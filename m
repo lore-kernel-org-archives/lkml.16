@@ -1,176 +1,233 @@
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2046.outbound.protection.outlook.com [40.107.117.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BACDAA32;
-	Wed, 16 Apr 2025 13:25:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744809939; cv=fail; b=nuuK4Per8nE4/x8KjfqqCDfKV5so7KWrJk2CEQdHSlUsLUaAJomsQsf9TnF+5W8H9WHdRhiLnM06OypLrGviktGrfMS6RptIawYb/1onHq/v3+gWyYuKM5BIqyKzyXLthnfrFxmJJ1l5e9x3mZrrem6tlvG0YGvU9An+3+e6C30=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744809939; c=relaxed/simple;
-	bh=vT4c12ypZgPqRRhSDCg4tdbL0qL8ZMw3KlabKzEUyeM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=CudWYlyf1lgb9dZ+6ZEjgzaBMwwLoMQwY99fQiSDQZ5FdrNwWTqzUr9hRDdRCQThHdLQNv8PQK1/kRp1lL909LVfq9NxtalNYpQAhEhxXZppDtJEJw/LoL4sZIXyBtR7lvDXSl/1Ntv/BjNTFDxOchoezc0iAmHU6fOqEBGWlZw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=RJx2Re5Z; arc=fail smtp.client-ip=40.107.117.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E278013A88A
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744810018; cv=none; b=MvvRVNEkhMB6kybfSLSbJUlanTc3lY/j7P0nQm0APoRcehln2+19RnWNY4umYMLvYPyvof4ZDmGR698fUp3CEWCgxEEgXz+Zr3xPC944jEZMZbjnvvv3XznqMj53Rvwo+CIlwA0s9K3R7S1j1+SPlcz//luCiGj1dhflbITgjAk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744810018; c=relaxed/simple;
+	bh=u7tgQKyBQxDpDlv/eeh5XGW8bH99prkZaYli+k8oNIg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Wm8k/8YaG2tZJ40mb6VWB+NlQaAmfWflh60qv5Ffz+lEqB3o5JX6rHPt5UYoe3F84BKd+LmXAG7jQWZc0qejn4moJA+J4IdfugiHJAZXUb30cjgW/bduw1+XipwWCeAUCh3Fy3Jrf60+41WpRxQu2R0WTcFyUecGIhnFAs09o9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e4nezjGD; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="RJx2Re5Z"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qvPdvvbkLCvsyd+yqRgZnO31ZUT/yhdA7PAxgYZOLoqGt0LqUvMejFFm5YpJ4600dyKhOrd/VG5hLepqOeSxHX6cQyLds12V527Js8NUCu9jDVEuYBbsutD2FLUSdrnpBPdnMK3jpzu32MqqYwgPZ7S7s3ocHai5VC1k9hsjASZzhF28kHaMyXEk6IGZz2bKDfVO9Aqor+3Xey0b54VGnCX5F2W+mz+1zJtZMIBAR+4fU0TRy/hhuOI1I2doNkU602id1snohEcGkypVbO8HmQ2Ce+9afREK+q8VVkgZfmdC18us/vIPeSg8+vjxF6A3SkOCxQgKIU1DnUnpza1WXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vT4c12ypZgPqRRhSDCg4tdbL0qL8ZMw3KlabKzEUyeM=;
- b=cHaUinn8LYzBYEUTL00VPx2a9Bqkg9RVmBXrtzZF7GCYB1jmdvYl83EtlgoohY3S213gzAGcxqwM4khGfbsK1UUX2tewcidrKWHE7nQqoVXdSLXU5dj+QprDFGoTb0/Hupj+pHdEvPK2BfG1r14Xwb+ndnv+bJTh518R82GGyGTXzwgHDRgiykBqr3/WGxnQeM/ArJFqAMvE9QB720lmHfQYx2VH+XSud3bZBSu4G/XztvJ0bnqasjnU5DfQ23vRBnRE5GNTmRsAFnZvKKo7iBZuZL5AcE8+fpexP/RWB4DQg4MUlx0nJb9JyqDX68ajBXWmmUfwoo4UZ49KyghXaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vT4c12ypZgPqRRhSDCg4tdbL0qL8ZMw3KlabKzEUyeM=;
- b=RJx2Re5ZMY/RnUUom6X65PMDLLLwQgim6jZHl1HnsGY4l2+RQr/GZmRrVd/dmEhMiKzSrb/ef+r40LZE4IOSPcnHDsOppy2VPu89coU2zRWJXefmA2twJi4B0Fqh229pmt/KwP0I3Ka+CBfjqDDRb+83WmHzaqBlSRdzu4DaCOl6YNfSCGfxp0TtCuKXfP424CvVfdT1SQl8WJWrkLxsuYiNwPFb9pu1T4Ut/J54maqvyEzIOskY7v/F6gDUxYJFkRhXjD+uQQu8XGY8uJ/v+nXv15Exci88kyl0qhJsIbOEnG6SOKBGfpcaJwxhw29OSaZ0bUooTws7y7eFrRYP+w==
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
- by TYSPR06MB7300.apcprd06.prod.outlook.com (2603:1096:405:99::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Wed, 16 Apr
- 2025 13:25:34 +0000
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::8c74:6703:81f7:9535]) by SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::8c74:6703:81f7:9535%6]) with mapi id 15.20.8632.030; Wed, 16 Apr 2025
- 13:25:34 +0000
-From: =?utf-8?B?5p2O5oms6Z+s?= <frank.li@vivo.com>
-To: "dsterba@suse.cz" <dsterba@suse.cz>, Qu Wenruo <quwenruo.btrfs@gmx.com>
-CC: "clm@fb.com" <clm@fb.com>, "josef@toxicpanda.com" <josef@toxicpanda.com>,
-	"dsterba@suse.com" <dsterba@suse.com>, "linux-btrfs@vger.kernel.org"
-	<linux-btrfs@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject:
- =?utf-8?B?5Zue5aSNOiBbUEFUQ0hdIGJ0cmZzOiByZW1vdmUgQlRSRlNfUkVGX0xBU1Qg?=
- =?utf-8?B?ZnJvbSBidHJmc19yZWZfdHlwZQ==?=
-Thread-Topic: [PATCH] btrfs: remove BTRFS_REF_LAST from btrfs_ref_type
-Thread-Index: AQHbrd73jkcBLdMm7Uid+r2d6yAy4LOkaR4AgAAB9UCAAAdpAIAAchcAgAFleqA=
-Date: Wed, 16 Apr 2025 13:25:34 +0000
-Message-ID:
- <SEZPR06MB52696AF210BDA98300C58FCFE8BD2@SEZPR06MB5269.apcprd06.prod.outlook.com>
-References: <20250415083808.893050-1-frank.li@vivo.com>
- <472ae717-5494-44ae-973a-85249a65d289@gmx.com>
- <SEZPR06MB52691756B32BA90DBE82BDFDE8B22@SEZPR06MB5269.apcprd06.prod.outlook.com>
- <2e158208-4914-4bfb-984a-0d35e8b93225@gmx.com>
- <20250415160508.GH16750@suse.cz>
-In-Reply-To: <20250415160508.GH16750@suse.cz>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SEZPR06MB5269:EE_|TYSPR06MB7300:EE_
-x-ms-office365-filtering-correlation-id: 97ef0974-d181-4f52-16c6-08dd7cea2b3c
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?bzhhKzQvaEljQmUyZithUmY3SDRMTEh5bEJ4eHpiY2xDYm5SdlFxak1iaWto?=
- =?utf-8?B?TnpwQkVjSlVobjIvU1pNaGdzQjRYT1QvRUhiT2hqanBvV2ZNWmF3V2hHbVRy?=
- =?utf-8?B?V1IvZ3BzZHMwV0Q4ckZnUVFvclptMjdVK3NPZnZzdnpTRXl4K2xpekZmUExK?=
- =?utf-8?B?ek1mWkRqVkFtdWxPQlNMZC96ZlE1RTZrc2dqL00xS20yWEpMSEEvZ1JFNnlP?=
- =?utf-8?B?amQxMnM2SVRuLytSMldCd2hpQ1BJQjVPdlRzMVZmSld3a2JoV01VOXk2bDhy?=
- =?utf-8?B?aFlVZ0s2SDliWFJWZ3ExT0phZnI0M0IrbFZRNzMrUGlBR1ZhOUEyL25rQ0RM?=
- =?utf-8?B?R0ZYb2JHUFo4Und3WWpWLzNyT1REYkUwY0pUNytSemY4Vmh2bk9NME01TVpO?=
- =?utf-8?B?Q1NGTjlhb3Z0WEd5Z2o3bnFubjMrSHdxeU56VGY2TW5CZ3djNTl4RVdSVEVX?=
- =?utf-8?B?UWlKTmtxVE4rUzlReE1KM0JseHJ1VGU4bjRPWG16OXpsTEM4cjhwL2Z5ajBI?=
- =?utf-8?B?aDE0VFBQYUw2UVlsejhHKyt2OFkvQi95SXp3elVpK09CYnVuV0tOSWxabmZK?=
- =?utf-8?B?WU5vazkwakgxN2xzUTQvUENZZW1CNEZIb0xJZ3VYTWZBWGFpRTExT3M0QzlD?=
- =?utf-8?B?M25XZ3VHVmtqWmVVUC96b1pkb3MxN053TlZFMkhPZTk5aS9saE01K3B1djd3?=
- =?utf-8?B?dUhDVGZJUytqRHU0aXYvNVlTbUhGSHFybjdXVUNsMnpUS3ZTdHd4RCtIY2pq?=
- =?utf-8?B?WXRLMm82KzgxYmx6ZDFjandnSmRjYXFKS2RNcThlTkFjeExuUGtvZVVFWWRy?=
- =?utf-8?B?ektDL3lHTVlIY21ScU1vaFpBcklqdXVlVVorZGUzZHN6cVh5aUxwRmNaMkVt?=
- =?utf-8?B?OXAwMmQvZVlIMGRVbjlyNkhoNUtKSHN1OUFTWDJqN29VVUllMUxJYi9oQjdv?=
- =?utf-8?B?N05WOFZld0V6b05FOTZYR2dBaktRRU5XYWdHS2ZpUjIzTVIyczhkcXpjVDJB?=
- =?utf-8?B?Nlo0NnNrUTdDZGwxaVpCQTErcTMzZnBUd29OQXdNOERqN204bVFMcFJSb3Ay?=
- =?utf-8?B?U0FvZWxWdFppSWMvVTNiYkxjdlJQVTNDZjM5c0V0VTQ2TlhucFZpblRJOUxD?=
- =?utf-8?B?L1JCMU5XUG5nMU1mamVUNDg0dzQ5WTBUUHgyRHJJL2FvK1MzL1Mvb2hmZmxk?=
- =?utf-8?B?ejFQNURyQ2ZzTVpTN2NKZTlIRHpSVnBNRUwybXNTOUZjSW1kVlpUNnVJQ0lV?=
- =?utf-8?B?MjhCVUdSWjZ1MDFVWDhKUEpGNm1ZWlNnVXFkWUtBNExJOWx2Z2o0NEYzcWE0?=
- =?utf-8?B?UGJUUVVJcyswTW1Kek4rWlBDb0h5OHRWZHZwYmQ4Sml5bVVpY20vaGVIcjNJ?=
- =?utf-8?B?NnNIREZyb2lpQmNFME1EZVA1U3ZycUsvYm9vdis5NmhZc05GUzFvUTV5RmF5?=
- =?utf-8?B?d1lWeGtaWEhHQXNPaWdjTkUwNlNRbWNJT0J1K213NGNCRGowQmxNQmxzZXl0?=
- =?utf-8?B?c29aTEovQW45dWFZakZSVUlFK09ScFJXY1pxWWVEN1M3MU9kcmhHM3dqSDJj?=
- =?utf-8?B?cHZESnRRY0t2VlkvMWNPc013UTYxM2FHdVNjcC9JazcybVBBK2pYVWhnMllj?=
- =?utf-8?B?U3FGS2NUR2FQdmlVOGdJNHZKNkZRZUZHeUpsQlFvcTAyQ25QQkFOby8yWHp5?=
- =?utf-8?B?eU9ZVGNoUWh1QlNpb1ZlTFJ3dThkWG1PSWlGRkVlV1dzazNXOHl3YXhEcG80?=
- =?utf-8?B?VUZjM1NENDJTek9CZkdUUzZGaDhvak1BMjBBVndyM1JYT2VJTW9tdXB0NGYz?=
- =?utf-8?B?Sk1NSXJENFVwVHM5TTBWeVFhNVIzVngxSzVSWEE4ajg0SHdzaXM5YXlaMnNx?=
- =?utf-8?B?Zmh3WDdsclcvb1RjRDFsdVlISFMvbUJXVjk3ekxLajMvOXIydGFDd2Flc3F1?=
- =?utf-8?B?ODE4NlBHNk5IS0dsQ1pMZGROYW9maFplU0dCWmoraHlicllSczBCWmlDdUJQ?=
- =?utf-8?B?Zk5YbHlYVi9BPT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?Rkdsd1pMa3ZpTW9IU3lJMmdyM1RRVTk3QjhHVk8yYXRVblFQNE1vVzZzU0FG?=
- =?utf-8?B?WU9sb3FrTUMreU9GaTdzck5hczAvREZhQ1lJM2g3Y1hOQjNoKzhEcnVkZFpH?=
- =?utf-8?B?QXpJcnpoa052Q3NqSGNESVJ5RUFLaTJvQzZSVSsxeDYrMkdsWlNaZkZNQlVy?=
- =?utf-8?B?bExMSFVrdC94TXQyYzdNN2RJRGFkcTBRMzlSU0VNdjMrZFRsa2lqK0g4L3ZX?=
- =?utf-8?B?ZGY1eHpCMm1UK1laQStlWWYzWkJZc1d0cTJ2V0VwdXhwRHpGaGpzUDFGYTI2?=
- =?utf-8?B?ejcveUVWVEtsckg0TU5VYzFsMUFwS2kvNGNMb2F4WXd0a3RtdDhoUldvZXhG?=
- =?utf-8?B?R2ZmWE1LZldBVTRxUC9Cd0hLdk9oWks2VWl1NE4zZTNDM0pSVDVMRm1HVlU2?=
- =?utf-8?B?WkovY0Nsc3VqQ2hBd0xrV0E2LzlDT3FhZTBYSXIxRnRIVndQa2t3aDYrOC9N?=
- =?utf-8?B?Y3ZnSzBYd2VBbmw0ckFBUTJVTEZtRzFCYTJPUW91YitQV2QwSnVFdFlpWTVs?=
- =?utf-8?B?aHY0MCtwcis3VTd4UUE2Z1JUVkxWTi9BYjBWREk0WmJMNURLRThPUWY4QUJ1?=
- =?utf-8?B?Zldaa0JpVEY1Z1U5eWdCSjFxVTZoWTNqcnRxMGFodTBOOXljamdZUmtDVkZi?=
- =?utf-8?B?TExvOTc0UW02V0FKNjlGYlpvek5JME9Zdi9zUUg2YUMvempQTXAwKzVuaVls?=
- =?utf-8?B?Tmw0ZFBaRWVwYmlIMVlFWjdRK3FlTlhHbm5CT29Rd0RFQlpESW9RQVJ3OTJy?=
- =?utf-8?B?NDJCOHBkbnptOWRRV3RlSTdpQTZVNTZub3k2TVJlek1aaEppdkpnMFFLWWgv?=
- =?utf-8?B?L2s4TVZSMXcxR0JQVUYyYTVHYkNuSG5PMW5aMUpKV1hiMHk5dzdXeXY4bkR0?=
- =?utf-8?B?UWdjZC9VNnhmYi9yQlh3Q090alpaOVdyOW1NM2NOSG9kZ29GZk5OZjVCdTc3?=
- =?utf-8?B?ckJMaFloYlFzT2tpejluaGtZdTZQRUVKVmZpQTJLcnhzbEh1SGYxZEQ3NG0w?=
- =?utf-8?B?Wko4NlFpb0xGSmFIZWdVSTZ3TzFOSXA5b2pZVTRYbitNNDRrWmJJdkdVNVlw?=
- =?utf-8?B?cXFmcmx1Wm1rOFUzVDU3emFuQ2piMkpzL3Z5WENqWm5jSW52RVNFdVhWS1Rl?=
- =?utf-8?B?OXpaU3BKS3g5RUxPSnN4ZTdyQVZvRUd5c2dkLzJyc2d4Mm1vTWh4SGpvc0dx?=
- =?utf-8?B?S1BHNmVwV2FmaWoxMHlNYkJsbzlJbC8xbE9DUzRZNjRtRVY0bkxtMHBxbGgy?=
- =?utf-8?B?b1BLN1dlU0tITVBDcEQwbStpSmlTUERBT2J0V0xEdzhYMUY5MVhKVHNhYWFz?=
- =?utf-8?B?Tm95NE90QytQdEtoQjdmY3hKbTRndGNYdWt6b05IaVY5Zkd1emRUQTF0Y3FR?=
- =?utf-8?B?UXRsWk42N2lVK1FHL3cyUVI2QWwwR3dQN0Nscmh2MDAwRy85c0VJTDFaR0Uz?=
- =?utf-8?B?U3Q3cXdOVmZiZmE1NkVVS1JFWHRUTmp1L3hiQWJ0Ni9XczVUNjFFeU5GRjlr?=
- =?utf-8?B?TThFdklsa1ZhMXFCdkhsTFdHN2JLNDZqOXFLd1MvVlVLTkNpa1BzWVR6OVdZ?=
- =?utf-8?B?SXNYM250UlRUL040bDExZTEwWVdVSzVyaERtdE5HdG42dXFCMTZlOXVaV3h5?=
- =?utf-8?B?RGV5enB3TUJOZ1lwbVVrOUF3UElFRzZuS2c3T1RYTWFOeHdlV2V0TUZ1emNy?=
- =?utf-8?B?aUdrRDIySVpaZkRUUTYrNHZzazkrQVBreXFrcFR4VkdYcXpRQ2ZZOXNWekZv?=
- =?utf-8?B?cTNLaWVwYkhnTzNOT3p0ZGlWL05wL2xPMFdmdU1MaWt4UWo0MXUrZkh4djhL?=
- =?utf-8?B?c3JSYWkxK3B3dGMzQjBDMS9WT3hhTVpRT3IyZ1MvUFh1RDRDZlB3NEhGWE5u?=
- =?utf-8?B?TjhFOXNDY1ZNWXlScXdJM0k1M2M5aUVoRUZUQWZpZlA5SkdONGthRlZ0WlNS?=
- =?utf-8?B?MjZycExKL0lUbHZzSHZLd3VERys2Yk9LdGV2UzRxWGRwMXJkc1RVcXIrMU1m?=
- =?utf-8?B?cE1UMlJpM0xza2xyMUcxMFBDNUx6MHNzdXRYMDBTZ1F4ejBCZFdFbGdLZGRJ?=
- =?utf-8?B?YVBDU3d2U1B2WWxVRzR0UjNGYWFLOUYyVWRxOXRyUGxrQy9UOHUxWHFTak5V?=
- =?utf-8?Q?H1rc=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e4nezjGD"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso73166955e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:26:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744810015; x=1745414815; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=LXUe0iANce6xhwP4QYlP8FMxu/z1y++/7cwAdg0G+Lw=;
+        b=e4nezjGDmWYu/ShAEf+fYUZguqWtnwaNw0FIlPpkvjgSOU/ZC/Qhfw3zKi/vge0HSC
+         5RqJVgGdVNRfvQiSVLuiAT40wwK2NY8TUL69rj+Q0mCCQ7XbTsloL1dwuEJWDJA37rvL
+         nBS+cq90KLbeJKIUliXlf2BEHCGG1uELLoaQnywvKq9epGTInY4OpUy1v3GUmL+oY8p5
+         uMt6t1aXg5sc6zAHZ9QNN5CNhl4/tDr1zwxtkdiRAEpumeK68K5AkmPsr5nbOEdHpkNx
+         DqLV9Bsi5GmSiy0XOGpUC0yKLto6oId3fCUF79Fl+3QUYfbt1pYucr8uLAps9RPlNCCH
+         eJRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744810015; x=1745414815;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LXUe0iANce6xhwP4QYlP8FMxu/z1y++/7cwAdg0G+Lw=;
+        b=aBv19cHCsNGyWeuQhHjERCnQBfn5mWWpKpFh1c80SBdQGTz7CEWrRxpTWMf3wl0cJV
+         xMjmwXJFlu3GrFuEhFMPjaFcrMyeDe9emU9Uz3xGpztcu11ULfTCysk/VGWhOcKADmqk
+         CKUY3yTdK8nn0Y7K98087kclko+U+Ie1jqLiIvhbE9PNkNTYbw9lE0FAJ6bFrrpQnQgR
+         YVwZ1+u/IXu3/9q7ucvxEqzq5XXQcV8dq3//Mq2VRckC1IEiCUnsSmmOOrn9k6pvRdp7
+         6aPknLhzCGm1OFhxbndnpOT8A4hjq+EPns95lzV/eID8eJJ3LIk+gxvJR07jK1SXkLjY
+         UCzA==
+X-Forwarded-Encrypted: i=1; AJvYcCXTCPdgQ+bTjEw7qSAhIZ3MEsvIwGuU9g3eIDvBH0XEEgz2XSqHkVbqSbGhc0RI/xCC+/jHmzWCuXJBHQs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZnHu0fVZe0sWJNc11W0LpbnhmmSlFAQNa9pJja8O86yC0ajgR
+	h3dGIlj307+OPz9e6bPXsK9hC1VHw2cDgLuJzWp+Qan0eye6QC23pOSOpuHGY0k=
+X-Gm-Gg: ASbGncu1RgBOV2m1eo3ODhXp7cms0Jb3saz2X6rX943azNiLJKfGc/kpvh24BE/wDjl
+	hNaEqhIYdFI/n2KL2aZgmll6rM3CFjCEKDFHHByD6dDbvKzGsMROv3SPmZOojMrQkXaTzFPKf+t
+	mdO4cEQUyiwHLZCZoiBIGGB3FI12+kyeK8mNI+qE4ZaDGn2OAlDen+F4G/GYVwMl5NEGsn5jH/u
+	xtOdrJiUA6F+Xryt83LNlPnNaKPyBBkR9wOkPsHLqneWgDDBFb+jbKlwp3J/X8AF9i8dbWCURwn
+	VMFRYm0F9hG62KI4vIMR5g+QRn7hQB7W+W3knB+RFVU=
+X-Google-Smtp-Source: AGHT+IGw46NqRQ8rr3G65OgHPazkLo5CSU52gngWFd673YvxDsgGuzhMGHsuig9f8x6t5NauOdl0Mg==
+X-Received: by 2002:a05:600c:3b9c:b0:43d:412e:8a81 with SMTP id 5b1f17b1804b1-4405d6cce52mr14393385e9.28.1744810015079;
+        Wed, 16 Apr 2025 06:26:55 -0700 (PDT)
+Received: from [192.168.1.3] ([77.81.75.81])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b4c8216sm21577475e9.7.2025.04.16.06.26.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 06:26:54 -0700 (PDT)
+Message-ID: <95c9bd53-ccef-4a34-b6d2-7203df84db01@linaro.org>
+Date: Wed, 16 Apr 2025 14:26:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97ef0974-d181-4f52-16c6-08dd7cea2b3c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2025 13:25:34.5879
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yIXYAFDSDIX5vFw79E7JsXCEJRQRWjTQLw3xlroPY5vVGrnGIABr0Clr2AYzzO1NcwWBPhxK8BWIf/7WlzYF1A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR06MB7300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/10] tools headers: Update the syscall table with the
+ kernel sources
+From: James Clark <james.clark@linaro.org>
+To: Namhyung Kim <namhyung@kernel.org>, Arnd Bergmann <arnd@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
+ linux-arch@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>
+References: <20250410001125.391820-1-namhyung@kernel.org>
+ <20250410001125.391820-6-namhyung@kernel.org>
+ <f950fe96-34d3-4631-b04d-4a1584f4c2f1@linaro.org>
+Content-Language: en-US
+In-Reply-To: <f950fe96-34d3-4631-b04d-4a1584f4c2f1@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-PiBJIHRoaW5rIGluIHRoaXMgY2FzZSBpdCdzIG9rIHRvIHJlbW92ZSBpdCwgYWx0aG91Z2ggSSBh
-Z3JlZSB0aGF0IHdlIGhhdmUgdGhlIF9MQVNUIG9yIF9OUiBlbHNld2hlcmUuIEluIGJ0cmZzX3Jl
-Zl90eXBlKCkgdGVyZSdzIGFuIGFzc2VydGlvbg0KDQo+ICBBU1NFUlQocmVmLT50eXBlID09IEJU
-UkZTX1JFRl9EQVRBIHx8IHJlZi0+dHlwZSA9PSBCVFJGU19SRUZfTUVUQURBVEEpOw0KDQo+IHdo
-aWNoIGlzIHZhbGlkYXRpbmcgdGhlIHZhbHVlcy4gVGhlcmUncyBubyBlbnVtZXJhdGlvbiBvciBz
-d2l0Y2ggdGhhdCBjb3VsZCB1dGlsaXplIHRoZSB1cHBlciBib3VuZC4NCg0KRG8gSSBuZWVkIHRv
-IG1vZGlmeSB0aGUgc3VibWlzc2lvbiBpbmZvcm1hdGlvbiBhbmQgcmVzZW5kIHRoaXMgcGF0Y2g/
-DQoNClRoeCwNCllhbmd0YW8NCg==
+
+
+On 14/04/2025 5:28 pm, James Clark wrote:
+> 
+> 
+> On 10/04/2025 1:11 am, Namhyung Kim wrote:
+>> To pick up the changes in:
+>>
+>>    c4a16820d9019940 fs: add open_tree_attr()
+>>    2df1ad0d25803399 x86/arch_prctl: Simplify sys_arch_prctl()
+>>    e632bca07c8eef1d arm64: generate 64-bit syscall.tbl
+>>
+>> This is basically to support the new open_tree_attr syscall.  But it
+>> also needs to update asm-generic unistd.h header to get the new syscall
+>> number.  And arm64 unistd.h header was converted to use the generic
+>> 64-bit header.
+>>
+>> Addressing this perf tools build warning:
+>>
+>>    Warning: Kernel ABI header differences:
+>>      diff -u tools/scripts/syscall.tbl scripts/syscall.tbl
+>>      diff -u tools/perf/arch/x86/entry/syscalls/syscall_32.tbl arch/ 
+>> x86/entry/syscalls/syscall_32.tbl
+>>      diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/ 
+>> x86/entry/syscalls/syscall_64.tbl
+>>      diff -u tools/perf/arch/powerpc/entry/syscalls/syscall.tbl arch/ 
+>> powerpc/kernel/syscalls/syscall.tbl
+>>      diff -u tools/perf/arch/s390/entry/syscalls/syscall.tbl arch/ 
+>> s390/kernel/syscalls/syscall.tbl
+>>      diff -u tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl arch/ 
+>> mips/kernel/syscalls/syscall_n64.tbl
+>>      diff -u tools/perf/arch/arm/entry/syscalls/syscall.tbl arch/arm/ 
+>> tools/syscall.tbl
+>>      diff -u tools/perf/arch/sh/entry/syscalls/syscall.tbl arch/sh/ 
+>> kernel/syscalls/syscall.tbl
+>>      diff -u tools/perf/arch/sparc/entry/syscalls/syscall.tbl arch/ 
+>> sparc/kernel/syscalls/syscall.tbl
+>>      diff -u tools/perf/arch/xtensa/entry/syscalls/syscall.tbl arch/ 
+>> xtensa/kernel/syscalls/syscall.tbl
+>>      diff -u tools/arch/arm64/include/uapi/asm/unistd.h arch/arm64/ 
+>> include/uapi/asm/unistd.h
+>>      diff -u tools/include/uapi/asm-generic/unistd.h include/uapi/asm- 
+>> generic/unistd.h
+>>
+>> Please see tools/include/uapi/README for further details.
+>>
+>> Cc: linux-arch@vger.kernel.org
+>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>> ---
+>>   tools/arch/arm64/include/uapi/asm/unistd.h    | 24 +------------------
+>>   tools/include/uapi/asm-generic/unistd.h       |  4 +++-
+>>   .../perf/arch/arm/entry/syscalls/syscall.tbl  |  1 +
+>>   .../arch/mips/entry/syscalls/syscall_n64.tbl  |  1 +
+>>   .../arch/powerpc/entry/syscalls/syscall.tbl   |  1 +
+>>   .../perf/arch/s390/entry/syscalls/syscall.tbl |  1 +
+>>   tools/perf/arch/sh/entry/syscalls/syscall.tbl |  1 +
+>>   .../arch/sparc/entry/syscalls/syscall.tbl     |  1 +
+>>   .../arch/x86/entry/syscalls/syscall_32.tbl    |  3 ++-
+>>   .../arch/x86/entry/syscalls/syscall_64.tbl    |  1 +
+>>   .../arch/xtensa/entry/syscalls/syscall.tbl    |  1 +
+>>   tools/scripts/syscall.tbl                     |  1 +
+>>   12 files changed, 15 insertions(+), 25 deletions(-)
+>>
+>> diff --git a/tools/arch/arm64/include/uapi/asm/unistd.h b/tools/arch/ 
+>> arm64/include/uapi/asm/unistd.h
+>> index 9306726337fe005e..df36f23876e863ff 100644
+>> --- a/tools/arch/arm64/include/uapi/asm/unistd.h
+>> +++ b/tools/arch/arm64/include/uapi/asm/unistd.h
+>> @@ -1,24 +1,2 @@
+>>   /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+>> -/*
+>> - * Copyright (C) 2012 ARM Ltd.
+>> - *
+>> - * This program is free software; you can redistribute it and/or modify
+>> - * it under the terms of the GNU General Public License version 2 as
+>> - * published by the Free Software Foundation.
+>> - *
+>> - * This program is distributed in the hope that it will be useful,
+>> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> - * GNU General Public License for more details.
+>> - *
+>> - * You should have received a copy of the GNU General Public License
+>> - * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>> - */
+>> -
+>> -#define __ARCH_WANT_RENAMEAT
+>> -#define __ARCH_WANT_NEW_STAT
+>> -#define __ARCH_WANT_SET_GET_RLIMIT
+>> -#define __ARCH_WANT_TIME32_SYSCALLS
+>> -#define __ARCH_WANT_MEMFD_SECRET
+>> -
+>> -#include <asm-generic/unistd.h>
+>> +#include <asm/unistd_64.h>
+> 
+> Hi Namhyung,
+> 
+> Since we're not including the generic syscalls here anymore we now need 
+> to generate the syscall header file for the Perf build to work (build 
+> error pasted at the end for reference).
+> 
+> I had a go at adding the rule for it, but I saw that we'd need to pull 
+> in quite a bit from the kernel so it was blurring the lines about the 
+> separation of the tools/ folder. For example this file has the arm64 defs:
+> 
+>   arch/arm64/kernel/Makefile.syscalls
+> 
+> To make this common part of the makefile work:
+> 
+>   scripts/Makefile.asm-headers
+> 
+> Maybe we can just copy or reimplement Makefile.syscalls, but I'm not 
+> even sure if Makefile.asm-headers will work with the tools/ build 
+> structure so maybe that has to be re-implemented too. Adding Arnd to see 
+> what he thinks.
+> 
+> As far as I can tell this is a separate issue to the work that Charlie 
+> and Ian did recently to build all arch's syscall numbers into Perf to 
+> use for reporting, as this is requires a single header for the build.
+> 
+> Thanks
+> James
+> 
+> ---
+> 
+> In file included from /usr/include/aarch64-linux-gnu/sys/syscall.h:24,
+>                   from evsel.c:4:
+> /home/jamcla02/workspace/linux/linux/tools/arch/arm64/include/uapi/asm/ 
+> unistd.h:2:10: fatal error: asm/unistd_64.h: No such file or directory
+>      2 | #include <asm/unistd_64.h>
+>        |          ^~~~~~~~~~~~~~~~~
+> 
+> 
+> 
+
+Hmmm I see this was also mentioned a while ago here [1]. Maybe I can 
+have another go at adding the makerule to generate the file. I'll 
+probably start by including as much as possible from the existing make 
+rules from the kernel side. I think something similar was already done 
+for generating the sysreg defs in commit 02e85f74668e ("tools: arm64: 
+Add a Makefile for generating sysreg-defs.h")
+
+
+[1]: 
+https://lore.kernel.org/lkml/ZrO5HR9x2xyPKttx@google.com/T/#m269c1d3c64e3e0c96f45102d358d9583c69b722f
+
+
+
