@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DAB02116ED
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:29:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978D5211A1D
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:29:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744820970; cv=none; b=c0sk7rABWRDuLo15Kp4OfyD5b5H5KT0R7XKcJq6Qmo/zRs81YsD5D261W7441/Gn8sGt5aSrsDAAFZt/mtHz80X13JA2D+pxMJQREBsyA4hlSJbnheGdOAuA9lel0gsrhdzAjj+15cnb81maiCez4+4UjfkfYF/40Yo+23pgW/U=
+	t=1744820971; cv=none; b=tVGYwjBGE0/XDICvLTaw8/gmuqSbtg/J+/p7QGMltV+RlBAM2OZ8+2Ia/rbIquzQXO/Q2aBA5ywtQn1+rxe6lnzW2KRBtIarLIPElBfV9dr97mN+e5ItDX/CCn3lUWOJwE5/se0fjSHxl8lWU24lQJ2/+9FuOLWHBLMPC/zy554=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744820970; c=relaxed/simple;
-	bh=gZDykHfMqby7gxGce8x+ayT1Qdrm+fVyGpKvFiZf75A=;
+	s=arc-20240116; t=1744820971; c=relaxed/simple;
+	bh=Qn/57B9VzWB0JKYD2iE64ugEwzZtE06e200axAfuk/Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dgiKug3Uj+MSfPgzrKLX7WuLQrJyt8yBKAuCRd+6Wse1rfDA42DCDJU0ncwkokK3HsO/lr/tSrRYGcVLq0DOpGsWuQFhRWMsgWXLOoHHnAbF0mTVNSAVttzxMB4j4cfGmvG/4fTwzpOajKkyNCSbRlXiHRVadifFsnyl1Z1RkbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ITjw4ExO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ak1Llw4o; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=heqRTy7dFw5CQ+TjDm2ZxhVRF1M4wMjsNEgdWV48F8lIK9xKsTwZXv5tHKw9nX/4SfLG3qS3/+HmjIbqdStZf/J4fiMScEd35eVWAVEq2cBWz56ayA99pXeJRvIAiZfByzKGSTV8/K6GJzkEuEeWhyBnA2Ddys9dxrgbSDJSEkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=U9712h/I; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GZ1cIBCE; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ITjw4ExO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ak1Llw4o"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="U9712h/I";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GZ1cIBCE"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744820966;
+	s=2020; t=1744820967;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3jgr1wk+mD/xSNbvenCkg/mlo+/bFFKzD/3SVlMGOxc=;
-	b=ITjw4ExOlIk6Ey+wzASnp9LHCpswtwfHHAsetd2V94ffYkZFmPCd1B7NoXYqy9QykiJUV5
-	O0/gq3YJoYJbZ65Q+qumMJflTwNdK+CQjN4zJ7hfq3Ixq1MfDRgH8L/NTzMFFqt/bB0eHF
-	5tTVCPbW1XPPN808Qul/qaDDozGBQwcgrC0MajqCePmI8j7yYK4MmbZ8K3FCAy0yHuPH/L
-	R+0zrOE9CwN2OK92EjpDXMCmqtR429WPrRTZBnnTdZI/hzVFJB3aEMiH0HA3H5j8aavF4q
-	d0COd/DdtrUlVBYGRFQ7jOWYSJ91QTB6GPuJbu30rXOFXSCnkumxBg/hbS0dQQ==
+	bh=+7I78ss84vjJrdkUeLd869WN5gJwqNqGsAX7SSgTHw8=;
+	b=U9712h/IdrrqPwQBFDjDVZBK2RJooIUpw0Sfc61EoSzA03M5yxEAeLXywaqjRNx9mtldGt
+	JAcNslLKZ+t8yBu1OFy7zOXv+UX2Q5303m2HdQ4YHr9hUhBk8h6DzURqF9G38NVrY4KZH9
+	973S0zqZKRvO3TBbD5+ONZfpq5mGJYl71hT3dKHRSMaQamU1u73uyU0RnUMAu/K55eMB1f
+	y1eWZzBgkVKUIJ/xh+3iwAsu86mUy64z1NYR5J2DZYsqvYJhi+9GEeuSKjlzXTx2r8cWQ5
+	WJe+FXzQ5W6w8mtbJXfHNA5j4474T0jAkrgrOLjwx4kBINpmjBL9b7zb8qjOWQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744820966;
+	s=2020e; t=1744820967;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3jgr1wk+mD/xSNbvenCkg/mlo+/bFFKzD/3SVlMGOxc=;
-	b=Ak1Llw4om2VFqR376+gNgYWtb5v9jjBBRYopdMs36usbcP2D/56NbdK5QHjgY8KuFwnJvz
-	2qM6XKZOwd1Pb5AA==
+	bh=+7I78ss84vjJrdkUeLd869WN5gJwqNqGsAX7SSgTHw8=;
+	b=GZ1cIBCElpr0EQjLhcan7BCrlPHYHWN/xBBlHonMGKlc5mbFDpBofsxG/Z8DrD2mMM0iLW
+	B40tdNioRgx8MDDg==
 To: linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
 	Darren Hart <dvhart@infradead.org>,
@@ -50,9 +50,9 @@ Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
 	Valentin Schneider <vschneid@redhat.com>,
 	Waiman Long <longman@redhat.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v12 01/21] rcuref: Provide rcuref_is_dead()
-Date: Wed, 16 Apr 2025 18:29:01 +0200
-Message-ID: <20250416162921.513656-2-bigeasy@linutronix.de>
+Subject: [PATCH v12 04/21] futex: Pull futex_hash() out of futex_q_lock()
+Date: Wed, 16 Apr 2025 18:29:04 +0200
+Message-ID: <20250416162921.513656-5-bigeasy@linutronix.de>
 In-Reply-To: <20250416162921.513656-1-bigeasy@linutronix.de>
 References: <20250416162921.513656-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -63,70 +63,100 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-rcuref_read() returns the number of references that are currently held.
-If 0 is returned then it is not safe to assume that the object ca be
-scheduled for deconstruction because it is marked DEAD. This happens if
-the return value of rcuref_put() is ignored and assumptions are made.
+From: Peter Zijlstra <peterz@infradead.org>
 
-If 0 is returned then the counter transitioned from 0 to RCUREF_NOREF.
-If rcuref_put() did not return to the caller then the counter did not
-yet transition from RCUREF_NOREF to RCUREF_DEAD. This means that there
-is still a chance that the counter will transition from RCUREF_NOREF to
-0 meaning it is still valid and must not be deconstructed. In this brief
-window rcuref_read() will return 0.
-
-Provide rcuref_is_dead() to determine if the counter is marked as
-RCUREF_DEAD.
-
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- include/linux/rcuref.h | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ kernel/futex/core.c     | 7 +------
+ kernel/futex/futex.h    | 2 +-
+ kernel/futex/pi.c       | 3 ++-
+ kernel/futex/waitwake.c | 6 ++++--
+ 4 files changed, 8 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/rcuref.h b/include/linux/rcuref.h
-index 6322d8c1c6b42..2fb2af6d98249 100644
---- a/include/linux/rcuref.h
-+++ b/include/linux/rcuref.h
-@@ -30,7 +30,11 @@ static inline void rcuref_init(rcuref_t *ref, unsigned i=
-nt cnt)
-  * rcuref_read - Read the number of held reference counts of a rcuref
-  * @ref:	Pointer to the reference count
-  *
-- * Return: The number of held references (0 ... N)
-+ * Return: The number of held references (0 ... N). The value 0 does not
-+ * indicate that it is safe to schedule the object, protected by this refe=
-rence
-+ * counter, for deconstruction.
-+ * If you want to know if the reference counter has been marked DEAD (as
-+ * signaled by rcuref_put()) please use rcuread_is_dead().
-  */
- static inline unsigned int rcuref_read(rcuref_t *ref)
- {
-@@ -40,6 +44,22 @@ static inline unsigned int rcuref_read(rcuref_t *ref)
- 	return c >=3D RCUREF_RELEASED ? 0 : c + 1;
+diff --git a/kernel/futex/core.c b/kernel/futex/core.c
+index cca15859a50be..7adc914878933 100644
+--- a/kernel/futex/core.c
++++ b/kernel/futex/core.c
+@@ -502,13 +502,9 @@ void __futex_unqueue(struct futex_q *q)
  }
 =20
-+/**
-+ * rcuref_is_dead -	Check if the rcuref has been already marked dead
-+ * @ref:		Pointer to the reference count
-+ *
-+ * Return: True if the object has been marked DEAD. This signals that a pr=
-evious
-+ * invocation of rcuref_put() returned true on this reference counter mean=
-ing
-+ * the protected object can safely be scheduled for deconstruction.
-+ * Otherwise, returns false.
-+ */
-+static inline bool rcuref_is_dead(rcuref_t *ref)
-+{
-+	unsigned int c =3D atomic_read(&ref->refcnt);
-+
-+	return (c >=3D RCUREF_RELEASED) && (c < RCUREF_NOREF);
-+}
-+
- extern __must_check bool rcuref_get_slowpath(rcuref_t *ref);
+ /* The key must be already stored in q->key. */
+-struct futex_hash_bucket *futex_q_lock(struct futex_q *q)
++void futex_q_lock(struct futex_q *q, struct futex_hash_bucket *hb)
+ 	__acquires(&hb->lock)
+ {
+-	struct futex_hash_bucket *hb;
+-
+-	hb =3D futex_hash(&q->key);
+-
+ 	/*
+ 	 * Increment the counter before taking the lock so that
+ 	 * a potential waker won't miss a to-be-slept task that is
+@@ -522,7 +518,6 @@ struct futex_hash_bucket *futex_q_lock(struct futex_q *=
+q)
+ 	q->lock_ptr =3D &hb->lock;
 =20
- /**
+ 	spin_lock(&hb->lock);
+-	return hb;
+ }
+=20
+ void futex_q_unlock(struct futex_hash_bucket *hb)
+diff --git a/kernel/futex/futex.h b/kernel/futex/futex.h
+index 16aafd0113442..a219903e52084 100644
+--- a/kernel/futex/futex.h
++++ b/kernel/futex/futex.h
+@@ -354,7 +354,7 @@ static inline int futex_hb_waiters_pending(struct futex=
+_hash_bucket *hb)
+ #endif
+ }
+=20
+-extern struct futex_hash_bucket *futex_q_lock(struct futex_q *q);
++extern void futex_q_lock(struct futex_q *q, struct futex_hash_bucket *hb);
+ extern void futex_q_unlock(struct futex_hash_bucket *hb);
+=20
+=20
+diff --git a/kernel/futex/pi.c b/kernel/futex/pi.c
+index 7a941845f7eee..3bf942e9400ac 100644
+--- a/kernel/futex/pi.c
++++ b/kernel/futex/pi.c
+@@ -939,7 +939,8 @@ int futex_lock_pi(u32 __user *uaddr, unsigned int flags=
+, ktime_t *time, int tryl
+ 		goto out;
+=20
+ retry_private:
+-	hb =3D futex_q_lock(&q);
++	hb =3D futex_hash(&q.key);
++	futex_q_lock(&q, hb);
+=20
+ 	ret =3D futex_lock_pi_atomic(uaddr, hb, &q.key, &q.pi_state, current,
+ 				   &exiting, 0);
+diff --git a/kernel/futex/waitwake.c b/kernel/futex/waitwake.c
+index 6cf10701294b4..1108f373fd315 100644
+--- a/kernel/futex/waitwake.c
++++ b/kernel/futex/waitwake.c
+@@ -441,7 +441,8 @@ int futex_wait_multiple_setup(struct futex_vector *vs, =
+int count, int *woken)
+ 		struct futex_q *q =3D &vs[i].q;
+ 		u32 val =3D vs[i].w.val;
+=20
+-		hb =3D futex_q_lock(q);
++		hb =3D futex_hash(&q->key);
++		futex_q_lock(q, hb);
+ 		ret =3D futex_get_value_locked(&uval, uaddr);
+=20
+ 		if (!ret && uval =3D=3D val) {
+@@ -611,7 +612,8 @@ int futex_wait_setup(u32 __user *uaddr, u32 val, unsign=
+ed int flags,
+ 		return ret;
+=20
+ retry_private:
+-	hb =3D futex_q_lock(q);
++	hb =3D futex_hash(&q->key);
++	futex_q_lock(q, hb);
+=20
+ 	ret =3D futex_get_value_locked(&uval, uaddr);
+=20
 --=20
 2.49.0
 
