@@ -1,39 +1,65 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94EBA40849;
-	Wed, 16 Apr 2025 13:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0CA156F20
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:08:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744808924; cv=none; b=l3EFDIEX+xuvpc46xgh+ue+Ie12eH6T8TGuSZZgV5mRcpW0Qg7Q+BBmtGB+d60Df1JNuSIYPxM+BsjtSaWAWXJeqvnLhw+DJ/HeCQygK/dOvnH/+pEXkzEzoZJfUvLQAJKpxXJczAVSqsBHLBcTNPBhcRFN3sn6R2/anMza6Bes=
+	t=1744808942; cv=none; b=LFa2Ko8m9Lyplm/dsZg41DVrFLYDcn9qWk68T2kNw2AZmPbud4r5E0fwU4tSDEEei0nVYj6HWrfYVJAfrAdkrM9lEucraVqdFQVVZY7cy99TLhl1Guf/Nx0OTfma7NeQpCo33ioo8sTBqmMZ4Ss3SDVTyDdhY7HN7iFM7zdG2aA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744808924; c=relaxed/simple;
-	bh=E+b47x6oKtd1eJR0iUvNQyb2cup/jQzg6qkM4AFRjT0=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=ZrfdvoMJspFFm3f5g5Nz4usgapGwRb6/qSGrJc1viskfuub7RtcRTi2RoSEik5+oVfjJZzsjiJtJ9Zh5oRJ17WxhNg6+qAucLBa0lT3qgE59jOgbdi+kwGs6whUMUlmsp+pLP7HTzI54NVEu21P044Xa3GAdeYTHVKWKZzQ/sRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=X9CqSjB7; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1744808942; c=relaxed/simple;
+	bh=p/iyWC6HvCPY2TgwnlCPzsZ6CCy+XnmL1Lk+5LmCGhU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z5vBu1EadjvaWXQxU9qUvYN3PJbEcvuWFDk6+U3t/bBxeQhdS3XCodkb1sAFevbm92Tb84XIXpP0BjzHqZi8X2dtc64Tme/S7wKPtn8xxf06+HNUaxIafUh25e9uap65R2IuXxOkKRhDfZnK1qlYAp6YCAzcRCPRRllj2/IT28k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=C1mJ+ovf; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="X9CqSjB7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744808912; x=1745413712; i=markus.elfring@web.de;
-	bh=PPl45bcdpybn4S3L1FQ9aweIhu6xGMiofuniVuj6Icc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=X9CqSjB7bZ1HRYaH9fDxeLVN5tec9l6q8nLBR78bclcrRPv0VZLV5C6JUn4itCd2
-	 vpKnU4/VmXQCfkVUA1bmngL36RviU/wgSQ0oqULrSq36doHBRODe1GaehG315Qup+
-	 m40fo9mdTJS+KxlGZ5FFaG1rxQ4cPwpkiPPo9JAQb503Pzz2TbjvGiWtU4C4claGF
-	 UfEpjSMc6J1RTck3N/BaFxOfqq8dqzvh5vi1vpGgFWZwsD8AzEV9WKzlpA3QCU+VG
-	 ixYoO7DZ6ENuo576uPXRE1bwIvHijG0UXKlre1tx9DTtAn4jIhnfFeNKnsdrjviea
-	 msPK3+KdCpHsJQCZzw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.13]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M3m9H-1u4D9n0Phr-00Dmm7; Wed, 16
- Apr 2025 15:08:32 +0200
-Message-ID: <3e473ff5-1554-4065-a305-6b3661e0b941@web.de>
-Date: Wed, 16 Apr 2025 15:08:28 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="C1mJ+ovf"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3912d2c89ecso6365944f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:08:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744808938; x=1745413738; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0Q94yOoOApKItt1hLRlRluZyloOVNtuhZPjQvabIyLY=;
+        b=C1mJ+ovfwyUxOkxUy1ZTdUzVTdLc0RTLKxkJc8+vB2fqvW4KW1R/A6d70EaWq8dAms
+         vGioGUTBt716F9p8sEqqoaGcb0DtqmksNlpiVqKZwPtjaytNly6ntmO2kBojQTn/6z4/
+         xPgmTmUFp7r11MVZKuS2D5DS5PoIFQIzADzxHN1IfFT/sRqEr675OUX23QRIE4VBz1Ft
+         foTbQGc1OgS3PZe3oJkEZwECeFzN719qLs2Q8UNg6/4pbQj4Z1g6osxMRBWMHxHe7MRL
+         PWmDqP6/xmBGNwtvMKYDkaFp1XSvhFx3/9m6FZXYkkVRgeScd8GLSPYcuPZB7CFu6u9L
+         wM/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744808938; x=1745413738;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0Q94yOoOApKItt1hLRlRluZyloOVNtuhZPjQvabIyLY=;
+        b=sCTIDdo4NUyH27rJPwyW88fUgAWSH96pE7oAvChOfZRZud3lV2QRCBcczWtiPPKBLF
+         mRlMU0+Aogf6zaR9ngwiRWQOs6jeiXDvx9VvSmeblWvi2TqbyJROT4N7QEcv2e0oF/uh
+         NNMs3DyM2fHc19ArCvXIjfzvCOVHuXEAa/jtOEN/uuNYZAy9NtTXzYND6ePQ8vZXcfOB
+         WHRwtb8hTgxLBdgbfbNZRFqFbaZ/XD4nBScta4WJxlG/0hdl8ZiH0McCC4zUoKp3u98R
+         zFdbfBlyjkcz3kw1Rw9fNe2gnogjl6yU1v+51zsd6ew59t8ZUbprjgs3mZKzLvO1vfqR
+         KsLg==
+X-Forwarded-Encrypted: i=1; AJvYcCVVDhetXJ+/bhyxOd6UkQms+M08YMBQlhSfE4MD4cwQcsfVimnWYFbANtjNhPTgxJKJNA/kyyhhPStCygc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwkxVnoTaAu+yEJEXCFwEX1JGsBZmCKrbJ/O+tmxybTV96tIAY
+	kb20Yxe8IoZiq4YHm6m0xVfViRNj+E1O5R1ek1GHtx2PagMH2adcOBTSs2v/Ze0=
+X-Gm-Gg: ASbGncsZVwin7yT9M4GhNl0z9S04ijeOTmBYk9ETTfQf5v4secdzDl85o3/Ljleaet1
+	VadR187dnXkkZY3NPcmNHPMnTOvDCpQu8Z/4F6TtzTxvKsgqaMEyMjpJw46JVdl4rbSukf8xLLk
+	MI5dhD2w3akeCLJ2t16UFgxPWf6zsFu0RP0lsEAgvHPBHAx4bym5WDOXxbbtJlBiXBnvjlYoA83
+	wnbEg/YnN3TBqQU0bX0bd9mNOR/kg0C2POuwWVy/WUHWsKyYdLXBRXmo8mTyZpYg6DG5N2PZBQz
+	E3MVdyUH/wxlYoY7SgpU9CsBAJM2PPGRcvLohhFrPA2AxA3npXftob40X3/nmpgDwfERQUBSko3
+	FC8dDwoE=
+X-Google-Smtp-Source: AGHT+IHOsJk1QtB5kEoSZrYAYpRPaEigS+0jlbTDIIkpc2LnRk68oJlodSN8FXDP3R34O6sthrpyNg==
+X-Received: by 2002:a05:6000:4021:b0:39c:223f:2770 with SMTP id ffacd0b85a97d-39ee5b18646mr1809040f8f.15.1744808937399;
+        Wed, 16 Apr 2025 06:08:57 -0700 (PDT)
+Received: from ?IPV6:2001:a61:1350:fd01:ac0d:cf4f:2906:b446? ([2001:a61:1350:fd01:ac0d:cf4f:2906:b446])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43cd17sm17165723f8f.78.2025.04.16.06.08.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 06:08:56 -0700 (PDT)
+Message-ID: <65bd42ee-ecbc-4a23-9036-42358aa086df@suse.com>
+Date: Wed, 16 Apr 2025 15:08:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,104 +67,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: linux-sound@vger.kernel.org, sound-open-firmware@alsa-project.org,
- Bard Liao <yung-chuan.liao@linux.intel.com>,
- Daniel Baluta <daniel.baluta@nxp.com>, Jaroslav Kysela <perex@perex.cz>,
- Kai Vehmanen <kai.vehmanen@linux.intel.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Content-Language: en-GB
-Cc: LKML <linux-kernel@vger.kernel.org>, Chenyuan Yang
- <chenyuan0y@gmail.com>, Julia Lawall <julia.lawall@inria.fr>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] ASoC: SOF: topology: Replace devm_kasprintf() call by
- devm_kstrdup() in sof_copy_tuples()
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:oOK5+bHBAHZDH9yk8Bm8TgfX/hKD4YOaMRexCRmRC1xviV/7qwC
- RiYKXSJPjU3ZayqiCZFP5hKSR3JeUQ74U9tpjWWKKPtpNrpnZcv8MbUoos4DZ7gJMvUE0M+
- GotFWDaZXGSvyMIhxbhlqTjmXB9BPI2pSC9kng5Jl4H/F7Gcargd+yDZlEiuG1N28GeXi1N
- sKH6YuhXp4SRTIHD+T/vQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:4bp5+2TEYEc=;gFfEIRgffqIrQlbnRdS14k70N1k
- /KPXUHDTKIZs1d4TeGL695m732/MwiyN3mixogmJWFl/XHeGL3nPbqh70FllRIrdgDZImlay/
- H7Y/aR8qCB25dyy8+TJOYJ+4C9gptslINJmM+/vMFW4Z0QVTEKgOieX3BfU73HoItfk6NTOEG
- 4EWs+PPOdIE34iu9WVhaEmavxrGbuYHL3ncQOeazTMXNDN/QLdTNoIyl5WVFLyrGEOXKVt+Yk
- YBf4u+Z9VOA2Jg6eoUDndT4dJn0txEeXZ5RLSoeh9x2OhkDz1zYBtp9mP534kaySmtGfRYTGe
- U6WGdt5CMfX5kRc4zvBT+1AdY+a4cprbNhj4UvdfmIuWN+3LR8LkK45qCEJp/sfAwtgfx3RNh
- 6ydycCTQH+09J/S7vflotObXj2H6Qz6+lNr2EW9fFtU8A2Rb37t1MtjoExNqRn4sv31wAdDln
- Ev97gzyufCh5Bg4p01TMpfr+j4uyNoVH3mDd9A3I4opGM5rgyUBtiUga/cF14L8zZ6KlwYopy
- EUFWfDgMYdvKkZ77VIdA7CUiwMqe0j839sxS4UAGq8mN1zYRHooG91O8VhfvBbun7kR+YnG3O
- Y8cEvATtlWcCOuW5ohlT25/ATtEV3FY0VcfEchha5QVFvGxjhTq7aR1n9O7xDSzwrRyz7TeeV
- +/B4a7XLeH/z4V0bltPWzDiXXlQBk/LjQ2feO4xybxQdnHfVr3F4kPBYkM4kZXwViamjaD+T2
- 5EfB48f9WBSrSYgMOr5j9QvE3xphqlVQkJAteuqJJGC5/WvIwp7dt48Luq1mLmTxwZIPvSllO
- KF/aHdt+SatndyADZY3UBS5CD3FRyhPJzOFwHXuHk9dyDTaq6DvaKgOCteKLqaRoZDMj/tVfm
- kagrj1IZ1HLxSdoAIB2+jxJGzgt6QmPTKnkLzye06zc4z/Ski95sOSvUqlBWENNyUycKEjYHi
- SwwR2+Jsy6+cYeseELPQTGQ+eicc8QqJ9LRAqPZk1agzWthTrlIjHd2iB+B//zVmh4hI0CpOM
- IMetJ7T1A4e1LijH2GBDL0qw/lqm8ppGG9+A0+hy7MrbSqdS4fZE1dPytqUppDV3X2/IiLWy/
- 0VkEXmC80Qk5NTa8LLhX9oeWPFk+X+E1lPuFPXXt8IIKOlZiTy4DHbcfHIuaaANmJF7UCmWL6
- qknTuuK1op3ZBYoeAA5QXVFBlxML1AfS4gfLhKCvzRhBNcPIok08DJeYG9mYG5AbfcG7KheAT
- 38pzHR9ci49dJZaJAFKZNX1Lq/RR9JmP8TktKGrqAW6vPC2UwLPdEiL9nkPvXrruZIrZlbUe/
- /6h3e1DS9M+1EGGzjjiTMn8JunK0H9MN31YPt61KUQg6P9kik54nmf0p5Y3xth1c046LUWQou
- qEU+ttNWsjd8NQ2NpuZPesX5fa3AngorWHKoIwc4JvCOiciS7al8LLoYWMsdyte85mHwVCBky
- 4uUndBpWpQSZxDJqffzSSFaYQZk6THAzjwA9R8coSAlu5TQ/0z0kFNdmvt9KUMENAv+KI6isw
- 7c6x2/dEWcfk3TfJgKHoXz2RmQ7++dkagc4aJObyfyC7PKGGDal8WZ+BCA2uaiKcmhTnr3RoL
- jL16NKXI/cEOJdm6VmyBa+rKSuDmRHcWnl5K+rDMkV1ielXavqmtcay9w5XeoZzyJh1+yvIwp
- bDPt97mMTxHou5Ke+JwlRvQ4olRRULI2UNDrKCPJalZa5uGZBXvo8cCW1VzLD/iScso1yN1SY
- HNleple3C2MXRve11iyqvmYsHnrFrLgj2mmsX3s3bhi4KRSdRNkQpsIL5eHq/Z0PuDRd6spim
- bqORU2Vl4gNNU4ekTUppZdCsktOM75Lq6IeLVhac/w9mC7sU1NaOiAOu0M3WxcFa+QUWH/peV
- Rvz/gFKLxejRND1BsdWB6R6O9whM+sy1zQMZ+gUzp+3e/fzf3EqgIO2rB/nZAw0TP3hQsHcEu
- VD1STryweZM1LzBDrISF8j4S2V6a2PFmD+KNxaV3Y8rNata/1s0KUGI/+0CGwOVU1WNv/Ij7e
- UwXwZnRdBumPzAN8bNc9XDQ3iMqnMnWvF+l3FJyH3MEoKlzQan/JUQKkQtgXFcI1Dd36tILtO
- JPkrzacftTkUR8Z0Cxv0/WK9CZrxKtJNnosh3Rx3xZdJsSwMgQzmRS7TUifu6icLeO3nE7xqk
- l9Dl9NSCDb4z9NxwuEKdb/6xGAuQdnFq3epANoM85XZCn3sd3DZq1XIkZ0X8ObGI0trPEEG1A
- t7d0ki5aS5FS5opw99wincnUIYdBkTrmURhbHVslovpEPQVUz80vmkvxy5eKdnnmkRdB2Ppl6
- 6uTB4PCldjUnSQN+NwmmoYrf4SxEsFB5IafQZx8SmfBuCRU5IkHXJgwmxSPRGTEHYdtx+or+P
- 1q/0Dy4KuuCYNVxI8ZAVqw6TTcSKx3AfQ/C1R/aM+b1GYbn72OEB0d7G10rIld7kma/ueBDKb
- JYtag3BROkSKywUjmNmwRD2Yw4KTLAQcBbugMtmpzStsHM0xt3EV1eJaI7FzZNYmZJOst4t10
- x/MVMg9MVgicUKz70fgpIv0b50f7sdqKjrdqO/PNoc/xaAmysKjdB+DLyrSIpgHntdDZIsFCa
- PkYyAam7xz7nZBA38MhLJRaYbFce7Nyr/ADtfP3lgUpWNoFHbW3baMeb56fBgxQvHbP+QjvNz
- /Kxovr2cEglVqgP4F/ZdA+1HYpM0PEzbcL+7Qc7Ar4TXPcKePO3ZTghXB1C5Xgol21DOnz2/q
- 7xb2oXHGGd91OgN2MOGFyh5Hpf5qD7M9tDRGOAvwV5efD1TVfCSe4VsFFOVRY7jbDIaViU4Gt
- +t072JYFeGRED2pXoP8sKdK88Pv/yJ64dTdLhGQFZvlUkwjshJwThLrk+KYhtLWWnNhtF4Y99
- 4f4DHPZdM8Nr1R7tOAMnMsOgIbkAVjYKqmo/ycKIRxJmuIC52dEWE/Gpjs8+HAqmXghpaXnUS
- H3IeEqdPDBtvkFMuZwM6JxQmKaivDiXnLQvp5i1Dvx096gtf9tUSDkNv4y4Cw84I2IIU7s5t8
- CoBsrWb0IaY2QoumSZ6jyh0+9iMpB6j1K3bwVLQXjiRw2M//jVaQI8LpX2z3HbA7Y2EYl7b3h
- y1riyODs7+e7KhVyatRIslqq/0LY0/xWm8
+Subject: Re: [PATCH v2] usb: core: warn if a GFP zone flag is passed to
+ hcd_buffer_alloc()
+To: Petr Tesarik <ptesarik@suse.com>, Oliver Neukum <oneukum@suse.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250320154733.392410-1-ptesarik@suse.com>
+ <20250325134000.575794-1-ptesarik@suse.com>
+ <2025041110-starch-abroad-5311@gregkh> <20250414090216.596ebd11@mordecai>
+ <522b3049-8e7f-41d4-a811-3385992a4d46@suse.com>
+ <20250416094807.2545efd8@mordecai>
+ <e23e72d7-e50b-4a16-b47d-5dcd7cf49641@suse.com>
+ <20250416124736.3ac2bd55@mordecai>
+Content-Language: en-US
+From: Oliver Neukum <oneukum@suse.com>
+In-Reply-To: <20250416124736.3ac2bd55@mordecai>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 16 Apr 2025 14:44:58 +0200
+On 16.04.25 12:47, Petr Tesarik wrote:
+  
+> If I stay with the USB buffer allocations, AFAICS the mem_flags
+> parameter should be used only for non-zone flags. If you specify,
+> GFP_DMA here, it will have no impact whatsoever on allocating DMA
+> buffers. It may unnecessarily allocate from the DMA zone for doing PIO.
 
-Use a devm_kstrdup() call instead of a devm_kasprintf() call
-in this function implementation because only a single string
-should be copied.
+Yes. But we should not limit enforcement of such a _new_ policy
+to one method in order to fix a hypothetical issue.
+There is just no need for action.
 
-The source code was transformed by using the Coccinelle software.
+> Now I think I should really write an article for LWN to debunk some
+> myths about GFP_DMA.
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- sound/soc/sof/topology.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Well, if you go to that trouble an explanation of why memflags
+are passed in USB at all and how DMA works in general would be
+productive.
 
-diff --git a/sound/soc/sof/topology.c b/sound/soc/sof/topology.c
-index e19ba94f2c80..49462140facc 100644
-=2D-- a/sound/soc/sof/topology.c
-+++ b/sound/soc/sof/topology.c
-@@ -572,8 +572,9 @@ static int sof_copy_tuples(struct snd_sof_dev *sdev, s=
-truct snd_soc_tplg_vendor_
-=20
- 					tuples[*num_copied_tuples].token =3D tokens[j].token;
- 					tuples[*num_copied_tuples].value.s =3D
--						devm_kasprintf(sdev->dev, GFP_KERNEL,
--							       "%s", elem->string);
-+						devm_kstrdup(sdev->dev,
-+							     elem->string,
-+							     GFP_KERNEL);
- 					if (!tuples[*num_copied_tuples].value.s)
- 						return -ENOMEM;
- 				} else {
-=2D-=20
-2.49.0
+	Regards
+		Oliver
 
