@@ -1,101 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7613F2309B1;
-	Wed, 16 Apr 2025 07:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7BC522B5AA;
+	Wed, 16 Apr 2025 07:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744787063; cv=none; b=Uy0VLgv26V8hHcfBoWY93L2fLgQUYnicSSzrRr/czwo8qsIssAkKW6JwlCxzGy4QX57+5KF/bdULdeDbsvFtID7siy1kba0wM2T5wVXwJjzBDvuKJ7mX9P2KIgy5GB/xm+5Un1ba7PhfLFu0yju8P4za2Rf5bS8682mxU+eS604=
+	t=1744787082; cv=none; b=QLDmP6l/aJW1lH2IrdE3xToOmkofpxpi9I6Y2jMrOIt7ucqEDqixh6idxOkFTL4x/e0P2TZCNzNAMrljbpUowB1lzYIfUZLZm3dnCU8xU50WJ6vU2Gl/SWGOGEJ9RW+yJMNv2AtrPsR13Vz6zmunF1ILEbJ4Kaeo4/+qfH6Vfrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744787063; c=relaxed/simple;
-	bh=/z8O9SDZiaTEXhg4ysbJsJfwrcHDw53/UnAOR7/dwrs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=grjbsSe6DteO0W/r/ZmuGB7gDOgUNk91cD7OHZosXIxKb1kwVH1zH2zghwuqH3b8q8sYHXmKEJRw0PVIw04keC12yfFetWSK4p4bzHtTMVZc4sY5z9dzbSUcUu6k2SjAXIOYbv/YbwoLECnvqphmJBrfItkvmb9wPEs0rDSlIfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IkpVsuLX; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744787082; c=relaxed/simple;
+	bh=HS/z4N64pw2j7J+mRowqcRtfuewBz9oZ/SCe+FNi88M=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=P16QS69MQq2n1qds4DVWu5dyupjrwZ5jzT4D1IZ1iad+8Xz4G9rUYvSAcW0VJo2zN1nTKmCF2r/62+8GKEAdsIpZXlsj5HrW7B8Puj+VbXY2PVO397YkjxxldAINdUzcnEegAyx8a/vDnJLCkPNyO0lykcbfxeNiLjKG2x4uD4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=n18/EU8Y; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IkpVsuLX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744787062; x=1776323062;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/z8O9SDZiaTEXhg4ysbJsJfwrcHDw53/UnAOR7/dwrs=;
-  b=IkpVsuLXfzqhZUA4wycQcJ3s8yDWk7hJuBkrm9nTLy8qjzc8toVRiSaR
-   U51l42tRUve2tQDyOiN8HTZLqC47CcPH4VtejRryr63XK+qHFmmNriXNC
-   9TydHQ86qkRLWEKfTHu7YJLetpYEeuA2KUbRr3+DpnuH9qJIcxL3veZ75
-   MU80HyHd8pCwEONe36G3xEbiF0LmBnxcD4VNpjM4KbW7/z7nCmILY27iz
-   nuoEhrxDCqEKF7Y92eVr4CuoYSev2mN6Mt2CgJdQ849++kXdwNZAwywHf
-   WtHqvbEYtniKMe3FtUm4pk3u4j+2FRpmpIfjOO1cVx8+56AVIL9M6dMMC
-   A==;
-X-CSE-ConnectionGUID: kPCNy67vRKa83ysMhHfYuA==
-X-CSE-MsgGUID: 2IcchoUgSyu6KLU+5Rbovw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46241862"
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="46241862"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:04:18 -0700
-X-CSE-ConnectionGUID: A1VrY2KOTjmLpK6I8Y5sBw==
-X-CSE-MsgGUID: 7BYbbExuR1STIQxM3SHw9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="131315374"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa008.jf.intel.com with ESMTP; 16 Apr 2025 00:04:15 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id C7B8476C; Wed, 16 Apr 2025 10:04:10 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Jai Luthra <jai.luthra@ideasonboard.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH v5 7/7] media: i2c: ds90ub960: Remove of_node assignment
-Date: Wed, 16 Apr 2025 10:01:37 +0300
-Message-ID: <20250416070409.1867862-8-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250416070409.1867862-1-andriy.shevchenko@linux.intel.com>
-References: <20250416070409.1867862-1-andriy.shevchenko@linux.intel.com>
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="n18/EU8Y"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53G749voC2842662, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1744787049; bh=HS/z4N64pw2j7J+mRowqcRtfuewBz9oZ/SCe+FNi88M=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=n18/EU8YmpQ0gZurQCDKb6mcdcDzZiwDjj9W1fng3wCxM86JhA4Yu/NUFhrbQlIQL
+	 zlKC370tSMUmdf6rn40ZlXWDcgU6fRbbwT96KPESQqxABWVcFo6gxac5dW+Vs+EvKY
+	 fi7QN8iUoEpWUxZ57bDhSjEGhbGQ7KPJo85JKoy7pf/rhbHnT/swXE8CIZoP/guE+t
+	 IvjZ4EyiNCzHz+A2amiWhXfBxib/usTe1Dj/3PKmPh0pO8ZF7QWDUzfoE4jinw09yh
+	 GwwLS/6M4H69FXl27YmJ0GPBbdBbiaseV8dGupWCOdnDRjnmFKkzx1h8VJ59RpZmkZ
+	 f2Ti/EYnEbQhQ==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53G749voC2842662
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 15:04:09 +0800
+Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 16 Apr 2025 15:04:09 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 16 Apr 2025 15:04:09 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
+ RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
+ 15.01.2507.035; Wed, 16 Apr 2025 15:04:09 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: Jakub Kicinski <kuba@kernel.org>
+CC: "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com"
+	<edumazet@google.com>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "horms@kernel.org"
+	<horms@kernel.org>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        Larry Chiu
+	<larry.chiu@realtek.com>
+Subject: RE: [PATCH net-next v3] rtase: Add ndo_setup_tc support for CBS offload in traffic control setup
+Thread-Topic: [PATCH net-next v3] rtase: Add ndo_setup_tc support for CBS
+ offload in traffic control setup
+Thread-Index: AQHbrO80xvliwf3v7k6gHUORMXC8/LOk63SAgADsrVA=
+Date: Wed, 16 Apr 2025 07:04:09 +0000
+Message-ID: <b9fcab27bc6a4d35ba32438623e5b259@realtek.com>
+References: <20250414034202.7261-1-justinlai0215@realtek.com>
+ <20250415172303.19022025@kernel.org>
+In-Reply-To: <20250415172303.19022025@kernel.org>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+x-kse-serverinfo: RTEXMBS03.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-Remove of_node assignment which duplicates fwnode in struct i2c_board_info.
-In general drivers must not set both, it's quite confusing. The I²C core
-will consider fwnode with a priority and of_node is subject to remove from
-above mentioned data structure.
+>=20
+> On Mon, 14 Apr 2025 11:42:02 +0800 Justin Lai wrote:
+> > Add support for ndo_setup_tc to enable CBS offload functionality as
+> > part of traffic control configuration for network devices.
+>=20
+> This is some semi-switch-like device right? Or am I misremembering?
+> Could you clarify where the limits are applied?
+> From CPU into the switch or on the switch ports?
+> Should be documented in the commit msg.
+> --
+> pw-bot: cr
 
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
----
- drivers/media/i2c/ds90ub960.c | 1 -
- 1 file changed, 1 deletion(-)
+Hi Jakub,
 
-diff --git a/drivers/media/i2c/ds90ub960.c b/drivers/media/i2c/ds90ub960.c
-index 5dde8452739b..5afdbbad9ff4 100644
---- a/drivers/media/i2c/ds90ub960.c
-+++ b/drivers/media/i2c/ds90ub960.c
-@@ -1682,7 +1682,6 @@ static int ub960_rxport_add_serializer(struct ub960_data *priv, u8 nport)
- 	struct device *dev = &priv->client->dev;
- 	struct ds90ub9xx_platform_data *ser_pdata = &rxport->ser.pdata;
- 	struct i2c_board_info ser_info = {
--		.of_node = to_of_node(rxport->ser.fwnode),
- 		.fwnode = rxport->ser.fwnode,
- 		.platform_data = ser_pdata,
- 	};
--- 
-2.47.2
+Yes, this device is a switch, and CBS is applied from the CPU to the
+switch. More specifically, CBS is applied at the GMAC in the topmost
+architecture diagram in this driver. I will post a new version and
+add this information to the commit message.
 
+Thanks,
+Justin
