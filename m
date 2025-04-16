@@ -1,96 +1,75 @@
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B732010E3
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:04:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E461FDA9E;
+	Wed, 16 Apr 2025 01:04:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744765453; cv=none; b=hoLnwmv452D7QN7A8NhyvfalZwdzWt1mzjEmSCEggC17Fc7I2C6M2cuLe9IgmfH4UlQzQgFtwMtTQRsn5IHAME7k5E3OP2PCBAJtYYurdUjwEx6BK8gsdLMQZ/vuhxNhtRlmMJQ/2oX6weuJVuQk80oTr45NyTUfeOAlJAlDy6s=
+	t=1744765475; cv=none; b=Z4b4apmJH9y3MIfwgg5b3etFQkOICg/EtYkl3+//v+6XewhhLr4yqnSOvyt4Fy8Aa49J6WfmLE0dtEISrV2Uxw9hINnNhGnKNb+EqpJ4ZFpEzQ9uSCvcFiWf7POaZNQukdESXtwjA2PoDObs5Il7I4HwHi0mZumzn10CNeZKPfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744765453; c=relaxed/simple;
-	bh=tPIIDWCtvCMUi0dba5wS/vnKRpQYieJRvDzGuUpS2cE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a1yuAea4QevdJVNPnLjw3mTQiIWcljCf8VA8Am8JSFMQ/at/dr2PZm8O5Wu0A3+OZaD789jSY4b8xTzzfyFWYSMQryuqvY+ip9sHmWsE7MfndfTBPiEypfGyG6JLRWS20nKs62afdFbINd1P5x0OYJCfoyydxYnadKSNIxzZLrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=eAgaZS00; arc=none smtp.client-ip=209.85.166.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1744765475; c=relaxed/simple;
+	bh=/GN5//0khApZDeV3/QU1cv4jwzx2DHoR7L2Et4w6nmk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QtXkmMRrv2YASjiOav026Uch274ybvdHkfTcNEnl0NyJSOevXUHtesKy33GUEpL4Kgpuqp684IwZJYDYI1DuGmP0G8Ta0PTG2BKIud3ltzxi+7CBx5Fa9dCN2SPgzNA2RI8zOVUiTxXad4eJXXADXZG72vojTP0Bv411Wb/GYCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=nArdiCt/; arc=none smtp.client-ip=52.119.213.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="eAgaZS00"
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-85e15dc8035so204178539f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 18:04:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nArdiCt/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1744765451; x=1745370251; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YOzygePW3310tVx7kEfO3x/NC5w6EQLjdhpFeXqXF04=;
-        b=eAgaZS00Pv3pt+zm9nWLIo3Md/3MzJGcu7IEemdvbWpI7g/8GnXXX/9prjIrmZFNpp
-         Yx4Htw3VJhzm7BtnAouIJxzAXGlZuFJIGChlAoN46/bEoFz0G1ccPFudxVd8oje4laAH
-         z3B4qOUSqaxLNk0XssFvCcgGCvLwX2n0Or2XiASfBdJgF0WyJrYeXWMqL5qSw3OkgE0G
-         ukMafe5GVGmEPlKGGQorH4xV7r0kR3cFxk6Mm6u7swaqflBIfofITIba8V6KsqrxDgAA
-         6GOwl147a/5l+fIQF1AuyL13ayaZsPTxa0ZYQ9oi7yL6U4nkxoQGUaRJ7e2g1ZRM+iOH
-         pU0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744765451; x=1745370251;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YOzygePW3310tVx7kEfO3x/NC5w6EQLjdhpFeXqXF04=;
-        b=K7AeVeiDJ7TTZN2E2QVEZugStmRSz/hS11iWAdFcJXOkBt8RpDfErVPN7oFKgCcguc
-         n7HcGFgSxGC6PaFHtD2NYLoTExQ0epO/oIr7SbnqzGmvuLdB3LsJy75FZn0UEpmP+D0Y
-         w9E+jy31qilgWfS1PNBXHlq9NaWltkNVLgcS/OM1No2YasF3RmzQVEfZowftUbiXv3t6
-         BJudjfO9huOvAKRAkGlWQTkwtZkkC6Ardgf7GOyKlDcY9wf0FAfxwMEPl2dHic1/o01I
-         4XG0yi2hAHJkjVz1n/P8YS4DiJkcnRh5tD1U4GT45GFVWpEEgeGek377HDNzkXOz31GP
-         fmQg==
-X-Forwarded-Encrypted: i=1; AJvYcCU0g75M7Az+FVID/cTHS0RJ4MczfdK8BhxizTL63HN7Mp3bILsx5QrADWudR4YSDaBvg4XaC8TpjJDHS3o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJ2PCs4fDLJoivEL/4DMBE50mhdTErHQ4Qufw9GtHZoMn/5CQ7
-	q/FfMTEiplO+7/niJuSdJaokN3TLl/X6DG4QIuxobpGOqy6hotrFtYkXuTIikQE=
-X-Gm-Gg: ASbGnctTZzaOVhlNqQcvxESxVEuyux/jOG8s5rdsYwHZhNLD4kfGZeqGM00gnz3L0zf
-	C2iPKDDLjHQBPd86HBWL7goRrrfx3EGvXl2SH9f+qeq1vMjKF4ImYTChul32aMilVqVf3pjqzbp
-	vmtfQ7HfWmqz8Gb2++ln85MEYM/+vt/tjydDlKVNTMNi/wKXXVjo5iv2f16v6tgxTS9gH2mdAdp
-	stv/BbtFcJTy8gFj554SCf5k3FideCCWUfoSbphadg3PSmCYgoC+gLPbZARJMnWnIrJ+yi/BCgj
-	4zqzWieypSckOBVUbpzqSi5IZ65IJxN40utlbw==
-X-Google-Smtp-Source: AGHT+IEHI5YXtsH3GtE+xAxjPnoEaxwITdOpITzfsT2ZontVDQfoJEe0M8gxlFjwjY706Hy1dO+lEg==
-X-Received: by 2002:a05:6602:360f:b0:85e:8583:adc8 with SMTP id ca18e2360f4ac-861bfbbd3d6mr192307839f.3.1744765451183;
-        Tue, 15 Apr 2025 18:04:11 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8616522cf6bsm275091139f.7.2025.04.15.18.04.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 18:04:10 -0700 (PDT)
-Message-ID: <15e2151a-d788-48eb-8588-1d9a930c64dd@kernel.dk>
-Date: Tue, 15 Apr 2025 19:04:09 -0600
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1744765474; x=1776301474;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Wo8CbfOG5thLx5oYsZc118rz0h7ZghtQr/VOpd+yWgY=;
+  b=nArdiCt/Lq5Wr/FIcC2t6f6hbfZ5yfZuyWPRsTHUX16EZEuZliZehLHN
+   SCRs4Rp4T5CcofqO45wFOWzBeki/FdwCFuBpR6SpQr/oXREZmHZLEj9Sn
+   SDwNJWAInYc00/l77a00Pu3MBu5v+F5rokTPycOGfnE1AcyZbRa2cvu1g
+   4=;
+X-IronPort-AV: E=Sophos;i="6.15,214,1739836800"; 
+   d="scan'208";a="714144774"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 01:04:32 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.38.20:4308]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.21.195:2525] with esmtp (Farcaster)
+ id 21201563-830a-4377-8d65-013676a97cc4; Wed, 16 Apr 2025 01:04:31 +0000 (UTC)
+X-Farcaster-Flow-ID: 21201563-830a-4377-8d65-013676a97cc4
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 16 Apr 2025 01:04:30 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.88.149.87) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 16 Apr 2025 01:04:27 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <leitao@debian.org>
+CC: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <dsahern@kernel.org>,
+	<edumazet@google.com>, <horms@kernel.org>, <kernel-team@meta.com>,
+	<kuba@kernel.org>, <kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <pabeni@redhat.com>
+Subject: Re: [PATCH net-next 6/8] ipv4: Use nlmsg_payload in route file
+Date: Tue, 15 Apr 2025 18:04:17 -0700
+Message-ID: <20250416010418.23666-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250415-nlmsg_v2-v1-6-a1c75d493fd7@debian.org>
+References: <20250415-nlmsg_v2-v1-6-a1c75d493fd7@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 00/11] pcache: Persistent Memory Cache for Block
- Devices
-To: Dan Williams <dan.j.williams@intel.com>,
- Dongsheng Yang <dongsheng.yang@linux.dev>, hch@lst.de,
- gregory.price@memverge.com, John@groves.net, Jonathan.Cameron@huawei.com,
- bbhushan2@marvell.com, chaitanyak@nvidia.com, rdunlap@infradead.org
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-bcache@vger.kernel.org,
- nvdimm@lists.linux.dev
-References: <20250414014505.20477-1-dongsheng.yang@linux.dev>
- <67fe9ea2850bc_71fe294d8@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <67fe9ea2850bc_71fe294d8@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D046UWB003.ant.amazon.com (10.13.139.174) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On 4/15/25 12:00 PM, Dan Williams wrote:
-> Thanks for making the comparison chart. The immediate question this
-> raises is why not add "multi-tree per backend", "log structured
-> writeback", "readcache", and "CRC" support to dm-writecache?
-> device-mapper is everywhere, has a long track record, and enhancing it
-> immediately engages a community of folks in this space.
+From: Breno Leitao <leitao@debian.org>
+Date: Tue, 15 Apr 2025 12:28:57 -0700
+> Leverage the new nlmsg_payload() helper to avoid checking for message
+> size and then reading the nlmsg data.
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-Strongly agree.
-
--- 
-Jens Axboe
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
