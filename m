@@ -1,120 +1,107 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF222472B4;
-	Wed, 16 Apr 2025 10:25:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE82A48;
+	Wed, 16 Apr 2025 10:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744799156; cv=none; b=TUs3p2oAiVMWueDey5xJSxexSJtdGusOqbV4YqGDWHREWqyVXrOfHVSDfaSUERmwkiq2XEf1+mnFxQxNVDiRSGjetLsG+E3YemD5qdxGAnaDNC2DuAGE5zKtMLe1624qxX6o3mgmaTytJX953YB9aTJtaN6fXBsnXdzI681M7gk=
+	t=1744799491; cv=none; b=rCrnJgELSWuhxkGvO38R3kdL+qIT4DQCoEb8bm2hQs8zX6TssUoXogpaxESRoWKA10fozmrzHGFuh10XD1hNvy3dYXwkv2oRjMgrrn6bbCoVPCkbKt/Bsep9njqwZUKF5ao6+Hvrv4+DZ3Y9NLbG6hOImd2acY8ZmhWyDEu/1Xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744799156; c=relaxed/simple;
-	bh=/qk5OkmwZUBYyLisMCnfnlBAQRFvNeJqHFv1O/U7SWA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DdXaviad0r2jIERYdkKsS5HWjbUtFkHwVX34qIxV1VVwLGv5FQvMu0QQb1RN7ZK8rPr/T/R6TGJLUo42i+b+rB9oz+NyVMyl9GEQzWkFH3MRA9Nbv5t1l4cnf8CR+2edisWRZUXez1tN/CGWyyaduq5MrPORmgDDaiHzR4Ug8gM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=fHsOj4bO; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1744799491; c=relaxed/simple;
+	bh=27OkYuOGUUdfi84lVV+j7hZS96O8AIg0mm1ln73wz2Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YHqkAKcu18oqPq/dPRAGyoK2e8hT788ji88E3KCbWBVIJ/OlL7REruUxrHBmJAXE5stcwT6eLpolozfd/ijmEmK5qz0mZ1P8Sj+opCBUwWDoK21dqWOiYT3RHgXV/k7XUGEDZosq/RF9QnxGOvKN7irdVOkMpkU6qQ/v3iYOGco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KmpCJHzu; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="fHsOj4bO"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G7KfhN019516;
-	Wed, 16 Apr 2025 03:25:40 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pfpt0220; bh=Ws0ijbk6aSgPYtqMgyLJEYZ
-	5KFgXjxhOsYHcPi7tpd8=; b=fHsOj4bOyhJ6MFEVFVNH+HcpTNFCngwIgaazuqt
-	2UQr61Agzt3tmP4S/QWr/I89no5kTpkyycY9IYcR/Oz6yQ1XLMRag/+yAc5f5kM5
-	qr2S3N54gCvT8QdmC6Ur8/uu32y/5NseWebJsgw+nUYaymVcHJjQkaFj/snZ82o0
-	BUWeleEfi5zk/OiWbJ173N/i568846270xTAtiYqzhBHIN210GKnIgT4Bolw8UJ7
-	aIqrcOcIi479fXlLJ0M8ARJ+hbafYKN2V8MNSeHjy7dR0qYCyAt+Rx/jfuBds22D
-	kRXHgp1B/lEB+etR0fxIPCJ6IS3rruW4qPJzOvTb6ZwVD1Q==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 461pg72s8y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 03:25:39 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Wed, 16 Apr 2025 03:25:38 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Wed, 16 Apr 2025 03:25:38 -0700
-Received: from sburla-PowerEdge-T630.sclab.marvell.com (unknown [10.106.27.217])
-	by maili.marvell.com (Postfix) with ESMTP id DCA235B6948;
-	Wed, 16 Apr 2025 03:25:37 -0700 (PDT)
-From: Sathesh B Edara <sedara@marvell.com>
-To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <hgani@marvell.com>, <vimleshk@marvell.com>,
-        Veerasenareddy Burru
-	<vburru@marvell.com>,
-        Sathesh Edara <sedara@marvell.com>,
-        Shinas Rasheed
-	<srasheed@marvell.com>,
-        Satananda Burla <sburla@marvell.com>,
-        Andrew Lunn
-	<andrew+netdev@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric
- Dumazet" <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>
-Subject: [PATCH net v3] octeon_ep_vf: Resolve netdevice usage count issue
-Date: Wed, 16 Apr 2025 03:25:32 -0700
-Message-ID: <20250416102533.9959-1-sedara@marvell.com>
-X-Mailer: git-send-email 2.36.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KmpCJHzu"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-af51b57ea41so740185a12.2;
+        Wed, 16 Apr 2025 03:31:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744799489; x=1745404289; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D32T0CdHiX9syEkUflCYMqiwWk+v9ZkYuzEGhhatH7c=;
+        b=KmpCJHzuyaGMZWFEAj/ZE3XqoJTj5BvPTBaApxLkYIlTHN1AZlY3RI218nOMdDOaAw
+         E+46PPDWSjFZUJRXNiw055ZJKrFXOh3aF+rDJzx5YTebgchDB1pK6XGv4STxSVYsyNI5
+         S1NGp3KvWsI0U1SyTTKHACloAI4hI8blnppKsK2uWyKr06EFgwKz2DuPnN1d6kcN6Be3
+         Et7WSCxrqxMcJGmeB/mpUVx9acDyuT0SA6VLLdQfYgl4Un4CoFhIYiwYwrmOkLJNk8+l
+         NNi44Nh5sYd0Bs7ql+kTITW/dTFlFb5TqNSyhEZmZDx3RjOehpzXG23zXeVP/FjJlFco
+         3qLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744799489; x=1745404289;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=D32T0CdHiX9syEkUflCYMqiwWk+v9ZkYuzEGhhatH7c=;
+        b=IkXwP4kNNZ8d/0QPMJtV9n1U9vWkYIY/acWNJqgWZ18KOpU4NMRRKyrU025x6iJ+TB
+         XlEdldW8gMgghPfmnMeKoJP6BkI5j8Bk0uXdjUoD/QvAfj00PaTenKyLqJGrYOYhIgXu
+         6UsMjhV7O+5hjz4voi2EBwUSJuW6iUdFcKwikE3jVOkR/ldIk7lPG7LsrhM/SfMM1ZuS
+         Xpnk+Crn7B8XhVefEAddffisCJMjLWQCI2cTuo05kg/MMt5N0QDCAtQSmFqBuy1LVR/z
+         i/fZZyA6GRy0i2wtN50C5ZTZKn4k8Qgx6U3EMP/t9tavwreMeeoatHcqB6zLkBdf1Xwl
+         rUOA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDNiVyAdqs+l7iAEhjjmxaA4nBCr85B8b6NAEzYXXLrYYf6UeflOV8E1AqagDkLDBppFyxf7ueSTjPmAMgEto=@vger.kernel.org, AJvYcCVxUy5FDr5/11TaZj/R3T+H5HuSRoee9TaFqRUD9Rn8nWRof+0TwwgL4GCgBEyiOTIMM5EQo8UfLwo=@vger.kernel.org, AJvYcCWfksMHXV2k5Ns0nH+BWtXFfBz6hyu3aWO3om7xwagglCEkQPcRZjWup1Zutwg/FKq2KFDUA8r+8Gctz+VH@vger.kernel.org, AJvYcCXVnVM3u0056L8wmoE0T7qS7LhNlVm5UryfxdvH1d5EUanba9e4yGpnxFzVg3vwCYzcwIweDqrzxcA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YziPxDA7GznUmCWjeBSX+UDAaWZb1sZTIdxy2t30lzdBkhfIxey
+	2lCq8+w7Fjj321pA9clFawby8laJ5FgBquPBPRlkQ610QKRoYNyRiSiJDdPqfaWB89XM1W71eN4
+	8pwoojxJ4jqe6EaTYZhUC/7+unYg=
+X-Gm-Gg: ASbGncu18noJEV3q7iJ/Wm5uNfBRj9ef7RuyfFOW40flo72lMDZkH3yiuf/kXvgMl5f
+	3jUaitGstjFvtGLuL9v0oUCdSPMwHOSmdgwipMeM6AxsYiGYEq7IZ9fxB6xfaIlGWuSlR4/DFhX
+	DhELqLGh21zclBFWitMZcMhg==
+X-Google-Smtp-Source: AGHT+IFVBaVeklhFg8vEKdkB2fU0sPCoOXzPDv4HLRejSpcwC67vDdNf8GRCCAZbvABUaNnJmQbyKhcm13MHSpEKRG0=
+X-Received: by 2002:a17:90b:1a91:b0:2ff:7b67:2358 with SMTP id
+ 98e67ed59e1d1-30863d1dd1fmr578755a91.2.1744799489076; Wed, 16 Apr 2025
+ 03:31:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: rG1vEaOhqD3KF2WADHe6BtXWv8Et9hqR
-X-Proofpoint-ORIG-GUID: rG1vEaOhqD3KF2WADHe6BtXWv8Et9hqR
-X-Authority-Analysis: v=2.4 cv=Gp1C+l1C c=1 sm=1 tr=0 ts=67ff85a3 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=XR8D0OoHHMoA:10 a=M5GUcnROAAAA:8 a=8UtXAm7dt4rhr6CWwt8A:9 a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-16_04,2025-04-15_01,2024-11-22_01
+References: <cover.1744783509.git.viresh.kumar@linaro.org> <a940d1b1a02d99fdc80ba8d0526c35a776854cb3.1744783509.git.viresh.kumar@linaro.org>
+ <Z_9v24SghlIhT62r@pollux> <20250416095943.f3jxy55bamekscst@vireshk-i7>
+In-Reply-To: <20250416095943.f3jxy55bamekscst@vireshk-i7>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 16 Apr 2025 12:31:15 +0200
+X-Gm-Features: ATxdqUHNYlnL63Hpr69yW0Crawd1jAldhqFU9ww-cyVEd4_IloUCg4Z3mAOaEKI
+Message-ID: <CANiq72=MQmUop5UzeeN-r7gAE0ep8Z+EUaLuA6exeazhZCHqLw@mail.gmail.com>
+Subject: Re: [PATCH V10 14/15] rust: opp: Extend OPP abstractions with cpufreq support
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@redhat.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, linux-pm@vger.kernel.org, 
+	Vincent Guittot <vincent.guittot@linaro.org>, rust-for-linux@vger.kernel.org, 
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>, =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>, 
+	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Russell King <linux@armlinux.org.uk>, 
+	linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The netdevice usage count increases during transmit queue timeouts
-because netdev_hold is called in ndo_tx_timeout, scheduling a task
-to reinitialize the card. Although netdev_put is called at the end
-of the scheduled work, rtnl_unlock checks the reference count during
-cleanup. This could cause issues if transmit timeout is called on
-multiple queues. Therefore, netdev_hold and netdev_put have been removed.
+On Wed, Apr 16, 2025 at 11:59=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.=
+org> wrote:
+>
+> +// Frequency table implementation.
 
-Fixes: cb7dd712189f ("octeon_ep_vf: Add driver framework and device initialization")
-Signed-off-by: Sathesh B Edara <sedara@marvell.com>
----
-Changes:
-V3:
-  - Added more description to commit message
-V2:
-  - Removed redundant call
+///
 
- drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c | 2 --
- 1 file changed, 2 deletions(-)
+> +        // Returns a reference to the underlying [`cpufreq::Table`].
 
-diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
-index 18c922dd5fc6..5d033bc66bdf 100644
---- a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
-+++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
-@@ -819,7 +819,6 @@ static void octep_vf_tx_timeout_task(struct work_struct *work)
- 		octep_vf_open(netdev);
- 	}
- 	rtnl_unlock();
--	netdev_put(netdev, NULL);
- }
- 
- /**
-@@ -834,7 +833,6 @@ static void octep_vf_tx_timeout(struct net_device *netdev, unsigned int txqueue)
- {
- 	struct octep_vf_device *oct = netdev_priv(netdev);
- 
--	netdev_hold(netdev, NULL, GFP_ATOMIC);
- 	schedule_work(&oct->tx_timeout_task);
- }
- 
--- 
-2.36.0
+Ditto.
 
+I wonder if we should have a `checkpatch.pl` warnings (not error) for
+this -- it is not always a mistake, but there is a fair chance it is.
+The likelihood increases if we notice things like ``[`...`]`` there.
+Added:
+
+    https://github.com/Rust-for-Linux/linux/issues/1157
+
+Cheers,
+Miguel
