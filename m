@@ -1,187 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5147E191;
-	Wed, 16 Apr 2025 16:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37081191
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:00:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744819242; cv=none; b=ZeReim0IdLw4hisf16MLRtnQagsKSPWkrW0ByJaiuZpKCF7zwl5iamjyqmjMuOA7hvtwaciGasI3CxnS/0DpYJIzV9Lx1dXu4OyVQqCoJWGGhNLBjbYlhH0y3TergZUKHctmAVSUgj2c0flCIi5F3EpdRkYcdKLFT8IJXjhvZu0=
+	t=1744819251; cv=none; b=C2aOZWiEPj0cmmZ1MN1QE4OFBR3bwClPgO7ziP3rQ74MiYfQWCp1sM7jtkXay03sW1PpHAHp9JNX5//oLIIAVym+MKLkSdzPFyyErQXUJlzKnrzf79EdWSdP+qMX3eW8aOZ5meMi9FXmQeE9GEi1Vzy3rcec0if1Emm/wbSthlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744819242; c=relaxed/simple;
-	bh=Vz6bk6YGvtsRN2ZEQVaZ0sI/BeiXUIfOnij8CvC8Fuc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=evOTF6Qw420RWZRWJAngDJvuCLT8sEV6D8QZYwil03YsPm7VRf9MO5++6jyxx16KSQb1j5qXQ2MjgLN3yyiTvaV5GoQHt3RLdcrLGSYwWJ9d+5PT6Q4qEGaL/ZIPD+iV5pCCjU8F4Of1KywkIjoTzewCVX1LLgAG8nWahCp1FtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CImHhWh7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744819251; c=relaxed/simple;
+	bh=OQ2LUVURG5ZBoCwWh5loGiUwdSTfHuVc1849YbckkqU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jdyJeMzt0DK5GnuYrT+gcyHmCAmp2GxF0hv2EaDyGFcjJG7DY8xANmcLPKZQVguq7OIp577IGC9tKibpssC1GgQFWaeGp9b7QzM2Y/9v4zu/P59z8em2SBCbx3yvwvnJ5vqEW9fjDL1PLvkE7EE9VR4404lDhgJQLuAYgcwOPNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ceJY0ajc; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CImHhWh7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0B43C4CEE2;
-	Wed, 16 Apr 2025 16:00:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744819239;
-	bh=Vz6bk6YGvtsRN2ZEQVaZ0sI/BeiXUIfOnij8CvC8Fuc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CImHhWh71IJT8+4R26J6xICoE//1H58e6w3PjnHDwH2nMhUIdie79qzCkxzQ4nzDA
-	 rXzhVycoO+M1KZfnWUCNPYw8wSV7Bi8sA4vpi3izzWzIit6zbmqV60IE7zSScr/pLE
-	 e5eRoOM9KhD6tZjYZkqe06bDizHxkMRmkH+nPbLj5IKGTKRVDOwwHXL0IkXc2zAXQF
-	 vOCp2SD7Iy0mM51VxfrTJ7B5H4n+XFdVklxldigYiSEny8qOz1hv9OOJRiSH47A2W4
-	 sLXLz3NYzlJ5/R+CzQQPRnb8/5jwYGQUYKai2SIjiflg29VI6zrr/MZFZwTB7dkvZt
-	 U8fLtBQ2KXZqw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1u55Bl-000000007DM-3BB9;
-	Wed, 16 Apr 2025 18:00:38 +0200
-Date: Wed, 16 Apr 2025 18:00:37 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Cristian Marussi <cristian.marussi@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
-	james.quinlan@broadcom.com, f.fainelli@gmail.com,
-	vincent.guittot@linaro.org, peng.fan@oss.nxp.com,
-	michal.simek@amd.com, quic_sibis@quicinc.com,
-	dan.carpenter@linaro.org, maz@kernel.org
-Subject: Re: [PATCH 2/4] firmware: arm_scmi: Add Quirks framework
-Message-ID: <Z__UJUKaMRoFLYLc@hovoldconsulting.com>
-References: <20250415142933.1746249-1-cristian.marussi@arm.com>
- <20250415142933.1746249-3-cristian.marussi@arm.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ceJY0ajc"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54ac9b3ddf6so6364988e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:00:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1744819248; x=1745424048; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fBPmcg0bFH2XY3Hin8L4B6RZDr/nTgPQCfRGMZTM/dg=;
+        b=ceJY0ajcpp4Etwtg/oRJQk7GiAqywh6FqfWax9RM6aOqARUGEnt1SyS4osZjvEebcO
+         S3Uc/Vd7j2Ujy9gXs87Qer/GFW0/C7rdE/cLOsVyRIKcDSxwaeV0Ygqvlf2JrMOd59br
+         Q9da2Oq5TZXBUk2wENpmLSlwtySz5sEe5k3SI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744819248; x=1745424048;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fBPmcg0bFH2XY3Hin8L4B6RZDr/nTgPQCfRGMZTM/dg=;
+        b=WMBTV9/0zohVMPA//QWA/sqvvPfPUi9+a6UEGp4sNhT48FK1Mh8CdjwuNiw+DSJ2yZ
+         36gYBxl9IESmG78RyJV6XekEuwfUaL0Z+5Jl7SPL6zQ4kDGzhbbO8xVC8Nckl6zSZzpX
+         ZqH5EX8ag8zxx7N44KW5eeFK/Dos5bP919NMfdisvoQ3EyHVGEiD01IDndW9d1xrHtDx
+         2TTlgCckFd7AAnS20Tmt+prBO+nFJa4Hrknsc+sJ30YPIfl4BJjuGJgdlmV41cvg8p0s
+         F86ElHSQXvxejHLewFaHPr4Seipo5NHtrHa1gqRR9jgYtTF3OGO4YO0lOPDt9mzkDqLM
+         2YLg==
+X-Forwarded-Encrypted: i=1; AJvYcCVCv00I1uu1Sx23ZAyFcan1hbY18r+E/ghBEIeCvXrywyZ3nCae865XYccQZnsOpgcW4wjfs8md0NRC7Y0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzr0RrFoLv9NsEe91sljSi0RvwXd5GQyQ1o3Ou5JQdwl1ejYLwS
+	z3K4eIkC8ZyScEEYBI1RE9EFVCKakkOp53ZF8CZmqEkuGLGblcfkHVZaG4KlR/+ArKLk4eEr0mx
+	Oo8kv3CbStehnMRA7W6cjeHJrYlO2jHlwrt8/
+X-Gm-Gg: ASbGncslhzHd+svsftmRkRhiR4uh1/r999XDZig/Bdb4Y1TSajCbgAtgiT2ULUVXfbu
+	XAtwqSTa19FQQX/e4Z9qaNQsVpTfH43tLphhegHu5qUPG0Wca/iIHVU4RcPgjXe72eXFRzi0+e/
+	YCGg/vj8FehTyOkBOjQiuA/4UaRqJGOc7B
+X-Google-Smtp-Source: AGHT+IFlK7R096/+OAh92R+N0wIujqmp0uU3OFtKyNa2K1gFmEshtOax20fuvbKOa8HxCYGz77KZC4LpcqUinUZDXA8=
+X-Received: by 2002:a05:6512:1090:b0:549:912a:d051 with SMTP id
+ 2adb3069b0e04-54d64798c06mr830233e87.0.1744819248030; Wed, 16 Apr 2025
+ 09:00:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415142933.1746249-3-cristian.marussi@arm.com>
+References: <20250415071017.3261009-1-dualli@chromium.org> <20250415071017.3261009-2-dualli@chromium.org>
+ <69763528-bb00-44c5-a3ce-8c30530b29ee@schaufler-ca.com>
+In-Reply-To: <69763528-bb00-44c5-a3ce-8c30530b29ee@schaufler-ca.com>
+From: Li Li <dualli@chromium.org>
+Date: Wed, 16 Apr 2025 09:00:36 -0700
+X-Gm-Features: ATxdqUEvTcc4Mrcasz-DJMu04qcEN1mqV4hfHibSLmGFJSE6dIDY98ewYmt9cyM
+Message-ID: <CANBPYPgfW+3jeTPZmpHfkgr=hX8sRkMLgrEeLFYa6rOPftXeFg@mail.gmail.com>
+Subject: Re: [PATCH v17 1/3] lsm, selinux: Add setup_report permission to binder
+To: Casey Schaufler <casey@schaufler-ca.com>
+Cc: dualli@google.com, corbet@lwn.net, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	donald.hunter@gmail.com, gregkh@linuxfoundation.org, arve@android.com, 
+	tkjos@android.com, maco@android.com, joel@joelfernandes.org, 
+	brauner@kernel.org, cmllamas@google.com, surenb@google.com, 
+	omosnace@redhat.com, shuah@kernel.org, arnd@arndb.de, masahiroy@kernel.org, 
+	bagasdotme@gmail.com, horms@kernel.org, tweek@google.com, paul@paul-moore.com, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	netdev@vger.kernel.org, selinux@vger.kernel.org, hridya@google.com, 
+	smoreland@google.com, ynaffit@google.com, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 15, 2025 at 03:29:31PM +0100, Cristian Marussi wrote:
-> Add a common framework to describe SCMI quirks and associate them with a
-> specific platform or a specific set of SCMI firmware versions.
-> 
-> All the matching SCMI quirks will be enabled when the SCMI core stack
-> probes and after all the needed SCMI firmware versioning information was
-> retrieved using Base protocol.
-> 
-> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
-> ---
-> RFC->V1
-> - added handling of impl_ver ranges in quirk definition
-> - make Quirks Framework default-y
-> - match on all NULL/0 too..these are quirks that apply always anywhere !
-> - depends on COMPILE_TEST too
-> - move quirk enable calling logic out of Base protocol init (triggers a
->   LOCKDEP issues around cpu locks (cpufreq, static_branch_enable interactions..)
+Thank you Casey! I'll resend this specific patch to linux-security-module l=
+ist.
 
-> +static void scmi_enable_matching_quirks(struct scmi_info *info)
-> +{
-> +	struct scmi_revision_info *rev = &info->version;
-> +	const char *compatible = NULL;
-> +	struct device_node *root;
-> +
-> +	root = of_find_node_by_path("/");
-> +	if (root) {
-> +		of_property_read_string(root, "compatible", &compatible);
+Should I include the other 2 binder patches as well as they are using
+this new permission?
 
-Looks like you still only allow matching on the most specific compatible
-string.
-
-As we discussed in the RFC thread, this will result in one quirk entry
-for each machine in a SoC family in case the issue is not machine
-specific.
-
-> +		of_node_put(root);
-> +	}
-> +
-> +	/* Enable applicable quirks */
-> +	scmi_quirks_enable(info->dev, compatible,
-> +			   rev->vendor_id, rev->sub_vendor_id, rev->impl_ver);
-> +}
-
-> +static int scmi_quirk_range_parse(struct scmi_quirk *quirk)
-> +{
-> +	const char *last, *first = quirk->impl_ver_range;
-> +	size_t len;
-> +	char *sep;
-> +	int ret;
-> +
-> +	quirk->start_range = 0;
-> +	quirk->end_range = 0xFFFFFFFF;
-> +	len = quirk->impl_ver_range ? strlen(quirk->impl_ver_range) : 0;
-> +	if (!len)
-> +		return 0;
-> +
-> +	last = first + len - 1;
-> +	sep = strchr(quirk->impl_ver_range, '-');
-> +	if (sep)
-> +		*sep = '\0';
-> +
-> +	if (sep == first) // -X
-> +		ret = kstrtouint(first + 1, 0, &quirk->end_range);
-> +	else // X OR X- OR X-y
-> +		ret = kstrtouint(first, 0, &quirk->start_range);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!sep)
-> +		quirk->end_range = quirk->start_range;
-> +	else if (sep != last) //x-Y
-
-nit: space after // (if you insist on using c99 comments)
-
-> +		ret = kstrtouint(sep + 1, 0, &quirk->end_range);
-> +
-> +	if (quirk->start_range > quirk->end_range)
-> +		return -EINVAL;
-> +
-> +	return ret;
-> +}
-
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * System Control and Management Interface (SCMI) Message Protocol Quirks
-> + *
-> + * Copyright (C) 2025 ARM Ltd.
-> + */
-> +#ifndef _SCMI_QUIRKS_H
-> +#define _SCMI_QUIRKS_H
-> +
-> +#include <linux/static_key.h>
-> +#include <linux/types.h>
-> +
-> +#ifdef CONFIG_ARM_SCMI_QUIRKS
-> +
-> +#define DECLARE_SCMI_QUIRK(_qn)						\
-> +	DECLARE_STATIC_KEY_FALSE(scmi_quirk_ ## _qn)
-> +
-> +#define SCMI_QUIRK(_qn, _blk)						\
-> +	do {								\
-> +		if (static_branch_unlikely(&(scmi_quirk_ ## _qn)))	\
-> +			(_blk);						\
-> +	} while (0)
-> +
-> +void scmi_quirks_initialize(void);
-> +void scmi_quirks_enable(struct device *dev, const char *compat,
-> +			const char *vend, const char *subv, const u32 impl);
-> +
-> +#else
-> +
-> +#define DECLARE_SCMI_QUIRK(_qn)
-> +#define SCMI_QUIRK(_qn, _blk)
-
-As I mentioned earlier, wouldn't it be useful to always compile the
-quirk code in order to make sure changes to surrounding code does not
-break builds where the quirks are enabled?
-
-For example, by adding something like
-
-#define SCMI_QUIRK(_qn, _blk)						\
-	do {								\
-		if (0)							\
-			(_blk);						\
-	} while (0)
-
-here?
-
-I didn't really review this in detail, but it seems to work as intended
-when matching on vendor and version:
-
-Tested-by: Johan Hovold <johan+linaro@kernel.org>
+On Tue, Apr 15, 2025 at 9:13=E2=80=AFAM Casey Schaufler <casey@schaufler-ca=
+.com> wrote:
+>
+> On 4/15/2025 12:10 AM, Li Li wrote:
+> > From: Thi=C3=A9baud Weksteen <tweek@google.com>
+> >
+> > Introduce a new permission "setup_report" to the "binder" class.
+> > This persmission controls the ability to set up the binder generic
+> > netlink driver to report certain binder transactions.
+> >
+> > Signed-off-by: Thi=C3=A9baud Weksteen <tweek@google.com>
+> > Signed-off-by: Li Li <dualli@google.com>
+> > ---
+> >  include/linux/lsm_hook_defs.h       |  1 +
+> >  include/linux/security.h            |  6 ++++++
+> >  security/security.c                 | 13 +++++++++++++
+>
+> This patch needs to be sent to the linux-security-module list.
+>
