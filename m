@@ -1,200 +1,255 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC32C24A057
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DB424A05A
 	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744805185; cv=none; b=Oup8lQqOR6JeiB5Y6IizsXL5Umcfp1rBbgKCUfZtZOp8hSoCrSia1vRqeX2+2847FFBKhnHE4izCVYcx/4ux62nIoOvthFtAtI2oUXQH4D41QDalQ368wjuc0hrlVmQt7NIcJjvu02lwB/rRCcQFvcpr821kiDKWJ2VlcVAAmcw=
+	t=1744805186; cv=none; b=lWcGSRJah96xlt6bJ0EK2L5rH1C2SKOTIP+Wdu6/w6ev7tNX8nRQOSEzLWfvPgjGJL/gDiUqg87dsUyvL6y/rxPuYgQZYTHQs8kkumc32unufvq04fPbURDiG6rj9NvHsnzV5dSEKFvWD1SJdnFJ6b+BwH9nBhXGVHt0CGqX8oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744805185; c=relaxed/simple;
-	bh=3XHxWAQgn+V+SwWGMD+FtFu53Vt67LRJn8FBhkdpuME=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VPREX6/yOKNnt5mMoHRMhcpRVOJPy+tbCXg8EI5aCTnF77bXZfOECvbO6Jsn68v8De6LPvWXMBgG7jJgxYFDo6E34UOL1EsHNE3oh2uWBi4uv13E/OfHvwGvdlj4ramqFdXt9X87DsRlHDk1QIgndfb1BLCefcqNndxDbYIY+DI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Lw3lldJr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=o4M21KMi; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Lw3lldJr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=o4M21KMi; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1744805186; c=relaxed/simple;
+	bh=HmLYaF6k75emMNYuVKPaAVfZFtSclPYYeJ0ZzkL/MFw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=nqy9FuVhZZMwydTOZs59SgC4ES2cCmRtHgCHXolAxWUcj2BC5t6wC69MRyP/rRqnQzMPikHC0mw3KXHB+LQNm66PlSaCsfu7pUsERBkG0wDIvb2kYIHDZHViSs5x10rEbl6ywH5B7xT/xZ4t774xeQ1sKJwaFjHvDpZFCnhJ1+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=luYtl5qE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cnOJl8gq; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Lw3lldJr";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="o4M21KMi";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Lw3lldJr";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="o4M21KMi"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C25DD1F461;
-	Wed, 16 Apr 2025 12:06:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744805181; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="luYtl5qE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cnOJl8gq"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744805182;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WRA3KkOEADmn50Rq7X0uTvaMbEIhMejG93P6k6/cyZA=;
-	b=Lw3lldJru09pGfBfFWD0HGNT8E8bxxPkjk7eB7o4bH0mViy/+yXdkG57q6ScaLaQrCWNv0
-	TUed7ftyNkNGgIjVgSt1TslykvOs+CXYHI/g53JJFI1haYavC0CnyNWGyyiw/5GSqoWBhZ
-	En2O493L4mZY0Ft3WnwupPCiridnGPA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744805181;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1TF1+UPseHbLqKixvEBKKrw7HcxtjV+VM41Hak2YZ+c=;
+	b=luYtl5qEIb2GAfRMoftqlCTkRiTeQPvlrqLZ1czJH1+lRv/jN+Da6YfXppbEfergLaZ0Qq
+	KeadDVBArKN0lG2mPm/qPZGr/kUVR0/xJqUwme2gBLQL7jdo9fIWAXEPXWW5VFQCg7dcuh
+	0o1V7ic7h6huB2uhbrec3gVhlkTHeao/oiqLF7/ZqfL8vUM9iug77vY+GGDBJZPcyPssuj
+	1s+I4aTbsX5qPmf8ZxrARmrd2w5XgkM/7lOZWXKyEdaSlEnpRfOYdJucoysd5K+rDHLjDz
+	Rttxfmd1B6qg1MFEkEakHl7SgaEVQu4hLpVYDB3ZfPESfsrniyK91ELrqDZrnw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744805182;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WRA3KkOEADmn50Rq7X0uTvaMbEIhMejG93P6k6/cyZA=;
-	b=o4M21KMizBZ/Mh2e8YMbm69DJA0sEvccrAV4yES3CEYEAC4nb6nyPRFy5bXGe7dkm1LiUN
-	BXkuOGDtftpR2sDQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Lw3lldJr;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=o4M21KMi
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744805181; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WRA3KkOEADmn50Rq7X0uTvaMbEIhMejG93P6k6/cyZA=;
-	b=Lw3lldJru09pGfBfFWD0HGNT8E8bxxPkjk7eB7o4bH0mViy/+yXdkG57q6ScaLaQrCWNv0
-	TUed7ftyNkNGgIjVgSt1TslykvOs+CXYHI/g53JJFI1haYavC0CnyNWGyyiw/5GSqoWBhZ
-	En2O493L4mZY0Ft3WnwupPCiridnGPA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744805181;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WRA3KkOEADmn50Rq7X0uTvaMbEIhMejG93P6k6/cyZA=;
-	b=o4M21KMizBZ/Mh2e8YMbm69DJA0sEvccrAV4yES3CEYEAC4nb6nyPRFy5bXGe7dkm1LiUN
-	BXkuOGDtftpR2sDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 75440139A1;
-	Wed, 16 Apr 2025 12:06:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id /AhRGz2d/2dVIgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 16 Apr 2025 12:06:21 +0000
-Message-ID: <e9cd4d99-82f5-44d3-950d-2a4040875e24@suse.de>
-Date: Wed, 16 Apr 2025 14:06:21 +0200
+	 in-reply-to:in-reply-to:references:references;
+	bh=1TF1+UPseHbLqKixvEBKKrw7HcxtjV+VM41Hak2YZ+c=;
+	b=cnOJl8gqhzoQ4YMtor8pID9qmiX88Nd9OZTgMPVO2SI3Rx25UnMimu5C37aazq9JXGLpmr
+	x+SJJjLjxI1B5sCA==
+Date: Wed, 16 Apr 2025 14:06:18 +0200
+Subject: [PATCH 03/10] tools/nolibc: move open() and friends to fcntl.h
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH next] drm/udl: Set error code in udl_init()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Dave Airlie <airlied@redhat.com>, Sean Paul <sean@poorly.run>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-References: <Z_-P4N4_U-xTC9-O@stanley.mountain>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <Z_-P4N4_U-xTC9-O@stanley.mountain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: C25DD1F461
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_CC(0.00)[redhat.com,poorly.run,linux.intel.com,kernel.org,gmail.com,ffwll.ch,lists.freedesktop.org,vger.kernel.org];
-	DKIM_TRACE(0.00)[suse.de:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250416-nolibc-split-sys-v1-3-a069a3f1d145@linutronix.de>
+References: <20250416-nolibc-split-sys-v1-0-a069a3f1d145@linutronix.de>
+In-Reply-To: <20250416-nolibc-split-sys-v1-0-a069a3f1d145@linutronix.de>
+To: Willy Tarreau <w@1wt.eu>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744805177; l=4920;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=HmLYaF6k75emMNYuVKPaAVfZFtSclPYYeJ0ZzkL/MFw=;
+ b=ijLcVYHNTKCnJgCuZGgQlgtAZAhqppbY5Qu9VfTdmT+n5wRcCYpqex2BnAc7dg5uDaO6j19CJ
+ nWbc3f5h70GBon6sXZIKENxu1TDSkdUQKRF5Kz+N0LY9cH1OjUlCWpb
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Hi,
+This is the location regular userspace expects these definitions.
 
-thanks for the fix.
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+ tools/include/nolibc/Makefile |  1 +
+ tools/include/nolibc/dirent.h |  1 +
+ tools/include/nolibc/fcntl.h  | 69 +++++++++++++++++++++++++++++++++++++++++++
+ tools/include/nolibc/nolibc.h |  1 +
+ tools/include/nolibc/sys.h    | 52 --------------------------------
+ 5 files changed, 72 insertions(+), 52 deletions(-)
 
-Am 16.04.25 um 13:09 schrieb Dan Carpenter:
-> Return -ENOMEM if udl_alloc_urb_list() fails.  Don't return success.
->
-> Fixes: fb10144ba426 ("drm/udl: Support adapters without firmware descriptor")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-
-> ---
->   drivers/gpu/drm/udl/udl_main.c | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpu/drm/udl/udl_main.c b/drivers/gpu/drm/udl/udl_main.c
-> index 3dfeb88cf918..bc58991a6f14 100644
-> --- a/drivers/gpu/drm/udl/udl_main.c
-> +++ b/drivers/gpu/drm/udl/udl_main.c
-> @@ -361,6 +361,7 @@ int udl_init(struct udl_device *udl)
->   
->   	if (!udl_alloc_urb_list(udl, WRITES_IN_FLIGHT, MAX_TRANSFER)) {
->   		DRM_ERROR("udl_alloc_urb_list failed\n");
-> +		ret = -ENOMEM;
->   		goto err;
->   	}
->   
+diff --git a/tools/include/nolibc/Makefile b/tools/include/nolibc/Makefile
+index fd76d267d79a8533b7e78375c30324c962b01973..2132e4f4d2165729ec6d10860d0586f1b71ee0fb 100644
+--- a/tools/include/nolibc/Makefile
++++ b/tools/include/nolibc/Makefile
+@@ -32,6 +32,7 @@ all_files := \
+ 		dirent.h \
+ 		elf.h \
+ 		errno.h \
++		fcntl.h \
+ 		limits.h \
+ 		nolibc.h \
+ 		signal.h \
+diff --git a/tools/include/nolibc/dirent.h b/tools/include/nolibc/dirent.h
+index c5c30d0dd6806b1bec2fa8120a3df29aaa201393..d3fb9500c60a31bc1b75601d78871df82ca75f7d 100644
+--- a/tools/include/nolibc/dirent.h
++++ b/tools/include/nolibc/dirent.h
+@@ -9,6 +9,7 @@
+ 
+ #include "stdint.h"
+ #include "types.h"
++#include "fcntl.h"
+ 
+ #include <linux/limits.h>
+ 
+diff --git a/tools/include/nolibc/fcntl.h b/tools/include/nolibc/fcntl.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..5feb08ad54a7d943b8100eac21f4058310efea91
+--- /dev/null
++++ b/tools/include/nolibc/fcntl.h
+@@ -0,0 +1,69 @@
++/* SPDX-License-Identifier: LGPL-2.1 OR MIT */
++/*
++ * fcntl definition for NOLIBC
++ * Copyright (C) 2017-2021 Willy Tarreau <w@1wt.eu>
++ */
++
++#ifndef _NOLIBC_FCNTL_H
++#define _NOLIBC_FCNTL_H
++
++#include "arch.h"
++#include "types.h"
++#include "sys.h"
++
++/*
++ * int openat(int dirfd, const char *path, int flags[, mode_t mode]);
++ */
++
++static __attribute__((unused))
++int sys_openat(int dirfd, const char *path, int flags, mode_t mode)
++{
++	return my_syscall4(__NR_openat, dirfd, path, flags, mode);
++}
++
++static __attribute__((unused))
++int openat(int dirfd, const char *path, int flags, ...)
++{
++	mode_t mode = 0;
++
++	if (flags & O_CREAT) {
++		va_list args;
++
++		va_start(args, flags);
++		mode = va_arg(args, mode_t);
++		va_end(args);
++	}
++
++	return __sysret(sys_openat(dirfd, path, flags, mode));
++}
++
++/*
++ * int open(const char *path, int flags[, mode_t mode]);
++ */
++
++static __attribute__((unused))
++int sys_open(const char *path, int flags, mode_t mode)
++{
++	return my_syscall4(__NR_openat, AT_FDCWD, path, flags, mode);
++}
++
++static __attribute__((unused))
++int open(const char *path, int flags, ...)
++{
++	mode_t mode = 0;
++
++	if (flags & O_CREAT) {
++		va_list args;
++
++		va_start(args, flags);
++		mode = va_arg(args, mode_t);
++		va_end(args);
++	}
++
++	return __sysret(sys_open(path, flags, mode));
++}
++
++/* make sure to include all global symbols */
++#include "nolibc.h"
++
++#endif /* _NOLIBC_FCNTL_H */
+diff --git a/tools/include/nolibc/nolibc.h b/tools/include/nolibc/nolibc.h
+index 127f0d9068c6508bd45acfe0ebf2ce15acc422b0..bb4183a8fdc41023d9b8b37fe35ec37ca408b4c6 100644
+--- a/tools/include/nolibc/nolibc.h
++++ b/tools/include/nolibc/nolibc.h
+@@ -106,6 +106,7 @@
+ #include "time.h"
+ #include "stackprotector.h"
+ #include "dirent.h"
++#include "fcntl.h"
+ 
+ /* Used by programs to avoid std includes */
+ #define NOLIBC
+diff --git a/tools/include/nolibc/sys.h b/tools/include/nolibc/sys.h
+index 08c1c074bec89a27e53e5d461a3ebbf71ec323d1..5fa351e6a3512a3d0c609867244ac91e8563ab2a 100644
+--- a/tools/include/nolibc/sys.h
++++ b/tools/include/nolibc/sys.h
+@@ -764,58 +764,6 @@ int mount(const char *src, const char *tgt,
+ 	return __sysret(sys_mount(src, tgt, fst, flags, data));
+ }
+ 
+-/*
+- * int openat(int dirfd, const char *path, int flags[, mode_t mode]);
+- */
+-
+-static __attribute__((unused))
+-int sys_openat(int dirfd, const char *path, int flags, mode_t mode)
+-{
+-	return my_syscall4(__NR_openat, dirfd, path, flags, mode);
+-}
+-
+-static __attribute__((unused))
+-int openat(int dirfd, const char *path, int flags, ...)
+-{
+-	mode_t mode = 0;
+-
+-	if (flags & O_CREAT) {
+-		va_list args;
+-
+-		va_start(args, flags);
+-		mode = va_arg(args, mode_t);
+-		va_end(args);
+-	}
+-
+-	return __sysret(sys_openat(dirfd, path, flags, mode));
+-}
+-
+-/*
+- * int open(const char *path, int flags[, mode_t mode]);
+- */
+-
+-static __attribute__((unused))
+-int sys_open(const char *path, int flags, mode_t mode)
+-{
+-	return my_syscall4(__NR_openat, AT_FDCWD, path, flags, mode);
+-}
+-
+-static __attribute__((unused))
+-int open(const char *path, int flags, ...)
+-{
+-	mode_t mode = 0;
+-
+-	if (flags & O_CREAT) {
+-		va_list args;
+-
+-		va_start(args, flags);
+-		mode = va_arg(args, mode_t);
+-		va_end(args);
+-	}
+-
+-	return __sysret(sys_open(path, flags, mode));
+-}
+-
+ 
+ /*
+  * int pipe2(int pipefd[2], int flags);
 
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+2.49.0
 
