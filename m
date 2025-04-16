@@ -1,123 +1,139 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCF221517B;
-	Wed, 16 Apr 2025 17:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C102080D2
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 17:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744823183; cv=none; b=dswdJ0vePdQTMzp8aWSZ320/DHlz91pcI9yyxAI/WAvE35OwH8d/LxLOadYjQJTFaPL2EjmDZCMf34afoewxkSQkWx4l0XkpxOtmYv3mGXPgl87H42OciigPJmT1Pp0bzuaNVvGAyi/9IkcBwaP3T+UF5+otUF+x0P7DB44iyyI=
+	t=1744823265; cv=none; b=o3hbRNss8ORcCB2cxrjsUoAr4+iJgJs+6xsubpKIU47/f8RA3+bs1IrXWFrhrtgVYwOlm9SZn6GiYo0WrwCFdnaRzLvc7tlS4HV+7JjTqMDMIPQrns5kBjzW8ixuSg09p8IZk4KwE4rFWaILzx8yUDbczPMq41O3YoqGxSMAjsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744823183; c=relaxed/simple;
-	bh=d0f/eZxJsYBPNzP+ypgNu+3Y2vNYtC0mQ/V9+GgyiiY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=QPPmP+UM6kowS2FyGDxEN4NAb+F5b/12TV3fLjvF9UBt98zL4qPjJR0FJOWud2mx1TV4xgk83VbaT1LIB8u+CfQC4OstpYlFuZSSeSEj03XxFxbtN/uGl+hEH0a5ed/kxOJnTgaCeD+Ahpa7ucHnsxZTuFAXEwQC4+reA58chhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e677f59438so10322956a12.2;
-        Wed, 16 Apr 2025 10:06:21 -0700 (PDT)
+	s=arc-20240116; t=1744823265; c=relaxed/simple;
+	bh=WF7BJF3PXY/xmbEmGH86OEsdJ9VEQX9YRCd8L2T/9J4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bhnmYgXawGV57/md7HVQc/9oH/JpHr1UwGxkGL61F6MsoEJJZeTyCpBOBSL03QWjzlpRT6AKSvRTGrbrGtOwn3xSSsmGF6RPi+tl/UvY2DHzvrV+uHmu+IzaC/erL/hIjC4uBDwP7QGLWpmTAht7+R9Jcs65F3ZTwJuwLUz4jkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dj77Dvru; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dj77Dvru"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744823261;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Txu9eKRV5VXcx2F1SZgPKBUc9BS7eNXHTCkAiBh6fWQ=;
+	b=dj77Dvruwg1X8eddlmHZSzoZeQZJ8TnXBGB8fW5/4JAyYQPOtFH8zQtqvPduT4RRMdjlim
+	mJFKJ75XhZIgXG/2rPfbsI17WJ2cYa88EER9pZmPz6EBVodAtppww0l1k3x+lwKaWBwdq7
+	aEVseAuiXYbmpUcQup+c/VpoVr3NNDk=
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
+ [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-38-hLWOItm3MFC0foRxuLkxLw-1; Wed, 16 Apr 2025 13:07:40 -0400
+X-MC-Unique: hLWOItm3MFC0foRxuLkxLw-1
+X-Mimecast-MFC-AGG-ID: hLWOItm3MFC0foRxuLkxLw_1744823259
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-b0b2de67d6aso213680a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 10:07:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744823180; x=1745427980;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FT7KrIUQ+zDqya9cxR8Wwm/RYrGSzwBKh8Xo9H7htOg=;
-        b=nEPOWlShfqahKQtNBeY3rucDmD9pzvxpSNvyKIFv9TR+UG7zHFv/StIR0NSdutM9cC
-         vkHWpe0a0wSBKCuUHSkxsuUp/Lzlv8AKSqFh9/XDCwuO8V1ROvU8wqeX+AqZqfYzWQlk
-         QE+o+E90WiBL28oM4UQ2ei+ymzZnAaCUHMvSrUtcECkyITAypjvF1vqREa7PsRyIf0+C
-         HtHk9Ndmx66xOWMCvpZ95rJpLEEf103CnWCz1Oeb0Ik8bTwtFzidSY8G//EgC/bpY7UW
-         i8V/o8WBiV0bOYeqmWVLiUGoAK2XmEk00Jwbo7HOtbhyeGeC7xjOyIb65xvM/Teq5ee/
-         BtSg==
-X-Forwarded-Encrypted: i=1; AJvYcCXGdIGZqoMUxziQw22zgG3F9Y9glJem6nOslDIsJQlAuYc1nGiaaYesJToLsfLTan7JZ1tnkOecsCrMWDM=@vger.kernel.org, AJvYcCXsS0cMUdRVhPPEr4fzkrerorfWjvLCXREKJmfeYJS2AHU0pnwN2FmTZLuzV18oJAczaIZZnDN0xovpiaC3o01+zbRZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZ/wixi7METYFxBmEXVBqgSubK3VjIVM1jaovNtKMp9CxmrPFO
-	B7j0MeMIq5Aqk5q/7fJUs1VoJrq+eONUQ7Mas0kYCBr6PCEZpEyc
-X-Gm-Gg: ASbGnct93a0x+LGZUtB/pIrNHakIWHLVkkLeMeDbl0ErhzbFZGJwxG+ve7p44hLv5Vc
-	zHDySZEYbFHu8tqgU+inbnJUSQ164SaiB1eI4ofn8eh13OAC9XZxjTZHmVnCZef8tAQNHLCpuLJ
-	3OarIFiQ40Ct2O1wRWmBAPVE+pCHsJ7oXV7TDdrPIc+bHJkWvz1PWC9id8t1vt6/gHrSJ+w2LJ6
-	8nW3I6nYsMI0iVX7VYnElnO0hCVmdjV3ILMOm3kTM2pBI4jqKbxti2J2nVVOtgjlUzGGsz3Gg3X
-	Pk0+LaDprfdTmdAtx9CjXaj7cyMMRV4=
-X-Google-Smtp-Source: AGHT+IE46/jYtgnagWUq61/qNPpt6WU70ixrUVCo1T58uk5wl7XVhFk+rPViX3UF3CcLvypIq25TSA==
-X-Received: by 2002:a05:6402:3490:b0:5e5:bfab:51f with SMTP id 4fb4d7f45d1cf-5f4b6df5c7cmr2542173a12.0.1744823179647;
-        Wed, 16 Apr 2025 10:06:19 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:5::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36ee54d8fsm8850935a12.12.2025.04.16.10.06.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 10:06:19 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Wed, 16 Apr 2025 10:06:12 -0700
-Subject: [PATCH net-next] trace: tcp: Add const qualifier to skb parameter
- in tcp_probe event
+        d=1e100.net; s=20230601; t=1744823259; x=1745428059;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Txu9eKRV5VXcx2F1SZgPKBUc9BS7eNXHTCkAiBh6fWQ=;
+        b=CdVMzRgw4by0KJtqtg+4OOVXNgdFIXgQOPytGqnAMDqK1TlZxtsmSvEC9NaDSwPnD8
+         qa5pcP5k4earBmxKLYrr9f1c9qJSVj6VemjaGfEMvY7H0FmKECpq8JQS/+jpOLF85Csu
+         TJnf9O+PBzPoXW8Dg3Xjm12H8vSpXuyGxe22Fk7c2xJENM5iSraLNM/TjmFog7mquT9j
+         G+ZNrObhuz6FqAsZtJoy41FgjyPJju9iDfVjDVYGjxvoviEp3VFgsGrMa7QHVrlzL5ln
+         md9UZzdOfKV3A2SfP3MoUJr/1RC8o/Z0SkbW3eCQW/uTUZ8prZvElBpWtbDEiNWK60ff
+         2rCw==
+X-Forwarded-Encrypted: i=1; AJvYcCUsMqRnbgMUmhDKqSEplb2kPYHLFx+j7xLMd9SF6Hw+/HyBe/XJxn0QNy9s2vMxRchzWfT+yFf4BdZYUew=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymTHX6jdRAlRvDL155uayWkHyhTDpu2FayVgDKtFk0ROhReKFG
+	H+V/6jLR2nlho+2YwXUrt0cdffLghYEVw9GiWem1DjNdGAcdhJpkqcEEgrwNbDV1HDTBb4KBbJ+
+	G8saw12HWCXxWXFWb+uHjcp7seMzOieb8R37ImkCL3+ELkhIkQvqEavRPlmapig==
+X-Gm-Gg: ASbGncvsgcJHCPlWfoVzHb8++xWuYYCW6dNuFFGpJtpZPO1x8DWoM0eCUeSQB0t2mQi
+	TmwEflaI2yZmFt3/9mWrWn/pfSpHMJu7EtB2Ks0rYcijvCTxbCuf1jvaEqNhbrNbDuxD23g+AWI
+	15YDpMoXDMN+M5X87EGPVYMzElsRedP/8xyOmtYv95wadjfjPkEqNOwdkc2WynemRtaoSX7/w0M
+	JHOT/yIPmjrDPhrnYtDHfrwUf2UCyxbCW3Ok8wQSIt/B0GyqsZZU/xW644EGTNuXzAN7SN0Z24I
+	3gndXOO/zPm/5g==
+X-Received: by 2002:a17:903:17cb:b0:220:e896:54e1 with SMTP id d9443c01a7336-22c35916b8cmr41994625ad.26.1744823259015;
+        Wed, 16 Apr 2025 10:07:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEjE78Hd0NX2VKlmOvNMX/n/qLF921XEQIoPT7tUDRXgP5obufv6p3oZKxPjd6NKh3lVTqfRw==
+X-Received: by 2002:a17:903:17cb:b0:220:e896:54e1 with SMTP id d9443c01a7336-22c35916b8cmr41994295ad.26.1744823258688;
+        Wed, 16 Apr 2025 10:07:38 -0700 (PDT)
+Received: from [192.168.2.110] ([70.53.200.211])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33ef10e1sm16765735ad.16.2025.04.16.10.07.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 10:07:38 -0700 (PDT)
+Message-ID: <c5204098-ba03-483d-9d7c-9728aea217ff@redhat.com>
+Date: Wed, 16 Apr 2025 13:07:22 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250416-tcp_probe-v1-1-1edc3c5a1cb8@debian.org>
-X-B4-Tracking: v=1; b=H4sIAIPj/2cC/x3MWwqAIBAF0K0M9zvB3uFWIqJsqvkxUYlA2nvQW
- cDJiByEIwxlBL4lyuVgqCwI9lzcwUo2GEKlq1Y3ZaeS9bMP18pK66au+832w9KiIPjAuzz/NcJ
- xUo6fhOl9P8T7gqRlAAAA
-X-Change-ID: 20250416-tcp_probe-004337dc78a5
-To: Eric Dumazet <edumazet@google.com>, 
- Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, pabeni@redhat.com, 
- andrew+netdev@lunn.ch, kuba@kernel.org, davem@davemloft.net
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, kernel-team@meta.com, 
- Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1057; i=leitao@debian.org;
- h=from:subject:message-id; bh=d0f/eZxJsYBPNzP+ypgNu+3Y2vNYtC0mQ/V9+GgyiiY=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBn/+OKru1t39LuwcXgqrOsIm8r8vW5na2pFwQVt
- k2vZ4db8NqJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ//jigAKCRA1o5Of/Hh3
- bZEHD/4tWh2Qvw/qIU8EA/nnuzjl3TEwife+HTbot1I8APw8xLC8ySLIbbulMMtgd6jTvsY4iUG
- GMtaSGj2B2u6+o05sLaKiYDEnYcZrD9LGs10/+CSr14VnBGDFU1IaiEyr4yH4iYzD/gVkFxnQCk
- 0sSpxMHUCxbOnFs1H0Lybc3Um7iKiJazCCRGSjfzPrW0U2WE2YRYYeHYqPE8mFq4zYXkhD65pGH
- lAPf6z+5OoE2PB/2yKvVtv1tpBCnjMRDsNW+/jfHD4eBTpckk0CYPCPJneT5D33uMi19BHB/EcR
- 0FClBeTMqT2ZHRcE1mvdrYdZN5BsmH0JwdByhkISjkWQYQop3xEcgy52FJOAQ8jxxSPYb39MJjF
- zeeMSOVW9jDV2oEXceB+MzGgMKYOp0CJeVK7RpDNub7acKbotYRek60RjN1qw2dBF038mTMrCoS
- t41Rpd7IRR5eJKkXySNt9GNvs2hZuI+2ImUwyJaLznStPKT4efHYtsDDBTGj8igDflF4Pa8jX1m
- 6itgrh6m9a0IR/tUIVQdK/4lAk2ziOJFNAgOba09QX2xe0kO+oErG79ZLtzx+L6FfrojI0MxNFp
- IJX+dRgZ+I3h5IgOQZE9G6WXkHZcUK7TmmAKgLlCJZNz8MMJwiYmlZRyDZzma/OGih2TAGOx4cz
- 5NmmU0NU1Nr7xiw==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/hugetlb: use separate nodemask for bootmem allocations
+To: Frank van der Linden <fvdl@google.com>
+Cc: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, david@redhat.com, osalvador@suse.de
+References: <20250402205613.3086864-1-fvdl@google.com>
+ <a7f5a4f7-1ec6-42dc-a93d-af043a01044f@redhat.com>
+ <CAPTztWa4Q+E7ytKyorP1wg8Cq02_PWiKW1w+AHXZ_XzL4D5TNg@mail.gmail.com>
+Content-Language: en-US, en-CA
+From: Luiz Capitulino <luizcap@redhat.com>
+In-Reply-To: <CAPTztWa4Q+E7ytKyorP1wg8Cq02_PWiKW1w+AHXZ_XzL4D5TNg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Change the tcp_probe tracepoint to accept a const struct sk_buff
-parameter instead of a non-const one. This improves type safety and
-better reflects that the skb is not modified within the tracepoint
-implementation.
+On 2025-04-16 12:32, Frank van der Linden wrote:
+> On Tue, Apr 15, 2025 at 6:08 PM Luiz Capitulino <luizcap@redhat.com> wrote:
+>>
+>> On 2025-04-02 16:56, Frank van der Linden wrote:
+>>> Hugetlb boot allocation has used online nodes for allocation since
+>>> commit de55996d7188 ("mm/hugetlb: use online nodes for bootmem
+>>> allocation"). This was needed to be able to do the allocations
+>>> earlier in boot, before N_MEMORY was set.
+>>
+>> Honest question: I imagine there's a reason why we can't move
+>> x86's hugetlb_cma_reserve() and hugetlb_bootmem_alloc() calls
+>> in setup_arch() to after x86_init.paging.pagetable_init() (which
+>> seems to be where we call zone_sizes_init())? This way we could
+>> go back to using N_MEMORY and avoid this dance.
+>>
+>> I'm not familiar with vmemmap if that's the reason...
+>>
+> 
+> Yeah, vmemmap is the reason. pre-HVO (setting up vmemmap HVO-style)
+> requires the hugetlb bootmem allocations to be done before
+> sparse_init(), so the ordering you propose wouldn't work.
+> 
+> I originally looked at explicitly initializing N_MEMORY earlier,
+> figuring that all that was needed was having memblock node information
+> available. But there seems to be a history there - N_MEMORY indicates
+> that buddy allocator memory is available on the node, and several
+> comments referenced the fact that zone init and rounding may end up
+> not setting N_MEMORY on NUMA nodes with a tiny amount of memory. There
+> is also code that sets N_MEMORY temporarily in
+> find_zone_movable_pfns_for_nodes().
+> 
+> Some of the commits went back a long time ago, and I can't quite judge
+> if the comments still apply without looking at the code more. So, I
+> chickened out, and did a hugetlb only change to fix the hugetlb
+> issues.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
-Sending this for net-next to avoid bringing this to stable tree, which
-would make backport harder for not a big benefit.
----
- include/trace/events/tcp.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Oh, thanks for the full explanation.
 
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 75d3d53a3832c..53e878fa14d14 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -293,7 +293,7 @@ DECLARE_TRACE(tcp_cwnd_reduction_tp,
- 
- TRACE_EVENT(tcp_probe,
- 
--	TP_PROTO(struct sock *sk, struct sk_buff *skb),
-+	TP_PROTO(struct sock *sk, const struct sk_buff *skb),
- 
- 	TP_ARGS(sk, skb),
- 
+Since the new hugetlb init has to happen before sparse_init() then
+this patch is fine by me and I appreciate your concern in not
+changing/regressing the user visible behavior.
 
----
-base-commit: 40ad72f88a65814ffeb1ab362074c6f8c4dc3f61
-change-id: 20250416-tcp_probe-004337dc78a5
+Reviewed-by: Luiz Capitulino <luizcap@redhat.com>
 
-Best regards,
--- 
-Breno Leitao <leitao@debian.org>
+> 
+> But it does seem like setting N_MEMORY can be cleaned up a bit, it's
+> definitely something to follow up on.
+> 
+> - Frank
+> 
 
