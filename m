@@ -1,116 +1,132 @@
-Received: from sonic307-16.consmr.mail.ne1.yahoo.com (sonic307-16.consmr.mail.ne1.yahoo.com [66.163.190.39])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E1D230D3D
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.190.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7644F230D3D
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744844347; cv=none; b=pJYilj1W/z5/Hfsh3M/dTLoLnV3SLhlvOZjt1LsufPtpa1cYYM9UesWrLnc6LauJbCFoA/xo9jFKLFhTV4IL0mpeZlNobLWVaeQkTE1iPYdyguSpD1bNejS9v47S4NTr3pVYmcwdYfaNq852IGeHeO2zFIl7sWF3hLnTLyHNTKQ=
+	t=1744844358; cv=none; b=oKPQPBUU9KOqa810tPPExaM/HbV94iDM8GEo6BfFK5ryGHpiplbjHtb4aOBuz9kfg1Dgen3/8iWTWx41t+AK9lJgB1SIo6//i4dvDbepNS/EOx1q45Dmld8r6cxEz862NyO/ltMJaQxzJD9+MHzpwpBZZMFHTa1vTgLY4M8zf2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744844347; c=relaxed/simple;
-	bh=9KGTJBAij2oJilXXLjoLd9nWdXIAyABvDLZ7oyKnyoE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nexmbY610bDw3UJS6IrNDVew9rtS1fYsIaFYWLZCmwewLGj0uR87kcAFYNLJ99rtArM11p9ljqj0gfGVmfkDcFsP4JaS9+wuVLbx3q+WwnLdZ3YX9r4lZSt4HEuVoayiAHo9PZ+9mvvnpp0/XdyjdRTbYhBfHofilAbONWLCM6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=fuvoqj1z; arc=none smtp.client-ip=66.163.190.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
+	s=arc-20240116; t=1744844358; c=relaxed/simple;
+	bh=razgLfbYxRY7uFeweFjPfCpodvXxctUIGvfZZeItlCY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NqvXcjpR6wFKg2yeISJMX6EpRDg+WjCVR2vmfuydkISPpnYGqJDqlVpWk0XFPkN4oSTkf9FlkHyUjkUDc0Tpf1J0AWjmjCjbWJc5xq/6051FXHTyGswF5mOQ/vyg2A/gz9rXsMOwnuZHAZ19Ek4LnboeBvBfcgx80p0ng5qDW0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=ZRoYNB6L; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="fuvoqj1z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1744844338; bh=aGhH9OXD7DZEVuR+8ZNRXBzr6PP4/lToJ3C5tvpSAB4=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=fuvoqj1zmz1QFkOs/EDdj5G0hmjpq8SF61gTLKxsq3THKwOd4pOdR55uCP0e51+FE+MuHjOTPL0y4kInTeT1YGSyPWgzvKrcjdTeZ0hUOZy4YLtQch+2SFsZaQ9O1CqPR1N+Ruz0GciA1zHf07xtEYmpgEV+HLV7TH1WspoAIMb2aNMWQD9OWs8xp9s3Dra+yeCb98FgqfXquJ0dM9fKrYQf0fWAWjtjs9QcpufqDf+sRVQZZgAS5axFrREfjAfM16T6YjK/Xzfpy89gbV1jNWDaVbexcQtyqiQO4tIcMsIJWsXd4FV62LFOKgZlAiJRt7aezgEcoVndBTbsVz8zHQ==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1744844338; bh=uDpuVIXd+YfIBqzoLzJTaMMjY7bpSWXkm8Z9PgZr2yV=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=ZWUl3Fx7wZnl9r6UcqvADvWMswB3szjeCS8LeSkG0EG+f5UUPdSOxtW+cS8MSUnx09irbCxZ1z0NIv6HA473PcvcngF2376bzEgDxNch8oyxOU7BIIUCHXNoUPCFRlpCStOVWRfPsZw1ImBRy39fna3ebG6BTh+52j0Iy2t373t2f9vICtYQlZEpWJTtHbN2iNSZ+F7Z699n/OUt4jIT6yzFwrXRrFVDwlQlK6RlmFjUnHx0ZIn5sFhRmUBAGW6sn6+6tw6hnGYWgNtbx1SGBGGXjbltghhJ1PeMeGsvUcqRIf2fFdOeqm7+3Oc6DK1r78rvG8EIv8fw2RiSpIbSag==
-X-YMail-OSG: kx_iWJUVM1myVH8yXC0jEiI4TgDGfgJfea.sTiMalmSa37QuWTha1LcqYrN5_Iv
- TmFK1VJqY.hrotmVVGEOH12q3mYVEIqhSk4ZsOug7b9heMNhUiuzw1xtgkzCWocU7o33paNqhkyl
- MQPX_lEN8BHtCxcDFvYxbJGmbbLZkp3s4430ErNXCWDazLMdvXsWQjpKXdU_FKuAXXQzfojIksv9
- SgInQ3hnslzZM2alDUJ.ibsqRHzbSnMkm2pDdkxf9m1MWgAu29PKSXsXQGZwKDlqTMv0JTkQ.8HR
- koWepITHaNo7FWhTxw059qm0cP7BN77vfOtHdlA2wmKiZX9eN2QDlVjSMSBcqUrZ5YcflXSNHzwg
- ON7l0pJr4thWfDYAMk_H_26tprlvRBpAr.XZT._H2s8JkHxL..qIQRjx6D9m0wSsbOGN3dNEX1Jl
- 3T6x07NPHo6ca84kIRHXEnYT8z9TfNIKiaTatNIKaDbY4qDO8d9WpSCvwv4XqA16lz1FvbUptKlD
- nUl7FaDdF3ehQDkuo5mvQCP1vtVC5QM7lTS1YHYWHPGHOV8EwQchrK0VGsSA7mO0cQXNJSurf2Uj
- uxih0wXPuUh5piT1K83dcjhHz0OU_hxFthufJOh9oIUXTy969ZGP6CAtMcr6tHbSzY6KOovVbNGx
- w8I.Ht58JCGq7H2uI5VVcz35BPzGUG02rUAdxvFbz94vshjbUbI7wt9pL3hBMAMy89I3415xFl9w
- pHqmTHE7V0EIPqlwVoCMN2QV4ss1S8tsj3VTPSpPwEDAaZVoW3eflFpiGmPUTXo25KzmWpqQBM.k
- PoS3DxYvUNq.knU4jQVZ6QuTkRVF1Xw7Rt5dmmn.QbdMxoGOIl0huavCSWHEs2GaHbrx3rOR7HwS
- hQD.7DlS6ZU2BtFELXyurpZxqoFAxWIUTekPskSPys7EXu8HC8pHIqDQc_A4sH1kZ1.ePX2AsohH
- Sm3hdNaTYOiPY1MjYG_LguedQsnKIi2Ex8rV0Lh5r90ztnd_6mU4hbvsjgWZkXZuN9weuIW6npVd
- xl2cGAFfdUNRbQx6SXckVpM4jxAy77DsKabEVyhpDPIscHAwxodM_oSzLxzcePgCE3XAiE8x8q.O
- _2dgFeStsFtV1uIhSjrOk.6Z6xPmWeljoPAB4eF.DQr7opkuh4JsyVhPgfI3yiv1amV2P6nW.7pR
- l544iWl_OfiyBcVKvn8BPVX.b0psWD3xOyKjOxhogViEBBltnlVgylKWFh_.FM3Uisn8g6NJNVAf
- stPH9YUzRztGUNNkfuLn0l0nnbPhtF07Kg19RGOvvtOe5gZ8Q4rEYtPG2S9g.PvEa5BWmlNCvBBW
- 3HmHmB1Z1tV7tNpuAKBf77HdKNK09eSS1NlloLYtZagT8ixEnXmYOrVtpMDLoN3dJJHyjsKzK27W
- qC.O9oGROM59REVDLAD6kCOMvE6aqlKpt6BKk.tAKal2lsvr2NUNXZcJ7MJlzxxnzZtcXYtYeuV.
- iBuOA1buBJObQNror2vM0TM9SBU0ncN5IiCtkC1NqsheDF3xsqvO8x4pUkxTH4XmRNrg.cU3s0Wi
- qjXPgUKd5wWmGlA4k3BalfCBoHwL0tQmSq4_rEdE9I7VmVQZsHxC17BOVHfvNpJ8YWxQsmG5PPQ5
- kZZ1OBfOP7nF_Psc9rgM6vkSE748hwkSWyLKpmp56etLQVQUyUbQOTQHNMmeLP2EER1yEQKoP2gm
- Nr2VJPm2hsEQHNc195kPrRXGg8tUgcsS68I.5Qzj5oY0P6Yc8SyJU_4XdKn_WKF_oI.g1NpO3lwV
- paqgkbVYKPEkrnt6HdE9L3Ar0XjYpHJHyQ8.ixZ5V_Gjfo4PbpcpYaIhZmj6NwAtGPpL0C3.I5hI
- EMY8ptGZ8JYOCPRJJWRTjeWTLpT43TzDexV_qpM0jyMNLOiCizy62zmZ5JdudjZJubSWy29EK.ss
- 3BM3ju6U5UHRE.eIsy6V_Q3tUtRWSJHTNT7xhYkY3phyTpBK6Q.YRHg1vkZs1LdQhnSTA3wvJv2v
- N8TX2Flx2.xAbkRzdb8ND27yRYyR8eEGd8ZNcpAQzNGi4pfOPRToHL.qnOCVQx0Yt.boF09hClNW
- 2i83KKtcISfFUFiiu8B95nYukdAyXsk0pT4En4afHyzk8RKFUpdWPNdM9tGJSpJVkCvNZ2kgJQNv
- VUea0_M5QgVVg89CtEEy4Rl9W8k6Q_wu1qBZtqiYAHvL7y18mh13AbsXd.OKyrYzwFDrr1C9faod
- CVYg9oo6Ke1YGZGUo1D9D97jb6nPw1lCQ1EAAIdZv1C2aLI2r600_eJM4v80vs7VG1jY-
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: f3096bb7-d5e1-4278-b87b-771935d0acca
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.ne1.yahoo.com with HTTP; Wed, 16 Apr 2025 22:58:58 +0000
-Received: by hermes--production-gq1-74d64bb7d7-5qmwx (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 74ea1250be9b6111ec046bddcc0a667c;
-          Wed, 16 Apr 2025 22:58:54 +0000 (UTC)
-Message-ID: <9a4b0f45-1eb5-4eb7-b120-6b50ea0d4835@schaufler-ca.com>
-Date: Wed, 16 Apr 2025 15:58:54 -0700
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="ZRoYNB6L"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-736c3e7b390so88525b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 15:59:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1744844355; x=1745449155; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=R0SEFSDms0Srjc0vCBYMqkmnUZuH7wz5CdiiKrbnvac=;
+        b=ZRoYNB6LnmOda0Ssg08hw9Ubd16mC8uI//baUKj0B/YZNcTRvUQBNQysaluDfxWyNi
+         GuNjgQXojwwEf9e+RJax4yTeIKhq/7rPE6+n/lAo39vvZJBYT/qW7D52LKCFj0uFhZw/
+         piHUBS+zJRBLJlk21vLLVIgQceZojFPB4VQ1YaVA4z6yourgmlTBdUsYU9ZsjFD26JHg
+         1L7wyFiozLZ2Rb2sB5u0gVchOl5WmrBJtFvWj4mu7ImjH6QPdmrZ8MG6qMVaKZ04HY5z
+         PCKnOwLMtO+k+QLuNjiNZEjEn+Rp3J22ZBP2cJdKhq61Pv+rpsro6CbWXbxOsKDrb3AS
+         TZTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744844355; x=1745449155;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R0SEFSDms0Srjc0vCBYMqkmnUZuH7wz5CdiiKrbnvac=;
+        b=FMi8Sjq1oKt7+BrYoxYj3apQQFHPMM3i6cN8uLhKSRENsVNjhHBAp2+LZ1fuQgxOfg
+         UMyFAffXU82k8U4am+EffT8Dur/xeU0tDbXz1m6BjtBdW1gz03ikQAxpOiZJxk2kW5Gy
+         Nks5l0YDKrbzaJa3/mbWxXMUpkplvXgkB0O9YD7Ohd4zx9M4o+d+P3nRyV+vzjo9HeJy
+         OhXdRn127xU2uYnawCAFCoO6LfzDQK7hfl1wjZpFVTxAiXqsfgHPYvWNXqh/LOtgblVu
+         86KmaIjQBNqd4YSI3dAv5U954+4z6YVXZLhkR84oKgNY3OjmRUmsZXt2625n00f6DVZu
+         r/TA==
+X-Forwarded-Encrypted: i=1; AJvYcCXrTk9haAvdsh940Wa5B4PAWTT9yO7SudotA8Qk+aub5VDQMNkOoy6yA8DtjJYDUjDEhEGmoK3yF6l81oQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yywd1EK/TCXMe1+rxEF07rehqwXS46/SE3psK/ESzA5ETI6S2Gi
+	YmEtIfrPT6Om0aKZOl6x3dsg7fhSgP6WcdOhL0YZKLyDVoyMBC2f5OyvE4eKXLU=
+X-Gm-Gg: ASbGnctb7/ruIA4iyFWUAYSiLQ9jfAiY0J4Nz9YT6wjI7I/pBlkJSWS3qZulxHCdN13
+	V3EWI98exM60Rbqe/+XN3ETfv5lTgjnVlLFbCGWwnUQFyWjdU69uMol6h4X7TpjQWgLjaHBcOMD
+	OU+lx/Wd9ADH742bSGKUC/eBHrZfUpffrmeGesL/1sWvxnP37nra5cjfIdbV01JL10wOVO49jcF
+	cgW1BvjSxrcV7Yqdtos+3MnV5KdY7hCqSV2bz77KZ/VuuLL6KEPtHIuagEiuIKdgA+5QZENzpZm
+	n2yy7b9ty/+6eyrGHt7kG/YwaFRo/K/Rp97Ah9D67DB/VBw=
+X-Google-Smtp-Source: AGHT+IFSEYg7McQOY/czenNGbNNAfA2OUrmKCVnpYselYnTzk2rudOCU17EHO8GEU4xVRm4hqObtOA==
+X-Received: by 2002:a05:6a20:c797:b0:1ee:a914:1d67 with SMTP id adf61e73a8af0-203b3e505f1mr6482906637.2.1744844355423;
+        Wed, 16 Apr 2025 15:59:15 -0700 (PDT)
+Received: from medusa.lab.kspace.sh ([2601:640:8900:32c0::c137])
+        by smtp.googlemail.com with ESMTPSA id 41be03b00d2f7-b0b220e997asm1836362a12.37.2025.04.16.15.59.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 15:59:14 -0700 (PDT)
+Date: Wed, 16 Apr 2025 15:59:13 -0700
+From: Mohamed Khalfella <mkhalfella@purestorage.com>
+To: Sagi Grimberg <sagi@grimberg.me>
+Cc: Daniel Wagner <dwagner@suse.de>, Daniel Wagner <wagi@kernel.org>,
+	Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+	Hannes Reinecke <hare@suse.de>,
+	John Meneghini <jmeneghi@redhat.com>, randyj@purestorage.com,
+	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 3/3] nvme: delay failover by command quiesce timeout
+Message-ID: <20250416225913.GA2476975-mkhalfella@purestorage.com>
+References: <20250324-tp4129-v1-0-95a747b4c33b@kernel.org>
+ <20250324-tp4129-v1-3-95a747b4c33b@kernel.org>
+ <20250410085137.GE1868505-mkhalfella@purestorage.com>
+ <6f0d50b2-7a16-4298-8129-c3a0b1426d26@flourine.local>
+ <20250416004016.GC78596-mkhalfella@purestorage.com>
+ <3dad09ce-151d-41fc-8137-56a931c4c224@flourine.local>
+ <20250416135318.GI1868505-mkhalfella@purestorage.com>
+ <df6cd26e-551a-4bc1-bdc6-9c715e502aa8@grimberg.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v17 1/3] lsm, selinux: Add setup_report permission to
- binder
-To: Li Li <dualli@chromium.org>
-Cc: dualli@google.com, corbet@lwn.net, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- donald.hunter@gmail.com, gregkh@linuxfoundation.org, arve@android.com,
- tkjos@android.com, maco@android.com, joel@joelfernandes.org,
- brauner@kernel.org, cmllamas@google.com, surenb@google.com,
- omosnace@redhat.com, shuah@kernel.org, arnd@arndb.de, masahiroy@kernel.org,
- bagasdotme@gmail.com, horms@kernel.org, tweek@google.com,
- paul@paul-moore.com, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, netdev@vger.kernel.org, selinux@vger.kernel.org,
- hridya@google.com, smoreland@google.com, ynaffit@google.com,
- kernel-team@android.com, Casey Schaufler <casey@schaufler-ca.com>
-References: <20250415071017.3261009-1-dualli@chromium.org>
- <20250415071017.3261009-2-dualli@chromium.org>
- <69763528-bb00-44c5-a3ce-8c30530b29ee@schaufler-ca.com>
- <CANBPYPgfW+3jeTPZmpHfkgr=hX8sRkMLgrEeLFYa6rOPftXeFg@mail.gmail.com>
-Content-Language: en-US
-From: Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <CANBPYPgfW+3jeTPZmpHfkgr=hX8sRkMLgrEeLFYa6rOPftXeFg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Mailer: WebService/1.1.23665 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <df6cd26e-551a-4bc1-bdc6-9c715e502aa8@grimberg.me>
 
-On 4/16/2025 9:00 AM, Li Li wrote:
-> Thank you Casey! I'll resend this specific patch to linux-security-module list.
->
-> Should I include the other 2 binder patches as well as they are using
-> this new permission?
+On 2025-04-17 01:21:08 +0300, Sagi Grimberg wrote:
+> 
+> 
+> On 16/04/2025 16:53, Mohamed Khalfella wrote:
+> > On 2025-04-16 10:30:11 +0200, Daniel Wagner wrote:
+> >> On Tue, Apr 15, 2025 at 05:40:16PM -0700, Mohamed Khalfella wrote:
+> >>> On 2025-04-15 14:17:48 +0200, Daniel Wagner wrote:
+> >>>> Pasthrough commands should fail immediately. Userland is in charge here,
+> >>>> not the kernel. At least this what should happen here.
+> >>> I see your point. Unless I am missing something these requests should be
+> >>> held equally to bio requests from multipath layer. Let us say app
+> >>> submitted write a request that got canceled immediately, how does the app
+> >>> know when it is safe to retry the write request?
+> >> Good question, but nothing new as far I can tell. If the kernel doesn't
+> >> start to retry passthru IO commands, we have to figure out how to pass
+> >> additional information to the userland.
+> >>
+> > nvme multipath does not retry passthru commands. That is said, there is
+> > nothing prevents userspace from retrying canceled command immediately
+> > resulting in the unwanted behavior these very patches try to address.
+> 
+> userspace can read the controller cqt and implement the retry logic on 
+> its own.
+> If it doesn't/can't, it should use normal fs io. the driver does not 
+> handle passthru retries.
 
-I would appreciate it. Context can be pretty important. Sometimes 
-"why" an LSM hook is being added impacts who reviews it.
+passthru requests are not very different from normal IO. If the driver
+holds normal IO requests to prevent corruption, it should hold passthru
+requests too, for the same reason, no?
 
->
-> On Tue, Apr 15, 2025 at 9:13 AM Casey Schaufler <casey@schaufler-ca.com> wrote:
->> On 4/15/2025 12:10 AM, Li Li wrote:
->>> From: Thiébaud Weksteen <tweek@google.com>
->>>
->>> Introduce a new permission "setup_report" to the "binder" class.
->>> This persmission controls the ability to set up the binder generic
->>> netlink driver to report certain binder transactions.
->>>
->>> Signed-off-by: Thiébaud Weksteen <tweek@google.com>
->>> Signed-off-by: Li Li <dualli@google.com>
->>> ---
->>>  include/linux/lsm_hook_defs.h       |  1 +
->>>  include/linux/security.h            |  6 ++++++
->>>  security/security.c                 | 13 +++++++++++++
->> This patch needs to be sent to the linux-security-module list.
->>
+IMO, keeping the request holding logic in the driver makes more sense
+than implementing it in userspace. One reason is that CCR can help
+release requests held requests faster.
+
+> 
+> >
+> >>> Holding requests like write until it is safe to be retried is the whole
+> >>> point of this work, right?
+> >> My first goal was to address the IO commands submitted via the block
+> >> layer. I didn't had the IO passthru interface on my radar. I agree,
+> >> getting the IO passthru path correct is also good idea.
+> > Okay. This will be addressed in the next revision, right?
+> 
+> I don't think it should. passthru IO requires the issuer to understand 
+> the nvme
+> device, and CQT falls under this definition.
