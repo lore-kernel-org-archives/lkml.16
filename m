@@ -1,271 +1,374 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E07724BC07;
-	Wed, 16 Apr 2025 12:04:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1848A23F422;
+	Wed, 16 Apr 2025 12:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744805086; cv=none; b=Gk/quiBddYo7ewPA/zr/98WN0Q7j3L8TU5vlxMftYf2SgudZhq1k2/K5R1UizfU7teeg5mmy8T0Y255a3YhDGptAlukGhFUMHe3uKonQrw5TLAv5AXTOw35zb9uICDb4HMlcC1rymSHeAccs2zLv8wB/HZMor5xz5kBWClYDYyk=
+	t=1744805156; cv=none; b=SGtiRMao03qGiP1LWC5YE+pjsyj3K2ykx3vGiQ0JGUA35xyXo+P61PMlE81KzMe67FHESkqTQj1hjIO6kwSG/1TIWq6FNVys1xR51fQdA8qi6eMvWHyjSKLCHqySqq3e6Cmti4NJ9d8OJG5/ch6jtzKPeYigvB/iW/xLDcJeYm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744805086; c=relaxed/simple;
-	bh=0eqbW/ADX0/3OFgPSkh+pNLMavSwHy31i9yMWuD4ffI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TvVk36+fdxZ9AxmRnuXLsC066dZyecFShXclIrSUHSJFc3zhMbWVXcs5E67L5kWGwsuvu+sfrwB9V2M0mpLDZYXPc1aqGeUfkBDFtDMeBZQLbozsAlNSaxM5tvmXAuQG0P+SztSmmSjU/jAiON/Y8unkSdYwqZ2SPmzJvFZxF6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eZbWGhzD; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744805156; c=relaxed/simple;
+	bh=bnMHt1rL/O6Hg4QOcjQu/TboqXC7jvmxdMfDriXSJrI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lCeMZwwd+GLttUabuzu55M5OMhKQ8maJDDqnVDDwn4OZh2vCC7Wxv5I34pVcxYrav/nuJ9ktXPb1rTmkrEuTCQ9RuKcSygjtS0Pd1EJb3WY7rtBzJ3qY0G4LX/CbnQDDcJCJANKvij4Et6GF2uLAwk919IXigl+UfuOC/TWrlzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pafbQmE0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eZbWGhzD"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-227cf12df27so5411635ad.0;
-        Wed, 16 Apr 2025 05:04:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744805084; x=1745409884; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ie7hREUa4SMJAa/pZTbegFZ7KD0h8GRA9ZCVQg1tUQo=;
-        b=eZbWGhzDJhSPdJpzPPslkfmlwPP7KaRcuE/uH38hn4P4XDNRrztdjko/SRd/ySGHt0
-         YuHPrGEF3EXkQTHUyBWvGecoBqXKzmYwlCmmqVwtkFid5jeMommqYIOmwdTg+hREVRF3
-         Q9Zo7djlAxxAAGK1NBo8vS5PBz3Tm59hEitcxnFWQyd46bU7GaM3aRLuJtixuq7LDa00
-         ASRc+NgYcO2nINdZqOh7xCXzENeDnp/XD+0aCxuakxF+Iajz+KgPZGRMyepuLx34F8KF
-         KcXc0hdY3l8q1AlwB/R8qTDWoMBsCsTez/QOp9naTbW9DoaySTr78+ko3kz/wzvlX3RJ
-         R+mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744805084; x=1745409884;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ie7hREUa4SMJAa/pZTbegFZ7KD0h8GRA9ZCVQg1tUQo=;
-        b=Ya2XW/D35Yidhj79U/AUjgDa8USZDZR71C7YJHTFlgwAsR95xbm2F7ivFIrSBTN5me
-         /E5PUbmTg1dOlCxrZP02LzetTxOH6wAMW2ADupZfgWV0/J1cJ/R6hsUVpRkNvWuBmzyK
-         MaH7SZ3M39/YFjSo4T/ijd4wk8WtFrOaf8zR9xG16Knsk9W24oEEst3upnfWf+vBKgRF
-         6xnbxhLshArZRdq50OhPF7cf4rCEgeNjjPfI7GSPgDZ96HQaJDrf/xBOdsIY/iFQCH+r
-         CWbvtqEWr84FkUoDFi/RTDPhpBB1/FZevzxM6paAtMgKgibshm/SQ7EnngV+ykR2CNEl
-         napw==
-X-Forwarded-Encrypted: i=1; AJvYcCUpyBl7X8pAX0ImUim0aEXIPP34vq5yGgl5kl5Rkx3uidcDX1t0nPh/rnDuGr5/GcPS2CIHdaYMxe2I@vger.kernel.org, AJvYcCWE1pUD/ekGwg28z6phdjbk7dhVT0ind6u4LxeToCPZyWtZ1b/IXRHbslf3L49zd98SpMOGAY9Z28xyoQFz@vger.kernel.org
-X-Gm-Message-State: AOJu0YznXpuKbcLaPnOI2wD7xv/thUa7SRUh+0PKAVgYZok7Vs3bsupY
-	d3bbIDMyRTNLZdtSFcMyIQu/047cQpUxCr/fmnbMiOW6iJ1fLVHh
-X-Gm-Gg: ASbGncvVoblRBylfdcLsPpEiT9MoCeCIUzDw3ac1oIOLJPNNqqB1GeRCR7K8HPu3lVx
-	/i16zMGMAFlntAvpqNPNgjVxYN1EJO8J9gTLUGGcJIIaV5I0EBl29+nK4dxG3NQPrpTMNFkA1Bd
-	jN0533f79Fn98Ztt5R3NJbonc2WyY11HVOxJ4qyl6+D3qteGLWwUJW+Ew1uMH7XOV+lK4dMSK07
-	IUijLSWkI/bIZma3OrNR3e8WfweBuvXvMuwdq8NmcfJ53fyTzVkuJ5+rTDtLwsduH+3kR7fldTk
-	dJupP7S5hbfCYZcG15Y+BTkIbd14gCz9z+pqu/2NahBysYIq4A==
-X-Google-Smtp-Source: AGHT+IF3c77cgFMGhot+IttF6abeW9f9RiIxUS3EHqsIYXeT4jB4a6Vdk4WPQdSgQAWsR+Iaultg5w==
-X-Received: by 2002:a17:903:188:b0:220:cfb7:56eb with SMTP id d9443c01a7336-22c35f1cd23mr19478865ad.26.1744805083546;
-        Wed, 16 Apr 2025 05:04:43 -0700 (PDT)
-Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33febfb3sm12033385ad.259.2025.04.16.05.04.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 05:04:43 -0700 (PDT)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pafbQmE0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D45FAC4CEE2;
+	Wed, 16 Apr 2025 12:05:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744805155;
+	bh=bnMHt1rL/O6Hg4QOcjQu/TboqXC7jvmxdMfDriXSJrI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pafbQmE0kdKd2epxSFbX+aHj66P+4Irm/VJM0YBN2/Us1PDyFps2Hwx05AkWO0eIb
+	 T/LJTHBvb2Ixpd9fE4uspC+NmUYvjrZ+PB47zKk/Y7DyJuNqjGPouPQYbPwVAAvoEl
+	 89wXmy7bm/3ey0J/fgTpt9X7iJJMSn8V21uVhlm8HuoAlUyKU3ZdqIyLPyO8312AYb
+	 CJQgk9FNYOWRLqK/ClgrcpjSnGg/gHRLtRrcR7O3kN1q8PpZibBq+7TlgZjHNxXt6u
+	 BbQv9wBaEhz5nM85jvH/tVhCF7wkp8oCkuE39Nx0LAyyTPsOFgBGD0wuy2+b+kXBnv
+	 VSus8NV6ceJpw==
+Date: Wed, 16 Apr 2025 14:05:44 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Shivendra Pratap <quic_spratap@quicinc.com>
+Cc: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>,
+	Elliot Berman <quic_eberman@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, cros-qcom-dts-watchers@chromium.org,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Pengyu Luo <mitltlatltl@gmail.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Abel Vesa <abel.vesa@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org,
-	linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] phy: qualcomm: phy-qcom-eusb2-repeater: rework reg override handler
-Date: Wed, 16 Apr 2025 20:02:01 +0800
-Message-ID: <20250416120201.244133-3-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250416120201.244133-1-mitltlatltl@gmail.com>
-References: <20250416120201.244133-1-mitltlatltl@gmail.com>
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
+	Melody Olvera <quic_molvera@quicinc.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Stephen Boyd <swboyd@chromium.org>, linux-pm@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, Elliot Berman <elliotb317@gmail.com>,
+	Elliot Berman <elliot.berman@oss.qualcomm.com>
+Subject: Re: [PATCH v9 2/5] firmware: psci: Read and use vendor reset types
+Message-ID: <Z/+dGLAGXpf9bX7G@lpieralisi>
+References: <20250303-arm-psci-system_reset2-vendor-reboots-v9-0-b2cf4a20feda@oss.qualcomm.com>
+ <20250303-arm-psci-system_reset2-vendor-reboots-v9-2-b2cf4a20feda@oss.qualcomm.com>
+ <Z9QQw6BcE7IXzu+r@lpieralisi>
+ <Z+K3uNjTNbq3pUis@hu-mojha-hyd.qualcomm.com>
+ <Z/U95G+2GsoLD6Mi@lpieralisi>
+ <973eaca7-0632-53d8-f892-fe4d859ebbac@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <973eaca7-0632-53d8-f892-fe4d859ebbac@quicinc.com>
 
-In downstream tree, many registers need to be overridden, it varies
-from devices and platforms, with these registers getting more, adding
-a handler for this is helpful.
+On Wed, Apr 09, 2025 at 11:48:24PM +0530, Shivendra Pratap wrote:
+> 
+> 
+> On 4/8/2025 8:46 PM, Lorenzo Pieralisi wrote:
+> > On Tue, Mar 25, 2025 at 07:33:36PM +0530, Mukesh Ojha wrote:
+> >> On Fri, Mar 14, 2025 at 12:19:31PM +0100, Lorenzo Pieralisi wrote:
+> >>> On Mon, Mar 03, 2025 at 01:08:31PM -0800, Elliot Berman wrote:
+> >>>> From: Elliot Berman <elliot.berman@oss.qualcomm.com>
+> >>>>
+> >>>> SoC vendors have different types of resets and are controlled through
+> >>>> various registers. For instance, Qualcomm chipsets can reboot to a
+> >>>> "download mode" that allows a RAM dump to be collected. Another example
+> >>>> is they also support writing a cookie that can be read by bootloader
+> >>>> during next boot. PSCI offers a mechanism, SYSTEM_RESET2, for these
+> >>>> vendor reset types to be implemented without requiring drivers for every
+> >>>> register/cookie.
+> >>>>
+> >>>> Add support in PSCI to statically map reboot mode commands from
+> >>>> userspace to a vendor reset and cookie value using the device tree.
+> >>>
+> >>> I have managed to discuss a little bit this patchset over the last
+> >>> few days and I think we have defined a plan going forward.
+> >>>
+> >>> A point that was raised is:
+> >>>
+> >>> https://man7.org/linux/man-pages/man2/reboot.2.html
+> >>>
+> >>> LINUX_REBOOT_CMD_RESTART2 *arg command, what is it supposed to
+> >>> represent ?
+> >>>
+> >>> Is it the mode the system should reboot into OR it is the
+> >>> actual command to be issued (which is what this patchset
+> >>> implements) ?
+> >>>
+> >>> LINUX_REBOOT_CMD_RESTART "..a default restart..."
+> >>>
+> >>> It is unclear what "default" means. We wonder whether the
+> >>> reboot_mode variable was introduced to _define_ that "default".
+> >>>
+> >>> So, in short, my aim is trying to decouple reboot_mode from the
+> >>> LINUX_REBOOT_CMD_RESTART2 *arg command.
+> >>>
+> >>> I believe that adding a sysfs interface to reboot-mode driver
+> >>> infrastructure would be useful, so that the commands would
+> >>> be exposed to userspace and userspace can set the *arg command
+> >>> specifically to issue a given reset/mode.
+> >>>
+> >>> I wonder why this is not already in place for eg syscon-reboot-mode
+> >>> resets, how does user space issue a command in those systems if the
+> >>> available commands aren't exposed to userspace ?
+> >>>
+> >>> Is there a kernel entity exposing those "modes" to userspace, somehow ?
+> >>>
+> >>>> A separate initcall is needed to parse the devicetree, instead of using
+> >>>> psci_dt_init because mm isn't sufficiently set up to allocate memory.
+> >>>>
+> >>>> Reboot mode framework is close but doesn't quite fit with the
+> >>>> design and requirements for PSCI SYSTEM_RESET2. Some of these issues can
+> >>>> be solved but doesn't seem reasonable in sum:
+> >>>>  1. reboot mode registers against the reboot_notifier_list, which is too
+> >>>>     early to call SYSTEM_RESET2. PSCI would need to remember the reset
+> >>>>     type from the reboot-mode framework callback and use it
+> >>>>     psci_sys_reset.
+> >>>>  2. reboot mode assumes only one cookie/parameter is described in the
+> >>>>     device tree. SYSTEM_RESET2 uses 2: one for the type and one for
+> >>>>     cookie.
+> >>>
+> >>> This can be changed and I think it should, so that the reboot modes
+> >>> are exposed to user space and PSCI can use that.
+> >>>
+> >> In the case of a regular reboot or panic, the reboot/panic notifiers run
+> >> first, followed by the restart notifiers. The PSCI reset/reset2 should
+> >> be the last call from Linux, and ideally, this call should not fail.
+> >>
+> >> Reboot mode notifiers => restart notifiers or Panic notifiers => restart
+> >> notifiers
+> >>
+> >> So, if I understand correctly, you mean that we can change the reboot
+> >> mode framework to expose the arguments available to user space. We can
+> >> extend it to accept magic and cookies, save them in the reboot
+> >> framework, and retrieve them via a call from PSCI during a regular
+> >> reboot or panic based on the current arguments. Is this leading towards
+> >> writing an ARM-specific PSCI-reboot-mode driver, which in its reboot
+> >> notifier callback saves the magic and cookies, and these magic and
+> >> cookies will be used during psci_sys_reset2()? Or is there something
+> >> wrong with my understanding?
+> > 
+> > No, you got it right (apologies for the delay in replying) - if the
+> > case for making reboot mode available to user space is accepted.
+> > 
+> 
+> Agree that the available modes should be exposed to usespace via sysfs interface
+> and we should implement it. Also #1 and #2 can be handled via some
+> changes in the design as mentioned in above discussion.
+> 
+> I have one doubt though when we implement this via reboot-mode framework.
+> The current patch implements PSCI ARM PSCI SYSTEM RESET2 vendor reset types.
+> psci driver is initialized very early at boot but potential ARM psci reboot-mode
+> driver will not probe at that stage and the ARM PSCI SYSTEM RESET2 vendor reset
+> types functionality will not be available in psci reset path until the reboot-mode
+> driver probes. Will this cause any limitation on usage of ARM's PSCI vendor-reset
+> types for early device resets?
+> 
+> One use-case may be an early device crash or a early reset where a vendor 
+> wants to use PSCI SYSTEM RESET2 vendor reset type to a reset the device to a 
+> specific state but may not be able to use this driver.
+> (eg: a kernel panic at early boot where a vendor wants to reset device 
+> to a specific state using vendor reset. Currently panic passes a NULL
+> (*arg command) while device reset but it may be explored for vendor specific
+> reset).
 
-Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
----
- .../phy/qualcomm/phy-qcom-eusb2-repeater.c    | 105 +++++++++++++++---
- 1 file changed, 92 insertions(+), 13 deletions(-)
+As you said, that would not be a PSCI only issue - *if* we wanted to
+plug in this use case we should find a way to do it at reboot mode
+driver level.
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c b/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
-index 6bd1b3c75..a4b75e70e 100644
---- a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
-+++ b/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
-@@ -68,12 +68,27 @@ struct eusb2_repeater_cfg {
- 	int num_vregs;
- };
- 
-+struct tune {
-+	const char * const tune_name;
-+	const char * const host_tune_name;
-+	enum eusb2_reg_layout init_tbl_idx;
-+	u8 tune_reg;
-+	u8 tune;
-+	u8 host_tune;
-+};
-+
-+struct tune_cfg {
-+	struct tune *tune_tbl;
-+	int tune_tbl_size;
-+};
-+
- struct eusb2_repeater {
- 	struct device *dev;
- 	struct regmap *regmap;
- 	struct phy *phy;
- 	struct regulator_bulk_data *vregs;
- 	const struct eusb2_repeater_cfg *cfg;
-+	struct tune_cfg *tune_cfg;
- 	u32 base;
- 	enum phy_mode mode;
- };
-@@ -108,6 +123,79 @@ static const struct eusb2_repeater_cfg smb2360_eusb2_cfg = {
- 	.num_vregs	= ARRAY_SIZE(pm8550b_vreg_l),
- };
- 
-+static struct tune tune_tbl[] = {
-+	{
-+		.tune_name = "qcom,tune-usb2-amplitude",
-+		.host_tune_name = "qcom,tune-usb2-amplitude-host",
-+		.init_tbl_idx = TUNE_IUSB2,
-+		.tune_reg = EUSB2_TUNE_IUSB2,
-+	},
-+	{
-+		.tune_name = "qcom,tune-usb2-disc-thres",
-+		.host_tune_name = "qcom,tune-usb2-disc-thres-host",
-+		.init_tbl_idx = TUNE_HSDISC,
-+		.tune_reg = EUSB2_TUNE_HSDISC,
-+
-+	},
-+	{
-+		.tune_name = "qcom,tune-usb2-squelch",
-+		.host_tune_name = "qcom,tune-usb2-squelch-host",
-+		.init_tbl_idx = TUNE_SQUELCH_U,
-+		.tune_reg = EUSB2_TUNE_SQUELCH_U,
-+	},
-+	{
-+		.tune_name = "qcom,tune-usb2-preem",
-+		.host_tune_name = "qcom,tune-usb2-preem-host",
-+		.init_tbl_idx = TUNE_USB2_PREEM,
-+		.tune_reg = EUSB2_TUNE_USB2_PREEM,
-+	},
-+};
-+
-+static struct tune_cfg tune_cfg = {
-+	.tune_tbl	= tune_tbl,
-+	.tune_tbl_size	= ARRAY_SIZE(tune_tbl),
-+};
-+
-+static void eusb2_repeater_write_overrides(struct eusb2_repeater *rptr,
-+					   bool is_host_mode)
-+{
-+	struct tune *tune_tbl;
-+	int size, i;
-+
-+	tune_tbl = rptr->tune_cfg->tune_tbl;
-+	size = rptr->tune_cfg->tune_tbl_size;
-+
-+	for (i = 0; i < size; ++i)
-+		regmap_write(rptr->regmap, rptr->base + tune_tbl[i].tune_reg,
-+			     is_host_mode ? tune_tbl[i].host_tune : tune_tbl[i].tune);
-+}
-+
-+static void eusb2_repeater_parse_dt(struct eusb2_repeater *rptr)
-+{
-+	struct device_node *np = rptr->dev->of_node;
-+	const u32 *init_tbl = rptr->cfg->init_tbl;
-+	struct tune *tune_tbl;
-+	int size, i, idx;
-+
-+	tune_tbl = tune_cfg.tune_tbl;
-+	size = tune_cfg.tune_tbl_size;
-+
-+	for (i = 0; i < size; ++i) {
-+		/* set default values from init_tbl */
-+		idx = tune_tbl[i].init_tbl_idx;
-+		tune_tbl[i].tune = init_tbl[idx];
-+		tune_tbl[i].host_tune = init_tbl[idx];
-+
-+		/* update values from dt */
-+		of_property_read_u8(np, tune_tbl[i].tune_name,
-+				    &tune_tbl[i].tune);
-+		of_property_read_u8(np, tune_tbl[i].host_tune_name,
-+				    &tune_tbl[i].host_tune);
-+	}
-+
-+	rptr->tune_cfg = &tune_cfg;
-+}
-+
- static int eusb2_repeater_init_vregs(struct eusb2_repeater *rptr)
- {
- 	int num = rptr->cfg->num_vregs;
-@@ -127,20 +215,12 @@ static int eusb2_repeater_init_vregs(struct eusb2_repeater *rptr)
- static int eusb2_repeater_init(struct phy *phy)
- {
- 	struct eusb2_repeater *rptr = phy_get_drvdata(phy);
--	struct device_node *np = rptr->dev->of_node;
- 	struct regmap *regmap = rptr->regmap;
- 	const u32 *init_tbl = rptr->cfg->init_tbl;
--	u8 tune_usb2_preem = init_tbl[TUNE_USB2_PREEM];
--	u8 tune_hsdisc = init_tbl[TUNE_HSDISC];
--	u8 tune_iusb2 = init_tbl[TUNE_IUSB2];
- 	u32 base = rptr->base;
- 	u32 val;
- 	int ret;
- 
--	of_property_read_u8(np, "qcom,tune-usb2-amplitude", &tune_iusb2);
--	of_property_read_u8(np, "qcom,tune-usb2-disc-thres", &tune_hsdisc);
--	of_property_read_u8(np, "qcom,tune-usb2-preem", &tune_usb2_preem);
--
- 	ret = regulator_bulk_enable(rptr->cfg->num_vregs, rptr->vregs);
- 	if (ret)
- 		return ret;
-@@ -153,14 +233,9 @@ static int eusb2_repeater_init(struct phy *phy)
- 	regmap_write(regmap, base + EUSB2_TUNE_USB2_HS_COMP_CUR, init_tbl[TUNE_USB2_HS_COMP_CUR]);
- 	regmap_write(regmap, base + EUSB2_TUNE_USB2_EQU, init_tbl[TUNE_USB2_EQU]);
- 	regmap_write(regmap, base + EUSB2_TUNE_USB2_SLEW, init_tbl[TUNE_USB2_SLEW]);
--	regmap_write(regmap, base + EUSB2_TUNE_SQUELCH_U, init_tbl[TUNE_SQUELCH_U]);
- 	regmap_write(regmap, base + EUSB2_TUNE_RES_FSDIF, init_tbl[TUNE_RES_FSDIF]);
- 	regmap_write(regmap, base + EUSB2_TUNE_USB2_CROSSOVER, init_tbl[TUNE_USB2_CROSSOVER]);
- 
--	regmap_write(regmap, base + EUSB2_TUNE_USB2_PREEM, tune_usb2_preem);
--	regmap_write(regmap, base + EUSB2_TUNE_HSDISC, tune_hsdisc);
--	regmap_write(regmap, base + EUSB2_TUNE_IUSB2, tune_iusb2);
--
- 	ret = regmap_read_poll_timeout(regmap, base + EUSB2_RPTR_STATUS, val, val & RPTR_OK, 10, 5);
- 	if (ret)
- 		dev_err(rptr->dev, "initialization timed-out\n");
-@@ -177,6 +252,7 @@ static int eusb2_repeater_set_mode(struct phy *phy,
- 
- 	switch (mode) {
- 	case PHY_MODE_USB_HOST:
-+		eusb2_repeater_write_overrides(rptr, true);
- 		/*
- 		 * CM.Lx is prohibited when repeater is already into Lx state as
- 		 * per eUSB 1.2 Spec. Below implement software workaround until
-@@ -186,6 +262,7 @@ static int eusb2_repeater_set_mode(struct phy *phy,
- 		regmap_write(regmap, base + EUSB2_FORCE_VAL_5, V_CLK_19P2M_EN);
- 		break;
- 	case PHY_MODE_USB_DEVICE:
-+		eusb2_repeater_write_overrides(rptr, false);
- 		/*
- 		 * In device mode clear host mode related workaround as there
- 		 * is no repeater reset available, and enable/disable of
-@@ -252,6 +329,8 @@ static int eusb2_repeater_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	eusb2_repeater_parse_dt(rptr);
-+
- 	rptr->phy = devm_phy_create(dev, np, &eusb2_repeater_ops);
- 	if (IS_ERR(rptr->phy)) {
- 		dev_err(dev, "failed to create PHY: %d\n", ret);
--- 
-2.49.0
+As a matter of fact, this is not a mainline issue AFAICS.
 
+Even if we did not design this as a reboot mode driver there would be a
+time window where you would not be able to use vendor resets on panic.
+
+I don't see it as a major roadblock at the moment.
+
+Thanks,
+Lorenzo
+
+> 
+> - Shivendra
+> 
+> >> P.S. We appreciate Elliot for his work and follow-up on this while being
+> >> employed at Qualcomm.
+> > 
+> > Yes I sincerely do for his patience, thank you.
+> > 
+> > Lorenzo
+> > 
+> >>>>  3. psci cpuidle driver already registers a driver against the
+> >>>>     arm,psci-1.0 compatible. Refactoring would be needed to have both a
+> >>>>     cpuidle and reboot-mode driver.
+> >>>>
+> >>>> Signed-off-by: Elliot Berman <elliot.berman@oss.qualcomm.com>
+> >>>> ---
+> >>>>  drivers/firmware/psci/psci.c | 105 +++++++++++++++++++++++++++++++++++++++++++
+> >>>>  1 file changed, 105 insertions(+)
+> >>>>
+> >>>> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+> >>>> index a1ebbe9b73b136218e9d9f9b8daa7756b3ab2fbe..6f8c47deaec0225f26704e1f3bcad52603127a85 100644
+> >>>> --- a/drivers/firmware/psci/psci.c
+> >>>> +++ b/drivers/firmware/psci/psci.c
+> >>>> @@ -80,6 +80,14 @@ static u32 psci_cpu_suspend_feature;
+> >>>>  static bool psci_system_reset2_supported;
+> >>>>  static bool psci_system_off2_hibernate_supported;
+> >>>>  
+> >>>> +struct psci_reset_param {
+> >>>> +	const char *mode;
+> >>>> +	u32 reset_type;
+> >>>> +	u32 cookie;
+> >>>> +};
+> >>>> +static struct psci_reset_param *psci_reset_params __ro_after_init;
+> >>>> +static size_t num_psci_reset_params __ro_after_init;
+> >>>> +
+> >>>>  static inline bool psci_has_ext_power_state(void)
+> >>>>  {
+> >>>>  	return psci_cpu_suspend_feature &
+> >>>> @@ -306,9 +314,39 @@ static int get_set_conduit_method(const struct device_node *np)
+> >>>>  	return 0;
+> >>>>  }
+> >>>>  
+> >>>> +static int psci_vendor_system_reset2(const char *cmd)
+> >>>> +{
+> >>>> +	unsigned long ret;
+> >>>> +	size_t i;
+> >>>> +
+> >>>> +	for (i = 0; i < num_psci_reset_params; i++) {
+> >>>> +		if (!strcmp(psci_reset_params[i].mode, cmd)) {
+> >>>> +			ret = invoke_psci_fn(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2),
+> >>>> +					     psci_reset_params[i].reset_type,
+> >>>> +					     psci_reset_params[i].cookie, 0);
+> >>>> +			/*
+> >>>> +			 * if vendor reset fails, log it and fall back to
+> >>>> +			 * architecture reset types
+> >>>
+> >>> That's not what the code does.
+> >>>
+> >> Ack.
+> >>
+> >> -Mukesh
+> >>
+> >>>> +			 */
+> >>>> +			pr_err("failed to perform reset \"%s\": %ld\n", cmd,
+> >>>> +			       (long)ret);
+> >>>> +			return 0;
+> >>>> +		}
+> >>>> +	}
+> >>>> +
+> >>>> +	return -ENOENT;
+> >>>> +}
+> >>>> +
+> >>>>  static int psci_sys_reset(struct notifier_block *nb, unsigned long action,
+> >>>>  			  void *data)
+> >>>>  {
+> >>>> +	/*
+> >>>> +	 * try to do the vendor system_reset2
+> >>>> +	 * If there wasn't a matching command, fall back to architectural resets
+> >>>> +	 */
+> >>>> +	if (data && !psci_vendor_system_reset2(data))
+> >>>> +		return NOTIFY_DONE;
+> >>>> +
+> >>>>  	if ((reboot_mode == REBOOT_WARM || reboot_mode == REBOOT_SOFT) &&
+> >>>>  	    psci_system_reset2_supported) {
+> >>>>  		/*
+> >>>> @@ -795,6 +833,73 @@ static const struct of_device_id psci_of_match[] __initconst = {
+> >>>>  	{},
+> >>>>  };
+> >>>>  
+> >>>> +#define REBOOT_PREFIX "mode-"
+> >>>> +
+> >>>> +static int __init psci_init_system_reset2_modes(void)
+> >>>> +{
+> >>>> +	const size_t len = strlen(REBOOT_PREFIX);
+> >>>> +	struct psci_reset_param *param;
+> >>>> +	struct device_node *psci_np __free(device_node) = NULL;
+> >>>> +	struct device_node *np __free(device_node) = NULL;
+> >>>> +	struct property *prop;
+> >>>> +	size_t count = 0;
+> >>>> +	u32 magic[2];
+> >>>> +	int num;
+> >>>> +
+> >>>> +	if (!psci_system_reset2_supported)
+> >>>> +		return 0;
+> >>>> +
+> >>>> +	psci_np = of_find_matching_node(NULL, psci_of_match);
+> >>>> +	if (!psci_np)
+> >>>> +		return 0;
+> >>>> +
+> >>>> +	np = of_find_node_by_name(psci_np, "reset-types");
+> >>>> +	if (!np)
+> >>>> +		return 0;
+> >>>
+> >>> Related to my initial question above. If LINUX_REBOOT_CMD_RESTART2 *arg command,
+> >>> is the actual reset to be issued, should we add a default mode "cold"
+> >>> and, if SYSTEM_RESET2 is supported, a "warm" reset mode too ?
+> >>>
+> >>> It all boils down to what *arg represents - adding "cold" and "warm"
+> >>> modes would remove the dependency on reboot_mode for resets issued
+> >>> through LINUX_REBOOT_CMD_RESTART2, the question is whether this
+> >>> is the correct thing to do.
+> >>>
+> >>> Comments very welcome.
+> >>>
+> >>> Thanks,
+> >>> Lorenzo
+> >>>
+> >>>> +
+> >>>> +	for_each_property_of_node(np, prop) {
+> >>>> +		if (strncmp(prop->name, REBOOT_PREFIX, len))
+> >>>> +			continue;
+> >>>> +		num = of_property_count_u32_elems(np, prop->name);
+> >>>> +		if (num != 1 && num != 2)
+> >>>> +			continue;
+> >>>> +
+> >>>> +		count++;
+> >>>> +	}
+> >>>> +
+> >>>> +	param = psci_reset_params =
+> >>>> +		kcalloc(count, sizeof(*psci_reset_params), GFP_KERNEL);
+> >>>> +	if (!psci_reset_params)
+> >>>> +		return -ENOMEM;
+> >>>> +
+> >>>> +	for_each_property_of_node(np, prop) {
+> >>>> +		if (strncmp(prop->name, REBOOT_PREFIX, len))
+> >>>> +			continue;
+> >>>> +
+> >>>> +		num = of_property_read_variable_u32_array(np, prop->name, magic,
+> >>>> +							  1, ARRAY_SIZE(magic));
+> >>>> +		if (num < 0) {
+> >>>> +			pr_warn("Failed to parse vendor reboot mode %s\n",
+> >>>> +				param->mode);
+> >>>> +			kfree_const(param->mode);
+> >>>> +			continue;
+> >>>> +		}
+> >>>> +
+> >>>> +		param->mode = kstrdup_const(prop->name + len, GFP_KERNEL);
+> >>>> +		if (!param->mode)
+> >>>> +			continue;
+> >>>> +
+> >>>> +		/* Force reset type to be in vendor space */
+> >>>> +		param->reset_type = PSCI_1_1_RESET_TYPE_VENDOR_START | magic[0];
+> >>>> +		param->cookie = num > 1 ? magic[1] : 0;
+> >>>> +		param++;
+> >>>> +		num_psci_reset_params++;
+> >>>> +	}
+> >>>> +
+> >>>> +	return 0;
+> >>>> +}
+> >>>> +arch_initcall(psci_init_system_reset2_modes);
+> >>>> +
+> >>>>  int __init psci_dt_init(void)
+> >>>>  {
+> >>>>  	struct device_node *np;
+> >>>>
+> >>>> -- 
+> >>>> 2.34.1
+> >>>>
