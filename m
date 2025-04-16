@@ -1,116 +1,162 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646ED1CAA85
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C62522B8C1;
+	Wed, 16 Apr 2025 09:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744795137; cv=none; b=UCOUwYNVcjiS10ydUlsj8s6By+V1GGVh4NJ9RC2a+ZbjnPyNPMqcKxQOamPY6+i+b/HqgWLNgTD2wKZiK9i2PZIIjrVenxicfKTMJ/dgu+sxIawP2kSmuX20sVbl3OB/QrjAJ4x4pLjoqf7FprwKbnYzz+/XUzyqD0m69Ga2QyA=
+	t=1744795183; cv=none; b=N95EtkZh95l3Q/38HkXBTLpEpgAbnm/xIkE3D+RtoWHS0xcItpYmOkwWsPft7XhxnguVM6ykp7GFGp79Tnh4R9QZgXJjms6RG9kk+rsGDqZ+sqSFw9SuBJlL6Ip1kQ5Z2sTzpbCHObSHBBrakUPl4Mp/Sx46rz8qHSl40i7hWEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744795137; c=relaxed/simple;
-	bh=sL7Ti8xvt3zTXyskQwRv8lkOu/S58ozeaOijpgOANFk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RmJlGL8OdnGiUMOwR9pk5L5ZsnqxX8Y2q0CWpDzSfdojJ8oRgmPm3hyTRqEtr+GAkvk6TJL2ImNrGcgYlKmMjqxcQ1oiqhsXZGpxkFR/9cG92vZU2jL9evFH5lWCP0CGK7uludJ85l6DA8hJ3UhAT9IKpbP2+bbQ5DQ9Z2cnjPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=THNiEvyA; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1744795183; c=relaxed/simple;
+	bh=3IzjhMKt3C/Wjt/0qk13UqqN5hoOSs+vGT3liSo6GvI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X3S5iaQvXQCTPyzzlPgdQ74WLJDqEjTNHoNnlQf8I2T2g9IgRhcFl+1LU1cZOXtzR6FBGEOPBNg/v8L5XRnh2YPF+TNo37sczsmQt+4BSmU9k0ov1z/Uz5m212iI426/d8DugLOTGQNmmRrbCIhCVzVHHNlNlU01uZp+aE10BVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OO9fL/pU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="THNiEvyA"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4D49E40E01FF;
-	Wed, 16 Apr 2025 09:18:50 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id BID_kJvVBf17; Wed, 16 Apr 2025 09:18:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1744795125; bh=y1QLvckCadDCnHJ2JOMwlWjAwE8+7hRdZ6en0oGF7fs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=THNiEvyAZVBO3aHs/N3Y5F/Nsb0oeiq/CU/bUtFWa2vBOt3/zHOFS3r4Ja5Oe8Amv
-	 g9duM4/tTJYMR7YgJMMFqwIA/h2N3jszg/THVEkIpnBEDP8kWdtahyI5PlYen3ubRT
-	 u1+WXlQ7xsfNIhe94xhLaNZXuZ+rKK2DsUK/Gme5mw3ptisP9RoUonhzdYpQ2tvXNm
-	 NgxT7yLtn+exA03sRLRwA+Ex+/aNndLHojLxEv8Z5o0WMF/zJuJaV8OwiHxRTTfLM/
-	 1VdpLkC/kja8gpYVTwIev2geVtunRPqW9Q52v6XZfGVaDa5f7iP+qDYJ42aayHeaIi
-	 +sCJJbucN56HLo3PVsKg0dowoaL0ltiuXkLvyRccMT1ZBQU4G4zWRS+cleBRhxnkbO
-	 u/ZqX3ylemGKh2gr06OzWbplbrdzoL85b7k/a8ZNKT3oaojkCohM5ClOXn0n54eidx
-	 XDol/jKP0TbPzG9qf0cEvHrGnSaSrDjsXKnGi/INbwNvjbrdenLiFWB0qal5leeQEW
-	 sXT4LVOiXNhpNv9snSV5/Q0cmr0Gg7AlChf8dJ0iRHZGQD8AyEls/+0Isd7j4ljGId
-	 8eyrq6ZAKCTFdSUJkLmDz/Hm7UIM1X+iXxLosjXw1g8Y9CNyhIV2/qmcUoSG38BkEI
-	 Oya5Xsr+SJWQwqrgwPO16SYw=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 183BD40E016E;
-	Wed, 16 Apr 2025 09:18:37 +0000 (UTC)
-Date: Wed, 16 Apr 2025 11:18:30 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: David Gow <davidgow@google.com>
-Cc: Shuah Khan <skhan@linuxfoundation.org>, thomas.lendacky@amd.com,
-	"x86@kernel.org" <x86@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>
-Subject: Re: sev_es_trampoline_start undefined symbol referenced errors
- during kunit run
-Message-ID: <20250416091830.GBZ_915oVG0seSQp0O@fat_crate.local>
-References: <7c5f9e2a-2e9d-46f2-89b2-83e0d68d3113@linuxfoundation.org>
- <20250414230047.GHZ_2Tnysv9zCD6-tX@fat_crate.local>
- <995cfca8-c261-4cf0-96f6-b33ca5403ee5@linuxfoundation.org>
- <20250415180128.GJZ_6e-B3yFuwmqWWS@fat_crate.local>
- <8b08e040-fee7-4344-8ba6-bbbd4f73e318@linuxfoundation.org>
- <20250415221702.GMZ_7a3meDh4e0L11s@fat_crate.local>
- <88a4052c-ac37-4958-af2a-a3066e8b82bd@linuxfoundation.org>
- <CABVgOSmXfoEonJ6w33sj1sb5F2Ak5Kek0AxskSmjq=d=D=PiVw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OO9fL/pU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DBCBC4CEE2;
+	Wed, 16 Apr 2025 09:19:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744795182;
+	bh=3IzjhMKt3C/Wjt/0qk13UqqN5hoOSs+vGT3liSo6GvI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=OO9fL/pUj0PmyztYhGQC0YKRuzcSnYK7Sib01pp7086unFIPzfMyFuzjMb2obH+hi
+	 UQxdF68uNvzqphRvvWoINuTeGaEDd3r+bbpUu1w7jGHFZfsrr9pCgERW06XLl3yRtI
+	 /SgQv63ZEzkJhHmvjyMSCbg7n303VUdpR8uYC+QYN8cYgAFqHVX4aNIyVJtyjVcRzy
+	 sCNuqf+1/iJdwM9XSfUHW28hHni0EbOsr9ftDIfnh69oaVtKW6X1IibMY0M0T5Mg8+
+	 vzk2HfEL30Uh5b13Hn3rL/O6w69cXIif8xk8aPjJWffbo8YGONdguhc5An3RZuhfFI
+	 PfiW3qQQXsL2Q==
+Date: Wed, 16 Apr 2025 17:19:17 +0800
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>, Andy Shevchenko <andriy.shevchenko@intel.com>, David
+ Airlie <airlied@gmail.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Masahiro Yamada
+ <masahiroy@kernel.org>, Maxime Ripard <mripard@kernel.org>, Nathan
+ Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, dri-devel@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] scripts/kernel-doc.py: don't create *.pyc files
+Message-ID: <20250416171917.0985c0eb@sal.lan>
+In-Reply-To: <87tt6opks7.fsf@intel.com>
+References: <cover.1744789777.git.mchehab+huawei@kernel.org>
+	<4ad5eb8d4b819997c1615d2401581c22a32bb2c1.1744789777.git.mchehab+huawei@kernel.org>
+	<87tt6opks7.fsf@intel.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CABVgOSmXfoEonJ6w33sj1sb5F2Ak5Kek0AxskSmjq=d=D=PiVw@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 16, 2025 at 08:32:08AM +0800, David Gow wrote:
-> - make ARCH=um mrproper # Clean the source tree, but incompletely, as
-> the original kernel was built with ARCH=x86_64, not ARCH=um
-> # As a result, the pasyms.h file will be left in the tree, as it's not
-> part of the UML build
+Em Wed, 16 Apr 2025 11:34:16 +0300
+Jani Nikula <jani.nikula@linux.intel.com> escreveu:
 
-Yeah, or you do:
-
-$ git clean -dqfx
-
-and the thing is gone. :-P
-
-> - ./tools/testing/kunit/kunit.py run --arch x86_64 # Attempt to
-> build/run an out-of-tree x86_64 kernel.
-> # This will not tell you to clean the source tree, as it was
-> (incorrectly) cleaned for the wrong architecture, but will fail due to
-> the wrong pasyms.h still being present.
+> On Wed, 16 Apr 2025, Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> > As reported by Andy, kernel-doc.py is creating a __pycache__
+> > directory at build time.
+> >
+> > Disable creation of __pycache__ for the libraries used by
+> > kernel-doc.py, when excecuted via the build system or via
+> > scripts/find-unused-docs.sh.
+> >
+> > Reported-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> > Closes: https://lore.kernel.org/linux-doc/Z_zYXAJcTD-c3xTe@black.fi.intel.com/
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > ---
+> >  drivers/gpu/drm/Makefile      | 2 +-
+> >  drivers/gpu/drm/i915/Makefile | 2 +-
+> >  include/drm/Makefile          | 2 +-
+> >  scripts/Makefile.build        | 2 +-
+> >  scripts/find-unused-docs.sh   | 2 +-
+> >  5 files changed, 5 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+> > index ed54a546bbe2..d21d0cd2c752 100644
+> > --- a/drivers/gpu/drm/Makefile
+> > +++ b/drivers/gpu/drm/Makefile
+> > @@ -236,7 +236,7 @@ always-$(CONFIG_DRM_HEADER_TEST) += \
+> >  quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
+> >        cmd_hdrtest = \
+> >  		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
+> > -		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
+> > +		 PYTHONDONTWRITEBYTECODE=1 $(KERNELDOC) -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \  
 > 
-> I'm not sure if this is the same cause as what you're seeing, Shuah,
-> but it seems plausible enough. If so, this is really an issue with the
-> Makefiles suggesting the wrong make mrproper command (assuming that
-> the architecture hasn't changed), or failing to detect that the source
-> tree still isn't clean. Maybe that's something we could work around in
-> either the arch/um makefiles or in kunit.py (or at least the
-> documentation), if we don't want to rework how dirty trees are
-> detected.
+> KERNELDOC is not set here.
 
-ARCH=um has always been weird in that regard and we have had "bugs" like that in
-the past.
+> 
+> /bin/sh: 1: -none: not found
 
-I guess the simplest thing to do is to whack ARCH=um too when you clean, in
-addition to x86_64. Or use the above git command if you're in a git repo...
+Weird. This is set on Documentation/Makefile:
 
-Thx.
+	$ grep KERNELDOC Documentation/Makefile 
+	KERNELDOC       = $(srctree)/scripts/kernel-doc.py
+	...
 
--- 
-Regards/Gruss,
-    Boris.
+drivers/gpu/drm/Makefile should be able to see this variable there...
 
-https://people.kernel.org/tglx/notes-about-netiquette
+> 
+> >  		touch $@
+> >  
+> >  $(obj)/%.hdrtest: $(src)/%.h FORCE
+> > diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makefile
+> > index ed05b131ed3a..ab6b89a163e7 100644
+> > --- a/drivers/gpu/drm/i915/Makefile
+> > +++ b/drivers/gpu/drm/i915/Makefile
+> > @@ -408,7 +408,7 @@ obj-$(CONFIG_DRM_I915_GVT_KVMGT) += kvmgt.o
+> >  #
+> >  # Enable locally for CONFIG_DRM_I915_WERROR=y. See also scripts/Makefile.build
+> >  ifdef CONFIG_DRM_I915_WERROR
+> > -    cmd_checkdoc = $(srctree)/scripts/kernel-doc -none -Werror $<
+> > +    cmd_checkdoc = PYTHONDONTWRITEBYTECODE=1 $(KERNELDOC) -none -Werror $<
+> >  endif
+> >  
+> >  # header test
+> > diff --git a/include/drm/Makefile b/include/drm/Makefile
+> > index a7bd15d2803e..1df6962556ef 100644
+> > --- a/include/drm/Makefile
+> > +++ b/include/drm/Makefile
+> > @@ -11,7 +11,7 @@ always-$(CONFIG_DRM_HEADER_TEST) += \
+> >  quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
+> >        cmd_hdrtest = \
+> >  		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
+> > -		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
+> > +		PYTHONDONTWRITEBYTECODE=1 $(KERNELDOC) -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
+> >  		touch $@
+> >  
+> >  $(obj)/%.hdrtest: $(src)/%.h FORCE
+> > diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> > index 13dcd86e74ca..884dc86ce04e 100644
+> > --- a/scripts/Makefile.build
+> > +++ b/scripts/Makefile.build
+> > @@ -83,7 +83,7 @@ else ifeq ($(KBUILD_CHECKSRC),2)
+> >  endif
+> >  
+> >  ifneq ($(KBUILD_EXTRA_WARN),)
+> > -  cmd_checkdoc = $(srctree)/scripts/kernel-doc -none $(KDOCFLAGS) \
+> > +  cmd_checkdoc = PYTHONDONTWRITEBYTECODE=1 $(KERNELDOC) -none $(KDOCFLAGS) \
+> >          $(if $(findstring 2, $(KBUILD_EXTRA_WARN)), -Wall) \
+> >          $<
+> >  endif
+> > diff --git a/scripts/find-unused-docs.sh b/scripts/find-unused-docs.sh
+> > index ee6a50e33aba..d6d397fbf917 100755
+> > --- a/scripts/find-unused-docs.sh
+> > +++ b/scripts/find-unused-docs.sh
+> > @@ -54,7 +54,7 @@ for file in `find $1 -name '*.c'`; do
+> >  	if [[ ${FILES_INCLUDED[$file]+_} ]]; then
+> >  	continue;
+> >  	fi
+> > -	str=$(scripts/kernel-doc -export "$file" 2>/dev/null)
+> > +	str=$(PYTHONDONTWRITEBYTECODE=1 scripts/kernel-doc -export "$file" 2>/dev/null)
+> >  	if [[ -n "$str" ]]; then
+> >  	echo "$file"
+> >  	fi  
+> 
