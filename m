@@ -1,89 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256DD1D07BA
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:53:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D832459DF;
+	Wed, 16 Apr 2025 11:54:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744804437; cv=none; b=HiK5JMhmyWBCFzHyMHZ5RGU/jbtWZYnXvLZUALm8HSuaA0yuk7/KyY/hBLLV45MhkX8s+7nYnu7XMu6zZW5xk0Pl+oaWKNUT2LWE/AeQHd00pMIbZYv+3fPmE3xH7du2srRtAN27lbVB9CbRpPX8blvZyVLDLp+spxyqHraweAE=
+	t=1744804442; cv=none; b=teIQI8wdv5grJnGUMeIMj37fgZd36G1AhLJweGuuhPeSALRTCG6P0Ga74DgGmbkYasuNstfR+p3uskTBg+gEduJaWTJgtSppwtReS/IiHP/nebtK1aYlOTREHza6Qd6XSSsJsVtBfDj/vb1pf/ZbEe2giXFf6bIKQFJ+6nKhOjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744804437; c=relaxed/simple;
-	bh=nEUAL9xfxZ1pm145l7SXqcMBvUT5FrwxSZx7ZWyaz/M=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q8kWPViqkii1vrch5YsgFJrFXvUx8mkoU14dt2m+AXiVyMKUrL0Vo+c/dq/5RrMuvRoKRavec5XbLMF+WnGmsHmseTC/sdbhpa0OOJ6n5Qm2CF6oSWJt2BmkIjmZu85KL9ZGxeMtDgniD7MUaf0gvxYg5XKgMoi7RLJyHPQ28CY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vc44cQBe; arc=none smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1744804442; c=relaxed/simple;
+	bh=7qRIbmiS09zuebkIhFNeAIS85Mr+wGvkcDi7aBOIq4w=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ZzrcQ3kQogm+WkDwJC9yQOTyRx7s9kNpZLslOdPpruU9cwO5olNser36CaKMrUNf2KJccD4WsDcVXYLZwRZx1wMhev9HczRkxLirz0U09znSsAvtR7Fk74nMg240QsGtAv47qJij05jNuzi23ubSSkB5Xb/ONN2TiautDlboz1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mEtJiAJE; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vc44cQBe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mEtJiAJE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744804436; x=1776340436;
-  h=date:from:to:subject:message-id:references:mime-version:
-   in-reply-to;
-  bh=nEUAL9xfxZ1pm145l7SXqcMBvUT5FrwxSZx7ZWyaz/M=;
-  b=Vc44cQBeTfnW+m5ve3rOYbCS6JMuZ/a/smvLaaNUvWtiS2fLJHY2ZH+1
-   XnMa92qyZJ6JsdkrvQWz14to89o+HCcENEUCClBk36mWzUgam2/4iA877
-   KOX9ndDMzYxvhpmGZoYYYJozjlb/RHTns5Nwg3lwBxvKXckMGlcOtANX8
-   o7BBkPYqVTBH8zYDvNxwxHT10HtRiXGSZgV3jvkPA5fUzF9ftUHf27GUP
-   JVFrk3X8Y4NC4ERwNZuGuYyvUgmyebk0IXQL6p3J4jCPHEzWMAfAiy5NZ
-   jX/DZpMEhZa/Fcgi00PnklCwJDw3Cv/1XNArtKzVT5T5X9gfJGyMlr6/R
-   Q==;
-X-CSE-ConnectionGUID: CUsubG9BTPyqemFr/0SO5w==
-X-CSE-MsgGUID: u5oW7oITQsuGI0UYMWXeQw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="50155696"
+  t=1744804441; x=1776340441;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=7qRIbmiS09zuebkIhFNeAIS85Mr+wGvkcDi7aBOIq4w=;
+  b=mEtJiAJEoOJoz5NHxd+eMe8UnE7RxjdszMe95fEo7tvK4JoXT+ot/d1B
+   RT63nZdwAaFt8BLQw2bKL8vCJJNE3UDgzv6BquRcLQU3fFoDDyLQgjQfd
+   kcnXzH4ptsQJZ5zgF+m9Ync8hcKDMYbjODiuFNjoqSPH/UnB3M2ySWcbl
+   ECO383Uu9EgLTVJLabua+6+Tu9W0ZSkAA4iNVE94dgNR+SrUO5vrrg1/V
+   mPd15/SOKPtWdKFiqPxwuP++bAuPDOovvFewvHYE6n8+7bGTu9rdCzsLH
+   eD86/5dV6hLBQ1KwdT2iRHmHXbzuQ7QETVKyTTljedY5yiANTMSBFyu+C
+   A==;
+X-CSE-ConnectionGUID: 6vaO3GaaQhCbD0HmgWTYEQ==
+X-CSE-MsgGUID: EWjSetY6SZqWCXVYhgWjwA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="63753828"
 X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="50155696"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 04:53:50 -0700
-X-CSE-ConnectionGUID: nsKKjB7zRDekJqfRWluubg==
-X-CSE-MsgGUID: leWa5SPtQYSV4on0QlVzdQ==
+   d="scan'208";a="63753828"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 04:54:00 -0700
+X-CSE-ConnectionGUID: U0GvJdoERtK0/oYmQ01AEQ==
+X-CSE-MsgGUID: CTzwN4b6S16MzzsgE131bQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="135619571"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 04:53:49 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u51Ks-0000000CqHL-07Y8;
-	Wed, 16 Apr 2025 14:53:46 +0300
-Date: Wed, 16 Apr 2025 14:53:45 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] genirq/irqdesc: Balance locking to make sparse
- happy
-Message-ID: <Z_-aSfU6iSyNRQhu@smile.fi.intel.com>
-References: <20250416114122.2191820-1-andriy.shevchenko@linux.intel.com>
- <20250416114122.2191820-3-andriy.shevchenko@linux.intel.com>
- <Z_-Z8kH0oNVRyA-c@smile.fi.intel.com>
+   d="scan'208";a="130403134"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.243])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 04:53:57 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 16 Apr 2025 14:53:51 +0300 (EEST)
+To: Andy Shevchenko <andy@kernel.org>
+cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+    Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+    x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+    Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/1] x86: Use resource_set_{range,size}() helpers
+In-Reply-To: <Z_-E3W8i4EfxdBh3@smile.fi.intel.com>
+Message-ID: <a046f6bb-0b6e-a431-eaa5-ecd279459f86@linux.intel.com>
+References: <20250416101318.7313-1-ilpo.jarvinen@linux.intel.com> <Z_-E3W8i4EfxdBh3@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_-Z8kH0oNVRyA-c@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: multipart/mixed; boundary="8323328-255701998-1744804431=:991"
 
-On Wed, Apr 16, 2025 at 02:52:18PM +0300, Andy Shevchenko wrote:
-> On Wed, Apr 16, 2025 at 02:40:34PM +0300, Andy Shevchenko wrote:
-> > Sparse is not happy right now about conditional locking and
-> > complains:
-> > 
-> >   irqdesc.c:899:17: warning: context imbalance in '__irq_get_desc_lock' - wrong count at exit
-> > 
-> > Refactor the code and use __acquire() to make it happy.
-> > Annotate the function that it acquires the lock in the
-> > similar way how __irq_put_desc_unlock() is marked.
-> 
-> Oh, scratch this, it basically will diminish the idea for the users.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-That said, the first patch is okay, in case you want it.
+--8323328-255701998-1744804431=:991
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
--- 
-With Best Regards,
-Andy Shevchenko
+On Wed, 16 Apr 2025, Andy Shevchenko wrote:
 
+> On Wed, Apr 16, 2025 at 01:13:18PM +0300, Ilpo J=E4rvinen wrote:
+> > Convert open coded resource size calculations to use
+> > resource_set_{range,size}() helpers.
+> >=20
+> > While at it, use SZ_* for size parameter which makes the intent of code
+> > more obvious.
+>=20
+> ...
+>=20
+> > +=09resource_set_range(res, base, 1ULL << (segn_busn_bits + 20));
+>=20
+> Then probably
+>=20
+> =09resource_set_range(res, base, BIT_ULL(segn_busn_bits) * SZ_1M);
+>=20
+> to follow the same "While at it"?
 
+I'll change that now since you brought it up. It did cross my mind to=20
+convert that to * SZ_1M but it seemed to go farther than I wanted with a=20
+simple conversion patch.
+
+I've never liked the abuse of BIT*() for size related shifts though, I=20
+recall I saw somewhere a helper that was better named for size related=20
+operations but I just cannot recall its name and seem to not find that=20
+anymore :-(. But until I come across it once again, I guess I'll have to=20
+settle to BIT*().
+
+> > +=09=09=09resource_set_range(res, 0xC0000, SZ_128K);
+> >  =09=09=09res->flags =3D IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
+> >  =09=09=09=09     IORESOURCE_PCI_FIXED;
+>=20
+> I'm wondering why not DEFINE_RES_MEM() in such cases?
+
+I guess you meant DEFINE_RES() as that seems to allow giving custom flags.
+However, DEFINE_RES*() will overwrite ->name which seems something that=20
+ought to not be done here.
+
+I found one other case from the same file though which is truly defines
+a resource from scratch.
+
+--=20
+ i.
+--8323328-255701998-1744804431=:991--
