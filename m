@@ -1,124 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F381B22C336
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70ED51F4611;
+	Wed, 16 Apr 2025 06:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744785282; cv=none; b=qigiqHWI3sPavjcbEEbgnrPfvc7mopB1CVLCaLNBFHYAZ7mlitajbwZ/R2QbZwR2MEEs2EOo4Kjh9HRmNvRedGoXUAebuhzGfhl/NJm40nqj36vZ0qgMiBMWwcxjOJcSgKxbk5Nq2oYo6az1q1LRL2pRDq5IXXNbBvmkWCgHcPA=
+	t=1744785310; cv=none; b=iXaQ075d2NvlUe3lEJud8JjE2Vuk6605sv2BmYgx79F/fJRGyNrDYiuvOWap3SEQcnE/JQpYyfYDmTsM00/DPvOehwVIU2XoSc9K1jEE3qB2+HAFvMzX4mmcUotl+ZQ3+OZNOB/fNzseqBgaze0zoxx+EMAzIf+kXz7S5+zp6+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744785282; c=relaxed/simple;
-	bh=S0QN9aMOfNreqfKF8qZmVU0ifAofjrywgk5i4jdOUH0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=laMVxfHADzNA86ZaI/lqkh+iptVythXhdoQoHbOv5lD/9wVnR/aCG79eknXBKKWszQGKuL/SQ41lheDfySLndmoTeh6hhYQqZtPa1bWHrVDwSUVH8QLKr3Y77Yt4/2zHw2VHmEFDQafaN3XNy7vnKsUYU3qKnd/K3Tik7aZJHaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OQzxgroK; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744785310; c=relaxed/simple;
+	bh=JrmENTow3eU1JgLnFTACI/p8XRxovgR2TtFW5Z9K0sI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hxRo/Z7hjzXzKCJZZCvczLDdRXtlHJqPVFXV0SRjQqOKe79OsxXY4helpJeDAIzqVAaF9i55xZp97a0flfrvDOKZEg1UPQ4sNsfSaRFqt04H3irjes2zu53mXBSDrkuSpdN3JzxRJui9lIbFZZHvhwuEaCR1ihi15hIK+uxY1ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cJDltrYZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OQzxgroK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744785281; x=1776321281;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=S0QN9aMOfNreqfKF8qZmVU0ifAofjrywgk5i4jdOUH0=;
-  b=OQzxgroKZFUeb86MSp2bAzjeUDHpiKSHXXYl+VhQbP+jcDvjfCtznGMV
-   DhhHfbDRCOlUAQT40k2XIyWyAkzMXWxLWcDA8bwuTHr4TyFWpe8Ltl2zr
-   E/vnTuZXqfwKc2CX27HcB/nYj3/8uoQMW+ksYzaoA0nfzkOuGhHX2T3Z1
-   3FEXjK0ea2KONYrpj+8V3TLEcDS51dKqimbtu0k3gPv3JDbtPu5nXvaNK
-   LEEnb67Z4CIh5cka8as807YcQb6lEaBW9AAPInDGlXj5GgGQn1G1T2SDz
-   BoNRQn6T6hbkSAqWeJkBKaFbqErxBCRDuVBj5+rUfFzsgYrN+hALVh5wW
-   A==;
-X-CSE-ConnectionGUID: FeQ+1p06QG2v2q7CkmKjJg==
-X-CSE-MsgGUID: fRgZqlkDRWm7EvaTJbTguQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46333584"
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="46333584"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 23:34:41 -0700
-X-CSE-ConnectionGUID: iwAcN+cgT2aLo/lfqdzO8A==
-X-CSE-MsgGUID: bnJuy8XJQEGMUMTBUyih9A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="130111853"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 23:34:38 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u4wLz-0000000ClZV-173E;
-	Wed, 16 Apr 2025 09:34:35 +0300
-Date: Wed, 16 Apr 2025 09:34:35 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Corey Minyard <corey@minyard.net>
-Cc: openipmi-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Subject: Re: [PATCH v1 1/1] ipmi: si: Cast to smaller integer type without
- warning
-Message-ID: <Z_9Pe_l-RrO-9v0u@smile.fi.intel.com>
-References: <20250415085156.446430-1-andriy.shevchenko@linux.intel.com>
- <Z_5FV65cyIwiI9rs@mail.minyard.net>
- <Z_5L1J11W-ArXcUe@smile.fi.intel.com>
- <Z_5NDNeDztC1-6vx@smile.fi.intel.com>
- <Z_6uzH9DsWIh-hIz@mail.minyard.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cJDltrYZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC9B9C4CEE2;
+	Wed, 16 Apr 2025 06:35:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744785310;
+	bh=JrmENTow3eU1JgLnFTACI/p8XRxovgR2TtFW5Z9K0sI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cJDltrYZLIudHpg5OiqO9jvqGZ+H5sMSUNlQnnGCHwSsIaexVPn1KNXzNHAQv7FOw
+	 K5DHtWGeaXvl2aLpI3Qc8Cwezv4YfdiWoQREmtSrNasQ/WlyN+tZJ43AGp6SefMgsy
+	 l/pqyByDXrC8T/LJSbDYuk5rtEu3/RvvmfUwp+bcGWtVqKorgur1wQxR0skGxKEfpM
+	 RUZKaR1cwdeGEWbBW1Ih1JsPaIbVUsgRzZ6RTXvgxib9IayXIN02ZueYrH2B+O+dhO
+	 2VhvoggRhVaBEo0eYUO0QEXINm7xBR0c5kufYsLzBv3wPQHlSX0yUdsSUwgeYL9Wda
+	 8MFt26+IjN/aA==
+Message-ID: <954d6efb-b660-450e-974f-dc89d777bb45@kernel.org>
+Date: Wed, 16 Apr 2025 08:35:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_6uzH9DsWIh-hIz@mail.minyard.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 07/10] arm64: defconfig: enable CIX mailbox
+To: Peter Chen <peter.chen@cixtech.com>, soc@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com,
+ will@kernel.org, arnd@arndb.de, jassisinghbrar@gmail.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
+ maz@kernel.org, kajetan.puchalski@arm.com
+References: <20250415072724.3565533-1-peter.chen@cixtech.com>
+ <20250415072724.3565533-8-peter.chen@cixtech.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250415072724.3565533-8-peter.chen@cixtech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 15, 2025 at 02:09:00PM -0500, Corey Minyard wrote:
-> On Tue, Apr 15, 2025 at 03:11:56PM +0300, Andy Shevchenko wrote:
-> > On Tue, Apr 15, 2025 at 03:06:45PM +0300, Andy Shevchenko wrote:
-> > > On Tue, Apr 15, 2025 at 06:39:03AM -0500, Corey Minyard wrote:
-> > > > On Tue, Apr 15, 2025 at 11:51:56AM +0300, Andy Shevchenko wrote:
-> > > > > Debian clang version 19.1.7 is not happy when compiled with
-> > > > > `make W=1` (note, CONFIG_WERROR=y is the default):
-> > > > > 
-> > > > > ipmi_si_platform.c:268:15: error: cast to smaller integer type 'enum si_type' from 'const void *' [-Werror,-Wvoid-pointer-to-enum-cast]
-> > > > >   268 |         io.si_type      = (enum si_type)device_get_match_data(&pdev->dev);
-> > > > > 
-> > > > > Fix this by intermediate cast to the uintptr_t, that makes compiler happy.
-> > > > 
-> > > > Unless things have changed recently, Linus prefers "unsigned long" per
-> > > > https://patchwork.kernel.org/project/linux-hardening/patch/20220616143617.449094-1-Jason@zx2c4.com/#24899749
-> > > 
-> > > I'm not sure I got your point. That discussion seems irrelevant to me.
-> > > They are talking about pointer-as-an-integer cases. Here we already know
-> > > that we are passing integer-as-a-pointer and this is the opposite
-> > > conversion.
-> > > 
-> > > > And it would match what is in the match table.
-> > > 
-> > > Match tables are tend to move to pointers, enum is usually goes to int.
-> > > 
-> > > > Is that change ok?
-> > > 
-> > > If you don't like my change, please do yours and consider this as
-> > > a bug report that needs to be addressed. I prefer more my solution
-> > > as we do that in many places for the exact scenario.
-> > 
-> > Note, the proper solution to the cases like this is to move to info-like
-> > structure and actually operate with the pointers instead of enums, longs, etc.
-> > 
-> > That's what's slowly moving on in IIO subsystem, for instance.
+On 15/04/2025 09:27, Peter Chen wrote:
+> At CIX SoC platforms, the clock handling uses Arm SCMI protocol,
+> the physical clock access is at sub processor, so it needs to enable
+> mailbox by default.
 > 
-> Yes, you are right, I'll probably make that change.  I'm not sure
-> about the uintptr thing, but I think the right change is to do an info
-> structure.  I never liked that code as it was, anyway.
+> Signed-off-by: Peter Chen <peter.chen@cixtech.com>
+> ---
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index c8a8fdb0bedb..4e9805c5bcc3 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -1424,6 +1424,7 @@ CONFIG_BCM2835_MBOX=y
+>  CONFIG_QCOM_APCS_IPC=y
+>  CONFIG_MTK_ADSP_MBOX=m
+>  CONFIG_QCOM_IPCC=y
+> +CONFIG_CIX_MBOX=y
+Squash the patch. Don't create one patch per one config change.
 
-Please do, I will happily test anything you provide as currently this code breaks
-`make W=1` builds.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Best regards,
+Krzysztof
