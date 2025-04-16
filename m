@@ -1,133 +1,134 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A946818C03F;
-	Wed, 16 Apr 2025 07:47:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3005B189B9D
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744789648; cv=none; b=SupOab8Iqd2o/PJm2/IzbcEQJSht47VCjfbzzod0Nb8L33SVRfpMElI4zMJRU9uA3jumsKORkbHFMx2wZKAvzo6qXk4oipbA5MMQlx39ThCOKoTHpKlc5UGjoJ7R1vYJcQJRRsTlLB3VoxX/BS/GOSUYfrxI5heE3UxvTN4aMtI=
+	t=1744789694; cv=none; b=YKb8QxY3Trh2dhWDdYSIx6vkVgO1OULjCUguBp1gRPO0UEmLd0pwH3j3JBEOihaCz3utOzOhhVHaTDRcdVSDZF471vMOb6riJFDaW0+w80jbFq9AfXC1sJBl5Mkcr1fcJC2JiCtO8gUsPPGp7w0WbirraCFQyNgU+8mytyDfsLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744789648; c=relaxed/simple;
-	bh=+aK7VwUgzlHBYFwskORp/vcOjArc41p9ulC7hT1Rb2s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZmyuL8vC5S/zD5LzJDTGsyc/f6LPIDvihiqtao4vh1Ry36Wn4IlbsZe73rNIVW5EQDJDHawoQ9IHja1SVxAo0qevWuck2ANXPeCo4WOqSNPRdH1Gc3ZtAbr5/DG18hYN1eV1T8Z6hDAbIc9M9oYJkgROIdZV1MTxN09n5RgWs3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cDNCtzf6; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744789694; c=relaxed/simple;
+	bh=mlLugVIgUXMn68LUKrSnqKZfI+aiuTTmcGRKFxZQE4M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gjdub2KF6hy+6xe07KpSj8Vmwq7oCSkwUYIckj6a5RMYigy/uBgAa8PLWuPP66VB/+86lTfNQRsNjD3ll4Wq0Das3MoGt2jp/Ig+dBJoaB2d0urprGKWe19u2BAaUd37l6NKs0wBzu9ScU6lIqzmVAUYsur8yjc3f7p2Glo3eYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Jt5UjPgz; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cDNCtzf6"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9eb12so10788873a12.1;
-        Wed, 16 Apr 2025 00:47:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Jt5UjPgz"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43d64e6c83eso8122075e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 00:48:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744789645; x=1745394445; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fnmYoRkzfxz/puh5JdgYh8xFfsxdlpS9stminDS1YAI=;
-        b=cDNCtzf6n/BLpqB+50pfJ6+atmbw2cDFOkAFZtMs0VOtYl+1Ri1srrbZpyibeUXuAe
-         L8NYfCeodbK7hlSaS0GIES7jT8HRYktY8myyaYDfUeJlHFevAyAExNsDQCYwnRSqrHSe
-         ciznA5aB6Ckic5GZ8wTdLogXNwNo1vihzTl2WY1GK96gY24u3aAdb8oMZZv9OQY4KbdL
-         6OVRRW1YKSbo9tlQ7ARybh1jRAprFEH0jiB19UZ8wxCIzp5rvxY1B0ys2pC4coqFwQQY
-         MN5utHjZ2NRNlAZOlGX7apmWI4YkD2jBh9uYxPpSDUdYimLK3+TBWuPdkDTQ8/bXoQMf
-         D2Bg==
+        d=suse.com; s=google; t=1744789690; x=1745394490; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cTvOaDEQG30yWMqYolrBjhpkdSkM8de0KjZNMFJpHHE=;
+        b=Jt5UjPgzrvOaax5/Qeg5J5Xy16YvkCOVc4HtM2AuF51gyQHKFZggelDMuKijMuNg0g
+         RPvDbT0ZhKZL5PxUaTquwS23aOgWNVsD/AHXFMVQ9vnzXchG8EjEXx2nXnafAGBFS8zZ
+         95C5/w1YIiWs/w3/pJXy99B7GKf4YI+cWVoHn3tzoVlFg8T/0zL3i9gzBcWgRJh8lOMh
+         aH8X5PHWN5MnOmT6vB+b8QWSDCt6rgkSMaB4wmvSCxUmGjT41Qi5E6yJaQ+VsKxBuLfr
+         EbCWNEsHI/PjhzlJtPYvp2Z14fyU5uad39e2bo0bH5e4hx/nyPm2OJA2UPinLnaGusR+
+         R0lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744789645; x=1745394445;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fnmYoRkzfxz/puh5JdgYh8xFfsxdlpS9stminDS1YAI=;
-        b=I4jlWAVlfgmeDA96li5fJoVHshEygMr2KVqmkHi4d5jEmgzl8Z9rGBeBj0KQYLpwvb
-         oS09jdFgSDCyHib0Xkv2RcOit3NIDXzuZaKOTy8jTxkW+ECtiQyeBiF6D72b1bFwRlgr
-         Q+0MHFcMcPX4eWU7tSeAp/V+erD+GnhnK1Tl1WHiIIepYpp0qVO792oQQa+Dl+Xan/+p
-         N3AA8uiUKJnrq4oz8bx7MAQnUEobDTu8L9KtT6A/lODVEk6Z2yOgW/5nrhrJTQ/St9N4
-         xYDyT/lyT7CzZr144sUWOJ9RO8oheGQtcnkTSXzpRA9MfyYtWux893rnKOWUF6u2kaxv
-         W1vg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9BEmX6W5f1MVEOp8Yrl2CPD7FFZybKNCIec+04nk/QXvZn6UQY/3Wmml7bBYruQ1hBWPXyijv+NOS@vger.kernel.org, AJvYcCVImKHcMBziPVgUJpYp05v4LF3LNia9yB2MpLmD2TQoO+u3BCxx6TZha7S4qsbJ/nj/w30A1B8k@vger.kernel.org, AJvYcCWSrE4TcTq9y8m11f2jTPb/rBBaxaQ9krgTBfwSHlE7rymlQA4I7o7mayd+F4dkayA6asRXIyZ7BUjJpqQc@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4oDUMhHPpWouSkw0LiIDyyL2Dx0QO1qmGPpBEGX0+I5U7oUgq
-	4emulOm/uQ9DOJTYlxn6I2A+X1D4OMics/MHIkuyEvARcwHpAu0I
-X-Gm-Gg: ASbGncu0Pq9w01bJuCPyO1tkjI5/DwxLPyzfHYK/44x59yc9f0jX6BpDdCDjeyieRfF
-	XzUZCtEseVE+qLRWYIIyq++J66vT1EXfufXAFlNwdkdNkHBdoElOv12jq3ziTnFaeeFAmJ1z/HH
-	SccK4DJtAKQLzgzmxXN61DXRy/oxCQYjrltw3pKF4C50xT2I/wSs99HlpY8DyZnpXmHbf3nd/8S
-	8FdDZ7yAJMxMYeyZiHXCGU4rqEOLs0AYfZXkyh9WkkdKfGdY4RG35aVHHc0rzvb5SLjoFnSh1Xe
-	dpGT2bJUXBVR7WRU6MKZFXJ3pgXcOhMgyAp6BPod1Yv9c/rDeXT3NB90zp2dVEPo9gt60Q==
-X-Google-Smtp-Source: AGHT+IE4wZAAuWbgh94amq9c4VWINUMCA2nvDxELJOL9xH3ncpbcFzGL7F4tzZoeBmUHByL6j7mvpQ==
-X-Received: by 2002:a17:907:a08a:b0:abf:4c82:22b1 with SMTP id a640c23a62f3a-acb429c24b1mr63690466b.32.1744789644539;
-        Wed, 16 Apr 2025 00:47:24 -0700 (PDT)
-Received: from legfed1 (lis01.vpn.liebherr.com. [193.27.220.234])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36ee54d8fsm8074206a12.12.2025.04.16.00.47.23
+        d=1e100.net; s=20230601; t=1744789690; x=1745394490;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cTvOaDEQG30yWMqYolrBjhpkdSkM8de0KjZNMFJpHHE=;
+        b=fB7p8HBwQ30NL6dNwVQVpyq3WYSkNlfbkxHOQ9emylZdLjFAxeM1s+KoBz42IEIc+v
+         GIr3XqwRCLX1t6OiMoSVXGliCIFky/QRnLuSe89lckDrjGN+zV3nTcJM5sV6smvX1YIx
+         ifGSaOcwSur0xYzHUfyNbTgv7/AaZssa3eSGkKN1OJ1uqieHU0YcEWRx7LDxfUPJopau
+         YTfoROK6KnsFC3P7Bzj9b4EE7oS6Wryo8JkOpd/PskHbEPv5RRGXPwfu3EbPHKrRFO/T
+         Fp8LkzfenhA1Ps2eILZGrEn7FpJblrmcSMzif8RQ87lyA+LClsbpKkWwnp/kV+Wfuw9Z
+         769Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUyo8eY0dVqyaDNJwKnUV4338gchxNTxvXqeP+klvFzXxhTt1IBGuMSZ1V5EWm/IXk8nZM8Zzq0r6ewdMU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZlY4AEj8PCIpJzLwDqeyP8S3ibjFa7FFVp9kAbBbYN8FZGgPk
+	bRExS25egkzA9Koci1OCR6dzz4bw1Am8/Y79sAoQfwSk9yBmNsTbw0AzvUU4KRc=
+X-Gm-Gg: ASbGnctmvrJ2IJLAcm9u95zxejw7MlhvG9bedW6MVmJQMjq6PR0T2sJ+C/gvYLHLpEz
+	ObBSnSR/fMUaeIDnFgffQWEKzp1dogQYvw8hltP1I8OzTkb80ahpKA5gwIYpXBa7c8fFEuG7hpc
+	lkBmRPZn/16PmUg84qIPUaACx8bqeEKpvZB1QBZyUt7QB0GEehDDuDCCOzlJwiFHoK/5nEePP+0
+	veqE4iai7lJzY4PBubYxqO/TC+ipT4l+9I0FlXzNBOYfGOywCi01PDIcfPAeLCouSMBKLeQ4zCA
+	s1Gh7qFejsIJkiFHX9rbfV7dxtzwPvpxJtFgMygW6tBZivlOoiUxqaU//8qygL6678MsCZ96EAe
+	D6uhisLxBtF/6ibDgf0DhK/voyC5Q6w==
+X-Google-Smtp-Source: AGHT+IFOauWmzV5VTo8P00eam5tza1oS3n8d1LwySwXAoWJeZ+FWxgBAT6OBdbDfI53apvgsnPAh3w==
+X-Received: by 2002:a05:6000:4205:b0:39e:dce8:1c01 with SMTP id ffacd0b85a97d-39ee5b99f7emr245421f8f.12.1744789690290;
+        Wed, 16 Apr 2025 00:48:10 -0700 (PDT)
+Received: from mordecai (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b4f3ed7sm12862225e9.24.2025.04.16.00.48.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 00:47:24 -0700 (PDT)
-Date: Wed, 16 Apr 2025 09:47:22 +0200
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	"Fedrau Dimitri (LED)" <Dimitri.Fedrau@liebherr.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2 3/3] net: phy: dp83822: Add support for
- changing the MAC termination
-Message-ID: <20250416074722.GA17235@legfed1>
-References: <20250408-dp83822-mac-impedance-v2-0-fefeba4a9804@liebherr.com>
- <20250408-dp83822-mac-impedance-v2-3-fefeba4a9804@liebherr.com>
- <7dbf8923-ac78-47b8-8b9c-8f511a40dfa3@lunn.ch>
- <DB8P192MB0838E18B78149B3EC1E0F168F3B52@DB8P192MB0838.EURP192.PROD.OUTLOOK.COM>
- <04dc2856-f717-4d27-9e5c-5374bb01a322@lunn.ch>
- <20250408171831.GA4828@debian>
- <20250411150448.GA3236749-robh@kernel.org>
+        Wed, 16 Apr 2025 00:48:09 -0700 (PDT)
+Date: Wed, 16 Apr 2025 09:48:07 +0200
+From: Petr Tesarik <ptesarik@suse.com>
+To: Oliver Neukum <oneukum@suse.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] usb: core: warn if a GFP zone flag is passed to
+ hcd_buffer_alloc()
+Message-ID: <20250416094807.2545efd8@mordecai>
+In-Reply-To: <522b3049-8e7f-41d4-a811-3385992a4d46@suse.com>
+References: <20250320154733.392410-1-ptesarik@suse.com>
+	<20250325134000.575794-1-ptesarik@suse.com>
+	<2025041110-starch-abroad-5311@gregkh>
+	<20250414090216.596ebd11@mordecai>
+	<522b3049-8e7f-41d4-a811-3385992a4d46@suse.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.48; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250411150448.GA3236749-robh@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Am Fri, Apr 11, 2025 at 10:04:48AM -0500 schrieb Rob Herring:
-> On Tue, Apr 08, 2025 at 07:18:31PM +0200, Dimitri Fedrau wrote:
-> > On Tue, Apr 08, 2025 at 03:28:32PM +0200, Andrew Lunn wrote:
-> > > On Tue, Apr 08, 2025 at 01:01:17PM +0000, Fedrau Dimitri (LED) wrote:
-> > > > -----Ursprüngliche Nachricht-----
-> > > > Von: Andrew Lunn <andrew@lunn.ch> 
-> > > > Gesendet: Dienstag, 8. April 2025 14:47
-> > > > An: Fedrau Dimitri (LED) <dimitri.fedrau@liebherr.com>
-> > > > Cc: Heiner Kallweit <hkallweit1@gmail.com>; Russell King <linux@armlinux.org.uk>; David S. Miller <davem@davemloft.net>; Eric Dumazet <edumazet@google.com>; Jakub Kicinski <kuba@kernel.org>; Paolo Abeni <pabeni@redhat.com>; Rob Herring <robh@kernel.org>; Krzysztof Kozlowski <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>; Florian Fainelli <f.fainelli@gmail.com>; netdev@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Dimitri Fedrau <dima.fedrau@gmail.com>
-> > > > Betreff: Re: [PATCH net-next v2 3/3] net: phy: dp83822: Add support for changing the MAC termination
-> > > > 
-> > > > > > +static const u32 mac_termination[] = {
-> > > > > > +	99, 91, 84, 78, 73, 69, 65, 61, 58, 55, 53, 50, 48, 46, 44, 43,
-> > > > > 
-> > > > > Please add this list to the binding.
-> > > > 
-> > > > Add this list to "ti,dp83822.yaml" ?
-> > > 
-> > > Yes please. Ideally we want the DT validation tools to pick up invalid
-> > > values before they reach the kernel.
-> > >
-> > Ok, but then I would have to add "mac-termination-ohms" property to
-> > "ti,dp83822.yaml" as well together with the allowed values ? Ending up in
-> > some sort of duplication, because the property is already defined in
-> > "ethernet-phy.yaml". Is this the right way to do it ?
+On Tue, 15 Apr 2025 09:53:24 +0200
+Oliver Neukum <oneukum@suse.com> wrote:
+
+> On 14.04.25 09:02, Petr Tesarik wrote:
 > 
-> It is not duplication because you are adding constraints. I was thinking 
-> the definition in ethernet-phy.yaml should have some logical limit. Say
-> 200 ohms as termination resistance is typically 10s of ohms. 
+> Hi,
+>   
+> > That's the point. AFAICS there are _no_ in-tree callers that would pass
+> > GFP_DMA or GFP_DMA32 to hcd_buffer_alloc(), directly or indirectly. But
+> > nobody should be tempted to add the flag, because I cannot imagine how
+> > that would ever be the right thing to do.  
 > 
-> Seems like a long list to define to me, but if the driver is going to 
-> reject unknown values it makes sense. You could also make the driver 
-> just pick the closest match rather than require an exact match. 
-> Resistance values are nominal anyways.
->
-Will add the logical limit into ethernet-phy.yaml and add the table with
-the allowed values into ti,dp83822.yaml.
+> You do not dream about putting USB onto PCMCIA over Thunderbolt?
+
+Oh, I do, and that's precisely why these GFP flags are no good. The
+address (and other) constraints imposed by different buses may not
+(and often do not) match any existing memory zone.
+
+However, zone address ranges are determined statically at compile time,
+or latest at boot time (e.g. arm64). It's too late to adjust the limits
+when you hotplug a more constrained bus at run-time. And I haven't even
+mentioned bus bridges which add a non-zero offset to the address...
+
+> > I can change it back to mem_flags &= ~GFP_ZONEMASK to fix it silently;
+> > I simply thought that driver authors may appreciate a warning that
+> > they're trying to do something silly.  
+> 
+> People rarely appreciate warnings. I think we should limit them
+> to cases where something goes wrong or something unexpected happens.
+
+I'm certainly no expert on what is expected to happen if you include
+GFP_DMA in your HCD buffer allocation flags, but the current code will
+*ignore* it, unless the HCD uses PIO.
+
+I thought this was rather unexpected.
+
+> > Whatever works for you, but please keep in mind that there seems to be
+> > agreement among mm people that DMA and DMA32 zones should be removed
+> > from the kernel eventually.  
+> 
+> Well, if somebody finds a legitimate use case for these flags, the mm
+> people should deal with it. They are likelier to find a good solution than
+> all driver writers being forced into finding individual solutions.
+
+My goal is to provide an allocator that is a better match for the
+constraints defined by dma_mask, coherent_dma_mask and bus_dma_limit.
+For now, I'm trying to clean up some users of GFP_DMA and GFP_DMA32
+flags which look obviously incorrect.
+
+Petr T
