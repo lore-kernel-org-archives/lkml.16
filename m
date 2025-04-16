@@ -1,196 +1,269 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11021101.outbound.protection.outlook.com [40.93.194.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6B8219A8B
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:09:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744826951; cv=none; b=khUOLjTlJNvHS0H5peXthhY3aFAIw33yjHttL80skI0p/WF2/XwCOxOq4kPZqeqXYDgk6AaRsU7L6DpA7H3v5AqtzUzgEhIfwUHcYC9L6TbEAUMSNuFFgQl+r0WSovsZUCAGbxCG+JWWot6/8FMMSe2jJHVqyE6t6CZZJWluxMY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744826951; c=relaxed/simple;
-	bh=Tofc44tRyxEKXnUa2bwDyx3eVUfRCpuW6m9vhkYuuCw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rMZr86IXIFi6dBYwzrCIWhuObqC7otiRfZCUvaxZyk6JsRQ/TrFhtaSQ4suzoBB0sPNS4VRJV56qd5pVTj3Z6/zK36k/p6VXSot/62Htue0CWBF7qTqCZk4tg4li9Y6NchD85chjEBS4akHte7QhsIvUpPKbG8yiSd/03T9v2D4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=DnrhDyEK; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A402153E0;
+	Wed, 16 Apr 2025 18:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.101
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744826967; cv=fail; b=JFiym7nS4s4kEejiIJCPA8/XCWy3X09Ynqomw3YABaXlrWQWWY0SZmT4LXYv105mPJS4ZFFLF9ppMah7sOIrIYYVB2NWqQ3zMMKWqM6ei4aY6y46gtiIUMRE0sFP8uBLNgnH/7M+rn5g91tgEgDfSFx3OaFFU44qEtXrW0Iq2Dc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744826967; c=relaxed/simple;
+	bh=JvprXk0BXzwuGOjNKsPs+uRrI5kt5XdO3qoFN1cpCPw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ScXItcGJAMccyWLccRfnmYyFJ0ZQnMMnGph/u33G6p7qqrV+O06WJU8qcOaGv0sYKGkhVCMTtWKJhANHM6Th/lLXjDsY9vQpxjEWiEHtKEZFrnEoGcrRbhJb0nhWufMnbaeswB9nrR2bpVpP5wmMH9v33ZgwZzVCqtzzalBpThY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=RreElHEs; arc=fail smtp.client-ip=40.93.194.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="DnrhDyEK"
-Date: Wed, 16 Apr 2025 14:09:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
-	s=key1; t=1744826946;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1Z/ycPhzFOp7kqim8jOWP2MgWDZ24W6IrXcEl8cuJ58=;
-	b=DnrhDyEKSAHD2fzWhfxYKAMLqUZToFlUYZMgSO+5+GZ3c4t3esiForHeklefv6nSkYv15V
-	f1840w5Kopq2OZImcX4hNi7zsQ1tdLtx5/iNlV9Dl0zFAlOoPFCYjPGhxcW2jjG9FFXvpr
-	Rdy2YeX/ZKLv84JBoidMlckAU+DZoGYGvvoCAy7UWyzxQCF3qP6bZy2NvOyXQkKTbN+ms7
-	olCblvgUlVdi9MICJo+Ln+3BI6Hezht9UN5N7tiEyFbQIdJyzWITTElI6ppeNLhMlYUNQe
-	DN+7NAzASQnQroPDyeTYWCS+XcIoE5hPGkUyCWpWkfNv6O0puB+LKcUqc8Dpuw==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-To: fnkl.kernel@gmail.com
-Cc: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>,
-	Neal Gompa <neal@gompa.dev>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>
-Subject: Re: [PATCH 2/3] nvmem: Add spmi-nvmem driver
-Message-ID: <Z__yPpi43VdDqPYM@blossom>
-References: <20250415-spmi-nvmem-v1-0-22067be253cf@gmail.com>
- <20250415-spmi-nvmem-v1-2-22067be253cf@gmail.com>
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="RreElHEs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HcIzGbQx2WKt+WUQ28Hz1B1kF+OGeTgEuTn331OjyhzL02e3w5CaadwW4RiwYPpCKHXuFZsa8SYbnG5U/FozvnuVkxbLKfiOz0e2AbUEYA2cAn/9UH73IZsrhCLi+FbckvGslQ+lKUoJfStZ6HCPkTuWU6zrp3tumVCj36C+YEN26qJ04I9JMM3d24bouCtu9JaCG3mPIJrmW/Ody0GKXomlRnzT/t1t2hkT2NJY5W48Kio+bYkhOL1X88SY8hEXDM4GQ98r18LX28YFVsxqUuORv4Y701pA70ZUipZ2urUqSem5Z8JwySjjmpVrT+tRkoEkNf5d0lvJuck4IHm/Qw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OoMgX6Ds5PgLmnyxrld6Pp4mepkO3DrlV34Wz22LUow=;
+ b=xf96NKrf+gZ4clxqiqjN57bz4eVFGwJhXEH5CYYjAFe/hmZY+Nfjfd0pFcWomhl/8dFkTV7sJbmSje1sDauHeEhQgVSRuRFPYGZCt3z+no4eAg9PBYW4YZAEFAAqGVdyKxtxW6770hHEo5d0Ll8GC3LmjOEuYsU7/x6vJ/qxhxYOJuHC12u9XJ/zIouqq5NMYDwI58ANw3fek4rcvv5ozb9XmSuJ//Nc+mrJo2aJHy246XqauC3uneHYftw6NZYvmXc+Xvh8gIuVAc3CgBXdSO8tn5btUHVUMJHEY6ikSI0n8RwgQrSQHfVJV3Dscb8NibRP2ljQRh05oRbZGinKQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OoMgX6Ds5PgLmnyxrld6Pp4mepkO3DrlV34Wz22LUow=;
+ b=RreElHEsMqR1TkCwSH64VWlnnrSSfg+1vgHgTxYXFIjXQf00PlScjxLdcq7hhZaqt+E4Kcbc+M+x1N4OHatSDpgL275ubKUHtk4zrtfSF2Lxkcj5YbYnhV9jwd2iH87Crj/QOZcD+CZ4O+v+9VdHHCFRT6NNFTMUJWcZJRZVO64=
+Received: from SA6PR21MB4231.namprd21.prod.outlook.com (2603:10b6:806:412::20)
+ by SN3PEPF00013D7C.namprd21.prod.outlook.com (2603:10b6:82c:400:0:4:0:a) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.7; Wed, 16 Apr
+ 2025 18:09:23 +0000
+Received: from SA6PR21MB4231.namprd21.prod.outlook.com
+ ([fe80::5c62:d7c6:4531:3aff]) by SA6PR21MB4231.namprd21.prod.outlook.com
+ ([fe80::5c62:d7c6:4531:3aff%6]) with mapi id 15.20.8655.012; Wed, 16 Apr 2025
+ 18:09:23 +0000
+From: Long Li <longli@microsoft.com>
+To: Konstantin Taranov <kotaranov@linux.microsoft.com>, Konstantin Taranov
+	<kotaranov@microsoft.com>, "pabeni@redhat.com" <pabeni@redhat.com>, Haiyang
+ Zhang <haiyangz@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
+	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
+	<kuba@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, Dexuan Cui
+	<decui@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"jgg@ziepe.ca" <jgg@ziepe.ca>, "leon@kernel.org" <leon@kernel.org>
+CC: "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH rdma-next v2 2/3] RDMA/mana_ib: support of the zero based
+ MRs
+Thread-Topic: [PATCH rdma-next v2 2/3] RDMA/mana_ib: support of the zero based
+ MRs
+Thread-Index: AQHbrRuyNQ7ShGqnLk6Y3C5tFZyz9rOmmvdQ
+Date: Wed, 16 Apr 2025 18:09:23 +0000
+Message-ID:
+ <SA6PR21MB423135C01F96E70C7357DDA7CEBD2@SA6PR21MB4231.namprd21.prod.outlook.com>
+References: <1744621234-26114-1-git-send-email-kotaranov@linux.microsoft.com>
+ <1744621234-26114-3-git-send-email-kotaranov@linux.microsoft.com>
+In-Reply-To: <1744621234-26114-3-git-send-email-kotaranov@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=bfc05aae-39bd-4d3b-88c6-4a231418ff6a;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-04-16T18:08:44Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA6PR21MB4231:EE_|SN3PEPF00013D7C:EE_
+x-ms-office365-filtering-correlation-id: eca4df69-9b08-403c-e00d-08dd7d11d14e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|1800799024|7416014|366016|921020|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?mhVtNYHs6Cl8Lv3OW7ViSvVrUJEOGB0CGs8MaGMypuEzCDBiy9NkKf2zZtTK?=
+ =?us-ascii?Q?apCAzmhbgBXI61uh7LL57LmoDnahuCJegxEWJNsQhm6rIHZqE26xioqw+LyE?=
+ =?us-ascii?Q?abK5cTQTja+eF2pXtYkIlI4jSPCT2/XuIvI6Arni++rHIRe2qMzEFDPhmVXU?=
+ =?us-ascii?Q?pUWkSs3I+RWniW9jugOXXl+tlM1n6MVl2ziLjrNOd4o5OQ9K6xFpj5gav4tO?=
+ =?us-ascii?Q?PmqGtDsqIjxoPQwoIWVbZLvzs1XhH/kRY1UzsEwMvN5O+5eQWt3kTRG9xC25?=
+ =?us-ascii?Q?YYUBRxIUqfJTW+HVL7ZWc83/AAmhN/yYccqih5pyYJazxMcF/NW9SV1yFKlL?=
+ =?us-ascii?Q?gJN13nQg7SZYqJLEKdwmM4xLHuDnEk0ysIgy4Wdo9x+9IZja9cd65yP0g0af?=
+ =?us-ascii?Q?YX9qpDIjHxo1lY3AQkPKweHFLnfe1Q4tix5x1fia81w2tJM8NzApBbxupk39?=
+ =?us-ascii?Q?jOuWMA7+/dZGOdpFhGz8rblCn5gaQHx+zKUsKsCVC1NC2NDGK2MLON3rr4ss?=
+ =?us-ascii?Q?c4ToLaFAvOFrzkIpKXQhLTGQPJfMsGde2gAzxG7zxLrw6U5L7NxJ0K1g8uj2?=
+ =?us-ascii?Q?0nv2LtSYrfZuHfvE2RqLMNFNg8Gydz7m5U7q6l2O8B9G1yYbLCvmLjATDk2f?=
+ =?us-ascii?Q?I7xqRerwFeP42hsJI5FSMo6kzu5rzfAw8X4SRJ3jPMLL3uLsWihrsYxsqz24?=
+ =?us-ascii?Q?jgbxOaO2Ko+iqtTgfF4Uw9EAVDD9nWM61y45FTYBfCJIILkzpwi5gBzMiPUC?=
+ =?us-ascii?Q?1JoYFbIkBb4MQ3IcUZoxat8THDAvbRq0cZI4NWmiSXKc58iRzYGMvwR1AHAE?=
+ =?us-ascii?Q?WGEZH/ie/R+9nqeBu2zxrIiS4Axx22mKQSH5tTK0yWgF3wT35bfdmcB7EEVv?=
+ =?us-ascii?Q?j9u3cPJ9VB1DunB0xlbCl4d0HYhRyhMASboPqtzpYTl4stAFtriBUlXGXXoK?=
+ =?us-ascii?Q?FQylpvFhObKVPLvtKVknHUWC+blpWFCiuYka08JSMMVZ1zeEGtoNhI6OJn8U?=
+ =?us-ascii?Q?tiAD1lz2wRc/Db6k/XEpCqXUQjX2lifyPDQO2tBWmvNgH65sTRlIlZIWN/UE?=
+ =?us-ascii?Q?i0AW9ZP2zyxy3prBXEB6lhLtbiANEEYbxYUvZRGMHGllNEbqyZXpT7RebtnG?=
+ =?us-ascii?Q?zGfoMbeaDEnKGliV7rhvneeGbXh8h5YW+mU1TYMT4IMgrAAm0K4U/4PEGJJk?=
+ =?us-ascii?Q?GGumr4FwXzjytbCf1oE+/NCAZdOcAk3mpp4t3xCz/TXyIHwocleTzQYd1bBX?=
+ =?us-ascii?Q?+UOkbpkbI/Fb74PLYr1F/+KeYiD5ksbrsUNl9l3KeAhqdEs4L5a4CBN3/aya?=
+ =?us-ascii?Q?uTQrS9q4SqvNKrOskX0Tl91Dd+fX/iBp6u2FXs2x5URvf81IDljE6ZDIt34V?=
+ =?us-ascii?Q?OMHVvmaqxDU7zKwZXhaXZrC4fC+IxsqEE3/T8CZ6xlXedZsEN5kOwyw6mIYY?=
+ =?us-ascii?Q?AaYm4JDGXij5einMp29j8tMmMEWB2pbg0HQyJxM37D4P54aOrsLEgsZyECEv?=
+ =?us-ascii?Q?T8DBe0Ok1UXVj5o=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA6PR21MB4231.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(921020)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?O7wajTN1kee/7m04zv0IRecW0SeT8YI6QLYn/UiNoqdZT6LudWtH4SX1Suq3?=
+ =?us-ascii?Q?B85OvG86HO883IAabdU3MzIn+26ybWBg/WKnGsLnKKG3TfLH2NsSw5LdAq0j?=
+ =?us-ascii?Q?AopkaHkKiDVxYsYB145IiZ9HshMyh3FvXSPLSxFCA5mgEVpNk6EH9Ft86iPG?=
+ =?us-ascii?Q?cNTuJwSQ7+ixJ3zfnTz1D3ln+s9tz4XqvIg5RieFkMQq43Hloc7gu0g5BNXY?=
+ =?us-ascii?Q?fqrSf/KO/4rze75iwEQtbi2jCxPHvf8WobbA4twGS6GFTzja2/MkSadG+w83?=
+ =?us-ascii?Q?pJ7I33vEvnSZwktgtBYQ+MX2ATP1raUltxOLQ1hEMEr6wMVR/lUdctuEMd0q?=
+ =?us-ascii?Q?EBzrjdJ206ZLsqpt3H0On3F7b26ApPWGd/b/XM++jP04aLFqQalq4fbmQd23?=
+ =?us-ascii?Q?mtbw9ipQORiRENHgwlvRwe/886bvLNuPzOBLuQu4Xe2jLyht90LiK1/5zZcu?=
+ =?us-ascii?Q?LA1Mn7Nwutn7crcBVoVNiB6K5xc6y33v4mCYfvhBm+EKq6nnWbp5ZdU5FjW+?=
+ =?us-ascii?Q?vyHYXHSgRxK+ko9IwTb+wsxrLBJF7oih0LtoTQekbm7RvY1EMo29WNgB8hK1?=
+ =?us-ascii?Q?JsWzUpwE89CpycpufNEZIyxeexWDmN8ZBL6h6Ovsi1xL+WrlNlaHhNy16aPl?=
+ =?us-ascii?Q?tYzDZbmfnMQeFpHZDJaYu2MetWXgDwWfKscNkCCuIp9uo6oOaDnxRa8nR5hM?=
+ =?us-ascii?Q?Dzr7qcAvzriFg7LGsdbGuSsbThZpjg6IOpdsglRVMymVa4/Cjmsrl7pOfYeE?=
+ =?us-ascii?Q?yHNngnzd1lFnZokOe9A96RrJ79mtYQzh5LC9UwxRcTBDLfxcdyKZy/yANgPq?=
+ =?us-ascii?Q?zPIoB1cPA3nBZKrlgOqwpU5RhKDCLsdM1qEJE4k2SBhAIQ+/jId2+gwN+ppF?=
+ =?us-ascii?Q?OVmKjnnUUL05NevtqHpq/12njbkDr80S5hjLIUnyYHYGG31f9beZtpxW5Kc2?=
+ =?us-ascii?Q?SR896CLOQTKPwT7L0ITecCwxBi7IlRB0qwQMUzx/2kxgw2T4jRagslKbn1vE?=
+ =?us-ascii?Q?Ci/C0rg/8rzwzLPplToipkm2rdZKSXUGrm16J7UXnORlp/XNJtGB70okjm3R?=
+ =?us-ascii?Q?tLWkds7ExUeDObQjylUhgIYuLcgzW6JHYu+RbcR8O2v9dI3TkpWsx9/Ndwj/?=
+ =?us-ascii?Q?YBazVT3gH1Sl5qQGp3FFNGzUXB8b6MV1u4lP7WWYS3N6+mgkXix1mjbnNGp8?=
+ =?us-ascii?Q?tucB3cUtiYI2ahKtrrN7qzErMoQS6PmjLiA/6dtWq6uL21U5ppm8a9hjX8yS?=
+ =?us-ascii?Q?/Cq1VGvD7dCfpy9VWLuZpISiaBz/CQlHzPTWMbsmB+cUrRDTWzxE45sZEuXs?=
+ =?us-ascii?Q?bFvgkvzERxJ2hMxTKtSIFBvPqc9u9ZmZtGkzVbiMowKc9n/kHRO8OIBlP06p?=
+ =?us-ascii?Q?TAE+3pCoZ7UmlPSJ/gvJpWnolRkoqUaeVD0VBlwF9QLR0DJuGgMkzQA7sISR?=
+ =?us-ascii?Q?EjgHn1hPHleGj+jmrguFWB3DxybBzXBXq1PahY839V2ww6wPZGQjEwm72u26?=
+ =?us-ascii?Q?B7P7h9U3iXsnDKTPdLxDzyqP9enm0ULjNlOsh+8HBfeEglAb0aZKDGvmX7xv?=
+ =?us-ascii?Q?gK2s28Z5zbreSAmFj4aOXioePJaYo5UauXKbgJXm?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415-spmi-nvmem-v1-2-22067be253cf@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA6PR21MB4231.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eca4df69-9b08-403c-e00d-08dd7d11d14e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2025 18:09:23.5513
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tzKaYMFNAmjiudwfNcZF+SGFyOo73mtdkFEJj1DbPorUEgDA1pwRk+t0z82Oa+fDORStVqzbzVedlehVIW/jcA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN3PEPF00013D7C
 
-This should have a Co-developed-by tag in addition to the two sign-offs,
-given you've made significant changes.
+> Subject: [PATCH rdma-next v2 2/3] RDMA/mana_ib: support of the zero based
+> MRs
+>=20
+> From: Konstantin Taranov <kotaranov@microsoft.com>
+>=20
+> Add IB_ZERO_BASED to the valid flags and use the corresponding MR creatio=
+n
+> request for the zero based memory.
+>=20
+> Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
 
-> This driver exposes a SPMI device as an NVMEM device.
-> It is intended to be used with e.g. PMUs/PMICs that are used to
-> hold power management configuration, such as used on Apple Silicon
-> Macs.
-> 
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
+Reviewed-by: Long Li <longli@microsoft.com>
+
 > ---
->  MAINTAINERS                |  1 +
->  drivers/nvmem/Kconfig      | 14 +++++++++++
->  drivers/nvmem/Makefile     |  2 ++
->  drivers/nvmem/spmi-nvmem.c | 62 ++++++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 79 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e7b2d0df81b387ba5398957131971588dc7b89dc..63c12f901aed1f3e6de8227d6db34af1bd046fe6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2298,6 +2298,7 @@ F:	drivers/iommu/io-pgtable-dart.c
->  F:	drivers/irqchip/irq-apple-aic.c
->  F:	drivers/nvme/host/apple.c
->  F:	drivers/nvmem/apple-efuses.c
-> +F:	drivers/nvmem/spmi-nvmem.c
->  F:	drivers/pinctrl/pinctrl-apple-gpio.c
->  F:	drivers/pwm/pwm-apple.c
->  F:	drivers/soc/apple/*
-> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-> index 8671b7c974b933e147154bb40b5d41b5730518d2..9ec907d8aa6ef7df0ea45cc35e92d8239d2705ee 100644
-> --- a/drivers/nvmem/Kconfig
-> +++ b/drivers/nvmem/Kconfig
-> @@ -310,6 +310,20 @@ config NVMEM_SNVS_LPGPR
->  	  This driver can also be built as a module. If so, the module
->  	  will be called nvmem-snvs-lpgpr.
->  
-> +config NVMEM_SPMI
-> +	tristate "Generic SPMI NVMEM"
-> +	default ARCH_APPLE
-> +	depends on SPMI
-> +	select REGMAP_SPMI
-> +	help
-> +	  Say y here to build a generic driver to expose a SPMI device
-> +	  as a NVMEM provider. This can be used for PMIC/PMU devices which
-> +	  are used to store power and RTC-related settings on certain
-> +	  platforms, such as Apple Silicon Macs.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called nvmem-spmi.
-> +
->  config NVMEM_SPMI_SDAM
->  	tristate "SPMI SDAM Support"
->  	depends on SPMI
-> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-> index 5b77bbb6488bf89bfb305750a1cbf4a6731a0a58..b639f4284184db026bb27b11e04d54b8f7ff166f 100644
-> --- a/drivers/nvmem/Makefile
-> +++ b/drivers/nvmem/Makefile
-> @@ -64,6 +64,8 @@ obj-$(CONFIG_NVMEM_SC27XX_EFUSE)	+= nvmem-sc27xx-efuse.o
->  nvmem-sc27xx-efuse-y			:= sc27xx-efuse.o
->  obj-$(CONFIG_NVMEM_SNVS_LPGPR)		+= nvmem_snvs_lpgpr.o
->  nvmem_snvs_lpgpr-y			:= snvs_lpgpr.o
-> +obj-$(CONFIG_NVMEM_SPMI)		+= nvmem_spmi.o
-> +nvmem_spmi-y				:= spmi-nvmem.o
->  obj-$(CONFIG_NVMEM_SPMI_SDAM)		+= nvmem_qcom-spmi-sdam.o
->  nvmem_qcom-spmi-sdam-y			+= qcom-spmi-sdam.o
->  obj-$(CONFIG_NVMEM_SPRD_EFUSE)		+= nvmem_sprd_efuse.o
-> diff --git a/drivers/nvmem/spmi-nvmem.c b/drivers/nvmem/spmi-nvmem.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..fff6162cb22dd7ab45883f004f5b63ebae014698
-> --- /dev/null
-> +++ b/drivers/nvmem/spmi-nvmem.c
-> @@ -0,0 +1,62 @@
-> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
-> +/*
-> + * Generic SPMI NVMEM driver
-> + *
-> + * Copyright The Asahi Linux Contributors
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/nvmem-provider.h>
-> +#include <linux/of.h>
-> +#include <linux/spmi.h>
-> +#include <linux/regmap.h>
-> +
-> +static const struct regmap_config spmi_regmap_config = {
-> +	.reg_bits	= 16,
-> +	.val_bits	= 8,
-> +	.max_register	= 0xffff,
-> +};
-> +
-> +static int spmi_nvmem_probe(struct spmi_device *sdev)
-> +{
-> +	struct regmap *regmap;
-> +	struct nvmem_config nvmem_cfg = {
-> +		.dev = &sdev->dev,
-> +		.name = "spmi_nvmem",
-> +		.id = NVMEM_DEVID_AUTO,
-> +		.word_size = 1,
-> +		.stride = 1,
-> +		.size = 0xffff,
-> +		.reg_read = (void *)regmap_bulk_read,
-> +		.reg_write = (void *)regmap_bulk_write,
-> +	};
-> +
-> +	regmap = devm_regmap_init_spmi_ext(sdev, &spmi_regmap_config);
-> +	if (IS_ERR(regmap))
-> +		return PTR_ERR(regmap);
-> +
-> +	nvmem_cfg.priv = regmap;
-> +
-> +	return PTR_ERR_OR_ZERO(devm_nvmem_register(&sdev->dev, &nvmem_cfg));
-> +}
-> +
-> +static const struct of_device_id spmi_nvmem_id_table[] = {
-> +	{ .compatible = "spmi-nvmem" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, spmi_nvmem_id_table);
-> +
-> +static struct spmi_driver spmi_nvmem_driver = {
-> +	.probe = spmi_nvmem_probe,
-> +	.driver = {
-> +		.name = "spmi-nvmem",
-> +		.of_match_table	= spmi_nvmem_id_table,
-> +	},
-> +};
-> +
-> +module_spmi_driver(spmi_nvmem_driver);
-> +
-> +MODULE_LICENSE("Dual MIT/GPL");
-> +MODULE_AUTHOR("Hector Martin <marcan@marcan.st>");
-> +MODULE_DESCRIPTION("SPMI NVMEM driver");
-> 
-> -- 
-> 2.49.0
-> 
-> 
+>  drivers/infiniband/hw/mana/mr.c | 24 +++++++++++++++++-------
+>  include/net/mana/gdma.h         | 11 ++++++++++-
+>  2 files changed, 27 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/infiniband/hw/mana/mr.c b/drivers/infiniband/hw/mana=
+/mr.c
+> index e4a9f53..6d974d0 100644
+> --- a/drivers/infiniband/hw/mana/mr.c
+> +++ b/drivers/infiniband/hw/mana/mr.c
+> @@ -6,7 +6,7 @@
+>  #include "mana_ib.h"
+>=20
+>  #define VALID_MR_FLAGS (IB_ACCESS_LOCAL_WRITE |
+> IB_ACCESS_REMOTE_WRITE | IB_ACCESS_REMOTE_READ |\
+> -			IB_ACCESS_REMOTE_ATOMIC)
+> +			IB_ACCESS_REMOTE_ATOMIC | IB_ZERO_BASED)
+>=20
+>  #define VALID_DMA_MR_FLAGS (IB_ACCESS_LOCAL_WRITE)
+>=20
+> @@ -51,7 +51,10 @@ static int mana_ib_gd_create_mr(struct mana_ib_dev
+> *dev, struct mana_ib_mr *mr,
+>  		req.gva.virtual_address =3D mr_params->gva.virtual_address;
+>  		req.gva.access_flags =3D mr_params->gva.access_flags;
+>  		break;
+> -
+> +	case GDMA_MR_TYPE_ZBVA:
+> +		req.zbva.dma_region_handle =3D mr_params-
+> >zbva.dma_region_handle;
+> +		req.zbva.access_flags =3D mr_params->zbva.access_flags;
+> +		break;
+>  	default:
+>  		ibdev_dbg(&dev->ib_dev,
+>  			  "invalid param (GDMA_MR_TYPE) passed, type %d\n",
+> @@ -147,11 +150,18 @@ struct ib_mr *mana_ib_reg_user_mr(struct ib_pd
+> *ibpd, u64 start, u64 length,
+>  		  dma_region_handle);
+>=20
+>  	mr_params.pd_handle =3D pd->pd_handle;
+> -	mr_params.mr_type =3D GDMA_MR_TYPE_GVA;
+> -	mr_params.gva.dma_region_handle =3D dma_region_handle;
+> -	mr_params.gva.virtual_address =3D iova;
+> -	mr_params.gva.access_flags =3D
+> -		mana_ib_verbs_to_gdma_access_flags(access_flags);
+> +	if (access_flags & IB_ZERO_BASED) {
+> +		mr_params.mr_type =3D GDMA_MR_TYPE_ZBVA;
+> +		mr_params.zbva.dma_region_handle =3D dma_region_handle;
+> +		mr_params.zbva.access_flags =3D
+> +			mana_ib_verbs_to_gdma_access_flags(access_flags);
+> +	} else {
+> +		mr_params.mr_type =3D GDMA_MR_TYPE_GVA;
+> +		mr_params.gva.dma_region_handle =3D dma_region_handle;
+> +		mr_params.gva.virtual_address =3D iova;
+> +		mr_params.gva.access_flags =3D
+> +			mana_ib_verbs_to_gdma_access_flags(access_flags);
+> +	}
+>=20
+>  	err =3D mana_ib_gd_create_mr(dev, mr, &mr_params);
+>  	if (err)
+> diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h index
+> 50ffbc4..3db506d 100644
+> --- a/include/net/mana/gdma.h
+> +++ b/include/net/mana/gdma.h
+> @@ -812,6 +812,8 @@ enum gdma_mr_type {
+>  	 * address that is set up in the MST
+>  	 */
+>  	GDMA_MR_TYPE_GVA =3D 2,
+> +	/* Guest zero-based address MRs */
+> +	GDMA_MR_TYPE_ZBVA =3D 4,
+>  };
+>=20
+>  struct gdma_create_mr_params {
+> @@ -823,6 +825,10 @@ struct gdma_create_mr_params {
+>  			u64 virtual_address;
+>  			enum gdma_mr_access_flags access_flags;
+>  		} gva;
+> +		struct {
+> +			u64 dma_region_handle;
+> +			enum gdma_mr_access_flags access_flags;
+> +		} zbva;
+>  	};
+>  };
+>=20
+> @@ -838,7 +844,10 @@ struct gdma_create_mr_request {
+>  			u64 virtual_address;
+>  			enum gdma_mr_access_flags access_flags;
+>  		} gva;
+> -
+> +		struct {
+> +			u64 dma_region_handle;
+> +			enum gdma_mr_access_flags access_flags;
+> +		} zbva;
+>  	};
+>  	u32 reserved_2;
+>  };/* HW DATA */
+> --
+> 2.43.0
+
