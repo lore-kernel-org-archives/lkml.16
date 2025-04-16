@@ -1,97 +1,246 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798C422FAC3;
-	Wed, 16 Apr 2025 06:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C661DB34E;
+	Wed, 16 Apr 2025 06:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744785719; cv=none; b=EuHXuOwcJmRFV0MQwXkKRjLmr+kbVj28CYsFENW9xflonqLczFC04o2CIcLfTtZzTCG/aBBMBPPFkY85vZKFa1uwixm6w4EBsQzh0lSoKXH5MSOf74jG2x3RFg4NTUG5n+ST3+wg/OOk56/EC03L+ZfoZ9vvOwGblIUsmUNRpFs=
+	t=1744785740; cv=none; b=sx6cp06BQbCxCuK/riUBklYQaJSlRxf2YIrnBd9WsN9wwrjFMbEZFFR6t69RtlHkDpYuMOATDUjv9x14q1ZqFzmfUcDC23q/32mS8mMgenbMMTOvwlulNHaE/fj6rEu9JfjGvEZbtPdH745fxiD2MobUeSMilu/cYD9CjnqUXSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744785719; c=relaxed/simple;
-	bh=AeRn7fulkB1n4W59L2MZEekvvgPH6zRJiKzKmIqW6aw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XWmFCOQ2xocPqvW0D67L/W2DfU1rdfq8yQj+Qn+NtzV5meYMy/ECxbDVLCL1JBeMCUYFDu1viiwrTSIVnwgD+Cb+Y77/u7MLWui8Pl3tFVa1bw9FE5MGQ9eO9NvWN6PuWMHW7ZB1VrzOgvP9v1IDfkdWbe7/sxlzQpcWka0N4P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i43feLzF; arc=none smtp.client-ip=198.175.65.19
+	s=arc-20240116; t=1744785740; c=relaxed/simple;
+	bh=GRVp9P917blqRbz/a0s5zO5oAzopvzG7tEqL7bBBXNw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JP0jJg4lwqLPqotyKqfsMVIPcA3vGddaOnbznUhTzDv/8sNI0mH9lZ4+naSsi1dGIoxJzyI6tZUYT2MZ3KjOk0tOTvsiow5D/gub0yEpa9erz9THwfSCTd7aiLPleDiAHoYtrrlRYB2QneZ2iTiMOKyFlRP1lORv9qD1HUGHaiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n5qnUNED; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i43feLzF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n5qnUNED"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744785717; x=1776321717;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AeRn7fulkB1n4W59L2MZEekvvgPH6zRJiKzKmIqW6aw=;
-  b=i43feLzFrzNVTW7HzRcWcCLwZTSirESmYfvi5RF8MsU3yMxKiypWmCjo
-   jBqr7YXEqUTJ4wJuTXVXfIwD3A6aMtoSVNRnfpNcxZQ7P4R0IBAPQwKGh
-   9sIl72dsaoQyme9r6tlgb2uk+rJc46pZIORu26U0JJHnTueDP5UXB983r
-   pNkROESlDSlPJqvKcRYbNvL2qtGXOKJmZcAHh2sGWdIhsaWI/enrl+HvD
-   qNjMbJZaWUlOr+cbXVBgz3hqud5kkyzkQPx9fcnDsxM/Xf+9Ib50KCZY6
-   GSmgkZky5q4Xa8nyIHnk2t/iU0MnVMziXhTsPWSRtGHJPOnQPvfiyQuWq
-   w==;
-X-CSE-ConnectionGUID: R8/3wUfRTdWSRrxufGfmgA==
-X-CSE-MsgGUID: Plx0TIWzR/SAgT0EJPD2AQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46207923"
+  t=1744785739; x=1776321739;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=GRVp9P917blqRbz/a0s5zO5oAzopvzG7tEqL7bBBXNw=;
+  b=n5qnUNEDa4Skfakcwx+6Qtd2Xy4cj5vxBr5RvQKS8R01PnefIp+5Imkc
+   sCGNL6u/0LiW2s+pv33VioIHw7d63hrHwExVeylFhUNtOKswa2moD9hzx
+   FaSM5K9MiH04aaXaIojUMPmmegqBfq0Ka7KknjD+n6dya4ng3yGtusSI3
+   yqf5YUN2F6dN0LTYxRPmED1jHb+eHuby3DW//yYODYPujIw72qT/7e7S/
+   4hSNnfvU/KH6U6prTBbd3tglCZJIQouoWbyz2pON3i/8FWBDN597f0ycg
+   bhARgAlIBulCN92KeWOSjtJJjdry3ESM3vc7EaVyygwupkuPoCS0haq/0
+   g==;
+X-CSE-ConnectionGUID: NNqFPBzrS+uP65tdyhuylA==
+X-CSE-MsgGUID: FjedKStjS+Cl/pSSIWsVAw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46334163"
 X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="46207923"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 23:41:56 -0700
-X-CSE-ConnectionGUID: Tt4BfcoNTQmyzsjcWD/akw==
-X-CSE-MsgGUID: oaqcrxsxRXGfJoFx3e1ATw==
+   d="scan'208";a="46334163"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 23:42:18 -0700
+X-CSE-ConnectionGUID: koED1CSRSeS12ubHm/DcqA==
+X-CSE-MsgGUID: Qu+1IbnFQ6yen9OroQkKIg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="131262498"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 23:41:55 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u4wT1-0000000Clfh-27jh;
-	Wed, 16 Apr 2025 09:41:51 +0300
-Date: Wed, 16 Apr 2025 09:41:51 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] property: Use tidy for_each_named_* macros
-Message-ID: <Z_9RL4knM4vXrOff@smile.fi.intel.com>
-References: <Z_ew4DN0z71nCX3C@mva-rohm>
- <Z_yvNl23GcEpOkK1@smile.fi.intel.com>
- <Z_yvkKTgI4XSlGya@smile.fi.intel.com>
- <20250414201450.43fb8d9c@jic23-huawei>
- <0d470203-fe9c-4bc0-b487-6d638c006232@gmail.com>
+   d="scan'208";a="153566334"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 23:42:15 -0700
+Message-ID: <26799b7e-c3a6-4de2-afd1-7bda0639fa37@linux.intel.com>
+Date: Wed, 16 Apr 2025 14:42:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0d470203-fe9c-4bc0-b487-6d638c006232@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v3 16/22] perf/core: Support to capture higher width
+ vector registers
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
+ <20250415114428.341182-17-dapeng1.mi@linux.intel.com>
+ <20250415143626.GF4031@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250415143626.GF4031@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 16, 2025 at 08:55:13AM +0300, Matti Vaittinen wrote:
-> On 14/04/2025 22:14, Jonathan Cameron wrote:
 
-...
+On 4/15/2025 10:36 PM, Peter Zijlstra wrote:
+> On Tue, Apr 15, 2025 at 11:44:22AM +0000, Dapeng Mi wrote:
+>>  extern unsigned long perf_arch_instruction_pointer(struct pt_regs *regs);
+>> diff --git a/arch/x86/include/uapi/asm/perf_regs.h b/arch/x86/include/uapi/asm/perf_regs.h
+>> index f9c5b16b1882..5e2d9796b2cc 100644
+>> --- a/arch/x86/include/uapi/asm/perf_regs.h
+>> +++ b/arch/x86/include/uapi/asm/perf_regs.h
+>> @@ -33,7 +33,7 @@ enum perf_event_x86_regs {
+>>  	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
+>>  	PERF_REG_X86_64_MAX = PERF_REG_X86_SSP + 1,
+>>  
+>> -	/* These all need two bits set because they are 128bit */
+>> +	/* These all need two bits set because they are 128 bits */
+>>  	PERF_REG_X86_XMM0  = 32,
+>>  	PERF_REG_X86_XMM1  = 34,
+>>  	PERF_REG_X86_XMM2  = 36,
+>> @@ -53,6 +53,83 @@ enum perf_event_x86_regs {
+>>  
+>>  	/* These include both GPRs and XMMX registers */
+>>  	PERF_REG_X86_XMM_MAX = PERF_REG_X86_XMM15 + 2,
+>> +
+>> +	/* Leave bits[127:64] for other GP registers, like R16 ~ R31.*/
+>> +
+>> +	/*
+>> +	 * Each YMM register need 4 bits to represent because they are 256 bits.
+>> +	 * PERF_REG_X86_YMMH0 = 128
+>> +	 */
+>> +	PERF_REG_X86_YMM0	= 128,
+>> +	PERF_REG_X86_YMM1	= PERF_REG_X86_YMM0 + 4,
+>> +	PERF_REG_X86_YMM2	= PERF_REG_X86_YMM1 + 4,
+>> +	PERF_REG_X86_YMM3	= PERF_REG_X86_YMM2 + 4,
+>> +	PERF_REG_X86_YMM4	= PERF_REG_X86_YMM3 + 4,
+>> +	PERF_REG_X86_YMM5	= PERF_REG_X86_YMM4 + 4,
+>> +	PERF_REG_X86_YMM6	= PERF_REG_X86_YMM5 + 4,
+>> +	PERF_REG_X86_YMM7	= PERF_REG_X86_YMM6 + 4,
+>> +	PERF_REG_X86_YMM8	= PERF_REG_X86_YMM7 + 4,
+>> +	PERF_REG_X86_YMM9	= PERF_REG_X86_YMM8 + 4,
+>> +	PERF_REG_X86_YMM10	= PERF_REG_X86_YMM9 + 4,
+>> +	PERF_REG_X86_YMM11	= PERF_REG_X86_YMM10 + 4,
+>> +	PERF_REG_X86_YMM12	= PERF_REG_X86_YMM11 + 4,
+>> +	PERF_REG_X86_YMM13	= PERF_REG_X86_YMM12 + 4,
+>> +	PERF_REG_X86_YMM14	= PERF_REG_X86_YMM13 + 4,
+>> +	PERF_REG_X86_YMM15	= PERF_REG_X86_YMM14 + 4,
+>> +	PERF_REG_X86_YMM_MAX	= PERF_REG_X86_YMM15 + 4,
+>> +
+>> +	/*
+>> +	 * Each ZMM register needs 8 bits to represent because they are 512 bits
+>> +	 * PERF_REG_X86_ZMMH0 = 192
+>> +	 */
+>> +	PERF_REG_X86_ZMM0	= PERF_REG_X86_YMM_MAX,
+>> +	PERF_REG_X86_ZMM1	= PERF_REG_X86_ZMM0 + 8,
+>> +	PERF_REG_X86_ZMM2	= PERF_REG_X86_ZMM1 + 8,
+>> +	PERF_REG_X86_ZMM3	= PERF_REG_X86_ZMM2 + 8,
+>> +	PERF_REG_X86_ZMM4	= PERF_REG_X86_ZMM3 + 8,
+>> +	PERF_REG_X86_ZMM5	= PERF_REG_X86_ZMM4 + 8,
+>> +	PERF_REG_X86_ZMM6	= PERF_REG_X86_ZMM5 + 8,
+>> +	PERF_REG_X86_ZMM7	= PERF_REG_X86_ZMM6 + 8,
+>> +	PERF_REG_X86_ZMM8	= PERF_REG_X86_ZMM7 + 8,
+>> +	PERF_REG_X86_ZMM9	= PERF_REG_X86_ZMM8 + 8,
+>> +	PERF_REG_X86_ZMM10	= PERF_REG_X86_ZMM9 + 8,
+>> +	PERF_REG_X86_ZMM11	= PERF_REG_X86_ZMM10 + 8,
+>> +	PERF_REG_X86_ZMM12	= PERF_REG_X86_ZMM11 + 8,
+>> +	PERF_REG_X86_ZMM13	= PERF_REG_X86_ZMM12 + 8,
+>> +	PERF_REG_X86_ZMM14	= PERF_REG_X86_ZMM13 + 8,
+>> +	PERF_REG_X86_ZMM15	= PERF_REG_X86_ZMM14 + 8,
+>> +	PERF_REG_X86_ZMM16	= PERF_REG_X86_ZMM15 + 8,
+>> +	PERF_REG_X86_ZMM17	= PERF_REG_X86_ZMM16 + 8,
+>> +	PERF_REG_X86_ZMM18	= PERF_REG_X86_ZMM17 + 8,
+>> +	PERF_REG_X86_ZMM19	= PERF_REG_X86_ZMM18 + 8,
+>> +	PERF_REG_X86_ZMM20	= PERF_REG_X86_ZMM19 + 8,
+>> +	PERF_REG_X86_ZMM21	= PERF_REG_X86_ZMM20 + 8,
+>> +	PERF_REG_X86_ZMM22	= PERF_REG_X86_ZMM21 + 8,
+>> +	PERF_REG_X86_ZMM23	= PERF_REG_X86_ZMM22 + 8,
+>> +	PERF_REG_X86_ZMM24	= PERF_REG_X86_ZMM23 + 8,
+>> +	PERF_REG_X86_ZMM25	= PERF_REG_X86_ZMM24 + 8,
+>> +	PERF_REG_X86_ZMM26	= PERF_REG_X86_ZMM25 + 8,
+>> +	PERF_REG_X86_ZMM27	= PERF_REG_X86_ZMM26 + 8,
+>> +	PERF_REG_X86_ZMM28	= PERF_REG_X86_ZMM27 + 8,
+>> +	PERF_REG_X86_ZMM29	= PERF_REG_X86_ZMM28 + 8,
+>> +	PERF_REG_X86_ZMM30	= PERF_REG_X86_ZMM29 + 8,
+>> +	PERF_REG_X86_ZMM31	= PERF_REG_X86_ZMM30 + 8,
+>> +	PERF_REG_X86_ZMM_MAX	= PERF_REG_X86_ZMM31 + 8,
+>> +
+>> +	/*
+>> +	 * OPMASK Registers
+>> +	 * PERF_REG_X86_OPMASK0 = 448
+>> +	 */
+>> +	PERF_REG_X86_OPMASK0	= PERF_REG_X86_ZMM_MAX,
+>> +	PERF_REG_X86_OPMASK1	= PERF_REG_X86_OPMASK0 + 1,
+>> +	PERF_REG_X86_OPMASK2	= PERF_REG_X86_OPMASK1 + 1,
+>> +	PERF_REG_X86_OPMASK3	= PERF_REG_X86_OPMASK2 + 1,
+>> +	PERF_REG_X86_OPMASK4	= PERF_REG_X86_OPMASK3 + 1,
+>> +	PERF_REG_X86_OPMASK5	= PERF_REG_X86_OPMASK4 + 1,
+>> +	PERF_REG_X86_OPMASK6	= PERF_REG_X86_OPMASK5 + 1,
+>> +	PERF_REG_X86_OPMASK7	= PERF_REG_X86_OPMASK6 + 1,
+>> +
+>> +	PERF_REG_X86_VEC_MAX	= PERF_REG_X86_OPMASK7 + 1,
+>>  };
+>> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+>> index 5fc753c23734..78aae0464a54 100644
+>> --- a/include/uapi/linux/perf_event.h
+>> +++ b/include/uapi/linux/perf_event.h
+>> @@ -379,6 +379,10 @@ enum perf_event_read_format {
+>>  #define PERF_ATTR_SIZE_VER6	120	/* add: aux_sample_size */
+>>  #define PERF_ATTR_SIZE_VER7	128	/* add: sig_data */
+>>  #define PERF_ATTR_SIZE_VER8	136	/* add: config3 */
+>> +#define PERF_ATTR_SIZE_VER9	168	/* add: sample_regs_intr_ext[PERF_EXT_REGS_ARRAY_SIZE] */
+>> +
+>> +#define PERF_EXT_REGS_ARRAY_SIZE	7
+>> +#define PERF_NUM_EXT_REGS		(PERF_EXT_REGS_ARRAY_SIZE * 64)
+>>  
+>>  /*
+>>   * Hardware event_id to monitor via a performance monitoring event:
+>> @@ -533,6 +537,13 @@ struct perf_event_attr {
+>>  	__u64	sig_data;
+>>  
+>>  	__u64	config3; /* extension of config2 */
+>> +
+>> +	/*
+>> +	 * Extension sets of regs to dump for each sample.
+>> +	 * See asm/perf_regs.h for details.
+>> +	 */
+>> +	__u64	sample_regs_intr_ext[PERF_EXT_REGS_ARRAY_SIZE];
+>> +	__u64   sample_regs_user_ext[PERF_EXT_REGS_ARRAY_SIZE];
+>>  };
+>>  
+>>  /*
+> I still utterly hate this interface. This is a giant waste of bits.
+>
+> What makes it even worse is that XMMn is the lower half of YMMn which in
+> turn is the lower half of ZMMn.
+>
+> So by exposing only ZMMn you already expose all of them. The interface
+> explicitly allows asking for sub-words.
+>
+> But most importantly of all, last time I asked if there are users that
+> actually care about the whole per-register thing and I don't see an
+> answer here.
+>
+> Can we please find a better interface? Ideally one that scales up to
+> 1024 and 2048 bit vector width, because I'd hate to have to rev this
+> again.
+>
+> Perhaps add sample_vec_regs_*[] with a saner format, and if that is !0
+> then the XMM regs dissapear from sample_regs_*[] and we get to use that
+> space to extended GPs.
 
-> > Definitely not going to take anything
-> > through IIO that hasn't been on the iio list btw.
-> 
-> Ah. Thanks for pointing this out Jonathan! I just used the get_maintainer.pl
-> - and added You. I definitely should have added the IIO-list!
+Just think twice, using bitmap to represent these extended registers indeed
+wastes bits and is hard to extend, there could be much much more vector
+registers if considering AMX.
 
-Also a side note, the Subject should start with "device property: ...".
+Considering different arch/HW may support different number vector register,
+like platform A supports 8 XMM registers and 8 YMM registers, but platform
+B only supports 16 XMM registers, a better way to represent these vector
+registers may add two fields, one is a bitmap which represents which kinds
+of vector registers needs to be captures. The other field could be a u16
+array which represents the corresponding register length of each kind of
+vector register. It may look like this.
 
--- 
-With Best Regards,
-Andy Shevchenko
+#define    PERF_SAMPLE_EXT_REGS_XMM    BIT(0)
+#define    PERF_SAMPLE_EXT_REGS_YMM    BIT(1)
+#define    PERF_SAMPLE_EXT_REGS_ZMM    BIT(2)
+    __u32    sample_regs_intr_ext;
+    __u16    sample_regs_intr_ext_len[4];
+    __u32    sample_regs_user_ext;
+
+    __u16    sample_regs_user_ext_len[4];
+
+
+Peter, how do you think this? Thanks.
 
 
