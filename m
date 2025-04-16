@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED2621B9E5
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:29:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4893C21C193
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:29:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744820978; cv=none; b=WRUzxj3D5qmibRi7z7xwGsogcotXEbx68zYqpEb37OqC1p7hXp067Pv0+uxtIOQo8r2Tkn3n9w6+53KDkl5VR2ywQI+YzWzW/CYXJAuhTEwY8/0m5eKd2DnhkUO0WeWwrpi+HvLA3rcYEPDh9hBAgqJLXH7IIAxvRC0q2ncIits=
+	t=1744820979; cv=none; b=UpPuPgckD7tfndi6Er9V89d7z88WsDKWuEGHHBVIwh27zWsH+E4G14culAJtF6R6zeLoS4hfPbA3HUUxQCO1114YpGa9f/Fct8rpzzUj7SoO6B6MnZncqS4XwPvUVhmLQi5/mFwWYpfOcotjPhGwh2sI9vx5iVH7eBGJYw33NLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744820978; c=relaxed/simple;
-	bh=d9QnKurb5SH5mTyAlKLm+x2veeu8q55k+fNPL7B78yI=;
+	s=arc-20240116; t=1744820979; c=relaxed/simple;
+	bh=lt2/Wz0SjlzjDIBrfeAz7OUWJL3HzSiG8nn58ykLWHc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tuTExe8Q/bswauQZyYaKbNleDpU9GBCRGnvGDkSaVWqndGdxzyXK/tZ/8xt6K/2K2/NA/kZOH7HdXLuKF/lhUnwLmwd4rIrxUdMY9VCiTjDzSb+wUAfbQsK2F6Y9Xt8ZbEYF3WNPmf8VA0GoEo+PNbUZFOxIc6jD9vuSKdPTacA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BZWh+ysD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3tqKL4sw; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=IxKFiuo6PAUkHW7X9ugUmUrJAAz/qoCJ/JdlvSJG3EEnlWo6sXa823LClEsi1nxp8SH9PBxhOAMJ56zxJS3kEwaxDvXqIH4V2A9+IhFyFt0IYdF0lsgC+5RFPtiaeAfpIitaMWUOzYwsyKeLsB+3ZSQfsoN5NM3MrVjDeI+5YqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ihgWRmF1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HMHHdQQz; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BZWh+ysD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3tqKL4sw"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ihgWRmF1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HMHHdQQz"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744820972;
+	s=2020; t=1744820974;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=w4uAkwnBy7IBc0gSxMrL7lL3oQSyk01HKxQFhkjakhg=;
-	b=BZWh+ysDeeGKokqy2feS1iDf3PGFnpYyYQqBmO99kibJhu42CEsvTv2uXCZIY9cEE0AGqK
-	1JRn7fMkpNUH7WmgpbxJJTTOWcOcGoQwCG1R7ZFhzdB41wIWPNpJ8uqFXyVAab8EtRBaIb
-	Q/7nr7Wt7rlE3p0PTVyHRnYoIzKcUx1LYayZqyZyiDgChSBkC5voUZCnslFuMx3hYQWph8
-	5UfTQeEDSATtSBsDVDzmaWJ9A1h4vvEo2pkQ7cfITcG61WJ5Wo33PBvSK76vX4juszZ+MD
-	tGkWjeWMxJHCHsAv+0bZFPEK0WQ/N6xTMXCJGOmlzFLABtADTeB9Ms5BXQpQFA==
+	bh=lpOZgZc3132Vq4fULyCZrzofdl0twCFBC2bsdRhjlfw=;
+	b=ihgWRmF1+gQpnKUExmKZPIueCgibq0kOzoLv51TnQnW2xlR1yt6T4EBqmggblVU+NWroBQ
+	hUG58d3Ptx8mx2XmSgljG2/7yz25KVZGo0MQzURarq2xpebJ9NYPh+iPdawGP3VjQnS9fz
+	pcXENi2Hvpwx3yctj7ZLaBtrJjzgRe3bQQ8Vca+30C3Li07ocZ1mO1G9ztA3s9uws42ZDd
+	5Vv8yJjxSArYCRavjsIn5XluETuz9g7Z1dGDZ2qUt3g6+4+1jk4AxUetYenqeQRK/FmpIC
+	d6lv01wD9+Gg0rCidueFFDICtdJ4xFfFtv4Z6Lf2mGt53M3gUUMQ6J2FdE13Ww==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744820972;
+	s=2020e; t=1744820974;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=w4uAkwnBy7IBc0gSxMrL7lL3oQSyk01HKxQFhkjakhg=;
-	b=3tqKL4swFjwYoALRjxBvalSVtcIF5aLDjr7tiIEXX/4mI/npLo5P++wA3dMyVi7jUFXXQw
-	Ahn1aK4n634LlACw==
+	bh=lpOZgZc3132Vq4fULyCZrzofdl0twCFBC2bsdRhjlfw=;
+	b=HMHHdQQz4N38yU5YQDpJnCujHuh1RA1tnBn02XZ202b3CTdXPAp8codo4TEOYIIPe8SaDa
+	/vrhQfJXBCiuUFAw==
 To: linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
 	Darren Hart <dvhart@infradead.org>,
@@ -50,9 +50,9 @@ Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
 	Valentin Schneider <vschneid@redhat.com>,
 	Waiman Long <longman@redhat.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v12 17/21] futex: Implement FUTEX2_MPOL
-Date: Wed, 16 Apr 2025 18:29:17 +0200
-Message-ID: <20250416162921.513656-18-bigeasy@linutronix.de>
+Subject: [PATCH v12 21/21] selftests/futex: Add futex_numa_mpol
+Date: Wed, 16 Apr 2025 18:29:21 +0200
+Message-ID: <20250416162921.513656-22-bigeasy@linutronix.de>
 In-Reply-To: <20250416162921.513656-1-bigeasy@linutronix.de>
 References: <20250416162921.513656-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -63,291 +63,371 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Peter Zijlstra <peterz@infradead.org>
+Test the basic functionality for the NUMA and MPOL flags:
+- FUTEX2_NUMA should take the NUMA node which is after the uaddr
+  and use it.
+- Only update the node if FUTEX_NO_NODE was set by the user
+- FUTEX2_MPOL should use the memory based on the policy. I attempted to
+  set the node with mbind() and then use this with MPOL but this fails
+  and futex falls back to the default node for the current CPU.
 
-Extend the futex2 interface to be aware of mempolicy.
-
-When FUTEX2_MPOL is specified and there is a MPOL_PREFERRED or
-home_node specified covering the futex address, use that hash-map.
-
-Notably, in this case the futex will go to the global node hashtable,
-even if it is a PRIVATE futex.
-
-When FUTEX2_NUMA|FUTEX2_MPOL is specified and the user specified node
-value is FUTEX_NO_NODE, the MPOL lookup (as described above) will be
-tried first before reverting to setting node to the local node.
-
-[bigeasy: add CONFIG_FUTEX_MPOL, add MPOL to FUTEX2_VALID_MASK, write
-the node only to user if FUTEX_NO_NODE was supplied]
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- include/linux/mmap_lock.h  |   4 ++
- include/uapi/linux/futex.h |   2 +-
- init/Kconfig               |   5 ++
- kernel/futex/core.c        | 114 +++++++++++++++++++++++++++++++------
- kernel/futex/futex.h       |   6 +-
- 5 files changed, 113 insertions(+), 18 deletions(-)
+ .../selftests/futex/functional/.gitignore     |   1 +
+ .../selftests/futex/functional/Makefile       |   3 +-
+ .../futex/functional/futex_numa_mpol.c        | 232 ++++++++++++++++++
+ .../testing/selftests/futex/functional/run.sh |   3 +
+ .../selftests/futex/include/futex2test.h      |  34 +++
+ 5 files changed, 272 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/futex/functional/futex_numa_mpo=
+l.c
 
-diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
-index 4706c67699027..e0eddfd306ef3 100644
---- a/include/linux/mmap_lock.h
-+++ b/include/linux/mmap_lock.h
-@@ -7,6 +7,7 @@
- #include <linux/rwsem.h>
- #include <linux/tracepoint-defs.h>
- #include <linux/types.h>
-+#include <linux/cleanup.h>
+diff --git a/tools/testing/selftests/futex/functional/.gitignore b/tools/te=
+sting/selftests/futex/functional/.gitignore
+index d37ae7c6e879e..7b24ae89594a9 100644
+--- a/tools/testing/selftests/futex/functional/.gitignore
++++ b/tools/testing/selftests/futex/functional/.gitignore
+@@ -1,4 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
++futex_numa_mpol
+ futex_priv_hash
+ futex_requeue
+ futex_requeue_pi
+diff --git a/tools/testing/selftests/futex/functional/Makefile b/tools/test=
+ing/selftests/futex/functional/Makefile
+index 67d9e16d8a1f8..a4881fd2cd540 100644
+--- a/tools/testing/selftests/futex/functional/Makefile
++++ b/tools/testing/selftests/futex/functional/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ INCLUDES :=3D -I../include -I../../ $(KHDR_INCLUDES)
+ CFLAGS :=3D $(CFLAGS) -g -O2 -Wall -pthread $(INCLUDES) $(KHDR_INCLUDES)
+-LDLIBS :=3D -lpthread -lrt
++LDLIBS :=3D -lpthread -lrt -lnuma
 =20
- #define MMAP_LOCK_INITIALIZER(name) \
- 	.mmap_lock =3D __RWSEM_INITIALIZER((name).mmap_lock),
-@@ -211,6 +212,9 @@ static inline void mmap_read_unlock(struct mm_struct *m=
-m)
- 	up_read(&mm->mmap_lock);
- }
+ LOCAL_HDRS :=3D \
+ 	../include/futextest.h \
+@@ -18,6 +18,7 @@ TEST_GEN_PROGS :=3D \
+ 	futex_wait \
+ 	futex_requeue \
+ 	futex_priv_hash \
++	futex_numa_mpol \
+ 	futex_waitv
 =20
-+DEFINE_GUARD(mmap_read_lock, struct mm_struct *,
-+	     mmap_read_lock(_T), mmap_read_unlock(_T))
+ TEST_PROGS :=3D run.sh
+diff --git a/tools/testing/selftests/futex/functional/futex_numa_mpol.c b/t=
+ools/testing/selftests/futex/functional/futex_numa_mpol.c
+new file mode 100644
+index 0000000000000..30302691303f0
+--- /dev/null
++++ b/tools/testing/selftests/futex/functional/futex_numa_mpol.c
+@@ -0,0 +1,232 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (C) 2025 Sebastian Andrzej Siewior <bigeasy@linutronix.de>
++ */
 +
- static inline void mmap_read_unlock_non_owner(struct mm_struct *mm)
- {
- 	__mmap_lock_trace_released(mm, false);
-diff --git a/include/uapi/linux/futex.h b/include/uapi/linux/futex.h
-index 0435025beaae8..247c425e175ef 100644
---- a/include/uapi/linux/futex.h
-+++ b/include/uapi/linux/futex.h
-@@ -63,7 +63,7 @@
- #define FUTEX2_SIZE_U32		0x02
- #define FUTEX2_SIZE_U64		0x03
- #define FUTEX2_NUMA		0x04
--			/*	0x08 */
-+#define FUTEX2_MPOL		0x08
- 			/*	0x10 */
- 			/*	0x20 */
- 			/*	0x40 */
-diff --git a/init/Kconfig b/init/Kconfig
-index b308b98d79347..174633bc9810b 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1704,6 +1704,11 @@ config FUTEX_PRIVATE_HASH
- 	depends on FUTEX && !BASE_SMALL && MMU
- 	default y
-=20
-+config FUTEX_MPOL
-+	bool
-+	depends on FUTEX && NUMA
-+	default y
++#define _GNU_SOURCE
 +
- config EPOLL
- 	bool "Enable eventpoll support" if EXPERT
- 	default y
-diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index b5be2d4a34a53..ee1d7182ce0c0 100644
---- a/kernel/futex/core.c
-+++ b/kernel/futex/core.c
-@@ -43,6 +43,8 @@
- #include <linux/slab.h>
- #include <linux/prctl.h>
- #include <linux/rcuref.h>
-+#include <linux/mempolicy.h>
-+#include <linux/mmap_lock.h>
-=20
- #include "futex.h"
- #include "../locking/rtmutex_common.h"
-@@ -328,6 +330,73 @@ struct futex_hash_bucket *futex_hash(union futex_key *=
-key)
-=20
- #endif /* CONFIG_FUTEX_PRIVATE_HASH */
-=20
-+#ifdef CONFIG_FUTEX_MPOL
-+static int __futex_key_to_node(struct mm_struct *mm, unsigned long addr)
++#include <errno.h>
++#include <pthread.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <numa.h>
++#include <numaif.h>
++
++#include <linux/futex.h>
++#include <sys/mman.h>
++
++#include "logging.h"
++#include "futextest.h"
++#include "futex2test.h"
++
++#define MAX_THREADS	64
++
++static pthread_barrier_t barrier_main;
++static pthread_t threads[MAX_THREADS];
++
++struct thread_args {
++	void *futex_ptr;
++	unsigned int flags;
++	int result;
++};
++
++static struct thread_args thread_args[MAX_THREADS];
++
++#ifndef FUTEX_NO_NODE
++#define FUTEX_NO_NODE (-1)
++#endif
++
++#ifndef FUTEX2_MPOL
++#define FUTEX2_MPOL	0x08
++#endif
++
++static void *thread_lock_fn(void *arg)
 +{
-+	struct vm_area_struct *vma =3D vma_lookup(mm, addr);
-+	struct mempolicy *mpol;
-+	int node =3D FUTEX_NO_NODE;
++	struct thread_args *args =3D arg;
++	int ret;
 +
-+	if (!vma)
-+		return FUTEX_NO_NODE;
++	pthread_barrier_wait(&barrier_main);
++	ret =3D futex2_wait2(args->futex_ptr, 0, args->flags, NULL, 0);
++	args->result =3D ret;
++	return NULL;
++}
 +
-+	mpol =3D vma_policy(vma);
-+	if (!mpol)
-+		return FUTEX_NO_NODE;
++static void create_max_threads(void *futex_ptr)
++{
++	int i, ret;
 +
-+	switch (mpol->mode) {
-+	case MPOL_PREFERRED:
-+		node =3D first_node(mpol->nodes);
-+		break;
-+	case MPOL_PREFERRED_MANY:
-+	case MPOL_BIND:
-+		if (mpol->home_node !=3D NUMA_NO_NODE)
-+			node =3D mpol->home_node;
-+		break;
-+	default:
-+		break;
++	for (i =3D 0; i < MAX_THREADS; i++) {
++		thread_args[i].futex_ptr =3D futex_ptr;
++		thread_args[i].flags =3D FUTEX2_SIZE_U32 | FUTEX_PRIVATE_FLAG | FUTEX2_N=
+UMA;
++		thread_args[i].result =3D 0;
++		ret =3D pthread_create(&threads[i], NULL, thread_lock_fn, &thread_args[i=
+]);
++		if (ret) {
++			error("pthread_create failed\n", errno);
++			exit(1);
++		}
++	}
++}
++
++static void join_max_threads(void)
++{
++	int i, ret;
++
++	for (i =3D 0; i < MAX_THREADS; i++) {
++		ret =3D pthread_join(threads[i], NULL);
++		if (ret) {
++			error("pthread_join failed for thread %d\n", errno, i);
++			exit(1);
++		}
++	}
++}
++
++static void __test_futex(void *futex_ptr, int must_fail, unsigned int fute=
+x_flags)
++{
++	int to_wake, ret, i, need_exit =3D 0;
++
++	pthread_barrier_init(&barrier_main, NULL, MAX_THREADS + 1);
++	create_max_threads(futex_ptr);
++	pthread_barrier_wait(&barrier_main);
++	to_wake =3D MAX_THREADS;
++
++	do {
++		ret =3D futex2_wake(futex_ptr, to_wake, futex_flags);
++		if (must_fail) {
++			if (ret < 0)
++				break;
++			fail("Should fail, but didn't\n");
++			exit(1);
++		}
++		if (ret < 0) {
++			error("Failed futex2_wake(%d)\n", errno, to_wake);
++			exit(1);
++		}
++		if (!ret)
++			usleep(50);
++		to_wake -=3D ret;
++
++	} while (to_wake);
++	join_max_threads();
++
++	for (i =3D 0; i < MAX_THREADS; i++) {
++		if (must_fail && thread_args[i].result !=3D -1) {
++			fail("Thread %d should fail but succeeded (%d)\n", i, thread_args[i].re=
+sult);
++			need_exit =3D 1;
++		}
++		if (!must_fail && thread_args[i].result !=3D 0) {
++			fail("Thread %d failed (%d)\n", i, thread_args[i].result);
++			need_exit =3D 1;
++		}
++	}
++	if (need_exit)
++		exit(1);
++}
++
++static void test_futex(void *futex_ptr, int must_fail)
++{
++	__test_futex(futex_ptr, must_fail, FUTEX2_SIZE_U32 | FUTEX_PRIVATE_FLAG |=
+ FUTEX2_NUMA);
++}
++
++static void test_futex_mpol(void *futex_ptr, int must_fail)
++{
++	__test_futex(futex_ptr, must_fail, FUTEX2_SIZE_U32 | FUTEX_PRIVATE_FLAG |=
+ FUTEX2_NUMA | FUTEX2_MPOL);
++}
++
++static void usage(char *prog)
++{
++	printf("Usage: %s\n", prog);
++	printf("  -c    Use color\n");
++	printf("  -h    Display this help message\n");
++	printf("  -v L  Verbosity level: %d=3DQUIET %d=3DCRITICAL %d=3DINFO\n",
++	       VQUIET, VCRITICAL, VINFO);
++}
++
++int main(int argc, char *argv[])
++{
++	struct futex32_numa *futex_numa;
++	int mem_size, i;
++	void *futex_ptr;
++	char c;
++
++	while ((c =3D getopt(argc, argv, "chv:")) !=3D -1) {
++		switch (c) {
++		case 'c':
++			log_color(1);
++			break;
++		case 'h':
++			usage(basename(argv[0]));
++			exit(0);
++			break;
++		case 'v':
++			log_verbosity(atoi(optarg));
++			break;
++		default:
++			usage(basename(argv[0]));
++			exit(1);
++		}
 +	}
 +
-+	return node;
++	mem_size =3D sysconf(_SC_PAGE_SIZE);
++	futex_ptr =3D mmap(NULL, mem_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | =
+MAP_ANONYMOUS, 0, 0);
++	if (futex_ptr =3D=3D MAP_FAILED) {
++		error("mmap() for %d bytes failed\n", errno, mem_size);
++		return 1;
++	}
++	futex_numa =3D futex_ptr;
++
++	info("Regular test\n");
++	futex_numa->futex =3D 0;
++	futex_numa->numa =3D FUTEX_NO_NODE;
++	test_futex(futex_ptr, 0);
++
++	if (futex_numa->numa =3D=3D FUTEX_NO_NODE) {
++		fail("NUMA node is left unitiliazed\n");
++		return 1;
++	}
++
++	info("Memory too small\n");
++	test_futex(futex_ptr + mem_size - 4, 1);
++
++	info("Memory out of range\n");
++	test_futex(futex_ptr + mem_size, 1);
++
++	futex_numa->numa =3D FUTEX_NO_NODE;
++	mprotect(futex_ptr, mem_size, PROT_READ);
++	info("Memory, RO\n");
++	test_futex(futex_ptr, 1);
++
++	mprotect(futex_ptr, mem_size, PROT_NONE);
++	info("Memory, no access\n");
++	test_futex(futex_ptr, 1);
++
++	mprotect(futex_ptr, mem_size, PROT_READ | PROT_WRITE);
++	info("Memory back to RW\n");
++	test_futex(futex_ptr, 0);
++
++	/* MPOL test. Does not work as expected */
++	for (i =3D 0; i < 4; i++) {
++		unsigned long nodemask;
++		int ret;
++
++		nodemask =3D 1 << i;
++		ret =3D mbind(futex_ptr, mem_size, MPOL_BIND, &nodemask,
++			    sizeof(nodemask) * 8, 0);
++		if (ret =3D=3D 0) {
++			info("Node %d test\n", i);
++			futex_numa->futex =3D 0;
++			futex_numa->numa =3D FUTEX_NO_NODE;
++
++			ret =3D futex2_wake(futex_ptr, 0, FUTEX2_SIZE_U32 | FUTEX_PRIVATE_FLAG =
+| FUTEX2_NUMA | FUTEX2_MPOL);
++			if (ret < 0)
++				error("Failed to wake 0 with MPOL.\n", errno);
++			if (0)
++				test_futex_mpol(futex_numa, 0);
++			if (futex_numa->numa !=3D i) {
++				fail("Returned NUMA node is %d expected %d\n",
++				     futex_numa->numa, i);
++			}
++		}
++	}
++	return 0;
 +}
+diff --git a/tools/testing/selftests/futex/functional/run.sh b/tools/testin=
+g/selftests/futex/functional/run.sh
+index f0f0d2b683d7e..81739849f2994 100755
+--- a/tools/testing/selftests/futex/functional/run.sh
++++ b/tools/testing/selftests/futex/functional/run.sh
+@@ -86,3 +86,6 @@ echo
+ echo
+ ./futex_priv_hash $COLOR
+ ./futex_priv_hash -g $COLOR
 +
-+static int futex_key_to_node_opt(struct mm_struct *mm, unsigned long addr)
-+{
-+	int seq, node;
-+
-+	guard(rcu)();
-+
-+	if (!mmap_lock_speculate_try_begin(mm, &seq))
-+		return -EBUSY;
-+
-+	node =3D __futex_key_to_node(mm, addr);
-+
-+	if (mmap_lock_speculate_retry(mm, seq))
-+		return -EAGAIN;
-+
-+	return node;
-+}
-+
-+static int futex_mpol(struct mm_struct *mm, unsigned long addr)
-+{
-+	int node;
-+
-+	node =3D futex_key_to_node_opt(mm, addr);
-+	if (node >=3D FUTEX_NO_NODE)
-+		return node;
-+
-+	guard(mmap_read_lock)(mm);
-+	return __futex_key_to_node(mm, addr);
-+}
-+#else /* !CONFIG_FUTEX_MPOL */
-+
-+static int futex_mpol(struct mm_struct *mm, unsigned long addr)
-+{
-+	return FUTEX_NO_NODE;
-+}
-+
-+#endif /* CONFIG_FUTEX_MPOL */
++echo
++./futex_numa_mpol $COLOR
+diff --git a/tools/testing/selftests/futex/include/futex2test.h b/tools/tes=
+ting/selftests/futex/include/futex2test.h
+index 9d305520e849b..b664e8f92bfd7 100644
+--- a/tools/testing/selftests/futex/include/futex2test.h
++++ b/tools/testing/selftests/futex/include/futex2test.h
+@@ -8,6 +8,11 @@
+=20
+ #define u64_to_ptr(x) ((void *)(uintptr_t)(x))
+=20
++struct futex32_numa {
++	futex_t futex;
++	futex_t numa;
++};
 +
  /**
-  * __futex_hash - Return the hash bucket
-  * @key:	Pointer to the futex key for which the hash is calculated
-@@ -342,18 +411,20 @@ struct futex_hash_bucket *futex_hash(union futex_key =
-*key)
- static struct futex_hash_bucket *
- __futex_hash(union futex_key *key, struct futex_private_hash *fph)
+  * futex_waitv - Wait at multiple futexes, wake on any
+  * @waiters:    Array of waiters
+@@ -20,3 +25,32 @@ static inline int futex_waitv(volatile struct futex_wait=
+v *waiters, unsigned lon
  {
--	struct futex_hash_bucket *hb;
-+	int node =3D key->both.node;
- 	u32 hash;
--	int node;
-=20
--	hb =3D __futex_hash_private(key, fph);
--	if (hb)
--		return hb;
-+	if (node =3D=3D FUTEX_NO_NODE) {
-+		struct futex_hash_bucket *hb;
-+
-+		hb =3D __futex_hash_private(key, fph);
-+		if (hb)
-+			return hb;
-+	}
-=20
- 	hash =3D jhash2((u32 *)key,
- 		      offsetof(typeof(*key), both.offset) / sizeof(u32),
- 		      key->both.offset);
--	node =3D key->both.node;
-=20
- 	if (node =3D=3D FUTEX_NO_NODE) {
- 		/*
-@@ -480,6 +551,7 @@ int get_futex_key(u32 __user *uaddr, unsigned int flags=
-, union futex_key *key,
- 	struct folio *folio;
- 	struct address_space *mapping;
- 	int node, err, size, ro =3D 0;
-+	bool node_updated =3D false;
- 	bool fshared;
-=20
- 	fshared =3D flags & FLAGS_SHARED;
-@@ -501,27 +573,37 @@ int get_futex_key(u32 __user *uaddr, unsigned int fla=
-gs, union futex_key *key,
- 	if (unlikely(should_fail_futex(fshared)))
- 		return -EFAULT;
-=20
-+	node =3D FUTEX_NO_NODE;
-+
- 	if (flags & FLAGS_NUMA) {
- 		u32 __user *naddr =3D (void *)uaddr + size / 2;
-=20
- 		if (futex_get_value(&node, naddr))
- 			return -EFAULT;
-=20
-+		if (node !=3D FUTEX_NO_NODE &&
-+		    (node >=3D MAX_NUMNODES || !node_possible(node)))
-+			return -EINVAL;
-+	}
-+
-+	if (node =3D=3D FUTEX_NO_NODE && (flags & FLAGS_MPOL)) {
-+		node =3D futex_mpol(mm, address);
-+		node_updated =3D true;
-+	}
-+
-+	if (flags & FLAGS_NUMA) {
-+		u32 __user *naddr =3D (void *)uaddr + size / 2;
-+
- 		if (node =3D=3D FUTEX_NO_NODE) {
- 			node =3D numa_node_id();
--			if (futex_put_value(node, naddr))
--				return -EFAULT;
--
--		} else if (node >=3D MAX_NUMNODES || !node_possible(node)) {
--			return -EINVAL;
-+			node_updated =3D true;
- 		}
--
--		key->both.node =3D node;
--
--	} else {
--		key->both.node =3D FUTEX_NO_NODE;
-+		if (node_updated && futex_put_value(node, naddr))
-+			return -EFAULT;
- 	}
-=20
-+	key->both.node =3D node;
-+
- 	/*
- 	 * PROCESS_PRIVATE futexes are fast.
- 	 * As the mm cannot disappear under us and the 'key' only needs
-diff --git a/kernel/futex/futex.h b/kernel/futex/futex.h
-index acc7953678898..069fc2a83080d 100644
---- a/kernel/futex/futex.h
-+++ b/kernel/futex/futex.h
-@@ -39,6 +39,7 @@
- #define FLAGS_HAS_TIMEOUT	0x0040
- #define FLAGS_NUMA		0x0080
- #define FLAGS_STRICT		0x0100
-+#define FLAGS_MPOL		0x0200
-=20
- /* FUTEX_ to FLAGS_ */
- static inline unsigned int futex_to_flags(unsigned int op)
-@@ -54,7 +55,7 @@ static inline unsigned int futex_to_flags(unsigned int op)
- 	return flags;
+ 	return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, timo, clocki=
+d);
  }
-=20
--#define FUTEX2_VALID_MASK (FUTEX2_SIZE_MASK | FUTEX2_NUMA | FUTEX2_PRIVATE)
-+#define FUTEX2_VALID_MASK (FUTEX2_SIZE_MASK | FUTEX2_NUMA | FUTEX2_MPOL | =
-FUTEX2_PRIVATE)
-=20
- /* FUTEX2_ to FLAGS_ */
- static inline unsigned int futex2_to_flags(unsigned int flags2)
-@@ -67,6 +68,9 @@ static inline unsigned int futex2_to_flags(unsigned int f=
-lags2)
- 	if (flags2 & FUTEX2_NUMA)
- 		flags |=3D FLAGS_NUMA;
-=20
-+	if (flags2 & FUTEX2_MPOL)
-+		flags |=3D FLAGS_MPOL;
 +
- 	return flags;
- }
-=20
++static inline int futex2_wait(volatile struct futex_waitv *waiters, unsign=
+ed long nr_waiters,
++			      unsigned long flags, struct timespec *timo, clockid_t clockid)
++{
++	return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, timo, clocki=
+d);
++}
++
++/*
++ * futex_wait2() - block on uaddr with optional timeout
++ * @val:	Expected value
++ * @flags:	FUTEX2 flags
++ * @timeout:	Relative timeout
++ * @clockid:	Clock id for the timeout
++ */
++static inline int futex2_wait2(void *uaddr, long val, unsigned int flags,
++			      struct timespec *timeout, clockid_t clockid)
++{
++	return syscall(__NR_futex_wait, uaddr, val, 1, flags, timeout, clockid);
++}
++
++/*
++ * futex2_wake() - Wake a number of futexes
++ * @nr:		Number of threads to wake at most
++ * @flags:	FUTEX2 flags
++ */
++static inline int futex2_wake(void *uaddr, int nr, unsigned int flags)
++{
++	return syscall(__NR_futex_wake, uaddr, 1, nr, flags);
++}
 --=20
 2.49.0
 
