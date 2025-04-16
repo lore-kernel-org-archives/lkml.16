@@ -1,232 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE4114A4DB;
-	Wed, 16 Apr 2025 23:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E59230D3D;
+	Wed, 16 Apr 2025 23:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744846410; cv=none; b=iXmOd/Fvy4J5UwEqPGJAy35hEqvtGNbfgeYxQ4kG0DmS1MXHuCLoeb2kOLNZymVD0o7P4IbRXgoKb6WGEwPSKfNCIz1ZI9N0cx4U2AfIMvf+w5myk5jkhGNYHcuRFcmihEgwuX7C7aBQrp6nujZvKsczy2Kezokx4LS+ZWWPMH0=
+	t=1744846443; cv=none; b=jnE4Q5rbYd0r6stIikvD73h1kMbCrs3zcLLqID2KutLlSvrDhaCQeZIPhSqUYGk8RK/8K0gYw7hYDHeH91GfnCarvWMO6SsxVqPQ7anqWR6BEqauaoD2Rx4MLG80APO82NDSCclaLRSR/+m6mFtcMnN7BGVSIvyboH/m6TzD4iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744846410; c=relaxed/simple;
-	bh=Ecdg41vWCtpkSt3gvW7D8FWTYl606nKDN9OmlaG2l1k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uHRyW2gmBbv510b960b0aAb6/TM6/96B+SWV5CvZMM8vlUJ5BMxCfaYp62KjLtQgNJtqYNvSOHDpxXyJNkiDVLS3cSNrVkJnqtmANwG6o6Elvm2epqoZfXL/iUU4IET7Kv/HWlKP5g2DZwTwT7k+g2mdBrfLpVk5+wS8ErDYspM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WpeSk8q6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744846443; c=relaxed/simple;
+	bh=g2NU8wZf7ov7zeW75JbUxhAYPOAgNEyPYBnsaU7lHY4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JpqkchovfTZXg7QEJ3JswJkLqJntsAhLMQJ2NEPMaDIPqQkeOhfo/yXOQke4g4XthkxqHkieYNen6BDl6ETFgVDGMDTUvXQyT853lLLceA6GGUyluZiUIXl0bUQFNiyHC7sHgAJCvcQ7fMOpX9P8feA4XFs8p6+eLWyBsJ2pS0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=POSLl4gc; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WpeSk8q6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C54BC4CEE2;
-	Wed, 16 Apr 2025 23:33:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744846409;
-	bh=Ecdg41vWCtpkSt3gvW7D8FWTYl606nKDN9OmlaG2l1k=;
-	h=From:Date:Subject:To:Cc:From;
-	b=WpeSk8q6G8wXPJ6NfLBMGWG/BU/EcTU9c+pVJWlb9G9AnKnjn6UXeK/CbOqk2R66x
-	 hIZZoSqqFsKwx1vUls2g07m7PSN3UMTXMFaEWUJRDUKJNHOhuzVLE5tjIXfLBvql3K
-	 FqA3R7OpIgXv4pryPYERza9Nqh4TTFWcX+VI0FnrUNMFJIAkZwsx59/AaoSLbOUDOK
-	 Lc38fDuGdMVYauv8D7YCaZ12rBBn+9P5yRNBadPiCgNEuA8nT7DOCaqBWs3VID6Aw7
-	 H6ZYonMrwmLBRAa4GIn+Smsf9HcGB7dklXKkq82aFPrW9XOab0TGLPArz28ORDEK5V
-	 OKnPJgQNEh64A==
-From: Mark Brown <broonie@kernel.org>
-Date: Thu, 17 Apr 2025 00:32:49 +0100
-Subject: [PATCH] KVM: selftests: add test for SVE host corruption
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="POSLl4gc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1744846431;
+	bh=g2NU8wZf7ov7zeW75JbUxhAYPOAgNEyPYBnsaU7lHY4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=POSLl4gcH2AgoWTwaTKyZEidtqqKTBpgE+Fchxnbed1zy6wFTPiYor/JTmotv2SP3
+	 rekBMtSioc15RyR4WLPWA7P/8uXdNE+jorg4464rDkxvN2ZRW2AzZjxygpADCQfMWN
+	 Xo/o643/dOOJbIekDOFLM7ylVo7YLw59+fH9KWfuvlb4XSRQj1y5U6n0fg9wc1tAp5
+	 uypoe/gm5LkArnzPmsgfQAcHz5I0B7qyIgjPlLnn3L7mRu3gWbp2atdV0CPk7uyYeD
+	 P34xVqzZSpoJJJzQVNW9gpQQUAI/TtZdWvGkGfnAlR9tpc++gtThvBypbOnCTbiQ4Z
+	 UZWiJABXp8uPA==
+Received: from [192.168.68.112] (unknown [180.150.112.225])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id D187564323;
+	Thu, 17 Apr 2025 07:33:49 +0800 (AWST)
+Message-ID: <6f01162ca2024c8bc4f22e0be2f33e8724238f80.camel@codeconstruct.com.au>
+Subject: Re: [PATCH 2/7] soc: aspeed: lpc-snoop: Don't disable channels that
+ aren't enabled
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Jean Delvare <jdelvare@suse.de>
+Cc: Joel Stanley <joel@jms.id.au>, Henry Martin <bsdhenrymartin@gmail.com>, 
+ Patrick Rudolph <patrick.rudolph@9elements.com>, Andrew Geissler
+ <geissonator@yahoo.com>, Ninad Palsule <ninad@linux.ibm.com>, Patrick
+ Venture <venture@google.com>, Robert Lippert <roblip@gmail.com>,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Date: Thu, 17 Apr 2025 09:03:45 +0930
+In-Reply-To: <20250416141506.2d910334@endymion>
+References: 
+	<20250411-aspeed-lpc-snoop-fixes-v1-0-64f522e3ad6f@codeconstruct.com.au>
+	 <20250411-aspeed-lpc-snoop-fixes-v1-2-64f522e3ad6f@codeconstruct.com.au>
+	 <20250416141506.2d910334@endymion>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250417-kvm-selftest-sve-signal-v1-1-6330c2f3da0c@kernel.org>
-X-B4-Tracking: v=1; b=H4sIACA+AGgC/x3MMQqAMAxA0atIZgNtQUWvIg7FRA1qlUaKIN7d4
- viG/x9QjsIKXfFA5CQqR8iwZQHj4sPMKJQNzrjKOFfjmnZU3qaL9UJNjCpz8BtaT2SopcbWI+T
- 6jDzJ/Z/74X0/uxe3dWkAAAA=
-X-Change-ID: 20250226-kvm-selftest-sve-signal-1add0d9d716c
-To: Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>, 
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
- Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, 
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4129; i=broonie@kernel.org;
- h=from:subject:message-id; bh=Ecdg41vWCtpkSt3gvW7D8FWTYl606nKDN9OmlaG2l1k=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoAD5GSLv2p33SybMnvyMowOIRAo8cX4B97rSgmn/m
- FcQJNm+JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaAA+RgAKCRAk1otyXVSH0JsDCA
- CGWxC17NOadoAMvGZ1sYyldRUE7lDhlVDzftw1ctHVesXShJH7tox5uLPZKsb6y2qRbNs2prMZ/ZWF
- Ttq6K/zNNRoTyfk6Im9C1mwQ7Hyn89erkF11aFoU6OD/HHfA6AeXix8dD26yJkeB9UU/40sELfIV89
- vLogqEZbeTho53/NL4mzNsV41ecJeioVEwY7cc1JTuu6JhnTRfQt4TABTRxd8BL5dWxFYvjU8Ibiz6
- GwaedSRrkBqiLJsx5qy4wc1u03v94qITLQD8mPPlnV9/OfR9YyYxR3L03SDDn336Y8hMhTaJq4EvNZ
- ZoNnuEgEXV9+HwdMtNMJXKnDalcBF1
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-This test program, originally written by Mark Rutland and lightly modified
-by me for upstream, verifies that we do not have the issues with host SVE
-state being discarded which were fixed in
-
-   fbc7e61195e2 ("KVM: arm64: Unconditionally save+flush host FPSIMD/SVE/SME state")
-
-by running a simple VM while checking the SVE register state for
-corruption.
-
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/kvm/Makefile.kvm     |   1 +
- tools/testing/selftests/kvm/arm64/host_sve.c | 127 +++++++++++++++++++++++++++
- 2 files changed, 128 insertions(+)
-
-diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
-index f62b0a5aba35..d37072054a3d 100644
---- a/tools/testing/selftests/kvm/Makefile.kvm
-+++ b/tools/testing/selftests/kvm/Makefile.kvm
-@@ -147,6 +147,7 @@ TEST_GEN_PROGS_arm64 = $(TEST_GEN_PROGS_COMMON)
- TEST_GEN_PROGS_arm64 += arm64/aarch32_id_regs
- TEST_GEN_PROGS_arm64 += arm64/arch_timer_edge_cases
- TEST_GEN_PROGS_arm64 += arm64/debug-exceptions
-+TEST_GEN_PROGS_arm64 += arm64/host_sve
- TEST_GEN_PROGS_arm64 += arm64/hypercalls
- TEST_GEN_PROGS_arm64 += arm64/mmio_abort
- TEST_GEN_PROGS_arm64 += arm64/page_fault_test
-diff --git a/tools/testing/selftests/kvm/arm64/host_sve.c b/tools/testing/selftests/kvm/arm64/host_sve.c
-new file mode 100644
-index 000000000000..3826772fd470
---- /dev/null
-+++ b/tools/testing/selftests/kvm/arm64/host_sve.c
-@@ -0,0 +1,127 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+/*
-+ * Host SVE: Check FPSIMD/SVE/SME save/restore over KVM_RUN ioctls.
-+ *
-+ * Copyright 2025 Arm, Ltd
-+ */
-+
-+#include <errno.h>
-+#include <signal.h>
-+#include <sys/auxv.h>
-+#include <asm/kvm.h>
-+#include <kvm_util.h>
-+
-+#include "ucall_common.h"
-+
-+static void guest_code(void)
-+{
-+	for (int i = 0; i < 10; i++) {
-+		GUEST_UCALL_NONE();
-+	}
-+
-+	GUEST_DONE();
-+}
-+
-+void handle_sigill(int sig, siginfo_t *info, void *ctx)
-+{
-+	ucontext_t *uctx = ctx;
-+
-+	printf("  < host signal %d >\n", sig);
-+
-+	/*
-+	 * Skip the UDF
-+	 */
-+	uctx->uc_mcontext.pc += 4;
-+}
-+
-+void register_sigill_handler(void)
-+{
-+	struct sigaction sa = {
-+		.sa_sigaction = handle_sigill,
-+		.sa_flags = SA_SIGINFO,
-+	};
-+	sigaction(SIGILL, &sa, NULL);
-+}
-+
-+static void do_sve_roundtrip(void)
-+{
-+	unsigned long before, after;
-+
-+	/*
-+	 * Set all bits in a predicate register, force a save/restore via a
-+	 * SIGILL (which handle_sigill() will recover from), then report
-+	 * whether the value has changed.
-+	 */
-+	asm volatile(
-+	"	.arch_extension sve\n"
-+	"	ptrue	p0.B\n"
-+	"	cntp	%[before], p0, p0.B\n"
-+	"	udf #0\n"
-+	"	cntp	%[after], p0, p0.B\n"
-+	: [before] "=r" (before),
-+	  [after] "=r" (after)
-+	:
-+	: "p0"
-+	);
-+
-+	if (before != after) {
-+		TEST_FAIL("Signal roundtrip discarded predicate bits (%ld => %ld)\n",
-+			  before, after);
-+	} else {
-+		printf("Signal roundtrip preserved predicate bits (%ld => %ld)\n",
-+		       before, after);
-+	}
-+}
-+
-+static void test_run(void)
-+{
-+	struct kvm_vcpu *vcpu;
-+	struct kvm_vm *vm;
-+	struct ucall uc;
-+	bool guest_done = false;
-+
-+	register_sigill_handler();
-+
-+	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
-+
-+	do_sve_roundtrip();
-+
-+	while (!guest_done) {
-+
-+		printf("Running VCPU...\n");
-+		vcpu_run(vcpu);
-+
-+		switch (get_ucall(vcpu, &uc)) {
-+		case UCALL_NONE:
-+			do_sve_roundtrip();
-+			do_sve_roundtrip();
-+			break;
-+		case UCALL_DONE:
-+			guest_done = true;
-+			break;
-+		case UCALL_ABORT:
-+			REPORT_GUEST_ASSERT(uc);
-+			break;
-+		default:
-+			TEST_FAIL("Unexpected guest exit");
-+		}
-+	}
-+
-+	kvm_vm_free(vm);
-+}
-+
-+int main(void)
-+{
-+	/*
-+	 * This is testing the host environment, we don't care about
-+	 * guest SVE support.
-+	 */
-+	if (!(getauxval(AT_HWCAP) & HWCAP_SVE)) {
-+		printf("SVE not supported\n");
-+		return KSFT_SKIP;
-+	}
-+
-+	test_run();
-+	return 0;
-+}
-
----
-base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
-change-id: 20250226-kvm-selftest-sve-signal-1add0d9d716c
-
-Best regards,
--- 
-Mark Brown <broonie@kernel.org>
+T24gV2VkLCAyMDI1LTA0LTE2IGF0IDE0OjE1ICswMjAwLCBKZWFuIERlbHZhcmUgd3JvdGU6Cj4g
+T24gRnJpLCAxMSBBcHIgMjAyNSAxMDozODozMiArMDkzMCwgQW5kcmV3IEplZmZlcnkgd3JvdGU6
+Cj4gPiBNaXRpZ2F0ZSBlLmcuIHRoZSBmb2xsb3dpbmc6Cj4gPiAKPiA+IMKgwqDCoCAjIGVjaG8g
+MWU3ODkwODAubHBjLXNub29wID4gL3N5cy9idXMvcGxhdGZvcm0vZHJpdmVycy9hc3BlZWQtCj4g
+PiBscGMtc25vb3AvdW5iaW5kCj4gPiDCoMKgwqAgLi4uCj4gPiDCoMKgwqAgW8KgIDEyMC4zNjM1
+OTRdIFVuYWJsZSB0byBoYW5kbGUga2VybmVsIE5VTEwgcG9pbnRlciBkZXJlZmVyZW5jZQo+ID4g
+YXQgdmlydHVhbCBhZGRyZXNzIDAwMDAwMDA0IHdoZW4gd3JpdGUKPiA+IMKgwqDCoCBbwqAgMTIw
+LjM3Mzg2Nl0gWzAwMDAwMDA0XSAqcGdkPTAwMDAwMDAwCj4gPiDCoMKgwqAgW8KgIDEyMC4zNzc5
+MTBdIEludGVybmFsIGVycm9yOiBPb3BzOiA4MDUgWyMxXSBTTVAgQVJNCj4gPiDCoMKgwqAgW8Kg
+IDEyMC4zODMzMDZdIENQVTogMSBVSUQ6IDAgUElEOiAzMTUgQ29tbTogc2ggTm90IHRhaW50ZWQK
+PiA+IDYuMTUuMC1yYzEtMDAwMDktZzkyNjIxN2JjN2Q3ZC1kaXJ0eSAjMjAgTk9ORQo+ID4gwqDC
+oMKgIC4uLgo+ID4gwqDCoMKgIFvCoCAxMjAuNjc5NTQzXSBDYWxsIHRyYWNlOgo+ID4gwqDCoMKg
+IFvCoCAxMjAuNjc5NTU5XcKgIG1pc2NfZGVyZWdpc3RlciBmcm9tCj4gPiBhc3BlZWRfbHBjX3Nu
+b29wX3JlbW92ZSsweDg0LzB4YWMKPiA+IMKgwqDCoCBbwqAgMTIwLjY5MjQ2Ml3CoCBhc3BlZWRf
+bHBjX3Nub29wX3JlbW92ZSBmcm9tCj4gPiBwbGF0Zm9ybV9yZW1vdmUrMHgyOC8weDM4Cj4gPiDC
+oMKgwqAgW8KgIDEyMC43MDA5OTZdwqAgcGxhdGZvcm1fcmVtb3ZlIGZyb20KPiA+IGRldmljZV9y
+ZWxlYXNlX2RyaXZlcl9pbnRlcm5hbCsweDE4OC8weDIwMAo+ID4gwqDCoMKgIC4uLgo+ID4gCj4g
+PiBGaXhlczogOWY0ZjlhZTgxZDBhICgiZHJpdmVycy9taXNjOiBhZGQgQXNwZWVkIExQQyBzbm9v
+cCBkcml2ZXIiKQo+ID4gQ2M6IHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmcKPiA+IENjOiBKZWFuIERl
+bHZhcmUgPGpkZWx2YXJlQHN1c2UuZGU+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBBbmRyZXcgSmVmZmVy
+eSA8YW5kcmV3QGNvZGVjb25zdHJ1Y3QuY29tLmF1Pgo+ID4gLS0tCj4gPiDCoGRyaXZlcnMvc29j
+L2FzcGVlZC9hc3BlZWQtbHBjLXNub29wLmMgfCAxMSArKysrKysrKysrKwo+ID4gwqAxIGZpbGUg
+Y2hhbmdlZCwgMTEgaW5zZXJ0aW9ucygrKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9z
+b2MvYXNwZWVkL2FzcGVlZC1scGMtc25vb3AuYwo+ID4gYi9kcml2ZXJzL3NvYy9hc3BlZWQvYXNw
+ZWVkLWxwYy1zbm9vcC5jCj4gPiBpbmRleAo+ID4gYmZhNzcwZWM1MWE4ODkyNjBkMTFjMjZlNjc1
+ZjMzMjBiZjcxMGE1NC4uZTlkOWE4ZTYwYTZmMDYyYzBiNTNjOWMwMgo+ID4gZTVkNzM3Njg0NTM5
+OThkIDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9zb2MvYXNwZWVkL2FzcGVlZC1scGMtc25vb3Au
+Ywo+ID4gKysrIGIvZHJpdmVycy9zb2MvYXNwZWVkL2FzcGVlZC1scGMtc25vb3AuYwo+ID4gQEAg
+LTU4LDYgKzU4LDcgQEAgc3RydWN0IGFzcGVlZF9scGNfc25vb3BfbW9kZWxfZGF0YSB7Cj4gPiDC
+oH07Cj4gPiDCoAo+ID4gwqBzdHJ1Y3QgYXNwZWVkX2xwY19zbm9vcF9jaGFubmVsIHsKPiA+ICvC
+oMKgwqDCoMKgwqDCoGJvb2wgZW5hYmxlZDsKPiA+IMKgwqDCoMKgwqDCoMKgwqBzdHJ1Y3Qga2Zp
+Zm/CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBmaWZvOwo+ID4gwqDCoMKgwqDCoMKgwqDCoHdhaXRf
+cXVldWVfaGVhZF90wqDCoMKgwqDCoMKgwqB3cTsKPiA+IMKgwqDCoMKgwqDCoMKgwqBzdHJ1Y3Qg
+bWlzY2RldmljZcKgwqDCoMKgwqDCoMKgbWlzY2RldjsKPiA+IEBAIC0xOTAsNiArMTkxLDkgQEAg
+c3RhdGljIGludCBhc3BlZWRfbHBjX2VuYWJsZV9zbm9vcChzdHJ1Y3QKPiA+IGFzcGVlZF9scGNf
+c25vb3AgKmxwY19zbm9vcCwKPiA+IMKgwqDCoMKgwqDCoMKgwqBjb25zdCBzdHJ1Y3QgYXNwZWVk
+X2xwY19zbm9vcF9tb2RlbF9kYXRhICptb2RlbF9kYXRhID0KPiA+IMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKGRldik7Cj4gPiDCoAo+ID4g
+K8KgwqDCoMKgwqDCoMKgaWYgKGxwY19zbm9vcC0+Y2hhbltjaGFubmVsXS5lbmFibGVkKQo+ID4g
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiAtRUJVU1k7Cj4gCj4gVGhpcyBp
+c24ndCBzdXBwb3NlZCB0byBoYXBwZW4sIHJpZ2h0P8KgCgpObywgbm90IHN1cHBvc2VkIHRvIGhh
+cHBlbi4KCj4gV0FSTl9PTigpIG1heSBiZSBhcHByb3ByaWF0ZS4KCkFjay4KCj4gCj4gPiArCj4g
+PiDCoMKgwqDCoMKgwqDCoMKgaW5pdF93YWl0cXVldWVfaGVhZCgmbHBjX3Nub29wLT5jaGFuW2No
+YW5uZWxdLndxKTsKPiA+IMKgwqDCoMKgwqDCoMKgwqAvKiBDcmVhdGUgRklGTyBkYXRhc3RydWN0
+dXJlICovCj4gPiDCoMKgwqDCoMKgwqDCoMKgcmMgPSBrZmlmb19hbGxvYygmbHBjX3Nub29wLT5j
+aGFuW2NoYW5uZWxdLmZpZm8sCj4gPiBAQCAtMjM2LDYgKzI0MCw4IEBAIHN0YXRpYyBpbnQgYXNw
+ZWVkX2xwY19lbmFibGVfc25vb3Aoc3RydWN0Cj4gPiBhc3BlZWRfbHBjX3Nub29wICpscGNfc25v
+b3AsCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJlZ21hcF91cGRhdGVfYml0
+cyhscGNfc25vb3AtPnJlZ21hcCwgSElDUkIsCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaGljcmJfZW4sIGhpY3JiX2Vu
+KTsKPiA+IMKgCj4gPiArwqDCoMKgwqDCoMKgwqBscGNfc25vb3AtPmNoYW5bY2hhbm5lbF0uZW5h
+YmxlZCA9IHRydWU7Cj4gPiArCj4gPiDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIDA7Cj4gPiDCoAo+
+ID4gwqBlcnJfbWlzY19kZXJlZ2lzdGVyOgo+ID4gQEAgLTI0OCw2ICsyNTQsOSBAQCBzdGF0aWMg
+aW50IGFzcGVlZF9scGNfZW5hYmxlX3Nub29wKHN0cnVjdAo+ID4gYXNwZWVkX2xwY19zbm9vcCAq
+bHBjX3Nub29wLAo+ID4gwqBzdGF0aWMgdm9pZCBhc3BlZWRfbHBjX2Rpc2FibGVfc25vb3Aoc3Ry
+dWN0IGFzcGVlZF9scGNfc25vb3AKPiA+ICpscGNfc25vb3AsCj4gPiDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+aW50IGNoYW5uZWwpCj4gPiDCoHsKPiA+ICvCoMKgwqDCoMKgwqDCoGlmICghbHBjX3Nub29wLT5j
+aGFuW2NoYW5uZWxdLmVuYWJsZWQpCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+cmV0dXJuOwo+ID4gKwo+ID4gwqDCoMKgwqDCoMKgwqDCoHN3aXRjaCAoY2hhbm5lbCkgewo+ID4g
+wqDCoMKgwqDCoMKgwqDCoGNhc2UgMDoKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgcmVnbWFwX3VwZGF0ZV9iaXRzKGxwY19zbm9vcC0+cmVnbWFwLCBISUNSNSwKPiA+IEBAIC0y
+NjMsNiArMjcyLDggQEAgc3RhdGljIHZvaWQgYXNwZWVkX2xwY19kaXNhYmxlX3Nub29wKHN0cnVj
+dAo+ID4gYXNwZWVkX2xwY19zbm9vcCAqbHBjX3Nub29wLAo+ID4gwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqByZXR1cm47Cj4gPiDCoMKgwqDCoMKgwqDCoMKgfQo+ID4gwqAKPiA+ICvC
+oMKgwqDCoMKgwqDCoGxwY19zbm9vcC0+Y2hhbltjaGFubmVsXS5lbmFibGVkID0gZmFsc2U7Cj4g
+PiArwqDCoMKgwqDCoMKgwqAvKiBDb25zaWRlciBpbXByb3Zpbmcgc2FmZXR5IHdydCBjb25jdXJy
+ZW50IHJlYWRlcihzKSAqLwo+ID4gwqDCoMKgwqDCoMKgwqDCoG1pc2NfZGVyZWdpc3RlcigmbHBj
+X3Nub29wLT5jaGFuW2NoYW5uZWxdLm1pc2NkZXYpOwo+ID4gwqDCoMKgwqDCoMKgwqDCoGtmaWZv
+X2ZyZWUoJmxwY19zbm9vcC0+Y2hhbltjaGFubmVsXS5maWZvKTsKPiA+IMKgfQo+ID4gCj4gCj4g
+QWNrZWQtYnk6IEplYW4gRGVsdmFyZSA8amRlbHZhcmVAc3VzZS5kZT4KPiAKClRoYW5rcywKCkFu
+ZHJldwo=
 
