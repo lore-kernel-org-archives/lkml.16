@@ -1,80 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3BF1FF1B4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9851FCFF0;
 	Wed, 16 Apr 2025 00:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744765197; cv=none; b=YKZ9yvaRIyqJpMXiIDwr9DVcueJyerXPhcW4HMvlh71V0X69K453Ayhk1dhBDS1Kw3ts+I5/AhCepwdbp6UC2QWJdb6eLsDez32LxgvDrygRECopEpYKoudqBVxMj8MKNBs2IQ9WRtiII/ur8xKAH8nhRni+VkDCpXbfeBInrnI=
+	t=1744765201; cv=none; b=suFb668IOhLnjtTP317FPF1bUSDTPGZvcFHs0UVCcC+N/2KU9LT8+2EmZqiUQXXq+3fS7WgXYWmZBDKvP/JUlib+snMIBuf6ls/Xz5o5pq6mPScbLsRL2QgAkNsn3rYDT3r9EywP6//oiVGyb9V4L2Vy+iDRNEEXDRGq+Zh0g50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744765197; c=relaxed/simple;
-	bh=151ygcNcMsIrFJplJv9MnBQOAdO53zCmpNtyrWa+quA=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=dQAL67UIcz5MVtWpxnu/BYEFj5tw4SmynUJQxCakZtHxArcWU99/QJA+D1TP612PYxx3oMBGQCiqou8NOpKnRke2DaMGNrsJiP7yp0FzG+G43cN6+YJIs/jL4zru4+yWckGI5Ewce8fgG8FEwzdhdYG9GRNTOnuShKf1bMwy0lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QSnC9P3R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744765201; c=relaxed/simple;
+	bh=WponkBbzhkgFsGM8q1hgh/COWKn40sENxqwpBm+JBr4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f+F/+J4JySJtGCqKbJJCJtsLwgkiJHtwjdFE4DgfVOZ7iwxXwQeSZNFMtbjBPvz/zzQyAKv26Ei6tE1ZZvN2fL9+fEcVKI0SN+MNVoSWMHxKAvUMElecdveXvXQtl8fZtCy2YL3X5DObw0QBfh/I0004gZHySyk94EATbZTqp60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DXFmgOcb; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QSnC9P3R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77C61C4CEEB;
-	Wed, 16 Apr 2025 00:59:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744765197;
-	bh=151ygcNcMsIrFJplJv9MnBQOAdO53zCmpNtyrWa+quA=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=QSnC9P3Rr+Kfd0txBvFl7NiYvSHdTIhA+belTHNgD0yzB8wKinm0IpPBHyz9SsYye
-	 LywxoCGvyO/B6SFafA1vrkCSGzYLIh8jXEbVYI+ViIX3xVMOWTT3/DBI+8sEzZ2gLu
-	 cgnr546LFuT4L9q6Baq4iL9oiyQKkggHqwfSP1f3rwe6SYADAiETUfJuNNNloyaub9
-	 b6w/V2huI0AhuM+F7ydpNpKa9fRgC40Rh/l7IDt8FUXSqYrtvN5rXbk/bdqks/PbBU
-	 3BedhfjgT1beI+lvuWZUD4jYfP5GAHh3i8/KLtJSFSHlJVPFDTqTS1y4VidH5i9oIl
-	 0u9XdfeoZhqSQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE1EE3822D4B;
-	Wed, 16 Apr 2025 01:00:36 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DXFmgOcb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744765199; x=1776301199;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=WponkBbzhkgFsGM8q1hgh/COWKn40sENxqwpBm+JBr4=;
+  b=DXFmgOcb5lh48+ReIzZyFDYpE/+t15+wUfzAp4WxCRl3K8o8RHaEvY9c
+   9GaxAEIrv8bb/Rzk+1RRIvHfgPlftmEaM8sRl1dt/mznqo/Mv9QPTjclm
+   iXHRJJEP0wS8DJ10Rgl3QPvvCbu8adLuUBzQSL1szcA/vAN0tDEdha1kR
+   y7guQ6JbeuZZ7txjp5IuTp3Vt9tfa7aDUNX1rDxfDlEPZ3ENoPbD/plrp
+   GRuKNXSS2m4nsZLzxLXU27YniiDRfKbj2IyMwOLK7Z1rr4GsYouLBVkAF
+   87ZbgOICUplKj14VpqV+rKgLKsNGyWukdVCxAgPXioUM6cvaIEo2jvkpY
+   Q==;
+X-CSE-ConnectionGUID: j/4tFEDTQaSieNV+UgFbGQ==
+X-CSE-MsgGUID: /Jm+0EPURa+0lvXcGBHQhg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="50120332"
+X-IronPort-AV: E=Sophos;i="6.15,214,1739865600"; 
+   d="scan'208";a="50120332"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 17:59:57 -0700
+X-CSE-ConnectionGUID: myHvkvWQStuYu86/kbqlcg==
+X-CSE-MsgGUID: c36WZ+J2SAGoCqT3D6DMuw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,214,1739865600"; 
+   d="scan'208";a="130297038"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 17:59:54 -0700
+Message-ID: <93ebde20-0a1d-4356-872a-6820813c9fad@linux.intel.com>
+Date: Wed, 16 Apr 2025 08:59:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v3] net: bridge: locally receive all multicast
- packets if IFF_ALLMULTI is set
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174476523524.2834710.11784912594036142552.git-patchwork-notify@kernel.org>
-Date: Wed, 16 Apr 2025 01:00:35 +0000
-References: <OSZPR01MB8434308370ACAFA90A22980798B32@OSZPR01MB8434.jpnprd01.prod.outlook.com>
-In-Reply-To: <OSZPR01MB8434308370ACAFA90A22980798B32@OSZPR01MB8434.jpnprd01.prod.outlook.com>
-To: Shengyu Qu <wiagn233@outlook.com>
-Cc: razor@blackwall.org, idosch@nvidia.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- bridge@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- nbd@nbd.name
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v3 11/22] perf/x86/intel: Allocate arch-PEBS buffer and
+ initialize PEBS_BASE MSR
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
+ <20250415114428.341182-12-dapeng1.mi@linux.intel.com>
+ <20250415134503.GA4031@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250415134503.GA4031@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello:
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+On 4/15/2025 9:45 PM, Peter Zijlstra wrote:
+> On Tue, Apr 15, 2025 at 11:44:17AM +0000, Dapeng Mi wrote:
+>> +	buffer = dsalloc_pages(bsiz, preemptible() ? GFP_KERNEL : GFP_ATOMIC, cpu);
+> You were going to make this go away :-)
 
-On Mon, 14 Apr 2025 18:56:01 +0800 you wrote:
-> If multicast snooping is enabled, multicast packets may not always end up
-> on the local bridge interface, if the host is not a member of the multicast
-> group. Similar to how IFF_PROMISC allows all packets to be received
-> locally, let IFF_ALLMULTI allow all multicast packets to be received.
-> 
-> OpenWrt uses a user space daemon for DHCPv6/RA/NDP handling, and in relay
-> mode it sets the ALLMULTI flag in order to receive all relevant queries on
-> the network.
-> 
-> [...]
-
-Here is the summary with links:
-  - [net-next,v3] net: bridge: locally receive all multicast packets if IFF_ALLMULTI is set
-    https://git.kernel.org/netdev/net-next/c/a496d2f0fd61
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Yeah, since currently alloc_pebs_buffer() would be called in
+xxx_cpu_starting() context, I ever thought we still need this, but it seems
+I'm wrong. I just drop this change and run it in PTL and don't see any
+warning. I would drop this change in next version.
 
 
