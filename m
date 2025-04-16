@@ -1,123 +1,417 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430AD15B543;
-	Wed, 16 Apr 2025 03:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C598115B543;
+	Wed, 16 Apr 2025 03:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744775145; cv=none; b=HzofuEpFm7RuevG9rZCq48PqPNwd1R1sVVBvMUakdtflo1+32A/0dy9wnU0kRVLzbaz98ySRlrYauRc2gWdn7kbthkndQPy8oZK9GWXzROE+1gqbD2kfsBZvp7WRf9H6LE8Nfh4+NgyX43idjQNZb2i6dFqjPsEsQ+8ygT7sHhk=
+	t=1744775202; cv=none; b=jREjUbHTz0MDeFTb2YJEEJrVeNbe98sIZGfQtmu33LSmtzKv5PankblML3oUe/KGHdtfJ2zhrZLhiHaR29BY06k174azoefpRfEjtUqEgEBxvScmpkzNTcIPoZF4nL35P0hi09K7ijcHgiC9SgRS7qMAALRWRjIz2VEXbWC8Gok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744775145; c=relaxed/simple;
-	bh=Q/SXGPp3w7zDxJbEJI7HKZTVU2NnaABXW4B/3EMpNkw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TvSLmGxUC7RAe+Xicn4jAzZrXwbxjFYkEGHtU14UakisyVD7QUGPnD3+BcYTQ1lf9zvIeV31XojRo2i/8szCSl4mHx2mEE1+BrrKnnCZ9lC+ehNW+4zNbywfukPsfGCfxdrAGyPdIO2ev5uBDWJ5QRcrObqPLc1ztgvsr3F9LLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aCsXskQp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744775202; c=relaxed/simple;
+	bh=qfQGAx7ujA6mv9BqGg4+7VgDxR7WOgloe6QYeVhu6gw=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=CiT8vo+Nh1R1py4NgnVoqo0/FsinG/fbY6bAHQJdTsUA1macWlDif+h6z6oN3ALeUPrhL/yuGLRRuUkCC9G1zSX1NxawiV0uCBxkCcf5TFNCvv1o7obUnD53Pe8BdrZ7jzGZftcRIBkxH6iPHoeW38j4s9LDPx6Bo9Cp4tSxvbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Eqk+mUIY; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aCsXskQp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A13F8C4CEE2;
-	Wed, 16 Apr 2025 03:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744775144;
-	bh=Q/SXGPp3w7zDxJbEJI7HKZTVU2NnaABXW4B/3EMpNkw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aCsXskQpnTkLRG9qwgu2ohYa6Y7IkCCCR7rUl6cVZnJjaNbe7j1aCkG7cl+4g2RcB
-	 vasi7Y84lIspTDm7QDYPgLLMwA9ljoQLwVfxGwrWufPXm2A/kg7YrpvLU+/OdaeOws
-	 NPPtiuecbe+QjgWqE8XnpGmB110JOpcwyh0PMUmFuN/ZFPCSiv2/QcUmKo5zk5wiev
-	 iicOS46VoqIjeKab1sykWkab9lgQltTAUwWTm1mwfZ808s4lV4z+nIxts8fGrCZaMt
-	 ZD0HTxdHgm5vTbk9SVdNSIaMp75lNbHHGB6GPfJ8/7sXLk3Jr5473ncuL6cZxdD+iP
-	 Qh/LMLxBCYezA==
-Message-ID: <a05950b2-8995-484f-8678-699584d30ffe@kernel.org>
-Date: Wed, 16 Apr 2025 05:45:41 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eqk+mUIY"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22401f4d35aso72799285ad.2;
+        Tue, 15 Apr 2025 20:46:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744775200; x=1745380000; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EC5cRJ3DrdY8cRnwQGP/NwhxQE3eh7uMlEYNYdFTgqk=;
+        b=Eqk+mUIYUvpFxCi9sbGLk1YHfvRXe1fetIiijqKC/tN99o656PRrHgMINiFcuHrwyq
+         FpMlowHHE9aGreRFvFXCfq5ImxBOYNFy9c0IKXXwF11/Ug5eEWiH0OeWbxT8EExyMoT6
+         rtGpGPOhl0s+Ee/jfCqAr0RBAT3NbaO9urohQA5Aq+kG+1s/9j2fKL+shcgKVRkVd5RG
+         xj9CY/dVG2y0Iueoq9kqrBu3VMY74sE4kJmLrCP7SA2/+fOgwdUDj1ThJ21Q8/UYT/4k
+         Y2bgF1iLNelx96Scz5GSOCHne8fpw+h99iN7tCzI/IZBnVBVSSb6am/TwdpW9YboL+hD
+         220A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744775200; x=1745380000;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EC5cRJ3DrdY8cRnwQGP/NwhxQE3eh7uMlEYNYdFTgqk=;
+        b=Yja/fmm7v5M1y65DCuU4/F/I7T4Vur9Hexu/c1YVbFt8GkYQBmeAu/sMSs/fdc2roS
+         1cEzTRr51/94+6Xo0qw44/J2cAB4Jr0Tubikskf7Ug1DbVzXAou0WDrXJ0wljEzfELy3
+         SIRg3kzbW/tciFmaWFqqtdN3dXYh2eCGJlmnM0w1MUfR76l793GIZunyCkpb8ixt4VV4
+         nc4dHjVdCTd2SKPkAAbcPaO0T1TrAIor6Tku6+LC6voGzaKfJ9U3VWh/Odb0ktSU6tMI
+         iA6KhRLxL0vE9ZtkERJDHcN+fwusigoji6XbW+/QzEh1jvHPt5JbN8EKIfoBHShuxOmu
+         DAvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUl0oV65L+80JrWnw2Pc7ITFGP0l+1ZCNkQGoP6OxotbL3kXtvgNunl2lM7HOAoBa73hBlYhrWb@vger.kernel.org, AJvYcCXVCuFoupPi3ijsEVN3BhZyRAHp78YZQ50ieTYcjtI+8s2uEb5aaFMSr+62nLOkn5F5jBf6kCQBUUMty1k=@vger.kernel.org, AJvYcCXr9QnOkM3kBYq12qJ4rOIjbWKdkjwB4PEYB2b5kn+Zr5aAoUbHCeOI4o7iUUaVnTJDFE+D0YVehmSe16A7TaU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlPrmF9TU+fL7ntAMpi2JyKW0j5DV1vjDyWxuAwushkl4gqRje
+	yTwfnDtQRMPC+kwxgtkMqppj5EtzekW3sk/gQaAufwzhC3qU/ZZB
+X-Gm-Gg: ASbGncs0wcudXggRO7sVRco6et0OmUoGL6jC3XGGPzKHsALQio1b10CgU+/o7yCtXMu
+	m3Rdb47t0DQENRUgMPnxy5FmwxD/jdPWR6DGbFtrHk/uPWO/Gf4LcBAQ7NdUFlRTHqvmPn9R7SI
+	scigZ9ZB6M4+SxOnLKcYQv3iQJnC+mm4slB1wPrgQNi+U/stkJULY3a5Wfn5AxcLMhIxbUqk2Au
+	TUbNAzXJTwk9+w3sqHDAyRYkb56p0Vv7YpBOxctLKFiZMQsmcbR33uy96i7ftCHNEoYvFTy/HDK
+	ut4590o7Gdy+eLydknpOpSJRAVkcNIwRxjRMrhuQLQglaCX5BGB3zIocAeJk2lLAVt1SvhU7mg/
+	ojkmVsmgvij72mPENhiVRsiEew0aKICP+4Q==
+X-Google-Smtp-Source: AGHT+IGjrqlAd6Wb+ZXgS3zMNNwprjxMJ2s0Miw+SsiZpvGfwsIOpcwqiCXlp4hEzohHhkL8iDmH8A==
+X-Received: by 2002:a17:902:d2ca:b0:224:1eaa:5de1 with SMTP id d9443c01a7336-22c358d9cecmr4645315ad.18.1744775199732;
+        Tue, 15 Apr 2025 20:46:39 -0700 (PDT)
+Received: from localhost (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd23332a3sm9347267b3a.161.2025.04.15.20.46.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 20:46:39 -0700 (PDT)
+Date: Wed, 16 Apr 2025 12:46:24 +0900 (JST)
+Message-Id: <20250416.124624.303652240226377083.fujita.tomonori@gmail.com>
+To: a.hindborg@kernel.org, boqun.feng@gmail.com
+Cc: fujita.tomonori@gmail.com, rust-for-linux@vger.kernel.org,
+ gary@garyguo.net, me@kloenk.dev, daniel.almeida@collabora.com,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, andrew@lunn.ch,
+ hkallweit1@gmail.com, tmgross@umich.edu, ojeda@kernel.org,
+ alex.gaynor@gmail.com, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+ a.hindborg@samsung.com, aliceryhl@google.com, anna-maria@linutronix.de,
+ frederic@kernel.org, tglx@linutronix.de, arnd@arndb.de,
+ jstultz@google.com, sboyd@kernel.org, mingo@redhat.com,
+ peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, vschneid@redhat.com, tgunders@redhat.com,
+ david.laight.linux@gmail.com
+Subject: Re: [PATCH v13 3/5] rust: time: Introduce Instant type
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <67fe9efe.d40a0220.aa401.b05f@mx.google.com>
+References: <87lds3cjgx.fsf@kernel.org>
+	<20250414.205954.2258973048785103265.fujita.tomonori@gmail.com>
+	<67fe9efe.d40a0220.aa401.b05f@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/13] vt: properly support zero-width Unicode code
- points
-To: Nicolas Pitre <nico@fluxnic.net>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Nicolas Pitre <npitre@baylibre.com>, linux-serial@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250415192212.33949-1-nico@fluxnic.net>
- <20250415192212.33949-4-nico@fluxnic.net>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20250415192212.33949-4-nico@fluxnic.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 
-On 15. 04. 25, 21:17, Nicolas Pitre wrote:
-> From: Nicolas Pitre <npitre@baylibre.com>
-> 
-> Zero-width Unicode code points are causing misalignment in vertically
-> aligned content, disrupting the visual layout. Let's handle zero-width
-> code points more intelligently.
-> 
-> Double-width code points are stored in the screen grid followed by a white
-> space code point to create the expected screen layout. When a double-width
-> code point is followed by a zero-width code point in the console incoming
-> bytestream (e.g., an emoji with a presentation selector) then we may
-> replace the white space padding by that zero-width code point instead of
-> dropping it. This maximize screen content information while preserving
-> proper layout.
-> 
-> If a zero-width code point is preceded by a single-width code point then
-> the above trick is not possible and such zero-width code point must
-> be dropped.
-> 
-> VS16 (Variation Selector 16, U+FE0F) is special as it doubles the width
-> of the preceding single-width code point. We handle that case by giving
-> VS16 a width of 1 when that happens.
-> 
-> Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+On Tue, 15 Apr 2025 11:01:30 -0700
+Boqun Feng <boqun.feng@gmail.com> wrote:
 
-Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
+> On Mon, Apr 14, 2025 at 08:59:54PM +0900, FUJITA Tomonori wrote:
+>> On Mon, 14 Apr 2025 09:04:14 +0200
+>> Andreas Hindborg <a.hindborg@kernel.org> wrote:
+>> 
+>> > "Boqun Feng" <boqun.feng@gmail.com> writes:
+>> > 
+>> >> On Sun, Apr 13, 2025 at 07:43:08PM +0900, FUJITA Tomonori wrote:
+>> >>> Introduce a type representing a specific point in time. We could use
+>> >>> the Ktime type but C's ktime_t is used for both timestamp and
+>> >>> timedelta. To avoid confusion, introduce a new Instant type for
+>> >>> timestamp.
+>> >>>
+>> >>> Rename Ktime to Instant and modify their methods for timestamp.
+>> >>>
+>> >>> Implement the subtraction operator for Instant:
+>> >>>
+>> >>> Delta = Instant A - Instant B
+>> >>>
+>> >>> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+>> >>
+>> >> I probably need to drop my Reviewed-by because of something below:
+>> >>
+>> >>> Reviewed-by: Gary Guo <gary@garyguo.net>
+>> >>> Reviewed-by: Fiona Behrens <me@kloenk.dev>
+>> >>> Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
+>> >>> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+>> >>> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+>> >>> ---
+>> >> [...]
+>> >>> diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
+>> >>> index ce53f8579d18..27243eaaf8ed 100644
+>> >>> --- a/rust/kernel/time/hrtimer.rs
+>> >>> +++ b/rust/kernel/time/hrtimer.rs
+>> >>> @@ -68,7 +68,7 @@
+>> >>>  //! `start` operation.
+>> >>>
+>> >>>  use super::ClockId;
+>> >>> -use crate::{prelude::*, time::Ktime, types::Opaque};
+>> >>> +use crate::{prelude::*, time::Instant, types::Opaque};
+>> >>>  use core::marker::PhantomData;
+>> >>>  use pin_init::PinInit;
+>> >>>
+>> >>> @@ -189,7 +189,7 @@ pub trait HrTimerPointer: Sync + Sized {
+>> >>>
+>> >>>      /// Start the timer with expiry after `expires` time units. If the timer was
+>> >>>      /// already running, it is restarted with the new expiry time.
+>> >>> -    fn start(self, expires: Ktime) -> Self::TimerHandle;
+>> >>> +    fn start(self, expires: Instant) -> Self::TimerHandle;
+>> >>
+>> >> We should be able to use what I suggested:
+>> >>
+>> >> 	https://lore.kernel.org/rust-for-linux/Z_ALZsnwN53ZPBrB@boqun-archlinux/
+>> >>
+>> >> to make different timer modes (rel or abs) choose different expire type.
+>> >>
+>> >> I don't think we can merge this patch as it is, unfortunately, because
+>> >> it doesn't make sense for a relative timer to take an Instant as expires
+>> >> value.
+>> > 
+>> > I told Tomo he could use `Instant` in this location and either he or I
+>> > would fix it up later [1].
+>> > 
+> 
+> I saw that, however, I don't think we can put `Instant` as the parameter
+> for HrTimerPointer::start() because we don't yet know how long would the
+> fix-it-up-later take. And it would confuse users if they need a put an
+> Instant for relative time.
+> 
+>> > I don't want to block the series on this since the new API is not worse
+>> > than the old one where Ktime is overloaded for both uses.
+> 
+> How about we keep Ktime? That is HrTimerPointer::start() still uses
+> Ktime, until we totally finish the refactoring as Tomo show below?
+> `Ktime` is much better here because it at least matches C API behavior,
+> we can remove `Ktime` once the dust is settled. Thoughts?
 
+Either is fine with me. I'll leave it to Andreas' judgment.
+
+Andreas, if you like Boqun's approach, I'll replace the third patch
+with the following one and send v14.
+
+I added Ktime struct to hrtimer.rs so the well-reviewed changes to
+time.rs remain unchanged.
+
+---
+rust: time: Introduce Instant type
+
+Introduce a type representing a specific point in time. We could use
+the Ktime type but C's ktime_t is used for both timestamp and
+timedelta. To avoid confusion, introduce a new Instant type for
+timestamp.
+
+Rename Ktime to Instant and modify their methods for timestamp.
+
+Implement the subtraction operator for Instant:
+
+Delta = Instant A - Instant B
+
+Note that hrtimer still uses the Ktime type for now. It will be
+replaced with Instant and Delta types later.
+
+Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+Reviewed-by: Gary Guo <gary@garyguo.net>
+Reviewed-by: Fiona Behrens <me@kloenk.dev>
+Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
+Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+---
+ rust/kernel/time.rs                 | 77 +++++++++++++++--------------
+ rust/kernel/time/hrtimer.rs         | 17 ++++++-
+ rust/kernel/time/hrtimer/arc.rs     |  2 +-
+ rust/kernel/time/hrtimer/pin.rs     |  2 +-
+ rust/kernel/time/hrtimer/pin_mut.rs |  4 +-
+ rust/kernel/time/hrtimer/tbox.rs    |  2 +-
+ 6 files changed, 60 insertions(+), 44 deletions(-)
+
+diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
+index e00b9a853e6a..a8089a98da9e 100644
+--- a/rust/kernel/time.rs
++++ b/rust/kernel/time.rs
+@@ -5,6 +5,22 @@
+ //! This module contains the kernel APIs related to time and timers that
+ //! have been ported or wrapped for usage by Rust code in the kernel.
+ //!
++//! There are two types in this module:
++//!
++//! - The [`Instant`] type represents a specific point in time.
++//! - The [`Delta`] type represents a span of time.
++//!
++//! Note that the C side uses `ktime_t` type to represent both. However, timestamp
++//! and timedelta are different. To avoid confusion, we use two different types.
++//!
++//! A [`Instant`] object can be created by calling the [`Instant::now()`] function.
++//! It represents a point in time at which the object was created.
++//! By calling the [`Instant::elapsed()`] method, a [`Delta`] object representing
++//! the elapsed time can be created. The [`Delta`] object can also be created
++//! by subtracting two [`Instant`] objects.
++//!
++//! A [`Delta`] type supports methods to retrieve the duration in various units.
++//!
+ //! C header: [`include/linux/jiffies.h`](srctree/include/linux/jiffies.h).
+ //! C header: [`include/linux/ktime.h`](srctree/include/linux/ktime.h).
+ 
+@@ -33,59 +49,44 @@ pub fn msecs_to_jiffies(msecs: Msecs) -> Jiffies {
+     unsafe { bindings::__msecs_to_jiffies(msecs) }
+ }
+ 
+-/// A Rust wrapper around a `ktime_t`.
++/// A specific point in time.
++///
++/// # Invariants
++///
++/// The `inner` value is in the range from 0 to `KTIME_MAX`.
+ #[repr(transparent)]
+ #[derive(Copy, Clone, PartialEq, PartialOrd, Eq, Ord)]
+-pub struct Ktime {
++pub struct Instant {
+     inner: bindings::ktime_t,
+ }
+ 
+-impl Ktime {
+-    /// Create a `Ktime` from a raw `ktime_t`.
+-    #[inline]
+-    pub fn from_raw(inner: bindings::ktime_t) -> Self {
+-        Self { inner }
+-    }
+-
++impl Instant {
+     /// Get the current time using `CLOCK_MONOTONIC`.
+     #[inline]
+-    pub fn ktime_get() -> Self {
+-        // SAFETY: It is always safe to call `ktime_get` outside of NMI context.
+-        Self::from_raw(unsafe { bindings::ktime_get() })
+-    }
+-
+-    /// Divide the number of nanoseconds by a compile-time constant.
+-    #[inline]
+-    fn divns_constant<const DIV: i64>(self) -> i64 {
+-        self.to_ns() / DIV
+-    }
+-
+-    /// Returns the number of nanoseconds.
+-    #[inline]
+-    pub fn to_ns(self) -> i64 {
+-        self.inner
++    pub fn now() -> Self {
++        // INVARIANT: The `ktime_get()` function returns a value in the range
++        // from 0 to `KTIME_MAX`.
++        Self {
++            // SAFETY: It is always safe to call `ktime_get()` outside of NMI context.
++            inner: unsafe { bindings::ktime_get() },
++        }
+     }
+ 
+-    /// Returns the number of milliseconds.
++    /// Return the amount of time elapsed since the [`Instant`].
+     #[inline]
+-    pub fn to_ms(self) -> i64 {
+-        self.divns_constant::<NSEC_PER_MSEC>()
++    pub fn elapsed(&self) -> Delta {
++        Self::now() - *self
+     }
+ }
+ 
+-/// Returns the number of milliseconds between two ktimes.
+-#[inline]
+-pub fn ktime_ms_delta(later: Ktime, earlier: Ktime) -> i64 {
+-    (later - earlier).to_ms()
+-}
+-
+-impl core::ops::Sub for Ktime {
+-    type Output = Ktime;
++impl core::ops::Sub for Instant {
++    type Output = Delta;
+ 
++    // By the type invariant, it never overflows.
+     #[inline]
+-    fn sub(self, other: Ktime) -> Ktime {
+-        Self {
+-            inner: self.inner - other.inner,
++    fn sub(self, other: Instant) -> Delta {
++        Delta {
++            nanos: self.inner - other.inner,
+         }
+     }
+ }
+diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
+index ce53f8579d18..f46b41d3c31e 100644
+--- a/rust/kernel/time/hrtimer.rs
++++ b/rust/kernel/time/hrtimer.rs
+@@ -68,10 +68,25 @@
+ //! `start` operation.
+ 
+ use super::ClockId;
+-use crate::{prelude::*, time::Ktime, types::Opaque};
++use crate::{prelude::*, types::Opaque};
+ use core::marker::PhantomData;
+ use pin_init::PinInit;
+ 
++/// A Rust wrapper around a `ktime_t`.
++#[repr(transparent)]
++#[derive(Copy, Clone, PartialEq, PartialOrd, Eq, Ord)]
++pub struct Ktime {
++    inner: bindings::ktime_t,
++}
++
++impl Ktime {
++    /// Returns the number of nanoseconds.
++    #[inline]
++    pub fn to_ns(self) -> i64 {
++        self.inner
++    }
++}
++
+ /// A timer backed by a C `struct hrtimer`.
+ ///
+ /// # Invariants
+diff --git a/rust/kernel/time/hrtimer/arc.rs b/rust/kernel/time/hrtimer/arc.rs
+index 4a984d85b4a1..ccf1e66e5b2d 100644
+--- a/rust/kernel/time/hrtimer/arc.rs
++++ b/rust/kernel/time/hrtimer/arc.rs
+@@ -5,10 +5,10 @@
+ use super::HrTimerCallback;
+ use super::HrTimerHandle;
+ use super::HrTimerPointer;
++use super::Ktime;
+ use super::RawHrTimerCallback;
+ use crate::sync::Arc;
+ use crate::sync::ArcBorrow;
+-use crate::time::Ktime;
+ 
+ /// A handle for an `Arc<HasHrTimer<T>>` returned by a call to
+ /// [`HrTimerPointer::start`].
+diff --git a/rust/kernel/time/hrtimer/pin.rs b/rust/kernel/time/hrtimer/pin.rs
+index f760db265c7b..293ca9cf058c 100644
+--- a/rust/kernel/time/hrtimer/pin.rs
++++ b/rust/kernel/time/hrtimer/pin.rs
+@@ -4,9 +4,9 @@
+ use super::HrTimer;
+ use super::HrTimerCallback;
+ use super::HrTimerHandle;
++use super::Ktime;
+ use super::RawHrTimerCallback;
+ use super::UnsafeHrTimerPointer;
+-use crate::time::Ktime;
+ use core::pin::Pin;
+ 
+ /// A handle for a `Pin<&HasHrTimer>`. When the handle exists, the timer might be
+diff --git a/rust/kernel/time/hrtimer/pin_mut.rs b/rust/kernel/time/hrtimer/pin_mut.rs
+index 90c0351d62e4..6033572d35ad 100644
+--- a/rust/kernel/time/hrtimer/pin_mut.rs
++++ b/rust/kernel/time/hrtimer/pin_mut.rs
+@@ -1,9 +1,9 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+ use super::{
+-    HasHrTimer, HrTimer, HrTimerCallback, HrTimerHandle, RawHrTimerCallback, UnsafeHrTimerPointer,
++    HasHrTimer, HrTimer, HrTimerCallback, HrTimerHandle, Ktime, RawHrTimerCallback,
++    UnsafeHrTimerPointer,
+ };
+-use crate::time::Ktime;
+ use core::{marker::PhantomData, pin::Pin, ptr::NonNull};
+ 
+ /// A handle for a `Pin<&mut HasHrTimer>`. When the handle exists, the timer might
+diff --git a/rust/kernel/time/hrtimer/tbox.rs b/rust/kernel/time/hrtimer/tbox.rs
+index 2071cae07234..29526a5da203 100644
+--- a/rust/kernel/time/hrtimer/tbox.rs
++++ b/rust/kernel/time/hrtimer/tbox.rs
+@@ -5,9 +5,9 @@
+ use super::HrTimerCallback;
+ use super::HrTimerHandle;
+ use super::HrTimerPointer;
++use super::Ktime;
+ use super::RawHrTimerCallback;
+ use crate::prelude::*;
+-use crate::time::Ktime;
+ use core::ptr::NonNull;
+ 
+ /// A handle for a [`Box<HasHrTimer<T>>`] returned by a call to
 -- 
-js
-suse labs
+2.43.0
+
+
+
