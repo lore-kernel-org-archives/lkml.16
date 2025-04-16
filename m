@@ -1,156 +1,168 @@
-Received: from bayard.4d2.org (bayard.4d2.org [155.254.16.17])
+Received: from gmmr-2.centrum.cz (gmmr-2.centrum.cz [46.255.227.203])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD752139C4;
-	Wed, 16 Apr 2025 13:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=155.254.16.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C302139B5;
+	Wed, 16 Apr 2025 13:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.227.203
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744811683; cv=none; b=Eqix2OJXubiN/ScEt0/1QhBS5B6QPo4IAQDnVogekV3fp9JBn2bc74i+YvhXfNcQKyIUGrbb7q1Wde/yu3RaJVd0lVpbP0Z2It8BWJMOJYEzpajXVlOAnZ8VkExKWSyUc3sJK77RQl6+oXl3KJu9XvXSN0Kb0McQDPN3B4wyRqU=
+	t=1744811683; cv=none; b=eUSCIWYZCDfQ3frQtYaqSXbH3cinlFTOnCfvQXKkBayQAAwliQXIj48Kq976xlb3g1uQlDl8rmhG12nROGrezUMU2/Q1bfyQdlIgJ0skgL7C6wKCmwj9t3UNx2owj23/l5s6Rdrzz/agFyO168zu4wxVIeKHvBy23BIhD2JDQaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744811683; c=relaxed/simple;
-	bh=0TfnuVk3JuNdSQRmPF3HgxD+Ku/B4FyBYJxSffFdeEg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZO3gQWuvZ0HdDfA37AsEBGDNM8O/QgeI4M35bPz2FlE9ZE94D4OQBncK34IMFSMy81rbOh655hIidMGemoqBHAbQ37Cs9fHm4wrYfAe/UhsdYiD6eisbsEnJ2tN1W++yB6vfe9kasdepiJ9S8XI+ASjsP/LkBuILUK1uV0iYR+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=y8v12LoF; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=PGDPcXwq; arc=none smtp.client-ip=155.254.16.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4d2.org
+	bh=8iPCyBnNECrvFDdWDc3xKa6kubWw6Oh2mtACz/I0iCo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OWXRrKXg+gxleH0fyTEiM0vHSI0c5CjtqggqrLPurh/tHiJV2JL/3EQ28ADw65Oc0iTBfcgx0nu6e4ZBL5EZMtXTM5KqBzl5Gj4vbkrtaLbVIckQnz1wtaGwq9mAXI7aEjmKHINCkKCDswVk29WulILpX4rXHFNiT4Rysu0BfTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz; spf=pass smtp.mailfrom=atlas.cz; dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b=RaHc1mWK; arc=none smtp.client-ip=46.255.227.203
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atlas.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="y8v12LoF";
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="PGDPcXwq"
-Received: from bayard.4d2.org (bayard.4d2.org [127.0.0.1])
-	by bayard.4d2.org (Postfix) with ESMTP id 4E17D12FB451;
-	Wed, 16 Apr 2025 06:54:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1744811681; bh=0TfnuVk3JuNdSQRmPF3HgxD+Ku/B4FyBYJxSffFdeEg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=y8v12LoFkJ6OWeVxlzD6jlGrpjI0n4dP9xxbFoikVZLY+VK/QP14ZHMyY4eTco3HD
-	 jTeMcqmI9wUjk4bQ6AoJAz+8woLMCDFZOmR1zNX/qQwFvDq0bw78WgfWwE7EIBJ6qE
-	 lG+jq9y5jJ2nh9ujqwKx3zS6D/TO2QL1QcbdKQuA+rs4h+OyRvPaQMbNyWmdT8kyl0
-	 Qzi9D+RhYzUZmWWOYjxxCgaZtRs2vF2t1ptrupzSbg+lOoj+9KDeBcpisYg4Bn5IvE
-	 FA8zS4c6Ug+Z2DsBcTockIz57FKGGqBnz8JhCNYOLBZfqDEZcHwT3IVAueulOwD09+
-	 1aCqyU7VCTwmg==
-X-Virus-Scanned: amavisd-new at 4d2.org
-Authentication-Results: bayard.4d2.org (amavisd-new); dkim=pass (2048-bit key)
- header.d=4d2.org
-Received: from bayard.4d2.org ([127.0.0.1])
- by bayard.4d2.org (bayard.4d2.org [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id P4MgbncuCctj; Wed, 16 Apr 2025 06:54:39 -0700 (PDT)
-Received: from localhost.localdomain (unknown [183.217.80.190])
+	dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b="RaHc1mWK"
+Received: from gmmr-2.centrum.cz (localhost [127.0.0.1])
+	by gmmr-2.centrum.cz (Postfix) with ESMTP id 194BD2160D3C;
+	Wed, 16 Apr 2025 15:53:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
+	t=1744811608; bh=mOJi3ULIs6S9O57TJ4KmwFOJWvhHrsVQiIfVdvf40wo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RaHc1mWKy7sjYT1nowppfylloj95wowcY3xUi1JChHr5bx04qhidWORWHHsFkKB1U
+	 0cJKHHuWcbiS//5UXr/keo+Wjhh6u+DlsKnaSb8zf0Z6zGz1bwkOawADRFYuAIA9Wa
+	 az6jEzrxs5I0r5Ye/kIE/SGhz7lZ6u7XYsbs0UFo=
+Received: from antispam39.centrum.cz (antispam39.cent [10.30.208.39])
+	by gmmr-2.centrum.cz (Postfix) with ESMTP id 167EC211FC88;
+	Wed, 16 Apr 2025 15:53:28 +0200 (CEST)
+X-CSE-ConnectionGUID: Mln02DEDTaycyQEoKV972g==
+X-CSE-MsgGUID: kN5ul4MZQEKiIS9TdEEyWw==
+X-ThreatScanner-Verdict: Negative
+X-IPAS-Result: =?us-ascii?q?A2EHAAAqtf9n/03h/y5aGgEBAQEBAQEBAQEDAQEBARIBA?=
+ =?us-ascii?q?QEBAgIBAQEBQAmBOAMBAQEBCwGJeZFxA4t2hjOGDoVbgX4PAQEBAQEBAQEBC?=
+ =?us-ascii?q?UQEAQGFBwKLLCc2Bw4BAgQBAQEBAwIDAQEBAQEBAQEBDQEBBgEBAQEBAQYGA?=
+ =?us-ascii?q?QKBHYU1U4JiAYN/AQEBAQIBIw8BRhALDQEKAgIfBwICVgaDFYIwAREjsVt6g?=
+ =?us-ascii?q?TIaAmXccAKBI2OBKoEaLgGITwGFbIR3QoINhD8+gQUBhxiCaQSCLYEXlBCNO?=
+ =?us-ascii?q?FJ7HANZLAFVExcLBwWBKUMDgQ8jTgUwHYF6g3OFNoIRgVwDAyIBgxV1HIRsh?=
+ =?us-ascii?q?FYtT4MzgWgdQAMLbT03FBsGnHwBWSInOIElFcc5gxyBCYROnRUzl3ADkmQuh?=
+ =?us-ascii?q?2WPcnmpM4FuAoINMyIwgyNRGY5HIctZgTICBwEKAQEDCYI7jWGBSwEB?=
+IronPort-PHdr: A9a23:rB4ocBeT2Fj2wyLStyGyCRB0lGM+5djLVj580XLHo4xHfqnrxZn+J
+ kuXvawr0ASTG92DoKge1beM+4nbGkU+or+5+EgYd5JNUxJXwe43pCcHROOjNwjQAcWuURYHG
+ t9fXkRu5XCxPBsdMs//Y1rPvi/6tmZKSV3wOgVvO+v6BJPZgdip2OCu4Z3TZBhDiCagbb9oI
+ xi7oxvdutMKjYd+Jao91AXFr3pIduhI2GhlOU+dkxHg68i/+5Ju7z5esO87+c5aVqX6caU4T
+ bhGAzkjLms4+s7luwTdQAWW/ncSXX0YnRVRDwXb4x/0Q4/9vSTmuOVz3imaJtD2QqsvWTu+9
+ adrSQTnhzkBOjUk7WzYkM1wjKZcoBK8uxxyxpPfbY+JOPZieK7WYMgXTnRdUMlPSyNBA5u8b
+ 4oRAOoHIeZYtJT2q18XoRejGQWgGObjxzlVjXH0wKI6yfwsHw/G0gI+Ad8ArXfarNv6O6gOT
+ O+7w6vHwC7fb/5Vwzrx9JTEfgwjrPyKQLl+cdDRyU4qFw7dlFuft5DlPymI3esCqWeb6fRlV
+ eGygGMgsQ5xuDuvyd0piobTnIIY0UrL9Tl9wIkvPt20UlJ0YN+9HZZWqiqVOJd4TNk4TGF0p
+ CY11KcGuZijcSUWx5kqyBHRZfKDfoWL4hzuWumfLSl4iX9qZL+zmgu+/0a+x+HiVsS50UhGo
+ jZFn9TOqnwByx/e59WHRPZg/kms3yuE2QPL6uxcLk05lLDXJ4Ahz7MwjJYfr1rPEy/slEj0j
+ qKablso9vWm5uj9fLnquIOQO5VqhgzxLqgigMiyDOU+PwMTRWaU4/6826fm/UDhRbVKieA5n
+ bfBvZDBIMQbura5AwhI0oY/8xq/Dymp0NAfnXQfI1JFfQuLj5PsO1HSOPD0EOuzj06wnzh1w
+ fDGIqfhAojILnTZjLjgfK5x609ayAUt0dBS/51ZB7AbLP7tWkL8tMbUAgEnPwG02erqCtdw2
+ psbWW2VA6+ZNK3SsUWP5uIqO+SDfpUVuDXnJPgg/fHul2Q0lkUBfamtx5QXc2q0EehnIkmBe
+ 3rjns8BEXsWvgo5VOHqi0ONUSBSZ3a0Ra4z/Ss7CIW7AofYRYCsgKeM0z2hHp1TfGxJFleME
+ XLwe4WeR/gMcD6SItNmkjEcW7mhSosh1RWutQLhyrpnKOTU+jcCup3+ytd6/fDcmQs19TxuA
+ MSRy3uNQH1snmMUWz8227hyoEN+x1qCyqV4gOJXFcZV5/xXVgc2L5ncz/Z1C9zqQALOYs+JS
+ Eq6QtWhGTwxStMxw9kTY0dyAtmiixXD0jGpA78LjbOEGJ80/rjb33jrKMZx02zG27U5j1k6X
+ stPMnWribR89wjLAo7EiEGZl6esdaQB0y/B7WmDzW2TvEFeTQF/S7nFXXEYZkvQt9j54VnCT
+ 7C2BbQ9LgRB0dKCKrdNatDxglRJWvHjNM3DbG2vhWe/GxKIy6iIbIrrYGUdwD7dBFILkg8N+
+ 3aGLRI+BiCjo23AEDNuCUjjY0T28elxsH+7VFM7zxmWb0190Lq44hwVhfOGS/MUxbIEozwsq
+ y5pHFamwd3aEcaPpw1kfKlEe9My/E9H1X7Ftwx6JpGgK6FihlgDcwV4pk/hzQ93BZlAkcUxs
+ nMqwxR9KbiC3FNCaTyYx5bwNaPTKmXo+xCvcaHWiRni14Oz87sT6Pkn42riuAquBgJ27HRj1
+ 8h90n2S/JzGAQMeF5XrXRBk2QJ9ouTibzUnr73d095vef29qDzL3tszLOI5zh+7OdxNZvDXX
+ DTuGtEXUpD9YNchnEKkO1ddZLg6yQ==
+IronPort-Data: A9a23:pAIPxq2XSE7AvH5IEPbD5Sxwkn2cJEfYwER7XKvMYLTBsI5bpzwOy
+ GpJD2nTO/qDMzH9LdlwYNy/8R4PscSAy4I3HQI63Hw8FHgiRegppDi6wuUcGwvIc6UvmWo+t
+ 512huHodZ1yEzmF4E/wb9ANlFEkvYmQXL3wFeXYDS54QA5gWU8JhAlq8wIDqtcAbeORXUXU5
+ Lsen+WFYAX4g2ItbDpOg06+gEoHUMra6W5wUmMWOqgjUG/2zxE9EJ8ZLKetGHr0KqE8NvK6X
+ evK0Iai9Wrf+Ro3Yvv9+losWhBirhb6ZGBiu1IOM0SQqkEqSh8ajs7XAMEhhXJ/0F1lqfgqk
+ YkQ6sbgIeseFvakdOw1C3G0GszlVEFM0OevzXOX6aR/w6BaGpdFLjoH4EweZOUlFuhL7W5m0
+ PgecGohQzy/jvO90YuWTcpS15t5I5y+VG8fkikIITDxAvNjWpXfW/ySo9RV2isqm8UIFuS2i
+ 8gxNWQpNkmdJUcVZxFIV/rSn8/x7pX7WzRCq1uQrLAf6nTXxRc326qF3N/9I4TVFJwIxRfGz
+ o7A12ffXwweaPmt8Bem81OX19PDsA7qZ51HQdVU8dYv2jV/3Fc7CxAIVF39q+O+hlW9SvpWM
+ UlS8S0rxYAt9UivX/H8WROiqXKJtxJaXMBfe8UquF+lyafO5QudQG8eQVZpbN0gqd9zQDkC1
+ UGAlNCvAiZg2JWcSmqY3rOVqy6ifCYSMGkObDMFSg1D5MPsyKkjgxSKQtt9HaqditzuBSq20
+ z2MtDI5hbgYkYgMzarT1VLImTW3vbDSUxU4oA7QWwqN6gJ/eZ7gbpaj6XDF4vtaaoWUVF+Mu
+ D4Dgcf2xOQPC4yd0S+AWuMAGJm36Pufdj7Rm1hiG98m7TvFxpK4VdwOpmsjeQEzaJtCJmCBj
+ FLvhD69LaR7ZBOCBZKbqarqYyj25cAMzejYa80=
+IronPort-HdrOrdr: A9a23:O5DWYajdvBx/8rMLyYk+pBXutXBQXtcji2hC6mlwRA09TyVXra
+ +TddAgpHrJYVEqKRUdcLG7Scu9qBznn6KdjbN9AV7mZniAhILKFvAA0WKB+Vzd8kTFn4Y36U
+ 4jSchD4bbLY2SS4/yX3DWF
+X-Talos-CUID: 9a23:fUGq6mCSgmxYPLH6Ewxj8hZONu0JTnTMx2bpDkibNzc2ErLAHA==
+X-Talos-MUID: 9a23:X4pqhQSXDz+mun8oRXTvomx/MJtN0Z2DK0EsqsQ6t+SpJBNvbmI=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="6.15,216,1739833200"; 
+   d="scan'208";a="107915396"
+Received: from unknown (HELO gm-smtp10.centrum.cz) ([46.255.225.77])
+  by antispam39.centrum.cz with ESMTP; 16 Apr 2025 15:53:27 +0200
+Received: from arkam (ip-213-220-240-96.bb.vodafone.cz [213.220.240.96])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: heylenay@4d2.org)
-	by bayard.4d2.org (Postfix) with ESMTPSA id B3AFA12FB435;
-	Wed, 16 Apr 2025 06:54:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1744811679; bh=0TfnuVk3JuNdSQRmPF3HgxD+Ku/B4FyBYJxSffFdeEg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PGDPcXwqBuVtWpWOn/qAj0fyGN8YgXTVL3k8LP7Yi+tIOUdmS2hG+sZItP2mx3BM9
-	 e7Wa/6dThFtMcImxoe/ImX2yWPq4oMBZGUw7O8gk0/LIQdGpHObP22ZqBni9/5U5cZ
-	 hURMAeLW5rGdzveBTv0XOse+4lWWEiDK/unbnIUEPYrY7boFUpNxdbaYFO7emjzeq/
-	 5xSZPXGANeVaUxMMDnqEDmiMjhG9VJ/2jIxfjo0CoT7I7siIhB35Zvzn1IUuFC49fc
-	 q5Rt/AXP8pEuUPnLbEBaHd/D6YErA8myJwTlQmjmtWOIL1DcSlmEh5BXzR0pBx0lmH
-	 +qT0jqo+Sc+tg==
-From: Haylen Chu <heylenay@4d2.org>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Haylen Chu <heylenay@outlook.com>,
-	Yixun Lan <dlan@gentoo.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-riscv@lists.infradead.org,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	spacemit@lists.linux.dev,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Chen Wang <unicornxdotw@foxmail.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
-	Haylen Chu <heylenay@4d2.org>,
-	Alex Elder <elder@riscstar.com>
-Subject: [PATCH v8 4/6] clk: spacemit: k1: Add TWSI8 bus and function clocks
-Date: Wed, 16 Apr 2025 13:54:04 +0000
-Message-ID: <20250416135406.16284-5-heylenay@4d2.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250416135406.16284-1-heylenay@4d2.org>
-References: <20250416135406.16284-1-heylenay@4d2.org>
+	by gm-smtp10.centrum.cz (Postfix) with ESMTPSA id 8550480911AC;
+	Wed, 16 Apr 2025 15:53:27 +0200 (CEST)
+Date: Wed, 16 Apr 2025 15:53:25 +0200
+From: Petr =?utf-8?B?VmFuxJtr?= <arkamar@atlas.cz>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
+	Kevin Brodsky <kevin.brodsky@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	x86@kernel.org, xen-devel@lists.xenproject.org,
+	linux-arch@vger.kernel.org
+Subject: Re: Regression from a9b3c355c2e6 ("asm-generic: pgalloc: provide
+ generic __pgd_{alloc,free}") with CONFIG_DEBUG_VM_PGFLAGS=y and Xen
+Message-ID: <2025416135325-Z_-2VTPsw81jMgCm-arkamar@atlas.cz>
+References: <202541612720-Z_-deOZTOztMXHBh-arkamar@atlas.cz>
+ <Z_-lj5kCg084MXRI@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z_-lj5kCg084MXRI@casper.infradead.org>
 
-The control register for TWSI8 clocks, APBC_TWSI8_CLK_RST, contains mux
-selection bits, reset assertion bit and enable bits for function and bus
-clocks. It has a quirk that reading always results in zero.
+On Wed, Apr 16, 2025 at 01:41:51PM +0100, Matthew Wilcox wrote:
+> On Wed, Apr 16, 2025 at 02:07:20PM +0200, Petr Vaněk wrote:
+> > I have discovered a regression introduced in commit a9b3c355c2e6
+> > ("asm-generic: pgalloc: provide generic __pgd_{alloc,free}") [1,2] in
+> > kernel version 6.14. The problem occurs when the x86 kernel is
+> > configured with CONFIG_DEBUG_VM_PGFLAGS=y and is run as a PV Dom0 in Xen
+> > 4.19.1. During the startup, the kernel panics with the error log below.
+> 
+> You also have to have CONFIG_MITIGATION_PAGE_TABLE_ISOLATION enabled
+> to hit this problem, otherwise we allocate an order-0 page.
 
-As a workaround, let's hardcode the mux value as zero to select
-pll1_d78_31p5 as parent and treat twsi8_clk as a gate, whose enable mask
-is combined from the real bus and function clocks to avoid the
-write-only register being shared between two clk_hws, in which case
-updates of one clk_hw zero the other's bits.
+Indeed, the issue disappears when I disable
+CONFIG_MITIGATION_PAGE_TABLE_ISOLATION.
 
-With a 1:1 factor serving as placeholder for the bus clock, the I2C-8
-controller could be brought up, which is essential for boards attaching
-power-management chips to it.
+> > The commit changed PGD allocation path.  In the new implementation
+> > _pgd_alloc allocates memory with __pgd_alloc, which indirectly calls 
+> > 
+> >   alloc_pages_noprof(gfp | __GFP_COMP, order);
+> > 
+> > This is in contrast to the old behavior, where __get_free_pages was
+> > used, which indirectly called
+> > 
+> >   alloc_pages_noprof(gfp_mask & ~__GFP_HIGHMEM, order);
+> > 
+> > The key difference is that the new allocator can return a compound page.
+> > When xen_pin_page is later called on such a page, it call
+> > TestSetPagePinned function, which internally uses the PF_NO_COMPOUND
+> > macro. This macro enforces VM_BUG_ON_PGFLAGS if PageCompound is true,
+> > triggering the panic when CONFIG_DEBUG_VM_PGFLAGS is enabled.
+> 
+> I suspect the right thing to do here is to change the PF_NO_COMPOUND to
+> PF_HEAD.  Probably for all of these:
+> 
+> /* Xen */
+> PAGEFLAG(Pinned, pinned, PF_NO_COMPOUND)
+>         TESTSCFLAG(Pinned, pinned, PF_NO_COMPOUND)
+> PAGEFLAG(SavePinned, savepinned, PF_NO_COMPOUND);
+> PAGEFLAG(Foreign, foreign, PF_NO_COMPOUND);
+> PAGEFLAG(XenRemapped, xen_remapped, PF_NO_COMPOUND)
+>         TESTCLEARFLAG(XenRemapped, xen_remapped, PF_NO_COMPOUND)
+> 
+> Could you give that a try?
 
-Signed-off-by: Haylen Chu <heylenay@4d2.org>
-Reviewed-by: Alex Elder <elder@riscstar.com>
-Reviewed-by: Yixun Lan <dlan@gentoo.org>
----
- drivers/clk/spacemit/ccu-k1.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Yes, I could. Changing PF_NO_COMPOUND to PF_HEAD in those lines resolves
+the issue for me.
 
-diff --git a/drivers/clk/spacemit/ccu-k1.c b/drivers/clk/spacemit/ccu-k1.c
-index 8a0dd8146dbd..cdde37a05235 100644
---- a/drivers/clk/spacemit/ccu-k1.c
-+++ b/drivers/clk/spacemit/ccu-k1.c
-@@ -328,6 +328,12 @@ CCU_MUX_GATE_DEFINE(twsi4_clk, twsi_parents, APBC_TWSI4_CLK_RST, 4, 3, BIT(1), 0
- CCU_MUX_GATE_DEFINE(twsi5_clk, twsi_parents, APBC_TWSI5_CLK_RST, 4, 3, BIT(1), 0);
- CCU_MUX_GATE_DEFINE(twsi6_clk, twsi_parents, APBC_TWSI6_CLK_RST, 4, 3, BIT(1), 0);
- CCU_MUX_GATE_DEFINE(twsi7_clk, twsi_parents, APBC_TWSI7_CLK_RST, 4, 3, BIT(1), 0);
-+/*
-+ * APBC_TWSI8_CLK_RST has a quirk that reading always results in zero.
-+ * Combine functional and bus bits together as a gate to avoid sharing the
-+ * write-only register between different clock hardwares.
-+ */
-+CCU_GATE_DEFINE(twsi8_clk, CCU_PARENT_HW(pll1_d78_31p5), APBC_TWSI8_CLK_RST, BIT(1) | BIT(0), 0);
- 
- static const struct clk_parent_data timer_parents[] = {
- 	CCU_PARENT_HW(pll1_d192_12p8),
-@@ -412,6 +418,8 @@ CCU_GATE_DEFINE(twsi4_bus_clk, CCU_PARENT_HW(apb_clk), APBC_TWSI4_CLK_RST, BIT(0
- CCU_GATE_DEFINE(twsi5_bus_clk, CCU_PARENT_HW(apb_clk), APBC_TWSI5_CLK_RST, BIT(0), 0);
- CCU_GATE_DEFINE(twsi6_bus_clk, CCU_PARENT_HW(apb_clk), APBC_TWSI6_CLK_RST, BIT(0), 0);
- CCU_GATE_DEFINE(twsi7_bus_clk, CCU_PARENT_HW(apb_clk), APBC_TWSI7_CLK_RST, BIT(0), 0);
-+/* Placeholder to workaround quirk of the register */
-+CCU_FACTOR_DEFINE(twsi8_bus_clk, CCU_PARENT_HW(apb_clk), 1, 1);
- 
- CCU_GATE_DEFINE(timers1_bus_clk, CCU_PARENT_HW(apb_clk), APBC_TIMERS1_CLK_RST, BIT(0), 0);
- CCU_GATE_DEFINE(timers2_bus_clk, CCU_PARENT_HW(apb_clk), APBC_TIMERS2_CLK_RST, BIT(0), 0);
-@@ -896,6 +904,7 @@ static struct clk_hw *k1_ccu_apbc_hws[] = {
- 	[CLK_TWSI5]		= &twsi5_clk.common.hw,
- 	[CLK_TWSI6]		= &twsi6_clk.common.hw,
- 	[CLK_TWSI7]		= &twsi7_clk.common.hw,
-+	[CLK_TWSI8]		= &twsi8_clk.common.hw,
- 	[CLK_TIMERS1]		= &timers1_clk.common.hw,
- 	[CLK_TIMERS2]		= &timers2_clk.common.hw,
- 	[CLK_AIB]		= &aib_clk.common.hw,
-@@ -947,6 +956,7 @@ static struct clk_hw *k1_ccu_apbc_hws[] = {
- 	[CLK_TWSI5_BUS]		= &twsi5_bus_clk.common.hw,
- 	[CLK_TWSI6_BUS]		= &twsi6_bus_clk.common.hw,
- 	[CLK_TWSI7_BUS]		= &twsi7_bus_clk.common.hw,
-+	[CLK_TWSI8_BUS]		= &twsi8_bus_clk.common.hw,
- 	[CLK_TIMERS1_BUS]	= &timers1_bus_clk.common.hw,
- 	[CLK_TIMERS2_BUS]	= &timers2_bus_clk.common.hw,
- 	[CLK_AIB_BUS]		= &aib_bus_clk.common.hw,
--- 
-2.49.0
-
+Petr
