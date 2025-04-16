@@ -1,71 +1,180 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6D81F3BB4
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA84243947;
+	Wed, 16 Apr 2025 11:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744804744; cv=none; b=bPTK1sOmK8E1ujcqXWNecLI7XmvKrhp3VEymjB3aeiUDPBuvXH7Y9LGS0QM5F6cupCZ1EMB8q78QdbgV68z1MiWpyUr8bm//ZtWBSZgg95HD8f+Ev5TxDyjIXtJl8B49xHL25avKt/F3zrW4TtDz+pB+9GzUfadrbci1+jXrJUM=
+	t=1744804750; cv=none; b=DwXuhyWGTOvAOYLgO0Jb55xu67okxRqJe/MJQ7XhJwU33se18rbJjd/qjL0yZcQPfz5mkBDbXP322PMU3wWi/bAeOUvxQw0eMs6+AsyldEfGeXADOrfYgx62gc7wR8Y3P0Ct57wiABbb1AlpkWz/05T59VraCAmepRQFjj14Obw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744804744; c=relaxed/simple;
-	bh=7XDaLoq3659yz5WlMtNSwq/9FMDXu4Ya8eRfH6DDNso=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=h+aCHZBTuWQREqnKB0qMXNS8AlMyZGYIfhoHD2CyxBvkjNTXfhce1dw73YIuIw4Rgy09WniM9bqKLSHHh9IdHuZJxoeY3pUcPXFcRiL9yj8k2K+dlpswhYyXlKijGyP7PM3Bj+hcq7ZVcAy4n5VaDx0qD3FliaUBowNcwLEwPvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85e4f920dacso605848839f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 04:59:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744804742; x=1745409542;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hC1ORCdInRALRcey3WdLjKSlXXi6CnAh7ADTG+W6CIA=;
-        b=eQgKNBEGTSbFy3yGoh0CVmQ3nS2ai8dOEWzAO8YtNkMjHdLIrxATLyELAVPx4MR5GQ
-         pGzOPBiMW5BGj4NJV0uAT7/8Yt1RI/qeeO6YRK8fhztGaReKY/uYj+ThS4BPq2PWIodY
-         gmA6l21yX3Nxrjt2yYLCwQ4FHF/mQN4nwhh14RB48on5GLF5SWtQlgS7i5dp3fcJNwhp
-         XabCxfACMAn4l0xmBrzokBU8cWD0UcfyMSjGrrjUWZnO4SCyzu3TNrUNaLwUMv1Bayi0
-         ya8YO15hlS4wpbCBQJGz4llHdJCyPTJ/5fJIGHGOdaFqHWnvWZW+Z6D+4qH01CJGxjbQ
-         yb+Q==
-X-Gm-Message-State: AOJu0YznG+KB5IlT9X1r7TYsejRqYFp/hi2EujUjwn7h0MxJJJjH3Dwu
-	y93lP6eGUsVaZbIfPpx0E9I9yrKHhwmu8LuTJ81gXgNqS++4Ckcb/VJqnArwUQ3yhnwnb5eVoD+
-	S+pja6gN/uNZSQaLmqO1xV1ZsNOHWR7JmIT2Rp0OJz3qXhMkbjWUZ6Po=
-X-Google-Smtp-Source: AGHT+IGhEq8I5dh3yDQ17ht2ueFiHecyR0VOgyYsekGkKdDu42+b2TX4W+nRRMuegFVDvd7uFERTVQoCk6LgGOyRIax1tz/qZxGD
+	s=arc-20240116; t=1744804750; c=relaxed/simple;
+	bh=ALtJQWXgZ6dN7/4UoANBpoZDVZTBpnr7WjxXKFApxyc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mP1DfNKFPQSyO8aRMyVqU12h5ojrDNpOMDXhc1tgvKXMm8nE5K5EpC1Ms/j7ewrEK5jG/PRGx74mEDPqJsmHMVY9uib6AD1/yUtROqjzjN4iTpLIsCuy/D0jGSjZ5GJJ4b4bJfBv23JrvCTFSx2lNu0x3W7nyaBG2N9cqKwtOXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hb9+z3he; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hb9+z3he"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC571C4AF0B;
+	Wed, 16 Apr 2025 11:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744804748;
+	bh=ALtJQWXgZ6dN7/4UoANBpoZDVZTBpnr7WjxXKFApxyc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Hb9+z3heJulB223YkFfTYprUoXmfjh1/NpF+gh80Ps9qeEfzFVmn79lu8eLWRhIQS
+	 w9ISqlHxsRCPf+Mg1F7PtVduS632OV/90K+mGzEHV/+4oYAt5EAhvQJo7HCk2JMn9s
+	 IIPiUecrzG0i586fNUL0hBde4A5HWuqajs76qiQsdTXbloZLTv4Yxg4CxaLEiXWhDD
+	 Od9h+oQLNCsyK4M9lAQANvfB6Qwep1fKgUnnojJe5iN59mP7EhCmUWgcFpsHVex4jn
+	 9Q3nfbQA3LSvrBWuYr/F9LctHu9xMr8GRggXzXRV6wpbucMXYGC+xz/NYOggSbOHxS
+	 agronkrJ78Flw==
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2c7b2c14455so4296331fac.2;
+        Wed, 16 Apr 2025 04:59:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUQ3xnT+V9odSHj2JlQdUvNLv3r2ycbcH8Hubb59eCWXTUpIIgEClOLb8k75J0LRjjZ188tVXBchXiUPuU=@vger.kernel.org, AJvYcCWmdKQGnHjqS6QX6wu9yG6hyIKAFGPM3Y1JibUAKvYQXBQHNvFJC/E1hJASwbQvPdmeCoKPpZ4TtuA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5z9nKX4df7Enlp6NcxwCo2SIvl8cfV36V7upMBe1XlH8mjrTe
+	v+1ApFKdoa1LK6SrVs8r9pXp4dzBl7TLdEHlcFf4M5mNcwCJ8KBZN+KCZX29Z1EjgfSzJOIMLx6
+	tg/eyBeWM68hkeYYba4sqy8PAWZM=
+X-Google-Smtp-Source: AGHT+IEOcIVMxPhD85Zgkg4nhoiGIkKp4+2/bsREymu1TNHKVG4+1Cg/k72QVd3D1cutVfhQ21BsE0D/9orPt13jsKQ=
+X-Received: by 2002:a05:6870:596:b0:2d4:e101:13dd with SMTP id
+ 586e51a60fabf-2d4e1011ad8mr225979fac.1.1744804748169; Wed, 16 Apr 2025
+ 04:59:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3c86:b0:3d3:fa0a:7242 with SMTP id
- e9e14a558f8ab-3d815b10d23mr14184475ab.9.1744804742259; Wed, 16 Apr 2025
- 04:59:02 -0700 (PDT)
-Date: Wed, 16 Apr 2025 04:59:02 -0700
-In-Reply-To: <20250416114352.120139-1-n.zhandarovich@fintech.ru>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67ff9b86.050a0220.5cdb3.0004.GAE@google.com>
-Subject: Re: [syzbot] [usb?] BUG: corrupted list in usb_hcd_link_urb_to_ep (4)
-From: syzbot <syzbot+a2e67807a84a561c08fb@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, n.zhandarovich@fintech.ru, 
-	syzkaller-bugs@googlegroups.com
+References: <tencent_EE27C7D1D6BDB3EE57A2C467CC59A866C405@qq.com>
+ <tencent_6D2374392DB66C9D23BF6E2546638A42EC08@qq.com> <CAJZ5v0iE_iw+pSBppEWnJw=2=DFNa-J2VPDorTNF=Mve+0PNCg@mail.gmail.com>
+ <tencent_8E3A87C6D6A193F757BA846F0C41887CC405@qq.com>
+In-Reply-To: <tencent_8E3A87C6D6A193F757BA846F0C41887CC405@qq.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 16 Apr 2025 13:58:55 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iq4bw3WAk1yQRP=B3zk-rRYwibKNRjSfu=PGqTt6RNYw@mail.gmail.com>
+X-Gm-Features: ATxdqUE-tmeeHAEfid9e8PoBcQlKbHjRF175tpJhnR3Wn_yFirnDS7kDRNAlGeA
+Message-ID: <CAJZ5v0iq4bw3WAk1yQRP=B3zk-rRYwibKNRjSfu=PGqTt6RNYw@mail.gmail.com>
+Subject: Re: [PATCH v3] PM: EM: Fix potential division-by-zero error in em_compute_costs()
+To: Yaxiong Tian <iambestgod@qq.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, lukasz.luba@arm.com, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Yaxiong Tian <tianyaxiong@kylinos.cn>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Wed, Apr 16, 2025 at 4:57=E2=80=AFAM Yaxiong Tian <iambestgod@qq.com> wr=
+ote:
+>
+> =E5=9C=A8 2025/4/16 01:17, Rafael J. Wysocki =E5=86=99=E9=81=93:
+> > On Mon, Apr 14, 2025 at 11:09=E2=80=AFAM Yaxiong Tian <iambestgod@qq.co=
+m> wrote:
+> >>
+> >> From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+> >>
+> >> When the device is of a non-CPU type, table[i].performance won't be
+> >> initialized in the previous em_init_performance(), resulting in divisi=
+on
+> >> by zero when calculating costs in em_compute_costs().
+> >>
+> >> Since the 'cost' algorithm is only used for EAS energy efficiency
+> >> calculations and is currently not utilized by other device drivers, we
+> >> should add the _is_cpu_device(dev) check to prevent this division-by-z=
+ero
+> >> issue.
+> >>
+> >> Fixes: <1b600da51073> ("PM: EM: Optimize em_cpu_energy() and remove di=
+vision")
+> >
+> > Please look at the Fixes: tags in the kernel git history.  They don't
+> > look like the one above.
+> >
+> Yes, there's an extra '<>' here.
+>
+> >> Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
+> >> ---
+> >>   kernel/power/energy_model.c | 4 ++--
+> >>   1 file changed, 2 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
+> >> index d9b7e2b38c7a..fc972cc1fc12 100644
+> >> --- a/kernel/power/energy_model.c
+> >> +++ b/kernel/power/energy_model.c
+> >> @@ -235,7 +235,7 @@ static int em_compute_costs(struct device *dev, st=
+ruct em_perf_state *table,
+> >>
+> >>          /* Compute the cost of each performance state. */
+> >>          for (i =3D nr_states - 1; i >=3D 0; i--) {
+> >> -               unsigned long power_res, cost;
+> >> +               unsigned long power_res, cost =3D 0;
+> >>
+> >>                  if ((flags & EM_PERF_DOMAIN_ARTIFICIAL) && cb->get_co=
+st) {
+> >>                          ret =3D cb->get_cost(dev, table[i].frequency,=
+ &cost);
+> >> @@ -244,7 +244,7 @@ static int em_compute_costs(struct device *dev, st=
+ruct em_perf_state *table,
+> >>                                          cost, ret);
+> >>                                  return -EINVAL;
+> >>                          }
+> >> -               } else {
+> >> +               } else if (_is_cpu_device(dev)) {
+> >
+> > Can't you just check this upfront at the beginning of the function and
+> > make it bail out if dev is not a CPU device?
+> >
+> Sure, But the current implementation applies em_compute_costs() to both
+> non-CPU devices and CPU devices.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-unregister_netdevice: waiting for DEV to become free
+Maybe it shouldn't do that for non-CPU ones?
 
-unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
+> After carefully reviewing the latest code,
+> I've found this issue has expanded in scope.
+>
+> There are currently three call paths for invoking em_compute_costs():
+>
+> 1) Registering performance domains (for both non-CPU and CPU devices)
+> em_dev_register_perf_domain() =E2=86=92 em_create_pd() =E2=86=92
+> em_create_perf_table() =E2=86=92 em_compute_costs()
+>
+> 2)EM update paths (CPU devices only)
+>
+> Periodic 1000ms update check via em_update_work work item:
+> em_check_capacity_update() =E2=86=92 em_adjust_new_capacity() =E2=86=92
+> em_recalc_and_update() =E2=86=92 em_compute_costs()
+>
+> Exynos-chip initialization:
+> em_dev_update_chip_binning() =E2=86=92 em_recalc_and_update() =E2=86=92 e=
+m_compute_costs()
+>
+> 3) Device cost computation (non-CPU devices only - currently unused)
+> em_dev_compute_costs() =E2=86=92 em_compute_costs()
 
+So because this one is unused and AFAICS the cost values are never
+used for non-CPU devices, it's better to just avoid computing them at
+all.
 
-Tested on:
+> Note: In em_dev_compute_costs(), when calling em_compute_costs(),
+> neither the callback (cb) nor flags are set.In fact, it either does
+> nothing at all or performs incorrect operations.
+>
+> Therefore, should we mandate that non-CPU devices must provide a
+> get_cost callback?
 
-commit:         1a1d569a Merge tag 'edac_urgent_for_v6.15_rc3' of git:..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=120fafe4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=371da5cada627d74
-dashboard link: https://syzkaller.appspot.com/bug?extid=a2e67807a84a561c08fb
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+Why would that be an improvement?
 
-Note: no patches were applied.
+> So Should we add a check at the beginning of the em_compute_costs() to:
+>
+>         if (!_is_cpu_device(dev) && !cb->get_cost) {
+>                 dev_dbg(dev, "EM: No get_cost provided, cost unset.\n");
+>                 return 0;
+>         }
+> And Modify em_dev_compute_costs() to require callers to provide the cb
+> callback function,Also need to update its corresponding comments.
+>
+>
+> >>                          /* increase resolution of 'cost' precision */
+> >>                          power_res =3D table[i].power * 10;
+> >>                          cost =3D power_res / table[i].performance;
+> >> --
+
+I think until there is a user of em_dev_compute_costs() this is all
+moot and hard to figure out.
+
+I would drop em_dev_compute_costs() altogether for now and put a
+_is_cpu_device(dev) upfront check into em_compute_costs().
