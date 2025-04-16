@@ -1,146 +1,157 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2055.outbound.protection.outlook.com [40.107.93.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C268A201113
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 15:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744816237; cv=none; b=G7PMtiRpwq//8RncttmWPELr3j5yXF5KcNvexrj5aPsa7rA9VU3+rwVEvyy7KBWTH6qk8ip21iWK1wKWfOR/E3F06N5gFP+2akljAiNzQlFdKJ0b9MHY0vgwfDrUKD2IuFwEX5hAjjmLH4hkCF0cFHoouVuA201d5TJixw7A5Ew=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744816237; c=relaxed/simple;
-	bh=Ide8UYFDeeWAs1T/7pbZuBK8NGXCkQz+pW9bPws632E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OkY3MVsa1hZj0iB0Qv9KyoN/pOft9vlJeyE3Z7Wd3parAtLiRlD+bXKc/kwpm4yUmvVICmoSuwN/1re6/RNA7PIMq4JCTNWm3WNxkMYkn1URejH79kifeInY/sXSWUl1yJ3WYwWKoeVn4wRVXEKGd017sti8KUZvfYsMOgmDRHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=CnPjaQs8; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931AB1A4F21;
+	Wed, 16 Apr 2025 15:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744816247; cv=fail; b=Qsv6qzz+L4NsgN8uscR5Kw/5AVLzVaZ9YgMooETs8IbdHM2TPb8zRbhxW+CptInvH6z3DgY+At+vCiyx0Pp60tIUPeMWRCCOdKPnbba968SZ14fhkCvKBIGPMrw/btXPzPQndbjd6WIRHtXTjUm4ctblPe7HzsaWQgnunUptMqU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744816247; c=relaxed/simple;
+	bh=4vfuN1PmFNSCIOmT2fFxmUdoue8sq1y9/mUlWHLLukc=;
+	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=n8cF+LkCLrqGzqpOJj+8nqRJxlDVXmEblK63jjq273S4ufHVtVjbQqHXf8FXOXpdHLHxg6w9McZ7jOu4U9hEUEi+EEXnnO1SlIIq6XxN/dO/UBIiCaoar8QvZNhvG837EbdKgmB7NkYygfSk1z66avohW3K+EKpWVzcvV0O5X18=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jz137fVa; arc=fail smtp.client-ip=40.107.93.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="CnPjaQs8"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-85d9a87660fso571867739f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:10:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1744816235; x=1745421035; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=j0/VAqjkF1TxpYnRhzPRlf8Ce1qx0Jj3f5VBhpm09qo=;
-        b=CnPjaQs8v1ri2+WVSKVVXv98MygiHAkQzAirhP8FmKogh13uREmw1MhfJmSl9ujtCR
-         V4AdODbbSq1Fzg80LJHIeHwSBecFERYIvjT6ZxaVr4drJZhrpUg1pyIlQ/8LjHpXWA3p
-         sk3900V9k0QOa7LFMI2Bp/ElzE1A65Fal8XdEhIEMNRUItoQw3iNH4OOxwqpnJQUEGRN
-         R3tfDjRj/Q5363DEZhNsx0hlbyflEWbCiam4W0fyQKso9SGoaVOnx2hYovemL0CpsEkY
-         +slwJn4f9duRv66PXNWK28ii8n03Wrrgp6wpgRUrggke7MxKe74O2TtDW6tDEOzg9fx0
-         EIJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744816235; x=1745421035;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j0/VAqjkF1TxpYnRhzPRlf8Ce1qx0Jj3f5VBhpm09qo=;
-        b=NdZJ4CeDx5EJehKF/m8NNITYF055T4ULui/5i0PyUOR4lni7tFTDx3y1qrazjbk/no
-         3ZuI5R21GALzxScIrWHnt+I5dj60MgGP+SGVnSA7aAblse/LR7g4qr+wAqoBkXRnSD0c
-         3NkgNq/aD+nxw1LKcA3s8CgOdWopKSxeB9SHII7iUh8FmfJ8QTpYt/Gfj8bfT9JsgI88
-         rCEWlUX+U18Arp9nOVjZINW8TIVGKhXi18X9rzoThZnYDAXkx7nzReUr+k+dS++RkCf7
-         tw8JyT5ViY4kIX3HfQK82wEq/pnenl1uNjWtq5dX2aZwjPpBfBWICvQF5PoQskNdjoeW
-         IzgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWLIq8+y3Ye3O74Bv1yMhXGccCXX21Qo7TWgcutJq4L6oDtdMavC8HsOzORg+kRWZwG0+sJE8Xcq3+a7pM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIynZIe9dFm8yT2gcPzAyPD8Rkxc0rE+ndZuBtNSkrOlkPJpom
-	zqI/OBrP8/lv6j3fJ1mmFQW8jMsxDHQ3TPODaw4FVomRWRcKhs4mC/f/gmbTLVU=
-X-Gm-Gg: ASbGncuwajU+AjoAQgVjAZKsUda5xbVzuPF1/YpuYJ0g78tmst1SgRKHhJjuJ+NOroS
-	hzLmgT9SXouCFHuS3Pv8C3JkyLV3LXOA2zcItMlcSDN/wnZ5sJkNeKTJGheTG2b/beDxrPkuaOW
-	5voezrQwlqGFOqazP9WMTYnGJ6onFI50WWyIi4hg4mpqLKqhIModb2SI16gF0HmNxWvpuvktdfY
-	bPjRwe2O37yF9eQeKazry3Gh5IQpSGWqU7/j79xjXTS+Mi61RvXab03StX94O8m7I/26R3o0tWH
-	JemrUyF3sCm+wRCA3CMjK+wWa9twdmxmv/84
-X-Google-Smtp-Source: AGHT+IG9lQIK5sXneDabYlnfRgSCtZ39ELSyEdyUKJIaRYq5uFV6x1HjDv9FC0Ieo/MZkxOXm+Y0Vw==
-X-Received: by 2002:a05:6602:398c:b0:85b:35b1:53b4 with SMTP id ca18e2360f4ac-861c57e6f93mr262149139f.12.1744816234774;
-        Wed, 16 Apr 2025 08:10:34 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505dfd731sm3641805173.88.2025.04.16.08.10.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 08:10:34 -0700 (PDT)
-Message-ID: <d3231630-9445-4c17-9151-69fe5ae94a0d@kernel.dk>
-Date: Wed, 16 Apr 2025 09:10:33 -0600
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jz137fVa"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=phttslX22AHuWCQ1dM0SeCSRTabhP0DqTypZdfZ4FODjc03FfNRKrTmVZ4eYtC+G3MUMAVNMoKNaOyZQMnqz6htX28op0rVIFFQxFY8ZL9IuZs3PiD0DK2Q3hJKV4WzjBfhiD6pr4axQ3N5MOR1cO1YFXlTP2X+olD8iEQYRB641blfdfN0MgYJb5yjCDcH7f8KcUnWVjwoqzUibSQPh59YZzVuvewbV9At8+q/qNDMlf9/abdP/jMYsIXNY//6aFS65T6QzBcjKhftR5IDTAnpvSEnrKe+WqVIv9AmpSpOCofcK3QPZ7cFSOZ6zf+FYN7zBXe/nkcwnCxyXK7LlPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KwEXUIcd0Dq7dV6oAx/vf0P/X9MyrIV3q6fozcBfGk8=;
+ b=CTP7/+1U5OKI6b1CkluCS4WYkgYJkBbGZIvQj63IvxTNGlyvGbye6yfuqRqBrB3Y4i/2uWZHW+aaZx9a4zw8hPicKErU+T1lvIwQS9L1FlHnJ6t/jhAoU5Gjcc7r0vUchLkMnFJvccINVELWR1M+MUmW5q1RogESw70SkJHWVbUl6lSVI9fyQuP87V7lpqfSYhhEme16WaaqP04TfJzsw4Rjh3CuEB+jdTInugRWlwDIAegdXpKCDqrrhRFwcHxEInGoLNocDKB3sAaIWGdee+Kfz2bBeLm90sVVNNCvonSxs0wwdFxNnOuHsbEQeV+xkUC0zeDnuFtG8PqK+YmIqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KwEXUIcd0Dq7dV6oAx/vf0P/X9MyrIV3q6fozcBfGk8=;
+ b=jz137fVaAwdFMvPMEVDPurs/UBQDejVWgrw2R6/AowwsBiWTDNpU5XHLnU3pjmh8g2t1dBhN6MeXZTT5HqdBDnh0Y4jmosmr/w/ctf7nZDIIO0sPhWJwDAuAX8a6oio0JfU19p9ImA9cOUSc2XD1lfEKUD2SgYO2vr4i2HlSKF4=
+Received: from BY3PR10CA0023.namprd10.prod.outlook.com (2603:10b6:a03:255::28)
+ by CY3PR12MB9678.namprd12.prod.outlook.com (2603:10b6:930:101::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Wed, 16 Apr
+ 2025 15:10:41 +0000
+Received: from CY4PEPF0000FCC1.namprd03.prod.outlook.com
+ (2603:10b6:a03:255:cafe::7f) by BY3PR10CA0023.outlook.office365.com
+ (2603:10b6:a03:255::28) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.15 via Frontend Transport; Wed,
+ 16 Apr 2025 15:10:41 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000FCC1.mail.protection.outlook.com (10.167.242.103) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8655.12 via Frontend Transport; Wed, 16 Apr 2025 15:10:40 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 16 Apr
+ 2025 10:10:38 -0500
+From: Nathan Lynch <nathan.lynch@amd.com>
+To: Vinicius Costa Gomes <vinicius.gomes@intel.com>, Dave Jiang
+	<dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>, Arjan van de Ven
+	<arjan@linux.intel.com>, Nikhil Rao <nikhil.rao@intel.com>,
+	<dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] dmaengine: idxd: Fix allowing write() from different
+ address spaces
+In-Reply-To: <20250416025201.15753-1-vinicius.gomes@intel.com>
+References: <20250416025201.15753-1-vinicius.gomes@intel.com>
+Date: Wed, 16 Apr 2025 10:10:32 -0500
+Message-ID: <87mscgkuqf.fsf@AUSNATLYNCH.amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 00/11] pcache: Persistent Memory Cache for Block
- Devices
-To: Dongsheng Yang <dongsheng.yang@linux.dev>,
- Dan Williams <dan.j.williams@intel.com>, hch@lst.de,
- gregory.price@memverge.com, John@groves.net, Jonathan.Cameron@huawei.com,
- bbhushan2@marvell.com, chaitanyak@nvidia.com, rdunlap@infradead.org
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-bcache@vger.kernel.org,
- nvdimm@lists.linux.dev
-References: <20250414014505.20477-1-dongsheng.yang@linux.dev>
- <67fe9ea2850bc_71fe294d8@dwillia2-xfh.jf.intel.com.notmuch>
- <15e2151a-d788-48eb-8588-1d9a930c64dd@kernel.dk>
- <07f93a57-6459-46e2-8ee3-e0328dd67967@linux.dev>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <07f93a57-6459-46e2-8ee3-e0328dd67967@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC1:EE_|CY3PR12MB9678:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5dae6806-5d1e-4958-0fb1-08dd7cf8da2a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?IMSyZoYt3pZx5lsgp3uFcNYGbTMtoi9lvDxCvpHjHE1Pn65nOULUauojp3X6?=
+ =?us-ascii?Q?/DURE/6aOb8gSjRiDwZ8BTlDBrFtJfV2jtzEzInNCSf3KHlBLSs0oCdoUm6P?=
+ =?us-ascii?Q?R26ToHnfdYEg45HJtmXPD+eT7CE3AE73J/WoKlDOsUYLPOLgriAsfVZ25/e1?=
+ =?us-ascii?Q?UuhgvUvIyww6e5c7xhktOHw3UNibVcTCURwpxpIw0kKdI+uxEA3LPtRX9BSP?=
+ =?us-ascii?Q?ixRj7JLCAk8v+dUPRQhJntVJDKprBwrrLPW4b+sz8+8BY5PZF/zHl/oStg2n?=
+ =?us-ascii?Q?ul47JUbE89wkb1RMiQJlcJYq3rYP73efBjeoD0EnoCc2X4t/ISbkWFxgG71l?=
+ =?us-ascii?Q?GjuHLIluXWKshifDS0BnDcrPkzLsq6D8hvfsAb9vATqYU9EjiDBCfSpPbhqr?=
+ =?us-ascii?Q?myIuZWzizFU/6UUGd9QYECpqIQRjJiD5VcPeuWuCkrMIodqeCmkRGwMhqIrJ?=
+ =?us-ascii?Q?3GKWZE16rC7IZ4Pyo0erI1So0D2abIgMmlnuIe2x9NbVlcEM/xvJPdDfmrzp?=
+ =?us-ascii?Q?V86Y88tNut8zmGiNGhNilrNXzeeD5tkOxC/pqTHwrv0F8io+ubKyoEKE3EDx?=
+ =?us-ascii?Q?iA2+TRyh6IU+oRkJIQyWUIWuQ2iDQhBXr9t8Afr20WhzD7viebWYZhgyljel?=
+ =?us-ascii?Q?KzmdbiGFnsJf3MkTDc8lTDPMinHenI3UohwbQFBSQqF2bJkAmBn5nQ9qhfZz?=
+ =?us-ascii?Q?iNs+lGE3BxLkYXy2dYVRHlQwi6G+TLDZRMBCCzXYY+dmxG4Ibz+LcRMFZ2no?=
+ =?us-ascii?Q?Kgvn3riziH8zkjLPXDgVnImrTA3lEUTAk8snxnwVSuYa/UIgrTHgJ2DKy38d?=
+ =?us-ascii?Q?mDUt86pIi5z6IZOJ0n//vKsuCL/P63DIyhoplRMCSYCBdMlNk99MACsPPOGT?=
+ =?us-ascii?Q?z6Cp5VKDwkgbi4+qA25GytzCfOkGJnTpKcrZFOPLzdZ0iSh6Aqw/eFQ3n6yR?=
+ =?us-ascii?Q?Uv2u9A4y1Uw4y77KDk+85kZBLDsJ6hy25Heij9qcUBaAxHBEEn3A7CSk8QpL?=
+ =?us-ascii?Q?JlzIZyayPt7Z6fy4880akHmsIVjeRmfUCmGpe/S9Vys68ji1FrHnJVdE0ZNE?=
+ =?us-ascii?Q?7xYm5ueSDjxCeKieAQ03aB+AVTMuDN3t8ikgu+S5TrviYbipt8HwhTDcQKQ2?=
+ =?us-ascii?Q?l36s3kK11ZADdxhzhGeygpaihWr5tQFJVYJhpwF+TKpaomhvemMG5IK4byoe?=
+ =?us-ascii?Q?rhTz6PziQpdxDBpBKRTOAELtl7fbxKJkI84avbG8GTgNCq8Y8gzMQkC6k/mi?=
+ =?us-ascii?Q?4PLQe5Ig7OeOX+mXk8ZjkcVLuItrAF6YRkiOvJwfWQILXd3zwgQT1DT23whp?=
+ =?us-ascii?Q?IXoX3s7+Ks6cWWdzaHXVZr2nkU+bxoGT8q3n4fq8h7snvt5AkOZuasgVC2YE?=
+ =?us-ascii?Q?hngS1yIStP92i1IFPaz5S/PA4jpn3AkA5019itDLW4MuU6zjfcAe0EHkgDTr?=
+ =?us-ascii?Q?Pj+JbeXs3cX0Mg9+54Z4VntP2/Osh1XoOc+sABT10NDRkHxJzikVDzZumD+j?=
+ =?us-ascii?Q?Go7XHZcK97NBxqqDKZ8/l5CXMT6nG91mXFnq?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2025 15:10:40.8840
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5dae6806-5d1e-4958-0fb1-08dd7cf8da2a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000FCC1.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY3PR12MB9678
 
-On 4/16/25 12:08 AM, Dongsheng Yang wrote:
-> 
-> On 2025/4/16 9:04, Jens Axboe wrote:
->> On 4/15/25 12:00 PM, Dan Williams wrote:
->>> Thanks for making the comparison chart. The immediate question this
->>> raises is why not add "multi-tree per backend", "log structured
->>> writeback", "readcache", and "CRC" support to dm-writecache?
->>> device-mapper is everywhere, has a long track record, and enhancing it
->>> immediately engages a community of folks in this space.
->> Strongly agree.
-> 
-> 
-> Hi Dan and Jens,
-> Thanks for your reply, that's a good question.
-> 
->     1. Why not optimize within dm-writecache?
-> From my perspective, the design goal of dm-writecache is to be a
-> minimal write cache. It achieves caching by dividing the cache device
-> into n blocks, each managed by a wc_entry, using a very simple
-> management mechanism. On top of this design, it's quite difficult to
-> implement features like multi-tree structures, CRC, or log-structured
-> writeback. Moreover, adding such optimizations?especially a read
-> cache?would deviate from the original semantics of dm-writecache. So,
-> we didn't consider optimizing dm-writecache to meet our goals.
-> 
->     2. Why not optimize within bcache or dm-cache?
-> As mentioned above, dm-writecache is essentially a minimal write
-> cache. So, why not build on bcache or dm-cache, which are more
-> complete caching systems? The truth is, it's also quite difficult.
-> These systems were designed with traditional SSDs/NVMe in mind, and
-> many of their design assumptions no longer hold true in the context of
-> PMEM. Every design targets a specific scenario, which is why, even
-> with dm-cache available, dm-writecache emerged to support DAX-capable
-> PMEM devices.
-> 
->     3. Then why not implement a full PMEM cache within the dm framework?
-> In high-performance IO scenarios?especially with PMEM hardware?adding
-> an extra DM layer in the IO stack is often unnecessary. For example,
-> DM performs a bio clone before calling __map_bio(clone) to invoke the
-> target operation, which introduces overhead.
-> 
-> Thank you again for the suggestion. I absolutely agree that leveraging
-> existing frameworks would be helpful in terms of code review, and
-> merging. I, more than anyone, hope more people can help review the
-> code or join in this work. However, I believe that in the long run,
-> building a standalone pcache module is a better choice.
+Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
+> Check if the process submitting the descriptor belongs to the same
+> address space as the one that opened the file, reject otherwise.
 
-I think we'd need much stronger reasons for NOT adopting some kind of dm
-approach for this, this is really the place to do it. If dm-writecache
-etc aren't a good fit, add a dm-whatevercache for it? If dm is
-unnecessarily cloning bios when it doesn't need to, then that seems like
-something that would be worthwhile fixing in the first place, or at
-least eliminate for cases that don't need it. That'd benefit everyone,
-and we would not be stuck with a new stack to manage.
+I assume this can happen after a fork.
 
-Would certainly be worth exploring with the dm folks.
+Do idxd_cdev_mmap() and idxd_cdev_poll() need similar protection?
 
--- 
-Jens Axboe
+>
+> Fixes: 6827738dc684 ("dmaengine: idxd: add a write() method for applications to submit work")
+> Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+> ---
+>  drivers/dma/idxd/cdev.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+> index ff94ee892339..373c622fcddc 100644
+> --- a/drivers/dma/idxd/cdev.c
+> +++ b/drivers/dma/idxd/cdev.c
+> @@ -473,6 +473,9 @@ static ssize_t idxd_cdev_write(struct file *filp, const char __user *buf, size_t
+>  	ssize_t written = 0;
+>  	int i;
+>  
+> +	if (current->mm != ctx->mm)
+> +		return -EPERM;
+> +
+>  	for (i = 0; i < len/sizeof(struct dsa_hw_desc); i++) {
+>  		int rc = idxd_submit_user_descriptor(ctx, udesc + i);
+>  
+> -- 
+> 2.49.0
