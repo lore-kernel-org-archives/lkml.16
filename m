@@ -1,33 +1,39 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE483233126;
-	Thu, 17 Apr 2025 12:02:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4805F2405F5
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744891361; cv=none; b=dHHOrAjkxswh2Hv2GMa2RmJjK9wX3yh4fTL3d77kzKzqQJM2szU6fbTPpOU05yBIgg3cQDfpmtjepHNJ6snTeISsUMsg8jrSmudyk7ZtRcevM+f/O+B8OGF1CWuknYp2cMtJNB6MsX2dJO4cGVa2DfRG1HXbz86Dz0uh0IkBaIg=
+	t=1744891362; cv=none; b=ZnN5wYbdQXWJmq+WETes4lhqsECvnJGrVR4BZhswa1A+n3sQuOeI6AB4GrX5RtbNhJJCCJcgcx+eSaVX2FQmmGpV/l3Uxgb9PSZkLFPe0lfRfF1Q51kGNPRX+le/FqHT47f8pTN9Bo5kliyoQ3uNdbCfeHLUcSuxKrdfSuYfk7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744891361; c=relaxed/simple;
-	bh=ETJagbOOXP2BonGVzZfEgxqHeNpE2T6R8uNA00WJ9bs=;
+	s=arc-20240116; t=1744891362; c=relaxed/simple;
+	bh=ZdAAJZEMS2lx65rAt/T+b4Q1b4vWvh0/tPImgbmMuTc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tvpsFMbjwVQK7n0nyMEPCDG3Z2ggqmFc3E9Nk2lieIbrHiycFg6d0MOHQHarZr4dvLm5Ag7pjLlHhth97iW/LnvMd4FE8pFHqX+tH0T3Lw/9ERkDcqQMpNaAdhjAe3qh1F20Z7HT6PdifL6MjUrPYTooQxr1JLMrXhZ45kTLuEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R25X+7HL; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=E5/ZzT9/VrcvRNjDefTCoElfCaDtngbG6puKbS8cZXM//O491pTlu/xtoRtZRhYUAbYt3ZwHu7672QP1BEVdOve8M0myApW+mCsrHhn3iAtmZmk5sSlq9UPnalqg6Qr4aohVkecH7Z/EjSXVNKm82Xnu1o2ZhG6RQ5qlX/GN61o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Xpe1E9ar; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R25X+7HL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F841C4CEEA;
-	Thu, 17 Apr 2025 12:02:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744891360;
-	bh=ETJagbOOXP2BonGVzZfEgxqHeNpE2T6R8uNA00WJ9bs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=R25X+7HLu4h8lsLnxPQH9AUpCHFrjoyZ8ftDZimv3JoeCv7dMeB+8n0yydvjLk+5h
-	 HlSj0spgD8M5RFQGhBcQgllBBgSYSTDGl0vZ8l0proq7sIjDZ2npaDSgsM6KhedwnF
-	 I3FpxU8NXmGS8FCmqJQJigHzTv3nXhSG8OoLhHD1eddrZlkBgIkAnnAwfXhxRyt7IV
-	 zHQdJskUp5us+zItvy2WbIHUQw7pAvz0YqVbZ3/5pJZhLjDVyxqJBYELJRR0tqzf1C
-	 /5TR1vyM4vtfPiEqmHlIxoXFz+6/pFUHWO0Cz9FILdXSW8jT3/zYuApQjtVANVZ9Xm
-	 1NLVPcNLrM/Cw==
-Message-ID: <eb9a50c0-6bbe-4fcb-af30-bfddf6a00619@kernel.org>
-Date: Thu, 17 Apr 2025 07:02:38 -0500
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Xpe1E9ar"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=NRpqZn3xmGYP9OsNgVoADYvzcsi/0ghTFp6KfLY5hhA=; b=Xpe1E9arCgNAsu++BcdEUDFEmR
+	O/ZrpRhw8xi0s7ovvVoom57PQ3yaqQt1yyiAAeG4NdNO3dWHgLpxPJ2EfWpxV7oN2GXHibfEA/hHR
+	X2wZHsd9dTps9WTBHScwscfFEpgi7dypoL8THYu1Oa2kNifXkVgviX02xKHGakl2bK/3Osbfuvksd
+	a0r0ZgG7NENtNA5Kpqi/2u6r7kdlx7VnugplGSDxQtLrmS1cD2jZ42zgDBFeq3pOzP2MM3fn40CLl
+	my+WGMiUo04bnqMZ1IFtskElp/geHY90YdlStw0JD7scj7tBx9BGTsVuMsVr/cfBxsdMwJGkW4Fon
+	8vJIEgsA==;
+Received: from 39-14-49-133.adsl.fetnet.net ([39.14.49.133] helo=[192.168.220.43])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1u5Nwj-000nG0-2Z; Thu, 17 Apr 2025 14:02:21 +0200
+Message-ID: <667354f3-7076-4e64-9506-56e81e7d9234@igalia.com>
+Date: Thu, 17 Apr 2025 20:02:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,137 +41,135 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] Input: Add a Kconfig to emulate KEY_SCREENLOCK
- with META + L
-To: Hans de Goede <hdegoede@redhat.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>, Armin Wolf <W_Armin@gmx.de>
-References: <20250417013722.435751-1-superm1@kernel.org>
- <b9d8244a-df90-4bd2-bfd4-3539b4ad6d5e@redhat.com>
+Subject: Re: [PATCH] mm/huge_memory: fix dereferencing invalid pmd migration
+ entry
+To: Zi Yan <ziy@nvidia.com>
+Cc: David Hildenbrand <david@redhat.com>, Hugh Dickins <hughd@google.com>,
+ linux-mm@kvack.org, akpm@linux-foundation.org, willy@infradead.org,
+ linmiaohe@huawei.com, revest@google.com, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org
+References: <20250414072737.1698513-1-gavinguo@igalia.com>
+ <27d13454-280f-4966-b694-d7e58d991547@redhat.com>
+ <6787d0ea-a1b9-08cf-1f48-e361058eec20@google.com>
+ <83f17b85-c9fa-43a0-bec1-22c8565b67ad@redhat.com>
+ <98d1d195-7821-4627-b518-83103ade56c0@redhat.com>
+ <7d0ef7b5-043b-beca-72a9-6ae98b0d55fb@google.com>
+ <05a7d51e-f065-445a-af0e-481f3461a76e@redhat.com>
+ <f344d741-962c-48d3-84b7-ce3de5619122@igalia.com>
+ <412E70A4-4775-4AF7-A878-7FEBF9A122D8@nvidia.com>
 Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <b9d8244a-df90-4bd2-bfd4-3539b4ad6d5e@redhat.com>
+From: Gavin Guo <gavinguo@igalia.com>
+In-Reply-To: <412E70A4-4775-4AF7-A878-7FEBF9A122D8@nvidia.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-
-
-On 4/17/25 05:48, Hans de Goede wrote:
-> Hi Mario,
+On 4/17/25 19:32, Zi Yan wrote:
+> On 17 Apr 2025, at 7:21, Gavin Guo wrote:
 > 
-> On 17-Apr-25 3:37 AM, Mario Limonciello wrote:
->> From: Mario Limonciello <mario.limonciello@amd.com>
+>> On 4/17/25 17:04, David Hildenbrand wrote:
+>>> On 17.04.25 10:55, Hugh Dickins wrote:
+>>>> On Thu, 17 Apr 2025, David Hildenbrand wrote:
+>>>>> On 17.04.25 09:18, David Hildenbrand wrote:
+>>>>>> On 17.04.25 07:36, Hugh Dickins wrote:
+>>>>>>> On Wed, 16 Apr 2025, David Hildenbrand wrote:
+>>>>>>>>
+>>>>>>>> Why not something like
+>>>>>>>>
+>>>>>>>> struct folio *entry_folio;
+>>>>>>>>
+>>>>>>>> if (folio) {
+>>>>>>>>    if (is_pmd_migration_entry(*pmd))
+>>>>>>>>        entry_folio = pfn_swap_entry_folio(pmd_to_swp_entry(*pmd)));
+>>>>>>>>    else
+>>>>>>>>     entry_folio = pmd_folio(*pmd));
+>>>>>>>>
+>>>>>>>>    if (folio != entry_folio)
+>>>>>>>>          return;
+>>>>>>>> }
+>>>>>>>
+>>>>>>> My own preference is to not add unnecessary code:
+>>>>>>> if folio and pmd_migration entry, we're not interested in entry_folio.
+>>>>>>> But yes it could be written in lots of other ways.
+>>>>>>
+>>>>>> While I don't disagree about "not adding unnecessary code" in general,
+>>>>>> in this particular case just looking the folio up properly might be the
+>>>>>> better alternative to reasoning about locking rules with conditional
+>>>>>> input parameters :)
+>>>>>>
+>>>>>
+>>>>> FWIW, I was wondering if we can rework that code, letting the caller to the
+>>>>> checking and getting rid of the folio parameter. Something like this
+>>>>> (incomplete, just to
+>>>>> discuss if we could move the TTU_SPLIT_HUGE_PMD handling).
+>>>>
+>>>> Yes, I too dislike the folio parameter used for a single case, and agree
+>>>> it's better for the caller who chose pmd to check that *pmd fits the folio.
+>>>>
+>>>> I haven't checked your code below, but it looks like a much better way
+>>>> to proceed, using the page_vma_mapped_walk() to get pmd lock and check;
+>>>> and cutting out two or more layers of split_huge_pmd obscurity.
+>>>>
+>>>> Way to go.  However... what we want right now is a fix that can easily
+>>>> go to stable: the rearrangements here in 6.15-rc mean, I think, that
+>>>> whatever goes into the current tree will have to be placed differently
+>>>> for stable, no seamless backports; but Gavin's patch (reworked if you
+>>>> insist) can be adapted to stable (differently for different releases)
+>>>> more more easily than the future direction you're proposing here.
+>>>
+>>> I'm fine with going with the current patch and looking into cleaning it up properly (if possible).
+>>>
+>>> So for this patch
+>>>
+>>> Acked-by: David Hildenbrand <david@redhat.com>
+>>>
+>>> @Gavin, can you look into cleaning that up?
 >>
->> In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
->> to be. Modern versions of Windows [1], GNOME and KDE support "META" + "L"
->> to lock the screen. Modern hardware [2] also sends this sequence of
->> events for keys with a silkscreen for screen lock.
+>> Thank you for your review. Before I begin the cleanup, could you please
+>> confirm the following action items:
 >>
->> Introduced a new Kconfig option that will change KEY_SCREENLOCK when
->> emitted by driver to META + L.
+>> Zi Yan's suggestions for the patch are:
+>> 1. Replace the page fault with an invalid address access in the commit
+>>     description.
 >>
->> Link: https://support.microsoft.com/en-us/windows/keyboard-shortcuts-in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec [1]
->> Link: https://www.logitech.com/en-us/shop/p/k860-split-ergonomic.920-009166 [2]
->> Suggested-by: Armin Wolf <W_Armin@gmx.de>
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->> v3:
->>   * Emulation in the input core instead
->>
->>   drivers/input/Kconfig |  8 ++++++++
->>   drivers/input/input.c | 19 +++++++++++++++++++
->>   2 files changed, 27 insertions(+)
->>
->> diff --git a/drivers/input/Kconfig b/drivers/input/Kconfig
->> index 88ecdf5218ee9..ffb4163fe315f 100644
->> --- a/drivers/input/Kconfig
->> +++ b/drivers/input/Kconfig
->> @@ -174,6 +174,14 @@ config INPUT_APMPOWER
->>   	  To compile this driver as a module, choose M here: the
->>   	  module will be called apm-power.
->>   
->> +config INPUT_SCREENLOCK_EMULATION
->> +	bool "Pass KEY_SCREENLOCK as META + L"
->> +	help
->> +	  Say Y here if you want KEY_SCREENLOCK to be passed to userspace as
->> +	  META + L.
->> +
->> +	  If unsure, say Y.
->> +
->>   comment "Input Device Drivers"
->>   
->>   source "drivers/input/keyboard/Kconfig"
->> diff --git a/drivers/input/input.c b/drivers/input/input.c
->> index dfeace85c4710..08a857cea0c5d 100644
->> --- a/drivers/input/input.c
->> +++ b/drivers/input/input.c
->> @@ -370,6 +370,13 @@ void input_handle_event(struct input_dev *dev,
->>   	}
->>   }
->>   
->> +static void handle_screenlock_as_meta_l(struct input_dev *dev, unsigned int type,
->> +					int value)
->> +{
->> +	input_handle_event(dev, type, KEY_LEFTMETA, value);
->> +	input_handle_event(dev, type, KEY_L, value);
->> +}
->> +
->>   /**
->>    * input_event() - report new input event
->>    * @dev: device that generated the event
->> @@ -392,6 +399,12 @@ void input_event(struct input_dev *dev,
->>   {
->>   	if (is_event_supported(type, dev->evbit, EV_MAX)) {
->>   		guard(spinlock_irqsave)(&dev->event_lock);
->> +#ifdef CONFIG_INPUT_SCREENLOCK_EMULATION
->> +		if (code == KEY_SCREENLOCK) {
->> +			handle_screenlock_as_meta_l(dev, type, value);
->> +			return;
->> +		}
->> +#endif
->>   		input_handle_event(dev, type, code, value);
->>   	}
->>   }
->> @@ -2134,6 +2147,12 @@ void input_set_capability(struct input_dev *dev, unsigned int type, unsigned int
->>   
->>   	switch (type) {
->>   	case EV_KEY:
->> +#ifdef CONFIG_INPUT_SCREENLOCK_EMULATION
->> +		if (code == KEY_SCREENLOCK) {
->> +			__set_bit(KEY_L, dev->keybit);
->> +			__set_bit(KEY_LEFTMETA, dev->keybit);
->> +		}
+>> 2. Simplify the nested if-statements into a single if-statement to
+>>     reduce indentation.
 > 
-> Shouldn't there be a "break;" inside the if?
-> 
-> Since KEY_SCREENLOCK events will never get reported when
-> CONFIG_INPUT_SCREENLOCK_EMULATION is set, I think it would
-> be netter to not set it in dev->keybit ?
-> 
-> Regards,
+> 3. Can you please add Huge’s explanation below in the commit log?
+> That clarifies the issue. Thank you for the fix.
 
-This is something I wasn't sure about.
-
-I was worried there might be other parts of the kernel that check for a 
-capability of a specific keycode and conditionalize behavior.
-
-If that isn't a concern yes I could add a break into this block in the 
-next version.
+Sure, will send out another patch for your review. Thank you for the review.
 
 > 
-> Hans
+> “
+> an anon_vma lookup points to a
+> location which may contain the folio of interest, but might instead
+> contain another folio: and weeding out those other folios is precisely
+> what the "folio != pmd_folio((*pmd)" check (and the "risk of replacing
+> the wrong folio" comment a few lines above it) is for.
+> ”
+> 
+> With that, Acked-by: Zi Yan <ziy@nvidia.com>
+> 
+>>
+>> David, based on your comment, I understand that you are recommending the
+>> entry_folio implementation. Also, from your discussion with Hugh, it
+>> appears you agreed with my original approach of returning early when
+>> encountering a PMD migration entry, thereby avoiding unnecessary checks.
+>> Is that correct? If so, I will keep the current logic. Do you have any
+>> additional cleanup suggestions?
+>>
+>> I will start the cleanup work after confirmation.
+>>
+>>>
+>>>>
+>>>> (Hmm, that may be another reason for preferring the reasoning by
+>>>> folio lock: forgive me if I'm misremembering, but didn't those
+>>>> page migration swapops get renamed, some time around 5.11?)
+>>>
+>>> I remember that we did something to PTE handling stuff in the context of PTE markers. But things keep changing all of the time .. :)
+>>>
 > 
 > 
-> 
-> 
->> +#endif
->>   		__set_bit(code, dev->keybit);
->>   		break;
->>   
-> 
+> Best Regards,
+> Yan, Zi
 
