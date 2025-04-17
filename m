@@ -1,194 +1,136 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73DC728E37
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A62D28E37;
+	Thu, 17 Apr 2025 12:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744894318; cv=none; b=peecuGi8cicwt6WDMalWhYbzRvSN6RZHcnsyhahQXy7pkaXEURulBQZ1bueTCRHB6nw0XYQvfX7joNkUCqdP/b208asNiUN1j/yYgbM69390VwOQREB2yP5/B8hD3+M2JZyJ42jEEZoBMRwLHQeGRPRxZTQ91g/jNy0cx2/xL6Q=
+	t=1744894326; cv=none; b=d+WWnD73MPgH+7/W8oCMsp/eo7GmNL7DK9H2Mp3YdmzQ5vCu5eEvcEGCa+lUTM4OUSMMN2LjG/sZ5CnrUWhb1jbDdX+5nvuqjwO79VmAqHaS9o2OPf129A+6pM2FTKB35c8QqLYlBz3W86o25t/06s9kg4HqbbTjdmdwy4SkY8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744894318; c=relaxed/simple;
-	bh=zYiKuijpdMMZlMRVFlrMgMVcAf/1clBIvp6L5K7ttbY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E4QWlZZF/g2fDvuJMU9KqTzmIf9VM9oSHN1Abd8BT62eGolIvE/DBZ3aH2Cawq8XeJ/Z3tfH1M56nUA1ktnh5XZWtlWOxK75HwWlcZisjMRESET7e36dya2eijeAPr3Vf5GUanju8fD2Px/jKBOtWEdzRJIv6pX6EYhBHNHfKWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=CjuLnHAw; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1744894326; c=relaxed/simple;
+	bh=vwg+JpeNDtpdq8I/n2KI09Z8P3wJ2LAphm0xoV+Veak=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tfOJyVHfbMaj3OOKPFT9A7JZuTRN/nmClD2b6iPoeTprLhnjKr9fXIBlKMwDM/UxY9vRIiyLMEeq6NILBhRGCm/rTX2VTpjZk7gLMklk4dMQMS1t73uuEVorwZ+Sry/GVIdHMFxMiYmdbcDcBiZrY5OcmdNpKm3DBDzXhGefNIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=NltSaAaH; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="CjuLnHAw"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso7165845e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:51:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1744894315; x=1745499115; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=128aOD0HeldmNUa28jrs19qlYjVCdjVZq6egvszSPpE=;
-        b=CjuLnHAwEPDKIgIQKc1eTxv4x1nmBA3MhJF+bhSg6wppeCmXd3L7z6gG6VyKOOkD/I
-         eaDNFaDqg3FQq4LVj68F6CD2pMUKZR4q8R2jS3JtVSs79J09qvF3vops7i89ViEhBtoo
-         NKZd+s+Ae+Y3RfI/rgUOHuz2CxuPP4Nsp2UX/AzyJ0L0Sdcw9AcNJZSbLtj0v5XJ5v8k
-         hZOf/6xxEK896fY18/nlOUNuzMJl/QVPiWcXHOdmh391d6KwD6QU+X7/Jhj7KGqVqeX3
-         WDSVnJrE9vBtb/QSsBtT5bdXmnOvgcCIzrzShJzfkkpxJzSw+wGj2VBGCKNVU4sPT6T5
-         UHxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744894315; x=1745499115;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=128aOD0HeldmNUa28jrs19qlYjVCdjVZq6egvszSPpE=;
-        b=EQ4Bpzp7ZE3pmuFy8gvKfJRw30lKbUu7K5fZvoWStP8vam88mVjAEuPpEBvq4j/a+z
-         LQLEBEsXbuszyWNVEyf/cRLvLlh68W79UJI2eA88uTpo8qPLSDyMCaVykR2AH3sHQwnf
-         pYj6xhJzeVv1QA1nYB767TNcLGSZthhCb4QrvQeJHAjjReDtBun2CQbQ5CKuuEH9fLz5
-         OrCCPCLcGRReo5kBw/HcvT15zgl0F9g+aWu43Uosx0Wg/e974a5tk9sfRDBJKUYc+Xa1
-         WOcqG1zQLfD2FxvE80G1AStCxKHrvk3shNDWxoYhkQcBW088bdvYPA4bnDUFlveBOTwO
-         pxIA==
-X-Forwarded-Encrypted: i=1; AJvYcCVvziSItOfRfHPLjFGA2MRVSVO1UhMSIsGfoUejHzOBoafwg4sEHJ5DBOBwzF4bRLDhIPhEPR6K3lBAB+w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxz3RU7rmk0a6K3ZED7vE3X5RdqTt/HOmDRYQ1XOHqSKdsTtyP/
-	KJvdx0QYhRwXjTBGHi3Vc+5de2oDIcTOWdaGgmuTzu+2STAn5hqcfGR9RFBy663nx0on8HxHc4N
-	Q7EyIEwMDKanYbnTaDmCygwWekVcSuxh8E8cLyQ==
-X-Gm-Gg: ASbGncsSKYea9ARYnHj9kznWLEd4pTvCe4JnW+0kgnhaTn1bbA5imJydFQgJhO6tbnC
-	EyKQpO90oh2oaf5kCfOoG2gBb8Ur21kLNdifXQOWhGS0BXOhuVZvoF3a+mvv66ZZ3tEc12ODHTl
-	tUN9/M3phMp0CKEk4g84l1ro1whqPUGpE=
-X-Google-Smtp-Source: AGHT+IGSfaYlPsKYCZjwpMpDTw1oGQ6TfqqaE5dxySzTi8eYWLO/4VGzwdMbe3MJeePxuU0AjwYwUoAHiqHdzyVxgjQ=
-X-Received: by 2002:a05:6000:1a88:b0:39e:dd1e:f325 with SMTP id
- ffacd0b85a97d-39ee5b3623cmr4465854f8f.31.1744894314691; Thu, 17 Apr 2025
- 05:51:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="NltSaAaH"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8B84C4398B;
+	Thu, 17 Apr 2025 12:51:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744894315;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zEQX9dTK5OyX90/v7y2AQbh6bo08Y0ofbCQ+5EMbGpU=;
+	b=NltSaAaHRmq9kixVw4vlEq72DFEmVEvEOjzZxfDRfluWkh1O39Z4pHjQGRSHy7KxtHN+JJ
+	UuJqSFElgpkny4XrnUoELw1mRxcjR+9gPSPZyeLB2WqH6UG1XQ4uBY28UtjNFKthVD3Yf/
+	YYpHzPO4xoGmfAGTf8OeoSm9PP34h75TgCVbJfENfwNp0LT9Er9ZPG8ZvXbAF6a61s50RG
+	TgVxzo3D6sWd4tFKEm3ZQmgm95LTbL8FT/noe0GtBl0DmCj5RMSMJo/o08flh3A+1fGh+3
+	ssXcJOwXcuRZlXQ/f5ftXFCnKXZxaGITCbAr3Mxhgvkm+YfyLu+zJZoLJJY31g==
+Date: Thu, 17 Apr 2025 14:51:52 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Donald Hunter
+ <donald.hunter@gmail.com>, Rob Herring <robh@kernel.org>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Liam
+ Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, Dent
+ Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v8 02/13] net: pse-pd: Add support for
+ reporting events
+Message-ID: <20250417145152.5e6718b1@kmaincent-XPS-13-7390>
+In-Reply-To: <20250417144349.5b30afec@fedora.home>
+References: <20250416-feature_poe_port_prio-v8-0-446c39dc3738@bootlin.com>
+	<20250416-feature_poe_port_prio-v8-2-446c39dc3738@bootlin.com>
+	<20250417144349.5b30afec@fedora.home>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250116230955.867152-1-rkanwal@rivosinc.com> <20250116230955.867152-2-rkanwal@rivosinc.com>
- <CAP-5=fU9ovvb-JopPqQfNaj6xtL=u_WZO-b56RdhBmUw4mY0ZA@mail.gmail.com>
-In-Reply-To: <CAP-5=fU9ovvb-JopPqQfNaj6xtL=u_WZO-b56RdhBmUw4mY0ZA@mail.gmail.com>
-From: Rajnesh Kanwal <rkanwal@rivosinc.com>
-Date: Thu, 17 Apr 2025 13:51:43 +0100
-X-Gm-Features: ATxdqUGKyFbJpoByA6kTqSXnrGrcoiAJmkG-BaTaT2Bx7fpRX9c9j87i6CMLo9g
-Message-ID: <CAECbVCvX8St8sXh9pTnyO_94-cJT_DB4MyggtS_-PXqWNtXDXw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/7] perf: Increase the maximum number of samples to 256.
-To: Ian Rogers <irogers@google.com>, ak@linux.intel.com
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
-	ajones@ventanamicro.com, anup@brainfault.org, acme@kernel.org, 
-	atishp@rivosinc.com, beeman@rivosinc.com, brauner@kernel.org, 
-	conor@kernel.org, heiko@sntech.de, mingo@redhat.com, james.clark@arm.com, 
-	renyu.zj@linux.alibaba.com, jolsa@kernel.org, jisheng.teoh@starfivetech.com, 
-	palmer@dabbelt.com, will@kernel.org, kaiwenxue1@gmail.com, 
-	vincent.chen@sifive.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdelfeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdejpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehordhrvghmphgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvt
+ hdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvght
+X-GND-Sasl: kory.maincent@bootlin.com
 
-+ Adding Andi Kleen.
+On Thu, 17 Apr 2025 14:43:49 +0200
+Maxime Chevallier <maxime.chevallier@bootlin.com> wrote:
 
-On Thu, Feb 20, 2025 at 6:51=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Thu, Jan 16, 2025 at 3:10=E2=80=AFPM Rajnesh Kanwal <rkanwal@rivosinc.=
-com> wrote:
-> >
-> > RISCV CTR extension support a maximum depth of 256 last branch records.
-> > The 127 entries limit results in corrupting CTR entries for RISC-V if
-> > configured to be 256 entries. This will not impact any other architectu=
-res
-> > as it is just increasing maximum limit of possible entries.
->
-> I wonder if rather than a constant this code should just use the auto
-> resizing hashmap code?
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/t=
-ools/perf/util/hashmap.h
->
-> I assume the value of 127 comes from perf_event.h's PERF_MAX_STACK_DEPTH:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/i=
-nclude/uapi/linux/perf_event.h#n1252
->
-> Perhaps these constants shouldn't exist. The perf-record man page mention=
-s:
-> sysctl.kernel.perf_event_max_stack
-> which I believe gets a value from
-> /proc/sys/kernel/perf_event_max_stack, so maybe these should be
-> runtime determined constants rather than compile time.
->
+> Hi K=C3=B6ry,
+>=20
+> On Wed, 16 Apr 2025 15:44:17 +0200
+> Kory Maincent <kory.maincent@bootlin.com> wrote:
+>=20
+> > From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+> >=20
+> > Add support for devm_pse_irq_helper() to register PSE interrupts and re=
+port
+> > events such as over-current or over-temperature conditions. This follow=
+s a
+> > similar approach to the regulator API but also sends notifications usin=
+g a
+> > dedicated PSE ethtool netlink socket.
+> >=20
+> > Introduce an attached_phydev field in the pse_control structure to store
+> > the phydev attached to the PSE PI, ensuring that PSE ethtool notificati=
+ons
+> > are sent to the correct network interface.
+> >=20
+> > The attached_phydev pointer is directly tied to the PHY lifecycle. It
+> > is set when the PHY is registered and cleared when the PHY is removed.
+> > There is no need to use a refcount, as doing so could interfere with
+> > the PHY removal process.
+> >=20
+> > Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+> > Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > --- =20
+>=20
+> [...]
+>=20
+> > +void ethnl_pse_send_ntf(struct phy_device *phydev, unsigned long notif=
+s,
+> > +			struct netlink_ext_ack *extack)
+> > +{
+> > +	struct net_device *netdev =3D phydev->attached_dev;
+> > +	struct genl_info info;
+> > +	void *reply_payload;
+> > +	struct sk_buff *skb;
+> > +	int reply_len;
+> > +	int ret;
+> > +
+> > +	if (!netdev || !notifs)
+> > +		return;
+> > +
+> > +	ethnl_info_init_ntf(&info, ETHTOOL_MSG_PSE_NTF);
+> > +	info.extack =3D extack;
+> > +
+> > +	reply_len =3D ethnl_reply_header_size() +
+> > +		    nla_total_size(sizeof(u32)); /* _PSE_NTF_EVENTS */
+> > +
+> > +	skb =3D genlmsg_new(reply_len, GFP_KERNEL); =20
+>=20
+> I think you need to check skb here before using it.
 
-Thanks Ian for your feedback. I am not sure if it's feasible to use auto
-resizing hashmap here. On each sample of 256 entries we will be doing
-6 callocs and transferring a whole lot of entries in hashmap_grow. We
-can't reuse old hashmap as well. On each sample we bear the same cost
+Oh, thanks for spotting that!
 
-But I do agree this should be more dynamic but the maximum number
-of entries remove_loops can process is limited by the type of chash array
-here. I can change it and related logic to use uint16_t or higher but we
-will still have a cap on the number of entries.
-
-PERF_MAX_BRANCH_DEPTH seems to be denoting what remove_loops
-can process. This is being used by thread__resolve_callchain_sample to
-check if the sample is processable before calling remove_loops. I think
-this can't be changed to use perf_event_max_stack. But I can rename
-this macro to avoid confusion.
-
-I didn't notice PERF_MAX_STACK_DEPTH. This seems to be defined in
-multiple places and touches bpf as well. I agree that we should avoid
-using this macro and use runtime determined value instead. Tbh I don't
-have super in-depth perf understanding. I will give this a try and send a
-patch in the next update. It would be helpful if you can review it.
-
-Thanks
--Rajnesh
-
-> Thanks,
-> Ian
->
-> > Signed-off-by: Rajnesh Kanwal <rkanwal@rivosinc.com>
-> > ---
-> >  tools/perf/util/machine.c | 21 ++++++++++++++-------
-> >  1 file changed, 14 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> > index 27d5345d2b30..f2eb3c20274e 100644
-> > --- a/tools/perf/util/machine.c
-> > +++ b/tools/perf/util/machine.c
-> > @@ -2174,25 +2174,32 @@ static void save_iterations(struct iterations *=
-iter,
-> >                 iter->cycles +=3D be[i].flags.cycles;
-> >  }
-> >
-> > -#define CHASHSZ 127
-> > -#define CHASHBITS 7
-> > -#define NO_ENTRY 0xff
-> > +#define CHASHBITS 8
-> > +#define NO_ENTRY 0xffU
-> >
-> > -#define PERF_MAX_BRANCH_DEPTH 127
-> > +#define PERF_MAX_BRANCH_DEPTH 256
-> >
-> >  /* Remove loops. */
-> > +/* Note: Last entry (i=3D=3Dff) will never be checked against NO_ENTRY
-> > + * so it's safe to have an unsigned char array to process 256 entries
-> > + * without causing clash between last entry and NO_ENTRY value.
-> > + */
-> >  static int remove_loops(struct branch_entry *l, int nr,
-> >                         struct iterations *iter)
-> >  {
-> >         int i, j, off;
-> > -       unsigned char chash[CHASHSZ];
-> > +       unsigned char chash[PERF_MAX_BRANCH_DEPTH];
-> >
-> >         memset(chash, NO_ENTRY, sizeof(chash));
-> >
-> > -       BUG_ON(PERF_MAX_BRANCH_DEPTH > 255);
-> > +       BUG_ON(PERF_MAX_BRANCH_DEPTH > 256);
-> >
-> >         for (i =3D 0; i < nr; i++) {
-> > -               int h =3D hash_64(l[i].from, CHASHBITS) % CHASHSZ;
-> > +               /* Remainder division by PERF_MAX_BRANCH_DEPTH is not
-> > +                * needed as hash_64 will anyway limit the hash
-> > +                * to CHASHBITS
-> > +                */
-> > +               int h =3D hash_64(l[i].from, CHASHBITS);
-> >
-> >                 /* no collision handling for now */
-> >                 if (chash[h] =3D=3D NO_ENTRY) {
-> > --
-> > 2.34.1
-> >
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
