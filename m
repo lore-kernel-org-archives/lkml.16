@@ -1,53 +1,53 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8700DA926;
-	Thu, 17 Apr 2025 19:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5112BA926;
+	Thu, 17 Apr 2025 19:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744917556; cv=none; b=ssXUplkZ0H5rzgyTLHWndd4osnEIfkRbyr7fAQ/99pcCfGpf5LoAyVkSPB8kLMTP5JxAuxOc0enG0JYDNgl+aeBcS8wEAiFsINDoR3lKuewGRw6fOJcogBmcc9CpxFmr8nd6YGo7kJTy5Cx9leB1zEMCP4H5JFt9hpsPMBP6n+c=
+	t=1744917697; cv=none; b=u8MTc2OFVm/qELqgHSB+N1NNlk8jocjFGl+a71UQy56KNIftFSBRTpMhN4Uhei5JY6wIUAvsYNU+ZoKmo0qSHysgbt0/w0eyxKPhwiMrJGiQmnLaPhTMUCRalp3KYNVIzcWuhlV7v2kCp3zx7AClxMCIO2ACUm30eKa8TWSArz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744917556; c=relaxed/simple;
-	bh=/nj1y7uyNI0Hnabe58fvjjxo0vJvoqiHg99tGLJatBY=;
+	s=arc-20240116; t=1744917697; c=relaxed/simple;
+	bh=S8dLOsj0JQS/K9xCZ6WOy1r+UdtN9mec32qE58CjvCw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=evJjSTm+EYAN3uEMZqRbOWGG+P0P8r986iW9jJa1AJcayQJkP/p9RBi+7Yf+XZ6DCtV1pKtrVf1rqP1jpazBnAslk6QIS/Shj099rshfkq+zbKzNBYqFdVI96xoJGImDdzMPTAJjNO4UAcfoq+HBCCA/5E1iahPS403IsuLxJI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=uanQeqYx; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	 Content-Type:Content-Disposition:In-Reply-To; b=PV4HkWU4hCU67ytiO8i7xI+/Rep0KONLjguerr9WM6rx6njmoQ0TXg6J0seU501oJKasY2le++wThtgNdqwR7/6lDxMHGjr66IRgAelxXYOVKHfwxmmTU8Evvrfo4oPdyqLUHuWdg2UKg2aJSiMuY64c1+V+JXtc3G3EdKKX2bM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=ivbcAs0e; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="uanQeqYx"
-Received: from gaggiata.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 03BDF1F92A;
-	Thu, 17 Apr 2025 21:19:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1744917550;
-	bh=/nj1y7uyNI0Hnabe58fvjjxo0vJvoqiHg99tGLJatBY=;
-	h=Received:From:To:Subject;
-	b=uanQeqYxqFvRax/3xVgk6FJqoBYuHcHoxtfhxY0qI8WkQnxQedkcq+ft0paGowzPf
-	 eSUwM0LOXEiwm8f9c1A+3eJ3oC78++iF7Xwn6vD5vBcv1KQJi3s1IDsxdzvDN2zQH1
-	 ME/IyObB2Gpo3hlBQKT7j0Q/9S37pCi4lamJPX4qyCUmSVSjo+jgVUQpipgi2WIW3Q
-	 EMzJl0GO3K7eKjwbu6JDPnhxZSxEvDnw8YS8c0CEjkmXeYrOkr4k6QEvoNbyd5E6g9
-	 8ig/j1kqcXKy3/rjMxEaIThKV1ViztAOfjuzX5YnwSytWrUcBnwlCLNieNM0YfcdS6
-	 aZ2Foix3DSeIg==
-Received: by gaggiata.pivistrello.it (Postfix, from userid 1000)
-	id A8A237F823; Thu, 17 Apr 2025 21:19:09 +0200 (CEST)
-Date: Thu, 17 Apr 2025 21:19:09 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Judith Mendez <jm@ti.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ivbcAs0e"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=Fg2BJXRb6S31qKrgfk0IRXZ2sI+nMSB2CJWe2sxF3Ac=; b=ivbcAs0ektzTOXoU4fr3v+s6n0
+	Tu9qfSHBhDBO58pm3o8Gzmy1iUmpaQZi6JwIFYEhG6NVJ4sTuYoX5rKfptzFWBdM7mwaiPvBJEx9O
+	qGCMNknuOyGb5KD/dBSZwgOFC+o41+ixwIHuh5uMzy+JEf2VCETZhe8K2A4YTcjE+Vws=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u5Unc-009p4j-8a; Thu, 17 Apr 2025 21:21:24 +0200
+Date: Thu, 17 Apr 2025 21:21:24 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: dimitri.fedrau@liebherr.com
+Cc: Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-mmc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Josua Mayer <josua@solid-run.com>, Moteen Shah <m-shah@ti.com>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	Hiago De Franco <hiagofranco@gmail.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: mmc: sdhci-am654: Add
- ti,suppress-v1p8-ena
-Message-ID: <aAFULUo9BMf306s3@gaggiata.pivistrello.it>
-References: <20250417182652.3521104-1-jm@ti.com>
- <20250417182652.3521104-3-jm@ti.com>
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>, Andrew Davis <afd@ti.com>,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dimitri Fedrau <dima.fedrau@gmail.com>
+Subject: Re: [PATCH net-next v3 2/4] dt-bindings: net: dp83822: add
+ constraints for mac-termination-ohms
+Message-ID: <4e69a33c-56ee-4712-8b01-225fdfacee07@lunn.ch>
+References: <20250416-dp83822-mac-impedance-v3-0-028ac426cddb@liebherr.com>
+ <20250416-dp83822-mac-impedance-v3-2-028ac426cddb@liebherr.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,22 +56,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250417182652.3521104-3-jm@ti.com>
+In-Reply-To: <20250416-dp83822-mac-impedance-v3-2-028ac426cddb@liebherr.com>
 
-Hello Judith,
-thanks for the patch.
+On Wed, Apr 16, 2025 at 07:14:48PM +0200, Dimitri Fedrau via B4 Relay wrote:
+> From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+> 
+> Property mac-termination-ohms is defined in ethernet-phy.yaml. Add allowed
+> values for the property.
+> 
+> Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
 
-On Thu, Apr 17, 2025 at 01:26:52PM -0500, Judith Mendez wrote:
-> This patch documents ti,suppress-v1p8-ena which is a flag
-> used to suppress V1P8_SIGNAL_ENA in sdhci_am654 driver. This
-> quirk is necessary to fix fail init issues across various
-> types of SD cards tested on Sitara K3 SoCs.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-bindings are supposed to describe the hardware, not the driver.
-
-You should rephrase the commit message and the description of the property with
-this in mind.
-
-In addition, I think that the dt-bindings is supposed to be before the driver
-patch in the series.
-
+    Andrew
