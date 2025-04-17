@@ -1,235 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9496E189902;
-	Thu, 17 Apr 2025 19:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB561D6AA;
+	Thu, 17 Apr 2025 19:06:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744916757; cv=none; b=lHcLEUhWqGj9lwdLXa7ENOWuLU+Rn29pzptZNQP770ETpAeeoYWCOB2ZQziK6fZHceTRNrjQ/arHrJ57FOXM7ZdbSwFIB+fymtItLumDg6wbXH5uYm7hxb1am/mTL2hdbxxN9X7G9ENEDtxJxv7J1SSOf5p0sp0OZyFh3MOCbSY=
+	t=1744916805; cv=none; b=XQxlJPJxhS82UaeCMBUnrHLKhqqvqsw+kXO84QOwcE5s9xRkhHE02cfmsDW3PLoHx0GiQ3HFiwWxGy17ZEeN/AH4Gt5yczyH0Zncex+HLW/QW4XluxPOcmSz48jCHpwlFciNFFlkLkSTHikMhb+YD6jANF6Qa3wMiP+jvCVxfag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744916757; c=relaxed/simple;
-	bh=/BCjaY1lgSir+NBWUyZER/El8fVAEsfe5Vsl+nEQkUM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UbhtmrArCpxNb1tvsp5k33mz6ia9gCP1GEjKDguE81oJkQpwUSh8HBUTEDcjSDrCF4WJ+gkL9snOH+M514t0t4Gn6P5sMPEiwi0di9nn7sdpD6Y8OAfLeTWWbZMQoVvCe8T+vzw3sjaGXc16J4CdJC62/9AHWozCKB48xJ9VhhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y+J4pIQM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744916805; c=relaxed/simple;
+	bh=ByZwBqIg5e3XnAXpT5I73r/KjqgjylQ42ZXJCcxAdzk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AgtbNZ+jO7o8VZ4NmpVif1HuUOUwEYBHYLFuHG8ZibZ5DgWzF75s0t8m6epsVrGSTz1dHZgg2d0S6rxSucUykiuhKecsbjgVtL4J75R/sZy+fe+FfEVs8uvRjUMvHNiVFg5VsoN0cWQBxguiCz8eA2Aj0IYLzUg4+n8oLMVevIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=au8wbi59; arc=none smtp.client-ip=209.85.161.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y+J4pIQM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 117F8C4CEF1;
-	Thu, 17 Apr 2025 19:05:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744916757;
-	bh=/BCjaY1lgSir+NBWUyZER/El8fVAEsfe5Vsl+nEQkUM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Y+J4pIQMFTBaapaDGJvvBZeQZgzXbJ7F4NZLQ/j02VXO5KfqrN+O0qujcTgtx9/Hh
-	 HYbQCoFD/r3FLmCkIw0Toj9FugS7q03XTgj8efITGkj7D8jgLJY08MeYDH0SFzT3Lq
-	 5nzF2h5i+9YLhg9KJr78HhluuFE/jcqGuan+cRf5+NZdsOn5khFvZjlr/Ndth66prZ
-	 30KLjZzbNRBTqwBbo+n45z7lcBsrgLXrCiEfmlMZAwfHJ7cBpMmAxrHDWLxaOZswtK
-	 Yu9pjMr6hv7or1PLTm9DXnSF7pnLWO7DUVro2D7mV64Q217GiPHfBByyDEO9V60gy/
-	 yJ4RQXwONRiKA==
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2c2504fa876so322521fac.0;
-        Thu, 17 Apr 2025 12:05:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVCzx0GWMvSKJtaVZJpGgeo0bp44vtwrRXiz1j6B1W1RfHd2OiNpIzEjVfdhAv892Rp7M3o6rCCY8Z55I0=@vger.kernel.org, AJvYcCVWpITVOfmv0INM7nU2VMjCUsdArh9ZXzJuI8vgdbXXHm1wuYZbb/mbN4xizRBR8eT40l+M6DnCqDE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwPvlNaqCk3znvGNlb90XwGbaePpojNTfk+E887a8eJ7N0k8q6
-	G706EInnMbjJH7UyD3+KVa1ilD9VZ3NxbBiKVPkR7KWvqeI9Gm4epwYOmZJNUHMSXvmjbpPP/TQ
-	iCWqPWUnEKOC78W1xOS+x9rSpHXk=
-X-Google-Smtp-Source: AGHT+IF0MFZBYctxFNIVlnAm6Oxp5Mpyp7UeFm7NFC0Q0S5p9XpD9LVPSudh9x2WR+PcQBIMTDocgUbmEvHV76GoSzo=
-X-Received: by 2002:a05:6870:704b:10b0:2d5:230f:b34d with SMTP id
- 586e51a60fabf-2d526824aadmr55149fac.1.1744916756142; Thu, 17 Apr 2025
- 12:05:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="au8wbi59"
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-605ff280d1fso59861eaf.3;
+        Thu, 17 Apr 2025 12:06:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744916802; x=1745521602; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=PFe7ZTlW2N3/FAk3pU9QpPLTiImBz2Mq0lgXmwMOuPg=;
+        b=au8wbi59M0xeNX4DfAx6+kn8cE9wFiXiZ8U8JUc9FbfABcmnISsJSIfjdyA9oR9zSY
+         Sn0WjN6udT5PHJ3cf79EZUXGnIr09NRSMfMZ2TGJ7LABkH4TihXDuSx9mtZy1KgiBL/I
+         ikjufj0HQtDJNfID2EiUjT8If2+7j0/7VEE6WfZs3xdDfLRqoOLjVvwwVyvdH/PVrO/L
+         hT+dNox+oyQr7T2lKZULEevUujSUfNIJnOUayGSeCBEdY3gQcIu8mTecBuhQ9KZ0tKQ8
+         HjJtnfmqQFj8rgCtcZ2Rcw2FJ2swRWsaGXBuCFD4K9n+ZcmWQfrB8G4A8Fa5317WibX3
+         QQow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744916802; x=1745521602;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PFe7ZTlW2N3/FAk3pU9QpPLTiImBz2Mq0lgXmwMOuPg=;
+        b=wUHWwkRiXjsgIWrLzDjvFkrvJLlj8DGEA1+zSbkdQWnN4Q5deI0PioBOeZsT564yEs
+         4RWtL4fjYpdlXFI+Uj3KUbnqm3KH5Z+yRXIPZ1V0w/mMpQc9urkux7jT3DqUA1BbJT5J
+         IS+5MzWDdXssajhrhU2UYQZo/tRey0KnyB4SuzCcLZJkbRHmdiPygM93PhnmjmZlqZKl
+         sngwQGyYZsea9m2XBGH+VKb/Rat/OBCg+pvygJWfa7VByGn4/sh/+4m/XIzK6FsVymEq
+         xzqYRcBvb5pMwS/lKwrJpJHocMPYh+c2BXWv+aoJnvd51eyRkHfx2pUzSDGKn+A0UqXz
+         Emew==
+X-Forwarded-Encrypted: i=1; AJvYcCXIP6+cIzYRhd3RRafJsd9hIpItxUKg4spAhlCPJl705kJGoFUWQS8uy98xtto4ODprGJMHQ3eN@vger.kernel.org, AJvYcCXTBq1/5KkBcFnurnq4WPRo/CuaqZcZyuPo5GtueCt1TD2ccIYAjTyE4fELmRTCm2eax+LSNb05L1mei/U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7Yi6mfheyxyJTRTmANyHlTpRHlSFpucqpM5hXZxmb3W3s5TbQ
+	0D5/CT8E0rVM9JiZicI2+n2eVfo/awaVx8IM+7euxbgeXA2hLaUm
+X-Gm-Gg: ASbGncuRv4vNkl8xpgiEW9Of1IIXnI6w+5mx1Slt2iy7FoZUQS3VWIQNVV/FLXZW1/0
+	obCJiD67KA/d94KbNZaSf57hoiUFuG4dzAOOjJFMOvw0fwqDJ8d1A8sd5dcVxOlfaj7ZrxXtBF+
+	xTJiKrn77311mpBTmWqNiZogHmA60uZ0NPDSnGQYNoRinXVSGH0OnH3Scy/ISp1H2zEHhSRPWZy
+	/kuG30Dv9oLRoerUoGEdkhg2vnFinlNkhIGf/fRKnM+MakvShVjWwWh+EMh5e9HO7u5fsqVPNIs
+	L2MCEMKRI9X82ZawOaqXkJBTWHBHyQSuHw34jN21jhaLRURfFSwLAf4eFcWMsY75YCLHcbGh/UJ
+	LnOA=
+X-Google-Smtp-Source: AGHT+IHnGMkh3VLrU82vM3wKHWWuU+xqCJ1Fk/cIJGgcQl/DOP069V1QDMBCLRmh4Mz5kJm4xrmWQg==
+X-Received: by 2002:a05:6820:1ac5:b0:603:fd3b:aef6 with SMTP id 006d021491bc7-606005e133dmr80554eaf.8.1744916802546;
+        Thu, 17 Apr 2025 12:06:42 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-605ff69ca14sm69247eaf.26.2025.04.17.12.06.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Apr 2025 12:06:41 -0700 (PDT)
+Message-ID: <1793b939-7669-4e6f-a7be-6fa1739ae570@gmail.com>
+Date: Thu, 17 Apr 2025 12:06:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <4661520.LvFx2qVVIh@rjwysocki.net> <2239639.irdbgypaU6@rjwysocki.net>
- <1c0c6caa-e56c-454a-a976-81303dee1852@arm.com> <CAJZ5v0g-=DB_W5jkxxCERy22jz9a_V1Tcj8hiVwL6_R+xSM=gQ@mail.gmail.com>
- <76d5c5ba-6be0-405b-83dd-038f016af12b@arm.com> <CAJZ5v0hVRg0P+E1Ux9tOkr+g6wF36Bf52UT4f3BEAePMUM85Lw@mail.gmail.com>
- <b4835a2d-d855-403f-b3c1-c169faa1a9b4@arm.com>
-In-Reply-To: <b4835a2d-d855-403f-b3c1-c169faa1a9b4@arm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 17 Apr 2025 21:05:44 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hgL66VY74LvHCyS_C4r9jtfSS6ao7up8gNVnT+w0e-sA@mail.gmail.com>
-X-Gm-Features: ATxdqUEuN7U6o4Ha2jazlW1EcqG88N92rWqPbN6aLJmlKcVeYupCcd7l590Jsjg
-Message-ID: <CAJZ5v0hgL66VY74LvHCyS_C4r9jtfSS6ao7up8gNVnT+w0e-sA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] cpuidle: teo: Refine handling of short idle intervals
-To: Christian Loehle <christian.loehle@arm.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
-	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Doug Smythies <dsmythies@telus.net>, 
-	Aboorva Devarajan <aboorvad@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.12 000/393] 6.12.24-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250417175107.546547190@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250417175107.546547190@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 17, 2025 at 7:18=E2=80=AFPM Christian Loehle
-<christian.loehle@arm.com> wrote:
->
-> On 4/17/25 16:21, Rafael J. Wysocki wrote:
-> > On Thu, Apr 17, 2025 at 1:58=E2=80=AFPM Christian Loehle
-> > <christian.loehle@arm.com> wrote:
-> >>
-> >> On 4/16/25 16:28, Rafael J. Wysocki wrote:
-> >>> On Wed, Apr 16, 2025 at 5:00=E2=80=AFPM Christian Loehle
-> >>> <christian.loehle@arm.com> wrote:
-> >>>>
-> >>>> On 4/3/25 20:18, Rafael J. Wysocki wrote:
-> >>>>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >>>>>
-> >>>>> Make teo take all recent wakeups (both timer and non-timer) into
-> >>>>> account when looking for a new candidate idle state in the cases
-> >>>>> when the majority of recent idle intervals are within the
-> >>>>> LATENCY_THRESHOLD_NS range or the latency limit is within the
-> >>>>> LATENCY_THRESHOLD_NS range.
-> >>>>>
-> >>>>> Since the tick_nohz_get_sleep_length() invocation is likely to be
-> >>>>> skipped in those cases, timer wakeups should arguably be taken into
-> >>>>> account somehow in case they are significant while the current code
-> >>>>> mostly looks at non-timer wakeups under the assumption that frequen=
-t
-> >>>>> timer wakeups are unlikely in the given idle duration range which
-> >>>>> may or may not be accurate.
-> >>>>>
-> >>>>> The most natural way to do that is to add the "hits" metric to the
-> >>>>> sums used during the new candidate idle state lookup which effectiv=
-ely
-> >>>>> means the above.
-> >>>>>
-> >>>>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >>>>
-> >>>> Hi Rafael,
-> >>>> I might be missing something so bare with me.
-> >>>> Quoting the cover-letter too:
-> >>>> "In those cases, timer wakeups are not taken into account when they =
-are
-> >>>> within the LATENCY_THRESHOLD_NS range and the idle state selection m=
-ay
-> >>>> be based entirely on non-timer wakeups which may be rare.  This caus=
-es
-> >>>> the prediction accuracy to be low and too much energy may be used as
-> >>>> a result.
-> >>>>
-> >>>> The first patch is preparatory and it is not expected to make any
-> >>>> functional difference.
-> >>>>
-> >>>> The second patch causes teo to take timer wakeups into account if it
-> >>>> is about to skip the tick_nohz_get_sleep_length() invocation, so the=
-y
-> >>>> get a chance to influence the idle state selection."
-> >>>>
-> >>>> If the timer wakeups are < LATENCY_THRESHOLD_NS we will not do
-> >>>>
-> >>>> cpu_data->sleep_length_ns =3D tick_nohz_get_sleep_length(&delta_tick=
-);
-> >>>>
-> >>>> but
-> >>>>
-> >>>> cpu_data->sleep_length_ns =3D KTIME_MAX;
-> >>>>
-> >>>> therefore
-> >>>> idx_timer =3D drv->state_count - 1
-> >>>> idx_duration =3D some state with residency < LATENCY_THRESHOLD_NS
-> >>>>
-> >>>> For any reasonable system therefore idx_timer !=3D idx_duration
-> >>>> (i.e. there's an idle state deeper than LATENCY_THRESHOLD_NS).
-> >>>> So hits will never be incremented?
-> >>>
-> >>> Why never?
-> >>>
-> >>> First of all, you need to get into the "2 * cpu_data->short_idles >=
-=3D
-> >>> cpu_data->total" case somehow and this may be through timer wakeups.
-> >>
-> >> Okay, maybe I had a too static scenario in mind here.
-> >> Let me think it through one more time.
-> >
-> > Well, this is subtle and your question is actually a good one.
-> >
-> >>>
-> >>>> How would adding hits then help this case?
-> >>>
-> >>> They may be dominant when this condition triggers for the first time.
-> >>
-> >> I see.
-> >>
-> >> Anything in particular this would help a lot with?
-> >
-> > So I've been trying to reproduce my own results using essentially the
-> > linux-next branch of mine (6.15-rc2 with some material on top) as the
-> > baseline and so far I've been unable to do that.  There's no
-> > significant difference from these patches or at least they don't help
-> > as much as I thought they would.
-> >
-> >> There's no noticeable behavior change in my usual tests, which is
-> >> expected, given we have only WFI in LATENCY_THRESHOLD_NS.
-> >>
-> >> I did fake a WFI2 with residency=3D5 latency=3D1, teo-m is mainline, t=
-eo
-> >> is with series applied:
-> >>
-> >> device   gov    iter   iops    idles     idle_misses  idle_miss_ratio =
- belows   aboves   WFI       WFI2
-> >> -------  -----  -----  ------  --------  ------------  ---------------=
--  --------  -------  --------  --------
-> >> nvme0n1  teo    0      80223   8601862   1079609       0.126          =
-   918363    161246   205096    4080894
-> >> nvme0n1  teo    1      78522   8488322   1054171       0.124          =
-   890420    163751   208664    4020130
-> >> nvme0n1  teo    2      77901   8375258   1031275       0.123          =
-   878083    153192   194500    3977655
-> >> nvme0n1  teo    3      77517   8344681   1023423       0.123          =
-   869548    153875   195262    3961675
-> >> nvme0n1  teo    4      77934   8356760   1027556       0.123          =
-   876438    151118   191848    3971578
-> >> nvme0n1  teo    5      77864   8371566   1033686       0.123          =
-   877745    155941   197903    3972844
-> >> nvme0n1  teo    6      78057   8417326   1040512       0.124          =
-   881420    159092   201922    3991785
-> >> nvme0n1  teo    7      78214   8490292   1050379       0.124          =
-   884528    165851   210860    4019102
-> >> nvme0n1  teo    8      78100   8357664   1034487       0.124          =
-   882781    151706   192728    3971505
-> >> nvme0n1  teo    9      76895   8316098   1014695       0.122          =
-   861950    152745   193680    3948573
-> >> nvme0n1  teo-m  0      76729   8261670   1032158       0.125          =
-   845247    186911   237147    3877992
-> >> nvme0n1  teo-m  1      77763   8344526   1053266       0.126          =
-   867094    186172   237526    3919320
-> >> nvme0n1  teo-m  2      76717   8285070   1034706       0.125          =
-   848385    186321   236956    3889534
-> >> nvme0n1  teo-m  3      76920   8270834   1030223       0.125          =
-   847490    182733   232081    3887525
-> >> nvme0n1  teo-m  4      77198   8329578   1044724       0.125          =
-   855438    189286   240947    3908194
-> >> nvme0n1  teo-m  5      77361   8338772   1046903       0.126          =
-   857291    189612   241577    3912576
-> >> nvme0n1  teo-m  6      76827   8346204   1037520       0.124          =
-   846008    191512   243167    3914194
-> >> nvme0n1  teo-m  7      77931   8367212   1053337       0.126          =
-   866549    186788   237852    3930510
-> >> nvme0n1  teo-m  8      77870   8358306   1056011       0.126          =
-   867167    188844   240602    3923417
-> >> nvme0n1  teo-m  9      77405   8338356   1046012       0.125          =
-   856605    189407   240694    3913012
-> >>
-> >> The difference is small, but it's there even though this isn't
-> >> a timer-heavy workload at all.
-> >
-> > This is interesting, so thanks for doing it, but the goal really was
-> > to help with the polling state usage on x86 and that doesn't appear to
-> > be happening, so I'm going to drop these patches at least for now.
->
-> Alright, well my testing on x86 is limited, but I assume you are
-> referring to systems were we do have
-> state0 latency=3D0 residency=3D0 polling
-> state1 latency=3D1 residency=3D1
-> in theory teo shouldn't be super aggressive on state0 then with the
-> intercept logic, unless the idle durations are recorded as <1us.
-> I wonder what goes wrong, any traces or workloads you recommend looking
-> at?
+On 4/17/25 10:46, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.24 release.
+> There are 393 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 19 Apr 2025 17:49:48 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.24-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-I've observed state0 being selected too often and being too shallow
-90% or so of the time.
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-I don't have anything showing this specifically in a dramatic fashion
-and yes, state1 is usually selected much more often than state0.
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
