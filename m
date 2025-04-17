@@ -1,342 +1,244 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2081.outbound.protection.outlook.com [40.107.22.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02385189BAC
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744893425; cv=none; b=EGXtq+5oV2qf2Eno8xoZrU7tERseT4f1QYrXoZwpTCNYVsooWP1D+akI8CKTCZUZF3BmewNLTWZLgmQeBbJbx0Lj0PH1qMhi7G9on7Z1GmBsaHdpl2Cvkz5QdypD7EGfE8aJaAuyGV9H7k+hXXGiML0godqJ7PU3et0ewRId7MA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744893425; c=relaxed/simple;
-	bh=z8BywmB7U7TmFZECdgY4Am3vkqHwYELaHUoKH8WUIW4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=omg06+GWY2hUZjWLdSyEsIwqxaK1dUSdqof8JMdeLM5Ojw2PUD3DkqdqyEKZCNMwU371N/UfAuMelIEyn08soqaajqmexpukH9QwRQAzzkg3VG8P1VRMYK77IMqgdWlRYhDHC+HE6JXv2ry3c6wtgR0F6kaNwIMD++HDoqLROsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TKYfQPU2; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53DE72F24
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.81
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744893493; cv=fail; b=E2my/JT6a0okAq0OfJvdwqMavvmpdUuGl+os4mf9c6qaesMUsk4qT3E9yMIP/iTMYWIkSVhQbjyyG627nOf/nLn0qNKtFvADYTkZiFXhPmsFdjdU9d0csTzbEg1SAx31HyE9rMuNCuaEiYT1XG5IsU7zaLtNbNmkCU80H55vTUI=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744893493; c=relaxed/simple;
+	bh=rfR/qH+VbRmsxh72ODdyKj9T9O3xrvc5x4u4KQ7lz8o=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=orXHdf1K5dfQIF1QO6Qiv1u/XYYzl24+qybnsJmMqv6a+XHdlbZWtchBQNzil9a3LkbndQOkRj4jW35vttIIOabFMBr/U7Jl/+UuuZHwOktqseUDAT/arCC+f3yWbXlm/IHHFLAoLf+PGGDP6yqhwHnZ6eO/KLK2/roWT0lOwwg=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=VKBhLv94; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=VKBhLv94; arc=fail smtp.client-ip=40.107.22.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TKYfQPU2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744893421;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SAJBhTbOABggX16wvpv2vgV0fRUNwe643nUmUBYY404=;
-	b=TKYfQPU2Mthg91Rd7/dakSZsc1KllHjXHN4EnaqgvpDk+4oJawIUr5o7LUCCymQt9+0eVg
-	I9KVIPwiTZoYnSUs+0K+t2rY8RfoE946/yBKJkMoQcUi2lxMpbzvBViXbEqdfBRD8CyFST
-	S+kuo218814T+HwBDn1S3aYoRSOdewc=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-443-SvxzjRsWOwuR7z1hbJtkSw-1; Thu, 17 Apr 2025 08:37:00 -0400
-X-MC-Unique: SvxzjRsWOwuR7z1hbJtkSw-1
-X-Mimecast-MFC-AGG-ID: SvxzjRsWOwuR7z1hbJtkSw_1744893420
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5c9abdbd3so60856885a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:37:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744893420; x=1745498220;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SAJBhTbOABggX16wvpv2vgV0fRUNwe643nUmUBYY404=;
-        b=Vmm1CJobVPZwMyHU9UQAbXd2NaeLEC8yJ2tzdLV7rSoAZajJ1Y7mfAchBcxmqYDiFS
-         wLnBUyoIolDgelNZHIkEgq/f1mOJfexp+m2MHfOliMcjJfPwXEnEEmZcgo8Yl0EIKQWW
-         Rg4avo3wtn741Zq+WuIAu4RiF6kTEAFGE8zq3LJyrCAXZS/VRyTKnAbK3Sc0l2ts23fU
-         NOQ0C9YcPcUSjTv1WTPg2ALRFbnubEuKh9NJsyvR+Vj4ngoBxqptWSGM6M34lG36Cu7x
-         UUmIHt9NEaxLpm+9WB2V8Xj05/xtbAUwthJ8sObJxIvUMlorkrD6/ahHFGAAIZaLH2/h
-         Td7w==
-X-Forwarded-Encrypted: i=1; AJvYcCWkqlLjBOI9/ryfODQ2rQ1jocmEjwg/8E8QqFAzyOk+Yt9zzgs61LqZvubf3sRrootM7+3nhfg6fbbvIfE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiqfhRQm1ndSN2CMhp33yPFRwpAP4GLkCAejEa/J6qNqMQ83u+
-	IDyVeI6AgvlJVMXkZQe8R6Jx6ytN6OAoAN7zsZVvPrca68X/icpAyzgOiKbR4H4EHRD+9hfSu02
-	L0+R5Prap+8kuVfkhYNzjLt8ZgsWr2js+aVPk7Cjlgq8ao+LCiIfOhW74vwJGdQ==
-X-Gm-Gg: ASbGncthv9YxgQwh9FWi++cUI4GNRLMKln29i0HVP839oUc9kI2txptB5ue0gJH6fph
-	u/k2oIAFxXaICizaXV6F8wMpNixoy6DO5RqESZGRfjSY06qx9dDtYT+DNH1RAlAYXweS3PGGtz2
-	A/tlrIb5HfUgTnXJeEXvHlx55tfEXOTQElKHTGLCxxCKKvKlWhLwn2bJ3TuSRRQOZBdbZDdkBu6
-	GgMUnz+PL8w4RHZAdclOu5EcMcTP3yhU+fWPbpWaQzFHTyb2hfvAr/FmzgPvnk8gFQOdtikTvve
-	1DpID8YIURsU2Wc7OCaY21VhGOflvxo6UnzZmQHRIFTj1vQmfKlBVw==
-X-Received: by 2002:a05:620a:2629:b0:7c7:ad79:a087 with SMTP id af79cd13be357-7c9190875f7mr865554185a.57.1744893419798;
-        Thu, 17 Apr 2025 05:36:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGuHxFULT3nNni+vu8M3Vjd+F9IkWUkQuz6UZU9DS4yGU16eKaT0xWtw67tyWocpLYiA1XROw==
-X-Received: by 2002:a05:620a:2629:b0:7c7:ad79:a087 with SMTP id af79cd13be357-7c9190875f7mr865548585a.57.1744893419359;
-        Thu, 17 Apr 2025 05:36:59 -0700 (PDT)
-Received: from athena.aquini.home (c-76-23-219-111.hsd1.me.comcast.net. [76.23.219.111])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a89f98eesm1173067885a.83.2025.04.17.05.36.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 05:36:58 -0700 (PDT)
-Date: Thu, 17 Apr 2025 08:36:55 -0400
-From: Rafael Aquini <raquini@redhat.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Petr Mladek <pmladek@suse.com>,
-	Sergio Perez Gonzalez <sperezglz@gmail.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	David Rientjes <rientjes@google.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org,
-	Thomas Huth <thuth@redhat.com>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] slab: Decouple slab_debug and no_hash_pointers
-Message-ID: <aAD153YR9ahpDBcW@athena.aquini.home>
-References: <20250415170232.it.467-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="VKBhLv94";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="VKBhLv94"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=BjVA6bsdKBwuozMkbCS1ZS+9uyNTAkm+CTWTrHQo33XnJM4fIZ7rCFKgc2Rk4Z0ep8QvbAbLaiuiTIfYxwiDgA08l45+lKFSKDmlhPaYfsJV2Yp13fXkjzQm/pCM2gh4+N9mrXRsp4Foq5x/7bYl3H4hR19GmPPoYpuUct1wlD1E/9NwS7rQvTaNtAjEXa5EXJ2PqXzn7dXgNUAQDxyegfh3cddl9ACjS+q6US/cptikFUl4iY04kjn7fLmM+hEsM8QfD22u/RMYkQREn4ATVZqk7g/wTJ9jRbdEElstxjQYjEY3k+CEJrVFwDd9J0tB1MG3oA4MdInEUSYSc5AETA==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=exT6HbrUjHcLAhEaDpu/5dSs72NYlHjla28zhU7bNdI=;
+ b=tII6AOQY3wEctkepl9hh5KipOnmxNT7fOrfqAel7G+NayENX63j97OkAhHLsnpRV/EtwDJVRZ3lyvGKjsunXzsFBFGmB+EJfcvuZm6rYcq9yfK9gEJ2W/xgawrM3XeuXSEq3GtSe12g2CTX26XzLUcJoZKH/i0WC/lSJblZg0K16wLpRf52kX8qPe2qh6BaWDcjE4FezCDT/aXa8mDWS/L9RWXpDGYi+DZdU5HUozChWQu09QC9aSawzJgPx+7exLpZ2WLeSO2yOpOpenYAdMEJRtcFSRn7phDzgENee+7qKshY3aPPrWMSQc9g6l2MZ/RJSUz5oqL0i0vXRZELzzg==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=lists.freedesktop.org smtp.mailfrom=arm.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
+ dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=exT6HbrUjHcLAhEaDpu/5dSs72NYlHjla28zhU7bNdI=;
+ b=VKBhLv94sWmmWwU2409EISWRafrUl+kI607jtTDp3skepu1UgkIaZIp3VJ1DsGCO9khJYZJ2TRD9nYFaitvnj9qwivQqiQVclgYJALBE7/kouwQQjUN0fpeE6J9yoS0m7sADiKQJNule3FE7/rP4MO8H9fBFrQHmsC7cOKBicdE=
+Received: from CWLP265CA0412.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:1b6::23)
+ by AM7PR08MB5301.eurprd08.prod.outlook.com (2603:10a6:20b:dd::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.36; Thu, 17 Apr
+ 2025 12:38:06 +0000
+Received: from AM4PEPF00027A63.eurprd04.prod.outlook.com
+ (2603:10a6:400:1b6:cafe::93) by CWLP265CA0412.outlook.office365.com
+ (2603:10a6:400:1b6::23) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.36 via Frontend Transport; Thu,
+ 17 Apr 2025 12:38:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ AM4PEPF00027A63.mail.protection.outlook.com (10.167.16.73) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.12
+ via Frontend Transport; Thu, 17 Apr 2025 12:38:05 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LfsS/UKjipdrHjR/Dg+p1Kz4MXfMld5LQSeYhOjLO95gHpwewG5jCZLNl1bzZVNFN2CRzssjkmgcYozDPFv8omaW8xaSRB5SaFxdrgopcsRinLTW7DItw8sp8X5IWtC/q3Pl2i5V+CKRqTz5ck4qq1TKUcSi6ut45Gi3oytRKLAUtGYQM/TY5v1nR2nU20Iyn0h12gkenGCk84R8HuvpOyq4xnDIV0MT2yh1SxbxnwEmOi25cAmbFHiOZr0n12K5XeVRxObhqvlvKvSjgzTiGKbVYy2TKuCXM9jNKnWrQ0UQWzOt032mGrDllpVaY6aS6UD7h74cNTBBXV42H6sgew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=exT6HbrUjHcLAhEaDpu/5dSs72NYlHjla28zhU7bNdI=;
+ b=GpCFLy1gPrNIwi29FKXJmiSfOdrpI/sJoV7DV0119PgaLQj3drt5qHDzqd6Zmc28gFwebeSd9heheRZxuWG1azZsP2jNPhYRkeTkfG5lAkmqCwuCjhZv+7buDF8sv56WI0qx2umgixCt8Mof5WhiwVdCa71rOW6nC9BTp8eo/S1E5jskO5o1GKz3XpuZ9HOKvhlI+K3bmrrVXir4eyFUWgrg+t2tPTSfHKssDBbsZzhPCNWgrt5HjBTBCBnzvCjAG8L2GdHa1dLDKCf34GxHwby16FPj+IaNljJ4EH9SYDkLy/W2CrbWEM/6fP5V/O+eRoyXSCnLAPGfU0aR8JWpxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=exT6HbrUjHcLAhEaDpu/5dSs72NYlHjla28zhU7bNdI=;
+ b=VKBhLv94sWmmWwU2409EISWRafrUl+kI607jtTDp3skepu1UgkIaZIp3VJ1DsGCO9khJYZJ2TRD9nYFaitvnj9qwivQqiQVclgYJALBE7/kouwQQjUN0fpeE6J9yoS0m7sADiKQJNule3FE7/rP4MO8H9fBFrQHmsC7cOKBicdE=
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+Received: from VI0PR08MB11200.eurprd08.prod.outlook.com
+ (2603:10a6:800:257::18) by AS8PR08MB6023.eurprd08.prod.outlook.com
+ (2603:10a6:20b:291::5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.27; Thu, 17 Apr
+ 2025 12:37:33 +0000
+Received: from VI0PR08MB11200.eurprd08.prod.outlook.com
+ ([fe80::d594:64a:dfc:db74]) by VI0PR08MB11200.eurprd08.prod.outlook.com
+ ([fe80::d594:64a:dfc:db74%6]) with mapi id 15.20.8632.030; Thu, 17 Apr 2025
+ 12:37:32 +0000
+From: Karunika Choo <karunika.choo@arm.com>
+To: dri-devel@lists.freedesktop.org
+Cc: nd@arm.com,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	Steven Price <steven.price@arm.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/2] drm/panthor: Add 64-bit register accessors
+Date: Thu, 17 Apr 2025 13:37:23 +0100
+Message-ID: <20250417123725.2733201-1-karunika.choo@arm.com>
+X-Mailer: git-send-email 2.47.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: LO4P123CA0222.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1a6::11) To VI0PR08MB11200.eurprd08.prod.outlook.com
+ (2603:10a6:800:257::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415170232.it.467-kees@kernel.org>
+X-MS-TrafficTypeDiagnostic:
+	VI0PR08MB11200:EE_|AS8PR08MB6023:EE_|AM4PEPF00027A63:EE_|AM7PR08MB5301:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1684f4a1-8fab-471a-7757-08dd7dacb340
+X-LD-Processed: f34e5979-57d9-4aaa-ad4d-b122a662184d,ExtAddr,ExtAddr
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?us-ascii?Q?JXMDLymn0b6igGKoJyLNg5lkVVnAFe7zUcOYKRTV4ntxjksTS2bskuWTe2VM?=
+ =?us-ascii?Q?RM+fa34G9Y/FZNRLlOUgYPSSMixmKr0BzD44AaJD97LOzJ7gpUwjXVf0UYnR?=
+ =?us-ascii?Q?Ddo0b/PCbAQ9Wmzdhxxa5wcAcup4KIUsGHJqoGgKk80ik2uPMVTFXzfZf2BH?=
+ =?us-ascii?Q?pMUhEDmhsEknPLF9mSeD4mP6FCVbQ/sKqfe1xyf6USqBG8a6uTLLFNhgXp2c?=
+ =?us-ascii?Q?GmTcGFNrEehXz8JLScp0KnA7OKoL+wXzIuinQGVtsG/hl1eL8JKyJ5UbXkpO?=
+ =?us-ascii?Q?H7sL21CDNbBzIw2tZgcQSZIMnEhUFCzESHhY72qBfZzfp3SqJsO/R+E4xmHO?=
+ =?us-ascii?Q?nUK3Q7ToQ3R3FaiknlLL2mxig50DyO39Wl2MgLZmIJoVE9NdoJJUUmzsi7MJ?=
+ =?us-ascii?Q?9s7wHnj+nbuhFKAORWK6ksqi4RQDhCDuWhdeURVMTBBQx+D9Z4XiV8FeUx2w?=
+ =?us-ascii?Q?/VzmkFlw2AGbGVOevd97CdlnzlFZYEFFdMephq9a4eGT45rrwyNK5Oib7CUa?=
+ =?us-ascii?Q?YMqZHe2Cvvv2Cz1QvCdTOWYyLENVpnTDiDWJLDyFePCAa7jW6iYVgp+rZ2tX?=
+ =?us-ascii?Q?9K2Fgm6oeofXPo6i0dbYkrPG9HEx5DWMla8L+B2fbeojHLInCmAq0Atx0gqp?=
+ =?us-ascii?Q?vZNb0dPUfE2K5HTEb2DVtljx2ZndUs+2ThtntfMacCsPZEIgk8n6Egn6nLQX?=
+ =?us-ascii?Q?Ncon62Dsq+YTLlxFWrgyQbx3NJE101LzS8D8wnhk/qJmD59YPsvI7JKV99Sx?=
+ =?us-ascii?Q?qFeCCxVFLWUVvZxKDxdov5OVxwRpEgXC5CthjN7GKjNLytyAUh25aJykuqYY?=
+ =?us-ascii?Q?KwnsXxFM1YsdHQa9q3doUefPmLifq+VBXlo6OVUGUDGe3Qs6B31DXLUtkGrC?=
+ =?us-ascii?Q?ocNwhaV1RF7uPhT5KScYJb/Ax9WLZCQsXgl8/xmmyJdSa5QFcwfcRP4kGl4h?=
+ =?us-ascii?Q?2U8b1w+941ViTVvbeY4drlMxGAhy5zZi8RIFuyX+fqvVCCiDOEzbnpcW7mxz?=
+ =?us-ascii?Q?47lUJiX8P/VXiAPdkAUOsofWk93plq6ZsIbDOLnBmSEFYPzYjrx4MO4pYq0v?=
+ =?us-ascii?Q?z9b3kvGzsKaJ2lVsvDtX53ZGn01er5IHcCzhAF5uGWTZ4V9XTX1aLlExJ7+H?=
+ =?us-ascii?Q?2SEh1bjXvO6IjiZJNKweIOfoNgYpPMNwkIc6LCkeRhi6KL4FNzd99t48pYet?=
+ =?us-ascii?Q?7Sw20MA3cw4vv+dJ4uoCHfIWjPlAQMjP6h9EpUq8j4uNcYNjeJIhqel8ddy1?=
+ =?us-ascii?Q?RQzpOEL+j6ujo2BO4hjDq3cKBtMusculB+DXkFMIjAAQVKCV2kGjXyucLnUA?=
+ =?us-ascii?Q?JSv9x1rjcS5TGDE+W0QOeQ8x+/v6TOQrVHr3yBpINdxOOcB7B8yE3SKk4E0Y?=
+ =?us-ascii?Q?A8yJy3ueA3TLPEZd6LPEFooZmAHg2zOqNY1tYYqzib1BvzAYiiJH5QOZMBzo?=
+ =?us-ascii?Q?fd34reV9qBg=3D?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI0PR08MB11200.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB6023
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ AM4PEPF00027A63.eurprd04.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	e1904a08-cd5e-4ea6-9d87-08dd7dac9fd8
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|14060799003|36860700013|1800799024|376014|35042699022|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?p5vlRnjrvyN2sokrGmz9117sHWDl3DGv0sy9R6U7sgVSfvgsysRojbCE2xzg?=
+ =?us-ascii?Q?nXu2w6vz1zbCKcU3AGIhfBstMpI2tmSH3eiAgeV3rodoI9BJD1HeCNpMTbqN?=
+ =?us-ascii?Q?KuifpTknRlgbJ+wD+yp3Zfz5tw78B6TW0xy6T1gQZzUCufeb2RqzhiK9H9uG?=
+ =?us-ascii?Q?DvylzyYINrzdL7VNvTdpiN+HFXc4xb5/RT5IrQ5cNseupIfd4rm+Iir5VDOh?=
+ =?us-ascii?Q?Aj4b6HFXjxkuqfARkElAnMxlJRkU5G+oMKleg8xcZ3c1ODWPYwE8Qa9fBCS2?=
+ =?us-ascii?Q?G9ZGy3OK7ROKxrY87/Vky+BL7zIOJxzejVAPOZKbLItDTnGO4eEAssmg/y97?=
+ =?us-ascii?Q?Us0ipi5O9mgtNB9MC8rrqRzrXVpt3d8NhqsOSYd/QYwNXhvU0FHdMAKANxcb?=
+ =?us-ascii?Q?I01Xt9TcpkuSpOWfkMz6dzmcAqQis8y1CnU0CTxCkVKuElpxGEuAOl/cDcdg?=
+ =?us-ascii?Q?vS8w5xuQhE1bjcjzgNcKrARg5vtT9Ed1SSKTMl/+gWEE3ntvTCBOykMWI2M5?=
+ =?us-ascii?Q?/k81mDAeKmpypy7VaL6SeHd+5NRuqIPjQrgrItV+SH69CNvZOitwnX2s0cMy?=
+ =?us-ascii?Q?xOTytxyA/2SJJyWixI5vTv9msLvS4Z0jXgPSuUvqxBxwpn0DFzGjTXQv5y7o?=
+ =?us-ascii?Q?h4q8EH7/A4Gt8/vUNuWU9/nmMHuuZ8svM65fPxi+UtkraUaDzhfUg+sq5H7Q?=
+ =?us-ascii?Q?IhxJwdIf5STX5xkJ+HuNuaoR3o684nwCuKGW/uC2kCy26U0TGVx7sBYedz9h?=
+ =?us-ascii?Q?P4wHsu9F7vUTHqF2a2JpadzM/ACzkpDqVbS6ud+/+4miYsEY6MWnl1vpoMv1?=
+ =?us-ascii?Q?AQtm5/0VWplZ+yn5Zby6NlEisNkXZ5HTmNueMOBu+ApzRMTGu8sM3QZfhoVu?=
+ =?us-ascii?Q?PnNLWlMVt3W3k135ZZ/5lMUxOmcDc4NJ/qDh8TKdSwx6mhhtRWtd/3+TNa8v?=
+ =?us-ascii?Q?RHx3qY8bIIJTo5VVFZMa6NHAVNSAlAjNVtxo8PyWQct0Ezw/urWspQGtGqon?=
+ =?us-ascii?Q?/YjYIvTp/UeEphMwmFThVzMEfx+eSjR6PgZd9AXMlNv9CMl6GUldde1No4My?=
+ =?us-ascii?Q?flUfk7lB2GRIYdlI5h+uiEltKaf4k/6fPZD5Y6Blfi+ls7nAx+ivHO36BXWm?=
+ =?us-ascii?Q?LXNzHG6wbTZVJ7pkhZ0Be2w3CNcERRPzIe423mVEDmUrCjPDoiIPMOBiLoip?=
+ =?us-ascii?Q?8cvh1FkRRmH0WBfBFA8/MVnanZ3JmVRgdIUhXT4eOQLqArrwxtRuOhwJPhO4?=
+ =?us-ascii?Q?1OUdu1wG2KzzvS5CvmiT12xn8qZQiMLsgL1QzleiBUoVOwCeQ6HveW9wjMNJ?=
+ =?us-ascii?Q?kqIdDVLDW+76CpoRHuZMm2P1qmH0B3pSc4BFd9NpLvvn4yKCSoyBIyY8MiXs?=
+ =?us-ascii?Q?GUaLoeQmH3sw8ybIt/dll94T9Uvq0OM+YzOubyPi9UrqAtYHogp/FPhAf420?=
+ =?us-ascii?Q?zOx72G+3rKHoFfLsCHtM2TVuNTkhp58Y17w5xvhierkFZwi7ExVn0yan57MY?=
+ =?us-ascii?Q?X6dKmRa1+KDAMf8IOkWYb6RTcov830b1RL0c1Xcz+nIxf19qaYDJ/eckCQ?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(14060799003)(36860700013)(1800799024)(376014)(35042699022)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 12:38:05.0734
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1684f4a1-8fab-471a-7757-08dd7dacb340
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM4PEPF00027A63.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR08MB5301
 
-On Tue, Apr 15, 2025 at 10:02:33AM -0700, Kees Cook wrote:
-> Some system owners use slab_debug=FPZ (or similar) as a hardening option,
-> but do not want to be forced into having kernel addresses exposed due
-> to the implicit "no_hash_pointers" boot param setting.[1]
-> 
-> Introduce the "hash_pointers" boot param, which defaults to "auto"
-> (the current behavior), but also includes "always" (forcing on hashing
-> even when "slab_debug=..." is defined), and "never". The existing
-> "no_hash_pointers" boot param becomes an alias for "hash_pointers=never".
-> 
-> This makes it possible to boot with "slab_debug=FPZ hash_pointers=always".
-> 
-> Link: https://github.com/KSPP/linux/issues/368 [1]
-> Fixes: 792702911f58 ("slub: force on no_hash_pointers when slub_debug is enabled")
-> Co-developed-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
-> Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
-> Acked-by: David Rientjes <rientjes@google.com>
-> Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
->  v2: use switch state to avoid missing states (pmladek)
->  v1: https://lore.kernel.org/lkml/20250410174428.work.488-kees@kernel.org/
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Christoph Lameter <cl@linux.com>
-> Cc: Pekka Enberg <penberg@kernel.org>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> Cc: Roman Gushchin <roman.gushchin@linux.dev>
-> Cc: Harry Yoo <harry.yoo@oracle.com>
-> Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Tamir Duberstein <tamird@gmail.com>
-> Cc: Miguel Ojeda <ojeda@kernel.org>
-> Cc: Alice Ryhl <aliceryhl@google.com>
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> ---
->  .../admin-guide/kernel-parameters.txt         | 34 +++++++----
->  include/linux/sprintf.h                       |  2 +-
->  lib/vsprintf.c                                | 61 +++++++++++++++++--
->  mm/slub.c                                     |  5 +-
->  4 files changed, 82 insertions(+), 20 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 76e538c77e31..d0fd9c745db9 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -1798,6 +1798,27 @@
->  			backtraces on all cpus.
->  			Format: 0 | 1
->  
-> +	hash_pointers=
-> +			[KNL,EARLY]
-> +			By default, when pointers are printed to the console
-> +			or buffers via the %p format string, that pointer is
-> +			"hashed", i.e. obscured by hashing the pointer value.
-> +			This is a security feature that hides actual kernel
-> +			addresses from unprivileged users, but it also makes
-> +			debugging the kernel more difficult since unequal
-> +			pointers can no longer be compared. The choices are:
-> +			Format: { auto | always | never }
-> +			Default: auto
-> +
-> +			auto   - Hash pointers unless slab_debug is enabled.
-> +			always - Always hash pointers (even if slab_debug is
-> +				 enabled).
-> +			never  - Never hash pointers. This option should only
-> +				 be specified when debugging the kernel. Do
-> +				 not use on production kernels. The boot
-> +				 param "no_hash_pointers" is an alias for
-> +				 this mode.
-> +
->  	hashdist=	[KNL,NUMA] Large hashes allocated during boot
->  			are distributed across NUMA nodes.  Defaults on
->  			for 64-bit NUMA, off otherwise.
-> @@ -4120,18 +4141,7 @@
->  
->  	no_hash_pointers
->  			[KNL,EARLY]
-> -			Force pointers printed to the console or buffers to be
-> -			unhashed.  By default, when a pointer is printed via %p
-> -			format string, that pointer is "hashed", i.e. obscured
-> -			by hashing the pointer value.  This is a security feature
-> -			that hides actual kernel addresses from unprivileged
-> -			users, but it also makes debugging the kernel more
-> -			difficult since unequal pointers can no longer be
-> -			compared.  However, if this command-line option is
-> -			specified, then all normal pointers will have their true
-> -			value printed. This option should only be specified when
-> -			debugging the kernel.  Please do not use on production
-> -			kernels.
-> +			Alias for "hash_pointers=never".
->  
->  	nohibernate	[HIBERNATION] Disable hibernation and resume.
->  
-> diff --git a/include/linux/sprintf.h b/include/linux/sprintf.h
-> index 51cab2def9ec..521bb2cd2648 100644
-> --- a/include/linux/sprintf.h
-> +++ b/include/linux/sprintf.h
-> @@ -22,7 +22,7 @@ __scanf(2, 0) int vsscanf(const char *, const char *, va_list);
->  
->  /* These are for specific cases, do not use without real need */
->  extern bool no_hash_pointers;
-> -int no_hash_pointers_enable(char *str);
-> +void hash_pointers_finalize(bool slub_debug);
->  
->  /* Used for Rust formatting ('%pA') */
->  char *rust_fmt_argument(char *buf, char *end, const void *ptr);
-> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> index 01699852f30c..22cbd75266ef 100644
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -60,6 +60,20 @@
->  bool no_hash_pointers __ro_after_init;
->  EXPORT_SYMBOL_GPL(no_hash_pointers);
->  
-> +/*
-> + * Hashed pointers policy selected by "hash_pointers=..." boot param
-> + *
-> + * `auto`   - Hashed pointers enabled unless disabled by slub_debug_enabled=true
-> + * `always` - Hashed pointers enabled unconditionally
-> + * `never`  - Hashed pointers disabled unconditionally
-> + */
-> +enum hash_pointers_policy {
-> +	HASH_PTR_AUTO = 0,
-> +	HASH_PTR_ALWAYS,
-> +	HASH_PTR_NEVER
-> +};
-> +static enum hash_pointers_policy hash_pointers_mode __initdata;
-> +
->  noinline
->  static unsigned long long simple_strntoull(const char *startp, char **endp, unsigned int base, size_t max_chars)
->  {
-> @@ -2271,12 +2285,23 @@ char *resource_or_range(const char *fmt, char *buf, char *end, void *ptr,
->  	return resource_string(buf, end, ptr, spec, fmt);
->  }
->  
-> -int __init no_hash_pointers_enable(char *str)
-> +void __init hash_pointers_finalize(bool slub_debug)
->  {
-> -	if (no_hash_pointers)
-> -		return 0;
-> +	switch (hash_pointers_mode) {
-> +	case HASH_PTR_ALWAYS:
-> +		no_hash_pointers = false;
-> +		break;
-> +	case HASH_PTR_NEVER:
-> +		no_hash_pointers = true;
-> +		break;
-> +	case HASH_PTR_AUTO:
-> +	default:
-> +		no_hash_pointers = slub_debug;
-> +		break;
-> +	}
->  
-> -	no_hash_pointers = true;
-> +	if (!no_hash_pointers)
-> +		return;
->  
->  	pr_warn("**********************************************************\n");
->  	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
-> @@ -2289,11 +2314,39 @@ int __init no_hash_pointers_enable(char *str)
->  	pr_warn("** the kernel, report this immediately to your system   **\n");
->  	pr_warn("** administrator!                                       **\n");
->  	pr_warn("**                                                      **\n");
-> +	pr_warn("** Use hash_pointers=always to force this mode off      **\n");
-> +	pr_warn("**                                                      **\n");
->  	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
->  	pr_warn("**********************************************************\n");
-> +}
-> +
-> +static int __init hash_pointers_mode_parse(char *str)
-> +{
-> +	if (!str) {
-> +		pr_warn("Hash pointers mode empty; falling back to auto.\n");
-> +		hash_pointers_mode = HASH_PTR_AUTO;
-> +	} else if (strncmp(str, "auto", 4) == 0)   {
-> +		pr_info("Hash pointers mode set to auto.\n");
-> +		hash_pointers_mode = HASH_PTR_AUTO;
-> +	} else if (strncmp(str, "never", 5) == 0) {
-> +		pr_info("Hash pointers mode set to never.\n");
-> +		hash_pointers_mode = HASH_PTR_NEVER;
-> +	} else if (strncmp(str, "always", 6) == 0) {
-> +		pr_info("Hash pointers mode set to always.\n");
-> +		hash_pointers_mode = HASH_PTR_ALWAYS;
-> +	} else {
-> +		pr_warn("Unknown hash_pointers mode '%s' specified; assuming auto.\n", str);
-> +		hash_pointers_mode = HASH_PTR_AUTO;
-> +	}
->  
->  	return 0;
->  }
-> +early_param("hash_pointers", hash_pointers_mode_parse);
-> +
-> +static int __init no_hash_pointers_enable(char *str)
-> +{
-> +	return hash_pointers_mode_parse("never");
-> +}
->  early_param("no_hash_pointers", no_hash_pointers_enable);
->  
->  /*
-> diff --git a/mm/slub.c b/mm/slub.c
-> index b46f87662e71..f3d61b330a76 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -6314,9 +6314,8 @@ void __init kmem_cache_init(void)
->  	if (debug_guardpage_minorder())
->  		slub_max_order = 0;
->  
-> -	/* Print slub debugging pointers without hashing */
-> -	if (__slub_debug_enabled())
-> -		no_hash_pointers_enable(NULL);
-> +	/* Inform pointer hashing choice about slub debugging state. */
-> +	hash_pointers_finalize(__slub_debug_enabled());
->  
->  	kmem_cache_node = &boot_kmem_cache_node;
->  	kmem_cache = &boot_kmem_cache;
-> -- 
-> 2.34.1
-> 
->
+Hi all,
 
-Thank you, Kees.
+This patch series adds support for 64-bit and poll register accessors in
+the Panthor DRM driver and performs a cleanup of the 64-bit register
+definitions.
 
-Acked-by: Rafael Aquini <raquini@redhat.com>
+The first patch introduces new accessor functions to simplify and
+standardize 64-bit and polling register operations. The second patch
+refactors the existing 64-bit register definitions for improved clarity
+and consistency.
+
+v4:
+- [PATCH 1/2]:
+  - Fixed missing check against mask value in PWRTRANS register polling.
+  - Removed panthor_gpu_read_timestamp() and
+    panthor_gpu_read_timestamp_offset() in favour of direct register
+    access as they currently only serve as wrapper functions.
+- [PATCH 2/2]:
+  - Updated the register names inline with the removal of the two
+    timestamp functions.
+- Picked up Rb tags from Liviu and Steven
+- Link to v3: https://lore.kernel.org/dri-devel/20250411164805.2015088-1-karunika.choo@arm.com/
+v3:
+- Picked up Rb tags from Boris.
+- Link to v2: https://lore.kernel.org/dri-devel/20250411151140.1815435-1-karunika.choo@arm.com/
+v2:
+- Updated padding of the poll functions as requested
+- Removed *_HI register definitions and renamed *_LO registers
+- Link to v1: https://lore.kernel.org/dri-devel/20250410163546.919749-1-karunika.choo@arm.com/
+
+Kind regards,
+Karunika Choo
+
+Karunika Choo (2):
+  drm/panthor: Add 64-bit and poll register accessors
+  drm/panthor: Clean up 64-bit register definitions
+
+ drivers/gpu/drm/panthor/panthor_device.h |  71 ++++++++++
+ drivers/gpu/drm/panthor/panthor_drv.c    |   4 +-
+ drivers/gpu/drm/panthor/panthor_fw.c     |   9 +-
+ drivers/gpu/drm/panthor/panthor_gpu.c    | 159 +++++------------------
+ drivers/gpu/drm/panthor/panthor_gpu.h    |  12 +-
+ drivers/gpu/drm/panthor/panthor_mmu.c    |  34 ++---
+ drivers/gpu/drm/panthor/panthor_regs.h   | 100 +++++---------
+ 7 files changed, 162 insertions(+), 227 deletions(-)
+
+-- 
+2.47.1
 
