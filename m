@@ -1,97 +1,102 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cu-ua11p00im-quki07173001.ua.silu.net (cu-ua11p00im-quki07173001.ua.silu.net [123.126.78.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A59A23E330
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A007A1CB9F0
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.126.78.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744902658; cv=none; b=gHY9EWw77peBe6RhMM6C1Up1MTqVPNKzryEzN+MGBCfIa8t1oTim9VEi7TQbcK3Z0FETFn8PGXd8IJp+wNzDF2ZNFDLszIfaTfa1Tp9mjvL8kAQ7ifgj5cU0HV7jyW659oBxb0gk81tskLGHcsYq8M+FltncLNK38bNbd3WLlH0=
+	t=1744902686; cv=none; b=MPNMo2FJmHg83DhDJXMBUljm0hiHS4NW7jgiWh+ezEiQy01fHmh2TyDz9tGRgweQm/Gp2nIha3iU1LwQj3iPYHIcfpqUrMtn9hUuKrXTvxlJ/AsUNCDU/IIgSuVHyW49/5BkLtTQI4zOiIXSk5lZ4fyk7vOAzC+5bIb3hD9oyXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744902658; c=relaxed/simple;
-	bh=LiZgga9x8uNn0x7WdTDXbakOF44Ru5INCev66F2o+Dc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JAsaq5LqmKVBDSY4L296UVe9Upfo5vlF2hb3YynJdvaeZC5HQDGJV0j6sMbUnQafvUAnZol9cvMDpczboQ5XyYN+QcbQrBoKow37ZpLjq2Fkp6gyWUpXQi4qnioaXC/o8JrSuFkQGDLTbJ/fwqqPAeTEgQ+PUI1l9oBBEDRRxWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=H3yATVk1; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
+	s=arc-20240116; t=1744902686; c=relaxed/simple;
+	bh=3gBks0IDv5+bQ7f9oySXgiMRXgK7dls0NUMSTEFmLW4=;
+	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
+	 Cc:In-Reply-To:To; b=EqK3AVN/X45FQwoF7XBON7ubGUQ5e9SNTBYXFYJ79PxgGl8/PTOBEec15Av/B2apaxVC87rag7y70Bg9cI+3uGSSPJ/VajfOCygmQECxO+ovtg7GaXO7UoJjuIHc+rT5M9jIOMMMI5GcIsPIgZnO8U11qzpD4GkPOy1PyXrHhpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=Ts9eJT5Y; arc=none smtp.client-ip=123.126.78.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="H3yATVk1"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-226185948ffso10126735ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:10:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1744902655; x=1745507455; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LiZgga9x8uNn0x7WdTDXbakOF44Ru5INCev66F2o+Dc=;
-        b=H3yATVk10aZqoRI+w4nNhDNAcSrm+D72kf09ipil/lhZBQVG98+L9kHkPcmnSnwazQ
-         2l2q7/rcLpNyHl7W14wjQCbWN87G0IAsm+Yej1cduBZyRY+bLzSw3rdEYxijZFieiE5K
-         4p9sZvZQrU1T5YW0n/Phw1rSXkT4kX9Je/Pl622+TtYHoFzbnncoMrFYet2UFNdX7dEZ
-         Kp5GDmv6d0PucyJocp1zYdAefTVH68d510dC+sFSGKo4O3dpzsf/SX5osPX6hm1NRhbn
-         mn8Q/7MwclR7BEHoMAaKF+jTuamIjIVUOtP2h2aefp90oQRbxnCBj4UUds3GxtLFjNgk
-         ZaBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744902655; x=1745507455;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LiZgga9x8uNn0x7WdTDXbakOF44Ru5INCev66F2o+Dc=;
-        b=Cd5z3vZ3JctX+ycfh3sSHzi/6vwnan8wnb2edRjKoFC6NPvNC3r3pfYCOihX5UMHlK
-         1QTE7u9J7QoYfvcIVxI/AQvu/B6BedjYnOH3yWrMdigutzijlxCjW3ia1lj2xnbM/edp
-         pK94eZya2DE87Ki/u1STyp3zsbljCJ9kehLc61UV/lRtvEBuRuaomt1hdwWguVa7HEeK
-         6KvIpdneWwD3uFgp0SQqBazNskU/cOAO4Dsil0VGRCV471+gUfXVV/dzIpupcuaQZY5N
-         Aoz7zrIxcZt0NPPcxCYGy7LM6D5eoThIxMm8oFH9sp337P/KPQZrkPap+xwXiN7otS2C
-         QHzw==
-X-Forwarded-Encrypted: i=1; AJvYcCVQBXh5WCboPmhOjrfnzAN2UwdzZKUGs0B6/ulvuyqYL6sHf7LP96wTHpgVsX5VXY9w3K540vf+vWD3QhI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8qOCj7QrlwigR9DQ5OxCyEjmbbzO8RcKJd2qHb1jofr98QTDZ
-	uZAeePmHdyGNaj9zv9oz2s8MiXq3uj6cmPGLQ2lVz83xEWvG/rRr8xazefDyQlg=
-X-Gm-Gg: ASbGncvInYNfwcC24xC6IogHKur1GWzP4e/dyMhqD4M0JCa8ohUC0svNc91GrX/nl6N
-	YsBdnZMZuxzVbHRPZrL/63Hl3UGMO34JcEXFgqoOcDZ7MxPPfI9YEpeXLnh5/AnQu7trD5E5Qj4
-	i/KYo4P05ZhYv5DVa1g1B3qcyhGd9XOpfjgiFGCk4A97055j+enjarZcPrwxT9fsY+91MMRrJcM
-	zHJlyZKD3+hKvSkcDoP5r7V9v6ud87eoFU6+3KF6aL9ITCdlEq0lOqF7+GP8SYF9N5NJs2I8udV
-	vG1TfVZQqHyoPjJymDnEpVeLfgehEqB7F5k+wZpPVwl4ri2YulysWPD82CCGBqNSLqg8uf9dJuF
-	JU8YgFZkHtsCn9Tpa
-X-Google-Smtp-Source: AGHT+IHIP5FBpE6QRyj07ov+jrBL6Cb9idEsBOVjWQ1/IColpF0qdvEnnkroDFpHC82/JIDmUgRLTQ==
-X-Received: by 2002:a17:902:f642:b0:220:c813:dfd1 with SMTP id d9443c01a7336-22c359734c3mr102186955ad.36.1744902655602;
-        Thu, 17 Apr 2025 08:10:55 -0700 (PDT)
-Received: from hermes.local (204-195-96-226.wavecable.com. [204.195.96.226])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c210esm12348763b3a.41.2025.04.17.08.10.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 08:10:55 -0700 (PDT)
-Date: Thu, 17 Apr 2025 08:10:53 -0700
-From: Stephen Hemminger <stephen@networkplumber.org>
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
- kent.overstreet@linux.dev, brett.creeley@amd.com,
- schakrabarti@linux.microsoft.com, shradhagupta@linux.microsoft.com,
- ssengar@linux.microsoft.com, rosenp@gmail.com, paulros@microsoft.com,
- linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH 2/3] net: mana: Add sched HTB offload support
-Message-ID: <20250417081053.5b563a92@hermes.local>
-In-Reply-To: <1744876630-26918-3-git-send-email-ernis@linux.microsoft.com>
-References: <1744876630-26918-1-git-send-email-ernis@linux.microsoft.com>
-	<1744876630-26918-3-git-send-email-ernis@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="Ts9eJT5Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1ca1ba; t=1744902682;
+	bh=tbzU7uQeRtoWWJcQEx8UqorAm9YLdvKxFVfT04Erd6A=;
+	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:To;
+	b=Ts9eJT5Y9yksFWLCRM2LNqqUoUaXXLs1Ys4JSc2+W8F2cSFDng9y0keiiqcn00IF4
+	 j2b7BDJjIYQ6LUvPmmAVSZIRk9kKHcFusvgSDVC5JPvqOFqAWn3DKSuNTsW2mKMZzZ
+	 QyVwm/A+C8qvd6SauJU3YnUugJpLZlg8oZxF48x3dvO5U3sb1/0EVPZIwqNNIfiFK4
+	 LkqHbZHPjensMtlthMMFUE0Vn//+tTCsQR0mGswwCwKAU6i10Pif12aCqNYXP0d6PJ
+	 fvFMwNT2G8NUr0WecDGo1mZjsVSDJh5ymP5YNOsjDmPiSvR4kHYf+qkgOoLTSKdjzO
+	 yu2EHq/sjmzQA==
+Received: from smtpclient.apple (ua11p00im-asmtpcmvip.ua.silu.net [112.19.242.76])
+	by ua11p00im-quki07173001.ua.silu.net (Postfix) with ESMTPSA id 825B79A00D7;
+	Thu, 17 Apr 2025 15:11:21 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From: huzijun <zijun_hu@icloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2 1/3] configfs: Delete semicolon from macro type_print() definition
+Date: Thu, 17 Apr 2025 23:11:10 +0800
+Message-Id: <CDCE55D6-2296-4B36-9A65-369EC13492DC@icloud.com>
+References: <aAEXAL3ypUn4G/oe@gmail.com>
+Cc: Joel Becker <jlbec@evilplan.org>,
+ Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+ Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
+ Zijun Hu <quic_zijuhu@quicinc.com>
+In-Reply-To: <aAEXAL3ypUn4G/oe@gmail.com>
+To: Breno Leitao <leitao@debian.org>
+X-Mailer: iPad Mail (22D72)
+X-Proofpoint-ORIG-GUID: Wbdowg9GmiZn-x5PaAjozZtqabDaIoQF
+X-Proofpoint-GUID: Wbdowg9GmiZn-x5PaAjozZtqabDaIoQF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-17_03,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 malwarescore=0
+ mlxscore=0 phishscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2504170089
 
-On Thu, 17 Apr 2025 00:57:09 -0700
-Erni Sri Satya Vennela <ernis@linux.microsoft.com> wrote:
 
-> Introduce support for HTB qdisc offload in the mana ethernet
-> controller. This controller can offload only one HTB leaf.
-> The HTB leaf supports clamping the bandwidth for egress traffic.
-> It uses the function mana_set_bw_clamp(), which internally calls
-> a HWC command to the hardware to set the speed.
-
-A single leaf is just Token Bucket Filter (TBF).
-Are you just trying to support some vendor config?
+> =E5=9C=A8 2025=E5=B9=B44=E6=9C=8817=E6=97=A5=EF=BC=8C22:58=EF=BC=8CBreno L=
+eitao <leitao@debian.org> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> =EF=BB=BFOn Tue, Apr 15, 2025 at 08:34:25PM +0800, Zijun Hu wrote:
+>> From: Zijun Hu <quic_zijuhu@quicinc.com>
+>>=20
+>> Macro type_print() definition ends with semicolon, so will cause
+>> the subsequent macro invocations end with two semicolons.
+>>=20
+>> Fix by deleting the semicolon from the macro definition.
+>>=20
+>> Reviewed-by: Joel Becker <jlbec@evilplan.org>
+>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+>> ---
+>> fs/configfs/dir.c | 2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>=20
+>> diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
+>> index 7d10278db30d667d0ef7e1140e54961c5a440c41..0a011bdad98c492227859ff32=
+8d61aeed2071e24 100644
+>> --- a/fs/configfs/dir.c
+>> +++ b/fs/configfs/dir.c
+>> @@ -970,7 +970,7 @@ static void configfs_dump_one(struct configfs_dirent *=
+sd, int level)
+>> {
+>>    pr_info("%*s\"%s\":\n", level, " ", configfs_get_name(sd));
+>>=20
+>> -#define type_print(_type) if (sd->s_type & _type) pr_info("%*s %s\n", le=
+vel, " ", #_type);
+>> +#define type_print(_type) if (sd->s_type & _type) pr_info("%*s %s\n", le=
+vel, " ", #_type)
+>>    type_print(CONFIGFS_ROOT);
+>>    type_print(CONFIGFS_DIR);
+>>    type_print(CONFIGFS_ITEM_ATTR);
+>=20
+> As I've asked in V1. Is this macro being used?
+>=20
+yes. it is being used by those 3 statements which follows the macro definiti=
+on (^^)
+> --breno
