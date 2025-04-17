@@ -1,196 +1,156 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF64E1CD205
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F4061253B4E;
+	Thu, 17 Apr 2025 15:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744904909; cv=none; b=ZwTJLev5bDM1ylIXRk9IxiMFLNys2lRmKLf2nh8nMgEnhgfDx8H7/hYX2xjz4GvlmPRHT5KoyGrvlk3quK3H1KLjbIjMgXvozyafLVsxrduEy62Vghsjd55qUsc5mwTkJQDPCaoRUmPtTcyca6SqIJWQrcGqpeD2opXKk03mMcc=
+	t=1744904930; cv=none; b=jXDzA53St8R/ufOAG9FsDpJPezwDODye2x0HZhM1+ComDwjnLFbdnV5d/vUPTAMbe/40p5Kj4Ienw5zSHFJq1EXG6U91Cg6SJ3iONUVjVmPy5aXZVlV3ZABElRwNGicU4e3dgbYntcB+a1Eljbom7BjF1JmynQfEInr7hXbtI9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744904909; c=relaxed/simple;
-	bh=Y/a1RyMGC0x7pKJnb5bi8pFDmsxQboG7fC53/IeNtnw=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=G+p+HypXX8oeuPT7W7bXrvGi+UTjuGFy3AdkbtPuc+bXzVXBMKA02zOm5h/jGKTMY1hk5Iljj250eGHFhpYIYIOd6qgYdQjcxvQT3uAhL94GWdnNdSH4lwrV+BlqnaG6uBEalBbke4QtIV1LambWBShzvAswsf5C42MVVoOX40Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JtxyYKu9; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744904930; c=relaxed/simple;
+	bh=ClRmIN+7tcZ09syy4bcP8WJEVYYf/AZpRlc74JwrGSQ=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=eUz5fP4rm+npAdnFY6m8VaZ2V1lOnQzDd3rjGWqYbV0qiC6Rwh7TSSB03P0P3gYx9yzEiXF/z40ctkX4Y29ZHeCkiqFkZHYBSyPHX6GkIzKhaK+uSQa4xSyq5HRvdqpZTSDCIpqyT5AzAz37S8ok7sYGzwQVOieT/KvFvK1zFUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aAzE6QCM; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JtxyYKu9"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3995ff6b066so599394f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:48:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aAzE6QCM"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c56a3def84so79573385a.0;
+        Thu, 17 Apr 2025 08:48:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744904906; x=1745509706; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LbDTz1govFuJqW1HLjiNGtY4aJqmXA2tH78xltv4vpA=;
-        b=JtxyYKu9bc4zg2Bkf/ywd1JPeEo/3RuPiwin0Q/f1xoziXcD6pywHG40BrX5Dxyu97
-         aNtvW8dJ/CPE9pg4z2v0TFz+t+tlS9N3/p/bS1VnOubkJg0LCYR3MCqtg+tMhhY6oqWA
-         83ljAjnYBZ4mCp5X4ReijwY9G9bjsnVRlzD7tRE8++tKKPHX+UwKGp8aLfX9GdwlbmZ9
-         8k4Vy5VXUguvefJJHOIPj6iJQuEL5AXsl0pPNe+JIGaKWa/OS4SIuzPoKdmhJgJUY+pB
-         PzbEfAdzvAf6FTRWLUHZM4Tlq6jeHBdvonohpG/RO07biKYo1fm84YJ8b2jMUABbREis
-         lWCg==
+        d=gmail.com; s=20230601; t=1744904928; x=1745509728; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ClRmIN+7tcZ09syy4bcP8WJEVYYf/AZpRlc74JwrGSQ=;
+        b=aAzE6QCMP/GKADwXGHt6g8QlQxalaeZaeYcNUwpOQt+hE1pcj88ShNwx+mO+YP8aw+
+         lv29Vz3IGbQecmZMHS0Em6k//Mfiq80i9cAMxv4AFdtJPz0ccJEIgbOtDSPrhF2OFvHk
+         2ikdPI0WZGWeX/sfVTcAzMl2raMkad93IEuCA/csuOHd33jLAKeGRQnl3wpsJwCACnqG
+         3MN1V/rbIfW7ldB8BFO4ON0wHEfYN35Xh71Q/BXKhnCElr2D7dNdT7+0s3dmwBvofpg8
+         UK9TbwW99s21tKQcX3rhx7kOtGlnQpqmXQ1LAOrlE2a+mbittz7WW8OMIt5pojLNdT3N
+         Fe7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744904906; x=1745509706;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=LbDTz1govFuJqW1HLjiNGtY4aJqmXA2tH78xltv4vpA=;
-        b=Gk3sKEMz2Qtiutb/aJU/9NSFiZmNq4lfcntGMF5+rPURtm3D+U7KGAF/ud3pKEkGAi
-         yrnIcTslQrjwugLB5B4TwmAYD7A81jNHf3ueB1yS00ypoEEuDmSHupCAAtLXIhnBVwwI
-         Yy8dUY1XJNrxj/+F3iSLo8M+Z9eRhD5gM4mTl/aYJfkd0ncl+PlytrJ1+3+Z/s6NBQRL
-         dUIYWeTnZAs7MZroi4FDCGZ03VI5n1i4Vwa9vxguJFD6fYwF184QqBJEUuABG879arHM
-         T5exC/52pePOhrXZNsM7HALydS/cqgmxMbUOAehZfwLKnu7TnfRT2DwRMfLmiCzDr2bV
-         pAxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVky93sbjFELukrR8nUhdOElygbOW3MAVhPwg554MM3RvRNfJDrMzihBqtOlw9ZSGpNBZr4x3qk1j3qkn8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5TqHPStFdfEVJVxbaMrqo5ovhPR64jsbq5r7Vrf/Kbx0M3ZRm
-	E86G91vGrGdRbf6buhxh1V6423LKeCGgpcCBjjhhVYUdOZX8AWilrRFaJDFhytQ=
-X-Gm-Gg: ASbGncsD/fn8RfAPShiScWNSKlCpYM36oC2hwKrg1wP0Z4BtG+nf83rme0k+5fGmYNQ
-	zfNxSVKSOK6HWQb4K3DO38k1/2HKJ4v4+lyJ57aEjF8VMbfvqkzbviz0iRwtWzOzCS2lEVL+1H7
-	HVrMj5OzbkvYUNcxAkDyXEEY4jWQc7mfpQPtGj89fTY/Xtmp2gMukyToNY4mpDbGsixP6ZSKURs
-	xe9fTAlT55FtJdQYYo2QkYiQezBiIwNJelfcvg2Fx2QJST6RuM/hTKghY08ucfQ7YzvmYu0PjSr
-	+2e1is74poG2TJfA+SpIPyWEY1cVIHZqCq3e5Kv5sYSbTYEy3sVKbR2GNm3+Aj/ZRYRn3LdMD9i
-	B8z6g00L1IgFAUEY=
-X-Google-Smtp-Source: AGHT+IESUQJ7NOxOmnwu3OdSTKOT8rUo3iZKc5XBtYlZsnAtS4EidAQdEv9hWGPKjw9Go7Hovic/9g==
-X-Received: by 2002:a05:6000:2408:b0:38f:4f60:e669 with SMTP id ffacd0b85a97d-39ee5b33b16mr4947410f8f.29.1744904906292;
-        Thu, 17 Apr 2025 08:48:26 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:a7f9:634b:42d:1546? ([2a01:e0a:3d9:2080:a7f9:634b:42d:1546])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae977513sm20404419f8f.42.2025.04.17.08.48.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Apr 2025 08:48:25 -0700 (PDT)
-Message-ID: <96737f4e-4a7b-41dc-97d7-9d4be13d5ff6@linaro.org>
-Date: Thu, 17 Apr 2025 17:48:25 +0200
+        d=1e100.net; s=20230601; t=1744904928; x=1745509728;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ClRmIN+7tcZ09syy4bcP8WJEVYYf/AZpRlc74JwrGSQ=;
+        b=MFVnfXOF8FZUbTV+P6iguGP8k6WtXwWe86pFSbvZdjyc30XRygI1cfqRFVKT2KmC7c
+         UU5e0MItqs9G2ZnveCNsbr3IdtWP+X+lYa/KVG+jANr8a/Pin9kYttBo+K95XH6FUWHw
+         7+8adKBAWFsL6ATlO6HAwPUlZdMCuOpb0TmPDd4yiE2dMKpDnqAQ341zk+fk8G0xSmGH
+         cN0VRvQSh+zJi3shjctqpFnD2rEBr40sTCJlY5sTioHqTW5wCXL6gsswXeo1jroZSHnK
+         igQPv1tzhlShJOxHvwTOAOPkD+EGBwg6HqglludXCi+do1qdX07d3haefYwXXOxxwIe0
+         AE4A==
+X-Forwarded-Encrypted: i=1; AJvYcCWctkgWYEiFB4PDdQYpEZisLgKHTGVcGJB2kVKJxrbciBOIYmjYJ8hWEwyaC1J8+XlViP5fyyn1@vger.kernel.org, AJvYcCXNlpYe+tSnWxwtrHJFngbZARA2+Mg/XeudCB3u1hpkFHiqqHhkLImmUW8u897rT7lY3GliXMXuB+41iEk=@vger.kernel.org, AJvYcCXzLQZA54cnUAJB3Ahi+7IYTtRYgi+JSo3G89G3k4ZtpHwvF5g/owIWVKATTl9n07fRuPRzx7x35K0WxQiPvIsRd0PB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/0xEPAkCtqTF4MG149LePH4WuIY1UAGEAyLUNRAMC4kvgw+Fz
+	0KfdnKmCY7acQpJBUp717++bLBG+28Dil+JvH2pl9iiPA1p8UipQ
+X-Gm-Gg: ASbGnctR+Btan2MsYJxm03W+xjmDXoqJ3spXHNSXlfh0LOlCEtthjenNxxunJJc0QWn
+	6MAhQQmIHuBVoBw3l6TJ9FAVkIYqx5K5QOeq78+6fRIee2lLhtCepOxA7n9k8ci0/rAQfMdgHES
+	zn32v578QO6e7+8SIGlrxz924dLJXwuW5aOoK6Qtv+b5JJVzv0p1WKiWlXJuhGhZy0ycsBTainR
+	7ak7JjdYAJtlWx/L55W2sbgi7yumhr02g1PEcqcYq7Q9HPWlhYw0kYLR/0ck/Q3nrfbqKoMCCqm
+	Kcy9fr48GJqNSiuAM4/XYTtGyJAcMdCOQ/t27CO3ued7iYfdgu3HHnIkQXSj4Y1HK49he3EIiWS
+	1vASJA4iyzPwHqft+pmiwqBOft6yTdFE=
+X-Google-Smtp-Source: AGHT+IE/aYtEG63OWyM3ZH1aDT8SuS8Yu39bABKue/8b/gskEjEF3y1AdYeFUZ4n7FVaw5313LSsbQ==
+X-Received: by 2002:a05:620a:1926:b0:7c5:a29e:3477 with SMTP id af79cd13be357-7c919084009mr1000641185a.53.1744904927677;
+        Thu, 17 Apr 2025 08:48:47 -0700 (PDT)
+Received: from localhost (141.139.145.34.bc.googleusercontent.com. [34.145.139.141])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c925b4eb32sm4099385a.77.2025.04.17.08.48.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 08:48:46 -0700 (PDT)
+Date: Thu, 17 Apr 2025 11:48:46 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Song Liu <songliubraving@meta.com>, 
+ Paolo Abeni <pabeni@redhat.com>
+Cc: Breno Leitao <leitao@debian.org>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ David Ahern <dsahern@kernel.org>, 
+ Eric Dumazet <edumazet@google.com>, 
+ "kuba@kernel.org" <kuba@kernel.org>, 
+ Simon Horman <horms@kernel.org>, 
+ "kuniyu@amazon.com" <kuniyu@amazon.com>, 
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, 
+ "yonghong.song@linux.dev" <yonghong.song@linux.dev>, 
+ "song@kernel.org" <song@kernel.org>, 
+ Kernel Team <kernel-team@meta.com>
+Message-ID: <680122de92908_166f4f2942a@willemb.c.googlers.com.notmuch>
+In-Reply-To: <4D934267-EE73-49DB-BEAF-7550945A38C9@fb.com>
+References: <20250416-udp_sendmsg-v1-1-1a886b8733c2@debian.org>
+ <67a977bc-a4b9-4c8b-bf2f-9e9e6bb0811e@redhat.com>
+ <aADnW6G4X2GScQIF@gmail.com>
+ <0f67e414-d39a-4b71-9c9e-7dc027cc4ac3@redhat.com>
+ <4D934267-EE73-49DB-BEAF-7550945A38C9@fb.com>
+Subject: Re: [PATCH net-next] udp: Add tracepoint for udp_sendmsg()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 5/7] drm/bridge: analogix_dp: inline
- analogix_dp_prepare_panel()
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Jessica Zhang <quic_jesszhan@quicinc.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250401-panel-return-void-v1-0-93e1be33dc8d@oss.qualcomm.com>
- <20250401-panel-return-void-v1-5-93e1be33dc8d@oss.qualcomm.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250401-panel-return-void-v1-5-93e1be33dc8d@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 01/04/2025 07:11, Dmitry Baryshkov wrote:
-> The analogix_dp_prepare_panel() is now only calling a corresponding
-> drm_panel function. Inline it to simplify the code.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
->   drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 43 +++++-----------------
->   1 file changed, 10 insertions(+), 33 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-> index 1ec4d277fe6bb03ad9eb8451ae2af5ad5ada0978..f60068011008482f7b7b2edfcab5fb1b3e9e130f 100644
-> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-> @@ -955,33 +955,6 @@ static int analogix_dp_disable_psr(struct analogix_dp_device *dp)
->   	return analogix_dp_send_psr_spd(dp, &psr_vsc, true);
->   }
->   
-> -/*
-> - * This function is a bit of a catch-all for panel preparation, hopefully
-> - * simplifying the logic of functions that need to prepare/unprepare the panel
-> - * below.
-> - *
-> - * If @prepare is true, this function will prepare the panel. Conversely, if it
-> - * is false, the panel will be unprepared.
-> - *
-> - * The function will disregard the current state
-> - * of the panel and either prepare/unprepare the panel based on @prepare.
-> - */
-> -static int analogix_dp_prepare_panel(struct analogix_dp_device *dp,
-> -				     bool prepare)
-> -{
-> -	int ret = 0;
-> -
-> -	if (!dp->plat_data->panel)
-> -		return 0;
-> -
-> -	if (prepare)
-> -		ret = drm_panel_prepare(dp->plat_data->panel);
-> -	else
-> -		ret = drm_panel_unprepare(dp->plat_data->panel);
-> -
-> -	return ret;
-> -}
-> -
->   static int analogix_dp_get_modes(struct drm_connector *connector)
->   {
->   	struct analogix_dp_device *dp = to_dp(connector);
-> @@ -1174,9 +1147,11 @@ static void analogix_dp_bridge_atomic_pre_enable(struct drm_bridge *bridge,
->   	if (old_crtc_state && old_crtc_state->self_refresh_active)
->   		return;
->   
-> -	ret = analogix_dp_prepare_panel(dp, true);
-> -	if (ret)
-> -		DRM_ERROR("failed to setup the panel ret = %d\n", ret);
-> +	if (dp->plat_data->panel) {
-> +		ret = drm_panel_prepare(dp->plat_data->panel);
-> +		if (ret)
-> +			DRM_ERROR("failed to prepare the panel ret = %d\n", ret);
-> +	}
->   }
->   
->   static int analogix_dp_set_bridge(struct analogix_dp_device *dp)
-> @@ -1274,9 +1249,11 @@ static void analogix_dp_bridge_disable(struct drm_bridge *bridge)
->   
->   	pm_runtime_put_sync(dp->dev);
->   
-> -	ret = analogix_dp_prepare_panel(dp, false);
-> -	if (ret)
-> -		DRM_ERROR("failed to setup the panel ret = %d\n", ret);
-> +	if (dp->plat_data->panel) {
-> +		ret = drm_panel_unprepare(dp->plat_data->panel);
-> +		if (ret)
-> +			DRM_ERROR("failed to unprepare the panel ret = %d\n", ret);
-> +	}
->   
->   	dp->fast_train_enable = false;
->   	dp->psr_supported = false;
-> 
+Song Liu wrote:
+> Hi Paolo, =
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+> =
+
+> > On Apr 17, 2025, at 6:17=E2=80=AFAM, Paolo Abeni <pabeni@redhat.com> =
+wrote:
+> > =
+
+> > On 4/17/25 1:34 PM, Breno Leitao wrote:
+> >> On Thu, Apr 17, 2025 at 08:57:24AM +0200, Paolo Abeni wrote:
+> >>> On 4/16/25 9:23 PM, Breno Leitao wrote:
+> >>>> Add a lightweight tracepoint to monitor UDP send message operation=
+s,
+> >>>> similar to the recently introduced tcp_sendmsg_locked() trace even=
+t in
+> >>>> commit 0f08335ade712 ("trace: tcp: Add tracepoint for
+> >>>> tcp_sendmsg_locked()")
+> >>> =
+
+> >>> Why is it needed? what would add on top of a plain perf probe, whic=
+h
+> >>> will be always available for such function with such argument, as t=
+he
+> >>> function can't be inlined?
+> >> =
+
+> >> Why this function can't be inlined?
+> > =
+
+> > Because the kernel need to be able find a pointer to it:
+> > =
+
+> > .sendmsg =3D udp_sendmsg,
+> > =
+
+> > I'll be really curious to learn how the compiler could inline that.
+> =
+
+> It is true that functions that are only used via function pointers
+> will not be inlined by compilers (at least for those we have tested).
+> For this reason, we do not worry about functions in various
+> tcp_congestion_ops. However, udp_sendmsg is also called directly
+> by udpv6_sendmsg, so it can still get inlined by LTO. =
+
+> =
+
+> Thanks,
+> Song
+> =
+
+
+I would think that hitting this tracepoint for ipv6_addr_v4mapped
+addresses is unintentional and surprising, as those would already
+hit udpv6_sendmsg.
+
+On which note, any IPv4 change to UDP needs an equivalent IPv6 one.
