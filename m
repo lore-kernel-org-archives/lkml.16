@@ -1,181 +1,135 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E625C35948
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 20:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B9F1E7C3B
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 20:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744922882; cv=none; b=SrTfbZnerwbBKff6t5u4LiHobmTqqnKt8wEmar/FbpwCK4KOtHlccilypJ/zloVSFuMNO9UvKxszuPNXBXBbhbj8w5NO4PZXvLuR9S0ZJ0tWCJPpG2knRmrBZyB1WZ/2EzBeuu2Tz294oQjWafENTqCkNHV+o4qTjYOCfp50xMk=
+	t=1744922933; cv=none; b=kWgUxop3B/n1iK+CF9ipMCGZnLShdFR15njaknEj8qhI4cPAe/9uX2Eb6tahPgy0GQ28MuFfKz1wKLX+0HJkvFA6b5Agvm4Nx/cvQMza3GfoEyyWgy0SD7Ov+jjKiyj5OpMapZm78m2GGNYQbg3j6FZXTkQ3LL0Wh6ve8VAom+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744922882; c=relaxed/simple;
-	bh=N0OtCQ/wmluZjDQF0XCwJk0ra5ZW+8e9DBlEWE49myg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Wo774uwUaosy0EVmADOK6TmtRuHc1FW0CRTqHpNH2mfNbM8ImNkWUbn4qKLTM0ae4v0z4FRYpt+uxxngkoDpBH8oImWHXF/0Fqzbf7IaqXqjJYFN/oHPA5Fl46Nk2aq8Cqg1A20U59MWIVs2t0NdUpRj3aKqEFRFJJmSnR72z/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=neHC3YGH; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744922933; c=relaxed/simple;
+	bh=SE6VYeO161Lchp9XqCW7wK4j3SfrihWV7uyQWpBrpwk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ck/SinQkv4GU3fG2KCh0H0rkwmWGj/olTmdHQQlz03iKu/mcfqa50qncOAPz8lPLUguigQAkzjcRHeVDpXp26kIfCdCrSczHOTZFTaoeIyjr1nDWXTazh1D4k+7drzKYM7mdKzVc+7v5auFPh42YwjOPe7YGTdkm4xSH0n1POro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Pkg1uAzM; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="neHC3YGH"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso1275154b3a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 13:48:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Pkg1uAzM"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3f9832f798aso731832b6e.2
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 13:48:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744922880; x=1745527680; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DsyUznqqCfi4i2SQdmivlu5NHQdFlcXIhsGSIh7PHa8=;
-        b=neHC3YGH+73QRycp9ngWRMS/8/U1wzf7ZgmGh9RN0GraD2L/SxStYEEHSGaO6isF0a
-         B+S3vE+n/wPffzlxk4/3RlhvqE5fBiBb9TMnnLF10pRVQRT7m8Q2gxUCBj/pETzsyy/b
-         zs7dY36IIT37yH+CFGnQjUx+n4+HgKpHmT7AomOztPRWhVgyl2mVqLDPUvrI4egrNNfA
-         8fzBGfIF9QMdJVZ8NLyIrzYJXyMQut0wpJsUkt1DpL7MxA6MohPD2elMvOnM3zJiqCDm
-         7GPoDieghZfL/D0D76mD8syadPQ20OtQCaC8GtcIWKrRZu2y8yof4kx4PZj0h9OW/cgX
-         IKtA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744922928; x=1745527728; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AkhkFAogJf6rcZdrKyxj+n2pOOqU53PozCIK3xijJrY=;
+        b=Pkg1uAzMvJIiRigpxIR5+/iH0jxoJHiCRKnxVlTNrsLTR3l/cnNbSm3dVLv3Jl9GoX
+         4rx3/ExsooVw0ep2BgKNVScaeywkg/i0moalZFcFpQf6ZkMYVLnJjn5xKHiPPP0sQBV9
+         vtehn65imb0MwkxzVlG86BVhTRhJrDFTwVxS9bZ8T6/rmKcAzVgIP7FcHK8JGWE8J5g+
+         bgNbqgh8PHsgO/FKK83srAGoBKvVD+E3G5CbbFtUdJ6MsIB0G37EDlPbgrAhkWUBdWd3
+         ZymCn1dneBSYG//dBzeWQekmv7+p+dKFdy8lOWN7Yf/6PkEO9J0eC6w5OZZqV2FUXkrM
+         4hJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744922880; x=1745527680;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DsyUznqqCfi4i2SQdmivlu5NHQdFlcXIhsGSIh7PHa8=;
-        b=aVw62JsVFpgrLOr2IZIfofQrJkZV7s2k3GiM0MAdXVEZ0csZ6ts04TxRB4avPfpJYl
-         JSN3XnC/nwLymAYsusdwyt7lR8V618C+bDC+AG1skvux/m/Of1RH/WZykhTOH+hocRhM
-         pZrCrrhqMgJcrBHxax8X1SJn7xYiPHlM2sVlsfg9StQyy34WSn12awPH56lEpdcWiuKN
-         xq6cvU6ioLRDa6hKvX2zpEA+U4mz0j4Uj9OjFadbNvW47b3G03OkmVsCB9StwY3UxK2U
-         i/GiAvb5wRfd/thi0r9ipsq6fF+kfYtJlcnr3f/VmPfmycNzU4uyij6SRUhoSwaXRxZE
-         J2Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCVbWW2RRHRhNWsd1Epz9LqwN8AY+z+sPBjxQ2vbQ9Uk2vYwhGKjWQSsy6hU6oKMVpcbg4MS6fgxzsREu8s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGnLnJBPFAYTUy44UEGJgRTYxjU28/xIRWT9fGxpdnb4rWlta/
-	F6UkN2qCJAUoScUgfBwCWPbEfMsGkgZt+FP/+zUAH/83WK51pbG88iGzrsIX/izm5gGkOtTvucT
-	Yvg/HAVheg8Dly+0O+huSvjOh+Fs=
-X-Gm-Gg: ASbGncvLxa0A5COYcDilSVIKKMBMDhSImtQDzn1ZAWuX+5ZBDCX+PebUcr82RHNsgBw
-	Lx7VCK4LtKLzAOi4ZsfIRjKy8vIqKmjSSp3pIkNlP7Vvp0kMQFEk70Hh70JM06MdfHqeTQLX/jL
-	OWhW3uhaHRrX/Aw96LdFX3ot/Y+j+t8d975NwZdw==
-X-Google-Smtp-Source: AGHT+IGkf09SLgRPWC20TV11LMw4EqhtPcAEX96o2A9jKGoNu1a05Gc9kqv8Ppmu44QBbwoG/+CIiEwBFzlP40dlJN4=
-X-Received: by 2002:a05:6a00:ac0b:b0:736:a82a:58ad with SMTP id
- d2e1a72fcca58-73dc156a999mr310377b3a.15.1744922880183; Thu, 17 Apr 2025
- 13:48:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744922928; x=1745527728;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AkhkFAogJf6rcZdrKyxj+n2pOOqU53PozCIK3xijJrY=;
+        b=LdoxXBMQ0NSowLQZOcDZQEOe3HH867wIYT9IEUrIwDxfJE9QvK5ZcuzW6tsb4FjgDz
+         TxgnfDO6GPD5qTf9u/vieeJpVAEpZ3qFqKIG3z4TVVMdebrADo/1/gx2WaQSOECNqulZ
+         P1CTtC9IVIMWlI1uqjM8Pt8aav4h9obdcCOBwBSJjTGSZHfbUyXgnJVNI0H0Sn41Mgfp
+         H5C5Pp3j+sDlEiNpx+bULP0rxbxpiu9O2ziIWi86UbZ2VtKFlm7/rugoPhRm1irm4waT
+         Ku4oYFgh9J/8Rt1tgOxaW60bun0WzVdEZEw5WW57NhjJzZ6FsjVxGb+gM4mdkqhHhTAO
+         8mWA==
+X-Forwarded-Encrypted: i=1; AJvYcCXW3SDz+91BIFFOFpSEk78ewdjLse/greBiXStkl2nktmooNjlOQSQUQmvHuNODGeb6b3LN6LwS4krTiiM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwV0sIgYWHS9SeVrxgJyyDtNaHVIJ9F+gDnUN7cm9ZajZ3p4Ax+
+	ifvm5ElDESay/IpKwbccr6r1ZVp7Pc9Q+GJJGuCSNJY5qEdZTHXEU9Ji6vBuv4Y=
+X-Gm-Gg: ASbGnct9rbF/43XK5acBU3FQk+hSnAKeBWEYo41IhsIFCn5XPsqTwCPEL8XaKCKwlis
+	Bw45+F8mUfbPzMbapCsWpB+zaInAmYZSaWGLTEPbkHPmunGJrFBJ4z2xMNLPoaW3SF2EkUBeqew
+	1G0J938SGIuRPTopqNjKAv/s6fYqJkfGOSLXr/eVXDf7Tel8k4avXFYetGFfCmcEMtanJmumoL1
+	wDsNhGt4SF4jdXY+gux+6x/EV49WYP7YWhvXXkYrY3AZ/GITh3xPpY0Rp2x/Nu6Rkt+pyh33vwK
+	bd4wuseCEl+Su3qCpoEIcG7peE53S8IbYHdmAn+DDTpHed6cjKYR1iGmb/8xcSqEKjp7tAfspuS
+	7b1b3r3XNz2JPOwTegg==
+X-Google-Smtp-Source: AGHT+IF7ZjPtLD+LrakaPKE8P6Ie7Z9AHBDyOGjvviQeXkjr+Jv27cdNwkf/cTlSFR3UJfutg615hw==
+X-Received: by 2002:a05:6808:4a84:b0:401:2e2d:cb54 with SMTP id 5614622812f47-401c0c3f94bmr111311b6e.29.1744922928611;
+        Thu, 17 Apr 2025 13:48:48 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:c91b:eea3:7afd:2dee? ([2600:8803:e7e4:1d00:c91b:eea3:7afd:2dee])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d52135b8b4sm115918fac.17.2025.04.17.13.48.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Apr 2025 13:48:47 -0700 (PDT)
+Message-ID: <651b1f91-fd5e-4d59-b78b-fdd7f89247e4@baylibre.com>
+Date: Thu, 17 Apr 2025 15:48:44 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417152808.722409-1-mykyta.yatsenko5@gmail.com> <CAEf4BzbVPQ=BjWztmEwBPRKHUwNfKBkS3kce-Rzka6zvbQeVpg@mail.gmail.com>
-In-Reply-To: <CAEf4BzbVPQ=BjWztmEwBPRKHUwNfKBkS3kce-Rzka6zvbQeVpg@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 17 Apr 2025 13:47:48 -0700
-X-Gm-Features: ATxdqUEfmguRvvXaFJojHSceTsB5sS3hyibIXzxDMwO9_tjc8wqpOgu1m_hMy4Y
-Message-ID: <CAEf4BzY7a2LadR58yaNAEjoXTFZuAEHzC=gDwv7-8D9y5BsRag@mail.gmail.com>
-Subject: Re: [PATCH mm] maccess: fix strncpy_from_user_nofault empty string handling
-To: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>, rostedt@goodmis.org
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, mhiramat@kernel.org, 
-	andrii@kernel.org, kernel-team@meta.com, linux-kernel@vger.kernel.org, 
-	Mykyta Yatsenko <yatsenko@meta.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/8] iio: imu: adis16550: align buffers for timestamp
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Andy Shevchenko <andy@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Cosmin Tanislav <cosmin.tanislav@analog.com>,
+ Tomasz Duszynski <tduszyns@gmail.com>,
+ Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>,
+ Andreas Klinger <ak@it-klinger.de>, Petre Rodan
+ <petre.rodan@subdimension.ro>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
+ <20250417-iio-more-timestamp-alignment-v1-6-eafac1e22318@baylibre.com>
+ <aAEzeY_p6a8Pr-zn@smile.fi.intel.com>
+ <f4db1a95-106f-4fa4-9318-3ee172e29cdb@baylibre.com>
+ <20250417184429.00002403@huawei.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250417184429.00002403@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 17, 2025 at 1:44=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Thu, Apr 17, 2025 at 8:28=E2=80=AFAM Mykyta Yatsenko
-> <mykyta.yatsenko5@gmail.com> wrote:
-> >
-> > From: Mykyta Yatsenko <yatsenko@meta.com>
-> >
-> > strncpy_from_user_nofault should return the length of the copied string
-> > including the trailing NUL, but if the argument unsafe_addr points to
-> > an empty string ({'\0'}), the return value is 0.
-> >
-> > This happens as strncpy_from_user copies terminal symbol into dst
-> > and returns 0 (as expected), but strncpy_from_user_nofault does not
-> > modify ret as it is not equal to count and not greater than 0, so 0 is
-> > returned, which contradicts the contract.
-> >
-> > Signed-off-by: Mykyta Yatsenko <yatsenko@meta.com>
-> > ---
-> >  kernel/trace/trace_events_filter.c | 10 ++++++++--
-> >  mm/maccess.c                       |  2 +-
-> >  2 files changed, 9 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_ev=
-ents_filter.c
-> > index 0993dfc1c5c1..86b7e5a4e235 100644
-> > --- a/kernel/trace/trace_events_filter.c
-> > +++ b/kernel/trace/trace_events_filter.c
-> > @@ -800,6 +800,7 @@ static __always_inline char *test_string(char *str)
-> >  {
-> >         struct ustring_buffer *ubuf;
-> >         char *kstr;
-> > +       int cnt;
-> >
-> >         if (!ustring_per_cpu)
-> >                 return NULL;
-> > @@ -808,7 +809,9 @@ static __always_inline char *test_string(char *str)
-> >         kstr =3D ubuf->buffer;
-> >
-> >         /* For safety, do not trust the string pointer */
-> > -       if (!strncpy_from_kernel_nofault(kstr, str, USTRING_BUF_SIZE))
-> > +       cnt =3D strncpy_from_kernel_nofault(kstr, str, USTRING_BUF_SIZE=
-);
-> > +       /* Return null if empty string or error */
-> > +       if (cnt <=3D 1)
-> >                 return NULL;
->
-> I wouldn't touch this part and leave it up to Steven to fix (if he
-> agrees it needs fixing). Current logic seems wrong already, as it
-> won't correctly handle -EFAULT. And, on the other hand, there is
-> nothing wrong or special about empty string, so I don't think it needs
-> special handling. Let's drop these changes in trace_events_filter.c?
+On 4/17/25 12:44 PM, Jonathan Cameron wrote:
+> On Thu, 17 Apr 2025 12:07:37 -0500
+> David Lechner <dlechner@baylibre.com> wrote:
+> 
+>> On 4/17/25 11:59 AM, Andy Shevchenko wrote:
+>>> On Thu, Apr 17, 2025 at 11:52:38AM -0500, David Lechner wrote:  
+>>>> Align the buffers used with iio_push_to_buffers_with_timestamp() to
+>>>> ensure the s64 timestamp is aligned to 8 bytes.
+>>>>
+>>>>  drivers/iio/accel/bmc150-accel.h | 2 +-
+>>>>  drivers/iio/imu/adis16550.c      | 2 +-  
+>>>
+>>> Looks like a stray squash of the two independent commits.  
+>>
+>> Oops, sure enough.
+>>
+>>>
+>>> ...
+>>>   
+>>>>  	struct bmc150_accel_trigger triggers[BMC150_ACCEL_TRIGGERS];
+>>>>  	struct mutex mutex;
+>>>>  	u8 fifo_mode, watermark;
+>>>> -	s16 buffer[8];
+>>>> +	s16 buffer[8] __aligned(8);  
+>>>
+>>> As for the code, would it be possible to convert to actually use a sturcture
+>>> rather than an array?  
+>>
+>> I do personally prefer the struct pattern, but there are very many other drivers
+>> using this buffer pattern that I was not tempted to try to start converting them.
+> 
+> For drivers like this one where there is no room for the timestamp
+> to sit earlier for minimal channels I think it is worth that conversion
+> if we are touching them anyway. 
+> 
+> Jonathan
+> 
+There is actually a lot more wrong in this driver, so will save that for a
+separate series.
 
-Actually, you are not even touching strncpy_from_kernel_nofault(), so
-yeah, definitely let's not do this (at least not in this patch).
-
->
-> >         return kstr;
-> >  }
-> > @@ -818,6 +821,7 @@ static __always_inline char *test_ustring(char *str=
-)
-> >         struct ustring_buffer *ubuf;
-> >         char __user *ustr;
-> >         char *kstr;
-> > +       int cnt;
-> >
-> >         if (!ustring_per_cpu)
-> >                 return NULL;
-> > @@ -827,7 +831,9 @@ static __always_inline char *test_ustring(char *str=
-)
-> >
-> >         /* user space address? */
-> >         ustr =3D (char __user *)str;
-> > -       if (!strncpy_from_user_nofault(kstr, ustr, USTRING_BUF_SIZE))
-> > +       cnt =3D strncpy_from_user_nofault(kstr, ustr, USTRING_BUF_SIZE)=
-;
-> > +       /* Return null if empty string or error */
-> > +       if (cnt <=3D 1)
-> >                 return NULL;
->
-> ditto
->
-> >
-> >         return kstr;
-> > diff --git a/mm/maccess.c b/mm/maccess.c
-> > index 8f0906180a94..831b4dd7296c 100644
-> > --- a/mm/maccess.c
-> > +++ b/mm/maccess.c
-> > @@ -196,7 +196,7 @@ long strncpy_from_user_nofault(char *dst, const voi=
-d __user *unsafe_addr,
-> >         if (ret >=3D count) {
-> >                 ret =3D count;
-> >                 dst[ret - 1] =3D '\0';
-> > -       } else if (ret > 0) {
-> > +       } else if (ret >=3D 0) {
-> >                 ret++;
-> >         }
-> >
->
-> This part looks good and does indeed fix the issue. Good catch!
->
-> Reviewed-by: Andrii Nakryiko <andrii@kernel.org>
->
-> > --
-> > 2.49.0
-> >
