@@ -1,90 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8E6204F8B
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 20:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CC835948
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 20:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744922955; cv=none; b=TYYth7T8yS77t90ykiU5+i+oYfiR+YcLHgkba03dB9Ldd52oFx86jJKTqiDHOB4vuMqGpl5U90UwgF1FK7MokFm8K1lAu/Tjo62V2hafmPGdI2bb9GTfTyO4aEDIb775sYCpwSV1waWB1Wz6VENmD8rRapxtgzn2x331QQdl6nE=
+	t=1744923204; cv=none; b=mw2/+LPqijqzNDqhV+cJjUJraNcAuOQ44jNLR+MXrVTYQMPbRIWlydXk9TP99tthtxHR8wrtRNkUH6COmisgFLmPaRJHwfFxDKNciqb5bqVkfAmz1UozxVzWAjgTODLC8YKpezhSv219sZJsQdv/Itk5qrGFBHz1+iGgTcLs+38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744922955; c=relaxed/simple;
-	bh=DWS07BFjRraNsuTItPweGdB3f9Vke3kxJW4VRMjVaLM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=uWOwia1OwM8HPXqEa7ubbdu9/Sc/gKjewJaXii3qinCQ0gACLWH+Qe+JzVmy74rYolXtrjR2G2bSyi2PAuvtaCZriC/M+exCQoqjXw2tqnMNS9hJfXIZkUMDuHBHMwjgl447o+gmoSDRGqbh4hLCHuN25D3okdpyDCyGRCu1SIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xnr+RMR1; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744923204; c=relaxed/simple;
+	bh=dU4K8w2iZUqK1qEwcjzFKZf95JgMH503fYGue1h04/U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ufROpsaZLX4aWa5Ly07DbcXNCZ02QIyn6UUBD85q6+k5VdkZVsdY1QN96MtkcxQ28aEfxpkGYoA5BH/OsoM3UID9Zm8ciQom5ZAds2tP9k0pj21n9mTUgU9Ry7GbRnW9w6Yllk4x3BM5WmhQ2VQJrMrZdBXkz/APLVN8D34wvp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ATBPhGaE; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xnr+RMR1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744922953; x=1776458953;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=DWS07BFjRraNsuTItPweGdB3f9Vke3kxJW4VRMjVaLM=;
-  b=Xnr+RMR1IiOdl9GE2c7E/uVHxKmQysWYvMy+6jmnWyQpCDCnUedDQALy
-   6ZsOs7/y5xn59eQl9jUQSEjah0PbCg4CTaQXSCXu4/6JGARFNT+9/+aC/
-   twyz67Z/JF0lOriFKWrBVo7HJYFCIA+Qs1jypmxOCmWBDXLpI9HXN3w7m
-   KxBFxekisM5NCwdDgVkjIPunpnoyxgvebxCDwQje8xocJV4cjXA5nvDTg
-   lZ+XAIZqKGj+AUHnUBB1wNN78upOKtdxxD1HHWMhhlRtQz7Ik0ZdNLTyp
-   iIGE7WQdcX/qyqr2yInfup/akPg0ExQK/zIput1FsTqV5IBaLomUgRaw5
-   A==;
-X-CSE-ConnectionGUID: dCfS5WdHR2iNP67/xUOrkQ==
-X-CSE-MsgGUID: nY9E+sYFSwq4IyoSSRNi6w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="57530201"
-X-IronPort-AV: E=Sophos;i="6.15,220,1739865600"; 
-   d="scan'208";a="57530201"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 13:49:12 -0700
-X-CSE-ConnectionGUID: xJciFMqlQ/WcBnIzUhhR5w==
-X-CSE-MsgGUID: Vc2zxfXJR1SCxYWyU3pREQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,220,1739865600"; 
-   d="scan'208";a="130772880"
-Received: from lkp-server01.sh.intel.com (HELO 61e10e65ea0f) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 17 Apr 2025 13:49:10 -0700
-Received: from kbuild by 61e10e65ea0f with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u5WAV-00021t-2t;
-	Thu, 17 Apr 2025 20:49:07 +0000
-Date: Fri, 18 Apr 2025 04:48:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>
-Subject: kismet: WARNING: unmet direct dependencies detected for
- DRM_DISPLAY_DSC_HELPER when selected by DRM_PANEL_SAMSUNG_S6E3HA8
-Message-ID: <202504180453.imViKVk7-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ATBPhGaE"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4394a823036so4098685e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 13:53:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744923200; x=1745528000; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xDbB859dSDSfvEjPhjet4jsYsLjTq5f/3IKKPbQbhjc=;
+        b=ATBPhGaE921YD+OxmrFJAIF5q1jNXPA8c9QQKqWjM8UOprf7i31rmipI1ohg64JvSL
+         XfACDbNayyuzU+bKe0YDOjMbSTch7sMf9bK1pS5vdpcRUfT0bD5F0hoZXvi8qpfY4FNp
+         7YjE0Se4qINVirmd0RPalDjWOQHDA6k1ZrxrNCHsr/SGWMINDiaVJTBW8XrA7Hk3l5zZ
+         3yrc0k0FIvKuGx3DOYffGqu1FBu+Bk1dHvAgfnH7g6yH28SKJ7Cv5SpLKte1Pm6hqPqd
+         VuJsyL6FVVwQQOGIsr29MrvrAwa8paM7xZHJswJpapmOIjcU25Sjd75vRzxIGRPeh1Fj
+         /4pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744923200; x=1745528000;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xDbB859dSDSfvEjPhjet4jsYsLjTq5f/3IKKPbQbhjc=;
+        b=v1UNY/Vq0HiPKu+OzWFuKScsQ1CGCjWh1QcKBp2hgpO8fR8sRGRjZpxHK08c8dNUUb
+         mEDlQuRT7GQmyP5tc4yd3zMZQiNdiMlAUDFWBA+XE90JeSpXxSWy98FZVbJm7o0YhdTm
+         9i9PPAXhOWRQIh/PXLBFsEkiX4pneIm3vuXH8Hqsf1Kk2e0qi5pvze6G5ZvMHtbSLV8i
+         5QhbC575T8t2Bqzhnf0A4dT023PHFBUQDIpU0S5DhG5pS47u1M5vulCenf9mj0nHPApv
+         rqlbMLiPrxcVcUw1qlCBbZYyA8gZCzFQ5eksf4ug/tC+V6kDU10Rtk1Ne5sK44mQMsSW
+         AAng==
+X-Forwarded-Encrypted: i=1; AJvYcCXBqHrDz1utoB7kvctRvQUhURy0YN1qMSml8sm5tGiSqGQ3TbcpLojSTvoVlMiQ5pc75St/Obm+vLIulms=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUK5J6r9k24uk2dUR6RBsSmE7A4WJN0UQrEbYfjxpCPDFNrCQu
+	3kr9y3Yb/OaBDcXrrvcs2GV2n0xsgwyCuALgE/fKR9cT3xEFD9qmcgfRIDFJ5Zo=
+X-Gm-Gg: ASbGncte3TIm5BuuB5KoJsdwhLK8Ba4mTD5zksUMdmZzHWSTA/LxHoEfrhpxbtXIHVB
+	TocHBeJ2XpJIURHA2MSBr5a1rn7QO+ntm6skqg3CynmqHbPFQ1rqt+eJeDcwykAtcCxSke+3Dtj
+	2ePH28x8xVJzt0b/FA4S20+hFdPTATUQNKMl4cm7Op4Bk3nms7JkjsZl+1VVuXO6yNVDwuDVl06
+	dhsJt5W90cgr0n063905j7OozwdLQ3tpZa5y0ZcS7cj1DEbLOGc7foYLNqnJHyfq1mAa6g8bTNn
+	5AmwC0qwRJEw8CoO5byitRid8rsoNSyZinpp5RIJogS2uo77zm13FvA1Hz9eY403kAbke/sNLHg
+	maT8=
+X-Google-Smtp-Source: AGHT+IE/Yp64SirhNGNelGiWpri0X2Q09E00vtNFhQsoUcfIVJFu1JQsSDwG5YgCWmsxIzILvvYqcA==
+X-Received: by 2002:a05:600c:b94:b0:43d:fa59:af98 with SMTP id 5b1f17b1804b1-4406ac65474mr2651105e9.33.1744923200468;
+        Thu, 17 Apr 2025 13:53:20 -0700 (PDT)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406abb640bsm3339605e9.2.2025.04.17.13.53.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 13:53:19 -0700 (PDT)
+Date: Thu, 17 Apr 2025 22:53:18 +0200
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] thermal: hisi: Do not enable by default during compile
+ testing
+Message-ID: <aAFqPuFBfGEKFb-D@mai.linaro.org>
+References: <20250417074638.81329-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250417074638.81329-1-krzysztof.kozlowski@linaro.org>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   b5c6891b2c5b54bf58069966296917da46cda6f2
-commit: fd3b2c5f40a1e028bc813284260d430257444334 drm/panel: s6e3ha8: select CONFIG_DRM_DISPLAY_DSC_HELPER
-date:   6 months ago
-config: sparc64-kismet-CONFIG_DRM_DISPLAY_DSC_HELPER-CONFIG_DRM_PANEL_SAMSUNG_S6E3HA8-0-0 (https://download.01.org/0day-ci/archive/20250418/202504180453.imViKVk7-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250418/202504180453.imViKVk7-lkp@intel.com/reproduce)
+On Thu, Apr 17, 2025 at 09:46:37AM +0200, Krzysztof Kozlowski wrote:
+> Enabling the compile test should not cause automatic enabling of all
+> drivers, but only allow to choose to compile them.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> ---
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504180453.imViKVk7-lkp@intel.com/
+Applied, thanks
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for DRM_DISPLAY_DSC_HELPER when selected by DRM_PANEL_SAMSUNG_S6E3HA8
-   WARNING: unmet direct dependencies detected for DRM_DISPLAY_DSC_HELPER
-     Depends on [n]: HAS_IOMEM [=y] && DRM [=y] && DRM_DISPLAY_HELPER [=n]
-     Selected by [y]:
-     - DRM_PANEL_SAMSUNG_S6E3HA8 [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_PANEL [=y] && OF [=y] && DRM_MIPI_DSI [=y] && BACKLIGHT_CLASS_DEVICE [=y]
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
