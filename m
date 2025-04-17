@@ -1,116 +1,185 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88355145B24;
-	Thu, 17 Apr 2025 13:25:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272412459C2
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 13:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744896337; cv=none; b=n4A3Nsm06U1R/nSHaIIAmRsHRev8jMGtv8dhabfFUm+I+5gkkrITkaEWUV4SQ/4Fz5JE/6S5XRPtzSjsFao9Q6UBTcffirrmdFz3uKAR6EJ22gsCyLmDjkTxlCB9+wB7iQbZEsRDlxqRcfCPLDvw5lClE7yzhM/7UnTsFYE87gs=
+	t=1744896338; cv=none; b=nKrSJVVx0hkAQTd02TyIWT2wrnlZkJmltQP4xG1kVGTndxmf0mSQh3mknzS9R+BBDVHbM9xg2NLeCFrV0Me7C17E2BHgxByeov5N8LRT5h3fJy0MJbf1eoyCsfjkUa/0z8XP671+iTRWwvI56SdLRBZ5ieQIxAWfYV5Z/vGcVbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744896337; c=relaxed/simple;
-	bh=q4NaoZ7xo8oEWEmB7VZfKkCNv6lU6m3qRhv6S7Jtzek=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i7F7f6pVKb9dBePZkj80HCkXJXPhnfQzIXRJhSsF96EbiJ5JHDM2sc2TKoOOAuQtOtLYNfL32ZpvBYLO+nXaZQ2LXCCjcX/dGn0e3oYoHl3/TTEqgSRdooC3r6ByKlFB97W8OSKHY3QsMahCiWO9/qb0IuCSY7Q3mjYnnVSvEPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=atM9hhj5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=apbQAm/f; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744896338; c=relaxed/simple;
+	bh=yO/X2Lc+Vc+y6EqE1GD2spaSU9G2Rtby76SZq5hc96M=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=hHYSzpgparwC4rv8XvOaFSkDfGNYOayrYXTe3GJX3mGthtcAPdb8jXsvN2a7nHr9Kxs2P0N+cuLMWzD9GsNIufL9WZmrJAkkSZF5g87+jiscwPlmLM2bCPcJcmEB8TD5l0yiKCQUO/I5eEcsxWxm54RS4ettGXz5pOgg1elPT1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X6lFVZLC; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="atM9hhj5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="apbQAm/f"
-Date: Thu, 17 Apr 2025 15:25:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744896333;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Dr5wU54Em1g7dKQEZ9qB5ewpkVtvVqUjyzBHzxBb3tg=;
-	b=atM9hhj5lPTJyR/eGBDgoSMwq2J595tlcLd5d59/iJGNDj4f0+4i3LB6cTsb8MQUESpKyj
-	xVEK56OAPKXLYcwvEGmb4r+y+3NemSIgGX6IUoekkl1x3yBLab7u3uJkDcxO4+mynmLxIy
-	jcjusRa2pFMeWYeiy9aeM8l7wjIwdBfi1DVGEjYGTspjtYNtaXYZ6Ka9TPgNWpWn8o25ys
-	cSfIiqWgp19CiMplq6DiYoma7bKEtYIJu5rg2+ZrmC0p2x9FeZy7hXVM6KwNsrHcVDQh9W
-	mLA31UlKU6mZr+YgWKU/elODr9bw6Fua7yF5ingCYbcQP1wKniPKGwXaHtajvg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744896333;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Dr5wU54Em1g7dKQEZ9qB5ewpkVtvVqUjyzBHzxBb3tg=;
-	b=apbQAm/fv5JshfD7bvoxqlQ1OxRVIYnQD2RXMNAjoT+FfwnFDtjbpU+02tQJcP5CrQIfCG
-	sXABnWYuO3OykuBQ==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v3 1/8] ref_tracker: don't use %pK in pr_ostream() output
-Message-ID: <20250417152453-5cb4e42b-ec66-4150-a8f8-4ec7b4e06cc0@linutronix.de>
-References: <20250417-reftrack-dbgfs-v3-0-c3159428c8fb@kernel.org>
- <20250417-reftrack-dbgfs-v3-1-c3159428c8fb@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X6lFVZLC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744896337; x=1776432337;
+  h=date:from:to:cc:subject:message-id;
+  bh=yO/X2Lc+Vc+y6EqE1GD2spaSU9G2Rtby76SZq5hc96M=;
+  b=X6lFVZLCrPwit0AUjxo+A//qWaO1TLIfZ8Eqgqu2BFoFEmnUVqMr5yO7
+   rEiW3FYwZ26X2xmxrkSEDRjTaKY38fQ/r4FENnLcykWslnVCzqQgotjng
+   STC5ZpX32LCO3BjUu+dz2h737XwYlkTv1329KSBGauaNhn1fJ0/0XHyrg
+   CvobwNNiojZ9cVprYSJnIg8iK6+qUaCbfwDs9aNkMNYKYp8aaItINGjGO
+   XNrTltDSD1ygrs0kiKoW6eIZWjuVKVBa35IZzmvUbc4E0zuSjsYfSN4dZ
+   D6i/64VHYhS1qHXKl49s7Y/M1Ts2I2UwF2vDsbLq96z/Bm8aUuk5o3+c5
+   Q==;
+X-CSE-ConnectionGUID: cE+f+nmSTweppia+yp/9Gg==
+X-CSE-MsgGUID: SogsETIuRiWXUWFjqtgimQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="68974395"
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="68974395"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 06:25:31 -0700
+X-CSE-ConnectionGUID: obA4W5sfReqBIzepQaHiVw==
+X-CSE-MsgGUID: JWa6Mqy3QnedP5n0jlGfbw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="135658125"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 17 Apr 2025 06:25:30 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u5PFA-000MrY-0j;
+	Thu, 17 Apr 2025 13:25:28 +0000
+Date: Thu, 17 Apr 2025 21:24:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:irq/core] BUILD SUCCESS
+ 41c95ac4839401cb15e6c9a7756226f6af52ea49
+Message-ID: <202504172148.phYvacnI-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250417-reftrack-dbgfs-v3-1-c3159428c8fb@kernel.org>
 
-On Thu, Apr 17, 2025 at 09:11:04AM -0400, Jeff Layton wrote:
-> As Thomas Weiﬂschuh points out [1], it is now preferable to use %p
-> instead of hashed pointers with printk(), since raw pointers should no
-> longer be leaked into the kernel log. Change the ref_tracker
-> infrastructure to use %p instead of %pK in its formats.
-> 
-> [1]: https://lore.kernel.org/netdev/20250414-restricted-pointers-net-v1-0-12af0ce46cdd@linutronix.de/
-> 
-> Cc: "Thomas Weiﬂschuh" <thomas.weissschuh@linutronix.de>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
+branch HEAD: 41c95ac4839401cb15e6c9a7756226f6af52ea49  genirq/irqdesc: Use sysfs_emit() to instead of s*printf()
 
-Thanks,
+elapsed time: 1447m
 
-Reviewed-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+configs tested: 108
+configs skipped: 3
 
-> ---
->  lib/ref_tracker.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/lib/ref_tracker.c b/lib/ref_tracker.c
-> index cf5609b1ca79361763abe5a3a98484a3ee591ff2..de71439e12a3bab6456910986fa611dfbdd97980 100644
-> --- a/lib/ref_tracker.c
-> +++ b/lib/ref_tracker.c
-> @@ -96,7 +96,7 @@ __ref_tracker_dir_pr_ostream(struct ref_tracker_dir *dir,
->  
->  	stats = ref_tracker_get_stats(dir, display_limit);
->  	if (IS_ERR(stats)) {
-> -		pr_ostream(s, "%s@%pK: couldn't get stats, error %pe\n",
-> +		pr_ostream(s, "%s@%p: couldn't get stats, error %pe\n",
->  			   dir->name, dir, stats);
->  		return;
->  	}
-> @@ -107,13 +107,13 @@ __ref_tracker_dir_pr_ostream(struct ref_tracker_dir *dir,
->  		stack = stats->stacks[i].stack_handle;
->  		if (sbuf && !stack_depot_snprint(stack, sbuf, STACK_BUF_SIZE, 4))
->  			sbuf[0] = 0;
-> -		pr_ostream(s, "%s@%pK has %d/%d users at\n%s\n", dir->name, dir,
-> +		pr_ostream(s, "%s@%p has %d/%d users at\n%s\n", dir->name, dir,
->  			   stats->stacks[i].count, stats->total, sbuf);
->  		skipped -= stats->stacks[i].count;
->  	}
->  
->  	if (skipped)
-> -		pr_ostream(s, "%s@%pK skipped reports about %d/%d users.\n",
-> +		pr_ostream(s, "%s@%p skipped reports about %d/%d users.\n",
->  			   dir->name, dir, skipped, stats->total);
->  
->  	kfree(sbuf);
-> 
-> -- 
-> 2.49.0
-> 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                   randconfig-001-20250417    gcc-13.3.0
+arc                   randconfig-002-20250417    gcc-13.3.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                          collie_defconfig    gcc-14.2.0
+arm                      footbridge_defconfig    clang-17
+arm                       imx_v4_v5_defconfig    clang-21
+arm                        mvebu_v7_defconfig    clang-21
+arm                   randconfig-001-20250417    gcc-7.5.0
+arm                   randconfig-002-20250417    clang-16
+arm                   randconfig-003-20250417    gcc-10.5.0
+arm                   randconfig-004-20250417    gcc-6.5.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250417    gcc-7.5.0
+arm64                 randconfig-002-20250417    gcc-5.5.0
+arm64                 randconfig-003-20250417    clang-21
+arm64                 randconfig-004-20250417    gcc-9.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250417    gcc-13.3.0
+csky                  randconfig-002-20250417    gcc-11.5.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250417    clang-21
+hexagon               randconfig-002-20250417    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250416    clang-20
+i386        buildonly-randconfig-002-20250416    gcc-12
+i386        buildonly-randconfig-003-20250416    gcc-12
+i386        buildonly-randconfig-004-20250416    gcc-11
+i386        buildonly-randconfig-005-20250416    clang-20
+i386        buildonly-randconfig-006-20250416    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250417    gcc-14.2.0
+loongarch             randconfig-002-20250417    gcc-13.3.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250417    gcc-11.5.0
+nios2                 randconfig-002-20250417    gcc-9.3.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                randconfig-001-20250417    gcc-12.4.0
+parisc                randconfig-002-20250417    gcc-6.5.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                      ppc64e_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250417    clang-21
+powerpc               randconfig-002-20250417    gcc-9.3.0
+powerpc               randconfig-003-20250417    gcc-9.3.0
+powerpc64             randconfig-001-20250417    clang-21
+powerpc64             randconfig-002-20250417    clang-21
+powerpc64             randconfig-003-20250417    gcc-5.5.0
+riscv                             allnoconfig    gcc-14.2.0
+riscv                 randconfig-001-20250417    gcc-7.5.0
+riscv                 randconfig-002-20250417    clang-21
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250417    gcc-7.5.0
+s390                  randconfig-002-20250417    clang-21
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250417    gcc-13.3.0
+sh                    randconfig-002-20250417    gcc-7.5.0
+sh                           se7619_defconfig    gcc-14.2.0
+sh                           se7780_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250417    gcc-12.4.0
+sparc                 randconfig-002-20250417    gcc-14.2.0
+sparc64               randconfig-001-20250417    gcc-14.2.0
+sparc64               randconfig-002-20250417    gcc-10.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250417    gcc-12
+um                    randconfig-002-20250417    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250417    clang-20
+x86_64      buildonly-randconfig-002-20250417    clang-20
+x86_64      buildonly-randconfig-003-20250417    gcc-12
+x86_64      buildonly-randconfig-004-20250417    clang-20
+x86_64      buildonly-randconfig-005-20250417    clang-20
+x86_64      buildonly-randconfig-006-20250417    clang-20
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                generic_kc705_defconfig    gcc-14.2.0
+xtensa                randconfig-001-20250417    gcc-8.5.0
+xtensa                randconfig-002-20250417    gcc-14.2.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
