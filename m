@@ -1,55 +1,55 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4103421D3EE
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 23:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21062236F3
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 23:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744931280; cv=none; b=LEIDkBrapcL0+aipQ3texqKndygIaMIaWKAzkNpL9i+GwgacZ7u8gZ5QtcR2/zSdfhvE7TwMqRvmjT18vPSTr16bIUN9zLxv84BOq0tj1qKOQc3YEZ1TeADQMgHv4aFHeNETZtTlI9+uq6KbMKqeNM0otyDDptq+j0ocxtQvQks=
+	t=1744931287; cv=none; b=iXsPrsVzgl/+Z/npddIBli/DbPeyi6iQaWOzM56om/oSrDg2V4B8qmEacEruTgG8JQ8WuKFIZ50uNI4778htZ6omsh3dwK2pKgIZXYoQfXytMFyRxC78gH1pAAdwRTTH+S/x387ZfpkMwu4zwNfZQILNg1CHXi967ApGVAsMImc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744931280; c=relaxed/simple;
-	bh=mJQVFLCm9ty84JCDlLg5++0OwAqRrW5FDC64ClqBhO8=;
+	s=arc-20240116; t=1744931287; c=relaxed/simple;
+	bh=LRLZdT5hOWA0SXwX+weES0oI2ZWCXSQ23XqvPbFD5aY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=Z7RCAXmGvqsY1VpEkn9ePo/0DChXgrC3ts1MOakwV7H4lhSJXOKelxlE1L+xGA+MywF7geWeGbu3t7WlpnzlL6Ue9h9lgdA7IkoSqH4dUb8pmIpS52KLTH6oj6Vsnql7Fdi/I0TxdVZ3G7XJiAlq9gmVITjQ9U5ky0ZZcaYpXKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qBrxRa1+; arc=none smtp.client-ip=209.85.216.73
+	 To:Content-Type; b=rD5RFfCugqoGtFU9jUNgCVy4b8uRZCUxiD5BiobsnqzoL8FVFBjgxL4HK7O6vNZD4tIvTPne25lAuwapgV7sdWaYv1r3ANHnXbQE/pYFu4fHaFgbNU8JXfNMucf3Wi2ZYCo+YB8WSBdJavR76FNBpbFDmPQOqlSRMcLdKqh1xJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RvtyyBGc; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qBrxRa1+"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff605a7a43so1883965a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:07:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RvtyyBGc"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-225ab228a37so12138125ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:08:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744931278; x=1745536078; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744931285; x=1745536085; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=PaI5u9A1ZK2E6Bx2qH0e5jW/HFuv3lmW4guRFbw3gqw=;
-        b=qBrxRa1+ec9Ws5tbhZ5R2CKAnzVXDEeFJP3B6jGs+HI0iYWUEGJozfy8MqMkuCvm30
-         LNOTriykQ+VIw+5RpRWZDNTburKjCrilgYLM8o1Cgf55zOp5SyuMohATP88D+1p8oDY3
-         QoIBPiNyELe1l8s/+mhLwro4zdxuSWo7HF7Vz15o+PX1Wht69PY/8bv6M4xZsXGwsosd
-         LoEWRbXP2/PfBrbSu25tyUi+8FJtzqeS1s8hoELNJI7j7NDim2EhUR6+czjC6v+ESEQW
-         eU7wd5tC5nO+D3X9EI0BMQZPkCYxyet01tI6vxVFm38q1WM+3B0EU5ANIYGnHlEWywqt
-         8yow==
+        bh=C+v/iA3QAz14KzOUNaxFJb9QhGqk7bNH0V+P+kCM29I=;
+        b=RvtyyBGcYB9JfwXtI52aNH7Xuq0llXIi4DgzFPp7sylcC+vrWjB+FnXLRe0rKJNaM8
+         qYFZWXsK4qycA54s04DeKrmTOSxbPZ03AYIaGZ8SyTYK6x/X/hTQISEihpo6dJLrkxJT
+         McTsCEEval9miCnqz6FwZfR4VgJ6jX9GiCfDfg3F2jifmppeLhc3RtuMFR3eM0nHoiti
+         sHrXcI5Jj+UMevq523ZrvhoHPLf14FUnBwQ3YGdq6tW1IRtRp4JPT55zkFNKJPS16jfp
+         u92eT012Y2YYpxNfFs4q/tyFPu59+k0iyJzkq+V8z7Qf7Oi3OPRivlprq+2Y9CkhkUVs
+         5veA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744931278; x=1745536078;
+        d=1e100.net; s=20230601; t=1744931285; x=1745536085;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PaI5u9A1ZK2E6Bx2qH0e5jW/HFuv3lmW4guRFbw3gqw=;
-        b=gym7aJnWY3CgGDXxzOy+I7M3IxqrbaY0BEjkPuW0UTYMZZxvkbWuBlaQAApaENq1rS
-         LYCLoJpd+caxmGEwflgLH2O5tiHFFAr+PhHyMJPr6ZhZ7yPgaZatUwWmB9jW+1wUJm7r
-         HfQfMf0Or/VHYpHjqGQHrGX2LJwgVFTtVTV1oSwqCFbMMMwOAcDMkUcyeR9BpIsa81Js
-         FfPAovyiIiI3avhWbWLvZWUypNtNDwmxA7U9JBPdz7nt7W70INn0nZt94iwuNkrASECq
-         VllwGg7tU8+tmQklggN0I13vryKu9oteVdQTkV/8Ukemv/7YeEAXm3o6z14RaZLXu5/A
-         I2UQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJUd8j/jeL2qRhiSVBu/Aa5S24CAVfkMHEw55ailEgos3U5stX5RK8kGRcbABjdKGNv5fYUgYdIW8Tkvc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqKd6Gts54/7cJ0DY1hSBsbMjExUBFEA/3IqW8FEzctlCAOFu8
-	gGzfM624fqkhgcYKlybLw5o4dRsvwVnmTeMrgZYIh5jYdM+ir8ALw33eMDIT33huONEfh27ecjD
-	rqD5kAg==
-X-Google-Smtp-Source: AGHT+IF4TiTN8mIjFeWYyjcvH+QxpKzHnUuvBCtLoCycCssQ0z2iMetyKW3xvnPKYvVbL7H/8N/Pe+HdGEeN
-X-Received: from pjbsf15.prod.google.com ([2002:a17:90b:51cf:b0:2fa:1fac:2695])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3a4b:b0:2fe:b774:3ec8
- with SMTP id 98e67ed59e1d1-3087bcc7f59mr819081a91.23.1744931278619; Thu, 17
- Apr 2025 16:07:58 -0700 (PDT)
-Date: Thu, 17 Apr 2025 16:07:23 -0700
+        bh=C+v/iA3QAz14KzOUNaxFJb9QhGqk7bNH0V+P+kCM29I=;
+        b=knl0GxH4PMEt4CB9z8gPHfZbucBd1qf+2f9pDzZsxDto1cgRZMzi8p9gmLIEb5+DtC
+         jDedKHCwI04h9PmHy1FIIPQxQMdBClKUE0afq8/XLlGD9HWswjdxwH2wWzUhLkTwJOtW
+         ALut8+GZcsDbJHNwnOUxUHy8EhAvTXytZWUWLivNhfatRk2I5MgQBKVCHXtLta9LODS+
+         gqvObPprq2sJA4SBE6ZR6w2V99rrcTBruJ+KuDQ8dsgaaessBhAWx3QwyILPCF2I6vfk
+         RAokqh+bDu7SJCduJMlPAs6GdvHA36HTTUmJrijRXZiCzUImyJefJr/JIu2kD5nZ/M76
+         WsDg==
+X-Forwarded-Encrypted: i=1; AJvYcCXGEdbC3OsHqiG0pbYP4Mup12l4D1r4872sGy7Oe9TkBAtoSp9+o5J1g0bpIDNdctkZ82biENcEewy/F4Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNpAxv57AZrSzGC+/hj/q42hIgwGHkmj/EPJfVudr/2h8srhYa
+	P+X7rSjtrcFXxrPgigi3geGiYW7DkQ5Juwei4qp8dvLKWKT8lRrbxoi8cGIJ+2wUty82v70hBXo
+	SBmpsKw==
+X-Google-Smtp-Source: AGHT+IG7ZoF5x6T+kA85kaMATkQC66Ptfdqe25x2XYwjUy5ZUI7EMa3SwBgwuXxfCajqgxBSSEbaedI1jfQj
+X-Received: from plrp11.prod.google.com ([2002:a17:902:b08b:b0:223:432c:56d4])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e80f:b0:223:fb3a:8647
+ with SMTP id d9443c01a7336-22c53607c39mr9603665ad.41.1744931285231; Thu, 17
+ Apr 2025 16:08:05 -0700 (PDT)
+Date: Thu, 17 Apr 2025 16:07:26 -0700
 In-Reply-To: <20250417230740.86048-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250417230740.86048-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
-Message-ID: <20250417230740.86048-3-irogers@google.com>
-Subject: [PATCH v4 02/19] perf map: Constify objdump offset/address conversion APIs
+Message-ID: <20250417230740.86048-6-irogers@google.com>
+Subject: [PATCH v4 05/19] perf capstone: Remove open_capstone_handle
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,95 +80,75 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Song Liu <song@kernel.org>, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Make the map argument const as the conversion act won't modify the map
-and this allows other callers to use a const struct map.
+open_capstone_handle is similar to capstone_init and used only by
+symbol__disassemble_capstone. symbol__disassemble_capstone_powerpc
+already uses capstone_init, transition symbol__disassemble_capstone
+and eliminate open_capstone_handle.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/map.c | 19 +++++++++++++++----
- tools/perf/util/map.h |  6 +++---
- 2 files changed, 18 insertions(+), 7 deletions(-)
+ tools/perf/util/capstone.c | 34 ++++++----------------------------
+ 1 file changed, 6 insertions(+), 28 deletions(-)
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index d729438b7d65..a22a423792d7 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -514,6 +514,8 @@ void srccode_state_free(struct srccode_state *state)
- 	state->line = 0;
+diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
+index c0a6d94ebc18..c9845e4d8781 100644
+--- a/tools/perf/util/capstone.c
++++ b/tools/perf/util/capstone.c
+@@ -137,33 +137,6 @@ ssize_t capstone__fprintf_insn_asm(struct machine *machine __maybe_unused,
+ #endif
  }
  
-+static const struct kmap *__map__const_kmap(const struct map *map);
+-#ifdef HAVE_LIBCAPSTONE_SUPPORT
+-static int open_capstone_handle(struct annotate_args *args, bool is_64bit, csh *handle)
+-{
+-	struct annotation_options *opt = args->options;
+-	cs_mode mode = is_64bit ? CS_MODE_64 : CS_MODE_32;
+-
+-	/* TODO: support more architectures */
+-	if (!arch__is(args->arch, "x86"))
+-		return -1;
+-
+-	if (cs_open(CS_ARCH_X86, mode, handle) != CS_ERR_OK)
+-		return -1;
+-
+-	if (!opt->disassembler_style ||
+-	    !strcmp(opt->disassembler_style, "att"))
+-		cs_option(*handle, CS_OPT_SYNTAX, CS_OPT_SYNTAX_ATT);
+-
+-	/*
+-	 * Resolving address operands to symbols is implemented
+-	 * on x86 by investigating instruction details.
+-	 */
+-	cs_option(*handle, CS_OPT_DETAIL, CS_OPT_ON);
+-
+-	return 0;
+-}
+-#endif
+-
+ #ifdef HAVE_LIBCAPSTONE_SUPPORT
+ static void print_capstone_detail(cs_insn *insn, char *buf, size_t len,
+ 				  struct annotate_args *args, u64 addr)
+@@ -309,6 +282,7 @@ int symbol__disassemble_capstone(const char *filename __maybe_unused,
+ 	cs_insn *insn = NULL;
+ 	char disasm_buf[512];
+ 	struct disasm_line *dl;
++	bool disassembler_style = false;
+ 
+ 	if (args->options->objdump_path)
+ 		return -1;
+@@ -333,7 +307,11 @@ int symbol__disassemble_capstone(const char *filename __maybe_unused,
+ 
+ 	annotation_line__add(&dl->al, &notes->src->source);
+ 
+-	if (open_capstone_handle(args, is_64bit, &handle) < 0)
++	if (!args->options->disassembler_style ||
++	    !strcmp(args->options->disassembler_style, "att"))
++		disassembler_style = true;
 +
- /**
-  * map__rip_2objdump - convert symbol start address to objdump address.
-  * @map: memory map
-@@ -525,9 +527,9 @@ void srccode_state_free(struct srccode_state *state)
-  *
-  * Return: Address suitable for passing to "objdump --start-address="
-  */
--u64 map__rip_2objdump(struct map *map, u64 rip)
-+u64 map__rip_2objdump(const struct map *map, u64 rip)
- {
--	struct kmap *kmap = __map__kmap(map);
-+	const struct kmap *kmap = __map__const_kmap(map);
- 	const struct dso *dso = map__dso(map);
++	if (capstone_init(maps__machine(args->ms.maps), &handle, is_64bit, disassembler_style) < 0)
+ 		goto err;
  
- 	/*
-@@ -570,7 +572,7 @@ u64 map__rip_2objdump(struct map *map, u64 rip)
-  *
-  * Return: Memory address.
-  */
--u64 map__objdump_2mem(struct map *map, u64 ip)
-+u64 map__objdump_2mem(const struct map *map, u64 ip)
- {
- 	const struct dso *dso = map__dso(map);
- 
-@@ -587,7 +589,7 @@ u64 map__objdump_2mem(struct map *map, u64 ip)
- }
- 
- /* convert objdump address to relative address.  (To be removed) */
--u64 map__objdump_2rip(struct map *map, u64 ip)
-+u64 map__objdump_2rip(const struct map *map, u64 ip)
- {
- 	const struct dso *dso = map__dso(map);
- 
-@@ -619,6 +621,15 @@ struct kmap *__map__kmap(struct map *map)
- 	return (struct kmap *)(&RC_CHK_ACCESS(map)[1]);
- }
- 
-+static const struct kmap *__map__const_kmap(const struct map *map)
-+{
-+	const struct dso *dso = map__dso(map);
-+
-+	if (!dso || !dso__kernel(dso))
-+		return NULL;
-+	return (struct kmap *)(&RC_CHK_ACCESS(map)[1]);
-+}
-+
- struct kmap *map__kmap(struct map *map)
- {
- 	struct kmap *kmap = __map__kmap(map);
-diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-index 4262f5a143be..768501eec70e 100644
---- a/tools/perf/util/map.h
-+++ b/tools/perf/util/map.h
-@@ -133,13 +133,13 @@ static inline u64 map__unmap_ip(const struct map *map, u64 ip_or_rip)
- }
- 
- /* rip/ip <-> addr suitable for passing to `objdump --start-address=` */
--u64 map__rip_2objdump(struct map *map, u64 rip);
-+u64 map__rip_2objdump(const struct map *map, u64 rip);
- 
- /* objdump address -> memory address */
--u64 map__objdump_2mem(struct map *map, u64 ip);
-+u64 map__objdump_2mem(const struct map *map, u64 ip);
- 
- /* objdump address -> rip */
--u64 map__objdump_2rip(struct map *map, u64 ip);
-+u64 map__objdump_2rip(const struct map *map, u64 ip);
- 
- struct symbol;
- struct thread;
+ 	needs_cs_close = true;
 -- 
 2.49.0.805.g082f7c87e0-goog
 
