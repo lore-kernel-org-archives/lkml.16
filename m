@@ -1,83 +1,67 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC0117A30E;
-	Thu, 17 Apr 2025 16:53:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D966917A30E;
+	Thu, 17 Apr 2025 16:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744908782; cv=none; b=SepJoUoluWMCllAuzc68ohYIvUyJR1dY7M9/VVK4+7cRqG7YLPLwloa4ZBTLUfUCmj43ENGryxGLLlaagx3bX6pQWfKgsofSQ2ix4xHcE9Nk5ixcrT/SZzIfmnZk6sewK0VVzQ8kwu4YelfLng+v2YBtDogugOUdJ9DsE7V8xZM=
+	t=1744908793; cv=none; b=X9nsPTsl4Ct1Sy8H4iwpE3exhxvhpzFNpf8YlIFc+yEj1LT3Rp/Eis1NX/EYS1dzg9Syvk/Li4W7/i3EF912DsO6lYmI91e3SAhcrgYj5OfrbqAzxPLVpPwh5D5LCH23s9ZfPauFTsF+cNX/eBc5249qyAtrNRzhtf6eGYdAvt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744908782; c=relaxed/simple;
-	bh=GQjlB9ZQQVx3fg+6D6Zmajd5XJFoVNuSEJm6qm93bkU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=sDgi2xvJuuE12RZfCI1e1clc9wvGf+hT2/pf2iZJw8KQavqeV9pBcTlrhF/kPdLXZ8q9vHo4HS5uPg1GUHJziCzGa7xUteaQN5J2I4iknYriRdAKgEgOzPGA3bs1NrB5ZAb55Mvtzk/bqNccSb2+YU9oDoekMfFTWuB87BNXNVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=he/f7u9K; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mPAtkEcJ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744908793; c=relaxed/simple;
+	bh=FnrDTiqP5GOEuFNV3L4kIiqs3E1hpChvor2OYtPnF2Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YHOCUyGMF1rAePBbrMgUGxbb6mEklUowCohQPPWLNStY1rEm9ojKvBZ+kk4Dxu4Rv/v20OxqZT3+f7IsVmeKwheovHYgnqGbdT6E3hLAAqdheSDSezNwew9sIIsUtRqdj4ipXcIXWjTJXmRjnbc7tXL51qO3OZDlu1viMQ4SAf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JOKQktra; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="he/f7u9K";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mPAtkEcJ"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744908779;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ilrSYlzAx9iYFVL6md0qcJaDQ6BCvMQ44d5U56I1qoc=;
-	b=he/f7u9K5qRzxO1u0lg191NtilNjwQbO4LCYa/OMIgAyczFQurpFr4ksvZSy4fpfQ0fRwm
-	063rHKrU3jseAgzCkrg/ghApOnJGmDkI+NX41YQg/JKX5s43dKdFX8hB/z2t6EJzWEyaMv
-	0KNI2v11d+cV791Zxw9iO8UwdYbOcI9gi2Em3QAOOmLkXJUY+AU5A7eRLPLIMbgGiQ77W7
-	F7gFI4cs5I0KynPr45rjqry0HaEumGispMv+FIDWIfYBQ55u4jpePYQv3lcbJIilTi947X
-	CeL7aSdRWqqNXiUA4R8JEn0wgc28Zi2V5JHnCpyDUgshKaFVm5sLH/6GPjkExw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744908779;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ilrSYlzAx9iYFVL6md0qcJaDQ6BCvMQ44d5U56I1qoc=;
-	b=mPAtkEcJrNQQicuNCJuc2v1lPrHodX+1R3nx+8J0eGa1Q6jJ2IAK1kwl4BztyPv15fY4Aw
-	WFlAP7PHh62GKABQ==
-To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>, linux-kernel@vger.kernel.org
-Cc: bp@alien8.de, mingo@redhat.com, dave.hansen@linux.intel.com,
- Thomas.Lendacky@amd.com, nikunj@amd.com, Santosh.Shukla@amd.com,
- Vasant.Hegde@amd.com, Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com,
- x86@kernel.org, hpa@zytor.com, peterz@infradead.org, seanjc@google.com,
- pbonzini@redhat.com, kvm@vger.kernel.org, kirill.shutemov@linux.intel.com,
- huibo.wang@amd.com, naveen.rao@amd.com, francescolavra.fl@gmail.com
-Subject: Re: [PATCH v4 06/18] x86/apic: Add update_vector callback for
- Secure AVIC
-In-Reply-To: <f93d3f20-6070-4ffd-bfbb-cd813bb03479@amd.com>
-References: <20250417091708.215826-1-Neeraj.Upadhyay@amd.com>
- <20250417091708.215826-7-Neeraj.Upadhyay@amd.com> <877c3jrrfc.ffs@tglx>
- <f93d3f20-6070-4ffd-bfbb-cd813bb03479@amd.com>
-Date: Thu, 17 Apr 2025 18:52:58 +0200
-Message-ID: <87y0vyraqd.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JOKQktra"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA960C4CEE4;
+	Thu, 17 Apr 2025 16:53:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744908792;
+	bh=FnrDTiqP5GOEuFNV3L4kIiqs3E1hpChvor2OYtPnF2Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JOKQktra7AcQm05bcaJQ+N+NmnvZJCk7xy2FNdprIonBstTYNOiMWzqeaeeKA1GM3
+	 gX+zwJDw28bVl4wtyv5Sdg82W5oyGBbYOQRuu4mSsv/6Ujbe6adwtgP2nbQTZZyj5b
+	 lQtE30S+QofXTBkjKo2r7E5PmCAjEza96PQN42mUTSjpdRikl9L1RLY6wj/xxDYddj
+	 CSPKRx7EmY2sEQSrmxFMGbbeTFjv9tZaExPNNggNNqKp4GHJ7zrZWQF8CXZGXuAdC+
+	 t6qMzaF2atxCHOjwSs3h5DWDUCnTy23Owxr6EUpkgApBKxcNtdhf9xlYm00scP9Xl1
+	 vKpl5j0yg+ZqA==
+Date: Thu, 17 Apr 2025 09:53:10 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Joe Damato <jdamato@fastly.com>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
+ Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>, Alexei
+ Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend
+ <john.fastabend@gmail.com>, open list <linux-kernel@vger.kernel.org>, "open
+ list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, "open
+ list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)"
+ <bpf@vger.kernel.org>
+Subject: Re: [PATCH net-next v2 4/4] selftests: drv-net: Test that NAPI ID
+ is non-zero
+Message-ID: <20250417095310.1adbcbc8@kernel.org>
+In-Reply-To: <aAEvq_oLLzboJeIB@LQ3V64L9R2>
+References: <20250417013301.39228-1-jdamato@fastly.com>
+	<20250417013301.39228-5-jdamato@fastly.com>
+	<20250417064615.10aba96b@kernel.org>
+	<aAEvq_oLLzboJeIB@LQ3V64L9R2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 17 2025 at 17:42, Neeraj Upadhyay wrote:
-> On 4/17/2025 4:22 PM, Thomas Gleixner wrote:
->>> +static void savic_update_vector(unsigned int cpu, unsigned int vector, bool set)
->>> +{
->>> +	update_vector(cpu, SAVIC_ALLOWED_IRR, vector, set);
->> 
->> This indirection is required because otherwise the code is too simple to
->> follow?
->> 
-> update_vector() is used by send_ipi_dest() in Patch 7. From your comment
-> on v3 https://lore.kernel.org/lkml/87y0whv57k.ffs@tglx/ , what I understood
-> was that you wanted update_vector() to be defined in the patch where that code
-> is added (i.e. this patch) and not at a later patch. Is that not correct
-> understanding?
+On Thu, 17 Apr 2025 09:43:23 -0700 Joe Damato wrote:
+> I think the main outstanding thing is Paolo's feedback which maybe
+> (?) is due to a Python version difference? If you have any guidance
+> on how to proceed on that, I'd appreciate it [1].
 
-Fair enough. I missed the later usage sites. Again, a short note in the
-change log which explains the rationale would avoid this.
-
-Thanks,
-
-        tglx
+yes, it's a Python version, I made the same mistake in the past.
+Older Pythons terminate an fstring too early.
+Just switch from ' to " inside the fstring, like you would in bash
+if you wanted to quote a quote character. The two are functionally
+equivalent.
