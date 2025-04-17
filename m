@@ -1,318 +1,170 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB5522D4EB;
-	Thu, 17 Apr 2025 08:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B5D22F175;
+	Thu, 17 Apr 2025 08:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744878144; cv=none; b=XwIKvTP9W9+IflhpOhdp0sXVjF8dynb2P7yThsuhSQTzH2AGv+im2tQLOX3GyDzk2Zw5FqPAoUYNqp8M+JftYN4jPr7AfPKGS440Ty/3VmaUTH+WJ+wusHL8qxs0849ccV8jJjGF1UUpyMI3LNx6vDzDf2+5gNs1mMD2hThmBdI=
+	t=1744878148; cv=none; b=fBrSRRfPwMpss0CVflvvEY4zE3XZYfmWtMgdjCNfyLISEctVNNYdP474ljFddib+7t6Elu6dDo8Q9vfJ3DLi+MIPFtI+FcNhr2F04DNvaoysu+CvJy690UJNzRw9el+zK73GLmFh8BEAJcb8uPyyzfyftJdopmpkv6/P5my3Jz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744878144; c=relaxed/simple;
-	bh=PzkIBzvinUW2oPWntBhM6dLX4AXexyJnbByjvs0DJ94=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iAabUR+HpOqKHLNxfOJxCMeJNMksh0Zel2DAFMfKR3rMaZP4sHZsXhlifFqx0ygK/k1ID1uRFChSHCxcuTncKPKDoyB658AGA5R+W0fhO3YLhxK4ovuGMYBU7rUt9kv7wyXB5tF8zHzLyR9zSRy/cQ/7hH/R9LOwTpfgLkS293w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YLIy3IaG; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744878148; c=relaxed/simple;
+	bh=XaLWudfU75UnKIdaIpmE5WlbFHKJ3Zsed/6soZVriaY=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wz25Rzb9t9edfgjYVeuTf16bI+GWqBnpiyctyCFtJfyZCGmQtZ+SsAMREPGRUi1766kGYf62Jw6t07DkEPVRrQ0Sx7hSl1xnYkFGjCoSFumKCVqrIoD5Ca6533TX3CKyo8xa2DTNrmnPR1Hs2x4i7Hyvasps5TgZgGZ12YCPRBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nSZUFr//; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YLIy3IaG"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53H7wdRp015008;
-	Thu, 17 Apr 2025 08:22:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=6Xx+Qq
-	lGnemhmirWT8bkH9kSx479Ey0v4BVTqYKjZfs=; b=YLIy3IaGvGp8JgylzRVYXD
-	LnqGzbXVSdlqqXA9wbI88OiWmFG1D+bdy4s24ioA3bDYjLASM37FOjuRUvVQ6yVz
-	KC6lcGiRHt1f8FPneIfd1UYgF3rOz2sMAboUhH1YAU9J9vntK2xifSn0xDm7JjoN
-	/CSJ5zXlG/BHTxYpCKivBjFd5IG6iSQULqGzHtTqxxAtSpQRt3QYPIvi6tvHrjsn
-	nOXc00LUw7+Ch4nzbmWrKlZjG1GBpRxsEu6LX+KUEF0u+0jwr4D8a9Z/mtdN4/0b
-	NhaeirB+xeLYGC6aviJHbTEdioCEAo7Q+h3Lo/I2KgC+MIMUtHwquAFAdhajokxQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 462mn7tc53-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 08:22:07 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53H8Fo4m003626;
-	Thu, 17 Apr 2025 08:22:07 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 462mn7tc52-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 08:22:07 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53H7GYIY010415;
-	Thu, 17 Apr 2025 08:22:06 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4604qkcg5j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 08:22:05 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53H8M49Q34865888
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 17 Apr 2025 08:22:04 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 45B472004B;
-	Thu, 17 Apr 2025 08:22:04 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9CECE20040;
-	Thu, 17 Apr 2025 08:22:00 +0000 (GMT)
-Received: from [9.109.199.221] (unknown [9.109.199.221])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 17 Apr 2025 08:22:00 +0000 (GMT)
-Message-ID: <cfc1576a-6c69-4047-890d-3f51e8a5995b@linux.ibm.com>
-Date: Thu, 17 Apr 2025 13:51:59 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSZUFr//"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-3105ef2a06cso4717991fa.2;
+        Thu, 17 Apr 2025 01:22:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744878145; x=1745482945; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aOerJZt7N7TJbcdxM6FzsrLlZ/8eU0Fzpj/ouPW/K/M=;
+        b=nSZUFr//xjRjiCFB1m3kgEQGZ5s0W0ZMvZsyrMLqPUeeX6py5UERgfxRrSV1aJ1b2f
+         3qN8YJuHWxaRq5ePdDo/1YHERrJ0/rI4l5NoEv3XU/UFewJVnURwho41DvYsLSDpHT3X
+         fVn0qYGlIBG2q9k3sORbCGuqWweDQQpY+eUzg26lWIPwFzpEkOpi/ltaIJ+tky5PEib3
+         PFa7jGVKivdRo3wkTOMiBRhOMdpiw3MacoIKeoNrFBNc7oomEGJqaobZ52r49qwmwcGV
+         Gny+gf0cbTSz8wnZ7j9k7WZWkci5DJWAOLn1UtxwsW82EM+2Q2KtuD8T+JNZVy7Mpgyd
+         w23Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744878145; x=1745482945;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aOerJZt7N7TJbcdxM6FzsrLlZ/8eU0Fzpj/ouPW/K/M=;
+        b=QZA9piolEs5jRJGoCel9xmSFibDdr5IWyZz9zqypkspf0PIUYEyfP9d81HIDDDHWl8
+         rJnF3fqj9xWlVmNzo13L9rlZNL0HWYrTisv8BYPsieFT0Kh/YF98fhyMvMj4WN+sGTvT
+         qPYAdkKQOioVMkj0bHKTLjolYcQzpZpxTK4lPWh0VsQ/sqkYhkqBYgqOg0RDBJR21+Eg
+         TSBf4W39VhanC2qQ4ioK45k60woYb/AxIwIOFQXyhpm3Y6qUtzkhac274HG+DR20dAeS
+         M23xhcsrXqyUZ0jigAOA7RoBBQp0Dk7WYOAxTeDNEuixzErvQYZc0ry9ri4XCTMJWtNe
+         nuEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6iphJ8FqWj33A4AFrULwTV2tscySjdcj2Yt8x3XA5BwzBSNMt+FHh+9R8Vptot6gmLgXsL0Fu@vger.kernel.org, AJvYcCUB01aTapu2ozHPXyJZxb8ZRSQPaFxD0K8cA+FsEafijyV3LqgKwwAlADHwU5eqf5A3hoGGG5BDhPQztvo=@vger.kernel.org, AJvYcCVmnCT4jeQ47lJEo1F+DJFDeluLOqg1lIGmhu183W4tkbemBtY3oyVkkA4j31cHM55akbfm@vger.kernel.org
+X-Gm-Message-State: AOJu0YwksIyVL2TV5mDX9GhNqwG3/OzbqqH8G+7zJSfhVV0Hlm5Xnh1z
+	2Yi2VgHM+EBaV6w9qaSto98A2RaxVsSPfOx6LoLUH/CHmfsDrzdC
+X-Gm-Gg: ASbGnctnSnpvNGH+5j3acBopga2+JepbLwuvpdb1b0FH62D9f3Jql1s8kA+bIZP47hj
+	LutvCa2V3Yt/tfZ79cOdud3ytlq7QLJ33IQD0FD2VAPiCiJ5YzKeBwLO3Eaevj7cGTEKNW8nEjT
+	IUpxDGUs2nZFh7moPSYx0gGykGwzV4wEoX3La09ZVjzpqg/QAcnCui2ypW55O4+AYcGfXcVQ2n5
+	QwnBa9W+58kVpM09ek7HLM2Ic/0/QGxex+3ZbI7S9YhkCJlTGtyEgyIRmilK+AoWj4a6Ly831YF
+	HWaQ4Ps=
+X-Google-Smtp-Source: AGHT+IGMLKxq2LO15KmhGtkOiM7gb90wl6nIY0Y+lquxul1vxlYn5GuuUoaTIqIvxIK7OETTr7XVxg==
+X-Received: by 2002:a2e:a58e:0:b0:308:df1e:24c4 with SMTP id 38308e7fff4ca-3107f718becmr16592671fa.29.1744878144740;
+        Thu, 17 Apr 2025 01:22:24 -0700 (PDT)
+Received: from pc636 ([2001:9b1:d5a0:a500::800])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f465d4ed2sm27214161fa.86.2025.04.17.01.22.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 01:22:24 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Thu, 17 Apr 2025 10:22:22 +0200
+To: Breno Leitao <leitao@debian.org>
+Cc: Uladzislau Rezki <urezki@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>, aeh@meta.com,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	edumazet@google.com, jhs@mojatatu.com, kernel-team@meta.com,
+	Erik Lundgren <elundgren@meta.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
+Subject: Re: [RFC PATCH 0/8] Introduce simple hazard pointers for lockdep
+Message-ID: <aAC6PgzV1kOHT2go@pc636>
+References: <20250414060055.341516-1-boqun.feng@gmail.com>
+ <Z/+7LMnQqtV+mnJ+@gmail.com>
+ <Z__G_8VNrgUpfpuk@pc636>
+ <Z//4FUsm1/jbOTP1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf trace: Speed up startup time by bypassing the
- creation of kernel maps
-To: Howard Chu <howardchu95@gmail.com>, peterz@infradead.org
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        kan.liang@linux.intel.com, james.clark@linaro.org,
-        charlie@rivosinc.com, mpetlan@redhat.com, vmolnaro@redhat.com,
-        linux@treblig.org, mhiramat@kernel.org, leo.yan@arm.com,
-        dima@secretsauce.net, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, krzysztof.m.lopatowski@gmail.com
-References: <20250405031213.3502708-1-howardchu95@gmail.com>
-Content-Language: en-US
-From: Aditya Bodkhe <adityab1@linux.ibm.com>
-In-Reply-To: <20250405031213.3502708-1-howardchu95@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=ANnAolku c=1 sm=1 tr=0 ts=6800ba2f cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=uy4nFIpy6xwnJLC1:21 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=tCK5g1jhulg5S5MmH4MA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: Ba7M40Aj1pI70ftrUMu9u645IQUyqRSY
-X-Proofpoint-ORIG-GUID: 0b94XlSJsJyIPCKyZC7rLrl6nQ0FJVbI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-17_01,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 adultscore=0 spamscore=0 mlxscore=0 bulkscore=0
- suspectscore=0 phishscore=0 clxscore=1015 impostorscore=0
- priorityscore=1501 lowpriorityscore=0 classifier=spam authscore=0 adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504170062
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z//4FUsm1/jbOTP1@gmail.com>
 
-Hi Howard
+Hello, Breno!
 
-I tested this patch on powerpc platform and got following results
+> Hello Vlad,
+> 
+> On Wed, Apr 16, 2025 at 05:04:31PM +0200, Uladzislau Rezki wrote:
+> > On Wed, Apr 16, 2025 at 07:14:04AM -0700, Breno Leitao wrote:
+> > > Hi Boqun,
+> > > 
+> > > On Sun, Apr 13, 2025 at 11:00:47PM -0700, Boqun Feng wrote:
+> > > 
+> > > > Overall it looks promising to me, but I would like to see how it
+> > > > performs in the environment of Breno. Also as Paul always reminds me:
+> > > > buggy code usually run faster, so please take a look in case I'm missing
+> > > > something ;-) Thanks!
+> > > 
+> > > Thanks for the patchset. I've confirmed that the wins are large on my
+> > > environment, but, at the same magnitute of synchronize_rcu_expedited().
+> > > 
+> > > Here are the numbers I got:
+> > > 
+> > > 	6.15-rc1 (upstream)
+> > > 		# time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1234: mq
+> > > 		real	0m3.986s
+> > > 		user	0m0.001s
+> > > 		sys	0m0.093s
+> > > 
+> > > 	Your patchset on top of 6.15-rc1
+> > > 		# time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1234: mq
+> > > 		real	0m0.072s
+> > > 		user	0m0.001s
+> > > 		sys	0m0.070s
+> > > 
+> > > 
+> > > 	My original proposal of using synchronize_rcu_expedited()[1]
+> > > 		# time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1234: mq
+> > > 		real	0m0.074s
+> > > 		user	0m0.001s
+> > > 		sys	0m0.061s
+> > > 
+> > > Link: https://lore.kernel.org/all/20250321-lockdep-v1-1-78b732d195fb@debian.org/ [1]
+> > > 
+> > Could you please also do the test of fist scenario with a regular
+> > synchronize_rcu() but switch to its faster variant:
+> > 
+> > echo 1 > /sys/module/rcutree/parameters/rcu_normal_wake_from_gp
+> > 
+> > and run the test. If you have a time.
+> 
+> Of course, I am more than interesting in this topic. This is what I run:
+> 
+> 
+> 	# /usr/sbin/tc qdisc replace dev eth0 root handle 0x1: mq; time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1234: mq
+> 	real	0m4.150s
+> 	user	0m0.001s
+> 	sys	0m0.076s
+> 
+> 	[root@host2 ~]# echo 1 > /sys/module/rcutree/parameters/rcu_normal_wake_from_gp
+> 	[root@host2 ~]# /usr/sbin/tc qdisc replace dev eth0 root handle 0x1: mq; time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1234: mq
+> 	real	0m4.225s
+> 	user	0m0.000s
+> 	sys	0m0.106s
+> 
+> 	[root@host2 ~]# cat /sys/module/rcutree/parameters/rcu_normal_wake_from_gp
+> 	1
+> 	[root@host2 ~]# echo 0 > /sys/module/rcutree/parameters/rcu_normal_wake_from_gp
+> 	[root@host2 ~]# /usr/sbin/tc qdisc replace dev eth0 root handle 0x1: mq; time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1234: mq
+> 	real	0m4.152s
+> 	user	0m0.001s
+> 	sys	0m0.099s
+> 
+> It seems it made very little difference?
+> 
+Yep, no difference. In your case you just need to speed up a grace
+period completion. So an expedited version really improves your case.
 
-Average real time over 10 runs : 2.130 Seconds (Without Patch)
+So you do not have a lot of callbacks which may delay a normal GP.
 
-Average real time over 10 runs : 2.062 Secomds (With Patch)
+Thank you!
 
-Am i missing something here
-
-Thanks
-
-Aditya
-
-
-On 05/04/25 8:42 am, Howard Chu wrote:
-> If perf trace isn't run with '--call-graph' and '--kernel-syscall-graph'
-> options, e.g.
->
-> sudo ./perf trace --call-graph fp --kernel-syscall-graph -a
->
-> there is no need for creating kernel maps.
->
-> before:
->
-> perf $ time sudo ./perf trace -- sleep 1
->           ? (         ): sleep/3462908  ... [continued]: execve())                                           = 0
-> 	 ...
->    1001.459 (         ): sleep/3463166 exit_group()                                                          = ?
->
-> real    0m2.834s
-> user    0m0.011s
-> sys     0m0.012s
->
-> after:
->
-> perf $ time sudo ./perf trace -- sleep 1
->           ? (         ): sleep/3459948  ... [continued]: execve())                                           = 0
-> 	 ...
->    1001.471 (         ): 3459948 exit_group()                                                          = ?
->
-> real    0m1.810s
-> user    0m0.008s
-> sys     0m0.015s
->
-> I also want to express my gratitude to Krzysztof Łopatowski—his
-> profiling of the perf trace [1] inspired this patch. I'm not sure why
-> the discussion stalled, and I apologize for not being able to answer his
-> questions. Since his findings significantly improve the startup time of
-> perf trace, I don't want to take credit for that. So Krzysztof, please
-> let me know if you'd like a Suggested-by: or anything else.
->
-> [1]: https://lore.kernel.org/linux-perf-users/CAOQCU67EsHyw_FsqGbRuityahZTSAtWzffU=hLUJ7K=aZ=1hhA@mail.gmail.com/
-> Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> Cc: "Krzysztof Łopatowski" <krzysztof.m.lopatowski@gmail.com>
-> ---
->   tools/perf/builtin-buildid-list.c     | 2 +-
->   tools/perf/builtin-trace.c            | 2 +-
->   tools/perf/tests/code-reading.c       | 2 +-
->   tools/perf/tests/dlfilter-test.c      | 2 +-
->   tools/perf/tests/dwarf-unwind.c       | 2 +-
->   tools/perf/tests/mmap-thread-lookup.c | 2 +-
->   tools/perf/tests/symbols.c            | 2 +-
->   tools/perf/util/machine.c             | 6 +++---
->   tools/perf/util/machine.h             | 2 +-
->   tools/perf/util/probe-event.c         | 2 +-
->   10 files changed, 12 insertions(+), 12 deletions(-)
->
-> diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
-> index 52dfacaff8e3..357201d8ef0c 100644
-> --- a/tools/perf/builtin-buildid-list.c
-> +++ b/tools/perf/builtin-buildid-list.c
-> @@ -47,7 +47,7 @@ static void buildid__show_kernel_maps(void)
->   {
->   	struct machine *machine;
->   
-> -	machine = machine__new_host();
-> +	machine = machine__new_host(true);
->   	machine__for_each_kernel_map(machine, buildid__map_cb, NULL);
->   	machine__delete(machine);
->   }
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index f55a8a6481f2..39f23ce39842 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -1963,7 +1963,7 @@ static int trace__symbols_init(struct trace *trace, struct evlist *evlist)
->   	if (err)
->   		return err;
->   
-> -	trace->host = machine__new_host();
-> +	trace->host = machine__new_host(callchain_param.enabled && trace->kernel_syscallchains);
->   	if (trace->host == NULL)
->   		return -ENOMEM;
->   
-> diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-> index cf6edbe697b2..17c7b9f95532 100644
-> --- a/tools/perf/tests/code-reading.c
-> +++ b/tools/perf/tests/code-reading.c
-> @@ -654,7 +654,7 @@ static int do_test_code_reading(bool try_kcore)
->   
->   	pid = getpid();
->   
-> -	machine = machine__new_host();
-> +	machine = machine__new_host(true);
->   	machine->env = &perf_env;
->   
->   	ret = machine__create_kernel_maps(machine);
-> diff --git a/tools/perf/tests/dlfilter-test.c b/tools/perf/tests/dlfilter-test.c
-> index 54f59d1246bc..11f70ebabacf 100644
-> --- a/tools/perf/tests/dlfilter-test.c
-> +++ b/tools/perf/tests/dlfilter-test.c
-> @@ -352,7 +352,7 @@ static int test__dlfilter_test(struct test_data *td)
->   		return test_result("Failed to find program symbols", TEST_FAIL);
->   
->   	pr_debug("Creating new host machine structure\n");
-> -	td->machine = machine__new_host();
-> +	td->machine = machine__new_host(true);
->   	td->machine->env = &perf_env;
->   
->   	td->fd = creat(td->perf_data_file_name, 0644);
-> diff --git a/tools/perf/tests/dwarf-unwind.c b/tools/perf/tests/dwarf-unwind.c
-> index 4803ab2d97ba..b76712f68403 100644
-> --- a/tools/perf/tests/dwarf-unwind.c
-> +++ b/tools/perf/tests/dwarf-unwind.c
-> @@ -203,7 +203,7 @@ noinline int test__dwarf_unwind(struct test_suite *test __maybe_unused,
->   	struct thread *thread;
->   	int err = -1;
->   
-> -	machine = machine__new_host();
-> +	machine = machine__new_host(true);
->   	if (!machine) {
->   		pr_err("Could not get machine\n");
->   		return -1;
-> diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
-> index ddd1da9a4ba9..194b5affaa41 100644
-> --- a/tools/perf/tests/mmap-thread-lookup.c
-> +++ b/tools/perf/tests/mmap-thread-lookup.c
-> @@ -167,7 +167,7 @@ static int mmap_events(synth_cb synth)
->   	 */
->   	TEST_ASSERT_VAL("failed to create threads", !threads_create());
->   
-> -	machine = machine__new_host();
-> +	machine = machine__new_host(true);
->   
->   	dump_trace = verbose > 1 ? 1 : 0;
->   
-> diff --git a/tools/perf/tests/symbols.c b/tools/perf/tests/symbols.c
-> index ee20a366f32f..6b22a451211a 100644
-> --- a/tools/perf/tests/symbols.c
-> +++ b/tools/perf/tests/symbols.c
-> @@ -19,7 +19,7 @@ struct test_info {
->   
->   static int init_test_info(struct test_info *ti)
->   {
-> -	ti->machine = machine__new_host();
-> +	ti->machine = machine__new_host(true);
->   	if (!ti->machine) {
->   		pr_debug("machine__new_host() failed!\n");
->   		return TEST_FAIL;
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 55d4977b9913..b1828e3922f2 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -125,14 +125,14 @@ int machine__init(struct machine *machine, const char *root_dir, pid_t pid)
->   	return 0;
->   }
->   
-> -struct machine *machine__new_host(void)
-> +struct machine *machine__new_host(bool create_kmaps)
->   {
->   	struct machine *machine = malloc(sizeof(*machine));
->   
->   	if (machine != NULL) {
->   		machine__init(machine, "", HOST_KERNEL_ID);
->   
-> -		if (machine__create_kernel_maps(machine) < 0)
-> +		if (create_kmaps && machine__create_kernel_maps(machine) < 0)
->   			goto out_delete;
->   
->   		machine->env = &perf_env;
-> @@ -146,7 +146,7 @@ struct machine *machine__new_host(void)
->   
->   struct machine *machine__new_kallsyms(void)
->   {
-> -	struct machine *machine = machine__new_host();
-> +	struct machine *machine = machine__new_host(true);
->   	/*
->   	 * FIXME:
->   	 * 1) We should switch to machine__load_kallsyms(), i.e. not explicitly
-> diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-> index ae3e5542d57d..e6faf8cd06e7 100644
-> --- a/tools/perf/util/machine.h
-> +++ b/tools/perf/util/machine.h
-> @@ -163,7 +163,7 @@ struct thread *machine__findnew_guest_code(struct machine *machine, pid_t pid);
->   void machines__set_id_hdr_size(struct machines *machines, u16 id_hdr_size);
->   void machines__set_comm_exec(struct machines *machines, bool comm_exec);
->   
-> -struct machine *machine__new_host(void);
-> +struct machine *machine__new_host(bool create_kmaps);
->   struct machine *machine__new_kallsyms(void);
->   int machine__init(struct machine *machine, const char *root_dir, pid_t pid);
->   void machine__exit(struct machine *machine);
-> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> index 307ad6242a4e..6b5b5542f454 100644
-> --- a/tools/perf/util/probe-event.c
-> +++ b/tools/perf/util/probe-event.c
-> @@ -94,7 +94,7 @@ int init_probe_symbol_maps(bool user_only)
->   	if (symbol_conf.vmlinux_name)
->   		pr_debug("Use vmlinux: %s\n", symbol_conf.vmlinux_name);
->   
-> -	host_machine = machine__new_host();
-> +	host_machine = machine__new_host(true);
->   	if (!host_machine) {
->   		pr_debug("machine__new_host() failed.\n");
->   		symbol__exit();
+--
+Uladzislau Rezki
