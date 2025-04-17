@@ -1,138 +1,289 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022125.outbound.protection.outlook.com [40.107.75.125])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08AEC1D5CF9;
-	Thu, 17 Apr 2025 10:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744885086; cv=none; b=A7oHoTLQRttIKCdpSd8hrSGUumeM+R3xY2T19dY8meStiIQgDs/HDm7o0qzh1QbEtzFzc+tJGklQCTe/ENiG8bt9bcgpq7F/Qe7NJRYq7rbMGmkkRa1ebrMxjKcvnJ+Q+vn0rVpKZVVvn8T3CczHl/vWEsTQ5U4PSevJc5xNQgc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744885086; c=relaxed/simple;
-	bh=rF92U0urWt6p/1AbiPtAf80xk17/Dsl9xvRoza9f7OA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ksopEjWu7ZExGMgyYslu2aW2EjPboocAV6CGS7CEtR/UmzIBU33yuWfKbTP0NyfFEXLcWHpfxitJtGyt4v6zOtgRge8MxN5iJExG5Ut4dPik2/IXP3t4G/Xbspgp2n4XrWuKwa9ABKGBP3qYHke0xSF1NjT5Fe7gZgBK5Gy9Suw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KW9Y9RFY; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FB91CAA97;
+	Thu, 17 Apr 2025 10:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.125
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744885120; cv=fail; b=U6wvqzbEzboZP18LuPV8sB6MUpl2C6YvAr1OhsElNaepqtEF2QExGp9TVAvtBeg4fD9c1assV1GihdU5ecyc/Ut3En+u8Si+qHpyNI4x453296HITNr+3n/Sekl+9pxeq9p+hKOE0AC4KH8ag5Tt9D/cYVg2Gmryq95EmGtfdmM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744885120; c=relaxed/simple;
+	bh=wf83LsYLDDW86/fnSumQr4B//zemI7gVWLI4WGcnm80=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=rhGcOxpF+YDY53w8m0HJpdHaHHQPyiJUU8N2TjXLzC6Vu/RosSAWCUjRW3tViT6k3A+x4RQed9YiczNaJNR6Lp+vrcLQQheqlZpcP6dqwuuXUTiml1xhUnxDo2I9OjfyO3YLJzNZD+fDBhZoopS5JfIDIu1XW4Gp+xmxlTdyOzk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=portwell.com.tw; spf=pass smtp.mailfrom=portwell.com.tw; dkim=pass (2048-bit key) header.d=fetCA905017.onmicrosoft.com header.i=@fetCA905017.onmicrosoft.com header.b=D/apJYsq; arc=fail smtp.client-ip=40.107.75.125
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=portwell.com.tw
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=portwell.com.tw
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KW9Y9RFY"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acb415dd8faso87506866b.2;
-        Thu, 17 Apr 2025 03:18:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fetCA905017.onmicrosoft.com header.i=@fetCA905017.onmicrosoft.com header.b="D/apJYsq"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yiryzmC/cgMDn5b941+zIpOFi9AOae7LBZ0hQ0gRpHFvnkdsxTq3nT57tPcqNo9nsXwoScrWcBCjkQWWGm6YNTERedduTA1w5DajPoSkGl0dhZTfgwriISjosmmDJOJbpyssyOtJ54ZX6V+KWbX1nJcIER5De4aaT3rTiER1m4UGB+J3NVQ2AdccsssCBfp6eUUGZW2w01TL2oE1g6IIJ7XjplqcZKj7CISeX17ocxkYpxmWYgDuaW2bUAPCOZII5+Cu7ukZGvC/AxuFLJU5CVU0I4TCW5TRH2F3y2YCABKkSjMqN8RVBWsyKD01V/QW2lea1JbYidDIfp0W9Wwlog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6EwR3Qo2KoHhEJZl1irRGZKGdiTEchFEcLmJQIXNaIE=;
+ b=C3sby3sL996b2IyXwfeA9W4b7KSHRRdo++GIQXbmxtGY76w7Ljk/h2JkBtZ0kZhfh2KtXB609ka4EO7LB02zAoqqjdA2G4/VkhCvgAwBYdIuiHhPoGOX85uwmZj1McMZ7CyVB/kjP+XCXwxXIrwXtIKIf5q3cWWK20cak7kTz61ZBkXQgRC26n1GKJ8S1Axd3zoXOv7gIWy52itzmN1WWo02bScWFv6tKozQJyNsMywrTJ79EHzi/tfDxFY9ExoHIt5XUz7gFpcfUKDeyhjaLpd26Qwa6VeLM6C3nkjgQreoprfFeZp0KeJxMK/k/0eCnwfYJ+I7Q8KpUwFF8+fjcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=portwell.com.tw; dmarc=pass action=none
+ header.from=portwell.com.tw; dkim=pass header.d=portwell.com.tw; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744885083; x=1745489883; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=l9skOushEggbMsJxKcF45wWS3+ATrrzyuUsGqv0t7ro=;
-        b=KW9Y9RFYJ+JmFVoFfdNqPbmy8RtLoU2U6U83zeWveBRyowNCLr/C17aeEoj7xZYGFS
-         cOGMw9YxwvQZ0ewVTq7PlRaviBe98pI4VXrRwipmETSlvA9u2P4u9Sz67xIQoyn3u2EK
-         AN5jCMEwCdXaTLDCQJx1dsJLQnl0AixndtUG7lzheuQPS5TnWnYsgFXQFVJRy19lBke4
-         UupHNkDGaB9IF9zUxROdw2lq5JA5fc6vbAIB2Mu9l05hOKVGZjNCZaJYAbCltF1gDXne
-         G/ILcEKfrdxuBsOraRSeVP/Obh6H8uEWnnq0fACUHojkPAhEkfVmIj7aBfRIMkZlQUV0
-         B6+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744885083; x=1745489883;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l9skOushEggbMsJxKcF45wWS3+ATrrzyuUsGqv0t7ro=;
-        b=sNLuHazBMbdKN8KFqMBnNtc9nEJ7jBR/VCsJBXjuY9SFwacSaJ5sYO+rtC5kBiPBtM
-         wt0Lg5XVhrJ9viOSjUHNdZTw99Exxggqj/d7pVigfC8fb/a+4gqoJy9E468+NH5V2UCJ
-         pu7ygfIUza+/e689HwzkA9hAZUnQm8q9wkTFdw2o/TZUx4nkULa0CBx8nFL1AUdxrtSN
-         N+o2moRmSJ/4Rn1uPnPqTs1WzDmgAXCGR9b/BhzN/h9Z+SQ2Wx+2ztbvQzKNP+3FrTru
-         N9aitKCjfhoKph/EFPpD8s5yDLCxOrkrtqODkUre2X1wewWwkbt8MWM2VVKRjUtaLwVY
-         aXlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9sNasO8KTQvNKB/+w7Lry8oiehCz9YAWtM83WP0tBD7WstJUZsD48c5tBTIPk+b6pZir9m+f1sTnQrBQZ@vger.kernel.org, AJvYcCWmetGlicj1SmIt2RjO2e2CQHL7wJfX6rxWVoQqrGbViaUrMuoCj8xrPEdNkpspatYxXLDend0Y2LNWI7u/@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIJm2un5sE1jF3Q8qqCrSc24QT+yHAxSRpV9soWN3MUg93a6j9
-	cg1c8hg5LOiyHOwW2o+TqNu/ASVHObG6cfGNVPrB/pBjswbqtx1o
-X-Gm-Gg: ASbGncsz7ubkQaAThjPs4+THWiVSgQED8lDa45CD+4drPSZ+U/jlV5gGNjcWrrT6l2r
-	dhyfBWTcGuKB/+xXZxE2SPNIWGWVc04sgfzWsF0np1j6fU7eiRqwNc3thmVx7FZlxZ3mHjohaAK
-	kSl4Wvq1X6tRCS38JQ0jRlG1UXqVyds5C8p2YdryU2KXuhHtMCOp1GllMNOhHXiow91kn+4dNJk
-	UbQA+XY5Lunk18dHbvSlm/zhMI0jmUUkqQQpXQfK83plItxk5/k+rIFnrsjbOzZ0B+UrUbeIoyS
-	sk0QCwhA3ZRLJvAgpXimFZW3Bj3cbkbtcnKm0ZTkQQIjPu6KsDGKrd2l
-X-Google-Smtp-Source: AGHT+IFlFTz1i8hkW1ayUI43fP0HBbOeOnZrYXBdNwyKbNNyaLitmXK/BtM5DVGKI9LSAZcCdlpucw==
-X-Received: by 2002:a17:907:7fa7:b0:ac7:95b3:fbe2 with SMTP id a640c23a62f3a-acb42c5a12fmr400036666b.56.1744885083009;
-        Thu, 17 Apr 2025 03:18:03 -0700 (PDT)
-Received: from f (cst-prg-69-142.cust.vodafone.cz. [46.135.69.142])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3d32ecbesm269586266b.161.2025.04.17.03.18.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 03:18:02 -0700 (PDT)
-Date: Thu, 17 Apr 2025 12:17:54 +0200
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org, 
-	Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: Re: [linus:master] [fs] a914bd93f3:
- stress-ng.close.close_calls_per_sec 52.2% regression
-Message-ID: <hupjeobnfvo7y3jyvomjuqxtdl2df2myqxwr3bktmxabsrbid4@erg2ghyfkuj5>
-References: <202504171513.6d6f8a16-lkp@intel.com>
- <CAGudoHGcQspttcaZ6nYfwBkXiJEC-XKuprxnmXRjjufz2vPRhw@mail.gmail.com>
- <CAGudoHHMvREPjWNvmAa_qQovK-9S1zvCAGh=K6U21oyr4pTtzg@mail.gmail.com>
+ d=fetCA905017.onmicrosoft.com; s=selector1-fetCA905017-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6EwR3Qo2KoHhEJZl1irRGZKGdiTEchFEcLmJQIXNaIE=;
+ b=D/apJYsq40vOzaG6zzZwV6KPmdKdialyrle3O+8DKS0SNdI7rg19uf96ZvkwkatjRKIxkiXUU/OF+rAU+JBwanZCx0Ec9Svgi1s3dYWwY49RZ5VsKptY77RfsPZE/l73H2ZhC06XgNgE4EGgkxgRy3OaclVIk7orY9UHxiTgOJhwsEvufiaXvs+peA1tG853t6O9CME5llEuwTA9j/Epr9LRHrxyTnfMmWag/SjlstISqjVju66FsO4BIfB0nSwigu8a2K0p8Ga9CdvsLeHqzR691OKMvQjfPhWu/axMKm1msZh4ZQyv9Gt5MCjGxK8Y2AfECMPcK08KI1UBTAJEng==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=portwell.com.tw;
+Received: from KL1PR06MB6395.apcprd06.prod.outlook.com (2603:1096:820:e7::10)
+ by SEZPR06MB6139.apcprd06.prod.outlook.com (2603:1096:101:ea::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.24; Thu, 17 Apr
+ 2025 10:18:30 +0000
+Received: from KL1PR06MB6395.apcprd06.prod.outlook.com
+ ([fe80::9235:5570:71b3:224]) by KL1PR06MB6395.apcprd06.prod.outlook.com
+ ([fe80::9235:5570:71b3:224%3]) with mapi id 15.20.8632.030; Thu, 17 Apr 2025
+ 10:18:30 +0000
+Message-ID: <a77a4e1f-7eb6-4194-923d-f8b19000bcf6@portwell.com.tw>
+Date: Thu, 17 Apr 2025 18:18:26 +0800
+User-Agent: Mozilla Thunderbird
+From: jesse huang <jesse.huang@portwell.com.tw>
+Subject: Re: [PATCH v4] platform/x86: portwell-ec: Add GPIO and WDT driver for
+ Portwell EC
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, linus.walleij@linaro.org,
+ brgl@bgdev.pl, wim@linux-watchdog.org, linux@roeck-us.net,
+ LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ jay.chen@canonical.com
+References: <3096e0c7-f215-4a51-9a84-b2b64514ffd6@portwell.com.tw>
+ <35bcd82d-c417-0b93-f2e7-03fa8fe1e0c4@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <35bcd82d-c417-0b93-f2e7-03fa8fe1e0c4@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PS2PR01CA0006.apcprd01.prod.exchangelabs.com
+ (2603:1096:300:2d::18) To KL1PR06MB6395.apcprd06.prod.outlook.com
+ (2603:1096:820:e7::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAGudoHHMvREPjWNvmAa_qQovK-9S1zvCAGh=K6U21oyr4pTtzg@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: KL1PR06MB6395:EE_|SEZPR06MB6139:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7f42a368-a279-4934-198d-08dd7d99336f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ak1YTnlBOVk1Zko2akp2a0pVdnVtOFJyMzFTSGQ3aTBJNXBXcEJnbjNwb1dn?=
+ =?utf-8?B?ZGg5K3RtdmtCODhVMWZDaVdqUkppeGpUL2RJbzEwMzRlMVJ2TkJ3V2RlbkVn?=
+ =?utf-8?B?dUJROHlhdHJRem5oZ21MZmtqZkV0U1Z1ZVN6M25LMy8xengyY2czSVM5dG1Y?=
+ =?utf-8?B?ZEs3SjlwcFVwOUVZTUNrYkFoSk5mZ2U2aU5NcDJILytrSGI2dEVQcWIyem40?=
+ =?utf-8?B?UEhsS3Vkam82dXp4VTBOUDA1cS94RUR1eGxJNHVOZzVhdjh2dFl4ZDFpQnZH?=
+ =?utf-8?B?K3ZxSGYyODJaaXJTVkQvNlNBK2toQkFTM1NJL0dYZUszWTJyK044NHRVNlEz?=
+ =?utf-8?B?SURzRmhWUHIzNEFrYmVHYnFCdE9kVXAxakpmRENvdnV5SlZOSzlKMzJIV3Zx?=
+ =?utf-8?B?ZXNabEwyMVhyMmt5aGxWeVVSSGU0MERTUTJPZmxxQjFDWDdpVzNDZXRGTVdl?=
+ =?utf-8?B?TC9yUzBCdDdDMHI4cmVQZ2puUEUyODZPTEZCS3hrTjBiTFp0c0VvbXNIQVAw?=
+ =?utf-8?B?NExIdlVldDR0LzZtUkpRdHJ1TW5qY2RZd3pNTHV6TStPSldBdGMzd3NUNnJV?=
+ =?utf-8?B?WXlKL1oxMUU3ZEJQTFlZNUNVWldSckdPcGxwUHVqMktWdlhZRWFWTGpiRFYw?=
+ =?utf-8?B?QlZBeUxFRkxTTFM0U1R3RnA3VWx4aUVwbHRCM2VxQ0RHZW5hTk5FVmc5emxX?=
+ =?utf-8?B?bldlcU00MittU0xlVVVCSzNZaEpqZlN4eHNYZUg1c2taMUd3MkNwamd2a2gy?=
+ =?utf-8?B?MTJJWlFlL2JlOUovQUhTU09GaFBRTzAzY0N1RFYvckNSNC8zWEdBd2FXKzJT?=
+ =?utf-8?B?U1Rxd2lIeXI2dDBuNkpOb1huVW9IcTN2STBCVll3Q1lGcnRua3NPUkxUTUZo?=
+ =?utf-8?B?UWVLdG5GWGxwbzBUajlTSzFwOU9DQjFFSHY0L1lnK3JzaEFzMWRqV1FOUnly?=
+ =?utf-8?B?a3R3bndiakZocDFhb3ZRc0I3RUJnK1l5Q1A3WHV0SHVKaEpXMlhLR1FoTit2?=
+ =?utf-8?B?RVNmVG41Y2RqNGpQNUdyb280anB5Vkh0b1haUTdFeTAva2YrcXBtQmdmR3Rq?=
+ =?utf-8?B?dlhrNVBISllidFRmZzE5NGx4YXIxWlVRMVZ6Y01peEF6MFVIOFVZWjRpZUZR?=
+ =?utf-8?B?QUFZTkpIRFlPajcwa2gray9QQ1IwbnAzYmExaTVESVIzeXdpcG9xN2x3c1l1?=
+ =?utf-8?B?WjVXVWU1b2ZNMmNoOC9yeTBld3VTdm1SNVB4SDBlQmVYbjNrbDRSajRJZDJT?=
+ =?utf-8?B?ckZNcjJxcnFGZTI0MGJjMytvR0VxUThwaWJDbHY2dHpKWTBDVDFEQ2pkZFRL?=
+ =?utf-8?B?VjZlKzE3VEFvYW9UbDZyRzZPb0gzcXRZSjV4WTZVS0doMzJUMjVqYk52aTBy?=
+ =?utf-8?B?dy8wbml4RXl1VGkySTBJbUVoRVRTc3VIVTltYVZCaDA2RHY1WkhzSlVJUysv?=
+ =?utf-8?B?SHRrSDE1OWhhQTY2S0liSDJWYXQvZEJONFJZUWxpMjVLYlVXVWducmUyeGxJ?=
+ =?utf-8?B?WktqU2FpZGJPelk4UjhHYmhOVWZFQmYyZmFHcXhpdWdzS2ZJQ2hDRDcvSzRP?=
+ =?utf-8?B?NU12VlNWbjFyc0QzWUtPSi9ySGFTK0doa2lKSWpQbmFadExCMnpIYWltN29N?=
+ =?utf-8?B?MUxNYUFjb1kwellwaXcxRm5iRmZTZXkyWWxvT3loMTh4NVZoa2dlU0FUOG9l?=
+ =?utf-8?B?RTUxTGFQVi9KeHpjS2tFWk12RXlwRVZFRGd0SnU0TnJpSHFYSGpOYnl1THQ5?=
+ =?utf-8?B?dDY2RUxnSXVDRm5kSUMrVFM3ZWRNZmhseEJBR01tY1hoMlh2RGNDUDVGeGpG?=
+ =?utf-8?B?OC9WM1hmN3VJZWpjUHFTSnF4UjNGbmhVZDkrOUxQTE9qZUNMT1Nra3N1MzBk?=
+ =?utf-8?B?TDRNeXh6NTBSOHBCTmc0R0VqeVdOM0hGTTJIWHFYTGRNOUlsZDUxZlRvM0Nr?=
+ =?utf-8?Q?Xika6LqqzP4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR06MB6395.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?THdabkxYdFBDcS9ndW01UU45UjVreUtZUG9rRmJWS3c1Tmg2KzcyMWRZVHJZ?=
+ =?utf-8?B?TXZZaitNeEtKRUxPMWpLUXkwamNRWllHaW1vRzYrQnlnMW05OG9XaVRNUDl2?=
+ =?utf-8?B?Sm9zeVRTbm1PMmhPek5IVjBBZFhEQWRYejNPMjB0TU5SZG85eThWYnNBZTM1?=
+ =?utf-8?B?NFNNelFML0VqUnZjdUpCWHFROHI2RWU4V2ZzRnh2NjkwV1VoNTZIcVE3NTZz?=
+ =?utf-8?B?ajRiLyt6akZSaGEyL0hOaFl2ZnlxUUNEVE1tdDJ3ZnpFTTR5VHR4Zk1JNU1H?=
+ =?utf-8?B?Y2ZHM2llM1l3eG5YdWdTeThxLys1RC9PMm83VmRZTHJOeFZpd0hiZFE5M05F?=
+ =?utf-8?B?K2ovM3YyQWJ5UXVmUHFYSVdDMDE1RGNIS1YxdDFEZkpEcnpBd1NLcGlMOC9w?=
+ =?utf-8?B?SVhBQWhmc1JBMVZTb3VKdXY2d0lzV0hBZFJPQ2tsM0wzdk90MlRJc0hXUTJE?=
+ =?utf-8?B?WlNsOUtOTHU3d3NMeXByQ3ZLb2RIR0RXWmM2SjdmVkorcnNsRnV4cklCUGY2?=
+ =?utf-8?B?bHRFZWZ2OTZLdlowbnVXNkNaL0hmKzM1SXVnSW90SGNsL25wWGhiUVpIWFI5?=
+ =?utf-8?B?SnR1Qzd2WEhLWHRGK0Z6cDRNOTB1UEU2YlNDZ3M5Vm9xMHMrWktQYTR4Zm0y?=
+ =?utf-8?B?TGdVUVBqbjBQQmh6WmJiWG9Qa1I0VHg2YzkyTTI5c1lzdGN3eDg5S2k5TFMv?=
+ =?utf-8?B?ak5xaWF4ajArQllZbWg0T1J2QzFlbDhKSFllQUVrM0tIeHR3dTY2OEo0T3No?=
+ =?utf-8?B?WVFrV0hvd0l1RlBZMEhUb1N0RXd6V0YyYkR5d0E2TUowVnl1a0svTjM2Wmxr?=
+ =?utf-8?B?NG5jaUdVUFRHcUY1elRLSlhER2kySnYzK25FRVo0NmJRKzlSR1N0cGRGU3k0?=
+ =?utf-8?B?ZjNSWWw0U2xPMlZlL0hUL25hRTc1VkorUHpET3B4NEd0ZVhZa2R2Q01tcU5V?=
+ =?utf-8?B?YnVwaVNLdUVnNHozYWlvU2wwZzNpSmc5dVVIR05XVEVLM3pjWEZuSk5VZktI?=
+ =?utf-8?B?M0Z0SGF6alk0M2E5YkFHQUM2Wk5jVlQ3L3k0aXd2SUtIMWZieUhlZHd2OWVK?=
+ =?utf-8?B?ZEZsUDFHbkJ6UDVuc2czeHVXamRrTDlqVWU1R2dMZ3IvUEhqckNIRVJ4MG8x?=
+ =?utf-8?B?cXRraHN3b0M0emR3cWdtTC9HWGVmdFBmQUFIWUxrN29MVDYwNVp4SFhTbVVX?=
+ =?utf-8?B?VU1rV0lmUjR1LzJHTVVUL1E1bVlxZkRkWjdTL0hwUUNNZnpOTi84ekdxRWVR?=
+ =?utf-8?B?MGZibFNUcFVIZ0ZDN2k1Wi8vWnpRc3h6WktaUUVUbk1zZnVLVjdXZnpLRytt?=
+ =?utf-8?B?d002aGZQRVNpWVJNNTNUT1NONHQ1VmxQREdWQzV6ODdaSDdCeWdyMjNRWHhv?=
+ =?utf-8?B?SWI4MTRxbTZScDhJOUN5VmY0Zno3Uis3UEdFbncvWlNjT0NkR1JwaEQxMlVv?=
+ =?utf-8?B?OHNyZ2pGYXp5OGlQbkl5SkhXVjErOUZpNGYzaXdFUllwWXl2bW1JNE5tVUw1?=
+ =?utf-8?B?dmJ2L2pPMysrY1pTNERhMlVvaVR3Y2dMRm1NdW0xRm10aWNSL2ZqOEkycVA1?=
+ =?utf-8?B?aFRwVFdqc1J1QTZqdEtnU1Y3L1lpTmxRbmRIN0hwczlVS3hsQk9FNGZ3am91?=
+ =?utf-8?B?aXEvdUw3dnNyYmd5aDczdS8wT2ppVWd4RUJIM3hMT3BnYVJKb1lseFg2d2xK?=
+ =?utf-8?B?ZlRwWFNCU0s3MWk3eFQxYU1ULzJNdUNoT1JjeW9JK2NRbGJ5SklvU3BPdkt2?=
+ =?utf-8?B?K3lCWFdzdnJpK2I5TUEzVzVZWmI4K2RHZno4Tno3blg1d3FqWDRXYk1mUEpY?=
+ =?utf-8?B?MEZqVndZZHJWYVpMTm9zWDFxNzZwQy85UVVZckFtTFJZOXJENnR2aWtIbWZr?=
+ =?utf-8?B?Q2JFUDNDNHl5OGoxK2RWTWNJZkttVS90bi9yYis2ZkhIYXVKR1JlTjhqUHBk?=
+ =?utf-8?B?bmIvN05zbUpkbjA4WDhwYXJlYmdWRUpGVmE1SFZqUlJ3LzFTWlZza3BVeGtw?=
+ =?utf-8?B?SU5QOCs2Zkx3Y0pWZ0JSZEE1Ums1dHF1SlZ2end3bGNaMXFZWVBrZXZJQkNt?=
+ =?utf-8?B?ZzNrRXBHeXFwR2dmeG9WNXNNZVFYVzFKcUIwcUdITnpuRGNLZjdxU3BvZUxa?=
+ =?utf-8?B?UnVSMVhrZ0c4UDJyNnVqc0N0bCtqdXNsWWFjOWZseXQ2aXZFejM1R0RZQmo0?=
+ =?utf-8?B?N2c9PQ==?=
+X-OriginatorOrg: portwell.com.tw
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f42a368-a279-4934-198d-08dd7d99336f
+X-MS-Exchange-CrossTenant-AuthSource: KL1PR06MB6395.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 10:18:30.6523
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e309f7e-c3ee-443b-8668-97701d998b2c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KJZ2DNbLVIV0hK3JOZmkG6ZxV995Ao3i/OJoXnoHCdaI8d2dDSun4a4YuAiZ3QUbNdMOXzgqNv/MyEdAYTv8/agPPkiXhl72kx0VLxbgUAg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB6139
 
-On Thu, Apr 17, 2025 at 12:02:55PM +0200, Mateusz Guzik wrote:
-> bottom line though is there is a known tradeoff there and stress-ng
-> manufactures a case where it is always the wrong one.
+Hi Ilpo, Guenter,
+
+Thank you for the reviews and the patient corrections.
+
+On 16/04/2025 12:30 pm, Guenter Roeck wrote:
+> On 4/15/25 21:10, Yen-Chi Huang wrote:
+
+>> +static int pwec_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
+>> +{
+>> +    u8 direction = pwec_read(PORTWELL_GPIO_DIR_REG) & (1 << offset);
+>> +
+>> +    if (direction)
+>> +        return GPIO_LINE_DIRECTION_IN;
+>> +    else
+>> +        return GPIO_LINE_DIRECTION_OUT;
 > 
-> fd 2 at hand is inherited (it's the tty) and shared between *all*
-> workers on all CPUs.
+> Just a side note, you'll get a static analyzer warning telling you
+> that else after return is not necessary.
 > 
-> Ignoring some fluff, it's this in a loop:
-> dup2(2, 1024)                           = 1024
-> dup2(2, 1025)                           = 1025
-> dup2(2, 1026)                           = 1026
-> dup2(2, 1027)                           = 1027
-> dup2(2, 1028)                           = 1028
-> dup2(2, 1029)                           = 1029
-> dup2(2, 1030)                           = 1030
-> dup2(2, 1031)                           = 1031
-> [..]
-> close_range(1024, 1032, 0)              = 0
+>> +}
+
+Will remove the else in v5.
+
+>> +static int pwec_wdt_set_timeout(struct watchdog_device *wdd, unsigned int timeout)
+>> +{
+>> +    if (timeout == 0 || timeout > PORTWELL_WDT_EC_MAX_COUNT_SECOND)
+>> +        return -EINVAL;
+>> +
 > 
-> where fd 2 is the same file object in all 192 workers doing this.
+> Below:
+> 
+>> +    .min_timeout = 1,
+>> +    .max_timeout = PORTWELL_WDT_EC_MAX_COUNT_SECOND,
+> 
+> This means the watchdog core validates the range. Why check it again here ?
+> 
+>> +    wdd->timeout = timeout;
+>> +    pwec_wdt_write_timeout(wdd->timeout);
+>> +
+>> +    return 0;
+>> +}
+
+Will remove the dummy check in v5. Sorry, I didn't study the core handling closely enough.
+
+>> +    if (!devm_request_region(&pdev->dev, PORTWELL_EC_IOSPACE,
+>> +                PORTWELL_EC_IOSPACE_LEN, dev_name(&pdev->dev))) {
+>> +        dev_err(&pdev->dev, "I/O region 0xE300-0xE3FF busy\n");
+> 
+> ... or failed to allocate memory.
 > 
 
-the following will still have *some* impact, but the drop should be much
-lower
+Will simplify the message to "failed to get I/O region\n" to make it more general.
 
-it also has a side effect of further helping the single-threaded case by
-shortening the code when it works
+---
 
-diff --git a/include/linux/file_ref.h b/include/linux/file_ref.h
-index 7db62fbc0500..c73865ed4251 100644
---- a/include/linux/file_ref.h
-+++ b/include/linux/file_ref.h
-@@ -181,17 +181,15 @@ static __always_inline __must_check bool file_ref_put_close(file_ref_t *ref)
- 	long old, new;
- 
- 	old = atomic_long_read(&ref->refcnt);
--	do {
--		if (unlikely(old < 0))
--			return __file_ref_put_badval(ref, old);
--
--		if (old == FILE_REF_ONEREF)
--			new = FILE_REF_DEAD;
--		else
--			new = old - 1;
--	} while (!atomic_long_try_cmpxchg(&ref->refcnt, &old, new));
--
--	return new == FILE_REF_DEAD;
-+	if (likely(old == FILE_REF_ONEREF)) {
-+		new = FILE_REF_DEAD;
-+		if (likely(atomic_long_try_cmpxchg(&ref->refcnt, &old, new)))
-+			return true;
-+		/*
-+		 * The ref has changed from under us, don't play any games.
-+		 */
-+	}
-+	return file_ref_put(ref);
- }
- 
- /**
+On 16/04/2025 3:45 pm, Ilpo Jarvinen wrote:
+> On Wed, 16 Apr 2025, Yen-Chi Huang wrote:
+> 
+
+>> +/* Ensure consistent min/sec read in case of second rollover. */
+>> +static unsigned int pwec_wdt_get_timeleft(struct watchdog_device *wdd)
+>> +{
+>> +	u8 min, sec1, sec2;
+>> +
+>> +	sec1 = pwec_read(PORTWELL_WDT_EC_COUNT_SEC_ADDR);
+> 
+> This is not a safe way to do rollover correction. Lets say rollover 
+> happens at this point.
+> 
+>> +	min = pwec_read(PORTWELL_WDT_EC_COUNT_MIN_ADDR);
+>> +	sec2 = pwec_read(PORTWELL_WDT_EC_COUNT_SEC_ADDR);
+>> +
+>> +	if (sec2 > sec1) {
+>> +		min--;
+> 
+> ...This is subtracting from the post-rollover value.
+> 
+> This is roughly how drivers/clocksource/ drivers handle rollovers:
+> 
+> 	min = readmin();
+> 	do {
+> 		old_min = min;
+> 		sec = readsec();
+> 		min = readmin();
+> 	} while (min != old_min);
+> 
+>> +		sec1 = sec2;
+>> +	}
+>> +
+>> +	return min * 60 + sec1;
+>> +}
+>> +
+
+Will rework in v5.
+
+Appreciate the reference and the guidance, and sorry
+for not getting it right the first time.
+
+>> +	return (!strcmp(PORTWELL_EC_FW_VENDOR_NAME, buf)) ? 0 : -ENODEV;
+> 
+> Those parenthesis are unnecessary.
+
+Will remove the parenthesis in v5.
+
+>> +static struct platform_driver pwec_driver = {
+>> +	.driver = {
+>> +		.name = "portwell-ec",
+>> +	},
+>> +	.probe = pwec_probe
+> 
+> Please include the comma to any entry that is not a terminator entry to 
+> make diffs cleaner if another member is added here later.
+
+Will add the comma in v5. Apologies for missing it in the previous version.
+
+>> +static void __exit pwec_exit(void)
+>> +{
+>> +	if (pwec_dev)
+> 
+> How can pmec_dev be NULL if init always sets it or returns error?
+
+Will remove it in v5.
+
+Best regards,  
+Yen-Chi Huang
