@@ -1,82 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F82222564;
-	Thu, 17 Apr 2025 23:31:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C5D1DF260;
+	Thu, 17 Apr 2025 23:32:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744932711; cv=none; b=o21Ho89Hgj2Sz6qY9NNq7sK1uj0sX4XxZLNW1T+WfsN5dR8S8ZAkSgbcblI/U4JFQR9PPaAX6PdIutz8qtmEuiFBsy0XZ9FGKAZRmU2Ot2oMvYNTn7oapNjUyLUawK9GZRbi7Qh0HFq0Cy1hiHZbwOFfzruU/MILa1SyvOGMS/0=
+	t=1744932772; cv=none; b=i7c0r5m7jJsx/UQ314LLXENjt+xpkaRpzJ2JfD4un49gPb2gg2wBLuoFRyCqRLQMgM8Nywr4MLnTkYtX+elHZjI/vkrRn7cei2rr5Dw/lY8LxCm5GjCS9AaCqdoy5mUKI+y61wRW9W0mAjGyoffhkvfaqY4tsv4uu0PFlNt6W1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744932711; c=relaxed/simple;
-	bh=voDmLeRkXhnBh06zKO+SDWJ4p+ieK+pSNyDhd0/wngs=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=EDwSoBFFsD+qmL8O8SJPcMkfu4+ZSFcogIenNo4P/RVTHxBQjFTibGP5YwxyVYswGxO4HSvX7FyTXWcUnsQvccYyOw5qhjPnfig7SY4lpFumqvthhDLCzne5Y/KrTw+NBO7oWeUwPs7Rm/QWY1sHWcS1ZSOdHp2nM8nKgXijFvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=yk3Nt81H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744932772; c=relaxed/simple;
+	bh=NjeDRiJTwUo1cP3hkUv6xDm1gfr1mj3fB9ermM3sWkI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=mSYw/+bmSuVeHS4GnXamFBjIx/U+6A6we4b48Q8TClUjIrCjQH5RHv8mVg42hnslsdi0rS1dt13MTTdY8nLz+KzsUy92SYfc6nPNafLzxoJW2e8V6Ydue5Eb6Wt9qxobty6dvAt1f+Gbn61bHOsFziU+Ay48Fxd4OvmcPyqBGq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OW6CQJvs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="yk3Nt81H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CB59C4CEE4;
-	Thu, 17 Apr 2025 23:31:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1744932710;
-	bh=voDmLeRkXhnBh06zKO+SDWJ4p+ieK+pSNyDhd0/wngs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=yk3Nt81HyWt8AB2Z4Zy0KzCNdCaAaL+E4nyoP35V0A8XO5tprE9Aj0S6sKaTHdo6U
-	 RFNu9nPpT9lIEJFybkOlWDTRVvoRjfNZgieypSBpLEkmXWTLm76bTbPxbaRGOmtNjM
-	 YtHmij0mEPrRJ7/ELuHB222LXFbe6X+NZTwGhLno=
-Date: Thu, 17 Apr 2025 16:31:49 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Rakie Kim <rakie.kim@sk.com>, <gourry@gourry.net>, <linux-mm@kvack.org>,
- <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
- <joshua.hahnjy@gmail.com>, <ying.huang@linux.alibaba.com>,
- <david@redhat.com>, <Jonathan.Cameron@huawei.com>, <osalvador@suse.de>,
- <kernel_team@skhynix.com>, <honggyu.kim@sk.com>, <yunjeong.mun@sk.com>
-Subject: Re: [PATCH v9 0/3] Enhance sysfs handling for memory hotplug in
- weighted interleave
-Message-Id: <20250417163149.c918137ef2f9742daf79083f@linux-foundation.org>
-In-Reply-To: <6801839a2481_71fe29462@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250417072839.711-1-rakie.kim@sk.com>
-	<20250417081106.732-1-rakie.kim@sk.com>
-	<20250417153505.c921f75a035089906bb38fe6@linux-foundation.org>
-	<6801839a2481_71fe29462@dwillia2-xfh.jf.intel.com.notmuch>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OW6CQJvs"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 31C8EC4CEEA;
+	Thu, 17 Apr 2025 23:32:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744932772;
+	bh=NjeDRiJTwUo1cP3hkUv6xDm1gfr1mj3fB9ermM3sWkI=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=OW6CQJvs7mRM8Ph4luHzB5TaTF/gDC0wIDwXS+GHSid/HWyY1ZfwUKwWc1BAZgOIq
+	 Q3o98pAK+tt/DmxJPBEZuy+EXseDivse2c8XsEUTc7pL/h+VGzVC3FsJqi4FbKvhAA
+	 UKA2uDXMHQOtT9j2/8Ege7CcHaLs1ezhtfZCC65c3oBV60Qo614sRF/bb9ajKT0Joz
+	 cpuLFja2dsor6zIobA9IS3EVzklgprGS9Dzn5QLu/7S64VbtkNoxDYGbwAcJCcPW3g
+	 8hjN65fsgewJ7aAuetF07k+Nb7judNAoXsaBp93TA58OfR8qE3Pe5ADfIvHQIrAa/k
+	 8CgSu3zoYTy0g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3D4C369C2;
+	Thu, 17 Apr 2025 23:32:52 +0000 (UTC)
+From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
+Date: Fri, 18 Apr 2025 01:32:49 +0200
+Subject: [PATCH] ARM: dts: allwinner: orangepi-zero: Enable audio codec
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250418-opz-audio-v1-1-4e86bb5bc734@posteo.net>
+X-B4-Tracking: v=1; b=H4sIAKCPAWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDE0Nz3fyCKt3E0pTMfF0LSwMLE8tki6Qko1QloPqCotS0zAqwWdGxtbU
+ AXPuJz1sAAAA=
+X-Change-ID: 20250417-opz-audio-890849c8bb2e
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+ Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744932771; l=1299;
+ i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
+ bh=k/eQQFQjUWyBWBOWbfy/ABZzzwLp3ynUUvGy69783PQ=;
+ b=XFDURnfsrz3fEywg3lhFqDKzoRTAi/FcZG9XBdQ96YdDa7CZFBotwe5QPeCWFtnsRKebQD/SK
+ u4ZHjkpmgcCB6noff2Vt0VoZe7aulUZBUyOZs83ORW4NTGoV7Puxm/G
+X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
+ pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
+X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
+ auth_id=156
+X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+Reply-To: j.ne@posteo.net
 
-On Thu, 17 Apr 2025 15:41:30 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
+From: "J. Neuschäfer" <j.ne@posteo.net>
 
-> Andrew Morton wrote:
-> > On Thu, 17 Apr 2025 17:10:08 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
-> > 
-> > > I sincerely apologize for causing repeated inconvenience. The series of
-> > > patches version v8 that was merged into -mm, mm-new today needs
-> > > additional corrections.
-> > > Link: https://lore.kernel.org/all/6800742de6315_130fd2949c@dwillia2-mobl3.amr.corp.intel.com.notmuch/
-> > > Therefore, I have updated a new version v9, in which the problems have
-> > > been addressed.
-> > 
-> > No probs, this is why mm.git workflow (mm-new -> mm-unstable ->
-> > mm-stable -> mainline) operates as it does - to easily permit revisions
-> > and replacements as patches move towards their final state.
-> > 
-> > Please note that I added a cc:stable to your [1/N] patch - sysfs leaks
-> > should be fixed in earlier kernels.  I considered this to be low
-> > priority - if it's higher priority than this patch should best have
-> > been separated from the series, so it can take a different merge path
-> > from the other patches.  
-> 
-> The risk of leak is low because it only appears to trigger if setup
-> fails. Setup only fails due to -ENOMEM which is unlikely to happen from
-> a late_initcall() when memory pressure is low.
+Line out playback and microphone capture work, after enabling the
+corresponding ALSA controls. Tested with the Orange Pi Zero interface
+board, which is a (mostly) passive adapter from the 13-pin header to
+standard connectors (2x USB A, 1x Audio/Video output, 1x built-in
+microphone).
 
-Oh, OK, thanks.  I added the above paragraph to the changelog and
-removed the cc:stable.
+  https://orangepi.com/index.php?route=product/product&product_id=871
 
-Generally, we assume that -ENOMEM doesn't happen in __init code.  If it
-does, the kernel is totally messed up anyway)
+Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+---
+ arch/arm/boot/dts/allwinner/sun8i-h2-plus-orangepi-zero.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm/boot/dts/allwinner/sun8i-h2-plus-orangepi-zero.dts b/arch/arm/boot/dts/allwinner/sun8i-h2-plus-orangepi-zero.dts
+index 1b001f2ad0efd2e77218742efe6d8edfdd18a816..d65ede3dd6ed1206248a39c91e46065684e7ba29 100644
+--- a/arch/arm/boot/dts/allwinner/sun8i-h2-plus-orangepi-zero.dts
++++ b/arch/arm/boot/dts/allwinner/sun8i-h2-plus-orangepi-zero.dts
+@@ -112,6 +112,14 @@ wifi_pwrseq: pwrseq {
+ 	};
+ };
+ 
++&codec {
++	allwinner,audio-routing =
++		"Line Out", "LINEOUT",
++		"MIC1", "Mic",
++		"Mic",  "MBIAS";
++	status = "okay";
++};
++
+ &cpu0 {
+ 	cpu-supply = <&reg_vdd_cpux>;
+ };
+
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250417-opz-audio-890849c8bb2e
+
+Best regards,
+-- 
+J. Neuschäfer <j.ne@posteo.net>
+
+
