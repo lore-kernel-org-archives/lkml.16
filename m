@@ -1,79 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376E641C63;
-	Thu, 17 Apr 2025 20:39:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F03F2066C6
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 20:40:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744922386; cv=none; b=aAQLGg4R8vCgX9qwb0CtDKAZAv5q/aetuFaZgycyHyMOn6Z5agr4uHckHD2zhaXV3qMeO3sM2kxsrkVhozEIH0EpmA0zf/JiLFtYndnfwClbFRUG/U7TxP79ljtTHCWQhUS31kXivdYeRk0M6dsTElsl/sPRIE/0BN39kTf/Vjs=
+	t=1744922408; cv=none; b=jtNpEuhvcS4qkeTsfedehB4Nh98ytDL5oLsS3UpIOoFrMYNEPSAA1GsBZk52AeBiToFUId5ewbfuchm5UqyHsXfSg6tOHErm8E3UBrnLcplPnBERRmMXlKGN+qrmo3hSYsLOzqnhHyxUZ0jG7VQ8i0I9D96ffDdw0lOnyPkm4XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744922386; c=relaxed/simple;
-	bh=bTok9hLCJm69hH4JMezsIs0CexcmXt7PVIqgOVapE9s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PfBs++p6qt/HyYtu+pLsGiabyMi2CJ/tLMQDDfAAA2lOc/UXf94v/IP+IOkSdhUk4IsUFDz6Kf/Xk5ixTVeXlP0APp/SPdQXlfPYmzf0Xh/X9C08V1ZyGYbnx1PCdnVMbEtq6VM4Q1XDeYJQssFI1HVAin6vwv4oxI/0vIJ53tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p/Ym9XfZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744922408; c=relaxed/simple;
+	bh=J+fTUy8JfPiu2xNDj7ikNeEFzhgwkqhWw+2n37PV/6w=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=oVC1c7ircqam4TrIqom36+MAaYqLmEKxKIGut+ZR6V9dxola9QGxWGyjVuXZOpOZxMLLjfExW1Eqgtkh9FlPJERp0CHerzUItgQPbGKtvEDdQP5T0Xqo8Y3/gDiU4WTcX4EOLdas7pafZWHyFsswLN22uVZMBYer7A3/sGEFvds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=SbZrc6fY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p/Ym9XfZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 661FFC4CEE4;
-	Thu, 17 Apr 2025 20:39:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744922385;
-	bh=bTok9hLCJm69hH4JMezsIs0CexcmXt7PVIqgOVapE9s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p/Ym9XfZKW0LuDTYZ+9TldWf1KNwfcg473FDJvlAA3rhXxXkYTTvYdxn/8ZDHR9R8
-	 WLgXcYrQsyL0vpnU0EvphHvjplTWJD8JRGkUI+B1yO96+lJfIUvjfBC5DZVu7BrIaq
-	 JURsnKcA6/d+UgdLjIK9tiE2QJwuKJUU3NvFlSzrupp4AGi9EqHmSh/T7YYxfFlKao
-	 2zUZcFOeAXsMgtR1+atxcW7+0k2OK32ZeSbNTvIMPVDZYM0geUtENrwDIZHAEGM8q6
-	 xIO8Pr1EIrLaPzU3rDB6Me+7NXDhQ9Dm3+5CyAkDwNSe/76xcLgl1O3vj4J7R41yvy
-	 B3PqTDsMB3s5g==
-Date: Thu, 17 Apr 2025 10:39:44 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: phasta@kernel.org, Danilo Krummrich <dakr@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] workqueue: rust: add creation of workqueues
-Message-ID: <aAFnEBv50t11Rjt0@slm.duckdns.org>
-References: <20250411-create-workqueue-v1-1-f7dbe7f1e05f@google.com>
- <Z_1QzTdV8mHJYdQ6@cassiopeiae>
- <Z_4gb8ZAlbfhobgW@google.com>
- <Z_45kDv_wAHIBNpI@cassiopeiae>
- <Z_-f7Bgjw35iXkui@google.com>
- <CAH5fLgiKxDpWg=dDsTJsrB6Kmkw32GZ9WPO-SrpWm4TZDxGVtg@mail.gmail.com>
- <aAALmSjLyWqrcQ45@slm.duckdns.org>
- <59c1e09a5c47a60e26c5fb10c3305356328a98a6.camel@mailbox.org>
- <aACtqnC7okO7eZEg@slm.duckdns.org>
- <CAH5fLgg3RrsWy-ArWb9502st3O=DsmPsBsXoZ5M_nS7oWggJuA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="SbZrc6fY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58EB5C4CEE7;
+	Thu, 17 Apr 2025 20:40:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1744922407;
+	bh=J+fTUy8JfPiu2xNDj7ikNeEFzhgwkqhWw+2n37PV/6w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=SbZrc6fY9T7SORAuDT6PDiTXud4pOI2WQgqyRUHxS1owfay8JbDu77kpqkUIyE5Qh
+	 Oh/B9UCKJB+lIoWnFfCJkNEXaGRYxN0dEk0VKyaLHGsvqket/qFnMn389yq3EgAvVW
+	 Ac7vuiezT5Fcq1vU3a5HDDsmi0t0TNco9o6PtXxg=
+Date: Thu, 17 Apr 2025 13:40:06 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>
+Cc: linux-mm@kvack.org, rostedt@goodmis.org, mhiramat@kernel.org,
+ andrii@kernel.org, kernel-team@meta.com, linux-kernel@vger.kernel.org,
+ Mykyta Yatsenko <yatsenko@meta.com>
+Subject: Re: [PATCH mm] maccess: fix strncpy_from_user_nofault empty string
+ handling
+Message-Id: <20250417134006.60e0d6b3fc963bcbec1255b0@linux-foundation.org>
+In-Reply-To: <20250417152808.722409-1-mykyta.yatsenko5@gmail.com>
+References: <20250417152808.722409-1-mykyta.yatsenko5@gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAH5fLgg3RrsWy-ArWb9502st3O=DsmPsBsXoZ5M_nS7oWggJuA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Thu, 17 Apr 2025 16:28:08 +0100 Mykyta Yatsenko <mykyta.yatsenko5@gmail.com> wrote:
 
-On Thu, Apr 17, 2025 at 10:26:04PM +0200, Alice Ryhl wrote:
-...
-> But doesn't that have a cleanup problem? If the work item owns an
-> allocation or a refcount that's cleared by the work item's run
-> function, then using cancel_delayed_work_sync() will fail to clean
-> that up. Whereas flush_delayed_work() avoids this problem.
+> strncpy_from_user_nofault should return the length of the copied string
+> including the trailing NUL, but if the argument unsafe_addr points to
+> an empty string ({'\0'}), the return value is 0.
+> 
+> This happens as strncpy_from_user copies terminal symbol into dst
+> and returns 0 (as expected), but strncpy_from_user_nofault does not
+> modify ret as it is not equal to count and not greater than 0, so 0 is
+> returned, which contradicts the contract.
 
-True, especially for self-freeing work items. flush it is, I suppose.
+Looks right, I think.
 
-Thanks.
+But why do strncpy_from_user() and strncpy_from_user_nofault() have
+different interfaces?
 
--- 
-tejun
+/**
+ * strncpy_from_user: - Copy a NUL terminated string from userspace.
+ * ...
+ * On success, returns the length of the string (not including the trailing
+ * NUL).
+
+/**
+ * strncpy_from_user_nofault: - Copy a NUL terminated string from unsafe user
+ *				address.
+ * ...
+ * On success, returns the length of the string INCLUDING the trailing NUL.
+
+This is surprising and I'm wondering what led us to do this?
