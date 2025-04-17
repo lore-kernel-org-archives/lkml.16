@@ -1,47 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16121E5B75;
-	Thu, 17 Apr 2025 06:20:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0600E1E1DE8;
+	Thu, 17 Apr 2025 06:25:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744870853; cv=none; b=Q840N8J3kGq6V2LFlrsQYn6UcaewANZQUNktNNwmPKg4pdl6al1/47ULUS6LmU1dlziFjBSjGaQZo5EweXKK6BNS5Ld4Jw5zVdrAI0Y1o89vSsOcVj1G8MUXGbIyWYJCWccd8yYZKq/8okV8+2bTh6y74rLPWrNccwJVu7uTO98=
+	t=1744871108; cv=none; b=pomv8DdIyQTQyJnsZoPtfhhzzf2Xyf0Ev9X4yJ9I27cfbb56aJLU8DphKcnc9aGqUE5OwGcZ6ZauY4CtsihrCNqzP3uhO6XafAB8vcJ7Nf2kAEcD+5QJByIYXvDLWJ7VSAtXle90Sa9RGHXEA5uyiryatf1H0h5OGsodI2tGHWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744870853; c=relaxed/simple;
-	bh=x/rr7Zz2xfD3RvRsd0FGGIq1TtjiOPDKWjaQ3aD9bIw=;
+	s=arc-20240116; t=1744871108; c=relaxed/simple;
+	bh=Rpjh8Lqls1eestMqHgra8ah6xBmfTl+3tzrMDUdJI2Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CXCVKjMm0tDG4SwmNS2YyLJ7ECWMeZVqUa36OZGYbP69qDJu2wXjWvHkbD2NxEFPSzL1tfhk/6wS9Ra4pGCALi6X5P23AbH0JOiUvYqQnfYslJ3oaxp4eAAzudtpHtL7DZ792RiQia6LzsKK84MGgiTXSXZGmUsV2SWGBYMlmxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FcMtRcyP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=l4sb3HlA37UM5LoQFemWfzF4IRbLRMn/sHgB8yEY53PHF+qYLXoDEVhVV7pFpFCPDpFgE4qzdrfDsNxPrb2PVMdgsuSE/DpDdfF4gvxF8yrDjM44TSjlKeWzKhK039fkVhE+eY8nvsWJqPiPxpKQernv1u8E4gUzyCnFsYz2ycg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O65eiq2s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FcMtRcyP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CFAFC4CEE4;
-	Thu, 17 Apr 2025 06:20:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O65eiq2s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3E38C4CEE4;
+	Thu, 17 Apr 2025 06:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744870852;
-	bh=x/rr7Zz2xfD3RvRsd0FGGIq1TtjiOPDKWjaQ3aD9bIw=;
+	s=k20201202; t=1744871106;
+	bh=Rpjh8Lqls1eestMqHgra8ah6xBmfTl+3tzrMDUdJI2Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FcMtRcyPQiZlivoPspWmnOvXBu+ifzrM6kpIWEA+E0xeoWP77NRv8qnBezfBXsczx
-	 jm7bn94t8yf1L0qth7MVQEnWCpdiZi8w6AIz1q3a4ru5VrgORatKOPkxsKw0Inpqo8
-	 YYvEa8BgqkIZBF15ZYpcIvb7O1hXGyDW46iKLaUNgmRSaPm1FI+iXJZdyd/0pRfNy/
-	 bgF4zAaKagzx4LWom4M6//jJq5Iq0MvElxSw2iDHsoRaxRK3dFlh4tFdEZemyevCck
-	 Jew08Fh4WbZOfoLwyQiWDhWoCawXXTDDeZiKLq48xW8f98/TPs2Wi01JjDoLQGA532
-	 2W+EfYCf8k+2g==
-Date: Thu, 17 Apr 2025 08:20:48 +0200
+	b=O65eiq2sXTc1TIMVnNtAyarpb3gipRHvr4DeIJjXJ8JI6dBKjao0xLiQZnbkioack
+	 aFPuyUQv3X3zCI4D2W9mfuAr6bOZhcBSHtnkie1dnsFABvDCq5wbCBHWSSZY0qQBKc
+	 NkRgXBjTUUL024pC5G5P8Y8p+OAXPO6YkKvuVBkYrEYannSdRGf4DMlMkm1IVvlN+d
+	 Tso2DMYnz4/w9E2edelZkEeSSVxtTlb9kPlFKosOyQqQYzIH8ExQ/64qFKjIQhigrL
+	 Uj4w2GHarT0lOBLIzea0HZOwmjIkuozQah4EG5d+jxWrJO63e42cxz4XGKoLob3PUY
+	 AGqznLSRTBhTg==
+Date: Thu, 17 Apr 2025 08:25:02 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Eason Yang <j2anfernee@gmail.com>
-Cc: jic23@kernel.org, lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, 
-	javier.carrasco.cruz@gmail.com, gstols@baylibre.com, alisadariana@gmail.com, 
-	tgamblin@baylibre.com, olivier.moysan@foss.st.com, antoniu.miclaus@analog.com, 
-	eblanc@baylibre.com, andriy.shevchenko@linux.intel.com, joao.goncalves@toradex.com, 
-	tobias.sperling@softing.com, marcelo.schmitt@analog.com, 
-	angelogioacchino.delregno@collabora.com, thomas.bonnefille@bootlin.com, herve.codina@bootlin.com, 
-	chanh@os.amperecomputing.com, KWLIU@nuvoton.com, yhyang2@nuvoton.com, 
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 1/2] dt-bindings: iio: adc: add NCT7201 ADCs
-Message-ID: <20250417-acoustic-ambrosial-mosquito-9d75f4@shite>
-References: <20250416081734.563111-1-j2anfernee@gmail.com>
- <20250416081734.563111-2-j2anfernee@gmail.com>
+To: justin.chen@broadcom.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	florian.fainelli@broadcom.com, conor+dt@kernel.org, krzk+dt@kernel.org, robh@kernel.org, 
+	jassisinghbrar@gmail.com, bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH v4 1/2] dt-bindings: mailbox: Add support for bcm74110
+Message-ID: <20250417-scrupulous-noisy-finch-272f7e@shite>
+References: <20250415182826.3905917-1-justin.chen@broadcom.com>
+ <20250415182826.3905917-2-justin.chen@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,35 +44,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250416081734.563111-2-j2anfernee@gmail.com>
+In-Reply-To: <20250415182826.3905917-2-justin.chen@broadcom.com>
 
-On Wed, Apr 16, 2025 at 04:17:33PM GMT, Eason Yang wrote:
-> Add a binding specification for the Nuvoton NCT7201/NCT7202 up to 12-bit
-> ADCs with I2C interface.
+On Tue, Apr 15, 2025 at 11:28:25AM GMT, justin.chen@broadcom.com wrote:
+> From: Justin Chen <justin.chen@broadcom.com>
 > 
-> Signed-off-by: Eason Yang <j2anfernee@gmail.com>
+> Add devicetree YAML binding for brcmstb bcm74110 mailbox used
+> for communicating with a co-processor.
+> 
+> Signed-off-by: Justin Chen <justin.chen@broadcom.com>
 
-Did you read the message you got from me last time?
-
-<form letter>
-This is a friendly reminder during the review process.
-
-It looks like you received a tag and forgot to add it.
-
-If you do not know the process, here is a short explanation:
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-versions of patchset, under or above your Signed-off-by tag, unless
-patch changed significantly (e.g. new properties added to the DT
-bindings). Tag is "received", when provided in a message replied to you
-on the mailing list. Tools like b4 can help here. However, there's no
-need to repost patches *only* to add the tags. The upstream maintainer
-will do that for tags received on the version they apply.
-
-Please read:
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-
-If a tag was not added on purpose, please state why and what changed.
-</form letter>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
