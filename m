@@ -1,94 +1,103 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0914A1D
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DD917993
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744894138; cv=none; b=kWiND/Qe7MvHPPNgyFx6q+wlKozhSInnk/VXpJrqlVWChj9O77zfO8lJVeAICi9G2HJT0CIkXJeIPM3BQU8Oj3cVHR3UZyhli8twz3TV53hC9cR6hRLlo3dx8Aa7+4xfrUb/ZAu1zlOYDilPN1V4yP3wOTftgPAwU183Oei22QA=
+	t=1744894164; cv=none; b=FnI87wf7ljgXrkZW2rYYQ4kfzhA0YKL+nGc866UEMzUvaSh/NA68qiMTmxT2YAwgLxArIulY2jMr2SJ9d6fk1fpRxdmkP0OieGKqNSYmiERJEAifDK9YPDIxHnVBaDmBFxGpgAd0TXHNLckz/d6S2EIrEWO43Nn49oPdXo5AhOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744894138; c=relaxed/simple;
-	bh=OF+xWYvtq8DwTqbmiS1xaxSCtLJkP0UYS7V6sI7D3rY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bdb/jPJrz80trBapqQCzJZepNhdO3RQVULnLJzHtjM+XJ5pJIeWFpKAafT5frv61IlasEEzySbtgCDxaN18UveohUrzTNrDY5dPGQOlgTOJDCVoGTGnynXcIBdFyrbEO+jEjBifvP0VUBXaKu6Xn1gkCCUv6d5Kk+1MXUFP+WbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S9pS9wZy; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744894164; c=relaxed/simple;
+	bh=+HXeqZgtzYzWCtXZ1TgKj/++VtpjZjSe0b6GVPrhRWg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PqYbW1pWIsiSeD8774Gu1v80LoIFgyU5zfe8LG0smOb/9/WeDcvONhkvctfgcph0bC1OAwT48BZoT+f2rwY0kahrj82ssgC6Fs+KdY0TfA52Oo11yjOcsKvCytVz7h9GDtd9q/xIwyM2enw3OOMcx40+UXZQOuybMXKhSaQ5th8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EqvJFal1; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S9pS9wZy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744894135;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OF+xWYvtq8DwTqbmiS1xaxSCtLJkP0UYS7V6sI7D3rY=;
-	b=S9pS9wZys2geobfSZShvDdZ8s5WTFcc/SNoFS8B/J1WU5zjFpaYTH7bXwJ6BD7eeMOaPBq
-	m5V95wLcMv7v69PBu82YyybWXiAWORkcky9aYzALK3aaTKAvRMG2xsLbq4MdKuLXUl0X19
-	ESOuDZe6rxd+goY0T4XJt3M8yT0mW7U=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-685-y7TS2U--NeqV2NEZGbHBtg-1; Thu,
- 17 Apr 2025 08:48:52 -0400
-X-MC-Unique: y7TS2U--NeqV2NEZGbHBtg-1
-X-Mimecast-MFC-AGG-ID: y7TS2U--NeqV2NEZGbHBtg_1744894130
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 96D751956048;
-	Thu, 17 Apr 2025 12:48:50 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.74.16])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B4CC5180176F;
-	Thu, 17 Apr 2025 12:48:48 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nfsd: allow SC_STATUS_FREEABLE when searching via
- nfs4_lookup_stateid()
-Date: Thu, 17 Apr 2025 08:48:46 -0400
-Message-ID: <1F8D33B0-6844-4DD6-A673-7EA1F63EDF82@redhat.com>
-In-Reply-To: <20250212-nfsd-fixes-v1-1-935e3a4919fc@kernel.org>
-References: <20250212-nfsd-fixes-v1-1-935e3a4919fc@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EqvJFal1"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-301e05b90caso622314a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:49:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744894163; x=1745498963; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=d8kk0nVKUMf/OdtBEnWp0PEvIohAyGuTJWgasrqfltw=;
+        b=EqvJFal1c616yQf6g2CVw6/KsVla6P7qYiDJtxKRDzDTkbj+PlFRvK8ANXDujIy7Um
+         P1e9Ocki0Kc95bc6KI8IX2drTYz3ZDua2z7klwG+onUkUAxdhqE+uOFmqEHhtpd/xWIq
+         JfDu5e1hRPbx/EZl/GiVjc22lVps1RRGJdUsBjcUfLm0wRkvVmxldM4ARpVyKD8hWmoJ
+         GKygRTboU/90PU8bVTWggruON4lXHSDHHZgFnZWIz7cfWooNEZE1Hjw5MNhjlNp9fZ04
+         StjCBPthWoYVAaSmN5CilSduH5gGhR0j+Tw0/uGrNU3lQn3oDZXIa5KJY6VBhFsSyR9E
+         +s4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744894163; x=1745498963;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d8kk0nVKUMf/OdtBEnWp0PEvIohAyGuTJWgasrqfltw=;
+        b=Ug+JWznXI6ZNGHr2CCTIaRxJNot19eBaai9kFRi25a0zo8E3yBkQDDPKVE0xucHBTI
+         TGcWJxbZdjWK1EunsSfPjZ2CEqoevBqiu5ppfK4jFCCiD+8mmpj3k6iJyMInvgOsBey4
+         1Wv8JgFg1iiP5Xl3JkjtGiAuY4SHZQm3wt/mSI1MAWg6IlesE9ekYz+ab8RgLJhH6/5d
+         8xgOibrK4e20Ss2+e96PLLsp43NmNnKtwxsjQi3vcCPpzrftK4tk2/EYCP9eErW8RrqY
+         pmTYVrOeChUUSDCIWspQ71xeFOVKZNtqg6zPBbuTa6rWnI4hA3qeMUh44PHW8GU6QfJj
+         KbTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZQG9UCtomVSlbOFlJ/c+tmPEGzsPxSPw0/B/ymm0q3qWnNiH+izKRsYLyUq8hXGq1PhPkv6dXgiYWG/Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8/rxxXSARY539InXc0yOB+j4n0Nl09PimzHYq2Z9rYWErbuGx
+	1JqsowbOAtBuqaINiOhSpRPBpkGWZ2w0CHoehPmRl4FyFtklatKN
+X-Gm-Gg: ASbGncv8oB8kUtAr5BQXDFYD+MV0/MN0f6ydbx3aJN9Z+9/12ZnyGZMor5Xekii8jEp
+	OqhGKh+WRkwttmyTxq97SD6fGXsMlsfRPWrsJDjg+ZFL1IyYwYxRjnwI2Ti6hWIPlW7S7ZHUxTi
+	/crXfOS+7CnFF+pUl7R7rbHNCuP5CVTMeJ32GyzfIF6vkBQlyj2IHzgcZetYlOnkjESNk+Ao9Rq
+	7tbWidzwiI/ep4ajBi2Oamc1g51IgJHx4pM2h9P/GutXFECn+XRiLSNHD6rg81ADj/5LotTmUX6
+	mu8jZXviqGJx6T5E9HXK0Cq8IJDYVpUUoLt5CqRBXYAsY2Lz
+X-Google-Smtp-Source: AGHT+IETkytabvdQ2inUW/wBroQ6pMG4SfR1s1xBDBO13XlHhB0u2/Mrc41iiG+kLTFS+1gqFdB+8g==
+X-Received: by 2002:a17:90b:3d50:b0:305:2d68:8d57 with SMTP id 98e67ed59e1d1-30863d237a6mr7590014a91.5.1744894162662;
+        Thu, 17 Apr 2025 05:49:22 -0700 (PDT)
+Received: from EBJ9932692.tcent.cn ([43.134.20.116])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-308613b2fe8sm3533170a91.35.2025.04.17.05.49.19
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 17 Apr 2025 05:49:22 -0700 (PDT)
+From: Lance Yang <ioworker0@gmail.com>
+To: akpm@linux-foundation.org
+Cc: david@redhat.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Lance Yang <ioworker0@gmail.com>,
+	Mingzhe Yang <mingzhe.yang@ly.com>
+Subject: [PATCH 1/1] mm/rmap: add CONFIG_MM_ID guard for folio_test_large_maybe_mapped_shared()
+Date: Thu, 17 Apr 2025 20:49:08 +0800
+Message-ID: <20250417124908.58543-1-ioworker0@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Transfer-Encoding: 8bit
 
-On 12 Feb 2025, at 11:29, Jeff Layton wrote:
+Add a compile-time check to make sure folio_test_large_maybe_mapped_shared()
+is only used with CONFIG_MM_ID enabled, as it directly accesses the _mm_ids
+field that only works under CONFIG_MM_ID.
 
-> When a delegation is revoked, it's initially marked with
-> SC_STATUS_REVOKED, or SC_STATUS_ADMIN_REVOKED and later, it's marked
-> with the SC_STATUS_FREEABLE flag, which denotes that it is waiting for
-> s FREE_STATEID call.
->
-> nfs4_lookup_stateid() accepts a statusmask that includes the status
-> flags that a found stateid is allowed to have. Currently, that mask
-> never includes SC_STATUS_FREEABLE, which means that revoked delegations
-> are (almost) never found.
->
-> Add SC_STATUS_FREEABLE to the always-allowed status flags.
->
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
-> This fixes the pynfs DELEG8 test.
+Suggested-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Mingzhe Yang <mingzhe.yang@ly.com>
+Signed-off-by: Lance Yang <ioworker0@gmail.com>
+---
+ include/linux/page-flags.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I want to follow-up this patch with the report that this will fix quite
-severe TEST_STATEID/FREE_STATEID storms from NFS clients that can never
-satisfy the server's setting SEQ4_STATUS_*_STATE_REVOKED status bits.
-
-Correct accounting on the server's cl_revoked counter is pretty important, I
-do wish the protocol had something like a per-client global window of valid
-state.
-
-Thanks Jeff (and thanks Olga for the original fix!),
-
-Ben
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index d3909cb1e576..6bd9b9043976 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -1232,6 +1232,8 @@ static inline int folio_has_private(const struct folio *folio)
+ 
+ static inline bool folio_test_large_maybe_mapped_shared(const struct folio *folio)
+ {
++	/* This function should never be called without CONFIG_MM_ID enabled. */
++	BUILD_BUG_ON(!IS_ENABLED(CONFIG_MM_ID));
+ 	return test_bit(FOLIO_MM_IDS_SHARED_BITNUM, &folio->_mm_ids);
+ }
+ #undef PF_ANY
+-- 
+2.49.0
 
