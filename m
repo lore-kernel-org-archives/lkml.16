@@ -1,74 +1,74 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFD21B4153
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3972236EF
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744906677; cv=none; b=O0l6r7b9oBjWt/JxfvMyDYbHdx25g/YaQVN15J6tTKA0DBiu7Dr3hnJNHHHNwVEquy73ikzdT7FxTk6kbzGOWwSysoat6Q7sSE7/K+JGwccT2IwPrTmTohXfCbX8oGY75m9wsssNY6M178UOVIHRaWpRz/A++WLYbMMEdKqrRd8=
+	t=1744906744; cv=none; b=cA8LMTxZCZwbo6L7UwzJe5wtLaJnJQv2bLHJkLWjm14vsfC3lH6aU2/xncnNEANDwJBh9ugbc24L3zvElDduZTAFsAaE5Tj2PM1tQ/EtwEro1LAVwLo5NiFkLdi8C4IyNiQd3d8lBwZluFk0v7nYMkDUhXuvfyWbtWp/HiNfu7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744906677; c=relaxed/simple;
-	bh=dPeOh37/KvBdmNXeg9JCFPJaMqjFM/+HdNT8gTbVIBQ=;
+	s=arc-20240116; t=1744906744; c=relaxed/simple;
+	bh=GbzL5o71nrvlxb63bfFVJesEI/8ZeQT36+CsnxSbH5E=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rqwfhVRRBruozvS73mOuhUxdxco0TkCWnRD81ORd2GrteEB2nkR0p7qgm2vpMFlsshG0nOLLJUfMG7ve9NvLwyuC2357FfIo73W5zVzPncyUnlBO5acqOVcrRRzWc0Oob0qEOAmdENABceDuSPE3Xm54meSkHHZGvc5zhnb4G44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QKB/pyP6; arc=none smtp.client-ip=209.85.167.50
+	 Content-Type:Content-Disposition:In-Reply-To; b=oP7jrGA8p0oeDylOgX9JDH2AabQ3MbronvKaoOYJqxGFFNtr9Nn1neoX6X8Oa+RZwio4lbzuqaExiZIqr/JTGK/2+QmVZA8pLQwgaV/qonotVa2gJ6xJvm5eorJjausZdm8c/CIe9aftZkJxI5KJ8Kdtn4AyYbsuuTowF+x+Qog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xx2Vo313; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QKB/pyP6"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54d65cb6e8aso1234875e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:17:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xx2Vo313"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5499c5d9691so1216749e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:19:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744906674; x=1745511474; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744906741; x=1745511541; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aawqGQA7h7mWtnCzcBvSH6Tpe/FpQ6KN3oVwrmoliu8=;
-        b=QKB/pyP6Mb1Qu8h5swRXGqNsicIMlhsNxY1c5xLZHhzDmVRPbF9OO2IHxJHVutVQQR
-         vLuyok7KIFcOCT+fU7YxHdl8/NqWWeNrAOlhrfd7Y8hXI91Sa8SqYGvcsKr7+fGzW1My
-         56dvB5RMorrlXvsJiEBq3Lu3HelQFKgrVO3+fmeuELqwapaQ8TBDk9HwlThxDX0nAWeS
-         20VI600ExU6NJ6eZEA4GXTDV69PblJ5FJlzu3zNLsj6ULgKQzKECywCPZlSIB7xFouKO
-         AzewyGNXXhoJHsvBqL0t2R/RxkJtzWyEfxAM1FfP73NdI/JyL9u4Naog488MQEUKPIR6
-         o7tA==
+        bh=vPskhcbl5jGXpRpm5GOfbaOmkWsPfCLOp03oVIAJ7es=;
+        b=Xx2Vo313Oz8xxM3JFXQ5/P+Y1sWQ/iBPhv53wn8Q38ypv9IuRCfYS5URcrJ13HER5L
+         hKGcDGfCzryF4ATRvZ0g/NWpfRkVW7+qMPMrkOcnuw3GVo44W3DaUGQEcpIVC/WQWXt1
+         ecxnPCv6+RM8wCHxjZHM5g+dSBlx6D4vlG56Cklro87B/X0usnXLWFweA6D6hHvcTScV
+         wxKpGepNnKxrYt9sSzgfSgkFh7h43b/yhZ2ZzB2sECEztiAN8wvAXakfLNpaLekPeifn
+         +avorYE885kXY4ChI8RsGZzjIcvoKZ2zZA/8bWXZJffvbWagtQTPGyUhqUQwLzBQteLn
+         7E1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744906674; x=1745511474;
+        d=1e100.net; s=20230601; t=1744906741; x=1745511541;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aawqGQA7h7mWtnCzcBvSH6Tpe/FpQ6KN3oVwrmoliu8=;
-        b=X1Kaj1YTZwkDXjyNwqHM1lZo+AbdqZXPBsR9ERvJaOSQX6PL/kkzBbDRhqgoe0K7Eo
-         ApSrMxt8bdFPyxVHnFK1WFRZH9t3VnBeji46lUORCGWDaU5/OmBte7DDoV/SeyzFF8M7
-         7ex2WbFkZLbTNDc+mU4gPU8FrFJwNgQfyTQXQDIerwEeAA0zFY+jf/RZZ7OyTY58xTHu
-         xa/OQtxXuaau8OswgsRBhgLI7MWBgjRr4oFFGgXZcq5vdKE0lsN041JZSAbyFf/5kl8w
-         ya/kmwpjXPxGx/yYCeUZM+J1kF+SshCAsTTRl059XNo+Bb+ctOtoTmobshbnBStAMwEC
-         HsLw==
-X-Forwarded-Encrypted: i=1; AJvYcCXiefZW9AfhuvXApjXlrAF725dVtaDjEOuhBn+i0YhM2t8LjeA+fvNQ6eRnRA6zAyVjgMLf+DfYOwcKk9U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEE6jxiAhZYsMKlIMwG4Y+6FOhkPh/Qm8zMERYtpuTVYaCrvrZ
-	u8XtdiHqXAOUfLGWXNTw4mF7+rP0EVMrbkB8MfYGtG0zFBWaZNC7
-X-Gm-Gg: ASbGncvN9Af4JfAX0iQ1LBO/aK06nd2ypJs1VNELHfjsi8soLqcVKm+P3w3cfZLtz1M
-	zdVYNB/YCxY3A9g3PPnY89aQ+8X7ZTC5sM+H4kpqrTZLk04CeIv2xAD9RD2GIxSw0CNSneiOc/S
-	RXFmpFkrsuKX/wTOW5NSbSAkaHcOmhTERdwJRBE4XHb41fop8PVEXRLVJbp80czImMirHHNkm7n
-	QSyUuMqnt2lYZAOvK9o2wd5p3vzY4ZRpaB6nbWKWIKspNpsu99xRMPFNpc1y6lSjnqNUe6ftapK
-	JZ+xSLIAaLxI0gTfYQsNEQInvIH5+x5GVyK4GJDIM9R57xPbAecA2QCxd7NhPgRpw6vb
-X-Google-Smtp-Source: AGHT+IFw/cc14IFO9UCiR2xFD24fmph4C2vk2h0k2LliVIja/hNbA0EyNQRDigh7xH1Kf3h3LI54Pg==
-X-Received: by 2002:a05:6512:a8d:b0:549:9044:94b3 with SMTP id 2adb3069b0e04-54d64ab0c71mr2050136e87.29.1744906673833;
-        Thu, 17 Apr 2025 09:17:53 -0700 (PDT)
+        bh=vPskhcbl5jGXpRpm5GOfbaOmkWsPfCLOp03oVIAJ7es=;
+        b=sdFp5iKhGBpy8QSgtR1qpw9g6DsD4g628N69Oz66Ip0CXwvtFrnjxpN8HXI9UTzPZ5
+         aw/o8Ul7n7YR/q6a7oxXlpl6XoUYi/WCEn4fTFb30DLmwxeMRezBmybQQkdwYo85xsNO
+         SQkkBtnY24jUgiLHXInISbpmMGEWhLy5HKHrFIj1TuVFetUNVmu22k5TCJYhf2uPAawm
+         pM7lY5/DigECR+87y4XT9wuCOxtu0it67lS0Ux3KWRPWgym5n60BToReeLzV4XvK7DE+
+         PZXvblKkEHPmdvcz+mh49srG2eqc8X3T7etLnvdJZPt1e+um4W8flG430vXmIBR3s1R2
+         j1Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCUnTOYel2EBxWcIUdUUxPZhncKM9HkG3jKHAgR4MCVtgIrqc0yPun+ap7ev7VdoGsaMsnNoM6QjIAoTI+g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZ0pry/m5fRFmNGKU0VdguRIhAibJKarX1Abe2/u607PD+cCrw
+	W0W3OQDuFi72+BNS+dpIf0MESpqAheg21FbPMGI5GkMwmGQX3uej
+X-Gm-Gg: ASbGncvNUWwn7qcJIGDg7phHfL7ScPJA3xfPhR37z5/lS+c5ThKSO+iipE5vStT8cJl
+	IluPD/igj73wDR99isQIrWnL1RyznN5ThGNmsjdm4ZAeEK2InGfJHWNH/sHQ2Xujme7fdsPxS61
+	bjSKFMXdNDnW7vH3j2+jo4BwVfmCL7BhIzz9fbSHuHascdeXEGDdwaUX5Z249P849B7Q9C3hLhF
+	EnH2ODpeqc7q9XmjcNmMmLm1vzxMFRHmrjIO7ixcPtBL/QN5HuZGmynupwSUfVWkfRMqK2uUUGD
+	TKBlUI0C30hNjDR29A1KJeHZYhyy2gv2fnweCBFdiQ3t0zHj9c+zTNsMQRf5307dI6j/
+X-Google-Smtp-Source: AGHT+IHkOvyZf2qj6Whva3DMKWIH3m5oml5dy5H2yOOMPZAj11xW+Y1vBMQgJXjGLZrXAoH4U3M4aQ==
+X-Received: by 2002:a05:6512:3da3:b0:542:28b4:23ad with SMTP id 2adb3069b0e04-54d64a9c1a5mr2252831e87.16.1744906740308;
+        Thu, 17 Apr 2025 09:19:00 -0700 (PDT)
 Received: from pc636 (host-90-233-217-52.mobileonline.telia.com. [90.233.217.52])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6dfa1d1esm2066e87.174.2025.04.17.09.17.52
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6dfa2e7csm2210e87.190.2025.04.17.09.18.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 09:17:53 -0700 (PDT)
+        Thu, 17 Apr 2025 09:18:59 -0700 (PDT)
 From: Uladzislau Rezki <urezki@gmail.com>
 X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Thu, 17 Apr 2025 18:17:51 +0200
+Date: Thu, 17 Apr 2025 18:18:57 +0200
 To: Baoquan He <bhe@redhat.com>
 Cc: Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
 	akpm@linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] mm/vmalloc.c: return explicit error value in
- alloc_vmap_area()
-Message-ID: <aAEpryR3d4OmlFIk@pc636>
+Subject: Re: [PATCH 3/5] mm/vmalloc.c: optimize code in decay_va_pool_node()
+ a little bit
+Message-ID: <aAEp8R0GcKCXtMwG@pc636>
 References: <20250415023952.27850-1-bhe@redhat.com>
- <20250415023952.27850-6-bhe@redhat.com>
- <Z_--mXGQwZHdqm8w@pc636>
- <aABvLrUdWcLcQO9z@MiWiFi-R3L-srv>
+ <20250415023952.27850-4-bhe@redhat.com>
+ <Z_-1ozajrbaVLq6m@pc636>
+ <aABswErLwX7o7OXa@MiWiFi-R3L-srv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,158 +77,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aABvLrUdWcLcQO9z@MiWiFi-R3L-srv>
+In-Reply-To: <aABswErLwX7o7OXa@MiWiFi-R3L-srv>
 
-On Thu, Apr 17, 2025 at 11:02:06AM +0800, Baoquan He wrote:
-> On 04/16/25 at 04:28pm, Uladzislau Rezki wrote:
-> > On Tue, Apr 15, 2025 at 10:39:52AM +0800, Baoquan He wrote:
-> > > In codes of alloc_vmap_area(), it returns the upper bound 'vend' to
-> > > indicate if the allocation is successful or failed. That is not very clear.
+On Thu, Apr 17, 2025 at 10:51:44AM +0800, Baoquan He wrote:
+> On 04/16/25 at 03:50pm, Uladzislau Rezki wrote:
+> > On Tue, Apr 15, 2025 at 10:39:50AM +0800, Baoquan He wrote:
+> > > When purge lazily freed vmap areas, VA stored in vn->pool[] will also be
+> > > taken away into free vmap tree partially or completely accordingly, that
+> > > is done in decay_va_pool_node(). When doing that, for each pool of node,
+> > > the whole list is detached from the pool for handling. At this time,
+> > > that pool is empty. It's not necessary to update the pool size each time
+> > > when one VA is removed and addded into free vmap tree.
 > > > 
-> > > Here change to return explicit error values and check them to judge if
-> > > allocation is successful.
-> > > 
-> > > IS_ERR_VALUE already uses unlikely() internally
+> > > Here change code to update the pool size when attaching the pool back.
 > > > 
 > > > Signed-off-by: Baoquan He <bhe@redhat.com>
 > > > ---
-> > >  mm/vmalloc.c | 34 +++++++++++++++++-----------------
-> > >  1 file changed, 17 insertions(+), 17 deletions(-)
+> > >  mm/vmalloc.c | 23 +++++++++++------------
+> > >  1 file changed, 11 insertions(+), 12 deletions(-)
 > > > 
 > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > > index 3f38a232663b..5b21cd09b2b4 100644
+> > > index 488d69b56765..bf735c890878 100644
 > > > --- a/mm/vmalloc.c
 > > > +++ b/mm/vmalloc.c
-> > > @@ -1715,7 +1715,7 @@ va_clip(struct rb_root *root, struct list_head *head,
-> > >  			 */
-> > >  			lva = kmem_cache_alloc(vmap_area_cachep, GFP_NOWAIT);
-> > >  			if (!lva)
-> > > -				return -1;
-> > > +				return -ENOMEM;
+> > > @@ -2150,7 +2150,7 @@ decay_va_pool_node(struct vmap_node *vn, bool full_decay)
+> > >  	LIST_HEAD(decay_list);
+> > >  	struct rb_root decay_root = RB_ROOT;
+> > >  	struct vmap_area *va, *nva;
+> > > -	unsigned long n_decay;
+> > > +	unsigned long n_decay, len;
+> > >  	int i;
+> > >  
+> > >  	for (i = 0; i < MAX_VA_SIZE_PAGES; i++) {
+> > > @@ -2164,22 +2164,20 @@ decay_va_pool_node(struct vmap_node *vn, bool full_decay)
+> > >  		list_replace_init(&vn->pool[i].head, &tmp_list);
+> > >  		spin_unlock(&vn->pool_lock);
+> > >  
+> > > -		if (full_decay)
+> > > -			WRITE_ONCE(vn->pool[i].len, 0);
+> > > +		len = n_decay = vn->pool[i].len;
+> > > +		WRITE_ONCE(vn->pool[i].len, 0);
+> > >  
+> > >  		/* Decay a pool by ~25% out of left objects. */
+> > > -		n_decay = vn->pool[i].len >> 2;
+> > > +		if (!full_decay)
+> > > +			n_decay >>= 2;
+> > > +		len -= n_decay;
+> > >  
+> > >  		list_for_each_entry_safe(va, nva, &tmp_list, list) {
+> > > +			if (!n_decay)
+> > > +				break;
+> > >  			list_del_init(&va->list);
+> > >  			merge_or_add_vmap_area(va, &decay_root, &decay_list);
+> > > -
+> > > -			if (!full_decay) {
+> > > -				WRITE_ONCE(vn->pool[i].len, vn->pool[i].len - 1);
+> > > -
+> > > -				if (!--n_decay)
+> > > -					break;
+> > > -			}
+> > > +			n_decay--;
 > > >  		}
 > > >  
 > > >  		/*
-> > > @@ -1729,7 +1729,7 @@ va_clip(struct rb_root *root, struct list_head *head,
+> > > @@ -2188,9 +2186,10 @@ decay_va_pool_node(struct vmap_node *vn, bool full_decay)
+> > >  		 * can populate the pool therefore a simple list replace
+> > >  		 * operation takes place here.
 > > >  		 */
-> > >  		va->va_start = nva_start_addr + size;
-> > >  	} else {
-> > > -		return -1;
-> > > +		return -EINVAL;
+> > > -		if (!full_decay && !list_empty(&tmp_list)) {
+> > > +		if (!list_empty(&tmp_list)) {
+> > >  			spin_lock(&vn->pool_lock);
+> > >  			list_replace_init(&tmp_list, &vn->pool[i].head);
+> > > +			vn->pool[i].len = len;
+> > >  			spin_unlock(&vn->pool_lock);
+> > >  		}
 > > >  	}
-> > >  
-> > >  	if (type != FL_FIT_TYPE) {
-> > > @@ -1758,19 +1758,19 @@ va_alloc(struct vmap_area *va,
-> > >  
-> > >  	/* Check the "vend" restriction. */
-> > >  	if (nva_start_addr + size > vend)
-> > > -		return vend;
-> > > +		return -ERANGE;
-> > >  
-> > >  	/* Update the free vmap_area. */
-> > >  	ret = va_clip(root, head, va, nva_start_addr, size);
-> > > -	if (WARN_ON_ONCE(ret))
-> > > -		return vend;
-> > >
-> > Not clear why you remove this WARN_ON by this patch. It should be
-> > a separate patch or just keep it as is. The warning here can mean
-> > that something is really wrong, especially if NOTHING_FIT. So we
-> > definitely want the warning.
+> > > -- 
+> > > 2.41.0
+> > > 
+> > Which Linux version this patch is based on? I can not apply it.
 > 
-> I remember one time someone reported that the slab allocation failure
-> triggered this warning which is confusing to them. But yes, it should be
-> discussed in a separate post or thread, not appropriate to remove it
-> silently. I will add it back in v2.
+> I can apply them on the latest mainline kernel, next/master and
+> mm-new branch of akpm/mm.git. I checked just now.
 > 
-Thanks!
-
-> > 
-> > > +	if (ret)
-> > > +		return ret;
-> > >  
-> > >  	return nva_start_addr;
-> > >  }
-> > >  
-> > >  /*
-> > >   * Returns a start address of the newly allocated area, if success.
-> > > - * Otherwise a vend is returned that indicates failure.
-> > > + * Otherwise an error value is returned that indicates failure.
-> > >   */
-> > >  static __always_inline unsigned long
-> > >  __alloc_vmap_area(struct rb_root *root, struct list_head *head,
-> > > @@ -1795,14 +1795,13 @@ __alloc_vmap_area(struct rb_root *root, struct list_head *head,
-> > >  
-> > >  	va = find_vmap_lowest_match(root, size, align, vstart, adjust_search_size);
-> > >  	if (unlikely(!va))
-> > > -		return vend;
-> > > +		return -ENOENT;
-> > >  
-> > >  	nva_start_addr = va_alloc(va, root, head, size, align, vstart, vend);
-> > > -	if (nva_start_addr == vend)
-> > > -		return vend;
-> > >  
-> > >  #if DEBUG_AUGMENT_LOWEST_MATCH_CHECK
-> > > -	find_vmap_lowest_match_check(root, head, size, align);
-> > > +	if (!IS_ERR_VALUE(nva_start_addr))
-> > >
-> > Just keep it as it was. No need to check if addr is valid or not.
-> 
-> This is to keep consistent with the old code. Before this patch, if
-> va_alloc() return vend, it returns directly, no
-> find_vmap_lowest_match_check() invocation is done. I tried to keep the
-> behaviour unchanged. That code is for debugging, both is fine to me.
-> 
-Ack. Makes sense to keep same behaviour as it was/is.
-
-> > 
-> > > +		find_vmap_lowest_match_check(root, head, size, align);
-> > >  #endif
-> > >  
-> > >  	return nva_start_addr;
-> > > @@ -1932,7 +1931,7 @@ node_alloc(unsigned long size, unsigned long align,
-> > >  	struct vmap_area *va;
-> > >  
-> > >  	*vn_id = 0;
-> > > -	*addr = vend;
-> > > +	*addr = -EINVAL;
-> > >  
-> > >  	/*
-> > >  	 * Fallback to a global heap if not vmalloc or there
-> > > @@ -2012,20 +2011,20 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
-> > >  	}
-> > >  
-> > >  retry:
-> > > -	if (addr == vend) {
-> > > +	if (IS_ERR_VALUE(addr)) {
-> > >  		preload_this_cpu_lock(&free_vmap_area_lock, gfp_mask, node);
-> > >  		addr = __alloc_vmap_area(&free_vmap_area_root, &free_vmap_area_list,
-> > >  			size, align, vstart, vend);
-> > >  		spin_unlock(&free_vmap_area_lock);
-> > >  	}
-> > >  
-> > > -	trace_alloc_vmap_area(addr, size, align, vstart, vend, addr == vend);
-> > > +	trace_alloc_vmap_area(addr, size, align, vstart, vend, IS_ERR_VALUE(addr));
-> > >  
-> > >  	/*
-> > > -	 * If an allocation fails, the "vend" address is
-> > > +	 * If an allocation fails, the error value is
-> > >  	 * returned. Therefore trigger the overflow path.
-> > >  	 */
-> > > -	if (unlikely(addr == vend))
-> > > +	if (IS_ERR_VALUE(addr))
-> > >  		goto overflow;
-> > >  
-> > >  	va->va_start = addr;
-> > > @@ -4753,9 +4752,10 @@ struct vm_struct **pcpu_get_vm_areas(const unsigned long *offsets,
-> > >  
-> > >  		ret = va_clip(&free_vmap_area_root,
-> > >  			&free_vmap_area_list, va, start, size);
-> > > -		if (WARN_ON_ONCE(unlikely(ret)))
-> > > -			/* It is a BUG(), but trigger recovery instead. */
-> > Keep the comment.
-> 
-> OK, will add it back.
-> 
-Thank you.
+Sounds good.
 
 --
 Uladzislau Rezki
