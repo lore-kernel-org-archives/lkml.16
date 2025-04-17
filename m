@@ -1,106 +1,78 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA758366;
-	Thu, 17 Apr 2025 03:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DBDA920
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 04:03:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744861804; cv=none; b=GyJ6hf8ZfCIuDwKjJPhlINHLJbtsUYscBDujFLLdfsFHL5mq87q4KaAGBa8k3NugrPTShKP1+vu9elK0A4Ir0wfWCpGMT42XsYQg32mHq4gu0X6kBDIU2FjamEncQ84WYmPXE3cQyjQ1vPP3QTwSDo75dZiHqn7KkQ1uCLDqDM8=
+	t=1744862636; cv=none; b=Kl+PQfjZYwi1LcctYjEzLLW8ICn6hJ8xX6hEW3fyKMkoHoBVenYRZb4nsOpaXMwHSV9h5VetJLDEv+Zp3lsuaVIRmDoGZKmpWHMgF7iuZAE183LIAguw4fq4elfUDRubiXJZwTT7a5GxYMQn4jvlnttfEAx1eWynnOcXEHcSD4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744861804; c=relaxed/simple;
-	bh=jeWaCuSZrf7B5bExjA7jriSA1Z+K7m4e2E4LHDGHBa8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S5T1xEPgAQaIDJHUx2uzngkTcFpY5MXBjufItPC6GKgkOOq9XB0A5Zb0jR9jCg7jmKdB5mH/vRurCTZfmSK+EDlk7trxvNsB2xX8MaYG367Ls44GWXs/qRStreZiQ4wq/CeyIF2hVLteu6rI/uUJZOvzG7krKtxLDflnLDLX3Oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=H445JwgR; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="H445JwgR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1744861799;
-	bh=5rvvzX2BNLO+Z4+daJhz9zFdFJOMaj6dUkwcfxhNqb8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=H445JwgRblXZfB0sNBHDP4R2nDiBBNTtIH+zo7ijJ9SC9yiHpR8X7hiht49+2ZZJ+
-	 VbBw/KBbgn1P2PB+DqO025VsF2CFkmqOMo7f70zFziso3F8UtjlJYQcovj4KYroqhV
-	 esD2h8jiB73Wy2wM7EFZYfi5Z6fTRo2Tj50KQQZwAswBLSu0OAQtUrjHjJnBgHRiXo
-	 3VfOy29Ii1xJ8PdXemJDBHB8+ULpoWXBauV6VF8G627lrEuV04oOEw4abq4BSM6tVp
-	 dX0D0fe/Xe/7OlW1L0EeLOzHBdVlOvZkWMBpXmIqYVxRlNfiqfpl/LwBohnOuhElVR
-	 YT6LoqApdI4CA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZdP6b4tV1z4xQv;
-	Thu, 17 Apr 2025 13:49:59 +1000 (AEST)
-Date: Thu, 17 Apr 2025 13:49:59 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20250417134959.37204d48@canb.auug.org.au>
-In-Reply-To: <20250415133518.2c8d4325@canb.auug.org.au>
-References: <20250415133518.2c8d4325@canb.auug.org.au>
+	s=arc-20240116; t=1744862636; c=relaxed/simple;
+	bh=1bFR0C3jNLA9tSkGV71HxjxgDBotPlSsrG0KeonFzTo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=UOIrMYiYNFCD22dxImB+8B1Jo/VuRTs4yQQ3MVAQ7qUSj0jWUL+UO8OhdXdR7BtDZyH0vD5r060pFqWICTYmTnqWvANpXYvqQW1I/Hj89/zMOC2tYBBPpJYIjsGucs7d3v9Y5ryG1N4GPlfWMEfidFXsbno24DCaboONEzuIN9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d5b3819ff9so3827465ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 21:03:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744862634; x=1745467434;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DRWmYyNjOgoVTWwvG5rZdm5gRwNqTNVjxqguvMWZWfI=;
+        b=FftBU+/FHJV9qbWknPmpWBVMlxWAG3q919q1TEuGn8pU0FM7wYYwALq4XHJ1b12G/w
+         LewZjxlLW7Mtv6qIt5zcH9Yew752Eeqqi9EpjfddZgHT1K0bBIT8HxsHaVLit0LEAWkp
+         Cg98OxDIP55JxVX6dVlfWcLWWdaz0m8NEUBKtEkS1lwgcdTyPfbqB98liAkheb6QoGtN
+         jIkoNvHYhTr/fq4SsDHReBaLl26KdQDT+bRf3b2worp1FPyPdvTvoHedbpQeyLkYsg3+
+         yeJ28wOFb65BOD9vNyfXG1yCeNLdRNo5ys2ko99migWudp9/fj/QgLHSBZ0xAEkXrPsi
+         +xgw==
+X-Gm-Message-State: AOJu0YxtKlXReXFTjWuZff+KF+1KPdOjb7RB3ZVzvuc+Acpb9nZz3aJH
+	vovdWPR7PavDHx+9DRaBVuZkIxLTsaigo4Hm3EuBAPaanY1K2wBI19qdcEHOSqbVr6vxXoDHsi9
+	1qGH5lOyzS+zuqTh1V955qoFMFWcGRIAzMaxYWVm4medkQFRpiHUyJQU=
+X-Google-Smtp-Source: AGHT+IHqWdj3+hYoDE/0JWo7IwGGpVaEuA9ei61adPfIEmcKy7STpkRAIWCDCw0GH411SykitvKSkzkjRJIIhaHpKcyyPuxtLklZ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/H6MILf.2np5J=BBlQn_0oR8";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-Received: by 2002:a05:6e02:471c:b0:3d8:1d0e:5308 with SMTP id
+ e9e14a558f8ab-3d81d0e57bbmr3480915ab.6.1744862633903; Wed, 16 Apr 2025
+ 21:03:53 -0700 (PDT)
+Date: Wed, 16 Apr 2025 21:03:53 -0700
+In-Reply-To: <679f3464.050a0220.d7c5a.006d.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68007da9.050a0220.5cdb3.000b.GAE@google.com>
+Subject: Re: [syzbot] Re: [PATCH 0/3] ocfs2: Fix deadlocks in quota recovery
+From: syzbot <syzbot+f59a1ae7b7227c859b8f@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
---Sig_/H6MILf.2np5J=BBlQn_0oR8
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Hi all,
+***
 
-On Tue, 15 Apr 2025 13:35:18 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> After merging the tip tree, today's linux-next build (native perf)
-> failed like this:
->=20
-> diff: tools/arch/x86/include/asm/amd/ibs.h: No such file or directory
-> In file included from util/amd-sample-raw.c:12:
-> tools/include/../../arch/x86/include/asm/amd/ibs.h:10:10: fatal error: as=
-m/msr-index.h: No such file or directory
->    10 | #include <asm/msr-index.h>
->       |          ^~~~~~~~~~~~~~~~~
-> compilation terminated.
->=20
-> Maybe caused by commit
->=20
->   3846389c03a8 ("x86/platform/amd: Move the <asm/amd-ibs.h> header to <as=
-m/amd/ibs.h>")
-> or associated commits?
->=20
-> This a native ppc build of perf.
->=20
-> I have used the tip tree from next-20250414 for today.
+Subject: Re: [PATCH 0/3] ocfs2: Fix deadlocks in quota recovery
+Author: heming.zhao@suse.com
 
-I am still getting is failure.
+I created a branch for these 3 patch files. Let's ask syzbot to test them.
 
---=20
-Cheers,
-Stephen Rothwell
+syzbot page: https://syzkaller.appspot.com/bug?extid=f59a1ae7b7227c859b8f
 
---Sig_/H6MILf.2np5J=BBlQn_0oR8
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+#syz test: https://github.com/zhaohem/linux jans_ocfs2
 
------BEGIN PGP SIGNATURE-----
+On 4/3/25 19:32, Jan Kara wrote:
+> Hello,
+> 
+> this implements another approach to fixing quota recovery deadlocks. We avoid
+> grabbing sb->s_umount semaphore from ocfs2_finish_quota_recovery() and instead
+> stop quota recovery early in ocfs2_dismount_volume(). Please review and test,
+> the series has been only lightly tested in local mode as I don't have
+> proper OCFS2 test setup.
+> 
+> 								Honza
+> 
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgAemcACgkQAVBC80lX
-0GxmCAgAmezco5KsyvIfwvtkuBuYVyy45CrXkWCPUoO4h/NvkIWIOb8Nb4qo8tGl
-W++KLTVQ1AH6q0Kg7MRdYoA+iCiuInEWMgUzSB/v9yzRcmbwuZu+ZQLDDmRRZGEK
-MDyBVF6y62u/+w/vBf+boJevdDiaH9VnnO8ZgZ0AzJtea0nbBHDnZHogA7HRjw5j
-zCAxzrbFy69dBfmhms3u2VDUsyE3MAdePGnNozXqvb7StJB5QH+YBul8UvU4wE7P
-yEWEHT6p3x/P+eynEW4Xh9YNTzqOBSjxpg1vvGn578vMVFCvbE5KUMGTRXcEAj7y
-hShutFbTxa+lnqoGOCgFx/gYo6Ib5w==
-=L+Kj
------END PGP SIGNATURE-----
-
---Sig_/H6MILf.2np5J=BBlQn_0oR8--
