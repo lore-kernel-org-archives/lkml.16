@@ -1,108 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B712153DA;
-	Thu, 17 Apr 2025 07:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E204217F36
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:11:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744873857; cv=none; b=KioZ4Rh3xUxq47ZU++wrF0dRTipUrtG9xXn96gZt0qQHepXxHeGfRdlvpfBQKU4aC+8s6qh3T7R5eU/85QIsabkLaB+eAc5jcWEl6aem+w862DMEHOuKQZM1JpQsnREE7HgBLfAvDgrjHgqLZ7zOJD9W1BXypZXvstE/15kKtUE=
+	t=1744873867; cv=none; b=dFRfdJr6MbtPVD1ey7wRpcMuVV2c+2OxLiLe4AsZVIpjHoSAAr/xKpGgK7PNoGygZw3qE9Ss0uPg0gp741xwmGukJqfsVmsmcwS1rjlA/9lAWOaJJNgNegASc80vCkfAlhJJoPSSz2/jrLH1jyeiDMsIs7ZCperKN3g6cH64SDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744873857; c=relaxed/simple;
-	bh=aYAuIo7LVdzgQM2/Cl+IsgbnZZ20GzAjup2iniRCGwQ=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=emH0iyCmmWNBRqndV0111rk0gnIAMMP195Fw7IikegLK/ikFXoAqmvyOoItwhWxjFT726sCrRD1ffJIWy94vuv+TqoMABpi738y4MSh0Q27/gcqrtKGKD3Hscjs46q54d3v7IZXgNnWb9QsLUZ4fbXnd8mvbG6Mh7fuCg7TVS4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ux08j7+l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744873867; c=relaxed/simple;
+	bh=tviSTmff1afpb8klQio9z76Bda9qCmF9rlTxmyn4Jzk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DcrWxN2CgdNA0BdCSdrPa/4SEq+OdSZtqZU8Yoq3gnFVmHgwgWoDbMIBb+9Tax0vlfNKRtAc1b8F8irUnyLSDDRuOVZaWBeYsWAhgMLdKzhpAzCE2rzoaSFdnxCDwDRzbU4heKKvtaYsmgbK9TkocoT4+s89pk8FMLkvZTkj+VY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=umich.edu; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=T+nTw/43; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=umich.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ux08j7+l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5799C4CEE4;
-	Thu, 17 Apr 2025 07:10:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744873856;
-	bh=aYAuIo7LVdzgQM2/Cl+IsgbnZZ20GzAjup2iniRCGwQ=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=Ux08j7+ly7IeXhweuU6V9uUOKO6RsQHdFsue+IwskLBT5r7fZOtcpUqk9+ws3xJqF
-	 UcKZv4To/uPjMzxp30mllzIZ0YqldDdZ1J5epKuTM3ep04/F1WwrxwA6yCGnSKMKxh
-	 2yA2bGlSyfrpjs/Q6Od3xZz8C0GPl1R1XGdKjYOUIIDYwxidores7ok/V6c21mQ9k6
-	 dqVLUkYK0QsZohYzfpa54i+fBpKL2fgV28mvSwrBI0M/fdtGc94g/efRmid3DEc/6E
-	 55zGn2kiZ7tj7CUhcGvJcfoXLVtCKN3vg5H8vaL0JGCCVnazLHb0Zs6QWj7v3zL4P1
-	 Y/x3LNePlQEbw==
-Date: Thu, 17 Apr 2025 00:10:53 -0700
-From: Kees Cook <kees@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-CC: Coly Li <colyli@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>,
- linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] md/bcache: Mark __nonstring look-up table
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAMj1kXHfearSZG6TFTxxX87qmRkUmAefQm-TfPNS8j09kWxujQ@mail.gmail.com>
-References: <20250416220135.work.394-kees@kernel.org> <CAMj1kXHfearSZG6TFTxxX87qmRkUmAefQm-TfPNS8j09kWxujQ@mail.gmail.com>
-Message-ID: <994E520B-64B1-4387-8DFF-88755346FE55@kernel.org>
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="T+nTw/43"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e6df4507690so429421276.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:11:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1744873864; x=1745478664; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HpU/EXyyDjiU44teDiS87vVaKo5dkE+fJf9jnkZlWjo=;
+        b=T+nTw/43HFZIZKt57M+Hjlid9OF24NBH9sHWIbKjGaBIzmC0zY7hNx95MXClsucq9i
+         TIwom5tejHtTiXEetvovKMOBpo4w5NT4B08g6wrWJplzU/Q/EHJQQc+wmZY3Y91+P4qt
+         WfBX8ZHOWqar6s7eiNKiHMmRaq2dkKWN3F1fahLDPLLCBf0s1OjJUY3AjlNibCLHT6iS
+         qPKMjJrVHxSP9odM5G47d2gqOW0p9IHl/jHRkHxoDmXWo9QE6VabwQfV9F94vAWxmUXQ
+         Rdg3SJnYUW1grlUF1CBjfbdf9Bha7+Zc7d+3CUw30a/f08WZa60XISRK278wIGyaW+qt
+         JuZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744873864; x=1745478664;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HpU/EXyyDjiU44teDiS87vVaKo5dkE+fJf9jnkZlWjo=;
+        b=NawuyRYIHGfsj4ejp1zzwVjq5vWIZIKzVLM0DpauMUu2WfPOyEuls6rGbMzT3lGXsz
+         T6wjYetfbdyIavQbkosouFsTHCNj9xt239546mW8wrTm+n1NP9AcAYhzwvkET3GChU1x
+         Xg1C8wYGMvAV6wKyy7f8EIl43U8Fm9yLv/hNGOSBV9hkZPvHs5EsdB6pddwq1f7XS6+B
+         cA3AkUOd+7hv/9xnkVwjv9FId2yFpYnI/0j/TiQEKWehMgcIXJF173tD3EnTZg6earwU
+         nlLTviXZV+rEjhjPUt4JxZIunIkWZrVy3jmkVpyJ5TFZke56FScVC+tULE5JBxXPTf4s
+         +uDA==
+X-Forwarded-Encrypted: i=1; AJvYcCVC0ZNJshFIhMdJTxozPtVQdzQ9rR7XHSOUYwMq+oolBcXPUw3aZ5KQoTV5GRuL+svsAZViNvHfqKSbW8w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvKQeSV7WwIV03uHwUXBanSDBW7joiODFIqfC8E/z1Iw0pXjxF
+	nl3ipysGjPFbm1JirSJ3LsJ5tfBr3trGM6FqdgHVhLhqsMz14eVFi7thYf2AN8jWAkmUtPy9Kd6
+	BjiNryZf07PK3ctK8rgpakjAShqSUAQuf/DeGCQ==
+X-Gm-Gg: ASbGncvD0WdkXOjsdW9t60P5mp7fuzpDMJxRW3Usspk/K9OVPQPyw1eXg4SbRnENRC8
+	0AmKDQIvGqWlZpz0YXTIpMneCqB0q8/Zsnp/rGbT4EtIm5ydRrA2xg+6aP/DwgMcV/Otnp1uQtj
+	+Vta9VJ7vPPoAcV49MmM8knQ==
+X-Google-Smtp-Source: AGHT+IEi920jFsOkCXOITeOeuLFT1lqte36DnI8bIahvpncns/FQ54QuvgAzwiPwHvxcppMuHzxPPOSb6zlSksMEqeA=
+X-Received: by 2002:a05:6902:2589:b0:e60:8b26:8c34 with SMTP id
+ 3f1490d57ef6-e7282a75222mr2272949276.22.1744873864423; Thu, 17 Apr 2025
+ 00:11:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20250325-rust-analyzer-host-v5-0-385e7f1e1e23@gmail.com> <20250325-rust-analyzer-host-v5-6-385e7f1e1e23@gmail.com>
+In-Reply-To: <20250325-rust-analyzer-host-v5-6-385e7f1e1e23@gmail.com>
+From: Trevor Gross <tmgross@umich.edu>
+Date: Thu, 17 Apr 2025 02:10:53 -0500
+X-Gm-Features: ATxdqUE-Klo-KfOapj4E4gV65oOXgdtjTVe08rFy0gCvLEWTuaEpYGH9CSdhcus
+Message-ID: <CALNs47uO9ST7Ev3yG3LPNeJ=0Mdq9pQwO2Jcy624__FpnU=NHA@mail.gmail.com>
+Subject: Re: [PATCH v5 06/13] scripts: generate_rust_analyzer.py: add type hints
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Danilo Krummrich <dakr@kernel.org>, 
+	Boris-Chengbiao Zhou <bobo1239@web.de>, Kees Cook <kees@kernel.org>, Fiona Behrens <me@kloenk.dev>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Lukas Wirth <lukas.wirth@ferrous-systems.com>, 
+	Daniel Almeida <daniel.almeida@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-
-
-On April 16, 2025 11:16:45 PM PDT, Ard Biesheuvel <ardb@kernel=2Eorg> wrot=
-e:
->On Thu, 17 Apr 2025 at 00:01, Kees Cook <kees@kernel=2Eorg> wrote:
->>
->> GCC 15's new -Wunterminated-string-initialization notices that the 16
->> character lookup table "zero_uuid" (which is not used as a C-String)
->> needs to be marked as "nonstring":
->>
->> drivers/md/bcache/super=2Ec: In function 'uuid_find_empty':
->> drivers/md/bcache/super=2Ec:549:43: warning: initializer-string for arr=
-ay of 'char' truncates NUL terminator but destination lacks 'nonstring' att=
-ribute (17 chars into 16 available) [-Wunterminated-string-initialization]
->>   549 |         static const char zero_uuid[16] =3D "\0\0\0\0\0\0\0\0\0=
-\0\0\0\0\0\0\0";
->>       |                                           ^~~~~~~~~~~~~~~~~~~~~=
-~~~~~~~~~~~~~
->>
->> Add the annotation to silence the GCC warning=2E
->>
->> Signed-off-by: Kees Cook <kees@kernel=2Eorg>
->> ---
->> Cc: Coly Li <colyli@kernel=2Eorg>
->> Cc: Kent Overstreet <kent=2Eoverstreet@linux=2Edev>
->> Cc: linux-bcache@vger=2Ekernel=2Eorg
->> ---
->>  drivers/md/bcache/super=2Ec | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/md/bcache/super=2Ec b/drivers/md/bcache/super=2Ec
->> index e42f1400cea9=2E=2E577d048170fe 100644
->> --- a/drivers/md/bcache/super=2Ec
->> +++ b/drivers/md/bcache/super=2Ec
->> @@ -546,7 +546,7 @@ static struct uuid_entry *uuid_find(struct cache_se=
-t *c, const char *uuid)
->>
->>  static struct uuid_entry *uuid_find_empty(struct cache_set *c)
->>  {
->> -       static const char zero_uuid[16] =3D "\0\0\0\0\0\0\0\0\0\0\0\0\0=
-\0\0\0";
->> +       static const char zero_uuid[] __nonstring =3D "\0\0\0\0\0\0\0\0=
-\0\0\0\0\0\0\0\0";
->>
+On Tue, Mar 25, 2025 at 3:07=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
 >
->Just
+> Python type hints allow static analysis tools like mypy to detect type
+> errors during development, improving the developer experience.
 >
->static const char zero_uuid[16] =3D {};
+> Python type hints have been present in the kernel since 2019 at the
+> latest; see commit 6ebf5866f2e8 ("kunit: tool: add Python wrappers for
+> running KUnit tests").
 >
->should work fine here too=2E No need for the initializer=2E
+> Add a subclass of `argparse.Namespace` to get type checking on the CLI
+> arguments. Move parsing of `cfg` out of `generate_crates` to reduce the
+> number of variables in scope with `cfg` in their name. Use a defaultdict
+> to avoid `.get("key", [])`.
+>
+> Run `mypy --strict scripts/generate_rust_analyzer.py --python-version
+> 3.8` to verify. Note that `mypy` no longer supports python < 3.8.
+>
+> Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+>  scripts/generate_rust_analyzer.py | 166 +++++++++++++++++++++++++-------=
+------
+>  1 file changed, 109 insertions(+), 57 deletions(-)
 
-=F0=9F=A4=A6 Yes=2E This is what I get for fixing dozens of these=2E I'll =
-send a v2=2E=2E=2E
+> +                {
+> +                    crate: vals.lstrip("--cfg").split()
+> +                    for crate, vals in map(lambda cfg: cfg.split("=3D", =
+1), args.cfgs)
+> +                },
 
--Kees
+Tiny nit only if you wind up touching this again, generators or
+comprehension are a bit more canonical than `map` and `filter`
 
+     for crate, _, vals in (cfg.partition("=3D") for cfg in args.cfg)
 
---=20
-Kees Cook
+The rest looks good to me, with or without that
+
+Reviewed-by: Trevor Gross <tmgross@umich.edu>
