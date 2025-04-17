@@ -1,144 +1,113 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B378185935;
-	Thu, 17 Apr 2025 01:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08BF74BED;
+	Thu, 17 Apr 2025 01:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744854683; cv=none; b=RJ07XYNSVB6UgqG3tyFdnDG++4eOHyDm3uru80HeYPcjJdeUdX5cOB1VhRKKy8alQ3FCaI7ljGlOwQbg3NhyvW0g95AVSOZCQ+OjFby+g4uYwyqOlLGEsREN7J8ehRi17CkoFTEldlhwIl/vMfiWMg1KXcpwFBlsUTJkwzhFGe8=
+	t=1744854732; cv=none; b=Zi1BYo56hSGNGPt3UJgzCAmWasjgWbeWzslE8m2IWObj19VnWUQkwYWMolfMghcu0U8wEgJ+A3TxVkBLtKT/n8bAa5pvc7eKCCPxcBubEZC8Uv/seB65bzMMKsduwgly533YXc7IQfk6l97lzp9HCMUOgCrfvmIGHVWSbiKs6gI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744854683; c=relaxed/simple;
-	bh=ejenr1IlbFkwAZlQzP67Mm+QohganpUA2+i6veMbS8c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mnWcTaJZlQrdeGT/iCYjdwDJCwT+sb3SdKvvz+bUYtIDXUzM9TOs9rXxL1s0WrzaKNvfAHEKJJavMwCvdlfL4YeuxFWSxU+wnbJNxPb5IGBAgzpgYVJ20oOyEm68024JfnZRtEZ4tbN46nFF3lDPqqzwzMkDv3p2L1ZdrQPiM+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=H6j4Z3ZQ; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744854732; c=relaxed/simple;
+	bh=8P33tZx+FG4uxbrNDNGiIx42lfZjyKNz1e0q+MTU00Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Kv4gEu8BL+WSpgI53s1Xy81momNNoF/j6WGe9IoEoCJvh+gPdAbe1y39Q/wBPrBsu9BiQPFPC/cLPGHfJ5rzPT4p4dPTwc05n0CFGVGprEoqveHJJrD5rsUQEfIFPx4kTE3dpYNzf4w5m2KZ057VN960K3inDxq5i8eNhUZO9T0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=M/R8b8I/; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="H6j4Z3ZQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=EjXsv
-	QkFD1by3AcR8i+7PjuCNVtIggElZ4f9qddqVTs=; b=H6j4Z3ZQmGePk01xlioxO
-	qbr5+9KQEN3Nh5daiJwM2/6og+Y4ZUigHKy9PRvtusDt1WubDKsSPFc+IOkQdWIw
-	B2s5tQ040QLFQ2q5oXKvjKskreBaZUPaajL0U5LZwXNq5KoJMI6ljRKvUBDwtu1X
-	Rbz5APqDu7oCQ7q3WhLuCw=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgA3kaEGXgBopyyzAg--.31710S5;
-	Thu, 17 Apr 2025 09:49:00 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	hengqi.chen@gmail.com,
-	olsajiri@gmail.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 bpf-next 3/3] selftests/bpf: Add test for attaching kprobe with long event names
-Date: Thu, 17 Apr 2025 09:48:48 +0800
-Message-Id: <20250417014848.59321-4-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250417014848.59321-1-yangfeng59949@163.com>
-References: <20250417014848.59321-1-yangfeng59949@163.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="M/R8b8I/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1744854723;
+	bh=NL+ho5AbXUYunSuWKJArnY56fdGu/V6TOvKjJ6or/Sk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=M/R8b8I/dlDbjY2Dip7yYTIT29huJr7KfafedW6/5qIbT2XjCe9RQMX8csv52e1yo
+	 +nGX+pLbplvaCMBLJEHYlSbvA//FbV6f0XDxztvUINreoPIMHtSr/yAt/U6UH5c1Ti
+	 E1P2ckl4Y0s7+VQH1m+nNFKpR7x/oybeZ/3EmB68iVPlbcHfMkVkYJ9QKBe2JqGSOd
+	 cSYFm3GmKpD92dhodp/DyknKb1QpyVQcWSh+hsK2XWXL2WYCxbFvR1IKK+NO520rpf
+	 Pem0iqaWomkO0b97oXvYa0TyaGohhqPVeyg+zeppbgqg/bMaKfhWvSUIQXNbYgZIPZ
+	 3ypZJNW/zI2tg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZdLVW07K8z4xRB;
+	Thu, 17 Apr 2025 11:52:02 +1000 (AEST)
+Date: Thu, 17 Apr 2025 11:52:01 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Linux Crypto List <linux-crypto@vger.kernel.org>, Linux Kernel Mailing
+ List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the crypto tree
+Message-ID: <20250417115201.05de8b5c@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:QCgvCgA3kaEGXgBopyyzAg--.31710S5
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXF1DGw18Zr18Ary3Kr1rJFb_yoW5ZF1Upa
-	yDZ34Ykr4rX3W7WF98G34UZr4Fvr1kur17CF1Dtrn8ZF4UWw1xXF17tF4jyrn8JrZaq3Wa
-	va1Utry5uayxZFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jSOJ5UUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiwhUyeGgAXDhKBAAAsf
+Content-Type: multipart/signed; boundary="Sig_/dQDpTbzmc7/cDLg=1IeyOPF";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-From: Feng Yang <yangfeng@kylinos.cn>
+--Sig_/dQDpTbzmc7/cDLg=1IeyOPF
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This test verifies that attaching kprobe/kretprobe with long event names
-does not trigger EINVAL errors.
+Hi all,
 
-Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
----
- .../selftests/bpf/prog_tests/attach_probe.c   | 35 +++++++++++++++++++
- .../selftests/bpf/test_kmods/bpf_testmod.c    |  4 +++
- 2 files changed, 39 insertions(+)
+After merging the crypto tree, today's linux-next build (powerpc
+ppc64_defconfig) failed like this:
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/attach_probe.c b/tools/testing/selftests/bpf/prog_tests/attach_probe.c
-index 9b7f36f39c32..cabc51c2ca6b 100644
---- a/tools/testing/selftests/bpf/prog_tests/attach_probe.c
-+++ b/tools/testing/selftests/bpf/prog_tests/attach_probe.c
-@@ -168,6 +168,39 @@ static void test_attach_uprobe_long_event_name(void)
- 	test_attach_probe_manual__destroy(skel);
- }
- 
-+/* attach kprobe/kretprobe long event name testings */
-+static void test_attach_kprobe_long_event_name(void)
-+{
-+	DECLARE_LIBBPF_OPTS(bpf_kprobe_opts, kprobe_opts);
-+	struct bpf_link *kprobe_link, *kretprobe_link;
-+	struct test_attach_probe_manual *skel;
-+
-+	skel = test_attach_probe_manual__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "skel_kprobe_manual_open_and_load"))
-+		return;
-+
-+	/* manual-attach kprobe/kretprobe */
-+	kprobe_opts.attach_mode = PROBE_ATTACH_MODE_LEGACY;
-+	kprobe_opts.retprobe = false;
-+	kprobe_link = bpf_program__attach_kprobe_opts(skel->progs.handle_kprobe,
-+						      "bpf_testmod_looooooooooooooooooooooooooooooong_name",
-+						      &kprobe_opts);
-+	if (!ASSERT_OK_PTR(kprobe_link, "attach_kprobe_long_event_name"))
-+		goto cleanup;
-+	skel->links.handle_kprobe = kprobe_link;
-+
-+	kprobe_opts.retprobe = true;
-+	kretprobe_link = bpf_program__attach_kprobe_opts(skel->progs.handle_kretprobe,
-+							 "bpf_testmod_looooooooooooooooooooooooooooooong_name",
-+							 &kprobe_opts);
-+	if (!ASSERT_OK_PTR(kretprobe_link, "attach_kretprobe_long_event_name"))
-+		goto cleanup;
-+	skel->links.handle_kretprobe = kretprobe_link;
-+
-+cleanup:
-+	test_attach_probe_manual__destroy(skel);
-+}
-+
- static void test_attach_probe_auto(struct test_attach_probe *skel)
- {
- 	struct bpf_link *uprobe_err_link;
-@@ -371,6 +404,8 @@ void test_attach_probe(void)
- 
- 	if (test__start_subtest("uprobe-long_name"))
- 		test_attach_uprobe_long_event_name();
-+	if (test__start_subtest("kprobe-long_name"))
-+		test_attach_kprobe_long_event_name();
- 
- cleanup:
- 	test_attach_probe__destroy(skel);
-diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-index f38eaf0d35ef..2e54b95ad898 100644
---- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-+++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-@@ -134,6 +134,10 @@ bpf_testmod_test_arg_ptr_to_struct(struct bpf_testmod_struct_arg_1 *a) {
- 	return bpf_testmod_test_struct_arg_result;
- }
- 
-+__weak noinline void bpf_testmod_looooooooooooooooooooooooooooooong_name(void)
-+{
-+}
-+
- __bpf_kfunc void
- bpf_testmod_test_mod_kfunc(int i)
- {
--- 
-2.43.0
+arch/powerpc/lib/crc32-glue.c: In function 'crc32c_arch':
+arch/powerpc/lib/crc32-glue.c:44:17: error: implicit declaration of functio=
+n 'pagefault_disable'; did you mean 'preempt_disable'? [-Wimplicit-function=
+-declaration]
+   44 |                 pagefault_disable();
+      |                 ^~~~~~~~~~~~~~~~~
+      |                 preempt_disable
+arch/powerpc/lib/crc32-glue.c:48:17: error: implicit declaration of functio=
+n 'pagefault_enable'; did you mean 'preempt_enable'? [-Wimplicit-function-d=
+eclaration]
+   48 |                 pagefault_enable();
+      |                 ^~~~~~~~~~~~~~~~
+      |                 preempt_enable
+arch/powerpc/lib/crc-t10dif-glue.c: In function 'crc_t10dif_arch':
+arch/powerpc/lib/crc-t10dif-glue.c:48:17: error: implicit declaration of fu=
+nction 'pagefault_disable'; did you mean 'preempt_disable'? [-Wimplicit-fun=
+ction-declaration]
+   48 |                 pagefault_disable();
+      |                 ^~~~~~~~~~~~~~~~~
+      |                 preempt_disable
+arch/powerpc/lib/crc-t10dif-glue.c:52:17: error: implicit declaration of fu=
+nction 'pagefault_enable'; did you mean 'preempt_enable'? [-Wimplicit-funct=
+ion-declaration]
+   52 |                 pagefault_enable();
+      |                 ^~~~~~~~~~~~~~~~
+      |                 preempt_enable
 
+Presumably caused by commit
+
+  fcfbdddc6f02 ("crypto: ctr - Remove unnecessary header inclusions")
+
+I have used the crypto tree from next-20250416 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/dQDpTbzmc7/cDLg=1IeyOPF
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgAXsEACgkQAVBC80lX
+0GxrTwf/cRkXDexTV415rtU80TLkkFReh0SqQUZpeFJ+HTUiEywKjy2USV+iH26R
+1cV/kY0+ug42BQIUrwinNWewQgzCmZYySnjMhLo5ksyoG/vmJ9ygu+Wp55UMO6Hf
+jhNmXj9EM4atj8VrgoHXqDRTmXUDBRtiry7A5m+PQookN4tOI3av97PO/757lPRD
+/XtX1AMetacfoSBCznsSQjRyrxff6bFLNh2RzuM1tp5IEk1aSd5xlDs893i35xpo
+SB5GzoeM6Zpx61vHfCbXCG0oYMhv8gWbpNiFPzpmAwIqcW0lV8n7H9mJNfSJvnoH
+w7td0b72gNYHAdAlWW25/NUZ7mPkOw==
+=MaM0
+-----END PGP SIGNATURE-----
+
+--Sig_/dQDpTbzmc7/cDLg=1IeyOPF--
