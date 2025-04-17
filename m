@@ -1,98 +1,112 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D21023FC7D;
-	Thu, 17 Apr 2025 12:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F1823FC7D
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:26:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744892782; cv=none; b=U0/qH3NiWL4mCo9ijKQuxYyl8McYiINGzcgpl/oj2mRvo7L9ZYZ1fojB4VUNlRxzicv5Y8s4QkqfXXHa6d44NeffkMhsV/IFfPN5MRfzYw/JHUEcjmlcE3XEDZdPjKOzs7QNKgFcB5oI0RrRW7crtXi5dk+I6QEYmRuhU14X8t8=
+	t=1744892794; cv=none; b=ByQlEGtElDnaaB/i+VoAIFxJf22apUv8YLPHYulg896/jUqVWANxz3bGhXEtlvqby6jtO/b2QN1HnBGZMvhynYu2t/Mt9GOqiQKFoPHbE3bR5Dg0QRfP4jMfpxVNMSdc+T47U5WAiSBZ5mFkhTP1H2rqzYWelY05U4RpvYGQcvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744892782; c=relaxed/simple;
-	bh=XShrIqy/F/rO/KKW612V+Cc9f3IOC6YKFgfbvHrhTVw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rhxIIa80FuiDCQ4HHD87kkNYmNNXipomV0K+En3E8VjaHzFpLeZ6LLU7bUFaIXQlKtxck3LTrMMsxOCC/CtoUV0L6KHUSSo9vx/f+MJJh5eBwy0CZa2fcq1/yS0DeOHim2gIbxKkPZtQSyE7fyZGUiCcYjosCekbuuEJktlg1GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=KScbEZzG; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1744892794; c=relaxed/simple;
+	bh=lz3o+oEn9wieKcZUu7IDOFxkvLTQmW2Gg8dareie/DI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uQ1B71vhmTd1zKkLbmpNd/PWe6adgjy4Hoivg6zGCmASYlxZsOADquy+U9OD5ub+jrqK6Zal6fTJ4VLQF3a6b/5/GZt7l/F+VuOn9qqYFdKvezHUcYtpgFUNncSK16itDEAwaedcMfhLRzS+Um4fVwk4cRzl3V/7Qx8ZEByCah0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=NTHucLyi; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="KScbEZzG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=BVA8Ut43wC0vlwGEv5MT143tTlJwFfx7Nv9rCtN2oCo=; b=KScbEZzGRMQxUhMbyHSWCWNh/o
-	8v6F3QwmplCDkcgy0Ast0jELZEdhMvg5mGAymRrtGYyO+W5p2O/e/+VvZoXwSAQk9NDACJ8HIWmEE
-	ui3wNRoI6/Z3vuSCpRMhExN/42nau6qdfvUpgPI9ywIRiwuilCBorpRTj0b+SUYd4Yr2h34VcP9Wk
-	TN5nIKO5nLMaOCCfWz4aXFAoOc44Hp9FKoDHnw7rle8FoN9OcgOEz81wrTP5JoClxWV1sPG5pqxST
-	Q5EzrYAVhniiBMa0Zjj3vLehMaUrlQ7xy/lVmn6WsMGFHAo/iJZyC/V8nhS/1Fes/uqnHESH3ZMIH
-	ZLJ5pTtQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56390)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u5OJj-0007Gc-2R;
-	Thu, 17 Apr 2025 13:26:07 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u5OJa-0002RV-1O;
-	Thu, 17 Apr 2025 13:25:58 +0100
-Date: Thu, 17 Apr 2025 13:25:58 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	upstream@airoha.com, Christian Marangi <ansuelsmth@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Clark Wang <xiaoning.wang@nxp.com>,
-	Claudiu Beznea <claudiu.beznea@microchip.com>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ioana Ciornei <ioana.ciornei@nxp.com>,
-	Jonathan Corbet <corbet@lwn.net>, Joyce Ooi <joyce.ooi@intel.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Madalin Bucur <madalin.bucur@nxp.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	Robert Hancock <robert.hancock@calian.com>,
-	Saravana Kannan <saravanak@google.com>,
-	UNGLinuxDriver@microchip.com,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Wei Fang <wei.fang@nxp.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [net-next PATCH v3 00/11] Add PCS core support
-Message-ID: <aADzVrN1yb6UOcLh@shell.armlinux.org.uk>
-References: <20250415193323.2794214-1-sean.anderson@linux.dev>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NTHucLyi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1744892787;
+	bh=kRxBgMG2LpqYjbVTje+9WNfR7ZeDUoJk1ySneyQlkPQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NTHucLyiW4iNqVJ8JqmXKPoqdFnaX9JBWFojVg9O5R+GY4Y+qeZ6aCGz/y3fhMJOv
+	 viTDZUBFMGsN5bhPlUF0USib8ENwikYaUMMLrUiSU2Smum+GzsNjb+4pXSWbroHgkA
+	 BYJ7eOlKSkHJ9Lz4E4tFGKpWFj4aXxn4kPtAbHej13WykNUj1L0Gk4kldk9uC22ct6
+	 RtGuDX5ubbVzAtJVNfawhS4yJ6EYQS8PAdLK+m5/LLLMZ7C4urzIAf6Qzmms93hCTj
+	 o/+iY70+GQD/4+DW9DtMu1k8Y5imzQS5OrI+U6WnrRnsGUPpq37yTn6Vunt7slV8K5
+	 BqgkcgWLgGl4g==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZdcZV656Vz4x8b;
+	Thu, 17 Apr 2025 22:26:26 +1000 (AEST)
+Date: Thu, 17 Apr 2025 22:26:25 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: maddy@linux.ibm.com, linux-kernel@vger.kernel.org, Michael Ellerman
+ <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>,
+ linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] powerpc: do not build ppc_save_regs.o always
+Message-ID: <20250417222625.50a6684e@canb.auug.org.au>
+In-Reply-To: <20250417105305.397128-1-jirislaby@kernel.org>
+References: <20250417105305.397128-1-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415193323.2794214-1-sean.anderson@linux.dev>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: multipart/signed; boundary="Sig_/AdrgyeNqwXgUiyco/PGm_Mo";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Tue, Apr 15, 2025 at 03:33:12PM -0400, Sean Anderson wrote:
-> This series adds support for creating PCSs as devices on a bus with a
-> driver (patch 3). As initial users,
+--Sig_/AdrgyeNqwXgUiyco/PGm_Mo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-As per previous, unless I respond (this response not included) then I
-haven't had time to look at it - and today is total ratshit so, not
-today.
+Hi Jiri,
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+On Thu, 17 Apr 2025 12:53:05 +0200 "Jiri Slaby (SUSE)" <jirislaby@kernel.or=
+g> wrote:
+>
+> The Fixes commit below tried to add CONFIG_PPC_BOOK3S to one of the
+> conditions to enable the build of ppc_save_regs.o. But it failed to do
+> so, in fact. The commit omitted to add a dollar sign.
+>=20
+> Therefore, ppc_save_regs.o is built always these days (as
+> "(CONFIG_PPC_BOOK3S)" is never an empty string).
+>=20
+> Fix this by adding the missing dollar sign.
+>=20
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> Fixes: fc2a5a6161a2 ("powerpc/64s: ppc_save_regs is now needed for all 64=
+s builds")
+> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: Naveen N Rao <naveen@kernel.org>
+> Cc: linuxppc-dev@lists.ozlabs.org
+
+Thanks for that.
+
+Only 7.5 years later :-)  This shows why I should not have been fixing
+problems in linux-next, I should have only ever complained about them,
+like I do now :-)
+
+Acked-by: Stephen Rothwell <sfr@canb.auug.org.au>
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/AdrgyeNqwXgUiyco/PGm_Mo
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgA83EACgkQAVBC80lX
+0GywEwf/WKqVgTtucvJR5XWjZC/k5Z9n+/rd2S1x/h5tDfYGPaQFOOdyooaQm7Dj
+z0T8C1FvnuIDUNH9TZUKUu4vdf2y09nCtpTVerfRTZ0qgCbFdop8sUylxbkHvJ3E
+J9truj4d7HyB4ZFFStPypbzO+WNULp3a+S0xAYBzsDYKDESJ9bHuRfzCbXuN/i7g
+9QpXZdLg851zPi0AFnlBNkoLOCPyKmt5Fp0tpxtTBSNVgYOFqPLGxbWCONY1IGwx
+f6QKRrSL1/0QMXhWqhQi+ExI+SOecVsEzeRTuK0wY3msPBb3rNIn/+lrWKZ9i8My
+HrggBVKCZAiZHYhh+Xrt7QGyPvURhg==
+=nL1d
+-----END PGP SIGNATURE-----
+
+--Sig_/AdrgyeNqwXgUiyco/PGm_Mo--
