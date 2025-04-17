@@ -1,152 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2450C2566CE;
-	Thu, 17 Apr 2025 17:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E62256C92
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 17:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744912582; cv=none; b=bHuZg4FOOSFiHsBMpR0lU/Po5Ul19qptVQ0Rq/KbxPPS4rNWB3r/k6MtNbbc68tri4e6zgj4GljsH+o+AYzXAHm5HgEdvZIyh6R2odmqH0bUpR7vIfCt5bGc3H4ejfSmtz6+jUDhb+x+qROPuRWela+5mcsG71TKdplbD0rHgXA=
+	t=1744912611; cv=none; b=XcckHTuq7EVFRYWO506PbCFwG56l+no3xvT0RSy0ZVz+vJW16eOdCHPJ+9Xih8OdTSllZKJBlBqwz604V9TcL1k7loP1t6iGx5JiJU8EiA39x48z/IP7/oqT4y6uS2u16WF8NXvkvJymPFMXjjshpjPjFoFWk2GJLM2DKRM1j0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744912582; c=relaxed/simple;
-	bh=DFUBl5Ml1aGbqFNUB0aEGrMyI66kUjniylf329G+vOA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oTfiVVq/bC9A7xW/6gUF5c+Pp1Ht4+N49W3bGiTbovz2f2pZ9Ccc/WgiaGAFhSti3tpxE8PCyIGFAHTtqBXlx/kUmOVW7uY5b79xJQY+pVj+HHtDNF+Kte8EIle4SLZbmqI+zIyJeuJUwqclYqrmw0QhFMA05hBDg6SK9lhQM+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=X2CJ1eGD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744912611; c=relaxed/simple;
+	bh=HFDjxAa3bGkrA+MCKxtUHwtw/L15m55cXlBT8SmDkZs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aM6D3As9f9I6D4J/Eg6f2eWQAFin/c5Jbi1X+5jyXKr7yRp6gRjjMkJ4kAqszOKMfk/Z0DZbU2K/h8cmTsj2ImDzdje0WX5Fy8uhkZ9HKd0PzePsAjppHNhLPBUBAH7bLUicdnwleyIeOaPWNnUrDNMk/MnG1jiGIxyf8pGjx5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Nl8OV9Rt; arc=none smtp.client-ip=209.85.161.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="X2CJ1eGD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A4F4C4CEE4;
-	Thu, 17 Apr 2025 17:56:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744912582;
-	bh=DFUBl5Ml1aGbqFNUB0aEGrMyI66kUjniylf329G+vOA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X2CJ1eGDY1dQOSaPQiynKfZqu0TacYwpxslPlnWxHi7GvzXGHJjIC9M0L4r05UCmH
-	 nGbU9hJxKEBDm/M3KYUUyc0PY/LrjZg44H/nhJQeDnCx75UeKq66Ox7U0f4quaYOWh
-	 nR5D2IW1lMSboohxwDkojWdnZkkG/YjL0qNEYfIw=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	Max Grobecker <max@grobecker.info>,
-	Ingo Molnar <mingo@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Borislav Petkov <bp@alien8.de>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.14 057/449] x86/cpu: Dont clear X86_FEATURE_LAHF_LM flag in init_amd_k8() on AMD when running in a virtual machine
-Date: Thu, 17 Apr 2025 19:45:45 +0200
-Message-ID: <20250417175120.288922085@linuxfoundation.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250417175117.964400335@linuxfoundation.org>
-References: <20250417175117.964400335@linuxfoundation.org>
-User-Agent: quilt/0.68
-X-stable: review
-X-Patchwork-Hint: ignore
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Nl8OV9Rt"
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-601fcbff303so519283eaf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 10:56:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1744912608; x=1745517408; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=IbsMu0aBr/i6j1IitEROGEDVxfzbbm1plyUyzpvhlRo=;
+        b=Nl8OV9Rt4KYlwOwn8SKxYx8ZezllBOZ3gf8epgXhImFKGCPMhZ2ZwU7OfNYdGxa3m0
+         /ZWG0e8x7I8lsPz3BGZldTx+ymY+MQ3shCSSvFIm2qugu7F1dPsFn4Eu5BHaa4cNYbkh
+         eXEzCnBUY3YrKN2TQXQLf2QG0jhRT5qDiFBCw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744912608; x=1745517408;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IbsMu0aBr/i6j1IitEROGEDVxfzbbm1plyUyzpvhlRo=;
+        b=MIwayyr0PxsrU5U0VtpooArwzA4xmGkNbIoJ0EZMKbg5n74+F/B5EfNfoKBwI62F3F
+         3iz7S29lL+uNYLKTsR2vQAX/+DdwfDFSiTumjNlh2kpZmKshtKYc3VkHwjIAGGbeqBn/
+         tqXuMVdNxcUfOR7ZOwplb9BfA9KwbKMfRRzWc7mjpqjKxx+5eYss5IEijkPmMX+lofDI
+         D88BzE9hT6PsThD/1Bb6CI5E3VsHd6LGQ0NDhTK+E9xT8emTYVPhXeam5rgvrGxtdjrB
+         /W5eNkD58W4LrzTYhuH0Rj4ShWOOVgbVBO89Y+pP6A/+xNQgpVv78T+OUg41DrZldukV
+         loFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUA1zkczTIMk/+cMOJY3J04xGpX76hAGPfFsczrDZmUyxQUZXSIgstml2lz61ZXSiKQd3blp7FtCVjPFDs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywh0geJywrcEQnkSeCSNnpkHsUkSHjNNz411G1eep9XQCVF/Mbr
+	2HwS4eAZVYmOugbZzPaH7FgsQfx4kOkxHe2Dc0JIjFu8CoKVq7W4TgzMEjIgPw==
+X-Gm-Gg: ASbGncuNRpFKNz8EnU2ESxeAP3MOYgOeE8QOLGBiE0yoNEa99+ifoapUFADXsYm6zlF
+	BFEYQFeKBaHx5jJPwl10wXhqS5WHDBnb+a8S+qhNQ2p4RdShfaKLpdKR85v3lbQJbZuavrKSssc
+	5tX3lV8THJd0j4VKJzjOKxXBrQJfQx+XvlaM8nAXT8ePCJR39phhCBOe1JY/V60z7IjlKWfj6Lq
+	QXSuYvjpfcJ4zI4jPwgESegBUzlEFe5lYrUqgSy9eW3KujdfDJgADfvF+9zBSLoVYC4NiMKiTL0
+	b8hhpoujES3l1giulRZgjVpN8f3EVcLcm2KelXObFzrW5+7HBOHHWzmnAb/LiFQwk/jTjgIFlPc
+	YhKZvcm7mAXomgGw=
+X-Google-Smtp-Source: AGHT+IFedkd78SDrsxjahnEbM2pzg/zyHlHKbslNiqwrGHxrAvh6pS7r2bvmEgEhjZGtcvK72ai09Q==
+X-Received: by 2002:a4a:e913:0:b0:603:f973:1b6 with SMTP id 006d021491bc7-604a92b330bmr3384645eaf.5.1744912608302;
+        Thu, 17 Apr 2025 10:56:48 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-605ff5f778bsm47206eaf.17.2025.04.17.10.56.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Apr 2025 10:56:47 -0700 (PDT)
+Message-ID: <94abe22f-ae52-4bc6-aef1-4378db38f494@broadcom.com>
+Date: Thu, 17 Apr 2025 10:56:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [ethernet/broadcom/bgmac]: Implement software multicast filter
+ clear
+To: Ujwal Kundur <ujwal.kundur@gmail.com>, rafal@milecki.pl,
+ bcm-kernel-feedback-list@broadcom.com
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, shuah@kernel.org
+References: <CALkFLL+LxVk+M--+qHiP6g31rcvXxBGRJpKvp=CCFekL9OyUww@mail.gmail.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <CALkFLL+LxVk+M--+qHiP6g31rcvXxBGRJpKvp=CCFekL9OyUww@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-6.14-stable review patch.  If anyone has any objections, please let me know.
+Howdy,
 
-------------------
+On 4/13/25 00:25, Ujwal Kundur wrote:
+> Hi,
+>     I'm trying to work on a few TODOs in the
+> drivers/net/ethernet/broadcom/bgmac.c driver code and came across the
+> "Clear software multicast filter list" item.
+>     I tried comparing the multicast filter implementation of the
+> sb1250-mac.c driver for inspiration but realized that most of the code
+> for bgmac has been written by reverse-engineering the specs:
+>     hhttps://bcm-v4.sipsolutions.net/Specification/
+> 
+>     I'd like to try my hand at this if there are documents/guides
+> around this topic or if there's a canonical source for the binary that
+> I can try reverse engineering. Please let me know if you have any
+> leads/advice.
 
-From: Max Grobecker <max@grobecker.info>
+Given that these controllers are always interfaced with either an 
+integrated or an external Ethernet switch chip, the design was done 
+assuming that the switch will be operated in managed mode and multicast 
+filtering will be done on the switch side.
 
-[ Upstream commit a4248ee16f411ac1ea7dfab228a6659b111e3d65 ]
-
-When running in a virtual machine, we might see the original hardware CPU
-vendor string (i.e. "AuthenticAMD"), but a model and family ID set by the
-hypervisor. In case we run on AMD hardware and the hypervisor sets a model
-ID < 0x14, the LAHF cpu feature is eliminated from the the list of CPU
-capabilities present to circumvent a bug with some BIOSes in conjunction with
-AMD K8 processors.
-
-Parsing the flags list from /proc/cpuinfo seems to be happening mostly in
-bash scripts and prebuilt Docker containers, as it does not need to have
-additionals tools present – even though more reliable ways like using "kcpuid",
-which calls the CPUID instruction instead of parsing a list, should be preferred.
-Scripts, that use /proc/cpuinfo to determine if the current CPU is
-"compliant" with defined microarchitecture levels like x86-64-v2 will falsely
-claim the CPU is incapable of modern CPU instructions when "lahf_lm" is missing
-in that flags list.
-
-This can prevent some docker containers from starting or build scripts to create
-unoptimized binaries.
-
-Admittably, this is more a small inconvenience than a severe bug in the kernel
-and the shoddy scripts that rely on parsing /proc/cpuinfo
-should be fixed instead.
-
-This patch adds an additional check to see if we're running inside a
-virtual machine (X86_FEATURE_HYPERVISOR is present), which, to my
-understanding, can't be present on a real K8 processor as it was introduced
-only with the later/other Athlon64 models.
-
-Example output with the "lahf_lm" flag missing in the flags list
-(should be shown between "hypervisor" and "abm"):
-
-    $ cat /proc/cpuinfo
-    processor       : 0
-    vendor_id       : AuthenticAMD
-    cpu family      : 15
-    model           : 6
-    model name      : Common KVM processor
-    stepping        : 1
-    microcode       : 0x1000065
-    cpu MHz         : 2599.998
-    cache size      : 512 KB
-    physical id     : 0
-    siblings        : 1
-    core id         : 0
-    cpu cores       : 1
-    apicid          : 0
-    initial apicid  : 0
-    fpu             : yes
-    fpu_exception   : yes
-    cpuid level     : 13
-    wp              : yes
-    flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca
-                      cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx rdtscp
-                      lm rep_good nopl cpuid extd_apicid tsc_known_freq pni
-                      pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt
-                      tsc_deadline_timer aes xsave avx f16c hypervisor abm
-                      3dnowprefetch vmmcall bmi1 avx2 bmi2 xsaveopt
-
-... while kcpuid shows the feature to be present in the CPU:
-
-    # kcpuid -d | grep lahf
-         lahf_lm             - LAHF/SAHF available in 64-bit mode
-
-[ mingo: Updated the comment a bit, incorporated Boris's review feedback. ]
-
-Signed-off-by: Max Grobecker <max@grobecker.info>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kernel/cpu/amd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index ce71f49654ee3..4c9b20d028eb4 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -632,7 +632,7 @@ static void init_amd_k8(struct cpuinfo_x86 *c)
- 	 * (model = 0x14) and later actually support it.
- 	 * (AMD Erratum #110, docId: 25759).
- 	 */
--	if (c->x86_model < 0x14 && cpu_has(c, X86_FEATURE_LAHF_LM)) {
-+	if (c->x86_model < 0x14 && cpu_has(c, X86_FEATURE_LAHF_LM) && !cpu_has(c, X86_FEATURE_HYPERVISOR)) {
- 		clear_cpu_cap(c, X86_FEATURE_LAHF_LM);
- 		if (!rdmsrl_amd_safe(0xc001100d, &value)) {
- 			value &= ~BIT_64(32);
+It's been a while since I looked at that part of the DSA and bridge 
+stack, but we should be pretty close to having that capability nowadays.
 -- 
-2.39.5
-
-
-
+Florian
