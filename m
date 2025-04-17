@@ -1,126 +1,220 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3800714A4C7;
-	Thu, 17 Apr 2025 14:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF36974BED
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:50:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744901430; cv=none; b=ZxoSQRq5QGWS/hD1SEmqASFMSplnbTEHbp5j31k6yP7aGw020Urlg+ctLyiNsWx+9iv4ed+MOSudK3DmDOoRTfAMwgO523VDwffldBzc5YOyMjCoPRocfynzIfFX6KTFlCGynroe/6hoSdcwgng34+pLQGkx+cabgi7o7ur3L0I=
+	t=1744901442; cv=none; b=b8yBmXkLhPRir4/3bdMnXefr4/I9av/3RKptvK5/qOuNQkI42i4UJD7ooNUBc0FQRQlvSKLZ1+hRIVLxy16LXVehOVz0ebywYHIMpemAAk28S1akj9WGI8sLPiw9ziFGxL5/0XmCGQ3pkE3xFu7IP7KLMsFfLWlvHdQrwH6P5yA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744901430; c=relaxed/simple;
-	bh=ydLwQu78BFvyikLXpxEaVTRiTBaEQwxwQL+LQghN1WU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A4s8cmPcXdL9w5fqQRafRWNINm/PMpSXQ/RJ7oDAWH46KRWvzlJtWsROhv++lPbgt5VyJRrIBUD6QMpZlQWI2PO/3OW3BP8utr5w3lMKIR/JDPzBxY4e0Zyo0WWH80X5+1PQSJvAkKfnxw8e0lR0gRlPXQVnj3kTe/TsikYPbVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a6rBNo+2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744901442; c=relaxed/simple;
+	bh=lfFcddiYY0f2/ajdCn13Ssqz/6k7ckZ4gPrPUQzxMQg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P4i0kMpsaN0XIiCWwNi2hC0I6RFLfe3C7g5SygOYm6J28scaI4T2wNQlq5xtcp0brMbsWGYVH1bXr0B59aLj9efidV3IqvY1nm/JiGTwF7l8vV73m4wZAPSiCq+ZcBhcEyM6OrwRcyiEyjvRVkukhX+TVVwuMtyu+2rcYoBMFhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aPfXkfuJ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a6rBNo+2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8413DC4CEE4;
-	Thu, 17 Apr 2025 14:50:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744901429;
-	bh=ydLwQu78BFvyikLXpxEaVTRiTBaEQwxwQL+LQghN1WU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a6rBNo+21GFbSyFtRSgtRLtdRBEHmGBjkySwyyv8xVXSZB9hXmetX8jJGOr/9lcf7
-	 G6088TMvGliHy0mpHsB2NS7yIJtrVHg7067cwIlBMaJNLtbxGhqe/vsNKAktU5NMJT
-	 TY28aVCpRZrico48wx8Wy8qERIAQ6XCCkfn+1P8knxStX68c4rSfB8DRArvkGVoRzM
-	 h4KSd0FMEkEZvY7dX61dEI8XrzL1Hrd8uw2gSZ0HvZbb+26cdbMgNWys25axYOIxci
-	 96r1znetQ1aLdxN0U0pK3PEC1y/O2k9D6vBfQ1h649OFj6KGI9OqrjPgI+gjxJ2BHb
-	 la2CzQ+I0BqXA==
-Date: Thu, 17 Apr 2025 15:50:23 +0100
-From: Srinivas Kandagatla <srini@kernel.org>
-To: Janne Grunau <j@jannau.net>
-Cc: fnkl.kernel@gmail.com, Sven Peter <sven@svenpeter.dev>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Neal Gompa <neal@gompa.dev>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>
-Subject: Re: [PATCH 2/3] nvmem: Add spmi-nvmem driver
-Message-ID: <20250417145023.GA34166@srini-hackbase>
-References: <20250415-spmi-nvmem-v1-0-22067be253cf@gmail.com>
- <20250415-spmi-nvmem-v1-2-22067be253cf@gmail.com>
- <81fb1290-fb39-40b7-9d79-f147fae5b269@kernel.org>
- <20250417143053.GD8400@robin.jannau.net>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aPfXkfuJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744901438;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n69F12b8gb5rkYnrsYjWLffA9DRH6Ubd/djGhMzPmIg=;
+	b=aPfXkfuJG4wLNN0frXzQgXp8hYJhexfwfA7NGu2xGeJyM3jVmfiYJllwTStQ/1A0pEwvhP
+	eErgtegkz/aHVVrAKLxjO4sgZNbqZ15Uw3SJhdEuTMFbwYoCOIo5OgBV8PIqLGQ2wttORb
+	x/abiBjWHml7pNpk57QqggHWEMdQm04=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-541-0BTaddYTPTi8ReVuyeNSuw-1; Thu,
+ 17 Apr 2025 10:50:35 -0400
+X-MC-Unique: 0BTaddYTPTi8ReVuyeNSuw-1
+X-Mimecast-MFC-AGG-ID: 0BTaddYTPTi8ReVuyeNSuw_1744901433
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C42B719560AD;
+	Thu, 17 Apr 2025 14:50:32 +0000 (UTC)
+Received: from [10.44.33.28] (unknown [10.44.33.28])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4AE8E19560A3;
+	Thu, 17 Apr 2025 14:50:27 +0000 (UTC)
+Message-ID: <03afdbe9-8f55-4e87-bec4-a0e69b0e0d86@redhat.com>
+Date: Thu, 17 Apr 2025 16:50:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417143053.GD8400@robin.jannau.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 net-next 3/8] mfd: Add Microchip ZL3073x support
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250416162144.670760-1-ivecera@redhat.com>
+ <20250416162144.670760-4-ivecera@redhat.com>
+ <8fc9856a-f2be-4e14-ac15-d2d42efa9d5d@lunn.ch>
+ <CAAVpwAsw4-7n_iV=8aXp7=X82Mj7M-vGAc3f-fVbxxg0qgAQQA@mail.gmail.com>
+ <894d4209-4933-49bf-ae4c-34d6a5b1c9f1@lunn.ch>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <894d4209-4933-49bf-ae4c-34d6a5b1c9f1@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Thu, Apr 17, 2025 at 04:30:53PM +0200, Janne Grunau wrote:
-> On Thu, Apr 17, 2025 at 02:34:37PM +0100, Srinivas Kandagatla wrote:
-> > 
-> > 
-> > On 15/04/2025 22:52, Sasha Finkelstein via B4 Relay wrote:
-> > > From: Hector Martin <marcan@marcan.st>
-> > > 
-> > > This driver exposes a SPMI device as an NVMEM device.
-> > > It is intended to be used with e.g. PMUs/PMICs that are used to
-> > > hold power management configuration, such as used on Apple Silicon
-> > > Macs.
-> > > 
-> > > Signed-off-by: Hector Martin <marcan@marcan.st>
-> > > Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
-> > > ---
-> > >   MAINTAINERS                |  1 +
-> > >   drivers/nvmem/Kconfig      | 14 +++++++++++
-> > >   drivers/nvmem/Makefile     |  2 ++
-> > >   drivers/nvmem/spmi-nvmem.c | 62 ++++++++++++++++++++++++++++++++++++++++++++++
-> > >   4 files changed, 79 insertions(+)
-> > > 
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index e7b2d0df81b387ba5398957131971588dc7b89dc..63c12f901aed1f3e6de8227d6db34af1bd046fe6 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -2298,6 +2298,7 @@ F:	drivers/iommu/io-pgtable-dart.c
-> > >   F:	drivers/irqchip/irq-apple-aic.c
-> > >   F:	drivers/nvme/host/apple.c
-> > >   F:	drivers/nvmem/apple-efuses.c
-> > > +F:	drivers/nvmem/spmi-nvmem.c
-> > >   F:	drivers/pinctrl/pinctrl-apple-gpio.c
-> > >   F:	drivers/pwm/pwm-apple.c
-> > >   F:	drivers/soc/apple/*
-> > > diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-> > > index 8671b7c974b933e147154bb40b5d41b5730518d2..9ec907d8aa6ef7df0ea45cc35e92d8239d2705ee 100644
-> > > --- a/drivers/nvmem/Kconfig
-> > > +++ b/drivers/nvmem/Kconfig
-> > > @@ -310,6 +310,20 @@ config NVMEM_SNVS_LPGPR
-> > >   	  This driver can also be built as a module. If so, the module
-> > >   	  will be called nvmem-snvs-lpgpr.
-> > >   
-> > > +config NVMEM_SPMI
-> > > +	tristate "Generic SPMI NVMEM"
-> > > +	default ARCH_APPLE
-> > Why default is set to ARCH_APPLE?
-> > 
-> > This will endup with y in arm64 defconfig, means increasing the size of 
-> > kernel.
-> > 
-> > should it be:
-> > 
-> > depends on ARCH_APPLE || COMPILE_TEST
+
+
+On 17. 04. 25 3:13 odp., Andrew Lunn wrote:
+> On Wed, Apr 16, 2025 at 08:19:25PM +0200, Ivan Vecera wrote:
+>> On Wed, Apr 16, 2025 at 7:11 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>>
+>>      > +++ b/include/linux/mfd/zl3073x_regs.h
+>>      > @@ -0,0 +1,105 @@
+>>      > +/* SPDX-License-Identifier: GPL-2.0-only */
+>>      > +
+>>      > +#ifndef __LINUX_MFD_ZL3073X_REGS_H
+>>      > +#define __LINUX_MFD_ZL3073X_REGS_H
+>>      > +
+>>      > +#include <asm/byteorder.h>
+>>      > +#include <linux/lockdep.h>
+>>
+>>      lockdep?
+>>
+>>
+>> lockdep_assert*() is used in later introduced helpers.
 > 
-> I don't think it should depend on ARCH_APPLE. There is nothing
-> ARCH_APPLE specific in the driver or dt-bindings even apple platforms
-> are currently only user.
+> nitpicking, but you generally add headers as they are needed.
 
-irrespective of this is generic or not none of the drivers should have
-default set to y.
++1
 
 
+>>      > +#include <linux/mfd/zl3073x.h>
+>>      > +#include <linux/regmap.h>
+>>      > +#include <linux/types.h>
+>>      > +#include <linux/unaligned.h>
+>>      > +
+>>      > +/* Registers are mapped at offset 0x100 */
+>>      > +#define ZL_RANGE_OFF        0x100
+>>      > +#define ZL_PAGE_SIZE        0x80
+>>      > +#define ZL_REG_ADDR(_pg, _off) (ZL_RANGE_OFF + (_pg) * ZL_PAGE_SIZE +
+>>      (_off))
+>>      > +
+>>      > +/**************************
+>>      > + * Register Page 0, General
+>>      > + **************************/
+>>      > +
+>>      > +/*
+>>      > + * Register 'id'
+>>      > + * Page: 0, Offset: 0x01, Size: 16 bits
+>>      > + */
+>>      > +#define ZL_REG_ID ZL_REG_ADDR(0, 0x01)
+>>      > +
+>>      > +static inline __maybe_unused int
+>>      > +zl3073x_read_id(struct zl3073x_dev *zldev, u16 *value)
+>>      > +{
+>>      > +     __be16 temp;
+>>      > +     int rc;
+>>      > +
+>>      > +     rc = regmap_bulk_read(zldev->regmap, ZL_REG_ID, &temp, sizeof
+>>      (temp));
+>>      > +     if (rc)
+>>      > +             return rc;
+>>      > +
+>>      > +     *value = be16_to_cpu(temp);
+>>      > +     return rc;
+>>      > +}
+>>
+>>      It seems odd these are inline functions in a header file.
+>>
+>>
+>> There are going to be used by dpll_zl3073x sub-driver in series part 2.
 > 
-> `default m if ARCH_APPLE` might an alternative but in this specific case
-> the driver which will uses the nvmem cells should just select it. So I
-> would remove the default.
+> The subdriver needs to know the ID, firmware version, etc?
 
-remove the default, and let it be selected in defconfig as m as
-required, like any other drivers.
+No
 
---srini
-> 
-> Janne
+> Anyway, look around. How many other MFD, well actually, any sort of
+> driver at all, have a bunch of low level helpers as inline functions
+> in a header? You are aiming to write a plain boring driver which looks
+> like every other driver in Linux....
+
+Well, I took inline functions approach as this is safer than macro usage
+and each register have own very simple implementation with type and
+range control (in case of indexed registers).
+
+It is safer to use:
+zl3073x_read_ref_config(..., &v);
+...
+zl3073x_read_ref_config(..., &v);
+
+than:
+zl3073x_read_reg8(..., ZL_REG_REF_CONFIG, &v);
+...
+zl3073x_read_reg16(..., ZL_REG_REF_CONFIG, &v); /* wrong */
+
+With inline function defined for each register the mistake in the 
+example cannot happen and also compiler checks that 'v' has correct type.
+
+> Think about your layering. What does the MFD need to offer to sub
+> drivers so they can work? For lower registers, maybe just
+> zl3073x_read_u8(), zl3073x_read_u16() & zl3073x_read_read_u32(). Write
+> variants as well. Plus the API needed to safely access the mailbox.
+> Export these using one of the EXPORT_SYMBOL_GPL() variants, so the sub
+> drivers can access them. The #defines for the registers numbers can be
+> placed into a shared header file.
+
+Would it be acceptable for you something like this:
+
+int zl3073x_read_reg{8,16,32,48}(..., unsigned int reg, u{8,16,32,64} *v);
+int zl3073x_write_reg{8,16,32,48}(..., unsigned int reg, u{8,16,32,64} v);
+int zl3073x_read_idx_reg{8,16,32,48}(..., unsigned int reg, unsigned int 
+idx, unsigned int max_idx, unsigned int stride, u{8,16,32,64} *v);
+int zl3073x_write_idx_reg{8,16,32,48}(..., unsigned int reg, unsigned 
+int idx, unsigned int max_idx, unsigned int stride, u{8,16,32,64} v);
+
+/* Simple non-indexed register */
+#define ZL_REG_ID	ZL_REG_ADDR(0 /* page */, 0x01 /* offset */
+#define ZL_REG_ID_BITS	8
+
+/* Simple indexed register */
+#define ZL_REG_REF_STATUS	ZL_REG_ADDR(2, 0x44)
+#define ZL_REG_REF_STATUS_BITS	16
+#define ZL_REG_REF_STATUS_ITEMS	10
+#define ZL_REG_REF_STATUS_STRIDE 2
+
+/* Read macro for non-indexed register */
+#define ZL3073X_READ_REG(_zldev, _reg, _v)	\
+	__PASTE(zl3073x_read_reg, _reg##_BITS)(_zldev, _reg, _v)
+
+/* For indexed one */
+#define ZL3073X_READ_IDX_REG(_zldev, _reg, _idx, _v)	\
+	__PASTE(zl3073x_read_idx_reg, _reg##_BITS)(_zldev, _reg, _v,
+						   _idx, \
+						   _reg##_ITEMS, \
+						   _reg##_STRIDE, _v)
+
+This would allow to call simply
+ZL3073X_READ_REG(zldev, ZL_REG_ID, &val);
+or
+ZL3073X_READ_IDX_REG(zldev, ZL_REG_REF_STATUS, 4);
+
+and caller does not need to know register size and range constraints.
+
+WDYT?
+
+Thanks,
+Ivan
+
