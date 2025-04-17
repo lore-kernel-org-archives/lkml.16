@@ -1,55 +1,55 @@
-Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
+Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6C12561D9;
-	Thu, 17 Apr 2025 18:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F9F256C62;
+	Thu, 17 Apr 2025 18:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744915750; cv=none; b=qn7TjgGNPb1BuQL24cB6Zcl7dbLCDEdpOqlL72eseZ6K3n+FUaZDri6+ppeC8yA5+Mt8FtDG8SBxO8+jj1wbQdMsGAR2acJ+EB1Qnwwjv5xkJt7x9ephcNaYB7L6nwkfr/cCJJQUcVniWF/Vo+ZBSkYoyoSuyws8vCW/vEmhDjE=
+	t=1744915751; cv=none; b=hv8IJtFvsXTNySsjE7fgUIUNhMixqufI0+ncN05KLkfKmMrxAmHp1+cQNCER/BOALbb3PPi7G+alELdqGVaLFpmU9zW5WGF1bZki6jtovdA1/9yGBQKBGGenA5KnrhnOLlWaWc5/PMNmiQqrI5kehunqVeIxVeRadR+32tQfmCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744915750; c=relaxed/simple;
-	bh=erlMHrM9Cs6b3GgS9nPHlqBtf3Ox19dftn3lWGx+vhM=;
+	s=arc-20240116; t=1744915751; c=relaxed/simple;
+	bh=fm3eFyJozG2lS4Rb/hc1hRnxBHCnkLqI+2kI+zYTuII=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CX2VNilku4LG6VEEXTjQ5MZmAgr92tJG5IH04NwcUe5Gyd3fRwGOwSrb8R7Dkzz88xrRC+Mlz/MSq1NgqH1Jc0tJwZY7mMX2xycJ1q69iWy/18SPeGRugI/2Vbv6RDRJjyT1YYPIg7/CR6mQgmSAZ6pfM0NquLtJGjrF8uNvhXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=AbfmN6Ah; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OLfs08lJ; arc=none smtp.client-ip=202.12.124.148
+	 MIME-Version; b=jrZ+0MJ7D17WkkYjs+9ieCslIGbLGzapXAe6kD7jORCYMCPMD57hU4PFW+cel5wNg2Y0tPOsaXoociFHMivsKgAL6n/mIjGVvZ13CzDP5bbBnYk8OjkJWsOF0uXk5g7YuF/uAoDXyIilgnQXAbPVUmbMbJtQduV7nFMHZmdb1zQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=jjmq5NdS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=l4P2uOaf; arc=none smtp.client-ip=202.12.124.155
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="AbfmN6Ah";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OLfs08lJ"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfout.stl.internal (Postfix) with ESMTP id 081F811400D2;
-	Thu, 17 Apr 2025 14:49:08 -0400 (EDT)
-Received: from phl-frontend-02 ([10.202.2.161])
-  by phl-compute-04.internal (MEProxy); Thu, 17 Apr 2025 14:49:08 -0400
+	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="jjmq5NdS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="l4P2uOaf"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 1715E254014A;
+	Thu, 17 Apr 2025 14:49:09 -0400 (EDT)
+Received: from phl-frontend-01 ([10.202.2.160])
+  by phl-compute-01.internal (MEProxy); Thu, 17 Apr 2025 14:49:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1744915747; x=
-	1745002147; bh=ib4GxQsCcbLjx08EB7K5kdtLw96IO5K7n2r4f7nSpeA=; b=A
-	bfmN6AhWjc6flNYhOheDHOrfIsI9z61iJ+TRixXKD5yQ3YKoBsrsMG8M5mF51sEv
-	L3CBZs9CIjBev98CKsdcLbi2nQrDYvHgeF31qe3VXyrhv+F9o/tcJ53BPUP696Ez
-	Sxvtcc/ddaUPgMUEzKPErCphgoPEilauggzFAPbJfCcwc42XPF3M9vQkLZ1MHhfW
-	vHG7F2lIGtcl+1iekHjZCNAEBUt/Oz5BkIDvnICuyncPYbArB99AEoNSOkPckWrh
-	7N02t/eTv+jpVfDtalDMUK4ufTsgH9UGsIFPrFQ08025dofZi55epXvHA+GMaa5I
-	kInbVKkHJdvVDQ11TjpYw==
+	:reply-to:subject:subject:to:to; s=fm2; t=1744915748; x=
+	1745002148; bh=xawSWFfcd32yMzp1Ryv7c3+npsnX3TTRHig5t/4hu6Y=; b=j
+	jmq5NdSbe9BgguNAjklmxVSbuFdkV7zcp/WaHywvH+HwtkSji77CTgNfWiFsxgVn
+	BYvLPdgxuV4j14EIKGQCVicupsyKXl7i6Mu7UT7kzOVHx08w6oBx6bT+zTftGeeS
+	o/wsnNG9ilKnVTujS+0SO8nR9AnQw/R5AaF6XKLNhzTRNB2nD1SXZ+YvgQalK7Zs
+	xpwjNce2okzD1yTUx3EP9xLMYUtQyYnFg27H/KCvZ7hK0No/kgEchYGwL9Ru0wzs
+	u3eDxCxCknlaFrq0Hd6Hg615gX2r9pap5Flj/iZoHuDVhdkrfmcsSFcyRUwb5yrA
+	R282XR6q8ks0nVlrluKUA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1744915747; x=1745002147; bh=i
-	b4GxQsCcbLjx08EB7K5kdtLw96IO5K7n2r4f7nSpeA=; b=OLfs08lJy1cjWX/jf
-	f82TkLPZXXDoqMmm3C7+BSlRr5SdTJJAwDr/2voStPilPZ7/pDfKD6Yloi8sNM3h
-	udjrcVmC3vzmGlH4g/um7PYDDBgMRafch4Z9ShoL883XC71SVaYvretfikDInzqd
-	zT3upCkgL+ztbanBlrNIO2uFSQ0IOpAmCkQATDav6enXfcKd9sg06ccOO2/mrhfK
-	f52XrIfAG3iyoT1WaN8Zk1m0X3AwYEoWrl3GnzoovpGjW/i2WJMsSyvP2mx7iNcz
-	/j3Gf9vCFK/C/cFvpaRGaKQGRQ48zBa+1Z27bv44ARu3M8k3pUNAgzHYqvoE/D5f
-	6DuOQ==
-X-ME-Sender: <xms:I00BaLEK6Vb1qCq-QZIa0ONKG0-wfPS_O1GViUxJktHaXlJKzCwkJg>
-    <xme:I00BaIWv9gGCc5M9W7_WhnNyAa9JnKQsQUeAxyxLdXyukU-7jYDO4LBC5-cUt_MPy
-    skwrft5YeNt25oDb_g>
-X-ME-Received: <xmr:I00BaNKRtpOCqmKQ2gPghdFJGP-pf7aJgxQflVVWjYM4V0rlddpE9Oi_vLzGhB-Z7r1nRoVsKD89xFwGOunz71K7EjYzq0PlxuQnogFCZdNDPhTIwg>
+	:x-me-sender:x-sasl-enc; s=fm2; t=1744915748; x=1745002148; bh=x
+	awSWFfcd32yMzp1Ryv7c3+npsnX3TTRHig5t/4hu6Y=; b=l4P2uOafNptS1wwEh
+	yzSyhM/UVBgRIoWhF6MQLTU2Y1bLuJWVDDnm+6Xk0A1YYme8AVQO4WK3UHGHayQr
+	nP4gUQDeiVjEK5nZWWlwaEO+daRar+XOKIJQFa3/mDRcaTER1P3F7K9+IPrcgow2
+	R1Q7tFwSrpqc1ELNXKZSJp6GOu2gb4Y8Jwy/sbN7ZuzLIcMoF94JtGrytr0bjaXt
+	V+BeXUwDWpEzZmNve6OhZhVfdV6c0iMM1V7PMhBRtpi1dP/co2OZh4zBlZOqkd3R
+	RxBma32KYWhipzgzlgNWDnL2z9auBtx6MhQ8lbF7yCSUig0pbn7qjKA3UyEfujWv
+	TUyyw==
+X-ME-Sender: <xms:JE0BaIXW8yoDV8BS-YUiu7S9CCu5XsK5iWQRAAxaR7KXPRP7fNVeqA>
+    <xme:JE0BaMnwH72efVSTkam5MDouK8f07cIfiwZ21jCTHIXdVOPNrdU82VWGzz7Yw4EUL
+    xSCnodaFZ0XtpBQp-4>
+X-ME-Received: <xmr:JE0BaMZzmncz9UFbOF3-LKEIgD6rvrnBdi3A7ML_aYFw8vPAEA-kN39MNaPyB2B0lWtiRiGwhszkw67X-c1HdINKVevRKCIXA_eSJEVkuxjehrOxbA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfedttddvucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
     pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
@@ -64,26 +64,26 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfedttddvucetufdote
     hgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdho
     rhhgpdhrtghpthhtoheplhhinhhugidqshgvrhhirghlsehvghgvrhdrkhgvrhhnvghlrd
     horhhg
-X-ME-Proxy: <xmx:I00BaJEuOrqBF1fgrRPoI44GO_Gz8cXobC8dm_Y0GAbPCcB3t0i5DQ>
-    <xmx:I00BaBXei3igKO0BL0GuzVouL4DbKveR1jWUfzBN16005Wls9gCcLw>
-    <xmx:I00BaEMJV28Z5J2fT_W-otwvKXflatUh1R0fhAtiFJMj8qd942fBYg>
-    <xmx:I00BaA21wrAMdfQk9wfIuNj6r1FAh6_6c39nkUbQ7QebuOTE2-a5Fw>
-    <xmx:I00BaA1ZEVjHgpt8YyBTPnWJ4e78QKub1SjS-5yCk7Oe_0Aj5Aar43ny>
+X-ME-Proxy: <xmx:JE0BaHWbMmT-pbubaVzb757gOIcet_gTcJo_QJCXucLqOo9gPt-X4g>
+    <xmx:JE0BaCkTVyMP5J1WjjpggFUOYVspiuRde60PCnm4XY1JmdzJtcvlKg>
+    <xmx:JE0BaMea_P_yzYiqPzcdR9bSYcVn1znYKHELwEP6Qc7P2c-MoxRNWg>
+    <xmx:JE0BaEFCrqWFNFk7Y6OGGqfON30szkw1RXFigE-gYJyCHpJqfxbalA>
+    <xmx:JE0BaJEgG_jjr7tizZ7CC8z1rqAzJOPuT1B4AbiaUdIkCoxoIf79HIpp>
 Feedback-ID: i58514971:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 17 Apr 2025 14:49:07 -0400 (EDT)
+ 17 Apr 2025 14:49:08 -0400 (EDT)
 Received: from xanadu.lan (OpenWrt.lan [192.168.1.1])
-	by yoda.fluxnic.net (Postfix) with ESMTPSA id E445B11443C9;
-	Thu, 17 Apr 2025 14:49:06 -0400 (EDT)
+	by yoda.fluxnic.net (Postfix) with ESMTPSA id 1A2C711443D7;
+	Thu, 17 Apr 2025 14:49:08 -0400 (EDT)
 From: Nicolas Pitre <nico@fluxnic.net>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Jiri Slaby <jirislaby@kernel.org>
 Cc: Nicolas Pitre <npitre@baylibre.com>,
 	linux-serial@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 01/14] vt: minor cleanup to vc_translate_unicode()
-Date: Thu, 17 Apr 2025 14:45:03 -0400
-Message-ID: <20250417184849.475581-2-nico@fluxnic.net>
+Subject: [PATCH v3 11/14] vt: remove zero-width-space handling from conv_uni_to_pc()
+Date: Thu, 17 Apr 2025 14:45:13 -0400
+Message-ID: <20250417184849.475581-12-nico@fluxnic.net>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250417184849.475581-1-nico@fluxnic.net>
 References: <20250417184849.475581-1-nico@fluxnic.net>
@@ -97,64 +97,41 @@ Content-Transfer-Encoding: 8bit
 
 From: Nicolas Pitre <npitre@baylibre.com>
 
-Make it clearer when a sequence is bad.
+This is now taken care of by ucs_is_zero_width().
 
 Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
 Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
 ---
- drivers/tty/vt/vt.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/tty/vt/consolemap.c | 2 --
+ drivers/tty/vt/vt.c         | 2 +-
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
+diff --git a/drivers/tty/vt/consolemap.c b/drivers/tty/vt/consolemap.c
+index 82d70083fe..bb4bb272eb 100644
+--- a/drivers/tty/vt/consolemap.c
++++ b/drivers/tty/vt/consolemap.c
+@@ -870,8 +870,6 @@ int conv_uni_to_pc(struct vc_data *conp, long ucs)
+ 		return -4;		/* Not found */
+ 	else if (ucs < 0x20)
+ 		return -1;		/* Not a printable character */
+-	else if (ucs == 0xfeff || (ucs >= 0x200b && ucs <= 0x200f))
+-		return -2;			/* Zero-width space */
+ 	/*
+ 	 * UNI_DIRECT_BASE indicates the start of the region in the User Zone
+ 	 * which always has a 1:1 mapping to the currently loaded font.  The
 diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index f5642b3038..b5f3c8a818 100644
+index 1bd1878094..24c6cd2eed 100644
 --- a/drivers/tty/vt/vt.c
 +++ b/drivers/tty/vt/vt.c
-@@ -2817,7 +2817,7 @@ static int vc_translate_unicode(struct vc_data *vc, int c, bool *rescan)
- 	if ((c & 0xc0) == 0x80) {
- 		/* Unexpected continuation byte? */
- 		if (!vc->vc_utf_count)
--			return 0xfffd;
-+			goto bad_sequence;
+@@ -2995,7 +2995,7 @@ static int vc_con_write_normal(struct vc_data *vc, int tc, int c,
+ 	/* Now try to find out how to display it */
+ 	tc = conv_uni_to_pc(vc, tc);
+ 	if (tc & ~charmask) {
+-		if (tc == -1 || tc == -2)
++		if (tc == -1)
+ 			return -1; /* nothing to display */
  
- 		vc->vc_utf_char = (vc->vc_utf_char << 6) | (c & 0x3f);
- 		vc->vc_npar++;
-@@ -2829,17 +2829,17 @@ static int vc_translate_unicode(struct vc_data *vc, int c, bool *rescan)
- 		/* Reject overlong sequences */
- 		if (c <= utf8_length_changes[vc->vc_npar - 1] ||
- 				c > utf8_length_changes[vc->vc_npar])
--			return 0xfffd;
-+			goto bad_sequence;
- 
- 		return vc_sanitize_unicode(c);
- 	}
- 
- 	/* Single ASCII byte or first byte of a sequence received */
- 	if (vc->vc_utf_count) {
--		/* Continuation byte expected */
-+		/* A continuation byte was expected */
- 		*rescan = true;
- 		vc->vc_utf_count = 0;
--		return 0xfffd;
-+		goto bad_sequence;
- 	}
- 
- 	/* Nothing to do if an ASCII byte was received */
-@@ -2858,11 +2858,14 @@ static int vc_translate_unicode(struct vc_data *vc, int c, bool *rescan)
- 		vc->vc_utf_count = 3;
- 		vc->vc_utf_char = (c & 0x07);
- 	} else {
--		return 0xfffd;
-+		goto bad_sequence;
- 	}
- 
- need_more_bytes:
- 	return -1;
-+
-+bad_sequence:
-+	return 0xfffd;
- }
- 
- static int vc_translate(struct vc_data *vc, int *c, bool *rescan)
+ 		/* Glyph not found */
 -- 
 2.49.0
 
