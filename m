@@ -1,113 +1,109 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81EF01E1E1D
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6289245039;
+	Thu, 17 Apr 2025 12:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744891469; cv=none; b=qXG+rxlhHFJPrrFnA/y9s9MH+vMk30R4npteVWrjTiH1l8S2XYQYF0LiNIg+h8O1Zpql+q07fH4QlmHzLuOwIK5Rb9kei+VD/qWl6IWSvRY+dZ6jZ9TZYk9t0XpTUsnS+IhVXSuMUfGTzLxip0NxaVUQ7MBzqaNA0nfNV42NJ/o=
+	t=1744891471; cv=none; b=PPQyojeLMQFSahEK87JJIleLpmoBHkR3zm/0Yefy7zpulYAy+kcO4dWANrzUeLH5vm0sXDjMfGqoyklZNIe0xRlu86GcxsXMs48ISkcjgcRFSd5VMYgP1g4ooH7NIyQ89nXUqWphrOQQ7uKzj1ys8e6Hr+mTGQt5lzvAVaAQPRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744891469; c=relaxed/simple;
-	bh=ksUyW653NyIT3lvyAI4RmnyliHyVSS70xVKOoNyhJjc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VCR6Xvpb/yiBBO7INz1krYPMl6krFyhejDZJsvsDxRPcIr80/aUTg5iW2uAh0SFw2PRBwrel4I0r1rHvKE33Z41+Ib6EccpLmsXJLMoX+fT26M05LYkMzuBoQpVTemUZvupwuPUlcJ6mPvAHdAxVQBDdwrR/DV8PVh9yjl5wS4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZviCbdEN; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744891471; c=relaxed/simple;
+	bh=hdh/cC5B5BjbJmW5jfYyNw12JwvmmMdkfFYBi1lG7Ps=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kO3lyZrDGv1ChBmw1hBdayJbytYBJl58urrJxWx4fsV4gfMCQxlx5rbLTkZ1S+KfnFc0Y+ybvIbWUE/Dg8T9nPuRwzsrAhkrm2LbDQ/fWw16pKLz5rJW+PtzVQgX+U0rvAIe6luhNR3O+QBvdCRkKcIu9pWjn+MZzaxSnwHDCMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WsDyAgNf; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZviCbdEN"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=+whgyZ8F2+lZPSX5+w+V/eDEdox87Gze8zZrqLkwGPU=; b=ZviCbdENme03fTvAVQk21bV0fX
-	rWdf4FYIr5BDCugkJfSdj41Y7AHmTBC8ZCCMpKFbyxLxKqcM7g/mVn/wgAC4OvEjzLQR3u5OC3b4V
-	bdAL+s9ho0JXor+HXerVgS1GzBCff2QHDw/A9qpSxsr1qCoYDKRaaWg65m2JOkpon3ngn5NUn2442
-	0Y4EUPbypDBCiKP1Ik5dS5iAWmvBS/KlZLpymTdCMsSyYfXSNnvGM1IdUlH0ZGEJ1Avz9nF3PLtHJ
-	WnCXRe/frN642WHeCjGFjLMSG/DvUGGZexFw/f01TWAMjXhibq1ndO07WbffcpHqyPeVUfpZu8ccb
-	IuuLonWA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u5Nx5-0000000BM53-2U3f;
-	Thu, 17 Apr 2025 12:03:22 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id DDC2D300619; Thu, 17 Apr 2025 14:01:30 +0200 (CEST)
-Date: Thu, 17 Apr 2025 14:01:30 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	"Chen, Yu C" <yu.c.chen@intel.com>,
-	Tim Chen <tim.c.chen@linux.intel.com>,
-	Ingo Molnar <mingo@kernel.org>, Doug Nelson <doug.nelson@intel.com>,
-	Mohini Narkhede <mohini.narkhede@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched: Skip useless sched_balance_running acquisition if
- load balance is not due
-Message-ID: <20250417120130.GE17910@noisy.programming.kicks-ass.net>
-References: <20250416035823.1846307-1-tim.c.chen@linux.intel.com>
- <fbe29b49-92af-4b8c-b7c8-3c15405e5f15@linux.ibm.com>
- <667f2076-fbcd-4da7-8e4b-a8190a673355@intel.com>
- <5e191de4-f580-462d-8f93-707addafb9a2@linux.ibm.com>
- <517b6aac-7fbb-4c28-a0c4-086797f5c2eb@linux.ibm.com>
- <CAKfTPtBF353mFXrqdm9_QbfhDJKsvOpjvER+p+X61XEeAd=URA@mail.gmail.com>
- <7a5a5f1f-0bbc-4a63-b2aa-67bc6c724b2d@amd.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WsDyAgNf"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53HC4IEU621229
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 17 Apr 2025 07:04:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744891458;
+	bh=WJ97kL1cYIsquQCKwHO92kMaPbc3jT3OXHsbn89VbeQ=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=WsDyAgNfA7BZckp/WWN7/bRSAJxZIj5br7SPUkDs62eX0bd95TdIDh3SuHkbbat68
+	 W65pr4Hyl+0THNU2V3nCgD7UAe1BIS9iFVNJ+87j5PIJTOd54NebPqCMaaIWkV3VVG
+	 fcCvzuI997A50BSS/rtakhffvaxljUvh643uup8M=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53HC4IGT083572
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 17 Apr 2025 07:04:18 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 17
+ Apr 2025 07:04:18 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 17 Apr 2025 07:04:18 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53HC47VK004789;
+	Thu, 17 Apr 2025 07:04:15 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>
+Subject: [PATCH 2/7] arm64: dts: ti: k3-j7200-main: switch to 64-bit address space for PCIe1
+Date: Thu, 17 Apr 2025 17:34:02 +0530
+Message-ID: <20250417120407.2646929-3-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250417120407.2646929-1-s-vadapalli@ti.com>
+References: <20250417120407.2646929-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7a5a5f1f-0bbc-4a63-b2aa-67bc6c724b2d@amd.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Thu, Apr 17, 2025 at 05:01:37PM +0530, K Prateek Nayak wrote:
-> On 4/16/2025 3:17 PM, Vincent Guittot wrote:
-> > > 
-> > > Sorry, forgot to add.
-> > > 
-> > > Do we really need newidle running all the way till NUMA? or if it runs till PKG is it enough?
-> > > the regular (idle) can take care for NUMA by serializing it?
-> > > 
-> > > -               if (sd->flags & SD_BALANCE_NEWIDLE) {
-> > > +               if (sd->flags & SD_BALANCE_NEWIDLE && !(sd->flags & SD_SERIALIZE)) {
-> > 
-> > Why not just clearing SD_BALANCE_NEWIDLE in your sched domain when you
-> > set SD_SERIALIZE
-> 
-> I've some questions around "sched_balance_running":
-> 
-> o Since this is a single flag across the entire system, it also implies
->   CPUs cannon concurrently do load balancing across different NUMA
->   domains which seems reasonable since a load balance at lower NUMA
->   domain can potentially change the "nr_numa_running" and
->   "nr_preferred_running" stats for the higher domain but if this is the
->   case, a newidle balance at lower NUMA domain can interfere with a
->   concurrent busy / newidle load balancing at higher NUMA domain.
->   Is this expected? Should newidle balance be serialized too?
+The PCIe0 instance of PCIe in J7200 SoC supports:
+1. 128 MB address region in the 32-bit address space
+2. 4 GB address region in the 64-bit address space
 
-Serializing new-idle might create too much idle time.
+The default configuration is that of a 128 MB address region in the
+32-bit address space. While this might be sufficient for most use-cases,
+it is insufficient for supporting use-cases which require larger address
+spaces. Therefore, switch to using the 64-bit address space with a 4 GB
+address region.
 
->   (P.S. I copied over the serialize logic from sched_balance_domains()
->    into sched_balance_newidle() and did not see any difference in my
->    testing but perhaps there are benchmarks out there that care for
->    this)
-> 
-> o If the intention of SD_SERIALIZE was to actually "serializes
->   load-balancing passes over large domains (above the NODE topology
->   level)" as the comment above "sched_balance_running" states, and
->   this question is specific to x86 - when enabling SNC on Intel or
->   NPS on AMD servers, the first NUMA domain is in fact as big as the
->   NODE (now PKG domain) if not smaller. Is it okay to clear
->   SD_SERIALIZE for these domains since they are small enough now?
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-j7200-main.dtsi | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-You'll have to dive into the history here, but IIRC it was from SGI back
-in the day, where NUMA factors were quite large and load-balancing
-across numa was a pain.
+diff --git a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
+index 5ab510a0605f..e898dffdebbe 100644
+--- a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
+@@ -759,7 +759,7 @@ pcie1_rc: pcie@2910000 {
+ 		reg = <0x00 0x02910000 0x00 0x1000>,
+ 		      <0x00 0x02917000 0x00 0x400>,
+ 		      <0x00 0x0d800000 0x00 0x00800000>,
+-		      <0x00 0x18000000 0x00 0x00001000>;
++		      <0x41 0x00000000 0x00 0x00001000>;
+ 		reg-names = "intd_cfg", "user_cfg", "reg", "cfg";
+ 		interrupt-names = "link_state";
+ 		interrupts = <GIC_SPI 330 IRQ_TYPE_EDGE_RISING>;
+@@ -778,8 +778,9 @@ pcie1_rc: pcie@2910000 {
+ 		device-id = <0xb00f>;
+ 		msi-map = <0x0 &gic_its 0x0 0x10000>;
+ 		dma-coherent;
+-		ranges = <0x01000000 0x0 0x18001000  0x00 0x18001000  0x0 0x0010000>,
+-			 <0x02000000 0x0 0x18011000  0x00 0x18011000  0x0 0x7fef000>;
++		ranges = <0x01000000 0x00 0x00001000 0x41 0x00001000 0x00 0x00100000>, /* IO (1 MB) */
++			 <0x02000000 0x00 0x00101000 0x41 0x00101000 0x00 0x08000000>, /* 32-bit Non-Prefetchable MEM (128 MB) */
++			 <0x43000000 0x41 0x08101000 0x41 0x08101000 0x00 0xf7eff000>; /* 64-bit Prefetchable MEM (4 GB - (129 MB + 4 KB)) */
+ 		dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
+ 		status = "disabled";
+ 	};
+-- 
+2.34.1
 
-Small really isn't the criteria, but inter-node latency might be, we
-also have this node_reclaim_distance thing.
-
-Not quite sure what makes sense, someone should tinker I suppose, see
-what works with today's hardare.
