@@ -1,122 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 563C018DB2B;
-	Thu, 17 Apr 2025 05:28:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292271DE4DC
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:28:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744867688; cv=none; b=JNwOoL+0/t6DMSLXCuxXTeQPcIrniVasyvtZrgzSUKZ5y7oheec4lVSjsjzMpXG1TB199lCRKrwugzEAQOw3hus+rLZYSPWGQNqWscVml5cw+HL9SPEScyl19IpaiyN9w8Ej3tsx9eRS4FU3GCSAR8G6uodUhIsou5mimxs2Y1I=
+	t=1744867700; cv=none; b=txKuisNwaHtHHcoxpzX6rxz1DH+0dk3yjeYbb0ZabyLNSzmHCzZbcPDFIh1Fk6ONWKz0BRHTgqEhezlZjRXwfpCNgKqm84y9DE7WH8ohQMOQUgNZAqlfCtDGaHBcb0q3ZhMZf3yisNCOPWURHVxnuHQ+2ufqnVAbMiq3jfV1dR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744867688; c=relaxed/simple;
-	bh=eaR+iOlwPc1wrYjHt4NO2kTcsvS4p229gSXyNaJIYzE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=fXsvgOfMbWH3ye6QxTrh9iEq6UbLPAkFYDaFnjEpDnrHRrsyudHSAoCFkxz84oziPNGTO/iiiablZugIOpssvhIbLgKNOFkAs7JbO4c8mTTQch+eqIZIg7DKackU7tyudhqIPtIYyGRf+P2zUUx8CbWUkefTjXzkaVEHrleQqwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qtemet4D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744867700; c=relaxed/simple;
+	bh=5nulTxMnIYIk2hOq1j9PcbmTHrZ2rCRpv8a7ug/XG1E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dnx/gQj0tAdmztgzMSRX60MWQR6RIX3g6F8wAkI97Q1OP+GY/m40cNPy0fCwM4R73sBuQ4NCQQS9hb+3muxTMr0sbylCnzjrAAeSONoHZdSzpE/3jDIa4tMd57PB9ZhE8J+ieUiORRgAHNX0Ugt8O73VCnvGqKYPNMxVD3Nhi+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u6BY8kl1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qtemet4D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E159CC4CEE4;
-	Thu, 17 Apr 2025 05:28:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u6BY8kl1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4898C4CEEF
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744867687;
-	bh=eaR+iOlwPc1wrYjHt4NO2kTcsvS4p229gSXyNaJIYzE=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Qtemet4D9ZexycTr8dOTkuaK/J3IJ9v9+9ifCFPtAk6slTam8ri7BIoIXzSVlQXVd
-	 JNhq8S/Q7Q2TKy61TzBDyjvgoJjqIu5X7OvkBtIcfaFrM7SsjEActQ1R/dMqz3axrC
-	 GscaQcjxKxGpkAnhUlHK0y2zimZxa+E7gFcv3HhQTZFv6QVEKhLbASMNFwVM6itM2z
-	 1x8+k4S/ndqYgAdx1833gdqh/MTtmMWumB0+c64DVRzin9oXfI8nyv1w4kNe/5Owq2
-	 V8e9At9ej2CLuQnneM3m5Vx2FKE67VZtNKp/VDfIwihMtIraAc9RvvNll1NTJROckg
-	 Nwf8FHnidDiZQ==
-Message-ID: <68d04be5-d5b6-4cd4-993e-f5fb06405ae7@kernel.org>
-Date: Thu, 17 Apr 2025 07:28:02 +0200
+	s=k20201202; t=1744867699;
+	bh=5nulTxMnIYIk2hOq1j9PcbmTHrZ2rCRpv8a7ug/XG1E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=u6BY8kl1e5RiUzj6KkiXzVQYJpW+LTkKkTwzh+gjlRw30uoPjHK6IwcO270ACiauZ
+	 YqgTXDrJGFrNflAhf4Yrkh70UTdTDn+J07Uu5abmoJTU+WOyLkLQ+zJDR+BrzFFPy0
+	 e8gX77TUf0NqFSKi6SdVuZmqEGSsqslXkdhJAO4b6nxZK9dI1DJjPpQYisBW67DR2z
+	 Ej4JlIuxCh5+7VaEE3bHDgOOaJWGjnHqEJHX7WRTDKRU2nXL/sz91W1JRx3eNJjPH+
+	 ZAh754u9xtGABFFiGAyhx0WdUgLP5f4M2bykWiPyH/zdzLyv3LUPFvWsWqmaezOD80
+	 6/0V+REAstRcQ==
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-476ae781d21so3904381cf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:28:19 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yzh+mwWId6mtHEKyl9dXGSotD3m9uNDplSADiLrm4xKgC4tdizI
+	80VY+pYhc1vWKWBzuLx7NnU4qHRi3BZRVZLlFKwiTN97yuaPRTA7Rz8LnslM/IjYiPPaCqaV18h
+	QRBMelwJXdIK7SHBRLdbdJhr5HY0=
+X-Google-Smtp-Source: AGHT+IHfj1ZW6/f0Qbs3G+6VwYnqPt5fWy6B+JR8gDtIXleiML091O70SkU8AQXdIYiui6SSAujoaGuVRQNK+y2QMhE=
+X-Received: by 2002:ac8:578a:0:b0:476:8288:9563 with SMTP id
+ d75a77b69052e-47ad80973a9mr54281061cf.10.1744867698822; Wed, 16 Apr 2025
+ 22:28:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] arm64: defconfig: enable NVIDIA VRS PSEQ
-To: Shubhi Garg <shgarg@nvidia.com>, lee@kernel.org,
- alexandre.belloni@bootlin.com, thierry.reding@gmail.com,
- jonathanh@nvidia.com, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-References: <20250416120619.483793-1-shgarg@nvidia.com>
- <20250416120619.483793-6-shgarg@nvidia.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250416120619.483793-6-shgarg@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <Z_6bxZUiodrE45HJ@bombadil.infradead.org>
+In-Reply-To: <Z_6bxZUiodrE45HJ@bombadil.infradead.org>
+From: Song Liu <song@kernel.org>
+Date: Wed, 16 Apr 2025 22:28:06 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW5HYYvGoFO2L81EBkHDmozxxjpmdRh+GPrAxea-+91YNQ@mail.gmail.com>
+X-Gm-Features: ATxdqUGu0s_Wo3j7qUbZSWmwU_ALvQ7OyebLFavS-tdfwMv1lJEa2d7htYHVD04
+Message-ID: <CAPhsuW5HYYvGoFO2L81EBkHDmozxxjpmdRh+GPrAxea-+91YNQ@mail.gmail.com>
+Subject: Re: The future of kernel-patches-daemon - folding under LF?
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kdevops@lists.linux.dev, 
+	Jim Zemlin <jzemlin@linux-foundation.org>, Konstantin Ryabitsev <mricon@kernel.org>, 
+	=?UTF-8?Q?Javier_Gonz=C3=A1lez?= <javier.gonz@samsung.com>, 
+	Greg Marsden <greg.marsden@oracle.com>, Tso Ted <tytso@mit.edu>, 
+	Gustavo Padovan <gus@collabora.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 16/04/2025 14:06, Shubhi Garg wrote:
-> Enable NVIDIA VRS (Voltage Regulator Specification) power sequencer
-> device modules. NVIDIA VRS PSEQ controls ON/OFF and suspend/resume
-> power sequencing of system power rails on Tegra234 SoC. This device
+Hi Luis,
 
-Which upstream boards use it?
+How about we discuss different options over a video conference?
+We have a BPF office hour scheduled every Thursday at 9am PST.
+Would this time work for folks?
 
-> also provides 32kHz RTC support with backup battery for system timing.
-> 
-> Signed-off-by: Shubhi Garg <shgarg@nvidia.com>
-> ---
->  arch/arm64/configs/defconfig | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 5c85e5da152f..9c6cba664a43 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -780,6 +780,8 @@ CONFIG_MFD_TPS6594_I2C=m
->  CONFIG_MFD_ROHM_BD718XX=y
->  CONFIG_MFD_WCD934X=m
->  CONFIG_MFD_KHADAS_MCU=m
-> +CONFIG_MFD_NVVRS_PSEQ=m
-> +CONFIG_RTC_DRV_NVVRS_PSEQ=m
+Thanks,
+Song
 
-Does not look like properly ordered.
 
-Best regards,
-Krzysztof
+On Tue, Apr 15, 2025 at 10:47=E2=80=AFAM Luis Chamberlain <mcgrof@kernel.or=
+g> wrote:
+>
+> Song,
+>
+> We're starting to rely on kernel-patches-deamon (kpd in short) [0] for qu=
+ite a
+> bit of  linux-kernel subsystems and have integrated it on kdevops for the=
+m [1]
+> [2]. We already use it for the modules subsystem but even then that runs =
+into
+> hiccups every now and then and we just have to restart it. For smaller
+> subsystems we've started to experiment with lei based patchwork solutions=
+, we
+> started with the firmware loader, and the hope was that if that works we =
+could
+> move on to memory management to leverage the automation of tests we have =
+for
+> xarray, maple tree, and vmas. The lei patchwork instance which kernel.org=
+ admins
+> have helped us with works well, however kpd doesn't yet work with it [3],=
+ so we
+> can't even get that off the ground yet. In the meantime, we've been inste=
+ad
+> relying on linux-next tags to test other subsystems like memory managemen=
+t so we
+> avoid regressions that way, instead of testing patches while on the maili=
+ng
+> list. But we do want to get to the point we can test things proactively f=
+or
+> different subsystems.
+>
+> While we could look for alternatives I think we need to face the fact tha=
+t we
+> need more kpd love. I'm convinced that the only way to scale Linux kernel=
+-ci
+> work is by dividing and conquering and those can contribute to different
+> components do so, and kpd fits well right in, but I think we need to star=
+t
+> thinking about scaling it beyond just Meta. While we could just try to
+> contribute to it to fix lingering bugs I've noted my first issue with it,
+> requring CLA [4], and I don't think it makes sense to fork it from Meta. =
+kpd the
+> sort of specialized daemon that also can take time to learn and believe a=
+t this
+> point it might make sense if kpd can be part of the LF covered toolbox we=
+ can
+> get support for. Ie, make it an LF project and see if we can get more hel=
+p with
+> the sort of pipelines that fit both Meta and the kernel community.
+>
+> Let me know your thoughts.
+>
+> [0] https://github.com/facebookincubator/kernel-patches-daemon
+> [1] https://github.com/linux-kdevops/kdevops/blob/main/docs/kernel-ci/REA=
+DME.md
+> [2] https://github.com/linux-kdevops/kdevops/blob/main/docs/kernel-ci/ker=
+nel-ci-kpd.md
+> [3] https://lkml.kernel.org/r/CAB=3DNE6X5mJJmcXjEkHyE=3D2f1CCA5fDDEjMFH_a=
+MArrhom2qO8Q@mail.gmail.com
+> [4] https://github.com/facebookincubator/kernel-patches-daemon/issues/62
+>
+>   Luis
