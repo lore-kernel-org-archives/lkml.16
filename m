@@ -1,73 +1,145 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outbound.pv.icloud.com (p-west1-cluster1-host3-snip4-3.eps.apple.com [57.103.64.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA69185935
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 04:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC057186E2E
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 04:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.64.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744863664; cv=none; b=VhoKlupgM3gAyUMkrVgNOq1IIic767tkFc/ojLoSQugY45OZA9FUXUqP6mO0ThN3kqB0K56oK6t/yG3xjgb97Xrnm3X2MlHHOmUFaz8Vra/yxE/6zfBiIdWhuMPxn/V27ZdR/j49SuMW6OOw4Yg9Fk6Kl4g7SXasyowV6rfSNc8=
+	t=1744863691; cv=none; b=NkjDvf8TPUQxsQ+ZHxdKfjjIMjzcORkbo/C8BAr0R5L3JtSFFJrgv/5kOMDNzJ+/XTXB3TPtvKoBN3jY6WI/nWS3DDiUjzjyRb51gGRErZrRMR0QPxRDK+zs7B2Dfl1IZknfJxUylWHiRJ2cLwnA8SVweCjOtbg+0SYTpBu6Z1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744863664; c=relaxed/simple;
-	bh=zKgmMw5M/FIyzqJDaMLdICR0MGyRBeVckPPHOAqsZ9k=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=aSKXhxyFpwGhustrGgxr0GLBo0NOwFxWM81sdXz9/tAHMUoAzvniqk71EEKWGR7oqzxfycq9PbYzjnA16eFtlUPtXQ373UvUS9y4dx271RYwg5FshZjCNniqVElqZ17lGlkDMaAcJ9n8iWcoqQ73ie6C6iO2hda5RxptHh8rXNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d44ba1c2b5so4023975ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 21:21:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744863662; x=1745468462;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hOx1qW2VGmO6PLzv4gQpE58CYHIAJJUvQB+BBQ0do9A=;
-        b=ZJcrKOTpL09BTxDGQE70rJ7EGLygsIlACN6lgZVz6J/76yvPPrMPABaFkfgExtupB0
-         +uKhb5noOA90u64BgWWyREXF+gJHPtwdmixQilZss5ki3nZFK/s/u0Ud+K5yA2oiJc9T
-         8IeMk2IKIhWSJufWoAlhDcu1gniaxz66iVggo297NnXPwuJKxos7ToSKAJ+G1TqalgRz
-         0zamMCMNASzSErZ1BxvnIAqDUC6FmXGIU9Wq8Q3pS1CJARGKPyM9Kk+UMoOGUp+YV0R3
-         8/3Nhz2dN071QUIo5idcPPoP0T6oxCOpJ9qgK4kRpeVviMeP+2yqveIlc9dsntrHhvf4
-         /Ehw==
-X-Forwarded-Encrypted: i=1; AJvYcCVibTR6lHUUAa6JwoCSSrk1Uk11c3f1vHb7vdP63HDz9enLfmKZPRuwxlOqqtzsaFB23uYpUuhHZNATwD4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzs6R2ePl0ii+WRJ3i1bWiF2eXFm6oTb+YVDfbt5Uc+E4ZelL3w
-	5edOEu80/zs4qrIyLS5Af2bM/vv1ihICteV/9lxNKaISnmULuuMlX0StJ/XsSQ8/OkLza7rNpat
-	LwjPpyAJwwOqqvNkPLh/nHHEet5wXrZ6yunUH2TJZFr5SjBf5WoKvt5Y=
-X-Google-Smtp-Source: AGHT+IGnd8eV5ayGQsYUuq2AcTRA0V2EyqoKcS0OYFHWZRk0N6XqhX6HoydKe18pTV9cA0YxKoZmD1Nx8M+d63v9Z2WAjT2eBGFI
+	s=arc-20240116; t=1744863691; c=relaxed/simple;
+	bh=dfUslngHGbc7gvv9eDtyiO7iLzoXGlsWtq2BBf2ZBpA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Wt8uRautHjYMU36+S+BX1EPgRYImhvBSgzN13quRIih0oaeLhgSYKUGed1sAzBES5DMtfXxuhDnMzQUBudhCepkhP/Mlhm1Nj5EvwjKjakvnWnQ1iBKykob401Io20s8wpNR6VQipSefC+p6lCQUc8ku8o1+4Qr3JSkJ0t3H9uU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=etehtsea.me; spf=pass smtp.mailfrom=etehtsea.me; dkim=pass (2048-bit key) header.d=etehtsea.me header.i=@etehtsea.me header.b=vhp8GUSL; arc=none smtp.client-ip=57.103.64.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=etehtsea.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etehtsea.me
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=etehtsea.me header.i=@etehtsea.me header.b="vhp8GUSL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=etehtsea.me; s=sig1;
+	bh=s8Ze0YrAsRvM56Guf/YtrV37Q0EOqSVlsBXfjoOyn44=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme;
+	b=vhp8GUSLBS9mDgmUKnWpMptHb4zydL8N8Q+yPOxVFS09PTXCud15z3gPBzO3dX0tR
+	 D4wVQlPUv8ekGnXXgWTPArmYE6P2Y6kszaQHor1oci2Z/C9hnySBVEzGfLk3hBNe8q
+	 AC/QsW4+2F4JhMYw+Eu6KJIeJMpHTfz0x62ti+hy4zjPqqwxNXEXVpiReEFhK15o4j
+	 FkDWrllt0iUyfxzUfxKthOgXrLhnmgvdJb0pxbfuuzh5af/kGWDmqem406WC+lW6rJ
+	 GNjjuiW/KPBzFldVR55+nCT0DHzALxy5khBU+U60TmdYsBtoB0PkifETVNBABr2GmB
+	 EmaixC3zjIU5Q==
+Received: from localhost (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
+	by outbound.pv.icloud.com (Postfix) with ESMTPSA id CF1A418000AF;
+	Thu, 17 Apr 2025 04:21:18 +0000 (UTC)
+From: Konstantin Shabanov <mail@etehtsea.me>
+To: Sandy Huang <hjc@rock-chips.com>,
+	=?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: Konstantin Shabanov <mail@etehtsea.me>,
+	Daniel Stone <daniel@fooishbar.org>,
+	Andy Yan <andyshrk@163.com>,
+	Dan Callaghan <djc@djc.id.au>,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] drm/rockchip: Disable AFBC for res >2560 on rk3399
+Date: Thu, 17 Apr 2025 04:20:08 +0000
+Message-ID: <20250417042008.28536-1-mail@etehtsea.me>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250414095332.9674-1-mail@etehtsea.me>
+References: <20250414095332.9674-1-mail@etehtsea.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:470b:b0:3d8:1d7c:e190 with SMTP id
- e9e14a558f8ab-3d81d7ce2aemr2651065ab.7.1744863662422; Wed, 16 Apr 2025
- 21:21:02 -0700 (PDT)
-Date: Wed, 16 Apr 2025 21:21:02 -0700
-In-Reply-To: <89d94f84-8e88-4860-aaf7-102a51c11537@suse.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <680081ae.050a0220.d9ef5.0003.GAE@google.com>
-Subject: Re: [syzbot] [ocfs2?] possible deadlock in ocfs2_finish_quota_recovery
-From: syzbot <syzbot+f59a1ae7b7227c859b8f@syzkaller.appspotmail.com>
-To: heming.zhao@suse.com, jack@suse.cz, joseph.qi@linux.alibaba.com, 
-	linux-kernel@vger.kernel.org, m.masimov@mt-integration.ru, 
-	ocfs2-devel@lists.linux.dev, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: MXRK0RV78ZYYop4SgACsYfnc7XchLLpL
+X-Proofpoint-ORIG-GUID: MXRK0RV78ZYYop4SgACsYfnc7XchLLpL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-17_01,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0
+ mlxlogscore=999 clxscore=1030 spamscore=0 malwarescore=0 mlxscore=0
+ bulkscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2504170032
 
-Hello,
+As it isn't supported by hardware. At least, RK3399 doesn't support
+it. From the datasheet[1]
+("1.2.10 Video IN/OUT", "Display Interface", p. 17):
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-unregister_netdevice: waiting for DEV to become free
+  Support AFBC function co-operation with GPU
+    * support 2560x1600 UI
 
-unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
+Manually tested on RockPro64 (rk3399):
+- ARM_AFBC modifier is used for 1920x1080
+- DRM_FORMAT_MOD_LINEAR modifier us used for 3840x2160
+- No noise on the screen when sway is running in 4k
+- Dynamic resolution switching works correctly in sway
 
+Signed-off-by: Konstantin Shabanov <mail@etehtsea.me>
+Cc: Daniel Stone <daniel@fooishbar.org>
+Cc: Andy Yan <andyshrk@163.com>
+Reported-by: Dan Callaghan <djc@djc.id.au>
+Closes: https://gitlab.freedesktop.org/mesa/mesa/-/issues/7968
 
-Tested on:
+[1]: https://opensource.rock-chips.com/images/d/d7/Rockchip_RK3399_Datasheet_V2.1-20200323.pdf
+---
+V2 -> V3: Run check only on rk3399
+V1 -> V2: Move the check to the fb_create callback
 
-commit:         11376431 ocfs2: Stop quota recovery before disabling q..
-git tree:       https://github.com/zhaohem/linux jans_ocfs2
-console output: https://syzkaller.appspot.com/x/log.txt?x=14183a3f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5348e7fd1b89a770
-dashboard link: https://syzkaller.appspot.com/bug?extid=f59a1ae7b7227c859b8f
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+Hi Andy and Daniel!
+Thank you for the review!
 
-Note: no patches were applied.
+Best wishes,
+Konstantin
+
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+index dcc1f07632c3..6ca757f80a30 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+@@ -5,6 +5,7 @@
+  */
+
+ #include <linux/kernel.h>
++#include <linux/of.h>
+
+ #include <drm/drm.h>
+ #include <drm/drm_atomic.h>
+@@ -17,6 +18,9 @@
+ #include "rockchip_drm_drv.h"
+ #include "rockchip_drm_fb.h"
+ #include "rockchip_drm_gem.h"
++#include "rockchip_drm_vop.h"
++
++#define RK3399_AFBC_MAX_WIDTH		2560
+
+ static const struct drm_framebuffer_funcs rockchip_drm_fb_funcs = {
+ 	.destroy       = drm_gem_fb_destroy,
+@@ -52,6 +56,15 @@ rockchip_fb_create(struct drm_device *dev, struct drm_file *file,
+ 	}
+
+ 	if (drm_is_afbc(mode_cmd->modifier[0])) {
++		if (of_machine_is_compatible("rockchip,rk3399")) {
++			if (mode_cmd->width > RK3399_AFBC_MAX_WIDTH) {
++				DRM_DEBUG_KMS("AFBC is not supported for the width %d (max %d)\n",
++					      mode_cmd->width,
++					      RK3399_AFBC_MAX_WIDTH);
++				return ERR_PTR(-EINVAL);
++			};
++		}
++
+ 		int ret, i;
+
+ 		ret = drm_gem_fb_afbc_init(dev, mode_cmd, afbc_fb);
+
+base-commit: 4890d68db651562ea80250f2c93205a5c0327a6a
+--
+2.48.1
