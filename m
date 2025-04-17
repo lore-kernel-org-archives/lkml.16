@@ -1,131 +1,118 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx2.usergate.com (unknown [46.229.79.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C521DE4C8;
-	Thu, 17 Apr 2025 05:54:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4421DE4FC;
+	Thu, 17 Apr 2025 05:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.229.79.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744869262; cv=none; b=YXOqOiSqQO/yjyS9LOEXTz6dxjNgo4DpGJiuCosqCdPqxChESILnjHTaIJUN36GMkM1rRbep5+4I1FECbBGqbMt3HH4T4iFFMIchIOhMHVxO2+kZqLFUikjIJpcol8HdISJDXZD/AHknUiA0TQb4buy9RI6h8AzYYruJmQ0T2LY=
+	t=1744869297; cv=none; b=fxc7sPdUJrD3dqZSCB3TAqecPt+BfhqXEtiNw/FdbOjxfuBVrOKnri/7dOaYZpct8QZzJwnWTBnrJ0pO7F7J1amGzV5eGfWLNGSTp7XTBNEsf5URB76/idcko9ehr4izidUzTpXhl06zDl/ygfMWTqZXIfb+G18vr25GnIW5SD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744869262; c=relaxed/simple;
-	bh=kprK0lvULNRRtrBb0B3NMMimLQuxvy9ogMHPfRsi3y0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nPVv+lGK9VsVqb4JMQgndQsIf5UJzerACCaBufoBhhqJ2ngXwWoNNTenF9ke5/fyjr+6w4oAEYoR7h1Bqv8O9GxgeTw7r6dsXtXQ9WWN/VxfbwZkhVl0DCJkOkvyY+2oLYtna9mC8jh6fSGNDZbCnrnPxLZbgR4Dc9wzVG4RLLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f9bxmsxs; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f9bxmsxs"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c5a88b34a6so39458385a.3;
-        Wed, 16 Apr 2025 22:54:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744869260; x=1745474060; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kprK0lvULNRRtrBb0B3NMMimLQuxvy9ogMHPfRsi3y0=;
-        b=f9bxmsxsThM6TvmfkRApZVKRnZMFDOGYuESGdx9uc7CxD1KNDcfJ2C1fuePQ3C72vI
-         T4kvZUwiiHax7z+0D/x5LCxsLt/ekvER65hHgJDLe6gMtXNzYo5kIMHiBSbt4LgKmPoT
-         A025L0p9b4XSWD9Vd87NoJkJx/KkKigxm30bYszbNW8HujfNSkQEjpgTv/219MSghhLm
-         /Cenxx9/E76arX0NyXjGLHJec5iiNcrNIg4NJe2djVbL2v5DchjE502x37tPGPnrqSsL
-         y3ivXGBlUldbUIbMTqs/37QF3lIiYh74MD9Uva0UKZnvIthgeOw8E3HdflmFAn4TWEsF
-         LKUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744869260; x=1745474060;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kprK0lvULNRRtrBb0B3NMMimLQuxvy9ogMHPfRsi3y0=;
-        b=Qt/yPPHCRDmFLi15j7cW5OyFHdA2qppHmAa9dRRtQPcXOyZ/H4ZUOzwBtlwmg3sCfN
-         SJ2hEkANtiAZdYyfRwbRjVySPK/x9xVeJvynJa1wFrfzDGTe0bGGOJSfhwrqBKzeYV/z
-         m2ES1KBJKnb5DlfoEwRrkYx3G9hUKgNsjoJvTDZkGQIR7FU2QiBmeyI0TFe6u3+aklay
-         lDhgN/68eXe+EnYp5RDeUtsrAEEf4YUT7mJGAG/zgeNQ9pGPYy6pydqpeVAxgI9HB7D8
-         qGaMKottlN7cgPozxL6H1KUKMlFci46jPHUDlxEV+UBS2MQX2TPAiH1trynVtZ3R1dP7
-         MdyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNUvjZxdlYoKYmluBkR4b/OZ4QdavcyR0AUMA0N0LTbvEifJcDWAudCAWxAhLiPXgd6EL7WZPVSJ3e@vger.kernel.org, AJvYcCUiUb7I1I8B5/ZhKIYJ2KZWilctMHYTwIaX/vSWEL+ropkDR+HgSTaXLgItBGRZYx01zRxPyVxzXSz8@vger.kernel.org, AJvYcCVEWm6NhqTitRYnRK5GRt6V3HJK+L4P8NWF/i0hihKbBH83MCkBLBFrfNDFoMKwXvQ5KGloWHD2@vger.kernel.org, AJvYcCVG+LfXczlKF2dhcHoHGFMTQTIFyPYCqNUIzaFkXbzXboYW+io4zB/1JoUqfRrqPCQHHPnNiWjXVTAz@vger.kernel.org, AJvYcCVhn6VQTVrLjz+jIoX9zUnX0X/7Khr8/C89J4hq+05Vw/s1D3EgUnguxLu9+HfLhNUMpKbb9VOnC2ytqi6x@vger.kernel.org, AJvYcCX6JRzEfjGEBPKe5Qyir5jXKA4/LVJey5uBVWH838szmmytm6lu8h5xhRhy+bU/q4qHaGN3ytjPkNRE@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMeoxUYR0qnugIRa346zXxaeXNCeAHIK8WYAN9sT4htVPmadTg
-	wy9cJpxJ6+ir+iKbcev4pvmuRR8BQZAtSHPT0r92OVNE8BLmWXGeZv4g5zVGewYIbO2VHUv59Gh
-	reRa2axWwQ96uJn0dc/nZX0trUV8=
-X-Gm-Gg: ASbGnctawqsezLUoikXh7DS0ssC/W657B9C4mRXN1B/tW8vL5S9raDv1I4EH7PMhK9J
-	MPhKuYPM9jetNaCNxTck/RJZwAQtkmJWOaq4TMy3aQzVU0QFavR4gTqwwrRKyXfoVdr9US++ZEz
-	GOx4S2WgnNI/6n6o8i551NQ+MURhNtdwv/ZtIVcgkQanfpxopJ9P31VSY=
-X-Google-Smtp-Source: AGHT+IEnx6E+7Cu6lljiUQFeBdgwuD5UZtC9iurhJ50vZO4BYyoWmDW8Pd/wlyU1Nx7Pubvo+CQRG+bGBvTyZ549gPE=
-X-Received: by 2002:a05:620a:2894:b0:7c5:9a1b:4f22 with SMTP id
- af79cd13be357-7c919083ed8mr715313285a.56.1744869260062; Wed, 16 Apr 2025
- 22:54:20 -0700 (PDT)
+	s=arc-20240116; t=1744869297; c=relaxed/simple;
+	bh=Od0yWLlZbKBUa36Zzz8mWeVChx1sO/abmn2CfT7dci0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b2lCNyleSlEduZCGlRuz25utRghwGbMn57S0uBF6TQh1EfsUjE7FJl0epmpgTq+QmAIVnI9w4YWXJsB5wln8i8Q5AtyurIp+MWRQy1+Zx07R8yMBqqHfC7KeBqX2nrRwjKrz2TrlZ3yRJOX20Bwl8Kcx66LgMxe+yDJT0r8Jp8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=usergate.com; spf=pass smtp.mailfrom=usergate.com; arc=none smtp.client-ip=46.229.79.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=usergate.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=usergate.com
+Received: from mail.usergate.com[192.168.90.36] by mx2.usergate.com with ESMTP id
+	 B4D8733438D542E28A1FEB29109F5909; Thu, 17 Apr 2025 11:20:39 +0700
+From: Boris Belyavtsev <bbelyavtsev@usergate.com>
+To: <hare@suse.org>
+CC: <linux-scsi@vger.kernel.org>,<linux-kernel@vger.kernel.org>,"Boris
+ Belyavtsev" <bbelyavtsev@usergate.com>
+Subject: [PATCH 3/3] scsi: aic79xx: check for non-NULL scb in
+	 ahd_linux_queue_abort_cmd
+Date: Thu, 17 Apr 2025 11:20:15 +0700
+Message-ID: <20250417042015.780823-4-bbelyavtsev@usergate.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250417042015.780823-1-bbelyavtsev@usergate.com>
+References: <20250417042015.780823-1-bbelyavtsev@usergate.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
- <20250416-wmt-updates-v1-10-f9af689cdfc2@gmail.com> <209070b3-4758-416e-a408-480b2a8e4fbc@kernel.org>
-In-Reply-To: <209070b3-4758-416e-a408-480b2a8e4fbc@kernel.org>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Thu, 17 Apr 2025 09:54:15 +0400
-X-Gm-Features: ATxdqUFzP7BBKqFL0s0OmGzLfog0caQx_klZzGoU6YsUX4cKgbYRNzTdifkZ0Bo
-Message-ID: <CABjd4YxrqxAx9RpMcEtxoJm17BHMNUjD90EA9oHdGF8OoYTHiw@mail.gmail.com>
-Subject: Re: [PATCH 10/13] ARM: dts: vt8500: Use generic compatibles for EHCI
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset="utf-8"
+X-ClientProxiedBy: ESLSRV-EXCH-01.esafeline.com (192.168.90.36) To
+ nsk02-mbx01.esafeline.com (10.10.1.35)
+X-Message-Id: CD07E1B6428D475B95C80F94AC46F7AF
+X-MailFileId: 3A8A392F50A64BE0AC8477CCC4284E4D
 
-On Thu, Apr 17, 2025 at 9:34=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
->
-> On 16/04/2025 10:21, Alexey Charkov wrote:
-> > VIA/WonderMedia SoCs don't have anything special about their EHCI
-> > controllers: in fact, vendor provided kernels just use the
->
-> It does not have to do anything special - dedicated compatible properly
-> describes the hardware.
+possible NULL pointer dereference in case hardware returns invalid scb
+index
 
-My thinking was along the lines of "if the IP block is generic without
-vendor-specific changes, then I'd rather describe it using the generic
-compatible". But point taken, will drop this patch and extend the EHCI
-binding instead.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-> > generic PCI driver by emulating a virtual PCI bus with fixed MMIO
->
-> PCI? But this is USB.
+Signed-off-by: Boris Belyavtsev <bbelyavtsev@usergate.com>
+---
+ drivers/scsi/aic7xxx/aic79xx_osm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Yes, it is a pure platform USB EHCI controller. But the way the vendor
-approached its enablement in their kernels was to code up a virtual
-PCI bus with statically defined BARs which the common kernel code then
-picked up and enumerated this platform EHCI controller as a PCI device
-using the generic PCI EHCI controller driver. That was before the
-mainline EHCI driver got support for platform devices, so apparently
-they thought it's easier to do the virtual-PCI hack instead of
-properly binding a platform device.
+diff --git a/drivers/scsi/aic7xxx/aic79xx_osm.c b/drivers/scsi/aic7xxx/aic7=
+9xx_osm.c
+index 17dfc3c72110..7d40c7d80411 100644
+--- a/drivers/scsi/aic7xxx/aic79xx_osm.c
++++ b/drivers/scsi/aic7xxx/aic79xx_osm.c
+@@ -2265,7 +2265,8 @@ ahd_linux_queue_abort_cmd(struct scsi_cmnd *cmd)
+                 * and hope that the target responds.
+                 */
+                pending_scb =3D ahd_lookup_scb(ahd, active_scbptr);
+-               pending_scb->flags |=3D SCB_RECOVERY_SCB|SCB_ABORT;
++               if (pending_scb =3D=3D NULL)
++                       pending_scb->flags |=3D SCB_RECOVERY_SCB|SCB_ABORT;
+                ahd_outb(ahd, MSG_OUT, HOST_MSG);
+                ahd_outb(ahd, SCSISIGO, last_phase|ATNO);
+                scmd_printk(KERN_INFO, cmd, "Device is active, asserting AT=
+N\n");
+--
+2.43.0
 
-My point was that the hardware block has only ever been enabled with
-generic EHCI code, so it must be indeed generic. There are no docs
-available on this part, so various vendor code dumps and manual poking
-are the only sources of information about the hardware.
-
-> > mappings just to bind the existing driver as-is. So switch to the
-> > generic compatible to save further additions to bindings.
-> >
-> > Note that these devices have only ever supported appended-DTB boot,
-> > so changing the compatible should not affect any existing users.
->
-> And other users of the DTS?
->
-> I don't see benefits in this patch.
-
-No problem, I will drop it and update the binding schema to include
-the vendor-specific compatible instead.
-
-Best regards,
-Alexey
+=D0=9D=D0=B0=D1=81=D1=82=D0=BE=D1=8F=D1=89=D0=B5=D0=B5 =D1=8D=D0=BB=D0=B5=
+=D0=BA=D1=82=D1=80=D0=BE=D0=BD=D0=BD=D0=BE=D0=B5 =D1=81=D0=BE=D0=BE=D0=B1=
+=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =D1=81=D0=BE=D0=B4=D0=B5=D1=80=D0=B6=D0=B8=
+=D1=82 =D0=B8=D0=BD=D1=84=D0=BE=D1=80=D0=BC=D0=B0=D1=86=D0=B8=D1=8E =D0=BA=
+=D0=BE=D0=BD=D1=84=D0=B8=D0=B4=D0=B5=D0=BD=D1=86=D0=B8=D0=B0=D0=BB=D1=8C=D0=
+=BD=D0=BE=D0=B3=D0=BE =D1=85=D0=B0=D1=80=D0=B0=D0=BA=D1=82=D0=B5=D1=80=D0=
+=B0, =D0=B0 =D1=82=D0=B0=D0=BA=D0=B6=D0=B5 =D0=BC=D0=BE=D0=B6=D0=B5=D1=82 =
+=D1=81=D0=BE=D0=B4=D0=B5=D1=80=D0=B6=D0=B0=D1=82=D1=8C =D0=BA=D0=BE=D0=BC=
+=D0=BC=D0=B5=D1=80=D1=87=D0=B5=D1=81=D0=BA=D1=83=D1=8E =D1=82=D0=B0=D0=B9=
+=D0=BD=D1=83 =D0=9E=D0=9E=D0=9E =C2=AB=D0=AE=D0=B7=D0=B5=D1=80=D0=B3=D0=B5=
+=D0=B9=D1=82=C2=BB =D0=98=D0=9D=D0=9D 5408308256 (UserGate). =D0=9D=D0=B5=
+=D0=BF=D1=80=D0=B0=D0=B2=D0=BE=D0=BC=D0=B5=D1=80=D0=BD=D0=BE=D0=B5 =D0=B8=
+=D1=81=D0=BF=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D0=BD=D0=B8=D0=B5 / =
+=D1=80=D0=B0=D1=81=D0=BA=D1=80=D1=8B=D1=82=D0=B8=D0=B5 =D1=82=D0=B0=D0=BA=
+=D0=BE=D0=B2=D0=BE=D0=B9 =D0=B8=D0=BD=D1=84=D0=BE=D1=80=D0=BC=D0=B0=D1=86=
+=D0=B8=D0=B8 =D0=B7=D0=B0=D0=BF=D1=80=D0=B5=D1=89=D0=B5=D0=BD=D0=BE. =D0=95=
+=D1=81=D0=BB=D0=B8 =D0=B2=D1=8B =D0=BF=D0=BE=D0=BB=D1=83=D1=87=D0=B8=D0=BB=
+=D0=B8 =D0=BD=D0=B0=D1=81=D1=82=D0=BE=D1=8F=D1=89=D0=B5=D0=B5 =D1=81=D0=BE=
+=D0=BE=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =D0=BF=D0=BE =D0=BE=D1=88=D0=B8=
+=D0=B1=D0=BA=D0=B5, =D0=BF=D0=BE=D0=B6=D0=B0=D0=BB=D1=83=D0=B9=D1=81=D1=82=
+=D0=B0, =D1=81=D0=B2=D1=8F=D0=B6=D0=B8=D1=82=D0=B5=D1=81=D1=8C =D1=81 =D0=
+=BE=D1=82=D0=BF=D1=80=D0=B0=D0=B2=D0=B8=D1=82=D0=B5=D0=BB=D0=B5=D0=BC =D0=
+=B8 =D1=83=D0=B4=D0=B0=D0=BB=D0=B8=D1=82=D0=B5 =D0=B2=D1=81=D0=B5 =D0=BA=D0=
+=BE=D0=BF=D0=B8=D0=B8 =D1=81=D0=BE=D0=BE=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D1=
+=8F. =D0=9D=D0=B0=D1=81=D1=82=D0=BE=D1=8F=D1=89=D0=B5=D0=B5 =D1=81=D0=BE=D0=
+=BE=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =D0=BD=D0=B5 =D1=8F=D0=B2=D0=BB=D1=
+=8F=D0=B5=D1=82=D1=81=D1=8F =D0=BE=D1=84=D0=B5=D1=80=D1=82=D0=BE=D0=B9. =D0=
+=A1=D0=B2=D0=B5=D0=B4=D0=B5=D0=BD=D0=B8=D1=8F =D0=BE =D0=BF=D0=BB=D0=B0=D0=
+=BD=D0=B8=D1=80=D1=83=D0=B5=D0=BC=D1=8B=D1=85 =D0=BA =D1=80=D0=B0=D0=B7=D1=
+=80=D0=B0=D0=B1=D0=BE=D1=82=D0=BA=D0=B5 =D1=82=D0=B5=D1=85=D0=BD=D0=BE=D0=
+=BB=D0=BE=D0=B3=D0=B8=D1=87=D0=B5=D1=81=D0=BA=D0=B8=D1=85 =D1=80=D0=B5=D1=
+=88=D0=B5=D0=BD=D0=B8=D1=8F=D1=85, =D1=86=D0=B5=D0=BD=D0=BE=D0=B2=D0=BE=D0=
+=B9 =D0=BF=D0=BE=D0=BB=D0=B8=D1=82=D0=B8=D0=BA=D0=B5, =D0=B8=D0=BD=D1=8B=D0=
+=B5 =D1=81=D0=BE=D0=B4=D0=B5=D1=80=D0=B6=D0=B0=D1=89=D0=B8=D0=B5=D1=81=D1=
+=8F =D0=B2 =D1=81=D0=BE=D0=BE=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B8 =D1=81=D0=
+=B2=D0=B5=D0=B4=D0=B5=D0=BD=D0=B8=D1=8F =D0=B8=D0=BC=D0=B5=D1=8E=D1=82 =D0=
+=B8=D1=81=D0=BA=D0=BB=D1=8E=D1=87=D0=B8=D1=82=D0=B5=D0=BB=D1=8C=D0=BD=D0=BE=
+ =D0=B8=D0=BD=D1=84=D0=BE=D1=80=D0=BC=D0=B0=D1=86=D0=B8=D0=BE=D0=BD=D0=BD=
+=D1=8B=D1=85 =D1=85=D0=B0=D1=80=D0=B0=D0=BA=D1=82=D0=B5=D1=80 =D0=B8 =D0=BD=
+=D0=B5 =D0=B4=D0=BE=D0=BB=D0=B6=D0=BD=D1=8B =D0=B1=D1=8B=D1=82=D1=8C =D1=80=
+=D0=B0=D1=81=D1=86=D0=B5=D0=BD=D0=B5=D0=BD=D1=8B =D0=B2 =D0=BA=D0=B0=D1=87=
+=D0=B5=D1=81=D1=82=D0=B2=D0=B5 =D0=BE=D1=81=D0=BD=D0=BE=D0=B2=D0=B0=D0=BD=
+=D0=B8=D1=8F =D0=B4=D0=BB=D1=8F =D0=B2=D0=BE=D0=B7=D0=BD=D0=B8=D0=BA=D0=BD=
+=D0=BE=D0=B2=D0=B5=D0=BD=D0=B8=D1=8F =D0=BE=D0=B1=D1=8F=D0=B7=D0=B0=D1=82=
+=D0=B5=D0=BB=D1=8C=D1=81=D1=82=D0=B2 =D0=BB=D1=8E=D0=B1=D0=BE=D0=B3=D0=BE =
+=D1=81=D0=B2=D0=BE=D0=B9=D1=81=D1=82=D0=B2=D0=B0.
