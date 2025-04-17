@@ -1,209 +1,125 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2EE2566CF;
-	Thu, 17 Apr 2025 18:40:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C7E88462
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 18:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744915240; cv=none; b=AYjhMoD4WqZhRV35ngAbAGRziAxPbljSDRjCPPit+SO+yp6rKTOycjCGr1H6Hcb4b/5GYOh5mVlTjxsMc1LgR4tMZILgGMyRfwQmdc+3Ka9pQEwUF+g7RjU9/5Vuu9qjF1M/MZvOrhrC1zkb47dCz3RS87Ya2bMjCT3IgOwIFwI=
+	t=1744915492; cv=none; b=lAZwwfbq/URFq4LksEaMBbhZDQsFzxOYempkBI8n9SxZZ1MJOj0RYyJczXrwgKvGfqckVZvK0ErWthxVABRI4eSSGZFAnPvKrF+/dSqAOFDG+29gTxSwvYfKRdn+E1RqAEFgxugmTV1dN5daWW0dQX44uBaWacKIJbYe2Mowai4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744915240; c=relaxed/simple;
-	bh=phQHYai+8w3V/h695X+78EB/wpe3P53UQdp1xEFlryc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pltbtLpP8VNNTqvzIAzbNmaFGyAkIVuyVE8x+XuGMnrlrfRdMKIOc7P+ZXluRCxZXOnMhxDyqcfunLV1IERJvroeTf/J+OSFlTsWV8/Fmu517hZ9DHTo9EHyAKMSr0PvjwMhT2IgLkp/fvEFP814JuDkg4tTdXPFqv6haHHT9sI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M2FZoojk; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744915492; c=relaxed/simple;
+	bh=VNambXyeIHQ+MPofQIKI8LZb9w950n+4SWJrBF6ZD30=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=STM0ujni1ouxjCDYRpe8Fj7W93gW9SAj21NWcGe38+5rDuga0/UCpDEh9swEifNYC7YkipzyJFaT9Gp/5JOvG4MAmuikHZ8kHofqeqm2tlYqIFQRi8ak8qGTOKvLOP6W+/auSy0DFpf60V+eWjira1iU88H06qypxLZCrxJoow0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=SFvT8iyB; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2FZoojk"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-301a6347494so192738a91.3;
-        Thu, 17 Apr 2025 11:40:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744915237; x=1745520037; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=AJXFv/uh2CkmNYOfLVF+jSs12YduHnlm2R0/XL3XVAc=;
-        b=M2FZoojkhpJfJBpKG3DQN3jSgJuh5I7E69rMBo0LPLiO7tqLBGHCwmCibK/sEPe/At
-         SnXUO7endYeG01r7s0IkyVNchQsPHT7rParvPY3DBTzwLKR1bJa9Ub8VagiuCYA6ZQdD
-         nbWcGIBCptFYgh49JEGy87XUdpNoc7LupWCqWPBLbkfmDwLe6hWv5/P8wORm4wtVrdr0
-         oyeoU4JK5nrG55c3couFfP1j2BT2LwM9jH7FTCvCdLJObwQXu9xpA1I3PmaBHunKxD4m
-         eVatYC7BHUj1sy6ryqtLaBsv4v6Ct/ZTSyzeIPxs5M+PfSrR6YIpsPnonVnldLOWjQ6R
-         vl7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744915237; x=1745520037;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AJXFv/uh2CkmNYOfLVF+jSs12YduHnlm2R0/XL3XVAc=;
-        b=VGiOuTMiLtvLH1WGCw9GtX5uVEJfIXiyQR4FrHJOOaXs98OUJ/WvpHFJInvXpLwTTT
-         /On1vb5/dDubED7Z8pWbIL/vnR7PDegrTH6lM+77VftIdK7Vrxf+SxfUBzxgNcXPlRBu
-         vrRWWdg1i9ehqNrbAc0+HCJrwtxUw8kXWUWVZR6ARofk+O96q5E5Z9xRxQtex0Gx73M8
-         NYy0UIXfJECfAfFgJ6CrXYTZU/72Y3Qpsf8t5tTW4oqBzIAZ5/HOaIIzR7ZU3sYIhhlo
-         8Wff6zvPFT9ardINrNX4oU/guhawlOALirqyH/osKKUwRrG5sw+Xvz6C2eEx2EeJnkf8
-         dcDw==
-X-Forwarded-Encrypted: i=1; AJvYcCVSPmQOVlnXM7hA4Vkc7ssc+CI2CZJoqXj8bLIoBk3bvrIhduBaxNo3OFx/CJxOix3rU7j6k5MQEJ2VlXpDg0o=@vger.kernel.org, AJvYcCX3JFNmbM+dGJUj4t2YrdnpdgUzv4yM0PZkIuixVGtpABKVR/qdtkkF+nVy9oJHIeBTHXQo1dN42Ovdww8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLX/UhfhDBbOEcOhXj7Lk4gU+4uePsqXojCchJQZ1L4z4UtI8B
-	eCDz/rNHrN8ebgFjWKHiUdghoPEQhneKxvr2+sQDzFFD4yuCGGHnmkSsyxGblXJR1oDX9QKHLkY
-	fNdduxnOxQc4g7/cWDNgjEAGiTNk=
-X-Gm-Gg: ASbGncuW7Irl2SnTmUUWHP7K87ejQMhzTlSqKsnDhMGCGZfhHlqF+rcklp9oXfJpteA
-	bl1xB54PekUKTmKC3MMQ2/wlR0oyJNgkhRBiOyetTupeCmJPVTAA6qJlZmmLIz5NpWsRkGbgsCX
-	ikasoCWAziibK8fqxik1FT6w==
-X-Google-Smtp-Source: AGHT+IH8aEonqKPoSyA9bIyV8LFkUk4EhzfTy08nmIpoOn6HXaWivtFYQGpywzxjlcRLvwBouWFibvp1JymiFrFtnJY=
-X-Received: by 2002:a17:90b:38cc:b0:2fe:91d0:f781 with SMTP id
- 98e67ed59e1d1-3087bb3f2c3mr34484a91.2.1744915237717; Thu, 17 Apr 2025
- 11:40:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SFvT8iyB"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53HIi8xU4149562
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 17 Apr 2025 11:44:09 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53HIi8xU4149562
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1744915450;
+	bh=7OqEEE7EuKkstsubHWZLqMOLXkWpnuVuB/GL6W5HW8o=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=SFvT8iyBvbhsuqvLRp2iIcz02vonZGZPdXAiSlgiPxxRgZ64lj8SJ0tr//bvbxY8A
+	 1sc+l+eT8bb5olJaiHkfxsxQnstuyOj83XilJIjBGfUQLZ1MZ2b2F7IVPW5iXriIl9
+	 I4hcRo84e92ApgSikX4OqkbogVjYYugaO30W7+P8IXepghuhNntaQm6Gd1ak9tH+h4
+	 MYjVfavRefqiFmffbPMHaUpTe5X1pBycteBThpwtAfJ7U+Vl57XYX6hoNWMrX00dkT
+	 RWabkYLZ9jRRvLCBWJQXeBrsLUbTT3DL1LyShLr4n5X6p+zt2/KYFvwfGsoRj+/8c1
+	 QUEwaft4Mjicw==
+Date: Thu, 17 Apr 2025 11:44:06 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Paul Menzel <pmenzel@molgen.mpg.de>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+CC: LKML <linux-kernel@vger.kernel.org>
+Subject: Re: e820: Undefined type not treated as AddressRangeReserved
+User-Agent: K-9 Mail for Android
+In-Reply-To: <074c2637-1b65-428e-b3e2-24384780e936@molgen.mpg.de>
+References: <074c2637-1b65-428e-b3e2-24384780e936@molgen.mpg.de>
+Message-ID: <084FA661-17FD-4FC7-B863-92A4FE112201@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410124526.GB9833@noisy.programming.kicks-ass.net>
- <20250410130944.GA9003@noisy.programming.kicks-ass.net> <CANiq72=k+tZ3ACEB5k9qwJ8ZYu-dXkA3=Lisg1b8ze-2D0STog@mail.gmail.com>
- <20250410132649.GE9833@noisy.programming.kicks-ass.net> <CANiq72=Q_Z8KfV+n4z9wWVJsZwVevag=Vh3URe71XkUuWuqEDg@mail.gmail.com>
- <20250410133446.GF9833@noisy.programming.kicks-ass.net> <CAH5fLghrcqSYwkqbC4SSp6oYCny0riMRGA6W+oqQ69aA=NwYWw@mail.gmail.com>
- <CANiq72k0AM3v9JZe=8mDN6T1ToiAt1-1e1zJ3z0Oh6ZWfchzag@mail.gmail.com>
- <20250416202040.GD38216@noisy.programming.kicks-ass.net> <202504161442.66CE2596@keescook>
- <20250417081818.GJ38216@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250417081818.GJ38216@noisy.programming.kicks-ass.net>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 17 Apr 2025 20:40:24 +0200
-X-Gm-Features: ATxdqUFjllzBrLR26e1HbjrffvuB-1hcrLPaeoQhX8sCVVDtZwVcoE8SgPj4-eM
-Message-ID: <CANiq72kjDM0cKALVy4POEzhfdT4nO7tqz0Pm7xM+3=_0+L1t=A@mail.gmail.com>
-Subject: Re: [PATCH] x86/Kconfig: make CFI_AUTO_DEFAULT depend on !RUST
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Kees Cook <kees@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	=?UTF-8?Q?Pawe=C5=82_Anikiel?= <panikiel@google.com>, 
-	Sami Tolvanen <samitolvanen@google.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Nathan Chancellor <nathan@kernel.org>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Matthew Maurer <mmaurer@google.com>, Ramon de C Valle <rcvalle@google.com>
-Content-Type: multipart/mixed; boundary="000000000000e86c9a0632fdbc8b"
-
---000000000000e86c9a0632fdbc8b
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 17, 2025 at 10:18=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
-rg> wrote:
+On April 16, 2025 11:49:04 PM PDT, Paul Menzel <pmenzel@molgen=2Empg=2Ede> =
+wrote:
+>Dear Linux folks,
 >
-> Urgh, yeah, reading hard :-/
 >
-> OK, Ack
+>Some firmware, like coreboot with older FILO payload [1] or GRUB as paylo=
+ad [2], mark memory regions(?) with type E820 type 13 (Undefined), that is =
+reserved for future use=2E Other payloads like SeaBIOS mark it as 2 (Addres=
+sRangeReserved)=2E As a result, userspace is not able to access this region=
+, which can be worked around by booting with `iomem=3Drelaxed`, or probably=
+ with the `memmap` parameter=2E
+>
+>    $ grep -A1 3ff7b000 /proc/iomem # FILO
+>    3ff7b000-3fffffff : Unknown E820 type
+>      3ffa1000-3ffa8fff : BOOT0000:00
+>
+>    $ grep -A1 3ff7b000 /proc/iomem # SeaBIOS, that marks it as reserved
+>    3ff7b000-3fffffff : Reserved
+>      3ffa1000-3ffa8fff : BOOT0000:00
+>
+>Table 15-374 *Address Range Types* in the ACPI specification 6=2E3 says:
+>
+>> Reserved for future use=2E OSPM must treat any range of this type as if
+>> the type returned was AddressRangeReserved=2E
+>
+>Could and should Linux be adapted to follow the specification, and fix so=
+me real-world use cases? I looked at `arch/x86/include/asm/e820/types=2Eh` =
+and `arch/x86/kernel/e820=2Ec`, but failed to find the place where to imple=
+ment this, and how to name the macros for the undefined regions=2E
+>
+>
+>Kind regards,
+>
+>Paul
+>
+>
+>[1]: https://review=2Ecoreboot=2Eorg/c/filo/+/51120
+>[2]: https://ticket=2Ecoreboot=2Eorg/issues/590
+>[3]: https://uefi=2Eorg/sites/default/files/resources/ACPI_6_3_final_Jan3=
+0=2Epdf
+>
+>
+>diff --git a/arch/x86/include/asm/e820/types=2Eh b/arch/x86/include/asm/e=
+820/types=2Eh
+>index 80c4a7266629=2E=2E1b341914d438 100644
+>--- a/arch/x86/include/asm/e820/types=2Eh
+>+++ b/arch/x86/include/asm/e820/types=2Eh
+>@@ -14,6 +14,10 @@ enum e820_type {
+>        E820_TYPE_NVS           =3D 4,
+>        E820_TYPE_UNUSABLE      =3D 5,
+>        E820_TYPE_PMEM          =3D 7,
+>+       E820_TYPE_UNDEFINED_8   =3D 8, /* reserved for future use */
+>+       E820_TYPE_UNDEFINED_9   =3D 9, /* reserved for future use */
+>+       E820_TYPE_UNDEFINED_10  =3D 10, /* reserved for future use */
+>+       E820_TYPE_UNDEFINED_11  =3D 11, /* reserved for future use */
+>
+>        /*
+>         * This is a non-standardized way to represent ADR or
+>@@ -28,6 +32,8 @@ enum e820_type {
+>         */
+>        E820_TYPE_PRAM          =3D 12,
+>
+>+       E820_TYPE_UNDEFINED_13  =3D 13, /* reserved for future use */
+>+
+>        /*
+>         * Special-purpose memory is indicated to the system via the
+>         * EFI_MEMORY_SP attribute=2E Define an e820 translation of this
 
-Thanks Peter (and Kees for clarifying) -- not sure how you/others
-prefer to route this patch or if you expect a v2, but I got the
-following (attached). I converted your Ack.
-
-Cheers,
-Miguel
-
---000000000000e86c9a0632fdbc8b
-Content-Type: text/x-patch; charset="UTF-8"; 
-	name="0001-x86-Kconfig-make-CFI_AUTO_DEFAULT-depend-on-RUST-or-.patch"
-Content-Disposition: attachment; 
-	filename="0001-x86-Kconfig-make-CFI_AUTO_DEFAULT-depend-on-RUST-or-.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_m9lpbbt90>
-X-Attachment-Id: f_m9lpbbt90
-
-RnJvbSAyYzY2MzZjODJmOGM2YzE4ZTE4YzA4NWZlNjlkMGNkM2RiZTNiOTkxIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiA9P1VURi04P3E/UGF3ZT1DNT04Mj0yMEFuaWtpZWw/PSA8cGFu
-aWtpZWxAZ29vZ2xlLmNvbT4KRGF0ZTogVGh1LCAxMCBBcHIgMjAyNSAxMTo1NDoyMCArMDAwMApT
-dWJqZWN0OiBbUEFUQ0hdIHg4Ni9LY29uZmlnOiBtYWtlIENGSV9BVVRPX0RFRkFVTFQgZGVwZW5k
-IG9uICFSVVNUIG9yIFJ1c3QgPj0KIDEuODgKTUlNRS1WZXJzaW9uOiAxLjAKQ29udGVudC1UeXBl
-OiB0ZXh0L3BsYWluOyBjaGFyc2V0PVVURi04CkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IDhi
-aXQKCkNhbGxpbmcgY29yZTo6Zm10Ojp3cml0ZSgpIGZyb20gcnVzdCBjb2RlIHdoaWxlIEZpbmVJ
-QlQgaXMgZW5hYmxlZApyZXN1bHRzIGluIGEga2VybmVsIHBhbmljOgoKWyA0NjE0LjE5OTc3OV0g
-a2VybmVsIEJVRyBhdCBhcmNoL3g4Ni9rZXJuZWwvY2V0LmM6MTMyIQpbIDQ2MTQuMjA1MzQzXSBP
-b3BzOiBpbnZhbGlkIG9wY29kZTogMDAwMCBbIzFdIFBSRUVNUFQgU01QIE5PUFRJClsgNDYxNC4y
-MTE3ODFdIENQVTogMiBVSUQ6IDAgUElEOiA2MDU3IENvbW06IGRtYWJ1Zl9kdW1wIFRhaW50ZWQ6
-IEcgICAgIFUgICAgIE8gICAgICAgNi4xMi4xNy1hbmRyb2lkMTYtMC1nNmFiMzhjNTM0YTQzICMx
-IDlkYTA0MGYyNzY3M2VjMzk0NWUyM2I5OThhMGY4YmQ2NGM4NDY1OTkKWyA0NjE0LjIyNzgzMl0g
-VGFpbnRlZDogW1VdPVVTRVIsIFtPXT1PT1RfTU9EVUxFClsgNDYxNC4yNDEyNDddIFJJUDogMDAx
-MDpkb19rZXJuZWxfY3BfZmF1bHQrMHhlYS8weGYwClsgNDYxNC4yNDY2MjFdIENvZGU6IGM2IDE1
-IDhkIGFkIGFjIDQ4IDBmIDQ0IGYxIDQ4IDhkIDA0IDgwIDQ4IDhkIDE0IDQ1IGQwIDM3IDQyIGFj
-IDQ4IGM3IGM3IDIyIDk5IGJiIGFjIGU4IDlmIDdhIDA1IDAwIDBmIDBiIGViIDlhIDY3IDBmIGI5
-IDQwIDEyIDwwZj4gMGIgY2MgY2MgY2MgY2MgNjYgMGYgMWYgMDAgNDEgODEgZWEgMDAgMDAgMDAg
-MDAgNzQgMDMgMGYgMGIgOTAKWyA0NjE0LjI2NzYwNl0gUlNQOiAwMDE4OmZmZmZiOTVhY2ZhNGI5
-NzggRUZMQUdTOiAwMDAxMDA5NwpbIDQ2MTQuMjczNDY0XSBSQVg6IDAwMDAwMDAwMDAwMDAwNTcg
-UkJYOiBmZmZmYjk1YWNmYTRiOWI4IFJDWDogM2ZmMWM4MTNjYjU3NjMwMApbIDQ2MTQuMjgxNDI2
-XSBSRFg6IGZmZmY5YTUwYjc5MmI4ZDAgUlNJOiBmZmZmOWE1MGI3OTFkNTQ4IFJESTogZmZmZjlh
-NTBiNzkxZDU0OApbIDQ2MTQuMjg5NDA4XSBSQlA6IGZmZmZiOTVhY2ZhNGI5ODAgUjA4OiAwMDAw
-MDAwMDAwMDAwZDdjIFIwOTogZmZmZmZmZmZhZDQ1ZDUwMApbIDQ2MTQuMjk3Mzk5XSBSMTA6IDAw
-MDAwMDAwMDAwMDI4NzQgUjExOiAwMDAwMDAwMDAwMDAwMDA0IFIxMjogMDAwMDAwMDAwMDAwMDAw
-MApbIDQ2MTQuMzA1MzY5XSBSMTM6IDAwMDAwMDAwMDAwMDAwMDAgUjE0OiAwMDAwMDAwMDAwMDAw
-MDAwIFIxNTogMDAwMDAwMDAwMDAwMDAwMwpbIDQ2MTQuMzEzMzQ1XSBGUzogIDAwMDA3NmZhMTA2
-ZGNmZTgoMDAwMCkgR1M6ZmZmZjlhNTBiNzkwMDAwMCgwMDAwKSBrbmxHUzowMDAwMDAwMDAwMDAw
-MDAwClsgNDYxNC4zMjIzODZdIENTOiAgMDAxMCBEUzogMDAwMCBFUzogMDAwMCBDUjA6IDAwMDAw
-MDAwODAwNTAwMzMKWyA0NjE0LjMyODgwNl0gQ1IyOiAwMDAwNzZmOGZjMjA3YmQwIENSMzogMDAw
-MDAwMDIyNzI0MjAwMCBDUjQ6IDAwMDAwMDAwMDBmNTJlYjAKWyA0NjE0LjMzNjc3N10gUEtSVTog
-NTU1NTU1NTQKWyA0NjE0LjMzOTc4Nl0gQ2FsbCBUcmFjZToKWyA0NjE0LjM0MjUyNF0gIDxUQVNL
-PgpbIDQ2MTQuMzQ0ODY3XSAgPyBfX2RpZV9ib2R5KzB4NjkvMHhiMApbIDQ2MTQuMzQ4Nzg2XSAg
-PyBkaWUrMHhhOS8weGQwClsgNDYxNC4zNTIwMDBdICA/IGRvX3RyYXArMHg4OS8weDE2MApbIDQ2
-MTQuMzU1NzIxXSAgPyBkb19rZXJuZWxfY3BfZmF1bHQrMHhlYS8weGYwClsgNDYxNC4zNjA0MTNd
-ICA/IGhhbmRsZV9pbnZhbGlkX29wKzB4NjkvMHg5MApbIDQ2MTQuMzY0OTg1XSAgPyBkb19rZXJu
-ZWxfY3BfZmF1bHQrMHhlYS8weGYwClsgNDYxNC4zNjk2NTRdICA/IGV4Y19pbnZhbGlkX29wKzB4
-MzYvMHg2MApbIDQ2MTQuMzczOTU5XSAgPyBhc21fZXhjX2ludmFsaWRfb3ArMHgxZi8weDMwClsg
-NDYxNC4zNzg2NDNdICA/IGRvX2tlcm5lbF9jcF9mYXVsdCsweGVhLzB4ZjAKWyA0NjE0LjM4MzMz
-NV0gID8gZG9fa2VybmVsX2NwX2ZhdWx0KzB4MzEvMHhmMApbIDQ2MTQuMzg4MDA1XSAgZXhjX2Nv
-bnRyb2xfcHJvdGVjdGlvbisweDQ5LzB4NzAKWyA0NjE0LjM5Mjg3MV0gIGFzbV9leGNfY29udHJv
-bF9wcm90ZWN0aW9uKzB4MmIvMHg2MApbIDQ2MTQuMzk4MTQ0XSBSSVA6IDAwMTA6X1JOdlhzNV9O
-dE50TnRDczNvMnRHc3VIeW91XzRjb3JlM2ZtdDNudW0zaW1weU50QjlfN0Rpc3BsYXkzZm10KzB4
-MC8weDIwClsgNDYxNC40MDc3OTJdIENvZGU6IDQ4IGY3IGRmIDQ4IDBmIDQ4IGY5IDQ4IDg5IGYy
-IDg5IGM2IDVkIGU5IDE4IGZkIGZmIGZmIDBmIDFmIDg0IDAwIDAwIDAwIDAwIDAwIGYzIDBmIDFl
-IGZhIDQxIDgxIGVhIDE0IDYxIGFmIDJjIDc0IDAzIDBmIDBiIDkwIDw2Nj4gMGYgMWYgMDAgNTUg
-NDggODkgZTUgNDggODkgZjIgNDggOGIgM2YgYmUgMDEgMDAgMDAgMDAgNWQgZTkgZTcKWyA0NjE0
-LjQyODc3NV0gUlNQOiAwMDE4OmZmZmZiOTVhY2ZhNGJhNjggRUZMQUdTOiAwMDAxMDI0NgpbIDQ2
-MTQuNDM0NjA5XSBSQVg6IDAwMDAwMDAwMDAwMDAwMDAgUkJYOiAwMDAwMDAwMDAwMDAwMDEwIFJD
-WDogMDAwMDAwMDAwMDAwMDAwMApbIDQ2MTQuNDQyNTg3XSBSRFg6IDAwMDAwMDAwMDAwMDAwMDcg
-UlNJOiBmZmZmYjk1YWNmYTRiYTcwIFJESTogZmZmZmI5NWFjZmE0YmM4OApbIDQ2MTQuNDUwNTU3
-XSBSQlA6IGZmZmZiOTVhY2ZhNGJhZTAgUjA4OiBmZmZmMGEwMGZmZmZmZjA1IFIwOTogMDAwMDAw
-MDAwMDAwMDA3MApbIDQ2MTQuNDU4NTI3XSBSMTA6IDAwMDAwMDAwMDAwMDAwMDAgUjExOiBmZmZm
-ZmZmZmFiNjdlYWYwIFIxMjogZmZmZmI5NWFjZmE0YmNjOApbIDQ2MTQuNDY2NDkzXSBSMTM6IGZm
-ZmZmZmZmYWM1ZDUwZjAgUjE0OiAwMDAwMDAwMDAwMDAwMDAwIFIxNTogMDAwMDAwMDAwMDAwMDAw
-MApbIDQ2MTQuNDc0NDczXSAgPyBfX2NmaV9fUk52WHM1X050TnROdENzM28ydEdzdUh5b3VfNGNv
-cmUzZm10M251bTNpbXB5TnRCOV83RGlzcGxheTNmbXQrMHgxMC8weDEwClsgNDYxNC40ODQxMThd
-ICA/IF9STnZOdENzM28ydEdzdUh5b3VfNGNvcmUzZm10NXdyaXRlKzB4MWQyLzB4MjUwCgpUaGlz
-IGhhcHBlbnMgYmVjYXVzZSBjb3JlOjpmbXQ6OndyaXRlKCkgY2FsbHMKY29yZTo6Zm10OjpydDo6
-QXJndW1lbnQ6OmZtdCgpLCB3aGljaCBjdXJyZW50bHkgaGFzIENGSSBkaXNhYmxlZDoKCmxpYnJh
-cnkvY29yZS9zcmMvZm10L3J0LnJzOgoxNzEgICAgIC8vIEZJWE1FOiBUcmFuc211dGluZyBmb3Jt
-YXR0ZXIgaW4gbmV3IGFuZCBpbmRpcmVjdGx5IGJyYW5jaGluZyB0by9jYWxsaW5nCjE3MiAgICAg
-Ly8gaXQgaGVyZSBpcyBhbiBleHBsaWNpdCBDRkkgdmlvbGF0aW9uLgoxNzMgICAgICNbYWxsb3co
-aW5saW5lX25vX3Nhbml0aXplKV0KMTc0ICAgICAjW25vX3Nhbml0aXplKGNmaSwga2NmaSldCjE3
-NSAgICAgI1tpbmxpbmVdCjE3NiAgICAgcHViKHN1cGVyKSB1bnNhZmUgZm4gZm10KCZzZWxmLCBm
-OiAmbXV0IEZvcm1hdHRlcjwnXz4pIC0+IFJlc3VsdCB7CgpUaGlzIGNhdXNlcyBhIENvbnRyb2wg
-UHJvdGVjdGlvbiBleGNlcHRpb24sIGJlY2F1c2UgRmluZUlCVCBoYXMgc2VhbGVkCm9mZiB0aGUg
-b3JpZ2luYWwgZnVuY3Rpb24ncyBlbmRicjY0LgoKVGhpcyBtYWtlcyBydXN0IGN1cnJlbnRseSBp
-bmNvbXBhdGlibGUgd2l0aCBGaW5lSUJULiBBZGQgYSBLY29uZmlnCmRlcGVuZGVuY3kgdGhhdCBw
-cmV2ZW50cyBGaW5lSUJUIGZyb20gZ2V0dGluZyB0dXJuZWQgb24gYnkgZGVmYXVsdAppZiBydXN0
-IGlzIGVuYWJsZWQuCgpbIFJ1c3QgMS44OC4wIChzY2hlZHVsZWQgZm9yIDIwMjUtMDYtMjYpIHNo
-b3VsZCBoYXZlIHRoaXMgZml4ZWQgWzFdLAogIGFuZCB0aHVzIHdlIHJlbGF4ZWQgdGhlIGNvbmRp
-dGlvbiB3aXRoIFJ1c3QgPj0gMS44OC4KCiAgV2hlbiBgb2JqdG9vbGAgbGFuZHMgY2hlY2tpbmcg
-Zm9yIHRoaXMgd2l0aCBlLmcuIFsyXSwgdGhlIHBsYW4gaXMKICB0byBpZGVhbGx5IHJ1biB0aGF0
-IGluIHVwc3RyZWFtIFJ1c3QncyBDSSB0byBwcmV2ZW50IHJlZ3Jlc3Npb25zCiAgZWFybHkgWzNd
-LCBzaW5jZSB3ZSBkbyBub3QgY29udHJvbCBgY29yZWAncyBzb3VyY2UgY29kZS4KCiAgQWxpY2Ug
-dGVzdGVkIHRoZSBSdXN0IFBSIGJhY2twb3J0ZWQgdG8gYW4gb2xkZXIgY29tcGlsZXIuCgogICAg
-LSBNaWd1ZWwgXQoKU2lnbmVkLW9mZi1ieTogUGF3ZcWCIEFuaWtpZWwgPHBhbmlraWVsQGdvb2ds
-ZS5jb20+ClJldmlld2VkLWJ5OiBBbGljZSBSeWhsIDxhbGljZXJ5aGxAZ29vZ2xlLmNvbT4KQWNr
-ZWQtYnk6IFBldGVyIFppamxzdHJhIDxwZXRlcnpAaW5mcmFkZWFkLm9yZz4KTGluazogaHR0cHM6
-Ly9naXRodWIuY29tL3J1c3QtbGFuZy9ydXN0L3B1bGwvMTM5NjMyIFsxXQpMaW5rOiBodHRwczov
-L2xvcmUua2VybmVsLm9yZy9ydXN0LWZvci1saW51eC8yMDI1MDQxMDE1NDU1Ni5HQjkwMDNAbm9p
-c3kucHJvZ3JhbW1pbmcua2lja3MtYXNzLm5ldC8gWzJdCkxpbms6IGh0dHBzOi8vZ2l0aHViLmNv
-bS9ydXN0LWxhbmcvcnVzdC9wdWxsLzEzOTYzMiNpc3N1ZWNvbW1lbnQtMjgwMTk1MDg3MyBbM10K
-TGluazogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvci8yMDI1MDQxMDExNTQyMC4zNjYzNDktMS1w
-YW5pa2llbEBnb29nbGUuY29tClNpZ25lZC1vZmYtYnk6IE1pZ3VlbCBPamVkYSA8b2plZGFAa2Vy
-bmVsLm9yZz4KLS0tCiBhcmNoL3g4Ni9LY29uZmlnIHwgMSArCiAxIGZpbGUgY2hhbmdlZCwgMSBp
-bnNlcnRpb24oKykKCmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9LY29uZmlnIGIvYXJjaC94ODYvS2Nv
-bmZpZwppbmRleCA0YjlmMzc4ZTA1ZjYuLjU4NzNjOWUzOTkxOSAxMDA2NDQKLS0tIGEvYXJjaC94
-ODYvS2NvbmZpZworKysgYi9hcmNoL3g4Ni9LY29uZmlnCkBAIC0yMzY4LDYgKzIzNjgsNyBAQCBj
-b25maWcgU1RSSUNUX1NJR0FMVFNUQUNLX1NJWkUKIGNvbmZpZyBDRklfQVVUT19ERUZBVUxUCiAJ
-Ym9vbCAiQXR0ZW1wdCB0byB1c2UgRmluZUlCVCBieSBkZWZhdWx0IGF0IGJvb3QgdGltZSIKIAlk
-ZXBlbmRzIG9uIEZJTkVJQlQKKwlkZXBlbmRzIG9uICFSVVNUIHx8IFJVU1RDX1ZFUlNJT04gPj0g
-MTA4ODAwCiAJZGVmYXVsdCB5CiAJaGVscAogCSAgQXR0ZW1wdCB0byB1c2UgRmluZUlCVCBieSBk
-ZWZhdWx0IGF0IGJvb3QgdGltZS4gSWYgZW5hYmxlZCwKCmJhc2UtY29tbWl0OiBjMWI0MDcxZWMz
-YTZhNTk0ZGY2YzQ5YmY4ZjA0YTYwYTg4MDcyNTI1Ci0tIAoyLjQ5LjAKCg==
---000000000000e86c9a0632fdbc8b--
+Don't create macros; *all* unknown memory types *must* be treated as equiv=
+alent to 2=2E
