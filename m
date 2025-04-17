@@ -1,231 +1,428 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0970F252295;
-	Thu, 17 Apr 2025 15:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744902556; cv=fail; b=UNDx5DrkaT0czi0gq4kf0byzr+X9dj9FXxBoRqjxNgcRXSQqEaRRimI+s5Z8SaqVvY4gSAkU2jMk7USN3Ht5YTH4vxGkBDVZxA9tQWpG82DwGMK6q/MUzSOFaJiTrv22or1XJI/eDJud4pUoVdFdLAzh5OlOykDmyHyp4xOuGQg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744902556; c=relaxed/simple;
-	bh=5+dmQ81Vozjdq6FNoJyaTxPmA+y7dFKDi8IBcFGT/lY=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Tme8Ylk+vbp+pJhYOGcgS03vn/HV4xRcohtqlAxZxREAc1sZpsKG+SZxTOeVkegmnPhvdte89hgL/VP6eMoxiRwNjQVMjqlgwUnPx3Jwadcm5PbZfBURrKgZNXUEuYwN4hkXUiTUwzOK47SzOkCl2jMMDDTPkTolfbgqUEJQRQ0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MVzSU5S/; arc=fail smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDBCD253955;
+	Thu, 17 Apr 2025 15:09:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744902560; cv=none; b=trKQJrxoy9FsJbg9Fktj7nvcyWYiC+Z714bWkUVYTPQqkN0iGQ3WQl2yu40SXwWJrgAWftB6IT5E4lUq58zLoGkyLF0lY6wpnBaKHYiFSPuAdyrK+dgybb9uxx7iwvzHypLsZJZJzmUza2GxYGn7XXzEHAQ3t2zlRHaKC12xtns=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744902560; c=relaxed/simple;
+	bh=HskvPqh0fp+Xs08GCGluLWoFMFTiGIhDxXetKAaR2zo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sro1Ijqcj/cmIoEQTluajz07y6hhbHBtVPOpN3uWph8psmY5D9ol/ad5IgzD8QpkSsBcU8/t3SSkTMzHl3MjebXdqZ1GmLUtazPyPOHXyQhdRfb4eK1K2T817kg3gxL48jhNWzSOsWxSCHVA4S5iBzGaCmb4D8tEMGIyRnIFtlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IcNZstgU; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MVzSU5S/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IcNZstgU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744902555; x=1776438555;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=5+dmQ81Vozjdq6FNoJyaTxPmA+y7dFKDi8IBcFGT/lY=;
-  b=MVzSU5S/OdW8v31HHOTuFmgFRXJo+vhNgfWRuYL4jVDI9AGlZ6x6beVt
-   l/R4DxikgPsG1phe0QXWq2ugeYL1zSo5YXcCKkrrze9gj0A6OkND4Z5SM
-   lYk/CE077REe1QMLjDODioZz0JhmXzSwTPfph+Z4TWUGDsuSFN51nqvDv
-   22A9tAbxhnufW/QGPuPbimNyH4eesO+bYXD0/KpFm8y42FUBG9R68pMhG
-   rWwZ+uDU2HRVXSWJhrCx/LUhoVDEWNBmFAogJLz5GD8OKr/l6+DwNBcqH
-   EIPPhEw2Yv6rBig8a6Oxgfp4iF+OOnjmQ36yB1mIcKbG4cZf4TxXlB/wK
-   g==;
-X-CSE-ConnectionGUID: mSsb6pfnQ8OPb0CM2L8a1g==
-X-CSE-MsgGUID: Ewy4Ovp5QV+7+f62w2GMrA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="34110250"
+  t=1744902557; x=1776438557;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=HskvPqh0fp+Xs08GCGluLWoFMFTiGIhDxXetKAaR2zo=;
+  b=IcNZstgUZQi1JiTeElGnVrIsE2dYt6rblFejKJwK2Awsb4Im3dPHQItd
+   BkBzTh99PKlGrdPwDZIGa8zwoUW8toWWYbf7GmZEeAMNQV/SqmRm8Ux76
+   JoElhbNQAj+dDzg5pxMRFjIAPn+OirENHknHFbwnIiXbc5hyndtKP9LSB
+   p3ghz+tQZy6RrfE1yhxtavK4SGlPaz9vE7HtNvpD+p7V5b1QsxdNl8IQh
+   asQD1PaoCRFnCxo65H4+7tlvP7W9PfSiwYvrRO+JtVZ6cqMKHsNsyj0+i
+   oj66/oGBld/vuunSR5lxOQClzM73GFwewL13vXqg+yCs4Jp2H/YYMW6s5
+   A==;
+X-CSE-ConnectionGUID: atgH34e5TZG8cdm20ASeQw==
+X-CSE-MsgGUID: 3/5DysP8TdawPpnKNVjOyg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="57488732"
 X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="34110250"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 08:09:14 -0700
-X-CSE-ConnectionGUID: NnJEsx7eRamWmPl/FC9YbQ==
-X-CSE-MsgGUID: kOgJeajBTj+DQAGlpXc8Og==
+   d="scan'208";a="57488732"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 08:09:17 -0700
+X-CSE-ConnectionGUID: z9KLyd6+SsyicaVLGaPR1Q==
+X-CSE-MsgGUID: NYORa+7LQcipEQVt690L0g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="130794556"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 08:09:13 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 17 Apr 2025 08:09:12 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 17 Apr 2025 08:09:12 -0700
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.43) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 17 Apr 2025 08:09:12 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YRBc5Z4Sm3iFpJwYH20/ipqFINTMzaHdviYtj6rUSJb5MwGHJL1/zryB1NSzIxyGlDtt+HiQzCIeGVYQuU1hkaTMdFzbiTnuqULEnNOHWkbM8E32fFNwOUlG7rSbiUr4ysMIlgk76owLU3A6jp4hVWkkrs2gAVMKKVGIgqwIeiUmfkRbjOKaW1B+Nh8B7xO9f0+f6FiZXGWLiYaLY8CBXqfFHNAQGMJfUA1pUD0Y6Wcc8qTh5S2jA+Hitv55DOUbY40IIZPkBT4qIrTMtYmiW73EDgH3egROPIAPiFZ00Ui8+KgogR8bzHWjgur1scjT1Nqd2kpTcHfa53KIrP/e5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6Xg2x3sq6KQU9vpBP+avTX1tIqikHJbZZREn2rm/220=;
- b=voLxt/ZYRckC/e92qP/nllGiZlZncmnTAHe8whe00GQqRqggTRwPdKpEzy/kIphIt8qw2O0GfrTk8lxj14sLnODqj0KYiADFE8AR2e5NSce2eBave9iV+1ZpKHp0VGelDjJD3KbRzOzgMRiPjjMjXuyoozaJtL5TE0d1x4Yp1q+IuQMQ+uNd7CG2R7mYD4J91rgWjtS41+WK9ZcTJFKJO5sP2p5+ztujsTjW4TkyatWyZX315z0OG2Q82jkntz1vrBCxp1CtRPfFqDeaM1CtJKqAlPIt8FlCD/GMBObStHlTN0ncn8eKDt6ApcEEWr9iRi81cJcIAnxyEx7eCGPbkQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by IA3PR11MB9109.namprd11.prod.outlook.com (2603:10b6:208:572::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Thu, 17 Apr
- 2025 15:09:09 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8632.030; Thu, 17 Apr 2025
- 15:09:09 +0000
-Message-ID: <2aff0d11-91c1-4a3e-92e0-0ae49c804549@intel.com>
-Date: Thu, 17 Apr 2025 08:09:06 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 20/26] x86/resctrl: Provide interface to update the
- event configurations
-To: <babu.moger@amd.com>, <tony.luck@intel.com>, <peternewman@google.com>
-CC: <corbet@lwn.net>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-	<hpa@zytor.com>, <paulmck@kernel.org>, <akpm@linux-foundation.org>,
-	<thuth@redhat.com>, <rostedt@goodmis.org>, <ardb@kernel.org>,
-	<gregkh@linuxfoundation.org>, <daniel.sneddon@linux.intel.com>,
-	<jpoimboe@kernel.org>, <alexandre.chartre@oracle.com>,
-	<pawan.kumar.gupta@linux.intel.com>, <thomas.lendacky@amd.com>,
-	<perry.yuan@amd.com>, <seanjc@google.com>, <kai.huang@intel.com>,
-	<xiaoyao.li@intel.com>, <kan.liang@linux.intel.com>, <xin3.li@intel.com>,
-	<ebiggers@google.com>, <xin@zytor.com>, <sohil.mehta@intel.com>,
-	<andrew.cooper3@citrix.com>, <mario.limonciello@amd.com>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<maciej.wieczor-retman@intel.com>, <eranian@google.com>
-References: <cover.1743725907.git.babu.moger@amd.com>
- <d18beb9ca31eb013405677792377542e609ea693.1743725907.git.babu.moger@amd.com>
- <7be35258-f913-4111-b5da-c4173615cf18@intel.com>
- <7423145d-7de7-4414-85be-b7325c01b437@amd.com>
- <fda6c46d-c01c-494f-a2ba-efbcb1f331b4@intel.com>
- <c3c54172-087e-4a53-bd66-7849402f4a55@amd.com>
-From: Reinette Chatre <reinette.chatre@intel.com>
-Content-Language: en-US
-In-Reply-To: <c3c54172-087e-4a53-bd66-7849402f4a55@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR03CA0038.namprd03.prod.outlook.com
- (2603:10b6:303:8e::13) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+   d="scan'208";a="161876913"
+Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 08:09:14 -0700
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+To: Tony Luck <tony.luck@intel.com>
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+	Feng Xu <feng.f.xu@intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>,
+	Yi Lai <yi1.lai@intel.com>,
+	Shawn Fan <shawn.fan@intel.com>,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 5/7] EDAC/{skx_common,i10nm}: Refactor enable_retry_rd_err_log()
+Date: Thu, 17 Apr 2025 23:07:22 +0800
+Message-ID: <20250417150724.1170168-6-qiuxu.zhuo@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250417150724.1170168-1-qiuxu.zhuo@intel.com>
+References: <20250417150724.1170168-1-qiuxu.zhuo@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|IA3PR11MB9109:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1cf109ab-af1a-443b-b137-08dd7dc1cd94
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?QVQzMmgrY2F2SUhIaE1NMXFoU0tEOXFEVHEybUdBd25zSmgrOHJ4QzYyNVVx?=
- =?utf-8?B?eUlDb3doYXliK0VaZVFvSUJzQ3JzSndFcm1tbk45QVNReWt2Sit0bFRqTGl2?=
- =?utf-8?B?ckduaFI1VVdHVkc1b0dsNVlzQ2tTemREeVoza3BjeitJSkhNSWg1aSsrL1pH?=
- =?utf-8?B?UEUwWDNnSEV1UDZCOEVGdDBBT2VuaHJqYnNocGxaUXJ5TUh0WG00Sm13dnFy?=
- =?utf-8?B?U3l6cnYvSWJsTVgvamVaTmtYejcvWTlqOXF1RW9BcC9aUVZkTmZYT1dxaENZ?=
- =?utf-8?B?ZEZ0d1lQSDBZcHF5eGhnalV1K01QaFE1Ykplak51WVh3UlF3a1lPYUtZTE45?=
- =?utf-8?B?VXk4NjByeTJSVUtLWldSdGR2REljeEJlN1E2eU82OFEwRS9TajJzdFZ0Ykhk?=
- =?utf-8?B?dVFHblF2cXFVbGxuYmZsbGh6VFRwbGNnYXdDRmpZOVBIM2M5bWpuUW1HQ3pM?=
- =?utf-8?B?bTRPM1JwQWtLZWk5YnFZUzFPSmZFaXowc2pFZnJoemdPUGIzTWh5R0U1T2tY?=
- =?utf-8?B?U0RIdm1aL0Y4L0VRejcyUFRzdjVhdG1kWTdUOU1nKzBXTXlaYlpYV081aHpq?=
- =?utf-8?B?NklvSDF4MGxJYjZMSGhKYVRCZWZOZ0wxN05HdWJidXhPZmhTZXJGVFVpWW0r?=
- =?utf-8?B?N0xaUWdxTE5LYnJEREU2K3pteCthd0VCS25iR3dYbDhxODhNL0t3NzhZZklq?=
- =?utf-8?B?OSt0L29xeEkvMVJRbnQvNjFSd01ycVNRTENiV2JadE1zaVRZMFJFUVZTSXJN?=
- =?utf-8?B?czdnNDZmUVVab25oMlZTR1RCc1RwU2ZHTkNlT1VTamVWUDVjTGh1U1hNZFJt?=
- =?utf-8?B?dzgyS0R3RXJwR1B4YW9ld3B0bFkrZmo5RTloMi94Y0xCdi9zYkh6aUdFZjY1?=
- =?utf-8?B?V0dmRFQwUnFlc1ZmZ2Q0YWE5aXpJYldnMG53YmY0WmVsTmUrdkZlNkpaMjJv?=
- =?utf-8?B?SGJUaUJKeUt4bk03c0dUWExvWGV2MFUxc0orRkRjamRQTlhLSzB5STMzd2h1?=
- =?utf-8?B?U1hVRTJRZlByNXJaRWFrMU15R0loK09ZK21WbDFwNk5rdXhSOSt6SGx2LzhG?=
- =?utf-8?B?MkxGWWhkaUMwenZlc08veHJaYS9XN1BqbTk5QkNDZmtqZGVyM1ZuWHBTQTVM?=
- =?utf-8?B?dXpkK2h1akdLelhyWFV1R3lUeHhTcXdIVE1DNGlnLzBuVjRHRTQ4T3VYQTUz?=
- =?utf-8?B?UDcyNDlLTVZrNVhBbU1keWJSQytIeVlycnNHdUdmUTB4K2l3NWc4U09oSC9y?=
- =?utf-8?B?WmhaYU1pcHVDSFlwRlNMaXJzZ1lzd2RxS2pqQTVyL3ZudHgvc1NLVVJxdlNw?=
- =?utf-8?B?d1RCYjlDNDlyTWpHcVF2bW5pQmlmR2RpV3dMYitLTHBrM2M1bWRKWG1tVnhT?=
- =?utf-8?B?SzRJUkhJS0FhVnJ6L3drdDlaQ01qaGJtTEZ5Y1FHNXRheDkwMkE1MWtBSy9F?=
- =?utf-8?B?VTIwUURCVGhYV01aaDEzSUpVN3l5eXFaQjB0Ykw1cXBQTlBnak9CWEkyd2lh?=
- =?utf-8?B?WUVXbk9jaTZuV3RQU0hGU1dHSE8xaCt6Z2VKVWRSM0UzRXZYbUFzMnlNR3I4?=
- =?utf-8?B?b3g1YWdNRE9PMnRBbXZFazBsRDE2YlZyRUNiY2tyaUhpTEtPbmtzK3dEYlFY?=
- =?utf-8?B?RnNVVXJQdDcwNHhXdURTT2xZU1YwVUl1S1l6SWFTTDdKMnVmS1dDajloZUhR?=
- =?utf-8?B?Y0NHVmpFWnpRUDRtcmtpcWhOT1RybWJJaG0rL3E0SGo4NUpFM1p2dnRXemti?=
- =?utf-8?B?dmNCb2MvR241eVRMQ2RsbXVYVkkwdDN6NE1DS0VkdmM0c2Rqc2NMMUgxNUdK?=
- =?utf-8?B?MEx4OStFQzBmWllRRlUwQVY3VTJMWis2MURsYlp2MFJmSVNaaVlLRFpJeHJ2?=
- =?utf-8?B?QVVYTUlWZXR3T0IwKzUyVzd1UFJhNW1LTkozU3FLM2NIRVJOV3U2Y1pMV0Na?=
- =?utf-8?Q?CswRBwy/uIY=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?T2RiblJtUVV3Q0RZZjlpZDVTemFEUkFkb2pERTlleGptTDIwbGMzQTVoNjBD?=
- =?utf-8?B?a0xCSEpudkN4ZFdTdjgvT2Q0a01CWVBnMDIzMURpQkxCaUVKTjZPV0dNNVUy?=
- =?utf-8?B?N003T3JCdWYrNE9ZWDYwbmtSNjRielhuMEZMQWgwSEZKL215T0hqL1grRERh?=
- =?utf-8?B?azE2TWM5NFhKdGxxRlpRbXk1ZnRWYjFteFlHZStLVGxVOWVyaTdYWXYzWkZQ?=
- =?utf-8?B?UkhiZHVYVXdHYzJQcEZsNW9uYk5BN3JRTFhoU2oxT2JzZ1hla1BEVGovU2RX?=
- =?utf-8?B?UUw5YWFZV2ROWVZsSS9yZElXRkZlZkthVDdLTXZqL2x2d2p1OGtIc0F3RFgy?=
- =?utf-8?B?NHZyWXJNdWNJbmd5NExGUkh6TmlkR2Z6ZlB6TVhYby9vSHpFWE4yOUZUU2dK?=
- =?utf-8?B?OXdySVBmK0JZbnRrcDZPSm1qSTN0cExRbkhGd0ZzbVAxQ01OczM3Vll3WTNa?=
- =?utf-8?B?UExCVWRmdmFmeWg4US9malV5SFcyOHEwbVA4L3A4WHdvMDJkTGNuK2RkUDZs?=
- =?utf-8?B?UmxHam9xRzFYdTZoZE9QVmJYWUtQOWhJTkc1TXdSUHNNbkdzZkM2NTg3WkhW?=
- =?utf-8?B?Zlp1Sk44dWhOczVZd05leVdBRFpwNStieWhPOHdqWmlZTlhxbzlsUCs5OFRy?=
- =?utf-8?B?NkprdW4xUnY0RDlzMnpMMGJuM3FYNG1RcnZNdTMyOGVsWXJhNjZXYnBCVXg5?=
- =?utf-8?B?WGNTZWhyTlMxTjJFODJjQktRRTRUcm9qT0ZaVkltS21uWEJjU1BDa3FlWnI5?=
- =?utf-8?B?UDUrT0FrRVYwS2hNMlhXV3NINmpscE1mSHdMeWRaVk0vNkU0NUkxMjVvcnRw?=
- =?utf-8?B?SDZNZlBVNGNGeldNYXUrcnZOWk9MTGZOOUxaUk1ST2IvZDdzd0Rvcnpad1VX?=
- =?utf-8?B?ZlBkMm8wQUl5d1Rwdy85SEswSGdqbmlFbzFDanRBN09FK3hUMlRVN2tGaEcx?=
- =?utf-8?B?K0lzU1JBRHZBTjFPbU9zM3VVZ2k2TFFNRVZ5NERRMXdTdGhSYzI0bldINENS?=
- =?utf-8?B?dXVxTFhtZUZCRVVEcFNncHJvamhEcE5ZUk9US21GWWFlOGthTVdOc3gwY1Fo?=
- =?utf-8?B?bWdJTHZyQ2ZTSlFsSnJWV1RPOFNCcjJQMjROSGEyZ0hwaWZwblRCTUpJbkJB?=
- =?utf-8?B?NUJnUTh4YmRWNEZXaStzbmZWeFRCZUg0bGlwRktaMkZOK2V0QWhZOCt6RVVj?=
- =?utf-8?B?ak9Db01JNWtVL05rZHdFTWRQYTVURnFiejFiNCtGOGFPN0JWZXJSZkJNMkJp?=
- =?utf-8?B?NUljaUZEMEp6SlYrL0Nzam8zL2h0Mi9JOUtKSjlxZGZ1eTVEQ21ZYnBkaVVH?=
- =?utf-8?B?ajNoVnVLRm9YTGJlNytod2NLRHBORDUrY0s0N0Z4NzRFOFJPcHFiOSt4OGNJ?=
- =?utf-8?B?aXVIMThtQ2M1S1VUTklDd1B4R3VxWWxaTW5URE5PWWlDS0FmOTZYT3ltc01V?=
- =?utf-8?B?VnJ6dEl2MkNFRTdsZmMvMEJrSTE4WVNVMHJvMnl5V0FNRWxzWndCVnNEN2dB?=
- =?utf-8?B?bU5PWkJvNGQxRmU2UGhhTjFjUnBKbzE2b1FpaVVLa3Rldlo3RHNzdWhlZmwr?=
- =?utf-8?B?ZUpsZjBET0hWN2FOdnljbjBlNzdpNWNpcmFpNWhvQmtDTm95U3NyODVqd1Bh?=
- =?utf-8?B?eHFkaTNFM255OEg1WWdmYmlMWG1lS0p0bXNTM04rcGpVK2g1QiswbEgwamU1?=
- =?utf-8?B?SHJrQi9rb082TFFmSU0wbnFuZHFOaStwb1N1TXJ2Zm9QeGxzOGJTYXdlRERl?=
- =?utf-8?B?cytVd2NDckVTN3ZYZVBZZjRoQWEyQnJOZ0dGL0pRRDF3RkNVVERDb3J4OG1x?=
- =?utf-8?B?Z3hQQ1JlZEhEQXZMQnlIb2V6bFV1Ny8xUWxjSkdnbXRrbURxVFlNMThLYVVo?=
- =?utf-8?B?TzRRUUdZZmpHY1BqZHkrU05GWHZ6cXlWemY0NlByYW5JbUxZdENPZDRac0Yz?=
- =?utf-8?B?amtDcmk5R0lTK2dIekE2d2JPbEJaUVMzOTNZOWp4ZGtXUnBjT09LaTY3Znpk?=
- =?utf-8?B?bzAvYVpKd0Y5em5hdXFFRCtzL2kxMTV0ZWtSNnpjWkI2Z3JIbXJ1Z2NZT2xP?=
- =?utf-8?B?V3lwSGhoV2xlaU9wNUxSM3dJSlUxKzVwQ01mdklDVG1XakM2bkNxTERIbUNP?=
- =?utf-8?B?V0FzakpjWERnRmZTbk5kN3NMdUd6bUNaVlhTUmdlTkdLZWRSTnVUVjYzNUdj?=
- =?utf-8?B?OUE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1cf109ab-af1a-443b-b137-08dd7dc1cd94
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 15:09:09.0333
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FFhr47DehLuGDot0XJFCJt91dugeSTBKUSjC/Wv7N1ztxAbpofOOJP3wZWAiUqIT0gXjArvKv+PVkDpYgF9AqhW6cNDgcsHDGNrJSjw59kE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR11MB9109
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-Hi Babu,
+Refactor enable_retry_rd_err_log() using helper functions for both
+DDR and HBM, making the RRL control bits configurable instead of
+hard-coded. Additionally, explicitly define the four RRL modes for
+better readability.
 
-On 4/17/25 7:34 AM, Moger, Babu wrote:
-> On 4/16/25 13:52, Reinette Chatre wrote:
->>
->> Below is a start of trying to address this but I think more refinement is needed (other
->> possible terms for "transactions" could perhaps be "data sources"? ... what do you think?):
->>
->> 	"The read/write event_filter file contains the configuration of the event
->> 	 that reflects which transactions(?) are being counted by it."
->>
-> 
-> How about?
-> 
-> "The read/write event_filter file contains the configuration of the event
-> that reflects which memory transactions are being counted by it."
-> 
+No functional changes intended.
 
-Looks good to me. Perhaps "being" can be dropped? Thank you.
+Tested-by: Feng Xu <feng.f.xu@intel.com>
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+---
+ drivers/edac/i10nm_base.c | 233 ++++++++++++++++++++++----------------
+ drivers/edac/skx_common.h |  20 ++++
+ 2 files changed, 154 insertions(+), 99 deletions(-)
 
-Reinette
+diff --git a/drivers/edac/i10nm_base.c b/drivers/edac/i10nm_base.c
+index b47da970510c..2a03db86883c 100644
+--- a/drivers/edac/i10nm_base.c
++++ b/drivers/edac/i10nm_base.c
+@@ -72,11 +72,6 @@
+ #define I10NM_SAD_ENABLE(reg)		GET_BITFIELD(reg, 0, 0)
+ #define I10NM_SAD_NM_CACHEABLE(reg)	GET_BITFIELD(reg, 5, 5)
  
+-#define RETRY_RD_ERR_LOG_UC		BIT(1)
+-#define RETRY_RD_ERR_LOG_EN_PATSPR	BIT(13)
+-#define RETRY_RD_ERR_LOG_NOOVER		BIT(14)
+-#define RETRY_RD_ERR_LOG_EN		BIT(15)
+-#define RETRY_RD_ERR_LOG_NOOVER_UC	(BIT(14) | BIT(1))
+ #define RETRY_RD_ERR_LOG_OVER_UC_V	(BIT(2) | BIT(1) | BIT(0))
+ 
+ static struct list_head *i10nm_edac_list;
+@@ -88,153 +83,193 @@ static bool mem_cfg_2lm;
+ 
+ static struct reg_rrl icx_reg_rrl_ddr = {
+ 	.set_num = 2,
++	.modes = {LRE_SCRUB, LRE_DEMAND},
+ 	.offsets = {
+ 		{0x22c60, 0x22c54, 0x22c5c, 0x22c58, 0x22c28, 0x20ed8},
+ 		{0x22e54, 0x22e60, 0x22e64, 0x22e58, 0x22e5c, 0x20ee0},
+ 	},
++	.widths		= {4, 4, 4, 4, 4, 8},
++	.uc_mask	= BIT(1),
++	.en_patspr_mask	= BIT(13),
++	.noover_mask	= BIT(14),
++	.en_mask	= BIT(15),
+ };
+ 
+ static struct reg_rrl spr_reg_rrl_ddr = {
+ 	.set_num = 3,
++	.modes = {LRE_SCRUB, LRE_DEMAND, FRE_DEMAND},
+ 	.offsets = {
+ 		{0x22c60, 0x22c54, 0x22f08, 0x22c58, 0x22c28, 0x20ed8},
+ 		{0x22e54, 0x22e60, 0x22f10, 0x22e58, 0x22e5c, 0x20ee0},
+ 		{0x22c70, 0x22d80, 0x22f18, 0x22d58, 0x22c64, 0x20f10},
+ 	},
++	.widths		= {4, 4, 8, 4, 4, 8},
++	.uc_mask	= BIT(1),
++	.en_patspr_mask	= BIT(13),
++	.noover_mask	= BIT(14),
++	.en_mask	= BIT(15),
+ };
+ 
+ static struct reg_rrl spr_reg_rrl_hbm_pch0 = {
+ 	.set_num = 2,
++	.modes = {LRE_SCRUB, LRE_DEMAND},
+ 	.offsets = {
+ 		{0x2860, 0x2854, 0x2b08, 0x2858, 0x2828, 0x0ed8},
+ 		{0x2a54, 0x2a60, 0x2b10, 0x2a58, 0x2a5c, 0x0ee0},
+ 	},
++	.widths		= {4, 4, 8, 4, 4, 8},
++	.uc_mask	= BIT(1),
++	.en_patspr_mask	= BIT(13),
++	.noover_mask	= BIT(14),
++	.en_mask	= BIT(15),
+ };
+ 
+ static struct reg_rrl spr_reg_rrl_hbm_pch1 = {
+ 	.set_num = 2,
++	.modes = {LRE_SCRUB, LRE_DEMAND},
+ 	.offsets = {
+ 		{0x2c60, 0x2c54, 0x2f08, 0x2c58, 0x2c28, 0x0fa8},
+ 		{0x2e54, 0x2e60, 0x2f10, 0x2e58, 0x2e5c, 0x0fb0},
+ 	},
++	.widths		= {4, 4, 8, 4, 4, 8},
++	.uc_mask	= BIT(1),
++	.en_patspr_mask	= BIT(13),
++	.noover_mask	= BIT(14),
++	.en_mask	= BIT(15),
+ };
+ 
+-static void __enable_retry_rd_err_log(struct skx_imc *imc, int chan, bool enable, u32 *rrl_ctl,
+-				      u32 *offsets_scrub, u32 *offsets_demand,
+-				      u32 *offsets_demand2)
++static u64 read_imc_reg(struct skx_imc *imc, int chan, u32 offset, u8 width)
+ {
+-	u32 s, d, d2;
++	switch (width) {
++	case 4:
++		return I10NM_GET_REG32(imc, chan, offset);
++	case 8:
++		return I10NM_GET_REG64(imc, chan, offset);
++	default:
++		i10nm_printk(KERN_ERR, "Invalid readd RRL 0x%x width %d\n", offset, width);
++		return 0;
++	}
++}
+ 
+-	s = I10NM_GET_REG32(imc, chan, offsets_scrub[0]);
+-	d = I10NM_GET_REG32(imc, chan, offsets_demand[0]);
+-	if (offsets_demand2)
+-		d2 = I10NM_GET_REG32(imc, chan, offsets_demand2[0]);
++static void write_imc_reg(struct skx_imc *imc, int chan, u32 offset, u8 width, u64 val)
++{
++	switch (width) {
++	case 4:
++		return I10NM_SET_REG32(imc, chan, offset, (u32)val);
++	default:
++		i10nm_printk(KERN_ERR, "Invalid write RRL 0x%x width %d\n", offset, width);
++	}
++}
++
++static void enable_rrl(struct skx_imc *imc, int chan, struct reg_rrl *rrl,
++		       int rrl_set, bool enable, u32 *rrl_ctl)
++{
++	enum rrl_mode mode = rrl->modes[rrl_set];
++	u32 offset = rrl->offsets[rrl_set][0], v;
++	u8 width = rrl->widths[0];
++	bool first, scrub;
++
++	/* First or last read error. */
++	first = (mode == FRE_SCRUB || mode == FRE_DEMAND);
++	/* Patrol scrub or on-demand read error. */
++	scrub = (mode == FRE_SCRUB || mode == LRE_SCRUB);
++
++	v = read_imc_reg(imc, chan, offset, width);
+ 
+ 	if (enable) {
+-		/* Save default configurations */
+-		rrl_ctl[0] = s;
+-		rrl_ctl[1] = d;
+-		if (offsets_demand2)
+-			rrl_ctl[2] = d2;
++		/* Save default configurations. */
++		*rrl_ctl = v;
++		v &= ~rrl->uc_mask;
+ 
+-		s &= ~RETRY_RD_ERR_LOG_NOOVER_UC;
+-		s |=  RETRY_RD_ERR_LOG_EN_PATSPR;
+-		s |=  RETRY_RD_ERR_LOG_EN;
+-		d &= ~RETRY_RD_ERR_LOG_NOOVER_UC;
+-		d &= ~RETRY_RD_ERR_LOG_EN_PATSPR;
+-		d |=  RETRY_RD_ERR_LOG_EN;
++		if (first)
++			v |= rrl->noover_mask;
++		else
++			v &= ~rrl->noover_mask;
+ 
+-		if (offsets_demand2) {
+-			d2 &= ~RETRY_RD_ERR_LOG_UC;
+-			d2 &= ~RETRY_RD_ERR_LOG_EN_PATSPR;
+-			d2 |=  RETRY_RD_ERR_LOG_NOOVER;
+-			d2 |=  RETRY_RD_ERR_LOG_EN;
+-		}
++		if (scrub)
++			v |= rrl->en_patspr_mask;
++		else
++			v &= ~rrl->en_patspr_mask;
++
++		v |= rrl->en_mask;
+ 	} else {
+-		/* Restore default configurations */
+-		if (rrl_ctl[0] & RETRY_RD_ERR_LOG_UC)
+-			s |=  RETRY_RD_ERR_LOG_UC;
+-		if (rrl_ctl[0] & RETRY_RD_ERR_LOG_NOOVER)
+-			s |=  RETRY_RD_ERR_LOG_NOOVER;
+-		if (!(rrl_ctl[0] & RETRY_RD_ERR_LOG_EN_PATSPR))
+-			s &=  ~RETRY_RD_ERR_LOG_EN_PATSPR;
+-		if (!(rrl_ctl[0] & RETRY_RD_ERR_LOG_EN))
+-			s &= ~RETRY_RD_ERR_LOG_EN;
+-		if (rrl_ctl[1] & RETRY_RD_ERR_LOG_UC)
+-			d |=  RETRY_RD_ERR_LOG_UC;
+-		if (rrl_ctl[1] & RETRY_RD_ERR_LOG_NOOVER)
+-			d |=  RETRY_RD_ERR_LOG_NOOVER;
+-		if (rrl_ctl[1] & RETRY_RD_ERR_LOG_EN_PATSPR)
+-			d |=  RETRY_RD_ERR_LOG_EN_PATSPR;
+-		if (!(rrl_ctl[1] & RETRY_RD_ERR_LOG_EN))
+-			d &= ~RETRY_RD_ERR_LOG_EN;
+-
+-		if (offsets_demand2) {
+-			if (rrl_ctl[2] & RETRY_RD_ERR_LOG_UC)
+-				d2 |=  RETRY_RD_ERR_LOG_UC;
+-			if (rrl_ctl[2] & RETRY_RD_ERR_LOG_EN_PATSPR)
+-				d2 |=  RETRY_RD_ERR_LOG_EN_PATSPR;
+-			if (!(rrl_ctl[2] & RETRY_RD_ERR_LOG_NOOVER))
+-				d2 &=  ~RETRY_RD_ERR_LOG_NOOVER;
+-			if (!(rrl_ctl[2] & RETRY_RD_ERR_LOG_EN))
+-				d2 &= ~RETRY_RD_ERR_LOG_EN;
++		/* Restore default configurations. */
++		if (*rrl_ctl & rrl->uc_mask)
++			v |= rrl->uc_mask;
++
++		if (first) {
++			if (!(*rrl_ctl & rrl->noover_mask))
++				v &= ~rrl->noover_mask;
++		} else {
++			if (*rrl_ctl & rrl->noover_mask)
++				v |= rrl->noover_mask;
++		}
++
++		if (scrub) {
++			if (!(*rrl_ctl & rrl->en_patspr_mask))
++				v &= ~rrl->en_patspr_mask;
++		} else {
++			if (*rrl_ctl & rrl->en_patspr_mask)
++				v |= rrl->en_patspr_mask;
+ 		}
++
++		if (!(*rrl_ctl & rrl->en_mask))
++			v &= ~rrl->en_mask;
+ 	}
+ 
+-	I10NM_SET_REG32(imc, chan, offsets_scrub[0], s);
+-	I10NM_SET_REG32(imc, chan, offsets_demand[0], d);
+-	if (offsets_demand2)
+-		I10NM_SET_REG32(imc, chan, offsets_demand2[0], d2);
++	write_imc_reg(imc, chan, offset, width, v);
++}
++
++static void enable_rrls(struct skx_imc *imc, int chan, struct reg_rrl *rrl,
++			bool enable, u32 *rrl_ctl)
++{
++	for (int i = 0; i < rrl->set_num; i++)
++		enable_rrl(imc, chan, rrl, i, enable, rrl_ctl + i);
++}
++
++static void enable_rrls_ddr(struct skx_imc *imc, bool enable)
++{
++	struct reg_rrl *rrl_ddr = res_cfg->reg_rrl_ddr;
++	int i, chan_num = res_cfg->ddr_chan_num;
++	struct skx_channel *chan = imc->chan;
++
++	if (!imc->mbase)
++		return;
++
++	for (i = 0; i < chan_num; i++)
++		enable_rrls(imc, i, rrl_ddr, enable, chan[i].rrl_ctl[0]);
++}
++
++static void enable_rrls_hbm(struct skx_imc *imc, bool enable)
++{
++	struct reg_rrl **rrl_hbm = res_cfg->reg_rrl_hbm;
++	int i, chan_num = res_cfg->hbm_chan_num;
++	struct skx_channel *chan = imc->chan;
++
++	if (!imc->mbase || !imc->hbm_mc || !rrl_hbm[0] || !rrl_hbm[1])
++		return;
++
++	for (i = 0; i < chan_num; i++) {
++		enable_rrls(imc, i, rrl_hbm[0], enable, chan[i].rrl_ctl[0]);
++		enable_rrls(imc, i, rrl_hbm[1], enable, chan[i].rrl_ctl[1]);
++	}
+ }
+ 
+ static void enable_retry_rd_err_log(bool enable)
+ {
+-	int i, j, imc_num, chan_num;
+-	struct skx_channel *chan;
+-	struct skx_imc *imc;
+ 	struct skx_dev *d;
++	int i, imc_num;
+ 
+ 	edac_dbg(2, "\n");
+ 
+ 	list_for_each_entry(d, i10nm_edac_list, list) {
+ 		imc_num  = res_cfg->ddr_imc_num;
+-		chan_num = res_cfg->ddr_chan_num;
+-
+-		for (i = 0; i < imc_num; i++) {
+-			imc = &d->imc[i];
+-			if (!imc->mbase)
+-				continue;
+-
+-			chan = d->imc[i].chan;
+-			for (j = 0; j < chan_num; j++)
+-				__enable_retry_rd_err_log(imc, j, enable, chan[j].rrl_ctl[0],
+-							  res_cfg->reg_rrl_ddr->offsets[0],
+-							  res_cfg->reg_rrl_ddr->offsets[1],
+-							  res_cfg->reg_rrl_ddr->set_num > 2 ?
+-							  res_cfg->reg_rrl_ddr->offsets[2] : NULL);
+-
+-		}
++		for (i = 0; i < imc_num; i++)
++			enable_rrls_ddr(&d->imc[i], enable);
+ 
+ 		imc_num += res_cfg->hbm_imc_num;
+-		chan_num = res_cfg->hbm_chan_num;
+-
+-		for (; i < imc_num; i++) {
+-			imc = &d->imc[i];
+-			if (!imc->mbase || !imc->hbm_mc)
+-				continue;
+-
+-			chan = d->imc[i].chan;
+-			for (j = 0; j < chan_num; j++) {
+-				__enable_retry_rd_err_log(imc, j, enable, chan[j].rrl_ctl[0],
+-							  res_cfg->reg_rrl_hbm[0]->offsets[0],
+-							  res_cfg->reg_rrl_hbm[0]->offsets[1],
+-							  NULL);
+-				__enable_retry_rd_err_log(imc, j, enable, chan[j].rrl_ctl[1],
+-							  res_cfg->reg_rrl_hbm[1]->offsets[0],
+-							  res_cfg->reg_rrl_hbm[1]->offsets[1],
+-							  NULL);
+-			}
+-		}
++		for (; i < imc_num; i++)
++			enable_rrls_hbm(&d->imc[i], enable);
+ 	}
+ }
+ 
+diff --git a/drivers/edac/skx_common.h b/drivers/edac/skx_common.h
+index 5833fbe7c0fb..cf3d0aac035a 100644
+--- a/drivers/edac/skx_common.h
++++ b/drivers/edac/skx_common.h
+@@ -84,11 +84,31 @@
+ /* Max RRL registers per set. */
+ #define NUM_RRL_REG		6
+ 
++/* Modes of RRL register set. */
++enum rrl_mode {
++	/* Last read error from patrol scrub. */
++	LRE_SCRUB,
++	/* Last read error from demand. */
++	LRE_DEMAND,
++	/* First read error from patrol scrub. */
++	FRE_SCRUB,
++	/* First read error from demand. */
++	FRE_DEMAND,
++};
++
+ /* RRL registers per {,sub-,pseudo-}channel. */
+ struct reg_rrl {
+ 	/* RRL register parts. */
+ 	int set_num;
++	enum rrl_mode modes[NUM_RRL_SET];
+ 	u32 offsets[NUM_RRL_SET][NUM_RRL_REG];
++	/* RRL register widths in byte per set. */
++	u8 widths[NUM_RRL_REG];
++	/* RRL control bits of the first register per set. */
++	u32 uc_mask;
++	u32 en_patspr_mask;
++	u32 noover_mask;
++	u32 en_mask;
+ };
+ 
+ /*
+-- 
+2.43.0
 
