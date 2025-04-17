@@ -1,81 +1,69 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from mail-24417.protonmail.ch (mail-24417.protonmail.ch [109.224.244.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BCD21B9FE
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5B422B8AC
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744876824; cv=none; b=h9PW70G41rbvFADW7Gwi7zxvjxVXFGq7+CFAs+7iWkpXSCSdBwyA0vykj5hvg1fL2qRiCWVtK1Z+f3wgybslyP2djRMQi6N3KnTH2BFm430xlB/DkVPNJ8wwHFK+PxpM/FRFyg27jJgVHiJ79q7+vePZX58mBPZ1/f+OLjPlOJ4=
+	t=1744876850; cv=none; b=Ck0gn1ogfkx41+5ZzRG7Jutq0wx4FqFcTTtFJv7O48ybEBI6QSX9YXUHGWh5Wg5O5XMWu+zvwYTy2vyO5XL8xZWB0yiMwkUt1QA2ZC5tYQdthFtvtaLtrYpfMP5uOBbCeuerTtp266ecFhyz9kv7dM/Fu4N/q57XTWXLjvUmVHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744876824; c=relaxed/simple;
-	bh=tIm/oaPlys8uFyXbcHNmNFBT2SeelwoE54kuk2o+4pI=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=EROuHWR6BHaFOxJzBtgfrjT4l6TpyfslufZlUygPYqB4JFdl1Xm78h6KST5Z6BDczBmDirL97l6KS6Smzn4c+b6dAaOsEy5f8vjxIy3T37LIXcUnMzoB4x2HY7NZGSbdkOQgitOyoDvWMlU01Bc3gXaVK/EXHvNRnyF9/z9tuh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TxXiLSvO; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744876850; c=relaxed/simple;
+	bh=h3M8nRjVuDVmfNgSsps3kLl6ltkWfwPgNKiJY+3KBX4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TCDm7imsxDJhpD9yKXG8Jbm4w44fLijNNw1Us89khWqKwD57Vlz0rBtBrmrP2YfpQyQeYxRarYNVBQUf6lseWCFYjfR+UrC/EnZdpKidb32C3GFEg88XHzXKR+llBWGADpWHFobWy8pksbdBay87CgDCeGBQ6jmqKsu0zaRmyI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=cKHTtMp6; arc=none smtp.client-ip=109.224.244.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TxXiLSvO"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744876814;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vBdI9y5KWJCNNa9ktEQEOVoyDLr5ottCf+QYtSzhQuM=;
-	b=TxXiLSvOakA3RBpXz5Tws6UFTVmACWnNM1nImqMDiNjXGjNSpuCtQ7cnEJq99pQT2uxr34
-	gY6y8j34T+Kri1tHBvjuPkQXf9ovjL6QJVxhyHdaa4a732OyP97ukuqFYqmBDI+c4aVeRE
-	i63x2upKHiqCjH6fQnYMO8RsTBttRk0=
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="cKHTtMp6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=mo5kiaaxzzbulfrq7t524gy3u4.protonmail; t=1744876839; x=1745136039;
+	bh=h3M8nRjVuDVmfNgSsps3kLl6ltkWfwPgNKiJY+3KBX4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=cKHTtMp6Nl4+wN4xDfq6H98VrQLHDVlci6//HiRQ8BHNReXmvAtYVxy6OehvofENJ
+	 XTeujO7jO+x96iupXZRLSVnoKBT/Hg67LA5vJs7qZqlvyNeQpQmaUgPLni4pEJjuZS
+	 QqjkQV3np8Xffo2/rGJLQ5EzAINzQajp/MMx+Wef+3lgsygugsi6OMPXXsO/v5LJEv
+	 AMWyFlkS9bfbDfjNmUradbjMR4FZ49pqH5MzHxjsIN+OwpQGcPfGjhMfOURgf8SHFK
+	 65ijvFFbLOPZFmDolRsjMSBf8v+83Jr5J/4uTfTfdW2dP+qdb3wbu/8XhM/4aOk7pf
+	 ZDjlJxev5jWng==
+Date: Thu, 17 Apr 2025 08:00:33 +0000
+To: Viresh Kumar <viresh.kumar@linaro.org>, Danilo Krummrich <dakr@kernel.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>, rust-for-linux@vger.kernel.org, Manos Pitsidianakis <manos.pitsidianakis@linaro.org>, =?utf-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>, Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>, Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V10 11/15] rust: cpufreq: Add initial abstractions for cpufreq framework
+Message-ID: <D98R7PHH6TYX.2DUASKIXS5F8W@proton.me>
+In-Reply-To: <20250416093720.5nigxsirbvyiumcv@vireshk-i7>
+References: <cover.1744783509.git.viresh.kumar@linaro.org> <ac6854885277b23f100c6033fab51a080cdb70eb.1744783509.git.viresh.kumar@linaro.org> <Z_904KuBhKbO738_@pollux> <20250416093720.5nigxsirbvyiumcv@vireshk-i7>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: ae30b957bfe6b8526ed7c4f59e8cc1d7dfe15a54
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.2\))
-Subject: Re: [PATCH] MIPS: Remove unnecessary zero-length struct member
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <alpine.DEB.2.21.2504160321210.23090@angie.orcam.me.uk>
-Date: Thu, 17 Apr 2025 10:00:02 +0200
-Cc: Oleg Nesterov <oleg@redhat.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- linux-mips@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <03F0731F-3C87-47D9-A739-01289873572B@linux.dev>
-References: <20250411090032.7844-1-thorsten.blum@linux.dev>
- <alpine.DEB.2.21.2504160321210.23090@angie.orcam.me.uk>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 16. Apr 2025, at 04:33, Maciej W. Rozycki wrote:
-> On Fri, 11 Apr 2025, Thorsten Blum wrote:
-> 
->> Remove the zero-length struct member '__last' and use sizeof() to
->> calculate the value for MAX_REG_OFFSET.
->> 
->> No functional changes intended.
-> 
-> Have you verified that there's no change except for timestamp data in 
-> (non-debug) `vmlinux' produced with and w/o the patch applied?
-> 
-> Also this is broken anyway: if you use MAX_REG_OFFSET for `offset' passed 
-> to `regs_get_register', then data past the end of `regs' will be accessed.
+On Wed Apr 16, 2025 at 11:37 AM CEST, Viresh Kumar wrote:
+> On 16-04-25, 11:14, Danilo Krummrich wrote:
+>> On Wed, Apr 16, 2025 at 12:09:28PM +0530, Viresh Kumar wrote:
+>> > +#[allow(dead_code)]
+>>=20
+>> Why is this needed?
+>
+> Looks like leftover from a previous version. Same for the other one.
+>
+> I have also made a change to the cpufreq driver now to remove
+> `dead_code`, hope that is fine:
 
-Yes, true. It seems like
+In the future, instead of using `allow`, you can try to use `expect`. It
+will warn, when the code is used.
 
-	if (unlikely(offset >= MAX_REG_OFFSET))
-		return 0;
-
-should do the trick.
-
-The comment also says "If @offset is bigger than MAX_REG_OFFSET", rather
-than "is bigger than or equal to".
-
-Happy to add it to v2 or a separate patch, if this is actually correct?!
-
-Thanks,
-Thorsten
+---
+Cheers,
+Benno
 
