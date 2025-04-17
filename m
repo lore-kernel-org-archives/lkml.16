@@ -1,90 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FC579C4;
-	Thu, 17 Apr 2025 05:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4DCF79C4
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744866600; cv=none; b=mLYJcPb1srzCsYZrsYO8IkIxGXSYM8dCng5ih9hOqCfwtnxBTmQ+idUD0nieMB2JfKG7rZk07ezZ428vY8akDMpL38z+BK7JL/JyBu5kvtr1McPc2ZbifBHVFB5lV2ZMPYcC12qXruFEl8OoLrbkA0/c1CD6hdJ1KVo3VpXye4c=
+	t=1744866769; cv=none; b=dhtMGBWuFgfnwrOXWCxDVzeqvITZSi2byptga7fD8425JB+z31HPj9t1vHBbV3O53G7E3pLF/JYS59PkDd6ApPf/U/CFxP720ALCQvrFQUHN0P3Y9/IEz9ovoiqQ4PtNWNYeYgf/XhxgYg0eGtsYM2hfx3L5wRAfYMEAUPnShWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744866600; c=relaxed/simple;
-	bh=a0PxjADT9yns48CkGR8gkFWxExFp1tdMczNAaBszUpo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=QGUDhSmaKeoJ87RY7oNc7ok4hLwkakpbIB3K8ZFqLUKhOCwGCCW4/8ZbNryiUKQsIqzDc82PNYgL8VnhsLzkCqd72U67wmGCOWrEMSDUeE9uKY7iLZOPZQAbrB27XOWBft8FmnQ/8AjUI3/iRRwAy/vnZW2rtANPIZX0whl3bZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jAz3yEzQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744866769; c=relaxed/simple;
+	bh=RwjFwDkBu13PI5sKcOqmuHCEzvAqWpqM2gBR2fnslU8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FoHy4xf20nAJWfoM7HoArBwFan8pF31lGSfM87yuzHqwFo5qE9ZbysXyMd1l83d4yEyipugYZT1hw/NRflf7Qgoh+3vfE2tTjKW9VJHfjTbDMjwgA4PrilgVAhP+SADKn0DcpmtSyAEnFB1hIR6j0C3IGoaqiGofg98qrVOOisw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=DYdnEZdE; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jAz3yEzQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B01EBC4CEE7;
-	Thu, 17 Apr 2025 05:09:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744866599;
-	bh=a0PxjADT9yns48CkGR8gkFWxExFp1tdMczNAaBszUpo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jAz3yEzQAnjL8mgiPPDzRsidGrabee2AwWCs9N6n6CWGErlYcTp7ab3vtfWbOGO53
-	 sML9SM4zpk93n/S1ASmd6YNPwmfemNBC/7ZnkUPMidlK63CUk8N3p3h/cfU1wA0yIV
-	 qsjVw/Mq+vrYACGQ9/4nof4ScbamWL4P8OE/siSx6OQSlxvGc+mLf3lpuGZI7xUZ+t
-	 UlTW5Yr0n+PT2sCnpPnOPxa99Uj3POVgpJQB3hmOVgOI2CI/zdG9sPFXsSosHAYFvq
-	 3/xFCr0o9hVsos3dKHPtV60J9K80HCG45APB5kqitL6CSMmKLtYgRCQkjFOVF4R7B1
-	 mZYjMCuREaiWg==
-Date: Thu, 17 Apr 2025 14:09:57 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Record trace_clock in last_boot_info
-Message-Id: <20250417140957.d0051e19f562cb2b80a8e1c0@kernel.org>
-In-Reply-To: <20250416111227.34299b4e@batman.local.home>
-References: <174481479787.2426861.10924329074660376176.stgit@mhiramat.tok.corp.google.com>
-	<20250416111227.34299b4e@batman.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="DYdnEZdE"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2255003f4c6so4533995ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:12:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1744866767; x=1745471567; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hh3kV57LiDX7manrXAEW9HUCJLEmcGX3IJLDmSlBULk=;
+        b=DYdnEZdEFgVUJOnsvQNLDUFZIkFTSvByqYt281/oO63o68IigxqoEEde2Ft8EIjWJC
+         NjfRa1GEb/gc44Yxft/yS8zbJikWLDVdAsj83AfcfSMi52KmoExgqHx6/+eDCabUPdPm
+         tvQfPDSz4FofQsvNHWMF4NwDmRM1RrLZu0uY+ZIXYz5azKRncqhrxjE+4s0TDxPOicDJ
+         UVuuplEe2Jg79uGVfl94/e5pxFCU+1GZxTNeOkTzUQsCdC2nhMbEr7xahnGedFNvRszr
+         2fyWEHJOow7Q/ih7WnWGUuzJ3+Jj8l8ArQJv5Bf6Dsd9+2DoJBmuQZes5dJ/scmpFf5D
+         2sDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744866767; x=1745471567;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hh3kV57LiDX7manrXAEW9HUCJLEmcGX3IJLDmSlBULk=;
+        b=L46Jvp9skTChghE7ej+RoQQSru7KPb9b8eyao9VgEsaJ1pTSyRUQb3lFXq5goYJKR5
+         1BWKOvyLG/zHQI1xOQPM3wm2wifEth8LZjpBwH01148hlBwj56ZpiS3R0Tl671aSomXr
+         BTRGjgT7UpbB7psXtvVoQxRAcF+FVpZN7ywn9OewOPOCCOleGUVu+Fsov06zSSuPETir
+         0eODJncvwTCxvKjcO4lXXKwMtJhT1N/cirJyetYpBoqWFAKgdsIzTBBbhxSFrkYaLrFV
+         YJ9t4Cn1WXftLby31ku6/qKPDdrLB+ypYBNBfJdW6DbNOJ/ezyfWGcd9N1eEh+0JEczq
+         GmMA==
+X-Forwarded-Encrypted: i=1; AJvYcCUa4AfQ5X/I4/bA0elW8oBc1uKM2prVxh6ly9ZndlcIsunJFSl+lDRkmGZT5QWBtH67uUhf3MHqMBc9h0o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFC25sW7Z6wh2WS6i9RlrNpqz/fFzmPUx0L2UwehldBUChCHI3
+	ZWURtGDA/DZxvqoWhMPiOYUSHojHYqW7zfFHxwJm/zICknks+AYARca9tUr2BYY=
+X-Gm-Gg: ASbGncvU1oL+vvbUDR4DBcU/LTUzvQf9dIz3c8j/s2H4vJmclUGw6GFzd86IEr8gxGQ
+	UEcdSm2VMOMvy3WqCYJm9mrPs6amh7TogL4LBG0zINuhoz7C1SKIr/F8Hj7I8Oabd4MwdKIIrFH
+	BzKN3jZinUUrhFw3ndTPegj0JxfNrtnQSOayG4WxxpTYMr4LfR1HmUrJoQbMr/MBa2BQ353AuzZ
+	2sRQSqXJOzFwProcxgNjKluOxNNd3+wkU/s1ws53C3b+KhvbSnp0MD+z/+t2kd8ApuQCQ3BhFew
+	rmCYMMgQGN87iV2seBTWLn986S6/vnr/wGOzdn8qTdXx2IsBMoiqmlnRaoyhkLIoHGw9vwUDuQ=
+	=
+X-Google-Smtp-Source: AGHT+IG+DJ8hFvCH+e3tMNsQubnMI6xLQ0x1LAhdNsGyukov9JTMdxIRePZdTqUQNcjXeFL0RV3m+A==
+X-Received: by 2002:a17:903:2ec5:b0:224:18b0:86a0 with SMTP id d9443c01a7336-22c3597ec0amr63501095ad.37.1744866766946;
+        Wed, 16 Apr 2025 22:12:46 -0700 (PDT)
+Received: from xldev1604-tmpl.dev.purestorage.com ([208.88.159.128])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21e00e8sm11393282b3a.80.2025.04.16.22.12.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 22:12:46 -0700 (PDT)
+Date: Wed, 16 Apr 2025 23:12:41 -0600
+From: Michael Liang <mliang@purestorage.com>
+To: Chaitanya Kulkarni <chaitanyak@nvidia.com>
+Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	Mohamed Khalfella <mkhalfella@purestorage.com>,
+	Randy Jennings <randyj@purestorage.com>,
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] nvme-tcp: wait socket wmem to drain in queue stop
+Message-ID: <20250417051241.b3cnkp5svew3zhud@xldev1604-tmpl.dev.purestorage.com>
+References: <20250405054848.3773471-1-mliang@purestorage.com>
+ <612d817f-33e1-4e2d-99eb-0ea87e1a958c@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <612d817f-33e1-4e2d-99eb-0ea87e1a958c@nvidia.com>
 
-On Wed, 16 Apr 2025 11:12:27 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, Apr 08, 2025 at 09:00:00PM +0000, Chaitanya Kulkarni wrote:
+> On 4/4/25 22:48, Michael Liang wrote:
+> > +static void nvme_tcp_stop_queue_wait(struct nvme_tcp_queue *queue)
+> > +{
+> > +	int timeout = 100;
+> > +
+> 
+> is there a guarantee that above will work for all the setups?
+> using configurable timeout values helps creating more generic
+> fix, do we need to consider that here ?
+The value here primarily reflects the latency between __tcp_transmit_skb()
+and the freeing of the skb in the TX completion path. For most scenarios,
+100ms should be sufficient. While it's theoretically possible to see higher
+latencies, such cases might not be typical or practical for NVMe-TCP (please
+correct me if I’m wrong).
 
-> On Wed, 16 Apr 2025 23:46:38 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > Record trace_clock information in the trace_scratch area and show
-> > it via `last_boot_info` so that reader can docode the timestamp
-> > correctly.
-> > With this change, the first line of the last_boot_info becomes
-> > trace_clock which is used when the trace was recorded. E.g.
-> > 
-> > /sys/kernel/tracing/instances/boot_mapped # cat last_boot_info
-> > trace_clock: mono
-> > ffffffff81000000        [kernel]
-> > 
-> 
-> As this will not go in this cycle, which means tools may be built
-> around this.
-> 
-> Either we put it at the end, or we make it:
-> 
-> # trace_clock: mono
-> ffffffff81000000        [kernel]
-> 
-> Where "info" like "trace_clock" will be in the comment section, and all
-> non comments will be addresses.
+That said, I'm open to making this timeout configurable if needed—perhaps
+via a module parameter?
 
-OK. Anyway, as we discussed offline, I'll update it to just set the
-value to the "trace_clock" file instead of using "last_boot_info".
-
-Thank you,
-
+> > +	while (timeout > 0) {
+> > +		if (!sk_wmem_alloc_get(queue->sock->sk))
+> > +			return;
+> > +		msleep(2);
+> > +		timeout -= 2;
+> > +	}
+> > +	dev_warn(queue->ctrl->ctrl.device,
+> > +		 "qid %d: wait draining sock wmem allocation timeout\n",
+> > +		 nvme_tcp_queue_id(queue));
+> > +}
+> > +
 > 
-> Tooling can then just ignore the comment section, or read it for more
-> information.
+> -ck
 > 
-> -- Steve
+> 
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thanks,
+Michael
