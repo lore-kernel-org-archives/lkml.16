@@ -1,52 +1,78 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F3E225417
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB858224AED
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744882394; cv=none; b=eeibc8wLbJHImwzuwCIxBxoLe/8rBaXMWgCZ9AUHXLxZsWpdQIzeRX9At1wnqlqBfkfcC2a48Ustey1JFLgQrpCeiNRjlh9Jz62L3ShoPVUOTBEhcRmzN+fsXAKVqeBiuRXc5CLLJRjz3O49DFvJXkPgH83mrydCVLq4PNrwPJU=
+	t=1744882405; cv=none; b=oUQ2tme+Td6Tf+zxN6HJ8Fx/Q0hRk22G+mcbqxBSncVFuXQiA4w8KBWRgLE+vUew3KBosV5kMDXkwkkxDwLV1XbThOHBnyF7t21zjam47O7LZwKyeVVUCh+URhKc4C7iwEP4fc8oogF7P4HRG2ILzveKW7+W6sZzTvlVCQ06uAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744882394; c=relaxed/simple;
-	bh=5HxR8csm8fyNJrtqHHIIMUwA5KzfJLvNOgVPXyjfE2o=;
+	s=arc-20240116; t=1744882405; c=relaxed/simple;
+	bh=4N3XYkDst3rYfH4PF/bcxk8Q9dUYBcytZTx+T0TxXHY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r+Haa2YTQXr6hFRHx28Ap+7uk74F3FTBCREVflbBiVV5RxerIaR3MAHFUpWEa2CGbuiAtyfhMY63eaAbLSlLV/747IDqWcp/Uhss/A2afzAk5I2R0nNY0IrawF/mj8mIbE9eWCRWOPkozIJ8Htmd0kyBMDE+MhOT4orXIjof0lU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1u5Lc8-0001sN-Hw; Thu, 17 Apr 2025 11:32:56 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1u5Lc7-000j6u-3B;
-	Thu, 17 Apr 2025 11:32:56 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1u5Lc7-005taT-2m;
-	Thu, 17 Apr 2025 11:32:55 +0200
-Date: Thu, 17 Apr 2025 11:32:55 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Piotr Kubik <piotr.kubik@adtran.com>
-Cc: Kory Maincent <kory.maincent@bootlin.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] net: pse-pd: Add Si3474 PSE controller driver
-Message-ID: <aADKx3sAiWO_2KG3@pengutronix.de>
-References: <a92be603-7ad4-4dd3-b083-548658a4448a@adtran.com>
- <93d3bbf0-742c-41d4-83c6-6d94a0dd779c@adtran.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ocrsQpxMhv4jkhjShjaGGclsAPklsyE5NU2pl1B14DilhLEIrWaSVEqECGi3cPqgKtkcgve4yKQipX4P1sTpkRUifI+lDQ5SrrFgCg8Uq0BmfqmS7/SeoDyyNhoWLTALuUBVUiz11v3jb0kvelFa6cKKjnueS862V4L6/sAwxp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YJdVEW74; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YJdVEW74"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-736ad42dfd6so407194b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 02:33:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744882403; x=1745487203; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=9N0xhgZNCRJbzkyeaB5Kdu2W0GpuGNyTH2hczyIgWGQ=;
+        b=YJdVEW74OjnjGoPgoX6jkhhvbJMQnF5I6yh04Zo79Rp5HU4gKzh5j8U20iOQ9M5stU
+         sfzg6KIU1yBv4IVWarEpB+Y0M6p+NyiiA7h/mBBLSLEFSHNcdwEj/cWotoXXzmB22wQE
+         GyOIFqN7JcLEL8bWgg9ALeHALewW/7PeiRaeCdB8EndFvxyqfE7JzTBBjBVniMNi6/pg
+         2Ro/miY2nB4OEnZkpK+sQvUtluxpOIsuGcSnskXMhf1QNgDjgr+7bFbBTx+3JZcoy76W
+         akjqWHe70/Xlyxw7XTfCOOgWUp4iS4dyfRsAC1LbFhsdDHOxy0/Pu4Zvr0se72ykSh2v
+         pKCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744882403; x=1745487203;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9N0xhgZNCRJbzkyeaB5Kdu2W0GpuGNyTH2hczyIgWGQ=;
+        b=datmiTKNSIXkDROTb7Sd91x5hyCLF7cpAwDPl+4Jd9Z8SDioBMzsu/KfQOVM2gx1IV
+         b9Lc4DAgzENDfGFh5VNvFTAdibiWXDqJg6ODO2wCUDWJxh6bUy2/W8zOPnIgaKW+3WBL
+         BzcC33T/icba8PU+a4Mqha4TvfiawK4sS2Ilm1VPP5rBwXxNajEg0vg6562AHZVxevWE
+         WVC4NKbqkgy8RV4DplTrCOZWYmpnxRLGTsL71wF+GVF58ttKxaS2jYheoSEY4NGr9RC1
+         fUeeRDjKCpQMXeDM+906jW4HConMlGX6Mbdl90GtGoM6lMqtk9AEvR1MsbQ9o6Yqy0Ip
+         GzaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4Fv5H6DqXHr0oDdPqYyaNZPjsAhEAwI9xlN0raE08y9UMiZZkrQCdqtQ6a12Qovq6ZH3NX056mVvE2pk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywDvsF1paN4e9ybJ0bHev8TYK92B2PpAfwgnhjPQ9DQma/SIvU
+	zHGLsU1DbpBlByvP99kPz53lcroTuzunZ8btN5fw+jgBh7CSWjIz352fyS9EYA==
+X-Gm-Gg: ASbGncty94YTbK71keIMXxEg49M2Brxvwb9UwJU9PyEIzvCvPOZ89C7A4iuyifnIbmO
+	AD8Qhj1vpmCOedPPIYixqF8oNM6I5pvJVwNdKkH1qQ4KXYph7Y9S7bg3kx69c4pGpv8MnHcholM
+	LbQRJybu2WAJhl7Yk+m84t/kpkcnVZFbERyM4G1xoaUGHBy7cgLbnNbiLFuDZjUZsUDRfVL8RC9
+	o+CER/02mHRuWN+H9qSGONAAlJnJxyPjN0bnkorwtPgWfukYTIPIcuWKsLR7PmsCwKf/2Kug7o+
+	hrE/eFlniUf2Hf5FecXq/U8myCDIPiTWNGicbxUcBcYg5UDm
+X-Google-Smtp-Source: AGHT+IEDIoppzt9Qk8ptm5Tvdr9bMM0BM2cyotG2JtwFXQXfEIWSI1eGvMWwitL7P6ll2IgmvhRvXA==
+X-Received: by 2002:a05:6a00:2e24:b0:736:8c0f:774f with SMTP id d2e1a72fcca58-73c267ee1bbmr7570930b3a.22.1744882402798;
+        Thu, 17 Apr 2025 02:33:22 -0700 (PDT)
+Received: from thinkpad ([120.60.54.0])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd2198d95sm12277569b3a.17.2025.04.17.02.33.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 02:33:22 -0700 (PDT)
+Date: Thu, 17 Apr 2025 15:03:16 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, dingwei@marvell.com, cassel@kernel.org, 
+	Lukas Wunner <lukas@wunner.de>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] PCI: Add link down handling for host bridges
+Message-ID: <hcjqtycb3dpauylwx726f3kb722dinuxootjswitchmh6cymlc@d4gzshhlfodh>
+References: <20250416-pcie-reset-slot-v2-0-efe76b278c10@linaro.org>
+ <20250416-pcie-reset-slot-v2-3-efe76b278c10@linaro.org>
+ <26b70e1b-861f-4c94-47a7-a267c41cadbb@oss.qualcomm.com>
+ <lsehjhqicvit32jcsjkfqemgypnpim6zbxwapzdrncm3hwrp44@bvwg2acyyvle>
+ <2c0b0929-0610-3e99-03be-a50e9f5f323b@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,171 +81,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <93d3bbf0-742c-41d4-83c6-6d94a0dd779c@adtran.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2c0b0929-0610-3e99-03be-a50e9f5f323b@oss.qualcomm.com>
 
-Hi Piotr,
+On Thu, Apr 17, 2025 at 02:41:55PM +0530, Krishna Chaitanya Chundru wrote:
+> 
+> 
+> On 4/17/2025 1:24 PM, Manivannan Sadhasivam wrote:
+> > On Wed, Apr 16, 2025 at 11:21:49PM +0530, Krishna Chaitanya Chundru wrote:
+> > > 
+> > > 
+> > > On 4/16/2025 9:59 PM, Manivannan Sadhasivam via B4 Relay wrote:
+> > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > 
+> > > > The PCI link, when down, needs to be recovered to bring it back. But that
+> > > > cannot be done in a generic way as link recovery procedure is specific to
+> > > > host bridges. So add a new API pci_host_handle_link_down() that could be
+> > > > called by the host bridge drivers when the link goes down.
+> > > > 
+> > > > The API will iterate through all the slots and calls the pcie_do_recovery()
+> > > > function with 'pci_channel_io_frozen' as the state. This will result in the
+> > > > execution of the AER Fatal error handling code. Since the link down
+> > > > recovery is pretty much the same as AER Fatal error handling,
+> > > > pcie_do_recovery() helper is reused here. First the AER error_detected
+> > > > callback will be triggered for the bridge and the downstream devices. Then,
+> > > > pcie_do_slot_reset() will be called for each slots, which will reset the
+> > > > slots using 'reset_slot' callback to recover the link. Once that's done,
+> > > > resume message will be broadcasted to the bridge and the downstream devices
+> > > > indicating successful link recovery.
+> > > > 
+> > > > In case if the AER support is not enabled in the kernel, only
+> > > > pci_bus_error_reset() will be called for each slots as there is no way we
+> > > > could inform the drivers about link recovery.
+> > > > 
+> > > The PCIe endpoint drivers are registering with err_handlers and they
+> > > will be invoked only from pcie_do_recovery, but there are getting built
+> > > by default irrespective of AER is enabled or not.
+> > > 
+> > 
+> > AER is *one* of the functionalities of an endpoint. And the endpoint could
+> > mostly work without AER reporting (except for AER fatal/non-fatal where recovery
+> > need to be performed by the host). So it wouldn't make sense to add AER
+> > dependency for them.
+> > 
+> > > Does it make sense to built err.c irrespective of AER is enabled or not
+> > > to use common logic without the need of having dependency on AER.
+> > > 
+> > 
+> > Well, yes and no. Right now, only DPC reuses the err handlers except AER. But
+> > DPC driver itself is functional dependent on AER. So I don't think it is really
+> > required to build err.c independent of AER. But I will try to rework the code in
+> > the future for fixing things like 'AER' prefix added to logs and such.
+> > 
+> Right now we have DPC & AER to use this pcie_do_recovery(), now we are
+> adding supporting for controller reported error (Link down) not sure if
+> there will be newer ways to report errors in future.
+> 
+> May be not in this series, in future better to de-couple err.c from
+> AER as err.c. As the sources of error reporting is not limited to AER
+> or DPC alone now.
+> 
 
-Thanks again for the patch! Looking a bit deeper into the Si3474
-architecture based on the datasheet and thinking about future
-extensions, there's a challenge with how the chip mixes shared resources
-with its two-quad/two-address I2C setup that we should probably tackle
-architecturally.
+Yes, that's part of my plan.
 
-The current approach, common for multi-address devices, is to treat each
-I2C address (and thus each quad) as a separate i2c_client handled by
-potentially independent driver instances. This works for the basic port
-access implemented here, but might get complicated quickly for the
-Si3474.
+> > > Also since err.c is tied with AER, DPC also had a hard requirement
+> > > to enable AER which is not needed technically.
+> > > 
+> > 
+> > DPC driver is functional dependent on AER.
+> I got a impression by seeing below statement that DPC can work
+> independently.
+> As per spec 6 sec 6.2.11.2, DPC error signaling "A DPC-capable
+> Downstream Port must support ERR_COR signaling, independent of whether
+> it supports Advanced Error Reporting (AER) or not".
+> 
 
-The Si3474 has several key resources that are inherently shared across
-the whole chip package, not just per-quad:
+That's why I intentionally said 'DPC driver' not 'DPC'. The driver has the
+dependency, not the feature.
 
-- Single RESETb pin
-- Single INTb pin
-- Firmware Update
-- Global Status (Temperature, VDD/VPWR UVLO)
-- OSS Pin
-- ... and likely others.
+> In fact it can work if AER is not enabled also, but will not have full
+> functionality of DPC.
+> 
 
-Trying to manage these shared aspects across two potentially independent
-driver instances would a bit challenging :)
+Right. That's why I said functionally dependent.
 
-Proposed Architectural Change:
+- Mani
 
-It seems much more robust to treat the entire Si3474 package as one
-logical device within the driver. A possible approach could be:
-
-1. The driver instance probed for the primary address (Quad 0)
-takes ownership.
-2. It finds/acquires the i2c_client for the secondary address (Quad
-1).
-3. The primary instance handles all shared resources (IRQ, global
-state, etc.).
-4. PSE controller registration (devm_pse_controller_register) happens
-only once for all 8 logical PIs.
-5. Internal functions use the "correct" i2c_client based on the target
-channel/PI.
-
-Search for i2c_new_ancillary_device()
-
-Naming Conventions:
-
-- Regarding naming, the goal is to align with IEEE 802.3 terminology where
-  possible. Exzeption are register and bit names.
-
-Regarding naming: Could you please rename `priv->port` (and similar variables
-representing the logical PSE port/`id`) to `priv->pi`? This aligns better with
-the IEEE 802.3 term 'PI' (Power Interface) for the logical port, avoiding the
-datasheet's overloaded use of 'port'. We can stick with 'channel' internally
-for the physical Si3474 control paths (0-7) ('ports'). Adding the introductory
-comment explaining this would still be great too.
-
-Regarding the current patch:
-- The `PB_POWER_ENABLE_REG` seems to be 8-bit register, but the driver
-  is using i2c_smbus_write_word_data(). Please use i2c_smbus_write_byte_data()
-  or add a comment explaining why 'word' version is used.
-
-A comment like this on the top of this driver would be helpful:
-
-/*
- * Driver for the Skyworks Si3474 PoE PSE Controller
- *
- * Chip Architecture & Terminology:
- *
- * The Si3474 is a single-chip PoE PSE controller managing 8 physical power
- * delivery channels. Internally, it's structured into two logical "Quads".
- *
- * Quad 0: Manages physical channels ('ports' in datasheet) 0, 1, 2, 3
- * Quad 1: Manages physical channels ('ports' in datasheet) 4, 5, 6, 7
- *
- * Each Quad is accessed via a separate I2C address. The base address range is
- * set by hardware pins A1-A4, and the specific address selects Quad 0 (usually
- * the lower/even address) or Quad 1 (usually the higher/odd address).
- * See datasheet Table 2.2 for the address mapping.
- *
- * While the Quads manage channel-specific operations, the Si3474 package has
- * several resources shared across the entire chip:
- * - Single RESETb input pin.
- * - Single INTb output pin (signals interrupts from *either* Quad).
- * - Single OSS input pin (Emergency Shutdown).
- * - Global I2C Address (0x7F) used for firmware updates.
- * - Global status monitoring (Temperature, VDD/VPWR Undervoltage Lockout).
- *
- * Driver Architecture:
- *
- * To handle the mix of per-Quad access and shared resources correctly, this
- * driver treats the entire Si3474 package as one logical device. The driver
- * instance associated with the primary I2C address (Quad 0) takes ownership.
- * It discovers and manages the I2C client for the secondary address (Quad 1).
- * This primary instance handles shared resources like IRQ management and
- * registers a single PSE controller device representing all logical PIs.
- * Internal functions route I2C commands to the appropriate Quad's i2c_client
- * based on the target channel or PI.
- *
- * Terminology Mapping:
- *
- * - "PI" (Power Interface): Refers to the logical PSE port as defined by
- * IEEE 802.3 (typically corresponds to an RJ45 connector). This is the
- * `id` (0-7) used in the pse_controller_ops.
- * - "Channel": Refers to one of the 8 physical power control paths within
- * the Si3474 chip itself (hardware channels 0-7). This terminology is
- * used internally within the driver to avoid confusion with 'ports'.
- * - "Quad": One of the two internal 4-channel management units within the
- * Si3474, each accessed via its own I2C address.
- *
- * Relationship:
- * - A 2-Pair PoE PI uses 1 Channel.
- * - A 4-Pair PoE PI uses 2 Channels.
- *
- * ASCII Schematic:
- *
- * +-----------------------------------------------------+
- * |                    Si3474 Chip                      |
- * |                                                     |
- * | +---------------------+     +---------------------+ |
- * | |      Quad 0         |     |      Quad 1         | |
- * | | Channels 0, 1, 2, 3 |     | Channels 4, 5, 6, 7 | |
- * | +----------^----------+     +-------^-------------+ |
- * | I2C Addr 0 |                        | I2C Addr 1    |
- * |            +------------------------+               |
- * | (Primary Driver Instance) (Managed by Primary)      |
- * |                                                     |
- * | Shared Resources (affect whole chip):               |
- * |  - Single INTb Output -> Handled by Primary         |
- * |  - Single RESETb Input                              |
- * |  - Single OSS Input   -> Handled by Primary         |
- * |  - Global I2C Addr (0x7F) for Firmware Update       |
- * |  - Global Status (Temp, VDD/VPWR UVLO)              |
- * +-----------------------------------------------------+
- *        |   |   |   |        |   |   |   |
- *        Ch0 Ch1 Ch2 Ch3      Ch4 Ch5 Ch6 Ch7  (Physical Channels)
- *
- * Example Mapping (Logical PI to Physical Channel(s)):
- * * 2-Pair Mode (8 PIs):
- * PI 0 -> Ch 0
- * PI 1 -> Ch 1
- * ...
- * PI 7 -> Ch 7
- * * 4-Pair Mode (4 PIs):
- * PI 0 -> Ch 0 + Ch 1  (Managed via Quad 0 Addr)
- * PI 1 -> Ch 2 + Ch 3  (Managed via Quad 0 Addr)
- * PI 2 -> Ch 4 + Ch 5  (Managed via Quad 1 Addr)
- * PI 3 -> Ch 6 + Ch 7  (Managed via Quad 1 Addr)
- * (Note: Actual mapping depends on Device Tree and PORT_REMAP config)
- */
-
-Best Regards,
-Oleksij
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+மணிவண்ணன் சதாசிவம்
