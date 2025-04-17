@@ -1,228 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8924D24339D
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:48:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744901286; cv=fail; b=eFuDZouqMpE1YdTa7nVKJlOVmD1ezTOCGOzAE88nMl+Jsf5YBY7UYu4u3xwZRKqx/sYWmfSVr+eIJrd5/OkVWztLqLq5K+h3VTt/wGz76sE7DRCuB8bq8IwTi3SvQfm5Ya+ydsXJasSflD5JhtizuDhp7YGeBEn6dAmikpyQVk4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744901286; c=relaxed/simple;
-	bh=MyV9b2ldmLb0JaXRdV/A4JFguXIB32gLuYzP8Qw05To=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=tKTIV829IhGVfhHo2eRsAPLj6PGdIXFYkSFcA1VBr5y8GxSVv+om6U2z5Fdst75/IM9KD+qjVEz/POF7qfrvmQ4Qd3ZSfDRCkbAbh4Rq8udmF+FqmEAGFNEzmI4Q/UmqeEyJdO3B/h98IPPygUVt6a1IPdAp2YN+f4nlqoqCHT8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=exHCvfpA; arc=fail smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA7A252284
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744901295; cv=none; b=NG36DLyfkTRMfqFwQQkaKooj0o2RtqlJUloud5Wz2lj/z8153N9CtZ33y8ePYcTcR/COqV+QqSi/m8VXIftL4NNXPLzjix19DZDMdhhgLRkoTSMfcubwxT3V6qpG8MRXYhQYQvg8GA3rPRKbWBCd9wxeLtfJFxQrXXnwOUMvNOk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744901295; c=relaxed/simple;
+	bh=RY5mdWHGD5kfzWhvtf5E8Sp/to3iuvXGYpo1Vpthnn4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YGHC894dNmHLSOsl/V/z7PBIbW6AtUOuM3a18QHIzq0WpqVRobuFORs2emiz/1yDlV6Z04MrHQ3KqLHZHCXRW4pb7HMeRxtwlWJHInRrBcbZJ4m9jew8H/2j9oQHxi+HnStsEPDMqNK5nc/KRpjzr7+jnM2gsJBXj8jMgDpOvUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Yjg5SSfw; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Yjg5SSfw; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="exHCvfpA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744901285; x=1776437285;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=MyV9b2ldmLb0JaXRdV/A4JFguXIB32gLuYzP8Qw05To=;
-  b=exHCvfpAkAZB6U13Yugj32Jj4J0jrrwWPvqd4kLPPeuwM/llpPeG3XGa
-   yTowjD6B1bp2o4vd7LGD6HVwBungNEZxNiJ90UMhxi3vcNOgceDj8KUVG
-   /y3+ec0qd2qPhvHERzQ/07QhRa0jQ0JE4BKaYTU6+xyZ6t0Xt+s0+OCG9
-   Cd9UsJfUw/7kke16zJl85S+iopPINvBvhpZ/7rGIv35fs1q9ezE6TKesw
-   e1p+JP4IDFSw0sf6GKWClB+ReIU3eDXYm+zDU/i09Aft7DVhUavQGNVKk
-   RODbk3nh+IWVd9O/mSRosF/l+uRZZ19L5xH93pm6PDya3BTeX9utoHTnK
-   g==;
-X-CSE-ConnectionGUID: UvFfDWLNSP6FAwBo8g1Mqw==
-X-CSE-MsgGUID: MdsaFceaSKiynsmF94A7/g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="63902082"
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="63902082"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 07:48:04 -0700
-X-CSE-ConnectionGUID: 3FoHstS/Sy+chVr4vjKKmA==
-X-CSE-MsgGUID: i4eWXWhJSqywb8nKEk1Z9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="130681679"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 07:48:03 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 17 Apr 2025 07:48:02 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 17 Apr 2025 07:48:02 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.41) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 17 Apr 2025 07:48:02 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TcEARHgP5mzoSalXx3PJJhbzGcGUXWBO1pAwaFcPLJQ3n9+RLgQozDfCGXaeIQBrfBFTf51xU6SMEqE9P6fzlDssBrNtHKo2ZNWmuN9XFnIElKKxI/4XIcwbWh6LqfWWt15+zyXYdQMPQrnqlpjzlzV4ZznG/vavxZDtbXqApjEZL0yuIUIoFIdcu6kqyfjJnLz3Ae4lIPscMLsBSFHqrRaP3sinrS16EdWvUM1NFOUKmE2EIHubuygkC1ljWnOVGiRfz8P8z1PrfaCAJoiFcUTR6Q1X3ldY52j6bI15GmmzUf+yMsnLBsonlVdaiUhBJrGybex5LftPstnBdsEpIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ds7sHbQ550f2EDfnHIxSqYsKS2rs+4CUpzVM1U/YTD4=;
- b=H4RFHjQ19r2NMflkB89Msuy0fjXPaWb6xf3qyzyi3G88YmP/QH9a3GIZXS0M6qmSla7LszhHphWFPsnad6cMV0Xk8TUKFYesfPgA4pMfX/B1/WNsyg0d8Bn/zINbXaL8M5HGw2qiPzU1lZH01FSBsrraYsqPa1brqklzYV6IZCIrg1bM8LHyUEmdKVKbQtYMEDyO9bjXlztQUrQa3JftN2MGHPu0xBFHgr2NZ5NHG3mAowLa+kEJPuGRfALYN2WyKw4k741ihsoMpqRDALV+v2FJozZtKAgrsdLVWoRNhQQh0O7F6uJquJibG8KbwxdCreU5U38kYxfxPKHwyDISRg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by PH0PR11MB5174.namprd11.prod.outlook.com (2603:10b6:510:3b::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.21; Thu, 17 Apr
- 2025 14:47:58 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8632.030; Thu, 17 Apr 2025
- 14:47:58 +0000
-Message-ID: <4cfd5753-976f-49ac-82fc-e925c8d31be2@intel.com>
-Date: Thu, 17 Apr 2025 07:47:55 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 00/21] x86/resctrl: Move the resctrl filesystem code to
- /fs/resctrl
-To: "Shaopeng Tan (Fujitsu)" <tan.shaopeng@fujitsu.com>, 'James Morse'
-	<james.morse@arm.com>, "x86@kernel.org" <x86@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Babu Moger
-	<Babu.Moger@amd.com>
-CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-	"shameerali.kolothum.thodi@huawei.com"
-	<shameerali.kolothum.thodi@huawei.com>, D Scott Phillips OS
-	<scott@os.amperecomputing.com>, "carl@os.amperecomputing.com"
-	<carl@os.amperecomputing.com>, "lcherian@marvell.com" <lcherian@marvell.com>,
-	"bobo.shaobowang@huawei.com" <bobo.shaobowang@huawei.com>,
-	"baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>, Jamie Iles
-	<quic_jiles@quicinc.com>, Xin Hao <xhao@linux.alibaba.com>,
-	"peternewman@google.com" <peternewman@google.com>, "dfustini@baylibre.com"
-	<dfustini@baylibre.com>, "amitsinght@marvell.com" <amitsinght@marvell.com>,
-	David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
-	"Dave Martin" <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>, Shanker
- Donthineni <sdonthineni@nvidia.com>, "fenghuay@nvidia.com"
-	<fenghuay@nvidia.com>
-References: <20250411164229.23413-1-james.morse@arm.com>
- <TYCPR01MB88043F4EBA7A338ADBDC23D48BBC2@TYCPR01MB8804.jpnprd01.prod.outlook.com>
-Content-Language: en-US
-From: Reinette Chatre <reinette.chatre@intel.com>
-In-Reply-To: <TYCPR01MB88043F4EBA7A338ADBDC23D48BBC2@TYCPR01MB8804.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR04CA0245.namprd04.prod.outlook.com
- (2603:10b6:303:88::10) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Yjg5SSfw";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Yjg5SSfw"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 71F7A2116B;
+	Thu, 17 Apr 2025 14:48:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1744901291; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=URyoU8ysBuk6krIvolEQ5LBEHfOYYs9TThhoUc7ox78=;
+	b=Yjg5SSfw++a9DxyJ9eE+LRLtw2f2jldBH7kwe0Lj8DyyBj4pXJ3S3tg2yXEiSaZnJ7u5SQ
+	cgiglz969Lm0kvpv2bY119Q0s4lLv8jZ/+lK7QxwUBWmEM91vPNiMdvnNDsJy238foJ8ds
+	7MiBgJmCfmr7vKFsdwwjpK1rr2pj+7Y=
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1744901291; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=URyoU8ysBuk6krIvolEQ5LBEHfOYYs9TThhoUc7ox78=;
+	b=Yjg5SSfw++a9DxyJ9eE+LRLtw2f2jldBH7kwe0Lj8DyyBj4pXJ3S3tg2yXEiSaZnJ7u5SQ
+	cgiglz969Lm0kvpv2bY119Q0s4lLv8jZ/+lK7QxwUBWmEM91vPNiMdvnNDsJy238foJ8ds
+	7MiBgJmCfmr7vKFsdwwjpK1rr2pj+7Y=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0F5F8137CF;
+	Thu, 17 Apr 2025 14:48:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 36JCAqsUAWjaWQAAD6G6ig
+	(envelope-from <jgross@suse.com>); Thu, 17 Apr 2025 14:48:11 +0000
+From: Juergen Gross <jgross@suse.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Cc: Juergen Gross <jgross@suse.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	=?UTF-8?q?Petr=20Van=C4=9Bk?= <arkamar@atlas.cz>,
+	stable@vger.kernel.org
+Subject: [PATCH] x86/mm: fix _pgd_alloc() for Xen PV mode
+Date: Thu, 17 Apr 2025 16:48:08 +0200
+Message-ID: <20250417144808.22589-1-jgross@suse.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|PH0PR11MB5174:EE_
-X-MS-Office365-Filtering-Correlation-Id: ebb5465c-734d-4d7b-b1c7-08dd7dbed853
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?clE5VStGMFJZUVVIYURxc0x5Nmw2VmNKb25OeHk2VWdKcG1rZDV0RGZpU2ND?=
- =?utf-8?B?dTNoV1FIK0g4K0Rud09EN1RHeFpWb25ITDZKRTRWeVNSb0RWWjVuVFE0VU14?=
- =?utf-8?B?amgydmQ5TnVUYW9ZOXk0aVVhczhwd0JkNGVLQk91RFJ5cjVGSlRaVlNVN2FB?=
- =?utf-8?B?Rm9xYlYxbHBLTVp2OSsvUDZPODd5TXloL085UnRiNmI2WjBXbEsxaUpWSmpK?=
- =?utf-8?B?UnFrSFFNaGZVVVh2WHdyN1FIWDhYa2VybjN5eGxaVldBbmhvek9yWHNaMXhE?=
- =?utf-8?B?NGNqdC9VRjNEbEVURU1vVklZaXBSbDdRTFFLZUtPN2xhV1dqVTU2RThaVjFW?=
- =?utf-8?B?cTdHQU5ZWWpRZndLc2VCemM2Y1JDM1NWRGZOWkRnYmNuaVJ4citKZCtseUJM?=
- =?utf-8?B?OGdXZE9NV3RJTHB5dnAvZWlURFdDbmZxWFIyTDVsbitKM0NoQ2NzOVdxSlgy?=
- =?utf-8?B?d2U5TGlGeldOb2g0QUtmTHd6VlF4bklWN0QzV2gycVAvTHBuYTV1cnVwUW1J?=
- =?utf-8?B?TzJqM211TjBOYWgzWXpNQ3BISkFXM3EwSTlaV3JnSmtDNUhnaTh1TEpDdG1P?=
- =?utf-8?B?ZlluWEIxVlBNeUdudWhkWkZlcjVUTnF3V1Y2K2p3YTJ2NDQ0T0p4Lzc3NE9s?=
- =?utf-8?B?eGltNjB3bGU1UXlTbk1Ua0hDN09QeTc2ZzVKWk1IcGxpU3BGWC8zMU4xenVp?=
- =?utf-8?B?Sm1sdFFud1VYSzBwTTdITE9iR3ZucmxoUmFna3V4enNwVkp1ZkZINGZDdU5s?=
- =?utf-8?B?VVFpaDRiNU1TNE9qRDhRckkySzR5T1cxMVhGd2sraEZ3cDdFYnZ1WXJleUI1?=
- =?utf-8?B?dU5Fc2tQN3A4QnRyS1ZkbzVQb1J3YjVLd3o0ZTZ6WEUwWTl2K3FsTjgvOE1p?=
- =?utf-8?B?YXdBMDltM0huL21LNVdGRFFmSnRtaTNQVG9CRXR4WkI4YXBIa0M0NG9EeE41?=
- =?utf-8?B?TzIxYnFGU1JBRk5HdWtDRGRPSk9ROE84bU5KK2RQb2EzWUs0aFYyRzE1NVlE?=
- =?utf-8?B?cW1rVGw2YTF5ZVVmZzVtQ25saTJLN3BNMXJocldjQy9kUk1yYTY0bXpRQ1FJ?=
- =?utf-8?B?MFlIMjF4SkxKZXlYQlAwWTY0VGkyVzdrOWhZWHhORFdCZXhvdXpzeXd3NjR6?=
- =?utf-8?B?aVlSZUQxYnkrNzkrRWJjdzFEZ1FGQjRVMno2eGRhRWhxa1hGdlFqWDRsVHpu?=
- =?utf-8?B?eGZNSDhXLy96MmUwc2h4WTRuRVk1R2Y4bkpCcVRSNEMxQy95cW5qaXNnVm9q?=
- =?utf-8?B?WVExajZNRVBQcWtyb2w1UmdjSXdEQWlKSzlrNXdjU0IrbHhlZ2tUZHIxeW9U?=
- =?utf-8?B?ZFZqY1RwK0NkTitwSW9pUjlHenJ4bWhLQm9sUVc2MkdPYy9iSE5iYjFFa3ZW?=
- =?utf-8?B?V0d1QmtyQ0RuczFmem55MzQyNHR3MGdsY1lsaHRXcGcrek9jbm1jZ3E3OWs2?=
- =?utf-8?B?UFJ4R2xFNTcyUzQxZmY2THVHa3dVL3FEa04vVkRvekVQNVFLbk9hd05LV3RK?=
- =?utf-8?B?WjRtcnlCdGJSRVpKNW9YYlFWRDNaQ09uZU5GWjl1NGJiU01GNWt3RzRSSlFP?=
- =?utf-8?B?czNveG5iTlRHMVZWWEFSTjdlTEprQjlBRkdubC9XeHBOMlBUMUhzVzR4b3Av?=
- =?utf-8?B?TVVuS0dkWXFxYXFoc29PNFBkZ2d5SXo1a1Q0MFlvVUtCR0VWK2tySkxKUFpZ?=
- =?utf-8?B?eE9qU3pYdG1wR2dqenNUaTFZcUlUU1FoWUpaVGdtZElPTFVFTEwwTmYxanZX?=
- =?utf-8?B?TWpaTGlhckN2dE9TR1V3TWdhR2lBN2Q0OTB4Mmh1WnlzQXNUei9sRi9Pd293?=
- =?utf-8?B?V3RZcmQzbjB0dWV5ekYzOERXRDZHZ1J6VHQzYk5HWmZra2JSdThnSEl2bnFL?=
- =?utf-8?Q?6gLYYcBPcNJmJ?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?U24wdk0zNVBYdHZDL1hKKzNQbTdxdk8vem9UVXZISS9GQlptc1Rpb0RrZlNx?=
- =?utf-8?B?eldOem1kdzVCcGRCL1htUnhXWk9HdHloZW1XQVh5cVRscnBoU29vYWNGVEdZ?=
- =?utf-8?B?VnVsRnQ0T0d0ek1qLzhoUStITWczS0Vua3EzQUdZZjFoSEowUERhSzRFSjIw?=
- =?utf-8?B?Wm9aOTlyTCtuWlpRSXhnRWdOOVhrSFdIdWFQWUtSakRzMGV5R0gveHVLcHFx?=
- =?utf-8?B?bFZmbTNtelZhbGluNmMwZ1B3TTNreTA3azV4ZXVVNjd2SVRWZzFScVBNMWZl?=
- =?utf-8?B?R2c0UzkvWmxzVStBQWxaTmJoNlFjWDk1b2ZTYmdtdlNwa2ZnYzdKRDlpR2xj?=
- =?utf-8?B?bzZST2pGdkhuTkhBVTNXNDBOVzM5TkViZThyYXV0clltWjVsRTdaMEZvN3NL?=
- =?utf-8?B?VVYwbTBDSWhNTGh6VFcxS3hXRUc3V1hSaEhBQkFFREtyU3NYWEoraGF6d0xC?=
- =?utf-8?B?bUJGUTdFTnJmb3FiSDdsSkVmTjM1N1V6cVJocllwVTB3OFR5a1FSZWUwQmN3?=
- =?utf-8?B?OSsvRmRtVTZQeGVqcEVmTzhMQlBhQnU2RkRjVHJHMUNzbGxieExYYUVtUEpI?=
- =?utf-8?B?LzVOZUMvakEyUFRYUmtDT3hkRFdWTUd4K1dQTXlhMU1YTE9oOGx0MFI4bU4v?=
- =?utf-8?B?bkZ2ZG80NElwQUhsSFBFeEtORlJWZXBTb1BvQjByNnlnYVBPM1NGMzdKQytL?=
- =?utf-8?B?My9HVzRJdFhxZkh0OUdRdFI0UjcveDJ4REdabzJUR2UrT3ZLaW5pZ1pTYjJk?=
- =?utf-8?B?OUtoM3pnRjFkRWswMnViN2lGVVhHbHIxRDBJbnFHMWZLOTVsNjZMU2lUNkxP?=
- =?utf-8?B?UllGeDZmWjNjSVJsNWlxZ1BrTS9tNXZhOXFwRGNGM0hEc0gvZmdWdzZjcEU2?=
- =?utf-8?B?YjI1dVN2czBGVWlDT2hyWC9ZVDRpMmhHRnBNR0tlczk3YzBPcm1QSGpabXZL?=
- =?utf-8?B?bVpadnJpRTM3Q0cxVzkya2h0WW12REs0ZjFTREdOdmhRcjdoRmZNVGVMcnQw?=
- =?utf-8?B?UFgrNU1PVlE0ME50MDl2N1JHYmdkUGszQ1J0akxaL3AvTWVCQmU5aXJPOFJw?=
- =?utf-8?B?a0NxdGdQMU1PTlVKNk5HZzU4L2pLcXhSbzllUUxJUE9FV0Q1amNjakkvdkdy?=
- =?utf-8?B?eXE2MlQwU2ZKaHJ0c05BbDdOUzlGZ1owN0h5a1lJM1lrRDZJU0FoUTRyTllk?=
- =?utf-8?B?SkZsaDlJWVdzY21Yc3BsNXNRUUsrdGdBZlhnNzJta04zUGpLYjROWjBOMDJW?=
- =?utf-8?B?SElLUi9vS3ZDL1A1akJYdXowM3RGZ3VSNzlOSXQxSnpHUlI0bERPUmkvRlZa?=
- =?utf-8?B?aGY5aTloY05XRU9WcGNQT0E3cE03NndEV0FmdGpoUElEQzdJbmhERklTQytv?=
- =?utf-8?B?dE5zSHo4MHdZZlJ2SHNDVU5WakxLRXEvWHpWdko4TDJKVjFWZjY5dnFsVk03?=
- =?utf-8?B?T3BFS2pTU2gybGh1TkxJS3BWdWtoN1pLRGpUMTl0RjdUY1A1U0pscXkrRDIv?=
- =?utf-8?B?M05nM3YxVFF4VTgwWndFKzZyaHBxRFdlZnNWUzRPUzVWbW12Z0ZKM0FmeWJk?=
- =?utf-8?B?U0RPS1JnNVQvZFRqeGlIcEdaN3Eyb2NNQVgySGtzMjhXU3NVUEpxMTM4emFX?=
- =?utf-8?B?TW5qODVEbVlEeFlWMzBjaEIzS3dkMGdBbUdTdi93WnMzUm5Relp0WTJ4Zmdi?=
- =?utf-8?B?Vy9YL2JxaUc2ZG9reWJKcEtEVVBKL2xHQmxxS3VxL2JBaFZHR0UrL24ySGtN?=
- =?utf-8?B?a0V0a2lRKzFPMHRKZ2w0bXJrVEM5U2I3NkpBdGRvYnFiU3VVNnpLSDR1RCsy?=
- =?utf-8?B?dnZ1bUZWSHNQWXZEUlJESHhiOCtjZHc4aGhNaUc4WmJGamF5UkNBT0hwbnZP?=
- =?utf-8?B?a2k5dnQ0bUpENWY4VW1la2xLMFZ4MXNTY29kdGtOMldpNGZvWEhORTlTdVg4?=
- =?utf-8?B?YjkwbGFzdlk2Zzd0MmREM3puWEFEYmVreTAvcFZIekxEUk9hdlVrSVZkelFw?=
- =?utf-8?B?d1FUS1pGTGpqMnNIbFk1bXZ0ZHViV3hMT3dhYWFKaktuc05sYVRlQ3FzK1Ft?=
- =?utf-8?B?UWNGRVVLWkZiOFp3V3M2WjI4bmk0THdmRVdpNzR3OWVFUnlaOWFtbmFicG02?=
- =?utf-8?B?cHRuR095MzJzYzVBakx3SmNkSWtiVjNGR0FkTmlEWFNDYWNJUE5INE1KSGov?=
- =?utf-8?B?TWc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ebb5465c-734d-4d7b-b1c7-08dd7dbed853
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 14:47:58.5420
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vxOJjenEhbVGvXnRcuN54WcDdRAmszesFqzOX8U3jiENE11Eme1oEzzM6pooLHU2esLs8AUHnuWEBtJe4oEgrpdoiXlhke7NI1J6uobbQRI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5174
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -3.30
+X-Spam-Flag: NO
 
-Hi Shaopeng and Babu,
+Recently _pgd_alloc() was switched from using __get_free_pages() to
+pagetable_alloc_noprof(), which might return a compound page in case
+the allocation order is larger than 0.
 
-On 4/17/25 5:18 AM, Shaopeng Tan (Fujitsu) wrote:
-> Hello,
-> 
-> I ran tools/tests/selftests/resctrl with the following patches on AMD EPYC 9454P 48-Core Processor, it looks good.
+On x86 this will be the case if CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
+is set, even if PTI has been disabled at runtime.
 
-Thank you!
+When running as a Xen PV guest (this will always disable PTI), using
+a compound page for a PGD will result in VM_BUG_ON_PGFLAGS being
+triggered when the Xen code tries to pin the PGD.
 
-> 
-> https://lore.kernel.org/lkml/96d276c11e69cfb1e29d50a12c8043555c06b404.1718144237.git.babu.moger@amd.com/#r
+Fix the Xen issue together with the not needed 8k allocation for a
+PGD with PTI disabled by using a variable holding the PGD allocation
+order in case CONFIG_MITIGATION_PAGE_TABLE_ISOLATION is set.
 
-It is strange that you needed to add this since it can be found in v6.10 and up.
+Reported-by: Petr Vaněk <arkamar@atlas.cz>
+Fixes: a9b3c355c2e6 ("asm-generic: pgalloc: provide generic __pgd_{alloc,free}")
+Cc: stable@vger.kernel.org
+Signed-off-by: Juergen Gross <jgross@suse.com>
+---
+ arch/x86/include/asm/pgalloc.h | 7 ++++++-
+ arch/x86/mm/pgtable.c          | 4 ++++
+ arch/x86/mm/pti.c              | 3 +++
+ 3 files changed, 13 insertions(+), 1 deletion(-)
 
-> https://lore.kernel.org/lkml/cover.1717626661.git.babu.moger@amd.com/#r
-
-Babu, is this still something that you want to see upstream?
-
-Reinette
+diff --git a/arch/x86/include/asm/pgalloc.h b/arch/x86/include/asm/pgalloc.h
+index a33147520044..754f95bddf98 100644
+--- a/arch/x86/include/asm/pgalloc.h
++++ b/arch/x86/include/asm/pgalloc.h
+@@ -34,8 +34,13 @@ static inline void paravirt_release_p4d(unsigned long pfn) {}
+  * Instead of one PGD, we acquire two PGDs.  Being order-1, it is
+  * both 8k in size and 8k-aligned.  That lets us just flip bit 12
+  * in a pointer to swap between the two 4k halves.
++ *
++ * As PTI can be runtime disabled (either via boot parameter or due to
++ * running as a Xen PV guest), store the actually needed allocation
++ * order in a global variable.
+  */
+-#define PGD_ALLOCATION_ORDER 1
++#define PGD_ALLOCATION_ORDER pgd_allocation_order
++extern unsigned int pgd_allocation_order;
+ #else
+ #define PGD_ALLOCATION_ORDER 0
+ #endif
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index a05fcddfc811..f61b2d6be311 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -12,6 +12,10 @@ phys_addr_t physical_mask __ro_after_init = (1ULL << __PHYSICAL_MASK_SHIFT) - 1;
+ EXPORT_SYMBOL(physical_mask);
+ #endif
+ 
++#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
++unsigned int pgd_allocation_order = 0;
++#endif
++
+ pgtable_t pte_alloc_one(struct mm_struct *mm)
+ {
+ 	return __pte_alloc_one(mm, GFP_PGTABLE_USER);
+diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
+index 5f0d579932c6..44b7120c63e3 100644
+--- a/arch/x86/mm/pti.c
++++ b/arch/x86/mm/pti.c
+@@ -38,6 +38,7 @@
+ #include <asm/desc.h>
+ #include <asm/sections.h>
+ #include <asm/set_memory.h>
++#include <asm/pgalloc.h>
+ 
+ #undef pr_fmt
+ #define pr_fmt(fmt)     "Kernel/User page tables isolation: " fmt
+@@ -97,6 +98,8 @@ void __init pti_check_boottime_disable(void)
+ 	if (pti_mode == PTI_AUTO && !boot_cpu_has_bug(X86_BUG_CPU_MELTDOWN))
+ 		return;
+ 
++	pgd_allocation_order = 1;
++
+ 	setup_force_cpu_cap(X86_FEATURE_PTI);
+ }
+ 
+-- 
+2.43.0
 
