@@ -1,52 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3930F1D5CF8;
-	Thu, 17 Apr 2025 16:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86641D5CF8;
+	Thu, 17 Apr 2025 16:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744909140; cv=none; b=CZI095ga8TVcnAbv2uoT1YBP5b7BP81vhk4rOIWkUsBAVpwP+0bVurfVygIwGyjeHrN8mjFEIY/as8yLoFyp8KBMk5EOF0Tkn8Rs3N+d4LyjV/cIXWOSrmnxsu+euJwNg7pXRimICW7423E4NM7UGPdTEyRgyGVsV5NLJAgZHmo=
+	t=1744909201; cv=none; b=ePpRW9XED0I+ngvqat1REd9+BJheHhYvPdRT58/QfA/ab7AKNXPOha16i6e9EA03ME7RTigfR1IfHihYLdYElSbIhqWnGP4RCafqMIzWV0rpQV9FW0Qgc39vOyT9FXZnw/0CG2B+7nWC7ys/D/cdLxh2XSxlL++RYPhr2OcZIW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744909140; c=relaxed/simple;
-	bh=jxIXxKxaNPo3dQmGxoi0tG5S1YbEPJ8HH1VVwK4JwsQ=;
+	s=arc-20240116; t=1744909201; c=relaxed/simple;
+	bh=G3ce7TmoAzipkk+YWHvblWF+GzIYLtfn6pbvWy71+Hk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AUimLyWcrlmyllnYPuChe5sRaYKdDNeM2wtJct6MauOTGK2J5Z5myLYkEp9lQVTqKiNtlrDcIJTajE+iOZmyexegFkWr4lJRh8GZA0lUka7WD0OLiMCPNNNcAaOcZnkbDIx7qjZfln344BgCnYHAtGcD5vYQb7lUalm3/iveAsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N8AX4HSl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N8AX4HSl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B39E2C4CEE4;
-	Thu, 17 Apr 2025 16:58:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744909139;
-	bh=jxIXxKxaNPo3dQmGxoi0tG5S1YbEPJ8HH1VVwK4JwsQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N8AX4HSlMyK+6vjGU6LNISIWaMI2Kvl2ZIRqMHxyDAt/Vmem72yJ1zLaip+GqanQC
-	 roC/3ASqU987M0/pMgs09BI3a7n17pIPMzEmba0a+moJ47+F4yhsVk0jx/GHxtke1g
-	 sYl5I0WW57wSgkij+x1IH+ySGmYxZeZNYLY4mdXW2Nl2ycVCqmdrdoOwi6BNGJ/zpC
-	 eoZaqiX+XCZN3nQOYCC9V43vKoHRrp8TBYF4aJqbYMAih+fJPsNb0j9+Tl3bhq+uf7
-	 LR7WJaM6XqazLHqR1lV4SDC5PxKdSMInlgW59aaXMAHlHsCeFYKgLWrTMV/htMXQWT
-	 JfeVOXg8AU9DQ==
-Date: Thu, 17 Apr 2025 09:58:56 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Qingfang Deng <dqfext@gmail.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	linux-crypto@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Christoph =?iso-8859-1?Q?M=FCllner?= <christoph.muellner@vrull.eu>,
-	Heiko Stuebner <heiko.stuebner@vrull.eu>,
-	Qingfang Deng <qingfang.deng@siflower.com.cn>
-Subject: Re: [RFC PATCH] crypto: riscv: scalar accelerated GHASH
-Message-ID: <20250417165856.GB800@quark.localdomain>
-References: <20250417064940.68469-1-dqfext@gmail.com>
- <CAMj1kXFPAVXOtPoETKvHB49kjZUPYrsAqsJwdL7p5Cu4xk75Rg@mail.gmail.com>
- <CALW65jY=LnVBYoKPOQnSKgGSA0brKzmo0vqoRDcqF_=jofLAng@mail.gmail.com>
- <CAMj1kXH-u7hiKGQfgYHj_16V4ATN_aHmA_wkvMSyLh+E3+QaAA@mail.gmail.com>
- <CALW65jZVYUZoka7Gbjcoh43qbkD7rGpw8gTZjjOYpZD-BhLyBQ@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=sKx42VJaikffNMVGvvYCbBbPsBy58Zw1WRsPDUK/jgfl4/6ONib4LAa9ojWcUgTA9TWORSmvfzmfNnqRHEkzgwGjduMEagJ8kQRUfKWLFyBLa0BJpl5jlA9Vrc7I9Jq4VVz/3BJGLNTGzew39sfs9IHszRPceniZEn2h1b3v0w8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: qDaNjaHmQo2c1bLp9h017g==
+X-CSE-MsgGUID: wPqEdL6XQQOnlmaUxtGLaQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="50319332"
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="50319332"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 09:59:49 -0700
+X-CSE-ConnectionGUID: 7jhBxJh8R6SNFsGSuYbh8A==
+X-CSE-MsgGUID: tfqBq1xGRnqHLb9ZbCHoBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="131848343"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 09:59:41 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u5SaP-0000000DGBC-21Cu;
+	Thu, 17 Apr 2025 19:59:37 +0300
+Date: Thu, 17 Apr 2025 19:59:37 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Cosmin Tanislav <cosmin.tanislav@analog.com>,
+	Tomasz Duszynski <tduszyns@gmail.com>,
+	Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>,
+	Andreas Klinger <ak@it-klinger.de>,
+	Petre Rodan <petre.rodan@subdimension.ro>,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 6/8] iio: imu: adis16550: align buffers for timestamp
+Message-ID: <aAEzeY_p6a8Pr-zn@smile.fi.intel.com>
+References: <20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
+ <20250417-iio-more-timestamp-alignment-v1-6-eafac1e22318@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,19 +61,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALW65jZVYUZoka7Gbjcoh43qbkD7rGpw8gTZjjOYpZD-BhLyBQ@mail.gmail.com>
+In-Reply-To: <20250417-iio-more-timestamp-alignment-v1-6-eafac1e22318@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Apr 17, 2025 at 04:42:46PM +0800, Qingfang Deng wrote:
-> > I see. But do you have a particular configuration in mind? Does it
-> > have scalar AES too? I looked into that a while ago but I was told
-> > that nobody actually incorporates that. So what about these
-> > extensions? Are they commonly implemented?
+On Thu, Apr 17, 2025 at 11:52:38AM -0500, David Lechner wrote:
+> Align the buffers used with iio_push_to_buffers_with_timestamp() to
+> ensure the s64 timestamp is aligned to 8 bytes.
 > 
-> It's aes-generic.c (LUT-based) with accelerated GHASH.
+>  drivers/iio/accel/bmc150-accel.h | 2 +-
+>  drivers/iio/imu/adis16550.c      | 2 +-
 
-That's an odd combination.  Normally accelerated AES and GHASH go together.
-Presumably you're targeting some specific RISC-V CPU.  Is this going to be a
-one-off thing for that specific CPU?  Or can we expect many RISC-V CPUs to have
-GHASH acceleration without AES?  And if so, why?
+Looks like a stray squash of the two independent commits.
 
-- Eric
+...
+
+>  	struct bmc150_accel_trigger triggers[BMC150_ACCEL_TRIGGERS];
+>  	struct mutex mutex;
+>  	u8 fifo_mode, watermark;
+> -	s16 buffer[8];
+> +	s16 buffer[8] __aligned(8);
+
+As for the code, would it be possible to convert to actually use a sturcture
+rather than an array?
+
+...
+
+>  	struct iio_poll_func *pf = p;
+> -	__be32 data[ADIS16550_MAX_SCAN_DATA];
+> +	__be32 data[ADIS16550_MAX_SCAN_DATA] __aligned(8);
+>  	struct iio_dev *indio_dev = pf->indio_dev;
+>  	struct adis16550 *st = iio_priv(indio_dev);
+
+Ditto.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
