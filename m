@@ -1,136 +1,205 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E52189BAC
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43C5189BAC
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744893532; cv=none; b=qEkNVf5u/D9X2le1aBuPBj5t4hA2BU4yRiycA9QzNT8lEDGjZRdCBbv30MXsEz2wTHU/FkS4UamSjhFJ+028dq4RaikIC8AEsSmIt4fsh8uOMBY13ufn5+1OaMBB/kwvieCuHmE3x36HKfNeWqIz+ank/OhlMNEApzurNOWkOQg=
+	t=1744893541; cv=none; b=cJ4EZpPTPZgk25X8/s7BCguzGSmxDt6uGHGCelB9vztVzHd0oNs5GyyRnIMHxSZAtyS8STIEi7dUwW/KnRS75xKMIHwPjPmgiE1W8YP4jRH6w5iqJP4iGtUWcvlEDIB+0Sn+/vnPWHlwmJTqCsqg9PLJapBX/utyEWIl1XIzID4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744893532; c=relaxed/simple;
-	bh=Ldi3hZNFBBq84SXBhwaBJGyT3CF7JNx+7PI3rrOqdNM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mrh2GTrUtsItt33/+xNtUIlJOKvGGH8Ma6PTxO6xAtaYjkj+J0uv1CcKAN/sWq0z2L5jnXKHFDux8Wu0+wOupVx6lZrx0Xqx5p5szRDkr1r01wsQIy0ikoXW3RzxIzp9msWI4RdlH2ZT0AGdryzCRcPehJT8lRRORoaG/cLcZM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1u5OVh-0006jN-3i; Thu, 17 Apr 2025 14:38:29 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1u5OVg-000kfr-1S;
-	Thu, 17 Apr 2025 14:38:28 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1u5OVg-005xtd-0z;
-	Thu, 17 Apr 2025 14:38:28 +0200
-Date: Thu, 17 Apr 2025 14:38:28 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	Simon Horman <horms@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
-	Kyle Swenson <kyle.swenson@est.tech>,
-	Dent Project <dentproject@linuxfoundation.org>,
-	kernel@pengutronix.de,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v8 07/13] net: pse-pd: Add support for budget
- evaluation strategies
-Message-ID: <aAD2RN_PV79rpf1Q@pengutronix.de>
-References: <20250416-feature_poe_port_prio-v8-0-446c39dc3738@bootlin.com>
- <20250416-feature_poe_port_prio-v8-7-446c39dc3738@bootlin.com>
+	s=arc-20240116; t=1744893541; c=relaxed/simple;
+	bh=EkVsj9981T9qm0e5vxfXaEMAgIxpgdNeruEjFa24wvI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fxeETFgWDW0WbNG7iFQYtAiQ6WyAl3b4jJ+ey0g+GmKRE+5rZhcIy1uFJMRLpiO/Hdu2gAA5Ys662nNLQsqJ7XowoUfFqtWTbS8NQeU093ekrooD3QQmwaBrAfq9/7EQ8IAXfyDMy0wrdQDDfWUUVLky2tAuIhSyl33ejJxEf8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=ND4O5eDd; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="ND4O5eDd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=DhN1xrm3btmQ9MDmtBh97AmEqa32qb4yE0YewSaFB6g=; b=ND4O5eDdmzLluNp/684ZQtG+Lx
+	k7pYohrLoorYBxM5hH15IqgHs0F6o4kkw47ciUNyXg0w+3t8mYgHA/Mw3kTqFUeQy2T0+D3McYIkn
+	kmO1sXggweT8hvyisJPWttTp2zqnOfzSK/TbUPDVR8w9eltd7FF5WPZiF+RWs++/5Pt3GmZoB7rys
+	42DuIV3zAJvplq8mpjGEze1Y9VbgXRO05FCGJyXRqLaY/nAUf15eS0EzzDFohUj6w8+FPGwe9XFBu
+	mHM/8dyhYpqnOhYbv9zS3u4iLg3H2fqkbGb6ApvDJGim+JLUwqPj2GQAOIW4RtQTVDMiPkXAI3Mxi
+	DjurjBMA==;
+Received: from 39-14-49-133.adsl.fetnet.net ([39.14.49.133] helo=[192.168.220.43])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1u5OVr-000nvR-4H; Thu, 17 Apr 2025 14:38:39 +0200
+Message-ID: <492b58a8-ff4a-4afe-b317-6fd1bafc874e@igalia.com>
+Date: Thu, 17 Apr 2025 20:38:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/huge_memory: fix dereferencing invalid pmd migration
+ entry
+To: Zi Yan <ziy@nvidia.com>
+Cc: David Hildenbrand <david@redhat.com>, Hugh Dickins <hughd@google.com>,
+ linux-mm@kvack.org, akpm@linux-foundation.org, willy@infradead.org,
+ linmiaohe@huawei.com, revest@google.com, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org
+References: <20250414072737.1698513-1-gavinguo@igalia.com>
+ <27d13454-280f-4966-b694-d7e58d991547@redhat.com>
+ <6787d0ea-a1b9-08cf-1f48-e361058eec20@google.com>
+ <83f17b85-c9fa-43a0-bec1-22c8565b67ad@redhat.com>
+ <98d1d195-7821-4627-b518-83103ade56c0@redhat.com>
+ <7d0ef7b5-043b-beca-72a9-6ae98b0d55fb@google.com>
+ <05a7d51e-f065-445a-af0e-481f3461a76e@redhat.com>
+ <f344d741-962c-48d3-84b7-ce3de5619122@igalia.com>
+ <412E70A4-4775-4AF7-A878-7FEBF9A122D8@nvidia.com>
+ <667354f3-7076-4e64-9506-56e81e7d9234@igalia.com>
+ <CD959F2D-FD0B-42C3-B451-ABCE254485E7@nvidia.com>
+Content-Language: en-US
+From: Gavin Guo <gavinguo@igalia.com>
+In-Reply-To: <CD959F2D-FD0B-42C3-B451-ABCE254485E7@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250416-feature_poe_port_prio-v8-7-446c39dc3738@bootlin.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Wed, Apr 16, 2025 at 03:44:22PM +0200, Kory Maincent wrote:
-> From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+On 4/17/25 20:10, Zi Yan wrote:
+> On 17 Apr 2025, at 8:02, Gavin Guo wrote:
 > 
-> This patch introduces the ability to configure the PSE PI budget evaluation
-> strategies. Budget evaluation strategies is utilized by PSE controllers to
-> determine which ports to turn off first in scenarios such as power budget
-> exceedance.
-> 
-> The pis_prio_max value is used to define the maximum priority level
-> supported by the controller. Both the current priority and the maximum
-> priority are exposed to the user through the pse_ethtool_get_status call.
-> 
-> This patch add support for two mode of budget evaluation strategies.
-> 1. Static Method:
-> 
->    This method involves distributing power based on PD classification.
->    It’s straightforward and stable, the PSE core keeping track of the
->    budget and subtracting the power requested by each PD’s class.
-> 
->    Advantages: Every PD gets its promised power at any time, which
->    guarantees reliability.
-> 
->    Disadvantages: PD classification steps are large, meaning devices
->    request much more power than they actually need. As a result, the power
->    supply may only operate at, say, 50% capacity, which is inefficient and
->    wastes money.
-> 
->    Priority max value is matching the number of PSE PIs within the PSE.
-> 
-> 2. Dynamic Method:
-> 
->    To address the inefficiencies of the static method, vendors like
->    Microchip have introduced dynamic power budgeting, as seen in the
->    PD692x0 firmware. This method monitors the current consumption per port
->    and subtracts it from the available power budget. When the budget is
->    exceeded, lower-priority ports are shut down.
-> 
->    Advantages: This method optimizes resource utilization, saving costs.
-> 
->    Disadvantages: Low-priority devices may experience instability.
-> 
->    Priority max value is set by the PSE controller driver.
-> 
-> For now, budget evaluation methods are not configurable and cannot be
-> mixed. They are hardcoded in the PSE driver itself, as no current PSE
-> controller supports both methods.
-> 
-> Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+>> On 4/17/25 19:32, Zi Yan wrote:
+>>> On 17 Apr 2025, at 7:21, Gavin Guo wrote:
+>>>
+>>>> On 4/17/25 17:04, David Hildenbrand wrote:
+>>>>> On 17.04.25 10:55, Hugh Dickins wrote:
+>>>>>> On Thu, 17 Apr 2025, David Hildenbrand wrote:
+>>>>>>> On 17.04.25 09:18, David Hildenbrand wrote:
+>>>>>>>> On 17.04.25 07:36, Hugh Dickins wrote:
+>>>>>>>>> On Wed, 16 Apr 2025, David Hildenbrand wrote:
+>>>>>>>>>>
+>>>>>>>>>> Why not something like
+>>>>>>>>>>
+>>>>>>>>>> struct folio *entry_folio;
+>>>>>>>>>>
+>>>>>>>>>> if (folio) {
+>>>>>>>>>>     if (is_pmd_migration_entry(*pmd))
+>>>>>>>>>>         entry_folio = pfn_swap_entry_folio(pmd_to_swp_entry(*pmd)));
+>>>>>>>>>>     else
+>>>>>>>>>>      entry_folio = pmd_folio(*pmd));
+>>>>>>>>>>
+>>>>>>>>>>     if (folio != entry_folio)
+>>>>>>>>>>           return;
+>>>>>>>>>> }
+>>>>>>>>>
+>>>>>>>>> My own preference is to not add unnecessary code:
+>>>>>>>>> if folio and pmd_migration entry, we're not interested in entry_folio.
+>>>>>>>>> But yes it could be written in lots of other ways.
+>>>>>>>>
+>>>>>>>> While I don't disagree about "not adding unnecessary code" in general,
+>>>>>>>> in this particular case just looking the folio up properly might be the
+>>>>>>>> better alternative to reasoning about locking rules with conditional
+>>>>>>>> input parameters :)
+>>>>>>>>
+>>>>>>>
+>>>>>>> FWIW, I was wondering if we can rework that code, letting the caller to the
+>>>>>>> checking and getting rid of the folio parameter. Something like this
+>>>>>>> (incomplete, just to
+>>>>>>> discuss if we could move the TTU_SPLIT_HUGE_PMD handling).
+>>>>>>
+>>>>>> Yes, I too dislike the folio parameter used for a single case, and agree
+>>>>>> it's better for the caller who chose pmd to check that *pmd fits the folio.
+>>>>>>
+>>>>>> I haven't checked your code below, but it looks like a much better way
+>>>>>> to proceed, using the page_vma_mapped_walk() to get pmd lock and check;
+>>>>>> and cutting out two or more layers of split_huge_pmd obscurity.
+>>>>>>
+>>>>>> Way to go.  However... what we want right now is a fix that can easily
+>>>>>> go to stable: the rearrangements here in 6.15-rc mean, I think, that
+>>>>>> whatever goes into the current tree will have to be placed differently
+>>>>>> for stable, no seamless backports; but Gavin's patch (reworked if you
+>>>>>> insist) can be adapted to stable (differently for different releases)
+>>>>>> more more easily than the future direction you're proposing here.
+>>>>>
+>>>>> I'm fine with going with the current patch and looking into cleaning it up properly (if possible).
+>>>>>
+>>>>> So for this patch
+>>>>>
+>>>>> Acked-by: David Hildenbrand <david@redhat.com>
+>>>>>
+>>>>> @Gavin, can you look into cleaning that up?
+>>>>
+>>>> Thank you for your review. Before I begin the cleanup, could you please
+>>>> confirm the following action items:
+>>>>
+>>>> Zi Yan's suggestions for the patch are:
+>>>> 1. Replace the page fault with an invalid address access in the commit
+>>>>      description.
+>>>>
+>>>> 2. Simplify the nested if-statements into a single if-statement to
+>>>>      reduce indentation.
+>>>
+>>> 3. Can you please add Huge’s explanation below in the commit log?
+>>> That clarifies the issue. Thank you for the fix.
+>>
+>> Sure, will send out another patch for your review. Thank you for the review.
+>>
+> Thanks. Do you mind sharing the syzkaller reproducer if that is
+> possible and easy? I am trying to understand more about the issue.
 
-Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Sure, this is the reproducer:
+https://drive.google.com/file/d/1eDBV6VfIzyqD9SeYGQBah-BJXO32Piy8/view
 
-Thank you!
+Reproducing steps
+1). gcc -o repro -lpthread -static ./repro.c
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2). ./repro
+
+3). Find the group number and replace 2539 in the following
+sudo cat /sys/kernel/debug/shrinker/thp-deferred_split-12/count
+
+4). Run the following command in multiple sessions
+for i in $(seq 10000); do echo "2539 0 100" | sudo tee 
+/sys/kernel/debug/shrinker/thp-deferred_split-12/scan ; done
+
+Generally, the bug will be triggered within 5 minutes.
+
+> 
+>>>
+>>> “
+>>> an anon_vma lookup points to a
+>>> location which may contain the folio of interest, but might instead
+>>> contain another folio: and weeding out those other folios is precisely
+>>> what the "folio != pmd_folio((*pmd)" check (and the "risk of replacing
+>>> the wrong folio" comment a few lines above it) is for.
+>>> ”
+>>>
+>>> With that, Acked-by: Zi Yan <ziy@nvidia.com>
+>>>
+>>>>
+>>>> David, based on your comment, I understand that you are recommending the
+>>>> entry_folio implementation. Also, from your discussion with Hugh, it
+>>>> appears you agreed with my original approach of returning early when
+>>>> encountering a PMD migration entry, thereby avoiding unnecessary checks.
+>>>> Is that correct? If so, I will keep the current logic. Do you have any
+>>>> additional cleanup suggestions?
+>>>>
+>>>> I will start the cleanup work after confirmation.
+>>>>
+>>>>>
+>>>>>>
+>>>>>> (Hmm, that may be another reason for preferring the reasoning by
+>>>>>> folio lock: forgive me if I'm misremembering, but didn't those
+>>>>>> page migration swapops get renamed, some time around 5.11?)
+>>>>>
+>>>>> I remember that we did something to PTE handling stuff in the context of PTE markers. But things keep changing all of the time .. :)
+>>>>>
+>>>
+>>>
+>>> Best Regards,
+>>> Yan, Zi
+> 
+> 
+> Best Regards,
+> Yan, Zi
+
