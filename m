@@ -1,88 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61F718D63E;
-	Thu, 17 Apr 2025 21:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2331D07BA;
+	Thu, 17 Apr 2025 21:19:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744924581; cv=none; b=IiaX3j5f37KKVS3Hwi5muAYMY1Zat6tU125+gm47snF59x0qXXSWlsZHYvN/ZHz3epv6zY6QRM8TjYgTwEg5u9DAER10ByONtlksJ2mpL0vJgo0/gnfB4b43l53DsahPpqjCiS4wl/8ydm2pIG/DbStgHibmXpCyK5qCshbP24A=
+	t=1744924756; cv=none; b=uRHMU/z6R+m0M5ATKssJfkJptxJ87rpUky/AfbBE0pPcEPLo8DkVLFwfyZk2b2yFH7t+9XZZawyFalr1CiFg+5RRfibw7MLvYGaxMrVjdjLs9QodRrIuPDo+y5S/xcqB/QvsXKOy+2fu6NhGgoHGvRA7BAogXQhoIa5UPRM72GM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744924581; c=relaxed/simple;
-	bh=eZkEV26HEMG6QDimOrqTRv4PVSP8eRQSfQX42CYvtN0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Gl3tGXrISr3IgxR03Ny3G3jAnnO2nlhQ7J9krAoZhSkq7ljtEnv35djZ5JxETDUUyHJvu5MoqMaukH+L1BH/GBXsVrfw+TbGew9UsiT37uPAEVBUrYDEwak82Ne7C/Xu/b1JQZ0zcgoOiXNKBPS1emOACHYguB41MaDRPKTWpyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b8wb0u3G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744924756; c=relaxed/simple;
+	bh=nC8UzQqBU++CeIHZRw6fD+TYAx/1VnKSjr8xWFnChxs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=B7wpQ34Rd3FLyrQGB2gVHv+P/r0iIO7zca3mIOv0eeVbM3ETl3HwY/Mskn/YIlLRzmy9sFDSze/JpD6EWAa3m1pVqOUFxxyOGCGiyB+USJEN2QiQOKwHcXhcz2zYvJZOsryEp4k1jG6n45D5BOq39TwWRPfdsVzm59QVosjb0jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=nW1e/yvl; arc=none smtp.client-ip=52.95.49.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b8wb0u3G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4FC3C4CEE4;
-	Thu, 17 Apr 2025 21:16:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744924578;
-	bh=eZkEV26HEMG6QDimOrqTRv4PVSP8eRQSfQX42CYvtN0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=b8wb0u3G6u46w0HKEUoSL92HBTLjm4Wxn9SunITkNLDIRs8vNU9uwb8MuljUJ80CS
-	 EoIBqiMuwZM/NTU7KgggXyX+btApxNWei8SmFRxOmlrlhD/nNSOmx7UiVj2aF/8s7c
-	 Vu6kfcsTbIRkUc3ZnC0VbK06nIEH2hyxUbQKB8NRvaAqkhRljUWd2p8ouSgU2lvm8K
-	 kMjvVneTWiLfH7NsbZqmrQ7B/qPjOrf3YJuA4NEw9ElDs9mWRe5o6cyUYWMu03nGd1
-	 Ua99stb/301QFSgvsAJvXLHbqj5YOVGTlSSco4Uz+kOKIclaZhAQ/W468d/isn3zOV
-	 kbyfvyRb4yP5A==
-From: Mark Brown <broonie@kernel.org>
-To: Philipp Stanner <phasta@kernel.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250417083902.23483-2-phasta@kernel.org>
-References: <20250417083902.23483-2-phasta@kernel.org>
-Subject: Re: [PATCH 1/2] spi: spi-cavium-thunderx: Use non-hybrid PCI
- devres API
-Message-Id: <174492457740.248895.3318833401427095151.b4-ty@kernel.org>
-Date: Thu, 17 Apr 2025 22:16:17 +0100
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nW1e/yvl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1744924755; x=1776460755;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=VEpcLojT1ePaRIDUjzvduBn77a/qfXTeM2H6Ak+/xZM=;
+  b=nW1e/yvll34Jj6WQ+Z/BFCa733dB/B7u6TyjM83bze2hZDPtKeDZR4Xi
+   3sWYCteR7qatY6u5+S63mnSgHFJ+3lX/A+Kjkil+V7LmXecL3rliPZImR
+   WtUehAYPcHP3NHM2ZUypAy2wSmmRLgXBVOfGfF6C/cQgMmosP2lJIi+Q7
+   w=;
+X-IronPort-AV: E=Sophos;i="6.15,220,1739836800"; 
+   d="scan'208";a="490377752"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 21:18:00 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.21.151:39572]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.47.20:2525] with esmtp (Farcaster)
+ id b9b8547f-3313-4caa-9a82-5c24831f1157; Thu, 17 Apr 2025 21:17:58 +0000 (UTC)
+X-Farcaster-Flow-ID: b9b8547f-3313-4caa-9a82-5c24831f1157
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 17 Apr 2025 21:17:58 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.94.49.59) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 17 Apr 2025 21:17:54 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <jlayton@kernel.org>
+CC: <akpm@linux-foundation.org>, <andrew@lunn.ch>, <davem@davemloft.net>,
+	<edumazet@google.com>, <horms@kernel.org>, <kuba@kernel.org>,
+	<kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>, <nathan@kernel.org>,
+	<netdev@vger.kernel.org>, <pabeni@redhat.com>, <qasdev00@gmail.com>
+Subject: Re: [PATCH v3 8/8] net: register debugfs file for net_device refcnt tracker
+Date: Thu, 17 Apr 2025 14:17:44 -0700
+Message-ID: <20250417211746.16680-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250417-reftrack-dbgfs-v3-8-c3159428c8fb@kernel.org>
+References: <20250417-reftrack-dbgfs-v3-8-c3159428c8fb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D045UWC002.ant.amazon.com (10.13.139.230) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On Thu, 17 Apr 2025 10:39:02 +0200, Philipp Stanner wrote:
-> cavium-thunderx enables its PCI device with pcim_enable_device(). This,
-> implicitly, switches the function pci_request_regions() into managed
-> mode, where it becomes a devres function.
+From: Jeff Layton <jlayton@kernel.org>
+Date: Thu, 17 Apr 2025 09:11:11 -0400
+> As a nearly-final step in register_netdevice(), finalize the name in the
+> refcount tracker, and register a debugfs file for it.
 > 
-> The PCI subsystem wants to remove this hybrid nature from its
-> interfaces. To do so, users of the aforementioned combination of
-> functions must be ported to non-hybrid functions.
-> 
-> [...]
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-
-Thanks!
-
-[1/2] spi: spi-cavium-thunderx: Use non-hybrid PCI devres API
-      commit: 23812bbd7d5fe27b6b2e0fe5a8ba4c6f37f26671
-[2/2] spi: pci1xxxx: Use non-hybrid PCI devres API
-      commit: d981e7b3f25fbabca9cdd02aa2a8f16d6f235fc2
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
