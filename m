@@ -1,139 +1,300 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AFC52DFA2F;
-	Thu, 17 Apr 2025 05:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0929D2DFA2F
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744868362; cv=none; b=M9dr53hx4vis/2DWuQrk2qjsJUmy4Eldrj7UXrYOEGfT2i+DErYyUsVHhFyy93OeMWMiVTE8K9gpT2D8aT1wXppr1GCjeGLPrUAFo1Gz8PelCf+w+uwphIvBvYE42pb/U7rOYQpENGg85XpXua/jC8R1ZHprH9BIXUm/plT8sek=
+	t=1744868370; cv=none; b=Gjj6j0GAGc5vSp8gYcphJzbu8Ze2tnbOI6GgbdbTC25CbxHBCk6Fmg0GMDvIFY65Y9kJErl6Q/ei91fWAPDkLE9TZ/UTnWA7ww3Y3/ngvFqf0WQhcY0VbPNX39zZ9VWXfa5m432N4VdU28Z/L53Cs11cpIhA+WLIfjl/wULFEzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744868362; c=relaxed/simple;
-	bh=Rzd2yE0g4gqaFtFYIhYtHCRfy1E0nHomvZgN21JrlzQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SsU7ztnB6P/YF6CCtCpWCww/g2TmdXH+dMjAlZLhuH7vm309nSIK0Qfm/+MFZY685AG5ueNaAiZhx3xaG3l954tywX2611L6LGN9Yd1QZpSEB6sh2Nb87QnZrLffBHa6eRpKHSE36I/INWUMnDGfeFjmDRncz+OlErTfYwSw+9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ye7w7YYE; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744868370; c=relaxed/simple;
+	bh=H6m5Tdy8+/JRNoNm7oMsQVHxeGyCxsf3G0xsF81+8rM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kcQ62B/bq/Sb9nGy4zo/2DO2OCOV0DOJ50iuY5iYD/W7pJHfO8Pp504HGqKQgoNp56HKFxmDt88duigJLXdhuWfDeEhMfZDCGERLCC7ZFe971McKXUVPxddA/+UK0Eilvueh5kNyON2f39BzD7Nuw+lSXR7SDo2d5c4QQxtKkmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T08ZG8D3; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ye7w7YYE"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-225df540edcso16549965ad.0;
-        Wed, 16 Apr 2025 22:39:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T08ZG8D3"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-736aaeed234so284487b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:39:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744868358; x=1745473158; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=24x0GQ0PkA6+zr9zBlahx+1SY3PmBt3xsKYJkkmlKZ0=;
-        b=Ye7w7YYEyPxR1TaB91AkeVoisCd2bel5Wrw8GvTSH3PJUn/yXeIkLNhRL0HMZFLbGw
-         uGmn+w6woPJk6E+NAID0HYGgc6JEtDh8Ae738w6RuLIKK1MS0sIepTO5qChDgV9OaBBG
-         D8AwHDAlaFwvvN7A2yyv/F79GNTt0HY9PMVHCcNd+UETp+Nwx0AZYfPZn7tnWiDWeQp6
-         vZtWO0zZBtci1wtXeZMqhKwjAB+IviJnuEq/2wFa2yMwBkjWRT+Vl2QESOIWFVZCy12K
-         gH23xASSOF4HBRN8eQz+D+HKqo8q+EQw0M8/Fgi/xxoIvCxZ2d0t9F/cE2zflB4V25qL
-         1F4Q==
+        d=linaro.org; s=google; t=1744868368; x=1745473168; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=f5v426PMT/rcYy79308JbFGxzA66xRwLsnLNveGybTY=;
+        b=T08ZG8D31AwiBMqwYV4paElnQEkUWmntcSNg2cgUF0M3Lh5Hru97Sd74WtQvf4O5jp
+         BvquM5Rf4Tnj8ALqgClX91ddrxWuG1ghEM7aPUYAEzG7S5mwgUpeeqT0+iBq8Wcms472
+         x7WarVdP2SNHpBOy8zmTFZpR5abWBB045InDppanFqIg5knX6YiTXfDvoWwCQ5Tq2oAw
+         7jGsyB4VIGOUCuA1CQP7AU/CtFXzMkUJdc/MDMqUhoGyo51OBh5DqwJQDPGHI+1uudTf
+         3KzLKGlxSGUZeu6XMkWXdkJwpGHc4EijtlLRwORJkGkHHdVyXAgydbxAm9pQCXSDm8Ds
+         NnkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744868358; x=1745473158;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1744868368; x=1745473168;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=24x0GQ0PkA6+zr9zBlahx+1SY3PmBt3xsKYJkkmlKZ0=;
-        b=DzvXHEq4SIOBymT1flpwjJ053+bkzDJFiyfLPUexmrW2IsC1u7uTxCIrbtURWytld3
-         3/nS6kFdBHKkiHWgzvbmM5lkFpqaAvc23x+vK0UDuczRO1rOwAqv51zjoxr3U/K2aUu5
-         liGKqTwKwQpIV3G/n9+SebCvXCO+EbSd728ivepvQR/8x7dPTN7DfDIubkIqCzAFPGeD
-         qrdxLhRvHLERfNHkNNhBgQ69nXt676TQCOKK/HPnlVwLWnywlEaDY3AoIRS1VWzQ2ZTI
-         Oxm1a/eoxyeCsvsQ2vAQ9sP0ZXGW9o9InSRnBdpywnQscP2FPsCXXRSWGCsDCQro1d4u
-         PqyA==
-X-Forwarded-Encrypted: i=1; AJvYcCWcn9zMTa7pDoYL4GnXGY0+2wZA3EznUWxSBkBA8ZmoCvolhflF4lIfZkeeobOQOpkfZJnhZQAE2Ik75qI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx69h1NEOcwCn7L00CamwtPstwyc5shTf62F452xBkoIAKXsFeY
-	8hUiavqb7PyH6FbiiiItbwgcBi+w/3f6oCriz20VX1pmMZizyryTImO0f8H1
-X-Gm-Gg: ASbGncs8qa7LpFzqoUYavz505W+Tp4Ez0SxQ/4ObVJmnPWotmrJrQMvHp+mLuvPGSIf
-	pBMYGgfWvhlMrawHlPBiY4pVi57h1yEfCsSHg42UYuGHL7IigQK6zHA5OM3MaPm2u73BPZ7rJFX
-	fJRi8/1pNl4j0+egJbZLQJGfZgM/4DhhTcigFq03pj6aY/hq3quhLbRR40kljd/XfXinKL2C3Qn
-	lAgCWBgSHsr2Tn84cfW1HWUPlQtUWsnvpwyYwUHiHH7rMijhTBzbw985S0SM0imcoHHG9TPHOOn
-	C6X8RSO766hbcqtqdySio1Zez4cMS72cfzmKXJD7/Zpd8V+nsQ==
-X-Google-Smtp-Source: AGHT+IEYI2mZ5pqppiYJEHMxeSskqOZW/A6Fj6tplgWB4OIO//BTRKIAqK+VzAW9q8NYNjUr/OKCnQ==
-X-Received: by 2002:a17:902:d587:b0:223:607c:1d99 with SMTP id d9443c01a7336-22c41b65eeemr27176765ad.0.1744868358225;
-        Wed, 16 Apr 2025 22:39:18 -0700 (PDT)
-Received: from [192.168.0.161] ([14.139.108.62])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33f1d199sm24591105ad.90.2025.04.16.22.39.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 22:39:17 -0700 (PDT)
-Message-ID: <f0f6604f-30aa-471a-9f21-40d423285499@gmail.com>
-Date: Thu, 17 Apr 2025 11:09:14 +0530
+        bh=f5v426PMT/rcYy79308JbFGxzA66xRwLsnLNveGybTY=;
+        b=dXYr6LQM0jTqUMfEaSQYFY9H65+hwzlnnjQHqV8p6UW8hfb+oirfKpUg/1MJWGfho8
+         9XvHwJ1Af2HLKscTl/ni15JWwGufTt4N4YjteBVEO63GUu2ZOTQfum359cb7MDNiNgCc
+         2V1Lv98QqrOL4J8Lg3fIEN+r0Pc53aE/sCZ/sus9tioyTtFq3FZPids8mVDrn0iSBxNB
+         BP+zsLo4V1ZFauKzwajtTYbZ9LGPQiQeJW6La0a9MBPXzHsqr2igl/egZp7EFKYjKAkD
+         OVQIXx1JmlSAW5eALP1YVltW+z7OhEYbElfeFquxZvB5gnotftgJ7R4WQAfl9Pz1ZA0F
+         m0Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCWF/H46F1hVRP0jX60b1Xs9nNZN2U9+7C/rtKJueIfnY6NhVBQp3K68zwWrr1aCMbqiT79MlyMXTaXfsF4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRxlyK4cBqE4G1fhpt+8O3odw7mqaA2Ll1zcLJwRZpRppDcqpa
+	UJTeNdKr2W+4y98vgaGqNGPf5zCCWavxNAre3E2d0AUVK1WC1/KwvjO7fwr28Q==
+X-Gm-Gg: ASbGncuCMiwVAQeA4DbAGhBusScv+TpOroJ3pCxYGsj9Df5q+3X9O+xFWgxxGq6X+Y2
+	eP2eKv/tI/J6mgjEv4/RiT0/dg7JFGytnkOWZLswaiojGMEhcg94s/PeH6RFPg1N3+kg0/0uIqs
+	LPLrRk0PmkspIjtddLKiqwl59STP4tO50zJ+VT/i4u5n79fb3FNp/zIqqX5dxIjEBTzAsmJ2k8f
+	jRuoxFBzMix0Y76UBsJlnLk5y1MLKnOgpFJIZOYgDndnHxa1UvXl5ELqPXueKpMPaFAoQTTuhct
+	8FTbOuSOsfFD0nz7WwV/FhHdYyzWXrzUJuMVHMsWWRrLuJS6
+X-Google-Smtp-Source: AGHT+IEndgfa94YN7BMZh5STCpP7wGFsaSVlAG8SMJDtj+c3nxd5AzXnq+goeqg6hGMJKi6M/Nlsaw==
+X-Received: by 2002:a05:6a20:ce48:b0:1f5:862b:a583 with SMTP id adf61e73a8af0-203b3fbe8ffmr7026509637.34.1744868368169;
+        Wed, 16 Apr 2025 22:39:28 -0700 (PDT)
+Received: from thinkpad ([120.60.54.0])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0b220a988bsm2235387a12.14.2025.04.16.22.39.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 22:39:27 -0700 (PDT)
+Date: Thu, 17 Apr 2025 11:09:21 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof Wilczy??ski <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, dingwei@marvell.com, cassel@kernel.org, 
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 2/4] PCI/ERR: Add support for resetting the slot in a
+ platforms specific way
+Message-ID: <jb4iq364iqwk3swux5cjiczyvdyrkjtqjclefyfjrntepvroyn@7vbvbzu3pd3p>
+References: <20250404-pcie-reset-slot-v1-0-98952918bf90@linaro.org>
+ <20250404-pcie-reset-slot-v1-2-98952918bf90@linaro.org>
+ <Z--cY5Uf6JyTYL9y@wunner.de>
+ <3dokyirkf47lqxgx5k2ybij5b5an6qnceifsub3mcmjvzp3kdb@sm7f2jxxepdc>
+ <Z__AyQeZmXiNwT7c@wunner.de>
+ <rrqn7hlefn7klaczi2jkfta72pwmtentj3zp37yvw3brwpnalk@3eapwfeo5y4d>
+ <aABJ_u8-FXeJoPyF@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dma: idxd: cdev: Fix uninitialized use of sva in
- idxd_cdev_open
-To: Dave Jiang <dave.jiang@intel.com>, vinicius.gomes@intel.com,
- vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250410110216.21592-1-purvayeshi550@gmail.com>
- <23417f4a-05fe-44d3-b257-7a5991d252cb@intel.com>
-Content-Language: en-US
-From: Purva Yeshi <purvayeshi550@gmail.com>
-In-Reply-To: <23417f4a-05fe-44d3-b257-7a5991d252cb@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aABJ_u8-FXeJoPyF@wunner.de>
 
-On 11/04/25 02:30, Dave Jiang wrote:
+On Thu, Apr 17, 2025 at 02:23:26AM +0200, Lukas Wunner wrote:
+> On Wed, Apr 16, 2025 at 08:34:21PM +0530, Manivannan Sadhasivam wrote:
+> > I don't think it is possible to get rid of the powerpc version. It has
+> > its own pci_dev::sysdata pointing to 'struct pci_controller' pointer
+> > which is internal to powerpc arch code. And the generic code would need
+> > 'struct pci_host_bridge' to access the callback.
 > 
+> Below is my proposal to convert powerpc to the new ->slot_reset() callback.
+> Compile-tested only.
 > 
-> On 4/10/25 4:02 AM, Purva Yeshi wrote:
->> Fix Smatch-detected issue:
->> drivers/dma/idxd/cdev.c:321 idxd_cdev_open() error:
->> uninitialized symbol 'sva'.
->>
->> 'sva' pointer may be used uninitialized in error handling paths.
->> Specifically, if PASID support is enabled and iommu_sva_bind_device()
->> returns an error, the code jumps to the cleanup label and attempts to
->> call iommu_sva_unbind_device(sva) without ensuring that sva was
->> successfully assigned. This triggers a Smatch warning about an
->> uninitialized symbol.
->>
->> Initialize sva to NULL at declaration and add a check using
->> IS_ERR_OR_NULL() before unbinding the device. This ensures the
->> function does not use an invalid or uninitialized pointer during
->> cleanup.
->>
->> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> Feel free to include this in your series, alternatively I can submit it
+> to powerpc maintainers once your series has landed.  Thanks!
 > 
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-Hi Dave,
-
-Thank you for the review and the Reviewed-by tag.
-
->> ---
->>   drivers/dma/idxd/cdev.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
->> index ff94ee892339..7bd031a60894 100644
->> --- a/drivers/dma/idxd/cdev.c
->> +++ b/drivers/dma/idxd/cdev.c
->> @@ -222,7 +222,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
->>   	struct idxd_wq *wq;
->>   	struct device *dev, *fdev;
->>   	int rc = 0;
->> -	struct iommu_sva *sva;
->> +	struct iommu_sva *sva = NULL;
->>   	unsigned int pasid;
->>   	struct idxd_cdev *idxd_cdev;
->>   
->> @@ -317,7 +317,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
->>   	if (device_user_pasid_enabled(idxd))
->>   		idxd_xa_pasid_remove(ctx);
->>   failed_get_pasid:
->> -	if (device_user_pasid_enabled(idxd))
->> +	if (device_user_pasid_enabled(idxd) && !IS_ERR_OR_NULL(sva))
->>   		iommu_sva_unbind_device(sva);
->>   failed:
->>   	mutex_unlock(&wq->wq_lock);
+> -- >8 --
+> 
+> From: Lukas Wunner <lukas@wunner.de>
+> Subject: [PATCH] powerpc/powernv/pci: Migrate to pci_host_bridge::reset_slot
+>  callback
+> 
+> struct pci_host_bridge has just been amended with a ->reset_slot()
+> callback to allow for a per-host-bridge Secondary Bus Reset procedure.
+> 
+> PowerNV needs a platform-specific reset procedure and has historically
+> implemented it by overriding pcibios_reset_secondary_bus().
+> 
+> Migrate PowerNV to the new ->reset_slot() callback for simplicity and
+> cleanliness.  Assign the callback as soon as the pci_host_bridge is
+> allocated through the following call chain:
+> 
+> pcibios_init()
+>   pcibios_scan_phb()
+>     pci_create_root_bus()
+>       pci_register_host_bridge()
+>         pcibios_root_bridge_prepare()
+> 
+> The powerpc-specific implementation of pcibios_reset_secondary_bus() can
+> thus be deleted and the remaining default implementation in the PCI core
+> can be made private.  The ->reset_secondary_bus() callback in struct
+> pci_controller_ops likewise becomes obsolete and can be deleted.
 > 
 
-Best regards,
-Purva
+Looks good to me, thanks! I think it would be better if it is submitted once my
+series has landed in mainline (just to avoid immutable branch hassle between
+powerpc and PCI trees).
+
+- Mani
+
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> ---
+>  arch/powerpc/include/asm/pci-bridge.h        |  1 -
+>  arch/powerpc/kernel/pci-common.c             | 12 ------------
+>  arch/powerpc/platforms/powernv/eeh-powernv.c | 14 +++++++++-----
+>  arch/powerpc/platforms/powernv/pci-ioda.c    |  9 +++++++--
+>  arch/powerpc/platforms/powernv/pci.h         |  3 ++-
+>  drivers/pci/pci.c                            |  2 +-
+>  include/linux/pci.h                          |  1 -
+>  7 files changed, 19 insertions(+), 23 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
+> index 2aa3a091ef20..0de09fc90641 100644
+> --- a/arch/powerpc/include/asm/pci-bridge.h
+> +++ b/arch/powerpc/include/asm/pci-bridge.h
+> @@ -36,7 +36,6 @@ struct pci_controller_ops {
+>  					    unsigned long type);
+>  	void		(*setup_bridge)(struct pci_bus *bus,
+>  					unsigned long type);
+> -	void		(*reset_secondary_bus)(struct pci_dev *pdev);
+>  
+>  #ifdef CONFIG_PCI_MSI
+>  	int		(*setup_msi_irqs)(struct pci_dev *pdev,
+> diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
+> index eac84d687b53..dad15fbec4e0 100644
+> --- a/arch/powerpc/kernel/pci-common.c
+> +++ b/arch/powerpc/kernel/pci-common.c
+> @@ -233,18 +233,6 @@ void pcibios_setup_bridge(struct pci_bus *bus, unsigned long type)
+>  		hose->controller_ops.setup_bridge(bus, type);
+>  }
+>  
+> -void pcibios_reset_secondary_bus(struct pci_dev *dev)
+> -{
+> -	struct pci_controller *phb = pci_bus_to_host(dev->bus);
+> -
+> -	if (phb->controller_ops.reset_secondary_bus) {
+> -		phb->controller_ops.reset_secondary_bus(dev);
+> -		return;
+> -	}
+> -
+> -	pci_reset_secondary_bus(dev);
+> -}
+> -
+>  resource_size_t pcibios_default_alignment(void)
+>  {
+>  	if (ppc_md.pcibios_default_alignment)
+> diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
+> index db3370d1673c..9b9517cb6ab7 100644
+> --- a/arch/powerpc/platforms/powernv/eeh-powernv.c
+> +++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
+> @@ -890,18 +890,22 @@ static int pnv_eeh_bridge_reset(struct pci_dev *pdev, int option)
+>  	return (rc == OPAL_SUCCESS) ? 0 : -EIO;
+>  }
+>  
+> -void pnv_pci_reset_secondary_bus(struct pci_dev *dev)
+> +int pnv_pci_reset_secondary_bus(struct pci_host_bridge *host,
+> +				struct pci_dev *dev)
+>  {
+>  	struct pci_controller *hose;
+> +	int rc_hot, rc_dea;
+>  
+>  	if (pci_is_root_bus(dev->bus)) {
+>  		hose = pci_bus_to_host(dev->bus);
+> -		pnv_eeh_root_reset(hose, EEH_RESET_HOT);
+> -		pnv_eeh_root_reset(hose, EEH_RESET_DEACTIVATE);
+> +		rc_hot = pnv_eeh_root_reset(hose, EEH_RESET_HOT);
+> +		rc_dea = pnv_eeh_root_reset(hose, EEH_RESET_DEACTIVATE);
+>  	} else {
+> -		pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
+> -		pnv_eeh_bridge_reset(dev, EEH_RESET_DEACTIVATE);
+> +		rc_hot = pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
+> +		rc_dea = pnv_eeh_bridge_reset(dev, EEH_RESET_DEACTIVATE);
+>  	}
+> +
+> +	return rc_hot ? : rc_dea ? : 0;
+>  }
+>  
+>  static void pnv_eeh_wait_for_pending(struct pci_dn *pdn, const char *type,
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> index ae4b549b5ca0..e1b75a4bc681 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -2145,6 +2145,12 @@ static void pnv_pci_ioda_fixup(void)
+>  #endif
+>  }
+>  
+> +static int pnv_pci_root_bridge_prepare(struct pci_host_bridge *bridge)
+> +{
+> +	bridge->reset_slot = pnv_pci_reset_secondary_bus;
+> +	return 0;
+> +}
+> +
+>  /*
+>   * Returns the alignment for I/O or memory windows for P2P
+>   * bridges. That actually depends on how PEs are segmented.
+> @@ -2504,7 +2510,6 @@ static const struct pci_controller_ops pnv_pci_ioda_controller_ops = {
+>  	.release_device		= pnv_pci_release_device,
+>  	.window_alignment	= pnv_pci_window_alignment,
+>  	.setup_bridge		= pnv_pci_fixup_bridge_resources,
+> -	.reset_secondary_bus	= pnv_pci_reset_secondary_bus,
+>  	.shutdown		= pnv_pci_ioda_shutdown,
+>  #ifdef CONFIG_IOMMU_API
+>  	.device_group		= pnv_pci_device_group,
+> @@ -2515,7 +2520,6 @@ static const struct pci_controller_ops pnv_npu_ocapi_ioda_controller_ops = {
+>  	.enable_device_hook	= pnv_ocapi_enable_device_hook,
+>  	.release_device		= pnv_pci_release_device,
+>  	.window_alignment	= pnv_pci_window_alignment,
+> -	.reset_secondary_bus	= pnv_pci_reset_secondary_bus,
+>  	.shutdown		= pnv_pci_ioda_shutdown,
+>  };
+>  
+> @@ -2724,6 +2728,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+>  	}
+>  
+>  	ppc_md.pcibios_default_alignment = pnv_pci_default_alignment;
+> +	ppc_md.pcibios_root_bridge_prepare = pnv_pci_root_bridge_prepare;
+>  
+>  #ifdef CONFIG_PCI_IOV
+>  	ppc_md.pcibios_fixup_sriov = pnv_pci_ioda_fixup_iov;
+> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+> index 42075501663b..44e8969c7729 100644
+> --- a/arch/powerpc/platforms/powernv/pci.h
+> +++ b/arch/powerpc/platforms/powernv/pci.h
+> @@ -275,7 +275,8 @@ extern struct iommu_table *pnv_pci_table_alloc(int nid);
+>  
+>  extern void pnv_pci_init_ioda2_phb(struct device_node *np);
+>  extern void pnv_pci_init_npu2_opencapi_phb(struct device_node *np);
+> -extern void pnv_pci_reset_secondary_bus(struct pci_dev *dev);
+> +extern int pnv_pci_reset_secondary_bus(struct pci_host_bridge *host,
+> +				       struct pci_dev *dev);
+>  extern int pnv_eeh_phb_reset(struct pci_controller *hose, int option);
+>  
+>  extern struct pnv_ioda_pe *pnv_pci_bdfn_to_pe(struct pnv_phb *phb, u16 bdfn);
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 13709bb898a9..fe66d69c6429 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4980,7 +4980,7 @@ void pci_reset_secondary_bus(struct pci_dev *dev)
+>  	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
+>  }
+>  
+> -void __weak pcibios_reset_secondary_bus(struct pci_dev *dev)
+> +static void pcibios_reset_secondary_bus(struct pci_dev *dev)
+>  {
+>  	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+>  	int ret;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 76e977af2d52..43d952361e84 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1398,7 +1398,6 @@ int pci_probe_reset_slot(struct pci_slot *slot);
+>  int pci_probe_reset_bus(struct pci_bus *bus);
+>  int pci_reset_bus(struct pci_dev *dev);
+>  void pci_reset_secondary_bus(struct pci_dev *dev);
+> -void pcibios_reset_secondary_bus(struct pci_dev *dev);
+>  void pci_update_resource(struct pci_dev *dev, int resno);
+>  int __must_check pci_assign_resource(struct pci_dev *dev, int i);
+>  void pci_release_resource(struct pci_dev *dev, int resno);
+> -- 
+> 2.43.0
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
