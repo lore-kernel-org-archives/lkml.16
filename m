@@ -1,299 +1,287 @@
-Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2060.outbound.protection.outlook.com [40.107.220.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15183226CFC
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744883094; cv=none; b=XoDhWJUP4ZVPb16cROWmVOJVdnEeLKHVOTY1M6mBtXG/AKPE/1BRkBCljwRMeFM2neQk1BE2yj1hsTPg61L1XOE0J7uGbl0/J0tmLpEzDntNwsi/+yYhtRXQneIW3fnJ7dyg/HWwSggy2r23dxMwLgHXEj4Dks948if0I52VYGs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744883094; c=relaxed/simple;
-	bh=DZ7q0YDfE7N1bPL/mA+UEDFwjr40WMySwkGTehTFR3o=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=hF8IergoYw3T8fjaKAoj4pmx31pU+Q2qF+RbCt/9QdrrX+MqwwMxs2R1vq4SzzIyA3AFK5X5HnHyLF7NKciGNbMDtdx16N70NsHaB/udO1KgCJkCeyLNKTMU5mHEP5hbJYixFvJMMTGDaLvEQjHM8zs7JB8iyDkAQiAckuXuZdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mclapinski.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NbfquUS4; arc=none smtp.client-ip=209.85.208.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mclapinski.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C14019006B
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744883150; cv=fail; b=GLhsJQwJF3FHBzrQEWVcWFH/oD/oAZBPj3bk1zCIvxy5SH3RAzB88K+RnsRzVg8B6V/4iKmSOZqkol3sbaZnS+wE8Xr45PgLjbPuCiveXOtZTZKNt1Lr/8b7So3zlE5eFakO+CKcMc4pYGBYg6kNxexFKmXxnQlMU2thOJ6U4BU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744883150; c=relaxed/simple;
+	bh=N00pbzQckc2qLlg9rLTv9LX3gMDvANhKHIL5jAQN6ls=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XsxzfKdAVADLeIX7f1kbQEad8fKpn+jF1VVutXNMjHoPScOSCXwgPlYdHiHtIVW1HKGsGQ3XcOWEZsJQTurSpOm0zm5SxL9dcAgJ1P+lp042kjKaiYqw4NNm8h3vK9vmnmqp8maMYUnkUe00gSxGRq+9RumqIlwt0iZXuhbGa0s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=aukJIfET; arc=fail smtp.client-ip=40.107.220.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NbfquUS4"
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5e5c76fd898so499832a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 02:44:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744883091; x=1745487891; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=wD7Qk4RrTd9xfQxmaol+oD/P6dpfTs5U+U+3JhrL4nM=;
-        b=NbfquUS4AEZ82PG/scRkg544v26Qxe9aMHqw5doSQmmFoQC8KhcfKaAR9MNzsE6dz9
-         pkblckiCXvE9ssUOUTib6oouBQHuqFqNlJzXn1XBLIzSMnkqhrLAMrRAm5/3jaGAQ5PW
-         Ad0x5VAcJ56hfZ/EK+tycYpgLgt46meAQIXJ7tS7Ve8BXbLJqUKxdZ2NyJLdUXp/vw5S
-         5F0oiqWz1v0OgMwtQo0jrW+1LafWdNvBQg78/IH7UASptIbV6qn2SLshPeENIh7pYa3/
-         lf2dp2TiTmZiWnlzk+0ZIjrBJu9z5wbR8mhPkyrz+FoP0EGqmej2lOhh2v7/kIe6b/av
-         Q+aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744883091; x=1745487891;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wD7Qk4RrTd9xfQxmaol+oD/P6dpfTs5U+U+3JhrL4nM=;
-        b=jRgNKBKDtelaPrtv9xtmKDADL2VHpk/1mVT4/bQxYPmit7dXHNtcAhHm+/AknTssM8
-         mNcTXwC68VSgtaAj83eTWPNwk/WFHRvc5kAy++LyglvRoZj51UJbFWqxlLxsOv2dYYxG
-         LVpjqiVvAgZ3vVC98DskjaN9f58nkZmm0/0/OUYarCSP4LT+kPIacf6B7bgHlA5PWNXK
-         XL6MsOXULzkzZcn2bNstonC/s+oRKeWlAOu2L2I8cweXeyQkHvL0Q1efKwiWEoorBCr+
-         jrHVifgQsUohCYuFq//Q7ErMB0xQVg/+f3jRlr40DhW7YnnM5boTcUivowkVIekRgSrR
-         JKWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/s4CiaMUeh9HPUkCbVHEdtIgJUEdFnnNeSdYh4zRawPw6gSpo3fwoLT41fFX64oeLsxJGPaxjOsd0tRw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuR4ejCpGptTAyAM1wHIJNbfP/N+gViBqf+RDJycS6b4SpIiBU
-	EjuNgIVzrOen/AAu6y+zvdTJTds30G6PhUjrHm1Ljc6pNEx4En5MiVHgyCqIFdn6TR5+P+/x/F3
-	wDCm6xbxq/vSosYhedw==
-X-Google-Smtp-Source: AGHT+IF3ziPzRL1h03+T3uQPQ+OVjHXAwzHdaqiQIAuXSzMcxLZdGld+ARV/oDwmpyIVSm/HF3CzkYqt6bQHayeI
-X-Received: from edra24.prod.google.com ([2002:aa7:d918:0:b0:5ec:d794:927f])
- (user=mclapinski job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6402:3549:b0:5e1:dac1:fa22 with SMTP id 4fb4d7f45d1cf-5f4b75dd0b8mr3938873a12.21.1744883091409;
- Thu, 17 Apr 2025 02:44:51 -0700 (PDT)
-Date: Thu, 17 Apr 2025 11:44:32 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="aukJIfET"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OQlHVTCV+2/+E2d0MxzGnSIzTY45IIFX/9mEV3Q5tMXo6vij2MmwIKbxWM4sX6bG6erz9O/zZFW1nnVoaWDPYw0yteDvFU8T9dmYskXF7z+0a8i/+bKL4mjd5K9LTm6tOhwqIs1NSUb3pkZnki9c0A3u55PrMGLfFoVi0d+8D0jozdIg2XgBIFkGzFkvQfkQbpQk0HIBGgZJuZwJjO37905maVyWKsnRqHCTYt0ji1ETiBc9hzqVqXLxEKtuKgOJXD04MFB6rdGoGXMFKKQ5/7fB/ps0J7CVjtXISp9huGziyzr5tBmRv/PR++31w0bPp5QTs7RKDfzlrosxfRqlzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pBiuECYcUxoq3usEhaA0tRU83TdxRyPTYC2xV5RdhZg=;
+ b=AbZABrXwG9NUcntCrzOyiJTC0EzLhL5GqKAqBSqafxLynTpuqjshbBSlWY93ZweGnPLe0JeMTYf42wt3Q2arqoU2BM2Ijo0Ml89TdA9AzwFm43Br/fDcPhy8dnBDYA8ouCSuWrF+oG0IZXTN+Qbx4BZpx3USrnuNTWWcTLRx/eUKXczwDcv3aczMyImQp6SCkXgeir/PZP4QoffV+a7YUxZNesrn34/i3ZkmAKv+b7UXF2i7Ge0B4HOSkQRGwdxN4NDx5ClNmlL3CwirUM+LTTihagGuu1G+jaFxlY7br9PIzQRgS1EA5ztJedt44cGIQTOhTREe8zyvDfgnDZI1kw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=lists.infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pBiuECYcUxoq3usEhaA0tRU83TdxRyPTYC2xV5RdhZg=;
+ b=aukJIfETJPRHeudbrHAfqHbUOcjeNlfZztIEaGbRtms+0zmJCT5EdIiNHYYCg085Q0DjQKnlxpvrZecTCVvLSzW2Z67fThNRiAFf7NKE0EheAhWzGvbA0KbFSvTtRtAlurGOWuRLoLWWgDy+2hutKXbT/3dNvEih2iqzV52DnIE=
+Received: from MN2PR08CA0003.namprd08.prod.outlook.com (2603:10b6:208:239::8)
+ by LV2PR12MB5944.namprd12.prod.outlook.com (2603:10b6:408:14f::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Thu, 17 Apr
+ 2025 09:45:45 +0000
+Received: from BN2PEPF00004FBD.namprd04.prod.outlook.com
+ (2603:10b6:208:239:cafe::42) by MN2PR08CA0003.outlook.office365.com
+ (2603:10b6:208:239::8) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.22 via Frontend Transport; Thu,
+ 17 Apr 2025 09:45:45 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ BN2PEPF00004FBD.mail.protection.outlook.com (10.167.243.183) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8655.12 via Frontend Transport; Thu, 17 Apr 2025 09:45:44 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 17 Apr
+ 2025 04:45:44 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 17 Apr
+ 2025 04:45:44 -0500
+Received: from xsjwillw50.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Thu, 17 Apr 2025 04:45:43 -0500
+From: Madhav Bhatt <madhav.bhatt@amd.com>
+To: <michal.simek@amd.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] firmware: xilinx: Add debugfs support for PM_GET_NODE_STATUS
+Date: Thu, 17 Apr 2025 02:45:43 -0700
+Message-ID: <20250417094543.3873507-1-madhav.bhatt@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.777.g153de2bbd5-goog
-Message-ID: <20250417094432.3690181-1-mclapinski@google.com>
-Subject: [PATCH 1/1] libnvdimm/e820: Add a new parameter to configure many
- regions per e820 entry
-From: Michal Clapinski <mclapinski@google.com>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Jonathan Corbet <corbet@lwn.net>
-Cc: nvdimm@lists.linux.dev, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Michal Clapinski <mclapinski@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB05.amd.com: madhav.bhatt@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF00004FBD:EE_|LV2PR12MB5944:EE_
+X-MS-Office365-Filtering-Correlation-Id: 94d9b335-6d28-4787-86de-08dd7d949ff4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?PtqT3mFt0bW/2f7YJlqRAt9BcFFgtwEyQk0cLqRferwxc9OC6x9wuJXQAICm?=
+ =?us-ascii?Q?5sgrX+bKj4UFbOgArD42bEQ19aqcE9vfKsSE7ya60S621iwUn4WmHBg5WOrX?=
+ =?us-ascii?Q?iij3+gcK804gEHrEvoGiB5nY6wVVwCx7soD7T8jGqqZoyooob6U/9PqUxfui?=
+ =?us-ascii?Q?h4SxEDcPRBIOgFGvoBUviwdd+1o+UCru7jcnbEP9XgXrlGPY3Se5chhc6kaf?=
+ =?us-ascii?Q?Nm8piZvcbbBXTL/Lm3woP9Opc9vjUygJgDA2MhN4owYYmV089mcNFnYoNfQN?=
+ =?us-ascii?Q?zZtoCjDVbHhsuexNE5RPA6D7vFwvDQdlUeR4VO14C+WDcefcdbUKb1xfYZsF?=
+ =?us-ascii?Q?MUK0qe7cGSt97IPf+8fGv6nqL4DER7hpzRZ4OJYz0Uje5YWU5CRr1Me/7I/X?=
+ =?us-ascii?Q?5QKPTVRuvvl1qU0IJAsM+PF7pWaZrEb/o+N2EZzf0pMPQM7ues9nmGuXZUYk?=
+ =?us-ascii?Q?BZEUarRpzXlr9jgHaLBV5k3sGnpo22jDmtU6VmiWiyJipPXWWToKCgBjs6qj?=
+ =?us-ascii?Q?rwzJrQ5ucFvTdx6SRW9sL/tA0Cr+yzuBxXRF5/RI+wT/TnEHbxMD6F/flems?=
+ =?us-ascii?Q?tWiarrGRkkFHq0RWZARPJx2kkgO5RF8Mt3Rzb1w3NJJY/PmjKhHP/3zbHShh?=
+ =?us-ascii?Q?uEQxGn2r5yKrf3g18lwLxKjpsqi/EHl5nRmIDyk/GtohUIi6hM13fwn3WDwG?=
+ =?us-ascii?Q?oDsE3JhuIKDqsY9iHBfmpqaiuCtnYIlrZA9wui6M2zn1DAvq2oOwi4HBs19L?=
+ =?us-ascii?Q?CohQmUXZdTWeGvF+3OH3eWl0arhToo/jeNM5yB/zGm9HR4C5XCElVo1xKx+i?=
+ =?us-ascii?Q?tFi51HqXhhjjExnQQeuIF0pYS8L5kcZRUSnbPjSXMpOiyYVscwF7E6V0sPFs?=
+ =?us-ascii?Q?NhfedNDOOXonJw5/vxcNlNDpDgNxE5bcyhR/HenqNrLvFt0u5p4RHtOvv6GF?=
+ =?us-ascii?Q?k9XM3ZbQS7c0ja9S2qL4jtYQIfXWO9BrpK8+0Srbmg+gWYTbGi6VRgSYbt42?=
+ =?us-ascii?Q?FcYKI6ZcmdQuFITSbi4ll9PtoZAvL/mUjasUiXFZZbtUXSujzeJNdSao8S+a?=
+ =?us-ascii?Q?lyi0K9nyWV4fXsjq3mx4piNj7KhkNKLnvgGCx2z42dSC0nTG6a3jQMow1voY?=
+ =?us-ascii?Q?OyiyX1rhM8QD4mL6y/8z2WQPzh7NHj97TphuJx1KYN+2pjRbSTPtKbtXt0SK?=
+ =?us-ascii?Q?Olx0DvGq4U2hTreSG2auhtl6OptxM9ITtnuFPoAmWoACIvGlNJ1108sowFRo?=
+ =?us-ascii?Q?QPazolhRIhCgKw+smm3iRDmDoVyWHjOcw8MKc29Ss6gHqSQZjw4AG8FMClJX?=
+ =?us-ascii?Q?bXA7ncNmOgS0u7LG5/RdHMg5L13k9lQgv0hv7eixFcPrUCzoNqUlz6y3N30d?=
+ =?us-ascii?Q?tZq3O0w56NFeO1Z0FX7COTXA649d2xqr7pv1oYoOTIMx+tqx9/mKSRCby8NW?=
+ =?us-ascii?Q?Q0FBvBRdf3qvBZ4j40Xl/RoxfnBfaY/VtUW518fu2yAe27pQtsGHYI5H8Y2O?=
+ =?us-ascii?Q?Vkfv+UkCnnwTgmxp5swykqZm3CYqJ3WZe9ha?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 09:45:44.7462
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 94d9b335-6d28-4787-86de-08dd7d949ff4
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF00004FBD.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5944
 
-Currently, the user has to specify each memory region to be used with
-nvdimm via the memmap parameter. Due to the character limit of the
-command line, this makes it impossible to have a lot of pmem devices.
-This new parameter solves this issue by allowing users to divide
-one e820 entry into many nvdimm regions.
+Add new debug interface to support PM_GET_NODE_STATUS to get the node
+information like requirements and usage.
 
-This change is needed for the hypervisor live update. VMs' memory will
-be backed by those emulated pmem devices. To support various VM shapes
-I want to create devdax devices at 1GB granularity similar to hugetlb.
+The debugfs firmware driver interface is only meant for testing and
+debugging EEMI APIs. Hence, it is by-default disabled in production
+systems.
 
-It's also possible to expand this parameter in the future,
-e.g. to specify the type of the device (fsdax/devdax).
-
-Signed-off-by: Michal Clapinski <mclapinski@google.com>
+Signed-off-by: Madhav Bhatt <madhav.bhatt@amd.com>
 ---
- .../admin-guide/kernel-parameters.txt         |   7 +
- drivers/nvdimm/e820.c                         | 149 +++++++++++++++++-
- 2 files changed, 153 insertions(+), 3 deletions(-)
+ drivers/firmware/xilinx/zynqmp-debug.c | 13 ++++++++
+ drivers/firmware/xilinx/zynqmp.c       | 41 +++++++++++++++++++++++++-
+ include/linux/firmware/xlnx-zynqmp.h   | 12 +++++++-
+ 3 files changed, 64 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fb8752b42ec85..63af03eb850ed 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3849,6 +3849,13 @@
- 
- 	n2=		[NET] SDL Inc. RISCom/N2 synchronous serial card
- 
-+	nd_e820.pmem=ss[KMG],nn[KMG]
-+			Divide one e820 entry specified by memmap=x!ss
-+			(that is starting at ss) into pmem devices of size nn.
-+			There can be only one pmem parameter per one e820
-+			entry. The size of the e820 entry has to be divisible
-+			by the device size.
-+
- 	netdev=		[NET] Network devices parameters
- 			Format: <irq>,<io>,<mem_start>,<mem_end>,<name>
- 			Note that mem_start is often overloaded to mean
-diff --git a/drivers/nvdimm/e820.c b/drivers/nvdimm/e820.c
-index 41c67dfa80158..581fe01553a22 100644
---- a/drivers/nvdimm/e820.c
-+++ b/drivers/nvdimm/e820.c
-@@ -8,6 +8,87 @@
- #include <linux/libnvdimm.h>
- #include <linux/module.h>
- #include <linux/numa.h>
-+#include <linux/moduleparam.h>
-+#include <linux/xarray.h>
-+
-+#define MAX_PMEM_ARGUMENTS 32
-+
-+static char *pmem[MAX_PMEM_ARGUMENTS];
-+static int pmem_count;
-+
-+static int pmem_param_set(const char *arg, const struct kernel_param *kp)
-+{
-+	int rc;
-+	struct kernel_param kp_new;
-+
-+	kp_new.name = kp->name;
-+	kp_new.arg = &pmem[pmem_count];
-+	rc = param_set_charp(arg, &kp_new);
-+	if (rc)
-+		return rc;
-+	++pmem_count;
-+	return 0;
-+}
-+
-+static void pmem_param_free(void *arg)
-+{
-+	int i;
-+
-+	for (i = 0; i < pmem_count; ++i)
-+		param_free_charp(&pmem[i]);
-+
-+	pmem_count = 0;
-+}
-+
-+static const struct kernel_param_ops pmem_param_ops = {
-+	.set =		pmem_param_set,
-+	.free =		pmem_param_free,
-+};
-+module_param_cb(pmem, &pmem_param_ops, NULL, 0);
-+
-+struct pmem_entry {
-+	unsigned long region_size;
-+};
-+
-+static int parse_one_pmem_arg(struct xarray *xarray, char *p)
-+{
-+	int rc = -EINVAL;
-+	char *oldp;
-+	unsigned long start;
-+	struct pmem_entry *entry = kmalloc(sizeof(*entry), GFP_KERNEL);
-+
-+	if (!entry)
-+		return -ENOMEM;
-+
-+	oldp = p;
-+	start = memparse(p, &p);
-+	if (p == oldp || *p != ',') {
-+		pr_err("Can't parse pmem start: %s\n", oldp);
-+		goto err;
-+	}
-+	++p;
-+
-+	oldp = p;
-+	entry->region_size = memparse(p, &p);
-+	if (p == oldp || (*p != ',' && *p != '\0')) {
-+		pr_err("Can't parse pmem region size: %s\n", oldp);
-+		goto err;
-+	}
-+
-+	if (*p != '\0')
-+		pr_warn("Unexpected parameters in pmem arg: %s\n", p);
-+
-+	rc = xa_err(xa_store(xarray, start, entry, GFP_KERNEL));
-+	if (rc) {
-+		pr_err("Failed to store 0x%lx in xarray, error %d\n", start, rc);
-+		goto err;
-+	}
-+	return 0;
-+
-+err:
-+	kfree(entry);
-+	return rc;
-+}
- 
- static void e820_pmem_remove(struct platform_device *pdev)
- {
-@@ -16,10 +97,9 @@ static void e820_pmem_remove(struct platform_device *pdev)
- 	nvdimm_bus_unregister(nvdimm_bus);
+diff --git a/drivers/firmware/xilinx/zynqmp-debug.c b/drivers/firmware/xilinx/zynqmp-debug.c
+index 22853ae0efdf..36efb827f3da 100644
+--- a/drivers/firmware/xilinx/zynqmp-debug.c
++++ b/drivers/firmware/xilinx/zynqmp-debug.c
+@@ -3,6 +3,7 @@
+  * Xilinx Zynq MPSoC Firmware layer for debugfs APIs
+  *
+  *  Copyright (C) 2014-2018 Xilinx, Inc.
++ *  Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc.
+  *
+  *  Michal Simek <michal.simek@amd.com>
+  *  Davorin Mista <davorin.mista@aggios.com>
+@@ -38,6 +39,7 @@ static struct pm_api_info pm_api_list[] = {
+ 	PM_API(PM_RELEASE_NODE),
+ 	PM_API(PM_SET_REQUIREMENT),
+ 	PM_API(PM_GET_API_VERSION),
++	PM_API(PM_GET_NODE_STATUS),
+ 	PM_API(PM_REGISTER_NOTIFIER),
+ 	PM_API(PM_RESET_ASSERT),
+ 	PM_API(PM_RESET_GET_STATUS),
+@@ -167,6 +169,17 @@ static int process_api_request(u32 pm_id, u64 *pm_api_arg, u32 *pm_api_ret)
+ 						pm_api_arg[3] ? pm_api_arg[3] :
+ 						ZYNQMP_PM_REQUEST_ACK_BLOCKING);
+ 		break;
++	case PM_GET_NODE_STATUS:
++		ret = zynqmp_pm_get_node_status(pm_api_arg[0],
++						&pm_api_ret[0],
++						&pm_api_ret[1],
++						&pm_api_ret[2]);
++		if (!ret)
++			sprintf(debugfs_buf,
++				"GET_NODE_STATUS:\n\tNodeId: %llu\n\tStatus: %u\n\tRequirements: %u\n\tUsage: %u\n",
++				pm_api_arg[0], pm_api_ret[0],
++				pm_api_ret[1], pm_api_ret[2]);
++		break;
+ 	case PM_REGISTER_NOTIFIER:
+ 		ret = zynqmp_pm_register_notifier(pm_api_arg[0],
+ 						  pm_api_arg[1] ?
+diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+index 7356e860e65c..dea6c53511ab 100644
+--- a/drivers/firmware/xilinx/zynqmp.c
++++ b/drivers/firmware/xilinx/zynqmp.c
+@@ -3,7 +3,7 @@
+  * Xilinx Zynq MPSoC Firmware layer
+  *
+  *  Copyright (C) 2014-2022 Xilinx, Inc.
+- *  Copyright (C) 2022 - 2024, Advanced Micro Devices, Inc.
++ *  Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc.
+  *
+  *  Michal Simek <michal.simek@amd.com>
+  *  Davorin Mista <davorin.mista@aggios.com>
+@@ -1413,6 +1413,45 @@ int zynqmp_pm_set_tcm_config(u32 node_id, enum rpu_tcm_comb tcm_mode)
  }
+ EXPORT_SYMBOL_GPL(zynqmp_pm_set_tcm_config);
  
--static int e820_register_one(struct resource *res, void *data)
-+static int register_one_pmem(struct resource *res, struct nvdimm_bus *nvdimm_bus)
- {
- 	struct nd_region_desc ndr_desc;
--	struct nvdimm_bus *nvdimm_bus = data;
- 	int nid = phys_to_target_node(res->start);
- 
- 	memset(&ndr_desc, 0, sizeof(ndr_desc));
-@@ -32,12 +112,64 @@ static int e820_register_one(struct resource *res, void *data)
- 	return 0;
- }
- 
-+struct walk_data {
-+	struct xarray *pmem_xarray;
-+	struct nvdimm_bus *nvdimm_bus;
-+};
-+
-+static int e820_handle_one_entry(struct resource *res, void *data)
++/**
++ * zynqmp_pm_get_node_status - PM call to request a node's current power state
++ * @node:		ID of the component or sub-system in question
++ * @status:		Current operating state of the requested node
++ * @requirements:	Current requirements asserted on the node,
++ *			used for slave nodes only.
++ * @usage:		Usage information, used for slave nodes only:
++ *			PM_USAGE_NO_MASTER	- No master is currently using
++ *						  the node
++ *			PM_USAGE_CURRENT_MASTER	- Only requesting master is
++ *						  currently using the node
++ *			PM_USAGE_OTHER_MASTER	- Only other masters are
++ *						  currently using the node
++ *			PM_USAGE_BOTH_MASTERS	- Both the current and at least
++ *						  one other master is currently
++ *						  using the node
++ *
++ * Return:		Returns status, either success or error+reason
++ */
++int zynqmp_pm_get_node_status(const u32 node, u32 *const status,
++			      u32 *const requirements, u32 *const usage)
 +{
-+	struct walk_data *walk_data = data;
-+	struct resource res_local;
-+	struct pmem_entry *entry;
-+	unsigned long entry_size = resource_size(res);
-+	int rc;
++	u32 ret_payload[PAYLOAD_ARG_CNT];
++	int ret;
 +
-+	entry = xa_load(walk_data->pmem_xarray, res->start);
-+
-+	if (!entry)
-+		return register_one_pmem(res, data);
-+
-+	if (entry_size % entry->region_size != 0) {
-+		pr_err("Entry size %lu is not divisible by region size %lu\n",
-+		       entry_size, entry->region_size);
++	if (!status || !requirements || !usage)
 +		return -EINVAL;
++
++	ret = zynqmp_pm_invoke_fn(PM_GET_NODE_STATUS, ret_payload, 1, node);
++	if (ret_payload[0] == XST_PM_SUCCESS) {
++		*status = ret_payload[1];
++		*requirements = ret_payload[2];
++		*usage = ret_payload[3];
 +	}
 +
-+	res_local.start = res->start;
-+	res_local.end = res->start + entry->region_size - 1;
-+	while (res_local.end <= res->end) {
-+		rc = register_one_pmem(&res_local, walk_data->nvdimm_bus);
-+		if (rc)
-+			return rc;
-+
-+		res_local.start += entry->region_size;
-+		res_local.end += entry->region_size;
-+	}
-+
-+	return 0;
++	return ret;
 +}
++EXPORT_SYMBOL_GPL(zynqmp_pm_get_node_status);
 +
-+static void free_pmem_xarray(struct xarray *pmem_xarray)
+ /**
+  * zynqmp_pm_force_pwrdwn - PM call to request for another PU or subsystem to
+  *             be powered down forcefully
+diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+index 6d4dbc196b93..54fa85f2cf73 100644
+--- a/include/linux/firmware/xlnx-zynqmp.h
++++ b/include/linux/firmware/xlnx-zynqmp.h
+@@ -3,7 +3,7 @@
+  * Xilinx Zynq MPSoC Firmware layer
+  *
+  *  Copyright (C) 2014-2021 Xilinx
+- *  Copyright (C) 2022 - 2024, Advanced Micro Devices, Inc.
++ *  Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc.
+  *
+  *  Michal Simek <michal.simek@amd.com>
+  *  Davorin Mista <davorin.mista@aggios.com>
+@@ -164,6 +164,7 @@ enum pm_api_cb_id {
+ enum pm_api_id {
+ 	PM_API_FEATURES = 0,
+ 	PM_GET_API_VERSION = 1,
++	PM_GET_NODE_STATUS = 3,
+ 	PM_REGISTER_NOTIFIER = 5,
+ 	PM_FORCE_POWERDOWN = 8,
+ 	PM_REQUEST_WAKEUP = 10,
+@@ -630,6 +631,8 @@ int zynqmp_pm_request_wake(const u32 node,
+ int zynqmp_pm_get_rpu_mode(u32 node_id, enum rpu_oper_mode *rpu_mode);
+ int zynqmp_pm_set_rpu_mode(u32 node_id, enum rpu_oper_mode rpu_mode);
+ int zynqmp_pm_set_tcm_config(u32 node_id, enum rpu_tcm_comb tcm_mode);
++int zynqmp_pm_get_node_status(const u32 node, u32 *const status,
++			      u32 *const requirements, u32 *const usage);
+ int zynqmp_pm_set_sd_config(u32 node, enum pm_sd_config_type config, u32 value);
+ int zynqmp_pm_set_gem_config(u32 node, enum pm_gem_config_type config,
+ 			     u32 value);
+@@ -937,6 +940,13 @@ static inline int zynqmp_pm_set_tcm_config(u32 node_id, enum rpu_tcm_comb tcm_mo
+ 	return -ENODEV;
+ }
+ 
++static inline int zynqmp_pm_get_node_status(const u32 node, u32 *const status,
++					    u32 *const requirements,
++					    u32 *const usage)
 +{
-+	unsigned long start;
-+	struct pmem_entry *entry;
-+
-+	xa_for_each(pmem_xarray, start, entry) {
-+		kfree(entry);
-+	}
-+	xa_destroy(pmem_xarray);
++	return -ENODEV;
 +}
 +
- static int e820_pmem_probe(struct platform_device *pdev)
- {
- 	static struct nvdimm_bus_descriptor nd_desc;
- 	struct device *dev = &pdev->dev;
- 	struct nvdimm_bus *nvdimm_bus;
-+	struct xarray pmem_xarray;
-+	struct walk_data walk_data = {.pmem_xarray = &pmem_xarray};
- 	int rc = -ENXIO;
-+	int i;
- 
- 	nd_desc.provider_name = "e820";
- 	nd_desc.module = THIS_MODULE;
-@@ -46,8 +178,19 @@ static int e820_pmem_probe(struct platform_device *pdev)
- 		goto err;
- 	platform_set_drvdata(pdev, nvdimm_bus);
- 
-+	xa_init(&pmem_xarray);
-+	for (i = 0; i < pmem_count; i++) {
-+		rc = parse_one_pmem_arg(&pmem_xarray, pmem[i]);
-+		if (rc != 0 && rc != -EINVAL) {
-+			free_pmem_xarray(&pmem_xarray);
-+			goto err;
-+		}
-+	}
-+
-+	walk_data.nvdimm_bus = nvdimm_bus;
- 	rc = walk_iomem_res_desc(IORES_DESC_PERSISTENT_MEMORY_LEGACY,
--			IORESOURCE_MEM, 0, -1, nvdimm_bus, e820_register_one);
-+		IORESOURCE_MEM, 0, -1, &walk_data, e820_handle_one_entry);
-+	free_pmem_xarray(&pmem_xarray);
- 	if (rc)
- 		goto err;
- 	return 0;
+ static inline int zynqmp_pm_set_sd_config(u32 node,
+ 					  enum pm_sd_config_type config,
+ 					  u32 value)
 -- 
-2.49.0.777.g153de2bbd5-goog
+2.25.1
 
