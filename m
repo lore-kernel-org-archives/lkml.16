@@ -1,63 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3051BBBD4;
-	Thu, 17 Apr 2025 02:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE19747F;
+	Thu, 17 Apr 2025 02:13:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744855763; cv=none; b=ADsXJxq3T1dZJncYV885TgQ8Zo/f6/myI0OvK+IqbQNSsMBsh/ff3uFvFOti5w1Mn67ii2n1n+9aOvMqjXTl7/kWO2zvN5HrxllhxYtuQ7flUBsLBiPcX1PYxCxPl/oTi8c1fFRhVWU+6owE/wWOCxHmt0xs5sfPu3LmRdpa1pI=
+	t=1744856036; cv=none; b=AGOL5IXs6BLRpmxKXirpiTTS5xSLSf6VeDRO5BiRWIKBTejkKTbY54fy9TqF8zouUE0b1B88RPNOeHo8Rsko0IHh4rT0dg/rnFlLJZGciATB2w7QYjmQ7o2jgZcZ09LEqCQDprsThzVrKChahVZ1Fkl2hgtRvxvb4Uuyv8U4oIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744855763; c=relaxed/simple;
-	bh=v0j0T5Wcrf9Gx1tBLBUdRLrzr+SLUjSSw73EKC3/EJY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iSgjICu9XygWRSFQEOH0MJEzNsJBVIRdHKBcLah4p3qCS9eMRM/RQ+83PXZSs/TePTM9RLZNC5rEbCXF4fGVZQc9NpG+VGh5IFljhIzlrYiTSwyWWm6utWab9cBjbBxM5HxQhdCXKyAo6PFZ5KusnnsBI+OJlfdYdbIvKlhnGXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kFMPt/kB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744856036; c=relaxed/simple;
+	bh=LAS8y6RQEU7U5RNx9S5FJG3mhSf2SFRYYNWPG81rDKI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DBRB4GhKHn5q1q8Qkhgdbw8jma8aq5GVq0DgdT1R43/m0yjca55UCuIZ4yVumIFoO+M7i1SDgCJaUKBO+4iZE8rvoIy1DPBZgK8ftES8SwpaUVuk/KiiV8K/rDB+3dGgDFEgpHOPRStQOxCVbRaaSIkd76K6aIwKzZ6bJvxJ37w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BsWncaH5; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kFMPt/kB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B754C4CEEA;
-	Thu, 17 Apr 2025 02:09:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744855762;
-	bh=v0j0T5Wcrf9Gx1tBLBUdRLrzr+SLUjSSw73EKC3/EJY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kFMPt/kBIQJMKPoOpqZkInVTpPszcv+egMTMGs//lSDmewfmqo1f4KkVetZr4Jkaq
-	 6rtyMk2jWpRtyh3JIE97kg/7nb+KkAJRsspcGZ3CWSnWp45KMs8ins8/u0ZSITh2Tr
-	 mFI7mSaKiGN9t6fAKYHPdYrCW3Hhd4c5dYzBuV2ONSGRjHfw5a0ESVsfOd91N3Khtj
-	 Kev3hHqm4cOOR4HAdotIndOEjJYjVHcZOwiZ7GOpoSm84BDm7s5LYoXQoItdzGizmf
-	 89qDIVSnsCXFKa7HTwOHS+GYKcNoDGtuNtHmUqWvOMZr+hYoUM0ZvQWGhBVaifTCp/
-	 A5AqUVaOg3ewA==
-Date: Wed, 16 Apr 2025 19:09:21 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
-Cc: donald.hunter@gmail.com, davem@davemloft.net, edumazet@google.com,
- pabeni@redhat.com, horms@kernel.org, vadim.fedorenko@linux.dev,
- jiri@resnulli.us, anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
- andrew+netdev@lunn.ch, saeedm@nvidia.com, leon@kernel.org,
- tariqt@nvidia.com, jonathan.lemon@gmail.com, richardcochran@gmail.com,
- aleksandr.loktionov@intel.com, milena.olech@intel.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- intel-wired-lan@lists.osuosl.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH net-next v2 1/4] dpll: use struct dpll_device_info for
- dpll registration
-Message-ID: <20250416190921.3cfd6326@kernel.org>
-In-Reply-To: <20250415181543.1072342-2-arkadiusz.kubalewski@intel.com>
-References: <20250415181543.1072342-1-arkadiusz.kubalewski@intel.com>
-	<20250415181543.1072342-2-arkadiusz.kubalewski@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BsWncaH5"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39bf44be22fso153497f8f.0;
+        Wed, 16 Apr 2025 19:13:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744856033; x=1745460833; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F5DHHgrjGd2rCCjwjWpNQeDoT3BghQC1sBR2u4Y5ESY=;
+        b=BsWncaH5q5xFTV7ig/zP3w8OTuVJ/SpF199GNs3vE7iErwhOBWEiGYjwN2VctR8xrv
+         lQzuT1UDjLPo39MyxmKFLs9MZIb+IhtT66e17ix6Ne9QYiLSua6fMt8dqhVGLgar5Ttv
+         f7BDUSP3LmVXbP7qD76oEwI9RbEa1pAsAYWPX4XoEwMf4ePT7fb24KhgMTnjVp6HChK9
+         7i9fg6sXlnpKT82Sw0mlm1ocxhYw1DtdMtOAvv8zdZ1MO8oJcEzVoPMjGQuI9fv30e6r
+         9PYTCbAxXb7gKIifziheZ8HAZQyZMVKa0PC0xqhcs2XObhH4Y6e5gPmHxT1sps8ND98f
+         tLgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744856033; x=1745460833;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=F5DHHgrjGd2rCCjwjWpNQeDoT3BghQC1sBR2u4Y5ESY=;
+        b=XsXFxblaC4gSnJ6SgYx801A4Cn+b6w8bZOga1jCUdBYGXmVzS89bkJhORwxmKfBDAE
+         YMOrmc7f1b3viJLk6Of6flu9sjXdO7QZtoGW03Z8ADfYa/pDm351U2NxZLE20B2EvqgO
+         hWsdZ0EuqR070fyP72u8XYj7lBPZZSBqLesvrh7DbWLudfET8b42JSFmqWJ2KhuNbfrj
+         y6nBA7h9boULW+il/02CkGf/Lrl8rETiCi0LcizyUpxNPGN5WwntbRgcT//A37dRb+eU
+         9C9/Mb986ZZcwHhiueZhMbh0Rjm6tNqPw2Zok3HFKWFM/DXgJWuHPNHJLMngBB/k60Tq
+         OL5A==
+X-Forwarded-Encrypted: i=1; AJvYcCV87EDbRwaoIHxWmFm6ZKAsfj0+xCjRRl5e2ll7tllzyWWbL3Fj3kTWgsH7YoQdCrU2Cu4Q7o2wI3z2wTYd@vger.kernel.org, AJvYcCWK9DaiHX0PO8Y7jk0bLPwBqENN3PN0rpMlkL2aYtvk8Wy5U85FJLkEGH+cTRDeplxKw8XCqphTuPviifa6@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNu4KrIpGesDcQi6sPDT5gvM2iDfaBZCwA5AiKhxGYaaw0h8d1
+	Eh2vKiHi8E0XqatR1sxlyITnpOPbFtM5+M8cA5iX1WCMI65gGCYdGhX1LLg=
+X-Gm-Gg: ASbGnctglqMasc6iR+fy2wEpfEyyTKgx7vbKa7JqAITdK08szhi3VmJp28so5VQeysx
+	bFjAHv+6M7mOGTFz03NXUYILNuT7Y/sMRAbtcfgPfOLCji0yX7RRedqRM/hnKPV3F94kOi5UE4/
+	sU3BVOYzpkOSzlqC2oWe8M8A4ja9qjXub2a5VRagqs6KYiH/dPFSFoX9SpM/hUk6aa/Boh6dU5+
+	6JzQt8E0vg7Tii0QqYy4q+N05+G1yysW/tUx77HbxI8CodSO89N1EHryTo76A8kk7/mIlOmxbMI
+	nTKZ+KAnRbffJpYDG4PO7ZS64OGIuE9A8Fs5yyFcoi+H1Q==
+X-Google-Smtp-Source: AGHT+IGzrdbDSFpnoAxT/1N2SrlSqLje5cfHVitMqyyo32g8ydOGWS+ibmmSo/GsALjZ4OmYeGNfPg==
+X-Received: by 2002:a05:6000:1acf:b0:39c:1258:2dc7 with SMTP id ffacd0b85a97d-39ee5ba050emr3472141f8f.56.1744856032524;
+        Wed, 16 Apr 2025 19:13:52 -0700 (PDT)
+Received: from alex-x1.lan ([84.226.118.249])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b4d1236sm36940485e9.13.2025.04.16.19.13.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 19:13:52 -0700 (PDT)
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+To: Dmitry Baryshkov <lumag@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	dmitry.baryshkov@oss.qualcomm.com
+Cc: Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	laurentiu.tudor1@dell.com,
+	abel.vesa@linaro.org,
+	johan@kernel.org,
+	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Subject: [PATCH v3 1/4] drm/msm/dp: Fix support of LTTPR initialization
+Date: Thu, 17 Apr 2025 04:10:32 +0200
+Message-ID: <20250417021349.148911-2-alex.vinarskis@gmail.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250417021349.148911-1-alex.vinarskis@gmail.com>
+References: <20250417021349.148911-1-alex.vinarskis@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 15 Apr 2025 20:15:40 +0200 Arkadiusz Kubalewski wrote:
-> @@ -408,14 +408,14 @@ EXPORT_SYMBOL_GPL(dpll_device_register);
->   * Context: Acquires a lock (dpll_lock)
->   */
->  void dpll_device_unregister(struct dpll_device *dpll,
-> -			    const struct dpll_device_ops *ops, void *priv)
-> +			    const struct dpll_device_info *info, void *priv)
+Initialize LTTPR before msm_dp_panel_read_sink_caps, as DPTX shall
+(re)read DPRX caps after LTTPR detection, as required by DP 2.1,
+Section 3.6.7.6.1.
 
-Some kdoc unhappiness here, W=1 build should lead you to it.
+Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+---
+ drivers/gpu/drm/msm/dp/dp_display.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
+index bbc47d86ae9e..fc07cce68382 100644
+--- a/drivers/gpu/drm/msm/dp/dp_display.c
++++ b/drivers/gpu/drm/msm/dp/dp_display.c
+@@ -367,12 +367,12 @@ static int msm_dp_display_send_hpd_notification(struct msm_dp_display_private *d
+ 	return 0;
+ }
+ 
+-static void msm_dp_display_lttpr_init(struct msm_dp_display_private *dp)
++static void msm_dp_display_lttpr_init(struct msm_dp_display_private *dp, u8 *dpcd)
+ {
+ 	u8 lttpr_caps[DP_LTTPR_COMMON_CAP_SIZE];
+ 	int rc;
+ 
+-	if (drm_dp_read_lttpr_common_caps(dp->aux, dp->panel->dpcd, lttpr_caps))
++	if (drm_dp_read_lttpr_common_caps(dp->aux, dpcd, lttpr_caps))
+ 		return;
+ 
+ 	rc = drm_dp_lttpr_init(dp->aux, drm_dp_lttpr_count(lttpr_caps));
+@@ -385,12 +385,17 @@ static int msm_dp_display_process_hpd_high(struct msm_dp_display_private *dp)
+ 	struct drm_connector *connector = dp->msm_dp_display.connector;
+ 	const struct drm_display_info *info = &connector->display_info;
+ 	int rc = 0;
++	u8 dpcd[DP_RECEIVER_CAP_SIZE];
+ 
+-	rc = msm_dp_panel_read_sink_caps(dp->panel, connector);
++	rc = drm_dp_read_dpcd_caps(dp->aux, dpcd);
+ 	if (rc)
+ 		goto end;
+ 
+-	msm_dp_display_lttpr_init(dp);
++	msm_dp_display_lttpr_init(dp, dpcd);
++
++	rc = msm_dp_panel_read_sink_caps(dp->panel, connector);
++	if (rc)
++		goto end;
+ 
+ 	msm_dp_link_process_request(dp->link);
+ 
+-- 
+2.45.2
+
