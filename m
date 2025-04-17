@@ -1,134 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292271DE4DC
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9E81DE4F6
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744867700; cv=none; b=txKuisNwaHtHHcoxpzX6rxz1DH+0dk3yjeYbb0ZabyLNSzmHCzZbcPDFIh1Fk6ONWKz0BRHTgqEhezlZjRXwfpCNgKqm84y9DE7WH8ohQMOQUgNZAqlfCtDGaHBcb0q3ZhMZf3yisNCOPWURHVxnuHQ+2ufqnVAbMiq3jfV1dR0=
+	t=1744867800; cv=none; b=SVb0S7mXQawwHkEF90Qs2gS2lv41tQJhIx0vGe+t1iQLL5dJQ+bl4V/meP9QdUnYUF2C/m366o9Moc8D6CtzRlV+gSih8h5EtaZb+3I3QR8Sn4NDSHCNpFeUj25cKrxKmI8XxP28gWsu/aiUV2tJY5r2L+EQTtHBF8PKonfmqpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744867700; c=relaxed/simple;
-	bh=5nulTxMnIYIk2hOq1j9PcbmTHrZ2rCRpv8a7ug/XG1E=;
+	s=arc-20240116; t=1744867800; c=relaxed/simple;
+	bh=8IRUAWuyG9XC3pN0aPIS/KTtqadjkSf+Hpg2rRtqp40=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dnx/gQj0tAdmztgzMSRX60MWQR6RIX3g6F8wAkI97Q1OP+GY/m40cNPy0fCwM4R73sBuQ4NCQQS9hb+3muxTMr0sbylCnzjrAAeSONoHZdSzpE/3jDIa4tMd57PB9ZhE8J+ieUiORRgAHNX0Ugt8O73VCnvGqKYPNMxVD3Nhi+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u6BY8kl1; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=LlPJUFfcWxju9fF4tdgMaQae74aWzzTaMIxTB+m6m0qKAuvvAwJiaXyggh6y8Gor9AVPVOTh9f0ExWdhNZZICP7GGEEW+ERdHSiFi7G6wzLjAYt3epANAHcVhfZhcQGRCxJcYmbsoLP+LlRxotSdHiLttQXr+z+wcRSDoX8O4GY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gppObXx0; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u6BY8kl1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4898C4CEEF
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744867699;
-	bh=5nulTxMnIYIk2hOq1j9PcbmTHrZ2rCRpv8a7ug/XG1E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=u6BY8kl1e5RiUzj6KkiXzVQYJpW+LTkKkTwzh+gjlRw30uoPjHK6IwcO270ACiauZ
-	 YqgTXDrJGFrNflAhf4Yrkh70UTdTDn+J07Uu5abmoJTU+WOyLkLQ+zJDR+BrzFFPy0
-	 e8gX77TUf0NqFSKi6SdVuZmqEGSsqslXkdhJAO4b6nxZK9dI1DJjPpQYisBW67DR2z
-	 Ej4JlIuxCh5+7VaEE3bHDgOOaJWGjnHqEJHX7WRTDKRU2nXL/sz91W1JRx3eNJjPH+
-	 ZAh754u9xtGABFFiGAyhx0WdUgLP5f4M2bykWiPyH/zdzLyv3LUPFvWsWqmaezOD80
-	 6/0V+REAstRcQ==
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-476ae781d21so3904381cf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:28:19 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yzh+mwWId6mtHEKyl9dXGSotD3m9uNDplSADiLrm4xKgC4tdizI
-	80VY+pYhc1vWKWBzuLx7NnU4qHRi3BZRVZLlFKwiTN97yuaPRTA7Rz8LnslM/IjYiPPaCqaV18h
-	QRBMelwJXdIK7SHBRLdbdJhr5HY0=
-X-Google-Smtp-Source: AGHT+IHfj1ZW6/f0Qbs3G+6VwYnqPt5fWy6B+JR8gDtIXleiML091O70SkU8AQXdIYiui6SSAujoaGuVRQNK+y2QMhE=
-X-Received: by 2002:ac8:578a:0:b0:476:8288:9563 with SMTP id
- d75a77b69052e-47ad80973a9mr54281061cf.10.1744867698822; Wed, 16 Apr 2025
- 22:28:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gppObXx0"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5499c5d9691so473810e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:29:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744867796; x=1745472596; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/tbq98NwkRxfOjYm7weOTRHKupXkAEHniDZUVgeT5NY=;
+        b=gppObXx0daXauwXNinllK3Gn5/8vH1/XDhdrvtczv3r5m85tD/P4XNDAG8qKqqzI7v
+         SgBkJaM0n5jWXojlSPGtEJqjMjwFSI2ol4261qFU+0nDK2QjM3t+VtNZra/NvHUSv71I
+         yUH3QytrnFSb8ht2kdViEA2pEoO3/DrfJ1WiDST8DfCRfDiikGVCQIbhQkCs5jGTfbhz
+         UA4ksWjT4kYLVS6MN1QbtQKzLIJ5o+ZjWBplpaffynqDccHD/cV5VENt+hAOhjXkJSbz
+         G94oMUc59HPkeKZXatG7eApGmJwseHPUNEREA6LpbTyqXumRFUkeIPGCH4iMxa6pUo4w
+         n0jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744867796; x=1745472596;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/tbq98NwkRxfOjYm7weOTRHKupXkAEHniDZUVgeT5NY=;
+        b=nrPZTHsYAdlloKFhNjsk/lObZfEM3h4viHyqrsXb3slszCHGUth9TFcgNoqS8kPR4A
+         +9gql+LqTma416RlPPX18U/A50mSawjrHT5YGbQFjs4BZAaqGhdQ6aooAvAQMTQlc8Xw
+         gtsRRt49HjTtwQbi1fsT31qKhaIQQSefdrk4UV6LZz0FeVHuBQ/D4Q3NjQfMfhOGpwbA
+         Skp1cJx5wKYPzkeFZhfO4oLdHumBQOor3qyo0k4IkqzdGVGZXru0gK5HSQ6o81xf+lBb
+         oUd9f9BAapyKhHAPM56tznCkzLrwuaixVccNX5kGDXOB0j0vCBMuJ6ZrHBdNbnMEyKfQ
+         2o1A==
+X-Forwarded-Encrypted: i=1; AJvYcCXHWHU6eo1dYwxyv99BaTtrxtQB68JxQtD0YmaTxPOOi6WsDemVdMlnuMCtghpX4+nhWV4B9OP2lFCkEkQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/r90TsjYhmHy1Rj/u4JB95z6C0iBNPOcr4wg++0cj56L5aod2
+	gauf6cz+dKnLgu/9NmXNZ4lgEijAYn3MBRE3Oje95bjIPF6YxtNzjwKsC/MvKE5ytzxGXtv3J8b
+	v8SR58BeFEQRm5itaKP8NUABITZcV2gxt1XU=
+X-Gm-Gg: ASbGnctzWFME76kkMeb8utxy+wflQDyutTPS3g6QfDZUZXlgDL3aMBEl8H6A5K+0juT
+	PSsOK5AVP8V30qDtuunVaY7QVkydIir3Z/XwigRnyMy3wsNLFF47s09WHBlCm+EcombyHVbxtlZ
+	lo9AvCE3S883IU5mHKVlf8hLEhk+16o3Qn/hgOXGb1GXonDsVsEfZyOl1PNhyjug==
+X-Google-Smtp-Source: AGHT+IFJsMYdvqU27gQJon+URzkUuZBB06ki2I46tRCTIgHeKrXMiYT2i6HfyxRplJ+POPGp9j0hKgQgUp4Pj9Dsnbw=
+X-Received: by 2002:a05:6512:ac5:b0:549:903a:1b3 with SMTP id
+ 2adb3069b0e04-54d64aea494mr1431419e87.42.1744867796065; Wed, 16 Apr 2025
+ 22:29:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z_6bxZUiodrE45HJ@bombadil.infradead.org>
-In-Reply-To: <Z_6bxZUiodrE45HJ@bombadil.infradead.org>
-From: Song Liu <song@kernel.org>
-Date: Wed, 16 Apr 2025 22:28:06 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5HYYvGoFO2L81EBkHDmozxxjpmdRh+GPrAxea-+91YNQ@mail.gmail.com>
-X-Gm-Features: ATxdqUGu0s_Wo3j7qUbZSWmwU_ALvQ7OyebLFavS-tdfwMv1lJEa2d7htYHVD04
-Message-ID: <CAPhsuW5HYYvGoFO2L81EBkHDmozxxjpmdRh+GPrAxea-+91YNQ@mail.gmail.com>
-Subject: Re: The future of kernel-patches-daemon - folding under LF?
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kdevops@lists.linux.dev, 
-	Jim Zemlin <jzemlin@linux-foundation.org>, Konstantin Ryabitsev <mricon@kernel.org>, 
-	=?UTF-8?Q?Javier_Gonz=C3=A1lez?= <javier.gonz@samsung.com>, 
-	Greg Marsden <greg.marsden@oracle.com>, Tso Ted <tytso@mit.edu>, 
-	Gustavo Padovan <gus@collabora.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>
+References: <20250320200306.1712599-1-jstultz@google.com> <Z-KURRE_Gr72Xv_n@localhost>
+ <874izezv3c.ffs@tglx> <Z-Vx8kV4M3khPknC@localhost> <Z-qsg6iDGlcIJulJ@localhost>
+ <87o6xgwftc.ffs@tglx> <Z-vL3cVZuQ8XQXhG@localhost> <87iknnwxa4.ffs@tglx>
+ <Z-5HlSUEh1xgCi4f@localhost> <877c41wkis.ffs@tglx> <87h632wals.ffs@tglx>
+In-Reply-To: <87h632wals.ffs@tglx>
+From: John Stultz <jstultz@google.com>
+Date: Wed, 16 Apr 2025 22:29:43 -0700
+X-Gm-Features: ATxdqUFRIk__GaYDInAsvbeQ0YVaEScg1GGtg38lyC7CTsJPCjHDcqn17UbtfGY
+Message-ID: <CANDhNCpAVo7FsmGhTVRMkazUT18dZG42M82O3QPQE8XobsWOaw@mail.gmail.com>
+Subject: Re: [PATCH] timekeeping: Prevent coarse clocks going backwards
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Miroslav Lichvar <mlichvar@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+	Stephen Boyd <sboyd@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org, 
+	kernel-team@android.com, Lei Chen <lei.chen@smartx.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Luis,
+On Sat, Apr 5, 2025 at 2:40=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de>=
+ wrote:
+>
+> Lei Chen raised an issue with CLOCK_MONOTONIC_COARSE seeing time
+> inconsistencies. Lei tracked down that this was being caused by the
+> adjustment
+>
+>     tk->tkr_mono.xtime_nsec -=3D offset;
+>
+> which is made to compensate for the unaccumulated cycles in offset when t=
+he
+> multiplicator is adjusted forward, so that the non-_COARSE clockids don't
+> see inconsistencies.
+>
+> However, the _COARSE clockid getter functions use the adjusted xtime_nsec
+> value directly and do not compensate the negative offset via the
+> clocksource delta multiplied with the new multiplicator. In that case the
+> caller can observe time going backwards in consecutive calls.
+>
 
-How about we discuss different options over a video conference?
-We have a BPF office hour scheduled every Thursday at 9am PST.
-Would this time work for folks?
+Hey Thomas!
+  Thanks so much for reviving this version of the fix and my apologies
+for apparently taking us down the wrong path with the earlier
+solution.
 
-Thanks,
-Song
+Looking over the patch, it seems ok to me, but in a test run with it,
+I've seen an error with CLOCK_REALTIME_COARSE during the
+clocksource-switch test  (as well as some seemingly unrelated test
+errors, which I need to investigate) so I'm looking at the zeroing
+done in timekeeping_forward_now and will try to look more into this
+tomorrow.
 
-
-On Tue, Apr 15, 2025 at 10:47=E2=80=AFAM Luis Chamberlain <mcgrof@kernel.or=
-g> wrote:
->
-> Song,
->
-> We're starting to rely on kernel-patches-deamon (kpd in short) [0] for qu=
-ite a
-> bit of  linux-kernel subsystems and have integrated it on kdevops for the=
-m [1]
-> [2]. We already use it for the modules subsystem but even then that runs =
-into
-> hiccups every now and then and we just have to restart it. For smaller
-> subsystems we've started to experiment with lei based patchwork solutions=
-, we
-> started with the firmware loader, and the hope was that if that works we =
-could
-> move on to memory management to leverage the automation of tests we have =
-for
-> xarray, maple tree, and vmas. The lei patchwork instance which kernel.org=
- admins
-> have helped us with works well, however kpd doesn't yet work with it [3],=
- so we
-> can't even get that off the ground yet. In the meantime, we've been inste=
-ad
-> relying on linux-next tags to test other subsystems like memory managemen=
-t so we
-> avoid regressions that way, instead of testing patches while on the maili=
-ng
-> list. But we do want to get to the point we can test things proactively f=
-or
-> different subsystems.
->
-> While we could look for alternatives I think we need to face the fact tha=
-t we
-> need more kpd love. I'm convinced that the only way to scale Linux kernel=
--ci
-> work is by dividing and conquering and those can contribute to different
-> components do so, and kpd fits well right in, but I think we need to star=
-t
-> thinking about scaling it beyond just Meta. While we could just try to
-> contribute to it to fix lingering bugs I've noted my first issue with it,
-> requring CLA [4], and I don't think it makes sense to fork it from Meta. =
-kpd the
-> sort of specialized daemon that also can take time to learn and believe a=
-t this
-> point it might make sense if kpd can be part of the LF covered toolbox we=
- can
-> get support for. Ie, make it an LF project and see if we can get more hel=
-p with
-> the sort of pipelines that fit both Meta and the kernel community.
->
-> Let me know your thoughts.
->
-> [0] https://github.com/facebookincubator/kernel-patches-daemon
-> [1] https://github.com/linux-kdevops/kdevops/blob/main/docs/kernel-ci/REA=
-DME.md
-> [2] https://github.com/linux-kdevops/kdevops/blob/main/docs/kernel-ci/ker=
-nel-ci-kpd.md
-> [3] https://lkml.kernel.org/r/CAB=3DNE6X5mJJmcXjEkHyE=3D2f1CCA5fDDEjMFH_a=
-MArrhom2qO8Q@mail.gmail.com
-> [4] https://github.com/facebookincubator/kernel-patches-daemon/issues/62
->
->   Luis
+thanks
+-john
