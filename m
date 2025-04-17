@@ -1,203 +1,172 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0515A21C162
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B901F3FE3;
+	Thu, 17 Apr 2025 08:41:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744879232; cv=none; b=JnFXgdEvliqORuizamFavFZtw+XeRF4QQMTlBNbpGQpEfhn+fCnlLAnAIT0abLRwRXgTHbgd2uV+y828G68zXKGITmQevct6BickThcKQHnColiVmxmV52HRGGMLtRArUFTbDrXj+ideJxYpFbTZS2SSHct2+CqqBJu3lVdV/o8=
+	t=1744879320; cv=none; b=Xuz41RTcVbSoP9f4R4pFHnSdgyoV3rcB1iyxUaUEpYO8rW+gmqbwA6wJlm7+oOJUxZS/uc4HbQfxOdldH4B6iyTFjmxBqJgV5yPWowfzTHDoiB4QV4/XyyLHqkmBUOJgeiVK6MQJcjztASsLyaFmcLz35kfRsD170pX9dCHtjWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744879232; c=relaxed/simple;
-	bh=IAo3QNskL03rdP0A9AmyP8vjrsbCqugDP4tHh/BJV2M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sq2+t2JtUfu72cAmD+dlvqmRx14YQnIh18jg/oB/oqph/jg2RcZl8m/IjZmolA6qP2mB4klnTJz19AxVIZJaVUV4MFQMYyrmhjfQH7Uh72mHB/QbNtMXTPdj5mT7GRUvsd1zUAXx6r/lbgVwUzaPeIko+0DU64F3a10wUOY4ZdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A2wfOquL; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744879320; c=relaxed/simple;
+	bh=uVwo6amo6zkXhHED8eHbbbX+u93QJ1BEDv8D4fVRyRM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LtEPL4ZCVUhHMOW1o0G+w6/EiMxfuXmVHnfqMYonsBzwM/yqesvDIWxfdketQuufD7P6vPbvK//lqv6ynG09NV/4Imx4Kqk4gGbzeqvPkYoC2rciJN5JKnSqT3ikdHdz+X1ASE12XnIbAQxAzFUHcyJ2oL/ONtfy/R4Jay8DnLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RPqKSJcY; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A2wfOquL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744879228;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=2HM15lSIcwJz1/Tn8IohqE330i22WhecFHOPITsT+xA=;
-	b=A2wfOquLiwBizl77FWU1T40ejtYXyOeBGGPDETWO5yLRrp2hXoOD3aEuACxKLXx/cAx0R9
-	gJ/bsnEukOdI14ggMy+iaE9VrUSEfOT9o0NL8Oy4/oaxcgWOHaHTZFYFiuV0VSgwJyAmqA
-	v9mL9I+uYqFwum5MFJ5202Xdt53tAhY=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-19-N59Deh8TN06mW7ccxYMzUQ-1; Thu, 17 Apr 2025 04:40:27 -0400
-X-MC-Unique: N59Deh8TN06mW7ccxYMzUQ-1
-X-Mimecast-MFC-AGG-ID: N59Deh8TN06mW7ccxYMzUQ_1744879226
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39d917b105bso260226f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 01:40:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RPqKSJcY"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso3059115e9.3;
+        Thu, 17 Apr 2025 01:41:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744879317; x=1745484117; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DXozyqUJ9d4xtCCzMWxO4QOFhe8g2i4PdCmKZX1X/X4=;
+        b=RPqKSJcYsZVsnLkjzlXY5Yykk3yKeARpCCxg2GyYVSpWnXHrjJkQIs6nq75PV92ith
+         Pul7atLhZIRwFgX2ieMiZpFeS7GgcWerrLbjhB9fEM61/a5oGh7Y5v9QqjmKnXPvyD9i
+         aavivEFni7RfgmjK15XZD/lBSfACquQqHLR0alw8m0PqJeHevbSE8g9WA5VF9sm+Qwht
+         ttLood1OxM/Wp1aTkuEcLujQLYtpGDeF4uGpAd7QERo3U8wuAW6B5HKefnQJc9q8McrS
+         1bztAdNuVFdvn0xSECpMhv9I3u5/IUnv+pjUCVoGxc3YCTYZH4X2ZOg9Dbo0T0AiOzKV
+         YlVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744879226; x=1745484026;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2HM15lSIcwJz1/Tn8IohqE330i22WhecFHOPITsT+xA=;
-        b=gG/VohyNrwcIbGlDI8WAgoQoZH1xTgBvKLUlMxMPIecIgv3PcYhAQfHKM29K8GNGbu
-         Xojlj4S6GRuBB45w3kCTgx9nn6GV0tTIDdwmlqpcm/JV4mY4P5RgDyKlZH0IaBwFYK30
-         GFXPtsLDGzUxoxEoETgAniyGyDon9G007ZoLEyA9L7w/gZKansjfLqHrGoAlNaJONKoa
-         znLkigFd18hV81ozMeGPYkZpASSy2DUt5xfhomNZNldto9f5m9tKpenzA32y1gtB7pIR
-         etl6T44S6jH8szNfZS53yxrSo2nrJUnsB5uVxbHA0x28tgTp8k5Ihafem+nwjVz6eLkb
-         ZAlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW2jjZXJaFoDQe6zL/bgYLofVZO4TdA+A2GngZJJOOid6Rgb/cWESk7wQ9D0z1VyRwnmQHBFRWM/1/u4eo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYNDTpAHxpytl9DORfWpgOxvu/ZAbF1YChcZCfToE08ylgwbUU
-	2Sd6SA2hKFDsgD+Wj14wabhCHnYBcBd31rgmVYCbnE77E1tbYONBxgZUWXEluCIJ3A72/XhYcnJ
-	44NfteTo8J2ruK56GPetcp8Ce4d5ici2gGQXoPz/n/NLrXMJToELBYUk9Mbp1VQ==
-X-Gm-Gg: ASbGnctY+CYXj7Vmky2LHIO5csHX2tcul4RCsSsZIeCTyCS1Ex7bC+4ORFaLtGpC6Z1
-	8OXcQsPCAYEybtYXDamZcl5CKnw6mDAb7hJSvjchzyKXmN7xqTYsxcE/tIfAunJZqtGKdX87Enm
-	8q/epJ8h/z4+l4AeqPUcvmGv2vXNDj9nVDcStwLdZnkUAru0l90oDg8+4Q09h8wZrxHn6Zv2kfl
-	ZwGNqGlXLb9H5TyXRaPaLtGXtKiBu/SmZrA0RxQuYUvsSLLRj0ikEYBwBDy1XEA4qQnrKNgBVuK
-	HonQH9FzlS5t6LH/xFPH4T83jJOhSVlCT3DrhmvsqZ71vHz979igzxNNNc+i42oBYqzcSrtK6kD
-	uAMnS7w7vhe5kkomjLYDzgRpHjd6ZJdeYca8yLmo=
-X-Received: by 2002:a05:6000:2911:b0:399:6dc0:f134 with SMTP id ffacd0b85a97d-39ee5bad76emr4379724f8f.51.1744879225956;
-        Thu, 17 Apr 2025 01:40:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHQeRaBf4AjgQTFoutEd6jXROHhB1GPjNf97Ew+mL54HY9MIlxAHk/+IocWI7W3ZkjJTLahOQ==
-X-Received: by 2002:a05:6000:2911:b0:399:6dc0:f134 with SMTP id ffacd0b85a97d-39ee5bad76emr4379705f8f.51.1744879225578;
-        Thu, 17 Apr 2025 01:40:25 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c706:2700:abf9:4eac:588c:adab? (p200300cbc7062700abf94eac588cadab.dip0.t-ipconnect.de. [2003:cb:c706:2700:abf9:4eac:588c:adab])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39ee3f12dc9sm4168115f8f.8.2025.04.17.01.40.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Apr 2025 01:40:25 -0700 (PDT)
-Message-ID: <75dc1299-8a83-4ce8-a715-cf1a8d43e0f9@redhat.com>
-Date: Thu, 17 Apr 2025 10:40:23 +0200
+        d=1e100.net; s=20230601; t=1744879317; x=1745484117;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DXozyqUJ9d4xtCCzMWxO4QOFhe8g2i4PdCmKZX1X/X4=;
+        b=ZFI5Z6TeInSz4mFcN2KK9KMsru+PC7CQsf/uzBTHjypzFFrH8kIvrvTPYnol3Ll0Tb
+         OUmYH2ws+UjEM+kkibxvcnh7RNxWAgDfTCPdg9nCmXd8jdu8iGVp8WzuRwSPhkzOFUi1
+         9Q5tqfJTvtskYtj1mjwSMtXd0kGxQu9rySc8xo1YIrecsuB/2/+2JntiDYx2WbBZL0P1
+         zeEWUkglLi7SZ+/oBJvih3ggyQZ47W8Pw20k8uwsrhXf6tk1IyvfqsmcI7ZIG8MTsmJ0
+         W9qjnIJqsOe+wJGDnqdxBrjyseN/DFUhWnkKDW6ga2Wcn2Uc80/JH5AyndXNTOpjZu5Q
+         OwAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWKw1IVYf4wTbImbtiL273lYc6wGY95mHqR2gylwcwqHBRV2f2pQG6vLugRQyWHn0L8T6Y8d4JstTP8@vger.kernel.org, AJvYcCX7rYoUArJAlB9enrs4Xmpy1qAos/J+lO1BTSFdycv02wc9nIVBTMHl8U2BWRo6IAALU8OMDmzcS9J5DDZN@vger.kernel.org, AJvYcCXHh0BNbJz5NKwqwvGHKVhHNmDE9iiW9AgHJRMaXa0iO39Wcvx0S3bYBdIF6K/ltK5adn6Xc8graCXPkUv21bLsoxA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTGt5EdvaM5CFxLmiYgUgovM7ZFHmkwE3z2115uul3mKgFPAww
+	ixLdtWczI3Hw8VD2/excq6LmZPQc8UOJf7saAbFfVw9r9Nq3rqUe
+X-Gm-Gg: ASbGncvzokRPOUNeXrhsc7XtUxhg3LA9yGRvasrxSaOTtQAWFQRn8gabK7tK+teKRZI
+	LJpcxSuDvSzUr3lmzxdkOs/4omfYBqE0VONV9PdkXQupoKB0ASn/xPW4geA3UqEyOSTWuAoRAJa
+	RdsRaueNItiW3YitkRxXKrPPBvAlY6OSs9YX3ard8zbfjYAnpsQRKdajePc/Vnv2aOkJA1oZosN
+	3hxO8z8vkwXhIZv+otKrlYy8kGdPZfoHJz/uSKC/mgKNpLVqKDBEzir4RAucXjiZSw/9dEwhCp1
+	N4uyXeDmCSObkbXigmrH7nwi1ZEtZ6F70ZGfcObvhTgH6I0hPs6ulhwT32BWRM1w
+X-Google-Smtp-Source: AGHT+IErRiAS0z3JNyUleWBdVl92EfrzdQ3pXN9rJF3OKf8o4ZU/wUUqjoSjXJtkv9PYKHE0yGdVDw==
+X-Received: by 2002:a05:600c:b8c:b0:43d:94:2d1e with SMTP id 5b1f17b1804b1-4405d61c914mr54409795e9.13.1744879316325;
+        Thu, 17 Apr 2025 01:41:56 -0700 (PDT)
+Received: from iku.Home ([2a06:5906:61b:2d00:3f0f:d684:f4a:34e6])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96cf1asm19657712f8f.39.2025.04.17.01.41.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 01:41:55 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+	Jose Abreu <joabreu@synopsys.com>
+Cc: netdev@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH net-next v8 0/4] Add GBETH glue layer driver for Renesas RZ/V2H(P) SoC
+Date: Thu, 17 Apr 2025 09:40:11 +0100
+Message-ID: <20250417084015.74154-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 1/2] mm: export folio_expected_refs for JFS migration
- handler
-To: Shivank Garg <shivankg@amd.com>, shaggy@kernel.org,
- akpm@linux-foundation.org
-Cc: willy@infradead.org, wangkefeng.wang@huawei.com, jane.chu@oracle.com,
- ziy@nvidia.com, donettom@linux.ibm.com, apopple@nvidia.com,
- jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, syzbot+8bb6fd945af4e0ad9299@syzkaller.appspotmail.com
-References: <20250417060630.197278-1-shivankg@amd.com>
- <20250417060630.197278-2-shivankg@amd.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250417060630.197278-2-shivankg@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 17.04.25 08:06, Shivank Garg wrote:
-> Export folio_expected_refs() to allow filesystem-specific migration
-> handlers like JFS metapage_migrate_folio to properly verify reference
-> counts before migration.
-> 
-> Signed-off-by: Shivank Garg <shivankg@amd.com>
-> ---
->   include/linux/migrate.h | 1 +
->   mm/migrate.c            | 3 ++-
->   2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/migrate.h b/include/linux/migrate.h
-> index aaa2114498d6..cb31c5b1eb6a 100644
-> --- a/include/linux/migrate.h
-> +++ b/include/linux/migrate.h
-> @@ -60,6 +60,7 @@ struct movable_operations {
->   /* Defined in mm/debug.c: */
->   extern const char *migrate_reason_names[MR_TYPES];
->   
-> +int folio_expected_refs(struct address_space *mapping, struct folio *folio);
->   #ifdef CONFIG_MIGRATION
->   
->   void putback_movable_pages(struct list_head *l);
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 6e2488e5dbe4..0f01b8a87dec 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -445,7 +445,7 @@ void pmd_migration_entry_wait(struct mm_struct *mm, pmd_t *pmd)
->   }
->   #endif
->   
-> -static int folio_expected_refs(struct address_space *mapping,
-> +int folio_expected_refs(struct address_space *mapping,
->   		struct folio *folio)
->   {
->   	int refs = 1;
-> @@ -458,6 +458,7 @@ static int folio_expected_refs(struct address_space *mapping,
->   
->   	return refs;
->   }
-> +EXPORT_SYMBOL_GPL(folio_expected_refs);
->   
->   /*
->    * Replace the folio in the mapping.
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Can we make that an inline function instead, and add some documentation?
+Hi All,
 
-This function is only suitable if we know the folio is unmapped from 
-page tables (no references from page table mappings: !folio_mapped()).
+This patch series adds support for the GBETH (Gigabit Ethernet) glue layer
+driver for the Renesas RZ/V2H(P) SoC. The GBETH IP is integrated with
+the Synopsys DesignWare MAC (version 5.20). The changes include updating
+the device tree bindings, documenting the GBETH bindings, and adding the
+DWMAC glue layer for the Renesas GBETH.
 
-So when exporting this function we either
+v7->v8
+- Rebased the changes on net-next
+- Fixed return value in renesas_gbeth_init()
 
-a) Need a clearer name
+v6->v7
+- Rebased the changes on net-next
+- Added Reviewed-by tag from Russell
+- Folded contenets of renesas_gbeth_clks_config()
+  in renesas_gbeth_init/exit() as suggested by Philipp
+- Dropped regs member from struct renesas_gbeth
 
-b) Should generalize it to consider folio_mapcount() etc, and lookup the
-    mapping from the folio.
+v5->v6
+- stmmac_pltfr_find_clk() is now used to find the clocks
+- devm_stmmac_pltfr_probe() is now used to probe the platform device
+  and dropped remove callback
+- Switched to using init/exit callback to configure the clock
+  instead of using the clks_config callback
+- Dropped pm callback
+- Fixed checkpatch warnings
+- Added a new patch to update the MAINTAINERS file
 
-For your use case, a) might be easier. Maybe call  it something like 
-"folio_migration_expected_refs" ?
+v4->v5
+- Rebased the changes on net-next
+
+v3->v4
+- Fixed maxItems for interrupt-names property
+- Maintained reverse christmas tree order in renesas_gbeth_clks_config
+- Returned err in case of success in renesas_gbeth_probe()
+
+v2->v3
+- Fixed review comments from Rob and Russell
+
+v1->v2
+- Updated commit description for patch 2/3
+- Updated tx/rx queue completion interrupt names
+- Added clks_config callback
+
+v1:
+https://lore.kernel.org/all/20250302181808.728734-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (4):
+  dt-bindings: net: dwmac: Increase 'maxItems' for 'interrupts' and
+    'interrupt-names'
+  dt-bindings: net: Document support for Renesas RZ/V2H(P) GBETH
+  net: stmmac: Add DWMAC glue layer for Renesas GBETH
+  MAINTAINERS: Add entry for Renesas RZ/V2H(P) DWMAC GBETH glue layer
+    driver
+
+ .../bindings/net/renesas,r9a09g057-gbeth.yaml | 201 ++++++++++++++++++
+ .../devicetree/bindings/net/snps,dwmac.yaml   |  25 ++-
+ MAINTAINERS                                   |   8 +
+ drivers/net/ethernet/stmicro/stmmac/Kconfig   |  11 +
+ drivers/net/ethernet/stmicro/stmmac/Makefile  |   1 +
+ .../stmicro/stmmac/dwmac-renesas-gbeth.c      | 146 +++++++++++++
+ 6 files changed, 383 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
 
 -- 
-Cheers,
-
-David / dhildenb
+2.49.0
 
