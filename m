@@ -1,167 +1,63 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F7A252287;
-	Thu, 17 Apr 2025 14:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1A9325178D;
+	Thu, 17 Apr 2025 14:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744900655; cv=none; b=hrru6Vkay7mFxcyoycOSbINnUh7ciJT673GefkNsRHv2lIBS/wUcRImoD465xwQOCULBeRluTRBVcjhyAd1pdmT7ktHBswpH5vKEAbFKVcN4yvqZlHso4nr2D9fGK1Yosjp8pjM00LU/APi1TSs8TXeb0MOAi+wal1zNBvEZjks=
+	t=1744900669; cv=none; b=Atn+xEAQsejJ08Q2OHRjvsMXmcK0uB3sBMRl//HUSUtiVEEK0bIa9QZuQ2DBfotOG74eRebE0sw6449y5DQXt6d2eHJarMUuFDRdyJzo3p0BL3f15d8fXdr5841bPFnAmG/b9+iYE1HCkXsDxD1P1dYq2T3hhFuAgn43PbVAH3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744900655; c=relaxed/simple;
-	bh=5KKTJC0BGgZzdJ44qMWE7iL95oyAAWhSmtBAKPP/Ro4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WqBT9F6pdMUoFxWCiiuWe4VL6BgcAt5UEh/ek7QwXjg3za94NfBcpaaOG3bSrkTeGtGsa+FqckcftV7ckaEMtAc75sVjJNFpp5rWQuJeIMOllZsFm8YlJD7o1Ldi7af7G3qIskJQC4Cs1JtXJAkWDB6nwDHqZTBkqthqoOtBk0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=KgffntZl; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1744900669; c=relaxed/simple;
+	bh=TUnWqrGCNuu0kp3HQLe+J7RkhciGbYiemq03Z4bFMzA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cpiK1nzhnivu5QLKa9Izz9bcThm5GnT0rMw5vTdSK5+P/ZHn/nYDb7rtjW5Shd3ozZeRG51yUi9v3jxTYx79gIEq0F3qiYjrpjFYp2Cl0xv5mTJ7KJD7Nmu1c+Cb6sog2W+O6TlTf0wj0L/wOQz9chkKfjllVmAgQjyZ/+1kLfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=BG7gUTR0; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="KgffntZl"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 88CB125C5C;
-	Thu, 17 Apr 2025 16:37:32 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id aHuPYRFQIArQ; Thu, 17 Apr 2025 16:37:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1744900651; bh=5KKTJC0BGgZzdJ44qMWE7iL95oyAAWhSmtBAKPP/Ro4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=KgffntZlzNEDdRqy70ufQIlVyxM+n/R3CMYZA2XOTU6SnDNcryQp5MoPm7k/FsTXb
-	 4hJ/N5pXZllUfDqscZ+oU7XarxvoXFCIYe11fTb0nbS6JAZjDlSfUz0lXuQWovID+Z
-	 +bc+fjUMrAuCKUn5PulWzMm3tVWMuE0cyMj3qI7XxMkHn9NEgtg30zjDyKNaFpAD83
-	 OClxwtKdWvgIcv/lt/YTArikEmBpHz2MUfAZtoOd/7lloFIzCDuU9+jxQipV2LtjJc
-	 0xEq64Wm5fng2RSsyv0HuztHaOaDSzi56YwfgK4zwB4qNxJc/xESLF7J7Dx9663cuE
-	 ACpSXXM30mTPg==
-From: Yao Zi <ziyao@disroot.org>
-To: Ulf Hansson <ulf.hansson@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Shresth Prasad <shresthprasad7@gmail.com>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Chukun Pan <amadeus@jmu.edu.cn>
-Cc: linux-mmc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH v4 4/5] arm64: dts: rockchip: Add SDMMC/SDIO controllers for RK3528
-Date: Thu, 17 Apr 2025 14:36:46 +0000
-Message-ID: <20250417143647.43860-5-ziyao@disroot.org>
-In-Reply-To: <20250417143647.43860-1-ziyao@disroot.org>
-References: <20250417143647.43860-1-ziyao@disroot.org>
+	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="BG7gUTR0"
+Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id E58A648667;
+	Thu, 17 Apr 2025 16:37:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
+	s=default; t=1744900667;
+	bh=TUnWqrGCNuu0kp3HQLe+J7RkhciGbYiemq03Z4bFMzA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BG7gUTR09SCxCajindITMjvEuNZ4CXxJdHqSfSMCjxaN/FQm0HgQKq1r+H7qcg9Se
+	 kzYfWcW7QkjpgTF0Cq1lYxy0V1BxzDQosNFwQ19E3SD/eTOHH0a+sOOnvlHpdyU+nM
+	 bfu1bBgsBiTmQPOjsb/rpRiwz7ywlCo2SaSCa4X2j7Qoh4+Djy/ek8VR+ruUThlM8B
+	 WFOypkOAuRdtwi+BVM3KTjIviNwcFvpDFXh7iLUFan7p/y0+kjpm3M4y4YC3qdklaV
+	 BW6wp5kAnSRM7gcEJ+48J3GUWS2SmMZ8q2o35dTTALhJD1k92IWbUX5cFk+fXxNN1F
+	 hdgAREQj1RGZA==
+Date: Thu, 17 Apr 2025 16:37:45 +0200
+From: Joerg Roedel <joro@8bytes.org>
+To: Pavel Paklov <Pavel.Paklov@cyberprotect.ru>
+Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Wan Zongshun <Vincent.Wan@amd.com>, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] iommu/amd: Fix potential buffer overflow in
+ parse_ivrs_acpihid
+Message-ID: <aAESOQ5xlTZewgo5@8bytes.org>
+References: <20250325092259.392844-1-Pavel.Paklov@cyberprotect.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250325092259.392844-1-Pavel.Paklov@cyberprotect.ru>
 
-RK3528 features two SDIO controllers and one SD/MMC controller, describe
-them in devicetree. Since their sample and drive clocks are located in
-the VO and VPU GRFs, corresponding syscons are added to make these
-clocks available.
+On Tue, Mar 25, 2025 at 09:22:44AM +0000, Pavel Paklov wrote:
+> Fixes: ca3bf5d47cec ("iommu/amd: Introduces ivrs_acpihid kernel parameter")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Pavel Paklov <Pavel.Paklov@cyberprotect.ru>
+> ---
+>  drivers/iommu/amd/init.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-Signed-off-by: Yao Zi <ziyao@disroot.org>
----
- arch/arm64/boot/dts/rockchip/rk3528.dtsi | 69 ++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-index 826f9be0be19..931d4ac004c5 100644
---- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-@@ -321,6 +321,16 @@ qos_vpu: qos@ff280400 {
- 			reg = <0x0 0xff280400 0x0 0x20>;
- 		};
- 
-+		vpu_grf: syscon@ff340000 {
-+			compatible = "rockchip,rk3528-vpu-grf", "syscon";
-+			reg = <0x0 0xff340000 0x0 0x8000>;
-+		};
-+
-+		vo_grf: syscon@ff360000 {
-+			compatible = "rockchip,rk3528-vo-grf", "syscon";
-+			reg = <0x0 0xff360000 0x0 0x10000>;
-+		};
-+
- 		cru: clock-controller@ff4a0000 {
- 			compatible = "rockchip,rk3528-cru";
- 			reg = <0x0 0xff4a0000 0x0 0x30000>;
-@@ -501,6 +511,65 @@ sdhci: mmc@ffbf0000 {
- 			status = "disabled";
- 		};
- 
-+		sdio0: mmc@ffc10000 {
-+			compatible = "rockchip,rk3528-dw-mshc",
-+				     "rockchip,rk3288-dw-mshc";
-+			reg = <0x0 0xffc10000 0x0 0x4000>;
-+			clocks = <&cru HCLK_SDIO0>,
-+				 <&cru CCLK_SRC_SDIO0>,
-+				 <&cru SCLK_SDIO0_DRV>,
-+				 <&cru SCLK_SDIO0_SAMPLE>;
-+			clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-+			fifo-depth = <0x100>;
-+			interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
-+			max-frequency = <200000000>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&sdio0_bus4>, <&sdio0_clk>, <&sdio0_cmd>;
-+			resets = <&cru SRST_H_SDIO0>;
-+			reset-names = "reset";
-+			status = "disabled";
-+		};
-+
-+		sdio1: mmc@ffc20000 {
-+			compatible = "rockchip,rk3528-dw-mshc",
-+				     "rockchip,rk3288-dw-mshc";
-+			reg = <0x0 0xffc20000 0x0 0x4000>;
-+			clocks = <&cru HCLK_SDIO1>,
-+				 <&cru CCLK_SRC_SDIO1>,
-+				 <&cru SCLK_SDIO1_DRV>,
-+				 <&cru SCLK_SDIO1_SAMPLE>;
-+			clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-+			fifo-depth = <0x100>;
-+			interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
-+			max-frequency = <200000000>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&sdio1_bus4>, <&sdio1_clk>, <&sdio1_cmd>;
-+			resets = <&cru SRST_H_SDIO1>;
-+			reset-names = "reset";
-+			status = "disabled";
-+		};
-+
-+		sdmmc: mmc@ffc30000 {
-+			compatible = "rockchip,rk3528-dw-mshc",
-+				     "rockchip,rk3288-dw-mshc";
-+			reg = <0x0 0xffc30000 0x0 0x4000>;
-+			clocks = <&cru HCLK_SDMMC0>,
-+				 <&cru CCLK_SRC_SDMMC0>,
-+				 <&cru SCLK_SDMMC_DRV>,
-+				 <&cru SCLK_SDMMC_SAMPLE>;
-+			clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-+			fifo-depth = <0x100>;
-+			interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-+			max-frequency = <150000000>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&sdmmc_bus4>, <&sdmmc_clk>, <&sdmmc_cmd>,
-+				    <&sdmmc_det>;
-+			resets = <&cru SRST_H_SDMMC0>;
-+			reset-names = "reset";
-+			rockchip,default-sample-phase = <90>;
-+			status = "disabled";
-+		};
-+
- 		dmac: dma-controller@ffd60000 {
- 			compatible = "arm,pl330", "arm,primecell";
- 			reg = <0x0 0xffd60000 0x0 0x4000>;
--- 
-2.49.0
-
+Applied for -rc, thanks.
