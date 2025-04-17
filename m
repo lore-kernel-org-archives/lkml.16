@@ -1,93 +1,87 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154AF2512C5
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967DC2512DA
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744899752; cv=none; b=SKsvU7gi2m4HEe1WpeWsbWn7ifQ/RYEvhEdyC4rwS5Mt3q15yv3niV4XfXpW5AMNwG+B9ewEt89HXxLLiObX/CMbyDun0zhOPQ2ybu2SGqDGR2o4dZOWLhOg83o48Rtn+qWMGcTS/eHG/IvdTCdeajMDcqKjVPIXwZRyUZ5dNOU=
+	t=1744899769; cv=none; b=sZbWpHEk39iD60cINxnCmmP1dQiGTRPQSiVEDN70J/bGtfieFj4HiQiapGQ/I6i6Z9fCdywZQ/BeQi7oUSLO0cBgW/Gp8RJygRO7e7WVRIsNhCEodXQNG0flLywrsOg8anSz63BT/kxSAET9B/+Lu0tPC5KfrVjHZnETAV1Bm40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744899752; c=relaxed/simple;
-	bh=xrC86xvnJkiy2wsi0KaTZ23wdHmrQQxY6hWpQMlw79Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GNYMt+itj9KKMMWPatpBTcxAwv5SFuTpn2ueERfq9D7bYU8YJWC6rB+Dve+WW3TMXSetiFYkG8lym9oAdIU0z6ceAUcXfXcjQY9L6HSpNp54u0m9Sn7OhlxP5Uj7H25kD4ydJ5z3LEj6FWS0x7sP4lafft/uBrqYpjVW3I+xu/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CuZseRVi; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744899769; c=relaxed/simple;
+	bh=9FSKpxCPd9i3UM5rQhSSgYxqhu8htOS3MLmDsJB3+dM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PNLB5a/hEVuVq+Sm9RrAeit/aTLEyDFNjBJWpISlqrooXgDddov8GIO7Lb3V0tRgSjVyyloTFU2ALNPxR/eqLociEOjQRfDdfsD3UlWIy7pgXX6jJ1DoC/URkXBBjZTz/YexE50Fh1OxytLz0aBesDkUA3aKiOHH2Fwkty5ENoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=epf/QWi0; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CuZseRVi"
-Message-ID: <13357f38-f27f-45b5-8c6a-9a7aca41156f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744899737;
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="epf/QWi0"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1744899764;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ChiiEwSa59wY7fvBbAy6iv40vz0WXaWqLI1I0LPkf10=;
-	b=CuZseRViZ/RaXnYZOACNcu4na/IG6hHI8dgeNeVVCuTSOVxXCs2ZnGodyZUZUH3dWE7CeK
-	QyjpUmPSSCLfAhMZ96M4KxFeuPaGKkfxb2/X4sadI1tABc+Cmv/RtAjACgO8b4jAiWWp3V
-	8lcI4vehocZ2Igzm1PT46ptOaVKHTGY=
-Date: Thu, 17 Apr 2025 10:22:09 -0400
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=i674xOwrjdf/AAf3vaDDj/zXNM7PUpgpfGixq0BvJVM=;
+	b=epf/QWi0fEMbAePO0z2eV4VX/swstqahqUqzcygHP0DUZtjjOHcjgeViy27Yytj7Be690M
+	ySo035j0wLDy5r1/hXLft9L0MrK9XDkOFsUqji7vLGPO61zUiowfKaBPniuXs+3/0Zpmge
+	/5NGI5R7h5IKsgJFebHve85QL3fvfN3cbdxlh4MwZZjNj2I0w74cWJlNksgOGqz6GoDZam
+	KcBBqm3QSadwVwLWZnfrrJV14r45Vng8AottX3TkeiReqBt+kG/Mit/xfgHyEWPskklxNw
+	v/fAQ33/TVTWCXevtP/iPE/iy9iMwZKKGJP8IwxryliX6s6W21Hl7qPPTUQQRw==
+From: Diederik de Haas <didi.debian@cknow.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: Dragan Simic <dsimic@manjaro.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Diederik de Haas <didi.debian@cknow.org>,
+	stable@vger.kernel.org
+Subject: [PATCH] PCI: dw-rockchip: Fix function call sequence in rockchip_pcie_phy_deinit
+Date: Thu, 17 Apr 2025 16:21:18 +0200
+Message-ID: <20250417142138.1377451-1-didi.debian@cknow.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [net-next PATCH v3 00/11] Add PCS core support
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, upstream@airoha.com,
- Christian Marangi <ansuelsmth@gmail.com>, linux-kernel@vger.kernel.org,
- Kory Maincent <kory.maincent@bootlin.com>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Clark Wang <xiaoning.wang@nxp.com>,
- Claudiu Beznea <claudiu.beznea@microchip.com>,
- Claudiu Manoil <claudiu.manoil@nxp.com>, Conor Dooley <conor+dt@kernel.org>,
- Ioana Ciornei <ioana.ciornei@nxp.com>, Jonathan Corbet <corbet@lwn.net>,
- Joyce Ooi <joyce.ooi@intel.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Madalin Bucur <madalin.bucur@nxp.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Michal Simek <michal.simek@amd.com>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
- Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
- Robert Hancock <robert.hancock@calian.com>,
- Saravana Kannan <saravanak@google.com>, UNGLinuxDriver@microchip.com,
- Vladimir Oltean <vladimir.oltean@nxp.com>, Wei Fang <wei.fang@nxp.com>,
- devicetree@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com
-References: <20250415193323.2794214-1-sean.anderson@linux.dev>
- <aADzVrN1yb6UOcLh@shell.armlinux.org.uk>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <aADzVrN1yb6UOcLh@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Hi Russell,
+The documentation for the phy_power_off() function explicitly says
 
-On 4/17/25 08:25, Russell King (Oracle) wrote:
-> On Tue, Apr 15, 2025 at 03:33:12PM -0400, Sean Anderson wrote:
->> This series adds support for creating PCSs as devices on a bus with a
->> driver (patch 3). As initial users,
-> 
-> As per previous, unless I respond (this response not included) then I
-> haven't had time to look at it - and today is total ratshit so, not
-> today.
+  Must be called before phy_exit().
 
-Sorry if I resent this too soon. I had another look at the request for
-#pcs-cells [1], and determined that a simpler approach would be
-possible. So I wanted to resend with that change since it would let me
-drop the fwnode_property_get_reference_optional_args patches.
+So let's follow that instruction.
 
---Sean
+Fixes: 0e898eb8df4e ("PCI: rockchip-dwc: Add Rockchip RK356X host controller driver")
+Cc: stable@vger.kernel.org	# v5.15+
+Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
+---
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[1] https://lore.kernel.org/netdev/e7720741-93c5-450b-99a0-3434a5d535f5@linux.dev/
+diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+index c624b7ebd118..4f92639650e3 100644
+--- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
++++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+@@ -410,8 +410,8 @@ static int rockchip_pcie_phy_init(struct rockchip_pcie *rockchip)
+ 
+ static void rockchip_pcie_phy_deinit(struct rockchip_pcie *rockchip)
+ {
+-	phy_exit(rockchip->phy);
+ 	phy_power_off(rockchip->phy);
++	phy_exit(rockchip->phy);
+ }
+ 
+ static const struct dw_pcie_ops dw_pcie_ops = {
+-- 
+2.49.0
+
