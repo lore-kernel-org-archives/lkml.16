@@ -1,252 +1,175 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2047.outbound.protection.outlook.com [40.107.92.47])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C60224EF6D;
-	Thu, 17 Apr 2025 14:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744898984; cv=fail; b=HR8wkhA2NAumwkER4JJ5+V/ajMGlYGLSNgwicy58jo59WwBraMO0HV8wnI82MHtLwBCHCbKTHBMXPmBiz7a7BzSLcAm22P0bojZrJ35tKNejpTvZSch7L8bVtAY4jIckZP526dGDINatFlqiu4bJMpYRpqeBO4jvQHUF6Bgm178=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744898984; c=relaxed/simple;
-	bh=/rbmkQh4rSRZnUmMpA6fiXO9OyZrfyk494wq+ellvGE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=DjBp5D5Mk9VIxUvg5Ok3smF2YW322AzzsC3zAD9XnOI9/6Sc9xRYjn4hewl+IA9N5uV58A32qdRPxBVCraosauhpQVAejKPndih0Syl4oC3facCjMDWx47cpw32wy7SgnuJU1Glnyt8phO3P0OkIy9wtD5thV+dodQCc7bSbliE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ssE5GeJ1; arc=fail smtp.client-ip=40.107.92.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ssE5GeJ1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nxCXGYKm+SOdz0JfkTe80WusHasHhqhu1j1p+m5SHc9RYAfWKLohp2wCm+jtmy5UpsxZzE0UAlXo9G/FxY2WGDBJd0Inp8ZnmqqTeSv6RAUmgtiaF99m20LeU+uy3aXW7ngBvzaZqRr3WMpjV6JfHVrKDr/2DdJlYTpTE9LCqSArqJfYaeqyUA0WnaRlWMs0X0BBZa0q4jcQeS5Vh6ka1s0s3QsgyJiwbcFPQOHtqCSKGgRZLdZNQNNj+ZZwcqYCSS33+PJmnrx5E1Pfhh5mZWoqes16veB7tULC+t+poNAkSJNrBWtJen+b+953t2+KWWlpdi6/amZm07U0/kejzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=w2qOh/qjvHLcqAmOrrfp1dPsMah/mIpERRxb2/AYMMk=;
- b=ymcn/iWIwP16EXh9XSxnrGJj3l5+VWKfYnQkWWwxUvZZpcABen3NCsFG4E/yFqLBD0HoYT+tWE93Tnv3H5HtBjZ0NoZ3ySAm71CcFV1bZGlFDFht8ZoLuB/dwkXjLxPFYFbQibHJHT+f7JjThuKS3HS5WNFnAH5xSGHmRZDLOR+9M8/eLiNTH5R2ylHclVtosFb0iSN8/JXziIn6oshlM+AH15yuuwFeXAmVLyzg/aMjxt17XtozeYWTcNmgq5E9uU9zbWBDxoKJ5tGe3Z8OrXAERMxmm/T2G+RmUtvJr2RWS+xSsdRLt5UpcDJkcKSpa22AB3K88oIKx7+2qaJuPA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w2qOh/qjvHLcqAmOrrfp1dPsMah/mIpERRxb2/AYMMk=;
- b=ssE5GeJ1HSHU0CIpBa5h/PaNEsf1wWH6Pnq3QVs5Lb6FJGIFLZ+KLD9lTJZ+uyM+Ee69glpoAUbKHoacFmCQomoNdQnQAW/c+QfAiRefx7csm8LQAXppx6R9Ko116InIHbCil+pGNnoPliUUckZQoKdDEiDNqxosSFPi4WUDjXUbj8j/EETv9MqT6TFnCV7diZHXP3RqNSzqPfXJV6DyTHrp5n1zwqtRGnuoFcrx2rRBThqMmSfsp62hV2Bd4vxFvhGNPM3kMGAG8/gwW0tF7LPJU9E3zT1fP5ABc0SYlkI90/wKLnF4kSUi5b3Qlv2+q9gS2gxFoTBDupVFrEw7Gg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA1PR12MB9031.namprd12.prod.outlook.com (2603:10b6:208:3f9::19)
- by PH8PR12MB7231.namprd12.prod.outlook.com (2603:10b6:510:225::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Thu, 17 Apr
- 2025 14:09:37 +0000
-Received: from IA1PR12MB9031.namprd12.prod.outlook.com
- ([fe80::1fb7:5076:77b5:559c]) by IA1PR12MB9031.namprd12.prod.outlook.com
- ([fe80::1fb7:5076:77b5:559c%5]) with mapi id 15.20.8632.035; Thu, 17 Apr 2025
- 14:09:36 +0000
-Date: Thu, 17 Apr 2025 14:09:18 +0000
-From: Dragos Tatulea <dtatulea@nvidia.com>
-To: Kees Cook <kees@kernel.org>, Saeed Mahameed <saeedm@nvidia.com>
-Cc: Tariq Toukan <tariqt@nvidia.com>, Leon Romanovsky <leon@kernel.org>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>, 
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net/mlx5e: ethtool: Fix formatting of
- ptp_rq0_csum_complete_tail_slow
-Message-ID: <d7cj5kz2xnm2wg475oqs6fyc77l2aictw5gyq7n5oogp3g4pii@bibogucg42s3>
-References: <20250416020109.work.297-kees@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416020109.work.297-kees@kernel.org>
-X-ClientProxiedBy: TL2P290CA0014.ISRP290.PROD.OUTLOOK.COM
- (2603:1096:950:2::17) To IA1PR12MB9031.namprd12.prod.outlook.com
- (2603:10b6:208:3f9::19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA7524EF6C;
+	Thu, 17 Apr 2025 14:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744899015; cv=none; b=NxCe6Ige+jD8Dg1nW5s4LQue6ebOX5Azq4BizbxLaNA1567HEkZFmVd2nCNwbEJAhNWPPzaqIledwuj5rebsvKs0iYS7mDmj69T+yd372XR3vX9rmspURpqbmepKPdmh6Sm82Sc6kz4x1z0deYSubXmBOtnnMGwRnUHbjTn+pYE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744899015; c=relaxed/simple;
+	bh=grUKcXQg7P2JBY8UPMAZIicOLz6vwNYpw2r6RoZTR4g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MMAlv2s5YhQav5rxvZIj7RHmmitc1DTtc52ZQkdfV7q8KLdtXTR+T/FhcikrIxWtIHMR4yUrod4EtHS/dSADwa7Gb7pNoUeUvm3qKCBkcfwMrRwYnUl0M38WGNMLuHV6KJJ9OjTFbyBW7iSUb8n03ZoftXRA0Rj5oatqEFS8sEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zdfsg1t9Bz4f3m6s;
+	Thu, 17 Apr 2025 22:09:43 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 847D41A17B9;
+	Thu, 17 Apr 2025 22:10:08 +0800 (CST)
+Received: from [10.67.111.192] (unknown [10.67.111.192])
+	by APP2 (Coremail) with SMTP id Syh0CgDHhGe+CwFowTzCJg--.63259S2;
+	Thu, 17 Apr 2025 22:10:08 +0800 (CST)
+Message-ID: <9da88811-cce0-41df-8069-2e8b67541c39@huaweicloud.com>
+Date: Thu, 17 Apr 2025 22:10:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB9031:EE_|PH8PR12MB7231:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8932f428-ba97-4e0a-a245-08dd7db97c58
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?11juNpc98OR/3ZmaB+UAv0TBNjk80LXEw+1b1eEkZl1wlr3zxvrCGbEjK5ST?=
- =?us-ascii?Q?Xy6WRbBPhCXFrfHK8G7cWRsNn4wCTimzKwIJK+Yo4JJUe+s1uFMKw21rNQ1a?=
- =?us-ascii?Q?HrWQdiOAzjVhcMohAID9o9mM1GFNRtgcjLPmChJaM0cy9aoEXoJkvSTh8/LP?=
- =?us-ascii?Q?IcYSmqsZGWzYLclhKivRZgbXR10I8xafvn1lNIZX4XFQEk6HhE9sFjw6DU0a?=
- =?us-ascii?Q?YePwJbyNowmSLwOniL2FALl40bqlD3h2Qide8nU++Q4m9N2CVQQqEoPTW6fb?=
- =?us-ascii?Q?bpgmdwhrJcgRdYg9Xe5tRjLMHh0EQL9JjMmUIPXKNDsiHt3seuBfMpNj4Mfp?=
- =?us-ascii?Q?SUqKf2k5IGYQvFk9ByKGxdryamw6vJuhEL9pxC8YfjHxAnDzSG3zqJPS51Db?=
- =?us-ascii?Q?kls9q8/TGqknUaR6VxRVBF6k8j2bt2AScPobmE4HKOywHYswNg/MBaV4gaWp?=
- =?us-ascii?Q?Mq94rGlK+1IAyMtC9V971KfuS84EVC6JTOJLFhhZLzqIPCV6a+Qh2JymgMKY?=
- =?us-ascii?Q?37pA35TcQcyET3uZYkLR/lhdHhzJO+i6zpsHoJT/rZG4x1saAyBHuXLsEnVM?=
- =?us-ascii?Q?vwp5Uhvef35GtEV3V0/Mxn5se7zqBf9MoO2VycTPvGlwdW975wcuytgr6Ha+?=
- =?us-ascii?Q?LyqFYUOINnZoMQaVfeeh1703wA7a3C5B8py4wPv3JqyBb6dKhoau8KldaOeh?=
- =?us-ascii?Q?+qn0zmm+AtybllXqpPIPqvCDItOKwfQnbUK2y5yTijM19IJ3h+CZfpfvcJBQ?=
- =?us-ascii?Q?kRYPxNBNGfVrpaG5/MV2vCDutlKW7yf2SZ7Yb5AnBUXJ3N5oy24vSBbXNG8Q?=
- =?us-ascii?Q?5kxhD5eUm2IuK6xA7bzo58rTVlZ4IMMiklyhFVMCMwWVxbbrC4nxL6k4oIME?=
- =?us-ascii?Q?ddjQviq/DRgfDwKr5iHX4I4IUqEGrF6Dqr7Y6k7qq4OKzs8GwIcmT2wIeBch?=
- =?us-ascii?Q?XXzPfXJPuCKSDCy5htbxzrXHghJjijHbHPRAkL1uAVQsHWzPeZi0lD8iKcVL?=
- =?us-ascii?Q?P08KqMxlx1654fyN9Yy3mBj+UAVX12pwF8bQ+fX3eJqcm3mMS0Edi/I7PwMX?=
- =?us-ascii?Q?to84lQX11LkVpGarslHeA90Eu/QyBU2XaCk5AjYmhpesSb56rU3K9VMRbIVS?=
- =?us-ascii?Q?yEQe5K3g+bqnZkPuJi/TJllEl6sVb0xZ3dGdXZvmTekdJoUJ9m+oHSNU5Hhi?=
- =?us-ascii?Q?cvhBXODzu3CUmo8FpgcNckOITZBZVtJL/33EkaRap3MpzHEfRYEtqF90Xbvf?=
- =?us-ascii?Q?frRyVwkVk/6ND0B5WN6CbGWbYLVuhzSDq3b5uu4cY/fV7nW602ltrdFKBXSO?=
- =?us-ascii?Q?04KH3kMdJHafvKVpCwX8fyQCkcwo9rjUZnseetRAYWvDdsBKXRfkPouinOwn?=
- =?us-ascii?Q?kHw8Tu7Qsj/toY21LN0cMnt5sNs3hXjaZEkdlk9ynW5wXpIkwLkJ/GVSCJjf?=
- =?us-ascii?Q?h7H/0V4MrgA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9031.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?eHL4agGXyBD++R7lMErRBN1RCW1dmCvdf7piJBKbK2Qhj7Np4uXRMoV0J0zx?=
- =?us-ascii?Q?xo3AMC0AK3GAdsW8Zw2B0vZw3YBpz+cz98kuLv/ceHvHBr3LTVDLNUOo7BAK?=
- =?us-ascii?Q?V9rs0YxrLXqHVtp6xIV8OxHiXh7MxnaJVpUe5ZQlj/045Hz3rr7A91VYC0AW?=
- =?us-ascii?Q?Y5jh4OUn5NZVem8ArYiQ1qbAfDdEVWtUbu1KMGvezmGyg5XE+uD0SkodUlP+?=
- =?us-ascii?Q?DG3kMTgoWlAiHctj134aj7Og7YUe4OaVkPwC7deV+jAYazfLuN7yFFgu1N50?=
- =?us-ascii?Q?4FOBdiCJ+zM3kbYlgoxTrJx3aBATtWBrGFK+/A5Uaq65NaNR2owCpomZAIsR?=
- =?us-ascii?Q?EZ6Ikkt/eZMDZZ1ajEQq3+C4pkUDLaM6HD+xVVYraU2dXaZPz/PuExvQIgfr?=
- =?us-ascii?Q?7b4hH3DokKSiJTeR4ktsVubW7gMIWKkn3/YXxBIoztYQzusyChHnmzx/eRwW?=
- =?us-ascii?Q?2URlfZ5iO3UjIEgTf4n1iN47UDTHgT5NJpv5kjJpKhpoXPU3DW6i3+TPQrOl?=
- =?us-ascii?Q?tde0pqMT9/DrGdvhoF/K/XQMB3sOUWTwcLtxxOKHg1gEtnvYqr3OUw9kyxQC?=
- =?us-ascii?Q?VVOwKeuC/vEnzLQitIN5kuDoDcowvkyf8p8FossdLbYyI5A/XM3QsvC0JBz7?=
- =?us-ascii?Q?LpPtjqk7E7A4hq/Gi24q4/L87lHPxKE2BGyn+Sh6g4r6CWxR3LVLerZ/+XB7?=
- =?us-ascii?Q?EJXFp7TP19rsibd853jkzw3Zlbvt591RZhS/ro4QDH6qrWAPNgA/NspFY+c9?=
- =?us-ascii?Q?0b49OxUb18rUxdPS4SHA9tTQWGlZyTrNOWk69X7k+Lm+uMRXJePg7dH/yUB5?=
- =?us-ascii?Q?YkR2AtP5B3/8ITrrKpcMUM+o1zHV2mLvvnkP2JWjCyS451iSYlx2FvrNHXRc?=
- =?us-ascii?Q?uIxaTsM+YpM4jpow92jk1GHcAI3xp0rmBv1MxTzZaIaPnX3yPD6dF0zcsBYI?=
- =?us-ascii?Q?P7qgbKdoHnpox2biwM3cTSM8MGmuT6dGFgBSRKo2j0ZCGOh0FYAJw54dfUT6?=
- =?us-ascii?Q?1am2IuA1XxH/v4EDyF6Ga2jcXdtH3fXArzdguxmn9Ej8U+o9DQIusorv9KFq?=
- =?us-ascii?Q?B67zRbcvVnNc41jhw/v0OPFxJ6pIy3ru5zPc2xqm33Iafdo9BXRJUGDK0XQO?=
- =?us-ascii?Q?l14flloy4TtEUvk80wlzPiAnyyemcoUGyoAugEkXQx5ZNEzt0EPbZnOvNfDw?=
- =?us-ascii?Q?jGGpGlDhF6cn/q4vPazoIHjqxJKJfARupXwLyN4Y7d+bVHHuzfI3lEoeTdpZ?=
- =?us-ascii?Q?/YJuaQMJH6Hkk093qH7il9lboGWvciudr5enkez1EaRJIYgxfJfLACYmJl0U?=
- =?us-ascii?Q?5hDIrYw5FHSWHssymodY1JMO7pPAr1z5lmZdvbBQg87eu0X3hGfaqnqNyl7i?=
- =?us-ascii?Q?/DOEpisHEhBipKE30LKmecuVEgsc8ztt0Hah4RNCxkNx2TDG5X12yZZvTI6l?=
- =?us-ascii?Q?JftGXEF/Dk2a/zT0OMt7PXpOHr314cRZlmtVc+0PypADGTVgozNQXsyzbCso?=
- =?us-ascii?Q?unZPrAaT/STRh+dC7ooiTWdsgxJpig9muoIiirxJrZ/nWh9LUprBaiMa6KFA?=
- =?us-ascii?Q?ZDk2iNbR/AQN1Hvj7qDrYNvvU49MONJwks/5j26T?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8932f428-ba97-4e0a-a245-08dd7db97c58
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB9031.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 14:09:36.8247
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: a2oU3lQa1Fo+2bML+SF3oI79PmWbBQU/u5fL20cCMGKPqPCyjg6b2GlBOZkg/3eyU+Y0xTFoCH3qcK4otcC+VA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7231
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC bpf-next 1/4] bpf: add struct largest member size in
+ func model
+To: =?UTF-8?Q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Puranjay Mohan <puranjay@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Florent Revest <revest@chromium.org>,
+ Bastien Curutchet <bastien.curutchet@bootlin.com>, ebpf@linuxfoundation.org,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kselftest@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
+ <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com>
+ <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
+ <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com>
+Content-Language: en-US
+From: Xu Kuohai <xukuohai@huaweicloud.com>
+In-Reply-To: <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgDHhGe+CwFowTzCJg--.63259S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxZr18Kw48WrWftF1kJF47urg_yoWrGw4fpF
+	ZYg3Z8tF4kJr4xua1qy3yUZrWSq34rCryUCry3tw17tFWDGF1kKFW7KF45ury5Gr1kG342
+	vF42qF45Aa43ZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	4xRDUUUUU==
+X-CM-SenderInfo: 50xn30hkdlqx5xdzvxpfor3voofrz/
 
-On Tue, Apr 15, 2025 at 07:01:14PM -0700, Kees Cook wrote:
-> The new GCC 15 warning -Wunterminated-string-initialization reports:
+On 4/17/2025 3:14 PM, Alexis Lothoré wrote:
+> Hi Andrii,
 > 
-> In file included from drivers/net/ethernet/mellanox/mlx5/core/en.h:55,
->                  from drivers/net/ethernet/mellanox/mlx5/core/en_stats.c:34:
-> drivers/net/ethernet/mellanox/mlx5/core/en_stats.h:57:46: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (33 chars into 32 available) [-Wunterminated-string-initialization]
->    57 | #define MLX5E_DECLARE_PTP_RQ_STAT(type, fld) "ptp_rq%d_"#fld, offsetof(type, fld)
->       |                                              ^~~~~~~~~~~
-> drivers/net/ethernet/mellanox/mlx5/core/en_stats.c:2279:11: note: in expansion of macro 'MLX5E_DECLARE_PTP_RQ_STAT'
->  2279 |         { MLX5E_DECLARE_PTP_RQ_STAT(struct mlx5e_rq_stats, csum_complete_tail_slow) },
->       |           ^~~~~~~~~~~~~~~~~~~~~~~~~
+> On Wed Apr 16, 2025 at 11:24 PM CEST, Andrii Nakryiko wrote:
+>> On Fri, Apr 11, 2025 at 1:32 PM Alexis Lothoré (eBPF Foundation)
+>> <alexis.lothore@bootlin.com> wrote:
+>>>
+>>> In order to properly JIT the trampolines needed to attach BPF programs
+>>> to functions, some architectures like ARM64 need to know about the
+>>> alignment needed for the function arguments. Such alignment can
+>>> generally be deduced from the argument size, but that's not completely
+>>> true for composite types. In the specific case of ARM64, the AAPCS64 ABI
+>>> defines that a composite type which needs to be passed through stack
+>>> must be aligned on the maximum between 8 and the largest alignment
+>>> constraint of its first-level members. So the JIT compiler needs more
+>>> information about the arguments to make sure to generate code that
+>>> respects those alignment constraints.
+>>>
+>>> For struct arguments, add information about the size of the largest
+>>> first-level member in the struct btf_func_model to allow the JIT
+>>> compiler to guess the needed alignment. The information is quite
+>>
+>> I might be missing something, but how can the *size* of the field be
+>> used to calculate that argument's *alignment*? i.e., I don't
+>> understand why arg_largest_member_size needs to be calculated instead
+>> of arg_largest_member_alignment...
+> 
+> Indeed I initially checked whether I could return directly some alignment
+> info from btf, but it then involves the alignment computation in the btf
+> module. Since there could be minor differences between architectures about
+> alignment requirements, I though it would be better to in fact keep alignment
+> computation out of the btf module. For example, I see that 128 bits values
+> are aligned on 16 bytes on ARM64, while being aligned on 8 bytes on S390.
+> 
+> And since for ARM64, all needed alignments are somehow derived from size
+> (it is either directly size for fundamental types, or alignment of the
+> largest member for structs, which is then size of largest member),
+> returning the size seems to be enough to allow the JIT side to compute
+> alignments.
 >
-> This stat string is being used in ethtool_sprintf(), so it must be a
-> valid NUL-terminated string. Currently the string lacks the final NUL
-> byte (as GCC warns), but by absolute luck, the next byte in memory is a
-> space (decimal 32) followed by a NUL. "format" is immediately followed
-> by little-endian size_t:
-> 
-> struct counter_desc {
->         char                       format[32];           /*     0    32 */
->         size_t                     offset;               /*    32     8 */
-> };
-> 
-> The "offset" member is populated by the stats member offset:
-> 
->  #define MLX5E_DECLARE_PTP_RQ_STAT(type, fld) "ptp_rq%d_"#fld, offsetof(type, fld)
-> 
-> which for this struct mlx5e_rq_stats member, csum_complete_tail_slow, is
-> 32, or space, and then the rest of the "offset" bytes are NULs.
-> 
-> struct mlx5e_rq_stats {
-> 	...
->         u64                        csum_complete_tail_slow; /* 32     8 */
-> 
-> The use of vsnprintf(), within ethtool_sprintf(), reads past the end of
-> "format" and sees the format string as "ptp_rq%d_csum_complete_tail_slow ",
-> with %d getting resolved by MLX5E_PTP_CHANNEL_IX (value 0):
-> 
->                        ethtool_sprintf(data, ptp_rq_stats_desc[i].format,
->                                        MLX5E_PTP_CHANNEL_IX);
-> 
-> With an output result of "ptp_rq0_csum_complete_tail_slow", which gets
-> precisely truncated to 31 characters with a trailing NUL.
-> 
-> So, instead of accidentally getting this correct due to the NUL bytes
-> at the end of the size_t that happens to follow the format string, just
-> make the string initializer 1 byte shorter by replacing "%d" with "0",
-> since MLX5E_PTP_CHANNEL_IX is already hard-coded. This results in no
-> initializer truncation and no need to call sprintf().
->
-Thanks for the detailed write-up!
 
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Saeed Mahameed <saeedm@nvidia.com>
-> Cc: Tariq Toukan <tariqt@nvidia.com>
-> Cc: Leon Romanovsky <leon@kernel.org>
-> Cc: Andrew Lunn <andrew+netdev@lunn.ch>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: Richard Cochran <richardcochran@gmail.com>
-> Cc: netdev@vger.kernel.org
-> Cc: linux-rdma@vger.kernel.org
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/en_stats.c | 3 +--
->  drivers/net/ethernet/mellanox/mlx5/core/en_stats.h | 2 +-
->  2 files changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
-> index 1c121b435016..19664fa7f217 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
-> @@ -2424,8 +2424,7 @@ static MLX5E_DECLARE_STATS_GRP_OP_FILL_STRS(ptp)
->  	}
->  	if (priv->rx_ptp_opened) {
->  		for (i = 0; i < NUM_PTP_RQ_STATS; i++)
-> -			ethtool_sprintf(data, ptp_rq_stats_desc[i].format,
-> -					MLX5E_PTP_CHANNEL_IX);
-> +			ethtool_puts(data, ptp_rq_stats_desc[i].format);
->  	}
->  }
->  
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.h b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.h
-> index 8de6fcbd3a03..def5dea1463d 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.h
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.h
-> @@ -54,7 +54,7 @@
->  #define MLX5E_DECLARE_PTP_TX_STAT(type, fld) "ptp_tx%d_"#fld, offsetof(type, fld)
->  #define MLX5E_DECLARE_PTP_CH_STAT(type, fld) "ptp_ch_"#fld, offsetof(type, fld)
->  #define MLX5E_DECLARE_PTP_CQ_STAT(type, fld) "ptp_cq%d_"#fld, offsetof(type, fld)
-> -#define MLX5E_DECLARE_PTP_RQ_STAT(type, fld) "ptp_rq%d_"#fld, offsetof(type, fld)
-> +#define MLX5E_DECLARE_PTP_RQ_STAT(type, fld) "ptp_rq0_"#fld, offsetof(type, fld)
->  
->  #define MLX5E_DECLARE_QOS_TX_STAT(type, fld) "qos_tx%d_"#fld, offsetof(type, fld)
->  
-> -- 
-> 2.34.1
-> 
->
-Thought of renaming the stat but then it will impact current users which
-is worse: csum_complete_tail_slow is a regular rq stat as well. So:
+Not exactly. The compiler's "packed" and "alignment" attributes cause a
+structure to be aligned differently from its natural alignment.
 
-Reviewed-by: Dragos Tatulea <dtatulea@nvidia.com>
+For example, with the following three structures:
 
-Thanks,
-Dragos
+struct s0 {
+     __int128 x;
+};
+
+struct s1 {
+     __int128 x;
+} __attribute__((packed));
+
+struct s2 {
+     __int128 x;
+} __attribute__((aligned(64)));
+
+Even though the largest member size is the same, s0 will be aligned to 16
+bytes, s1 and s2 are not aligned the same way. s1 has no alignment due to
+the "packed" attribute, while s2 will be aligned to 64 bytes.
+
+When these three structures are passed as function arguments, they will be
+located on different positions on the stack.
+
+For the following three functions:
+
+int f0(__int128 a, __int128 b, __int128 c, int64_t d, __int128 e, int64_t f, struct s0 g);
+int f1(__int128 a, __int128 b, __int128 c, int64_t d, __int128 e, int64_t f, struct s1 g);
+int f2(__int128 a, __int128 b, __int128 c, int64_t d, __int128 e, int64_t f, struct s2 g);
+
+g will be located at sp+32 in f0, sp + 24 in f1, and some 64-byte aligned
+stack address in f2.
+
+>>> specific, but it allows to keep arch-specific concerns (ie: guessing the
+>>> final needed alignment for an argument) isolated in each JIT compiler.
+>>
+>> couldn't all this information be calculated in the JIT compiler (if
+>> JIT needs that) from BTF?
+> 
+>>From what I understand, the JIT compiler does not have access to BTF info,
+> only a substract from it, arranged in a struct btf_func_model ? This
+> struct btf_func_model already has size info for standard types, but for
+> structs we need some additional info about the members, hence this
+> arg_largest_member_alignment addition in btf_func_model.
+> 
+> Thanks,
+> 
+> Alexis
+> 
+
