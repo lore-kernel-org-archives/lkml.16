@@ -1,119 +1,104 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 750AB22A1CB;
-	Thu, 17 Apr 2025 09:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3322288CC;
+	Thu, 17 Apr 2025 09:54:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744883673; cv=none; b=GMqrAEMM1i6JN/9ueaCzFJ/C/orbbiOOl8tOU9ZmU/fCdzHSDhIasJJIaTp2fEgUS/7g0Bd9Q8sPtOq83di6P9O/2G8jOzOVzdchFOPmoIH6OP8S/KpinDX2PsWUZzkzpV6vycGUTjKuXwnboLJ1fO2ngjJZLi6HWOCUn8vAAMY=
+	t=1744883686; cv=none; b=JOeCtiCvKTV8VskwiZjEtpC9t1DGfvzvcfvYsdIdvUH55hD2waCAahyC5HiOQ7GnNTlA37nQzZuChhm0VTKWrnyBmOyNlzt1i+mjNjz+dHJxpg0L5eijp+iHGrByOlZK28smJPgVxZen9hNWN+AnOnhiPTLn7fwV5Jsz+yrfrS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744883673; c=relaxed/simple;
-	bh=Qfe/CBGkmZbL6EmYdCa433SjCrHvAu5pxnjtFrFLdkg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=O+fXhJSgBPm1So8n8NCKj3VzNvy23pmnV/8WD2BeLlNe+zZU8HlFKv7K7Df8Roh4GDkePSamHlovgZUF+8TaPmI6EPheAcZVQ8FuM98yQYnQoj1/K6WKPzfzUrLrFtf4j1Pxuc+JU6qILN3cZiql8fNABk5l6Da5LYyYFe0mkIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=a0dzhG81; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744883686; c=relaxed/simple;
+	bh=vAhYR0DxNYTjOSzwAc2fvxm9d0b4bcwj8L5gWZR5QS8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rAa9divgBB428DFfG8a5QjS313qMoWo6QWLjjwna9e/FxkmMTHKDd76f4a13u8cCPLTUSVxT5+qjww1cS/dVZX5lal7h9UFZ4cRDsnkch91KLBL4GJq+I/eXRGjv51ZZK9kwXHnYfi2iqV+n1EpPx7B3APQrUcpN5oQH+rH8eeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UcHcbGbB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="a0dzhG81"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=brCIu
-	T7WOka4QsCGcvoP2O2amwg+o0P7EpSsxEuWZgs=; b=a0dzhG81c0zNMx5DKhCLf
-	0Ek45TfufCikzbBLn8u6S28Z4hrwb1mrQQja0/8SN952ruJkGL5TIoHHgQPrSOHk
-	AQ3yX/4n8ybG6b9rkw3M2o6VxIb3VIJrW/mH5Z+Vm0ce5YraRZgprxQA3LO4caiv
-	gwWtgBge3Lqp7LBRwP8kxA=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wDXH0hxzwBoI3LbAQ--.843S2;
-	Thu, 17 Apr 2025 17:52:51 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: andrii.nakryiko@gmail.com
-Cc: andrii@kernel.org,
-	ast@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	eddyz87@gmail.com,
-	haoluo@google.com,
-	john.fastabend@gmail.com,
-	jolsa@kernel.org,
-	kpsingh@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	martin.lau@linux.dev,
-	mathieu.desnoyers@efficios.com,
-	mattbobrowski@google.com,
-	mhiramat@kernel.org,
-	rostedt@goodmis.org,
-	sdf@fomichev.me,
-	song@kernel.org,
-	yangfeng59949@163.com,
-	yonghong.song@linux.dev
-Subject: Re: [PATCH bpf-next v3] bpf: Remove redundant checks
-Date: Thu, 17 Apr 2025 17:52:45 +0800
-Message-Id: <20250417095245.388120-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <CAEf4Bzai7NL-3=1SVi4-WWYWEY6Lzrb8GBfKnt6FG8sNm2OMRQ@mail.gmail.com>
-References: <CAEf4Bzai7NL-3=1SVi4-WWYWEY6Lzrb8GBfKnt6FG8sNm2OMRQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UcHcbGbB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15D29C4CEE4;
+	Thu, 17 Apr 2025 09:54:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744883685;
+	bh=vAhYR0DxNYTjOSzwAc2fvxm9d0b4bcwj8L5gWZR5QS8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UcHcbGbBno1NM6VGd/kWkWEc0O9+cEg0+k7nrMTYrN1TpBGrPb3u5LPztWhYLn5bp
+	 dvJ+8Hy4Gyz1nLpiyNAYO3nzeGmMYRBZtBTVQRfFJMwCPuphKiQg7KAIEwHBbmycdU
+	 Z1DdujIfnC+zCPPj51MMTdviv8BNdzYeuqZPPydCdHj0QGRtJEptj+KUQjqWt4ZmCl
+	 JK18Dwqr9xGceHLH5jI1GjPC2PvOLtfZ7vakGOgS/opSpbp764yjIyUuUSZ5TjRjHM
+	 1L81SKYKL0QkGQ2UUbNyyJy1Sq4cIZXhBg5FG8UwUWGFI5n57GeD9wcmUDsXO2bdHW
+	 rUP9UGK6Sl1WQ==
+Date: Thu, 17 Apr 2025 11:54:40 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, lpieralisi@kernel.org,
+	kw@linux.com, bhelgaas@google.com, heiko@sntech.de,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	jingoohan1@gmail.com, thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
+Message-ID: <aADP4JZmSVACXKwd@ryzen>
+References: <20250416151926.140202-1-18255117159@163.com>
+ <aACoEpueUHBLjgbb@ryzen>
+ <85643fe4-c7df-4d64-e852-60b66892470a@rock-chips.com>
+ <aACsJPkSDOHbRAJM@ryzen>
+ <ca283065-a48c-3b39-e70d-03d4c6c8a956@rock-chips.com>
+ <aACyRp8S9c8azlw9@ryzen>
+ <52a2f6dc-1e13-4473-80f2-989379df4e95@163.com>
+ <aAC-VTqJpCqcz6NK@ryzen>
+ <4c2a94b4-e483-426f-b7d8-ed98ac474c63@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDXH0hxzwBoI3LbAQ--.843S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJr45tw4fWr1xAFWfKr48JFb_yoW8WFWfp3
-	W7Ar15Ar4kGa4Ut3sxJrs5ZFyrur13X3yxJwnakas09FsrZFyUJry3ta12vF95Zr95Ga4x
-	ZanFqrW5tFyIqa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUoOJnUUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiwgUyeGgAyKnWlwAAsF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4c2a94b4-e483-426f-b7d8-ed98ac474c63@163.com>
 
-On Wed, 16 Apr 2025 14:55:43 -0700, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-
-[......]
-> I'm surprised these two are not part of bpf_base_func_proto, tbh...
-> maybe let's move them there while we are cleaning all this up?
+On Thu, Apr 17, 2025 at 05:48:04PM +0800, Hans Zhang wrote:
 > 
-> pw-bot: cr
 > 
-> > -       case BPF_FUNC_trace_printk:
-> > -               return bpf_get_trace_printk_proto();
-> >         case BPF_FUNC_get_smp_processor_id:
-> >                 return &bpf_get_smp_processor_id_proto;
+> On 2025/4/17 16:39, Niklas Cassel wrote:
+> > On Thu, Apr 17, 2025 at 04:07:51PM +0800, Hans Zhang wrote:
+> > > On 2025/4/17 15:48, Niklas Cassel wrote:
+> > > 
+> > > Hi Niklas and Shawn,
+> > > 
+> > > Thank you very much for your discussion and reply.
+> > > 
+> > > I tested it on RK3588 and our platform. By setting pci=pcie_bus_safe, the
+> > > maximum MPS will be automatically matched in the end.
+> > > 
+> > > So is my patch no longer needed? For RK3588, does the customer have to
+> > > configure CONFIG_PCIE_BUS_SAFE or pci=pcie_bus_safe?
+> > > 
+> > > Also, for pci-meson.c, can the meson_set_max_payload be deleted?
+> > 
+> > I think the only reason why this works is because
+> > pcie_bus_configure_settings(), in the case of
+> > pcie_bus_config == PCIE_BUS_SAFE, will walk the bus and set MPS in
+> > the bridge to the lowest of the downstream devices:
+> > https://github.com/torvalds/linux/blob/v6.15-rc2/drivers/pci/probe.c#L2994-L2999
+> > 
+> > 
+> > So Hans, if you look at lspci for the other RCs/bridges that don't
+> > have any downstream devices connected, do they also show DevCtl.MPS 256B
+> > or do they still show 128B ?
+> > 
 > 
-> this one should be cleaned up as well and
-> bpf_get_smp_processor_id_proto removed. All BPF programs either
-> disable CPU preemption or CPU migration, so bpf_base_func_proto's
-> implementation should work just fine (but please do it as a separate
-> patch)
+> Hi Niklas,
 > 
+> It will show DevCtl.MPS 256B.
 
-BPF_CALL_0(bpf_get_smp_processor_id)
-{
-	return smp_processor_id();
-}
-const struct bpf_func_proto bpf_get_smp_processor_id_proto = {
-	.func		= bpf_get_smp_processor_id,
-	.gpl_only	= false,
-	.ret_type	= RET_INTEGER,
-	.allow_fastcall	= true,
-};
-When attempting to remove bpf_get_smp_processor_id_proto,
-it was observed that bpf_get_smp_processor_id is extensively used.
-Should we also replace all instances of bpf_get_smp_processor_id with bpf_get_raw_cpu_id in these cases?
+Ok.
 
-For example:
-#define ___BPF_FUNC_MAPPER(FN, ctx...)			\
-        ......
-	FN(get_smp_processor_id, 8, ##ctx)		\
+I guess that just means that the bridge itself is included in pci_walk_bus().
 
-samples/bpf/sockex3_kern.c:
-static struct globals *this_cpu_globals(void)
-{
-        u32 key = bpf_get_smp_processor_id();
-        return bpf_map_lookup_elem(&percpu_map, &key);
-}
-and so on......
-Thanks.
-> > -       case BPF_FUNC_get_numa_node_id:
-> > -               return &bpf_get_numa_node_id_proto;
-> >         case BPF_FUNC_perf_event_read:
-> >                 return &bpf_perf_event_read_proto;
+Let's wait and see what people think about my proposal earlier in the thread,
+or if someone can think of something better.
 
+
+Kind regards,
+Niklas
