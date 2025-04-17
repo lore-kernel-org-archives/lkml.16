@@ -1,93 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA3035973;
-	Thu, 17 Apr 2025 16:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B872F35973;
+	Thu, 17 Apr 2025 16:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744908139; cv=none; b=Uzl19JD61WLu1iZ5aidbnI9OXBvsYQGCVfLqescDyLC7VmtNDH0ObxB7oj1aiET3dIlrNHtNn7R61PaaUqgSfTFGvKpQs9GgWvZe8orAQwbWXmXlYwse5ED05+gdZY8whcQ1Ur7hb6rmdgtyu6edo4SfHka7WnI+vUzgz3Huwhw=
+	t=1744908146; cv=none; b=nwkrw0hNcAS/mGQyUznGnpKZM0hReCABKyMqHQPFL9PigpuL3h4pMJYxNO5Kn5D7VMvnW+FNEWCR6psfxVWVpRv3+UipaPrhIpi+QPJ/1Iklq6kIcTLTbhunfFZAAWQ8iPk3D4hcQvoJi1mrtIpyOJOiRD8r86hAkbLEeiT1zaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744908139; c=relaxed/simple;
-	bh=9Z7zBFITen5PF+y8xcxXkcjNm2Fxh2599HAlAnQpbdc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=lFwFQOM3Gsad8mWEYCyAPgIKPcudkJzemMmofI25MOoYXSmdGNl81/k3mJjEw447hCBHv/tk0MA1cJRWX8px8qV3lm9zggkcv1sMaM3AcMfWX4hw0MwbA6LICl4VLneSOTDlBha4UnUO6ThdgSJf7Uy7MG2DfEQgQx/meUCdrEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b4LNlipi; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b4LNlipi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C792AC4CEE4;
-	Thu, 17 Apr 2025 16:42:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744908138;
-	bh=9Z7zBFITen5PF+y8xcxXkcjNm2Fxh2599HAlAnQpbdc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=b4LNlipiHMvrWTAjLoHe+ZwMoIeK2hjXpW23gk4aIrdi/420f1KjZFYcMbrCsxsYA
-	 NbizB1LwKEPz7s1osOFZogR2ovTj02RQBC1VhE+Z5u8A3jntOBYK8auHEmqk2fLrcD
-	 zP0JTHvRL9CILuHpJb1h6E4kDv2D8I7XSqSoNtov3mtMriQht3xUFEd7lJ4Jkirblw
-	 +MzdZRPREZcem9JGuLXoKYCwqtLAUt/WDzJ6KdDYnVUBbOa1QLujt669Gw0ea/fkCO
-	 Y1pBv7Y77WZQ3mU+df3USCgk3DneWDn7cmZ4DaFfyCT2WV397zrdGUICKq/TGsgRXg
-	 SHGc0Od+wJ/rQ==
-Date: Thu, 17 Apr 2025 11:42:17 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Shuah Khan <shuah@kernel.org>, Yi Lai <yi1.lai@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 1/1] selftests/pcie_bwctrl: Fix test progs list
-Message-ID: <20250417164217.GA114940@bhelgaas>
+	s=arc-20240116; t=1744908146; c=relaxed/simple;
+	bh=Yk13GbJg6uRZcMPD4wlifpeBZXXXTA/RowAd4MaGLiU=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=GW6ygcyYw9Bg7nbGvd3vzu4J/w9SSCfyNNaYcv0X/LnqCcxopA9eWhclHIbxjHTxebSaGbHk0RjLDdVxDChFcPP2SuoP8rs0fiAGqm9cfXDLfjuz5Kx1rYaHKTnNO02A76VYL1TfWaoE8HqEuCVLxLb8mg2Ir0m4noOy0hJd4ZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.98.2)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1u5SH7-000000002ZV-1ibD;
+	Thu, 17 Apr 2025 16:42:19 +0000
+Date: Thu, 17 Apr 2025 17:42:16 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH net-next v3] net: ethernet: mtk_eth_soc: convert cap_bit in
+  mtk_eth_muxc struct to u64
+Message-ID: <d6d3f9421baa85cdb7ff56cd06a9fc97ba0a77f9.1744907886.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250417124529.11391-1-ilpo.jarvinen@linux.intel.com>
 
-On Thu, Apr 17, 2025 at 03:45:29PM +0300, Ilpo Järvinen wrote:
-> The commit df6f8c4d72ae ("selftests/pcie_bwctrl: Add
-> 'set_pcie_speed.sh' to TEST_PROGS") added set_pcie_speed.sh into
-> TEST_PROGS but that script is a helper that is only being called by
-> set_pcie_cooling_state.sh, not a test case itself. When
-> set_pcie_speed.sh is in TEST_PROGS, selftest harness will execute also
-> it leading to bwctrl selftest errors:
-> 
->   # selftests: pcie_bwctrl: set_pcie_speed.sh
->   # cat: /cur_state: No such file or directory
->   not ok 2 selftests: pcie_bwctrl: set_pcie_speed.sh # exit=1
-> 
-> Place set_pcie_speed.sh into TEST_FILES instead to have it included
-> into installed test files but not execute it from the test harness.
-> 
-> Fixes: df6f8c4d72ae ("selftests/pcie_bwctrl: Add 'set_pcie_speed.sh' to TEST_PROGS")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+From: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
 
-Applied to pci/for-linus for v6.15, thanks, Ilpo!
+The capabilities bitfield was converted to a 64-bit value, but a cap_bit
+in struct mtk_eth_muxc which is used to store a full bitfield (rather
+than the bit number, as the name would suggest) still holds only a
+32-bit value.
 
-> ---
-> 
-> I'm sorry I didn't realize this while the fix was submitted, I'm not that
-> familiar with all the kselftest harness variables and the justification
-> given for the fix sounded valid enough to raise any alarm bells in my
-> mind that something would be off with the approach the fix patch used.
-> 
->  tools/testing/selftests/pcie_bwctrl/Makefile | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/pcie_bwctrl/Makefile b/tools/testing/selftests/pcie_bwctrl/Makefile
-> index 48ec048f47af..277f92f9d753 100644
-> --- a/tools/testing/selftests/pcie_bwctrl/Makefile
-> +++ b/tools/testing/selftests/pcie_bwctrl/Makefile
-> @@ -1,2 +1,3 @@
-> -TEST_PROGS = set_pcie_cooling_state.sh set_pcie_speed.sh
-> +TEST_PROGS = set_pcie_cooling_state.sh
-> +TEST_FILES = set_pcie_speed.sh
->  include ../lib.mk
-> 
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-> -- 
-> 2.39.5
-> 
+Change the type of cap_bit to u64 in order to avoid truncating the
+bitfield which results in path selection to not work with capabilities
+above the 32-bit limit.
+
+The values currently stored in the cap_bit field are
+MTK_ETH_MUX_GDM1_TO_GMAC1_ESW:
+ BIT_ULL(18) | BIT_ULL(5)
+
+MTK_ETH_MUX_GMAC2_GMAC0_TO_GEPHY:
+ BIT_ULL(19) | BIT_ULL(5) | BIT_ULL(6)
+
+MTK_ETH_MUX_U3_GMAC2_TO_QPHY:
+ BIT_ULL(20) | BIT_ULL(5) | BIT_ULL(6)
+
+MTK_ETH_MUX_GMAC1_GMAC2_TO_SGMII_RGMII:
+ BIT_ULL(20) | BIT_ULL(5) | BIT_ULL(7)
+
+MTK_ETH_MUX_GMAC12_TO_GEPHY_SGMII:
+ BIT_ULL(21) | BIT_ULL(5)
+
+While all those values are currently still within 32-bit boundaries,
+the addition of new capabilities of MT7988 as well as future SoC's
+like MT7987 will exceed them. Also, the use of a 32-bit 'int' type to
+store the result of a BIT_ULL(...) is misleading.
+
+Fixes: 51a4df60db5c2 ("net: ethernet: mtk_eth_soc: convert caps in mtk_soc_data struct to u64")
+Signed-off-by: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+---
+v3: improve commit message, target net-next instead of net tree
+
+ drivers/net/ethernet/mediatek/mtk_eth_path.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_path.c b/drivers/net/ethernet/mediatek/mtk_eth_path.c
+index 7c27a19c4d8f4..6fbfb16438a51 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_path.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_path.c
+@@ -14,7 +14,7 @@
+ 
+ struct mtk_eth_muxc {
+ 	const char	*name;
+-	int		cap_bit;
++	u64		cap_bit;
+ 	int		(*set_path)(struct mtk_eth *eth, u64 path);
+ };
+ 
+-- 
+2.49.0
