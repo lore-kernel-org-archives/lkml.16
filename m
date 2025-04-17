@@ -1,162 +1,163 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4562522A1;
-	Thu, 17 Apr 2025 15:16:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9ED2522BF
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744902998; cv=none; b=QgywTL1djHQMV4QRaWjuKedr4jIvyI1qkO81Iiuv4+Tx7PgLu4wYHYN3ecD6QAKbkVKr8g9t3gqgHrAaw4iwANwulB4ZyzubM1thQFcnrN6F03gsftoqW9Shb4DWPz/Za1mV13/OUGHNKKkEFfMRCFLUMbCZqvHEK2eeX5T7ebc=
+	t=1744903011; cv=none; b=L9THir8KkzbQo+xY7v1w8uzqgd2rnHI9E9PC7ybcyIr+SyeUlA8tfpXtL0klUY7zkjdD5/3OYOWP63uMUNsKT0BM1uUJTT9pUiRrytmsTgoJerRYzuSql/zN3+vaXY8MkJx63CzmM6+k1T0OYwCDBjs+uLxB1nhHBmpQNXP9HxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744902998; c=relaxed/simple;
-	bh=M0ps3LCBKc62FNAWPHwB1zPZkFhqRXORCQuoBC88wcU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mpYAObaiO2Fk3Rqf8Lm1Jvg6dOwGS3BZrC5JRYSucQySKXYhASRg7grAW/id7s+8GSYdsJbgxx0g/bpUYqNVmCvMqUy3Q6vYX7rIex5kl0G2DiB9HZBse5OzBsdUXvqjVpiJa9/Ocv8fpG8L7Yi5w7u1ngikIMxZ1uJzOvvskg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E2dajMOr; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744903011; c=relaxed/simple;
+	bh=Ys2EqgACX0cL+daHoP5EiN4rYMl0rh5or5GCGkkGTKI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oWJ7qiYf1tOwCc+HtdhNj7pPtTLpB3740O4pZ8zo9FjtSDfvx24JlGQZt9aPG5noCsXstzOiyHa99WVE2UL0Ho6u4X2F6HZcjgbGX6WC/ViTpOGqLAUyKjkPNcclj0yh5ZviL1IDugRa2Ois6f7CGl2RPR5RUqYosTtP4JR7cmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aEfH70VK; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E2dajMOr"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-227d6b530d8so10837255ad.3;
-        Thu, 17 Apr 2025 08:16:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aEfH70VK"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso8427865e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:16:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744902996; x=1745507796; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=euLZUslJNu0pFdN7EJCQ7RkSALSAl6XKyINO0kuIYTs=;
-        b=E2dajMOrTdOr/Jx1UrCzpySxQFE001XakA1NihBiobKum2GMsvT4rJKjE3WD+aXyA/
-         3p21IOu+n8Mdh+X8Kw1TR8sffvKe3F6COpG2ufSAEJKLkd85y+QbrzjOWXalWWf/zn9L
-         GCcQGlyzgACUXVbKP6wac0kXfp6BDatdD28tZUvCbpIM44lXk7bYPnuPqnhmiOrM4ZQ1
-         y3O0qW1uZ7NBZsumt6FoA+rdTMOFNevtGEILhPhRVVi7V2gGv4y3UaC0MJ5BTdOkb9Aa
-         gOqeUUxwNOpuXen+6hJhoVuKXaTqTJEw/Z4Db8mBVwwFJwKKq1Nz7V2+l+uIkL+1AWGL
-         SCEw==
+        d=linaro.org; s=google; t=1744903007; x=1745507807; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=J8+TpeWUK0EnK7TAevGTAydH5jdr7kBGeMy1Oq63Os0=;
+        b=aEfH70VK/huuxFsI7uQXqUlBBZvfCK1z7eALVozk6IqVbdr3XqBaqo3EZftgaS7xNs
+         pcCmLt8fkx95QwKJVfFe8i5n03aEnuhc6vpxV1gyZF1hkJRpSAXXXG1tr1JlaFxS/srl
+         zyrLH96Q8KImvIUeoAVjDKu19DXRpp4byBiNp3b6tVXY8WzCdf08Tl56Ds0PYmI6J8g8
+         982bquQOAgZ+DIjVCl+PIq6uSkm/GQmxpgzvZHqUlOq0LgcFXAtS/06CV+lJRN1Topvv
+         Z8/gPJoEmxkDJ4YwQfRrzPhPa2bktbDsrNukRUvQW3JAvVivr2qcOhKNZCSGvPQkQ1m0
+         z8/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744902996; x=1745507796;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=euLZUslJNu0pFdN7EJCQ7RkSALSAl6XKyINO0kuIYTs=;
-        b=dUOj/RPwz+3vbw6fOBfDn/Uxs68vmY2ttHUfN1rFFmgkfGTrrnp0t/3+dmzxmv9Tar
-         Z8qywiPKVwud3no7GbReyT+Yua5sou/NAXNSHjzaMzHNUFUkzH8drIQt6KX0yGaXBAnh
-         ixYtNmHamiaknDA70t/3yyRXS3RJvjkQZvkuJ6OkPOGmbXtTT1D+S+bzOydhg7pFM8I0
-         FxYJkjxHpzuTyf59tn9QOVHWK+G3ebwIAVfNAU10R+KABm3urIWAIubnrz+mJzrYcMBM
-         Q75wE5phykSZHp/oPklY0PZYMaj8fWLW1zllJkLUWikheoCLizSniVF/c392tGrZKpJX
-         Uvjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVrmy1Ftf0sZO6zRIwhkEc7nl9p1svKZTL6i8jNs3QDMnuyAcrjE6N83LHOCOj3WkxAfNKIRs8L+H3hFzY=@vger.kernel.org, AJvYcCXZZR/g8gsQF7LYsEcuuyGDO8rIF40GFykrTrAzX5DFq0hC81f/o6em7OvQX3i3bdaDP+juweGGs697ohDyuHA8@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHJz7XaskQhTmWs39gmn63MYN+M9nd1I9u6xwV0RuXPJA9kCWZ
-	tjqcAjcW0tE+rKQ0fIWxnlvuy1EEmpkYoUP5USkQ/+gEu2JGaXMp
-X-Gm-Gg: ASbGncutx33uKFhk6t95FmJ84jSKxI/vDzdHYvuZR0zGVHiW5lW7ejo7Ol2mmIFj3Av
-	Bh0YQ21cpZJAeYfzFSG3cF87/mQK04kxxwOfd0iUOLK97FvYp5WzmjHnwnLKQDEly5G61BrB6rd
-	LD7OCpz0Bv9/hTYnGxuN4FNZkQNb6YFerir6ICLHnhZ/ZhrqZgPdAs0AXuoAj0OpMV4SNe6JFgQ
-	urlIn4mxVnP2r5IHA6AGd+ehwbUygtg/URvzDZBvVXhiGqWansZBfXBcD5J0Kapje4eYF38Y+uI
-	/tyiFD/qqswMRP6dU7q0M+r0lkbBFLJpDV1A5xdYkKLB
-X-Google-Smtp-Source: AGHT+IHdPEu5kbBaAs5vfqhKwIrxObiM0Xt+eP4UF3dnlnAkulaDLzvj5C3+dLSU1yVNOeewy/DbxQ==
-X-Received: by 2002:a17:903:1b26:b0:224:13a4:d62e with SMTP id d9443c01a7336-22c3597ec4bmr120492105ad.35.1744902995986;
-        Thu, 17 Apr 2025 08:16:35 -0700 (PDT)
-Received: from ubuntu2404.. ([125.121.98.233])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fdb97esm773125ad.219.2025.04.17.08.16.29
+        d=1e100.net; s=20230601; t=1744903007; x=1745507807;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=J8+TpeWUK0EnK7TAevGTAydH5jdr7kBGeMy1Oq63Os0=;
+        b=l4yWFyz6hnIgYhY23wXJrKU6EcOyV3+RLWHRyH+yZUZ69WNZ+NrxwV1pYIlbGBneat
+         dBHWsbz5loQ8H2zvx9cnLCnJy5357XeZuSLaqAVlQhGbv5RmgHV9rPECovn6xvhxLyg4
+         aUi6xtOZeFEmE5fvy/eucbjPiO+hZCS3BNOQKZ1QX7UlcY/UYDJxq5AQ8UstRQ4H4isM
+         zpkGF17mmvcx+d8/0dhq3SPO3h2WLUPLO4smJNY2KHqb9hHmOhd3Omr/YhdepXnEOoj0
+         vwGXaEOoffAO+OjDyFK/r9va45/CLWx9/Cyasxiau+DDEVUG7ESDY+1NFpKV9QYQ611e
+         bouQ==
+X-Gm-Message-State: AOJu0YxrHxZzOhKn61JMFVa6MW0d4exJMzqGHOtV5ESvASqstRF3H4qK
+	opDs5tsLo+l11dU6wGePKKl+/n1nxpBYW31q1ovENB0j21RvsONb9zidnxonwupS8nNXRHxUr7N
+	I
+X-Gm-Gg: ASbGncsz1UhMc1UE7ifmGf+EVqd5ij5dzC0BMLgdWWXOr8ItiHON9w5dThm1ohKyMTd
+	eH+oipEXJy9gzjxUf0fteU8n0dYiCKIruglO0QZ1jmNFHEFAGLun5uOfCWtp4VJQ8fzzNrM9hUY
+	OiBB0xXeRXbCYajfr8/fXvsDyVlN0uh/SMEbXz72TuHSG6jeTYH9eIqbHFxotHGZpI1eHAzYGKE
+	sNVJQMWhD17pD1t3xqQuZARv+mXROHJxqoqWR+dd/DoS36vNu6udAN2ExynIs+6cd6vnydr9WhE
+	w77IHbx6jT/VthmmP/b3HxeTTrwKmwhSoLiblT688wCmoc2QMKjQ2nb62kA+7xlCsvY=
+X-Google-Smtp-Source: AGHT+IEdRyryYWgHaL0fwAW/Sj5APK5Alf2wY8uJlmGrsmsoRU/YRkadjOMvEcs84ubN/8NU1/Z10w==
+X-Received: by 2002:a05:600c:1e0d:b0:43d:4e9:27ff with SMTP id 5b1f17b1804b1-4405d5fcd26mr64938685e9.7.1744903007316;
+        Thu, 17 Apr 2025 08:16:47 -0700 (PDT)
+Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf445315sm20528346f8f.82.2025.04.17.08.16.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 08:16:35 -0700 (PDT)
-From: KaFai Wan <mannkafai@gmail.com>
-X-Google-Original-From: KaFai Wan <kafai.wan@hotmail.com>
-To: martin.lau@linux.dev,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	mykolal@fb.com,
-	shuah@kernel.org,
-	memxor@gmail.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	kafai.wan@hotmail.com,
-	leon.hwang@linux.dev
-Subject: [PATCH bpf-next v3 2/2] selftests/bpf: Add test to access const void pointer argument in tracing program
-Date: Thu, 17 Apr 2025 23:15:48 +0800
-Message-ID: <20250417151548.1276279-3-kafai.wan@hotmail.com>
+        Thu, 17 Apr 2025 08:16:46 -0700 (PDT)
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: daniel.lezcano@linaro.org,
+	tglx@linutronix.de
+Cc: linux-kernel@vger.kernel.org,
+	thomas.fossati@linaro.org,
+	Larisa.Grigore@nxp.com,
+	ghennadi.procopciuc@nxp.com,
+	krzysztof.kozlowski@linaro.org,
+	S32@nxp.com
+Subject: [PATCH v5 0/2] Add the System Timer Module for the NXP S32 architecture
+Date: Thu, 17 Apr 2025 17:16:17 +0200
+Message-ID: <20250417151623.121109-1-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250417151548.1276279-1-kafai.wan@hotmail.com>
-References: <20250417151548.1276279-1-kafai.wan@hotmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Adding verifier test for accessing const void pointer argument in
-tracing programs.
+These couple of changes bring the System Timer Module - STM which is
+part of the NXP S32 architecture.
 
-The test program loads 1st argument of bpf_fentry_test10 function
-which is const void pointer and checks that verifier allows that.
+The timer module has one counter and four comparators, an interrupt
+line when one of the comparator matches the counter. That means the
+interrupt is shared across the comparator.
 
-Signed-off-by: KaFai Wan <kafai.wan@hotmail.com>
----
- net/bpf/test_run.c                                   |  8 +++++++-
- .../selftests/bpf/progs/verifier_btf_ctx_access.c    | 12 ++++++++++++
- 2 files changed, 19 insertions(+), 1 deletion(-)
+The number of STM is equal to the number of core available on the
+system. For the s32g2 variant, there are three Cortex-M3 and four
+Cortex-A53, consequently there are seven STM modules dedicated to
+those.
 
-diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
-index 7cb192cbd65f..aaf13a7d58ed 100644
---- a/net/bpf/test_run.c
-+++ b/net/bpf/test_run.c
-@@ -569,6 +569,11 @@ __bpf_kfunc u32 bpf_fentry_test9(u32 *a)
- 	return *a;
- }
- 
-+int noinline bpf_fentry_test10(const void *a)
-+{
-+	return (long)a;
-+}
-+
- void noinline bpf_fentry_test_sinfo(struct skb_shared_info *sinfo)
- {
- }
-@@ -699,7 +704,8 @@ int bpf_prog_test_run_tracing(struct bpf_prog *prog,
- 		    bpf_fentry_test6(16, (void *)17, 18, 19, (void *)20, 21) != 111 ||
- 		    bpf_fentry_test7((struct bpf_fentry_test_t *)0) != 0 ||
- 		    bpf_fentry_test8(&arg) != 0 ||
--		    bpf_fentry_test9(&retval) != 0)
-+		    bpf_fentry_test9(&retval) != 0 ||
-+		    bpf_fentry_test10((void *)0) != 0)
- 			goto out;
- 		break;
- 	case BPF_MODIFY_RETURN:
-diff --git a/tools/testing/selftests/bpf/progs/verifier_btf_ctx_access.c b/tools/testing/selftests/bpf/progs/verifier_btf_ctx_access.c
-index 28b939572cda..03942cec07e5 100644
---- a/tools/testing/selftests/bpf/progs/verifier_btf_ctx_access.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_btf_ctx_access.c
-@@ -65,4 +65,16 @@ __naked void ctx_access_u32_pointer_reject_8(void)
- "	::: __clobber_all);
- }
- 
-+SEC("fentry/bpf_fentry_test10")
-+__description("btf_ctx_access const void pointer accept")
-+__success __retval(0)
-+__naked void ctx_access_const_void_pointer_accept(void)
-+{
-+	asm volatile ("					\
-+	r2 = *(u64 *)(r1 + 0);		/* load 1st argument value (const void pointer) */\
-+	r0 = 0;						\
-+	exit;						\
-+"	::: __clobber_all);
-+}
-+
- char _license[] SEC("license") = "GPL";
+In addition, there is a STM variant which is read-only, so the counter
+can not be set because it is tied to another STM module dedicated to
+timestamp. These special STM modules are apart and will be handled
+differently as they can not be used as a clockevent. They are not part
+of these changes.
+
+The choice is to have one STM instance, aka one STM description in the
+device tree, which initialize a clocksource and a clockevent per
+CPU. The latter is assigned to a CPU given the order of their
+description. First is CPU0, second is CPU1, etc ...
+
+Changelog:
+
+ - v5
+   - Fixed typos in the comments (Ghennadi Procopciuc)
+   - Added clocks bindings for the module and the register (Ghennadi Procopciuc)
+   - Fixed help in the Kconfig option (Ghennadi Procopciuc)
+   - Changed max_ticks to ULONG_MAX when registering the clockevent
+   - Removed Reviewed-by tag from Krzysztof Kozlowski as the binding changed
+
+ - v4
+   - Removed useless compatible string (Krzysztof Kozlowski)
+   - Dropped of_match_ptr() (Krzysztof Kozlowski)
+
+ - v3
+   - Fixed bindings, compatible description and name (Krzysztof Kozlowski)
+   - Fixed bindings filename to fit the compatible (Krzysztof Kozlowski)
+   - Fixed a couple of typos in the driver changelog (Ghennadi Procopciuc)
+   - Enclosed macro into parenthesis (Ghennadi Procopciuc)
+   - Replaced irq_of_parse_and_map() by platform_get_irq() (Ghennadi Procopciuc)
+   - Fixed checkpatch --script reports
+   - Removed debugfs as the driver is not considered complex enough (Arnd Bergmann)
+
+ - v2:
+   - Fixed errors reported by 'make dt_binding_check' (Rob Herring)
+   - Removed unneeded '|' symbol (Rob Herring)
+   - Removed 'clocks' description (Rob Herring)
+   - Removed 'clock-names' because there is only one description (Rob Herring)
+   - Renamed 'stm@' to 'timer@' in the DT binding example (Rob Herring)
+   - Fixed dt bindings patch subject (Krzysztof Kozlowski)
+   - Dropped 'OneOf' in the DT bindings (Krzysztof Kozlowski)
+   - Dropped the STM instances structure
+   - Use the dev_err_probe() helper (Krzysztof Kozlowski)
+   - Use the dev_err_probe() helper (Krzysztof Kozlowski)
+   - Use devm_clk_get_enabled() (Krzysztof Kozlowski)
+   - Removed unneeded headers (Ghennadi Procopciuc)
+   - Removed unused macro (Ghennadi Procopciuc)
+   - Replaced 'int' by 'unsigned int' (Ghennadi Procopciuc)
+   - Removed dev_set_drvdata() (Ghennadi Procopciuc)
+   - Prevent disabling the entire module and set min delta (Ghennadi Procopciuc)
+   - Factored out the clocksource / clockevent init routine (Ghennadi Procopciuc)
+   - Use devm_request_irq() (Ghennadi Procopciuc.)
+   - Use irq_dispose_mapping() for error rollbacking (Ghennadi Procopciuc)
+
+ - v1: initial post
+
+Daniel Lezcano (2):
+  dt-bindings: timer: Add NXP System Timer Module
+  clocksource/drivers/nxp-timer: Add the System Timer Module for the
+    s32gx platforms
+
+ .../bindings/timer/nxp,s32g2-stm.yaml         |  64 +++
+ drivers/clocksource/Kconfig                   |   8 +
+ drivers/clocksource/Makefile                  |   2 +
+ drivers/clocksource/timer-nxp-stm.c           | 495 ++++++++++++++++++
+ 4 files changed, 569 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/nxp,s32g2-stm.yaml
+ create mode 100644 drivers/clocksource/timer-nxp-stm.c
+
 -- 
 2.43.0
 
