@@ -1,60 +1,62 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A9561D86ED
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCB525485B
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:12:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744906342; cv=none; b=C8oJNl/l+J2iZaVdhouWqdhl+7QVsj6zoxuazQOYGs3vsnInNDLdTacginSht/JUZpPovVl1rpmn2Hrz8jGJgEp8c8jr08bKVs1FpSavzONqlTiBm0A9BbJ9mdbGEXv8IJCb+fmuFiJHLRW1NrMsjLFvhECKPKqBbYYvPPYxybE=
+	t=1744906343; cv=none; b=N9XWC0llqY8HhPyo7Dqlq7iGMICTzDxzI5ZG82J3+ndIl4CynPNmKf0f/cP/KBiJCMFYo99rSApF/Xk0Tq4A9RRUDGsreNojwaDPptzncdZzOCXF9BzqbZaj5GuW+L6XgSlzPBawEo4EvDCNJFzozk3DbURsCHwV5gDuyOQZztM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744906342; c=relaxed/simple;
-	bh=DKQ8bU6Ekf424I3mrOInFztpFTcZgUHm0h1NeQbWmug=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=V2qzc22UP4GLzT9JU6kXtIhZCrtif+O2lIgkwk160OdNlG4TpVvf83lP8YhlKnzJ7GorQKzka9svzcnCxGAZ5Sbkfu6+6w70+j2LDEr9L27yK498V4RBUAI4s3RpQjzzyNsISeCJlEMrdzcXZv7Ldg5tPcl+iH6F+Fw89v7sKYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fIgv2CHW; arc=none smtp.client-ip=209.85.167.43
+	s=arc-20240116; t=1744906343; c=relaxed/simple;
+	bh=3nyx5/o0+dZjRFjxJhpCvRRADTgRjnaxhy/Fz4EHK5M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XaK9ym/M964FbRthseTaINFjeQM331OI/s755LKZVvcbl7FkopawL6RtS3JRjSbUA+YYXDQ+MQieH/rqXBjBV8ORogxesokHhb2i1YOnVO4SnkrXqpc/vjNotHkecqZEON8cisi5GoEA+hkMplukR2sKVkrAhEZwirFDHhy5HbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K5eCHPkN; arc=none smtp.client-ip=209.85.167.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fIgv2CHW"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54addb5a139so1119805e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:12:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K5eCHPkN"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-548409cd2a8so1319801e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:12:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744906339; x=1745511139; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pP2JHfGtEbeQt6MxQz+Ftq1QIgZyi2KIG08JxM2kREc=;
-        b=fIgv2CHWM2m8uqO6F4RHgqwEcvp0br1aF8iUC1f7ga0GedsKADIY9bFoNh3VaR6lIh
-         oj3C42F3Sp5QeuXPd7pZ8HkMRgiuzO1FzHRCjf93NNu02rb7KIgvmfDKkb2sTlfohnbW
-         02G87uHQXSq9QdBDG8H2pHH6n5OOew9k5QA9wwBEF0+fcCKLgh/W/2A7uX9Xtuopoqe+
-         VO+Fsnvyo0bVsUviC7mrGcw3YosElJfbr0Jn4R/ubumho+VyRpopPHXGpowRyAaXsUrA
-         owa2QgWDAgqKg2kk8ltBhkgIjaKM3oafTul4jfXkbOG+5Gaena00rtlB/TnhhP3662fM
-         AEUQ==
+        d=gmail.com; s=20230601; t=1744906340; x=1745511140; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q2DqD9BQAtvDREsRw2DN/6o2wQp/L1QLQLFU4UGNmDU=;
+        b=K5eCHPkNCH/Rlj54SgkLBuVc9SjOKtD65KU7axjixmnq//+9SBOlf7NSe7l9AiA5iu
+         bTGret5nXc6vtNDlfir5rJdTbrYvavYw80ZsUvn7n8C6WzNL3mDIY8hXAPxOkM56CYhH
+         IvKhf9Fu6lUZBc1npuQXeN1MpROrmJIAPXJg224cK0vyxuo0Is/KZEaRKFBU5H6i6RiX
+         fXUU0xUon6kcv5yhmh12q7s8gPwjpfFE/0vR9M69HQQ5XSAY5bPa4vNLkKKpbsvUrrHq
+         ZWyVRZPkrggzE9rn7kKrUqLJMETvbSN8FdAImbnGBWHU5g3Hp7k2MPNSXwhmNV385gFd
+         75YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744906339; x=1745511139;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pP2JHfGtEbeQt6MxQz+Ftq1QIgZyi2KIG08JxM2kREc=;
-        b=UBAwwhEvvFCPPY+5RR9+acnlZ8O4sl3aJITian06iErVOu4PA+ut2juRe0vpMe5Lpc
-         ts+aPEcaMCAjRdwuPX7NGjHiluxBNSEaPp9TbLH+G7GIccbbPo5FHatD5J6dylR5E4Du
-         Z9N2kBlcuXr4WgBDM1i24uGQvlvrBlf3jW3lSxYToB+ZLfcEJvfb5Pe/lhVH9XQsbcdC
-         ZGfY0/bIizyv5XjwNA5U2CaajXkb6gCIttu+j3qBznbQse5ki/DKKtk8CmU9FZ+i5X0q
-         QM1rxtQrq+taJnw2hdnt/7czEwWMZJ3TuXGmWffpmNZqKAtTH5I7Mgl7n8uZ+E3pv6hO
-         Uh9w==
-X-Forwarded-Encrypted: i=1; AJvYcCWQWuRNymOK7jrwBsZMthk8vsC3zWZ3AEKFYaihtrBUW1Vb4yM7xRg0PpQM9X0gunD4kNYwcLKiaaQa6V4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygqURzKW4w7LZhx4kXQGxvB7cOUUNV6Eiof0bLbmR29yRVE3gF
-	XljN6sQJhTYSjq0tSmYIJve/RuSdUNJdvP2KKmV2AvypwjTlKCtI
-X-Gm-Gg: ASbGncvaxAOx59hz1iu/1xcIFTOUycfJ3tRA7ltfs9r/55AYTw7dHkPOuZHsqmAGQ6H
-	t9MiiBIwWIvNu3XkbRQEzpR3l9VE8HY4aTRAmXZADdrgUYT/lSj94xIVXydE0KtvNiFFx67onFo
-	qDakqNeiJLDXtswGzDU3ThovI+4pvZsIkwqq+8wZHGSxq3jcHWV4y5etrw7MlCR8MR99Tnf7jba
-	hgL8AF0YLhX8/Bd8kiOYDCtSVpXuq++fDVm8ZMNxYW2frX1IHCoEdU2bHCiqOwr9UiWQn9UBiQ6
-	IZO2cccAEy/WyKtbjZpoOAW1bluuJcxYpBqb
-X-Google-Smtp-Source: AGHT+IGr8svtmU66VHJua0H8YKMP4oFA1Xc/Puv08hiW/VcgcSZzl/c2MLzMDv6Lv8uNkgabsQTkMg==
-X-Received: by 2002:a05:6512:12d3:b0:54a:c514:76f0 with SMTP id 2adb3069b0e04-54d64a9c225mr2505066e87.14.1744906339056;
+        d=1e100.net; s=20230601; t=1744906340; x=1745511140;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q2DqD9BQAtvDREsRw2DN/6o2wQp/L1QLQLFU4UGNmDU=;
+        b=iaU9dWuNHp0Vizi9XG6H8NlzLzsdkKAEQqTsVQrXCwbEOdBW9tSaP2ubBA7lg8pSOu
+         iSIyNLtiOILbkZKUsjQKsFzoOwALfQquBb83YWNaYZmsLuK/ijb6+hYwejazzji1ZfM1
+         e3zEXVkodPDkcX4MijpxCq2asEhNgUnz+KK9bHdFJ5ViFL27wwFykV9gY7ZEzYl+I4/0
+         9oesP7yLxocPgIipzFlFXLLYvtcXgCj4SW+YtTFDF/eKqgbinLyVKRt3e7W+OfHq4xDL
+         0SMgTiFGkEmZgm6eZo8thoJYCBZWsU4gQF+mn2w7mt8miLE8aSZFBY3onpWH76H53L2N
+         KbOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXM4Peep2chgweIrlPMHCc8sSbSrmL/JN/aetgC8XHn/Gui/pJalOr+aVA9cHwuZpMrrXYEzJtNTZVhG20=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjF12X6tG4oioozsF3vZelApJMS7AqMUusuVo0xuVVKNLv+23D
+	DITeSwV/jhWLp/WKdASf4vnIIi6RWz/KrzEkCgQPTGPbYYeQyiNx
+X-Gm-Gg: ASbGncu2CzIham7It3gMay7WoJ320UIyQcljxdRAq/8EKjJ7sAcCxsC7rkv7JKUDNWt
+	5YxXjcZ6I0ywUPUJTWgZts+wm047wJE8f+qqP38Cfp/QcnM1lsW+JtcUF53vsuJ7FCPZZI2yCXB
+	4NJZDsxCZRWNsubojNDjqxZ7NfaV/cjJlYIa6AWPLUuP3cFBEysmBug7PfSMmoKLSILRYqxB5wj
+	f7TfOgCZqPP8ypacMzWz3ooZyJXSv0mVl/FtV6KbsjUZTkUc5e+BLmx/AvwlnHhh4Rot0tlewhI
+	Z6zXKuxhKETDjuNwCMb3SVDJMd2O90yomvlw
+X-Google-Smtp-Source: AGHT+IFrLX6vE1RvZB2qO8Upzy1nOrDt6DKQMQLhorbBry2iEtc4ISaiMBxadO/UPacQLXXCe8bOvg==
+X-Received: by 2002:a05:6512:a87:b0:545:ee3:f3be with SMTP id 2adb3069b0e04-54d64a7b390mr2599525e87.10.1744906339861;
         Thu, 17 Apr 2025 09:12:19 -0700 (PDT)
 Received: from pc638.lan ([2001:9b1:d5a0:a500:2d8:61ff:fec9:d743])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6df60cf6sm2882e87.66.2025.04.17.09.12.18
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6df60cf6sm2882e87.66.2025.04.17.09.12.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 09:12:18 -0700 (PDT)
+        Thu, 17 Apr 2025 09:12:19 -0700 (PDT)
 From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-mm@kvack.org,
@@ -63,10 +65,12 @@ Cc: linux-mm@kvack.org,
 	Christoph Hellwig <hch@infradead.org>,
 	Uladzislau Rezki <urezki@gmail.com>,
 	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
-Subject: [PATCH 1/4] lib/test_vmalloc.c: Replace RWSEM to SRCU for setup
-Date: Thu, 17 Apr 2025 18:12:13 +0200
-Message-Id: <20250417161216.88318-1-urezki@gmail.com>
+Subject: [PATCH 2/4] lib/test_vmalloc.c: Allow built-in execution
+Date: Thu, 17 Apr 2025 18:12:14 +0200
+Message-Id: <20250417161216.88318-2-urezki@gmail.com>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250417161216.88318-1-urezki@gmail.com>
+References: <20250417161216.88318-1-urezki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,101 +79,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The test has the initialization step during which threads are
-created. To prevent the workers from starting prematurely a write
-lock was previously used by the main setup thread, while each
-worker would block on a read lock.
+This patch removes the dependency on module loading ("m")
+for the vmalloc test suite, enabling it to be built directly
+into the kernel, so both ("=m") and ("=y") are supported.
 
-Replace this RWSEM based synchronization with a simpler SRCU
-based approach. Which does two basic steps:
+Motivation:
+- Faster debugging/testing of vmalloc code;
+- It allows to configure the test via kernel-boot parameters.
 
-- Main thread wraps the setup phase in an SRCU read-side
-  critical section. Pair of srcu_read_lock()/srcu_read_unlock().
-- Each worker calls synchronize_srcu() on entry, ensuring
-  it waits for the initialization phase to be completed.
-
-This patch eliminates the need for down_read()/up_read() and
-down_write()/up_write() pairs thus simplifying the logic and
-improving clarity.
+Configuration example:
+  test_vmalloc.nr_threads=64
+  test_vmalloc.run_test_mask=7
+  test_vmalloc.sequential_test_order=1
 
 Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 ---
- lib/test_vmalloc.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ lib/Kconfig.debug  | 3 +--
+ lib/test_vmalloc.c | 5 +++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index f9051ab610d54..166b9d830a85a 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2574,8 +2574,7 @@ config TEST_BITOPS
+ config TEST_VMALLOC
+ 	tristate "Test module for stress/performance analysis of vmalloc allocator"
+ 	default n
+-       depends on MMU
+-	depends on m
++	depends on MMU
+ 	help
+ 	  This builds the "test_vmalloc" module that should be used for
+ 	  stress and performance analysis. So, any new change for vmalloc
 diff --git a/lib/test_vmalloc.c b/lib/test_vmalloc.c
-index f585949ff696e..4ab23e5e772d0 100644
+index 4ab23e5e772d0..6d65ef725d42c 100644
 --- a/lib/test_vmalloc.c
 +++ b/lib/test_vmalloc.c
-@@ -13,9 +13,9 @@
- #include <linux/moduleparam.h>
- #include <linux/completion.h>
- #include <linux/delay.h>
--#include <linux/rwsem.h>
- #include <linux/mm.h>
- #include <linux/rcupdate.h>
-+#include <linux/srcutree.h>
- #include <linux/slab.h>
+@@ -591,10 +591,11 @@ static void do_concurrent_test(void)
+ 	kvfree(tdriver);
+ }
  
- #define __param(type, name, init, msg)		\
-@@ -58,10 +58,9 @@ __param(int, run_test_mask, INT_MAX,
- );
- 
- /*
-- * Read write semaphore for synchronization of setup
-- * phase that is done in main thread and workers.
-+ * This is for synchronization of setup phase.
-  */
--static DECLARE_RWSEM(prepare_for_test_rwsem);
-+DEFINE_STATIC_SRCU(prepare_for_test_srcu);
- 
- /*
-  * Completion tracking for worker threads.
-@@ -458,7 +457,7 @@ static int test_func(void *private)
- 	/*
- 	 * Block until initialization is done.
- 	 */
--	down_read(&prepare_for_test_rwsem);
-+	synchronize_srcu(&prepare_for_test_srcu);
- 
- 	t->start = get_cycles();
- 	for (i = 0; i < ARRAY_SIZE(test_case_array); i++) {
-@@ -487,8 +486,6 @@ static int test_func(void *private)
- 		t->data[index].time = delta;
- 	}
- 	t->stop = get_cycles();
--
--	up_read(&prepare_for_test_rwsem);
- 	test_report_one_done();
- 
- 	/*
-@@ -526,7 +523,7 @@ init_test_configuration(void)
- 
- static void do_concurrent_test(void)
+-static int vmalloc_test_init(void)
++static int __init vmalloc_test_init(void)
  {
--	int i, ret;
-+	int i, ret, idx;
+ 	do_concurrent_test();
+-	return -EAGAIN; /* Fail will directly unload the module */
++	/* Fail will directly unload the module */
++	return IS_BUILTIN(CONFIG_TEST_VMALLOC) ? 0:-EAGAIN;
+ }
  
- 	/*
- 	 * Set some basic configurations plus sanity check.
-@@ -538,7 +535,7 @@ static void do_concurrent_test(void)
- 	/*
- 	 * Put on hold all workers.
- 	 */
--	down_write(&prepare_for_test_rwsem);
-+	idx = srcu_read_lock(&prepare_for_test_srcu);
- 
- 	for (i = 0; i < nr_threads; i++) {
- 		struct test_driver *t = &tdriver[i];
-@@ -555,7 +552,7 @@ static void do_concurrent_test(void)
- 	/*
- 	 * Now let the workers do their job.
- 	 */
--	up_write(&prepare_for_test_rwsem);
-+	srcu_read_unlock(&prepare_for_test_srcu, idx);
- 
- 	/*
- 	 * Sleep quiet until all workers are done with 1 second
+ module_init(vmalloc_test_init)
 -- 
 2.39.5
 
