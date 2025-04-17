@@ -1,151 +1,103 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CEAF322E;
-	Thu, 17 Apr 2025 12:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A694B1DE883;
+	Thu, 17 Apr 2025 12:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744892159; cv=none; b=b6IOEJZQOcaHitQkAQWQuDoLR4nu/KmQdC9HUFB7o/L3NBqlVathvZk7QGeo0qNsAOH8XKKv6+U/f/5Dp/C4OQkHtOCsdtOOdP89m3RRoOEzQBQOH4tQpQyfBRTYAc/YDd4F3mGP/dE2YzkUqnKKZkY9KjYZkr1AisV82wPH6bY=
+	t=1744892215; cv=none; b=hI0T/kfDWmYQwbOPBbOCykYKox2Fg3jnwf2ssnOAan92olP1XVinBypK9Dy97l7hkz6XAKXXKkPZTZKfYtqlKyih9zkC7uZEsA/d6XLd3oOPnduvGkmBDYw2CMN64jJOMLD9ae5khEhqEqyu8wKS8lnPGqcCH7C51fPweTI0dGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744892159; c=relaxed/simple;
-	bh=/touNEg3wjqxZZrko58aIkqU4PlLZuskeKvYOEX9psw=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZAN1X3AKXYoKYWec4Y24gTsWt/737ffq5xiJlZFWMiiRlN/4kMwyumS0yUDv+DNziLbbqJ2t0BdFT6VFIBkDaqNyTR81P6YsvEzCGLhme3NQonF2GIXZOzlD2KZ/iptVZEt4/tD4eNg/kEsJmBHzwpEnMVhrtBwWF7O2Ee+b/TM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EZOso7Pl; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744892215; c=relaxed/simple;
+	bh=BKpue1V0Sgd6BpeJVDYlO2s0+kyfQoXF6anpbOlkUbY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K6Tm4BGVThLRILcP0u04pxq3+Woxo/emzpQJOM0/UfbbBfgQfkG69C31Q4fuc1B44Wr9ZyxpXD9b0PLOWmML5WhfxjmnA0BRx27exKa0boksp1jUZF/4u8ojLe050CTbOWDPR5k+spS0o0ndEzGQkuTTIy6Dr7WXqt3xfdTkEIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=YOs0mQPB; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EZOso7Pl"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-acae7e7587dso107034966b.2;
-        Thu, 17 Apr 2025 05:15:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744892156; x=1745496956; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OUJ14Q/wp8t71IM3YE/NevYBGnSm24K1weaRXQsU0zY=;
-        b=EZOso7PlWlSf07rxXEGtKLJl7ZawNEUGuPsBZUZYDbfHNccBXFNBSBdgkOTpoM3psT
-         SPiPvk10QeBoTREm8osekIqo+xjmewgtkVUnP4PUNbU4bo37dCGXQsJxpsGQDdNQDI7R
-         IWAdf0wHeL2MCzbiDIH8pLiVOzu/9JoIbppsZvUgXvjiP9MuhL8lAXtdLTNHnQU3xVV8
-         RKbYiVVFks4v7bxfnQ9pN51a8ckzt/In9xLmugcZZOjcqIwmLBTBo1yzPjHQ5/OTWdLv
-         mtuRlbP9zATG9v70nd4uxnM/+oVSWIq1pEhV5e+NJ4PBpldbO2o1q0UOfGqC860SBQ1M
-         6A+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744892156; x=1745496956;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OUJ14Q/wp8t71IM3YE/NevYBGnSm24K1weaRXQsU0zY=;
-        b=sI642Y1LFAUzQ3rcsaImSjz/7J/tfmjksPsON+4RL58sEZ7D6du7YJLVco77mpdC1U
-         5vZPr0nNXWamc10GOmHQuE0LaTxvKO0cuThNqeMiuXCAYY7jdw88lQGDzqFUBoemxywJ
-         kAeQOJ4DXtJpm8UEPREJpCBxbTRTorOJN/QzNSbYn35JOr5SwOw6pOmTuy2wi/5bHNlB
-         ZkR/Cv+QxCyFJqBP0zHM/oMVGhXC7cusC/UsQUfWPaq08kl+rRbY1HCGMJTpMO0AoOej
-         ihvOHyUwTwtH1rklzd0ppNpEcocskHzB8T4tsEJrmbYFmpEQuGpL4CntocwszDEgBIJt
-         uImg==
-X-Forwarded-Encrypted: i=1; AJvYcCUdP3OXvL2JP5loNHhwTXHBovfExvtkyu7molmMxBYuc+qImghFEHjDrE1dsc5GE3fz1kY=@vger.kernel.org, AJvYcCV3IIQLGGa2/sOpTatbymy7/nCRVcC89tx5kTCp7KaKWxiFOc33RrR0pjrn+lPzhFqBF5z5UmSnA7hlVC9vCOOZ@vger.kernel.org, AJvYcCXAgFt6N7Hx44+p4A/F6kq6fnOM4yBIoiC2KPXhusY4uGHRQaaPDxKgYC/onc6gPQ3D9nCAHm08PCaZcMp+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxx/1L1197NNUVR2gkevoWNNiAxhaqkwuW7W2xqCiBy82VYmLa6
-	ius7Kysl9mzF56QRskn4fHcgxJNroPZnziT/ittgkwkN3ERCj8Vz8QxZTg==
-X-Gm-Gg: ASbGnctRtxKypUiL/D4hYGOZ6LArETBD54a5HfhhKXRCOAmEyrAot4Dh+a28DOkgL0r
-	Du9CbEmQ7zV/GCb6hhIPo1FAcjiXZMrTE3XhI2ZzWnDWEQxu0kM5tIs75t8bFEXHRde2yc68V7x
-	JT1r4eLLJrc4ApEY6fTIYdxidzwaagbPAojHv6V7uWHmpoA5A34myz9mlqsrd3rc/exHfIZlHeU
-	Necq0Qo59YldSsT6CAIYGhLpa8xxqSEjnqWWRiF6QtbtY1XtHZ5DxfVwhsQeogpAyhpUm6aH40I
-	X5Amf7v67l5xYMVDK0XXqzr+xk342RV4
-X-Google-Smtp-Source: AGHT+IE7/vNmio6sAeclOjmWpSweu38zWJ6HuV1eNkFF8HpE1SRATrqkyDEsyNNg156IK3QR0LONPg==
-X-Received: by 2002:a17:906:49b:b0:acb:4e0c:23ed with SMTP id a640c23a62f3a-acb4e0c2616mr294067266b.14.1744892155924;
-        Thu, 17 Apr 2025 05:15:55 -0700 (PDT)
-Received: from krava ([2a00:102a:400b:c830:675c:d00d:19b9:1f1c])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36f069174sm9865882a12.37.2025.04.17.05.15.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 05:15:55 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 17 Apr 2025 14:15:51 +0200
-To: KaFai Wan <mannkafai@gmail.com>
-Cc: martin.lau@linux.dev, ast@kernel.org, daniel@iogearbox.net,
-	andrii@kernel.org, eddyz87@gmail.com, song@kernel.org,
-	yonghong.song@linux.dev, john.fastabend@gmail.com,
-	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, horms@kernel.org, mykolal@fb.com,
-	shuah@kernel.org, memxor@gmail.com, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kafai.wan@hotmail.com, leon.hwang@linux.dev
-Subject: Re: [PATCH bpf-next v2 1/2] bpf: Allow access to const void pointer
- arguments in tracing programs
-Message-ID: <aADw97YoFMGPGnJJ@krava>
-References: <20250416161756.1079178-1-kafai.wan@hotmail.com>
- <20250416161756.1079178-2-kafai.wan@hotmail.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="YOs0mQPB"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5141A40E0200;
+	Thu, 17 Apr 2025 12:16:50 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id pyyy_CUboGJK; Thu, 17 Apr 2025 12:16:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744892204; bh=OkPJNLQNaBgHBD7+vM9R4BzDcQAcht9Q91uQ60sTI2k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YOs0mQPB0rVfjTJ5Joae5B47WeFtzEcS7I7oH5zZ1gVo3rqAiKpNqCdVt/o6RWrx2
+	 QEVb5hc2inNQsNlGOvGwhtJQE2ewH9q96w6N6aCfXAXBu9j21RLbWsxozsqa9jRyjZ
+	 36uLxGsU1TLuDbNUQI5lcN0g4MJmQnMMYM/mFoQnVOsBJ3Q8omDbw9HDAXdwMChWtd
+	 4kEAXHR6qU1k3mAl5L3Dr5CzEq6qFLFIyPuioAG4DJwSRycVh5dqoh8rYeD4PGbTIy
+	 3GhecoeNm1JR7RQIK6At93E6olQzb7IeHCmKALSsynz2Ypjh/F3acIIvTVbMGAEjtE
+	 tcCZffkLNf47Cygj1gRkiFzPL8vmi9vBe4lgXoiJlOnpM2dd69Vs7o4Qykqnt79J4m
+	 tmPaDANsjUOrQ0CKUoelf8z5Z3QY1ztH/oopqhXB/d/BR0u6fu0jdhORTqJlVBHJiu
+	 X7+gLF0TZ07P4MkrrqlUpM66NaEv/qI048SIQG3V89runhGMIjInzrauNOs2LZ8MIr
+	 Led2bzRSKIA63JuQqM8wuSO+dhf/8WcACQefT5jk2Bs2CFqrvCgeyHnT+Q8SNEoJvs
+	 yQ5sUewNZ+fbZJqEkVsDof9TFzBMnZOeOhvKhlylsMJF86Emibh18E6AkpTOqAZoYM
+	 Sn5D0r5WyocbjnNfSIQ1sHyI=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7348840E01FF;
+	Thu, 17 Apr 2025 12:16:37 +0000 (UTC)
+Date: Thu, 17 Apr 2025 14:16:31 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: x86@kernel.org, Tony Luck <tony.luck@intel.com>,
+	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+	Smita.KoralahalliChannabasappa@amd.com,
+	Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: Re: [PATCH v3 10/17] x86/mce: Separate global and per-CPU quirks
+Message-ID: <20250417121631.GPaADxHwT-OrriCFU5@fat_crate.local>
+References: <20250415-wip-mca-updates-v3-0-8ffd9eb4aa56@amd.com>
+ <20250415-wip-mca-updates-v3-10-8ffd9eb4aa56@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250416161756.1079178-2-kafai.wan@hotmail.com>
+In-Reply-To: <20250415-wip-mca-updates-v3-10-8ffd9eb4aa56@amd.com>
 
-On Thu, Apr 17, 2025 at 12:17:55AM +0800, KaFai Wan wrote:
-> Adding support to access arguments with const void pointer arguments
-> in tracing programs.
-> 
-> Currently we allow tracing programs to access void pointers. If we try to
-> access argument which is pointer to const void like 2nd argument in kfree,
-> verifier will fail to load the program with;
-> 
-> 0: R1=ctx() R10=fp0
-> ; asm volatile ("r2 = *(u64 *)(r1 + 8); ");
-> 0: (79) r2 = *(u64 *)(r1 +8)
-> func 'kfree' arg1 type UNKNOWN is not a struct
-> 
-> Changing the is_int_ptr to void and generic integer check and renaming
-> it to is_void_or_int_ptr.
-> 
-> Cc: Leon Hwang <leon.hwang@linux.dev>
-> Signed-off-by: KaFai Wan <kafai.wan@hotmail.com>
-> ---
->  kernel/bpf/btf.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-> index 16ba36f34dfa..0b1724453b75 100644
-> --- a/kernel/bpf/btf.c
-> +++ b/kernel/bpf/btf.c
-> @@ -6383,12 +6383,12 @@ struct btf *bpf_prog_get_target_btf(const struct bpf_prog *prog)
->  		return prog->aux->attach_btf;
->  }
->  
-> -static bool is_int_ptr(struct btf *btf, const struct btf_type *t)
-> +static bool is_void_or_int_ptr(struct btf *btf, const struct btf_type *t)
+On Tue, Apr 15, 2025 at 02:55:05PM +0000, Yazen Ghannam wrote:
+>  /* cpu init entry point, called from mce.c with preempt off */
+>  void mce_amd_feature_init(struct cpuinfo_x86 *c)
 >  {
->  	/* skip modifiers */
->  	t = btf_type_skip_modifiers(btf, t->type, NULL);
+> @@ -656,6 +678,7 @@ void mce_amd_feature_init(struct cpuinfo_x86 *c)
+>  	u32 low = 0, high = 0, address = 0;
+>  	int offset = -1;
 >  
-> -	return btf_type_is_int(t);
-> +	return btf_type_is_void(t) || btf_type_is_int(t);
->  }
+> +	amd_apply_quirks(c);
+
+<---- newline here.
+
+>  	mce_flags.amd_threshold	 = 1;
 >  
->  static u32 get_ctx_arg_idx(struct btf *btf, const struct btf_type *func_proto,
-> @@ -6783,7 +6783,7 @@ bool btf_ctx_access(int off, int size, enum bpf_access_type type,
->  		 */
->  		return true;
+>  	for (bank = 0; bank < this_cpu_read(mce_num_banks); ++bank) {
 
-could we remove the above check then? 
+...
 
-        if (t->type == 0)
-                /* This is a pointer to void.
-                 * It is the same as scalar from the verifier safety pov.
-                 * No further pointer walking is allowed.
-                 */
-                return true;
-
-jirka
-
+> @@ -2255,6 +2223,8 @@ void cpu_mca_init(struct cpuinfo_x86 *c)
 >  
-> -	if (is_int_ptr(btf, t))
-> +	if (is_void_or_int_ptr(btf, t))
->  		return true;
->  
->  	/* this is a pointer to another type */
-> -- 
-> 2.43.0
-> 
+>  	if (cap & MCG_SER_P)
+>  		mca_cfg.ser = 1;
+> +
+> +	__mcheck_cpu_apply_quirks(c);
+
+Right, this is not a per-CPU init function anymore but a one-time thing and
+called only here so put its contents here and whack it.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
