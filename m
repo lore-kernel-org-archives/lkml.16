@@ -1,71 +1,74 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5112BA926;
-	Thu, 17 Apr 2025 19:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAD72046A9
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 19:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744917697; cv=none; b=u8MTc2OFVm/qELqgHSB+N1NNlk8jocjFGl+a71UQy56KNIftFSBRTpMhN4Uhei5JY6wIUAvsYNU+ZoKmo0qSHysgbt0/w0eyxKPhwiMrJGiQmnLaPhTMUCRalp3KYNVIzcWuhlV7v2kCp3zx7AClxMCIO2ACUm30eKa8TWSArz0=
+	t=1744917702; cv=none; b=JILV131/A3mK7bxCb/sfjexNABm8ReSAHQhM9T5sa54QSqCGo/cqRIoCeNRApwdc2vHG27lL1GAAXKnJIDgidBhmp2TXxFRwjq6ZTm7TDy7mKx2M2pecHrmc2sVYsvw4CgiJMT4KPx94xch9ez8aq/9pyRxCSb7Qww+YE1OJtfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744917697; c=relaxed/simple;
-	bh=S8dLOsj0JQS/K9xCZ6WOy1r+UdtN9mec32qE58CjvCw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PV4HkWU4hCU67ytiO8i7xI+/Rep0KONLjguerr9WM6rx6njmoQ0TXg6J0seU501oJKasY2le++wThtgNdqwR7/6lDxMHGjr66IRgAelxXYOVKHfwxmmTU8Evvrfo4oPdyqLUHuWdg2UKg2aJSiMuY64c1+V+JXtc3G3EdKKX2bM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=ivbcAs0e; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744917702; c=relaxed/simple;
+	bh=QEDo5h9HZXac5uo5Oxegl4cZxwuq6drwyTIoNXKUOW0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TW9Z/p89P9ZulDDhJxjReqCxcnt9SxJVRFw+JlilLsC4TsoA4BsPfva8Laufbe4j5ZlHz0yiADE7PWn6eXl7nr6kefa8XM1Hq1z5T5JjSE/bko43fawdmKBVdlhJxcnPVlkUENldyang72S41jiaMkfiw1D0pC5k60WI75w+Fbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BWHZHfaI; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ivbcAs0e"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=Fg2BJXRb6S31qKrgfk0IRXZ2sI+nMSB2CJWe2sxF3Ac=; b=ivbcAs0ektzTOXoU4fr3v+s6n0
-	Tu9qfSHBhDBO58pm3o8Gzmy1iUmpaQZi6JwIFYEhG6NVJ4sTuYoX5rKfptzFWBdM7mwaiPvBJEx9O
-	qGCMNknuOyGb5KD/dBSZwgOFC+o41+ixwIHuh5uMzy+JEf2VCETZhe8K2A4YTcjE+Vws=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u5Unc-009p4j-8a; Thu, 17 Apr 2025 21:21:24 +0200
-Date: Thu, 17 Apr 2025 21:21:24 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: dimitri.fedrau@liebherr.com
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, Andrew Davis <afd@ti.com>,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dimitri Fedrau <dima.fedrau@gmail.com>
-Subject: Re: [PATCH net-next v3 2/4] dt-bindings: net: dp83822: add
- constraints for mac-termination-ohms
-Message-ID: <4e69a33c-56ee-4712-8b01-225fdfacee07@lunn.ch>
-References: <20250416-dp83822-mac-impedance-v3-0-028ac426cddb@liebherr.com>
- <20250416-dp83822-mac-impedance-v3-2-028ac426cddb@liebherr.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BWHZHfaI"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744917688;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=m4nhPsAXq16l8mLZ2dp76RiRIb0Pdz76My5DfrqpHO0=;
+	b=BWHZHfaIMXwcSms3RZgM9SPl7nhvp3t7K6eG02JK+9YkLr2+/ItWbAzB3ynV+FZHTybERv
+	3N4fflNbIglkt5lFr/q1x3rg9cZvH3uxTNiiRnwKGKOeph3OJ1yA6VgdKs4U6WCWQVMtYd
+	/iWO2wvuK2ZqMKPknR8fIhmY6NMf5sk=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-hardening@vger.kernel.org,
+	linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] smp: Replace deprecated strcpy() with strscpy()
+Date: Thu, 17 Apr 2025 21:20:52 +0200
+Message-ID: <20250417192054.69663-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416-dp83822-mac-impedance-v3-2-028ac426cddb@liebherr.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Apr 16, 2025 at 07:14:48PM +0200, Dimitri Fedrau via B4 Relay wrote:
-> From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-> 
-> Property mac-termination-ohms is defined in ethernet-phy.yaml. Add allowed
-> values for the property.
-> 
-> Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+strcpy() is deprecated; use strscpy() instead.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Link: https://github.com/KSPP/linux/issues/88
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ arch/alpha/kernel/smp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-    Andrew
+diff --git a/arch/alpha/kernel/smp.c b/arch/alpha/kernel/smp.c
+index ed06367ece57..56155b988b9c 100644
+--- a/arch/alpha/kernel/smp.c
++++ b/arch/alpha/kernel/smp.c
+@@ -262,7 +262,7 @@ recv_secondary_console_msg(void)
+ 
+ 		cnt = cpu->ipc_buffer[0] >> 32;
+ 		if (cnt <= 0 || cnt >= 80)
+-			strcpy(buf, "<<< BOGUS MSG >>>");
++			strscpy(buf, "<<< BOGUS MSG >>>");
+ 		else {
+ 			cp1 = (char *) &cpu->ipc_buffer[1];
+ 			cp2 = buf;
+-- 
+2.49.0
+
