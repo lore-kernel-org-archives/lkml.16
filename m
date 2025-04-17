@@ -1,356 +1,135 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8769722423C;
-	Thu, 17 Apr 2025 07:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B421A264A;
+	Thu, 17 Apr 2025 07:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744876642; cv=none; b=gVaqrh5YdFmvXujON0ykpnDYpcGoqe97kSmjLxv0PJeBFwRssrHsfRZEXV/xfAmyXB8lE+4uyNPChxUbRygG0w3h2qXgjNXy9knmolzz3noXFbyMyTo1IUO8c6uOfOUDC9u2tAc2rpOEB6t8rQH0aq83GU3Kt7FkxfNT9mu13tc=
+	t=1744876683; cv=none; b=ibOZEzoEkt7sODt208YeCMM/mAkrEqd9rDU4mpuefsBgwSnbvVagD2rZ3Dcfihpy0zQaTP5g6E4Dho7bnPHS/HSKMu/sb5DF5BfmvfTk37No+it5h1KZ4j+dX+DKjmv/fWQZA8mV2PPjN3S6hp9HpeDMbuiisgtC9f14mchNFEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744876642; c=relaxed/simple;
-	bh=69IV9j1CnaWOQX9Nu+KovtxIy/CCWYCi7b9fxKJN8C0=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=s4vlHs5MCPwF03KDIWhP6WakzEfJ3Th1Z+rKoxe8nYaOmf9gs8nMyqzukYsLfgbgvIY/T2JnV7abrpQbXEjsaNDT+ZS60rwKxg9vGzCg+luHYRoJcHEyaY8VFNM72daKKq9RxF9Z6tkLs7or0crURTxCApcAIt9wiuWoCqFYXkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HQhlwyIc; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1744876683; c=relaxed/simple;
+	bh=Js9PnPh53l/RPMmQHOE+NlNbkf8vxe/CykSrXM0XUvI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Xgz2MAdCGiSn9GFloaKEN3FRoOZ4R+qpkjMSaVBp9bKns5M9h9D4vq+cuwyPzjU3xrIrzIf/GLJ9EV6BgUNhHajysJcMBC5uZDFNoxfEGpZ6pYVeV+30pr3JoAy1O1cPG0pFnNqpDlkJ+2dYamIMslKE24YvDYInA3iujrnC3HA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dl8W6d1O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HQhlwyIc"
-Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id 2D2B921199C8; Thu, 17 Apr 2025 00:57:19 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2D2B921199C8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1744876639;
-	bh=ikqgemc/xaYJTjIbCudC8PpR3P2K//U5qVWjUkDNlzE=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=HQhlwyIcsCxvmh8MFQgZ22wFHR/rxqDnkodAKIyUlf/uo256Xh3VK+U09oX7q4WxP
-	 kDs1lsZ2d8VYpegjjmEnXPHttGcgpgm/qu/gnOBzUNPSH+mjDR0wDPsA9bv1HSBn9k
-	 1LjlkcaMdiHNpOJLOXj6yTjGViHCt48ogzCp7LuI=
-From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	longli@microsoft.com,
-	kotaranov@microsoft.com,
-	horms@kernel.org,
-	kent.overstreet@linux.dev,
-	brett.creeley@amd.com,
-	schakrabarti@linux.microsoft.com,
-	ernis@linux.microsoft.com,
-	shradhagupta@linux.microsoft.com,
-	ssengar@linux.microsoft.com,
-	rosenp@gmail.com,
-	paulros@microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: [PATCH 2/3] net: mana: Add sched HTB offload support
-Date: Thu, 17 Apr 2025 00:57:09 -0700
-Message-Id: <1744876630-26918-3-git-send-email-ernis@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1744876630-26918-1-git-send-email-ernis@linux.microsoft.com>
-References: <1744876630-26918-1-git-send-email-ernis@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dl8W6d1O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF1B8C4CEED;
+	Thu, 17 Apr 2025 07:58:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744876682;
+	bh=Js9PnPh53l/RPMmQHOE+NlNbkf8vxe/CykSrXM0XUvI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dl8W6d1OQwhWGF25I4N4e6NJW72zHAeiYIqcjLe2tToWXg1OKEnqDpfvAEsg2dAu8
+	 fDAxoFvmrqNyKeZZZStUPGUBkOJ3Z94enWTerGPEMd1L1pKmllqe3XdCNPMsVHMfqG
+	 jVEBBwHfOqWOn+WA5kSKNMTfWyJOipzAUK5Ah/LJmoTqKceDZ/qFboE+NiAUqSsKk4
+	 SnfSxuyUH/pUEjW+vHz/DQrXrMZknUriuIn1WpafWTo7uqvBwX//cIriR8KY78bylH
+	 F6yXL52XDD2jOoVhGyOXVZF//eDi0zjboVNXg2FhcQE4HxgkQAsSXqbFvmBFnM6mnN
+	 dfl8GuLta+Rrg==
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54963160818so575449e87.2;
+        Thu, 17 Apr 2025 00:58:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVExhFkcVUtDKt7oK/8H6Ue3y7c7YatMNeT0n2C2vMzQQYyHnVm2e9lmnj1chBtEqz02joMh5n247PsUxI=@vger.kernel.org, AJvYcCWCGMQQ7pygBLPWN/SdBOQ1v3t+L96Z8MkvCVgrvk1NLhMw7yoo0ltqqw/A85jCeLAV6vEOGGAjDqN5tnMy@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8GpebpTu6koNw+50hTY0+7WXS5UrmgARgQ0CgExYpKWjf5Ovp
+	kkz7/UZV+8AsUtHGqdWLnJeaul5Xus3vWtcnlcokKsZUKCNkY9tMwJSzJH9qZ7eJYzOm9WHqe6p
+	wgsxeSWTeDNckBolZzcJvf3zcfoU=
+X-Google-Smtp-Source: AGHT+IH+UGf3TCV/ileu1EuOqc6i/WlofQ6d6d2XoOO/gySbI9Xvr1O2nr7dG2avGasJMuGSvjsQhU5N69R4KoqhLdg=
+X-Received: by 2002:a05:6512:3c87:b0:54a:cc11:9cc6 with SMTP id
+ 2adb3069b0e04-54d64a99ffcmr1827489e87.19.1744876681141; Thu, 17 Apr 2025
+ 00:58:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250417064940.68469-1-dqfext@gmail.com> <CAMj1kXFPAVXOtPoETKvHB49kjZUPYrsAqsJwdL7p5Cu4xk75Rg@mail.gmail.com>
+ <CALW65jY=LnVBYoKPOQnSKgGSA0brKzmo0vqoRDcqF_=jofLAng@mail.gmail.com>
+In-Reply-To: <CALW65jY=LnVBYoKPOQnSKgGSA0brKzmo0vqoRDcqF_=jofLAng@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 17 Apr 2025 09:57:49 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXH-u7hiKGQfgYHj_16V4ATN_aHmA_wkvMSyLh+E3+QaAA@mail.gmail.com>
+X-Gm-Features: ATxdqUFMmNbL_QaqhzIxzv2O_oKF8Akp0R3BbKtNgh9uwgL4T2xnWwluVDekAc8
+Message-ID: <CAMj1kXH-u7hiKGQfgYHj_16V4ATN_aHmA_wkvMSyLh+E3+QaAA@mail.gmail.com>
+Subject: Re: [RFC PATCH] crypto: riscv: scalar accelerated GHASH
+To: Qingfang Deng <dqfext@gmail.com>
+Cc: Eric Biggers <ebiggers@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	"David S. Miller" <davem@davemloft.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, linux-crypto@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	=?UTF-8?Q?Christoph_M=C3=BCllner?= <christoph.muellner@vrull.eu>, 
+	Heiko Stuebner <heiko.stuebner@vrull.eu>, Qingfang Deng <qingfang.deng@siflower.com.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Introduce support for HTB qdisc offload in the mana ethernet
-controller. This controller can offload only one HTB leaf.
-The HTB leaf supports clamping the bandwidth for egress traffic.
-It uses the function mana_set_bw_clamp(), which internally calls
-a HWC command to the hardware to set the speed.
+On Thu, 17 Apr 2025 at 09:25, Qingfang Deng <dqfext@gmail.com> wrote:
+>
+> Hi Ard,
+>
+> On Thu, Apr 17, 2025 at 2:58=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org> =
+wrote:
+> >
+> > (cc Eric)
+> >
+> > On Thu, 17 Apr 2025 at 08:49, Qingfang Deng <dqfext@gmail.com> wrote:
+> > >
+> > > From: Qingfang Deng <qingfang.deng@siflower.com.cn>
+> > >
+> > > Add a scalar implementation of GHASH for RISC-V using the Zbc (carry-=
+less
+> > > multiplication) and Zbb (bit-manipulation) extensions. This implement=
+ation
+> > > is adapted from OpenSSL but rewritten in plain C for clarity.
+> > >
+> > > Unlike the OpenSSL one that rely on bit-reflection of the data, this
+> > > version uses a pre-computed (reflected and multiplied) key, inspired =
+by
+> > > the approach used in Intel's CLMUL driver, to avoid reflections durin=
+g
+> > > runtime.
+> > >
+> > > Signed-off-by: Qingfang Deng <qingfang.deng@siflower.com.cn>
+> >
+> > What is the use case for this? AIUI, the scalar AES instructions were
+> > never implemented by anyone, so how do you expect this to be used in
+> > practice?
+>
+> The use case _is_ AES-GCM, as you mentioned. Without this, computing
+> GHASH can take a considerable amount of CPU time (monitored by perf).
+>
 
-The minimum bandwidth is 100 Mbps, and only multiples of 100 Mbps
-are handled by the hardware. When the HTB leaf/root is deleted,
-the speed will be reset to maximum bandwidth supported by the SKU.
+I see. But do you have a particular configuration in mind? Does it
+have scalar AES too? I looked into that a while ago but I was told
+that nobody actually incorporates that. So what about these
+extensions? Are they commonly implemented?
 
-This feature is not supported by all hardware.
+[0] https://web.git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/=
+?h=3Driscv-scalar-aes
 
-Steps to configure speed:
+> > ...
+> > > +static __always_inline __uint128_t get_unaligned_be128(const u8 *p)
+> > > +{
+> > > +       __uint128_t val;
+> > > +#ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+> >
+> > CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS means that get_unaligned_xxx()
+> > helpers are cheap. Casting a void* to an aligned type is still UB as
+> > per the C standard.
+>
+> Technically an unaligned access is UB but this pattern is widely used
+> in networking code.
+>
 
-Add the root qdisc
-$tc qdisc add dev enP30832s1 root handle 1: htb offload
+Of course. But that is no reason to keep doing it.
 
-Add the class with required rate
-$tc class add dev enP30832s1 parent 1: classid 1:1 htb rate 1000mbit
+> >
+> > So better to drop the #ifdef entirely, and just use the
+> > get_unaligned_be64() helpers for both cases.
+>
+> Currently those helpers won't generate rev8 instructions, even if
+> HAVE_EFFICIENT_UNALIGNED_ACCESS and RISCV_ISA_ZBB is set, so I have to
+> implement my own version of this to reduce the number of instructions,
+> and to align with the original OpenSSL implementation.
+>
 
-Display class details
-$tc class show dev enP30832s1 classid 1:1
->class htb 1:1 root prio 0 rate 1Gbit ceil 1Gbit 
->burst 1375b cburst 1375b  offload
-
-Display port information using ethtool
-$ethtool enP30832s1
->Settings for enP30832s1:
-        Supported ports: [  ]
-        Supported link modes:   Not reported
-        Supported pause frame use: No
-        Supports auto-negotiation: No
-        Supported FEC modes: Not reported
-        Advertised link modes:  Not reported
-        Advertised pause frame use: No
-        Advertised auto-negotiation: No
-        Advertised FEC modes: Not reported
-        Speed: 1000Mb/s
-        Duplex: Full
-        Auto-negotiation: off
-        Port: Other
-        PHYAD: 0
-        Transceiver: internal
-        Link detected: yes
-
-Delete class
-$tc class del dev enP30832s1 classid 1:1
-
-Delete root qdisc (If used alone, also deletes the attached class)
-$tc qdisc del dev enP30832s1 root
-
-Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 138 ++++++++++++++++++
- include/net/mana/mana.h                       |  19 +++
- 2 files changed, 157 insertions(+)
-
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index ba550fc7ece0..5b62f1443716 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -16,10 +16,13 @@
- #include <net/netdev_lock.h>
- #include <net/page_pool/helpers.h>
- #include <net/xdp.h>
-+#include <net/pkt_cls.h>
- 
- #include <net/mana/mana.h>
- #include <net/mana/mana_auxiliary.h>
- 
-+#define MIN_BANDWIDTH 100
-+
- static DEFINE_IDA(mana_adev_ida);
- 
- static int mana_adev_idx_alloc(void)
-@@ -719,6 +722,99 @@ static int mana_change_mtu(struct net_device *ndev, int new_mtu)
- 	return err;
- }
- 
-+static int mana_tc_htb_handle_leaf_queue(struct mana_port_context *mpc,
-+					 struct tc_htb_qopt_offload *opt,
-+					 bool alloc)
-+{
-+	u32 rate, old_speed;
-+	int err;
-+
-+	if (opt->command == TC_HTB_LEAF_ALLOC_QUEUE) {
-+		if (opt->parent_classid != TC_HTB_CLASSID_ROOT) {
-+			NL_SET_ERR_MSG_MOD(opt->extack, "invalid parent classid");
-+			return -EINVAL;
-+		} else if (mpc->classid) {
-+			NL_SET_ERR_MSG_MOD(opt->extack, "Cannot create multiple classes");
-+			return -EOPNOTSUPP;
-+		}
-+		mpc->classid = opt->classid;
-+	}
-+
-+	rate = div_u64(opt->rate, 1000) << 3; //Convert Bps to Kbps
-+	rate = div_u64(rate, 1000);	      //Convert Kbps to Mbps
-+
-+	/*Get current speed*/
-+	err = mana_query_link_cfg(mpc);
-+	old_speed = (err) ? SPEED_UNKNOWN : mpc->speed;
-+
-+	if (!err) {
-+		if (alloc) {
-+			/*Support only multiples of 100Mbps for rate parameter*/
-+			rate = max(rate, MIN_BANDWIDTH);
-+			rate = rounddown(rate, MIN_BANDWIDTH);
-+
-+			err = mana_set_bw_clamp(mpc, rate, TRI_STATE_TRUE);
-+			mpc->speed = (err) ? old_speed : rate;
-+		} else {
-+			err = mana_set_bw_clamp(mpc, rate, TRI_STATE_FALSE);
-+			mpc->classid = (err) ? : 0;
-+		}
-+	}
-+
-+	return err;
-+}
-+
-+static int mana_create_tc_htb(struct mana_port_context *mpc)
-+{
-+	int err;
-+
-+	/*Check for hardware support*/
-+	err = mana_query_link_cfg(mpc);
-+	if (err == -EINVAL)
-+		netdev_info(mpc->ndev, "QoS is not configured yet\n");
-+
-+	return err;
-+}
-+
-+static int mana_tc_setup_htb(struct mana_port_context *mpc,
-+			     struct tc_htb_qopt_offload *opt)
-+{
-+	int err;
-+
-+	switch (opt->command) {
-+	case TC_HTB_CREATE:
-+		err = mana_create_tc_htb(mpc);
-+		return err;
-+	case TC_HTB_NODE_MODIFY:
-+	case TC_HTB_LEAF_ALLOC_QUEUE:
-+		err = mana_tc_htb_handle_leaf_queue(mpc, opt, 1);
-+		return err;
-+	case TC_HTB_DESTROY:
-+	case TC_HTB_LEAF_DEL:
-+	case TC_HTB_LEAF_DEL_LAST:
-+	case TC_HTB_LEAF_DEL_LAST_FORCE:
-+		return mana_tc_htb_handle_leaf_queue(mpc, opt, 0);
-+	case TC_HTB_LEAF_QUERY_QUEUE:
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+	return 0;
-+}
-+
-+static int mana_setup_tc(struct net_device *dev, enum tc_setup_type type,
-+			 void *type_data)
-+{
-+	struct mana_port_context *mpc = netdev_priv(dev);
-+
-+	switch (type) {
-+	case TC_SETUP_QDISC_HTB:
-+		return mana_tc_setup_htb(mpc, type_data);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
- static const struct net_device_ops mana_devops = {
- 	.ndo_open		= mana_open,
- 	.ndo_stop		= mana_close,
-@@ -729,6 +825,7 @@ static const struct net_device_ops mana_devops = {
- 	.ndo_bpf		= mana_bpf,
- 	.ndo_xdp_xmit		= mana_xdp_xmit,
- 	.ndo_change_mtu		= mana_change_mtu,
-+	.ndo_setup_tc		= mana_setup_tc,
- };
- 
- static void mana_cleanup_port_context(struct mana_port_context *apc)
-@@ -1198,6 +1295,46 @@ int mana_query_link_cfg(struct mana_port_context *apc)
- 	return err;
- }
- 
-+int mana_set_bw_clamp(struct mana_port_context *apc, u32 speed,
-+		      int enable_clamping)
-+{
-+	struct mana_set_bw_clamp_resp resp = {};
-+	struct mana_set_bw_clamp_req req = {};
-+	struct net_device *ndev = apc->ndev;
-+	int err;
-+
-+	mana_gd_init_req_hdr(&req.hdr, MANA_SET_BW_CLAMP,
-+			     sizeof(req), sizeof(resp));
-+	req.vport = apc->port_handle;
-+	req.link_speed = speed;
-+	req.enable_clamping = enable_clamping;
-+
-+	err = mana_send_request(apc->ac, &req, sizeof(req), &resp,
-+				sizeof(resp));
-+
-+	if (err) {
-+		netdev_err(ndev, "Failed to set bandwidth clamp for speed %u, err = %d",
-+			   speed, err);
-+		return err;
-+	}
-+
-+	err = mana_verify_resp_hdr(&resp.hdr, MANA_SET_BW_CLAMP,
-+				   sizeof(resp));
-+
-+	if (err || resp.hdr.status) {
-+		netdev_err(ndev, "Failed to set bandwidth clamp: %d, 0x%x\n", err,
-+			   resp.hdr.status);
-+		if (!err)
-+			err = -EPROTO;
-+		return err;
-+	}
-+
-+	if (resp.qos_unconfigured)
-+		netdev_info(ndev, "QoS is unconfigured\n");
-+
-+	return 0;
-+}
-+
- int mana_create_wq_obj(struct mana_port_context *apc,
- 		       mana_handle_t vport,
- 		       u32 wq_type, struct mana_obj_spec *wq_spec,
-@@ -2942,6 +3079,7 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
- 	ndev->hw_features |= NETIF_F_RXCSUM;
- 	ndev->hw_features |= NETIF_F_TSO | NETIF_F_TSO6;
- 	ndev->hw_features |= NETIF_F_RXHASH;
-+	ndev->hw_features |= NETIF_F_HW_TC;
- 	ndev->features = ndev->hw_features | NETIF_F_HW_VLAN_CTAG_TX |
- 			 NETIF_F_HW_VLAN_CTAG_RX;
- 	ndev->vlan_features = ndev->features;
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 63193613c185..69687dfe7540 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -469,6 +469,8 @@ struct mana_port_context {
- 	u16 port_idx;
- 
- 	u32 speed;
-+	/*HTB class parameters*/
-+	u16 classid;
- 
- 	bool port_is_up;
- 	bool port_st_save; /* Saved port state */
-@@ -500,6 +502,8 @@ void mana_chn_setxdp(struct mana_port_context *apc, struct bpf_prog *prog);
- int mana_bpf(struct net_device *ndev, struct netdev_bpf *bpf);
- void mana_query_gf_stats(struct mana_port_context *apc);
- int mana_query_link_cfg(struct mana_port_context *apc);
-+int mana_set_bw_clamp(struct mana_port_context *apc, u32 speed,
-+		      int enable_clamping);
- int mana_pre_alloc_rxbufs(struct mana_port_context *apc, int mtu, int num_queues);
- void mana_pre_dealloc_rxbufs(struct mana_port_context *apc);
- 
-@@ -527,6 +531,7 @@ enum mana_command_code {
- 	MANA_CONFIG_VPORT_RX	= 0x20007,
- 	MANA_QUERY_VPORT_CONFIG	= 0x20008,
- 	MANA_QUERY_LINK_CONFIG	= 0x2000A,
-+	MANA_SET_BW_CLAMP	= 0x2000B,
- 
- 	/* Privileged commands for the PF mode */
- 	MANA_REGISTER_FILTER	= 0x28000,
-@@ -548,6 +553,20 @@ struct mana_query_link_config_resp {
- 	u8 reserved[3];
- }; /* HW DATA */
- 
-+/* Set Bandwidth Clamp*/
-+struct mana_set_bw_clamp_req {
-+	struct gdma_req_hdr hdr;
-+	mana_handle_t vport;
-+	enum TRI_STATE enable_clamping;
-+	u32 link_speed;
-+}; /* HW DATA */
-+
-+struct mana_set_bw_clamp_resp {
-+	struct gdma_resp_hdr hdr;
-+	u8 qos_unconfigured;
-+	u8 reserved[7];
-+}; /* HW DATA */
-+
- /* Query Device Configuration */
- struct mana_query_device_cfg_req {
- 	struct gdma_req_hdr hdr;
--- 
-2.34.1
-
+So fix the helpers.
