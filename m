@@ -1,202 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A711991CB;
-	Thu, 17 Apr 2025 13:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E993242904
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 13:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744896883; cv=none; b=PKgZbxxDP+5Z+Q1k2r17zPJ5gDMsExlXE3hHdJEs1t17HqeDYVQqX+Aw6Le8KXapaWw3CvzPAefuSU9b/qArioj5kXcU0IgNNg7HYKU2uQcUs+prb3cyqIL7hhrRAS+tg6BiONbrVUpB+JLubImvumyCkhJsYj+fitfRS37K6EU=
+	t=1744896942; cv=none; b=fwyhMIh/o9yCuJ3DbjxvNP5qLC1R7RDAHC960hR2b1YkU1buKRqXvtUz3uTWuxIJTZz5e6AUQAL1cWwkw+xuoTeBWoxM7nu687oXtlsOa5nWFxhtM7o4YGyjn/HUw8CdRd5mk8MQFauCcc5XUH5R7oeIkPbMHZYhiyIkVhq6DTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744896883; c=relaxed/simple;
-	bh=SB34PBY0RNUAZRZBFCty6nn1wf0hugGM1UTlDrumSZw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EXrSzjkfBFPizRXnz9nbQUKyDA9uh1uFkKM2CylC4vYobjixwU9QroslyAMuuuNDgqPAn8AsnUCHd/zoW6Z4AyPzG84/ztEbHL2PT6Pgu1t8ipMQvVQzvwAJXQ6aYY7uIeFtNuuFFdY2P9VSTdEHZu/SjCu2vA0/rOxxpBSqQFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tGSA3AaJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744896942; c=relaxed/simple;
+	bh=9+waGCNIm0OPgHizo1NKmPeiIC961/3UFO6NV5b7X0c=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=jJ383uYn9Cpkk9h538d2jGA/ZxTh8yp5m7dnMc5t+r7HI3PIXi7QpGpUNi1ZYfi8aDO/p4fPTOkJak/hqUFy/pLUTB6luj1Zu9nAgAZWnrBoZUUXz8cm2Xl59Hl/OduuqsBVTYMpdikKWfi4O6v7aRiaHxzNcXaVgIMle0BtVJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VITLWMnD; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tGSA3AaJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BC7AC4CEE4;
-	Thu, 17 Apr 2025 13:34:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744896882;
-	bh=SB34PBY0RNUAZRZBFCty6nn1wf0hugGM1UTlDrumSZw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tGSA3AaJ3Au/8D16cER7nJP8rmOy2xPt8yhqiBtcGf29IqtyDhP7bTtVuQctPm8up
-	 FuPLhZKvP+etB6rz8o5fjVaxxOURWKXTd1iKeK59cvhbkrqmaZn3Egv7h2JMiAi4q1
-	 MJnwTHML5RWLCZZ1r0LW8DGmLJZKmr0tRK5Q1ZHfViAbCQIXFTqaIu3I8h5RtcUJnD
-	 tFg+yyC4OyuPhQzgTGV5fH2AXi01n6F0P0oBGedrW+rPlGrS0abEXrPjjSGs4eIXeM
-	 ygs7YqVw9Yh00+11ME717PMi1GAuFAfbRy6Jd2JYuXD7cakrcxKH1ALj7vsWvrcfRk
-	 7eWGaw1B6XyrA==
-Message-ID: <81fb1290-fb39-40b7-9d79-f147fae5b269@kernel.org>
-Date: Thu, 17 Apr 2025 14:34:37 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VITLWMnD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744896941; x=1776432941;
+  h=date:from:to:cc:subject:message-id;
+  bh=9+waGCNIm0OPgHizo1NKmPeiIC961/3UFO6NV5b7X0c=;
+  b=VITLWMnDdWCFYIxd5aDCQlUfJZPrj2GEUWXHUGMjY1B9h9NpBsM3auU7
+   RdAQZMr+Z+ZlkO/AxErUXA6CArPO8Df7g20MgXHj5ouo2cf2BZACQXTzS
+   mlSvvUBAjXlmfgL4y1mZGu75/J6p9OhRJ63LwbeNnZJiCfEnlzwFwVCwd
+   F9LSmZee7bs9aRZ8iSiQe0/1wO0W5tlEMAvoIvH2UEbtKY5YbhXvOqb4r
+   kvyHiQmEhLPhqZJ4gEkkq5CcR87t8EQPQdzRNmVe/IvR7mmHqFZbgysYz
+   mGnNHUeOXVrEzG4sBYYhN1xv8WOERq6jKpEYdCbjuDgKuMwA9j/maBDNj
+   A==;
+X-CSE-ConnectionGUID: j3xJU82mQ+mGt9Ssp8vGgg==
+X-CSE-MsgGUID: f8klAz/hS+Ob24Rmbpl8CA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="50132338"
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="50132338"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 06:35:39 -0700
+X-CSE-ConnectionGUID: gqm5unVPTJ2rtmsZ4m5x+g==
+X-CSE-MsgGUID: f6pOaH1DS2uzeaoV9hHS7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="135971101"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 17 Apr 2025 06:35:39 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u5POy-000N2t-0U;
+	Thu, 17 Apr 2025 13:35:36 +0000
+Date: Thu, 17 Apr 2025 21:35:23 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:irq/urgent] BUILD SUCCESS
+ 9b3ae50cb902322a2b5922b9fcf8132d9b4c2a24
+Message-ID: <202504172117.vHb1QAxw-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] nvmem: Add spmi-nvmem driver
-To: fnkl.kernel@gmail.com, Sven Peter <sven@svenpeter.dev>,
- Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
- Neal Gompa <neal@gompa.dev>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Hector Martin <marcan@marcan.st>
-References: <20250415-spmi-nvmem-v1-0-22067be253cf@gmail.com>
- <20250415-spmi-nvmem-v1-2-22067be253cf@gmail.com>
-Content-Language: en-US
-From: Srinivas Kandagatla <srini@kernel.org>
-In-Reply-To: <20250415-spmi-nvmem-v1-2-22067be253cf@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/urgent
+branch HEAD: 9b3ae50cb902322a2b5922b9fcf8132d9b4c2a24  irqchip/irq-bcm2712-mip: Enable driver when ARCH_BCM2835 is enabled
 
+elapsed time: 1458m
 
-On 15/04/2025 22:52, Sasha Finkelstein via B4 Relay wrote:
-> From: Hector Martin <marcan@marcan.st>
-> 
-> This driver exposes a SPMI device as an NVMEM device.
-> It is intended to be used with e.g. PMUs/PMICs that are used to
-> hold power management configuration, such as used on Apple Silicon
-> Macs.
-> 
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
-> ---
->   MAINTAINERS                |  1 +
->   drivers/nvmem/Kconfig      | 14 +++++++++++
->   drivers/nvmem/Makefile     |  2 ++
->   drivers/nvmem/spmi-nvmem.c | 62 ++++++++++++++++++++++++++++++++++++++++++++++
->   4 files changed, 79 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e7b2d0df81b387ba5398957131971588dc7b89dc..63c12f901aed1f3e6de8227d6db34af1bd046fe6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2298,6 +2298,7 @@ F:	drivers/iommu/io-pgtable-dart.c
->   F:	drivers/irqchip/irq-apple-aic.c
->   F:	drivers/nvme/host/apple.c
->   F:	drivers/nvmem/apple-efuses.c
-> +F:	drivers/nvmem/spmi-nvmem.c
->   F:	drivers/pinctrl/pinctrl-apple-gpio.c
->   F:	drivers/pwm/pwm-apple.c
->   F:	drivers/soc/apple/*
-> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-> index 8671b7c974b933e147154bb40b5d41b5730518d2..9ec907d8aa6ef7df0ea45cc35e92d8239d2705ee 100644
-> --- a/drivers/nvmem/Kconfig
-> +++ b/drivers/nvmem/Kconfig
-> @@ -310,6 +310,20 @@ config NVMEM_SNVS_LPGPR
->   	  This driver can also be built as a module. If so, the module
->   	  will be called nvmem-snvs-lpgpr.
->   
-> +config NVMEM_SPMI
-> +	tristate "Generic SPMI NVMEM"
-> +	default ARCH_APPLE
-Why default is set to ARCH_APPLE?
+configs tested: 112
+configs skipped: 2
 
-This will endup with y in arm64 defconfig, means increasing the size of 
-kernel.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-should it be:
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                   randconfig-001-20250417    gcc-13.3.0
+arc                   randconfig-002-20250417    gcc-13.3.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                            mmp2_defconfig    gcc-14.2.0
+arm                            mps2_defconfig    clang-21
+arm                   randconfig-001-20250417    gcc-7.5.0
+arm                   randconfig-002-20250417    clang-16
+arm                   randconfig-003-20250417    gcc-10.5.0
+arm                   randconfig-004-20250417    gcc-6.5.0
+arm                         s5pv210_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250417    gcc-7.5.0
+arm64                 randconfig-002-20250417    gcc-5.5.0
+arm64                 randconfig-003-20250417    clang-21
+arm64                 randconfig-004-20250417    gcc-9.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250417    gcc-13.3.0
+csky                  randconfig-002-20250417    gcc-11.5.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250417    clang-21
+hexagon               randconfig-002-20250417    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250416    clang-20
+i386        buildonly-randconfig-002-20250416    gcc-12
+i386        buildonly-randconfig-003-20250416    gcc-12
+i386        buildonly-randconfig-004-20250416    gcc-11
+i386        buildonly-randconfig-005-20250416    clang-20
+i386        buildonly-randconfig-006-20250416    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250417    gcc-14.2.0
+loongarch             randconfig-002-20250417    gcc-13.3.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                        bcm63xx_defconfig    clang-21
+mips                           ip30_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250417    gcc-11.5.0
+nios2                 randconfig-002-20250417    gcc-9.3.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250417    gcc-12.4.0
+parisc                randconfig-002-20250417    gcc-6.5.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                      ppc44x_defconfig    clang-21
+powerpc               randconfig-001-20250417    clang-21
+powerpc               randconfig-002-20250417    gcc-9.3.0
+powerpc               randconfig-003-20250417    gcc-9.3.0
+powerpc64                        alldefconfig    clang-21
+powerpc64             randconfig-001-20250417    clang-21
+powerpc64             randconfig-002-20250417    clang-21
+powerpc64             randconfig-003-20250417    gcc-5.5.0
+riscv                             allnoconfig    gcc-14.2.0
+riscv                 randconfig-001-20250417    gcc-7.5.0
+riscv                 randconfig-002-20250417    clang-21
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250417    gcc-7.5.0
+s390                  randconfig-002-20250417    clang-21
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                    randconfig-001-20250417    gcc-13.3.0
+sh                    randconfig-002-20250417    gcc-7.5.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250417    gcc-12.4.0
+sparc                 randconfig-002-20250417    gcc-14.2.0
+sparc64               randconfig-001-20250417    gcc-14.2.0
+sparc64               randconfig-002-20250417    gcc-10.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250417    gcc-12
+um                    randconfig-002-20250417    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250417    clang-20
+x86_64      buildonly-randconfig-002-20250417    clang-20
+x86_64      buildonly-randconfig-003-20250417    gcc-12
+x86_64      buildonly-randconfig-004-20250417    clang-20
+x86_64      buildonly-randconfig-005-20250417    clang-20
+x86_64      buildonly-randconfig-006-20250417    clang-20
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250417    gcc-8.5.0
+xtensa                randconfig-002-20250417    gcc-14.2.0
 
-depends on ARCH_APPLE || COMPILE_TEST
-
-
---srini
-> +	depends on SPMI
-> +	select REGMAP_SPMI
-> +	help
-> +	  Say y here to build a generic driver to expose a SPMI device
-> +	  as a NVMEM provider. This can be used for PMIC/PMU devices which
-> +	  are used to store power and RTC-related settings on certain
-> +	  platforms, such as Apple Silicon Macs.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called nvmem-spmi.
-> +
->   config NVMEM_SPMI_SDAM
->   	tristate "SPMI SDAM Support"
->   	depends on SPMI
-> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-> index 5b77bbb6488bf89bfb305750a1cbf4a6731a0a58..b639f4284184db026bb27b11e04d54b8f7ff166f 100644
-> --- a/drivers/nvmem/Makefile
-> +++ b/drivers/nvmem/Makefile
-> @@ -64,6 +64,8 @@ obj-$(CONFIG_NVMEM_SC27XX_EFUSE)	+= nvmem-sc27xx-efuse.o
->   nvmem-sc27xx-efuse-y			:= sc27xx-efuse.o
->   obj-$(CONFIG_NVMEM_SNVS_LPGPR)		+= nvmem_snvs_lpgpr.o
->   nvmem_snvs_lpgpr-y			:= snvs_lpgpr.o
-> +obj-$(CONFIG_NVMEM_SPMI)		+= nvmem_spmi.o
-> +nvmem_spmi-y				:= spmi-nvmem.o
->   obj-$(CONFIG_NVMEM_SPMI_SDAM)		+= nvmem_qcom-spmi-sdam.o
->   nvmem_qcom-spmi-sdam-y			+= qcom-spmi-sdam.o
->   obj-$(CONFIG_NVMEM_SPRD_EFUSE)		+= nvmem_sprd_efuse.o
-> diff --git a/drivers/nvmem/spmi-nvmem.c b/drivers/nvmem/spmi-nvmem.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..fff6162cb22dd7ab45883f004f5b63ebae014698
-> --- /dev/null
-> +++ b/drivers/nvmem/spmi-nvmem.c
-> @@ -0,0 +1,62 @@
-> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
-> +/*
-> + * Generic SPMI NVMEM driver
-> + *
-> + * Copyright The Asahi Linux Contributors
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/nvmem-provider.h>
-> +#include <linux/of.h>
-> +#include <linux/spmi.h>
-> +#include <linux/regmap.h>
-> +
-> +static const struct regmap_config spmi_regmap_config = {
-> +	.reg_bits	= 16,
-> +	.val_bits	= 8,
-> +	.max_register	= 0xffff,
-> +};
-> +
-> +static int spmi_nvmem_probe(struct spmi_device *sdev)
-> +{
-> +	struct regmap *regmap;
-> +	struct nvmem_config nvmem_cfg = {
-> +		.dev = &sdev->dev,
-> +		.name = "spmi_nvmem",
-> +		.id = NVMEM_DEVID_AUTO,
-> +		.word_size = 1,
-> +		.stride = 1,
-> +		.size = 0xffff,
-> +		.reg_read = (void *)regmap_bulk_read,
-> +		.reg_write = (void *)regmap_bulk_write,
-> +	};
-> +
-> +	regmap = devm_regmap_init_spmi_ext(sdev, &spmi_regmap_config);
-> +	if (IS_ERR(regmap))
-> +		return PTR_ERR(regmap);
-> +
-> +	nvmem_cfg.priv = regmap;
-> +
-> +	return PTR_ERR_OR_ZERO(devm_nvmem_register(&sdev->dev, &nvmem_cfg));
-> +}
-> +
-> +static const struct of_device_id spmi_nvmem_id_table[] = {
-> +	{ .compatible = "spmi-nvmem" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, spmi_nvmem_id_table);
-> +
-> +static struct spmi_driver spmi_nvmem_driver = {
-> +	.probe = spmi_nvmem_probe,
-> +	.driver = {
-> +		.name = "spmi-nvmem",
-> +		.of_match_table	= spmi_nvmem_id_table,
-> +	},
-> +};
-> +
-> +module_spmi_driver(spmi_nvmem_driver);
-> +
-> +MODULE_LICENSE("Dual MIT/GPL");
-> +MODULE_AUTHOR("Hector Martin <marcan@marcan.st>");
-> +MODULE_DESCRIPTION("SPMI NVMEM driver");
-> 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
