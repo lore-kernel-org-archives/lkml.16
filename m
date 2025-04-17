@@ -1,118 +1,84 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A6B253F1A
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B69182D0;
+	Thu, 17 Apr 2025 15:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744904599; cv=none; b=UoDIfQaMn9b1KH/95iK6wq2nRhXMCFaALC3WqOiIU1gY14Aexd/4MkJc+J47I3Wd2xkgpvEkvBHlFL/ROTFShhXtev3i6p7UcmBugUITFpfahkG/TS8Ihv23XSzgBu9uU0WIvk/kw+KVXwnRRg5+p6GzUCsOnDnjhb6GJErBcwQ=
+	t=1744904740; cv=none; b=bsqtwhHGZcQ1TTP0LCGGZTgsq3Iio7wmdtVeUs8gfn81kDCsIg6FyneVMcc1uXoM1bGUjR1L+bz2j2/VWeZpjMHNBmpePPZezkVqgKqf+JdNu05wDHwxaD1jTs+YXWhGnnu0GBsVrxg639dVTU6cnlYuth/UGO1oWU3xytmpv7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744904599; c=relaxed/simple;
-	bh=3xZTPoJDnTR2ZNrT+amq61JFizgrmqJzF9AZziFoneI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Vda2+bpFqzxq7igo3ojl93szlHDf8tCSBqvnDYrIEXeONA4SQ4dvATj0fVYHyxrHG7ZHpysHAGYZEuq38TO/n3lZXLKp3v5sr5EF/mufGh2Qm1i5RGeqdJW6qeenlxfjcgG+Z0+vaJXWt5fLbHbTq09RLJFG5/zTFpUxZ2VFWhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TPMBTYJg; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TPMBTYJg"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39ee57c0b8cso965973f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:43:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744904595; x=1745509395; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nS+iMVPzLszyvK1ef5pz0a8ecHJhiCbYxQ8pLZG1LMM=;
-        b=TPMBTYJgAjSzATlJfHgBwIVZqLa1xAqDVSpHmavzbZaNoUJwmTF0Dwt/NxXD7hV3jP
-         jJI+fOCQHK3lf1YW91/SkUuxVlHfh9olXpe6vZZmqLgXEqQC5KnaN27cXTeQzRc9xrTN
-         o1VIP+EddNy/6ds11ujuzpHR5f5iMsQKunqVx3g0MKAQEaXyWYSDhnm/f4yyW0seKuAg
-         rk2LoLIGJF4L6DJHUBpfbPMikZ7pTWUlHJpHRG8FiMI2mKIY/t3klxN1aU+qwIGUKIsR
-         LA4qh4iEdoCpThvIgkqK6FMzJHaa/8loB8BOL71AP5JA0MiTAzDkWledLBheC67YgFVY
-         HNLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744904595; x=1745509395;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nS+iMVPzLszyvK1ef5pz0a8ecHJhiCbYxQ8pLZG1LMM=;
-        b=M+0S1zVka4zM8hMlu7fAyC8vsMtVgkQYUqvCAX5dMBcw7rf2TEozlX6GKdodd/w+bx
-         4xfnWZFDnNKKVns0h5+VkonLnUwf6Iu8YdveZ3mF6A4jsNXxxnV9xCdAWnbNXn6ySBLK
-         gaFjjWj6YhNtih23Rgtbzhh9cPIsMgZW5igX/Cj6LCcy1sQdZ8nbXlmlkycdsctRZtxu
-         OY38CvUIJt9xfQWOXn/XdUAVpkVaZGOShdZyb+vflQiA0YuD0WRMnNhVY2Z0X6CoHhAz
-         jWhHy2NdlGyS6CDxpHKdulp7rfvgF6sZCD8tETIeyv8SRzGfPcL3nXZiae9D5dfpgOWL
-         y2iA==
-X-Forwarded-Encrypted: i=1; AJvYcCX9GBOd5MyEL7iQbEL10EYCQvjUqnTWhCAFRqnHyHFcPLY63ZTy/g/nRadKh9e/LDZgnm2GG+IWrC6qpKM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVzI9/zTmx/QDPgdPC4esVbKJlYFAIW/57GLKMhzdPjwotOg5u
-	uFm8AXsuytAN903XRHv52DN0CFqwgL73//vEp77oeWcOx3wlKFzeMiH/ZawCRlzK6FfFvRkodbS
-	Z
-X-Gm-Gg: ASbGnctRE5Kgy50QQZXKsdK7E42fLoaNeGwR/SmEz2YWFmVIC4yf5ngQB1SAl0S1uqE
-	0/5aKKCvkR4cVQ43c6CGbL1KX2fkyjEsvI+SX4B+GeZXNlGUbXIVpcO5AAfSD15pO2hJiaf+hcS
-	2h5R85KRyvDRLTK0DgxE5YJtEJxEJ4Qt7MJ22f6eIReGZghnegDEJm/yf5MWV0k5XzV2Ua9lXFg
-	1iycUwBi2uBNEra/xJdmwX1tqTQN+8RWTPC1HeXO+/Y+Uw2JdKezmmQBnRdh/NPVKsyV7gjRrcW
-	OiG0jYSzuUE0/OMe+CkCmGSC7vcyIul+uVKZoIlAhV3Z7iW+V/iTqiF3g2oElg==
-X-Google-Smtp-Source: AGHT+IGryh9t6uhy66lrT8gQ3EODPyMha/2rPVIOWr8w58yUILTFXYIOWehquSJJiWUu1ku4BKDX9w==
-X-Received: by 2002:a05:6000:2505:b0:39a:c9fe:f069 with SMTP id ffacd0b85a97d-39ee5b373d3mr5516764f8f.30.1744904594884;
-        Thu, 17 Apr 2025 08:43:14 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf44577dsm20773640f8f.94.2025.04.17.08.43.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 08:43:14 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: quic_jesszhan@quicinc.com, airlied@gmail.com, simona@ffwll.ch, 
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, kernel@collabora.com, pablo.sun@mediatek.com, 
- christophe.jaillet@wanadoo.fr
-In-Reply-To: <20250414082918.30298-1-angelogioacchino.delregno@collabora.com>
-References: <20250414082918.30298-1-angelogioacchino.delregno@collabora.com>
-Subject: Re: [PATCH v4 0/3] Add driver for Himax HX8279 DriverIC panels
-Message-Id: <174490459408.1152288.4538582198698733279.b4-ty@linaro.org>
-Date: Thu, 17 Apr 2025 17:43:14 +0200
+	s=arc-20240116; t=1744904740; c=relaxed/simple;
+	bh=dQh+X+m8OEmQKRtOdQmQPjj5mBNJKtXEfgJHzuVkwSg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A0cYP1Ke/3BqYaxQJSIM7haL2lB07Vf7gbXJ1UzRUKzVqbV5PHMWcguAq9fm3dSSQ4xNQhZm0x/HFQzCe3UxlsvVkiKfH0rGIC7Ib5B3GWpvbOOzdiTJR7gCVFE4RCaMGvMFwXhsobPAvZ1g0JoiSFcDXv5ZiZo4tf7f4kbEXLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.98.2)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1u5RNv-000000001vT-3TbA;
+	Thu, 17 Apr 2025 15:45:17 +0000
+Date: Thu, 17 Apr 2025 16:45:14 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH net v2 4/5] net: ethernet: mtk_eth_soc: net: revise
+ NETSYSv3 hardware configuration
+Message-ID: <aAEiCjdJdsqH6EAU@makrotopia.org>
+References: <8ab7381447e6cdcb317d5b5a6ddd90a1734efcb0.1744764277.git.daniel@makrotopia.org>
+ <28929b5bb2bfd45e040a07c0efefb29e57a77513.1744764277.git.daniel@makrotopia.org>
+ <20250417081055.1bda2ff6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417081055.1bda2ff6@kernel.org>
 
-Hi,
-
-On Mon, 14 Apr 2025 10:29:15 +0200, AngeloGioacchino Del Regno wrote:
-> Changes in v4:
->  - Changed hx8279_set_page() and all other utilities to void (Neil)
->  - Changed hx8279_{on,prepare,unprepare}() to return dsi_ctx.accum_err (Neil)
->  - Switched to devm_drm_panel_alloc() as suggested (Neil)
+On Thu, Apr 17, 2025 at 08:10:55AM -0700, Jakub Kicinski wrote:
+> On Wed, 16 Apr 2025 01:51:42 +0100 Daniel Golle wrote:
+> > +		/* PSE should not drop port8, port9 and port13 packets from WDMA Tx */
+> > +		mtk_w32(eth, 0x00002300, PSE_DROP_CFG);
+> > +
+> > +		/* PSE should drop packets to port8, port9 and port13 on WDMA Rx ring full */
 > 
-> Changes in v3:
->  - Added support for setting digital gamma parameters and validity check
->  - Added support for setting analog gamma parameters
->  - Changed gout_{l,r} to a structure and added a description
->  - Fixed DSI LPM/HS setting in prepare/unprepare callbacks
->  - Remove forced panel off in probe function as that was simply
->    useless
->  - Renamed function hx8279_check_config to hx8279_check_params
->    as that is actually checking multiple parameters and not just
->    basic DDIC configuration
->  - Moved the GMUX and GOA validation to their own functions to
->    improve readability
+> nit: please try to wrap at 80 chars. There's really no need to go over
+> on comments. Some of us stick to 80 char terminals. 
+
+Too late now to send another revision...
+
+> > [...]
+> > diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+> > index 39709649ea8d1..eaa96c8483b70 100644
+> > --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+> > +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+> > @@ -151,7 +151,12 @@
+> >  #define PSE_FQFC_CFG1		0x100
+> >  #define PSE_FQFC_CFG2		0x104
+> >  #define PSE_DROP_CFG		0x108
+> > -#define PSE_PPE0_DROP		0x110
+> > +#define PSE_PPE_DROP(x)		(0x110 + ((x) * 0x4))
+> > +
+> > +/* PSE Last FreeQ Page Request Control */
+> > +#define PSE_DUMY_REQ		0x10C
 > 
-> [...]
+> This really looks like misspelling of DUMMY, is it really supposed 
+> to have one 'M' ?
 
-Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-next)
-
-[1/3] dt-bindings: vendor-prefixes: Add Shenzhen Aoly Technology Co., Ltd.
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/a1958a56e52c87aea94c5cb0c08fe61ede929e7c
-[2/3] dt-bindings: display: panel: Add Himax HX8279/HX8279-D DDIC panels
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/a424c93db7ea8ffd18c6c170501bb898abf05932
-[3/3] drm: panel: Add driver for Himax HX8279 DDIC panels
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/38d42c261389985e8dd4739dbd97e2dc855e8dd0
-
--- 
-Neil
-
+I also thought that when I first saw that and have told MediaTek engineers
+about it, they told me that the register is called like that also in their
+datasheet and hence they want the name to be consistent in the driver.
