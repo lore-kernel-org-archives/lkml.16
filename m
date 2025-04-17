@@ -1,53 +1,53 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F92D1DF246;
-	Thu, 17 Apr 2025 05:39:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA431DEFD9;
+	Thu, 17 Apr 2025 05:39:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744868383; cv=none; b=nk2IiG+XjfloYUPj8tL5+tGc6nbPDCps9jlecLQNa8RdVQp8HKlvfDmbFPPXXOcExTwpqE4rG6xTyJieh+4ZuRV+BpId9ZlL401VdQehzBoSzeeA5oLGQNoTGqUUiakKyclCsFUHZ2AM1OUxzC2yMn2haJAbpXUJTQdqO6tfHfs=
+	t=1744868383; cv=none; b=WgXlZ8NZRtDTVkx29upHyECZxeX6yzdm4pUBeEalFWu/sQN11aqhttm6ROxn5+BwYjiMtR5ORVFcu1ysQ4nKnLeX4YkyDM5qgGE8FXx/CukQGx/BXTwKsgInEH1OSYWrQWVaKuXFtf5O2+DNpQlcc6yfO26Gp+pD3UKzD8WF3s8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744868383; c=relaxed/simple;
-	bh=w96el8l/C22AGhoEPDhUwV8/F6kr6oSVXuuZJzzt+VA=;
+	bh=QGIyTd6Vdox6ymNRvMBTB4LB92YlIYZp9fDPqv/jmqY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UsLXlJKKmW/uYBhwJFyUFn/2yBr6F4kb54awunYSluB8LQdfzPOWEkE6gLGxGOZ6cM7ol+gS1tnOZFl7//mOkJE5vQ7opJEam1yfOunBO9p4rdgfDu8E3LvONLlme8v+dvriPpeY8GcqzbQkrdIy0fehHgPHfiA7D/5UOd3nHjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qti.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FQ4jpe6M; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version; b=dLUNUI36goi1mLyE6FALifwIC2NfOJ77+CChUezMtMybOlQTjEYeDT1scb+n33t5A0uRW/6x8lLaHz61CH+MYJ6hiboUMUnzmDqNO22QxjEHdmMlXOGK0l4bYP90MXy7RjsHZJBcXbSIuOLRfRl5rPHuzzLxrvQQ89xHHICzeb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qti.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HUPGrlVw; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qti.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FQ4jpe6M"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GMAoVA020755;
-	Thu, 17 Apr 2025 05:39:20 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HUPGrlVw"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GLtwH7000506;
+	Thu, 17 Apr 2025 05:39:21 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=N16d/cjEgwk
-	zk89AS7N9awAMoLC6dVhqnAz/gYe/79U=; b=FQ4jpe6MAH9sWOf44vuk572L14E
-	Aas+CJZIMXER9SlX7luwh40iWsrqf9XPhJray0KjSnYwOFbaHMYrt4co86QRIqVO
-	eEIfwJ/jmwA6sv7mymQDB06KM3RqEDupq4CH8Joc5regwgKUu8Av1zLQWRh21Hsw
-	lwUHFt5VWskKKtRCqASZ7RpEi09/+76wtC+Puwd9S5OaQ4TYwmHQiHcpsMvIoGvc
-	RvlD59q2CtOYGIgyrfG/zXDLktJVx56I+c7uXEzE+F3WIX/8LgXFOcejD4J63ZXS
-	8UX2oF7OTzhTdboMKuZPmb0Z+rVzcdpKEKqpQdjlZtAelAXETZklV0fkWLw==
+	:mime-version:references:subject:to; s=qcppdkim1; bh=GOClGSh9v9w
+	wL4WrcpWqMQ6gSJ6U1uUrubcgC7dOZCA=; b=HUPGrlVw+8VpVP3PrT9Mbm+Zle2
+	glYvciaVIm50YxycAl2f+YDizO0BPdk8sBYYmhQQQttTqZEuW0Ei7rAad8jqLUi3
+	EewgY9/L/ieWFCCkTSlungDSVYn1nSFNKvYiyI6xFm2D1QaZkFuOP/xIAvq+NP1f
+	ro0So9X1AN4ONm1t3vZ0gDrZDgcinRvd61gOR0/vNcCpwMd/tHu5sAqWgBTt8pAn
+	lhl7yqvgj0oP44iiOfkyWMzNDLmqa/z5rF2IL5tB9SpjjVEmt9J9KoUpbiaKGxPm
+	EM2KOnkQeVDE8Y9aM9afQFcc4004emCMZWXvix23Gki1brS9iMV2RHKP4vA==
 Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yhbpwjsa-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4vnvxj-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 05:39:19 +0000 (GMT)
+	Thu, 17 Apr 2025 05:39:20 +0000 (GMT)
 Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 53H5dFpM023961;
-	Thu, 17 Apr 2025 05:39:15 GMT
+	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 53H5aYaC021454;
+	Thu, 17 Apr 2025 05:39:17 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 462f5dnugb-1
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 462f5dnuh8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 05:39:15 +0000
+	Thu, 17 Apr 2025 05:39:17 +0000
 Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53H5dEw8023907;
-	Thu, 17 Apr 2025 05:39:14 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53H5dEnx023908;
+	Thu, 17 Apr 2025 05:39:16 GMT
 Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-amakhija-hyd.qualcomm.com [10.213.99.91])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 53H5dE00023904
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 53H5dFii023986
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 05:39:14 +0000
+	Thu, 17 Apr 2025 05:39:16 +0000
 Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4090850)
-	id AB78F598; Thu, 17 Apr 2025 11:09:13 +0530 (+0530)
+	id BD1AE59C; Thu, 17 Apr 2025 11:09:13 +0530 (+0530)
 From: Ayushi Makhija <amakhija@qti.qualcomm.com>
 To: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
@@ -61,10 +61,10 @@ Cc: Ayushi Makhija <quic_amakhija@quicinc.com>, robdclark@gmail.com,
         Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
         jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
         quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
-        quic_jesszhan@quicinc.com, Dmitry Baryshkov <lumag@kernel.org>
-Subject: [PATCH v4 04/11] drm/msm/dsi: add DSI PHY configuration on SA8775P
-Date: Thu, 17 Apr 2025 11:09:02 +0530
-Message-Id: <20250417053909.1051416-5-amakhija@qti.qualcomm.com>
+        quic_jesszhan@quicinc.com
+Subject: [PATCH v4 07/11] arm64: dts: qcom: sa8775p-ride: add anx7625 DSI to DP bridge nodes
+Date: Thu, 17 Apr 2025 11:09:05 +0530
+Message-Id: <20250417053909.1051416-8-amakhija@qti.qualcomm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250417053909.1051416-1-amakhija@qti.qualcomm.com>
 References: <20250417053909.1051416-1-amakhija@qti.qualcomm.com>
@@ -79,102 +79,248 @@ X-QCInternal: smtphost
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 0gFc27Mxf1WAjihXYqiHxkCNBqiwoiBz
-X-Proofpoint-GUID: 0gFc27Mxf1WAjihXYqiHxkCNBqiwoiBz
-X-Authority-Analysis: v=2.4 cv=I+plRMgg c=1 sm=1 tr=0 ts=68009407 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=VwQbUJbxAAAA:8 a=UZNEAvMi2Rj6Meq9XXQA:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 5TECM1ysDwlCl7D7w2Zzd644oyIlajcq
+X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=68009409 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=VqzA0eLRv8fxzvICV_UA:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: 5TECM1ysDwlCl7D7w2Zzd644oyIlajcq
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-17_01,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
- bulkscore=0 mlxlogscore=999 clxscore=1011 impostorscore=0 malwarescore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1011 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
  definitions=main-2504170042
 
 From: Ayushi Makhija <quic_amakhija@quicinc.com>
 
-The SA8775P SoC uses the 5nm (v4.2) DSI PHY driver with
-different enable regulator load.
+Add anx7625 DSI to DP bridge device nodes.
 
 Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
-Reviewed-by: Dmitry Baryshkov <lumag@kernel.org>
 ---
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.c     |  2 ++
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.h     |  1 +
- drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c | 27 +++++++++++++++++++++++
- 3 files changed, 30 insertions(+)
+ arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi | 180 +++++++++++++++++++++
+ 1 file changed, 180 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-index c0bcc6828963..92be08ac5f65 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-@@ -581,6 +581,8 @@ static const struct of_device_id dsi_phy_dt_match[] = {
- 	  .data = &dsi_phy_7nm_cfgs },
- 	{ .compatible = "qcom,dsi-phy-7nm-8150",
- 	  .data = &dsi_phy_7nm_8150_cfgs },
-+	{ .compatible = "qcom,sa8775p-dsi-phy-5nm",
-+	  .data = &dsi_phy_5nm_8775p_cfgs },
- 	{ .compatible = "qcom,sc7280-dsi-phy-7nm",
- 	  .data = &dsi_phy_7nm_7280_cfgs },
- 	{ .compatible = "qcom,sm6375-dsi-phy-7nm",
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-index 1925418d9999..8d9a541f9f09 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-@@ -59,6 +59,7 @@ extern const struct msm_dsi_phy_cfg dsi_phy_7nm_8150_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_7nm_7280_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_5nm_8350_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_5nm_8450_cfgs;
-+extern const struct msm_dsi_phy_cfg dsi_phy_5nm_8775p_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_4nm_8550_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_4nm_8650_cfgs;
+diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+index 175f8b1e3b2d..d5b2dabe927d 100644
+--- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
++++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+@@ -28,6 +28,13 @@ chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
  
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-index a92decbee5b5..2bfe6f921c7e 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-@@ -1147,6 +1147,10 @@ static const struct regulator_bulk_data dsi_phy_7nm_37750uA_regulators[] = {
- 	{ .supply = "vdds", .init_load_uA = 37550 },
++	vph_pwr: vph-pwr-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vph_pwr";
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
+ 	vreg_conn_1p8: vreg_conn_1p8 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vreg_conn_1p8";
+@@ -128,6 +135,30 @@ dp1_connector_in: endpoint {
+ 			};
+ 		};
+ 	};
++
++	dp-dsi0-connector {
++		compatible = "dp-connector";
++		label = "DSI0";
++		type = "full-size";
++
++		port {
++			dp_dsi0_connector_in: endpoint {
++				remote-endpoint = <&dsi2dp_bridge0_out>;
++			};
++		};
++	};
++
++	dp-dsi1-connector {
++		compatible = "dp-connector";
++		label = "DSI1";
++		type = "full-size";
++
++		port {
++			dp_dsi1_connector_in: endpoint {
++				remote-endpoint = <&dsi2dp_bridge1_out>;
++			};
++		};
++	};
  };
  
-+static const struct regulator_bulk_data dsi_phy_7nm_48000uA_regulators[] = {
-+	{ .supply = "vdds", .init_load_uA = 48000 },
+ &apps_rsc {
+@@ -519,7 +550,107 @@ &i2c18 {
+ 	clock-frequency = <400000>;
+ 	pinctrl-0 = <&qup_i2c18_default>;
+ 	pinctrl-names = "default";
++
+ 	status = "okay";
++
++	io_expander: gpio@74 {
++		compatible = "ti,tca9539";
++		reg = <0x74>;
++		interrupts-extended = <&tlmm 98 IRQ_TYPE_EDGE_BOTH>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		pinctrl-0 = <&io_expander_intr_active>,
++			    <&io_expander_reset_active>;
++		pinctrl-names = "default";
++	};
++
++	i2c-mux@70 {
++		compatible = "nxp,pca9543";
++		#address-cells = <1>;
++
++		#size-cells = <0>;
++		reg = <0x70>;
++
++		i2c@0 {
++			reg = <0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			bridge@58 {
++				compatible = "analogix,anx7625";
++				reg = <0x58>;
++				interrupts-extended = <&io_expander 2 IRQ_TYPE_EDGE_FALLING>;
++				enable-gpios = <&io_expander 1 GPIO_ACTIVE_HIGH>;
++				reset-gpios = <&io_expander 0 GPIO_ACTIVE_HIGH>;
++				vdd10-supply = <&vph_pwr>;
++				vdd18-supply = <&vph_pwr>;
++				vdd33-supply = <&vph_pwr>;
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					port@0 {
++						reg = <0>;
++
++						dsi2dp_bridge0_in: endpoint {
++							remote-endpoint = <&mdss0_dsi0_out>;
++						};
++					};
++
++					port@1 {
++						reg = <1>;
++
++						dsi2dp_bridge0_out: endpoint {
++							remote-endpoint = <&dp_dsi0_connector_in>;
++						};
++					};
++				};
++			};
++		};
++
++		i2c@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			bridge@58 {
++				compatible = "analogix,anx7625";
++				reg = <0x58>;
++				interrupts-extended = <&io_expander 10 IRQ_TYPE_EDGE_FALLING>;
++				enable-gpios = <&io_expander 9 GPIO_ACTIVE_HIGH>;
++				reset-gpios = <&io_expander 8 GPIO_ACTIVE_HIGH>;
++				vdd10-supply = <&vph_pwr>;
++				vdd18-supply = <&vph_pwr>;
++				vdd33-supply = <&vph_pwr>;
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					port@0 {
++						reg = <0>;
++
++						dsi2dp_bridge1_in: endpoint {
++							remote-endpoint = <&mdss0_dsi1_out>;
++						};
++					};
++
++					port@1 {
++						reg = <1>;
++
++						dsi2dp_bridge1_out: endpoint {
++							remote-endpoint = <&dp_dsi1_connector_in>;
++						};
++					};
++				};
++			};
++		};
++	};
++
+ };
+ 
+ &mdss0 {
+@@ -566,6 +697,40 @@ &mdss0_dp1_phy {
+ 	status = "okay";
+ };
+ 
++&mdss0_dsi0 {
++	vdda-supply = <&vreg_l1c>;
++
++	status = "okay";
 +};
 +
- static const struct regulator_bulk_data dsi_phy_7nm_98000uA_regulators[] = {
- 	{ .supply = "vdds", .init_load_uA = 98000 },
- };
-@@ -1289,6 +1293,29 @@ const struct msm_dsi_phy_cfg dsi_phy_5nm_8450_cfgs = {
- 	.quirks = DSI_PHY_7NM_QUIRK_V4_3,
- };
- 
-+const struct msm_dsi_phy_cfg dsi_phy_5nm_8775p_cfgs = {
-+	.has_phy_lane = true,
-+	.regulator_data = dsi_phy_7nm_48000uA_regulators,
-+	.num_regulators = ARRAY_SIZE(dsi_phy_7nm_48000uA_regulators),
-+	.ops = {
-+		.enable = dsi_7nm_phy_enable,
-+		.disable = dsi_7nm_phy_disable,
-+		.pll_init = dsi_pll_7nm_init,
-+		.save_pll_state = dsi_7nm_pll_save_state,
-+		.restore_pll_state = dsi_7nm_pll_restore_state,
-+		.set_continuous_clock = dsi_7nm_set_continuous_clock,
-+		},
-+	.min_pll_rate = 600000000UL,
-+#ifdef CONFIG_64BIT
-+	.max_pll_rate = 5000000000UL,
-+#else
-+	.max_pll_rate = ULONG_MAX,
-+#endif
-+	.io_start = { 0xae94400, 0xae96400 },
-+	.num_dsi_phy = 2,
-+	.quirks = DSI_PHY_7NM_QUIRK_V4_2,
++&mdss0_dsi0_out {
++	data-lanes = <0 1 2 3>;
++	remote-endpoint = <&dsi2dp_bridge0_in>;
 +};
 +
- const struct msm_dsi_phy_cfg dsi_phy_4nm_8550_cfgs = {
- 	.has_phy_lane = true,
- 	.regulator_data = dsi_phy_7nm_98400uA_regulators,
++&mdss0_dsi0_phy {
++	vdds-supply = <&vreg_l4a>;
++
++	status = "okay";
++};
++
++&mdss0_dsi1 {
++	vdda-supply = <&vreg_l1c>;
++
++	status = "okay";
++};
++
++&mdss0_dsi1_out {
++	data-lanes = <0 1 2 3>;
++	remote-endpoint = <&dsi2dp_bridge1_in>;
++};
++
++&mdss0_dsi1_phy {
++	vdds-supply = <&vreg_l4a>;
++
++	status = "okay";
++};
++
+ &pmm8654au_0_gpios {
+ 	gpio-line-names = "DS_EN",
+ 			  "POFF_COMPLETE",
+@@ -714,6 +879,21 @@ ethernet0_mdio: ethernet0-mdio-pins {
+ 		};
+ 	};
+ 
++	io_expander_intr_active: io-expander-intr-active-state {
++		pins = "gpio98";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	io_expander_reset_active: io-expander-reset-active-state {
++		pins = "gpio97";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++		output-high;
++	};
++
+ 	qup_uart10_default: qup-uart10-state {
+ 		pins = "gpio46", "gpio47";
+ 		function = "qup1_se3";
 -- 
 2.34.1
 
