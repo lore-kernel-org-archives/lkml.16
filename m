@@ -1,69 +1,72 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9F41DB37B
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7A021ADA2
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744876001; cv=none; b=eSAhr/zdiOIn1jQAvzv2THSIkb561yLlCgLg7tByj4l2mb3djZ8av1O0Jc7/VoAUK2d09K2vAqWbXmCqft914BKQmb8dmwQ4xR/rRHaAH9gtrJBH7RVwRQX3bjWaG7bUCJ/yX1Akqdawujfv+Jsm5fAmYNv9/m1etipqkC9NWNc=
+	t=1744876003; cv=none; b=jcashHAzFFa/Z9WdUH5dc7BCkH2kFW62mYEJDupMsk5CZuJvTd5jfPZ8K0weyb2aU7jRTXXOLtCHXK6ueGTy569y+UrrEYGkF70/yt5XYOOVOx/hAAbvopXOQ/foI9rDel3U/pVBwt9bb0BPOtvwBC3sgjySe02k0jcnhEfea74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744876001; c=relaxed/simple;
-	bh=Eb9cXVsuOC4GbThMc32N8q0N/L9WglE/l9ak7PMRhw4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gLnO+dnyXUNKNtVRl7+SC7j0YuzgvrO9cbI4ASrVUy636NKRuFW//VJfktAHqZMk2GprzrztTnIYdEcmn+27YMduRHZzyPN86fyPMa3QzgPNBI4EitBjuRxoAkcTH9ViLWyu6+R+L8N8ADhMvY0RxlCnIaMh0Y+pQWJ0rF3C2cE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bzmxQ+nX; arc=none smtp.client-ip=209.85.221.41
+	s=arc-20240116; t=1744876003; c=relaxed/simple;
+	bh=tMQzWzBnniAx5rk+EeqFSOn4cd/MzHon/bXFCu4cUe8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZzjeHmb11HuIlvfl8diAl914/VorOe96FCfRqEFCng2qqu1CYEHKD/m4cmJME/Kx/U8Gat9ixw/+KKgQC98gZL8ZQU7i8tJYyfTt2aGWHPg2GAxl0pQeLFnfBElfihw6urgQLdS3TaZogJ59W0u4imfza+6vmdW3YLua0riloX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NqPwu8O1; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bzmxQ+nX"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3912b75c0f2so15925f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:46:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NqPwu8O1"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3912622c9c0so74783f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:46:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744875997; x=1745480797; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744876000; x=1745480800; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vRtdeaVuk9B5XsngdQBqU6+Uwf4/zyBV5nrkNqEVjA0=;
-        b=bzmxQ+nXQ6yNMQcs/q1cuW8TPGvQw6h8Q2KxjWOibEdfhKuo5Ph3AI63wByy60rfE6
-         oBZa1YW4qZx35mwxHJjB4npNBiUNjU0ce8LXvxN1JHOg0e4ej5tSuPZ/5vhgM4mOchV1
-         kixzmkiw0A3XzSkGS6uD4fWTjr3x3ygSZmqS/smzFMsvNb3mmO/t7TjNmCqeKh1eeG35
-         aZ5EuzTk3buVqD7RJVzdiYnOmsJ3Hv1/gsNsPtRVIH41wkj0Pmyji18o7Izvj/BIAIyK
-         ceVCxVK1G4irBd5Q6MxjbCNcg2I5escT0Mzzp0JD841xfrO047W/5AEC10K/sZn4cgzo
-         vy9Q==
+        bh=UqFJhe3fk5yFBKlXHJgDCuqjovr9ww4TiQotyaOjXdU=;
+        b=NqPwu8O1ltH0PYNIj5UGuiy+t7C0b5BBvFsPnVmcr56t5KTAISMi3x5a5o5kybTLuR
+         Dom+NU6wRfyaBFmvmZPsEzdHbFZi4Mmg4F04l0kvfbirjcpJOOF1mffqBPxKBiDTIlPO
+         y11s5yiuS6I29+tztgKCLM5SkXypD6fB+B8m+MeVJCfBlM7kGYnneZzTjGWv3ZzNGn98
+         cV7PfT9mf8c18Gg/WdPJG4wzMi+sHeR37MRzwq+kfPtSwz/G2/mvUbBSfPoEX7vezRVv
+         Q+kMEIa0wF1iLqV/w2cSb+rJOAUazNqtbp7Bii2zeYzq+OOKFHTMpsOdsp9LO90Vzs13
+         o4vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744875997; x=1745480797;
+        d=1e100.net; s=20230601; t=1744876000; x=1745480800;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=vRtdeaVuk9B5XsngdQBqU6+Uwf4/zyBV5nrkNqEVjA0=;
-        b=Y+nFgrM1TJOcRA7uK6UnD4MDUTAPj2+uxf7VRmcN3qG9Kg8YIqj7iuYp2P43T751VM
-         A33RHAN2/fmg6HDVMc7Ez9XOVUNw/EpJUM2Vnjk9lUtXxoA9O9JgTVQhNmyqz4KaWsFE
-         2xuCKtPU6QeLNhsg+7lBlfNFReR8zsPHF011UjV1NnzpdcLSVD75pD/XVasZ4nm8HtMO
-         bLA3CfD9B5G/CREwWF/LfPhruuR7+VlDtQBFJU8o/k5+BJE9CD7++tkHoMaoCtBDM7N4
-         tLZgNRolJXN9iLq/2HkEmFThVzFIQHHq+aDlxs7aDprJSc8iW68y1W9VXUeyub82K4IN
-         ElPg==
-X-Forwarded-Encrypted: i=1; AJvYcCXfIwsqVbx94M15KwcJh/MqaBsCkyF/YIQlKt5GmIhuBrw1j8ScZbStnWkEtkjkXes/m3mSyxLMVaB6T2Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7DTevnbSI3VOUTYz8ta2Uhw+4F55e7akWK8Ow9VPjDspeN1xa
-	Pj8PXeWvafpe0V3WoLvtL4h8G2jST2nPgVlCwek6E+NwLu+pEQRDCASMqXhRoGg=
-X-Gm-Gg: ASbGnctZVh/yvR5HiMpNP/W9WUyGRmQW1NqdJC7WMd2XlR/RVXa/nyr36NcYUSuTk7S
-	Lybjm1FfAsxN2BNxmRXGV3wXhJqO6DfG3cyW+Y2JMI2Jj5GpbEXaZ13QjDkQQ7ZiXw2o/oCHJX4
-	5y/RGW+OARAKTFHKsCc29+eeupP1ifqk6HmDOGhEftvfS2v09rEZU6VVddbsg0X0TSLsMh5aV1x
-	RmX5XlSegVFeWwKQHnoYZnR1je67F3dHe96X5yub85e+ohdb1DLtC0VY9SJqVQaqT+e29CGecXj
-	c/M7ylFtz5XHmUAY19v4pckztzMwfuotJhw5uqSa+V/3wWbgFxRi8qCFBWEydtrzkrFPFcKjfd8
-	xX+bDbg==
-X-Google-Smtp-Source: AGHT+IErpFYig+5USrElsn8/GLitcKQ8MpWzj97AV4tWtydIWiChjBtijhGr4jx+hlgc+5rmITX55w==
-X-Received: by 2002:a5d:6d8a:0:b0:38d:ba08:dd64 with SMTP id ffacd0b85a97d-39ee8f2ced9mr726282f8f.0.1744875997580;
-        Thu, 17 Apr 2025 00:46:37 -0700 (PDT)
+        bh=UqFJhe3fk5yFBKlXHJgDCuqjovr9ww4TiQotyaOjXdU=;
+        b=ugpYY//JyZW0EotXiC7xHeSo5rQ5Is5VHcAKkEr6J9xzsu6Rebdk8qustJAx4WFnJW
+         +ml9R70q+tMuzz6qn9foWK4LVEhqE6yaObp69FZtgDELj6vkIb/ZSgZK5AfvaE48d3fX
+         Ul9nx8lPFzCfI7fFBWQLVEk/pLKqvyz/r1MOHhnEaFD59RN0gKoArhkkr4o/r4f7FgdE
+         u+9vTK9EX2HwWrCvh44LOdaFMph2ZTvCqSix219Mgj1pNDvKCiXGXH7bP8GLaPnjDjvs
+         DrEw1mXC5zXbwdzNd58sDAtLEd1bmK/Tehmd7baI6L6YxkCD48VcBAjWVdTdwU4bdjLW
+         yB8g==
+X-Forwarded-Encrypted: i=1; AJvYcCXGn7KS4kENCF4P4dMc/vFwDEEG0ql9gL/2MFSxd4/it4pDfroS+dPQDBF0e8Z1Z4TN0iaYFgBN7t7EOQw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxR+KnDayeuqNOXe0pgbCT+PDQvqgfHJfPIzEXOyfRjGHQzdcpj
+	5TjdCHfwQ0sRpOzY9KhNYrPvt53BN+MuEbFrVdgnNTErX7oNcIbIo76CaKTui90=
+X-Gm-Gg: ASbGncsQ7ibLXON8E06GvQNurxUoUBOl+Stko6AOkee+nC+uGy2w8lQn9BcYe++ruHe
+	++EFT53p1Mvnuy9PJM9s8e3dAhWPPGIkuTs41hhrVtpaBkZyOm431/yq0Z5CSU0VucGke0TJZnD
+	lOEnILSkRojuZ3d1GkEHyBA1cJOKPTOdEVf6XEFUN7wmKI5LSQX4ryPChszP8AtLNvCa0yJ5l6E
+	6ML1cmGiwhs89rlQPziTd1k0URkPJbQinQtaRWdHUp16USEk985GflG2Kkh/KpN5mSOUJU8R7k5
+	mhpxr8rvnjQIF6lrkwhOVI11309Bds4eovKaauhdMSGtqX5m0hMaurwpFSf8Bx8wA5Q234WfFxV
+	VDNsm4u0v8rsuiWvX
+X-Google-Smtp-Source: AGHT+IGUHnidkuDlHE8kYyTwUeGcsum4lorsxEkRuIAHsC4LRbi3ea/WsFZ1fQruK2QZL3pK0Ycwkw==
+X-Received: by 2002:a05:600c:4f53:b0:439:930a:58a6 with SMTP id 5b1f17b1804b1-44061ece26emr6534575e9.8.1744876000074;
+        Thu, 17 Apr 2025 00:46:40 -0700 (PDT)
 Received: from kuoka.. (46.150.74.144.lvv.nat.volia.net. [46.150.74.144])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b4d12b5sm43332595e9.10.2025.04.17.00.46.36
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b53f29fsm42835765e9.37.2025.04.17.00.46.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 00:46:36 -0700 (PDT)
+        Thu, 17 Apr 2025 00:46:39 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org,
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	linux-pm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] USB: host: omap: Do not enable by default during compile testing
-Date: Thu, 17 Apr 2025 09:46:34 +0200
-Message-ID: <20250417074634.81295-1-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] thermal: hisi: Do not enable by default during compile testing
+Date: Thu, 17 Apr 2025 09:46:37 +0200
+Message-ID: <20250417074638.81329-1-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -83,22 +86,22 @@ Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 For longer rationale:
 https://lore.kernel.org/all/191543a8-2e2e-4ac4-9b2b-d253820a0c9f@app.fastmail.com/
 ---
- drivers/usb/host/Kconfig | 2 +-
+ drivers/thermal/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index d011d6c753ed..6dedacba94b3 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -225,7 +225,7 @@ config USB_EHCI_HCD_OMAP
- 	tristate "EHCI support for OMAP3 and later chips"
- 	depends on ARCH_OMAP || COMPILE_TEST
- 	depends on NOP_USB_XCEIV
+diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+index d3f9686e26e7..510c2b821546 100644
+--- a/drivers/thermal/Kconfig
++++ b/drivers/thermal/Kconfig
+@@ -257,7 +257,7 @@ config HISI_THERMAL
+ 	depends on ARCH_HISI || COMPILE_TEST
+ 	depends on HAS_IOMEM
+ 	depends on OF
 -	default y
-+	default ARCH_OMAP
++	default ARCH_HISI
  	help
- 	  Enables support for the on-chip EHCI controller on
- 	  OMAP3 and later chips.
+ 	  Enable this to plug hisilicon's thermal sensor driver into the Linux
+ 	  thermal framework. cpufreq is used as the cooling device to throttle
 -- 
 2.45.2
 
