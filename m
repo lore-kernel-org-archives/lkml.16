@@ -1,117 +1,234 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8588189B8C;
-	Thu, 17 Apr 2025 09:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34F5189B8C;
+	Thu, 17 Apr 2025 09:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744883463; cv=none; b=Dhh4xch1MqYY3f9RYDwHAWUk/+kFbtkHOIveGCP32J2gvOL9IipwTSBL4fEKFbQITJbR/6e5c0fWRQjnyyhcDseLJTZ4ncjOfqzynjwNPHZw39GLTb4yaDzgKmc4qhZ+BTryKZy0/STE9w7QH3xkZl1gCC+bAJQL7TQok/YAtgQ=
+	t=1744883494; cv=none; b=ua1uwutDl+h8/S4UDpcxxcFzSHfuEveACypg5UrUtK45NhZgGO0hwqssAJvf/NZ+W2QYmJu4fVRUy/uqRuaHVQc7r3LRdrcuhOpSb0CHX6zBHqw8ByOb3BA5V/zQHUIxGuuRUpDfEIdLQC7CNHuU0l9V1jb47ezxTPg61iivzmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744883463; c=relaxed/simple;
-	bh=L8o2PSkGeZxi2mBoFN19BApuLbghB6wGeSWpWaGCaTE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NztdZFaTxbgYqv2wEry9SX23Bybauq4dzeHUUGaGRlrww6M3eOxSX7p/psZagXUMdrsUFfTyiMnMjqLkDhlginn+Bn9j38IGOMZ/57PPsJGM8X4qvQWz7g5darCp5H/91MFCbXisbfAHUboXKiIc2JNjnx6QDI4BYHajjKYuFuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XJNeDJ5a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744883494; c=relaxed/simple;
+	bh=qV6wd0XaBpYUdHTNTl7eH/NcVPlbWBggaCBh21C9ZlY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CI0oi/26L2aZvq/C+MHnS5YftVcpMepKU82R8qEfjT8dGk1jqE2UZnlIG/KORQ/Dumib+y1wGcRNllZl1pnlYlj+f2amhqxRUmGuwUJDK0T4fpYtLupzZP/59M24zfjtNjft/2oC8nYa5Y3QoVNlyAjZwBGpS1efCqOgTpFGrFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=NsQlRhYl; arc=none smtp.client-ip=199.247.17.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XJNeDJ5a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48A01C4CEE7;
-	Thu, 17 Apr 2025 09:51:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744883463;
-	bh=L8o2PSkGeZxi2mBoFN19BApuLbghB6wGeSWpWaGCaTE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XJNeDJ5a7rXZB3aV5DxX/MCGa77oE21mxbt+dYjy8W71i8SMQO9lI+JRJj1MuTNeK
-	 PDtBEUTxmJ2BNwI3Fd7DLt8En85mkjUdTsW1S86vhnxYwRLFYQb3E3QwE5q93BSl6L
-	 NbLhvoO+haS/iQAhYM2pjNLjdiOhjb4kvMDApTd/EAXCqOChB23jnwFoM0tF4Ubg5E
-	 gfR8iVWMe3lQ0+NwEzvn9TttR8k586DAsrO5dff9ZU5JaRpMVosi2yM+0yKkAZdUma
-	 2etP+icr4Mq/WjSeZ6JK96g0XYbgGXjrkrSTQmZLk7TB8FMKmdk+avpl4VxsuzShhr
-	 2VEUUKsMosSrw==
-Date: Thu, 17 Apr 2025 11:51:01 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, linux-pwm@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, Biju Das <biju.das.au@gmail.com>
-Subject: Re: [PATCH v24 3/4] pwm: Add support for RZ/G2L GPT
-Message-ID: <wapp2p55vrdpgwy7dpnrbxallcdu4yvk6a3nqimbyb565crqg2@7ljkanddwmjz>
-References: <20250226144531.176819-1-biju.das.jz@bp.renesas.com>
- <20250226144531.176819-4-biju.das.jz@bp.renesas.com>
+	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="NsQlRhYl"
+Received: from spock.localnet (unknown [212.20.115.26])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by prime.voidband.net (Postfix) with ESMTPSA id 6ABE86166143;
+	Thu, 17 Apr 2025 11:51:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+	s=dkim-20170712; t=1744883481;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1LfRVlt70i3SJHIXIz6vqd3UAEcvnG03V8Mwe8AU5Ms=;
+	b=NsQlRhYlqKCxV4QznBkgto1zEDuB/+M8fB4icn9zaktCGu5q8WTZB5fktMtbaVe7cpp3UO
+	+1tyZOSiqj79j9B+3ovnRBTCQSSkh4hPCKoMuuD3PGCfN1mO/sOCLMw1CcnnJtycM5MOCY
+	lQdqJo25hBY+miNGnK1Md6YWOzZxG9g=
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Donald Hunter <donald.hunter@gmail.com>,
+ Antonio Quartulli <antonio@openvpn.net>, Shuah Khan <shuah@kernel.org>,
+ sd@queasysnail.net, ryazanov.s.a@gmail.com,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Xiao Liang <shaw.leon@gmail.com>, steffen.klassert@secunet.com,
+ antony.antony@secunet.com, willemdebruijn.kernel@gmail.com,
+ David Ahern <dsahern@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+ Shuah Khan <skhan@linuxfoundation.org>
+Subject:
+ Re: [PATCH net-next v26 00/23] Introducing OpenVPN Data Channel Offload
+Date: Thu, 17 Apr 2025 11:51:07 +0200
+Message-ID: <5001537.31r3eYUQgx@natalenko.name>
+In-Reply-To: <20250415-b4-ovpn-v26-0-577f6097b964@openvpn.net>
+References: <20250415-b4-ovpn-v26-0-577f6097b964@openvpn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="oo3vkt6iyksbvgcq"
-Content-Disposition: inline
-In-Reply-To: <20250226144531.176819-4-biju.das.jz@bp.renesas.com>
+Content-Type: multipart/signed; boundary="nextPart4642518.LvFx2qVVIh";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
-
---oo3vkt6iyksbvgcq
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH v24 3/4] pwm: Add support for RZ/G2L GPT
+--nextPart4642518.LvFx2qVVIh
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+Date: Thu, 17 Apr 2025 11:51:07 +0200
+Message-ID: <5001537.31r3eYUQgx@natalenko.name>
+In-Reply-To: <20250415-b4-ovpn-v26-0-577f6097b964@openvpn.net>
+References: <20250415-b4-ovpn-v26-0-577f6097b964@openvpn.net>
 MIME-Version: 1.0
 
-Hello Biju,
+Hello.
 
-On Wed, Feb 26, 2025 at 02:45:22PM +0000, Biju Das wrote:
-> RZ/G2L General PWM Timer (GPT) composed of 8 channels with 32-bit timer
-> (GPT32E). It supports the following functions
->  * 32 bits x 8 channels
->  * Up-counting or down-counting (saw waves) or up/down-counting
->    (triangle waves) for each counter.
->  * Clock sources independently selectable for each channel
->  * Two I/O pins per channel
->  * Two output compare/input capture registers per channel
->  * For the two output compare/input capture registers of each channel,
->    four registers are provided as buffer registers and are capable of
->    operating as comparison registers when buffering is not in use.
->  * In output compare operation, buffer switching can be at crests or
->    troughs, enabling the generation of laterally asymmetric PWM waveforms.
->  * Registers for setting up frame cycles in each channel (with capability
->    for generating interrupts at overflow or underflow)
->  * Generation of dead times in PWM operation
->  * Synchronous starting, stopping and clearing counters for arbitrary
->    channels
->  * Starting, stopping, clearing and up/down counters in response to input
->    level comparison
->  * Starting, clearing, stopping and up/down counters in response to a
->    maximum of four external triggers
->  * Output pin disable function by dead time error and detected
->    short-circuits between output pins
->  * A/D converter start triggers can be generated (GPT32E0 to GPT32E3)
->  * Enables the noise filter for input capture and external trigger
->    operation
+On =C3=BAter=C3=BD 15. dubna 2025 13:17:17, st=C5=99edoevropsk=C3=BD letn=
+=C3=AD =C4=8Das Antonio Quartulli wrote:
+> Notable changes since v25:
+> * removed netdev notifier (was only used for our own devices)
+> * added .dellink implementation to address what was previously
+>   done in notifier
+> * removed .ndo_open and moved netif_carrier_off() call to .ndo_init
+> * fixed author in MODULE_AUTHOR()
+> * properly indented checks in ovpn.yaml
+> * switched from TSTATS to DSTATS
+> * removed obsolete comment in ovpn_socket_new()
+> * removed unrelated hunk in ovpn_socket_new()
+>=20
+> The latest code can also be found at:
+>=20
+> https://github.com/OpenVPN/ovpn-net-next
 
-I now finally looked over this patch and I'm ok with it. So I will apply
-patches 1 and 3 to
+Thank you for this. I've backported the submission for my local v6.14-based=
+ build (had to adjust for 69c7be1b903fca) and I'm using it now with [1] as =
+you've suggested previously. So far so good. Feel free to add my:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-next
+Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
 
-for now. Note this doesn't mean 2 and 4 are bad, just I
-didn't find the time yet to look into these.
+A couple of notes if I may:
 
-I will send a patch on top of this for a low-hanging improvement.
+1. is it expected for then tun iface to stay after the connection is brough=
+t down? If that matters, I'm using NetworkManager for managing my OpenVPN c=
+onnections
+2. a userspace nit probably not relevant to this submission: the daemon sti=
+ll reports "DCO version:" but with "N/A" value because that version file un=
+der /sys is not presented any more like it was with an out-of-tree v2 imple=
+mentation
 
-Best regards
-Uwe
+[1]: https://github.com/mandelbitdev/openvpn/tree/gianmarco/179-ovpn-support
 
---oo3vkt6iyksbvgcq
+>=20
+> Thanks a lot!
+> Best Regards,
+>=20
+> Antonio Quartulli
+> OpenVPN Inc.
+>=20
+> ---
+> Antonio Quartulli (23):
+>       net: introduce OpenVPN Data Channel Offload (ovpn)
+>       ovpn: add basic netlink support
+>       ovpn: add basic interface creation/destruction/management routines
+>       ovpn: keep carrier always on for MP interfaces
+>       ovpn: introduce the ovpn_peer object
+>       ovpn: introduce the ovpn_socket object
+>       ovpn: implement basic TX path (UDP)
+>       ovpn: implement basic RX path (UDP)
+>       ovpn: implement packet processing
+>       ovpn: store tunnel and transport statistics
+>       ovpn: implement TCP transport
+>       skb: implement skb_send_sock_locked_with_flags()
+>       ovpn: add support for MSG_NOSIGNAL in tcp_sendmsg
+>       ovpn: implement multi-peer support
+>       ovpn: implement peer lookup logic
+>       ovpn: implement keepalive mechanism
+>       ovpn: add support for updating local or remote UDP endpoint
+>       ovpn: implement peer add/get/dump/delete via netlink
+>       ovpn: implement key add/get/del/swap via netlink
+>       ovpn: kill key and notify userspace in case of IV exhaustion
+>       ovpn: notify userspace when a peer is deleted
+>       ovpn: add basic ethtool support
+>       testing/selftests: add test tool and scripts for ovpn module
+>=20
+>  Documentation/netlink/specs/ovpn.yaml              |  367 +++
+>  Documentation/netlink/specs/rt-link.yaml           |   16 +
+>  MAINTAINERS                                        |   11 +
+>  drivers/net/Kconfig                                |   15 +
+>  drivers/net/Makefile                               |    1 +
+>  drivers/net/ovpn/Makefile                          |   22 +
+>  drivers/net/ovpn/bind.c                            |   55 +
+>  drivers/net/ovpn/bind.h                            |  101 +
+>  drivers/net/ovpn/crypto.c                          |  210 ++
+>  drivers/net/ovpn/crypto.h                          |  145 ++
+>  drivers/net/ovpn/crypto_aead.c                     |  383 ++++
+>  drivers/net/ovpn/crypto_aead.h                     |   29 +
+>  drivers/net/ovpn/io.c                              |  446 ++++
+>  drivers/net/ovpn/io.h                              |   34 +
+>  drivers/net/ovpn/main.c                            |  274 +++
+>  drivers/net/ovpn/main.h                            |   14 +
+>  drivers/net/ovpn/netlink-gen.c                     |  213 ++
+>  drivers/net/ovpn/netlink-gen.h                     |   41 +
+>  drivers/net/ovpn/netlink.c                         | 1258 +++++++++++
+>  drivers/net/ovpn/netlink.h                         |   18 +
+>  drivers/net/ovpn/ovpnpriv.h                        |   55 +
+>  drivers/net/ovpn/peer.c                            | 1365 +++++++++++
+>  drivers/net/ovpn/peer.h                            |  163 ++
+>  drivers/net/ovpn/pktid.c                           |  129 ++
+>  drivers/net/ovpn/pktid.h                           |   86 +
+>  drivers/net/ovpn/proto.h                           |  118 +
+>  drivers/net/ovpn/skb.h                             |   61 +
+>  drivers/net/ovpn/socket.c                          |  233 ++
+>  drivers/net/ovpn/socket.h                          |   49 +
+>  drivers/net/ovpn/stats.c                           |   21 +
+>  drivers/net/ovpn/stats.h                           |   47 +
+>  drivers/net/ovpn/tcp.c                             |  598 +++++
+>  drivers/net/ovpn/tcp.h                             |   36 +
+>  drivers/net/ovpn/udp.c                             |  439 ++++
+>  drivers/net/ovpn/udp.h                             |   25 +
+>  include/linux/skbuff.h                             |    2 +
+>  include/uapi/linux/if_link.h                       |   15 +
+>  include/uapi/linux/ovpn.h                          |  109 +
+>  include/uapi/linux/udp.h                           |    1 +
+>  net/core/skbuff.c                                  |   18 +-
+>  net/ipv6/af_inet6.c                                |    1 +
+>  tools/testing/selftests/Makefile                   |    1 +
+>  tools/testing/selftests/net/ovpn/.gitignore        |    2 +
+>  tools/testing/selftests/net/ovpn/Makefile          |   31 +
+>  tools/testing/selftests/net/ovpn/common.sh         |   92 +
+>  tools/testing/selftests/net/ovpn/config            |   10 +
+>  tools/testing/selftests/net/ovpn/data64.key        |    5 +
+>  tools/testing/selftests/net/ovpn/ovpn-cli.c        | 2376 ++++++++++++++=
+++++++
+>  tools/testing/selftests/net/ovpn/tcp_peers.txt     |    5 +
+>  .../testing/selftests/net/ovpn/test-chachapoly.sh  |    9 +
+>  .../selftests/net/ovpn/test-close-socket-tcp.sh    |    9 +
+>  .../selftests/net/ovpn/test-close-socket.sh        |   45 +
+>  tools/testing/selftests/net/ovpn/test-float.sh     |    9 +
+>  tools/testing/selftests/net/ovpn/test-tcp.sh       |    9 +
+>  tools/testing/selftests/net/ovpn/test.sh           |  113 +
+>  tools/testing/selftests/net/ovpn/udp_peers.txt     |    5 +
+>  56 files changed, 9940 insertions(+), 5 deletions(-)
+> ---
+> base-commit: 23f09f01b495cc510a19b30b6093fb4cb0284aaf
+> change-id: 20241002-b4-ovpn-eeee35c694a2
+>=20
+> Best regards,
+>=20
+
+
+=2D-=20
+Oleksandr Natalenko, MSE
+--nextPart4642518.LvFx2qVVIh
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgAzwIACgkQj4D7WH0S
-/k6F3wf+Noa4373MKa5MYVacKyVz7WLzOdwsr3d/DMwV1+M3hE4L2euGaaZS85+U
-k3G4c/LqIoOFFQUFF/qYiIQADWKNoRY269Rj0c3jFKwzs0ZoW6GKROlSv7FOLvJN
-5BIqudas5hvjTmuOmFivMyRfc3s/nMoABNgkpZvZ7PEa7FKkQyF+KMdpE8VCgaZQ
-6g1y9IC7sgzYUmIZL3HBbEgJ2zefddY0h2WFxqvZ5F9MNXnXxhxg5sEr2Sf3RFkS
-BgkebDoyXdo3l14GhfVunSdggvHYpWaKfX4ad3Zkox+vyp76SEhRIr9fRh0yXfZL
-3S8/sMk9wxwxvQg6raINc5lHW6XZdA==
-=z9MA
+iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmgAzwsACgkQil/iNcg8
+M0uluRAA57hH1FjxzJx2QU08priDGbP0JZH//2ZAYoYRNBkpfHrNoOagZwE9VZtQ
+n87B06TbX32AX3B1agPIATdBYTm+2czKa70D3HIWW5kKzNCVzSjUjL7GhQzDMXSl
+uIQblhdkbMLiJ86DLYDnHcfo+YiKnioz+0CK5xyjC/ddDQIpaVWc3PZq5xZoeQUx
+KIc32o/cGirQXMVFCMD6prh6XWhwpXWPSvBcstQOpRUmgdiYm+ERuCr/M+/67SOp
+7r8fjseLVL9E0Yb9awFcAzGratUKzeDn8MkJmAYiupWItNuV5gLiBkifBgwE0h2U
+5PN3GOtkeJGh3isT6xqfRs2PjOi3GZirgSsdVDhjW9Zapc7zAJOJO6N2RGkT4KjE
+YAthC8pe2uksRZbQf8FEHrOloSMqsVw+DgsOCp1EMFNvg668suxIgkpAup53csuD
+GYDk1aoMGh+fU1lAFgZeTqvmsnC56cfpsfJwpLolpKMSpplBY7xLy/yBZK0RAJoW
+sERhvjs4x64IJg8Q00DlqDfH12nT/Nqp32cIifPCfyzNiNQJkWF8YK65nGjvROyI
+jBRXgy90GoCEcdbxCFBtlcDN1yXa6gxNHJSbh0aMPJYizH507zPKY5fO1Xw3sSsr
+pXjuQRojYOGntfjeqCqHeT4EG6A+sUXPVQEI1fGKDDmWDabt0vY=
+=KQn9
 -----END PGP SIGNATURE-----
 
---oo3vkt6iyksbvgcq--
+--nextPart4642518.LvFx2qVVIh--
+
+
+
