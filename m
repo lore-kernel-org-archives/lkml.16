@@ -1,189 +1,73 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4A021D5BF
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEEA218845;
+	Thu, 17 Apr 2025 08:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744878113; cv=none; b=qoqzenf+R1hg5iGf1p2YpdJLhl+74y+xaZcDAAvIkUiBdA2KXhnv4f6OYqqTpZnbGMv05QhgSRQMtfdhGmJx5AVvL4pjb2Ugmkn7PZNSxz2v09p2WHx+rFS8tYkh/NLOqnqAa4SHGCk4tLVgZxUUqbnUauTpvKlGRrk0cf9FkVg=
+	t=1744878127; cv=none; b=c6EDx1CtCjYGlTurA7pYgDYGaYv+73Qkon1dfHzVP0iUVbujPXqJ0p5F7YpH4xlj/Jex+sjryo0rKy5x5VPmi1mxzHW3+V4LFafZWdiMTKGOZLrMC8RO+WxBOJjpK6BO7w+qd3h6Sxhr2sW3mF1EWorPYLj1TXh9+TA+gQa9xxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744878113; c=relaxed/simple;
-	bh=/O9PzffT0UkF38g6YsQfm2ehvWBdBRlM1qDTFBNKPcg=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=uCXuni0/+B/OkxkDi3KMgn0FjCJM2aH5BFiG0VPowXWw3lGFsXKfAucrXoQgASiRBtGVwj3uMF+aJU7ScC7EV1wuyb3gmhiF/qjbzTnX7OsL9z+LsX5roqk9UrrUeS6mVspP+kCClWJ8kHkjMKBcYhbxgkMxwwHW6xX9deqovKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=don8ttsG; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1744878127; c=relaxed/simple;
+	bh=3Guob2VmuutBCBMwoD8YsabQN8PE9ZpuNHgFAtmcvHI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PevAzM5EaI0T54yf/LiSt+Itvv0YdTDhmDrOWbqBtydq2cXL38M6fUZIjX7R3ETH0LmJzMvGxupea4bix7YP6xBHKmchXHH+NgiGOCASHlxVdGhup7dhShpCBJnl6vzMx6FQ+r1BMxnim32DklavwvIDYcxFD/soOPQ6se/Hebo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0GnlhWlM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="don8ttsG"
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250417082141epoutp031844842df57d9f390ff022dff6ace393~3DWN5BRi02007320073epoutp03r
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:21:41 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250417082141epoutp031844842df57d9f390ff022dff6ace393~3DWN5BRi02007320073epoutp03r
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1744878101;
-	bh=nKe4i8h6okYt25emOV7WfFmaZZU5uL7Xb8zHj/J4a4c=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=don8ttsGE+XWMOQjR52294VgyDel9rFbIaPPQdh91Fh61M+vR9+ELCtYhSt+bbkKS
-	 yL0zslYAsIVsuiIVk2uDDVfoyiTDJgEm9UkdhLV9lTQ5LAS1440OwRsvr0mRuE5eLt
-	 u2K0gdeWc61v1wI4g+WocIc2xqX2u0NZ+Y/1r/74=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas1p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250417082140epcas1p48d7a4439fa3773be1ee9784e78e6fd63~3DWNCgvbu2991529915epcas1p4F;
-	Thu, 17 Apr 2025 08:21:40 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.36.226]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4ZdW841mrLz6B9m5; Thu, 17 Apr
-	2025 08:21:40 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-	epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-	3B.72.10191.41AB0086; Thu, 17 Apr 2025 17:21:40 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250417082139epcas1p3ca8595055b368abd970300e9422e3515~3DWMJPt_01730217302epcas1p38;
-	Thu, 17 Apr 2025 08:21:39 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250417082139epsmtrp2dc85a27f3e86f17c5141280daa730411~3DWMH6Rta1656716567epsmtrp2M;
-	Thu, 17 Apr 2025 08:21:39 +0000 (GMT)
-X-AuditID: b6c32a39-0213c240000027cf-84-6800ba146716
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	D7.F2.08805.31AB0086; Thu, 17 Apr 2025 17:21:39 +0900 (KST)
-Received: from dh0421hwang02 (unknown [10.253.101.58]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250417082139epsmtip2d388a92515101398af77802a15043ec1~3DWL6ohPs1317113171epsmtip2w;
-	Thu, 17 Apr 2025 08:21:39 +0000 (GMT)
-From: "DooHyun Hwang" <dh0421.hwang@samsung.com>
-To: "'Avri Altman'" <Avri.Altman@sandisk.com>, <linux-scsi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <alim.akhtar@samsung.com>,
-	<avri.altman@wdc.com>, <bvanassche@acm.org>,
-	<James.Bottomley@HansenPartnership.com>, <martin.petersen@oracle.com>,
-	<peter.wang@mediatek.com>, <manivannan.sadhasivam@linaro.org>,
-	<quic_mnaresh@quicinc.com>
-Cc: <grant.jung@samsung.com>, <jt77.jang@samsung.com>,
-	<junwoo80.lee@samsung.com>, <jangsub.yi@samsung.com>,
-	<sh043.lee@samsung.com>, <cw9316.lee@samsung.com>,
-	<sh8267.baek@samsung.com>, <wkon.kim@samsung.com>
-In-Reply-To: <PH7PR16MB6196EF7F7A1862B48B66C5C5E5BC2@PH7PR16MB6196.namprd16.prod.outlook.com>
-Subject: RE: [PATCH 1/2] scsi: ufs: Add an enum for ufs_trace to check ufs
- cmd error
-Date: Thu, 17 Apr 2025 17:21:39 +0900
-Message-ID: <055d01dbaf71$be2da7f0$3a88f7d0$@samsung.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0GnlhWlM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AFF4C4CEE4;
+	Thu, 17 Apr 2025 08:22:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744878125;
+	bh=3Guob2VmuutBCBMwoD8YsabQN8PE9ZpuNHgFAtmcvHI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=0GnlhWlMg/eGs9SsDusivpz6SHlV0uSXsb3EpZ8awKET5op16AG1G4ao7jWnp4LcQ
+	 /q8esY4qJLQIfALJdKPGtamVIyjA05SPRF6LW33tvl4qOmhABASbYYf42/c6qrlqtO
+	 EQ0UNmiPRC1qEH9sSCDzydA8FYYEtMXvh9SIbzd4=
+Date: Thu, 17 Apr 2025 10:22:02 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] USB: host: omap: Do not enable by default during compile
+ testing
+Message-ID: <2025041747-cruncher-exposure-590c@gregkh>
+References: <20250417074634.81295-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQEmYeTjtFjYRI1QNWxgWL0Y7ybfIwITLn2gAaoUPAICNqyVwLTieWog
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOJsWRmVeSWpSXmKPExsWy7bCmga7ILoYMg78ruCwezNvGZvFu/RYm
-	i5c/r7JZTPvwk9lixqk2Votff9ezW2zs57Do2DqZyWLH8zPsFrv+NjNZXN41h82i+/oONou7
-	LZ2sFsuP/2Oy2PrpN6vFt74n7BZNf/axWFw7c4LVYvOlbywOwh6Xr3h7TJt0is3jzrU9bB4t
-	J/ezeHx8eovFY+KeOo++LasYPaatOc/k8XmTnEf7gW6mAK6obJuM1MSU1CKF1Lzk/JTMvHRb
-	Je/geOd4UzMDQ11DSwtzJYW8xNxUWyUXnwBdt8wcoMeUFMoSc0qBQgGJxcVK+nY2RfmlJakK
-	GfnFJbZKqQUpOQVmBXrFibnFpXnpenmpJVaGBgZGpkCFCdkZMy5FFUwQquidt5m5gbGPt4uR
-	k0NCwETi5sppLCC2kMAORok1m3W6GLmA7E+MEltuXmCCcL4xSjw98ZkFpuP2rZfMEIm9jBL3
-	ft1hh3BeM0ocnDWLHaSKTcBAYvKxN2wgCRGB+0wSXU9vgrUwC1xnlPh57wsTSBWnQKzErXs7
-	gDo4OIQFwiQe/jYCCbMIqEos//eQDcTmFbCU2He0mx3CFpQ4OfMJ2BnMAvIS29/OYYY4SUHi
-	59NlrCC2iICbxJsTa6BqRCRmd7aB7ZUQmMwp0fR4IyNEg4vE5P/H2SFsYYlXx7dA2VISn9/t
-	ZYOwiyWunDsLZbcwSjzqyICw7SWaW5vZQG5mFtCUWL9LH2IXn8S7rz2sIGEJAV6JjjYhiGo1
-	icX/vgNtZQeyZSQauSGiHhKP296wTGBUnIXkr1lI/pqF5P5ZCKsWMLKsYhRLLSjOTU8tNiww
-	hUd1cn7uJkZwitey3ME4/e0HvUOMTByMhxglOJiVRHjPmf9LF+JNSaysSi3Kjy8qzUktPsRo
-	CgzpicxSosn5wCyTVxJvaGJpYGJmZGJhbGlspiTOu+fj03QhgfTEktTs1NSC1CKYPiYOTqkG
-	Jv4jm4/0qb0y++Aa1bQ0bW3t56mchv/+HXNYpFJ20N133iXn6uObTx63VNRmdIm9f+AmU8zj
-	e1VLvXx9t29w3jHnQ0r3z4kdjaInV7t/Ndn88cFnyzdG3m9F1lkGKj1a8ufqbG+rZGtHk1Kt
-	zybOUYnB1ef37V4xf/OiS5fVpb5zx97hKYotO/47bNYMxl8LHTI0X1lHWadPuFTuP/HCjsw/
-	DL+naDUWTv0gqnD1hOtZYdV19/fPP6d89/MugVPC6ts0/P5Zsk3cJjtV8IhNUuGtiphJM7w3
-	vJIWTmhplq1u4PydvZQrQ1lgTfL0w7v+M/Hz5ce92pVSr/Pb1Hp5f9aywK3VIj7ZmTNPZe0J
-	t1ZiKc5INNRiLipOBADTcn9megQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCIsWRmVeSWpSXmKPExsWy7bCSvK7wLoYMg5/blSwezNvGZvFu/RYm
-	i5c/r7JZTPvwk9lixqk2Votff9ezW2zs57Do2DqZyWLH8zPsFrv+NjNZXN41h82i+/oONou7
-	LZ2sFsuP/2Oy2PrpN6vFt74n7BZNf/axWFw7c4LVYvOlbywOwh6Xr3h7TJt0is3jzrU9bB4t
-	J/ezeHx8eovFY+KeOo++LasYPaatOc/k8XmTnEf7gW6mAK4oLpuU1JzMstQifbsErowZl6IK
-	JghV9M7bzNzA2MfbxcjJISFgInH71kvmLkYuDiGB3YwS++avZoFIyEh039/L3sXIAWQLSxw+
-	XAxR85JR4um3NrAaNgEDicnH3rCBJEQEXjJJLLvzlxHEYRa4zyixaNtUdoiWCUwSqy5cZAdp
-	4RSIlbh1bweYLSwQInH820Ewm0VAVWL5v4dsIDavgKXEvqPd7BC2oMTJmU9YQM5gFtCTaNvI
-	CBJmFpCX2P52DjPEpQoSP58uYwWxRQTcJN6cWMMCUSMiMbuzjXkCo/AsJJNmIUyahWTSLCQd
-	CxhZVjFKphYU56bnFhsWGOWllusVJ+YWl+al6yXn525iBEe8ltYOxj2rPugdYmTiYDzEKMHB
-	rCTCe878X7oQb0piZVVqUX58UWlOavEhRmkOFiVx3m+ve1OEBNITS1KzU1MLUotgskwcnFIN
-	TDxpP+/q/b9TFPlkpaXFBIWtogtq31+Zk7HeJHuptuVGmWhJp56m2PLHt40lixUb5yZL7Plv
-	a2R6jbVC53jFQalLpcl71vHWTNwgGie9JE75o4HiG4ui8yvvGNrpmQcW5smXZJ/lKefOMN9z
-	wbrnhumi9i1ruHMdzunmxh+5nNOdeDXVh6/7K4v6pL7OnQsPv87Z7We3TfSvvoSjiKjno2ua
-	Z3JCd1sVFPoHq2qa9HsIW/9LYZNOCX8oY/vnQGGyhN9tgToTrfna8bO3t+gcCJ13aGpDHesC
-	ZYGT0pPNGjzmqFyW485/K79L2Mqr9fzV0twPbXlszZ4s+06nBK18qBkTd630n9jym/s8y5RY
-	ijMSDbWYi4oTAQswajtnAwAA
-X-CMS-MailID: 20250417082139epcas1p3ca8595055b368abd970300e9422e3515
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250417023417epcas1p31338c05e70e61b0a5e96d0ac0910713d
-References: <20250417023405.6954-1-dh0421.hwang@samsung.com>
-	<CGME20250417023417epcas1p31338c05e70e61b0a5e96d0ac0910713d@epcas1p3.samsung.com>
-	<20250417023405.6954-2-dh0421.hwang@samsung.com>
-	<PH7PR16MB6196EF7F7A1862B48B66C5C5E5BC2@PH7PR16MB6196.namprd16.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417074634.81295-1-krzysztof.kozlowski@linaro.org>
 
-> > There is no trace when a ufs uic cmd error occurs.
-> > So, add "UFS_CMD_ERR" enumeration to ufs_trace_str_t.
-> >
-> > Signed-off-by: DooHyun Hwang <dh0421.hwang@samsung.com>
-> > ---
-> >  drivers/ufs/core/ufs_trace.h | 1 +
-> >  include/ufs/ufs.h            | 2 +-
-> >  2 files changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/ufs/core/ufs_trace.h b/drivers/ufs/core/ufs_trace.h
-> index
-> > caa32e23ffa5..43830a092637 100644
-> > --- a/drivers/ufs/core/ufs_trace.h
-> > +++ b/drivers/ufs/core/ufs_trace.h
-> > @@ -41,6 +41,7 @@
-> >  #define UFS_CMD_TRACE_STRINGS                                  \
-> >         EM(UFS_CMD_SEND,        "send_req")                     \
-> >         EM(UFS_CMD_COMP,        "complete_rsp")                 \
-> > +       EM(UFS_CMD_ERR,         "req_complete_err")             \
-> >         EM(UFS_DEV_COMP,        "dev_complete")                 \
-> >         EM(UFS_QUERY_SEND,      "query_send")                   \
-> >         EM(UFS_QUERY_COMP,      "query_complete")               \
-> > diff --git a/include/ufs/ufs.h b/include/ufs/ufs.h index
-> > c0c59a8f7256..7f2d418bdd86 100644
-> > --- a/include/ufs/ufs.h
-> > +++ b/include/ufs/ufs.h
-> > @@ -631,7 +631,7 @@ struct ufs_dev_info {
-> >   * This enum is used in string mapping in ufs_trace.h.
-> >   */
-> >  enum ufs_trace_str_t {
-> > -       UFS_CMD_SEND, UFS_CMD_COMP, UFS_DEV_COMP,
-> > +       UFS_CMD_SEND, UFS_CMD_COMP, UFS_CMD_ERR, UFS_DEV_COMP,
-> >         UFS_QUERY_SEND, UFS_QUERY_COMP, UFS_QUERY_ERR,
-> >         UFS_TM_SEND, UFS_TM_COMP, UFS_TM_ERR  };
-> It seems strange to me that scsi & uic commands are designated by the same
-> enum.
-> Has it been considered to add UFS_UIC_SEND, UFS_UIC_COMP, UFS_UIC_ERR to
-> enum ufs_trace_str_t ?
-> Also looks like UFS_DEV_COMP is unused ?
+On Thu, Apr 17, 2025 at 09:46:34AM +0200, Krzysztof Kozlowski wrote:
+> Enabling the compile test should not cause automatic enabling of all
+> drivers, but only allow to choose to compile them.
 > 
-> Thanks,
-> Avri
-It is correct that the same enumeration is used for both SCSI and UIC
-commands.
-However, the trace function differs for SCSI and UIC commands.
-The enum is solely for handling the sending and completion of each command
-within the respective trace functions.
-
-Therefore, I think there is no need to add new enums like "UFS_UIC_SEND".
-
-It seems better to discuss "UFS_DEV_COMP" in another commit.
-
-
-Thank you.
-DooHyun Hwang.
-> > --
-> > 2.48.1
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > 
+> ---
+> 
+> For longer rationale:
+> https://lore.kernel.org/all/191543a8-2e2e-4ac4-9b2b-d253820a0c9f@app.fastmail.com/
+> ---
+>  drivers/usb/host/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+> index d011d6c753ed..6dedacba94b3 100644
+> --- a/drivers/usb/host/Kconfig
+> +++ b/drivers/usb/host/Kconfig
+> @@ -225,7 +225,7 @@ config USB_EHCI_HCD_OMAP
+>  	tristate "EHCI support for OMAP3 and later chips"
+>  	depends on ARCH_OMAP || COMPILE_TEST
+>  	depends on NOP_USB_XCEIV
+> -	default y
+> +	default ARCH_OMAP
 
+Should this get a "Fixes:" tag as well?
 
+thanks,
+
+greg k-h
