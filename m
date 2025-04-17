@@ -1,121 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251CE254B0A;
-	Thu, 17 Apr 2025 17:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146D724111D;
+	Thu, 17 Apr 2025 17:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744911917; cv=none; b=jh6tuXRKv+I7xzF2Rz5j8l/2Go3T5and40kz0873xzuXU2kGmEegA0jHrKkJJ+HQ7vUqu7rhusVtkfmyKHulxZdk0g2t0mRWA4McLbWHxWjR6GaEBatJcrjuPVacL7Z50UlgxAFNj4q06h64P1q3QOUfYcAJ9QsICTeIQEub9eU=
+	t=1744911987; cv=none; b=eZc7vAbKa7nL0B1QMwmWjZ4f0coycVaRkhnIcCdpqnXxFHLdKcqF4FjPr1yGz3pBxTqKbG2/qDJlDgI5ta9ZTR8FVLkCz1+ZNYW4sCxaDWKqu1N4Z3OfgDPZwjA5oum0Nl9cd6jeyJkTCCewh5NAdBwiEqYzMerhccaPUnPLulA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744911917; c=relaxed/simple;
-	bh=6HqrhZNro99W4hlfSawIZ3bq362Egs1uCP6Vd2PPZEo=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OkbEq+zcM/xf1fh8GVq2ck5w8tNC/4wmvXtyecxTZwo8xP3SoaIRhCITRGhlfqRsd3yrTctczb/TSZp+cnOVXgHix11HYE8GvK4ChylLAkXUjPBPz/jsTF3tJFocvqG7UZDw+ZTuN80s5zS5mZ4YJF7EbnAKfZ4ZuN/ZkmrAlAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rg9yC7Ql; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rg9yC7Ql"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87272C4CEE4;
-	Thu, 17 Apr 2025 17:45:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744911916;
-	bh=6HqrhZNro99W4hlfSawIZ3bq362Egs1uCP6Vd2PPZEo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Rg9yC7QlGIMHPKQ7WEUGcSXGLVG9wxf2u/ZQSNnkgiCyTxtBSESRPGDe+sRSX9zqE
-	 Yr6zKteWNfT21eUPrDzH3townbAbp+JNZoqjO8E9Btki0TkxaaNjeqnOFomOXxGsY9
-	 npxcqlAvOCfIOhiGpE7+KHL4yZ17Ea7yhnR7iLd/LuMwKNgaMfatKUoXU++iSE+yc4
-	 bCUeuLNT8zmRwNmWOd81ph5gMXXeKiDDW6+RZvyzte4ueYT3Dt2CGTpkNowMW9fKmZ
-	 kSD+ATjwqop+j6mDFplMVngOWwDoWMPy9UNGDtf1OWVrt4ZVExz07i9a69OinfacJU
-	 FCAJM3b+Ersgw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1u5TIY-006VUB-5A;
-	Thu, 17 Apr 2025 18:45:14 +0100
-Date: Thu, 17 Apr 2025 18:45:12 +0100
-Message-ID: <86mscek7h3.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Luo Jie <quic_luoj@quicinc.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-kernel@vger.kernel.org,
-	cocci@inria.fr,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	quic_kkumarcs@quicinc.com,
-	quic_linchen@quicinc.com,
-	quic_leiwei@quicinc.com,
-	quic_suruchia@quicinc.com,
-	quic_pavir@quicinc.com
-Subject: Re: [PATCH v3 0/6] Add FIELD_MODIFY() helper
-In-Reply-To: <0c97c659-bd28-45e0-8537-d9be2637cb22@lunn.ch>
-References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
-	<86sem7jb5t.wl-maz@kernel.org>
-	<0c97c659-bd28-45e0-8537-d9be2637cb22@lunn.ch>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1744911987; c=relaxed/simple;
+	bh=46ukvaYcdhyKDeXS4wk7tC3dQ01qf4FGv/IJfYCeBMs=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OPjxPy6OWzzcIK8KrvVe759WrwGLvFSTEjfL0xHrP6dghfJA8nQAWBAvnyWqyz+388SkIurcfUxUhkeVCS7ATDVQTcyAp8K/CXA1zFN6yxn6T7aDpnKStfuZlnMSWHpay44N5thy6QUZT9YLFUC+pgjZtTsV4eU9KNZN/RR+vW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zdlf138pWz6L53m;
+	Fri, 18 Apr 2025 01:44:57 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6369D140121;
+	Fri, 18 Apr 2025 01:46:22 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 17 Apr
+ 2025 19:46:21 +0200
+Date: Thu, 17 Apr 2025 18:46:20 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Andy Shevchenko <andy@kernel.org>
+CC: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
+	<jic23@kernel.org>, Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Matthias
+ Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Lars-Peter Clausen
+	<lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, "Cosmin
+ Tanislav" <cosmin.tanislav@analog.com>, Tomasz Duszynski
+	<tduszyns@gmail.com>, Jean-Baptiste Maneyrol
+	<jean-baptiste.maneyrol@tdk.com>, Andreas Klinger <ak@it-klinger.de>, Petre
+ Rodan <petre.rodan@subdimension.ro>, <linux-iio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH 7/8] iio: imu: inv_mpu6050: align buffer for timestamp
+Message-ID: <20250417184620.00006ae6@huawei.com>
+In-Reply-To: <aAEzlZoZTsQuWgZa@smile.fi.intel.com>
+References: <20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
+	<20250417-iio-more-timestamp-alignment-v1-7-eafac1e22318@baylibre.com>
+	<aAEzlZoZTsQuWgZa@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: andrew@lunn.ch, quic_luoj@quicinc.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk, Julia.Lawall@inria.fr, nicolas.palix@imag.fr, catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, linux-kernel@vger.kernel.org, cocci@inria.fr, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com, quic_leiwei@quicinc.com, quic_suruchia@quicinc.com, quic_pavir@quicinc.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 17 Apr 2025 18:22:29 +0100,
-Andrew Lunn <andrew@lunn.ch> wrote:
+On Thu, 17 Apr 2025 20:00:05 +0300
+Andy Shevchenko <andy@kernel.org> wrote:
+
+> On Thu, Apr 17, 2025 at 11:52:39AM -0500, David Lechner wrote:
+> > Align the buffer used with iio_push_to_buffers_with_timestamp() to
+> > ensure the s64 timestamp is aligned to 8 bytes.  
 > 
-> On Thu, Apr 17, 2025 at 12:10:54PM +0100, Marc Zyngier wrote:
-> > On Thu, 17 Apr 2025 11:47:07 +0100,
-> > Luo Jie <quic_luoj@quicinc.com> wrote:
-> > > 
-> > > Add the helper FIELD_MODIFY() to the FIELD_XXX family of bitfield
-> > > macros. It is functionally similar as xxx_replace_bits(), but adds
-> > > the compile time checking to catch incorrect parameter type errors.
-> > > 
-> > > This series also converts the four instances of opencoded FIELD_MODIFY()
-> > > that are found in the core kernel files, to instead use the new
-> > > FIELD_MODIFY() macro. This is achieved with Coccinelle, by adding
-> > > the script field_modify.cocci.
-> > > 
-> > > The changes are validated on IPQ9574 SoC which uses ARM64 architecture.
-> > 
-> > We already have the *_replace_bits() functions (see
-> > include/linux/bitfield.h).
-> > 
-> > Why do we need extra helpers?
+> Same question as per previous patch.
 > 
-> If you look at bitfield.h, the *_replace_bits() seem to be
-> undocumented internal macro magic, not something you are expected to
-> use. What you are expected to use in that file is however well
-> documented. The macro magic also means that cross referencing tools
-> don't find them.
+In this case I don't think we know the position of the timestamp
+so a structure would be misleading.
 
-$ git grep _replace_bits|  wc -l
-1514
+The comment above the define certainly suggests it is variable..
 
-I think a bunch of people have found them, tooling notwithstanding.
-
-As for the documentation, the commit message in 00b0c9b82663ac would
-be advantageously promoted to full-fledged kernel-doc.
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+/*
+ * Maximum of 6 + 6 + 2 + 7 (for MPU9x50) = 21 round up to 24 and plus 8.
+ * May be less if fewer channels are enabled, as long as the timestamp
+ * remains 8 byte aligned
+ */
+#define INV_MPU6050_OUTPUT_DATA_SIZE         32
