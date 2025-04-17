@@ -1,39 +1,37 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748A41DE3A8;
-	Thu, 17 Apr 2025 18:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D6D2571BD;
+	Thu, 17 Apr 2025 18:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744913075; cv=none; b=q8xyWJ+5usjqZrY79L9kucaxiwCEH7DaT07C546KEf7uitYpa7NDpKeYbdGvZOdQUnvgEuj1g2Ae2C2wgDA2lK3PsZT4NiEBJ21EQA39TrynYZkA/704KC1Yjkdy7oPoB1DAvV71ukDvHuGzp2S2Ei0xPnroQpgDb6Fmwl/Xz6g=
+	t=1744913080; cv=none; b=RbemdJqg1UfaZ0cvHWYryTQc/LAKKRmsldQkrh/qYXK3aEdYqyWw6FXRHEt/DmruhMbJ40WelARB6EdZTDvF11tXownnSlO76tyqpW6u4C3nlLomPWSrzPT0WrxN5KrvXIr7/S5/m7+Eurig0N9CPDz6hvcD+v4Qs72K7VzlKyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744913075; c=relaxed/simple;
-	bh=k+ofFeWwMijvwPMKv1ntTjaG2LbAroxgMS8DJQPA+5c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j9a2K7v2maWShd9xT5gYf47Iy8Og55/y87fV2YdNXqsRVy+aCIOjf0yD7xweUHPiuDzPBrXrbMOYI072XGf67ExoICAHRXcztL1zqtSiGUy25G+utYQkUF5dDmOrZCAPpBD7P0Rg23rFVG8oCmCzkL6EP4n0ryG0ffSPHCabCpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=korsgaard.com; spf=pass smtp.mailfrom=korsgaard.com; arc=none smtp.client-ip=217.70.183.201
+	s=arc-20240116; t=1744913080; c=relaxed/simple;
+	bh=l/B2NDHOCGeM+43tocuNN/tYWjEBeJ15OptW16MOMKU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=DyCTgpHlhAuC9d74Q/lFGhoIyVNqx/Qd6z8Lr9ge92IlDgABRirkfszdGCuame1P4+1Q4+ziLT6VZ5RmyObLu+xPtxjLmW30EKIf5AK+ld+j7ApQqs0mAlXQBOMGUTTq2cPlVNLcUsXYQYJ+VCyzP1izooA1IsVT7FHZX8icq6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=korsgaard.com; spf=pass smtp.mailfrom=korsgaard.com; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=korsgaard.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=korsgaard.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 915ED43B56;
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0AF0742EF5;
 	Thu, 17 Apr 2025 18:04:28 +0000 (UTC)
 Received: from peko by dell.be.48ers.dk with local (Exim 4.96)
 	(envelope-from <peko@dell.be.48ers.dk>)
-	id 1u5Tb9-00GFN7-2b;
-	Thu, 17 Apr 2025 20:04:27 +0200
+	id 1u5TbA-00GFNL-0c;
+	Thu, 17 Apr 2025 20:04:28 +0200
 From: Peter Korsgaard <peter@korsgaard.com>
 To: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
+	Guenter Roeck <linux@roeck-us.net>
 Cc: Peter Korsgaard <peter@korsgaard.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
 	linux-hwmon@vger.kernel.org,
-	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: hwmon: ti,tmp102: document optional V+ supply property
-Date: Thu, 17 Apr 2025 20:04:25 +0200
-Message-Id: <20250417180426.3872314-1-peter@korsgaard.com>
+Subject: [PATCH 2/2] hwmon: (tmp102): add vcc regulator support
+Date: Thu, 17 Apr 2025 20:04:26 +0200
+Message-Id: <20250417180426.3872314-2-peter@korsgaard.com>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250417180426.3872314-1-peter@korsgaard.com>
+References: <20250417180426.3872314-1-peter@korsgaard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,40 +41,39 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdelleefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefrvghtvghrucfmohhrshhgrggrrhguuceophgvthgvrheskhhorhhsghgrrghrugdrtghomheqnecuggftrfgrthhtvghrnhepveeiveethfelteelueelvdffieevgfdvtdeivdetuefgffdtvdeuffevheegffdunecukfhppedujeekrdduudelrddurddufeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudejkedrudduledruddrudefjedphhgvlhhopeguvghllhdrsggvrdegkegvrhhsrdgukhdpmhgrihhlfhhrohhmpehpvghkoheskhhorhhsghgrrghrugdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepjhguvghlvhgrrhgvsehsuhhsvgdrtghomhdprhgtphhtthhopehlihhnuhigsehrohgvtghkqdhushdrnhgvthdprhgtphhtthhopehpvghtvghrsehkohhrshhgrggrrhgurdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrt
- ghpthhtohepkhhriihksehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhhfihmohhnsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdelleefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefrvghtvghrucfmohhrshhgrggrrhguuceophgvthgvrheskhhorhhsghgrrghrugdrtghomheqnecuggftrfgrthhtvghrnheptdelfeekveegudfhudehtedtjeekkeeggeehgfeghfevkedvtdfhfeetudfgiedtnecukfhppedujeekrdduudelrddurddufeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudejkedrudduledruddrudefjedphhgvlhhopeguvghllhdrsggvrdegkegvrhhsrdgukhdpmhgrihhlfhhrohhmpehpvghkoheskhhorhhsghgrrghrugdrtghomhdpnhgspghrtghpthhtohephedprhgtphhtthhopehjuggvlhhvrghrvgesshhushgvrdgtohhmpdhrtghpthhtoheplhhinhhugiesrhhovggtkhdquhhsrdhnvghtpdhrtghpthhtohepphgvthgvrheskhhorhhsghgrrghrugdrtghomhdprhgtphhtthhopehlihhnuhigqdhhfihmohhnsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 X-GND-Sasl: peter@korsgaard.com
 
-TMP102 is powered by its V+ supply, document it. The property is called
-"vcc-supply" since the plus sign (+) is not a valid property character.
+Make it optional for backwards compatibility.
 
 Signed-off-by: Peter Korsgaard <peter@korsgaard.com>
 ---
- Documentation/devicetree/bindings/hwmon/ti,tmp102.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/hwmon/tmp102.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/ti,tmp102.yaml b/Documentation/devicetree/bindings/hwmon/ti,tmp102.yaml
-index 7e5b62a0215dd..4c89448eba0dc 100644
---- a/Documentation/devicetree/bindings/hwmon/ti,tmp102.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/ti,tmp102.yaml
-@@ -23,6 +23,9 @@ properties:
-   "#thermal-sensor-cells":
-     const: 1
+diff --git a/drivers/hwmon/tmp102.c b/drivers/hwmon/tmp102.c
+index 8af44a33055f3..a02daa496c9c4 100644
+--- a/drivers/hwmon/tmp102.c
++++ b/drivers/hwmon/tmp102.c
+@@ -16,6 +16,7 @@
+ #include <linux/device.h>
+ #include <linux/jiffies.h>
+ #include <linux/regmap.h>
++#include <linux/regulator/consumer.h>
+ #include <linux/of.h>
  
-+  vcc-supply:
-+    description: Power supply for tmp102
+ #define	DRIVER_NAME "tmp102"
+@@ -204,6 +205,10 @@ static int tmp102_probe(struct i2c_client *client)
+ 		return -ENODEV;
+ 	}
+ 
++	err = devm_regulator_get_enable_optional(dev, "vcc");
++	if (err < 0 && err != -ENODEV)
++		return dev_err_probe(dev, err, "Failed to enable regulator\n");
 +
- required:
-   - compatible
-   - reg
-@@ -42,6 +45,7 @@ examples:
-             reg = <0x48>;
-             interrupt-parent = <&gpio7>;
-             interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
-+            vcc-supply = <&supply>;
-             #thermal-sensor-cells = <1>;
-         };
-     };
+ 	tmp102 = devm_kzalloc(dev, sizeof(*tmp102), GFP_KERNEL);
+ 	if (!tmp102)
+ 		return -ENOMEM;
 -- 
 2.39.5
 
