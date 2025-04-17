@@ -1,156 +1,75 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C46B1E0DE8;
-	Thu, 17 Apr 2025 06:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6211F8908;
+	Thu, 17 Apr 2025 06:29:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744871243; cv=none; b=I5R86iwoD2/rlJxOODQhZ1K1NJre0drZuCOsu2TVyUMgzky8asc5XjfHEQ+u+RTEUbSydl0oa+IwVWYa2hG9Gox7b6Ont2ywEb13R9HmOJDGnxgitigXuSJVBmEyMhVE2/hEbH5QO8gdFILtLNcb8eRl5EpNRTZ3La+4pLgD338=
+	t=1744871344; cv=none; b=fyxdAgCpmoEEAI4O19wZs3Lvx2G7KMEglPI4//zogs7Vu5c0VySyC7YiRZarNozKzISp9yOKTYq1Sl7csVAfcfDq+ib64XJwUvzBZIrGSQH98h5EkhQQDEcMxaet2Pktt33wunEBUJiooYRzwmmDTWtq9ppve0zfFkjDuyzTAz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744871243; c=relaxed/simple;
-	bh=hzJBWmW8lICSwnMRPi/LH9kPNvWBF+pCWcOfKl3VUD8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dRUuc6VT6DZmpqh3Iss3VhErDezgMj2EzYIS7gWSby5+HauJwOTOx4KnoFiovPQ4oJWZCVi5kNVa+xP0mOHigt3lmKJCvNhGIKF1sWXzTRiMEiPrASGrk2VnD+gqvb1Y68Ua2t+mr0E4aOoX+v7kQNL47jhzcTMj+ncU5d8coVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K0f8DkOx; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744871344; c=relaxed/simple;
+	bh=7IAS7u/qyeDA+3kCVGKykpqGrK/XcXN5eUwS62reNK4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rotCshyEO8iu87sOhHINLjLDq/nlW4oe2sAb8uBmPr6ZvCFht7G6weq2SwPGw7vISzFGa6CLnqeyLWewZ0shOiIb6Wnx513QAlvhFEWdC4wz2Ga3MNLzCNNpSeN/ZeHaULR+ahnn85kKImClFjBJjNmkbpy9bdKXMbK2zw8vn+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XgFcS3y3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K0f8DkOx"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6ecf99dd567so6222576d6.0;
-        Wed, 16 Apr 2025 23:27:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744871240; x=1745476040; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lYASVlhOcfaq1av7/fl04126jANP6cWR4NufJae7Xbg=;
-        b=K0f8DkOxBPpGU9vtVJk6I/BydF3S3qqcM7t49DV2rOGwOX/6flFpHtD/GcKeeF0LJh
-         yzEZMCll0Pv7m2QpG9mTA2iDBVeKFgnDrj82MnZYPSoKJcfbiWQa4ETqkPmBi7FPRpJW
-         C/BCPBBgJRZgzZtOM3QXwvu+W+v+WtwQMLdGXlDkHZNNCTUhXftQ45zeUG29QTI+kWia
-         dG6HC8bx9Ys8Xs5+L45jJl5+ywnzNEiEr7ffdxcbQ78VDdPpKwiW9qjg/q4WihUow4EW
-         MA2zYHTKRGRiPQc6JAeoDyk7FnnYSUOhe/Y9GlrCPGu32PPWpVg/SGKCKsdZff78n9VQ
-         a3hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744871240; x=1745476040;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lYASVlhOcfaq1av7/fl04126jANP6cWR4NufJae7Xbg=;
-        b=qV+BHr81na6jHrS1WoLDBxVqwi04diD8ToJNMiAjzwJO3qdsrr204KJv2Hw037lYe/
-         eYG2ygH5zydn3BTMCQX4/8BPOp+Oh/9K8NEbTTRmSfFnRP2RE21L2aG6owm+dDtnY/LE
-         g1YTEpvnm9gKdpF5XYQ5p00vGxXqpyGdzzBrIDJERgymjrhhBYxIcdRM+FVKjeQvuKXX
-         ybANPmszuelBUVhlkWHl1i0FS3tbORbk4i6vUsTl7spcXpSz6L+Z6zmtaxficnUWsgeu
-         yQItQrESz/qaaHJbRvt6yezFjg4NfUQ8E69n5vmZD9cWT7Y+DBgE7rxGBnhG79AMjDEV
-         6rlA==
-X-Forwarded-Encrypted: i=1; AJvYcCUbe098sOYVIlQ/182OY7H/HnBErSVGKudYl7f79ACXBMvX03THl635tiutIDvDm9qQdy4QjOeo552w@vger.kernel.org, AJvYcCUyVoj70R/m0SzHw36e/esswnqZTBO1kuu57DMZWACJncJP336K9DXjjBya9dj20avN2GaKbxpdhzTU@vger.kernel.org, AJvYcCVbQOx80itgI5HzcOqVCiYoHMosXq17ZYQjZqsMiz6yfFWc1RDflf2iYe3X3fOvOIthmpKQSHAfH7cv@vger.kernel.org, AJvYcCWhWx5ROiTkx6IuLIZ3Wl6+m0WpTgukoXkmiD2QvvygCpBFsmMABOwQ+RoM0aFk/athx3jYKTQoaK9kHaxP@vger.kernel.org, AJvYcCWqVO6Dd6OhDkPmytxXJeSTIJUMbuZIZ4jCAe2nVblnruc0a7KvPQWm9t1wIytZNyImR2bUnkoKT24o@vger.kernel.org, AJvYcCX398VqUskBjUoUYFQ3e77RZJPnUUPVXi/dQiHkQCUsPPzuLZrMEQM/VdWL/64Io2pXN+W55c2x@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx80vLtUDyXI2mAwtSoSsm6JRx5QBGidP1Na5ekHf2SNFmd+wsE
-	FDZoIkJM5E3U2QvYNGuzJfUHbUQA3JqT9dvquzaEd9frwg7q1g/bwhQ5ADihBPMhL2fEmLFrFMS
-	qHVz9NRZyuIXn7W+4MfzMOkYHmbE=
-X-Gm-Gg: ASbGnctFSpW6wanqwVFxnfFfIpp6K1zek80cgDatkUJNqT8wtc7svJY8uXBqd9wRdVY
-	nwCWpVD1I8bcqvYdoxOvuRcpUgiGxjYAfmpw567KMOzrZMHtum7hhwNjS2G0YYrsmos3wHbMszT
-	/XQQo1Yb4U8bpmURuXvrKyU9Tof8uCeGp1EIFi+KjR0qeEGjTisqCYKlo=
-X-Google-Smtp-Source: AGHT+IFtGW1OUCxVsFYK0aS+AATgm+R1KxN8WtGUG42EZWSWUImsJZzN5NBoIDk83tn8feVZCpeI87IWUhbWn44GVCc=
-X-Received: by 2002:ac8:7f8c:0:b0:478:dcdd:a257 with SMTP id
- d75a77b69052e-47ad80c2478mr62378561cf.25.1744871240118; Wed, 16 Apr 2025
- 23:27:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XgFcS3y3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C96E3C4CEE7;
+	Thu, 17 Apr 2025 06:29:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744871343;
+	bh=7IAS7u/qyeDA+3kCVGKykpqGrK/XcXN5eUwS62reNK4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XgFcS3y3UHQw9SyyZDhs8yKzZcuIEoe57HITDLImj6A11NPPAyrHQSJ9xUg/AFuFe
+	 xOLpwLraz8ffZcLpYyyyGF0como1vwUQvXhYFRLmfNOOomn7obPIhTAKjouuUrCrYd
+	 +UwlcZGslCBWCMrUyueRUD4aVASK7sggMb1Jmx/k7S05AdSqcowupyn9XUAMA4wL59
+	 tjfzjPP987AIoUMM7NYFD00DgbqU4xvofP+Ey2tfzVogiJW6bIa4uMLAUTo+Yt9ttG
+	 +7qZeJPNyE9VsEiVwYdy6kPfDRKUvbpuGqTZW7+omMmdBXv0pQNyJR26D6XLizcpBc
+	 ttBso8DqragWA==
+Date: Thu, 17 Apr 2025 08:28:58 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Frank Wunderlich <linux@fw-web.de>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Frank Wunderlich <frank-w@public-files.de>, 
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Daniel Golle <daniel@makrotopia.org>, 
+	Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-phy@lists.infradead.org
+Subject: Re: [PATCH v3 1/8] dt-bindings: arm: mediatek: add bpi-r4 2g5 phy
+ variant
+Message-ID: <20250417-red-smilodon-of-aurora-e5beaf@shite>
+References: <20250416095402.90543-1-linux@fw-web.de>
+ <20250416095402.90543-2-linux@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
- <20250416-wmt-updates-v1-5-f9af689cdfc2@gmail.com> <20250416201523.GD3811555-robh@kernel.org>
-In-Reply-To: <20250416201523.GD3811555-robh@kernel.org>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Thu, 17 Apr 2025 10:27:15 +0400
-X-Gm-Features: ATxdqUFawBnxynRxMiSVdRnmhaCCPBo4utOuqT_7dUg0IVBqoTqf8a1fVYs9mBE
-Message-ID: <CABjd4Yw5g8oKn=j08a6pr2o=TK7bMPx_NgfEh5cMFX9MVfgP-g@mail.gmail.com>
-Subject: Re: [PATCH 05/13] dt-bindings: pwm: vt8500-pwm: Convert to YAML
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250416095402.90543-2-linux@fw-web.de>
 
-On Thu, Apr 17, 2025 at 12:15=E2=80=AFAM Rob Herring <robh@kernel.org> wrot=
-e:
->
-> On Wed, Apr 16, 2025 at 12:21:30PM +0400, Alexey Charkov wrote:
-> > Rewrite the textual description for the WonderMedia PWM controller
-> > as YAML schema, and switch the filename to follow the compatible
-> > string.
-> >
-> > Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> > ---
-> >  .../devicetree/bindings/pwm/via,vt8500-pwm.yaml    | 43 ++++++++++++++=
-++++++++
-> >  .../devicetree/bindings/pwm/vt8500-pwm.txt         | 18 ---------
-> >  MAINTAINERS                                        |  1 +
-> >  3 files changed, 44 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml =
-b/Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..a5f77fa848e0f604bed63c3=
-6b8e0996cf599cec0
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml
-> > @@ -0,0 +1,43 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pwm/via,vt8500-pwm.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: VIA/Wondermedia VT8500/WM8xxx series SoC PWM controller
-> > +
-> > +maintainers:
-> > +  - Alexey Charkov <alchark@gmail.com>
-> > +
-> > +allOf:
-> > +  - $ref: pwm.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - const: via,vt8500-pwm
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  '#pwm-cells':
-> > +    const: 3
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    pwm1: pwm@d8220000 {
-> > +        #pwm-cells =3D <3>;
-> > +        compatible =3D "via,vt8500-pwm";
-> > +        reg =3D <0xd8220000 0x1000>;
-> > +        clocks =3D <&clkpwm>;
->
-> Same order as in 'properties'.
+On Wed, Apr 16, 2025 at 11:53:53AM GMT, Frank Wunderlich wrote:
+> From: Frank Wunderlich <frank-w@public-files.de>
+> 
+> Add new compatible for Bananapi R4 with 2.5G phy.
+> Base board is compatible with existing BPI-R4 only 1 SFP is replaced
+> by RJ45 port and use mt7988 internal phy.
+> 
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> ---
+> v3:
+> - new patch adding compatible for 2.5g variant
+> ---
+>  Documentation/devicetree/bindings/arm/mediatek.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Noted, thanks, will adjust.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
-Alexey
+Krzysztof
+
