@@ -1,83 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DCBD2AD0C
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 20:06:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFAB2AD0C;
+	Thu, 17 Apr 2025 20:12:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744920403; cv=none; b=X34/mRvQ2+e1+vrBthTwvPnnUB29O4XBFvBBS+MQ/896PieF1q1wSd6SiC87ZdKGd5cG9ci/n6GRombRP+rvRUHqYw89hUPD3G0aN5b+1BTctsZgbtsGGaqhKpIwl+M6yw49floA6QERlPsajukU3WlcVUbZD1JXY5UO6AtkerU=
+	t=1744920758; cv=none; b=gcmkD1pZ+unE8X34FVls7OkRInyX1SyHTvXZUSEpkdpwOhBL8vKX6plwOZux9WiTJdrAfskjPYj8V9lerHI51PPBkrkcECZHgjAIAngh0eabD6rvPHJSxbp+m0jZ38sJcq7fIk/H+x9ktwRKzCIFj9n+uGhd4htR1uChOjEQzog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744920403; c=relaxed/simple;
-	bh=q/vy1YX2+uTRbBtFY8YVzxCyPtEyoNyrwpp/Fz+rrmU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YRzNUXrL6eYdZ0vX/r4PnsZAFQ9uvVyUqfXilbNVf766KRkC+aUc+hsyD7i03OD5TTvTpaEyHXzyTL9hRC8ephykaKlifxQryd9PBevdjB/lgUgjfw8KRfr6OYa65BQLPMa68sxgK/estM5vR79v2I5NwTOMv1g+Kfs2xgbiYos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h5mOVqGl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744920758; c=relaxed/simple;
+	bh=0YpGtHMUawX1ATSiuC8hsCCXgN6stiffyM1wwPmYrys=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Ks2WMM8e6g5Fm9S/ho1dS7P3PRjQDMCq4bzlp+LQd3Zr4mhfNj45YyPTCIHIC3llcuCpVTJCylC0TtAsIxBRy0OaKwIBkRQoGT+7b4ueHE2u8zKUSnJ0ojNfd1ldcu/SEU3s+Uh0n3MBdMmySLiGf9qNbsOu8p+sCQ8thmh9ZOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=0ap1dEvM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h5mOVqGl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8518BC4CEE4
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 20:06:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744920402;
-	bh=q/vy1YX2+uTRbBtFY8YVzxCyPtEyoNyrwpp/Fz+rrmU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=h5mOVqGlHCcbMeh2iJ6P+/ydaqwlAqttTTGyiYkZKwLDyKFVfr/5JuoBBehOpMKpd
-	 9G5wrdnD/b64DhM7anEk3K4xfbv87LbYZJQwFSGhhMdgPoOsYfnSvv8jmWrb9aqPx+
-	 60yW6E7+PMonSxqgGXe5OlOd/v7Z6XAUBVgwoP4y1u55npg3jyxyh6kYRWOK/ErREz
-	 hn5bbbSdt57KQCgxHAWhqu7yDEV1ZtEfj3ggSkAvXJ0p9Tn4J8MUO5p3d7XDq2L5Fl
-	 t8oL+JYt2Owt0vbh+YgfH45tUxlKKBa33VbhX/8gVja2iL/gQHcMOEwxlSORjiVpXC
-	 ALKJmT8wRi3lw==
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-301918a4e1bso973697a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 13:06:42 -0700 (PDT)
-X-Gm-Message-State: AOJu0YxcV115kwaKiMR3BIoUdu+Ps0Yjhq/VhqUSP4plCSdOdxYen33/
-	24j1g7+UUGjpz9fZoBIxp61fBEEjVElSeiXbeocd1Fm7D4EEb3T5Io+F/1GAVu2OmZZhUTe0bC1
-	hbjrJYeI+eczLyA8pbxl+FOp2Wt4=
-X-Google-Smtp-Source: AGHT+IFoYGmudZ4wDvEbvWTf2r56JPhAO7qbG3oOwmR4uGiCuK25awOfWAowI0Ayig76hPvaE8ajyGfik99RnLLhGoM=
-X-Received: by 2002:a17:90b:5827:b0:2ee:f076:20f1 with SMTP id
- 98e67ed59e1d1-3087ba53cd7mr578860a91.0.1744920402036; Thu, 17 Apr 2025
- 13:06:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="0ap1dEvM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BB23C4CEE4;
+	Thu, 17 Apr 2025 20:12:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1744920758;
+	bh=0YpGtHMUawX1ATSiuC8hsCCXgN6stiffyM1wwPmYrys=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=0ap1dEvMcMQhNVxw8JwbcsNMW5gQ1fyqZjG3esAIQOfcmxlBgSLnL42sB0lUOnwuZ
+	 5FM+yPY45aQR8283cPYigHYzb7wepQtQ4JTBjD821nQ8hPxHOjUerUbt+w3uG2cjBE
+	 38hpEmeDqmBXHe4Q4x22IRrMJtAiq7fJwVooNd3s=
+Date: Thu, 17 Apr 2025 13:12:36 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Libo Chen <libo.chen@oracle.com>
+Cc: peterz@infradead.org, mgorman@suse.de, mingo@redhat.com,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org, tj@kernel.org,
+ rostedt@goodmis.org, llong@redhat.com, kprateek.nayak@amd.com,
+ raghavendra.kt@amd.com, yu.c.chen@intel.com, tim.c.chen@intel.com,
+ vineethr@linux.ibm.com, chris.hyser@oracle.com, daniel.m.jordan@oracle.com,
+ lorenzo.stoakes@oracle.com, mkoutny@suse.com, Dhaval.Giani@amd.com,
+ cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] sched/numa: Skip VMA scanning on memory pinned
+Message-Id: <20250417131236.c47ce477c0e68dbb06a4fabb@linux-foundation.org>
+In-Reply-To: <20250417191543.1781862-1-libo.chen@oracle.com>
+References: <20250417191543.1781862-1-libo.chen@oracle.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <Z_6bxZUiodrE45HJ@bombadil.infradead.org> <CAPhsuW5HYYvGoFO2L81EBkHDmozxxjpmdRh+GPrAxea-+91YNQ@mail.gmail.com>
- <aAEV2U2A1sXdVffx@bombadil.infradead.org>
-In-Reply-To: <aAEV2U2A1sXdVffx@bombadil.infradead.org>
-From: Song Liu <song@kernel.org>
-Date: Thu, 17 Apr 2025 13:06:29 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5avVeJMZpCJut8EDOxsTOafa3pf_Ncn6To5AfvKzHHEA@mail.gmail.com>
-X-Gm-Features: ATxdqUEem8cc5zoHMv7j1mSpy22YJnG19ybOFsRiawngpOGlz5_BRvFdUGq7QNI
-Message-ID: <CAPhsuW5avVeJMZpCJut8EDOxsTOafa3pf_Ncn6To5AfvKzHHEA@mail.gmail.com>
-Subject: Re: The future of kernel-patches-daemon - folding under LF?
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kdevops@lists.linux.dev, 
-	Jim Zemlin <jzemlin@linux-foundation.org>, Konstantin Ryabitsev <mricon@kernel.org>, 
-	=?UTF-8?Q?Javier_Gonz=C3=A1lez?= <javier.gonz@samsung.com>, 
-	Greg Marsden <greg.marsden@oracle.com>, Tso Ted <tytso@mit.edu>, 
-	Gustavo Padovan <gus@collabora.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 17, 2025 at 7:53=E2=80=AFAM Luis Chamberlain <mcgrof@kernel.org=
-> wrote:
->
-> On Wed, Apr 16, 2025 at 10:28:06PM -0700, Song Liu wrote:
-> > Hi Luis,
-> >
-> > How about we discuss different options over a video conference?
-> > We have a BPF office hour scheduled every Thursday at 9am PST.
-> > Would this time work for folks?
->
-> Works for me. How about next Thursday April 24th?
+On Thu, 17 Apr 2025 12:15:41 -0700 Libo Chen <libo.chen@oracle.com> wrote:
 
+> v1->v2:
+> 1. add perf improvment numbers in commit log. Yet to find perf diff on
+> will-it-scale, so not included here. Plan to run more workloads.
+> 2. add tracepoint.
+> 3. To peterz's comment, this will make it impossible to attract tasks to
+> those memory just like other VMA skippings. This is the current
+> implementation, I think we can improve that in the future, but at the
+> moment it's probabaly better to keep it consistent.
+> 
+> v2->v3:
+> 1. add enable_cpuset() based on Mel's suggestion but again I think it's
+> redundant
+> 2. print out nodemask with %*p.. format in the tracepoint
 
-Yes. April 24th sounds great. I added this topic to the agenda.
+I do agree with Mel - bitmap_weight() is somewhat expensive and
+cpusets_enabled() is super fast.  So the benefit to
+cpusets_enabled()=false kernels will exceed to cost to
+cpusets_enabled()=true kernels.
 
-Please refer to the following link for information about the office hour.
-
-https://docs.google.com/spreadsheets/d/1LfrDXZ9-fdhvPEp_LHkxAMYyxxpwBXjywWa=
-0AejEveU/edit?usp=3Dsharing
-
-Song
+This isn't traditionally mm.git material, but it's close.  I'll grab
+the patchset for some testing.  and shall drop it again if it turns up
+via another tree.
