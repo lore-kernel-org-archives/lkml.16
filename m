@@ -1,139 +1,213 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8D41DDA2F;
-	Thu, 17 Apr 2025 20:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2B319CC0A
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 20:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744921668; cv=none; b=Pbzk9yMoElpy3iBpQoCdEFXFxx8y2ixfGfYwnibolzbZ/Jt8KUwFlEkWvFboCx2rXA5RZv5cK/G057D4eYROomOLcudtzW0hniFx1Sfe5KFZGzebwfnVTSPL7a3vXUxl/FEHAufl9qZDfTqkZNZ1XMmsaoAuTI4C8Hj97c4qbow=
+	t=1744921819; cv=none; b=rLTAwUu1q5ilkZF0keCMKCa+E7Fx8KOkOklrgOQzIwlnQ++6/tGDnDPHVNfSSPxJ5ZlNcW4ZfQbgVwXMaZV1EeAey7F6wEsnPjQMV5oc1mrBsojL+s5Kp3fVXASSnWyG33T2441Uz5HoEek9keTYYXgBbb7ItN0SA2kD7oObCqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744921668; c=relaxed/simple;
-	bh=lIA/HRcL6BkCZF6NyQXASHIt+r/PGpnGcRYZxTpdBOs=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=pHSVGCg2WTSbJxDzlOSmPZw7De87y3PWfootD+NsXaBZ1Q1IDcUdAFXNagtc3bRLj3szDOCmfx+t6csOG+24UrCKgps9lDlUu6XTMearV+1bn7S3sSzB7mzBHgQZQt6oIDDTfgL/WmuUQCbSQcgApbh2Hk0DG4aJNl2X1dsBqHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NXuhXcTa; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744921819; c=relaxed/simple;
+	bh=8jvzjrzeUI+f//PctZuZkUbQH5+8B60A4PubCW3hXS4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bmMImCNTjEH+GD0LQyvmYULZYdfnKCan9uqCBqYIEiBPuINmGgO+VvVoEQcD+8ll3Dn5BKKY2ZMO+dXZ3DjDEl2heo2KtBknA2W++vPq2W23WgPVbIb4UK8J6DxMf0kKtcD6erPFTGL8xKBgr0gnW/CHn9V4m9PUjk97D3vxDN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dcj5R6bk; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXuhXcTa"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-736b350a22cso1112790b3a.1;
-        Thu, 17 Apr 2025 13:27:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dcj5R6bk"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-47666573242so119171cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 13:30:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744921665; x=1745526465; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1744921816; x=1745526616; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lIA/HRcL6BkCZF6NyQXASHIt+r/PGpnGcRYZxTpdBOs=;
-        b=NXuhXcTaG9rqsURAz4b22lYEINxF14pfo70Zak0E11Xsfh/UrpCe/MEkIKtfZgqIED
-         Y1GSYBjc00HCOWKMTAfHjh6UcxH+Q+vCiBQC2ezO4zIz4X79a+/eoxDZDOrWvCCzhcDa
-         qtpZkBS85zJXLFRr/G92HUJ0+pg9IyE8ceXN1R0TsUt8DRmWyPG4+o3LFEvLUpAZ2umx
-         0H9ybkhwyP48R1ZTcCr9/r2Dq2XUlS9q3M7UOjvJ3h8scIF3RQAwBJWwDJOsSjjxkFQ2
-         etQNlolwdOttZtJ+napm4PeHBJ50oYoLprzssbUU1kJ5aoHIuDZbTX5r1GJWxfTabLsM
-         3Uxg==
+        bh=KSYCQlCdJRvaCsoVa8PuzWUQ/r1Df/jdHAjvC1U2+0s=;
+        b=dcj5R6bkuO/QhPK2CmWhfY7Z+Smn9SaWL6updtA7/8vbxUZH0U16XvSLSpkgLXGU98
+         r3pQm1EfS+a6tiVt/7q6dCquonLW8zoJCJzRsJBHBQcntc6kNjshXMqCZlkd+m1cBNJk
+         nQDvV7w2kusAUIyDiy3sYLX5HBKl73CF+UWjLZaxq4yfCNbb3SxN57nuAhBRNpkOneF3
+         mgK6Rurl2kDOG295gtU2BLMRmUPZbvua+Y6BJCFX9DFUd3J2fqSfCaEpoDAYpQQl0z3C
+         OXlgxfvvqIwTGVgoLTIS20DlzB8oH0aYjBCAr3bDKhSX6vMLZ4iftjwZs+Nvk3iwrYTR
+         jTYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744921665; x=1745526465;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lIA/HRcL6BkCZF6NyQXASHIt+r/PGpnGcRYZxTpdBOs=;
-        b=YJRsiGGvjNX+sap2YXJhmSos00H6s8cT8uKEt/aYCz5Dwm1X9vaNxVbU0P2hKhB+1c
-         WdtV/XQZvHbSVqYWxo51lO82wyQJ67z96pCiLxD5NEZq2YtZLiS917K6TekI5VAZen9x
-         8hWMo80ILLYcTrAi40uEV0PVoF7QfPIFHdYiCQUz6Y7IFHd5+SHBAIK5czonK8Rmi5m3
-         tdpntQlfDhdGZp99pRAfp7av6rhywKb+5qYpaaQ2QusSK23jUgl7pA1uCcvsgCvpw/Q2
-         D/e/+SAierXzb3YDsyG5TPzJ2piVCMkDZ4Iyb7zHjtdCPBczrCMbJbva3FBw9DbFhuCk
-         WFfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUkzr/fJQTloJ9+ZI/OBDpsyQ/R72Fo+2FJzl6mX4ifPKD26MhB+i2j1KYugn07kQwuaqR/yw9atD1LZbk=@vger.kernel.org, AJvYcCVB44Pxdue168TSqoVnqkakvfXJmIPUL9Tl61Pd65lE2VDcPEd8MXtqIwroEvMLpS2g+lJNmdnpxRzFNG0+b4GsUwP4eg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFy9d3F0RpRaAPmT0pDRBUNMtPSbqyYFcfXNqb1kE/Eg/0ldRM
-	Pygg9x+spKNpb55+3RXZrNhMwAOCB50TzctzB+ONZgWw0/d4hGt9
-X-Gm-Gg: ASbGncvhBARw07h2zzJgNmfVzPhPI/RHQD3TK+itZT8H02cISJzm6ChZsozzHVyWmje
-	qz1dGKkwOrAW0/Ey1L2JOxyk9/B76TqS35gWAbSgyAoq2JqQEplwKSdLNeKfwbuyUs4hAXXxbWC
-	bm2AiNqUCCEueRM6HWKNg5HQTkBHA2LcTzOTManCOYOeXiN/wDHRaGnVE1gbWox0dbHvlxbF2VL
-	ru7qHsRte0yZuIHz7L+TM+VLnlBGtT3nyJxZH1Pz5fNc51xzIHo/S7i3ofs1VBH7QGWrd0TsShO
-	mgMh+TjcHYACkvfn3dgS3XRM5RvyOJxi6A==
-X-Google-Smtp-Source: AGHT+IEbKrBbVR/RHruqfYQbJuZavlzmY0ghM2eiyPcM/+gQdCRo8cGBs1yIK6cNohKY1nwH7HyNoA==
-X-Received: by 2002:a05:6a00:3911:b0:736:5753:12f7 with SMTP id d2e1a72fcca58-73dc145740amr351604b3a.3.1744921664399;
-        Thu, 17 Apr 2025 13:27:44 -0700 (PDT)
-Received: from localhost ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8e3ba8sm307156b3a.68.2025.04.17.13.27.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Apr 2025 13:27:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744921816; x=1745526616;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KSYCQlCdJRvaCsoVa8PuzWUQ/r1Df/jdHAjvC1U2+0s=;
+        b=gjCN2mAPDdSoD7Xz1MXZVTcVa4n7M40h/C/a17uy1VAGb3VhthJ1h53o0hqauBByMZ
+         uFBW0BMexLExtdbFNQWxeRj/11XAiSzaveKWUR5HIk07bYCOe5YpU9addJfvBA/iv28z
+         TDIXhFcEYimVIDJGiy/4R0ySMx8+0DfDkue5MCSNxt3htM/nkwhNLx5QxP9CsotwUIF4
+         mY1DlxbRGJnbPQrT/7XSFmbsBSy29C9biXY+r0jqMnD72F2m8tR5fcUl501y7LNegm0d
+         j/AixO0+kWkQnUcLsigV+XhonmaL3gcsIcaaRfD8SwlNS1U6YXcDFk7pbXtwc1s/oYUr
+         WIOg==
+X-Forwarded-Encrypted: i=1; AJvYcCUyDXwNrdwgNgjAb7nZXgfW63ITNG059PcFwQDEhQkHi6k8ccIj2GhL2RaGL1JTXxTxjrg9arCSxurhPlo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxpk2HvOWIJ6Wqyu7w/t5TAInHTPhGjPil5RdwDZf2a82tqOX9Y
+	BFQX8zDh02ppbGH9saQrkg97BU6aJ25kGe7mqB0TyYzqyFZmYD7ORoCqDUgh3+OlVj/FXOKa8se
+	/z3DPYNpljoS9zT7fjRzBthuwNBXeXYqT7kY8kA4VlbtggcM6VBMT
+X-Gm-Gg: ASbGncuaAuNYrlfjNpzntCho+Pn0YdMc/jW/vR003c623bIVCPsxzkayMb3rutg1W1b
+	cy44g/MaWiHAyPQuA5SEMkkX+5A91mS87BNbLEYr1+M3/9i7k1k9YQ4zXBDDwCw8+nguIVIdHN0
+	zzfF4PBjgtBwtwDwXSKNu4++GQb529Z565kSP9gus1YdyqhTIIJ9EK
+X-Google-Smtp-Source: AGHT+IEX2UtNOppZD3tHg7Ft0MDhrbQphb7UixP6vmBL/AgRj7UjnQUm4ayBLDq7gljiyyLvRT6k/CWMaevWIuA7DlE=
+X-Received: by 2002:a05:622a:1a18:b0:477:1f86:178c with SMTP id
+ d75a77b69052e-47aeb26fddbmr899271cf.26.1744921815900; Thu, 17 Apr 2025
+ 13:30:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250415171954.3970818-1-jyescas@google.com> <536596bf-8f5b-462b-add7-a203b6cd1e46@amd.com>
+ <CAJDx_rjrAgJiyOV2KcTYp574w=9mjNQ5jY3VYdG12mMuroVQ9Q@mail.gmail.com> <21cbda3a-1997-4ac0-ad5d-6e6d447fc11c@amd.com>
+In-Reply-To: <21cbda3a-1997-4ac0-ad5d-6e6d447fc11c@amd.com>
+From: Juan Yescas <jyescas@google.com>
+Date: Thu, 17 Apr 2025 13:30:04 -0700
+X-Gm-Features: ATxdqUFqpr3SUaYyrcoHC1l0zJVY8cIEh8mxRUqzXl69R4ekay5l-uDxnSIYlUw
+Message-ID: <CAJDx_rjY_myNpTm0XzA0sPn54GKzN1W_qZ8HEOhCBy9An-3ZkA@mail.gmail.com>
+Subject: Re: [PATCH] dma-buf: heaps: Set allocation orders for larger page sizes
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>, 
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
+	John Stultz <jstultz@google.com>, "T.J. Mercier" <tjmercier@google.com>, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	linux-kernel@vger.kernel.org, baohua@kernel.org, 
+	dmitry.osipenko@collabora.com, jaewon31.kim@samsung.com, 
+	Guangming.Cao@mediatek.com, surenb@google.com, kaleshsingh@google.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 17 Apr 2025 17:27:41 -0300
-Message-Id: <D9973T381GI3.KMDIB14GR4LO@gmail.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>, "Armin Wolf" <W_Armin@gmx.de>,
- "Mario Limonciello" <mario.limonciello@amd.com>,
- <platform-driver-x86@vger.kernel.org>, <Dell.Client.Kernel@dell.com>,
- "LKML" <linux-kernel@vger.kernel.org>, "Dan Carpenter"
- <dan.carpenter@linaro.org>
-Subject: Re: [PATCH] platform/x86: alienware-wmi-wmax: Fix uninitialized
- variable due to bad error handling
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250416-smatch-fix-v1-1-35491b462d8f@gmail.com>
- <14424f02-c800-a482-4d23-fd05f61cec82@linux.intel.com>
-In-Reply-To: <14424f02-c800-a482-4d23-fd05f61cec82@linux.intel.com>
 
-On Thu Apr 17, 2025 at 7:57 AM -03, Ilpo J=C3=A4rvinen wrote:
-> On Wed, 16 Apr 2025, Kurt Borja wrote:
+On Thu, Apr 17, 2025 at 1:06=E2=80=AFAM Christian K=C3=B6nig
+<christian.koenig@amd.com> wrote:
 >
->> wmax_thermal_information() may also return -ENOMSG, which would leave
->> `id` uninitialized in thermal_profile_probe.
->>=20
->> Reorder and modify logic to catch all errors.
->>=20
->> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
->> Closes: https://lore.kernel.org/r/Z_-KVqNbD9ygvE2X@stanley.mountain
->> Fixes: 27e9e6339896 ("platform/x86: alienware-wmi: Refactor thermal cont=
-rol methods")
->> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
->> ---
->> Hi all,
->>=20
->> @Ilpo: This will definitely conflict with the for-next branch when
->> merging.
+> Am 16.04.25 um 23:51 schrieb Juan Yescas:
 >
-> Okay, thanks for the heads up (I'll eventually merge fixes into for-next
-> once I merge this fix).
+> On Wed, Apr 16, 2025 at 4:34=E2=80=AFAM Christian K=C3=B6nig
+> <christian.koenig@amd.com> wrote:
 >
->> Also, the fixes tag references a commit from before the split (same
->> series though), but ofc this fix is meant to be applied on top of it
->> (fixes branch). Is this ok or would it be better to change the fixes
->> tag to the "split" commit?
 >
-> Pointing to the correct commit is preferred.
+> Am 15.04.25 um 19:19 schrieb Juan Yescas:
 >
-> It doesn't look very likely that the series would be "split" such that=20
-> only a part of it appears in a specific stable kernel so the difference=
-=20
-> shouldn't matter anyway.
+> This change sets the allocation orders for the different page sizes
+> (4k, 16k, 64k) based on PAGE_SHIFT. Before this change, the orders
+> for large page sizes were calculated incorrectly, this caused system
+> heap to allocate from 2% to 4% more memory on 16KiB page size kernels.
+>
+> This change was tested on 4k/16k page size kernels.
+>
+> Signed-off-by: Juan Yescas <jyescas@google.com>
+> ---
+>  drivers/dma-buf/heaps/system_heap.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/dma-buf/heaps/system_heap.c b/drivers/dma-buf/heaps/=
+system_heap.c
+> index 26d5dc89ea16..54674c02dcb4 100644
+> --- a/drivers/dma-buf/heaps/system_heap.c
+> +++ b/drivers/dma-buf/heaps/system_heap.c
+> @@ -50,8 +50,15 @@ static gfp_t order_flags[] =3D {HIGH_ORDER_GFP, HIGH_O=
+RDER_GFP, LOW_ORDER_GFP};
+>   * to match with the sizes often found in IOMMUs. Using order 4 pages in=
+stead
+>   * of order 0 pages can significantly improve the performance of many IO=
+MMUs
+>   * by reducing TLB pressure and time spent updating page tables.
+> + *
+> + * Note: When the order is 0, the minimum allocation is PAGE_SIZE. The p=
+ossible
+> + * page sizes for ARM devices could be 4K, 16K and 64K.
+>   */
+> -static const unsigned int orders[] =3D {8, 4, 0};
+> +#define ORDER_1M (20 - PAGE_SHIFT)
+> +#define ORDER_64K (16 - PAGE_SHIFT)
+> +#define ORDER_FOR_PAGE_SIZE (0)
+> +static const unsigned int orders[] =3D {ORDER_1M, ORDER_64K, ORDER_FOR_P=
+AGE_SIZE};
+> +#
+>
+> Good catch, but I think the defines are just overkill.
+>
+> What you should do instead is to subtract page shift when using the array=
+.
+>
+> There are several occurrences of orders in the file and I think it is
+> better to do the calculations up front in the array. Would you be ok
+> if we get rid of the defines as per your suggestion and make the
+> calculations during the definition of the array. Something like this:
+>
+> static const unsigned int orders[] =3D {20 - PAGE_SHIFT, 16 - PAGE_SHIFT,=
+ 0};
+>
+>
+> Yeah that totally works for me as well. Just make sure that a code commen=
+t nearby explains why 20, 16 and 0.
+>
 
-Yeah, this is what I thought too.
+Thanks, the changes were added in the [PATCH v3].
+
+> Apart from that using 1M, 64K and then falling back to 4K just sounds ran=
+dom to me. We have especially pushed back on 64K more than once because it =
+is actually not beneficial in almost all cases.
+>
+> In the hardware where the driver is used, the 64K is beneficial for:
+>
+> Arm SMMUv3 (4KB granule size):
+>            64KB (contiguous bit groups 16 4KB pages)
+>
+> SysMMU benefits from 64KB (=E2=80=9Clarge=E2=80=9D page) on 4k/16k page s=
+izes.
+>
+>
+> Question could this HW also work with pages larger than 64K? (I strongly =
+expect yes).
+>
+
+Yes, if the page sizes in the SMMUv3 are:
+      - 4k, we can have 2MiB pages
+     - 16k, we can have 32MiB pages
+
+> I suggest to fix the code in system_heap_allocate to not over allocate in=
+stead and just try the available orders like TTM does. This has proven to b=
+e working architecture independent.
+>
+> Do you mean to have an implementation similar to __ttm_pool_alloc()?
+>
+>
+> Yeah something like that.
+>
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
+ee/drivers/gpu/drm/ttm/ttm_pool.c?h=3Dv6.15-rc2#n728
+>
+> If that is the case, we can try the change, run some benchmarks and
+> submit the patch if we see positive results.
+>
+>
+> Could be that this doesn't matter for your platform, but it's minimal ext=
+ra overhead asking for larger chunks first and it just avoids fragmenting e=
+verything into 64K chunks.
+>
+> That is kind of important since the code in DMA-heaps should be platform =
+neutral if possible.
+
+I agree, I'll make the change in another patch.
+
+Thanks
+Juan
 
 >
-> In general, stable people would just send you a notification if something=
-=20
-> cannot be backported to some stable version due to a conflict, and they'd=
-=20
-> depend on you to submit the amended backport anyway so it's not much extr=
-a=20
-> "work" for them if something ends up conflicting. (And I don't think your=
-=20
-> inbox would be exactly filling from stable notifications unlike mine ---=
-=20
-> one of those joys of being a subsystem maintainer).
-
-Guess I'm still lucky :)
-
-Thanks for the explanation. I'm going to stop worrying so much about
-stable haha
-
---=20
- ~ Kurt
+> Regards,
+> Christian.
+>
+>
+> Thanks
+> Juan
+>
+> Regards,
+> Christian.
+>
+>  #define NUM_ORDERS ARRAY_SIZE(orders)
+>
+>  static struct sg_table *dup_sg_table(struct sg_table *table)
+>
+>
