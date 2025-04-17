@@ -1,121 +1,87 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2215D1B4F09;
-	Thu, 17 Apr 2025 17:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6FB2561A2;
+	Thu, 17 Apr 2025 17:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744911876; cv=none; b=UaHvcHNGPjw5XBs2PxzYHyUbCXinL/ekuktoVlMOTaXsOAq2+uRUqivu7Ph3K8bOdrlKgNR3y4rxXCUpg/eKtTCdcC6+g082vxaVBx4I92FDtqoQusWV0DI90CUy6bVSZ2/6sE2P4Hmfsr7fbcrgx1/K3yE0zK7Yi31FKOwwJ5A=
+	t=1744911899; cv=none; b=juzyy/BzGS1ve2E5YHMppBmVj2kl2u69NqWDxNacpxHKxpUSAw7S8NTsTRKm08mGzqPx0r/1L3Do87XE9oYgGK/XBK5M3Tkqp9MLBeAtjiK6TbcoJk813UvqkVW91IqYR6sdvfipCvbCZkIIb3vBSk5XD6i9N+1OfUVRQH/dE/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744911876; c=relaxed/simple;
-	bh=cVBnumUroswgP2BUPsVHASBE14+00NJBPctGj1TGTe4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MNS8BrjWCWcAMojvOVUFTGR3/Vrtd3Hwh310dYYlrcE/Bu1icRd7A+DsNQYmYzZqhMH4xvd6ak0igKwkMlFoZ/2BUrymUOwKl0vVxCXjWGjB+w8uPhAGR+m4yZZYyLdrEVGt1Esz3Svbt60bMxmKIJiQ4TXyakWNh+CoWFjbtNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZdlXZ0x45z67KPG;
-	Fri, 18 Apr 2025 01:40:14 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id BADD6140520;
-	Fri, 18 Apr 2025 01:44:31 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 17 Apr
- 2025 19:44:31 +0200
-Date: Thu, 17 Apr 2025 18:44:29 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: David Lechner <dlechner@baylibre.com>
-CC: Andy Shevchenko <andy@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
-	Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Matthias Brugger
-	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Lars-Peter Clausen
-	<lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, "Cosmin
- Tanislav" <cosmin.tanislav@analog.com>, Tomasz Duszynski
-	<tduszyns@gmail.com>, Jean-Baptiste Maneyrol
-	<jean-baptiste.maneyrol@tdk.com>, Andreas Klinger <ak@it-klinger.de>, "Petre
- Rodan" <petre.rodan@subdimension.ro>, <linux-iio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>
-Subject: Re: [PATCH 6/8] iio: imu: adis16550: align buffers for timestamp
-Message-ID: <20250417184429.00002403@huawei.com>
-In-Reply-To: <f4db1a95-106f-4fa4-9318-3ee172e29cdb@baylibre.com>
-References: <20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
-	<20250417-iio-more-timestamp-alignment-v1-6-eafac1e22318@baylibre.com>
-	<aAEzeY_p6a8Pr-zn@smile.fi.intel.com>
-	<f4db1a95-106f-4fa4-9318-3ee172e29cdb@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1744911899; c=relaxed/simple;
+	bh=aIYvomeDpv4/GkLIzCKwmgf1FVlN32aREId3Ji9lS+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uz+74E0sQUUEskYi1eph2RCdFzfwGXIbLpf10BAbOEI2MOa9zQTTwv/f8Otq8PWt6S9AP/VMwxhpFVWhp79zWGQ55QdlmW02yAvpHjlVLBkLVDly/ExKgz/X3+6aUiSKGyKa1v9ycr7aIy6rgVuShoN96FTPgsrc/osSJdKaRpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bXgs7SPF; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bXgs7SPF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744911898; x=1776447898;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=aIYvomeDpv4/GkLIzCKwmgf1FVlN32aREId3Ji9lS+U=;
+  b=bXgs7SPFXcKd3C7wPufhLet+FYk8bwo7iN1kNBDKpgxG6RMTqqWjcToZ
+   9uTkLneBwAE7ABWagQiXLfxRBEeoW15JPSKUqqiiS9RHGo97CYG+M7ZW+
+   VqetcrgRfrvDmY/CeX7hk7sNyRA4iQ3lqfZFVNXRq5XasfS4xVeTNX/sY
+   lBfTOW1NJBfF+3K0ekP5H2P7x/3fIGpGqNsySXA7yOOwITbmrJ/2sD1HW
+   AE5Z8kGtlvPeQbeNTEuc550IFG9AC1mS03Bju+UBevA7FsRvzCLYaIbtF
+   FfstYXvAIX7Wa7thTqaP5dpHbePU6N7ysqUcbBjUXrvXnA/afNMGoyKnM
+   g==;
+X-CSE-ConnectionGUID: I3OFErp8TfyCLRyhUN3mRw==
+X-CSE-MsgGUID: 1zZE0XAxTDuSp/2Z2KrLmw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="49206219"
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="49206219"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:44:57 -0700
+X-CSE-ConnectionGUID: NOa0S1DnQb+xAiIBQ/Pssg==
+X-CSE-MsgGUID: Jxpni2hFQWOQbtaip7bNIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="154064530"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:44:56 -0700
+Date: Thu, 17 Apr 2025 10:44:55 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: Feng Xu <feng.f.xu@intel.com>, Borislav Petkov <bp@alien8.de>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>, Yi Lai <yi1.lai@intel.com>,
+	Shawn Fan <shawn.fan@intel.com>, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/7] EDAC/{skx_common,i10nm}: Refactor
+ show_retry_rd_err_log()
+Message-ID: <aAE-F4nGjuKX-m3e@agluck-desk3>
+References: <20250417150724.1170168-1-qiuxu.zhuo@intel.com>
+ <20250417150724.1170168-7-qiuxu.zhuo@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417150724.1170168-7-qiuxu.zhuo@intel.com>
 
-On Thu, 17 Apr 2025 12:07:37 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+On Thu, Apr 17, 2025 at 11:07:23PM +0800, Qiuxu Zhuo wrote:
+> +	/* CORRERRCNT register parts. */
+> +	int cecnt_num;
+> +	u32 cecnt_offsets[NUM_CECNT_REG];
+> +	u8 cecnt_widths[NUM_CECNT_REG];
 
-> On 4/17/25 11:59 AM, Andy Shevchenko wrote:
-> > On Thu, Apr 17, 2025 at 11:52:38AM -0500, David Lechner wrote:  
-> >> Align the buffers used with iio_push_to_buffers_with_timestamp() to
-> >> ensure the s64 timestamp is aligned to 8 bytes.
-> >>
-> >>  drivers/iio/accel/bmc150-accel.h | 2 +-
-> >>  drivers/iio/imu/adis16550.c      | 2 +-  
-> > 
-> > Looks like a stray squash of the two independent commits.  
-> 
-> Oops, sure enough.
-> 
-> > 
-> > ...
-> >   
-> >>  	struct bmc150_accel_trigger triggers[BMC150_ACCEL_TRIGGERS];
-> >>  	struct mutex mutex;
-> >>  	u8 fifo_mode, watermark;
-> >> -	s16 buffer[8];
-> >> +	s16 buffer[8] __aligned(8);  
-> > 
-> > As for the code, would it be possible to convert to actually use a sturcture
-> > rather than an array?  
-> 
-> I do personally prefer the struct pattern, but there are very many other drivers
-> using this buffer pattern that I was not tempted to try to start converting them.
+YOu have added this "cecnt_widths" field and code to print in different
+formats fo value == 4 ("%.8llx") and not 4 ("%.16llx"). But no CPU
+(including Granite Rapids added by next patch) has any values other
+than "4".
 
-For drivers like this one where there is no room for the timestamp
-to sit earlier for minimal channels I think it is worth that conversion
-if we are touching them anyway. 
+Is there a mistake in the struct reg_rrl defintions where you intended
+to have some "8" values somewhere?
 
-Jonathan
+Or is this just for symmetry with the ".widths" you have for the
+RRL register (which do have varying widths).
 
-
-> 
-> > 
-> > ...
-> >   
-> >>  	struct iio_poll_func *pf = p;
-> >> -	__be32 data[ADIS16550_MAX_SCAN_DATA];
-> >> +	__be32 data[ADIS16550_MAX_SCAN_DATA] __aligned(8);
-This one is more complex as you need to take the
-available scan masks into account to figure out that it
-always has enough channels enabled to ensure the timestamp
-ends up in the 3rd 64 byte position.
-
-We get 7 channels for each of the available scan masks.
-So fine, but hard to see that, so this one I'd be less tempted
-to change.
-
-
-> >>  	struct iio_dev *indio_dev = pf->indio_dev;
-> >>  	struct adis16550 *st = iio_priv(indio_dev);  
-> > 
-> > Ditto.
-> >   
-> 
-> 
-
+-Tony
