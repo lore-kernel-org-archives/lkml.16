@@ -1,102 +1,156 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9494622687C
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F5722687C
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744904097; cv=none; b=OJe+d5CXKxBa66B8ndaDZ+7GVj6U3f9cQIT+HQmPo5kdZsrHL7Bkh/tSQhlRgphI8BkzdycPXfSxWCwJi0+HAs7WeXTEQyMIFldukjxxrEqE28kvkwmL9XTZrWLJfYDcs7wVFL5ChnaEa5IoIrV6VLqwLpD+OczkBsMrobL26ck=
+	t=1744904269; cv=none; b=cSxe44eHwwGG1mz5LvC5DsUbowBbe8eRabn/KRkRSzGwWPNJbDPl1nLAFWvf42Sye5eM8o3+kVtyANoXoKe7xEOdRmwr55/TRkEp6gq0IAZBpjKbiMtPghOCnay7AzLNnLl8zPOX706Uoqi1ySS7ME3toUk+Qqi4KpG+/QuiraM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744904097; c=relaxed/simple;
-	bh=BYunUdQfrerhTg99uRvTw3WSL9HPwsl6RhtMEvLyqv4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uumXR30nmNEsj2yBVZ1Dp/fBId6Hw2dcwxhszj93oyh5s9T6Gt1x+3DN/5Q0IUU1fa518XnEitgFapZDyikv6K5x4SiON62Sax++7RcBsULARfz8fwjcRrZejlVLY3UIkjk2GsCpKYhBXS3fq8w9S/+sCBREfHJ2OiFiNl4rZDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JBWJzhZt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=37dHej4V; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744904269; c=relaxed/simple;
+	bh=2Msp8WmlmXe1BOtKwVoz4D+koSrCPnvLMOaihrPblgI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nTwjulDTX0Z83C7ki0uxxbTXQIynGGEhd6kbaXGGQ+nOja1duB4z7OJRYGIaaJS1kakWanK80o2T1WbNhLayGaTlHfrkijqRGbP2/z6IOuID+WfCJJuYjNxPX785+fDo6I9Bb8vQ4ZOlih0+Qqs+s6fUbmZu+YUiHhnIPYwl2UI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gSV17Kif; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JBWJzhZt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="37dHej4V"
-Date: Thu, 17 Apr 2025 17:34:51 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744904093;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5BGVo1YhDlDJikVWAUwBr+O+QKov40WrC9YM1Ibwhug=;
-	b=JBWJzhZtm6QvJsEBkJUCOI6YL2CFRQ5Kc4yr4YyBp1wHJa9iRqJOpczO2NUu11Dy97gflb
-	J/SQOLps7jLdL/Q+TeShgoi0qZLA3LzyUKzCZ6aGxWGfcXB+nuQFT7EMnRynsWMsnWxnH5
-	0MD+11AXFWCWgAfNUsKRkcfsZjriDfyplWefMeciibH1axv7Tta1duvUx7oIW2eecq/4RN
-	RvtHn3OhsxLV3D/cCoWMHLsxiQ6lqXkWKgJRJ8BdHh0sc4uHOK3ASXXsIpOc2T2FCkzGGt
-	STht3HTDjhyOyOK9Tme4T1eOMie2cLU7vKWqEntPqxt82bWJ62omNMxxwLqVAg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744904093;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5BGVo1YhDlDJikVWAUwBr+O+QKov40WrC9YM1Ibwhug=;
-	b=37dHej4VehyJs8Ud06K7ACHbp9zlkVivzAZhwxBrlA9TWIvLYjXcJYrSPl2/gzUhbKgriO
-	uPLySRky3xuFGHBQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: linux-kernel@vger.kernel.org
-Cc: =?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v11 15/19] futex: Implement FUTEX2_NUMA
-Message-ID: <20250417153451.b50sWh_Z@linutronix.de>
-References: <20250407155742.968816-1-bigeasy@linutronix.de>
- <20250407155742.968816-16-bigeasy@linutronix.de>
- <20250407165224.z0FmVaXX@linutronix.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gSV17Kif"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6f0c30a1cf8so12803746d6.2
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:37:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744904266; x=1745509066; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1MyAnJTr6eQCZG3FgtbZ7+3YB/W35AyW1Th3bTHG7vk=;
+        b=gSV17KifLfQi4TD0gOeVYuUlm9n4gA7/rVBdn6tAfUPIjHEdV9bKOEncZM404p6Yad
+         4CkHdLAK3WQOSlpDOmtHpvkUUrJs3y+QOpfyCwirGR/tdIJYOScRuoGeRnR7eNqev+i4
+         9pKHdeBoBom0NKFknik1CPSoA4++N2fQ8Hzno//gge1LxIgSKsgdSqpf8QgWpTkJqjwp
+         M1JPaqvErmuAV4dfGclx1jZRBP8utnJFpIecF9DuLO9QM717irRy1DSbnFFIHY65QbrD
+         z94CghCTSie0XK5ITKC4LrMRNDubJ9uAW0kMCyOf2pPUONV2HuRMoTQ+/3cTpMKyinvW
+         S8zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744904266; x=1745509066;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1MyAnJTr6eQCZG3FgtbZ7+3YB/W35AyW1Th3bTHG7vk=;
+        b=Ru33Bq+KXfjS6lj72uOeZ9m3C9bkUVsVq0egAP+y8OMfu6E2NHbumS8fRTfPdsVncq
+         WFAu3w5vTR+pJB216zIVN9aurcx5DqxsmDpWEvIlTCePeBcwM5rfhZLCuDNiErRX6w5F
+         iu2UjwtCcUh30Ygepjk5dVqzOa8LPZ/m3pPEpyl4q/Tics/mmQtYC/iuAdxvMyIcT4W7
+         P2VjPsY5Bjl4UxARMb0AhNvaX+odJcDWtDsGzn89rMcmL/92tancp7neqp7dspLcLzFH
+         2c0/kT6g7q0Vr+RsbBDk4OCSJEIO4QzeqVcRSCK/RljLVwkoFfd65zbrzAr2Bej2IY41
+         yvjw==
+X-Forwarded-Encrypted: i=1; AJvYcCWhBz4QBPE8q9RppIU3iDOjqJBGkG1hHu42ftD9CjyNeO1Qfpy63+ynOaVNsd7Xqucra11m9t5enehKcuQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw731s5wUaFN1z1m47hWhO+UEnqZRow+awgMOKFZsnFrIse8ISj
+	h9ekSbqSTL+HHcg8Mfs0uQzIrCOTMPsrs5eQ839Uh6cUzcmE/c0IjxLJr1eJOJv3avLxXqdj/2i
+	6CBQIGDyZCpY4Qwh+5z3QQ3/COMxXSxigVz82
+X-Gm-Gg: ASbGncvyB+04/tKxgqkvNljnyl1C+kLvEhe295V8cfLMaLN82LJKS3pqIEjUBrCA2su
+	vRQGsBu2dLuMYQVLv+VfIrNG0BSqkboh+ergRzDDQXFQ/7MqY0iohmtw4kwHpmwNmZhwOPeuXvK
+	uJdZ1VEKh73sKbKkkMRFHunstxoUl95HtYLwoZI4zWHlWfJl2su+yl
+X-Google-Smtp-Source: AGHT+IEs2561XTO/1Ve+MnCxcw2e29ym4EDvEKrONPtk2dfQV5yd4Nu/YOGfLWC6BWoSpXUB+e0SbALJ/kNHjW5pARo=
+X-Received: by 2002:a05:6214:226c:b0:6e8:ed7f:1a79 with SMTP id
+ 6a1803df08f44-6f2b304be07mr111127706d6.32.1744904266134; Thu, 17 Apr 2025
+ 08:37:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20250416085446.480069-1-glider@google.com> <20250416085446.480069-7-glider@google.com>
+ <cb6d98dc-49e9-2d3b-1acc-f208e4fd13fc@gmail.com>
+In-Reply-To: <cb6d98dc-49e9-2d3b-1acc-f208e4fd13fc@gmail.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Thu, 17 Apr 2025 17:37:09 +0200
+X-Gm-Features: ATxdqUF6tyoL-d94GB69k__O5KRs0S2IIOkhLY92J9CAUkV5rKaE2SdyZimOJzY
+Message-ID: <CAG_fn=W8GDqYy_JV1F=YypD-6qR6vEqMuCi=DKfhdM-5=N3DdA@mail.gmail.com>
+Subject: Re: [PATCH 6/7] x86: objtool: add support for R_X86_64_REX_GOTPCRELX
+To: Uros Bizjak <ubizjak@gmail.com>, Ard Biesheuvel <ardb@kernel.org>
+Cc: quic_jiangenj@quicinc.com, linux-kernel@vger.kernel.org, 
+	kasan-dev@googlegroups.com, x86@kernel.org, 
+	Aleksandr Nogikh <nogikh@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Marco Elver <elver@google.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250407165224.z0FmVaXX@linutronix.de>
 
-On 2025-04-07 18:52:25 [+0200], To linux-kernel@vger.kernel.org wrote:
-> On 2025-04-07 17:57:38 [+0200], To linux-kernel@vger.kernel.org wrote:
-> > --- a/kernel/futex/core.c
-> > +++ b/kernel/futex/core.c
-> > @@ -332,15 +337,35 @@ __futex_hash(union futex_key *key, struct futex_p=
-rivate_hash *fph)
-> =E2=80=A6
-> > +	if (node =3D=3D FUTEX_NO_NODE) {
-> > +		/*
-> > +		 * In case of !FLAGS_NUMA, use some unused hash bits to pick a
-> > +		 * node -- this ensures regular futexes are interleaved across
-> > +		 * the nodes and avoids having to allocate multiple
-> > +		 * hash-tables.
-> > +		 *
-> > +		 * NOTE: this isn't perfectly uniform, but it is fast and
-> > +		 * handles sparse node masks.
-> > +		 */
-> > +		node =3D (hash >> futex_hashshift) % nr_node_ids;
->=20
-> forgot to mention earlier: This % nr_node_ids turns into div and it is
-> visible in perf top while looking at __futex_hash(). We could round it
-> down to a power-of-two (which should be the case in my 1, 2 and 4 based
-> NUMA world) and then we could use AND instead.
-> ARM does not support NUMA or div so it is not a concern.
->=20
-> Maybe a fast path for 1/2/4 would make sense since it is the most common
-> one. In case you consider it I could run test to see how significant it
-> is. It might be that it pops up in "perf bench futex hash" but not be
-> significant in general use case. I had some hacks and those did not
-> improve the numbers as much as I hoped for.
+On Wed, Apr 16, 2025 at 4:21=E2=80=AFPM Uros Bizjak <ubizjak@gmail.com> wro=
+te:
+>
+>
+>
+> On 16. 04. 25 10:54, Alexander Potapenko wrote:
+> > When compiling modules with -fsanitize-coverage=3Dtrace-pc-guard, Clang
+> > will emit R_X86_64_REX_GOTPCRELX relocations for the
+> > __start___sancov_guards and __stop___sancov_guards symbols. Although
+> > these relocations can be resolved within the same binary, they are left
+> > over by the linker because of the --emit-relocs flag.
+> >
+> > This patch makes it possible to resolve the R_X86_64_REX_GOTPCRELX
+> > relocations at runtime, as doing so does not require a .got section.
+> > In addition, add a missing overflow check to R_X86_64_PC32/R_X86_64_PLT=
+32.
+> >
+> > Cc: x86@kernel.org
+> > Signed-off-by: Alexander Potapenko <glider@google.com>
+> > ---
+> >   arch/x86/include/asm/elf.h      | 1 +
+> >   arch/x86/kernel/module.c        | 8 ++++++++
+> >   arch/x86/um/asm/elf.h           | 1 +
+> >   tools/objtool/arch/x86/decode.c | 1 +
+> >   4 files changed, 11 insertions(+)
+> >
+> > diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
+> > index 1fb83d47711f9..15d0438467e94 100644
+> > --- a/arch/x86/include/asm/elf.h
+> > +++ b/arch/x86/include/asm/elf.h
+> > @@ -63,6 +63,7 @@ typedef struct user_i387_struct elf_fpregset_t;
+> >   #define R_X86_64_8          14      /* Direct 8 bit sign extended  */
+> >   #define R_X86_64_PC8                15      /* 8 bit sign extended pc=
+ relative */
+> >   #define R_X86_64_PC64               24      /* Place relative 64-bit =
+signed */
+> > +#define R_X86_64_REX_GOTPCRELX       42      /* R_X86_64_GOTPCREL with=
+ optimizations */
+> >
+> >   /*
+> >    * These are used to set parameters in the core dumps.
+> > diff --git a/arch/x86/kernel/module.c b/arch/x86/kernel/module.c
+> > index 8984abd91c001..6c8b524bfbe3b 100644
+> > --- a/arch/x86/kernel/module.c
+> > +++ b/arch/x86/kernel/module.c
+> > @@ -133,6 +133,14 @@ static int __write_relocate_add(Elf64_Shdr *sechdr=
+s,
+> >               case R_X86_64_PC32:
+> >               case R_X86_64_PLT32:
+> >                       val -=3D (u64)loc;
+> > +                     if ((s64)val !=3D *(s32 *)&val)
+> > +                             goto overflow;
+> > +                     size =3D 4;
+> > +                     break;
+> > +             case R_X86_64_REX_GOTPCRELX:
+> > +                     val -=3D (u64)loc;
+> > +                     if ((s64)val !=3D *(s32 *)&val)
+> > +                             goto overflow;
+> >                       size =3D 4;
+> >                       break;
+>
+> These two cases are the same. You probably want:
+>
+>                 case R_X86_64_PC32:
+>                 case R_X86_64_PLT32:
+>                 case R_X86_64_REX_GOTPCRELX:
+>                         val -=3D (u64)loc;
+>                         if ((s64)val !=3D *(s32 *)&val)
+>                                 goto overflow;
+>                         size =3D 4;
+>                         break;
+>
 
-Since I'm cleaning up: I'm getting approx 1% improvement with this so I
-am not considering it.
-
-Sebastian
+You are right, I overlooked this, as well as the other
+R_X86_64_REX_GOTPCRELX case above.
+Ard, do you think we can relax the code handling __stack_chk_guard to
+accept every R_X86_64_REX_GOTPCRELX relocation?
