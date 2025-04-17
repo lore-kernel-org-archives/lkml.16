@@ -1,175 +1,107 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E612A21B9C1;
-	Thu, 17 Apr 2025 06:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58065215762
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 06:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744873044; cv=none; b=BC+E0k4h6hfJabXU6PtfFcUHN/C7JESpxb3V0Gu89X5ZJVmvfTZpPDobZxCxENOnm/NAEMenbhHaAlzbk0TohaqQWk11L4iIx6CBvE6WyeQjuaEmo3hPKnRiiwG8dAyvjhCCz0C1abIKa1s3yLBuXPUviRJJWElECFz0oJD0CDA=
+	t=1744873051; cv=none; b=DK6Q+LtreH0lCMj3tSuHrFVnHbpx2E7EDuQ3F7v6Wxn7/FcF2W1PL9Bmf0nZbX6lgodCIELivyRtkn+QQ0ViVHaCNdqX+KnlKdBgY7i0H77lvzHnZ+PjHBxqZbi6KQc4Y05EKxH8ehn9APa2yTZRCZW/RpXJGDLv80swoKQQRdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744873044; c=relaxed/simple;
-	bh=sEIegzlIhef8uFEitubqjX3tMdcykCCYJ2vuArlmZEw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hILt153su1HnluMFQKs05Nmo+evn4QZJ1LzNUDnSgen2PXEfYiH0x4wvN4GR3mTfD5ml5l/VAJhJljpg3fj8jH3HS6X8SDcf2ADeId0yYOOqlbG6gedWQX1wyMeWKBIKNq1P0wCks0C8pJdVkmickUoGqYIl4iyCknf7BolJWn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=CZH47SMO; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744873051; c=relaxed/simple;
+	bh=jjODyzoHgOaSkMOizAfMka0/yn10076bTRY95dAS8m8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q157LE68VurGF/9eBoxgwPr/2Z/vDo+OlgjJEfn03ks5Zb3zYEkouxBnXo4ieQVLeip8yYteIBdBLw9rBpFmR5iAHluAkuBDEU8KvTnLMfeVhMSJcSI4CZAB+Q8Dy4zuulyiE/bZhkxP43H1RD7zIZSVA8/uPOLtEyUh7SFl8RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NcqLBxSg; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CZH47SMO"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53H6vC5u3003895
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 17 Apr 2025 01:57:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744873032;
-	bh=PhShn70TdRYL1J6DfOPQlJOJ9SjRcFePPYyx3QRsNtE=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=CZH47SMOa/rh5FYCHWUSx/XeLAEiBRPn5dRnf3j+ZaQTEzpJid1W3C9SiVo1Q24JM
-	 PAF6g1jQuDkhzX47Zn8qw6rW//IU9aYwK8vtj9KA7IBMsSnglzP/bwoyDRXv7NIwdh
-	 y4mf/Uf+mnfYemnskp5+FkXJDw0lGubk5yWQOdpo=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53H6vCic000501
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 17 Apr 2025 01:57:12 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 17
- Apr 2025 01:57:11 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 17 Apr 2025 01:57:11 -0500
-Received: from ws.dhcp.ti.com (ws.dhcp.ti.com [10.24.69.232])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53H6tsxC035403;
-	Thu, 17 Apr 2025 01:57:06 -0500
-From: Rishikesh Donadkar <r-donadkar@ti.com>
-To: <jai.luthra@linux.dev>, <mripard@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <r-donadkar@ti.com>, <devarsht@ti.com>,
-        <y-abhilashchandra@ti.com>, <mchehab@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vaishnav.a@ti.com>,
-        <s-jain1@ti.com>, <vigneshr@ti.com>, <sakari.ailus@linux.intel.com>,
-        <hverkuil-cisco@xs4all.nl>, <tomi.valkeinen@ideasonboard.com>,
-        <jai.luthra@ideasonboard.com>, <changhuang.liang@starfivetech.com>,
-        <jack.zhu@starfivetech.com>, <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH v3 12/13] media: ti: j721e-csi2rx: Submit all available buffers
-Date: Thu, 17 Apr 2025 12:25:53 +0530
-Message-ID: <20250417065554.437541-13-r-donadkar@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250417065554.437541-1-r-donadkar@ti.com>
-References: <20250417065554.437541-1-r-donadkar@ti.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NcqLBxSg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744873049;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jjODyzoHgOaSkMOizAfMka0/yn10076bTRY95dAS8m8=;
+	b=NcqLBxSgsicmKMUpmjdlDHIM6vhtiSlWWZKlcxU9QRHildA+z8tZUrFlXDjuDk9Meod/4B
+	m3WBdJO0eL2iR4Oi2gAdwtV36qBRC61GbgtVax8CTdUnkOfb9LJH0Wyq6la27xni2AtEVP
+	dpT+wB5Yt7XNcYTJ4baVpdB/kwFD760=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-424-jIrHH3dcP620McbZONzgiw-1; Thu, 17 Apr 2025 02:57:27 -0400
+X-MC-Unique: jIrHH3dcP620McbZONzgiw-1
+X-Mimecast-MFC-AGG-ID: jIrHH3dcP620McbZONzgiw_1744873046
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-391315098b2so143254f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 23:57:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744873046; x=1745477846;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jjODyzoHgOaSkMOizAfMka0/yn10076bTRY95dAS8m8=;
+        b=LtKz3fjLcgd/o2xwrO4GUh2lckIpn0DlmSvTpUs23hxZROdfVTaLmITKnnqD3mJ2Cu
+         lcYjRl+pnSbihZ5+JwqcFLNPXwiQvCeuQeM035HITlZ+FcV4nYkIfGzHa+aeSnk0WnR/
+         xCCBKM8BF8gtXhFK3FaT4/rkDeKRyeLDiZDFdLs8WJxny/qslmoBZ9ZGGMN3sRs5DLEk
+         elfRzEC4gaVs8TU87jzL/zuzmilIgmwafLigXCuil0YHAuXzKkxLB4gBDgUVquW4+Ctw
+         Hjf3kIa21fsUopD9snOgg5f9fm6Du4549GK7mctgr1IKAyIAnMbgWZ8EBfGR9doga/Kn
+         IccQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+M4mXfPD3yfT2+S+RlkJz2r+k4Afv1AsW3gJqXwOuQBHJ3T74APArSI5kC5q2VyVcWu9FsvLFRBH+448=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0wMFsybUFQeY95pm6CXYxk8zK/EOvLZyM6XDGBRgTuG8OYi1D
+	jouU/tuXlNR/mbIETt7evDO5yczWBadMNSKtO2xuUDRDhv17OJNPgKyBDP++PTXgFV5o+H5IFLH
+	o6svWn5LnRNFuNC7hWRDFu2O64yLXJhG0uCSXPDzW9m4kqg3JvRzROgReIy6zJg==
+X-Gm-Gg: ASbGncsmdMbDJ01/e92zn9jPZL+ftCuJc/+3Esg8Sp/6Zfp7JBSxNISgQrpE3J+1DZ0
+	yTc5vHiQ3e8TqwnTe3AUxbqCxh8evDmMNVY+n0RFxyt+J+KN4CuOaT3sK/rb5VgNi57p4zOcmQH
+	35Rp3b0zQ02MR66e51RwsR1xh5IL6rMb9GHe38SnM4gurHb5xlASmfJmMKs46rFyvAP7Sj6lGF4
+	ZXaQHfXATCI+JFZyZkRNYuJYDb/ziGahEC40cz6zYHCXioLR8q/ejgimKrX3VAadWAh2HVX+Wy1
+	PrcbnHidN5D8gh1yYji6shJP0HT0afrQ2CUfo0yC6g==
+X-Received: by 2002:a5d:598e:0:b0:39e:e557:7d9 with SMTP id ffacd0b85a97d-39ee5b12f6amr4246217f8f.5.1744873046361;
+        Wed, 16 Apr 2025 23:57:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGxeneD4PU1badohm8V9WmJtKj9YkZnOXQdqdLY0Y/Fs91DJ14HKRGByKHiwMz/4SXoc3HdGw==
+X-Received: by 2002:a5d:598e:0:b0:39e:e557:7d9 with SMTP id ffacd0b85a97d-39ee5b12f6amr4246204f8f.5.1744873046049;
+        Wed, 16 Apr 2025 23:57:26 -0700 (PDT)
+Received: from [192.168.88.253] (146-241-55-253.dyn.eolo.it. [146.241.55.253])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43ce3bsm19526728f8f.66.2025.04.16.23.57.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 23:57:25 -0700 (PDT)
+Message-ID: <67a977bc-a4b9-4c8b-bf2f-9e9e6bb0811e@redhat.com>
+Date: Thu, 17 Apr 2025 08:57:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next] udp: Add tracepoint for udp_sendmsg()
+To: Breno Leitao <leitao@debian.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Simon Horman <horms@kernel.org>, kuniyu@amazon.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, yonghong.song@linux.dev,
+ song@kernel.org, kernel-team@meta.com
+References: <20250416-udp_sendmsg-v1-1-1a886b8733c2@debian.org>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250416-udp_sendmsg-v1-1-1a886b8733c2@debian.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Jai Luthra <j-luthra@ti.com>
+On 4/16/25 9:23 PM, Breno Leitao wrote:
+> Add a lightweight tracepoint to monitor UDP send message operations,
+> similar to the recently introduced tcp_sendmsg_locked() trace event in
+> commit 0f08335ade712 ("trace: tcp: Add tracepoint for
+> tcp_sendmsg_locked()")
 
-We already make sure to submit all available buffers to DMA in each DMA
-completion callback.
+Why is it needed? what would add on top of a plain perf probe, which
+will be always available for such function with such argument, as the
+function can't be inlined?
 
-Move that logic in a separate function, and use it during stream start
-as well, as most application queue all their buffers before stream on.
+Thanks,
 
-Signed-off-by: Jai Luthra <j-luthra@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Signed-off-by: Rishikesh Donadkar <r-donadkar@ti.com>
----
- .../platform/ti/j721e-csi2rx/j721e-csi2rx.c   | 43 +++++++++++--------
- 1 file changed, 24 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-index d00b5a1848043..23d63d8bcd36a 100644
---- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-+++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-@@ -644,6 +644,27 @@ static int ti_csi2rx_drain_dma(struct ti_csi2rx_ctx *ctx)
- 	return ret;
- }
- 
-+static int ti_csi2rx_dma_submit_pending(struct ti_csi2rx_ctx *ctx)
-+{
-+	struct ti_csi2rx_dma *dma = &ctx->dma;
-+	struct ti_csi2rx_buffer *buf;
-+	int ret = 0;
-+
-+	/* If there are more buffers to process then start their transfer. */
-+	while (!list_empty(&dma->queue)) {
-+		buf = list_entry(dma->queue.next, struct ti_csi2rx_buffer, list);
-+		ret = ti_csi2rx_start_dma(ctx, buf);
-+		if (ret) {
-+			dev_err(ctx->csi->dev,
-+				"Failed to queue the next buffer for DMA\n");
-+			vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_ERROR);
-+			break;
-+		}
-+		list_move_tail(&buf->list, &dma->submitted);
-+	}
-+	return ret;
-+}
-+
- static void ti_csi2rx_dma_callback(void *param)
- {
- 	struct ti_csi2rx_buffer *buf = param;
-@@ -664,18 +685,7 @@ static void ti_csi2rx_dma_callback(void *param)
- 	vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_DONE);
- 	list_del(&buf->list);
- 
--	/* If there are more buffers to process then start their transfer. */
--	while (!list_empty(&dma->queue)) {
--		buf = list_entry(dma->queue.next, struct ti_csi2rx_buffer, list);
--
--		if (ti_csi2rx_start_dma(ctx, buf)) {
--			dev_err(ctx->csi->dev,
--				"Failed to queue the next buffer for DMA\n");
--			vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_ERROR);
--		} else {
--			list_move_tail(&buf->list, &dma->submitted);
--		}
--	}
-+	ti_csi2rx_dma_submit_pending(ctx);
- 
- 	if (list_empty(&dma->submitted))
- 		dma->state = TI_CSI2RX_DMA_IDLE;
-@@ -884,7 +894,6 @@ static int ti_csi2rx_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	struct ti_csi2rx_ctx *ctx = vb2_get_drv_priv(vq);
- 	struct ti_csi2rx_dev *csi = ctx->csi;
- 	struct ti_csi2rx_dma *dma = &ctx->dma;
--	struct ti_csi2rx_buffer *buf;
- 	struct v4l2_subdev_krouting *routing;
- 	struct v4l2_subdev_route *route = NULL, *r;
- 	struct media_pad *remote_pad;
-@@ -948,16 +957,13 @@ static int ti_csi2rx_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	ctx->sequence = 0;
- 
- 	spin_lock_irqsave(&dma->lock, flags);
--	buf = list_entry(dma->queue.next, struct ti_csi2rx_buffer, list);
- 
--	ret = ti_csi2rx_start_dma(ctx, buf);
-+	ret = ti_csi2rx_dma_submit_pending(ctx);
- 	if (ret) {
--		dev_err(csi->dev, "Failed to start DMA: %d\n", ret);
- 		spin_unlock_irqrestore(&dma->lock, flags);
--		goto err_pipeline;
-+		goto err_dma;
- 	}
- 
--	list_move_tail(&buf->list, &dma->submitted);
- 	dma->state = TI_CSI2RX_DMA_ACTIVE;
- 	spin_unlock_irqrestore(&dma->lock, flags);
- 
-@@ -972,7 +978,6 @@ static int ti_csi2rx_start_streaming(struct vb2_queue *vq, unsigned int count)
- 
- err_dma:
- 	ti_csi2rx_stop_dma(ctx);
--err_pipeline:
- 	video_device_pipeline_stop(&ctx->vdev);
- 	writel(0, csi->shim + SHIM_CNTL);
- 	writel(0, csi->shim + SHIM_DMACNTX(ctx->idx));
--- 
-2.34.1
+Paolo
 
