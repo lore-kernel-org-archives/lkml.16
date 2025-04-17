@@ -1,265 +1,140 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81D735979
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01A115FA7B;
+	Thu, 17 Apr 2025 13:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744894777; cv=none; b=DyqAsNY/PLWL5p4BFDM9euHvK+InKwSZ+tJFxWeqj7UF8ECPqzSwABys7QyKDQ/RED5oXx7PoJF76W5qFnzeXNjkA3liOlGp5uoY73v6BRiYCJD0W5a7uenV/Oi0xlx9MyZ9XaEDGg2+pMty8b+ze8p64pr4/EFRcngotOrSPWM=
+	t=1744894886; cv=none; b=Qzb9IN+ZLodIaa4iGH1S8R0Vu9JwnQJ7hDcbkTUuuebtB3K9L+k8zsLdq8L/xdLlxvg21K948jeoDTBs1XcWrj0VdXvESNQs2PnTEpbHIfqAfGQiMrWCYTmvKqBayy352k4nIMrXXfgvgj+D4xBm6SLgry1fQZmenMDkUmiNz44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744894777; c=relaxed/simple;
-	bh=v2x4hFoubcQi9ZZRNcUzMtAy9/ejIC2CLfcg0Z7T1s4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FJpyzXVkr/JsANfAj4pBaVY88kpuSyliUpKN+4OrD1ZsHlXnAZGbrLBFy2I6LeJViGFEgqJZWlGX8CZlZ3nsW0na/Y/R2cs9C0dKDZFFsHh4rZRwsOnVHBwFNgFvyQMdXI/Dg6SrowodlW2QN0WHNP1jlGzakCWXUY+vat74mgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=xiCwG7Un; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1744894886; c=relaxed/simple;
+	bh=KWnWVfOA8c1Wv+4gBL063mnR9c9nhvCmbY4Ut2JRHDU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OHQJr0v5HG2iZYAP0r3VNNmpguKjAEYjOrfEF6grDw3S3s/fRr50/tSuIRb9q20bOLv+0IG1bd5ZbivGK2Q+2HV3+YTsXT55nq1pdzIpaeVzQVfNIqNy2NUsRyLZFHeauqr06h19I4rQXDOPCO3eA5s7yzoFEthpMN40bk4V63I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fYC9e/a9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="xiCwG7Un"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZddJh0HwLz9sjc;
-	Thu, 17 Apr 2025 14:59:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1744894772; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=51vweVEcUGCNRfQ4076cptc2aU0LE9uyLpE4JQL7dTg=;
-	b=xiCwG7UntZlu1mkOFcCnQBI8kn85BvBzSH+PwkuOail+q2Lv/1BX/kqrv/wFvyDutjtby8
-	wBPcrHJkRyOmUwEcaGK372XvHHCUnz5flZ9NupLLw/FwwBYzk5Ep7euWGvSrsRpshdwRCs
-	0FlTKo3DaG1f2UMaP/OfxrF+gw87gxtju6qYttC+4jvHAqh9XynfZ73HKfUi0r5DeN7Mnt
-	fOEPLF684WIZiNmkADFOXpTdd5yIodNqL24mav8CuolL04FhxjJWw/QRe6OEY+9u7t5S7I
-	0s4bf9FRGPQetvLG2YXvLLCIiKUiBUDAWrGcAHCpRJEZd9Pn0lp4zdg0s1muzA==
-Message-ID: <0f5768efe0828802435affa444a615dd9fefad08.camel@mailbox.org>
-Subject: Re: [EXTERNAL] [PATCH] vdpa/octeon_ep: Use non-hybrid PCI devres API
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Vamsi Krishna Attunuru <vattunuru@marvell.com>, "phasta@kernel.org"
- <phasta@kernel.org>, Srujana Challa <schalla@marvell.com>, "Michael S.
- Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
- <xuanzhuo@linux.alibaba.com>, Eugenio =?ISO-8859-1?Q?P=E9rez?=
- <eperezma@redhat.com>, Shijith Thotton <sthotton@marvell.com>, Dan
- Carpenter <dan.carpenter@linaro.org>, Satha Koteswara Rao Kottidi
- <skoteshwar@marvell.com>
-Cc: "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>, 
- "linux-kernel@vger.kernel.org"
-	 <linux-kernel@vger.kernel.org>
-Date: Thu, 17 Apr 2025 14:59:28 +0200
-In-Reply-To: <MW4PR18MB5244B9A5E105A514BB3D5272A6BC2@MW4PR18MB5244.namprd18.prod.outlook.com>
-References: <20250417080211.19970-2-phasta@kernel.org>
-	 <MW4PR18MB5244915E54967510C5356B4DA6BC2@MW4PR18MB5244.namprd18.prod.outlook.com>
-	 <a57d5f6f47ec8ba2860df853aca324e96320eba5.camel@mailbox.org>
-	 <MW4PR18MB5244B9A5E105A514BB3D5272A6BC2@MW4PR18MB5244.namprd18.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fYC9e/a9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE41BC4CEEA;
+	Thu, 17 Apr 2025 13:01:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744894885;
+	bh=KWnWVfOA8c1Wv+4gBL063mnR9c9nhvCmbY4Ut2JRHDU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fYC9e/a9vcPImM0qEXijPfQ1ABcyZ/YSN0M5omRfHnQdKjTQ/MTG1pAZ0gcZOjxmf
+	 gJgBXfQsGVUa+gFtKGaWb9jxY+bxpsUkvgwmPKGxwaEYGtwY5tHXLyYDYueE9Wznfe
+	 mogT4qQpQN93bCm/kSx771bVkBG9QkVUanbzbbcCYpOiqyDxWCcbWr8+NBBXbtdwYJ
+	 l+TEgSazXJ6xudLSSaIpWoaQ3Y64azRqpZEpv8VzEqj+dmYoPrt0xZMY3h35zwSDmA
+	 /DPNiFTmT/exx4m+vkS3irGJNU3sAfYWDfGsJw+hMiri2Bkv64q1lfCkD/q4KNbDv4
+	 nb8vOAFmnJs9A==
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2c6ed7efb1dso450793fac.2;
+        Thu, 17 Apr 2025 06:01:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU9YPgSltNvq77+BfybfPkL7PCBzFGKxYtlOewq7YMGJzzdGLgW/1tCZm2gJriCAuEUfRyEWQIixB4jPKY=@vger.kernel.org, AJvYcCWkavvn50GOR1WKHI/EcWll8VogSTKqaQ/kKaFgdHYXnXqgkQyVIcePG0NffiEfTs1L1IqAkoAcSXE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0Qnl9C/PUSGeYMXZAgKaztigRYk04ka8WREDGvUtuWx0TsMCi
+	wctaHeKR1cyJ+zHvNreTpNg0kbLUsmLo8hVq7CDoqyjvNb46LGIyeIhzkyNDKBKr5faXI7F5q4p
+	DTAtSTgS7tfrh/3YlcApHFp+s/LU=
+X-Google-Smtp-Source: AGHT+IHOwV/UB7P82bRaQrXpDMI4M9ZvLUWLgqZFXu0lDZJnl1aeIwkdOWHX+F3XBWb05sq3u4gNN+OwtYP4tLLq6bo=
+X-Received: by 2002:a05:6870:1708:b0:2bc:7d6f:fa86 with SMTP id
+ 586e51a60fabf-2d4d2d58f98mr3838358fac.35.1744894883674; Thu, 17 Apr 2025
+ 06:01:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-META: z4crme3k945xyf5yhq3gyr5piqsyqget
-X-MBO-RS-ID: 5cf4e34f0750923ffa0
+References: <3344336.aeNJFYEL58@rjwysocki.net> <8554829.NyiUUSuA9g@rjwysocki.net>
+ <e439a75c-fe36-4fba-b394-c154adeff15a@arm.com>
+In-Reply-To: <e439a75c-fe36-4fba-b394-c154adeff15a@arm.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 17 Apr 2025 15:01:12 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jxoKaGOsXqUqd=n95ATxzDTueSy_je_ktxOdm6B=+20A@mail.gmail.com>
+X-Gm-Features: ATxdqUFqVAGSUxvggDc1DQyXBFEDUMLQGnrSY7wE1mYSzgRkQRC0XbcSOOwjyZ4
+Message-ID: <CAJZ5v0jxoKaGOsXqUqd=n95ATxzDTueSy_je_ktxOdm6B=+20A@mail.gmail.com>
+Subject: Re: [RFT][PATCH v1 3/8] cpufreq/sched: Allow .setpolicy() cpufreq
+ drivers to enable EAS
+To: Christian Loehle <christian.loehle@arm.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, 
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, 
+	Pierre Gondois <pierre.gondois@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2025-04-17 at 12:56 +0000, Vamsi Krishna Attunuru wrote:
->=20
->=20
-> > -----Original Message-----
-> > From: Philipp Stanner <phasta@mailbox.org>
-> > Sent: Thursday, April 17, 2025 4:09 PM
-> > To: Vamsi Krishna Attunuru <vattunuru@marvell.com>; Philipp Stanner
-> > <phasta@kernel.org>; Srujana Challa <schalla@marvell.com>; Michael
-> > S.
-> > Tsirkin <mst@redhat.com>; Jason Wang <jasowang@redhat.com>; Xuan
-> > Zhuo <xuanzhuo@linux.alibaba.com>; Eugenio P=C3=A9rez
-> > <eperezma@redhat.com>; Shijith Thotton <sthotton@marvell.com>; Dan
-> > Carpenter <dan.carpenter@linaro.org>; Satha Koteswara Rao Kottidi
-> > <skoteshwar@marvell.com>
-> > Cc: virtualization@lists.linux.dev; linux-kernel@vger.kernel.org
-> > Subject: Re: [EXTERNAL] [PATCH] vdpa/octeon_ep: Use non-hybrid PCI
-> > devres API
-> >=20
-> > On Thu, 2025-04-17 at 09:=E2=80=8A02 +0000, Vamsi Krishna Attunuru wrot=
-e: >
-> > > > > -----
-> > Original Message----- > > From: Philipp Stanner
-> > <phasta@=E2=80=8Akernel.=E2=80=8Aorg> > >
-> > Sent: Thursday, April 17, 2025 1:=E2=80=8A32 PM > > To: Srujana
-> >=20
-> > On Thu, 2025-04-17 at 09:02 +0000, Vamsi Krishna Attunuru wrote:
-> > >=20
-> > >=20
-> > > > -----Original Message-----
-> > > > From: Philipp Stanner <phasta@kernel.org>
-> > > > Sent: Thursday, April 17, 2025 1:32 PM
-> > > > To: Srujana Challa <schalla@marvell.com>; Vamsi Krishna
-> > > > Attunuru
-> > > > <vattunuru@marvell.com>; Michael S. Tsirkin <mst@redhat.com>;
-> > > > Jason
-> > > > Wang <jasowang@redhat.com>; Xuan Zhuo
-> > <xuanzhuo@linux.alibaba.com>;
-> > > > Eugenio P=C3=A9rez <eperezma@redhat.com>; Shijith Thotton
-> > > > <sthotton@marvell.com>; Dan Carpenter
-> > > > <dan.carpenter@linaro.org>;
-> > > > Philipp Stanner <phasta@kernel.org>; Satha Koteswara Rao
-> > > > Kottidi
-> > > > <skoteshwar@marvell.com>
-> > > > Cc: virtualization@lists.linux.dev;
-> > > > linux-kernel@vger.kernel.org
-> > > > Subject: [EXTERNAL] [PATCH] vdpa/octeon_ep: Use non-hybrid PCI
-> > > > devres API
-> > > >=20
-> > > > octeon enables its PCI device with pcim_enable_device(). This,
-> > > > implicitly, switches the function pci_request_region() into
-> > > > managed
-> > > > mode, where it becomes a devres function. The PCI subsystem
-> > > > wants to
-> > > > remove this hybrid nature from its interfaces.
-> > > > octeon enables its PCI device with pcim_enable_device(). This,
-> > > > implicitly, switches the function pci_request_region() into
-> > > > managed
-> > > > mode, where it becomes a devres function.
-> > > >=20
-> > > > The PCI subsystem wants to remove this hybrid nature from its
-> > > > interfaces. To do so, users of the aforementioned combination
-> > > > of
-> > > > functions must be ported to non-hybrid functions.
-> > > >=20
-> > > > Moreover, since both functions are already managed in this
-> > > > driver,
-> > > > the calls to
-> > > > pci_release_region() are unnecessary.
-> > > >=20
-> > > > Remove the calls to pci_release_region().
-> > > >=20
-> > > > Replace the call to sometimes-managed pci_request_region() with
-> > > > one
-> > > > to the always-managed pcim_request_region().
-> > >=20
-> >=20
-> > Hi,
-> >=20
-> > > Thanks you, Philipps, for the patch. The Octeon EP driver does
-> > > not use
-> > > managed calls for handling resource regions.
-> > > This is because the PCIe PF function reduces its resources to
-> > > share
-> > > them with its VFs and later restores them to original size once
-> > > the
-> > > VFs are released. Due to this resource sharing requirement, the
-> > > driver
-> > > cannot use the always-managed request regions calls.
-> >=20
-> > so this would mean that the driver is already broken.
-> > pci_request_region() in your driver is always-managed since you
-> > call
-> > pcim_enable_device(). Or am I missing something?
->=20
-> Driver is not actually broken. Yes, pci_request_region is always
-> managed in the driver due to pcim_enable_device().
-> But inside pcim_request_region(), res->type is considered as
-> PCIM_ADDR_DEVRES_TYPE_REGION and
-> pcim_addr_resource_release() releases entire bar. Whereas my driver
-> needs type=3DPCIM_ADDR_DEVRES_TYPE_MAPPING
-> so that pci_iounmap() get called. If I use this patch, driver reload
-> was failing for VF devices with below errors
->=20
-> [90662.789921] octep_vdpa 0000:17:02.0: BAR 4: can't reserve [mem
-> 0x207ff0000000-0x207ff07fffff 64bit pref]
-> [90662.789922] octep_vdpa 0000:17:02.0: Failed to request BAR:4
-> region
->=20
-> As you suggested below, I prefer to have non-managed version (use
-> pci_request_region()) and explicit remove() at required
-> places for now.
+On Thu, Apr 17, 2025 at 2:19=E2=80=AFPM Christian Loehle
+<christian.loehle@arm.com> wrote:
+>
+> On 4/16/25 19:01, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > Some cpufreq drivers, like intel_pstate, have built-in governors that
+> > are used instead of regular cpufreq governors, schedutil in particular,
+> > but they can work with EAS just fine, so allow EAS to be used with
+> > those drivers.
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >
+> > v0.3 -> v1
+> >      * Rebase on top of the new [1-2/8].
+> >      * Update the diagnostic message printed if the conditions are not =
+met.
+> >
+> > This patch is regarded as a cleanup for 6.16.
+> >
+> > ---
+> >  drivers/cpufreq/cpufreq.c |   13 +++++++++++--
+> >  1 file changed, 11 insertions(+), 2 deletions(-)
+> >
+> > --- a/drivers/cpufreq/cpufreq.c
+> > +++ b/drivers/cpufreq/cpufreq.c
+> > @@ -3054,7 +3054,16 @@
+> >
+> >       guard(cpufreq_policy_read)(policy);
+> >
+> > -     return sugov_is_governor(policy);
+> > +     /*
+> > +      * For EAS compatibility, require that either schedutil is the po=
+licy
+> > +      * governor or the policy is governed directly by the cpufreq dri=
+ver.
+> > +      *
+> > +      * In the latter case, it is assumed that EAS can only be enabled=
+ by the
+> > +      * cpufreq driver itself which will not enable EAS if it does not=
+ meet
+> > +      * the EAS' expectations regarding performance scaling response.
+> > +      */
+> > +     return sugov_is_governor(policy) || (!policy->governor &&
+> > +             policy->policy !=3D CPUFREQ_POLICY_UNKNOWN);
+> >  }
+> >
+> >  bool cpufreq_ready_for_eas(const struct cpumask *cpu_mask)
+> > @@ -3064,7 +3073,7 @@
+> >       /* Do not attempt EAS if schedutil is not being used. */
+> >       for_each_cpu(cpu, cpu_mask) {
+> >               if (!cpufreq_policy_is_good_for_eas(cpu)) {
+> > -                     pr_debug("rd %*pbl: schedutil is mandatory for EA=
+S\n",
+> > +                     pr_debug("rd %*pbl: EAS requirements not met\n",
+> >                                cpumask_pr_args(cpu_mask));
+>
+> I'd prefer to have at least "EAS cpufreq requirements" printed here.
 
-Would you then mind replacing pcim_enable_device() with
-pci_enable_device()? Should I send you a patch for that or do you want
-to do that yourself?
+Sure.
 
-That should do the trick.=20
+> with that caveat
+> Reviewed-by: Christian Loehle <christian.loehle@arm.com>
+>
+> Maybe we should amend the EAS documentation to reflect this?
 
-P.
+Yes, the documentation should be updated.  Which piece of it in
+particular I need to look at?
 
->=20
-> >=20
-> > The only way for you to, currently, have non-managed versions is by
-> > using
-> > pci_enable_device() instead and then doing pci_disable_device()
-> > manually in
-> > remove() and the other appropriate places.
-> >=20
-> > This patch should not change behavior in any way.
-> >=20
-> > If you're sure that having no management is not a problem, then we
-> > could
-> > simply drop this patch and I later remove the hybrid feature from
-> > PCI. Then
-> > your call to pci_request_region() will become unmanaged, even if
-> > you keep
-> > the pcim_enable_device().
-> >=20
-> > Tell me if you have a preference.
-> >=20
-> > P.
-> >=20
-> > >=20
-> > > >=20
-> > > > Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> > > > ---
-> > > > drivers/vdpa/octeon_ep/octep_vdpa_main.c | 4 +---
-> > > > 1 file changed, 1 insertion(+), 3 deletions(-)
-> > > >=20
-> > > > diff --git a/drivers/vdpa/octeon_ep/octep_vdpa_main.c
-> > > > b/drivers/vdpa/octeon_ep/octep_vdpa_main.c
-> > > > index f3d4dda4e04c..e0da6367661e 100644
-> > > > --- a/drivers/vdpa/octeon_ep/octep_vdpa_main.c
-> > > > +++ b/drivers/vdpa/octeon_ep/octep_vdpa_main.c
-> > > > @@ -391,7 +391,7 @@ static int octep_iomap_region(struct
-> > > > pci_dev
-> > > > *pdev,
-> > > > u8 __iomem **tbl, u8 bar)=C2=A0 {
-> > > > 	int ret;
-> > > >=20
-> > > > -	ret =3D pci_request_region(pdev, bar,
-> > > > OCTEP_VDPA_DRIVER_NAME);
-> > > > +	ret =3D pcim_request_region(pdev, bar,
-> > > > OCTEP_VDPA_DRIVER_NAME);
-> > > > 	if (ret) {
-> > > > 		dev_err(&pdev->dev, "Failed to request BAR:%u
-> > > > region\n",
-> > bar);
-> > > > 		return ret;
-> > > > @@ -400,7 +400,6 @@ static int octep_iomap_region(struct
-> > > > pci_dev
-> > > > *pdev,
-> > > > u8 __iomem **tbl, u8 bar)
-> > > > 	tbl[bar] =3D pci_iomap(pdev, bar, pci_resource_len(pdev,
-> > > > bar));
-> > > > 	if (!tbl[bar]) {
-> > > > 		dev_err(&pdev->dev, "Failed to iomap
-> > > > BAR:%u\n", bar);
-> > > > -		pci_release_region(pdev, bar);
-> > > > 		ret =3D -ENOMEM;
-> > > > 	}
-> > > >=20
-> > > > @@ -410,7 +409,6 @@ static int octep_iomap_region(struct
-> > > > pci_dev
-> > > > *pdev,
-> > > > u8 __iomem **tbl, u8 bar)=C2=A0 static void
-> > > > octep_iounmap_region(struct
-> > > > pci_dev *pdev, u8 __iomem **tbl, u8 bar)=C2=A0 {
-> > > > 	pci_iounmap(pdev, tbl[bar]);
-> > > > -	pci_release_region(pdev, bar);
-> > > > }
-> > > >=20
-> > > > static void octep_vdpa_pf_bar_shrink(struct octep_pf *octpf)
-> > > > --
-> > > > 2.48.1
-> > >=20
->=20
+> (And also emphasise that EAS will make cpufreq assumptions as if sugov
+> was the governor regardless.)
 
+Right.
