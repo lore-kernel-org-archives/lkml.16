@@ -1,129 +1,138 @@
-Received: from mail-lf1-f66.google.com (mail-lf1-f66.google.com [209.85.167.66])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B461F1FBCAF;
-	Thu, 17 Apr 2025 10:17:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08AEC1D5CF9;
+	Thu, 17 Apr 2025 10:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744885052; cv=none; b=KeW7EPvV8pw4I94vh7vE755IFV8F/0eB1U8sQZV0f//qdAdN2PpsywaTIbtt0lCyrnoelDM2HJ0d/9zmRWxj4rh9V8nIZJGBbUVYBKEHgQuJ2HfdHuSMxgPMrAGyNj1djTxtbKw4KA4bO0Rhpr2Egku6/xZJKqJ1BIpSOPNLj5c=
+	t=1744885086; cv=none; b=A7oHoTLQRttIKCdpSd8hrSGUumeM+R3xY2T19dY8meStiIQgDs/HDm7o0qzh1QbEtzFzc+tJGklQCTe/ENiG8bt9bcgpq7F/Qe7NJRYq7rbMGmkkRa1ebrMxjKcvnJ+Q+vn0rVpKZVVvn8T3CczHl/vWEsTQ5U4PSevJc5xNQgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744885052; c=relaxed/simple;
-	bh=h3UCEJIIGeY1tUsuc/qIZ1JHXh0UjMxmhnt8IJ/77uw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nBZ4OX7+fSq+sA6IlUZg4Tf8qE+fb/LALoX5UupOQ+VDA2eBC+LVc1fguheqcA1pAOjU2bNd5MDiegWTZY+8mQ7TEovHKiYxRXS4Oudl1BS943edNH8IwG4Qhm67EYQXu5/5gbfI0FH177yTvOoNxBwZZzKhRnYjK8qc7La/bwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nC+aK3nt; arc=none smtp.client-ip=209.85.167.66
+	s=arc-20240116; t=1744885086; c=relaxed/simple;
+	bh=rF92U0urWt6p/1AbiPtAf80xk17/Dsl9xvRoza9f7OA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ksopEjWu7ZExGMgyYslu2aW2EjPboocAV6CGS7CEtR/UmzIBU33yuWfKbTP0NyfFEXLcWHpfxitJtGyt4v6zOtgRge8MxN5iJExG5Ut4dPik2/IXP3t4G/Xbspgp2n4XrWuKwa9ABKGBP3qYHke0xSF1NjT5Fe7gZgBK5Gy9Suw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KW9Y9RFY; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nC+aK3nt"
-Received: by mail-lf1-f66.google.com with SMTP id 2adb3069b0e04-54ac9b3ddf6so596966e87.1;
-        Thu, 17 Apr 2025 03:17:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KW9Y9RFY"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acb415dd8faso87506866b.2;
+        Thu, 17 Apr 2025 03:18:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744885049; x=1745489849; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mr4iHssyb6BG/1AKbGKXTkraXilD33gxEVEHI0uTy7c=;
-        b=nC+aK3ntAniqwQhQogNGGRXFghF4H6gVk3M4EL0OMwxvhIFHc+HoBKDzWqXbvrSJ+3
-         bfa/RXi/OFjyWvfuBwmSzRvRhursXrn0bWkOaeGqXEuhUEfjbLGcHaal5MamR4NfoK5D
-         PFgQ9itbY37hj3276QiglP02ddDK6qE52QATmoNiyb8hbCOTYxP+B0M1MZ37n8kQQLP6
-         UeGW5aKR2yrYzSTHsA3C7i8D4N5khsXsofhH8H0LwwxC5X9eO940Y9lGQts/diBF7DyQ
-         GMbnSAIxgvFcqQ+nfEFsGr6yMLBpnhO+NbsWa2tx57F6Io4cxC4j4+nT6P1c3op4Yifo
-         VrQw==
+        d=gmail.com; s=20230601; t=1744885083; x=1745489883; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=l9skOushEggbMsJxKcF45wWS3+ATrrzyuUsGqv0t7ro=;
+        b=KW9Y9RFYJ+JmFVoFfdNqPbmy8RtLoU2U6U83zeWveBRyowNCLr/C17aeEoj7xZYGFS
+         cOGMw9YxwvQZ0ewVTq7PlRaviBe98pI4VXrRwipmETSlvA9u2P4u9Sz67xIQoyn3u2EK
+         AN5jCMEwCdXaTLDCQJx1dsJLQnl0AixndtUG7lzheuQPS5TnWnYsgFXQFVJRy19lBke4
+         UupHNkDGaB9IF9zUxROdw2lq5JA5fc6vbAIB2Mu9l05hOKVGZjNCZaJYAbCltF1gDXne
+         G/ILcEKfrdxuBsOraRSeVP/Obh6H8uEWnnq0fACUHojkPAhEkfVmIj7aBfRIMkZlQUV0
+         B6+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744885049; x=1745489849;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mr4iHssyb6BG/1AKbGKXTkraXilD33gxEVEHI0uTy7c=;
-        b=UgB/7OGzhhhIqYcSq74uAHzLtXKz/KtcLHJgQBxV8lTRUHmWOo4evkqw82k6nzpVyv
-         n/MDlKylpxhfg30RPLyg+vc9G03l77OCA8jnI03AlqfvVo1S72nzU9vg5xI7fsw1EUWs
-         aUdG2Y3dSf60vBvls2NGBA30GTGmAGldT5HzYKZjWQq+NvO/QJD7k71lOLCpDQppsw8k
-         XLBnI6rgbQZY9lS8yRJX9z3bVKgiF9Ih4Y5vhMwgprEM+NU9x2NAlTP7hidX8iFDmqub
-         5feidsroZsvSD74vJ/H/QaUreBDkgLuZcKsOoTfssWd2lTttma8eWeEyhwRy6qbZE9ho
-         zerw==
-X-Forwarded-Encrypted: i=1; AJvYcCW6NVSAfQ5NChOvKT9QaYyap8tywtJ8Tpr/wxPGdrkreMrTSXHw9sDks1OdWeEqD14mbKzg0Ef51qogY2nQ@vger.kernel.org, AJvYcCWj0crG4NaXqq+mwzVd/UKhHg/fEptPqbzYUCLZssMCIs9vgVA4+2EijsmWVhir7PvFnl8U4WZ9jTc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqAd/0eDIKsNDwEM6CA8O0SP58cZhs19vGYXkAb+VYWG9wqODR
-	yvgxJFL6CMOkAvSar85m1gUpXAqJo8cVKa/zxwV9WN6tFJhVT/Mgv3mu6X/JJeaiiCk/cMgbsYI
-	EmfCNWrdMuDqSdxzV5tpQKG2jNI8=
-X-Gm-Gg: ASbGncvBNWBTVCx69wscDP6oPyiPXJquHQyXYjWlWyy47Q9cOAZeya7mD1R1kAfAE3j
-	FPsb9YkUDiH9vdyDKIji+EHH11y84nC0hIerXAuGWxUheRIfd150pH0C8IHlbfgKx5njepUwTTz
-	W3547eRCRTXgqLujDnrfnImA==
-X-Google-Smtp-Source: AGHT+IEvRSTyP0SY5ojVdpl7yM7WjI0aehemNKpV20d6KfCvjuDMKOIi2DQC57sqiNxjCYpB1GvaF2rMc9iGaUjrjwM=
-X-Received: by 2002:a05:6512:3b8f:b0:545:fc8:e155 with SMTP id
- 2adb3069b0e04-54d64a9c105mr1945636e87.20.1744885048467; Thu, 17 Apr 2025
- 03:17:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744885083; x=1745489883;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l9skOushEggbMsJxKcF45wWS3+ATrrzyuUsGqv0t7ro=;
+        b=sNLuHazBMbdKN8KFqMBnNtc9nEJ7jBR/VCsJBXjuY9SFwacSaJ5sYO+rtC5kBiPBtM
+         wt0Lg5XVhrJ9viOSjUHNdZTw99Exxggqj/d7pVigfC8fb/a+4gqoJy9E468+NH5V2UCJ
+         pu7ygfIUza+/e689HwzkA9hAZUnQm8q9wkTFdw2o/TZUx4nkULa0CBx8nFL1AUdxrtSN
+         N+o2moRmSJ/4Rn1uPnPqTs1WzDmgAXCGR9b/BhzN/h9Z+SQ2Wx+2ztbvQzKNP+3FrTru
+         N9aitKCjfhoKph/EFPpD8s5yDLCxOrkrtqODkUre2X1wewWwkbt8MWM2VVKRjUtaLwVY
+         aXlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU9sNasO8KTQvNKB/+w7Lry8oiehCz9YAWtM83WP0tBD7WstJUZsD48c5tBTIPk+b6pZir9m+f1sTnQrBQZ@vger.kernel.org, AJvYcCWmetGlicj1SmIt2RjO2e2CQHL7wJfX6rxWVoQqrGbViaUrMuoCj8xrPEdNkpspatYxXLDend0Y2LNWI7u/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIJm2un5sE1jF3Q8qqCrSc24QT+yHAxSRpV9soWN3MUg93a6j9
+	cg1c8hg5LOiyHOwW2o+TqNu/ASVHObG6cfGNVPrB/pBjswbqtx1o
+X-Gm-Gg: ASbGncsz7ubkQaAThjPs4+THWiVSgQED8lDa45CD+4drPSZ+U/jlV5gGNjcWrrT6l2r
+	dhyfBWTcGuKB/+xXZxE2SPNIWGWVc04sgfzWsF0np1j6fU7eiRqwNc3thmVx7FZlxZ3mHjohaAK
+	kSl4Wvq1X6tRCS38JQ0jRlG1UXqVyds5C8p2YdryU2KXuhHtMCOp1GllMNOhHXiow91kn+4dNJk
+	UbQA+XY5Lunk18dHbvSlm/zhMI0jmUUkqQQpXQfK83plItxk5/k+rIFnrsjbOzZ0B+UrUbeIoyS
+	sk0QCwhA3ZRLJvAgpXimFZW3Bj3cbkbtcnKm0ZTkQQIjPu6KsDGKrd2l
+X-Google-Smtp-Source: AGHT+IFlFTz1i8hkW1ayUI43fP0HBbOeOnZrYXBdNwyKbNNyaLitmXK/BtM5DVGKI9LSAZcCdlpucw==
+X-Received: by 2002:a17:907:7fa7:b0:ac7:95b3:fbe2 with SMTP id a640c23a62f3a-acb42c5a12fmr400036666b.56.1744885083009;
+        Thu, 17 Apr 2025 03:18:03 -0700 (PDT)
+Received: from f (cst-prg-69-142.cust.vodafone.cz. [46.135.69.142])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3d32ecbesm269586266b.161.2025.04.17.03.18.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 03:18:02 -0700 (PDT)
+Date: Thu, 17 Apr 2025 12:17:54 +0200
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: kernel test robot <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org, 
+	Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: Re: [linus:master] [fs] a914bd93f3:
+ stress-ng.close.close_calls_per_sec 52.2% regression
+Message-ID: <hupjeobnfvo7y3jyvomjuqxtdl2df2myqxwr3bktmxabsrbid4@erg2ghyfkuj5>
+References: <202504171513.6d6f8a16-lkp@intel.com>
+ <CAGudoHGcQspttcaZ6nYfwBkXiJEC-XKuprxnmXRjjufz2vPRhw@mail.gmail.com>
+ <CAGudoHHMvREPjWNvmAa_qQovK-9S1zvCAGh=K6U21oyr4pTtzg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAPY8ntAFHW3kiqCnXjFtzL9FnRoQ69v8+3yJ+jR8_W8Bb+6d8A@mail.gmail.com>
- <20250402020513.42628-1-bsdhenrymartin@gmail.com> <14654c19-fa26-4d37-8f0f-9cf092982b67@gmx.net>
-In-Reply-To: <14654c19-fa26-4d37-8f0f-9cf092982b67@gmx.net>
-From: henry martin <bsdhenrymartin@gmail.com>
-Date: Thu, 17 Apr 2025 18:17:20 +0800
-X-Gm-Features: ATxdqUHZfP5CWnv2EfUodjm25gfdmY6UfSse5sOTHfNb3TCeaJauUAPMA3I37KI
-Message-ID: <CAEnQdOqoCuiN67oWisJs7RYandhHxcvbPXXxHKmPaoS5=puPyw@mail.gmail.com>
-Subject: Re: [PATCH v2] clk: bcm: rpi: Add NULL check in raspberrypi_clk_register()
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, florian.fainelli@broadcom.com, 
-	bcm-kernel-feedback-list@broadcom.com, popcornmix@gmail.com, 
-	mripard@kernel.org, u.kleine-koenig@baylibre.com, linux-clk@vger.kernel.org, 
-	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, nathan@kernel.org, 
-	dave.stevenson@raspberrypi.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAGudoHHMvREPjWNvmAa_qQovK-9S1zvCAGh=K6U21oyr4pTtzg@mail.gmail.com>
 
-> Just a note, please don't send new patch versions as a reply to older
-> ones. This makes them harder to find.
+On Thu, Apr 17, 2025 at 12:02:55PM +0200, Mateusz Guzik wrote:
+> bottom line though is there is a known tradeoff there and stress-ng
+> manufactures a case where it is always the wrong one.
+> 
+> fd 2 at hand is inherited (it's the tty) and shared between *all*
+> workers on all CPUs.
+> 
+> Ignoring some fluff, it's this in a loop:
+> dup2(2, 1024)                           = 1024
+> dup2(2, 1025)                           = 1025
+> dup2(2, 1026)                           = 1026
+> dup2(2, 1027)                           = 1027
+> dup2(2, 1028)                           = 1028
+> dup2(2, 1029)                           = 1029
+> dup2(2, 1030)                           = 1030
+> dup2(2, 1031)                           = 1031
+> [..]
+> close_range(1024, 1032, 0)              = 0
+> 
+> where fd 2 is the same file object in all 192 workers doing this.
+> 
 
-Noted, thanks for the review! I'll make sure to send new patch versions as
-separate emails in the future.
+the following will still have *some* impact, but the drop should be much
+lower
 
-Regards,
-Henry
+it also has a side effect of further helping the single-threaded case by
+shortening the code when it works
 
-Stefan Wahren <wahrenst@gmx.net> =E4=BA=8E2025=E5=B9=B44=E6=9C=8817=E6=97=
-=A5=E5=91=A8=E5=9B=9B 18:09=E5=86=99=E9=81=93=EF=BC=9A
->
-> Am 02.04.25 um 04:05 schrieb Henry Martin:
-> > devm_kasprintf() returns NULL when memory allocation fails. Currently,
-> > raspberrypi_clk_register() does not check for this case, which results
-> > in a NULL pointer dereference.
-> >
-> > Add NULL check after devm_kasprintf() to prevent this issue.
-> >
-> > Fixes: 93d2725affd6 ("clk: bcm: rpi: Discover the firmware clocks")
-> > Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
-> > Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
->
-> Just a note, please don't send new patch versions as a reply to older
-> ones. This makes them harder to find.
->
-> Thanks
-> > ---
-> > V1 -> V2: Correct the commit hash in the Fixes: tag.
-> >
-> >   drivers/clk/bcm/clk-raspberrypi.c | 2 ++
-> >   1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-ra=
-spberrypi.c
-> > index 0e1fe3759530..720acc10f8aa 100644
-> > --- a/drivers/clk/bcm/clk-raspberrypi.c
-> > +++ b/drivers/clk/bcm/clk-raspberrypi.c
-> > @@ -286,6 +286,8 @@ static struct clk_hw *raspberrypi_clk_register(stru=
-ct raspberrypi_clk *rpi,
-> >       init.name =3D devm_kasprintf(rpi->dev, GFP_KERNEL,
-> >                                  "fw-clk-%s",
-> >                                  rpi_firmware_clk_names[id]);
-> > +     if (!init.name)
-> > +             return ERR_PTR(-ENOMEM);
-> >       init.ops =3D &raspberrypi_firmware_clk_ops;
-> >       init.flags =3D CLK_GET_RATE_NOCACHE;
-> >
->
+diff --git a/include/linux/file_ref.h b/include/linux/file_ref.h
+index 7db62fbc0500..c73865ed4251 100644
+--- a/include/linux/file_ref.h
++++ b/include/linux/file_ref.h
+@@ -181,17 +181,15 @@ static __always_inline __must_check bool file_ref_put_close(file_ref_t *ref)
+ 	long old, new;
+ 
+ 	old = atomic_long_read(&ref->refcnt);
+-	do {
+-		if (unlikely(old < 0))
+-			return __file_ref_put_badval(ref, old);
+-
+-		if (old == FILE_REF_ONEREF)
+-			new = FILE_REF_DEAD;
+-		else
+-			new = old - 1;
+-	} while (!atomic_long_try_cmpxchg(&ref->refcnt, &old, new));
+-
+-	return new == FILE_REF_DEAD;
++	if (likely(old == FILE_REF_ONEREF)) {
++		new = FILE_REF_DEAD;
++		if (likely(atomic_long_try_cmpxchg(&ref->refcnt, &old, new)))
++			return true;
++		/*
++		 * The ref has changed from under us, don't play any games.
++		 */
++	}
++	return file_ref_put(ref);
+ }
+ 
+ /**
