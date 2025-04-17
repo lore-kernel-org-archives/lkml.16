@@ -1,51 +1,49 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA9C1FF610;
-	Thu, 17 Apr 2025 19:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A1AA926;
+	Thu, 17 Apr 2025 19:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744917749; cv=none; b=UTfF8cUhjCe5r9n6yeh+VgQk7xn6RgEYRGLfqtAdIedew0Y8yneSnzvGV9O+CLNCzT0XSWBAnFqJAQL2ZtP/dF3/QeJ6X2+Q0x5SVkocNzyP5KpkDTQn2ks+9Yp1XHfkadiZyVs0VU5YYeSgNt/9WVR8CjmU9llsKY/6PKuLcLQ=
+	t=1744917875; cv=none; b=m2AJpyFCnWcnxRzq3RaLM8Vj8CAwXr/d79CkP2AKq8XCkVsVDsTVG5UY2MHu7N1cWud/CKLNG/wNL/MmshNzHhgDIXhaje/20r6NlfNkPzke6+FejiLupq7qjQmmZ3GLz8EPqBQw1lJ+mKt+UgJhgjIbEupL5z8fcPytJ0wNFrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744917749; c=relaxed/simple;
-	bh=erzSqX42u86Pu0QutiQ6JSyJ1eLwKyc4t7HHtCGZOG8=;
+	s=arc-20240116; t=1744917875; c=relaxed/simple;
+	bh=SNWSxf8+UlF6qnGNRfesiQGoFCIZZo4ApljuLAMLcQE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qrQuX6eBQp85KWsGp0WyGw6T+eZ2CfLOV5fxD90r5aL1tnQW2q0ruC2I0K8K9faoe7LzEN6gs1fPN2sxgrRQ0Oh9ZftHcsRnwFFInCzMhKkoZFw+yVevnIk9JGKxBN1zxFaZuB49/Y8XKUm0Dt4BWWT7/KFphn/VJktA75NDqnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=OIAJMk6k; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	 Content-Type:Content-Disposition:In-Reply-To; b=IIWuinBN1zeuPQ5UabHSWhAhMBGy4nKX6AzuxXDvpv1mAFSpssWWGp16ld9NpYevHIsj3COsVttm23O5sPnVGiBp4wL2Ku0MYQUDiIikQIGGTQmNJiZSBVLRp+pj9EgVTneMlpSmghVmluuUG+DDdibhpMnhmfanZMLD0key1Cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=i+Uc+ccw; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="OIAJMk6k"
-Received: from gaggiata.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 1D3801F92A;
-	Thu, 17 Apr 2025 21:22:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1744917745;
-	bh=erzSqX42u86Pu0QutiQ6JSyJ1eLwKyc4t7HHtCGZOG8=;
-	h=Received:From:To:Subject;
-	b=OIAJMk6k3f7HE3QqoyRCE33tRQylqAzRmLQJ1xkRGMyigwieSNZLLl7YVWqxUGCaJ
-	 6hBW7bgpqfoTpVL5q19dRyMa1+vdJ9C9uYy+Oe/5pWk8aepzDtiUJz3D/gCO2gHhoH
-	 HqDFIqeBghsOBFyGeeoPyuhllPrBNGjo6+KJNFbSXsJdF8ZgITqDq1aqCRh2uCHMRJ
-	 ucfBC4Fnh3Ugle18oNie1N83NG65kkUkz1laHGXGsYCxkw4jRq86jA8XZlC9O2j8By
-	 jqZwHLMx6jrWTxLQwXUINwXnWpwDtTX0rYsBAvOiM1D6lZK2NR5GnfS9Dlgu6qkbDm
-	 5KhZAyNZt72bg==
-Received: by gaggiata.pivistrello.it (Postfix, from userid 1000)
-	id C0D4B7FD18; Thu, 17 Apr 2025 21:22:24 +0200 (CEST)
-Date: Thu, 17 Apr 2025 21:22:24 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Judith Mendez <jm@ti.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-mmc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Josua Mayer <josua@solid-run.com>, Moteen Shah <m-shah@ti.com>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	Hiago De Franco <hiagofranco@gmail.com>
-Subject: Re: [PATCH v2 0/2] Fix V1P8_SIGNAL_ENA
-Message-ID: <aAFU8K9j4fZ-njwP@gaggiata.pivistrello.it>
-References: <20250417182652.3521104-1-jm@ti.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="i+Uc+ccw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=40CklYnnrRZVmpvhHO08Vc7yIAqGP3b0osrBFdwWVvg=; b=i+Uc+ccwl1KbUAwE9Z18eOIA2Y
+	wXJi72hUXv8FpUOdDoJr0W5mkZnTmj5/pTgws9Y0Q0pIKxijIcULOcUNw+8nkoG5rZorz2biCXsrs
+	DQ9cy3jsaIc4epcEQvX3o5QiFDYC4ML30UfgB2g8fpLbFXx6IS1VkJF07+X5C4XdepV0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u5UqZ-009p6R-5u; Thu, 17 Apr 2025 21:24:27 +0200
+Date: Thu, 17 Apr 2025 21:24:27 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Qasim Ijaz <qasdev00@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v3 2/8] ref_tracker: add a top level debugfs directory
+ for ref_tracker
+Message-ID: <10696fe0-0a9e-4304-951a-98af86a19add@lunn.ch>
+References: <20250417-reftrack-dbgfs-v3-0-c3159428c8fb@kernel.org>
+ <20250417-reftrack-dbgfs-v3-2-c3159428c8fb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,19 +52,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250417182652.3521104-1-jm@ti.com>
+In-Reply-To: <20250417-reftrack-dbgfs-v3-2-c3159428c8fb@kernel.org>
 
-On Thu, Apr 17, 2025 at 01:26:50PM -0500, Judith Mendez wrote:
-> There are eMMC boot failures seen with V1P8_SIGNAL_ENA on Kingston
-> eMMC and variouse types of SD cards on Sitara K3 SoCs due to the
-> sequencing when enumerating to HS200 mode. Since V1P8_SIGNAL_ENA is
-> optional for eMMC, do not set V1P8_SIGNAL_ENA by default for eMMC.
-> For SD cards we shall parse DT for ti,suppress-v1p8-ena property
-> to determine whether to apply the quirk.
+On Thu, Apr 17, 2025 at 09:11:05AM -0400, Jeff Layton wrote:
+> Add a new "ref_tracker" directory in debugfs. Each individual refcount
+> tracker can register files under there to display info about
+> currently-held references.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-I assume this ti,suppress-v1p8-ena should be added to some SoC dtsi, am I
-wrong?
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Francesco
-
-
+    Andrew
