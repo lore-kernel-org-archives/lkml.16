@@ -1,80 +1,74 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158AAEAE7
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 01:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED181494BB
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 01:33:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744853587; cv=none; b=dPQ9AO10i9XaqPS7VMNUR9vG4n1pGfd6gCa8UR2/lN79++MGyDZ16hBg3w05AfKeXfJ6wtz1sG1m5++iJIFtxA46nL9AGJMu1H/xq3/fqiK1NfNZ8iTK22gWBWh26FlQyGWMMwHcJbbVSlTOhydcsOinoayVkVj9HWh70E8odPw=
+	t=1744853588; cv=none; b=Y3G0HNq0Ux9tkt3OxprhU7pZ3pYiU+x0QO32bsY7Y//GJ4Qa1u360boNnm9cNDJg6vSjxpUnVtRqXa2sSTCWpJ4n2I29H7Uz5X9wG8x6rSeAM0NaKCzqO042kGbTJ+toNCZEnrJ1Nbl6BYYOvtErQurhJ2CBtDTX66sbxYJNqMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744853587; c=relaxed/simple;
-	bh=2xULYgcWmIJIehHFYM/bibVezPdaJmAJv90YTx9g74U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RQ5ZWVoodrbhzosjscbJgq00b+HNv21ZN5lIvLB294mjjlwlhrfeI7R080fhxws52kEriYiNvhWN7H0X/1LMAvB8OCl4mJLWQSGuIYnAszdfDQQ7WIxH/4vm+u55O54JVl0+00xyqyThfIotH1RT3mVULZcW5Mz1v1diPuK9pH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=Niit9KmY; arc=none smtp.client-ip=209.85.214.170
+	s=arc-20240116; t=1744853588; c=relaxed/simple;
+	bh=peXZjv91qcnXAES8N8mnCKfga6OZjhML/WpesH4NfKc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YKfloZA2n6CuruOsnDX5z2hDNtPV5O1M8EoL7/OiXajx+HdzlcXBjfmGQbZmMpVmyC4kbGEyCpBpv86XxAwpg0t40CDQS0CS6DrU0dZR2KgJly/pj1LNF7pXEu/v7KC5JUb9+RkClGbcgJ9e+9Jjj8GEfp+KD5qfdmoGa/IKYvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=bxk30Ms2; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="Niit9KmY"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-223fb0f619dso3275155ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:33:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="bxk30Ms2"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22928d629faso2708595ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:33:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1744853585; x=1745458385; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cl7lm0q1pdo1TJIdPWC7UtnUlQ76D/cDOJLKOcjE6io=;
-        b=Niit9KmY+zeqZb+KOolZ0UPw8k+9oFE9HAUxH+EOggwLn0LbFnpTqB7MfJyHqc3jYz
-         dskzprgL1yZRgw4itsd7cz188OasiYGAbtVbw2KnKTKziHlS2ZQy0dfkoMvQpkqANJss
-         BP1B3dONTAbPh1auPbTt4EqMAVe9IuB6h1UEY=
+        d=fastly.com; s=google; t=1744853586; x=1745458386; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h6JaAma8wr++LnPs79mPGowXaCOiBb9Nd8NFNngwV7o=;
+        b=bxk30Ms2EfGd7eBs7o5vLLqLrZTEIjlNZYv7nNvSLAKDvQ98dfGe80N5x21jp71EAc
+         ZVi/7rMKNog16ED2mDVERGgFY/vn/5MElZmctCqZebAc5kxirrvKogDYRo9eXHwzCMQT
+         EgUGXlgWPhIw/S4adGO7F/waCwfomdWl1pg64=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744853585; x=1745458385;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Cl7lm0q1pdo1TJIdPWC7UtnUlQ76D/cDOJLKOcjE6io=;
-        b=SgGy9SzZ9F29ABIfb3Tbv0XcMK/t2TyQnRXmgJHa0cbdRilwNMU8hdmO8NtqhR2guK
-         87M4b1XagCkcvhzyVtu0vKsxdc8Jq1w5rTX3Ln7ACAjQlkN4Y2FwSWGQuKQksUleBum2
-         /ABkuVDXMZS7AU5ApxMDwl5KQcoTmvP82tWc5MEx6A1oiAH11rkkQWSuAt3+d39WzT8a
-         yLs78l2+dNJyWNcmHl57tdoYyTjecNP4eEoVbpVEe2SjSjrv8+ByU7f0wUrZKH8lRhpH
-         ricuyIgwSMBj0Xg9h7RxPYjHai6YCMP+audIuKzxn1hvQBTrkb+NKS6mYHpxh39sQL6h
-         yEkg==
-X-Forwarded-Encrypted: i=1; AJvYcCWk/wRRODmjBOGLebcWAXlWSa1bGYoFwp6RasNyiWf5IQ2OVQL/ekKm62rT6btyfyGv1wcmljyz3HJYFnQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHQ05Bfjs1IWBMGHrOOE6QdUpdveVlkfr1fpTg656XvNX9/weY
-	QSRWI+/72H+wj/KogpQKeDDKJCYVwg6S/SbB01OkB8ophQixDnk+PadX8nbTAWg=
-X-Gm-Gg: ASbGncsnXe2KY/kbTZcMEx7jBfEdrL2p2k+/kBZNbHxNu/AsppFRYgqBifHIipEAj2I
-	WpsQQjDcsTzbQQJ8pDOk6wxfceXI094QqaL7TtwikEnPmWjBLOg54bNySA4eknE7FDE7pA0PEZb
-	lMUYzPKIQKkiEkaD0vGDiwYdj2zhoQllI2fADyGFyiH5QzrmhFvcHqCrtC9XErb/XWAqYmjV5m5
-	XbMQE65w1a1/uJhwx+cwWFFUv8cBUe4F74AD5pO6YnrBq3xPn7HAwVaQ9PiB3qHmbpVgBMvLyQf
-	4PZ44Prg3PJ79hEDa02lV59kbux/74Da5OQyjjVIFs/GwhcsurCttNqbPfQ=
-X-Google-Smtp-Source: AGHT+IEfKQ+r/gnTBZHe1EymGe3tKAmJ5TO38k1pfoylMUgPGDSds01vW9UdN7R4QlZfSpduWCIKYg==
-X-Received: by 2002:a17:902:ea07:b0:223:5c77:7ef1 with SMTP id d9443c01a7336-22c358dae13mr58260805ad.21.1744853585258;
-        Wed, 16 Apr 2025 18:33:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744853586; x=1745458386;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h6JaAma8wr++LnPs79mPGowXaCOiBb9Nd8NFNngwV7o=;
+        b=q4m3y9sMAZQekeyW8m92w6OGWfCd/fhbqCK6+97cBzKoxF9h6ICF+X6c2BA6YMMjLF
+         SehP8pn01bgP6jP9C7rOSs5/WuTusFHSdUMiAZ8rSgECXdpUR6iLuVHZ1WSMBttNQghS
+         neeTObYXw+5dKPwV8kXApkm/HKLctB+tGFmxUfMPRH173lWGyACqmEYwHqK8ao2dommC
+         Q2wSpVNUcp0sbUPaENukyppIj//5Wlj4283HaRTFlecoJozUoU3La2JNTJRlcvNSETUt
+         4LNIve3ExKrRPdbRRypIuLZ8h1WwDzl7X7soC3qRbjvRLDlDY0mua3v4+Yk/C9GJptBa
+         8Lvw==
+X-Forwarded-Encrypted: i=1; AJvYcCV8VqgMmNokuSrh4dm5fFQSyqb6X45FGmj54mqFt1Fx4f3y6gmcAVK7DgcnxWBPUI5cbUsaVuYm1uN5+ps=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBqtAPH/PzeJMzMiW61qjZGs92uqJ8qcBYiHCIFQSKZse68czw
+	vq0CbnEw5hVg6hQDC+2C6tBur8Jg5O1oJSvTR2KEM6a3x2hzViGT8E1uLgHc3VI=
+X-Gm-Gg: ASbGncv30Aaj1TXgS1qoRFZCn7h+DGTQhq+0y3KVeeuyfO7AjxItaYXZOA9OdJdcgpi
+	uiGtpL6Kb9d5+LsmAo5dxa/kYndmk9ZGI5PCDxMmNB3J5SYhHC4RxzQrgQ/12618rPkPiwVciqW
+	TYnuyeR2NvsQ1edcWhdp3+TuiWokh7sWAju4TqoTDwk6w3OSEslz7VzkMcP7RaWM9dvRzz7tKTR
+	08K4E5xsKoNiLeiN+0+C1LXpxa2YsFwcTTdOGyORlFk9fOho/e1r+hz+Bu0VTloUqdheu/asx+m
+	+NETImnh+EHt883EueS7P2iezjufiY/KxfxFxZ7bly+PwyHN
+X-Google-Smtp-Source: AGHT+IHG7ipMCyI6c0/c97Gk3L/+AoJB9ydcVHy1jbC151MdKqezcYzCYtt+B9Ehn2HYIZfDsowUZw==
+X-Received: by 2002:a17:903:1252:b0:225:b718:4dff with SMTP id d9443c01a7336-22c35983151mr69095555ad.53.1744853586637;
+        Wed, 16 Apr 2025 18:33:06 -0700 (PDT)
 Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33ef11c7sm21349505ad.37.2025.04.16.18.33.03
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33ef11c7sm21349505ad.37.2025.04.16.18.33.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 18:33:04 -0700 (PDT)
+        Wed, 16 Apr 2025 18:33:06 -0700 (PDT)
 From: Joe Damato <jdamato@fastly.com>
 To: netdev@vger.kernel.org
 Cc: kuba@kernel.org,
 	Joe Damato <jdamato@fastly.com>,
-	Alexei Starovoitov <ast@kernel.org>,
 	Andrew Lunn <andrew+netdev@lunn.ch>,
-	bpf@vger.kernel.org (open list:XDP (eXpress Data Path):Keyword:(?:\b|_)xdp(?:\b|_)),
-	Daniel Borkmann <daniel@iogearbox.net>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK),
 	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Willem de Bruijn <willemb@google.com>,
-	Xiao Liang <shaw.leon@gmail.com>
-Subject: [PATCH net-next v2 0/4] Fix netdevim to correctly mark NAPI IDs
-Date: Thu, 17 Apr 2025 01:32:38 +0000
-Message-ID: <20250417013301.39228-1-jdamato@fastly.com>
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next v2 1/4] netdevsim: Mark NAPI ID on skb in nsim_rcv
+Date: Thu, 17 Apr 2025 01:32:39 +0000
+Message-ID: <20250417013301.39228-2-jdamato@fastly.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250417013301.39228-1-jdamato@fastly.com>
+References: <20250417013301.39228-1-jdamato@fastly.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,50 +77,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Greetings:
+Previously, nsim_rcv was not marking the NAPI ID on the skb, leading to
+applications seeing a napi ID of 0 when using SO_INCOMING_NAPI_ID.
 
-Welcome to v2.
+To add to the userland confusion, netlink appears to correctly report
+the NAPI IDs for netdevsim queues but the resulting file descriptor from
+a call to accept() was reporting a NAPI ID of 0.
 
-This series fixes netdevsim to correctly set the NAPI ID on the skb.
-This is helpful for writing tests around features that use
-SO_INCOMING_NAPI_ID.
+Signed-off-by: Joe Damato <jdamato@fastly.com>
+---
+ drivers/net/netdevsim/netdev.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-In addition to the netdevsim fix in patch 1, patches 2-4 do some self
-test refactoring and add a test for NAPI IDs. The test itself (patch 4)
-introduces a C helper because apparently python doesn't have
-socket.SO_INCOMING_NAPI_ID.
-
-Thanks,
-Joe
-
-v2:
-  - No longer an RFC
-  - Minor whitespace change in patch 1 (no functional change).
-  - Patches 2-4 new in v2
-
-rfcv1: https://lore.kernel.org/netdev/20250329000030.39543-1-jdamato@fastly.com/
-
-Joe Damato (4):
-  netdevsim: Mark NAPI ID on skb in nsim_rcv
-  selftests: drv-net: Factor out ksft C helpers
-  selftests: net: Allow custom net ns paths
-  selftests: drv-net: Test that NAPI ID is non-zero
-
- drivers/net/netdevsim/netdev.c                |  2 +
- .../testing/selftests/drivers/net/.gitignore  |  1 +
- tools/testing/selftests/drivers/net/Makefile  |  6 +-
- tools/testing/selftests/drivers/net/ksft.h    | 56 +++++++++++++
- .../testing/selftests/drivers/net/napi_id.py  | 24 ++++++
- .../selftests/drivers/net/napi_id_helper.c    | 83 +++++++++++++++++++
- .../selftests/drivers/net/xdp_helper.c        | 49 +----------
- tools/testing/selftests/net/lib/py/netns.py   |  4 +-
- 8 files changed, 175 insertions(+), 50 deletions(-)
- create mode 100644 tools/testing/selftests/drivers/net/ksft.h
- create mode 100755 tools/testing/selftests/drivers/net/napi_id.py
- create mode 100644 tools/testing/selftests/drivers/net/napi_id_helper.c
-
-
-base-commit: bbfc077d457272bcea4f14b3a28247ade99b196d
+diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
+index 0e0321a7ddd7..2aa999345fe1 100644
+--- a/drivers/net/netdevsim/netdev.c
++++ b/drivers/net/netdevsim/netdev.c
+@@ -29,6 +29,7 @@
+ #include <net/pkt_cls.h>
+ #include <net/rtnetlink.h>
+ #include <net/udp_tunnel.h>
++#include <net/busy_poll.h>
+ 
+ #include "netdevsim.h"
+ 
+@@ -357,6 +358,7 @@ static int nsim_rcv(struct nsim_rq *rq, int budget)
+ 			break;
+ 
+ 		skb = skb_dequeue(&rq->skb_queue);
++		skb_mark_napi_id(skb, &rq->napi);
+ 		netif_receive_skb(skb);
+ 	}
+ 
 -- 
 2.43.0
 
