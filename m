@@ -1,311 +1,126 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EB235948;
-	Thu, 17 Apr 2025 13:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D3A24635E;
+	Thu, 17 Apr 2025 13:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744896531; cv=none; b=ifhNAjwtn7CB4SBHZgKhWGxoEgNL53qiHAEVa4r3zs+e9JBOmgRDtEAc1rG8tv7oEb4C9Mn+Ks+kAAm+AhPhqlKxh51ncEivPxat3oHwiow5vobstkut/65NmgGEsMU1OkAWBC8rvnYcLcTysCDvoOPO203ulLLHYq0tKr4mrtM=
+	t=1744896540; cv=none; b=Ntb8n2RyuGYUxvT8Rj0Z4P1kvnxroz0Ewwz820RSe9pcHT8sx25aPaKU2kXo2pjtjm06p2oifqlYEBi4/9GRrGghz/nMKnfI04Z49gIiC7Gn5SzxkOYozaWHtRKOCiae3NymWD67MzZ6PInXaIR62hxeau+XLJrMMENsGsCi6Lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744896531; c=relaxed/simple;
-	bh=wyDrjObx2d/jAlYGTVoynAezismk4KrEVgvdF/EK0Cw=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Ymg9m8GRmPhMf8pViigwd0mUsdRkDaK0h2u9A77qSXi4W7oBHXj8tDedn/u5THbTUCTLpIv+CghHoiVDnt9sgcelCYJpUOYa1KkhOqfVjCLGA1F3fd3ekRksnqVnmegosxDaJ0RdYz8x36aX8P+EBR0wsoiDrOgA4fceJ3W7fe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=YrWKRm8i; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1744896540; c=relaxed/simple;
+	bh=Wb5FML++ffu7BKTnVHKn9Qktq8g0SdVudA58F5+Hafg=;
+	h=Message-ID:From:Date:Subject:MIME-Version:Content-Type:To:Cc; b=k9jRsHbExytI3OP4J/Q2BBFE+6o1Gd/qW/S64RdS/n1DT94TmHSxgbQ4maUh5QXzAE8axuhmwS8iZIisC9CL4VpzvTktzJ73TXn3xATORmHxiI/vKz1DqoAAgrPFu8Ueu0b17wM21S6lOKf349zq5K4+c5hca2gL+0VvDBxQsgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=QUmikXXv; arc=none smtp.client-ip=162.62.57.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="YrWKRm8i"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
-	Cc:To:Subject:From:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=/rT6d8HNq5uMmOgaei59ZL41n/Gekb+BH3BbOQkgZX0=; b=YrWKRm8iLWrzKXs22fH2ZFc591
-	VHIXU2Z7a5un45v9L0mFpoFxNq+/D2Qy7MN4nxM1pF3dRli0/REiI1lA9IF9vrNh++XFsLO6rnHE1
-	SCVpYuqS6RDrGwVpzXz4upyPzww7MI5TN0DEahaXTJyK0lEgRnXfpsLj37s6cvb7fv0a02encbprz
-	Oh2h9cjfBdN1uCLxse99LvkJ+WtZfN7bl+NkTUvQU7cXsv8Skk45KWSFFIlWQftyqp33WFTf1kU6B
-	7isI2I/CS82M2WgoDx2wjXnh6dpozbRv1h1ahnuNrII/wlOTdItV6Se7dysEZyEKSviCodat746G+
-	be3SYLSA==;
-Received: from [58.29.143.236] (helo=[192.168.1.6])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1u5PID-000ovm-6j; Thu, 17 Apr 2025 15:28:37 +0200
-Message-ID: <f7e388e0-331f-43b3-a1e1-d0c14818e3ad@igalia.com>
-Date: Thu, 17 Apr 2025 22:28:29 +0900
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="QUmikXXv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1744896223; bh=P6Pul/+ArKPg34akN0qY9pzKeWou+xvJwhzhlTJnEiA=;
+	h=From:Date:Subject:To:Cc;
+	b=QUmikXXv1qOIAjI2kO7C5q4dJqxYEVGSea0Q41ROwR71HFHcOf4adngB+dbkshpog
+	 +w8J2Scd8pMS0s+JQMB/GPGACeYPcl5XQe8YwN60kpZFs2JSqIGgEzwVzUCtwUdpv0
+	 KFx2M9hO9/7Ss8Z1qarX9TsNvbUVnyF8dz9gQiuM=
+Received: from [127.0.1.1] ([112.48.46.45])
+	by newxmesmtplogicsvrszb20-0.qq.com (NewEsmtp) with SMTP
+	id 5E928AC7; Thu, 17 Apr 2025 21:23:41 +0800
+X-QQ-mid: xmsmtpt1744896221tejjf7pu0
+Message-ID: <tencent_BA80A2305727877DEE7BE20655D9CA825B09@qq.com>
+X-QQ-XMAILINFO: MllZffuBkEb5SfsZIqWlqfHM8mFg5y9TSNOBVhYHOKcwmrijH8Te5f7Ue4yOKK
+	 zG10c4DkehMtofINRJ5Dc7Uetd4MoNHC1qnAXsZzQs0K98ZGdEDUO9jmpuW+o8wMk/ZXfOEhUZco
+	 4NkaZBoxigVY2LkLdvwvXaC4OAH4w4qx0pTfVGLRpm9IEUdiMTz6u5CMUup3nvXMmqI605yuiLzj
+	 /xkSuhbCeML9Bow1X3bHs8DLTkEcXNl6UWg5JFxCStPSH6cNhgUOjTQWYe4oF0P6rethacc9UAqW
+	 KwTI2jp4ipHDp6EzmeuPKJao3vKYPTH1E9/EcABxweOTFb7OhXLTD92nkqxddzwaj2eaV4QSx3sG
+	 RLou+b2r3AK/8Dt1W497CtzV+BaNrbmGzX12YC2i3SNkprGyfYq16/3R+VAlcb+WdzK5d3UTfEmQ
+	 0upvB1xNbU+CrV13A3RFIi5lcZUXgHkYi20K28/u4QlrPc6z/lr98UCxGl5UNgDSJfrMk+uIo70a
+	 5mjnQvq4NmgqSDeGgW/EwTPvTMbzujyx46P61ZGjJrFkrjLq5mpVVEHak1O0hSyISOeixpXFzt4u
+	 O2cVwdd3YwIr8aRRYDFpeBukDbJi4+kJF655tRQ/I7rSZJZ0OMjvDCz5t7W/DYO9y1PoUFw/FGzr
+	 C24J8f/te8GMX8Ai3d/4pGky7bgaJOLxwdjkLHWRxhiJmqr6v5I2w+WBRQ/iuMnK/OpNZDAEQJoT
+	 NVD9OovwsOuvQJCmwm/nVdbIu+YNwmD988nacO+hP3ZQzNY7ol7Xjq7/c1dp9N1UXGSDOOfBaNKq
+	 3QPt3qZgQIxQH3o3NGXOGumtdCGRanIN7Fr0VnFJb+wH9ogF1llqeGo+n5UDtlRJ72E3qFI4w/ID
+	 8v1wUfqqZj87Im3jVmt7DL+YavDiQ71Cv84/lrN2xoiwNV9SteNWNK5pyZ3qJEKSdJ4ch+fbMWNj
+	 Dflsf7mARKXGZCx1uEZZBfo3+mH9X0TfpsS3nR2Hm9dfs3Mfa74iSSTApquAMUv8YS1OQSpwxBDW
+	 B3foKdBzchIpa/08UHhXrMumXouKE7IFEL+uqMtsdw5tGM12ZTSY2aEWZ2K9D+bOdj3hSCANpLCV
+	 3oZ3Ow
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: Liya Huang <1425075683@qq.com>
+Date: Thu, 17 Apr 2025 21:23:38 +0800
+Subject: [PATCH] of: Build warn for missing fn() in _OF_DECLARE
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Changwoo Min <changwoo@igalia.com>
-Subject: Re: [PATCH] PM: EM: Add inotify support when the energy model is
- updated.
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Lukasz Luba <lukasz.luba@arm.com>
-Cc: christian.loehle@arm.com, tj@kernel.org, len.brown@intel.com,
- kernel-dev@igalia.com, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, pavel@kernel.org
-References: <20250415004215.48757-1-changwoo@igalia.com>
- <d29e4ea6-2bfe-4017-b7c8-0d77613959f4@arm.com>
- <CAJZ5v0jx44heAgXPwCDriGo-xyjX2pUP+PG1cQwjme_=EHo3rg@mail.gmail.com>
-Content-Language: en-US, ko-KR, en-US-large, ko
-In-Reply-To: <CAJZ5v0jx44heAgXPwCDriGo-xyjX2pUP+PG1cQwjme_=EHo3rg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-OQ-MSGID: <20250417-_of_declare-v1-1-945a4b69c984@qq.com>
+X-B4-Tracking: v=1; b=H4sIANkAAWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDE0Nz3fj8tPiU1OScxKJU3cRkC4MkU8sUS1OjFCWgjoKi1LTMCrBp0bG
+ 1tQCd/pH5XQAAAA==
+X-Change-ID: 20250417-_of_declare-ac80b59d952d
+To: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Liya Huang <1425075683@qq.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744896221; l=2083;
+ i=1425075683@qq.com; s=20250415; h=from:subject:message-id;
+ bh=Wb5FML++ffu7BKTnVHKn9Qktq8g0SdVudA58F5+Hafg=;
+ b=AGvWJer6vFeAeJbpmXk0wlvtVa/tkbFAWt9i5DioScxeU0tQOsA578r//3ekgZZW0yNGV5IgB
+ eKSRfH6YwZzCyXeDEflFcqrAPDHzXitr6u0NcfgrH6DsAAuHx4rIzRq
+X-Developer-Key: i=1425075683@qq.com; a=ed25519;
+ pk=nSnzeGGcMXBimuyIWYIZpZRN8DboZqwr67IqWALwrGs=
 
-Hi Lukasz and Rafael,
+The function pointer fn() in _OF_DECLARE macro might be NULL. For example,
+in __reserved_mem_init_node(), only non-NULL cases are handled, and NULL
+function pointers are ignored.
 
-Thank you super much for the comments!
+This patch introduces a check to handle cases where fn() is NULL. If fn()
+is found to be NULL, a warning is issued during compilation to notify
+developers about the missing function pointer.
 
-On 4/16/25 02:05, Rafael J. Wysocki wrote:
-> On Tue, Apr 15, 2025 at 10:31 AM Lukasz Luba <lukasz.luba@arm.com> wrote:
->>
->> Hi Changwoo,
->>
->> Thanks for the patch.
->>
->> On 4/15/25 01:42, Changwoo Min wrote:
->>> The sched_ext schedulers [1] currently access the energy model through the
->>> debugfs to make energy-aware scheduling decisions [2]. The userspace part
->>> of a sched_ext scheduler feeds the necessary (post-processed) energy-model
->>> information to the BPF part of the scheduler.
->>
->> This is very interesting use case!
->>
->>>
->>> However, there is a limitation in the current debugfs support of the energy
->>> model. When the energy model is updated (em_dev_update_perf_domain), there
->>> is no way for the userspace part to know such changes (besides polling the
->>> debugfs files).
->>>
->>> Therefore, add inotify support (IN_MODIFY) when the energy model is
->>> updated. With this inotify support, the sched_ext scheduler can monitor the
->>> energy model change in userspace using the regular inotify interface and
->>> feed the updated energy model information to make energy-aware scheduling
->>> decisions.
->>>
->>> [1] https://lwn.net/Articles/922405/
->>> [2] https://github.com/sched-ext/scx/pull/1624
->>>
->>> Signed-off-by: Changwoo Min <changwoo@igalia.com>
->>> ---
->>>    kernel/power/energy_model.c | 47 +++++++++++++++++++++++++++++++++++++
->>>    1 file changed, 47 insertions(+)
->>>
->>> diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
->>> index d9b7e2b38c7a..0c06e0278df6 100644
->>> --- a/kernel/power/energy_model.c
->>> +++ b/kernel/power/energy_model.c
->>> @@ -14,6 +14,7 @@
->>>    #include <linux/cpumask.h>
->>>    #include <linux/debugfs.h>
->>>    #include <linux/energy_model.h>
->>> +#include <linux/fsnotify.h>
->>>    #include <linux/sched/topology.h>
->>>    #include <linux/slab.h>
->>>
->>> @@ -156,9 +157,53 @@ static int __init em_debug_init(void)
->>>        return 0;
->>>    }
->>>    fs_initcall(em_debug_init);
->>> +
->>> +static void em_debug_update_ps(struct em_perf_domain *em_pd, int i,
->>> +                            struct dentry *pd)
->>> +{
->>> +     static const char *names[] = {
->>> +             "frequency",
->>> +             "power",
->>> +             "cost",
->>> +             "performance",
->>> +             "inefficient",
->>> +     };
->>> +     struct em_perf_state *table;
->>> +     unsigned long freq;
->>> +     struct dentry *d, *cd;
->>> +     char name[24];
->>> +     int j;
->>> +
->>> +     rcu_read_lock();
->>> +     table = em_perf_state_from_pd(em_pd);
->>> +     freq = table[i].frequency;
->>> +     rcu_read_unlock();
->>> +
->>> +     snprintf(name, sizeof(name), "ps:%lu", freq);
->>> +     d = debugfs_lookup(name, pd);
->>> +
->>> +     for (j = 0; j < ARRAY_SIZE(names); j++) {
->>> +             cd = debugfs_lookup(names[j], d);
->>> +             if (!cd)
->>> +                     return;
->>> +             fsnotify_dentry(cd, FS_MODIFY);
->>> +             cond_resched();
->>> +     }
->>> +}
->>> +
->>> +static void em_debug_update(struct device *dev)
->>> +{
->>> +     struct dentry *d;
->>> +     int i;
->>> +
->>> +     d = debugfs_lookup(dev_name(dev), rootdir);
->>> +     for (i = 0; i < dev->em_pd->nr_perf_states; i++)
->>> +             em_debug_update_ps(dev->em_pd, i, d);
->>> +}
->>>    #else /* CONFIG_DEBUG_FS */
->>>    static void em_debug_create_pd(struct device *dev) {}
->>>    static void em_debug_remove_pd(struct device *dev) {}
->>> +static void em_debug_update(struct device *dev) {}
->>>    #endif
->>>
->>>    static void em_release_table_kref(struct kref *kref)
->>> @@ -323,6 +368,8 @@ int em_dev_update_perf_domain(struct device *dev,
->>>
->>>        em_table_free(old_table);
->>>
->>> +     em_debug_update(dev);
->>> +
->>
->> I would move this out of the locked section, below the mutex
->> unlock. Looking at the code in em_debug_update() you are trying
->> to send such notification for each EM's table entry * number of
->> fields, which is heavy. The RCU copy that you get will make sure
->> you have consistent view on the data and you don't have to
->> be under the mutex lock.
+---
+The function pointer fn() in _OF_DECLARE macro might be NULL. For example,
+in __reserved_mem_init_node(), only non-NULL cases are handled, and NULL
+function pointers are ignored.
 
-That makes sense. I will change it in the next version as you suggested.
+This patch introduces a check to handle cases where fn() is NULL. If fn()
+is found to be NULL, a warning is issued during compilation to notify 
+developers about the missing function pointer.
 
->>
->> A different question would be if the notification has to be
->> that heavy?
+Link: https://lore.kernel.org/all/CAL_JsqK733Q9bbxC0Wz5uxyZ9m7bs+bci5kUJF9GJMv73-dO4w@mail.gmail.com/
 
-This is a good question. In this version, I tried to mimic the situation
-such that all the files under a performance domain are updated, so I
-sent inotify for all files.
+Signed-off-by: Liya Huang <1425075683@qq.com>
+---
+ include/linux/of.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-However, that is *not* necessary considering how a userspace code
-monitors the update of the energy model. Now, I think it will be better
-to inotify just the directory of a performance domain (e.g., /sys/
-kernel/debug/energy_model/cpu0). A userspace application just monitors
-'/sys/kernel/debug/energy_model' to get a notification for an update on
-any performance domain.
+diff --git a/include/linux/of.h b/include/linux/of.h
+index a62154aeda1b6a600c2b155ac486c0e0b56e0bf2..99d1d553e65b7970a3ecb5158774ca5185f297a0 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -1523,6 +1523,7 @@ static inline int of_get_available_child_count(const struct device_node *np)
+ }
+ 
+ #define _OF_DECLARE_STUB(table, name, compat, fn, fn_type)		\
++	static_assert((fn) != NULL);	\
+ 	static const struct of_device_id __of_table_##name		\
+ 		__attribute__((unused))					\
+ 		 = { .compatible = compat,				\
+@@ -1530,6 +1531,7 @@ static inline int of_get_available_child_count(const struct device_node *np)
+ 
+ #if defined(CONFIG_OF) && !defined(MODULE)
+ #define _OF_DECLARE(table, name, compat, fn, fn_type)			\
++	static_assert((fn) != NULL);	\
+ 	static const struct of_device_id __of_table_##name		\
+ 		__used __section("__" #table "_of_table")		\
+ 		__aligned(__alignof__(struct of_device_id))		\
 
-The change will be minimal as follows:
+---
+base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
+change-id: 20250417-_of_declare-ac80b59d952d
 
-@@ -14,6 +14,7 @@
-  #include <linux/cpumask.h>
-  #include <linux/debugfs.h>
-  #include <linux/energy_model.h>
-+#include <linux/fsnotify.h>
-  #include <linux/sched/topology.h>
-  #include <linux/slab.h>
-
-@@ -156,9 +157,18 @@ static int __init em_debug_init(void)
-  	return 0;
-  }
-  fs_initcall(em_debug_init);
-+
-+void em_debug_update(struct device *dev)
-+{
-+	struct dentry *d;
-+
-+	d = debugfs_lookup(dev_name(dev), rootdir);
-+	fsnotify_dentry(d, FS_MODIFY);
-+}
-  #else /* CONFIG_DEBUG_FS */
-  static void em_debug_create_pd(struct device *dev) {}
-  static void em_debug_remove_pd(struct device *dev) {}
-+static void em_debug_update(struct device *dev) {}
-  #endif
-
-  static void em_destroy_table_rcu(struct rcu_head *rp)
-@@ -335,6 +345,8 @@ int em_dev_update_perf_domain(struct device *dev,
-  	em_table_free(old_table);
-
-  	mutex_unlock(&em_pd_mutex);
-+
-+	em_debug_update(dev);
-  	return 0;
-  }
-  EXPORT_SYMBOL_GPL(em_dev_update_perf_domain);
-
->> Can we just 'ping' the user-space that there is a change and ask to read
->> the new values?
-
-Besides the inotify, another 'ping' mechanism that I can think of is
-using kprobe/kretprobe. The BPF code hooks em_dev_update_perf_domain()
-using kprobe/kretprobe. When the function is called, the BPF code tells
-the userspace to re-read the energy model.
-
-This is pretty ad-hoc and has two (or more) problems. Firstly, it
-requires another communication mechanism (maybe BPF ring buffer) from
-the BPF code to the userspace. This will eventually mimic what inotify
-does. More importantly, the BPF code has a dependency on the function
-name. The changes in the function name/prototype will break the  BPF
-code. We may consider adding a tracepoint to em_dev_update_perf_domain()
-to avoid this, but to me, it feels like another bandage over a bandage.
-
-Due to this, I think inotify is the right solution to the problem.
-
-@Lukasz -- If you have anything particular in mind other than kprobe and
-inotify, please let me know.
-
->>
->> Another question, but this time to Rafael would be if for such use case
->> we can use debugfs, or we need a sysfs?
-> 
-> debugfs is not really suitable for this IMV and the problem at hand is
-> a symptom of that (but there will be more issues in the future
-> AFAICS).
-
-I agree debugfs is not ideal in the sense that it is not considered as a
-stable interface. We can consider moving from the debugfs to the sysfs
-if there is a consensus. In my view, moving to sysfs is reasonable since
-there is no major change in the debugfs hierarchy since its inception.
-If necessary, I will add the sysfs implementation (dropping the debugfs
-code) to the next version.
-
-@Rafael -- Could you elaborate a bit more about 'the problem at hand'
-and 'more issues in the future'? Once inotify-ing only the performance
-domain directory as described above, I think overhead is no longer a
-problem. Do you have anything particular concerning about?
-
-> 
-> Before starting to invent new interfaces for user space, though, I'm
-> wondering why the BPF code cannot obtain the energy model information
-> from the kernel?
-
-First of all, we prefer a userspace interface over adding new BPF kfuncs
-to access the energy model. The user space has much more freedom than
-the BPF code (e.g., using external libraries and floating point
-arithmetics). For instance, one sched_ext scheduler may leverage the
-energy model information to find the best subset of CPUs given the
-workload using machine learning or some numerical optimization
-techniques. Such approaches are infeasible (if not impossible) in the
-BPF/kernel code.
-
-Secondly,  I am unsure if the current energy model data structures are
-accessible without any modifications through new BPF kfuncs. In
-particular, there are two flexible array members (cpus[] in
-em_perf_domain and state[] in em_perf_table). I guess that the BPF
-verifier may not be able to know the bounds of the arrays.
-
-Finally, even if the current EM data structures are accessible without
-any modifications, I still think adding new BPF kfuncs is not ideal
-because that creates dependencies between the EM data structures and the
-BPF code. If the EM data structures change (e.g., struct name change,
-field name change), the BPF code will break. While there is a BPF
-compatibility feature (CO-RE), managing such changes in the BPF code
-will be painful.
-
-Regards,
-Changwoo Min
-> 
->>>        mutex_unlock(&em_pd_mutex);
->>>        return 0;
->>>    }
-> 
-> 
+Best regards,
+-- 
+Liya Huang <1425075683@qq.com>
 
