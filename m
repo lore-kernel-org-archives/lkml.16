@@ -1,165 +1,203 @@
-Received: from mail53.out.titan.email (mail53.out.titan.email [209.209.25.159])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFB324EABC
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.209.25.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E38DF9EC;
+	Thu, 17 Apr 2025 14:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744899469; cv=none; b=adxzKVnnaeWdO++Cuqi+MPeFPtNoJR30jF58Dl4l79M1y5vBjVUnEflpoaTLA/1fvW7P9JRJ4KkxvwDybR9+C+Fgx1ak7VMJ7+f7qUCdQw31Oz35Fb22hJU7sonjZ6VK5rADjSh+wZrCUkQMdG33ZDA/p5lWQ/QdhuPXpthDZQ4=
+	t=1744899499; cv=none; b=u+nOuFQZJbBRxLdJ19evrFptjRGqw+IuhgJjIAM8raYKJtV2+9k6x6aFXyFqQT5qCkJU1bChOAinGrovUZW2BLdIRfBNBhkCSnnI+MwUSJevt1ePRgC7L/K5J9mz2PgO2kXtC96KImoIgiXGYm9oIH5Gux17ComAFGWpcQ3leAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744899469; c=relaxed/simple;
-	bh=j/PfWcvOdvDX/QR5kqDYMnCt+/AXcLPVxvAygbwKZpU=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=GgkZNMmReVQay9IIoCH6gRivkbGei2iA7+nZ/CehvAyS/03jfFm/ddNk+PQzZ8vjSaRq1MgW8M+pkclzoqwZois/bBpGxRj/129fGcvj+TlSxLT6GTgv+hBfu2FbCuxVe71GSOfT/4Y4qW+D+glmhUCQ1rq3eo46e6/wTPsnf0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=YfXiimzx; arc=none smtp.client-ip=209.209.25.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
+	s=arc-20240116; t=1744899499; c=relaxed/simple;
+	bh=ogbzXbPaaVrpysAm9GDN/zeNCLSQ6+n6Y7bEzCdmPdU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JtTtVknJq6ciDdvXgq0cECCMRymBoZu89xl5U+pXMMxzS+dcZE01jl5FWj6MVuIiv7n/yJZKueZ/OSXv5coQinWQqxf215Z2uLlLyZCBRTm/UHXcKsZu3bPLgAE+CYJc6A2DNK86f5mwbYNBjUAk+FGVbJhCV9QMxki43hhWmCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=I3yzOqP9; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="YfXiimzx"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp-out.flockmail.com (Postfix) with ESMTP id B35D260359;
-	Thu, 17 Apr 2025 14:17:45 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; bh=XnB24iAeGbj6B5uP93ZICmKOLHtGxbBDP9NdC4vj7ME=;
-	c=relaxed/relaxed; d=t12smtp-sign004.email;
-	h=mime-version:from:references:subject:in-reply-to:cc:date:message-id:to:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1744899465; v=1;
-	b=YfXiimzxGicQ+epEfxkoqE365IAHrB4fVc8Fd5giar6CaO/7iG4idJ/+6Yw4Mdn8geGnIOWH
-	hS4Ypf64Oejd5sT66e0zCtGUokHfo+Db8lKA0mY42PuxMrW2H9P+n+39xXyz1gxK2nnPBNzflPC
-	fw8hXNNAgstZe9sCdwLigDqM=
-Received: from smtpclient.apple (unknown [141.11.218.23])
-	by smtp-out.flockmail.com (Postfix) with ESMTPA id 1262F6020D;
-	Thu, 17 Apr 2025 14:17:42 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="I3yzOqP9"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D39E240E0248;
+	Thu, 17 Apr 2025 14:18:12 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id HA1r3aB_pVnO; Thu, 17 Apr 2025 14:18:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744899488; bh=7eQQq1DJrnX54xIua4pvbzUmNo6euVrOC12zQEBYgBA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I3yzOqP9Ki+vlZMXLDagdHXcIu7JS54Hss2AtiMSZE4c6q0dGvlIa/5qQtWXA2aOd
+	 bd3xzVm2kP5vhbhTSQLSb5Ngg36HGCFKGysM/lnosfN9dXuq28ctoXOy92fy45cm+P
+	 PopRH7jDZBJ7iXtfcO4iYItsgpnjQCOcNC15Nuh2B7P/M1FLCv8Z6lYRWAmNV0tp6N
+	 qJM3rUT/DFHXzW0djy4wpVn4e5IZQeOvhdtxSC8BE2zUqdLESlsaq6kS2/SvTHg2LN
+	 vChcaHCWzmVo0cCXc6kGIGAh5XBLF6FroRGhzk8I2DOE7PHmZfJCmq/J1Ssv1/AL0+
+	 JBO4KfdMZduLeAOpezt2KpS3PvkPfRf3F+VBlsiJHsQAvtPGDhiyqk4h4gJZpCAf/X
+	 TB2d43v27ejJ3kw6YBpfwrBfiuIm/bHZdqOxjzUBEur2rHiEYdtrLScSQhVgqNyZ/H
+	 rRH6qm2Rl0PLfAPo2zRP+CraenwGQR6UjU5ZZelixHYDs7dYyWZ6fU/lxDPzHfqf8G
+	 p00yo10/anSMFPHHO3FX9oQZvF0uVA7Qsxqip+ndHF4D1tsJ/OXMPicOFM1o71ECKt
+	 sZ/2qAxoD16OK0+Vd3Pit6iZqwroK5r9vOIYY4HxFhEAxqRFgW4ZXCgczCGma3EE3S
+	 UUtcXHvadTYm/1SPx7RSujWo=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D190840E01FF;
+	Thu, 17 Apr 2025 14:17:57 +0000 (UTC)
+Date: Thu, 17 Apr 2025 16:17:51 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: linux-kernel@vger.kernel.org
+Cc: linux-tip-commits@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, Rik van Riel <riel@surriel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org
+Subject: Re: [tip: x86/alternatives] x86/efi: Make efi_enter/leave_mm() use
+ the use_/unuse_temporary_mm() machinery
+Message-ID: <20250417141751.GAaAENj1RsBOtp2Tvb@fat_crate.local>
+References: <20250402094540.3586683-7-mingo@kernel.org>
+ <174448360887.31282.4227052210506129936.tip-bot2@tip-bot2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [PATCH] md/bcache: Mark __nonstring look-up table
-Feedback-ID: :i@coly.li:coly.li:flockmailId
-From: Coly Li <i@coly.li>
-In-Reply-To: <CAMj1kXHwBKu1K=yjJprnEArZFKphvDPsfZzA5KgTtyo5L866=w@mail.gmail.com>
-Date: Thu, 17 Apr 2025 22:17:30 +0800
-Cc: Kees Cook <kees@kernel.org>,
- Coly Li <colyli@kernel.org>,
- linux-bcache@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A64AEAB9-9C41-408E-8B51-F2F58882CFBE@coly.li>
-References: <20250416220135.work.394-kees@kernel.org>
- <CAMj1kXHfearSZG6TFTxxX87qmRkUmAefQm-TfPNS8j09kWxujQ@mail.gmail.com>
- <994E520B-64B1-4387-8DFF-88755346FE55@kernel.org>
- <208BFA1D-F3E9-4D9F-A4A1-4E4C3F4CA309@coly.li>
- <CAMj1kXHwBKu1K=yjJprnEArZFKphvDPsfZzA5KgTtyo5L866=w@mail.gmail.com>
-To: Ard Biesheuvel <ardb@kernel.org>,
- Kent Overstreet <kent.overstreet@linux.dev>
-X-Mailer: Apple Mail (2.3826.500.181.1.5)
-X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1744899465573767940.5242.3803715497672975691@prod-use1-smtp-out1001.
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=fZxXy1QF c=1 sm=1 tr=0 ts=68010d89
-	a=USBFZE4A2Ag4MGBBroF6Xg==:117 a=USBFZE4A2Ag4MGBBroF6Xg==:17
-	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=VwQbUJbxAAAA:8
-	a=bNni2TGrO3FHrKkdXQAA:9 a=QEXdDO2ut3YA:10 a=2sD_2MczOTEKGp_KAmFJ:22
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <174448360887.31282.4227052210506129936.tip-bot2@tip-bot2>
+
+On Sat, Apr 12, 2025 at 06:46:48PM -0000, tip-bot2 for Andy Lutomirski wrote:
+> The following commit has been merged into the x86/alternatives branch of tip:
+> 
+> Commit-ID:     e7021e2fe0b4335523d3f6e2221000bdfc633b62
+> Gitweb:        https://git.kernel.org/tip/e7021e2fe0b4335523d3f6e2221000bdfc633b62
+> Author:        Andy Lutomirski <luto@kernel.org>
+> AuthorDate:    Wed, 02 Apr 2025 11:45:39 +02:00
+> Committer:     Ingo Molnar <mingo@kernel.org>
+> CommitterDate: Sat, 12 Apr 2025 10:06:04 +02:00
+> 
+> x86/efi: Make efi_enter/leave_mm() use the use_/unuse_temporary_mm() machinery
+> 
+> This should be considerably more robust.  It's also necessary for optimized
+> for_each_possible_lazymm_cpu() on x86 -- without this patch, EFI calls in
+> lazy context would remove the lazy mm from mm_cpumask().
+> 
+> [ mingo: Merged it on top of x86/alternatives ]
+> 
+> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Cc: Rik van Riel <riel@surriel.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Link: https://lore.kernel.org/r/20250402094540.3586683-7-mingo@kernel.org
+> ---
+>  arch/x86/platform/efi/efi_64.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+> index ac57259..a5d3496 100644
+> --- a/arch/x86/platform/efi/efi_64.c
+> +++ b/arch/x86/platform/efi/efi_64.c
+> @@ -434,15 +434,12 @@ void __init efi_dump_pagetable(void)
+>   */
+>  static void efi_enter_mm(void)
+>  {
+> -	efi_prev_mm = current->active_mm;
+> -	current->active_mm = &efi_mm;
+> -	switch_mm(efi_prev_mm, &efi_mm, NULL);
+> +	efi_prev_mm = use_temporary_mm(&efi_mm);
+>  }
+>  
+>  static void efi_leave_mm(void)
+>  {
+> -	current->active_mm = efi_prev_mm;
+> -	switch_mm(&efi_mm, efi_prev_mm, NULL);
+> +	unuse_temporary_mm(efi_prev_mm);
+>  }
+>  
+>  void arch_efi_call_virt_setup(void)
+
+mingo thinks this one causes this:
+
+[    0.119491] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+[    0.119498] x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'compacted' format.
+[    0.137368] Freeing SMP alternatives memory: 40K
+[    0.137381] pid_max: default: 32768 minimum: 301
+[    0.137496] ------------[ cut here ]------------
+[    0.137502] WARNING: CPU: 0 PID: 0 at arch/x86/mm/tlb.c:795 switch_mm_irqs_off+0x3d3/0x460
+[    0.137516] Modules linked in:
+[    0.137526] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.15.0-rc2+ #3 PREEMPT(voluntary) 
+[    0.137537] Hardware name: HP HP ProBook 635 Aero G7 Notebook PC/8830, BIOS S84 Ver. 01.05.00 05/14/2021
+[    0.137548] RIP: 0010:switch_mm_irqs_off+0x3d3/0x460
+[    0.137556] Code: 28 00 65 ff 0d 3e c9 db 01 0f 85 88 fd ff ff 0f 1f 44 00 00 e9 7e fd ff ff be 00 01 00 00 31 ff e8 02 cb fb ff e9 be fd ff ff <0f> 0b e9 6c fc ff ff 9c 58 f6 c4 02 0f 84 c4 fd ff ff e8 46 3b 59
+[    0.137575] RSP: 0000:ffffffffb6a03e00 EFLAGS: 00010202
+[    0.137583] RAX: 0000000000000246 RBX: ffffffffb6c5fd40 RCX: 0000000100238000
+[    0.137591] RDX: ffffffffb6a149c0 RSI: ffffffffb6c5fd40 RDI: 0000000000000000
+[    0.137599] RBP: ffffffffb6bbcdc0 R08: 00000000b357d000 R09: 0000000000000000
+[    0.137607] R10: 000000010ab06067 R11: 0000000000000000 R12: ffffffffb6a149c0
+[    0.137616] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+[    0.137624] FS:  0000000000000000(0000) GS:ffff9b6093385000(0000) knlGS:0000000000000000
+[    0.137633] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.137640] CR2: ffff9b6048601000 CR3: 0000000106c26000 CR4: 0000000000350ef0
+[    0.137648] Call Trace:
+[    0.137653]  <TASK>
+[    0.137658]  use_temporary_mm+0x55/0x90
+[    0.137666]  efi_set_virtual_address_map+0xfd/0x1b0
+[    0.137676]  efi_enter_virtual_mode+0x3e3/0x450
+[    0.137685]  start_kernel+0x6b7/0x720
+[    0.137693]  x86_64_start_reservations+0x24/0x30
+[    0.137700]  x86_64_start_kernel+0x7a/0x80
+[    0.137706]  common_startup_64+0x13e/0x141
+[    0.137717]  </TASK>
+[    0.137720] irq event stamp: 128439
+[    0.137725] hardirqs last  enabled at (128447): [<ffffffffb579dcd2>] __up_console_sem+0x52/0x60
+[    0.137737] hardirqs last disabled at (128454): [<ffffffffb579dcb7>] __up_console_sem+0x37/0x60
+[    0.137748] softirqs last  enabled at (105766): [<ffffffffb56f57b6>] __irq_exit_rcu+0x96/0xc0
+[    0.137759] softirqs last disabled at (105759): [<ffffffffb56f57b6>] __irq_exit_rcu+0x96/0xc0
+[    0.137770] ---[ end trace 0000000000000000 ]---
+[    0.137777] ------------[ cut here ]------------
+[    0.137782] WARNING: CPU: 0 PID: 0 at arch/x86/kernel/cpu/common.c:453 cr4_update_irqsoff+0x45/0x70
+[    0.137794] Modules linked in:
+[    0.137800] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Tainted: G        W           6.15.0-rc2+ #3 PREEMPT(voluntary) 
+[    0.137813] Tainted: [W]=WARN
+[    0.137817] Hardware name: HP HP ProBook 635 Aero G7 Notebook PC/8830, BIOS S84 Ver. 01.05.00 05/14/2021
+[    0.137827] RIP: 0010:cr4_update_irqsoff+0x45/0x70
+[    0.137834] Code: 0b 65 8b 0d d5 3d e0 01 85 c9 74 13 48 f7 d7 48 21 d7 48 09 c7 48 39 fa 75 20 e9 f6 8d b8 00 65 8b 0d 9b 3a e0 01 85 c9 74 e2 <0f> 0b 48 f7 d7 48 21 d7 48 09 c7 48 39 fa 74 e0 65 48 89 3d eb 6a
+[    0.137853] RSP: 0000:ffffffffb6a03df8 EFLAGS: 00010202
+[    0.137860] RAX: 0000000000000000 RBX: ffffffffb6c5fd40 RCX: 0000000000000001
+[    0.137868] RDX: 0000000000350ef0 RSI: 0000000000000100 RDI: 0000000000000100
+[    0.137876] RBP: ffffffffb6bbcdc0 R08: 00000000b357d000 R09: 0000000000000000
+[    0.137884] R10: 000000010ab06067 R11: 0000000000000000 R12: 000000010022e000
+[    0.137892] R13: 0000000000010000 R14: 0000000000000000 R15: 0000000000000000
+[    0.137900] FS:  0000000000000000(0000) GS:ffff9b6093385000(0000) knlGS:0000000000000000
+[    0.137909] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.137916] CR2: ffff9b6048601000 CR3: 000000010022e000 CR4: 0000000000350ef0
+[    0.137924] Call Trace:
+[    0.137928]  <TASK>
+[    0.137932]  switch_mm_irqs_off+0x3ce/0x460
+[    0.137940]  use_temporary_mm+0x55/0x90
+[    0.137946]  efi_set_virtual_address_map+0xfd/0x1b0
+[    0.137956]  efi_enter_virtual_mode+0x3e3/0x450
+[    0.137964]  start_kernel+0x6b7/0x720
+[    0.137971]  x86_64_start_reservations+0x24/0x30
+[    0.137978]  x86_64_start_kernel+0x7a/0x80
+[    0.137984]  common_startup_64+0x13e/0x141
+[    0.137994]  </TASK>
+[    0.137998] irq event stamp: 128723
+[    0.138002] hardirqs last  enabled at (128731): [<ffffffffb579dcd2>] __up_console_sem+0x52/0x60
+[    0.138013] hardirqs last disabled at (128738): [<ffffffffb579dcb7>] __up_console_sem+0x37/0x60
+[    0.138024] softirqs last  enabled at (105766): [<ffffffffb56f57b6>] __irq_exit_rcu+0x96/0xc0
+[    0.138034] softirqs last disabled at (105759): [<ffffffffb56f57b6>] __irq_exit_rcu+0x96/0xc0
+[    0.138045] ---[ end trace 0000000000000000 ]---
 
 
+-- 
+Regards/Gruss,
+    Boris.
 
-> 2025=E5=B9=B44=E6=9C=8817=E6=97=A5 22:08=EF=BC=8CArd Biesheuvel =
-<ardb@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> On Thu, 17 Apr 2025 at 15:12, Coly Li <i@coly.li> wrote:
->>=20
->>=20
->>=20
->>> 2025=E5=B9=B44=E6=9C=8817=E6=97=A5 15:10=EF=BC=8CKees Cook =
-<kees@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
->>>=20
->>>=20
->>>=20
->>> On April 16, 2025 11:16:45 PM PDT, Ard Biesheuvel <ardb@kernel.org> =
-wrote:
->>>> On Thu, 17 Apr 2025 at 00:01, Kees Cook <kees@kernel.org> wrote:
->>>>>=20
->>>>> GCC 15's new -Wunterminated-string-initialization notices that the =
-16
->>>>> character lookup table "zero_uuid" (which is not used as a =
-C-String)
->>>>> needs to be marked as "nonstring":
->>>>>=20
->>>>> drivers/md/bcache/super.c: In function 'uuid_find_empty':
->>>>> drivers/md/bcache/super.c:549:43: warning: initializer-string for =
-array of 'char' truncates NUL terminator but destination lacks =
-'nonstring' attribute (17 chars into 16 available) =
-[-Wunterminated-string-initialization]
->>>>> 549 |         static const char zero_uuid[16] =3D =
-"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
->>>>>     |                                           =
-^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>>>>=20
->>>>> Add the annotation to silence the GCC warning.
->>>>>=20
->>>>> Signed-off-by: Kees Cook <kees@kernel.org>
->>>>> ---
->>>>> Cc: Coly Li <colyli@kernel.org>
->>>>> Cc: Kent Overstreet <kent.overstreet@linux.dev>
->>>>> Cc: linux-bcache@vger.kernel.org
->>>>> ---
->>>>> drivers/md/bcache/super.c | 2 +-
->>>>> 1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>=20
->>>>> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
->>>>> index e42f1400cea9..577d048170fe 100644
->>>>> --- a/drivers/md/bcache/super.c
->>>>> +++ b/drivers/md/bcache/super.c
->>>>> @@ -546,7 +546,7 @@ static struct uuid_entry *uuid_find(struct =
-cache_set *c, const char *uuid)
->>>>>=20
->>>>> static struct uuid_entry *uuid_find_empty(struct cache_set *c)
->>>>> {
->>>>> -       static const char zero_uuid[16] =3D =
-"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
->>>>> +       static const char zero_uuid[] __nonstring =3D =
-"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
->>>>>=20
->>>>=20
->>>> Just
->>>>=20
->>>> static const char zero_uuid[16] =3D {};
->>>>=20
->>>> should work fine here too. No need for the initializer.
->>>=20
->>> =F0=9F=A4=A6 Yes. This is what I get for fixing dozens of these. =
-I'll send a v2...
->>=20
->>=20
->> Can we do this,
->>=20
->> static const char zero_uuid[16] =3D {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, =
-0, 0, 0, 0, 0};
->>=20
->> I like the explicit array element number 16, and the explicit uuid =
-content by obvious zero (=E2=80=980=E2=80=99) symbols. They provide =
-redundant information.
->> Not sure whether GCC 15 complains or not.
->>=20
->=20
-> Even the {} initializer is entirely redundant, given that the variable
-> has static linkage, and so C guarantees that it will be zero
-> initialized.
->=20
-> Could you use NULL_GUID and be done with it?
-
-I feel the =E2=80=9Cstatic=E2=80=9D here is an optimization to avoid =
-initializing zero_uuid again =E2=80=A6.
-
-Kent,
-
-Am I right?
-
-Coly Li
-
-
-
+https://people.kernel.org/tglx/notes-about-netiquette
