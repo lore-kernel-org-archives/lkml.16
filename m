@@ -1,71 +1,72 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813B1221F30
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205D4221F30
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744876411; cv=none; b=kevw21RBl35v/b6OIieNUxfKIH7YeQHRPUl/YUSlrZ8tTrzkPc7UY4n39IlKXssa5XQYHD7AsDE4ewq/lpW43Zajti3TrX5QpnmyzibaU1mRQCg8a1ULlF32CkWiuIs9A9aWIGrAMxZFc4F3vBkOEwbgzCKNPUO+0d1y63ucnjA=
+	t=1744876450; cv=none; b=HFHUluuoAJZ4UgZ+fgmo07spQhnVUohLiWe+5a1tdUHsEx2zCBhEkKQJ5cJER6pIYEVsnmSS1mpFcufO/KTSGjaDUWGMs4qMjYjnjU/D0+CpFwZtgBLcm+knew5itAK8CtdNcXZIMW/vINMpRO1pbQ5HpIOBrfdRnY3Ei4xfs28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744876411; c=relaxed/simple;
-	bh=Q3+YaSQtPKXC0cuE5RjCpyH+Pf71thLokmXHjSKya4A=;
+	s=arc-20240116; t=1744876450; c=relaxed/simple;
+	bh=ut5rPT2VTUeqW60+O7hiE+vw8MaCcc2eRCHNUKfWsRQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XBe7CAviEDieRh842abjG6meVgigDtoRQSNKDMAzaWe1ea9C0me344MW1ucXiNBxuDZ5jAhniPsblgYCNpVxDOBojsH5+W8e+UOx6yM1/y9Vq9hQM60OcM8c+lHaBJJRyW1bQU6r8wTZNtCW+L0qR2tR66OGdW0pQf0lRyR5AEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VFkf4dvL; arc=none smtp.client-ip=209.85.208.175
+	 To:Cc:Content-Type; b=Er+mBH1/W6SviCDBCvHq8FUf+bL4QyPfuCR/+1uwhx1WnUnMoYVaZxtS4OgRllk3Fw0GghWFIOlCV8MJVO4ELWTx4ExoHBb4IbplxKmbyKKNa1pLQHxQFlTpDJXnWh6fX/yxHjNF6I+saP1mi+VznR5sdZu3WD/iengKpRVLV1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=U6S7w+50; arc=none smtp.client-ip=209.85.208.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VFkf4dvL"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3105ef2a070so4756371fa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:53:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U6S7w+50"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30c2d427194so4409791fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:54:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744876408; x=1745481208; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744876447; x=1745481247; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Q3+YaSQtPKXC0cuE5RjCpyH+Pf71thLokmXHjSKya4A=;
-        b=VFkf4dvLKxbatPWImfVfFhvjNhlfjCdJu7/w1DE/80tzosAQTYLLi89ink/uzEnaIo
-         r0vA+MsYx5HR0C/6oUwgGNuR41Oo1+qP5QiOPA8eMcEqCYav84trJCq2k6Ga9u+CdltA
-         RgINGCtHhm2WTDKsuxMiVM7vOPEP5zyClelnQ/vyvrrrbcfTNDLS+bpLx7RFkv3nE868
-         nOAljNlMP3F437YD7qkAuJZ0VOVig8ZXIMmqaND6hSqsTjedZqvdAJyIrWXW/J8xS2be
-         C6GPVc+i5gJsl9q0/Jm6WI8vo5phXiHz8QvNQT22k3ZBlmJj7qpAK9w6N+wBxss1mF1z
-         MeFw==
+        bh=ut5rPT2VTUeqW60+O7hiE+vw8MaCcc2eRCHNUKfWsRQ=;
+        b=U6S7w+50aosanKK79VgLpQqNpCp9dWcSINzBIP0Wa9LqjGeWQ7f/NMfvcBCurMgzaF
+         wDFZ8eo3waQ/trQha5DnR9YXw5FmTgj4VZYeFaAxEn4ZiEs7JAZbzNsk68PV4IXBlFWj
+         ztxkEJiLyFqZho3evWftCunVIJ+vU3586TKzVcBXemxfkL2wgv2CDRM/mYdxH1N+wSFC
+         rwkXGH18NH/uBMe64SnhNy/OM7hJi1rPEYyrZ/8uFo6c/SDKIPhR5aLcbBRsEB/mDTma
+         IiWVSVKiaCqNVl9h4RGF6QcwMfnAXsPMhq0rTyiw9gnOjhfGO3RDTLtSjkI+jgEQaO83
+         BzkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744876408; x=1745481208;
+        d=1e100.net; s=20230601; t=1744876447; x=1745481247;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Q3+YaSQtPKXC0cuE5RjCpyH+Pf71thLokmXHjSKya4A=;
-        b=UEfvSuim8QaAOqQu2tKX9x4M2HJ8D7Ag2gIQ+lzkkCUFXA03ycS7IReJgPCrymvIvG
-         nYblh9VkrkFu6Y7DuYxgbLita3FcItC+ATw7nuprxQ9anmqDjgbeTkDswRMIxcZ3ahC7
-         UIIVpQs5DwTk4jHb6G8+Qe+ebf8/vpRCLTnqqC9PGlXfPu0jjMV4gd9B2t8B4LfR+d/H
-         jkZUlyBN0XPCOQ1kzEM8HD6eX4c2JoRClP0H1xYnl3xsuOAyUeyG3RosbZIyR/0bpBHf
-         IwQLA7FJb9xanQxwOi744QHRlm9dWWortzLJm5pCZiUKSewooh1C+B0EVfTGh8YJNr3d
-         u4Yw==
-X-Forwarded-Encrypted: i=1; AJvYcCVlfs4SsicVg/GI8rGYdsigE2P2c5rnTH9HstUtbrnPgKSIkdcbahTAwhXHtG2hOSzWpzSoBva6TpRVeqk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsIWemdtx3F5nWQ2C/UyuedCYFfBz8+U8Y+4u90VErS4f7dh0u
-	TSeERtfkePwyAvHpqvTPiW/JBHXfCfcGYdR5Id+i8kT2WoxD659er69rZ9iJAt4Y68vdL4xhJj9
-	rnP6d4yQuJTC03es1b5hKv+9PP4RAGw2xTb/E8g==
-X-Gm-Gg: ASbGnctCDILTf3lqmuF3nPuH90IebIyIAu9mFDK4FCZbe1OZiPTEYdhhyLTaTwX4iQm
-	8Dtb6XmRCjTfYjAEMk8pK84suqIBLb1WShV8RrDE+se3MqbQrfDAdnuzJzOCw1b3JxQ5QLrad0x
-	UiNViYNRrqp3dasn541WZsZg==
-X-Google-Smtp-Source: AGHT+IG6fH8i73HZcByMHNF5RXrO9SAK28PBO/AFODMukbnw4fFfbSNlkijjqFOir4rIjJV1QWIs7u0W5Rh/Tw30EAQ=
-X-Received: by 2002:a2e:be1c:0:b0:30b:e983:9ba0 with SMTP id
- 38308e7fff4ca-3107f6cd893mr18106361fa.23.1744876407724; Thu, 17 Apr 2025
- 00:53:27 -0700 (PDT)
+        bh=ut5rPT2VTUeqW60+O7hiE+vw8MaCcc2eRCHNUKfWsRQ=;
+        b=B8PWaRVG2iHDWZcHjlwjtB3IMJc0R4RkTSLy96Aa8cX4v/fjtj2xCaPSchhuP9FGrs
+         qlIF7YmHicKsMps/hq3I10JvDCM88CGkbk2s4zlmb6MaS2n+9yEs0ZfDQsKMU/CpbPQv
+         AluUi3o0bzjzlmwHCcCwc/HZUCNl9K1a2BrSUOlEa18ngdvPTwUr0P1jXwRZ7PycRQbO
+         NHjx/A563/r5ztyassfwm3YDapF7vjXl1fJy0+q4kecSufSLWJIVIKhSwf+UEgKbITjN
+         CbX3t7cCiyXJyvtsqkfohKeYEL5t7pMt28pDJ5JORFT6rWK+XdkXWUASs7g3XehTet/5
+         3lUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWBuSKv+87Gr9mD8KUi7Y4VNIZtAEufsNfV9wIzcl4uDBbPqRfwMRdLxfStp7sqq8wXs42AL15+ARz7Yws=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+J4uBhRHzmMm62nZtJhqOVpZPyO2pUTntZbh2/h28q1h/zDO4
+	eGaWQLXz1mR95u8Ng6U+W07gznydYbQ87wjWi82/nC3pXAwljE0SRvJiU3G/66BgtfKloDUx3ME
+	i6UqlpuUXk7+zUakRWQVSQ40Yq5A3C5GbIl4U7w==
+X-Gm-Gg: ASbGncvn5hb3Pi8/RjU4i7cezd8wrAt7uC8CZKKKHd0wvqDHohynut7bSteyTm9URUr
+	AKTjH71fOAbXwM39BT5pVwQAvkjEhnyvhUXWABN/UKvCg2ShJlMWzopZx8FwFDVFCCZD+i/WZ6e
+	Zre3Tby+7+IQiM1/ztvWLKiQ==
+X-Google-Smtp-Source: AGHT+IHjZpDAVRSAtSwdk/A8DsM8HVBC/wxFZxvv3n/7a1hMa9/G/fFzrK6BK83uA5wxj6J6AevNW2f8vm5mvi82fkw=
+X-Received: by 2002:a05:651c:221a:b0:30b:b908:ce06 with SMTP id
+ 38308e7fff4ca-3107f6ce066mr16224881fa.19.1744876447216; Thu, 17 Apr 2025
+ 00:54:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416-aaeon-up-board-pinctrl-support-v3-0-9ca13aa57312@bootlin.com>
-In-Reply-To: <20250416-aaeon-up-board-pinctrl-support-v3-0-9ca13aa57312@bootlin.com>
+References: <20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com>
+ <20250416-aaeon-up-board-pinctrl-support-v3-1-f40776bd06ee@bootlin.com>
+In-Reply-To: <20250416-aaeon-up-board-pinctrl-support-v3-1-f40776bd06ee@bootlin.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 17 Apr 2025 09:53:16 +0200
-X-Gm-Features: ATxdqUHbFi-Z7SI6e_TKuBrx9cROKcb5-SqU1LRW63Sr0A6JqXuYgLtul-_YeLE
-Message-ID: <CACRpkdYo8bHYKdkFLLqkCTZzy44pk=xPri=E3ogXP=BiywL9zQ@mail.gmail.com>
-Subject: Re: [PATCH v3 00/10] Add pinctrl support for the AAEON UP board FPGA
+Date: Thu, 17 Apr 2025 09:53:56 +0200
+X-Gm-Features: ATxdqUGIgZDMDaG2VPyNwkFLSsmA3QDAeOH0re9zu9lZkKpcDM2AWa8KpN9XBUk
+Message-ID: <CACRpkdbHybj9kZ+X2mdKHPyvcLqxiPfyNjrusjTWAP5Vi4iWaQ@mail.gmail.com>
+Subject: Re: [PATCH v3 01/10] gpiolib: add support to register sparse pin range
 To: Thomas Richard <thomas.richard@bootlin.com>
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
 	Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org, 
@@ -74,31 +75,28 @@ Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <br
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 16, 2025 at 4:00=E2=80=AFPM Thomas Richard
+On Wed, Apr 16, 2025 at 4:08=E2=80=AFPM Thomas Richard
 <thomas.richard@bootlin.com> wrote:
 
-> This is the third version of this series (rebased on v6.15-rc2).
+> Add support to register for GPIO<->pin mapping using a list of non
+> consecutive pins. The core already support sparse pin range (pins member
+> of struct pinctrl_gpio_range), but it was not possible to register one. I=
+f
+> pins is not NULL the core uses it, otherwise it assumes that a consecutiv=
+e
+> pin range was registered and it uses pin_base.
 >
-> The gpiolib part has been reworked, the gpiochip_add_pin_range() was
-> renamed to gpiochip_add_pin_range_with_pins() and a new pins parameter wa=
-s
-> addded. Two stubs were created to add consecutive or sparse pin range.
+> The function gpiochip_add_pin_range() which allocates and fill the struct
+> pinctrl_gpio_range was renamed to gpiochip_add_pin_range_with_pins() and
+> the pins parameter was added.
 >
-> For the forwarder library, a namespace was added and patches were splitte=
-d
-> to more simpler changes.
->
-> In the pinctrl core, the function devm_pinctrl_register_mappings() was
-> created.
->
-> No big changes in the upboard pinctrl driver, only few fixes and
-> improvements.
+> Two new functions were added, gpiochip_add_pin_range() and
+> gpiochip_add_sparse_pin_range() to register a consecutive or sparse pins
+> range. Both use gpiochip_add_pin_range_with_pins().
 >
 > Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 
-From a pin control view this looks fine, I expect the whole thing
-to be merged into the GPIO tree, so I'll just ACK the pinctrl
-patches.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
