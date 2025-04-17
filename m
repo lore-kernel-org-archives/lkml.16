@@ -1,138 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CFE22E40F;
-	Thu, 17 Apr 2025 14:08:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF592512D7;
+	Thu, 17 Apr 2025 14:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744898917; cv=none; b=cAimk9+e/HotBJjfxaYrwNwLT8anmAQT0xSGAVUkv9LT53vt3RnwTh2wgEeE+lHDZ7eO/W+rciMVte3AV0NIDzww4rBTA4fo4a8AmNojFYeM/6xsp+eO5B9ynuGSGTrNoeuPUk4kvMmnibhZduqV+gINVgQfEYD6s2TBhKnbJgU=
+	t=1744898924; cv=none; b=i0v7JQzg/ngRULqX4k4k2fDoUpO0wwN8UHHNnw175CbJyPaGUf1SyDWye9C8dHnmg/mqINblv2v+FxoEM0hQQZbTY5wfSdARZdX6kJSnPkBN3ZRx/l8pbCz6LGW8OTY8LvCL+IedZRLn1B46T9Y1ng81M4a/LWQhxt0IrfYSkfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744898917; c=relaxed/simple;
-	bh=TPLMm1ZndoiDToH+KUk2/lN3biqed27I3c3jpuhsKvA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cfQubIF9JwEsPQxkZ9/UGRTBkdDbUouZfg2VT6MD8A6G/OPBQyMnXUOrEo3iMlsv659Y3zdyAA4rO+RGYA7H9x+kGBSm9ExvMQJ4vVmltcESo4MrcXnV7FK5PnaWn0tXUOHnaqaZ/CzaZez1Z0eABsTxG7k2dDWvAgFvlW0gnEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HZGRSEao; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HZGRSEao"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 256C9C4CEED;
-	Thu, 17 Apr 2025 14:08:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744898917;
-	bh=TPLMm1ZndoiDToH+KUk2/lN3biqed27I3c3jpuhsKvA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HZGRSEaoi+oQbsNROhJiRLUVIfgxqTSPTNtMFtRxthU/aLNxaoIw3NxN7jYvtCKW/
-	 B1Gohm2E9jSlQPq9yNq9CqO8L14Sd88RSaPsAQussnHTiR9RF17mFM0kF8zH7Qzlqf
-	 Lg29hVkepKat6sey+Yce5/KqJ69XEwzyL3NTsyt9rtRxez9GH7jDOv8YdohPlR8FQQ
-	 ZDgamB2stsRFXRN9lsNL+6B9AgaLAushp4m7R1yH6IHQ9QltsAh3Si5wGmSPjKCAMe
-	 yhHWTVcXzh4Msu+VxmWtttSKm45c2PHc5QeyPjW4UjyMiZqnBX9aYeIc3XY4rZaVVQ
-	 EtcZgLS5g8WJw==
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30bfb6ab47cso7492391fa.3;
-        Thu, 17 Apr 2025 07:08:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVXJ3PB+tkhrdwf8Nu6EIaJCrlS+tvUXjblmB+OFnleZeHMXVm/IwxPIjZ7Aihl6w9Dh9ZxXVqHIQvjEjQ=@vger.kernel.org, AJvYcCWffx7OhX9UJ8qKsMdhZIG6t9A4w4nITrpOGqyxkuucxGlsXonFFYYk6qXAg8aVeJZiqqJZwAmobYbYi7F16tk5@vger.kernel.org, AJvYcCXxYLowet4VM/8J7uUE8a/4uLBZ37QnJhD6j8nBLR3P1fFcaOLPQaFHz068iVX5qDQVdch4R7kgBt5NSMB2@vger.kernel.org
-X-Gm-Message-State: AOJu0YwO2CpoCRnxP0CAXS6KDs9yIEVySN1Ulr4ziPpMsfIhgxazxNZu
-	rfHw1I63BUaeimJOcv5ebl4tfU8pubhL+WBi9dJG1BJgaMZUnOEULvtce7Z2luHmFFgInIJsB8P
-	WDWfpVl0AXC6D6/zvilwrNl4nH2s=
-X-Google-Smtp-Source: AGHT+IEaWJ0x/aIHicJH+1QFpi6ZvgoGXGxaTEIbros01uIBaTwGaYG+LL59AV/3MLt6Wza4qg4HBbIxWtRg0LWEKGU=
-X-Received: by 2002:a05:651c:983:b0:307:e498:1254 with SMTP id
- 38308e7fff4ca-3107f73b152mr23930761fa.35.1744898915141; Thu, 17 Apr 2025
- 07:08:35 -0700 (PDT)
+	s=arc-20240116; t=1744898924; c=relaxed/simple;
+	bh=NpvKRT8qb3gzwy4mW7KuevNscS4HRyz37dPBTIaWGO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mdY9F1+CgE+Z+WoBnJTg6srs9hnx41EqHjRiomnhdxyUW/lurxcoKEkqWw5gqbyNxi66Bscmdl3j7Unh3uwHHfoT9cI+PB2VFC6gmlCFqjSSY2k2S0Bh04087nthjBZnbM7gqKLDIbpKKfO77DYFGNWWMNhAciZB3VJKX4JcpdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 62BC72C07110;
+	Thu, 17 Apr 2025 16:08:36 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id D08915D318; Thu, 17 Apr 2025 16:08:37 +0200 (CEST)
+Date: Thu, 17 Apr 2025 16:08:37 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI/bwctrl: Replace lbms_count with
+ PCIE_LINK_LBMS_SEEN flag
+Message-ID: <aAELZfjCCZUE4aos@wunner.de>
+References: <20250417124633.11470-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416220135.work.394-kees@kernel.org> <CAMj1kXHfearSZG6TFTxxX87qmRkUmAefQm-TfPNS8j09kWxujQ@mail.gmail.com>
- <994E520B-64B1-4387-8DFF-88755346FE55@kernel.org> <208BFA1D-F3E9-4D9F-A4A1-4E4C3F4CA309@coly.li>
-In-Reply-To: <208BFA1D-F3E9-4D9F-A4A1-4E4C3F4CA309@coly.li>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 17 Apr 2025 16:08:22 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHwBKu1K=yjJprnEArZFKphvDPsfZzA5KgTtyo5L866=w@mail.gmail.com>
-X-Gm-Features: ATxdqUHUUxsySpjImSVW-rg1mZFOWA4rV7sSuMoXiMZYR4kYnV5xepnxWqT88QY
-Message-ID: <CAMj1kXHwBKu1K=yjJprnEArZFKphvDPsfZzA5KgTtyo5L866=w@mail.gmail.com>
-Subject: Re: [PATCH] md/bcache: Mark __nonstring look-up table
-To: Coly Li <i@coly.li>
-Cc: Kees Cook <kees@kernel.org>, Coly Li <colyli@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, linux-bcache@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250417124633.11470-1-ilpo.jarvinen@linux.intel.com>
 
-On Thu, 17 Apr 2025 at 15:12, Coly Li <i@coly.li> wrote:
->
->
->
-> > 2025=E5=B9=B44=E6=9C=8817=E6=97=A5 15:10=EF=BC=8CKees Cook <kees@kernel=
-.org> =E5=86=99=E9=81=93=EF=BC=9A
-> >
-> >
-> >
-> > On April 16, 2025 11:16:45 PM PDT, Ard Biesheuvel <ardb@kernel.org> wro=
-te:
-> >> On Thu, 17 Apr 2025 at 00:01, Kees Cook <kees@kernel.org> wrote:
-> >>>
-> >>> GCC 15's new -Wunterminated-string-initialization notices that the 16
-> >>> character lookup table "zero_uuid" (which is not used as a C-String)
-> >>> needs to be marked as "nonstring":
-> >>>
-> >>> drivers/md/bcache/super.c: In function 'uuid_find_empty':
-> >>> drivers/md/bcache/super.c:549:43: warning: initializer-string for arr=
-ay of 'char' truncates NUL terminator but destination lacks 'nonstring' att=
-ribute (17 chars into 16 available) [-Wunterminated-string-initialization]
-> >>>  549 |         static const char zero_uuid[16] =3D "\0\0\0\0\0\0\0\0\=
-0\0\0\0\0\0\0\0";
-> >>>      |                                           ^~~~~~~~~~~~~~~~~~~~=
-~~~~~~~~~~~~~~
-> >>>
-> >>> Add the annotation to silence the GCC warning.
-> >>>
-> >>> Signed-off-by: Kees Cook <kees@kernel.org>
-> >>> ---
-> >>> Cc: Coly Li <colyli@kernel.org>
-> >>> Cc: Kent Overstreet <kent.overstreet@linux.dev>
-> >>> Cc: linux-bcache@vger.kernel.org
-> >>> ---
-> >>> drivers/md/bcache/super.c | 2 +-
-> >>> 1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-> >>> index e42f1400cea9..577d048170fe 100644
-> >>> --- a/drivers/md/bcache/super.c
-> >>> +++ b/drivers/md/bcache/super.c
-> >>> @@ -546,7 +546,7 @@ static struct uuid_entry *uuid_find(struct cache_=
-set *c, const char *uuid)
-> >>>
-> >>> static struct uuid_entry *uuid_find_empty(struct cache_set *c)
-> >>> {
-> >>> -       static const char zero_uuid[16] =3D "\0\0\0\0\0\0\0\0\0\0\0\0=
-\0\0\0\0";
-> >>> +       static const char zero_uuid[] __nonstring =3D "\0\0\0\0\0\0\0=
-\0\0\0\0\0\0\0\0\0";
-> >>>
-> >>
-> >> Just
-> >>
-> >> static const char zero_uuid[16] =3D {};
-> >>
-> >> should work fine here too. No need for the initializer.
-> >
-> > =F0=9F=A4=A6 Yes. This is what I get for fixing dozens of these. I'll s=
-end a v2...
->
->
-> Can we do this,
->
-> static const char zero_uuid[16] =3D {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, =
-0, 0, 0, 0};
->
-> I like the explicit array element number 16, and the explicit uuid conten=
-t by obvious zero (=E2=80=980=E2=80=99) symbols. They provide redundant inf=
-ormation.
-> Not sure whether GCC 15 complains or not.
->
+On Thu, Apr 17, 2025 at 03:46:32PM +0300, Ilpo Järvinen wrote:
+> PCIe BW controller counts LBMS assertions for the purposes of the
+> Target Speed quirk. It was also a plan to expose the LBMS count through
+> sysfs to allow better diagnosing link related issues. Lukas Wunner
+> suggested, however, that adding a trace event would be better for
+> diagnostics purposes. Leaving only Target Speed quirk as an user of the
+> lbms_count.
+> 
+> The logic in the Target Speed quirk does not require keeping count of
+> LBMS assertions but a simple flag is enough which can be placed into
+> pci_dev's priv_flags. The reduced complexity allows removing
+> pcie_bwctrl_lbms_rwsem.
+[...]
+> This will conflict with the new flags Lukas added due to the hp fixes
+> but it should be simple to deal with that conflict while merging the
+> topic branches.
 
-Even the {} initializer is entirely redundant, given that the variable
-has static linkage, and so C guarantees that it will be zero
-initialized.
+Hm, perhaps it would be easier to merge this if it would use bit 6
+instead of bit 4.  Then it would just be a trivial merge conflict
+between two topic branches (pci/hotplug and pci/bwctrl, I presume).
+The way it is now, it will require manually tweaking the bit after
+applying the patch.
 
-Could you use NULL_GUID and be done with it?
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -557,6 +557,7 @@ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
+>  #define PCI_DPC_RECOVERED 1
+>  #define PCI_DPC_RECOVERING 2
+>  #define PCI_DEV_REMOVED 3
+> +#define PCIE_LINK_LBMS_SEEN	4
+
+The two newly added bits on the pci/hotplug branch use the prefix
+"PCI_LINK_".  It would be slightly neater if this used the same prefix.
+
+>  drivers/pci/hotplug/pciehp_ctrl.c |  2 +-
+>  drivers/pci/pci.c                 |  2 +-
+>  drivers/pci/pci.h                 | 10 ++---
+>  drivers/pci/pcie/bwctrl.c         | 63 +++++++++----------------------
+>  drivers/pci/quirks.c              | 10 ++---
+>  5 files changed, 25 insertions(+), 62 deletions(-)
+
+Obviously a nice, welcome simplification, shaving off 37 LoC.
+Thanks for doing this!
+
+Lukas
