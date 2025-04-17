@@ -1,182 +1,220 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F642EAE7;
-	Thu, 17 Apr 2025 03:02:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FD63EAE7
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 03:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744858923; cv=none; b=LZ7UqPgWcnQ2JjsqQL5UHHmDv35XvTsdByn+XhYPL8TUaNE54IB0XMDEdAG7LMwIPt61D+Fg5B3P3erpRmjzdczdI4QburoXjFQwNZtDdIXbHKeFLk9U99/jzmpH5ohOwRxsekL9OpIy6jpUh9j4u4+buG4HDicjL5iK72gnRw4=
+	t=1744858941; cv=none; b=dn6TIounJZQs2NFtJVAWpN9dWOv3GuiS2nN5eA26zJBrIX3P/e44kjDpkt7iIMR9rVXIX4kTouOrdjQk8WVuVsCwYTetwesVTdzmyrIzhd1f8KewcyaOH7in+Fv5MjY3sZgojQ6zKHtrd3W0xEXGLf2cH6e48zS10DSCFjqx8kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744858923; c=relaxed/simple;
-	bh=T/PYf6Vx2LUb8e64Vnd3yEiNgyfh6NqOdaYlcfMOnf0=;
-	h=Date:From:To:Cc:Subject:Message-Id:Mime-Version:Content-Type; b=D1P5GL/WR4sCwrBV3y0bRBRQoFNedhxcA8wmYEPz7d0osWtCO+XzlkGfkMtDmTZPc9FK9Wxs2YZ0gs4y/6wdqPxVyW2AuZmBC9/BrVSE1ZVr8A33hpiyRZJTly8mbtNdxv+xgjm2urSWcxPyfguL9ahBl5MUAS62T36G9XYAls4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=B04gTF3w; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744858941; c=relaxed/simple;
+	bh=MvZUt0ebFjlJFJpgqTFcbco2i5jw139SS8bPGEKB6cc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=umwLmPu3g4jYbLOMrNImHmB6CQOHqtPn/NFSYaANMuQYEtrTmOmCtMG79bOe+Wlgb1/brQ0+65Dv9xGz8cB+bUHmAvNdEC6DPVXeK8N3NmGIsUrW12v7xKHbNTZwiulo/5XS2dlOKmixkV7QsCz3y48YRG88HhTwRXJybjg4D9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fZl15HB+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="B04gTF3w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B78DC4CEE2;
-	Thu, 17 Apr 2025 03:02:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1744858922;
-	bh=T/PYf6Vx2LUb8e64Vnd3yEiNgyfh6NqOdaYlcfMOnf0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=B04gTF3wvEr92rOKkULJlBM2mP6V75Pgucz5r8wmx1Y4doQolt2gxYq3zVDUTYzIV
-	 z41JQuA8LNItlDhttJ5dSByP6fp0NMFnq+s3bmKTE4raPhWirDSehls5We8SgjxSD/
-	 ckj/Gs03+PRoQDCY4UVeG+9lkecCDm1sSzXixfzA=
-Date: Wed, 16 Apr 2025 20:02:02 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-mm@kvack.org, mm-commits@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: [GIT PULL] hotfixes for 6.15-rc2
-Message-Id: <20250416200202.f5fe2bc61292d57a7a2346fd@linux-foundation.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fZl15HB+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744858934;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=16YmuC3sgspoT6YKMWDqzrc6wPyEVf4AYJx2YXCwu28=;
+	b=fZl15HB+NkNOeRk47TaS40rEbDaFyik0DkvrFGInoY+ysX15u6iqXFiXWJchX5oWHTQBtN
+	59wwfFOTM+IaHTutcFMGwTC+H9rJd4XJujsYLgmrJ0cG+YAIXlrWQy9IQHM/DhA/5Ym862
+	jzD9rlbsDXPeUxhhXWBcv79Z5O8a5oE=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-170-KfAJNOJhP9quv3iiYW9kIQ-1; Wed,
+ 16 Apr 2025 23:02:13 -0400
+X-MC-Unique: KfAJNOJhP9quv3iiYW9kIQ-1
+X-Mimecast-MFC-AGG-ID: KfAJNOJhP9quv3iiYW9kIQ_1744858932
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DC62D1956088;
+	Thu, 17 Apr 2025 03:02:11 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.38])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 900DB19560B8;
+	Thu, 17 Apr 2025 03:02:10 +0000 (UTC)
+Date: Thu, 17 Apr 2025 11:02:06 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] mm/vmalloc.c: return explicit error value in
+ alloc_vmap_area()
+Message-ID: <aABvLrUdWcLcQO9z@MiWiFi-R3L-srv>
+References: <20250415023952.27850-1-bhe@redhat.com>
+ <20250415023952.27850-6-bhe@redhat.com>
+ <Z_--mXGQwZHdqm8w@pc636>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_--mXGQwZHdqm8w@pc636>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
+On 04/16/25 at 04:28pm, Uladzislau Rezki wrote:
+> On Tue, Apr 15, 2025 at 10:39:52AM +0800, Baoquan He wrote:
+> > In codes of alloc_vmap_area(), it returns the upper bound 'vend' to
+> > indicate if the allocation is successful or failed. That is not very clear.
+> > 
+> > Here change to return explicit error values and check them to judge if
+> > allocation is successful.
+> > 
+> > IS_ERR_VALUE already uses unlikely() internally
+> > 
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > ---
+> >  mm/vmalloc.c | 34 +++++++++++++++++-----------------
+> >  1 file changed, 17 insertions(+), 17 deletions(-)
+> > 
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > index 3f38a232663b..5b21cd09b2b4 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -1715,7 +1715,7 @@ va_clip(struct rb_root *root, struct list_head *head,
+> >  			 */
+> >  			lva = kmem_cache_alloc(vmap_area_cachep, GFP_NOWAIT);
+> >  			if (!lva)
+> > -				return -1;
+> > +				return -ENOMEM;
+> >  		}
+> >  
+> >  		/*
+> > @@ -1729,7 +1729,7 @@ va_clip(struct rb_root *root, struct list_head *head,
+> >  		 */
+> >  		va->va_start = nva_start_addr + size;
+> >  	} else {
+> > -		return -1;
+> > +		return -EINVAL;
+> >  	}
+> >  
+> >  	if (type != FL_FIT_TYPE) {
+> > @@ -1758,19 +1758,19 @@ va_alloc(struct vmap_area *va,
+> >  
+> >  	/* Check the "vend" restriction. */
+> >  	if (nva_start_addr + size > vend)
+> > -		return vend;
+> > +		return -ERANGE;
+> >  
+> >  	/* Update the free vmap_area. */
+> >  	ret = va_clip(root, head, va, nva_start_addr, size);
+> > -	if (WARN_ON_ONCE(ret))
+> > -		return vend;
+> >
+> Not clear why you remove this WARN_ON by this patch. It should be
+> a separate patch or just keep it as is. The warning here can mean
+> that something is really wrong, especially if NOTHING_FIT. So we
+> definitely want the warning.
 
-Linus, please merge this batch of hotfixes, thanks.
+I remember one time someone reported that the slab allocation failure
+triggered this warning which is confusing to them. But yes, it should be
+discussed in a separate post or thread, not appropriate to remove it
+silently. I will add it back in v2.
 
+> 
+> > +	if (ret)
+> > +		return ret;
+> >  
+> >  	return nva_start_addr;
+> >  }
+> >  
+> >  /*
+> >   * Returns a start address of the newly allocated area, if success.
+> > - * Otherwise a vend is returned that indicates failure.
+> > + * Otherwise an error value is returned that indicates failure.
+> >   */
+> >  static __always_inline unsigned long
+> >  __alloc_vmap_area(struct rb_root *root, struct list_head *head,
+> > @@ -1795,14 +1795,13 @@ __alloc_vmap_area(struct rb_root *root, struct list_head *head,
+> >  
+> >  	va = find_vmap_lowest_match(root, size, align, vstart, adjust_search_size);
+> >  	if (unlikely(!va))
+> > -		return vend;
+> > +		return -ENOENT;
+> >  
+> >  	nva_start_addr = va_alloc(va, root, head, size, align, vstart, vend);
+> > -	if (nva_start_addr == vend)
+> > -		return vend;
+> >  
+> >  #if DEBUG_AUGMENT_LOWEST_MATCH_CHECK
+> > -	find_vmap_lowest_match_check(root, head, size, align);
+> > +	if (!IS_ERR_VALUE(nva_start_addr))
+> >
+> Just keep it as it was. No need to check if addr is valid or not.
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+This is to keep consistent with the old code. Before this patch, if
+va_alloc() return vend, it returns directly, no
+find_vmap_lowest_match_check() invocation is done. I tried to keep the
+behaviour unchanged. That code is for debugging, both is fine to me.
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+> 
+> > +		find_vmap_lowest_match_check(root, head, size, align);
+> >  #endif
+> >  
+> >  	return nva_start_addr;
+> > @@ -1932,7 +1931,7 @@ node_alloc(unsigned long size, unsigned long align,
+> >  	struct vmap_area *va;
+> >  
+> >  	*vn_id = 0;
+> > -	*addr = vend;
+> > +	*addr = -EINVAL;
+> >  
+> >  	/*
+> >  	 * Fallback to a global heap if not vmalloc or there
+> > @@ -2012,20 +2011,20 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+> >  	}
+> >  
+> >  retry:
+> > -	if (addr == vend) {
+> > +	if (IS_ERR_VALUE(addr)) {
+> >  		preload_this_cpu_lock(&free_vmap_area_lock, gfp_mask, node);
+> >  		addr = __alloc_vmap_area(&free_vmap_area_root, &free_vmap_area_list,
+> >  			size, align, vstart, vend);
+> >  		spin_unlock(&free_vmap_area_lock);
+> >  	}
+> >  
+> > -	trace_alloc_vmap_area(addr, size, align, vstart, vend, addr == vend);
+> > +	trace_alloc_vmap_area(addr, size, align, vstart, vend, IS_ERR_VALUE(addr));
+> >  
+> >  	/*
+> > -	 * If an allocation fails, the "vend" address is
+> > +	 * If an allocation fails, the error value is
+> >  	 * returned. Therefore trigger the overflow path.
+> >  	 */
+> > -	if (unlikely(addr == vend))
+> > +	if (IS_ERR_VALUE(addr))
+> >  		goto overflow;
+> >  
+> >  	va->va_start = addr;
+> > @@ -4753,9 +4752,10 @@ struct vm_struct **pcpu_get_vm_areas(const unsigned long *offsets,
+> >  
+> >  		ret = va_clip(&free_vmap_area_root,
+> >  			&free_vmap_area_list, va, start, size);
+> > -		if (WARN_ON_ONCE(unlikely(ret)))
+> > -			/* It is a BUG(), but trigger recovery instead. */
+> Keep the comment.
 
-are available in the Git repository at:
+OK, will add it back.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm tags/mm-hotfixes-stable-2025-04-16-19-59
-
-for you to fetch changes up to a727a83ef22591d47e2d219cd8e01bd3616f4611:
-
-  MAINTAINERS: update HUGETLB reviewers (2025-04-14 15:23:17 -0700)
-
-----------------------------------------------------------------
-31 hotfixes.  9 are cc:stable and the remainder address post-6.15 issues
-or aren't considered necessary for -stable kernels.
-
-22 patches are for MM, 9 are otherwise.
-
-----------------------------------------------------------------
-Alexei Starovoitov (2):
-      locking/local_lock, mm: replace localtry_ helpers with local_trylock_t type
-      mm/page_alloc: avoid second trylock of zone->lock
-
-Anshuman Khandual (1):
-      selftests/mm: fix compiler -Wmaybe-uninitialized warning
-
-Arnd Bergmann (7):
-      ASN.1: add module description
-      samples/livepatch: add module descriptions
-      fpga: tests: add module descriptions
-      zlib: add module description
-      ucs2_string: add module description
-      mm/kasan: add module decription
-      kunit: slub: add module description
-
-Baolin Wang (1):
-      selftests: mincore: fix tmpfs mincore test failure
-
-Baoquan He (1):
-      MAINTAINERS: add Andrew and Baoquan as kexec maintainers
-
-Daniel Gomez (1):
-      radix-tree: add missing cleanup.h
-
-David Hildenbrand (1):
-      mm: (un)track_pfn_copy() fix + doc improvements
-
-Frank van der Linden (1):
-      mm/cma: report base address of single range correctly
-
-Jean-Michel Hautbois (1):
-      mailmap: add entry for Jean-Michel Hautbois
-
-Jinjiang Tu (1):
-      mm/hugetlb: fix set_max_huge_pages() when there are surplus pages
-
-Johannes Weiner (1):
-      mm: page_alloc: speed up fallbacks in rmqueue_bulk()
-
-Kirill A. Shutemov (1):
-      mm: fix apply_to_existing_page_range()
-
-Liu Shixin (1):
-      mm/hugetlb: fix nid mismatch in alloc_surplus_hugetlb_folio()
-
-Loic Poulain (1):
-      mailmap: map Loic Poulain's old email addresses
-
-Lorenzo Stoakes (1):
-      mm/vma: add give_up_on_oom option on modify/merge, use in uffd release
-
-Mark Brown (1):
-      selftests/mm: generate a temporary mountpoint for cgroup filesystem
-
-Matthew Wilcox (Oracle) (1):
-      test suite: use %zu to print size_t
-
-Oscar Salvador (1):
-      MAINTAINERS: update HUGETLB reviewers
-
-Sheng Yong (1):
-      lib/iov_iter: fix to increase non slab folio refcount
-
-T.J. Mercier (1):
-      alloc_tag: handle incomplete bulk allocations in vm_module_tags_populate
-
-Takuma Watanabe (1):
-      mseal: fix typo and style in documentation
-
-Vishal Moola (Oracle) (2):
-      mm/compaction: fix bug in hugetlb handling pathway
-      mm: fix filemap_get_folios_contig returning batches of identical folios
-
-wangxuewen (1):
-      mm/hugetlb: add a line break at the end of the format string
-
- .mailmap                                           |   3 +
- Documentation/userspace-api/mseal.rst              |   2 +-
- MAINTAINERS                                        |   4 +
- drivers/fpga/tests/fpga-bridge-test.c              |   1 +
- drivers/fpga/tests/fpga-mgr-test.c                 |   1 +
- drivers/fpga/tests/fpga-region-test.c              |   1 +
- include/linux/local_lock.h                         |  58 +-----
- include/linux/local_lock_internal.h                | 207 +++++++++------------
- include/linux/pgtable.h                            |   9 +-
- lib/alloc_tag.c                                    |  15 +-
- lib/asn1_decoder.c                                 |   1 +
- lib/iov_iter.c                                     |   2 +-
- lib/tests/slub_kunit.c                             |   1 +
- lib/ucs2_string.c                                  |   1 +
- lib/zlib_inflate/inflate_syms.c                    |   1 +
- mm/cma.c                                           |  19 +-
- mm/compaction.c                                    |   6 +-
- mm/filemap.c                                       |   1 +
- mm/hugetlb.c                                       |  23 ++-
- mm/kasan/kasan_test_c.c                            |   1 +
- mm/memcontrol.c                                    |  39 ++--
- mm/memory.c                                        |   6 +-
- mm/page_alloc.c                                    | 128 +++++++++----
- mm/userfaultfd.c                                   |  13 +-
- mm/vma.c                                           |  51 ++++-
- mm/vma.h                                           |   9 +-
- samples/livepatch/livepatch-callbacks-busymod.c    |   1 +
- samples/livepatch/livepatch-callbacks-demo.c       |   1 +
- samples/livepatch/livepatch-callbacks-mod.c        |   1 +
- samples/livepatch/livepatch-sample.c               |   1 +
- samples/livepatch/livepatch-shadow-fix1.c          |   1 +
- samples/livepatch/livepatch-shadow-fix2.c          |   1 +
- tools/testing/selftests/mincore/mincore_selftest.c |  16 +-
- .../selftests/mm/charge_reserved_hugetlb.sh        |   4 +-
- tools/testing/selftests/mm/cow.c                   |   2 +-
- .../selftests/mm/hugetlb_reparenting_test.sh       |   2 +-
- tools/testing/shared/linux.c                       |   4 +-
- tools/testing/shared/linux/cleanup.h               |   2 +
- 38 files changed, 357 insertions(+), 282 deletions(-)
- create mode 100644 tools/testing/shared/linux/cleanup.h
+> 
+> > +		if ((unlikely(ret))) {
+> > +			WARN_ONCE(1, "%s error: errno (%d)\n", __func__, ret);
+> >  			goto recovery;
+> > +		}
+> >
+> 
+> --
+> Uladzislau Rezki
+> 
 
