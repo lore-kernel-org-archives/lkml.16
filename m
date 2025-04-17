@@ -1,67 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B48256D;
-	Thu, 17 Apr 2025 00:58:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202774A05;
+	Thu, 17 Apr 2025 00:58:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744851499; cv=none; b=dAwuJD7z5vNdiayZZHxvREp5TT0sQDimRvuMoXOHAsr6QVpz4jVkoPJ/W3Uj4AtHLZZGAXoZOFSUqRAxJJkYMv/MeabgjwBbysqffNwMvuxOwjxBntG1rzv6n0iVTdtJq0PfDo37RPrRt4Bvw4uEulkvGS3OHMAMMtVthU0pLYE=
+	t=1744851517; cv=none; b=ZZXWMpdWoAhdxDV0Z1OLwMPF6rUMc07ENRgms0z6JpXA24fxSEZz+pIzT+h2jpdtN47hzjLsIpq2+dy0gQz7EAKsGsyMoEkixYIQr3qm1Fp8ANcBzgbnimt2CFNhu/cM4iNCUvqFaaoV+aX0vYAO32c4yL+kARHy++wjy1tPhrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744851499; c=relaxed/simple;
-	bh=mdwBWJFnWt+yos4kCuaEtJ7BaPz/4gkZesgIEnShi0A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p75SOmDHZi39Yith+GpF271LSRk+uiXE9dykQbDWn18Fytn3VTYWhInEqSOimjvXZuh5jFCFA3KQD9pmLwphgoHZLg2PcDHC3Yo9QGnjelBSR/nX6Lj0w+q1o4jwP4kVIBZJe27tHTEOsnX+IG8xWRmoJwzhXR9BgsGPc/3Jvzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N8kzntf4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744851517; c=relaxed/simple;
+	bh=IJ60gUMEGTmb8XxC1mQ13En+4ayrfd2OTpbrOX8ZN1A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cN/yuDYc303I5MoQfhiOOUPmeog5Or9T4nogwRToqJhMFKdNy6tCxjEuGYJ3pVu/3bEglSPIPDp0C+Hr3apEi0B20I+DI0joaXp8/1RFRPiyddpcWaih1C9zupT+aAZ1aNQBaDYGztyFZUF2F+eVA4Tl+EhqeF8tpnOa5rj78/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=asR2gNEl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N8kzntf4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D6E6C4CEED;
-	Thu, 17 Apr 2025 00:58:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="asR2gNEl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FE9CC4CEE2;
+	Thu, 17 Apr 2025 00:58:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744851497;
-	bh=mdwBWJFnWt+yos4kCuaEtJ7BaPz/4gkZesgIEnShi0A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=N8kzntf4t6pE+EZImG5+TA5Tlro1cK+BECpae4bojYT6uZcoQOKi/Y4bx5A+ZMbv1
-	 SELZuZnmosbRlrwHOYqolKBAAqg++R4C1ixRUtNgbaouR4Ze6TsdHjxFr1ne5TeQTd
-	 +SZz1Of7DG15KQzrHRPhnbxJzf03GV4XUPig844x2kQZga6xVTA1xZLzTpMASTa2c7
-	 QJLVVJJk0j2odqITQ3u2a2ZoVid37dSZ5aApbZWt8HwIyZCm+Gt3d/JlnMfiJzIgwb
-	 9Sj8PKDdNMu/bhhhM4rhRJyYxhUFAoClDqP1OfHPOkyNEjGJk/gJZxuHxQzpDoSyYf
-	 WkLatXEZG2Ekg==
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-603f54a6cb5so112981eaf.0;
-        Wed, 16 Apr 2025 17:58:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVdGV/tbshg5eCcM6kjYvm/Vu+sjRVKDByUHJrslOl6XFJ1IHmeTLvG3+UpmVdKvvll1taINyuiGkna@vger.kernel.org, AJvYcCXgZweSEHyx/NPdReQ33UocLaDY9H/3I8d+7DmhPFX/6s/Ur5C0o1p3T02bK1Q2NFPUKqRbGxyphBSM4gcf@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiiyJRT/mbgRWYLWWDnY6bk0HinMAD3/rHdV99Kb1KGOh4AapM
-	h/b3KDBWfbkhrhU6Otm7GpFnh1MULZwVFRKz0ZglXEKyKJL21CHWB7aT72xVUvgxFCL0/A1NgvN
-	IlhUnprpR3a9gmHCwlGVSpxIUlWA=
-X-Google-Smtp-Source: AGHT+IEy1dWiY2l5vX1BBMRM60bEhU8l++DRF2965mxk3GF+QcMTzfMHuDvOwh1jl2izsUQBksyYCyO9TK0nnP1dEOY=
-X-Received: by 2002:a05:6870:9c8e:b0:2cc:3603:f05f with SMTP id
- 586e51a60fabf-2d4d2d7ddbcmr2770411fac.35.1744851496735; Wed, 16 Apr 2025
- 17:58:16 -0700 (PDT)
+	s=k20201202; t=1744851516;
+	bh=IJ60gUMEGTmb8XxC1mQ13En+4ayrfd2OTpbrOX8ZN1A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=asR2gNEl/7FkbuQ+3UP4beLzsskFfi/ipeAnceSSj7rL1aTmcmirHu0ADrFJl1nA8
+	 NmEEUbzJaHKbo/cypO19YlgFaH0l/Y69kfC5sc1VXmOVwHN17FWQxnjaThmZvG6keA
+	 WUBp2Ozj8xPdpuJgpZfzk19Ftd3wsieylcIL2PESPXlY9WM2IwclfL9ln625Ie1xYW
+	 5oNMh/4Kp9JYKR1e5qdre3WUUOyNO66b94MbZMIa8uP1poMII5p/iK1vqRziVmhFga
+	 UqVdL1MpQB5cN0VUkZDBrs3HTR1J1VxPjI76RUpkT16+QpXkTTDI+Wa92QEvL+mK8/
+	 tEc7ZZS/i3oTw==
+Date: Wed, 16 Apr 2025 17:58:35 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Alexey Nepomnyashih <sdl@nppct.ru>
+Cc: Juergen Gross <jgross@suse.com>, Stefano Stabellini
+ <sstabellini@kernel.org>, Oleksandr Tyshchenko
+ <oleksandr_tyshchenko@epam.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Alexei
+ Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend
+ <john.fastabend@gmail.com>, xen-devel@lists.xenproject.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ lvc-project@linuxtesting.org, stable@vger.kernel.org
+Subject: Re: [PATCH] xen-netfront: handle NULL returned by
+ xdp_convert_buff_to_frame()
+Message-ID: <20250416175835.687a5872@kernel.org>
+In-Reply-To: <20250414183403.265943-1-sdl@nppct.ru>
+References: <20250414183403.265943-1-sdl@nppct.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aAAEYYktAh0SOKzb@pc>
-In-Reply-To: <aAAEYYktAh0SOKzb@pc>
-From: Namjae Jeon <linkinjeon@kernel.org>
-Date: Thu, 17 Apr 2025 09:58:05 +0900
-X-Gmail-Original-Message-ID: <CAKYAXd8jAtCvUiMf1oVqsvxum3S638DwMg3FyzXTE=dEJOChKA@mail.gmail.com>
-X-Gm-Features: ATxdqUH9qP13dtYLpAP8jck1RnbVoP_UElKXul1kO3TXGYK7fP-Do4VzINDcK5I
-Message-ID: <CAKYAXd8jAtCvUiMf1oVqsvxum3S638DwMg3FyzXTE=dEJOChKA@mail.gmail.com>
-Subject: Re: [PATCH v3] smb: server: smb2pdu: check return value of xa_store()
-To: Salah Triki <salah.triki@gmail.com>
-Cc: Steve French <smfrench@gmail.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Tom Talpey <tom@talpey.com>, linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 17, 2025 at 4:26=E2=80=AFAM Salah Triki <salah.triki@gmail.com>=
- wrote:
->
-> xa_store() may fail so check its return value and return error code if
-> error occurred.
->
-> Signed-off-by: Salah Triki <salah.triki@gmail.com>
-Applied it to #ksmbd-for-next-next.
-Thanks!
+On Mon, 14 Apr 2025 18:34:01 +0000 Alexey Nepomnyashih wrote:
+>  		get_page(pdata);
+
+Please notice this get_page() here.
+
+>  		xdpf = xdp_convert_buff_to_frame(xdp);
+> +		if (unlikely(!xdpf)) {
+> +			trace_xdp_exception(queue->info->netdev, prog, act);
+> +			break;
+> +		}
