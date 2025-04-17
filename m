@@ -1,110 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2AC1A2554;
-	Thu, 17 Apr 2025 06:16:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4451A1A2554;
+	Thu, 17 Apr 2025 06:16:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744870573; cv=none; b=M31rk4aO1udVZRUvyC7qoCdS9ylnoXg8vVhO56KdF8q42f5tRBs98jpNcusTNKWq2mNqKpKvxYrpXim7EYljxuKGzNUSNj7CERIJLG50jeY5yrhP2VfUv4RBvXmgkE3Sv2KTwYIn/ZyEiAyw90/y8/Dbj8no4m9TcaiTd3zhxYk=
+	t=1744870618; cv=none; b=hcG3mep/fx0qO2Uq9cY7YF6345aQdFLr53BOEwiLllSuv2BhP+cTtelQbLInC53oTjxNtA9ArId4zFtyGdelxs5HOU7zpCZilLoJvQ26AnbR6q4mve+eQu+UWTqS2r455sqvmz6LBqjcprUV/NkSaGpD6bVT8we/XReU1ySCxoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744870573; c=relaxed/simple;
-	bh=RQv/fRgsVHqOkoNjxMHHTJdpzlmuD4NTxtUVWy7n8+Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c4q52jCJM4lNjNbO3Yu1hPs1wI6oEKTGouODcBIjTo0LfJQsMjw04Zj5SFgRvWAkHd+yPhIrwGeeAcqxis2Zas/as5dY8CQN6w5rHSWIssGmoDi+74vvHcAg2Ps+UbiVnvnJBq6eW4TbEFIC+6kX7rEvz8P7cBfSw5DiEscV86g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VTSrLc1t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744870618; c=relaxed/simple;
+	bh=iKWt0M60fm9Kxz2/cP9xQaB/Ji02xwJlF4wlL+lnafE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Qrn783ge14ux3oHx+B+VUK/buUBuGyv1LnN+YihxDSrjAXZGFgbWbuV34FIf2ZgD1qiNVErDZrc//PH2EVQYjJIGc8+Jk0dNESdpLuX8toZs//4WU0yoxIbrroh0vXJnbeMiaZmZwUe++Ab14/+g08x0r+Gtif0HyVfNQYXx/Lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ohQFtaV8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VTSrLc1t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C734C4CEE4;
-	Thu, 17 Apr 2025 06:16:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ohQFtaV8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C038DC4CEE4;
+	Thu, 17 Apr 2025 06:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744870572;
-	bh=RQv/fRgsVHqOkoNjxMHHTJdpzlmuD4NTxtUVWy7n8+Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VTSrLc1ti92MIiis3NS3wxA6xUttc1XaoSYCUcFvVFiY54nVfKJaqv+MQfw3JlChF
-	 5PGrp59sLgTHbpDmmfGDkOEqE2Zinug8s+Eu1YlykmJ+iQU77EFxJ0jV/1+ziOyxpn
-	 VGbAYzH8SezRtk6rOlUVUWzl+hc6050R7GBbRFR8NYrSs6qnyfF87SrFD9IeujBODY
-	 Zpdtkje/6oYiVrm6TyY0p7rnDD8qF7zcvAwDM5f3wQtfZA6IrCw7BRVbQYb0E9U2Pd
-	 aGfOBpPV7ObpIf7l920Tf0pW16Xi6LanOSn78gXtC2yRVVznbJgNFTAXdphorUkBR9
-	 JA+zydFhNAE1A==
-Message-ID: <e46b8bcb-ddf2-457a-b873-af19f72115f0@kernel.org>
-Date: Thu, 17 Apr 2025 08:16:05 +0200
+	s=k20201202; t=1744870617;
+	bh=iKWt0M60fm9Kxz2/cP9xQaB/Ji02xwJlF4wlL+lnafE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ohQFtaV8AQ/3UyPjq/wYUGk6Sr3Paqy7WNSylzEK4l7agYoqUspnOoQ7DNOegWbN5
+	 NMeO7jCg+/k/u15savL93xkZfLsgMz+EmjdWS2VwmEiEYyhOuAQNdM09+zyMNgXDBn
+	 PeUBKpiRhP/tGfg3VYFMhFjk9w0ZvRD6F5IeiBM1ZibU+3uGdfZ26QJZzu6H7XcoCR
+	 IP+r4Yk8HWgmxLjEi2bo85bdrxMcrj5mOvYjOLtUCNGg+DM1prfR9HuREzfxXVi1f8
+	 lCGfsgmWY8ax5+wjE5PEk5RAKvs3rNOZVWMDR8bsgwmsrVAN2QreYCiU+RwLMfq2+b
+	 JmlKY7RhB3lNQ==
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30bfe0d2b6dso3877801fa.3;
+        Wed, 16 Apr 2025 23:16:57 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU+YXrMEPPsrD6e6c6LvmwKtJcgIPhhSs4kLTLZ65kRaYmwobLkb6zo/L+jtshyPZ4BbWa6TxPda5HmO2BV9gOd@vger.kernel.org, AJvYcCUGoDWTR4o4A1MHvN3F5fK4SKK2+ozYGHbjI/gyCHgmI5M4+bbeYFH+PBQCuQQltoY+lrTV/qidZulPrCih@vger.kernel.org, AJvYcCXjuJzzSnnrDgiBKqUeweV20nY258pcP07uRyOXHzP36i+lLEg+M9XrUeAQtZGQzuTjdetIX6ufUema8o8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQZo1TfWEkp5TKp5TKkzSJ2y5oIB7ZvootesIayhqaCvZd4bmd
+	O0V9ZwHt2HMlLl/j5qwib4fOn3uRJODvR4ANwAD0u6NHxi/s1XCasR/aQ0j7AKSCN0lQGlZqBW4
+	b816buFkwv6WgQ/0d3Svn7egHbhw=
+X-Google-Smtp-Source: AGHT+IFJFMhcRogBoh9bsWUtiURFChPdUG1PiejQs+Hcg18HHSr74LoMxvw9NZJZnU+cTYLcSStKzPSy+E5M13yNz54=
+X-Received: by 2002:a05:651c:883:b0:30c:460f:f56 with SMTP id
+ 38308e7fff4ca-3107f6cdf12mr15064411fa.20.1744870616089; Wed, 16 Apr 2025
+ 23:16:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 05/10] dt-bindings: mailbox: add cix,sky1-mbox
-To: Peter Chen <peter.chen@cixtech.com>, soc@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com,
- will@kernel.org, arnd@arndb.de, jassisinghbrar@gmail.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
- maz@kernel.org, kajetan.puchalski@arm.com,
- Guomin Chen <Guomin.Chen@cixtech.com>, Lihua Liu <Lihua.Liu@cixtech.com>
-References: <20250415072724.3565533-1-peter.chen@cixtech.com>
- <20250415072724.3565533-6-peter.chen@cixtech.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250415072724.3565533-6-peter.chen@cixtech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250416220135.work.394-kees@kernel.org>
+In-Reply-To: <20250416220135.work.394-kees@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 17 Apr 2025 08:16:45 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHfearSZG6TFTxxX87qmRkUmAefQm-TfPNS8j09kWxujQ@mail.gmail.com>
+X-Gm-Features: ATxdqUEXLNTaidkdZkAuf5TP88fl1OFyAaAm6dy4iq9wo3sfgOFtsjB0k1CMTa0
+Message-ID: <CAMj1kXHfearSZG6TFTxxX87qmRkUmAefQm-TfPNS8j09kWxujQ@mail.gmail.com>
+Subject: Re: [PATCH] md/bcache: Mark __nonstring look-up table
+To: Kees Cook <kees@kernel.org>
+Cc: Coly Li <colyli@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 15/04/2025 09:27, Peter Chen wrote:
-> From: Guomin Chen <Guomin.Chen@cixtech.com>
-> 
-> Add a dt-binding for the Cixtech Mailbox Controller.
-> 
-> Reviewed-by: Peter Chen <peter.chen@cixtech.com>
-> Signed-off-by: Lihua Liu <Lihua.Liu@cixtech.com>
-> Signed-off-by: Guomin Chen <Guomin.Chen@cixtech.com>
+On Thu, 17 Apr 2025 at 00:01, Kees Cook <kees@kernel.org> wrote:
+>
+> GCC 15's new -Wunterminated-string-initialization notices that the 16
+> character lookup table "zero_uuid" (which is not used as a C-String)
+> needs to be marked as "nonstring":
+>
+> drivers/md/bcache/super.c: In function 'uuid_find_empty':
+> drivers/md/bcache/super.c:549:43: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (17 chars into 16 available) [-Wunterminated-string-initialization]
+>   549 |         static const char zero_uuid[16] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+>       |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>
+> Add the annotation to silence the GCC warning.
+>
+> Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
+> Cc: Coly Li <colyli@kernel.org>
+> Cc: Kent Overstreet <kent.overstreet@linux.dev>
+> Cc: linux-bcache@vger.kernel.org
+> ---
+>  drivers/md/bcache/super.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+> index e42f1400cea9..577d048170fe 100644
+> --- a/drivers/md/bcache/super.c
+> +++ b/drivers/md/bcache/super.c
+> @@ -546,7 +546,7 @@ static struct uuid_entry *uuid_find(struct cache_set *c, const char *uuid)
+>
+>  static struct uuid_entry *uuid_find_empty(struct cache_set *c)
+>  {
+> -       static const char zero_uuid[16] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+> +       static const char zero_uuid[] __nonstring = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+>
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Just
 
-Best regards,
-Krzysztof
+static const char zero_uuid[16] = {};
+
+should work fine here too. No need for the initializer.
+
+
+>         return uuid_find(c, zero_uuid);
+>  }
+> --
+> 2.34.1
+>
+>
