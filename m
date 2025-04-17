@@ -1,128 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E988F1F12F2;
-	Thu, 17 Apr 2025 06:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FC01F1526
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 06:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744870038; cv=none; b=Pi8oNmnN8/ps6ZlC6XXp4DRGfMJB0Q8zBH7SzlfUleAgyQdZccf5qQkWVPceFPTu90YX8MVtuaFHn+V/Uq4d7Z0WNrl/5OAAyx4btqKTBBLyz2Q/6sjKT+4MhGD/GvplU2yuYvRX24hcyyqVDx3BmnSOF0B3QMZ6dAW3GVKIMGc=
+	t=1744870065; cv=none; b=PND3ro+dHosmuJ6sMAAN1MZ5OiNJuIZVPcJt8QX2y27uRDfJQyOI+JAI8AR2CR2TtogoTi2Y9/kV6S8Fnmjy16xIawABaYwagyA8uFop8CCLGuiSlj9RSM8KsBoZODfeu+J9OHTyDDXFCVKYOeL4GEsiSppT+iZvQlWShRxuSek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744870038; c=relaxed/simple;
-	bh=T0O/tNUKkb54MomY9u1IkE+AolkQsb1wSNigh3NAVIw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sEaCjPfloNllbgiZl3dz6/NR3GAtgxLiGKbf4cXraBFhZ9OA6Z3RGILd6/lehZxHXMC5XCiBVMJ/VXnjZOE0jnQV2Mt3dh9XaBQ8NE4rXfLczlfx/j7YKwcY5DC6WXO3D8bftNMfxC6DV07SCsgj8a6dsCCU1pucbFLjK6JOxfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dt2i8lYs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744870065; c=relaxed/simple;
+	bh=SJ5pp2PEFU9Mosrf8HZCUtQXVnazURuiUC73cKCZalg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OB9xLh8XVoME29354bgpSf++2mzQ4cUjTzk4sp+VkPk40uCLP3ci4UtqKlBocl11YLZymOEIjVK3wATX+QfMaGOGZS9YOkIjLxi3jLLWH1EiH70Bl/qCTrUGsIpUNEVsmhp2tjZa35Z1vnYSKytmAmHL5sLvEJEbkux/zdiWJP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B3L/KVTG; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dt2i8lYs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6720C4CEE4;
-	Thu, 17 Apr 2025 06:07:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744870037;
-	bh=T0O/tNUKkb54MomY9u1IkE+AolkQsb1wSNigh3NAVIw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dt2i8lYs+vcjVDnLlSyLo+fncM+M8xA20OuARj3Ov4wowD50gJVTsp+2pT9868d0K
-	 gkwd4tQOgk4QarfZ7QLKjkMp6l+j0GTJtG/XaFAGbC8Rb/sXw7TQ4gb54daX8fosHN
-	 DGOgNSPQ4l+ggFNyLkFEiAJasWdlC0qNVrKLDoEgU+cuX+b9X9aRGi1SdShWQSQNZa
-	 Ex4VERx0dsvmSOzKzsuUg9i8vyuB1fv5/a0dVvu+lEfQv75pBmwhpAfuPfP71OmLcD
-	 dLXXbdTj0IxXm/KywOKwZku8hwVP+MKfKGOiltsPjoqbyyfK9pa2yz1tGW7YJsM1I0
-	 OK6sCE1IsEi+A==
-Message-ID: <d2f07476-d65e-4fc5-ad15-222cd6f749bd@kernel.org>
-Date: Thu, 17 Apr 2025 08:07:11 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B3L/KVTG"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-73bf1cef6ceso331332b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 23:07:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744870063; x=1745474863; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Pd6OOWCuIIKAwnNGxCiRtg0jiUDcshaa45Tlc/bukVw=;
+        b=B3L/KVTGfswXOANfd8zfHIHCi2/25FkO3qJf9/Ju8b8fvrUzjuK6ZjErL1neYzsJXz
+         dkVU4OnqlgHmFjbuMxHYCH+g1a6PyR9lJflK+CeI3lJE/xrycUNIaMaPgQ9WHiAHf7wp
+         EEECLJa9tEVoKrBqTmq7lLoyeFhpJgXbogr3Pw6iR+sSI0nuRaORIBEPih/lZgaeITf1
+         ZgTODtNrugc4IU5cZ0ZFkiZGVES8B4hc9UYznpJlwJPZ815QBKbWQ3XfF+kE8bER/fnR
+         YXrCAfCuh+43sZxbfFxOaQ4wqX0h7WqPjbIruEc4NgzvX3+CSLegN73HNAZY+VMVdb+4
+         UKPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744870063; x=1745474863;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pd6OOWCuIIKAwnNGxCiRtg0jiUDcshaa45Tlc/bukVw=;
+        b=uG6P7VEO8LYLSHKCCHjgCmHF/DY3HuYfWU739rC+ioqBGTsPp/BShpvNInP2XU2B3C
+         fIKfSPNS+cz85DGVuqpvRJ9mVcSbV9rHRn2FxebLbf5PGiCJyNUDTcXnUjtSrACyeYFh
+         nvpU1bdT497QkyUjxp8bNfmSRnaFl39pJW0eTY/LZdQaxVFRM3uEXHELLLtM2jM1/zhL
+         cHV66wponDHVN71X+KvLhBwDCTOm4CwoMHdK6/MjnSo3R2EZ89pqU2y+WHa/82Zi+3QO
+         gbRD9PrAC7V/yBZPoqsBntdBCFmFAWJpLQWQjCm29nYS6O0mGkttSvuvOoU2oYyO5Pd+
+         Dh+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUbilpqZZ7gfuyn8tMEs7ktLGbQSEGm9UrFTv54TIvSdv/iOgnxlGTpWNz26Eswwd/UBw5qMkFg9jDEPmE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwE+owjn91Dh9i7vNYQEeja4f7TPVYyckgnNiHTgD3grhCvrrsp
+	uUhGWiL1uYYBrage9btrMlevwVhhgFiGwMvZmBGBCa/Q4p0WAIAM6c3rbrsDY2yRKvV/tCHgYGM
+	=
+X-Gm-Gg: ASbGncuTKNVRw1rwlV83839aDiYlzEF0gSso3dhvHvOV4p1sEHuYouT3caoKFoaZgBa
+	OzVh56zTIiwL8hKbJl+DaNCD5HxsJ1cLet2sG927wiuoXiw/ZJ2dIA+Mlyl5GxTUn/+k8Jd/5tn
+	dEg8po+/OSC65Gqj7BGf8+PZ/wvIV3prb/L0IA62r4sWOY0nrJawhiYP2ypYYC0pk4Yfb/y5qj0
+	kIGQxHpRh2ENxPy271rHjfmsSlndbLpI2FEDwHeqxKBcj/CbmDPSN8F+jlVy393UXO5sr3sXX4z
+	GH1uxXdCEWvdvH8dXVDvM3RNLUrwbyTKxeulN3H6J8M6WG8K
+X-Google-Smtp-Source: AGHT+IEGKe8IgUll51m3XVZ/pKTgzfl3xR85lF+5Mw9zim0JsXl11h/TRDH0YYgMcdLUzmlGXqar4A==
+X-Received: by 2002:a05:6a00:240c:b0:736:5725:59b4 with SMTP id d2e1a72fcca58-73c266b5fcfmr7618028b3a.3.1744870062780;
+        Wed, 16 Apr 2025 23:07:42 -0700 (PDT)
+Received: from thinkpad ([120.60.54.0])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd23351fbsm11902923b3a.171.2025.04.16.23.07.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 23:07:42 -0700 (PDT)
+Date: Thu, 17 Apr 2025 11:37:38 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Veerabhadrarao Badiganti <quic_vbadigan@quicinc.com>
+Cc: Vivek Pernamitta <quic_vpernami@quicinc.com>, mhi@lists.linux.dev, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bus: mhi: host: pci: Disable runtime PM for QDU100
+Message-ID: <o7rv3xgg3btaoqjlzfenbfkrp3fuw54cx6zqojclcfslfg3ha4@c3sqaqqdjdjv>
+References: <20250414-vdev_next-20250411_pm_disable-v1-1-e963677636ca@quicinc.com>
+ <ec99379e-fd54-42b0-a383-8ed212072396@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 12/13] ARM: dts: vt8500: Add VIA APC Rock/Paper board
-To: Alexey Charkov <alchark@gmail.com>
-Cc: Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mmc@vger.kernel.org, netdev@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
- <20250416-wmt-updates-v1-12-f9af689cdfc2@gmail.com>
- <8feea1ba-2d4a-4898-9882-cf3ec8b03852@kernel.org>
- <CABjd4YzkUYE3B7sPCm97NFcv7=nkwQTNFjSiomjCHzTFRDCLZg@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <CABjd4YzkUYE3B7sPCm97NFcv7=nkwQTNFjSiomjCHzTFRDCLZg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ec99379e-fd54-42b0-a383-8ed212072396@quicinc.com>
 
-On 17/04/2025 08:01, Alexey Charkov wrote:
->>> diff --git a/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts b/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts
->>> new file mode 100644
->>> index 0000000000000000000000000000000000000000..58b3c8deb4f20ae072bf1381f1dfa5e5adeb414a
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts
->>> @@ -0,0 +1,21 @@
->>> +// SPDX-License-Identifier: GPL-2.0-or-later
->>
->>
->> Odd license, we don't do GPL v4 in the kernel. We do however dual
->> license for bindings and DTS. Why choosing such license? Did you take
->> the code from somewhere?
+On Thu, Apr 17, 2025 at 10:00:38AM +0530, Veerabhadrarao Badiganti wrote:
 > 
-> I picked the license identifier of the wm8850.dtsi include, which
-> defines most of the functionality for this board. No preference from
-> my side, and happy to use whichever license is common practice for
-> DTS, but I'm simply not sure how differently licensed files and
-> includes combine together - thus the conservative choice to stick to
-> what's already there. The original .dtsi was written by Tony Prisk,
-> not me.
-OK, that's fine.
+> On 4/14/2025 1:17 PM, Vivek Pernamitta wrote:
+> > The QDU100 device does not support the MHI M3 state, necessitating the
+> > disabling of runtime PM for this device. Since the PCIe core framework
+> > enables runtime PM by default for all clients, it is essential to disable
+> > runtime PM if the device does not support Low Power Mode (LPM).
+> > 
+> > Signed-off-by: Vivek Pernamitta<quic_vpernami@quicinc.com>
+> > ---
+> >   drivers/bus/mhi/host/pci_generic.c | 10 ++++++++++
+> >   1 file changed, 10 insertions(+)
+> > 
+> > diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
+> > index 03aa887952098661a488650053a357f883d1559b..a011fd2d48c57cf9d1aec74040153267a206d797 100644
+> > --- a/drivers/bus/mhi/host/pci_generic.c
+> > +++ b/drivers/bus/mhi/host/pci_generic.c
+> > @@ -43,6 +43,7 @@
+> >    * @mru_default: default MRU size for MBIM network packets
+> >    * @sideband_wake: Devices using dedicated sideband GPIO for wakeup instead
+> >    *		   of inband wake support (such as sdx24)
+> > + * @pm_disable: disables runtime PM (optional)
+> >    */
+> >   struct mhi_pci_dev_info {
+> >   	const struct mhi_controller_config *config;
+> > @@ -54,6 +55,7 @@ struct mhi_pci_dev_info {
+> >   	unsigned int dma_data_width;
+> >   	unsigned int mru_default;
+> >   	bool sideband_wake;
+> > +	bool pm_disable;
+> >   };
+> >   #define MHI_CHANNEL_CONFIG_UL(ch_num, ch_name, el_count, ev_ring) \
+> > @@ -295,6 +297,7 @@ static const struct mhi_pci_dev_info mhi_qcom_qdu100_info = {
+> >   	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
+> >   	.dma_data_width = 32,
+> >   	.sideband_wake = false,
+> > +	.pm_disable = true,
+> 
+> |no_m3|orno_|m3_support|would be more suitable than|pm_disable|
 
-Best regards,
-Krzysztof
+Yes!
+
+But does the device not supporting M3 only or D3Hot also? If the former, then we
+should prevent MHI host to enter/exit M3 state in mhi_pm_suspend/ mhi_pm_resume.
+There is an incentive in allowing D3Hot if the device supports it.
+
+Also, is there a way we could probe M3 support in the device so that we can
+check it during runtime?
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
