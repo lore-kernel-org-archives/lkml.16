@@ -1,156 +1,225 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F4061253B4E;
-	Thu, 17 Apr 2025 15:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A45C2512D8
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744904930; cv=none; b=jXDzA53St8R/ufOAG9FsDpJPezwDODye2x0HZhM1+ComDwjnLFbdnV5d/vUPTAMbe/40p5Kj4Ienw5zSHFJq1EXG6U91Cg6SJ3iONUVjVmPy5aXZVlV3ZABElRwNGicU4e3dgbYntcB+a1Eljbom7BjF1JmynQfEInr7hXbtI9o=
+	t=1744904943; cv=none; b=eTKwU+tx16BC/xbp9AKo9DRr/+La0WcUsw2HPgny5D218Mu8FWcSJyikgXy7Py1qUqDKLfl5pV+iDgLTikxhpRchlsqBxZYCgmRi4h3qk0kZStGI6faofcanUkbFa7AJOki/k2EpG9pgjONanbUcPOXbymLlE913z8ir2ZbliW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744904930; c=relaxed/simple;
-	bh=ClRmIN+7tcZ09syy4bcP8WJEVYYf/AZpRlc74JwrGSQ=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=eUz5fP4rm+npAdnFY6m8VaZ2V1lOnQzDd3rjGWqYbV0qiC6Rwh7TSSB03P0P3gYx9yzEiXF/z40ctkX4Y29ZHeCkiqFkZHYBSyPHX6GkIzKhaK+uSQa4xSyq5HRvdqpZTSDCIpqyT5AzAz37S8ok7sYGzwQVOieT/KvFvK1zFUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aAzE6QCM; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744904943; c=relaxed/simple;
+	bh=kgoA1OsnIEpPfp9OYmdCsuzTPHeFuBryrSbwkurdgWE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=YjYK5NlGjw52U+SQP1VqZ1MXO9X2A4daOy03OdVUowbxvPwXY5wN5/vtkAN8T+HwJPTeV1X7lyk20xErydl9edKH8FX5nRUFbFPszoF3dmty6YSkLgOogdrFLGnN6sIUG7sYOxyw6QQv77sR8DPexceCiYZfa3kSDwUAIvDT3+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mRRudHY+; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aAzE6QCM"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c56a3def84so79573385a.0;
-        Thu, 17 Apr 2025 08:48:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mRRudHY+"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso7003055e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:49:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744904928; x=1745509728; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ClRmIN+7tcZ09syy4bcP8WJEVYYf/AZpRlc74JwrGSQ=;
-        b=aAzE6QCMP/GKADwXGHt6g8QlQxalaeZaeYcNUwpOQt+hE1pcj88ShNwx+mO+YP8aw+
-         lv29Vz3IGbQecmZMHS0Em6k//Mfiq80i9cAMxv4AFdtJPz0ccJEIgbOtDSPrhF2OFvHk
-         2ikdPI0WZGWeX/sfVTcAzMl2raMkad93IEuCA/csuOHd33jLAKeGRQnl3wpsJwCACnqG
-         3MN1V/rbIfW7ldB8BFO4ON0wHEfYN35Xh71Q/BXKhnCElr2D7dNdT7+0s3dmwBvofpg8
-         UK9TbwW99s21tKQcX3rhx7kOtGlnQpqmXQ1LAOrlE2a+mbittz7WW8OMIt5pojLNdT3N
-         Fe7g==
+        d=linaro.org; s=google; t=1744904940; x=1745509740; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lxs3pbRmeZljAVv85dIFV0auKcBCxEW2zKAGoLO6chg=;
+        b=mRRudHY+tclsmuBI1ARNIuyyipWQGIRpVT4bHDMrLomcDRIw64zjXcj975vyZIQauN
+         aXxVSNn2bZi5y2CsajeHMbtfW6ttCG9fL0IrG7KZBcljIm3qAxG3Ev/xPNODrzXCHSEW
+         3G3M+/hD46CedSslh+ovL8jI0RzFYB78h+puW/iFMMTWX6QbnjvVtrnJtInlc7IVnTBB
+         IU4YLzPBdY4tU987wf4mDFUC8FJQpB4H13Vdmvwge3DfHGE+PZVsBgBopnNAqXRcyY2L
+         X4deAnFnfywu6hLD+bgL7Fsvx4gRRR3o1/Ur8jL6vUFy2Sm6EsmiZ1Iv61doL/rg/QfJ
+         7Osw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744904928; x=1745509728;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ClRmIN+7tcZ09syy4bcP8WJEVYYf/AZpRlc74JwrGSQ=;
-        b=MFVnfXOF8FZUbTV+P6iguGP8k6WtXwWe86pFSbvZdjyc30XRygI1cfqRFVKT2KmC7c
-         UU5e0MItqs9G2ZnveCNsbr3IdtWP+X+lYa/KVG+jANr8a/Pin9kYttBo+K95XH6FUWHw
-         7+8adKBAWFsL6ATlO6HAwPUlZdMCuOpb0TmPDd4yiE2dMKpDnqAQ341zk+fk8G0xSmGH
-         cN0VRvQSh+zJi3shjctqpFnD2rEBr40sTCJlY5sTioHqTW5wCXL6gsswXeo1jroZSHnK
-         igQPv1tzhlShJOxHvwTOAOPkD+EGBwg6HqglludXCi+do1qdX07d3haefYwXXOxxwIe0
-         AE4A==
-X-Forwarded-Encrypted: i=1; AJvYcCWctkgWYEiFB4PDdQYpEZisLgKHTGVcGJB2kVKJxrbciBOIYmjYJ8hWEwyaC1J8+XlViP5fyyn1@vger.kernel.org, AJvYcCXNlpYe+tSnWxwtrHJFngbZARA2+Mg/XeudCB3u1hpkFHiqqHhkLImmUW8u897rT7lY3GliXMXuB+41iEk=@vger.kernel.org, AJvYcCXzLQZA54cnUAJB3Ahi+7IYTtRYgi+JSo3G89G3k4ZtpHwvF5g/owIWVKATTl9n07fRuPRzx7x35K0WxQiPvIsRd0PB@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/0xEPAkCtqTF4MG149LePH4WuIY1UAGEAyLUNRAMC4kvgw+Fz
-	0KfdnKmCY7acQpJBUp717++bLBG+28Dil+JvH2pl9iiPA1p8UipQ
-X-Gm-Gg: ASbGnctR+Btan2MsYJxm03W+xjmDXoqJ3spXHNSXlfh0LOlCEtthjenNxxunJJc0QWn
-	6MAhQQmIHuBVoBw3l6TJ9FAVkIYqx5K5QOeq78+6fRIee2lLhtCepOxA7n9k8ci0/rAQfMdgHES
-	zn32v578QO6e7+8SIGlrxz924dLJXwuW5aOoK6Qtv+b5JJVzv0p1WKiWlXJuhGhZy0ycsBTainR
-	7ak7JjdYAJtlWx/L55W2sbgi7yumhr02g1PEcqcYq7Q9HPWlhYw0kYLR/0ck/Q3nrfbqKoMCCqm
-	Kcy9fr48GJqNSiuAM4/XYTtGyJAcMdCOQ/t27CO3ued7iYfdgu3HHnIkQXSj4Y1HK49he3EIiWS
-	1vASJA4iyzPwHqft+pmiwqBOft6yTdFE=
-X-Google-Smtp-Source: AGHT+IE/aYtEG63OWyM3ZH1aDT8SuS8Yu39bABKue/8b/gskEjEF3y1AdYeFUZ4n7FVaw5313LSsbQ==
-X-Received: by 2002:a05:620a:1926:b0:7c5:a29e:3477 with SMTP id af79cd13be357-7c919084009mr1000641185a.53.1744904927677;
-        Thu, 17 Apr 2025 08:48:47 -0700 (PDT)
-Received: from localhost (141.139.145.34.bc.googleusercontent.com. [34.145.139.141])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c925b4eb32sm4099385a.77.2025.04.17.08.48.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 08:48:46 -0700 (PDT)
-Date: Thu, 17 Apr 2025 11:48:46 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Song Liu <songliubraving@meta.com>, 
- Paolo Abeni <pabeni@redhat.com>
-Cc: Breno Leitao <leitao@debian.org>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- David Ahern <dsahern@kernel.org>, 
- Eric Dumazet <edumazet@google.com>, 
- "kuba@kernel.org" <kuba@kernel.org>, 
- Simon Horman <horms@kernel.org>, 
- "kuniyu@amazon.com" <kuniyu@amazon.com>, 
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, 
- "yonghong.song@linux.dev" <yonghong.song@linux.dev>, 
- "song@kernel.org" <song@kernel.org>, 
- Kernel Team <kernel-team@meta.com>
-Message-ID: <680122de92908_166f4f2942a@willemb.c.googlers.com.notmuch>
-In-Reply-To: <4D934267-EE73-49DB-BEAF-7550945A38C9@fb.com>
-References: <20250416-udp_sendmsg-v1-1-1a886b8733c2@debian.org>
- <67a977bc-a4b9-4c8b-bf2f-9e9e6bb0811e@redhat.com>
- <aADnW6G4X2GScQIF@gmail.com>
- <0f67e414-d39a-4b71-9c9e-7dc027cc4ac3@redhat.com>
- <4D934267-EE73-49DB-BEAF-7550945A38C9@fb.com>
-Subject: Re: [PATCH net-next] udp: Add tracepoint for udp_sendmsg()
+        d=1e100.net; s=20230601; t=1744904940; x=1745509740;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lxs3pbRmeZljAVv85dIFV0auKcBCxEW2zKAGoLO6chg=;
+        b=YM+Mr7Y7UqSbEX6Utcxj/k8QPXocMI7LL4fXd9KuZzneFxZW6mcjc+N2OsZvEtknvt
+         FQ+/hg3G9ytAKpKpokHyVSAZxjoAencsWXDJPCrsWQmrx+xfGBcsZutVC9t2iZfx+/yg
+         jNCs+PvLyWLLQHwRGc4j7zE1Qn20xypBORyR9F7WlTgTGowjNQSF/+l6G64+naQt6j0P
+         450NJgDthBDERPYKH1lrGzQ3MKxiEcK3jINRZdrn+bM3eV/Q3TaZvSdRUC3FvtZu5gSl
+         RFsXcX7itqcfgbkXt9qyKQckwAIn8pwCSS4TNJYzcH0vJvtyQGrL7RF3y/q6kw0deoLf
+         u1zw==
+X-Forwarded-Encrypted: i=1; AJvYcCW0OR4oj7EkFm6UAsEbOi3A9f+uheFAGYQV3z++Brg0j1jB0UhkoRIbFmT7Vox+Fe3LdZLYN8fGKLx+B0I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMVz9mmzs2amlM0yLHW1rWES/fsK0dh7tVAqrjvDMkUfNTfgI8
+	PY/e3u5TpKdZ4zQcu/bjON02eBnkAg94P6pC1koidNCJ3Uu6dEwp6HF59Tx59oY=
+X-Gm-Gg: ASbGncv/cVpA/bB8LToNhNCBx1fAgul+/jahaWIFaixVGCpLAHq9Ja3r4r066hotMyK
+	QEMaOSjn+R+R4SMDJYkMCbH1ibzrJO5zzrPW35eHSw519/+81azBuGeFb1QT/jXMu9CHCceumy1
+	FY/qb0yJ+bnEQmyebSxZX+hPNtNm6N6pGe3AFAIJIc+1Wn7XWCi1zAOuFbATfAIdUnowNZ8eega
+	8kjuRxfOKaIn175lGzTQoetLMvFxocrq9xnQFwIByDReqwPoZVNtrwo9cC30TkXAAeyQsSL5vVD
+	mr+BTkVfVFSezXIgpiu+VGEiHhKA1lX6e0BAGpvwHsnMhkyDxNC3cSTkBAw6XzCOnano2iUn7wC
+	Me6YBvRChD2e7Q3k=
+X-Google-Smtp-Source: AGHT+IFoDPTK4Q0eWnPXUkfNUbOrNzlhA0H+lOPBGXmkTH9+PzSVedd+3ibhuJVjuyt6k3UdF8swoA==
+X-Received: by 2002:a7b:ca4d:0:b0:43b:c592:7e16 with SMTP id 5b1f17b1804b1-440696f77a1mr4071195e9.3.1744904939943;
+        Thu, 17 Apr 2025 08:48:59 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:a7f9:634b:42d:1546? ([2a01:e0a:3d9:2080:a7f9:634b:42d:1546])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96e912sm20949934f8f.31.2025.04.17.08.48.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Apr 2025 08:48:59 -0700 (PDT)
+Message-ID: <693a5c6a-88b3-4f52-b918-ef78ff174c1f@linaro.org>
+Date: Thu, 17 Apr 2025 17:48:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 6/7] drm/bridge: analogix_dp: ignore return values of
+ drm_panel_* calls
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250401-panel-return-void-v1-0-93e1be33dc8d@oss.qualcomm.com>
+ <20250401-panel-return-void-v1-6-93e1be33dc8d@oss.qualcomm.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250401-panel-return-void-v1-6-93e1be33dc8d@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Song Liu wrote:
-> Hi Paolo, =
+On 01/04/2025 07:11, Dmitry Baryshkov wrote:
+> Follow the example of other drivers and ignore return values of the
+> drm_panel_prepare() / unprepare() / enable() / disable() calls. There is
+> no possible error recovery, so the driver just logs a message.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
+>   drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 39 ++++------------------
+>   1 file changed, 6 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+> index f60068011008482f7b7b2edfcab5fb1b3e9e130f..c7dffdae31877ae194fc6b0a5bf21be203f7dcc4 100644
+> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+> @@ -838,10 +838,7 @@ static int analogix_dp_commit(struct analogix_dp_device *dp)
+>   	int ret;
+>   
+>   	/* Keep the panel disabled while we configure video */
+> -	if (dp->plat_data->panel) {
+> -		if (drm_panel_disable(dp->plat_data->panel))
+> -			DRM_ERROR("failed to disable the panel\n");
+> -	}
+> +	drm_panel_disable(dp->plat_data->panel);
+>   
+>   	ret = analogix_dp_train_link(dp);
+>   	if (ret) {
+> @@ -863,13 +860,7 @@ static int analogix_dp_commit(struct analogix_dp_device *dp)
+>   	}
+>   
+>   	/* Safe to enable the panel now */
+> -	if (dp->plat_data->panel) {
+> -		ret = drm_panel_enable(dp->plat_data->panel);
+> -		if (ret) {
+> -			DRM_ERROR("failed to enable the panel\n");
+> -			return ret;
+> -		}
+> -	}
+> +	drm_panel_enable(dp->plat_data->panel);
+>   
+>   	/* Check whether panel supports fast training */
+>   	ret = analogix_dp_fast_link_train_detection(dp);
+> @@ -1136,7 +1127,6 @@ static void analogix_dp_bridge_atomic_pre_enable(struct drm_bridge *bridge,
+>   	struct analogix_dp_device *dp = bridge->driver_private;
+>   	struct drm_crtc *crtc;
+>   	struct drm_crtc_state *old_crtc_state;
+> -	int ret;
+>   
+>   	crtc = analogix_dp_get_new_crtc(dp, old_state);
+>   	if (!crtc)
+> @@ -1147,11 +1137,7 @@ static void analogix_dp_bridge_atomic_pre_enable(struct drm_bridge *bridge,
+>   	if (old_crtc_state && old_crtc_state->self_refresh_active)
+>   		return;
+>   
+> -	if (dp->plat_data->panel) {
+> -		ret = drm_panel_prepare(dp->plat_data->panel);
+> -		if (ret)
+> -			DRM_ERROR("failed to prepare the panel ret = %d\n", ret);
+> -	}
+> +	drm_panel_prepare(dp->plat_data->panel);
+>   }
+>   
+>   static int analogix_dp_set_bridge(struct analogix_dp_device *dp)
+> @@ -1231,17 +1217,11 @@ static void analogix_dp_bridge_atomic_enable(struct drm_bridge *bridge,
+>   static void analogix_dp_bridge_disable(struct drm_bridge *bridge)
+>   {
+>   	struct analogix_dp_device *dp = bridge->driver_private;
+> -	int ret;
+>   
+>   	if (dp->dpms_mode != DRM_MODE_DPMS_ON)
+>   		return;
+>   
+> -	if (dp->plat_data->panel) {
+> -		if (drm_panel_disable(dp->plat_data->panel)) {
+> -			DRM_ERROR("failed to disable the panel\n");
+> -			return;
+> -		}
+> -	}
+> +	drm_panel_disable(dp->plat_data->panel);
+>   
+>   	disable_irq(dp->irq);
+>   
+> @@ -1249,11 +1229,7 @@ static void analogix_dp_bridge_disable(struct drm_bridge *bridge)
+>   
+>   	pm_runtime_put_sync(dp->dev);
+>   
+> -	if (dp->plat_data->panel) {
+> -		ret = drm_panel_unprepare(dp->plat_data->panel);
+> -		if (ret)
+> -			DRM_ERROR("failed to unprepare the panel ret = %d\n", ret);
+> -	}
+> +	drm_panel_unprepare(dp->plat_data->panel);
+>   
+>   	dp->fast_train_enable = false;
+>   	dp->psr_supported = false;
+> @@ -1678,10 +1654,7 @@ void analogix_dp_unbind(struct analogix_dp_device *dp)
+>   	analogix_dp_bridge_disable(dp->bridge);
+>   	dp->connector.funcs->destroy(&dp->connector);
+>   
+> -	if (dp->plat_data->panel) {
+> -		if (drm_panel_unprepare(dp->plat_data->panel))
+> -			DRM_ERROR("failed to turnoff the panel\n");
+> -	}
+> +	drm_panel_unprepare(dp->plat_data->panel);
+>   
+>   	drm_dp_aux_unregister(&dp->aux);
+>   
+> 
 
-> =
-
-> > On Apr 17, 2025, at 6:17=E2=80=AFAM, Paolo Abeni <pabeni@redhat.com> =
-wrote:
-> > =
-
-> > On 4/17/25 1:34 PM, Breno Leitao wrote:
-> >> On Thu, Apr 17, 2025 at 08:57:24AM +0200, Paolo Abeni wrote:
-> >>> On 4/16/25 9:23 PM, Breno Leitao wrote:
-> >>>> Add a lightweight tracepoint to monitor UDP send message operation=
-s,
-> >>>> similar to the recently introduced tcp_sendmsg_locked() trace even=
-t in
-> >>>> commit 0f08335ade712 ("trace: tcp: Add tracepoint for
-> >>>> tcp_sendmsg_locked()")
-> >>> =
-
-> >>> Why is it needed? what would add on top of a plain perf probe, whic=
-h
-> >>> will be always available for such function with such argument, as t=
-he
-> >>> function can't be inlined?
-> >> =
-
-> >> Why this function can't be inlined?
-> > =
-
-> > Because the kernel need to be able find a pointer to it:
-> > =
-
-> > .sendmsg =3D udp_sendmsg,
-> > =
-
-> > I'll be really curious to learn how the compiler could inline that.
-> =
-
-> It is true that functions that are only used via function pointers
-> will not be inlined by compilers (at least for those we have tested).
-> For this reason, we do not worry about functions in various
-> tcp_congestion_ops. However, udp_sendmsg is also called directly
-> by udpv6_sendmsg, so it can still get inlined by LTO. =
-
-> =
-
-> Thanks,
-> Song
-> =
-
-
-I would think that hitting this tracepoint for ipv6_addr_v4mapped
-addresses is unintentional and surprising, as those would already
-hit udpv6_sendmsg.
-
-On which note, any IPv4 change to UDP needs an equivalent IPv6 one.
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
