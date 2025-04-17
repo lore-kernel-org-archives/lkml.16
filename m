@@ -1,31 +1,39 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D39423644A
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 11:11:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C20C23645F;
+	Thu, 17 Apr 2025 11:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744888297; cv=none; b=hsP2kOfH2JsMOOYyJQhOuX6s5OuZ/+ORrErhC1bsuzp/sf5TNjARO6MzoytOt30OPJCMfN8PFzO7Dhihdo0d77Q6V+FwQUfCi3oCEFlvvyOyjDw9690oCVATOnQZLDpSqbIWxDSlewHwsW+mv7lBZMZq6HlYTa66Q8v/CTIn8nY=
+	t=1744888345; cv=none; b=S9227j0ssDDFMosFj1z5u3/q2oW9pB/sY8vL4Xsl7GinHmaJt00rrWM4WFCifZjoLgC3A6Lr1uGERavvtv/7vnJigoPhTtozjifZiuSJT1ZhtwbRIZ+DI47ZPZ/m4QJh097o9iHc8zNSCewucGItmiE3EC73j8FSXmhCvCLWDz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744888297; c=relaxed/simple;
-	bh=iPlBiPeQvYwklJSnGwieziVFHlC8ZbDVfSa4gQiyems=;
+	s=arc-20240116; t=1744888345; c=relaxed/simple;
+	bh=zKR49UWsXQlKIMA1VnL+BkqgO+3iF8iLPVDDfF2KoTE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V8caBTE9RorD8euHQUUR3ulkxECczinFxpuLS5lLjfHQzx7tWh71TYT4KmfT+JSoGAgwQ9LRyOFtXlSI1x7NWEK+y6sb3cCPDj1RFl6QiRpTUeFzrLRg1JPhLAUouqk/1gFRvz0ytdXhJTzMwFqJEX6Rx2ulA8b2b056TPXTkQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=gvpg8SEw; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=qJv86Il9HqLtscLyVepF/2S8m/x0VJulXPSa8zvBWZuchr/O4G6UWUyWFznvNE8KjgnwSqRoajoPJpzF2/wy4MpHHYFytP+KKoPa/sfquDczEHSfMFI+RNlieWHMDIr/7cCW3iixL2DS6JcI2oLoGR6XHX/tZxPEdTqhAfK/izs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ZIADA/NB; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="gvpg8SEw"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1744888284; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Ih4D2hjc1RuSPbkNyhYdhil7SRFVem/SvdPeGCUUw2w=;
-	b=gvpg8SEwawWkJpE28CaNwp5mgUbxYySJi8WlY443CZZGHP0dJfC2rEDHwIoKeOnsRdI/TU6xJLiBA108osA4PysWN5hspQiBO/brCVXMV+qj6saA9dtyEjqr9jred2sTPOKrRvilfNQMuIJF+bFm/gh6drtM8SctEdIN3XxvL8I=
-Received: from 30.221.145.47(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0WXEiprf_1744888283 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 17 Apr 2025 19:11:24 +0800
-Message-ID: <518cd8d7-394c-4b19-a0b9-f73219c621de@linux.alibaba.com>
-Date: Thu, 17 Apr 2025 19:11:23 +0800
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ZIADA/NB"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53HBB0dU3967739
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 17 Apr 2025 04:11:01 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53HBB0dU3967739
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1744888264;
+	bh=zKR49UWsXQlKIMA1VnL+BkqgO+3iF8iLPVDDfF2KoTE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZIADA/NBWFdjMUgJTKpv9M9Wy2YG9IZEPFByL8wYabsxbBoRuZfKRlm/KXHCD1Dct
+	 p+vwf14YsIuc+VHp9bDfack/1J0ZEDi3/LMHCo05xDW9TD4JrJ0GM5fVVA/piqxPhD
+	 UyV8JWSU0hR2PMwkuYuHLcqgii53bDcW9KmA0ITTnJZG4RxQYf1Gr8LMHk+DKpR9xo
+	 v/L3GNQ4ChUSYncpwgOQsPYYlB/v/0qZd/JiW4t/kLzx/6ZLdqruZ97wB6zyl1mziC
+	 tKwEE+12hM3fNBR36tO17t9Oq8pShTsP2t1ihwsRhIESP8RHTn9IcCLiPfhw0jeR7+
+	 9wRv9KyfJmA3A==
+Message-ID: <edbeb41d-3c38-4778-9a7c-255edc7cd5fb@zytor.com>
+Date: Thu, 17 Apr 2025 04:10:59 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,172 +41,79 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] ocfs2: fix the issue with discontiguous allocation
- in the global_bitmap
-To: Heming Zhao <heming.zhao@suse.com>, akpm <akpm@linux-foundation.org>
-Cc: ocfs2-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
- gautham.ananthakrishna@oracle.com
-References: <20250414060125.19938-1-heming.zhao@suse.com>
- <20250414060125.19938-2-heming.zhao@suse.com>
-From: Joseph Qi <joseph.qi@linux.alibaba.com>
-In-Reply-To: <20250414060125.19938-2-heming.zhao@suse.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [RFC PATCH v1 13/15] x86/msr: Use the alternatives mechanism to
+ read MSR
+To: Francesco Lavra <francescolavra.fl@gmail.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, ajay.kaher@broadcom.com,
+        alexander.shishkin@linux.intel.com, andrew.cooper3@citrix.com,
+        bcm-kernel-feedback-list@broadcom.com, boris.ostrovsky@oracle.com,
+        bp@alien8.de, bpf@vger.kernel.org, dave.hansen@linux.intel.com,
+        decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
+        irogers@google.com, jgross@suse.com, jolsa@kernel.org,
+        kan.liang@linux.intel.com, kvm@vger.kernel.org, kys@microsoft.com,
+        linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
+        llvm@lists.linux.dev, luto@kernel.org, mark.rutland@arm.com,
+        mingo@redhat.com, namhyung@kernel.org, pbonzini@redhat.com,
+        peterz@infradead.org, seanjc@google.com, tglx@linutronix.de,
+        tony.luck@intel.com, virtualization@lists.linux.dev,
+        vkuznets@redhat.com, wei.liu@kernel.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org
+References: <0f4f2ed70829fffb2eb816e34e26be22681705a5.camel@gmail.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <0f4f2ed70829fffb2eb816e34e26be22681705a5.camel@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+On 4/14/2025 10:13 AM, Francesco Lavra wrote:
+> This works only if this function has been called directly (e.g. via
+> `call asm_xen_write_msr`), but doesn't work with alternative call types
+> (like indirect calls). Not sure why one might want to use an indirect
+> call to invoke asm_xen_write_msr, but this creates a hidden coupling
+> between caller and callee.
+> I don't have a suggestion on how to get rid of this coupling, other
+> than setting ipdelta in _ASM_EXTABLE_FUNC_REWIND() to 0 and adjusting
+> the _ASM_EXTABLE_TYPE entries at the call sites to consider the
+> instruction that follows the function call (instead of the call
+> instruction) as the faulting instruction (which seems pretty ugly, at
+> least because what follows the function call could be an instruction
+> that might itself fault). But you may want to make this caveat explicit
+> in the comment.
 
-
-On 2025/4/14 14:01, Heming Zhao wrote:
-> The commit 4eb7b93e0310 ("ocfs2: improve write IO performance when
-> fragmentation is high") introduced another regression.
-> 
-> The following ocfs2-test case can trigger this issue:
->> discontig_runner.sh => activate_discontig_bg.sh => resv_unwritten:
->> ${RESV_UNWRITTEN_BIN} -f ${WORK_PLACE}/large_testfile -s 0 -l \
->> $((${FILE_MAJOR_SIZE_M}*1024*1024))
-> 
-> In my env, test disk size (by "fdisk -l <dev>"):
->> 53687091200 bytes, 104857600 sectors.
-> 
-> Above command is:
->> /usr/local/ocfs2-test/bin/resv_unwritten -f \
->> /mnt/ocfs2/ocfs2-activate-discontig-bg-dir/large_testfile -s 0 -l \
->> 53187969024
-> 
-> Error log:
->> [*] Reserve 50724M space for a LARGE file, reserve 200M space for future test.
->> ioctl error 28: "No space left on device"
->> resv allocation failed Unknown error -1
->> reserve unwritten region from 0 to 53187969024.
-> 
-> Call flow:
-> __ocfs2_change_file_space //by ioctl OCFS2_IOC_RESVSP64
->  ocfs2_allocate_unwritten_extents //start:0 len:53187969024
->   while()
->    + ocfs2_get_clusters //cpos:0, alloc_size:1623168 (cluster number)
->    + ocfs2_extend_allocation
->      + ocfs2_lock_allocators
->      |  + choose OCFS2_AC_USE_MAIN & ocfs2_cluster_group_search
->      |
->      + ocfs2_add_inode_data
->         ocfs2_add_clusters_in_btree
->          __ocfs2_claim_clusters
->           ocfs2_claim_suballoc_bits
->           + During the allocation of the final part of the large file
-> 	    (after ~47GB), no chain had the required contiguous
->             bits_wanted. Consequently, the allocation failed.
-> 
-> How to fix:
-> When OCFS2 is encountering fragmented allocation, the file system should
-> stop attempting bits_wanted contiguous allocation and instead provide the
-> largest available contiguous free bits from the cluster groups.
-> 
-> Reported-by: Gautham Ananthakrishna <gautham.ananthakrishna@oracle.com>
-> Signed-off-by: Heming Zhao <heming.zhao@suse.com>
-> Fixes: 4eb7b93e0310 ("ocfs2: improve write IO performance when fragmentation is high")
-
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-> ---
->  fs/ocfs2/suballoc.c | 38 ++++++++++++++++++++++++++++++++------
->  fs/ocfs2/suballoc.h |  1 +
->  2 files changed, 33 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/ocfs2/suballoc.c b/fs/ocfs2/suballoc.c
-> index f7b483f0de2a..6ac4dcd54588 100644
-> --- a/fs/ocfs2/suballoc.c
-> +++ b/fs/ocfs2/suballoc.c
-> @@ -698,10 +698,12 @@ static int ocfs2_block_group_alloc(struct ocfs2_super *osb,
->  
->  	bg_bh = ocfs2_block_group_alloc_contig(osb, handle, alloc_inode,
->  					       ac, cl);
-> -	if (PTR_ERR(bg_bh) == -ENOSPC)
-> +	if (PTR_ERR(bg_bh) == -ENOSPC) {
-> +		ac->ac_which = OCFS2_AC_USE_MAIN_DISCONTIG;
->  		bg_bh = ocfs2_block_group_alloc_discontig(handle,
->  							  alloc_inode,
->  							  ac, cl);
-> +	}
->  	if (IS_ERR(bg_bh)) {
->  		status = PTR_ERR(bg_bh);
->  		bg_bh = NULL;
-> @@ -1794,6 +1796,7 @@ static int ocfs2_search_chain(struct ocfs2_alloc_context *ac,
->  {
->  	int status;
->  	u16 chain;
-> +	u32 contig_bits;
->  	u64 next_group;
->  	struct inode *alloc_inode = ac->ac_inode;
->  	struct buffer_head *group_bh = NULL;
-> @@ -1819,10 +1822,21 @@ static int ocfs2_search_chain(struct ocfs2_alloc_context *ac,
->  	status = -ENOSPC;
->  	/* for now, the chain search is a bit simplistic. We just use
->  	 * the 1st group with any empty bits. */
-> -	while ((status = ac->ac_group_search(alloc_inode, group_bh,
-> -					     bits_wanted, min_bits,
-> -					     ac->ac_max_block,
-> -					     res)) == -ENOSPC) {
-> +	while (1) {
-> +		if (ac->ac_which == OCFS2_AC_USE_MAIN_DISCONTIG) {
-> +			contig_bits = le16_to_cpu(bg->bg_contig_free_bits);
-> +			if (!contig_bits)
-> +				contig_bits = ocfs2_find_max_contig_free_bits(bg->bg_bitmap,
-> +						le16_to_cpu(bg->bg_bits), 0);
-> +			if (bits_wanted > contig_bits && contig_bits >= min_bits)
-> +				bits_wanted = contig_bits;
-> +		}
-> +
-> +		status = ac->ac_group_search(alloc_inode, group_bh,
-> +				bits_wanted, min_bits,
-> +				ac->ac_max_block, res);
-> +		if (status != -ENOSPC)
-> +			break;
->  		if (!bg->bg_next_group)
->  			break;
->  
-> @@ -1982,6 +1996,7 @@ static int ocfs2_claim_suballoc_bits(struct ocfs2_alloc_context *ac,
->  	victim = ocfs2_find_victim_chain(cl);
->  	ac->ac_chain = victim;
->  
-> +search:
->  	status = ocfs2_search_chain(ac, handle, bits_wanted, min_bits,
->  				    res, &bits_left);
->  	if (!status) {
-> @@ -2022,6 +2037,16 @@ static int ocfs2_claim_suballoc_bits(struct ocfs2_alloc_context *ac,
->  		}
->  	}
->  
-> +	/* Chains can't supply the bits_wanted contiguous space.
-> +	 * We should switch to using every single bit when allocating
-> +	 * from the global bitmap. */
-> +	if (i == le16_to_cpu(cl->cl_next_free_rec) &&
-> +	    status == -ENOSPC && ac->ac_which == OCFS2_AC_USE_MAIN) {
-> +		ac->ac_which = OCFS2_AC_USE_MAIN_DISCONTIG;
-> +		ac->ac_chain = victim;
-> +		goto search;
-> +	}
-> +
->  set_hint:
->  	if (status != -ENOSPC) {
->  		/* If the next search of this group is not likely to
-> @@ -2365,7 +2390,8 @@ int __ocfs2_claim_clusters(handle_t *handle,
->  	BUG_ON(ac->ac_bits_given >= ac->ac_bits_wanted);
->  
->  	BUG_ON(ac->ac_which != OCFS2_AC_USE_LOCAL
-> -	       && ac->ac_which != OCFS2_AC_USE_MAIN);
-> +	       && ac->ac_which != OCFS2_AC_USE_MAIN
-> +	       && ac->ac_which != OCFS2_AC_USE_MAIN_DISCONTIG);
->  
->  	if (ac->ac_which == OCFS2_AC_USE_LOCAL) {
->  		WARN_ON(min_clusters > 1);
-> diff --git a/fs/ocfs2/suballoc.h b/fs/ocfs2/suballoc.h
-> index b481b834857d..bcf2ed4a8631 100644
-> --- a/fs/ocfs2/suballoc.h
-> +++ b/fs/ocfs2/suballoc.h
-> @@ -29,6 +29,7 @@ struct ocfs2_alloc_context {
->  #define OCFS2_AC_USE_MAIN  2
->  #define OCFS2_AC_USE_INODE 3
->  #define OCFS2_AC_USE_META  4
-> +#define OCFS2_AC_USE_MAIN_DISCONTIG  5
->  	u32    ac_which;
->  
->  	/* these are used by the chain search */
-
+Good idea, will state that in the comment.
