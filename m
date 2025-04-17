@@ -1,93 +1,116 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A0812147FB;
-	Thu, 17 Apr 2025 07:21:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3C5218EBA;
+	Thu, 17 Apr 2025 07:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744874518; cv=none; b=hTIVuWu9S5QApr4nb9IyuBzWPX/6rlD+1OGDkU2gxBP3JHG/2QrtmGETJ6ob9E+0UfYchmxXEZHsSsVi/3tvV1ceWawAAT062c/uYTuzBB3e10fsC0tkE8lfCZW11ACP5WuAfKFMxZc88gxge2xsU3dk8AKLRqMFa/CbMSOVTm8=
+	t=1744874538; cv=none; b=iwOltyeZJmZ2VDga3tTLu5zGPEUjlT7PAkOlrvGXoqt9opbVUwZj14/ZovcwF0klhkgZ1S/+fnxNgGnGoM64K4X6LCsHhH454YkFu19ma9n41Ugv4auhNhrfLxOhotb4YWDB9L7Wc8bBsVcb1r9pgOBwaoxI8PzdvCHii5/5OBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744874518; c=relaxed/simple;
-	bh=D6FUsCg0Gpw8z0w/zqu3Oewsd1avSCrPubcu3vTtGiM=;
+	s=arc-20240116; t=1744874538; c=relaxed/simple;
+	bh=njd0Ctie5/NJ/u0nIFo0b6CFaL7VXTbcT9S6B/AcLZ8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S6r+aNPvQdfg0b1G1OPka9ZdDmHgXZJOCFAhFOuHbNuorvZZxSbC155ooV8SOtntcIclspNRsFzAkqaADgsHesZQP3dH7Enq9q3fFESH8c8PuA1em4AKwBKHGf/QTvUx/yF3i03P30fkh5/SDwRMhPUPyCf6hS96qJY5uiyTPxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=m2xZjzmn; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=KyqT65NwdppDitsStT37MoST3ULHZz7+v8TNWEfQDU3Wnamy3BC1dyHh/60VBl/sE4ZTXyn3BsCrJJvslWG61lAcjof6NNb2Oc9E2/HLGHYprGPpBLn3AxaRINJW1IVO4vn1nuRd9ph6DaBVdgazErASpGJFJ5FpN15tJ2CcTy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NpvjqSLw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="m2xZjzmn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=9kw9FMXD/wPGWa+Txh7gPuISKMppmLAsTHqS5svg0z0=; b=m2xZjzmnbaV1GAQlzHYGXRlrUL
-	fdZofOEhaKFYsBYK18yKTMJ7q+s63Jm2OLSXzwAFwFxMuHCkBBa5GlFl7OI3Ru2Ybj9o19CxLrS2B
-	7m5EQ2MbXd1ZtKBI6l7w1VdX6MY/RKnZxu/CgnA0/XkP9xO5ov8kTIZEdIHJKhYVECy+bPd0UmE7h
-	/fSgTR/5nJdbdiWzrn48HfJ+1nqj9YyUOq1PAWQsC+mmRzZicngojjAaIu24RtFza+IZ73cNQyVcQ
-	elbTrGBfe2aY0GdLyTHSrVBiniwvb4U/axuz/sEKkAREUY4ffQ3BRIGbhwwUu2/xbNPdkS47Jd7pH
-	t5TeE0DA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u5JZ3-00GPE6-0G;
-	Thu, 17 Apr 2025 15:21:38 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 17 Apr 2025 15:21:37 +0800
-Date: Thu, 17 Apr 2025 15:21:37 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Qingfang Deng <dqfext@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	linux-crypto@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Christoph =?iso-8859-1?Q?M=FCllner?= <christoph.muellner@vrull.eu>,
-	Heiko Stuebner <heiko.stuebner@vrull.eu>,
-	Qingfang Deng <qingfang.deng@siflower.com.cn>
-Subject: Re: [RFC PATCH] crypto: riscv: scalar accelerated GHASH
-Message-ID: <aACsAT0sOzkqFblQ@gondor.apana.org.au>
-References: <20250417064940.68469-1-dqfext@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NpvjqSLw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F4F0C4CEE4;
+	Thu, 17 Apr 2025 07:22:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744874537;
+	bh=njd0Ctie5/NJ/u0nIFo0b6CFaL7VXTbcT9S6B/AcLZ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NpvjqSLwnO5P4oov6RnrAJXFvg5T2B5X5w7SVvL3sYujMH5bf0IpFDTcWNfIXY8sH
+	 ISYUjs240LTbyzWxSlvk3SclXPnsjL3106pN+tJLAWjKmn3VHFF7Dkv7sLwEFGnaQL
+	 jbPsZicrvOsj6AzaMl8u9RifyRNNSY+vQLaAqOVjKE6IaSyVRqwQKv1FBYREQLvizv
+	 6Qlexqzlh8L17ECPL6ZfzNikEUw2Vq+xekJevwisVsuJUZ75bXsBYkN4RMqBao9HPu
+	 XjXV4gJprVmX3DLafD6kKfmLB3oyRheCLo9FBevmpnsY5IZ2zaxzsMPIxv3HYCxZNi
+	 xjti22U8Axj/Q==
+Date: Thu, 17 Apr 2025 09:22:12 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org, kw@linux.com,
+	bhelgaas@google.com, heiko@sntech.de,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	jingoohan1@gmail.com, thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
+Message-ID: <aACsJPkSDOHbRAJM@ryzen>
+References: <20250416151926.140202-1-18255117159@163.com>
+ <aACoEpueUHBLjgbb@ryzen>
+ <85643fe4-c7df-4d64-e852-60b66892470a@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250417064940.68469-1-dqfext@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <85643fe4-c7df-4d64-e852-60b66892470a@rock-chips.com>
 
-On Thu, Apr 17, 2025 at 02:49:38PM +0800, Qingfang Deng wrote:
->
-> +static int riscv64_clmul_ghash_update(struct shash_desc *desc, const u8 *src, unsigned int srclen)
-> +{
-> +	struct riscv64_clmul_ghash_ctx *ctx = crypto_shash_ctx(desc->tfm);
-> +	struct riscv64_clmul_ghash_desc_ctx *dctx = shash_desc_ctx(desc);
-> +	unsigned int len;
-> +
-> +	if (dctx->bytes) {
-> +		if (dctx->bytes + srclen < GHASH_DIGEST_SIZE) {
-> +			memcpy(dctx->buffer + dctx->bytes, src, srclen);
-> +			dctx->bytes += srclen;
-> +			return 0;
-> +		}
-> +		memcpy(dctx->buffer + dctx->bytes, src, GHASH_DIGEST_SIZE - dctx->bytes);
-> +
-> +		gcm_ghash_rv64i_zbc(&dctx->shash, ctx->key, dctx->buffer, GHASH_DIGEST_SIZE);
-> +
-> +		src += GHASH_DIGEST_SIZE - dctx->bytes;
-> +		srclen -= GHASH_DIGEST_SIZE - dctx->bytes;
-> +		dctx->bytes = 0;
-> +	}
+On Thu, Apr 17, 2025 at 03:08:34PM +0800, Shawn Lin wrote:
+> 在 2025/04/17 星期四 15:04, Niklas Cassel 写道:
+> > Hello Hans,
+> > 
+> > On Wed, Apr 16, 2025 at 11:19:26PM +0800, Hans Zhang wrote:
+> > > The RK3588's PCIe controller defaults to a 128-byte max payload size,
+> > > but its hardware capability actually supports 256 bytes. This results
+> > > in suboptimal performance with devices that support larger payloads.
+> > 
+> > Patch looks good to me, but please always reference the TRM when you can.
+> > 
+> > Before this patch:
+> > 		DevCap: MaxPayload 256 bytes
+> > 		DevCtl: MaxPayload 128 bytes
+> > 
+> > 
+> > As per rk3588 TRM, section "11.4.3.8 DSP_PCIE_CAP Detail Registers Description"
+> > 
+> > DevCap is per the register description of DSP_PCIE_CAP_DEVICE_CAPABILITIES_REG,
+> > field PCIE_CAP_MAX_PAYLOAD_SIZE.
+> > Which claims that the value after reset is 0x1 (256B).
+> > 
+> > DevCtl is per the register description of
+> > DSP_PCIE_CAP_DEVICE_CONTROL_DEVICE_STATUS, field PCIE_CAP_MAX_PAYLOAD_SIZE_CS.
+> > Which claims that the reset value is 0x0 (128B).
+> > 
+> > Both of these match the values above.
+> > 
+> > As per the description of PCIE_CAP_MAX_PAYLOAD_SIZE_CS:
+> > "Permissible values that
+> > can be programmed are indicated by the Max_Payload_Size
+> > Supported field (PCIE_CAP_MAX_PAYLOAD_SIZE) in the Device
+> > Capabilities (DEVICE_CAPABILITIES_REG) register (for more
+> > details, see section 7.5.3.3 of PCI Express Base Specification)."
+> > 
+> > So your patch looks good.
+> > 
+> > I guess I'm mostly surprised that the e.g. pci_configure_mps() does not
+> > already set DevCtl to the max(DevCap.MPS of the host, DevCap.MPS of the
+> > endpoint).
+> > 
+> > Apparently pci_configure_mps() only decreases MPS from the reset values?
+> > It never increases it?
+> > 
+> 
+> Actually it does:
+> 
+> https://github.com/torvalds/linux/blob/master/Documentation/admin-guide/kernel-parameters.txt#L4757
 
-If this progresses beyond an RFC, you will need to do convert this
-into a block-only algorithm on top of:
+If that is the case, then explain the before/after with Hans lspci output here:
+https://lore.kernel.org/linux-pci/bb40385c-6839-484c-90b2-d6c7ecb95ba9@163.com/
 
-https://patchwork.kernel.org/project/linux-crypto/patch/b2eb753b083c029785c5e18238ca6cf06f48c86a.1744784515.git.herbert@gondor.apana.org.au/
+His patch changes the default value of DevCtl.MPS (from 128B to 256B), but if
+pci_configure_mps() can bump DevCtl.MPS to a higher value, his patch should not
+be needed, since the EP (an NVMe SSD in his case) has DevCap.MPS 512B, and the
+RC itself has DevCap.MPS 256B.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Seems like we are missing something here.
+
+
+Kind regards,
+Niklas
