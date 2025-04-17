@@ -1,67 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3456C25178D
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:37:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808062517AF;
+	Thu, 17 Apr 2025 14:38:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744900674; cv=none; b=tKbMSonR1+Whnu8idxZDynQ6CgvmbARXrnzux8go7NIONevT2qjYhjnJYKXnzrGpd1hVL7Iyqu7B1dl7DlEtVttXnO/8Va0XbSZeGb7Y6h+u2K5znXKnjnYLyb9FA5CXKYzl2x7AF5kCSmfm/HYABVtdBo8bM12AwkoqPwnb+qM=
+	t=1744900721; cv=none; b=hwKJxIfVsKVCCKYd2iBBI7F+gDZ7R4Y/tiacju7Dxc/K91MuGCZ+n1PygIUpdAgLRKbwwE/pLCMeq8gVahMIAHA3HsOhbKKrhcTGU3K/KUtWjlbl7frV/DpXoUxKCos1c8rZEcMVqZBQVLjJ0Pn9rObsbPqpwpe8uSFyzIomv5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744900674; c=relaxed/simple;
-	bh=ZWtyqLd0KUu/OoDp0pkKasAAbUekLA45tdG3GN70TXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mo7Cy+wNbtCSUvmD8raVHu+tIB1ppB1yslBeAh9d8KmlQ1dGz66vmuUNX1B9CSNgfngadNBhfEnHRdw1blyarBDCrCB/vSKwALr1ZnD6cN6igCmChlRL7XCPqkXtYspVatGt0+gVvZzW5H9DTSZRV0XhWb6v5NZ7UYAhgFe4sxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ldan3gmy; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ldan3gmy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31EA6C4CEE4;
-	Thu, 17 Apr 2025 14:37:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744900673;
-	bh=ZWtyqLd0KUu/OoDp0pkKasAAbUekLA45tdG3GN70TXk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ldan3gmyFwSi2sUoFtPU7hdmwJnkjkTi1EHKo/6jMQxEdshQ70jazaY5OsSO+5TNV
-	 p3Rk1NmsklcOSNHQI0BS63hKn2PBiID127QbwT6p42r6gcA+okuNh/44l0cNuMJkFR
-	 aeOJX+p2kBI7TLq5peBnzxgv9GgM/lgmNiNwSvGQ=
-Date: Thu, 17 Apr 2025 16:37:50 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Cal Peake <cp@absolutedigital.net>
-Cc: Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Vishal Annapurve <vannapurve@google.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [STABLE] 6.12.23: vfio error (was: arch/x86/coco/tdx/tdx.c build
- error)
-Message-ID: <2025041738-rocklike-undergrad-14d6@gregkh>
-References: <eb5a1df4-95f8-2784-8f4e-8460f33f8f4d@absolutedigital.net>
- <808e1111-27b7-f35b-6d5c-5b275e73677b@absolutedigital.net>
- <66f3e1b3-6165-4a2e-f34c-de6fef86e441@absolutedigital.net>
+	s=arc-20240116; t=1744900721; c=relaxed/simple;
+	bh=YmtnUeaLSZxV53krlcgNrrwtiIIegedBkZV17BMHwfA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=DM4wyLZQwEid50Gb+Z9fnetI2zhH6m50KqjzJIG26o1lMkr2t63WmLPTpXz0NRp1xHfQzpdaIvYaAIJwD08r711gbvNkAAfE+Vjp1x3LMR8HswDgRdzmnpmlSsi34Y38GffIAV81KeU2fHHkNqpc68+uwnCsEgCupn99oonX7sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A014C4CEE4;
+	Thu, 17 Apr 2025 14:38:39 +0000 (UTC)
+Date: Thu, 17 Apr 2025 10:40:17 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Subject: [PATCH] ftrace: Initialize variables for
+ ftrace_startup/shutdown_subops()
+Message-ID: <20250417104017.3aea66c2@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <66f3e1b3-6165-4a2e-f34c-de6fef86e441@absolutedigital.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 14, 2025 at 07:55:06PM -0400, Cal Peake wrote:
-> On Sun, 13 Apr 2025, Cal Peake wrote:
-> 
-> > After booting the new kernel, I get errors trying to do vfio passthrough:
-> > 
-> > qemu-8.2-system-x86_64: vfio: Cannot reset device 0000:14:00.3, no available reset mechanism.
-> > qemu-8.2-system-x86_64: vfio: Cannot reset device 0000:14:00.2, no available reset mechanism.
-> > qemu-8.2-system-x86_64: vfio: Cannot reset device 0000:14:00.1, no available reset mechanism.
-> > qemu-8.2-system-x86_64: vfio: Cannot reset device 0000:14:00.0, no available reset mechanism.
-> 
-> This was resolved by Alex Williamson, with his patch:
-> 
-> https://lore.kernel.org/lkml/20250414211828.3530741-1-alex.williamson@redhat.com/
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Is this in Linus's tree yet?
+The reworking to fix and simplify the ftrace_startup_subops() and the
+ftrace_shutdown_subops() made it possible for the filter_hash and
+notrace_hash variables to be used uninitialized in a way that the compiler
+did not catch it.
 
-thanks,
+Initialize both filter_hash and notrace_hash to the EMPTY_HASH as that is
+what they should be if they never are used.
 
-greg k-h
+Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Fixes: 0ae6b8ce200d ("ftrace: Fix accounting of subop hashes")
+Closes: https://lore.kernel.org/all/1db64a42-626d-4b3a-be08-c65e47333ce2@linux.ibm.com/
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ftrace.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 19b902b8de2b..66bf4512ec04 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -3490,8 +3490,8 @@ static int add_next_hash(struct ftrace_hash **filter_hash, struct ftrace_hash **
+  */
+ int ftrace_startup_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command)
+ {
+-	struct ftrace_hash *filter_hash;
+-	struct ftrace_hash *notrace_hash;
++	struct ftrace_hash *filter_hash = EMPTY_HASH;
++	struct ftrace_hash *notrace_hash = EMPTY_HASH;
+ 	struct ftrace_hash *save_filter_hash;
+ 	struct ftrace_hash *save_notrace_hash;
+ 	int ret;
+@@ -3625,8 +3625,8 @@ static int rebuild_hashes(struct ftrace_hash **filter_hash, struct ftrace_hash *
+  */
+ int ftrace_shutdown_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command)
+ {
+-	struct ftrace_hash *filter_hash;
+-	struct ftrace_hash *notrace_hash;
++	struct ftrace_hash *filter_hash = EMPTY_HASH;
++	struct ftrace_hash *notrace_hash = EMPTY_HASH;
+ 	int ret;
+ 
+ 	if (unlikely(ftrace_disabled))
+-- 
+2.47.2
+
