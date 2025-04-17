@@ -1,135 +1,78 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C4E13D994;
-	Thu, 17 Apr 2025 03:43:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2B03D994;
+	Thu, 17 Apr 2025 03:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744861407; cv=none; b=iewSzIj1sqqqBp0EJOmW219LQ2Fq309tgQi+YPa3tkLrYTBO+DKvoCXOqY9au3ldOVK7YynWxVkI9lPdpbXWrOqUqaJzRJkUrKpp3/N31NRdqZwUiWdsp6InY/s6UGQ9kT5Rc57MFLz+Ehe1GkTOXBwUaOwW+lI0CfzmmZLWDSM=
+	t=1744861448; cv=none; b=ePuRofKEGW24UNJmsbGVgSnd2rQ0AJo0x5UaqIvBd9eZUebMAiFY734lrQf9aqcLC+/Ah/T86QHnZYf3bi++HqVOMMrrahk0WVrSQLnBLH2m4+5xUbFb1hxdRFk+lWaJB3zNPBXKHigrauxn5Dgzn/Mrs5eLl6/GJfuyOBpLaR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744861407; c=relaxed/simple;
-	bh=5YsPtHQVET6UOmT0G9jLviPcM3Ddk/H757x+xvnX5/g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=RtYw7MqJ24yyJmRLKVb98HpZpYSKCbhBcKpxtHzQHj4jGMWbv8QoyBx3XXZEB5AR7tGbZs89wN796VaCBRuRIh1xICtiIHvVL1moVrA7kaWdg9Kh0Qjrl51i8y1tLR/1qlh36sL8kf80sK8hF1HYECgMxcJHEkZi7o5EIA5kobE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=GAmlPfmF; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1744861448; c=relaxed/simple;
+	bh=R7qsYUeUd1iUm6G89HG5YRgfHabJRXn5qvLM8WYzZhc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kQZ4JIqFpqFZCaTAXQ13UJu4R1ZajbNELf01GIj4eDVlRXEYQGDzdf7g9l1Ea7kWongUS2XA/ipMv9qCcJUUy3aoVe0R0Jrfvt2/CvkIbypUxuU860b2AM34MZAqAP34sSIMD7fV0sTOlaBhLSrpzArdgeKB4kD5+Z+vPiOTQBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PnKDWUqF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GAmlPfmF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1744861395;
-	bh=GPP/Lmjt4MiPH1Wde/+yE8U14WRwTq5UhBb2MQrmlkE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=GAmlPfmF/ytlX2Mjdqd5w1KEZgd1E69odH1rGwS0q+/qNQ5S9nYq3xlyE6Fkfm9cD
-	 xNzMoxuZ63pIwvrY4U+OViANuMwbePIBKdI2Hh4d4ddMhX5ogAhy6GPoRBTaxKbzHq
-	 LZr55AAJt6ta1aUPVUMATTocs245Z/p4iLfZncV4xOfUpYcgp7TsoGQBmACFffSBvQ
-	 V6nM1Lcto/QsYSbUnwk7bJHxGVPZHXCYGUoJ3gd4Fc3A2x57Km+No/UTSFXED7hEJH
-	 pXjodPxyntCgSO5unU0cocq7PPn40qgDJEzVXgS0jl4Bqm+AZ3MAj6bmPydgdI79+R
-	 wX55xCEl3xLeg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZdNyn5r2tz4xRB;
-	Thu, 17 Apr 2025 13:43:13 +1000 (AEST)
-Date: Thu, 17 Apr 2025 13:43:12 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Ingo Molnar <mingo@kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, "Rafael J. Wysocki"
- <rafael.j.wysocki@intel.com>, Viresh Kumar <viresh.kumar@linaro.org>
-Subject: linux-next: manual merge of the tip tree with the pm tree
-Message-ID: <20250417134312.6892d237@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PnKDWUqF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68C24C4CEE7;
+	Thu, 17 Apr 2025 03:44:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744861447;
+	bh=R7qsYUeUd1iUm6G89HG5YRgfHabJRXn5qvLM8WYzZhc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PnKDWUqFijN2IvXTjfo+QFPvyIILLzxLzDEEIWN6/pdVSsmzJywTV2LVI1STdLoiT
+	 phdnrBLo/4VPhkkuJgqDc1wms+HF0yu23CJeOG7X7HESMnA6mqP+QKw/Xvp63VG1sU
+	 A1qNMPRpONC4dgOvCu+gOnbS40N6a1InPw4qeMZs0sQNbIjY9oBZpkRR2lMFZdt4vz
+	 NG49+2U6mCaJLYiZi5vIyaMGVXdpFfOR0flmKXSva090mLrQFQ4A0OlALio+EoU3/M
+	 FPlOCCsZZg2W0Q34QsGvqOjEZAR3wc4Qr6bbxu92ebF4hPZ0ntALS6Km9Z+Jymk82a
+	 QC4QXj3JmM7sA==
+Date: Wed, 16 Apr 2025 20:44:06 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+	nvdimm@lists.linux.dev, Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alistair Popple <apopple@nvidia.com>,
+	Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v1] fs/dax: fix folio splitting issue by resetting old
+ folio order + _nr_pages
+Message-ID: <20250417034406.GF25659@frogsfrogsfrogs>
+References: <20250410091020.119116-1-david@redhat.com>
+ <Z_gYIU7Nq-YDYnc7@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/WUW=oNglpiXE1jIpo=9zSLl";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_gYIU7Nq-YDYnc7@aschofie-mobl2.lan>
 
---Sig_/WUW=oNglpiXE1jIpo=9zSLl
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Apr 10, 2025 at 12:12:33PM -0700, Alison Schofield wrote:
+> On Thu, Apr 10, 2025 at 11:10:20AM +0200, David Hildenbrand wrote:
+> > Alison reports an issue with fsdax when large extends end up using
+> > large ZONE_DEVICE folios:
+> >
+> 
+> Passes the ndctl/dax unit tests.
+> 
+> Tested-by: Alison Schofield <alison.schofield@intel.com>
 
-Hi all,
+This fixes the crash I complained about here:
+https://lore.kernel.org/linux-fsdevel/20250417030143.GO25675@frogsfrogsfrogs/T/
 
-Today's linux-next merge of the tip tree got a conflict in:
+Can we get a fix queued up for -rc3 if it hasn't been already, please?
 
-  drivers/cpufreq/acpi-cpufreq.c
+Tested-by: "Darrick J. Wong" <djwong@kernel.org>
 
-between commit:
+--D
 
-  395b8b5c8f67 ("cpufreq: ACPI: Don't enable boost on policy exit")
-
-from the pm tree and commit:
-
-  78255eb23973 ("x86/msr: Rename 'wrmsrl()' to 'wrmsrq()'")
-
-from the tip tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/cpufreq/acpi-cpufreq.c
-index 85b5a88f723f,8bc08f3b0d5d..000000000000
---- a/drivers/cpufreq/acpi-cpufreq.c
-+++ b/drivers/cpufreq/acpi-cpufreq.c
-@@@ -108,17 -107,25 +108,17 @@@ static void boost_set_msr_each(void *p_
-  		msr_mask =3D MSR_K7_HWCR_CPB_DIS;
-  		break;
-  	default:
- -		return -EINVAL;
- +		return;
-  	}
- =20
-- 	rdmsrl(msr_addr, val);
-+ 	rdmsrq(msr_addr, val);
- =20
-  	if (enable)
-  		val &=3D ~msr_mask;
-  	else
-  		val |=3D msr_mask;
- =20
-- 	wrmsrl(msr_addr, val);
-+ 	wrmsrq(msr_addr, val);
- -	return 0;
- -}
- -
- -static void boost_set_msr_each(void *p_en)
- -{
- -	bool enable =3D (bool) p_en;
- -
- -	boost_set_msr(enable);
-  }
- =20
-  static int set_boost(struct cpufreq_policy *policy, int val)
-
---Sig_/WUW=oNglpiXE1jIpo=9zSLl
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgAeNAACgkQAVBC80lX
-0Gx4oAf/X5Qan91RaoZ1l6h8Foky2fCb0eKrOFnPwu2mvLD1TXlIiwo2o5bSECld
-j4WdpE93n0c9thyhDuC/0fQPY1DVDlu1T0Afd7xLm4nK7Q1X9uORWMAT6dMH1Nwk
-GF12xH6YXWKGhzo714qusmcKWktwmi0ot10uvOjHW/s10TlrdtoRcofWq669M01n
-M72T55/SN/XEIN6UNv8tZl9MYNGsfRvmbmgYJ0vHUiXeGR+9SiHF8LPiN6iTjTgN
-M4TsUzvsXUzqkwX37F1t1zOWtlaSQEWHgo4PlGEjJOVaTEkHiFUj6xOCKTxmXN4X
-bwhhEF6HFZnD0X/xE8f/PiCtpuVh3Q==
-=DCBF
------END PGP SIGNATURE-----
-
---Sig_/WUW=oNglpiXE1jIpo=9zSLl--
+> 
+> snip
+> 
+> 
