@@ -1,49 +1,46 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344381FE469;
-	Thu, 17 Apr 2025 19:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B301BC9F4;
+	Thu, 17 Apr 2025 19:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744918249; cv=none; b=WZAjcMvwcfrEknsOgv3VTxkE/K5AHPKuV53vHod6dcjS5mmjTIcm2vs/19LoQ0zPc1ntVgDU3HE7ympxWe4pwMZ/xmRHstSYxDEh6wAxj7Xop4ay3834GPmakucNeAhMi36rca7Y6mTYTiMIaDiiLqbKfhRVJO1yKGii1J44wro=
+	t=1744918269; cv=none; b=cAQ0enewnZh8znRb7v88V9zIyEqsf1weXvJHx3Dbqluaq0LQi7Elk/O9/oxrR12I8X21xHQcQLuF2UZHmH146sUODsZp22HxSK5+Ol6kH0YPC1h/0AiWu9S+TiS93RSBCHwo0wVg80DoUGkzXGC4Ay7/GllsD8+c4fEj4ths104=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744918249; c=relaxed/simple;
-	bh=REmcHxXXU5+5hilcctST6LtwCBBCuJS8ASNwe2WwSTA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PzkY2dJ34oBHymvuX28Qg7GqwAge4ZeL4dP6EQn1IfQzvv/9hqnH1diOEXOMAnoJXXA/EhL+6ciIzAz82050arkJhbZQYIwq9zMR0cK7BXlHG2U8xrtsjsvggvKvHlZlWwlyJDAaSCctBJ4aI0Y2mXAq5MnoC2rBpOz1J6Ol4X4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=CzdYcVrO; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744918269; c=relaxed/simple;
+	bh=9AX6tVfbkd+pSYNXJrk75ytubbBqDkCzzjRuH1cCBcI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ZqdLkEOV78BYJzDUdm2uozf0Z9HopwJ82Mhx4FSFag2STs2DhcBXR4QCafTrw8XHGHuWFk7o0GMask2cudbueipEMtAzSO9F6zWs1kSOpUOriCRIx+zTOUOubVR+cT9z0FcQuHra+N87fRazmJZ2Df/7FtXMg4U4S4FOqpTfYUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C3givaiB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="CzdYcVrO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=ZTs5g6G9WbUbzhzliHd7tnfQ2m0a2XtS9zhb4HobkM4=; b=CzdYcVrOdf08e9EjeLBfQKsga5
-	KzKVztc38ZKwBuLUaTCHHV08c8ClMnXYU7FagIoK3EDQzgY38YK4hm37xIBapszl3AM1vd/l5j1p5
-	0OmtSUaxzjAgVHSsNQC3wvTrGFd7LFlFwhboYZHH39+Lp5vCdVfOwOMe7vDy7tZ5w4CU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u5Uwa-009pAs-Eb; Thu, 17 Apr 2025 21:30:40 +0200
-Date: Thu, 17 Apr 2025 21:30:40 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Qasim Ijaz <qasdev00@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v3 7/8] net: add ref_tracker_dir_debugfs() calls for
- netns refcount tracking
-Message-ID: <7bd4ce9b-7b92-4311-b3e0-525cd1f52227@lunn.ch>
-References: <20250417-reftrack-dbgfs-v3-0-c3159428c8fb@kernel.org>
- <20250417-reftrack-dbgfs-v3-7-c3159428c8fb@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C3givaiB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2777C4CEE4;
+	Thu, 17 Apr 2025 19:31:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744918269;
+	bh=9AX6tVfbkd+pSYNXJrk75ytubbBqDkCzzjRuH1cCBcI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=C3givaiBZ9ajgF4VdBGY/2PGt6kDEdJY24QBrLscfHSkVIs0JkxrLLvGUy+aPIisL
+	 YVNGCEBiKXeq9hfyPYEqqSKRPl0Z3mlXn2i3faLy0ZNTymx8+GLAuBu+n7nE7k3x/Z
+	 QgAU+7feL5Z8uN5PuRXAlTm/xeolipSvGwMGfY2HDVDqUiTU2hI5V/yvoOR25vCtGU
+	 ymP47NCvBN/B4vrjSmLdtg2CXYzhSa445aOwMOWSm3bjLqTx38HkmE6mMBh8ZSU8ZX
+	 EixnmcB4+POaXdUK22IXvJTtR/Ylgd4aIZh29brR0Km7YZBrFgZJjFd3mTrXBQRWxQ
+	 8+gNBWETf42RQ==
+Date: Thu, 17 Apr 2025 14:31:07 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Christian Bruel <christian.bruel@foss.st.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+	robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
+	conor+dt@kernel.org, mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com, p.zabel@pengutronix.de,
+	thippeswamy.havalige@amd.com, shradha.t@samsung.com,
+	quic_schintav@quicinc.com, cassel@kernel.org,
+	johan+linaro@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/9] PCI: stm32: Add PCIe host support for STM32MP25
+Message-ID: <20250417193107.GA123243@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,19 +49,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250417-reftrack-dbgfs-v3-7-c3159428c8fb@kernel.org>
+In-Reply-To: <20250417131833.3427126-3-christian.bruel@foss.st.com>
 
-On Thu, Apr 17, 2025 at 09:11:10AM -0400, Jeff Layton wrote:
-> After assigning the inode number to the namespace, use it to create a
-> unique name for each netns refcount tracker and register the debugfs
-> files for them.
-> 
-> init_net is registered before the ref_tracker dir is created, so add a
-> late_initcall() to register its files.
-> 
-> Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+On Thu, Apr 17, 2025 at 03:18:26PM +0200, Christian Bruel wrote:
+> Add driver for the STM32MP25 SoC PCIe Gen1 2.5 GT/s and Gen2 5GT/s
+> controller based on the DesignWare PCIe core.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> +static void stm32_pcie_deassert_perst(struct stm32_pcie *stm32_pcie)
+> +{
+> +	/* Delay PERST# de-assertion t least 100ms he power to become stable */
 
-    Andrew
+s/ t / at /
+s/ he / for / ?
+
+Could also remove "100ms".
+
+> +	msleep(PCIE_T_PVPERL_MS);
+> +
+> +	gpiod_set_value(stm32_pcie->perst_gpio, 0);
+> +
+> +	/* Wait 100ms for the REFCLK to becode stable  */
+
+s/becode/become/
+
+Could drop "100ms" here, too.
+
+> +	if (stm32_pcie->perst_gpio)
+> +		msleep(PCIE_T_RRS_READY_MS);
+> +}
+
+> +	if (stm32_pcie->wake_gpio) {
+> +		wake_irq = gpiod_to_irq(stm32_pcie->wake_gpio);
+> +		ret = dev_pm_set_dedicated_wake_irq(dev, wake_irq);
+> +		if (ret) {
+> +			dev_info(dev, "Failed to enable wake# %d\n", ret);
+
+I guess this refers to the "WAKE#" signal in the spec?  Could
+capitalize to remove the question.
