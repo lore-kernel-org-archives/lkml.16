@@ -1,104 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724C82561B3;
-	Thu, 17 Apr 2025 17:40:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FCE2561BB
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 17:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744911632; cv=none; b=M5sXenb5S2rKZEBRGGEVwMLAj0qPZ7OiesaTUmb+FeY/0ovNmSF+LA+PL0n2PvyzZgJKCDsH8fSXFOIZ+gB4478qU6h5nDzoKZnTzBmHn6yCBLewcNUr7MMA7iOvbOxqGGMdM9IXeOYi4wnnURqBmih20vwEVL8sY4J+Ncx5kRU=
+	t=1744911641; cv=none; b=bYOIn7rjhhVCikLcZbn2mYfka6+MSeDVdPUXaaRDOW5hr+ZJWuqiJf/KBIAtd8t8kW8Z/R1x9YOhTgHK66JlC0gIjXofCaeozQaO1myU2IjK+3mSLmXXmq6Wx2vtAdPv3uPIi4mqIdPT5MfpN5o9dzIKqfZ/LnvA3ULidiW9brg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744911632; c=relaxed/simple;
-	bh=RByqbqR2sj3JXiwCVh4ka5KQANsreeUtATPY5BTiidA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LIr0Hr1UoMe+nkf36r5y61VRA3pif0VU3aUeA2DEp7qw5i5RBsmXJEPvU5rt7l0oEH0q0YzgYWS0ZvW37qL01RKVdDlT1O0ude0e5e3XcqoOM1K10juaXTmsv7T+dJQCRKROPdOEny2ASQD0YQVZHnJYvhkQfVGz/f0gROVPQ1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hQbwQfnz; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hQbwQfnz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744911631; x=1776447631;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RByqbqR2sj3JXiwCVh4ka5KQANsreeUtATPY5BTiidA=;
-  b=hQbwQfnzwH+dwEccxRzCG6BO3sWkzsxi7RpBxqlfc+8r8Y1x7FFtqVUs
-   DvmYlwAplSzq5uRnjs/dUH9CLNlFU3jHdJm8ZUQJllf3LHwDpY5wcur82
-   /ddw7H7E4dotmhdKasm9x6SGkcYkIn2aO8Tc5Tg49lVK3ym4vP3P1C8Zt
-   u19CPiXeX0Pfqbk59GWEh8IL6Zhv9PRAYN8EodHEVCG8O+/mK3F9TA3GZ
-   +i+Q+d6yyTUbrvO3vIBTe3jnc+OwKxZj5V5YoMwYWBiT1tP0FLXi/5JTv
-   pO+4eXU1edrUPtZmrZ5H29svZ/k8+fa6PTEHgzgRFgbHUi8BjZWW3u0qm
-   Q==;
-X-CSE-ConnectionGUID: wiYkhklGSY6McJ8PyuyzJw==
-X-CSE-MsgGUID: t4of64igQsuZIZ9oi0BLzA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="50329945"
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="50329945"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:40:30 -0700
-X-CSE-ConnectionGUID: 1yoxHOMfRtyNrJUAZJ4bZg==
-X-CSE-MsgGUID: rqaG4ukmS1C66Xp19uaKmg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="131859981"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:40:27 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u5TDs-0000000DGnI-2wrA;
-	Thu, 17 Apr 2025 20:40:24 +0300
-Date: Thu, 17 Apr 2025 20:40:24 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu,
-	GaryWang@aaeon.com.tw
-Subject: Re: [PATCH v3 08/10] gpio: aggregator: handle runtime registration
- of gpio_desc in gpiochip_fwd
-Message-ID: <aAE9CJebvNitZkph@smile.fi.intel.com>
-References: <20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com>
- <20250416-aaeon-up-board-pinctrl-support-v3-8-f40776bd06ee@bootlin.com>
- <aAE8mY2YjWt4PB1o@smile.fi.intel.com>
+	s=arc-20240116; t=1744911641; c=relaxed/simple;
+	bh=KQBKxbaVe63fu/O/4ha9V5nRgofS7Z/e1L61wF48buY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Iko6bRV5a7Pfs8ejwNzwLYUvF7nk3wlLPuJGmva7PBwcjPepmGu0rHhS4/uLsG9kFNTy3GCVntdqTIi388wNYXGsviLpuJK3k9Fk6gbROucHxNgwfUY7rup9BNROC7nwi1pUWJjsy1tXcFqbd5KBj+D/UXmG0ca5PMb9tuLU2h4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1u5TDv-0006JN-BW; Thu, 17 Apr 2025 19:40:27 +0200
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1u5TDu-000n0w-1O;
+	Thu, 17 Apr 2025 19:40:26 +0200
+Received: from localhost ([::1] helo=dude04.red.stw.pengutronix.de)
+	by dude04.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1u5TDu-00198A-1A;
+	Thu, 17 Apr 2025 19:40:26 +0200
+From: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Date: Thu, 17 Apr 2025 19:40:17 +0200
+Subject: [PATCH] usb: dwc2: also exit clock_gating when stopping udc while
+ suspended
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAE8mY2YjWt4PB1o@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250417-dwc2_clock_gating-v1-1-8ea7c4d53d73@pengutronix.de>
+X-B4-Tracking: v=1; b=H4sIAAA9AWgC/x3M0QpAMBSA4VfRubZiaHgVSevsbE402oSSd7dcf
+ hf//0CkwBShzx4IdHLkzSeUeQY4a+9IsEkGWcimqEslzIVywnXDZXL6YO9EozrdKovGdhWkbg9
+ k+f6fw/i+H0CLtAFjAAAA
+To: Minas Harutyunyan <hminas@synopsys.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel@pengutronix.de, Michael Grzeschik <m.grzeschik@pengutronix.de>
+X-Mailer: b4 0.12.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1426;
+ i=m.grzeschik@pengutronix.de; h=from:subject:message-id;
+ bh=KQBKxbaVe63fu/O/4ha9V5nRgofS7Z/e1L61wF48buY=;
+ b=owEBbQKS/ZANAwAKAb9pWET5cfSrAcsmYgBoAT0J9MbWVW8dLjn/LbXr1wAnJ/DiRji3wFbGA
+ sB43PgAqouJAjMEAAEKAB0WIQQV2+2Fpbqd6fvv0Gi/aVhE+XH0qwUCaAE9CQAKCRC/aVhE+XH0
+ qz15EACsplTgm8stnjnf6hPHvNH2VW7uzCctFYkG2IDAit5VFrM2v6VE3N1FbN3AKxPrkXxWWNh
+ Za6XRHApz7fYNeVuK1yNEl+vzuAcwC/1vzHxRS6+mKWdLf7GQzDTv4g4mQu2PMgNFiCjiKfT0WJ
+ zwhijIM9QmAabIirhwclhnOsTP/mko936jSSL6dkMHOaH/oGQ/6DA7uAxJtJqGnlU2TNQ7dybDe
+ 48z03U+P0eN/JlVe63yvKWRGO0zKAUZk7LHcYPaflqGSaSRax+nbLAtII+/F5M86d2B9W/hf8Yt
+ D2TiOnz1VZXtso+tO9Pk5ESs4b58Bu8B9wnZfydtX/ol/u3en1CSN7I3l9u25m71cwZrU3OmZSl
+ sBgAZgkW9sdof4QbBwm8mZTjmba+fz3C1PLMU9w+tc87p3pywgCo8SQM1V2UcZSTORbXWLu5zmv
+ fD+6nD++otTfPHW0hbwXPCXfK3aqQlFqAwn/PiJ05GvMx3MRsjppDxJK1BY0F0swMkVwx9MwI6X
+ aLRCZRFr3VrdC1w9oHWL/W3Qt0KBIpqyVnvmJVAKJGFujg7/wWg3rzxm9l3QOip1iL+lpukiDDu
+ 7ESitrWIkkPWxKHdX0XX/ewctS/qPt0nvLzr/9NbAWC207o+iuy+yGqTuBm7Bz0R0tK2d/GLFrR
+ KESLDqS2tiG7T3A==
+X-Developer-Key: i=m.grzeschik@pengutronix.de; a=openpgp;
+ fpr=957BC452CE953D7EA60CF4FC0BE9E3157A1E2C64
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: m.grzeschik@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Thu, Apr 17, 2025 at 08:38:33PM +0300, Andy Shevchenko wrote:
-> On Wed, Apr 16, 2025 at 04:08:16PM +0200, Thomas Richard wrote:
+It is possible that the gadget will be disabled, while the udc is
+suspended. When enabling the udc in that case, the clock gating
+will not be enabled again. Leaving the phy unclocked. Even when the
+udc is not enabled, connecting this powered but not clocked phy leads
+to enumeration errors on the host side.
 
-...
+To ensure that the clock gating will be in an valid state, we ensure
+that the clock gating will be enabled before stopping the udc.
 
-> > +	unsigned int ndescs = 0, i;
-> 
-> Slightly better (from maintenance perspective) to decouple assignment as it's
-> not a standalone function that just counts them. So it means some code may
-> appear in between and in long-term someone might screw up with the initial
-> value for that.
-> 
-> >  	int error;
-> 
-> 	ndescs = 0;
-> 
-> > +	for (i = 0; i < chip->ngpio; i++)
-> > +		if (fwd->descs[i])
-> > +			ndescs++;
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+---
+ drivers/usb/dwc2/gadget.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Btw, note with a mask for them you can just have a bitmap_weight() call instead of all this.
+diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
+index 300ea4969f0cf..f323fb5597b32 100644
+--- a/drivers/usb/dwc2/gadget.c
++++ b/drivers/usb/dwc2/gadget.c
+@@ -4604,6 +4604,12 @@ static int dwc2_hsotg_udc_stop(struct usb_gadget *gadget)
+ 	if (!hsotg)
+ 		return -ENODEV;
+ 
++	/* Exit clock gating when driver is stopped. */
++	if (hsotg->params.power_down == DWC2_POWER_DOWN_PARAM_NONE &&
++	    hsotg->bus_suspended && !hsotg->params.no_clock_gating) {
++		dwc2_gadget_exit_clock_gating(hsotg, 0);
++	}
++
+ 	/* all endpoints should be shutdown */
+ 	for (ep = 1; ep < hsotg->num_of_eps; ep++) {
+ 		if (hsotg->eps_in[ep])
 
-	ndescs = bitmap_weight(valid_mask);
+---
+base-commit: cfb2e2c57aef75a414c0f18445c7441df5bc13be
+change-id: 20250417-dwc2_clock_gating-579a87fcdf93
 
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Michael Grzeschik <m.grzeschik@pengutronix.de>
 
