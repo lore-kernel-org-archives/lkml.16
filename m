@@ -1,331 +1,138 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FAC64A98
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 02:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1C420330
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 02:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744857118; cv=none; b=Cna/+zIC17YvJwHR6R4Ig7hhcpji6DxUpe/VUXkFcM7se/NXa+2H+cgY+FFaP6piU2pPLnrgLdjARAQdEQ7Dl7m6NglXJwGQDWhRil8kMPFf11Fuley0RtUS5Byp8xdy42CSMPigvjOTb15sCI3T8pcF3IAWfOiVOPZcOJia0do=
+	t=1744857261; cv=none; b=He3BuLx7+JDql2u9qVKmXklkj1xpQXmf19L317YpuDKKvruNb9WFlU8q7wCZcDRZLGacVeA3AeL2ufaxmsYWEsL8Uv7L3dqrx1kG+l/XfWYjPq7ijhWAOfjg6dlbloD4HbkihEmrR+odgfATZ7x6K/3ICtMogv4zXeYYCEraFIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744857118; c=relaxed/simple;
-	bh=6CJFErd7ZHftNpzjCnWNz6/INQL9Nqp2caIwYGKu25I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XNGcj/Lg1dkrYbKgmPWSAgCyXKfemNIzOo7M4lUlZgE+Mgxq+orj4iP5fEXQlS/yAr0EKypV9LVUKFfT/wBCb8d9jtU3qV7lcDNEO/EOHy0Oj4bI57F6EUsYu0vNCxzEuxzuaYsy81y+4zygTeVkxn7nuN0hFPBcRwSjZXblPck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PS6MeGBi; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744857261; c=relaxed/simple;
+	bh=lzu4RHdidFF3IvAP3ntWf+o5vVtP3s2YPbz4MELxehE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 References; b=AOFdNj5PjcGhNVmUC2Dk9pQBKwqQuVjn/2ilC8vWcZoCokYUEXn+4Iz5zwlMpxj+9dtd7eHxzuB/6qX4KBHeYS/yALahQld3LSLDFybN9pxj3HYFieWWUU8RPSwXAHMPKFjolHZhb+QEiHFKslT3TWAlfqdKxCiLDA6mSYpVOH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=u97qMqdH; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PS6MeGBi"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5f4d0da2d2cso626286a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 19:31:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744857114; x=1745461914; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eQ9jNxCJwHDF27H4ZtnkpYdR5iF/7G7+HzsDdES8aQA=;
-        b=PS6MeGBih69CUXaZx8axv1FlrF8erIbCjcUCmU/s6Tzse2biDHNCN+SoyGGfbj/2yV
-         vPpYcQ9f09TLSu6rX7F/jqseU+DS6v9CbAe2vb3I3HMDawtAyfQH8lS2iVTeSpqFI8Dw
-         0+xpgV1l5T0GvbrHkTBqUVqBgyGBC2jsXZlOtc9QgcPk3GkGhQjZpOXbZ8IKulIV0/UE
-         nDyNgcnCnXceDmKYK7COdZ6F2gCLaGTsH8fun/nBEpJYeEDrAn5MOi1SkmoAf61sBS3I
-         syV6Fg18gFi85u6vi+R8KVF15uaTtlFEVZxup2uIQSCPnPm2h9b2pEiUJ4u5MTz+N0MD
-         aemA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744857114; x=1745461914;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eQ9jNxCJwHDF27H4ZtnkpYdR5iF/7G7+HzsDdES8aQA=;
-        b=kY+Iwwy03emuh2ddpgsYJVMIRO+NgzB8udsvixLH3/zJjAj4Ck5IivmU4wzHSWf/xj
-         Ly1YUuwcdxqmJjFo4OaQWbnoVv3RoWJmL3lQl/RrL/0XuGOVRUIl0rMUWXbrLwaEzXgY
-         KqQRqQi7eD0ljc/RcYJaYder8or0+LZSDaWY6i23lvFdjQPpe60ZttOOQhlnGRXF0Qju
-         lZObug5fH5o8PeMlgsjX3gkFthbSjJeEn1xn8IpozVq38Zq6zHUCOb16fZv5Q1JKzlhW
-         eFhnZWwLI7vIBPOH24cEKJys0MGng0VZ3AoG8ZBHQte1hWTF5pEapu2zBkUuDkYB3wEc
-         nynA==
-X-Forwarded-Encrypted: i=1; AJvYcCXXIPH37wnxYEtc9tnkkweId5H4AT8zRweHorROpRTqAiOnCYz0j6SpLzzB7Rc3NyHQCdZJsHCuQYKWnE4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyjk002NqYN6/YnvcWrO2xEpaT7KhZG+MMDrHFEwUTPBvrbrRFS
-	xHj9llhiji2VkaRN/Dvrny/xecREZSdqKwQWDg4WRj1EzLtdaXud+4TPO14ZFi5zN/GrTpE7kNZ
-	1Z3AuN8P7jTMqeG7qb+629EKlrrw=
-X-Gm-Gg: ASbGncskqQvXyja6xr6uON6PEJS0TWSfX9uLE3rbfcV9WB6qVFCeUk0a+MnruSe68mR
-	b5XhEOG7jkjlXZHh8xcwcGGIkrWFJVeM15ft5po+kzxMXNSRXy5NaAa4vZfioiC2VaBmSuvKldj
-	dI1xxlaxIOL49u1icyC1g8bRY=
-X-Google-Smtp-Source: AGHT+IE5Nr4GLzI2raaMDShW1rkqtiiC5r74o6c0kUtdTnLxqsSZnkBulh852Ct7wSYAHFzYAK8bygA6zSHmbZC+eXQ=
-X-Received: by 2002:a17:907:3d0b:b0:aca:c7c6:b218 with SMTP id
- a640c23a62f3a-acb4286ed31mr425404566b.1.1744857113960; Wed, 16 Apr 2025
- 19:31:53 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="u97qMqdH"
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250417023416epoutp026eb7ca47a02c651bab5426562ba948c3~2_m4xfT-S1640016400epoutp02M
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 02:34:16 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250417023416epoutp026eb7ca47a02c651bab5426562ba948c3~2_m4xfT-S1640016400epoutp02M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744857256;
+	bh=wjeE/pXfIQFwZScu66ols+meQfxXWKJ+jO8uL41b120=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=u97qMqdHEOsVqViHF15lO573hh3LmrXb+TFeXNs6qajpDsSXAl7v9wCa1riPcaZ1P
+	 NrUj1OcmL3ogs0nDyHgPp4PtAxRDnPQmKeNO47wkt+kTock9HkbnBwbscGA+1X0AiD
+	 sL82E5l4UW9Y4KCXRVpmsIbb1Qufdd2uqt8nBoVw=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas1p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250417023416epcas1p3bd3f3e95f989c02eeba3064f378b8064~2_m4ISfKy1017310173epcas1p3c;
+	Thu, 17 Apr 2025 02:34:16 +0000 (GMT)
+Received: from epsmgec1p1.samsung.com (unknown [182.195.38.240]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4ZdMRC4Mwvz6B9m7; Thu, 17 Apr
+	2025 02:34:15 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+	epsmgec1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	F9.E3.10210.7A860086; Thu, 17 Apr 2025 11:34:15 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250417023415epcas1p47da6d269afcb5d1807004c9b708675a5~2_m3J2FBp1437214372epcas1p4E;
+	Thu, 17 Apr 2025 02:34:15 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250417023415epsmtrp1c2c84d0460a4e8829fde31c34d6783b9~2_m3I2DoX2422224222epsmtrp1A;
+	Thu, 17 Apr 2025 02:34:15 +0000 (GMT)
+X-AuditID: b6c32a33-145fd700000027e2-75-680068a75d27
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	83.03.19478.6A860086; Thu, 17 Apr 2025 11:34:14 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.253.101.61]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250417023414epsmtip21504e7ff7f309e1bf7acdf3388b2de9e~2_m24HDzL2769027690epsmtip2M;
+	Thu, 17 Apr 2025 02:34:14 +0000 (GMT)
+From: DooHyun Hwang <dh0421.hwang@samsung.com>
+To: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org,
+	James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
+	peter.wang@mediatek.com, manivannan.sadhasivam@linaro.org,
+	quic_mnaresh@quicinc.com
+Cc: grant.jung@samsung.com, jt77.jang@samsung.com, junwoo80.lee@samsung.com,
+	jangsub.yi@samsung.com, sh043.lee@samsung.com, cw9316.lee@samsung.com,
+	sh8267.baek@samsung.com, wkon.kim@samsung.com, DooHyun Hwang
+	<dh0421.hwang@samsung.com>
+Subject: [PATCH 0/2] scsi: ufs: Add an enum for ufs_trace_str_t to check uic
+ cmd error
+Date: Thu, 17 Apr 2025 11:34:02 +0900
+Message-ID: <20250417023405.6954-1-dh0421.hwang@samsung.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325133954.3699535-1-liwei.song.lsong@gmail.com> <20250331161542.3040005-1-liwei.song.lsong@gmail.com>
-In-Reply-To: <20250331161542.3040005-1-liwei.song.lsong@gmail.com>
-From: liwei song <liwei.song.lsong@gmail.com>
-Date: Thu, 17 Apr 2025 10:31:42 +0800
-X-Gm-Features: ATxdqUEoTXodvrfp2Ymcwt4VUFMiUIvGhD_n8Rg_2iUc7DD09nHVFnUSan_3TSI
-Message-ID: <CAND4H7dg_Zv8Q_QtQdfs-VUi2GZA8YmuBEaY--LPyzOG6G+sNQ@mail.gmail.com>
-Subject: Re: [PATCH v2] mtd: core: add sync between read/write and unbind device
-To: MiquelRaynal <miquel.raynal@bootlin.com>, RichardWeinberger <richard@nod.at>, 
-	VigneshRaghavendra <vigneshr@ti.com>, TudorAmbarus <tudor.ambarus@linaro.org>, 
-	PratyushYadav <pratyush@kernel.org>, MichaelWalle <mwalle@kernel.org>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHJsWRmVeSWpSXmKPExsWy7bCmnu7yDIYMg9fLFCwezNvGZvHy51U2
+	i2kffjJbzDjVxmqx79pJdotff9ezW2zs57Do2DqZyWLH8zPsFrv+NjNZXN41h82i+/oONou7
+	LZ2sFsuP/2Oy2PrpN6vFt74n7BZNf/axWFw7c4LVYvOlbywOwh6Xr3h7TJt0is3jzrU9bB4t
+	J/ezeHx8eovFY+KeOo++LasYPT5vkvNoP9DNFMAZlW2TkZqYklqkkJqXnJ+SmZduq+QdHO8c
+	b2pmYKhraGlhrqSQl5ibaqvk4hOg65aZA/STkkJZYk4pUCggsbhYSd/Opii/tCRVISO/uMRW
+	KbUgJafArECvODG3uDQvXS8vtcTK0MDAyBSoMCE74/nLtUwF3SwVf1t5Ghh7mLsYOTkkBEwk
+	jk2eC2YLCexglDj5VK+LkQvI/sQocXfWJFaIBJAzaXo9TMPHW9OZIYp2Mkp0L93JCOF8ZpRY
+	s2E72Cg2AT2JPb2rWEESIgLzmCQ6Ly1hAXGYBT4ySiy89ZoNpEpYIEKif/5+sA4WAVWJjS9W
+	M4HYvAI2EuuezmSE2CcvcamrjR0iLihxcuYTFhCbGSjevHU22B0SAgc4JFa8PwfV4CLR0/yA
+	HcIWlnh1fAuULSXxsr8Nyi6WuHLuLBuE3cIo8agjA8K2l2hubQaKcwAt0JRYv0sfYhefxLuv
+	PawgYQkBXomONiGIajWJxf++A21lB7JlJBq5IaIeEpf7OhghARcrMW3yY9YJjHKzkNw/C8n9
+	sxBWLWBkXsUollpQnJuemmxYYAiPxuT83E2M4ISsZbyD8fL8f3qHGJk4GA8xSnAwK4nwnjP/
+	ly7Em5JYWZValB9fVJqTWnyI0RQYohOZpUST84E5Ia8k3tDE0sDEzMjEwtjS2ExJnHf3x6fp
+	QgLpiSWp2ampBalFMH1MHJxSDUyuFU1dvT9Sg1UrrFXe/Zq54Oi6t6ozs64zaS8q2vPIyz74
+	juUc3Ypz1ZJuhbk7KioUpBkZrJ9vP1XJvuKG/7vN5/L/ed73X2i27Of+11I+Tga+H5fvk5oU
+	e+jcUcvL6cG9lW7MIn8fiR2RVHFrLY1iP7Pquu/KVTVSOj/WnXfT3XPyuM8Gf551a6ZMY3oe
+	Pyfid1YQv/y0/xzWrP7qp+qYQ4yeljBXS4afF12/4EPkeZfAPtli5Sz/pPlJv641fT8oc1i+
+	NN513g217qxTX2w1rPXskliXaLHtXr7oX7Tv+bNBgZ/65n06dujixdwWHrfVSl6GUx5rp/VY
+	eTnocwUp+nC7PWmcOvNzN2vnCyWW4oxEQy3mouJEAKx8G1ZRBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrBLMWRmVeSWpSXmKPExsWy7bCSvO6yDIYMgzs3rS0ezNvGZvHy51U2
+	i2kffjJbzDjVxmqx79pJdotff9ezW2zs57Do2DqZyWLH8zPsFrv+NjNZXN41h82i+/oONou7
+	LZ2sFsuP/2Oy2PrpN6vFt74n7BZNf/axWFw7c4LVYvOlbywOwh6Xr3h7TJt0is3jzrU9bB4t
+	J/ezeHx8eovFY+KeOo++LasYPT5vkvNoP9DNFMAZxWWTkpqTWZZapG+XwJXx/OVapoJuloq/
+	rTwNjD3MXYycHBICJhIfb00Hsrk4hAS2M0rMWXeAESIhI9F9fy97FyMHkC0scfhwMUTNR0aJ
+	j+cfMoHUsAnoSezpXcUKkhARWMEkMf/WR3YQh1ngN6PEpB/N7CBVwgJhElNWLmADsVkEVCU2
+	vlgN1s0rYCOx7ulMqG3yEpe62tgh4oISJ2c+YQGxmYHizVtnM09g5JuFJDULSWoBI9MqRtHU
+	guLc9NzkAkO94sTc4tK8dL3k/NxNjODI0Qrawbhs/V+9Q4xMHIyHGCU4mJVEeM+Z/0sX4k1J
+	rKxKLcqPLyrNSS0+xCjNwaIkzquc05kiJJCeWJKanZpakFoEk2Xi4JRqYOLQ5k7N8xNUZr+4
+	81VmVciXfUq5uzkz+LX8vpcv77ERTM4+52YQx7Cztu/+1hWeiodrpebM0Nzm1fY1/9fN0KAH
+	P3cLyxjOOxa7a7rbzw+pfF4Tjz9Q+z1r2a9vth6x/46pnVbUX3RIxecr665XaUpWuq0OJx2u
+	XbxT1XEpe6b+o3yG9+VXzFZKFQlmXL8t5S0113f6TK7MaenCsUdvbjlw+q2119XiM8rLq3f9
+	nPtOwGhqudDXhtLsDTvnlvQm2M7XOh3n9+25ncO/HNn7GnlsHr1ZZVanhWfs33fxcsqM5F2+
+	8ioL0tq3pWTsP5wy5/D0JZ43pP114q3uPzx1Sk854/yBA9z7Np4/frDz1SElluKMREMt5qLi
+	RABKDV6vCwMAAA==
+X-CMS-MailID: 20250417023415epcas1p47da6d269afcb5d1807004c9b708675a5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250417023415epcas1p47da6d269afcb5d1807004c9b708675a5
+References: <CGME20250417023415epcas1p47da6d269afcb5d1807004c9b708675a5@epcas1p4.samsung.com>
 
-Hi Maintainer, could you give some suggestions about this unbind issue?
+There is no trace when a ufs uic command error occurs.
 
-Thanks,
-Liwei.
+So, add "UFS_CMD_ERR" enum to ufs_trace_str_t and add trace function calls when a uic
+command error happens.
 
+DooHyun Hwang (2):
+  scsi: ufs: Add an enum for ufs_trace to check ufs cmd error
+  scsi: ufs: core: Add a trace function calling when uic command error
+    occurs
 
-On Tue, Apr 1, 2025 at 12:16=E2=80=AFAM Liwei Song <liwei.song.lsong@gmail.=
-com> wrote:
->
-> When unbind mtd device or qspi controller with a high frequency
-> reading to /dev/mtd0 device, there will be Calltrace as below:
->
-> $ while true; do cat /dev/mtd0 >/dev/null; done &
-> $ echo ff8d2000.spi  > /sys/bus/platform/drivers/cadence-qspi/unbind
->
-> Internal error: synchronous external abort: 0000000096000210 [#1] PREEMPT=
- SMP
-> Modules linked in:
-> CPU: 3 UID: 0 PID: 466 Comm: cat Not tainted 6.14.0-rc7-yocto-standard+ #=
-1
-> Hardware name: SoCFPGA Stratix 10 SoCDK (DT)
-> pc : cqspi_indirect_read_execute.isra.0+0x188/0x330
-> lr : cqspi_indirect_read_execute.isra.0+0x21c/0x330
-> Call trace:
->  cqspi_indirect_read_execute.isra.0+0x188/0x330 (P)
->  cqspi_exec_mem_op+0x8bc/0xe40
->  spi_mem_exec_op+0x3e0/0x478
->  spi_mem_no_dirmap_read+0xa8/0xc8
->  spi_mem_dirmap_read+0xdc/0x150
->  spi_nor_read_data+0x120/0x198
->  spi_nor_read+0xf0/0x280
->  mtd_read_oob_std+0x80/0x98
->  mtd_read_oob+0x9c/0x168
->  mtd_read+0x6c/0xd8
->  mtdchar_read+0xdc/0x288
->  vfs_read+0xc8/0x2f8
->  ksys_read+0x70/0x110
->  __arm64_sys_read+0x24/0x38
->  invoke_syscall+0x5c/0x130
->  el0_svc_common.constprop.0+0x48/0xf8
->  do_el0_svc+0x28/0x40
->  el0_svc+0x30/0xd0
->  el0t_64_sync_handler+0x144/0x168
->  el0t_64_sync+0x198/0x1a0
-> Code: 927e7442 aa1a03e0 8b020342 d503201f (b9400321)
-> ---[ end trace 0000000000000000 ]---
->
-> Or:
-> $ while true; do cat /dev/mtd0 >/dev/null; done &
-> $ echo spi0.0 > /sys/class/mtd/mtd0/device/driver/unbind
->
-> Unable to handle kernel paging request at virtual address 00000000000012e=
-8
-> Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
-> Modules linked in:
-> CPU: 2 UID: 0 PID: 459 Comm: cat Not tainted 6.14.0-rc7-yocto-standard+ #=
-1
-> Hardware name: SoCFPGA Stratix 10 SoCDK (DT)
-> pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
-> pc : spi_mem_exec_op+0x3e8/0x478
-> lr : spi_mem_exec_op+0x3e0/0x478
-> Call trace:
->  spi_mem_exec_op+0x3e8/0x478 (P)
->  spi_mem_no_dirmap_read+0xa8/0xc8
->  spi_mem_dirmap_read+0xdc/0x150
->  spi_nor_read_data+0x120/0x198
->  spi_nor_read+0xf0/0x280
->  mtd_read_oob_std+0x80/0x98
->  mtd_read_oob+0x9c/0x168
->  mtd_read+0x6c/0xd8
->  mtdchar_read+0xdc/0x288
->  vfs_read+0xc8/0x2f8
->  ksys_read+0x70/0x110
->  __arm64_sys_read+0x24/0x38
->  invoke_syscall+0x5c/0x130
->  el0_svc_common.constprop.0+0x48/0xf8
->  do_el0_svc+0x28/0x40
->  el0_svc+0x30/0xd0
->  el0t_64_sync_handler+0x144/0x168
->  el0t_64_sync+0x198/0x1a0
-> Code: f9400842 d63f0040 2a0003f4 f94002a1 (f9417437)
-> ---[ end trace 0000000000000000 ]---
->
-> when unbind is running, the memory allocated to qspi controller and
-> mtd device is freed during unbinding, but open/close and reading device
-> are still running, if the reading process get read lock and start
-> excuting, there will be above illegal memory access. This issue also
-> can be repruduced on many other platforms like ls1046 and nxpimx8 which
-> have qspi flash.
->
-> In this patch, register a spi bus notifier which will be called before
-> unbind process freeing device memory, add a new member mtd_event_remove
-> to block mtd open/read, then waiting for the running task to be finished,
-> after that, memory is safe to be free.
->
-> Signed-off-by: Liwei Song <liwei.song.lsong@gmail.com>
-> ---
->
-> Hi Maintainer,
->
-> This is an improved patch compared with the original one:
-> (https://patchwork.ozlabs.org/project/linux-mtd/patch/20250325133954.3699=
-535-1-liwei.song.lsong@gmail.com/),
-> This v2 patch move notifier to spi-nor to avoid crash other types of flas=
-h.
-> now this patch only aim at fixing nor-flash "bind/unbind while reading" c=
-alltrace,
-> but for other types of flash like nand also have this issue.
->
-> Thanks,
-> Liwei.
->
-> ---
->  drivers/mtd/mtdcore.c       |  3 +++
->  drivers/mtd/spi-nor/core.c  | 46 +++++++++++++++++++++++++++++++++++++
->  include/linux/mtd/mtd.h     |  1 +
->  include/linux/mtd/spi-nor.h |  1 +
->  4 files changed, 51 insertions(+)
->
-> diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-> index 724f917f91ba..a78044ee603e 100644
-> --- a/drivers/mtd/mtdcore.c
-> +++ b/drivers/mtd/mtdcore.c
-> @@ -1243,6 +1243,9 @@ int __get_mtd_device(struct mtd_info *mtd)
->         struct mtd_info *master =3D mtd_get_master(mtd);
->         int err;
->
-> +       if (master->mtd_event_remove)
-> +               return -ENODEV;
-> +
->         if (master->_get_device) {
->                 err =3D master->_get_device(mtd);
->                 if (err)
-> diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
-> index 19eb98bd6821..ae879d445046 100644
-> --- a/drivers/mtd/spi-nor/core.c
-> +++ b/drivers/mtd/spi-nor/core.c
-> @@ -16,6 +16,7 @@
->  #include <linux/mtd/mtd.h>
->  #include <linux/mtd/spi-nor.h>
->  #include <linux/mutex.h>
-> +#include <linux/of_device.h>
->  #include <linux/of_platform.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/sched/task_stack.h>
-> @@ -44,6 +45,9 @@
->  #define SPI_NOR_SRST_SLEEP_MIN 200
->  #define SPI_NOR_SRST_SLEEP_MAX 400
->
-> +static int spi_nor_remove_notifier_call(struct notifier_block *nb,
-> +                                       unsigned long event, void *data);
-> +
->  /**
->   * spi_nor_get_cmd_ext() - Get the command opcode extension based on the
->   *                        extension type.
-> @@ -1191,6 +1195,9 @@ static int spi_nor_prep(struct spi_nor *nor)
->         if (nor->controller_ops && nor->controller_ops->prepare)
->                 ret =3D nor->controller_ops->prepare(nor);
->
-> +       if (nor->mtd.mtd_event_remove)
-> +               return -ENODEV;
-> +
->         return ret;
->  }
->
-> @@ -3649,6 +3656,11 @@ static int spi_nor_probe(struct spi_mem *spimem)
->         if (ret)
->                 return ret;
->
-> +       if (!nor->spi_nor_remove_nb.notifier_call) {
-> +               nor->spi_nor_remove_nb.notifier_call =3D spi_nor_remove_n=
-otifier_call;
-> +               bus_register_notifier(&spi_bus_type, &nor->spi_nor_remove=
-_nb);
-> +       }
-> +
->         return mtd_device_register(&nor->mtd, data ? data->parts : NULL,
->                                    data ? data->nr_parts : 0);
->  }
-> @@ -3659,6 +3671,9 @@ static int spi_nor_remove(struct spi_mem *spimem)
->
->         spi_nor_restore(nor);
->
-> +       bus_unregister_notifier(&spi_bus_type, &nor->spi_nor_remove_nb);
-> +       memset(&nor->spi_nor_remove_nb, 0, sizeof(nor->spi_nor_remove_nb)=
-);
-> +
->         /* Clean up MTD stuff. */
->         return mtd_device_unregister(&nor->mtd);
->  }
-> @@ -3737,6 +3752,37 @@ static const struct of_device_id spi_nor_of_table[=
-] =3D {
->  };
->  MODULE_DEVICE_TABLE(of, spi_nor_of_table);
->
-> +static int spi_nor_remove_notifier_call(struct notifier_block *nb,
-> +                                   unsigned long event, void *data)
-> +{
-> +       struct device *dev =3D data;
-> +       struct spi_device *spi;
-> +       struct spi_mem *mem;
-> +       struct spi_nor *nor;
-> +
-> +       if (!of_match_device(spi_nor_of_table, dev))
-> +               return 0;
-> +
-> +       switch (event) {
-> +       case BUS_NOTIFY_DEL_DEVICE:
-> +       case BUS_NOTIFY_UNBIND_DRIVER:
-> +               spi =3D to_spi_device(dev);
-> +               mem =3D spi_get_drvdata(spi);
-> +               if (!mem)
-> +                       return NOTIFY_DONE;
-> +               nor =3D spi_mem_get_drvdata(mem);
-> +
-> +               mutex_lock(&nor->lock);
-> +               nor->mtd.mtd_event_remove =3D true;
-> +               mutex_unlock(&nor->lock);
-> +               msleep(300);
-> +
-> +               break;
-> +       }
-> +
-> +       return NOTIFY_DONE;
-> +}
-> +
->  /*
->   * REVISIT: many of these chips have deep power-down modes, which
->   * should clearly be entered on suspend() to minimize power use.
-> diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
-> index 8d10d9d2e830..134bfa6fcf76 100644
-> --- a/include/linux/mtd/mtd.h
-> +++ b/include/linux/mtd/mtd.h
-> @@ -290,6 +290,7 @@ struct mtd_info {
->         /* Kernel-only stuff starts here. */
->         const char *name;
->         int index;
-> +       bool mtd_event_remove;
->
->         /* OOB layout description */
->         const struct mtd_ooblayout_ops *ooblayout;
-> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-> index cdcfe0fd2e7d..d176af8fe2f2 100644
-> --- a/include/linux/mtd/spi-nor.h
-> +++ b/include/linux/mtd/spi-nor.h
-> @@ -420,6 +420,7 @@ struct spi_nor {
->         } dirmap;
->
->         void *priv;
-> +       struct notifier_block spi_nor_remove_nb;
->  };
->
->  static inline void spi_nor_set_flash_node(struct spi_nor *nor,
-> --
-> 2.40.0
->
+ drivers/ufs/core/ufs_trace.h | 1 +
+ drivers/ufs/core/ufshcd.c    | 5 +++++
+ include/ufs/ufs.h            | 2 +-
+ 3 files changed, 7 insertions(+), 1 deletion(-)
+
+-- 
+2.48.1
+
