@@ -1,331 +1,130 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6400F22AE74
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 10:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE8122F17B;
+	Thu, 17 Apr 2025 10:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744886961; cv=none; b=jHcIZvV7hW2+fDvd6V1nXZISlRdFYEpZdFFpvwRc0klYZQPytZIc7NOpNU8rv3E1+qp85RybLWSrf7cTZvRO8MiZxPzH6apdNjXDzXX7BehjEkCJvG3I1aVb3oUSybvrEM5ZRkx6+20y9/pqDPEW4PwgYm3qltb2d5AKlHck3j8=
+	t=1744887004; cv=none; b=pxpTULgFtHbcB+OyJLikL6075bejCFS7Q9ztNZZV1fJ/SLCdqxfB1SwqddKDIpKcRaqnS2mn9qMdVG71cxt5mUqDhKuBBZsgkwFdb8k1IM9MWpi6Mb7aIaIFRBzIKLBAPWzXyVa0ila9ISfMyGzRddV0D4HgX0z+jYIlNM4k6DI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744886961; c=relaxed/simple;
-	bh=cvIlQ7wMKAmBLuGD8J/k+8QJiAJq2WQfIxaEfXMl5zI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FBh+V9lUgN9MMrhBwsPokXlJ/+hWbbmUkYJLeCqYGEeS5N+5VwKHADaNhwSE4PPg24n9EPE2nPYyewyqyUWBPTNgFgTvb3/ky8hnUPffm8i7vkTm5PiA6SU3HAQ1m9aS6XD8oSkMguc0hVPuI/kz5yow8y7O+BGmTGnPf+aV7uU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=elfO380P; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VSJVXdM1; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=elfO380P; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VSJVXdM1; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1744887004; c=relaxed/simple;
+	bh=fqY4KQ2D+HxzZsXRSVS0wqXuoLvIAWlo8blt0cM+9iI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=abKbJsLBmNkiNd8/SL5rSVOYTQXNX1Hxq+N8/vdIAlJoWV586w6mlMv7j/eKrTl/NKTF0eB6cR7cPwpMX7Lcdg/x+uR+GUFGmpe9BLYTN+dHO7dNRBGPytHoAX/+6hJJ1vRHfpkJrR485lMzUNdnYErgD15Mqt2bO6fklljMpHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JWaYTg0O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="elfO380P";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VSJVXdM1";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="elfO380P";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VSJVXdM1"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 735732116B;
-	Thu, 17 Apr 2025 10:49:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744886956; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XgBGIb8Ml757E8HqOMQaHqsZI/NRoUruYO5ZoA1mMes=;
-	b=elfO380PV0rf33+Q7/uzinckxIOPD9vkd4TAU5u+L1FPUmA3oeBB9AyRRCbsDzcGRO61xo
-	kCAPy/QSRZNnW+nCEMwYGCJF54ExKa1AmKYLAqk2peiL0fKFktzJ4pMwxuDSiwA4VoJQ7F
-	8dzV3yVrEpZA87aerlUQQWjs6/4YzsU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744886956;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XgBGIb8Ml757E8HqOMQaHqsZI/NRoUruYO5ZoA1mMes=;
-	b=VSJVXdM1oxM8OHTgsNKb2F1UwlPXIT0MTCbX/bPLZkZOON2Dc4Idd0pjse7s/E9Lilow8v
-	o5aWNYrXwyPEykCw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744886956; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XgBGIb8Ml757E8HqOMQaHqsZI/NRoUruYO5ZoA1mMes=;
-	b=elfO380PV0rf33+Q7/uzinckxIOPD9vkd4TAU5u+L1FPUmA3oeBB9AyRRCbsDzcGRO61xo
-	kCAPy/QSRZNnW+nCEMwYGCJF54ExKa1AmKYLAqk2peiL0fKFktzJ4pMwxuDSiwA4VoJQ7F
-	8dzV3yVrEpZA87aerlUQQWjs6/4YzsU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744886956;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XgBGIb8Ml757E8HqOMQaHqsZI/NRoUruYO5ZoA1mMes=;
-	b=VSJVXdM1oxM8OHTgsNKb2F1UwlPXIT0MTCbX/bPLZkZOON2Dc4Idd0pjse7s/E9Lilow8v
-	o5aWNYrXwyPEykCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 15E89137CF;
-	Thu, 17 Apr 2025 10:49:16 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id j2ZuA6zcAGilEAAAD6G6ig
-	(envelope-from <jdelvare@suse.de>); Thu, 17 Apr 2025 10:49:16 +0000
-Date: Thu, 17 Apr 2025 12:49:14 +0200
-From: Jean Delvare <jdelvare@suse.de>
-To: Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: Joel Stanley <joel@jms.id.au>, Henry Martin <bsdhenrymartin@gmail.com>,
- Patrick Rudolph <patrick.rudolph@9elements.com>, Andrew Geissler
- <geissonator@yahoo.com>, Ninad Palsule <ninad@linux.ibm.com>, Patrick
- Venture <venture@google.com>, Robert Lippert <roblip@gmail.com>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/7] soc: aspeed: lpc-snoop: Lift channel config to
- const structs
-Message-ID: <20250417124914.77f80975@endymion>
-In-Reply-To: <20250411-aspeed-lpc-snoop-fixes-v1-7-64f522e3ad6f@codeconstruct.com.au>
-References: <20250411-aspeed-lpc-snoop-fixes-v1-0-64f522e3ad6f@codeconstruct.com.au>
-	<20250411-aspeed-lpc-snoop-fixes-v1-7-64f522e3ad6f@codeconstruct.com.au>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JWaYTg0O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD6F2C4CEE4;
+	Thu, 17 Apr 2025 10:50:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744887003;
+	bh=fqY4KQ2D+HxzZsXRSVS0wqXuoLvIAWlo8blt0cM+9iI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=JWaYTg0OD/0fVFqBQdp4nJ/T3KWJ8BElM8UVfGbIqVFkHSRQHvvGugY1IBgbc2PpO
+	 Wnuq/KooJPGA2PQGeW3jfhrvAwe0hz8Fc2NSRhvlROEHZJkekIfb9tWhHpoj+ATTja
+	 BBrZg0usesTUXb9rF6jC/Pe3gatXWMa3iVkOWolvFV2aEnQkwBjhiPw4n6a5zyk38i
+	 Zjrayy7jm4l12nMge8sB+Tk1sKc/68eKEMdN3s9QZIv+B8nj55T+ANlfAZO+Eit6cw
+	 odPW6C5BrkpOZ8LtTCN/upbgMdiENZti1cObDMUctmowf6ilhp3eMTRoSuubn1ZnIX
+	 WJOqgUnG441Uw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D76380664C;
+	Thu, 17 Apr 2025 10:50:43 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,yahoo.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[jms.id.au,gmail.com,9elements.com,yahoo.com,linux.ibm.com,google.com,vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_DN_SOME(0.00)[]
-X-Spam-Score: -3.80
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v26 00/23] Introducing OpenVPN Data Channel
+ Offload
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174488704201.4029344.7980447608416873863.git-patchwork-notify@kernel.org>
+Date: Thu, 17 Apr 2025 10:50:42 +0000
+References: <20250415-b4-ovpn-v26-0-577f6097b964@openvpn.net>
+In-Reply-To: <20250415-b4-ovpn-v26-0-577f6097b964@openvpn.net>
+To: Antonio Quartulli <antonio@openvpn.net>
+Cc: netdev@vger.kernel.org, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, donald.hunter@gmail.com, shuah@kernel.org,
+ sd@queasysnail.net, ryazanov.s.a@gmail.com, andrew+netdev@lunn.ch,
+ horms@kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, shaw.leon@gmail.com,
+ steffen.klassert@secunet.com, antony.antony@secunet.com,
+ willemdebruijn.kernel@gmail.com, dsahern@kernel.org, andrew@lunn.ch,
+ skhan@linuxfoundation.org
 
-Hi Andrew,
+Hello:
 
-On Fri, 11 Apr 2025 10:38:37 +0930, Andrew Jeffery wrote:
-> The shifts and masks for each channel are defined by hardware and
-> are not something that changes at runtime. Accordingly, describe the
-> information in an array of const structs and associate elements with
-> each channel instance, removing the need for the switch and handling of
-> its default case.
+This series was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-I like the idea very much. A few comments on the implementations below.
-
-> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
-> ---
->  drivers/soc/aspeed/aspeed-lpc-snoop.c | 82 +++++++++++++++++------------------
->  1 file changed, 41 insertions(+), 41 deletions(-)
+On Tue, 15 Apr 2025 13:17:17 +0200 you wrote:
+> Notable changes since v25:
+> * removed netdev notifier (was only used for our own devices)
+> * added .dellink implementation to address what was previously
+>   done in notifier
+> * removed .ndo_open and moved netif_carrier_off() call to .ndo_init
+> * fixed author in MODULE_AUTHOR()
+> * properly indented checks in ovpn.yaml
+> * switched from TSTATS to DSTATS
+> * removed obsolete comment in ovpn_socket_new()
+> * removed unrelated hunk in ovpn_socket_new()
 > 
-> diff --git a/drivers/soc/aspeed/aspeed-lpc-snoop.c b/drivers/soc/aspeed/aspeed-lpc-snoop.c
-> index 0b2044fd79b1be08dfa33bfcaf249b020c909bb9..b54d8fbf7b83ebadd4fe1b16cbddf07a0bfac868 100644
-> --- a/drivers/soc/aspeed/aspeed-lpc-snoop.c
-> +++ b/drivers/soc/aspeed/aspeed-lpc-snoop.c
-> @@ -10,6 +10,7 @@
->   * 0x80 writes made by the BIOS during the boot process.
->   */
->  
-> +#include "linux/ratelimit.h"
->  #include <linux/bitops.h>
->  #include <linux/clk.h>
->  #include <linux/interrupt.h>
-> @@ -57,7 +58,15 @@ struct aspeed_lpc_snoop_model_data {
->  	unsigned int has_hicrb_ensnp;
->  };
->  
-> +struct aspeed_lpc_snoop_channel_cfg {
-> +	u32 hicr5_en;
-> +	u32 snpwadr_mask;
-> +	u32 snpwadr_shift;
-> +	u32 hicrb_en;
-> +};
-> +
->  struct aspeed_lpc_snoop_channel {
-> +	const struct aspeed_lpc_snoop_channel_cfg *cfg;
->  	bool enabled;
->  	struct kfifo		fifo;
->  	wait_queue_head_t	wq;
-> @@ -188,7 +197,6 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
->  				   int index, u16 lpc_port)
->  {
->  	const struct aspeed_lpc_snoop_model_data *model_data;
-> -	u32 hicr5_en, snpwadr_mask, snpwadr_shift, hicrb_en;
->  	struct aspeed_lpc_snoop_channel *channel;
->  	int rc = 0;
->  
-> @@ -200,6 +208,9 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
->  	if (channel->enabled)
->  		return -EBUSY;
->  
-> +	if (WARN_ONCE(!channel->cfg, "snoop channel %d lacks required config", index))
+> [...]
 
-Why not just WARN? WARN_ONCE has a higher cost, and I don't expect this
-code path to be taken more than twice.
+Here is the summary with links:
+  - [net-next,v26,01/23] net: introduce OpenVPN Data Channel Offload (ovpn)
+    https://git.kernel.org/netdev/net-next/c/9f23d943eb6b
+  - [net-next,v26,02/23] ovpn: add basic netlink support
+    https://git.kernel.org/netdev/net-next/c/b7a63391aa98
+  - [net-next,v26,03/23] ovpn: add basic interface creation/destruction/management routines
+    https://git.kernel.org/netdev/net-next/c/c2d950c4672a
+  - [net-next,v26,04/23] ovpn: keep carrier always on for MP interfaces
+    https://git.kernel.org/netdev/net-next/c/8327a3baa9b0
+  - [net-next,v26,05/23] ovpn: introduce the ovpn_peer object
+    https://git.kernel.org/netdev/net-next/c/80747caef33d
+  - [net-next,v26,06/23] ovpn: introduce the ovpn_socket object
+    https://git.kernel.org/netdev/net-next/c/f6226ae7a0cd
+  - [net-next,v26,07/23] ovpn: implement basic TX path (UDP)
+    https://git.kernel.org/netdev/net-next/c/08857b5ec5d9
+  - [net-next,v26,08/23] ovpn: implement basic RX path (UDP)
+    https://git.kernel.org/netdev/net-next/c/ab66abbc769b
+  - [net-next,v26,09/23] ovpn: implement packet processing
+    https://git.kernel.org/netdev/net-next/c/8534731dbf2d
+  - [net-next,v26,10/23] ovpn: store tunnel and transport statistics
+    https://git.kernel.org/netdev/net-next/c/04ca14955f9a
+  - [net-next,v26,11/23] ovpn: implement TCP transport
+    https://git.kernel.org/netdev/net-next/c/11851cbd60ea
+  - [net-next,v26,12/23] skb: implement skb_send_sock_locked_with_flags()
+    https://git.kernel.org/netdev/net-next/c/17240749f26e
+  - [net-next,v26,13/23] ovpn: add support for MSG_NOSIGNAL in tcp_sendmsg
+    https://git.kernel.org/netdev/net-next/c/36bb1d713a15
+  - [net-next,v26,14/23] ovpn: implement multi-peer support
+    https://git.kernel.org/netdev/net-next/c/05003b408c20
+  - [net-next,v26,15/23] ovpn: implement peer lookup logic
+    https://git.kernel.org/netdev/net-next/c/a3aaef8cd173
+  - [net-next,v26,16/23] ovpn: implement keepalive mechanism
+    https://git.kernel.org/netdev/net-next/c/3ecfd9349f40
+  - [net-next,v26,17/23] ovpn: add support for updating local or remote UDP endpoint
+    https://git.kernel.org/netdev/net-next/c/f0281c1d3732
+  - [net-next,v26,18/23] ovpn: implement peer add/get/dump/delete via netlink
+    https://git.kernel.org/netdev/net-next/c/1d36a36f6d53
+  - [net-next,v26,19/23] ovpn: implement key add/get/del/swap via netlink
+    https://git.kernel.org/netdev/net-next/c/203e2bf55990
+  - [net-next,v26,20/23] ovpn: kill key and notify userspace in case of IV exhaustion
+    https://git.kernel.org/netdev/net-next/c/89d3c0e4612a
+  - [net-next,v26,21/23] ovpn: notify userspace when a peer is deleted
+    https://git.kernel.org/netdev/net-next/c/a215d253c17a
+  - [net-next,v26,22/23] ovpn: add basic ethtool support
+    https://git.kernel.org/netdev/net-next/c/b756861e6e63
+  - [net-next,v26,23/23] testing/selftests: add test tool and scripts for ovpn module
+    https://git.kernel.org/netdev/net-next/c/959bc330a439
 
-> +		return -EINVAL;
-> +
->  	init_waitqueue_head(&channel->wq);
->  
->  	channel->miscdev.minor = MISC_DYNAMIC_MINOR;
-> @@ -220,39 +231,20 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
->  		goto err_free_fifo;
->  
->  	/* Enable LPC snoop channel at requested port */
-> -	switch (index) {
-> -	case 0:
-> -		hicr5_en = HICR5_EN_SNP0W | HICR5_ENINT_SNP0W;
-> -		snpwadr_mask = SNPWADR_CH0_MASK;
-> -		snpwadr_shift = SNPWADR_CH0_SHIFT;
-> -		hicrb_en = HICRB_ENSNP0D;
-> -		break;
-> -	case 1:
-> -		hicr5_en = HICR5_EN_SNP1W | HICR5_ENINT_SNP1W;
-> -		snpwadr_mask = SNPWADR_CH1_MASK;
-> -		snpwadr_shift = SNPWADR_CH1_SHIFT;
-> -		hicrb_en = HICRB_ENSNP1D;
-> -		break;
-> -	default:
-> -		rc = -EINVAL;
-> -		goto err_misc_deregister;
-> -	}
-> -
-> -	/* Enable LPC snoop channel at requested port */
-
-Strange that you discard a comment which you added yourself in the
-previous patch.
-
-> -	regmap_update_bits(lpc_snoop->regmap, HICR5, hicr5_en, hicr5_en);
-> -	regmap_update_bits(lpc_snoop->regmap, SNPWADR, snpwadr_mask,
-> -			   lpc_port << snpwadr_shift);
-> +	regmap_update_bits(lpc_snoop->regmap, HICR5, channel->cfg->hicr5_en,
-> +		channel->cfg->hicr5_en);
-
-Not caused by your patch, but I think regmap_set_bits() could be used
-here to improve readability.
-
-> +	regmap_update_bits(lpc_snoop->regmap, SNPWADR, channel->cfg->snpwadr_mask,
-> +		lpc_port << channel->cfg->snpwadr_shift);
->  
->  	model_data = of_device_get_match_data(dev);
->  	if (model_data && model_data->has_hicrb_ensnp)
-> -		regmap_update_bits(lpc_snoop->regmap, HICRB, hicrb_en, hicrb_en);
-> +		regmap_update_bits(lpc_snoop->regmap, HICRB, channel->cfg->hicrb_en,
-> +			channel->cfg->hicrb_en);
-
-Could also use regmap_set_bits().
-
->  
->  	channel->enabled = true;
->  
->  	return 0;
->  
-> -err_misc_deregister:
-> -	misc_deregister(&lpc_snoop->chan[index].miscdev);
->  err_free_fifo:
->  	kfifo_free(&lpc_snoop->chan[index].fifo);
->  	return rc;
-> @@ -272,21 +264,7 @@ static void aspeed_lpc_disable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
->  	if (!channel->enabled)
->  		return;
->  
-> -	/* Disable interrupts along with the device */
-
-Any reason for killing this poor innocent comment? ^^
-
-> -	switch (index) {
-> -	case 0:
-> -		regmap_update_bits(lpc_snoop->regmap, HICR5,
-> -				   HICR5_EN_SNP0W | HICR5_ENINT_SNP0W,
-> -				   0);
-> -		break;
-> -	case 1:
-> -		regmap_update_bits(lpc_snoop->regmap, HICR5,
-> -				   HICR5_EN_SNP1W | HICR5_ENINT_SNP1W,
-> -				   0);
-> -		break;
-> -	default:
-> -		return;
-> -	}
-> +	regmap_update_bits(lpc_snoop->regmap, HICR5, channel->cfg->hicr5_en, 0);
-
-Could use regmap_clear_bits() if I'm not mistaken.
-
->  
->  	channel->enabled = false;
->  	/* Consider improving safety wrt concurrent reader(s) */
-> @@ -294,6 +272,21 @@ static void aspeed_lpc_disable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
->  	kfifo_free(&channel->fifo);
->  }
->  
-> +static const struct aspeed_lpc_snoop_channel_cfg channel_cfgs[] = {
-> +	{
-> +		.hicr5_en = HICR5_EN_SNP0W | HICR5_ENINT_SNP0W,
-> +		.snpwadr_mask = SNPWADR_CH0_MASK,
-> +		.snpwadr_shift = SNPWADR_CH0_SHIFT,
-> +		.hicrb_en = HICRB_ENSNP0D,
-> +	},
-> +	{
-> +		.hicr5_en = HICR5_EN_SNP1W | HICR5_ENINT_SNP1W,
-> +		.snpwadr_mask = SNPWADR_CH1_MASK,
-> +		.snpwadr_shift = SNPWADR_CH1_SHIFT,
-> +		.hicrb_en = HICRB_ENSNP1D,
-> +	},
-> +};
-> +
->  static int aspeed_lpc_snoop_probe(struct platform_device *pdev)
->  {
->  	struct aspeed_lpc_snoop *lpc_snoop;
-> @@ -308,6 +301,13 @@ static int aspeed_lpc_snoop_probe(struct platform_device *pdev)
->  	if (!lpc_snoop)
->  		return -ENOMEM;
->  
-> +	static_assert(ARRAY_SIZE(channel_cfgs) == ARRAY_SIZE(lpc_snoop->chan),
-> +		"Broken implementation assumption regarding cfg count");
-> +	static_assert(ARRAY_SIZE(lpc_snoop->chan) == 2,
-> +		"Broken implementation assumption regarding channel count");
-
-Wouldn't it be good (and maybe sufficient) to declare
-aspeed_lpc_snoop_channel_cfg as channel_cfgs[NUM_SNOOP_CHANNELS]?
-
-If you insist on keeping the second assert then you should at least use
-NUM_SNOOP_CHANNELS instead of hard-coding 2.
-
-> +	lpc_snoop->chan[0].cfg = &channel_cfgs[0];
-> +	lpc_snoop->chan[1].cfg = &channel_cfgs[1];
-
-Could this be done at the beginning of aspeed_lpc_enable_snoop()? So
-that you don't have to duplicate the statement (and don't set
-lpc_snoop->chan[1].cfg if there's no second port). Would save a WARN as
-well.
-
-> +
->  	np = pdev->dev.parent->of_node;
->  	if (!of_device_is_compatible(np, "aspeed,ast2400-lpc-v2") &&
->  	    !of_device_is_compatible(np, "aspeed,ast2500-lpc-v2") &&
-> 
-
-
+You are awesome, thank you!
 -- 
-Jean Delvare
-SUSE L3 Support
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
