@@ -1,230 +1,85 @@
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E071E5B75;
-	Thu, 17 Apr 2025 06:20:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16121E5B75;
+	Thu, 17 Apr 2025 06:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744870841; cv=none; b=XkJ6GgzPgD5D2e2MXQ1MPiK+GG1nHmVAR9QV1zze0IGKrUMymaPwAOrICC0Jwvox6++iFrlwWrLD7E+69oxwZPkXnGZdY8WHhPZ3qWDd1kvUP6Fb1o/IyBoLMZ0kG6NTZ3qLtS+XvYNBs6yQ/JZx3r23jFDbfnAuOzvBXCyt3uw=
+	t=1744870853; cv=none; b=Q840N8J3kGq6V2LFlrsQYn6UcaewANZQUNktNNwmPKg4pdl6al1/47ULUS6LmU1dlziFjBSjGaQZo5EweXKK6BNS5Ld4Jw5zVdrAI0Y1o89vSsOcVj1G8MUXGbIyWYJCWccd8yYZKq/8okV8+2bTh6y74rLPWrNccwJVu7uTO98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744870841; c=relaxed/simple;
-	bh=jWdWYL2xljv5vybxvl3qY4QI5KxWxjAA4vZnrXfmHks=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=HUdQkIuev1g9f/hqDijqhyLMItJqIeLDDrxFMJ/XD2QV8AxZ86pqYg5QfM9Bch+PgLRdPW4nmhNXgFhhtvH0GedTR2kkjE4CaHQvQUQkky+E7QC+837sGGPTTA58LWaDlPmxLg1sBbrKJ92nWdedXumsJbus80sqbByzMPStEx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=kKGEobHR; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+	s=arc-20240116; t=1744870853; c=relaxed/simple;
+	bh=x/rr7Zz2xfD3RvRsd0FGGIq1TtjiOPDKWjaQ3aD9bIw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CXCVKjMm0tDG4SwmNS2YyLJ7ECWMeZVqUa36OZGYbP69qDJu2wXjWvHkbD2NxEFPSzL1tfhk/6wS9Ra4pGCALi6X5P23AbH0JOiUvYqQnfYslJ3oaxp4eAAzudtpHtL7DZ792RiQia6LzsKK84MGgiTXSXZGmUsV2SWGBYMlmxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FcMtRcyP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="kKGEobHR"
-Received: from localhost (web.docker-mailserver_default [172.18.0.2])
-	by mail.mainlining.org (Postfix) with ESMTPSA id 6B705BBAD2;
-	Thu, 17 Apr 2025 06:20:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
-	s=psm; t=1744870836;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vINGxXd1a/HvJqBAZg5qAK4jrccoMyLLJvCH80uIjEo=;
-	b=kKGEobHRSReKJ1RvO2JA11xM/eViImkOIcHP3mrAOubxN+UtDvrII4KRy90i6k5bPBDIxT
-	szymDQiM9mbUgeEAd+KC8kJj4nNTqMOtsXfegsmboLsNM9nF0NaFXgRLtF8reYVZ+X4j70
-	eWpZCm1qaIh+JSMAaxId0BwWa/iiFqEdOiJfPZY9M7Q7DTHYq8khJz7+GBYZmI/KXdUHej
-	GWRv94Oq5IAOHG+4U3UoYBhps/O6touiPhMBHdgavS8A24LcSel9RT68m+cRBoGYoD2Ojw
-	vqEltuN9kIh+Qe0hYbnsP36WWfGc0tbAdntaxQ7ro6DSZmtgp2I3ulVQygqZmQ==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FcMtRcyP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CFAFC4CEE4;
+	Thu, 17 Apr 2025 06:20:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744870852;
+	bh=x/rr7Zz2xfD3RvRsd0FGGIq1TtjiOPDKWjaQ3aD9bIw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FcMtRcyPQiZlivoPspWmnOvXBu+ifzrM6kpIWEA+E0xeoWP77NRv8qnBezfBXsczx
+	 jm7bn94t8yf1L0qth7MVQEnWCpdiZi8w6AIz1q3a4ru5VrgORatKOPkxsKw0Inpqo8
+	 YYvEa8BgqkIZBF15ZYpcIvb7O1hXGyDW46iKLaUNgmRSaPm1FI+iXJZdyd/0pRfNy/
+	 bgF4zAaKagzx4LWom4M6//jJq5Iq0MvElxSw2iDHsoRaxRK3dFlh4tFdEZemyevCck
+	 Jew08Fh4WbZOfoLwyQiWDhWoCawXXTDDeZiKLq48xW8f98/TPs2Wi01JjDoLQGA532
+	 2W+EfYCf8k+2g==
+Date: Thu, 17 Apr 2025 08:20:48 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Eason Yang <j2anfernee@gmail.com>
+Cc: jic23@kernel.org, lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, 
+	javier.carrasco.cruz@gmail.com, gstols@baylibre.com, alisadariana@gmail.com, 
+	tgamblin@baylibre.com, olivier.moysan@foss.st.com, antoniu.miclaus@analog.com, 
+	eblanc@baylibre.com, andriy.shevchenko@linux.intel.com, joao.goncalves@toradex.com, 
+	tobias.sperling@softing.com, marcelo.schmitt@analog.com, 
+	angelogioacchino.delregno@collabora.com, thomas.bonnefille@bootlin.com, herve.codina@bootlin.com, 
+	chanh@os.amperecomputing.com, KWLIU@nuvoton.com, yhyang2@nuvoton.com, 
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/2] dt-bindings: iio: adc: add NCT7201 ADCs
+Message-ID: <20250417-acoustic-ambrosial-mosquito-9d75f4@shite>
+References: <20250416081734.563111-1-j2anfernee@gmail.com>
+ <20250416081734.563111-2-j2anfernee@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 17 Apr 2025 08:20:36 +0200
-From: barnabas.czeman@mainlining.org
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>,
- =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, Linus Walleij
- <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, Srinivas Kandagatla
- <srinivas.kandagatla@linaro.org>, Joerg Roedel <joro@8bytes.org>, Will
- Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Konrad Dybcio
- <konradybcio@kernel.org>, Rob Clark <robdclark@gmail.com>, Sean Paul
- <sean@poorly.run>, Abhinav Kumar <quic_abhinavk@quicinc.com>, Marijn Suijten
- <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, Simona
- Vetter <simona@ffwll.ch>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, Dmitry Baryshkov
- <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- iommu@lists.linux.dev, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, phone-devel@vger.kernel.org,
- ~postmarketos/upstreaming@lists.sr.ht, linux@mainlining.org, Dang Huynh
- <danct12@riseup.net>
-Subject: Re: [PATCH v4 4/6] arm64: dts: qcom: Add initial support for MSM8937
-In-Reply-To: <f85195a1-f55e-41ea-967d-b758014cba06@oss.qualcomm.com>
-References: <20250315-msm8937-v4-0-1f132e870a49@mainlining.org>
- <20250315-msm8937-v4-4-1f132e870a49@mainlining.org>
- <f85195a1-f55e-41ea-967d-b758014cba06@oss.qualcomm.com>
-Message-ID: <93ea35691deaa1ff38d229225e26cf41@mainlining.org>
-X-Sender: barnabas.czeman@mainlining.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250416081734.563111-2-j2anfernee@gmail.com>
 
-On 2025-04-14 22:55, Konrad Dybcio wrote:
-> On 3/15/25 3:57 PM, Barnabás Czémán wrote:
->> From: Dang Huynh <danct12@riseup.net>
->> 
->> Add initial support for MSM8937 SoC.
->> 
->> Signed-off-by: Dang Huynh <danct12@riseup.net>
->> Co-developed-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
->> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
->> ---
+On Wed, Apr 16, 2025 at 04:17:33PM GMT, Eason Yang wrote:
+> Add a binding specification for the Nuvoton NCT7201/NCT7202 up to 12-bit
+> ADCs with I2C interface.
 > 
-> [...]
-> 
->> +			power-domains = <&cpu_pd0>;
->> +			power-domain-names = "psci";
-> 
-> So CPU4-7 get "nicer" idle, but 0-3 don't?
-> 
-> [...]
-> 
->> +		cpu-map {
->> +			/* The MSM8937 has 2 cluster A53 setup. */
-> 
-> This comment seems superfluous
-> 
-> [...]
-> 
->> +	timer {
-> 
-> 'p' < 't', please sort top-level nodes alphabetically
-> 
-> [...]
-> 
->> +				wcss-wlan2-pins {
->> +					pins = "gpio76";
->> +					function = "wcss_wlan2";
->> +					drive-strength = <6>;
-> 
-> please unify this order (drive-strength before bias)
-> 
->> +					bias-pull-up;
->> +
->> +				};
-> 
-> Extra newline
-> 
-> [...]
-> 
->> +		gpu: gpu@1c00000 {
->> +			compatible = "qcom,adreno-505.0", "qcom,adreno";
->> +			reg = <0x1c00000 0x40000>;
->> +			reg-names = "kgsl_3d0_reg_memory";
->> +			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
->> +			interrupt-names = "kgsl_3d0_irq";
->> +			#cooling-cells = <2>;
->> +			clocks = <&gcc GCC_OXILI_GFX3D_CLK>,
->> +				<&gcc GCC_OXILI_AHB_CLK>,
->> +				<&gcc GCC_BIMC_GFX_CLK>,
->> +				<&gcc GCC_BIMC_GPU_CLK>,
->> +				<&gcc GCC_OXILI_TIMER_CLK>,
->> +				<&gcc GCC_OXILI_AON_CLK>;
-> 
-> Please align the <s
-> 
->> +			clock-names = "core",
->> +				      "iface",
->> +				      "mem_iface",
->> +				      "alt_mem_iface",
->> +				      "rbbmtimer",
->> +				      "alwayson";
->> +			operating-points-v2 = <&gpu_opp_table>;
->> +			power-domains = <&gcc OXILI_GX_GDSC>;
->> +
->> +			iommus = <&adreno_smmu 0>;
->> +
->> +			status = "disabled";
->> +
->> +			gpu_opp_table: opp-table {
->> +				compatible = "operating-points-v2";
->> +
->> +				opp-19200000 {
->> +					opp-hz = /bits/ 64 <19200000>;
->> +					opp-supported-hw = <0xFF>;
-> 
-> 0xff is overly broad, please document the existing known speed bins
-There are no speedbins for 8937 gpu. 8940 have but 8940 is not scope of 
-this series.
-> 
-> [...]
-> 
->> +		adreno_smmu: iommu@1c40000 {
->> +			compatible = "qcom,msm8996-smmu-v2",
->> +				     "qcom,adreno-smmu",
->> +				     "qcom,smmu-v2";
->> +			reg = <0x1c40000 0x10000>;
-> 
-> Does it work as-is, without iommu changes?
-> 
-> [...]
-> 
->> +	thermal_zones: thermal-zones {
->> +		aoss-thermal {
->> +			polling-delay-passive = <250>;
-> 
-> There are no passive trip points> +
->> +			thermal-sensors = <&tsens 0>;
->> +
->> +			trips {
->> +				aoss_alert0: trip-point0 {
->> +					temperature = <85000>;
->> +					hysteresis = <2000>;
->> +					type = "hot";
->> +				};
-> 
-> Please convert these to 'critical' instead
-> 
-> [...]
-> 
->> +		cpuss1-thermal {
->> +			polling-delay-passive = <250>;
-> 
-> You can drop polling-delay-passive under CPU tzones, as threshold
-> crossing is interrupt-driven
-> 
->> +
->> +			thermal-sensors = <&tsens 4>;
->> +
->> +			cooling-maps {
->> +				map0 {
->> +					trip = <&cpuss1_alert0>;
->> +					cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +			};
->> +
->> +			trips {
->> +				cpuss1_alert0: trip-point0 {
->> +					temperature = <75000>;
->> +					hysteresis = <2000>;
->> +					type = "passive";
->> +				};
->> +
->> +				cpuss1_alert1: trip-point1 {
->> +					temperature = <85000>;
->> +					hysteresis = <2000>;
->> +					type = "hot";
->> +				};
-> 
-> On newer platforms we rely on LMH to shut down the device if it
-> were to reach the junction temperature, but let's leave them here
-> as probably no one remembers for sure how reliable that is on these
-> older platforms and you're most likely not willing to test that
-> 
-> Konrad
+> Signed-off-by: Eason Yang <j2anfernee@gmail.com>
+
+Did you read the message you got from me last time?
+
+<form letter>
+This is a friendly reminder during the review process.
+
+It looks like you received a tag and forgot to add it.
+
+If you do not know the process, here is a short explanation:
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+versions of patchset, under or above your Signed-off-by tag, unless
+patch changed significantly (e.g. new properties added to the DT
+bindings). Tag is "received", when provided in a message replied to you
+on the mailing list. Tools like b4 can help here. However, there's no
+need to repost patches *only* to add the tags. The upstream maintainer
+will do that for tags received on the version they apply.
+
+Please read:
+https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
+
+If a tag was not added on purpose, please state why and what changed.
+</form letter>
+
+Best regards,
+Krzysztof
+
