@@ -1,112 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F433253B6D;
-	Thu, 17 Apr 2025 15:22:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C647119D898;
+	Thu, 17 Apr 2025 15:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744903343; cv=none; b=STe80W0LZKZekaHlvNmnpZXEmabTcftIBedRZlBjeAnZHeu3nfuoWEeaACFkOptcYNUNhlvs7+doij+Q++Cp89RmG9XOwnGqcl7eKpPsSf5mjTSnWNfLMEGLPNbTNmDy6sfGqTxuHJMRG7L3giBYzCuFV8zORYb61o9zVO6Oq1c=
+	t=1744903384; cv=none; b=i1YNXH0KWNR9BwVnZot7eYTB/rHyZb1sJWwLgmClwMfxKq/tDOR8vPYonwaguVjAmNS/ENjm824hP28mW9PhDloBlUhf34jDfyPe/ufUMGQTPqXHFy5K/wlNn+bwioxAvBNFPPmU/yl6Ii7I3hLhUvQ1lCO2b6F8G3bdJKCAyvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744903343; c=relaxed/simple;
-	bh=+d5Tt/mnxSSxnKX+ZWT69Gg5ImQItqXJ1kvJcCqc0I0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MS8Cnchqso+GI1ABFiVLbRxHFhTzRBTdS/zSbfztDUku5IH1Yil4SzLCqNM1kYcoIH3IY/EXlqdvz9WA+OwJ8GPOC7jerch6NFyH9ixE37WToxSWkriCgriX3qQ0jsuMzb7dA+/WVMM1TVz3kW93lUSrMEHFbJKVgLmMBdOK52I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fkN1axgs; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744903384; c=relaxed/simple;
+	bh=dMyG7WSN4UzW62EmgSZr5yjiNbS6P89IH+n++NqakCY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Cz+N5zUxDRk9O0nXlnRG5pS4jH7/UittxkBJYrtEDKfBLRU0/AQ9ZScLFtcvk4ncP6b4R/TRO8geYGUqfhosSC0ZSSuq5xA7/7Zq7L9geMhr7QnvFJ0HIcPdlNUDuGh+2T77dI1CVHw1etUMO8SJGMn3ufT2yV7CcB5x2cegCzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=k5tEo7mL; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fkN1axgs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744903341; x=1776439341;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+d5Tt/mnxSSxnKX+ZWT69Gg5ImQItqXJ1kvJcCqc0I0=;
-  b=fkN1axgsZZ2QO4fR2Bl/QyG+1UlqPUBbuZNywZCx4vEe0YfCjkYFp4vT
-   VCXx3RGPR9JdrR0h475lDO8Lmf4l6H3RuTE+UsJM++NgkINvh716UYlp2
-   WjvESL/CTGDZxhwb+fEbYtsFg12erVzQfpFFBNwlO0gZ2PZYf/U5YEd/4
-   GAi2YJRpW8umxbM3nA5PMrZRamOL2SZsQMUX1+hqiCON4dtwQ3GljvInU
-   FdL7/g/KmXoZnzugks5polL+GiYHumLYTrIHE542P90hoojfQKd9Yqhka
-   vaI4VvsHyDbIqaXO1duHR5ZcmMKHXTjmg1j3pE7P91J4Vq9IRkupJUs3A
-   A==;
-X-CSE-ConnectionGUID: a31pUV2FRqGpIw6usicMpw==
-X-CSE-MsgGUID: Ls6T/qi6R+KslCefQRdadw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="57491489"
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="57491489"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 08:22:21 -0700
-X-CSE-ConnectionGUID: LQ4kZetMRt+j6Pjvc2NiTA==
-X-CSE-MsgGUID: xH8gX4lDTE6PH7+z8SfxVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="135684999"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 08:22:20 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u5R4D-0000000DEdd-073w;
-	Thu, 17 Apr 2025 18:22:17 +0300
-Date: Thu, 17 Apr 2025 18:22:16 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: David Lechner <dlechner@baylibre.com>
-Subject: Re: [PATCH v2 1/2] spi: Add spi_bpw_to_bytes() helper and use it
-Message-ID: <aAEcqC9R6GDOr5L4@smile.fi.intel.com>
-References: <20250417151958.490174-1-andriy.shevchenko@linux.intel.com>
- <20250417151958.490174-2-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="k5tEo7mL"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53HClO8P004998;
+	Thu, 17 Apr 2025 15:22:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	jqU3VPQFajJYSl8LLs2AnZ3oWYCgLyBeHhzLeGcXoOs=; b=k5tEo7mLk1gNiwAH
+	O2nmwX55xA2EB+VATUvpCgA/k7T8SX5GYiFOlg5r/iyzDv3EHo26lL7Z27oq+SQ8
+	9aQG3bgjRXiyujJ5cT9rpdGhG1WU0KgfFP9bYOR/rv4NqQVMDWPMbXcwjwkJdGiu
+	WGQ31pmfJuQpWWLNCoIn3l8pMhIbyeUFvtwhnqshBOtKmuZ7zfE+k3RcVZ+Tr7HP
+	FM0leJ/Q4k6LwPbum0dP4g3+wu2HJRNBsFdA9ki7NWiLzan3REeLn9AVpwUyYQRe
+	DFg8Z4Vj5zfmVOWXw/AoEYNVVuosx73FKY/qx7KW5oEO+pHZtA1zmjRkhAfTmJ3W
+	teWOnQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf69ydkw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 15:22:55 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53HFMs9h002009
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 15:22:54 GMT
+Received: from [10.216.1.40] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 17 Apr
+ 2025 08:22:50 -0700
+Message-ID: <e6315453-00bb-36e3-a9fd-098e4871858b@quicinc.com>
+Date: Thu, 17 Apr 2025 20:52:46 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417151958.490174-2-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v7 6/7] media: platform: qcom/iris: rename platform_sm8550
+ to platform_gen2
+Content-Language: en-US
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+        Dikshita Agarwal
+	<quic_dikshita@quicinc.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Bryan O'Donoghue
+	<bryan.odonoghue@linaro.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org>
+ <20250417-topic-sm8x50-iris-v10-v7-6-f020cb1d0e98@linaro.org>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <20250417-topic-sm8x50-iris-v10-v7-6-f020cb1d0e98@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: rNZjktt6d_gP274dR_OoaoGXncePfpDF
+X-Authority-Analysis: v=2.4 cv=JNc7s9Kb c=1 sm=1 tr=0 ts=68011ccf cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=qSEDWXbd971SOQ7OCGAA:9
+ a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: rNZjktt6d_gP274dR_OoaoGXncePfpDF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-17_04,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
+ impostorscore=0 clxscore=1015 phishscore=0 adultscore=0 priorityscore=1501
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504170115
 
-On Thu, Apr 17, 2025 at 06:17:52PM +0300, Andy Shevchenko wrote:
-> This helper converts the given bits per word to bytes. The result
-> will always be power-of-two, e.g.,
+
+
+On 4/17/2025 8:29 PM, Neil Armstrong wrote:
+> In order to prepare for supporting the SM8650 SoC, move the
+> iris_platform_sm8550.c file into iris_platform_gen2.c that will
+> contain all the common HFI GEN2x structures.
 > 
->     ===============    =================
->     Input (in bits)    Output (in bytes)
->     ===============    =================
->             0                   0
->             5                   1
->             9                   2
-
->             2                   4
->             3                   8
-
-My gosh, it lost the couple of characters here, should be 21 and 37 respectively...
-I'll fix this in v3.
-
->     ===============    =================
-
-...
-
-> + * This function converts the given @bpw to bytes. The result is always
-> + * power-of-two, e.g.,
-> + *
-> + *  ===============    =================
-> + *  Input (in bits)    Output (in bytes)
-> + *  ===============    =================
-> + *          0                   0
-> + *          5                   1
-> + *          9                   2
-
-> + *          2                   4
-> + *          3                   8
-
-As per above,
-
-> + *  ===============    =================
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # x1e Dell
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+>  drivers/media/platform/qcom/iris/Makefile                               | 2 +-
+>  .../platform/qcom/iris/{iris_platform_sm8550.c => iris_platform_gen2.c} | 0
+>  2 files changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/Makefile b/drivers/media/platform/qcom/iris/Makefile
+> index 473aaf655448180ade917e642289677fc1277f99..e86d00ee6f15dda8bae2f25f726feb0d427b7684 100644
+> --- a/drivers/media/platform/qcom/iris/Makefile
+> +++ b/drivers/media/platform/qcom/iris/Makefile
+> @@ -10,7 +10,7 @@ qcom-iris-objs += \
+>               iris_hfi_gen2_packet.o \
+>               iris_hfi_gen2_response.o \
+>               iris_hfi_queue.o \
+> -             iris_platform_sm8550.o \
+> +             iris_platform_gen2.o \
+>               iris_power.o \
+>               iris_probe.o \
+>               iris_resources.o \
+> diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c b/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+> similarity index 100%
+> rename from drivers/media/platform/qcom/iris/iris_platform_sm8550.c
+> rename to drivers/media/platform/qcom/iris/iris_platform_gen2.c
+> 
+Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
