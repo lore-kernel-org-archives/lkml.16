@@ -1,149 +1,163 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B84C1DEFC5;
-	Thu, 17 Apr 2025 05:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6F52135B8;
+	Thu, 17 Apr 2025 05:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744868385; cv=none; b=C6fO54FeK6EcRze5PhBcf5PJhmZcjOUqP0aXw1ZpmRhWQZclzS1kyT8qb6c7lCQz5NjsGFTOvZHRoilIUBruTJgOn0QGdSWKz5WPvlmdryTKDncF+KWhLGqQ6RWdOMMcbHCzZNOj/ykE60XUbg7fc3GHv06aNNT0CycAneFtac0=
+	t=1744868391; cv=none; b=CsNEmBlf3U2Zn8UKdCZzxq1bNY8Tpi5IrqTLLSAXluO0YQH+2FFRrXCwCYCKx49/e7GcgOy3QkevlTNTBBCqAvGnv33W8fdm45UGUDp/y4sYiypOGbmiXiky+xV2Cu6kb9ykFHdgh1emcTdL+qSg86GzHvntZxxNAhpc2zknY3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744868385; c=relaxed/simple;
-	bh=Yuyjus0LQVpAFwdjQxMQDi6sUsGpYsZoeuhkm7vBU4E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PhS4Mc8cC4fqCxuCPP4TPIaKOWP1SBN8/6GdO78B/DXMekzMMt4WkjT7Aqz1hD3U/0OwPj0w/ntazPOmjH+zmoZUnIxkHrC/wAYoq0+Jkutvxz5c/zA2NAQ++2+aZalBrfiZ2teMCl9tffayAaQ5InR+LBGse7sLKx0JhFRnoD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qti.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=cOJB4ZiR; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qti.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1744868391; c=relaxed/simple;
+	bh=O+7UduCp8OWrVDAANuMZTwB/Aldeg/z+ZeOeNAciQ+0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vA6gvljWY7X/gVahwqhv7kzalik29rlN4HRpVM2LXLoEaybmJDAUoWBDn4joLJOVmFYFtxCPDej2I/6A5+EviculiPVlQn3z0sdWaAjbrVeYYDggPpCXOHFvY8/UJscJZAJELC1X/TI7vIK13toaL/p2YdBA+iD3AtiH6LGZsHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RCl6riEp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="cOJB4ZiR"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GLfwjW020919;
-	Thu, 17 Apr 2025 05:39:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=FcHfKRd2faO
-	EI6ZqeZo5Jj61vy3go1jGp/L+XdNQtWs=; b=cOJB4ZiRDPmnKEqD81CtzX81L1W
-	g8sxd48i4HoM2232mDKbyzxCkBpHQMVRCMLhP3KmkmH2zy+bH8Xcu0PntrWhjFcj
-	4bgRGbWpw5O5RKbn7c0jVS03VdOSIFyN10uVUYcKz6nkzunvn/FGoovIs+DA/hEb
-	NgyuttxLwO+RDWxk/HYFdgDHOUaLQqcjmWTus9TEvt2SzGgeJnLMRUoAG5pCV44t
-	jSjLX97OTQ1r8G0VWZmF9KEARzOunPwUwhLraD2+DLxlH9atSAMr/KgIeGWheRpN
-	/4n2kXOerdmeKKUIaQEGT4nT6o87GwzLNrlbXMCouES2qlornsMD5tQh5qA==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yhbpwjsd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 05:39:20 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 53H5aYaB021454;
-	Thu, 17 Apr 2025 05:39:17 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 462f5dnuh9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 05:39:16 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53H5dE8f023909;
-	Thu, 17 Apr 2025 05:39:16 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-amakhija-hyd.qualcomm.com [10.213.99.91])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 53H5dFif023991
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 05:39:16 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4090850)
-	id D1A125A0; Thu, 17 Apr 2025 11:09:13 +0530 (+0530)
-From: Ayushi Makhija <amakhija@qti.qualcomm.com>
-To: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: Ayushi Makhija <quic_amakhija@quicinc.com>, robdclark@gmail.com,
-        dmitry.baryshkov@oss.qualcomm.com, sean@poorly.run,
-        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
-        robh+dt@kernel.org, krzk+dt@kernel.org, konradybcio@kernel.org,
-        conor+dt@kernel.org, andrzej.hajda@intel.com,
-        neil.armstrong@linaro.org, rfoss@kernel.org,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
-        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
-        quic_jesszhan@quicinc.com,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: [PATCH v4 11/11] drm/bridge: anx7625: change the gpiod_set_value API
-Date: Thu, 17 Apr 2025 11:09:09 +0530
-Message-Id: <20250417053909.1051416-12-amakhija@qti.qualcomm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250417053909.1051416-1-amakhija@qti.qualcomm.com>
-References: <20250417053909.1051416-1-amakhija@qti.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RCl6riEp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13208C4CEE4;
+	Thu, 17 Apr 2025 05:39:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744868391;
+	bh=O+7UduCp8OWrVDAANuMZTwB/Aldeg/z+ZeOeNAciQ+0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RCl6riEpixKGXyqSZL1ftlEjmnCLrlYV1FBSZKJAVmkJmdx+PRaHyn0eDO/ZjikuQ
+	 RJpJDoAraOoLBmfQ7JQsrP5U9aUss6PfMktt5X3dSdYJ1Cp5qheMGcd/NsVk9wjTpL
+	 +asjBcncP4M5zhefatZO+mM0XFcMNxx1ubpH3tpDRlTA+jHbSJuIdq0zDv0RFwPJ8P
+	 s0mFV5+UNDivWe883qlQE+aoLmVGPEE+LJ2UlCyiD1LKZvWqNhrMz5Ab68jGh6o5uU
+	 vrAQDPgU3LZsTuIgWKSecxNLmwqZFXq1yC1iFGtkVCLLkSxGPVBY658jQznxwf4QWt
+	 Ll8w+58O91JfQ==
+Message-ID: <f189ec8e-88fc-491f-8552-e1e5d0b7cde7@kernel.org>
+Date: Thu, 17 Apr 2025 07:39:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 37IJIajygxg7f7sQ-shj8ohX5OLj6xbL
-X-Proofpoint-GUID: 37IJIajygxg7f7sQ-shj8ohX5OLj6xbL
-X-Authority-Analysis: v=2.4 cv=I+plRMgg c=1 sm=1 tr=0 ts=68009408 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=qu7jSu7UeuI-ykz2460A:9 a=TjNXssC_j7lpFel5tvFf:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-17_01,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
- bulkscore=0 mlxlogscore=999 clxscore=1011 impostorscore=0 malwarescore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504170042
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/3] arm64: dts: ti: k3-am62l: add initial
+ infrastructure
+To: Bryan Brattlof <bb@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250407-am62lx-v4-0-ce97749b9eae@ti.com>
+ <20250407-am62lx-v4-2-ce97749b9eae@ti.com>
+ <20250409-calculating-hungry-mosquito-f8cfeb@shite>
+ <20250411182608.cpxr357humjq6ln7@bryanbrattlof.com>
+ <859a4fc2-45f5-4d72-9727-7979e4c15bd5@kernel.org>
+ <20250416144202.4bmm566iqaz6adzo@bryanbrattlof.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250416144202.4bmm566iqaz6adzo@bryanbrattlof.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Ayushi Makhija <quic_amakhija@quicinc.com>
+On 16/04/2025 16:42, Bryan Brattlof wrote:
+> On April 12, 2025 thus sayeth Krzysztof Kozlowski:
+>> On 11/04/2025 20:26, Bryan Brattlof wrote:
+>>>>> +
+>>>>> +		usb0_phy_ctrl: syscon@45000 {
+>>>>> +			compatible = "ti,am62-usb-phy-ctrl", "syscon";
+>>>>> +			reg = <0x45000 0x4>;
+>>>>> +			bootph-all;
+>>>>> +		};
+>>>>> +
+>>>>> +		usb1_phy_ctrl: syscon@45004 {
+>>>>> +			compatible = "ti,am62-usb-phy-ctrl", "syscon";
+>>>>> +			reg = <0x45004 0x4>;
+>>>>
+>>>> No, you do not get syscon per register. The entire point of syscon is to
+>>>> collect ALL registers. Your device is the syscon, not a register.
+>>>>
+>>>
+>>> My understanding from [0] was that we would need to break this up into 
+>>> smaller syscon nodes because the alternative would be to mark the entire 
+>>> region as a syscon and every other node using it would need to use it's 
+>>> base + offset which was kinda undesirable especially for the small 
+>>> number of drivers that need data from this region.
+>>>
+>>>     a-device {
+>>>         clocks = <&epwm_tbclk 0>;
+>>
+>>
+>> Hm? That's how you use the syscon, so how it can be undesirable?
+>>
+>> Anyway, one register is not a device, so no device node per register.
+>>
+>> In the link you provided I was repeating the same, so you got same
+>> review in multiple places.
+>>
+> 
+> Interesting. The way I read that thread was the opposite and it's why we 
+> did this for the 62, 62A, and 62P devices. I mainly say it's unfortunate 
 
-Use gpiod_set_value_cansleep() instead of gpiod_set_value()
-to fix the below call trace in the boot log:
+Really? What was unclear here:
 
-[    5.690534] Call trace:
-[    5.690536]  gpiod_set_value+0x40/0xa4
-[    5.690540]  anx7625_runtime_pm_resume+0xa0/0x324 [anx7625]
-[    5.690545]  __rpm_callback+0x48/0x1d8
-[    5.690549]  rpm_callback+0x6c/0x78
+https://lore.kernel.org/lkml/20250124-able-beagle-of-prowess-f5eb7a@krzk-bin/
 
-Certain GPIO controllers require access via message-based buses
-such as I2C or SPI, which may cause the GPIOs to enter a sleep
-state. Therefore, use the gpiod_set_value_cansleep().
+Un-acked, I missed the point that you really speak in commit msg about
+register and you really treat one register is a device. I assumed you
+only need that register from this device, but no. That obviously is not
+what this device is. Device is not a single register among 10000 others.
+IOW, You do not have 10000 devices there.
 
-Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- drivers/gpu/drm/bridge/analogix/anx7625.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+NAK
 
-diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/bridge/analogix/anx7625.c
-index 365d1c871028..f6f730262511 100644
---- a/drivers/gpu/drm/bridge/analogix/anx7625.c
-+++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
-@@ -1257,10 +1257,10 @@ static void anx7625_power_on(struct anx7625_data *ctx)
- 	usleep_range(11000, 12000);
- 
- 	/* Power on pin enable */
--	gpiod_set_value(ctx->pdata.gpio_p_on, 1);
-+	gpiod_set_value_cansleep(ctx->pdata.gpio_p_on, 1);
- 	usleep_range(10000, 11000);
- 	/* Power reset pin enable */
--	gpiod_set_value(ctx->pdata.gpio_reset, 1);
-+	gpiod_set_value_cansleep(ctx->pdata.gpio_reset, 1);
- 	usleep_range(10000, 11000);
- 
- 	DRM_DEV_DEBUG_DRIVER(dev, "power on !\n");
-@@ -1280,9 +1280,9 @@ static void anx7625_power_standby(struct anx7625_data *ctx)
- 		return;
- 	}
- 
--	gpiod_set_value(ctx->pdata.gpio_reset, 0);
-+	gpiod_set_value_cansleep(ctx->pdata.gpio_reset, 0);
- 	usleep_range(1000, 1100);
--	gpiod_set_value(ctx->pdata.gpio_p_on, 0);
-+	gpiod_set_value_cansleep(ctx->pdata.gpio_p_on, 0);
- 	usleep_range(1000, 1100);
- 
- 	ret = regulator_bulk_disable(ARRAY_SIZE(ctx->pdata.supplies),
--- 
-2.34.1
+> because if we have a block of miscellaneous registers there's no clear 
+> guidance on how big or small that range can or should be and we still 
+> need to encode the offset to that exact register.
+> 
+> By labeling each register we at least have the opportunity to describe 
+> each register and if they are even used.
+Repeated many times: no device nodes per clock (also TI invention), no
+device nodes per register. This is not an opportunity. This is just not
+desired.
 
+Best regards,
+Krzysztof
