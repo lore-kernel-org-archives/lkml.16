@@ -1,360 +1,216 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2060.outbound.protection.outlook.com [40.107.247.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F558184E
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 01:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744853974; cv=none; b=cZF9wSSk9Vq8JxzNP1vU61A3uEAgXaefR6sXxXCeTfugES8jwR7NgVceXaBLtxuDTSGZlhV6ZhUaeeHioYJMPnR7k+RikJAKuVPbapIhv8efAeshPvrD7aOvGndHHuwu9yMRW/FBTP7Ivc+gLAw1u4FEUjyZGSUYgONx0KbVgQM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744853974; c=relaxed/simple;
-	bh=h62JHsQmqhsDsN4CaKaBiijN1lqzL+rYXcIMo9hSL9k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SACKklJAjYAOoJp0pYrt71OSskAre37hQYSfaFR66vjvB/e6yEKCq9RJppM5eRhI4LFEjD/JmpAIKkFblkdt6C875fsEgvQ3Pxed0D1YyYTuvLn1jqiUaNAbVHwtdkKjSlBj3iuciglJTFlV97Y+EoHmcA7I5NoGObMKYa0cTy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YxFi7y0C; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C15E1B6CFE;
+	Thu, 17 Apr 2025 01:39:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744853979; cv=fail; b=RceecU0ZCsiRDYi8aznFoOX7jPPlfWRGQaT2EoZNQarTtc6nBtMVUL1JbtGqiEdekj+McVWbyxh1vJ7EGbDYLqwhlJQtHMHYhrADDG4qIOfj98fJDpllSXI1v4BOLzW+aul3HN2V2RZUaLrd/Ompm+g/agQuIlnasIT6MP+ob0w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744853979; c=relaxed/simple;
+	bh=AYnwjDwae2+3TV9XXXQqLVrLAR28kMuBzZSS7jHLJUs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=uuTRGqBATpEDQPjVGI8nhjBbafoGkOJhwE3Vv1pS5MIQeazTz09+cPr72jLvrATWe4X6chJFYkgB4ZD3majHeKLn/vlLh6ajHU7flYi0JvzoFgIRXZk4ZOiwuWRSr62kh4gS5NjBMSrckMysanu4LstKIgisIKkW6t5Uj6Vnlyc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=ajMyDPla; arc=fail smtp.client-ip=40.107.247.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YxFi7y0C"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4774ce422easo2707741cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:39:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744853971; x=1745458771; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NOe1djEik/yP7e5cg6YlAaCrKcDKxWOtCMdsfblIQ2Q=;
-        b=YxFi7y0CBxOinZvr7bxcnCGjvl3a7h71i3kjNxY6ZyZTnSzrbQ8tpLhFT/E6VDfeLJ
-         bBrNfge44C/j8n7Xv53l9By76MDEuAgK3TgN0sfSDiNVDvkYLFL3/qooyMM20lde+Toy
-         Pwrt1uebbJuoOul/prfk8ECoTUJ9TOEJtbCAeHmcFJ5w15K8xJQYl68lyYr/duJ3cL27
-         cuJrjJdBS5X+CZGoOZ6Ga02TVzlS5WP0Umz5GvujOCHltX8TUJak1cYQImwcu/71BBhF
-         x4UtwJ6jN73At+7bqop8ilJAeFHQemx/ymQJFNEKvqHWn9Xj3Tfqzz6+UJUWG2fz2yd8
-         4wFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744853971; x=1745458771;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NOe1djEik/yP7e5cg6YlAaCrKcDKxWOtCMdsfblIQ2Q=;
-        b=Udgl+eeKonjy4jemi70gL3QJ5y70G48iJrQgs4uLrCy6c/qjF9dQcyGzS0a8k1UFLi
-         UVEYcd80aTGpwscZEBAW/RNTxAySakL+/3peu+Y7T9mXcqfmQQn+sBva/V66p2iMlylK
-         gTMbSqQTeriQ7Yph2y5zgFh0LPEHIZFfhYOnjM+sUbq5DQOq4IGrBSRzVF6APyqCZ/si
-         btqkNFNQ1deE/Eg1gGVY4+3oH2LJJkwphDfIohBvGXJ5cHgzGcFn/3x8M2kb6zh37T7/
-         1f2ktwGQVKFAjPgCL/15GICjI8UMFp1Oapdljpq1WddwXpphkAAUr2VN8+OhEo9ktbNE
-         SnVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXbgTT8JiZiGQ8kCbvRA1xasT3RIUvduFs4EFpOyXGYpdtLEPHIBrk0Iz/RRII53uAllgc+3jWf1XPzeUA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuP24koYwcYvXgn/N7ADKyFztGpd7G4tHhqfc6POURvqypc/1r
-	Zuq9ysa01R+YooccWUeP96Fq1OLmr8rR4dEQpiGg/p/jfRFt1QhLlIlV9GUWKgsiTmBfev1I2N/
-	Ol76bucTaqstcDsc9VuRBjHiKsq0=
-X-Gm-Gg: ASbGncvFrNTPU3deBVpvY3tFO87VlOl++M59ovRnALBrcccaRVtSpfekQNgXxOGNefj
-	RHcZQlMGlmlqMA7AiSeHAOjzHJVorxaAHnscSZp6A7eYzEBRE3XL2te+XMApfic9JGzkqZvxDpz
-	zq5alXFwdfxNd0QBBaK8wSD6I=
-X-Google-Smtp-Source: AGHT+IHLFEGnsnz/A7PMGzkHiB7EB+L+kYeTk3TNV3Pu5ivO4IWuJvNlG33dcAmcUCnvaiFqGlS89axp8Oha5cbekvk=
-X-Received: by 2002:a05:622a:110:b0:476:7ff5:cc27 with SMTP id
- d75a77b69052e-47ad81369d4mr54399261cf.51.1744853970800; Wed, 16 Apr 2025
- 18:39:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="ajMyDPla"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vIsVQM3020mjfIoS3RgAnOyAUVafDRcuvuQ4MLoW6aoJFZcwdqOZVnd85Lp9FneFoMBs0BFO2AgW1pjY8FpYFRVL5LJVXS4KyX+s8dar1gsVLyXDnwA8XwJPfohwl7ICvg5fPk1FBE1J64p0NnN/Sqwb4pszlOfxZSIbYJc2fX3FiUmeTGei7AV615rKLitHO0BIHL6bqglzajiyHAJFEdrK6igQ3hIdwDOC7WrIAH/IUC03/ZI7ScfV4DNadB/oj+Q96plJbOdNLnqK3J+LVC4s1NKvBdAL54pMYHv+y8BzEQAlUCk2MvT1Uo293rriCtCzHm4Wa3x0eQ9yvUP/hg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GDFjGIl1LIiMjWtafzFDKpMegYkeHYtaw9vkQ0OHLa0=;
+ b=BCL/W8czEWMg83NhVd+T54zLBI/jOcByiWCD4MgqH51kXIUMjL5WPCFCspp1iXd9xn7ZDpryNB69yhpyEukmOF/nty67C8CtLxP3+tFeqkN3SAJ8JeYKEMo/ajzZWDo2aSSrU8yvxtBQh/eH7P8p0fZWEawc+A4mj9XBEPsjpyJ1I4mrwMqnK6JQ2C4nTe3u2hiP2w7yN6+oGVhzFrYkCPRMXp5rWjc3tIdOYYLSoDRx2a00ZpkH9cpmuxN32Rd6MtFkBgK84QmrSIdlurAzK2GQTEZ9brjLwJs34iYhiVlmAQjgkW5hfT02/7VAuFDDs+fY8/8A6tloi136VCt2Ig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GDFjGIl1LIiMjWtafzFDKpMegYkeHYtaw9vkQ0OHLa0=;
+ b=ajMyDPlarGGvA6Py7WhgyUst8vmK/KFF1xmf9WuxPDN/5+h5jN5Ggg7IQzGhTYhcuL9nwsOyWfzNuMDf5qttNwhLpyvqrm902I5PxOiPHcqMyK54czWuZfF7Hk/z7phegeSnfEPdOtjSgsCm1PI5shzO3dRhPLajBeMrnGAuesE96xqg1Jyj4oEoA4Wn2khfUhWbEHF5gBrKn0MYjHFzXkGYHCmXu0breohv/LkN0DmEaD9Ws4Pb3TFFmvdAwS35pHyqcE1g3b5VNxAVr+p7MmddYg58C82Dt+zIp44RitXqrD8hkYSIv8UxI/8yITBAdFgevdtgH4BCh3+Cs7K5yA==
+Received: from VI2PR04MB11147.eurprd04.prod.outlook.com
+ (2603:10a6:800:293::14) by AS8PR04MB9126.eurprd04.prod.outlook.com
+ (2603:10a6:20b:449::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Thu, 17 Apr
+ 2025 01:39:34 +0000
+Received: from VI2PR04MB11147.eurprd04.prod.outlook.com
+ ([fe80::75ad:fac7:cfe7:b687]) by VI2PR04MB11147.eurprd04.prod.outlook.com
+ ([fe80::75ad:fac7:cfe7:b687%7]) with mapi id 15.20.8632.030; Thu, 17 Apr 2025
+ 01:39:33 +0000
+From: Carlos Song <carlos.song@nxp.com>
+To: Tamura Dai <kirinode0@gmail.com>, Mark Brown <broonie@kernel.org>, Shawn
+ Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
+CC: "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] [PATCH] spi: spi-imx: Add check for spi_imx_setupxfer()
+Thread-Topic: [EXT] [PATCH] spi: spi-imx: Add check for spi_imx_setupxfer()
+Thread-Index: AQHbrzaEaYg1Jc+Hk0CsR8JmDd2KBrOnFBTQ
+Date: Thu, 17 Apr 2025 01:39:33 +0000
+Message-ID:
+ <VI2PR04MB111477C8C199A1110FF0BBCB6E8BC2@VI2PR04MB11147.eurprd04.prod.outlook.com>
+References: <20250417011700.14436-1-kirinode0@gmail.com>
+In-Reply-To: <20250417011700.14436-1-kirinode0@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: VI2PR04MB11147:EE_|AS8PR04MB9126:EE_
+x-ms-office365-filtering-correlation-id: 325ec7e2-fbaa-42b6-9370-08dd7d50b4ad
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|7416014|366016|376014|7053199007|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?DvdwvXsRUBvrwvqGS70eykj1eapkidNfil2Yj/k0p0YI2GbOeRkF6KtTIo1j?=
+ =?us-ascii?Q?BZdpbuEuXBaacu0o6/oQClyBfnvqO8PUoDYKaKEi7OlzXe6HEePZRTBQbxIA?=
+ =?us-ascii?Q?0G7uZfjpfmh/6G6UcMOZxCf4W26rrmDL03v5S13xwySyvsCQriU4ACRdC6YT?=
+ =?us-ascii?Q?OhlCLReeAn1rKmVnhDZxaEOYLnp/QR5P4qejCzXt8/8I+dQGFugrw0qrHaRY?=
+ =?us-ascii?Q?sMCPzVmQ9qDDOgWmaCfeThG1h7WhAzsIwW1R+tL0xY8z7wTLHEzwOX1BG55G?=
+ =?us-ascii?Q?2GI2O8zAJbd1Ep7mTP5weAgIlG4f2U0oc2hSO7x9N4fd7RmrcUynfG6Kmv+P?=
+ =?us-ascii?Q?vF+mMK1fNq+onD7UAKJKwFsEi78d5tjE7r/PzUHE9eEQFxKC2Y5D+vHzxx7P?=
+ =?us-ascii?Q?dlcjR0mhS5ZjHh6WnzZWfTf7VLlIzpjEOBGFEK4vUkPv2JP8Sg9Cfgeo9QdN?=
+ =?us-ascii?Q?g6kob+qXEu2MD03442s4WR/s2rA9MnE68iodoWyuy0tRLnvnN8c3NtV5RSjt?=
+ =?us-ascii?Q?W3jCA7GCK0s0rVzd2dZIlbxJpzNiPw9BpSWPEeUOFlNZ7Z/9jaR9kWBOdJIN?=
+ =?us-ascii?Q?41/5/yEsiCrR36Y1mgg4hf1Ip84Bvx03DLFfhNO1bnXoZdw3W1QSNB00Cpy2?=
+ =?us-ascii?Q?3VtM+Gz9Oze2RWdM67vGuGjP6LidOVtJCfjRleGOMcXKfKhlMfDVrgv7q9iY?=
+ =?us-ascii?Q?1mRaUTGPNdI2PCqxEs4ZHnbGEVETyxWNgXh97N0I8T6KpIG/Am8VPm6bOLOV?=
+ =?us-ascii?Q?Sk/tGIMtY8nJoIlSzPX9GmGneETsCgzEvW2KnSGBWKWloTncNhqUAfkgnTfE?=
+ =?us-ascii?Q?UfFg4hnn3aQRNnmKvWErW5OZZlUH3Fc3ngBC8cUrY8XIs7E0fKixPGiXdBi2?=
+ =?us-ascii?Q?ccOOugukl/vOixCXhs2LF+imyV5lsliThufI6ZYUsdbW3OvRci10JfbbT3KP?=
+ =?us-ascii?Q?0POSHzjAzZRX3+MDX/EfPfGai+v7f9hIw3WhhqS/mnvCW0fshAvZ3TlQAhqe?=
+ =?us-ascii?Q?Ng5mE0xPaSDf4KvwiAFZoTphZDnh6p1JJOkNouvMkyHfp1jER+reS61RtIej?=
+ =?us-ascii?Q?cVEpaX1et6meSdt/NZdYw6Mp0DSaw97Mud6B3JcaIuvdvpdDd+RXY5a1tyky?=
+ =?us-ascii?Q?B2y0QWyIUIam+VKJoLaNcJirMPLjxaxQ44K/MWInc/QtZPJdLC1QQ5dgj5bB?=
+ =?us-ascii?Q?kJ2xEMftBnqb0QVz5NdXu5I9zFBZMNijkSvqNE7QoVyXn+sLRAJyyZgctR4Y?=
+ =?us-ascii?Q?WfkoAXYV/6pEA5+g64sXub7HmJ/EhJ7UMUhxNWBzwSWnPALh39LO/seNRssV?=
+ =?us-ascii?Q?9vDuWYtMLFn5IgBN7PFEO9lHAQ8LZJWN0Aaf7UD1JJ3rLnGVxDyWlbUMi3fb?=
+ =?us-ascii?Q?NV3oVg1JlVz6rVYuHGCbruqROLaOf4YHDCdbN4NyJRzWnshB5g0tQagr17IQ?=
+ =?us-ascii?Q?9mkbFzgt17jbfShU2x7XMkGX96qMxud8Ufm0MxBpNNHlo3avtOGo6Q=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI2PR04MB11147.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014)(7053199007)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?u8c6yHCvnbYi7VVLubCZz3y4vDFb0uCUbmzPQOk45+JzJMMHRPaPcDUZE5b8?=
+ =?us-ascii?Q?JXYeUI+/Bm9Wb876GNt+20vARE9c9hVfIE16lqWftSuR8kd0WL3XGOCjk9I4?=
+ =?us-ascii?Q?Nn8NJhKlj7PwPpg9FyEe+jyErpMMJa4eH/GuYC9gi/ioa0dYQaGGiP1n7Li3?=
+ =?us-ascii?Q?JSMpXYo07AKHDT3gUoublORGud+0j316Ui/4qSslpRJ+P16L5xa+3SphUae5?=
+ =?us-ascii?Q?B+CmaVKCrXi1NJTVq9yQYYKccUfrKcllExg6MZftfkxTE3FjXVTIX878eJih?=
+ =?us-ascii?Q?0nRjctTI1lvyg70hJd8BZ9aJG9CTM2dLksAX6/RNBEur9sUfclYtHUnosrsF?=
+ =?us-ascii?Q?UhSH8qybJEwJHp3baRijEC7CRj3tN58d3YEhrE4OEnZklmVHWK1T3Tx6Vsus?=
+ =?us-ascii?Q?UDFcXmrUZKE/EMLm+hiHADWgvVS/oAZv5ZhOV/GXqTmSZO6ORyeIi+H93pcP?=
+ =?us-ascii?Q?Bk6yLl/6JOvUWbYuXftsF6SkoJv1AxbduZk+wOb+uOQAOfVxKseSNB7t1C+k?=
+ =?us-ascii?Q?sJch85LqWABHnXgz9k7aqWNWMmv9vu7XCVh1GprSx7wdLn2ZlA15P9eur03X?=
+ =?us-ascii?Q?tKYPgLhkft6CKFqppeE69RHydt/ze8YKWuT4fJVAnUDxShs+bSrvp3jQPirC?=
+ =?us-ascii?Q?ncFR7mUVq5HDh2O+4hAflZjSF3qefl85UbFkIH/jJ7r68xkbSqRSkTuvsOif?=
+ =?us-ascii?Q?sbXEz0FYhAmvqBH2rNbpLUxAJQFfus6L739/tPK+NJ26ylHfrW4HYAQyzxbi?=
+ =?us-ascii?Q?CceU0w/9iLy9rBLttz4VHTKhcIemI8ncd+H31iqg7yaLS0i2ihVktkqoIcvA?=
+ =?us-ascii?Q?jQgmK6vyrJjLl1xeM70DyPcSU5rfp1ogJR0dV0wFQmAfDWIKDv5N4Pv3slfw?=
+ =?us-ascii?Q?3HT+RllqyVoAQb4alVGuNmrw9VtXltlTE9J/r4UeqT+EYgEt1XOSG9XcMBp8?=
+ =?us-ascii?Q?Q9zkcFtgHUqAj3oA0JvAZc749KfJtN/fMqu/1wiPiJ8zRvhXzi6ZVh1uLO9B?=
+ =?us-ascii?Q?vvvhYMgr3gnisb7dQ4q3HEbAVxBQ93qu1T5QWsRMCLj+7Siyv2MLoQoxjcZZ?=
+ =?us-ascii?Q?3vLjPYfICFfRIHx5S6yIC3P4FJaooLc+pafVX7y3WsAA1MXUd+vcBZw6XcEF?=
+ =?us-ascii?Q?ehUO2KPb8y6cz/1xeqjyoididn2reysy8pUygs1IDGOjpLe/oY7JoYlpWT6z?=
+ =?us-ascii?Q?8Sd2GmuXDr3XMjjIMwJi62vYM/tQ7dK0oAwBbzQMlFkxTNhRUQGG4DwisnGZ?=
+ =?us-ascii?Q?ft/FwYATwkcy6lbCapYDqFImQ7YtAT6PDlZhZT+dBaBlCzwmpZYh35O/rnyt?=
+ =?us-ascii?Q?Ze7v6flqTHi1cG7HB/FUzZEr3hQEksI+FI7jQEmWsTZnazQ/sSbi8QyNvRBg?=
+ =?us-ascii?Q?co8CDS6Y0YRPHY5RcacqKV0SkvulKDuIMS8Qk83VfEInSpRrtCrnN4TI6fgu?=
+ =?us-ascii?Q?GYxHCeErEkYQge6QCfVvAM2nx4r+jbXzRsbAfnZSmMK7K3lCXlDuWCMjVQ9L?=
+ =?us-ascii?Q?cTbOWQClwQlgQzee4+3xc9dDpPOAd4gIWj1/h1PwXeCDGbT/D1D7i8UVedyT?=
+ =?us-ascii?Q?bDQ35I/MY4g0aIZsBGI=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325014733.18405-1-xuewen.yan@unisoc.com> <CAKfTPtA06D1EGg2VdVHt-P0PDE-1XZVJOp3myZPSNknnFT3nNg@mail.gmail.com>
- <CAB8ipk_uOKn+U0ozZyaQ8J9OjifoZWSh-9NUQ9UD+K-kLV28vw@mail.gmail.com>
- <CAKfTPtD2T8Qm-6Nq-9qODQASoU9Wn1Ujk4uQbbN1Dvo3+EFZFA@mail.gmail.com>
- <CAB8ipk-G_Q20Cyx69GRY5pdTj9C4SyVyiuRVFi-i-otQ1zBVFg@mail.gmail.com> <CAKfTPtC2XA_DUy5zjPo4Xr1r7W-CFiZEwabEQcZPk0FDLxc3QQ@mail.gmail.com>
-In-Reply-To: <CAKfTPtC2XA_DUy5zjPo4Xr1r7W-CFiZEwabEQcZPk0FDLxc3QQ@mail.gmail.com>
-From: Xuewen Yan <xuewen.yan94@gmail.com>
-Date: Thu, 17 Apr 2025 09:39:20 +0800
-X-Gm-Features: ATxdqUG7uw4wqEJrmgqfbfOZatsx4xEaRx63LWD7GmG-cKLy-tUrpnQ-Vz6_M0U
-Message-ID: <CAB8ipk-d2Yj8kEaEHBFvM7w1kedocStS8U2L0Ypv0mgbiK5MHQ@mail.gmail.com>
-Subject: Re: [PATCH v2] sched/uclamp: Align uclamp and util_est and call
- before freq update
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Xuewen Yan <xuewen.yan@unisoc.com>, dietmar.eggemann@arm.com, mingo@redhat.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, rostedt@goodmis.org, 
-	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
-	hongyan.xia2@arm.com, qyousef@layalina.io, ke.wang@unisoc.com, 
-	di.shen@unisoc.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VI2PR04MB11147.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 325ec7e2-fbaa-42b6-9370-08dd7d50b4ad
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2025 01:39:33.8096
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DDlTuuwQpXLPbMs+GIYXvRtoPlmZn2d/rOLRyReazb6Crk7YWXTsMsF+EwH3DrcaYLg3tAH/Q9DSayV4PlSgDg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB9126
 
-On Wed, Apr 16, 2025 at 8:19=E2=80=AFPM Vincent Guittot
-<vincent.guittot@linaro.org> wrote:
->
-> On Wed, 16 Apr 2025 at 13:07, Xuewen Yan <xuewen.yan94@gmail.com> wrote:
-> >
-> > On Wed, Apr 16, 2025 at 5:42=E2=80=AFPM Vincent Guittot
-> > <vincent.guittot@linaro.org> wrote:
-> > >
-> > > On Wed, 16 Apr 2025 at 04:55, Xuewen Yan <xuewen.yan94@gmail.com> wro=
-te:
-> > > >
-> > > > On Wed, Apr 16, 2025 at 1:05=E2=80=AFAM Vincent Guittot
-> > > > <vincent.guittot@linaro.org> wrote:
-> > > > >
-> > > > > On Tue, 25 Mar 2025 at 02:48, Xuewen Yan <xuewen.yan@unisoc.com> =
-wrote:
-> > > > > >
-> > > > > > When task's uclamp is set, we hope that the CPU frequency
-> > > > > > can increase as quickly as possible when the task is enqueued.
-> > > > > > Because the cpu frequency updating happens during the enqueue_t=
-ask(),
-> > > > >
-> > > > > Strictly speaking, it doesn't happen during enqueue_task but when=
- :
-> > > > > - attach/detach tasks when migrating
-> > > > > - update_load_avg decayed
-> > > > > - io_wait
-> > > > >
-> > > > > This often happens during an enqueue but not always ...
-> > > >
-> > > > Okay, I would make some adjustments to these descriptions.
-> > > >
-> > > > >
-> > > > > > so the rq's uclamp needs to be updated before the task is enque=
-ued,
-> > > > >
-> > > > > this doesn't ensure that new rq's uclamp will be taken into accou=
-nt
-> > > >
-> > > > Did I miss something?
-> > > >
-> > > > As following stack:
-> > > > enqueue_task_fair()
-> > > > update_load_avg()
-> > > > cfs_rq_util_change(cfs_rq, 0);
-> > >
-> > > As mentioned above, this doesn't always happen so you are not ensured
-> > > to take uclamp into account. If you mandate to take uclamp value into
-> > > account immediately this is not enough
-> >
-> > I understand your point now. I think what you're referring to is a
-> > different issue, just like what we discussed earlier with Prateek:
-> > https://lore.kernel.org/all/CAB8ipk_1=3DU_HgVQrfQ4VRUDrcHJBQd2LJ9aXh8PG=
-6E-Z4_xS+g@mail.gmail.com/
-> >
-> > However, I think the purpose of this patch is to ensure that during
-> > the enqueue_task process, if a frequency change is triggered, the
-> > uclamp has already been updated before the frequency is changed.
->
-> okay, so please update the commit message because " When task's uclamp
-> is set, we hope that the CPU frequency
->  can increase as quickly as possible when the task is enqueued." is confu=
-sing
-Okay.
 
->
-> >
-> > >
-> > > > cpufreq_update_util()
-> > > >   sugov_update_shared()
-> > > >     sugov_next_freq_shared()
-> > > >      sugov_get_util()
-> > > >         effective_cpu_util()
-> > > >             *min =3D max(irq + cpu_bw_dl(rq), uclamp_rq_get(rq, UCL=
-AMP_MIN));
-> > > >             *max =3D min(scale, uclamp_rq_get(rq, UCLAMP_MAX));
-> > > >
-> > > > So, the rq's uclamp value should update before enqueue_task().
-> > > > >
-> > > > > > just like util_est.
-> > > > >
-> > > > > just like util_est
-> > > > >
-> > > > > > So, aline the uclamp and util_est and call before freq update.
-> > > > >
-> > > > > nit s/aline/align/ ?
-> > > > align.
-> > > > >
-> > > > > >
-> > > > > > For sched-delayed tasks, the rq uclamp/util_est should only be =
-updated
-> > > > > > when they are enqueued upon being awakened.
-> > > > > > So simply the logic of util_est's enqueue/dequeue check.
-> > > > > >
-> > > > > > Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
-> > > > > > ---
-> > > > > > v2:
-> > > > > > - simply the util-est's en/dequeue check;
-> > > > > > ---
-> > > > > > Previous discussion:
-> > > > > > https://lore.kernel.org/all/CAB8ipk8pEvOtCm-d0o1rsekwxPWUHk9iBG=
-tt9TLTWW-iWTQKiA@mail.gmail.com/
-> > > > > > https://lore.kernel.org/all/84441660bef0a5e67fd09dc3787178d0276=
-dad31.1740664400.git.hongyan.xia2@arm.com/T/#u
-> > > > > > https://lore.kernel.org/all/CAB8ipk9LpbiUDnbcV6+59+Sa=3DAi7tFzO=
-=3D=3D=3DmpLD3obNdV4=3DJ-A@mail.gmail.com/T/#u
-> > > > > > https://lore.kernel.org/all/aa8baf67-a8ec-4ad8-a6a8-afdcd703677=
-1@arm.com/
-> > > > > > ---
-> > > > > >  kernel/sched/core.c | 17 ++++++++++-------
-> > > > > >  kernel/sched/fair.c |  4 ++--
-> > > > > >  2 files changed, 12 insertions(+), 9 deletions(-)
-> > > > > >
-> > > > > > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > > > > > index 042351c7afce..72fbe2031e54 100644
-> > > > > > --- a/kernel/sched/core.c
-> > > > > > +++ b/kernel/sched/core.c
-> > > > > > @@ -1747,7 +1747,7 @@ static inline void uclamp_rq_dec_id(struc=
-t rq *rq, struct task_struct *p,
-> > > > > >         }
-> > > > > >  }
-> > > > > >
-> > > > > > -static inline void uclamp_rq_inc(struct rq *rq, struct task_st=
-ruct *p)
-> > > > > > +static inline void uclamp_rq_inc(struct rq *rq, struct task_st=
-ruct *p, int flags)
-> > > > > >  {
-> > > > > >         enum uclamp_id clamp_id;
-> > > > > >
-> > > > > > @@ -1763,7 +1763,8 @@ static inline void uclamp_rq_inc(struct r=
-q *rq, struct task_struct *p)
-> > > > > >         if (unlikely(!p->sched_class->uclamp_enabled))
-> > > > > >                 return;
-> > > > > >
-> > > > > > -       if (p->se.sched_delayed)
-> > > > > > +       /* Only inc the delayed task which being woken up. */
-> > > > > > +       if (p->se.sched_delayed && !(flags & ENQUEUE_DELAYED))
-> > > > > >                 return;
-> > > > > >
-> > > > > >         for_each_clamp_id(clamp_id)
-> > > > > > @@ -2031,7 +2032,7 @@ static void __init init_uclamp(void)
-> > > > > >  }
-> > > > > >
-> > > > > >  #else /* !CONFIG_UCLAMP_TASK */
-> > > > > > -static inline void uclamp_rq_inc(struct rq *rq, struct task_st=
-ruct *p) { }
-> > > > > > +static inline void uclamp_rq_inc(struct rq *rq, struct task_st=
-ruct *p, int flags) { }
-> > > > > >  static inline void uclamp_rq_dec(struct rq *rq, struct task_st=
-ruct *p) { }
-> > > > > >  static inline void uclamp_fork(struct task_struct *p) { }
-> > > > > >  static inline void uclamp_post_fork(struct task_struct *p) { }
-> > > > > > @@ -2067,12 +2068,14 @@ void enqueue_task(struct rq *rq, struct=
- task_struct *p, int flags)
-> > > > > >         if (!(flags & ENQUEUE_NOCLOCK))
-> > > > > >                 update_rq_clock(rq);
-> > > > > >
-> > > > > > -       p->sched_class->enqueue_task(rq, p, flags);
-> > > > > >         /*
-> > > > > > -        * Must be after ->enqueue_task() because ENQUEUE_DELAY=
-ED can clear
-> > > > > > -        * ->sched_delayed.
-> > > > > > +        * Can be before ->enqueue_task() because uclamp consid=
-ers the
-> > > > > > +        * ENQUEUE_DELAYED task before its ->sched_delayed gets=
- cleared
-> > > > > > +        * in ->enqueue_task().
-> > > > > >          */
-> > > > > > -       uclamp_rq_inc(rq, p);
-> > > > > > +       uclamp_rq_inc(rq, p, flags);
-> > > > > > +
-> > > > > > +       p->sched_class->enqueue_task(rq, p, flags);
-> > > > > >
-> > > > > >         psi_enqueue(p, flags);
-> > > > > >
-> > > > > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > > > > > index c798d2795243..c92fee07fb7b 100644
-> > > > > > --- a/kernel/sched/fair.c
-> > > > > > +++ b/kernel/sched/fair.c
-> > > > > > @@ -6930,7 +6930,7 @@ enqueue_task_fair(struct rq *rq, struct t=
-ask_struct *p, int flags)
-> > > > > >          * Let's add the task's estimated utilization to the cf=
-s_rq's
-> > > > > >          * estimated utilization, before we update schedutil.
-> > > > > >          */
-> > > > > > -       if (!(p->se.sched_delayed && (task_on_rq_migrating(p) |=
-| (flags & ENQUEUE_RESTORE))))
-> > > > > > +       if (!p->se.sched_delayed || (flags & ENQUEUE_DELAYED))
-> > > > >
-> > > > > commit message doesn't explain why you change util_est condition
-> > > >
-> > > > Because, the sched_delayed flag is set when dequeue_entity, and cle=
-ar
-> > > > after the condition,
-> > > > so for migrating/prio_change, we could just check the sched_delayed=
-.
-> > >
-> > > Why is testing sched_delayed enough for migrating/prio_change ?
-> > > With your change, we will remove then add back util_est when changing
-> > > prio of the task which is useless
-> >
-> > I sincerely apologize for any misunderstanding my previous description
-> > may have caused.
-> > When changing prio without changing class, the delayed_task's
-> > sched_delayed flag is not changed,
-> > we would not remove then add back util_est.
-> > If the class was changed=EF=BC=9A
-> >
-> > if (prev_class !=3D next_class && p->se.sched_delayed)
-> >                  dequeue_task(rq, p, DEQUEUE_SLEEP | DEQUEUE_DELAYED |
-> > DEQUEUE_NOCLOCK);
-> >
-> > It will dequeue the delayed-task first, and will not enqueue it.
-> >
-> > As for normal tasks which are not delayed, indeed, the issue you
-> > mentioned can occur, but it seems that this problem has always
-> > existed. Perhaps this is a new issue that has come up.
->
-> I have been confused by the patch that added  the condition "if
-> (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags &
-> ENQUEUE_RESTORE))))". I wrongly thought it was for
-> dequeue_save/enqueue_restore
->
-> Could you please split this in 2 patches :
-> patch 1 updates condition for util_est_dequeue/enqueue  and a
-> description why it's safe
-> patch 2 for aligning uclamp with util_est
->
-Alright, I will make the changes in patch-v3 as well.
+Hi, Thank you for fix.
 
-Thanks!
+Reviewed-by: Carlos Song <carlos.song@nxp.com>
 
-> Thanks
->
-> >
-> > Thanks!
-> >
-> > ---
-> > xuewen.yan
-> >
-> > >
-> > >
-> > > > And for the wakeup, because the the sched_delayed flag is cleared a=
-fter this,
-> > > > so use the ENQUEUE_DELAYED flag to ensure the util_est could enqueu=
-e.
-> > > >
-> > > > >
-> > > > > >                 util_est_enqueue(&rq->cfs, p);
-> > > > > >
-> > > > > >         if (flags & ENQUEUE_DELAYED) {
-> > > > > > @@ -7168,7 +7168,7 @@ static int dequeue_entities(struct rq *rq=
-, struct sched_entity *se, int flags)
-> > > > > >   */
-> > > > > >  static bool dequeue_task_fair(struct rq *rq, struct task_struc=
-t *p, int flags)
-> > > > > >  {
-> > > > > > -       if (!(p->se.sched_delayed && (task_on_rq_migrating(p) |=
-| (flags & DEQUEUE_SAVE))))
-> > > > > > +       if (!p->se.sched_delayed)
-> > > > >
-> > > > > same here, you should explain in commit message why it's okay to =
-do so
-> > > >
-> > > > Same as above,  the sched_delayed flag is set when dequeue_entity, =
-so
-> > > > this place,
-> > > > the sched_delayed was not set when sleeping, If the flag is set, it
-> > > > indicates that it
-> > > > was migrating or prio changing.
-> > > >
-> > > > By the way, I will kindly update these reasons in the commit messag=
-e.
-> > > >
-> > > > Thanks!
-> > > >
-> > > > BR
-> > > > ---
-> > > > xuewen
+> -----Original Message-----
+> From: Tamura Dai <kirinode0@gmail.com>
+> Sent: Thursday, April 17, 2025 9:16 AM
+> To: Mark Brown <broonie@kernel.org>; Shawn Guo <shawnguo@kernel.org>;
+> Sascha Hauer <s.hauer@pengutronix.de>; Pengutronix Kernel Team
+> <kernel@pengutronix.de>; Fabio Estevam <festevam@gmail.com>
+> Cc: linux-spi@vger.kernel.org; imx@lists.linux.dev;
+> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Tamur=
+a Dai
+> <kirinode0@gmail.com>
+> Subject: [EXT] [PATCH] spi: spi-imx: Add check for spi_imx_setupxfer()
+>=20
+> [You don't often get email from kirinode0@gmail.com. Learn why this is
+> important at https://aka.ms/LearnAboutSenderIdentification ]
+>=20
+> Caution: This is an external email. Please take care when clicking links =
+or
+> opening attachments. When in doubt, report the message using the 'Report
+> this email' button
+>=20
+>=20
+> Add check for the return value of spi_imx_setupxfer().
+> spi_imx->rx and spi_imx->tx function pointer can be NULL when
+> spi_imx_setupxfer() return error, and make NULL pointer dereference.
+>=20
+>  Unable to handle kernel NULL pointer dereference at virtual address
+> 0000000000000000  Call trace:
+>   0x0
+>   spi_imx_pio_transfer+0x50/0xd8
+>   spi_imx_transfer_one+0x18c/0x858
+>   spi_transfer_one_message+0x43c/0x790
+>   __spi_pump_transfer_message+0x238/0x5d4
+>   __spi_sync+0x2b0/0x454
+>   spi_write_then_read+0x11c/0x200
+>=20
+> Signed-off-by: Tamura Dai <kirinode0@gmail.com>
+> ---
+>  drivers/spi/spi-imx.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c index
+> 832d6e9009eb..c93d80a4d734 100644
+> --- a/drivers/spi/spi-imx.c
+> +++ b/drivers/spi/spi-imx.c
+> @@ -1695,9 +1695,12 @@ static int spi_imx_transfer_one(struct
+> spi_controller *controller,
+>                                 struct spi_device *spi,
+>                                 struct spi_transfer *transfer)  {
+> +       int ret;
+>         struct spi_imx_data *spi_imx =3D
+> spi_controller_get_devdata(spi->controller);
+>=20
+> -       spi_imx_setupxfer(spi, transfer);
+> +       ret =3D spi_imx_setupxfer(spi, transfer);
+> +       if (ret < 0)
+> +               return ret;
+>         transfer->effective_speed_hz =3D spi_imx->spi_bus_clk;
+>=20
+>         /* flush rxfifo before transfer */
+> --
+> 2.47.2
+>=20
+
