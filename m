@@ -1,102 +1,150 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7FEA253B7E
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:57:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29CD253B7E;
+	Thu, 17 Apr 2025 15:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744905477; cv=none; b=f5MB/MIAbHLOdKccUsgvHG0utjMFK1oe8gYKh/cJmiI7wNOwhlDTMHSPUMrRwp5cZhBCHrAq9yfakQLH0uc/91pbR0kQ6wwDWMivrDpA0LjQ7II7S3Dm9fj7G8z0jZykMGofP3GGyudjmmU5MCzHT4HAbvZajhYfTKaKgBScW4w=
+	t=1744905482; cv=none; b=k0gO3Z/zN4uQcH5XXo3UbwgGikgns/2KZEQcrD55TIezuvqySrVHuSHBEYkJclkwWwQQcoIfZLyPHsjAjJ1bf5ldEWZEWvvra4MHSwOar2P/5AZHBe8CZU8+d/ScZJW/bHC1lydhjDNX9hdF4utW6cVA0vCp2wxN4eVTM7SU93I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744905477; c=relaxed/simple;
-	bh=oqpZymM7yF3tIuS4VpohAgmdi+lxdVuXMSrd7IogELc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Mgy3IdZDGp737Uw/SxMjGm8x+ytGfR0xJpZROfF3rxBpphX7/eD7Zf/guzB7ueEL8a/0Z0Gwj7tPmMdMNs0Q5mLqhC24zG6P6ANBkJtDxwtwORwLxVR3k6zZOsmpzDpRHxd72TszSIZmFV2mzdYwU1t1nok2ACYnkt16IA+EYus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=b2to7UCe; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="b2to7UCe"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 27B74240103
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 17:57:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1744905474; bh=oqpZymM7yF3tIuS4VpohAgmdi+lxdVuXMSrd7IogELc=;
-	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version:From;
-	b=b2to7UCeekGueffdpZ/leT7csXcA2zK4YGfuK2vZOy4IXM/V9HzsYlKeh5Iau22yl
-	 OnJpO9HTVobzqtpNMw0m2diedEjJLQ45WyDzf1Q/ZRf1JlklfHCA9frNSqcnse2+T+
-	 aYulrX2yWU5CGYdHONx5R8snxu2lEq7JMWF8yZfx7A9bNkHI3+mX0tIn1LRJ/9V5DJ
-	 wybiHglCRQwNF489x1C0CnhgemYllWhpaWliANIjLFLOoGu2/z8HRL4id98OZNZuWQ
-	 e/fUZLOKlTk9C1e23WIH0Gwb1dEJzeZqGYqlWON/8L/MIv2cNTzyWbgBMYqUM82UZH
-	 NLhexUnFx0VOQ==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4ZdjGS1Zy1z9rxB;
-	Thu, 17 Apr 2025 17:57:52 +0200 (CEST)
-Message-ID: <2cc70f19c1b001ea7f2cf0632618d060f69faef0.camel@posteo.net>
-Subject: Re: [PATCH] iio: frequency:: Remove unused parameter from data
- documentation
-From: Charalampos Mitrodimas <charmitro@posteo.net>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev, 
-	gregkh@linuxfoundation.org, jic23@kernel.org, lars@metafoo.de, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-staging@lists.linux.dev, Michael.Hennerich@analog.com
-Date: Thu, 17 Apr 2025 15:57:48 +0000
-In-Reply-To: <56edfb88d3f31939fb343149bfad436f24671f9d.camel@posteo.net>
-References: <20250417143220.572261-1-gshahrouzi@gmail.com>
-	 <56edfb88d3f31939fb343149bfad436f24671f9d.camel@posteo.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1744905482; c=relaxed/simple;
+	bh=MgrM6VUX9CxNwUlss2Njm+86WUNpP/hZxAP3jwFwF+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n5yBUR4Tmz2rH8OQWIP+kYmzvEVg/Fuq0lWCbnzHLU9Gfa+eX1tChzsiWTuUrievZWHtxXxJEmH7OCKWzW2W/LfqhDNApcPDbP+An9XDkk1L7RJKNp6ERzYFoU495O/AjSlWUM53OHtbULreVJl9AozsIHyklFuP2o9Q3YwtD5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.98.2)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1u5Ra5-000000001zt-0Tra;
+	Thu, 17 Apr 2025 15:57:51 +0000
+Date: Thu, 17 Apr 2025 16:57:48 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH net v2 5/5] net: ethernet: mtk_eth_soc: convert cap_bit
+ in mtk_eth_muxc struct to u64
+Message-ID: <aAEk_J9JCi3lkuGD@makrotopia.org>
+References: <8ab7381447e6cdcb317d5b5a6ddd90a1734efcb0.1744764277.git.daniel@makrotopia.org>
+ <99177094f957c7ad66116aba0ef877df42590dec.1744764277.git.daniel@makrotopia.org>
+ <20250417081325.0e0345ee@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417081325.0e0345ee@kernel.org>
 
-On Thu, 2025-04-17 at 15:53 +0000, Charalampos Mitrodimas wrote:
-> On Thu, 2025-04-17 at 10:32 -0400, Gabriel Shahrouzi wrote:
-> > The AD9832 driver uses the Common Clock Framework (CCF) to obtain
-> > the
-> > master clock (MCLK) frequency rather than relying on a frequency
-> > value
-> > passed from platform data.
-> >=20
-> > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> > ---
-> > =C2=A0drivers/staging/iio/frequency/ad9832.h | 1 -
-> > =C2=A01 file changed, 1 deletion(-)
-> >=20
-> > diff --git a/drivers/staging/iio/frequency/ad9832.h
-> > b/drivers/staging/iio/frequency/ad9832.h
-> > index 98dfbd9289ab8..d0d840edb8d27 100644
-> > --- a/drivers/staging/iio/frequency/ad9832.h
-> > +++ b/drivers/staging/iio/frequency/ad9832.h
-> > @@ -13,7 +13,6 @@
-> > =C2=A0
-> > =C2=A0/**
-> > =C2=A0 * struct ad9832_platform_data - platform specific information
-> > - * @mclk:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0master clock in Hz
->=20
-> Hi Gabriel,
->=20
-> This seems to be a leftover from
-> 566564e80b0ed23ffa4c40f7ad4224bf3327053a ("staging: iio: ad9832: use
-> clock framework for clock reference")
+On Thu, Apr 17, 2025 at 08:13:25AM -0700, Jakub Kicinski wrote:
+> On Wed, 16 Apr 2025 01:52:03 +0100 Daniel Golle wrote:
+> > The capabilities bitfield was converted to a 64-bit value, but a cap_bit
+> > in struct mtk_eth_muxc which is used to store a full bitfield (rather
+> > than the bit number, as the name would suggest) still holds only a
+> > 32-bit value.
+> > 
+> > Change the type of cap_bit to u64 in order to avoid truncating the
+> > bitfield which results in path selection to not work with capabilities
+> > above the 32-bit limit.
+> 
+> Could you please be more specific and name a bit or a field that goes
+> over 32b? Since this is a fix ideally we'd also have impact to the user
+> described in the commit message. But having enough info for the reviewer
+> to quickly validate the change is the bare minimum.
 
-That said, a Fixes: tag might be helpful?
+I reckon it's too late to include that information in the commit
+description. However, let me still illustrate the problem here now:
 
->=20
->=20
->=20
-> > =C2=A0 * @freq0:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0power up freq0 tuning word in Hz
-> > =C2=A0 * @freq1:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0power up freq1 tuning word in Hz
-> > =C2=A0 * @phase0:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0power up phase0 value [0..4095] correlates
-> > with 0..2PI
->=20
->=20
+In mtk_eth_soc.h:
 
+enum mkt_eth_capabilities {
+	MTK_RGMII_BIT = 0,
+	MTK_TRGMII_BIT,
+	MTK_SGMII_BIT,
+	MTK_USXGMII_BIT,
+	MTK_2P5GPHY_BIT,
+	MTK_ESW_BIT,
+	MTK_GEPHY_BIT,
+	MTK_MUX_BIT,
+	MTK_INFRA_BIT,
+	MTK_SHARED_SGMII_BIT,
+	MTK_HWLRO_BIT,
+	MTK_RSS_BIT,
+	MTK_SHARED_INT_BIT,
+	MTK_PDMA_INT_BIT,
+	MTK_TRGMII_MT7621_CLK_BIT,
+	MTK_QDMA_BIT,
+	MTK_SOC_MT7628_BIT,
+	MTK_RSTCTRL_PPE1_BIT,
+	MTK_RSTCTRL_PPE2_BIT,
+	MTK_U3_COPHY_V2_BIT,
+	MTK_SRAM_BIT,
+	MTK_36BIT_DMA_BIT,
+
+	/* MUX BITS*/
+	MTK_ETH_MUX_GDM1_TO_GMAC1_ESW_BIT,
+	MTK_ETH_MUX_GMAC2_GMAC0_TO_GEPHY_BIT,
+	MTK_ETH_MUX_U3_GMAC2_TO_QPHY_BIT,
+	MTK_ETH_MUX_GMAC2_TO_2P5GPHY_BIT,
+	MTK_ETH_MUX_GMAC1_GMAC2_TO_SGMII_RGMII_BIT,
+	MTK_ETH_MUX_GMAC12_TO_GEPHY_SGMII_BIT,
+	MTK_ETH_MUX_GMAC123_TO_GEPHY_SGMII_BIT,
+	MTK_ETH_MUX_GMAC123_TO_USXGMII_BIT,
+
+	/* PATH BITS */
+	MTK_ETH_PATH_GMAC1_RGMII_BIT,
+	MTK_ETH_PATH_GMAC1_TRGMII_BIT,
+	MTK_ETH_PATH_GMAC1_SGMII_BIT,
+	MTK_ETH_PATH_GMAC2_RGMII_BIT,
+	MTK_ETH_PATH_GMAC2_SGMII_BIT,
+	MTK_ETH_PATH_GMAC2_2P5GPHY_BIT,
+	MTK_ETH_PATH_GMAC2_GEPHY_BIT,
+	MTK_ETH_PATH_GMAC3_SGMII_BIT,
+	MTK_ETH_PATH_GDM1_ESW_BIT,
+	MTK_ETH_PATH_GMAC1_USXGMII_BIT,
+	MTK_ETH_PATH_GMAC2_USXGMII_BIT,
+	MTK_ETH_PATH_GMAC3_USXGMII_BIT,
+};
+
+...
+
+#define MTK_ETH_MUX_GDM1_TO_GMAC1_ESW		\
+	BIT_ULL(MTK_ETH_MUX_GDM1_TO_GMAC1_ESW_BIT)
+#define MTK_ETH_MUX_GMAC2_GMAC0_TO_GEPHY	\
+	BIT_ULL(MTK_ETH_MUX_GMAC2_GMAC0_TO_GEPHY_BIT)
+#define MTK_ETH_MUX_U3_GMAC2_TO_QPHY		\
+	BIT_ULL(MTK_ETH_MUX_U3_GMAC2_TO_QPHY_BIT)
+#define MTK_ETH_MUX_GMAC2_TO_2P5GPHY		\
+	BIT_ULL(MTK_ETH_MUX_GMAC2_TO_2P5GPHY_BIT)
+#define MTK_ETH_MUX_GMAC1_GMAC2_TO_SGMII_RGMII	\
+	BIT_ULL(MTK_ETH_MUX_GMAC1_GMAC2_TO_SGMII_RGMII_BIT)
+#define MTK_ETH_MUX_GMAC12_TO_GEPHY_SGMII	\
+	BIT_ULL(MTK_ETH_MUX_GMAC12_TO_GEPHY_SGMII_BIT)
+#define MTK_ETH_MUX_GMAC123_TO_GEPHY_SGMII	\
+	BIT_ULL(MTK_ETH_MUX_GMAC123_TO_GEPHY_SGMII_BIT)
+#define MTK_ETH_MUX_GMAC123_TO_USXGMII	\
+	BIT_ULL(MTK_ETH_MUX_GMAC123_TO_USXGMII_BIT)
+
+The above MTK_ETH_MUX_* macros are the ones used as values for cap_bit in
+mtk_eth_path.c.
+So technically MTK_ETH_MUX_GMAC123_TO_USXGMII == BIT_ULL(29)
+which is still fine for a 32-bit value, but never the less BIT_ULL returns
+a 64-bit type and hence using a 32-bit type to store the result is at
+least misleading.
+
+However, you are right that with the currently supported SoCs this doesn't
+result in an actual bug (but it will with the upcoming addition of newer SoC
+like MT7987).
