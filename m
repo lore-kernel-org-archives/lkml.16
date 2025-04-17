@@ -1,139 +1,104 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8D8222594
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDDDC221F30;
+	Thu, 17 Apr 2025 07:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744876489; cv=none; b=p8s+u1WF7n4NwUGtQE2eBboiyug7uRLIBbarlx6tB6YTGn3woskc3pnDHfc/WViqalFrwtj06lKYp2I5rMaFzhhx9EwbqGN7wZ+kBVkehZMSZ1KPMNIWlkr5b2DrLTzv4hddwAssqOzRwqCuwZcNG6lCF56/epTrkLJbXhrOrdc=
+	t=1744876547; cv=none; b=i+HiC8cP0qT13tHJInFmZ9GI8THLQeEgR/C74ZVU4mvo3UEE0iVdQOql7cL5a6mSAlHimMaROsCR7GH3qMp0NDBbcJmcYMUtLeN9qC0U8MRXdZ4o08svOv/o5Bwpwl9CMebtpqPntZDsnQN497s1UmjCownJjJO7KsRpNA7e2bQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744876489; c=relaxed/simple;
-	bh=G2wbLDTBuDuot2uMyXXKGIFRZm9zNrwNLtVXgIYuceY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GGthPzaetSjkilANooes+AIJjyVETfOKcIlWLXmus7lJE06fMH3OsOI/y+YZZL+bZi41sDxcuQJj29irrWeG3D8nVcDp1eKA6QZRYY9qqfOEQxV2hxLo7VMuPSdmmBmrImQR2wXxie47r+sheAOwiw22qBaq3nDPK1+3aus34ZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wG9uc4w3; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744876547; c=relaxed/simple;
+	bh=4i5YgCrOGdBrtwwWThX/LhUHhP/fkzwgzMCsIxQCG+0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MGU07rUJ/v7R+4/Fa2NWIzmr3/fgXbkvqWpr1njPaQI8gTVEum4JwJw4WeUS8idGps/KomsADbKI8nHJfGil/RvgCcQmfNtMmzJ4XYheslaHflhS9mckLLjtmLIM5IxDTsJGWSVEZ8s7rv9WqsWwPM2uyRCIBj0amShgTi3Ro6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=S8WgWN+R; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wG9uc4w3"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-30332dfc820so468244a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:54:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744876487; x=1745481287; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HzOw82UGgblpmMtgHt3tu3Y7oCEf0jc/oLwNceOiuZ8=;
-        b=wG9uc4w3y66E0GeVCyjISU03ftpy1Q4tEfO80mk3nz3WtZxabOH5DE8yzgmeWzUDCx
-         re5AEW+yeJ9kUF/ZOFgPVI/xWVx8TcHBrgZ5VAOwCwdisvE6sa7VK9EIcbx/iL2vP+BV
-         fkveyoWcQjoQvpFRKFWxftTOFlA78J9y9k8J0ArDDwxyShJrc/GKWoubCzekyyTDTCqT
-         EAsnv4WAoz0bpBQp4IUgZ9pEui+TBni1434iSzPvj4bVYAn0Za1eYWyeVWw99285Eo4V
-         XFaA3z4B6so7vtKL7Fo5ulqcbhI3wpiCNM5Y2jHM61424hwtZSLFtMtWKOuB1j912qv+
-         Bffg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744876487; x=1745481287;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HzOw82UGgblpmMtgHt3tu3Y7oCEf0jc/oLwNceOiuZ8=;
-        b=XSaLhcKkEnnArkSfPa8SMBSnmESP1b498NofoGiyPTAk+vI14Uk+eM5KIZqkOaLvNY
-         ZMNcQBMK+Nlag8dU5AyMH09vY3H5jOLZSCkpczWVyF/9OfSu+/xdj1QB3Vs3pIQwumyI
-         aRkoAcgp0rnOscT+HE4u7aq0C6M0UwN83bUxw6UEtRsG6fM+OLcuy3eLYvBjfs8Fdeo6
-         m7zdJ7gpq1RICtgAXU47JMYvZ6kAGIzCQU5naSc6pbD6FWnlRAf9W1cjpcXqdcLItp+z
-         mVsKMDMqli+kX2FK28fZAV48ZR54jVHyKZF6rQgSjf0fSCZg6PnolZD3q0yuzyUJozq1
-         2Weg==
-X-Forwarded-Encrypted: i=1; AJvYcCVqGBcj6B/NQuXcBS90lph70bdkJGxlKB/5azcl3grxRMwoYt0T2BX0WwwLM0tyGFZ+ApfzVaQ1ch2iric=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycSYSmIWlNv1l50C5E4CcztPqjBR5LS+ENS7h+6HEnrmA6HyUM
-	3ktQoOkuZQ3xOIufJ3S05o1DoZDr602L0dFaBTfqnLZWKvtnFhvtgIl+Ve2yFg==
-X-Gm-Gg: ASbGncuUY19lAccwcRMk8K+zlg0zdp9mH7Fdqulzz+s6MabE9Z0AV7IBHtD5jN/q6dB
-	CPceN7QsjhUj4LDvQczN27X7FmkgG6j9CuU+1ew65NA8Mcx4uGp4zRLUDpF1ubRshon7IOoStqH
-	0VwDaNdTuy4liRbOOpY8qSyErp9OyaSQ/m8Iie4YOrWV41jSvAP1PbKYqQPM8dqZpl9oLract60
-	EtFEztF9l0fSGfgAxyS+35IDuTFgOHO6ssc6p0VuoT2B6sPREHxg9aAbAlFsfGrSRiul3QUFUXh
-	+bHHYXVGqPZ9Rz24uMo1v/9L5hb0AulJBSRl3qvDrqwEN1Jy
-X-Google-Smtp-Source: AGHT+IHr4TLOn+vWmMUG8we+6H82JH3XHC68smquEz0SW0g3spOjs92CiF0f680vTLzBzdTTUPC87Q==
-X-Received: by 2002:a17:90b:5824:b0:2fe:a79e:f56f with SMTP id 98e67ed59e1d1-30863f19571mr7527508a91.13.1744876487050;
-        Thu, 17 Apr 2025 00:54:47 -0700 (PDT)
-Received: from thinkpad ([120.60.54.0])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-308613b2f13sm3318363a91.36.2025.04.17.00.54.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 00:54:46 -0700 (PDT)
-Date: Thu, 17 Apr 2025 13:24:41 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, dingwei@marvell.com, cassel@kernel.org, 
-	Lukas Wunner <lukas@wunner.de>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] PCI: Add link down handling for host bridges
-Message-ID: <lsehjhqicvit32jcsjkfqemgypnpim6zbxwapzdrncm3hwrp44@bvwg2acyyvle>
-References: <20250416-pcie-reset-slot-v2-0-efe76b278c10@linaro.org>
- <20250416-pcie-reset-slot-v2-3-efe76b278c10@linaro.org>
- <26b70e1b-861f-4c94-47a7-a267c41cadbb@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="S8WgWN+R"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53H7tehS2909553
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 17 Apr 2025 02:55:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744876540;
+	bh=P5bcOC/5bs1h8a5DNn2BHPGF4s2BivbRSPsmGSQjsVI=;
+	h=From:To:CC:Subject:Date;
+	b=S8WgWN+RqpPRfwKYRzSh3S1m9QCjMMqR7qL0Hz+kqO6cBmroj8+KB32ZLIh395R1c
+	 TVUAOOQ9v3lKf4EtSp+T1jqZ8ztwl4fXaDl0tBonFCDdvIUC4DoH3eEv9gy0cxKo81
+	 7ucdZpNRDjBirF1ewapoi96y2TfqawKvsGfUFwOM=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53H7teWl008094
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 17 Apr 2025 02:55:40 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 17
+ Apr 2025 02:55:39 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 17 Apr 2025 02:55:39 -0500
+Received: from abhilash-HP.dhcp.ti.com (abhilash-hp.dhcp.ti.com [172.24.227.115])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53H7tanv104512;
+	Thu, 17 Apr 2025 02:55:37 -0500
+From: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+To: <peter.ujfalusi@gmail.com>, <grygorii.strashko@ti.com>, <vkoul@kernel.org>
+CC: <vaishnav.a@ti.com>, <u-kumar1@ti.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <y-abhilashchandra@ti.com>,
+        <stable@vger.kernel.org>
+Subject: [PATCH RESEND] dmaengine: ti: k3-udma: Use cap_mask directly from dma_device structure instead of a local copy
+Date: Thu, 17 Apr 2025 13:25:21 +0530
+Message-ID: <20250417075521.623651-1-y-abhilashchandra@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <26b70e1b-861f-4c94-47a7-a267c41cadbb@oss.qualcomm.com>
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, Apr 16, 2025 at 11:21:49PM +0530, Krishna Chaitanya Chundru wrote:
-> 
-> 
-> On 4/16/2025 9:59 PM, Manivannan Sadhasivam via B4 Relay wrote:
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > 
-> > The PCI link, when down, needs to be recovered to bring it back. But that
-> > cannot be done in a generic way as link recovery procedure is specific to
-> > host bridges. So add a new API pci_host_handle_link_down() that could be
-> > called by the host bridge drivers when the link goes down.
-> > 
-> > The API will iterate through all the slots and calls the pcie_do_recovery()
-> > function with 'pci_channel_io_frozen' as the state. This will result in the
-> > execution of the AER Fatal error handling code. Since the link down
-> > recovery is pretty much the same as AER Fatal error handling,
-> > pcie_do_recovery() helper is reused here. First the AER error_detected
-> > callback will be triggered for the bridge and the downstream devices. Then,
-> > pcie_do_slot_reset() will be called for each slots, which will reset the
-> > slots using 'reset_slot' callback to recover the link. Once that's done,
-> > resume message will be broadcasted to the bridge and the downstream devices
-> > indicating successful link recovery.
-> > 
-> > In case if the AER support is not enabled in the kernel, only
-> > pci_bus_error_reset() will be called for each slots as there is no way we
-> > could inform the drivers about link recovery.
-> > 
-> The PCIe endpoint drivers are registering with err_handlers and they
-> will be invoked only from pcie_do_recovery, but there are getting built
-> by default irrespective of AER is enabled or not.
-> 
+Currently, a local dma_cap_mask_t variable is used to store device
+cap_mask within udma_of_xlate(). However, the DMA_PRIVATE flag in
+the device cap_mask can get cleared when the last channel is released.
+This can happen right after storing the cap_mask locally in
+udma_of_xlate(), and subsequent dma_request_channel() can fail due to
+mismatch in the cap_mask. Fix this by removing the local dma_cap_mask_t
+variable and directly using the one from the dma_device structure.
 
-AER is *one* of the functionalities of an endpoint. And the endpoint could
-mostly work without AER reporting (except for AER fatal/non-fatal where recovery
-need to be performed by the host). So it wouldn't make sense to add AER
-dependency for them.
+Fixes: 25dcb5dd7b7c ("dmaengine: ti: New driver for K3 UDMA")
+Cc: stable@vger.kernel.org
+Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Reviewed-by: Udit Kumar <u-kumar1@ti.com>
+Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+---
+ drivers/dma/ti/k3-udma.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> Does it make sense to built err.c irrespective of AER is enabled or not
-> to use common logic without the need of having dependency on AER.
-> 
-
-Well, yes and no. Right now, only DPC reuses the err handlers except AER. But
-DPC driver itself is functional dependent on AER. So I don't think it is really
-required to build err.c independent of AER. But I will try to rework the code in
-the future for fixing things like 'AER' prefix added to logs and such.
-
-> Also since err.c is tied with AER, DPC also had a hard requirement
-> to enable AER which is not needed technically.
-> 
-
-DPC driver is functional dependent on AER.
-
-- Mani
-
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index b223a7aacb0c..08ed8cd7f1dd 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -4246,7 +4246,6 @@ static struct dma_chan *udma_of_xlate(struct of_phandle_args *dma_spec,
+ 				      struct of_dma *ofdma)
+ {
+ 	struct udma_dev *ud = ofdma->of_dma_data;
+-	dma_cap_mask_t mask = ud->ddev.cap_mask;
+ 	struct udma_filter_param filter_param;
+ 	struct dma_chan *chan;
+ 
+@@ -4278,7 +4277,7 @@ static struct dma_chan *udma_of_xlate(struct of_phandle_args *dma_spec,
+ 		}
+ 	}
+ 
+-	chan = __dma_request_channel(&mask, udma_dma_filter_fn, &filter_param,
++	chan = __dma_request_channel(&ud->ddev.cap_mask, udma_dma_filter_fn, &filter_param,
+ 				     ofdma->of_node);
+ 	if (!chan) {
+ 		dev_err(ud->dev, "get channel fail in %s.\n", __func__);
 -- 
-மணிவண்ணன் சதாசிவம்
+2.34.1
+
