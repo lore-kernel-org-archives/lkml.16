@@ -1,128 +1,109 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB95347B4;
-	Thu, 17 Apr 2025 16:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714A6347B4;
+	Thu, 17 Apr 2025 16:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744906243; cv=none; b=U94IRt4VQYk/VHaNRXhw04uXnEtTr7n6aXr56UN2fOlJO8w877QlecASKVIKqf623Os2FrYK4MExY9mjHHbEzEX8IlOOFIe6F4E6ReaESJjgJKbrPtG7ZUpEOtm6Qtz+dp0jaEeSAC0pYp+sRrwAu2EJV/C3qTD0+LT+v6z3wpY=
+	t=1744906276; cv=none; b=Ekdmh8D1uMYIi/z1VIQx+5pfceiAMYUYyAkpkcx5cx3QrifS8xg9NTGaoYMaBnBs/qUGXIIs5oJdVP3DpyfEg/ctV9C0k6M9z+9R4q5eX+v3dd357du6m1Tlq+kowMdZXz7CmN4UNVSivKn8wV4Ljt5DlAfxPSjNypSj4dUYtio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744906243; c=relaxed/simple;
-	bh=HkAdHd8gpS42Z7HDfjzr3JCk7eoCi2Sb1S8krTF/8pk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HwlC53OAPCANddMo0ekL1PGxMzVmRi0YxS3NsH4b2PdwwFMbTvctJLqvq3CcIE8/mO05dwx0HvXVBACc3a1tOEIB5zmaX65wb7/1KoMzsNR9zPDE2xvO3+C8xB2tfCn/pSa0AWaojYxLJoYjhDnFUsruu/MHBf5C5KWXpjA7jrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dgeHBa3r; arc=none smtp.client-ip=209.85.218.52
+	s=arc-20240116; t=1744906276; c=relaxed/simple;
+	bh=0JvHSv/zBfDwIrbND3HHsM5lPGuyvdsrhZLlK7Q+Jbw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UQn2ZNRfKxDqPN/b20ZAKGa3w5WfJwZrTXsGtg3wVoyYZZgfzlssYj+0k5HE0x5wQCDK6muUxHbAcpvhBpAW4UCyVyhvukSb99DzKNDB8JZi569baSiuhTeqoA4P8uVVdNZGPzoY6PI07s3HeQdD/U4AvEBa2FdCmae0c1Z8fSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UXqz1snV; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dgeHBa3r"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-acb415dd8faso148543466b.2;
-        Thu, 17 Apr 2025 09:10:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UXqz1snV"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso1476451f8f.1;
+        Thu, 17 Apr 2025 09:11:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744906240; x=1745511040; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tbPve1uvYPOzo7umjR855m+N4T3daG9Z1kh0/VM2qUA=;
-        b=dgeHBa3r5nHmuGuoPCGPu7mhUgq+rtDDDdqphxS3eWFvPSs9Z1E8PokATEUnKssLhL
-         3HX9cFErFCp5eKKzpWjPYLDAHFPPJqkDBhSljCUzoqDUKq6jGeU2xdaMs4KT+s8BVAHg
-         Ns68s48DTgSQR0PHPY34GfvvxN6F07eLOAYo/PebUhL05X8pe0AmTDFNN51TVhGGKU8P
-         2b37l9gMguslxRvqWKe/lNj5M+1WguaL7fqTNYSJVi4XaxNHRgY3YHtvn9RB8SMvjfAy
-         bf4tZpem1h3CBCNyDD4ZJDjWMATSKGz0J4bZ6hNh8Maem2C7czDGyf6rGf1oO8Qwg9yM
-         OYhQ==
+        d=gmail.com; s=20230601; t=1744906273; x=1745511073; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0YoOig2NlT2ugypUY7ub3Z8t3Ukg5TG35rVUrcVY94k=;
+        b=UXqz1snVxb38BHKOg0Z1g4pFXIGQSb7UYvrKkorIWYzefCoQ2IDmwqlcsZmqWJvg3T
+         UXl0HHxo+XlYNohcHlRJnPsiHOY685jblq3kLA9qOtQyR7xlBsKa5e2zIM49I92I1W+l
+         fH/1lLpwZiM7UhDzCPJCWwdGl4SritH11Vu+LMWpN4lyf+F9PSbw66QUf79BqoEPruuG
+         wgStIPD3vxU9KylrMvqiVYANRkScEnpCuikAa0zBsWcbnrRSCtIEUD5yDyssAO6Puaup
+         CqESYGAuuvevBTkr+9moUJRua0RHxeb0lp79Qp2b2kuQnvK+NuZUCudvvPpszOuVBbb+
+         BjcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744906240; x=1745511040;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tbPve1uvYPOzo7umjR855m+N4T3daG9Z1kh0/VM2qUA=;
-        b=Jy8gaNrJxbQflNcZLHt+yQtoq1E2VAZJSLrgbqKfrUmzurtThaudFqrthWdVAC2gqx
-         odmRU5y/rMuJUOhcmaC8QORb3i4cx2RglUPFexamUap5qk23mMaRis5JOPOYufmSFgdC
-         WIwyeg2yxTPwba9Q7rc37/Sw5/km+aH5eMAEoXubCZfrWxG0QPXK4kByUYAzMCu//MKw
-         3g76HfNw22qhIbilrA0BqpDhtDlbHloatsah7Mow96W5IVPAi/YPzlAmL+nsjLCTaCmR
-         Go767VVaaZTJzuscCWhJimoTqOyFcf9qgk53AXCggNNh31qCD9XhpseOJlw8MAS0O9bc
-         jXRg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7m0MBurc0FI1GgbgPfPBud2brGxxxe/QwSxhpxo1pf/DqT0Iaw4Y3iv7ZNBFTrpA1rxXa/wh4OLg=@vger.kernel.org, AJvYcCXgDEu+qdZQ5DqPSjpeV2h/dW3Z+pWsVuudLHvfolCd28mbdxd45bNmNJEMUVDQ9YOq/YkBKZtKIlOphZuX@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRsdToBmsyNFuFyLY0vRc7tWFD/YEdENFFr2LRFeOBCgdt1vR3
-	z62cQPT5KLiq/BRGnoINKyRQtV6CtBaO//eH0la74bbM/nrKLguEhFSBQUQEZ4hCjgf8zUQVkhn
-	Oy03ueJacDK1kGNLvNvg7N0YNJiE=
-X-Gm-Gg: ASbGncvfyrealMFBlxdRlWqIT9MMftVNEuuh0m8Bib6ffbfBlV9qcp3UFttDAXIOTph
-	bB/UKvl8kwhM9CXRcGrQweA6HL+I9uU8+49x9hg0lLQZQg7DDIVO6pplY/HSQSebfKw3kOgQqnb
-	xMrs6uUKpgHCgr2wpBBz71fptv
-X-Google-Smtp-Source: AGHT+IFoGx7J9uYtzFyupfPUt8X32SjyduVEB58JftV7nr+5ZGIrPbnKu7I7scjxL3eiTU2jZ/pKfKkaTV7WedmdHLU=
-X-Received: by 2002:a17:906:f5a9:b0:ac2:cf0b:b809 with SMTP id
- a640c23a62f3a-acb429ed4d2mr702253466b.31.1744906239458; Thu, 17 Apr 2025
- 09:10:39 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744906273; x=1745511073;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0YoOig2NlT2ugypUY7ub3Z8t3Ukg5TG35rVUrcVY94k=;
+        b=QJHqIPY1GsmMyIrCdEPR6UtNAABv4OUsRXGoEQ3ij3De7V+VgXklPUJNMZvjBCvsLN
+         hmPSjt5Qpmhja126zNvxdV72qv+BNW35UX3vyo/g4F3PjMgfBYQTSkZRPXbg7KNLrn+2
+         GJcBmIhWh9xft9vjfBFL9e9YqPFkYSG4Dc+0uwqNh67fcWS38JgVDwzQRlUAublv1qyN
+         m4rXFT5kZQAQU5+29KKDqqaMV00JjDGPq0fgvPmXgyUmhTXZi5bc4bkYTr/wjSmv3nwJ
+         5y8F+kUUY0MmSpQrY4ErvrbMzhptX3lgM9o+HpScaCRHJSmks4gAQeLQZII+6m6y0Isi
+         J3fQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVhPagfcGDeTqMJD2MPNXomOFyWEbSaqP7xrJzIqPeeaOqg+aGIUxg8cwJBgK+KiF9jkvql4/mPcHPACQz0eLVNOM4=@vger.kernel.org, AJvYcCX1zaqkrwHWZhRWgY36diizvsMXNkpTPCMnUctPgLMBVII9rDuLyLRPC3rHTkNEDsM+ImsEtG2p@vger.kernel.org, AJvYcCXO2t6j9RVlFHCfvtU/jaYGdU2yoZzIe4Wfb1IeH1NF6DGqcF9YtXvT6Y7xdUdTeenJhMyyQNtximB7XxQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKsOIiCxi7znK3b0jxe7RepCJ1Wk/U17N7StD+sNdkeF5H9b12
+	53xfpZeu+77CWnRHJLNbtof+EjN2SN+T0ktXU15NIeaGjAad/DN4
+X-Gm-Gg: ASbGncvF8sAv1ekJpxYNx9WDrBxSa2Ety+yBKpdNBAoMM/ES2a7Fz6NXeCOMhIsiYh0
+	po0OiXQPcdpHKILm5NZ0nFzOnRC4VxHw9yuoPfKpXdmfFaUj/j97amA3p5FVPLoGCGjpCNmKzy8
+	gaBl4XlBlLdDy5LXNfTK1lyLJrWjy1XqSH7vJa0zNMEtee6cULYiyC5GyZZgcBefIzuEO+semQs
+	fVHMWisUPqI6A7vBjQNQyoEbZ7hKBK1z1Z2v5VhoLRbxB9xD2hbipduYLs2GoqgEXop04JS4ZQs
+	LZB4MiSEzz5SRldJX5mIbIuYvYol8n1bf8r++JnYWQ==
+X-Google-Smtp-Source: AGHT+IGC8XUS3Me7ine70yCjc2tBMhV+dBWz5fKYCdIg5NPTsQPgafcB1x+Wut8kapX6DuF22rs8gA==
+X-Received: by 2002:a05:6000:2a84:b0:391:21e2:ec3b with SMTP id ffacd0b85a97d-39ef9cc594fmr361937f8f.3.1744906272540;
+        Thu, 17 Apr 2025 09:11:12 -0700 (PDT)
+Received: from localhost ([194.120.133.58])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39eaf43cd69sm20426895f8f.80.2025.04.17.09.11.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 09:11:12 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <clement.leger@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-renesas-soc@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] net: dsa: rzn1_a5psw: Make the read-only array offsets static const
+Date: Thu, 17 Apr 2025 17:11:06 +0100
+Message-ID: <20250417161106.490122-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415-losd-3-inv-icm42600-add-wom-support-v2-0-de94dfb92b7e@tdk.com>
- <20250415-losd-3-inv-icm42600-add-wom-support-v2-1-de94dfb92b7e@tdk.com>
- <CAHp75VdZDovPuRqQMpP=TkjeBr9AgRssPFJfmsjnXC=wUXxFHg@mail.gmail.com> <FR3P281MB17570E56798219E17F8C0814CEBC2@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
-In-Reply-To: <FR3P281MB17570E56798219E17F8C0814CEBC2@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 17 Apr 2025 19:10:03 +0300
-X-Gm-Features: ATxdqUHBRj8Mee1rXojwcphqLoRKp5e4YGtOJLfRaG7565FqHXoTW72eOrKA1PM
-Message-ID: <CAHp75VeUYyjZqLsxS8BQn0K9uRGCibKsNTgrCdf58ukCrMgSsA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] iio: imu: inv_icm42600: add WoM support
-To: Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 17, 2025 at 5:25=E2=80=AFPM Jean-Baptiste Maneyrol
-<Jean-Baptiste.Maneyrol@tdk.com> wrote:
-> > On Tue, Apr 15, 2025 at 5:47=E2=80=AFPM Jean-Baptiste Maneyrol via B4 R=
-elay
-> > <devnull+jean-baptiste.maneyrol.tdk.com@kernel.org> wrote:
+Don't populate the read-only array offsets and md5_init on the stack
+at run time, instead make it static const.
 
-...
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/net/dsa/rzn1_a5psw.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> > > +       /* 1000/256mg per LSB converted in m/s=C2=B2 in micro (100000=
-0) */
-> >
-> > That 1000000 is redundant, just properly spell the units.
->
-> I will use um/s=C2=B2
+diff --git a/drivers/net/dsa/rzn1_a5psw.c b/drivers/net/dsa/rzn1_a5psw.c
+index 31ea8130a495..df7466d4fe8f 100644
+--- a/drivers/net/dsa/rzn1_a5psw.c
++++ b/drivers/net/dsa/rzn1_a5psw.c
+@@ -337,8 +337,9 @@ static void a5psw_port_rx_block_set(struct a5psw *a5psw, int port, bool block)
+ static void a5psw_flooding_set_resolution(struct a5psw *a5psw, int port,
+ 					  bool set)
+ {
+-	u8 offsets[] = {A5PSW_UCAST_DEF_MASK, A5PSW_BCAST_DEF_MASK,
+-			A5PSW_MCAST_DEF_MASK};
++	static const u8 offsets[] = {
++		A5PSW_UCAST_DEF_MASK, A5PSW_BCAST_DEF_MASK, A5PSW_MCAST_DEF_MASK
++	};
+ 	int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(offsets); i++)
+-- 
+2.49.0
 
-FWIW, you may even use a Greek MU letter, kernel is UTF-8 compatible :-)
-=CE=BCm/s=C2=B2
-
-...
-
-> > > +       /* limit value to 8 bits and prevent 0 */
-> > > +       return min(255, max(1, value));
-> >
-> > Reinvention of the clamp() ?
->
-> It was a copy-paste of an older driver, at the time clamp was not here.
-> I will replace by clamp, it is much more readable.
-
-For the curious, read this https://lwn.net/Articles/983965/.
-The min(max()) may have really unexpected side effects :-)
-
-...
-
-> > > +       if (sleep_ms)
-> >
-> > Do you need this check?
->
-> We need this check in the case sleep_ms is 0. It will happen if accel is
-> already on. msleep(0) was usually doing a sleep before. I don't know if i=
-t
-> is still the case.
-
-I'm wondering if it's documented anywhere, do we need to update /
-improve a documentation?
-
-> > > +               msleep(sleep_ms);
-
---=20
-With Best Regards,
-Andy Shevchenko
