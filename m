@@ -1,126 +1,261 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F21521C162
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24E9184E;
+	Thu, 17 Apr 2025 08:36:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744878908; cv=none; b=d9YriGlkRGs19wcxq6ZqsRYvp7SEbefG50HtjZan8kKOvNrZ08hiYlbPiox2jN+o9p4wIvJXOyzeOEhfZsfC03U7AZ5biavXOaBUUSYXOk8YFOfgPHTbg7Yv3sGfDMqk2awhcjq2XXmUPCpMwjtae5SodSRHcxV6cw7K9fc7qTI=
+	t=1744878965; cv=none; b=ZAL1jLp/q4XBdmsdQeC2774+R8VFfc0baWAjU3EZbWiwJSuNWqv1KiXWFWGLmjoTPr0wkVZ8ZGMfNLnOmC0me7bRewto5sMpr5SI0of9jhhDceyZmB23JxPDivY/8shpg3zsTqYxE6Z67TdNF8c9AZshgClMCgRZ5ME6NiuEYNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744878908; c=relaxed/simple;
-	bh=v7Beki1wx0pFxToSPLRFkM034OQKjMUf3qDwIahY5NM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=clcDKybG5IOsm+ngDfvQd4gV0vGHz5/lMvcNUlZl6Y5erIz5MflzOvdUR7mefN9Vadqtn4Bx6/LSeVw4XVUPeeiVIcmE01WLJ6OzPpefRGBMArRcj8+8+koXQF4oSj6O8CC7PxUjXH97morE8P5evojZXNg2YHADhTG+rYaZ7Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H03mvwnR; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744878965; c=relaxed/simple;
+	bh=s2y/8+X4byijBsMJhdGFgV9G5Ctuj92CsBaLWWFN71A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nzIfb3xO+otfsUskv6XfI9Vdck1oHopiuZA68i9QDUSs2a8ev3Lpg4GqQhIw/WRd+SvVIEU2IVi0TxW4X5plkSlQ/IzC2x3WtGuU/u68SkTDzU239DQoYPEJocS7qzyR/i5gACrA07rphD9YyX6S8oXTFpNDINnzJKpwa7ihbXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O6TjEa+W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H03mvwnR"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso3354295e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 01:35:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744878904; x=1745483704; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8bFwlWCS6Kk0bCLYBtfT5ejGrulPH1qXFNrU5XO5/8E=;
-        b=H03mvwnRiYcbZYS1DZNrmt5AS6xuF+vkG/VOBFyTlmX0CzDZdfOZqlT4mdWIHGd+7H
-         u8s4w0fEXI53qwD4GNx4ONdXdvU/KRbIsV9YdbfdbnX2SJM+i8xnfLvWdtT4IX8CPv8t
-         5URndPnbDjPuip5eXJ/JiG3J0m4lCev9Twjjpfmrm1emLomRMlJ1Fa1vMN2S0ZTsXLn5
-         G1tpCVHswCqY7NwyDzvVCiLztkjT0QmdZihrDtB5P5/3/+T05VxWxmAleWU1pmhMD8Po
-         r//58OPVdZQgwkC/7X4akrwL0vUnjiGXlxRmNHRh2cn/Om98YJ+NZwRFBG3md7eFDaBk
-         cExg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744878904; x=1745483704;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8bFwlWCS6Kk0bCLYBtfT5ejGrulPH1qXFNrU5XO5/8E=;
-        b=HRnlssXynD+2G34USbgXpIGnzMvHJF6iyyQT8FC3TsspF2x1/Ibvp3DAroXGD78i7V
-         NKVj8J6mOzvu/8LM5BlmTA1Wy6UvahnMoSJRX6ce7ltcHLYQG4/fg+uSMJXyAodtPSeH
-         7gsJKP8jcIdSBtfPrEzib7sx9LuJ/Q29e+swsigu30hJ2Npc3wQ864/0diMMRGIHthLh
-         h2P98WFL6cGiM9HdOuWJftzogYkP/6WaWWKgQIq32mIyXh0ZzTddvQ19wkB2MwuEtyK+
-         DZe0B6rArfqTIuexIcfC0+o5PSWUDcU49XfhrZzy8DCD3/e0FiV7HJv3XvinCs6X7JP1
-         A4pg==
-X-Forwarded-Encrypted: i=1; AJvYcCWTfBYpH4VmLkkflRZR3VD2FBZGsUgwG5yts4tQOGci3xoee8pBO5wQLs+EGNOxQyAU7bqkznsC2PHtWNA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy32zGasQfCPWlxh6mzk3HmtIkxAELLFrj0rAS5e5wthaJ5nsz+
-	709Yblv7ByVnxraRgA9vHKvs3CFR4yfUMNl5NQSraqGvZPcHd1gM/WkDIiDv2jA=
-X-Gm-Gg: ASbGncvjDCCdZfz1qqic8EkUjvclS8rucJBxArEnvLzUtRsrBPISlE6mYvzbsCvjHTz
-	9RVYqLHuJ96d19wZSyjAV0twDgNRhBXPxI3Lk/2MNvRdgU93XEYOTIUYVd4dvZcfP4dtlxqXorG
-	wMtioioKoGEeE7q8xlzB8CZUMvcPeDozkZFEfj4HRpw0IjOxTDkNSZ+6Iy/EnYw/GtIK0oZbkLF
-	DVNfTSVjReRz6U3u1mrzw0oOdZq6chkkTs2t+d/Gx4GUL+jST/J2MEXPYyhGHNpc4or9f8ZWWko
-	uoUazFsA5J7TMdhi0dfm1tYVxK8afKn/8yvLY5P5VeAv680wlMrq+jmI7AEWLkjWMrhhCT67Qtd
-	2m9G/IQ==
-X-Google-Smtp-Source: AGHT+IEB3uiv9d12q/gsfhCkq1pih+E/njAdV0CZuqhp7+y+hbWHDbSN03BGf2xjAj3/8S3g6KwzKA==
-X-Received: by 2002:a05:600c:5127:b0:43c:ed33:a500 with SMTP id 5b1f17b1804b1-4406351b084mr16091615e9.10.1744878904468;
-        Thu, 17 Apr 2025 01:35:04 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39ee411dd02sm4256434f8f.55.2025.04.17.01.35.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Apr 2025 01:35:04 -0700 (PDT)
-Message-ID: <b9e232c9-ae06-42f1-9fca-a8c5d7d64a86@linaro.org>
-Date: Thu, 17 Apr 2025 09:35:02 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O6TjEa+W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E264C4CEE4;
+	Thu, 17 Apr 2025 08:36:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744878964;
+	bh=s2y/8+X4byijBsMJhdGFgV9G5Ctuj92CsBaLWWFN71A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O6TjEa+WFy2S09KaAMFKRDF6Z5a4jwkvLna42rnYi2b3nD1w+j9N53hy48xnuq1Iv
+	 x9pegG6ClmcDBD8lmw3+lUv3JaHQcy6V++AF4VyfZL/YKKCxTa/IrIeDkxseklmwVZ
+	 m9JCcTTZQz30DwkqGOiI5aoT1a3frAKU3tFJc8WiHj5GTcuYyptBMm7IgXJvpyRJvT
+	 /FLzieSpDgmTZv4HzEo5ZlXzHeQKu/fZilcvxkf5eTpCWAsJZvKaU9Rh/AjowKGhMt
+	 nMRJBqD1BoIK9mPsLoX7kHE4ljb/K57LzNG9NcAzl6yJDJibRwTvXcKUnc20a03c2V
+	 Uv8KhFHsvLkGA==
+Date: Thu, 17 Apr 2025 09:35:59 +0100
+From: Simon Horman <horms@kernel.org>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>, upstream@airoha.com,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [net-next PATCH v3 03/11] net: pcs: Add subsystem
+Message-ID: <20250417083559.GA2430521@horms.kernel.org>
+References: <20250415193323.2794214-1-sean.anderson@linux.dev>
+ <20250415193323.2794214-4-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/20] media: iris: Skip destroying internal buffer if not
- dequeued
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Stefan Schmidt <stefan.schmidt@linaro.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Neil Armstrong <neil.armstrong@linaro.org>, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, stable@vger.kernel.org
-References: <20250408-iris-dec-hevc-vp9-v1-0-acd258778bd6@quicinc.com>
- <20250408-iris-dec-hevc-vp9-v1-1-acd258778bd6@quicinc.com>
- <811cd70e-dc27-4ce0-b7da-296fa5926f90@linaro.org>
- <137c68d5-36c5-4977-921b-e4b07b22113c@linaro.org>
- <96bd9ffa-94f6-0d1f-d050-5bec13b3328f@quicinc.com>
- <70a630cb-06ad-403c-b2e2-ae6d26e0877e@linaro.org>
- <30ebc1b7-5746-59a3-0155-7a7870544622@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <30ebc1b7-5746-59a3-0155-7a7870544622@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415193323.2794214-4-sean.anderson@linux.dev>
 
-On 16/04/2025 17:40, Dikshita Agarwal wrote:
+On Tue, Apr 15, 2025 at 03:33:15PM -0400, Sean Anderson wrote:
+> This adds support for getting PCS devices from the device tree. PCS
+> drivers must first register with phylink_register_pcs. After that, MAC
+> drivers may look up their PCS using phylink_get_pcs.
 > 
-> On 4/16/2025 5:40 PM, Bryan O'Donoghue wrote:
->> On 15/04/2025 05:58, Dikshita Agarwal wrote:
->>> Although firmware makes sure that during session close, all buffers are
->>> returned to driver and driver will release them but still we shouldn't rely
->>> for this on firmware and should handle in driver.
->>> Will fix this in next patch set.
->> Shouldn't we reset iris in this case ?
->>
-> Not required.
+> We wrap registered PCSs in another PCS. This wrapper PCS is refcounted
+> and can outlive the wrapped PCS (such as if the wrapped PCS's driver is
+> unbound). The wrapper forwards all PCS callbacks to the wrapped PCS,
+> first checking to make sure the wrapped PCS still exists. This design
+> was inspired by Bartosz Golaszewski's talk at LPC [1].
+> 
+> pcs_get_by_fwnode_compat is a bit hairy, but it's necessary for
+> compatibility with existing drivers, which often attach to (devicetree)
+> nodes directly. We use the devicetree changeset system instead of
+> adding a (secondary) software node because mdio_bus_match calls
+> of_driver_match_device to match devices, and that function only works on
+> devicetree nodes.
+> 
+> [1] https://lpc.events/event/17/contributions/1627/
+> 
+> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
 
-OK sure.
+Hi Sean,
 
-Could you at least add an error message on close() if any buffer is not 
-released ?
+Overall this looks quite clean to me.
+Please find minor some nits flagged by tooling below.
 
-That way we can "trust but verify". What makes me suspicious is that we 
-have one instance where a buffer hasn't been released which we expected 
-to have been released - that may be reasons for that which we can't 
-interrogate from APSS - fine but, then how can we be sure the software 
-contract on close() is respected ?
+> +/**
+> + * struct pcs_wrapper - Wrapper for a registered PCS
+> + * @pcs: the wrapping PCS
+> + * @refcnt: refcount for the wrapper
+> + * @list: list head for pcs_wrappers
+> + * @dev: the device associated with this PCS
+> + * @fwnode: this PCS's firmware node; typically @dev.fwnode
+> + * @wrapped: the backing PCS
+> + */
+> +struct pcs_wrapper {
+> +	struct phylink_pcs pcs;
+> +	refcount_t refcnt;
+> +	struct list_head list;
+> +	struct device *dev;
+> +	struct fwnode_handle *fwnode;
+> +	struct phylink_pcs *wrapped;
+> +};
 
-So yes, I accept what you say that its not required but for peace of 
-mind we should at the very least be noisy on close() about unreleased 
-buffers and if we start to see kernel logs about unreleased bufs we 
-should revisit resetting firmware.
+I think that wrapped needs an __rcu annotation.
 
----
-bod
+Flagged by Sparse.
+
+...
+
+> +static int pcs_post_config(struct phylink_pcs *pcs,
+> +			   phy_interface_t interface)
+> +{
+> +	struct pcs_wrapper *wrapper = pcs_to_wrapper(pcs);
+
+The line above dereferences pcs.
+
+> +	struct phylink_pcs *wrapped;
+> +	int ret, idx;
+> +
+> +	idx = srcu_read_lock(&pcs_srcu);
+> +
+> +	wrapped = srcu_dereference(wrapper->wrapped, &pcs_srcu);
+> +	if (pcs && wrapped->ops->pcs_post_config)
+
+But here it is assumed that pcs may be NULL.
+This does not seem consistent.
+
+Flagged by Smatch.
+
+> +		ret = wrapped->ops->pcs_post_config(wrapped, interface);
+> +	else
+> +		ret = 0;
+> +
+> +	srcu_read_unlock(&pcs_srcu, idx);
+> +	return ret;
+> +}
+
+...
+
+> +/**
+> + * pcs_unregister() - unregister a PCS
+> + * @pcs: a PCS previously registered with pcs_register()
+> + */
+> +void pcs_unregister(struct phylink_pcs *pcs)
+> +{
+> +	struct pcs_wrapper *wrapper;
+> +
+> +	mutex_lock(&pcs_mutex);
+> +	list_for_each_entry(wrapper, &pcs_wrappers, list) {
+> +		if (wrapper->wrapped == pcs)
+
+Assuming that rcu_access_pointer() works with srcu,
+I think that this should be:
+
+		if (rcu_access_pointer(wrapper->wrapped) == pcs)
+
+Also flagged by Sparse
+
+> +			goto found;
+> +	}
+> +
+> +	mutex_unlock(&pcs_mutex);
+> +	WARN(1, "trying to unregister an already-unregistered PCS\n");
+> +	return;
+> +
+> +found:
+> +	list_del(&wrapper->list);
+> +	mutex_unlock(&pcs_mutex);
+> +
+> +	put_device(wrapper->dev);
+> +	fwnode_handle_put(wrapper->fwnode);
+> +	rcu_replace_pointer(wrapper->wrapped, NULL, true);
+> +	synchronize_srcu(&pcs_srcu);
+> +
+> +	if (!wrapper->pcs.poll)
+> +		phylink_pcs_change(&wrapper->pcs, false);
+> +	if (refcount_dec_and_test(&wrapper->refcnt))
+> +		kfree(wrapper);
+> +}
+> +EXPORT_SYMBOL_GPL(pcs_unregister);
+> +
+> +static void devm_pcs_unregister(void *pcs)
+> +{
+> +	pcs_unregister(pcs);
+> +}
+> +
+> +/**
+> + * devm_pcs_register - resource managed pcs_register()
+
+nit: devm_pcs_register_full
+
+     Flagged by W=1 builds, and ./scripts/kernel-doc -none
+
+> + * @dev: device that is registering this PCS
+> + * @fwnode: The PCS's firmware node; typically @dev.fwnode
+> + * @pcs: the PCS to register
+> + *
+> + * Managed pcs_register(). For PCSs registered by this function,
+> + * pcs_unregister() is automatically called on driver detach. See
+> + * pcs_register() for more information.
+> + *
+> + * Return: 0 on success, or -errno on failure
+> + */
+> +int devm_pcs_register_full(struct device *dev, struct fwnode_handle *fwnode,
+
+...
+
+> +/**
+> + * pcs_find_fwnode() - Find a PCS's fwnode
+> + * @mac_node: The fwnode referencing the PCS
+> + * @id: The name of the PCS to get. May be %NULL to get the first PCS.
+> + * @fallback: An optional fallback property to use if pcs-handle is absent
+> + * @optional: Whether the PCS is optional
+> + *
+> + * Find a PCS's fwnode, as referenced by @mac_node. This fwnode can later be
+> + * used with _pcs_get_tail() to get the actual PCS. ``pcs-handle-names`` is
+> + * used to match @id, then the fwnode is found using ``pcs-handle``.
+> + *
+> + * This function is internal to the PCS subsystem from a consumer
+> + * point-of-view. However, it may be used to implement fallbacks for legacy
+> + * behavior in PCS providers.
+> + *
+> + * Return: %NULL if @optional is set and the PCS cannot be found. Otherwise,
+> + * *       returns a PCS if found or an error pointer on failure.
+> + */
+> +struct fwnode_handle *pcs_find_fwnode(const struct fwnode_handle *mac_node,
+> +				      const char *id, const char *fallback,
+> +				      bool optional)
+> +{
+> +	int index;
+> +	struct fwnode_handle *pcs_fwnode;
+
+Reverse xmas tree here please.
+
+Edward Cree's xmastree tool can be helpful:
+https://github.com/ecree-solarflare/xmastree
+
+> +
+> +	if (!mac_node)
+> +		return optional ? NULL : ERR_PTR(-ENODEV);
+> +
+> +	if (id)
+> +		index = fwnode_property_match_string(mac_node,
+> +						     "pcs-handle-names", id);
+> +	else
+> +		index = 0;
+> +
+> +	if (index < 0) {
+> +		if (optional && (index == -EINVAL || index == -ENODATA))
+> +			return NULL;
+> +		return ERR_PTR(index);
+> +	}
+> +
+> +	/* First try pcs-handle, and if that doesn't work try the fallback */
+> +	pcs_fwnode = fwnode_find_reference(mac_node, "pcs-handle", index);
+> +	if (PTR_ERR(pcs_fwnode) == -ENOENT && fallback)
+> +		pcs_fwnode = fwnode_find_reference(mac_node, fallback, index);
+> +	if (optional && !id && PTR_ERR(pcs_fwnode) == -ENOENT)
+> +		return NULL;
+> +	return pcs_fwnode;
+> +}
+> +EXPORT_SYMBOL_GPL(pcs_find_fwnode);
+
+...
