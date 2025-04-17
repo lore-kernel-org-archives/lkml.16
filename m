@@ -1,148 +1,135 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30615A55
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061741CB9E2;
+	Thu, 17 Apr 2025 09:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744882689; cv=none; b=d1uQFqan0JwQUkHQTjt7Awnps6DQ+m3JtdXCoF5CBgfTh6mZGTv+JPqDf1Tu8Q06LLSI4ZztkZNmQQJCEoAF9iyvRB6O34zd9Yiw7Th/z9Cw3z5pQL34ouOVkJ02j/9yFHIdXXDAKzlhPYUzoVpqum2+JlYDw2clSLiztdzJKtI=
+	t=1744882690; cv=none; b=JSXJPtTK7sQflUKvtAJnTJO2lbv7cO6qpJK1e6towY3+Cla7QyX2CuKfEc3TWtXl+o5TzHajPEZtN3LoAydRo2APIeheVu2CQa+kIsj4kOfP40CAb/aBs/Mmsh9/ZG5fP7Gj4s/L2ZByKqCt05e8ZqDsSWZImlasdXlFcN6a44Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744882689; c=relaxed/simple;
-	bh=GkzBasvTgY38/cF3ha2NE+bowg2QDwKg2T/grta1xGU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=ni51tnxVf+gzlDm1Sel/VE1UsLCV2uZ02Wk32TmZr7clHRaXMUjJap6nf6VRf7VKayL4Sv5bvsNcEZuXsHuk80N7d1ZVd6aaTLC9yVfVBBMNQGBIdl//967rihl6xk2HSHg9Al6BvbqdXmXM6aPZtsSvCpff3hlwrsWlCsIF8zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=v8Ks3Q79; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZMukqPmR; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZpgUsPTE; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=aNY+yqtT; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1744882690; c=relaxed/simple;
+	bh=pkuj8qhpuC1L8bJHEWeOX4XesGf2CgnOO2ZvKUdm6oE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mFBbgmw/kwrqBx2soaZh7qmw0zV4w4NQswiDLll0SiledfVIgKkxVdmQy7J6RYQIkt7CBiv1aNOB5jO2FZp1GTeaQsQJEuf0ooH/XYg/3+QlpQV9q/dTd9kAgDFqepjSGqwqbLE6WA+/TYQFOEA+X0jCb1iZpe0chyOubuo8CaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WZwVyPr+; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="v8Ks3Q79";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZMukqPmR";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZpgUsPTE";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="aNY+yqtT"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2BB1121165;
-	Thu, 17 Apr 2025 09:38:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744882686; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=VkE4MpLnxcZnM5LXT3iBXJFM4c2I3RraTKjGur4DjrQ=;
-	b=v8Ks3Q79wkxHSTacTTByzPjxzSQihkEGcuiCMHLEowGkn4C+D/VgM3A+OuQ/AIxjA0kF6f
-	wTgCBuOJBclPHvvNgO7X+JRwSZaVnLbRMrPDILkbYtSP1rOnmEsEg2Fit9+/xNv6g0xPGY
-	RrAl7OMfMcNKl78YyBql2l7DnzJMZlc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744882686;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=VkE4MpLnxcZnM5LXT3iBXJFM4c2I3RraTKjGur4DjrQ=;
-	b=ZMukqPmRRkHFfHop2823UFs+tBpcg/JESvPeUxAusKc/g6Dhe9inMD0DD5lYTDMeCn6iJP
-	8opFDaoDux5EhgCg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=ZpgUsPTE;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=aNY+yqtT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744882685; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=VkE4MpLnxcZnM5LXT3iBXJFM4c2I3RraTKjGur4DjrQ=;
-	b=ZpgUsPTES1R/hhuBqz8eQsLl+XCklznnSjRr73Cmb69Jjc894vjlJYQYpxZ4D7/Lw33Pyt
-	y2MQ93xhXj1TSQB5POwv5D1nO+ADzBZ1Alhu+qovpEXl2PAslHQgg2lxhm4oJMbAs+OfJ1
-	KN8BHCWhI9BCr2UBe2hH/ESwbYKzbKY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744882685;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=VkE4MpLnxcZnM5LXT3iBXJFM4c2I3RraTKjGur4DjrQ=;
-	b=aNY+yqtTlbWteX9tMon5en8VHlG9gT3upVw3OSAZ2yceg57zF/AaYyYyRpw4ajpcMgM5jG
-	QF1+HM4RyeNAPqCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1032E137CF;
-	Thu, 17 Apr 2025 09:38:05 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id SYeaA/3LAGj1eAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 17 Apr 2025 09:38:05 +0000
-Message-ID: <fd2359ed-f87e-4ba1-a6e5-b4114db7e2bb@suse.cz>
-Date: Thu, 17 Apr 2025 11:38:04 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WZwVyPr+"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ff6cf448b8so699984a91.3;
+        Thu, 17 Apr 2025 02:38:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744882688; x=1745487488; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zmAjcq1hyDWgD/CheyINUCmNxGBhGov0++8U9Vbpz60=;
+        b=WZwVyPr+F2vrAdZHhzvfSLCIRMLTzkpq/a/S0lf8quHryo5gUDavjVQJozpVpczOwb
+         3Gx/Uj/78vhWD/JtMEQJT5jTCNJWjewNBW0mqSdZ/BovclLPHDHX2azXnpTn97Ny8ZNK
+         8yLzFwIBh9EToYJetOLinIpJSRTmdMdJ1jW32VTmx7R2SPa/OzBsuqagnv+YLI8aDdav
+         3a0OHqAerzsg4MuXUBHuKAHb7+etgNXviXOanlkS+7UcQGBogjqhnzGNoYFwSU3P1+7n
+         B6K0HgkARxPq86zxq3Y973tAT53jHAb6HvaJgh5l2/2dw6PQX/cbDBIpcWpdrGnGV38Y
+         RJsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744882688; x=1745487488;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zmAjcq1hyDWgD/CheyINUCmNxGBhGov0++8U9Vbpz60=;
+        b=aMwyF1MJ7s9Qg++XDoZTVv9dT9AINq+T4j/m/lGlisltJyy8pmVfrHw3kIpxnnQt2Z
+         nfTPkTi/vkkD9MPCf2u57xSu1MLuOjQWi/5qVQTsRBHoemjCSuvW0ayOFrf+8Hc+ZFUv
+         sS6coCfLTrpj59oEM4qZlmbXoTFS2N96k0blPfn5lOHCmVfRZexYcFwdKE3thD4DTfQC
+         8g6UBT2SaLz3VpZkdfs68Uxa9ezocno6lMWElsLBlFDh1sRVU5PiNunkLk0+8KmEnO+2
+         62c+WGLPgxde7tr6QB+HLShPYAvRaUUdXsYW1PX8q1D2MsR1+mXqJuQh2GQ8vgKhbC/5
+         kI3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUuHwxW+iLUlXzk5yPXKSCIA7v/0TjuCsf1pVADYuDu2pT27eOOa0xYUkoKhX5pFqohfpuuZfcaA+sqK8ZE@vger.kernel.org, AJvYcCVvKDtzxymOoABIya+8VjcZR6DCOdruT9E1uz9Sm6+rX1HiIdapX1MhkZkrxILnbB61EitXVhIN1oaQxw==@vger.kernel.org, AJvYcCWOdRLA5orkTByE/cyXfOtBNr0o5uZJMOQNXdLKsGpU2DcU1N4YRvxQ/ldJpwGb2T5DUilgB4non3Eo@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJmVDz6QigTdlsFt14vkRMNrAkpDFtN7JIMMdtTXWf7XnZWKqp
+	Co/4ZcyGsAnKh+oC7JrbEQe6/iIKG+83KYdpU+oXAvLZIG6NvAIQDAseQg==
+X-Gm-Gg: ASbGncuZer3Tl3fbKtCo3NuYcDoWFLJGqRX/Hng2M4l0/9MJtxmJw4A3iQk2IR+prE8
+	podfxS2ydQk2MD5z2xwWN2sq1lDHfAFJoJEmh8fPyZDx3SKFi/emh54Cp8crW6vCqE+qpxhYz6Z
+	KQIMvh1dDuG0V5Ar+yyYMJVmIEQWj8XUgfrXCaRFSoio6di8GrlOZhj39bsNXUQrweKnCUa9T6v
+	oruKFewqsTiBsp8rtF6M5cTPBQEAI35Djn5QEVl7My5cIjwi75hTDTl0/hx7Nf3l6YH8HStqx2G
+	i3m0KKcufb25ij9ltUrm0FaSpFD/uTvj3BsUIbsEWGoIFWUVurwEQQ==
+X-Google-Smtp-Source: AGHT+IFV99Y0b6SjR27hTssQJUN2m5u9i+nWFFtBzvYZk1ruGbbNl9e+iP0/hxiAp+Uqq/ElDMOJWQ==
+X-Received: by 2002:a17:90b:2e10:b0:2ee:e945:5355 with SMTP id 98e67ed59e1d1-30863f30453mr7027126a91.19.1744882688148;
+        Thu, 17 Apr 2025 02:38:08 -0700 (PDT)
+Received: from localhost.localdomain ([171.255.57.44])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-308537b54d1sm4016523a91.0.2025.04.17.02.38.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 02:38:07 -0700 (PDT)
+From: Nam Tran <trannamatk@gmail.com>
+To: krzk+dt@kernel.org
+Cc: pavel@kernel.org,
+	lee@kernel.org,
+	robh@kernel.org,
+	conor+dt@kernel.org,
+	corbet@lwn.net,
+	devicetree@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/5] dt-bindings: leds: add TI/National Semiconductor LP5812 LED Driver
+Date: Thu, 17 Apr 2025 16:37:40 +0700
+Message-Id: <20250417093740.8466-1-trannamatk@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <878933d0-7062-4b91-ac32-efd5ea190702@kernel.org>
+References: <878933d0-7062-4b91-ac32-efd5ea190702@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Vlastimil Babka <vbabka@suse.cz>
-Subject: [GIT PULL] slab fix for 6.15-rc2
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: David Rientjes <rientjes@google.com>, Christoph Lameter <cl@linux.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, Suren Baghdasaryan <surenb@google.com>
-Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 2BB1121165
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[google.com,linux.com,linux-foundation.org,kvack.org,vger.kernel.org,linux.dev,gmail.com];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	TAGGED_RCPT(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:mid,suse.cz:dkim]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+On Thu, 17 Apr 2025, Krzysztof Kozlowski wrote:
 
-please pull the latest slab fix from:
+>On 17/04/2025 04:06, Nam Tran wrote:
+>> 
+>>>>
+>>>>>> +
+>>>>>> +patternProperties:
+>>>>>> +  "^led@[0-9a-b]$":
+>>>>>> +    type: object
+>>>>>> +    $ref: common.yaml#
+>>>>>> +    unevaluatedProperties: false
+>>>>>> +
+>>>>>> +    properties:
+>>>>>> +      reg:
+>>>>>> +        minimum: 0
+>>>>>> +        maximum: 0xb
+>>>>>> +
+>>>>>> +      chan-name:
+>>>>>> +        $ref: /schemas/types.yaml#/definitions/string
+>>>>>> +        description: LED channel name
+>>>>>
+>>>>> My comment stay valid. I don't think LEDs have channels, datasheet also
+>>>>> has nothing about channels, so again - use existing properties. Or
+>>>>> better drop it - I don't see any point in the name. The reg already
+>>>>> defines it.
+>>>>
+>>>> The channel was named for the output channel to each LED, not the LED channels.
+>>>
+>>> I don't understand what you want to say. Please explain why existing
+>>> label property is not correct here.
+>> 
+>> I understand that the label property is deprecated and that the preferred approach now is to use function and color instead.
+>> However, in the case of the LP5812, which is a matrix LED driver, these properties are not a good fit.
+>> The LP5812 does not associate each output with a specific function (like "status", "activity"),
+>> and the LEDs driven by LP5812 are not fixed to a particular color.
+>
+>Then use label instead of creating another property. If label is
+>deprecated, how creating another property which duplicates the label
+>solves anything?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/vbabka/slab.git tags/slab-for-6.15-rc2
+You're right — creating a new property like chan-name does not help
+if it duplicates the purpose of the deprecated label property.
+I initially created the chan-name property after referring to the existing leds-lp55xx.yaml binding.
 
-Thanks,
-Vlastimil
+However, based on your recommendation, I’ve decided to drop chan-name and the entire subnode as well.
+Additionally, I will add the vcc-supply property as mentioned in the last email.
 
-======================================
+Would this be sufficient for me to submit a new patch?
 
-- Stable fix adding zero initialization of slab->obj_ext to prevent crashes
-  with allocation profiling (Suren Baghdasaryan) 
-
-----------------------------------------------------------------
-Suren Baghdasaryan (1):
-      slab: ensure slab->obj_exts is clear in a newly allocated slab page
-
- mm/slub.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Best regards,
+Nam Tran
