@@ -1,230 +1,227 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2042.outbound.protection.outlook.com [40.107.102.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12375253B59;
-	Thu, 17 Apr 2025 16:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744906876; cv=none; b=loAbKY+2jp5xRk7k1ih4NMPt3AAQajiCjrB0TBXxjESx5F1VS0PhTdiJkqDCcaEZ8cv97uFU1cM89OgcgxEp9biTRSAUdC1Aj9yysoIlAiuHPrBukgiW8dnC5DX25EfmEaGr80kQnETUR7w3aBS87w79yT4EFMcyijtufrP52VI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744906876; c=relaxed/simple;
-	bh=wyX4lbJqpujDpt2SeJaFK9mS1tgXuoY4Hg/9OutBGSs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Jq4zAgIblIebLUKyO9w8pbqJevOilzH6ada2sx1b0OzFoi8LYyAmFicR5MfYaPjTTCaTNMEP9p820i68Qt/PEkte064FrOzFYb3rgcl29dPCahKQLV/c4ZZCbfAchv2hm+19PhEsnk32dmKe3h3e/Sg2l7CYvZQl7qg8zI7QBRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kHiRebIN; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6973025335A;
+	Thu, 17 Apr 2025 16:21:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744906898; cv=fail; b=WwTsdtm8HUSdkvPHvdtuV8NEJMsaXiGrAaujdgMTYA3wYqiy4X8jcWc83dixsAUlheK0JKCwrOCGIFz7+vqpkVGzX8OSB565Z4HCPF6MiCMGQFHctzML3Du+T/zeHb1+FWgZVEzAmH6r3g9FBdRcWaMRKUTrLD5otGb2AgK4ce8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744906898; c=relaxed/simple;
+	bh=GzAhXaiBu1jGW+/ZzPtMc4ZP4n3CWYWMZCXmed3TwSk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=sobRR0JremN77zT8DCC5CedkSfyrRLMvTxHK9fpeYIDQHyzgZzS6zXF/UXA7W9c83L56poBlR3EqbHue7DerwITsmwYtte67RLt/GE/wF4s5ey0yLc5/XrZ+ZvwSQAvPeUjBrTlOAMwr6esz0TSCYCrtGXlsZ1HHcy+PS/3v0DA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NTPFOw10; arc=fail smtp.client-ip=40.107.102.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kHiRebIN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A038C4CEE4;
-	Thu, 17 Apr 2025 16:21:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744906875;
-	bh=wyX4lbJqpujDpt2SeJaFK9mS1tgXuoY4Hg/9OutBGSs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=kHiRebINgRV0QY1UvT81pYcajboacUIi9FBxESi9yEjA1uCj/HGzyo6FSgaQoqZGp
-	 CzzaGe+tTK5ZfJ5LxSBKMYwMej/elCZCUF7HFT2JuwtFaChC/BOstpv7XcMYDAjX9b
-	 HXfHNWoN/gwElZKTr1pstr479AcoYruPUSGdXTXvbFez1ImUGxG9XCV51mJtawSWQY
-	 CVzOGgJxxXHcxkU0bqXR3JiXoCvfJxbYhO1GW+WfvnF2iN+6ScoiKwzgYN4DYJpgPX
-	 JqPwEynIBn/DCaxTC9F3Cd3jCqxIM2UZYoZJpCsDlC4GkBmdZhkIfoFlhOEvNTYK7/
-	 tnyx6yxS80AxQ==
-Date: Thu, 17 Apr 2025 11:21:13 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sairaj Kodilkar <sarunkod@amd.com>
-Cc: alex.williamson@redhat.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bhelgaas@google.com, will@kernel.org,
-	joro@8bytes.org, robin.murphy@arm.com, iommu@lists.linux.dev,
-	linux-pci@vger.kernel.org, vasant.hegde@amd.com,
-	suravee.suthikulpanit@amd.com, Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [bug report] Potential DEADLOCK due to vfio_pci_mmap_huge_fault()
-Message-ID: <20250417162113.GA113267@bhelgaas>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NTPFOw10"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UNYbTrjQdUk/xvlunAwbg80dRNoMECg+NIR9k4wIRsZrFt6cj5qHwXwG7Fdc4sv+zUVbrj2o8+NnjTmDDSf3eyBmVdHW6+w5j6jwFBc3h6szx+YVEzv6VtCvseCjOMJh8xBm44uwWXaB/4QrRqHxQaX0SMkV2OIFbMuZBGwOqraUm/kyF/BYFGm3m1FprmP4JhL9jh0tBeMUN7od/NUaIapk3Tz/8ak272oRGEPERBiIvQLqsD0oOu+B4ARwMOLF8mT7zSmN8FH78RGLgmDy6Nuq8rKmFwUBMCIXWBxyW2o1y5mUNreF0cUFc/rfkERTdGR8lU3dye6B1ewZ+L0Jpw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+6GpVj3aO9O84Q1dge/kL0AhceqbB8xUxMH7a78LyIQ=;
+ b=QIWq6bl5uZYQw/S3EbvTx5vmPcNqsSfNEj2rIguLimpaeHWH66PfWJs8wfSi662sXMqjz7UWpwD7mG54vMARPPy66UtP6RizxhGxZXDzA2xw4svD4werJ9AEzYLd3rmXPu4oUqMpQU/75fcTuDMTmjFqBA/3eMVUt6hMPunZI+jvpctPGeSpWMbE6R+FzO3CzI6sNQX4POdep6Jic4XdIP4ZMoLC1uxGV+m67fHrzf4FoW6q6pYbKtzus7xLDY484Q7MDL1WEdFmzi+Ce4pYwn2+CVQG7TLM9zZZhjmDf6TJ7mtY3npG2DZKjdGqcXmLQWSaziBHsg1LCtCVL/+/QA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+6GpVj3aO9O84Q1dge/kL0AhceqbB8xUxMH7a78LyIQ=;
+ b=NTPFOw10+nYLA1YPnW6veE/P/nV5jC9yH5NAeWmbfgJD+KRw1Tyl0kw+L/sox7zk3ey86CDSI3lL7yvT8UI8gEDEyYf4Bxt2m+LkqjOAL2mpkwhvfyD4q+rbEgaKSxLpZ7tmTMvO/W1CCnkZ8uBnlPeBW42iJQ6ddFv7hquhdSc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
+ by PH7PR12MB9152.namprd12.prod.outlook.com (2603:10b6:510:2ec::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Thu, 17 Apr
+ 2025 16:21:31 +0000
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e%5]) with mapi id 15.20.8655.022; Thu, 17 Apr 2025
+ 16:21:31 +0000
+Message-ID: <96762dec-616b-b906-02b3-e006d43a8535@amd.com>
+Date: Thu, 17 Apr 2025 11:21:30 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v3] x86/boot/sev: Avoid shared GHCB page for early memory
+ acceptance
+Content-Language: en-US
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>, Ard Biesheuvel <ardb+git@google.com>,
+ linux-efi@vger.kernel.org, x86@kernel.org, mingo@kernel.org,
+ linux-kernel@vger.kernel.org,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Dionna Amalie Glaze <dionnaglaze@google.com>,
+ Kevin Loughlin <kevinloughlin@google.com>
+References: <20250410132850.3708703-2-ardb+git@google.com>
+ <20250411184113.GBZ_liSYllx10eT-l1@renoirsky.local>
+ <CAMj1kXEqWxokyJf_WUE5Owwz3fO6b-Wq8sSNxFmMVAA+Q47uPQ@mail.gmail.com>
+ <3f2b0089-a641-1e0c-3558-0a8dc174d1ec@amd.com>
+ <CAMj1kXGvLQwea2J0E72tMhY-9iDCTmQm3drrHCTLyZ=hCP_iAg@mail.gmail.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+In-Reply-To: <CAMj1kXGvLQwea2J0E72tMhY-9iDCTmQm3drrHCTLyZ=hCP_iAg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA1P222CA0020.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:22c::21) To DM4PR12MB5070.namprd12.prod.outlook.com
+ (2603:10b6:5:389::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417115200.31275-1-sarunkod@amd.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|PH7PR12MB9152:EE_
+X-MS-Office365-Filtering-Correlation-Id: b42530ad-a884-4581-953a-08dd7dcbea17
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aTJOMlBCVUdHMjRzeDRPTGIrWVJnV2ZHMjdMeXgvT0N4aHdKYXpXVjVmZzZN?=
+ =?utf-8?B?SjNpWHVWUFZkU0FLSFJ5YjczNzYzWmJwVk81d1Q3MktFUXY1R1Bpemlab2ZY?=
+ =?utf-8?B?K0hYWWJCMmRZNCtCbTd4T3UvKythdVh0RVI0OEhOdlhlZXJvOEdOakRNb2Iz?=
+ =?utf-8?B?dm80dmZTaFRtTUFJZFpHR1VLdEFsLzZIOVBsUjdkaCtEek13VE5TNXdVdy92?=
+ =?utf-8?B?ZzRLY3J4Zm9wT1RDNEFpejBUc0NMZGM3UEFjSEQwWHNoL2pCM0lpT05YK3Zp?=
+ =?utf-8?B?cG0xV3VRMFhFQUdZVUtxa3R6R0ZIZVhjUmZtUUxpck11bksxOEtSbEhkOVNx?=
+ =?utf-8?B?Rk1kdVpWVFNURjlRSk5uZGdvUmd0dTd6TURHa2wwUVZOSHdkOUU3MUxOVWRy?=
+ =?utf-8?B?akd5K3FicHBuZTBzWHdmenU5M0xNZXFWWHU0RG5XTmxVOThKdUtNelFZMG4x?=
+ =?utf-8?B?ejJkcWtJTUk0bFZmWURBeXVRODJxV1piT3c4alhMYWNaaU5KbEJTZ2JORmNy?=
+ =?utf-8?B?YUJlSmtnMzNQTm9TU2pPbmFsd0pvSkVsQ3pRMXNRSFYvRjB1dzFOWmxhckNK?=
+ =?utf-8?B?REJuRmtFYjljdGkwWDJrTXFGSldSZCtqY3pTdzkyb2FkSndJQnhjU2xxTW9s?=
+ =?utf-8?B?Wkh1dmFFcElwd21NSk9uUnVtencvV0Y0OW0rZ0VsTmJUR0djbUNiTnNFQytD?=
+ =?utf-8?B?ZHB1RHRrSUtvZFdNdmJVcHBpQWdvNjZ5R09Idy9sUER2NjYxOHFDYkhKL3FE?=
+ =?utf-8?B?blRvUmdyYitDQmU2Wmk2RnA0YlFQTFdvQm1sSWZ6ejJhU0poMTFCZnd4cVdY?=
+ =?utf-8?B?Y2RJNjd2aThSdms2cW1xUnowQ1E0cEJKTjE2bWxpWDE5ZU5RRURRdjJOcEFx?=
+ =?utf-8?B?ZW01TmdENDdTbW5kcXdVUEs1MlZCckdGNnB6R0VlKytiSjE1R1k0NjN2SEM2?=
+ =?utf-8?B?YitsYnNUM1dac09FWXd6QllsSXM2NWdDUWpXQWhES2ttWUZvRzREMGRqaHBX?=
+ =?utf-8?B?SHJjRndCMWN5djl2TVk1MHNnSUI1SXBtUEZHZHRma1lVWVZUN2VWTkZjTTQ5?=
+ =?utf-8?B?Y0VMdlZCb3Ria2NCY05kbnl3SHZWbW5Gd2w0S0x6NnBHdlg2Qithdm9xaVcx?=
+ =?utf-8?B?aHZtT1FLd25JNUk1SWcyenNVY0FIQTg1Q3U0cWRTSnhYRnZtckVjMDhPQzR1?=
+ =?utf-8?B?STBMYVJaTjhXRmFmdzhzQmFCOEpBZGNreDZTMlh4Q3pVcUtyMG45ajhkTHBK?=
+ =?utf-8?B?RzVDMk5EOVJESW9XcjhKVXpua0p2dmI3RnNkZUtJOU5DOHBvZjhsb0ZUK0gz?=
+ =?utf-8?B?d2VoZ0N4RTR4Y2ttTno2RFc1bFpRT1E4ejRVUWxqUllaUDJzenMrV3hibHcv?=
+ =?utf-8?B?Q25OUkRJNURZRmZ4bjFtV2VmSHBNbENCZHNUK2toTDBaUmdiK0YzNG1Ndlkx?=
+ =?utf-8?B?OVMrSjFMZ1NPOEg4ZlhtQWgwZTduWGQzSjZsb3JIcHVndE5EZUcwcGJDc01r?=
+ =?utf-8?B?Slc0ZE9mNldWcy80QzYwU3hhMU1wc0ZhSGN0YUV6Wjc2UUwrRWxQUmtWWUM3?=
+ =?utf-8?B?ZkdubHlJQ01sWG9Ed3l4V2EzWHN3cnBmVVBVR3J6dUx6NUd5QklvVklXSW5r?=
+ =?utf-8?B?RzJFQjAycW5CUkZoT0d3Z2tpR2x0eXNHd2x6dEtQaDR6WE00cWhHemJ3TGhB?=
+ =?utf-8?B?RDRzOWJDYTlGQ21pZGxpQXlhdFpKVWVnVTFaTStJTDJ3czFLRStaclRKNFNU?=
+ =?utf-8?B?UzVEV0k1UFBYZ2NsYkZscC9LU0E4aG5KUVE5dWowWFFLaEZ4b1dGUnlPWWJQ?=
+ =?utf-8?B?NGlTbzNTbmVkMnNSYUlCcHpoUFY1YWhMU0dkcXZFNnM0WUNUL1hRdlBiTmFP?=
+ =?utf-8?B?R0RWQzlVZXJDekIyU2tHTnI4aTFORkpPREd6M0pIVGdMOEFMV0YzVkpTNUQ3?=
+ =?utf-8?Q?gFrfxE0wohE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bEg0cGhkK255ck5mbUZmNEV3aHhaR1E0Tno2NTltdWc1anRKL08rY2lRUytq?=
+ =?utf-8?B?dlphWFo1NEE4bE9XakgreTZxWFlOZUpYNmZLM2l1bHpYeXg5R2MzRTVkNnND?=
+ =?utf-8?B?TUxWbms3ZzVBVGhQWWJLS0s2YjlrN25VaDhudnJRVDEvTTJDQnd2cUFxL0tE?=
+ =?utf-8?B?VXJteFhpWWd2YTFZdlRzaFZ4OHA0UEoySFowVk05MjJaL2o4RHhDOE0vRmE1?=
+ =?utf-8?B?UW5QU3Bha1BsSEhLZzlsRXlWYURMVW9xc2xyT3FKY3JDdjh4MUVsYTFaVWFF?=
+ =?utf-8?B?NTZSYmVZT3hjYXBSc3ZoNlVkSjdEcGpRNmtIaXpWeWJ0akdabU95Uzhha21z?=
+ =?utf-8?B?eGlFUUVwM2ZLQVozK1ZoVXdMRytLMXp6ZTA3M05KTmpHbzlyM0EvUzZVVVVM?=
+ =?utf-8?B?N21COFQwbUlXcTdXOE9lVXpxUEgzZUdFcnRuUDlDL0x1TTZZYnVhT3lwM1Rm?=
+ =?utf-8?B?UUdrQXVmVXA5LzJmeThlc2duNUNFYjRUeHRFa2tSU3BiZjN5OUJiREdubm9O?=
+ =?utf-8?B?QWRQYWhVckYvWXRnZ0FSZDR4OXpwaHgzVk1HTml0VnhZcDZoM2x1UkV5MzFP?=
+ =?utf-8?B?VGhZNXhTcFpPWUFBQUZHaCsrVGd2NFh0WW1TUUhsT01WSFRYSHNnVDFxRGdY?=
+ =?utf-8?B?a3ZjS3YybkppOHhrN05qc2RyS0ZvVytjNG1LaG0wT1Y1b2pLOFQ5OW5KdXBG?=
+ =?utf-8?B?QThhdFNoc2UxQjZHTmcyL0hkMFptTi9GZ3AvZkNYc1JLdk9iOUZtekJNVVlF?=
+ =?utf-8?B?Q2t2MUdVVS9aRkZDQW56VW9xQW8vbWo2MUdscnNVMEpWclA0bExYbVRrL3di?=
+ =?utf-8?B?Mkkvc2hSUGlpa2JqV0ExNUU2UUpjNDJPV3dwdkg1V01ybU5NYXhJU2ptbUtt?=
+ =?utf-8?B?dVg2ejVQeE1oazBNOHo3RUc4NWFmZWhIaXdJYXZQYktvdkpkS0NpaStUbmVk?=
+ =?utf-8?B?c3lNdHBxelJ1VFNJWllrZXMrMkNRTHpmZmwrbWQ5dXV1eGtRNmpJSUYvb3RB?=
+ =?utf-8?B?VHFUakNkTHlHaGo4WlpaaTdRSnFOT0dkSkxBLzU3TERUM2p4aEM1Rm1MMTQw?=
+ =?utf-8?B?eDFVWjFKcEdzdk1OcGlGSkdhNVpvRXBaT1BCbDY5aHIySDNaeEoyOTJiajlC?=
+ =?utf-8?B?aFVDR3hVOEwvc2RYN2Y5MmxMYy8vekdoL3hGTm1xSHA5c2V4d3VlOU56YTJu?=
+ =?utf-8?B?SDNhZ2FlMUpzUjRVYWt1TEgzQXVUWDRSdW1JZlVsU2k5YUQ1Vmd4RWtGdExu?=
+ =?utf-8?B?bHB6S3JRSEhla0dqUTA4R251cGNBWjVjeEhCM2N3R2tRM1U2a3o5RVRlRlFy?=
+ =?utf-8?B?eDExUytPOGF1Si9Jd0dZVndVbms5RDcwWkZSYWxqa1hrTytEMnUyM2hWbGVz?=
+ =?utf-8?B?REtvRUVQWlNkc2RjNVhIRTMydE1ZYUlyYTdrSzRCaFlySGJjdVlEZ0NvTVor?=
+ =?utf-8?B?R2dHUVI0V0dSQjBubjJjUGtzL0FFVUdJek9jUWswMHdYNTR4TTdhd3h0SEZC?=
+ =?utf-8?B?NlkxRkx6cm1VQ3JuQWJPWWtJZkR4R1h1d29oOGcyQzZwY3MwOUdMSDQxSC9h?=
+ =?utf-8?B?bncwcEs1NVBUMWtlV1ZHOS9JajdlUFZmODAvL3I3WmJlM3JOb2tLMXI3ZFJz?=
+ =?utf-8?B?aXFKWm9kb29aUHpCaXMxbHI5cnNzNkJJKzhDWW1xZkNWcjdqT3lVU0l1MGZ0?=
+ =?utf-8?B?L0d2N2gxblVBSytOZlFzZlVXQVlaaXpPRVBrSlJIdnVuRis5R1J5eE9KUlBF?=
+ =?utf-8?B?UFF6aTBRNjFWTVZUZmM5aHJtWlU5bGIrcTBxYkxLUTdmNWluS2NrdUFqQnZw?=
+ =?utf-8?B?cHJMN09tOUE5K215QnpiRThVVmlVUSsvdllRcm0vMlp5WmJhTmYyNkVhRXZn?=
+ =?utf-8?B?OTQxbUdvcGZnSkNBOUlTRHRTWDFhbzJKQ2h3Q28xSkpGbnNlMTZzU00rbm9w?=
+ =?utf-8?B?MzZ4Z2V0aCtGQmhiWWowa1lSTU05Zi94M2RjUkdvY2ZtMlFKZ3BsbHRWNG15?=
+ =?utf-8?B?cFhEdlRQZ1Jjcno3MC9pUFNRZElLdklqVWtlOVhsd0F6K2tSS3hOT2s2NTFW?=
+ =?utf-8?B?WkpJWUZOVWNucm1yVXFJaVFBeWtnOFEwNm51bVJvY25sWHlteStQc0ZRcGU5?=
+ =?utf-8?Q?8E6YjIpKi/iuLZSkN3I1hl/1M?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b42530ad-a884-4581-953a-08dd7dcbea17
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 16:21:31.7026
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2DEKgu2ypiGFFdu0/uYPOkJ8ENLH2rz8Zk01PviJwTh2ZTR0uJgBsP/y90FBG8hRA5PZteSh3iudsJ9+vaPv4Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9152
 
-[+cc Thomas since msi_setup_device_data() is in a call path]
+On 4/17/25 11:14, Ard Biesheuvel wrote:
+> On Thu, 17 Apr 2025 at 18:08, Tom Lendacky <thomas.lendacky@amd.com> wrote:
+>>
+>> On 4/11/25 14:00, Ard Biesheuvel wrote:
+>>> On Fri, 11 Apr 2025 at 20:40, Borislav Petkov <bp@alien8.de> wrote:
+>>>>
+>>>> On Thu, Apr 10, 2025 at 03:28:51PM +0200, Ard Biesheuvel wrote:
+>>>>> From: Ard Biesheuvel <ardb@kernel.org>
+>>>>>
+>>>>> Communicating with the hypervisor using the shared GHCB page requires
+>>>>> clearing the C bit in the mapping of that page. When executing in the
+>>>>> context of the EFI boot services, the page tables are owned by the
+>>>>> firmware, and this manipulation is not possible.
+>>>>>
+>>>>> So switch to a different API for accepting memory in SEV-SNP guests, one
+>>>>
+>>>> That being the GHCB MSR protocol, it seems.
+>>>>
+>>>
+>>> Yes.
+>>>
+>>>> And since Tom co-developed, I guess we wanna do that.
+>>>>
+>>>> But then how much slower do we become?
+>>>>
+>>>
+>>> Non-EFI stub boot will become slower if the memory that is used to
+>>> decompress the kernel has not been accepted yet. But given how heavily
+>>> SEV-SNP depends on EFI boot, this typically only happens on kexec, as
+>>> that is the only boot path that goes through the traditional
+>>> decompressor.
+>>
+>> Some quick testing showed no significant differences in kexec booting
+>> and testing shows everything seems to be good.
+>>
+> 
+> Thanks.
+> 
+>> But, in testing with non-2M sized memory (e.g. a guest with 4097M of
+>> memory) and without the change to how SNP is detected before
+>> sev_enable() is called, we hit the error path in arch_accept_memory() in
+>> arch/x86/boot/compressed/mem.c and the boot crashes.
+>>
+> 
+> Right. So this is because sev_snp_enabled() is based on sev_status,
+> which has not been set yet at this point, right?
 
-On Thu, Apr 17, 2025 at 05:22:00PM +0530, Sairaj Kodilkar wrote:
-> Hi everyone,
-> I am seeing following errors on the host when I run FIO tests inside the
-> guest on the latest upstream kernel. This causes guest to hang. Can anyone help with this ? 
+Correct.
+
 > 
-> I have done some cursory analysis of the trace and it seems the reason is
-> `vfio_pci_mmap_huge_fault`. I think following scenario is causing the
-> deadlock.
-> 
->      CPU0                     CPU1                                    CPU2
-> (Trying do                      (Trying to perform                  (Receives fault
-> `vfio_pci_set_msi_trigger())     operation with sysfs               during vfio_pin_pages_remote())
->                                  /sys/bus/pci/devices/<devid>) 
->                             
-> ===================================================================================================
-> (A) vdev->memory_lock
->     (vfio_msi_enable())
->                                 (C) root->kernfs_rwsem
->                                     (kernfs_fop_readdir())
-> (B) root->kernfs_rwsem
->     (kernfs_add_one())
->                                                                     (E) mm->mmap_lock
->                                                                         (do_user_addr_fault())
->                                 (D) mm->mmap_lock
->                                    (do_user_addr_fault())
->                                                                     (F) vdev->memory_lock
->                                                                         (vfio_pci_mmap_huge_fault())
-> 
-> 
-> Here, there is circular dependency of A->B->C->D->E->F->A.
-> Please let me know if anyone encountered this. I will be happy to help!
-> ---------------------------------------------------------------------------------
-> 
-> [ 1457.982233] ======================================================
-> [ 1457.989494] WARNING: possible circular locking dependency detected
-> [ 1457.996764] 6.15.0-rc1-0af2f6be1b42-1744803490343 #1 Not tainted
-> [ 1458.003842] ------------------------------------------------------
-> [ 1458.011105] CPU 0/KVM/8259 is trying to acquire lock:
-> [ 1458.017107] ff27171d80a8e960 (&root->kernfs_rwsem){++++}-{4:4}, at: kernfs_add_one+0x34/0x380
-> [ 1458.027027]
-> [ 1458.027027] but task is already holding lock:
-> [ 1458.034273] ff27171e19663918 (&vdev->memory_lock){++++}-{4:4}, at: vfio_pci_memory_lock_and_enable+0x2c/0x90 [vfio_pci_core]
-> [ 1458.047221]
-> [ 1458.047221] which lock already depends on the new lock.
-> [ 1458.047221]
-> [ 1458.057506]
-> [ 1458.057506] the existing dependency chain (in reverse order) is:
-> [ 1458.066629]
-> [ 1458.066629] -> #2 (&vdev->memory_lock){++++}-{4:4}:
-> [ 1458.074509]        __lock_acquire+0x52e/0xbe0
-> [ 1458.079778]        lock_acquire+0xc7/0x2e0
-> [ 1458.084764]        down_read+0x35/0x270
-> [ 1458.089437]        vfio_pci_mmap_huge_fault+0xac/0x1c0 [vfio_pci_core]
-> [ 1458.097135]        __do_fault+0x30/0x180
-> [ 1458.101918]        do_shared_fault+0x2d/0x1b0
-> [ 1458.107189]        do_fault+0x41/0x390
-> [ 1458.111779]        __handle_mm_fault+0x2f6/0x730
-> [ 1458.117339]        handle_mm_fault+0xd8/0x2a0
-> [ 1458.122606]        fixup_user_fault+0x7f/0x1d0
-> [ 1458.127963]        vaddr_get_pfns+0x129/0x2b0 [vfio_iommu_type1]
-> [ 1458.135073]        vfio_pin_pages_remote+0xd4/0x430 [vfio_iommu_type1]
-> [ 1458.142771]        vfio_pin_map_dma+0xd4/0x350 [vfio_iommu_type1]
-> [ 1458.149979]        vfio_dma_do_map+0x2dd/0x450 [vfio_iommu_type1]
-> [ 1458.157183]        vfio_iommu_type1_ioctl+0x126/0x1c0 [vfio_iommu_type1]
-> [ 1458.165076]        __x64_sys_ioctl+0x94/0xc0
-> [ 1458.170250]        do_syscall_64+0x72/0x180
-> [ 1458.175320]        entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [ 1458.181944]
-> [ 1458.181944] -> #1 (&mm->mmap_lock){++++}-{4:4}:
-> [ 1458.189446]        __lock_acquire+0x52e/0xbe0
-> [ 1458.194703]        lock_acquire+0xc7/0x2e0
-> [ 1458.199676]        down_read_killable+0x35/0x280
-> [ 1458.205229]        lock_mm_and_find_vma+0x96/0x280
-> [ 1458.210979]        do_user_addr_fault+0x1da/0x710
-> [ 1458.216638]        exc_page_fault+0x6d/0x200
-> [ 1458.221814]        asm_exc_page_fault+0x26/0x30
-> [ 1458.227274]        filldir64+0xee/0x170
-> [ 1458.231963]        kernfs_fop_readdir+0x102/0x2e0
-> [ 1458.237620]        iterate_dir+0xb1/0x2a0
-> [ 1458.242509]        __x64_sys_getdents64+0x88/0x130
-> [ 1458.248282]        do_syscall_64+0x72/0x180
-> [ 1458.253371]        entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [ 1458.260006]
-> [ 1458.260006] -> #0 (&root->kernfs_rwsem){++++}-{4:4}:
-> [ 1458.268012]        check_prev_add+0xf1/0xca0
-> [ 1458.273187]        validate_chain+0x610/0x6f0
-> [ 1458.278452]        __lock_acquire+0x52e/0xbe0
-> [ 1458.283711]        lock_acquire+0xc7/0x2e0
-> [ 1458.288678]        down_write+0x32/0x1d0
-> [ 1458.293442]        kernfs_add_one+0x34/0x380
-> [ 1458.298588]        kernfs_create_dir_ns+0x5a/0x90
-> [ 1458.304214]        internal_create_group+0x11e/0x2f0
-> [ 1458.310131]        devm_device_add_group+0x4a/0x90
-> [ 1458.315860]        msi_setup_device_data+0x60/0x110
-> [ 1458.321679]        pci_setup_msi_context+0x19/0x60
-> [ 1458.327398]        __pci_enable_msix_range+0x19d/0x640
-> [ 1458.333513]        pci_alloc_irq_vectors_affinity+0xab/0x110
-> [ 1458.340211]        vfio_pci_set_msi_trigger+0x8c/0x230 [vfio_pci_core]
-> [ 1458.347883]        vfio_pci_core_ioctl+0x2a6/0x420 [vfio_pci_core]
-> [ 1458.355164]        vfio_device_fops_unl_ioctl+0x81/0x140 [vfio]
-> [ 1458.362155]        __x64_sys_ioctl+0x93/0xc0
-> [ 1458.367295]        do_syscall_64+0x72/0x180
-> [ 1458.372336]        entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [ 1458.378932]
-> [ 1458.378932] other info that might help us debug this:
-> [ 1458.378932]
-> [ 1458.388965] Chain exists of:
-> [ 1458.388965]   &root->kernfs_rwsem --> &mm->mmap_lock --> &vdev->memory_lock
-> [ 1458.388965]
-> [ 1458.402717]  Possible unsafe locking scenario:
-> [ 1458.402717]
-> [ 1458.410064]        CPU0                    CPU1
-> [ 1458.415495]        ----                    ----
-> [ 1458.420939]   lock(&vdev->memory_lock);
-> [ 1458.425597]                                lock(&mm->mmap_lock);
-> [ 1458.432683]                                lock(&vdev->memory_lock);
-> [ 1458.440153]   lock(&root->kernfs_rwsem);
-> [ 1458.444905]
-> [ 1458.444905]  *** DEADLOCK ***
-> [ 1458.444905]
-> [ 1458.452589] 2 locks held by CPU 0/KVM/8259:
-> [ 1458.457627]  #0: ff27171e196636b8 (&vdev->igate){+.+.}-{4:4}, at: vfio_pci_core_ioctl+0x28a/0x420 [vfio_pci_core]
-> [ 1458.469499]  #1: ff27171e19663918 (&vdev->memory_lock){++++}-{4:4}, at: vfio_pci_memory_lock_and_enable+0x2c/0x90 [vfio_pci_core]
-> [ 1458.483306]
-> [ 1458.483306] stack backtrace:
-> [ 1458.488927] CPU: 169 UID: 0 PID: 8259 Comm: CPU 0/KVM Not tainted 6.15.0-rc1-0af2f6be1b42-1744803490343 #1 PREEMPT(voluntary)
-> [ 1458.488933] Hardware name: AMD Corporation RUBY/RUBY, BIOS RRR100EB 12/05/2024
-> [ 1458.488936] Call Trace:
-> [ 1458.488940]  <TASK>
-> [ 1458.488944]  dump_stack_lvl+0x78/0xe0
-> [ 1458.488954]  print_circular_bug+0xd5/0xf0
-> [ 1458.488965]  check_noncircular+0x14c/0x170
-> [ 1458.488970]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [ 1458.488976]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [ 1458.488980]  ? find_held_lock+0x32/0x90
-> [ 1458.488986]  ? local_clock_noinstr+0xd/0xc0
-> [ 1458.489001]  check_prev_add+0xf1/0xca0
-> [ 1458.489006]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [ 1458.489015]  validate_chain+0x610/0x6f0
-> [ 1458.489027]  __lock_acquire+0x52e/0xbe0
-> [ 1458.489032]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [ 1458.489035]  ? __lock_release+0x15d/0x2a0
-> [ 1458.489046]  lock_acquire+0xc7/0x2e0
-> [ 1458.489051]  ? kernfs_add_one+0x34/0x380
-> [ 1458.489060]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [ 1458.489063]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [ 1458.489067]  ? __lock_release+0x15d/0x2a0
-> [ 1458.489080]  down_write+0x32/0x1d0
-> [ 1458.489085]  ? kernfs_add_one+0x34/0x380
-> [ 1458.489090]  kernfs_add_one+0x34/0x380
-> [ 1458.489100]  kernfs_create_dir_ns+0x5a/0x90
-> [ 1458.489107]  internal_create_group+0x11e/0x2f0
-> [ 1458.489118]  devm_device_add_group+0x4a/0x90
-> [ 1458.489128]  msi_setup_device_data+0x60/0x110
-> [ 1458.489136]  pci_setup_msi_context+0x19/0x60
-> [ 1458.489144]  __pci_enable_msix_range+0x19d/0x640
-> [ 1458.489150]  ? pci_conf1_read+0x4e/0xf0
-> [ 1458.489154]  ? find_held_lock+0x32/0x90
-> [ 1458.489162]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [ 1458.489165]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [ 1458.489172]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [ 1458.489176]  ? mark_held_locks+0x40/0x70
-> [ 1458.489182]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [ 1458.489191]  pci_alloc_irq_vectors_affinity+0xab/0x110
-> [ 1458.489206]  vfio_pci_set_msi_trigger+0x8c/0x230 [vfio_pci_core]
-> [ 1458.489222]  vfio_pci_core_ioctl+0x2a6/0x420 [vfio_pci_core]
-> [ 1458.489231]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [ 1458.489241]  vfio_device_fops_unl_ioctl+0x81/0x140 [vfio]
-> [ 1458.489252]  __x64_sys_ioctl+0x94/0xc0
-> [ 1458.489262]  do_syscall_64+0x72/0x180
-> [ 1458.489269]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [ 1458.489273] RIP: 0033:0x7f0898724ded
-> [ 1458.489279] Code: 04 25 28 00 00 00 48 89 45 c8 31 c0 48 8d 45 10 c7 45 b0 10 00 00 00 48 89 45 b8 48 8d 45 d0 48 89 45 c0 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1a 48 8b 45 c8 64 48 2b 04 25 28 00 00 00
-> [ 1458.489282] RSP: 002b:00007f08965622a0 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> [ 1458.489286] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f0898724ded
-> [ 1458.489289] RDX: 00007f07800f6d00 RSI: 0000000000003b6e RDI: 000000000000001e
-> [ 1458.489291] RBP: 00007f08965622f0 R08: 00007f07800008e0 R09: 0000000000000001
-> [ 1458.489293] R10: 0000000000000007 R11: 0000000000000246 R12: 0000000000000000
-> [ 1458.489295] R13: fffffffffffffb28 R14: 0000000000000007 R15: 00007ffd0ef83ae0
-> [ 1458.489315]  </TASK>
+> And for the record, could you please indicate whether you are ok with
+> the co-developed-by/signed-off-by credits on this patch (and
+> subsequent revisions)?
+
+Yep, I'm fine with that.
+
+Thanks,
+Tom
+
