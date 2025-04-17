@@ -1,138 +1,179 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B7028EA
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E4B23C9;
+	Thu, 17 Apr 2025 00:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744848478; cv=none; b=OsfQu0yQGrelIghbE3fmBckLxqgTa1HDzqXbHGBJWBXRoGePiiiv6IksT56ufB2NW3qdc38AVs1Oy5cq9V9khEcTbscYB7+aC1ULli8KN60/V5PQx2vBffOc0xXGGft5MA4UUdlttAOfwn79HYKIWCKVO/3PYm1Q6N8qjj2JoVw=
+	t=1744848519; cv=none; b=O+9M1aOe9KWqQGXozw6pyax8K55Qu2Xt7q4l0AIGaRUySFHPBUy2pC1jvCRpi0PBdJ6arDvDMz5EkMJ6nDURJlHwWGRlRl/4YksIVK73NsNTVSW87RkGIRUWoYQ32d78PtW4vdTGPaTlrx5g5bAUqWpnnR5oSTFULoy04Nrli44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744848478; c=relaxed/simple;
-	bh=J7cpEhGN+eEa1w3M0W/clk1j5yrNbvcE3ifGcRRwmJ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pxsOHTofzlNpajIMV6qZlkY6qYhO3pRB0ig56UDf19Z4eSOMkhz+MAJ+irvfR+wuXhVdFQB1l4aLo9gN2Z0F65CKLiE0RqBsjBOyO1u5XInxpXRpyUGEIFqu4iBAv4skpVzZoXrHGBtIoxZcBHJ5/hYmOZBLeRGZlTTS0zcODhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U4MDvQSH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744848519; c=relaxed/simple;
+	bh=hGr79s50hbOArFrIr7J2c9YKbRUTXQLJEWlC9VOUCM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZKoEyxjNNDfddFSyabW16kmWjabyPhO0YhkQE+4aSUpVnB7oOl+myu+FsayWDPErfv4CcW1omYPWpzW47MIBs4RVQ2QSmpSlYF7HZ/BnIohRKTNU5mX+y/I/GDxHKTvscGqxXu+zaewja4oz6F0ZrfnFn2/Ujbzi94bc4G9k9Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QHmqfsng; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U4MDvQSH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744848476;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YwgfUM8JwJbA0iQF0LdD8dJp+2ea27Yg2QmSTdEXXUw=;
-	b=U4MDvQSHpe9Bu43UnJ0lKJS//qBm1ZoXDtEUDn07D4cMwTMgImNugGEhn4zCMwm4YKzEms
-	T+zJg+xKa8FEawU0QyFmu1Z/moP2WmjswZurZT151qvWw9+1nYQqYNLe6dpJmRmbrX/nwZ
-	f497YlqbEu3ibtSkBBC7493sqH54fzg=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-210-9yDmiuLHPCmnKNQ90mv0mg-1; Wed,
- 16 Apr 2025 20:07:53 -0400
-X-MC-Unique: 9yDmiuLHPCmnKNQ90mv0mg-1
-X-Mimecast-MFC-AGG-ID: 9yDmiuLHPCmnKNQ90mv0mg_1744848469
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 947F61956048;
-	Thu, 17 Apr 2025 00:07:49 +0000 (UTC)
-Received: from h1.redhat.com (unknown [10.22.88.34])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4B8FC1800352;
-	Thu, 17 Apr 2025 00:07:39 +0000 (UTC)
-From: Nico Pache <npache@redhat.com>
-To: linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: akpm@linux-foundation.org,
-	corbet@lwn.net,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	david@redhat.com,
-	baohua@kernel.org,
-	baolin.wang@linux.alibaba.com,
-	ryan.roberts@arm.com,
-	willy@infradead.org,
-	peterx@redhat.com,
-	ziy@nvidia.com,
-	wangkefeng.wang@huawei.com,
-	usamaarif642@gmail.com,
-	sunnanyong@huawei.com,
-	vishal.moola@gmail.com,
-	thomas.hellstrom@linux.intel.com,
-	yang@os.amperecomputing.com,
-	kirill.shutemov@linux.intel.com,
-	aarcange@redhat.com,
-	raquini@redhat.com,
-	dev.jain@arm.com,
-	anshuman.khandual@arm.com,
-	catalin.marinas@arm.com,
-	tiwai@suse.de,
-	will@kernel.org,
-	dave.hansen@linux.intel.com,
-	jack@suse.cz,
-	cl@gentwo.org,
-	jglisse@google.com,
-	surenb@google.com,
-	zokeefe@google.com,
-	hannes@cmpxchg.org,
-	rientjes@google.com,
-	mhocko@suse.com,
-	rdunlap@infradead.org
-Subject: [PATCH v4 12/12] Documentation: mm: update the admin guide for mTHP collapse
-Date: Wed, 16 Apr 2025 18:02:38 -0600
-Message-ID: <20250417000238.74567-13-npache@redhat.com>
-In-Reply-To: <20250417000238.74567-1-npache@redhat.com>
-References: <20250417000238.74567-1-npache@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QHmqfsng"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6e8fa1f99a6so382826d6.3;
+        Wed, 16 Apr 2025 17:08:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744848516; x=1745453316; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tJqOv8o36TMLKjrK4zXvLAIpyGUhPRv2sP67Kw4EUAY=;
+        b=QHmqfsngc02NTZUUbY02r3j+8FYJDDgaxurqJkkaIcbR+QnzAjWhFfyb580uaOshqB
+         R/K9CpQ9P7yPp2e5gxL8jRQMdyzKCjADMjDFTQr9pmBD3vOcd1pIFmCP8vD+G9OB0E2J
+         bkYcVV+XqbVk0AP6rkdRd5LlFup1kECzfFkIarShXpSZHyluUZOjHV7ZFn9Jb0hdbN5Y
+         9uqXXatpWB9/iUn7qmYtK0tte39ngw1+EmlZQEUPbKEfvQr78bmHW+thAszQATaKT7yr
+         fRs6Yqo0Lt06wm/ZH7IpBpzra1SfWXGNQx9bv8NU1URMDEqy96wxS5WccXcOiiLraurb
+         jSVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744848516; x=1745453316;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tJqOv8o36TMLKjrK4zXvLAIpyGUhPRv2sP67Kw4EUAY=;
+        b=Yln/ozDHkUqA5aAD9mqexvTFctrh2bxRu1d+dpSzGKuuoTcPPCUxTX/+Scsu10k8Fn
+         qzkaB1uJTE713Oh1epKjZlWjst5prDbVPa5JKLEZQfFu+yIj2IqNv1SbCnyWDpSqcOq3
+         Y8rbPCsx0O3HdVedSxdYEgAe3uMPLkE1mBIEpiivv8k3luyQA6V2ccsQDTlG8xjU8Wuc
+         bkZuXqslADQ4Mbgq6DYucZcerYVDJqP909MZ7mslWXq7vJR6iKsm2vrt3NB7nU1MC/Af
+         sdVJOXVJfxdwWEvjpCJumwDUZiutEs+QbZV6EsuLqEn2bXNa7DrccGJLTcRa6g8J6RHW
+         rP8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUL+9IizsFA4UYAzxq3gu/C98ZjIJWeWhccc6qQq4AhFF1EvtI9AzD9TIPSLdyUhY3qS8Gk+Hmp8BTu@vger.kernel.org, AJvYcCUejfPDVytu8KqvI2m3AP73OLJItNz0tj6eUqIwItvR1me3KxozNGBSvai7F23n5Alszw8nCy9ka27/@vger.kernel.org, AJvYcCV2chR7y4T50eW03xNs+Df+9boyylu8LC2rIk8utHhCP58BqmL0vei2t0PFGq74WcCTJUpe6Lp4htJOMk/S@vger.kernel.org, AJvYcCXy3LBeuKtesXXeRvGjM8ZOhgdgZc9Jt1tycmdkJeunjGIMvYbBN0bnIF3YgFyv9MrWdGq/XrT6S6Gfeg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRTLiC0tghdd8VHTjP4G5aNHHwVb+LcqtBjRX6AcieBr7Xi1Dh
+	UTpcOGG3qFo3gOLDN8e+rqoCfItGDgtTv7ZBruo3JIANJcOTBoVf
+X-Gm-Gg: ASbGncuXG/ausKCs0jqQfVZLH9phK0+Du9t1IPWbBaMc32rdfOUmwG1yqyKZtMfYDBX
+	dBRB4zTjOdYAcnDmNofZ/J54DlTnZ5v/Xj9X4TX/ZauhFer6oYV7Gtw5MOKce/39bXnbUddRqPq
+	KFLA7KqY6qPceOvSlvLcg8r0Rj55U6Tps8any/+YZTtF/j3NAnFovuuVUn+ha9lZceYau/r2ZJj
+	5zjcQPKnqeasjNxyGUzbMB+QZE0IjQq+EMv97+Dm3dmc0YgPsjC+NfCikTbaEErlnTyQDGd1gIH
+	ZTNUooTpa3IxnWuoN3RjBsoI4/ZNmgKyj4YT4jEaBgIlPCr/kIz/doeIcSBc/A==
+X-Google-Smtp-Source: AGHT+IEgt/xzdl4pyyhYr8Rve1iU9l/NmW8OKduLXW80EHNhcCRd4MzklhGlnNblENETHjaRR9goIw==
+X-Received: by 2002:ad4:5fc8:0:b0:6e8:98ce:dd75 with SMTP id 6a1803df08f44-6f2b964e60cmr9426336d6.9.1744848516175;
+        Wed, 16 Apr 2025 17:08:36 -0700 (PDT)
+Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0de9734a8sm122800756d6.48.2025.04.16.17.08.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 17:08:35 -0700 (PDT)
+Date: Wed, 16 Apr 2025 21:08:30 -0300
+From: Jonathan Santos <jonath4nns@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, lars@metafoo.de,
+	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
+	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+	broonie@kernel.org
+Subject: Re: [PATCH v5 02/14] dt-bindings: iio: adc: ad7768-1: add
+ trigger-sources property
+Message-ID: <aABGfv+9KxEt5sAq@JSANTO12-L01.ad.analog.com>
+Reply-To: 938b950b-4215-4358-a888-6f6c9aab48e8@baylibre.com
+References: <cover.1744325346.git.Jonathan.Santos@analog.com>
+ <35481552e9ce39a24a0257ab001c0bcfea1a23be.1744325346.git.Jonathan.Santos@analog.com>
+ <938b950b-4215-4358-a888-6f6c9aab48e8@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <938b950b-4215-4358-a888-6f6c9aab48e8@baylibre.com>
 
-Now that we can collapse to mTHPs lets update the admin guide to
-reflect these changes and provide proper guidence on how to utilize it.
+On 04/11, David Lechner wrote:
+> On 4/11/25 10:56 AM, Jonathan Santos wrote:
+> > In addition to GPIO synchronization, The AD7768-1 also supports
+> > synchronization over SPI, which use is recommended when the GPIO
+> > cannot provide a pulse synchronous with the base MCLK signal. It
+> > consists of looping back the SYNC_OUT to the SYNC_IN pin and send
+> > a command via SPI to trigger the synchronization.
+> > 
+> > Introduce the 'trigger-sources' property to support SPI-based
+> > synchronization, along with additional optional entries for the SPI
+> > offload trigger and the START signal via GPIO3.
+> > 
+> > While at it, add description to the interrupts property.
+> > 
+> > Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> > ---
+> > v5 Changes:
+> > * Include START pin and DRDY in the trigger-sources description.
+> > * Fixed "#trigger-source-cells" value and description.
+> > * sync-in-gpios is represented in the trigger-sources property.
+> > 
+> > v4 Changes:
+> > * none
+> > 
+> > v3 Changes:
+> > * Fixed dt-bindings errors.
+> > * Trigger-source is set as an alternative to sync-in-gpios, so we
+> >   don't break the previous ABI.
+> > * increased maxItems from trigger-sources to 2.
+> > 
+> > v2 Changes:
+> > * Patch added as replacement for adi,sync-in-spi patch.
+> > * addressed the request for a description to interrupts property.
+> > ---
+> >  .../bindings/iio/adc/adi,ad7768-1.yaml        | 38 +++++++++++++++++--
+> >  1 file changed, 35 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> > index 3ce59d4d065f..4c58dbe8f749 100644
+> > --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> > @@ -26,7 +26,30 @@ properties:
+> >    clock-names:
+> >      const: mclk
+> >  
+> > +  trigger-sources:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +    minItems: 1
+> > +    maxItems: 3
+> > +    description: |
+> > +      A list of phandles referencing trigger source devices or GPIOs.
+> 
+> I don't think a gpio phandle should be directly allowed. Only a trigger
+> source provider (something with #trigger-source-cells).
+> 
 
-Signed-off-by: Nico Pache <npache@redhat.com>
----
- Documentation/admin-guide/mm/transhuge.rst | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+Sorry, I meant gpio-trigger, but I phrased it incorrectly.
 
-diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
-index dff8d5985f0f..06814e05e1d5 100644
---- a/Documentation/admin-guide/mm/transhuge.rst
-+++ b/Documentation/admin-guide/mm/transhuge.rst
-@@ -63,7 +63,7 @@ often.
- THP can be enabled system wide or restricted to certain tasks or even
- memory ranges inside task's address space. Unless THP is completely
- disabled, there is ``khugepaged`` daemon that scans memory and
--collapses sequences of basic pages into PMD-sized huge pages.
-+collapses sequences of basic pages into huge pages.
- 
- The THP behaviour is controlled via :ref:`sysfs <thp_sysfs>`
- interface and using madvise(2) and prctl(2) system calls.
-@@ -144,6 +144,14 @@ hugepage sizes have enabled="never". If enabling multiple hugepage
- sizes, the kernel will select the most appropriate enabled size for a
- given allocation.
- 
-+khugepaged uses max_ptes_none scaled to the order of the enabled mTHP size to
-+determine collapses. When using mTHPs it's recommended to set max_ptes_none
-+low-- ideally less than HPAGE_PMD_NR / 2 (255 on 4k page size). This will
-+prevent undesired "creep" behavior that leads to continuously collapsing to a
-+larger mTHP size. max_ptes_shared and max_ptes_swap have no effect when
-+collapsing to a mTHP, and mTHP collapse will fail on shared or swapped out
-+pages.
-+
- It's also possible to limit defrag efforts in the VM to generate
- anonymous hugepages in case they're not immediately free to madvise
- regions or to never try to defrag memory and simply fallback to regular
--- 
-2.48.1
+> > +      Supports up to three entries, each representing a different type of
+> > +      trigger:
+> > +
+> > +        - First entry specifies the device responsible for driving the
+> > +          synchronization (SYNC_IN) pin, as an alternative to adi,sync-in-gpios.
+> > +          This can be a `gpio-trigger` or another `ad7768-1` device. If the
+> > +          device's own SYNC_OUT pin is internally connected to its SYNC_IN pin,
+> > +          reference the device itself or omit this property.
+> > +        - Second entry optionally defines a GPIO3 pin used as a START signal trigger.
+> > +        - Third entry specifies a GPIO line to act as a trigger for SPI offload.
+> 
+> SPI offload is part of the SPI controller, not the ADC chip, so doesn't
+> make sense to have that binding here. In that case, the ADC is the
+> trigger-source provider, not consumer.
 
+Right! Maybe a silly question, but this means we would have then two trigger-sources 
+defined, one in the spi controller node and other in the adc node, right? like
+this:
+
+spi_controller: spi@44a00000 {
+	...
+	trigger-sources = <&offload_trigger_source>;
+	...
+	adc0@ {
+	...
+		trigger-sources = <&sync_trigger_source>;
+		#trigger-source-cells = <1>;
+	...
+	}
+}
+
+> 
+> 
+> 
