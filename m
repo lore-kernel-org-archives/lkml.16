@@ -1,103 +1,214 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746DB79E1
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292CF79C4
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744866150; cv=none; b=H+4KXF9fSuamXjh5oTwB5xpvdj2MLM1sAu9sOUEgNlTJvg4D/GJyCtBhC5oHrtySadbTUkwZ4gZA739aHdEzuS6mdNhKc5R7gtXzlgaB03iLmRc7NJeXOt6z/Vk04f5IwDLto0pYjUyavYSriydi+G3no7W9KHuGW3abxEiRAY8=
+	t=1744866218; cv=none; b=GQx5gG/Hqhv4rTE4ZjG8IMbhKAWgRjz5uYn1LFpuiqAnDvlMRG9MxYPtwQ5E6EPFn+4TPND0mSSy2oWdSxVAT//4DmsyVauIklNbRACNzdKZ8JVUFKSzyxwfb/9d+v0Fi4E6IQPqCdttRMURZyDW/zHCHOoSEOinCuoFK1RmVEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744866150; c=relaxed/simple;
-	bh=9M2r/BN+wgJnJLiMtl0Q6+EJzSQ1DU6UiVV2RyTO9jM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o3knnzDWhA18F1Pbe0JgRP5LaIpWoKS60Y3S6xyt3G6xqvWTmkyIwF8YMnfrhDuEL7LTfxIrjb098S53NC79bmsvQ/Atbb3nAGWgCzOJcJEbTqDyeTN3GEdT5jrFI4J46OZoTIVFTJWGQ5Ax0Z4rO7LKVK7nJOU6YQ/vcNOukCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ywX7QEex; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744866218; c=relaxed/simple;
+	bh=I7wIEYnpxcz/BApB48jy+atPoGsInFFcNendN5f2mEc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=O41Z/AWbf/2tMh6mc3NWN7rB02hohkIcgM1ie/DEHQmVxL6PN44NQMxxzWPA6DCSm4vraoDK/RCN2ehg52SwVUxvmlet7gM0MEMIM8oDw+OTtd9zAiWUPE3ysknFh6RCqfqnBx7p8GNGwjLZaHb6IxUHb/N3x4cTsRM40K7aMTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GTDn7W0Z; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ywX7QEex"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-736b0c68092so267095b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:02:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GTDn7W0Z"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-224191d92e4so4102995ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:03:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744866149; x=1745470949; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GZHfsagG6Q2hcjMTlAC7HlQ6ESQi8KB+OYVG8WQKoGk=;
-        b=ywX7QEexMkd2HJwBKaSAvKsao0bDedd1u5pEheaIrK8YQzwzSEqZG8E+fRjUdXyNVJ
-         7vy/g6OCSvrbnxo2Zw/Wwpn9WMSzk95QPalIEJs0XFypLk+/PN9HHjeR7vkGq3kAB/RW
-         v2vjFCRXmikSwFksnfntmtV5PY6fOD7gnWfqCzdtAg51pUtpQX3JOG7tCw+qsV32rrk2
-         zh/aeJ7OE/2mnvSObu3rKYk/rucu7MpSnoMqtPotRnxZ3DSjck11WMEvp1zC+pKpvdrF
-         rrxWtwnzsND8ZNs73jSgQQdIrXueBVqG00hWXKiKPUE+o99tfW8Dmz8sjOYuNfr2XVAN
-         eIDw==
+        d=google.com; s=20230601; t=1744866216; x=1745471016; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bz/XOU6GJUjnIHziBMa/ejaxLXDiuXn3yPYLfVwKjWo=;
+        b=GTDn7W0Z1Vv5x69Cv9GF14wZ7i+KDOwD6kdf7sE+21DVl5wMvWuvMUEMjBjMy8YoUg
+         lQBbSMXEVfGiVvM1r7KJSmY+bLU5orx/a7+Rgm1als9hDISlnThCaqkMwjxpJqs7rDWY
+         jlQbXjMNkusC5vvip4cABskBUNZx66b3e15Uq73+ntis68gXDiRwmJDC9hQWcul6BKLt
+         j9+GHvEp3rQ9XUOt4TU5MGdd5GK9FP6Gntu146qhAR1/kMZGTZpuxZWCVgaFaYQ/e+nq
+         8NODKpMsP+lfDenxq1zCcWcecORTfACclfbbG8l8XAjUozUmviKrYQMbhKVU15bfTesI
+         sytA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744866149; x=1745470949;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GZHfsagG6Q2hcjMTlAC7HlQ6ESQi8KB+OYVG8WQKoGk=;
-        b=L3halCCm3LKaUCAc/AIkcdazMvIf656v394fA7lGKskFqTAgG/J6n/wxOaFMGjGzfW
-         N+RDc+pmxiqwHwDTsefyQdKQ/2PLIhrnInnrni7uZvnukqdop29edti5dT9xfDRz5J6b
-         BOJQsavdOzFo8CTtWy9gnt/5D/4cWrvkV1dQD442ZfYl9pIAZSn/y43uZRXffMulj7he
-         ES9gxNJva+qBbGsXmcW8Hxgo018j3krC372Mt5Bz63IyNKIcV6LqRS/jXPqdRuRaos6h
-         MFTt6KjY1H/VSsPk+7ZcBnsps3ttGaZy7R7vH/LS0e11/Qzi+EorFt2lHWKyfP5ky8th
-         C5sA==
-X-Gm-Message-State: AOJu0Yw33lZuhlU3qP3i2PvNJeZZRJP39bxcwdkgmUu3TTHKBQC8Ge4k
-	h3JGE1FvYDCuhn6aTbMPESKbmaRhka3JXeFJ+ZZxVBFqxDPCtkFa/jc/Rq8wZxw=
-X-Gm-Gg: ASbGncuFydPdXRpTeH7YpPb3Y7izvFnieVmTr+4poybfqipdpDnJnvHKgYWKZI+su6I
-	4g0j6WvyRV67yt12tFFqzUdfsvDptmRUwWOVfpvP0F/NUFeYoE1F97nsxNaaJ/5c5xA705+CmdD
-	z7lAuqfJ2t2T7v0Uqvn5ZRIzgGEHJl63rBj/+yKSsPzdL21jS3txBIweVhy4UDBgEEN3gWeK3+6
-	JrxXtsyH7arnySv7wxFH7N+Eigd8UrAx7VKDwK5AtAVGQ6Ex5FUiJFqplNlHQHErI5AHYgbguDy
-	dDTIUJCZQK2Mpw2GSC0HEt2zxRKGXEwg4drBKYctWQ==
-X-Google-Smtp-Source: AGHT+IFSqgtpQYxJWwym9yAwruethfN7kMgJzdygmpSqtMeWwFsSzwF9wIfwPtkLQ/Exq5QZsCWNiA==
-X-Received: by 2002:a05:6a00:451c:b0:736:6ecd:8e32 with SMTP id d2e1a72fcca58-73c267f8a15mr6255222b3a.21.1744866148664;
-        Wed, 16 Apr 2025 22:02:28 -0700 (PDT)
-Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c338fsm11376269b3a.43.2025.04.16.22.02.27
+        d=1e100.net; s=20230601; t=1744866216; x=1745471016;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bz/XOU6GJUjnIHziBMa/ejaxLXDiuXn3yPYLfVwKjWo=;
+        b=PfZ/N93qnQF+v/ixXTicyqjln7KBKCDciw8Pnq4jZwJ5NDZtV1savI22oIbF+dhaaE
+         luEJe1b2FHslyXaXBTPbUhELUtIuvKf/SldhQF9qUJhBUtHNSBALPrgH4It5NLMZfn6y
+         /lietUp2/OJm4Ltuv/XNB2jIav+yO3x8dt+D9aA9rOcVuWMJ+zCJXbyVooP8WM6tcP1Y
+         ROZxTcbPUNNxAGi/O0BSfwF2zEwPQykRYNG6SVv/uJr4yydWhWskufYI4ksm4ZyhCkl6
+         lPCt035YPGuCwN229XlNNMcN41CI2s0/85dSZOIdmk/eDyIB0T6w/wdNQfaD5eoUfIfx
+         CAyg==
+X-Forwarded-Encrypted: i=1; AJvYcCU61f9/NUZQGIGQOcja5KDm99BwdR4OA274jXwPsortKil4z18Ax0uk9HFgDryK0Ec1JGQL4sYPDDlAhcc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxITH+gLkhPL5z07AQ7vUBH+rcQd/Jif8344o4/HBDrVhnd0Tec
+	xeRiZUk+QglrIhQUc9vrhE78oh05YQMSe6EZVhxOc/aRXd77oXy9qbSgl6BSZw==
+X-Gm-Gg: ASbGncupE6rTRmkmWPtqypFfE8EdfawqT4IKvK4F47JlFoAwYyjJJRTwP0Uh59cd9j8
+	5MBEkzetQqFR0gMVjK0zQ+975rcuImcOVwpttPz/S6YcIWy6OLfuxKED8ed9uOznTwISzHf5TQN
+	C4ZA5Wpj6ZFMdRb/fjjDXd7JzJRDbIXfBaQbkmshIYJFOvmuvzTxp3vO+KfgDYYXoXGyrVvbh9e
+	hor1qRYllKSliH9m1tMFcKGUm1GXEjeaLSWpEgKQAxniAruKKrOLhDk4xEp4LR2P0oNlXKsZsAW
+	83+esQZeY4N2ZpAkKQif+qR51SMDmA+AFTnZaTPf9/t6wocfU1QQawdBfJgwO7SK873zK3Dltzm
+	6fEUnQqPNNM0aRUSu3q84lXpA
+X-Google-Smtp-Source: AGHT+IERG0jv4hzWyJchJgTRcqJ4HywpEjypOZy8IrUAQQsiFDrXebt5WGosFtJLR6VQALxZ6cQziw==
+X-Received: by 2002:a17:902:c405:b0:224:2384:5b40 with SMTP id d9443c01a7336-22c35916c90mr72088015ad.24.1744866216101;
+        Wed, 16 Apr 2025 22:03:36 -0700 (PDT)
+Received: from darker.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33fa5f59sm24056305ad.129.2025.04.16.22.03.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 22:02:28 -0700 (PDT)
-Date: Thu, 17 Apr 2025 10:32:26 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Nicholas Chin <nic.c3.14@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	rafael.j.wysocki@intel.com, rafael@kernel.org,
-	vincent.guittot@linaro.org, zhenglifeng1@huawei.com
-Subject: Re: [PATCH] cpufreq: acpi: Don't enable boost on policy exit
-Message-ID: <20250417050226.c6kdp2s5du3y3a3j@vireshk-i7>
-References: <2c788c2ca0cab09a8ef4e384f272af928a880b0e.1744781329.git.viresh.kumar@linaro.org>
- <20250417015424.36487-1-nic.c3.14@gmail.com>
+        Wed, 16 Apr 2025 22:03:35 -0700 (PDT)
+Date: Wed, 16 Apr 2025 22:03:33 -0700 (PDT)
+From: Hugh Dickins <hughd@google.com>
+To: Zi Yan <ziy@nvidia.com>
+cc: Gavin Guo <gavinguo@igalia.com>, linux-mm@kvack.org, 
+    akpm@linux-foundation.org, willy@infradead.org, linmiaohe@huawei.com, 
+    hughd@google.com, revest@google.com, kernel-dev@igalia.com, 
+    linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+    Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Subject: Re: [PATCH] mm/huge_memory: fix dereferencing invalid pmd migration
+ entry
+In-Reply-To: <A049A15F-1287-4943-8EE4-833CEEC4F988@nvidia.com>
+Message-ID: <eec1be5d-8b42-6dbb-432d-488650b79c40@google.com>
+References: <20250414072737.1698513-1-gavinguo@igalia.com> <A049A15F-1287-4943-8EE4-833CEEC4F988@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417015424.36487-1-nic.c3.14@gmail.com>
+Content-Type: multipart/mixed; boundary="-1463770367-916831765-1744866215=:4537"
 
-On 16-04-25, 19:54, Nicholas Chin wrote:
-> Unfortunately the issue I reported still seems to be present after
-> applying this patch. Upon resuming from suspend, the system is still
-> entering boost states descpite the boost flag being set to 0.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Okay, so this is what we know so far:
+---1463770367-916831765-1744866215=:4537
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-- Force synchronizing (disabling here) boost state at resume was
-  making this work earlier.
+On Mon, 14 Apr 2025, Zi Yan wrote:
+> On 14 Apr 2025, at 3:27, Gavin Guo wrote:
+>=20
+> > When migrating a THP, concurrent access to the PMD migration entry
+> > during a deferred split scan can lead to a page fault, as illustrated
+>=20
+> It is an access violation, right? Because pmd_folio(*pmd_migration_entry)
+> does not return a folio address. Page fault made this sounded like not
+> a big issue.
+>=20
+> > below. To prevent this page fault, it is necessary to check the PMD
+> > migration entry and return early. In this context, there is no need to
+> > use pmd_to_swp_entry and pfn_swap_entry_to_page to verify the equality
+> > of the target folio. Since the PMD migration entry is locked, it cannot
+> > be served as the target.
+>=20
+> You mean split_huge_pmd_address() locks the PMD page table, so that
+> page migration cannot proceed, or the THP is locked by migration,
+> so that it cannot be split? The sentence is a little confusing to me.
 
-- Setting the boost flag to "enabled" state during resume works as
-  well, as that makes the cpufreq core disable the boost frequencies
-  again.
+No, split_huge_pmd_address() locks nothing. But its caller holds the
+folio lock on this folio (as split_huge_pmd_locked() asserts with a=20
+VM_WARN_ON_ONCE); and page migration holds folio lock on its folio
+(as various swapops.h functions assert with BUG_ON).
 
-- This patch (though doing the correct thing) doesn't work. This is
-  one of the known places where boost was getting enabled before going
-  to suspend though.
+So any PMD migration entry found here cannot be for the folio which
+split_huge_pmd_address() is passing down.  (And even if the impossible
+did occur, what woud we want to do?  Skip it as the patch does.)
 
-- This means that some other part of kernel (or hardware ?) is
-  enabling the boost frequencies at suspend (or early resume), which
-  the kernel was disabling earlier and not anymore.
+>=20
+> >
+> > BUG: unable to handle page fault for address: ffffea60001db008
+> > CPU: 0 UID: 0 PID: 2199114 Comm: tee Not tainted 6.14.0+ #4 NONE
+> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-=
+1.16.3-2 04/01/2014
+> > RIP: 0010:split_huge_pmd_locked+0x3b5/0x2b60
+> > Call Trace:
+> > <TASK>
+> > try_to_migrate_one+0x28c/0x3730
+> > rmap_walk_anon+0x4f6/0x770
+> > unmap_folio+0x196/0x1f0
+> > split_huge_page_to_list_to_order+0x9f6/0x1560
+> > deferred_split_scan+0xac5/0x12a0
+> > shrinker_debugfs_scan_write+0x376/0x470
+> > full_proxy_write+0x15c/0x220
+> > vfs_write+0x2fc/0xcb0
+> > ksys_write+0x146/0x250
+> > do_syscall_64+0x6a/0x120
+> > entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> >
+> > The bug is found by syzkaller on an internal kernel, then confirmed on
+> > upstream.
+> >
+> > Fixes: 84c3fc4e9c56 ("mm: thp: check pmd migration entry in common path=
+")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Gavin Guo <gavinguo@igalia.com>
+> > ---
+> >  mm/huge_memory.c | 18 ++++++++++++++----
+> >  1 file changed, 14 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> > index 2a47682d1ab7..0cb9547dcff2 100644
+> > --- a/mm/huge_memory.c
+> > +++ b/mm/huge_memory.c
+> > @@ -3075,6 +3075,8 @@ static void __split_huge_pmd_locked(struct vm_are=
+a_struct *vma, pmd_t *pmd,
+> >  void split_huge_pmd_locked(struct vm_area_struct *vma, unsigned long a=
+ddress,
+> >  =09=09=09   pmd_t *pmd, bool freeze, struct folio *folio)
+> >  {
+> > +=09bool pmd_migration =3D is_pmd_migration_entry(*pmd);
+> > +
+> >  =09VM_WARN_ON_ONCE(folio && !folio_test_pmd_mappable(folio));
+> >  =09VM_WARN_ON_ONCE(!IS_ALIGNED(address, HPAGE_PMD_SIZE));
+> >  =09VM_WARN_ON_ONCE(folio && !folio_test_locked(folio));
+> > @@ -3085,10 +3087,18 @@ void split_huge_pmd_locked(struct vm_area_struc=
+t *vma, unsigned long address,
+> >  =09 * require a folio to check the PMD against. Otherwise, there
+> >  =09 * is a risk of replacing the wrong folio.
+> >  =09 */
+> > -=09if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) ||
+> > -=09    is_pmd_migration_entry(*pmd)) {
+> > -=09=09if (folio && folio !=3D pmd_folio(*pmd))
+> > -=09=09=09return;
+> > +=09if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) || pmd_migration) {
+> > +=09=09if (folio) {
+> > +=09=09=09/*
+> > +=09=09=09 * Do not apply pmd_folio() to a migration entry; and
+> > +=09=09=09 * folio lock guarantees that it must be of the wrong
+> > +=09=09=09 * folio anyway.
+>=20
+> Why does the folio lock imply it is a wrong folio?
 
-Rafael, any suggestions ?
+Because you cannot have two tasks holding folio lock on the same folio
+at the same time.  So therefore it is a different ("wrong") folio.
 
--- 
-viresh
+>=20
+> > +=09=09=09 */
+> > +=09=09=09if (pmd_migration)
+> > +=09=09=09=09return;
+> > +=09=09=09if (folio !=3D pmd_folio(*pmd))
+> > +=09=09=09=09return;
+> > +=09=09}
+>=20
+> Why not just
+>=20
+> if (folio && pmd_migration)
+> =09return;
+
+That looks nicer, less indentation, I agree.  But Gavin's patch is
+keeping the relevant check next to the "pmd_folio(*pmd)" to be avoided:
+also good. I have no opinion which is the better.
+
+Hugh
+
+>=20
+> if (pmd_trans_huge() =E2=80=A6) {
+> =09=E2=80=A6
+> }
+> ?
+>=20
+> Thanks.
+>=20
+> Best Regards,
+> Yan, Zi
+>=20
+---1463770367-916831765-1744866215=:4537--
