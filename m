@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D0A24169C
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 18:56:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D88F2571B3;
+	Thu, 17 Apr 2025 18:56:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744916193; cv=none; b=PFKYraDOpsjgFjM43v23ff/SHZ8atjFf/xjbWp09zAyJMCdDRoEl12VuGNDa1ppo0pK5z9MK8IAk6eP0yoTAK6etfZspJ0awdicMh75C7be6fwADGn0ZS3gQXgosT2T0St5FQjeGMVNk+3OQ5/lrwpd2TGPDy+Z9sxeGrCyNKG0=
+	t=1744916200; cv=none; b=V71nhkg5a+YZZHsJY5SdkpQrdpOCVbMcWCrZ5lFgxmfIDAlf+2Yj9kg8ybOYrXhKZnkmRn3wl0gC0zRvwEJJ6ihmTl7XDsms5EPuyA+3WiQzsfOruuW8VuZf8QAeDV6K2cV1Suev+6+U3/Kq+1d6iYAmxDjNfom4USBh09C/a5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744916193; c=relaxed/simple;
-	bh=2WiSBdqR2jEursVoeXUuiW1A74IIEdUo88Qk5TSEpsM=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=RIIEZ7CVM9AEr7uC7q1WHXS4MCN8mvBRDVriudQBPswe8dtNyRIgoYludsTBEok7Rzj/Cg+qXO0APs6WeQ0hfCQCzpG9WdzDVZYUxupguyE3dSMmr+DaS280ntFGll3+or7ahuwdi7K1IdjtMTZuXjQmgxPR9RzsmUTxjg2UcVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f93FjgV8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744916200; c=relaxed/simple;
+	bh=6wRWRa1/y7doVZiJ6NVdsM54ji6xrJ2w3I5J/XsMqro=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=KThH9W1VaBo5Rm6G8MKKW7PmNwxs925pcNss7JuWIRMfyuAqQh81P5CGh24zDzQuvP1VP3667N9Pz3JgA8/Yi0le/el2RIGSRMCCtN1FbpsgMLlJLDAuR9R0uuMtNJkE1HrENAX1aC3se3o8xmC8+yjUazrl1i59Y0wWAVFDPfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hf53StaC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f93FjgV8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 572BDC4CEE4;
-	Thu, 17 Apr 2025 18:56:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hf53StaC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EF52C4CEE4;
+	Thu, 17 Apr 2025 18:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744916193;
-	bh=2WiSBdqR2jEursVoeXUuiW1A74IIEdUo88Qk5TSEpsM=;
+	s=k20201202; t=1744916200;
+	bh=6wRWRa1/y7doVZiJ6NVdsM54ji6xrJ2w3I5J/XsMqro=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=f93FjgV8wfhlhniI48DRpxfaP7ZahncidpZgk2zv8LOm5XZ3jyPycnnNx4LVctFFf
-	 h5g6jzD7fvhOBRlKVksGtkw5C31V8/d4LSy6IWsTX7cefBXn9x7JLthQlUiUaRg9iT
-	 0s2brjGH7p3jcTQNXIwRkXNZUa6ZNTlppveWLsXOOBFjmYq0T5m990dURv1adDfzyp
-	 FBc7eA3KG/NJLMUPZXHwxV6EhOmdXdrke14iixDLg9YUMo/LRoz4vWjXTiRruS0Z1f
-	 GmGHN2gZpySRCeYdv1FYHwY/FQtCyv8ouimMNQ23Kzgn1gJLiSPzwo2dRiFATv2/C3
-	 vcBxaa+ANw/uA==
+	b=hf53StaCtOvTAfRnhl4rry4spuPvm6lbdUUxbvrjzsVK1b6cIjJXg3HkQoQVZYM0Q
+	 DKXTMJupbhn2s3MCqE49e5pXQMb+NSj/zNUo6FVPMGg53kKfchdKnJ4EFYxmLk6FN6
+	 3SkAvrhsvdvilRX0gR3mz7r95TvFX6vxjTwpxSpw0dSvQ91IV+s3dbaqeXglzEiRc9
+	 +WJG5EAGRM0501zDMLlwTCylJMj/WETIin28STGv8aI0DfnA/M37BbQApbUR2kXQbE
+	 1ws9VIPMlTmZx9uodbJkeolai6QE6woXgR1VcHZ8+Aj1GQr7Jrxa6pxPpevGIuvt5V
+	 D/ReQxtZRgwsA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADDD1380AAEB;
-	Thu, 17 Apr 2025 18:57:12 +0000 (UTC)
-Subject: Re: [GIT PULL] xen: branch for v6.15-rc3
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADCE1380AAEB;
+	Thu, 17 Apr 2025 18:57:19 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for v6.15-3
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250417145831.23359-1-jgross@suse.com>
-References: <20250417145831.23359-1-jgross@suse.com>
-X-PR-Tracked-List-Id: Xen developer discussion <xen-devel.lists.xenproject.org>
-X-PR-Tracked-Message-Id: <20250417145831.23359-1-jgross@suse.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-6.15a-rc3-tag
-X-PR-Tracked-Commit-Id: 715ad3e0ec2b13c27335749f27a5c9f0c0e84064
+In-Reply-To: <pdx86-pr-20250417141051-263296082@linux.intel.com>
+References: <pdx86-pr-20250417141051-263296082@linux.intel.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <pdx86-pr-20250417141051-263296082@linux.intel.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.15-3
+X-PR-Tracked-Commit-Id: baf2f2c2b4c8e1d398173acd4d2fa9131a86b84e
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 85a9793e769e2af692d341a2b3935703eac65328
-Message-Id: <174491623122.4184086.14165543907582591003.pr-tracker-bot@kernel.org>
-Date: Thu, 17 Apr 2025 18:57:11 +0000
-To: Juergen Gross <jgross@suse.com>
-Cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org, sstabellini@kernel.org
+X-PR-Merge-Commit-Id: 8499899816fd79aefdfa923ed3fb5a15b0a62757
+Message-Id: <174491623815.4184086.17116293743419496707.pr-tracker-bot@kernel.org>
+Date: Thu, 17 Apr 2025 18:57:18 +0000
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Thu, 17 Apr 2025 16:58:31 +0200:
+The pull request you sent on Thu, 17 Apr 2025 14:10:51 +0300:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-6.15a-rc3-tag
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.15-3
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/85a9793e769e2af692d341a2b3935703eac65328
+https://git.kernel.org/torvalds/c/8499899816fd79aefdfa923ed3fb5a15b0a62757
 
 Thank you!
 
