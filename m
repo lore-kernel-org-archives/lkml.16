@@ -1,166 +1,85 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35A522258E
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:55:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189F91A264A;
+	Thu, 17 Apr 2025 07:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744876554; cv=none; b=UrLehXuGJ+sald7Y0F9jeRwc1D/094S/bJRv8t1EPeoQjUqqLE08tNpsnSQkLRj86pJJHmUKOSe+a6eq+WSurt5/ex/ns/cuRg+XzwpCGwlvnzLtyT/KJUbJ8Naw57hkEWY/9rv3RGrn0/5InDtBu6pCNK/ZGqYQvrY/m8mxKFY=
+	t=1744876601; cv=none; b=SwFC7XUxLKMG3Hs7nBU1nSNhdu5yEWnU1cB8YUuvIxvBTa4+M+e/hEhwyfAK2wZXojrxvm01Xat8nINYd53HL8AzSES5Kx3Yh2rDEj9HKlBuGNi+P2OFtms03vrMNxSp186WEoFKnURFT/Oo3R9EHEQk1RT8F3+54dPmyYNotAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744876554; c=relaxed/simple;
-	bh=e6mFxcB2v21c4S506XttT3JLcoSFRJDd1JrtFUAPIc0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fG8QLZ9XQ+UvvSw3iOt3FaI2f2zL8lhZdJL+6sMbCA+cRDJd1NSyd9aJ4DLbyucTs727tWrl0arNw/4z1ufK73UgF7UhBT6BBazA1fuuJla2l/KM0+9TqrzvMt+vO68Y0GWg4eC9yIEbzPA90jR/Z/BSEAUdLbZVy+BT5QZ3RFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E2LOoIeM; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744876601; c=relaxed/simple;
+	bh=RxUiFzrEpZlvqlS4fuqNrXLhBNDOhrE1KIvoZVywsvI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pz+id0ILRMGdXoKTYvFL1ZxOylHHKXDTcwdxmnxF7jW41UTZB36wPExTsr6FQ/wpnmu1agcA419XJ/scdy4JMJB53IU9NDb0Q2vkY7KIO19Xa3eqY3lOP166sXNKRzDJ7IEGKPicE3JLH0hi7WpApG9IJ/ifQO/oK4QbQYmKIaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iFPaqbT+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E2LOoIeM"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39d94327297so68357f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:55:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744876551; x=1745481351; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=iYBp8bXwTSPvop/uN9QKUwhG4aPmw7LiXiOg4yRVMEY=;
-        b=E2LOoIeM1XVb+o2WvWGmofV+EGtd+0Ya53O6OIVI7QolZe40W1nG7pMrt4QsiNGP8m
-         h2+Z/IMt5K9cFmQEJrtF4PmLCWXQ0WJhoC1pKLegJ4xrpqnIjha14I5dIOQ+6I7FtyRr
-         /kUrCdaJNU795SFHqefnNuEV8XCjQ77xtqZ89nmjck49hiiAzRfNlGhyDunoWqh7HN9c
-         00fY+VBRBTEnpCs3wSjOp5AbYL4bPCL8Z0zHFxTeZbY2O8PcZjFAiA4KUXxLNAHICYpj
-         RcQkND01aMrEo/JLGtdQrwX8BRlwGwcJA/CHREIjUZO/V6uFZVtedIyCROUaU64ZDnrg
-         N7FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744876551; x=1745481351;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iYBp8bXwTSPvop/uN9QKUwhG4aPmw7LiXiOg4yRVMEY=;
-        b=vtEbPVJyhEf2zIr/XqYoLUU7GhSj+cfn/utbqqEKiv9U6DOiCI0xzRWsrNbZzgndcX
-         PGK+FrkrgGNe/BJyQFatfsP/zEzu5gu5iQu2m+fld0tYBiq2ww11BSmcjxSSOlNizKv+
-         HZvCZy8l52sNTux2e8I1N0OzdLbN/SNQH2aCMmnxHIh83Y8ALEDk+pGPVNgzGmB7j6eJ
-         0NlYFLd7lCX5WR6I8WV7C5Eeu6Tz7o82s7vcyUv3XiGEeCQqNuan6lU6RS6MzUdhO2eQ
-         cT9MPYr5bRWfk9X3c71TyXn7Nxmmmw+Zofxvany18IO4asA0Qwv/ycNTnf97yGEN6WAc
-         SpPA==
-X-Forwarded-Encrypted: i=1; AJvYcCVLbbiAZ0rlpl1BQDi1t8k9wQ1XrCeEvT8K6bxTguz0n5CVS3AorMll02ktwaS1V8SBoplk7DmyGEEMeu0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBIQpBd6FJ5XkEfCiMgVIwe1LR8U6jk66SblvdUcZeMNGVp0Ef
-	R59VgcIlPr8v7UvBa5ibmGR7lfPtJYDEPqs1uA7MK3WBiJv16+sEO3cZb4vkMXg=
-X-Gm-Gg: ASbGncvQOyKj3y8LvsetJ24PwrHqD1rq00usvuP9geCRRuHU6E/nv1DpXpfl7HawlG9
-	nfqs5Jyz5uA04/CMo89maDYZQ3Y5BpO+fInLnhFKXv+6Nqvn8H8eH1+oEz2Z6axEy81PNaE1qlR
-	SzUwaeKNhFN+rf5Rfq6HPd5hHXHurQsL15MJV39j5P5WmX+0pFh9C/wzMJkZop4aDnpnyJZg8O6
-	/Myg5rs6Fgzpp0ghmU0lSbnRaKW7uVgOvfl4JPZBS5jXPVn0LFOcuxth0SGQbf/D78tBzJqMj1h
-	ysG/RxpcmiCy3rDsXhTay9Qr5xVmlIX3DbCgaMNHKyeRFjTQ9LE1BnHlSTPtGT/rQYRYI8uNzrI
-	HWanCaXMJOXopOrQp
-X-Google-Smtp-Source: AGHT+IEmso3cvRkXN4G0w7P3zUeOJ/AYGl3CfSoHEUSAeWv2i/wwasHzOdYuG2WhGIQmSBdmKfYRGg==
-X-Received: by 2002:a5d:584a:0:b0:39a:be16:9f1e with SMTP id ffacd0b85a97d-39ee8fd638cmr693229f8f.12.1744876551057;
-        Thu, 17 Apr 2025 00:55:51 -0700 (PDT)
-Received: from [192.168.0.101] (46.150.74.144.lvv.nat.volia.net. [46.150.74.144])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b58cc4csm44522675e9.25.2025.04.17.00.55.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Apr 2025 00:55:50 -0700 (PDT)
-Message-ID: <36939c30-3cbb-43cb-aacd-aeb7b1f6973e@linaro.org>
-Date: Thu, 17 Apr 2025 09:55:49 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iFPaqbT+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31344C4CEE4;
+	Thu, 17 Apr 2025 07:56:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744876600;
+	bh=RxUiFzrEpZlvqlS4fuqNrXLhBNDOhrE1KIvoZVywsvI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=iFPaqbT+hGI+wo4OmKtFnepG50kbuWkcPeosOB8tINH/SMpSqaBDj+u6Fa2oUT6Qx
+	 fugzQ0AJ1So4SbxvccS6vyd7fgCjt/vfEF+FCG/N4+krBAQvxpQsuI/mEi5QH9ZtS8
+	 73lDh5LDTyVvWXcLFX7lGMz4mPcOZNtLtVjSzQY70uwcrIZolZR/NAU/Buu67VPCij
+	 2cXDsK+xieZiF7th/5EH0crdQbg21gYzRfNZt5RTBMHpFpbB2qXG1/DGpD+GlRyCh/
+	 R4HB8A0uJNW9tgD+c+EQHD8RUOoFiO3UmUPV036X9LIZXCAaHQaoEkzEpRfmzW158X
+	 ZF4MlqFVYgNEQ==
+From: Christian Brauner <brauner@kernel.org>
+To: linux-fsdevel@vger.kernel.org,
+	Joe Damato <jdamato@fastly.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	jack@suse.cz,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Sridhar Samudrala <sridhar.samudrala@intel.com>,
+	Alexander Duyck <alexander.h.duyck@intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH vfs/vfs.fixes v2] eventpoll: Set epoll timeout if it's in the future
+Date: Thu, 17 Apr 2025 09:56:32 +0200
+Message-ID: <20250417-kurzlebig-bedrohen-046f8724a6d6@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250416185826.26375-1-jdamato@fastly.com>
+References: <20250416185826.26375-1-jdamato@fastly.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] cpufreq: fix compile-test defaults
-To: Johan Hovold <johan@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, "Rob Herring (Arm)"
- <robh@kernel.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250417065535.21358-1-johan+linaro@kernel.org>
- <a0739b6b-b043-47f1-8044-f6ed68d39f2c@linaro.org>
- <aACsQUADxYHTQDi1@hovoldconsulting.com>
- <f957e366-51e1-4447-982c-93374d0fde2e@linaro.org>
- <aACxzWi4KqDdylfj@hovoldconsulting.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <aACxzWi4KqDdylfj@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1320; i=brauner@kernel.org; h=from:subject:message-id; bh=RxUiFzrEpZlvqlS4fuqNrXLhBNDOhrE1KIvoZVywsvI=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQwbDFa3XYgalHswbWLF7wRrp04iSuVudPBjqM2J1Ypp mni82sZHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABMJCGT4XxFhd59Nr1W3+a+7 c/KazrlsgSGsp934DfNDJJ/1sZ+VYmT4HHy+6F5T5LlLjgk/A7pNg0K1HSbq6JZXTL1bXWgU8oQ bAA==
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On 17/04/2025 09:46, Johan Hovold wrote:
-> On Thu, Apr 17, 2025 at 09:28:43AM +0200, Krzysztof Kozlowski wrote:
->> On 17/04/2025 09:22, Johan Hovold wrote:
+On Wed, 16 Apr 2025 18:58:25 +0000, Joe Damato wrote:
+> Avoid an edge case where epoll_wait arms a timer and calls schedule()
+> even if the timer will expire immediately.
 > 
->>>>> Fix the default values for drivers that can be compile tested and that
->>>>> should be enabled by default when not compile testing.
->>>>>
->>>>> Fixes: 3f66425a4fc8 ("cpufreq: Enable COMPILE_TEST on Arm drivers")
->>>>
->>>>
->>>>> Fixes: d4f610a9bafd ("cpufreq: Do not enable by default during compile testing")
->>>>
->>>> That's not correct tag - it introduced no new issues, did not make
->>>> things worse, so nothing to fix there, if I understand correctly.
->>>
->>> Fair enough, I could have used dependency notation for this one.
->>>
->>> Let me do that in v3.
->>
->> OK. I have doubts that this should be marked as a fix in the first place
->> - even skipping my commit. Some (several?) people were always
->> considering COMPILE_TEST as enable everything, thus for them this was
->> the intention, even if it causes such S3C64xx cpufreq warnings:
->>
->> https://lore.kernel.org/all/8b6ede05-281a-4fb1-bcdc-457e6f2610ff@roeck-us.net/
+> For example: if the user has specified an epoll busy poll usecs which is
+> equal or larger than the epoll_wait/epoll_pwait2 timeout, it is
+> unnecessary to call schedule_hrtimeout_range; the busy poll usecs have
+> consumed the entire timeout duration so it is unnecessary to induce
+> scheduling latency by calling schedule() (via schedule_hrtimeout_range).
 > 
-> Sounds like you, me and Arnd and least have the same understanding of
-> how COMPILE_TEST should work.
+> [...]
 
-Yes. It does not make it necessarily a bug (It's not a bug, it's a
-feature). Anyway, I don't mind so up to you folks.
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
-Best regards,
-Krzysztof
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
+
+[1/1] eventpoll: Set epoll timeout if it's in the future
+      https://git.kernel.org/vfs/vfs/c/0a65bc27bd64
