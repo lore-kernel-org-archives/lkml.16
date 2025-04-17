@@ -1,84 +1,153 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90BEA251795;
-	Thu, 17 Apr 2025 14:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D3A253323
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:27:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744900034; cv=none; b=ppfVmV7zSS5DC0lAYAEZ6VYAWwZLWwiRQJf2WmtdbEizpCm/nyqrxtKO6wRSWl2Gf2DQ3McJXWhD7g74Qs8QdG5Jf3uen+bDZJkCq0rpsuL6WP3Gzl2pPwi4B+O8WyM3N5Vtyasdq4rlT0DXsxBcHG1x+pVKFaJtvSbTfGbhPwo=
+	t=1744900047; cv=none; b=mr0FOMeZ+iISAD9z3KauHND4MLpCBouxSVtOU+EdP6osXj96FWHDZD+ESmdYpyVwAY6AdRYZth9gQL4J9zFd2vgnHguS+IYl7QlNrTAEVrCTzvLcwFsbzoA7D5U+IDLgyuVoenWwTvYRDwN8Y9hQZekEfHYBFsDH39hMSozIU/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744900034; c=relaxed/simple;
-	bh=H5LcbxHIEsi6NfNXL48aB+b5/EUn547ceJU8rD/SnfA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YyYoydpjcRvla97a6feVEX7fTX5MRQ0lkoCFxRJhWa5s+bLdpF072zeak+kK+9/MrQKNOZzqV3FtMm7wstd8TCKxlEIM8otaI8BCf6ZewXAJqUQekYQNbGF4HDW55TV3p27o++ijzFZswMyOvShC/N6hYhSyYQmT0+SHcRZBmgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ktDIIfnF; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744900047; c=relaxed/simple;
+	bh=/wlRLlvGCRJyQcf8KfFhaL1Dra4/nZn492rCe1AyKNw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C7iy4fRfToH7UiKyfpef1dVmzgd72Iw/7tUxmWo57TdF4qrZ9Gd8HFfy8cEx+Ybl8qspmH9gV+vBQZT7rAANXLW04pbNZqnwosuvY06W6rMUkFj/sxZSmTxTavwGR5/h/S/fGzncuSsaAx0WIjeYs4zVJwhg0g3diXJosBaOBx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Q5TEdOCv; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xdvRs3fs; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Q5TEdOCv; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xdvRs3fs; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ktDIIfnF"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6febbd3b75cso8028507b3.0;
-        Thu, 17 Apr 2025 07:27:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744900031; x=1745504831; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=H5LcbxHIEsi6NfNXL48aB+b5/EUn547ceJU8rD/SnfA=;
-        b=ktDIIfnF9QQFR9/iWhuzbLEKrbx2Q57E0vG3JH8tuxa0Lc+wQ7FEs4L/2BDiEqcDMC
-         XAzlYBZE5ikcjwGkTTWDf+wuu/F1dUOksnoDdCi0wB+D9WD20jjclxmbTPJy7Jl/t4kI
-         BOb0+kv7BQUqOx2LR8Qaw6OcovMZ8k06hIxSzBg2BFs/F/hgTv8CFlb/cgLv/hvCjXJq
-         KSIykJVH0Cn6xzo852nUfKK/cBZJZ+DeWspYcLnXj1PntLzgm3G8zb+RFRs51R//YuA4
-         r8agetFM/YytiHNdks6bLWhauofXe7IihZLWzZpL1Wta9/k6jf5BkDiJzTT6MSJCsh5J
-         IBLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744900031; x=1745504831;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=H5LcbxHIEsi6NfNXL48aB+b5/EUn547ceJU8rD/SnfA=;
-        b=h4khsZUzCA+fd+7kldmDQtb9UGSzJcsD6euDOCYNMXVQjsc1N4cdjta5rpt6AEBy7w
-         mnaNB0p5XZmkeaAOBRIspVka76uhQs/cxL7bSKLm7KNFETGG2jyQoWY5lDWbh4Nn35zI
-         aEz+SEan7jvOAu345P1VmeU+rt270MN+agnC5Q1TyuQCs6bOshZmAZopTrdS9M5RHPRs
-         fYeNzYpiHzk1YTC9QiM1a8reaCYTLkeolt+Cq++p10nbGBahXGekYx9Wuu3Ax9H6ZM9+
-         sKzCUoTH2CE3tw30cD9dDuOA08F5XNM+OCYOEshEIcebmN13CyEJwrwvxnHQFI6NJEDe
-         +tmA==
-X-Forwarded-Encrypted: i=1; AJvYcCVhixsRHTpkxrQJPu/NJ9IeS4Ku8LMzoQFmBygdTsxmf+1eUKFmEX8hyHnMWAN4AiuH0bs1dcD0ACPpi3yM@vger.kernel.org, AJvYcCVzKs/Zj/gPYXmg2ZndT9+s2h6KvAGpuY4ohBZNCsWaDhWgqKd4rscQ3dnnZTVWAGaDCZy1KTU2GZpx@vger.kernel.org
-X-Gm-Message-State: AOJu0YzI5QwSlLKqc0344LB09TQI/dIOxgrk+an5W3Lm0bxwdGIFxHgj
-	cEPj3GR//gdL0zEbSQSmO6UjwxooWVNN8ecunHucBsJSCJAuOFvF6YhHo0BJM595yyGduY9SJvY
-	q96Pael3wDHSFmpH4zzTHVXGPbJc=
-X-Gm-Gg: ASbGncuKHiRaPxnVnfGylAVRw34IyyeWE8K+eLPJO15t3pSVi1AhVFTT5jMb1X7/mwZ
-	d2w+X75p5pYGW+AcuWNIutjmLTvyC14ViWBNBhQxvVCPVrFhZPva1BE4Pcr+56uP0kUe8GfR5+s
-	mSCqn02+adQnGzSh29XCKEnuk=
-X-Google-Smtp-Source: AGHT+IFlsRdoOPNKP+IgFk3s9dutZbcvjVOYZpKbxlSBuHkLsa+WbDm4tMUPjfUhVNf9zruI9fG719C6Puhpz/icXwI=
-X-Received: by 2002:a05:690c:6b83:b0:6fb:91a9:94d9 with SMTP id
- 00721157ae682-706b3255c50mr92412037b3.2.1744900031538; Thu, 17 Apr 2025
- 07:27:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Q5TEdOCv";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xdvRs3fs";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Q5TEdOCv";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xdvRs3fs"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D6BF821169;
+	Thu, 17 Apr 2025 14:27:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744900043; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OTOlmfXBkX0z6KmD/qDsm4EQbX4+4WK/B07AutJC1Pg=;
+	b=Q5TEdOCvrv31wuwYUSI8WZfsWmyBIRRfe5jW71exn0imyeLWRqBFYrXvq+6SlawXugtrmv
+	YGXDIJhdai088tEq3QoOoudK685SZBxN2YQbnn866J2THlzDHP2nS/7Oi40bIjWtYLBIjM
+	Gnz9TibTf2ZD0QLkU/h2CHaKYfM4Zn8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744900043;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OTOlmfXBkX0z6KmD/qDsm4EQbX4+4WK/B07AutJC1Pg=;
+	b=xdvRs3fsdGoldkFuNlF4tNwJG0SS2LfIxMJZ43WYkcwCwjawCiI/y2FGsKmxZdFA0om3KW
+	TUSURhstwlZzdmBg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Q5TEdOCv;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=xdvRs3fs
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744900043; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OTOlmfXBkX0z6KmD/qDsm4EQbX4+4WK/B07AutJC1Pg=;
+	b=Q5TEdOCvrv31wuwYUSI8WZfsWmyBIRRfe5jW71exn0imyeLWRqBFYrXvq+6SlawXugtrmv
+	YGXDIJhdai088tEq3QoOoudK685SZBxN2YQbnn866J2THlzDHP2nS/7Oi40bIjWtYLBIjM
+	Gnz9TibTf2ZD0QLkU/h2CHaKYfM4Zn8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744900043;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OTOlmfXBkX0z6KmD/qDsm4EQbX4+4WK/B07AutJC1Pg=;
+	b=xdvRs3fsdGoldkFuNlF4tNwJG0SS2LfIxMJZ43WYkcwCwjawCiI/y2FGsKmxZdFA0om3KW
+	TUSURhstwlZzdmBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 83D1B137CF;
+	Thu, 17 Apr 2025 14:27:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Wrc0HcoPAWiOUwAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Thu, 17 Apr 2025 14:27:22 +0000
+Date: Thu, 17 Apr 2025 15:27:16 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: corbet@lwn.net, tsbogend@alpha.franken.de, akpm@linux-foundation.org, 
+	jeffxu@chromium.org, lorenzo.stoakes@oracle.com, kees@kernel.org, 
+	Liam.Howlett@oracle.com, hca@linux.ibm.com, takumaw1990@gmail.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, 
+	thomas.weissschuh@linutronix.de, tglx@linutronix.de, namcao@linutronix.de, zhanjun@uniontech.com, 
+	niecheng1@uniontech.com, guanwentao@uniontech.com, Erpeng Xu <xuerpeng@uniontech.com>
+Subject: Re: [PATCH] mseal sysmap: enable mips with LOONGSON64
+Message-ID: <dpagj64oai5yn45poxfr36jtliwpbueu3pvhbrb5flxgu7hnql@7rarpfgkf6wz>
+References: <7EB087B72C4FBDD3+20250417132410.404043-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415-spmi-nvmem-v1-0-22067be253cf@gmail.com>
- <20250415-spmi-nvmem-v1-2-22067be253cf@gmail.com> <81fb1290-fb39-40b7-9d79-f147fae5b269@kernel.org>
-In-Reply-To: <81fb1290-fb39-40b7-9d79-f147fae5b269@kernel.org>
-From: Sasha Finkelstein <fnkl.kernel@gmail.com>
-Date: Thu, 17 Apr 2025 16:27:00 +0200
-X-Gm-Features: ATxdqUG-QdtnFm03q8e1kJSl7Bv2F6tlWh8pqcBflMsEFPTlm2gMwGAFKqTZq5A
-Message-ID: <CAMT+MTQ6gtQaMpH=5ATtJ_A7X6EjT2ra2UAe_1XiDAk1YGP2Zw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] nvmem: Add spmi-nvmem driver
-To: Srinivas Kandagatla <srini@kernel.org>
-Cc: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7EB087B72C4FBDD3+20250417132410.404043-1-wangyuli@uniontech.com>
+X-Rspamd-Queue-Id: D6BF821169
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[lwn.net,alpha.franken.de,linux-foundation.org,chromium.org,oracle.com,kernel.org,linux.ibm.com,gmail.com,vger.kernel.org,linutronix.de,uniontech.com];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.01
+X-Spam-Flag: NO
 
-On Thu, 17 Apr 2025 at 15:34, Srinivas Kandagatla <srini@kernel.org> wrote:
-> should it be:
+On Thu, Apr 17, 2025 at 09:24:10PM +0800, WangYuli wrote:
+> Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS on mips with
+> CPU_LOONGSON64, covering the vdso.
+> 
+> NOTE:
+>   There is significant diversity among devices within the MIPS
+> architecture, which extends to their kernel code implementations.
+>   My testing capabilities are limited to Loongson 3A4000/3B4000
+> CPUs.
+>   Consequently, I have not enabled mseal sysmap support for the
+> entirety of mips64, as I lack the necessary devices for testing.
 >
-> depends on ARCH_APPLE || COMPILE_TEST
 
-No, this is not a driver for an apple-specific hw, but a generic thing
-for re-exporting
-a set of spmi registers as nvmem cells.
+I strongly suggest we don't do this kind of stuff. Lets keep things simple and either:
+
+1) Check that there's no problem for _all_ variations of the arch. Then enable
+   ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS.
+2) If not checking everything, then don't do any sort of enabling.
+
+It should help reduce confusion.
+
+And, to be clear for folks not following mseal, this feature is rather small and not a
+priority in any way (and will not be enabled in linux distros for a whole bunch of years,
+due to the current situation being unworkable for !chromeOS). There's really no rush
+in having this enabled for all architectures.
+
+-- 
+Pedro
