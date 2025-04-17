@@ -1,98 +1,124 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5841DE4FC
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2560A2DFA2F;
+	Thu, 17 Apr 2025 05:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744867800; cv=none; b=neu150SSAmlz8IrMeh61KwA5G4580BmvcVUrimfruxWReQPzYCAs9QQ7aT/u8hs5yxMwWG2awg5pvtSWnM0eP651esPmc8rOpozmXBpHvEgIhrK/u8RyztkZRuyr74JnLjynal2DFhvwaMGq5/Oq7lGN/ybSYtbsPoRIXBRVuO8=
+	t=1744868059; cv=none; b=oEMwyJsK9tbknAZNU2PUBfcP9dw4rgplOV6JmmfCAPs9Y8lVvxL+fyMZQyoPVBKYYcvlgGI7UyBT/xP3DxOPeoc3BOxkjcsCEV8BR6scnZSazu7GPTG+n7D1V69lRo5PXslyIOPL00OEQxIrar/qehpcRy9DPAhEXQA8A5YD7TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744867800; c=relaxed/simple;
-	bh=TEUTdEEXTmy8ALJVhENgaSqDviDpkYjUlBkULiXDmpY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=TZ1gxEQfvOCJGd6BynnivfklozZ5Qe+ZNqIRgDEnf1HaMnQJKstQz8ysfRcpZq9vLbX2YH8mDOQ4ZX5cxXfDZTpgdbq+5ANMffnk+9z6iU3z7YMZNMbYSdV64u/gROq1QVEg9r894lVBYMtmxmxxSH0W3ce67OXbZI3Ee+/KA4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t4QUFk4Z; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744868059; c=relaxed/simple;
+	bh=zyJNg9uFmfkUUAFiN7I/bWvyZM4TumdpS5tAIZnJYBY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=paU0QaT4HHVGVN6EL8cEqc8Al5ts+QDR0iLcHZro/Q7ajfAgtYGXwcNw7UA/yH9SQzs/LqnT4INOVG/G93rhF+7GORU2RdGnabjy2BarLuFy2VftGNVQjRpKCKYDBBQBUzzoWIJnzFQFV2pIjkrCJl9QaGTV1s+uNca8Zx13HS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pY51bz0v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t4QUFk4Z"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso446552b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:29:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744867798; x=1745472598; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K2/0NuQSzNOebXOyA98ZePT7hD/9RuG1jjaeZ69P3hY=;
-        b=t4QUFk4ZS3g5ItE+QDoKTJSz2it5OBo1++YQyi3DJ7BjfTS8ml1Vv8N2hzYlkxXB5g
-         CR+ipxjoDgYFm2edpJGs4ZN2aq6K6Ll21rqp4kyrLSqhTdn0KCIkK5iI4pa7al3RRV5q
-         BpKY9hH5vMUuWbY2CoSRGYVEsjcEMVHuw9YXJFO5oo/oclv+ueAXIhO3wiuB81KJIyvk
-         Ecy2KKpKiZnt60PRJADrrTdC5khTJABmiBfhL/Qfy/JQTaUwQVIX/W7Acq7fZXVgUaYg
-         nDmwOLue+LmasxfQhLkBYGYQBWVJfqgIvX7gUBS9V70Ao0Ajp5a5+NLbb0mRbCXZtT6n
-         O3xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744867798; x=1745472598;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K2/0NuQSzNOebXOyA98ZePT7hD/9RuG1jjaeZ69P3hY=;
-        b=Eq7cw+hd+23sWXezT8rJEDyOPr0TPvuFF5PwUvaQoqzGiBMYDuG95hk4Nc+vuQd8e0
-         2ITmjkkB13mW1xprNZiNo8aDn7WgFRJc0krlE1yB4Q9h+RJ31mCgjeA83TkXxy9CE6Dl
-         I2NCfYLMdtco8aCNxJWa+9gUpDdhHyARJ3nTtDGXsH7UW0Up4HAxkQs3nROpqJFYD30+
-         KeG8H0ERFrYNgPrlE+uUyNbv8Xq04z/o6uqwvLz4e7MjLoTV+RS6ovaDysfU8HkgXKqP
-         IBRKaDavAngfMIoywWCusTT5uJSfFkpzT6KLJ1Ov4TAonzBO0ERVW7bx1cu1qNSzbJJK
-         lVIw==
-X-Forwarded-Encrypted: i=1; AJvYcCWFFo3wjcb9cH3lInVBxdw+CdCScDs5wpWtrNEX6zlsgRlBnx20XI1QNq2y/NI4rmRnvdOZPNtYllWnvGI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQ2Hagvs0yUx23+YBM0a8JVIV+AegbDKtatpV3L7el98jFWNfT
-	EHJWdYDh7aBHDpP8FSTTiTIQxh1bwxdEVMPPSitMm5alz7c3XXdDcuYBp2bdcw==
-X-Gm-Gg: ASbGncuTv8f2vDt4LZNYmHNovPAIcyZpNQmZB+nkK61sv2guK9+vb2DPkhk8IN+QiSO
-	cJVOWMJfVUizOkjrsMX8REjR3r4Osaw+kS3i5T+M9kRI51kOfESRKP8TyeOtr20kpDRtaLG834G
-	TzFmSjNdrJQoPX7wCvJPq7088CRxESELekibAbcIRcb+1riV2l4IK2j1Tw4PelNHjaIsTitpbEr
-	7Af3QTVs1BQcCa8VbREOjdAvz80aT57ux3rAzLsz5WV11XbV0y4QBgvWSpzQRi5wfl2aV4qBdNc
-	oZCc3hFh98zNqQgGB6rTswR/nnir3ZijEaC6cTWwOlq9CmgDG28PK9AmmU4Fs2AslqCJ3lINMII
-	3w5LEJl9VJVojjuq53cbCOKqc
-X-Google-Smtp-Source: AGHT+IEqPmJ2V0Q5TenmE86WICH2IRs1S6rt1lUDyy3mX17Qt4m9speStiJo+O/DmW1SnrqjigDtJw==
-X-Received: by 2002:a05:6a00:180f:b0:736:6d4d:ffa6 with SMTP id d2e1a72fcca58-73c267e1deamr6189297b3a.15.1744867798384;
-        Wed, 16 Apr 2025 22:29:58 -0700 (PDT)
-Received: from darker.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd230e32dsm11452046b3a.150.2025.04.16.22.29.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 22:29:57 -0700 (PDT)
-Date: Wed, 16 Apr 2025 22:29:56 -0700 (PDT)
-From: Hugh Dickins <hughd@google.com>
-To: Zi Yan <ziy@nvidia.com>
-cc: Gavin Guo <gavinguo@igalia.com>, linux-mm@kvack.org, 
-    akpm@linux-foundation.org, willy@infradead.org, linmiaohe@huawei.com, 
-    hughd@google.com, revest@google.com, david@redhat.com, 
-    kernel-dev@igalia.com, linux-kernel@vger.kernel.org, 
-    Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Subject: Re: [PATCH] mm/huge_memory: fix dereferencing invalid pmd migration
- entry
-In-Reply-To: <C055C822-0CE9-4455-9849-7242F31515EB@nvidia.com>
-Message-ID: <95e543dd-6b93-9507-d383-1ae91e2e6640@google.com>
-References: <20250414072737.1698513-1-gavinguo@igalia.com> <A049A15F-1287-4943-8EE4-833CEEC4F988@nvidia.com> <83629774-981b-44cb-a106-d549f1a43db9@igalia.com> <C055C822-0CE9-4455-9849-7242F31515EB@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pY51bz0v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6B97C4CEE4;
+	Thu, 17 Apr 2025 05:34:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744868058;
+	bh=zyJNg9uFmfkUUAFiN7I/bWvyZM4TumdpS5tAIZnJYBY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pY51bz0vJT44hG2BCVrlTQNlRl2zbbQ2Ls87R6m1/+ew6dJsL9SrZ4UW8Ne4NYYec
+	 O/CuBpZuLev7XSemR8/yUPZDVkIAlj/QeXd5aLekzqGT0jq0mzp13siwGtTSxlPu4D
+	 sEYaLUA1ar2fcMH3l16Voxt9TvhnVLp+qiNKiShW2t7tV0RrDX/XkGzgqZ5f9cGDkF
+	 Mjl+1ODl+GussYybJERu3UH+Mj3kxVg+3UyfDVfQrOVzZHO1ZIkVmm3ADERFsirjng
+	 rzIi+NqBi0OqP9KUPzvoU9SOt2bp4jFQOEtWBL/32Qq8NanewwBi4aaCQvvpILDysI
+	 2SrPZbY8HZRUQ==
+Message-ID: <209070b3-4758-416e-a408-480b2a8e4fbc@kernel.org>
+Date: Thu, 17 Apr 2025 07:34:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 10/13] ARM: dts: vt8500: Use generic compatibles for EHCI
+To: Alexey Charkov <alchark@gmail.com>, Andi Shyti <andi.shyti@kernel.org>,
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mmc@vger.kernel.org, netdev@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
+ <20250416-wmt-updates-v1-10-f9af689cdfc2@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250416-wmt-updates-v1-10-f9af689cdfc2@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 15 Apr 2025, Zi Yan wrote:
+On 16/04/2025 10:21, Alexey Charkov wrote:
+> VIA/WonderMedia SoCs don't have anything special about their EHCI
+> controllers: in fact, vendor provided kernels just use the
+
+It does not have to do anything special - dedicated compatible properly
+describes the hardware.
+
+> generic PCI driver by emulating a virtual PCI bus with fixed MMIO
+
+PCI? But this is USB.
+
+> mappings just to bind the existing driver as-is. So switch to the
+> generic compatible to save further additions to bindings.
 > 
-> Anyway, we need to figure out why both THP migration and deferred_split_scan()
-> hold the THP lock first, which sounds impossible to me. Or some other execution
-> interleaving is happening.
+> Note that these devices have only ever supported appended-DTB boot,
+> so changing the compatible should not affect any existing users.
 
-I think perhaps you're missing that an anon_vma lookup points to a
-location which may contain the folio of interest, but might instead
-contain another folio: and weeding out those other folios is precisely
-what the "folio != pmd_folio((*pmd)" check (and the "risk of replacing
-the wrong folio" comment a few lines above it) is for.
+And other users of the DTS?
 
-The "BUG: unable to handle page fault" comes about because that other
-folio might actually be being migrated at this time, so we encounter
-a PMD migration entry instead of a valid PMD entry.  But if it's the
-folio we're looking for, our folio lock excludes a racing migration,
-so it would never be a PMD migration entry for our folio.
+I don't see benefits in this patch.
 
-Hugh
+Best regards,
+Krzysztof
