@@ -1,134 +1,89 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D2D1A0730;
-	Thu, 17 Apr 2025 17:22:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB35B2550AD;
+	Thu, 17 Apr 2025 17:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744910541; cv=none; b=nVJWf1UeD4tHverpNEDi6f4CHTd0pz3vLqD76ntysLSHUwG2pUaetBiI5ExiUrXbENWP4rFdeAIwPGxqx39GJiWw2UVneN6HknPBQUtZi/m3OtZ2JsMqAu7UWOX3t278WOn0+gSAC4RX32VIQczLvqEvUosMTsRSzCF/Ohw/gYQ=
+	t=1744910567; cv=none; b=aQsxWYvYoKJL1+mJ3zItUbJAyRZ9Wj/av9UxQP7asv/M3OIMVTMv1ZiPTHkx4BTwrwjIFD3ZWjQ28BKDoFxa9knOFVDnpQNfY70tBBcXivZ8hS6//UdpCuLKZ/USaH+HkUX7YMo+N9Ytmd61skN4LRXSvgFcsRcB+qtiOvXqJrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744910541; c=relaxed/simple;
-	bh=QaiiSw2sc68sB4+5GNZUMgQk4P7YNtfdfuop79iBfVg=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=t9L7iOz++fw756E4BVPhiW9vzAjQ837Qo20FTKVIGrfl4LE/GkNuy4xGdYun2EQpKzNScCp4RIImEy8BB+ulZOUcxfNQZMKO2bFzKVqo9j8Dtho5FlrXmqAY61+A24VQfwPVTRhxxedHopvkeRG6yX+qofPG7WwvXg6ieu9lZgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zdl3B2gGGz6M4fj;
-	Fri, 18 Apr 2025 01:18:14 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 21D01140145;
-	Fri, 18 Apr 2025 01:22:15 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 17 Apr
- 2025 19:22:14 +0200
-Date: Thu, 17 Apr 2025 18:22:12 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
-	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
-	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
-	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<lukas@wunner.de>, <ming.li@zohomail.com>,
-	<PradeepVineshReddy.Kodamati@amd.com>
-Subject: Re: [PATCH v8 14/16] cxl/pci: Remove unnecessary CXL Endpoint
- handling helper functions
-Message-ID: <20250417182212.000078d2@huawei.com>
-In-Reply-To: <20250327014717.2988633-15-terry.bowman@amd.com>
-References: <20250327014717.2988633-1-terry.bowman@amd.com>
-	<20250327014717.2988633-15-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1744910567; c=relaxed/simple;
+	bh=vnur/dTUJk0z+wfU8VALjgtrhmiqJntTUjprsU2e5dI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EILde/wDamanZiWj3uhR/UGNA70gMDdyRvipnSNNqX9N8s1nzPYpaKog5OABwFwUMWRMNheQVIo2uskCML/AqhT2piOReM+AYSbXt/4J5XCyBTkZs7JSJgSQNFOEQXYZvlz9aGuXHQvUNGN+5eGn6FCe35Vfjjfi6ypDKDwof84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=nNhyFVrH; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="nNhyFVrH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=rUgcReSeERaYjdCHY/S65QNcDRKyKTJVSUifM/SqTHw=; b=nNhyFVrHTOlSrXjfJ7WcbfgeDz
+	yngeaH3pmyxCVI63fr1I6g9oKwTQbDRIG2W/USafgFWZx+MTv1JOFQGgsDQZP3SUGj4KZ2a0RVDwK
+	YTzliV8jwsvbqwGaC7f0x8l7qjpImJw2o4nQTjzI/dzvQwJe6EvZ23voS+PYm4uqjBQk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u5SwX-009oI0-Lw; Thu, 17 Apr 2025 19:22:29 +0200
+Date: Thu, 17 Apr 2025 19:22:29 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Luo Jie <quic_luoj@quicinc.com>, Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>, linux-kernel@vger.kernel.org,
+	cocci@inria.fr, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, quic_kkumarcs@quicinc.com,
+	quic_linchen@quicinc.com, quic_leiwei@quicinc.com,
+	quic_suruchia@quicinc.com, quic_pavir@quicinc.com
+Subject: Re: [PATCH v3 0/6] Add FIELD_MODIFY() helper
+Message-ID: <0c97c659-bd28-45e0-8537-d9be2637cb22@lunn.ch>
+References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
+ <86sem7jb5t.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86sem7jb5t.wl-maz@kernel.org>
 
-On Wed, 26 Mar 2025 20:47:15 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
-
-> The cxl_handle_endpoint_cor_ras()/cxl_handle_endpoint_ras() functions
-> are unnecessary helper function and only used for Endpoints. Remove these
-> functions because they are not necessary and do not align with a common
-> handling API for all CXL devices' errors.
-Having done this, what does the double underscore in the naming denote?
-I assume original intent was perhaps that only the wrappers should
-ever be called.  If that's not the case after this change maybe get
-rid of the __ prefix?
-
+On Thu, Apr 17, 2025 at 12:10:54PM +0100, Marc Zyngier wrote:
+> On Thu, 17 Apr 2025 11:47:07 +0100,
+> Luo Jie <quic_luoj@quicinc.com> wrote:
+> > 
+> > Add the helper FIELD_MODIFY() to the FIELD_XXX family of bitfield
+> > macros. It is functionally similar as xxx_replace_bits(), but adds
+> > the compile time checking to catch incorrect parameter type errors.
+> > 
+> > This series also converts the four instances of opencoded FIELD_MODIFY()
+> > that are found in the core kernel files, to instead use the new
+> > FIELD_MODIFY() macro. This is achieved with Coccinelle, by adding
+> > the script field_modify.cocci.
+> > 
+> > The changes are validated on IPQ9574 SoC which uses ARM64 architecture.
 > 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> ---
->  drivers/cxl/core/pci.c | 17 ++++-------------
->  1 file changed, 4 insertions(+), 13 deletions(-)
+> We already have the *_replace_bits() functions (see
+> include/linux/bitfield.h).
 > 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index f2139b382839..a67925dfdbe1 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -670,11 +670,6 @@ static void __cxl_handle_cor_ras(struct device *cxl_dev, struct device *pcie_dev
->  	trace_cxl_aer_correctable_error(cxl_dev, pcie_dev, serial, status);
->  }
->  
-> -static void cxl_handle_endpoint_cor_ras(struct cxl_dev_state *cxlds)
-> -{
-> -	return __cxl_handle_cor_ras(&cxlds->cxlmd->dev, NULL, cxlds->serial, cxlds->regs.ras);
-Previously second parameter was NULL. After this change you pass &pdev->dev.
-That makes it look at least like there is a functional change here.
-If this doesn't matter perhaps you should explain why in the description.
+> Why do we need extra helpers?
 
-> -}
-> -
->  /* CXL spec rev3.0 8.2.4.16.1 */
->  static void header_log_copy(void __iomem *ras_base, u32 *log)
->  {
-> @@ -732,14 +727,8 @@ static pci_ers_result_t __cxl_handle_ras(struct device *cxl_dev, struct device *
->  	return PCI_ERS_RESULT_PANIC;
->  }
->  
-> -static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
-> -{
-> -	return __cxl_handle_ras(&cxlds->cxlmd->dev, NULL, cxlds->serial, cxlds->regs.ras);
-> -}
-> -
->  #ifdef CONFIG_PCIEAER_CXL
->  
-> -
+If you look at bitfield.h, the *_replace_bits() seem to be
+undocumented internal macro magic, not something you are expected to
+use. What you are expected to use in that file is however well
+documented. The macro magic also means that cross referencing tools
+don't find them.
 
-Unrelated change. I think this ifdef was added earlier in series so avoid
-adding the bonus line wherever it came from...
+I think this is a useful additional to bitfield.h.
 
->  void cxl_port_cor_error_detected(struct device *cxl_dev,
->  				 struct cxl_prot_error_info *err_info)
->  {
-> @@ -868,7 +857,8 @@ void cxl_cor_error_detected(struct device *dev, struct cxl_prot_error_info *err_
->  		if (cxlds->rcd)
->  			cxl_handle_rdport_errors(cxlds);
->  
-> -		cxl_handle_endpoint_cor_ras(cxlds);
-> +		__cxl_handle_cor_ras(&cxlds->cxlmd->dev, &pdev->dev,
-> +				     cxlds->serial, cxlds->regs.ras);
->  	}
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_cor_error_detected, "CXL");
-> @@ -907,7 +897,8 @@ pci_ers_result_t cxl_error_detected(struct device *dev,
->  		 * chance the situation is recoverable dump the status of the RAS
->  		 * capability registers and bounce the active state of the memdev.
->  		 */
-> -		ue = cxl_handle_endpoint_ras(cxlds);
-> +		ue = __cxl_handle_ras(&cxlds->cxlmd->dev, &pdev->dev,
-> +				      cxlds->serial, cxlds->regs.ras);
->  	}
->  
->  	if (ue)
-
+	Andrew
