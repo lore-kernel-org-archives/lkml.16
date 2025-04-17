@@ -1,135 +1,331 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A67F2309AD
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 10:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6400F22AE74
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 10:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744886941; cv=none; b=EkR65zMLO6rEKEnQ5PbFzb5Fju4u4K1q5bf4eExj1Kl0XxJ/7XSTG139uMVnC2tMXYdi/10wJ4Q5me3vsj7MA91bAwZTBQHauqQq6XlrETDnYvVbTgWWL+Q0RMri/U5J22didCno6OikaHZA8Xr2kwgGDw5OaSdHfLSSZPm1xW0=
+	t=1744886961; cv=none; b=jHcIZvV7hW2+fDvd6V1nXZISlRdFYEpZdFFpvwRc0klYZQPytZIc7NOpNU8rv3E1+qp85RybLWSrf7cTZvRO8MiZxPzH6apdNjXDzXX7BehjEkCJvG3I1aVb3oUSybvrEM5ZRkx6+20y9/pqDPEW4PwgYm3qltb2d5AKlHck3j8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744886941; c=relaxed/simple;
-	bh=gqGzOX65dgUloUXBiDM2uUofMMrXchcJwN/9t+iSb7k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=LX1wl1W0LrpaUt4jG5vQLBO3MQCerF2v81ztwDlyJ+tLz4uXZl8oYwmeUVXempJNlwj2bp9EUWCg0GE3XIepkSOYW11bCTdZwOpX1WFUR0vR+b51fnp2vtlj0XeemfMbYaHPKb360M1VZCIygGTyEcCVDBRTyHxpbWlNjHHlYWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dmx5oJ6J; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744886961; c=relaxed/simple;
+	bh=cvIlQ7wMKAmBLuGD8J/k+8QJiAJq2WQfIxaEfXMl5zI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FBh+V9lUgN9MMrhBwsPokXlJ/+hWbbmUkYJLeCqYGEeS5N+5VwKHADaNhwSE4PPg24n9EPE2nPYyewyqyUWBPTNgFgTvb3/ky8hnUPffm8i7vkTm5PiA6SU3HAQ1m9aS6XD8oSkMguc0hVPuI/kz5yow8y7O+BGmTGnPf+aV7uU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=elfO380P; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VSJVXdM1; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=elfO380P; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VSJVXdM1; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dmx5oJ6J"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53H5l5Ml009309;
-	Thu, 17 Apr 2025 10:47:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	dTr8jPcJDG1ssEC02tHjuO+8nyj5jMrX7M1nMqoPipQ=; b=dmx5oJ6JtpYkEYa/
-	L0Vyz/KnttUzx2cqqWQYLeTWaUVL4XmR58nnaXOAePWW/gdcYyg6h3EUnPCmjkBv
-	R7s6G1p3W9uZuCobNfASQi2UgwC686Ds9UK1bpo2iffENDzgTH7U88JppoWaQy2j
-	XtF/S64aYGs1bf2wOGjlw6kcP8M1o8Wpt2UtE/etIJDBhGYDoid9GXAC8itkgk2e
-	cPjaCNM1MbsmZ5wDkoogdYJWQcBJi6F8bQEPDDH8plelucItKSZuw02n0Mc14DDf
-	CcILIbR5SjsRr/BHFie+zFcb9xTc6n5DcLXKN3kwklyvPE6aRDX5CaZEWq60DP75
-	LGg5fw==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4628rvbuw0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 10:47:36 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53HAlZHQ011208
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 10:47:35 GMT
-Received: from nsssdc-sh01-lnx.ap.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 17 Apr 2025 03:47:31 -0700
-From: Luo Jie <quic_luoj@quicinc.com>
-Date: Thu, 17 Apr 2025 18:47:10 +0800
-Subject: [PATCH v3 3/6] arm64: tlb: Convert the opencoded field modify
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="elfO380P";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VSJVXdM1";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="elfO380P";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VSJVXdM1"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 735732116B;
+	Thu, 17 Apr 2025 10:49:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744886956; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XgBGIb8Ml757E8HqOMQaHqsZI/NRoUruYO5ZoA1mMes=;
+	b=elfO380PV0rf33+Q7/uzinckxIOPD9vkd4TAU5u+L1FPUmA3oeBB9AyRRCbsDzcGRO61xo
+	kCAPy/QSRZNnW+nCEMwYGCJF54ExKa1AmKYLAqk2peiL0fKFktzJ4pMwxuDSiwA4VoJQ7F
+	8dzV3yVrEpZA87aerlUQQWjs6/4YzsU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744886956;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XgBGIb8Ml757E8HqOMQaHqsZI/NRoUruYO5ZoA1mMes=;
+	b=VSJVXdM1oxM8OHTgsNKb2F1UwlPXIT0MTCbX/bPLZkZOON2Dc4Idd0pjse7s/E9Lilow8v
+	o5aWNYrXwyPEykCw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744886956; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XgBGIb8Ml757E8HqOMQaHqsZI/NRoUruYO5ZoA1mMes=;
+	b=elfO380PV0rf33+Q7/uzinckxIOPD9vkd4TAU5u+L1FPUmA3oeBB9AyRRCbsDzcGRO61xo
+	kCAPy/QSRZNnW+nCEMwYGCJF54ExKa1AmKYLAqk2peiL0fKFktzJ4pMwxuDSiwA4VoJQ7F
+	8dzV3yVrEpZA87aerlUQQWjs6/4YzsU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744886956;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XgBGIb8Ml757E8HqOMQaHqsZI/NRoUruYO5ZoA1mMes=;
+	b=VSJVXdM1oxM8OHTgsNKb2F1UwlPXIT0MTCbX/bPLZkZOON2Dc4Idd0pjse7s/E9Lilow8v
+	o5aWNYrXwyPEykCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 15E89137CF;
+	Thu, 17 Apr 2025 10:49:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id j2ZuA6zcAGilEAAAD6G6ig
+	(envelope-from <jdelvare@suse.de>); Thu, 17 Apr 2025 10:49:16 +0000
+Date: Thu, 17 Apr 2025 12:49:14 +0200
+From: Jean Delvare <jdelvare@suse.de>
+To: Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: Joel Stanley <joel@jms.id.au>, Henry Martin <bsdhenrymartin@gmail.com>,
+ Patrick Rudolph <patrick.rudolph@9elements.com>, Andrew Geissler
+ <geissonator@yahoo.com>, Ninad Palsule <ninad@linux.ibm.com>, Patrick
+ Venture <venture@google.com>, Robert Lippert <roblip@gmail.com>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 7/7] soc: aspeed: lpc-snoop: Lift channel config to
+ const structs
+Message-ID: <20250417124914.77f80975@endymion>
+In-Reply-To: <20250411-aspeed-lpc-snoop-fixes-v1-7-64f522e3ad6f@codeconstruct.com.au>
+References: <20250411-aspeed-lpc-snoop-fixes-v1-0-64f522e3ad6f@codeconstruct.com.au>
+	<20250411-aspeed-lpc-snoop-fixes-v1-7-64f522e3ad6f@codeconstruct.com.au>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250417-field_modify-v3-3-6f7992aafcb7@quicinc.com>
-References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
-In-Reply-To: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
-To: Yury Norov <yury.norov@gmail.com>,
-        Rasmus Villemoes
-	<linux@rasmusvillemoes.dk>,
-        Julia Lawall <Julia.Lawall@inria.fr>,
-        "Nicolas
- Palix" <nicolas.palix@imag.fr>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Oliver Upton
-	<oliver.upton@linux.dev>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Suzuki K Poulose
-	<suzuki.poulose@arm.com>,
-        Zenghui Yu <yuzenghui@huawei.com>
-CC: <linux-kernel@vger.kernel.org>, <cocci@inria.fr>,
-        <linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-        <andrew@lunn.ch>, <quic_kkumarcs@quicinc.com>,
-        <quic_linchen@quicinc.com>, <quic_leiwei@quicinc.com>,
-        <quic_suruchia@quicinc.com>, <quic_pavir@quicinc.com>,
-        Luo Jie <quic_luoj@quicinc.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744886837; l=1071;
- i=quic_luoj@quicinc.com; s=20250209; h=from:subject:message-id;
- bh=gqGzOX65dgUloUXBiDM2uUofMMrXchcJwN/9t+iSb7k=;
- b=sxhXTdsE+Z/QAYZZpILNncmv9BD3WHP8C30/OyBTr9mtTkJJhDV22A9VJlIMxz87/nnKD69Ta
- SFmrL05AyupA38N88nqL6ZzChWDnb8DsQhi7Z9hD9tVAMrP2JnglnZT
-X-Developer-Key: i=quic_luoj@quicinc.com; a=ed25519;
- pk=pzwy8bU5tJZ5UKGTv28n+QOuktaWuriznGmriA9Qkfc=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: AtLGZHnrWsYSQEjPsUo0tJffbaXJLcWr
-X-Authority-Analysis: v=2.4 cv=RbSQC0tv c=1 sm=1 tr=0 ts=6800dc48 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=ZOzjf2MOAAAA:8 a=COk6AnOGAAAA:8 a=C2vL1j-_i977Atbg1qQA:9
- a=QEXdDO2ut3YA:10 a=1Mhi-5-LkjG4w5oc0yAU:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: AtLGZHnrWsYSQEjPsUo0tJffbaXJLcWr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-17_03,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=542
- suspectscore=0 adultscore=0 impostorscore=0 clxscore=1015 bulkscore=0
- phishscore=0 priorityscore=1501 spamscore=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504170080
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,yahoo.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[jms.id.au,gmail.com,9elements.com,yahoo.com,linux.ibm.com,google.com,vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_DN_SOME(0.00)[]
+X-Spam-Score: -3.80
+X-Spam-Flag: NO
 
-Replaced below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
-- reg &= ~MASK;
-- reg |= FIELD_PREP(MASK, val);
-The semantic patch that makes this change is available
-in scripts/coccinelle/misc/field_modify.cocci.
+Hi Andrew,
 
-More information about semantic patching is available at
-https://coccinelle.gitlabpages.inria.fr/website
+On Fri, 11 Apr 2025 10:38:37 +0930, Andrew Jeffery wrote:
+> The shifts and masks for each channel are defined by hardware and
+> are not something that changes at runtime. Accordingly, describe the
+> information in an array of const structs and associate elements with
+> each channel instance, removing the need for the switch and handling of
+> its default case.
 
-Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
----
- arch/arm64/include/asm/tlbflush.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+I like the idea very much. A few comments on the implementations below.
 
-diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-index eba1a98657f1..0d250ef4161c 100644
---- a/arch/arm64/include/asm/tlbflush.h
-+++ b/arch/arm64/include/asm/tlbflush.h
-@@ -112,8 +112,7 @@ static inline unsigned long get_trans_granule(void)
- 	    level >= 0 && level <= 3) {					\
- 		u64 ttl = level & 3;					\
- 		ttl |= get_trans_granule() << 2;			\
--		arg &= ~TLBI_TTL_MASK;					\
--		arg |= FIELD_PREP(TLBI_TTL_MASK, ttl);			\
-+		FIELD_MODIFY(TLBI_TTL_MASK, &arg, ttl);			\
- 	}								\
- 									\
- 	__tlbi(op, arg);						\
+> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+> ---
+>  drivers/soc/aspeed/aspeed-lpc-snoop.c | 82 +++++++++++++++++------------------
+>  1 file changed, 41 insertions(+), 41 deletions(-)
+> 
+> diff --git a/drivers/soc/aspeed/aspeed-lpc-snoop.c b/drivers/soc/aspeed/aspeed-lpc-snoop.c
+> index 0b2044fd79b1be08dfa33bfcaf249b020c909bb9..b54d8fbf7b83ebadd4fe1b16cbddf07a0bfac868 100644
+> --- a/drivers/soc/aspeed/aspeed-lpc-snoop.c
+> +++ b/drivers/soc/aspeed/aspeed-lpc-snoop.c
+> @@ -10,6 +10,7 @@
+>   * 0x80 writes made by the BIOS during the boot process.
+>   */
+>  
+> +#include "linux/ratelimit.h"
+>  #include <linux/bitops.h>
+>  #include <linux/clk.h>
+>  #include <linux/interrupt.h>
+> @@ -57,7 +58,15 @@ struct aspeed_lpc_snoop_model_data {
+>  	unsigned int has_hicrb_ensnp;
+>  };
+>  
+> +struct aspeed_lpc_snoop_channel_cfg {
+> +	u32 hicr5_en;
+> +	u32 snpwadr_mask;
+> +	u32 snpwadr_shift;
+> +	u32 hicrb_en;
+> +};
+> +
+>  struct aspeed_lpc_snoop_channel {
+> +	const struct aspeed_lpc_snoop_channel_cfg *cfg;
+>  	bool enabled;
+>  	struct kfifo		fifo;
+>  	wait_queue_head_t	wq;
+> @@ -188,7 +197,6 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+>  				   int index, u16 lpc_port)
+>  {
+>  	const struct aspeed_lpc_snoop_model_data *model_data;
+> -	u32 hicr5_en, snpwadr_mask, snpwadr_shift, hicrb_en;
+>  	struct aspeed_lpc_snoop_channel *channel;
+>  	int rc = 0;
+>  
+> @@ -200,6 +208,9 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+>  	if (channel->enabled)
+>  		return -EBUSY;
+>  
+> +	if (WARN_ONCE(!channel->cfg, "snoop channel %d lacks required config", index))
+
+Why not just WARN? WARN_ONCE has a higher cost, and I don't expect this
+code path to be taken more than twice.
+
+> +		return -EINVAL;
+> +
+>  	init_waitqueue_head(&channel->wq);
+>  
+>  	channel->miscdev.minor = MISC_DYNAMIC_MINOR;
+> @@ -220,39 +231,20 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+>  		goto err_free_fifo;
+>  
+>  	/* Enable LPC snoop channel at requested port */
+> -	switch (index) {
+> -	case 0:
+> -		hicr5_en = HICR5_EN_SNP0W | HICR5_ENINT_SNP0W;
+> -		snpwadr_mask = SNPWADR_CH0_MASK;
+> -		snpwadr_shift = SNPWADR_CH0_SHIFT;
+> -		hicrb_en = HICRB_ENSNP0D;
+> -		break;
+> -	case 1:
+> -		hicr5_en = HICR5_EN_SNP1W | HICR5_ENINT_SNP1W;
+> -		snpwadr_mask = SNPWADR_CH1_MASK;
+> -		snpwadr_shift = SNPWADR_CH1_SHIFT;
+> -		hicrb_en = HICRB_ENSNP1D;
+> -		break;
+> -	default:
+> -		rc = -EINVAL;
+> -		goto err_misc_deregister;
+> -	}
+> -
+> -	/* Enable LPC snoop channel at requested port */
+
+Strange that you discard a comment which you added yourself in the
+previous patch.
+
+> -	regmap_update_bits(lpc_snoop->regmap, HICR5, hicr5_en, hicr5_en);
+> -	regmap_update_bits(lpc_snoop->regmap, SNPWADR, snpwadr_mask,
+> -			   lpc_port << snpwadr_shift);
+> +	regmap_update_bits(lpc_snoop->regmap, HICR5, channel->cfg->hicr5_en,
+> +		channel->cfg->hicr5_en);
+
+Not caused by your patch, but I think regmap_set_bits() could be used
+here to improve readability.
+
+> +	regmap_update_bits(lpc_snoop->regmap, SNPWADR, channel->cfg->snpwadr_mask,
+> +		lpc_port << channel->cfg->snpwadr_shift);
+>  
+>  	model_data = of_device_get_match_data(dev);
+>  	if (model_data && model_data->has_hicrb_ensnp)
+> -		regmap_update_bits(lpc_snoop->regmap, HICRB, hicrb_en, hicrb_en);
+> +		regmap_update_bits(lpc_snoop->regmap, HICRB, channel->cfg->hicrb_en,
+> +			channel->cfg->hicrb_en);
+
+Could also use regmap_set_bits().
+
+>  
+>  	channel->enabled = true;
+>  
+>  	return 0;
+>  
+> -err_misc_deregister:
+> -	misc_deregister(&lpc_snoop->chan[index].miscdev);
+>  err_free_fifo:
+>  	kfifo_free(&lpc_snoop->chan[index].fifo);
+>  	return rc;
+> @@ -272,21 +264,7 @@ static void aspeed_lpc_disable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+>  	if (!channel->enabled)
+>  		return;
+>  
+> -	/* Disable interrupts along with the device */
+
+Any reason for killing this poor innocent comment? ^^
+
+> -	switch (index) {
+> -	case 0:
+> -		regmap_update_bits(lpc_snoop->regmap, HICR5,
+> -				   HICR5_EN_SNP0W | HICR5_ENINT_SNP0W,
+> -				   0);
+> -		break;
+> -	case 1:
+> -		regmap_update_bits(lpc_snoop->regmap, HICR5,
+> -				   HICR5_EN_SNP1W | HICR5_ENINT_SNP1W,
+> -				   0);
+> -		break;
+> -	default:
+> -		return;
+> -	}
+> +	regmap_update_bits(lpc_snoop->regmap, HICR5, channel->cfg->hicr5_en, 0);
+
+Could use regmap_clear_bits() if I'm not mistaken.
+
+>  
+>  	channel->enabled = false;
+>  	/* Consider improving safety wrt concurrent reader(s) */
+> @@ -294,6 +272,21 @@ static void aspeed_lpc_disable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+>  	kfifo_free(&channel->fifo);
+>  }
+>  
+> +static const struct aspeed_lpc_snoop_channel_cfg channel_cfgs[] = {
+> +	{
+> +		.hicr5_en = HICR5_EN_SNP0W | HICR5_ENINT_SNP0W,
+> +		.snpwadr_mask = SNPWADR_CH0_MASK,
+> +		.snpwadr_shift = SNPWADR_CH0_SHIFT,
+> +		.hicrb_en = HICRB_ENSNP0D,
+> +	},
+> +	{
+> +		.hicr5_en = HICR5_EN_SNP1W | HICR5_ENINT_SNP1W,
+> +		.snpwadr_mask = SNPWADR_CH1_MASK,
+> +		.snpwadr_shift = SNPWADR_CH1_SHIFT,
+> +		.hicrb_en = HICRB_ENSNP1D,
+> +	},
+> +};
+> +
+>  static int aspeed_lpc_snoop_probe(struct platform_device *pdev)
+>  {
+>  	struct aspeed_lpc_snoop *lpc_snoop;
+> @@ -308,6 +301,13 @@ static int aspeed_lpc_snoop_probe(struct platform_device *pdev)
+>  	if (!lpc_snoop)
+>  		return -ENOMEM;
+>  
+> +	static_assert(ARRAY_SIZE(channel_cfgs) == ARRAY_SIZE(lpc_snoop->chan),
+> +		"Broken implementation assumption regarding cfg count");
+> +	static_assert(ARRAY_SIZE(lpc_snoop->chan) == 2,
+> +		"Broken implementation assumption regarding channel count");
+
+Wouldn't it be good (and maybe sufficient) to declare
+aspeed_lpc_snoop_channel_cfg as channel_cfgs[NUM_SNOOP_CHANNELS]?
+
+If you insist on keeping the second assert then you should at least use
+NUM_SNOOP_CHANNELS instead of hard-coding 2.
+
+> +	lpc_snoop->chan[0].cfg = &channel_cfgs[0];
+> +	lpc_snoop->chan[1].cfg = &channel_cfgs[1];
+
+Could this be done at the beginning of aspeed_lpc_enable_snoop()? So
+that you don't have to duplicate the statement (and don't set
+lpc_snoop->chan[1].cfg if there's no second port). Would save a WARN as
+well.
+
+> +
+>  	np = pdev->dev.parent->of_node;
+>  	if (!of_device_is_compatible(np, "aspeed,ast2400-lpc-v2") &&
+>  	    !of_device_is_compatible(np, "aspeed,ast2500-lpc-v2") &&
+> 
+
 
 -- 
-2.34.1
-
+Jean Delvare
+SUSE L3 Support
