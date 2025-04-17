@@ -1,98 +1,134 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C352628D
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 13:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9523384D2B;
+	Thu, 17 Apr 2025 13:46:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744897532; cv=none; b=ASKITt0wXVdLJnM3mkRXfxi+LrYINgwfjUmSZdldDk3JeA8TyXAhm53vbQ/zBhvAsIotvizaj9nRtNqXbECltqfO7qZjtrLGfGeJOHvPHwBxL5wo1Tojt0DzN6WB6pIXG4PlISB8Cf6R1yWm6/caZpMiSETS7YvOIvEBp6Uvl8A=
+	t=1744897577; cv=none; b=BKdSom44jUB+xOqszNVUgK9dfSM13lvqESxu7/VTaL+PLb17n0UsRwiINZi8CVeewdCPjhsBgLLF0AHGFK5HW0B/lH7d5T2W/FX+gM6SnJnlhWwnrYeRZGDJUHBHQFd3PrINdRG/Lz3lA2YYV9RqRPIkuNJMrPsWfPidQcIFSbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744897532; c=relaxed/simple;
-	bh=64iGb0V5xGrlPmvhpWeIrwqVhtaTSQgt0BrhNU+Lh0k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=B+l2tBeyo1BizK5iGa2qxwI8M7m1oj2Ry2iFw1DtLZVjmv785VjU/L38KpN0uDAGBWnWc42uAjESxoKBjSNf3kEsEa+hyFcguJeeWqprsk7brBiysds2urMRq9M8fd1z+onXwujyJBHbqDJNdbZMaEiqI82DYgxKuT4MrbTCe6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BXH/B9Sr; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744897577; c=relaxed/simple;
+	bh=Jp3P1IDKrogJGTyaRjCD0IYiY+Sdkq83T+tFKxCJJQ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SE16Eiul40UqpIwMGttoebrHgzUIHlqaHdRpgZtLBXg+OA3fIvgbPS2sOMIkQ1cfokQJD+SLwqnG/zexZXBg9jzEw+styEm8TRdHUIlSNwGfmsV3JamFMhfSo+N1wSbqSsHRIC7HkNZncuqqvS1X0BRP5I9vHTiTfortEouiQM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MTwdbrmV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXH/B9Sr"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2af2f15d1so93290666b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 06:45:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744897529; x=1745502329; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gMRK/C6IRR/MfRx3XDCIMsJeEmZ8Nwb4lwT+UFro0Zc=;
-        b=BXH/B9SrOUpar4WRLZ795miLXCPQN+ziLqfh35ZVpT31bgniNV4F5IjzWt71QYBSX3
-         36oVlIMO2UEoZfBbqrWdIZ7jFKNPGMbOZhwbx2hkdSPY5YUIAMBAFys+X5QMSIkgHBcn
-         vTbgw0maC68eBwAPTbuRVO7EUZTM/Z1cHknBSaeXkuJq7ROeYPsoArHO7mWhXJb144Gr
-         G1sElzjHJfVMv+zYqKWJf1J4v5plpbGtUGh1CIblrRiklAl42IM5xvEAX9a1qGrSY7/8
-         YEp7HMK2xHp0peq7+qiWFVU3DOHliSSdpx2J6rMb7lvSj0IXUKWVgp3Jt59EI/LDpdK9
-         tHlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744897529; x=1745502329;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gMRK/C6IRR/MfRx3XDCIMsJeEmZ8Nwb4lwT+UFro0Zc=;
-        b=il0l46HQIr3wPg3u27igfj+NO+nudSMiHboltNyaUD2PUJhFnGT5hkpoNDqwDlMIAY
-         IC6Qa4gfQ+9Q7Q0mFRdttvyCrkFE7PwanqVU9JcZHnS9KtNHJRkzNB4WqWtysqujeZ38
-         0FduE6kESLh0aB9KMQNfH7LbWMGrvr04tsrNoJP/b2lMks9s6f/V9rIzHqR8YBe3RfTq
-         vBpc/YqxZ0uYxtRixsSKn6XqyS2vfGdE1Ahpv/5XEimgInYIKhnwsSe9ggWmX/87gEiB
-         9Lqx+35QXaTsB5JpJLvcMo9pEo+TYwss+60Ycxo5zx+x0DRXqUv5sBk5QB/rLzETabUB
-         ULkg==
-X-Gm-Message-State: AOJu0Yy5NgLd6S2IrM6lr66MkQk6lFHxBNTTJYDujCo4UcHO8myXmWUa
-	PnWDS43+gBpmaJF2XoHgHJZsmhqKD2uYSjX8IeEHXV1j8Kgez7ugjDE50reArco=
-X-Gm-Gg: ASbGncv/YoE2hB96a1Q+IDtEdhBjtSj9g4ahiScOCW6h1lUhZufMOE7YviFRKdwrHYs
-	09vM34BTeJj3hJPgiWyjLa3X0hwX4TYKtNlLFBAp87FCcqgnTNiXeVxgbVGm8fMfS+Uy1jGkeb2
-	kvqov2Il5H2bmV21qRlq6o0KoKjSRqeP+r98HVbwo38KpO2uHiqYvYB34c/0P6rTri3sNxzAv+1
-	mJzO4JnjQ13CJ3berIuFCSnEkE8idOtK88sFNnmbDwt8hp/lu4xheaUhW9q3mhTD9EGeedLuIms
-	IhcBGPKaKdA/93cHyhSL/bybyMjIu0GMYQAmdHXF+a0wGjqcR/ZJcQq2nE3AGIMlATFHWDg9+oB
-	eXMP1ILmAyA8G5rggselauQI6R2BDf2AKFOJdJVlTyGmOBCs68M/8vSUxe42IUT/fXnXzCNScjE
-	cXl4XMJpAZvGmMtw==
-X-Google-Smtp-Source: AGHT+IH09w642gc9QbfgAfKM9kn1FTfl1tEZzN76Cs6wYYe1JvaXTXPTA/PUaDDGAswtCwxs+H/DoA==
-X-Received: by 2002:a17:906:f594:b0:aca:d4d0:a735 with SMTP id a640c23a62f3a-acb42ad330dmr546069366b.43.1744897528793;
-        Thu, 17 Apr 2025 06:45:28 -0700 (PDT)
-Received: from localhost.localdomain (2001-1c05-0098-bd00-b57a-3d8d-696c-b3ac.cable.dynamic.v6.ziggo.nl. [2001:1c05:98:bd00:b57a:3d8d:696c:b3ac])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb5f3006a3sm103730466b.151.2025.04.17.06.45.28
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 17 Apr 2025 06:45:28 -0700 (PDT)
-From: batumete1011@gmail.com
-To: linux-kernel@vger.kernel.org
-Cc: CheeseSpace <167085599+CheeseSpace@users.noreply.github.com>
-Subject: [PATCH] Signed-off-by: CheeseSpace <167085599+CheeseSpace@users.noreply.github.com>
-Date: Thu, 17 Apr 2025 15:44:30 +0200
-Message-Id: <20250417134430.16580-1-batumete1011@gmail.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MTwdbrmV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA693C4CEEA;
+	Thu, 17 Apr 2025 13:46:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744897577;
+	bh=Jp3P1IDKrogJGTyaRjCD0IYiY+Sdkq83T+tFKxCJJQ0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MTwdbrmVnx/M2TbvYbZ1GVcbtAT0j+KoA5FAy3SJuooWpGRktgfCWNigxhu9BEAp6
+	 /5lMiXr2O9F6XsfL2P8GppZp/cknJHc5pg77zkVv1rCK8c2o8VdBJOz3YfGDtMP3+0
+	 GYL0SHYq9V8X/mH58MQAi4h8urcpYfwblYninyUILl8B8fya2kbFTJA0H4rnbCjwp4
+	 ZpI9QH4ppUDY1tZ/dV4fsDty1hXctTShuEpmCwzIrHilcBGNG/JoVTeNFcBEGnji8K
+	 nU0fRLK2sJACJwDkK8aaE04rYAjGxoOk2ktwDuFFKfNKYjmCgGWL3eHiLf1iILyxJe
+	 OMUvaQvq2Dr3g==
+Date: Thu, 17 Apr 2025 06:46:15 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Joe Damato <jdamato@fastly.com>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
+ Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>, Alexei
+ Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend
+ <john.fastabend@gmail.com>, linux-kernel@vger.kernel.org (open list),
+ linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK),
+ bpf@vger.kernel.org (open list:XDP (eXpress Data
+ Path):Keyword:(?:\b|_)xdp(?:\b|_))
+Subject: Re: [PATCH net-next v2 4/4] selftests: drv-net: Test that NAPI ID
+ is non-zero
+Message-ID: <20250417064615.10aba96b@kernel.org>
+In-Reply-To: <20250417013301.39228-5-jdamato@fastly.com>
+References: <20250417013301.39228-1-jdamato@fastly.com>
+	<20250417013301.39228-5-jdamato@fastly.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: CheeseSpace <167085599+CheeseSpace@users.noreply.github.com>
+On Thu, 17 Apr 2025 01:32:42 +0000 Joe Damato wrote:
+> Test that the SO_INCOMING_NAPI_ID of a network file descriptor is
+> non-zero. This ensures that either the core networking stack or, in some
+> cases like netdevsim, the driver correctly sets the NAPI ID.
+> 
+> Signed-off-by: Joe Damato <jdamato@fastly.com>
+> ---
+>  .../testing/selftests/drivers/net/.gitignore  |  1 +
+>  tools/testing/selftests/drivers/net/Makefile  |  6 +-
+>  .../testing/selftests/drivers/net/napi_id.py  | 24 ++++++
+>  .../selftests/drivers/net/napi_id_helper.c    | 83 +++++++++++++++++++
+>  4 files changed, 113 insertions(+), 1 deletion(-)
+>  create mode 100755 tools/testing/selftests/drivers/net/napi_id.py
+>  create mode 100644 tools/testing/selftests/drivers/net/napi_id_helper.c
+> 
+> diff --git a/tools/testing/selftests/drivers/net/.gitignore b/tools/testing/selftests/drivers/net/.gitignore
+> index ec746f374e85..71bd7d651233 100644
+> --- a/tools/testing/selftests/drivers/net/.gitignore
+> +++ b/tools/testing/selftests/drivers/net/.gitignore
+> @@ -1,2 +1,3 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  xdp_helper
+> +napi_id_helper
 
-removed unnecessary quotes in readme fille
----
- README | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+sort alphabetically, pls
 
-diff --git a/README b/README
-index fd903645e6de..beff112b72eb 100644
---- a/README
-+++ b/README
-@@ -5,8 +5,8 @@ There are several guides for kernel developers and users. These guides can
- be rendered in a number of formats, like HTML and PDF. Please read
- Documentation/admin-guide/README.rst first.
- 
--In order to build the documentation, use ``make htmldocs`` or
--``make pdfdocs``.  The formatted documentation can also be read online at:
-+In order to build the documentation, use make htmldocs or make pdfdocs.
-+The formatted documentation can also be read online at:
- 
-     https://www.kernel.org/doc/html/latest/
- 
--- 
-2.39.5 (Apple Git-154)
+> diff --git a/tools/testing/selftests/drivers/net/Makefile b/tools/testing/selftests/drivers/net/Makefile
+> index 0c95bd944d56..47247c2ef948 100644
+> --- a/tools/testing/selftests/drivers/net/Makefile
+> +++ b/tools/testing/selftests/drivers/net/Makefile
+> @@ -6,9 +6,13 @@ TEST_INCLUDES := $(wildcard lib/py/*.py) \
+>  		 ../../net/net_helper.sh \
+>  		 ../../net/lib.sh \
+>  
+> -TEST_GEN_FILES := xdp_helper
+> +TEST_GEN_FILES := \
+> +	napi_id_helper \
+> +	xdp_helper \
 
+like you did here
+
+> +# end of TEST_GEN_FILES
+>  
+>  TEST_PROGS := \
+> +	napi_id.py \
+>  	netcons_basic.sh \
+>  	netcons_fragmented_msg.sh \
+>  	netcons_overflow.sh \
+> diff --git a/tools/testing/selftests/drivers/net/napi_id.py b/tools/testing/selftests/drivers/net/napi_id.py
+> new file mode 100755
+> index 000000000000..aee6f90be49b
+> --- /dev/null
+> +++ b/tools/testing/selftests/drivers/net/napi_id.py
+> @@ -0,0 +1,24 @@
+> +#!/usr/bin/env python3
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +from lib.py import ksft_run, ksft_exit
+> +from lib.py import ksft_eq, NetDrvEpEnv
+> +from lib.py import bkg, cmd, rand_port, NetNSEnter
+> +
+> +def test_napi_id(cfg) -> None:
+> +    port = rand_port()
+> +    listen_cmd = f'{cfg.test_dir / "napi_id_helper"} {cfg.addr_v['4']} {port}'
+
+you need to deploy, in case test is running with a real remote machine
+and the binary has to be copied over:
+
+	bin_remote = cfg.remote.deploy(cfg.test_dir / "napi_id_helper")
+	listen_cmd = f'{bin_remote} {cfg.addr_v['4']} {port}' 
+
+> +    with bkg(listen_cmd, ksft_wait=3) as server:
+> +        with NetNSEnter('net', '/proc/self/ns/'):
+> +          cmd(f"echo a | socat - TCP:{cfg.addr_v['4']}:{port}", host=cfg.remote, shell=True)
+
+Like Xiao Liang said, just host=cfg.remote should work.
+
+> +    ksft_eq(0, server.ret)
+> +
