@@ -1,94 +1,108 @@
-Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A04F2153DA
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B712153DA;
+	Thu, 17 Apr 2025 07:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744873843; cv=none; b=LTMU9gYoI0899Ya5oMEtkPKmojYSED4z9AbNUfh0ypN92skjCyyMqGpvwzlN1f/ZlzcmxvC3ZncocuPRwkiTBDDZ3OYjTx0xGR+MOMFG8taxMdNeINXt8Vw3mehbHaB2KfFHJopYBO9YvNP28dDN4LwPNPAVCenLIbEg2eJ65Vg=
+	t=1744873857; cv=none; b=KioZ4Rh3xUxq47ZU++wrF0dRTipUrtG9xXn96gZt0qQHepXxHeGfRdlvpfBQKU4aC+8s6qh3T7R5eU/85QIsabkLaB+eAc5jcWEl6aem+w862DMEHOuKQZM1JpQsnREE7HgBLfAvDgrjHgqLZ7zOJD9W1BXypZXvstE/15kKtUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744873843; c=relaxed/simple;
-	bh=+JiUNgqyoXFvdtdEoFu1TtZXJ9PUjEsA5M8yVrRsh98=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dL7K0axFq0Da5VI+PEQBtsqgOZQiA6fnEg+Yl9iwWIn3mvzHDgMC0+aQSEzx+qPiH2INRFOFVe8hWz/Mpb7PPQFZSzY+zWmxD3H0QaVCYnwdEvNifu2GdQ3gBxEkOCeRsBrXk27LI9lM1C1cgDJMAbd/fAALatdqNmRhuoSFcXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=aLKCqLTF; arc=none smtp.client-ip=209.85.210.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1744873857; c=relaxed/simple;
+	bh=aYAuIo7LVdzgQM2/Cl+IsgbnZZ20GzAjup2iniRCGwQ=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=emH0iyCmmWNBRqndV0111rk0gnIAMMP195Fw7IikegLK/ikFXoAqmvyOoItwhWxjFT726sCrRD1ffJIWy94vuv+TqoMABpi738y4MSh0Q27/gcqrtKGKD3Hscjs46q54d3v7IZXgNnWb9QsLUZ4fbXnd8mvbG6Mh7fuCg7TVS4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ux08j7+l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="aLKCqLTF"
-Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-736aa9d0f2aso502935b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:10:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1744873840; x=1745478640; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qgYgljJxI+hCrOOLR7b719OU8bcmPXVZJzM2YizyFss=;
-        b=aLKCqLTFz52F/n2l3mYOJNd8coNRxizYW27VnomPm5s2H5bs0wMsVhoAviY1mpwDAN
-         8rFJ0PvW/tL0sowNFUpYEleoSAc/caPTVGmCID5vQtRvftSKU+tpSjqLqcHtN9aonCP8
-         UuzOgnM6lQwU2+8fifFo1F2WUAtV/FL0Bry7gTD/0uy6aHIsWTLO4kkH/Mw428BU+Pgf
-         7Td+oH1waEyMOs9Z0Ud6bsxb0wPLBDJXJkUAc09jv7p5AcOwvayS+dlFIfDYoOKuDj93
-         K9n556uzwJjAS8cKI+rcWrdg1ciqUzWXJb0dW0ANCxEyxaQx5xchdSr/IC4NbeVY1yRg
-         Wmig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744873840; x=1745478640;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qgYgljJxI+hCrOOLR7b719OU8bcmPXVZJzM2YizyFss=;
-        b=HpTpE6GUgowwSAqyo5PDBZjP06jQrKf1VxXKb/VOpw3M04DX78fBx5NoUC3WPrKhre
-         shgIC3n8W6Em047z82oVX5jm43Bl/1n9zT3vdYmxw0SMLY5ttkovoz4hvz16/eRGeHTe
-         BtxbgiCFIjtI2sTQ0+xEpawKBSyC7fKLdr4yl2YZv70k64qoEvcon+m043fODQMsg1XU
-         x+ojw69HqcOsyWr7AZnYY3e84zCyQa09SJU50w9n1V8wfxLjYj7CS0flfsvVTo7sumjB
-         lN8rnA69EK2BOr8Rmmz163aVQv5ixTHFLXxBGPSEj9zicLnn22mgImrwoOAb6i8pXeyg
-         /LUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUUv9DnmQRscNaBKq6TuD43T8JTSVg5J4AYxuESG/UduoBdMQrRb2Yb9620Trc65b5f8gPuEgeTCuWZNYM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxp0tfDuR/Z6/qmAHDE7I4SPpFjr1f7S/yBgBCN6iQ/t1fMTJTM
-	p687wKCvyOwppBu9VO5GmbCMqfATvb6XRxGhtGsFa/S2dTzvtKhS7GheQUs6MB8=
-X-Gm-Gg: ASbGncsCa6tkFcjyHnup0t7DNOrLcWZecAElnZEv4BtU6MjrtVWmcUbeSlzb0ZwYfLe
-	Rip/94sX+xaYhXck+E2BwO5WQsoin3wFz0jWk7rcwJJYMLE/ELB6XJVmN2hltPhGeNMXWTVGuXo
-	MoJlCGcsJum88TSR9VGv7tkKIGQsu42yyvQ+XdBwW9wr1uqe16x3W7PWGfuVttwwHALkVP4l2td
-	8Wm60x35HhcdR4uVf028vJT2JNvtRnHohflWPBbbJ+dunN3N5c6F8oa0kUUY+MIFr2SRqqU9WIv
-	0FpbXa7U5x4XJ18BCF9ZmvxuV3HfeD49tLr99l54uOG/QAc7
-X-Google-Smtp-Source: AGHT+IEVe/K3jTKEPBOICq/hXsLGkcQRGNxPHABsmFWTO+uu7X2IPJ3WbFKcUwQCvyFzgLk2C/HPZw==
-X-Received: by 2002:a05:6a00:328a:b0:736:5822:74b4 with SMTP id d2e1a72fcca58-73c267fba0fmr7220974b3a.21.1744873839691;
-        Thu, 17 Apr 2025 00:10:39 -0700 (PDT)
-Received: from purestorage.com ([208.88.159.128])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0b22217f7bsm2338045a12.65.2025.04.17.00.10.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 00:10:39 -0700 (PDT)
-Date: Thu, 17 Apr 2025 01:10:36 -0600
-From: Michael Liang <mliang@purestorage.com>
-To: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>
-Cc: Michael Liang <mliang@purestorage.com>,
-	Mohamed Khalfella <mkhalfella@purestorage.com>,
-	Randy Jennings <randyj@purestorage.com>,
-	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/1] nvme-tcp: wait socket wmem to drain in queue stop
-Message-ID: <20250417071036.a7nhovuokg7w2n5r@purestorage.com>
-References: <20250405054848.3773471-1-mliang@purestorage.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ux08j7+l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5799C4CEE4;
+	Thu, 17 Apr 2025 07:10:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744873856;
+	bh=aYAuIo7LVdzgQM2/Cl+IsgbnZZ20GzAjup2iniRCGwQ=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=Ux08j7+ly7IeXhweuU6V9uUOKO6RsQHdFsue+IwskLBT5r7fZOtcpUqk9+ws3xJqF
+	 UcKZv4To/uPjMzxp30mllzIZ0YqldDdZ1J5epKuTM3ep04/F1WwrxwA6yCGnSKMKxh
+	 2yA2bGlSyfrpjs/Q6Od3xZz8C0GPl1R1XGdKjYOUIIDYwxidores7ok/V6c21mQ9k6
+	 dqVLUkYK0QsZohYzfpa54i+fBpKL2fgV28mvSwrBI0M/fdtGc94g/efRmid3DEc/6E
+	 55zGn2kiZ7tj7CUhcGvJcfoXLVtCKN3vg5H8vaL0JGCCVnazLHb0Zs6QWj7v3zL4P1
+	 Y/x3LNePlQEbw==
+Date: Thu, 17 Apr 2025 00:10:53 -0700
+From: Kees Cook <kees@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+CC: Coly Li <colyli@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>,
+ linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] md/bcache: Mark __nonstring look-up table
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAMj1kXHfearSZG6TFTxxX87qmRkUmAefQm-TfPNS8j09kWxujQ@mail.gmail.com>
+References: <20250416220135.work.394-kees@kernel.org> <CAMj1kXHfearSZG6TFTxxX87qmRkUmAefQm-TfPNS8j09kWxujQ@mail.gmail.com>
+Message-ID: <994E520B-64B1-4387-8DFF-88755346FE55@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250405054848.3773471-1-mliang@purestorage.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Changes in v2:
- - Always wait in tcp queue stop regardless of the queue liveness, which
-   fixes the concurrent queue stop from I/O timeout from multiple namespaces
-   of the same controller.
- - Link to v1: https://lore.kernel.org/linux-nvme/20250405054848.3773471-1-mliang@purestorage.com/
 
-Michael Liang (1):
-  nvme-tcp: wait socket wmem to drain in queue stop
 
- drivers/nvme/host/tcp.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+On April 16, 2025 11:16:45 PM PDT, Ard Biesheuvel <ardb@kernel=2Eorg> wrot=
+e:
+>On Thu, 17 Apr 2025 at 00:01, Kees Cook <kees@kernel=2Eorg> wrote:
+>>
+>> GCC 15's new -Wunterminated-string-initialization notices that the 16
+>> character lookup table "zero_uuid" (which is not used as a C-String)
+>> needs to be marked as "nonstring":
+>>
+>> drivers/md/bcache/super=2Ec: In function 'uuid_find_empty':
+>> drivers/md/bcache/super=2Ec:549:43: warning: initializer-string for arr=
+ay of 'char' truncates NUL terminator but destination lacks 'nonstring' att=
+ribute (17 chars into 16 available) [-Wunterminated-string-initialization]
+>>   549 |         static const char zero_uuid[16] =3D "\0\0\0\0\0\0\0\0\0=
+\0\0\0\0\0\0\0";
+>>       |                                           ^~~~~~~~~~~~~~~~~~~~~=
+~~~~~~~~~~~~~
+>>
+>> Add the annotation to silence the GCC warning=2E
+>>
+>> Signed-off-by: Kees Cook <kees@kernel=2Eorg>
+>> ---
+>> Cc: Coly Li <colyli@kernel=2Eorg>
+>> Cc: Kent Overstreet <kent=2Eoverstreet@linux=2Edev>
+>> Cc: linux-bcache@vger=2Ekernel=2Eorg
+>> ---
+>>  drivers/md/bcache/super=2Ec | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/md/bcache/super=2Ec b/drivers/md/bcache/super=2Ec
+>> index e42f1400cea9=2E=2E577d048170fe 100644
+>> --- a/drivers/md/bcache/super=2Ec
+>> +++ b/drivers/md/bcache/super=2Ec
+>> @@ -546,7 +546,7 @@ static struct uuid_entry *uuid_find(struct cache_se=
+t *c, const char *uuid)
+>>
+>>  static struct uuid_entry *uuid_find_empty(struct cache_set *c)
+>>  {
+>> -       static const char zero_uuid[16] =3D "\0\0\0\0\0\0\0\0\0\0\0\0\0=
+\0\0\0";
+>> +       static const char zero_uuid[] __nonstring =3D "\0\0\0\0\0\0\0\0=
+\0\0\0\0\0\0\0\0";
+>>
+>
+>Just
+>
+>static const char zero_uuid[16] =3D {};
+>
+>should work fine here too=2E No need for the initializer=2E
 
--- 
-2.34.1
+=F0=9F=A4=A6 Yes=2E This is what I get for fixing dozens of these=2E I'll =
+send a v2=2E=2E=2E
 
+-Kees
+
+
+--=20
+Kees Cook
