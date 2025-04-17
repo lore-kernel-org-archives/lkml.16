@@ -1,202 +1,178 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62377239588;
-	Thu, 17 Apr 2025 11:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744888705; cv=pass; b=aGCPsaHx0xyYp06Tkn0YMZ7KoBoglByFqpDjBlYHO5WrmOQ6tyYQvfR2lYM148bQSy+oyybaNNPBDUmNa+PA9lfTx9GvTZ9kepUB27S+QHSzHJ8VFN1XblmotMUkPvdi0mvCeiIMQdwYGN1AYbQPLuy9LrMhVpeYxOvj5+Xsz9U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744888705; c=relaxed/simple;
-	bh=g3n8qbuXH6LCUlQ+Gf+tgFZRbHSsQBpiI2ikcrzfzEE=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=jxBPSL5tMh05MelNDcyD630nPsrQ5V7ZIGk9mGjrvzQS1CCq7GZm3yPcUs3DkSOIZ/Fld1KtSwtuYZAhRIGOg2oTeRKDTaY7Qsun79LG5HLnIFYsQk1N2JFXr0QdtFRvILyWwS/bnGy8G324xnWbxRsz+Esu9SJ8WCaGruEpgGI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=MuXm5JFC; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBC423A98B;
+	Thu, 17 Apr 2025 11:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744888708; cv=none; b=DY9pJ0zPGMUYoWfMceC2AvQd5ovaDb282OK1z0rAfN3OYCxNA6pdzSHfMSJHFbolpXot3ClUhWzlGMiVjz7Lj/xq6PJpjOhBlHRqT3LtG4nvaa8WyWp2/v2OxFC6d+tegdm7v9rMXRg/4Ap+pZodUwPonSe9bjryZ1fpkipYBx0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744888708; c=relaxed/simple;
+	bh=dKMIHb1S6571ydBn3lEnTNtLoHrKyfQUv7BgHtM4Wc4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Xit3Fh6MdLiFUyyNjGGE7MnySgE0Wcg6NXO38UqbxoLZa8x2gLO/3ZoHajRgRQ9YKTK/L5VZ3+4Vba87yImmBEVzJDYS0IixjJcWqXNhmWEZnNGR8UzTUycbkYKp2ZZuQfABzJCglwzaDKDrV21yAfoX1myTPLugu1YstOESZzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iutut7Hp; arc=none smtp.client-ip=209.85.160.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="MuXm5JFC"
-ARC-Seal: i=1; a=rsa-sha256; t=1744888673; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=CQ18dQ3tN4r2M3/Ux1SXUdBjlzAw1Vt6vjawvhnvoOOV+mKFXfT6sHqe5qNVSwq/9cBbia7X3H828LbnathXiRIZeQBKaD2ezdx+6T8a09wDXaSTdB0wK8SdnZvuWv/n2CnwKSwOsQOixrSNPZhDPpO/hfIbsuC977FCLYv2+w0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744888673; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=B3vHgcOcDvV9fe66m4M7950Oh2PXKr33rDoJYxpZcH8=; 
-	b=VSFVSVX4vZ3tyW72g/zUs9f7xOp3kvfn/oCn8zUZ6X1C5Tg0B0kJtf2lAGwlBX/C2QyUUCI5aADpWcafm48QppOwi2G5vWXHCgJK/5AEV5pb72BGzINergz9xVtdZiVVdxMqtjV4Ovs0lsihpQSWJpPSfVQn0lQBPglmAF77ZLU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744888673;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=B3vHgcOcDvV9fe66m4M7950Oh2PXKr33rDoJYxpZcH8=;
-	b=MuXm5JFCd87w3ohq7nh0VmJ0vrTyQ39c1OCLAwrLsgXfE2KXKVCWF9h4h/6w9yH8
-	HbFPx/KGyi8eQDVBa4HyWax8ua/XyJbaSj73/u/aNdFlOvN9JN7YSNIBrmYlDfeE7MI
-	MhKwecRBasuEG0U3GDPd4oMRRYv1YJrreATPMZwo=
-Received: by mx.zohomail.com with SMTPS id 1744888670925391.69631041570995;
-	Thu, 17 Apr 2025 04:17:50 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iutut7Hp"
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2d0920c6f96so384357fac.1;
+        Thu, 17 Apr 2025 04:18:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744888705; x=1745493505; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W4GG7mgkzFUoZqWeT2Tf0Q4QNFO5CH7b3xCbrus3OBQ=;
+        b=iutut7HpTcURpq1TW+yZ7yp3MvtphgVYy1o9uXUvyZAWzo3wd7nyIHQ32zjNyHcM8c
+         +Dfz/eTTQ0FpzJ2fceSDAfXG/9eVYgv/CqS1hmo7e2LNd0/SEagVroYoLepNvEHh9PJ2
+         ChILf02bgj2zr5KNumPYW3ZNGDU9jfXhBjEafjLQCi8mApL/vQdOxn+aCL8H6KzfAgKD
+         Wrr/azYqwbasaRhC6keUynUt/YMU5vraHHdKJGKIanh3GyLwufiU1Wz/+17mMVBx1KVq
+         kvCrMjdPApdSsseXmtePHUHdFj6Wqd4+hpxezp34M7bC5shd6bDuNIz60I6sGtwkqilR
+         bIcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744888705; x=1745493505;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W4GG7mgkzFUoZqWeT2Tf0Q4QNFO5CH7b3xCbrus3OBQ=;
+        b=M9Iz1ckJJXMEbmnUaqX0iRz+qgCJuyLPwaTgDxVGiKIfFZCLYIl2/HBTi5i5AWJ1J+
+         9irA+JQ7kdv7ZfFfq1iLmComv5hNDRbXzFQxHoHBolYPHB0EFSAmwClOYW7qN0xnbf7j
+         NCEmOmVFaPA5B52ixZU6Xrar9BsmD5UcT5SAM3uaFbNEqTbwURbKnmB3UMI2vrL6Nt7r
+         f8eT45oOcMIbSH4ucsPz5ztssXDY1dshrU2UwJOhnVdLUUtD3k26t3kcHSrEGt7qkmG0
+         3+mMrkyK4xeNTpByiWGtcPFwXVcErg1CzEM3Do9hOdSw1LBW/2YP8c6FP63UioFcGit6
+         QkDA==
+X-Forwarded-Encrypted: i=1; AJvYcCWX2nUybPpRUfhQgy0wjMoawoCxr/KIRQbN8Z3lm7YeB7hwWrgnI+q+Nl9b22QsiIzZv2zYnsYZW6CVHYTyX/REVMgbMQ==@vger.kernel.org, AJvYcCWi9tchRTUnsBhuNXXsJ13Y5AgW6mI5SAVliuaxDhDRWdgX6K4+6waIwYnwVlKegibMGljUQfPa641NzVs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMTBfnHGD7LiykzaeV/+KFU3uG/d4d7ezSEJRZ6S6Ljnnf/bjl
+	Z+vg16H54uS+HGamc7HzTI4p/Jw+QBRpFI+79KWxpZIzMqHVLvJNlt61IVvy5l8kYvFwMo3yrfs
+	hxJYZjhIaSZz7r1iE8P01iXiK0Aw=
+X-Gm-Gg: ASbGnctGEoh5WK4u1DVYkrltcRb7AG63ZHQoZmShIYblJUnLs5xiKRSxdtNiV2AtpXA
+	592WWl5z35JIRYQcRFdB6svf92wNNnDjWYIBGanWjzxef2gP1tp0hsa5rFuhJNXt43JQGYVwR+q
+	IL7wfFlWbALi5JU7Dt/uSaxLKW6CRr0rqr2Qj6r6AmblfqcmjsOPgL1YM=
+X-Google-Smtp-Source: AGHT+IH0HSnN/+LmZ5KKcaPEA/CtnPyE/zdEeBijGPlnrYXfT2VNXnFT98y24tAbxtFcuJyICuXjCnc95YN0nLLlz84=
+X-Received: by 2002:a05:6871:a506:b0:2c2:5b08:8e42 with SMTP id
+ 586e51a60fabf-2d4d2d13558mr3675849fac.27.1744888705172; Thu, 17 Apr 2025
+ 04:18:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH v5 07/13] scripts: generate_rust_analyzer.py: avoid
- optional arguments
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <CAJ-ks9=UwmdZqVnvJ8dzASG2hjtWFS=PAM2jAtWpEuZ9Lu5f+w@mail.gmail.com>
-Date: Thu, 17 Apr 2025 08:17:28 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- Boris-Chengbiao Zhou <bobo1239@web.de>,
- Kees Cook <kees@kernel.org>,
- Fiona Behrens <me@kloenk.dev>,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Lukas Wirth <lukas.wirth@ferrous-systems.com>
+MIME-Version: 1.0
+References: <20250417105758.100675-1-gasper.nemgar@gmail.com> <fad8f831-c813-433e-83d4-0a45ecb6ad0d@redhat.com>
+In-Reply-To: <fad8f831-c813-433e-83d4-0a45ecb6ad0d@redhat.com>
+From: =?UTF-8?Q?Ga=C5=A1per_Nemgar?= <gasper.nemgar@gmail.com>
+Date: Thu, 17 Apr 2025 13:17:58 +0200
+X-Gm-Features: ATxdqUHYihN_6qwo53D5Wbti_2z5xYpyJHeUuOXLu82PRon8QtNDJCHJsGdnFrg
+Message-ID: <CAKi4K-hTj+S_hkR5PkhDSAza9i8eDYCriiR=o=dS5B0OVMdKCw@mail.gmail.com>
+Subject: Re: [PATCHv5] platform/x86: ideapad-laptop: added support for some
+ new buttons
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: ikepanhc@gmail.com, ALOK TIWARI <alok.a.tiwari@oracle.com>, 
+	ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <C58B27D5-7F61-46D1-84F3-CC69E01EF5C4@collabora.com>
-References: <20250325-rust-analyzer-host-v5-0-385e7f1e1e23@gmail.com>
- <20250325-rust-analyzer-host-v5-7-385e7f1e1e23@gmail.com>
- <CCB6D89D-D513-4514-8992-AC37313F5588@collabora.com>
- <CAJ-ks9=UwmdZqVnvJ8dzASG2hjtWFS=PAM2jAtWpEuZ9Lu5f+w@mail.gmail.com>
-To: Tamir Duberstein <tamird@gmail.com>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
-X-ZohoMailClient: External
 
-Hi Tamir,
+Hello,
+I see that there has been a mistake.
+Thanks, I will send again.
+Ga=C5=A1per
 
-> On 1 Apr 2025, at 10:34, Tamir Duberstein <tamird@gmail.com> wrote:
->=20
-> On Tue, Apr 1, 2025 at 8:59=E2=80=AFAM Daniel Almeida
-> <daniel.almeida@collabora.com> wrote:
->>=20
->> Hi Tamir,
->>=20
->> This patch looks good to me but,
->>=20
->>> On 25 Mar 2025, at 17:06, Tamir Duberstein <tamird@gmail.com> wrote:
->>>=20
->>> Make all arguments required to reduce the probability of incorrect
->>> implicit behavior. Use keyword arguments for clarity.
->>>=20
->>> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
->>> ---
->>> scripts/generate_rust_analyzer.py | 90 =
-+++++++++++++++++++++++++++------------
->>> 1 file changed, 62 insertions(+), 28 deletions(-)
->>>=20
->>> diff --git a/scripts/generate_rust_analyzer.py =
-b/scripts/generate_rust_analyzer.py
->>> index b37d8345486a..badcef4126cf 100755
->>> --- a/scripts/generate_rust_analyzer.py
->>> +++ b/scripts/generate_rust_analyzer.py
->>> @@ -69,9 +69,10 @@ def generate_crates(
->>>    def build_crate(
->>>        display_name: str,
->>>        root_module: pathlib.Path,
->>> +        *,
->>>        deps: List[str],
->>> -        cfg: List[str] =3D [],
->>> -        is_workspace_member: bool =3D True,
->>> +        cfg: List[str],
->>> +        is_workspace_member: bool,
->>>    ) -> Crate:
->>>        return {
->>>            "display_name": display_name,
->>> @@ -92,21 +93,34 @@ def generate_crates(
->>>    def append_crate(
->>>        display_name: str,
->>>        root_module: pathlib.Path,
->>> +        *,
->>>        deps: List[str],
->>> -        cfg: List[str] =3D [],
->>> -        is_workspace_member: bool =3D True,
->>> +        cfg: List[str],
->>>    ) -> None:
->>>        register_crate(
->>> -            build_crate(display_name, root_module, deps, cfg, =
-is_workspace_member)
->>> +            build_crate(
->>> +                display_name,
->>> +                root_module,
->>> +                deps=3Ddeps,
->>> +                cfg=3Dcfg,
->>> +                is_workspace_member=3DTrue,
->>> +            )
->>>        )
->>>=20
->>>    def append_proc_macro_crate(
->>>        display_name: str,
->>>        root_module: pathlib.Path,
->>> +        *,
->>>        deps: List[str],
->>> -        cfg: List[str] =3D [],
->>> +        cfg: List[str],
->>>    ) -> None:
->>> -        crate =3D build_crate(display_name, root_module, deps, cfg)
->>> +        crate =3D build_crate(
->>> +            display_name,
->>> +            root_module,
->>> +            deps=3Ddeps,
->>> +            cfg=3Dcfg,
->>> +            is_workspace_member=3DTrue,
->>> +        )
->>>        proc_macro_dylib_name =3D (
->>>            subprocess.check_output(
->>>                [
->>> @@ -133,66 +147,75 @@ def generate_crates(
->>>=20
->>>    def append_sysroot_crate(
->>>        display_name: str,
->>> +        *,
->>>        deps: List[str],
->>> -        cfg: List[str] =3D [],
->>> +        cfg: List[str],
->>>    ) -> None:
->>> -        append_crate(
->>> -            display_name,
->>> -            sysroot_src / display_name / "src" / "lib.rs",
->>> -            deps,
->>> -            cfg,
->>> -            is_workspace_member=3DFalse,
->>> +        register_crate(
->>> +            build_crate(
->>> +                display_name,
->>> +                sysroot_src / display_name / "src" / "lib.rs",
->>> +                deps=3Ddeps,
->>> +                cfg=3Dcfg,
->>> +                is_workspace_member=3DFalse,
->>> +            )
->>>        )
->>=20
->> Why the change from append to register+build here? Maybe this change
->> should be in another patch?
->=20
-> The reason is that `append_crate` has lost its `is_workspace_member`
-> parameter, so the only way to pass `False` now is to use
-> `build_crate`. I chose to remove the argument from `append_crate`
-> because the alternative would have introduced many instances of
-> `is_workspace_member=3DTrue`, which I judged to be less-good than =
-this.
-
-Fine with me.
-
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
-
->=20
-> Cheers.
-> Tamir
-
-=E2=80=94 Daniel=
+On Thu, 17 Apr 2025 at 13:05, Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi Ga=C5=A1per,
+>
+> On 17-Apr-25 12:57 PM, Ga=C5=A1per Nemgar wrote:
+> > Added entries to unsupported wmi codes in ideapad_keymap[]
+> > and one check in wmi_nofify in order to get wmi code 0x13d to trigger p=
+latform_profile_cycle
+> >
+> > Signed-off-by: Ga=C5=A1per Nemgar <gasper.nemgar@gmail.com>"
+> > ---
+> > Changes in v5:
+> >  - Changed performance button to KE_KEY
+>
+> Thank you for the new version, but you seem to not actually
+> have made this change to the code.
+>
+> Also below you still have "User Asignable Key" instead of
+> "User Assignable Key" (with double ss in assignable)
+>
+> You also still have 2 spaces instead of one after 0x3d in:
+>
+>                 /* performance button triggered by 0x3d  */
+>
+> (both pointed out by Alok for v4)
+>
+> Maybe you accidentally send out an old version of the code?
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+> > Changes in v4:
+> >  - Changed performace button to KE_IGNORE
+> > Changes in v3:
+> >  - Minor changes
+> > Changes in v2:
+> >  - Added more codes that trigger with key combos (Fn+N, Fn+M, ...)
+> >  - Added performence toggle in wmi_notify()
+> > Changes in v1:
+> >  - Added codes for buttons on laptop(performance, star, ...)
+> > ---
+> >  drivers/platform/x86/ideapad-laptop.c | 18 ++++++++++++++++++
+> >  1 file changed, 18 insertions(+)
+> >
+> > diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x=
+86/ideapad-laptop.c
+> > index 17a09b778..72d3306ef 100644
+> > --- a/drivers/platform/x86/ideapad-laptop.c
+> > +++ b/drivers/platform/x86/ideapad-laptop.c
+> > @@ -1294,6 +1294,16 @@ static const struct key_entry ideapad_keymap[] =
+=3D {
+> >       /* Specific to some newer models */
+> >       { KE_KEY,       0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
+> >       { KE_KEY,       0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
+> > +     /* Star- (User Asignable Key) */
+> > +     { KE_KEY,       0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
+> > +     /* Eye */
+> > +     { KE_KEY,       0x45 | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
+> > +     /* Performance toggle also Fn+Q, handled inside ideapad_wmi_notif=
+y() */
+> > +     { KE_IGNORE,    0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
+> > +     /* shift + prtsc */
+> > +     { KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
+> > +     { KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
+> > +     { KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
+> >
+> >       { KE_END },
+> >  };
+> > @@ -2080,6 +2090,14 @@ static void ideapad_wmi_notify(struct wmi_device=
+ *wdev, union acpi_object *data)
+> >               dev_dbg(&wdev->dev, "WMI fn-key event: 0x%llx\n",
+> >                       data->integer.value);
+> >
+> > +             /* performance button triggered by 0x3d  */
+> > +             if (data->integer.value =3D=3D 0x3d) {
+> > +                     if (priv->dytc) {
+> > +                             platform_profile_cycle();
+> > +                             break;
+> > +                     }
+> > +             }
+> > +
+> >               /* 0x02 FnLock, 0x03 Esc */
+> >               if (data->integer.value =3D=3D 0x02 || data->integer.valu=
+e =3D=3D 0x03)
+> >                       ideapad_fn_lock_led_notify(priv, data->integer.va=
+lue =3D=3D 0x02);
+>
