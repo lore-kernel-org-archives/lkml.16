@@ -1,102 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-81.smtpout.orange.fr [80.12.242.81])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687A72066C3
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 22:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6161F585C;
+	Thu, 17 Apr 2025 22:11:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744927713; cv=none; b=gdy+zeD/5DHkyaPyhaTD0B8+CDs9WsYc2oUf/Z/thCyGk/gGobJY/3D9khdD8EGJsVxQIdY7UMCzVIG686oJbKQuaG8i7AD2Y/9HKAyw5wMA2ZiPSreZlu+SDwfVWDgiaTV5VBxwMPBd/8umxtz6Kuh/0isRZIsn5fHnulkbD1E=
+	t=1744927901; cv=none; b=a6+T2PEiCqErUqteArkPu8wlzxAeQk37Ku8M2ibk1LkDbJZl3OtxGqvDieLfqyTtss2x9lK4nTrN96JvB1zI+8DDeAMipfWM1H7Zpl7djUAx3JUr2xgTL9LTFLZblHQu4RdWp0oeXNXBIX/l52AB2fsrIDUQAAdmzExlz0wt1qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744927713; c=relaxed/simple;
-	bh=o+qo/RvZDtevq0UAYNWCAjxyhgQu3FqtGxBbcECxZ4c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GbvercMfIdjivB/8ADCK0L4/BViRehMyKcf1wrxfLIbYKm4YJR698WOja5iyq4vtHIsdfDFCf2wIFtNsOOvdpLKhqcVPjGIx7ny/5cqLnAEX+1gGJ67KkeFLsyBqUv/s/PB41dcl4W16Lmm1iF0S225BxKYMZpO7fHXC285MDd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C14C6C4CEE4;
-	Thu, 17 Apr 2025 22:08:31 +0000 (UTC)
-Date: Thu, 17 Apr 2025 18:10:10 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>, akpm@linux-foundation.org,
- linux-mm@kvack.org, mhiramat@kernel.org, andrii@kernel.org,
- kernel-team@meta.com, linux-kernel@vger.kernel.org, Mykyta Yatsenko
- <yatsenko@meta.com>
-Subject: Re: [PATCH mm] maccess: fix strncpy_from_user_nofault empty string
- handling
-Message-ID: <20250417181010.3cc5777f@gandalf.local.home>
-In-Reply-To: <CAEf4BzbVPQ=BjWztmEwBPRKHUwNfKBkS3kce-Rzka6zvbQeVpg@mail.gmail.com>
-References: <20250417152808.722409-1-mykyta.yatsenko5@gmail.com>
-	<CAEf4BzbVPQ=BjWztmEwBPRKHUwNfKBkS3kce-Rzka6zvbQeVpg@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744927901; c=relaxed/simple;
+	bh=PE+TjdUopxSp8BkidKGkIbGWLaP1+fCPSat8nwKEV50=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M4dt2yTraRmPbV7VE4GgVBfht3KR4cdQMfeO0NbtaQGtQMq71dD/RboBUngIVR4qt6FN4P33OvIw2DGyQb8zIzKRP62aLcpN3OkjuX/FBwOsh3QeW4VZwx1Xez001/GKJjdB77ZJ/44Iz9gGdEcFyfPUlaTih68VGXJH+oOgmmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Sb4W16iu; arc=none smtp.client-ip=80.12.242.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Sb4W16iu"
+Received: from localhost.localdomain ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id 5XJDuPve2ZSWC5XJHufye6; Fri, 18 Apr 2025 00:02:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1744927335;
+	bh=jtp8GYhjZseAjbyWNNzA/7uP91uP4NjtvHa4qyzcjGA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=Sb4W16iujH9X2qQIj0Drugo+28BaX6cz1IW1IjU0SCgR/iHoMQkIOcGRqYmIggfbt
+	 lIJDs+oAbaDbpe+8J000u+0+cdGbQxmRCsZh/aCcDXfCFHLf6IMtYyLpLSSxCff9Rd
+	 orAFpHvZmZRJGoMmwYDsXhFgIhHw//k+C/75XTuqIRwtqNzN5nzvIf1k07qt2UHT9u
+	 oaGsXg6VSZfTxeuxDVMJebvlSS1RWesZXDyAhP6KMfGrPK/ebbcFIHkNzVymdmbslr
+	 ChExic6tYWiafGJo6GECbLwX8xksxi2cohEtMVnBagrCaLYNZEpXYU+UCqsxZo7u+b
+	 eBYKZ7UWHCMrQ==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 18 Apr 2025 00:02:15 +0200
+X-ME-IP: 90.11.132.44
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Ming Qian <ming.qian@nxp.com>,
+	Zhou Peng <eagle.zhou@nxp.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-media@vger.kernel.org
+Subject: [PATCH] media: amphion: Slightly simplify vpu_core_register()
+Date: Fri, 18 Apr 2025 00:01:58 +0200
+Message-ID: <e59b3387479fcdaa4ae0faf9fe30eb92a8f6034b.1744927294.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Thu, 17 Apr 2025 13:44:48 -0700
-Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+"vpu_core->msg_buffer_size" is unused out-side of vpu_core_register().
+There is no need to save this value in struct vpu_core.
 
-> > @@ -808,7 +809,9 @@ static __always_inline char *test_string(char *str)
-> >         kstr = ubuf->buffer;
-> >
-> >         /* For safety, do not trust the string pointer */
-> > -       if (!strncpy_from_kernel_nofault(kstr, str, USTRING_BUF_SIZE))
-> > +       cnt = strncpy_from_kernel_nofault(kstr, str, USTRING_BUF_SIZE);
-> > +       /* Return null if empty string or error */
-> > +       if (cnt <= 1)
-> >                 return NULL;  
-> 
-> I wouldn't touch this part and leave it up to Steven to fix (if he
-> agrees it needs fixing). Current logic seems wrong already, as it
-> won't correctly handle -EFAULT. And, on the other hand, there is
-> nothing wrong or special about empty string, so I don't think it needs
-> special handling. Let's drop these changes in trace_events_filter.c?
+Remove it and use a local variable instead.
 
-Bah, it is wrong. I don't usually use filtering on strings much, but come
-to think of it, the last time I tried, it didn't work, but I found another
-way to get what I was looking for, and didn't look deeper into it.
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/media/platform/amphion/vpu.h      | 1 -
+ drivers/media/platform/amphion/vpu_core.c | 7 ++++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-I only care if it faulted or not. I don't care about it just copying zero
-bytes. It should have been:
+diff --git a/drivers/media/platform/amphion/vpu.h b/drivers/media/platform/amphion/vpu.h
+index 22f0da26ccec..1451549c9dd2 100644
+--- a/drivers/media/platform/amphion/vpu.h
++++ b/drivers/media/platform/amphion/vpu.h
+@@ -162,7 +162,6 @@ struct vpu_core {
+ 	struct delayed_work msg_delayed_work;
+ 	struct kfifo msg_fifo;
+ 	void *msg_buffer;
+-	unsigned int msg_buffer_size;
+ 
+ 	struct vpu_dev *vpu;
+ 	void *iface;
+diff --git a/drivers/media/platform/amphion/vpu_core.c b/drivers/media/platform/amphion/vpu_core.c
+index 8df85c14ab3f..da00f5fc0e5d 100644
+--- a/drivers/media/platform/amphion/vpu_core.c
++++ b/drivers/media/platform/amphion/vpu_core.c
+@@ -250,6 +250,7 @@ static void vpu_core_get_vpu(struct vpu_core *core)
+ static int vpu_core_register(struct device *dev, struct vpu_core *core)
+ {
+ 	struct vpu_dev *vpu = dev_get_drvdata(dev);
++	unsigned int buffer_size;
+ 	int ret = 0;
+ 
+ 	dev_dbg(core->dev, "register core %s\n", vpu_core_type_desc(core->type));
+@@ -263,14 +264,14 @@ static int vpu_core_register(struct device *dev, struct vpu_core *core)
+ 	}
+ 	INIT_WORK(&core->msg_work, vpu_msg_run_work);
+ 	INIT_DELAYED_WORK(&core->msg_delayed_work, vpu_msg_delayed_work);
+-	core->msg_buffer_size = roundup_pow_of_two(VPU_MSG_BUFFER_SIZE);
+-	core->msg_buffer = vzalloc(core->msg_buffer_size);
++	buffer_size = roundup_pow_of_two(VPU_MSG_BUFFER_SIZE);
++	core->msg_buffer = vzalloc(buffer_size);
+ 	if (!core->msg_buffer) {
+ 		dev_err(core->dev, "failed allocate buffer for fifo\n");
+ 		ret = -ENOMEM;
+ 		goto error;
+ 	}
+-	ret = kfifo_init(&core->msg_fifo, core->msg_buffer, core->msg_buffer_size);
++	ret = kfifo_init(&core->msg_fifo, core->msg_buffer, buffer_size);
+ 	if (ret) {
+ 		dev_err(core->dev, "failed init kfifo\n");
+ 		goto error;
+-- 
+2.49.0
 
-	if (strncpy_from_kernel_nofault(kstr, str, USTRING_BUF_SIZE) < 0)
-
-> 
-> >         return kstr;
-> >  }
-> > @@ -818,6 +821,7 @@ static __always_inline char *test_ustring(char *str)
-> >         struct ustring_buffer *ubuf;
-> >         char __user *ustr;
-> >         char *kstr;
-> > +       int cnt;
-> >
-> >         if (!ustring_per_cpu)
-> >                 return NULL;
-> > @@ -827,7 +831,9 @@ static __always_inline char *test_ustring(char *str)
-> >
-> >         /* user space address? */
-> >         ustr = (char __user *)str;
-> > -       if (!strncpy_from_user_nofault(kstr, ustr, USTRING_BUF_SIZE))
-
-This is broken too.
-
-As this isn't relying on the other change in this patch, I'll just fix it
-myself. I'm getting a pull request ready anyway.
-
-Thanks!
-
--- Steve
-
-
-> > +       cnt = strncpy_from_user_nofault(kstr, ustr, USTRING_BUF_SIZE);
-> > +       /* Return null if empty string or error */
-> > +       if (cnt <= 1)
-> >                 return NULL;  
-> 
-> ditto
-> 
-> >
