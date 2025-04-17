@@ -1,116 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3C5218EBA;
-	Thu, 17 Apr 2025 07:22:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0C0217F36;
+	Thu, 17 Apr 2025 07:22:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744874538; cv=none; b=iwOltyeZJmZ2VDga3tTLu5zGPEUjlT7PAkOlrvGXoqt9opbVUwZj14/ZovcwF0klhkgZ1S/+fnxNgGnGoM64K4X6LCsHhH454YkFu19ma9n41Ugv4auhNhrfLxOhotb4YWDB9L7Wc8bBsVcb1r9pgOBwaoxI8PzdvCHii5/5OBM=
+	t=1744874562; cv=none; b=GD9SYXd2GGAo3032z7o6+1n3ERdZdA9QCOXakFcfpdKosVumOM/UDyifmmXsiIQjv3qZjhQpxqHSqI2Ya6M0MjPbdIpZEA5qUCB4np8XahseXM1N6IsR+jwl4VvvCmb2AS+Yts+30buldP9NZvmrSUEfWwiKezSWuGZGxPkiCL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744874538; c=relaxed/simple;
-	bh=njd0Ctie5/NJ/u0nIFo0b6CFaL7VXTbcT9S6B/AcLZ8=;
+	s=arc-20240116; t=1744874562; c=relaxed/simple;
+	bh=0S+KpR1ZAK42RiiHVxB5z5tMzy93HJ/YyCYV0Oi7ty0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KyqT65NwdppDitsStT37MoST3ULHZz7+v8TNWEfQDU3Wnamy3BC1dyHh/60VBl/sE4ZTXyn3BsCrJJvslWG61lAcjof6NNb2Oc9E2/HLGHYprGPpBLn3AxaRINJW1IVO4vn1nuRd9ph6DaBVdgazErASpGJFJ5FpN15tJ2CcTy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NpvjqSLw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dz+aL7wVd6feq8VRVtx9fSAgR5QUdvjLLdb5hPlGzitjKrvfL4ot4ARzoc20G09VELlY5sOSP8KapPCAs1Qril0VDe9ZY28gZJKQAKVgqrXjlzXqVwG/TOEd4t7e03ao+zFShYL7jHsGyHRYcqs3WV5L75cFT6oD+JBer0GU7es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b7a58EL2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NpvjqSLw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F4F0C4CEE4;
-	Thu, 17 Apr 2025 07:22:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b7a58EL2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD22AC4CEE7;
+	Thu, 17 Apr 2025 07:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744874537;
-	bh=njd0Ctie5/NJ/u0nIFo0b6CFaL7VXTbcT9S6B/AcLZ8=;
+	s=k20201202; t=1744874561;
+	bh=0S+KpR1ZAK42RiiHVxB5z5tMzy93HJ/YyCYV0Oi7ty0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NpvjqSLwnO5P4oov6RnrAJXFvg5T2B5X5w7SVvL3sYujMH5bf0IpFDTcWNfIXY8sH
-	 ISYUjs240LTbyzWxSlvk3SclXPnsjL3106pN+tJLAWjKmn3VHFF7Dkv7sLwEFGnaQL
-	 jbPsZicrvOsj6AzaMl8u9RifyRNNSY+vQLaAqOVjKE6IaSyVRqwQKv1FBYREQLvizv
-	 6Qlexqzlh8L17ECPL6ZfzNikEUw2Vq+xekJevwisVsuJUZ75bXsBYkN4RMqBao9HPu
-	 XjXV4gJprVmX3DLafD6kKfmLB3oyRheCLo9FBevmpnsY5IZ2zaxzsMPIxv3HYCxZNi
-	 xjti22U8Axj/Q==
-Date: Thu, 17 Apr 2025 09:22:12 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org, kw@linux.com,
-	bhelgaas@google.com, heiko@sntech.de,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	jingoohan1@gmail.com, thomas.richard@bootlin.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
-Message-ID: <aACsJPkSDOHbRAJM@ryzen>
-References: <20250416151926.140202-1-18255117159@163.com>
- <aACoEpueUHBLjgbb@ryzen>
- <85643fe4-c7df-4d64-e852-60b66892470a@rock-chips.com>
+	b=b7a58EL2fd9RmleKNHO/3n0vOEeE2AToG5GTLnbZ+uQDI+I+GAEgnl5fma+849t7E
+	 Wk/SrtOMNdJkJTI0mU7/7NMLONooC7su6n24L+zNIPdB2pb6GmIPzFwUW6AY/ynsM6
+	 MqIfFhyvp3VJSBap/7NrfI2e/P2UiCTbG4HksW1AJQn1gD6xuN/1pRTMIYG0hoAmCE
+	 yM4btPDfx/MOnTswdBGOUX8OqrS6r2LWn7HvigUj0aGJqjwz2oI//fXDUkMW6vakFp
+	 beh08dViYlr3gdkTRyywfLs56wu34GTvdf4R4BJLgYL6LoeknZKKr/qGvp+kvBB8W0
+	 FuuqAPGNVfyzg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u5Ja5-000000008O2-1v5L;
+	Thu, 17 Apr 2025 09:22:41 +0200
+Date: Thu, 17 Apr 2025 09:22:41 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	"Rob Herring (Arm)" <robh@kernel.org>, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] cpufreq: fix compile-test defaults
+Message-ID: <aACsQUADxYHTQDi1@hovoldconsulting.com>
+References: <20250417065535.21358-1-johan+linaro@kernel.org>
+ <a0739b6b-b043-47f1-8044-f6ed68d39f2c@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <85643fe4-c7df-4d64-e852-60b66892470a@rock-chips.com>
+In-Reply-To: <a0739b6b-b043-47f1-8044-f6ed68d39f2c@linaro.org>
 
-On Thu, Apr 17, 2025 at 03:08:34PM +0800, Shawn Lin wrote:
-> 在 2025/04/17 星期四 15:04, Niklas Cassel 写道:
-> > Hello Hans,
+On Thu, Apr 17, 2025 at 09:10:09AM +0200, Krzysztof Kozlowski wrote:
+> On 17/04/2025 08:55, Johan Hovold wrote:
+> > Commit 3f66425a4fc8 ("cpufreq: Enable COMPILE_TEST on Arm drivers")
+> > enabled compile testing of most Arm CPUFreq drivers but left the
+> > existing default values unchanged so that many drivers are enabled by
+> > default whenever COMPILE_TEST is selected.
 > > 
-> > On Wed, Apr 16, 2025 at 11:19:26PM +0800, Hans Zhang wrote:
-> > > The RK3588's PCIe controller defaults to a 128-byte max payload size,
-> > > but its hardware capability actually supports 256 bytes. This results
-> > > in suboptimal performance with devices that support larger payloads.
+> > This specifically results in the S3C64XX CPUFreq driver being enabled
+> > and initialised during boot of non-S3C64XX platforms with the following
+> > error logged:
 > > 
-> > Patch looks good to me, but please always reference the TRM when you can.
-> > 
-> > Before this patch:
-> > 		DevCap: MaxPayload 256 bytes
-> > 		DevCtl: MaxPayload 128 bytes
-> > 
-> > 
-> > As per rk3588 TRM, section "11.4.3.8 DSP_PCIE_CAP Detail Registers Description"
-> > 
-> > DevCap is per the register description of DSP_PCIE_CAP_DEVICE_CAPABILITIES_REG,
-> > field PCIE_CAP_MAX_PAYLOAD_SIZE.
-> > Which claims that the value after reset is 0x1 (256B).
-> > 
-> > DevCtl is per the register description of
-> > DSP_PCIE_CAP_DEVICE_CONTROL_DEVICE_STATUS, field PCIE_CAP_MAX_PAYLOAD_SIZE_CS.
-> > Which claims that the reset value is 0x0 (128B).
-> > 
-> > Both of these match the values above.
-> > 
-> > As per the description of PCIE_CAP_MAX_PAYLOAD_SIZE_CS:
-> > "Permissible values that
-> > can be programmed are indicated by the Max_Payload_Size
-> > Supported field (PCIE_CAP_MAX_PAYLOAD_SIZE) in the Device
-> > Capabilities (DEVICE_CAPABILITIES_REG) register (for more
-> > details, see section 7.5.3.3 of PCI Express Base Specification)."
-> > 
-> > So your patch looks good.
-> > 
-> > I guess I'm mostly surprised that the e.g. pci_configure_mps() does not
-> > already set DevCtl to the max(DevCap.MPS of the host, DevCap.MPS of the
-> > endpoint).
-> > 
-> > Apparently pci_configure_mps() only decreases MPS from the reset values?
-> > It never increases it?
-> > 
+> > 	cpufreq: Unable to obtain ARMCLK: -2
 > 
-> Actually it does:
+> But isn't this fixed by my commit (d4f610a9bafd)? How is it possible to
+> reproduce above error when you are NOT test compiling?
+
+Correct, but this was how I found the issue and motivation for
+backporting the fixes including yours which was not marked for stable.
+ 
+> > Commit d4f610a9bafd ("cpufreq: Do not enable by default during compile
+> > testing") recently fixed most of the default values, but two entries
+> > were missed
 > 
-> https://github.com/torvalds/linux/blob/master/Documentation/admin-guide/kernel-parameters.txt#L4757
+> That's not really a bug to be fixed. No things got worse by missing two
+> entries, so how this part could be called something needing fixing?
 
-If that is the case, then explain the before/after with Hans lspci output here:
-https://lore.kernel.org/linux-pci/bb40385c-6839-484c-90b2-d6c7ecb95ba9@163.com/
+I'm not saying it's buggy, I'm explaining that the identified issue was
+recently fixed partially.
+ 
+> >  and two could use a more specific default condition.
+> 
+> Two entries for more specific default - before they were ALWAYS default,
+> so again I narrowed it from wide default. Nothing to fix here. You can
+> narrow it further but claiming that my commit made something worse looks
+> like a stretch - and that's a meaning of fixing someone's commit.
 
-His patch changes the default value of DevCtl.MPS (from 128B to 256B), but if
-pci_configure_mps() can bump DevCtl.MPS to a higher value, his patch should not
-be needed, since the EP (an NVMe SSD in his case) has DevCap.MPS 512B, and the
-RC itself has DevCap.MPS 256B.
+Relax. I'm not blaming you for doing anything wrong here.
 
-Seems like we are missing something here.
+I sent a fix for the same issues you addressed and Viresh let me know
+that he had already merged a fix for most of the issues:
 
+	https://lore.kernel.org/lkml/20250416134331.7604-1-johan+linaro@kernel.org/
+ 
+> > Fix the default values for drivers that can be compile tested and that
+> > should be enabled by default when not compile testing.
+> > 
+> > Fixes: 3f66425a4fc8 ("cpufreq: Enable COMPILE_TEST on Arm drivers")
+> 
+> 
+> > Fixes: d4f610a9bafd ("cpufreq: Do not enable by default during compile testing")
+> 
+> That's not correct tag - it introduced no new issues, did not make
+> things worse, so nothing to fix there, if I understand correctly.
 
-Kind regards,
-Niklas
+Fair enough, I could have used dependency notation for this one.
+
+Let me do that in v3.
+
+> > Changes in v2:
+> >  - rebase on commit d4f610a9bafd ("cpufreq: Do not enable by default
+> >    during compile testing")
+
+Johan
