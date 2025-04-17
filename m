@@ -1,153 +1,184 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 513EA22DF86;
-	Thu, 17 Apr 2025 08:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B1AB22FDEF;
+	Thu, 17 Apr 2025 08:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744877315; cv=none; b=a7U88fl7f3/JoXMXggFAnxbb5u8aNxWvjljcgOcjwSIa/93brVfQFZNoGlvNGt0K0jol/2lOnjVIMtZipIbdQsig+HU7OkAdH4v0zsw1nLJWVXzLAF+nWkBKUzFNm16WTwjdK+6xsR64lDtVo3xrZeyDa9AYoQFQnYXiK6prcmM=
+	t=1744877319; cv=none; b=R9cPz+yHCYgbYhka+cNi+JfXsF4qD4X8xThCTR3KkzLY+ZlaH3tUiTbrOZvJXV7E6a3ddDWzVeOMt1yseb8LWc8YN9yhlnxdYRumsXEfxUmYzdXE/a3PUOBgrW5QI0+/MMO6iCXxZZiv+lkZ7s9j6QMA4DqKnxkWiR30pGjNxQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744877315; c=relaxed/simple;
-	bh=wsSYuEeEfzcuxI4QZjsSIfleahK+9e1G2ym2wIqY87M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VJwcGBtw99HkDTY4fdUUTzRW/mrazFBp9OFEw30hbGTi2SsYrHtuCPUQgWPOKckogzcEVeApWQj8GJCLhu1iPTKua2yEvPzSiCOA+OpvGD4IK6h8bwJO/TnAzYHOvgLBvWnBdSE3niwmB46E5S2VuHglOL2rAimNRcHOOtqehf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=RYGvreS4; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744877319; c=relaxed/simple;
+	bh=oAkNIcTrbsDjg2rCO20P27VhVYo/dVZFJ2QIK1NQ5hY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=i3atIN9ZuHwcLZt6F/ZcvO3zUB7K9TOwlBVg2N0Br4ndhITVCHlSvNR0c5GoFVgI83g1EKVO0jkMIQz5OCR6u5HE9aVCR0cDnlx+X9q39uje4jUbVOy3Xr5wAhgISjnNAwG2JDKAwJT/lQaGUT3APqrNS04wot24PubQk6yox0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=dRjKZ2jz; arc=none smtp.client-ip=220.197.31.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="RYGvreS4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=HlgWpR09t/bSRSkE9n5lqQqIokkyYXuy0tioT6D2/gU=;
-	b=RYGvreS4Se2WbeLN10BDpFsbNJdMWqT3wCNTLrz8G2chlNdbl9oubsIcSiZp09
-	zKFwqAeB1t2wfiAGmwsN8s6b+irHTW/vvx8X+7ra05p6uoOxwLQpeVAzHA8VGUcq
-	sVA8EuQdLYybGjyc3Tk1jt/NssiajnDWEm1DjQg7z+GUk=
-Received: from [192.168.142.52] (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wAX613XtgBo09yjAg--.7973S2;
-	Thu, 17 Apr 2025 16:07:53 +0800 (CST)
-Message-ID: <52a2f6dc-1e13-4473-80f2-989379df4e95@163.com>
-Date: Thu, 17 Apr 2025 16:07:51 +0800
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="dRjKZ2jz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=5zMWL
+	w2oBotcMAyoCNuk8WRvwhj38gyFAUUeStJrHxg=; b=dRjKZ2jz7rRhF23qlb7mp
+	fFw0MqW0BKwbwsV0nVwkZSfr7wE+aUfahDTsn2aat5E7hGHbnbLTyBdtAtWwasIw
+	7SzgP1X+zOB6j/Z5s5QX8blhuVu+kItffFulRumLQBgYlKc4pPnxL/BPqgx1h+8J
+	Zg6NUFcfepBb2ZWax9plAA=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wD3BxOttgBoy+aUBA--.4732S3;
+	Thu, 17 Apr 2025 16:07:12 +0800 (CST)
+From: Honglei Wang <jameshongleiwang@126.com>
+To: tj@kernel.org,
+	void@manifault.com,
+	arighi@nvidia.com,
+	changwoo@igalia.com
+Cc: mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	joshdon@google.com,
+	brho@google.com,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	jameshongleiwang@126.com
+Subject: [PATCH 1/2] sched_ext: change the variable name for slice refill event
+Date: Thu, 17 Apr 2025 16:07:07 +0800
+Message-Id: <20250417080708.1333-2-jameshongleiwang@126.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20250417080708.1333-1-jameshongleiwang@126.com>
+References: <20250417080708.1333-1-jameshongleiwang@126.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
-To: Niklas Cassel <cassel@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
- heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
- jingoohan1@gmail.com, thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org
-References: <20250416151926.140202-1-18255117159@163.com>
- <aACoEpueUHBLjgbb@ryzen>
- <85643fe4-c7df-4d64-e852-60b66892470a@rock-chips.com>
- <aACsJPkSDOHbRAJM@ryzen>
- <ca283065-a48c-3b39-e70d-03d4c6c8a956@rock-chips.com>
- <aACyRp8S9c8azlw9@ryzen>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <aACyRp8S9c8azlw9@ryzen>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAX613XtgBo09yjAg--.7973S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCr4kCr47Jw4rArWrXryrZwb_yoWrGF18p3
-	y5Xa1Ykrs8tw45Jrs7t3Wv9rWYyFsxXFy5Wwn8JryUJwn0kr13tr4vkr4UKF17Xr4rGF4j
-	qFyUJryfX3WDAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UHrWwUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxcyo2gAsnuqcwAAsl
+X-CM-TRANSID:_____wD3BxOttgBoy+aUBA--.4732S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Gr4DXrW8Aw4Dtw4fAF1rtFb_yoW7CF48p3
+	W5G345tr48t3y2vrWFqF4ku3WaqrWFqw1qkF95W393ZF1jgwn0yFyYyrWaqFyYgrs5CF1S
+	kw4UKF43ArZY9rDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRRRRiUUUUU=
+X-CM-SenderInfo: 5mdpv2pkrqwzphlzt0bj6rjloofrz/1tbirwUyrWgArS3H+wACsj
 
+SCX_EV_ENQ_SLICE_DFL gives the impression that the event only occurs
+when the tasks were enqueued, which seems not accurate. What it actually
+means is the refilling with defalt slice, and this can occur either when
+enqueue or pick_task. Let's change the variable to
+SCX_EV_REFILL_SLICE_DFL.
 
+Signed-off-by: Honglei Wang <jameshongleiwang@126.com>
+---
+ kernel/sched/ext.c             | 22 +++++++++++-----------
+ tools/sched_ext/scx_qmap.bpf.c |  4 ++--
+ 2 files changed, 13 insertions(+), 13 deletions(-)
 
-On 2025/4/17 15:48, Niklas Cassel wrote:
-> On Thu, Apr 17, 2025 at 03:25:06PM +0800, Shawn Lin wrote:
->> 在 2025/04/17 星期四 15:22, Niklas Cassel 写道:
->>> On Thu, Apr 17, 2025 at 03:08:34PM +0800, Shawn Lin wrote:
->>>> 在 2025/04/17 星期四 15:04, Niklas Cassel 写道:
->>>>> Hello Hans,
->>>>>
->>>>> On Wed, Apr 16, 2025 at 11:19:26PM +0800, Hans Zhang wrote:
->>>>>> The RK3588's PCIe controller defaults to a 128-byte max payload size,
->>>>>> but its hardware capability actually supports 256 bytes. This results
->>>>>> in suboptimal performance with devices that support larger payloads.
->>>>>
->>>>> Patch looks good to me, but please always reference the TRM when you can.
->>>>>
->>>>> Before this patch:
->>>>> 		DevCap: MaxPayload 256 bytes
->>>>> 		DevCtl: MaxPayload 128 bytes
->>>>>
->>>>>
->>>>> As per rk3588 TRM, section "11.4.3.8 DSP_PCIE_CAP Detail Registers Description"
->>>>>
->>>>> DevCap is per the register description of DSP_PCIE_CAP_DEVICE_CAPABILITIES_REG,
->>>>> field PCIE_CAP_MAX_PAYLOAD_SIZE.
->>>>> Which claims that the value after reset is 0x1 (256B).
->>>>>
->>>>> DevCtl is per the register description of
->>>>> DSP_PCIE_CAP_DEVICE_CONTROL_DEVICE_STATUS, field PCIE_CAP_MAX_PAYLOAD_SIZE_CS.
->>>>> Which claims that the reset value is 0x0 (128B).
->>>>>
->>>>> Both of these match the values above.
->>>>>
->>>>> As per the description of PCIE_CAP_MAX_PAYLOAD_SIZE_CS:
->>>>> "Permissible values that
->>>>> can be programmed are indicated by the Max_Payload_Size
->>>>> Supported field (PCIE_CAP_MAX_PAYLOAD_SIZE) in the Device
->>>>> Capabilities (DEVICE_CAPABILITIES_REG) register (for more
->>>>> details, see section 7.5.3.3 of PCI Express Base Specification)."
->>>>>
->>>>> So your patch looks good.
->>>>>
->>>>> I guess I'm mostly surprised that the e.g. pci_configure_mps() does not
->>>>> already set DevCtl to the max(DevCap.MPS of the host, DevCap.MPS of the
->>>>> endpoint).
->>>>>
->>>>> Apparently pci_configure_mps() only decreases MPS from the reset values?
->>>>> It never increases it?
->>>>>
->>>>
->>>> Actually it does:
->>>>
->>>> https://github.com/torvalds/linux/blob/master/Documentation/admin-guide/kernel-parameters.txt#L4757
->>>
->>> If that is the case, then explain the before/after with Hans lspci output here:
->>> https://lore.kernel.org/linux-pci/bb40385c-6839-484c-90b2-d6c7ecb95ba9@163.com/
->>>
->>> His patch changes the default value of DevCtl.MPS (from 128B to 256B), but if
->>> pci_configure_mps() can bump DevCtl.MPS to a higher value, his patch should not
->>> be needed, since the EP (an NVMe SSD in his case) has DevCap.MPS 512B, and the
->>> RC itself has DevCap.MPS 256B.
->>>
->>> Seems like we are missing something here.
->>
->> So Hans, could you please help set pci=pcie_bus_safe or
->> pci=pcie_bus_perf in your cmdline, and see how lspci dump different
->> without your patch?
-> 
-> It seems that the default MPS strategy can be set using Kconfigs:
-> https://github.com/torvalds/linux/blob/v6.15-rc2/drivers/pci/pci.c#L126-L136
-> https://github.com/torvalds/linux/blob/v6.15-rc2/include/linux/pci.h#L1110-L1116
-> 
-> Note that the these Kconfigs are hidden behind CONFIG_EXPERT.
-> So unless you have explicitly set one of these Kconfigs, the default should be:
-> PCIE_BUS_DEFAULT,	/* Ensure MPS matches upstream bridge */
-
-
-Hi Niklas and Shawn,
-
-Thank you very much for your discussion and reply.
-
-I tested it on RK3588 and our platform. By setting pci=pcie_bus_safe, 
-the maximum MPS will be automatically matched in the end.
-
-So is my patch no longer needed? For RK3588, does the customer have to 
-configure CONFIG_PCIE_BUS_SAFE or pci=pcie_bus_safe?
-
-Also, for pci-meson.c, can the meson_set_max_payload be deleted?
-
-
-Best regards,
-Hans
-
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index 66bcd40a28ca..594087ac4c9e 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -1517,10 +1517,10 @@ struct scx_event_stats {
+ 	s64		SCX_EV_ENQ_SKIP_MIGRATION_DISABLED;
+ 
+ 	/*
+-	 * The total number of tasks enqueued (or pick_task-ed) with a
+-	 * default time slice (SCX_SLICE_DFL).
++	 * The total number of tasks slice refill with default time slice
++	 * (SCX_SLICE_DFL).
+ 	 */
+-	s64		SCX_EV_ENQ_SLICE_DFL;
++	s64		SCX_EV_REFILL_SLICE_DFL;
+ 
+ 	/*
+ 	 * The total duration of bypass modes in nanoseconds.
+@@ -2197,7 +2197,7 @@ static void do_enqueue_task(struct rq *rq, struct task_struct *p, u64 enq_flags,
+ 	 */
+ 	touch_core_sched(rq, p);
+ 	p->scx.slice = SCX_SLICE_DFL;
+-	__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
++	__scx_add_event(SCX_EV_REFILL_SLICE_DFL, 1);
+ local_norefill:
+ 	dispatch_enqueue(&rq->scx.local_dsq, p, enq_flags);
+ 	return;
+@@ -2205,7 +2205,7 @@ static void do_enqueue_task(struct rq *rq, struct task_struct *p, u64 enq_flags,
+ global:
+ 	touch_core_sched(rq, p);	/* see the comment in local: */
+ 	p->scx.slice = SCX_SLICE_DFL;
+-	__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
++	__scx_add_event(SCX_EV_REFILL_SLICE_DFL, 1);
+ 	dispatch_enqueue(find_global_dsq(p), p, enq_flags);
+ }
+ 
+@@ -3296,7 +3296,7 @@ static struct task_struct *pick_task_scx(struct rq *rq)
+ 		p = prev;
+ 		if (!p->scx.slice) {
+ 			p->scx.slice = SCX_SLICE_DFL;
+-			__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
++			__scx_add_event(SCX_EV_REFILL_SLICE_DFL, 1);
+ 		}
+ 	} else {
+ 		p = first_local_task(rq);
+@@ -3313,7 +3313,7 @@ static struct task_struct *pick_task_scx(struct rq *rq)
+ 				scx_warned_zero_slice = true;
+ 			}
+ 			p->scx.slice = SCX_SLICE_DFL;
+-			__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
++			__scx_add_event(SCX_EV_REFILL_SLICE_DFL, 1);
+ 		}
+ 	}
+ 
+@@ -3399,7 +3399,7 @@ static int select_task_rq_scx(struct task_struct *p, int prev_cpu, int wake_flag
+ 		if (cpu >= 0) {
+ 			p->scx.slice = SCX_SLICE_DFL;
+ 			p->scx.ddsp_dsq_id = SCX_DSQ_LOCAL;
+-			__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
++			__scx_add_event(SCX_EV_REFILL_SLICE_DFL, 1);
+ 		} else {
+ 			cpu = prev_cpu;
+ 		}
+@@ -4413,7 +4413,7 @@ static ssize_t scx_attr_events_show(struct kobject *kobj,
+ 	at += scx_attr_event_show(buf, at, &events, SCX_EV_DISPATCH_KEEP_LAST);
+ 	at += scx_attr_event_show(buf, at, &events, SCX_EV_ENQ_SKIP_EXITING);
+ 	at += scx_attr_event_show(buf, at, &events, SCX_EV_ENQ_SKIP_MIGRATION_DISABLED);
+-	at += scx_attr_event_show(buf, at, &events, SCX_EV_ENQ_SLICE_DFL);
++	at += scx_attr_event_show(buf, at, &events, SCX_EV_REFILL_SLICE_DFL);
+ 	at += scx_attr_event_show(buf, at, &events, SCX_EV_BYPASS_DURATION);
+ 	at += scx_attr_event_show(buf, at, &events, SCX_EV_BYPASS_DISPATCH);
+ 	at += scx_attr_event_show(buf, at, &events, SCX_EV_BYPASS_ACTIVATE);
+@@ -5148,7 +5148,7 @@ static void scx_dump_state(struct scx_exit_info *ei, size_t dump_len)
+ 	scx_dump_event(s, &events, SCX_EV_DISPATCH_KEEP_LAST);
+ 	scx_dump_event(s, &events, SCX_EV_ENQ_SKIP_EXITING);
+ 	scx_dump_event(s, &events, SCX_EV_ENQ_SKIP_MIGRATION_DISABLED);
+-	scx_dump_event(s, &events, SCX_EV_ENQ_SLICE_DFL);
++	scx_dump_event(s, &events, SCX_EV_REFILL_SLICE_DFL);
+ 	scx_dump_event(s, &events, SCX_EV_BYPASS_DURATION);
+ 	scx_dump_event(s, &events, SCX_EV_BYPASS_DISPATCH);
+ 	scx_dump_event(s, &events, SCX_EV_BYPASS_ACTIVATE);
+@@ -7313,7 +7313,7 @@ __bpf_kfunc void scx_bpf_events(struct scx_event_stats *events,
+ 		scx_agg_event(&e_sys, e_cpu, SCX_EV_DISPATCH_KEEP_LAST);
+ 		scx_agg_event(&e_sys, e_cpu, SCX_EV_ENQ_SKIP_EXITING);
+ 		scx_agg_event(&e_sys, e_cpu, SCX_EV_ENQ_SKIP_MIGRATION_DISABLED);
+-		scx_agg_event(&e_sys, e_cpu, SCX_EV_ENQ_SLICE_DFL);
++		scx_agg_event(&e_sys, e_cpu, SCX_EV_REFILL_SLICE_DFL);
+ 		scx_agg_event(&e_sys, e_cpu, SCX_EV_BYPASS_DURATION);
+ 		scx_agg_event(&e_sys, e_cpu, SCX_EV_BYPASS_DISPATCH);
+ 		scx_agg_event(&e_sys, e_cpu, SCX_EV_BYPASS_ACTIVATE);
+diff --git a/tools/sched_ext/scx_qmap.bpf.c b/tools/sched_ext/scx_qmap.bpf.c
+index 26c40ca4f36c..c3cd9a17d48e 100644
+--- a/tools/sched_ext/scx_qmap.bpf.c
++++ b/tools/sched_ext/scx_qmap.bpf.c
+@@ -784,8 +784,8 @@ static int monitor_timerfn(void *map, int *key, struct bpf_timer *timer)
+ 		   scx_read_event(&events, SCX_EV_DISPATCH_KEEP_LAST));
+ 	bpf_printk("%35s: %lld", "SCX_EV_ENQ_SKIP_EXITING",
+ 		   scx_read_event(&events, SCX_EV_ENQ_SKIP_EXITING));
+-	bpf_printk("%35s: %lld", "SCX_EV_ENQ_SLICE_DFL",
+-		   scx_read_event(&events, SCX_EV_ENQ_SLICE_DFL));
++	bpf_printk("%35s: %lld", "SCX_EV_REFILL_SLICE_DFL",
++		   scx_read_event(&events, SCX_EV_REFILL_SLICE_DFL));
+ 	bpf_printk("%35s: %lld", "SCX_EV_BYPASS_DURATION",
+ 		   scx_read_event(&events, SCX_EV_BYPASS_DURATION));
+ 	bpf_printk("%35s: %lld", "SCX_EV_BYPASS_DISPATCH",
+-- 
+2.45.2
 
