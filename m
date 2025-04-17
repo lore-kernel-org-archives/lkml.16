@@ -1,186 +1,189 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0E4226CE1
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4A021D5BF
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744877959; cv=none; b=LHT8XVl6mT9KEd2XtIQGhLztlo/DoG7N2DOIg1eM+EizdALNzrnCa8Av+cCMFl2TmAWlhFeMRRY91JVQ++OW3psqhTCq1QW8IoS0eL1YAibtMGq1Xw30guhhbN+CqHP8q27j4c6SndoAvSZmwKqZGmd+WPm42L4jl142rghgGPE=
+	t=1744878113; cv=none; b=qoqzenf+R1hg5iGf1p2YpdJLhl+74y+xaZcDAAvIkUiBdA2KXhnv4f6OYqqTpZnbGMv05QhgSRQMtfdhGmJx5AVvL4pjb2Ugmkn7PZNSxz2v09p2WHx+rFS8tYkh/NLOqnqAa4SHGCk4tLVgZxUUqbnUauTpvKlGRrk0cf9FkVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744877959; c=relaxed/simple;
-	bh=xCWd6ki5GrDlLykqmHH2klMoYvbEqjjVSnjddmgLQs4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZpcmYJg731EbPMlPK/Bqd+icpF9oLox/Vk8H78tuJ9HMkmx8UweWdtyFQG0VzsJLCldlNLmGnVFYfYORP/CZNtKXryxsVybE2o0pnTOwpTM1nZx7OkR0En9YwrS4YqRyHLzIlVrsTct29k4chNd3oyLIcFbtUGTOq28bJJycG5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=s0Mj1sVD; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744878113; c=relaxed/simple;
+	bh=/O9PzffT0UkF38g6YsQfm2ehvWBdBRlM1qDTFBNKPcg=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=uCXuni0/+B/OkxkDi3KMgn0FjCJM2aH5BFiG0VPowXWw3lGFsXKfAucrXoQgASiRBtGVwj3uMF+aJU7ScC7EV1wuyb3gmhiF/qjbzTnX7OsL9z+LsX5roqk9UrrUeS6mVspP+kCClWJ8kHkjMKBcYhbxgkMxwwHW6xX9deqovKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=don8ttsG; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="s0Mj1sVD"
-Message-ID: <c11e3511-62b1-4c6a-aadf-7e0939fda9f7@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744877952;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MFGnHY+VW4c1DYMChWjV1PIKxfT0t/ucmTyO7p9u9R4=;
-	b=s0Mj1sVDlzq7lr255WnuuMxP8xJqKJf4R+xdCGn8SdUfUBq17aXWB3GvCuLcrRUyHJqvDk
-	AVY4ZpxW02/kJ4EgB4Bm0xUd9R6JS06OpXRbX27mBCvJNj7TemHisT3oR/FjVHwCzleGUx
-	SEmdsJjlpNu+GK+Id6I0ufB60TWPvjM=
-Date: Thu, 17 Apr 2025 16:18:53 +0800
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="don8ttsG"
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250417082141epoutp031844842df57d9f390ff022dff6ace393~3DWN5BRi02007320073epoutp03r
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:21:41 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250417082141epoutp031844842df57d9f390ff022dff6ace393~3DWN5BRi02007320073epoutp03r
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744878101;
+	bh=nKe4i8h6okYt25emOV7WfFmaZZU5uL7Xb8zHj/J4a4c=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=don8ttsGE+XWMOQjR52294VgyDel9rFbIaPPQdh91Fh61M+vR9+ELCtYhSt+bbkKS
+	 yL0zslYAsIVsuiIVk2uDDVfoyiTDJgEm9UkdhLV9lTQ5LAS1440OwRsvr0mRuE5eLt
+	 u2K0gdeWc61v1wI4g+WocIc2xqX2u0NZ+Y/1r/74=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas1p4.samsung.com (KnoxPortal) with ESMTPS id
+	20250417082140epcas1p48d7a4439fa3773be1ee9784e78e6fd63~3DWNCgvbu2991529915epcas1p4F;
+	Thu, 17 Apr 2025 08:21:40 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.36.226]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4ZdW841mrLz6B9m5; Thu, 17 Apr
+	2025 08:21:40 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+	epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+	3B.72.10191.41AB0086; Thu, 17 Apr 2025 17:21:40 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250417082139epcas1p3ca8595055b368abd970300e9422e3515~3DWMJPt_01730217302epcas1p38;
+	Thu, 17 Apr 2025 08:21:39 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250417082139epsmtrp2dc85a27f3e86f17c5141280daa730411~3DWMH6Rta1656716567epsmtrp2M;
+	Thu, 17 Apr 2025 08:21:39 +0000 (GMT)
+X-AuditID: b6c32a39-0213c240000027cf-84-6800ba146716
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	D7.F2.08805.31AB0086; Thu, 17 Apr 2025 17:21:39 +0900 (KST)
+Received: from dh0421hwang02 (unknown [10.253.101.58]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250417082139epsmtip2d388a92515101398af77802a15043ec1~3DWL6ohPs1317113171epsmtip2w;
+	Thu, 17 Apr 2025 08:21:39 +0000 (GMT)
+From: "DooHyun Hwang" <dh0421.hwang@samsung.com>
+To: "'Avri Altman'" <Avri.Altman@sandisk.com>, <linux-scsi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <alim.akhtar@samsung.com>,
+	<avri.altman@wdc.com>, <bvanassche@acm.org>,
+	<James.Bottomley@HansenPartnership.com>, <martin.petersen@oracle.com>,
+	<peter.wang@mediatek.com>, <manivannan.sadhasivam@linaro.org>,
+	<quic_mnaresh@quicinc.com>
+Cc: <grant.jung@samsung.com>, <jt77.jang@samsung.com>,
+	<junwoo80.lee@samsung.com>, <jangsub.yi@samsung.com>,
+	<sh043.lee@samsung.com>, <cw9316.lee@samsung.com>,
+	<sh8267.baek@samsung.com>, <wkon.kim@samsung.com>
+In-Reply-To: <PH7PR16MB6196EF7F7A1862B48B66C5C5E5BC2@PH7PR16MB6196.namprd16.prod.outlook.com>
+Subject: RE: [PATCH 1/2] scsi: ufs: Add an enum for ufs_trace to check ufs
+ cmd error
+Date: Thu, 17 Apr 2025 17:21:39 +0900
+Message-ID: <055d01dbaf71$be2da7f0$3a88f7d0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] tools/drgn: Add script to display page state for a given
- PID and VADDR
-To: Omar Sandoval <osandov@osandov.com>
-Cc: paulmck@kernel.org, Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-toolchains@vger.kernel.org, linux-mm@kvack.org,
- Ye Liu <liuye@kylinos.cn>, linux-debuggers@vger.kernel.org
-References: <20250415075024.248232-1-ye.liu@linux.dev>
- <20250415191414.a64de2d228ab5f43a5390acf@linux-foundation.org>
- <42f50a48-10da-4739-9e51-f865fbf04bdd@linux.dev>
- <098e977c-55cd-498b-bd36-725333c06210@dorminy.me>
- <7e45afc8-dde0-481a-b0bf-0237f551ebe0@paulmck-laptop>
- <665652ac-2e94-48b4-bf47-32870b823464@linux.dev>
- <aACaf4_molKromnT@telecaster>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Ye Liu <ye.liu@linux.dev>
-In-Reply-To: <aACaf4_molKromnT@telecaster>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQEmYeTjtFjYRI1QNWxgWL0Y7ybfIwITLn2gAaoUPAICNqyVwLTieWog
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOJsWRmVeSWpSXmKPExsWy7bCmga7ILoYMg78ruCwezNvGZvFu/RYm
+	i5c/r7JZTPvwk9lixqk2Votff9ezW2zs57Do2DqZyWLH8zPsFrv+NjNZXN41h82i+/oONou7
+	LZ2sFsuP/2Oy2PrpN6vFt74n7BZNf/axWFw7c4LVYvOlbywOwh6Xr3h7TJt0is3jzrU9bB4t
+	J/ezeHx8eovFY+KeOo++LasYPaatOc/k8XmTnEf7gW6mAK6obJuM1MSU1CKF1Lzk/JTMvHRb
+	Je/geOd4UzMDQ11DSwtzJYW8xNxUWyUXnwBdt8wcoMeUFMoSc0qBQgGJxcVK+nY2RfmlJakK
+	GfnFJbZKqQUpOQVmBXrFibnFpXnpenmpJVaGBgZGpkCFCdkZMy5FFUwQquidt5m5gbGPt4uR
+	k0NCwETi5sppLCC2kMAORok1m3W6GLmA7E+MEltuXmCCcL4xSjw98ZkFpuP2rZfMEIm9jBL3
+	ft1hh3BeM0ocnDWLHaSKTcBAYvKxN2wgCRGB+0wSXU9vgrUwC1xnlPh57wsTSBWnQKzErXs7
+	gDo4OIQFwiQe/jYCCbMIqEos//eQDcTmFbCU2He0mx3CFpQ4OfMJ2BnMAvIS29/OYYY4SUHi
+	59NlrCC2iICbxJsTa6BqRCRmd7aB7ZUQmMwp0fR4IyNEg4vE5P/H2SFsYYlXx7dA2VISn9/t
+	ZYOwiyWunDsLZbcwSjzqyICw7SWaW5vZQG5mFtCUWL9LH2IXn8S7rz2sIGEJAV6JjjYhiGo1
+	icX/vgNtZQeyZSQauSGiHhKP296wTGBUnIXkr1lI/pqF5P5ZCKsWMLKsYhRLLSjOTU8tNiww
+	hUd1cn7uJkZwitey3ME4/e0HvUOMTByMhxglOJiVRHjPmf9LF+JNSaysSi3Kjy8qzUktPsRo
+	CgzpicxSosn5wCyTVxJvaGJpYGJmZGJhbGlspiTOu+fj03QhgfTEktTs1NSC1CKYPiYOTqkG
+	Jv4jm4/0qb0y++Aa1bQ0bW3t56mchv/+HXNYpFJ20N133iXn6uObTx63VNRmdIm9f+AmU8zj
+	e1VLvXx9t29w3jHnQ0r3z4kdjaInV7t/Ndn88cFnyzdG3m9F1lkGKj1a8ufqbG+rZGtHk1Kt
+	zybOUYnB1ef37V4xf/OiS5fVpb5zx97hKYotO/47bNYMxl8LHTI0X1lHWadPuFTuP/HCjsw/
+	DL+naDUWTv0gqnD1hOtZYdV19/fPP6d89/MugVPC6ts0/P5Zsk3cJjtV8IhNUuGtiphJM7w3
+	vJIWTmhplq1u4PydvZQrQ1lgTfL0w7v+M/Hz5ce92pVSr/Pb1Hp5f9aywK3VIj7ZmTNPZe0J
+	t1ZiKc5INNRiLipOBADTcn9megQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCIsWRmVeSWpSXmKPExsWy7bCSvK7wLoYMg5/blSwezNvGZvFu/RYm
+	i5c/r7JZTPvwk9lixqk2Votff9ezW2zs57Do2DqZyWLH8zPsFrv+NjNZXN41h82i+/oONou7
+	LZ2sFsuP/2Oy2PrpN6vFt74n7BZNf/axWFw7c4LVYvOlbywOwh6Xr3h7TJt0is3jzrU9bB4t
+	J/ezeHx8eovFY+KeOo++LasYPaatOc/k8XmTnEf7gW6mAK4oLpuU1JzMstQifbsErowZl6IK
+	JghV9M7bzNzA2MfbxcjJISFgInH71kvmLkYuDiGB3YwS++avZoFIyEh039/L3sXIAWQLSxw+
+	XAxR85JR4um3NrAaNgEDicnH3rCBJEQEXjJJLLvzlxHEYRa4zyixaNtUdoiWCUwSqy5cZAdp
+	4RSIlbh1bweYLSwQInH820Ewm0VAVWL5v4dsIDavgKXEvqPd7BC2oMTJmU9YQM5gFtCTaNvI
+	CBJmFpCX2P52DjPEpQoSP58uYwWxRQTcJN6cWMMCUSMiMbuzjXkCo/AsJJNmIUyahWTSLCQd
+	CxhZVjFKphYU56bnFhsWGOWllusVJ+YWl+al6yXn525iBEe8ltYOxj2rPugdYmTiYDzEKMHB
+	rCTCe878X7oQb0piZVVqUX58UWlOavEhRmkOFiVx3m+ve1OEBNITS1KzU1MLUotgskwcnFIN
+	TDxpP+/q/b9TFPlkpaXFBIWtogtq31+Zk7HeJHuptuVGmWhJp56m2PLHt40lixUb5yZL7Plv
+	a2R6jbVC53jFQalLpcl71vHWTNwgGie9JE75o4HiG4ui8yvvGNrpmQcW5smXZJ/lKefOMN9z
+	wbrnhumi9i1ruHMdzunmxh+5nNOdeDXVh6/7K4v6pL7OnQsPv87Z7We3TfSvvoSjiKjno2ua
+	Z3JCd1sVFPoHq2qa9HsIW/9LYZNOCX8oY/vnQGGyhN9tgToTrfna8bO3t+gcCJ13aGpDHesC
+	ZYGT0pPNGjzmqFyW485/K79L2Mqr9fzV0twPbXlszZ4s+06nBK18qBkTd630n9jym/s8y5RY
+	ijMSDbWYi4oTAQswajtnAwAA
+X-CMS-MailID: 20250417082139epcas1p3ca8595055b368abd970300e9422e3515
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250417023417epcas1p31338c05e70e61b0a5e96d0ac0910713d
+References: <20250417023405.6954-1-dh0421.hwang@samsung.com>
+	<CGME20250417023417epcas1p31338c05e70e61b0a5e96d0ac0910713d@epcas1p3.samsung.com>
+	<20250417023405.6954-2-dh0421.hwang@samsung.com>
+	<PH7PR16MB6196EF7F7A1862B48B66C5C5E5BC2@PH7PR16MB6196.namprd16.prod.outlook.com>
+
+> > There is no trace when a ufs uic cmd error occurs.
+> > So, add "UFS_CMD_ERR" enumeration to ufs_trace_str_t.
+> >
+> > Signed-off-by: DooHyun Hwang <dh0421.hwang@samsung.com>
+> > ---
+> >  drivers/ufs/core/ufs_trace.h | 1 +
+> >  include/ufs/ufs.h            | 2 +-
+> >  2 files changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/ufs/core/ufs_trace.h b/drivers/ufs/core/ufs_trace.h
+> index
+> > caa32e23ffa5..43830a092637 100644
+> > --- a/drivers/ufs/core/ufs_trace.h
+> > +++ b/drivers/ufs/core/ufs_trace.h
+> > @@ -41,6 +41,7 @@
+> >  #define UFS_CMD_TRACE_STRINGS                                  \
+> >         EM(UFS_CMD_SEND,        "send_req")                     \
+> >         EM(UFS_CMD_COMP,        "complete_rsp")                 \
+> > +       EM(UFS_CMD_ERR,         "req_complete_err")             \
+> >         EM(UFS_DEV_COMP,        "dev_complete")                 \
+> >         EM(UFS_QUERY_SEND,      "query_send")                   \
+> >         EM(UFS_QUERY_COMP,      "query_complete")               \
+> > diff --git a/include/ufs/ufs.h b/include/ufs/ufs.h index
+> > c0c59a8f7256..7f2d418bdd86 100644
+> > --- a/include/ufs/ufs.h
+> > +++ b/include/ufs/ufs.h
+> > @@ -631,7 +631,7 @@ struct ufs_dev_info {
+> >   * This enum is used in string mapping in ufs_trace.h.
+> >   */
+> >  enum ufs_trace_str_t {
+> > -       UFS_CMD_SEND, UFS_CMD_COMP, UFS_DEV_COMP,
+> > +       UFS_CMD_SEND, UFS_CMD_COMP, UFS_CMD_ERR, UFS_DEV_COMP,
+> >         UFS_QUERY_SEND, UFS_QUERY_COMP, UFS_QUERY_ERR,
+> >         UFS_TM_SEND, UFS_TM_COMP, UFS_TM_ERR  };
+> It seems strange to me that scsi & uic commands are designated by the same
+> enum.
+> Has it been considered to add UFS_UIC_SEND, UFS_UIC_COMP, UFS_UIC_ERR to
+> enum ufs_trace_str_t ?
+> Also looks like UFS_DEV_COMP is unused ?
+> 
+> Thanks,
+> Avri
+It is correct that the same enumeration is used for both SCSI and UIC
+commands.
+However, the trace function differs for SCSI and UIC commands.
+The enum is solely for handling the sending and completion of each command
+within the respective trace functions.
+
+Therefore, I think there is no need to add new enums like "UFS_UIC_SEND".
+
+It seems better to discuss "UFS_DEV_COMP" in another commit.
 
 
-在 2025/4/17 14:06, Omar Sandoval 写道:
-> On Thu, Apr 17, 2025 at 09:29:23AM +0800, Ye Liu wrote:
->> 在 2025/4/16 12:02, Paul E. McKenney 写道:
->>> On Tue, Apr 15, 2025 at 11:28:41PM -0400, Sweet Tea Dorminy wrote:
->>>> On 4/15/25 10:46 PM, Ye Liu wrote:
->>>>> 在 2025/4/16 10:14, Andrew Morton 写道:
->>>>>> On Tue, 15 Apr 2025 15:50:24 +0800 Ye Liu <ye.liu@linux.dev> wrote:
->>>>>>
->>>>>>> From: Ye Liu <liuye@kylinos.cn>
->>>>>>>
->>>>>>> Introduces a new drgn script, `show_page_info.py`, which allows users
->>>>>>> to analyze the state of a page given a process ID (PID) and a virtual
->>>>>>> address (VADDR). This can help kernel developers or debuggers easily
->>>>>>> inspect page-related information in a live kernel or vmcore.
->>>>>>>
->>>>>>> The script extracts information such as the page flags, mapping, and
->>>>>>> other metadata relevant to diagnosing memory issues.
->>>>>>>
->>>>>>> Currently, there is no specific maintainer entry for `tools/drgn/` in the
->>>>>>> MAINTAINERS file. Therefore, this patch is sent to the general kernel and
->>>>>>> tools mailing lists for review.
->>>>>> Help.  My copy of linux has no tools/drgn/
->>>>> I noticed that the current upstream Linux tree doesn't contain a
->>>>> `tools/drgn/` directory.
->>>>>
->>>>> I'm interested in contributing a drgn script tool as well.
->>>>> Given that this directory does not yet exist in mainline, where would
->>>>> be the appropriate place to add new drgn scripts? Would it make sense
->>>>> to create a new `tools/drgn/` directory, or is there a preferred
->>>>> location for such debugging scripts?
->>>>>
->>>>> Thanks,
->>>>> Ye
->>>> I believe the traditional thing to do with new drgn scripts is to add them
->>>> to the contrib directory in drgn via pull request:
->>>> https://github.com/osandov/drgn/blob/main/contrib/README.rst
->>> I have an RCU-related drgn script in tools/rcu, so maybe this one should
->>> go in tools/mm.
->>
->> To determine the most appropriate place to submit this script, I looked
->>
->> into existing drgn-based tooling in the kernel tree. Several drgn scripts
->> have already been added under `tools/`, such as:
->>
->> - `tools/sched_ext/scx_show_state.py`
->> - `tools/cgroup/iocost_monitor.py`
->> - `tools/cgroup/memcg_slabinfo.py`
->> - `tools/writeback/wb_monitor.py`
->> - `tools/rcu/rcu-cbs.py`
->> - `tools/workqueue/wq_dump.py`
->> - `tools/workqueue/wq_monitor.py`
->>
->> Given this precedent, I believe it would be reasonable to place
->> `show_page_info.py` under `tools/mm/`, since it's focused on memory
->> subsystem internals and would follow a similar organizational pattern
->> to the above.
->>
->> I'd appreciate any input on whether this is a suitable direction.
->> I'm happy to send the script for review once the location is agreed upon.
->>
->> Thanks,  
->>
->> Ye Liu
-> Hi,
->
-> The drgn repository and the kernel tools directory are both valid places
-> to put drgn scripts, and it's ultimately up to you where you'd prefer to
-> put it. Here are some factors to consider, though:
->
-> 1. Reusability: if your script is very generic and would be widely
->    useful, the ideal is to add it as a helper to drgn upstream. For
->    scripts that are less generic but could still be useful to many
->    people, I'd personally prefer for them to go into the drgn
->    repository's tools or contrib directories. At the other extreme, if
->    your script is only useful to a handful of developers of a specific
->    subsystem, the kernel tools directory makes more sense.
-> 2. Kernel version coupling: there are a couple of options for dealing
->    with kernel changes that require drgn scripts to be updated (e.g.,
->    struct member renames, data structure changes).  Scripts in the
->    kernel tools directory tend to only handle the current version. This
->    is simpler, but it also means that sometimes you can't use features
->    from a new version of the script on old kernels. On the other hand,
->    the drgn repository supports every kernel version that's still
->    meaningfully deployed. This can complicate scripts with
->    version-dependent logic, but it means you can always use the latest
->    and greatest features on any kernel version. I prefer the latter
->    approach, but the choice is yours (except for drgn helpers upstream,
->    which are required to support all kernel versions).
-> 3. Maintainership: who wants to own the script? A lot of the current
->    drgn scripts in the kernel tools directory are written and maintained
->    by the relevant subsystem maintainers, so it's a no-brainer for them
->    to own it without any involvement from the drgn project. It's not as
->    obvious for other contributors. If the subsystem maintainer is
->    willing to own a drgn script in the kernel repo, then I won't
->    complain. I'm willing to take just about anything for the drgn
->    repository's contrib directory, and I'm slightly more selective for
->    helpers and tools.
->
-> All that being said, your script looks pretty widely useful, so I think
-> it'd make sense in the drgn repository's contrib directory (or even the
-> tools directory if you want to make it a full-fledged tool with test
-> cases, support for all kernel versions, documentation, etc., but contrib
-> is fine).
->
-Hi Omar,
-
-Thank you so much for the detailed guidance and thoughtful suggestions.
-I really appreciate your insights on maintainership, version compatibility,      
-and the organization of drgn scripts — that context is super helpful.
-
-Given the nature of this script, which is fairly tightly coupled to the current
-kernel’s memory subsystem and primarily intended to assist mm subsystem
-developers, I’m leaning toward submitting it under `tools/mm/` in the kernel tree
-for now. I believe it aligns with similar precedents like
-`tools/rcu/rcu-cbs.py` and `tools/cgroup/memcg_slabinfo.py`.
-
-That said, I’d absolutely be happy to contribute future scripts to the drgn
-`contrib/` directory — especially those that are more generic or extended
-to support multiple kernel versions. Your feedback has been very helpful
-in shaping how I think about future tooling work in this space.
-
-Thanks again for your support and for maintaining drgn!
-
-Thanks,
-Ye Liu
+Thank you.
+DooHyun Hwang.
+> > --
+> > 2.48.1
+> 
 
 
