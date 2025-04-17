@@ -1,114 +1,84 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5C961F8937;
-	Thu, 17 Apr 2025 08:11:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B644A1F8937;
+	Thu, 17 Apr 2025 08:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744877478; cv=none; b=akVmlUHtvQv6q0cRcb5g2NjGG32RJjTU1alpjEJawQATMc3ceLsRr6uwyaBQoYkPv1nA174FIWukr1Np2IzAQO9GOncKsbF8M0bbZw1pT3rMr1qs7u+Y7qZ06QoQX6cUvvvgovQnVFrPiajq41/KDbxWsmOOaoOOq6mU1bRl1l0=
+	t=1744877576; cv=none; b=frdAc7VUMN+UYMyCvu9uaXrcJKq9mJ3m8wDlNXAPA46LQwHkcowsSfsp0ATaAqs4RdkuXyigwdpgcQA5nnKpYox/453Y6/0sbkCjp8yNUUwXzSX1q2zHrhJXEJjAROQY0NNg5eig5xeise4wbVKETRaSLqcAVsaCiD5ExaqQfFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744877478; c=relaxed/simple;
-	bh=Eme8szcr1CADWxFkxXJzZqKX2tXuRHI7rR0yLme1TmE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=poS+TWiLkHTSlw7M+gSVEq3EjkbZz3Rqn2Mb+q3yU8otBGqzZ+s3vPuiLkuaFZlD6t/Eo653v98DCTkrts6q56xkXxF1KXsBK5ucnMqv92ByaZHEojYktrxT4mX7LfLHVQ1A9JSr/xq5NN+2IaML/0m7g77pboexSVhLMp200Bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-57-6800b79e565a
-From: Rakie Kim <rakie.kim@sk.com>
-To: akpm@linux-foundation.org
-Cc: gourry@gourry.net,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com,
-	dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com,
-	david@redhat.com,
-	Jonathan.Cameron@huawei.com,
-	osalvador@suse.de,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	rakie.kim@sk.com
-Subject: Re: [PATCH v9 0/3] Enhance sysfs handling for memory hotplug in weighted interleave
-Date: Thu, 17 Apr 2025 17:10:08 +0900
-Message-ID: <20250417081106.732-1-rakie.kim@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <20250417072839.711-1-rakie.kim@sk.com>
-References: 
+	s=arc-20240116; t=1744877576; c=relaxed/simple;
+	bh=ausffIwdAWgX2eiDnN/xWkFLcAKEIHmv735KMjP74Hw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LlkoEYuCwRA0ySThUpxWEBviji02mmSwrBWJ3EjhyEQWgnWrrjUZuoMKXYZ0eSjqV0X4BA02TT0/IceJDzvB3SP9tNLlzCs5/k1+E9Sl58YEI7OU3NSZQ8qVufuWVm4MkJfmDvRq4YW9xCLtZm2pTidaiGobDm7UhqwesE3O86c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=n82oSPFO; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="n82oSPFO"
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 4459421199CA; Thu, 17 Apr 2025 01:12:54 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4459421199CA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1744877574;
+	bh=S9VENa3hYgzvatnix+kIlW1E4DfVat/eX1pf1K4UW08=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n82oSPFODY+SlcpPsvrOFUo3UtbSq1Mj2qm4eJDFqSQgLHaIiLGrmjexJP2Yhw07z
+	 gMCsNPXswizBJMnIURsGVSXzJJt5VlwlkBNTSgOcJ8V6uNbUtFDq1J9zmb49Y79nAh
+	 3FHjAYj9Mkyv6IfENq6CbvqWUTj/aVCp1ObpA+QY=
+Date: Thu, 17 Apr 2025 01:12:54 -0700
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>,
+	Jakub Kicinski <kuba@kernel.org>, KY Srinivasan <kys@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	Long Li <longli@microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	"horms@kernel.org" <horms@kernel.org>,
+	"brett.creeley@amd.com" <brett.creeley@amd.com>,
+	"surenb@google.com" <surenb@google.com>,
+	"schakrabarti@linux.microsoft.com" <schakrabarti@linux.microsoft.com>,
+	"kent.overstreet@linux.dev" <kent.overstreet@linux.dev>,
+	"shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>,
+	"erick.archer@outlook.com" <erick.archer@outlook.com>,
+	"rosenp@gmail.com" <rosenp@gmail.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	Paul Rosswurm <paulros@microsoft.com>
+Subject: Re: [EXTERNAL] Re: [PATCH 2/3] net: mana: Implement
+ set_link_ksettings in ethtool for speed
+Message-ID: <20250417081254.GA30387@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1742473341-15262-3-git-send-email-ernis@linux.microsoft.com>
+ <fb6b544f-f683-4307-8adf-82d37540c556@lunn.ch>
+ <20250325170955.GB23398@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <adaaa2b0-c161-4d4f-8199-921002355d05@lunn.ch>
+ <20250325122135.14ffa389@kernel.org>
+ <MN0PR21MB3437DA2C43930B08036BB146CAA72@MN0PR21MB3437.namprd21.prod.outlook.com>
+ <6396c1f7-756d-476a-833e-7ea35ae41da8@lunn.ch>
+ <MN0PR21MB34376199FAFAE4901EF18E75CAA72@MN0PR21MB3437.namprd21.prod.outlook.com>
+ <f2619b80-8d5d-4484-a154-18f902d43d63@lunn.ch>
+ <20250331090822.GA22061@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCLMWRmVeSWpSXmKPExsXC9ZZnoe687QwZBg8mcFrMWb+GzWL61AuM
-	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9XizLQii9VrMhy4PXbOusvu
-	0d12md2j5chbVo/Fe14yeWz6NInd48SM3yweOx9aerzfd5XNY/Ppao/Pm+QCuKK4bFJSczLL
-	Uov07RK4MlZ9PctScIKnomVdUgPjXq4uRk4OCQETiTm/dzJ1MXKA2fuWm4KYbAJKEsf2xoBU
-	iAjISkz9e56li5GLg1ngMZPEo+cvGLsY2TmEBWIkJsuCVLMIqErMOx4PUs0rYCzxaesmdojZ
-	mhINl+4xgdicQLOn7W5hBrGFBHgkXm3YzwhRLyhxcuYTFhCbWUBeonnrbGaQTRIC39kkHty7
-	ywYxSFLi4IobLBMY+Wch6ZmFpGcBI9MqRqHMvLLcxMwcE72MyrzMCr3k/NxNjMCwX1b7J3oH
-	46cLwYcYBTgYlXh4Tyz6ny7EmlhWXJl7iFGCg1lJhPec+b90Id6UxMqq1KL8+KLSnNTiQ4zS
-	HCxK4rxG38pThATSE0tSs1NTC1KLYLJMHJxSDYz1G45pHrVn6NhiLjTv7oyenQZ39s1Y8Nra
-	8kvmkXnl3pPOv1bg23b77qkjlk45nPpmRv0c8Z1JYbXCafrNS3n2/sxeZuNQzs9oPOv+zRma
-	qfMS1tY2BEn5XViyxuxmveh23sX3lkqmma0I2viGVWrbxOTSuT2zNUUidineefmv9eGryOoz
-	PfuVWIozEg21mIuKEwEjeGR2dwIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHLMWRmVeSWpSXmKPExsXCNUNNS3fudoYMg+9fzCzmrF/DZjF96gVG
-	i6/rfzFb/Lx7nN3i87PXzBarFl5jszi+dR67xeG5J1ktzs86xWJxedccNot7a/6zWpyZVmRx
-	6NpzVovVazIsfm9bwebA77Fz1l12j+62y+weLUfesnos3vOSyWPTp0nsHidm/Gbx2PnQ0uP9
-	vqtsHt9ue3gsfvGByWPz6WqPz5vkAniiuGxSUnMyy1KL9O0SuDJWfT3LUnCCp6JlXVID416u
-	LkYODgkBE4l9y01BTDYBJYlje2O6GDk5RARkJab+Pc/SxcjFwSzwmEni0fMXjF2M7BzCAjES
-	k2VBqlkEVCXmHY8HqeYVMJb4tHUTO4gtIaAp0XDpHhOIzQk0e9ruFmYQW0iAR+LVhv2MEPWC
-	EidnPmEBsZkF5CWat85mnsDIMwtJahaS1AJGplWMIpl5ZbmJmTmmesXZGZV5mRV6yfm5mxiB
-	ob6s9s/EHYxfLrsfYhTgYFTi4T2x6H+6EGtiWXFl7iFGCQ5mJRHec+b/0oV4UxIrq1KL8uOL
-	SnNSiw8xSnOwKInzeoWnJggJpCeWpGanphakFsFkmTg4pRoY+TaF7+fv3/lb8nPzxl1ceY7p
-	523CS+QSio4Lik0/mbv0b8u8bfFvLk4qfcfkvyP0eZ3oaZlT/5c3mF1O7rFbWb60epb033/n
-	Njw7E5zqkLFSY5lvYVr5xOO/5JavLExaZtuXzmcd/0/mj2nb04fdjfma4XeWTj9pozkpZGLV
-	DrPksn4Tt5lzlViKMxINtZiLihMBvdXI8nECAAA=
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250331090822.GA22061@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Thu, 17 Apr 2025 16:28:34 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
-> These patches have been tested under CXL-based memory configurations,
-> including hotplug scenarios, to ensure proper behavior and stability.
-> 
->  mm/mempolicy.c | 240 ++++++++++++++++++++++++++++++-------------------
->  1 file changed, 148 insertions(+), 92 deletions(-)
-> 
-> base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
-> -- 
+I hope this message finds you well.
 
-To Andrew
+I wanted to follow up on this patchset I previously submitted. 
+Based on your valuable feedback, I have made modifications 
+and incorporated your suggestions along with my
+previous logic. Please find the updated patchset attached.
 
-I sincerely apologize for causing repeated inconvenience. The series of
-patches version v8 that was merged into -mm, mm-new today needs
-additional corrections.
-Link: https://lore.kernel.org/all/6800742de6315_130fd2949c@dwillia2-mobl3.amr.corp.intel.com.notmuch/
-Therefore, I have updated a new version v9, in which the problems have
-been addressed.
-
-I would greatly appreciate it if you could drop the existing v8 and
-replace it with the new version v9. Below is the information regarding
-the v8 patch series that needs to be dropped.
-Once again, I truly apologize for the inconvenience.
-
-<1>
-The patch titled:
-     Subject: mm/mempolicy: fix memory leaks in weighted interleave sysfs
-Filename:
-     mm-mempolicy-fix-memory-leaks-in-weighted-interleave-sysfs.patch
-
-<2>
-The patch titled:
-     Subject: mm/mempolicy: prepare weighted interleave sysfs for memory hotplug
-Filename:
-     mm-mempolicy-prepare-weighted-interleave-sysfs-for-memory-hotplug.patch
-
-<3>
-The patch titled:
-     Subject: mm/mempolicy: support memory hotplug in weighted interleave
-Filename:
-     mm-mempolicy-support-memory-hotplug-in-weighted-interleave.patch
-
-Rakie
-
+https://lore.kernel.org/lkml/1744876630-26918-1-git-send-email-ernis@linux.microsoft.com/
