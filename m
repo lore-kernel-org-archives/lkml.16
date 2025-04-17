@@ -1,101 +1,89 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F2A1A238A;
-	Thu, 17 Apr 2025 17:30:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3475D14F90
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 17:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744911057; cv=none; b=ri0gQ8fFly0Lbw850pFPR3YeyJikDtMldj/7oLtr09ScQ/Sylzeu9F8a9nmP2HaaV1Qd1Q6/jN3UfZ/H6hIdcsNG39zYJ8ZdegABnbHrOmfpd51O050Rp0Y9kSYITfB5bxswk4UMa3Nxs+aBO2RMLPOyTIMOJ11f1pXgcY6nWMg=
+	t=1744911139; cv=none; b=AM19Q4+Rc/VeOTkzs6BsH0lQvvny/cqttkgdvyiidzU693wjGNHVYTf0OPxfmxCFsTN1GRGD3O+ZNPUo2oLmAB8dgq9VdhJHUmXeieKFDU03p4L0TYiXeUk3nYjm7Rlp928xwPny9+VGIsYlSXqzGPZdSUS/j48dVANtigmjbRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744911057; c=relaxed/simple;
-	bh=68Fo9PxNCm2MVEvQ7px+p7wujeJOAtr26F6i4ENvrJM=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Jw9sX3G6BJVJYtMOk4CutyvvbBUhWg1VRnC8eYIR8nFVUSP81uF0PNEOy83IndnTnXRPU/e8pZHbLALH3pObokBSaThSwPvl9+s+XXR0n4A5cdiTTgM/deMKqXWWEYpShdDviJMk74IPLUCEXRr2cr1Pp+kX2e7vZNKNrfP9RtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZdlF70NSvz6M4gh;
-	Fri, 18 Apr 2025 01:26:51 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id C9D32140595;
-	Fri, 18 Apr 2025 01:30:51 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 17 Apr
- 2025 19:30:51 +0200
-Date: Thu, 17 Apr 2025 18:30:49 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: David Lechner <dlechner@baylibre.com>
-CC: Jonathan Cameron <jic23@kernel.org>, Nuno =?ISO-8859-1?Q?S=E1?=
-	<nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Matthias Brugger
-	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Lars-Peter Clausen
-	<lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, "Cosmin
- Tanislav" <cosmin.tanislav@analog.com>, Tomasz Duszynski
-	<tduszyns@gmail.com>, Jean-Baptiste Maneyrol
-	<jean-baptiste.maneyrol@tdk.com>, Andreas Klinger <ak@it-klinger.de>, "Petre
- Rodan" <petre.rodan@subdimension.ro>, <linux-iio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>
-Subject: Re: [PATCH 0/8] iio: more timestamp alignment
-Message-ID: <20250417183049.0000336c@huawei.com>
-In-Reply-To: <20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
-References: <20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1744911139; c=relaxed/simple;
+	bh=L8zYV5TNnFGOd7vlMx9E0q1H4hv3xsODxRHGyPyrxcc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=P+AIp78RUb6X1HtV89vhR9CW5wLeLv7ecV6d3zQDn+Z3LVPiyRAk+SkA2gASYg7tEoKMPOaTSvvyd8nHRhrUoUpYvpOBKen5rRWiOU0Xw6/vMyUkARmLRjET1poJXQFy3giSmnJpsrrcguhGHwr0XMHOiLWpP6ibLJjBQexrxeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SQjFV7ZQ; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SQjFV7ZQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744911137; x=1776447137;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=L8zYV5TNnFGOd7vlMx9E0q1H4hv3xsODxRHGyPyrxcc=;
+  b=SQjFV7ZQpP5deHeW+vw8q6vaVnKgTPyAvn522Yf+IN18a1x0AB4ToQlL
+   3oJYwu4kA89oYOksrG/nTVHPT/YBjYBNkNiSshEYFl7f4uU+vHvxpLTCb
+   3GgRcmPSQO5al28vfagzgqddlTv8qqbXGwBfa/owMog/pkm8/A8GCLZfW
+   a0Vic0wLvGtOLJRk4U9FBIKiUsKV1K0Nif0QpfUvt6RPZ+PjSzSgmbBfy
+   bZJ3tRMBZV/kdn+NQ4Q3e2WZ1iZODyCjendNvv/ahxqgVPg5vXa0eUHm/
+   5k0iPGUsjyD1+PDilhuu9WYKFk4Vm8Hqg6uMxfnuGelYkZVbLj8yfHBsp
+   w==;
+X-CSE-ConnectionGUID: J6kKC+iNQJ6XWRwDTLvIBQ==
+X-CSE-MsgGUID: fYhc99r1SGeKR8BN+kzK8g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="57889661"
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="57889661"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:32:14 -0700
+X-CSE-ConnectionGUID: 9N2okqOWQ+2EgokY1XmETQ==
+X-CSE-MsgGUID: ZmCH0iexT5Sw79g5H686Fg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="135717839"
+Received: from lkp-server01.sh.intel.com (HELO 61e10e65ea0f) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 17 Apr 2025 10:32:07 -0700
+Received: from kbuild by 61e10e65ea0f with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u5T5p-0000Zw-0f;
+	Thu, 17 Apr 2025 17:32:05 +0000
+Date: Fri, 18 Apr 2025 01:31:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: kismet: WARNING: unmet direct dependencies detected for
+ DRM_BRIDGE_CONNECTOR when selected by DRM_IMX_LDB
+Message-ID: <202504180138.vMkVoVLq-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu, 17 Apr 2025 11:52:32 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   cfb2e2c57aef75a414c0f18445c7441df5bc13be
+commit: f673055a46784ccea04465b9213e999f7bc5187e drm/imx: Add missing DRM_BRIDGE_CONNECTOR dependency
+date:   7 months ago
+config: sparc64-kismet-CONFIG_DRM_BRIDGE_CONNECTOR-CONFIG_DRM_IMX_LDB-0-0 (https://download.01.org/0day-ci/archive/20250418/202504180138.vMkVoVLq-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20250418/202504180138.vMkVoVLq-lkp@intel.com/reproduce)
 
-> Wile reviewing [1], I noticed a few more cases where we can use
-> aligned_s64 or need __aligned(8) on data structures used with
-> iio_push_to_buffers_with_timestamp().
-> 
-> [1]: https://lore.kernel.org/linux-iio/20250413103443.2420727-1-jic23@kernel.org/
-> 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504180138.vMkVoVLq-lkp@intel.com/
 
-I have a bunch of these in a 'too hard before sending that patch
-pile' as well.  Hopefully you've covered many of those :) There
-were definitely more bugs than I expected to see when I started that
-effort!  I thought we'd tracked all these down long ago :(
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for DRM_BRIDGE_CONNECTOR when selected by DRM_IMX_LDB
+   WARNING: unmet direct dependencies detected for DRM_BRIDGE_CONNECTOR
+     Depends on [n]: HAS_IOMEM [=y] && DRM [=y] && DRM_DISPLAY_HELPER [=n]
+     Selected by [y]:
+     - DRM_IMX_LDB [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_IMX [=y] && COMMON_CLK [=y]
 
-Jonathan
-
-> ---
-> David Lechner (8):
->       iio: adc: dln2-adc: use aligned_s64 for timestamp
->       iio: adc: mt6360-adc: use aligned_s64 for timestamp
->       iio: addac: ad74413r: use aligned_s64 for timestamp
->       iio: chemical: pms7003: use aligned_s64 for timestamp
->       iio: chemical: sps30: use aligned_s64 for timestamp
->       iio: imu: adis16550: align buffers for timestamp
->       iio: imu: inv_mpu6050: align buffer for timestamp
->       iio: pressure: mprls0025pa: use aligned_s64 for timestamp
-> 
->  drivers/iio/accel/bmc150-accel.h           | 2 +-
->  drivers/iio/adc/dln2-adc.c                 | 2 +-
->  drivers/iio/adc/mt6360-adc.c               | 4 ++--
->  drivers/iio/addac/ad74413r.c               | 5 +++--
->  drivers/iio/chemical/pms7003.c             | 5 +++--
->  drivers/iio/chemical/sps30.c               | 2 +-
->  drivers/iio/imu/adis16550.c                | 2 +-
->  drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c | 2 +-
->  drivers/iio/pressure/mprls0025pa.h         | 2 +-
->  9 files changed, 14 insertions(+), 12 deletions(-)
-> ---
-> base-commit: 3159d40a2ca0ae14e69e1cae8b12f04c933d0445
-> change-id: 20250416-iio-more-timestamp-alignment-6c6c6a87ebda
-> 
-> Best regards,
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
