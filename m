@@ -1,117 +1,122 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43A0217F36;
-	Thu, 17 Apr 2025 07:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBE319F133
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744874575; cv=none; b=J+E2i6VnWKfTuWiOarBObLB/rn32Hex5UqhoLD3RftwMjyeyb3xVlwyqZVvVWtx0VP2WJ74ef0VrFaQeNpFC0IjcQhuJCguAHwiDGVLKO7oumT5H8SO4iGtQSgTtuiDWgT6n5BUe6lU+ldjYVH7TmZwHVzW8v3KKqtJ4+KRWm70=
+	t=1744874736; cv=none; b=oC27H1hfy//7fbjPbJNbIZGPdvZ7Bq0jz5gGsq7trUIFDTcZvdIjkvnEpNvh9h7+H0zaAIQnOGwPlgKF1rs5exEp6lSnvAXEPi3zi9b7roJbjzIVxDdsE8/zYJhcCRgEGaKeulXmyTIX6Zh+foNTG58LPTpn/fthhEzjh31ZQiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744874575; c=relaxed/simple;
-	bh=Icm1Q/omv7sI1TZB8AuErbOKaaYlIRqQXQFkerJZWsY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ecVm5xSenabeHpQVtLbfTPfKEl5G68SOgocKGHu/R0AHmWxUxV0tyVxO+ahMjl1tNTLpzRgJo00c9QBmVoZAW79KIUCDyIX8Dw3sJXNbdzu1hEvF8PhOqaqwJnOcZAR7YGc00oO+dNIbBmsA3gPZaMLiF0DolZcKQpGHPFF6G5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=GyCobIhu; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1744874736; c=relaxed/simple;
+	bh=CAvDAZwfGLBI/HItNzkiNR1FoMJ30j2kia+vuCfBV2U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Cn7wO8NQ+yQeJbLhEqz9XhjAl6HCDdgzo2GV8pgUE59f3BXZXLUzpyhgHrjrDtReDusIDXc9eGP7NjdGQnin1wjLaL3Zj/fkats8BuC3k1z8W0HVv7d7jqjCuoHelxZW3fFxt3u1lynCBrd/2FZk04l2qAQ9V0RIRgbLW99NRGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=umich.edu; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=M7cFYtq9; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=umich.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="GyCobIhu"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4ZdTr36YZ2z9sny;
-	Thu, 17 Apr 2025 09:22:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1744874563; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Icm1Q/omv7sI1TZB8AuErbOKaaYlIRqQXQFkerJZWsY=;
-	b=GyCobIhuKB7LCnXJEhw+MhBLztlAJb7i6P9QYi4Y9lJBzLe297YxQb4u9dCOzzxxOSoJ1k
-	q+5eNzS5YEj6+bvysd6ZjtU9uN5Z/H89cw1z+fAQJg8LdhVW7NeVSMKdrEvY0OrbCeAnvr
-	5Ov/Af4E85NITU7T9QBj1bPI5drnyDfbgTcnYdO0ILQsQMFSjxQjsgmewdzyClYwl0/yO+
-	dA74hADEOyOUbUb8dKPrO6hDIpcT78zhdds2BRVeORXpV1pco94WzpyYXFlF1ZwtiKrA3q
-	s6AIM6DqzDDUqAi/COLDzevpeNYHFTVsLrr7t/OdKgpqaw9tLuVK90hagbTF3Q==
-Message-ID: <59c1e09a5c47a60e26c5fb10c3305356328a98a6.camel@mailbox.org>
-Subject: Re: [PATCH] workqueue: rust: add creation of workqueues
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Tejun Heo <tj@kernel.org>, Alice Ryhl <aliceryhl@google.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Philipp Stanner <phasta@kernel.org>,
-  Miguel Ojeda <ojeda@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,  Gary Guo <gary@garyguo.net>,
- =?ISO-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,  Benno
- Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>,
- Trevor Gross <tmgross@umich.edu>, Daniel Almeida
- <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@gmail.com>,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 17 Apr 2025 09:22:40 +0200
-In-Reply-To: <aAALmSjLyWqrcQ45@slm.duckdns.org>
-References: <20250411-create-workqueue-v1-1-f7dbe7f1e05f@google.com>
-	 <Z_1QzTdV8mHJYdQ6@cassiopeiae> <Z_4gb8ZAlbfhobgW@google.com>
-	 <Z_45kDv_wAHIBNpI@cassiopeiae> <Z_-f7Bgjw35iXkui@google.com>
-	 <CAH5fLgiKxDpWg=dDsTJsrB6Kmkw32GZ9WPO-SrpWm4TZDxGVtg@mail.gmail.com>
-	 <aAALmSjLyWqrcQ45@slm.duckdns.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="M7cFYtq9"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e643f0933afso1310477276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:25:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1744874732; x=1745479532; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dCSw/es2iR8/yNVw4J5gJ8YTwX58btUZLp0G7enr38c=;
+        b=M7cFYtq99BiMTuc3lZQh8R3w7URZBjK19DcAfDJ9GBrlDoTyJc7OeLOX6GqbGDl4to
+         uE+Za1l1ViEZbfNlBqTIzrefp/0TjXbUmGobLBXRWViFa03xcAjfhHDKP2sNwSlOeayN
+         pNrbrf5PvfoYfmfdpzj2DUtN1Eh0Dv3xQ9QUD8+ZvLa+IvLjNJAjdubQtMvUEgQnw2Mu
+         h7TMf9h2tNX0jT+35UjKjReAYKg3P4InchqgVx4f7i0QEjvBTh1YXzv203BNWxB27BOi
+         ovEAraPbQztyNmvmHW5ZxZSHFvtx8irEWYf/QiJ8pbmj1IBdDPPPhqBLtHoADm11IADP
+         TD7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744874732; x=1745479532;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dCSw/es2iR8/yNVw4J5gJ8YTwX58btUZLp0G7enr38c=;
+        b=BXPrjif9Kck3vQDF0u2ckklUTBe9XBL06wGsGuKl0/FCo0P71C/GoBU9YakmnnMfht
+         TpKLjQwClJzad0SLlt4v3g14zyMtmJ/ojBeF8bBS5q1/js0cMDb2YFT9Ft57BpfRw/Gd
+         NUiYlVSmhcEKi3w6EGGiXXO9nRIhQnERMgbIZRgZAmPbT9831tMCpZ8b+yo48TnxYKUI
+         yEtHPzj0ehhWwV14GQa16MxXxy3V/D8C7hTTaCahtnTyn8l1OoZ/lvTrxN4X5Yy6lVFO
+         bHWhetLyPob+qAGs1gFTEV2nltg2RSgZir97vRW/Fz/Lokyg94idsGYa9/Fw3Z8h9fLC
+         qxTg==
+X-Forwarded-Encrypted: i=1; AJvYcCWycZWhcsBl5WK70E606z3ZDQxS62xW1wy2+5AlqiSy0GO4phSpne65FRwVKA3n5sN93kWHrZ35uHPR144=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzERe/GMUPZ7Gpbzlwfcm45X+LlY8Rp3MLkBjgP6XR3d60RHgTn
+	STs79XcVWqoGplufc033xHQ5auc3a6xKIUHzI1azmTQd7KB5+ZnlxUanwqFQiGGCea7bHhWz2fq
+	QPoMVRErpn/wdLUVg56crXVK9mCE7bYqkieGe4g==
+X-Gm-Gg: ASbGncsjxFK5DMVOLHESq/5oYdp9wOhzTMueggv0DAhKriPmeFF/1idcoJ7md7+XNFs
+	VurRxsFNGSru6AKpDYyH8z6EIV1mUXVsNN3dnt9XABR5d+f0wDhVk/7M+WNTa8f5Tg3lueTPsjq
+	VgS5/9bKBWr0SnbPmJz2zLKGx+Pd+eb4oC
+X-Google-Smtp-Source: AGHT+IE+p2PW3ydbONwQRu4rSA2EsOCb+RSOH2X4Csb3G9CdLF2TBoaq+QSeCw64kVxVVt90nJDanY3G9zyLsMtv34M=
+X-Received: by 2002:a05:6902:240b:b0:e6b:723f:bcf with SMTP id
+ 3f1490d57ef6-e7282a769b0mr2670551276.21.1744874732296; Thu, 17 Apr 2025
+ 00:25:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-ID: 3218d200813b166295e
-X-MBO-RS-META: fzqsgiezkr1gbya8r381es4aho6jiypf
+References: <20250325-rust-analyzer-host-v5-0-385e7f1e1e23@gmail.com> <20250325-rust-analyzer-host-v5-12-385e7f1e1e23@gmail.com>
+In-Reply-To: <20250325-rust-analyzer-host-v5-12-385e7f1e1e23@gmail.com>
+From: Trevor Gross <tmgross@umich.edu>
+Date: Thu, 17 Apr 2025 02:25:21 -0500
+X-Gm-Features: ATxdqUGfByujakoDWsaF_GHACD1pGmqrbiR7ZbZczWOGW_x4V9XFFfDIb1tbrFk
+Message-ID: <CALNs47sy7fcQoOaxQ0moyRt5TJOi4VWc8AxXHzPgouccPP4N7A@mail.gmail.com>
+Subject: Re: [PATCH v5 12/13] scripts: generate_rust_analyzer.py: define scripts
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Danilo Krummrich <dakr@kernel.org>, 
+	Boris-Chengbiao Zhou <bobo1239@web.de>, Kees Cook <kees@kernel.org>, Fiona Behrens <me@kloenk.dev>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Lukas Wirth <lukas.wirth@ferrous-systems.com>, 
+	Daniel Almeida <daniel.almeida@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2025-04-16 at 09:57 -1000, Tejun Heo wrote:
-> Hello, Alice.
->=20
-> On Wed, Apr 16, 2025 at 09:41:21PM +0200, Alice Ryhl wrote:
-> ...
-> > I thought about implementation approaches. The first thought that
-> > sprang to mind is add a list of all delayed work items, but now I
-> > think we can do better. We can have an atomic counter tracking the
-> > number of delayed work items, and have destroy_workqueue() do this:
-> >=20
-> > retry:
-> > drain_workqueue(wq);
-> > if (has_delayed_work_items(wq)) {
-> > =C2=A0=C2=A0=C2=A0 wait_for_delayed_to_be_scheduled(wq);
-> > =C2=A0=C2=A0=C2=A0 goto retry;
-> > }
-> >=20
-> > where wait_for_delayed_to_be_scheduled() either waits for the
-> > counter
-> > to hit zero, or waits for at least waits for one of them to be
-> > scheduled. For example, maybe wait_for_delayed_to_be_scheduled()
-> > could
-> > add a dummy work item *without* waking up the worker threads, and
-> > then
-> > wait for that work item to get executed, which would effectively
-> > mean
-> > that it sleeps until something else wakes up a worker.
->=20
-> I suppose that can work too but the delays can be pretty long, so
-> while
-> correct, I'm not sure it'd be very pleasant to use. If we per-cpu
-> lists, I
-> don't think the overhead would be all that noticeable, so may as well
-> do
-> that?
+On Tue, Mar 25, 2025 at 3:07=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
+>
+> Generate rust-project.json entries for scripts written in Rust. This is
+> possible now that we have a definition for `std` built for the host.
+>
+> Use `str::rstrip` for consistency.
+>
+> Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
+> Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
+> Reviewed-by: Fiona Behrens <me@kloenk.dev>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+>  scripts/generate_rust_analyzer.py | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
 
-I assume you, ultimately, mean that the list of delayed_work's would be
-accessible through workqueue_struct, correct?
+> +    with open(scripts / "Makefile") as f:
+> +        makefile =3D f.read()
 
-And then destroy_workqueue() could loop over all of them with
-cancel_delayed_work_sync()?
+Since we are using pathlib, this can be `makefile =3D (scripts /
+"Makefile").open().read()`
 
-I think that would be the cleanest possible solution.
+> +    for path in scripts.glob("*.rs"):
+> +        name =3D path.name.rstrip(".rs")
 
-P.
+`stem` should provide the file name without extension, so
 
->=20
-> Thanks.
->=20
+    name =3D path.stem
 
+> @@ -267,7 +281,7 @@ def generate_crates(
+>      for folder in extra_dirs:
+>          for path in folder.rglob("*.rs"):
+>              logging.info("Checking %s", path)
+> -            name =3D path.name.replace(".rs", "")
+> +            name =3D path.name.rstrip(".rs")
+
+The above applies here too.
+
+A couple of optional nits if you resend but nothing to block on:
+
+Reviewed-by: Trevor Gross <tmgross@umich.edu>
