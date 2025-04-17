@@ -1,76 +1,35 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED372E628;
-	Thu, 17 Apr 2025 01:17:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9807C1494BB;
+	Thu, 17 Apr 2025 01:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744852656; cv=none; b=lkUmnkfg/FcCxLCROgr+hnoXDzK1gm5HzeMQVVc3RbZOQEQfeKJvp2h6NOWhYFpPPV+dj/dEOAUmueFTZ50mg0iEB3murDPa2l6tJu1ePFWaV/8PnIWb4SM3crh4dnczaCe9b/4jgdgepfrxquQztMsGxDp9IiC4x45+gma3Bww=
+	t=1744852829; cv=none; b=LNUwNa1ASQJ5pEgIJqyUnvV7n0neEwHnmIUkOk6XKupXl5gsuINXsovGd2AuO7ICOXmJDJDKAXz7m6EHsRDhu5/Vv4Xclw2P9i+BSd8wGfMyFePcA8TyxotPFw7olfwtzBTttfgh0oDWGcptK0DsB/ARbPOkomK48q53ZwrhE5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744852656; c=relaxed/simple;
-	bh=tAGrv9Y+ISX56kVJ642r8N1Gzi55R5eePdaHPLoZ/VA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Csu0q/KyaoBHFukScoU1g2cenN8fr2kTemq1lUZWw4yjbGdcWfRj3bI2DsqbN33J/nKks/RwmGJmAYrmxhD3Ub+YjUPy2Ahu6VkYk0CkB0FmFmBjapuNpMRbNbT/zCYjq9dS6Q3mliHTJbWUPPI8erighSs3uMYWfQbXKOVYuVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PvNVOPdo; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744852829; c=relaxed/simple;
+	bh=HrsgfIKn+UzmmpDCQZdqj2kTeP/jZdyNwEi1kO/oBaw=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=atYZKBuBMdqroHachvEDfcx4BYkSmL+noU9ANEMWgz24ANVui8pb4cjRJPRrRqkrnM6Kxb8ezwGbpbJ8IDB/Ot8UBvoznQSnolZSRQCuIPjxdxce/Yq4fQ562+u4fNfoSJQCtaUHRhT1Tiqecu8LxDdpXBJgK1ik6Apjl0W6Sb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uhUjR2St; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PvNVOPdo"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-af9925bbeb7so150561a12.3;
-        Wed, 16 Apr 2025 18:17:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744852654; x=1745457454; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=X6kZCUyOGMeKdwk9Rr6GjPnU39uDn4efBFP4mrDY4n8=;
-        b=PvNVOPdoQV5OVxfdHj4eG7O4k+6MAeUf8it0fH0d7qeYOxijbzCj1b6Zaw1BwVOybj
-         1Tx51z62TXEn2CUX2EwSK58jbmLBooiU1I90GMJMcDkgjZvyW/NZwDUjSQQDnfwrghyM
-         gJzmh0AMWP3Q7dWlJ7egN8S2TRjXBMPYbU+l5m+JeFBv6bX7UuVx4GDlgkb0h5CGNOSf
-         O3a+zWr7lwUeywpxd1aEKSNL6XYXNsEIvMFUaIkFkgMYvoPDhaYU7mfAYq+16VkOAb9H
-         pmih1xWMbfeBkcclmb51hIkltCOgANE8Nwg9h21yhtqVqyU3eLU89jvaDUHg38p5OCUt
-         e8AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744852654; x=1745457454;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X6kZCUyOGMeKdwk9Rr6GjPnU39uDn4efBFP4mrDY4n8=;
-        b=KxrniFrzXECeh20GN7PcxQBpGArCtGA3olOIG9ptzD0womOZ+CN8xn3ojsk7/qpcfE
-         6bsE/PJoJG3kTmkwS7k8yepOxu+emD6Luvj+qrlgvGsD3CQorxg+IIsOi6SIxKjFvLRr
-         Rww/lr/A2XuwtcO0LjBLMGMWKtx4YIYle5B65ptjmpN0ILRxGmr9bsjdAWLLhEHSRsFt
-         JeO6p/eQCF6ShJsPavbryW1cYeueWXZyhsV6XpgJ36cI1Uy90ZGQH6keDel7uuVuLueL
-         2YLo7V8L1ACEt29GO5eh7Z1kEEcykd3klMpFGE5fh45arvogjXrUXHfpSP1viTiY+GOp
-         bb3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVgtYeY9EdiJq1j/7CJprdPbAcyY0T5PfGHRZ0B9znTd4UBDeSNf2KFsTXsjuCyZZwSmf+0hgu4qJVCBMU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyM+hI5PP2jgO17hxUlRUmSYgZ1G+sC/muXKUP0upJ4U33I6EC2
-	+3lwyXGWg1lhPsbIkPQNkYjWdRQTg6mwGZLlsQsO5tO96hFJfo+8
-X-Gm-Gg: ASbGnctAVL1wUjzzE8GycyXFdlfU83VFgjJaWWBCM0tTw8fzNxiY2gsuHGw7Ff68tN+
-	t/aOu/vRgX93pbdZHUKw//xYUFjc/2pd9NMQQgpkjtAUl/3lzwOS25tSOOvLKuhJ3zMXp23mjaT
-	jlMRVYe6Ydh5fuq2UhRQ4/9JqSjBkzoetRxPHhZnBh5ULnIrxW9csZo6WQRbJgZiwcAEGUERM4H
-	EXssc0rwoSSnTiKQIkbenac4tMA0m0xET+R61hjgglrOeNXb+ko2h8AWCoHF2mc2Lm6yHhUp/33
-	1qsJspr8hVApYIOnf+jHj9c3oQXcBs1cxVr6OiZ+2L8I4cAmHpOE8apBH07S4yCjGgkWpYk8hiD
-	Ed3pw
-X-Google-Smtp-Source: AGHT+IFdCxEx27NH3yIHMAmLL3SGYxxHjyXgNtoivLisYP2O66x59yWDou7m+l9nKLM43nZ0EotW4Q==
-X-Received: by 2002:a17:902:f60f:b0:221:85:f384 with SMTP id d9443c01a7336-22c358db3demr62326835ad.16.1744852654324;
-        Wed, 16 Apr 2025 18:17:34 -0700 (PDT)
-Received: from delphinus (p4007-ipbfpfx02osakakita.osaka.ocn.ne.jp. [60.40.45.135])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3086104dfd8sm2365860a91.0.2025.04.16.18.17.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 18:17:33 -0700 (PDT)
-From: Tamura Dai <kirinode0@gmail.com>
-To: Mark Brown <broonie@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: linux-spi@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Tamura Dai <kirinode0@gmail.com>
-Subject: [PATCH] spi: spi-imx: Add check for spi_imx_setupxfer()
-Date: Thu, 17 Apr 2025 10:16:05 +0900
-Message-ID: <20250417011700.14436-1-kirinode0@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uhUjR2St"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E67CDC4CEE2;
+	Thu, 17 Apr 2025 01:20:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744852829;
+	bh=HrsgfIKn+UzmmpDCQZdqj2kTeP/jZdyNwEi1kO/oBaw=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=uhUjR2Stf0vSLX7bXyHEMMy/uJ5+aqUWEAjhUJIoJdzqtrdg13mibdm1EMS0EaxHE
+	 MGTNCWm0d6PRxx1BsO5fRiso3FNeMoKno9hhCgjA8D3T/yfyBU+rp32Jf8zVm1Xt3v
+	 JSk8kR8mSoit59dWFgFcMO+j0CwAyCCCfOepNa4dOOdFnjA/OFDBRLt6gAeGDsRHD+
+	 UshvX9NHoelpPSbeHvOUCaA3tIQFmUdCo1+DeROLzr8C/cN7IpSI9FubeDlABFrrXG
+	 OQKCzXST3SCKVFogtIebyEx3o2XsYAgj33y3C0tfWkN1Bgi7soL6ZcCbIH3HHt0V5B
+	 kRpMVe2ZHUYVA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33DCF3822D59;
+	Thu, 17 Apr 2025 01:21:08 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,44 +37,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] net: b53: enable BPDU reception for management port
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174485286700.3555240.23676030459979617.git-patchwork-notify@kernel.org>
+Date: Thu, 17 Apr 2025 01:21:07 +0000
+References: <20250414200434.194422-1-jonas.gorski@gmail.com>
+In-Reply-To: <20250414200434.194422-1-jonas.gorski@gmail.com>
+To: Jonas Gorski <jonas.gorski@gmail.com>
+Cc: florian.fainelli@broadcom.com, andrew@lunn.ch, olteanv@gmail.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ f.fainelli@gmail.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Add check for the return value of spi_imx_setupxfer().
-spi_imx->rx and spi_imx->tx function pointer can be NULL when
-spi_imx_setupxfer() return error, and make NULL pointer dereference.
+Hello:
 
- Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
- Call trace:
-  0x0
-  spi_imx_pio_transfer+0x50/0xd8
-  spi_imx_transfer_one+0x18c/0x858
-  spi_transfer_one_message+0x43c/0x790
-  __spi_pump_transfer_message+0x238/0x5d4
-  __spi_sync+0x2b0/0x454
-  spi_write_then_read+0x11c/0x200
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Signed-off-by: Tamura Dai <kirinode0@gmail.com>
----
- drivers/spi/spi-imx.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+On Mon, 14 Apr 2025 22:04:34 +0200 you wrote:
+> For STP to work, receiving BPDUs is essential, but the appropriate bit
+> was never set. Without GC_RX_BPDU_EN, the switch chip will filter all
+> BPDUs, even if an appropriate PVID VLAN was setup.
+> 
+> Fixes: ff39c2d68679 ("net: dsa: b53: Add bridge support")
+> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+> 
+> [...]
 
-diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-index 832d6e9009eb..c93d80a4d734 100644
---- a/drivers/spi/spi-imx.c
-+++ b/drivers/spi/spi-imx.c
-@@ -1695,9 +1695,12 @@ static int spi_imx_transfer_one(struct spi_controller *controller,
- 				struct spi_device *spi,
- 				struct spi_transfer *transfer)
- {
-+	int ret;
- 	struct spi_imx_data *spi_imx = spi_controller_get_devdata(spi->controller);
- 
--	spi_imx_setupxfer(spi, transfer);
-+	ret = spi_imx_setupxfer(spi, transfer);
-+	if (ret < 0)
-+		return ret;
- 	transfer->effective_speed_hz = spi_imx->spi_bus_clk;
- 
- 	/* flush rxfifo before transfer */
+Here is the summary with links:
+  - [net] net: b53: enable BPDU reception for management port
+    https://git.kernel.org/netdev/net/c/36355ddfe895
+
+You are awesome, thank you!
 -- 
-2.47.2
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
