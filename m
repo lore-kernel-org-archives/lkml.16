@@ -1,130 +1,175 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic309-21.consmr.mail.gq1.yahoo.com (sonic309-21.consmr.mail.gq1.yahoo.com [98.137.65.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D37253928;
-	Thu, 17 Apr 2025 17:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD139253928
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 17:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.137.65.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744911521; cv=none; b=W4ikuh3CPzNzi7PwQ4LxwwNaU6CUmDnIbHLV6Vdqk3ouFMXny7cPARxQrekul6mxdheeMaQ7U6sB10FWrh7KDILwz+ynQVm0AZVEOLgOp5tBJKfTXClxTNGD1O3AGiaos4FnWR0hFVfuztrkmsCKSxqoShiXyQaWn9U1vjuXpmw=
+	t=1744911554; cv=none; b=jWuykx7ksvf6a2gSgGi1m9uGHgU9zV2ANXPDWR1olCGd1Iv6gjBfkpjOozu+k10mi4CFkrzx9V6mm3lKtqUz6iTQVoMWQJJWQ7fSET4NGs+YQsuGfpOIlGgkC9HhVesGDRgec8lzQCepfoa+8QBrs5GR8omnV9B+/Osw5XSH/O0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744911521; c=relaxed/simple;
-	bh=aBBES7qWAwrLY1U9W4TcOgMEondA+0Z/D1I4wcYL/K4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nnUQ/dYtpPdf8gpO89oBCujfzj48f/FnIfAZdzDtYWAd9e61ccSwP5GpGVlod1wn2tSH5BvqpgkJMrcTMMOE2XjVkzBBZ4DSLi2xrqMY0I9TyNkSYPwSbKN2eN8RZceAAe4A5yDY0ckEgCsS4GMmdB+alI8GME9vKZXkz0hu2K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EApIwmRK; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744911554; c=relaxed/simple;
+	bh=87u6W1TihUzP8Z4D1g73cGTWePCPzbowKmmvBeLq2Bg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=TEngV3cFRaCWA4XcWFgEZaWYL3WpNZM2IwJd/ucGIo3XkFsP+rDTiEXOnudotClAnwn5eC4qS3NA/aojx6LAoX3b8YS1WALA+dLaK7VaHNMPeHbSEF0e3Sg0/Ky8l76Jw7EnpsaqU/Y3F9Mb2M6t65P3JokUHloFosPVbTYiLdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com; spf=pass smtp.mailfrom=aol.com; dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b=Qjda+O8l; arc=none smtp.client-ip=98.137.65.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aol.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EApIwmRK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744911519; x=1776447519;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aBBES7qWAwrLY1U9W4TcOgMEondA+0Z/D1I4wcYL/K4=;
-  b=EApIwmRKKUnAtQluYonLqYjb6PvDWSyu3KlksdrFEXk0z52nTLQx/TdX
-   iFcdCGk0BA0bIG/NKpFTIOdn/5wj3NTAl5WIBkYn0aYxxCGIb446uqs43
-   rJcqbo8dXUXOVCDUtmvgaxqtmepbZMcInu0k5zen+xtQ2T2lJwXH/J3iA
-   C/v5i93JFyx4+v/4k+HpATJav0c8is6S9tZfqttNgcO1l0XrPfpT3S9Lj
-   axo18WpZgiMj3sI66tRGb+6aG2Oi8sts26Z3iBTM6FwTnvUqJLInDUjdL
-   ET5SVr/tjgh2EhvQUhZVYX39RwEDXK2Lfq7h0QsquDDTwy71PrbGIFP7m
-   w==;
-X-CSE-ConnectionGUID: PqujK4iZS7OmObZ4t4eyFg==
-X-CSE-MsgGUID: DylYVFxJSxCbkwDf1yuWyw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="57185898"
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="57185898"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:38:39 -0700
-X-CSE-ConnectionGUID: /Jww+DIbQQCwjuaWkg/lCA==
-X-CSE-MsgGUID: 0uzxvsNNSBGFgt51Y0Nusg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="130827780"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:38:36 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u5TC5-0000000DGlm-2S6L;
-	Thu, 17 Apr 2025 20:38:33 +0300
-Date: Thu, 17 Apr 2025 20:38:33 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu,
-	GaryWang@aaeon.com.tw
-Subject: Re: [PATCH v3 08/10] gpio: aggregator: handle runtime registration
- of gpio_desc in gpiochip_fwd
-Message-ID: <aAE8mY2YjWt4PB1o@smile.fi.intel.com>
-References: <20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com>
- <20250416-aaeon-up-board-pinctrl-support-v3-8-f40776bd06ee@bootlin.com>
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="Qjda+O8l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1744911552; bh=B5EIQ+T8gzw3O3ySM34rCVBGg45rFyrTsDX/Alk2S/s=; h=Subject:From:To:Cc:Date:In-Reply-To:References:From:Subject:Reply-To; b=Qjda+O8lrR8EX0/IVevUX/lXWrc0mmEaVV/VgW5wymZJykuhbcquwu7Lhs3G2DqjxnIEEAIOpKeEr4yHjR6A3JJnHklXB9fLRBdY4bC6m7ytc70NNdqKb9VGOL6BVNEyVnb1xhNK3ug+j9nu42ohiRHG+5uWTL3NAKs4MrWUO6oeXJKHU9mjNwDxfkD7pwU2gbxuh21TnoWBFM+u8ChTmEmURLkRXhGrx34GF8lFjSxmEgOVEAmVQ8rxZ90tnRlfVfgbij62H7dF0mmw5ycfe/doJaZ1Zql8HnZzBvDnOiAD337OUIcH4Z/rH/2Msvqu2hd9PrKEqRaTkZKmkgu+ow==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1744911552; bh=RpLlX+z86ZK7nJeDffV+a8x5TCvgtfnTQNtezAsvgPD=; h=X-Sonic-MF:Subject:From:To:Date:From:Subject; b=sXIDXTJ7TdSZvuLyhwD4SSoN7y1JVVThPitBeG9oRvqJ9gWI4s33zLpm3uwsvvcqCJA3N8iSQgsOJ/C84cI7fvOCIk9zh3wlWUju4bLgi9J7W27SQNd1Sw15wj49qPLGqnfnKwUMY7VsiSlluck1msrOLwg7R90g7/vhxjwhdEi2FcFYScyd1F/BQkmFDvQ9/D+cqmD8/LR8+w+/qvUVkOoptuJh+yPMGrCIRMhdOUx5m9aeqiLIqM1f38JHvlN360ei3iqOh28Bb4TDepksE4MUOmrqBtv6mJib+bS6u0bqKJ7Wh3g/sz19PEVirtx7+aS4EbFdaFGcOpfc7GS61g==
+X-YMail-OSG: ZRGNm8wVM1nSCMBiOomP0Kf7VL1XYubqDjRsawjuIqNj_0vYGbqGIf247rDcTou
+ y0IBQxgbjx_5WLjNVwP.hm33RsTgZSuPQWrzt7C.QS9PnlqvUNWAIo4g3wGP4hDWaDDcGrUyEo9j
+ LbdSBxnZiS_vY7EQs0oL64VVWDi65djzPnUCiwrnIc0GBZR8VftG_lYjadUpvmSfnnokXU8x6.Wg
+ sTvzHpPlBA57hUuE5AoDP.VkKvWW2rViKLxMiiUfed3q423lLJUGXT3_p.62x5qNxeRC9SmtKbU2
+ evnGPOvORBqlNlsK6lCTaL2qU9TBtUbhAssLh_ieHaFuuqlNPrDopgqE6hZw6lLaq4WKQf_e32LU
+ eLKnYfnkehhp3KmWLTIDZZtXbkgDcCgxZJRr_g_Cxrb3Q_2IN71XprlvtKYy2WdkeOzuu7a52d_m
+ W.kvHDbIXDdBLCn6YniSHZIW7pIMhXjv1EH.XvvxOk5ZPIfFv9EpakDXZsLg7REtSfziLH3_DQ1W
+ VxnIHqs2f5gy_mEkeZ3JxvnvIqNMgLexkvgq.Yb56WDVHjMNy0JLnRg0h79s_uhyfCC5oSfiJ6M2
+ LAeAzoW_8uLCFJEf_lATEihIrunINqvWJr8GXvOeWCGo3JPRxx_DyU.nbRfb5SdQay0b30LwV4GZ
+ 3M26XvIIoyRC70zy0.sUhLMV8M6hMiFDuRc2KXwwqM4FUOP3RG04i8QKOq.eZugF14rWjBTpPY44
+ ea7HppiSbp_hv6R9ozyFEqzV5hYc3n.CHxsX1JGPv6WP1qSMYpbgOVS3GJBd0K4FVCqMcGKbCb8O
+ 2qDFItxMhUhmxWJ2RdZL13cRCqqvVbfTT21joCsa9Mdl9x5AAQmAiyv8QIS_BTuVhMOa3oJwY7ql
+ pRIdvyStF996t50JlcQrnj0CInYioWV8ce9lfO9x7cig0IcTqHedbtyqcPl3QrMP7u2CN7xa6Zki
+ GU0OzViYqAhyl7_UyJv5fx.mIJBuhlyWjGXpuYEsbGIIQZRvDMaQWdNN97_A8D5sQGXUFqFA_t9N
+ PahFpkPbL9nTwASnZCIg.PiKSEBXq1hSJjDhmwisLbwk6N5oyVIq5JfYa_nEDCUGC4kqcBlMa4WX
+ gRWxRo7kyfZqW3zcYzREDGVABWU_EPYDuQf1jaG1lnbAkeMzc0Fb.wgy75CAv.TeF5smO8Y9Frcx
+ j7jDXa9HTzw4nhhAVStyOMIblZkm5FdxHs31JKQ7qRQnRfGyAUIh.W.Qcmj4kVUyJKhy4w6czzb5
+ DVaqTWGA.UK7aL5PNxGl5xzOoV3yBUxhDHLgH2uMLMQ.IrHdd0p5pckr0CbVoUUebTenqNfRru6t
+ kqqcPv1DBG8.bsl6zfzR6cAIv9tV_E61ztq3yx._.g84CTmrtN3e2siKvDRkYirvmvbT7i13JgIh
+ ln.cLziX9Tmy28NTAhMtyn1S16I36kxhMVBei1nsboqze3myIGfVbQ.rNWZG3ZUO92ZLwCsfaZ8B
+ 1XUr5xnIbFNJyA_cS44do9_M1yTnsHkVtxWZ83Z60qogYmn2kVbL3RGWnywR_t5HlzPTjBw.AMnR
+ C.De_zWcEs.uE2bWfuYKm3zs3nHeNF4kXiR6A3AsGQnkFfm2ymw7HLkUjrU_J3R2owUTOW8Vgalz
+ paS.1GLsGrdnGCc_Vfiyjcd6rhyWnHeW1BUAOtvo3qofQUtnSFAwy2U7v9bUmRgwlqznFD.vCnr9
+ GZnPwELe2xY0q0ZqKHtZNYkIIQtqA8emWZoQ07W5x3QNIovMWCh.EmAijmHaieqiOIdWN6eFCfxe
+ bkpGlRhl9SCIUmKv_5TbDw5WqOl.GwEA.oXs8Q2m9o48MuLMrYukRE1WYoU8doqPLxbyvkGRfgnl
+ ldKGO2W7QhhnTxipccCnjUeQniPnC704zibYtIzzAkWncdDFNz0.GTRh7GpDfh_Fca9o8nJkIOsd
+ MculkKYU_kbhIlGhA809PoMcyU412p8AyknQRMdaeZwkwY_TopwzDC.p2Zkvg8GOY1pgwE9H7EJi
+ RrF3hn2STcyeavp.8KztzgDVckJaLKMNfrxdva34qm866fe66eIX770BWaMaV91zGWRXHdIa47Lw
+ oYN3Qa.TH030zhjzromLhjOn0Rdbe0QCbEbHWZDDRSkdkMb79xXFAprAUEt0hccik0buf4m__AaX
+ bRITRdVzb8B7BJzjmgEH.SbL276IcwdP8cOMGk1IKtXUW.zhppz4YD6xs7usSDiaaULXUo_F_13U
+ ome4kZNZoXpc7Pf_4DivfKG6nTbhjju57zF8yfQ1gSnupFL.wiKVahv.LsQ--
+X-Sonic-MF: <rubenru09@aol.com>
+X-Sonic-ID: acb42ab2-e095-4176-a93b-893fd3fd75f2
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.gq1.yahoo.com with HTTP; Thu, 17 Apr 2025 17:39:12 +0000
+Received: by hermes--production-ir2-858bd4ff7b-rtzhj (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID a26aee031807310d262ca66c92894fe7;
+          Thu, 17 Apr 2025 17:28:58 +0000 (UTC)
+Message-ID: <6ec1fa494ee823549fb97a48121cb28e37f1cc4d.camel@aol.com>
+Subject: Re: [PATCH] staging: sm750fb: fix instances of camel case
+From: Ruben Wauters <rubenru09@aol.com>
+To: Greg Korah-Hartman <gregkh@linuxfoundation.org>
+Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>, Teddy Wang
+	 <teddy.wang@siliconmotion.com>, Sudip Mukherjee
+	 <sudip.mukherjee@codethink.co.uk>, linux-fbdev@vger.kernel.org, 
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Thu, 17 Apr 2025 18:28:07 +0100
+In-Reply-To: <2025041758-mounting-populace-458f@gregkh>
+References: <20250417153101.353645-1-rubenru09.ref@aol.com>
+	 <20250417153101.353645-1-rubenru09@aol.com>
+	 <2025041758-mounting-populace-458f@gregkh>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416-aaeon-up-board-pinctrl-support-v3-8-f40776bd06ee@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Mailer: WebService/1.1.23665 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
 
-On Wed, Apr 16, 2025 at 04:08:16PM +0200, Thomas Richard wrote:
-> Add request() callback to check if the GPIO descriptor was well registered
-> in the gpiochip_fwd before to use it. This is done to handle the case
-> where GPIO descriptor is added at runtime in the forwarder.
-> 
-> If at least one GPIO descriptor was not added before the forwarder
-> registration, we assume the forwarder can sleep as if a GPIO is added at
-> runtime it may sleep.
+On Thu, 2025-04-17 at 18:58 +0200, Greg Korah-Hartman wrote:
+> On Thu, Apr 17, 2025 at 04:27:47PM +0100, Ruben Wauters wrote:
+> > As per the kernel style guidelines, and as reported by
+> > checkpatch.pl,
+> > replaced instances of camel case with snake_case where appropriate
+> > and
+> > aligned names in the header with those in the c file.
+> >=20
+> > Signed-off-by: Ruben Wauters <rubenru09@aol.com>
+> > ---
+> > =C2=A0drivers/staging/sm750fb/ddk750_sii164.c | 113 ++++++++++++-------=
+-
+> > ----
+> > =C2=A0drivers/staging/sm750fb/ddk750_sii164.h |=C2=A0 26 +++---
+> > =C2=A02 files changed, 69 insertions(+), 70 deletions(-)
+> >=20
+> > diff --git a/drivers/staging/sm750fb/ddk750_sii164.c
+> > b/drivers/staging/sm750fb/ddk750_sii164.c
+> > index 89700fc5dd2e..20c2f386220c 100644
+> > --- a/drivers/staging/sm750fb/ddk750_sii164.c
+> > +++ b/drivers/staging/sm750fb/ddk750_sii164.c
+> > @@ -12,11 +12,11 @@
+> > =C2=A0#define USE_HW_I2C
+> > =C2=A0
+> > =C2=A0#ifdef USE_HW_I2C
+> > -=C2=A0=C2=A0=C2=A0 #define i2cWriteReg sm750_hw_i2c_write_reg
+> > -=C2=A0=C2=A0=C2=A0 #define i2cReadReg=C2=A0 sm750_hw_i2c_read_reg
+> > +=C2=A0=C2=A0=C2=A0 #define I2C_WRITE_REG sm750_hw_i2c_write_reg
+> > +=C2=A0=C2=A0=C2=A0 #define I2C_READ_REG=C2=A0 sm750_hw_i2c_read_reg
+>=20
+> Close, but these are really a function name, not a macro, right?
+>=20
+> And what sets this #define?=C2=A0 If it's always enabled, then unwrap thi=
+s
+> indirection instead of keeping it around
 
-...
+Will take a look into it, if it turns out that this is in fact actually
+used/different, what would be the best way to name this? checkpatch.pl
+doesn't like the camelCase that's currently there.
 
-> +int gpio_fwd_request(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-> +
-> +	return fwd->descs[offset] ? 0 : -ENODEV;
+> > =C2=A0#else
+> > -=C2=A0=C2=A0=C2=A0 #define i2cWriteReg sm750_sw_i2c_write_reg
+> > -=C2=A0=C2=A0=C2=A0 #define i2cReadReg=C2=A0 sm750_sw_i2c_read_reg
+> > +=C2=A0=C2=A0=C2=A0 #define I2C_WRITE_REG sm750_sw_i2c_write_reg
+> > +=C2=A0=C2=A0=C2=A0 #define I2C_READ_REG=C2=A0 sm750_sw_i2c_read_reg
+> > =C2=A0#endif
+> > =C2=A0
+> > =C2=A0/* SII164 Vendor and Device ID */
+> > @@ -25,7 +25,7 @@
+> > =C2=A0
+> > =C2=A0#ifdef SII164_FULL_FUNCTIONS
+> > =C2=A0/* Name of the DVI Controller chip */
+> > -static char *gDviCtrlChipName =3D "Silicon Image SiI 164";
+> > +static char *dvi_controller_chip_name =3D "Silicon Image SiI 164";
+>=20
+> This is a totally different thing.
 
-ENODEV? Hmm... Why has that error code been chosen?
+It is, however I believe it is somewhat more descriptive, I suppose it
+doesn't really matter though and if it should be the same, just made
+snake_case, I can do that.
+>=20
+> > =C2=A0#endif
+> > =C2=A0
+> > =C2=A0/*
+> > @@ -37,14 +37,14 @@ static char *gDviCtrlChipName =3D "Silicon Image
+> > SiI 164";
+> > =C2=A0 */
+> > =C2=A0unsigned short sii164_get_vendor_id(void)
+> > =C2=A0{
+> > -	unsigned short vendorID;
+> > +	unsigned short vendor;
+>=20
+> Why change this?
 
-> +}
+Again removing camelCase, kernel style guide says that shorter names
+are preferred (unless I misinterpreted that), I could make it vendor_id
+if that is preferred, I believe the same would be with device_id below
+it.
 
-...
+> This is a mix of lots of different changes, please break things up
+> into
+> "one logical change per patch"
 
->  int gpio_fwd_register(struct gpiochip_fwd *fwd)
->  {
->  	struct gpio_chip *chip = &fwd->chip;
-> +	unsigned int ndescs = 0, i;
+Would it be best to split each rename (function or variable) into a
+separate patch? I do agree it is quite a lot and I was a little unsure
+when sending this one, but I also don't want to make a lot of different
+patches and spam your email with 100 patches at once.
 
-Slightly better (from maintenance perspective) to decouple assignment as it's
-not a standalone function that just counts them. So it means some code may
-appear in between and in long-term someone might screw up with the initial
-value for that.
-
->  	int error;
-
-	ndescs = 0;
-
-> +	for (i = 0; i < chip->ngpio; i++)
-> +		if (fwd->descs[i])
-> +			ndescs++;
-> +
-> +	/*
-> +	 * Some gpio_desc were not registers. They will be registered at runtime
-
-registered
-
-> +	 * but we have to suppose they can sleep.
-> +	 */
-> +	if (ndescs != chip->ngpio)
-> +		chip->can_sleep = true;
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+I suppose I could make one rename per patch and do them a few at a
+time, that may take longer though.
+>=20
+> thanks,
+>=20
+> greg k-h
 
