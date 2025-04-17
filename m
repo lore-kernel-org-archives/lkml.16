@@ -1,159 +1,101 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62E87E1
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 04:46:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E64119ABC6;
+	Thu, 17 Apr 2025 04:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744865162; cv=none; b=g3/JlhFKauayJJalVuzrthxb+85W9Mgn8JnHtcKULms114+xg1s0129AKEXa7P8IZXd7oQDalGlDJlqQYbZ8uw3CkDZe2KwCkhzX1mDVNaahpoS1ZNjOXUynA0rXQpv/YE7LUpap3EUhozpDRUlSnkk6wpR74eSe6mTwu/blKwU=
+	t=1744865195; cv=none; b=ZMIM69Zzmja/Rwz19QzoO21NWIJHN5bcv9MRPpFnDLAoe7AYFdI7kD1YS/GrkfUeb+XxQw5PvzHY0akz7ZedViTeU2uCqFOv53kSmmZSVZ2eXLMhVQPtc756kC75wZhojPFmBPGNaIlMSJQhNCJ75HDGyCldM1AcmEJMuAq1gqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744865162; c=relaxed/simple;
-	bh=RPXZU/aP7WbMdeCTfBXzeiUmIUu7vsCmakN5UMy60VY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NVKOEzu+DoYmQFdkXk6m/+NxMdAuaPcKKQjy19leq9Uurdmt/eimncEYi175RjRCR2Pzl/X6+VFev+HFyEBW56LrIYiymIeLfh9W+Pt904OYS8F6cr1ANo70zHitxVM5CmPEDKj5BHwfetP++s4Q4rqtAYvUWnrgjVqKyVo0NpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dadbc207; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744865195; c=relaxed/simple;
+	bh=K8SkiHxrCKzwTq/mZJ96qvMfgq/dZJsgw3ghWUVqKug=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ld4SRiWH6gBLvrqvZ/WuZoeCL4c2wBkq5vRbdPlsGxG2hOejkNjtQi6xPoA/xQcmjVLI74ycJE8AKB6+sc4VblXCJZ2z7fh7F7b1MyaJLb5hC/za5imJx0PjZnr9bu3tvcocYXsQAfOmf7yjbcFsKYMiylRK+W+ehKM3JsVhRQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=IdoC2tUy; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dadbc207"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744865158;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nu1ItUoeTVNPAi+YTEKwfobNfHWy8BGxvV0+PknfgOw=;
-	b=dadbc20747aMlX8LMCtS5SYSYUTdkPiGHsSI6lEfGvJj2rbyiu+A3PunbjxwBYDyBkz1U/
-	kGYmuiyI/o3Yf5ojMol3I/3PeRSmtj4SnMR5iTmswvexNWeXbtgUis/gZFUR4Yr8l77mMN
-	6p33ZxbLaFvUAdPAg6Gl+eZjgN2nZDk=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: andrii@kernel.org,
-	martin.lau@linux.dev,
-	bpf@vger.kernel.org
-Cc: alexis.lothore@bootlin.com,
-	mrpre@163.com,
-	Jiayuan Chen <jiayuan.chen@linux.dev>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next v1 2/2] selftests/bpf: Add link update test for cgroup_storage
-Date: Thu, 17 Apr 2025 12:40:15 +0800
-Message-ID: <20250417044041.252874-3-jiayuan.chen@linux.dev>
-In-Reply-To: <20250417044041.252874-1-jiayuan.chen@linux.dev>
-References: <20250417044041.252874-1-jiayuan.chen@linux.dev>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IdoC2tUy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1744865188;
+	bh=W4Eno2aLkiyV8ghB33/W6zz5PT3dWlL4c69V39DVBL0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=IdoC2tUyU5VryngxRsqKjnUr/BM2r+AOctincFaW9awNT2XqWZiMxessCfIa63qsu
+	 kSh5m+FW2Gppx2UYDPzgQ08ZGugWxxc+Ql6ATXfpK3BUctue55ffU9gF0mirZfek5o
+	 j6KYsqHdrzvBDlnj3fN7sM7Kc/zCaoD1aIK7Sy62sc05ybNiGnOhSSTuuOxXt24gfu
+	 b+xzSE4ZUhvSEnYrEstmiKdnOn3C2S58PF7p+xkDjEk3/3ftBwKTgwWWQwvKm34Ybl
+	 FnMhfC6JAeDjQ7Qt/7n3y5FOmdv0T2wjWcWwmm9QM5W8JnIuFjPleKFcQWcwxQBswD
+	 8B7QR0N7IG9BQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZdQMk6PcLz4x8b;
+	Thu, 17 Apr 2025 14:46:26 +1000 (AEST)
+Date: Thu, 17 Apr 2025 14:46:25 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Greg KH <greg@kroah.com>, Rob Herring <robh@kernel.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>
+Subject: linux-next: manual merge of the tty tree with the devicetree tree
+Message-ID: <20250417144625.4be32ba7@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; boundary="Sig_/s4P5Egj6WZVdiIqMz_C.n=E";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Add link update test for cgroup_storage.
+--Sig_/s4P5Egj6WZVdiIqMz_C.n=E
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-'./test_progs -a cgroup_storage_update'
-test_cgroup_storage_update:PASS:create cgroup 0 nsec
-setup_network:PASS:ip netns add cgroup_storage_ns 0 nsec
-setup_network:PASS:open netns 0 nsec
-setup_network:PASS:ip link set lo up 0 nsec
-test_cgroup_storage_update:PASS:setup network 0 nsec
-test_cgroup_storage_update:PASS:load program 0 nsec
-test_cgroup_storage_update:PASS:attach no map program 0 nsec
-test_cgroup_storage_update:PASS:bpf_link_update 0 nsec
-test_cgroup_storage_update:PASS:first ping 0 nsec
-test_cgroup_storage_update:PASS:second ping 0 nsec
-test_cgroup_storage_update:PASS:third ping 0 nsec
-61      cgroup_storage_update:OK
-Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
+Hi all,
 
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
----
- .../selftests/bpf/prog_tests/cgroup_storage.c | 45 +++++++++++++++++++
- .../selftests/bpf/progs/cgroup_storage.c      |  6 +++
- 2 files changed, 51 insertions(+)
+Today's linux-next merge of the tty tree got a conflict in:
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/cgroup_storage.c b/tools/testing/selftests/bpf/prog_tests/cgroup_storage.c
-index cf395715ced4..8478b08aa62a 100644
---- a/tools/testing/selftests/bpf/prog_tests/cgroup_storage.c
-+++ b/tools/testing/selftests/bpf/prog_tests/cgroup_storage.c
-@@ -94,3 +94,48 @@ void test_cgroup_storage(void)
- 	close(cgroup_fd);
- 	cleanup_cgroup_environment();
- }
-+
-+void test_cgroup_storage_update(void)
-+{
-+	struct cgroup_storage *skel;
-+	struct nstoken *ns = NULL;
-+	int cgroup_fd;
-+	int err;
-+
-+	cgroup_fd = cgroup_setup_and_join(TEST_CGROUP);
-+	if (!ASSERT_OK_FD(cgroup_fd, "create cgroup"))
-+		return;
-+
-+	if (!ASSERT_OK(setup_network(&ns), "setup network"))
-+		goto cleanup_cgroup;
-+
-+	skel = cgroup_storage__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "load program"))
-+		goto cleanup_network;
-+
-+	skel->links.bpf_prog_no_map =
-+		bpf_program__attach_cgroup(skel->progs.bpf_prog_no_map,
-+					   cgroup_fd);
-+	if (!ASSERT_OK_PTR(skel->links.bpf_prog_no_map, "attach no map prog"))
-+		goto cleanup_progs;
-+
-+	err = bpf_link_update(bpf_link__fd(skel->links.bpf_prog_no_map),
-+			      bpf_program__fd(skel->progs.bpf_prog), NULL);
-+	if (!ASSERT_OK(err, "bpf_link_update"))
-+		goto cleanup_progs;
-+
-+	err = SYS_NOFAIL(PING_CMD);
-+	ASSERT_OK(err, "first ping");
-+	err = SYS_NOFAIL(PING_CMD);
-+	ASSERT_NEQ(err, 0, "second ping");
-+	err = SYS_NOFAIL(PING_CMD);
-+	ASSERT_OK(err, "third ping");
-+
-+cleanup_progs:
-+	cgroup_storage__destroy(skel);
-+cleanup_network:
-+	cleanup_network(ns);
-+cleanup_cgroup:
-+	close(cgroup_fd);
-+	cleanup_cgroup_environment();
-+}
-diff --git a/tools/testing/selftests/bpf/progs/cgroup_storage.c b/tools/testing/selftests/bpf/progs/cgroup_storage.c
-index db1e4d2d3281..33a6013ca806 100644
---- a/tools/testing/selftests/bpf/progs/cgroup_storage.c
-+++ b/tools/testing/selftests/bpf/progs/cgroup_storage.c
-@@ -21,4 +21,10 @@ int bpf_prog(struct __sk_buff *skb)
- 	return (*counter & 1);
- }
- 
-+SEC("cgroup_skb/egress")
-+int bpf_prog_no_map(struct __sk_buff *skb)
-+{
-+	return 1;
-+}
-+
- char _license[] SEC("license") = "GPL";
--- 
-2.47.1
+  Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
 
+between commit:
+
+  672da444fccd ("dt-bindings: remove RZ/N1S bindings")
+
+from the devicetree tree and commit:
+
+  0ed228275485 ("dt-bindings: serial: snps-dw-apb-uart: Simplify DMA-less R=
+Z/N1 rule")
+
+from the tty tree.
+
+I fixed it up (Ijust used the latter) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/s4P5Egj6WZVdiIqMz_C.n=E
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgAh6EACgkQAVBC80lX
+0GyDZwf9E27ZmXgD26/S0yb5AwL4MkGUxbw4cxfg3XoW6g+o+PpaZ35gupJKf2kL
+I5m8dnF57c9erInfaW3vnO/gBsftrAnaarpD4PBxHLfLQOCgnQVmD5TJAYOrSSYV
+cNkYnf8a9H/iBn8LvlEeGUvYb6Qf2TisQwKb4bIYfIp00fkYUmvU1pGOnzBZkS5G
+IbYeLQ+bdlvvZDUl3Da2Rl8OQFuOeLObHHn2DF+bxVyymdboRYRqTZ4qvjyEIYvy
+mFPQcAl96kxjquyAnQuiZVqKBuQZ5msiy10MYfGZ4gyY7/1EL3bkRrgstHPD0ZbX
+Wx80fk2sWVo++B8YQehl1zzECOvKhQ==
+=zIiW
+-----END PGP SIGNATURE-----
+
+--Sig_/s4P5Egj6WZVdiIqMz_C.n=E--
