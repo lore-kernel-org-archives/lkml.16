@@ -1,157 +1,135 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE04E1D63D6;
-	Thu, 17 Apr 2025 10:08:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D3222A1D5;
+	Thu, 17 Apr 2025 10:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.129.21.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744884540; cv=none; b=noMXLZsa12PtrPTgDiYFQ76FWbzwFYc/c3WXr2w7/YmNWemJfoPP3uf/l6sxv4TiROO7tEHO6mQ/toKWqThZmHp+VCAHIJXsAe0NfXqk8tlOYq21kUeupc/12yvVOxyQndCNhksBNS9XULsoQt9HCOVWVil82zFNK7TLBnAn5YI=
+	t=1744884633; cv=none; b=HFcvwHvyTBK3kLmptryc1mZqzkD7o9PkRW2Fr+bjdDTSSTwi/nx4N72yxTdTTnXruArzcOodT+yW0S2RPdhDi0hghwBvFaH1gVZqSuEzBvjq9lvyefb79tQKxzHqYtaH9ogA9ciwHc2ccE+MBFmtLyTUTcZTQFzPmdBKLVJ7KYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744884540; c=relaxed/simple;
-	bh=10pNOVV0gQLeU0Jbw1YIJzu9t4BhwJ4GIrZhQVMTtdY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D+qZ33oED+1k50vUyC2vUS54Hum0NdxydmvyF+ab4Gu1Shw/mDzR8YuJzWPIzuKZJQTTBdufaZoYNwF9QKdA6fHuF2DntxATmvI+SsCmW+X/nJoIvrrii6G7Cx3HApwVSSgP7jXfGmwtiQy8jNRiwHiU5Wji3zWY6YpG1dwDD+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=U8pl/SFw; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1744884633; c=relaxed/simple;
+	bh=EsRsSj5ZTvOM1KJnm90ywQ0x9hB4YFNumvk55p/KIbc=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=MHoLcjh/Dt3HgNoboxpTPuAtU5O+B5ogZQDuz3IGZEeThTfMbfYX/XQ5ChJvwl4ad0kmbMQtOX4ad74fbWvYLPmwqW0YnlPUavXSQ8sL+88LKE3c1KemYfbiQIxMTFzRSFzYVcPe4CRBV6l0PSBa9Ywe019ynJTt2VkxcOcEkD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr; spf=pass smtp.mailfrom=3xo.fr; dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b=0fdtNDFs; arc=none smtp.client-ip=212.129.21.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="U8pl/SFw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1744884535; x=1745489335; i=wahrenst@gmx.net;
-	bh=KboW8T0LwmdQHDzhaLO8y9T+QaLii17k/39YhKZ8oxI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=U8pl/SFwG4FteTqjHlyBNWNeoj/6Cg6bgUncQSCwQitCyBL4N0vL/R4jQtd26i3B
-	 GrTZeWZMwrVhLBkjd26/ClIUm5mfPDdzucSaOJLqZYY9yTrwl7NMwhmCYz1pn8QQE
-	 pnN9+6qDC79tO6JoI9YQ/uN1n04OfWwObfiGrPLaEWKLH9SyfjqNQG9GZ/7InCF7p
-	 R7a0BMcEBFFbvBQlnU5RDq27MqbypErqHZU1RdudZSSKwQ6/D4yS6/Ytd9G/b/ntG
-	 LeftBAqZ+8eeAinoLFMf2/b1tU76CNdvIVbICJuFQrFElfaxp4bNuFvwJcwut4K0d
-	 FZcmcLvkA+ScL4dNvg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.107] ([37.4.251.153]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M5fIW-1uCUmL3Avy-009VWA; Thu, 17
- Apr 2025 12:08:55 +0200
-Message-ID: <14654c19-fa26-4d37-8f0f-9cf092982b67@gmx.net>
-Date: Thu, 17 Apr 2025 12:08:54 +0200
+	dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b="0fdtNDFs"
+Received: from localhost (mail.3xo.fr [212.129.21.66])
+	by mail.3xo.fr (Postfix) with ESMTP id 55498CB;
+	Thu, 17 Apr 2025 12:10:23 +0200 (CEST)
+X-Virus-Scanned: Debian amavis at nxo2.3xo.fr
+Received: from mail.3xo.fr ([212.129.21.66])
+ by localhost (mail.3xo.fr [212.129.21.66]) (amavis, port 10024) with ESMTP
+ id VFVFhVEXUlTK; Thu, 17 Apr 2025 12:10:21 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.3xo.fr DF2908D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xo.fr; s=3xo;
+	t=1744884621; bh=cEovSie5bPZsVx3CnJ0Skbpj6zHabO1hydZaJkwFs24=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=0fdtNDFsENFoaAUJ1xp+B2t6xldOSGZCp/9jU3VMorwZR/NMZmgoBIRIT8zhqtx8U
+	 EBk4DCw5ETeFbBjJdR5w2avtzTOKQe3VoQ/HRpTT7i63LKsWRNykBga6gTBb3nzgAJ
+	 QG9k6ELrX9gesnEBfutnItM7aYs1IlM/0Uj/Q+3O1ve0ndMVBXOchwgAK5VSV26xHu
+	 wbmp+ib7sPZxAdZK/LkdctofD+y79KN0Kn6Ed37CErv//eqw8b0yT/HlhAGy5c3FgV
+	 qPPYF3MqJLQtl9j0AKVWvq4WzYhzyVA/yqNrHy99FEcYDWivXv+xAyN1xVDAYYjbkp
+	 tGelecKgztLIQ==
+Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by mail.3xo.fr (Postfix) with ESMTPSA id DF2908D;
+	Thu, 17 Apr 2025 12:10:20 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] clk: bcm: rpi: Add NULL check in
- raspberrypi_clk_register()
-To: Henry Martin <bsdhenrymartin@gmail.com>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, florian.fainelli@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, popcornmix@gmail.com,
- mripard@kernel.org, u.kleine-koenig@baylibre.com, linux-clk@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, nathan@kernel.org,
- dave.stevenson@raspberrypi.com
-References: <CAPY8ntAFHW3kiqCnXjFtzL9FnRoQ69v8+3yJ+jR8_W8Bb+6d8A@mail.gmail.com>
- <20250402020513.42628-1-bsdhenrymartin@gmail.com>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-Autocrypt: addr=wahrenst@gmx.net; keydata=
- xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
- IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
- NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
- JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
- TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
- f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
- V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
- aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
-In-Reply-To: <20250402020513.42628-1-bsdhenrymartin@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Vp3a+37uaw4BVeCxFEXatGI5F4P8nElZTeg0boA2hoAHEK14seC
- yQF09nylKm//RzK80Ccl1Nxq5xx+AXMmnju2sSrSL6/Xd0A3KTGWeA0gAcs0RGhEkhFZU79
- pKrs8ZnayWwIslZqi1R1HDP1936LRCb1l7TQJlsh0r9izdjT4kwqc1tudY2OAK1D+YIpe7r
- 6UZT+IMtS59ieG7LFSePw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:7FDxd8SGR7E=;gMwnoXSoReXFUKsr4zsYdoIONYG
- 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
+Date: Thu, 17 Apr 2025 12:10:20 +0200
+From: Nicolas Baranger <nicolas.baranger@3xo.fr>
+To: Paulo Alcantara <pc@manguebit.com>
+Cc: Christoph Hellwig <hch@infradead.org>, hch@lst.de, David Howells
+ <dhowells@redhat.com>, netfs@lists.linux.dev, linux-cifs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Steve French
+ <smfrench@gmail.com>, Jeff Layton <jlayton@kernel.org>, Christian Brauner
+ <brauner@kernel.org>
+Subject: Re: [netfs/cifs - Linux 6.14] loop on file cat + file copy when files
+ are on CIFS share
+In-Reply-To: <f12973bcf533a40ca7d7ed78846a0a10@manguebit.com>
+References: <10bec2430ed4df68bde10ed95295d093@3xo.fr>
+ <35940e6c0ed86fd94468e175061faeac@3xo.fr> <Z-Z95ePf3KQZ2MnB@infradead.org>
+ <48685a06c2608b182df3b7a767520c1d@3xo.fr>
+ <F89FD4A3-FE54-4DB2-BA08-3BCC8843C60E@manguebit.com>
+ <5087f9cb3dc1487423de34725352f57c@3xo.fr>
+ <f12973bcf533a40ca7d7ed78846a0a10@manguebit.com>
+Message-ID: <e63e7c7ec32e3014eb758fd6f8679f93@3xo.fr>
+X-Sender: nicolas.baranger@3xo.fr
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-Am 02.04.25 um 04:05 schrieb Henry Martin:
-> devm_kasprintf() returns NULL when memory allocation fails. Currently,
-> raspberrypi_clk_register() does not check for this case, which results
-> in a NULL pointer dereference.
->
-> Add NULL check after devm_kasprintf() to prevent this issue.
->
-> Fixes: 93d2725affd6 ("clk: bcm: rpi: Discover the firmware clocks")
-> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
-> Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
+Hi Paulo
 
-Just a note, please don't send new patch versions as a reply to older=20
-ones. This makes them harder to find.
+Resending this mail with content-type: text, sorry !
 
-Thanks
-> ---
-> V1 -> V2: Correct the commit hash in the Fixes: tag.
->
->   drivers/clk/bcm/clk-raspberrypi.c | 2 ++
->   1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-ras=
-pberrypi.c
-> index 0e1fe3759530..720acc10f8aa 100644
-> --- a/drivers/clk/bcm/clk-raspberrypi.c
-> +++ b/drivers/clk/bcm/clk-raspberrypi.c
-> @@ -286,6 +286,8 @@ static struct clk_hw *raspberrypi_clk_register(struc=
-t raspberrypi_clk *rpi,
->   	init.name =3D devm_kasprintf(rpi->dev, GFP_KERNEL,
->   				   "fw-clk-%s",
->   				   rpi_firmware_clk_names[id]);
-> +	if (!init.name)
-> +		return ERR_PTR(-ENOMEM);
->   	init.ops =3D &raspberrypi_firmware_clk_ops;
->   	init.flags =3D CLK_GET_RATE_NOCACHE;
->  =20
+Thanks again for answer and help, it's good to hear you're back to 
+health.
 
+> Thanks for the trace.  I was finally able to reproduce your issue and 
+> will provide you with a fix soon.
+
+Perfect... And thanks !
+
+If you need more traces or details on (both?) issues :
+
+- 1) infinite loop issue during 'cat' or 'copy' since Linux 6.14.0
+
+- 2) (don't know if it's related) the very high number of several bytes 
+TCP packets transmitted in SMB transaction (more than a hundred) for a 5 
+bytes file transfert under Linux 6.13.8
+
+Do not hesitate to ask, I would be happy to help.
+
+Kind regards
+Nicolas
+
+
+
+
+Le 2025-04-15 20:28, Paulo Alcantara a écrit :
+
+> Hi Nicolas,
+> 
+> Sorry for the delay as I've got busy with some downstream work.
+> 
+> Nicolas Baranger <nicolas.baranger@3xo.fr> writes:
+> 
+> I'll look into it as soon as I recover from my illness. Hope you're 
+> doing better
+
+I'm fully recovered now, thanks :-)
+
+> I had to rollback to linux 6.13.8 to be able to use the SMB share and
+> here is what I constat
+> (don't know if it's a normal behavior but if yes, SMB seems to be a 
+> very
+> very unefficient protocol)
+> 
+> I think the issue can be buffer related:
+> On Linux 6.13.8 the copy and cat of the 5 bytes 'toto' file containing
+> only ascii string 'toto' is working fine but here is what I capture 
+> with
+> tcpdump during transfert of toto file:
+> https://xba.soartist.net/t6.pcap
+> 131 tcp packets to transfer a 5 byte file...
+> Isn't there a problem ?
+> Openning the pcap file with wireshark show a lot of lines:
+> 25    0.005576    10.0.10.100    10.0.10.25    SMB2    1071    Read 
+> Response, Error:
+> STATUS_END_OF_FILE
+> It seems that those lines appears after the 5 bytes 'toto' file had 
+> been
+> transferred, and it continue until the last ACK recieved
+
+Thanks for the trace.  I was finally able to reproduce your issue and
+will provide you with a fix soon.
