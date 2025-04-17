@@ -1,125 +1,61 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103F61DE4F6;
-	Thu, 17 Apr 2025 06:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FC31DBB38;
+	Thu, 17 Apr 2025 06:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744869714; cv=none; b=bbHPY0TIjeAjZ0tp7qYLNbnhxekc2xWS7M7IUB542MNwvTD6VDej+MQOOyafIw7Q25fkA8H+583TXvlEA2J8dj/xlfJk5ktQiDum4ckexNTVF+2Qz8ee/ddSJxQPKj1F0OpCE0qZpUuZ3WdEw0wnISeZeBbEbKVpD9K4ij2LX1Y=
+	t=1744869807; cv=none; b=qT7p0ZoAetiNb3hB8Hai0nlxc36/mdN137/JB1JTF2c76h0UMx85A3+MIVDLqnnabx2PcVziHJzLjF9IXdiq/kqTDogHtEuRZ0M5Z4z7h9MN5Ev/tm7Sd0gQ3WHid67lKhPHgzL4lQP6WygPmPT5UC8p7/Fx76qG0pe5CpyW4+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744869714; c=relaxed/simple;
-	bh=KpV+jFENVgflhlgCLLNEqk737rf20tIu6cxYp9KlZII=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uYYNRkmSB3MwXH+YBeD1ZGFCEp6a/Iv3V3BJlr9C7vqmW1i6uWXn6Idr54U6NSo/gn3J1IxWk+uA5EKg9F86rtQCzi+Drkm/MSjaGeR3Z9XDha+smlFWWBegIHnEmsdaV0Rzuy/Ya3HsxyATohTJh/AOowNLXLiPKJLaBUe3N9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IetuOzlP; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IetuOzlP"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4769aef457bso4775121cf.2;
-        Wed, 16 Apr 2025 23:01:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744869712; x=1745474512; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KZZ0OiCh3i8QphKEZyGH0TyGWbIM9TA+BFLKz7OvmdY=;
-        b=IetuOzlPyoGfl2KluHxAmlji4J0yKcLsOuVSIfgdctOtL6PVZoyOS2Sw8iSGlMLcIq
-         jYYsC0CM5u7u4g1RialybjDkr56pIkMkKkArKXr2XnsNl+AfbXOFOtclWJO/OCdX8DJ6
-         utrlnbCnt+CU1wNXrFNlP4dFBLxanj7I/r6Gtb7iQKE+icXC5rLq9cTLao9YTtRmR6a/
-         WQynC6KsrMCKnp6MiJMH6v4g+ZdLEweVah8FUsVmbI7A+sZl5HOJJTT+oS56ZWWGSht1
-         LsTV9STI9I+QCETXnBLqa0C3Q3IG3Bh06t/4efpwYjonPPdGgUaH2993URM0rMR3J9in
-         Z3/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744869712; x=1745474512;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KZZ0OiCh3i8QphKEZyGH0TyGWbIM9TA+BFLKz7OvmdY=;
-        b=rvHQPRwp9gbIESLzl/U5LuEHAr83CyChJijFNJkX+3Esr+c/by0NISksMBhNuq5CCV
-         5L3nUjce4yWjwtOjaqCdl+grE0lU48jQCsgZOO1oa2AyhJWOF3sW4ie8RKYSwfiPRt64
-         zNan6u2aEFcBDYsyPM7RcCGN40An9BD3jkivyA4B98zP0QOVaqZjkklj6uMfJfXV1nhY
-         9Kws2d7BPpOqNlEt/9kN9o7WjWh+sDKcWnCVHYurrb1KeW2m5sER6Q2FPhs2WtU/c8Yf
-         aHH+t145oLcxihH7N3YDJQysQrRFgVs4YjW8+v03uQgiD2K1w/tnuicHv7AUWhOP+gBP
-         qG/g==
-X-Forwarded-Encrypted: i=1; AJvYcCUxNLMa2FYNRsBmhk/GLuVpyz42hi9cPYKyNxuDx+avlE/P0dGsVWfpPom4AdVcngRJgXIxuIv/m44+Mncl@vger.kernel.org, AJvYcCWDwy78k7IrPcMadHtwY+9zO4fkgh1H4XvbFLl0t7/ZzaCwsJdNNnaSrTUUsO2kyPs/m2vfHV3ntVmT@vger.kernel.org, AJvYcCWP6ndmCwalMyhoEBWcAs5yZNquG3nZjjxwyj8A0mv4KxsntuV/mBX4WcLGLRz/0eKL989D+Po9XSpA@vger.kernel.org, AJvYcCX/4re0EbXBedcCH5/zKkO1siKCYQwOg8zueDLchJCIakWsXdfn1GIC8lV0v9LB6xGULf8Q0Cp2QPOn@vger.kernel.org, AJvYcCXUBDOzXuiVK67A3ALMgG/JIFZTVDDtDKiYfwKxiva6H0xHu6q9/IZgBkplfFK0ihEW/V3u7WDT@vger.kernel.org, AJvYcCXtlcExQXLqMJUqNJb5X/rS7oAgcdp+y+vQbYZg5FO6bUy7Y5R0IJOg72SnKufOYYST/eD5GNm+nuPz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7hX8IPJ2LzcMhRJd2byMj5jLyxQ7yru3idTVRY17Wj6J12Pin
-	H0xAI2olWWk3AI1do++m8MmQbcoBkn7dkEXzgB7JIPekurV/rFc0Ui/TtUzTGiZVG5r/13/b+GU
-	HT7EssjMmhX5KTW58Oi+I/DQSx7M=
-X-Gm-Gg: ASbGncuV26qEgRcrPHEdxRLESpyY4ftcQ3cC4ACiUbr8CwhtO980H5DYp/4ca2I3TIp
-	1ZQ+MDCzW01S1MgJ0hQHgQkBxydrP7THXu6K5sAOd4JtuVgtD8S+ecMj/csETk58uHVR5gC19Qq
-	hBG7fcUixhDfrWtfjliFT708KoIyZE03y1gU5AErYKLXZ5ZZjrYh4KK5g=
-X-Google-Smtp-Source: AGHT+IF8tMblL4zzcQke4qYiQBnX4U0VMVjKusdYcCfocK8IStZ6GIbCT+kwGjMmzlxIaiYYv7SzQwcpgCKgqbWryyE=
-X-Received: by 2002:ac8:7d8f:0:b0:476:98d6:141d with SMTP id
- d75a77b69052e-47ad811527fmr75350031cf.32.1744869711825; Wed, 16 Apr 2025
- 23:01:51 -0700 (PDT)
+	s=arc-20240116; t=1744869807; c=relaxed/simple;
+	bh=6ZoqTPwfO/hTrww6ih36cHlyfM9o4ZZ9D90K3jw68XM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZkwctCfX6MEOvzdYtrJlBboDxk0EPBlcpAGfS7qo/WYR0kMgHlpwKL5ExjbWu405AdTUr7FtiFvOF4dbw8jYnXuTcT0P/Vxd9WkyGXKSFS6Ss4xn0MRGWxshQkSvQIvNax+v7QqFspnKJmSczT5TW314tZh9YKyRlbpacHsbcnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72006C4CEE4;
+	Thu, 17 Apr 2025 06:03:26 +0000 (UTC)
+Date: Thu, 17 Apr 2025 08:03:22 +0200
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
+	Krishna Manikandan <quic_mkrishn@quicinc.com>, Jonathan Marek <jonathan@marek.ca>, 
+	Bjorn Andersson <andersson@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Joerg Roedel <joro@8bytes.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 01/10] dt-bindings: display/msm: dp-controller:
+ describe SAR2130P
+Message-ID: <20250417-arboreal-turkey-of-acumen-e1e3da@shite>
+References: <20250417-sar2130p-display-v4-0-b91dd8a21b1a@oss.qualcomm.com>
+ <20250417-sar2130p-display-v4-1-b91dd8a21b1a@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
- <20250416-wmt-updates-v1-12-f9af689cdfc2@gmail.com> <8feea1ba-2d4a-4898-9882-cf3ec8b03852@kernel.org>
-In-Reply-To: <8feea1ba-2d4a-4898-9882-cf3ec8b03852@kernel.org>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Thu, 17 Apr 2025 10:01:47 +0400
-X-Gm-Features: ATxdqUHbb-NLlWiY3v98GpI67Jq817VdD6NkjDUJu2KmL6qXEllQohh5zOadrGI
-Message-ID: <CABjd4YzkUYE3B7sPCm97NFcv7=nkwQTNFjSiomjCHzTFRDCLZg@mail.gmail.com>
-Subject: Re: [PATCH 12/13] ARM: dts: vt8500: Add VIA APC Rock/Paper board
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250417-sar2130p-display-v4-1-b91dd8a21b1a@oss.qualcomm.com>
 
-On Thu, Apr 17, 2025 at 9:36=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
->
-> On 16/04/2025 10:21, Alexey Charkov wrote:
-> > diff --git a/arch/arm/boot/dts/vt8500/Makefile b/arch/arm/boot/dts/vt85=
-00/Makefile
-> > index 255f4403af91c1d6a22416ab694b8eab44bf98a2..c5a2e57d53af4babe40fe2d=
-79b2f8d9c1ae1b8db 100644
-> > --- a/arch/arm/boot/dts/vt8500/Makefile
-> > +++ b/arch/arm/boot/dts/vt8500/Makefile
-> > @@ -4,4 +4,5 @@ dtb-$(CONFIG_ARCH_VT8500) +=3D \
-> >       wm8505-ref.dtb \
-> >       wm8650-mid.dtb \
-> >       wm8750-apc8750.dtb \
-> > -     wm8850-w70v2.dtb
-> > +     wm8850-w70v2.dtb \
-> > +     wm8950a-apc-rock.dtb
-> > diff --git a/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts b/arch/arm/bo=
-ot/dts/vt8500/wm8950-apc-rock.dts
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..58b3c8deb4f20ae072bf138=
-1f1dfa5e5adeb414a
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts
-> > @@ -0,0 +1,21 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
->
->
-> Odd license, we don't do GPL v4 in the kernel. We do however dual
-> license for bindings and DTS. Why choosing such license? Did you take
-> the code from somewhere?
+On Thu, Apr 17, 2025 at 02:16:31AM GMT, Dmitry Baryshkov wrote:
+> From: Dmitry Baryshkov <lumag@kernel.org>
+> 
+> Describe DisplayPort controller present on Qualcomm SAR2130P platform.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-I picked the license identifier of the wm8850.dtsi include, which
-defines most of the functionality for this board. No preference from
-my side, and happy to use whichever license is common practice for
-DTS, but I'm simply not sure how differently licensed files and
-includes combine together - thus the conservative choice to stick to
-what's already there. The original .dtsi was written by Tony Prisk,
-not me.
+Addresses do not match. You re-authored the commit, so now everywhere is
+mess.
 
 Best regards,
-Alexey
+Krzysztof
+
