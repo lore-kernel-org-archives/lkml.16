@@ -1,83 +1,135 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6E41D89FA;
-	Thu, 17 Apr 2025 05:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10FC1DF26E;
+	Thu, 17 Apr 2025 05:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744868604; cv=none; b=lNsaHjDK2UlYhgFqaQM47b685kKwd8QxgYTXNv3rplFyD5xi9bndheWkq94FTTAZyWRn6JXh/KcN56ejyx6Wuc1e2Qneye+wK5r68QkPsQrsHYCjNhtiIBSUXMPgSO2TQVArNhmWnuvSQVXcuSTrwK3gBCfXGyMYE20rK7Jy5EM=
+	t=1744868604; cv=none; b=mJZZuq57PPF6ag+0hm+zDPyILIt4k2Ynss4wxh1fyDkbsaJ9ru6a3yn6zwo7mLZFIps0W/i3TLEHrR3Dj3GkwQPY8ISAqhGQAHk3tvzZBzc9DXjqjVzb6YMuFWe781hYj+Jhi9DEUoIO5YYz8wsGOEpzdQ6bgPjSk0iaz7l3Gw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744868604; c=relaxed/simple;
-	bh=TRJ6twXpH4iMA/qz2kvp2gzUPDHSYQfKQDAI4sKb+RQ=;
-	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
-	 Content-Type:Message-ID:Date; b=bzdYtQz1tGxTj4LvQWLEphxTCx76rtKV93/1bPtxgK0n0XyEwfkpYQBO1s+Pjo0z56CZj57PWgZOX61pfjsyOTTcDNlQ777XWG5xDSaVmXTTSEjA4mj/85kFwAomp8qurIF82r0ixkXcGzjMn8kF1Vwm0DgONB8H67iw0jKyGmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=Qyad389l; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	bh=+H6GJqZe88wszfPLN3DOELIGl3ZeXdSBFTpQYHbYMJY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QPMDGC1XjBO706+o6HrSDECuGQGEzwnY0+LqBbYQpYF/KWXUZ95XuBE1ei1p3jdKj7ZZh4XsQAKdbkJs9yQ9NyhbbRCAQik+aPVAeRTbbF9VSzgmTwfH++F6w4xvRHUzl2ME1xkj1KLkvkal6ttluEbye2n0GoyabrZVz9QaZS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gTVHKvWW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="Qyad389l"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53H5hA7k9368765, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1744868591; bh=TRJ6twXpH4iMA/qz2kvp2gzUPDHSYQfKQDAI4sKb+RQ=;
-	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
-	 Content-Type:Message-ID:Date;
-	b=Qyad389lKUlD9IR8KRNlNNPqV1Wg4el7w+PdtcXKuJ+kZ6cldUOaMxK0oo31Ia0lQ
-	 ARs/llOSWsY/GDkNvg8DAZMD74omrRXWlceIYtoeLIYDfVc7A/hgJxdKfplF46ZSqZ
-	 3qCcnXNUMB+O6qmiT9lVT2bLQh/gpfWbVib91VGQmZnhLpssrpRp4IVebn1AAJZ80P
-	 Zln95Dm1XvfvfcAc1oqrQoBzc4T/1UbdfKXg4AhSyazoFM/ejUyZFIEsdzuqpoGSR2
-	 l+VYji3+87upntfRtk7lRJIvZHtazyGCuPZz8carSn4kPUJNI4xqOZvyFUohMPbof+
-	 fsQy6h7zfPbkg==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53H5hA7k9368765
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 17 Apr 2025 13:43:10 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 17 Apr 2025 13:43:11 +0800
-Received: from [127.0.1.1] (172.21.69.94) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 17 Apr
- 2025 13:43:09 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Zhen XIN <zhen.xin@nokia-sbell.com>, <linux-wireless@vger.kernel.org>
-CC: <pkshih@realtek.com>, <linux-kernel@vger.kernel.org>,
-        <martin.blumenstingl@googlemail.com>,
-        Zhen XIN <zhen.xin@nokia-sbell.com>
-Subject: Re: [PATCH -v2 2/2] wifi: rtw88: sdio: map mgmt frames to queue TX_DESC_QSEL_MGMT
-In-Reply-To: <20250410154217.1849977-3-zhen.xin@nokia-sbell.com>
-References: <20250410154217.1849977-1-zhen.xin@nokia-sbell.com> <20250410154217.1849977-3-zhen.xin@nokia-sbell.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gTVHKvWW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07C9AC4CEE4;
+	Thu, 17 Apr 2025 05:43:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744868604;
+	bh=+H6GJqZe88wszfPLN3DOELIGl3ZeXdSBFTpQYHbYMJY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gTVHKvWWe2zc88whVLBSepXdn6Sn3GQNc6QGHyCp5jebMJIOQXF5eYdd/jVtZ/PHM
+	 PMxfUF5agQAe0MW4c1w3M9GxgXoe5+44sPjsZRU0NV03Oski9Hme2rHPW7Ep9se0QQ
+	 9ZkqF4ijt397cReOmB9CxqpU0SBRubQG/lO2YA86JsHkqKAypHQQE9rNSUuZiP7h+O
+	 lBndNZZ049UxR92FHv/d3A3QYqdciiYR5b7tlcr40mfetZt7FTXrMal1K33rRLxkth
+	 Lw3Jcxnu8SaCRySwYhdax6rlxHFRIkldygthqpvxFUTdatyKWLQnLOQkLNzWfCp9lP
+	 /9LeLxBiMBTSA==
+Message-ID: <878933d0-7062-4b91-ac32-efd5ea190702@kernel.org>
+Date: Thu, 17 Apr 2025 07:43:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Message-ID: <b638cfa9-b2eb-4feb-bb06-b3fd8c2fb497@RTEXMBS04.realtek.com.tw>
-Date: Thu, 17 Apr 2025 13:43:09 +0800
-X-ClientProxiedBy: RTEXMBS02.realtek.com.tw (172.21.6.95) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/5] dt-bindings: leds: add TI/National Semiconductor
+ LP5812 LED Driver
+To: Nam Tran <trannamatk@gmail.com>, krzk+dt@kernel.org
+Cc: pavel@kernel.org, lee@kernel.org, robh@kernel.org, conor+dt@kernel.org,
+ corbet@lwn.net, devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <a22eff98-86db-47db-a310-5d00dcba14fa@kernel.org>
+ <20250417020622.1562-1-trannamatk@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250417020622.1562-1-trannamatk@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Zhen XIN <zhen.xin@nokia-sbell.com> wrote:
-
-> Rtw88-sdio do not work in AP mode due to the lack of tx status report for
-> management frames.
+On 17/04/2025 04:06, Nam Tran wrote:
 > 
-> Map the management frames to queue TX_DESC_QSEL_MGMT, which enables the
-> chip to generate TX reports for these frames
+>>>
+>>>>> +
+>>>>> +patternProperties:
+>>>>> +  "^led@[0-9a-b]$":
+>>>>> +    type: object
+>>>>> +    $ref: common.yaml#
+>>>>> +    unevaluatedProperties: false
+>>>>> +
+>>>>> +    properties:
+>>>>> +      reg:
+>>>>> +        minimum: 0
+>>>>> +        maximum: 0xb
+>>>>> +
+>>>>> +      chan-name:
+>>>>> +        $ref: /schemas/types.yaml#/definitions/string
+>>>>> +        description: LED channel name
+>>>>
+>>>> My comment stay valid. I don't think LEDs have channels, datasheet also
+>>>> has nothing about channels, so again - use existing properties. Or
+>>>> better drop it - I don't see any point in the name. The reg already
+>>>> defines it.
+>>>
+>>> The channel was named for the output channel to each LED, not the LED channels.
+>>
+>> I don't understand what you want to say. Please explain why existing
+>> label property is not correct here.
 > 
-> Tested-on: rtl8723ds
-> 
-> Fixes: 65371a3f14e7 ("wifi: rtw88: sdio: Add HCI implementation for SDIO based chipsets")
-> Signed-off-by: Zhen XIN <zhen.xin@nokia-sbell.com>
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> I understand that the label property is deprecated and that the preferred approach now is to use function and color instead.
+> However, in the case of the LP5812, which is a matrix LED driver, these properties are not a good fit.
+> The LP5812 does not associate each output with a specific function (like "status", "activity"),
+> and the LEDs driven by LP5812 are not fixed to a particular color.
 
-2 patch(es) applied to rtw-next branch of rtw.git, thanks.
+Then use label instead of creating another property. If label is
+deprecated, how creating another property which duplicates the label
+solves anything?
 
-b2effcdc2379 wifi: rtw88: sdio: map mgmt frames to queue TX_DESC_QSEL_MGMT
-fc5f5a0ec463 wifi: rtw88: sdio: call rtw_sdio_indicate_tx_status unconditionally
 
----
-https://github.com/pkshih/rtw.git
-
+Best regards,
+Krzysztof
