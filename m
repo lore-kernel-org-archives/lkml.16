@@ -1,113 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 197B5253956;
-	Thu, 17 Apr 2025 15:53:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1140253B7E
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744905229; cv=none; b=Fyw3hL2+VXVV+8i4mlPO81r6C992VcF9jwduiCzT4XiiTwr5Z1BrWzr5YBpgClDfv6dBaXRvNKHiLapjEFu6nMTb30O0p7lv0mCLsMjoEdFmBdIyawNHjIJD7QI/qL8/anOqSuQO2v7SGUQDw1Qgam1TpWdOGB2x2/1Zw3oIMcE=
+	t=1744905240; cv=none; b=GkFT2N3JOChO/4C2sAYMpXzPyXr7/sWNKtqUmrMa+BnItnSWOFrLoKhbiJiwGrRjt61xVO5QMwroapkyWY+PT+dcqS+wYALrh+kg3ND5Y/lLC0ZPLNm8AZBJUmbO/pkYvfQf0kf70rKKzrAC7IKmbvneWXtTlHoMelq649ttjUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744905229; c=relaxed/simple;
-	bh=7pkkB8jiphZ1tt+fGYzi1eQrIinGLTSIKkVgKhP56fU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AkOdVSmdn90ctilLjZQfxzBx32bOYS5GJccZ/HnfbHlF7SJ/ln5K9PmGMkLr3lJIS69yGWoQxcle82nZbhCSBJKO9QDPlhltuGKePmKtSphN0SX8wOIsxZS+exJ0OZSF1K/Ys3+mHd7gbRNJ2z4TfO9n0emDys+HCHyr0siDZnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: oKQ2u1d1Qpisw9B440VFxQ==
-X-CSE-MsgGUID: NXQ8KRx0SDKUYHiMSO/7Eg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="46628147"
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="46628147"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 08:53:47 -0700
-X-CSE-ConnectionGUID: k9AqzmaWTIan+SgfNXdEdw==
-X-CSE-MsgGUID: FHF73yGfQSqk3fwljmHODw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="154024564"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 08:53:44 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1u5RYb-0000000DFA1-0OGW;
-	Thu, 17 Apr 2025 18:53:41 +0300
-Date: Thu, 17 Apr 2025 18:53:40 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 net-next 4/8] mfd: zl3073x: Add support for devlink
- device info
-Message-ID: <aAEkBOSQRoYXxcIB@smile.fi.intel.com>
-References: <20250416162144.670760-1-ivecera@redhat.com>
- <20250416162144.670760-5-ivecera@redhat.com>
+	s=arc-20240116; t=1744905240; c=relaxed/simple;
+	bh=ZIBfrh/c201PDhvEu0wpq1QFp8dzTYEC0yDBA/8kVyE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HoQX9VGyI5nZSVA+zDWAITv5vUt6SeUisBl1495UyRl4RdMuTtkILqhA/EmndIU5+MlQKHxtS8vozyAvS7zKufqUnrhA+wrpt8gCqXk5YYwKdT4vN8ZaV407bDKXf2ABXhm58jwqllV6a3Qe6GiqeHXKE7uYGjC+rQaFD/3P/HA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=CiN6Hkn2; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="CiN6Hkn2"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 2D923240027
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 17:53:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1744905237; bh=ZIBfrh/c201PDhvEu0wpq1QFp8dzTYEC0yDBA/8kVyE=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version:From;
+	b=CiN6Hkn2jpDgTZz2Wie9Y97B6G/CKVswp0PfEZocu+aAYVRAp9atFDkI9qlP6Hjkg
+	 eSzNUhBCmYpzvukvtPFCovY/rxlbRUZSIbIhw8rKhL8k+OIgq2t1YUtkqiuX5mzvrL
+	 gtDjOwwuIhfFfdof91DPXrsB4iHRnNPNmLlvDixF5geAkfGt12nm1DeQQXF4IR+4BG
+	 W42AHTb4iRsbv1mZvYD5IiiyDvonCa0znnmbB+PNCF0sOAoVgcLKmYWWad+Oho0hq+
+	 plwvb+M8GOIPxo3rSnbB7qqKAHNtaDfPvNXOhm9J0+bkNGMjsur8k+KU5nYARZz/RM
+	 HI5XFH4ixUiMQ==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4Zdj9t5XRkz6txd;
+	Thu, 17 Apr 2025 17:53:54 +0200 (CEST)
+Message-ID: <56edfb88d3f31939fb343149bfad436f24671f9d.camel@posteo.net>
+Subject: Re: [PATCH] iio: frequency:: Remove unused parameter from data
+ documentation
+From: Charalampos Mitrodimas <charmitro@posteo.net>
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev, 
+	gregkh@linuxfoundation.org, jic23@kernel.org, lars@metafoo.de, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-staging@lists.linux.dev, Michael.Hennerich@analog.com
+Date: Thu, 17 Apr 2025 15:53:51 +0000
+In-Reply-To: <20250417143220.572261-1-gshahrouzi@gmail.com>
+References: <20250417143220.572261-1-gshahrouzi@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416162144.670760-5-ivecera@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Apr 16, 2025 at 06:21:40PM +0200, Ivan Vecera wrote:
-> Use devlink_alloc() to alloc zl3073x_dev structure, register the device
-> as a devlink device and add devlink callback to provide devlink device
-> info.
+On Thu, 2025-04-17 at 10:32 -0400, Gabriel Shahrouzi wrote:
+> The AD9832 driver uses the Common Clock Framework (CCF) to obtain the
+> master clock (MCLK) frequency rather than relying on a frequency
+> value
+> passed from platform data.
+>=20
+> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> ---
+> =C2=A0drivers/staging/iio/frequency/ad9832.h | 1 -
+> =C2=A01 file changed, 1 deletion(-)
+>=20
+> diff --git a/drivers/staging/iio/frequency/ad9832.h
+> b/drivers/staging/iio/frequency/ad9832.h
+> index 98dfbd9289ab8..d0d840edb8d27 100644
+> --- a/drivers/staging/iio/frequency/ad9832.h
+> +++ b/drivers/staging/iio/frequency/ad9832.h
+> @@ -13,7 +13,6 @@
+> =C2=A0
+> =C2=A0/**
+> =C2=A0 * struct ad9832_platform_data - platform specific information
+> - * @mclk:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0master clock in Hz
 
-...
+Hi Gabriel,
 
->  /**
->   * zl3073x_devm_alloc - allocates zl3073x device structure
->   * @dev: pointer to device structure
-> @@ -124,12 +204,18 @@ static const struct regmap_config zl3073x_regmap_config = {
->  struct zl3073x_dev *zl3073x_devm_alloc(struct device *dev)
->  {
->  	struct zl3073x_dev *zldev;
-> +	struct devlink *devlink;
->  	int rc;
->  
-> -	zldev = devm_kzalloc(dev, sizeof(*zldev), GFP_KERNEL);
-> -	if (!zldev)
-> +	devlink = devlink_alloc(&zl3073x_devlink_ops, sizeof(*zldev), dev);
-> +	if (!devlink)
->  		return ERR_PTR(-ENOMEM);
->  
-> +	/* Add devres action to free devlink device */
-> +	if (devm_add_action_or_reset(dev, zl3073x_devlink_free, devlink))
-> +		return ERR_PTR(-ENOMEM);
+This seems to be a leftover from
+566564e80b0ed23ffa4c40f7ad4224bf3327053a ("staging: iio: ad9832: use
+clock framework for clock reference")
 
-Please, do not shadow the error codes. You might miss something. Shadowing
-error codes needs a good justification.
 
-> +	zldev = devlink_priv(devlink);
->  	zldev->dev = dev;
 
->  }
-
-...
-
-> +	/* Add devres action to unregister devlink device */
-> +	rc = devm_add_action_or_reset(zldev->dev, zl3073x_devlink_unregister,
-> +				      devlink);
-> +	if (rc)
-> +		return rc;
-
-The code is even inconsistent in one patch!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> =C2=A0 * @freq0:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0power up freq0 tuning word in Hz
+> =C2=A0 * @freq1:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0power up freq1 tuning word in Hz
+> =C2=A0 * @phase0:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0power up phase0 value [0..4095] correlates
+> with 0..2PI
 
