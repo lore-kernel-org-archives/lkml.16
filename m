@@ -1,124 +1,128 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C8FB2512EA
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65C0224247;
+	Thu, 17 Apr 2025 14:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744900526; cv=none; b=Tp6Misl7MTo+azksNrVx15NKVwNJF0oKEQ0IYuyUXJ33ciszMaJEFVfAoRsQg/Ia6khdowsdRQLqd1Xq2LGEcoJP5MA+QeAq5E1KlMtbneEQupfcAKX5Yp8rkCnIdJmSwRB25pAyYAD4Vc80qUpgvFq2kSM4ATS6dcb1JPlBG3E=
+	t=1744900587; cv=none; b=gYl4f4nCZA1rUYHwl+lRskGEJOs8AowCPTVeOeaZePgWsR0hXSVCndVI+WwLl38c8tUCKmh9SmB0dhKjtjWb6jz0fTZQVOA6BVvDIRqMajiGwyjT8x62ptJ4n3CN9jaipl1mCLK6BQlHjAsYlwHOGpCMchXdlIQk9fFim6SJ3K4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744900526; c=relaxed/simple;
-	bh=1VaDkTpRD94FIkbUpfyZjjqIn1MyKITxv1GLCc/owX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z/6yMFvLY9NvQkolAbQRgY1kdmesyJBbyeWx4USPXQgFpxKYP2NQg2wCI2/7aU5n9+eBqFxLX3lTDGxqbFkinrdgVaoKwE4NZl+Ziyl7u10VqsCc/JyWPQDzdpLzlHYjT30dhZkWDVE7Lx45p43scK8colvzxQm+205tcUhXBAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=W5vj8Mme; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1744900587; c=relaxed/simple;
+	bh=SBvQ73WYivvfdzl3CJZHVlcNEi0joPRJF/v4trctjCU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aT1B7fVxRz5TNCruKXo0WBNZrmviwjdkhXF0R/T5AXUEEy62WZAJjnGArhN7yMLjW22CZ+68P+qzlKwNg5d0NJlrYBKhhqjm0m1ZsJCdGleJuQr92DGKhlT4If9euFd8ImhcFIG0LO5++XLijM59h849EvXcYMpd7OgD5qTJL9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U47VK4s2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="W5vj8Mme"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 4DB12240029
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:35:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1744900517; bh=1VaDkTpRD94FIkbUpfyZjjqIn1MyKITxv1GLCc/owX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:From;
-	b=W5vj8Mmes662K02Sx8FcDS510TTGzGYiOgRip1NbLnqursHtTk8wPEwPNXR5+ztvr
-	 fACmhMZpFEXPaJgQY9O8GcJZhp7yjdaIeoSN3wdGpGze5Zz00OvietiNVkDc7SozYo
-	 e1ZbfIGpJMSx677lyhUR1y5euh+bD7t4V2kvzXn2DSRCh76Iw8o9A8tIfgUxKiuhub
-	 GzcdAmsKiHz8useLzzbx+0LMkJE3Jniub/NXhLJrgc0g4WMTuZt/l60xsF+FV7G9mk
-	 sNav5MoqS+viJPRbZCxHrxws0OFTtuawvNxv6dHqeGMrCaSa5u2BNRxMiGrPhsg71h
-	 kXNIDXsc1Sw/A==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4ZdgR74Tjkz6twL;
-	Thu, 17 Apr 2025 16:35:15 +0200 (CEST)
-Date: Thu, 17 Apr 2025 14:35:15 +0000
-From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-To: Rob Herring <robh@kernel.org>
-Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
-	Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
-	Pavel Machek <pavel@kernel.org>, linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v2] dt-bindings: leds: Allow differently named multicolor
- leds
-Message-ID: <aAERoxkLoB_HwGFR@probook>
-References: <20250412-multi-led-v2-1-56af86908744@posteo.net>
- <20250412171237.GA1347507-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U47VK4s2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F77EC4CEE4;
+	Thu, 17 Apr 2025 14:36:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744900587;
+	bh=SBvQ73WYivvfdzl3CJZHVlcNEi0joPRJF/v4trctjCU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=U47VK4s2ZLew93JI7p+xs+UYJC7O9l2oKkXj/dF+84H5ZIdRl+s5L+fGRGn3cPnpm
+	 20PraA0E0V/8SWFpgKmIW8a/BluR0EShkgjGNq887euZwD+gN1UU5O5JZGhkH3TVuu
+	 TBy45c1Bo+EogU8RTAY3Ot/WRKRFHq8LGeWZ17YmPDmntGkJnuohmGu2nPm6s0uvhB
+	 yIaEsbIgAANXe2eteArELeqvf9rjPi/4icHcF/P7mWUBAHGoEBf/hv4f4wewlbIKVh
+	 vcGiyjnIPIcZPYqVNbUOxNv3TJ1zzWUlXtGH8l4k1vWxVc3LnNQK/76fyIIc9qnKRY
+	 2k/B64gxl/T6g==
+Message-ID: <ff583eb3-d01d-4850-9f9b-f6b15ddaf137@kernel.org>
+Date: Thu, 17 Apr 2025 16:36:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250412171237.GA1347507-robh@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] arm64: dts: rockchip: Add I2C controllers for
+ RK3528
+To: Yao Zi <ziyao@disroot.org>, Heiko Stuebner <heiko@sntech.de>,
+ Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
+ Chukun Pan <amadeus@jmu.edu.cn>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250417120118.17610-3-ziyao@disroot.org>
+ <20250417120118.17610-5-ziyao@disroot.org>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250417120118.17610-5-ziyao@disroot.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Apr 12, 2025 at 12:12:37PM -0500, Rob Herring wrote:
-> On Sat, Apr 12, 2025 at 03:04:32PM +0200, J. Neuschäfer wrote:
-> > In some cases, for example when using multiple instances of
-> > leds-group-multicolor, a board may have multiple multi-leds which can't
-> > be distinguished by unit address. In such cases it should be possible to
-> > name them differently, for example multi-led-a and multi-led-b. This
-> > patch adds another node name pattern to leds-class-multicolor.yaml to
-> > allow such names.
+On 17/04/2025 14:01, Yao Zi wrote:
+> Describe I2C controllers shipped by RK3528 in devicetree. For I2C-2,
+> I2C-4 and I2C-7 which come with only a set of possible pins, a default
+> pin configuration is included.
 > 
-> Really, multi-led-0, multi-led-1, etc. would be preferred like we have 
-> in other places.
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3528.dtsi | 110 +++++++++++++++++++++++
+>  1 file changed, 110 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+> index 826f9be0be19..2c9780069af9 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+> @@ -24,6 +24,14 @@ aliases {
+>  		gpio2 = &gpio2;
+>  		gpio3 = &gpio3;
+>  		gpio4 = &gpio4;
+> +		i2c0 = &i2c0;
+> +		i2c1 = &i2c1;
+> +		i2c2 = &i2c2;
+> +		i2c3 = &i2c3;
+> +		i2c4 = &i2c4;
+> +		i2c5 = &i2c5;
+> +		i2c6 = &i2c6;
+> +		i2c7 = &i2c7;
+Aliases are not properties of the SoC but boards.
 
-I'll change the examples to -0, -1. I'm also open to restricting the
-pattern to something else than -.+
-
-> 
-> > 
-> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> > ---
-> > V2:
-> > - Add Krzysztof's review tag
-> > - mention leds-group-multicolor in the commit message
-> > - rebase on 6.15-rc1
-> > 
-> > Link to v1: https://lore.kernel.org/r/20250209-multi-led-v1-1-5aebccbd2db7@posteo.net
-> > ---
-> >  Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> > index bb40bb9e036ee00e06d21e2321ecd5a7d471c408..c22af25b6430be71300c0e37f696cd61112ea190 100644
-> > --- a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> > +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> > @@ -21,7 +21,9 @@ description: |
-> >  
-> >  properties:
-> >    $nodename:
-> > -    pattern: "^multi-led(@[0-9a-f])?$"
-> > +    oneOf:
-> > +      - pattern: "^multi-led(@[0-9a-f])?$"
-> > +      - pattern: "^multi-led-.*$"
-> 
-> Combine these:
-> 
-> '^multi-led(-.+|@[0-9a-f])?$'
-> 
-> oneOf is best avoided because the error messages aren't so great.
-
-Alright, I'll change that.
-
-> 
-> >  
-> >    color:
-> >      description: |
-> > 
-> > ---
-> > base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-> > change-id: 20250209-multi-led-9991e205befd
-> > 
-> > Best regards,
-> > -- 
-> > J. Neuschäfer <j.ne@posteo.net>
-> > 
+Best regards,
+Krzysztof
