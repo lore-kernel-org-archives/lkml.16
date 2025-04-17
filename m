@@ -1,173 +1,302 @@
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11013013.outbound.protection.outlook.com [40.107.44.13])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C83DE33FD;
-	Thu, 17 Apr 2025 14:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744898842; cv=fail; b=a64DkDEqDrbFUnNhFqEgYLzPRVJ07o6YYsGCZjIXtXiyJs2LW9CEcZOpQQQ2RV813/aX6OFvzuNib8m8CYz3qc16PGOeYiziEjI9duuyK9wet9EBUGfGFmruQd6f5D8XrrqCk0cnSLx1fN38Axlq8kCe8og1G17t5wkeAOcV3Gg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744898842; c=relaxed/simple;
-	bh=tNkoVIJE16dmSSuC48hJrIOR6UP38GLDOTSIlzb7l0I=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Xxq4e/7UdNe/vZX2MIG4cZroLX38bw2abtOVLtNVl0hfRYf8hLMw6ZdgdwlXQQnIb9lNz7nlFk2RZCLA/vNJFb3wsxWV6LS9zrD4nHidLOrAgGXDwwvSqkr07SfmxPpCxNP5xwYIW0P3j0z3fg1Q+qtCLGEbrQZmcB8TdmrnYWo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=M0LXN8C2; arc=fail smtp.client-ip=40.107.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608E215A8;
+	Thu, 17 Apr 2025 14:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744898850; cv=none; b=OsyLkxVea3AUpLCCASL27nMD9Crlnw0ioO31nziaClLjTDSVLUMcLZ12319QIAZfVXpGG/Z3sytsWttupuEfQ9/Tc9/itg36ZBEihVeQ1fwTQ3kEADK+sXg2W6GW5Of45y0SnBWF4vORc+6+Mehe6+LEb4HCT/BpcZNPw6X0TDs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744898850; c=relaxed/simple;
+	bh=4D2BTjShe/OVtYJ+jQ1FkBPe/v1Y6FR69xEpB9nQ7FY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=hmasz17qlBVWaxG443YrYJPeVo3tOmNQLUMRacMdOKRSES30m/+9c/RcxKXkA6YNZ5D8p57nzIIqE3Dw69tQNPZ1pVmpey29b8+VSiS3PspoQfKFans8V4n8cXBaTmK3cQXu7fY1IEffb6SLc09NCpcdCU2fPt3f0OY6JEwpd5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aLKgdeeJ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="M0LXN8C2"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wQFYgFnhZV9n+EmFcJSc4iAw+wyGPKoW1R0HesZczs7zKIIswXzUv7ZANqBbCDNPT0y2qg5xOVIJ7NnPQfWRxVjPbAMfDFGEkdWc4U/nc0d3Lv/JlEZA9b/I8TYmHNLuInSm2q6RPDDRePfuVk3RAZH/5GdCHNhf/YPUX903vv9SdM1HxWOQXujVq8bL+tCVUf7olMTpkUHyFaWl32vH7KaESWswphVzW1fuRcBgG8Z9Ue7uy+UkeuQx7yqcz3gBnf3HXMQGn96UVfA+8bdaQiGkmzvBFXqVaY0A+runl/yMzUFfmewHrzlvU8ITmNOk9YxhqNKqywIP6LhGjxwXNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jm+OnGjz0Zre1FvZk56i4mu1N0oc2QN1pi0V0tMw8lE=;
- b=prCzGdGZ6BXPlbBmueXWNAX8fsmu/X8ZZe0pQJr07v9m018jZu2+f/pKEb3KVpSAWuZv1GVz7h8xRxR5gC8BAhy68DyLEI03HRzxZfRoWB9mbSWLq59SfzlQsUJ7APbUbXzpOtmxG4m76v1wtsZOER28rc7VQ2fXvAiAL1I9yu7D6BAA70vYABtHQV0bSVarCEC0KthiYgLoUNA+L2EY2MCDHho70nq03Z4zIyWhCaK0E7INdzfOv4Ocl9AiuoJSxv7pN94Kp6zwwUIWsYYxecNrnykgN3YAD+teG/JXlgxvVK82NXrRxc/iuMpxGBch7bID2FoYWAE2Yw1KQPVm8w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jm+OnGjz0Zre1FvZk56i4mu1N0oc2QN1pi0V0tMw8lE=;
- b=M0LXN8C2OErogBbWAdL5TpaDWubEJS1Jw3ZVY4FwqvYOVTwsWp/uhnpS7dt4oQW2Yh2JPq7lIVWnzHa3abmus+h0U8TItcVOP3Vpv/V8zTlllorz85PIHFbkrW3l/dfgQrjnAb4Hc+oA+l6huNjp+ENw9gozIIqqmoiJCf0IXscBipdEq0siu7TETMiK5eyE0yElxgo8ejyjGmD9jAAs9DfCxc8AXxM1LavJK8AH8uhPjkoX8eV33pmVGxZlujGyDf/q07yKJ0cxVi9PC8PirQHIy6txVkj64Zu99Uv902NkC84jghxt5M/gR74bnauofB0Jp5CJ0JMarPvDQ/BK5A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
- by SEYPR06MB6585.apcprd06.prod.outlook.com (2603:1096:101:172::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.31; Thu, 17 Apr
- 2025 14:07:14 +0000
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::8c74:6703:81f7:9535]) by SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::8c74:6703:81f7:9535%6]) with mapi id 15.20.8632.030; Thu, 17 Apr 2025
- 14:07:14 +0000
-From: Yangtao Li <frank.li@vivo.com>
-To: clm@fb.com,
-	josef@toxicpanda.com,
-	dsterba@suse.com
-Cc: linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yangtao Li <frank.li@vivo.com>
-Subject: [PATCH v2] btrfs: remove BTRFS_REF_LAST from btrfs_ref_type
-Date: Thu, 17 Apr 2025 08:26:49 -0600
-Message-Id: <20250417142655.1284388-1-frank.li@vivo.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0113.apcprd02.prod.outlook.com
- (2603:1096:4:92::29) To SEZPR06MB5269.apcprd06.prod.outlook.com
- (2603:1096:101:78::6)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aLKgdeeJ"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53HClLLi001246;
+	Thu, 17 Apr 2025 14:07:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ebljc4HXRFqnMj/alss7Wxhd0z9M0KbmucyUjzkQeBc=; b=aLKgdeeJS92hll++
+	LQ+yx82dKkLmI2H+eY9QbjZsjHB75JkD1+2+9Vf+OTzZB1W5hI/u/wlDwQac9wl0
+	St9XWthaQp9KvBK3pq3tT7CjOjJWCt2mqGMho3XebblZp001UlFe9QnBac+WCWyL
+	qzN15MpkxgwSkG4Ge4sHgTqBTA1/M5l52ccjxyy5CiaG/q+uNTY1ivXL9MPjpX7u
+	mhgA1fnq8RGxCFYj+mzz6nMEf/uEAU4o/HsPfXFcb4gMbp3bw6e/PXv92ebfkDQm
+	pvYx28nubXW4TtNy36oyB+4RyRIDaFpf4d54WNipbivDZYFjw/M49E+b73I4euuI
+	f4Lcig==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ydvjfd8y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 14:07:15 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53HE7E4U009130
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 14:07:14 GMT
+Received: from [10.216.1.40] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 17 Apr
+ 2025 07:07:10 -0700
+Message-ID: <27ad27a6-7ead-b265-c461-940181889bb4@quicinc.com>
+Date: Thu, 17 Apr 2025 19:36:59 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|SEYPR06MB6585:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9cb9007d-7e69-495e-aa04-08dd7db92743
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|1800799024|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?L4lQ71iQcvq8x8ASTzTXyatXJ89DgaAqTajpya1QXQgcsV54GGlqrA0PhhxJ?=
- =?us-ascii?Q?7SacIc0vfZaRBHpXIYn6bk+zyII1g6UncaX56Ua4n4OFL2aAtxaQgv8sYI9X?=
- =?us-ascii?Q?xMA3nr05tZ5BKgH/nROyYERt54mfLKEecnp4VOOdvwz+lohjYz6vV14zIUqG?=
- =?us-ascii?Q?877HuLwSI8udUNHt2W/hypn1+c6Nm9nWXKvwmIo5kew1veDI2+JpBIJPvc7l?=
- =?us-ascii?Q?xT2gOuYeuNMvRNGzq3iU/NLnEXl6TtRHlBInxe8Xde329aX/c39NYNjoRyM+?=
- =?us-ascii?Q?zRtsJYzAArpjc2om54Rs6YaHc1p6GuCpCnBJD+GJ5ntbvexhwVt+JPlw7LMb?=
- =?us-ascii?Q?nSgtUvT6zH2iYyAgwbz1huubqY8ACGj671ONgQ7PeuNuRq/pnzYJDvQN3hKm?=
- =?us-ascii?Q?MeISZjwixQp9rwYZZPy/STHTkGX08XAAiHPB2Gfq3XtMpaswkNeL0MCRXRxX?=
- =?us-ascii?Q?HtVQap5t13mvOIWeIExt6cWws+zLnFVQ4UG/kS9wxLKADsX54m0o+NICl0kd?=
- =?us-ascii?Q?wMSApjGCvUo/91OUvm1UDoZf7ZoWNVxz4c9aCz4QRThxJK51qqhUIdSuCgjr?=
- =?us-ascii?Q?2tNZxUgpyBcjnQWqS+HVEd+j+JO2/JfhakTRKkFQ5QSUOwpueGD3Xdbc1TjT?=
- =?us-ascii?Q?KvIlVoJGhLj0Xu9l/N/XSLdEoNBbn61HZxZjLS0RWY7VKZZU2Qyk3u6tFpWG?=
- =?us-ascii?Q?ZOg5itKctkQKO3ukQL78NfiY2567BLAIoKoftC4PvRcgB0GH0jkfyTZHco5m?=
- =?us-ascii?Q?yTaIkT6VFJjS46mgcQgUBd9LS4OBK8TDLwyjPG7kl9BfxMNsJqDeK1n9mDi/?=
- =?us-ascii?Q?7Re+Bpp92QFH5kXAicD8Jasbg8Bh0zrD7nWPzd6TVNo4rGlkTzVThZI8Rn8Y?=
- =?us-ascii?Q?TfzvP9ncmKhIAFpfSH/1i3tNzXzAOnsHrrAQq7gU0asnLSffyGT8UFgAwR8q?=
- =?us-ascii?Q?tyUKQzNprfpJVoLWkSyP54YbEJd/EZr51P+F4rwVi7bJ73kYhk4o5izCv7lU?=
- =?us-ascii?Q?egqk5TxtcXYZIFw1tTufhwUtsm8ZXMNnW//p8A5I1BpIOEwBFdqQ5D97V0Gq?=
- =?us-ascii?Q?gzh5S2/F+ceCkaAVrVWrGk1P1qndjdet9Ej9z0YBpUyn/JL0oeV1LGcz1MOn?=
- =?us-ascii?Q?6uawVuvMdBLtUkKweFEzEN6h3pTXdeyp75WsaopIEZHe8bsNterYVoULJV/6?=
- =?us-ascii?Q?TXM/F01yaBuxMcJ5iTcCNiWISGmM0oz40MA3HsVw41RiIPBS71HJHLMFWdQ1?=
- =?us-ascii?Q?g7h3L6FDVVJIKj++CqDj1rT46ZCVMB+yS1OlI+Ss+76fRjtOmPXJ4QY4PaxL?=
- =?us-ascii?Q?gfEeO+1yZQCbbZlGqVMW5FVi82h6LzU7W/ttT6sIzwf70aYjr4SsJooCpa1i?=
- =?us-ascii?Q?sQf8tnINCn3HEQJPV9+fzM9tCoVFhRUNke90YYckc2C4+/zgYBS0kYOfwVVC?=
- =?us-ascii?Q?cNWsGKSH6YmQ8fsfGqS3ooWUYzsxxHMCZGr7VHoscOCx+Ebul3JJrQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(52116014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?eq3iWTC3CiUO1dnaMnrfB70GZYfz8kFBGs6as+uquXuPmd/BglGT4ZEU3bwD?=
- =?us-ascii?Q?JaAv2FyJh09g21+iEI1RCJjs5vv2i27X5S4cU4WRzJMDTNPwJih+3MaxXRMO?=
- =?us-ascii?Q?Vdm6wSWckLhTjlxKfmEMC2DOnrf8/mI90CbDnsqfkvGNpr4LZfWCirQlmCq/?=
- =?us-ascii?Q?Kr3zwKRWGgHJmgjg+X/C3Hz5ovxM8HxwTwJmeKslNltiatHxk7AzHVIEHBB1?=
- =?us-ascii?Q?17Nlk7Av9gy8vzurA96u3o3+1zP4uVcYakFn1mr0Y1uFPCFdcXxpmYRyPiVf?=
- =?us-ascii?Q?zJwKjxzUCrdcWrJRyZIEJwxO5vDfGqGJdbZgVxcwRJ6T0jk1cWwLHlr9eeeP?=
- =?us-ascii?Q?BdnqFGEwPn73prgZfGoeu/GgaM2k9TvOeli3blzSWA/ksIIxXj9E7iw4AZz1?=
- =?us-ascii?Q?iUiUhiTO34mhyPQ4iVHk/P2cj0VWr7U/h3GDjqQkC6cg+kHYIm0b/muzwET+?=
- =?us-ascii?Q?F4phupoofjfB79ldUki1SITk6/of7rgwRKYWggGb8jnmyw/Aav/KoTjGkx7i?=
- =?us-ascii?Q?jA4UYT274mV41RBtEJP6aO0tEnA1GuakqoVsZJEKwcGt1l5lzNGAA33Mxkhb?=
- =?us-ascii?Q?QmusSCqeskgdGlQ+JsIwwC6czNZrGkzAZ32eRewcJcWeZ1k8vjskCsmLUlYL?=
- =?us-ascii?Q?46RKre80leZw7uDMn+VMaRJU7IQl4/TAQqMIUrenCtwoQTN9vPxKC+74RzD0?=
- =?us-ascii?Q?xaCHuj+i1HL276mKFP/sjR21fhTWDOot3CTwSj+FRky95XK8Ndv5fLCE8nUb?=
- =?us-ascii?Q?ptRyCWQlolBcViJbFqcdg56ELwQHjVsaqoL9MLUVsoHOVIHsiwo36hjjy7VQ?=
- =?us-ascii?Q?9sScRtOTK1s1HL+GvgnrcKj9KxkqCH76ZxDs/qh1AT6gIvSz1pgkL/LWiw6c?=
- =?us-ascii?Q?kiJ5QDlPPWEmZFk5KKnrSJaCW1Zmd77BbttfGWlspOEAvm1kXxiyPABuv6Fw?=
- =?us-ascii?Q?7Pex2ekYRg1zWTM3mZY2xQcjwiBbj6IZjVKJniogNJCIxDx/yaZCs4d97ZMn?=
- =?us-ascii?Q?ltZ5+8ubdqUuajWhkIjv6rtXmt/jQnBcMjlZj5HkuXs6qA+ZTC0rJzp1eV1n?=
- =?us-ascii?Q?/bcBU/6F1STrTtcTKXk8xbb/nEsE/E9NrCY3YV/P1SMvzG0z4bjzwQwYsIrr?=
- =?us-ascii?Q?+9qF6O4WJtLYRF+AbtEz372aa4hR4RdJezs8ZQ2uXuC3IS39aRzJWo88BICx?=
- =?us-ascii?Q?Ire+48VO/AduQX1Vd3Pjo02zlzMciDPByp+yY3uMNteLf1FS/9YqRrmkJcyV?=
- =?us-ascii?Q?5UaE3GSEnDReLhUh9f2gPwoKDIITwKG+LvwPCcfIHQsKmmoCX+5hEmbAGRHp?=
- =?us-ascii?Q?VJFg1cSMoY46uM/A4//B6zUgjcEvlsnwatv+OWTZWH/+6vQByVZd1YFuu0nN?=
- =?us-ascii?Q?TD0inSY6Qx1RW+BRqhPynv/O3hP6cnBiknwop8Hob/j8VjtWGOmL6omfm5Wd?=
- =?us-ascii?Q?2J+jjjHtT9Cbxy34m/nKfbFTtVr2NofUI9XjMvBxjAh+a/OYIrxSSLSK16UN?=
- =?us-ascii?Q?g0ezC9LWW3WOWoQapmr4ItHJ3BYD+8o0dtc34yitsy+F77DsjZASYzd0XXpk?=
- =?us-ascii?Q?O8EIOpOthZy2tCZmpHyHWF7GZeCwN5T/QYuccUkG?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9cb9007d-7e69-495e-aa04-08dd7db92743
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 14:07:14.0698
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BAfAWK/6urR/wzx6k7MukQr0ywCSUTzyAXMIB9rqeFjvQmZzAHbnEjUxh92k9731WkLCih4gWy9iXCTqMAIOiQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB6585
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v6 7/7] media: platform: qcom/iris: add sm8650 support
+To: <neil.armstrong@linaro.org>, Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Philipp Zabel
+	<p.zabel@pengutronix.de>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250415-topic-sm8x50-iris-v10-v6-0-8ad319094055@linaro.org>
+ <20250415-topic-sm8x50-iris-v10-v6-7-8ad319094055@linaro.org>
+ <085acdab-87b0-3a94-72fd-881d517d95cb@quicinc.com>
+ <68313fff-89d6-4a17-9006-75db971554c0@linaro.org>
+Content-Language: en-US
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <68313fff-89d6-4a17-9006-75db971554c0@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=ZIrXmW7b c=1 sm=1 tr=0 ts=68010b13 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=GFKehwC6CmmHh3UBcFkA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: AkVrCWMMiMIh-9NpAPdab_l9YSfFYFyh
+X-Proofpoint-ORIG-GUID: AkVrCWMMiMIh-9NpAPdab_l9YSfFYFyh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-17_04,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
+ clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0 mlxlogscore=999
+ spamscore=0 impostorscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504170105
 
-Commit b28b1f0ce44c ("btrfs: delayed-ref: Introduce better documented
-delayed ref structures") introduced BTRFS_REF_LAST, which can be used
-for sanity checking.
 
-In btrfs_ref_type() there was an assertion
+On 4/17/2025 2:20 PM, Neil Armstrong wrote:
+> On 16/04/2025 12:25, Dikshita Agarwal wrote:
+>>
+>>
+>> On 4/15/2025 7:17 PM, Neil Armstrong wrote:
+>>> Add support for the SM8650 platform by re-using the SM8550
+>>> definitions and using the vpu33 ops.
+>>>
+>>> Move the reset tables that diffes in a per-SoC platform
+>>> header, that will contain mode SoC specific data when
+>>> more codecs are introduced.
+>>>
+>>> The SM8650/vpu33 requires more reset lines, but the H.264
+>>> decoder capabilities are identical.
+>>>
+>>> Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # x1e Dell
+>>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+>>> ---
+>>>   .../platform/qcom/iris/iris_platform_common.h      |  1 +
+>>>   .../media/platform/qcom/iris/iris_platform_gen2.c  | 65 +++++++++++++++++++++-
+>>>   .../platform/qcom/iris/iris_platform_sm8550.h      | 11 ++++
+>>>   .../platform/qcom/iris/iris_platform_sm8650.h      | 13 +++++
+>>>   drivers/media/platform/qcom/iris/iris_probe.c      |  4 ++
+>>>   5 files changed, 92 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h
+>>> b/drivers/media/platform/qcom/iris/iris_platform_common.h
+>>> index
+>>> fdd40fd80178c4c66b37e392d07a0a62f492f108..6bc3a7975b04d612f6c89206eae95dac678695fc 100644
+>>> --- a/drivers/media/platform/qcom/iris/iris_platform_common.h
+>>> +++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
+>>> @@ -35,6 +35,7 @@ enum pipe_type {
+>>>     extern struct iris_platform_data sm8250_data;
+>>>   extern struct iris_platform_data sm8550_data;
+>>> +extern struct iris_platform_data sm8650_data;
+>>>     enum platform_clk_type {
+>>>       IRIS_AXI_CLK,
+>>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+>>> b/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+>>> index
+>>> 35d278996c430f2856d0fe59586930061a271c3e..6d1771bd68689d96b5b9087b0ad32b934f7295ee 100644
+>>> --- a/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+>>> +++ b/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+>>> @@ -10,6 +10,9 @@
+>>>   #include "iris_platform_common.h"
+>>>   #include "iris_vpu_common.h"
+>>>   +#include "iris_platform_sm8550.h"
+>>> +#include "iris_platform_sm8650.h"
+>>> +
+>>>   #define VIDEO_ARCH_LX 1
+>>>     static struct platform_inst_fw_cap inst_fw_cap_sm8550[] = {
+>>> @@ -142,8 +145,6 @@ static const struct icc_info sm8550_icc_table[] = {
+>>>       { "video-mem",  1000, 15000000 },
+>>>   };
+>>>   -static const char * const sm8550_clk_reset_table[] = { "bus" };
+>>> -
+>>>   static const struct bw_info sm8550_bw_table_dec[] = {
+>>>       { ((4096 * 2160) / 256) * 60, 1608000 },
+>>>       { ((4096 * 2160) / 256) * 30,  826000 },
+>>> @@ -264,3 +265,63 @@ struct iris_platform_data sm8550_data = {
+>>>       .dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
+>>>       .dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
+>>>   };
+>>> +
+>>> +/*
+>>> + * Shares most of SM8550 data except:
+>>> + * - vpu_ops to iris_vpu33_ops
+>>> + * - clk_rst_tbl to sm8650_clk_reset_table
+>>> + * - controller_rst_tbl to sm8650_controller_reset_table
+>>> + * - fwname to "qcom/vpu/vpu33_p4.mbn"
+>>> + */
+>>> +struct iris_platform_data sm8650_data = {
+>>> +    .get_instance = iris_hfi_gen2_get_instance,
+>>> +    .init_hfi_command_ops = iris_hfi_gen2_command_ops_init,
+>>> +    .init_hfi_response_ops = iris_hfi_gen2_response_ops_init,
+>>> +    .vpu_ops = &iris_vpu33_ops,
+>>> +    .set_preset_registers = iris_set_sm8550_preset_registers,
+>>> +    .icc_tbl = sm8550_icc_table,
+>>> +    .icc_tbl_size = ARRAY_SIZE(sm8550_icc_table),
+>>> +    .clk_rst_tbl = sm8650_clk_reset_table,
+>>> +    .clk_rst_tbl_size = ARRAY_SIZE(sm8650_clk_reset_table),
+>>> +    .controller_rst_tbl = sm8650_controller_reset_table,
+>>> +    .controller_rst_tbl_size = ARRAY_SIZE(sm8650_controller_reset_table),
+>>> +    .bw_tbl_dec = sm8550_bw_table_dec,
+>>> +    .bw_tbl_dec_size = ARRAY_SIZE(sm8550_bw_table_dec),
+>>> +    .pmdomain_tbl = sm8550_pmdomain_table,
+>>> +    .pmdomain_tbl_size = ARRAY_SIZE(sm8550_pmdomain_table),
+>>> +    .opp_pd_tbl = sm8550_opp_pd_table,
+>>> +    .opp_pd_tbl_size = ARRAY_SIZE(sm8550_opp_pd_table),
+>>> +    .clk_tbl = sm8550_clk_table,
+>>> +    .clk_tbl_size = ARRAY_SIZE(sm8550_clk_table),
+>>> +    /* Upper bound of DMA address range */
+>>> +    .dma_mask = 0xe0000000 - 1,
+>>> +    .fwname = "qcom/vpu/vpu33_p4.mbn",
+>>> +    .pas_id = IRIS_PAS_ID,
+>>> +    .inst_caps = &platform_inst_cap_sm8550,
+>>> +    .inst_fw_caps = inst_fw_cap_sm8550,
+>>> +    .inst_fw_caps_size = ARRAY_SIZE(inst_fw_cap_sm8550),
+>>> +    .tz_cp_config_data = &tz_cp_config_sm8550,
+>>> +    .core_arch = VIDEO_ARCH_LX,
+>>> +    .hw_response_timeout = HW_RESPONSE_TIMEOUT_VALUE,
+>>> +    .ubwc_config = &ubwc_config_sm8550,
+>>> +    .num_vpp_pipe = 4,
+>>> +    .max_session_count = 16,
+>>> +    .max_core_mbpf = ((8192 * 4352) / 256) * 2,
+>>> +    .input_config_params =
+>>> +        sm8550_vdec_input_config_params,
+>>> +    .input_config_params_size =
+>>> +        ARRAY_SIZE(sm8550_vdec_input_config_params),
+>>> +    .output_config_params =
+>>> +        sm8550_vdec_output_config_params,
+>>> +    .output_config_params_size =
+>>> +        ARRAY_SIZE(sm8550_vdec_output_config_params),
+>>> +    .dec_input_prop = sm8550_vdec_subscribe_input_properties,
+>>> +    .dec_input_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_input_properties),
+>>> +    .dec_output_prop = sm8550_vdec_subscribe_output_properties,
+>>> +    .dec_output_prop_size =
+>>> ARRAY_SIZE(sm8550_vdec_subscribe_output_properties),
+>>> +
+>>> +    .dec_ip_int_buf_tbl = sm8550_dec_ip_int_buf_tbl,
+>>> +    .dec_ip_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_ip_int_buf_tbl),
+>>> +    .dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
+>>> +    .dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
+>>> +};
+>>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8550.h
+>>> b/drivers/media/platform/qcom/iris/iris_platform_sm8550.h
+>>> new file mode 100644
+>>> index
+>>> 0000000000000000000000000000000000000000..ac8847edb585e4a9ce6b669a3a5988e7809972af
+>>> --- /dev/null
+>>> +++ b/drivers/media/platform/qcom/iris/iris_platform_sm8550.h
+>>> @@ -0,0 +1,11 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>>> +/*
+>>> + * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights
+>>> reserved.
+>>> + */
+>>> +
+>>> +#ifndef __IRIS_PLATFORM_SM8550_H__
+>>> +#define __IRIS_PLATFORM_SM8550_H__
+>>> +
+>>> +static const char * const sm8550_clk_reset_table[] = { "bus" };
+>>> +
+>>> +#endif
+>> There is no need of iris_platform_sm8550.h, you can keep this entry in
+>> gen2.c file itself. As we are making that our base.
+>> You can just have iris_platform_sm8650.h which overrides this entry with
+>> SOC specific reset requirements for SM8650.
+> 
+> Ok, so this was requested by Vikash, but it seemed weird, but as Dmitry sais
+> kind of symmetrical and ok in fact.
+My point was to introduce an header for 8650, never was the plan to introduce
+for 8550. We wanted to keep that as base and any other SOC, bringing in delta
+would introduce the delta via SOC header.
+> 
+> But I'll respin without this file if you request it.
+Thank you.
 
-ASSERT(ref->type == BTRFS_REF_DATA || ref->type == BTRFS_REF_METADATA);
-
-to validate the value. 
-
-And there is currently no enum or switch to use the upper limit,
-so let's remove it.
-
-Signed-off-by: Yangtao Li <frank.li@vivo.com>
----
- fs/btrfs/delayed-ref.h | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/fs/btrfs/delayed-ref.h b/fs/btrfs/delayed-ref.h
-index f5ae880308d3..78cc23837610 100644
---- a/fs/btrfs/delayed-ref.h
-+++ b/fs/btrfs/delayed-ref.h
-@@ -262,7 +262,6 @@ enum btrfs_ref_type {
- 	BTRFS_REF_NOT_SET,
- 	BTRFS_REF_DATA,
- 	BTRFS_REF_METADATA,
--	BTRFS_REF_LAST,
- } __packed;
- 
- struct btrfs_ref {
--- 
-2.39.0
-
+Regards,
+Vikash
+> 
+> neil
+> 
+>>
+>> Thanks,
+>> Dikshita
+>>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8650.h
+>>> b/drivers/media/platform/qcom/iris/iris_platform_sm8650.h
+>>> new file mode 100644
+>>> index
+>>> 0000000000000000000000000000000000000000..75e9d572e788de043a56cf85a4cb634bd02226b9
+>>> --- /dev/null
+>>> +++ b/drivers/media/platform/qcom/iris/iris_platform_sm8650.h
+>>> @@ -0,0 +1,13 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>>> +/*
+>>> + * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights
+>>> reserved.
+>>> + */
+>>> +
+>>> +#ifndef __IRIS_PLATFORM_SM8650_H__
+>>> +#define __IRIS_PLATFORM_SM8650_H__
+>>> +
+>>> +static const char * const sm8650_clk_reset_table[] = { "bus", "core" };
+>>> +
+>>> +static const char * const sm8650_controller_reset_table[] = { "xo" };
+>>> +
+>>> +#endif
+>>> diff --git a/drivers/media/platform/qcom/iris/iris_probe.c
+>>> b/drivers/media/platform/qcom/iris/iris_probe.c
+>>> index
+>>> 4f8bce6e2002bffee4c93dcaaf6e52bf4e40992e..7cd8650fbe9c09598670530103e3d5edf32953e7 100644
+>>> --- a/drivers/media/platform/qcom/iris/iris_probe.c
+>>> +++ b/drivers/media/platform/qcom/iris/iris_probe.c
+>>> @@ -345,6 +345,10 @@ static const struct of_device_id iris_dt_match[] = {
+>>>               .data = &sm8250_data,
+>>>           },
+>>>   #endif
+>>> +    {
+>>> +        .compatible = "qcom,sm8650-iris",
+>>> +        .data = &sm8650_data,
+>>> +    },
+>>>       { },
+>>>   };
+>>>   MODULE_DEVICE_TABLE(of, iris_dt_match);
+>>>
+> 
