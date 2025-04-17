@@ -1,127 +1,82 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC5E14A4C7
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D0C254873;
+	Thu, 17 Apr 2025 16:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744905906; cv=none; b=X0l7UutpsPl/nsst8QDwGrxrE/aec0ric1TYojAUnTO1KYdea2fgABv4mPIVnANDOsjQId8yrYWlhOptzNGUPDiHEk5RjouizVrvH/N1YFekYPsRpi8g81nh1RLEbxhfY3L+kSSrdrVJDN3TlFeSYqSqemeDKgSSCn6cXMtceCU=
+	t=1744905908; cv=none; b=t3H7tsneOP0qt79dJciIgTYIW7ui5YQcFGIcnzYlB6yPpDcxk3bErpey8HItGIibA6S3BMI3I+X+gLaNwxae/WHicnQ2NjWqAmKgK7eaDUNeNBzS8n2tvuXtUWqLzLaMjJ7MyJsmnJOQ23+juu4u8hoJyLlsIco1VXIqKuOWNR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744905906; c=relaxed/simple;
-	bh=W8qDOiyv1h4pWlH3g88O7C4xDqIzRDAqgGgkiAByMFA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ebS28A/gZD6StuemC4RHZiL9L9NJeUH9smIaj1ulBkkfAlh/X7FOVDY3BERfxRHXwezNymAWnip+KeI9GDHvkHD+P/gDFh4pXHvh9lp3LQyj0wd0g67fnXYzyV4p/fA0JbkiGMY0S6qvyHeiOwgvLAtUGvGqw3Qcn7EjNQw4JaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=05T8qUJ8; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744905908; c=relaxed/simple;
+	bh=u+UmixzBBg2qLju8DtViG+IB8PoPJfibLgIOwE3b83o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=SQedT00Vjx2e6OxmFTV9R221G5HdlLf/9gttmWOevdiddYcd2+//EauPu1ZpYQpZKrQ5j0zSAMeRQz8BSu4ZQU097WbSmbj0NGhUN3jPT9Xgz/T9Ikt4+L8eiTs0oJ/w93ZQ3b6KdRSxccqvBx2ton3m/lQuBCzOj+rl+ThJ3Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pftw3qZc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="05T8qUJ8"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43ef83a6bfaso64885e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:05:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744905903; x=1745510703; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W8qDOiyv1h4pWlH3g88O7C4xDqIzRDAqgGgkiAByMFA=;
-        b=05T8qUJ8RoX5tk45LI7g4c39PTyk5OSEfS5W7exQ5fG9bISBxuDnOWbP8RqIYV/KF6
-         Ol6CSpSsyUGmbn3e6GPGa+gftSEpY91LDcfFZ43bpOcdbltJIadnEhoCbUXGqcXLhoSj
-         UZgPtAvH9uYXzMZXR95hazlrI8KI+JNcrhSCR+zoI7MyIbJjj/dulsuNpTLbL7Iy/0cy
-         yepyFRLzt/XMP79Cp6wYU8wC2eCu6KWYQRac6/gQmkPr6faMqUiRlfJ44bCqNhdx+0AR
-         oxI9kkVBz/KUZ+ns1F/vu0IJojmOqe9sNa9JuPf1pt3BWdUlCDNcYSxBIIJaRL9KmUGt
-         gPMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744905903; x=1745510703;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W8qDOiyv1h4pWlH3g88O7C4xDqIzRDAqgGgkiAByMFA=;
-        b=QGX3j2OVNBKrmRCs2xGs6R8b9dBoMllXKSkYpQPonO+pDo8j7Nsrt6tjvUq/NmJ/cQ
-         hGm1CCLpplr4NYL/4TGTREpo+ZIRIQ9ibp+xgTfcuKVK/yGlJqepw+OCHz7juqMAdr1L
-         fBaygVthP4+mbmeQEMcFXWpniAIA7a3Mb6wU6imJIK4LvmLIEnW4n22S01nPVTurDPQE
-         bdxt1CcFa3XZDEBIEQeY8oXq8ruJYtKLu2OwNXvmnbolCWvljBwkVhP99jdl1XzzsVBo
-         I7wcn9PQDcx6sbHrnOCBsTB/TLc1nujqKrsrfUymTyTGIqiHFcmrPTK5ehwPzXD9wsoI
-         oitA==
-X-Forwarded-Encrypted: i=1; AJvYcCXpRca83w3GJsUXUYCsZoCr6qEcwAnlBKDn/ki06ifjTCYU5An+V9sOwuuGnQF+6pTiN58/oskPJlgogLA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWnissncky+XnQmw7HqBVQK7rxGtpPNNB06cwwjzIQBwc5vQiL
-	w+RmL9pVZIfU0Aiz5PriSE4tKyTQKAabIA7FhDFLMrNm+OBS2MECTJW6nEY47XfJyqgmfEiCqdj
-	qIBIFRTTz+76GUbWfdLexiVXTklavRMstLHyL
-X-Gm-Gg: ASbGnct/exKCA7jdXO/pZvK0IF9w6LdCeqHvCQg89MQJdOI+MuREI7E3WeT/dJLncR3
-	gxoUBV/seGU62g6ux4iSM2lbNQdM2B9MR0cryK87cx1uQ2xv7fXzXrGGKec9wVtkTV7PfMuubRT
-	veBrK/3O23cw6acaWAho7BfMYgy44k8sslOVvhr91rYT3hjllu+k8=
-X-Google-Smtp-Source: AGHT+IHPxO/HoUoGfRA0x5PPvATzdMA6UAFEJv1oRfObulb1rUcdqwGzvQUiketg6T4NXeqjA4RD4Ot7mU9EPOGp8HE=
-X-Received: by 2002:a05:600c:1c1e:b0:439:7fc2:c7ad with SMTP id
- 5b1f17b1804b1-44063d6fe78mr983735e9.7.1744905902735; Thu, 17 Apr 2025
- 09:05:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pftw3qZc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED135C4CEEE;
+	Thu, 17 Apr 2025 16:05:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744905908;
+	bh=u+UmixzBBg2qLju8DtViG+IB8PoPJfibLgIOwE3b83o=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Pftw3qZcbLoRGEWO45dEMdW4wn4WIr3O/R9EZIY+z8TunCKUDXox2HmAQ7NQ08lCv
+	 jsj8lStfF/zf2uNWT7k/tv5RofeBDQvwCTtxTWjzQihcY1y0hNsLgopu4sfcgwUZRN
+	 rTMcpmoLjCeRczRB3qzgNiszd/my1ckuFzdcvMPElRsJO1HgdUQAy1ccGrjkKDGFKg
+	 lFIrOQV+Qni8Qc7Mfc8ZB2W1D3qYwQ5m2AyJP0cRjKqqteRJPaV0ZMydhKHjgxDYml
+	 d8zGwtzE+KudtjAaqLSVDpqHPw9Kol4bD09Od5OBU32JzZuFByY698op8RKGnTkFxO
+	 M/WN+Jgjv0Lig==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u5Rjg-0000000031B-1t9z;
+	Thu, 17 Apr 2025 18:05:08 +0200
+Date: Thu, 17 Apr 2025 18:05:08 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] USB-serial device ids for 6.15-rc3
+Message-ID: <aAEmtBNxgCFqA5op@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414225227.3642618-1-tjmercier@google.com>
- <20250414225227.3642618-3-tjmercier@google.com> <CAPhsuW6sgGvjeAcciskmGO7r6+eeDo_KVS3y7C8fCDPptzCebw@mail.gmail.com>
- <CABdmKX0bgxZFYuvQvQPK0AnAHEE3FebY_eA1+Vo=ScH1MbfzMg@mail.gmail.com>
- <CAPhsuW72Q2--E9tQQY8xADghTV6bYy9vHpFQoCWNh0V_QBWafA@mail.gmail.com>
- <CABdmKX1tDv3fSFURDN7=txFSbQ1xTjp8ZhLP8tFAvLcO9_-4_A@mail.gmail.com>
- <CAPhsuW7xvSYjWvy8K9Ev_tMwDRy2dpEiBcHYai3n-wAa0xvLow@mail.gmail.com>
- <CABdmKX1p0KgbipTSW1Ywi4bTBabQmsg21gA14Bp5atYHg8FeXQ@mail.gmail.com> <CAPhsuW4f2=M_K553+BVnGJq=ddZ7sXj4CfCAHeYQ=4cpihBCzA@mail.gmail.com>
-In-Reply-To: <CAPhsuW4f2=M_K553+BVnGJq=ddZ7sXj4CfCAHeYQ=4cpihBCzA@mail.gmail.com>
-From: "T.J. Mercier" <tjmercier@google.com>
-Date: Thu, 17 Apr 2025 09:04:48 -0700
-X-Gm-Features: ATxdqUG71xXjeNh_Y--IqcHwHgbok8UYG45JYmWjM55y53LlzggibWtxWiJMWb4
-Message-ID: <CABdmKX0P1tpa-jxzN1_TCyk6Cw6drYM+KRZQ5YQcjNOBFtOFJw@mail.gmail.com>
-Subject: Re: [PATCH 2/4] bpf: Add dmabuf iterator
-To: Song Liu <song@kernel.org>
-Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	skhan@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, android-mm@google.com, 
-	simona@ffwll.ch, corbet@lwn.net, eddyz87@gmail.com, yonghong.song@linux.dev, 
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
-	jolsa@kernel.org, mykolal@fb.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, Apr 16, 2025 at 9:56=E2=80=AFPM Song Liu <song@kernel.org> wrote:
->
-> On Wed, Apr 16, 2025 at 7:09=E2=80=AFPM T.J. Mercier <tjmercier@google.co=
-m> wrote:
-> >
-> > On Wed, Apr 16, 2025 at 6:26=E2=80=AFPM Song Liu <song@kernel.org> wrot=
-e:
-> [...]
-> > >
-> > > Here is another rookie question, it appears to me there is a file des=
-criptor
-> > > associated with each DMA buffer, can we achieve the same goal with
-> > > a task-file iterator?
-> >
-> > That would find almost all of them, but not the kernel-only
-> > allocations. (kernel_rss in the dmabuf_dump output I attached earlier.
-> > If there's a leak, it's likely to show up in kernel_rss because some
-> > driver forgot to release its reference(s).) Also wouldn't that be a
-> > ton more iterations since we'd have to visit every FD to find the
-> > small portion that are dmabufs? I'm not actually sure if buffers that
-> > have been mapped, and then have had their file descriptors closed
-> > would show up in task_struct->files; if not I think that would mean
-> > scanning both files and vmas for each task.
->
-> I don't think scanning all FDs to find a small portion of specific FDs
-> is a real issue. We have a tool that scans all FDs in the system and
-> only dump data for perf_event FDs. I think it should be easy to
-> prototype a tool by scanning all files and all vmas. If that turns out
-> to be very slow, which I highly doubt will be, we can try other
-> approaches.
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-But this will not find *all* the buffers, and that defeats the purpose
-of having the iterator.
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
-> OTOH, I am wondering whether we can build a more generic iterator
-> for a list of objects. Adding a iterator for each important kernel lists
-> seems not scalable in the long term.
+are available in the Git repository at:
 
-I think the wide variety of differences in locking for different
-objects would make this difficult to do in a generic way.
+  https://git.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial.git tags/usb-serial-6.15-rc3
+
+for you to fetch changes up to 4cc01410e1c1dd075df10f750775c81d1cb6672b:
+
+  USB: serial: simple: add OWON HDS200 series oscilloscope support (2025-04-16 08:38:22 +0200)
+
+----------------------------------------------------------------
+USB-serial device ids for 6.15-rc3
+
+Here's a new simple driver for Owon oscilloscopes and a couple of new
+new modem and smart meter device ids.
+
+All have been in linux-next with no reported issues.
+
+----------------------------------------------------------------
+Adam Xue (1):
+      USB: serial: option: add Sierra Wireless EM9291
+
+Craig Hesling (1):
+      USB: serial: simple: add OWON HDS200 series oscilloscope support
+
+Michael Ehrenreich (1):
+      USB: serial: ftdi_sio: add support for Abacus Electrics Optical Probe
+
+ drivers/usb/serial/ftdi_sio.c          | 2 ++
+ drivers/usb/serial/ftdi_sio_ids.h      | 5 +++++
+ drivers/usb/serial/option.c            | 3 +++
+ drivers/usb/serial/usb-serial-simple.c | 7 +++++++
+ 4 files changed, 17 insertions(+)
