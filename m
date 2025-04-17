@@ -1,64 +1,64 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9AB01D7998
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:45:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFE11DDA36
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:45:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744850751; cv=none; b=WaNy+q7CzM3oG/bSN9bOHBt4KeU72UtBeNE8fP5MaAoGZdNZ3fj86CX9L1SQ4CmgjP7HExnv0MYCoz2KC5e/AdHGScOPfEI1RwDAziFAIXfutB6A0ybhTXta1Y9XdZDxQAwdVNukiikg6jL/4FxdbRhum3QiZqFmdBS2iUAgMcA=
+	t=1744850752; cv=none; b=B+3zNMXqPupjHiW+9aswii2R2tqmnL+1MoMx2C0MYF5bmKFvdpOqJeBkfymfRpOJpQT3Y7XRvxpwcPtI3mbj71zcPzaMcxa3Si7IpglgE5sZsCHkmrmTeGNKZJ6SfVjgkeaoj14UYQmFeXDI1XQ++E1BGA7NT79lNPLDPj7OYPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744850751; c=relaxed/simple;
-	bh=dINICUlUQwKCLuaYFcvZQj0ckrAk0FXSLsUGERu4iAk=;
+	s=arc-20240116; t=1744850752; c=relaxed/simple;
+	bh=vqqMD2vMr3KfIaXswxJ7mru+gGuO0Ld1w+78Qj406Ug=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N/tEDVTJINPdCnxMM9iFnjGVw836Vkj/mo8jdDk/g4dO4Ky6kAwjkFq4W/JyVptIbihFnSDdX3V9R4qgDiW/7DZsvsSk/z4b2T521emt2ghxHoos5tORX+Quh4lSHnakNE68G9IpUQdfS3j5HnjX/mdbFM+95tfUJCVuM7FtF2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=Dv+qy+vT; arc=none smtp.client-ip=209.85.214.177
+	 MIME-Version; b=B94IjBaNpFxgMj9MngCqi3fmXNEvNfMxFpJs47UWArf+wYxGjde5ZNQ9xwA1PoHr3Ad82R2q5/uau+VXbtaccOzXmO8vx7UoA3rLGhbOnzt+XwA4WgP/jHWq5v8EUDs4y79PqVhst7sSnFPLw1YZ/PSMcx4ZoXWVma8Uv6QWhWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=YKYWYAia; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neverthere.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="Dv+qy+vT"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2295d78b433so2519425ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 17:45:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="YKYWYAia"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-223fb0f619dso3036695ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 17:45:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neverthere.org; s=google; t=1744850749; x=1745455549; darn=vger.kernel.org;
+        d=neverthere.org; s=google; t=1744850750; x=1745455550; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QHmTXYndf5bH9FTsR78jW+NBjJBfXqdxCg1p2ihtcws=;
-        b=Dv+qy+vTjx4vXPQyI69P+h6k6wBEb1jmpTAFIqJu7FA6tmicnW16IMzk8YCxpF5zg7
-         ar/Y6mVoTGsTuw6f/jzZYwo1EisvgRTSDbdHmGRv7wbG7GRfXZEWv1U1UaSaQ6+AsDKZ
-         AHX8nQJSBqM55pQHv1Xqku81Y8t+Fe5KvZJ8Fk4S8rNUw3oAiEy4TixVeHqIlh6zkV6L
-         LjDYNBpJ9n+SI03OcQ3xljKRepzf+O7mSe8qVlbIQo1BXgYIQ7XlwVtaBovp/oVTs3U2
-         VautymzqkbZyGovyqqvuCcCgS0Y83Y5/Mi7h8Xyj0zsuGHb2pbTHTnsIok0N7O5Ykjye
-         5I0Q==
+        bh=9MpLJjSgDnPFGiVpHm3KvyZyL7VDXcVSfSDoSsrVCXw=;
+        b=YKYWYAiaHa84H6rbv0xJmAoQ7cSnkkKpjgLds44JKefEw+0Vtw4NxUKtbWd4Pk5+ll
+         ypYvx8Hq42QRxCgd+jRMRLyXYDC9WitHcyAXTe21VSrlPVXBkPOVPoArtF3aRSJPZr0x
+         n3zNHeiCfy9lm4V1pd9O8u3i81BxlyNogF0QhaII7f5QqM2JY2lYic8hfmg9scQ5PXGe
+         fnUvNCT10loD0l89D1fTJR4ttkbQsqljoPh13ckhY0k4TM1yMuMoE1cHJ/+LVyD8kHTc
+         nviNMg9vL1GPzP9bBmrvtuent73w5SFSl3JAWsiJl6lgBIS87iAEbk/l3WEmpmlKkIol
+         ctaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744850749; x=1745455549;
+        d=1e100.net; s=20230601; t=1744850750; x=1745455550;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QHmTXYndf5bH9FTsR78jW+NBjJBfXqdxCg1p2ihtcws=;
-        b=XAg6B92J+ah6N+Y6DcBRBoP0HS3hVmZtpZ4mXt3xdNj32OWIt4GkHklAzvRK5leI8y
-         rBm4v1lhJ9VQ1Fd7cHjcPUEj2kg/qO11S/yTNYbFbQD/hl8M11Np+y6idHftx+iZhLGw
-         5HCJD0A7R7HkMSLEH5MbiPbck9+tUzQ+FkzKFKXU9RaQDtLD2w3TLDCWKvwMkZVFym03
-         YwNHstZ8NmNZK1IKaWzmWFBhZ+WM/q8v2H9JH8AnVUiH1cperxaICz0fhMzS682nn45D
-         asCzbyPmqFSPCkUrBw81sNNJQmlZJM/UT6aQaas33osE5UqucM6gZmeA8LUEshYS6lRX
-         EHnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFz6mraXaXVMiCGSOoS9JdsHQVWOgNBGMaNDujk5mNUkAAa0SXXbHpYB/dGOQJZOkUYFo5OP//77ejNtk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGIwn8S5rs8GIKrD9ODSUPZeNLtCoL3Ksg42zb4bBobjWJJxa7
-	TAU+1gDICuPkdbnt3TnK9hDYZ0JivFFT6F4ssoF9SaWTMmX8NOKDv1Fih9DBYaGKT5z3J5A77CM
+        bh=9MpLJjSgDnPFGiVpHm3KvyZyL7VDXcVSfSDoSsrVCXw=;
+        b=AEmpqzsqTK66Ye/kfuIfik5VNxgMSz4P9z4gIiy/+1Ai9B7hFZ/DpGCInufqa/22w6
+         g5lHg8xOgKxlxXlEnX8q2uG8zjBoQLqvkT8AUyOMi22WpC6Z3VCs5QUKv+RB1w503MDo
+         t+c+d3QqD3Nnw0Nhn4cRb9kyDIBHHSDVbQ7E20mvN2qcALhKMBOPHIB3Fu/TctYZIqtB
+         c/i37WlOU3r/uMpTiiSeKUxVoAmLWbPgoXIoe0MtkTe3Sv4bvmwNQInGW4N8nn/l8UQt
+         8KXwilWjV1UDD3WFXWGMQNw0vub8OgqhgXWGmNr7DJojKIM/CNvISqyZd1Okyv443cf6
+         njqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWyjdJJeTgjpc7lsCirz1eYYEkAW35QINV7V8tD188uOIqu2g8cgbv//WuTuujQ4Qqt8SKzWMolSqNCL94=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOTRzL/LXTpCGmtWVIlTkxY1Bcm1klk5gaMtPu6YTkw021oidS
+	CTTJQfhC4b1sgA31M90PhIHVTXyltm62jyVyJtfxIdgMEdyVYtglVqEAfbE5VZQcqAGO+8mUUOs
 	=
-X-Gm-Gg: ASbGncsPnW2PzARN8O+yxiuhZNOSfrCh/4jZMPZTqgRpORokBVN5LmTI0TLt9igwA3/
-	VT74sCl9RhLRlDGbW8RpteIl0Cr1kxK/NF5kTqGJouEja57Eql+oc95PiPjvB5YljQKi7oHis/4
-	EQPcO8JGlJn0hytlijN2dWY/CyY47MjsP/sVWNyS2Dowc+RWlphgiipgM5KshQVHlgrJ6uJ7LQo
-	DQBDRfpQNwQE8E1DeqI8AkppmN7imsDtiycWCUiZHefsIdDx7scq4tFyvIGzXOz/+mCYSKSklYp
-	n/o8scmZ15e2oa3vDGM/fNwQv10UdqM2rsWmIpQcdUKxSIjLeMoJLHH0a0Eei9H4pNqCXMMiEM4
-	n3wIeoQ==
-X-Google-Smtp-Source: AGHT+IH3MhM2hoTiTH/u/6kjUD6KKHoQAem6f3XGNiye6KYVHV/o9gvD0bLkEkhVvZBAs7yhcOL7Lw==
-X-Received: by 2002:a17:902:e54b:b0:224:18bb:44c2 with SMTP id d9443c01a7336-22c358c616amr40273245ad.6.1744850749436;
-        Wed, 16 Apr 2025 17:45:49 -0700 (PDT)
+X-Gm-Gg: ASbGncsg0/2yOxbAHVh1yjMFncqZh+OL6LdjAbBQqjVlBuq5UleBqNcIUNF2xGNxQpy
+	tJOpFIClXyipX8BVyb+s/3fCJDSN00cwWnphsM2+bTHnOTJBZhueim+U19xGVsaErchipiaKvD3
+	zAiUcjDVwZH57mph/VcFrgY2zdFt/S+qFRxvhb41fuJcPFyobz2dPL+Vl3UcrNYKOOavmDTEP/k
+	aUhDJsHw1pV0nv4lwlAtQhyiv41BsFmvsspvGeOd3ndGWlhRmjygn/UAnAWq+2E967qjWkk5RTy
+	3W+jyuDQLhc9yQ4jABtNXRgCFwCBUAWV0kgZv1W/SEeXn0DSo6tMU8Njy51MdP7WBlC53HknlgU
+	+vYYT0voDlTZLcu/4
+X-Google-Smtp-Source: AGHT+IFKuJl/aeUSGhla9FOWsU2V8+3HJ8VUb4CYfV/wKpEd6/jg8WfSCM6hMpkMfJIdXmgjLpnGmA==
+X-Received: by 2002:a17:902:c944:b0:220:e9ac:e746 with SMTP id d9443c01a7336-22c359a43dcmr64796545ad.53.1744850750593;
+        Wed, 16 Apr 2025 17:45:50 -0700 (PDT)
 Received: from tiamat (c-69-181-214-135.hsd1.ca.comcast.net. [69.181.214.135])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33faa307sm20904095ad.136.2025.04.16.17.45.49
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73c2b2122c5sm1565886b3a.76.2025.04.16.17.45.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 17:45:49 -0700 (PDT)
+        Wed, 16 Apr 2025 17:45:50 -0700 (PDT)
 From: Michael Rubin <matchstick@neverthere.org>
 To: gregkh@linuxfoundation.org,
 	dpenkler@gmail.com,
@@ -66,9 +66,9 @@ To: gregkh@linuxfoundation.org,
 Cc: linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Michael Rubin <matchstick@neverthere.org>
-Subject: [PATCH v2 10/14] staging: gpib: ni_usb: u8 over uint8_t
-Date: Thu, 17 Apr 2025 00:45:29 +0000
-Message-ID: <20250417004533.86765-11-matchstick@neverthere.org>
+Subject: [PATCH v2 11/14] staging: gpib: pc2: u8 over uint8_t
+Date: Thu, 17 Apr 2025 00:45:30 +0000
+Message-ID: <20250417004533.86765-12-matchstick@neverthere.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250417004533.86765-1-matchstick@neverthere.org>
 References: <20250417004533.86765-1-matchstick@neverthere.org>
@@ -85,85 +85,83 @@ Reported by checkpatch.pl.
 CHECK: Prefer kernel type 'u8' over 'uint8_t'
 Signed-off-by: Michael Rubin <matchstick@neverthere.org>
 ---
- drivers/staging/gpib/ni_usb/ni_usb_gpib.c | 16 ++++++++--------
+ drivers/staging/gpib/pc2/pc2_gpib.c | 16 ++++++++--------
  1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/staging/gpib/ni_usb/ni_usb_gpib.c b/drivers/staging/gpib/ni_usb/ni_usb_gpib.c
-index a3d517efca08..d5b281fa8b37 100644
---- a/drivers/staging/gpib/ni_usb/ni_usb_gpib.c
-+++ b/drivers/staging/gpib/ni_usb/ni_usb_gpib.c
-@@ -589,7 +589,7 @@ static int ni_usb_write_registers(struct ni_usb_priv *ni_priv,
+diff --git a/drivers/staging/gpib/pc2/pc2_gpib.c b/drivers/staging/gpib/pc2/pc2_gpib.c
+index ae265e2eb46a..fd191d24d7a6 100644
+--- a/drivers/staging/gpib/pc2/pc2_gpib.c
++++ b/drivers/staging/gpib/pc2/pc2_gpib.c
+@@ -90,7 +90,7 @@ irqreturn_t pc2a_interrupt(int irq, void *arg)
  }
  
- // interface functions
--static int ni_usb_read(struct gpib_board *board, uint8_t *buffer, size_t length,
-+static int ni_usb_read(struct gpib_board *board, u8 *buffer, size_t length,
- 		       int *end, size_t *bytes_read)
+ // wrappers for interface functions
+-static int pc2_read(struct gpib_board *board, uint8_t *buffer, size_t length, int *end,
++static int pc2_read(struct gpib_board *board, u8 *buffer, size_t length, int *end,
+ 		    size_t *bytes_read)
  {
- 	int retval, parse_retval;
-@@ -720,7 +720,7 @@ static int ni_usb_read(struct gpib_board *board, uint8_t *buffer, size_t length,
- 	return retval;
+ 	struct pc2_priv *priv = board->private_data;
+@@ -98,7 +98,7 @@ static int pc2_read(struct gpib_board *board, uint8_t *buffer, size_t length, in
+ 	return nec7210_read(board, &priv->nec7210_priv, buffer, length, end, bytes_read);
  }
  
--static int ni_usb_write(struct gpib_board *board, uint8_t *buffer, size_t length,
-+static int ni_usb_write(struct gpib_board *board, u8 *buffer, size_t length,
- 			int send_eoi, size_t *bytes_written)
+-static int pc2_write(struct gpib_board *board, uint8_t *buffer, size_t length, int send_eoi,
++static int pc2_write(struct gpib_board *board, u8 *buffer, size_t length, int send_eoi,
+ 		     size_t *bytes_written)
  {
- 	int retval;
-@@ -824,7 +824,7 @@ static int ni_usb_write(struct gpib_board *board, uint8_t *buffer, size_t length
- 	return retval;
+ 	struct pc2_priv *priv = board->private_data;
+@@ -106,7 +106,7 @@ static int pc2_write(struct gpib_board *board, uint8_t *buffer, size_t length, i
+ 	return nec7210_write(board, &priv->nec7210_priv, buffer, length, send_eoi, bytes_written);
  }
  
--static int ni_usb_command_chunk(struct gpib_board *board, uint8_t *buffer, size_t length,
-+static int ni_usb_command_chunk(struct gpib_board *board, u8 *buffer, size_t length,
- 				size_t *command_bytes_written)
+-static int pc2_command(struct gpib_board *board, uint8_t *buffer,
++static int pc2_command(struct gpib_board *board, u8 *buffer,
+ 		       size_t length, size_t *bytes_written)
  {
- 	int retval;
-@@ -918,7 +918,7 @@ static int ni_usb_command_chunk(struct gpib_board *board, uint8_t *buffer, size_
- 	return 0;
+ 	struct pc2_priv *priv = board->private_data;
+@@ -149,7 +149,7 @@ static void pc2_remote_enable(struct gpib_board *board, int enable)
+ 	nec7210_remote_enable(board, &priv->nec7210_priv, enable);
  }
  
--static int ni_usb_command(struct gpib_board *board, uint8_t *buffer, size_t length,
-+static int ni_usb_command(struct gpib_board *board, u8 *buffer, size_t length,
- 			  size_t *bytes_written)
+-static int pc2_enable_eos(struct gpib_board *board, uint8_t eos_byte, int compare_8_bits)
++static int pc2_enable_eos(struct gpib_board *board, u8 eos_byte, int compare_8_bits)
  {
- 	size_t count;
-@@ -1182,7 +1182,7 @@ static void ni_usb_remote_enable(struct gpib_board *board, int enable)
- 	return;// 0;
+ 	struct pc2_priv *priv = board->private_data;
+ 
+@@ -184,14 +184,14 @@ static int pc2_secondary_address(struct gpib_board *board, unsigned int address,
+ 	return nec7210_secondary_address(board, &priv->nec7210_priv, address, enable);
  }
  
--static int ni_usb_enable_eos(struct gpib_board *board, uint8_t eos_byte, int compare_8_bits)
-+static int ni_usb_enable_eos(struct gpib_board *board, u8 eos_byte, int compare_8_bits)
+-static int pc2_parallel_poll(struct gpib_board *board, uint8_t *result)
++static int pc2_parallel_poll(struct gpib_board *board, u8 *result)
  {
- 	struct ni_usb_priv *ni_priv = board->private_data;
+ 	struct pc2_priv *priv = board->private_data;
  
-@@ -1341,7 +1341,7 @@ static int ni_usb_secondary_address(struct gpib_board *board, unsigned int addre
- 	return 0;
+ 	return nec7210_parallel_poll(board, &priv->nec7210_priv, result);
  }
  
--static int ni_usb_parallel_poll(struct gpib_board *board, uint8_t *result)
-+static int ni_usb_parallel_poll(struct gpib_board *board, u8 *result)
+-static void pc2_parallel_poll_configure(struct gpib_board *board, uint8_t config)
++static void pc2_parallel_poll_configure(struct gpib_board *board, u8 config)
  {
- 	int retval;
- 	struct ni_usb_priv *ni_priv = board->private_data;
-@@ -1396,7 +1396,7 @@ static int ni_usb_parallel_poll(struct gpib_board *board, uint8_t *result)
- 	return retval;
+ 	struct pc2_priv *priv = board->private_data;
+ 
+@@ -205,14 +205,14 @@ static void pc2_parallel_poll_response(struct gpib_board *board, int ist)
+ 	nec7210_parallel_poll_response(board, &priv->nec7210_priv, ist);
  }
  
--static void ni_usb_parallel_poll_configure(struct gpib_board *board, uint8_t config)
-+static void ni_usb_parallel_poll_configure(struct gpib_board *board, u8 config)
+-static void pc2_serial_poll_response(struct gpib_board *board, uint8_t status)
++static void pc2_serial_poll_response(struct gpib_board *board, u8 status)
  {
- 	int retval;
- 	struct ni_usb_priv *ni_priv = board->private_data;
-@@ -1474,7 +1474,7 @@ static void ni_usb_serial_poll_response(struct gpib_board *board, u8 status)
- 	return;// 0;
+ 	struct pc2_priv *priv = board->private_data;
+ 
+ 	nec7210_serial_poll_response(board, &priv->nec7210_priv, status);
  }
  
--static uint8_t ni_usb_serial_poll_status(struct gpib_board *board)
-+static u8 ni_usb_serial_poll_status(struct gpib_board *board)
+-static uint8_t pc2_serial_poll_status(struct gpib_board *board)
++static u8 pc2_serial_poll_status(struct gpib_board *board)
  {
- 	return 0;
- }
+ 	struct pc2_priv *priv = board->private_data;
+ 
 -- 
 2.43.0
 
