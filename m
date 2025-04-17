@@ -1,76 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail84.out.titan.email (mail84.out.titan.email [3.216.99.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC972571DC;
-	Thu, 17 Apr 2025 17:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E6719F40A
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 18:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.216.99.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744912681; cv=none; b=GjeKVUm9Uo1V8xV8c7g8vbCW3E9ox1mRuq7yXWfNy/gp1KdCD0UOB+BigQExeZVJfk4JHTfezq5GrJS9qxBaJHKGslWjdu3HAgQcQMWipoZ+UgwdOJOL52rkK5QOUefgZqx0alvTW3uFtlmBuTMxnsTK/i7Rt6Dt+P5ZMSQnoGY=
+	t=1744912803; cv=none; b=oh8uVh+wqtziMp9zhjr+8Gde7ROkdM/Dk/0GZFkEtAgaSydKr9NKT1oLULRxswTl8Bu5XHzVaJeE2UvXHlRAg2MQugWZoTO8YY82Euj2RlqaArB9QyzgBXWOR9XxRXoE9FXzE58JD9wvxEeV188ckeJOkiv4OR7Z/eHQVFKCV+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744912681; c=relaxed/simple;
-	bh=obmBouT+OPn9WusyTQWX756/PQVLb3x6dmC8Wnrv21Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=CuwB/PucFIgxmzUBIxjtRUolzdBr2qM4+xulYhkizOXW0ZaRvb92GAveCscMqzbO3qU0YJrSdtTbOI9QVLYawy/Ok3grB7I2BFEa18t06BX29ak/5dpEr4eUkwjbdRLbkaMefsekT3blNz4OH8qNCNE+Yc3Fe6KHy8LvlpLJG18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCBA6C4CEE7;
-	Thu, 17 Apr 2025 17:58:00 +0000 (UTC)
-Date: Thu, 17 Apr 2025 13:59:39 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] ftrace: Free ftrace hashes after they are replaced in the
- subops code
-Message-ID: <20250417135939.245b128d@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744912803; c=relaxed/simple;
+	bh=dtb9K8lcpmys1W32pb4Durrh6XWu23sh+YsgDer1diQ=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=n5NPvNX+pgqcsG+yONqBduQQrumtIrAqDAXIn7XnPc+HfB4WmDJoAudEceC4vF2NGwAPgGyVo9UtDbrMZlByR5aIN9qRsiwA9ejy3hixbJWXCHQ3lCx6/IFe1jNdsljsEZ8z729EmOMRD9fO+/Nyv02LWH9CG0hC31dq+JDZFEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=A5ElI5kj; arc=none smtp.client-ip=3.216.99.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="A5ElI5kj"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp-out.flockmail.com (Postfix) with ESMTP id 2E995E03F8;
+	Thu, 17 Apr 2025 13:11:55 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; bh=JSduZ8d++wQ3nvXz3tNF7pbhlQZRllEIV6azsHZ8TPo=;
+	c=relaxed/relaxed; d=t12smtp-sign004.email;
+	h=in-reply-to:cc:references:subject:from:date:to:mime-version:message-id:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
+	q=dns/txt; s=titan1; t=1744895515; v=1;
+	b=A5ElI5kjlOJ1vwK7+UoOWh5AWqnuoXJWfAXWbNTJjHiyfHrj0hIAKYYk8jeJuSh4s++5cR2X
+	po6CPLW9b7C8k0walzZAL4Z37+v2Qa4eTwftjYlewD78oNYBUSUbzQavghNw40aXMU1shIh9lMU
+	43/xEmyTzkfzN93p77Dq3w5A=
+Received: from smtpclient.apple (unknown [141.11.218.23])
+	by smtp-out.flockmail.com (Postfix) with ESMTPA id 4A185E02FF;
+	Thu, 17 Apr 2025 13:11:51 +0000 (UTC)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
+Subject: Re: [PATCH] md/bcache: Mark __nonstring look-up table
+Feedback-ID: :i@coly.li:coly.li:flockmailId
+From: Coly Li <i@coly.li>
+In-Reply-To: <994E520B-64B1-4387-8DFF-88755346FE55@kernel.org>
+Date: Thu, 17 Apr 2025 21:11:39 +0800
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+ Coly Li <colyli@kernel.org>,
+ Kent Overstreet <kent.overstreet@linux.dev>,
+ linux-bcache@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <208BFA1D-F3E9-4D9F-A4A1-4E4C3F4CA309@coly.li>
+References: <20250416220135.work.394-kees@kernel.org>
+ <CAMj1kXHfearSZG6TFTxxX87qmRkUmAefQm-TfPNS8j09kWxujQ@mail.gmail.com>
+ <994E520B-64B1-4387-8DFF-88755346FE55@kernel.org>
+To: Kees Cook <kees@kernel.org>
+X-Mailer: Apple Mail (2.3826.500.181.1.5)
+X-F-Verdict: SPFVALID
+X-Titan-Src-Out: 1744895514990706196.26132.3658974856431284874@prod-use1-smtp-out1004.
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.4 cv=fZxXy1QF c=1 sm=1 tr=0 ts=6800fe1b
+	a=USBFZE4A2Ag4MGBBroF6Xg==:117 a=USBFZE4A2Ag4MGBBroF6Xg==:17
+	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=VwQbUJbxAAAA:8
+	a=dxI0GJXRgo0QjBsCUv0A:9 a=QEXdDO2ut3YA:10 a=UZE0bJQDkNwXTw_to89n:22
 
-From: Steven Rostedt <rostedt@goodmis.org>
 
-The subops processing creates new hashes when adding and removing subops.
-There were some places that the old hashes that were replaced were not
-freed and this caused some memory leaks.
 
-Fixes: 0ae6b8ce200d ("ftrace: Fix accounting of subop hashes")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ftrace.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+> 2025=E5=B9=B44=E6=9C=8817=E6=97=A5 15:10=EF=BC=8CKees Cook =
+<kees@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+>=20
+>=20
+> On April 16, 2025 11:16:45 PM PDT, Ard Biesheuvel <ardb@kernel.org> =
+wrote:
+>> On Thu, 17 Apr 2025 at 00:01, Kees Cook <kees@kernel.org> wrote:
+>>>=20
+>>> GCC 15's new -Wunterminated-string-initialization notices that the =
+16
+>>> character lookup table "zero_uuid" (which is not used as a C-String)
+>>> needs to be marked as "nonstring":
+>>>=20
+>>> drivers/md/bcache/super.c: In function 'uuid_find_empty':
+>>> drivers/md/bcache/super.c:549:43: warning: initializer-string for =
+array of 'char' truncates NUL terminator but destination lacks =
+'nonstring' attribute (17 chars into 16 available) =
+[-Wunterminated-string-initialization]
+>>>  549 |         static const char zero_uuid[16] =3D =
+"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+>>>      |                                           =
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>=20
+>>> Add the annotation to silence the GCC warning.
+>>>=20
+>>> Signed-off-by: Kees Cook <kees@kernel.org>
+>>> ---
+>>> Cc: Coly Li <colyli@kernel.org>
+>>> Cc: Kent Overstreet <kent.overstreet@linux.dev>
+>>> Cc: linux-bcache@vger.kernel.org
+>>> ---
+>>> drivers/md/bcache/super.c | 2 +-
+>>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>>=20
+>>> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+>>> index e42f1400cea9..577d048170fe 100644
+>>> --- a/drivers/md/bcache/super.c
+>>> +++ b/drivers/md/bcache/super.c
+>>> @@ -546,7 +546,7 @@ static struct uuid_entry *uuid_find(struct =
+cache_set *c, const char *uuid)
+>>>=20
+>>> static struct uuid_entry *uuid_find_empty(struct cache_set *c)
+>>> {
+>>> -       static const char zero_uuid[16] =3D =
+"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+>>> +       static const char zero_uuid[] __nonstring =3D =
+"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+>>>=20
+>>=20
+>> Just
+>>=20
+>> static const char zero_uuid[16] =3D {};
+>>=20
+>> should work fine here too. No need for the initializer.
+>=20
+> =F0=9F=A4=A6 Yes. This is what I get for fixing dozens of these. I'll =
+send a v2...
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 39ccbb3b9693..d3e8b801ccc1 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -3609,6 +3609,9 @@ static int rebuild_hashes(struct ftrace_hash **filter_hash, struct ftrace_hash *
- 			}
- 		}
- 
-+		free_ftrace_hash(temp_hash.filter_hash);
-+		free_ftrace_hash(temp_hash.notrace_hash);
-+
- 		temp_hash.filter_hash = *filter_hash;
- 		temp_hash.notrace_hash = *notrace_hash;
- 	}
-@@ -3703,8 +3706,11 @@ static int ftrace_hash_move_and_update_subops(struct ftrace_ops *subops,
- 	}
- 
- 	ret = rebuild_hashes(&filter_hash, &notrace_hash, ops);
--	if (!ret)
-+	if (!ret) {
- 		ret = ftrace_update_ops(ops, filter_hash, notrace_hash);
-+		free_ftrace_hash(filter_hash);
-+		free_ftrace_hash(notrace_hash);
-+	}
- 
- 	if (ret) {
- 		/* Put back the original hash */
--- 
-2.47.2
 
+Can we do this,
+
+static const char zero_uuid[16] =3D {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, =
+0, 0, 0, 0};
+
+I like the explicit array element number 16, and the explicit uuid =
+content by obvious zero (=E2=80=980=E2=80=99) symbols. They provide =
+redundant information.
+Not sure whether GCC 15 complains or not.
+
+Thanks.
+
+Coly Li=
