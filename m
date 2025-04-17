@@ -1,161 +1,189 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7723423BE
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C2E35979
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:19:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744849025; cv=none; b=iFFM76EcVtd8cJMx1jDn3l8g4Thntt5sLdAXdM12HCnyNTP8+FTM2G1Il5RFLQJfZdQmcChh54xXi4VdVBTAB9sdykrWNzrd5MKLjvdPBHXb43E3zqO1UTZxIJhNwd3Ni2aClatzFyqGuMy+vn1n+QxlB+GYefEASlTshe6ZFTI=
+	t=1744849191; cv=none; b=IZMSKMbG7fB2c+jlLmjnKIBCxN/lm9pJaumJo9LEKIAqAOH0SzzPiHXcYXSE5+2sKhTrbCgVGRKcpSKs815/r+s19GDdzRoo6FtZO15VS0Cv550MUBAKet3g+7X27F3beTqbSQVnLLu52coCGL8jzDX/9LdQj560kP6ECw/Oox8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744849025; c=relaxed/simple;
-	bh=L4aG1+L1krMjLXDIAZtwRmNMTb5c0HNpTgN6ft1Ffz0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IkJ6zLKXLv3KFHC2BeiuclBY0DQWf/T0I+2kSsXn2fE3RNnt5LFowsrZ6tFZF9zbNpFo/GRAgQRk54bC7mCtw7StsiRGNk7xi69AyE20G8wyGRv3mrgtH4KO007S4kBA24wn/23PWob0rv5+xYMj22BJr2MDemg3IDgwBS8J2Go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XcJG7Ijc; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744849191; c=relaxed/simple;
+	bh=6PrGYoynop5eh0kR7OFlxxWuReKE4E8EHPjB431KdG0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cRXGG6mjYwcyOvnQBXQFxuG1ZiTOKTZXIPsPsjC0miz3p6mE9f7YOvq488YZtp+N66opn2bvkPCHUJ+7vMS8F2IPwL0EUWzyMvdcgD+ttK84P3w2GoEMra/OUspnRM3hX+KfstbHJixZwU/SNB+dU2Q65txopd7GvwmnqKW6wMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=elDakrPq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XcJG7Ijc"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af523f4511fso159858a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 17:17:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744849023; x=1745453823; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ou/vN4o4n3TBeIVFHaSiKpFZDK8cAIRKfyt0XdDezGY=;
-        b=XcJG7IjcUydXuSh4JqX8U6xvPpFtfsjki+BMuGFfk6xv1k5sr5g3/BGWfCHm726QSj
-         HEX13uuYEO3vIBcfLlPPsyOfQ3acw29Qso2BnqjmUF8l787qTfcK+5UOcPrDNLfBo2IU
-         xMleqR3Wd/HwgXZ+LQBzCollqnYyJiA3/CaxduxqNybyVkyld27odYI+7e/i4oYk2w2I
-         AQx0hgZ9WQUTGwBiFka/xhMWGX96rNpCoIz1edBs5BxWDWW/C8v/TaKvJbEHARxA1opH
-         cWgRQQ+gOxRuMv2rHMaNPVmC8YmM0vyvfVzsyLXBDXTmQ3ho8clM5+8VNznY2DHQAhi8
-         ps5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744849023; x=1745453823;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ou/vN4o4n3TBeIVFHaSiKpFZDK8cAIRKfyt0XdDezGY=;
-        b=VhCbpCI4lUlOlNygnR2bbMmp0lDIx/SiZbIG92RyNlRO4lp0/KOkjw+F57633nqeqk
-         52Gyyu2WkJ20FK7eZdBXwigMI6PWdtyXaEDtiq74WuoaLmgfd5VpHEghnphOC/P2/lXL
-         eUXV0ijehXUCQ3lZ1c+3VvvPzQedc8hUZ2unrevlDw6hLVoGHNXnjd5lyUPgukkyVn9/
-         VY95ZuZ30V3Ibrb44e4BUp5MXays9C6yD+iq6BoGA6sBCUik7jtKm8ECUOOhrdiFZrVA
-         nLwrJoLeYjhqgZfGHJvcmxzZ90g3PCbFsfz+CJrFbsO3PrWJ99tEQ8xr3yMP6bIv3BIq
-         kBlA==
-X-Forwarded-Encrypted: i=1; AJvYcCWjiHcYo0vXEzqMduact2WaTTdqXnfSD8zpfhsdGdeFnk70mPzsxxA6mqWzFy0j2vLU/cCSDDzfjOAaZ1s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykrvQxY1CQpLpyvIO8kcFrycTrkq5lxbJyqGPzrsENECACRiWZ
-	N1QZVxhcDh+5MDtPy2JepmiRTmDWA3Y4Ysl82Et+zhCdHissackE
-X-Gm-Gg: ASbGncslHx6CBoSD0MbE0i3USmsk1oMYWIzmZGKXrkwUP8hIL8OAktMK+mBcLM020k+
-	U6Cbp9lORgOYSYXAwHAmhpPun2SfW0g05AfjPsp4vgfApcEeX4CtOCc6ZusDH6MaWxJKEHfzw5u
-	uFr2E7au/VDWn117/K8CUDWy5zezwLNGntJP+c5j5BcF9p/Vc4QPoqC5XquVuf/i+vP8ZItLPDC
-	kXd4JKcPTkMJ50hcAvHJjS46iul/UhZp4MIobfK5GoAp+GTKVbmwQ407Mm5T6nZpXfeLXRosB5S
-	rp5WBUN4ZOphdSh+/PU8+BFnI+lGAdsqxvNVr95Zp8UftUyqncN88W5vsO8GEZ/c4ERxXg+1AMv
-	CrBTjPu9T2+DgVJQ1w9s+uWSv
-X-Google-Smtp-Source: AGHT+IFMlrsbP2bFmaha56sPH+o4Xf9ssQxi59Scyc2jAjEcnGy1fIixcrU8jXPSzs2Gmrqloly3zA==
-X-Received: by 2002:a17:90b:4d0f:b0:2fe:b8ba:62de with SMTP id 98e67ed59e1d1-3086416638dmr5022435a91.25.1744849022538;
-        Wed, 16 Apr 2025 17:17:02 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-308613b2f13sm2551008a91.36.2025.04.16.17.17.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 17:17:01 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <4d9cb937-2a8a-4b3c-af32-f8fae922aa5c@roeck-us.net>
-Date: Wed, 16 Apr 2025 17:17:00 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="elDakrPq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744849188;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xTb+PgEwgnCAHk5R7g1zQ1HaDUH8KH8i2a+1FlMxjgA=;
+	b=elDakrPq2Zq9Cd8ayhYc6TOmZorUmtE9GDQ25L+TRTQgts4jT73f2XOaRt80nhsleMp5h6
+	jgM7M3n5EY0k6BC4wbP8lFg4fbARpouuNfuP3lQdZ8HZGysa8YSe5GnmWkxOXlHKFVfOSA
+	nOJK56qNJ5HbudPBu0ucKHc2/M2SCRY=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-147-gVaXXH2fNZO5xhpiVzWUwQ-1; Wed,
+ 16 Apr 2025 20:19:43 -0400
+X-MC-Unique: gVaXXH2fNZO5xhpiVzWUwQ-1
+X-Mimecast-MFC-AGG-ID: gVaXXH2fNZO5xhpiVzWUwQ_1744849179
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CF1561800874;
+	Thu, 17 Apr 2025 00:19:37 +0000 (UTC)
+Received: from h1.redhat.com (unknown [10.22.88.34])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 470B819560A3;
+	Thu, 17 Apr 2025 00:19:27 +0000 (UTC)
+From: Nico Pache <npache@redhat.com>
+To: linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: akpm@linux-foundation.org,
+	corbet@lwn.net,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	david@redhat.com,
+	baohua@kernel.org,
+	baolin.wang@linux.alibaba.com,
+	ryan.roberts@arm.com,
+	willy@infradead.org,
+	peterx@redhat.com,
+	shuah@kernel.org,
+	ziy@nvidia.com,
+	wangkefeng.wang@huawei.com,
+	usamaarif642@gmail.com,
+	sunnanyong@huawei.com,
+	vishal.moola@gmail.com,
+	thomas.hellstrom@linux.intel.com,
+	yang@os.amperecomputing.com,
+	kirill.shutemov@linux.intel.com,
+	aarcange@redhat.com,
+	raquini@redhat.com,
+	dev.jain@arm.com,
+	anshuman.khandual@arm.com,
+	catalin.marinas@arm.com,
+	tiwai@suse.de,
+	will@kernel.org,
+	dave.hansen@linux.intel.com,
+	jack@suse.cz,
+	cl@gentwo.org,
+	jglisse@google.com,
+	surenb@google.com,
+	zokeefe@google.com,
+	hannes@cmpxchg.org,
+	rientjes@google.com,
+	mhocko@suse.com,
+	rdunlap@infradead.org
+Subject: [PATCH v4 0/4] mm: introduce THP deferred setting
+Date: Wed, 16 Apr 2025 18:18:42 -0600
+Message-ID: <20250417001846.81480-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] x86/Kconfig: Fix allyesconfig
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Alexander Potapenko <glider@google.com>,
- Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>, kasan-dev@googlegroups.com,
- linux-kernel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>
-References: <20250416230559.2017012-1-linux@roeck-us.net>
- <20250416170359.a0267b77d3db85ff6d5f8ac0@linux-foundation.org>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20250416170359.a0267b77d3db85ff6d5f8ac0@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On 4/16/25 17:03, Andrew Morton wrote:
-> On Wed, 16 Apr 2025 16:05:59 -0700 Guenter Roeck <linux@roeck-us.net> wrote:
-> 
->> 64-bit allyesconfig builds fail with
->>
->> x86_64-linux-ld: kernel image bigger than KERNEL_IMAGE_SIZE
->>
->> Bisect points to commit 6f110a5e4f99 ("Disable SLUB_TINY for build
->> testing") as the responsible commit. Reverting that patch does indeed
->> fix the problem. Further analysis shows that disabling SLUB_TINY enables
->> KASAN, and that KASAN is responsible for the image size increase.
->>
->> Solve the build problem by disabling KASAN for test builds.
->>
-> 
-> Excluding KASAN from COMPILE_TEST builds is regrettable.
-> 
-> Can we address this some other way?  One way might be to alter or
-> disable the KERNEL_IMAGE_SIZE check if COMPILE_TEST?  That will be sad
-> for anyone who tries to boot a COMPILE_TEST kernel, but who the heck
-> does that?
+This series is a follow-up to [1], which adds mTHP support to khugepaged.
+mTHP khugepaged support is a "loose" dependency for the sysfs/sysctl
+configs to make sense. Without it global="defer" and  mTHP="inherit" case
+is "undefined" behavior.
 
-I tried increasing the limit. It didn't work. With the RFC I sent earlier
-I made it dependent on allmodconfig, but Linus said I should just disable
-it for test builds (which was the cases anyway until commit 6f110a5e4f99).
+We've seen cases were customers switching from RHEL7 to RHEL8 see a
+significant increase in the memory footprint for the same workloads.
 
-Personally I don't have a preference either way. I can also do nothing and
-stop testing allyesconfig. That would help reducing the load on my testbed,
-so I would be all for it.
+Through our investigations we found that a large contributing factor to
+the increase in RSS was an increase in THP usage.
 
-Guenter
+For workloads like MySQL, or when using allocators like jemalloc, it is
+often recommended to set /transparent_hugepages/enabled=never. This is
+in part due to performance degradations and increased memory waste.
+
+This series introduces enabled=defer, this setting acts as a middle
+ground between always and madvise. If the mapping is MADV_HUGEPAGE, the
+page fault handler will act normally, making a hugepage if possible. If
+the allocation is not MADV_HUGEPAGE, then the page fault handler will
+default to the base size allocation. The caveat is that khugepaged can
+still operate on pages thats not MADV_HUGEPAGE.
+
+This allows for three things... one, applications specifically designed to
+use hugepages will get them, and two, applications that don't use
+hugepages can still benefit from them without aggressively inserting
+THPs at every possible chance. This curbs the memory waste, and defers
+the use of hugepages to khugepaged. Khugepaged can then scan the memory
+for eligible collapsing. Lastly there is the added benefit for those who
+want THPs but experience higher latency PFs. Now you can get base page
+performance at the PF handler and Hugepage performance for those mappings
+after they collapse.
+
+Admins may want to lower max_ptes_none, if not, khugepaged may
+aggressively collapse single allocations into hugepages.
+
+TESTING:
+- Built for x86_64, aarch64, ppc64le, and s390x
+- selftests mm
+- In [1] I provided a script [2] that has multiple access patterns
+- lots of general use.
+- redis testing. This test was my original case for the defer mode. What I
+   was able to prove was that THP=always leads to increased max_latency
+   cases; hence why it is recommended to disable THPs for redis servers.
+   However with 'defer' we dont have the max_latency spikes and can still
+   get the system to utilize THPs. I further tested this with the mTHP
+   defer setting and found that redis (and probably other jmalloc users)
+   can utilize THPs via defer (+mTHP defer) without a large latency
+   penalty and some potential gains. I uploaded some mmtest results
+   here[3] which compares:
+       stock+thp=never
+       stock+(m)thp=always
+       khugepaged-mthp + defer (max_ptes_none=64)
+
+  The results show that (m)THPs can cause some throughput regression in
+  some cases, but also has gains in other cases. The mTHP+defer results
+  have more gains and less losses over the (m)THP=always case.
+
+V4 Changes:
+- Minor Documentation fixes
+- rebased the dependent series [1] onto mm-unstable
+    commit 0e68b850b1d3 ("vmalloc: use atomic_long_add_return_relaxed()")
+
+V3 Changes:
+- moved some Documentation to the other series and merged the remaining
+   Documentation updates into one
+
+V2 Changes:
+- rebase changes ontop mTHP khugepaged support series
+- Fix selftests parsing issue
+- add mTHP defer option
+- add mTHP defer Documentation
+
+[1] - https://lore.kernel.org/lkml/20250417000238.74567-1-npache@redhat.com/
+[2] - https://gitlab.com/npache/khugepaged_mthp_test
+[3] - https://people.redhat.com/npache/mthp_khugepaged_defer/testoutput2/output.html
+
+Nico Pache (4):
+  mm: defer THP insertion to khugepaged
+  mm: document (m)THP defer usage
+  khugepaged: add defer option to mTHP options
+  selftests: mm: add defer to thp setting parser
+
+ Documentation/admin-guide/mm/transhuge.rst | 31 +++++++---
+ include/linux/huge_mm.h                    | 18 +++++-
+ mm/huge_memory.c                           | 69 +++++++++++++++++++---
+ mm/khugepaged.c                            | 10 ++--
+ tools/testing/selftests/mm/thp_settings.c  |  1 +
+ tools/testing/selftests/mm/thp_settings.h  |  1 +
+ 6 files changed, 107 insertions(+), 23 deletions(-)
+
+-- 
+2.48.1
 
