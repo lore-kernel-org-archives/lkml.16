@@ -1,87 +1,174 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967DC2512DA
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67E6074BED
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744899769; cv=none; b=sZbWpHEk39iD60cINxnCmmP1dQiGTRPQSiVEDN70J/bGtfieFj4HiQiapGQ/I6i6Z9fCdywZQ/BeQi7oUSLO0cBgW/Gp8RJygRO7e7WVRIsNhCEodXQNG0flLywrsOg8anSz63BT/kxSAET9B/+Lu0tPC5KfrVjHZnETAV1Bm40=
+	t=1744899902; cv=none; b=HZYwBwFrPMiHd45DvM+0rdp0vKdijmawSbOvyrNZPeiGBzBmvDAFAMSEY0z5mugUWV3gPNuDdrFb6Wy045kU/u987NmedulHd4iCRtJE1f7PspvMBxp/mbDaLFpC36J0U+8I8LIZhZcQ0rJ+iWi89TW2+48pptr/G2ahS4MaOVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744899769; c=relaxed/simple;
-	bh=9FSKpxCPd9i3UM5rQhSSgYxqhu8htOS3MLmDsJB3+dM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PNLB5a/hEVuVq+Sm9RrAeit/aTLEyDFNjBJWpISlqrooXgDddov8GIO7Lb3V0tRgSjVyyloTFU2ALNPxR/eqLociEOjQRfDdfsD3UlWIy7pgXX6jJ1DoC/URkXBBjZTz/YexE50Fh1OxytLz0aBesDkUA3aKiOHH2Fwkty5ENoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=epf/QWi0; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="epf/QWi0"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1744899764;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=i674xOwrjdf/AAf3vaDDj/zXNM7PUpgpfGixq0BvJVM=;
-	b=epf/QWi0fEMbAePO0z2eV4VX/swstqahqUqzcygHP0DUZtjjOHcjgeViy27Yytj7Be690M
-	ySo035j0wLDy5r1/hXLft9L0MrK9XDkOFsUqji7vLGPO61zUiowfKaBPniuXs+3/0Zpmge
-	/5NGI5R7h5IKsgJFebHve85QL3fvfN3cbdxlh4MwZZjNj2I0w74cWJlNksgOGqz6GoDZam
-	KcBBqm3QSadwVwLWZnfrrJV14r45Vng8AottX3TkeiReqBt+kG/Mit/xfgHyEWPskklxNw
-	v/fAQ33/TVTWCXevtP/iPE/iy9iMwZKKGJP8IwxryliX6s6W21Hl7qPPTUQQRw==
-From: Diederik de Haas <didi.debian@cknow.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: Dragan Simic <dsimic@manjaro.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Diederik de Haas <didi.debian@cknow.org>,
-	stable@vger.kernel.org
-Subject: [PATCH] PCI: dw-rockchip: Fix function call sequence in rockchip_pcie_phy_deinit
-Date: Thu, 17 Apr 2025 16:21:18 +0200
-Message-ID: <20250417142138.1377451-1-didi.debian@cknow.org>
+	s=arc-20240116; t=1744899902; c=relaxed/simple;
+	bh=fm3tSkk1uiZ17wtiMVDFxgwZiANGJ692DPmParqNIRE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X/cqX47r/wORhhJiLm2WsZXOGkhivI5RVIWaehHOKIBsMaFbNzLOw9+4NfUmcDmC9IkNbEDLDMIeEjInyahvPdCBEe1MBYwgL0ZVsGN0npvclwWic5E9ydZDWoDrUcCynQ8BqHbsf4QyNHjse+mDPLs/qdjSDfuPh8L/Gvru/Wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10BAE1515;
+	Thu, 17 Apr 2025 07:24:57 -0700 (PDT)
+Received: from [10.1.37.32] (e122027.cambridge.arm.com [10.1.37.32])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 20BC13F694;
+	Thu, 17 Apr 2025 07:24:56 -0700 (PDT)
+Message-ID: <da7435d8-1618-4296-bf4a-beec646134a5@arm.com>
+Date: Thu, 17 Apr 2025 15:24:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 1/4] drm/panthor: Introduce BO labeling
+To: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250415191539.55258-1-adrian.larumbe@collabora.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250415191539.55258-1-adrian.larumbe@collabora.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-The documentation for the phy_power_off() function explicitly says
+On 15/04/2025 20:15, Adrián Larumbe wrote:
+> Add a new character string Panthor BO field, and a function that allows
+> setting it from within the driver.
+> 
+> Driver takes care of freeing the string when it's replaced or no longer
+> needed at object destruction time, but allocating it is the responsibility
+> of callers.
+> 
+> Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 
-  Must be called before phy_exit().
+Reviewed-by: Steven Price <steven.price@arm.com>
 
-So let's follow that instruction.
-
-Fixes: 0e898eb8df4e ("PCI: rockchip-dwc: Add Rockchip RK356X host controller driver")
-Cc: stable@vger.kernel.org	# v5.15+
-Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
----
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index c624b7ebd118..4f92639650e3 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -410,8 +410,8 @@ static int rockchip_pcie_phy_init(struct rockchip_pcie *rockchip)
- 
- static void rockchip_pcie_phy_deinit(struct rockchip_pcie *rockchip)
- {
--	phy_exit(rockchip->phy);
- 	phy_power_off(rockchip->phy);
-+	phy_exit(rockchip->phy);
- }
- 
- static const struct dw_pcie_ops dw_pcie_ops = {
--- 
-2.49.0
+> ---
+>  drivers/gpu/drm/panthor/panthor_gem.c | 46 +++++++++++++++++++++++++++
+>  drivers/gpu/drm/panthor/panthor_gem.h | 17 ++++++++++
+>  2 files changed, 63 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/panthor/panthor_gem.c b/drivers/gpu/drm/panthor/panthor_gem.c
+> index 8244a4e6c2a2..8dd7fa63f1ff 100644
+> --- a/drivers/gpu/drm/panthor/panthor_gem.c
+> +++ b/drivers/gpu/drm/panthor/panthor_gem.c
+> @@ -2,6 +2,7 @@
+>  /* Copyright 2019 Linaro, Ltd, Rob Herring <robh@kernel.org> */
+>  /* Copyright 2023 Collabora ltd. */
+>  
+> +#include <linux/cleanup.h>
+>  #include <linux/dma-buf.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/err.h>
+> @@ -18,6 +19,14 @@ static void panthor_gem_free_object(struct drm_gem_object *obj)
+>  	struct panthor_gem_object *bo = to_panthor_bo(obj);
+>  	struct drm_gem_object *vm_root_gem = bo->exclusive_vm_root_gem;
+>  
+> +	/*
+> +	 * Label might have been allocated with kstrdup_const(),
+> +	 * we need to take that into account when freeing the memory
+> +	 */
+> +	kfree_const(bo->label.str);
+> +
+> +	mutex_destroy(&bo->label.lock);
+> +
+>  	drm_gem_free_mmap_offset(&bo->base.base);
+>  	mutex_destroy(&bo->gpuva_list_lock);
+>  	drm_gem_shmem_free(&bo->base);
+> @@ -196,6 +205,7 @@ struct drm_gem_object *panthor_gem_create_object(struct drm_device *ddev, size_t
+>  	obj->base.map_wc = !ptdev->coherent;
+>  	mutex_init(&obj->gpuva_list_lock);
+>  	drm_gem_gpuva_set_lock(&obj->base.base, &obj->gpuva_list_lock);
+> +	mutex_init(&obj->label.lock);
+>  
+>  	return &obj->base.base;
+>  }
+> @@ -247,3 +257,39 @@ panthor_gem_create_with_handle(struct drm_file *file,
+>  
+>  	return ret;
+>  }
+> +
+> +void
+> +panthor_gem_bo_set_label(struct drm_gem_object *obj, const char *label)
+> +{
+> +	struct panthor_gem_object *bo = to_panthor_bo(obj);
+> +	const char *old_label;
+> +
+> +	scoped_guard(mutex, &bo->label.lock) {
+> +		old_label = bo->label.str;
+> +		bo->label.str = label;
+> +	}
+> +
+> +	kfree_const(old_label);
+> +}
+> +
+> +void
+> +panthor_gem_kernel_bo_set_label(struct panthor_kernel_bo *bo, const char *label)
+> +{
+> +	const char *str;
+> +
+> +	/* We should never attempt labelling a UM-exposed GEM object */
+> +	if (drm_WARN_ON(bo->obj->dev, bo->obj->handle_count > 0))
+> +		return;
+> +
+> +	if (!label)
+> +		return;
+> +
+> +	str = kstrdup_const(label, GFP_KERNEL);
+> +	if (!str) {
+> +		/* Failing to allocate memory for a label isn't a fatal condition */
+> +		drm_warn(bo->obj->dev, "Not enough memory to allocate BO label");
+> +		return;
+> +	}
+> +
+> +	panthor_gem_bo_set_label(bo->obj, str);
+> +}
+> diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/panthor/panthor_gem.h
+> index 1a363bb814f4..af0d77338860 100644
+> --- a/drivers/gpu/drm/panthor/panthor_gem.h
+> +++ b/drivers/gpu/drm/panthor/panthor_gem.h
+> @@ -46,6 +46,20 @@ struct panthor_gem_object {
+>  
+>  	/** @flags: Combination of drm_panthor_bo_flags flags. */
+>  	u32 flags;
+> +
+> +	/**
+> +	 * @label: BO tagging fields. The label can be assigned within the
+> +	 * driver itself or through a specific IOCTL.
+> +	 */
+> +	struct {
+> +		/**
+> +		 * @label.str: Pointer to NULL-terminated string,
+> +		 */
+> +		const char *str;
+> +
+> +		/** @lock.str: Protects access to the @label.str field. */
+> +		struct mutex lock;
+> +	} label;
+>  };
+>  
+>  /**
+> @@ -91,6 +105,9 @@ panthor_gem_create_with_handle(struct drm_file *file,
+>  			       struct panthor_vm *exclusive_vm,
+>  			       u64 *size, u32 flags, uint32_t *handle);
+>  
+> +void panthor_gem_bo_set_label(struct drm_gem_object *obj, const char *label);
+> +void panthor_gem_kernel_bo_set_label(struct panthor_kernel_bo *bo, const char *label);
+> +
+>  static inline u64
+>  panthor_kernel_bo_gpuva(struct panthor_kernel_bo *bo)
+>  {
 
