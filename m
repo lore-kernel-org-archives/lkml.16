@@ -1,149 +1,263 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B926C2512E6;
-	Thu, 17 Apr 2025 14:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E409B1624DC;
+	Thu, 17 Apr 2025 14:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744899328; cv=none; b=SXnBCJuVFpRM8ajpJtQ4Sy2WP4Sho0Gq1hqFwPpL4VHiBmgbDUHX/GpfDnPDKwXmC6VftR9p+jxY1ugtCAXCHdQPHlvfDoPPh6SHuGj2I6u4Dq6v43deZbiiLAJWu+Kf1YFaSMys4lYE4/9x1T1xpMRHM+AcJJi3BtNTj5Q3A8w=
+	t=1744899354; cv=none; b=ohiicU47n+lBH3SMzKKRjSto/QC7doe2+SUbUvNzR87lIP9oKeSJ9DQkTc7x4Qv4L0m5cB2PNSE3Y0yJ0egheSWMzL7BiLcblEMu16rmi6WXZBVa5CZdtQmL/xmws5EDiMoJyS5etQp8IgadZWBGvtmJ9psSgxO6BK8ZQR8h0Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744899328; c=relaxed/simple;
-	bh=OwOkjFVgfqnhtYMoB2n+/2LjSN54EJEx3cnulauDKdo=;
+	s=arc-20240116; t=1744899354; c=relaxed/simple;
+	bh=vazE/OzKBBSg2rjIggOk4OJ14N/Lt5458VFxQiSnZsY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IO/aWFJaZbuVcPAEPDjd3yRL+0tJoG5tiWhPfYgJxeRFj3jaoHHQt0HlhwWNpAy9E76ktfWCuqp0sZ5bLnQ0kRhpUWqQdfCIEhuE/3JrpUBAoQicRcDSxyqiixXM3sRfpFsILnndOGwfFRZC1lEc+cK1EDh03goo9TQersfjsLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rkPcu2I9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rkPcu2I9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32058C4CEED;
-	Thu, 17 Apr 2025 14:15:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744899328;
-	bh=OwOkjFVgfqnhtYMoB2n+/2LjSN54EJEx3cnulauDKdo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rkPcu2I9/wcJSEB9hys4gh2n7O1us0r2kkmLcoI3BHSWby4kg6PpnZiNYwA8xAsv2
-	 qdNxNE5+pvCPVLL/Yg4eQ8v6PWOO7yFGCwLrbZz0PQm7FhrlLXMRnF8JDr5pFbJ3tz
-	 Gtig0ZzIYazvHpcs5VKrktD54KbjXccWV1YGXKUgCwvwbg35BpxskWyoYVAyJ+3LO4
-	 Jn0LnkZsTT853+vAqZw+33d6WLX7Hle9MMmSYhTQ5hZkcTX98WjS7l/DY6o4uUZc94
-	 gWsgAil/6uekgh3x3aB/eH0R7cxBYKhkVRJ04JMRNnrJFbwO2GRxatlx88fZs6PrHs
-	 bJm8ag2D0nnBQ==
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bfe0d2b6dso7927651fa.3;
-        Thu, 17 Apr 2025 07:15:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUu6qk5bPczgY3Bqgbiff7Wzym3yH9DQVA40CkBQ6jXfmqL5ejhaUbraB4xTg5ND+eGpM7K5+nkOT3j8QHA@vger.kernel.org, AJvYcCXiBLMqY0RfR3iSS6N1pBPoDlZlWGUEbVd7kVlM+INdCbdaa3ibCfPtSyyBmTTbvivBbO2oLLnJRSbHYfA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxu9mvhnU+y63UFMJ/a8EGxsk5r6AgOchR1p4rKnAqTwKZDPJXM
-	2m72ciHeHdYTJJGP9vRILbVzS2M/gEKs1RuPOmI3vRHhZkcbeHiXymZqCBHvIQw/bwjEo9rjxCx
-	9QFtJjiwR/7qnQfOK5sUAdxuQ8/Y=
-X-Google-Smtp-Source: AGHT+IGKDLvGQdTgpdJ7/j9wkID94NCC8FnydWqifd12MlpxWqVVofyUjcJtA/8XvkknzSU9uf03za/MH7AVddjqFIU=
-X-Received: by 2002:a2e:ad93:0:b0:30b:b204:6b80 with SMTP id
- 38308e7fff4ca-3107f695046mr25939941fa.8.1744899326442; Thu, 17 Apr 2025
- 07:15:26 -0700 (PDT)
+	 To:Cc:Content-Type; b=PP2iFpxMEbrxuETNw/f86DTyT3Wcm2PVSPvtsSg+P8L5cOgWaRlyyaAu042gG0IXtukmkVamJ2NN1mrtsbldnP/og/6N0tjJN0EyrVW6wkAw4+7NMkASI5y5Avkh7qM/LafZ7gDrv+YZJALH+yae90M29fPSWb+wMdl8nqmCSf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c5c815f8efso68376385a.2;
+        Thu, 17 Apr 2025 07:15:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744899350; x=1745504150;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6ozcptRYeKioDAf1+hL3+/Kh+TNtMmTVxXgs8Vkwsgs=;
+        b=q50mrEJ04CkN/du6CgvgHy0rtam/w/7A5nKGxKPJTz7yUiluY8Rt3VEZp9NVY0Lw7p
+         i7TndtmW74qUuzbI0nHLUjBj8ZAUAgGX34kp9o4mm46PRfVC+HhVAyDHXGbcd3ixwSpl
+         SpWmOXCayoQj3y+5VpWpvoMoMKh5lPSFl+FM2F9+d8AEVaFyOP0fwN0HiuPZxsRP1C3y
+         30qBkrDFR4KgEUWTtS/nXCxcErx4uA36JlQDuar9mYi4YpeotY4BU9k7gU8yHmQcB4tX
+         GVPzpjvZ/XEjeQiQq1hEDlWPGHiJpkstVgq+NtgyL4iYwI3Hd0ItedrLSq4EJptBiYGX
+         FGaA==
+X-Forwarded-Encrypted: i=1; AJvYcCV55mOsaJkHDAcrRc3JdE7lX54x0lq5/zNQkPQ9dzyky4GLpXSv9qkWVEL4pVEzUgsdPJR7HW5CW3CCgOel@vger.kernel.org, AJvYcCVySVkcudgTuqWHRHti2weKPBco7+elNap9u/2opOlk+8XgdliI0WP3k7hK07sJCnN1lYmwje40lFNZph1iCNkrKMo=@vger.kernel.org, AJvYcCXFwS1OUMBKfkJclY+ZAZ9QuQwFA/U+Jb7CCoHliWywd6CHzkU/nEwAme9MZzgdua/dahPrkn2SGMg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIsGaG6R89fFDjJ1FOa5v56uw5wQo/TK8++WU4o+S4r1KTmWIW
+	+exZvefRz0jt9R8RoMWBnE2gQSWA1/3EPKY3DSiSfz9QBPFP1EnJdE0tNmR9
+X-Gm-Gg: ASbGnctVQGbmXqx1l2O4TKU33iF/riNjOQMEkhLGvXvDxgdJEi7sxyJ+hqSH+zNnlE0
+	ziAp/LdHv6Q0OSWFVM4EWoSjCbVxlDxDfEnZGPrms12Bi889GumFUX/PfqC+lVidWBPsQcD9hYG
+	3Z0EGzaVKE21x6C7WqZHXx7zVeVJ1ITsYyRhtmKMB3I6ctOvjOzUcswuWv9GcTV6kik4rNYPx5V
+	Pg1RVh6x4DZieYzk5QKerXfu6wuRG18W85dTYKdwtp/vyz+uPVBZZGd1MHc55z/koKNgC85R7o7
+	kuw/1noSMVICWZyIPuGJIP3dTtpYhInjv8tPGjD4+AR1P+T16uZLDjejV7Pl4Hm/uSyxCjINpLe
+	3uW8=
+X-Google-Smtp-Source: AGHT+IFJH1AzXuc5IZhd3k9hgLRCWGGutWbYC2A54S0nnZLrcEDWkGjbfg1nvWP/innDXRdFlm0/Og==
+X-Received: by 2002:a05:620a:424b:b0:7c5:55be:7bff with SMTP id af79cd13be357-7c9190652c6mr770883185a.43.1744899349835;
+        Thu, 17 Apr 2025 07:15:49 -0700 (PDT)
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com. [209.85.219.49])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8969143sm1178126085a.50.2025.04.17.07.15.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Apr 2025 07:15:49 -0700 (PDT)
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6e8f4c50a8fso7818786d6.1;
+        Thu, 17 Apr 2025 07:15:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUfG3O5gFYP/wzDsg6+DU3TwjdYGv4jUsFTOYKT4jlHOH2VcsxCm0OF85qi2gYPOlDZWrF219U//4Y=@vger.kernel.org, AJvYcCUh+W2t/TyVEPWBSvA5e8ScLVwodDrv/XyOrZbf65AGuHSvLVGgaBulEvJnCKtnmAjvRQI+of0JGS/r8mEzqYPFCtw=@vger.kernel.org, AJvYcCXEWi3D9sfMsNy4jHi1VvXLI1LBBK2Zm4CLZFgzu6WaD+/gYBWPSbeUG3k0zoPs+uOMi3ralU4sR+eCQdaV@vger.kernel.org
+X-Received: by 2002:a05:6214:410e:b0:6e6:68e3:8d84 with SMTP id
+ 6a1803df08f44-6f2b2f8c378mr94221856d6.18.1744899349400; Thu, 17 Apr 2025
+ 07:15:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417064940.68469-1-dqfext@gmail.com> <CAMj1kXFPAVXOtPoETKvHB49kjZUPYrsAqsJwdL7p5Cu4xk75Rg@mail.gmail.com>
- <CALW65jY=LnVBYoKPOQnSKgGSA0brKzmo0vqoRDcqF_=jofLAng@mail.gmail.com>
- <CAMj1kXH-u7hiKGQfgYHj_16V4ATN_aHmA_wkvMSyLh+E3+QaAA@mail.gmail.com> <CALW65jZVYUZoka7Gbjcoh43qbkD7rGpw8gTZjjOYpZD-BhLyBQ@mail.gmail.com>
-In-Reply-To: <CALW65jZVYUZoka7Gbjcoh43qbkD7rGpw8gTZjjOYpZD-BhLyBQ@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 17 Apr 2025 16:15:15 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXE8nY0rasb04qbZGtkuL5_b8so7L7NH61zLv9G3nm5vcg@mail.gmail.com>
-X-Gm-Features: ATxdqUGHOdKzra412vt6IXHNye7okVyhB80J7RfKjih5eOcYv_TSJ39O50e8lAk
-Message-ID: <CAMj1kXE8nY0rasb04qbZGtkuL5_b8so7L7NH61zLv9G3nm5vcg@mail.gmail.com>
-Subject: Re: [RFC PATCH] crypto: riscv: scalar accelerated GHASH
-To: Qingfang Deng <dqfext@gmail.com>
-Cc: Eric Biggers <ebiggers@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	"David S. Miller" <davem@davemloft.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, linux-crypto@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	=?UTF-8?Q?Christoph_M=C3=BCllner?= <christoph.muellner@vrull.eu>, 
-	Heiko Stuebner <heiko.stuebner@vrull.eu>, Qingfang Deng <qingfang.deng@siflower.com.cn>
+References: <20250403212919.1137670-1-thierry.bultel.yh@bp.renesas.com> <20250403212919.1137670-6-thierry.bultel.yh@bp.renesas.com>
+In-Reply-To: <20250403212919.1137670-6-thierry.bultel.yh@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 17 Apr 2025 16:15:37 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUu4o5VU9Sd1CW5QyEZewKLj--2yMPYCfcwVMut5FiVyg@mail.gmail.com>
+X-Gm-Features: ATxdqUGdJarQQ-GgVZlFhU6ALz5FSk5JmuyCNTEwOSgp5rihxYznS7cN1STNyRI
+Message-ID: <CAMuHMdUu4o5VU9Sd1CW5QyEZewKLj--2yMPYCfcwVMut5FiVyg@mail.gmail.com>
+Subject: Re: [PATCH v7 05/13] clk: renesas: Pass sub struct of cpg_mssr_priv
+ to cpg_clk_register
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org, 
+	paul.barker.ct@bp.renesas.com, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, 17 Apr 2025 at 10:42, Qingfang Deng <dqfext@gmail.com> wrote:
->
-> On Thu, Apr 17, 2025 at 3:58=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org> =
-wrote:
-> > > >
-> > > > What is the use case for this? AIUI, the scalar AES instructions we=
-re
-> > > > never implemented by anyone, so how do you expect this to be used i=
-n
-> > > > practice?
-> > >
-> > > The use case _is_ AES-GCM, as you mentioned. Without this, computing
-> > > GHASH can take a considerable amount of CPU time (monitored by perf).
-> > >
-> >
-> > I see. But do you have a particular configuration in mind? Does it
-> > have scalar AES too? I looked into that a while ago but I was told
-> > that nobody actually incorporates that. So what about these
-> > extensions? Are they commonly implemented?
->
-> It's aes-generic.c (LUT-based) with accelerated GHASH.
->
-> >
-> > [0] https://web.git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/=
-log/?h=3Driscv-scalar-aes
-> >
-> > > > ...
-> > > > > +static __always_inline __uint128_t get_unaligned_be128(const u8 =
-*p)
-> > > > > +{
-> > > > > +       __uint128_t val;
-> > > > > +#ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-> > > >
-> > > > CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS means that get_unaligned_xxx=
-()
-> > > > helpers are cheap. Casting a void* to an aligned type is still UB a=
-s
-> > > > per the C standard.
-> > >
-> > > Technically an unaligned access is UB but this pattern is widely used
-> > > in networking code.
-> > >
-> >
-> > Of course. But that is no reason to keep doing it.
-> >
-> > > >
-> > > > So better to drop the #ifdef entirely, and just use the
-> > > > get_unaligned_be64() helpers for both cases.
-> > >
-> > > Currently those helpers won't generate rev8 instructions, even if
-> > > HAVE_EFFICIENT_UNALIGNED_ACCESS and RISCV_ISA_ZBB is set, so I have t=
-o
-> > > implement my own version of this to reduce the number of instructions=
-,
-> > > and to align with the original OpenSSL implementation.
-> > >
-> >
-> > So fix the helpers.
->
-> The issue is that RISC-V GCC doesn=E2=80=99t emit efficient unaligned loa=
-ds by default:
-> - Not all RISC-V CPUs support unaligned access efficiently, so GCC
-> falls back to conservative byte-wise code.
+Hi Thierry,
 
-That makes sense.
-
-> - There=E2=80=99s no clean way to force the optimized path - GCC only emi=
-ts
-> fast unaligned loads if tuned for a specific CPU (e.g., -mtune=3Dsize or
-> -mtune=3Dthead-c906), which the kernel doesn't typically do, even with
-> HAVE_EFFICIENT_UNALIGNED_ACCESS.
+On Thu, 3 Apr 2025 at 23:30, Thierry Bultel
+<thierry.bultel.yh@bp.renesas.com> wrote:
+> In a subsequent patch, the registration callback will need more parameters
+> from cpg_mssr_priv (like another base address with clock controllers
+> with double register block, and also, notifiers and rmw_lock).
+> Instead of adding more parameters, move the needed parameters to a public
+> sub-struct.
+> Instead moving clks to this structure, which would have implied to add
+> an allocation (and cleanup) for it, keep the way the allocation is done
+> and just have a copy of the pointer in the public structure.
 >
-> Maybe we should raise this with the GCC maintainers. An explicit
-> option to enable optimized unaligned access could help.
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+
+Thanks for your patch!
+
+> --- a/drivers/clk/renesas/r8a77970-cpg-mssr.c
+> +++ b/drivers/clk/renesas/r8a77970-cpg-mssr.c
+> @@ -218,11 +218,13 @@ static int __init r8a77970_cpg_mssr_init(struct device *dev)
+>  }
+>
+>  static struct clk * __init r8a77970_cpg_clk_register(struct device *dev,
+> -       const struct cpg_core_clk *core, const struct cpg_mssr_info *info,
+> -       struct clk **clks, void __iomem *base,
+> -       struct raw_notifier_head *notifiers)
+> +       const struct cpg_core_clk *core,
+> +       const struct cpg_mssr_info *info,
+
+These two still fit on a single line, like before.
+
+> +       struct cpg_mssr_pub *pub)
+>  {
+>         const struct clk_div_table *table;
+> +       void __iomem *base = pub->base0;
+> +       struct clk **clks = pub->clks;
+>         const struct clk *parent;
+>         unsigned int shift;
 >
 
-HAVE_EFFICIENT_UNALIGNED_ACCESS is a build time setting, so the
-resulting kernel only runs correctly on hardware that implements
-unaligned accesses in hardware.
+> --- a/drivers/clk/renesas/rcar-gen3-cpg.h
+> +++ b/drivers/clk/renesas/rcar-gen3-cpg.h
+> @@ -80,9 +80,9 @@ struct rcar_gen3_cpg_pll_config {
+>  #define CPG_RCKCR      0x240
+>
+>  struct clk *rcar_gen3_cpg_clk_register(struct device *dev,
+> -       const struct cpg_core_clk *core, const struct cpg_mssr_info *info,
+> -       struct clk **clks, void __iomem *base,
+> -       struct raw_notifier_head *notifiers);
+> +       const struct cpg_core_clk *core,
+> +       const struct cpg_mssr_info *info,
 
-So that means you could pass this -mtune=3D option too in that case, no?
-Then, you can just use a packed struct or an __aligned(1) annotation
-and the compiler will emit the correct code for you, depending on
-whether unaligned accesses are permitted.
+Likewise.
+
+> +       struct cpg_mssr_pub *pub);
+>  int rcar_gen3_cpg_init(const struct rcar_gen3_cpg_pll_config *config,
+>                        unsigned int clk_extalr, u32 mode);
+>
+
+> --- a/drivers/clk/renesas/rcar-gen4-cpg.c
+> +++ b/drivers/clk/renesas/rcar-gen4-cpg.c
+> @@ -418,9 +418,11 @@ static const struct clk_div_table cpg_rpcsrc_div_table[] = {
+>
+>  struct clk * __init rcar_gen4_cpg_clk_register(struct device *dev,
+>         const struct cpg_core_clk *core, const struct cpg_mssr_info *info,
+> -       struct clk **clks, void __iomem *base,
+> -       struct raw_notifier_head *notifiers)
+> +       struct cpg_mssr_pub *pub)
+>  {
+> +       struct raw_notifier_head *notifiers = &pub->notifiers;
+> +       void __iomem *base = pub->base0;
+> +       struct clk **clks = pub->clks;
+>         const struct clk *parent;
+>         unsigned int mult = 1;
+>         unsigned int div = 1;
+> @@ -517,7 +519,7 @@ struct clk * __init rcar_gen4_cpg_clk_register(struct device *dev,
+>
+>         case CLK_TYPE_GEN4_RPC:
+>                 return cpg_rpc_clk_register(core->name, base + CPG_RPCCKCR,
+> -                                           __clk_get_name(parent), notifiers);
+> +                                           __clk_get_name(parent), &pub->notifiers);
+
+Please drop this unneeded change.
+
+>
+>         case CLK_TYPE_GEN4_RPCD2:
+>                 return cpg_rpcd2_clk_register(core->name, base + CPG_RPCCKCR,
+
+> --- a/drivers/clk/renesas/renesas-cpg-mssr.c
+> +++ b/drivers/clk/renesas/renesas-cpg-mssr.c
+> @@ -127,14 +127,12 @@ static const u16 srstclr_for_gen4[] = {
+>   *
+>   * @rcdev: Optional reset controller entity
+>   * @dev: CPG/MSSR device
+> - * @base: CPG/MSSR register block base address
+>   * @reg_layout: CPG/MSSR register layout
+>   * @rmw_lock: protects RMW register accesses
+
+rmw_lock is removed below.
+
+>   * @np: Device node in DT for this CPG/MSSR module
+>   * @num_core_clks: Number of Core Clocks in clks[]
+>   * @num_mod_clks: Number of Module Clocks in clks[]
+>   * @last_dt_core_clk: ID of the last Core Clock exported to DT
+> - * @notifiers: Notifier chain to save/restore clock state for system resume
+>   * @status_regs: Pointer to status registers array
+>   * @control_regs: Pointer to control registers array
+>   * @reset_regs: Pointer to reset registers array
+> @@ -143,6 +141,7 @@ static const u16 srstclr_for_gen4[] = {
+>   *                 [].val: Saved values of SMSTPCR[]
+>   * @reserved_ids: Temporary used, reserved id list
+>   * @num_reserved_ids: Temporary used, number of reserved id list
+> + * @pub: Data passed to clock registration callback
+>   * @clks: Array containing all Core and Module Clocks
+>   */
+>  struct cpg_mssr_priv {
+> @@ -150,16 +149,13 @@ struct cpg_mssr_priv {
+>         struct reset_controller_dev rcdev;
+>  #endif
+>         struct device *dev;
+> -       void __iomem *base;
+>         enum clk_reg_layout reg_layout;
+> -       spinlock_t rmw_lock;
+>         struct device_node *np;
+>
+>         unsigned int num_core_clks;
+>         unsigned int num_mod_clks;
+>         unsigned int last_dt_core_clk;
+>
+> -       struct raw_notifier_head notifiers;
+>         const u16 *status_regs;
+>         const u16 *control_regs;
+>         const u16 *reset_regs;
+> @@ -172,6 +168,7 @@ struct cpg_mssr_priv {
+>         unsigned int *reserved_ids;
+>         unsigned int num_reserved_ids;
+>
+> +       struct cpg_mssr_pub pub;
+
+Perhaps insert this at the top of the structure, so &priv->pub needs
+no calculation?
+
+>         struct clk *clks[];
+>  };
+
+> --- a/drivers/clk/renesas/renesas-cpg-mssr.h
+> +++ b/drivers/clk/renesas/renesas-cpg-mssr.h
+
+> @@ -27,6 +29,21 @@ struct cpg_core_clk {
+>         unsigned int div;
+>         unsigned int mult;
+>         unsigned int offset;
+> +
+> +/**
+> + * struct cpg_mssr_pub - Private data shared with
+
+The "private" sounds a bit weird here, so please just drop it.
+
+> + * device-specific clk registration code
+> + *
+> + * @base0: CPG/MSSR register block base0 address
+> + * @rmw_lock: protects RMW register accesses
+> + * @notifiers: Notifier chain to save/restore clock state for system resume
+
+These two lines should be exchanged, to match the declaration order
+below.
+
+> + * @clks: pointer to clocks
+> + */
+> +struct cpg_mssr_pub {
+> +       void __iomem *base0;
+> +       struct raw_notifier_head notifiers;
+> +       spinlock_t rmw_lock;
+> +       struct clk **clks;
+>  };
+>
+>  enum clk_types {
+
+The rest LGTM.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
