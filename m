@@ -1,106 +1,137 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34255179A7;
-	Thu, 17 Apr 2025 05:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E674B1DE2DB;
+	Thu, 17 Apr 2025 05:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744868818; cv=none; b=rKSWU6yLo2XIjyrbKVb+1BKeFWUYDgXbEzFM0PgnSK8+BFKmvfiuhljP8XboxaDWtyInDMDNYAeGudL3hjD3QK+BRQ2IDVx2EKiB7a9pVdgH8oPryXmKqhFb3YmVyuFprNqlHgQPFW8vtAp19zi8GV6T3nrc8PjbLk+Hto181Ps=
+	t=1744868930; cv=none; b=mHcoCt6Oek7zsBfJauDxfWnIqeZ9X1pjFXON66w2+X4pUXuZbE2Fu4+7axwBYupzGcqkhqpbiqHrD2WfMdv/+N+Rn13rX93WCeb3ItxYDTlTpy6tJgGCC5OEblrjDBzlCr7dd3nALStDlmwFttFMbfeVzB8f29Ihl2Gozei6kcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744868818; c=relaxed/simple;
-	bh=4oYgM5MCWKU1QZFM9ucaKlFA+1SLFEymDkr9y2UXtGo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=uKUHpK/pdTDswzAH77Mm5fu7ldOfsOC9nOtRb6um3A7rsDMzcvxS/nHRv8EjHOaod0mKdudMgIs1YZb1AOBZUYCS/zr1MWaqVdmxoDPUcQoYRrsEWmsetws0YYH7n5F/f6EwCmbKwRuiu/xT3FFWb2XAVUUzOOERleKx6bkDOY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=MpbBw2fg; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1744868930; c=relaxed/simple;
+	bh=j1ZBYuVBrZJCmWxUwT77cthlWHAR/U5idBaQjE3I0oE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QHeVsiUPQJ5dpPjL8d6v+hram5NjNenDBmL1Rm8ubNVifyBDulkYxOsSzBHPEtcig3DOSTYXb5rjDbpwOa/gWDhrWFwA332PS9mSK3ptCx0FHYaLQGHXH9iyxaCLq1e9WjZFXZbAa5yjEqsP3TP87ZqKewRawTnrpe8ffUlvjLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NmMUgnFq; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="MpbBw2fg"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53H5kBp05370839, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1744868772; bh=4oYgM5MCWKU1QZFM9ucaKlFA+1SLFEymDkr9y2UXtGo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=MpbBw2fg9mpTniqSkEyHgL/8joTtsTmpyLO8dB3WBpt7RKwNFSEeYPsKPmyLP+tKt
-	 0YbXRYxYZMeIYbDl/aGdK6z0jMzyJ2Rkp2cxx3i1QwUY1L20a2vcfxOSzuGU5ESdqx
-	 s4mQ5Vqao7Dwh6wJxXywnvx4BFtPOeHvT8aSD+aKxF92q1fcvMFsD1+YgDzdZy0RoI
-	 JkhJNFRllmbeKlf4MNtA1fWl+8y7KWk7fYMg8pn23BLsUI9I7ItoH2fGEMM5JbqlNB
-	 ILKjaJacNJdheY5jpLR0Iw7cQE8+TRkaFj1UKbWUAFJZFI+7ojWmYbPLPexg2Z1VSi
-	 XHgkOzQ22MRGw==
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53H5kBp05370839
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 17 Apr 2025 13:46:11 +0800
-Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 17 Apr 2025 13:46:12 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 17 Apr 2025 13:46:11 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Thu, 17 Apr 2025 13:46:11 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: Andrew Lunn <andrew@lunn.ch>
-CC: "kuba@kernel.org" <kuba@kernel.org>,
-        "davem@davemloft.net"
-	<davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "andrew+netdev@lunn.ch"
-	<andrew+netdev@lunn.ch>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>,
-        "horms@kernel.org" <horms@kernel.org>,
-        Ping-Ke Shih
-	<pkshih@realtek.com>,
-        Larry Chiu <larry.chiu@realtek.com>,
-        kernel test robot
-	<lkp@intel.com>
-Subject: RE: [PATCH net v2 1/3] rtase: Fix the compile error reported by the kernel test robot
-Thread-Topic: [PATCH net v2 1/3] rtase: Fix the compile error reported by the
- kernel test robot
-Thread-Index: AQHbrs2Kq1M05GT8LEGJNWsOuQL6jbOl0KSAgAGJHbA=
-Date: Thu, 17 Apr 2025 05:46:11 +0000
-Message-ID: <ae94b522ec23485e88f8a01a3e09c57c@realtek.com>
-References: <20250416124534.30167-1-justinlai0215@realtek.com>
- <20250416124534.30167-2-justinlai0215@realtek.com>
- <152c9566-a1bd-4082-9f66-6bbe8ab1eb47@lunn.ch>
-In-Reply-To: <152c9566-a1bd-4082-9f66-6bbe8ab1eb47@lunn.ch>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NmMUgnFq"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22c33e4fdb8so4274215ad.2;
+        Wed, 16 Apr 2025 22:48:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744868928; x=1745473728; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cNsf6WXByV5kGLNoh4Utq0sYrI3KSxAvmYlZ4eczIl4=;
+        b=NmMUgnFqhXXRZh1NwEfzAtz2A/zfPZNQ1W2AWpOP8Pr56JW5EEM+PCK79W6JBeiWQK
+         SuQlZR6CcXa5Vvf+okA53/D/Wfu+rngAMfxeijtwsLyhn5m1OJwjQzIMHdgPVhkPYF93
+         m4vy09LKg6M54XbHJud+DKm5PK46atVAxof3CfplyafoTXfYFSSnzgK4Jd1V0VHAEUUZ
+         ZOazRTs6Zqd7Ruhjm3mZKqEQFcXid2JSrLjMBHfx2VvOaavqXl4Z3+dkeaejEB6i3ZYU
+         LCKTWTGAHDaIdpzwLB2HVkFd4fNEbEASl5uAGpwqC0Y50a1Vu//BH2MVGDXQA6zpltg4
+         nteA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744868928; x=1745473728;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cNsf6WXByV5kGLNoh4Utq0sYrI3KSxAvmYlZ4eczIl4=;
+        b=kigWe2CuRum5XdwtFWI3lhIKOPylwAaaNX+QLoEdiIEY05jKsOceWbcizvvO4BtCLn
+         VedP5CJf1cUMPgtROrCY2Y2+cURd3qo7lWAGVNbxufltHByd7vsxjdld43YZd/IY/a11
+         +8JjcHCdxLLfmyzEo883Dxz8I3p//XARBaM+Ps82H2iwAMpYlayT0SJnf/x9/naIsdnS
+         TZjqx0mZ8pL0aCzNWDcdzBYbuKLDPySMUGDWbU1hXbLzLXA1rA5Y1+Ze/c2EFAIBT3qE
+         gxITvaEwuX8yusn2UWYHPq5vDDSUB6SxK9AA5pVRNTr9vgccjdjgpWUQNLuw7T9cxIJ/
+         H82g==
+X-Forwarded-Encrypted: i=1; AJvYcCVqsBiAy+dI9b1+PtVzxqYaeuzKULnvZ6WV7cvQX2f2Ho0O6utooMlA2eI+44W0d9LRPNWxZQFKZDg=@vger.kernel.org, AJvYcCVrFRvHus5H8sNMjLjbpWERRe4feElvaCKJeFidJqO1xHS0nmWYwfSnY72mBFgs1Fbt4E8eqL/HPIQbkV6F@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZJ7aqYoW0u9xDGZ+pHML6qXAAcPex1mjANjPYt8bQWkMuNwtu
+	tOeTgJIkiw+Bxe/AV+taPPBpSMMw2TaStPSRZKbT5ejZX2VmdcimlXGBsxmQ
+X-Gm-Gg: ASbGnctU56sXzl+4Dx8D29VfRVFujHmqL1u0U6T6+QEiYOYYLWh4Q8QIj16wiugCxeh
+	0Cd7reSM4DNdqNeou+Ks+e68Zd6FeRyDrujoOMgWTVuDCttg5H8y1qqSMqf6y7Fi8SWPYQIEoTD
+	sb/SFWipWWAUFZITWgReqJvpJVLP76I+GzBP3YPYCCaCHwbWYeHDSCoR87PdDjCapC/c1LD45Ae
+	2er4ezJogxAi0vvDgbpG197Fj1acsRyqPkmZ7dNJ0DvmezZ5Y8V4eL/6lZ5W9iNBrvX5uOFArpR
+	RcNQhAhaICdQnqXXjyrnGXKC/BVLomcEjEOKZHQ2aYn1eIgJdP4Z7EOcJ3/f
+X-Google-Smtp-Source: AGHT+IHezBF0z9ROPg31/enyGAUOnxCTQmX38YqiUYlSWdkhSgmUwXaiD6iT9D/Ho+BmJm9yeUyJ/g==
+X-Received: by 2002:a17:903:2409:b0:21f:bd66:cafa with SMTP id d9443c01a7336-22c358db577mr64486325ad.17.1744868928047;
+        Wed, 16 Apr 2025 22:48:48 -0700 (PDT)
+Received: from [192.168.0.161] ([14.139.108.62])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c388fsm11881651b3a.54.2025.04.16.22.48.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 22:48:47 -0700 (PDT)
+Message-ID: <471d32cb-89d2-4abe-bfbd-772466184d0d@gmail.com>
+Date: Thu, 17 Apr 2025 11:18:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] iio: adc: ad_sigma_delta: Fix use of uninitialized
+ status_pos
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250410170408.8585-1-purvayeshi550@gmail.com>
+ <20250412180046.62f9eab4@jic23-huawei>
+Content-Language: en-US
+From: Purva Yeshi <purvayeshi550@gmail.com>
+In-Reply-To: <20250412180046.62f9eab4@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
->=20
-> On Wed, Apr 16, 2025 at 08:45:32PM +0800, Justin Lai wrote:
-> > Fix the following compile error reported by the kernel test robot by
-> > modifying the condition used to detect overflow in
-> > rtase_calc_time_mitigation.
->=20
-> The Subject: line is not very useful. It is better to talk about what you=
- are fixing,
-> not that a robot reported an issue.
->=20
->     Andrew
->=20
-> ---
-> pw-bot: cr
+On 12/04/25 22:30, Jonathan Cameron wrote:
+> On Thu, 10 Apr 2025 22:34:08 +0530
+> Purva Yeshi <purvayeshi550@gmail.com> wrote:
+> 
+>> Fix Smatch-detected issue:
+>> drivers/iio/adc/ad_sigma_delta.c:604 ad_sd_trigger_handler() error:
+>> uninitialized symbol 'status_pos'.
+>>
+>> The variable `status_pos` was only initialized in specific switch cases
+>> (1, 2, 3, 4), which could leave it uninitialized if `reg_size` had an
+>> unexpected value.
+>>
+>> Fix by adding a default case to the switch block to catch unexpected
+>> values of `reg_size`. Use `dev_err_ratelimited()` for error logging and
+>> `goto irq_handled` instead of returning early.
+>>
+>> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> Seems like reasonable hardening of the code.
+> 
+> Applied.
+> 
+> Thanks,
 
-Hi Andrew,
+Hi Jonathan,
 
-Thank you for your response. I will modify the subject and post a new
-version.
+Thank you for reviewing and applying the patch.
 
-Thanks,
-Justin
+> 
+>> ---
+>> V1 - https://lore.kernel.org/all/20250409200151.201327-1-purvayeshi550@gmail.com/
+>> V2 - Moved the reg_size validation inside the switch statement using a default case,
+>> replaced dev_err() with dev_err_ratelimited(), and replaced return IRQ_HANDLED
+>> with goto irq_handled;
+>>
+>>   drivers/iio/adc/ad_sigma_delta.c | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/iio/adc/ad_sigma_delta.c b/drivers/iio/adc/ad_sigma_delta.c
+>> index 6c37f8e21120..4c5f8d29a559 100644
+>> --- a/drivers/iio/adc/ad_sigma_delta.c
+>> +++ b/drivers/iio/adc/ad_sigma_delta.c
+>> @@ -587,6 +587,10 @@ static irqreturn_t ad_sd_trigger_handler(int irq, void *p)
+>>   		 * byte set to zero. */
+>>   		ad_sd_read_reg_raw(sigma_delta, data_reg, transfer_size, &data[1]);
+>>   		break;
+>> +
+>> +	default:
+>> +		dev_err_ratelimited(&indio_dev->dev, "Unsupported reg_size: %u\n", reg_size);
+>> +		goto irq_handled;
+>>   	}
+>>   
+>>   	/*
+> 
+
+Best regards,
+Purva
