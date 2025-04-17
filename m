@@ -1,384 +1,266 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2071.outbound.protection.outlook.com [40.107.220.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4AF5227EB1;
-	Thu, 17 Apr 2025 09:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F3722157E;
+	Thu, 17 Apr 2025 09:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.71
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744881799; cv=fail; b=TGK8qqaUl4TvOPDW8QKCU8pI240vLP+YmzOg/9wZ2BL6aE2AhCPv1MHxMd1VPoKLfWj4SnPGshs5SdMb+mXkU70/3MUNQzEri9gNNkkutsgVbQF1wfnzT8XY7ytDjGRL5T3U0pvEEiNhnRoSlhMupvoZXkRjFVlEYMJnv3XZOqE=
+	t=1744881820; cv=fail; b=AxNapLtXVQxJrJ9i8G3oMv0gsuYFiBVOOcHF/CJ+dVCy1g2nAvceeFgMllB16wUyRpjRdjMQr7nk+h5+dKwxuSGno+Zm/QyQiENF8QV81FZiCgNruPqdhYUm4kNOCgH0z6+b3GePu7WwP5k8qDaYsHREZiElu1VDtsiryNlyC3A=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744881799; c=relaxed/simple;
-	bh=xsU5HNGeOtRvFHrksudXOb41gQ8T7N1eQVXdvX6dbVk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=YiUcGMom76XTeQLLnr5cVFojAPDs/w++8MYHq/qURMbi95R++Wlgtr/uSrthrNv4gtjpTuS0XOGelVTiPF28XnGyGjTm95C8C/UhN5o05Mniy7gaMLVS0uzo47uyg+lG9aEFLj3CKVPb3J+ZBTcZDu5KoAmStb5B8xntzrJ6g+M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l3L06hrW; arc=fail smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744881820; c=relaxed/simple;
+	bh=CKLrXGY7++cHpO76C0dZiH37suKGi4TDM+yGiL0lMZY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UCV35kbLEI81G0vDG3ETh7wMgPQRl7IHZtucLDl88N4+yb6loK/99j49amxcCGzDj0utYjt1rQ2oyr2zaRY2GipLEjKF7BKq0tt3WHUVlmsGmGt/Yet3B3QCc6RWm3TKk3s0KGyu7XYWjBq1XkoT+mwSZiAv/k3uOtti+x6LwCc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=W75zYKie; arc=fail smtp.client-ip=40.107.220.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l3L06hrW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744881797; x=1776417797;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=xsU5HNGeOtRvFHrksudXOb41gQ8T7N1eQVXdvX6dbVk=;
-  b=l3L06hrWRQ85e1UINTUTs5Bj3ND56imUTQbCGbdQ4XPaj+BQtqkgyqOy
-   d3VTfEobzBIHT74PxdocQnjCVnWLQBtIN6BQu3w5iUhyqa3Qe5XupXi28
-   HgzuhFlOQS/hFvzprkfAQ3CQpp5ceLGLcS+9uu6E6lNv8dC6OZJxOJDi/
-   BeoMIsWi3HabYKT3AQabCCs3P0Ehtfrni5LsWityRkfOjJniEox7Q8iHq
-   nVOIxyDJJgW5dkrFWIS5dOjZq/m5WeVw8isjb04V+ckIf84Y7rVW93EO7
-   FoZYHWc+rrYHRT1utukXH1yU5daja1YFdKyA6xq7jCPDkltGgkf+6THmf
-   A==;
-X-CSE-ConnectionGUID: flYu1uIgRqy0AxwR6qw7fA==
-X-CSE-MsgGUID: 0IzVH1jlTju42coruFPnAg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="50268711"
-X-IronPort-AV: E=Sophos;i="6.15,218,1739865600"; 
-   d="scan'208";a="50268711"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 02:23:14 -0700
-X-CSE-ConnectionGUID: WXGIoKVZS0i5gVCbAXG3eg==
-X-CSE-MsgGUID: WgAOE+j5Tfuf0d+aa18FgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,218,1739865600"; 
-   d="scan'208";a="135717426"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 02:23:14 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 17 Apr 2025 02:23:13 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 17 Apr 2025 02:23:13 -0700
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.46) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 17 Apr 2025 02:23:12 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="W75zYKie"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gdDCPuAO8C5hAn0oKc0jwAaQHISOQR8OpHdKUJWjf2yziAiDdNOHIwlNzFhtlBSDv1iloOg0JIMi6nH1MscpfPcJ6sngw+yixjRAab4N7xg34VFLjZ/jS3UhML11af+tf9FI7pRqQsUJRdCqW2U6xJNNw26dlPzgMUj9/VNNupcy1sKfr4m72+FE7zcxym75IClXAzSw9wV3JhmPJlnjr2YSE4cIEB+lQg0ReVAPbzGUzxjJPO+eigEIuwpb2GOzVJkJQONaacIXPQUBzmRcd6riA12IkMdq6f9Ol3aiBdMTK9PgTZVkuWvIDSwvZMnZBlmM5WWduoxijZ7mZDpCFg==
+ b=u615+UOOM+eh+X77wxSzTps3WDpYFf2yZ1WyNANIbKhMmnXiMX35e9zxw/upOhIyzhDPgdmUaNB603u+gDLJMPdwMITcII/3w1e9FB6CKDqzuVJrTtu25/WBqnBs/8EFZ7TQ+9FslGzSNvCJgsgNp+Nt+4JXR5RT+BuNJEefqHEr4AaGKDI30ngjIXrwbXKgrx3UTZpIcb76YiHYsz9Hw0+NC33tTVzWWG1JbAD/iQyQamlavrjo3BYqwF+DFjvk3zne3ixZD4GcTKWsi6Pn+ClaAOrflg7mQ9snH3I1+FjnzaGQOyeJwOOroAso6p32SOC6iye3JNZUSw4S866fZg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ipzjqGqPCqBCpgMYv3Y/fosaXRmY2KuO5l2kFE8hOZM=;
- b=k2EiwxJSsY/PCLgNf4ZGeLtfg9N+x4kva8VfvXBp/MJ8WYw8G8RJ26EehPunxDQ4MF4IbUuH23I6g31FKHpG7L87fYn4j/aigZ30JE+oUluM7w8zHqK6qqw6qBvGut6kbIe9IwEv/BzUE/jfH4yZptqwy0vulz8IK4yPOT5GQs5Zj3pqSSDqRveZL5aRRYqZJKEYlUPPpdZdLFZaGu678qrLlHXhZFaSW6YV1JvUWEuP5lKLvS9dqzHoUgkJrv2E8G16YoFyiiJaRzca1SOFmfG1YJNhlYZL01iMGoJVpTXNc6OM+AtXy5yUzkIcX5gvjgapePF44ChEClIGYkSUiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SJ2PR11MB8452.namprd11.prod.outlook.com (2603:10b6:a03:574::22)
- by SA1PR11MB8254.namprd11.prod.outlook.com (2603:10b6:806:251::9) with
+ bh=lUv1SmKy5i/8r8vZVOWpDmjPcAHjAA25R4HpO+iBVa0=;
+ b=AJgTLs9mVrT1f1UrNWltSMp/GUaVA3uPlRi2MKx5sS19IHN7fOg+NzRsXLaFz6JkZwQVZERzldeWwAeFNBoPn9duDTNj6Y9h68YZSmDHLhF0EFW+3r74l4e1tGcaSnmX4lMZtn2AHviCXxUr3X4b00cN5h20CI7LVli6zK3m6VltmTRM4I3McRSxqFx1+my5wOvnMrq/c2dyQQVmveFNGlxgeXPgf+D+nVjPTQ0dX22T9+eRPkrv6fv7iCy3Dz8Oin7XcP24wzOqFWFkZS1aOYQBgT+kG/kIMlCKjgkOKzgl+9jq4D15XoRoX3uEhSQtI/zycYNYB+k3bbJDBEH0nw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lUv1SmKy5i/8r8vZVOWpDmjPcAHjAA25R4HpO+iBVa0=;
+ b=W75zYKieDHcwyz0dzVIWFCvT/pT37VO4Md5BoF/Nn6erWvcC69+m+Avjx+4JQmUb305MDH6pBNGDuyJlv4VLyYrwydQM2gngkEUstYLB9Lv5iyaMpi0hXb4n9zYy9z9VuxarifWLf1L2whXgiupY0GVMvbZJaGhTiezWKXTA/6o=
+Received: from BL0PR02CA0062.namprd02.prod.outlook.com (2603:10b6:207:3d::39)
+ by DM4PR12MB6591.namprd12.prod.outlook.com (2603:10b6:8:8e::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Thu, 17 Apr
- 2025 09:23:09 +0000
-Received: from SJ2PR11MB8452.namprd11.prod.outlook.com
- ([fe80::d200:bfac:918a:1a38]) by SJ2PR11MB8452.namprd11.prod.outlook.com
- ([fe80::d200:bfac:918a:1a38%5]) with mapi id 15.20.8655.022; Thu, 17 Apr 2025
- 09:23:09 +0000
-From: "Kubalewski, Arkadiusz" <arkadiusz.kubalewski@intel.com>
-To: Jiri Pirko <jiri@resnulli.us>
-CC: "donald.hunter@gmail.com" <donald.hunter@gmail.com>, "kuba@kernel.org"
-	<kuba@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "Dumazet,
- Eric" <edumazet@google.com>, "pabeni@redhat.com" <pabeni@redhat.com>,
-	"horms@kernel.org" <horms@kernel.org>, "vadim.fedorenko@linux.dev"
-	<vadim.fedorenko@linux.dev>, "Nguyen, Anthony L"
-	<anthony.l.nguyen@intel.com>, "Kitszel, Przemyslaw"
-	<przemyslaw.kitszel@intel.com>, "andrew+netdev@lunn.ch"
-	<andrew+netdev@lunn.ch>, "saeedm@nvidia.com" <saeedm@nvidia.com>,
-	"leon@kernel.org" <leon@kernel.org>, "tariqt@nvidia.com" <tariqt@nvidia.com>,
-	"jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
-	"richardcochran@gmail.com" <richardcochran@gmail.com>, "Loktionov, Aleksandr"
-	<aleksandr.loktionov@intel.com>, "Olech, Milena" <milena.olech@intel.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Subject: RE: [PATCH net-next v2 3/4] dpll: features_get/set callbacks
-Thread-Topic: [PATCH net-next v2 3/4] dpll: features_get/set callbacks
-Thread-Index: AQHbrjN1g9R91USWQEWl7IeAkKUAtbOmNNOAgAFYDYA=
-Date: Thu, 17 Apr 2025 09:23:09 +0000
-Message-ID: <SJ2PR11MB84521AE1C30176E2A31C4F709BBC2@SJ2PR11MB8452.namprd11.prod.outlook.com>
-References: <20250415181543.1072342-1-arkadiusz.kubalewski@intel.com>
- <20250415181543.1072342-4-arkadiusz.kubalewski@intel.com>
- <lljouuqzmhcb2esfrxrviohrwgweee6632ntfoca5fqho736il@auarfibpahpf>
-In-Reply-To: <lljouuqzmhcb2esfrxrviohrwgweee6632ntfoca5fqho736il@auarfibpahpf>
-Accept-Language: pl-PL, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SJ2PR11MB8452:EE_|SA1PR11MB8254:EE_
-x-ms-office365-filtering-correlation-id: 3afe6314-b55c-4709-620e-08dd7d917806
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?TKv0UU1jEqGIKDL7UtFjzSOKWEw3dRwQ8A9GzykouEKHBC0NbbWim7jIwH0K?=
- =?us-ascii?Q?xnZS21vcNlU46DB5QxULF1SahBDc0okTRw3eUAw0nXtipLiA3U/HMQ9hSDRn?=
- =?us-ascii?Q?CrfBegridevqhDWM3j0DFaIB5szGKRjSmm7+2X3zTdNKqSqF/wTsi8MI4mzv?=
- =?us-ascii?Q?O2rPN3Fk1/Xef1jjISSlaxmiun5FYu+JJFg9x8dB3oehtXYnHgFucP/xMSND?=
- =?us-ascii?Q?TZxH5QesClLmtRXdyt8h3GJrLvFcpzEt5YAt4D6Sd3Tu20k8xx302KqJJg3q?=
- =?us-ascii?Q?oeFlFu+EgBn/2p5pireO1g0cPCmhySLQKDZlvOlPngZMAcU/4L7jrj0Qve/B?=
- =?us-ascii?Q?Qz7DP01RGJMMaL/HVA8pAww5cPfUu8j5CK3er0EQaZ4oDLnjj2y231SikVh1?=
- =?us-ascii?Q?hsk/O7R0R1Mue1OyFe/MLAOP47dHAwnBWmd0dqlEV7ApKe3SUs5k+QZOuMbs?=
- =?us-ascii?Q?lPiK1vdkWw/qCdu54BzzXnsfxxpjtmblp46Z0JrNEa6pOenTBmnu+Ej+PnST?=
- =?us-ascii?Q?UQRO2paAyoCJOWRnEKoOfPx00JqdHB74aB0H2FgRM1lRsWNu5GI59VRdh4PQ?=
- =?us-ascii?Q?Ph32jnmI3xlebuQmFtoL6DIr3Bczv39UWzIYseY7zrUx5exocOsn7uEos1LX?=
- =?us-ascii?Q?58EZEuRdP0I7gLC1X0JSTTVUcAYa8hfJBqHjpafjRBiuL6UvIS9CfKVkrMo9?=
- =?us-ascii?Q?Ks0wBljtoSt1zC7BwTsKv+NC+tzUWWHLFLeQ/OJ3TXsb7NNz9x6g5XSSKL1T?=
- =?us-ascii?Q?YTRwp5IZ+RdUwIO2CO80lT5hqjUJUznYM4RWLRAouflEqcCytXaFrMdbCHlO?=
- =?us-ascii?Q?f9mT4m9xB+ReOLTuWeFDs918mCf2+R7c/XEt8EAhs34+7lD0EYmMD5/RirEe?=
- =?us-ascii?Q?grRjJaB3aywPwWODBgLg71q2eVEVlahwkDDsXoYn42HUu45IpyKxN7G0KUaX?=
- =?us-ascii?Q?2UiCGbJzSHjRYdbEJY99jCwAdL4Z9raK9IQ0VD8iZLaVl3nSo9g8qMlQ7nmI?=
- =?us-ascii?Q?PIImiRlYdsl5kEjGBrRR9hwKlzz8J0jDIJ/KFfpFLVaKt3SeRO01HFFJmkZM?=
- =?us-ascii?Q?AMHwb9YMcthKOrnR1ZfzTmgLtxSWVlGbrgBIdv9mQOD8wEvUQBHxBsrYjsMC?=
- =?us-ascii?Q?y4YD95tPEMiKGiqextW6KDXrtIPgy5uKoX75KWbdV4s+rrnQ6IXCwtVxoqXK?=
- =?us-ascii?Q?pVn91k00Yu1LIsuI+jyzL/Ps3r9RPbJcc65++KQtUc5tKr/caCFMbzwVXZ5f?=
- =?us-ascii?Q?L6Mtsrl2Wg/uuJFtdngpJZsEFjWaezagkqKXDwhz94cybOKtO0LnyrEo65r+?=
- =?us-ascii?Q?lTTd1fkJpMcAC5KFWGFzILucieYmjTJpkFiJqJksvnqxk7UrMH7y8P0E6vE2?=
- =?us-ascii?Q?3grypbPhKv72yS8B9Da9mQoUEtNPclwED61Xwx+YbnVRPL0bxB98mLApxPSq?=
- =?us-ascii?Q?gEIuKggxk5Uy7iYbNFly2+Rkamd4ugy9B+o2oamRLMTWF2hQJt+q5A=3D=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB8452.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?qLHTEsuBQd0R9YF4ArdgwapP7d1a19a3etC+pWAsAZSQ3e5PMv169cq+nCU9?=
- =?us-ascii?Q?nDanlJVIn2C7rEvWfpZhfnkNswXifRkFIGre1um+dRCtdx4AB8qNX0hmfldR?=
- =?us-ascii?Q?Sr/Md5wXREIQAfvYOp0XO9yltmX3kzJi7F9pNQs9fZ3rn/yUkqwvoqInjBFY?=
- =?us-ascii?Q?RAJrFNIh8ExlUL4h0yik8/wmG9tXOnoJ+b+ED+PcwJsqVcvC1pjeysBV8TpB?=
- =?us-ascii?Q?LScKu+kc6Kc6KBZ9m4gQMg5sp1SeBHhgSi6brpAiWQ1rmdEd1F1T8i7Nz26/?=
- =?us-ascii?Q?vSCK7REeGIl8CZZY01aFMebzoR0owS5UokR/UNBSsnJmFGy/kPK03hvMCzUG?=
- =?us-ascii?Q?y8hXqp71hFPNbbNtdEtvQ3TwwGDPux3PE4ELslUvyNTF/qyOe7mdfhEl3q5W?=
- =?us-ascii?Q?Ct9edqE1uBf8Yx7NjZQAXr7sWKKnFiapJ35tIHr0yZzOZAEGLrWf57s130Cb?=
- =?us-ascii?Q?Z9yettO11vXr5tm/oHAntiBZUyiMozJ5/cI2f/N/jexvdVWsV6FXfmKVjWKe?=
- =?us-ascii?Q?mqBSPJaXfiEMEJKeKe3dNJttl3utf7yUYVzNuJpOqY5JidElsQlya3nJqzmf?=
- =?us-ascii?Q?7WSwlSohNF0OZDGfaXWOUbI8ikqojHPLpiFw7DmPrjVcA0yo4PkIps/6dPSq?=
- =?us-ascii?Q?1naTbIstNDcDQh+FZu0XFlsHF21TxRj7iZEeOnTalqUxwi9IUV7ub+82kaY1?=
- =?us-ascii?Q?FijUtTlwcSWlneTfXpJxCfFZz4fIindvGA8bwzd54xDmkMgtfKuCKBx3lZ6l?=
- =?us-ascii?Q?OrMPdWSD1a67ZdtBywFpY5fKiu5ccVPlRNBmmZmwTf92CVrRzJWK78ijM85D?=
- =?us-ascii?Q?lGLlrqEi6DrFhN2WpabvD5oN3AHVyh8kPgb8/BdJKXPSrasXfYbI7EUyxhuJ?=
- =?us-ascii?Q?Li0tpIPRtESYFmH5jdDS4OY9gMGJIOrkw6mAn8Et1hXdnqftaeaNPxF7R+Lw?=
- =?us-ascii?Q?GK1JlZzn6Iw5iSmQgUINyQT/FFuzJCCRdc2c4Qd6etJPm8D0cKS6h2kbtPHH?=
- =?us-ascii?Q?3Nfq40rqDlqLg42OUQmlbdYX0ITJfOFUIc/0bHB2DWuRhyEuE3r5YMmBQ4zS?=
- =?us-ascii?Q?xRJrZfyg4Gs1z5fTydJvJQ6HhAV10VNx89x/TiUVpotqn7QZIFD027mFgMNL?=
- =?us-ascii?Q?Nv4tI6GWBKQkQlW1pmde77zJrU+ZzdQt8isfKHzTHu4c9Y6pAJ77r2T1kii2?=
- =?us-ascii?Q?sjYg2U3zqmuDYHQZg9YpSOstngLT+JBo3DCN0PVCwwllcBrK6BSBQK6ysWHy?=
- =?us-ascii?Q?vw6sMPX3NNQtoZxQD7k/YSVM/u/xv0AwpzOgtdFOeyn8VPDzzl5tfIkYl7BZ?=
- =?us-ascii?Q?LPiwV622PG98TTNaxhFJz70BSyIXL8cKN7gIHQfpZQUo/60njMjClh0D+956?=
- =?us-ascii?Q?zp40he33WbqoS45V0ikPkPVGga2FAU+tqoaf3ePxQZi+axVg9yDq6tpfmwaW?=
- =?us-ascii?Q?MCuLpkJ8kcsjGNpdliQeI5+2b1RPEBVJD3Yzmiio/pPBsQkvKV/zTizYZNA1?=
- =?us-ascii?Q?WMSu5gA9dnHLvu5sVxizVKTEzeftc8AZ0tciGIEsbJJDgbaKlVI66Xva1+F/?=
- =?us-ascii?Q?b2gyj69Q9sFKwb/k5ePa/YFoI+zixvU8FBsPqqbjFvSFDSiv+5YI8cCA9H6E?=
- =?us-ascii?Q?3Q=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Thu, 17 Apr
+ 2025 09:23:33 +0000
+Received: from BL6PEPF0001AB56.namprd02.prod.outlook.com
+ (2603:10b6:207:3d:cafe::8f) by BL0PR02CA0062.outlook.office365.com
+ (2603:10b6:207:3d::39) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.35 via Frontend Transport; Thu,
+ 17 Apr 2025 09:23:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL6PEPF0001AB56.mail.protection.outlook.com (10.167.241.8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8655.12 via Frontend Transport; Thu, 17 Apr 2025 09:23:33 +0000
+Received: from BLR-L-NUPADHYA.xilinx.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 17 Apr 2025 04:23:24 -0500
+From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+To: <linux-kernel@vger.kernel.org>
+CC: <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>, <nikunj@amd.com>,
+	<Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
+	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
+	<hpa@zytor.com>, <peterz@infradead.org>, <seanjc@google.com>,
+	<pbonzini@redhat.com>, <kvm@vger.kernel.org>,
+	<kirill.shutemov@linux.intel.com>, <huibo.wang@amd.com>,
+	<naveen.rao@amd.com>, <francescolavra.fl@gmail.com>
+Subject: [PATCH v4 15/18] x86/apic: Add kexec support for Secure AVIC
+Date: Thu, 17 Apr 2025 14:47:05 +0530
+Message-ID: <20250417091708.215826-16-Neeraj.Upadhyay@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250417091708.215826-1-Neeraj.Upadhyay@amd.com>
+References: <20250417091708.215826-1-Neeraj.Upadhyay@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB8452.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3afe6314-b55c-4709-620e-08dd7d917806
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2025 09:23:09.3388
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB56:EE_|DM4PR12MB6591:EE_
+X-MS-Office365-Filtering-Correlation-Id: d85fb08b-4e3e-4838-a9fc-08dd7d918660
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?sHhD7t+fhr6R1Agx0DzeFZJuoiTKYxxioQks+PORWNau4G8y3bOyNHBHWXWP?=
+ =?us-ascii?Q?G9ZsfwFyG3WIduIOioHvKaQI8J6YWMbCI0dSXIl5FMRmBU4IcfS02VCOgoWt?=
+ =?us-ascii?Q?S93xMa0Y+cAIKRGl+XYK2SoIjlzI6Ff4lDWT6tdZ8ZA4Ymdl61wcFcysisI+?=
+ =?us-ascii?Q?m2b58TslIPHdlHcqHZGL6zOKY8Yq3RsM8eQbSYEzK8n5D1mXJKsLpbACyhgN?=
+ =?us-ascii?Q?+7uqUyhcWbTKwWz7eAiCN/xXhfzSzN/87PBtYDHEYtx3U/14hz2KfrMJeW2D?=
+ =?us-ascii?Q?wt25CPH6ZcnzITTHYmKPl2pfM2EbXQiwpK5PpKcMVeNHgP9sEelKORSJ9shU?=
+ =?us-ascii?Q?LMPVaWJMrv3+n9zLe2y1yv81qnaJ4fFQybXgcWuqUh5nYwqu8NR6rIZSYOH3?=
+ =?us-ascii?Q?OYXkCmGf2ZzBFn4fm7/Y2GOXpsJZVAeGik2HXQcfskdjl6IxBJwXwXVZ6/4N?=
+ =?us-ascii?Q?mTzh6NBxxZVitxOiBJEzDTIu7SIMxrDNwAYQgkKZLlandZq+CZi3DwlDbvdn?=
+ =?us-ascii?Q?xc0/Cg0V71P8GId8w1y00JGhaeh4n5g7sbBBiSXNlDYX60ehJ+asgOwc5UGh?=
+ =?us-ascii?Q?NGRNg9+U43m3beeQV4TQ9VK0WYxeEQ6rOBryRxdYGEu0xxeSmaThV9kKaqqy?=
+ =?us-ascii?Q?jrLigIhcOcve/MDRz7Ux5GvNxGLtHuTSZOm2Bl9TBtBCq8mxjKDJzVEzF87w?=
+ =?us-ascii?Q?n6p556Sh+eHm0pi4poqEzYUBqurY/fRHRoMlvNZ91L5Fpavs/Mt4miXmXV64?=
+ =?us-ascii?Q?wXSEv4WSc2Vqk8maw3WyHB/VFaGEV59jjl34YbS94XNQLnrLQhRR1Gd9n9as?=
+ =?us-ascii?Q?ut2/xbWcWTT/yedynjYuZyVvoBaHQf2y1S3YGaD4+qLqA7pC1D9EcyRC/eue?=
+ =?us-ascii?Q?sKr5Y5FpQtRba7/bOYibRcIfFwAvAInUvw9JbFL+9SgJgAx3VVVg4JgjYtxa?=
+ =?us-ascii?Q?Qb3vVB6Ud+pDpqp8LMtTJ4NHZwaFLVdcgGChn7RW2veO+m9PUZFZSVx7wIQ4?=
+ =?us-ascii?Q?zYBRqeLQNLmNdJw5jyzibAIeY+/2BBevFsBp0uJTDIV8jCi2CU3dQZgqOLDF?=
+ =?us-ascii?Q?CCS9Ql4mWIHuz61BQrYJf1T1K2p7ca+vCKl4D9W/BE5KzMrVJRjkC63+EShC?=
+ =?us-ascii?Q?prGbcgf4hpLnd1Hpk1WSraC1yvBgQPOYPfz3EL5DFsK6cCdQt15w6u9Jr1Wn?=
+ =?us-ascii?Q?+QGvOIqDsniLC1JUcDoxKLkJYhm49FaoEOWnqsMsbQL9/0wgcZc9BTu47Nw4?=
+ =?us-ascii?Q?jMAn86VpqdTiQHFR0rQ8hj2bAo+exTrODoUQ776WkeFCr3z8X7YiMQhmudo4?=
+ =?us-ascii?Q?hswGyHuoLsIp02xwxJE74Xb/dyItk8pRq/mV2UNIO8yNDngWNi2Kl+XYCVml?=
+ =?us-ascii?Q?ogF1jNMvGUmnk/N5T4HI1bpc3NkX/JFiv64vQNy4M90BcEfGUQdjRYqEh9d2?=
+ =?us-ascii?Q?y3Mvos2JbkgfDMqDmNQ5D+MDyoniu6w9oFgX90BsR/yNshnhHdG16+ZVajoX?=
+ =?us-ascii?Q?xeD6voDAQ/6cX1JhkOECx0iqzmL0SME5n66l?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 09:23:33.4254
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kwV+9hxSdSH10EyFNPVNzSHFJk/5zE562t+kusJUUR4o4FMnXaOZ12VChgTmvUjdu0ijta8Y8sh82VY7+YVZG2SV2M8WoOoBTFTM002BqiI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8254
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d85fb08b-4e3e-4838-a9fc-08dd7d918660
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB56.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6591
 
->From: Jiri Pirko <jiri@resnulli.us>
->Sent: Wednesday, April 16, 2025 2:11 PM
->
->Tue, Apr 15, 2025 at 08:15:42PM +0200, arkadiusz.kubalewski@intel.com
->wrote:
->>Add new callback ops for a dpll device.
->>- features_get(..) - to obtain currently configured features from dpll
->>  device,
->>- feature_set(..) - to allow dpll device features configuration.
->>Provide features attribute and allow control over it to the users if
->>device driver implements callbacks.
->>
->>Reviewed-by: Milena Olech <milena.olech@intel.com>
->>Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
->>---
->>v2:
->>- adapt changes and align wiht new dpll_device_info struct
->>---
->> drivers/dpll/dpll_netlink.c | 79 ++++++++++++++++++++++++++++++++++++-
->> include/linux/dpll.h        |  5 +++
->> 2 files changed, 82 insertions(+), 2 deletions(-)
->>
->>diff --git a/drivers/dpll/dpll_netlink.c b/drivers/dpll/dpll_netlink.c
->>index 2de9ec08d551..acfdd87fcffe 100644
->>--- a/drivers/dpll/dpll_netlink.c
->>+++ b/drivers/dpll/dpll_netlink.c
->>@@ -126,6 +126,25 @@ dpll_msg_add_mode_supported(struct sk_buff *msg,
->>struct dpll_device *dpll,
->> 	return 0;
->> }
->>
->>+static int
->>+dpll_msg_add_features(struct sk_buff *msg, struct dpll_device *dpll,
->>+		      struct netlink_ext_ack *extack)
->>+{
->>+	const struct dpll_device_ops *ops =3D dpll_device_ops(dpll);
->>+	u32 features;
->>+	int ret;
->>+
->>+	if (!ops->features_get)
->>+		return 0;
->>+	ret =3D ops->features_get(dpll, dpll_priv(dpll), &features, extack);
->>+	if (ret)
->>+		return ret;
->>+	if (nla_put_u32(msg, DPLL_A_FEATURES, features))
->>+		return -EMSGSIZE;
->>+
->>+	return 0;
->>+}
->>+
->> static int
->> dpll_msg_add_lock_status(struct sk_buff *msg, struct dpll_device *dpll,
->> 			 struct netlink_ext_ack *extack)
->>@@ -592,6 +611,11 @@ dpll_device_get_one(struct dpll_device *dpll, struct
->>sk_buff *msg,
->> 		return ret;
->> 	if (nla_put_u32(msg, DPLL_A_TYPE, info->type))
->> 		return -EMSGSIZE;
->>+	if (nla_put_u32(msg, DPLL_A_CAPABILITIES, info->capabilities))
->>+		return -EMSGSIZE;
->>+	ret =3D dpll_msg_add_features(msg, dpll, extack);
->>+	if (ret)
->>+		return ret;
->>
->> 	return 0;
->> }
->>@@ -747,6 +771,34 @@ int dpll_pin_change_ntf(struct dpll_pin *pin)
->> }
->> EXPORT_SYMBOL_GPL(dpll_pin_change_ntf);
->>
->>+static int
->>+dpll_features_set(struct dpll_device *dpll, struct nlattr *a,
->>+		  struct netlink_ext_ack *extack)
->>+{
->>+	const struct dpll_device_info *info =3D dpll_device_info(dpll);
->>+	const struct dpll_device_ops *ops =3D dpll_device_ops(dpll);
->>+	u32 features =3D nla_get_u32(a), old_features;
->>+	int ret;
->>+
->>+	if (features && !(info->capabilities & features)) {
->>+		NL_SET_ERR_MSG_ATTR(extack, a, "dpll device not capable of this
->>features");
->>+		return -EOPNOTSUPP;
->>+	}
->>+	if (!ops->features_get || !ops->features_set) {
->>+		NL_SET_ERR_MSG(extack, "dpll device not supporting any
->>features");
->>+		return -EOPNOTSUPP;
->>+	}
->>+	ret =3D ops->features_get(dpll, dpll_priv(dpll), &old_features,
->>extack);
->>+	if (ret) {
->>+		NL_SET_ERR_MSG(extack, "unable to get old features value");
->>+		return ret;
->>+	}
->>+	if (old_features =3D=3D features)
->>+		return -EINVAL;
->>+
->>+	return ops->features_set(dpll, dpll_priv(dpll), features, extack);
->
->So you allow to enable/disable them all in once. What if user want to
->enable feature A and does not care about feature B that may of may not
->be previously set?
+Add a apic->teardown() callback to disable Secure AVIC before
+rebooting into the new kernel. This ensures that the new
+kernel does not access the old APIC backing page which was
+allocated by the previous kernel. Such accesses can happen
+if there are any APIC accesses done during guest boot before
+Secure AVIC driver probe is done by the new kernel (as Secure
+AVIC would have remained enabled in the Secure AVIC control
+msr).
 
-Assumed that user would always request full set.
+Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+---
+Changes since v3:
 
->How many of the features do you expect to appear in the future. I'm
->asking because this could be just a bool attr with a separate op to the
->driver. If we have 3, no problem. Benefit is, you may also extend it
->easily to pass some non-bool configuration. My point is, what is the
->benefit of features bitset here?
->
+ - Use SVM_VMGEXIT_SAVIC_SELF_GPA in place of -1ULL in
+   savic_unregister_gpa().
+ - Use guard(irqsave)() in savic_unregister_gpa().
+ - Misc cleanups.
 
-Not much, at least right now..
-Maybe one similar in nearest feature. Sure, we can go that way.
+ arch/x86/coco/sev/core.c            | 23 +++++++++++++++++++++++
+ arch/x86/include/asm/apic.h         |  1 +
+ arch/x86/include/asm/sev.h          |  2 ++
+ arch/x86/kernel/apic/apic.c         |  3 +++
+ arch/x86/kernel/apic/x2apic_savic.c |  8 ++++++++
+ 5 files changed, 37 insertions(+)
 
-But you mean uAPI part also have this enabled somehow per feature or
-leave the feature bits there?
+diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+index 1dcd40e80a46..49cf0f97e372 100644
+--- a/arch/x86/coco/sev/core.c
++++ b/arch/x86/coco/sev/core.c
+@@ -1499,6 +1499,29 @@ enum es_result savic_register_gpa(u64 gpa)
+ 	return res;
+ }
+ 
++enum es_result savic_unregister_gpa(u64 *gpa)
++{
++	struct ghcb_state state;
++	struct es_em_ctxt ctxt;
++	enum es_result res;
++	struct ghcb *ghcb;
++
++	guard(irqsave)();
++
++	ghcb = __sev_get_ghcb(&state);
++	vc_ghcb_invalidate(ghcb);
++
++	ghcb_set_rax(ghcb, SVM_VMGEXIT_SAVIC_SELF_GPA);
++	res = sev_es_ghcb_hv_call(ghcb, &ctxt, SVM_VMGEXIT_SAVIC,
++				  SVM_VMGEXIT_SAVIC_UNREGISTER_GPA, 0);
++	if (gpa && res == ES_OK)
++		*gpa = ghcb->save.rbx;
++
++	__sev_put_ghcb(&state);
++
++	return res;
++}
++
+ static void snp_register_per_cpu_ghcb(void)
+ {
+ 	struct sev_es_runtime_data *data;
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index c359cce60b22..37317d914c05 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -306,6 +306,7 @@ struct apic {
+ 	/* Probe, setup and smpboot functions */
+ 	int	(*probe)(void);
+ 	void	(*setup)(void);
++	void	(*teardown)(void);
+ 	int	(*acpi_madt_oem_check)(char *oem_id, char *oem_table_id);
+ 
+ 	void	(*init_apic_ldr)(void);
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index fab71d311135..feeff8418bb7 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -521,6 +521,7 @@ int snp_svsm_vtpm_send_command(u8 *buffer);
+ void __init snp_secure_tsc_prepare(void);
+ void __init snp_secure_tsc_init(void);
+ enum es_result savic_register_gpa(u64 gpa);
++enum es_result savic_unregister_gpa(u64 *gpa);
+ u64 savic_ghcb_msr_read(u32 reg);
+ void savic_ghcb_msr_write(u32 reg, u64 value);
+ 
+@@ -574,6 +575,7 @@ static inline int snp_svsm_vtpm_send_command(u8 *buffer) { return -ENODEV; }
+ static inline void __init snp_secure_tsc_prepare(void) { }
+ static inline void __init snp_secure_tsc_init(void) { }
+ static inline enum es_result savic_register_gpa(u64 gpa) { return ES_UNSUPPORTED; }
++static inline enum es_result savic_unregister_gpa(u64 *gpa) { return ES_UNSUPPORTED; }
+ static inline void savic_ghcb_msr_write(u32 reg, u64 value) { }
+ static inline u64 savic_ghcb_msr_read(u32 reg) { return 0; }
+ 
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index bad60bcb80e7..5a378bdf7db3 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1169,6 +1169,9 @@ void disable_local_APIC(void)
+ 	if (!apic_accessible())
+ 		return;
+ 
++	if (apic->teardown)
++		apic->teardown();
++
+ 	apic_soft_disable();
+ 
+ #ifdef CONFIG_X86_32
+diff --git a/arch/x86/kernel/apic/x2apic_savic.c b/arch/x86/kernel/apic/x2apic_savic.c
+index bfb6f2770f7e..e7dd7ec7c502 100644
+--- a/arch/x86/kernel/apic/x2apic_savic.c
++++ b/arch/x86/kernel/apic/x2apic_savic.c
+@@ -333,6 +333,13 @@ static void init_apic_page(void)
+ 	set_reg(APIC_ID, apic_id);
+ }
+ 
++static void savic_teardown(void)
++{
++	/* Disable Secure AVIC */
++	native_wrmsr(MSR_AMD64_SECURE_AVIC_CONTROL, 0, 0);
++	savic_unregister_gpa(NULL);
++}
++
+ static void savic_setup(void)
+ {
+ 	void *backing_page;
+@@ -419,6 +426,7 @@ static struct apic apic_x2apic_savic __ro_after_init = {
+ 	.probe				= savic_probe,
+ 	.acpi_madt_oem_check		= savic_acpi_madt_oem_check,
+ 	.setup				= savic_setup,
++	.teardown			= savic_teardown,
+ 
+ 	.dest_mode_logical		= false,
+ 
+-- 
+2.34.1
 
-Thank you!
-Arkadiusz
-
->
->
->>+}
->>+
->> static int
->> dpll_pin_freq_set(struct dpll_pin *pin, struct nlattr *a,
->> 		  struct netlink_ext_ack *extack)
->>@@ -1536,10 +1588,33 @@ int dpll_nl_device_get_doit(struct sk_buff *skb,
->struct genl_info *info)
->> 	return genlmsg_reply(msg, info);
->> }
->>
->>+static int
->>+dpll_set_from_nlattr(struct dpll_device *dpll, struct genl_info *info)
->>+{
->>+	struct nlattr *a;
->>+	int rem, ret;
->>+
->>+	nla_for_each_attr(a, genlmsg_data(info->genlhdr),
->>+			  genlmsg_len(info->genlhdr), rem) {
->>+		switch (nla_type(a)) {
->>+		case DPLL_A_FEATURES:
->>+			ret =3D dpll_features_set(dpll, a, info->extack);
->>+			if (ret)
->>+				return ret;
->>+			break;
->>+		default:
->>+			break;
->>+		}
->>+	}
->>+
->>+	return 0;
->>+}
->>+
->> int dpll_nl_device_set_doit(struct sk_buff *skb, struct genl_info *info)
->> {
->>-	/* placeholder for set command */
->>-	return 0;
->>+	struct dpll_device *dpll =3D info->user_ptr[0];
->>+
->>+	return dpll_set_from_nlattr(dpll, info);
->> }
->>
->> int dpll_nl_device_get_dumpit(struct sk_buff *skb, struct
->>netlink_callback *cb)
->>diff --git a/include/linux/dpll.h b/include/linux/dpll.h
->>index 0489464af958..90c743daf64b 100644
->>--- a/include/linux/dpll.h
->>+++ b/include/linux/dpll.h
->>@@ -30,6 +30,10 @@ struct dpll_device_ops {
->> 				       void *dpll_priv,
->> 				       unsigned long *qls,
->> 				       struct netlink_ext_ack *extack);
->>+	int (*features_set)(const struct dpll_device *dpll, void *dpll_priv,
->>+			    u32 features, struct netlink_ext_ack *extack);
->>+	int (*features_get)(const struct dpll_device *dpll, void *dpll_priv,
->>+			    u32 *features, struct netlink_ext_ack *extack);
->> };
->>
->> struct dpll_pin_ops {
->>@@ -99,6 +103,7 @@ struct dpll_pin_ops {
->>
->> struct dpll_device_info {
->> 	enum dpll_type type;
->>+	u32 capabilities;
->> 	const struct dpll_device_ops *ops;
->> };
->>
->>--
->>2.38.1
->>
