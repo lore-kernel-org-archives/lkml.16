@@ -1,296 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D484324503A;
-	Thu, 17 Apr 2025 13:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418782F24;
+	Thu, 17 Apr 2025 13:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744896006; cv=none; b=qJ/hXQ33UAqXPI9D/vsroqTDMOpHMQ+mYHzC5dsgRL1ntdy8xfASHG8RXUf2QSBwhnXJcruQU20Oymy1lv0BXaMMt3pof/FCe4/2Iq68BY4ugLTkYgkz5J0hNWw3zBOxgcsevZ4+6RDQ1fxOUTjTOyaEi22LI9Rkz1zamHEWuMA=
+	t=1744896031; cv=none; b=qVaVKQcpKL+WcLOuUEDhWuc3I6tPS8KyBTM6goSezlMW3ISQjc5g5Lox2SHBkymGLNP3gZ9abH4t2EovWxHutq3PeqgEFxVp1p1obVPm1BhGbUZ5mqV2OtwmZUwGkOATp8gB1sKMx8rhmiCHdh7ftUJCeF9CfsDWtyi5rSC9gVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744896006; c=relaxed/simple;
-	bh=ZpKmpUKBjMZXBbjXZcDXAx1IMWF1ABeWVMj3xH17rpw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b2EeC+mT3Oy74aDW0sU4zO7hGtxsHCXwn940VHwvVnleIsPxV6JYBhTOtV4BxPeq3mMpP6M2jypucsnu4tcV8GeA+MyravmRLz3O997Po/t4FUppc7vsPSML9a+Cv53IzwL7P+NEMoV1NmBPyMqt7ZWZZR303kQw0l0eojPBFwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d62AULNF; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744896031; c=relaxed/simple;
+	bh=USJc9JCGJMae1BOrGUqYC9Qw2zxqsi9K4Px5b2V9oIE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SQCeLqjkRqZ3RKfCFLVSXYNZYhB/w3EOvYehfBvAYO0QZ5b/BzWFiBn6SEFMwkT7gdPlmqcCvN1DJ9Ado3Cbtc5uPHRqPM2rxmpO4ESVhGcppQJeiXJ0gSlqsCxMBS/dsIPOVKqRXIfGHElJ27ANJKKAAaPjbfCscUuuvi/+g/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dx+USYBa; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Qaj+PmDO; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d62AULNF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744896005; x=1776432005;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ZpKmpUKBjMZXBbjXZcDXAx1IMWF1ABeWVMj3xH17rpw=;
-  b=d62AULNF03GMoLpb5+JYQcS6xCTxQuXU8M2bJIX9ymFjMCPzBxhPLI/r
-   7JcxMfLD3iALvfDKWoGowggsRUvJb+FVJNsHF82v2iriAkNO2+E8PpVl3
-   08hTfq99qdP7vnOolVrusvVct7KbdSgAXEHCPecEqpb3U7PS/ufmUvGZ4
-   kzE/udkiy3B90mE03xOAAfhl4qmJGQ+A4YnSvX+StjkylEXjBRTmb8Bfa
-   LrohtwSXKGJDk7rmjndsp7eC6yhkpKpaykZ0UngqWiX/gvs+Jk7aL3O5z
-   SHSDCC4SHC44UJ1mqe/rMoNHUkESALjif5+s90PGCQsfbYSBWB0dBl826
-   Q==;
-X-CSE-ConnectionGUID: pZPm0MPjQmCjc61G6G3Q7g==
-X-CSE-MsgGUID: yjSLLSXwSriFwF3LR1sxvg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="57852598"
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="57852598"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 06:20:05 -0700
-X-CSE-ConnectionGUID: vfA2SgW2Tcyw58bKgL4vBA==
-X-CSE-MsgGUID: GlQvN1hRSTCuh/RtUGWVQQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="131708221"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.ger.corp.intel.com) ([10.245.254.135])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 06:20:00 -0700
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: pbonzini@redhat.com,
-	seanjc@google.com
-Cc: mlevitsk@redhat.com,
-	kvm@vger.kernel.org,
-	rick.p.edgecombe@intel.com,
-	kirill.shutemov@linux.intel.com,
-	kai.huang@intel.com,
-	reinette.chatre@intel.com,
-	xiaoyao.li@intel.com,
-	tony.lindgren@linux.intel.com,
-	binbin.wu@linux.intel.com,
-	isaku.yamahata@intel.com,
-	linux-kernel@vger.kernel.org,
-	yan.y.zhao@intel.com,
-	chao.gao@intel.com
-Subject: [PATCH V2 1/1] KVM: TDX: Add sub-ioctl KVM_TDX_TERMINATE_VM
-Date: Thu, 17 Apr 2025 16:19:45 +0300
-Message-ID: <20250417131945.109053-2-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250417131945.109053-1-adrian.hunter@intel.com>
-References: <20250417131945.109053-1-adrian.hunter@intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dx+USYBa";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Qaj+PmDO"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744896028;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ax4rJeZalogOj8wIoY/TFwkI03ahXbhPQLwzXY9UpSs=;
+	b=dx+USYBaLx2I8Gdx4jaFGW21JHYSvZVQrMa5rF24bMOqGyQaCRgOzg0x0adtoH5JsOf47v
+	2hJnYdYFooJcZxCWeTw2EPrM4awrBlwYJW2xB5R5gYeSnqutuy2HT9AwFj8PqePW5X34C3
+	NqLOaNdSQv97cS0V2073siV4AMC/9KiZA1RP5999vF5i99jwHTR0VwpD6HpAolWxL2W4eb
+	PPm2n0L+wUt9QO1jEe3nthl4ZXhQyYMLM1sBmPvS+T5q3lcUazqEogUeikY/16l71r+tc4
+	nVLZ9cHWKGQqqsO8t4usyVnssXaNuO1fcSf78zFdsP3LUrWJ/Sk27C0zCwyqZQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744896028;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ax4rJeZalogOj8wIoY/TFwkI03ahXbhPQLwzXY9UpSs=;
+	b=Qaj+PmDOxeik8no8OOe9lbHhu7DdF7oqPucBcoWuTLQSfomc8hZvaWFmgzLnJx/muwN01O
+	PloGeSH7pFB+TZDw==
+Subject: [PATCH ath-next 0/4] wifi: ath: Don't use %pK through printk
+Date: Thu, 17 Apr 2025 15:19:06 +0200
+Message-Id: <20250417-restricted-pointers-ath-v1-0-4e9a04dbe362@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAMr/AGgC/x2MwQqDQAwFf0VybmDd1Ur7K8WDuM+ayypJKIL47
+ 932ODAzJxlUYPRsTlJ8xGQrFdpbQ/M6lTdYcmWKIfahawdWmKvMjsz7JsWhxpOv3C1xePQppHT
+ PVOtdscjxP7/oJxQcTuN1fQHjFTh/cwAAAA==
+X-Change-ID: 20250417-restricted-pointers-ath-4f279530336d
+To: Jeff Johnson <jjohnson@kernel.org>, 
+ Loic Poulain <loic.poulain@oss.qualcomm.com>, ath10k@lists.infradead.org, 
+ ath11k@lists.infradead.org, ath12k@lists.infradead.org, 
+ wcn36xx@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+ Aleksandr Loktionov <aleksandr.loktionov@intel.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744896028; l=2034;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=USJc9JCGJMae1BOrGUqYC9Qw2zxqsi9K4Px5b2V9oIE=;
+ b=4aoFpAS7vIBaF9DayfeaPUa3K8Y5PLpmCpvBRYmcVCoc+zcl7IawUrjWZAlS1Ft2aLcp1igtX
+ zxE18fWrB/kCfXWYMg4nMCS/vnn8USOet1o2Ez+oHcqdiricl6fnoxv
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-From: Sean Christopherson <seanjc@google.com>
+In the past %pK was preferable to %p as it would not leak raw pointer
+values into the kernel log.
+Since commit ad67b74d2469 ("printk: hash addresses printed with %p")
+the regular %p has been improved to avoid this issue.
+Furthermore, restricted pointers ("%pK") were never meant to be used
+through printk(). They can still unintentionally leak raw pointers or
+acquire sleeping locks in atomic contexts.
 
-Add sub-ioctl KVM_TDX_TERMINATE_VM to release the HKID prior to shutdown,
-which enables more efficient reclaim of private memory.
+Switch to the regular pointer formatting which is safer and
+easier to reason about.
 
-Private memory is removed from MMU/TDP when guest_memfds are closed. If
-the HKID has not been released, the TDX VM is still in RUNNABLE state,
-so pages must be removed using "Dynamic Page Removal" procedure (refer
-TDX Module Base spec) which involves a number of steps:
-	Block further address translation
-	Exit each VCPU
-	Clear Secure EPT entry
-	Flush/write-back/invalidate relevant caches
+These patches were originally part of
+https://lore.kernel.org/lkml/20250414-restricted-pointers-net-v1-0-12af0ce46cdd@linutronix.de/
 
-However, when the HKID is released, the TDX VM moves to TD_TEARDOWN state
-where all TDX VM pages are effectively unmapped, so pages can be reclaimed
-directly.
-
-Reclaiming TD Pages in TD_TEARDOWN State was seen to decrease the total
-reclaim time.  For example:
-
-	VCPUs	Size (GB)	Before (secs)	After (secs)
-	 4	 18		  72		 24
-	32	107		 517		134
-	64	400		5539		467
-
-[Adrian: wrote commit message, added KVM_TDX_TERMINATE_VM documentation,
- and moved cpus_read_lock() inside kvm->lock for consistency as reported
- by lockdep]
-
-Link: https://lore.kernel.org/r/Z-V0qyTn2bXdrPF7@google.com
-Signed-off-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- Documentation/virt/kvm/x86/intel-tdx.rst | 16 ++++++
- arch/x86/include/uapi/asm/kvm.h          |  1 +
- arch/x86/kvm/vmx/tdx.c                   | 63 +++++++++++++++++-------
- 3 files changed, 61 insertions(+), 19 deletions(-)
+Thomas Weißschuh (4):
+      wifi: ath10k: Don't use %pK through printk
+      wifi: ath11k: Don't use %pK through printk
+      wifi: ath12k: Don't use %pK through printk
+      wifi: wcn36xx: Don't use %pK through printk
 
-diff --git a/Documentation/virt/kvm/x86/intel-tdx.rst b/Documentation/virt/kvm/x86/intel-tdx.rst
-index de41d4c01e5c..e5d4d9cf4cf2 100644
---- a/Documentation/virt/kvm/x86/intel-tdx.rst
-+++ b/Documentation/virt/kvm/x86/intel-tdx.rst
-@@ -38,6 +38,7 @@ ioctl with TDX specific sub-ioctl() commands.
-           KVM_TDX_INIT_MEM_REGION,
-           KVM_TDX_FINALIZE_VM,
-           KVM_TDX_GET_CPUID,
-+          KVM_TDX_TERMINATE_VM,
- 
-           KVM_TDX_CMD_NR_MAX,
-   };
-@@ -214,6 +215,21 @@ struct kvm_cpuid2.
- 	  __u32 padding[3];
-   };
- 
-+KVM_TDX_TERMINATE_VM
-+-------------------
-+:Type: vm ioctl
-+:Returns: 0 on success, <0 on error
-+
-+Release Host Key ID (HKID) to allow more efficient reclaim of private memory.
-+After this, the TD is no longer in a runnable state.
-+
-+Using KVM_TDX_TERMINATE_VM is optional.
-+
-+- id: KVM_TDX_TERMINATE_VM
-+- flags: must be 0
-+- data: must be 0
-+- hw_error: must be 0
-+
- KVM TDX creation flow
- =====================
- In addition to the standard KVM flow, new TDX ioctls need to be called.  The
-diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-index 225a12e0d5d6..a2f973e1d75d 100644
---- a/arch/x86/include/uapi/asm/kvm.h
-+++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -939,6 +939,7 @@ enum kvm_tdx_cmd_id {
- 	KVM_TDX_INIT_MEM_REGION,
- 	KVM_TDX_FINALIZE_VM,
- 	KVM_TDX_GET_CPUID,
-+	KVM_TDX_TERMINATE_VM,
- 
- 	KVM_TDX_CMD_NR_MAX,
- };
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index b952bc673271..5763a70d1ec6 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -472,7 +472,7 @@ static void smp_func_do_phymem_cache_wb(void *unused)
- 		pr_tdx_error(TDH_PHYMEM_CACHE_WB, err);
- }
- 
--void tdx_mmu_release_hkid(struct kvm *kvm)
-+static void __tdx_release_hkid(struct kvm *kvm, bool terminate)
- {
- 	bool packages_allocated, targets_allocated;
- 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-@@ -485,10 +485,11 @@ void tdx_mmu_release_hkid(struct kvm *kvm)
- 	if (!is_hkid_assigned(kvm_tdx))
- 		return;
- 
-+	if (KVM_BUG_ON(refcount_read(&kvm->users_count) && !terminate, kvm))
-+		return;
-+
- 	packages_allocated = zalloc_cpumask_var(&packages, GFP_KERNEL);
- 	targets_allocated = zalloc_cpumask_var(&targets, GFP_KERNEL);
--	cpus_read_lock();
--
- 	kvm_for_each_vcpu(j, vcpu, kvm)
- 		tdx_flush_vp_on_cpu(vcpu);
- 
-@@ -500,14 +501,7 @@ void tdx_mmu_release_hkid(struct kvm *kvm)
- 	 */
- 	mutex_lock(&tdx_lock);
- 
--	/*
--	 * Releasing HKID is in vm_destroy().
--	 * After the above flushing vps, there should be no more vCPU
--	 * associations, as all vCPU fds have been released at this stage.
--	 */
- 	err = tdh_mng_vpflushdone(&kvm_tdx->td);
--	if (err == TDX_FLUSHVP_NOT_DONE)
--		goto out;
- 	if (KVM_BUG_ON(err, kvm)) {
- 		pr_tdx_error(TDH_MNG_VPFLUSHDONE, err);
- 		pr_err("tdh_mng_vpflushdone() failed. HKID %d is leaked.\n",
-@@ -515,6 +509,7 @@ void tdx_mmu_release_hkid(struct kvm *kvm)
- 		goto out;
- 	}
- 
-+	write_lock(&kvm->mmu_lock);
- 	for_each_online_cpu(i) {
- 		if (packages_allocated &&
- 		    cpumask_test_and_set_cpu(topology_physical_package_id(i),
-@@ -539,14 +534,20 @@ void tdx_mmu_release_hkid(struct kvm *kvm)
- 	} else {
- 		tdx_hkid_free(kvm_tdx);
- 	}
--
-+	write_unlock(&kvm->mmu_lock);
- out:
- 	mutex_unlock(&tdx_lock);
--	cpus_read_unlock();
- 	free_cpumask_var(targets);
- 	free_cpumask_var(packages);
- }
- 
-+void tdx_mmu_release_hkid(struct kvm *kvm)
-+{
-+	cpus_read_lock();
-+	__tdx_release_hkid(kvm, false);
-+	cpus_read_unlock();
-+}
-+
- static void tdx_reclaim_td_control_pages(struct kvm *kvm)
- {
- 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-@@ -1789,13 +1790,13 @@ int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn,
- 	struct page *page = pfn_to_page(pfn);
- 	int ret;
- 
--	/*
--	 * HKID is released after all private pages have been removed, and set
--	 * before any might be populated. Warn if zapping is attempted when
--	 * there can't be anything populated in the private EPT.
--	 */
--	if (KVM_BUG_ON(!is_hkid_assigned(to_kvm_tdx(kvm)), kvm))
--		return -EINVAL;
-+	if (!is_hkid_assigned(to_kvm_tdx(kvm))) {
-+		WARN_ON_ONCE(!kvm->vm_dead);
-+		ret = tdx_reclaim_page(page);
-+		if (!ret)
-+			tdx_unpin(kvm, page);
-+		return ret;
-+	}
- 
- 	ret = tdx_sept_zap_private_spte(kvm, gfn, level, page);
- 	if (ret <= 0)
-@@ -2790,6 +2791,27 @@ static int tdx_td_finalize(struct kvm *kvm, struct kvm_tdx_cmd *cmd)
- 	return 0;
- }
- 
-+static int tdx_terminate_vm(struct kvm *kvm)
-+{
-+	int r = 0;
-+
-+	guard(mutex)(&kvm->lock);
-+	cpus_read_lock();
-+
-+	if (!kvm_trylock_all_vcpus(kvm)) {
-+		r = -EBUSY;
-+		goto out;
-+	}
-+
-+	kvm_vm_dead(kvm);
-+	kvm_unlock_all_vcpus(kvm);
-+
-+	__tdx_release_hkid(kvm, true);
-+out:
-+	cpus_read_unlock();
-+	return r;
-+}
-+
- int tdx_vm_ioctl(struct kvm *kvm, void __user *argp)
- {
- 	struct kvm_tdx_cmd tdx_cmd;
-@@ -2805,6 +2827,9 @@ int tdx_vm_ioctl(struct kvm *kvm, void __user *argp)
- 	if (tdx_cmd.hw_error)
- 		return -EINVAL;
- 
-+	if (tdx_cmd.id == KVM_TDX_TERMINATE_VM)
-+		return tdx_terminate_vm(kvm);
-+
- 	mutex_lock(&kvm->lock);
- 
- 	switch (tdx_cmd.id) {
+ drivers/net/wireless/ath/ath10k/ahb.c       |  2 +-
+ drivers/net/wireless/ath/ath10k/bmi.c       |  6 +++---
+ drivers/net/wireless/ath/ath10k/ce.c        |  4 ++--
+ drivers/net/wireless/ath/ath10k/core.c      |  4 ++--
+ drivers/net/wireless/ath/ath10k/htc.c       |  6 +++---
+ drivers/net/wireless/ath/ath10k/htt_rx.c    |  2 +-
+ drivers/net/wireless/ath/ath10k/mac.c       | 22 +++++++++++-----------
+ drivers/net/wireless/ath/ath10k/pci.c       |  2 +-
+ drivers/net/wireless/ath/ath10k/testmode.c  |  4 ++--
+ drivers/net/wireless/ath/ath10k/txrx.c      |  2 +-
+ drivers/net/wireless/ath/ath10k/usb.c       |  4 ++--
+ drivers/net/wireless/ath/ath10k/wmi.c       |  4 ++--
+ drivers/net/wireless/ath/ath11k/testmode.c  |  2 +-
+ drivers/net/wireless/ath/ath12k/testmode.c  |  4 ++--
+ drivers/net/wireless/ath/wcn36xx/testmode.c |  2 +-
+ 15 files changed, 35 insertions(+), 35 deletions(-)
+---
+base-commit: cfb2e2c57aef75a414c0f18445c7441df5bc13be
+change-id: 20250417-restricted-pointers-ath-4f279530336d
+
+Best regards,
 -- 
-2.43.0
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
