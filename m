@@ -1,72 +1,181 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046B525335A;
-	Thu, 17 Apr 2025 16:27:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF9A22371B;
+	Thu, 17 Apr 2025 16:28:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744907278; cv=none; b=UE5EL/zqPP8fPjVugVyXF9ecVwXZkNRacbooAEEnO2+LBq0RCKbc5f0u8K1uYtaEmQMOSDhPf72wCaOEtnG6zTXr84lNpELCmcR2Mtrw7AFeDEsOYWL5qZ26IdnQ/UAERX9nQQdmckNcmRuuVjsnRVmsfBCtqBDECRVySms1ZDE=
+	t=1744907307; cv=none; b=C+IvH4vW/7mGm0jxqZRwL8T23VE0jHpUg1VACPWF5BRi+cQBO/4vfXPVUgCXnzK6rxYR0VkfcuLEJTRaQnHFWVVwUu0yfSmBhNWj9DlD21PjG8f3gX6E40/kZQOaVD3HOJgpqKoeP6YpP/883Ks66q9DjNYgQiMlHcshbpOFLeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744907278; c=relaxed/simple;
-	bh=4sRq40JH/ISI0UBvuCqCuGv7ETOqS4v59COSIUShOxE=;
+	s=arc-20240116; t=1744907307; c=relaxed/simple;
+	bh=5+bAhaVCEtouC2Gh1wkP9M4D61cnTPG4oGIs+tydw0g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kodjpuQMgrqIJ3yscWY7xN25Fwtd9l1Z2C1bHg7bWVQtPjrl3il1lNafa2uMixktxkL6kBotrj5g3Jc2v4S6oU19E00W+em5pcemTnwQviiyHXL54U44ixafDI8rjS4ZmxrS73kZ4vdu+jkIgvH7UBcu1t1LSkXQB+9f/+uq/ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XNZM39fu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mxCXmeDo4oAYJqBCCJAGH5Hy774Fy+w54rUiDCH4ABxIHXNt2iY3IQgahEWrGrvfCIl4PAHb+NCd7/pUYRraydAkqzandscvOly0ghno5RH89eOUvSmvqMlSYQQy2jLp8aFTm1kH7EfD8U3n2NhFPmZQlKEGWVUfr7c3vFlXqH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IUuFSUhb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XNZM39fu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61E66C4CEE4;
-	Thu, 17 Apr 2025 16:27:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IUuFSUhb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F9FAC4CEE4;
+	Thu, 17 Apr 2025 16:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744907277;
-	bh=4sRq40JH/ISI0UBvuCqCuGv7ETOqS4v59COSIUShOxE=;
+	s=k20201202; t=1744907306;
+	bh=5+bAhaVCEtouC2Gh1wkP9M4D61cnTPG4oGIs+tydw0g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XNZM39fuNQmF+Oy343fYSZMqmC+oaOGw+Fh93KA5zze+js1zftz3VNk16IiGsjL+M
-	 ON2U69G5t9TgorBRiHzWPXLL+6DWcvK6OOmMXGJ+p94goKUNfx+dXVviLyYMy9QiGG
-	 2DjvlVyTO2/7d7BaZDbJqVTD1V738rF/Xc1wJhiXTEs0bdOYlET9eCielQI/Bfi0NG
-	 zqd2QdpRd+r0/TD588R+XSWe4UkxI3017RSZSFHMiG/AUOnX/bJFBmmQXanSmz/R/I
-	 vY0Qkxf49vfiSNUSXUbZ0RdljpvMRn7X2vOhM38wQpIWdCyJd2Wc/bdc1LWF3U9SgW
-	 DTHXdyMvBZBcA==
-Date: Thu, 17 Apr 2025 06:27:56 -1000
-From: Tejun Heo <tj@kernel.org>
-To: gaoxu <gaoxu2@honor.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	=?iso-8859-1?B?Ik1pY2hhbCBLb3V0bv0i?= <mkoutny@suse.com>,
-	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"surenb@google.com" <surenb@google.com>,
-	yipengxiang <yipengxiang@honor.com>
-Subject: Re: [PATCH] cgroup: Fix compilation issue due to cgroup_mutex not
- being exported
-Message-ID: <aAEsDKh79cBV4P3i@slm.duckdns.org>
-References: <24763f5c8a13421fa6dc3672a57a7836@honor.com>
+	b=IUuFSUhbCr0KN9vxBx/yjPs2XDBTvTml7q0EaqU3kVRzCRGw2+w4H2SzSgDsU2eay
+	 kWINEYHYqyuhbaH2emnJMq/6UhEh3NIZbWcE4YpG8hhuLXGCCrOrFtDad8EYwI6Nfs
+	 sUYqFAggBbZhu1UkhPnU50awF9nrdBqgPqb/OpgoqV+relcoekBgTyFWAbyk2wUNZh
+	 Zz23GXyoAEslDzf5L0Qymk6Lmjdbqk28o4OLJq+SvW0f7AzOxwaDCNXxag8rHvP/Ta
+	 JMDt9K74J28voIaRSpBZ+01NEm1ft3HKBZNhomDgTuU8ZYbYH7kI2VpudOGWwWRmar
+	 3CGqnIaAXdsXw==
+Date: Thu, 17 Apr 2025 18:28:20 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Ian Kent <raven@themaw.net>
+Cc: Mark Brown <broonie@kernel.org>, Eric Chanudet <echanude@redhat.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Clark Williams <clrkwllms@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ian Kent <ikent@redhat.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
+	Alexander Larsson <alexl@redhat.com>, Lucas Karpinski <lkarpins@redhat.com>, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
+Message-ID: <20250417-pyrotechnik-neigung-f4a727a5c76b@brauner>
+References: <20250408210350.749901-12-echanude@redhat.com>
+ <fbbafa84-f86c-4ea4-8f41-e5ebb51173ed@sirena.org.uk>
+ <20250417-wolfsrudel-zubewegt-10514f07d837@brauner>
+ <fb566638-a739-41dc-bafc-aa8c74496fa4@themaw.net>
+ <20250417-abartig-abfuhr-40e558b85f97@brauner>
+ <20250417-outen-dreihundert-7a772f78f685@brauner>
+ <20250417-zappeln-angesagt-f172a71839d3@brauner>
+ <20250417153126.QrVXSjt-@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <24763f5c8a13421fa6dc3672a57a7836@honor.com>
+In-Reply-To: <20250417153126.QrVXSjt-@linutronix.de>
 
-On Thu, Apr 17, 2025 at 07:30:00AM +0000, gaoxu wrote:
-> When adding folio_memcg function call in the zram module for
-> Android16-6.12, the following error occurs during compilation:
-> ERROR: modpost: "cgroup_mutex" [../soc-repo/zram.ko] undefined!
+On Thu, Apr 17, 2025 at 05:31:26PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2025-04-17 17:28:20 [+0200], Christian Brauner wrote:
+> > >     So if there's some userspace process with a broken NFS server and it
+> > >     does umount(MNT_DETACH) it will end up hanging every other
+> > >     umount(MNT_DETACH) on the system because the dealyed_mntput_work
+> > >     workqueue (to my understanding) cannot make progress.
+> > 
+> > Ok, "to my understanding" has been updated after going back and reading
+> > the delayed work code. Luckily it's not as bad as I thought it is
+> > because it's queued on system_wq which is multi-threaded so it's at
+> > least not causing everyone with MNT_DETACH to get stuck. I'm still
+> > skeptical how safe this all is. 
 > 
-> This error is caused by the indirect call to lockdep_is_held(&cgroup_mutex)
-> within folio_memcg. The export setting for cgroup_mutex is controlled by
-> the CONFIG_PROVE_RCU macro. If CONFIG_LOCKDEP is enabled while
-> CONFIG_PROVE_RCU is not, this compilation error will occur.
-> 
-> To resolve this issue, add a parallel macro CONFIG_LOCKDEP control to
-> ensure cgroup_mutex is properly exported when needed.
-> 
-> Signed-off-by: gao xu <gaoxu2@honor.com>
+> I would (again) throw system_unbound_wq into the game because the former
+> will remain on the CPU on which has been enqueued (if speaking about
+> multi threading).
 
-Applied to cgroup/for-6.15-fixes.
+Yes, good point.
 
-Thanks.
+However, what about using polled grace periods?
 
--- 
-tejun
+A first simple-minded thing to do would be to record the grace period
+after umount_tree() has finished and the check it in namespace_unlock():
+
+diff --git a/fs/namespace.c b/fs/namespace.c
+index d9ca80dcc544..1e7ebcdd1ebc 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -77,6 +77,7 @@ static struct hlist_head *mount_hashtable __ro_after_init;
+ static struct hlist_head *mountpoint_hashtable __ro_after_init;
+ static struct kmem_cache *mnt_cache __ro_after_init;
+ static DECLARE_RWSEM(namespace_sem);
++static unsigned long rcu_unmount_seq; /* protected by namespace_sem */
+ static HLIST_HEAD(unmounted);  /* protected by namespace_sem */
+ static LIST_HEAD(ex_mountpoints); /* protected by namespace_sem */
+ static DEFINE_SEQLOCK(mnt_ns_tree_lock);
+@@ -1794,6 +1795,7 @@ static void namespace_unlock(void)
+        struct hlist_head head;
+        struct hlist_node *p;
+        struct mount *m;
++       unsigned long unmount_seq = rcu_unmount_seq;
+        LIST_HEAD(list);
+
+        hlist_move_list(&unmounted, &head);
+@@ -1817,7 +1819,7 @@ static void namespace_unlock(void)
+        if (likely(hlist_empty(&head)))
+                return;
+
+-       synchronize_rcu_expedited();
++       cond_synchronize_rcu_expedited(unmount_seq);
+
+        hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
+                hlist_del(&m->mnt_umount);
+@@ -1939,6 +1941,8 @@ static void umount_tree(struct mount *mnt, enum umount_tree_flags how)
+                 */
+                mnt_notify_add(p);
+        }
++
++       rcu_unmount_seq = get_state_synchronize_rcu();
+ }
+
+ static void shrink_submounts(struct mount *mnt);
+
+
+I'm not sure how much that would buy us. If it doesn't then it should be
+possible to play with the following possibly strange idea:
+
+diff --git a/fs/mount.h b/fs/mount.h
+index 7aecf2a60472..51b86300dc50 100644
+--- a/fs/mount.h
++++ b/fs/mount.h
+@@ -61,6 +61,7 @@ struct mount {
+                struct rb_node mnt_node; /* node in the ns->mounts rbtree */
+                struct rcu_head mnt_rcu;
+                struct llist_node mnt_llist;
++               unsigned long mnt_rcu_unmount_seq;
+        };
+ #ifdef CONFIG_SMP
+        struct mnt_pcp __percpu *mnt_pcp;
+diff --git a/fs/namespace.c b/fs/namespace.c
+index d9ca80dcc544..aae9df75beed 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -1794,6 +1794,7 @@ static void namespace_unlock(void)
+        struct hlist_head head;
+        struct hlist_node *p;
+        struct mount *m;
++       bool needs_synchronize_rcu = false;
+        LIST_HEAD(list);
+
+        hlist_move_list(&unmounted, &head);
+@@ -1817,7 +1818,16 @@ static void namespace_unlock(void)
+        if (likely(hlist_empty(&head)))
+                return;
+
+-       synchronize_rcu_expedited();
++       hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
++               if (!poll_state_synchronize_rcu(m->mnt_rcu_unmount_seq))
++                       continue;
++
++               needs_synchronize_rcu = true;
++               break;
++       }
++
++       if (needs_synchronize_rcu)
++               synchronize_rcu_expedited();
+
+        hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
+                hlist_del(&m->mnt_umount);
+@@ -1923,8 +1933,10 @@ static void umount_tree(struct mount *mnt, enum umount_tree_flags how)
+                        }
+                }
+                change_mnt_propagation(p, MS_PRIVATE);
+-               if (disconnect)
++               if (disconnect) {
++                       p->mnt_rcu_unmount_seq = get_state_synchronize_rcu();
+                        hlist_add_head(&p->mnt_umount, &unmounted);
++               }
+
+                /*
+                 * At this point p->mnt_ns is NULL, notification will be queued
+
+This would allow to elide synchronize rcu calls if they elapsed in the
+meantime since we moved that mount to the unmounted list.
