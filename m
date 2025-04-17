@@ -1,226 +1,338 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2056.outbound.protection.outlook.com [40.107.223.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2584722839A
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744881506; cv=none; b=pSZZhEH08qj1wJUaYzkYPJiiG9/8cPoA99Fu9jEswWIAMgUZur74CBHcU5/9LE6+UOghfIRBy3Z6Zjxe8fY2CPZ4fCO6zUaY6eXGsCLKD9U7w/S2390Aj1VCfBfACemrOh4SCnGPt56+C/YaQmuy9KiM3283Wc1YyHmvmpDE6P4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744881506; c=relaxed/simple;
-	bh=PW8c1mWvkfR+W+kDvV9842WyzO/tTkTc3JwNFZ3+Noo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=IkTjgMyJ/jDCaKQWld2gHpjgCwwrILA15mNGHQsAtCWO7GFvmTdKO1OhfmtEFBe7U7bnV2gepdB6Qa6hW6tVl8cXlSqtuevt9fmUtGQMBr/lUnd/wNfZr3vFQoGMWD2VDnf8eGiJHkdTrY3odZqK2/fu4DjxmyEXFyHjlrl5V4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d5da4fb5e0so5531365ab.2
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 02:18:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744881503; x=1745486303;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZBHJfolbH6LTPpISuqRD4FxIFHlU3xIPXVQPhFDXFw0=;
-        b=IG/nS94atsjLyfqPbDUR2prOco2M85AvFj1UuZIVgZEhgKwbeWQ3uuVnkwZBKwhvj2
-         DPs3QJrqXqqLMA21nU53A1CUNKAoB1vD/Lv2WXNbMXEUbEv9u7gBF/JYpCWlRk9HQI1F
-         rO2UE1qcojgPSXHKvWkSw1wVPiciRbyZo7rGLYFsYNThaMZX44SxRm8ClaAo1WhL8FaF
-         CdNCPTOrSvGYN/vL5cPLdiE0HVGowVZVB2MStG8XZUtN6pbH05aqIi3lJ819fkzde1ON
-         6XoyEJRpbov3inAc9fG3nF5OeGcaIU9YdFTBmwnupQIwl5qSHRzF9XfEG1WAojCh7V5h
-         aQjA==
-X-Forwarded-Encrypted: i=1; AJvYcCWcuX/XYT4fO86M/t4Sq3Tl/Hf2FjiAvGaClir9LnY+v9Xu09ZFT5SK2spTWY9Yk8cY/vpd3XT5cnquYT8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0Zv+6oRnvArEEjvYXwzLOlHOwmLuU2oA3e8/zRm+e9RPccpNw
-	aRMok1wZFD2wtVgygvsSxR+t6kFTLlpOYWe/tZNEDk0kcP0TWIJKciCDJgbSpyC5D7634RGyPkE
-	W1oa1K6qM5jx5E1js076hIeuZ4SyVq5fthJFuuTRXyWADH79OVdIhJ6I=
-X-Google-Smtp-Source: AGHT+IFQ2r648nK2DZ6wrTInFuOr6gpYzVmaIHY7z3M7jrXaQPJZmNIXqb/Fu+7gACHl+VcvR6A5WiDkmp0WeckXGdaR2o7vh3i5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D3C207DE3;
+	Thu, 17 Apr 2025 09:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744881527; cv=fail; b=j2QQjFpK47OJ8/JCPHlAg1Cqc0LL775H2oFG2FWm2CASBSKn062x6ZVJ4QZF/Zlyh9CPsScwYh0hb+P0tbbCtF5ynuRRdCH3cwDRGkkjl2MIZuWa0Yi3g+TLeop0udxvXkV9cilEHrMi4eIrXywr1aTwdWundIi+MR1Pzsjn/OE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744881527; c=relaxed/simple;
+	bh=YfthRmJD3btVb2DBS9eT5T1NVuwJlYCn6RISQ/K2jg0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P8oGs+3JRk+ACpSACu5Gyu4sSvWMDAnXK6xhZVHWApHbz76yspgoCffeiqIyfx9OGxxIgEgkRKnVklvNo7MeiO7TgcQsuoSN4lE6pA1wj4U+ijZ6mWP47U+bvkDeHvE54obLbUyHLzlbgLcftO0SJ8MOKSwzjpYOI4FLoJ1SbYg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vPEjGivv; arc=fail smtp.client-ip=40.107.223.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vPEjGivv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GDQL+gIugDZ2shR7VBRiQVXIog9u9gIMhy+H9IRrIMrzBUWCmEO2NdhI+0+w7xL2w3U/mh9wp8wCSc9XB9kw6VQ/i/dPhF/OLaX6pe69DRtJd4FzuMCs1suB2KAb3H354E2YXB9pbz31b+fSmo1gtdfTw7LYj1Reo0RaXErszK55a3GzeC64aDDn964oQX6+Wds7X2RGVg8c1FHiaNGAP8p60dXB1eGxOhVhzVCkxk2inxSWA7IRFMdwYK4X2IJT6iifqdfWDRgSEnMLqyy0SvEMXgHYvmQ8KEgPImvF0xqmFHF3xGmCr1WZ1y+DCeEkyybe/VEtPTDtXttGScK4AQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KqSJ/QoCPWDV4whhgc7+r7rLybWtNPTK5Src9rXOvcc=;
+ b=CRvUMxZIAV5zX11DWHjkcMVUMZXW16tCPAQ16ozg9yw9YntkC3PXWFSMgB9lz3ITcvICYTTxmwtaQwhtXKVO8xKfwv8/ugY3xLH7LPVuHlYgMjhNW9iqne2r6E6g9IKRAnKTcdrcdY58nup6LfdQVt93QGmiYH818+PV8Wb+xDT35+pVtXmIR1mzxdl3SXNYPDM/VIcTXfKu7YEn5soy4BGY1JZ3gfiKdS7CRk2USztszrD20/g8AxfBAo5U79TxoFyY1c+JgaRLIinnQW9h+dAnk/Pc2r53XWmZtCcg7Pi31+2um5ivqmCE368Kk9S6E30mq8LdfeKwLYoRZvQBdQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KqSJ/QoCPWDV4whhgc7+r7rLybWtNPTK5Src9rXOvcc=;
+ b=vPEjGivvnnzfRkGRl4ZkRhAhoVldqI92hwOiTd4mYQ5WTladphOgAeJEX6pAUkTwr5rYTuHmcyvKSjtkEP427HGlinOTIxj1utvGfTXXbhWh4DmDETRoiGOuJ9Nj0IIKT5cSmZJx8Wk2KnJXLFlBAMmoww01z6DKkeEU4q/Yyb8=
+Received: from MN0P221CA0026.NAMP221.PROD.OUTLOOK.COM (2603:10b6:208:52a::14)
+ by MN0PR12MB5908.namprd12.prod.outlook.com (2603:10b6:208:37c::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Thu, 17 Apr
+ 2025 09:18:40 +0000
+Received: from BN2PEPF000055DF.namprd21.prod.outlook.com
+ (2603:10b6:208:52a:cafe::d3) by MN0P221CA0026.outlook.office365.com
+ (2603:10b6:208:52a::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.15 via Frontend Transport; Thu,
+ 17 Apr 2025 09:18:40 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN2PEPF000055DF.mail.protection.outlook.com (10.167.245.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8678.4 via Frontend Transport; Thu, 17 Apr 2025 09:18:40 +0000
+Received: from BLR-L-NUPADHYA.xilinx.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 17 Apr 2025 04:18:33 -0500
+From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+To: <linux-kernel@vger.kernel.org>
+CC: <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>, <nikunj@amd.com>,
+	<Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
+	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
+	<hpa@zytor.com>, <peterz@infradead.org>, <seanjc@google.com>,
+	<pbonzini@redhat.com>, <kvm@vger.kernel.org>,
+	<kirill.shutemov@linux.intel.com>, <huibo.wang@amd.com>,
+	<naveen.rao@amd.com>, <francescolavra.fl@gmail.com>
+Subject: [PATCH v4 03/18] x86/apic: Initialize Secure AVIC APIC backing page
+Date: Thu, 17 Apr 2025 14:46:53 +0530
+Message-ID: <20250417091708.215826-4-Neeraj.Upadhyay@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250417091708.215826-1-Neeraj.Upadhyay@amd.com>
+References: <20250417091708.215826-1-Neeraj.Upadhyay@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3e8d:b0:3d8:1ed0:e167 with SMTP id
- e9e14a558f8ab-3d81ed0e200mr3586855ab.14.1744881503233; Thu, 17 Apr 2025
- 02:18:23 -0700 (PDT)
-Date: Thu, 17 Apr 2025 02:18:23 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6800c75f.050a0220.5cdb3.0010.GAE@google.com>
-Subject: [syzbot] [afs?] BUG: sleeping function called from invalid context in lock_mm_and_find_vma
-From: syzbot <syzbot+844241a52d3e9dccc8d1@syzkaller.appspotmail.com>
-To: dhowells@redhat.com, linux-afs@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, marc.dionne@auristor.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000055DF:EE_|MN0PR12MB5908:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8a714bfc-1808-41d6-dce7-08dd7d90d7bc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|7416014|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?r4aM6sfMMKaDxk3K0zzCqP+e6+qHqieFqWNIdqOCsjVQhq4Pyx3u4iUFKX7d?=
+ =?us-ascii?Q?SOt7948++SHjM5eSZ3mD1sWD2zU+nhRAVDhadLL9KVnsH6jBKdGQQ+fDdB2b?=
+ =?us-ascii?Q?QaxmznvsYxBQqsoo1dxQ6ySmtGeoSd2CpBB7X1POJmdhMSJsp+psYF5EG3Ud?=
+ =?us-ascii?Q?rvQtnjisSq0hX5OncRwL0oedFjzmbDKXF/Fu6t/dMWqNacnMcuQSjAs+bJ7H?=
+ =?us-ascii?Q?AR3aTqIITgvszD6F8kw+Xbo3QRY7GelkzeHERok/Fu0YzfWtLZWmsMcPLtPn?=
+ =?us-ascii?Q?K3mmaL6paZI0aEmi3lt78EcyMZRURrnMEXgs5M8L6dzghv16hhj3BSzC0JRd?=
+ =?us-ascii?Q?qZDj3WYUCWB+OSX1Gkz9dx/eWdLBRsSXEptX+wd6rxB1HlMue2vqjWGiQ/SN?=
+ =?us-ascii?Q?mVPCHyC37k9HMeZQh3tm+7OuE3QSXSzp/fDh68kcfsZmY79lu7jz42bvSENm?=
+ =?us-ascii?Q?n9/2/L47cdFEbkWEbOQJP5lyf3yIDAlZZ5WcpbjhS3PY6fN3qElMC5KVagjQ?=
+ =?us-ascii?Q?qNzXkTLLip3wQHBCTs0yWFuHv/tqoXSAbedtXinXWpxi7hNqo5in8lqIGWNj?=
+ =?us-ascii?Q?1pnRV1VM4Cr4PBLfbpOis66ecDCxAfMgbyoFR1parkWpIrVLeGQ3K4WrBeiJ?=
+ =?us-ascii?Q?+xWpyka8f0bw/J+w1amLGMHCdR8kYM8akO3/OVK6as7lzsdRYKWndOYNiaFT?=
+ =?us-ascii?Q?kb1br2L+N9OlRq0YfcLqHjfuPgNY1ixI81cHKUJdEcnh69I6hw6klS3XPMBK?=
+ =?us-ascii?Q?jHjp91DVtwJueUcY0xvPqdurZ69UTm3+GLsJEgKKK9Q5RXiBL72+UIy6jPcL?=
+ =?us-ascii?Q?iHHMukpA+JJr0u/PeR0W3brPatd4+ERrEVg1lCv240qaGWQclv4VuVHtW4Pd?=
+ =?us-ascii?Q?JbAWXkGQlRVTc9IaGL3Tm73Yh2eArgURHEa+GUK5PCdhJ5mRq0mBaF8VeR8g?=
+ =?us-ascii?Q?4tT+XDzSHT9nkAbO7TsdDAt4XKsZxhXlsVHTf2FqOgWjf09WhD4FDAO4ai2i?=
+ =?us-ascii?Q?rcS0x/Mv6VN77dPZUJKYf/9YFSmFD+bH6P69oI7rfTFCi6r1jPsb/HvqpE40?=
+ =?us-ascii?Q?aeq6CzlCFU9XF2EgEjJL6PmdCmYlEX07r0XNnj93y+u0m9pZjFk/Bs0fJqdt?=
+ =?us-ascii?Q?s1VLfgDfipAonDQ6P2scfLotrbTZzKHM4MdM63G05tyaXoSkcv2nqvYl7nCp?=
+ =?us-ascii?Q?rbkXzXzobtmMI+4AE0HoZqY9bNuYQ+6gLXxVx3zupz6Ugdl1eZKs9TKOSuQS?=
+ =?us-ascii?Q?wGFgfn7G/b6yFrV3Lyxpckt95MPuvPZgyzMiUHNYO9BD5oSJ2rWbfKbPFe4a?=
+ =?us-ascii?Q?cijTBb2T8id7UpruBGBZBjrr8yGcDQ7QWcdIMCdWedGthcao2rd2SX+XjACL?=
+ =?us-ascii?Q?PvIWLTCsZ4LXbhfSEtsSJViEh3/sBLAM3LZZDEWkDH+eaxdvrytvtM5oBpaO?=
+ =?us-ascii?Q?W5RoEPMZyvP6A2R/tLOU/+5+EMR2+Nll+ul/mPAxB8jYKnwzubLVTcDXnyov?=
+ =?us-ascii?Q?fjzUQQ2Oq9su3pHoko3v+lOr3JDOGeFlVMAo?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 09:18:40.4296
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a714bfc-1808-41d6-dce7-08dd7d90d7bc
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000055DF.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5908
 
-Hello,
+With Secure AVIC, the APIC backing page is owned and managed by guest.
+Allocate and initialize APIC backing page for all guest CPUs.
 
-syzbot found the following issue on:
+The NPT entry for a vCPU's APIC backing page must always be present
+when the vCPU is running in order for Secure AVIC to function. A
+VMEXIT_BUSY is returned on VMRUN and the vCPU cannot be resumed if
+the NPT entry for the APIC backing page is not present. Notify GPA of
+the vCPU's APIC backing page to the hypervisor by using the
+SVM_VMGEXIT_SECURE_AVIC GHCB protocol event. Before executing VMRUN,
+the hypervisor makes use of this information to make sure the APIC backing
+page is mapped in NPT.
 
-HEAD commit:    7cdabafc0012 Merge tag 'trace-v6.15-rc1' of git://git.kern..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13750fe4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fb8650d88e9fb80f
-dashboard link: https://syzkaller.appspot.com/bug?extid=844241a52d3e9dccc8d1
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/0f9317cc7b92/disk-7cdabafc.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/b9e0f7e75505/vmlinux-7cdabafc.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/5c11cc51cada/bzImage-7cdabafc.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+844241a52d3e9dccc8d1@syzkaller.appspotmail.com
-
-BUG: sleeping function called from invalid context at kernel/locking/rwsem.c:1546
-in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 6316, name: syz.2.49
-preempt_count: 0, expected: 0
-RCU nest depth: 1, expected: 0
-3 locks held by syz.2.49/6316:
- #0: ffff8880341be9b8 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x247/0x310 fs/file.c:1213
- #1: ffff88805d998148 (&type->i_mutex_dir_key#16){.+.+}-{4:4}, at: iterate_dir+0x4a6/0x760 fs/readdir.c:101
- #2: ffffffff8ed3dfa0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- #2: ffffffff8ed3dfa0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
- #2: ffffffff8ed3dfa0 (rcu_read_lock){....}-{1:3}, at: afs_dynroot_readdir+0x466/0xbe0 fs/afs/dynroot.c:351
-CPU: 1 UID: 0 PID: 6316 Comm: syz.2.49 Not tainted 6.15.0-rc1-syzkaller-00325-g7cdabafc0012 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- __might_resched+0x558/0x6c0 kernel/sched/core.c:8818
- down_read_killable+0x9c/0xcb0 kernel/locking/rwsem.c:1546
- mmap_read_lock_killable+0x1d/0x70 include/linux/mmap_lock.h:193
- get_mmap_lock_carefully mm/memory.c:6355 [inline]
- lock_mm_and_find_vma+0x29c/0x2f0 mm/memory.c:6406
- do_user_addr_fault arch/x86/mm/fault.c:1360 [inline]
- handle_page_fault arch/x86/mm/fault.c:1480 [inline]
- exc_page_fault+0x1c1/0x920 arch/x86/mm/fault.c:1538
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-RIP: 0010:filldir64+0x297/0x690 fs/readdir.c:370
-Code: 80 ff 48 89 df 4c 89 f6 e8 b6 a1 80 ff 4c 39 f3 0f 82 5f 02 00 00 48 39 eb 0f 87 56 02 00 00 0f 01 cb 0f ae e8 48 8b 44 24 58 <49> 89 46 08 48 8b 4c 24 18 48 8b 44 24 50 48 89 01 48 8b 44 24 20
-RSP: 0018:ffffc90004317be8 EFLAGS: 00050283
-RAX: 0000000000000006 RBX: 0000000000000020 RCX: ffff888021749e00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000020
-RBP: 00007ffffffff000 R08: ffffffff8242a51a R09: 0000000000000004
-R10: ffffc90004317bf0 R11: ffffffff8242a2a0 R12: ffff888140ed9661
-R13: ffffc90004317e50 R14: 0000000000000000 R15: 0000000000000005
- dir_emit include/linux/fs.h:3861 [inline]
- afs_dynroot_readdir_cells fs/afs/dynroot.c:310 [inline]
- afs_dynroot_readdir+0x814/0xbe0 fs/afs/dynroot.c:352
- iterate_dir+0x5a9/0x760 fs/readdir.c:108
- __do_sys_getdents64 fs/readdir.c:403 [inline]
- __se_sys_getdents64+0x1e4/0x4c0 fs/readdir.c:389
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f420138d169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f41ff1d5038 EFLAGS: 00000246 ORIG_RAX: 00000000000000d9
-RAX: ffffffffffffffda RBX: 00007f42015a6160 RCX: 00007f420138d169
-RDX: 0000000000000022 RSI: 0000000000000000 RDI: 0000000000000004
-RBP: 00007f420140e990 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f42015a6160 R15: 00007ffd0e8c7678
- </TASK>
-
-=============================
-[ BUG: Invalid wait context ]
-6.15.0-rc1-syzkaller-00325-g7cdabafc0012 #0 Tainted: G        W          
------------------------------
-syz.2.49/6316 is trying to lock:
-ffff88807d326fe0 (&mm->mmap_lock){++++}-{4:4}, at: mmap_read_lock_killable+0x1d/0x70 include/linux/mmap_lock.h:193
-other info that might help us debug this:
-context-{5:5}
-3 locks held by syz.2.49/6316:
- #0: ffff8880341be9b8 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x247/0x310 fs/file.c:1213
- #1: ffff88805d998148 (&type->i_mutex_dir_key#16){.+.+}-{4:4}, at: iterate_dir+0x4a6/0x760 fs/readdir.c:101
- #2: ffffffff8ed3dfa0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- #2: ffffffff8ed3dfa0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
- #2: ffffffff8ed3dfa0 (rcu_read_lock){....}-{1:3}, at: afs_dynroot_readdir+0x466/0xbe0 fs/afs/dynroot.c:351
-stack backtrace:
-CPU: 1 UID: 0 PID: 6316 Comm: syz.2.49 Tainted: G        W           6.15.0-rc1-syzkaller-00325-g7cdabafc0012 #0 PREEMPT(full) 
-Tainted: [W]=WARN
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_lock_invalid_wait_context kernel/locking/lockdep.c:4831 [inline]
- check_wait_context kernel/locking/lockdep.c:4903 [inline]
- __lock_acquire+0xc30/0xd80 kernel/locking/lockdep.c:5185
- lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
- down_read_killable+0xcb/0xcb0 kernel/locking/rwsem.c:1547
- mmap_read_lock_killable+0x1d/0x70 include/linux/mmap_lock.h:193
- get_mmap_lock_carefully mm/memory.c:6355 [inline]
- lock_mm_and_find_vma+0x29c/0x2f0 mm/memory.c:6406
- do_user_addr_fault arch/x86/mm/fault.c:1360 [inline]
- handle_page_fault arch/x86/mm/fault.c:1480 [inline]
- exc_page_fault+0x1c1/0x920 arch/x86/mm/fault.c:1538
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-RIP: 0010:filldir64+0x297/0x690 fs/readdir.c:370
-Code: 80 ff 48 89 df 4c 89 f6 e8 b6 a1 80 ff 4c 39 f3 0f 82 5f 02 00 00 48 39 eb 0f 87 56 02 00 00 0f 01 cb 0f ae e8 48 8b 44 24 58 <49> 89 46 08 48 8b 4c 24 18 48 8b 44 24 50 48 89 01 48 8b 44 24 20
-RSP: 0018:ffffc90004317be8 EFLAGS: 00050283
-RAX: 0000000000000006 RBX: 0000000000000020 RCX: ffff888021749e00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000020
-RBP: 00007ffffffff000 R08: ffffffff8242a51a R09: 0000000000000004
-R10: ffffc90004317bf0 R11: ffffffff8242a2a0 R12: ffff888140ed9661
-R13: ffffc90004317e50 R14: 0000000000000000 R15: 0000000000000005
- dir_emit include/linux/fs.h:3861 [inline]
- afs_dynroot_readdir_cells fs/afs/dynroot.c:310 [inline]
- afs_dynroot_readdir+0x814/0xbe0 fs/afs/dynroot.c:352
- iterate_dir+0x5a9/0x760 fs/readdir.c:108
- __do_sys_getdents64 fs/readdir.c:403 [inline]
- __se_sys_getdents64+0x1e4/0x4c0 fs/readdir.c:389
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f420138d169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f41ff1d5038 EFLAGS: 00000246 ORIG_RAX: 00000000000000d9
-RAX: ffffffffffffffda RBX: 00007f42015a6160 RCX: 00007f420138d169
-RDX: 0000000000000022 RSI: 0000000000000000 RDI: 0000000000000004
-RBP: 00007f420140e990 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f42015a6160 R15: 00007ffd0e8c7678
- </TASK>
-----------------
-Code disassembly (best guess):
-   0:	80 ff 48             	cmp    $0x48,%bh
-   3:	89 df                	mov    %ebx,%edi
-   5:	4c 89 f6             	mov    %r14,%rsi
-   8:	e8 b6 a1 80 ff       	call   0xff80a1c3
-   d:	4c 39 f3             	cmp    %r14,%rbx
-  10:	0f 82 5f 02 00 00    	jb     0x275
-  16:	48 39 eb             	cmp    %rbp,%rbx
-  19:	0f 87 56 02 00 00    	ja     0x275
-  1f:	0f 01 cb             	stac
-  22:	0f ae e8             	lfence
-  25:	48 8b 44 24 58       	mov    0x58(%rsp),%rax
-* 2a:	49 89 46 08          	mov    %rax,0x8(%r14) <-- trapping instruction
-  2e:	48 8b 4c 24 18       	mov    0x18(%rsp),%rcx
-  33:	48 8b 44 24 50       	mov    0x50(%rsp),%rax
-  38:	48 89 01             	mov    %rax,(%rcx)
-  3b:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
-
-
+Co-developed-by: Kishon Vijay Abraham I <kvijayab@amd.com>
+Signed-off-by: Kishon Vijay Abraham I <kvijayab@amd.com>
+Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Changes since v3:
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+ - Use guard(irqsave) instead of local_irq_save()/local_irq_restore().
+ - Use ~0ULL in place of -1ULL for local CPU in savic_register_gpa().
+   Define SVM_VMGEXIT_SAVIC_SELF_GPA for this value.
+ - s/x2apic_savic_setup/savic_setup/
+ - Other cleanups.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+ arch/x86/coco/sev/core.c            | 22 +++++++++++++++
+ arch/x86/include/asm/apic.h         |  1 +
+ arch/x86/include/asm/sev.h          |  2 ++
+ arch/x86/include/uapi/asm/svm.h     |  4 +++
+ arch/x86/kernel/apic/apic.c         |  2 ++
+ arch/x86/kernel/apic/x2apic_savic.c | 42 +++++++++++++++++++++++++++++
+ 6 files changed, 73 insertions(+)
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+index dcfaa698d6cf..6046a325abd6 100644
+--- a/arch/x86/coco/sev/core.c
++++ b/arch/x86/coco/sev/core.c
+@@ -1419,6 +1419,28 @@ static enum es_result vc_handle_msr(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
+ 	return ret;
+ }
+ 
++enum es_result savic_register_gpa(u64 gpa)
++{
++	struct ghcb_state state;
++	struct es_em_ctxt ctxt;
++	enum es_result res;
++	struct ghcb *ghcb;
++
++	guard(irqsave)();
++
++	ghcb = __sev_get_ghcb(&state);
++	vc_ghcb_invalidate(ghcb);
++
++	ghcb_set_rax(ghcb, SVM_VMGEXIT_SAVIC_SELF_GPA);
++	ghcb_set_rbx(ghcb, gpa);
++	res = sev_es_ghcb_hv_call(ghcb, &ctxt, SVM_VMGEXIT_SAVIC,
++				  SVM_VMGEXIT_SAVIC_REGISTER_GPA, 0);
++
++	__sev_put_ghcb(&state);
++
++	return res;
++}
++
+ static void snp_register_per_cpu_ghcb(void)
+ {
+ 	struct sev_es_runtime_data *data;
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index c63c2fe8ad13..562115100038 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -305,6 +305,7 @@ struct apic {
+ 
+ 	/* Probe, setup and smpboot functions */
+ 	int	(*probe)(void);
++	void	(*setup)(void);
+ 	int	(*acpi_madt_oem_check)(char *oem_id, char *oem_table_id);
+ 
+ 	void	(*init_apic_ldr)(void);
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index 13a88a4b52a0..4246fdc31afa 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -520,6 +520,7 @@ int snp_svsm_vtpm_send_command(u8 *buffer);
+ 
+ void __init snp_secure_tsc_prepare(void);
+ void __init snp_secure_tsc_init(void);
++enum es_result savic_register_gpa(u64 gpa);
+ 
+ static __always_inline void vc_ghcb_invalidate(struct ghcb *ghcb)
+ {
+@@ -570,6 +571,7 @@ static inline int snp_send_guest_request(struct snp_msg_desc *mdesc, struct snp_
+ static inline int snp_svsm_vtpm_send_command(u8 *buffer) { return -ENODEV; }
+ static inline void __init snp_secure_tsc_prepare(void) { }
+ static inline void __init snp_secure_tsc_init(void) { }
++static inline enum es_result savic_register_gpa(u64 gpa) { return ES_UNSUPPORTED; }
+ 
+ #endif	/* CONFIG_AMD_MEM_ENCRYPT */
+ 
+diff --git a/arch/x86/include/uapi/asm/svm.h b/arch/x86/include/uapi/asm/svm.h
+index ec1321248dac..436266183413 100644
+--- a/arch/x86/include/uapi/asm/svm.h
++++ b/arch/x86/include/uapi/asm/svm.h
+@@ -117,6 +117,10 @@
+ #define SVM_VMGEXIT_AP_CREATE			1
+ #define SVM_VMGEXIT_AP_DESTROY			2
+ #define SVM_VMGEXIT_SNP_RUN_VMPL		0x80000018
++#define SVM_VMGEXIT_SAVIC			0x8000001a
++#define SVM_VMGEXIT_SAVIC_REGISTER_GPA		0
++#define SVM_VMGEXIT_SAVIC_UNREGISTER_GPA	1
++#define SVM_VMGEXIT_SAVIC_SELF_GPA		~0ULL
+ #define SVM_VMGEXIT_HV_FEATURES			0x8000fffd
+ #define SVM_VMGEXIT_TERM_REQUEST		0x8000fffe
+ #define SVM_VMGEXIT_TERM_REASON(reason_set, reason_code)	\
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index a05871c85183..839397eab8fc 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1502,6 +1502,8 @@ static void setup_local_APIC(void)
+ 		return;
+ 	}
+ 
++	if (apic->setup)
++		apic->setup();
+ 	/*
+ 	 * If this comes from kexec/kcrash the APIC might be enabled in
+ 	 * SPIV. Soft disable it before doing further initialization.
+diff --git a/arch/x86/kernel/apic/x2apic_savic.c b/arch/x86/kernel/apic/x2apic_savic.c
+index bea844f28192..0a2cb1c03d08 100644
+--- a/arch/x86/kernel/apic/x2apic_savic.c
++++ b/arch/x86/kernel/apic/x2apic_savic.c
+@@ -8,17 +8,54 @@
+  */
+ 
+ #include <linux/cc_platform.h>
++#include <linux/percpu-defs.h>
+ 
+ #include <asm/apic.h>
+ #include <asm/sev.h>
+ 
+ #include "local.h"
+ 
++/* APIC_EILVTn(3) is the last defined APIC register. */
++#define NR_APIC_REGS	(APIC_EILVTn(4) >> 2)
++
++struct apic_page {
++	union {
++		u32	regs[NR_APIC_REGS];
++		u8	bytes[PAGE_SIZE];
++	};
++} __aligned(PAGE_SIZE);
++
++static struct apic_page __percpu *apic_page __ro_after_init;
++
+ static int savic_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
+ {
+ 	return x2apic_enabled() && cc_platform_has(CC_ATTR_SNP_SECURE_AVIC);
+ }
+ 
++static void savic_setup(void)
++{
++	void *backing_page;
++	enum es_result res;
++	unsigned long gpa;
++
++	backing_page = this_cpu_ptr(apic_page);
++	gpa = __pa(backing_page);
++
++	/*
++	 * The NPT entry for a vCPU's APIC backing page must always be
++	 * present when the vCPU is running in order for Secure AVIC to
++	 * function. A VMEXIT_BUSY is returned on VMRUN and the vCPU cannot
++	 * be resumed if the NPT entry for the APIC backing page is not
++	 * present. Notify GPA of the vCPU's APIC backing page to the
++	 * hypervisor by calling savic_register_gpa(). Before executing
++	 * VMRUN, the hypervisor makes use of this information to make sure
++	 * the APIC backing page is mapped in NPT.
++	 */
++	res = savic_register_gpa(gpa);
++	if (res != ES_OK)
++		snp_abort();
++}
++
+ static int savic_probe(void)
+ {
+ 	if (!cc_platform_has(CC_ATTR_SNP_SECURE_AVIC))
+@@ -30,6 +67,10 @@ static int savic_probe(void)
+ 		/* unreachable */
+ 	}
+ 
++	apic_page = alloc_percpu(struct apic_page);
++	if (!apic_page)
++		snp_abort();
++
+ 	return 1;
+ }
+ 
+@@ -38,6 +79,7 @@ static struct apic apic_x2apic_savic __ro_after_init = {
+ 	.name				= "secure avic x2apic",
+ 	.probe				= savic_probe,
+ 	.acpi_madt_oem_check		= savic_acpi_madt_oem_check,
++	.setup				= savic_setup,
+ 
+ 	.dest_mode_logical		= false,
+ 
+-- 
+2.34.1
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
