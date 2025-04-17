@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10485253B50;
-	Thu, 17 Apr 2025 15:18:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F50253947;
+	Thu, 17 Apr 2025 15:18:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744903132; cv=none; b=s7mp2hJj76/28Odc4LwI5rUzQenizr63aEU1cSqHCDvfL3dXYhUFvmUVBP011ps8D3guW15pAO0hKlDsyJX+iJxosdn1A9GymimcC2mWXBgdP5/uF7LGx6vBmt8scGsVW7xbSnkzTcn6jsOsK4ejQBBw2RCwnsCfustifGvz+7s=
+	t=1744903135; cv=none; b=HRRBEIiejpHn9ciXsGnMjgfuzSTlGb3Sv2RuOBvrh1czrJ7ME8kqPUZkz67QokzPk08taGvPDLfvGp39yvx0fg6nuUcsAnFTGRUiqjMzm/OeIViMBIxR3kZh1NkDrOjgkIb0hMaG6ZmY0kqrlN6QUslYFuwZ4u7C2reGltXPmtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744903132; c=relaxed/simple;
-	bh=fAdwmBvDWfknm6kM3iUJ9T90mtg2EB2ea1pIuluMZxk=;
+	s=arc-20240116; t=1744903135; c=relaxed/simple;
+	bh=WMM/wu4EpPKC2gJkP++OcdA6brqyyvoMdvoYCiUQdTI=;
 	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=X0VnVYC9oHNY9o2VAftNP2NJyER1gztP08qKjXynY2cycgDUDpGgzGprtK5BOukGDS4R3f92W/ZcxJ51n9avhnUOl7Os20tBdiIu5lN2JU3FnWHNWftpFPp34CwZ12dxMJCcHGZJWw6HPfb4t0ORsEtbqLIT3bsFtoKW6mfFc+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eNXQ/kT0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=om8PVfd59kNJ41u9Mnl+kHAPglGSCOxH51Pu7AP79S8RTBsEqPEb2e5YAYL76EPf2OTbtoGFofnhaFGndsERN3dbQ7ItEIKGnmdzra3Z+FzmrDPnQFKKskuSuh4HtRIZ9015XuSKMuVyvJY/XQNLyKGwijKGpLuhU08gKeJiuyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jpPjCYRw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eNXQ/kT0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EBB2C4CEED;
-	Thu, 17 Apr 2025 15:18:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jpPjCYRw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6B0FC4CEEC;
+	Thu, 17 Apr 2025 15:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744903131;
-	bh=fAdwmBvDWfknm6kM3iUJ9T90mtg2EB2ea1pIuluMZxk=;
+	s=k20201202; t=1744903135;
+	bh=WMM/wu4EpPKC2gJkP++OcdA6brqyyvoMdvoYCiUQdTI=;
 	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=eNXQ/kT0mF1kt1OBrNeeEoG212p1AiGiokCIFkvYZ0mq78A26ciSFd4pqF6M/R4d5
-	 K4Va7Ysid/cpkevzuhyK+QakQQjcdjT5A/5fabXAYiq5qVyDPpyEWTFHslMM2aDBQA
-	 HnsdYhYjJU10LWp7Ani9wLSZCy59MS19TpFa4yikHlHIDnH8mC2TETKYEBl0rOzG4V
-	 0xhhob2jbN5FiI+rVJSh/ImAUKg3TzChlygFzYHr5QAWLFpEQfuAVuPzi0BYYN0edw
-	 +lNaY/zbxVHYI6T/58v4lSrY+EVmNc6ansvVAeoM07OsZ9at02CZor8gQuiAvmQvfZ
-	 bNsq8vRFtz5lg==
+	b=jpPjCYRw6U3tWJrG5joqrwpMmYtMHZdqo9V8xNSR7Z3lpSPF37VWydUfRqoQIVl/A
+	 gbP/up5TDmxcv28s5Vupijx0tg+FMSBzxOgcz1L55Oy9Osqk2BClRb9q+YBGgCFR4o
+	 nuYoJoI7sTI8yIM+QQBkT3COfEVHf5abo3O2/irfTM8KXLjm0Jg3MA6UWqm66yclYy
+	 +dQ/O7AnCq37sQxWQTwkQpzaVqr0I5nWlqb0F7cY1X5YpkANc2GagfCCpZMa4Q7AoN
+	 vaGChrySP15z6+EYqzshBP1MX4jfTDlIxQJJJEpVVrp/6htVAv5Pg6yKlXYR2a+pee
+	 H9o+R5V2YcVww==
 From: Vinod Koul <vkoul@kernel.org>
-To: Basavaraj.Natikar@amd.com, dmaengine@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Eder Zulian <ezulian@redhat.com>
-In-Reply-To: <20250411165451.240830-1-ezulian@redhat.com>
-References: <20250411165451.240830-1-ezulian@redhat.com>
-Subject: Re: [PATCH] dmaengine: ptdma: Remove dead code from
- pt_dmaengine_register()
-Message-Id: <174490313001.238725.12942298542601347160.b4-ty@kernel.org>
-Date: Thu, 17 Apr 2025 20:48:50 +0530
+To: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ wangzhou1@hisilicon.com, liulongfang@huawei.com, 
+ Jie Hai <haijie1@huawei.com>
+In-Reply-To: <20250402085423.347526-1-haijie1@huawei.com>
+References: <20250402085423.347526-1-haijie1@huawei.com>
+Subject: Re: [PATCH] MAINTAINERS: Maintainer change for hisi_dma
+Message-Id: <174490313350.238725.16561551295448743454.b4-ty@kernel.org>
+Date: Thu, 17 Apr 2025 20:48:53 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,20 +46,17 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Fri, 11 Apr 2025 18:54:51 +0200, Eder Zulian wrote:
-> devm_kasprintf() is used to allocate and format a string and the
-> returned pointer is assigned to 'cmd_cache_name'. However, the variable
-> 'cmd_cache_name' is not effectively used.
-> 
-> Remove the dead code.
+On Wed, 02 Apr 2025 16:54:23 +0800, Jie Hai wrote:
+> I am moving on to other things and longfang is going to
+> take over the role of hisi_dma maintainer. Update the
+> MAINTAINERS accordingly.
 > 
 > 
-> [...]
 
 Applied, thanks!
 
-[1/1] dmaengine: ptdma: Remove dead code from pt_dmaengine_register()
-      commit: 862f3c49a86b85f314c09437d0afd1afc2c02fdd
+[1/1] MAINTAINERS: Maintainer change for hisi_dma
+      commit: 1c398492b2e8d5daf83773684699f03b06af44ce
 
 Best regards,
 -- 
