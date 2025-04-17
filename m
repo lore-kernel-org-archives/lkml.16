@@ -1,176 +1,137 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BF4366;
-	Thu, 17 Apr 2025 03:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F9F374C4;
+	Thu, 17 Apr 2025 03:29:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744860365; cv=none; b=jceR3CEnxefXrxV1maxoCNgLUl8JN4DBo12MDBWgjem9H6u+S+yf6C0FKDY584LoOnVIk9aisgU4Ev33Q28ozYZgU4McbiKNJbAV5tkefvSaaNxxF6CFGGH7ZB/Zl4ouqTWcrsIro4DTK8vs1TphdqJtRAUAHwpTJwiAMfsLWNI=
+	t=1744860580; cv=none; b=o9xW2Vqlit0ZP4iqTYtHuj2zN9nVQYnYSVpcxPGn8v2cpnG082X5L8CV2hId51BPrmNYi1YNogw/O0epLn30nNQZjuCqh8JsgmZJiMJuE7mV3BLvv4eL59s9a7TM7QPuyul6vpDqSFM+AyVEPnSdRZLsQBAqoDmaN8kirpnyuXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744860365; c=relaxed/simple;
-	bh=7sVoXT7XKlN8U5vje+Hb02RZjNt/UJds8IKOz4ZJvys=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JAFuqpFvFrC7xvbAD3dcjLjR7wBozjJyUtk9BVPGEtcBxj/iltnuvU7gAA36Xiz9ns2elaFsmc9CSgqENQp9kmWpnx9zbW6lbUnO7sjX4uBJ2t2O89K4EyRVgBxrcPRyUFZdBQbUCo8EOZDHhMlmucpFcqtga+kTcdlPokBd06U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bh5SKE0i; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744860580; c=relaxed/simple;
+	bh=jlqPVasGC1ykd+2aDFH4bupQjT9GBrbdsJAsG4hnLGM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qjOepZqabSuYKa4cLgoPaJZeZ3gtezOgBTB5iF/zlKTaxPYXb9iDubahphE42OHqLgb5kkoQGiyHMfS2pVShAqZtV3nNzir3gFx47jbnA0dD3D9m5FE/R6xALpkfxf7dwvEjos/X06Ufg3itFjHikSpDuaEdl871DtmlIKg1Fd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Oh77/Ta1; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bh5SKE0i"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3054ef26da3so186933a91.3;
-        Wed, 16 Apr 2025 20:26:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744860363; x=1745465163; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5rS65ywkzEPVtHQpoEzb/xOFumWoUK7lTFewz48Ob8M=;
-        b=bh5SKE0itvUQR0ltFvdZ/04mxVCE6Ww0C4RmWV9X9ofirqHMVbDGt9YyDOpkEq2o+p
-         YZw5unH7E9MOzFopg/PrgooIsvZCTV0FTlPma7sv6MzbVCymYdkxi3iQfc+KMVhkVLOc
-         Q2VMWiSdQNQqTTQpFRQseOiptKb/+yLWdROACdcDQW2DSWR8ey2593eDoCjvNNWHjoUZ
-         rpenwGCXyCex6KFi0P+Yoqr+1gNcO3Qp35bnZ3CspJa+vWfijpRzmHv2hTB/NYK6zEDc
-         A9rQduD3gHjk7NcFwKrWLSTRB7za4D8RIAI3x+Vz9qgFRnp5Nv86nWT+cndDLljbb9wX
-         AGcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744860363; x=1745465163;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5rS65ywkzEPVtHQpoEzb/xOFumWoUK7lTFewz48Ob8M=;
-        b=hpOT7SvF/GWfNpCVGH4rzpYzoYxbl49QULPCTJmxzcTzO5OY9a10ynaEfvBx12OcPL
-         20KnhkLxbNWrpRhxI3WlcB8ruYSWSf/PTGvGlEXoK6nGWEaRwSg/b6WtmWg1nHgijrTI
-         E/Fw9EDrKregDtItPJdTg+JnY2ZWuyzCP16ELnd09CA7OHA9YdOB1SBKEshY4M1tFiNL
-         LbMkAOkRJNUDD9yfqa+GrlZlMEg5Rtdv1cB65kXJ9DHJAeNsRSdJx52LlagTni76OpM5
-         0FeQyYlhjYw7hT1h5ZKmOOTj5hzW/u0ZZQ8wgtsAbwUa5y50vwbm5ttXnpkz7JBYA0tm
-         f6og==
-X-Forwarded-Encrypted: i=1; AJvYcCWbEoVq9YHD58xHnEZZYldcqPSemy48R086+n8tPRtoYcXMLfVTMn9XEGHD/UkQdsaIi/+9HcFV@vger.kernel.org, AJvYcCWc8JkjUOEd76Ir/UjazZ+rNKrRN8FfJE835VQmf80cyU5HqnFzVY4av5mNO2sCCVacLMtMKNTsJQO6K00=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwF1/eXg0T+/AIDQSOGygBm60sMBXdTN+odH/2GW22O8ZTjxoET
-	LwME1MFpJG0Ze6SW29UeJeu1b4zz1Ekf+v1C2l7h4sFl2fHHBfL7A8lf3iFjAdo=
-X-Gm-Gg: ASbGncvYHMM/Rw+IPKoJFwE1cYjv2rO3NSmC77pZLTi9wTGMDWaDI+fgZ8OA5WvnMQP
-	5w5LW1l9dBUMLVwYPbERkehp99LX1wrEbmaRv83v7fkyIzIQsftPi/LLizhYuRXG6y7/tGaYrrN
-	ckOzNAGh5a8aQLVMdp1lYbxBhlD43EKWbHY3UpRgPp6iQHX7nO9wFVhxBPEeVU56UWc+i46SwfG
-	ZvJrUZ4iJHHl+6qPSp/GQmGJrLKeBVNus9ffW96hyQwmu5Okb86dnXk35Z/U48r0RZNklMr0WI/
-	LfArE0zre26lK3BluWH42FC7VrFVO+iUIw==
-X-Google-Smtp-Source: AGHT+IGblRydXyNhcA3GeQ8a1oibWNPa3oj7Gy5lonhqrT2rZXBiN/eFky9E8IOo3IujZT1TbDmIlg==
-X-Received: by 2002:a17:90b:520f:b0:2f4:49d8:e6f6 with SMTP id 98e67ed59e1d1-30863d201b9mr5461741a91.3.1744860363149;
-        Wed, 16 Apr 2025 20:26:03 -0700 (PDT)
-Received: from gmail.com ([116.237.135.88])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-308611d6d58sm2485169a91.8.2025.04.16.20.25.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 20:26:02 -0700 (PDT)
-From: Qingfang Deng <dqfext@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	"Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-	Nathan Sullivan <nathan.sullivan@ni.com>,
-	Josh Cartwright <josh.cartwright@ni.com>,
-	Zach Brown <zach.brown@ni.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Chuanhong Guo <gch981213@gmail.com>,
-	Qingfang Deng <qingfang.deng@siflower.com.cn>,
-	Hao Guan <hao.guan@siflower.com.cn>
-Subject: [PATCH net] net: phy: leds: fix memory leak
-Date: Thu, 17 Apr 2025 11:25:56 +0800
-Message-ID: <20250417032557.2929427-1-dqfext@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Oh77/Ta1"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53H3TR952971983
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 22:29:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744860567;
+	bh=ZybCaegNwM4Mhdme7ie8tDG2/MD9+wEJuMfumqWYcxs=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=Oh77/Ta1cA2spSYlOCajSt7iUrBWGPh3XMG/daGR1vFMikEl7Ynu9xTRsREyAOP3M
+	 0+NcpyWw+E0aSppYTFBMCKkQN5dKfhABz+RyDSg7F5gsGqjw+/5XnHIhSmKh9Mg6Si
+	 JrLixEMXhsoynS5aJ8mBhw/KnFeZLe9y9ZC5iCns=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53H3TRud019651
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 16 Apr 2025 22:29:27 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 16
+ Apr 2025 22:29:27 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 16 Apr 2025 22:29:27 -0500
+Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53H3TRMV044506;
+	Wed, 16 Apr 2025 22:29:27 -0500
+Date: Wed, 16 Apr 2025 22:29:26 -0500
+From: Bryan Brattlof <bb@ti.com>
+To: Robert Nelson <robertcnelson@gmail.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Vignesh
+ Raghavendra" <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
+        Andrew Davis
+	<afd@ti.com>, Roger Quadros <rogerq@kernel.org>,
+        Siddharth Vadapalli
+	<s-vadapalli@ti.com>, Judith Mendez <jm@ti.com>,
+        Andrei Aldea
+	<a-aldea@ti.com>, Dhruva Gole <d-gole@ti.com>,
+        Jason Kridner
+	<jkridner@beagleboard.org>,
+        Deepak Khatri <lorforlinux@beagleboard.org>,
+        Ayush Singh <ayush@beagleboard.org>
+Subject: Re: [PATCH v3 2/2] arm64: dts: ti: Add k3-am62-pocketbeagle2
+Message-ID: <20250417032926.xamsafgue2ryj7sa@bryanbrattlof.com>
+X-PGP-Fingerprint: D3D1 77E4 0A38 DF4D 1853 FEEF 41B9 0D5D 71D5 6CE0
+References: <20250415225940.3899486-1-robertcnelson@gmail.com>
+ <20250415225940.3899486-2-robertcnelson@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20250415225940.3899486-2-robertcnelson@gmail.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Qingfang Deng <qingfang.deng@siflower.com.cn>
+On April 15, 2025 thus sayeth Robert Nelson:
+> BeagleBoard.org PocketBeagle 2 is an upgraded version of the popular
+> PocketBeagle.  It is based on Texas Instruments AM6232 or AM6254 SoC.
+> Its dual or quad A53 cores can provide higher performance than classic
+> PocketBeagle. The new design comes with pre-soldered headers, a 3-pin
+> JST-SH 1.00mm UART debug port, a USB-C port, Texas Instruments
+> MSPM0L1105 Cortex-M0+ MCU for ADC, 512MB RAM, and a LiPo Battery charger.
+> 
+> MSPM0L1105 firmware source: https://openbeagle.org/pocketbeagle/mspm0-adc-eeprom
+> * EEPROM 24c32 emulation
+> * ADC ad7291 emulation
+> 
+> https://www.beagleboard.org/boards/pocketbeagle-2
+> https://openbeagle.org/pocketbeagle/pocketbeagle-2
+> 
+> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+> CC: Rob Herring <robh@kernel.org>
+> CC: Krzysztof Kozlowski <krzk+dt@kernel.org>
+> CC: Conor Dooley <conor+dt@kernel.org>
+> CC: Vignesh Raghavendra <vigneshr@ti.com>
+> CC: Nishanth Menon <nm@ti.com>
+> CC: Andrew Davis <afd@ti.com>
+> CC: Roger Quadros <rogerq@kernel.org>
+> CC: Siddharth Vadapalli <s-vadapalli@ti.com>
+> CC: Judith Mendez <jm@ti.com>
+> CC: Andrei Aldea <a-aldea@ti.com>
+> CC: Dhruva Gole <d-gole@ti.com>
+> CC: Jason Kridner <jkridner@beagleboard.org>
+> CC: Deepak Khatri <lorforlinux@beagleboard.org>
+> CC: Ayush Singh <ayush@beagleboard.org>
+> ---
+> Changes since v2:
+>  - cleanup unused serial aliases
+>  - cleanup unused sdhci0 (un-populated) aliases
+>  - cleanup unused main_i2c1 (un-populated) aliases
+>  - add missing main_i2c0 aliases
+>  - fix bootph, function, color, gpios order in leds nodes
+>  - drop local cpsw disable, needs to be moved to k3-am62-main
+>  - MSPM0L1105 add firmware source and note where emulated
+>  - usb0 add note about Type-C connector, but only wired for USB 2.0
+>  - usb1 add compatible note with original PocketBeagle expansion boards
+> Changes since v1:
+>  - fix '_' in main-i2c2-default-pins
+>  - aliases i2c match original pocketbeagle
+>  - add mcu_m4fss with reseved memory and mailbox
+>  - drop unused main_gpio0_pins_default pinmux
+>  - drop unused main_gpio1_pins_default pinmux
+>  - drop unused main_spi2_pins_gpio pinmux
+>  - Reserve 128MiB of global CMA
+> ---
 
-A network restart test on a router led to an out-of-memory condition,
-which was traced to a memory leak in the PHY LED trigger code.
+I must say this is a fun little board! Excited to see all the carrier 
+boards people will make :)
 
-The root cause is misuse of the devm API. The registration function
-(phy_led_triggers_register) is called from phy_attach_direct, not
-phy_probe, and the unregister function (phy_led_triggers_unregister)
-is called from phy_detach, not phy_remove. This means the register and
-unregister functions can be called multiple times for the same PHY
-device, but devm-allocated memory is not freed until the driver is
-unbound.
+Reviewed-by: Bryan Brattlof <bb@ti.com>
 
-This also prevents kmemleak from detecting the leak, as the devm API
-internally stores the allocated pointer.
-
-Fix this by replacing devm_kzalloc/devm_kcalloc with standard
-kzalloc/kcalloc, and add the corresponding kfree calls in the unregister
-path.
-
-Fixes: 3928ee6485a3 ("net: phy: leds: Add support for "link" trigger")
-Fixes: 2e0bc452f472 ("net: phy: leds: add support for led triggers on phy link state change")
-Signed-off-by: Hao Guan <hao.guan@siflower.com.cn>
-Signed-off-by: Qingfang Deng <qingfang.deng@siflower.com.cn>
----
- drivers/net/phy/phy_led_triggers.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/net/phy/phy_led_triggers.c b/drivers/net/phy/phy_led_triggers.c
-index bd3c9554f6ac..60893691d4c3 100644
---- a/drivers/net/phy/phy_led_triggers.c
-+++ b/drivers/net/phy/phy_led_triggers.c
-@@ -93,9 +93,8 @@ int phy_led_triggers_register(struct phy_device *phy)
- 	if (!phy->phy_num_led_triggers)
- 		return 0;
- 
--	phy->led_link_trigger = devm_kzalloc(&phy->mdio.dev,
--					     sizeof(*phy->led_link_trigger),
--					     GFP_KERNEL);
-+	phy->led_link_trigger = kzalloc(sizeof(*phy->led_link_trigger),
-+					GFP_KERNEL);
- 	if (!phy->led_link_trigger) {
- 		err = -ENOMEM;
- 		goto out_clear;
-@@ -105,10 +104,9 @@ int phy_led_triggers_register(struct phy_device *phy)
- 	if (err)
- 		goto out_free_link;
- 
--	phy->phy_led_triggers = devm_kcalloc(&phy->mdio.dev,
--					    phy->phy_num_led_triggers,
--					    sizeof(struct phy_led_trigger),
--					    GFP_KERNEL);
-+	phy->phy_led_triggers = kcalloc(phy->phy_num_led_triggers,
-+					sizeof(struct phy_led_trigger),
-+					GFP_KERNEL);
- 	if (!phy->phy_led_triggers) {
- 		err = -ENOMEM;
- 		goto out_unreg_link;
-@@ -129,11 +127,11 @@ int phy_led_triggers_register(struct phy_device *phy)
- out_unreg:
- 	while (i--)
- 		phy_led_trigger_unregister(&phy->phy_led_triggers[i]);
--	devm_kfree(&phy->mdio.dev, phy->phy_led_triggers);
-+	kfree(phy->phy_led_triggers);
- out_unreg_link:
- 	phy_led_trigger_unregister(phy->led_link_trigger);
- out_free_link:
--	devm_kfree(&phy->mdio.dev, phy->led_link_trigger);
-+	kfree(phy->led_link_trigger);
- 	phy->led_link_trigger = NULL;
- out_clear:
- 	phy->phy_num_led_triggers = 0;
-@@ -147,8 +145,13 @@ void phy_led_triggers_unregister(struct phy_device *phy)
- 
- 	for (i = 0; i < phy->phy_num_led_triggers; i++)
- 		phy_led_trigger_unregister(&phy->phy_led_triggers[i]);
-+	kfree(phy->phy_led_triggers);
-+	phy->phy_led_triggers = NULL;
- 
--	if (phy->led_link_trigger)
-+	if (phy->led_link_trigger) {
- 		phy_led_trigger_unregister(phy->led_link_trigger);
-+		kfree(phy->led_link_trigger);
-+		phy->led_link_trigger = NULL;
-+	}
- }
- EXPORT_SYMBOL_GPL(phy_led_triggers_unregister);
--- 
-2.43.0
-
+~Bryan
