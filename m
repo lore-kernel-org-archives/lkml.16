@@ -1,92 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B469253B4E;
-	Thu, 17 Apr 2025 15:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7FEA253B7E
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:57:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744905397; cv=none; b=na44gu9tE5WX60vXgE0k8lxd1rpz2YaxmLXL51X17nvE/S1mA0fRdKNMKWjlDC9oIQ0vrI4THRrd0CUo/25d+8bycR5km38cgu9IEeZS7409ge69hs4w4+HgLQ82xdrtmG12iX3dwh55S5t73wNyHnyeKXid3C4EcMiD10rCS2g=
+	t=1744905477; cv=none; b=f5MB/MIAbHLOdKccUsgvHG0utjMFK1oe8gYKh/cJmiI7wNOwhlDTMHSPUMrRwp5cZhBCHrAq9yfakQLH0uc/91pbR0kQ6wwDWMivrDpA0LjQ7II7S3Dm9fj7G8z0jZykMGofP3GGyudjmmU5MCzHT4HAbvZajhYfTKaKgBScW4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744905397; c=relaxed/simple;
-	bh=uldIoo2ppczQb9y0R5Iyi2s+eQoDhHt8SZj5mwVhK+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sP3J3PLSsU8JIF0R0Zcrei8yi6H9WIVooMEfiYKMMOyU6yvXNtLkyA/h2S2rDMAuuA4Gf3yfCjfUt/7UbBSeEX6lUCySgAoNq98nPTJK/exztyvm6MDjH5wLhk3k0JaKPBxbolG6ovjRhcfJtlRMJbC7kP7qAK20LqpOdRXQDnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fUkzKRA/; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744905477; c=relaxed/simple;
+	bh=oqpZymM7yF3tIuS4VpohAgmdi+lxdVuXMSrd7IogELc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Mgy3IdZDGp737Uw/SxMjGm8x+ytGfR0xJpZROfF3rxBpphX7/eD7Zf/guzB7ueEL8a/0Z0Gwj7tPmMdMNs0Q5mLqhC24zG6P6ANBkJtDxwtwORwLxVR3k6zZOsmpzDpRHxd72TszSIZmFV2mzdYwU1t1nok2ACYnkt16IA+EYus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=b2to7UCe; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fUkzKRA/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744905396; x=1776441396;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uldIoo2ppczQb9y0R5Iyi2s+eQoDhHt8SZj5mwVhK+4=;
-  b=fUkzKRA/q9WdT2oj/zY8DDQKovLBUvgFTnQ71qQEWwGdpKVWhki0EHCu
-   a/wbSZhG5DZBFWCkvSylfu3QsR+dkgpahxD9dg3uMMX8jOD5vkv0hEMYv
-   3r+ij0iEEwwOdni5TNuj3NEFB52bOejrSFo7e5jQksWN+6aqNwrWu5AqB
-   /M+X9iP4koCCmJDbCb65i7cPhlq3S8eg55aHjLmcKR/UU7g959liEA6zp
-   Uwmv2NAJMevVJZPySVV6aW5ubOZirsb9VhVEH4Y3m2A3xDTZ4tYHaXDQb
-   SWLsFQLfgbfJ0zGS8C5SpwuGwKzgnw7/rdEUzkjQAToVJqcdT8vSXhAoQ
-   A==;
-X-CSE-ConnectionGUID: A+9NiFhfQRqE6sffJ0rhvg==
-X-CSE-MsgGUID: SC7l47ZRQqinInbNWTATBQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="57887199"
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="57887199"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 08:56:35 -0700
-X-CSE-ConnectionGUID: WxsXR6KER5KP3y85PdRo+g==
-X-CSE-MsgGUID: urzKjAbSRbW4BPr5G6qR5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="130603333"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 08:56:34 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u5RbL-0000000DFC7-1VZZ;
-	Thu, 17 Apr 2025 18:56:31 +0300
-Date: Thu, 17 Apr 2025 18:56:31 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: duplicate patches in the gpio-intel tree
-Message-ID: <aAEkrx0P5LFj1r6a@smile.fi.intel.com>
-References: <20250417154447.642f2ec4@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="b2to7UCe"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 27B74240103
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 17:57:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1744905474; bh=oqpZymM7yF3tIuS4VpohAgmdi+lxdVuXMSrd7IogELc=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version:From;
+	b=b2to7UCeekGueffdpZ/leT7csXcA2zK4YGfuK2vZOy4IXM/V9HzsYlKeh5Iau22yl
+	 OnJpO9HTVobzqtpNMw0m2diedEjJLQ45WyDzf1Q/ZRf1JlklfHCA9frNSqcnse2+T+
+	 aYulrX2yWU5CGYdHONx5R8snxu2lEq7JMWF8yZfx7A9bNkHI3+mX0tIn1LRJ/9V5DJ
+	 wybiHglCRQwNF489x1C0CnhgemYllWhpaWliANIjLFLOoGu2/z8HRL4id98OZNZuWQ
+	 e/fUZLOKlTk9C1e23WIH0Gwb1dEJzeZqGYqlWON/8L/MIv2cNTzyWbgBMYqUM82UZH
+	 NLhexUnFx0VOQ==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4ZdjGS1Zy1z9rxB;
+	Thu, 17 Apr 2025 17:57:52 +0200 (CEST)
+Message-ID: <2cc70f19c1b001ea7f2cf0632618d060f69faef0.camel@posteo.net>
+Subject: Re: [PATCH] iio: frequency:: Remove unused parameter from data
+ documentation
+From: Charalampos Mitrodimas <charmitro@posteo.net>
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev, 
+	gregkh@linuxfoundation.org, jic23@kernel.org, lars@metafoo.de, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-staging@lists.linux.dev, Michael.Hennerich@analog.com
+Date: Thu, 17 Apr 2025 15:57:48 +0000
+In-Reply-To: <56edfb88d3f31939fb343149bfad436f24671f9d.camel@posteo.net>
+References: <20250417143220.572261-1-gshahrouzi@gmail.com>
+	 <56edfb88d3f31939fb343149bfad436f24671f9d.camel@posteo.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417154447.642f2ec4@canb.auug.org.au>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Apr 17, 2025 at 03:44:47PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> The following commits are also in the gpio-brgl tree as different commits
-> (but the same patches):
-> 
->   8f4543e980ff ("gpio: ich: use new line value setter callbacks")
->   b7a49fd57be3 ("gpio: graniterapids: use new line value setter callbacks")
-> 
-> These are commits
-> 
->   69e230a0a288 ("gpio: ich: use new line value setter callbacks")
->   04eaa41eb8eb ("gpio: graniterapids: use new line value setter callbacks")
-> 
-> in the gpio-bgrl tree.
+On Thu, 2025-04-17 at 15:53 +0000, Charalampos Mitrodimas wrote:
+> On Thu, 2025-04-17 at 10:32 -0400, Gabriel Shahrouzi wrote:
+> > The AD9832 driver uses the Common Clock Framework (CCF) to obtain
+> > the
+> > master clock (MCLK) frequency rather than relying on a frequency
+> > value
+> > passed from platform data.
+> >=20
+> > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> > ---
+> > =C2=A0drivers/staging/iio/frequency/ad9832.h | 1 -
+> > =C2=A01 file changed, 1 deletion(-)
+> >=20
+> > diff --git a/drivers/staging/iio/frequency/ad9832.h
+> > b/drivers/staging/iio/frequency/ad9832.h
+> > index 98dfbd9289ab8..d0d840edb8d27 100644
+> > --- a/drivers/staging/iio/frequency/ad9832.h
+> > +++ b/drivers/staging/iio/frequency/ad9832.h
+> > @@ -13,7 +13,6 @@
+> > =C2=A0
+> > =C2=A0/**
+> > =C2=A0 * struct ad9832_platform_data - platform specific information
+> > - * @mclk:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0master clock in Hz
+>=20
+> Hi Gabriel,
+>=20
+> This seems to be a leftover from
+> 566564e80b0ed23ffa4c40f7ad4224bf3327053a ("staging: iio: ad9832: use
+> clock framework for clock reference")
 
-I expect that gpio-bgrl should drop these. Bart?
+That said, a Fixes: tag might be helpful?
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+>=20
+>=20
+>=20
+> > =C2=A0 * @freq0:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0power up freq0 tuning word in Hz
+> > =C2=A0 * @freq1:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0power up freq1 tuning word in Hz
+> > =C2=A0 * @phase0:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0power up phase0 value [0..4095] correlates
+> > with 0..2PI
+>=20
+>=20
 
