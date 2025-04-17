@@ -1,170 +1,130 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8852C23AE7C
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5DE242912;
+	Thu, 17 Apr 2025 12:04:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744891455; cv=none; b=rcsCLQWKOWVfy7c1KKyNSnJ6rGx9qYMfXrbVLWXd3Oe7uuxhAz+d1+x7O3jh4IX1SW8/MUGcXfXJ6clvScylP4zmVvP8wPFfdNs9zTySm/QMWoRc12m7mPXuHPFkVSjQri0imVtZDLFQkSBGp4adi/BqiVBfR5zaL+ufDw+5sTw=
+	t=1744891461; cv=none; b=B+HB4gs4KngOHfMTcCid2Qa3Q6UkrFoag/A7ZPPH/IVCf4ayajNo2uPW0HcB8OqkXcidfitRBcUErBqBtb+3kLttSbrFYtiS1+Kr/67oUC5mVjHDMtgNLvJP4CNeR4BOOxcH+v1Vwg4S0eENJwHbkUd6y/J+15oUl2+82zEn+ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744891455; c=relaxed/simple;
-	bh=dnPw/6WDA5NvkvubmkIBTjNuGbUeGZwq+sspzVMsaT8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J8U/KqfNBFMw9sTfs+XXTl5dpQ6EE2laCVwxCRfy76k7SH3qmuInUOkbUTkoyIqxehySYvDyUuR+CrXHCbpkqZdbG2naausB/ccB2j1GrZCuOssw+JJpQO8pB3KCZFE1rabxiPSDb4mcJR0XQhFp+U0k+805VCunTwY/KrXcVgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A+BXfnyd; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744891461; c=relaxed/simple;
+	bh=idyzSfJRd1KC3E10h0F8BgvdlVezLDki1ghCKDVY6KU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jJ5eE+FSROCSTfzpvknivlGRuSepQbgY+LneqzTm9ewEtR/sv+Q8uNhESrdWeU4uZHb8qWn0+MC9YG6aqewP4cgtqKOeKGWa4EYK3eXTA8jSFO9EX0+SNoY+gJ8U7DA+I4a9toIwxxBIrHZyHjH+lE1JbwD/AhCpndPXPzrDCo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pp8P81wE; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A+BXfnyd"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43ce4e47a85so855285e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:04:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744891451; x=1745496251; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=AIdCl/5qC9ELUd0iM51tsEop4bjwaQ4gO/Adiu/i0gc=;
-        b=A+BXfnydeJSmilbhCgUlt9Cas6WVbTGg5FNU6cmMIER8ahwL1W2MbPOchTSqhbXTri
-         MpPYU2mgXlm53uPBL1Jsj2xJ2BAAJrDyzYW2FxdulIS4q0S4T9RRiatyo1w0f3+m9ssV
-         wVX46kNraOd2BIfnom48kcGkDKT+CA47/LzE41orX47h1vprISGgskaZ6zSM6wJywfn0
-         PEWtcMsegHyODpIbGLxQIP16C/ZmhokhhoiqaOFYptW8mKsy0E+Q2RgPtHvNc8xDeltp
-         4cR+EX/0W1mUzk5rUNJBiHiRSz/acoUmNuqDj68yzDy5sHVpLd7zzX0ciCiZ009CENna
-         owVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744891451; x=1745496251;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AIdCl/5qC9ELUd0iM51tsEop4bjwaQ4gO/Adiu/i0gc=;
-        b=TGxZzNVxi8BxfFUuszw0u3ZzhJMoqtZdqGy6t5ZvHfc2oD1FSx5+gdcWcydJskA/fL
-         FxkU9F45E3WfishQD7s5+84RngEI25jW6PlHiZb6Ld2hbn85iMR0n6F4nFIig7Y4cPax
-         YkugWth49UTibpUAbBwHCOr2QXDGNd7dns7l7pgNgB39qW1ONIkuYIhXZuqjKdIyAZ1Q
-         Z3XBR+y6jzhP62lYHqOwikloFNvNYJE6L5kAKzfWxXXxORacMJBAeVzRpyVUm3TsvD0a
-         Qmc2rGg75+WJUOkb3BMIgzRjX3wEsT2vOmy17RDeT/ms09uXe7wQ/uG+vJ0txUuhwwdJ
-         Cnfw==
-X-Forwarded-Encrypted: i=1; AJvYcCVPPRtPBUzRiCIDJn2X9ehjqOUK+VhsvicqJ6VT+nsvGeovnBDzhfC3Oog7QV67pdh+HXSApigYkvJkQAw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZ09BgkjPBz38UxMBJGP+JsQUie1Bz1yfW/KOX8OVxqKp659Mg
-	VziXIm84r2Aa0kqwwFt6oO+mTuTS9fOkeeq9/PILBzmsjz7VlTUPTf60wmDa/wE=
-X-Gm-Gg: ASbGncusKJQJM96eU9KCto3RCrKWgk8TmF2fugcudZIjEBucGD6fu2vZ4NYebYb0Zwu
-	OEFPulEu70lLD+x/8aWi5XeI3sitejixruDVONeb/+M1ylMHTbjISM+PwEPaBytDwOpqgXz7INv
-	pRGg1B8BrERXfLuDdpm7lOBYwqWm4662xntvnp1k9cGpmkuf3tKBSxlsd8AzzeHIbPvCZ4y6te+
-	09W9yxH5AqvlzeUu2Vzo2GgoScZ4iz9BkY0oz/E+RLAn2asHf27zDdbgFRrkAaQKvwjUO4sZLkq
-	V7ppHYuRsZhPW+qljlbdTV6rlR9COD4Y4porWKoHL3pnKgr7jDVACvj5xBksSmEwZg5sPthr1Er
-	isKa3XZ+UIWyNd/VJ
-X-Google-Smtp-Source: AGHT+IED1Xnj9v0JnQwcOVttYnoHyhkKM/R+mA/Fw2SQCf/1dnCXdY6vmR1cIpyP4BRWLBv6GiuwYA==
-X-Received: by 2002:a05:6000:4026:b0:391:c42:dae with SMTP id ffacd0b85a97d-39ee8fa23e1mr1035766f8f.4.1744891450761;
-        Thu, 17 Apr 2025 05:04:10 -0700 (PDT)
-Received: from [192.168.0.101] (46.150.74.144.lvv.nat.volia.net. [46.150.74.144])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96c5f2sm20184959f8f.34.2025.04.17.05.04.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Apr 2025 05:04:10 -0700 (PDT)
-Message-ID: <a8f7f571-e81a-49d6-a40d-895960165039@linaro.org>
-Date: Thu, 17 Apr 2025 14:04:07 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pp8P81wE"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53HC4B6N683312
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 17 Apr 2025 07:04:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744891452;
+	bh=7BD3WTu9Y4pESy1qOjz0pPRJAJlKcmgN9whPwsT4Ip4=;
+	h=From:To:CC:Subject:Date;
+	b=pp8P81wEalKqbapSYEvKdtiUJ0leuKTn42cR90QiuylGq7lAIn0mCXWhb67K1kWTj
+	 9ddbwRMASlGj0ySxVvJ78sTu/4+p+pPLeqKxRKwarZm9Qf1Ev/YpcJlUz7fDEzx8gq
+	 fRSKWxdutrFeQePmcKqGcZdkx3XO3mPTCyEnAJSY=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53HC4BFg023480
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 17 Apr 2025 07:04:11 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 17
+ Apr 2025 07:04:11 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 17 Apr 2025 07:04:11 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53HC47VI004789;
+	Thu, 17 Apr 2025 07:04:08 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>
+Subject: [PATCH 0/7] AM64 and J7X DT: Enable PCIe 64-bit Address Space
+Date: Thu, 17 Apr 2025 17:34:00 +0530
+Message-ID: <20250417120407.2646929-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/10] dt-bindings: display/msm: dp-controller:
- describe SAR2130P
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar
- <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <lumag@kernel.org>,
- Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Kuogee Hsieh <quic_khsieh@quicinc.com>,
- Krishna Manikandan <quic_mkrishn@quicinc.com>,
- Jonathan Marek <jonathan@marek.ca>, Bjorn Andersson <andersson@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
- Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
- dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-References: <20250417-sar2130p-display-v4-0-b91dd8a21b1a@oss.qualcomm.com>
- <20250417-sar2130p-display-v4-1-b91dd8a21b1a@oss.qualcomm.com>
- <20250417-arboreal-turkey-of-acumen-e1e3da@shite>
- <7b559f03-f131-435e-95de-b5faee37b4d5@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <7b559f03-f131-435e-95de-b5faee37b4d5@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 17/04/2025 13:12, Konrad Dybcio wrote:
-> On 4/17/25 8:03 AM, Krzysztof Kozlowski wrote:
->> On Thu, Apr 17, 2025 at 02:16:31AM GMT, Dmitry Baryshkov wrote:
->>> From: Dmitry Baryshkov <lumag@kernel.org>
->>>
->>> Describe DisplayPort controller present on Qualcomm SAR2130P platform.
->>>
->>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>
->> Addresses do not match. You re-authored the commit, so now everywhere is
->> mess.
-> 
-> It's git's fault with replacing the linaro address based on .mailmap
-No. You can easily see:
-$ git show 51a6256b00008a3c520f6f31bcd62cd15cb05960
-top author is like you say - mailmapped, but Sob is my @samsung.com
+Hello,
 
-$ git format-patch 51a6256b00008a3c520f6f31bcd62cd15cb05960 -1
-What is in "From" field? Samsung, not mailmapped.
+The Cadence PCIe Controllers in TI's K3 SoCs namely:
+AM64, J7200, J721E, J721S2 (AM68), J722S, J742S2 and J784S4 (AM69)
+support two address regions:
+1. 128 MB address region in the 32-bit address space
+2. 4 GB address region in the 64-bit address space
 
-I believe that's a known problem in b4, already reported. I don't
-remember if this was fixed, but till it is - you need to use some sort
-of workaround.
+Currently, the 128 MB region in the 32-bit address space is enabled in
+the device-tree. This might be suitable for most of the use-cases, but
+for those use-cases requiring larger address regions than 128 MB it is
+necessary to switch to the 64-bit address space with the 4 GB address
+region. This series implements the corresponding device-tree changes to
+support the 4 GB address region as the default configuration. Existing
+use-cases should continue to work without any regression.
 
-Best regards,
-Krzysztof
+Series is based on linux-next tagged next-20250416.
+
+Series has been tested on AM642-EVM, J7200-EVM, J721E-EVM, J721S2-EVM,
+J722S-EVM and J784S4-EVM using an NVMe SSD connected to the PCIe
+Connector on the EVMs.
+
+Test Logs:
+1. AM642-EVM PCIe0
+https://gist.github.com/Siddharth-Vadapalli-at-TI/5c3e2e462066ed8a976273db94e856e3
+2. J7200-EVM PCIe1
+https://gist.github.com/Siddharth-Vadapalli-at-TI/47e1219258b310a1ac0e4a6d7324af33
+3. J721E-EVM PCIe0
+https://gist.github.com/Siddharth-Vadapalli-at-TI/85abe9ea5032f8e17b2634d616bf0db3
+4. J721E-EVM PCIe1
+https://gist.github.com/Siddharth-Vadapalli-at-TI/3e42d0f46fe92d353c9a2ae950e4cd64
+5. J721S2-EVM PCIe1
+https://gist.github.com/Siddharth-Vadapalli-at-TI/7afcf78a6f2601ca9dcf92ca9164be46
+6. J722S-EVM PCIe0
+https://gist.github.com/Siddharth-Vadapalli-at-TI/6be87d2e2d616db34af0c00b3df66daa
+7. J784S4-EVM PCIe0
+https://gist.github.com/Siddharth-Vadapalli-at-TI/44f3285756c9f62c7f7d69a10a7b5888
+
+Regards,
+Siddharth.
+
+Siddharth Vadapalli (7):
+  arm64: dts: ti: k3-am64-main: switch to 64-bit address space for PCIe0
+  arm64: dts: ti: k3-j7200-main: switch to 64-bit address space for
+    PCIe1
+  arm64: dts: ti: k3-j721e: add ranges for PCIe0 DAT1 and PCIe1 DAT1
+  arm64: dts: ti: k3-j721e-main: switch to 64-bit address space for
+    PCIe0 and PCIe1
+  arm64: dts: ti: k3-j721s2-main: switch to 64-bit address space for
+    PCIe1
+  arm64: dts: ti: k3-j722s-main: switch to 64-bit address space for
+    PCIe0
+  arm64: dts: ti: k3-j784s4-j742s2-main-common: switch to 64-bit address
+    space for PCIe0 and PCIe1
+
+ arch/arm64/boot/dts/ti/k3-am64-main.dtsi           |  7 ++++---
+ arch/arm64/boot/dts/ti/k3-j7200-main.dtsi          |  7 ++++---
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi          | 14 ++++++++------
+ arch/arm64/boot/dts/ti/k3-j721e.dtsi               |  2 ++
+ arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi         |  7 ++++---
+ arch/arm64/boot/dts/ti/k3-j722s-main.dtsi          |  7 ++++---
+ .../boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi  | 14 ++++++++------
+ 7 files changed, 34 insertions(+), 24 deletions(-)
+
+-- 
+2.34.1
+
