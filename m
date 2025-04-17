@@ -1,143 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C31184E;
-	Thu, 17 Apr 2025 01:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED372E628;
+	Thu, 17 Apr 2025 01:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744852525; cv=none; b=LLcjAa+0ggOmT4PbL8nLzsabpjcILbQ3J2SvtV9P4IJRyavin/YRb5bGdgAKX3kDsktdMFHR3Wz0mCMNjs+tHSb9R9BDCUgFKaf/UN1v6s0w6ENRfF19ya14KhOcvZ+b2DSXwEJuNyi22fY69M7hMXmC7rIB4FG4Ly4NwFmiNpY=
+	t=1744852656; cv=none; b=lkUmnkfg/FcCxLCROgr+hnoXDzK1gm5HzeMQVVc3RbZOQEQfeKJvp2h6NOWhYFpPPV+dj/dEOAUmueFTZ50mg0iEB3murDPa2l6tJu1ePFWaV/8PnIWb4SM3crh4dnczaCe9b/4jgdgepfrxquQztMsGxDp9IiC4x45+gma3Bww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744852525; c=relaxed/simple;
-	bh=amr6vgsdm/bR4XZmhanRpSp3TvMOJseVw7y8GlsWa0Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Gz9ZIp9pseyytoqMQAPvvu00VcmC4Bz8vnxhzJIZESUvIWkAs+e2djyhhE6ffgv9t0KGkkWf9W1AaXAO521QAKEKiJu3QBzHPI1tkKWuSC6M2iQKoT5/pxdbgNfi4lsqCjVEVPV4RlAZpkdK4nh3wUQJXPCO4NXTMFF64u6nASo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AqnsX7qO; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744852656; c=relaxed/simple;
+	bh=tAGrv9Y+ISX56kVJ642r8N1Gzi55R5eePdaHPLoZ/VA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Csu0q/KyaoBHFukScoU1g2cenN8fr2kTemq1lUZWw4yjbGdcWfRj3bI2DsqbN33J/nKks/RwmGJmAYrmxhD3Ub+YjUPy2Ahu6VkYk0CkB0FmFmBjapuNpMRbNbT/zCYjq9dS6Q3mliHTJbWUPPI8erighSs3uMYWfQbXKOVYuVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PvNVOPdo; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AqnsX7qO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744852524; x=1776388524;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=amr6vgsdm/bR4XZmhanRpSp3TvMOJseVw7y8GlsWa0Y=;
-  b=AqnsX7qOjs4k5a18RFVnjwzT19GsxDtMuxVzbEUm5TieTL0y6ERnNNTB
-   OVUhx1+hztZOpOgdCCg5v8NTa8P4n19vQmQNcyH3CyL+O3rXxZYafuKqV
-   YPTw3l8Vowdq7H11MhZKQB8ue/NcyqL4z40E+vgF7r5hDOxbf1Ribx3gS
-   +Z/CwRsQLLoxqZXDs8mBP30imIn9Fv5jNeU828TbDvilkgUsxQVF/07Yl
-   3UD8HSC7n2y9qCfMOQr2HXVMimARgVzDJOyocJxnPX4d6Lfv2+nWE0cUa
-   Qfpa1zW0lycy6EmqYu9Ui94n2miVroJMKqZ2ogdt6USe9DntSg3bS1cAX
-   g==;
-X-CSE-ConnectionGUID: lMBcJ1PRT0WlAqn9Tkk8yg==
-X-CSE-MsgGUID: 55PC6qRITfqILUTUFFPiAQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="50247421"
-X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
-   d="scan'208";a="50247421"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 18:15:23 -0700
-X-CSE-ConnectionGUID: ANCZp8RaQqiMsZfscb+Vlw==
-X-CSE-MsgGUID: XVHW47IARmGHPAmZtw11og==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
-   d="scan'208";a="153831948"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 18:15:19 -0700
-Message-ID: <3989d25c-2961-46b4-8f77-3c1eab63866a@linux.intel.com>
-Date: Thu, 17 Apr 2025 09:15:16 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PvNVOPdo"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-af9925bbeb7so150561a12.3;
+        Wed, 16 Apr 2025 18:17:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744852654; x=1745457454; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=X6kZCUyOGMeKdwk9Rr6GjPnU39uDn4efBFP4mrDY4n8=;
+        b=PvNVOPdoQV5OVxfdHj4eG7O4k+6MAeUf8it0fH0d7qeYOxijbzCj1b6Zaw1BwVOybj
+         1Tx51z62TXEn2CUX2EwSK58jbmLBooiU1I90GMJMcDkgjZvyW/NZwDUjSQQDnfwrghyM
+         gJzmh0AMWP3Q7dWlJ7egN8S2TRjXBMPYbU+l5m+JeFBv6bX7UuVx4GDlgkb0h5CGNOSf
+         O3a+zWr7lwUeywpxd1aEKSNL6XYXNsEIvMFUaIkFkgMYvoPDhaYU7mfAYq+16VkOAb9H
+         pmih1xWMbfeBkcclmb51hIkltCOgANE8Nwg9h21yhtqVqyU3eLU89jvaDUHg38p5OCUt
+         e8AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744852654; x=1745457454;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X6kZCUyOGMeKdwk9Rr6GjPnU39uDn4efBFP4mrDY4n8=;
+        b=KxrniFrzXECeh20GN7PcxQBpGArCtGA3olOIG9ptzD0womOZ+CN8xn3ojsk7/qpcfE
+         6bsE/PJoJG3kTmkwS7k8yepOxu+emD6Luvj+qrlgvGsD3CQorxg+IIsOi6SIxKjFvLRr
+         Rww/lr/A2XuwtcO0LjBLMGMWKtx4YIYle5B65ptjmpN0ILRxGmr9bsjdAWLLhEHSRsFt
+         JeO6p/eQCF6ShJsPavbryW1cYeueWXZyhsV6XpgJ36cI1Uy90ZGQH6keDel7uuVuLueL
+         2YLo7V8L1ACEt29GO5eh7Z1kEEcykd3klMpFGE5fh45arvogjXrUXHfpSP1viTiY+GOp
+         bb3A==
+X-Forwarded-Encrypted: i=1; AJvYcCVgtYeY9EdiJq1j/7CJprdPbAcyY0T5PfGHRZ0B9znTd4UBDeSNf2KFsTXsjuCyZZwSmf+0hgu4qJVCBMU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyM+hI5PP2jgO17hxUlRUmSYgZ1G+sC/muXKUP0upJ4U33I6EC2
+	+3lwyXGWg1lhPsbIkPQNkYjWdRQTg6mwGZLlsQsO5tO96hFJfo+8
+X-Gm-Gg: ASbGnctAVL1wUjzzE8GycyXFdlfU83VFgjJaWWBCM0tTw8fzNxiY2gsuHGw7Ff68tN+
+	t/aOu/vRgX93pbdZHUKw//xYUFjc/2pd9NMQQgpkjtAUl/3lzwOS25tSOOvLKuhJ3zMXp23mjaT
+	jlMRVYe6Ydh5fuq2UhRQ4/9JqSjBkzoetRxPHhZnBh5ULnIrxW9csZo6WQRbJgZiwcAEGUERM4H
+	EXssc0rwoSSnTiKQIkbenac4tMA0m0xET+R61hjgglrOeNXb+ko2h8AWCoHF2mc2Lm6yHhUp/33
+	1qsJspr8hVApYIOnf+jHj9c3oQXcBs1cxVr6OiZ+2L8I4cAmHpOE8apBH07S4yCjGgkWpYk8hiD
+	Ed3pw
+X-Google-Smtp-Source: AGHT+IFdCxEx27NH3yIHMAmLL3SGYxxHjyXgNtoivLisYP2O66x59yWDou7m+l9nKLM43nZ0EotW4Q==
+X-Received: by 2002:a17:902:f60f:b0:221:85:f384 with SMTP id d9443c01a7336-22c358db3demr62326835ad.16.1744852654324;
+        Wed, 16 Apr 2025 18:17:34 -0700 (PDT)
+Received: from delphinus (p4007-ipbfpfx02osakakita.osaka.ocn.ne.jp. [60.40.45.135])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3086104dfd8sm2365860a91.0.2025.04.16.18.17.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 18:17:33 -0700 (PDT)
+From: Tamura Dai <kirinode0@gmail.com>
+To: Mark Brown <broonie@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>
+Cc: linux-spi@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Tamura Dai <kirinode0@gmail.com>
+Subject: [PATCH] spi: spi-imx: Add check for spi_imx_setupxfer()
+Date: Thu, 17 Apr 2025 10:16:05 +0900
+Message-ID: <20250417011700.14436-1-kirinode0@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 12/22] perf/x86/intel: Update dyn_constranit base on
- PEBS event precise level
-To: "Liang, Kan" <kan.liang@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
- <20250415114428.341182-13-dapeng1.mi@linux.intel.com>
- <20250415135323.GC4031@noisy.programming.kicks-ass.net>
- <607b1f13-1d5d-4ea7-b0ab-f4c7f4fa319b@linux.intel.com>
- <a3269f8a-aff3-4f9e-8f43-b00fee03121a@linux.intel.com>
- <a998c0c3-1ec5-4dbe-95fa-fd37648de96a@linux.intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <a998c0c3-1ec5-4dbe-95fa-fd37648de96a@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+Add check for the return value of spi_imx_setupxfer().
+spi_imx->rx and spi_imx->tx function pointer can be NULL when
+spi_imx_setupxfer() return error, and make NULL pointer dereference.
 
-On 4/16/2025 9:59 PM, Liang, Kan wrote:
->
-> On 2025-04-15 9:46 p.m., Mi, Dapeng wrote:
->> On 4/16/2025 12:31 AM, Liang, Kan wrote:
->>> On 2025-04-15 9:53 a.m., Peter Zijlstra wrote:
->>>> On Tue, Apr 15, 2025 at 11:44:18AM +0000, Dapeng Mi wrote:
->>>>> arch-PEBS provides CPUIDs to enumerate which counters support PEBS
->>>>> sampling and precise distribution PEBS sampling. Thus PEBS constraints
->>>>> should be dynamically configured base on these counter and precise
->>>>> distribution bitmap instead of defining them statically.
->>>>>
->>>>> Update event dyn_constraint base on PEBS event precise level.
->>>> What if any constraints are there on this? 
->>> Do you mean the static constraints defined in the
->>> event_constraints/pebs_constraints?
->>>
->>>> CPUID is virt host
->>>> controlled, right, so these could be the most horrible masks ever.
->>>>
->>> Yes, it could be changed by VMM. A sanity check should be required if
->>> abad mask is given.
->> Yes, we need a check to restrict the PEBS counter mask into the valid
->> counter mask, and just realized that we can't use hybrid(event->pmu,
->> intel_ctrl) to check counter mask and need a minor tweak since it includes
->> the GLOBAL_CTRL_EN_PERF_METRICS bit.
->>
->> How about this?
->>
->>         if (x86_pmu.arch_pebs) {
->>             u64 cntr_mask = hybrid(event->pmu, intel_ctrl) &
->>                         ~GLOBAL_CTRL_EN_PERF_METRICS;
->>             u64 pebs_mask = event->attr.precise_ip >= 3 ?
->>                         pebs_cap.pdists : pebs_cap.counters;
->>             if (pebs_mask != cntr_mask)
->>                 event->hw.dyn_constraint = pebs_mask & cntr_mask;
->>         }
->>
-> The mask isn't changed after boot. The sanity check should only be done
-> once. I think it can be done in the update_pmu_cap() when perf retrieves
-> the value. If a bad mask is detected, the PEBS should be disabled.
+ Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+ Call trace:
+  0x0
+  spi_imx_pio_transfer+0x50/0xd8
+  spi_imx_transfer_one+0x18c/0x858
+  spi_transfer_one_message+0x43c/0x790
+  __spi_pump_transfer_message+0x238/0x5d4
+  __spi_sync+0x2b0/0x454
+  spi_write_then_read+0x11c/0x200
 
-Yeah, it makes sense. Would do.
+Signed-off-by: Tamura Dai <kirinode0@gmail.com>
+---
+ drivers/spi/spi-imx.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+index 832d6e9009eb..c93d80a4d734 100644
+--- a/drivers/spi/spi-imx.c
++++ b/drivers/spi/spi-imx.c
+@@ -1695,9 +1695,12 @@ static int spi_imx_transfer_one(struct spi_controller *controller,
+ 				struct spi_device *spi,
+ 				struct spi_transfer *transfer)
+ {
++	int ret;
+ 	struct spi_imx_data *spi_imx = spi_controller_get_devdata(spi->controller);
+ 
+-	spi_imx_setupxfer(spi, transfer);
++	ret = spi_imx_setupxfer(spi, transfer);
++	if (ret < 0)
++		return ret;
+ 	transfer->effective_speed_hz = spi_imx->spi_bus_clk;
+ 
+ 	/* flush rxfifo before transfer */
+-- 
+2.47.2
 
->
-> Thanks,
-> Kan>
->>>> This can land us in EVENT_CONSTRAINT_OVERLAP territory, no?The dyn_constraint is a supplement of the static constraints. It doesn't
->>> overwrite the static constraints.
->>>
->>> In the intel_get_event_constraints(), perf always gets the static
->>> constraints first. If the dyn_constraint is defined, it gets the common
->>> mask of the static constraints and the dynamic constraints. All
->>> constraint rules will be complied.
->>>
->>> 	if (event->hw.dyn_constraint != ~0ULL) {
->>> 		c2 = dyn_constraint(cpuc, c2, idx);
->>> 		c2->idxmsk64 &= event->hw.dyn_constraint;
->>> 		c2->weight = hweight64(c2->idxmsk64);
->>> 	}
->>>
->>> Thanks,
->>> Kan
->>>
->
