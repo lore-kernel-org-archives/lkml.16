@@ -1,96 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224031B6D08;
-	Thu, 17 Apr 2025 15:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825E71B4257;
+	Thu, 17 Apr 2025 16:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744905591; cv=none; b=ONvkZRsLvZe1mAnxqpjwAos2z15/dEdngoiAm4k/FStsztKabf9xRt2+jiNvPdxUqOVwelaP9PnnEqA61T1RTzvQ/O4Eh0edQ5WAwfOxlParcDd+j5rWpCKMIBrnllTYaaxZlcittUCtj4TdhTRV4Kzl6nk2RGhLB92TOPL8j6Y=
+	t=1744905615; cv=none; b=HeIYC/ZAUnVff13eKNRRNVydLB5OwH7P4ZKLxm32zm42/A1trAPWsw3oyiz4xe+6VspfkYl0YcVfiXLGJxnWdslIHEdOF+xXZTIf2qQP5aLCSp9skaRIOw4B1N1VXUcNNfzFxkaqVW6pn+hPektAudtL2W+OMiYGiSaq1kmIBiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744905591; c=relaxed/simple;
-	bh=hHSlbiPaRGPDFDdALuBGMJLctXSjXushS0Thr9FD/Zw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UKF5Es71np4m3xl6yXTkkhodIhz9bsEqscAA/byOuG3alBvQu7uQRMl3/SkuKWU8Ca8JV86oHfaRy7Cg2shNq6UKFW1fKAETJWXdsK0JwCWE1MZBBPxGW7n5ZqCYso6dzSB9s3aYZyyCa/4s6OVfxAskODZ7b+RVxLOmWDVjbxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SKKDzDFa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744905615; c=relaxed/simple;
+	bh=ZS6x8bwMHLKxIJFgPFcle45gVqwHALfPYTkIqt51OIg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cgelFZ+9Xi7XXLOxfXHP86C2ptfW+rxhOub/CI37MBntew8Ao6Oo3kxWaA8aPcAo+Azcy34RoLN595An63WDTqhxXUDjH1CGDhWZc6t9YDTrL72hnGRVPXVZFSwbsloybxF9shHlf4DEXyn5IMjyPeKrsfPNRRBf8K995Y+rJDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KnVKcOXK; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SKKDzDFa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0DC8C4CEE4;
-	Thu, 17 Apr 2025 15:59:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744905590;
-	bh=hHSlbiPaRGPDFDdALuBGMJLctXSjXushS0Thr9FD/Zw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=SKKDzDFa8yz//vN87vlFbNealPS3RLJ8/IeYYoE/jxcPJqA9v7cTkd7J6AxzsO/Nv
-	 SK3KnF6MDlGl2yM8TXsAF+hB8FfzOIL1ncZnOmTEuoTiYVF/l4Lezbcre9F8MvCsge
-	 8CIKfGV1Y3zG7kyfSCfQYFt/tTYAQhSjZ3N+BH4HDcdAybxH6d3i/N1Oqpm3LgizXe
-	 94+0ObpQDBGx0z1z34t9XGYj5YTpiguRIS94Xs/EtMwMkC0NqgPXGrn3NcBI/Y1bR9
-	 0+0OtUSjhS8HwdDxZ8+Gt9dnfQ+1sv0L9E5aQgqyOStp2KaWMFejEUuLMR9GdV0O+p
-	 gP+zNb10VHHSw==
-Date: Thu, 17 Apr 2025 08:59:48 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Matthias Brugger
- <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Florian Fainelli
- <f.fainelli@gmail.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net v2 4/5] net: ethernet: mtk_eth_soc: net: revise
- NETSYSv3 hardware configuration
-Message-ID: <20250417085948.35b0ec5a@kernel.org>
-In-Reply-To: <aAEiCjdJdsqH6EAU@makrotopia.org>
-References: <8ab7381447e6cdcb317d5b5a6ddd90a1734efcb0.1744764277.git.daniel@makrotopia.org>
-	<28929b5bb2bfd45e040a07c0efefb29e57a77513.1744764277.git.daniel@makrotopia.org>
-	<20250417081055.1bda2ff6@kernel.org>
-	<aAEiCjdJdsqH6EAU@makrotopia.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KnVKcOXK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744905614; x=1776441614;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZS6x8bwMHLKxIJFgPFcle45gVqwHALfPYTkIqt51OIg=;
+  b=KnVKcOXK1dRtUbGYCaAFSYvwpoNJfOFE1/Sg87IhkXUC/fLnLPQJHZ8B
+   0zik8tKKZMUtLTz0VC/cWew7AI+xFV6zPgqx4BX2CmSwowu622d2HwowH
+   vEBDxwqOp1/ZUTD7R6AO7RtA9AIIWg/7Zu1RGnnTQ8sjC1grXtN2dn/Mh
+   lfdM5pi53JzGfNqVmwrNUjDd4A721WGfFaRkCU2vQZyaknELHvxbLr9oh
+   j+oiTiNV+pp9aLjKtAga0+64kNfzQ+wBvfYpXB8X0kFbCDQt3AlEJAIpi
+   lTElFZS+iczLOyKSrc6IIx5ZWGxiF0xAZ8yztFE8A1HxiXzQ8CxHvSCl/
+   g==;
+X-CSE-ConnectionGUID: PjAiZrjlRdWa4Tc2kYDdjg==
+X-CSE-MsgGUID: lnJdVi2xQUS4BTQS8tP0KA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="50323733"
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="50323733"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 09:00:13 -0700
+X-CSE-ConnectionGUID: nrHJ4FFhSL6QwQxXjGyLEw==
+X-CSE-MsgGUID: wf/ikSkJTQ2l4EvXayOsWw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="168033914"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 09:00:11 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u5Req-0000000DFFp-3clD;
+	Thu, 17 Apr 2025 19:00:08 +0300
+Date: Thu, 17 Apr 2025 19:00:08 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] spi: Introduce and use spi_bpw_to_bytes()
+Message-ID: <aAEliMw1YDjnfEjc@smile.fi.intel.com>
+References: <20250417152529.490582-1-andriy.shevchenko@linux.intel.com>
+ <1e22baf9-303e-4e49-9e9a-0daa3cd4caec@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1e22baf9-303e-4e49-9e9a-0daa3cd4caec@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, 17 Apr 2025 16:45:14 +0100 Daniel Golle wrote:
-> On Thu, Apr 17, 2025 at 08:10:55AM -0700, Jakub Kicinski wrote:
-> > On Wed, 16 Apr 2025 01:51:42 +0100 Daniel Golle wrote:  
-> > > +		/* PSE should not drop port8, port9 and port13 packets from WDMA Tx */
-> > > +		mtk_w32(eth, 0x00002300, PSE_DROP_CFG);
-> > > +
-> > > +		/* PSE should drop packets to port8, port9 and port13 on WDMA Rx ring full */  
+On Thu, Apr 17, 2025 at 10:30:46AM -0500, David Lechner wrote:
+> On 4/17/25 10:24 AM, Andy Shevchenko wrote:
+> > Recently in the discussion with David the idea of having
+> > a common helper popped up. The helper converts the given
+> > bits per word to bytes. The result will always be power-of-two
+> > (e.g. for 37 bits it returns 8 bytes) or 0 for 0 input.
+> > More details are in the respective code comment.
 > > 
-> > nit: please try to wrap at 80 chars. There's really no need to go over
-> > on comments. Some of us stick to 80 char terminals.   
-> 
-> Too late now to send another revision...
-
-I only applied the first 3 :)
-
-> > > [...]
-> > > diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-> > > index 39709649ea8d1..eaa96c8483b70 100644
-> > > --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-> > > +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-> > > @@ -151,7 +151,12 @@
-> > >  #define PSE_FQFC_CFG1		0x100
-> > >  #define PSE_FQFC_CFG2		0x104
-> > >  #define PSE_DROP_CFG		0x108
-> > > -#define PSE_PPE0_DROP		0x110
-> > > +#define PSE_PPE_DROP(x)		(0x110 + ((x) * 0x4))
-> > > +
-> > > +/* PSE Last FreeQ Page Request Control */
-> > > +#define PSE_DUMY_REQ		0x10C  
+> > This mini-series introduces it and replaces current users
+> > under drivers/spi and we expect more (and possibly some
+> > lurking in other subsystems).
 > > 
-> > This really looks like misspelling of DUMMY, is it really supposed 
-> > to have one 'M' ?  
+> > Mark, if you okay with the idea, please, make this to be
+> > an immutable branch or tag for others to pull.
+> > 
+> > In v3:
+> > - fixed the typos in the examples
+> > 
+> > In v2:
+> > - improved examples in the code comment and commit message (David)
 > 
-> I also thought that when I first saw that and have told MediaTek engineers
-> about it, they told me that the register is called like that also in their
-> datasheet and hence they want the name to be consistent in the driver.
+> Reviewed-by: David Lechner <dlechner@baylibre.com>
 
-Hm, maybe add a comment ? It confused both of us, probably going 
-to confuse most people later on
+Thank you for the review!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
