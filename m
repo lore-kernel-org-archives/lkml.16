@@ -1,100 +1,99 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1981C22371B;
-	Thu, 17 Apr 2025 16:16:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 725141B4153
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744906618; cv=none; b=svbW/QcVDPrZemd3kZEETtY1t4RmjJrmoB0dCSZY3jwGmSQHH/mStYNX1gUJP2T0trxZ3AbKzQhkL6snpB/ILLVH50CaZz4a656HznyOq9sBN2dZyeOM7SzPkcFKVkJUWYvux+E1fTHVoa94e6v1HyiYlkNdeoJsk7GUfk1Lwqo=
+	t=1744906662; cv=none; b=VwBwxy1yFhBqMfqPhSDw4wIxQGmMye4oT8lKFD4kw6t4sltkkoSLNPPimgk9KiEMdViWCEBpL+kxM0AHv+H9Il1aGEZyYxxvog/NvVMKXjbjzBcl7Xw5B0N4TWCwZQE/wp+6PtcWQSv9YETOo9U+4Vzzn0+lP5vg/mscSiE4IcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744906618; c=relaxed/simple;
-	bh=FgUEG+umn1PfV0jboJ5wL1UISyXSNMwvwys2ha0CKWc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YP3vqFrA7vpS/sYzgq+eizUKWZv8a0W7GnY0PBV6fV4VJA8FDN2Q+Au7jQfoQ4ipgflm07UUwlzkwRy0Kymv3Y0PlWcRzS9TMx7xh4xmCz7SD56U+Qm9pemuSw3dKVv5ThHzmu6pEoygMfBKcebQbm/j58nf6qoOt5NiMje5+2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.98.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1u5RsR-000000002Q4-0DCF;
-	Thu, 17 Apr 2025 16:16:49 +0000
-Date: Thu, 17 Apr 2025 17:16:45 +0100
-From: Daniel Golle <daniel@makrotopia.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net v2 4/5] net: ethernet: mtk_eth_soc: net: revise
- NETSYSv3 hardware configuration
-Message-ID: <aAEpbV-IvbfaPwwL@makrotopia.org>
-References: <8ab7381447e6cdcb317d5b5a6ddd90a1734efcb0.1744764277.git.daniel@makrotopia.org>
- <28929b5bb2bfd45e040a07c0efefb29e57a77513.1744764277.git.daniel@makrotopia.org>
- <20250417081055.1bda2ff6@kernel.org>
- <aAEiCjdJdsqH6EAU@makrotopia.org>
- <20250417085948.35b0ec5a@kernel.org>
+	s=arc-20240116; t=1744906662; c=relaxed/simple;
+	bh=YdyGYQvJPxptB7Ud1K9823h/vEclrujKLrEKCBQa44w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jh+fha7b+rKBKL0yJqsLsocYyEOKK0/r0PTl5WZbLEwCPuRdNrC3xNUFMsGaNOEhg3E9sgr2GOQZSfYCSpdUS9VWVB5DWoTxCpfOgOg/FH8gMdz7ru4Mx2V3PPZwTm2su/3dMcmQb8mjjsjUFyRwtkfgoLeqa0pg8h+9uGiqPc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=I08ChHFl; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="I08ChHFl"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-603f54a6cb5so472078eaf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:17:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744906659; x=1745511459; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uJ86ga6RjrBQ4jtVg7iGsvEs2Pk/5xuTneiTlVnUO0k=;
+        b=I08ChHFl421jGUWX3hDKOeCEnaE2W6myEHnSc/t5arLr/NjtnLLOb/6WQqjUeLO1lN
+         Ykzpa0tDs7OOL15YMenVo6fimibiO27iVp3tNFmKtoUFjNTDPBRpv2Y1JNkY6uspB8rE
+         m+D3e7Glzdtpc0Hpe+UmFVcXFgjM1XsSIM9f6wlVC4Eh6VC1kD6suIBnKgt6SPFQUTT0
+         7V2vzSKFf1+MJiEG8R2g1iQzw5S2aX47IKFPAudL5k9x7ZkzC/0Gpgt+E5V4tf7ChoR2
+         mJK50Oyb9CZx27ZbOcCUL/focZmNQTZt6VXq1L8c9Rj6NEGyaFtlO58rQYBKWgDXOvRq
+         em2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744906659; x=1745511459;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uJ86ga6RjrBQ4jtVg7iGsvEs2Pk/5xuTneiTlVnUO0k=;
+        b=wvaU6gAgq0Sh/8X5/n6hnUfQ3T7+OHS4vQUv0tEF5CO1nJoyF6LdIoMDPmuUAHYoDs
+         pqdY2ZygbeZ45RMJIll6MfDRtBzsWbWXszPqewroLMLIC0RO3cWdOyopYtJDGr9zTboT
+         lrGdREiuzNUBd1s5cOvat4EOrZCNn3P5wf5PWUEVEdY8ei3SMVX+lHnITA3BJSiBy8CP
+         sAi81PA9Ylkwi8BKXGbvjAsfBeb6Enr1X6pb8VmsokWIOiio5M+2imusaZiohbCiUpCL
+         hdSQDJ+RUiRKcjVgpJ5xlUvSPUF50BEcnbVsBRw6CMy3EPNdsB3GXAE8xgIiNS4vW+as
+         J6/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUqw7TpE3DpEhrouc2wQzNE7G0xz5Cob98DdrpDuUYrIdqL0eOOLLo+CzRV8NBWmrKAg738FrtWETLDIdM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGxinalxgBI3M/JhjwVudeyk55K41Pp6Eg9xpuTBGbSqsSzIFZ
+	eBj9xaYUs+MO+jACiHMGFoeOiCIoceonKt1orDUTuZE84EnF7bH8yLb1sW2JoMo=
+X-Gm-Gg: ASbGncvMOE8YOeNVgWPAOFvbzT7ZzQA40J8xBHICdwitmPlmpetB59DFkIRsVWaU71w
+	SxPkvP2SydzGNLKetMMdDyQ3zTXCvEaEaQRLGhzcfkeheEZFbimgyxD0SBbkLPeZsXL1GTj5DnN
+	oNNLH+fr3dDCd7paX/B1CtOm6it0VAiVxdrgidsBaRL0o/QnSbQcfxRll+9iM9RZz6y4fbLrfVu
+	5drPOfENDiVDUHP/C3t61JVqDsjEZcBNVjuQL75oiKnVOCUvijN+3ZxMyw+Qo1EHBIeMtQIYafx
+	h6+v9ioi/4UObofLfMOVR1ivUavov1wZLgckadnOGdPZgiluFZap0meTcsD7HpqPYWq5BiPpzLq
+	rwIUryjkF0+V88sgUYw==
+X-Google-Smtp-Source: AGHT+IGBBgE75fsVkLXxYoZqV19j+mS6o4e4vTLZSbr9DKTQoVtLZ0+RYC5g8QIKrdP0fbpy7FLYJQ==
+X-Received: by 2002:a05:6820:1e13:b0:604:6b0:c259 with SMTP id 006d021491bc7-604a931e696mr3952610eaf.4.1744906659563;
+        Thu, 17 Apr 2025 09:17:39 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:c91b:eea3:7afd:2dee? ([2600:8803:e7e4:1d00:c91b:eea3:7afd:2dee])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-605ff6aacf5sm12896eaf.39.2025.04.17.09.17.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Apr 2025 09:17:39 -0700 (PDT)
+Message-ID: <cd50b4eb-ef6c-4842-88cd-932042ca2629@baylibre.com>
+Date: Thu, 17 Apr 2025 11:17:37 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417085948.35b0ec5a@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iio: frequency:: Remove unused parameter from data
+ documentation
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>, gregkh@linuxfoundation.org,
+ jic23@kernel.org, lars@metafoo.de, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+ Michael.Hennerich@analog.com
+Cc: skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+References: <20250417143220.572261-1-gshahrouzi@gmail.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250417143220.572261-1-gshahrouzi@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 17, 2025 at 08:59:48AM -0700, Jakub Kicinski wrote:
-> On Thu, 17 Apr 2025 16:45:14 +0100 Daniel Golle wrote:
-> > On Thu, Apr 17, 2025 at 08:10:55AM -0700, Jakub Kicinski wrote:
-> > > On Wed, 16 Apr 2025 01:51:42 +0100 Daniel Golle wrote:  
-> > > > +		/* PSE should not drop port8, port9 and port13 packets from WDMA Tx */
-> > > > +		mtk_w32(eth, 0x00002300, PSE_DROP_CFG);
-> > > > +
-> > > > +		/* PSE should drop packets to port8, port9 and port13 on WDMA Rx ring full */  
-> > > 
-> > > nit: please try to wrap at 80 chars. There's really no need to go over
-> > > on comments. Some of us stick to 80 char terminals.   
-> > 
-> > Too late now to send another revision...
+On 4/17/25 9:32 AM, Gabriel Shahrouzi wrote:
+> The AD9832 driver uses the Common Clock Framework (CCF) to obtain the
+> master clock (MCLK) frequency rather than relying on a frequency value
+> passed from platform data.
 > 
-> I only applied the first 3 :)
-
-Perfect, so I'll roll up the remaining two with the changes suggested.
-
+> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> ---
+>  drivers/staging/iio/frequency/ad9832.h | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> > > > [...]
-> > > > diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-> > > > index 39709649ea8d1..eaa96c8483b70 100644
-> > > > --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-> > > > +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-> > > > @@ -151,7 +151,12 @@
-> > > >  #define PSE_FQFC_CFG1		0x100
-> > > >  #define PSE_FQFC_CFG2		0x104
-> > > >  #define PSE_DROP_CFG		0x108
-> > > > -#define PSE_PPE0_DROP		0x110
-> > > > +#define PSE_PPE_DROP(x)		(0x110 + ((x) * 0x4))
-> > > > +
-> > > > +/* PSE Last FreeQ Page Request Control */
-> > > > +#define PSE_DUMY_REQ		0x10C  
-> > > 
-> > > This really looks like misspelling of DUMMY, is it really supposed 
-> > > to have one 'M' ?  
-> > 
-> > I also thought that when I first saw that and have told MediaTek engineers
-> > about it, they told me that the register is called like that also in their
-> > datasheet and hence they want the name to be consistent in the driver.
-> 
-> Hm, maybe add a comment ? It confused both of us, probably going 
-> to confuse most people later on
+Please include the driver name in your patch subjects. Otherwise readers will
+assume that this is something that affects all IIO frequency drivers. I noticed
+you are doing this on all of the patches you are sending, not just this one.
 
-Ok, will do and send v3.
 
-Thank you!
+[PATCH] iio: frequency: ad9832: Remove unused parameter from data documentation
