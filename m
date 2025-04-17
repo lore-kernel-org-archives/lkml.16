@@ -1,153 +1,117 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19BD1EB2F;
-	Thu, 17 Apr 2025 12:34:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E12D156CA
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744893267; cv=none; b=pJNWv3QnX6vn4CAD+OoURHg5WezmSULjNISycDO9EeccMggkPMsXKrIILkXmKSJZHoS7f0/ZFiyqGily6vl2lNSpUgViq6vtUBvEH3wDkW/ZCopSEIoAKcYJUA3zcBXXu/A6U+PerMSGATxgF4JpOFLJob4GR/DA3d3E7UVShd0=
+	t=1744893310; cv=none; b=UPcw8p2JacYMddrn4Rh649rkYqE7dELKoE923itcrhmMLxgBS+R8QQ9xMoMnEI2mIsWRzhhBk9/6Q+qdCGpXnULCehJbZQz7XuSuXAKVtCRrlGIgjkPgbT6nIH0+1UAlioViY8l932yEQQh6u7lq1S0pe0So5uI9AcohcyDA0ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744893267; c=relaxed/simple;
-	bh=ewChGJa/pDA64ON1Mo3kLbC08r17HE39rm6/OVxBAes=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J88VQMKhK1sRUDwOMPjX90UPeye+1oI3vzqt3rlfPMzsH7bcMWxUsejsbdASL29BFJu8nIEB3LVwuxLCk2uMicYxvixiETNAQDqAdhQRZ71fvExFdwLixFb+B2bdZurBTIoMO+nu1Gv67lVnRR2zbZgjBBK0e5aCOiixvyK8NXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=LAnlnd8E; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744893310; c=relaxed/simple;
+	bh=KYGjtBdb7XtMLaG0d3QFZTqtsfA5Al+6Ejy4SwFGmOQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QY6H3yoMHTihRrS04cjLAUdjGV8bgUmNU4bsjcBNdHOZ7E2P7uvwgvSVjZWbxfPbIXspUA8Yi2WDXNs3Pt03r01syKjTpp+ZAKenf52ApA3QGNTAPNLrKexlna+isFzIzJKKKr0jK2xEZ8YbUucPAud/v/gDbojHv/q8PDgJ/Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LEURn2J3; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LAnlnd8E"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53HCYJGR012975
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 17 Apr 2025 07:34:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744893259;
-	bh=Zv6Sg9oriYz3cRSUGKqGu91FELTk5ukWJXCsL2561ks=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=LAnlnd8EbLuvdd7fbUuERIsjsKa4/3mayZu1noNOj+C1FaX9fijMPbi9j3ORA9zR2
-	 GPQibpOCT5bQolJTqUYgIZ2fZOqd3RvvIxYbxMzztSjOPL8W2jIsyiKfqdA8/Jb31g
-	 tN7Es/8joOFgvkaPwMhM6b3mOLLkIx1cAznw6Uuk=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53HCYJKT095064
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 17 Apr 2025 07:34:19 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 17
- Apr 2025 07:34:19 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 17 Apr 2025 07:34:19 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53HCYICZ038854;
-	Thu, 17 Apr 2025 07:34:18 -0500
-Date: Thu, 17 Apr 2025 18:04:17 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Nishanth Menon <nm@ti.com>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <vigneshr@ti.com>,
-        <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <u-kumar1@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>
-Subject: Re: [PATCH 0/2] J722S: DT Node cleanup for serdes0 and serdes1
-Message-ID: <c952d708-fd56-408b-ad16-15c1c013c396@ti.com>
-References: <20250412052712.927626-1-s-vadapalli@ti.com>
- <20250414120930.m7x7zfmyby22urpo@ultimate>
- <79ef7f50-22d5-4c40-ae28-02bf297ca79c@ti.com>
- <20250414143916.zhskssezbffmvnsz@dragonfly>
- <4106b4b8-6ca7-400f-8862-a45214284326@ti.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LEURn2J3"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39c30d9085aso536449f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:35:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744893307; x=1745498107; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VTuj486eMBPlCuVzE5Ghwv5ENmZwB8uFg3Tiow35Sbg=;
+        b=LEURn2J3Kt7Z7fjsD75ekoDTaCUa2Xj9Of/mFCnZFv5ZPdHFJrPv/8AOsaM34u2fI+
+         o4ruSdV6JH40NltkLqtUVxULCEDfUOILM8Ws4Ct73q7maEbJTxsCtM2pY25eB08ar/Sp
+         A/l8hhxA2m6Ncim/da6oQ1Jeej214PtL9gqnVUkWi6qkbFT5/52A5kuSJmpm5bUNsTl1
+         mfxr4piKI+D/zgMGSqlPFYH0n5wbQeHty7kVOddmJkUJY2FJ1VWX7QLvSKksBgepIh7m
+         UEO9uYjMbCIIo0tJ/wQCF1KIN4rN+lZ+6bpVvahS6yZmDFlnCmJ0jRp6sjCxItoWT6Su
+         Mjvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744893307; x=1745498107;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VTuj486eMBPlCuVzE5Ghwv5ENmZwB8uFg3Tiow35Sbg=;
+        b=Nm3wvnqa8WufyUT8sUkj1wDbRF2Rj/wqhcDepTqjZ+IuoHXPnrCOTdwiyBf+h17TgY
+         taAu8aol9bwNKJSQUOcTnRmKqvLprgmNHEjwsBq7aE3ucsXKL6/z51gbROI8tt2xeaVy
+         o4bVKuag5skNfnubIsplQcgwCia4zOdHEfzpHTCh9sBhSaaCCLKj/MoUu9sbveU9mS2c
+         8KAtE98tBzCT5Db2MAoDSq2aNlq9xat1wNbPo0bwyOvliTiJTNNEP8sKQmOf6V58lPaV
+         hl4YZNh0vJoXppNxcnuLlHdyQqMn2ZkhszIz2YHzWjzLzXcPG/GfsWpAzPxn2ahCYSr1
+         R/XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/BpQZjCL8Aeiu1e1uEPHeUKH19SHMfkPxcsmbnSOwIrODMYk2s2neeFv9bOox0uLvOEv7Gx+3P9Enukk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzbe2hFK+j6n91TjYJudHirmRpDOXhMFh8zLNmwrKgagOe+2zIO
+	is/C7Mbr+lkXcS8/csIwrc0DgHF3+6CVzr3Mnf5DWBXE2pKeCHoifUZatVMH5T8=
+X-Gm-Gg: ASbGncs6t/RdfdPv96ZkG4+dSi6qik92BflIeu9d4fuS+GX7d2rWO6PFWF/IQ4NkGpq
+	vCjnO9sbVL1jOF1lUixigsFCaP7wJgyZaR2JkPCS3h26WwM4h5+QBhI/iAfBjZ+T/BrXdFMe4Rw
+	Zd7SQjmF8/xDz0+5vp5usynMaJYnDashUcf6Aq3qYcCM2+DFCjVz8oBRcSgxCDZa2q6ohwx8kPu
+	84ya7dOl6xd3nFNy5KEw0YacZcFHNwONf+UT2SWaIqNmuWOxQfMo+Opbb6eNlEBUTqlOFJGC8JC
+	YMyZjk6ybipilqnMJ+Fuwz4SbVfVjHKuSdUKwFbwsGmTC8tSsHI=
+X-Google-Smtp-Source: AGHT+IHsx+KpPXNauX7YJ1CpF7I0pEn6OThh/kiz1Tij3RGxo6jg5fZyTZOC2u0bvjB+NaEYetVrHQ==
+X-Received: by 2002:a05:6000:402b:b0:38f:3a89:fdb5 with SMTP id ffacd0b85a97d-39ee5b13247mr5200859f8f.11.1744893307325;
+        Thu, 17 Apr 2025 05:35:07 -0700 (PDT)
+Received: from brgl-pocket.lan ([2001:861:4445:5860:9b49:d51a:4244:693c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440666705c5sm14418765e9.14.2025.04.17.05.35.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 05:35:07 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Conor Dooley <conor@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Yixun Lan <dlan@gentoo.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Alex Elder <elder@riscstar.com>,
+	Yangyu Chen <cyy@cyyself.name>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Jesse Taube <mr.bossman075@gmail.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Icenowy Zheng <uwu@icenowy.me>,
+	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev
+Subject: Re: (subset) [PATCH v8 0/5] riscv: spacemit: add gpio support for K1 SoC
+Date: Thu, 17 Apr 2025 14:35:05 +0200
+Message-ID: <174489329731.7849.17910336598453828998.b4-ty@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250412-03-k1-gpio-v8-0-1c6862d272ec@gentoo.org>
+References: <20250412-03-k1-gpio-v8-0-1c6862d272ec@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <4106b4b8-6ca7-400f-8862-a45214284326@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 14, 2025 at 08:13:19PM +0530, Siddharth Vadapalli wrote:
-> On Mon, Apr 14, 2025 at 09:39:16AM -0500, Nishanth Menon wrote:
-> > On 18:30-20250414, Siddharth Vadapalli wrote:
-> > > On Mon, Apr 14, 2025 at 07:09:30AM -0500, Nishanth Menon wrote:
-> > > 
-> > > Hello Nishanth,
-> > > 
-> > > > On 10:57-20250412, Siddharth Vadapalli wrote:
-> > > > > Hello,
-> > > > > 
-> > > > > This series is based on the following series:
-> > > > > https://patchwork.kernel.org/project/linux-arm-kernel/cover/20250408103606.3679505-1-s-vadapalli@ti.com/
-> > > > > Based on the discussion in the above series which disabled 'serdes_wiz0'
-> > > > > and 'serdes_wiz1' nodes in the SoC file and enabled them in the board
-> > > > > file, Udit pointed out that it wasn't necessary to disable 'serdes0' and
-> > > > > 'serdes1' in the SoC file anymore, since that is not a working
-> > > > > configuration - serdes_wizX enabled and serdesX disabled doesn't work.
-> > > > > 
-> > > > > Hence, this series aims to cleanup the serdesX nodes after the changes
-> > > > > made by the above series.
-> > > > > 
-> > > > > Regards,
-> > > > > Siddharth.
-> > > > > 
-> > > > > Siddharth Vadapalli (2):
-> > > > >   arm64: dts: ti: k3-j722s-main: don't disable serdes0 and serdes1
-> > > > >   arm64: dts: ti: k3-j722s-evm: drop redundant status within
-> > > > >     serdes0/serdes1
-> > > > > 
-> > > > >  arch/arm64/boot/dts/ti/k3-j722s-evm.dts   | 2 --
-> > > > >  arch/arm64/boot/dts/ti/k3-j722s-main.dtsi | 4 ----
-> > > > >  2 files changed, 6 deletions(-)
-> > > > > 
-> > > > > -- 
-> > > > > 2.34.1
-> > > > > 
-> > > > 
-> > > > 
-> > > > I do not understand the logic here. serdes cannot operate without wiz
-> > > > nodes, correct? why would we leave serdes on by default?
-> > > 
-> > > Yes, serdesX requires serdes_wizX, but at the same time, serdesX is the
-> > > child node of serdes_wizX. Therefore, without enabling serdes_wizX, we
-> > > cannot enable serdesX.
-> > > 
-> > > Prior to this series, but with the dependent series at:
-> > > https://patchwork.kernel.org/project/linux-arm-kernel/cover/20250408103606.3679505-1-s-vadapalli@ti.com/
-> > > applied, the nodes look like:
-> > > 
-> > > 	serdes_wizX {
-> > > 		...
-> > > 		status = "disabled";
-> > > 
-> > > 		serdesX {
-> > > 			...
-> > > 			status = "disabled";
-> > > 		};
-> > > 	};
-> > > 
-> > > The dependent series fixes 'serdes_wizX' by disabling it in the SoC file
-> > > k3-j722s-main.dtsi. But after the fix, we have a 'status = "disabled";'
-> > > within the serdesX node which isn't required since:
-> > > a) serdes_wizX enabled but serdesX disabled is non-functional and
-> > > unusable
-> > > b) serdes_wizX disabled in DT implies that serdesX is also disabled
-> > 
-> > 
-> > Can we handle all of this in one series instead of two series?
+
+On Sat, 12 Apr 2025 07:31:27 +0800, Yixun Lan wrote:
+> The gpio controller of K1 support basic GPIO functions,
+> which capable of enabling as input, output. It can also be used
+> as GPIO interrupt which able to detect rising edge, falling edge,
+> or both. There are four GPIO ports, each consisting of 32 pins and
+> has indepedent register sets, while still sharing IRQ line and clocks.
+> The GPIO controller request the two clock sources from APBC block.
 > 
-> The idea behind splitting it was that the dependent series is a "Fix":
-> - Fix to follow the convention of disabling nodes in SoC file and enable
->   them in the board file.
-> while the current series is a "cleanup":
-> - No fixes are introduced by this series and therefore it doesn't
->   require a backport.
-> 
-> I can squash the two series and post them as a v2 if that helps.
+> [...]
 
-I have squashed the series and have posted it at:
-https://lore.kernel.org/r/20250417123246.2733923-1-s-vadapalli@ti.com
+Applied, thanks!
 
-Regards,
-Siddharth.
+[1/5] dt-bindings: gpio: spacemit: add support for K1 SoC
+      https://git.kernel.org/brgl/linux/c/378ce04c79d14c730fcee6db9f3076da4078b65f
+[2/5] gpio: spacemit: add support for K1 SoC
+      https://git.kernel.org/brgl/linux/c/6149376c9ad1777aa4214e13d844f12f88e22dea
+
+Best regards,
+-- 
+Bartosz Golaszewski <brgl@bgdev.pl>
