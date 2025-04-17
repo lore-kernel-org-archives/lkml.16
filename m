@@ -1,183 +1,169 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBD114885D;
-	Thu, 17 Apr 2025 02:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FFA2AEE2
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 02:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744855611; cv=none; b=lV3DgF0LX8vYvrX1Enz3wpoeurDuUe8WVrZ0SwV6119XvhCssxy5/IWkPfIUhDEpObxUIYBwxNmNjkvbMq/OZzavZiMx682KMM2CpeuESLdxRFygYlSEkbjRFDixGEXGsa+s2ShYcoOyqA4B6KG3tx6RcRrpcjJQhFssUUEaf4E=
+	t=1744855760; cv=none; b=eXNaLR0ghR+AybDIOlSRFG9kdCtHy/yYuhPuLZEaNDUEUWzyvhxHxhA8H/uLk4yEaCcc/xvL4igQrXv0Yli38pX3LshmDqyj16qf+1I/HIW4Dsi4PKhiCvmVZaNvVtWwG+DWzZRxezsX1VmbIZuf3v6IJV10jib4miVFq9qhf38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744855611; c=relaxed/simple;
-	bh=8Vy9aCztAXdVgTN3k4KwowRPP5iUfC36QefL0nSXbdg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=owu4UTCsbMC3c0RAtZqcFrrUou1dd8s+YkU1HIcUzwN+xhlZFLrtsu+2CPnfcgeOYz098X4ducAWE1rSDpaf9KiTKq3BkA574hzUPrDs5KifgWTpf4CoOY3Zyw4DDa0kEFjkmTG9834pq6uP+OKin+4d++Ix6vXvYM7XaktWhqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l+VjPAos; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744855760; c=relaxed/simple;
+	bh=KSelZMOHGBCAC6ffhylcs5ml2BXN3psxianAepa1Pw0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KAnlYW/Q+Bsa8F89YyWNZHmnQxaKl1tlvQWax15MRTYH8l/VytkpXIStGmp/17RUWlZjXO4GliCJv7XqFK+UzLNow0uTpDTPjWi326QC1XESa/S82LrYfAd/PQmbGeuzjaMB38K+yd/wV2DPmyRnx9mSg+wiSg+KUFrVZW2M+R0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JzYLMow2; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l+VjPAos"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-225477548e1so2874435ad.0;
-        Wed, 16 Apr 2025 19:06:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JzYLMow2"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43d5f10e1aaso33535e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 19:09:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744855610; x=1745460410; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1744855756; x=1745460556; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5S0Rc5OUApAJHdSC6yQdEbbcqqj1NWTeaGJIvpD8DrQ=;
-        b=l+VjPAosXdFYSJtNVwXmVslZBPhdF5KcPysrCxF7QlbB9Sy9E0SncDmWrHExyg0/UJ
-         jf76LC6VrT7sai/Y5S+4NpBX9uby2r+YsRgS/aEPf+wM93wDF6GgcdN2eXJDb6opnP9s
-         egzkK7stm30e/PRkIq5dEgcJ1qGqBE1x1D5IhBMSf05kgaPTPzbjfBDqxfTApcoxBokx
-         6X19mBqn25QSS3XTZJp99HcFEqPOfC2ATNQhqgarQ6NnpUGUBE9wLvOzDiE5cZH0O+YV
-         /xJa9/etGcJ9o3gLKoWNA33R+ZAoff+p6CzuiQ01Zr8zb4UVOrrHX+ygavlLzF2CHlo7
-         ONqA==
+        bh=KSelZMOHGBCAC6ffhylcs5ml2BXN3psxianAepa1Pw0=;
+        b=JzYLMow2LkLFPXSefmx1gmC72CSr7O902d+IMLLKHcYAnh4cz8Z42hzFCxR278ZFOh
+         rgTm2RhJ8s4j9zKTKcCTzvxUeqkG2ffMfGvV2NpV9o3YnmhZbd6HAWygJywKPPHOBQHT
+         v6GIose+LN7ZeN91pXPT1Szt17BECGMYNYtx6/0mCaBNr13XKGiBlBj+5a5QNHqerh+x
+         4QXhYYFltm1e2vCJOOijX/HmedyvwaQHIb4WuFedgAfA2W9bVYAgvet+0f1ILZloSDi+
+         jgdGGbsEFNJwAzwz7c5kGbLAugnCQp+WN9XRSo8wN4tV3uHaAP2EiTZbCGdRkqhwKqmI
+         TI6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744855610; x=1745460410;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744855756; x=1745460556;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5S0Rc5OUApAJHdSC6yQdEbbcqqj1NWTeaGJIvpD8DrQ=;
-        b=X0pmwMNEqU0P5mP2tp4e/eo/85m9mmolvdh5GiO/D8NJIGb+tHxuS9YkybQhK9+7r7
-         qag8fuDbxa5NqUliWQuizTPo6eh4gV98FQM2h5P2dCzC0fyrPWLq+6JgXRMe5F+Y6ogE
-         r2M9G3752kEzeLVD9wGlXrsulyKXJtVXylrhINv66d3iYgGTKj3QCETFKKk0Hyk6IjR+
-         GewurtSCK0iTE/qU1NuAosy/cQyvXHfhX3WSiNBFVBIOOrQF+nL/Oqis1DEnFhzn6Woz
-         +FUcAUdVh6TNPE+BAAd7jWDChYKbM/uv0Rs8jnDZJw2RC0i2rmDEQJOQewhW5ix1edYC
-         xmXg==
-X-Forwarded-Encrypted: i=1; AJvYcCWP1ymU7ALzwxTc81DAhCrpXJNt4gBMVjZQDiLmOKFT8xL1CiT9k09qWTe6qKrfYpe+kkHIL331/AmVDFUg@vger.kernel.org, AJvYcCXDMNkRQmPkPOr1ozZrBG+Q26LbUq1iCaakDHF4EVXDlIZ55lu3RB3mBo1/44xqmUYhaFVSWKM1j6ETaQ==@vger.kernel.org, AJvYcCXcN6Zsxpa3pE8Y/QEcUU3FJhcord8mcFcuXwhaoDqqDrAk8dBHP2iND0N/eo7xV+VRirKADyxYTBBY@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZDmx1XlNg2+Zjlwcnhgmw9U/evNt06xbijSpGhord2/5tC/07
-	Vnz9U3yTkzSBw6BNtA4xTgOB5tUv9FI6xrorV/628roKuyxRfn2C
-X-Gm-Gg: ASbGncvJzJHcDGcH/cTcJ8Fp+9sqrhgMVQvv8gTG5GXAZiv6ULDYkVIw7TX+fjKnPUS
-	VbzKtje4KQgOpwy5FM5VRP6yfLpVQj9wgsbdL4Zq7sxZIqQHpyvFWa8MBi/u7CFmv6McVAFU8eL
-	/raftauFAk+e9NiubuSl9MhBinlij0Ek/Ca0XocpwQ/uo4LlGOxquJRkZQCTn9ErjMI6rXeVAqs
-	DVB+fnhM0AfyNv2xRJ2sKuXjF/IL+QCi5HGlNo/7vlPd/jiKrJXJDgAq1h+JN7o8xakquZXFA9A
-	wyMDOfRJsjvGXpMB7Pa75tJ/zwHvb1G1I+IpdmuoOmZQ2B0TjAE+yQ==
-X-Google-Smtp-Source: AGHT+IHOSSVJxwJFTvqTyirKYLKDkNN1HsuII60LpoJlqemuqX/oIQnI0UNsOszF22K4816pi4+qdg==
-X-Received: by 2002:a17:902:dac7:b0:220:d601:a704 with SMTP id d9443c01a7336-22c358d71admr50793935ad.18.1744855609467;
-        Wed, 16 Apr 2025 19:06:49 -0700 (PDT)
-Received: from localhost.localdomain ([171.255.57.44])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33fcea58sm21612685ad.199.2025.04.16.19.06.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 19:06:48 -0700 (PDT)
-From: Nam Tran <trannamatk@gmail.com>
-To: krzk+dt@kernel.org
-Cc: pavel@kernel.org,
-	lee@kernel.org,
-	robh@kernel.org,
-	conor+dt@kernel.org,
-	corbet@lwn.net,
-	devicetree@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/5] dt-bindings: leds: add TI/National Semiconductor LP5812 LED Driver
-Date: Thu, 17 Apr 2025 09:06:22 +0700
-Message-Id: <20250417020622.1562-1-trannamatk@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <a22eff98-86db-47db-a310-5d00dcba14fa@kernel.org>
-References: <a22eff98-86db-47db-a310-5d00dcba14fa@kernel.org>
+        bh=KSelZMOHGBCAC6ffhylcs5ml2BXN3psxianAepa1Pw0=;
+        b=TXq/co3se3fX4XcMzR5okdlp1ZDkHjPhyqUPGjMiqZStT2dgRGiCygDluSKibAsHYL
+         p8DZRXCZ9aaH8v9OhQtAEak49eG0M/ibV3UY3wN/cpUwSON8HZljJLg7Sp6XUdnsDkNq
+         +f6VneCXIbcKzCPEv8HXrgyL+NMWnqkLMnSCgXpDBFsD+hOcQrS6feBV0ODIA98m68zJ
+         vyPx30CR5sEpwR1r8PIxZaE4ir5UBYROBHB/vp01KJDcpZxUmFseBrNrocedyT3FTZ+7
+         rapuCXw7VNQnH9IQvC4wb+tXJ6WX2QBCO9gaSSkUZEoP7tvG6ZmoT4u61cxD7hGRex/R
+         f8uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWL3T2xTIrI/8V+NRmpPbzdKKmE200egt5KTVzE3DORC3Y4/ZdMlRFObq83mIhzPabeU/P8bbDQDYb5ef0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxddNy1U6QmEjTDDOlAQPJVtXrQ5/pILFoASO28/h9ohTJpacxP
+	mv5n+6bl3GyHvOIZ5HZAd4I1AcEPfgncclbBK8ulpm3929SUy0fotC7BVUK35zm8+KE8q6bL+6S
+	NYTZeSuZYw9PSs/zQI1lcVMUFy2P4EOCV3CgQ
+X-Gm-Gg: ASbGncvzGth/4yHU15BpUwU5b4BkVVK1nGihiCd0R9imqep0cdjQuOBLuLK54nq8Hn5
+	MrNh02n84R0FC1m9XADJRuUjuZjIpCBOKqXpYuSVcLZg+d3XEwzLw4Dg3sL9nRnrnQkWDZKylDL
+	PPalJY5SnUWD8Zu+oJcSBB/wdNoLIB+fE=
+X-Google-Smtp-Source: AGHT+IFrppytZV5cSJfrYgzaifTbDrHqkypNt5Bohd7JB9cXbxaDZ8Ylu35PtX/6cVUznzvu+dDy2IZggStg9q0OeRc=
+X-Received: by 2002:a05:600c:3042:b0:439:9434:1b66 with SMTP id
+ 5b1f17b1804b1-44063d2802cmr294225e9.1.1744855756423; Wed, 16 Apr 2025
+ 19:09:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250414225227.3642618-1-tjmercier@google.com>
+ <20250414225227.3642618-3-tjmercier@google.com> <CAPhsuW6sgGvjeAcciskmGO7r6+eeDo_KVS3y7C8fCDPptzCebw@mail.gmail.com>
+ <CABdmKX0bgxZFYuvQvQPK0AnAHEE3FebY_eA1+Vo=ScH1MbfzMg@mail.gmail.com>
+ <CAPhsuW72Q2--E9tQQY8xADghTV6bYy9vHpFQoCWNh0V_QBWafA@mail.gmail.com>
+ <CABdmKX1tDv3fSFURDN7=txFSbQ1xTjp8ZhLP8tFAvLcO9_-4_A@mail.gmail.com> <CAPhsuW7xvSYjWvy8K9Ev_tMwDRy2dpEiBcHYai3n-wAa0xvLow@mail.gmail.com>
+In-Reply-To: <CAPhsuW7xvSYjWvy8K9Ev_tMwDRy2dpEiBcHYai3n-wAa0xvLow@mail.gmail.com>
+From: "T.J. Mercier" <tjmercier@google.com>
+Date: Wed, 16 Apr 2025 19:09:04 -0700
+X-Gm-Features: ATxdqUFLL37LKBoNbpt1TbRt2xDWynqShrVasUjLiM1tjzZW-eK8x-aahsy-M1I
+Message-ID: <CABdmKX1p0KgbipTSW1Ywi4bTBabQmsg21gA14Bp5atYHg8FeXQ@mail.gmail.com>
+Subject: Re: [PATCH 2/4] bpf: Add dmabuf iterator
+To: Song Liu <song@kernel.org>
+Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	skhan@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, android-mm@google.com, 
+	simona@ffwll.ch, corbet@lwn.net, eddyz87@gmail.com, yonghong.song@linux.dev, 
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
+	jolsa@kernel.org, mykolal@fb.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 15 Apr 2025, Krzysztof Kozlowski wrote:
-
->On 15/04/2025 11:53, Nam Tran wrote:
->> On Mon, 14 Apr 2025, Krzysztof Kozlowski wrote:
->> 
->>> On 14/04/2025 16:57, Nam Tran wrote:
->>>> +
->>>> +description: |
->>>> +  The LP5812 is an I2C LED Driver that can support LED matrix 4x3.
->>>> +  For more product information please see the link below:
->>>> +  https://www.ti.com/product/LP5812#tech-docs
->>>> +
->>>> +properties:
->>>> +  compatible:
->>>> +    const: ti,lp5812
->>>> +
->>>> +  reg:
->>>> +    maxItems: 1
->>>> +
->>>> +  "#address-cells":
->>>> +    const: 1
->>>> +
->>>> +  "#size-cells":
->>>> +    const: 0
->>>
->>> No need for supply?
->> 
->> Since the hardware uses an external power supply,
->> we decide not to include the supply property in the binding.
+On Wed, Apr 16, 2025 at 6:26=E2=80=AFPM Song Liu <song@kernel.org> wrote:
 >
->So there is power supply? If so, must be in the binding. Bindings
->describe given hardware (LP5812), not your particular board/setup.
-
-Thank you for the clarification.
-The LP5812 is externally powered and has a dedicated VCC pin.
-I'll update the binding to include a `vcc-supply` property.
-
->> 
->>>> +
->>>> +patternProperties:
->>>> +  "^led@[0-9a-b]$":
->>>> +    type: object
->>>> +    $ref: common.yaml#
->>>> +    unevaluatedProperties: false
->>>> +
->>>> +    properties:
->>>> +      reg:
->>>> +        minimum: 0
->>>> +        maximum: 0xb
->>>> +
->>>> +      chan-name:
->>>> +        $ref: /schemas/types.yaml#/definitions/string
->>>> +        description: LED channel name
->>>
->>> My comment stay valid. I don't think LEDs have channels, datasheet also
->>> has nothing about channels, so again - use existing properties. Or
->>> better drop it - I don't see any point in the name. The reg already
->>> defines it.
->> 
->> The channel was named for the output channel to each LED, not the LED channels.
+> On Wed, Apr 16, 2025 at 4:40=E2=80=AFPM T.J. Mercier <tjmercier@google.co=
+m> wrote:
+> >
+> > On Wed, Apr 16, 2025 at 4:08=E2=80=AFPM Song Liu <song@kernel.org> wrot=
+e:
+> > >
+> > > On Wed, Apr 16, 2025 at 3:51=E2=80=AFPM T.J. Mercier <tjmercier@googl=
+e.com> wrote:
+> > > [...]
+> > > > >
+> > > > > IIUC, the iterator simply traverses elements in a linked list. I =
+feel it is
+> > > > > an overkill to implement a new BPF iterator for it.
+> > > >
+> > > > Like other BPF iterators such as kmem_cache_iter or task_iter.
+> > > > Cgroup_iter iterates trees instead of lists. This is iterating over
+> > > > kernel objects just like the docs say, "A BPF iterator is a type of
+> > > > BPF program that allows users to iterate over specific types of ker=
+nel
+> > > > objects". More complicated iteration should not be a requirement he=
+re.
+> > > >
+> > > > > Maybe we simply
+> > > > > use debugging tools like crash or drgn for this? The access with
+> > > > > these tools will not be protected by the mutex. But from my perso=
+nal
+> > > > > experience, this is not a big issue for user space debugging tool=
+s.
+> > > >
+> > > > drgn is *way* too slow, and even if it weren't the dependencies for
+> > > > running it aren't available. crash needs debug symbols which also
+> > > > aren't available on user builds. This is not just for manual
+> > > > debugging, it's for reporting memory use in production. Or anything
+> > > > else someone might care to extract like attachment info or refcount=
+s.
+> > >
+> > > Could you please share more information about the use cases and
+> > > the time constraint here, and why drgn is too slow. Is most of the de=
+lay
+> > > comes from parsing DWARF? This is mostly for my curiosity, because
+> > > I have been thinking about using drgn to do some monitoring in
+> > > production.
+> > >
+> > > Thanks,
+> > > Song
+> >
+> > These RunCommands have 10 second timeouts for example. It's rare that
+> > I see them get exceeded but it happens occasionally.:
+> > https://cs.android.com/android/platform/superproject/main/+/main:framew=
+orks/native/cmds/dumpstate/dumpstate.cpp;drc=3D98bdc04b7658fde0a99403fc052d=
+1d18e7d48ea6;l=3D2008
 >
->I don't understand what you want to say. Please explain why existing
->label property is not correct here.
-
-I understand that the label property is deprecated and that the preferred approach now is to use function and color instead.
-However, in the case of the LP5812, which is a matrix LED driver, these properties are not a good fit.
-The LP5812 does not associate each output with a specific function (like "status", "activity"),
-and the LEDs driven by LP5812 are not fixed to a particular color.
-
->> but the person who wants to develop LP5812's matrix-related features can use the "channels" for easy mapping.
+> Thanks for sharing this information.
 >
->easy mapping of what? Please show me the usage.
-
-You're right — I cannot provide a meaningful usage example for chan-name.
-The chan-name property was intended to give a more descriptive name for each LED channel, mainly for convenience in user space.
-But since this isn’t standard and you advised against introducing such a property, we’ve decided to drop it.
-
->> 
->>>
->>> However after dropping this, your example has nodes with only reg -
->>> what's the point of them? Why no properties from common.yaml are
->>> applicable? If they are not applicable, then the entire subnode should
->>> be dropped - you don't need them to describe the hardware.
->> 
->> Actually, the "color" property can be applied, but the LP5812 is a matrix LED,
->> so specifying a particular LED color is not necessary when developing LP5812 features.
+> > The last time I used drgn (admittedly back in 2023) it took over a
+> > minute to iterate through less than 200 cgroups. I'm not sure what the
+> > root cause of the slowness was, but I'd expect the DWARF processing to
+> > be done up-front once and the slowness I experienced was not just at
+> > startup. Eventually I switched over to tracefs for that issue, which
+> > we still use for some telemetry.
 >
->This does not help me much and based on this I see no points in
->describing individual LEDs, because the only missing information is
->number of them but even that is fixed for given device, isn't it?
+> I haven't tried drgn on Android. On server side, iterating should 200
+> cgroups should be fairly fast (< 5 seconds, where DWARF parsing is
+> the most expensive part).
+>
+> > Other uses are by statsd for telemetry, memory reporting on app kills
+> > or death, and for "dumpsys meminfo".
+>
+> Here is another rookie question, it appears to me there is a file descrip=
+tor
+> associated with each DMA buffer, can we achieve the same goal with
+> a task-file iterator?
 
-Actually, the number of LED outputs on the LP5812 is not strictly fixed — it depends on the selected operating mode.
-This mode is configurable by the end user at runtime through sysfs interfaces provided by the driver.
-
-I understand your point — if no additional properties from common.yaml are applicable, these subnodes may not be necessary.
-Therefore, we’ve decided to drop them.
-
-Best regards,
-Nam Tran
+That would find almost all of them, but not the kernel-only
+allocations. (kernel_rss in the dmabuf_dump output I attached earlier.
+If there's a leak, it's likely to show up in kernel_rss because some
+driver forgot to release its reference(s).) Also wouldn't that be a
+ton more iterations since we'd have to visit every FD to find the
+small portion that are dmabufs? I'm not actually sure if buffers that
+have been mapped, and then have had their file descriptors closed
+would show up in task_struct->files; if not I think that would mean
+scanning both files and vmas for each task.
