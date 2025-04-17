@@ -1,64 +1,122 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387F71F585C;
-	Thu, 17 Apr 2025 19:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305491FF1D1
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 19:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744918187; cv=none; b=ckBUXfYDQqKqD3wgXIPaIh7wI8NgXdD3QtiiHPOXzvnVbJA1ro/juegDy4cqbpqaUP6Gf5dpiLo+391qRvKSblQONnZ7sQ9bVDbVRXEYiMA7kWuFQeRtmr+PRyH9G3nMNOiZucLCy94aLbIwbt8A8bbNP90BzniYq+v8I3XARNQ=
+	t=1744918224; cv=none; b=a2PYteR66PeUbvHOmdYym+gbLrFEQunxK1qbhXxTLhtPdwr1+kc5Og9OIObmR5XGNZJqv6DnHdJyrKRjmVpm1yQCHPoMYC4fBaPfRkiW3I0qhZ4+xf504x4dy8Ex3nZPV4XL9fJvzJxr3XCI5o7ylUixxztAho4Zdpr1IpH1EB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744918187; c=relaxed/simple;
-	bh=BJlGURHE6MemQVjXFAMKrZK6cLY/Pa9rDV0Y3yE9/kM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EtkMBp80rEdG+YK/kQGtAwgrAnBYWfiOdwc4TpJvqjMCnS0PJkqmicz2xgMaISGXb4UB6rneF6WwVMd+SQg98Ggod4OgqmIjh0YPaJR91i0y91iyCrm9lQufUkuw+5hcAUzu4i1yxo8QeTjDlttrcIFWk3yb7FZpqYawQ9LFduA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=B04kaKX/; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744918224; c=relaxed/simple;
+	bh=DgSOWnvNvn/QxSmHd7+V2xUmIEAWsoKv3QG7DLAGgaI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i9lo8jEdCqPUjk6RXhiq8eNc/3DWReBxCITSsSxLZy92BQ5vC09AVg2OK6JSowCOYM1TY5h0s7XcS3ndiVX4ZV30eI2kzfltGpdeqRqnz7K9R+sOB6u77L9kCs9N/rQL6ZSEIcRtv3e6w46gKeTMDWeFdUDjjq+qtIFhSnfE/Wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OrvtYSp3; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="B04kaKX/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=YYni3/1yasHUrwTdeLkDnxWGmeI3BeQA9igCHa2A0qg=; b=B04kaKX/7xRwyxbgdMBzBGab8j
-	Al3S4pwhaYRPg1+2ag8hWiVJW9j+iisbiiF+yJ36IzIUKsVgppCNYrw0g1lwwdOjIRabNRa2aDBmP
-	KZu7bV/foVoVI3/RfKUfn6lX/4MiIhRG7BZPq2e94tD9dADbibeo6zXWxSzbEVC8eBvE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u5Uva-009p9t-8F; Thu, 17 Apr 2025 21:29:38 +0200
-Date: Thu, 17 Apr 2025 21:29:38 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Qasim Ijaz <qasdev00@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v3 6/8] ref_tracker: widen the ref_tracker_dir.name field
-Message-ID: <6ad1f1ae-a912-43ec-aac5-de49e344e9ff@lunn.ch>
-References: <20250417-reftrack-dbgfs-v3-0-c3159428c8fb@kernel.org>
- <20250417-reftrack-dbgfs-v3-6-c3159428c8fb@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OrvtYSp3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744918221; x=1776454221;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=DgSOWnvNvn/QxSmHd7+V2xUmIEAWsoKv3QG7DLAGgaI=;
+  b=OrvtYSp3aPWDVcTWsbvAsEqy9/JfxabeBE+jHx2n+30tzO7olq6hElou
+   qpWfCuaDXmO2RzEyRA3jpQQLHm0DEjF8Ho67aTiE9QYfD2BBZrZuhrJJ+
+   Jw2zrql9Mh4Cw1Z5MGMz2nIc2lXGrP4eoeKjOwxPvkVQPfbpWX1HOfYcC
+   ZvX0g+79LCGpCynrSZIM8ls8VGO/8+hi2tAZ++IFlN2BXZEq2GQoJ8Jhb
+   03DLXH2azcjY9VQmGcVVTjE8dPg1nHX5pAYNXkmyoigi54cBYwbThbVXb
+   RWYNtBffnLnokXD7YupASKcZNDlPAy1aB1wayx6jEnysMHGLTrQcExqTl
+   Q==;
+X-CSE-ConnectionGUID: MPef/jrRQP+vQ44IFYJ9FQ==
+X-CSE-MsgGUID: sdwEDjePQiyuyqq51fuCeA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="46695504"
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="46695504"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 12:30:20 -0700
+X-CSE-ConnectionGUID: TA0yaL1wRBS9EMC0By5B9w==
+X-CSE-MsgGUID: iyuZ8g1STMWBTdUqO+adgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="131457672"
+Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.223.169]) ([10.124.223.169])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 12:30:20 -0700
+Message-ID: <b11e30ac-2b6f-4687-b687-3254511a003a@intel.com>
+Date: Thu, 17 Apr 2025 12:30:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417-reftrack-dbgfs-v3-6-c3159428c8fb@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] x86/devmem: Remove duplicate range_is_allowed()
+ definition
+To: Dan Williams <dan.j.williams@intel.com>, dave.hansen@linux.intel.com
+Cc: Ingo Molnar <mingo@kernel.org>, Naveen N Rao <naveen@kernel.org>,
+ Nikolay Borisov <nik.borisov@suse.com>, linux-kernel@vger.kernel.org,
+ linux-coco@lists.linux.dev
+References: <174491711228.1395340.3647010925173796093.stgit@dwillia2-xfh.jf.intel.com>
+ <174491712068.1395340.11679806523938235782.stgit@dwillia2-xfh.jf.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <174491712068.1395340.11679806523938235782.stgit@dwillia2-xfh.jf.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 17, 2025 at 09:11:09AM -0400, Jeff Layton wrote:
-> Currently it's 32 bytes, but with the need to move to unique names for
-> debugfs files, that won't be enough. Move to a 64 byte name field.
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+On 4/17/25 12:12, Dan Williams wrote:
+> The only thing preventing a common implementation is that
+> phys_mem_access_prot_allowed() expects the range check to exit
+> immediately when PAT is disabled [2]. I.e. there is no cache conflict to
+> manage in that case. This cleanup was noticed on the path to
+> considering changing range_is_allowed() policy to blanket deny /dev/mem
+> for private (confidential computing) memory.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Yay, removing duplicated code!
 
-    Andrew
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
