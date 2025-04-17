@@ -1,85 +1,89 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3778D18D63E;
-	Thu, 17 Apr 2025 21:55:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED6620E310;
+	Thu, 17 Apr 2025 21:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744926911; cv=none; b=bogDlofYNOomUxvq59GWSovwl7f8bDBdr4bF8RmzWlF5DV26gm46JqqTpuur/XSDH1osI5UVu1Lc1chOzVN67R4qzQwRG/Yh0smmQvRjlK1/IRRAhn/sj9IPMXwcqJa6cLRuonW/AoiZ8HB+oePRnzLGyf8EvpDJuQAAM9UZ7uY=
+	t=1744927101; cv=none; b=mtU9DhkL8Km6/IwM3oYySLt3ey7HYtnitfIQkMBGffj7BnPnNm42xx7tW0Zx9A/rl/TGTQ4+SiuhhY9GBUEpGi4bn0YoJsYWscO2CuuKvc0j6Vmp3EP6Y1Ze+JAku4W8WY9tHktfSjwlA2luEPn7qpCciBkcBUqb9aUhRNk+JQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744926911; c=relaxed/simple;
-	bh=ByPpYENxlIZaec+r3yhyrtXdmtS7Tm69rsr9RCqlPJc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OA6cY9idM6OiaWq8yAXO3GBckkQ5AlRsNYGm/J9pKQgV+cZwy3b4GendWedzKGZWaG0vxt74xK0fYI74aKDB4c3UaDh0vowPZ/zjUatLu4o5rADi1IJpbYipHyurD6GE52eY0CleFDlW9GsEGbYg9hButH8o+2USHQ5MAO45fhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=uuVjjB9C; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744927101; c=relaxed/simple;
+	bh=mznnJHuLbKpYgm+SG5uyUsVWXj7gHH37CxevZHUxBVI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=L9S1YioAfQWME9SOI/lnpjfJ+Rb6gHjFiAD0jHXV2PFti2u3LBxhbC6H5ExyGsjkq8fygaDX6XFN3RwCu6FP0pbbXFGlNd03kCgHKcbXsCW2sERy82Rjtkvx0ZFcRUFrLMnmAUTcyD+UmXibf8Zj8lAf9CKQHN1iPCCcUWe30SA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=c6uASypS; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uuVjjB9C"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=AoxkqaP/iwiaCH2PRcdctSE2Zygsq/ejG5zO2o7rnKo=; b=uuVjjB9CvUsob4jkYbsqVZ2TLI
-	/celJbqQ6R3m7vQHTBKsdpjzssBVF5969/s54JUV9Ka3oBrQJ9bVAuuplzU5x2GJAWz69dlLfK07b
-	rG6+9Gf04ehG9YFSa8n//p2rpgIet/eO08ubHtGzQ+uADs922cAn0hasjREqlFBjzX/g=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u5XCF-009pub-7D; Thu, 17 Apr 2025 23:54:59 +0200
-Date: Thu, 17 Apr 2025 23:54:59 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Qasim Ijaz <qasdev00@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v3 6/8] ref_tracker: widen the ref_tracker_dir.name field
-Message-ID: <09b53a5a-60af-4f4b-b69f-b92baca740ef@lunn.ch>
-References: <20250417-reftrack-dbgfs-v3-0-c3159428c8fb@kernel.org>
- <20250417-reftrack-dbgfs-v3-6-c3159428c8fb@kernel.org>
- <6ad1f1ae-a912-43ec-aac5-de49e344e9ff@lunn.ch>
- <c635c6024a18e9a3bd1f3832521f1976377fe314.camel@kernel.org>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="c6uASypS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744927098;
+	bh=mznnJHuLbKpYgm+SG5uyUsVWXj7gHH37CxevZHUxBVI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=c6uASypSYxZwTlVkWgFrq09bK5l2wonvRONdRYiABXANdRFuPQo3nE+t2Dg9O/86f
+	 OC/UZTO/Zm6pvu+pIx3bBMmhRNNCz0ZGuO8nKXUUhdDpcUpm/4Sr9ovm4ZQ9aErtq7
+	 79nplOIfwe6wuPGymnIzZ1boaWiO+PcLyDMDAq2gJZAjNc9jDUzLtVqD2a8dSxVzHx
+	 DAroQu/qa50rppWH0u0DDyKtJA1HBg5ETdOppe3TLq+yy38t/M5EVxS/3AZ0ltq3J4
+	 dQTxvR6+ZqcjSO0RGQelrhjE9JJ8YzSqSubET5qBilEYtyr/0tgoEGwXRa32SlWYO4
+	 5iHxsw96o1kag==
+Received: from [192.168.13.3] (unknown [IPv6:2606:6d00:15:9913::c73])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id E914817E0FA5;
+	Thu, 17 Apr 2025 23:58:16 +0200 (CEST)
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Date: Thu, 17 Apr 2025 17:57:58 -0400
+Subject: [PATCH v9 1/4] media: rkvdec: h264: Limit minimum profile to
+ constrained baseline
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c635c6024a18e9a3bd1f3832521f1976377fe314.camel@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250417-b4-rkvdec_h264_high10_and_422_support-v9-1-0e8738ccb46b@collabora.com>
+References: <20250417-b4-rkvdec_h264_high10_and_422_support-v9-0-0e8738ccb46b@collabora.com>
+In-Reply-To: <20250417-b4-rkvdec_h264_high10_and_422_support-v9-0-0e8738ccb46b@collabora.com>
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>, 
+ Sebastian Fricke <sebastian.fricke@collabora.com>
+X-Mailer: b4 0.14.2
 
-On Thu, Apr 17, 2025 at 05:27:05PM -0400, Jeff Layton wrote:
-> On Thu, 2025-04-17 at 21:29 +0200, Andrew Lunn wrote:
-> > On Thu, Apr 17, 2025 at 09:11:09AM -0400, Jeff Layton wrote:
-> > > Currently it's 32 bytes, but with the need to move to unique names for
-> > > debugfs files, that won't be enough. Move to a 64 byte name field.
-> > > 
-> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > 
-> > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> > 
-> 
-> 
-> Thanks for the review!
-> 
-> It occurs to me that we don't technically need this patch, since
-> ref_tracker_dir_debugfs() doesn't overwrite dir->name in this version.
+From: Sebastian Fricke <sebastian.fricke@collabora.com>
 
-I had not noticed that. I don't know if that is good or bad. Two
-different names for the same thing. Nice thing is, this is debugfs, so
-we are not setting an ABI. We can change this any time we want.
+Neither the hardware nor the kernel API support FMO/ASO features
+required by the full baseline profile. Therefore limit the minimum
+profile to the constrained baseline profile explicitly.
 
-> Perhaps we should drop this patch, or I could define the
-> REF_TRACKER_NAMESZ constant and just leave it at 32?
+Suggested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Signed-off-by: Sebastian Fricke <sebastian.fricke@collabora.com>
+Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+---
+ drivers/staging/media/rkvdec/rkvdec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Having the constant might make future changes easier to make, avoid
-having to find the hard coded 32.
+diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
+index dd7e57a902640d363d26be887cb535c2668d5b15..65c6f1d07a493e017ae941780b823d41314a49b8 100644
+--- a/drivers/staging/media/rkvdec/rkvdec.c
++++ b/drivers/staging/media/rkvdec/rkvdec.c
+@@ -150,7 +150,7 @@ static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
+ 	},
+ 	{
+ 		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_PROFILE,
+-		.cfg.min = V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE,
++		.cfg.min = V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_BASELINE,
+ 		.cfg.max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
+ 		.cfg.menu_skip_mask =
+ 			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
 
-	Andrew
+-- 
+2.49.0
+
