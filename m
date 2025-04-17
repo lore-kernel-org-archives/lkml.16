@@ -1,88 +1,138 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5076824290F
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20566243968;
+	Thu, 17 Apr 2025 12:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744893876; cv=none; b=N3aua281ppTArs/oqSdwXKw/Gi5K7BNfvedDDKDb8fuzonlUSQgewtOGAszOIEYYWsJPx4BA+S+DMMU5YwkvUKOub7oZroVsSXQ9fxze8HqBqO+drjddty7x6XOo9wsYtY1xbXIr4iXthxbQQq3ttG/TDhiH3q7+ZqPzurVXrtc=
+	t=1744893881; cv=none; b=TWqhwDgs+hWyE1EbYTWkHArfbj0eauMgWe/dEFqDeSpj+La5EMwGx79JR2LtOHulsty54TQRn6R5EXNcRCDLkeTU+rfqUE91WLyJ8qHLBRctWGmihb6R7efaiyfcDC+m6HGz9YZnmFpImKXSJVJ79u2mlyZcivEi0nBSIq/dlPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744893876; c=relaxed/simple;
-	bh=/Q1QqZcrRDm+z4zKny6B/oOLvOzzSnBzA1wNvjUJPDU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZvvuqJJzAxmc7XTF5w75XPZt2HgxGvA6f3vLhV75a622+SxePAk7k77IO5b/UmZx3Vpzwx0G9YpKJlnKweVS1ivCoLp4kf5YxVLiq1bj4T4sNoR7payo6Al8kBmtUy1xzrL0J/gYQOcD6FtgqfzR7Zg30uUVHO2LJMS6NN9KTkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Kt1agLx4; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744893881; c=relaxed/simple;
+	bh=REIhlmNxxgT8aKtiF2L/vrBcBS0fkO7/qt+KHBVnbNw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q/IoprF0fkLpuJQ9XomcWBYX0SfqfQ2z/YfnwYdpjn0rCmpsaL5F+Y00Z37i9t/iJ9zctz223XnxfTHIp4OMCs9DslARq58J6qS74pRELS7P3yV/qn4wCd2NmuuBb52njzikAuiGBQGYCn0lMOX1NxVpwsApqTED17a7VTZodaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=AXwUaOHK; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kt1agLx4"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e8f4c50a8fso6845976d6.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:44:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744893874; x=1745498674; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Q1QqZcrRDm+z4zKny6B/oOLvOzzSnBzA1wNvjUJPDU=;
-        b=Kt1agLx4MSD3094uu5DWA8HxqcrEtOw4iu/2Q37D3Dhj75BP1plHyw5ZbLGuq3EG23
-         uX+or6n3iCDVEUCCuwdQU+mcbJYuxBpht8ubOyWMsKlqvtWIQ5spMFDXFA4JWrmH6iCJ
-         9dHmJOJDa5oEqKlnTSD6lcspR70OHFfylb/NfIfTtg8C3NcFzqM/oX9Hji/R+M9dpNWz
-         VDnCffS1dh7JZMMK87pwnMSaXQCt+5finZz/BtpzbMglakocxC0GuthKOZ1TWfKJGfOL
-         HnQyXkNsH7CZ33dpjxYqlNfu4wYovi+qk/Q/Z+66ke7qXJh1uTkglg7uYE2lkpf/rOql
-         bCAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744893874; x=1745498674;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/Q1QqZcrRDm+z4zKny6B/oOLvOzzSnBzA1wNvjUJPDU=;
-        b=fjP0rswRYLfuPwWljmJ6oYFU7Gi9F2jfg6td/RpS/ONL7Rvst+CQy82QYw/u6gpuhX
-         nPJ7GxE7Zu+Xt/WpFr+gNYEzOcG6heqzhe95wXHjb+wnsX0vDt9+kC/YRRP8gH8NQkqp
-         zQ4quWSRrpFGVhUxq1U4R0/4SccmJa44b1KZcOWbj2n0aTIJyEmF6ab1u83+u6fYrTFQ
-         vKuaeH2EJYmoI2PLvZPZc0rMN1iksTPCVM9GEdK1zlnNS6nV6yfSkwxP5LE5IXJI4yO/
-         kes/tjbM4R805Imd+wA8SeC5Vnv4jmcf4J8ClElbFWtQH9Kamz5QIehcMqI0o7cUDtqS
-         mi9w==
-X-Gm-Message-State: AOJu0YyuY4wQen7MVyPebArV400dGDCZlxibrR0Q4tlV8ZNYbZ8x8O9e
-	bvMEf6ah9z6p1oomVXC3u4TWoUtISWG6e6ocAYj0aGmks9kOCNGk1vM03AVg1p9mp3X6hhxqg5q
-	UPVFpQLoaqWFZxbRdBKuGaiyz37R4nC4j5snH
-X-Gm-Gg: ASbGncsLJ6M4IbeK1LJnV3g2N7G9ANbz6Jphz2jUAki/65LH7u2chXC8C+VSnizAgky
-	1kyjjJVTCJbbYwyoUTrlWHC+O+GNM0EmWrFRNy+wThbiBmT7VG0e0H66TEiOElwMWcQkgyDRQEP
-	OdXHDuT2dihpXOhliHfCKFW4lvAIvcl5spXX4xe/cJxd/fUiAn5m0W
-X-Google-Smtp-Source: AGHT+IGDKku5hzsXeufF9xTbqlxVlKhjCgIAnMWYEftHB8mcdakBNxGXHUr6s1yQgujbrtUlTM9gptqG2IOLlbY+obo=
-X-Received: by 2002:a0c:aa07:0:b0:6f2:bcbf:1030 with SMTP id
- 6a1803df08f44-6f2bcbf11a4mr17778526d6.43.1744893873997; Thu, 17 Apr 2025
- 05:44:33 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AXwUaOHK"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53HCiElx628357
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 17 Apr 2025 07:44:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744893854;
+	bh=at8L1hZ/1fuPCfwlRQeFEAPYB3p7nMuCwhudAWDVQOY=;
+	h=From:To:CC:Subject:Date;
+	b=AXwUaOHKaq6yywaZtF+0qviR+V9JBb4c2r17yXrIuXQF4GuiIs16MHTZMxb6GXWwf
+	 ywt5ynzfA/SkC1m57RwsqjYrKGs/eI+cvhMlMWcgypXXa/nkIgDq1PlPSe4dIvNbEn
+	 cEFp0rZP7jFYXUWbbG9NL2KkkAnpPyTV20m4ixAw=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53HCiEDm101084
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 17 Apr 2025 07:44:14 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 17
+ Apr 2025 07:44:14 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 17 Apr 2025 07:44:14 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53HCi9XB048918;
+	Thu, 17 Apr 2025 07:44:09 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <vigneshr@ti.com>, <kishon@kernel.org>,
+        <18255117159@163.com>, <cassel@kernel.org>,
+        <wojciech.jasko-EXT@continental-corporation.com>,
+        <thomas.richard@bootlin.com>, <bwawrzyn@cisco.com>
+CC: <linux-pci@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: [PATCH v4 0/4] Loadable Module support for PCIe Cadence and J721E
+Date: Thu, 17 Apr 2025 18:14:04 +0530
+Message-ID: <20250417124408.2752248-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416085446.480069-1-glider@google.com> <aAB9sUllq/xR/Maf@hu-jiangenj-sha.qualcomm.com>
-In-Reply-To: <aAB9sUllq/xR/Maf@hu-jiangenj-sha.qualcomm.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Thu, 17 Apr 2025 14:43:56 +0200
-X-Gm-Features: ATxdqUHPHhj8x6Foqmh22Sf3Tnz5IYfxqO1r6Iz-bl_MdJoEp9NcRi1P5468ovk
-Message-ID: <CAG_fn=WyvDopbDN3YrrUzS-aUgbVKTDRv6D5vArnQbSkp_xB6Q@mail.gmail.com>
-Subject: Re: [PATCH 0/7] RFC: coverage deduplication for KCOV
-To: Joey Jiao <quic_jiangenj@quicinc.com>
-Cc: linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, 
-	Aleksandr Nogikh <nogikh@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Marco Elver <elver@google.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-> > Below are the average stats from the runs.
-> Is there test without trace collection? Is bitmap only enough?
+Hello,
 
-If we bump the bitmap size to ~16K, it should be enough to keep all
-the fuzzing results from a single run.
-We haven't experimented with it much though, because syzkaller
-currently processes coverage as an array of PCs, not a bitmap.
-Changing this would require a major rework of syzkaller, given that
-the positions in the bitmap may differ between different machines, so
-we'll need to maintain a reverse mapping between bits and PCs in every
-executor.
+This series enables support to build the PCIe Cadence Controller drivers
+and the PCI J721E Application/Wrapper/Glue driver as Loadable Kernel
+Modules. The motivation for this series is that PCIe is not a necessity
+for booting the SoC, due to which it doesn't have to be a built-in
+module. Additionally, the defconfig doesn't enable the PCIe Cadence
+Controller drivers and the PCI J721E driver, due to which PCIe is not
+supported by default. Enabling the configs as of now (i.e. without this
+series) will result in built-in drivers i.e. a bloated Linux Image for
+everyone who doesn't have the PCIe Controller. Therefore, with this
+series, after enabling support for building the drivers as loadable
+modules, the driver configs can be enabled in the defconfig to build
+the drivers as loadable modules, thereby enabling PCIe.
 
-Such a mapping could be implemented on the kernel side on top of the
-proposed patches, once someone proves a need for that.
+Series is based on linux-next tagged next-20250417.
+
+v3 of this series is at:
+https://lore.kernel.org/r/20250410104426.463453-1-s-vadapalli@ti.com/
+Changes since v3:
+- In the fourth patch of this series, the polarity for PERST# assert in
+  the driver's .remove callback has been fixed based on Mani's feedback at
+  https://lore.kernel.org/r/6bi5gul3sqvycmkf6cwokkvownjffaf2tkonjlefo2d7cautwx@uhfexzgz3okp/
+
+v2 of this series is at:
+https://lore.kernel.org/r/20250330083914.529222-1-s-vadapalli@ti.com/
+Changes since v2:
+- Collected "Reviewed-by" tag from:
+  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+  for the third patch in this series.
+- Dropped a delay before PERST assertion in the driver's remove callback
+  in the fourth patch of this series based on Mani's feedback at:
+  https://lore.kernel.org/r/zsxnx7biwogov5dw5yiafkgk6tsrtspac75bjbrca5uevweaim@ly67hwfyk7qh/
+
+v1 of this series is at:
+https://lore.kernel.org/r/20250307103128.3287497-1-s-vadapalli@ti.com/
+Changes since v1:
+- Collected "Reviewed-by" tags from:
+  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+  for the first two patches in this series.
+- Based on feedback from Mani on the third patch of the v1 series at:
+  https://lore.kernel.org/r/20250318080304.jsmrxqil6pn74nzh@thinkpad/
+  pci_epc_deinit_notify() has been included in cdns_pcie_ep_disable().
+- Based on feedback from Thomas on the fourth patch of the v1 series at:
+  https://lore.kernel.org/r/88b3ecbe-32b6-4310-afb9-da19a2d0506a@bootlin.com/
+  the "check" for a non-NULL "pcie-refclk" in j721e_pcie_remove() has been
+  dropped.
+
+Regards,
+Siddharth.
+
+Kishon Vijay Abraham I (1):
+  PCI: cadence: Add support to build pcie-cadence library as a kernel
+    module
+
+Siddharth Vadapalli (3):
+  PCI: cadence-host: Introduce cdns_pcie_host_disable helper for cleanup
+  PCI: cadence-ep: Introduce cdns_pcie_ep_disable helper for cleanup
+  PCI: j721e: Add support to build as a loadable module
+
+ drivers/pci/controller/cadence/Kconfig        |  12 +-
+ drivers/pci/controller/cadence/pci-j721e.c    |  31 ++++-
+ .../pci/controller/cadence/pcie-cadence-ep.c  |  17 +++
+ .../controller/cadence/pcie-cadence-host.c    | 113 ++++++++++++++++++
+ drivers/pci/controller/cadence/pcie-cadence.c |  12 ++
+ drivers/pci/controller/cadence/pcie-cadence.h |  14 ++-
+ 6 files changed, 190 insertions(+), 9 deletions(-)
+
+-- 
+2.34.1
+
