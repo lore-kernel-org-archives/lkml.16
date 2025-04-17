@@ -1,142 +1,151 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E439C2040B0;
-	Thu, 17 Apr 2025 06:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC0A205E0C
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 06:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744871960; cv=none; b=UhWfeSy+To87vVaGAdwKSWGZOLncZvdyLa99AXX+jsfsnHS/CU6gWprBopi+anorYzHJxbzZTNhntMKPO7Ep36CQrRwohKYWpl0ThW1pPlQNNVzGuA2WUYvC5B6ypDb1RCXsf2V2UmiQ3L7oCwecSrqMARYVlXfWsm5eTon+Pp8=
+	t=1744871971; cv=none; b=ILKFMXOkQA7qpro9a0Uy3WlEVyGMs+cCF0VRmQzZUluv/SXoJrVcYKK/LnJaf7m/fG38kaa4OfZeMn+E2GAclqXguZCYETEf9D6rxKRt5Mdmz7LTB08A1fkPR5d03RdY2fGyTQxA2G4vzHxRgl6nLKMlWZLq6oq7X1fHoxghsJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744871960; c=relaxed/simple;
-	bh=WKyAGawzprVwrTkfFvckDEJqm6+VK+OPjXyaZOlYxxo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=D99TAZqWLlcv5x1Ica87/JpfsIqVFjFNSLgOj2KOwWuGc/c6tSGb98w8f9RuWa6Q1vZUrR5ebYUbI7hFc2jkWsLowddpSoOtyJhtg7ip87aD9YirPg2M0JuyjxfpKeAgB4viL9LgbbZGO8T9JsJVmzCmWBu6jsnx42A9GbQHG1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=alHWxbM0; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744871971; c=relaxed/simple;
+	bh=59jZKnh0UjUE0oVRlN4BkQXlt3+BEqp/CSM8LBEvTfQ=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=nIIpVhPDjTXf8ovYVYrvJv1zBhghX03kR4x6MCmGvXNYu1q65JNzQAB/PTMpYVyheAID+a9act5w1n6eYwSy0zyX2dHVvwWra7Y59+SfHEa4xo75NeTcg3KE774xWebOLwT1SwJb5lHRgv0biPbKmEXj2Lp7gjsonVQL065Pwlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=fhom76C+; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="alHWxbM0"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53H5laLo031368;
-	Thu, 17 Apr 2025 06:39:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	lPuo4akm7drMI1PBgwsJ69tuzpSeETP77j5Q17EJVJM=; b=alHWxbM0RFNNlBWi
-	SSVByXzfNYXhvcwnJXwnX/e9GzAp58JEuXzV6AnWrnNEWRJXgPuhe9juwa/VCYLs
-	hmENAUyUUAob/jK2Z8j2uVd4gGs34zGDwtxgGPn2hStl46P16zRrhFMv0EfADbl4
-	lf/YhjHpL5uS73w4IgK8YfzeIPng/kIFta4dGPbtpSwdAlOT3sbB55aIq9ZhMKj8
-	umBeX2qxooDtwNeugOk4Jus0niF6Oa8YMLqNGq7zGGR99/h45z2Je+P76IGtc6J1
-	+dKBfnFsfeuOxQ+vOUwZpt7StmKUzg3/Xh+2RXfYI5/Nwr7Pe7S7tIEWCeP01RvG
-	zek0DA==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf69wwsx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 06:39:13 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53H6dCF8020507
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 06:39:12 GMT
-Received: from [10.216.50.229] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 16 Apr
- 2025 23:39:07 -0700
-Message-ID: <b592a51d-41f3-4a2b-a9f3-0f45c9bef967@quicinc.com>
-Date: Thu, 17 Apr 2025 12:09:04 +0530
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fhom76C+"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250417063926epoutp029b6c231c6b5f42d8ef0ed0aa99606175~3B88Up9W42643226432epoutp02r
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 06:39:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250417063926epoutp029b6c231c6b5f42d8ef0ed0aa99606175~3B88Up9W42643226432epoutp02r
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744871966;
+	bh=fVeozOJeYXKnjtHlTCmH8PYKO3xU7YuoOVEbKh6nUIw=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=fhom76C+/DsLyPJvZZNj7G1Fmw+wzGF03Ve1et7EVLRS3P1HwTWtC3OeJB5IR2HBB
+	 7y4iaePaEz9Ju+BP/GFcQtcjJJQNgR4h0nznCdQ8irvaC+6qFfJkALbKYJmnZZakYE
+	 YgjZqsc+9bigKLJu3LI3cFKyor/GHdWVm52rzcD8=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
+	20250417063926epcas5p42dc42cd6dcceca6f57eee04be5f2f97f~3B875T9Bk1038410384epcas5p4h;
+	Thu, 17 Apr 2025 06:39:26 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.182]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4ZdSt42szhz6B9mH; Thu, 17 Apr
+	2025 06:39:24 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	3A.CF.09842.C12A0086; Thu, 17 Apr 2025 15:39:24 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250417053233epcas5p26ead4fdc63ececbe1a11b66fc0337f86~3BCi5Tl_92508225082epcas5p27;
+	Thu, 17 Apr 2025 05:32:33 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250417053233epsmtrp1aa364e019649ddc717f6a682d6b4fda0~3BCi4XuIT3193131931epsmtrp1K;
+	Thu, 17 Apr 2025 05:32:33 +0000 (GMT)
+X-AuditID: b6c32a4b-329ff70000002672-58-6800a21c26c1
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	83.45.08766.17290086; Thu, 17 Apr 2025 14:32:33 +0900 (KST)
+Received: from INBRO000519 (unknown [107.122.1.150]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250417053232epsmtip12e87afa09158354fe2f9856bb1aa7298~3BChcJmI21636916369epsmtip1L;
+	Thu, 17 Apr 2025 05:32:31 +0000 (GMT)
+From: "Faraz Ata" <faraz.ata@samsung.com>
+To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, <alim.akhtar@samsung.com>,
+	<gregkh@linuxfoundation.org>, <jirislaby@kernel.org>
+Cc: <linux-arm-kernel@lists.infradead.org>,
+	<linux-samsung-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-serial@vger.kernel.org>, <dev.tailor@samsung.com>,
+	<rosa.pila@samsung.com>
+In-Reply-To: <d350841c-3560-4511-a866-9490737e48f7@kernel.org>
+Subject: RE: [PATCH v3] tty: serial: samsung_tty: support 18 uart ports
+Date: Thu, 17 Apr 2025 11:02:24 +0530
+Message-ID: <06cb01dbaf5a$1ea1a8b0$5be4fa10$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: qcs8300: Add cpufreq scaling node
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        "Rafael J. Wysocki"
-	<rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-CC: Ajit Pandey <quic_ajipan@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        Satya Priya Kakitapalli
-	<quic_skakitap@quicinc.com>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
-References: <20250313-qcs8300-cpufreq-scaling-v1-0-d4cd3bd9c018@quicinc.com>
- <20250313-qcs8300-cpufreq-scaling-v1-2-d4cd3bd9c018@quicinc.com>
- <ce00f7e3-86a1-4fdd-9274-c1a9896c0f12@oss.qualcomm.com>
-Content-Language: en-US
-From: Imran Shaik <quic_imrashai@quicinc.com>
-In-Reply-To: <ce00f7e3-86a1-4fdd-9274-c1a9896c0f12@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: xSGqB3RW_Cg5UkcZbFxVwPCWDuayVC8M
-X-Authority-Analysis: v=2.4 cv=JNc7s9Kb c=1 sm=1 tr=0 ts=6800a211 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=_WaFmQAp6mqnBGjcp68A:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: xSGqB3RW_Cg5UkcZbFxVwPCWDuayVC8M
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-17_01,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=820 lowpriorityscore=0 bulkscore=0
- impostorscore=0 clxscore=1015 phishscore=0 adultscore=0 priorityscore=1501
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504170050
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQNDUeEKzZOD+6UL/EvMWKPcOF/PnAGTFIryAfZj8UGwu8OBsA==
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBJsWRmVeSWpSXmKPExsWy7bCmhq7MIoYMgzlXhC0ezNvGZnFvxzJ2
+	i+bF69ks3s2VsTh/fgO7xabH11gtLu+aw2Yx4/w+Joszi3vZLb78fMDswOWxaVUnm8f+uWvY
+	PTYvqffo27KK0ePzJrkA1qhsm4zUxJTUIoXUvOT8lMy8dFsl7+B453hTMwNDXUNLC3MlhbzE
+	3FRbJRefAF23zBygm5QUyhJzSoFCAYnFxUr6djZF+aUlqQoZ+cUltkqpBSk5BSYFesWJucWl
+	eel6eaklVoYGBkamQIUJ2Rl7OjYwFlxgr7i2eCJTA+NKti5GTg4JAROJic3X2LsYuTiEBHYz
+	SrRNPMwI4XxilHi6bBkThPONUeLV9U/sMC1r/z5mAbGFBPYySiy8YwxR9JJR4vOb/2AJNgFN
+	iTufn4J1iwg0MEqsWDIHbC6zwAlGidPrbjCDVHEK2EnsetoKZHNwCAu4S6zYHQESZhFQlXj+
+	4QhYCa+ApcT/3pdsELagxMmZT8AWMAvIS2x/O4cZ4iIFiZ9Pl7GC2CICThKbe1qZIWrEJV4e
+	PQL2nITASg6Jxades0A0uEhseNABDQFhiVfHt0C9JiXxsr8NyvaRmHz0GyPIbRICGRJ31opA
+	hO0lVi84wwoSZgZ6cv0ufYiwrMTUU+uYINbySfT+fsIEEeeV2DEPxlaWOLlnDyuELSlx6PYL
+	1gmMSrOQfDYLyWezkHwwC2HbAkaWVYySqQXFuempxaYFxnmp5fAIT87P3cQITrJa3jsYHz34
+	oHeIkYmD8RCjBAezkgjvOfN/6UK8KYmVValF+fFFpTmpxYcYTYHBPZFZSjQ5H5jm80riDU0s
+	DUzMzMxMLI3NDJXEeZt3tqQLCaQnlqRmp6YWpBbB9DFxcEo1MF1s3eQW8oDBUj1t6su6vROj
+	7TU453578ElNpWJvX8TuDwdWCrqxfWOWm7bkFK+axOPdKrMF2y0krGeKdZ9I//BFyzX19kn2
+	uZ94t/ofv3wzj9F2iohvscMj5htLfv9c+m/vHzH57yzf+Gy0N8z9pz1j+tvG8C71+YdKly/b
+	tuX1Q7mbUh7qG/ZNqy+f2Pnn0jU7g+sRYevjdr9n6FAJ+xH4svX02+t73oUIeDYscmDNuaBy
+	4nbZ387zwsbMG7bqrWd7l7p1SkTe7JINsziCz7T1Hrx8pd1Y2Zj53CGbsk8JrX+uBnDYbrqW
+	MDW/ye4j46mNm2efWJhYUN21UiLZd6bxXvWex5e/X/yxxyTUbNosJZbijERDLeai4kQAlXZ1
+	TjsEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnkeLIzCtJLcpLzFFi42LZdlhJTrdwEkOGwbZGWYsH87axWdzbsYzd
+	onnxejaLd3NlLM6f38BusenxNVaLy7vmsFnMOL+PyeLM4l52iy8/HzA7cHlsWtXJ5rF/7hp2
+	j81L6j36tqxi9Pi8SS6ANYrLJiU1J7MstUjfLoErY0/HBsaCC+wV1xZPZGpgXMnWxcjJISFg
+	IrH272MWEFtIYDejxOnDchBxSYnDT++yQtjCEiv/PWfvYuQCqnnOKLHw4mKwBjYBTYk7n58y
+	gSREBFoYJY5MO8AEkmAWOMMosWleFMTUA4wS347bg9icAnYSu562MncxcnAIC7hLrNgdARJm
+	EVCVeP7hCDOIzStgKfG/9yUbhC0ocXLmExaIkdoST28+hbLlJba/ncMMcZyCxM+ny8AOFRFw
+	ktjc08oMUSMu8fLoEfYJjMKzkIyahWTULCSjZiFpWcDIsopRMrWgODc9t9iwwDAvtVyvODG3
+	uDQvXS85P3cTIzjOtDR3MG5f9UHvECMTB+MhRgkOZiUR3nPm/9KFeFMSK6tSi/Lji0pzUosP
+	MUpzsCiJ84q/6E0REkhPLEnNTk0tSC2CyTJxcEo1MB3ctEwwfsLp9bvPJzspqpwsmvmr73fq
+	Sr2tshfntK/K2qhcZmmYGSrE8sjiaLNlTPySAuPvWXVFbqLh3K82vdPN8uEoEy7hPima/+Xy
+	xPS8a9+jvRlnM/Rz3+T/5sh8dkveIdb4ZH0uu807t9QVan+N7p+YyWN+h2fuLObO69VeUuqi
+	Uv6MPxp0DZwEDvbISmm5sXKs3Ho3dv3j8N38/j5JMy5rbon5ZN/7P2DXNRvhCQs6bvt8ibnH
+	9v8u9w/RP1y8rj9mBBT9jWRX+mh3ab71PdX2cK64ip+PH3XyzD/9+9uLZcdv7piUunHzfqVt
+	d9yKWEpKwthfKysU39lzkT0yY+Uhp9TAzZ4c7Zd+KbEUZyQaajEXFScCAD1EdI8iAwAA
+X-CMS-MailID: 20250417053233epcas5p26ead4fdc63ececbe1a11b66fc0337f86
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250417042427epcas5p2df3d35803adcb24da7d83e5df586380d
+References: <CGME20250417042427epcas5p2df3d35803adcb24da7d83e5df586380d@epcas5p2.samsung.com>
+	<20250417043427.1205626-1-faraz.ata@samsung.com>
+	<d350841c-3560-4511-a866-9490737e48f7@kernel.org>
 
+Hello Krzysztof
 
-
-On 4/14/2025 4:36 PM, Konrad Dybcio wrote:
-> On 3/13/25 7:03 AM, Imran Shaik wrote:
->> Add cpufreq-hw node to support cpufreq scaling on QCS8300.
->>
->> Signed-off-by: Imran Shaik <quic_imrashai@quicinc.com>
->> ---
+> -----Original Message-----
+> From: Krzysztof Kozlowski <krzk@kernel.org>
+> Sent: Thursday, April 17, 2025 10:50 AM
+> To: Faraz Ata <faraz.ata@samsung.com>; alim.akhtar@samsung.com;
+> gregkh@linuxfoundation.org; jirislaby@kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org; linux-samsung-
+> soc@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> serial@vger.kernel.org; dev.tailor@samsung.com; rosa.pila@samsung.com
+> Subject: Re: [PATCH v3] tty: serial: samsung_tty: support 18 uart ports
 > 
-> [...]
+> On 17/04/2025 06:34, Faraz Ata wrote:
+> > ExynosAutov920 SoC supports 18 UART ports, update the value of
+> UART_NR
+> > to accommodate the same.
+> >
+> > Signed-off-by: Faraz Ata <faraz.ata@samsung.com>
+> > ---
+> > Changes in v3:
+> > - Fixed review comments from Krzysztof
 > 
->> +		cpufreq_hw: cpufreq@18591000 {
->> +			compatible = "qcom,qcs8300-cpufreq-epss", "qcom,cpufreq-epss";
->> +			reg = <0x0 0x18591000 0x0 0x1000>,
->> +			      <0x0 0x18594000 0x0 0x1000>,
->> +			      <0x0 0x18593000 0x0 0x1000>;
->> +			reg-names = "freq-domain0", "freq-domain1", "freq-domain2";
+> Which ones? What changed?
 > 
-> Please turn these into vertical lists> +
->> +			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
->> +			interrupt-names = "dcvsh-irq-0", "dcvsh-irq-1", "dcvsh-irq-2";
+While sending v2  change log was missed unintentionally.
+Added missed change log in v3.
 > 
-> Since these labels don't match the hardware anyway, please sort them by address
-> 
-
-Sure, I will take care of the above comments and post another series.
-
-Thanks,
-Imran
-> Konrad
-> 
->> +
->> +			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GCC_GPLL0>;
->> +			clock-names = "xo", "alternate";
->> +
->> +			#freq-domain-cells = <1>;
->> +		};
->> +
->>  		remoteproc_gpdsp: remoteproc@20c00000 {
->>  			compatible = "qcom,qcs8300-gpdsp-pas", "qcom,sa8775p-gpdsp0-pas";
->>  			reg = <0x0 0x20c00000 0x0 0x10000>;
->>
+> Best regards,
+> Krzysztof
 
