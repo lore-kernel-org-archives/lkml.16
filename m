@@ -1,176 +1,173 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2062.outbound.protection.outlook.com [40.107.244.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937BA1F463D;
-	Thu, 17 Apr 2025 13:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744895464; cv=none; b=agDCJfmXRjaJfiFkU9ffEsjlsobjpnS1sbjTRf2ZFN/PoK6pNw60YR0qW4cuWQFUKy2fZ0nYC9TUluOrX+RAlfm8CrHBUly3KbWh35Qs0HjO7GWaAH8EmcWlZ0kQMYkqTiUF4Fh4Eljl21/rtfJRVgQQ1+Exxh97sSuGeJQJVds=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744895464; c=relaxed/simple;
-	bh=xDoSUF+t2BtVAblw1gUxoFZPSnQzxNcWYx2wwjhefXQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=qYPcTznF7VeTX0RpFD/nFKWDCZQAYEEGzS//PQKcR1g9IrQbYN6wM2WuWsAsF1o7RPoaEcZZNligfbW40vwJz3hGUZ0eFE3jmvcleXBbmlqrOTshypBErW2jUXD08XBRfAjN+q/++WIZNaP46jxARf/fp6FbvaFfa7J8+94hS9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vp+pDqd2; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654D41F463D;
+	Thu, 17 Apr 2025 13:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744895478; cv=fail; b=W7uA7FlNxSxnwF9i853rdQCfiwowI6ql7+RWtmaVTdgcUcEB5e2YA3kNdYPlR9xhGvoqxx4XVLfMPKyTXOpoTOzQ3v2/3pm62IL/wNagPyB8AL7TAWX30ueynGANC2dr58TFMGEWhvHyW51WXhxACzvpCAflFO49/kYMav0L2dA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744895478; c=relaxed/simple;
+	bh=cXSNLCXzM3yosOUF99qGhUmL1XG8r6WhGDUeLLGoW64=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=OowVk4xL/Wt86aFNeyq006i/ErRJ/LGHEy3C2q8lzNtiK4mRrNNjLIi1myTYloVMsd3nMmqNLFb5TuqlvZvSWMBxIswEOSJa8FSr7yox0PtCEr3PS8APLUbHcfYH5IyHZMWShdN7xAU3N2dxlgNV84bkTt2wAiSCKnLCVii87ec=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iT9w87VE; arc=fail smtp.client-ip=40.107.244.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vp+pDqd2"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39c0dfba946so441586f8f.3;
-        Thu, 17 Apr 2025 06:11:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744895461; x=1745500261; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JfU/FeD2B8y15uk/G1y09exWREViQBDYUy+yy5/sUEI=;
-        b=Vp+pDqd2TcrTE5CCMV2Pd5iOSCDBt7JOC0r/VDthXhaOpwp2qFwAy1J9XNrPnd9Rsm
-         PkIBsNt5IUTfbHo6hMA2st9YXbBe7o54BiL9wlo8ZrhyBZ8I+iiEViYBN53VxQHNAa5q
-         QCT9D20opN/FrY5MDKV8GzsVPmLk8B6YPFD1QmgvU4ObkZDIXPOxmwdVSLhq3BMmfoAk
-         8ejaPVyseqjEuVlICDgWn95u2BYJT2ieusYkRAzZnaP8INIcHuzvA+J3QiSIu8cKeSrF
-         +X5KveWc9Gou86cgLirL0QHqopA7UVD7RXcl+d7R+c90J2zNtSPbhpQm0x36yyCADzCb
-         3uSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744895461; x=1745500261;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JfU/FeD2B8y15uk/G1y09exWREViQBDYUy+yy5/sUEI=;
-        b=Lu1hAhaxlYc7tIFaIXTub4sPEY8j2agrUP67lTJsKkAJ44zNm4fXUQHMxxTm7SckZN
-         zw4g2DTsDYN6G+fL1QIqjf15rCE23FBL63JyepRpi8wWJj7r3Otp+Fz8BoJ5wRVbxLF2
-         5kyOa6V7PzmPh1VpVF6cHg62rG/k8AlvafDpIYkOA1sFkPz9+/o1lR3M0ukLs1+7h37m
-         wcBcWp5zgrMiTVWoQuEVxePnLt70i9dU3uSXMYRMxHqVv+lxtoyQkTuPy8mEiNHm5dF5
-         AKeGVPGVOqW81+YUM822DJUxy9atI7qaj4tmfcZl6PE6UpqCVXPmWBn0rliBUmwTySnj
-         Uf6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV4fw/Zx/rRPAzcSGwooE5djUIoKCkAAAa20yLerS4D4IALzr9Srk4kaJHv07O+UDK4c4f21wP1w5jqphdOwuQPXYM=@vger.kernel.org, AJvYcCW7UKgHFiwQsQJG8KdjhbPVToR6Eh3De+tsxbvG4Ki1QIdxdSJC0hhtmbWIwSpss0gzhmG0r0E5cL8=@vger.kernel.org, AJvYcCWGMQQ5JlzU/87rP+z3DlwwLnxoR6e9U+xuvMVbkgmo5vyjyx9RkPNnxafV/cifTibub8P6cucEncaJD2az@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5BWnV+EzlsPuVJxUwLMZMyh5WP08pjaX5q1flVLgbZ0/XsUTq
-	R+1dsmNGN49l6YMOF4KOGKJDKFMWJbl4UpydM91JPGxYs8A6pO1Va8YTcaBptCQ0f5yEyoDZHi3
-	ypBh2bjZmuGAPx/NTb7KJMJZ8ObyLhJzQam4=
-X-Gm-Gg: ASbGnctILGn46V6SlpsytJ+mNSVWB1+mSrzZVg/LsxSk5251R2l9zJrLfTanFf3duB0
-	RBbqquKY5+cjR0AFpxBUgEYTBDRp7XxVDlitXb00mEuufu67AQAwWnq848TGcTtIqx2EC+Hw/jH
-	MBlEYl3qenPkORjX5JZyNaokSe2G7gzs54
-X-Google-Smtp-Source: AGHT+IHe8IeHMBruSy2OmJqIu5BulwSfPaVutWd/BDdoEX6OT87ImeTJYS49LegJyrfSfQbKWhmDk0r56i5nVbkhbf0=
-X-Received: by 2002:a05:6000:4022:b0:39c:1f19:f0c3 with SMTP id
- ffacd0b85a97d-39ee5ba069fmr5082581f8f.46.1744895460627; Thu, 17 Apr 2025
- 06:11:00 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="iT9w87VE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=txVml3RFxWQEkZ59ZNjfdOI4vd1P5g5Ncy15m/T82aNi2BUyvDE6atDDDgUt1NOx8htjwbYd8kBTd4sjWkMAQMA3mN0I/IhJACQjiY52c3E0n/Zgv7rZKsOGkHmhlNQYffAO4VErNf2nABhp6R7ZJ6wiQc9n3VoNAT5Sf65B4FUhwcgqVw5W7VKcctwkaBSHeShp78QtiHgl3fmk3WBlvsLpTsEc98U9w/ShWv6QBzG4YGpxFJ5k+HyXO8LK5ujMOG8EoWF8wI1UHjv33CU4joD8nJ3m6ksVpJikzYGctxMGeWoaIitrTNZ7m7qsFhHc3CrROKZvHaXRrc9msf+59Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dInmWQEHRcAeA1nAEFZyvb0o3sY2npb/+Rndpnmyuu4=;
+ b=VdT9AmiX7Oec8J9B1aGozu8MR223qDY9VkzWjLYvvJMspYbE7unsvA2xu+AuY8XiDQ/9j88Mh1htoyFgzSRX4lKQDDcUnMHnYmtceadmG9pxdaX4nByx84FvH94+P+3nl+6sNJ16gQbHU8gCZ+Cm+mvUc7oRdL+gDMQZPwHrQuLiqsxKj4cKeIsOCUEc+A/6Mrh1NIy5xt3ur8guPcG5XgYoZkRxsUnIvulWeRQ8Ze3ZQgbg9KTdVoavV71qd8oGesw9ZEhC6y0NUZ4dIBByRf/YxOyVsG3FgXoppe59g3FRcKgSaBKoyQa0FWxGg90mTIscfkhq8zuScFollPK8tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dInmWQEHRcAeA1nAEFZyvb0o3sY2npb/+Rndpnmyuu4=;
+ b=iT9w87VEv4cs+48ppwnTwchquk+QhuQr20d7fOH45fxBeHG1aFYyDEqsvWCv19f0PZXJ6Xio6xXn9XLW402sgUJTUZWf56Og9GmORb04jGpZ/HyErtXk2kw7UKYVxRUBGXtH3sThoHVOni4/zFNJhWk3O276Y9bXSfovnJWR2e8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
+ by PH8PR12MB6698.namprd12.prod.outlook.com (2603:10b6:510:1cd::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Thu, 17 Apr
+ 2025 13:11:12 +0000
+Received: from CYYPR12MB8750.namprd12.prod.outlook.com
+ ([fe80::b965:1501:b970:e60a]) by CYYPR12MB8750.namprd12.prod.outlook.com
+ ([fe80::b965:1501:b970:e60a%6]) with mapi id 15.20.8655.022; Thu, 17 Apr 2025
+ 13:11:12 +0000
+Date: Thu, 17 Apr 2025 15:11:06 +0200
+From: Robert Richter <rrichter@amd.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v4 03/14] cxl/pci: Add comments to cxl_hdm_decode_init()
+Message-ID: <aAD96vV3eSb481pM@rric.localdomain>
+References: <20250306164448.3354845-1-rrichter@amd.com>
+ <20250306164448.3354845-4-rrichter@amd.com>
+ <20250314113337.000054b6@huawei.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250314113337.000054b6@huawei.com>
+X-ClientProxiedBy: FRYP281CA0013.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::23)
+ To CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407121859.131156-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <aAC8f0dAMERD8GjW@shikoro>
-In-Reply-To: <aAC8f0dAMERD8GjW@shikoro>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Thu, 17 Apr 2025 14:10:32 +0100
-X-Gm-Features: ATxdqUFN80jEjR5nyR8PTGJy3DOuIY7N-bcdBPy5YnBJdqTQHWwl4yfUe47GLVI
-Message-ID: <CA+V-a8sM2mFS--zLSZt28mOUDuO2FpW0TsaV50A_VxFZ-juP4Q@mail.gmail.com>
-Subject: Re: [PATCH v8] i2c: riic: Implement bus recovery
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Prabhakar <prabhakar.csengg@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, Andy Shevchenko <andy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|PH8PR12MB6698:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7ff89eed-d164-4399-cdec-08dd7db153ac
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?c30dUn36DQQ0efeUaJayJwiMwnAayvG2LWrXuTbbsy6FP68r8ye/d20NgpDc?=
+ =?us-ascii?Q?d3RFgfoCoq+cYMuFv/X3XlSIM5LTIdXP8wye5WE/0zeY1rSs4lD1RatdeYp4?=
+ =?us-ascii?Q?vNATdgUmF6b2wy6r1WywUJl3q9tBzSooe7gZkY5dArGMdPLdGDz21qiUYsi7?=
+ =?us-ascii?Q?S8JLAO8ja4AbVD6qJB7UVG1iy046CNdMWdnWelMsga3mlw0yAxvPj9GWjGEr?=
+ =?us-ascii?Q?YxxrTmUyelce6bmS35DHtN0lQKfOdV3jbTKX2m3Hnd7VZVM3Ogm5Eww0CkLK?=
+ =?us-ascii?Q?Ff+lLxfGAUyMvFuVGzmasNQP/BBIf8YUbiAs6S87KgFKHZInTLsJP8ZMfoqm?=
+ =?us-ascii?Q?FkN8V1NNjD3yoRUIxqyZsofPm7VZ7kdtIU41o46bOH0iaLn7zrclqYOfEbTO?=
+ =?us-ascii?Q?0qfB592pd5MyMZZKTh+uywZKQC7uhdkKikP9eLXHSeZ3rv7jGVwa1TJk4qXE?=
+ =?us-ascii?Q?ul3L6LmAb51lajZutu0X/gNTYX2+gHlw1wxt8DupZ+niW1UnBjcXEl6unRU/?=
+ =?us-ascii?Q?XJdc19XpLR3KYgd/9Nvb7Bk2T+Hfku/5l9qAB6SMVb7fUaqhYhIhNY/TB465?=
+ =?us-ascii?Q?0JZXUTcZVDrGZuM0oVqYtok/IBO5wNtTO7P3vL6TZqnNGXpVE5mtBT8EvNW1?=
+ =?us-ascii?Q?uLEZGzJ5x92VJJ1U9Ev7SDbV5gZgiHy+Hn3ScLxmXE0UnvlUpSA2yZovm8yP?=
+ =?us-ascii?Q?7y3R2l/FY+z+zlm4pkScb38XMAPAtjfYwsOyd298kXVEApVBSAPzBtMnZtiv?=
+ =?us-ascii?Q?dDd8lNTW2vZP9F9EppPUL94lvzGeJ7CyQ8tIC3bkvJQn/JC9IF8QzH/0SnUv?=
+ =?us-ascii?Q?R8HQddbQWsTaAFMGQJercmdaOoJcs/RBQU6BUBP7jiMCWnUP6/DSnp1wt6Zo?=
+ =?us-ascii?Q?uPt0oGbqTvQ+PCZSJVaMumLA+nMawn3xoe4c1JcAm4Np3qG97cKbElq4+Dg7?=
+ =?us-ascii?Q?Gwa/qRmB8dqNLnXVKSDWjZzoq8vy2GWccR51efGSF4icgfh3JD6uxyZYNtbZ?=
+ =?us-ascii?Q?yCDWmsFH3+n3kIPLTDuO1m9RDaLeyyyevdYN5YCunwVwp/+V0crMzjcDjvIf?=
+ =?us-ascii?Q?W0wzt2hwjQrX3wewV9k13BGuMicgbkZmCVajHwhM3XJZELin/Wz4Gh8EosRu?=
+ =?us-ascii?Q?a/2kost4XPfAQMi8r9tqNQ7Igq1/JMaEjnbPOxCTkyiDPrhXAaBy1ZaXnyzb?=
+ =?us-ascii?Q?sYlSc3UrsmY5y5mc5lm4dKR4A4+naP0ppalUQYMHlKdHdLpXjdPpbuQPgxbu?=
+ =?us-ascii?Q?9sDlJQRNOa4KUxGzGKADkW/cofY1yq6loh/bYIU8sJhAc0kxcuQrVLBRfFzP?=
+ =?us-ascii?Q?mhkAH81fXZH89SyMhzN12sdp34Rz6z1+kQJUA0XAYx+og3uIx6J6VzcfUskw?=
+ =?us-ascii?Q?LRQgkKF2/Jp2b8UQgvFEH6v4nha0VComLLIZG0me52YojAj74h0HwWz7cNby?=
+ =?us-ascii?Q?txv22CsjWSs=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?BFEGYZ8UNoBVqZ7JMzII5apKZvUl6ExwrvgM9k4+4siIdXK5g+kjjnhSaXB3?=
+ =?us-ascii?Q?BUbFAX48XKwl7Qf1InVkRJG/Q5EsA2G1ue/B8uD+tPM2/qwl/uYBeccHqfSO?=
+ =?us-ascii?Q?luuP3yFsClR+HuCQf82Ny9l/VNPHXxqKSOIOdTCELRTUketVTQ2f96jQC/ER?=
+ =?us-ascii?Q?Ad3UMDlNvrkRImxXxjPkW+pnDAEbLLJ1J4q08HN0pzH3NGKfouvDLhGiJ94U?=
+ =?us-ascii?Q?oGw/LMgecNt3O1IykliUl45hKNG17aBWeYEiDPFzDDjSCbpigJXtOjyeYr8q?=
+ =?us-ascii?Q?2U8Z/+YX5e6vUe4+eaZ3mbx3S7WopC/mkRBHXltOG5FPMgoz2MyKttwaTtly?=
+ =?us-ascii?Q?ySjaS65TMOVrcSSs2JT5h2nX8XpwPbAbv3kBlPftvytv7X9PJYdP+loZRqJ7?=
+ =?us-ascii?Q?2NDcCsJhaB9M2bzBO+fsyjOwyXNZCKMu75x/uK9f/OIuuiWBPxdIsVyVGyPR?=
+ =?us-ascii?Q?Vd5JQfwcOxdFaOSIYsG+p28INu+H32b2haLUHr++1wlPsxIL40u5ZtEgwYj/?=
+ =?us-ascii?Q?X+8KXfzJ3edJBfEpye9SW2A/y94BQfsmYLzNec8Xe8RKQBnxv700GtmxpioS?=
+ =?us-ascii?Q?XiOeymhP4+f+xwfan4vPFsQ6U/ANNGtJdEkAU+KQyMYoiOHFtQzxYBQASjzv?=
+ =?us-ascii?Q?+ndj8PZuOF/tnBFY0+SWtdgcediBEl05fppogpA7/KIUemKMh7FT8EoxZg4F?=
+ =?us-ascii?Q?5RHT0vDuaDIKNEjs4et4fqCGiVP57eFevbthnK4eHQAXmQbBITVcLMN9oPth?=
+ =?us-ascii?Q?pqBKmLndpxZ99YPOqrnY3EOiRMpRhIZzCqrBaC7cWSQdfhigCTqDo9zaOTW1?=
+ =?us-ascii?Q?C37p+5ot5bRCjVAWMH2brEyyMjLBgCYaLddMCM+ePYSGzz6eht9Y7NZ7m7Ol?=
+ =?us-ascii?Q?qVUOuYTOH1y1uXGv/e4B7CTITGCIOggBTH+/G5NLzbA16r72t+6ZQtbdtBe/?=
+ =?us-ascii?Q?fpouKpTWM+gF9dRlrDens5TwIOwB1n99B4QijlWSF1+XbPfDWbbC1ROeZx34?=
+ =?us-ascii?Q?RqKzcQv2e+LmDthZWfPbn4FxPjNoYcUPMEdJS7pEhic+xi+rLNl+YwEn0nU8?=
+ =?us-ascii?Q?cRV8jneuyrTS3HmyQ7QShIG84VvOL++fh7VoJReK9f2+B8/6/SHn0VZTL27N?=
+ =?us-ascii?Q?U3Gy1AnTbcR71aY2dl1f2DdRFrauF2nB8/FESZ+RoWdVgN8+u5fXBkMJHRrd?=
+ =?us-ascii?Q?qAW1FBVFGVNweQZ2Bri2Zw8qXpD7ujhnJTxc52HRgh4fiqQzABAE6zXsVa+i?=
+ =?us-ascii?Q?kYUfGVRFr+awkcvnLKap7hdjPYNQq2vrRWrjKAkirpSkK6w1PeR4fUsm62GR?=
+ =?us-ascii?Q?3ebbv41YTpbVAFJEcjxzqis3QFP0w45J2D2686sAipH3crxhI8ARlCkcEhiT?=
+ =?us-ascii?Q?acljuf1K76YfFeQGzf/WqUyNITEFhrlowaEz3zwDW05hBcAaS87suCqmjAx9?=
+ =?us-ascii?Q?uUn5ThlEaoCGjBYdX7JBl3uNnAZIQSZojCTQ2Y7iKfQZbn5VtMRdDPT0EG8S?=
+ =?us-ascii?Q?oLzpYMQiWJ8ygBoHHAcSjH71LyYqw2e9zADPKGcKGxjm6VaINi25nRepL7sG?=
+ =?us-ascii?Q?veF643b5GnRby3VdzxHF9qFc9vhu+8uoYxVyEYBv?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ff89eed-d164-4399-cdec-08dd7db153ac
+X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 13:11:12.6053
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JJePOCioUOj/yjloQ2HXwWhC2O3IaAMzf0fSxxU2rVLnKJzPWBjCZsh1pAcRMu/huN8043cDs95KZE3I2rp8AQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6698
 
-Hi Wolfram,
+On 14.03.25 11:33:37, Jonathan Cameron wrote:
+> On Thu, 6 Mar 2025 17:44:37 +0100
+> Robert Richter <rrichter@amd.com> wrote:
+> 
+> > There are various configuration cases of HDM decoder registers causing
+> > different code paths. Add comments to cxl_hdm_decode_init() to better
+> > explain them.
+> > 
+> > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > Tested-by: Gregory Price <gourry@gourry.net>
+> Trivial comment inline.
+> Otherwise I think this is fine.
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Thank you for the review.
+> > +	/*
+> > +	 * The HDM Decoder Capability exists but is globally disabled.
+> 
+> Single line comment syntax appropriate here.
+> 
+> > +	 */
 
-Finally I got my setup out for this.
+Changed that.
 
-On Thu, Apr 17, 2025 at 9:32=E2=80=AFAM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
->
-> On Mon, Apr 07, 2025 at 01:18:59PM +0100, Prabhakar wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Implement bus recovery by reinitializing the hardware to reset the bus
-> > state and generating 9 clock cycles (and a stop condition) to release
-> > the SDA line.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Tested-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> > Reviewed-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> > Reviewed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > Reviewed-by: Andy Shevchenko <andy@kernel.org>
->
-> As I wrote in the other thread: I took your generic_scl approach and
-> replaced bus_free() with get_sda(). Works fine here with my G3S:
->
-As suggested I have the below now, (are there any changes Ive missed?)
+Thanks for review.
 
-+static int riic_get_sda(struct i2c_adapter *adap)
-+{
-+       struct riic_dev *riic =3D i2c_get_adapdata(adap);
-+
-+       /* Check if the bus is busy or SDA is not high */
-+       if ((riic_readb(riic, RIIC_ICCR2) & ICCR2_BBSY) ||
-+           !(riic_readb(riic, RIIC_ICCR1) & ICCR1_SDAI))
-+               return -EBUSY;
-+
-+       return 1;
-+}
-+
- static const struct riic_irq_desc riic_irqs[] =3D {
-        { .res_num =3D 0, .isr =3D riic_tend_isr, .name =3D "riic-tend" },
-        { .res_num =3D 1, .isr =3D riic_rdrf_isr, .name =3D "riic-rdrf" },
-@@ -523,7 +568,11 @@ static const struct riic_irq_desc riic_irqs[] =3D {
- };
-
- static struct i2c_bus_recovery_info riic_bri =3D {
--       .recover_bus =3D riic_recover_bus,
-+       .get_scl =3D riic_get_scl,
-+       .set_scl =3D riic_set_scl,
-+       .set_sda =3D riic_set_sda,
-+       .get_sda =3D riic_get_sda,
-+       .recover_bus =3D i2c_generic_scl_recovery,
- }
-
-> # echo 0x1a > /sys/kernel/debug/i2c/i2c-2/incomplete_address_phase ; i2cg=
-et -f -y 0 0x1a 3
-> 0x0c
->
-> And I see 9 pulses in the scope. Can you try this with your setup
-> please?
->
-This seems to be unreliable on my side below are my test results.
-
-root@smarc-rzg2l:~/i2c# cat ./incomplete_address_phase.sh
-cd /sys/kernel/debug/i2c/i2c-4/
-for i in {1..1}; do
-        echo 0x68 > incomplete_address_phase;
-        val=3D$(i2cget -y -f 3 0x68 8)
-        if [ "$?" !=3D "0" ] || [ "${val}" !=3D "0x83" ]; then
-                echo "I2C Read error (ret:$?) ${val}!!"
-                exit 1
-        fi
-        echo "Read val:${val}"
-done
-
-root@smarc-rzg2l:~/i2c#
-root@smarc-rzg2l:~/i2c# ./incomplete_address_phase.sh
-Read val:0x83
-root@smarc-rzg2l:~/i2c# ./incomplete_address_phase.sh
-Error: Read failed
-I2C Read error (ret:0) !!
-root@smarc-rzg2l:~/i2c# ./incomplete_address_phase.sh
-Read val:0x83
-root@smarc-rzg2l:~/i2c# ./incomplete_address_phase.sh
-Error: Read failed
-I2C Read error (ret:0) !!
-root@smarc-rzg2l:~/i2c#
-root@smarc-rzg2l:~/i2c# ./incomplete_address_phase.sh
-Read val:0x83
-root@smarc-rzg2l:~/i2c# ./incomplete_address_phase.sh
-Error: Read failed
-I2C Read error (ret:0) !!
-root@smarc-rzg2l:~/i2c#
-root@smarc-rzg2l:~/i2c#
-
-Cheers,
-Prabhakar
+-Robert
