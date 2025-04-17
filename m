@@ -1,74 +1,74 @@
-Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
+Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53FBD15ADB4;
-	Thu, 17 Apr 2025 21:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744925817; cv=none; b=GtmNrq9iRhouxGKF+9Kc012qeG7DzQTmbcJtHP0jfazvGAifDOUtjjJfKN8zWLq3MaVPqxcAdZnzOhgp7E1jCUlN0FUe5XrhGQ1znS2vpEPzNWkIAS+R+AenAxeR6lf1VfGxEh9BN8Z4OAQ95MXI24x8TnAXDl7ZFyvXgkRuq0c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744925817; c=relaxed/simple;
-	bh=Dm8q0zXFlhieUk322UWtrUVeJ7WyU00tA8FyUuT1SDA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=biDRP55aKJ63F3MdD6kaGIB+0ei9Yfv2dB96+/paEzQdfm7OVFDhRhBVZhHu111+0miQaUau2MDrojN89mhbWtWCsEuwhkt+OwZpDALrTMJhx/Yo9HGD04zfDZ2Ss0XC5l7zVQ518sIPgMbtMhfwIizs+fOS9AVBMU7ls3dkch4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=aovb7p8/; arc=none smtp.client-ip=199.89.3.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="aovb7p8/"
-Received: from localhost (localhost [127.0.0.1])
-	by 004.mia.mailroute.net (Postfix) with ESMTP id 4Zdrng1gt3zm2jWC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D621DF756;
 	Thu, 17 Apr 2025 21:36:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1744925812; x=1747517813; bh=Dm8q0zXFlhieUk322UWtrUVe
-	J7WyU00tA8FyUuT1SDA=; b=aovb7p8/AReFPC/Mo2SNpt8e9UuBVdqAb+agrZNH
-	n80yoDgAYBK8Jn1z1vP3EvD/JdC8jdCFzjtLNSpdMfpGgrPn4un6kq6zJ4NULwTy
-	Nf4udha2kJR5Fqqug0RsT8pFdogynnNU+OlNZqVyXLnwfKULw0y3Y0cPfw4V6E9y
-	RzHm9A31/6R6atKkX69aEddjLXzQxlTJDtmPvB80TvR1xdHccGhqHzZsDs4lmRaD
-	io2sf7tkiLj3Vf2a4OIPpItxHxYQHiv8t+aq8ZKaZ6nj48lK0mAHcXFhLCfgDicz
-	y0GKe5f352jSgkMQkLzLL5BJjq9Ffax7dCl4i4VxmEdqEw==
-X-Virus-Scanned: by MailRoute
-Received: from 004.mia.mailroute.net ([127.0.0.1])
- by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id aCS70688tKXs; Thu, 17 Apr 2025 21:36:52 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4ZdrnM69H8zm286r;
-	Thu, 17 Apr 2025 21:36:39 +0000 (UTC)
-Message-ID: <ab8e77aa-f39d-43fd-a393-488ea582998d@acm.org>
-Date: Thu, 17 Apr 2025 14:36:38 -0700
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.218
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744925818; cv=none; b=QGY4gy4kJFbycUPCX6hrkJiNax10t4GXtJHEOvC3gfDW6Qd9OXCuPioRsRp5D1+Kbq4iMDw4lYIzF0Dq5PrqSMSsZS0xXRCPEdvCTGNUeEWBcjK0WZyjh4fWD64xzQnrB70jZxZAYNHSwvOmaJ0njd10FPv+ZxYPa+eS94h0Bzo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744925818; c=relaxed/simple;
+	bh=hqaw3k7g0UO7sTcEgs7fXoq+uaX8F4h+P404DSZ2kAw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iN76lC9d8jgE3uma9yHV6aRrtxsLJBXjb/gkkSeoI/3/RGAN0OWdL9de+yCTsBCTxkCHglCMxVjpbqZpt0Eew3Y7KZMnq8pWqQl7u6IRmiwiR8PwIRgTeJ18ZZ1GWrCg+NC/T+OXgr1BXGTYcoNaAb7PiRyPTlWLrc6xgWAYxBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=QxfgG6Ll; arc=none smtp.client-ip=99.78.197.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="QxfgG6Ll"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1744925816; x=1776461816;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=I+vW1PIaSldpoCiESfdZkkd8QMcNuuxnJ4cgcZwI9Zs=;
+  b=QxfgG6LlMU0Tk+S66HfhjeczkvUd80hKf1e4xbzoWpt1nkI7W2cg2kYF
+   NeLDvCezmXNhUz033G1s6kWEph9MrQyEXKrJjZCIhtc7XA6oLzPTu/nqG
+   zOoD2H7cpdR4nEnbfmbIkWIDk9fRrWE1+sHqMHTmIgACFRX9Bxyl9JbK9
+   E=;
+X-IronPort-AV: E=Sophos;i="6.15,220,1739836800"; 
+   d="scan'208";a="396845048"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 21:35:46 +0000
+Received: from EX19MTAUWA001.ant.amazon.com [10.0.21.151:11278]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.29.65:2525] with esmtp (Farcaster)
+ id f4682754-45dd-48de-9739-0f441254e43d; Thu, 17 Apr 2025 21:35:45 +0000 (UTC)
+X-Farcaster-Flow-ID: f4682754-45dd-48de-9739-0f441254e43d
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWA001.ant.amazon.com (10.250.64.218) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 17 Apr 2025 21:35:45 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.94.49.59) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 17 Apr 2025 21:35:42 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <leitao@debian.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <horms@kernel.org>,
+	<kernel-team@meta.com>, <kuba@kernel.org>, <kuniyu@amazon.com>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>, <pabeni@redhat.com>
+Subject: Re: [PATCH net-next 1/2] net: Use nlmsg_payload in neighbour file
+Date: Thu, 17 Apr 2025 14:35:33 -0700
+Message-ID: <20250417213534.19088-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250417-nlmsg_v3-v1-1-9b09d9d7e61d@debian.org>
+References: <20250417-nlmsg_v3-v1-1-9b09d9d7e61d@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V1 0/3] Add support to disable UFS LPM
-To: Nitin Rawat <quic_nitirawa@quicinc.com>, alim.akhtar@samsung.com,
- avri.altman@wdc.com, krzk+dt@kernel.org, robh@kernel.org, mani@kernel.org,
- conor+dt@kernel.org, James.Bottomley@HansenPartnership.com,
- martin.petersen@oracle.com, beanhuo@micron.com, peter.wang@mediatek.com
-Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250417124645.24456-1-quic_nitirawa@quicinc.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250417124645.24456-1-quic_nitirawa@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D040UWA002.ant.amazon.com (10.13.139.113) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On 4/17/25 5:46 AM, Nitin Rawat wrote:
-> Add support to disable UFS Low Power Mode (LPM) for platforms
-> that doesn't support LPM.
-This patch series looks good to me.
+From: Breno Leitao <leitao@debian.org>
+Date: Thu, 17 Apr 2025 06:03:07 -0700
+> Leverage the new nlmsg_payload() helper to avoid checking for message
+> size and then reading the nlmsg data.
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-Thanks,
-
-Bart.
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
