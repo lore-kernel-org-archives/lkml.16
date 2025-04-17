@@ -1,109 +1,83 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714A6347B4;
-	Thu, 17 Apr 2025 16:11:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E2C2236EF;
+	Thu, 17 Apr 2025 16:11:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744906276; cv=none; b=Ekdmh8D1uMYIi/z1VIQx+5pfceiAMYUYyAkpkcx5cx3QrifS8xg9NTGaoYMaBnBs/qUGXIIs5oJdVP3DpyfEg/ctV9C0k6M9z+9R4q5eX+v3dd357du6m1Tlq+kowMdZXz7CmN4UNVSivKn8wV4Ljt5DlAfxPSjNypSj4dUYtio=
+	t=1744906299; cv=none; b=ZobiYTFy216rLsks6Yb6lAHT1rH3+IetEMph7CfpgW86bLf+WIbYp0zGPOP+NeJUcNBGX2DWZ16IjMZGhGVNXLgkRdl7aHAc+KIWDwAzjselgnikmUGruyu6O7g1wpBeF2geYx8Kn3oYddGIoRiX4QZBFE6PpbubbJ4FL1iJuKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744906276; c=relaxed/simple;
-	bh=0JvHSv/zBfDwIrbND3HHsM5lPGuyvdsrhZLlK7Q+Jbw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UQn2ZNRfKxDqPN/b20ZAKGa3w5WfJwZrTXsGtg3wVoyYZZgfzlssYj+0k5HE0x5wQCDK6muUxHbAcpvhBpAW4UCyVyhvukSb99DzKNDB8JZi569baSiuhTeqoA4P8uVVdNZGPzoY6PI07s3HeQdD/U4AvEBa2FdCmae0c1Z8fSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UXqz1snV; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744906299; c=relaxed/simple;
+	bh=PKyTrfEuurXxihtN12vI8NuAEhUtn57gwj36sy0sUYY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G/7cJcosuxWIjB8he8SsqujMIFtcd48zWDwGDl0UufOBooEHyg/ZP1o6N6j+IfVFlh379xkwMI/dvq7KfkND6hwrv6YmZqMj4sH4j3Xd4h+Mx0UnqLTRz1MS11GUaq7dRtF/tkt0PAKLqnj/bnBQBo3vJ8gU0BFk/qIKegCWwks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bCD+0vPV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UXqz1snV"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso1476451f8f.1;
-        Thu, 17 Apr 2025 09:11:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744906273; x=1745511073; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0YoOig2NlT2ugypUY7ub3Z8t3Ukg5TG35rVUrcVY94k=;
-        b=UXqz1snVxb38BHKOg0Z1g4pFXIGQSb7UYvrKkorIWYzefCoQ2IDmwqlcsZmqWJvg3T
-         UXl0HHxo+XlYNohcHlRJnPsiHOY685jblq3kLA9qOtQyR7xlBsKa5e2zIM49I92I1W+l
-         fH/1lLpwZiM7UhDzCPJCWwdGl4SritH11Vu+LMWpN4lyf+F9PSbw66QUf79BqoEPruuG
-         wgStIPD3vxU9KylrMvqiVYANRkScEnpCuikAa0zBsWcbnrRSCtIEUD5yDyssAO6Puaup
-         CqESYGAuuvevBTkr+9moUJRua0RHxeb0lp79Qp2b2kuQnvK+NuZUCudvvPpszOuVBbb+
-         BjcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744906273; x=1745511073;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0YoOig2NlT2ugypUY7ub3Z8t3Ukg5TG35rVUrcVY94k=;
-        b=QJHqIPY1GsmMyIrCdEPR6UtNAABv4OUsRXGoEQ3ij3De7V+VgXklPUJNMZvjBCvsLN
-         hmPSjt5Qpmhja126zNvxdV72qv+BNW35UX3vyo/g4F3PjMgfBYQTSkZRPXbg7KNLrn+2
-         GJcBmIhWh9xft9vjfBFL9e9YqPFkYSG4Dc+0uwqNh67fcWS38JgVDwzQRlUAublv1qyN
-         m4rXFT5kZQAQU5+29KKDqqaMV00JjDGPq0fgvPmXgyUmhTXZi5bc4bkYTr/wjSmv3nwJ
-         5y8F+kUUY0MmSpQrY4ErvrbMzhptX3lgM9o+HpScaCRHJSmks4gAQeLQZII+6m6y0Isi
-         J3fQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVhPagfcGDeTqMJD2MPNXomOFyWEbSaqP7xrJzIqPeeaOqg+aGIUxg8cwJBgK+KiF9jkvql4/mPcHPACQz0eLVNOM4=@vger.kernel.org, AJvYcCX1zaqkrwHWZhRWgY36diizvsMXNkpTPCMnUctPgLMBVII9rDuLyLRPC3rHTkNEDsM+ImsEtG2p@vger.kernel.org, AJvYcCXO2t6j9RVlFHCfvtU/jaYGdU2yoZzIe4Wfb1IeH1NF6DGqcF9YtXvT6Y7xdUdTeenJhMyyQNtximB7XxQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKsOIiCxi7znK3b0jxe7RepCJ1Wk/U17N7StD+sNdkeF5H9b12
-	53xfpZeu+77CWnRHJLNbtof+EjN2SN+T0ktXU15NIeaGjAad/DN4
-X-Gm-Gg: ASbGncvF8sAv1ekJpxYNx9WDrBxSa2Ety+yBKpdNBAoMM/ES2a7Fz6NXeCOMhIsiYh0
-	po0OiXQPcdpHKILm5NZ0nFzOnRC4VxHw9yuoPfKpXdmfFaUj/j97amA3p5FVPLoGCGjpCNmKzy8
-	gaBl4XlBlLdDy5LXNfTK1lyLJrWjy1XqSH7vJa0zNMEtee6cULYiyC5GyZZgcBefIzuEO+semQs
-	fVHMWisUPqI6A7vBjQNQyoEbZ7hKBK1z1Z2v5VhoLRbxB9xD2hbipduYLs2GoqgEXop04JS4ZQs
-	LZB4MiSEzz5SRldJX5mIbIuYvYol8n1bf8r++JnYWQ==
-X-Google-Smtp-Source: AGHT+IGC8XUS3Me7ine70yCjc2tBMhV+dBWz5fKYCdIg5NPTsQPgafcB1x+Wut8kapX6DuF22rs8gA==
-X-Received: by 2002:a05:6000:2a84:b0:391:21e2:ec3b with SMTP id ffacd0b85a97d-39ef9cc594fmr361937f8f.3.1744906272540;
-        Thu, 17 Apr 2025 09:11:12 -0700 (PDT)
-Received: from localhost ([194.120.133.58])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39eaf43cd69sm20426895f8f.80.2025.04.17.09.11.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 09:11:12 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <clement.leger@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-renesas-soc@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bCD+0vPV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D088C4CEE4;
+	Thu, 17 Apr 2025 16:11:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744906299;
+	bh=PKyTrfEuurXxihtN12vI8NuAEhUtn57gwj36sy0sUYY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bCD+0vPVYt8lxFPizihBcQn3MUxV7msoi9R/0BSSqif6oAzf6csPfNORTq9d29CCi
+	 7jgxjJAP34YLUrgTshKOP6UGPJ/6eFcAy+ja/nj6yGS7fXBJe9STfgVGbCRAT/+w5n
+	 IPTj7wBWnLTmEGUwuEr9nZgMDqNeb3jKSEVBXSpjNW5iE4XfWM5tvwzLfnQiSLBeOR
+	 yk5C2cMlMg7Begf9t4GDRwo6AZVvjXF85v+cXEe+vyInuCkIwWTaGT+M3l8s7cjn4J
+	 CWh4geb5bvrrCkC47wO/NhqxG2AiARSAyayY5+mgG9Nmv2IoCjHT23rNLUxMbsvE7u
+	 lY/UfMKhaQ9jw==
+Date: Thu, 17 Apr 2025 18:11:34 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Mohammed Elbadry <mohammed.0.elbadry@gmail.com>
+Cc: Tali Perry <tali.perry1@gmail.com>, 
+	Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, 
+	Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, 
+	Benjamin Fair <benjaminfair@google.com>, openbmc@lists.ozlabs.org, linux-i2c@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] net: dsa: rzn1_a5psw: Make the read-only array offsets static const
-Date: Thu, 17 Apr 2025 17:11:06 +0100
-Message-ID: <20250417161106.490122-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+Subject: Re: [PATCH v4] i2c: npcm: Add clock toggle recovery
+Message-ID: <npt666jrmw4qhesdwup4khufkxczy3zkf4sd4ygjx6dl6joas2@pb2jumja7cgb>
+References: <20250327193816.670658-1-mohammed.0.elbadry@gmail.com>
+ <20250328193252.1570811-1-mohammed.0.elbadry@gmail.com>
+ <4wbq7yepeqg6lhu34giqlz7fwamtuv4o5r5slm6ggj5ut7omvd@archqknzat3u>
+ <CAHdq5QHUeMk4WLf8uGz78KagN3WSvS_skhvKFMqUD5YkwJOOkg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHdq5QHUeMk4WLf8uGz78KagN3WSvS_skhvKFMqUD5YkwJOOkg@mail.gmail.com>
 
-Don't populate the read-only array offsets and md5_init on the stack
-at run time, instead make it static const.
+Hi Mohammed,
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/net/dsa/rzn1_a5psw.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+...
 
-diff --git a/drivers/net/dsa/rzn1_a5psw.c b/drivers/net/dsa/rzn1_a5psw.c
-index 31ea8130a495..df7466d4fe8f 100644
---- a/drivers/net/dsa/rzn1_a5psw.c
-+++ b/drivers/net/dsa/rzn1_a5psw.c
-@@ -337,8 +337,9 @@ static void a5psw_port_rx_block_set(struct a5psw *a5psw, int port, bool block)
- static void a5psw_flooding_set_resolution(struct a5psw *a5psw, int port,
- 					  bool set)
- {
--	u8 offsets[] = {A5PSW_UCAST_DEF_MASK, A5PSW_BCAST_DEF_MASK,
--			A5PSW_MCAST_DEF_MASK};
-+	static const u8 offsets[] = {
-+		A5PSW_UCAST_DEF_MASK, A5PSW_BCAST_DEF_MASK, A5PSW_MCAST_DEF_MASK
-+	};
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(offsets); i++)
--- 
-2.49.0
+> > > +                              npcm_i2c_get_SDA(&bus->adap), npcm_i2c_get_SCL(&bus->adap));
+> > > +             if (npcm_i2c_recovery_tgclk(&bus->adap)) {
+> > > +                     dev_err(bus->dev, "I2C%d init fail: SDA=%d SCL=%d\n",
+> > > +                             bus->num, npcm_i2c_get_SDA(&bus->adap),
+> > > +                             npcm_i2c_get_SCL(&bus->adap));
+> > > +                     return -ENXIO;
+> >
+> > why don't we return the error coming from
+> > npcm_i2c_recovery_tgclk() instead of forcing it to ENXIO?
+> 
+> The error that comes from the current driver is only -ENOTRECOVERABLE.
+> I do not see why we cannot return that error instead. I understand the
+> difference between both states; however, from the driver's
+> perspective, on initialization, ENXIO and ENOTRECOVERABLE behavior is
+> identical in that state.
 
+I think it makes more sense to return the error we receive from
+npcm_i2c_recovery_tgclk(). Then we can discuss whether that error
+is correct or not, but that's a different topic.
+
+> ENXIO was what the driver returned by default without trying to
+> recover. Do you recommend changing it? Let me know. I am happy to send
+> the v5 patch with the change and address the above comments, too.
+
+Yes, please do.
+
+Andi
