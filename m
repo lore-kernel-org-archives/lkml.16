@@ -1,257 +1,246 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81671DE889
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 06:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69D051CAA92;
+	Thu, 17 Apr 2025 06:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744872263; cv=none; b=baiST2Epfp12/ileIsJQggqCGDLcvIZq9UkYBzS9klKDm9oFnwLmA5Qk/7cgqJ1NOJRku0RI1jfKC2h+hJw3aF/DL8DILHZyaQ7E8UXAUL8T6WwmxjEfZEuf11BsYIwbVMTX2aQGaP5J7PlEHwN2F0S+YrkPYyHvivm+G0A+kWg=
+	t=1744872498; cv=none; b=jSPu1OC96BUi06gSDjYpoCvOYabcriB7AGwyB6akk3BzkDiqaPpOo+zD9HjMcylh4Dt1MyGwRyzyAbryETWylsFYH58bnNWSeYCvwjCzRXgGJSj9K5ztPCfHIt0dpLJ+5RwIHgYZjZgGMdUzY11H72ByJXMtrYLu9Jwj9nvBpgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744872263; c=relaxed/simple;
-	bh=If+ezqJJzVKuOBv/yLDBPkAxZAF7Q4lO+E5PwuZ1O/I=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=gdAQb3D6a7BsGD1BZ9ON99fuT3txzYQMzctR/lPZFeCRxhZ5XJ3c6ZkD9Y5+3X5CXBmgo78m3iY3XBldeEAPdBMQQTVRSC72Wpvk91DB59ikFtIkfiUCZwUp6w97ZeKyg2qLcSONxgzCq86+QxjL1f7P4xQDZnfnwRWJkvVeuHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d5b38276deso8680465ab.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 23:44:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744872261; x=1745477061;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=80vIA7ap+8Y3mbiZvd1Ac5OwnLScEEXHJZpjQ6o29cM=;
-        b=wVlJZVwYxJajeTimkxipBoocDRckMFG2pEaccZDk1jhbtuFIaDkYSA7EJ/bsfPf05/
-         YLPdl9lweOAWf2aRGbE9TNL/X2WofV08ortpUt2jzR42ensIJDzHHthI5I4qobOFGrKe
-         DRDwBfjZ8dG/Kw6mj/yAlEysOZNafcqAyhyFCf2zYKKv7cKUYkEQNDShgyMi+juulhBv
-         rK84jbwh5oRrNwOWiqRlpcJ3fYDBleFJKSjSwipZCeZad9O1NnWQuRL/18m+iSSHTggN
-         uWeILGaWAMYtsAv0hFJFttDQrka3LnaIofBp/iqXZ3ePJiVQocc0PZTSUSnueOJotqlA
-         MnDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPqp8PD+KfWnE03NZCw8K9cYm0bZ43Fays4Azwp4xLkYIw1JNdsVyL0RO+jh2zNkzKGbVZdFKhY+I/N2M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzU4IbFF2xZRipXnT4Fcg6ovAFi49YtOrsobHcdg3U4882YGoHi
-	JqzmVI27FhNj6pmp95rHTd8K+qLb0fucAvcnpX5kwgolE3MFBnpKCuf/RBtNO5+aOpBdJSTYwQ6
-	UD7Dqf02K0Yu5jNKgTnA6FurmSpr4sjjYP8ajNa0slsUPenCRjAZoelI=
-X-Google-Smtp-Source: AGHT+IElS9UcrUsD9qBSZfJWImK9txvdQ9mVCJUsQUEiZlsvorY3+4alHVP4YhtjNflvBEOHRMUn9vI2hHt+U+OD5oP+G/kymE+s
+	s=arc-20240116; t=1744872498; c=relaxed/simple;
+	bh=ukCcaMdJXQ5rliM6c9NU2hGSoLfFjHJkx8DMketdcSU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CqyNgzfs69Rk/vanVxtJOtWmd/ExNo2qQndIC0vW2prOFk0lNZkyWE0dvZX7Pangcq8jR6B5dvmGfMAVrJl/2LO/497BxXKCfR6nOzg6jWFaWeY3RMXIgZeTy1ca5FJeMuajWwDXlfxrANvENi4UlQ1ejVworeLQI07+fqcqF9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=kK5v809E; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="kK5v809E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=rbiGEnPXfTJBFF8/Jzz38hsNkOYWx3lXorEkxn6cETU=;
+	b=kK5v809ETPJ3ci6A09qlTPH3adIYbW9/Wauc6MkwQWvQRd9/IEBmozRHpc54gC
+	beR3IZ7QNyYS2A6bsWB9lC2X4ufe5Z1KXmlpjYrAVWcIYRMQBuayV0qNfqbvNePj
+	fFU4aG/eE57jAb6wKfZwxdKctJIffsLPv2dTN1P9fNeWM=
+Received: from [192.168.142.52] (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wBn37D7owBo5BmAAg--.29857S2;
+	Thu, 17 Apr 2025 14:47:26 +0800 (CST)
+Message-ID: <a8cc995e-c6d5-4079-b6d9-765f76a7ec7a@163.com>
+Date: Thu, 17 Apr 2025 14:47:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:16c5:b0:3d3:d067:73f8 with SMTP id
- e9e14a558f8ab-3d815b1cda5mr39072505ab.11.1744872260897; Wed, 16 Apr 2025
- 23:44:20 -0700 (PDT)
-Date: Wed, 16 Apr 2025 23:44:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6800a344.050a0220.5cdb3.000d.GAE@google.com>
-Subject: [syzbot] [afs?] BUG: sleeping function called from invalid context in __xfs_write_fault
-From: syzbot <syzbot+764108b2012ab7b1aad2@syzkaller.appspotmail.com>
-To: dhowells@redhat.com, linux-afs@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, marc.dionne@auristor.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    7cdabafc0012 Merge tag 'trace-v6.15-rc1' of git://git.kern..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=103bd398580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fb8650d88e9fb80f
-dashboard link: https://syzkaller.appspot.com/bug?extid=764108b2012ab7b1aad2
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/0f9317cc7b92/disk-7cdabafc.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/b9e0f7e75505/vmlinux-7cdabafc.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/5c11cc51cada/bzImage-7cdabafc.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+764108b2012ab7b1aad2@syzkaller.appspotmail.com
-
-BUG: sleeping function called from invalid context at ./include/linux/percpu-rwsem.h:50
-in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 6258, name: syz.2.54
-preempt_count: 0, expected: 0
-RCU nest depth: 1, expected: 0
-4 locks held by syz.2.54/6258:
- #0: ffff88807c041b38 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x247/0x310 fs/file.c:1213
- #1: ffff88804d208148 (&type->i_mutex_dir_key#18){++++}-{4:4}, at: iterate_dir+0x4a6/0x760 fs/readdir.c:101
- #2: ffffffff8ed3dfa0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- #2: ffffffff8ed3dfa0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
- #2: ffffffff8ed3dfa0 (rcu_read_lock){....}-{1:3}, at: afs_dynroot_readdir+0x466/0xbe0 fs/afs/dynroot.c:351
- #3: ffff88803143dbe0 (&mm->mmap_lock){++++}-{4:4}, at: mmap_read_trylock include/linux/mmap_lock.h:203 [inline]
- #3: ffff88803143dbe0 (&mm->mmap_lock){++++}-{4:4}, at: get_mmap_lock_carefully mm/memory.c:6346 [inline]
- #3: ffff88803143dbe0 (&mm->mmap_lock){++++}-{4:4}, at: lock_mm_and_find_vma+0x32/0x2f0 mm/memory.c:6406
-CPU: 1 UID: 0 PID: 6258 Comm: syz.2.54 Not tainted 6.15.0-rc1-syzkaller-00325-g7cdabafc0012 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- __might_resched+0x558/0x6c0 kernel/sched/core.c:8818
- percpu_down_read include/linux/percpu-rwsem.h:50 [inline]
- __sb_start_write include/linux/fs.h:1783 [inline]
- sb_start_pagefault include/linux/fs.h:1948 [inline]
- __xfs_write_fault+0x1cd/0x8f0 fs/xfs/xfs_file.c:1718
- xfs_write_fault+0x1a1/0x640 fs/xfs/xfs_file.c:1777
- do_page_mkwrite+0x159/0x340 mm/memory.c:3287
- wp_page_shared mm/memory.c:3688 [inline]
- do_wp_page+0x2bbc/0x5e00 mm/memory.c:3907
- handle_pte_fault+0xfaf/0x61c0 mm/memory.c:6013
- __handle_mm_fault mm/memory.c:6140 [inline]
- handle_mm_fault+0x1030/0x1aa0 mm/memory.c:6309
- do_user_addr_fault arch/x86/mm/fault.c:1388 [inline]
- handle_page_fault arch/x86/mm/fault.c:1480 [inline]
- exc_page_fault+0x2bb/0x920 arch/x86/mm/fault.c:1538
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-RIP: 0010:filldir+0x2c4/0x6a0 fs/readdir.c:292
-Code: 87 55 02 00 00 0f 01 cb 0f ae e8 48 8b 44 24 30 49 89 46 08 48 8b 4c 24 10 48 8b 44 24 60 48 89 01 48 8b 44 24 18 8b 6c 24 3c <66> 89 41 10 48 98 40 88 6c 01 ff 48 89 44 24 30 4d 63 f5 42 c6 44
-RSP: 0018:ffffc90003d8fbe0 EFLAGS: 00050283
-RAX: 0000000000000018 RBX: 0000200000002008 RCX: 0000200000001ff0
-RDX: 0000000000000000 RSI: 0000200000001fd8 RDI: 0000200000002008
-RBP: 0000000000000004 R08: ffffffff82429e7d R09: 1ffff11005dcf780
-R10: dffffc0000000000 R11: ffffed1005dcf781 R12: ffff8881432bfb41
-R13: 0000000000000003 R14: 0000200000001fd8 R15: 00007ffffffff000
- dir_emit include/linux/fs.h:3861 [inline]
- afs_dynroot_readdir_cells fs/afs/dynroot.c:310 [inline]
- afs_dynroot_readdir+0x814/0xbe0 fs/afs/dynroot.c:352
- iterate_dir+0x5a9/0x760 fs/readdir.c:108
- __do_sys_getdents fs/readdir.c:322 [inline]
- __se_sys_getdents+0x1ff/0x4e0 fs/readdir.c:308
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f74f7f8d169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f74f8d45038 EFLAGS: 00000246 ORIG_RAX: 000000000000004e
-RAX: ffffffffffffffda RBX: 00007f74f81a6080 RCX: 00007f74f7f8d169
-RDX: 00000000000000b8 RSI: 0000200000001fc0 RDI: 000000000000000e
-RBP: 00007f74f800e990 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f74f81a6080 R15: 00007fff9d606378
- </TASK>
-
-=============================
-[ BUG: Invalid wait context ]
-6.15.0-rc1-syzkaller-00325-g7cdabafc0012 #0 Tainted: G        W          
------------------------------
-syz.2.54/6258 is trying to lock:
-ffff88807b5f2f98 (&xfs_nondir_ilock_class
-){++++}-{4:4}, at: xfs_fs_dirty_inode+0x19d/0x260 fs/xfs/xfs_super.c:714
-other info that might help us debug this:
-context-{5:5}
-6 locks held by syz.2.54/6258:
- #0: ffff88807c041b38 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x247/0x310 fs/file.c:1213
- #1: ffff88804d208148 (&type->i_mutex_dir_key#18){++++}-{4:4}, at: iterate_dir+0x4a6/0x760 fs/readdir.c:101
- #2: ffffffff8ed3dfa0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- #2: ffffffff8ed3dfa0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
- #2: ffffffff8ed3dfa0 (rcu_read_lock){....}-{1:3}, at: afs_dynroot_readdir+0x466/0xbe0 fs/afs/dynroot.c:351
- #3: ffff88803143dbe0 (&mm->mmap_lock){++++}-{4:4}, at: mmap_read_trylock include/linux/mmap_lock.h:203 [inline]
- #3: ffff88803143dbe0 (&mm->mmap_lock){++++}-{4:4}, at: get_mmap_lock_carefully mm/memory.c:6346 [inline]
- #3: ffff88803143dbe0 (&mm->mmap_lock){++++}-{4:4}, at: lock_mm_and_find_vma+0x32/0x2f0 mm/memory.c:6406
- #4: ffff88807f006518 (sb_pagefaults#2){.+.+}-{0:0}, at: xfs_write_fault+0x1a1/0x640 fs/xfs/xfs_file.c:1777
- #5: ffff88807f006610 (sb_internal#2){.+.+}-{0:0}, at: xfs_fs_dirty_inode+0x15a/0x260 fs/xfs/xfs_super.c:712
-stack backtrace:
-CPU: 1 UID: 0 PID: 6258 Comm: syz.2.54 Tainted: G        W           6.15.0-rc1-syzkaller-00325-g7cdabafc0012 #0 PREEMPT(full) 
-Tainted: [W]=WARN
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_lock_invalid_wait_context kernel/locking/lockdep.c:4831 [inline]
- check_wait_context kernel/locking/lockdep.c:4903 [inline]
- __lock_acquire+0xc30/0xd80 kernel/locking/lockdep.c:5185
- lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
- down_write_nested+0xa2/0x220 kernel/locking/rwsem.c:1693
- xfs_fs_dirty_inode+0x19d/0x260 fs/xfs/xfs_super.c:714
- __mark_inode_dirty+0x2ee/0xe90 fs/fs-writeback.c:2527
- generic_update_time+0xad/0xc0 fs/inode.c:2064
- xfs_vn_update_time+0x2a7/0x600 fs/xfs/xfs_iops.c:1136
- inode_update_time fs/inode.c:2076 [inline]
- __file_update_time fs/inode.c:2305 [inline]
- file_update_time+0x314/0x450 fs/inode.c:2335
- __xfs_write_fault+0x2ff/0x8f0 fs/xfs/xfs_file.c:1719
- xfs_write_fault+0x1a1/0x640 fs/xfs/xfs_file.c:1777
- do_page_mkwrite+0x159/0x340 mm/memory.c:3287
- wp_page_shared mm/memory.c:3688 [inline]
- do_wp_page+0x2bbc/0x5e00 mm/memory.c:3907
- handle_pte_fault+0xfaf/0x61c0 mm/memory.c:6013
- __handle_mm_fault mm/memory.c:6140 [inline]
- handle_mm_fault+0x1030/0x1aa0 mm/memory.c:6309
- do_user_addr_fault arch/x86/mm/fault.c:1388 [inline]
- handle_page_fault arch/x86/mm/fault.c:1480 [inline]
- exc_page_fault+0x2bb/0x920 arch/x86/mm/fault.c:1538
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-RIP: 0010:filldir+0x2c4/0x6a0 fs/readdir.c:292
-Code: 87 55 02 00 00 0f 01 cb 0f ae e8 48 8b 44 24 30 49 89 46 08 48 8b 4c 24 10 48 8b 44 24 60 48 89 01 48 8b 44 24 18 8b 6c 24 3c <66> 89 41 10 48 98 40 88 6c 01 ff 48 89 44 24 30 4d 63 f5 42 c6 44
-RSP: 0018:ffffc90003d8fbe0 EFLAGS: 00050283
-RAX: 0000000000000018 RBX: 0000200000002008 RCX: 0000200000001ff0
-RDX: 0000000000000000 RSI: 0000200000001fd8 RDI: 0000200000002008
-RBP: 0000000000000004 R08: ffffffff82429e7d R09: 1ffff11005dcf780
-R10: dffffc0000000000 R11: ffffed1005dcf781 R12: ffff8881432bfb41
-R13: 0000000000000003 R14: 0000200000001fd8 R15: 00007ffffffff000
- dir_emit include/linux/fs.h:3861 [inline]
- afs_dynroot_readdir_cells fs/afs/dynroot.c:310 [inline]
- afs_dynroot_readdir+0x814/0xbe0 fs/afs/dynroot.c:352
- iterate_dir+0x5a9/0x760 fs/readdir.c:108
- __do_sys_getdents fs/readdir.c:322 [inline]
- __se_sys_getdents+0x1ff/0x4e0 fs/readdir.c:308
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f74f7f8d169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f74f8d45038 EFLAGS: 00000246 ORIG_RAX: 000000000000004e
-RAX: ffffffffffffffda RBX: 00007f74f81a6080 RCX: 00007f74f7f8d169
-RDX: 00000000000000b8 RSI: 0000200000001fc0 RDI: 000000000000000e
-RBP: 00007f74f800e990 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f74f81a6080 R15: 00007fff9d606378
- </TASK>
-----------------
-Code disassembly (best guess):
-   0:	87 55 02             	xchg   %edx,0x2(%rbp)
-   3:	00 00                	add    %al,(%rax)
-   5:	0f 01 cb             	stac
-   8:	0f ae e8             	lfence
-   b:	48 8b 44 24 30       	mov    0x30(%rsp),%rax
-  10:	49 89 46 08          	mov    %rax,0x8(%r14)
-  14:	48 8b 4c 24 10       	mov    0x10(%rsp),%rcx
-  19:	48 8b 44 24 60       	mov    0x60(%rsp),%rax
-  1e:	48 89 01             	mov    %rax,(%rcx)
-  21:	48 8b 44 24 18       	mov    0x18(%rsp),%rax
-  26:	8b 6c 24 3c          	mov    0x3c(%rsp),%ebp
-* 2a:	66 89 41 10          	mov    %ax,0x10(%rcx) <-- trapping instruction
-  2e:	48 98                	cltq
-  30:	40 88 6c 01 ff       	mov    %bpl,-0x1(%rcx,%rax,1)
-  35:	48 89 44 24 30       	mov    %rax,0x30(%rsp)
-  3a:	4d 63 f5             	movslq %r13d,%r14
-  3d:	42                   	rex.X
-  3e:	c6                   	.byte 0xc6
-  3f:	44                   	rex.R
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, lpieralisi@kernel.org, kw@linux.com,
+ bhelgaas@google.com, heiko@sntech.de, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ Shawn Lin <shawn.lin@rock-chips.com>
+References: <20250416204051.GA78956@bhelgaas>
+ <bb40385c-6839-484c-90b2-d6c7ecb95ba9@163.com> <aACZP48pWk5Y62dK@ryzen>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <aACZP48pWk5Y62dK@ryzen>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wBn37D7owBo5BmAAg--.29857S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Ww15ZrW5WFW5urWkAr4fZrb_yoW3ZF15p3
+	4ayF13KrWkJrW7K3Z5tF1DGr1xtr1qyF4UGF45G34rtF1a9r1Dtry29r1Sqa47Wry5JFya
+	gw4UJ3yIvw45J3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UmiihUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxMyo2gAnhDdWQAAs7
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+On 2025/4/17 14:01, Niklas Cassel wrote:
+> On Thu, Apr 17, 2025 at 10:19:10AM +0800, Hans Zhang wrote:
+>> On 2025/4/17 04:40, Bjorn Helgaas wrote:
+>>> On Wed, Apr 16, 2025 at 11:19:26PM +0800, Hans Zhang wrote:
+>>>> The RK3588's PCIe controller defaults to a 128-byte max payload size,
+>>>> but its hardware capability actually supports 256 bytes. This results
+>>>> in suboptimal performance with devices that support larger payloads.
+>>>>
+>>>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>>>> ---
+>>>>    drivers/pci/controller/dwc/pcie-dw-rockchip.c | 18 ++++++++++++++++++
+>>>>    1 file changed, 18 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>>>> index c624b7ebd118..5bbb536a2576 100644
+>>>> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>>>> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>>>> @@ -477,6 +477,22 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
+>>>>    	return IRQ_HANDLED;
+>>>>    }
+>>>> +static void rockchip_pcie_set_max_payload(struct rockchip_pcie *rockchip)
+>>>> +{
+>>>> +	struct dw_pcie *pci = &rockchip->pci;
+>>>> +	u32 dev_cap, dev_ctrl;
+>>>> +	u16 offset;
+>>>> +
+>>>> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+>>>> +	dev_cap = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCAP);
+>>>> +	dev_cap &= PCI_EXP_DEVCAP_PAYLOAD;
+>>>> +
+>>>> +	dev_ctrl = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
+>>>> +	dev_ctrl &= ~PCI_EXP_DEVCTL_PAYLOAD;
+>>>> +	dev_ctrl |= dev_cap << 5;
+>>>> +	dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, dev_ctrl);
+>>>> +}
+>>>
+>>> I can't really complain too much about this since meson does basically
+>>> the same thing, but there are some things I don't like about this:
+>>>
+>>>     - I don't think it's safe to set MPS higher in all cases.  If we set
+>>>       the Root Port MPS=256, and an Endpoint only supports MPS=128, the
+>>>       Endpoint may do a 256-byte DMA read (assuming its MRRS>=256).  In
+>>>       that case the RP may respond with a 256-byte payload the Endpoint
+>>>       can't handle.  The generic code in pci_configure_mps() might be
+>>>       smart enough to avoid that situation, but I'm not confident about
+>>>       it.  Maybe I could be convinced.
+>>>
+>>
+>> Dear Bjorn,
+>>
+>> Thank you very much for your reply. If we set the Root Port MPS=256, and an
+>> Endpoint only supports MPS=128. Finally, Root Port is also set to MPS=128 in
+>> pci_configure_mps.
+> 
+> In you example below, the Endpoint has:
+>   DevCap: MaxPayload 512 bytes
+> 
+> So at least your example can't be used to prove this specific point.
+> But perhaps you just wanted to show that your Max Payload Size increase
+> actually works?
+> 
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+Dear Niklas,
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+Do you have an Endpoint with MPS=128? If so, you can also help verify 
+the logic of the pci_configure_mps function. I don't have an Endpoint 
+with MPS=128 here.
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
 
-If you want to undo deduplication, reply with:
-#syz undup
+The processing logic of the pci_configure_mps function has been verified 
+on our own SOC platform. Please refer to the following log.
+Our Root Port will set MPS=512.
+
+
+0002:30:00.0 PCI bridge: Device 1f6c:0001 (prog-if 00 [Normal decode])
+         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
+ParErr- Stepping- SERR- FastB2B- DisINTx+
+         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+         Latency: 0
+         Interrupt: pin A routed to IRQ 167
+         Bus: primary=30, secondary=31, subordinate=5f, sec-latency=0
+         I/O behind bridge: 300000-300fff [size=4K] [16-bit]
+         Memory behind bridge: 38300000-383fffff [size=1M] [32-bit]
+         Prefetchable memory behind bridge: 
+00000000fff00000-00000000000fffff [disabled] [64-bit]
+         Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- 
+<TAbort- <MAbort- <SERR- <PERR-
+         Expansion ROM at 38200000 [virtual] [disabled] [size=1M]
+         BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16- MAbort- >Reset- 
+FastB2B-
+                 PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+         Capabilities: [80] Power Management version 3
+                 Flags: PMEClk- DSI- D1+ D2- AuxCurrent=0mA 
+PME(D0+,D1+,D2-,D3hot+,D3cold-)
+                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+         Capabilities: [90] MSI: Enable+ Count=1/32 Maskable+ 64bit+
+                 Address: 000000000e060040  Data: 0000
+                 Masking: fffffffe  Pending: 00000000
+         Capabilities: [b0] MSI-X: Enable- Count=2 Masked-
+                 Vector table: BAR=0 offset=00000040
+                 PBA: BAR=0 offset=00000040
+         Capabilities: [c0] Express (v2) Root Port (Slot-), MSI 00
+                 DevCap: MaxPayload 512 bytes, PhantFunc 0
+                         ExtTag- RBE+
+                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
+                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
+                         MaxPayload 256 bytes, MaxReadReq 1024 bytes
+
+
+0002:31:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. 
+RTL8125 2.5GbE Controller (rev 05)
+         Subsystem: Realtek Semiconductor Co., Ltd. RTL8125 2.5GbE 
+Controller
+         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
+ParErr- Stepping- SERR- FastB2B- DisINTx+
+         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+         Latency: 0, Cache Line Size: 64 bytes
+         Interrupt: pin A routed to IRQ 166
+         Region 0: I/O ports at 300000 [size=256]
+         Region 2: Memory at 38300000 (64-bit, non-prefetchable) [size=64K]
+         Region 4: Memory at 38310000 (64-bit, non-prefetchable) [size=16K]
+         Capabilities: [40] Power Management version 3
+                 Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA 
+PME(D0+,D1+,D2+,D3hot+,D3cold+)
+                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+         Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
+                 Address: 0000000000000000  Data: 0000
+                 Masking: 00000000  Pending: 00000000
+         Capabilities: [70] Express (v2) Endpoint, MSI 01
+                 DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s 
+<512ns, L1 <64us
+                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset- 
+SlotPowerLimit 0W
+                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
+                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop-
+                         MaxPayload 256 bytes, MaxReadReq 2048 bytes
+
+
+hans@hans:~$ iperf3 -s
+-----------------------------------------------------------
+Server listening on 5201
+-----------------------------------------------------------
+Accepted connection from ethernet_ip, port 47114
+[  5] local ubuntu_host_ip port 5201 connected to ethernet_ip port 47122
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-1.00   sec   108 MBytes   902 Mbits/sec
+[  5]   1.00-2.00   sec   112 MBytes   941 Mbits/sec
+[  5]   2.00-3.00   sec   112 MBytes   941 Mbits/sec
+[  5]   3.00-4.00   sec   112 MBytes   941 Mbits/sec
+[  5]   4.00-5.00   sec   112 MBytes   941 Mbits/sec
+[  5]   5.00-6.00   sec   112 MBytes   941 Mbits/sec
+[  5]   6.00-7.00   sec   112 MBytes   941 Mbits/sec
+[  5]   7.00-8.00   sec   112 MBytes   941 Mbits/sec
+[  5]   8.00-9.00   sec   112 MBytes   941 Mbits/sec
+[  5]   9.00-10.00  sec   112 MBytes   941 Mbits/sec
+[  5]  10.00-10.04  sec  4.92 MBytes   941 Mbits/sec
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-10.04  sec  1.10 GBytes   938 Mbits/sec 
+receiver
+-----------------------------------------------------------
+
+
+root@cix-localhost:~# iperf3 -c ubuntu_host_ip
+Connecting to host ubuntu_host_ip, port 5201
+[  5] local ethernet_ip port 47122 connected to ubuntu_host_ip port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec   114 MBytes   958 Mbits/sec    0    484 KBytes
+[  5]   1.00-2.00   sec   113 MBytes   946 Mbits/sec    0    535 KBytes
+[  5]   2.00-3.00   sec   112 MBytes   936 Mbits/sec    0    559 KBytes
+[  5]   3.00-4.00   sec   113 MBytes   946 Mbits/sec    0    587 KBytes
+[  5]   4.00-5.00   sec   112 MBytes   939 Mbits/sec    0    587 KBytes
+[  5]   5.00-6.00   sec   113 MBytes   948 Mbits/sec    0    587 KBytes
+[  5]   6.00-7.00   sec   112 MBytes   936 Mbits/sec    0    587 KBytes
+[  5]   7.00-8.00   sec   112 MBytes   939 Mbits/sec    0    587 KBytes
+[  5]   8.00-9.00   sec   112 MBytes   942 Mbits/sec    0    619 KBytes
+[  5]   9.00-10.00  sec   113 MBytes   945 Mbits/sec    0    677 KBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  1.10 GBytes   944 Mbits/sec    0             sender
+[  5]   0.00-10.04  sec  1.10 GBytes   938 Mbits/sec 
+receiver
+
+Best regards,
+Hans
+
