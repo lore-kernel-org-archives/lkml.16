@@ -1,103 +1,97 @@
-Received: from mx2.usergate.com (unknown [46.229.79.2])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10975179A7;
-	Thu, 17 Apr 2025 05:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.229.79.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2941DE4C8;
+	Thu, 17 Apr 2025 05:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744869236; cv=none; b=oiH5sS9L2j/deIZa4v6+e0YJTv/A12HKhIuallXsWF7pxiIWofnmC+o/jGq00/Ix2XwNF7STgXd4A9IjVKB8btSonDQNHy+tg7ywG/++cS+DklxsvPzyUS2Ev4UzFwXC+h6sX84TRv6QHaNFnzv1TCRhNqEvf/a9Z9GIP1IHhJc=
+	t=1744869255; cv=none; b=jj1UFXMOPhhVoqwdfwtqjdXJP6ChDGjcjQdT7LEmVzyyh3xR5vjXaQ6JSMK/Sel9NBW3XM5KmCNBHAgVm4BTdFowe2mZU/slkM0SKAtpVkFSUtNF/tPHvtc1HKT1oBgTXEqapcnRqDPRSZrrV/PLFEZbe2VTPf+xFn4/diHtXjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744869236; c=relaxed/simple;
-	bh=QUCSGN8Amri6gWsa/LlkBd+tPzIdUsEmXusdXXyHkxM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EfRBBd8IW94Wu2hSyK8/Usp/DY6+zITu9zak7fioY06rwgpENKy3zBsF8W6tWb4EY0CVhZ1hMDUaE40bnCVToA+7YKVPycgTlFJxInaeeNThPIbShD2AP/wJSdFj3k3xKv2e5CwbUwWhd7onLkL0bfpxK23757d6j2hhCJs96ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=usergate.com; spf=pass smtp.mailfrom=usergate.com; arc=none smtp.client-ip=46.229.79.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=usergate.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=usergate.com
-Received: from mail.usergate.com[192.168.90.36] by mx2.usergate.com with ESMTP id
-	 AADD522B2C1F47D286657FD680F32D36; Thu, 17 Apr 2025 11:20:30 +0700
-From: Boris Belyavtsev <bbelyavtsev@usergate.com>
-To: <hare@suse.org>
-CC: <linux-scsi@vger.kernel.org>,<linux-kernel@vger.kernel.org>,"Boris
- Belyavtsev" <bbelyavtsev@usergate.com>
-Subject: [PATCH 0/3] aic79xx: Add some non-NULL checks
-Date: Thu, 17 Apr 2025 11:20:12 +0700
-Message-ID: <20250417042015.780823-1-bbelyavtsev@usergate.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1744869255; c=relaxed/simple;
+	bh=K56yBMbgQGqljUDT9Hv9xg/jrxYHjS/4JS/AZXqh1NQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fR2ncDl85E64wiwiYGE5hLAfxoCvf4wQ6UEG4rYSqX9w0tyDStjflkTBGTc8BAma/cNGppk/vskbeiRuanqA3A6BI/1qiDqUJk4ybcykuVX/lVMi2sRlOKCR9+jAGfq+P5AF26bNdxskWwai9aVwK/gP0Z+yNgP0GJ/pM38eTj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDz4BW+w; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDz4BW+w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 449B8C4CEE4;
+	Thu, 17 Apr 2025 05:54:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744869254;
+	bh=K56yBMbgQGqljUDT9Hv9xg/jrxYHjS/4JS/AZXqh1NQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WDz4BW+w38peZmiAvsJJ0jOI3cOSWwnlLdeCnuh9/hErkGh5mFB0jQcHTLLznPSvv
+	 Elqy4aILvNhnKYoPVE3TT2qdXlsGrZP1LfR7p+nOrGBMOxYhT+Ppxv74SZ9cRlg+VU
+	 fCZflPW/IXpvtPVjCOoJb+b8cCFRfwbO5LWTDmA4QUV+9KD2x6DYTG0WhGkvOVQ+Ne
+	 gXK3WoRLaKr8ztyzzMoq0SklQ+1aKyaw5XyKw5Vwz49d0uqhyEDBj32H3J4gk9cZRe
+	 VEvqV64S7dlf7jMjilqZkt69bKHigdE9FKFY4iRinV4j/N+9qQDBz/E4qBb2hbZTf4
+	 AY5R65rI6zDCQ==
+Date: Thu, 17 Apr 2025 07:54:12 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: "Rob Herring (Arm)" <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, netdev@vger.kernel.org, 
+	Prathosh Satish <Prathosh.Satish@microchip.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
+	Kees Cook <kees@kernel.org>, Michal Schmidt <mschmidt@redhat.com>, 
+	Conor Dooley <conor+dt@kernel.org>, Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, 
+	linux-hardening@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, Jiri Pirko <jiri@resnulli.us>, 
+	Andy Shevchenko <andy@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 net-next 2/8] dt-bindings: dpll: Add support for
+ Microchip Azurite chip family
+Message-ID: <20250417-warping-weightless-puffin-d1c9c8@shite>
+References: <20250416162144.670760-1-ivecera@redhat.com>
+ <20250416162144.670760-3-ivecera@redhat.com>
+ <174482532098.3485034.14305412993449574460.robh@kernel.org>
+ <CAAVpwAurYhW1Eyw7C_gPY0cTrQJrw7o_FL3-npLdWsxE=FGXkg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: ESLSRV-EXCH-01.esafeline.com (192.168.90.36) To
- nsk02-mbx01.esafeline.com (10.10.1.35)
-X-Message-Id: 579B4D696D264E8F9C373CB304E8B1F4
-X-MailFileId: 5A38F62B95BB487497B95A6370B49430
+In-Reply-To: <CAAVpwAurYhW1Eyw7C_gPY0cTrQJrw7o_FL3-npLdWsxE=FGXkg@mail.gmail.com>
 
-Add non-NULL checks for ahd_lookup_scb return value.
-scb could be NULL if an attacker has special equipment to return
-certain values to the driver.
+On Wed, Apr 16, 2025 at 08:29:33PM GMT, Ivan Vecera wrote:
+> On Wed, Apr 16, 2025 at 7:42=E2=80=AFPM Rob Herring (Arm) <robh@kernel.or=
+g> wrote:
+> >
+> >
+> > On Wed, 16 Apr 2025 18:21:38 +0200, Ivan Vecera wrote:
+> > > Add DT bindings for Microchip Azurite DPLL chip family. These chips
+> > > provides up to 5 independent DPLL channels, 10 differential or
+> > > single-ended inputs and 10 differential or 20 single-ended outputs.
+> > > It can be connected via I2C or SPI busses.
+> > >
+> > > Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+> > > ---
+> > > v1->v3:
+> > > * single file for both i2c & spi
+> > > * 5 compatibles for all supported chips from the family
+> > > ---
+> > >  .../bindings/dpll/microchip,zl30731.yaml      | 115 ++++++++++++++++=
+++
+> > >  1 file changed, 115 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/dpll/microchip,=
+zl30731.yaml
+> > >
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > yamllint warnings/errors:
+> >
+> > dtschema/dtc warnings/errors:
+> > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings=
+/dpll/microchip,zl30731.yaml: $id: Cannot determine base path from $id, rel=
+ative path/filename doesn't match actual path or filename
+> >          $id: http://devicetree.org/schemas/dpll/microchip,zl3073x.yaml
+>=20
+> Oops, my bad... I forgot to update $id after rename of the file...
+> Will fix.
 
-Belyavtsev Boris (1):
-  scsi: aic79xx: check for non-NULL scb in ahd_handle_seqint
-
-Boris Belyavtsev (2):
-  scsi: aic79xx: check for non-NULL scb in ahd_handle_pkt_busfree
-  scsi: aic79xx: check for non-NULL scb in ahd_linux_queue_abort_cmd
-
- drivers/scsi/aic7xxx/aic79xx_core.c | 15 +++++++++------
- drivers/scsi/aic7xxx/aic79xx_osm.c  |  3 ++-
- 2 files changed, 11 insertions(+), 7 deletions(-)
-
---
-2.43.0
-
-=D0=9D=D0=B0=D1=81=D1=82=D0=BE=D1=8F=D1=89=D0=B5=D0=B5 =D1=8D=D0=BB=D0=B5=
-=D0=BA=D1=82=D1=80=D0=BE=D0=BD=D0=BD=D0=BE=D0=B5 =D1=81=D0=BE=D0=BE=D0=B1=
-=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =D1=81=D0=BE=D0=B4=D0=B5=D1=80=D0=B6=D0=B8=
-=D1=82 =D0=B8=D0=BD=D1=84=D0=BE=D1=80=D0=BC=D0=B0=D1=86=D0=B8=D1=8E =D0=BA=
-=D0=BE=D0=BD=D1=84=D0=B8=D0=B4=D0=B5=D0=BD=D1=86=D0=B8=D0=B0=D0=BB=D1=8C=D0=
-=BD=D0=BE=D0=B3=D0=BE =D1=85=D0=B0=D1=80=D0=B0=D0=BA=D1=82=D0=B5=D1=80=D0=
-=B0, =D0=B0 =D1=82=D0=B0=D0=BA=D0=B6=D0=B5 =D0=BC=D0=BE=D0=B6=D0=B5=D1=82 =
-=D1=81=D0=BE=D0=B4=D0=B5=D1=80=D0=B6=D0=B0=D1=82=D1=8C =D0=BA=D0=BE=D0=BC=
-=D0=BC=D0=B5=D1=80=D1=87=D0=B5=D1=81=D0=BA=D1=83=D1=8E =D1=82=D0=B0=D0=B9=
-=D0=BD=D1=83 =D0=9E=D0=9E=D0=9E =C2=AB=D0=AE=D0=B7=D0=B5=D1=80=D0=B3=D0=B5=
-=D0=B9=D1=82=C2=BB =D0=98=D0=9D=D0=9D 5408308256 (UserGate). =D0=9D=D0=B5=
-=D0=BF=D1=80=D0=B0=D0=B2=D0=BE=D0=BC=D0=B5=D1=80=D0=BD=D0=BE=D0=B5 =D0=B8=
-=D1=81=D0=BF=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D0=BD=D0=B8=D0=B5 / =
-=D1=80=D0=B0=D1=81=D0=BA=D1=80=D1=8B=D1=82=D0=B8=D0=B5 =D1=82=D0=B0=D0=BA=
-=D0=BE=D0=B2=D0=BE=D0=B9 =D0=B8=D0=BD=D1=84=D0=BE=D1=80=D0=BC=D0=B0=D1=86=
-=D0=B8=D0=B8 =D0=B7=D0=B0=D0=BF=D1=80=D0=B5=D1=89=D0=B5=D0=BD=D0=BE. =D0=95=
-=D1=81=D0=BB=D0=B8 =D0=B2=D1=8B =D0=BF=D0=BE=D0=BB=D1=83=D1=87=D0=B8=D0=BB=
-=D0=B8 =D0=BD=D0=B0=D1=81=D1=82=D0=BE=D1=8F=D1=89=D0=B5=D0=B5 =D1=81=D0=BE=
-=D0=BE=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =D0=BF=D0=BE =D0=BE=D1=88=D0=B8=
-=D0=B1=D0=BA=D0=B5, =D0=BF=D0=BE=D0=B6=D0=B0=D0=BB=D1=83=D0=B9=D1=81=D1=82=
-=D0=B0, =D1=81=D0=B2=D1=8F=D0=B6=D0=B8=D1=82=D0=B5=D1=81=D1=8C =D1=81 =D0=
-=BE=D1=82=D0=BF=D1=80=D0=B0=D0=B2=D0=B8=D1=82=D0=B5=D0=BB=D0=B5=D0=BC =D0=
-=B8 =D1=83=D0=B4=D0=B0=D0=BB=D0=B8=D1=82=D0=B5 =D0=B2=D1=81=D0=B5 =D0=BA=D0=
-=BE=D0=BF=D0=B8=D0=B8 =D1=81=D0=BE=D0=BE=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D1=
-=8F. =D0=9D=D0=B0=D1=81=D1=82=D0=BE=D1=8F=D1=89=D0=B5=D0=B5 =D1=81=D0=BE=D0=
-=BE=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =D0=BD=D0=B5 =D1=8F=D0=B2=D0=BB=D1=
-=8F=D0=B5=D1=82=D1=81=D1=8F =D0=BE=D1=84=D0=B5=D1=80=D1=82=D0=BE=D0=B9. =D0=
-=A1=D0=B2=D0=B5=D0=B4=D0=B5=D0=BD=D0=B8=D1=8F =D0=BE =D0=BF=D0=BB=D0=B0=D0=
-=BD=D0=B8=D1=80=D1=83=D0=B5=D0=BC=D1=8B=D1=85 =D0=BA =D1=80=D0=B0=D0=B7=D1=
-=80=D0=B0=D0=B1=D0=BE=D1=82=D0=BA=D0=B5 =D1=82=D0=B5=D1=85=D0=BD=D0=BE=D0=
-=BB=D0=BE=D0=B3=D0=B8=D1=87=D0=B5=D1=81=D0=BA=D0=B8=D1=85 =D1=80=D0=B5=D1=
-=88=D0=B5=D0=BD=D0=B8=D1=8F=D1=85, =D1=86=D0=B5=D0=BD=D0=BE=D0=B2=D0=BE=D0=
-=B9 =D0=BF=D0=BE=D0=BB=D0=B8=D1=82=D0=B8=D0=BA=D0=B5, =D0=B8=D0=BD=D1=8B=D0=
-=B5 =D1=81=D0=BE=D0=B4=D0=B5=D1=80=D0=B6=D0=B0=D1=89=D0=B8=D0=B5=D1=81=D1=
-=8F =D0=B2 =D1=81=D0=BE=D0=BE=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B8 =D1=81=D0=
-=B2=D0=B5=D0=B4=D0=B5=D0=BD=D0=B8=D1=8F =D0=B8=D0=BC=D0=B5=D1=8E=D1=82 =D0=
-=B8=D1=81=D0=BA=D0=BB=D1=8E=D1=87=D0=B8=D1=82=D0=B5=D0=BB=D1=8C=D0=BD=D0=BE=
- =D0=B8=D0=BD=D1=84=D0=BE=D1=80=D0=BC=D0=B0=D1=86=D0=B8=D0=BE=D0=BD=D0=BD=
-=D1=8B=D1=85 =D1=85=D0=B0=D1=80=D0=B0=D0=BA=D1=82=D0=B5=D1=80 =D0=B8 =D0=BD=
-=D0=B5 =D0=B4=D0=BE=D0=BB=D0=B6=D0=BD=D1=8B =D0=B1=D1=8B=D1=82=D1=8C =D1=80=
-=D0=B0=D1=81=D1=86=D0=B5=D0=BD=D0=B5=D0=BD=D1=8B =D0=B2 =D0=BA=D0=B0=D1=87=
-=D0=B5=D1=81=D1=82=D0=B2=D0=B5 =D0=BE=D1=81=D0=BD=D0=BE=D0=B2=D0=B0=D0=BD=
-=D0=B8=D1=8F =D0=B4=D0=BB=D1=8F =D0=B2=D0=BE=D0=B7=D0=BD=D0=B8=D0=BA=D0=BD=
-=D0=BE=D0=B2=D0=B5=D0=BD=D0=B8=D1=8F =D0=BE=D0=B1=D1=8F=D0=B7=D0=B0=D1=82=
-=D0=B5=D0=BB=D1=8C=D1=81=D1=82=D0=B2 =D0=BB=D1=8E=D0=B1=D0=BE=D0=B3=D0=BE =
-=D1=81=D0=B2=D0=BE=D0=B9=D1=81=D1=82=D0=B2=D0=B0.
+No, you forgot to test. You are expected to build your code (and this is
+here testing) BEFORE you post, not after or not through community
+resources.
