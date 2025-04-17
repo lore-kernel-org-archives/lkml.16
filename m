@@ -1,327 +1,104 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5296253345;
-	Thu, 17 Apr 2025 15:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19DF1253352
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744904304; cv=none; b=pWdTQjbd4KTJ0lIVSmai61XrgPDPsFsCfAcmcJLQMXwAYx+/Mpw9ZBzpVoJj1CCN0rzaqoNKrQGCOTUjfQghQk+1TAb3eTWNnyTK1XVu+fLITFOK/zsWmsRj+UzaUST3NAd9nQqqVhPcNMt9jFmyFGGlnxoOrEXC+HcSFjLObXQ=
+	t=1744904322; cv=none; b=DafjgT81yNpO+PdkU/Bd217NIsFV/ifOl/biPD36xtBVAPNHATjrLB3C7nwgTZT7ziliH/eJIlF6SwW33ffb1NjUYo6pHk3goy0NL3Y3HC0ZOz6UL9wUhGDx78BOfSeVStNDHitALLKUYJjCTSVbP9Bb8tfdKrpN5ItWE5YO7pI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744904304; c=relaxed/simple;
-	bh=yzLDAS6A/GX7McgtGzi2ROyNyZLwH044A8OQupLDivg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FnFpcwqdeOj8MwCSsd7nYNOmDMd2IKSfXHe1ukpc+HIJaV5kkPd/qp3XwtXOJAnb1sZLm3ktkEfIILCUjQNqiRnFnxG7gIUUIRI9fWdOS308cJoD7DBxEW288ZQXr7dinvsSpn89UpyqUZdYYzi9qY078mhNqeAO+rKWU6B47TU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gAN3cbpA; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744904322; c=relaxed/simple;
+	bh=4CmxrQz1pG2CKAvpdKstkQyARIpmzfZ1LOKGQOkWcYM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QbzAfdNt9b0wqci7zPFS1gkHJ/5MSxtGiUwXpezCK+szpIC2vcLoMtrcxVV8y8dEonxY1+EcQL2JflL2B8M78WshPYbKpjJAoDE4FgbmkeIE89gmBpHqLTXeGQYEgpi0vD1584/q5hx5SZIamcWSIixkL9s1uYyKbh5gjxwvA48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=dtQ6BtEJ; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neverthere.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gAN3cbpA"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E152E43B3C;
-	Thu, 17 Apr 2025 15:38:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744904293;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8pxVZw7n7OixPD/CTbfzF//IsHt1XOo0+mfNj04Rhsg=;
-	b=gAN3cbpAlGKvedIP4zxpeZShiRnZKs+WVhYCoRvNqbVP+C54p+fy85ABgf8WGiWZZDbDxG
-	VIxqETscqSVvxJeR/JSsRnRzYHDicDz31mgpbxhxyw2tOzbrovCil9Ie6ZG9pm8lx+iZeN
-	QI0X/FOJictjZbJnV11q0iBoD901Qt1xU14DoqQAimfTobivJoVi92t6D8+htFLAHJ8KVb
-	/Nyxzntr5/mQ/v1HsW5Q7gWl85/39sWCZR9AhRwEzrZ89LvGHLO80yG2UwkNqd4v6IaEgV
-	WBUXjJP+tsttBak1oQw7awAc3c2pWEtQVCgUY3VrfETmLz4NvwMwjmNYaBkxmQ==
-Date: Thu, 17 Apr 2025 17:38:10 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Andi Shyti
- <andi.shyti@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree-spec@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 2/2] schemas: i2c: Introduce I2C bus extensions
-Message-ID: <20250417173810.4697b2b8@bootlin.com>
-In-Reply-To: <20250402102123.30391c27@bootlin.com>
-References: <20250401081041.114333-1-herve.codina@bootlin.com>
-	<20250401081041.114333-3-herve.codina@bootlin.com>
-	<CAL_JsqKQdzDzAYHDctP-nmrONBynRfi-qyncnyj10r4xZNrx1A@mail.gmail.com>
-	<20250402102123.30391c27@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="dtQ6BtEJ"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22409077c06so14456295ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:38:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=neverthere.org; s=google; t=1744904320; x=1745509120; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fCFGfuy6JO8coiSlMwlp4uAr22QSVYGIY2uQAoexHHg=;
+        b=dtQ6BtEJ/STEa9j7HWFe3CBCHyjR1XeIn44KemxNSKSvzmqgNQOo0ABmGHBBZ2suol
+         TzrsvWH9i+KHfNgKnVrA8cVoUQUEyEjYQXp3az+z/vEF4M4adTiR8u48gdqWvI1TfnjT
+         oBdyltUnbxAIAK2WmeVpxdMhnUomNj4tT6y6K0YW/JwXQDT1GNEDevF0YWBSqzqOJqNC
+         q6aiOMt2154EcET7lSrEiB49UlZd/0EhQtV2rhK8e51GABMiQYD9Mb4g5i8GNlSq1PGn
+         p+yDJsAN8ZdvVdy4eeZ8+lmlXPach+MU9lt0XLeLTP1Kos8mhWdS/1Fr4RMgpj+XVsP6
+         2MvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744904320; x=1745509120;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fCFGfuy6JO8coiSlMwlp4uAr22QSVYGIY2uQAoexHHg=;
+        b=JQX2bJGWtWrUwcENY5lhBLyNN8rywpYaaW0t62rVH+B+4OpHL9ItJhbwaW+G+BwjoX
+         uc1mBR3OWiv0TiQcWt57+gx7oJwzRHCXR1wXfeOXUeGaPN1BM+RdKp4dhx1ON7x81bJy
+         fCU05aX231cgxhGPQszGv3AJ1KjhJDheE9PFzyik7OFII52bjcRuHT6VI5R6gjK+8Drp
+         pFoORERCADJHkm78hDPzwRIT/3LufIPUtZQHOiLzGSk6xHPOx8EjWpgnIzraC+BMV8fj
+         TVzmf5qdn0CHVIoQM4qzakZO2mfVMWPj9dg3FVyd2i3+4+Pgg1M/ceAR/G9dvu6sSbWY
+         NtAw==
+X-Forwarded-Encrypted: i=1; AJvYcCVuIyIKtNaNJB+/zw8woLYeJv0yH1ERRS1Vt2FmrwtMzqPXBJlHHr2Mi5+1uYCEhMeAWyTYtb5vdQhEjc8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+YKeyMDjrTg7HLUCrulritQO1EJ8wJGJNvrdNMWryA7eVp7Mf
+	GXnzjB6Cpk8rmDoMYjSFOy2g+CFCSlWqqg5ubUz3IqDDI6MN0wFZDLrpSpwR6Yok5lHEBGEjROg
+	=
+X-Gm-Gg: ASbGncvPnYOb6FRzkvk7BxO0vrzjSVJZTQsZmWqhonxhz3DVVZsOQIAPkes8Eh2bW8T
+	qQ2gFGrEP5M12V2XFSTW6dqbqf94exgpaZ6q2R4Qdu9cLkpVSTCMAd5X8KR5/xBB7NeDjmpqLzQ
+	P8IuYtPtMdTnhYxFI0o/K2Z9rSDPNpTyl8lS5ZcC6jakl3F0El2lJNU01nu8ofIJ9DDIrzeNcwd
+	JL0Z720Ke8/a9KWCZiIQ+zBnv89y9cHTaiin1xr5z2PLbLtYd3UgYO89tvAGQdYaM9V6Ky7FIW8
+	fKARmRh0gkcDIJRssI3nWa48rOxO3a8ZMVNAFzJOtXzquPGZyZbIJr2wrXw3WeSvCQ/F1HNnr30
+	mfzBreQ==
+X-Google-Smtp-Source: AGHT+IGPzUqcsg1OrfnfmQdTkvSJAN4C6ee3MKAjTkoPY/+xGNmmw/TfpRhBh3QH4n6tKKGOXDQcIQ==
+X-Received: by 2002:a17:902:db03:b0:224:1c41:a4bc with SMTP id d9443c01a7336-22c358e2060mr94206135ad.12.1744904320238;
+        Thu, 17 Apr 2025 08:38:40 -0700 (PDT)
+Received: from tiamat (c-69-181-214-135.hsd1.ca.comcast.net. [69.181.214.135])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd233787asm12880375b3a.173.2025.04.17.08.38.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 08:38:39 -0700 (PDT)
+From: Michael Rubin <matchstick@neverthere.org>
+To: gregkh@linuxfoundation.org,
+	dpenkler@gmail.com
+Cc: linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Michael Rubin <matchstick@neverthere.org>
+Subject: [PATCH v2] staging: gpib: Removing unused function CFGn
+Date: Thu, 17 Apr 2025 15:38:37 +0000
+Message-ID: <20250417153837.92690-1-matchstick@neverthere.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdelieegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppedvrgdtgeemtggvtgdtmeduvddtvdemfegufedtmedufhdufhemieegjeegmegsgeejrgemieeileelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtdegmegtvggttdemuddvtddvmeefugeftdemudhfudhfmeeigeejgeemsgegjegrmeeiieelledphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfihsrgdorhgvnhgvshgrshesshgrnhhgqdgvnhhgihhnvggvrhhinhhgrdgtohhmpdhrtghpthhtoheprghnughirdhshhihthhisehkvghrnhgvlhdrohhrghdprhgtphhtthhop
- ehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqihdvtgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Rob, device-tree maintainers,
+Removing CFGn since it is not called by kernel code nor any of the gpib
+drivers.
 
-This discussion started a few weeks ago and hasn't reached any conclusion.
-I answered questions and comments but didn't receive any feedback.
+Signed-off-by: Michael Rubin <matchstick@neverthere.org>
+---
+ drivers/staging/gpib/uapi/gpib_user.h | 5 -----
+ 1 file changed, 5 deletions(-)
 
-In order to move forward on that topic, can we revive this discussion?
-
-As a reminder, topics started in the discussion were the following:
- - i2c-bus-extension@0: usage of a subnode with unit address
- - Presence of phandles in both direction (double linked list)
-
-Best regards,
-Hervé
-
-On Wed, 2 Apr 2025 10:21:23 +0200
-Herve Codina <herve.codina@bootlin.com> wrote:
-
-> Hi Rob,
-> 
-> On Tue, 1 Apr 2025 09:03:23 -0500
-> Rob Herring <robh@kernel.org> wrote:
-> 
-> > On Tue, Apr 1, 2025 at 3:11 AM Herve Codina <herve.codina@bootlin.com> wrote:  
-> > >
-> > > An I2C bus can be wired to the connector and allows an add-on board to
-> > > connect additional I2C devices to this bus.
-> > >
-> > > Those additional I2C devices could be described as sub-nodes of the I2C
-> > > bus controller node however for hotplug connectors described via device
-> > > tree overlays there is additional level of indirection, which is needed
-> > > to decouple the overlay and the base tree:
-> > >
-> > >   --- base device tree ---
-> > >
-> > >   i2c1: i2c@abcd0000 {
-> > >       compatible = "xyz,i2c-ctrl";
-> > >       i2c-bus-extension@0 {    
-> > 
-> > What does 0 represent? Some fake I2C address?
-> > 
-> > Why do you even need a child node here?  
-> 
-> 0 represent the extension number. Multiple extensions can be connected
-> to a single i2c controller:
->                                       +-------------+
->   +------------+                 .----+ Connector 1 |
->   |   i2c      |                 |    +-------------+
->   | controller +---- i2c bus ----+
->   +------------+                 |    +-------------+
->                                  '----+ Connector 2 |
->                                       +-------------+
-> 
-> I need a child node because extensions don't modify existing hardware (adding/removing
-> a property) but add an entry point, the extension for a new set of devices.
-> As it is not a existing hardware modification it is better represented as a node.
-> 
-> 
-> Those extensions can be chained:
->   +-----------------------------------+         +-------------------+
->   | Base board                        |         | addon board       |
->   |                                   |         |    +------------+ |
->   | +------------+                    |         | .--+ i2c device | |
->   | |   i2c      |             +-------------+  | |  +------------+ |
->   | | controller +-- i2c bus --+ connector A +----+                 |
->   | +------------+             +-------------+  | |          +-------------+
->   +-----------------------------------+         | '----------+ connector B |
->                                                 |            +-------------+
->                                                 +-------------------+
-> The addon board is described using an overlay.
-> 
-> In that case, we have:
-> - base-board.dts:
->     i2c0: i2c@cafe0000 {
->         compatible = "xyz,i2c-ctrl";
->         #address-cells = <1>;
->         #size-cells = <0>;
-> 
->         i2c-bus-extension@0 {
->             reg = <0>;
->             i2c-bus = <&i2c_connector_a>;
->         };
->         ...
->     };
-> 
->     connector-a {
->         devices {
->            /* Entry point for devices available on the addon
->             * board that are not connected to a bus such as
->             * fixed-clock, fixed-regulator, connectors, ...
->             */
->         };
->         i2c_connector_a: i2c-connector-a {
->             /* The i2c available at connector */
->             #address-cells = <1>;
->             #size-cells = <0>;
->             i2c_parent <&i2c0>;
->        };
->     };
-> 
-> - addon-board.dtso
->     __overlay__ { /* This is applied at connector_a node */
->         i2c_connector_a: i2c-connector-a {
->             /* We do not modify the existing device i2c_connector_a
->              * by changing, adding or removing its properties but
->              * we add new devices (sub-nodes)
->              */
-> 
->             /* The i2c device available in the addon-board */
->             i2c-device@0x10 {
->                 compatible = "foo,bar";
->                 reg = 0x10;
->             };
-> 
->             /* The i2c extension forwarding the i2c bus */
->             i2c-bus-extension@0 {
-> 	        reg = <0>;
->                 i2c-bus = <&i2c_connector_b>;
->             };
->        };
->        
->        devices {
->           /* addon-board connector b */
->           connector_b {
->               i2c_connector_b: i2c_connector_b {
->               /* The i2c available at connector */
->               #address-cells = <1>;
->               #size-cells = <0>;
->               i2c_parent = <&i2c_connector_a>;
->           };
->        };
->    };
-> 
-> Without a child node for i2c-bus-extension, we need to add
-> properties on already existing node (i2c-connector-a) to add
-> the bus extension and adding/modifying/removing a property
-> on a device-tree node correspond to modifying the device
-> itself (description changed) whereas adding/removing sub-nodes
-> correspond to adding/removing devices handled by the parent
-> parent node of those sub-nodes.
-> 
-> From the controller point of view, an extension is "a collection of
-> devices described somewhere else in the device-tree and connected
-> to the I2C SDA/SCL pins". Having that described as a sub-node seems
-> correct.
-> 
-> >   
-> > >           i2c-bus = <&i2c_ctrl>;
-> > >       };
-> > >       ...
-> > >   };
-> > >
-> > >   i2c5: i2c@cafe0000 {
-> > >       compatible = "xyz,i2c-ctrl";
-> > >       i2c-bus-extension@0 {
-> > >           i2c-bus = <&i2c-sensors>;
-> > >       };
-> > >       ...
-> > >   };
-> > >
-> > >   connector {
-> > >       i2c_ctrl: i2c-ctrl {
-> > >           i2c-parent = <&i2c1>;
-> > >           #address-cells = <1>;
-> > >           #size-cells = <0>;
-> > >       };
-> > >
-> > >       i2c-sensors {
-> > >           i2c-parent = <&i2c5>;
-> > >           #address-cells = <1>;
-> > >           #size-cells = <0>;
-> > >       };
-> > >   };
-> > >
-> > >   --- device tree overlay ---
-> > >
-> > >   ...
-> > >   // This node will overlay on the i2c-ctrl node of the base tree
-> > >   i2c-ctrl {
-> > >       eeprom@50 { compatible = "atmel,24c64"; ... };
-> > >   };
-> > >   ...
-> > >
-> > >   --- resulting device tree ---
-> > >
-> > >   i2c1: i2c@abcd0000 {
-> > >       compatible = "xyz,i2c-ctrl";
-> > >       i2c-bus-extension@0 {
-> > >           i2c-bus = <&i2c_ctrl>;
-> > >       };
-> > >       ...
-> > >   };
-> > >
-> > >   i2c5: i2c@cafe0000 {
-> > >       compatible = "xyz,i2c-ctrl";
-> > >       i2c-bus-extension@0 {
-> > >           i2c-bus = <&i2c-sensors>;
-> > >       };
-> > >       ...
-> > >   };
-> > >
-> > >   connector {
-> > >       i2c-ctrl {
-> > >           i2c-parent = <&i2c1>;
-> > >           #address-cells = <1>;
-> > >           #size-cells = <0>;
-> > >
-> > >           eeprom@50 { compatible = "atmel,24c64"; ... };
-> > >       };
-> > >
-> > >       i2c-sensors {
-> > >           i2c-parent = <&i2c5>;
-> > >           #address-cells = <1>;
-> > >           #size-cells = <0>;
-> > >       };
-> > >   };
-> > >
-> > > Here i2c-ctrl (same goes for i2c-sensors) represent the part of I2C bus
-> > > that is on the hot-pluggable add-on. On hot-plugging it will physically
-> > > connect to the I2C adapter on the base board. Let's call the 'i2c-ctrl'
-> > > node an "extension node".
-> > >
-> > > In order to decouple the overlay from the base tree, the I2C adapter
-> > > (i2c@abcd0000) and the extension node (i2c-ctrl) are separate nodes.
-> > >
-> > > The extension node is linked to the I2C bus controller in two ways. The
-> > > first one with the i2c-bus-extension available in I2C controller
-> > > sub-node and the second one with the i2c-parent property available in
-> > > the extension node itself.
-> > >
-> > > The purpose of those two links is to provide the link in both direction
-> > > from the I2C controller to the I2C extension and from the I2C extension
-> > > to the I2C controller.    
-> > 
-> > Why do you need both directions? An i2c controller can search the tree
-> > for i2c-parent and find the one's that belong to it. Or the connector
-> > can register with the I2C controller somehow.  
-> 
-> Yes, but this is sub-optimal compare to the double-link references.
-> 
-> I discarded any kind of registering from the connector which implies
-> extra complexity compared to a simple double-link reference. In the I2C
-> path, the connector is really a passive component and fully transparent.
-> It should be transparent as well in the implementation.
-> 
-> Using only i2c-parent (i.e. the reference from extension to i2c controller)
-> works when the walk from extension to i2c controller but using it on the
-> other direction is not as trivial as it could be.
-> 
-> Indeed, starting from the i2c controller, we have to search for the entire
-> tree any i2c-parent that references the i2c controller.
-> Those i2c-parent can exist in node that are not at all related to i2c
-> extensions.
-> 
-> i2c-parent in all cases represents an i2c parent bus but not only for i2c
-> extensions. I2C muxes and some other devices use this property.
-> 
-> Here also, searching the entire tree for i2c-parent and being sure that
-> the property found is related to an I2C extension adds extra complexity
-> that is simply not present with the double-link references.
-> 
-> Best regards,
-> Hervé
+diff --git a/drivers/staging/gpib/uapi/gpib_user.h b/drivers/staging/gpib/uapi/gpib_user.h
+index eaf7399a164a..1cb6b6219e67 100644
+--- a/drivers/staging/gpib/uapi/gpib_user.h
++++ b/drivers/staging/gpib/uapi/gpib_user.h
+@@ -192,11 +192,6 @@ static inline __u8 PPE_byte(unsigned int dio_line, int sense)
+ 	return cmd;
+ }
+ 
+-static inline __u8 CFGn(unsigned int meters)
+-{
+-	return 0x6 | (meters & 0xf);
+-}
+-
+ /* mask of bits that actually matter in a command byte */
+ enum {
+ 	gpib_command_mask = 0x7f,
+-- 
+2.43.0
 
