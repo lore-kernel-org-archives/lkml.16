@@ -1,341 +1,236 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67EA33FD4;
-	Thu, 17 Apr 2025 02:20:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C30CD1922FB;
+	Thu, 17 Apr 2025 02:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744856405; cv=none; b=n09Y0G4edwXdGDai1k4OkGTAAv67LgaclUHa10OovwuPSJkE0nX44RMyghgYDV2FOa1r/OMZ2kInED5i49A9Zb3/eteHLG23emWMXs54ys6vx/L9KDwAwQQ2uQXHuGR8E0U9ClNe9ytbAk4a3Xrgt5pQD6CkC5gJq32HRn3/KLs=
+	t=1744856428; cv=none; b=HlhGo49DL9f7uyKyydPa1WgOqHv2HMOSmP7Yk7CrWdU/mgapvKuv4KUJnJ1XOXXGQS0n1yL2PS3ExMZVfsRBtt7+b40CwUkTz7e4RZSaFqauRzxEdzUuBmOKFn3FRlp5zpm/vEI9LP343ZhUlpIPtZi9xQhOy4TGpkA5HyzDAjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744856405; c=relaxed/simple;
-	bh=rlNva0zZfOVGnog08WGFYUTdJb3a2xmL3Xt3dmFFj88=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XP5IjpSL78fyLp4kZYScCtVfXNoTnlCTKLhLwu4kog9C/JqbBeodauoP6U8UKbQsQQSn8Z1A1yvDtVXrmysP9+k8ziUojXKH2rmDqUjrjxgOSmYZ0bB38Y1txZXDBYD4YPofFDAdx4h48W/IgKlZr9hr4fkaPkEXhlIQ/+l8LSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TxHfXf0J; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TxHfXf0J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=wrKLwquI8zlHwCmcvYouUws+LNMJVPBRxnJSH3TqZEo=;
-	b=TxHfXf0JNkDJq28oDhfkuSjz3NcQoj1Jh1u0c3idb0dCKsdxpeC39NTfPjeCqX
-	rXyyizFUt+M5nFntEaPeVIdpJcnk5IM7tGum9evxpnx4yb986HMrIjKbhrcpQkMQ
-	oHBPqNC0HJT2V+MjJsmkpLov3bZqG5ToAl4l1r6Ld2vUg=
-Received: from [192.168.142.52] (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wD3Xw0eZQBoZg1+AQ--.60903S2;
-	Thu, 17 Apr 2025 10:19:13 +0800 (CST)
-Message-ID: <bb40385c-6839-484c-90b2-d6c7ecb95ba9@163.com>
-Date: Thu, 17 Apr 2025 10:19:10 +0800
+	s=arc-20240116; t=1744856428; c=relaxed/simple;
+	bh=rhvCIqQEwxBgv4DhjWDvEpT8TN1nGrgFuyPNSSHoA9M=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=csGX5O5VJKKvSDgcv8Qxc6x4XFW0ldKnffoYLY0zOki9Nq2P5+z1LiLzamV60nvgjyLpxVa/6CGM9gHKwNp2TDDAKsQ8nuk9PYHYa+5qHApijeghYPzmab76/xwY9t/rIEFBkQzPimlJN5NRNXpL8JAZCEBHL55WwbCfe2bUYvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8BxrOJkZQBoLabAAA--.17906S3;
+	Thu, 17 Apr 2025 10:20:20 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by front1 (Coremail) with SMTP id qMiowMDxvhtfZQBo_kOHAA--.20302S3;
+	Thu, 17 Apr 2025 10:20:17 +0800 (CST)
+Subject: Re: [PATCH v2 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
+To: Thomas Gleixner <tglx@linutronix.de>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
+ jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
+ lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
+ gaosong@loongson.cn, yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250331064116.32540-1-zhangtianyang@loongson.cn>
+ <20250331064116.32540-3-zhangtianyang@loongson.cn> <87ldskwdyb.ffs@tglx>
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <a916e71b-de79-391a-55be-f8d7583ca344@loongson.cn>
+Date: Thu, 17 Apr 2025 10:19:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
- heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
- jingoohan1@gmail.com, thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org
-References: <20250416204051.GA78956@bhelgaas>
+In-Reply-To: <87ldskwdyb.ffs@tglx>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250416204051.GA78956@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wD3Xw0eZQBoZg1+AQ--.60903S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3uFyrXF4DZrWkKF1rXFW5KFg_yoWDuw4kpF
-	WqqFsrKrW8JayagFs2yF48CF4Utrn2yay3Kr9xW34Uta12grWDt3sI9rn8Z3WxAr1F93W2
-	yrWDt3yIqrn8JaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Uq0PhUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwUyo2gAY2hPoAAAsD
+X-CM-TRANSID:qMiowMDxvhtfZQBo_kOHAA--.20302S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCFWfWw48uw1DXF4kCF13ZFc_yoWrKF1DpF
+	yUGay2yayrXF4UWr10gF4DAFWIqr48GrZrKrWrGa43A3sI9r1xCF10grya9F95Crn5CF12
+	vF4jvrZ7ur1DJFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUD529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
+	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jnEfOUUUUU=
 
-On 2025/4/17 04:40, Bjorn Helgaas wrote:
-> On Wed, Apr 16, 2025 at 11:19:26PM +0800, Hans Zhang wrote:
->> The RK3588's PCIe controller defaults to a 128-byte max payload size,
->> but its hardware capability actually supports 256 bytes. This results
->> in suboptimal performance with devices that support larger payloads.
->>
->> Signed-off-by: Hans Zhang <18255117159@163.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 18 ++++++++++++++++++
->>   1 file changed, 18 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> index c624b7ebd118..5bbb536a2576 100644
->> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> @@ -477,6 +477,22 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
->>   	return IRQ_HANDLED;
->>   }
->>   
->> +static void rockchip_pcie_set_max_payload(struct rockchip_pcie *rockchip)
+Hi, Thomas
+
+ÔÚ 2025/4/1 ÏÂÎç3:14, Thomas Gleixner Ð´µÀ:
+> On Mon, Mar 31 2025 at 14:41, Tianyang Zhang wrote:
+>>   	irq_data_update_effective_affinity(data, cpumask_of(cpu));
+>> @@ -242,6 +233,7 @@ static void avecintc_irq_dispatch(struct irq_desc *desc)
+>>   		d = this_cpu_read(irq_map[vector]);
+>>   		if (d) {
+>>   			generic_handle_irq_desc(d);
+>> +
+> Stray newline.
+OK, I got it
+>
+>>   		} else {
+>> +
+>> +static void invalid_enqueue(struct redirect_queue *rqueue, struct irde_inv_cmd *cmd)
 >> +{
->> +	struct dw_pcie *pci = &rockchip->pci;
->> +	u32 dev_cap, dev_ctrl;
->> +	u16 offset;
+>> +	struct irde_inv_cmd *inv_addr;
+>> +	u32 tail;
 >> +
->> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->> +	dev_cap = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCAP);
->> +	dev_cap &= PCI_EXP_DEVCAP_PAYLOAD;
+>> +	guard(raw_spinlock_irqsave)(&rqueue->lock);
 >> +
->> +	dev_ctrl = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
->> +	dev_ctrl &= ~PCI_EXP_DEVCTL_PAYLOAD;
->> +	dev_ctrl |= dev_cap << 5;
->> +	dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, dev_ctrl);
+>> +	while (invalid_queue_is_full(rqueue->node, &tail))
+>> +		cpu_relax();
+>> +
+>> +	inv_addr = (struct irde_inv_cmd *)(rqueue->base + tail * sizeof(struct irde_inv_cmd));
+>> +	memcpy(inv_addr, cmd, sizeof(struct irde_inv_cmd));
+>> +	tail = (tail + 1) % INVALID_QUEUE_SIZE;
+>> +
+>> +	wmb();
+> Undocumented memory barrier.
+OK , I got it
+>
+>> +
+>> +	iocsr_write32(tail, LOONGARCH_IOCSR_REDIRECT_CQT);
 >> +}
-> 
-> I can't really complain too much about this since meson does basically
-> the same thing, but there are some things I don't like about this:
-> 
->    - I don't think it's safe to set MPS higher in all cases.  If we set
->      the Root Port MPS=256, and an Endpoint only supports MPS=128, the
->      Endpoint may do a 256-byte DMA read (assuming its MRRS>=256).  In
->      that case the RP may respond with a 256-byte payload the Endpoint
->      can't handle.  The generic code in pci_configure_mps() might be
->      smart enough to avoid that situation, but I'm not confident about
->      it.  Maybe I could be convinced.
-> 
-
-Dear Bjorn,
-
-Thank you very much for your reply. If we set the Root Port MPS=256, and 
-an Endpoint only supports MPS=128. Finally, Root Port is also set to 
-MPS=128 in pci_configure_mps.
-
-
-lspci information before the patch was submitted:
-
-root@firefly:~# lspci -vvv
-00:00.0 PCI bridge: Fuzhou Rockchip Electronics Co., Ltd Device 3588 
-(rev 01) (prog-if 00 [Normal decode])
-         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
-ParErr- Stepping- SERR+ FastB2B- DisINTx+
-         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-         Latency: 0
-         Interrupt: pin A routed to IRQ 73
-         Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
-         I/O behind bridge: 0000f000-00000fff [disabled]
-         Memory behind bridge: f0200000-f02fffff [size=1M]
-         Prefetchable memory behind bridge: 
-00000000fff00000-00000000000fffff [disabled]
-         Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- 
-<TAbort- <MAbort- <SERR- <PERR-
-         Expansion ROM at f0300000 [virtual] [disabled] [size=64K]
-         BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16- MAbort- >Reset- 
-FastB2B-
-                 PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-         Capabilities: [40] Power Management version 3
-                 Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA 
-PME(D0+,D1+,D2-,D3hot+,D3cold-)
-                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-         Capabilities: [50] MSI: Enable+ Count=16/32 Maskable+ 64bit+
-                 Address: 00000000fe670040  Data: 0000
-                 Masking: fffffeff  Pending: 00000000
-         Capabilities: [70] Express (v2) Root Port (Slot-), MSI 08
-                 DevCap: MaxPayload 256 bytes, PhantFunc 0
-                         ExtTag+ RBE+
-                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-                         RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop-
-                         MaxPayload 128 bytes, MaxReadReq 512 bytes
-
-
-01:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd 
-Device a80c (prog-if 02 [NVM Express])
-         Subsystem: Samsung Electronics Co Ltd Device a801
-         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
-ParErr- Stepping- SERR- FastB2B- DisINTx+
-         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-         Latency: 0
-         Interrupt: pin A routed to IRQ 72
-         Region 0: Memory at f0200000 (64-bit, non-prefetchable) [size=16K]
-         Capabilities: [40] Power Management version 3
-                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA 
-PME(D0-,D1-,D2-,D3hot-,D3cold-)
-                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-         Capabilities: [50] MSI: Enable- Count=1/32 Maskable- 64bit+
-                 Address: 0000000000000000  Data: 0000
-         Capabilities: [70] Express (v2) Endpoint, MSI 00
-                 DevCap: MaxPayload 512 bytes, PhantFunc 0, Latency L0s 
-unlimited, L1 unlimited
-                         ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ 
-SlotPowerLimit 0.000W
-                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-                         RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+ 
-FLReset-
-                         MaxPayload 128 bytes, MaxReadReq 512 bytes
-
-
-
-lspci information after the patch was submitted:
-root@firefly:~# lspci -vvv
-00:00.0 PCI bridge: Fuzhou Rockchip Electronics Co., Ltd Device 3588 
-(rev 01) (prog-if 00 [Normal decode])
-         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
-ParErr- Stepping- SERR+ FastB2B- DisINTx+
-         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-         Latency: 0
-         Interrupt: pin A routed to IRQ 73
-         Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
-         I/O behind bridge: 0000f000-00000fff [disabled]
-         Memory behind bridge: f0200000-f02fffff [size=1M]
-         Prefetchable memory behind bridge: 
-00000000fff00000-00000000000fffff [disabled]
-         Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- 
-<TAbort- <MAbort- <SERR- <PERR-
-         Expansion ROM at f0300000 [virtual] [disabled] [size=64K]
-         BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16- MAbort- >Reset- 
-FastB2B-
-                 PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-         Capabilities: [40] Power Management version 3
-                 Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA 
-PME(D0+,D1+,D2-,D3hot+,D3cold-)
-                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-         Capabilities: [50] MSI: Enable+ Count=16/32 Maskable+ 64bit+
-                 Address: 00000000fe670040  Data: 0000
-                 Masking: fffffeff  Pending: 00000000
-         Capabilities: [70] Express (v2) Root Port (Slot-), MSI 08
-                 DevCap: MaxPayload 256 bytes, PhantFunc 0
-                         ExtTag+ RBE+
-                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-                         RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop-
-                         MaxPayload 256 bytes, MaxReadReq 512 bytes
-
-01:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd 
-Device a80c (prog-if 02 [NVM Express])
-         Subsystem: Samsung Electronics Co Ltd Device a801
-         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
-ParErr- Stepping- SERR- FastB2B- DisINTx+
-         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-         Latency: 0
-         Interrupt: pin A routed to IRQ 72
-         Region 0: Memory at f0200000 (64-bit, non-prefetchable) [size=16K]
-         Capabilities: [40] Power Management version 3
-                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA 
-PME(D0-,D1-,D2-,D3hot-,D3cold-)
-                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-         Capabilities: [50] MSI: Enable- Count=1/32 Maskable- 64bit+
-                 Address: 0000000000000000  Data: 0000
-         Capabilities: [70] Express (v2) Endpoint, MSI 00
-                 DevCap: MaxPayload 512 bytes, PhantFunc 0, Latency L0s 
-unlimited, L1 unlimited
-                         ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ 
-SlotPowerLimit 0.000W
-                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-                         RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+ 
-FLReset-
-                         MaxPayload 256 bytes, MaxReadReq 512 bytes
-
-
-
-Here are my tests and the NVMe SSD worked fine.
-
-root@firefly:~# df -h
-Filesystem           Size  Used Avail Use% Mounted on
-......
-/dev/nvme0n1         916G   28K  870G   1% /root/nvme
-......
-root@firefly:~#
-root@firefly:~# ls -l nvme/
-total 16
-drwx------ 2 root root 16384 Dec 24 06:34 lost+found
-root@firefly:~#
-root@firefly:~# cd nvme/
-root@firefly:~/nvme# time dd if=/dev/zero of=test bs=1M count=1024
-1024+0 records in
-1024+0 records out
-1073741824 bytes (1.1 GB, 1.0 GiB) copied, 0.875072 s, 1.2 GB/s
-
-real    0m0.881s
-user    0m0.001s
-sys     0m0.874s
-root@firefly:~/nvme# ls -l
-total 1048596
-drwx------ 2 root root      16384 Dec 24 06:34 lost+found
--rw-r--r-- 1 root root 1073741824 Apr 17 02:11 test
-root@firefly:~/nvme# time cp -rf test test1
-
-real    0m0.901s
-user    0m0.005s
-sys     0m0.889s
-root@firefly:~/nvme# ls -lh
-total 2.1G
-drwx------ 2 root root  16K Dec 24 06:34 lost+found
--rw-r--r-- 1 root root 1.0G Apr 17 02:11 test
--rw-r--r-- 1 root root 1.0G Apr 17 02:12 test1
-
-
-
->    - There's nothing rockchip-specific about this.
-> 
->    - It's very similar to meson_set_max_payload(), so it'd be nice to
->      share that code somehow.
-
-The next version will be added to DWC.
-
-> 
->    - The commit log is specific about Max_Payload_Size Supported being
->      256 bytes, but the patch actually reads the value from Device
->      Capabilities.
-The commit log will be modified.
-
-> 
->    - I'd like to see FIELD_PREP()/FIELD_GET() used when possible.
->      PCIE_LTSSM_STATUS_MASK is probably the only other place.
-> 
-
-Will change.
-
-> These would be material for a separate patch:
-> 
-
-Thank you very much for your reminding and advice. I will submit another 
-patch separately for modification.
-
->    - The #defines for register offsets and bits are kind of a mess,
->      e.g., PCIE_SMLH_LINKUP, PCIE_RDLH_LINKUP, PCIE_LINKUP,
->      PCIE_L0S_ENTRY, and PCIE_LTSSM_STATUS_MASK are in
->      PCIE_CLIENT_LTSSM_STATUS, but you couldn't tell that from the
->      names, and they're not even defined together.
-> 
->    - Same for PCIE_RDLH_LINK_UP_CHGED, PCIE_LINK_REQ_RST_NOT_INT,
->      PCIE_RDLH_LINK_UP_CHGED, which are in
->      PCIE_CLIENT_INTR_STATUS_MISC.
-> 
->    - PCIE_LTSSM_ENABLE_ENHANCE is apparently in
->      PCIE_CLIENT_HOT_RESET_CTRL?  Sure wouldn't guess that from the
->      names or the order of #defines.
-> 
->    - PCIE_CLIENT_GENERAL_DEBUG isn't used at all.
-
-Will delete.
-
-
-Best regard,
-Hans
-
-> 
->>   static int rockchip_pcie_configure_rc(struct platform_device *pdev,
->>   				      struct rockchip_pcie *rockchip)
->>   {
->> @@ -511,6 +527,8 @@ static int rockchip_pcie_configure_rc(struct platform_device *pdev,
->>   	pp->ops = &rockchip_pcie_host_ops;
->>   	pp->use_linkup_irq = true;
->>   
->> +	rockchip_pcie_set_max_payload(rockchip);
 >> +
->>   	ret = dw_pcie_host_init(pp);
->>   	if (ret) {
->>   		dev_err(dev, "failed to initialize host\n");
->>
->> base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
->> -- 
->> 2.25.1
->>
+>> +static void smp_call_invalid_enqueue(void *arg)
+>> +{
+>> +	struct smp_invalid_arg *s_arg = (struct smp_invalid_arg *)arg;
+>> +
+>> +	invalid_enqueue(s_arg->queue, s_arg->cmd);
+>> +}
+>> +
+>> +static void irde_invlid_entry_node(struct redirect_item *item)
+>> +{
+>> +	struct redirect_queue *rqueue;
+>> +	struct smp_invalid_arg arg;
+>> +	struct irde_inv_cmd cmd;
+>> +	volatile u64 raddr = 0;
+>> +	int node = item->table->node, cpu;
+>> +
+>> +	rqueue = &(irde_descs[node].inv_queue);
+>> +	cmd.cmd_info = 0;
+>> +	cmd.index.type = INVALID_INDEX;
+>> +	cmd.index.need_notice = 1;
+>> +	cmd.index.index = item->index;
+>> +	cmd.notice_addr = (u64)(__pa(&raddr));
+>> +
+>> +	if (cpu_to_node(smp_processor_id()) == node)
+>> +		invalid_enqueue(rqueue, &cmd);
+>> +	else {
+> if () lacks brackets
+OK , I got it
+>
+>> +		for_each_cpu(cpu, cpumask_of_node(node)) {
+>> +			if (cpu_online(cpu))
+>> +				break;
+>> +		}
+>> +		arg.queue = rqueue;
+>> +		arg.cmd = &cmd;
+>> +		smp_call_function_single(cpu, smp_call_invalid_enqueue, &arg, 0);
+>> +	}
+>> +
+>> +	while (!raddr)
+>> +		cpu_relax();
+>> +
+>> +}
+>
+>> +static int redirect_table_free(struct redirect_item *item)
+>> +{
+>> +	struct redirect_table *ird_table;
+>> +	struct redirect_entry *entry;
+>> +	unsigned long flags;
+>> +
+>> +	ird_table = item->table;
+>> +
+>> +	entry = item->entry;
+>> +	memset(entry, 0, sizeof(struct redirect_entry));
+>> +
+>> +	raw_spin_lock_irqsave(&ird_table->lock, flags);
+>> +	bitmap_release_region(ird_table->bitmap, item->index, 0);
+>> +	raw_spin_unlock_irqrestore(&ird_table->lock, flags);
+> 	scoped_guard(raw_spinlock_irqsave, &ird_table->lock)
+> 		bitmap_release_region(ird_table->bitmap, item->index, 0);
+
+Initially, I thought there were no complex branches here, so I directly 
+used raw_spin_lock_irqsave.
+
+However, considering the unified code style, scoped_guard is more 
+appropriate
+
+>
+>> +static int redirect_set_affinity(struct irq_data *data, const struct cpumask *dest, bool force)
+>> +{
+>> +	struct redirect_item *item = data->chip_data;
+>> +	struct avecintc_data *adata;
+>> +	int ret;
+>> +
+>> +	ret = irq_chip_set_affinity_parent(data, dest, force);
+>> +	if (ret == IRQ_SET_MASK_OK_DONE)
+>> +		return IRQ_SET_MASK_OK;
+> Again bracket rules. Also what is this return value ranslation about?
+
+My initial aim was to keep the return value consistent with the previous 
+one.
+
+I'll study the differences between the two return values and make 
+appropriate changes. Thank you.
+
+>
+>> +	else if (ret) {
+>> +		pr_err("IRDE:set_affinity error %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	adata = irq_data_get_avec_data(data);
+>> +
+>> +	redirect_domain_prepare_entry(item, adata);
+>> +
+>> +	irde_invlid_entry_node(item);
+> This cannot work when irde_invlid_entry_node() goes into the SMP
+> function call path, because smp_call_function_single() cannot be invoked
+> with interrupts disabled.
+My oversight. This approach is indeed risky. I'll rethink the design. 
+Thanks for your advice.
+>> +{
+>> +	struct redirect_table *ird_table;
+>> +	struct avecintc_data *avec_data;
+>> +	struct irq_data *irq_data;
+>> +	int ret, i, node;
+>> +
+>> +#ifdef CONFIG_NUMA
+>> +	node = ((msi_alloc_info_t *)arg)->desc->dev->numa_node;
+> Bah.
+>
+>> +#else
+>> +	node = 0;
+>> +#endif
+>          msi_alloc_info_t *info = arg;
+>
+>          node = dev_to_node(info->desc->dev);
+This is appropriate and safe. Thank you.
+>
+>> +static int redirect_table_init(int node)
+>> +{
+>> +	struct redirect_table *ird_table = &(irde_descs[node].ird_table);
+>> +	struct page *pages;
+>> +	unsigned long *bitmap;
+> Use proper reverse fir tree ordering
+>
+> Thanks,
+>
+>          tglx
+
+I'll strive to fix other code style issues.
+
+Thank you for your reply.
+
+Tianyang
 
