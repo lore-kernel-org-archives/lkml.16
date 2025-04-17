@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A76257AD1;
-	Thu, 17 Apr 2025 18:03:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A48F2580C0;
+	Thu, 17 Apr 2025 18:03:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744913011; cv=none; b=dYoDJ3rtx9KZQqidPWMtLp6zHN9VABoJAVY+w4H1FQSDL4hiJpYtPL15W235v240I4o7yuXAtX6ZOvsd1jOstCtzcFYyqXyrrmfjuTUyG22R9SXmlS62PxXCcBYhGwtKZSqaMQhexdMfUftqzV2vjvFLlRpQspdV1qMgNXc/1+Q=
+	t=1744913012; cv=none; b=rs7PUyJHraXeCNNYbdvEEHnM7nRYVn8g+/+nVxraR4OjDy3fTivQArMI9p+iwI70Rwivk9eaTbK7vqDCFn/AG6fn05ZFi93o9nmFBBHEumUW61NczGqNLg/JdEBhSJlHlElHwGYSe54SEUK1pc/jGurkj/6UCJJwy8f9qpjoS7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744913011; c=relaxed/simple;
-	bh=SHagOM7q8YotFbO/VX8Cd8VQdTdJhrU2B6P3R8m43U0=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=ryTxE+eTI7uefeo5TTqF2CFmNAqYAgbHvqwKzgWIve1OD51BN8iA4meNwlIEe0v8vNSRVgY1hEVbHcBIf012Lsf40qic7zKDz3f24S3LA7c2byLgbYZsPex+SFQhTWSwqyROIQA21vUKo4pP59rzzm3o8LXCLUWgiAVnp6slwbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kS8atxwC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PU5oAnSj; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1744913012; c=relaxed/simple;
+	bh=pSbd5sxEGcTVrfJAguQNM9ehc7LTYsuqIwRIRC5hYsM=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=kS2yFq4WLXrtaYGlSUbY0D0Tn3Sy9BOduoptYAyB6cCpeLxZqgek/oXrxfB8x+A/rd1tQLuIYt2/Ct1mL783IGT50a2E1gmtgqVFHhlpCu1gqlGbDgN0OqBxGeHm0jNYrcKboXrq0PKFCFC1mso1LrfPDhImMCCbTLt1/7LmlBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JSWEtSS+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rEv1T3Gw; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kS8atxwC";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PU5oAnSj"
-Date: Thu, 17 Apr 2025 18:03:27 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JSWEtSS+";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rEv1T3Gw"
+Date: Thu, 17 Apr 2025 18:03:28 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1744913008;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=vH8JDT/bgq6XEaGBXPCAdqlVPFUvFzuv7efqS6ba+Aw=;
-	b=kS8atxwCnXKdsXkNqOFLZPBnr5lIpkwHqjPWSOPEcZDMYG94+aIYk3lACj1YdN0hDxQN+k
-	I72rg7QTG8KJ2kSkW6cYv4pYUR6Ogrz6mSMe67Z0/F6txOQr63JZTSRqiMHzRNggUV4DHt
-	WGDp0Ou6ikIE4EloZtp3V0t8Z6LcaV3GkrzbTAUqm3D8ftUlkFIuzG4YEYB6gqT2Lvd/dr
-	Y0DOk1qnmPpiIaxu0d11izEW09au1Z09YFR86JS8fx0WqT+71/bdAev6um2mBH4ZaxsMHN
-	xId/uwLFmvIwPmVc9xYthPIYZpRaRyPtF9waiLrOcYHldsfVoAYKDcztUKamIw==
+	bh=Wdnph35UQW/Un217RELR7gmJT8W97yeFpRd85Tss0Io=;
+	b=JSWEtSS+A1Z5341XADIp698x5j2yec37wyKJ2EezRMba9OM6lA71M+h/tXctVGTRKJaK1v
+	VAuZJScaERxNnFDMer8Az7UIc4AWfK/7m4Yh1iikR8ZwhJCwoDdsqPA1USL/5Ubdh8ttV4
+	MEdl11MxjY4Ii/kMJUdgbVi4IjVsD5nTlNkBx6/0VEWNycVccdqikIQPjZn15eTcDrjLOb
+	StzQczT4MA8RS991amvr98IGpx9CfgUnvJ1dbZ7fJz101w3UWG3CMGbCEdFHaZk6qHI13G
+	QcMbPopdeVr2cGx45W1JnFUKJNyhbP3ywbaLdyLmJHigrzOVER+O4zzySQ6J2A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1744913008;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=vH8JDT/bgq6XEaGBXPCAdqlVPFUvFzuv7efqS6ba+Aw=;
-	b=PU5oAnSjoMwRF6f2fQRqC+UQj4Ogsl+fkmEgXV3Hb8p68sAkQirX384MI8867pl+2pH9lo
-	n8dnge7v5MpRD8AA==
+	bh=Wdnph35UQW/Un217RELR7gmJT8W97yeFpRd85Tss0Io=;
+	b=rEv1T3Gw35YjXQeAjDEiw1bheWejAuQWyHvdBUhrEPisR60Ig3/oWtsXwMp8L19+BsCge/
+	3PEJj0xpoxR3hKCw==
 From: "tip-bot2 for Dave Hansen" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/mm: Always tell core mm to sync kernel mappings
+Subject: [tip: x86/mm] x86/mm: Always "broadcast" PMD setting operations
 Cc: Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
 Precedence: bulk
@@ -49,7 +49,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174491300738.31282.6790702061292691578.tip-bot2@tip-bot2>
+Message-ID: <174491300802.31282.1389796894467957175.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,49 +59,85 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/mm branch of tip:
 
-Commit-ID:     eb9c7f00f22d6ea2a94e00eb4f33a79064681564
-Gitweb:        https://git.kernel.org/tip/eb9c7f00f22d6ea2a94e00eb4f33a79064681564
+Commit-ID:     b0cc4d19f198cdfd1b58c8f5536670d1dc68cbbd
+Gitweb:        https://git.kernel.org/tip/b0cc4d19f198cdfd1b58c8f5536670d1dc68cbbd
 Author:        Dave Hansen <dave.hansen@linux.intel.com>
-AuthorDate:    Mon, 14 Apr 2025 10:32:37 -07:00
+AuthorDate:    Mon, 14 Apr 2025 10:32:35 -07:00
 Committer:     Dave Hansen <dave.hansen@linux.intel.com>
 CommitterDate: Thu, 17 Apr 2025 10:39:25 -07:00
 
-x86/mm: Always tell core mm to sync kernel mappings
+x86/mm: Always "broadcast" PMD setting operations
 
-Each mm_struct has its own copy of the page tables. When core mm code
-makes changes to a copy of the page tables those changes sometimes
-need to be synchronized with other mms' copies of the page tables. But
-when this synchronization actually needs to happen is highly
-architecture and configuration specific.
+Kernel PMDs can either be shared across processes or private to a
+process.  On 64-bit, they are always shared.  32-bit non-PAE hardware
+does not have PMDs, but the kernel logically squishes them into the
+PGD and treats them as private. Here are the four cases:
 
-In cases where kernel PMDs are shared across processes
-(SHARED_KERNEL_PMD) the core mm does not itself need to do that
-synchronization for kernel PMD changes. The x86 code communicates
-this by clearing the PGTBL_PMD_MODIFIED bit cleared in those
-configs to avoid expensive synchronization.
+	64-bit:                Shared
+	32-bit: non-PAE:       Private
+	32-bit:     PAE+  PTI: Private
+	32-bit:     PAE+noPTI: Shared
 
-The kernel is moving toward never sharing kernel PMDs on 32-bit.
-Prepare for that and make 32-bit PAE always set PGTBL_PMD_MODIFIED,
-even if there is no modification to synchronize. This obviously adds
-some synchronization overhead in cases where the kernel page tables
-are being changed.
+Note that 32-bit is all "Private" except for PAE+noPTI being an
+oddball.  The 32-bit+PAE+noPTI case will be made like the rest of
+32-bit shortly.
+
+But until that can be done, temporarily treat the 32-bit+PAE+noPTI
+case as Private. This will do unnecessary walks across pgd_list and
+unnecessary PTE setting but should be otherwise harmless.
 
 Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lore.kernel.org/all/20250414173237.EC790E95%40davehans-spike.ostc.intel.com
+Link: https://lore.kernel.org/all/20250414173235.F63F50D1%40davehans-spike.ostc.intel.com
 ---
- arch/x86/include/asm/pgtable-3level_types.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/mm/pat/set_memory.c |  4 ++--
+ arch/x86/mm/pgtable.c        | 11 +++--------
+ 2 files changed, 5 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/include/asm/pgtable-3level_types.h b/arch/x86/include/asm/pgtable-3level_types.h
-index 9d5b257..9759fa0 100644
---- a/arch/x86/include/asm/pgtable-3level_types.h
-+++ b/arch/x86/include/asm/pgtable-3level_types.h
-@@ -29,7 +29,7 @@ typedef union {
+diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+index def3d92..30ab4ac 100644
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -889,7 +889,7 @@ static void __set_pmd_pte(pte_t *kpte, unsigned long address, pte_t pte)
+ 	/* change init_mm */
+ 	set_pte_atomic(kpte, pte);
+ #ifdef CONFIG_X86_32
+-	if (!SHARED_KERNEL_PMD) {
++	{
+ 		struct page *page;
  
- #define SHARED_KERNEL_PMD	(!static_cpu_has(X86_FEATURE_PTI))
+ 		list_for_each_entry(page, &pgd_list, lru) {
+@@ -1293,7 +1293,7 @@ static int collapse_pmd_page(pmd_t *pmd, unsigned long addr,
+ 	/* Queue the page table to be freed after TLB flush */
+ 	list_add(&page_ptdesc(pmd_page(old_pmd))->pt_list, pgtables);
  
--#define ARCH_PAGE_TABLE_SYNC_MASK	(SHARED_KERNEL_PMD ? 0 : PGTBL_PMD_MODIFIED)
-+#define ARCH_PAGE_TABLE_SYNC_MASK	PGTBL_PMD_MODIFIED
+-	if (IS_ENABLED(CONFIG_X86_32) && !SHARED_KERNEL_PMD) {
++	if (IS_ENABLED(CONFIG_X86_32)) {
+ 		struct page *page;
  
- /*
-  * PGDIR_SHIFT determines what a top-level page table entry can map
+ 		/* Update all PGD tables to use the same large page */
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index ea01b55..f1c5886 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -97,18 +97,13 @@ static void pgd_ctor(struct mm_struct *mm, pgd_t *pgd)
+ 				KERNEL_PGD_PTRS);
+ 	}
+ 
+-	/* list required to sync kernel mapping updates */
+-	if (!SHARED_KERNEL_PMD) {
+-		pgd_set_mm(pgd, mm);
+-		pgd_list_add(pgd);
+-	}
++	/* List used to sync kernel mapping updates */
++	pgd_set_mm(pgd, mm);
++	pgd_list_add(pgd);
+ }
+ 
+ static void pgd_dtor(pgd_t *pgd)
+ {
+-	if (SHARED_KERNEL_PMD)
+-		return;
+-
+ 	spin_lock(&pgd_lock);
+ 	pgd_list_del(pgd);
+ 	spin_unlock(&pgd_lock);
