@@ -1,138 +1,214 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B195523817B;
-	Thu, 17 Apr 2025 11:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421F7238D53
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 11:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744888575; cv=none; b=PejLLbjEoLGOECt9Pq6N9Oq1Il2nA0DN0XyGQb8dVwr3S62Def0r4eRnIy4eMZ6n294OKY2lu0uXxPHbZR8Kpb1HFLcOsiMpUy8cM5/bNyYCDwZlQ67IEb0tuzGONRtLXfF8hxkX7YSq7GXL5+2KI9xmsYgGmOJ/x3suANuPGFY=
+	t=1744888611; cv=none; b=DeUhXDtmjvQPoLUaR4dMLcBxxtDje314GxlTgcq3j3oVUHESbmii0QeldBup1Qe/YWcqurbmGI0Wii4upoGtstrp66bnLCbZnM0aeorYOHiveCi4INxeUyBJqFD2H883ZHIJJ62txPRm5SanPwzOumVrQNmj1b5y2LNrAASiu8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744888575; c=relaxed/simple;
-	bh=R5O71Js30BHfakH/NEkLiIkAkq1QV6lpTAlKWsMZPn4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K9dDHlXNNVfKgbiTTVuyi/fZI00Oq2s71JGdfhEgYm0WxMuv6dHi3eHVp6NQRHsuzwd3LbX+egfSN4ld3mse/cUIq5yWPGUAph9bBJGNfvuF3BqfWOjisj4rbLJt4amS4Xma32x/BWrTXwqH0uhidwdq9jlg/jCC813A/rkK38Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NOld4/TR; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744888611; c=relaxed/simple;
+	bh=F8w/ZDS2nkOI75wDdKPnexYjMpSc59GF32Z6ZoUnxNg=;
+	h=Date:Message-ID:From:To:Cc:Subject:MIME-Version:Content-Type; b=Y6KHmPZlcVT0wjZkTJ4zjuwRKOpDKHr1uC+7CjXW+draK2USr5BRhv7FCvx0hvvCwb3ur+a3nQT3ZnkIivSsmu9p3sEmfL8hDNAoGLHGW0gELodX01KS0B9qxm8mO19EkMNifquCeRbcXgV7v1yC1LXtYFt7zV/FivKIgSvz3Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=TiEU+US0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1bMq/iNW; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=TiEU+US0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1bMq/iNW; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NOld4/TR"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so4269725e9.1;
-        Thu, 17 Apr 2025 04:16:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744888572; x=1745493372; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nska21crBmdz6JojasinsB56GkEwbIFHHV+nNujavCA=;
-        b=NOld4/TRVEJcC9boGAK+SKtmdj2ESZavuRjCih8qFZj3xIcCig34v1P4x0Ho0r2Uq9
-         dS+O0RoCXDpeKxqODhlS8ihiw6kPAFamjyTJH9jmNI2JyQtlnqJspA/jJCHQ96h6wzku
-         kyB/ERCiTSMKVGT0rcSa7bruTsFoDO8HWkfZVlF4b5J4ATqEY/wTT7nZeJnD7L5MHtmL
-         +e6Vof0aii5tNKO0ceSkdhJ58UDrO3BsnfuBOaQppgH4mG+OzrmXOn3LJYe6ABLm5M4J
-         CuifZjxs99XHSlNdyxqAcA79xJF9Sia6leK8NiAPUNzc4E8DzHnzI0JZHLOGxJrmYWvT
-         ycOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744888572; x=1745493372;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nska21crBmdz6JojasinsB56GkEwbIFHHV+nNujavCA=;
-        b=ZCkcSWtlm/fBnFgEPHOTJgx+wLseYPCVym58KhhLS81gwnAfOhPbxVjGqKL/hqZlNc
-         c6V2SnNsWGKkt68S4ly8jp5edADWM6ViQzPQDE9wV6gE80lC4WZgpfy2NiE0jNgo9U2t
-         ygqhFZhHAF+ytHP1vNIUPgReEfxRzBIaBbtfVZtgK5MH6MCz+wxoQhtc2p35fcIEsZkA
-         sl2H4DU9/AKggcBAJvQ2NO7MVWE1sEKgVqbXp1IYInbKyMDTKk8xZWWTCzEQa0MDX685
-         OW/C1sHPiZJGKQo62lJMM36h2QNCI2qL5pe2YIfyIxGtNx45MB8Ys6ymSA9hQo8I9FpU
-         TGDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1s5XcbVeZfW6T20o3jm4CXCobIWPWfewaW/4Y7dRuQ9APoR68IDO7Ob/UQbQMuJOsZLnthRDusRCHY56n@vger.kernel.org, AJvYcCU6ATjMKBgxJWhE1/gKvwS+N10mL7/JttR3ctI0nTDrbxeS8DA6k7NIMHFGXdBDQ4y9PWM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySXqBWAsfyR2M4Zdo2oOey2H/0jXW53CIbiSeZQlBBIksDWrBr
-	WFg1PJMBoalWuOdVeijju+qgwi4ZNCHZViUCt2IHDLojoqQR2EfO
-X-Gm-Gg: ASbGnctuOVcYAL0JQRMAcQpo4i0mY1ZTFzeiDMNEFcvdHVWsL/ySlv1gFGKlD7HDtjt
-	a4+YCJ7HTrBIYiFDc3gCyLTnP5NujH5us/AZjWXTP6pO7U2vGWqNlRXZeelVWIKcF9+vjzMIkHC
-	D48joT1qY6+/1xCHGkMverrSyvxjzkZ60XF8QFvDNgaI2F5Xgd6WLQHAHMdkAXq+OmrwCz8ogLX
-	VkJ5FHY2oZ/zIBKERmVS3AX/pQ6fynEB6O7FRCTlmGZC+5NYi94+VxbhFgw/yBwTkds7ibOetXC
-	XEZ77O5+rnKcQmnOJqfiidgT7EVLh9wq
-X-Google-Smtp-Source: AGHT+IHb9v83zlnCd8nEWcdCrNOaKQ7h/prAuXYrbjfN/0KrYcDFFbB3UDQBtoUx6diru6/n01SsQA==
-X-Received: by 2002:a05:600c:354c:b0:43c:e70d:4504 with SMTP id 5b1f17b1804b1-4405d636637mr44515535e9.19.1744888571754;
-        Thu, 17 Apr 2025 04:16:11 -0700 (PDT)
-Received: from krava ([2a00:102a:400b:c830:675c:d00d:19b9:1f1c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b54224bsm49227705e9.38.2025.04.17.04.16.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 04:16:11 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 17 Apr 2025 13:16:08 +0200
-To: Feng Yang <yangfeng59949@163.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
-	yonghong.song@linux.dev, john.fastabend@gmail.com,
-	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
-	hengqi.chen@gmail.com, olsajiri@gmail.com, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 bpf-next 0/3] libbpf: Fix event name too long error
- and add tests
-Message-ID: <aADi-FfI-PljQzcO@krava>
-References: <20250417014848.59321-1-yangfeng59949@163.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="TiEU+US0";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1bMq/iNW";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="TiEU+US0";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1bMq/iNW"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 548151F391;
+	Thu, 17 Apr 2025 11:16:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744888608; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Y1tVHPHVoMIn93culRJCZCipp4hop9jS1mSJ9CFmsPQ=;
+	b=TiEU+US066TPaDZjL1VnXZyiAmZwk5io9gKsSrKdRl8LY7puZw9fUz/EGbB1foUZU/rw+c
+	Erf894t82WBpW8W0gLprrultYOV/rF6TlBTUbqNQoZUyvjkBdy2jcN26/LOA5XXF5ryP1n
+	5ZFd8DXCieIsOO74FNJLyUn/UFVLx1c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744888608;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Y1tVHPHVoMIn93culRJCZCipp4hop9jS1mSJ9CFmsPQ=;
+	b=1bMq/iNWG4d0bglcbqptIA8M5WhUdh/k12cNCkyNqvewlTdWZzT/aKz4tBkW5MIi5NWA60
+	ARBUgamV5pPqTGDg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=TiEU+US0;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="1bMq/iNW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744888608; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Y1tVHPHVoMIn93culRJCZCipp4hop9jS1mSJ9CFmsPQ=;
+	b=TiEU+US066TPaDZjL1VnXZyiAmZwk5io9gKsSrKdRl8LY7puZw9fUz/EGbB1foUZU/rw+c
+	Erf894t82WBpW8W0gLprrultYOV/rF6TlBTUbqNQoZUyvjkBdy2jcN26/LOA5XXF5ryP1n
+	5ZFd8DXCieIsOO74FNJLyUn/UFVLx1c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744888608;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Y1tVHPHVoMIn93culRJCZCipp4hop9jS1mSJ9CFmsPQ=;
+	b=1bMq/iNWG4d0bglcbqptIA8M5WhUdh/k12cNCkyNqvewlTdWZzT/aKz4tBkW5MIi5NWA60
+	ARBUgamV5pPqTGDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2BBF01388F;
+	Thu, 17 Apr 2025 11:16:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id l9d6CSDjAGgRGQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 17 Apr 2025 11:16:48 +0000
+Date: Thu, 17 Apr 2025 13:16:47 +0200
+Message-ID: <87sem7ujfk.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Linux Sound Mailing List <linux-sound@vger.kernel.org>, Linux Kernel
+ Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] sound fixes for 6.15-rc3
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417014848.59321-1-yangfeng59949@163.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-8859-2
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 548151F391
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_DN_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.51
+X-Spam-Flag: NO
 
-On Thu, Apr 17, 2025 at 09:48:45AM +0800, Feng Yang wrote:
-> From: Feng Yang <yangfeng@kylinos.cn>
-> 
-> Hi everyone,
-> 
-> This series tries to fix event name too long error and add tests.
-> 
-> When the binary path is excessively long, the generated probe_name in libbpf
-> exceeds the kernel's MAX_EVENT_NAME_LEN limit (64 bytes).
-> This causes legacy uprobe event attachment to fail with error code -22.
-> 
-> The fix reorders the fields to place the unique ID before the name.
-> This ensures that even if truncation occurs via snprintf, the unique ID
-> remains intact, preserving event name uniqueness. Additionally, explicit
-> checks with MAX_EVENT_NAME_LEN are added to enforce length constraints.
-> ---
-> Changes in v5:
-> - use strrchr instead of basename.
-> - kprobe_test add __weak. Thanks, Andrii Nakryiko!
-> - Link to v4: https://lore.kernel.org/all/20250415093907.280501-1-yangfeng59949@163.com/
+Linus,
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+please pull sound fixes for v6.15-rc3 from:
 
-thanks,
-jirka
+  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-6.15-rc3
 
+The topmost commit is 7338856257fc6ee0a06dddf1f0888f3cfc95dc60
 
-> 
-> Changes in v4:
-> - add changelog. 
-> - gen_uprobe_legacy_event_name and gen_kprobe_legacy_event_name are combined into a function
-> - kprobe_test use normal module function. Thanks, Jiri Olsa!
-> - Link to v3: https://lore.kernel.org/bpf/20250414093402.384872-1-yangfeng59949@163.com/
-> 
-> Changes in v3:
-> - add __sync_fetch_and_add(&index) and let snprintf() do the trimming. Thanks, Andrii Nakryiko!
-> - add selftests.
-> - Link to v2: https://lore.kernel.org/all/20250411080545.319865-1-yangfeng59949@163.com/
-> 
-> Changes in v2:
-> - Use basename() and %.32s to fix. Thanks, Hengqi Chen!
-> - Link to v1: https://lore.kernel.org/all/20250410052712.206785-1-yangfeng59949@163.com/
-> 
-> Feng Yang (3):
->   libbpf: Fix event name too long error
->   selftests/bpf: Add test for attaching uprobe with long event names
->   selftests/bpf: Add test for attaching kprobe with long event names
-> 
->  tools/lib/bpf/libbpf.c                        | 43 ++++------
->  .../selftests/bpf/prog_tests/attach_probe.c   | 84 +++++++++++++++++++
->  .../selftests/bpf/test_kmods/bpf_testmod.c    |  4 +
->  3 files changed, 104 insertions(+), 27 deletions(-)
-> 
-> -- 
-> 2.43.0
-> 
+----------------------------------------------------------------
+
+sound fixes for 6.15-rc3
+
+A collection of small fixes since the previous PR.  All are
+device-specific like quirks, new IDs, and other safe (or rather
+boring) changes.
+
+----------------------------------------------------------------
+
+Amadeusz S³awiñski (1):
+      ASoC: Intel: avs: Constrain path based on BE capabilities
+
+Brady Norander (1):
+      ASoC: dwc: always enable/disable i2s irqs
+
+Charles Keepax (1):
+      ASoC: cs42l43: Reset clamp override on jack removal
+
+Chen Ni (1):
+      ALSA: hda/tas2781: Remove unnecessary NULL check before release_firmware()
+
+Evgeny Pimenov (1):
+      ASoC: qcom: Fix sc7280 lpass potential buffer overflow
+
+Henry Martin (1):
+      ASoC: Intel: avs: Fix null-ptr-deref in avs_component_probe()
+
+Herve Codina (1):
+      ASoC: fsl: fsl_qmc_audio: Reset audio data pointers on TRIGGER_START event
+
+Kailang Yang (1):
+      ALSA: hda/realtek - Fixed ASUS platform headset Mic issue
+
+Kuninori Morimoto (1):
+      ASoC: hdmi-codec: use RTD ID instead of DAI ID for ELD entry
+
+Peter Ujfalusi (1):
+      ASoC: Intel: sof_sdw: Add quirk for Asus Zenbook S16
+
+Richard Fitzgerald (2):
+      ALSA: hda/cirrus_scodec_test: Don't select dependencies
+      firmware: cs_dsp: test_bin_error: Fix uninitialized data used as fw version
+
+Shengjiu Wang (1):
+      ASoC: fsl_asrc_dma: get codec or cpu dai from backend
+
+Srinivas Kandagatla (4):
+      ASoC: codecs:lpass-wsa-macro: Fix vi feedback rate
+      ASoC: codecs:lpass-wsa-macro: Fix logic of enabling vi channels
+      MAINTAINERS: use kernel.org alias
+      mailmap: Add entry for Srinivas Kandagatla
+
+Thorsten Blum (1):
+      ALSA: azt2320: Replace deprecated strcpy() with strscpy()
+
+Weidong Wang (1):
+      ASoC: codecs: Add of_match_table for aw888081 driver
+
+---
+ .mailmap                                           |   2 +
+ MAINTAINERS                                        |   8 +-
+ .../firmware/cirrus/test/cs_dsp_mock_mem_maps.c    |  30 -----
+ drivers/firmware/cirrus/test/cs_dsp_test_bin.c     |   2 +-
+ .../firmware/cirrus/test/cs_dsp_test_bin_error.c   |   2 +-
+ include/linux/firmware/cirrus/cs_dsp_test_utils.h  |   1 -
+ sound/isa/azt2320.c                                |   4 +-
+ sound/pci/hda/Kconfig                              |   4 +-
+ sound/pci/hda/patch_realtek.c                      |  23 ++--
+ sound/pci/hda/tas2781_hda_spi.c                    |   3 +-
+ sound/soc/codecs/aw88081.c                         |  10 ++
+ sound/soc/codecs/cs42l43-jack.c                    |   3 +
+ sound/soc/codecs/hdmi-codec.c                      |  22 +++-
+ sound/soc/codecs/lpass-wsa-macro.c                 | 139 ++++++++++++++-------
+ sound/soc/dwc/dwc-i2s.c                            |  13 +-
+ sound/soc/fsl/fsl_asrc_dma.c                       |  15 ++-
+ sound/soc/fsl/fsl_qmc_audio.c                      |   3 +
+ sound/soc/intel/avs/path.c                         |  72 +++++++++++
+ sound/soc/intel/avs/path.h                         |   5 +
+ sound/soc/intel/avs/pcm.c                          |  52 +++++++-
+ sound/soc/intel/boards/sof_sdw.c                   |   1 +
+ sound/soc/qcom/lpass.h                             |   3 +-
+ 22 files changed, 307 insertions(+), 110 deletions(-)
+
