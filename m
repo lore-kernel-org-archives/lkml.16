@@ -1,89 +1,107 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB35B2550AD;
-	Thu, 17 Apr 2025 17:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6618524BD00;
+	Thu, 17 Apr 2025 17:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744910567; cv=none; b=aQsxWYvYoKJL1+mJ3zItUbJAyRZ9Wj/av9UxQP7asv/M3OIMVTMv1ZiPTHkx4BTwrwjIFD3ZWjQ28BKDoFxa9knOFVDnpQNfY70tBBcXivZ8hS6//UdpCuLKZ/USaH+HkUX7YMo+N9Ytmd61skN4LRXSvgFcsRcB+qtiOvXqJrs=
+	t=1744910584; cv=none; b=o5NxyxDUai2hhF7AccIwOQ7URQeAN2Z4yyT83Ck2/PHNWkCyCAVtr7Mbx62RFS+Kuq693aFjvZwUE0TUdVVhFwVl33zkwcKr2qDVPO6pc+AXPxITciqWHJJhfG8iPf3dn0k9i/kJtDnFojanumoPtong0zACpxq99HEW3ptconM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744910567; c=relaxed/simple;
-	bh=vnur/dTUJk0z+wfU8VALjgtrhmiqJntTUjprsU2e5dI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EILde/wDamanZiWj3uhR/UGNA70gMDdyRvipnSNNqX9N8s1nzPYpaKog5OABwFwUMWRMNheQVIo2uskCML/AqhT2piOReM+AYSbXt/4J5XCyBTkZs7JSJgSQNFOEQXYZvlz9aGuXHQvUNGN+5eGn6FCe35Vfjjfi6ypDKDwof84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=nNhyFVrH; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744910584; c=relaxed/simple;
+	bh=2n4Yhi3NLlYRVnd9ltNUkqu0ipLpa7E/5e7ig9W8q1c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dTrW6H6RRnt8cIFlKr6w8zgQg9rMKU7j+HsXImjbVHTe2m4+pB8RPWMO2lT8AWg8IoPR2V1ODKID/6MqQ1Y02275bFO82RxwP1RL96aaWfQUsWV4mmiY3TI9NVXhfVnfMKsx/nBx41UhlzaTpdwGg+1LQk/ABC2MVuKkt2L3LpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Od3V0Zqu; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="nNhyFVrH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=rUgcReSeERaYjdCHY/S65QNcDRKyKTJVSUifM/SqTHw=; b=nNhyFVrHTOlSrXjfJ7WcbfgeDz
-	yngeaH3pmyxCVI63fr1I6g9oKwTQbDRIG2W/USafgFWZx+MTv1JOFQGgsDQZP3SUGj4KZ2a0RVDwK
-	YTzliV8jwsvbqwGaC7f0x8l7qjpImJw2o4nQTjzI/dzvQwJe6EvZ23voS+PYm4uqjBQk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u5SwX-009oI0-Lw; Thu, 17 Apr 2025 19:22:29 +0200
-Date: Thu, 17 Apr 2025 19:22:29 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Luo Jie <quic_luoj@quicinc.com>, Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>, linux-kernel@vger.kernel.org,
-	cocci@inria.fr, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, quic_kkumarcs@quicinc.com,
-	quic_linchen@quicinc.com, quic_leiwei@quicinc.com,
-	quic_suruchia@quicinc.com, quic_pavir@quicinc.com
-Subject: Re: [PATCH v3 0/6] Add FIELD_MODIFY() helper
-Message-ID: <0c97c659-bd28-45e0-8537-d9be2637cb22@lunn.ch>
-References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
- <86sem7jb5t.wl-maz@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Od3V0Zqu"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-47ae894e9b7so4581981cf.3;
+        Thu, 17 Apr 2025 10:23:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744910582; x=1745515382; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RjbBi+pjpYF6x4ayVnEMHrCSwrafIYoi1gwG/mlXe+w=;
+        b=Od3V0ZquDpiQFfJfP4sC6s1xJJq5y72Qvrh+hMBSYsvEomSzQAtNU6VdaMMs9B2u3U
+         YVcYC2ANpoOvq+1If6KA2mXQdTQXYo+J+yKCw+xgiF0wuqLK3eNI1rlopxMCvnzWSsCI
+         vdvaHAJRhqevQUjJ+tM2xKTc7I9bOEdDcfTaYqsIdczz6xyDJ42mcvamAeoNWtasTZ5x
+         nYUcOyzCQ8ehUTjSYcKr2p9MlK3xrLQji1w4qFyG3vVZAdHFRCfv5ngP3IHkF1VtTGv0
+         0B9tTyHacvFC5aaUFR6Q6FDLWs91XllsN7bRp9xpYEme53p/9seVqEdc5vW5UIrOTZhN
+         wvyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744910582; x=1745515382;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RjbBi+pjpYF6x4ayVnEMHrCSwrafIYoi1gwG/mlXe+w=;
+        b=FmKI/InmuiiVzVIb2C7xAnOJfpu+Cfuxj1FzJJJBZ3OzXCAd5/q+2mgC8zrxUesA37
+         P+3XufcgmbUqjb4gDjxAtgQ0dwT2FfgESnIrIZZ8pXu7fzYR7OrU8/Gz+QenFlgRe+IK
+         TEyg+sqkVqZ5yEEx7onHuwJNUoASz8XF2d/IDkKtxJoN2umTuWp8VPj/msDxiQb5SrfP
+         2BIU5SkpLXKksUQTb9FqJDtqOySJv8hwQWS2cZZAq25josi6uqzR8jmd3s/3semR+fAX
+         N9IC6LRb47yWR1n+jCOsxhSKsskh4f5qianWpg2ecTFohM9G378Yr1sTZ+6ig9XBqU6L
+         lrtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUdsld4VfjtT3G0JAdkzEE0w+PGbM91cjsBgfkpYLJlJYiYF9NttzVbbpfWpdinj/dhtkCgqBm17/o=@vger.kernel.org, AJvYcCUh95OdKdEM2de/Ez+Nh/apTvn/+VkOhphCeNIrVHHuJbS+AwI5jxXt4zyy0XDejSHDMlrgWZDNRHD8fuIu@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpAbeAmjPEcIiqQYIE04Azm1f51S+2mKOgJuidCG0qVY3ZmY2A
+	yqruXJZaOC6r/UwMMlHjmBbV40+E5K5OqP+koEplFHAs5bWR5LbgvxdZJai9jStjwfIyACf4uTE
+	IiZv0PlqedKmFGXqcBCNiXt0scvAbOiIUmCM=
+X-Gm-Gg: ASbGnct39sn85lysXtj1Gn6l26sDDn7VcZUqrTp96/4k84w435O0QXWqHYbVAffxool
+	SJ3dGC4n4pPe12H09Fq+CFcL4GdUqLtFnnf9w7lC6jdoIyuUFaNl2m12JuCyvul5BPmNDmELxvs
+	rLChrXOcSSdYrHXZ3orQu8KFwrmFAM6UlDnFaqVB4HNhB3P7WWPURMWA==
+X-Google-Smtp-Source: AGHT+IH1R432djUArtqSJrov+jLeeKK7G5xyysfPPLkP7YEzAl8zKUnp6HImxKs4Ip+6mwoVVlinZORD3Tm3ypgijEI=
+X-Received: by 2002:ac8:5787:0:b0:476:7199:4da1 with SMTP id
+ d75a77b69052e-47ad813bbccmr120921701cf.46.1744910582249; Thu, 17 Apr 2025
+ 10:23:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86sem7jb5t.wl-maz@kernel.org>
+References: <20250417143220.572261-1-gshahrouzi@gmail.com> <cd50b4eb-ef6c-4842-88cd-932042ca2629@baylibre.com>
+In-Reply-To: <cd50b4eb-ef6c-4842-88cd-932042ca2629@baylibre.com>
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Date: Thu, 17 Apr 2025 13:22:51 -0400
+X-Gm-Features: ATxdqUFI0LdVPLpa26nw1ypvRkXPxjdqsVqmWuFga-NKkYCZCKf0ZqJW1TcTCp4
+Message-ID: <CAKUZ0zJW6ihoNTu_Lecztn7fqci31Q1sb5oJJHcnAw_TxrDFxg@mail.gmail.com>
+Subject: Re: [PATCH] iio: frequency:: Remove unused parameter from data documentation
+To: David Lechner <dlechner@baylibre.com>
+Cc: gregkh@linuxfoundation.org, jic23@kernel.org, lars@metafoo.de, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-staging@lists.linux.dev, Michael.Hennerich@analog.com, 
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 17, 2025 at 12:10:54PM +0100, Marc Zyngier wrote:
-> On Thu, 17 Apr 2025 11:47:07 +0100,
-> Luo Jie <quic_luoj@quicinc.com> wrote:
-> > 
-> > Add the helper FIELD_MODIFY() to the FIELD_XXX family of bitfield
-> > macros. It is functionally similar as xxx_replace_bits(), but adds
-> > the compile time checking to catch incorrect parameter type errors.
-> > 
-> > This series also converts the four instances of opencoded FIELD_MODIFY()
-> > that are found in the core kernel files, to instead use the new
-> > FIELD_MODIFY() macro. This is achieved with Coccinelle, by adding
-> > the script field_modify.cocci.
-> > 
-> > The changes are validated on IPQ9574 SoC which uses ARM64 architecture.
-> 
-> We already have the *_replace_bits() functions (see
-> include/linux/bitfield.h).
-> 
-> Why do we need extra helpers?
+On Thu, Apr 17, 2025 at 12:17=E2=80=AFPM David Lechner <dlechner@baylibre.c=
+om> wrote:
+>
+> On 4/17/25 9:32 AM, Gabriel Shahrouzi wrote:
+> > The AD9832 driver uses the Common Clock Framework (CCF) to obtain the
+> > master clock (MCLK) frequency rather than relying on a frequency value
+> > passed from platform data.
+> >
+> > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> > ---
+> >  drivers/staging/iio/frequency/ad9832.h | 1 -
+> >  1 file changed, 1 deletion(-)
+> >
+> Please include the driver name in your patch subjects. Otherwise readers =
+will
+> assume that this is something that affects all IIO frequency drivers. I n=
+oticed
+> you are doing this on all of the patches you are sending, not just this o=
+ne.
+Whoops. I thought that would be redundant because the information is
+in the git commit body. However, I realized it would be useful for
+people quickly glancing over emails to categorize them or get an
+initial idea of it solely based on the git commit title. Therefore, it
+makes the most sense to be specify the driver to indicate specifically
+what the change is being made towards. I'll use this convention for
+future patches.
 
-If you look at bitfield.h, the *_replace_bits() seem to be
-undocumented internal macro magic, not something you are expected to
-use. What you are expected to use in that file is however well
-documented. The macro magic also means that cross referencing tools
-don't find them.
-
-I think this is a useful additional to bitfield.h.
-
-	Andrew
+>
+>
+> [PATCH] iio: frequency: ad9832: Remove unused parameter from data documen=
+tation
