@@ -1,100 +1,121 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F49F21ABDB;
-	Thu, 17 Apr 2025 08:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7242DFA4F;
+	Thu, 17 Apr 2025 09:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744880329; cv=none; b=NHZYSjvYEaDdLcVFKqo/i5H+U+ZM4tPN0jqAs8RueqI4dEoGjuZdQCdLoZigyEucvs3QWwupRJDLfznp1oEEFsnW/7+0RI4mghaf8cuQ5P/LpQzFtbYSV0dfAIETug4LSVy9DKJE0uEnzk/1vGxv7AKeb0XoCAE28aaokHEXQHQ=
+	t=1744880474; cv=none; b=LS7t5YfScMmP/d7YklXWx/yC033Bdf6OVTEwwMJZsuZFyHFKtT2maklCadUR9NiiQN1WB5k1gcqZQnDtbyxleS2MAK+4wpqqNhgZ3jimQxhdPC53RGlowW7vpm6w2UULqeCk/qJaDcln5geS5QseBEAXcaaPiusuwJhIAtCBvUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744880329; c=relaxed/simple;
-	bh=4FJsdCfn91/lkxy2lUFnPEV522v97mbzTnQHWoCV0h8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ICMNmVtH9QVotPcR3ynoNbiRtMh9927z7asbLNgijC5rcR8R3WSx7CoXv+IskT8M90c3p+AvflAKCPVJtsAdRJXcHjJqiphflgQgOS988D3NcB9uvyTwTPOuioY0WLHXOUNnAmtkEZHGA1+zv5zEx4R9xtmLwGUSyGOkOXNHWdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=l8zZgzXB; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1744880474; c=relaxed/simple;
+	bh=VfSC6I/OG0eMCqe2vBONpRLTXOy+zIgjcUwPbGFwitY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JLAWo9Bmu4Bi0W2Zc4uFK9opmrgskohkBKz3tURNuXs3sSIsp/ic1zj8GOFNljFnDR7A2NpZsbh9CaqQwQqs3V1ekOPzkSkGs8JFJjTJJhP3jPfTUIEn9r65CbUOV0vl5nwYziDVaBWGM08b8CdHbFdluA1KXWPPBEJ4KG/EE3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XVBeZB0Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="l8zZgzXB"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53H8wWocD618370, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1744880312; bh=4FJsdCfn91/lkxy2lUFnPEV522v97mbzTnQHWoCV0h8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding:Content-Type;
-	b=l8zZgzXBB6AEiLr0+M2YuGHwO2fp5lqPO38IgbnzZoapjtXpcXxPSFoSvgS5T7XH5
-	 wi8aWjLF2yd/58BOhfVYc7hD/FtMhVEH1O2djMzTVBbCIlveYgu0VuELfg8ZyPTzem
-	 8xVKjuSxA95p9Rrd6W2ihjx6OAah4/ZcEPEUXWQSLf/EXN1tcIXyYZZHtaQxnVWOAn
-	 UbyE0LSoQNZaELoAxK2m8Q6owMuA0kvM/EvE/euFAn6BVrmyjZ+GAPnRi/A82YyIFB
-	 lH7O3ob2uV0YgXLiiaFLS2SDASr4kcWCV1sxVcSzmERQ76pVITBI+tMyZm9eW8gap/
-	 gnPNUGHHExSWQ==
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53H8wWocD618370
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 17 Apr 2025 16:58:32 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 17 Apr 2025 16:58:33 +0800
-Received: from RTDOMAIN (172.21.210.70) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 17 Apr
- 2025 16:58:32 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <horms@kernel.org>, <pkshih@realtek.com>,
-        <larry.chiu@realtek.com>, Justin Lai <justinlai0215@realtek.com>,
-        Andrew Lunn
-	<andrew@lunn.ch>
-Subject: [PATCH net v3 3/3] rtase: Fix a type error in min_t
-Date: Thu, 17 Apr 2025 16:56:59 +0800
-Message-ID: <20250417085659.5740-4-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250417085659.5740-1-justinlai0215@realtek.com>
-References: <20250417085659.5740-1-justinlai0215@realtek.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XVBeZB0Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA4B8C4CEE4;
+	Thu, 17 Apr 2025 09:01:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744880473;
+	bh=VfSC6I/OG0eMCqe2vBONpRLTXOy+zIgjcUwPbGFwitY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XVBeZB0Z5hsW2lMoZAnW0YScvMu0AI2NXksAInEzIq+dwf4G/tapElP5903u4Ur5t
+	 m1jTYDlFOTUkogilmrIagHY6EeQ/HUzJZvQyS+dYd/KJnfK5Lk9BvvJShXNmfbNAXi
+	 5WWKrHzzUh186HY16N8dZqbbu9xIaaGlvX5CqqES19cCDiqEg6eG66DiSYVkoXkT+D
+	 8Cm+ihCvMW58Xw3KVb+zXcOMcrP5EBl8LfXJ9gsQWzAfEeQOsYkRhz8MbNY2uQZXNo
+	 eqhcwxUi3JrOSWP5Lp7x4xc49zKZA8N/DOU5xANXInJvw7tzw+RAqYbpfSugdytXSM
+	 7MOEVEeXwBCjg==
+Date: Thu, 17 Apr 2025 11:01:08 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Mark Brown <broonie@kernel.org>, Eric Chanudet <echanude@redhat.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ian Kent <ikent@redhat.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
+	Alexander Larsson <alexl@redhat.com>, Lucas Karpinski <lkarpins@redhat.com>, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
+Message-ID: <20250417-wolfsrudel-zubewegt-10514f07d837@brauner>
+References: <20250408210350.749901-12-echanude@redhat.com>
+ <fbbafa84-f86c-4ea4-8f41-e5ebb51173ed@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <fbbafa84-f86c-4ea4-8f41-e5ebb51173ed@sirena.org.uk>
 
-Fix a type error in min_t.
+On Wed, Apr 16, 2025 at 11:11:51PM +0100, Mark Brown wrote:
+> On Tue, Apr 08, 2025 at 04:58:34PM -0400, Eric Chanudet wrote:
+> > Defer releasing the detached file-system when calling namespace_unlock()
+> > during a lazy umount to return faster.
+> > 
+> > When requesting MNT_DETACH, the caller does not expect the file-system
+> > to be shut down upon returning from the syscall. Calling
+> > synchronize_rcu_expedited() has a significant cost on RT kernel that
+> > defaults to rcupdate.rcu_normal_after_boot=1. Queue the detached struct
+> > mount in a separate list and put it on a workqueue to run post RCU
+> > grace-period.
+> 
+> For the past couple of days we've been seeing failures in a bunch of LTP
+> filesystem related tests on various arm64 systems.  The failures are
+> mostly (I think all) in the form:
+> 
+> 20101 10:12:40.378045  tst_test.c:1833: TINFO: === Testing on vfat ===
+> 20102 10:12:40.385091  tst_test.c:1170: TINFO: Formatting /dev/loop0 with vfat opts='' extra opts=''
+> 20103 10:12:40.391032  mkfs.vfat: unable to open /dev/loop0: Device or resource busy
+> 20104 10:12:40.395953  tst_test.c:1170: TBROK: mkfs.vfat failed with exit code 1
+> 
+> ie, a failure to stand up the test environment on the loopback device
+> all happening immediately after some other filesystem related test which
+> also used the loop device.  A bisect points to commit a6c7a78f1b6b97
+> which is this, which does look rather relevant.  LTP is obviously being
+> very much an edge case here.
 
-Fixes: a36e9f5cfe9e ("rtase: Add support for a pci table in this module")
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
----
- drivers/net/ethernet/realtek/rtase/rtase_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hah, here's something I didn't consider and that I should've caught.
 
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index 55b8d3666153..bc856fb3d6f3 100644
---- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-+++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -1923,7 +1923,7 @@ static u16 rtase_calc_time_mitigation(u32 time_us)
- 	u8 msb, time_count, time_unit;
- 	u16 int_miti;
- 
--	time_us = min_t(int, time_us, RTASE_MITI_MAX_TIME);
-+	time_us = min_t(u32, time_us, RTASE_MITI_MAX_TIME);
- 
- 	if (time_us > RTASE_MITI_TIME_COUNT_MASK) {
- 		msb = fls(time_us);
-@@ -1945,7 +1945,7 @@ static u16 rtase_calc_packet_num_mitigation(u16 pkt_num)
- 	u8 msb, pkt_num_count, pkt_num_unit;
- 	u16 int_miti;
- 
--	pkt_num = min_t(int, pkt_num, RTASE_MITI_MAX_PKT_NUM);
-+	pkt_num = min_t(u16, pkt_num, RTASE_MITI_MAX_PKT_NUM);
- 
- 	if (pkt_num > 60) {
- 		pkt_num_unit = RTASE_MITI_MAX_PKT_NUM_IDX;
--- 
-2.34.1
+Look, on current mainline no matter if MNT_DETACH/UMOUNT_SYNC or
+non-MNT_DETACH/UMOUNT_SYNC. The mntput() calls after the
+synchronize_rcu_expedited() calls will end up in task_work():
 
+        if (likely(!(mnt->mnt.mnt_flags & MNT_INTERNAL))) {
+                struct task_struct *task = current;
+                if (likely(!(task->flags & PF_KTHREAD))) {
+                        init_task_work(&mnt->mnt_rcu, __cleanup_mnt);
+                        if (!task_work_add(task, &mnt->mnt_rcu, TWA_RESUME))
+                                return;
+                }
+                if (llist_add(&mnt->mnt_llist, &delayed_mntput_list))
+                        schedule_delayed_work(&delayed_mntput_work, 1);
+                return;
+        }
+
+because all of those mntput()s are done from the task's contect.
+
+IOW, if userspace does umount(MNT_DETACH) and the task has returned to
+userspace it is guaranteed that all calls to cleanup_mnt() are done.
+
+With your change that simply isn't true anymore. The call to
+queue_rcu_work() will offload those mntput() to be done from a kthread.
+That in turn means all those mntputs end up on the delayed_mntput_work()
+queue. So the mounts aren't cleaned up by the time the task returns to
+userspace.
+
+And that's likely problematic even for the explicit MNT_DETACH use-case
+because it means EBUSY errors are a lot more likely to be seen by
+concurrent mounters especially for loop devices.
+
+And fwiw, this is exactly what I pointed out in a prior posting to this
+patch series.
+
+But we've also worsened that situation by doing the deferred thing for
+any non-UMOUNT_SYNC. That which includes namespace exit. IOW, if the
+last task in a new mount namespace exits it will drop_collected_mounts()
+without UMOUNT_SYNC because we know that they aren't reachable anymore,
+after all the mount namespace is dead.
+
+But now we defer all cleanup to the kthread which means when the task
+returns to userspace there's still mounts to be cleaned up.
