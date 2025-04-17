@@ -1,41 +1,71 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEAF2206B8;
-	Thu, 17 Apr 2025 07:52:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43362221717;
+	Thu, 17 Apr 2025 07:52:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744876365; cv=none; b=VU0vEusXeggC3A6BbPQESBt/FuqCMDlfRn4JjoKDUtoJG2yvHiAQQ9cFT6RgNc3xuYIZyuc0msPXSx6iD9LEDQPnrUFMx9wWkhiSuG7GPrm6D2OFuKj5yb6LsL1I0e49Nyl8v06oeuN/Ey+fuFbKy2EDs1NK/r8qZp17rWagaMk=
+	t=1744876367; cv=none; b=dq2HOv8ZIp48fKaiNmoO4QWOb5u9PbmOLlyktqNR1jyZu3VY84Y9P76DnkXt4HDnxUxxDq5ikVvNkIVYY58/bN1wk+v+KFgA+n2DEldj3wneee00RpiRZBcTNSff9RnyNbAi40zOVzQIPqyMcBHVlvmxnK2ea9IRgxXXxjM4RlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744876365; c=relaxed/simple;
-	bh=vAS/7HrbMdGDLRFHygkOO/AhYxPfFTm/pThX7WtCmnQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n9DrPlYAO0QjkXLQbDZWdqbk+eP+C8yHIlCWtHU80/dsWcg4Hle/B7gMDplN8hqnYchFCx5Z1nLW7YkpilryU6LmR3RcWNxuxLHpd/6j7iSUYRC+aaaXssN4I1HH9593D2inSazMB3Opx3RylMk+j1LEc4unAf2/EjJ3i9aQdCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53H6A2ot001881;
-	Thu, 17 Apr 2025 00:51:51 -0700
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45ykf3nuc4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 17 Apr 2025 00:51:51 -0700 (PDT)
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Thu, 17 Apr 2025 00:51:50 -0700
-Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Thu, 17 Apr 2025 00:51:47 -0700
-From: <jianqi.ren.cn@windriver.com>
-To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
-CC: <sfrench@samba.org>, <linux-cifs@vger.kernel.org>,
-        <samba-technical@lists.samba.org>, <pc@manguebit.com>,
-        <stfrench@microsoft.com>, <patches@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>, <jianqi.ren.cn@windriver.com>
-Subject: [PATCH 5.10.y 2/2] smb: client: fix potential UAF in cifs_stats_proc_show()
-Date: Thu, 17 Apr 2025 15:51:47 +0800
-Message-ID: <20250417075147.1721726-1-jianqi.ren.cn@windriver.com>
+	s=arc-20240116; t=1744876367; c=relaxed/simple;
+	bh=jSjQf0LL4J7XSdLfjv/tKoEHMcOwtnu91C0FyO/Ek64=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=e85ue0krCRgJRIW8P46wpPjiWOqrTHxdG+g8s5aVQJ1c0V/fw42n0RrbQy7QTHWwFhIGBYWZg1yHi7TpjQq148j7cAQK4HvgCexP2o6xaP2cwbsvDSrRNIyfxKWu/lB8QgaGV7z9ICVD9GMJ6g7qNMMj5lqSmHo8O2Kuzhpr5n0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aAyZopxZ; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aAyZopxZ"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22438c356c8so5476325ad.1;
+        Thu, 17 Apr 2025 00:52:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744876365; x=1745481165; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4ZssPyP7r1aptpoME6vap7qJnyiEzwndArjYxrVKMoc=;
+        b=aAyZopxZrG8hL2TF/J3hC25V45otxZ+FNsWDUAP4GXLavORyE4Pn1WyGRc4AD5qUoR
+         oORxDEC5ruW+U527MnxRQj6cOW50/T0/1ZNSW6huosSZw3CQBXIwadGuquvTCLYNb3a3
+         4f3WJBX5bs3rymub6CwvxEO7hWcBsFoFvNIPk+uc58jwTYjz9Bv+fNqdW/kpcJYWI/dA
+         e7vK700BOnCxRQfkiE+biB4zHBxvpHAdmZ3XL1SJNe2DxmLl/DGcT/HvhGHyPBSkvSR8
+         AN1bvdObM9ChU3UnLdaPcTCzGu1RfOf9TOrpCggYhDKJ3ihIrws7TwDSeuAnNlfjKvJ4
+         hmPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744876365; x=1745481165;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4ZssPyP7r1aptpoME6vap7qJnyiEzwndArjYxrVKMoc=;
+        b=BRjNWZ36y2c5OZODTjpKppn4+PHFPTrI9cqAgHC8acHzbLMJbWev1vtwJRRsJqyfSt
+         qMfnsU48uU1OJ9jlsmZNgKG8+6kg2LkPw4fouBAMU6as6+Sm5wW90UKo3jtnNtmGtosw
+         RT60jefIpKd768xvp7AA3soIQeDdalm2SkTwl0xPtT2Y7egSDSBFqmVuJdDvD9XLXS8d
+         VuJSv2e8M/S0TEENBP4eL2LNn8Jg3dPsL1FJIpqDNm9WlnC9YEgfIpDTbZYl5nkRwc7G
+         zt4qxEet2FV1bz+nwAkSLUg/Oi3bkC6TGyID11ewDWtDE/BUZDbxZ2EjhCpaNzmZxS+v
+         rKpw==
+X-Forwarded-Encrypted: i=1; AJvYcCVFCO5R6Ga5C70OyGCkWCyKF58tp3M+hlvGzf/GPw72i0PKUaVRJhD974RqiDxkwbnSyjP+8b+b9JAWTqA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtH4SOpK97Gg2a3f6dM6nTQcSd5QCuFRTWME31SKOSaJ/N9cel
+	DcMJpzD/KYJ/jk/O/tYaJfkbHJplf4dPAwtAkGGu1rMmyLd4XcOb
+X-Gm-Gg: ASbGncuGS7BxMICECvrNqphWGulDuNvxpr+t4WSKR26DaP25VjAEHAqZsG53gbB/q1N
+	n5lxn0PDLyOm5IQFtmZE77y8pJzOc35YxTceaPxkfwwHIdlwnzQAqWJL0HNaFbAC/zgTGyLba+I
+	CMCHeXX+GBeKxKOq15qC7nwnweVicmUDmRk2jM5n3Z4O7Qao9fqWZ+nnYAawbzPu5BIPnxt3SAI
+	Y7lxGlpEbzw65dd2JEeeQQwyreCK8boXHvigOIrIyED/povJ0HDEJlnXZv2gR9a/MgKk+U3yX4S
+	+KewwdCehcQ3qS6C3RNWji/bcHPSmlp4549L5A4gEv9/tNpZp0spctB/+ITykW0A1VRzeeM=
+X-Google-Smtp-Source: AGHT+IGg7mk2q02EkrNJj2cn6ix4tiECOBp4llx5PS+RF4nP0Vz96bv5xDiqFdl5R1DzMn546mJagQ==
+X-Received: by 2002:a17:903:1b6c:b0:227:e6b2:d989 with SMTP id d9443c01a7336-22c35983ce8mr85992745ad.44.1744876365449;
+        Thu, 17 Apr 2025 00:52:45 -0700 (PDT)
+Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([14.139.108.62])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33ef11e8sm27230485ad.11.2025.04.17.00.52.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 00:52:45 -0700 (PDT)
+From: Purva Yeshi <purvayeshi550@gmail.com>
+To: irenic.rajneesh@gmail.com,
+	david.e.box@intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Purva Yeshi <purvayeshi550@gmail.com>
+Subject: [PATCH] platform/x86: intel_pmc_core: Fix uninitialized pmc/map in pmc_core_send_ltr_ignore
+Date: Thu, 17 Apr 2025 13:22:29 +0530
+Message-Id: <20250417075229.20540-1-purvayeshi550@gmail.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -44,58 +74,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: HBHwV9Q37oEnOb8dwRTD4S7SxSCdijA6
-X-Authority-Analysis: v=2.4 cv=Wd0Ma1hX c=1 sm=1 tr=0 ts=6800b317 cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=XR8D0OoHHMoA:10 a=Li1AiuEPAAAA:8 a=VwQbUJbxAAAA:8 a=yMhMjlubAAAA:8 a=t7CeM3EgAAAA:8 a=i5IeLDUB_GyS7Qvew-AA:9
- a=qGKPP_lnpMOaqR3bcYHU:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-GUID: HBHwV9Q37oEnOb8dwRTD4S7SxSCdijA6
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-17_01,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 priorityscore=1501 spamscore=0 clxscore=1015
- impostorscore=0 suspectscore=0 malwarescore=0 adultscore=0 phishscore=0
- mlxlogscore=999 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
- definitions=main-2504170060
 
-From: Paulo Alcantara <pc@manguebit.com>
+Fix Smatch-detected issue:
 
-commit 0865ffefea197b437ba78b5dd8d8e256253efd65 upstream.
+drivers/platform/x86/intel/pmc/core.c:501 pmc_core_send_ltr_ignore()
+error: uninitialized symbol 'pmc'.
 
-Skip sessions that are being teared down (status == SES_EXITING) to
-avoid UAF.
+drivers/platform/x86/intel/pmc/core.c:501 pmc_core_send_ltr_ignore()
+error: uninitialized symbol 'map'.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Paulo Alcantara (Red Hat) <pc@manguebit.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-[ cifs_debug.c was moved from fs/cifs to fs/smb/client since
-38c8a9a52082 ("smb: move client and server files to common directory fs/smb").
-The cifs_ses_exiting() was introduced to cifs_debug.c since
-ca545b7f0823 ("smb: client: fix potential UAF in cifs_debug_files_proc_show()")
- which has been sent to upstream already.]
-Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
+drivers/platform/x86/intel/pmc/core.c:501 pmc_core_send_ltr_ignore()
+error: we previously assumed 'pmc' could be null (see line 479)
+
+
+Prevents uninitialized symbol warnings detected by smatch.
+
+Ensures map is not accessed if pmc is NULL, preventing dereferencing
+of uninitialized pointers
+
+Add defensive check for pmc and map to catch any unexpected edge cases
+and ensure all required pointers are valid.
+
+Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
 ---
-Verified the build test
----
- fs/cifs/cifs_debug.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/platform/x86/intel/pmc/core.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/fs/cifs/cifs_debug.c b/fs/cifs/cifs_debug.c
-index 8b88b0705481..257eae4673d2 100644
---- a/fs/cifs/cifs_debug.c
-+++ b/fs/cifs/cifs_debug.c
-@@ -593,6 +593,8 @@ static int cifs_stats_proc_show(struct seq_file *m, void *v)
- 		list_for_each(tmp2, &server->smb_ses_list) {
- 			ses = list_entry(tmp2, struct cifs_ses,
- 					 smb_ses_list);
-+			if (cifs_ses_exiting(ses))
-+				continue;
- 			list_for_each(tmp3, &ses->tcon_list) {
- 				tcon = list_entry(tmp3,
- 						  struct cifs_tcon,
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index 7a1d11f2914f..e674b940e29e 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -462,8 +462,8 @@ DEFINE_SHOW_ATTRIBUTE(pmc_core_pll);
+ 
+ int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value, int ignore)
+ {
+-	struct pmc *pmc;
+-	const struct pmc_reg_map *map;
++	struct pmc *pmc = NULL;
++	const struct pmc_reg_map *map = NULL;
+ 	u32 reg;
+ 	unsigned int pmc_index;
+ 	int ltr_index;
+@@ -480,6 +480,9 @@ int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value, int ignore)
+ 			continue;
+ 
+ 		map = pmc->map;
++		if (!map)
++			continue;
++
+ 		if (ltr_index <= map->ltr_ignore_max)
+ 			break;
+ 
+@@ -491,7 +494,7 @@ int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value, int ignore)
+ 		ltr_index = ltr_index - (map->ltr_ignore_max + 2) - 1;
+ 	}
+ 
+-	if (pmc_index >= ARRAY_SIZE(pmcdev->pmcs) || ltr_index < 0)
++	if (pmc_index >= ARRAY_SIZE(pmcdev->pmcs) || ltr_index < 0 || !pmc || !map)
+ 		return -EINVAL;
+ 
+ 	pr_debug("ltr_ignore for pmc%d: ltr_index:%d\n", pmc_index, ltr_index);
 -- 
 2.34.1
 
