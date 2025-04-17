@@ -1,144 +1,100 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990E6225771
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F49F21ABDB;
+	Thu, 17 Apr 2025 08:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744880321; cv=none; b=dJzpprXtJQOfeH9J7ikhulWc1UHB8TWEfefhB3xzM5WpykPo9sWzQ2OVjgxwA8yg0FVdhy+28aU9/kJ1rrkG8syoE/SC+Nr4FPq0Q0EH9WT0ytzlg7H6CufMe8QbvU6HYS4Loz2cwLCKcCwp4vJjfjhWEIUd2xuU1w3Ad667fT4=
+	t=1744880329; cv=none; b=NHZYSjvYEaDdLcVFKqo/i5H+U+ZM4tPN0jqAs8RueqI4dEoGjuZdQCdLoZigyEucvs3QWwupRJDLfznp1oEEFsnW/7+0RI4mghaf8cuQ5P/LpQzFtbYSV0dfAIETug4LSVy9DKJE0uEnzk/1vGxv7AKeb0XoCAE28aaokHEXQHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744880321; c=relaxed/simple;
-	bh=r1FjPDPkdRR2v2mM9JWjJvN0mbwzm6QYZ2Q9DLtMY7k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XRbAKuCMpJ03J0SeMVlQkymxTscOVOBMjwt0ZeJXGxvV7+VdldiGmyTx2JQIAqOX7FUu+mqNjPnl1WsPPBJftDU5Nk9OtAEq3WRsxF6ZclpTT8PEBzpT3rsDY/AHlJIPIHo3Sj1pNgtGWHEFhtMVMsx3/pnw6laZMGGn1YU40lA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KONCHHu0; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744880329; c=relaxed/simple;
+	bh=4FJsdCfn91/lkxy2lUFnPEV522v97mbzTnQHWoCV0h8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ICMNmVtH9QVotPcR3ynoNbiRtMh9927z7asbLNgijC5rcR8R3WSx7CoXv+IskT8M90c3p+AvflAKCPVJtsAdRJXcHjJqiphflgQgOS988D3NcB9uvyTwTPOuioY0WLHXOUNnAmtkEZHGA1+zv5zEx4R9xtmLwGUSyGOkOXNHWdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=l8zZgzXB; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KONCHHu0"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf848528aso3992215e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 01:58:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744880318; x=1745485118; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GP9CJN50tERxm6yE1CuNeHA83a3ivox+fButPu97ez4=;
-        b=KONCHHu0/ixD9FxcFkwSj4Gl/noiidGTT/qniwhrkg1ptG/8f/PDDM8am4vL9O4U1W
-         CBFyPWNyNSjI/j5yJ+AS9zjgzzNzpHR1hnnqmfkjtwK0mEFQawmJKL8odhj/hR06aUw/
-         HemnfBoDrh3xWGVCQQVFoSjT+hO3Uxy5NFlNfXwRTugxgoSGxots6yBqvh5CEWlcwcJa
-         CYRZ1YnAAYlwNv0G3Dg8URTG8NaK8X3+nQNW0zv4u3sQzWlULYOujRzOEf0ZsIz/8cBa
-         GyV7B6Zp88wX/UgIu4A7dFAkt685/ox45cpWi5Y9E9RYgx0E9MNnrYYjdmTmkIZksTba
-         MYOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744880318; x=1745485118;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GP9CJN50tERxm6yE1CuNeHA83a3ivox+fButPu97ez4=;
-        b=CGhK2lbyGEIxL5KrFQOZc2l7tLnCuPbTow5/Tu/SorL6wEY4dwwPHx8ThR/wA8roDk
-         E/6nvuONgTEALk3pM4BFkDshfOoLyzWt2A4fqXoSFKMPu3aoaiOvWuGlM07sgWa7WmJK
-         +gmh//wVMykrwD15qedz9Akgj3WDpU8aiJqqZbbuiP3UXLRG2aJNg8KzN45/+PPQKKPN
-         XHsMo0Nf+5lchqOqkgVoLst0RNezwWmfYhvbSRgu9twyvgh1hGY4fGY9ae70pZpsI4O2
-         i3MZCIQ7YggOSN7n18NBg7EgKIdmras+HHDYj420bS0p8irqdS6FK5IkJkCfHMTGupYu
-         LigQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFBpitayhJt/mKWxD1lCvtaZz2wvOiKuPwxSm+fC8L9kUCOG9eYKnDbV4t9l7lJEjVdgy3ML2eWmcmQck=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoguqZXBfysrl3VMI5XFQ37NhH8m8Pt0FBqSXw8BM5mi6MI18/
-	6rWMsGENfY2JMZb+Q/1T/Sy5EIQwF1MObNzjeUPG+EUDO1XVYyfuyAR4r5BqiHI=
-X-Gm-Gg: ASbGncu0Gqcy29LWk/EhaVl54d1SJ0zJxwJ5dodAe9uT5/NIdPHcjsOSZGPQtco5nq6
-	4LOkSdMqxMYqZimXsXHzOBvRCHdb1RxvqHB4FQaNdw0IzUFL0wjJOwbNZtBJz7rlGYD0I/tRE2u
-	zie5v8VrgHxUJAUSMwVo5riGla+r4NYcG1LKFT/RjwAFJRmmgIdCm0RrcfFtemzToAaOhLUYrjl
-	eZ8LEFT9DObYNQFEeTP4SaS3kjp3+KeOWTcSzHdoE/6Zx0MKoTgBugy9vFKim/i2BkFbkhPLzXK
-	a1pJdt9/+Qc2p8X/9cTLQTDMYAH6ifPPkB4nfXlZuKKgdNSoAoWD/g==
-X-Google-Smtp-Source: AGHT+IH6CNSHBn38pTz3KSqiHQKjYubJUpsb2xFQLAfw5wd+m9vVmQ9WStqNZ9vJMOreqvzejAJH0w==
-X-Received: by 2002:a05:600c:698e:b0:43c:f470:7605 with SMTP id 5b1f17b1804b1-4405d624e32mr53383385e9.12.1744880317933;
-        Thu, 17 Apr 2025 01:58:37 -0700 (PDT)
-Received: from [192.168.1.3] ([77.81.75.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96c0d9sm19859259f8f.32.2025.04.17.01.58.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Apr 2025 01:58:37 -0700 (PDT)
-Message-ID: <72b016c4-3959-49d1-8964-0927eee101bf@linaro.org>
-Date: Thu, 17 Apr 2025 09:58:36 +0100
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="l8zZgzXB"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53H8wWocD618370, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1744880312; bh=4FJsdCfn91/lkxy2lUFnPEV522v97mbzTnQHWoCV0h8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding:Content-Type;
+	b=l8zZgzXBB6AEiLr0+M2YuGHwO2fp5lqPO38IgbnzZoapjtXpcXxPSFoSvgS5T7XH5
+	 wi8aWjLF2yd/58BOhfVYc7hD/FtMhVEH1O2djMzTVBbCIlveYgu0VuELfg8ZyPTzem
+	 8xVKjuSxA95p9Rrd6W2ihjx6OAah4/ZcEPEUXWQSLf/EXN1tcIXyYZZHtaQxnVWOAn
+	 UbyE0LSoQNZaELoAxK2m8Q6owMuA0kvM/EvE/euFAn6BVrmyjZ+GAPnRi/A82YyIFB
+	 lH7O3ob2uV0YgXLiiaFLS2SDASr4kcWCV1sxVcSzmERQ76pVITBI+tMyZm9eW8gap/
+	 gnPNUGHHExSWQ==
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53H8wWocD618370
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 17 Apr 2025 16:58:32 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 17 Apr 2025 16:58:33 +0800
+Received: from RTDOMAIN (172.21.210.70) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 17 Apr
+ 2025 16:58:32 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <horms@kernel.org>, <pkshih@realtek.com>,
+        <larry.chiu@realtek.com>, Justin Lai <justinlai0215@realtek.com>,
+        Andrew Lunn
+	<andrew@lunn.ch>
+Subject: [PATCH net v3 3/3] rtase: Fix a type error in min_t
+Date: Thu, 17 Apr 2025 16:56:59 +0800
+Message-ID: <20250417085659.5740-4-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250417085659.5740-1-justinlai0215@realtek.com>
+References: <20250417085659.5740-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [tip:perf/core] [perf] da916e96e2:
- BUG:KASAN:null-ptr-deref_in_put_event
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Oliver Sang <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
- lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org,
- Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org,
- Mark Rutland <mark.rutland@arm.com>, Frederic Weisbecker <fweisbec@gmail.com>
-References: <202504131701.941039cd-lkp@intel.com>
- <20250414190138.GB13096@noisy.programming.kicks-ass.net>
- <Z/3krxHJLaWJTj4R@xsang-OptiPlex-9020>
- <5bc5f54b-ce6a-4834-86d4-5014d44c7217@linaro.org>
- <20250415100840.GM5600@noisy.programming.kicks-ass.net>
- <20250415131446.GN5600@noisy.programming.kicks-ass.net>
- <77036114-8723-4af9-a068-1d535f4e2e81@linaro.org>
- <20250416084610.GI4031@noisy.programming.kicks-ass.net>
- <20250416190817.GD6580@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250416190817.GD6580@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
+Fix a type error in min_t.
 
+Fixes: a36e9f5cfe9e ("rtase: Add support for a pci table in this module")
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+---
+ drivers/net/ethernet/realtek/rtase/rtase_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 16/04/2025 8:08 pm, Peter Zijlstra wrote:
-> On Wed, Apr 16, 2025 at 10:46:10AM +0200, Peter Zijlstra wrote:
->> On Tue, Apr 15, 2025 at 04:52:56PM +0100, James Clark wrote:
->>> Unrelated to the pointer deref issue, I'm also seeing perf stat not working
->>> due to this commit. And that's both with and without this fixup:
->>>
->>>   -> perf stat -- true
->>>
->>>   Performance counter stats for 'true':
->>>
->>>       <not counted> msec task-clock
->>>
->>>       <not counted>      context-switches
->>>
->>>       <not counted>      cpu-migrations
->>>
->>>       <not counted>      page-faults
->>>
->>>       <not counted>      armv8_cortex_a53/instructions/
->>>
->>>       <not counted>      armv8_cortex_a57/instructions/
->>>
->>>       <not counted>      armv8_cortex_a53/cycles/
->>>
->>>       <not counted>      armv8_cortex_a57/cycles/
->>>
->>>       <not counted>      armv8_cortex_a53/branches/
->>>
->>>       <not counted>      armv8_cortex_a53/branch-misses/
->>>
->>>       <not counted>      armv8_cortex_a57/branch-misses/
->>>
->>>
->>>         0.074139992 seconds time elapsed
->>>
->>>         0.000000000 seconds user
->>>         0.054797000 seconds sys
->>>
->>> Didn't look into it more other than bisecting it to this commit, but I can
->>> dig more unless the issue is obvious. This is on Arm big.LITTLE, although I
->>> didn't test it elsewhere so I'm not sure if that's relevant or not.
->>
->> I can reproduce on x86 alderlake (first machine I tried), so let me go
->> have a quick poke.
-> 
-> Could you please try queue.git/perf/core ? I've fixed this and found
-> another problem.
-> 
-> I'll post the patches tomorrow, after the robot has had a go.
-
-Yep that's all working now, thanks.
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+index 55b8d3666153..bc856fb3d6f3 100644
+--- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
++++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+@@ -1923,7 +1923,7 @@ static u16 rtase_calc_time_mitigation(u32 time_us)
+ 	u8 msb, time_count, time_unit;
+ 	u16 int_miti;
+ 
+-	time_us = min_t(int, time_us, RTASE_MITI_MAX_TIME);
++	time_us = min_t(u32, time_us, RTASE_MITI_MAX_TIME);
+ 
+ 	if (time_us > RTASE_MITI_TIME_COUNT_MASK) {
+ 		msb = fls(time_us);
+@@ -1945,7 +1945,7 @@ static u16 rtase_calc_packet_num_mitigation(u16 pkt_num)
+ 	u8 msb, pkt_num_count, pkt_num_unit;
+ 	u16 int_miti;
+ 
+-	pkt_num = min_t(int, pkt_num, RTASE_MITI_MAX_PKT_NUM);
++	pkt_num = min_t(u16, pkt_num, RTASE_MITI_MAX_PKT_NUM);
+ 
+ 	if (pkt_num > 60) {
+ 		pkt_num_unit = RTASE_MITI_MAX_PKT_NUM_IDX;
+-- 
+2.34.1
 
