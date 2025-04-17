@@ -1,90 +1,114 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E93195FE8;
-	Thu, 17 Apr 2025 05:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8469E179A7;
+	Thu, 17 Apr 2025 05:46:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744868695; cv=none; b=bFmo4AJbk939Ik72S+xswO9PekbJ1JVxNwYI9y2Ex40JR+tLhh2iiDXEFpgGs2SkiAZMwujXw9lGTd7hPLBUMk+I46vRcDr9eL13q69lin+X75LZdHmNvYxf8NFFcE1FmtqTat4Nw45n2aWSuIpe9/M8ebp5UML9p6fG7PI2aZY=
+	t=1744868812; cv=none; b=srNShlSfwEHS40IsdYmm0LuvDYo4H7qYJqQmlCZ6N1BNxXfODywGE/o/vhGrbq6fdP1eDYEldZVkfRh8ccxa/kha7n7sTr1hmRB3pBlasEF6FDRuLXm92UUc3iBX7UpuIJypt/1CnKzh40idkYeKfnZWhFcid2AMfAM9dREorac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744868695; c=relaxed/simple;
-	bh=Si3AfpSIXUZWHEBNXUEisWaaiZp9N8CK2LqUyKMe1sw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=LXWsERFPxZZhvGztPbRVLsUxgJQ5PQWLQpChFnH7ACZeiMRVaAFsB0nI9ihINbZ4zJl8Hn43rbHL1CLliN+4m/brFgHZ4yuvGQDLV7IKNR095r19TfjILNzjMGMNYUE3ee4/NSFRA4BTKR8In0WhCl9K0xcUkBvaiP2QRecgCxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=C+DJRvEn; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1744868812; c=relaxed/simple;
+	bh=w+Fw8NVAHUYrbrF2QdmSIueeFjlxwKqtyaXHc3p/lLA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aYSl6cIRC43XMfB64m8uxpConW8Nu/R1NMMv1ial9V0mE64rjIu1vavzeg+WTWlNWkan6lyZGy/wvSUMokmPnvZot/JyadfhuWlDnDxcR3Oef4O7wpTQhuQvft5fcNtyRw+YBKA3LpLTTrv3ya4XREUu+dugsirKsBrJl7A92BM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IVwKHJv7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="C+DJRvEn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1744868688;
-	bh=+G/l/IR8gz7cAHFKnICiUwkMBvH+qUera4e3n1Le9+c=;
-	h=Date:From:To:Cc:Subject:From;
-	b=C+DJRvEn0uGPHYSTXZhLiLPTgjeYgj4aUoKfc9CXEgCyFmAu4sNxWpXKtMCuhzaBp
-	 HNOtf7hnIkm4QAg/1mXST26JFO1ZdhJll51DIneKOAZ28jdLocJJo0oIZYuDK++131
-	 bYmBCjgCfdx0jn7BGOKL155lvCLNdTZpHMWNgclJBItsjukJtbLhsvyVYZdweNlNm9
-	 LpmNO3hf/wmfIMB60Pv0Ob+Us22aL4/k9uQWtIHoetbdo5ELDqOHHcN8UWvoM/u9LB
-	 274uzKk6HWRiCN8IapD7Bi/7HzBS0vx5o1XXuE0SMX/X2If2bpH/IvX1UspyPH5gsq
-	 UGrI1N3a8UR/w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZdRg41jGlz4x5k;
-	Thu, 17 Apr 2025 15:44:47 +1000 (AEST)
-Date: Thu, 17 Apr 2025 15:44:47 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski
- <brgl@bgdev.pl>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patches in the gpio-intel tree
-Message-ID: <20250417154447.642f2ec4@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IVwKHJv7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11E06C4CEE4;
+	Thu, 17 Apr 2025 05:46:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744868811;
+	bh=w+Fw8NVAHUYrbrF2QdmSIueeFjlxwKqtyaXHc3p/lLA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IVwKHJv77n9ud6ICAau+0RNSnlXkz/ZNaoZgcKqgTWhL6RCaInGFTpKMMBURKWtm4
+	 AmK8ByNzCvLMWQdU0mpA3eiPha3gJoTeRACaiNNmAygB4NH9FMudtj1jGbZDO3ADiB
+	 Lxs9CTzS8T3xdiYmqM8rk37j60G1m14SftrVhdqbgcbiDHrY3XA01phZI0ppXMwtkg
+	 Iaq/DupNqE1l5zdWgV9NlTvsz0caXZPpjmMO3qVPgT7QWHIG8vXwpxbKzKt2hzRtbB
+	 k7+MruJAl8anp/e+SnFajn0FzFl3g40csVCVRsSYU4ORgfGc6fVKpuXJOQ9KYaYFnA
+	 3FOkQuO6nMZXA==
+Message-ID: <7dc797c3-36d4-4477-a0c6-2a8c84ef1f11@kernel.org>
+Date: Thu, 17 Apr 2025 07:46:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Cg0v1yfqYb36Wgsb=RoL6Ym";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 03/11] dt-bindings: display: msm: document DSI
+ controller and phy on SA8775P
+To: Ayushi Makhija <amakhija@qti.qualcomm.com>,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Ayushi Makhija <quic_amakhija@quicinc.com>, robdclark@gmail.com,
+ dmitry.baryshkov@oss.qualcomm.com, sean@poorly.run,
+ marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
+ robh+dt@kernel.org, krzk+dt@kernel.org, konradybcio@kernel.org,
+ conor+dt@kernel.org, andrzej.hajda@intel.com, neil.armstrong@linaro.org,
+ rfoss@kernel.org, Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+ jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
+ quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
+ quic_jesszhan@quicinc.com
+References: <20250417053909.1051416-1-amakhija@qti.qualcomm.com>
+ <20250417053909.1051416-4-amakhija@qti.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250417053909.1051416-4-amakhija@qti.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---Sig_/Cg0v1yfqYb36Wgsb=RoL6Ym
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 17/04/2025 07:39, Ayushi Makhija wrote:
+> From: Ayushi Makhija <quic_amakhija@quicinc.com>
+> 
+> Document DSI controller and phy on SA8775P platform.
+> 
+> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
 
-Hi all,
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-The following commits are also in the gpio-brgl tree as different commits
-(but the same patches):
-
-  8f4543e980ff ("gpio: ich: use new line value setter callbacks")
-  b7a49fd57be3 ("gpio: graniterapids: use new line value setter callbacks")
-
-These are commits
-
-  69e230a0a288 ("gpio: ich: use new line value setter callbacks")
-  04eaa41eb8eb ("gpio: graniterapids: use new line value setter callbacks")
-
-in the gpio-bgrl tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Cg0v1yfqYb36Wgsb=RoL6Ym
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgAlU8ACgkQAVBC80lX
-0Gy9oAf+Lb5Rm5+EF8v0d8fHHFwP+bYZJ8zkautSLRV9acQ9owluHk6umU/4p1VR
-sZtSEbUD2lv9ETnj5Ia3Xt/MyjT/E+vdpmYCrjbAAh2KCC/5JR7aJROV3WnbA9j5
-eDmfLJAQppgWV/R5vJUWgLeGgjMn44mRL83Amvcff2mrEJOQ/su9zuEIr7BAbj9w
-ejjU6jHhmmYFoVY5rbPQ0HswzTZ6L6F+3jYlj2x8vFrL6gOBRgcKEzsfUUbft/el
-80ffYpXy3qXcalSpOreGpPFdLCQ2gG+3dYNbJZL5ptHNvH/W3H/2rZc3rQEH1nZT
-d2fFyMKVoWF381sBooQWm79D9hKvwg==
-=Q1JZ
------END PGP SIGNATURE-----
-
---Sig_/Cg0v1yfqYb36Wgsb=RoL6Ym--
+Best regards,
+Krzysztof
