@@ -1,83 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808062517AF;
-	Thu, 17 Apr 2025 14:38:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D917524EF79
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744900721; cv=none; b=hwKJxIfVsKVCCKYd2iBBI7F+gDZ7R4Y/tiacju7Dxc/K91MuGCZ+n1PygIUpdAgLRKbwwE/pLCMeq8gVahMIAHA3HsOhbKKrhcTGU3K/KUtWjlbl7frV/DpXoUxKCos1c8rZEcMVqZBQVLjJ0Pn9rObsbPqpwpe8uSFyzIomv5U=
+	t=1744900738; cv=none; b=bPmb8i6bQuHlPR24SndF/GZo25WWkUz2tsw8HZS9F0R7POBrHX8lobV9LS2o+kbsWID8WA5S5f4Yd34bzSdWDhnN/fxLgiYbpTQwlUEkYMSvHSyunoR1jwQjd0gT9kYdADcbTTdwi4+lefGgdF1lSvlPHnuPSBC4wy8n/UVGw7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744900721; c=relaxed/simple;
-	bh=YmtnUeaLSZxV53krlcgNrrwtiIIegedBkZV17BMHwfA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=DM4wyLZQwEid50Gb+Z9fnetI2zhH6m50KqjzJIG26o1lMkr2t63WmLPTpXz0NRp1xHfQzpdaIvYaAIJwD08r711gbvNkAAfE+Vjp1x3LMR8HswDgRdzmnpmlSsi34Y38GffIAV81KeU2fHHkNqpc68+uwnCsEgCupn99oonX7sM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A014C4CEE4;
-	Thu, 17 Apr 2025 14:38:39 +0000 (UTC)
-Date: Thu, 17 Apr 2025 10:40:17 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Subject: [PATCH] ftrace: Initialize variables for
- ftrace_startup/shutdown_subops()
-Message-ID: <20250417104017.3aea66c2@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744900738; c=relaxed/simple;
+	bh=+/4OIRG1mgIFyKcEzT8MzBUT8UyTa8AoP35zj9hv3n8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cRxqBgdmBHB82IDq3Z1LgOCPFo7wch/tb9YNmdHhG9d1FcN1UFe7shVYvx0X4OCoxsQ0n2/BaER7e1rZUsOaUREkbsIhQHb1ZU2r4JsMjt4x0yQ47XLHGWn2lYMtpT7XkKgpRciMGgIFcRyFaF8Rg+f9UM/naC5LKeNTlr4fC2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-acacb8743a7so148719766b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:38:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744900735; x=1745505535;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zi7zFVkaGameQCQElY8z6qfvV5cVBlJOJVieQTjHZdw=;
+        b=xTp07lkdNvqWfNJffQbGMjydBydLF1UTbV+jefz7mJejl6VOM9/9ihAfyMUzz/wrNm
+         SOzXSwExcyvyIsv11XY2DaMaiXcnJEWxPDpHB9khBHs8kCm8RWxjLJbrWsm0QNykrLKx
+         NtJKR71tLL7XOdXwgeMmcof0d3Nz5cnnHXzGnSlYsNEtsc7Yv33SOdQ10hRIW6O+zzPv
+         cfbVQTFOIWdIMXwpayg/9SkowkgQ3xQJYm53GE4ZatjXAcroNc4jw+JfT01YVj0r7bcD
+         ZhRijGIqVPiq1E06dK84yK452IwIN9KC+x1J/Z3cRKER3cUZg3X9PbiJ+ZbbWznjXS+W
+         I7IA==
+X-Forwarded-Encrypted: i=1; AJvYcCVF3GiUFr/nXR0gK12eVxCmgrn6MkyLET4OGyUGV9SyBBPuQvBc1AEuNe9T7gAfsvn3QaCHTO6JBv7tby4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3yk507Y3UBo9mVqkuYY7/cGBM39vJDtWR2fSNFASxhBuztXS1
+	GWkG6A2IxtQd6YTy/SNb5f+xN/9BaZcIFVEe8rYFsvOmPDlxWWj7p3JgOw==
+X-Gm-Gg: ASbGncs8qWq6wl+6/K7GXpPU3vFxhxPZSnfkH9dFSy6sisFKbMDR3B/rpnVdKSqrt03
+	Z3gQBZ//kUkbX/oOJ38ytt1FX3XzISJwB55hiji+FUbGTdbSJ+uP1nPdoOv2nDJruVp5yK1JTLO
+	nolDhs7UUXwKOQJSyaGoXH7u0prwjxgIk3msjUW1RU43RKA1Ki50wEcDPqt0JTA8sLt52NyWhbF
+	pxIn4CKDg/Xl9FmzR2Qbp79vYma98xtvlmx/grURE7n5+P/c7HcVAT/YGvZoDdm0+HIHBOGS2OL
+	mWBG7ertTeJwyNNG0TlLBqsVSSr0FZs=
+X-Google-Smtp-Source: AGHT+IH2FaJ1yPWDr+BeheIyMDzY5poAhbMf+kr6PY+cZP7Z2qrrqQ+2zbvzaFbssHyM7fxsxjInQQ==
+X-Received: by 2002:a17:907:94c8:b0:acb:1165:9a93 with SMTP id a640c23a62f3a-acb6ec0f778mr12255466b.3.1744900734798;
+        Thu, 17 Apr 2025 07:38:54 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:3::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef47ecesm1686366b.159.2025.04.17.07.38.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 07:38:54 -0700 (PDT)
+Date: Thu, 17 Apr 2025 07:38:52 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: Joel Becker <jlbec@evilplan.org>,
+	Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+	Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
+	Zijun Hu <quic_zijuhu@quicinc.com>
+Subject: Re: [PATCH 1/4] configfs: Delete semicolon from macro type_print()
+ definition
+Message-ID: <aAESfDy5M26hQ7CY@gmail.com>
+References: <20250408-fix_configfs-v1-0-5a4c88805df7@quicinc.com>
+ <20250408-fix_configfs-v1-1-5a4c88805df7@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408-fix_configfs-v1-1-5a4c88805df7@quicinc.com>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Hello Zijun,
 
-The reworking to fix and simplify the ftrace_startup_subops() and the
-ftrace_shutdown_subops() made it possible for the filter_hash and
-notrace_hash variables to be used uninitialized in a way that the compiler
-did not catch it.
+On Tue, Apr 08, 2025 at 09:26:07PM +0800, Zijun Hu wrote:
+> From: Zijun Hu <quic_zijuhu@quicinc.com>
+> 
+> Macro type_print() definition ends with semicolon, so will cause
+> the subsequent macro invocations end with two semicolons.
 
-Initialize both filter_hash and notrace_hash to the EMPTY_HASH as that is
-what they should be if they never are used.
+where is the type_print() macro invoked today?
 
-Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Fixes: 0ae6b8ce200d ("ftrace: Fix accounting of subop hashes")
-Closes: https://lore.kernel.org/all/1db64a42-626d-4b3a-be08-c65e47333ce2@linux.ibm.com/
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ftrace.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+I haven't found any reference for it in fs/configfs/dir.c
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 19b902b8de2b..66bf4512ec04 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -3490,8 +3490,8 @@ static int add_next_hash(struct ftrace_hash **filter_hash, struct ftrace_hash **
-  */
- int ftrace_startup_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command)
- {
--	struct ftrace_hash *filter_hash;
--	struct ftrace_hash *notrace_hash;
-+	struct ftrace_hash *filter_hash = EMPTY_HASH;
-+	struct ftrace_hash *notrace_hash = EMPTY_HASH;
- 	struct ftrace_hash *save_filter_hash;
- 	struct ftrace_hash *save_notrace_hash;
- 	int ret;
-@@ -3625,8 +3625,8 @@ static int rebuild_hashes(struct ftrace_hash **filter_hash, struct ftrace_hash *
-  */
- int ftrace_shutdown_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command)
- {
--	struct ftrace_hash *filter_hash;
--	struct ftrace_hash *notrace_hash;
-+	struct ftrace_hash *filter_hash = EMPTY_HASH;
-+	struct ftrace_hash *notrace_hash = EMPTY_HASH;
- 	int ret;
- 
- 	if (unlikely(ftrace_disabled))
--- 
-2.47.2
-
+Thanks
+--breno
