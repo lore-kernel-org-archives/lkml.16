@@ -1,81 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4237622A7EE;
-	Thu, 17 Apr 2025 11:23:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2512323BCF6;
+	Thu, 17 Apr 2025 11:23:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744888982; cv=none; b=CP+aaq3cd10hgM/Gn3bWAD7FGuJv+rDzTAn7H7kgwepVwmeAekbPbDs4PN/XXpA4Sc9+3k4KAA2A9R1KOua8dCIv2QIZ0Wzd2b7209PMp6JFvOK0T41EqZeUo9ynm4UVsuTEYY3MXJlE7aO6F8MBexG5h8cAftU9l1ZYDVz3Vag=
+	t=1744888994; cv=none; b=nNXJJDBXTR2pfrH/aK3yZwc2HAjZ/LB7k+2AgsKx88l0QZIEByOKPSKzkiSZaP0IVNSrHA5mCT3XWvqcaPAiDc5+3dbkk39XnLTGpOy4hBxaInxmWdfljKcMkuQBA5fPp6OMVLHL5dsXwGcgIQdaolru4zChjj5GHDf1ccoVjY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744888982; c=relaxed/simple;
-	bh=PbvjqwbJ5R0uIQDWP74GCjaHKoHjnobCuzoeS/nLKG4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ct6g/IyF9KBhZalyHMI02b6LVlM9C5ZgZyp0YDUtJjpnLLci+E2pYWdoSE2lROHf95LvW8eAsmAbnzZKJcSbAXvhmrRXfwW6tjiTuTQs5zK2nwcxy4bHoYfRcAqCVSZFZcnzKFEWUXMORUSmWtQvBydskWT9H8hcRcojmW2lpxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M2x1LwMi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744888994; c=relaxed/simple;
+	bh=7B70yJ4SRDrrXhm/q/EaJyQoxUqPWnLWl6ATh4yqNHg=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=owsaPSDzXVQERLawtoAC7qM4obLrVfbpgHMN3/m3UpPKm+POHeCnYVIRmA2eMK5+jljtvF9w3PawcdWa/Op1RClHrGNKb8znRHwCS2NRsxIyEux76NXTd8yJg5biz79XTloyOxNeEK+75yKvKWagWbXR/XsLvFM3CByHOLsHt+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R0m/wNfL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M2x1LwMi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35863C4CEE4;
-	Thu, 17 Apr 2025 11:23:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R0m/wNfL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDB31C4CEE4;
+	Thu, 17 Apr 2025 11:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744888982;
-	bh=PbvjqwbJ5R0uIQDWP74GCjaHKoHjnobCuzoeS/nLKG4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M2x1LwMij+JNodAIW8ehPjciHNEjSb2rzCehZ9YMuPyGmVEpU5a5+yEWxh0tziEvI
-	 at5rULM+cUN6GZ1qlfx7fFkuImCzm3k+zfJcnOkWsMMPwm7BTCIvlGxxaJSE6fp9vK
-	 7eXtVvHIKTLVT5SyK+4vB5L9GCRjQdhi8EsMqSZVnLnxzVuZ8Kxa/n3GHX9+dnGCDo
-	 Xhj3IK0IxmDATSTIJYTIgW4djhnJzI7Il8b6dUf/DWqJkg2Lj6YixAVKqKT/GFHE7V
-	 7x1S9MynS8urKGMEDjBhO3+GNaSNMtrIxTQkWoyzCFQUAFN/WjLhk+ioOwkNmMBpSu
-	 exxxGQ0DScGcA==
-Date: Thu, 17 Apr 2025 13:22:57 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: linux-next: manual merge of the tip tree with the pm tree
-Message-ID: <aADkkQMPfVkTWmxE@gmail.com>
-References: <20250417134312.6892d237@canb.auug.org.au>
+	s=k20201202; t=1744888994;
+	bh=7B70yJ4SRDrrXhm/q/EaJyQoxUqPWnLWl6ATh4yqNHg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=R0m/wNfLNfos3JG0Gq0YguHhHEbc6iV0N78lLqtliDi4TJjftl0F+8NzdKtM51Bly
+	 GLnWNv8W1PpDij5CZ8JuRVkZ96hhLCYPDuEAy/Mm1YL7qQEK6Vu1S4f8hXcSfZpzq4
+	 y2Qk/IsUhIw1tOjPF280+jrfoQETLD34nSNunLH87yUT3QvnN8SeNjzBf3N1LL5uxc
+	 zBqirpQcjS/mhyCUiQpwBpczn5LwlkYWVr2uGuv1JfW6CEJrICixBm5stTvnGBq8S+
+	 KtpuJfYn1bWjbXfbUJWQRnZqm3c4OAcAkEHUd/miRM1Eio0KdfMXeQArMjkpHehdRy
+	 LqjjO+Ycgllvw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1u5NKp-006Ohy-Fj;
+	Thu, 17 Apr 2025 12:23:11 +0100
+Date: Thu, 17 Apr 2025 12:23:10 +0100
+Message-ID: <86r01rjald.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Luo Jie <quic_luoj@quicinc.com>
+Cc: Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes
+	<linux@rasmusvillemoes.dk>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	"Nicolas\
+ Palix" <nicolas.palix@imag.fr>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Oliver Upton
+	<oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose
+	<suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	<linux-kernel@vger.kernel.org>,
+	<cocci@inria.fr>,
+	<linux-arm-kernel@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>,
+	<andrew@lunn.ch>,
+	<quic_kkumarcs@quicinc.com>,
+	<quic_linchen@quicinc.com>,
+	<quic_leiwei@quicinc.com>,
+	<quic_suruchia@quicinc.com>,
+	<quic_pavir@quicinc.com>
+Subject: Re: [PATCH v3 4/6] arm64: nvhe: Convert the opencoded field modify
+In-Reply-To: <20250417-field_modify-v3-4-6f7992aafcb7@quicinc.com>
+References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
+	<20250417-field_modify-v3-4-6f7992aafcb7@quicinc.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417134312.6892d237@canb.auug.org.au>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: quic_luoj@quicinc.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk, Julia.Lawall@inria.fr, nicolas.palix@imag.fr, catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, linux-kernel@vger.kernel.org, cocci@inria.fr, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, andrew@lunn.ch, quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com, quic_leiwei@quicinc.com, quic_suruchia@quicinc.com, quic_pavir@quicinc.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
+On Thu, 17 Apr 2025 11:47:11 +0100,
+Luo Jie <quic_luoj@quicinc.com> wrote:
+> 
+> Replaced below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
+> - reg &= ~MASK;
+> - reg |= FIELD_PREP(MASK, val);
+> The semantic patch that makes this change is available
+> in scripts/coccinelle/misc/field_modify.cocci.
+> 
+> More information about semantic patching is available at
+> https://coccinelle.gitlabpages.inria.fr/website
+> 
+> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+> ---
+>  arch/arm64/kvm/hyp/include/nvhe/memory.h | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/kvm/hyp/include/nvhe/memory.h b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> index 34233d586060..b2af748964d0 100644
+> --- a/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> +++ b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> @@ -30,8 +30,7 @@ enum pkvm_page_state {
+>  static inline enum kvm_pgtable_prot pkvm_mkstate(enum kvm_pgtable_prot prot,
+>  						 enum pkvm_page_state state)
+>  {
+> -	prot &= ~PKVM_PAGE_STATE_PROT_MASK;
+> -	prot |= FIELD_PREP(PKVM_PAGE_STATE_PROT_MASK, state);
+> +	FIELD_MODIFY(PKVM_PAGE_STATE_PROT_MASK, &prot, state);
+>  	return prot;
+>  }
 
-* Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+Following up on my suggestion to *not* add anything new, this patch
+could be written as:
 
-> Hi all,
-> 
-> Today's linux-next merge of the tip tree got a conflict in:
-> 
->   drivers/cpufreq/acpi-cpufreq.c
-> 
-> between commit:
-> 
->   395b8b5c8f67 ("cpufreq: ACPI: Don't enable boost on policy exit")
-> 
-> from the pm tree and commit:
-> 
->   78255eb23973 ("x86/msr: Rename 'wrmsrl()' to 'wrmsrq()'")
-> 
-> from the tip tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
+diff --git a/arch/arm64/kvm/hyp/include/nvhe/memory.h b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+index 34233d5860607..08cb6ba0e0716 100644
+--- a/arch/arm64/kvm/hyp/include/nvhe/memory.h
++++ b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+@@ -30,9 +30,8 @@ enum pkvm_page_state {
+ static inline enum kvm_pgtable_prot pkvm_mkstate(enum kvm_pgtable_prot prot,
+ 						 enum pkvm_page_state state)
+ {
+-	prot &= ~PKVM_PAGE_STATE_PROT_MASK;
+-	prot |= FIELD_PREP(PKVM_PAGE_STATE_PROT_MASK, state);
+-	return prot;
++	u64 p = prot;
++	return u64_replace_bits(p, state, PKVM_PAGE_STATE_PROT_MASK);
+ }
+ 
+ static inline enum pkvm_page_state pkvm_getstate(enum kvm_pgtable_prot prot)
 
-LGTM, thank you Stephen!
+	M.
 
-	Ingo
+-- 
+Without deviation from the norm, progress is not possible.
