@@ -1,100 +1,132 @@
-Received: from out203-205-221-210.mail.qq.com (out203-205-221-210.mail.qq.com [203.205.221.210])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574D01DE3BA;
-	Thu, 17 Apr 2025 07:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD24F21CFEF;
+	Thu, 17 Apr 2025 07:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744876102; cv=none; b=fKJOCiKNZfuAZPsL71r+6jnUecfgjaZvxRnbf/43zdAO7pob4uIBnq4C7zt0eIkzAkgZv4ZvHtItjQx26vFp0WcjJ+aajJlSFXZKoFCsH+9Gbg9a9wKOrRfga9AFMGmAymLJbMqcnNECWPEcB6W5t4aQFdNUSbyEt7kX27OVeLY=
+	t=1744876107; cv=none; b=jgSR802Ovr2gjiL80Lzmusk7PiVw05em2/6n/GK8BW9G2GfSb2arVUOcUbKQiXzKH9O/7b8Mv/Qz4XlYRIdRWBzPSMacKTNZ4JOjEtcX7EM4fFNWCgu2wSnbSQ2ZhaDlbQ98ClrmQaGN51j+gibd7CNIPcyKKynBXtkNYtv0psw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744876102; c=relaxed/simple;
-	bh=g69U3MXxWXrTcJzezoDF5hQtVmdFyUMPr2vui6AhBd8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ona6zFl/TL55hSSS90gg13onWzhAP3c3GW72EsKUM5jhFfC7ZeR90VV8khQy9zq+yzZ0IpacidDC9MAMXxtT29ccaTrMsaeljuBGL/QSWsNbu7Ia+njtB+b3mlA5LyzLxNNMayfuocHOdNHxPF8kv5MLkYZ0t+zj++9Vrx3gfE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=bvJrstqz; arc=none smtp.client-ip=203.205.221.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1744876107; c=relaxed/simple;
+	bh=q2pCfnUhdQWEZrucc/vgzT+PdUvSVSafzjmIF1npPYk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eGhXev811e3+EDzuZpqxfOojVF4xVjpy4XLTsKNZZDB0ESs65ZADS8ZgAEzF8eraZkKJaHNwe2VyZdNYjCUBlMP890b1K12gSPOOE5IhCSpawhOYDjl1T1t2T1+RHggzlBhqDHZZntvy85YlAz7T2cYLmhZ3FMn/2TsmMI4s2Yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u713mKvd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="bvJrstqz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1744876088; bh=jtLqqxgkkS7hjzhrNQSkLpeFrvyKORWwVkpEiRFM2y8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=bvJrstqzWSBhPkVWeMYuT4HIziUbUr2BmpzDrBQUj9Aj+f6SdLWVxoUWR/PA7X7E/
-	 XaF3W1MVMkWlEOwAt1sYQiXWyQqe+vD9rXwHI7L92zGR6FIOYqeHiGkhd/c/PPfPrn
-	 /SawPI1AAUjKf5cOPHXoG+dyDSMW9pCf4JHBEdW0=
-Received: from [10.42.13.21] ([116.128.244.169])
-	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
-	id A7A83A38; Thu, 17 Apr 2025 15:41:58 +0800
-X-QQ-mid: xmsmtpt1744875718tyr8k8gfy
-Message-ID: <tencent_7F0AB62F9DA4BF9F250063A7421F23AC3908@qq.com>
-X-QQ-XMAILINFO: Ntt/5q+SsafOsnPnwUxg9cH2jNPvQoJzy31D/qLKszyBC1og0zhcJchIQtlALw
-	 yhx15RO9RGMw20WtvpxUWUQo20XfMgAfPdLgw+wKOYbTvty1D9A3BPY5mDdcZXA8kGUlQ6MeoRQz
-	 /ZJC81lKrRE2ViL5gjYfMb/V8y5poj4OG6byl/wOFmwWyiRah8joVvZF5bQjJ3J3DRbIYtmG2Kiv
-	 2qRyNkjpH6fN6uv9TuCakoF7A1yolmQ0z6hhsHEWNPDp/R/VxQp2GkLFA9q7VIx0P0XbQG7E/Ekj
-	 OvY/BSzVoOelpQJ/tZHl5TAmOaN5mH2/l/xZQhvA4bxlIPtqWhJ5lUZzOTBG23CH6XU28+RtGodS
-	 0jMRKlUefrQD4Z6MCcB1yA247Rn8egl9Un4AzfRIAyZ8DHUE56yF4Lxhcyvmv8gp6lZP7E9x7Ixt
-	 bObvD8JGkmjRr8nWbVgnFMUkVWgQHJBEiPF4IA+z5csJGd7KrUHPWtpqXLtonmRMd+H6e6dmNERX
-	 vbsNV74B+BAT8pOsMs9wqmTotDoBPjzV3WjjykVFFcL3Z8cBO1M2M/4Jm+kMl6tKuGEU02Vjsc5K
-	 R8lBwCeXRgYRTgOwH0YlP3a815PNuFzmc3O6AKENw6nJULxm1G2T0J6yPjDLia5ZIqhMA7WouB3c
-	 yM7yCLhagWCeicBWMhWdwnThoKWfJVCXttrr577B2vvHWrJgmDN13AtxiC4YwsjiRdZ78aNPTiT9
-	 TsWsu3TAvz8q1QkKBlEpZTowIQYUNJe8bXSnJ6YcbaljQYTpMUtxhQzseIp3WKLni4gMZDmeMdqG
-	 MAo/xIaxinbMgSKdL9BcyzDcKOUW5BmpPUELmQcBo0HRxZOAIvMmH7TmVmSdrSvbTVEMiKSuiDPC
-	 X4+PF7yY9M3CV50P9eCCZ9HPb0TbvyeHZxu+mFLPa4WeITYu/BSs3caw0yjgrLAA7RZ4+yGlTlU7
-	 7a8FCGy9crh+Aeg6wyA5aT8wGTtgfgTvFgLOCBRKxwzGnYQf4HoEDqvF7ZJgXnEDvCPXj3zPYUvM
-	 d4azrXsp5PxJmD9HPDKx5CEXsYHzU=
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-OQ-MSGID: <e7ecc530-af6e-4ac5-92ea-b3976aa0f13d@qq.com>
-Date: Thu, 17 Apr 2025 15:41:58 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u713mKvd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 756D7C4CEE7;
+	Thu, 17 Apr 2025 07:48:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744876107;
+	bh=q2pCfnUhdQWEZrucc/vgzT+PdUvSVSafzjmIF1npPYk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=u713mKvdg1fU9fuM2e/uK122DMnJ1N1s9DQZW74R+/KLguTJh+HCUiusUeAiR5BQM
+	 sT0u7RAt5f+mTwEjdUnFAQ2NLTcmGe9oLu79YRw/Mp4sWbaQjrdfn2OlpA+/RT4K/k
+	 xkmQ6YMT7d2CF9ba53oDI34xHEuYQrBCwp/iGjBtqDuzaOMXakvi+danSK30Zhqf2n
+	 9hZmdhWH3wnj48enNVMbdQF8vrgoWvmJR7x7BD7STPzkHa/btO35d7klHy4m79307v
+	 OJ0xZ27+25pLnB1oC8upWx68RQtBJ1pawyfE0T0o66WkD9UJuRsJdkIODbN2oKCnIE
+	 mXoqJ0yATKUPQ==
+Date: Thu, 17 Apr 2025 09:48:22 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org, kw@linux.com,
+	bhelgaas@google.com, heiko@sntech.de,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	jingoohan1@gmail.com, thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
+Message-ID: <aACyRp8S9c8azlw9@ryzen>
+References: <20250416151926.140202-1-18255117159@163.com>
+ <aACoEpueUHBLjgbb@ryzen>
+ <85643fe4-c7df-4d64-e852-60b66892470a@rock-chips.com>
+ <aACsJPkSDOHbRAJM@ryzen>
+ <ca283065-a48c-3b39-e70d-03d4c6c8a956@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PM: EM: Fix potential division-by-zero error in
- em_compute_costs()
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, Yaxiong Tian <tianyaxiong@kylinos.cn>,
- rafael@kernel.org, Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-References: <tencent_EE27C7D1D6BDB3EE57A2C467CC59A866C405@qq.com>
- <143378b0-5740-4f2b-9a79-f04cf9ef1f77@arm.com>
- <tencent_C16C813B177E434BEAC73E842C46D872BC09@qq.com>
- <CAMuHMdVAvMuzmn48aVB-xshMjbENXFc1MmYB=r7iPrMvfDZjDg@mail.gmail.com>
-Content-Language: en-US
-From: Yaxiong Tian <iambestgod@qq.com>
-In-Reply-To: <CAMuHMdVAvMuzmn48aVB-xshMjbENXFc1MmYB=r7iPrMvfDZjDg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ca283065-a48c-3b39-e70d-03d4c6c8a956@rock-chips.com>
+
+On Thu, Apr 17, 2025 at 03:25:06PM +0800, Shawn Lin wrote:
+> 在 2025/04/17 星期四 15:22, Niklas Cassel 写道:
+> > On Thu, Apr 17, 2025 at 03:08:34PM +0800, Shawn Lin wrote:
+> > > 在 2025/04/17 星期四 15:04, Niklas Cassel 写道:
+> > > > Hello Hans,
+> > > > 
+> > > > On Wed, Apr 16, 2025 at 11:19:26PM +0800, Hans Zhang wrote:
+> > > > > The RK3588's PCIe controller defaults to a 128-byte max payload size,
+> > > > > but its hardware capability actually supports 256 bytes. This results
+> > > > > in suboptimal performance with devices that support larger payloads.
+> > > > 
+> > > > Patch looks good to me, but please always reference the TRM when you can.
+> > > > 
+> > > > Before this patch:
+> > > > 		DevCap: MaxPayload 256 bytes
+> > > > 		DevCtl: MaxPayload 128 bytes
+> > > > 
+> > > > 
+> > > > As per rk3588 TRM, section "11.4.3.8 DSP_PCIE_CAP Detail Registers Description"
+> > > > 
+> > > > DevCap is per the register description of DSP_PCIE_CAP_DEVICE_CAPABILITIES_REG,
+> > > > field PCIE_CAP_MAX_PAYLOAD_SIZE.
+> > > > Which claims that the value after reset is 0x1 (256B).
+> > > > 
+> > > > DevCtl is per the register description of
+> > > > DSP_PCIE_CAP_DEVICE_CONTROL_DEVICE_STATUS, field PCIE_CAP_MAX_PAYLOAD_SIZE_CS.
+> > > > Which claims that the reset value is 0x0 (128B).
+> > > > 
+> > > > Both of these match the values above.
+> > > > 
+> > > > As per the description of PCIE_CAP_MAX_PAYLOAD_SIZE_CS:
+> > > > "Permissible values that
+> > > > can be programmed are indicated by the Max_Payload_Size
+> > > > Supported field (PCIE_CAP_MAX_PAYLOAD_SIZE) in the Device
+> > > > Capabilities (DEVICE_CAPABILITIES_REG) register (for more
+> > > > details, see section 7.5.3.3 of PCI Express Base Specification)."
+> > > > 
+> > > > So your patch looks good.
+> > > > 
+> > > > I guess I'm mostly surprised that the e.g. pci_configure_mps() does not
+> > > > already set DevCtl to the max(DevCap.MPS of the host, DevCap.MPS of the
+> > > > endpoint).
+> > > > 
+> > > > Apparently pci_configure_mps() only decreases MPS from the reset values?
+> > > > It never increases it?
+> > > > 
+> > > 
+> > > Actually it does:
+> > > 
+> > > https://github.com/torvalds/linux/blob/master/Documentation/admin-guide/kernel-parameters.txt#L4757
+> > 
+> > If that is the case, then explain the before/after with Hans lspci output here:
+> > https://lore.kernel.org/linux-pci/bb40385c-6839-484c-90b2-d6c7ecb95ba9@163.com/
+> > 
+> > His patch changes the default value of DevCtl.MPS (from 128B to 256B), but if
+> > pci_configure_mps() can bump DevCtl.MPS to a higher value, his patch should not
+> > be needed, since the EP (an NVMe SSD in his case) has DevCap.MPS 512B, and the
+> > RC itself has DevCap.MPS 256B.
+> > 
+> > Seems like we are missing something here.
+> 
+> So Hans, could you please help set pci=pcie_bus_safe or
+> pci=pcie_bus_perf in your cmdline, and see how lspci dump different
+> without your patch?
+
+It seems that the default MPS strategy can be set using Kconfigs:
+https://github.com/torvalds/linux/blob/v6.15-rc2/drivers/pci/pci.c#L126-L136
+https://github.com/torvalds/linux/blob/v6.15-rc2/include/linux/pci.h#L1110-L1116
+
+Note that the these Kconfigs are hidden behind CONFIG_EXPERT.
+So unless you have explicitly set one of these Kconfigs, the default should be:
+PCIE_BUS_DEFAULT,	/* Ensure MPS matches upstream bridge */
 
 
-
-在 2025/4/17 15:20, Geert Uytterhoeven 写道:
-> Hi Yaxiong,
-> 
-> On Mon, 14 Apr 2025 at 11:14, Yaxiong Tian <iambestgod@qq.com> wrote:
->> I wasn’t sure whether the new patch should reuse the current Message-ID
->> or create a new one, so I checked with ChatGPT and kept the original
->> Message-ID for v2. If a new Message-ID is required, I can resend the
->> email.
-> 
-> Different (revisions of) patches must have different Message-IDs,
-> else they can no longer be distinguished by our tooling.
-> Fortunately it seems like you didn't succeed (which is good ;-),
-> as all four revisions do have different Message-IDs:
-> 
-> https://lore.kernel.org/all/tencent_8478BF8F2549630842D323E7394CB6F49D08@qq.com/
-> https://lore.kernel.org/all/tencent_EE27C7D1D6BDB3EE57A2C467CC59A866C405@qq.com/
-> https://lore.kernel.org/all/tencent_6D2374392DB66C9D23BF6E2546638A42EC08@qq.com/
-> https://lore.kernel.org/all/tencent_2256A7C02F7849F1D89390E488704E826D06@qq.com/
-> 
-> Gr{oetje,eeting}s,
-> 
->                          Geert
-> 
-Thank you for your explanation. My previous description might have been
-a bit unclear. Actually, what I meant was whether it should be --in-
-reply-to=original Message-ID. I think if it's a patch, replying to the
-  original Message-ID would be better.
-
+Kind regards,
+Niklas
