@@ -1,175 +1,100 @@
-Received: from sonic309-21.consmr.mail.gq1.yahoo.com (sonic309-21.consmr.mail.gq1.yahoo.com [98.137.65.147])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD139253928
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 17:39:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.137.65.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3F62566CF;
+	Thu, 17 Apr 2025 17:39:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744911554; cv=none; b=jWuykx7ksvf6a2gSgGi1m9uGHgU9zV2ANXPDWR1olCGd1Iv6gjBfkpjOozu+k10mi4CFkrzx9V6mm3lKtqUz6iTQVoMWQJJWQ7fSET4NGs+YQsuGfpOIlGgkC9HhVesGDRgec8lzQCepfoa+8QBrs5GR8omnV9B+/Osw5XSH/O0=
+	t=1744911559; cv=none; b=r+5vp5CN0eMbGE2NIXGtcSJz4XjNj07pmpr32KGL6I+qaDmZoMFS3DfHJGJBHKpgB4NGuXAN5mFpg6qh0Xpxivjq3pOhEeXa+3PZKLMWOy0ikgEqteacf9t1xQyjCU+GsNRjPYBup8KANP29nZLcr25N7vlvyJsN4y6kFY6JgV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744911554; c=relaxed/simple;
-	bh=87u6W1TihUzP8Z4D1g73cGTWePCPzbowKmmvBeLq2Bg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TEngV3cFRaCWA4XcWFgEZaWYL3WpNZM2IwJd/ucGIo3XkFsP+rDTiEXOnudotClAnwn5eC4qS3NA/aojx6LAoX3b8YS1WALA+dLaK7VaHNMPeHbSEF0e3Sg0/Ky8l76Jw7EnpsaqU/Y3F9Mb2M6t65P3JokUHloFosPVbTYiLdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com; spf=pass smtp.mailfrom=aol.com; dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b=Qjda+O8l; arc=none smtp.client-ip=98.137.65.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aol.com
+	s=arc-20240116; t=1744911559; c=relaxed/simple;
+	bh=IJOCoAbfESLPGcq0s+NtLK7+By4C1mnScFdgMd+jRPY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b6ddj0TF9TnUsU6rCsubhoZ2suXwtLJnQajcj6+nmvOLOk0A6YCnhoRQLe+Yk7ABF1505j4nifQ6wP3R1efV16s0dPDVMFB0S9yW0YFXLx5QMSOFWW6ysrpnZVDEonZ1VT7Z563aWUfeIJg5qEr7/pD66g2FJ9C8vQ9xRp0nnPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G3mWB04d; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="Qjda+O8l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1744911552; bh=B5EIQ+T8gzw3O3ySM34rCVBGg45rFyrTsDX/Alk2S/s=; h=Subject:From:To:Cc:Date:In-Reply-To:References:From:Subject:Reply-To; b=Qjda+O8lrR8EX0/IVevUX/lXWrc0mmEaVV/VgW5wymZJykuhbcquwu7Lhs3G2DqjxnIEEAIOpKeEr4yHjR6A3JJnHklXB9fLRBdY4bC6m7ytc70NNdqKb9VGOL6BVNEyVnb1xhNK3ug+j9nu42ohiRHG+5uWTL3NAKs4MrWUO6oeXJKHU9mjNwDxfkD7pwU2gbxuh21TnoWBFM+u8ChTmEmURLkRXhGrx34GF8lFjSxmEgOVEAmVQ8rxZ90tnRlfVfgbij62H7dF0mmw5ycfe/doJaZ1Zql8HnZzBvDnOiAD337OUIcH4Z/rH/2Msvqu2hd9PrKEqRaTkZKmkgu+ow==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1744911552; bh=RpLlX+z86ZK7nJeDffV+a8x5TCvgtfnTQNtezAsvgPD=; h=X-Sonic-MF:Subject:From:To:Date:From:Subject; b=sXIDXTJ7TdSZvuLyhwD4SSoN7y1JVVThPitBeG9oRvqJ9gWI4s33zLpm3uwsvvcqCJA3N8iSQgsOJ/C84cI7fvOCIk9zh3wlWUju4bLgi9J7W27SQNd1Sw15wj49qPLGqnfnKwUMY7VsiSlluck1msrOLwg7R90g7/vhxjwhdEi2FcFYScyd1F/BQkmFDvQ9/D+cqmD8/LR8+w+/qvUVkOoptuJh+yPMGrCIRMhdOUx5m9aeqiLIqM1f38JHvlN360ei3iqOh28Bb4TDepksE4MUOmrqBtv6mJib+bS6u0bqKJ7Wh3g/sz19PEVirtx7+aS4EbFdaFGcOpfc7GS61g==
-X-YMail-OSG: ZRGNm8wVM1nSCMBiOomP0Kf7VL1XYubqDjRsawjuIqNj_0vYGbqGIf247rDcTou
- y0IBQxgbjx_5WLjNVwP.hm33RsTgZSuPQWrzt7C.QS9PnlqvUNWAIo4g3wGP4hDWaDDcGrUyEo9j
- LbdSBxnZiS_vY7EQs0oL64VVWDi65djzPnUCiwrnIc0GBZR8VftG_lYjadUpvmSfnnokXU8x6.Wg
- sTvzHpPlBA57hUuE5AoDP.VkKvWW2rViKLxMiiUfed3q423lLJUGXT3_p.62x5qNxeRC9SmtKbU2
- evnGPOvORBqlNlsK6lCTaL2qU9TBtUbhAssLh_ieHaFuuqlNPrDopgqE6hZw6lLaq4WKQf_e32LU
- eLKnYfnkehhp3KmWLTIDZZtXbkgDcCgxZJRr_g_Cxrb3Q_2IN71XprlvtKYy2WdkeOzuu7a52d_m
- W.kvHDbIXDdBLCn6YniSHZIW7pIMhXjv1EH.XvvxOk5ZPIfFv9EpakDXZsLg7REtSfziLH3_DQ1W
- VxnIHqs2f5gy_mEkeZ3JxvnvIqNMgLexkvgq.Yb56WDVHjMNy0JLnRg0h79s_uhyfCC5oSfiJ6M2
- LAeAzoW_8uLCFJEf_lATEihIrunINqvWJr8GXvOeWCGo3JPRxx_DyU.nbRfb5SdQay0b30LwV4GZ
- 3M26XvIIoyRC70zy0.sUhLMV8M6hMiFDuRc2KXwwqM4FUOP3RG04i8QKOq.eZugF14rWjBTpPY44
- ea7HppiSbp_hv6R9ozyFEqzV5hYc3n.CHxsX1JGPv6WP1qSMYpbgOVS3GJBd0K4FVCqMcGKbCb8O
- 2qDFItxMhUhmxWJ2RdZL13cRCqqvVbfTT21joCsa9Mdl9x5AAQmAiyv8QIS_BTuVhMOa3oJwY7ql
- pRIdvyStF996t50JlcQrnj0CInYioWV8ce9lfO9x7cig0IcTqHedbtyqcPl3QrMP7u2CN7xa6Zki
- GU0OzViYqAhyl7_UyJv5fx.mIJBuhlyWjGXpuYEsbGIIQZRvDMaQWdNN97_A8D5sQGXUFqFA_t9N
- PahFpkPbL9nTwASnZCIg.PiKSEBXq1hSJjDhmwisLbwk6N5oyVIq5JfYa_nEDCUGC4kqcBlMa4WX
- gRWxRo7kyfZqW3zcYzREDGVABWU_EPYDuQf1jaG1lnbAkeMzc0Fb.wgy75CAv.TeF5smO8Y9Frcx
- j7jDXa9HTzw4nhhAVStyOMIblZkm5FdxHs31JKQ7qRQnRfGyAUIh.W.Qcmj4kVUyJKhy4w6czzb5
- DVaqTWGA.UK7aL5PNxGl5xzOoV3yBUxhDHLgH2uMLMQ.IrHdd0p5pckr0CbVoUUebTenqNfRru6t
- kqqcPv1DBG8.bsl6zfzR6cAIv9tV_E61ztq3yx._.g84CTmrtN3e2siKvDRkYirvmvbT7i13JgIh
- ln.cLziX9Tmy28NTAhMtyn1S16I36kxhMVBei1nsboqze3myIGfVbQ.rNWZG3ZUO92ZLwCsfaZ8B
- 1XUr5xnIbFNJyA_cS44do9_M1yTnsHkVtxWZ83Z60qogYmn2kVbL3RGWnywR_t5HlzPTjBw.AMnR
- C.De_zWcEs.uE2bWfuYKm3zs3nHeNF4kXiR6A3AsGQnkFfm2ymw7HLkUjrU_J3R2owUTOW8Vgalz
- paS.1GLsGrdnGCc_Vfiyjcd6rhyWnHeW1BUAOtvo3qofQUtnSFAwy2U7v9bUmRgwlqznFD.vCnr9
- GZnPwELe2xY0q0ZqKHtZNYkIIQtqA8emWZoQ07W5x3QNIovMWCh.EmAijmHaieqiOIdWN6eFCfxe
- bkpGlRhl9SCIUmKv_5TbDw5WqOl.GwEA.oXs8Q2m9o48MuLMrYukRE1WYoU8doqPLxbyvkGRfgnl
- ldKGO2W7QhhnTxipccCnjUeQniPnC704zibYtIzzAkWncdDFNz0.GTRh7GpDfh_Fca9o8nJkIOsd
- MculkKYU_kbhIlGhA809PoMcyU412p8AyknQRMdaeZwkwY_TopwzDC.p2Zkvg8GOY1pgwE9H7EJi
- RrF3hn2STcyeavp.8KztzgDVckJaLKMNfrxdva34qm866fe66eIX770BWaMaV91zGWRXHdIa47Lw
- oYN3Qa.TH030zhjzromLhjOn0Rdbe0QCbEbHWZDDRSkdkMb79xXFAprAUEt0hccik0buf4m__AaX
- bRITRdVzb8B7BJzjmgEH.SbL276IcwdP8cOMGk1IKtXUW.zhppz4YD6xs7usSDiaaULXUo_F_13U
- ome4kZNZoXpc7Pf_4DivfKG6nTbhjju57zF8yfQ1gSnupFL.wiKVahv.LsQ--
-X-Sonic-MF: <rubenru09@aol.com>
-X-Sonic-ID: acb42ab2-e095-4176-a93b-893fd3fd75f2
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.gq1.yahoo.com with HTTP; Thu, 17 Apr 2025 17:39:12 +0000
-Received: by hermes--production-ir2-858bd4ff7b-rtzhj (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID a26aee031807310d262ca66c92894fe7;
-          Thu, 17 Apr 2025 17:28:58 +0000 (UTC)
-Message-ID: <6ec1fa494ee823549fb97a48121cb28e37f1cc4d.camel@aol.com>
-Subject: Re: [PATCH] staging: sm750fb: fix instances of camel case
-From: Ruben Wauters <rubenru09@aol.com>
-To: Greg Korah-Hartman <gregkh@linuxfoundation.org>
-Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>, Teddy Wang
-	 <teddy.wang@siliconmotion.com>, Sudip Mukherjee
-	 <sudip.mukherjee@codethink.co.uk>, linux-fbdev@vger.kernel.org, 
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Date: Thu, 17 Apr 2025 18:28:07 +0100
-In-Reply-To: <2025041758-mounting-populace-458f@gregkh>
-References: <20250417153101.353645-1-rubenru09.ref@aol.com>
-	 <20250417153101.353645-1-rubenru09@aol.com>
-	 <2025041758-mounting-populace-458f@gregkh>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2-0ubuntu1 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G3mWB04d"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6e8f43c1fa0so12573046d6.3;
+        Thu, 17 Apr 2025 10:39:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744911557; x=1745516357; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IJOCoAbfESLPGcq0s+NtLK7+By4C1mnScFdgMd+jRPY=;
+        b=G3mWB04dQNC2cRZ6dK3rvIhdzFMac5hwKu1xeA3t/aZnkQGmy/w9d0wx57IX3J5l13
+         iTZsAgpY41+R4GurxgkM6R4Qu1qklFmjiZOGJiZlsjBzZtmVlwdvKHgUUBzMNjC/XGVB
+         f3E32h2yuKX560vaNyhBEZ6TIEAWi/pGC9Y9JlvnACEsk15sTJZCea65jEZTdokxY0fY
+         pcydB8j/Ero6CN4kS/B46DBcJSKF7jjXGKKYaKtnyxH8aRRjUDbURwydUMXXg5bGX6g/
+         9RDRYulxIZp0P+zyU+9aGk+pqZIM91jdSdRHtEUnPdCy9wiM3v3n2DG4V4uaLc8GayCo
+         bxlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744911557; x=1745516357;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IJOCoAbfESLPGcq0s+NtLK7+By4C1mnScFdgMd+jRPY=;
+        b=K0uB+U2s/LPM+GHrT/Zwqc+6tt3SxnAQkL7Sz9aKTYY2ZjYTaaDxqRP9OP2LxFfsi1
+         hXdexfnpUt/L8gKARlQ4c7N8hWs33+GxrMLU2jKvufntfSK6VLaywxLo6iXRK9sWaxih
+         QLRa5BoWPhikN+Bz9wLjYak4+ejp1ETpQqzBK9Zkf89l5PJDCeAxOWza10SPV6DCw7Tg
+         dMMubtblQ9vLsAuEPznzSOdwMCSu08HI0Rl+HXYpUWADZOtXick7tn2n85ubdSTHqil8
+         q2TkxSqBKFbB5zZHc7Xldow/tipFVg6JRgeDM9pcTYHN2hjLg3zrC9IuXE5ce7dhpy4L
+         fH5w==
+X-Forwarded-Encrypted: i=1; AJvYcCWcUnq8L7SfDfupBd1h9ig/hVOr2bhmr5unJ3kIJ0uxEYDPLS81MSsxFbbHFX2IkoXLrmRF4JV1UmB9cKg+@vger.kernel.org, AJvYcCXXZVD0LwwhqUk2LUB1ejRWk9OAYbjVValOOGZmz4mqiaf8d7nBwTR+yYUQFmWsU/XVqowpHaj9@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOEY5SkeL4T8Lllg//3MvJv2d+R4DK8iQM34b9te0CifJV0DSE
+	t00LLTPwE3hYNBY2Ie1l5oCvma83v1+J6najCx79ZoJWE99jCevy3r232spwSIa9HNQO17B+Trw
+	Vh1cQKC2B65v+WFFjJwo/q2MMKu8=
+X-Gm-Gg: ASbGncvFrqY5npei2I7MAq/oSEWwwcdyD6cvVLwOfFIrEoShq+HA724Bx9WubWQyh12
+	O59dLwHmzKkzGuRINVRdKt+9k/N/ny3/7dUiqMWIcL2ldHeZYx3k6G94WWFU2j9LxtYmXG3wxRL
+	ESeumaitxcXh7srwDyed4++XyPUeHcvPIITg==
+X-Google-Smtp-Source: AGHT+IFsg3WsedqYYClWbiPfH/kZJGoZhJCSZlGHr/KP3lAIsVoxNjt85IcMoa3Fs4WaZYg3jHMvlVYzOXx7ANmPxAM=
+X-Received: by 2002:ad4:5b83:0:b0:6e8:fa7a:14ab with SMTP id
+ 6a1803df08f44-6f2b2f22f6amr87091256d6.6.1744911556885; Thu, 17 Apr 2025
+ 10:39:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mailer: WebService/1.1.23665 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
+References: <20250415024532.26632-1-songmuchun@bytedance.com> <20250415024532.26632-22-songmuchun@bytedance.com>
+In-Reply-To: <20250415024532.26632-22-songmuchun@bytedance.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Thu, 17 Apr 2025 10:39:05 -0700
+X-Gm-Features: ATxdqUHfTz5BvLkk64iIoNn6d0Ol7xPi_VzpoY4ezJknMWiDhkMbdgsF-jH6xBs
+Message-ID: <CAKEwX=O4MCgM=CrnWWNaan0g1xmAWeFxXM8=OpKuZM4v3ajDFw@mail.gmail.com>
+Subject: Re: [PATCH RFC 21/28] mm: zswap: prevent lruvec release in zswap_folio_swapin()
+To: Muchun Song <songmuchun@bytedance.com>
+Cc: hannes@cmpxchg.org, mhocko@kernel.org, roman.gushchin@linux.dev, 
+	shakeel.butt@linux.dev, muchun.song@linux.dev, akpm@linux-foundation.org, 
+	david@fromorbit.com, zhengqi.arch@bytedance.com, yosry.ahmed@linux.dev, 
+	chengming.zhou@linux.dev, linux-kernel@vger.kernel.org, 
+	cgroups@vger.kernel.org, linux-mm@kvack.org, hamzamahfooz@linux.microsoft.com, 
+	apais@linux.microsoft.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2025-04-17 at 18:58 +0200, Greg Korah-Hartman wrote:
-> On Thu, Apr 17, 2025 at 04:27:47PM +0100, Ruben Wauters wrote:
-> > As per the kernel style guidelines, and as reported by
-> > checkpatch.pl,
-> > replaced instances of camel case with snake_case where appropriate
-> > and
-> > aligned names in the header with those in the c file.
-> >=20
-> > Signed-off-by: Ruben Wauters <rubenru09@aol.com>
-> > ---
-> > =C2=A0drivers/staging/sm750fb/ddk750_sii164.c | 113 ++++++++++++-------=
--
-> > ----
-> > =C2=A0drivers/staging/sm750fb/ddk750_sii164.h |=C2=A0 26 +++---
-> > =C2=A02 files changed, 69 insertions(+), 70 deletions(-)
-> >=20
-> > diff --git a/drivers/staging/sm750fb/ddk750_sii164.c
-> > b/drivers/staging/sm750fb/ddk750_sii164.c
-> > index 89700fc5dd2e..20c2f386220c 100644
-> > --- a/drivers/staging/sm750fb/ddk750_sii164.c
-> > +++ b/drivers/staging/sm750fb/ddk750_sii164.c
-> > @@ -12,11 +12,11 @@
-> > =C2=A0#define USE_HW_I2C
-> > =C2=A0
-> > =C2=A0#ifdef USE_HW_I2C
-> > -=C2=A0=C2=A0=C2=A0 #define i2cWriteReg sm750_hw_i2c_write_reg
-> > -=C2=A0=C2=A0=C2=A0 #define i2cReadReg=C2=A0 sm750_hw_i2c_read_reg
-> > +=C2=A0=C2=A0=C2=A0 #define I2C_WRITE_REG sm750_hw_i2c_write_reg
-> > +=C2=A0=C2=A0=C2=A0 #define I2C_READ_REG=C2=A0 sm750_hw_i2c_read_reg
->=20
-> Close, but these are really a function name, not a macro, right?
->=20
-> And what sets this #define?=C2=A0 If it's always enabled, then unwrap thi=
-s
-> indirection instead of keeping it around
+On Mon, Apr 14, 2025 at 7:47=E2=80=AFPM Muchun Song <songmuchun@bytedance.c=
+om> wrote:
+>
+> In the near future, a folio will no longer pin its corresponding
+> memory cgroup. So an lruvec returned by folio_lruvec() could be
+> released without the rcu read lock or a reference to its memory
+> cgroup.
+>
+> In the current patch, the rcu read lock is employed to safeguard
+> against the release of the lruvec in zswap_folio_swapin().
+>
+> This serves as a preparatory measure for the reparenting of the
+> LRU pages.
+>
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 
-Will take a look into it, if it turns out that this is in fact actually
-used/different, what would be the best way to name this? checkpatch.pl
-doesn't like the camelCase that's currently there.
+No objections from my end. AFAICT, wrapping this in rcu should not
+break things, and we're in the slow path (disk swapping) anyway, so
+should not be a problem.
 
-> > =C2=A0#else
-> > -=C2=A0=C2=A0=C2=A0 #define i2cWriteReg sm750_sw_i2c_write_reg
-> > -=C2=A0=C2=A0=C2=A0 #define i2cReadReg=C2=A0 sm750_sw_i2c_read_reg
-> > +=C2=A0=C2=A0=C2=A0 #define I2C_WRITE_REG sm750_sw_i2c_write_reg
-> > +=C2=A0=C2=A0=C2=A0 #define I2C_READ_REG=C2=A0 sm750_sw_i2c_read_reg
-> > =C2=A0#endif
-> > =C2=A0
-> > =C2=A0/* SII164 Vendor and Device ID */
-> > @@ -25,7 +25,7 @@
-> > =C2=A0
-> > =C2=A0#ifdef SII164_FULL_FUNCTIONS
-> > =C2=A0/* Name of the DVI Controller chip */
-> > -static char *gDviCtrlChipName =3D "Silicon Image SiI 164";
-> > +static char *dvi_controller_chip_name =3D "Silicon Image SiI 164";
->=20
-> This is a totally different thing.
-
-It is, however I believe it is somewhat more descriptive, I suppose it
-doesn't really matter though and if it should be the same, just made
-snake_case, I can do that.
->=20
-> > =C2=A0#endif
-> > =C2=A0
-> > =C2=A0/*
-> > @@ -37,14 +37,14 @@ static char *gDviCtrlChipName =3D "Silicon Image
-> > SiI 164";
-> > =C2=A0 */
-> > =C2=A0unsigned short sii164_get_vendor_id(void)
-> > =C2=A0{
-> > -	unsigned short vendorID;
-> > +	unsigned short vendor;
->=20
-> Why change this?
-
-Again removing camelCase, kernel style guide says that shorter names
-are preferred (unless I misinterpreted that), I could make it vendor_id
-if that is preferred, I believe the same would be with device_id below
-it.
-
-> This is a mix of lots of different changes, please break things up
-> into
-> "one logical change per patch"
-
-Would it be best to split each rename (function or variable) into a
-separate patch? I do agree it is quite a lot and I was a little unsure
-when sending this one, but I also don't want to make a lot of different
-patches and spam your email with 100 patches at once.
-
-I suppose I could make one rename per patch and do them a few at a
-time, that may take longer though.
->=20
-> thanks,
->=20
-> greg k-h
-
+Anyway:
+Acked-by: Nhat Pham <nphamcs@gmail.com>
