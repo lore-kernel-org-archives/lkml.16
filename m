@@ -1,199 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A092571BD;
-	Thu, 17 Apr 2025 18:02:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744912940; cv=fail; b=lR64KF5LIQTDtPLfw16bH3Q8jKQNDf+Cae/NlHBoSWo3Jlw9Yr04BcWUv7vNpZjhep2nPbA8MJGvqkxhY0Uvv+9jozovZX/OL7nRn7TEPoa1yE460zflf9/V7Hwtr4XMx84txx90kYw+UZ3bB9WqI93u+01DZKhf4UfXuRFz9uQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744912940; c=relaxed/simple;
-	bh=zhNaWddMm9xpa+hkAllmaUoFQt3EK0+6jq/4j5b5L+M=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=StmIzyrhA5WTn5R79RGtKGcoUkhfc5Y39+9g5+OGwlJcTehrUDq4hnTvdiQc3mYZ+pgTuiwImRAkBg6AK5yGOiitc8qqHHoJUBdDq7oJT8Qt+dlSJQV943jAfww6nTh7/Y9NFg4/Di8U0pS9Ce1pSuQFfauQkqCQv/dVBAlVZXg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jUhEcBsm; arc=fail smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6DD223710;
+	Thu, 17 Apr 2025 18:03:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744913008; cv=none; b=TRl5FTfc3u0PyWIvceQ8HidELrjowMocPC2q6XPE7HhQDl6agaGKhMGSh4yMYkua++CClE1kt/tB4R/kra5BrV1lyLTrpkoPdLX/voM5/ichHu0Zv8sO+zSOTidYhEPqBbADh6yKltpUf27MB00WrDOZ/nHc/E33wz2tNeiknbc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744913008; c=relaxed/simple;
+	bh=q/YUMyvtA4CGWflwbOipWzxrfqKCWKATN9nfNhn442w=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=uRxlaFnNODpUpVI+4kvzkq1BL7vA3pDjiZeXnOtAN0WT0mcr8R+W/tDETgjSAiRkMQ4d0gmT+5Hzwdc4mHfSA4QF3JyQSii+3DmXMdEXT0lc9DHt9T2pxyE+63WP7vaZETkAGwatZqzaBxrHJCj4ZFwsnN4PPpxz3Z5eZvCgxX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PUYX0SbC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sCgOLh8R; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jUhEcBsm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744912939; x=1776448939;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=zhNaWddMm9xpa+hkAllmaUoFQt3EK0+6jq/4j5b5L+M=;
-  b=jUhEcBsmrV5xNko+oQk/2j+mLOLqcQHp8EUsfink9WvvpSDWZMeH5ODQ
-   o8djZemOph69bzkfFMSBGObk4MM5R1CyGF+WnMJSn0GSfqyZP3vvycJvQ
-   gnWcqoadXqcvvl9fvyOFLrpSQBjJhkV928ycN2YtOY2GGjGJjM/8MjaLo
-   TjNeXH1wTqt5xbM+pZZ0B9vIMzXSCIvbz5kitEM/Uvyv9H7iY7J/IFzQL
-   cMGd2kcwJcD7IQ8mS+BUBbF3edzt2U+Xbl5CiMEZK3bMjLcg1JD9Sie14
-   F5023OCegvnrxpX1erW22c1n6z3tWClGBPJ1BNgz/k0abK8lQpePWNrJY
-   A==;
-X-CSE-ConnectionGUID: GCytVDP9Sperx5Qde9ImhA==
-X-CSE-MsgGUID: pf+ySMe4Rgm6NIv1U7AbtQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="69024760"
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="69024760"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 11:02:18 -0700
-X-CSE-ConnectionGUID: G35VfcwhTuO/3k/Y/hIXvw==
-X-CSE-MsgGUID: SLk4LCadSGmYHusmv0ZfVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="131194137"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 11:02:17 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 17 Apr 2025 11:02:16 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 17 Apr 2025 11:02:16 -0700
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.48) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 17 Apr 2025 11:02:13 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WuwqVyssEiQKqLKCb60XdTRL8vbV/fFTnAjLMNECECz7WoNAp4i0u4271g9bx687DG+1gBtQeTxErJJjZ3jFciQ//oidJQpIPfbuhj9yvZW6zswaAosJZbBUk90t/QJgPl2t9bhTg+LWUO5eOVqJKKqxflOIGqr9x7H265/d9sl/AMRt9wVlx++WKIJjVESseVkuwSDYwcnsapmfFke7ozysqrXqBz9F7NGhegNZ0bhE8zJRb0iv4BR1C/5blnvADC2ommmpy1RA9lAHoXlY3AU3RI2pHs0NinW9xSgRLV+p7NYZOriLScHwwOcBVuG5uRthT0HsT68kSZ3aQsQTUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hoVWgLbWKgxGdg4lbkYBKlxf0qDlagZbxkBGcRi7lTk=;
- b=VGIELAcGFDomA8rD4Pjg/q95/Re0rIfQSytEh5MR4ycMtETDUZpCEiAYwBOAhY8HgqnayySnfJg0ewnoo66xEUDs1XsrrxONayMbJ7jZfSu5922pKpL18IEgatvMpoDSldp1owwpqrXPuirzX7HoADjFHRLsiGeBmdl4u7MvjQOujBOio5Lmw+v29MFHYujyTmafEJx2r0gJbNnfrYo9BELIV3h0Tvv0zwEBSGpT/NYky3QihxGRGZAC+tTvk4eVV7Zu4PL4lfVwUijJJfcsTBbCTrb7R5JbCFtP1co4LnTArENCBtph1dhpdozZu8KJuf+AiToIl6TchtsftB1j2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH7PR11MB6380.namprd11.prod.outlook.com (2603:10b6:510:1f8::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Thu, 17 Apr
- 2025 18:01:58 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8655.022; Thu, 17 Apr 2025
- 18:01:57 +0000
-Date: Thu, 17 Apr 2025 11:01:54 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>, ", Darrick J. Wong"
-	<djwong@kernel.org>, Alison Schofield <alison.schofield@intel.com>
-CC: David Hildenbrand <david@redhat.com>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-fsdevel@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, Alexander Viro <viro@zeniv.linux.org.uk>,
-	"Christian Brauner" <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Dan
- Williams <dan.j.williams@intel.com>, Matthew Wilcox <willy@infradead.org>,
-	"Alistair Popple" <apopple@nvidia.com>, Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v1] fs/dax: fix folio splitting issue by resetting old
- folio order + _nr_pages
-Message-ID: <680142129141c_130fd294f7@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20250410091020.119116-1-david@redhat.com>
- <Z_gYIU7Nq-YDYnc7@aschofie-mobl2.lan>
- <20250417034406.GF25659@frogsfrogsfrogs>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250417034406.GF25659@frogsfrogsfrogs>
-X-ClientProxiedBy: MW4P220CA0007.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:303:115::12) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PUYX0SbC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sCgOLh8R"
+Date: Thu, 17 Apr 2025 18:03:24 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744913005;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=pJjzOrk/Lt+dViISsPl7b5Bl4SuARsrqdBzGJXbcJuc=;
+	b=PUYX0SbCB6eiQFaSAQWB0VM/o0lMGWduxnzFxn9UndCXlj0aByfMf0TwepOJTMfwclPgmR
+	lrgBuYFjK8qrcVmH0NZ+npnsMTmN/HtssGPtRgvZrIr/Tdc7Pi8ky34TsfElNCdCYGUMg7
+	leJHw6FkuF/j355gB7QwMM041roU1BpkARr/O8liV1ebKkr5AZadUE2dhdcsG6slzOXX/H
+	KwlbTNFZqaTpbFbhd3Ck0R3FcvdNOOyMYpvcq8dFT3h1w6q1Zu/pC4RmWS2hsk+4W/8ZfI
+	1Uy2xEklJNrJopAW+FsygsO/bMTjmzpIkJFi5iFDRLtal9n54gnyHKkFytHEtA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744913005;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=pJjzOrk/Lt+dViISsPl7b5Bl4SuARsrqdBzGJXbcJuc=;
+	b=sCgOLh8RZmqOmylJRKjS/waYTnrRdyDn/JnGCO2vRgHuCRTvtmKcqHAyilCL6cn8VMiED0
+	Dkv1jmED2qqKHuDA==
+From: "tip-bot2 for Dave Hansen" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/mm] x86/mm: Remove duplicated PMD preallocation macro
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH7PR11MB6380:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7f048be8-4332-4505-5648-08dd7dd9f1cf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?4AuS5dNKJ9r4bUWyY3SZX0VqaYw55pn6FZfRuBx6ONVlCJQzU+TCUER9ou4C?=
- =?us-ascii?Q?ipSEZLInyQniseBg37RryZg0zm2VryKrueXkQWv2ciTHnJLZni5CpoGNKPkz?=
- =?us-ascii?Q?cyFZkXnRfE36XifyXVF2jXA3unr6IAeEBPvRKShmv8FhFt9LhZMNFOTMsGzU?=
- =?us-ascii?Q?yfrM9QIuB6uvG7A022tZVlAbe8v4VCZoVv/8waLIZtIVS/DQTJyIe6ddLSPV?=
- =?us-ascii?Q?xoHj6/1laBt9m7VzKzBDicQGDqS3Pd66qMmg17zix1zjcXHRD8UNT2GZ8Owy?=
- =?us-ascii?Q?s4Urdk06BjQxI/nVPWDkrzgchCErz85pFgx/ULuXKrRVjIvuSciTzCv7HNgw?=
- =?us-ascii?Q?hRf/X6GRpWYnCKZXFtrKcNX0rCI5eIHVh8/JMRDVTlmYbO8NyHR2exLc1A0E?=
- =?us-ascii?Q?8/dE+2Wbmj3c4Hss0e13T1OiROGQSdVOASNfJDV+N3UibGRfl5EVuPVxH5pp?=
- =?us-ascii?Q?97TzNesukWlFKq+EEEPiXRgk9bWiregCwla2iT7DhjeUPmtr+fdok7QvgP9v?=
- =?us-ascii?Q?YmdEQaEl+CWE74iJKrwrngsWNSoGhMZ3i2zKu0wv4KR64kby0On7ghabH1L3?=
- =?us-ascii?Q?oK63bv20o9sqj4fSc0qzF6h9+dV/py6edmHKwQfkoiFBWGgNxIOXiYlPubUF?=
- =?us-ascii?Q?unptBSEXWgbx2gc4GUzckOGnSiqKvjmk8mTWZMUgiIoighjbj8S2pZ4x3LtX?=
- =?us-ascii?Q?qcfBPb5O8KRM3G/0Lbz58kKCyauLxwd3E5Rv565y/X0ln7k/dD8/50xxkIkM?=
- =?us-ascii?Q?nCRQrCwkhFw5UYVOHqGxxRBy+bhXjoXf2osJ+/FdBmoi/F89B6b6beRKd5u6?=
- =?us-ascii?Q?2xS2E/eM4ROMIqurnvN92QHDaS6t8KiYy59usqkqY6nqrkQq7bf5R0UJK30B?=
- =?us-ascii?Q?Ue8tZxfD2X0LnW1DuT7rxdjrZMb/vqmFHYJQJE5EsEmoxIv8iBUnFqaImC66?=
- =?us-ascii?Q?gV0GAuDMy2OFEq7ynP1EHcfPSQeJPV25AyTJv27qrtAtUOubslwVgpkBR/Ul?=
- =?us-ascii?Q?+/8ZQL3eszLWkfFiqFYieXlA29VbDB19cS8FOddvRz/EOUmRWVOIs17hJG9G?=
- =?us-ascii?Q?sKrLS3EFtf36lr74ARDTQPcVOcHAY5WCAtxemDkJmxrqOQxIpdQRzvoRpxUZ?=
- =?us-ascii?Q?pYBBvRv3UicwqYOg6Zp//eXvhLSqDr/jz3KHLVU+JRJCMkzBWLJnevW5zcLV?=
- =?us-ascii?Q?VxBSUV4Zqvchfd6Ez3f67jS2Fthq2AXAaIh+d0JCwtbD4J1dxGgNUiA1xstw?=
- =?us-ascii?Q?MorJbGSPIpXmssCnKVG01TuwZ8k/sn5KlrNa8eiMzbNVmpArI8tqJxNJ7Kot?=
- =?us-ascii?Q?LTOrlDVk38c9tRZWneZE3AY7Ghyg95qivu28wrM1LlMr31pbcr1XgmbgS5O2?=
- =?us-ascii?Q?tTQkOqUhYtH/PD6RNvW0xUvyMOSZSPoU/86vJhWsKvcaV4PKdIMXvGaVh3+W?=
- =?us-ascii?Q?7MI+7bTUlIc=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?vuGQXLYF5R08E+fUkGDPS4LqmmKN1gW+XoIotaVkqFk4sJGVJ/OgyD6q2pV6?=
- =?us-ascii?Q?kwUQxdvYhrCAmDzK9fzwRDitOSNSBxI9UMrz40nRjS7rA04F5SBDkBZqraTC?=
- =?us-ascii?Q?qogQ7M3m3NAIY9WBUqNUhMcflop4O7fT874Fb5vnJbBB7FX77ngK1G1I5ddi?=
- =?us-ascii?Q?cO89n/Sd9gMtTj/Pr3RXc1l9ApVBiR81JKjXpkzZNTC58Dvb6XJIjKK3uKZR?=
- =?us-ascii?Q?NpsaJj1pkdmOs6mo15Losy6z4dfX/+HJF81dqZaKhJ+amPl1DxRdeoP0aD17?=
- =?us-ascii?Q?+XwWjVpB51YPKkN2oSq0L2BP+GHyli9Ibd2GroAmHKKtj8VHBNG+yVXX3d+k?=
- =?us-ascii?Q?rDJIcgIlCiHp3CG5I21b0N0tJx/8ezuPsopQJnUL0I9rv8Zlbs1kSEfLVP+F?=
- =?us-ascii?Q?BdrVR1NY2Rh9nsXp0v30hxSgWCjaXtQoX49ygBYXtjlGRP7NwxGbrpvpNUEN?=
- =?us-ascii?Q?B3rxwoUE22jD/rILPw8oBHx9rQ3CGRMUG7dENr/jB/PBWJkinPVYy3BaWa43?=
- =?us-ascii?Q?gnaJklPAINT4Dk4rm3voj0D786CggjKgEtSrJaH5WINOwUDYb/BMewt71xup?=
- =?us-ascii?Q?v9nDbd50IL2cQbVSTKo5cTVOmtk2aarq2XLpI0UmIOlSsQLXu4eRAQ+Teurh?=
- =?us-ascii?Q?kU1G2YW+9kGQPN7ghFHueqPLnRtl+OCWc7TU4e6/lavPClAhZLJ14TM4hLle?=
- =?us-ascii?Q?WdPSpHC7bbkppAQG+u0Y6nNONlYHBtTmx2Q1pwdhZ2z5e2c+bRfbxW7/xiuI?=
- =?us-ascii?Q?ek3tVUHLW6fb7/5Zlt8MgJbTyULJSfNz82QCecvLX0Gm/XCWFJb8HvBSBlGl?=
- =?us-ascii?Q?MSpor/1kWKYE4bGNtCmuEVUqEgaIVHfV7f6okEvpuZQZJ97gKLBQychxbYWA?=
- =?us-ascii?Q?qvEIVXbSgLGojOu+LzuxIW4cuqK9FEmftdSPK90H0uNobgIdcOVN0LJNZQDb?=
- =?us-ascii?Q?1FAQ8oVHRv1PrGqMinIbsDqX1N1OiUO6VD91zzyORmxkUb5xSmHCxgqxvN2T?=
- =?us-ascii?Q?/Pl+piHUBPwloB933wTaX4OBNgIX4cXMjvEWGUiTQOQBgV6GLuA60JhxSijn?=
- =?us-ascii?Q?Um7QbcQQfctszI0aLe9/j+8u8Q/NhzwADLYVrAQuwkgEoz9RkvnwndUq+8iO?=
- =?us-ascii?Q?XKZhYJCcqwJ+W/8hCrLB9xV5PpdwPO3fNafyAiwbzssVeAKMpG5ub3lsnVCx?=
- =?us-ascii?Q?Xt6tWYNCgAO5cF2t3/JUEyTeEDPZjvV90xjj11AohS2pcQLfVl7xYOUBoNSI?=
- =?us-ascii?Q?Q/dx03LHkeFwwduvDnyXoOxPFbPYrXRb+xJVQTGm0S+L0aXrY315ISCcPNYs?=
- =?us-ascii?Q?fNmewXoR0EtRMhro6j0x//GWk/bJN6t9SmjUv6xNgDn9F6Mh1y8nbmYHd7/a?=
- =?us-ascii?Q?vA7mv7lBZ7tFhZ2CzTtAHLkLUZEzU905JJZqclcA2Z1Z3/73RQOe6QEsivJz?=
- =?us-ascii?Q?O1MvoaUSBQBUrxIQ455cwSQuGd1xtkAYwQjh4V7t+vQ2K63s2svw8f4+tTQq?=
- =?us-ascii?Q?wcfSp4IY5Tpm38wAdPkIVXyAAmKaZ+vS46FUlSaGixOi3vMdY4SWC9qajF0X?=
- =?us-ascii?Q?bBeZvki1MDM1fu789R0j9olvgwtKFt/FqQVyojV1iLqUzP0iSwucL5yZfieq?=
- =?us-ascii?Q?KA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7f048be8-4332-4505-5648-08dd7dd9f1cf
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 18:01:57.7435
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oC5OCUvwkoYDnvdwNUl/HgjTzeQnle5HwYQEN6yzuQBaxZFBOE6oU5WV3fkEMCDDFFsfQSHCtQo/gtCZXdryLWAmFfpqegC3fh5+MLdKgPE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6380
-X-OriginatorOrg: intel.com
+Message-ID: <174491300425.31282.4892024487045944709.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Darrick J. Wong wrote:
-> On Thu, Apr 10, 2025 at 12:12:33PM -0700, Alison Schofield wrote:
-> > On Thu, Apr 10, 2025 at 11:10:20AM +0200, David Hildenbrand wrote:
-> > > Alison reports an issue with fsdax when large extends end up using
-> > > large ZONE_DEVICE folios:
-> > >
-> > 
-> > Passes the ndctl/dax unit tests.
-> > 
-> > Tested-by: Alison Schofield <alison.schofield@intel.com>
-> 
-> This fixes the crash I complained about here:
-> https://lore.kernel.org/linux-fsdevel/20250417030143.GO25675@frogsfrogsfrogs/T/
-> 
-> Can we get a fix queued up for -rc3 if it hasn't been already, please?
-> 
-> Tested-by: "Darrick J. Wong" <djwong@kernel.org>
+The following commit has been merged into the x86/mm branch of tip:
 
-Andrew, please pick this up, I have nothing else pending in the dax
-area.
+Commit-ID:     99b8f0c54f571616d7bf4a776a2863a321c38cb1
+Gitweb:        https://git.kernel.org/tip/99b8f0c54f571616d7bf4a776a2863a321c38cb1
+Author:        Dave Hansen <dave.hansen@linux.intel.com>
+AuthorDate:    Mon, 14 Apr 2025 10:32:42 -07:00
+Committer:     Dave Hansen <dave.hansen@linux.intel.com>
+CommitterDate: Thu, 17 Apr 2025 10:39:25 -07:00
+
+x86/mm: Remove duplicated PMD preallocation macro
+
+MAX_PREALLOCATED_PMDS and PREALLOCATED_PMDS are now identical. Just
+use PREALLOCATED_PMDS and remove "MAX".
+
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lore.kernel.org/all/20250414173242.5ED13A5B%40davehans-spike.ostc.intel.com
+---
+ arch/x86/mm/pgtable.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index f4fa8fa..c1144e2 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -118,7 +118,6 @@ static void pgd_dtor(pgd_t *pgd)
+  * new process's life, we just pre-populate them here.
+  */
+ #define PREALLOCATED_PMDS	PTRS_PER_PGD
+-#define MAX_PREALLOCATED_PMDS	PTRS_PER_PGD
+ 
+ /*
+  * "USER_PMDS" are the PMDs for the user copy of the page tables when
+@@ -154,7 +153,6 @@ void pud_populate(struct mm_struct *mm, pud_t *pudp, pmd_t *pmd)
+ 
+ /* No need to prepopulate any pagetable entries in non-PAE modes. */
+ #define PREALLOCATED_PMDS	0
+-#define MAX_PREALLOCATED_PMDS	0
+ #define PREALLOCATED_USER_PMDS	 0
+ #define MAX_PREALLOCATED_USER_PMDS 0
+ #endif	/* CONFIG_X86_PAE */
+@@ -324,7 +322,7 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
+ {
+ 	pgd_t *pgd;
+ 	pmd_t *u_pmds[MAX_PREALLOCATED_USER_PMDS];
+-	pmd_t *pmds[MAX_PREALLOCATED_PMDS];
++	pmd_t *pmds[PREALLOCATED_PMDS];
+ 
+ 	pgd = _pgd_alloc(mm);
+ 
