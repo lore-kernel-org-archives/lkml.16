@@ -1,133 +1,329 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99BC61E4B2
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 21:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893E91CEADB
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 21:45:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744926268; cv=none; b=cqnoqoiortg8T8tGq9n/+r1nW04S2UU4wWG5rbj2nDq0sUOMoZbonhdQfFk5/NDnS9NN6F8aXzF6qcyG6qRxqXNHhwBs23XQxeKPqEnAyL2QGIRmUISLV21Nf8RaPuDec55EzcQ9mDy08qSiGhTNdxM/uw1Z8LUJXS0Ht2tpVPA=
+	t=1744926354; cv=none; b=jhLXGM7TTQqUpFzGpEGC6M/6uIviu+Du3kKVANSyuW4zhJMvglWhH4POkqhT4KNZDTR4JnpzEwiw3WPWzqgEGhAiBHBVLwlVXKpPFViWMwytfBwy1KaDdhz8BeKNeH1GfypFrthKFby5PDs0Y04iW/0e3PGIieJo8q94ESfJfDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744926268; c=relaxed/simple;
-	bh=Z8H0UeKV6n4GNYqtcRBzd5m/l0uFXnW7YgjPaymZP0Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UWJg7bDsheKMrxB1T29HKx1qUG3eik5Bk7qYEJcT08/4gR1mgqq1xuI1n+PhaXQ1lc7SGSN/9tr8+6QNWi7uE/iY+dDt+Bp8THc+Co/3ezUJI3b0h2SkUMudUToXMrxpItjlkjYqsFryewLy8S/TypZR8pvAx3LKmWFHl+CS+DM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=e/P01wFr; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1744926354; c=relaxed/simple;
+	bh=xHJ0U/NNew0D9559C+9DS7UY5fxxKEpGxBszJk6LAB4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DiZ+pJHrBti9ad5dN7xZeTcGhBgWoXjXFcK5N1adLNlfrriFoD7aq3+OeozAsWWM0cXJuxqSk32P8SV99xaojPbqKzU7nublssgOsEIZyRLhE+webPJQROUZZKbCJ6OD/Q9uxLSoCy6nCVaJFNjyUNFpVMilIwkTbLfhNvC0wNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fWi9QmVW; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="e/P01wFr"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c1ef4acf2so853270f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:44:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744926264; x=1745531064; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uBFmVEPSVrHwnGq833HFyEFbm1Am5W1x46GKoIrb/uQ=;
-        b=e/P01wFrfoBO+x0OXHV3KMVKiizt5wD70nDAS6nNgTtJ8a1Kj61ppm2vc3EmiqXIGE
-         /yuYutL/+stn0/dMQLT5ZuPIcavE0C9jbg2hFY/juDV2xbs7+JUWYbJZYGFvYJdsZQYp
-         7gX52ddhfOx612NBffYFPdCVtxv7MzDs6kLRbCy75CJ6OD94SGYPsTNd4usUW5+H8pkD
-         n/VY1iUkXmT0SO2RlvQlDHk0JBXuazXroillKvyA36XVE8qHh0mfHfNedk9mWPT3rhr6
-         hoY3VxVcZyQl2uocpovU8aYtFMvhKNLDbrRZ/XbR5L8OpupBNmjdKcTQtwPDmedWOjQO
-         C9hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744926264; x=1745531064;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uBFmVEPSVrHwnGq833HFyEFbm1Am5W1x46GKoIrb/uQ=;
-        b=TRJ4T3lj/nbZrAzCynza3YDp7Q/kwRE7N/FsxbhP77+cxVu/6AKIVg+1LQ1eAIIMV/
-         5Evny8uZCfgRKJYT58b1IUdXqsMUPvkf0NP3DPm/SDTOHjwgzcWtXGysEAWqSnwE0+aB
-         IFByseVcbv0Ag1n81IrFrvgafuvrW+vor/O3vLQCMDHmDJOEfFCqPRbPj9BsDHedeTrR
-         HxLtBDNW0+QoqPNQBsnPYVsGAZX5yDo/prtwfCHr397OQYArSAifMgkb3YkZIvFs0OCz
-         9zzAT5fbS0ewLJ9U/6ZVGGOyZVGbQ9/zjLz6Da5T8bbK/sfJkdR+1W50LTRFEC+eEGu4
-         iyYA==
-X-Forwarded-Encrypted: i=1; AJvYcCVTSnV15k+2r3dLQsH+W6Nj0u/MIUN8K1dRmrFyAjuYSzMz9Fbz3TLEEbAcDzK+OIxesxU1AD3R7L/tt5Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzBzzkHJWY1uG+uqXmehZ+Ry3dvgCgsXlFT3voAxUGSA6QK1EW
-	ZNVk4bTb5RKMZlPPGwx8GIRuKXfbCR5njmLGSDr6yF8hEpYZaQrOir0LeywmNHY=
-X-Gm-Gg: ASbGnctMc0EifvjgCA5NIBGNj+4uH+087CfQmekAFLu3nfijei1qe1VvJCZaiQps8Dl
-	Dgq+iG7RU8pDkm5QB1PsBOVHfyMtiv0SLU3j7uJUqU7aAXwjbM78t2iPFH92mQ+tIRA6SZv5f+k
-	lUsAt7jqtLU6cjL8dHYkP9aACFK+/3oRgm33MIboKls9VnEN/SnjWAJwdhYuv/1PlHdEXr75I3H
-	qqeRJhQ3llSgO7eaS++2n92hSbMcx8h1tUNXHn2gozS/zjSkzWUCJZU+bBKNWfHujpuQSfquscW
-	DouIa/UBiKyrXgiiNcHTArQ6uhuFCOT8OE3hAw5TJdsXjaDwU2vzw1dS7dOwsPD18+CYwqwB3u/
-	kYSJyub1J29pHNweI4CPFOqN+7dDQ
-X-Google-Smtp-Source: AGHT+IHTF5EMJwHhbB9yGSoZvy8o4ivHEImtkv1Z3X5htHr/S3sX8LVDdG42TvQEzNml/ZWrzgECLQ==
-X-Received: by 2002:a05:6000:4a11:b0:39c:dcc:f589 with SMTP id ffacd0b85a97d-39efba3d0d6mr312407f8f.20.1744926263900;
-        Thu, 17 Apr 2025 14:44:23 -0700 (PDT)
-Received: from [192.168.0.2] (host-87-15-70-119.retail.telecomitalia.it. [87.15.70.119])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406acc31fbsm4203375e9.32.2025.04.17.14.44.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 14:44:23 -0700 (PDT)
-From: Angelo Dureghello <adureghello@baylibre.com>
-X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
-Date: Thu, 17 Apr 2025 23:42:51 +0200
-Subject: [PATCH] iio: adc: ad7606: fix serial register access
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fWi9QmVW"
+Date: Thu, 17 Apr 2025 21:45:29 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744926337;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YyL22TIdx0Q5a8q6LIr4f7OFCQiot5vdD9q+5r2Pq1M=;
+	b=fWi9QmVWTQXLS+cHrsXzp9VdFCl1Wu6eF3gWaUI/LYpxjL8da362t/2VrISfu29y/nqiFp
+	7ppv8G5hA1hR6BA2OWNgdTxsQc/elTxKxO3iQ+TP9ZtPCI050IpT+KTUCT2gOJ1a/ZG7Xv
+	Rvu6+PRuCarcI1mA0/+dFIUbp5DvO5Q=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Kairui Song <ryncsn@gmail.com>
+Cc: Muchun Song <muchun.song@linux.dev>,
+	Muchun Song <songmuchun@bytedance.com>, hannes@cmpxchg.org,
+	mhocko@kernel.org, shakeel.butt@linux.dev,
+	akpm@linux-foundation.org, david@fromorbit.com,
+	zhengqi.arch@bytedance.com, yosry.ahmed@linux.dev,
+	nphamcs@gmail.com, chengming.zhou@linux.dev,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, hamzamahfooz@linux.microsoft.com,
+	apais@linux.microsoft.com, yuzhao@google.com
+Subject: Re: [PATCH RFC 00/28] Eliminate Dying Memory Cgroup
+Message-ID: <aAF2eUG26_xDYIDU@google.com>
+References: <20250415024532.26632-1-songmuchun@bytedance.com>
+ <CAMgjq7BAfh-op06++LEgXf4UM47Pp1=ER+1WvdOn3-6YYQHYmw@mail.gmail.com>
+ <F9BDE357-C7DA-4860-A167-201B01A274FC@linux.dev>
+ <CAMgjq7D+GXce=nTzxPyR+t6YZSLWf-8eByo+0NpprQf61gXjPA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250417-wip-bl-ad7606-fix-reg-access-v1-1-0ce341f3cfc3@baylibre.com>
-X-B4-Tracking: v=1; b=H4sIANp1AWgC/x3MQQqAIBBA0avErBtQsayuEi1MpxqICgcqiO6et
- Hzw+Q8IJSaBrngg0cnC+5ahywLC4reZkGM2GGUqZbXDiw8cV/TR1arGiW9MNKMPgUTQmTYYbV0
- T9QR5cSTKxb/vh/f9AI8SdiNuAAAA
-X-Change-ID: 20250417-wip-bl-ad7606-fix-reg-access-729c21478d1f
-To: Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>, Beniamin Bia <beniamin.bia@analog.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Angelo Dureghello <adureghello@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1229;
- i=adureghello@baylibre.com; h=from:subject:message-id;
- bh=hXaDn6noe6picTrePR7Qia5Jgk/9c/68JzwbdzSufT0=;
- b=owGbwMvMwCXGf3bn1e/btlsznlZLYshgLL2zTOLQK545X1dMWbPtgMDzOFO7C7XSFycYvLOf0
- VTUwfy5oKOUhUGMi0FWTJGlLjHCJPR2qJTyAsbZMHNYmUCGMHBxCsBEnpxh+Cvx/9TmK7un6JZ9
- ydn09M3XP6tkIrVnnFz/Mv2Jn6Cm+fJaRoZVK65nKxqyJHSHtW11YogpWnPqUI6flZIS64H5tzs
- 5m3gA
-X-Developer-Key: i=adureghello@baylibre.com; a=openpgp;
- fpr=703CDFAD8B573EB00850E38366D1CB9419AF3953
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMgjq7D+GXce=nTzxPyR+t6YZSLWf-8eByo+0NpprQf61gXjPA@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-From: Angelo Dureghello <adureghello@baylibre.com>
+On Fri, Apr 18, 2025 at 02:22:12AM +0800, Kairui Song wrote:
+> On Tue, Apr 15, 2025 at 4:02 PM Muchun Song <muchun.song@linux.dev> wrote:
+> >
+> >
+> >
+> > > On Apr 15, 2025, at 14:19, Kairui Song <ryncsn@gmail.com> wrote:
+> > >
+> > > On Tue, Apr 15, 2025 at 10:46 AM Muchun Song <songmuchun@bytedance.com> wrote:
+> > >>
+> > >> This patchset is based on v6.15-rc2. It functions correctly only when
+> > >> CONFIG_LRU_GEN (Multi-Gen LRU) is disabled. Several issues were encountered
+> > >> during rebasing onto the latest code. For more details and assistance, refer
+> > >> to the "Challenges" section. This is the reason for adding the RFC tag.
+> > >>
+> > >> ## Introduction
+> > >>
+> > >> This patchset is intended to transfer the LRU pages to the object cgroup
+> > >> without holding a reference to the original memory cgroup in order to
+> > >> address the issue of the dying memory cgroup. A consensus has already been
+> > >> reached regarding this approach recently [1].
+> > >>
+> > >> ## Background
+> > >>
+> > >> The issue of a dying memory cgroup refers to a situation where a memory
+> > >> cgroup is no longer being used by users, but memory (the metadata
+> > >> associated with memory cgroups) remains allocated to it. This situation
+> > >> may potentially result in memory leaks or inefficiencies in memory
+> > >> reclamation and has persisted as an issue for several years. Any memory
+> > >> allocation that endures longer than the lifespan (from the users'
+> > >> perspective) of a memory cgroup can lead to the issue of dying memory
+> > >> cgroup. We have exerted greater efforts to tackle this problem by
+> > >> introducing the infrastructure of object cgroup [2].
+> > >>
+> > >> Presently, numerous types of objects (slab objects, non-slab kernel
+> > >> allocations, per-CPU objects) are charged to the object cgroup without
+> > >> holding a reference to the original memory cgroup. The final allocations
+> > >> for LRU pages (anonymous pages and file pages) are charged at allocation
+> > >> time and continues to hold a reference to the original memory cgroup
+> > >> until reclaimed.
+> > >>
+> > >> File pages are more complex than anonymous pages as they can be shared
+> > >> among different memory cgroups and may persist beyond the lifespan of
+> > >> the memory cgroup. The long-term pinning of file pages to memory cgroups
+> > >> is a widespread issue that causes recurring problems in practical
+> > >> scenarios [3]. File pages remain unreclaimed for extended periods.
+> > >> Additionally, they are accessed by successive instances (second, third,
+> > >> fourth, etc.) of the same job, which is restarted into a new cgroup each
+> > >> time. As a result, unreclaimable dying memory cgroups accumulate,
+> > >> leading to memory wastage and significantly reducing the efficiency
+> > >> of page reclamation.
+> > >>
+> > >> ## Fundamentals
+> > >>
+> > >> A folio will no longer pin its corresponding memory cgroup. It is necessary
+> > >> to ensure that the memory cgroup or the lruvec associated with the memory
+> > >> cgroup is not released when a user obtains a pointer to the memory cgroup
+> > >> or lruvec returned by folio_memcg() or folio_lruvec(). Users are required
+> > >> to hold the RCU read lock or acquire a reference to the memory cgroup
+> > >> associated with the folio to prevent its release if they are not concerned
+> > >> about the binding stability between the folio and its corresponding memory
+> > >> cgroup. However, some users of folio_lruvec() (i.e., the lruvec lock)
+> > >> desire a stable binding between the folio and its corresponding memory
+> > >> cgroup. An approach is needed to ensure the stability of the binding while
+> > >> the lruvec lock is held, and to detect the situation of holding the
+> > >> incorrect lruvec lock when there is a race condition during memory cgroup
+> > >> reparenting. The following four steps are taken to achieve these goals.
+> > >>
+> > >> 1. The first step  to be taken is to identify all users of both functions
+> > >>   (folio_memcg() and folio_lruvec()) who are not concerned about binding
+> > >>   stability and implement appropriate measures (such as holding a RCU read
+> > >>   lock or temporarily obtaining a reference to the memory cgroup for a
+> > >>   brief period) to prevent the release of the memory cgroup.
+> > >>
+> > >> 2. Secondly, the following refactoring of folio_lruvec_lock() demonstrates
+> > >>   how to ensure the binding stability from the user's perspective of
+> > >>   folio_lruvec().
+> > >>
+> > >>   struct lruvec *folio_lruvec_lock(struct folio *folio)
+> > >>   {
+> > >>           struct lruvec *lruvec;
+> > >>
+> > >>           rcu_read_lock();
+> > >>   retry:
+> > >>           lruvec = folio_lruvec(folio);
+> > >>           spin_lock(&lruvec->lru_lock);
+> > >>           if (unlikely(lruvec_memcg(lruvec) != folio_memcg(folio))) {
+> > >>                   spin_unlock(&lruvec->lru_lock);
+> > >>                   goto retry;
+> > >>           }
+> > >>
+> > >>           return lruvec;
+> > >>   }
+> > >>
+> > >>   From the perspective of memory cgroup removal, the entire reparenting
+> > >>   process (altering the binding relationship between folio and its memory
+> > >>   cgroup and moving the LRU lists to its parental memory cgroup) should be
+> > >>   carried out under both the lruvec lock of the memory cgroup being removed
+> > >>   and the lruvec lock of its parent.
+> > >>
+> > >> 3. Thirdly, another lock that requires the same approach is the split-queue
+> > >>   lock of THP.
+> > >>
+> > >> 4. Finally, transfer the LRU pages to the object cgroup without holding a
+> > >>   reference to the original memory cgroup.
+> > >>
+> > >
+> > > Hi, Muchun, thanks for the patch.
+> >
+> > Thanks for your reply and attention.
+> >
+> > >
+> > >> ## Challenges
+> > >>
+> > >> In a non-MGLRU scenario, each lruvec of every memory cgroup comprises four
+> > >> LRU lists (i.e., two active lists for anonymous and file folios, and two
+> > >> inactive lists for anonymous and file folios). Due to the symmetry of the
+> > >> LRU lists, it is feasible to transfer the LRU lists from a memory cgroup
+> > >> to its parent memory cgroup during the reparenting process.
+> > >
+> > > Symmetry of LRU lists doesn't mean symmetry 'hotness', it's totally
+> > > possible that a child's active LRU is colder and should be evicted
+> > > first before the parent's inactive LRU (might even be a common
+> > > scenario for certain workloads).
+> >
+> > Yes.
+> >
+> > > This only affects the performance not the correctness though, so not a
+> > > big problem.
+> > >
+> > > So will it be easier to just assume dying cgroup's folios are colder?
+> > > Simply move them to parent's LRU tail is OK. This will make the logic
+> > > appliable for both active/inactive LRU and MGLRU.
+> >
+> > I think you mean moving all child LRU list to the parent memcg's inactive
+> > list. It works well for your case. But sometimes, due to shared page cache
+> > pages, some pages in the child list may be accessed more frequently than
+> > those in the parent's. Still, it's okay as they can be promoted quickly
+> > later. So I am fine with this change.
+> >
+> > >
+> > >>
+> > >> In a MGLRU scenario, each lruvec of every memory cgroup comprises at least
+> > >> 2 (MIN_NR_GENS) generations and at most 4 (MAX_NR_GENS) generations.
+> > >>
+> > >> 1. The first question is how to move the LRU lists from a memory cgroup to
+> > >>   its parent memory cgroup during the reparenting process. This is due to
+> > >>   the fact that the quantity of LRU lists (aka generations) may differ
+> > >>   between a child memory cgroup and its parent memory cgroup.
+> > >>
+> > >> 2. The second question is how to make the process of reparenting more
+> > >>   efficient, since each folio charged to a memory cgroup stores its
+> > >>   generation counter into its ->flags. And the generation counter may
+> > >>   differ between a child memory cgroup and its parent memory cgroup because
+> > >>   the values of ->min_seq and ->max_seq are not identical. Should those
+> > >>   generation counters be updated correspondingly?
+> > >
+> > > I think you do have to iterate through the folios to set or clear
+> > > their generation flags if you want to put the folio in the right gen.
+> > >
+> > > MGLRU does similar thing in inc_min_seq. MGLRU uses the gen flags to
+> > > defer the actual LRU movement of folios, that's a very important
+> > > optimization per my test.
+> >
+> > I noticed that, which is why I asked the second question. It's
+> > inefficient when dealing with numerous pages related to a memory
+> > cgroup.
+> >
+> > >
+> > >>
+> > >> I am uncertain about how to handle them appropriately as I am not an
+> > >> expert at MGLRU. I would appreciate it if you could offer some suggestions.
+> > >> Moreover, if you are willing to directly provide your patches, I would be
+> > >> glad to incorporate them into this patchset.
+> > >
+> > > If we just follow the above idea (move them to parent's tail), we can
+> > > just keep the folio's tier info untouched here.
+> > >
+> > > For mapped file folios, they will still be promoted upon eviction if
+> > > their access bit are set (rmap walk), and MGLRU's table walker might
+> > > just promote them just fine.
+> > >
+> > > For unmapped file folios, if we just keep their tier info and add
+> > > child's MGLRU tier PID counter back to the parent. Workingset
+> > > protection of MGLRU should still work just fine.
+> > >
+> > >>
+> > >> ## Compositions
+> > >>
+> > >> Patches 1-8 involve code refactoring and cleanup with the aim of
+> > >> facilitating the transfer LRU folios to object cgroup infrastructures.
+> > >>
+> > >> Patches 9-10 aim to allocate the object cgroup for non-kmem scenarios,
+> > >> enabling the ability that LRU folios could be charged to it and aligning
+> > >> the behavior of object-cgroup-related APIs with that of the memory cgroup.
+> > >>
+> > >> Patches 11-19 aim to prevent memory cgroup returned by folio_memcg() from
+> > >> being released.
+> > >>
+> > >> Patches 20-23 aim to prevent lruvec returned by folio_lruvec() from being
+> > >> released.
+> > >>
+> > >> Patches 24-25 implement the core mechanism to guarantee binding stability
+> > >> between the folio and its corresponding memory cgroup while holding lruvec
+> > >> lock or split-queue lock of THP.
+> > >>
+> > >> Patches 26-27 are intended to transfer the LRU pages to the object cgroup
+> > >> without holding a reference to the original memory cgroup in order to
+> > >> address the issue of the dying memory cgroup.
+> > >>
+> > >> Patch 28 aims to add VM_WARN_ON_ONCE_FOLIO to LRU maintenance helpers to
+> > >> ensure correct folio operations in the future.
+> > >>
+> > >> ## Effect
+> > >>
+> > >> Finally, it can be observed that the quantity of dying memory cgroups will
+> > >> not experience a significant increase if the following test script is
+> > >> executed to reproduce the issue.
+> > >>
+> > >> ```bash
+> > >> #!/bin/bash
+> > >>
+> > >> # Create a temporary file 'temp' filled with zero bytes
+> > >> dd if=/dev/zero of=temp bs=4096 count=1
+> > >>
+> > >> # Display memory-cgroup info from /proc/cgroups
+> > >> cat /proc/cgroups | grep memory
+> > >>
+> > >> for i in {0..2000}
+> > >> do
+> > >>    mkdir /sys/fs/cgroup/memory/test$i
+> > >>    echo $$ > /sys/fs/cgroup/memory/test$i/cgroup.procs
+> > >>
+> > >>    # Append 'temp' file content to 'log'
+> > >>    cat temp >> log
+> > >>
+> > >>    echo $$ > /sys/fs/cgroup/memory/cgroup.procs
+> > >>
+> > >>    # Potentially create a dying memory cgroup
+> > >>    rmdir /sys/fs/cgroup/memory/test$i
+> > >> done
+> > >>
+> > >> # Display memory-cgroup info after test
+> > >> cat /proc/cgroups | grep memory
+> > >>
+> > >> rm -f temp log
+> > >> ```
+> > >>
+> > >> ## References
+> > >>
+> > >> [1] https://lore.kernel.org/linux-mm/Z6OkXXYDorPrBvEQ@hm-sls2/
+> > >> [2] https://lwn.net/Articles/895431/
+> > >> [3] https://github.com/systemd/systemd/pull/36827
+> > >
+> > > How much overhead will it be? Objcj has some extra overhead, and we
+> > > have some extra convention for retrieving memcg of a folio now, not
+> > > sure if this will have an observable slow down.
+> >
+> > I don't think there'll be an observable slowdown. I think objcg is
+> > more effective for slab objects as they're more sensitive than user
+> > pages. If it's acceptable for slab objects, it should be acceptable
+> > for user pages too.
+> 
+> We currently have some workloads running with `nokmem` due to objcg
+> performance issues. I know there are efforts to improve them, but so
+> far it's still not painless to have. So I'm a bit worried about
+> this...
 
-Fix register read/write routine as per datasheet.
+Do you mind sharing more details here?
 
-When reading multiple consecutive registers, only the first one is read
-properly. This is due to missing chip select between first and second
-16bit transfer.
-
-Add chip select between the two 16bit transfers as per datasheet
-AD7606C-16, rev 0, figure 110.
-
-Fixes: f2a22e1e172f ("iio: adc: ad7606: Add support for software mode for ad7616")
-Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
----
- drivers/iio/adc/ad7606_spi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/iio/adc/ad7606_spi.c b/drivers/iio/adc/ad7606_spi.c
-index 997be483ebb93293481b922e13ece4edb47e940a..bd05357a542cf7234d5bb6b718829d6b720262cd 100644
---- a/drivers/iio/adc/ad7606_spi.c
-+++ b/drivers/iio/adc/ad7606_spi.c
-@@ -103,7 +103,7 @@ static int ad7606_spi_reg_read(struct ad7606_state *st, unsigned int addr)
- 		{
- 			.tx_buf = &st->d16[0],
- 			.len = 2,
--			.cs_change = 0,
-+			.cs_change = 1,
- 		}, {
- 			.rx_buf = &st->d16[1],
- 			.len = 2,
-
----
-base-commit: 8dc6b228d746b1a900bed28568defb2266fa4c43
-change-id: 20250417-wip-bl-ad7606-fix-reg-access-729c21478d1f
-
-Best regards,
--- 
-Angelo Dureghello <adureghello@baylibre.com>
-
+Thanks!
