@@ -1,235 +1,685 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517D78460
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 11:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C06E8460;
+	Thu, 17 Apr 2025 11:38:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744889810; cv=none; b=QAhh6FXTKz4l25Yye2W9fz+OOD34Dq51ZlsjNlc9V9ENnQmsbDd/XzuMxFeDED2uK7f6NiaUAY22578RDiGRaq5FYy9VdULtyoqFTb7zb+mxkxj5y7xAn185nASf01/yHxt8dV4i/3aTy0sPTSzBo3ic8LT8YZOCsVNMBRVyrf4=
+	t=1744889924; cv=none; b=hhXlijEB2Bd96iM5/uQXRp70GHVVkDnJNOIDs9luytQvWpXEgPt1hpND7eMmFKtIcblq2tmOBpVHux7Z6Fi3wWZPvCKbiShVOAPFbwHtPPlNYEjGmdcZvaipTS21B3zQIMjijRATaf+ewPnj+AeHYL2S9UwrV5TmMohaq5JFWT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744889810; c=relaxed/simple;
-	bh=vj6jVvjxRWyCw3NbQk75w2STyREng0KgAnwpjs4u1zw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I7k3oxBdw5HSGz1F/UFWNlpFhCSns8gZLjHm2Jac266zvDdKuszoxv4xWyeDW33dMbd5Uo4EhvvgYXVCibk8dvXcL4rjJEjWgzZWt8KGYYTdV32CCm9JA+N3DQ9tsyMBWuYmgGTsCopFmh1ixDp1ww/sGFzXqLMqPxaTStFJZdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iV5qhPDS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744889924; c=relaxed/simple;
+	bh=FDzo0ra69SUHnhT2dxhXFQWMQGsiUi03WLi5IVRl6Ek=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ionb+cBHLzBDd6KJ6iMdN21n8HPzBnNw5pBInQuLyFYTl2dNWf0Fc9ZVYEv0Kg+ZSOs7/JSbk8FCuFX8MIktUI3aSiG7sWNqt70UZN01JCnLr0fWvLrCh9/+qCTQbw1hIEOes7LJXkwbxzp/3HYY1kmAmB2BZ7Z2GS8pic0cVB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QeYhCD42; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iV5qhPDS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744889807;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=kzx9Eu/WeFq19jl2vTkSNZswgKYF5RL3vB3YRfJwvFQ=;
-	b=iV5qhPDSwACWwpqhlNBPlgkokCLBDxUInDXdoeIoOxgbxATE2jIiABzD4aWl4M2Phe1zPb
-	TBzps8RgWBPCbrq15b/l9pPb9cMwK+KscRiVrLx1mcdHzXkpY9TJ9FtfPvMFb29LKcPVYJ
-	1rWfanYnPvAPYk1+5e0XX9QVEuGHQyI=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-643-vjEZZRCTNiW7TRyvOKaZAg-1; Thu, 17 Apr 2025 07:36:44 -0400
-X-MC-Unique: vjEZZRCTNiW7TRyvOKaZAg-1
-X-Mimecast-MFC-AGG-ID: vjEZZRCTNiW7TRyvOKaZAg_1744889803
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43941ad86d4so2773155e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 04:36:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744889803; x=1745494603;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kzx9Eu/WeFq19jl2vTkSNZswgKYF5RL3vB3YRfJwvFQ=;
-        b=hWm5XCfjDzl+RNKSvgJ4XMPZnqzssklRnyTzjKH18YIZOOchzQLWDLM4assd1kzVDC
-         ZAELz3WOKsyxlT9NJVEUWJq/KgXu9xWxGMpN6DacKq3xoXfkyCpYkgIpJa340SJcPJvJ
-         s0lGjPrIcQ+MELTluyx8wcBZ7rIdx70B270b0MMViMFXu22yySLlsgrvs1cfxQLdhq86
-         0/zUPEpq6YIeV4G6OuHTpCyGya5loIU+8RKbde3x24E2FOD9wF+7voZrDML+mCHCteQU
-         +VNxPnLztLSUOzukAsPPHAe5FZUuqtedGbOOcmVuILatEwKRl2Rcr2T8SU8j1eDlPNjl
-         61nQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVfHplblZjlDFWrzMdH+pjEx+GMHL9OWOpNye1beQlB09KD6qtex3vn/Y+AWXXD5tWgHQ/+Z/pJTNZ8oSE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywsebhy+rboFuCMMiIjs4PjFZCiYav7KBFOFzONnocXH6bw5COQ
-	3vd3myqwIpF+cFu79wGVBcvGcdJbZXarNN4yY5qxuyyZpzjbd6YLxVZDuMCYM062wfOeL5qb0E/
-	+P1GuqARjMia5qP4gwXVW25M1O5loShibbTYHnuJ94AjyirU+tynqhXaoT2jpKg==
-X-Gm-Gg: ASbGncvYWcrORkGE2/odE7F9QqX+b+YAtJJbfTLotpmoUSY9xrbFI96wUPesiHSOHsm
-	pR1yOOqmJKEOTTMuq2KU/oZTKbvnKz+tCsa0qkcDe2TPLBZTMBL+FY3iQpKhi3mYtcElybzuhai
-	4qbiRu4OttyWPIojWX2IbxqRbIGzwrq4vaLTZUyH4RL4oAaWdIBYD1yOkWZrXLJtpwCq7LmZQZZ
-	ZM5VqddO5uq0yyZo3unexp8GD1gTvPBXNZ0t4A/9jvElBT5JOxlmqVzbEmqekOa4RJWRyHNbMEd
-	C0mDOHrcvkhgMKP4YAHZYH+O6NnGoQRr587lqQDk3a4Dxu9iskSoeq7JZS5BsXGAFOwA6Qadwse
-	ZaiTUoZvMORvbunuDERu0aTlg7jxlf9JXfazOASA=
-X-Received: by 2002:a05:6000:1a8a:b0:391:3094:d696 with SMTP id ffacd0b85a97d-39ee5ba0571mr5429299f8f.54.1744889803401;
-        Thu, 17 Apr 2025 04:36:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGe/gNkqzmEXTARV/xkcy3k35IanjkSyZQslxVkUk7XlP0HTpe4AK8oiUQDFWYHHUGHEY/5qA==
-X-Received: by 2002:a05:6000:1a8a:b0:391:3094:d696 with SMTP id ffacd0b85a97d-39ee5ba0571mr5429264f8f.54.1744889802860;
-        Thu, 17 Apr 2025 04:36:42 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c706:2700:abf9:4eac:588c:adab? (p200300cbc7062700abf94eac588cadab.dip0.t-ipconnect.de. [2003:cb:c706:2700:abf9:4eac:588c:adab])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae97b249sm20040789f8f.58.2025.04.17.04.36.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Apr 2025 04:36:42 -0700 (PDT)
-Message-ID: <4828e28d-eb56-449b-83c3-b5b2dc2ac6e2@redhat.com>
-Date: Thu, 17 Apr 2025 13:36:41 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QeYhCD42"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 22297C4CEE4;
+	Thu, 17 Apr 2025 11:38:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744889924;
+	bh=FDzo0ra69SUHnhT2dxhXFQWMQGsiUi03WLi5IVRl6Ek=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=QeYhCD42khS3iefsBDIFoN+qeADOKCuweYFBdXhbU13jnGLgzP+1BMVJRE7yWHMw9
+	 esEYzesQZbj2lE6r1aIDjOd26/us3KJU7Mo4ioCZar9f626MAKCz+7ii/jmi3S040I
+	 e97XWIjpUU42L8VhU0CG6S+oclV1hWadBkALrU8zA7/rVf6lp4HX9sVXrP8hLlLIK6
+	 8Ewso7O6iu36TOamAKDQ1cd7hHTfY+O+yrZg7q+hFJZa8o3d1Ux3dKUY4vhuInhvOu
+	 FrwTpsRKdUR/xld+uzfwgUPrebABc5ZxBgafGHb2+XUXCr8TbzsICWfs3qR5tDOgE/
+	 y55xdqbv+Of2Q==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E022C369B2;
+	Thu, 17 Apr 2025 11:38:44 +0000 (UTC)
+From: Jens Glathe via B4 Relay <devnull+jens.glathe.oldschoolsolutions.biz@kernel.org>
+Date: Thu, 17 Apr 2025 13:38:39 +0200
+Subject: [PATCH] arm64: dts: qcom: x1e80100-lenovo-yoga-slim7x: add
+ retimers, dp altmode support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/huge_memory: fix dereferencing invalid pmd migration
- entry
-To: Gavin Guo <gavinguo@igalia.com>, Hugh Dickins <hughd@google.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, willy@infradead.org,
- ziy@nvidia.com, linmiaohe@huawei.com, revest@google.com,
- kernel-dev@igalia.com, linux-kernel@vger.kernel.org
-References: <20250414072737.1698513-1-gavinguo@igalia.com>
- <27d13454-280f-4966-b694-d7e58d991547@redhat.com>
- <6787d0ea-a1b9-08cf-1f48-e361058eec20@google.com>
- <83f17b85-c9fa-43a0-bec1-22c8565b67ad@redhat.com>
- <98d1d195-7821-4627-b518-83103ade56c0@redhat.com>
- <7d0ef7b5-043b-beca-72a9-6ae98b0d55fb@google.com>
- <05a7d51e-f065-445a-af0e-481f3461a76e@redhat.com>
- <f344d741-962c-48d3-84b7-ce3de5619122@igalia.com>
-Content-Language: en-US
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <f344d741-962c-48d3-84b7-ce3de5619122@igalia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250417-slim7x-retimer-v1-1-5813a7835903@oldschoolsolutions.biz>
+X-B4-Tracking: v=1; b=H4sIAD7oAGgC/x3MQQqAIBBA0avErBNUKqGrRIvMqQbSYiYiCO+et
+ HyL/18QZEKBvnqB8SahIxWYuoJ5m9KKikIxWG1b3ZhOyU7RPYrxooisnPYGO+dNaCyU6GRc6Pm
+ Hw5jzBywC6ytgAAAA
+X-Change-ID: 20250416-slim7x-retimer-70b1e67b1d42
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744889923; l=13597;
+ i=jens.glathe@oldschoolsolutions.biz; s=20240919;
+ h=from:subject:message-id;
+ bh=J6YWAW2wf4sKpbRrC5khUuwPY4J2N1kA7a8SA4AMQZE=;
+ b=5WjpAjOwGwWynfspg+4RvEOtDInkV/o3tsZd3HtV9HMtEAF7NdgXGizmlHEIHHZ81+C8mZIYu
+ KNv6Nhh/za6BfiE4JJZI0vMpMdsJPv/sJ5HSKeDqI2Xv5XnodMiJ4n2
+X-Developer-Key: i=jens.glathe@oldschoolsolutions.biz; a=ed25519;
+ pk=JcRJqJc/y8LsxOlPakALD3juGfOKmFBWtO+GfELMJVg=
+X-Endpoint-Received: by B4 Relay for
+ jens.glathe@oldschoolsolutions.biz/20240919 with auth_id=216
+X-Original-From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+Reply-To: jens.glathe@oldschoolsolutions.biz
 
-On 17.04.25 13:21, Gavin Guo wrote:
-> On 4/17/25 17:04, David Hildenbrand wrote:
->> On 17.04.25 10:55, Hugh Dickins wrote:
->>> On Thu, 17 Apr 2025, David Hildenbrand wrote:
->>>> On 17.04.25 09:18, David Hildenbrand wrote:
->>>>> On 17.04.25 07:36, Hugh Dickins wrote:
->>>>>> On Wed, 16 Apr 2025, David Hildenbrand wrote:
->>>>>>>
->>>>>>> Why not something like
->>>>>>>
->>>>>>> struct folio *entry_folio;
->>>>>>>
->>>>>>> if (folio) {
->>>>>>>    if (is_pmd_migration_entry(*pmd))
->>>>>>>        entry_folio = pfn_swap_entry_folio(pmd_to_swp_entry(*pmd)));
->>>>>>>    else
->>>>>>>     entry_folio = pmd_folio(*pmd));
->>>>>>>
->>>>>>>    if (folio != entry_folio)
->>>>>>>          return;
->>>>>>> }
->>>>>>
->>>>>> My own preference is to not add unnecessary code:
->>>>>> if folio and pmd_migration entry, we're not interested in entry_folio.
->>>>>> But yes it could be written in lots of other ways.
->>>>>
->>>>> While I don't disagree about "not adding unnecessary code" in general,
->>>>> in this particular case just looking the folio up properly might be the
->>>>> better alternative to reasoning about locking rules with conditional
->>>>> input parameters :)
->>>>>
->>>>
->>>> FWIW, I was wondering if we can rework that code, letting the caller
->>>> to the
->>>> checking and getting rid of the folio parameter. Something like this
->>>> (incomplete, just to
->>>> discuss if we could move the TTU_SPLIT_HUGE_PMD handling).
->>>
->>> Yes, I too dislike the folio parameter used for a single case, and agree
->>> it's better for the caller who chose pmd to check that *pmd fits the
->>> folio.
->>>
->>> I haven't checked your code below, but it looks like a much better way
->>> to proceed, using the page_vma_mapped_walk() to get pmd lock and check;
->>> and cutting out two or more layers of split_huge_pmd obscurity.
->>>
->>> Way to go.  However... what we want right now is a fix that can easily
->>> go to stable: the rearrangements here in 6.15-rc mean, I think, that
->>> whatever goes into the current tree will have to be placed differently
->>> for stable, no seamless backports; but Gavin's patch (reworked if you
->>> insist) can be adapted to stable (differently for different releases)
->>> more more easily than the future direction you're proposing here.
->>
->> I'm fine with going with the current patch and looking into cleaning it
->> up properly (if possible).
->>
->> So for this patch
->>
->> Acked-by: David Hildenbrand <david@redhat.com>
->>
->> @Gavin, can you look into cleaning that up?
-> 
-> Thank you for your review. Before I begin the cleanup, could you please
-> confirm the following action items:
-> 
-> Zi Yan's suggestions for the patch are:
-> 1. Replace the page fault with an invalid address access in the commit
->      description.
+From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 
-Yes, that makes sense.
+comparing with CRD and other dts for a more complete support of the 7X
 
-> 
-> 2. Simplify the nested if-statements into a single if-statement to
->      reduce indentation.
-> 
-> David, based on your comment, I understand that you are recommending the
-> entry_folio implementation. Also, from your discussion with Hugh, it
-> appears you agreed with my original approach of returning early when
-> encountering a PMD migration entry, thereby avoiding unnecessary checks.
-> Is that correct? If so, I will keep the current logic. Do you have any
-> additional cleanup suggestions?
+Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+---
+This patch adds the required nodes to support DP Altmode on all three type-c
+ports. The definition is derived from the CRD. Since they are all marked 40Gbps,
+I assume there are 3 PS8830 retimers. 
+This modification is now for ~8 weeks in my tree with little to no complaints. I 
+don't have access to a Yoga Slim 7X, however many people on #aarch64-laptops do 
+and some are using this patch.
+---
+ .../boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts  | 491 ++++++++++++++++++++-
+ 1 file changed, 485 insertions(+), 6 deletions(-)
 
-Yes, the current patch is okay for upstream+stable, but we should look 
-into cleaning that up.
+diff --git a/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts b/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
+index 445d97d67d325853b7dcd2060523e7469ed4e6ea..129ab64c0f915e8f361a9300c2919cf69bbfda29 100644
+--- a/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
++++ b/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
+@@ -7,6 +7,8 @@
+ 
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/gpio-keys.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+ #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+ 
+ #include "x1e80100.dtsi"
+@@ -72,7 +74,15 @@ port@1 {
+ 					reg = <1>;
+ 
+ 					pmic_glink_ss0_ss_in: endpoint {
+-						remote-endpoint = <&usb_1_ss0_qmpphy_out>;
++						remote-endpoint = <&retimer_ss0_ss_out>;
++					};
++				};
++
++				port@2 {
++					reg = <2>;
++
++					pmic_glink_ss0_con_sbu_in: endpoint {
++						remote-endpoint = <&retimer_ss0_con_sbu_out>;
+ 					};
+ 				};
+ 			};
+@@ -101,7 +111,15 @@ port@1 {
+ 					reg = <1>;
+ 
+ 					pmic_glink_ss1_ss_in: endpoint {
+-						remote-endpoint = <&usb_1_ss1_qmpphy_out>;
++						remote-endpoint = <&retimer_ss1_ss_out>;
++					};
++				};
++
++				port@2 {
++					reg = <2>;
++
++					pmic_glink_ss1_con_sbu_in: endpoint {
++						remote-endpoint = <&retimer_ss1_con_sbu_out>;
+ 					};
+ 				};
+ 			};
+@@ -130,7 +148,15 @@ port@1 {
+ 					reg = <1>;
+ 
+ 					pmic_glink_ss2_ss_in: endpoint {
+-						remote-endpoint = <&usb_1_ss2_qmpphy_out>;
++						remote-endpoint = <&retimer_ss2_ss_out>;
++					};
++				};
++
++				port@2 {
++					reg = <2>;
++
++					pmic_glink_ss2_con_sbu_in: endpoint {
++						remote-endpoint = <&retimer_ss2_con_sbu_out>;
+ 					};
+ 				};
+ 			};
+@@ -226,6 +252,150 @@ vreg_nvme: regulator-nvme {
+ 		regulator-boot-on;
+ 	};
+ 
++	vreg_rtmr0_1p15: regulator-rtmr0-1p15 {
++		compatible = "regulator-fixed";
++
++		regulator-name = "VREG_RTMR0_1P15";
++		regulator-min-microvolt = <1150000>;
++		regulator-max-microvolt = <1150000>;
++
++		gpio = <&pmc8380_5_gpios 8 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-0 = <&usb0_pwr_1p15_reg_en>;
++		pinctrl-names = "default";
++
++		regulator-boot-on;
++	};
++
++	vreg_rtmr0_1p8: regulator-rtmr0-1p8 {
++		compatible = "regulator-fixed";
++
++		regulator-name = "VREG_RTMR0_1P8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++
++		gpio = <&pm8550ve_9_gpios 8 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-0 = <&usb0_1p8_reg_en>;
++		pinctrl-names = "default";
++
++		regulator-boot-on;
++	};
++
++	vreg_rtmr0_3p3: regulator-rtmr0-3p3 {
++		compatible = "regulator-fixed";
++
++		regulator-name = "VREG_RTMR0_3P3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpio = <&pm8550_gpios 11 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-0 = <&usb0_3p3_reg_en>;
++		pinctrl-names = "default";
++
++		regulator-boot-on;
++	};
++
++	vreg_rtmr1_1p15: regulator-rtmr1-1p15 {
++		compatible = "regulator-fixed";
++
++		regulator-name = "VREG_RTMR1_1P15";
++		regulator-min-microvolt = <1150000>;
++		regulator-max-microvolt = <1150000>;
++
++		gpio = <&tlmm 188 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-0 = <&usb1_pwr_1p15_reg_en>;
++		pinctrl-names = "default";
++
++		regulator-boot-on;
++	};
++
++	vreg_rtmr1_1p8: regulator-rtmr1-1p8 {
++		compatible = "regulator-fixed";
++
++		regulator-name = "VREG_RTMR1_1P8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++
++		gpio = <&tlmm 175 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-0 = <&usb1_pwr_1p8_reg_en>;
++		pinctrl-names = "default";
++
++		regulator-boot-on;
++	};
++
++	vreg_rtmr1_3p3: regulator-rtmr1-3p3 {
++		compatible = "regulator-fixed";
++
++		regulator-name = "VREG_RTMR1_3P3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpio = <&tlmm 186 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-0 = <&usb1_pwr_3p3_reg_en>;
++		pinctrl-names = "default";
++
++		regulator-boot-on;
++	};
++
++	vreg_rtmr2_1p15: regulator-rtmr2-1p15 {
++		compatible = "regulator-fixed";
++
++		regulator-name = "VREG_RTMR2_1P15";
++		regulator-min-microvolt = <1150000>;
++		regulator-max-microvolt = <1150000>;
++
++		gpio = <&tlmm 189 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-0 = <&usb2_pwr_1p15_reg_en>;
++		pinctrl-names = "default";
++
++		regulator-boot-on;
++	};
++
++	vreg_rtmr2_1p8: regulator-rtmr2-1p8 {
++		compatible = "regulator-fixed";
++
++		regulator-name = "VREG_RTMR2_1P8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++
++		gpio = <&tlmm 126 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-0 = <&usb2_pwr_1p8_reg_en>;
++		pinctrl-names = "default";
++
++		regulator-boot-on;
++	};
++
++	vreg_rtmr2_3p3: regulator-rtmr2-3p3 {
++		compatible = "regulator-fixed";
++
++		regulator-name = "VREG_RTMR2_3P3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpio = <&tlmm 187 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-0 = <&usb2_pwr_3p3_reg_en>;
++		pinctrl-names = "default";
++
++		regulator-boot-on;
++	};
++
+ 	vph_pwr: regulator-vph-pwr {
+ 		compatible = "regulator-fixed";
+ 
+@@ -567,6 +737,178 @@ keyboard@3a {
+ 	};
+ };
+ 
++&i2c1 {
++	clock-frequency = <400000>;
++
++	status = "okay";
++
++	typec-mux@8 {
++		compatible = "parade,ps8830";
++		reg = <0x08>;
++
++		clocks = <&rpmhcc RPMH_RF_CLK5>;
++
++		vdd-supply = <&vreg_rtmr2_1p15>;
++		vdd33-supply = <&vreg_rtmr2_3p3>;
++		vdd33-cap-supply = <&vreg_rtmr2_3p3>;
++		vddar-supply = <&vreg_rtmr2_1p15>;
++		vddat-supply = <&vreg_rtmr2_1p15>;
++		vddio-supply = <&vreg_rtmr2_1p8>;
++
++		reset-gpios = <&tlmm 185 GPIO_ACTIVE_LOW>;
++
++		pinctrl-0 = <&rtmr2_default>;
++		pinctrl-names = "default";
++
++		orientation-switch;
++		retimer-switch;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				retimer_ss2_ss_out: endpoint {
++					remote-endpoint = <&pmic_glink_ss2_ss_in>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++
++				retimer_ss2_ss_in: endpoint {
++					remote-endpoint = <&usb_1_ss2_qmpphy_out>;
++				};
++			};
++
++			port@2 {
++				reg = <2>;
++
++				retimer_ss2_con_sbu_out: endpoint {
++					remote-endpoint = <&pmic_glink_ss2_con_sbu_in>;
++				};
++			};
++		};
++	};
++};
++
++&i2c3 {
++	clock-frequency = <400000>;
++
++	status = "okay";
++
++	typec-mux@8 {
++		compatible = "parade,ps8830";
++		reg = <0x08>;
++
++		clocks = <&rpmhcc RPMH_RF_CLK3>;
++
++		vdd-supply = <&vreg_rtmr0_1p15>;
++		vdd33-supply = <&vreg_rtmr0_3p3>;
++		vdd33-cap-supply = <&vreg_rtmr0_3p3>;
++		vddar-supply = <&vreg_rtmr0_1p15>;
++		vddat-supply = <&vreg_rtmr0_1p15>;
++		vddio-supply = <&vreg_rtmr0_1p8>;
++
++		reset-gpios = <&pm8550_gpios 10 GPIO_ACTIVE_LOW>;
++
++		pinctrl-0 = <&rtmr0_default>;
++		pinctrl-names = "default";
++
++		retimer-switch;
++		orientation-switch;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				retimer_ss0_ss_out: endpoint {
++					remote-endpoint = <&pmic_glink_ss0_ss_in>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++
++				retimer_ss0_ss_in: endpoint {
++					remote-endpoint = <&usb_1_ss0_qmpphy_out>;
++				};
++			};
++
++			port@2 {
++				reg = <2>;
++
++				retimer_ss0_con_sbu_out: endpoint {
++					remote-endpoint = <&pmic_glink_ss0_con_sbu_in>;
++				};
++			};
++		};
++	};
++};
++
++&i2c7 {
++	clock-frequency = <400000>;
++
++	status = "okay";
++
++	typec-mux@8 {
++		compatible = "parade,ps8830";
++		reg = <0x8>;
++
++		clocks = <&rpmhcc RPMH_RF_CLK4>;
++
++		vdd-supply = <&vreg_rtmr1_1p15>;
++		vdd33-supply = <&vreg_rtmr1_3p3>;
++		vdd33-cap-supply = <&vreg_rtmr1_3p3>;
++		vddar-supply = <&vreg_rtmr1_1p15>;
++		vddat-supply = <&vreg_rtmr1_1p15>;
++		vddio-supply = <&vreg_rtmr1_1p8>;
++
++		reset-gpios = <&tlmm 176 GPIO_ACTIVE_LOW>;
++
++		pinctrl-0 = <&rtmr1_default>;
++		pinctrl-names = "default";
++
++		retimer-switch;
++		orientation-switch;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				retimer_ss1_ss_out: endpoint {
++					remote-endpoint = <&pmic_glink_ss1_ss_in>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++
++				retimer_ss1_ss_in: endpoint {
++					remote-endpoint = <&usb_1_ss1_qmpphy_out>;
++				};
++			};
++
++			port@2 {
++				reg = <2>;
++
++				retimer_ss1_con_sbu_out: endpoint {
++					remote-endpoint = <&pmic_glink_ss1_con_sbu_in>;
++				};
++			};
++
++		};
++	};
++};
++
+ &i2c8 {
+ 	clock-frequency = <400000>;
+ 
+@@ -614,6 +956,33 @@ &mdss {
+ 	status = "okay";
+ };
+ 
++&mdss_dp0 {
++	status = "okay";
++};
++
++&mdss_dp0_out {
++	data-lanes = <0 1>;
++	link-frequencies = /bits/ 64 <1620000000 2700000000 5400000000 8100000000>;
++};
++
++&mdss_dp1 {
++	status = "okay";
++};
++
++&mdss_dp1_out {
++	data-lanes = <0 1>;
++	link-frequencies = /bits/ 64 <1620000000 2700000000 5400000000 8100000000>;
++};
++
++&mdss_dp2 {
++	status = "okay";
++};
++
++&mdss_dp2_out {
++	data-lanes = <0 1>;
++	link-frequencies = /bits/ 64 <1620000000 2700000000 5400000000 8100000000>;
++};
++
+ &mdss_dp3 {
+ 	compatible = "qcom,x1e80100-dp";
+ 	/delete-property/ #sound-dai-cells;
+@@ -701,6 +1070,50 @@ &pcie6a_phy {
+ 	status = "okay";
+ };
+ 
++&pm8550_gpios {
++	rtmr0_default: rtmr0-reset-n-active-state {
++		pins = "gpio10";
++		function = "normal";
++		power-source = <1>; /* 1.8V */
++		bias-disable;
++		input-disable;
++		output-enable;
++	};
++
++	usb0_3p3_reg_en: usb0-3p3-reg-en-state {
++		pins = "gpio11";
++		function = "normal";
++		power-source = <1>; /* 1.8V */
++		bias-disable;
++		input-disable;
++		output-enable;
++	};
++};
++
++&pm8550ve_8_gpios {
++	misc_3p3_reg_en: misc-3p3-reg-en-state {
++		pins = "gpio6";
++		function = "normal";
++		bias-disable;
++		input-disable;
++		output-enable;
++		drive-push-pull;
++		power-source = <1>; /* 1.8 V */
++		qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
++	};
++};
++
++&pm8550ve_9_gpios {
++	usb0_1p8_reg_en: usb0-1p8-reg-en-state {
++		pins = "gpio8";
++		function = "normal";
++		power-source = <1>; /* 1.8V */
++		bias-disable;
++		input-disable;
++		output-enable;
++	};
++};
++
+ &pmc8380_3_gpios {
+ 	edp_bl_en: edp-bl-en-state {
+ 		pins = "gpio4";
+@@ -711,6 +1124,17 @@ edp_bl_en: edp-bl-en-state {
+ 	};
+ };
+ 
++&pmc8380_5_gpios {
++	usb0_pwr_1p15_reg_en: usb0-pwr-1p15-reg-en-state {
++		pins = "gpio8";
++		function = "normal";
++		power-source = <1>; /* 1.8V */
++		bias-disable;
++		input-disable;
++		output-enable;
++	};
++};
++
+ &qupv3_0 {
+ 	status = "okay";
+ };
+@@ -919,6 +1343,20 @@ wake-n-pins {
+ 		};
+ 	};
+ 
++	rtmr1_default: rtmr1-reset-n-active-state {
++		pins = "gpio176";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	rtmr2_default: rtmr2-reset-n-active-state {
++		pins = "gpio185";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
+ 	tpad_default: tpad-default-state {
+ 		pins = "gpio3";
+ 		function = "gpio";
+@@ -940,6 +1378,47 @@ reset-n-pins {
+ 		};
+ 	};
+ 
++	usb1_pwr_1p15_reg_en: usb1-pwr-1p15-reg-en-state {
++		pins = "gpio188";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	usb1_pwr_1p8_reg_en: usb1-pwr-1p8-reg-en-state {
++		pins = "gpio175";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	usb1_pwr_3p3_reg_en: usb1-pwr-3p3-reg-en-state {
++		pins = "gpio186";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	usb2_pwr_1p15_reg_en: usb2-pwr-1p15-reg-en-state {
++		pins = "gpio189";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	usb2_pwr_1p8_reg_en: usb2-pwr-1p8-reg-en-state {
++		pins = "gpio126";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	usb2_pwr_3p3_reg_en: usb2-pwr-3p3-reg-en-state {
++		pins = "gpio187";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
+ };
+ 
+ &uart21 {
+@@ -976,7 +1455,7 @@ &usb_1_ss0_dwc3_hs {
+ };
+ 
+ &usb_1_ss0_qmpphy_out {
+-	remote-endpoint = <&pmic_glink_ss0_ss_in>;
++	remote-endpoint = <&retimer_ss0_ss_in>;
+ };
+ 
+ &usb_1_ss1_hsphy {
+@@ -1008,7 +1487,7 @@ &usb_1_ss1_dwc3_hs {
+ };
+ 
+ &usb_1_ss1_qmpphy_out {
+-	remote-endpoint = <&pmic_glink_ss1_ss_in>;
++	remote-endpoint = <&retimer_ss1_ss_in>;
+ };
+ 
+ &usb_1_ss2_hsphy {
+@@ -1040,5 +1519,5 @@ &usb_1_ss2_dwc3_hs {
+ };
+ 
+ &usb_1_ss2_qmpphy_out {
+-	remote-endpoint = <&pmic_glink_ss2_ss_in>;
++	remote-endpoint = <&retimer_ss2_ss_in>;
+ };
 
-See the cleanup RFC patch I posted where we remove the folio check 
-completely. Please let me know if you need more information.
+---
+base-commit: f660850bc246fef15ba78c81f686860324396628
+change-id: 20250416-slim7x-retimer-70b1e67b1d42
 
+Best regards,
 -- 
-Cheers,
+Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 
-David / dhildenb
 
