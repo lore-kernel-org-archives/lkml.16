@@ -1,135 +1,111 @@
-Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D3222A1D5;
-	Thu, 17 Apr 2025 10:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.129.21.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E82A1D63D6;
+	Thu, 17 Apr 2025 10:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744884633; cv=none; b=HFcvwHvyTBK3kLmptryc1mZqzkD7o9PkRW2Fr+bjdDTSSTwi/nx4N72yxTdTTnXruArzcOodT+yW0S2RPdhDi0hghwBvFaH1gVZqSuEzBvjq9lvyefb79tQKxzHqYtaH9ogA9ciwHc2ccE+MBFmtLyTUTcZTQFzPmdBKLVJ7KYs=
+	t=1744884676; cv=none; b=VZx+OeJlOvRa4UKbI555x+6D+KKahtdpsGKXoUqBNlhAwYXLWAsMjACa/NQoWXEbR5xFA6B95BCPjjdAVAc2fUWDjkW/+9gqqN4Ayi2Cdvpy1LRQmjpKyIQ6RMp5h3+vKF5cVxRr8OVi5ARyvs+UdriQiVckbv/n+HRA0lk2tWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744884633; c=relaxed/simple;
-	bh=EsRsSj5ZTvOM1KJnm90ywQ0x9hB4YFNumvk55p/KIbc=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=MHoLcjh/Dt3HgNoboxpTPuAtU5O+B5ogZQDuz3IGZEeThTfMbfYX/XQ5ChJvwl4ad0kmbMQtOX4ad74fbWvYLPmwqW0YnlPUavXSQ8sL+88LKE3c1KemYfbiQIxMTFzRSFzYVcPe4CRBV6l0PSBa9Ywe019ynJTt2VkxcOcEkD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr; spf=pass smtp.mailfrom=3xo.fr; dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b=0fdtNDFs; arc=none smtp.client-ip=212.129.21.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xo.fr
+	s=arc-20240116; t=1744884676; c=relaxed/simple;
+	bh=OjOyXwwkPkvApQlOY7upCNWh6uL9evvXiu2wCmgHLjM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k+wTpS2S+a33vTOxwzyjOlKx4EZLZusukEgN7EeG+VNG06ze0W0jDtBuggQAcoyLPrMg73UnAK+0Uv8X+u8SPeE6LwekLackqCqgevwi4spzAX+eWSrYVtMp27Mj9bFkueUOebRomSREP2AgSLdFtnLslJzaE20Dj3wP14PHLPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=lyFy02Zs; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b="0fdtNDFs"
-Received: from localhost (mail.3xo.fr [212.129.21.66])
-	by mail.3xo.fr (Postfix) with ESMTP id 55498CB;
-	Thu, 17 Apr 2025 12:10:23 +0200 (CEST)
-X-Virus-Scanned: Debian amavis at nxo2.3xo.fr
-Received: from mail.3xo.fr ([212.129.21.66])
- by localhost (mail.3xo.fr [212.129.21.66]) (amavis, port 10024) with ESMTP
- id VFVFhVEXUlTK; Thu, 17 Apr 2025 12:10:21 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.3xo.fr DF2908D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xo.fr; s=3xo;
-	t=1744884621; bh=cEovSie5bPZsVx3CnJ0Skbpj6zHabO1hydZaJkwFs24=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=0fdtNDFsENFoaAUJ1xp+B2t6xldOSGZCp/9jU3VMorwZR/NMZmgoBIRIT8zhqtx8U
-	 EBk4DCw5ETeFbBjJdR5w2avtzTOKQe3VoQ/HRpTT7i63LKsWRNykBga6gTBb3nzgAJ
-	 QG9k6ELrX9gesnEBfutnItM7aYs1IlM/0Uj/Q+3O1ve0ndMVBXOchwgAK5VSV26xHu
-	 wbmp+ib7sPZxAdZK/LkdctofD+y79KN0Kn6Ed37CErv//eqw8b0yT/HlhAGy5c3FgV
-	 qPPYF3MqJLQtl9j0AKVWvq4WzYhzyVA/yqNrHy99FEcYDWivXv+xAyN1xVDAYYjbkp
-	 tGelecKgztLIQ==
-Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by mail.3xo.fr (Postfix) with ESMTPSA id DF2908D;
-	Thu, 17 Apr 2025 12:10:20 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="lyFy02Zs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=cJJC6WP3gpZ9K3VX9TT93MWqlpGNyRN7xfN0nAAX5ow=; b=lyFy02Zs99XdoiAkZ/hc5CAzhD
+	YiWUy1eBRdXDgyCSLi+Pqr1lv4YSwKj8r6wjCEIEIoLu/z/rX95dT07toDiLrulNaqFjc1c5qbVhn
+	hizjLWioCaBWkTeKE8r42yWwdh10Q22hupiiju9Z3v0WMdB6hUPI3IFzp1LqVpp34EXIE/RB4SRAN
+	CrVkbklx9/GIp1WNkLMyXIOYLRJsxc10oLD8CihkTabScq1KrtdUoHviFLiY0rKjWD5/xAbEqUFMv
+	a5bnTMsqsqZ+CPCHujM49texrGF0DHB+VrOKUyGJ7yrpByjYN5ahyB60pxoMuKVdPckB2ysBQl9R0
+	2EKY1wNw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50752)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1u5MCv-0005Bh-2W;
+	Thu, 17 Apr 2025 11:10:57 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1u5MCm-0002MO-1y;
+	Thu, 17 Apr 2025 11:10:48 +0100
+Date: Thu, 17 Apr 2025 11:10:48 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Frank Sae <Frank.Sae@motor-comm.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Parthiban.Veerasooran@microchip.com, linux-kernel@vger.kernel.org,
+	"andrew+netdev @ lunn . ch" <andrew+netdev@lunn.ch>, lee@trager.us,
+	horms@kernel.org, linux-doc@vger.kernel.org, corbet@lwn.net,
+	geert+renesas@glider.be, xiaogang.fan@motor-comm.com,
+	fei.zhang@motor-comm.com, hua.sun@motor-comm.com
+Subject: Re: [PATCH net-next v4 00/14] yt6801: Add Motorcomm yt6801 PCIe
+ driver
+Message-ID: <aADTqCC7oaXFauOm@shell.armlinux.org.uk>
+References: <20250408092835.3952-1-Frank.Sae@motor-comm.com>
+ <Z_T6vv013jraCzSD@shell.armlinux.org.uk>
+ <da434f13-fb08-4036-96ed-7de579cb9ddc@motor-comm.com>
+ <4fac4c4f-543b-4887-ace9-d264a0e5b0f2@lunn.ch>
+ <4ad68dae-311f-4cdd-a6f8-0229f069ece3@motor-comm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 17 Apr 2025 12:10:20 +0200
-From: Nicolas Baranger <nicolas.baranger@3xo.fr>
-To: Paulo Alcantara <pc@manguebit.com>
-Cc: Christoph Hellwig <hch@infradead.org>, hch@lst.de, David Howells
- <dhowells@redhat.com>, netfs@lists.linux.dev, linux-cifs@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Steve French
- <smfrench@gmail.com>, Jeff Layton <jlayton@kernel.org>, Christian Brauner
- <brauner@kernel.org>
-Subject: Re: [netfs/cifs - Linux 6.14] loop on file cat + file copy when files
- are on CIFS share
-In-Reply-To: <f12973bcf533a40ca7d7ed78846a0a10@manguebit.com>
-References: <10bec2430ed4df68bde10ed95295d093@3xo.fr>
- <35940e6c0ed86fd94468e175061faeac@3xo.fr> <Z-Z95ePf3KQZ2MnB@infradead.org>
- <48685a06c2608b182df3b7a767520c1d@3xo.fr>
- <F89FD4A3-FE54-4DB2-BA08-3BCC8843C60E@manguebit.com>
- <5087f9cb3dc1487423de34725352f57c@3xo.fr>
- <f12973bcf533a40ca7d7ed78846a0a10@manguebit.com>
-Message-ID: <e63e7c7ec32e3014eb758fd6f8679f93@3xo.fr>
-X-Sender: nicolas.baranger@3xo.fr
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <4ad68dae-311f-4cdd-a6f8-0229f069ece3@motor-comm.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Hi Paulo
-
-Resending this mail with content-type: text, sorry !
-
-Thanks again for answer and help, it's good to hear you're back to 
-health.
-
-> Thanks for the trace.  I was finally able to reproduce your issue and 
-> will provide you with a fix soon.
-
-Perfect... And thanks !
-
-If you need more traces or details on (both?) issues :
-
-- 1) infinite loop issue during 'cat' or 'copy' since Linux 6.14.0
-
-- 2) (don't know if it's related) the very high number of several bytes 
-TCP packets transmitted in SMB transaction (more than a hundred) for a 5 
-bytes file transfert under Linux 6.13.8
-
-Do not hesitate to ask, I would be happy to help.
-
-Kind regards
-Nicolas
-
-
-
-
-Le 2025-04-15 20:28, Paulo Alcantara a Ã©crit :
-
-> Hi Nicolas,
+On Thu, Apr 17, 2025 at 02:06:05PM +0800, Frank Sae wrote:
 > 
-> Sorry for the delay as I've got busy with some downstream work.
 > 
-> Nicolas Baranger <nicolas.baranger@3xo.fr> writes:
+> On 2025/4/14 04:33, Andrew Lunn wrote:
+> > On Fri, Apr 11, 2025 at 05:50:55PM +0800, Frank Sae wrote:
+> >>
+> >>
+> >> On 2025/4/8 18:30, Russell King (Oracle) wrote:
+> >>> On Tue, Apr 08, 2025 at 05:28:21PM +0800, Frank Sae wrote:
+> >>>> This series includes adding Motorcomm YT6801 Gigabit ethernet driver
+> >>>>  and adding yt6801 ethernet driver entry in MAINTAINERS file.
+> >>>> YT6801 integrates a YT8531S phy.
+> >>>
+> >>> What is different between this and the Designware GMAC4 core supported
+> >>> by drivers/net/ethernet/stmicro/stmmac/ ?
+> >>>
+> >>
+> >> We support more features: NS, RSS, wpi, wol pattern and aspm control.
+> > 
+> > Details please as to why these preventing the stmmac driver from being
+> > used? Our default opinion will be that you will extend that stmmac
+> > driver. In order to change that, you need to give us deep technical
+> > arguments why it cannot be done.
+> > 
 > 
-> I'll look into it as soon as I recover from my illness. Hope you're 
-> doing better
+> After internal discussion, we have decided to temporarily suspend upstream.
+> Thanks again!
 
-I'm fully recovered now, thanks :-)
+Sorry, but please understand the issue from our side, because the more
+code that's in the kernel tree, the more work that gives maintainers
+who stick around for the long term. Therefore, it is desirable not to
+collect lots of driver code that is only subtly different from each
+other, but require re-use and/or adaption of what is already present.
 
-> I had to rollback to linux 6.13.8 to be able to use the SMB share and
-> here is what I constat
-> (don't know if it's a normal behavior but if yes, SMB seems to be a 
-> very
-> very unefficient protocol)
-> 
-> I think the issue can be buffer related:
-> On Linux 6.13.8 the copy and cat of the 5 bytes 'toto' file containing
-> only ascii string 'toto' is working fine but here is what I capture 
-> with
-> tcpdump during transfert of toto file:
-> https://xba.soartist.net/t6.pcap
-> 131 tcp packets to transfer a 5 byte file...
-> Isn't there a problem ?
-> Openning the pcap file with wireshark show a lot of lines:
-> 25    0.005576    10.0.10.100    10.0.10.25    SMB2    1071    Read 
-> Response, Error:
-> STATUS_END_OF_FILE
-> It seems that those lines appears after the 5 bytes 'toto' file had 
-> been
-> transferred, and it continue until the last ACK recieved
-
-Thanks for the trace.  I was finally able to reproduce your issue and
-will provide you with a fix soon.
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
