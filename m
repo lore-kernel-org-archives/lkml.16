@@ -1,168 +1,173 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022088.outbound.protection.outlook.com [40.107.75.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858221DFD86;
-	Thu, 17 Apr 2025 06:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744871788; cv=none; b=deHiMcEzmfpsUHDj3Jj2GYtBPGNDu0ocNDzmdKiHvHgATiQLRYL8j4dLwbVGRog6kUN3K1vGAcwAmrol6wmY8ZNL3Ksb9y0wh+O3mMId/eER1Pi1+8eFVQ8etjnFq1CVR+uNs8WMGtITgUHPOhTwylpcQXDH2ih+x2HdzlJRXDo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744871788; c=relaxed/simple;
-	bh=qfsdvMQKMa6weBYznhuw0P3zXeNZrcaoAvug4vkw+lc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KFgrcmGZCV46UUva+fvwrpJztkgZz1/s+3y6xdT+SQqm3iYS6Wkd4w5UEMorbpR5x2Gdb27GhGl/zb5KMaMxWws1xcnSuYzDAAg/M9vzyavfNvI5agM3ol1BaUHOqAi7SIdQWUodRANT4c6u3IYSxooRxQ+abzTc5RrAbWfR684=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=CM81Wz43; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="CM81Wz43"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 44F5A1039EF2D;
-	Thu, 17 Apr 2025 08:36:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1744871783; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=MHwCLJyDeuWx/JjQt62OR0Vto9JTS8LaVyPorlwv61A=;
-	b=CM81Wz43G51dxJmGWG9E5VZzgOMqy4v5uVBHebc1PWgR3tHIRJsqZDPs6Ru/+Nn6K3N4eq
-	778byT4teaB7knzj39mpJEAmHTEzPQlc+ZlRGVNB7SincnzMDsbjOIUMMQV35fCD08jmev
-	OlG5jmPXKJ/qhY/9/9AhFUHGThrWc/5ADIa4t2rHhKYDzfEWNdYEm45+r5Mok+hF/V7OLv
-	pki+AWGnMrJe1xoBEYrdazf/AMGQx/tiUN4kD/zEC6kyzWbW3NufDoGuyb0wbZ3DAkoaZK
-	XQgao5QjAYa5hGeo+DQwuY0DDh3A2zqRC9Dbb/zI/Gb681FIfC4ghL0l3QA68w==
-Date: Thu, 17 Apr 2025 08:36:20 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Andrew Lunn <andrew@lunn.ch>, Andrew Lunn <andrew+netdev@lunn.ch>,
- davem@davemloft.net, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Richard Cochran
- <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, Simon Horman
- <horms@kernel.org>
-Subject: Re: [net-next v5 2/6] ARM: dts: nxp: mxs: Adjust the imx28.dtsi L2
- switch description
-Message-ID: <20250417083620.6322d9a7@wsk>
-In-Reply-To: <6511c88d-7876-4f69-81f1-1206056d061a@gmx.net>
-References: <20250414140128.390400-1-lukma@denx.de>
-	<20250414140128.390400-3-lukma@denx.de>
-	<06c21281-565a-4a2e-a209-9f811409fbaf@gmx.net>
-	<2c9a5438-40f1-4196-ada9-bfb572052122@lunn.ch>
-	<6511c88d-7876-4f69-81f1-1206056d061a@gmx.net>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B019319EED3;
+	Thu, 17 Apr 2025 06:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744871841; cv=fail; b=ZTfueYis9EPWV0osYhxG3VygukrrlAcK+INL0cSa2YrUEvlkrx2KSeOI7h2pf/CjK2B1v6bPrjDD4zpIOG4ZxZoZSVkco+GVi+hh8T4Qh8+F8QIJ+wnOpGHgvb2pxkPQsjmpId47z0ElX4tv8uQ6AtK6Q7d8UMH0mKh2qvYbzSo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744871841; c=relaxed/simple;
+	bh=MrfkoF1s4wTEQNyqvGRzeRzMb9qYLkP/Ucxb0zxgHUY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ikEfbkdJHjjEl4MUssJjIQHqrmwz2FJYZLSdSF6QOMypULa3dLCYykv+CYh3HKUYWVUwc57qymtNxQ6et74+TntifEsUZX+Tx/mrDWAgurcTUy1kBwD2fZgPy+e7H0c2L3mglef5dJCpPahj1ktCUfMAAFx0VVDFA0+PK25t3j0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.75.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=npb2DQS78Y/nnDgb6N321ggoeyyrk90268c5NbFSuMNzMIHyUgIQNQ5J9rveVCHTw2k74rQOCI7kpZxcuD6VuWUleAQjGfsn8OgVbBdruD2LGi4RdiARm9DbKqmSpNXwj4HzPE1bu8D3NSmmMqbvJsxrXZfb7cfo3GacDTVcOXr/Q74hs95ji+r02AjArcXC81W6UNCjHQ5H6+VSOaG5OQ+AW4+zQ/wSjn8MQ1bGUKutIwr+mt+AHf0C1At8rqfONOBNXjDg5L9S3YkG3vLRbBHxisL9xvA3NftpHw0QWIbUgYclza4yQ/ExAXrOIvt43z9Ak0rnsdmNcgkhSNEUHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lkzqgZ0l8sLcIoBbfUoUdzkUZq/uyzIcAK1bqXHbP1g=;
+ b=iF1/kuW+rR+kWYqRwcRx/vOVVeGNPdZIGH8hkmvY1Ilggr5vPBdhbcUiUCk/b5wSpCj67uTp1seYAUmnz9cBNCHoqr0f5YIq+YFofEyJ7Sh05S420qdVw7Ll+I2Cd1f6HPeWAWPpOIYfBV6GgNg8M/p7J6AaAH+lAJsg3liIDxR3eZyc0QoQMKXjJ8iKsiHn5Tpb/GPv6K42Upnh/3/8H9VWlT/mwIHAjZGX7cv+ATGbnx4wKB+0h3KbfcC+HkdjnJKTst4kqRdd2JVLR0+eSo4eCMH0bStgOFfjqYuvxcnlSOeCUF3vpOOb5mFAf2M25ym+wPua8mt4vGIL3K5PIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from TYAPR01CA0099.jpnprd01.prod.outlook.com (2603:1096:404:2a::15)
+ by TY0PR06MB5834.apcprd06.prod.outlook.com (2603:1096:400:32e::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Thu, 17 Apr
+ 2025 06:37:12 +0000
+Received: from TY2PEPF0000AB84.apcprd03.prod.outlook.com
+ (2603:1096:404:2a:cafe::39) by TYAPR01CA0099.outlook.office365.com
+ (2603:1096:404:2a::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.22 via Frontend Transport; Thu,
+ 17 Apr 2025 06:37:12 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ TY2PEPF0000AB84.mail.protection.outlook.com (10.167.253.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.12 via Frontend Transport; Thu, 17 Apr 2025 06:37:11 +0000
+Received: from nchen-desktop (unknown [172.16.64.25])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 9FBE841C0A00;
+	Thu, 17 Apr 2025 14:37:10 +0800 (CST)
+Date: Thu, 17 Apr 2025 14:37:05 +0800
+From: Peter Chen <peter.chen@cixtech.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: soc@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org,
+	arnd@arndb.de, jassisinghbrar@gmail.com,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
+	maz@kernel.org, kajetan.puchalski@arm.com,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Fugang Duan <fugang.duan@cixtech.com>,
+	Guomin Chen <Guomin.Chen@cixtech.com>,
+	Gary Yang <gary.yang@cixtech.com>
+Subject: Re: [PATCH v6 09/10] arm64: dts: cix: add initial CIX P1(SKY1) dts
+ support
+Message-ID: <aAChkWPn4ThMx44A@nchen-desktop>
+References: <20250415072724.3565533-1-peter.chen@cixtech.com>
+ <20250415072724.3565533-10-peter.chen@cixtech.com>
+ <74b9fc25-0815-4ece-845a-5f730c87fe78@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/OP3qBt+f/mJ28tgoAZOMfOc";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <74b9fc25-0815-4ece-845a-5f730c87fe78@kernel.org>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB84:EE_|TY0PR06MB5834:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9b9f5131-c90c-4ed1-d8b1-08dd7d7a48db
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|1800799024|376014|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?JYCyQJRS2UvDwZDNryQGOw1LcnWQCpuu7Mq/Aak1Y1qOPP4alrncDma/Epwf?=
+ =?us-ascii?Q?u99SV4QJ7VxjayCHj9UOUmDf9KBJCVDc2ZLof0LE0RLZWT7kopwllF7HZD7W?=
+ =?us-ascii?Q?E/6s1om7GJaohpUa4nR7It50p8ru/mF8BRsUdliksIUJVWDHCCVACyp9jFnj?=
+ =?us-ascii?Q?zGootYcRhH7OOzeh2qpf1BjsTtCeD4dDL11/BgkMrVzs09y7JdJ7geRC0O73?=
+ =?us-ascii?Q?XLU6vaYcwnLc6vk5BbLjE8Z6YT8lCbHHI75/KBMX3+XINe0ygsMNWH2ENUVC?=
+ =?us-ascii?Q?OfMVSp4rv35J8TXOP3lcEv7dycmaBrHeb2T19/Iicqd9mfsPRc2/1uV73EhL?=
+ =?us-ascii?Q?vhI3VN7DcJJ0aeQ7ANCvuGB2Fc56nn/ienYsSLh0vxaeDjrHR0ABbSDFDNkZ?=
+ =?us-ascii?Q?PLhmYMQmIezEECXWmh0cLqiLrXj4HJ17HFDa8WPUwAOh0q4DIhRqIHTVNSrD?=
+ =?us-ascii?Q?4JkNSUPWhtWY4LknuKZqhXxxP5PidjWt9koeOMJw6sGjrw19KBmdFEvwQ68V?=
+ =?us-ascii?Q?QF0vEvZrH2AytlMqkUgoNOQ08mvZOd8FJsg1H9rb2Pc4wmLFsgEFjBscztdv?=
+ =?us-ascii?Q?ebZzoOyrv47nXwUeILKW10HMQwAp/qUcxWdGu/wCZzPUkxl0W75UedZv/1g0?=
+ =?us-ascii?Q?B/2xNo3cIy5negdJRjCK82j4gJMhAoPRPxKSuOaJU/aMkzmvu3hl+PRp7P1+?=
+ =?us-ascii?Q?oqAyIIQfASHwolSFo9l8KmQOWufSgmhx5A8ws6JlkK7PXuDBDQm5QUnhAnod?=
+ =?us-ascii?Q?8qe92csNk9r2kdZav1U0TsuJutxvlRSfH1Hwgqsgx9aQDvsR08dHRqYlgb5o?=
+ =?us-ascii?Q?h7WaAjfn8t1qbLhmm+ePayxLPXUcix+5P2NzaBak9xV76hH8YCQ5rzUYGvtL?=
+ =?us-ascii?Q?Y3lQNAYTbk2H1rL6CKypPNIVdrZxxvYfDOfZm0lw9jJB6Vf1lw0qX18lF3WC?=
+ =?us-ascii?Q?FEtSZQ8Ou8fJPVpoZ8micYmzxXZWR0alUz/im7ivxbrqfMZouQPXEXomvkub?=
+ =?us-ascii?Q?y0OWghYmUQCutXsZSFCPf7zZNnZ8/BFQnixuQYrUswgrh8Dgt2FWsivQhC8q?=
+ =?us-ascii?Q?NuMjUgyMdBnNDueZk5f051HPWgoaRJfmyZPrcnYX0RIF5MrynekFsD0AiObd?=
+ =?us-ascii?Q?MR89OafCITN359xSAc+eEzqMS8Kw7aIu3Mk+8z8ESl2UkGyd0w3C5kSXcL1r?=
+ =?us-ascii?Q?NolmpwzrM08/1V987+JpuN9Iyi3jrG/nQClcOnd1q2XZVf5Xqk8RqwyE3zaP?=
+ =?us-ascii?Q?hNrF2Kf3v2ubQdI42wcIscaW5w0LEjjDL7DRMC4k8/b7BoVhqlhSPkSiPJW9?=
+ =?us-ascii?Q?CKcF/UI+oW2UXoHKhdekC5p1U/Q4gohvvaLKKkp71DhW4qukyKxbQ0D5B5UT?=
+ =?us-ascii?Q?y8s8z/8lIA5J/o/ggDMLzkLIp34NTEkw9mkF1ApzZqjqQfx+rYftG5nH2OFG?=
+ =?us-ascii?Q?HwBzY30LKufZGL6P3lgGadbCjuha4n3cHDLMzyoopl8xNgjmVcsI6C/zLgM9?=
+ =?us-ascii?Q?jog3h5pSUkfEDr4HDFrWZr5Ze2DGKcxySEAu?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 06:37:11.5983
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b9f5131-c90c-4ed1-d8b1-08dd7d7a48db
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: TY2PEPF0000AB84.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY0PR06MB5834
 
---Sig_/OP3qBt+f/mJ28tgoAZOMfOc
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 25-04-17 08:18:44, Krzysztof Kozlowski wrote:
+> EXTERNAL EMAIL
+> 
+> On 15/04/2025 09:27, Peter Chen wrote:
+> > +
+> > +             mbox_ap2pm: mailbox@6590080 {
+> > +                     compatible = "cix,sky1-mbox";
+> > +                     reg = <0x0 0x06590080 0x0 0xff80>;
+> > +                     interrupts = <GIC_SPI 363 IRQ_TYPE_LEVEL_HIGH 0>;
+> > +                     #mbox-cells = <1>;
+> > +                     cix,mbox-dir = "tx";
+> > +             };
+> > +
+> > +             pm2ap_scmi_mem: pm2ap-shmem@65a0000 {
+> > +                     compatible = "arm,scmi-shmem";
+> > +                     #address-cells = <2>;
+> > +                     #size-cells = <2>;
+> > +                     reg-io-width = <4>;
+> > +                     reg = <0x0 0x065a0000 0x0 0x80>;
+> 
+> Messed order of properties. Keep it consistent (see DTS conding style).
+> Other nodes also have oddly placed reg.
 
-Hi Stefan,
+Thanks for your reviewing, Krzysztof.
 
-> Hi Andrew,
->=20
-> Am 16.04.25 um 23:58 schrieb Andrew Lunn:
-> >>> -		eth_switch: switch@800f8000 {
-> >>> -			reg =3D <0x800f8000 0x8000>;
-> >>> +		eth_switch: switch@800f0000 {
-> >>> +			compatible =3D "nxp,imx28-mtip-switch";
-> >>> +			reg =3D <0x800f0000 0x20000>;
-> >>> +			interrupts =3D <100>, <101>, <102>;
-> >>> +			clocks =3D <&clks 57>, <&clks 57>, <&clks
-> >>> 64>, <&clks 35>;
-> >>> +			clock-names =3D "ipg", "ahb", "enet_out",
-> >>> "ptp"; status =3D "disabled"; =20
-> >> from my understanding of device tree this file should describe the
-> >> hardware, not the software implementation. After this change the
-> >> switch memory region overlaps the existing mac0 and mac1 nodes.
-> >>
-> >> Definition in the i.MX28 reference manual:
-> >> ENET MAC0 ENET 0x800F0000 - 0x800F3FFF 16KB
-> >> ENET MAC1 ENET 0x800F4000 - 0x800F7FFF 16KB
-> >> ENT Switch SWITCH 0x800F8000 - 0x800FFFFF 32KB
-> >>
-> >> I'm not the expert how to solve this properly. Maybe two node
-> >> references to mac0 and mac1 under eth_switch in order to allocate
-> >> the memory regions separately. =20
-> > I get what you are saying about describing the hardware, but...
-> >
-> > The hardware can be used in two different ways.
-> >
-> > 1) Two FEC devices, and the switch it left unused.
-> >
-> > For this, it makes sense that each FEC has its own memory range,
-> > there are two entries, and each has a compatible, since there are
-> > two devices.
-> >
-> > 2) A switch and MAC conglomerate device, which makes use of all
-> > three blocks in a single driver.
-> >
-> > The three hardware blocks have to be used as one consistent whole,
-> > by a single driver. There is one compatible for the whole. Given the
-> > ranges are contiguous, it makes little sense to map them
-> > individually, it would just make the driver needlessly more complex.
-> >
-> > It should also be noted that 1) and 2) are mutually exclusive, so i
-> > don't think it matters the address ranges overlap. Bad things are
-> > going to happen independent of this if you enable both at once.
-> >
-> >        Andrew =20
-> i wasn't aware how critical possible overlapping memory regions are.
-> I was just surprised because it wasn't mention in the commit message.
-> As long as everyone is fine with this approach, please ignore my last
-> comment.
->=20
-
-Just for the record - there was an attempt to "re-use" FEC enet driver
-in switch [1], but this approach has been rejected as one not very
-robust and "clear by design" (i.e. similar to cpsw_new.c driver).
-
-And I do agree with Andrew - that approach presented in this patch set
-is the correct one.
-
-Links:
-[1] -
-https://source.denx.de/linux/linux-imx28-l2switch/-/commits/imx28-v5.12-L2-=
-upstream-switchdev-RFC_v1
-
-> Regards
->=20
+All the nodes mailbox and shmem (in mailbox) are on the same bus, so
+I keep it by unit address in ascending order like DTS coding sytle
+says. I think below rules are two options, isn't it?
 
 
+1. Nodes on any bus, thus using unit addresses for children, shall be
+   ordered by unit address in ascending order.
+   Alternatively for some subarchitectures, nodes of the same type can be
+   grouped together, e.g. all I2C controllers one after another even if this
+   breaks unit address ordering.
 
+> 
+> 
+> 
+> Best regards,
+> Krzysztof
+
+
+-- 
 
 Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/OP3qBt+f/mJ28tgoAZOMfOc
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmgAoWQACgkQAR8vZIA0
-zr3Z0AgAjNWeG5547C9lxo+unXs8/onbMnCfQDJ3YSeCUfVD1VDsiEa2t0Mo/Fog
-nX9eR7DL85CJOQE3xlThujPztb/8w18Kf8J1ABg53mDanqEvgcABhF0fxyBOlWsP
-gSJ3fWaVflKSf43uvylKO0OoEU6Dzy26YRX3CaM3nHcBJL3YatBiXxZH/m/lGS5S
-2qqjLyTj1751iu1Q0euhZkxric47TZkMqDh1oARuNu4LjMX3n1/RkoZPuHH+AS8E
-8tmfzKYa3GDNF15Kkv2sx2QnljPfEA9kVLNrXB/adUESTwgVhH22GdIbSF7wYwus
-6QupQoOBSRICo3cnVGDHkY4J6nSz7w==
-=4Q3t
------END PGP SIGNATURE-----
-
---Sig_/OP3qBt+f/mJ28tgoAZOMfOc--
+Peter
