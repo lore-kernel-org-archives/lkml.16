@@ -1,62 +1,63 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031AF247DF0
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:25:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B198C248876
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744892730; cv=none; b=Hn60saLAIXzhm/AJ4me1cof/yRJdAMbcmYWA23br91aMSQ/68bnCUzoR7su7hzba63qkRhItchjuomROGn+CkX1gjOWiMfuFOXYlymCC/RjKuuBLx5mHUFd4/Si4K/XjEtznhIPjl0ASykOs4fwbpYGocInH5vAkCj2qp/nA0Bg=
+	t=1744892738; cv=none; b=NM5/iuKIM748YZRjk08RXETfJX3zKhKuprn2rFNxt7h6loL8P3mPnh8PkVURt7k/5fLp5k/30t6WLMK0IgKKKaVU0aCJRMUjuudF9a5qcP0Bb8wHzfzKSRy9ML0c3Z2tiwACjUWg3OrReUku5aBAPH8xJXeLA1czvouDM2CYD5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744892730; c=relaxed/simple;
-	bh=NXa9HEO5RKY1D2k9IbxsxMtK9lSmU2PJg0VdH4XU874=;
+	s=arc-20240116; t=1744892738; c=relaxed/simple;
+	bh=H5I3SSDmXjwRUib3TL18xTg/rVQsrKqfiODBF/E5v6c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g+r2OvUr3s7JFj/FjFytBW8PjLP9PNkQtDhGKgGQMecxC5E7d5lVzjEkAJePQ/3YasURzT3dGYPPfNgeRIrm090UwgF7ZZ5gTW1ngWomxlwmXU/donaLv1PclPvZGgwLIwqc5qggLIZ0pqV0JHLmIPUcp9c86GmFvL0fDtqxxp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ebL7KfEo; arc=none smtp.client-ip=209.85.214.176
+	 MIME-Version:Content-Type; b=G6oR3zGv5v7RaofrR1HDY4GYp1P3ghUosIxtvEARLOW/7scX57qvgHkY7N0gRBOm0sHDrIjYMum4nqEFZeWuZwVW9P+pNHU6BJf72gSTwKDVW11fB/lysS4n7HQR0cBe1zsbTqx8Oe+0E5ux++KS9s1116p1fHGLlyMubV9YAA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=XpBQMCuX; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ebL7KfEo"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-227d6b530d8so7156325ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:25:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="XpBQMCuX"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2295d78b433so7463325ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:25:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1744892727; x=1745497527; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1744892736; x=1745497536; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/KHThPTp9HBECdAqxs4JY6wN99GqOifsmOPr7rqjaok=;
-        b=ebL7KfEoLNqPqmyiWZAsOd3YNnrAxLi5iPwk0vZzO1HAU3PqZEJryOBOFQUSEVCx5D
-         6KkPS6/omiyR0cw0DrR0w6vrXo0ovV9xKUmPfHP5vjiMavkamcppOyMq7bswF6h8VZtg
-         pxV/CglZ5tAXiNA16etMPHVOp4m3cL2smOraRDIxnAhAKz1ynOIm3uQ6RgE/FFFMxMIV
-         zob7P1LzvABzUMIukDwahFh5UbXLPsZDjV9jmuE4UB6A3438EiK8S3aTsYIT+9tapbf+
-         6gyLejP7c5HNtVFUvD+uBUmKS8FpY3//gbPpgZ2JOVDg8f/zsC1MkvFmxoz4vqjny5sn
-         gR1g==
+        bh=RIWI5J13lSlmUc75M0Yyv1OmkFoJoZE6o7hXZ4HO9lg=;
+        b=XpBQMCuXAyDB11UWoArkfLcN7EhswpqfbfknbC1ohQpeyaijdj8NnI7eNKYdG9SdJ9
+         L5ieRIgVw3cebhF07DqstpRT60jXzn/bstssdCO5AwAI548ClCWIapyPKjIDNtn6424E
+         jhByHaFEWxUltJn/l8wiawskYcErI32YJgpXwGwu/RC5a0qiWRHMrZ6hblXHkQHSxipe
+         2g1XpCBRtGxG0U6q8xeou9KN5H2OhqyNt8mXzn/qvQyqrhYkZei5yR+vJeQQXucf2ghL
+         RaM2O2D7rVqCB3I7kXt3OBeZviQVJS//NPTdcvv0ipFcdrDHHYY1iwtG83FS0F4OixOL
+         c7ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744892727; x=1745497527;
+        d=1e100.net; s=20230601; t=1744892736; x=1745497536;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/KHThPTp9HBECdAqxs4JY6wN99GqOifsmOPr7rqjaok=;
-        b=JXzsyTP04ZkNnjVgpocgO2AFVaCxUCrzD5MxgP4uqFbM7YE/AUQZIaHxn8eHe16wiB
-         V9uehsqeOzp4rDoIY9+RMb5WDOluv9DF/v5oB921vGwSHUZS+CDfn5+AQLMnWASSKqk2
-         C8IrJHpXx7DHWZ2v8+3qO02EA621VmYnAj065bZgujy8TWtLFA2i8q1DDVgsBH/+ieGj
-         IXCOe8kqPWUYkk/DSFMZX4DlQR6vxFKwSxl/fyEgGofvb/313NxxOakPaYn7qdjhEFzB
-         cSBu0MXYg1sn8/w8sYJJEado1yXd1xrE/X7ZrOUJygLCUA7ZUOMRfMcFuEujZgD8yBzO
-         bsFw==
-X-Forwarded-Encrypted: i=1; AJvYcCWu6WNN4zQ5oJdBwrte35DSBCPOWa9K9InGOl8rljNLNA+Vy8j6mba0fpWylGDTU+3WMC9yovmqTL5MN8I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz96WRR2Gsd/HdxTuGDn994tTTwEcCM8mGruL2TqXPgfGjDQ67F
-	XL/qmVwU2zFsYhDjxQRtN3FXqTtydfVImJo0HWtNKEw2GvQJ+4YcpLqymEjSBvk=
-X-Gm-Gg: ASbGncsPbrwxuc6LAGUp9U0rEkzuzQ3+iZWwI3T+jMjp4A9tVSOnSzatCYvXM7fHTlQ
-	OModRSFdpDyZTsMZdASJWoB9dYumr/KdECHuk/S6kCS8joMcGuGlAk+3DsmO3CSwFenp8eQzoT2
-	AKcIQ/Dw72MnuQCtIY7HZlLyfs/NY48RZWMZAtM7juszqhy2sjRN3wVfAPNhtkGNTskRVjwa5Gq
-	lDTb7TTBN5qXwOT4dQ/z6FzRB/j4K0xJeC9mKOB1hofwVz5BLRW0POK7pPoMiftCIMdNvmW1GuC
-	TMLCYcxFytDm8Vl87sUB7/OX9N9412pY7bBCBG2jBQ==
-X-Google-Smtp-Source: AGHT+IEoqy/kqoORsS0UV+1ioB/JireEK12cMki3F6JIxzmrV6R0qu0Yn7V200b2nJAkaxmJUugsbg==
-X-Received: by 2002:a17:903:1b26:b0:224:13a4:d62e with SMTP id d9443c01a7336-22c3597ec4bmr109539965ad.35.1744892727277;
-        Thu, 17 Apr 2025 05:25:27 -0700 (PDT)
+        bh=RIWI5J13lSlmUc75M0Yyv1OmkFoJoZE6o7hXZ4HO9lg=;
+        b=i6JLCY2xFYg6FOVDPerwk5fEdRiGnlrIGLqGx0wAbflC83AeOAW568lGU4Ju2mAAJ+
+         xq5yJXP3pt101Mr4DRYligvQZt/G1hD7Bz8HOt0NuR1Cr6bCC1Fcga6gdGKX09suQ+Iw
+         3vFPbr6/kuol2N524Jg/d2kYFF7UF+UtlNoYZEgMBRPcF6ZaSJUYjm3U5LuYEaQnYkam
+         iG1PmI+mVqxL8rSDL1+rsO9uNG0hG7118+w4GP3RLljUF9/Naaeu0ZJZ6S//8qj9zAQ9
+         uU6rQZCnN/WsEY2B9VN9F5yX8j02+f9oRkE5iwQhmlse44t/jQDqjK+ZiJvLzGSwZk2s
+         j3uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHsEsDVXH9Fp26Dgqkx8kqAuc7vOEX5AdOK69As4qFLHZqdO4lM3M+7CTMk6ZMRw6GZIU2baMFAs2udbk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7tnkD1cCvw5b2YKap4/I0EIZi05vRAIsLPNzNprJbVC9IlEbE
+	M02R2kJWlwGfEbcxRsFlTlnCgEyw2Go85pPiO53tDFZ1xkG5bmb075zDBOKu6t4x4PVSb5fpRZV
+	c
+X-Gm-Gg: ASbGncup4zhmIquzdha+zVinZLJUHTl3Zp7kjML4F9dbxiqvYUwB12TkOMfEm8QmWQx
+	pXLu3COM5lMsZYCzHAYd4xUmq+9CjdhdI5CACNJCeayLmyaruq6/bWdMhNrMrqdyQiu9Y+zAPW9
+	VHXvXstuipd9xZXefKI4C97HmIbtQ3Bw7bDGtGa22yU/eHXJnWTvPJIhsZQ/fMsslc/+q190cVt
+	rEXoiVZX8vDLtLf1hwKlHt55e8obsA8OglLi9R3W1hRQh0o2Bta/tHAo1VUY/NduCCkRUpQ7QHV
+	/qDDhvJotsFEQ8LLDidwQ+vvarHzqTL0JGXM9AQl5Q==
+X-Google-Smtp-Source: AGHT+IH/XOfIZJN1QIMfxSpPHyEBOL2TQ9imzdZAMvoYmfc/2OhjJtEou81N2JqUbXrpk40zrfv2Kw==
+X-Received: by 2002:a17:903:1905:b0:224:10b9:357a with SMTP id d9443c01a7336-22c359743ffmr95085905ad.32.1744892735913;
+        Thu, 17 Apr 2025 05:25:35 -0700 (PDT)
 Received: from carbon-x1.. ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c3ee1a78dsm18489415ad.253.2025.04.17.05.25.19
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c3ee1a78dsm18489415ad.253.2025.04.17.05.25.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 05:25:26 -0700 (PDT)
+        Thu, 17 Apr 2025 05:25:35 -0700 (PDT)
 From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
 To: Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
@@ -73,9 +74,9 @@ To: Paul Walmsley <paul.walmsley@sifive.com>,
 Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
 	Samuel Holland <samuel.holland@sifive.com>,
 	Andrew Jones <ajones@ventanamicro.com>
-Subject: [PATCH v5 10/13] RISC-V: KVM: add SBI extension init()/deinit() functions
-Date: Thu, 17 Apr 2025 14:19:57 +0200
-Message-ID: <20250417122337.547969-11-cleger@rivosinc.com>
+Subject: [PATCH v5 11/13] RISC-V: KVM: add SBI extension reset callback
+Date: Thu, 17 Apr 2025 14:19:58 +0200
+Message-ID: <20250417122337.547969-12-cleger@rivosinc.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250417122337.547969-1-cleger@rivosinc.com>
 References: <20250417122337.547969-1-cleger@rivosinc.com>
@@ -88,73 +89,75 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The FWFT SBI extension will need to dynamically allocate memory and do
-init time specific initialization. Add an init/deinit callbacks that
-allows to do so.
+Currently, only the STA extension needed a reset function but that's
+going to be the case for FWFT as well. Add a reset callback that can be
+implemented by SBI extensions.
 
 Signed-off-by: Clément Léger <cleger@rivosinc.com>
 Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
 ---
- arch/riscv/include/asm/kvm_vcpu_sbi.h |  9 +++++++++
- arch/riscv/kvm/vcpu.c                 |  2 ++
- arch/riscv/kvm/vcpu_sbi.c             | 26 ++++++++++++++++++++++++++
- 3 files changed, 37 insertions(+)
+ arch/riscv/include/asm/kvm_host.h     |  1 -
+ arch/riscv/include/asm/kvm_vcpu_sbi.h |  2 ++
+ arch/riscv/kvm/vcpu.c                 |  2 +-
+ arch/riscv/kvm/vcpu_sbi.c             | 24 ++++++++++++++++++++++++
+ arch/riscv/kvm/vcpu_sbi_sta.c         |  3 ++-
+ 5 files changed, 29 insertions(+), 3 deletions(-)
 
+diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
+index 0e9c2fab6378..4fa02e082142 100644
+--- a/arch/riscv/include/asm/kvm_host.h
++++ b/arch/riscv/include/asm/kvm_host.h
+@@ -407,7 +407,6 @@ void __kvm_riscv_vcpu_power_on(struct kvm_vcpu *vcpu);
+ void kvm_riscv_vcpu_power_on(struct kvm_vcpu *vcpu);
+ bool kvm_riscv_vcpu_stopped(struct kvm_vcpu *vcpu);
+ 
+-void kvm_riscv_vcpu_sbi_sta_reset(struct kvm_vcpu *vcpu);
+ void kvm_riscv_vcpu_record_steal_time(struct kvm_vcpu *vcpu);
+ 
+ #endif /* __RISCV_KVM_HOST_H__ */
 diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h b/arch/riscv/include/asm/kvm_vcpu_sbi.h
-index 4ed6203cdd30..bcb90757b149 100644
+index bcb90757b149..cb68b3a57c8f 100644
 --- a/arch/riscv/include/asm/kvm_vcpu_sbi.h
 +++ b/arch/riscv/include/asm/kvm_vcpu_sbi.h
-@@ -49,6 +49,14 @@ struct kvm_vcpu_sbi_extension {
- 
- 	/* Extension specific probe function */
- 	unsigned long (*probe)(struct kvm_vcpu *vcpu);
-+
-+	/*
-+	 * Init/deinit function called once during VCPU init/destroy. These
-+	 * might be use if the SBI extensions need to allocate or do specific
-+	 * init time only configuration.
-+	 */
-+	int (*init)(struct kvm_vcpu *vcpu);
-+	void (*deinit)(struct kvm_vcpu *vcpu);
+@@ -57,6 +57,7 @@ struct kvm_vcpu_sbi_extension {
+ 	 */
+ 	int (*init)(struct kvm_vcpu *vcpu);
+ 	void (*deinit)(struct kvm_vcpu *vcpu);
++	void (*reset)(struct kvm_vcpu *vcpu);
  };
  
  void kvm_riscv_vcpu_sbi_forward(struct kvm_vcpu *vcpu, struct kvm_run *run);
-@@ -69,6 +77,7 @@ const struct kvm_vcpu_sbi_extension *kvm_vcpu_sbi_find_ext(
- bool riscv_vcpu_supports_sbi_ext(struct kvm_vcpu *vcpu, int idx);
+@@ -78,6 +79,7 @@ bool riscv_vcpu_supports_sbi_ext(struct kvm_vcpu *vcpu, int idx);
  int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu, struct kvm_run *run);
  void kvm_riscv_vcpu_sbi_init(struct kvm_vcpu *vcpu);
-+void kvm_riscv_vcpu_sbi_deinit(struct kvm_vcpu *vcpu);
+ void kvm_riscv_vcpu_sbi_deinit(struct kvm_vcpu *vcpu);
++void kvm_riscv_vcpu_sbi_reset(struct kvm_vcpu *vcpu);
  
  int kvm_riscv_vcpu_get_reg_sbi_sta(struct kvm_vcpu *vcpu, unsigned long reg_num,
  				   unsigned long *reg_val);
 diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-index 60d684c76c58..877bcc85c067 100644
+index 877bcc85c067..542747e2c7f5 100644
 --- a/arch/riscv/kvm/vcpu.c
 +++ b/arch/riscv/kvm/vcpu.c
-@@ -185,6 +185,8 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
+@@ -94,7 +94,7 @@ static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
+ 	vcpu->arch.hfence_tail = 0;
+ 	memset(vcpu->arch.hfence_queue, 0, sizeof(vcpu->arch.hfence_queue));
  
- void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- {
-+	kvm_riscv_vcpu_sbi_deinit(vcpu);
-+
- 	/* Cleanup VCPU AIA context */
- 	kvm_riscv_vcpu_aia_deinit(vcpu);
+-	kvm_riscv_vcpu_sbi_sta_reset(vcpu);
++	kvm_riscv_vcpu_sbi_reset(vcpu);
  
+ 	/* Reset the guest CSRs for hotplug usecase */
+ 	if (loaded)
 diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
-index d1c83a77735e..3139f171c20f 100644
+index 3139f171c20f..50be079b5528 100644
 --- a/arch/riscv/kvm/vcpu_sbi.c
 +++ b/arch/riscv/kvm/vcpu_sbi.c
-@@ -508,5 +508,31 @@ void kvm_riscv_vcpu_sbi_init(struct kvm_vcpu *vcpu)
- 		scontext->ext_status[idx] = ext->default_disabled ?
- 					KVM_RISCV_SBI_EXT_STATUS_DISABLED :
- 					KVM_RISCV_SBI_EXT_STATUS_ENABLED;
+@@ -536,3 +536,27 @@ void kvm_riscv_vcpu_sbi_deinit(struct kvm_vcpu *vcpu)
+ 		ext->deinit(vcpu);
+ 	}
+ }
 +
-+		if (ext->init && ext->init(vcpu) != 0)
-+			scontext->ext_status[idx] = KVM_RISCV_SBI_EXT_STATUS_UNAVAILABLE;
-+	}
-+}
-+
-+void kvm_riscv_vcpu_sbi_deinit(struct kvm_vcpu *vcpu)
++void kvm_riscv_vcpu_sbi_reset(struct kvm_vcpu *vcpu)
 +{
 +	struct kvm_vcpu_sbi_context *scontext = &vcpu->arch.sbi_context;
 +	const struct kvm_riscv_sbi_extension_entry *entry;
@@ -169,13 +172,35 @@ index d1c83a77735e..3139f171c20f 100644
 +		if (idx < 0 || idx >= ARRAY_SIZE(scontext->ext_status))
 +			continue;
 +
-+		if (scontext->ext_status[idx] == KVM_RISCV_SBI_EXT_STATUS_UNAVAILABLE ||
-+		    !ext->deinit)
++		if (scontext->ext_status[idx] != KVM_RISCV_SBI_EXT_STATUS_ENABLED ||
++		    !ext->reset)
 +			continue;
 +
-+		ext->deinit(vcpu);
- 	}
- }
++		ext->reset(vcpu);
++	}
++}
++
+diff --git a/arch/riscv/kvm/vcpu_sbi_sta.c b/arch/riscv/kvm/vcpu_sbi_sta.c
+index 5f35427114c1..cc6cb7c8f0e4 100644
+--- a/arch/riscv/kvm/vcpu_sbi_sta.c
++++ b/arch/riscv/kvm/vcpu_sbi_sta.c
+@@ -16,7 +16,7 @@
+ #include <asm/sbi.h>
+ #include <asm/uaccess.h>
+ 
+-void kvm_riscv_vcpu_sbi_sta_reset(struct kvm_vcpu *vcpu)
++static void kvm_riscv_vcpu_sbi_sta_reset(struct kvm_vcpu *vcpu)
+ {
+ 	vcpu->arch.sta.shmem = INVALID_GPA;
+ 	vcpu->arch.sta.last_steal = 0;
+@@ -156,6 +156,7 @@ const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_sta = {
+ 	.extid_end = SBI_EXT_STA,
+ 	.handler = kvm_sbi_ext_sta_handler,
+ 	.probe = kvm_sbi_ext_sta_probe,
++	.reset = kvm_riscv_vcpu_sbi_sta_reset,
+ };
+ 
+ int kvm_riscv_vcpu_get_reg_sbi_sta(struct kvm_vcpu *vcpu,
 -- 
 2.49.0
 
