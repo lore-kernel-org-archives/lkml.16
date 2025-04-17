@@ -1,196 +1,120 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9FF2475C7;
-	Thu, 17 Apr 2025 13:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA55224BC09;
+	Thu, 17 Apr 2025 13:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744895023; cv=none; b=cbdRyU3ZtFZllA+vt6NQMbUQ4bFbqOJKFjMQTSHcEZLRj2KTOtA7hfHxrpMza0mTf69CKg1hKfr/gg/qeCGgzlKhmUczkOw5eVoAaKmvAEm2h6cBedJFxj9CCdjJJLRdqT9jfvXDP6PnWlJ4f0aGyx1At3Myce1PRqp/OZ6PyUU=
+	t=1744895026; cv=none; b=s0stZaLnjCe6ozfDng8xk8rFx8dHzIzouR0XXA1F3D0046X4/eFECIq3jOtaib2UFATM86Y5alIVKgzL3/cb31QDDXkHupD+sI2bqbY8FeexhfYD//QKQE6sXEjAn17Inu85S1oTqYLfD7rZbvepEU1kblBd60SLpp9h+g+TODM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744895023; c=relaxed/simple;
-	bh=gHW6P2QpI4eEpDjW2tdunMsPSxMg/QdbH4OoYBTuEoM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=V3r2UZ2R4PUCdlGJZdUtaFD3KOj5oXqe9OQB5iYgA/RS+NiD4c+bwSXeSjcFMGmfyuvyGhCW2w4dqRZmmimuPH7RNK72SeinEbRzNS2YcH/cad6NwwscsImdA46Gu4CPQcTJRVIj+hXuue312Kt/W8HiYRymZ9eIjwdmxjI5/Yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e6c18e2c7dso1406877a12.3;
-        Thu, 17 Apr 2025 06:03:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744895020; x=1745499820;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AutvC+U3QHOO+X197OHtCyJb0BVhDeo5m3JbUAKORWo=;
-        b=qpOoQIHaYsFgv54J8d1il4c9JPDjU16v16VNjghea1ywu4FsudinOzf6QHSBerDDIm
-         KhcFsylz/04sielEvdpMXb3qCa2ACSHFEGvjQhmeX7P8O8Xlz8ZTtn9FcNwSBPHvDhN/
-         Z7vnU9IO7TzFIKwRIazsFhl59m6KECTlhppCSV8CZlvi9lG/HN/tY1wiXOYSfWgd5Ffe
-         yg5Z8i5KxYSgzdE8qNWuO2bOKBX1UogP4vxrBsVCE9iMt/t5vbXYUv0VhgwINTbcNnVk
-         aBhQbIbbYyWiS7UxhqLxmYHCDBg4x2B6208Eu/xKZk9oSe1XWcsURT+vlE6Qsdyu1KEk
-         HRvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOoq7uPyxQ4mQRqaKXJP3/b/mQBLW0oi87d9oJvqVPdsOe3+cYoxhElM+l/5TMXasAGtxnGCW6+ytkWlA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhGhgFgm0p4f01TpX7epUKKPgVFVoIEhq4sa9mt1/ow+QsUQUq
-	pxN02ifN9uz1bXRtY/xpwWVoxhLaFfauJdDXs+eA73yLLUgq3vqp
-X-Gm-Gg: ASbGncs1Dz8slDT3wJyNXwBASxJ+y3b/fqQWbkLLkZCAHHmKOLDshuDdJUHSwteu5sv
-	DtRqgjHrelmr0uFSaS+cZJpkVm1TPse5htJK7bilgoAN8ohu+7nMl+u216jBjoFmKifOMZV8nA6
-	nMoA7qvn/1BeGx+7nliUyvfUF6pm1QGiNLQlZi4JVsITDzdn5ueWjIGiz5gAVu1ZGKygEiXSnGu
-	yOcpxYOS6PA9GjlooFE8Q/HKBI6Z7ocGoRF+oh9Jjm5rhC9KqTaGmnWaH5N03QTMjOG7ZypI1IV
-	HFafWM9z30H5KLLM3S6sxTFqK9PXWWyrSQLU8x6aug==
-X-Google-Smtp-Source: AGHT+IET++hQzwpLiSXA7X7cR7lGATwouvwe+ipToYpgvPnBvdl+4Lk57vihhbCnYPGP/ljH713DuQ==
-X-Received: by 2002:a17:907:3cd5:b0:ac8:179a:42f5 with SMTP id a640c23a62f3a-acb428f0f9emr496144266b.14.1744895019752;
-        Thu, 17 Apr 2025 06:03:39 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:1::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3cd636adsm293548166b.14.2025.04.17.06.03.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 06:03:39 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Thu, 17 Apr 2025 06:03:08 -0700
-Subject: [PATCH net-next 2/2] net: Use nlmsg_payload in rtnetlink file
+	s=arc-20240116; t=1744895026; c=relaxed/simple;
+	bh=wEPx3I/OWDDwZ2qvR9loNOPeo14SzRulZb1jMXSeibA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CHB9UVb6/ccuuSpH8FPjU4PXURnN4G3F1UuZgj2YHX402v4/VtaDqjaeWj1NC8GOaSCjFqghavvDUk9XZFF0f0ycGUbAWlFlOg3qLSTW5B3qVItHxz+1dyfYKxdlFZVcxk54H844tQFBzNuC4xyuEHkPEPIWeP379hmZw80nI3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D4491515;
+	Thu, 17 Apr 2025 06:03:41 -0700 (PDT)
+Received: from [10.1.25.43] (e127648.arm.com [10.1.25.43])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7236F3F59E;
+	Thu, 17 Apr 2025 06:03:42 -0700 (PDT)
+Message-ID: <459cbf79-e493-4caf-9601-d5c477734673@arm.com>
+Date: Thu, 17 Apr 2025 14:03:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250417-nlmsg_v3-v1-2-9b09d9d7e61d@debian.org>
-References: <20250417-nlmsg_v3-v1-0-9b09d9d7e61d@debian.org>
-In-Reply-To: <20250417-nlmsg_v3-v1-0-9b09d9d7e61d@debian.org>
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- kuniyu@amazon.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Breno Leitao <leitao@debian.org>, kernel-team@meta.com
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3917; i=leitao@debian.org;
- h=from:subject:message-id; bh=gHW6P2QpI4eEpDjW2tdunMsPSxMg/QdbH4OoYBTuEoM=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBoAPwmkQqcPiPmwEcyf55VbWBttQqqnW30qGVfm
- yoobs8PSaiJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaAD8JgAKCRA1o5Of/Hh3
- bU6tEACm5bflh9wPvPRjiZ/rRpkuMoJ1cVWxIao4FikcVT10lbSS48bC8UKirwv/N/NO4IBKAoF
- 8mmx/Owj1x57EHbxZ8oTdd2sgfmArWrfrMBMRijpftdJCNvkRWdzIlcfHBZ3GhygTQ3YPMgd8pB
- li2WZRQS3YZpEQdiWm3TRZjVkVLiejWYlBQ505LXoOVhZWj4Nu9znlshLtJNCZsU45WzVdvcCX1
- 8s9zrWKXCWr2GN+cN/kyakYP8P6c+yK4LpUAdtR0Mv6ZQIYbrBJWoiDDk+Zr0HkeU+tXD8qn733
- 8YdGn7IAfYZsa1wbzhHKvvJOsh4koGEE1NwE44Bkfae3GkqcBVkdlcOrHN6W8CgzXmeEq4piSKb
- 9zyNx+J5UwDbaUDwRLK55B6IsWHtJhbLNGzBrcThLbf4cxq0df1y1Cwsao3PswF0KxWFTjYvZ1S
- XcD/zTpoq8fgIXAHyGmgXROCeEe8XQPd0y6RyVlnJeRtjQVE//5SpNi2eMqb4aqRSLiuy/SjT14
- 5wcp4klGdEQfT1N1tKbf/8qIoOSSOl9LERGai/W5C+By8FXNXF2gGDiToSLSUUK0IbW3+hmrt5u
- trSn1gNMA/0NV7Btrup/rwadfJzsLPnti7ooZn3z1mUmThfcB5CXP2W0Lclsqo/VVmj4RWsEcn6
- gXQWubbAIcS03Rw==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFT][PATCH v1 3/8] cpufreq/sched: Allow .setpolicy() cpufreq
+ drivers to enable EAS
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Morten Rasmussen <morten.rasmussen@arm.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+ Pierre Gondois <pierre.gondois@arm.com>
+References: <3344336.aeNJFYEL58@rjwysocki.net>
+ <8554829.NyiUUSuA9g@rjwysocki.net>
+ <e439a75c-fe36-4fba-b394-c154adeff15a@arm.com>
+ <CAJZ5v0jxoKaGOsXqUqd=n95ATxzDTueSy_je_ktxOdm6B=+20A@mail.gmail.com>
+Content-Language: en-US
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <CAJZ5v0jxoKaGOsXqUqd=n95ATxzDTueSy_je_ktxOdm6B=+20A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Leverage the new nlmsg_payload() helper to avoid checking for message
-size and then reading the nlmsg data.
+On 4/17/25 14:01, Rafael J. Wysocki wrote:
+> On Thu, Apr 17, 2025 at 2:19 PM Christian Loehle
+> <christian.loehle@arm.com> wrote:
+>>
+>> On 4/16/25 19:01, Rafael J. Wysocki wrote:
+>>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>>
+>>> Some cpufreq drivers, like intel_pstate, have built-in governors that
+>>> are used instead of regular cpufreq governors, schedutil in particular,
+>>> but they can work with EAS just fine, so allow EAS to be used with
+>>> those drivers.
+>>>
+>>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>> ---
+>>>
+>>> v0.3 -> v1
+>>>      * Rebase on top of the new [1-2/8].
+>>>      * Update the diagnostic message printed if the conditions are not met.
+>>>
+>>> This patch is regarded as a cleanup for 6.16.
+>>>
+>>> ---
+>>>  drivers/cpufreq/cpufreq.c |   13 +++++++++++--
+>>>  1 file changed, 11 insertions(+), 2 deletions(-)
+>>>
+>>> --- a/drivers/cpufreq/cpufreq.c
+>>> +++ b/drivers/cpufreq/cpufreq.c
+>>> @@ -3054,7 +3054,16 @@
+>>>
+>>>       guard(cpufreq_policy_read)(policy);
+>>>
+>>> -     return sugov_is_governor(policy);
+>>> +     /*
+>>> +      * For EAS compatibility, require that either schedutil is the policy
+>>> +      * governor or the policy is governed directly by the cpufreq driver.
+>>> +      *
+>>> +      * In the latter case, it is assumed that EAS can only be enabled by the
+>>> +      * cpufreq driver itself which will not enable EAS if it does not meet
+>>> +      * the EAS' expectations regarding performance scaling response.
+>>> +      */
+>>> +     return sugov_is_governor(policy) || (!policy->governor &&
+>>> +             policy->policy != CPUFREQ_POLICY_UNKNOWN);
+>>>  }
+>>>
+>>>  bool cpufreq_ready_for_eas(const struct cpumask *cpu_mask)
+>>> @@ -3064,7 +3073,7 @@
+>>>       /* Do not attempt EAS if schedutil is not being used. */
+>>>       for_each_cpu(cpu, cpu_mask) {
+>>>               if (!cpufreq_policy_is_good_for_eas(cpu)) {
+>>> -                     pr_debug("rd %*pbl: schedutil is mandatory for EAS\n",
+>>> +                     pr_debug("rd %*pbl: EAS requirements not met\n",
+>>>                                cpumask_pr_args(cpu_mask));
+>>
+>> I'd prefer to have at least "EAS cpufreq requirements" printed here.
+> 
+> Sure.
+> 
+>> with that caveat
+>> Reviewed-by: Christian Loehle <christian.loehle@arm.com>
+>>
+>> Maybe we should amend the EAS documentation to reflect this?
+> 
+> Yes, the documentation should be updated.  Which piece of it in
+> particular I need to look at?
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- net/core/rtnetlink.c | 25 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
-
-diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
-index f5c018090efc3..3becb79a97c69 100644
---- a/net/core/rtnetlink.c
-+++ b/net/core/rtnetlink.c
-@@ -2390,12 +2390,12 @@ static int rtnl_valid_dump_ifinfo_req(const struct nlmsghdr *nlh,
- 	if (strict_check) {
- 		struct ifinfomsg *ifm;
- 
--		if (nlh->nlmsg_len < nlmsg_msg_size(sizeof(*ifm))) {
-+		ifm = nlmsg_payload(nlh, sizeof(*ifm));
-+		if (!ifm) {
- 			NL_SET_ERR_MSG(extack, "Invalid header for link dump");
- 			return -EINVAL;
- 		}
- 
--		ifm = nlmsg_data(nlh);
- 		if (ifm->__ifi_pad || ifm->ifi_type || ifm->ifi_flags ||
- 		    ifm->ifi_change) {
- 			NL_SET_ERR_MSG(extack, "Invalid values in header for link dump request");
-@@ -4087,7 +4087,8 @@ static int rtnl_valid_getlink_req(struct sk_buff *skb,
- 	struct ifinfomsg *ifm;
- 	int i, err;
- 
--	if (nlh->nlmsg_len < nlmsg_msg_size(sizeof(*ifm))) {
-+	ifm = nlmsg_payload(nlh, sizeof(*ifm));
-+	if (!ifm) {
- 		NL_SET_ERR_MSG(extack, "Invalid header for get link");
- 		return -EINVAL;
- 	}
-@@ -4096,7 +4097,6 @@ static int rtnl_valid_getlink_req(struct sk_buff *skb,
- 		return nlmsg_parse_deprecated(nlh, sizeof(*ifm), tb, IFLA_MAX,
- 					      ifla_policy, extack);
- 
--	ifm = nlmsg_data(nlh);
- 	if (ifm->__ifi_pad || ifm->ifi_type || ifm->ifi_flags ||
- 	    ifm->ifi_change) {
- 		NL_SET_ERR_MSG(extack, "Invalid values in header for get link request");
-@@ -5055,12 +5055,12 @@ static int valid_fdb_get_strict(const struct nlmsghdr *nlh,
- 	struct ndmsg *ndm;
- 	int err, i;
- 
--	if (nlh->nlmsg_len < nlmsg_msg_size(sizeof(*ndm))) {
-+	ndm = nlmsg_payload(nlh, sizeof(*ndm));
-+	if (!ndm) {
- 		NL_SET_ERR_MSG(extack, "Invalid header for fdb get request");
- 		return -EINVAL;
- 	}
- 
--	ndm = nlmsg_data(nlh);
- 	if (ndm->ndm_pad1  || ndm->ndm_pad2  || ndm->ndm_state ||
- 	    ndm->ndm_type) {
- 		NL_SET_ERR_MSG(extack, "Invalid values in header for fdb get request");
-@@ -5327,12 +5327,12 @@ static int valid_bridge_getlink_req(const struct nlmsghdr *nlh,
- 	if (strict_check) {
- 		struct ifinfomsg *ifm;
- 
--		if (nlh->nlmsg_len < nlmsg_msg_size(sizeof(*ifm))) {
-+		ifm = nlmsg_payload(nlh, sizeof(*ifm));
-+		if (!ifm) {
- 			NL_SET_ERR_MSG(extack, "Invalid header for bridge link dump");
- 			return -EINVAL;
- 		}
- 
--		ifm = nlmsg_data(nlh);
- 		if (ifm->__ifi_pad || ifm->ifi_type || ifm->ifi_flags ||
- 		    ifm->ifi_change || ifm->ifi_index) {
- 			NL_SET_ERR_MSG(extack, "Invalid values in header for bridge link dump request");
-@@ -6224,7 +6224,8 @@ static int rtnl_valid_stats_req(const struct nlmsghdr *nlh, bool strict_check,
- {
- 	struct if_stats_msg *ifsm;
- 
--	if (nlh->nlmsg_len < nlmsg_msg_size(sizeof(*ifsm))) {
-+	ifsm = nlmsg_payload(nlh, sizeof(*ifsm));
-+	if (!ifsm) {
- 		NL_SET_ERR_MSG(extack, "Invalid header for stats dump");
- 		return -EINVAL;
- 	}
-@@ -6232,8 +6233,6 @@ static int rtnl_valid_stats_req(const struct nlmsghdr *nlh, bool strict_check,
- 	if (!strict_check)
- 		return 0;
- 
--	ifsm = nlmsg_data(nlh);
--
- 	/* only requests using strict checks can pass data to influence
- 	 * the dump. The legacy exception is filter_mask.
- 	 */
-@@ -6461,12 +6460,12 @@ static int rtnl_mdb_valid_dump_req(const struct nlmsghdr *nlh,
- {
- 	struct br_port_msg *bpm;
- 
--	if (nlh->nlmsg_len < nlmsg_msg_size(sizeof(*bpm))) {
-+	bpm = nlmsg_payload(nlh, sizeof(*bpm));
-+	if (!bpm) {
- 		NL_SET_ERR_MSG(extack, "Invalid header for mdb dump request");
- 		return -EINVAL;
- 	}
- 
--	bpm = nlmsg_data(nlh);
- 	if (bpm->ifindex) {
- 		NL_SET_ERR_MSG(extack, "Filtering by device index is not supported for mdb dump request");
- 		return -EINVAL;
-
--- 
-2.47.1
-
+Documentation/scheduler/sched-energy.rst
+has:
+6.4 - Schedutil governor
+so at least there.
