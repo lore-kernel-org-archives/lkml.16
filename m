@@ -1,99 +1,116 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CC835948
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 20:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C5A207DEE
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 20:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744923204; cv=none; b=mw2/+LPqijqzNDqhV+cJjUJraNcAuOQ44jNLR+MXrVTYQMPbRIWlydXk9TP99tthtxHR8wrtRNkUH6COmisgFLmPaRJHwfFxDKNciqb5bqVkfAmz1UozxVzWAjgTODLC8YKpezhSv219sZJsQdv/Itk5qrGFBHz1+iGgTcLs+38=
+	t=1744923257; cv=none; b=lcaQPH7NF+8x96SZQJqHLMmT2j0FrJed6ddMt2mpSxOJCwiw9/yje6W0LlaoYn7Vlt3lv53VR+YrPy2+aEvVgdABSKT8hHyyhOmxz6rqyuBdPrCjadDrMziODsPAv+JxFYbG/756wN7vq2Q0VojkpJtBBSEmytEKUPJUVxmwhPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744923204; c=relaxed/simple;
-	bh=dU4K8w2iZUqK1qEwcjzFKZf95JgMH503fYGue1h04/U=;
+	s=arc-20240116; t=1744923257; c=relaxed/simple;
+	bh=/2LmxShOaQLvBEqccdDJUYFolTsOGX4GIEB0Z+NV5NM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ufROpsaZLX4aWa5Ly07DbcXNCZ02QIyn6UUBD85q6+k5VdkZVsdY1QN96MtkcxQ28aEfxpkGYoA5BH/OsoM3UID9Zm8ciQom5ZAds2tP9k0pj21n9mTUgU9Ry7GbRnW9w6Yllk4x3BM5WmhQ2VQJrMrZdBXkz/APLVN8D34wvp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ATBPhGaE; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=DhqjpgVbD1VonBhRarIpDsep0I6tKaGSoSZqDPXBsKG+VGlYOPLcyVJAKfD/E/kxHKCNG78aULesElMX9mg0QQOAZHkSurRKCtDhcHwQSFbrh8x1O9EauL+Nt46rluxmjOYxdt+rfJxnf3l1rCUySTYF4rw37ZZ6OFzBZJAquxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=jmHRcbOa; arc=none smtp.client-ip=209.85.210.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ATBPhGaE"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4394a823036so4098685e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 13:53:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="jmHRcbOa"
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-72ecc30903cso642322a34.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 13:54:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744923200; x=1745528000; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xDbB859dSDSfvEjPhjet4jsYsLjTq5f/3IKKPbQbhjc=;
-        b=ATBPhGaE921YD+OxmrFJAIF5q1jNXPA8c9QQKqWjM8UOprf7i31rmipI1ohg64JvSL
-         XfACDbNayyuzU+bKe0YDOjMbSTch7sMf9bK1pS5vdpcRUfT0bD5F0hoZXvi8qpfY4FNp
-         7YjE0Se4qINVirmd0RPalDjWOQHDA6k1ZrxrNCHsr/SGWMINDiaVJTBW8XrA7Hk3l5zZ
-         3yrc0k0FIvKuGx3DOYffGqu1FBu+Bk1dHvAgfnH7g6yH28SKJ7Cv5SpLKte1Pm6hqPqd
-         VuJsyL6FVVwQQOGIsr29MrvrAwa8paM7xZHJswJpapmOIjcU25Sjd75vRzxIGRPeh1Fj
-         /4pQ==
+        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1744923254; x=1745528054; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AxyhzbzIHVkJvC2MgzVh8m2arwnfs5b3zesOIXgwMoA=;
+        b=jmHRcbOaNXkwpQsvfKWbxmeQqAz/Zw/tvKUp8QQiNZvvGAmkOIkQKjb030czTBbXJQ
+         M9BrBd75apUEjlPnkfyWovTbaSlx4tyojFjiZef0wgk+m+IZjEZoADRterCYUV2d2rDI
+         DTCSWo3X2qpftyIeLiYgl3RippthuO6JxZ7rnb37PdcJ51PYxtVJRXOuUSAl7Od3CJDG
+         0swqRpPWgeNpILQb2v0Tsn1Yd3WvoNSYaL6U5jFrHqil32693GHF64GQm0t4O8hyZP8m
+         ZkwsawiIANHlH0xtw9B34BjjNWnmbLfirxim/8/D4aolH6jnvao6OZsYqwV2QOPdEKM2
+         xLIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744923200; x=1745528000;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xDbB859dSDSfvEjPhjet4jsYsLjTq5f/3IKKPbQbhjc=;
-        b=v1UNY/Vq0HiPKu+OzWFuKScsQ1CGCjWh1QcKBp2hgpO8fR8sRGRjZpxHK08c8dNUUb
-         mEDlQuRT7GQmyP5tc4yd3zMZQiNdiMlAUDFWBA+XE90JeSpXxSWy98FZVbJm7o0YhdTm
-         9i9PPAXhOWRQIh/PXLBFsEkiX4pneIm3vuXH8Hqsf1Kk2e0qi5pvze6G5ZvMHtbSLV8i
-         5QhbC575T8t2Bqzhnf0A4dT023PHFBUQDIpU0S5DhG5pS47u1M5vulCenf9mj0nHPApv
-         rqlbMLiPrxcVcUw1qlCBbZYyA8gZCzFQ5eksf4ug/tC+V6kDU10Rtk1Ne5sK44mQMsSW
-         AAng==
-X-Forwarded-Encrypted: i=1; AJvYcCXBqHrDz1utoB7kvctRvQUhURy0YN1qMSml8sm5tGiSqGQ3TbcpLojSTvoVlMiQ5pc75St/Obm+vLIulms=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUK5J6r9k24uk2dUR6RBsSmE7A4WJN0UQrEbYfjxpCPDFNrCQu
-	3kr9y3Yb/OaBDcXrrvcs2GV2n0xsgwyCuALgE/fKR9cT3xEFD9qmcgfRIDFJ5Zo=
-X-Gm-Gg: ASbGncte3TIm5BuuB5KoJsdwhLK8Ba4mTD5zksUMdmZzHWSTA/LxHoEfrhpxbtXIHVB
-	TocHBeJ2XpJIURHA2MSBr5a1rn7QO+ntm6skqg3CynmqHbPFQ1rqt+eJeDcwykAtcCxSke+3Dtj
-	2ePH28x8xVJzt0b/FA4S20+hFdPTATUQNKMl4cm7Op4Bk3nms7JkjsZl+1VVuXO6yNVDwuDVl06
-	dhsJt5W90cgr0n063905j7OozwdLQ3tpZa5y0ZcS7cj1DEbLOGc7foYLNqnJHyfq1mAa6g8bTNn
-	5AmwC0qwRJEw8CoO5byitRid8rsoNSyZinpp5RIJogS2uo77zm13FvA1Hz9eY403kAbke/sNLHg
-	maT8=
-X-Google-Smtp-Source: AGHT+IE/Yp64SirhNGNelGiWpri0X2Q09E00vtNFhQsoUcfIVJFu1JQsSDwG5YgCWmsxIzILvvYqcA==
-X-Received: by 2002:a05:600c:b94:b0:43d:fa59:af98 with SMTP id 5b1f17b1804b1-4406ac65474mr2651105e9.33.1744923200468;
-        Thu, 17 Apr 2025 13:53:20 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406abb640bsm3339605e9.2.2025.04.17.13.53.19
+        d=1e100.net; s=20230601; t=1744923254; x=1745528054;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AxyhzbzIHVkJvC2MgzVh8m2arwnfs5b3zesOIXgwMoA=;
+        b=fQLzIz3nPLKoKNLsOKPB07cOh54mOs3qPGmpvTlzyDt2YJODK+i7AdxwGTv5uRGJuJ
+         wMFeOGlvabcr4znQ7WEjSDRNAi7pB/6YZfGZt4Ez46QJa0VsGvkWTO/UHuBI5xHuO4am
+         0FwIE8cje9VdMBZyUbPKQhDaoMzSvR0MosGacSK4rw7aM6aD9QFg/gESpI76PUAG31a+
+         es6cmydxlq/HVhT4Kbf52Tr17eQV1vxECKfFHCzDbrlIVUzyNo5cakHb6D/GPuZ5in5r
+         C1mdOq1DRjEXTQRoFQs0Pm7FQartm8k/n8E7YgTiojESMbhVr/qVFlN/vmI85vRII/yv
+         4lFw==
+X-Gm-Message-State: AOJu0YwS+dM2dDj+xMmfdblGDiMARpGnaN3CpTOa0weGit5ZJNjOmC+F
+	K5fHIYyOqWib/O/dzk6cUffiFMT8I1xil+qL360EoXlwxe/XjP9ZsjDEg3/irzA=
+X-Gm-Gg: ASbGncsIRjL52KF+66keb8hRCAJG2ccA5ULtS6p9Q3KVpTPww/f9rj60+mMJ9h+ngdR
+	GU4iT6iMs8m8wUhu1aOeQNyvioyd/61OkA5h+8HroFm9bcJsr6b7drW6fqA1wZnhQmziVjmHgwS
+	c0QGpfffdM5i0icvBO9Ekz/P4ksLW70J6uFP4d0NG1/lknILi8aY6vVyHGgoGWMK1DCzUl2XEeC
+	9F+G/eZbJ7Nb60JqdMjOHDYVRjeU55dyCtXA41fjkGv5hLcSU7OjcKjSsjKKZJAKe5nwbRQravs
+	1nSKnRRzB8TVvqEzZDCcv5ZgIiHrHbyCArYMf9FJeNnf
+X-Google-Smtp-Source: AGHT+IEEBCPGIT987h1aHaE/eKmnbK1GNdv4lCevrZreACU6pefT9/dZW63fGbDma8uaCTHrBWM2qQ==
+X-Received: by 2002:a05:6830:600b:b0:72b:9506:8db0 with SMTP id 46e09a7af769-73006213195mr121803a34.12.1744923254576;
+        Thu, 17 Apr 2025 13:54:14 -0700 (PDT)
+Received: from mail.minyard.net ([2001:470:b8f6:1b:8795:e9fb:beca:ef25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7300478f3fasm89495a34.7.2025.04.17.13.54.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 13:53:19 -0700 (PDT)
-Date: Thu, 17 Apr 2025 22:53:18 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] thermal: hisi: Do not enable by default during compile
- testing
-Message-ID: <aAFqPuFBfGEKFb-D@mai.linaro.org>
-References: <20250417074638.81329-1-krzysztof.kozlowski@linaro.org>
+        Thu, 17 Apr 2025 13:54:14 -0700 (PDT)
+Date: Thu, 17 Apr 2025 15:54:09 -0500
+From: Corey Minyard <corey@minyard.net>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linux Kernel <linux-kernel@vger.kernel.org>,
+	OpenIPMI Developers <openipmi-developer@lists.sourceforge.net>
+Subject: Re: [PATCH v2] ipmi:si: Move SI type information into an info
+ structure
+Message-ID: <aAFqcaFGOoOVRpWO@mail.minyard.net>
+Reply-To: corey@minyard.net
+References: <20250416183614.3777003-2-corey@minyard.net>
+ <aAEkdwD888tW2OUY@smile.fi.intel.com>
+ <aAElHft1iVqZbhBA@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250417074638.81329-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <aAElHft1iVqZbhBA@smile.fi.intel.com>
 
-On Thu, Apr 17, 2025 at 09:46:37AM +0200, Krzysztof Kozlowski wrote:
-> Enabling the compile test should not cause automatic enabling of all
-> drivers, but only allow to choose to compile them.
+On Thu, Apr 17, 2025 at 06:58:21PM +0300, Andy Shevchenko wrote:
+> On Thu, Apr 17, 2025 at 06:55:35PM +0300, Andy Shevchenko wrote:
+> > On Wed, Apr 16, 2025 at 01:36:15PM -0500, Corey Minyard wrote:
+> > > Andy reported:
+> > > 
+> > > Debian clang version 19.1.7 is not happy when compiled with
+> > > `make W=1` (note, CONFIG_WERROR=y is the default):
+> > > 
+> > > ipmi_si_platform.c:268:15: error: cast to smaller integer type 'enum si_type'
+> > > +from 'const void *' [-Werror,-Wvoid-pointer-to-enum-cast]
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> It seems you copied'n'pasted from narrow screen. The lines should kept as is
+> (as long as they are) without an additional line break and plus sign.
+
+Yep.  Thanks Andy.  Should this wait for for 6.16, or would 6.15 be
+better?
+
+-corey
+
 > 
-> ---
-
-Applied, thanks
-
-
--- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+> > >   268 |         io.si_type      = (enum
+> > > +si_type)device_get_match_data(&pdev->dev);
+> 
+> Ditto.
+> 
+> > > The IPMI SI type is an enum that was cast into a pointer that was
+> > > then cast into an enum again.  That's not the greatest style, so
+> > > instead create an info structure to hold the data and use that.
+> > 
+> > Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
