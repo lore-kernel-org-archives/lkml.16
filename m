@@ -1,179 +1,234 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2055.outbound.protection.outlook.com [40.107.95.55])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F372C1F8EF6;
-	Thu, 17 Apr 2025 09:19:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744881576; cv=fail; b=fs259cVpYedGfjyN61EmWdq458BKiTNgQt8ZMkGiU+2n/NCcNMkMqDUt+50MQ3CXdSFWJ5UwdDgL5O6y0tO2e68azK8r9ZAp20zlqTtYBe2NVv4lgWEPPDFg98vmw4SchZry2R/g0lIJOTlBpvRXVzLBERdtaXOwGSw821npLnM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744881576; c=relaxed/simple;
-	bh=fNWvREtw20UDRUDeaet1hyJW63o9ph+wDCxPj7HlkbE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OgFdzzuIRxKgymXYUVn9/VaXmXnAdwxLofwAMd84QK/Xfx97yT/xiCo/M7c+sFGKDl6ADL1NIj7L2kZtIZfyP8H5qXYT5FVqbizdrUrdT9UkEsDqmlOsJ7GV6xzqA9WukV1O4xs3VEXDDlcqTMheudKHqV1kUd6/wBTGT+Mm24M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QV2toHP6; arc=fail smtp.client-ip=40.107.95.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC98A2288C3
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:19:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744881579; cv=none; b=OAObK1xxI3lZx6KfHTZerFpzB+sLeKImCBmaQgIOGo65UCi92KLjjFw7Wb5YhpCcdoWD3CecY/1AVwO7t7Xm02rxuwpc/P+nALeoTPB0j8W02DX+8YQGwitGmQV3PQKpbfxXDgxfgx2B115kXPRKGpQJGWR/m8PR8yVSJedmD4g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744881579; c=relaxed/simple;
+	bh=Ylf0Ip+j+wp+NQRSGRA5HQfnG83N9uNyl5OVFc/4JbU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZUgHpCQW5VFzNjtO0NUgkYDkzAWLFrxiVgfV8eWXOzr7UXfwL5HTnkKM+jNm/BCa4uAubZ7Pu66jX6UK/01A0B3ePilOOFmZDWT48c9nOp7mh+VTUo/Vil8vghaCs5+SJ+xXE8ObCqoZZWBy0m4TwlSOt74ghoudAcdHxih5N4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Gi9qwnLt; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QV2toHP6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ESZ19LPWPF5nMzzUNP40Fhn9esDxpvkBKRhGveN73Ju9LOxb6/4fsIQDlf1UPpHxtLjFnZKCvvBMvpDp04WRXdayzXIMrk+UQ63N1VeuXey5eWtFRY5+w6foLjrkxTzb/x9/KN5RuoIPGTR/q+EAZETMizvf5PvZ9R3H0cYj7O5rKPzeYhtJ9vudrkKSB7TyHs/yjV1uFsPFQu3Q+p8+wO4nLjFh2X7PNJ6ODlT9W0JXRdOZ96yrZQwqpjXsKvChOOf9QB4SlpD/IiN9gQHYv5FmIO3NJ4/vfIRkf71bPM/ng++kdlUmbjdJTimfCA1bP2gedh/YtYjLA3eDGBVLOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zQLaFtxVNJw6R7KICuzkF7I+xkXI00u1GIQfeQRlwWI=;
- b=pRG4F8AuYkMNjV8rCX+f/2NWjUFmgCg+Xb+p/qxVJ2rKyOY2DbtQgbpKEz/aYljWzuBVD74InPYzzNBA1m9DP3PVlJE8b2F/nYAurxtFAENPmiCAAOk22buyZ2k0zRDXd1BnBCGfVXRDET6OxgGQVngXotrKnK/eP5jnLrRRKxyXinsjlUvEq9V+2FtV8BEbux3ZdeXc5lJZc4/vfzbGeHdXXVL14DcvC7Xfss6XVVoEPp3duzj9vBhbYRtRmt+MbgC8LTzOwN9cWDUHSXWn2SRZBE9y3OUHttFimWSEf9sIA/W31FWw2BK4aoaP9Y5725VkrGo1vEBY8MsPw/pbEg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zQLaFtxVNJw6R7KICuzkF7I+xkXI00u1GIQfeQRlwWI=;
- b=QV2toHP6wygnshJugFaOqm6oXM6+xPg6e+XRlBgufRmDtgkysdqsyY4hfFV+eRlYnk5+IhmhrMZ/5fAyEPQl3xHMRGN+YyVhH0Ly+/1G67u9kgsW5Cx0Z78AmX3+vYOhrH1Kklxvq7B2jj3rdlMxUzdime6rdKcj6yL+esnUal0=
-Received: from BN8PR12CA0008.namprd12.prod.outlook.com (2603:10b6:408:60::21)
- by DS0PR12MB8217.namprd12.prod.outlook.com (2603:10b6:8:f1::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.47; Thu, 17 Apr
- 2025 09:19:31 +0000
-Received: from BN2PEPF000055DA.namprd21.prod.outlook.com
- (2603:10b6:408:60:cafe::4b) by BN8PR12CA0008.outlook.office365.com
- (2603:10b6:408:60::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.34 via Frontend Transport; Thu,
- 17 Apr 2025 09:19:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN2PEPF000055DA.mail.protection.outlook.com (10.167.245.4) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8678.4 via Frontend Transport; Thu, 17 Apr 2025 09:19:31 +0000
-Received: from BLR-L-NUPADHYA.xilinx.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 17 Apr 2025 04:19:23 -0500
-From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>, <nikunj@amd.com>,
-	<Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
-	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
-	<hpa@zytor.com>, <peterz@infradead.org>, <seanjc@google.com>,
-	<pbonzini@redhat.com>, <kvm@vger.kernel.org>,
-	<kirill.shutemov@linux.intel.com>, <huibo.wang@amd.com>,
-	<naveen.rao@amd.com>, <francescolavra.fl@gmail.com>
-Subject: [PATCH v4 05/18] x86/apic: Initialize APIC ID for Secure AVIC
-Date: Thu, 17 Apr 2025 14:46:55 +0530
-Message-ID: <20250417091708.215826-6-Neeraj.Upadhyay@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250417091708.215826-1-Neeraj.Upadhyay@amd.com>
-References: <20250417091708.215826-1-Neeraj.Upadhyay@amd.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Gi9qwnLt"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GLdEHw016618;
+	Thu, 17 Apr 2025 09:19:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=c8WnN0
+	y0wFJKqb7B3e+6L+n496yH9B+pysfyySy9kJc=; b=Gi9qwnLtm1FL3FemqBl1gp
+	BiBQstU5PEj6uriKWajZO7PAufz5xvcKurJTtfjRAuxrSJgbrlM0EoNK/Np/Ms53
+	Ve+mVWLzWipUmM3mN2+scTNkoc9SqgRA1+ys1KetAlJndeE6pAg+YAR6lToooEU8
+	cnSh0jb91z69/eWgAtWtbI1iF1vzq1RQMz7eGoZYpsE5CV3mIR2jPdCw4xWVM8lM
+	SecN2FbOYFkDIkQxStIqzzoBkDZLZ4qDRpifnizys5FjkwqMW8jKA0aqTJQJtn0u
+	3Ccvpum8yJJ67oLGoYH4asUMDercd5Gzoox0CVXuWTchrrdguwOHLmw3QjyzRFNQ
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 462mn7tkvy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 09:19:28 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53H8e8RH024874;
+	Thu, 17 Apr 2025 09:19:27 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4602gtn8ja-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 09:19:27 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53H9JQXl33817338
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 17 Apr 2025 09:19:26 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0121A20043;
+	Thu, 17 Apr 2025 09:19:26 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4A68120040;
+	Thu, 17 Apr 2025 09:19:24 +0000 (GMT)
+Received: from [9.39.24.204] (unknown [9.39.24.204])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 17 Apr 2025 09:19:24 +0000 (GMT)
+Message-ID: <82baaf6c-f3d9-4c3e-be69-24389eadb18c@linux.ibm.com>
+Date: Thu, 17 Apr 2025 14:49:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000055DA:EE_|DS0PR12MB8217:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4db76b59-3b3f-43eb-464e-08dd7d90f603
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|7416014|1800799024|376014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?4mPr27xtO+2PTeUMT7fxSgZbKGXRlXb2eHv1A4u1zQq5pEusnYfvYEYVdPo4?=
- =?us-ascii?Q?uTkxi5sRKM+z+o+AMZvNCEL6Xeu3TTkn0NHq2MVBluBTEiVxpbed2wNEUl0z?=
- =?us-ascii?Q?AFRg9g0FavZPRQJ6a5IymNQcVUQUMhrSQ/Ac0V8O8/yA501rl42YTqVkW81V?=
- =?us-ascii?Q?HJA+pJLhHrLuiu5liKOOQKSnSJi1zD4jPuZ0SBkaqH4i0Iy0pgbN5Sw+awbL?=
- =?us-ascii?Q?XxAsbiNl1tG6w3eJkRVedph05LYlDWWaPLc6opS/PHSmm1cRAfs9DOvbykgC?=
- =?us-ascii?Q?CO7O/2eHutvKDv7MDpYq7OwsDMhNf308gjZXXraxYRPusvtiVeuG14voAivr?=
- =?us-ascii?Q?GSxsLi25twuaz0PBHzinutF3ICvtU8wT26nBRD+ZBO0gC7UCrRKPkf1dFrwu?=
- =?us-ascii?Q?KXu1BX72Qqtu7qTi5uFWOhhAo3MKxVx2xU1D/RcO6yVCHYMr8Bckvj6FVF6L?=
- =?us-ascii?Q?8UazRZ8tVTmeKmdlzzGGImxfx0vV8kCrB9bMbJVcqqEqCDImrfH/M99nk8A+?=
- =?us-ascii?Q?c3+8GjyuKfRT3qaX9qHFe8rmaBmi6MLBRS2oudCH1DmVUO8Q35PYvlUWhUZW?=
- =?us-ascii?Q?MildBmpz6DgTa2dhYHB9tLcx6A0iDN8VVckRu2e8/OSDdy89Oexpynxjj5gR?=
- =?us-ascii?Q?vua+Cce/qqeOZ9cmCoZHudqtA8s6K3CMqu0kWSPrsAugdQk5O3sHfcUllG4O?=
- =?us-ascii?Q?fj2+U+WYyqhHhEpSLWFuCtyIrux2EIrENWuLotWcQWA0BimgB61QKNfDDYMv?=
- =?us-ascii?Q?bROQn8jPC67v5vE2BOvB/9YNvhiskCWDuTHvjnDLbbYqoq9LJxEbZAAuQ+LR?=
- =?us-ascii?Q?luYE6+csK7cZjwSBaz73jbKcEbFYXH+0SA94GOhMzIEDwuMcD1kd5OKVa99D?=
- =?us-ascii?Q?bVsCqio4dZ1OBj2L1766TCXRnaLriMnG2/GxXe9jCdDcEq1YVDD/HiNMvUMg?=
- =?us-ascii?Q?7rAsYVuA73BaX1Yc5iOCmT2tBfuYvmJNJ9AbtEE1VKYVU1D9iOqnvsIU0PSU?=
- =?us-ascii?Q?UtSNew4MxSmvJDjsR+k8rkKa0tOIkwFpSbRX7ZGcVijgOZDWhVm2OHvooGuf?=
- =?us-ascii?Q?5GkjXlJeCxW37X5DbNMLkC/VNK0RCjQFtsVJhxkUd9iY5jBfpGqbCx8k1upe?=
- =?us-ascii?Q?3Q18wDJ5PBNhyNdteSfGSDHJfnddKe2DGCYYrNcRvpm+Qq3/7u0UjhGA4xN/?=
- =?us-ascii?Q?exhAIaJdXMk48C4dA2xgQmZlaywTonrU+sRi9LDkgwu9XlRPlkyEBZDFdViK?=
- =?us-ascii?Q?VmeJkperwkJo/1h3gMXHf+3CfKaRoHXCw32kP6l9e1n5XeR3TcGthzXyioH0?=
- =?us-ascii?Q?R2cuiMS2+oa266NEXVlPCoJShA6ynpDLRUpSxeGroYZLnFkRRUWjtPmuhwkH?=
- =?us-ascii?Q?3qhFcGiq+hfk+O3UbmOeuKdS8MhZj1XxNtMJai23CnwohqfDDMzGOdjx2GH8?=
- =?us-ascii?Q?J+AiCcao18Cq0gsOVbirFHlvO+RRZb4LbBpC9GkocDKSO0qXmCQVQYF6RgKy?=
- =?us-ascii?Q?IEV/vUlM5iG3s4KKlCZBzC/VmL573z+Q/Dwy?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 09:19:31.2228
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4db76b59-3b3f-43eb-464e-08dd7d90f603
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000055DA.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8217
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched: Skip useless sched_balance_running acquisition if
+ load balance is not due
+To: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>,
+        Doug Nelson <doug.nelson@intel.com>,
+        Mohini Narkhede <mohini.narkhede@intel.com>,
+        linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, "Chen, Yu C" <yu.c.chen@intel.com>
+References: <20250416035823.1846307-1-tim.c.chen@linux.intel.com>
+ <fbe29b49-92af-4b8c-b7c8-3c15405e5f15@linux.ibm.com>
+ <667f2076-fbcd-4da7-8e4b-a8190a673355@intel.com>
+ <5e191de4-f580-462d-8f93-707addafb9a2@linux.ibm.com>
+ <23e05939e7a19151d9b17d011e48a85d650b4e8a.camel@linux.intel.com>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <23e05939e7a19151d9b17d011e48a85d650b4e8a.camel@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=ANnAolku c=1 sm=1 tr=0 ts=6800c7a0 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=j9ACozpduBSlqxEhICoA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: daWXHAUEoCY0nVC9eRDj_emvx_je2tLs
+X-Proofpoint-ORIG-GUID: daWXHAUEoCY0nVC9eRDj_emvx_je2tLs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-17_02,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=999 adultscore=0 spamscore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 phishscore=0 clxscore=1015 impostorscore=0
+ priorityscore=1501 lowpriorityscore=0 classifier=spam authscore=0 adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504170070
 
-Initialize the APIC ID in the Secure AVIC APIC backing page with
-the APIC_ID msr value read from Hypervisor. CPU topology evaluation
-later during boot would catch and report any duplicate APIC ID for
-two CPUs.
 
-Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+
+On 4/16/25 21:49, Tim Chen wrote:
+> On Wed, 2025-04-16 at 14:46 +0530, Shrikanth Hegde wrote:
+>>
+
+>>
+> You mean doing a should_we_balance() check?  I think we should not
+> even consider that if balance time is not due and this balance due check should
+> come first.
+> 
+Hi Tim.
+
+This is the code I was suggesting.
+
 ---
-Changes since v3:
 
- - No change.
-
- arch/x86/kernel/apic/x2apic_savic.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/x86/kernel/apic/x2apic_savic.c b/arch/x86/kernel/apic/x2apic_savic.c
-index 4761afc7527d..81d932061b7b 100644
---- a/arch/x86/kernel/apic/x2apic_savic.c
-+++ b/arch/x86/kernel/apic/x2apic_savic.c
-@@ -144,12 +144,25 @@ static void savic_write(u32 reg, u32 data)
- 	}
- }
- 
-+static void init_apic_page(void)
-+{
-+	u32 apic_id;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 0c19459c8042..e712934973e7 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -11723,6 +11723,21 @@ static void update_lb_imbalance_stat(struct lb_env *env, struct sched_domain *sd
+                 break;
+         }
+  }
++/*
++ * This flag serializes load-balancing passes over large domains
++ * (above the NODE topology level) - only one load-balancing instance
++ * may run at a time, to reduce overhead on very large systems with
++ * lots of CPUs and large NUMA distances.
++ *
++ * - Note that load-balancing passes triggered while another one
++ *   is executing are skipped and not re-tried.
++ *
++ * - Also note that this does not serialize rebalance_domains()
++ *   execution, as non-SD_SERIALIZE domains will still be
++ *   load-balanced in parallel.
++ */
++static atomic_t sched_balance_running = ATOMIC_INIT(0);
 +
-+	/*
-+	 * Before Secure AVIC is enabled, APIC msr reads are intercepted.
-+	 * APIC_ID msr read returns the value from the Hypervisor.
-+	 */
-+	apic_id = native_apic_msr_read(APIC_ID);
-+	set_reg(APIC_ID, apic_id);
-+}
+  
+  /*
+   * Check this_cpu to ensure it is balanced within domain. Attempt to move
+@@ -11738,6 +11753,7 @@ static int sched_balance_rq(int this_cpu, struct rq *this_rq,
+         struct rq *busiest;
+         struct rq_flags rf;
+         struct cpumask *cpus = this_cpu_cpumask_var_ptr(load_balance_mask);
++       int need_serialize = 0;
+         struct lb_env env = {
+                 .sd             = sd,
+                 .dst_cpu        = this_cpu,
+@@ -11760,6 +11776,12 @@ static int sched_balance_rq(int this_cpu, struct rq *this_rq,
+                 goto out_balanced;
+         }
+  
++       need_serialize = (idle!=CPU_NEWLY_IDLE) && sd->flags & SD_SERIALIZE;
++       if (need_serialize) {
++               if (atomic_cmpxchg_acquire(&sched_balance_running, 0, 1))
++                       return ld_moved;
++       }
 +
- static void savic_setup(void)
- {
- 	void *backing_page;
- 	enum es_result res;
- 	unsigned long gpa;
- 
-+	init_apic_page();
- 	backing_page = this_cpu_ptr(apic_page);
- 	gpa = __pa(backing_page);
- 
--- 
-2.34.1
-
+         group = sched_balance_find_src_group(&env);
+         if (!group) {
+                 schedstat_inc(sd->lb_nobusyg[idle]);
+@@ -11884,6 +11906,8 @@ static int sched_balance_rq(int this_cpu, struct rq *this_rq,
+                         if (!cpumask_subset(cpus, env.dst_grpmask)) {
+                                 env.loop = 0;
+                                 env.loop_break = SCHED_NR_MIGRATE_BREAK;
++                               if (need_serialize)
++                                       atomic_set_release(&sched_balance_running, 0);
+                                 goto redo;
+                         }
+                         goto out_all_pinned;
+@@ -12000,6 +12024,9 @@ static int sched_balance_rq(int this_cpu, struct rq *this_rq,
+             sd->balance_interval < sd->max_interval)
+                 sd->balance_interval *= 2;
+  out:
++       if (need_serialize)
++               atomic_set_release(&sched_balance_running, 0);
++
+         return ld_moved;
+  }
+  
+@@ -12124,21 +12151,6 @@ static int active_load_balance_cpu_stop(void *data)
+         return 0;
+  }
+  
+-/*
+- * This flag serializes load-balancing passes over large domains
+- * (above the NODE topology level) - only one load-balancing instance
+- * may run at a time, to reduce overhead on very large systems with
+- * lots of CPUs and large NUMA distances.
+- *
+- * - Note that load-balancing passes triggered while another one
+- *   is executing are skipped and not re-tried.
+- *
+- * - Also note that this does not serialize rebalance_domains()
+- *   execution, as non-SD_SERIALIZE domains will still be
+- *   load-balanced in parallel.
+- */
+-static atomic_t sched_balance_running = ATOMIC_INIT(0);
+-
+  /*
+   * Scale the max sched_balance_rq interval with the number of CPUs in the system.
+   * This trades load-balance latency on larger machines for less cross talk.
+@@ -12188,7 +12200,7 @@ static void sched_balance_domains(struct rq *rq, enum cpu_idle_type idle)
+         /* Earliest time when we have to do rebalance again */
+         unsigned long next_balance = jiffies + 60*HZ;
+         int update_next_balance = 0;
+-       int need_serialize, need_decay = 0;
++       int need_decay = 0;
+         u64 max_cost = 0;
+  
+         rcu_read_lock();
+@@ -12213,12 +12225,6 @@ static void sched_balance_domains(struct rq *rq, enum cpu_idle_type idle)
+  
+                 interval = get_sd_balance_interval(sd, busy);
+  
+-               need_serialize = sd->flags & SD_SERIALIZE;
+-               if (need_serialize) {
+-                       if (atomic_cmpxchg_acquire(&sched_balance_running, 0, 1))
+-                               goto out;
+-               }
+-
+                 if (time_after_eq(jiffies, sd->last_balance + interval)) {
+                         if (sched_balance_rq(cpu, rq, sd, idle, &continue_balancing)) {
+                                 /*
+@@ -12232,9 +12238,7 @@ static void sched_balance_domains(struct rq *rq, enum cpu_idle_type idle)
+                         sd->last_balance = jiffies;
+                         interval = get_sd_balance_interval(sd, busy);
+                 }
+-               if (need_serialize)
+-                       atomic_set_release(&sched_balance_running, 0);
+-out:
++
+                 if (time_after(next_balance, sd->last_balance + interval)) {
+                         next_balance = sd->last_balance + interval;
+                         update_next_balance = 1;
