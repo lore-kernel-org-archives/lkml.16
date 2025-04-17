@@ -1,288 +1,299 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2057.outbound.protection.outlook.com [40.107.236.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6AD5A55;
-	Thu, 17 Apr 2025 09:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744883025; cv=fail; b=QmjB5DWNa6vAFxCpCA0RedWK/fxtBDHCRulCM0gLgWB9J3vedgvVXOL7tszNATMe+RGouiMm9BXT5k0caq8AtJAFJlppBSCotzClWkUpGRSG15vKq7TsArO1/l3t24uvnt89kQ7pbbtulyL/nWmj/Ee7RSSLXsmoCO2Nj4Roh2c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744883025; c=relaxed/simple;
-	bh=isCix2OR9HziAa4d/98CVm1KLKr6sApPE1s2MpdvpEQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=DRdAPGCzabxL3C96e1gOCsTDdVbj48KA6aNCHcIim6hiBWNIXCkVdOAOsPk85kpIn9mhPJH6EHLvANoXcAwgRTK182mGEfDYorMye8U3k7PdUY/ntq3vUWYZngWnbQog4Wm5RtwsgpJWGEfP0Jw45Lv4yuOyniDo1BywQNVOqxc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=kih/ax6e; arc=fail smtp.client-ip=40.107.236.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15183226CFC
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744883094; cv=none; b=XoDhWJUP4ZVPb16cROWmVOJVdnEeLKHVOTY1M6mBtXG/AKPE/1BRkBCljwRMeFM2neQk1BE2yj1hsTPg61L1XOE0J7uGbl0/J0tmLpEzDntNwsi/+yYhtRXQneIW3fnJ7dyg/HWwSggy2r23dxMwLgHXEj4Dks948if0I52VYGs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744883094; c=relaxed/simple;
+	bh=DZ7q0YDfE7N1bPL/mA+UEDFwjr40WMySwkGTehTFR3o=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=hF8IergoYw3T8fjaKAoj4pmx31pU+Q2qF+RbCt/9QdrrX+MqwwMxs2R1vq4SzzIyA3AFK5X5HnHyLF7NKciGNbMDtdx16N70NsHaB/udO1KgCJkCeyLNKTMU5mHEP5hbJYixFvJMMTGDaLvEQjHM8zs7JB8iyDkAQiAckuXuZdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mclapinski.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NbfquUS4; arc=none smtp.client-ip=209.85.208.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mclapinski.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="kih/ax6e"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=g6sowAKtoPMV0w34WMN/jQKadYA49nAqeWW0V3PvNGpJEQc96GsFBfI7eDLuUGTOCTeM86fZfvVxPL5uHnNRhPUwOVoRL6h07AiZtgZC3rP0nuYLuOe1Yd3ltZdaWOxIw+zC71w9k5xPSdkkje9eHvUkxAK1Vs/YVZh33Rt7ksKuhgYopzAKPspwD2jbvoRnb6I3q7VVyhmc9HYU/c8kmId15rwo/kwV1PnUYHYUUU+9COcMHBy7Rk4xPpN3wr8OPKupymysPKshctdFuZOmKaln7L42eAt0BvncHZnlJJgZrszG+1qtpQqGAV+LmpVOFh0zWZVdbXs7FgbVFsHMzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5Mi1ftBq6qYk2+QzGw3wOKYahPb3qE60W08+2aY+HkA=;
- b=Nl4/56LhW2wGedK8BdTOw/D32Ff1LVtTwBrSvPygsfehv3TqsntvVOUXaoTTBEpF+SE8XEBvn9W4l1H362FpCO25Uv1YCFx0hKmGs9+G8p6IsZhqOYxdUIwjm5F2C8Z+xRKkFPQS0KyFoafq0Qi6tIfvRxi8zJOFXnVPmJRO40KgEIxyPUF/pSwUVG/VOgX+48tZU2ZVrxSN+weiXRXYueWBU8s18CRuiqCjKHJp6P0mvVo4QQVRRuquB9F4HlQjeasZQbilayUqUqKy/IK2gDWLLONrB+VIyB1j/YmdwnIxgESBiau//WIhsGsIFYFf1Xo22w/hODRnnT5Wqp34NQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5Mi1ftBq6qYk2+QzGw3wOKYahPb3qE60W08+2aY+HkA=;
- b=kih/ax6eAynvBHLFsdHjJvLS1hbN38Tidioi0qE79RiZJsWCe515ivL35atn6vo8l3cm7N0nWXdBBXFjaNY6mtJarCPhBJX6l5/NBYAE+RFg2qpg1heLwhiqWRk5rDrCHqFG/EAfXrTqwFsY2kYDLCMGJ6ETaU17oxA8WC+JUdPIu6n66Zb4bJD0f5ofpGNLCld+5Sf51zWiL8EKhjS6EtHeHkrAMhBIdeuvgNPeBZcMM+K2mXaQzSRju+noYPoYtWI13ijru1HgRL7rFMC+GQLqfI3OflqvPEYoQ2BKJJ5G4lmt/MvATE7+FA3AF4umTHfHkY86baIcHngOZb0jKw==
-Received: from PH7PR12MB6418.namprd12.prod.outlook.com (2603:10b6:510:1fe::18)
- by PH0PR12MB5632.namprd12.prod.outlook.com (2603:10b6:510:14c::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Thu, 17 Apr
- 2025 09:43:40 +0000
-Received: from PH7PR12MB6418.namprd12.prod.outlook.com
- ([fe80::c212:c319:304e:bb09]) by PH7PR12MB6418.namprd12.prod.outlook.com
- ([fe80::c212:c319:304e:bb09%3]) with mapi id 15.20.8655.022; Thu, 17 Apr 2025
- 09:43:40 +0000
-From: Robert Lin <robelin@nvidia.com>
-To: "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-	"daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Jon Hunter
-	<jonathanh@nvidia.com>, "tglx@linutronix.de" <tglx@linutronix.de>, Pohsun Su
-	<pohsuns@nvidia.com>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Sumit Gupta
-	<sumitg@nvidia.com>
-Subject: RE: [PATCH 1/3] clocksource/drivers/timer-tegra186: add
- WDIOC_GETTIMELEFT support
-Thread-Topic: [PATCH 1/3] clocksource/drivers/timer-tegra186: add
- WDIOC_GETTIMELEFT support
-Thread-Index: AQHbr3shz4DTnH23jUWmHxsCiG0EhLOnmq9Q
-Date: Thu, 17 Apr 2025 09:43:40 +0000
-Message-ID:
- <PH7PR12MB6418D7F4AAE03AAB0600187FD9BC2@PH7PR12MB6418.namprd12.prod.outlook.com>
-References: <20250417092817.2751534-1-robelin@nvidia.com>
-In-Reply-To: <20250417092817.2751534-1-robelin@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR12MB6418:EE_|PH0PR12MB5632:EE_
-x-ms-office365-filtering-correlation-id: 69d763cf-befc-481e-b1e4-08dd7d9455d3
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|376014|38070700018|7053199007;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?DBI0tPkAwiowoHyBFC9A5JxwDAQVxkznq6x8Kl3ulTsCpI/ki7gGqjVAm2J3?=
- =?us-ascii?Q?g66KMUDa7GpczMWshzjL0JaWNM2TNu5kIn25xkwo+W5sX4HMrhZ+Mlf3v9Jr?=
- =?us-ascii?Q?1ziY4V5xBldv/BCuz8jnShl4a1hgxZ12Cca+MXAN15lKCDvJUfg6+Y1ZV8zD?=
- =?us-ascii?Q?+gnZnuA2lE54lv869p3WP5RvVEdUMrwa2cTSCLVQn/Esa3IlRa6dcwPYCobF?=
- =?us-ascii?Q?sw7t50jt8JYSooCAkazIZ/Uhu6HWQC3YejWrl2Y7z1m4ovRSx4eBlTdH0mWe?=
- =?us-ascii?Q?ryAjxmCX/4qhkQFhA+91Ma4XgjRmY3jE0Yqu8Zw2hFes72GJC13ST7Ulo4S0?=
- =?us-ascii?Q?c9zyoEaldeOaRVuI8W+Xq2fqacqL6IowjWcY98hM3xHxUe/lPVtyLv33/M4G?=
- =?us-ascii?Q?StXAp2MxdS0PIglqyYjDfClm2BSedIt8XugJGNPeErVrJP35keouppMgJkI5?=
- =?us-ascii?Q?Vio6WZmWsEWFGYLaVPvHXA/69OIqLEGBX3Rm83LLtnXLpqXGDqENFMIZTD6M?=
- =?us-ascii?Q?gC2syHPYB587BW1PSOTAepgAJ1IlpAOkWaO5vu3sz7E/wamr2CqUA35iJ5H+?=
- =?us-ascii?Q?fcakIA+fzDOeYpBvpe1wNTeD7M2JXnO1/un+pzBngQLMCYQaAx+/kuRec2n1?=
- =?us-ascii?Q?Y/BT0JpZC9bOup/S8RwH6W/DA3gXXJMQ5t65IrhotCVQTDN/K4k7ycnkvSDk?=
- =?us-ascii?Q?7TAjSx5P5qAVlruPA2o3A5ycUNd0lSVXmqQ+/H9073ScHjsJGHrgW6NZXxU2?=
- =?us-ascii?Q?XbGNPR1SIXr4WVPwvZeqarrzvo+Jp+f7mYrLnWtP05kYHHwSW5hgVsNClDVS?=
- =?us-ascii?Q?hCrVmnv5FJyOjza2DK2zPsJLbXz+LDqo4HvwX0DJ+XGjXFtBwC2MRgFVRSxd?=
- =?us-ascii?Q?vJyH/eBS3TrUSMAhs/qrjmm2sYih5HCwXwMX9BQ6NLt7HUXzzpHbCNv3Q+5I?=
- =?us-ascii?Q?gCsa6bZfJR6WJ6PtMFhStm4ai9leUu8LwBhJsrvuRbiri9nI51hQFS5/Pgk1?=
- =?us-ascii?Q?P+D8jSoxGnzX8A7YKch8BXHx+ckVDRClpL8JHZaGa+UuD+nQq/bu1V8fgkvb?=
- =?us-ascii?Q?mV3sNXvUSljGLztjyZkV+yUg11i5izruIDNOu4erItFfY4ZMbFpevJlyBgyd?=
- =?us-ascii?Q?zQZAgluBTy63zz3rRZBBpNwG0g6SS8gQPMScjTWURUKm4p0sYugNZsun2Xcg?=
- =?us-ascii?Q?6OU+kgdPBNfn0v2lZFXXNJ96msk99Gzp65SXTbGn5jvfdaGhHJ97hj/p5T9o?=
- =?us-ascii?Q?6qxJYjAWLWH3DZ6/Rc6RLe6cUtsuDxo20y8VC6tJto0hPfJcPJxs1JO4FiCx?=
- =?us-ascii?Q?P4H5wMZehwouDLYTpUDTek+AMmpcr/kG33KrpdIlT3KhHgLl+icDsEDhgF1c?=
- =?us-ascii?Q?9nwqcjnqiJoh7AAxrUSkhSTtP0AdIiZjDAv1+ZP0Z26ultO8qwsegS7pLEON?=
- =?us-ascii?Q?hJz+CWSTf0nL6yaGuZrtluHFIiQ7Nmln5g6rJzWksR9MrhxRWoXQTBTXJEgE?=
- =?us-ascii?Q?9c+DjGV11GTW4Oo=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6418.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018)(7053199007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?JVsYrj5BW/v0MHte2atMbnJNuDcMIMxjsm5lUpbMYoNjh0/0mM8ldjUmsqKZ?=
- =?us-ascii?Q?11Cr4Lijdhq6700kE9z4gsS08V75bxKLEcyesJjqboQGwTHvkQbUAna5Lptc?=
- =?us-ascii?Q?dzzvlNVUAlltQ92qRjkra6MPAF4O9lKGZvT6kM06/gfF6w5yAdwV0vxIVwCV?=
- =?us-ascii?Q?L8ae2LNN5vPGxu6vJOJ84kpcbMMyoEwKZQSx9aYbna3hll/UMPyyP2zadgKQ?=
- =?us-ascii?Q?mHxv5BKCefSI5JA2Ksqx7VNFxUveHW2PFp1BeEXr1yVpNI5wRh4Y/5PdlBVe?=
- =?us-ascii?Q?gXIYkBuur4vO0X35PJwBqN4N/wZcrD43aXhEf271lwRQBRAva1Az/sHg479y?=
- =?us-ascii?Q?cAMbi65x552SEQnK99f8n/SJ61+OZxL5OihXQNwhyzQGOQKopba33RGc/5b5?=
- =?us-ascii?Q?oXP+mpWzmG1PHdlhtU7N4vw7GCa8rC27BreAbVYVDxYtoMcP5S4AvgZFcewa?=
- =?us-ascii?Q?TSjfSMjdX/1sObHNvc8PYk/PljDuJpdrQ0qYDv+0lzoQVdD2gJwyyae49Niv?=
- =?us-ascii?Q?6q7XLyzik4/jWuazZn5yvHkwEbCnJZcrN29PcppswceYufFYrsV2n76IiHim?=
- =?us-ascii?Q?raDOuncTp3Clg2trNBf51Zzej73Esg7Z/8XTz6lwxGKCTpVCWOlnZO19iQKp?=
- =?us-ascii?Q?6Y9pFJ4q0VmpYTe9WBpeKqdJ3aZDvYaGvDsgUNhiac0piGaUkE3oVGNlzoDx?=
- =?us-ascii?Q?+ajJvFlvkLiw/PhCw2z+PeSKgJgypVM3OSYB4I7ZFuH67hIizPyTvft7qKGX?=
- =?us-ascii?Q?GAVHOY4dv2aQ7UzO0KIsOCvfztf+6/xillYGwiv8e4Z+nBqo8m+EyzyLCYwa?=
- =?us-ascii?Q?AriRFOw1l+y3pdszc4apj2gKsHj1a8ru1IxzFziqlBVUIlpy7GF37rsvE2fK?=
- =?us-ascii?Q?OVp4lSqnf7lUF63q1bwhotUks1l/HxL/Xwm1IhJFY6KqJr2PHQnPDbgZX6Zz?=
- =?us-ascii?Q?UZgadx1KKI5WJtfIiUjqn+yTam1pXb/CL7ZWKWSUh/s9pkHBfjfgNnS6ZEnT?=
- =?us-ascii?Q?YUb9ZgUiW/wvH99ZL0XRhRKIa2oUFHqOdSsPBtyyjSbARB3L5cg1UgrKnAaI?=
- =?us-ascii?Q?S1PH/AUyVB0H17wD7txk5dTK2qWsQhEHUKjJH5T3CWyNqfiaydn8Bs0R/hAa?=
- =?us-ascii?Q?OrDKENdumfJW5BFKo1tk0St6EthvFAEZa/NnyPsvZf0qW7cz1dGqgq3DS17G?=
- =?us-ascii?Q?+F9YwZmYUzaEWWFenMKgs/B/Vf8ibQFRtLkGSiGfoeaTJDBXAYEWb+VQlJ2q?=
- =?us-ascii?Q?nop8jlTp8uST6sWWFQls+i0aZyBrP6HmFB+yV4k8qNoJntjf9wzZKngWO2Uz?=
- =?us-ascii?Q?Q1dZaK/gyYtb+NGu2c9lbIfZ9XajgZKOFH1FRs9sLUeEGM0ijjemJbxw/afq?=
- =?us-ascii?Q?4INQpS22hO0+Ad2zp2fh7Hk17O9SyTYYzDrP9pSIJxSI0Kl16dTtyDFPw5WA?=
- =?us-ascii?Q?g6yP5eh1If78WbH1JyUNTdvZaEcvl1ozYxIhHy7z5g+cWQvFIW01i9t2BGbi?=
- =?us-ascii?Q?8zFcdCB+bD3Vvv3lfGMCYrGSyv2e2DdTjB4ItPrWuwuHTpNNmzh3JJOKNWce?=
- =?us-ascii?Q?rVzHm0ITHXvRCHdbNiw=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NbfquUS4"
+Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5e5c76fd898so499832a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 02:44:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744883091; x=1745487891; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wD7Qk4RrTd9xfQxmaol+oD/P6dpfTs5U+U+3JhrL4nM=;
+        b=NbfquUS4AEZ82PG/scRkg544v26Qxe9aMHqw5doSQmmFoQC8KhcfKaAR9MNzsE6dz9
+         pkblckiCXvE9ssUOUTib6oouBQHuqFqNlJzXn1XBLIzSMnkqhrLAMrRAm5/3jaGAQ5PW
+         Ad0x5VAcJ56hfZ/EK+tycYpgLgt46meAQIXJ7tS7Ve8BXbLJqUKxdZ2NyJLdUXp/vw5S
+         5F0oiqWz1v0OgMwtQo0jrW+1LafWdNvBQg78/IH7UASptIbV6qn2SLshPeENIh7pYa3/
+         lf2dp2TiTmZiWnlzk+0ZIjrBJu9z5wbR8mhPkyrz+FoP0EGqmej2lOhh2v7/kIe6b/av
+         Q+aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744883091; x=1745487891;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wD7Qk4RrTd9xfQxmaol+oD/P6dpfTs5U+U+3JhrL4nM=;
+        b=jRgNKBKDtelaPrtv9xtmKDADL2VHpk/1mVT4/bQxYPmit7dXHNtcAhHm+/AknTssM8
+         mNcTXwC68VSgtaAj83eTWPNwk/WFHRvc5kAy++LyglvRoZj51UJbFWqxlLxsOv2dYYxG
+         LVpjqiVvAgZ3vVC98DskjaN9f58nkZmm0/0/OUYarCSP4LT+kPIacf6B7bgHlA5PWNXK
+         XL6MsOXULzkzZcn2bNstonC/s+oRKeWlAOu2L2I8cweXeyQkHvL0Q1efKwiWEoorBCr+
+         jrHVifgQsUohCYuFq//Q7ErMB0xQVg/+f3jRlr40DhW7YnnM5boTcUivowkVIekRgSrR
+         JKWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW/s4CiaMUeh9HPUkCbVHEdtIgJUEdFnnNeSdYh4zRawPw6gSpo3fwoLT41fFX64oeLsxJGPaxjOsd0tRw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuR4ejCpGptTAyAM1wHIJNbfP/N+gViBqf+RDJycS6b4SpIiBU
+	EjuNgIVzrOen/AAu6y+zvdTJTds30G6PhUjrHm1Ljc6pNEx4En5MiVHgyCqIFdn6TR5+P+/x/F3
+	wDCm6xbxq/vSosYhedw==
+X-Google-Smtp-Source: AGHT+IF3ziPzRL1h03+T3uQPQ+OVjHXAwzHdaqiQIAuXSzMcxLZdGld+ARV/oDwmpyIVSm/HF3CzkYqt6bQHayeI
+X-Received: from edra24.prod.google.com ([2002:aa7:d918:0:b0:5ec:d794:927f])
+ (user=mclapinski job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6402:3549:b0:5e1:dac1:fa22 with SMTP id 4fb4d7f45d1cf-5f4b75dd0b8mr3938873a12.21.1744883091409;
+ Thu, 17 Apr 2025 02:44:51 -0700 (PDT)
+Date: Thu, 17 Apr 2025 11:44:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6418.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 69d763cf-befc-481e-b1e4-08dd7d9455d3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2025 09:43:40.4937
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7WPk+K2AMP18fMyK9xoojczykpnUQI2ZQHfpLFix/eLHcbhRylsMX7bsA/3JupDfuNVFQTPFJrdfaJEAKv5W4w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB5632
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.777.g153de2bbd5-goog
+Message-ID: <20250417094432.3690181-1-mclapinski@google.com>
+Subject: [PATCH 1/1] libnvdimm/e820: Add a new parameter to configure many
+ regions per e820 entry
+From: Michal Clapinski <mclapinski@google.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, Jonathan Corbet <corbet@lwn.net>
+Cc: nvdimm@lists.linux.dev, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Michal Clapinski <mclapinski@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-> -----Original Message-----
-> From: Robert Lin <robelin@nvidia.com>
-> Sent: Thursday, April 17, 2025 5:28 PM
-> To: thierry.reding@gmail.com; daniel.lezcano@linaro.org; Jon Hunter
-> <jonathanh@nvidia.com>; tglx@linutronix.de; Pohsun Su
-> <pohsuns@nvidia.com>
-> Cc: linux-kernel@vger.kernel.org; linux-tegra@vger.kernel.org; Sumit Gupt=
-a
-> <sumitg@nvidia.com>; Robert Lin <robelin@nvidia.com>
-> Subject: [PATCH 1/3] clocksource/drivers/timer-tegra186: add
-> WDIOC_GETTIMELEFT support
->=20
-> From: Pohsun Su <pohsuns@nvidia.com>
->=20
-> This change adds support for WDIOC_GETTIMELEFT so userspace programs
-> can get the number of seconds before system reset by the watchdog timer v=
-ia
-> ioctl.
->=20
-> Signed-off-by: Pohsun Su <pohsuns@nvidia.com>
-> Signed-off-by: Robert Lin <robelin@nvidia.com>
-> ---
->  drivers/clocksource/timer-tegra186.c | 56
-> +++++++++++++++++++++++++++-
->  1 file changed, 55 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/clocksource/timer-tegra186.c b/drivers/clocksource/t=
-imer-
-> tegra186.c
-> index ea742889ee06..201b24ca59f4 100644
-> --- a/drivers/clocksource/timer-tegra186.c
-> +++ b/drivers/clocksource/timer-tegra186.c
-> @@ -1,8 +1,9 @@
->  // SPDX-License-Identifier: GPL-2.0-only
->  /*
-> - * Copyright (c) 2019-2020 NVIDIA Corporation. All rights reserved.
-> + * Copyright (c) 2019-2025 NVIDIA Corporation. All rights reserved.
->   */
->=20
-> +#include <linux/bitfield.h>
->  #include <linux/clocksource.h>
->  #include <linux/module.h>
->  #include <linux/interrupt.h>
-> @@ -30,6 +31,7 @@
->=20
->  #define TMRSR 0x004
->  #define  TMRSR_INTR_CLR BIT(30)
-> +#define  TMRSR_PCV GENMASK(28, 0)
->=20
->  #define TMRCSSR 0x008
->  #define  TMRCSSR_SRC_USEC (0 << 0)
-> @@ -46,6 +48,9 @@
->  #define  WDTCR_TIMER_SOURCE_MASK 0xf
->  #define  WDTCR_TIMER_SOURCE(x) ((x) & 0xf)
->=20
-> +#define WDTSR 0x004
-> +#define  WDTSR_CURRENT_EXPIRATION_COUNT GENMASK(14, 12)
-> +
->  #define WDTCMDR 0x008
->  #define  WDTCMDR_DISABLE_COUNTER BIT(1)  #define
-> WDTCMDR_START_COUNTER BIT(0) @@ -235,12 +240,61 @@ static int
-> tegra186_wdt_set_timeout(struct watchdog_device *wdd,
->  	return 0;
->  }
->=20
-> +static unsigned int tegra186_wdt_get_timeleft(struct watchdog_device
-> +*wdd) {
-> +	struct tegra186_wdt *wdt =3D to_tegra186_wdt(wdd);
-> +	u32 timeleft, expiration, val;
-> +
-> +	if (!watchdog_active(&wdt->base)) {
-> +		/* return zero if the watchdog timer is not activated. */
-> +		return 0;
-> +	}
-> +
-> +	/*
-> +	 * Reset occurs on the fifth expiration of the
-> +	 * watchdog timer and so when the watchdog timer is configured,
-> +	 * the actual value programmed into the counter is 1/5 of the
-> +	 * timeout value. Once the counter reaches 0, expiration count
-> +	 * will be increased by 1 and the down counter restarts.
-> +	 * Hence to get the time left before system reset we must
-> +	 * combine 2 parts:
-> +	 * 1. value of the current down counter
-> +	 * 2. (number of counter expirations remaining) * (timeout/5)
-> +	 */
-> +
-> +	/* Get the current number of counter expirations. Should be a
-> +	 * value between 0 and 4
-> +	 */
-> +	val =3D readl_relaxed(wdt->regs + WDTSR);
-> +	expiration =3D FIELD_GET(WDTSR_CURRENT_EXPIRATION_COUNT, val);
-> +
-> +	/* Get the current counter value in microsecond.
-> +	 */
-> +	val =3D readl_relaxed(wdt->tmr->regs + TMRSR);
-> +	timeleft =3D FIELD_GET(TMRSR_PCV, val);
-> +
-> +	/*
-> +	 * Calculate the time remaining by adding the time for the
-> +	 * counter value to the time of the counter expirations that
-> +	 * remain. Do the multiplication first on purpose just to keep
-> +	 * the precision due to the integer division.
-> +	 */
-> +	timeleft +=3D wdt->base.timeout * (4 - expiration) / 5;
-> +	/*
-> +	 * Convert the current counter value to seconds,
-> +	 * rounding up to the nearest second.
-> +	 */
-> +	timeleft =3D (timeleft + USEC_PER_SEC / 2) / USEC_PER_SEC;
-> +	return timeleft;
-> +}
-> +
->  static const struct watchdog_ops tegra186_wdt_ops =3D {
->  	.owner =3D THIS_MODULE,
->  	.start =3D tegra186_wdt_start,
->  	.stop =3D tegra186_wdt_stop,
->  	.ping =3D tegra186_wdt_ping,
->  	.set_timeout =3D tegra186_wdt_set_timeout,
-> +	.get_timeleft =3D tegra186_wdt_get_timeleft,
->  };
->=20
->  static struct tegra186_wdt *tegra186_wdt_create(struct tegra186_timer
-> *tegra,
-> --
-> 2.34.1
+Currently, the user has to specify each memory region to be used with
+nvdimm via the memmap parameter. Due to the character limit of the
+command line, this makes it impossible to have a lot of pmem devices.
+This new parameter solves this issue by allowing users to divide
+one e820 entry into many nvdimm regions.
 
-Sorry for the spam. My automation script has some issue to submit the wrong=
- patch series. Please ignore these emails and move on to the next patch v4 =
-series: https://lore.kernel.org/lkml/20250417093110.2751877-1-robelin@nvidi=
-a.com/T/#t
+This change is needed for the hypervisor live update. VMs' memory will
+be backed by those emulated pmem devices. To support various VM shapes
+I want to create devdax devices at 1GB granularity similar to hugetlb.
 
-Let me know if this cause trouble and I'll need to submit a V5 patch instea=
-d, I apology for the mess.
+It's also possible to expand this parameter in the future,
+e.g. to specify the type of the device (fsdax/devdax).
 
-All the best,
-Robert Lin
+Signed-off-by: Michal Clapinski <mclapinski@google.com>
+---
+ .../admin-guide/kernel-parameters.txt         |   7 +
+ drivers/nvdimm/e820.c                         | 149 +++++++++++++++++-
+ 2 files changed, 153 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index fb8752b42ec85..63af03eb850ed 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3849,6 +3849,13 @@
+ 
+ 	n2=		[NET] SDL Inc. RISCom/N2 synchronous serial card
+ 
++	nd_e820.pmem=ss[KMG],nn[KMG]
++			Divide one e820 entry specified by memmap=x!ss
++			(that is starting at ss) into pmem devices of size nn.
++			There can be only one pmem parameter per one e820
++			entry. The size of the e820 entry has to be divisible
++			by the device size.
++
+ 	netdev=		[NET] Network devices parameters
+ 			Format: <irq>,<io>,<mem_start>,<mem_end>,<name>
+ 			Note that mem_start is often overloaded to mean
+diff --git a/drivers/nvdimm/e820.c b/drivers/nvdimm/e820.c
+index 41c67dfa80158..581fe01553a22 100644
+--- a/drivers/nvdimm/e820.c
++++ b/drivers/nvdimm/e820.c
+@@ -8,6 +8,87 @@
+ #include <linux/libnvdimm.h>
+ #include <linux/module.h>
+ #include <linux/numa.h>
++#include <linux/moduleparam.h>
++#include <linux/xarray.h>
++
++#define MAX_PMEM_ARGUMENTS 32
++
++static char *pmem[MAX_PMEM_ARGUMENTS];
++static int pmem_count;
++
++static int pmem_param_set(const char *arg, const struct kernel_param *kp)
++{
++	int rc;
++	struct kernel_param kp_new;
++
++	kp_new.name = kp->name;
++	kp_new.arg = &pmem[pmem_count];
++	rc = param_set_charp(arg, &kp_new);
++	if (rc)
++		return rc;
++	++pmem_count;
++	return 0;
++}
++
++static void pmem_param_free(void *arg)
++{
++	int i;
++
++	for (i = 0; i < pmem_count; ++i)
++		param_free_charp(&pmem[i]);
++
++	pmem_count = 0;
++}
++
++static const struct kernel_param_ops pmem_param_ops = {
++	.set =		pmem_param_set,
++	.free =		pmem_param_free,
++};
++module_param_cb(pmem, &pmem_param_ops, NULL, 0);
++
++struct pmem_entry {
++	unsigned long region_size;
++};
++
++static int parse_one_pmem_arg(struct xarray *xarray, char *p)
++{
++	int rc = -EINVAL;
++	char *oldp;
++	unsigned long start;
++	struct pmem_entry *entry = kmalloc(sizeof(*entry), GFP_KERNEL);
++
++	if (!entry)
++		return -ENOMEM;
++
++	oldp = p;
++	start = memparse(p, &p);
++	if (p == oldp || *p != ',') {
++		pr_err("Can't parse pmem start: %s\n", oldp);
++		goto err;
++	}
++	++p;
++
++	oldp = p;
++	entry->region_size = memparse(p, &p);
++	if (p == oldp || (*p != ',' && *p != '\0')) {
++		pr_err("Can't parse pmem region size: %s\n", oldp);
++		goto err;
++	}
++
++	if (*p != '\0')
++		pr_warn("Unexpected parameters in pmem arg: %s\n", p);
++
++	rc = xa_err(xa_store(xarray, start, entry, GFP_KERNEL));
++	if (rc) {
++		pr_err("Failed to store 0x%lx in xarray, error %d\n", start, rc);
++		goto err;
++	}
++	return 0;
++
++err:
++	kfree(entry);
++	return rc;
++}
+ 
+ static void e820_pmem_remove(struct platform_device *pdev)
+ {
+@@ -16,10 +97,9 @@ static void e820_pmem_remove(struct platform_device *pdev)
+ 	nvdimm_bus_unregister(nvdimm_bus);
+ }
+ 
+-static int e820_register_one(struct resource *res, void *data)
++static int register_one_pmem(struct resource *res, struct nvdimm_bus *nvdimm_bus)
+ {
+ 	struct nd_region_desc ndr_desc;
+-	struct nvdimm_bus *nvdimm_bus = data;
+ 	int nid = phys_to_target_node(res->start);
+ 
+ 	memset(&ndr_desc, 0, sizeof(ndr_desc));
+@@ -32,12 +112,64 @@ static int e820_register_one(struct resource *res, void *data)
+ 	return 0;
+ }
+ 
++struct walk_data {
++	struct xarray *pmem_xarray;
++	struct nvdimm_bus *nvdimm_bus;
++};
++
++static int e820_handle_one_entry(struct resource *res, void *data)
++{
++	struct walk_data *walk_data = data;
++	struct resource res_local;
++	struct pmem_entry *entry;
++	unsigned long entry_size = resource_size(res);
++	int rc;
++
++	entry = xa_load(walk_data->pmem_xarray, res->start);
++
++	if (!entry)
++		return register_one_pmem(res, data);
++
++	if (entry_size % entry->region_size != 0) {
++		pr_err("Entry size %lu is not divisible by region size %lu\n",
++		       entry_size, entry->region_size);
++		return -EINVAL;
++	}
++
++	res_local.start = res->start;
++	res_local.end = res->start + entry->region_size - 1;
++	while (res_local.end <= res->end) {
++		rc = register_one_pmem(&res_local, walk_data->nvdimm_bus);
++		if (rc)
++			return rc;
++
++		res_local.start += entry->region_size;
++		res_local.end += entry->region_size;
++	}
++
++	return 0;
++}
++
++static void free_pmem_xarray(struct xarray *pmem_xarray)
++{
++	unsigned long start;
++	struct pmem_entry *entry;
++
++	xa_for_each(pmem_xarray, start, entry) {
++		kfree(entry);
++	}
++	xa_destroy(pmem_xarray);
++}
++
+ static int e820_pmem_probe(struct platform_device *pdev)
+ {
+ 	static struct nvdimm_bus_descriptor nd_desc;
+ 	struct device *dev = &pdev->dev;
+ 	struct nvdimm_bus *nvdimm_bus;
++	struct xarray pmem_xarray;
++	struct walk_data walk_data = {.pmem_xarray = &pmem_xarray};
+ 	int rc = -ENXIO;
++	int i;
+ 
+ 	nd_desc.provider_name = "e820";
+ 	nd_desc.module = THIS_MODULE;
+@@ -46,8 +178,19 @@ static int e820_pmem_probe(struct platform_device *pdev)
+ 		goto err;
+ 	platform_set_drvdata(pdev, nvdimm_bus);
+ 
++	xa_init(&pmem_xarray);
++	for (i = 0; i < pmem_count; i++) {
++		rc = parse_one_pmem_arg(&pmem_xarray, pmem[i]);
++		if (rc != 0 && rc != -EINVAL) {
++			free_pmem_xarray(&pmem_xarray);
++			goto err;
++		}
++	}
++
++	walk_data.nvdimm_bus = nvdimm_bus;
+ 	rc = walk_iomem_res_desc(IORES_DESC_PERSISTENT_MEMORY_LEGACY,
+-			IORESOURCE_MEM, 0, -1, nvdimm_bus, e820_register_one);
++		IORESOURCE_MEM, 0, -1, &walk_data, e820_handle_one_entry);
++	free_pmem_xarray(&pmem_xarray);
+ 	if (rc)
+ 		goto err;
+ 	return 0;
+-- 
+2.49.0.777.g153de2bbd5-goog
+
