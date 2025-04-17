@@ -1,96 +1,86 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A8424339D
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:31:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C132F24339D;
+	Thu, 17 Apr 2025 15:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744903868; cv=none; b=OZj/HyjAHDcJAmpzLYDsvbcj5Uvg8cb0D+vkLSPmmY/QWvfdyJFbWVUR1oftzs1ILqZL0lE3qyuP5ZnTEJQUaBZZffObMbil2cZoZkHuNe/09K08Q7NXXOmaEeaob+2ZzhdQvsAT8WKAOsXyrSAvDFvWyp0gKuUI2b8G1aJghIg=
+	t=1744903891; cv=none; b=L7dnOpph1uJ3I7+wvZpkxqbV5U4rqqejpFj/45VuOnFaC9B9GoJLwKo8kEJUWsfHhOVWPGIamry27DiZMJjt2mOmOT7UNL6nvN0vRGr0lusH3mqK8hZjBiilvA/BlCnJ7c0MQe/6VWWO7vLxhJYL8q3jLsRAn3KvegT1mSLAYIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744903868; c=relaxed/simple;
-	bh=3MTw73aWbpQzR3zLxh074LLgFqiSGsDZ+BvoCWuIAxw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YtesPWM5zNOQQiSAPUryZE3nbGv46DGrL1FRbIx55eeVN0xlRB7Ake0WhAFmOQQZpciVX/qDD7l2S9FbdpPIztaryLdJ3y+L41HNAaiTTVyZbrer6KqkE7aKbvB5nLAAqHrWACYL2fstLpLkI+7V86LCJsiLoFeX44XCzDkNGb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LODFsi85; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744903891; c=relaxed/simple;
+	bh=wH4xbnF0tJ+lpv6tI2RocL517peQVILv0bdOqBny/aM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t4BHXW1yceZsdboNkkQpgWO05bSt1DMQBwUh/wf7J7hNGbRQRddtvaoYrU12aGXGJkw/l3US5c6anBzgy+etDQfrVpPNvY/b3ZXiYHv4oxhPj/ZKPXq6ERBIahZ+FgaCVOVsDM2GQviR2iQ2batmFuF8LlZnmBMlDpzkzNXjmT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=r7fnejSH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RhJ9nZiM; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LODFsi85"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-736b34a71a1so1109936b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:31:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744903865; x=1745508665; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XXwpinCtXrQvhLFQnEd9La7w+QdiN4cwUhD38eo9LNI=;
-        b=LODFsi85tgbMUDw0Nm88zSqBmx4rhswrQ5H3rnffDWhkC8FwJCJNf/KU09sMzlfl4I
-         ooXGUVsxGPjX/DaioXghsBFB64lfTq31M5DYP3h25iI85UFVOlejufZrw9qUEQ6ggjHD
-         Ac6/BQ6UVcp1feoKUg++oJ1/MbR2ovQj9BygmXufKO8moH80jAAFGJfsw5eWzFLzgxrl
-         F62TyvC47wxwU4rzn/LCCN0Xq4rd8LuPh/iYwCFGq3VG3gq6pVU3CVHHMw7glDQUg4re
-         JHC0yXuwp7/Qkeswsxu53kVGoKoKBjLghuN5dZnxWY7A46Bf+OhqgA/MmGLexs9N6SVS
-         ogkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744903865; x=1745508665;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XXwpinCtXrQvhLFQnEd9La7w+QdiN4cwUhD38eo9LNI=;
-        b=f0TPvynXscHaRucXWf85WjqqtxHX4WmFep+IQSEF/vX9wRWLRLtk939ZMW9vnx0xeZ
-         7rwXTHp6gr98gE1jpMZNvBmK9IwmU5U18D6mGtmFEGFCTnIMEKLLyNN+4x1qSpzWpo6p
-         9aTKcPLpo4smjE3LTMUFt04hCRyo0N0wDvudxTDflQKUzXR+XkxB+yV3vd5pm9IgC2mF
-         V0Yc8eHVsjR360pY0INW+bEiRYPgG85UcdYtbN4A51WcRPiSQSyK6W7NRumUp2Kgb5wY
-         RHSdrwBmbNP6EHQBcW8zg9h57IKLkW7CudWUEUC3ljWTE8QBGjBaC2G7GxOZ4Oic7wvc
-         A/Qw==
-X-Gm-Message-State: AOJu0YwwTn6K1fmIW2CXUFA8yja88cQoRsdKKgTjACEg9G2sc9iPv6Hz
-	GS1DqQ8WD+R8zA3OKankypuxr9a1i6i/dTKISpboxnvVznefd8fe+N3mhQope68=
-X-Gm-Gg: ASbGncutx/jgVWy2Js0oYxd98ph9+9AZkavTjsOt+hKlynzuUdkWNRfyVpWmTC3hSar
-	jjMiwQWmtTlcet0zkvCidnnRUBJyD0Wqt+8AsgAoRtDf1ieL7OeGR+VNPwnMo5fzx1rt7VqDHR1
-	Dm5HHBPjfqL/Dp+R+fMdzbSbJftUJZYYJMch7KQw2tBZlMtvbXqaUPG1w8tuTUFeOFv4zahvmsT
-	0WuUn+u2I93TBLe27NCjLq8HPM7juroJyQ70mQqxvPxbhMz19ojquUL+T0I5xAmUvWPlefHLYMd
-	qu3NyPR35tKjow7eM8zWd8Ivk/v1HxiT4uY9P0HCYxBXT/fqvg==
-X-Google-Smtp-Source: AGHT+IE0sBXnqQrNTr8mqqzWhCy8FSHFzIaWJzOqJ+xuokGfrBfxkKaNMG2Iw9cpsrZlSEbD0KDPbg==
-X-Received: by 2002:a05:6a00:198c:b0:736:a638:7f9e with SMTP id d2e1a72fcca58-73c26700979mr10339783b3a.8.1744903865528;
-        Thu, 17 Apr 2025 08:31:05 -0700 (PDT)
-Received: from localhost.localdomain ([43.129.202.66])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd22fa730sm12829030b3a.94.2025.04.17.08.31.04
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 17 Apr 2025 08:31:05 -0700 (PDT)
-From: Lance Yang <ioworker0@gmail.com>
-X-Google-Original-From: Lance Yang <lance.yang@linux.dev>
-To: akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	Lance Yang <lance.yang@linux.dev>
-Subject: [PATCH 1/1] mailmap: add entries for Lance Yang
-Date: Thu, 17 Apr 2025 23:30:41 +0800
-Message-ID: <20250417153041.38977-1-lance.yang@linux.dev>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r7fnejSH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RhJ9nZiM"
+Date: Thu, 17 Apr 2025 17:31:26 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744903888;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jPz1GvAsRDSeWCTqbiCwXpDsU6owFfdI+6h+yJOwEN8=;
+	b=r7fnejSHrmuXZG3gkKO6oax4/vQkB0tYQslhdQS4NLgWa1Qg7ycLsssCP3Achi+GJeFvY8
+	mAD+Vw4zPOSbHJvK8L5trOLqdaiASJhiAjpLesCPTAwbA/wjDeSr4waGGTXgmVaDB5jsXp
+	jRxWplPFXqCFcWlwldZDA7wsDXWrEyNROGH0xgQJfdZj0vjQ+RYBgpLJpAbQVfJvYsg7lm
+	zUuZxst0QJmcuxO3F91W3/Mh6cubMsrvp5XUOv6sWuSefQt0ECKxHGLzJD5V6wCR5aUpjF
+	3MhWFRX+Zx4PIIBnsG1BG1iYhCKP4txp1uahOX39RtEzxo9S3ZlzAP+ehhXthg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744903888;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jPz1GvAsRDSeWCTqbiCwXpDsU6owFfdI+6h+yJOwEN8=;
+	b=RhJ9nZiMb5QGNDaj87nqAmzhO5W3mAIsyA/Z0DzqINI7yVN+20Qn/BOe6+bj3GyNENvfiJ
+	YrSPRn/ltCnQImBg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Ian Kent <raven@themaw.net>, Mark Brown <broonie@kernel.org>,
+	Eric Chanudet <echanude@redhat.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, Ian Kent <ikent@redhat.com>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev,
+	Alexander Larsson <alexl@redhat.com>,
+	Lucas Karpinski <lkarpins@redhat.com>, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
+Message-ID: <20250417153126.QrVXSjt-@linutronix.de>
+References: <20250408210350.749901-12-echanude@redhat.com>
+ <fbbafa84-f86c-4ea4-8f41-e5ebb51173ed@sirena.org.uk>
+ <20250417-wolfsrudel-zubewegt-10514f07d837@brauner>
+ <fb566638-a739-41dc-bafc-aa8c74496fa4@themaw.net>
+ <20250417-abartig-abfuhr-40e558b85f97@brauner>
+ <20250417-outen-dreihundert-7a772f78f685@brauner>
+ <20250417-zappeln-angesagt-f172a71839d3@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250417-zappeln-angesagt-f172a71839d3@brauner>
 
-I'm moving to @linux.dev and mapping my old addresses to it.
+On 2025-04-17 17:28:20 [+0200], Christian Brauner wrote:
+> >     So if there's some userspace process with a broken NFS server and it
+> >     does umount(MNT_DETACH) it will end up hanging every other
+> >     umount(MNT_DETACH) on the system because the dealyed_mntput_work
+> >     workqueue (to my understanding) cannot make progress.
+> 
+> Ok, "to my understanding" has been updated after going back and reading
+> the delayed work code. Luckily it's not as bad as I thought it is
+> because it's queued on system_wq which is multi-threaded so it's at
+> least not causing everyone with MNT_DETACH to get stuck. I'm still
+> skeptical how safe this all is. 
 
-Signed-off-by: Lance Yang <lance.yang@linux.dev>
----
- .mailmap | 2 ++
- 1 file changed, 2 insertions(+)
+I would (again) throw system_unbound_wq into the game because the former
+will remain on the CPU on which has been enqueued (if speaking about
+multi threading).
 
-diff --git a/.mailmap b/.mailmap
-index 6efaee6537e4..52571145a869 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -447,6 +447,8 @@ Luca Ceresoli <luca.ceresoli@bootlin.com> <luca@lucaceresoli.net>
- Luca Weiss <luca@lucaweiss.eu> <luca@z3ntu.xyz>
- Lukasz Luba <lukasz.luba@arm.com> <l.luba@partner.samsung.com>
- Luo Jie <quic_luoj@quicinc.com> <luoj@codeaurora.org>
-+Lance Yang <lance.yang@linux.dev> <ioworker0@gmail.com>
-+Lance Yang <lance.yang@linux.dev> <mingzhe.yang@ly.com>
- Maciej W. Rozycki <macro@mips.com> <macro@imgtec.com>
- Maciej W. Rozycki <macro@orcam.me.uk> <macro@linux-mips.org>
- Maharaja Kennadyrajan <quic_mkenna@quicinc.com> <mkenna@codeaurora.org>
--- 
-2.49.0
-
+Sebastian
