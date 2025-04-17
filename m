@@ -1,63 +1,63 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABDE2512F8
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1652517AB
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744899938; cv=none; b=J8qEOTDCt/Kh1TmvvYRW3NR+n7eG9tn/WdV0g8byyg/CTfzSdeLl+aWCnG6Ee9pHT5HpHBGQywL8xAWtFmjjsZhCLSFheOCSJjPvaq/yNyXtb+VjBjce5ebsUzquK1Qxg0ePHQIyMAtoaAf+jAXX2FDVJQwgvADmNO9grzu8pNQ=
+	t=1744899939; cv=none; b=XE8FMbpAToh4LQUCv4BD3SVAebXNSegYm9PXHCiMNnvBqBYgDH3wjTxTOWdxsALKniEMlizHVpU3lNZXoYwslo7F0PSfp7DXWPVfPk+KKRgoTmpSn/IK95xz95hqka6b5g060iBJzZihkw+qbq1/vd2Z3Kf1p5TCQ+ZwkJ25L78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744899938; c=relaxed/simple;
-	bh=Cori/y8yi7jlnunZM7z+pNAx55LfzsPSrBTLfWbNPD8=;
+	s=arc-20240116; t=1744899939; c=relaxed/simple;
+	bh=N9bh2sDAqWIi8kjkl/KRpShW+sOiFuj+Ys/q11FogxA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=az6f4v5+j/sShGApSoVm8ZFi8mQ6mPg23i8JQAGmoL9SONwtMoEb3UDDXHEAtU6d2RPDx9BT7tVBANf4MHVSU30C/ATwb2f+yFy07AkQada7Su3PLYZXNdJii2fyfkDQNa+4ztVe2dcCy5yiVdX0LxOqg5iuq1w+uJHcvsAV3D0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pizVthba; arc=none smtp.client-ip=209.85.167.43
+	 MIME-Version; b=Umxu3GZXTxkp1MylOpfyPHD64PThuhG0Orgbo60UyBoGnYtBb/MstfRpfGb6Ouo9Ny0s8p/brYDx+nUg3vJFe9we0vMf+e1u7lce1DIXVkrVhKQHlg8/T3AhrwLr6oDlE/RyVmBGcxBrHBfkC0O7d9SY8mHGQwHXGzCVUxQxAlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vmwlZ0LP; arc=none smtp.client-ip=209.85.167.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pizVthba"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54d3ee30af1so916615e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:25:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vmwlZ0LP"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-548409cd2a8so1153618e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:25:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744899933; x=1745504733; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744899936; x=1745504736; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kLoMIJgubi/4cvpvs3WmBPRGnJMeyrBZc1JViSgU2O8=;
-        b=pizVthba8+pnJGt3T9nM9h26Ez1wiFVShQPbS0AWEbGogg5JwrNginydzARfIEP2/D
-         31ITHCc/Icsdf/bN7qO7Iw1VsAfQ2iwvrcDQxsmgvv8LSQskweK+tcOP9vremxfEjYkO
-         U5EGjuUdvrcdzZH/6zrxgmf3pkPop+cdsSKeuN2FyGla7NJteGkY2BnUZps+rmzOxl4O
-         NaxuMuHN+xu0DjCbn0In0q5b/GMzb1PAtlTpXXFGo31uCBZ4mA7FLv2IIfO9xvXkDHr0
-         5kBU2/njNCeQ7365zeTGAVAqp+vW69WZsoL633xLjsKTV8cgQR4AmfA32QIZFgx2A8Bc
-         sKnQ==
+        bh=LWK6OGQUPtJsrWaqiRqfJ/zsH5wseFrp650Wv3Bg60w=;
+        b=vmwlZ0LPlPe8HaIUcfLQVLJkNPZvu6OOt7f8Ie76eTZVUyN/0gIBqzgcT8i0l5p/WG
+         UAod08jCNl6UNGn76MKaw5detGjx+u72Fij+1cG1/oE3GThB+PBreNqkYxvdHiCksGAt
+         evlpL7oKzOHvmpIs5QgUBLDvhkQIuEA5PA/jzQv/y9XrD+vOvk7enxIHkq9wcafxAyZs
+         XhyWYHCk1CzDttsia70FWK8UOt4YO0/CIrbIgyQBgY/4rkQEd1/Yq+OSQzF5nxypeFi5
+         4VXWkjJzqK2JFMoKECysW7kspCok/5TkeOppGBqtxBN9pntvsRVCFIo1SFQSkofbm7WT
+         PyNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744899933; x=1745504733;
+        d=1e100.net; s=20230601; t=1744899936; x=1745504736;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kLoMIJgubi/4cvpvs3WmBPRGnJMeyrBZc1JViSgU2O8=;
-        b=SrN4TM5GcEAtjvhpB313OaQYWtze/I2Si0JHOup0jT8SXl+1Mb6H3AZ5vMWcptLxne
-         fVfvVMfpFuiMt6HW6Zdnt7rqaqHN3yukNuSSh6DuTHtIO6P8Bkt5qJqwzMnEXyHj0vAt
-         mR9DZC2EsqoTvmKQdQIfy1sqpMTeI7LH0ua6EefGkaRQZKf2lUkR/px/oyhiJUA/4e54
-         C3M6G4nVL2wVySkHldVAeSr9k1IbH1FSqzMQSU5A6A4TL0BqlW4Jl+EgQymcYBwg8/fQ
-         XDie+jD/Fkkoac3kDS3m/D78wpyCeU9oboYALxxdr9x/C37Pl0mdoXXbz1hwbCWZvIxZ
-         1pcA==
-X-Forwarded-Encrypted: i=1; AJvYcCWJRQYm2Wc1sD09wMwTRKHxF1JLKU3dB4uYZN2kJeDJnDPwFobUHxXj+NNeyC684ULRP7an2GWyrpWsRT0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeXzdv5IeoMkUJ5AcxEn5t/Nntu5EA3ZzlZFSo3EyP+t353FS1
-	aUE766gb8dBmrID2oleekArYdYmbv5cAuClu7LbYGFhTQh6mDKRxoen0I4DSyrQ=
-X-Gm-Gg: ASbGncvr+A9/LwsOHcl8huJ7ZdBv3SmCykqGHi6GcyTksXvoE4dezbOsfKOt/3pfzv6
-	XqwydZ2tJMQo3y8YiOqxaO+1XOdPBcPrEDssPUa3a2Qv3jg6c+Qg4alSlcv1VFFjcmq7Shgtqx6
-	QIiT3Us4Dxg99P6rGX8n18BUMT8m3ca9ZD8M0EKbC2IFmIv5Own5VhB4/pMT7ktpbBgvpWon3H1
-	r3hwbIBNwjG48NY1EWU6pvATaWW4zITSHK0iWExK3U0x+v8k/mWj3w+xOOVWP8qZtRCuf6y0FAl
-	UAnXuqbE4U1xa3S31N14SKcea49fDti8vcdXWB/XtVB+hnF3h4oRnNAnk/iVfE9yIf8WWVL866d
-	PPE9wSQWo8Oe2Tfc=
-X-Google-Smtp-Source: AGHT+IGEHywzk0Uvrr5vva6qwKhkHAMRzineGZ+Ie2tYZ9oqV2dzLL/IgZ7exOPJtd8mc3KpgoduVg==
-X-Received: by 2002:a05:6512:3a93:b0:549:8809:ee32 with SMTP id 2adb3069b0e04-54d64a9d570mr2067636e87.22.1744899933071;
-        Thu, 17 Apr 2025 07:25:33 -0700 (PDT)
+        bh=LWK6OGQUPtJsrWaqiRqfJ/zsH5wseFrp650Wv3Bg60w=;
+        b=m6jwr03jXFFu3QBQVUWNEvR1ure2uIPkINwxVauKV1WPEIMVBNaybPCnaPdn5m5CJ7
+         dfNMAaJUsxIihwTf2M5WZD6MuuShyBQLb9K34GPLDstctyTjtwNxXanQWMPsDVN5OwfP
+         +S6DX1EgLkrobsDt/mkID1nfGjeB7dAXoTuBU7kzyYwfkpQqdCyzK30IljhLyQMuglto
+         rm7sdLPCCPAo5fkEuoeXmSAKqjHX8tHPZ+kgUBgcCvtcMYXrO3cFSX6pIoeoDuDe9+uL
+         c9Q/czCl+kKAtVm365mdiZPI/haM2LJfAAz9HkIHDvwxHfnX3fOd3RLwL3tKVx1/LmnP
+         Py7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXKcREVv1Xkv2emxnVuRyjvTRUbPMSF4xVgjiVpA7xS0OAABDOT3iDbDp/lvcq8prHXCjWxy3vEqncaSyw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9iXp856ijGIAu2nJmr/seGyBXVreooSXHZSIE4t8hYLDCHuQw
+	iz5eB44k+j5eem6FK24jPHQ8O4LA4MUnwLESO6gwW6odcSucFGiWYMRGTab5gHY=
+X-Gm-Gg: ASbGncvQ0ml1GoO5nm3yF5XWmEW5aYRbIInC15vm4jk5nJFY671YYmH+By3XuD+caqN
+	ujTpiuxw99Y61cv7hU8Tm6ofNxL6hgIrS3VD21qHk2/p9HZ/ObkdMhSpRQxiL0S2bIzj3yej5px
+	K9/ZjdOmcEJDjOK+XNh7IsbK/vlw+354TxInK15KW+zg68wpstF2MHjkEXRBxtMml2nAbwYiMnH
+	QhlAKwK4PMaCYlltcTlCP7LXc8GMLL9Eqy4iN3I+qm0k9DNb3oXH0hSVkR7wfYvzsBW6s+sdzkn
+	MA14ZBmv3cM7s1X5IR4KF7HJiKVF1xbV+Ngf23j3dpbxAQC6mboyvj5ZYo8PHC0/0a3Y9gFNkQ1
+	SCmQcouqJKkTqoMI=
+X-Google-Smtp-Source: AGHT+IFMIMS9W78LDELYwj19yc/UbKsawjkHWp2lDcIWNSaSrbDAkmZeYKJckcObhsbeji26HeVx/Q==
+X-Received: by 2002:a05:6512:33d1:b0:549:91c6:96a8 with SMTP id 2adb3069b0e04-54d64a7b359mr1644875e87.7.1744899935896;
+        Thu, 17 Apr 2025 07:25:35 -0700 (PDT)
 Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d65e43647sm370096e87.58.2025.04.17.07.25.31
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d65e43647sm370096e87.58.2025.04.17.07.25.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 07:25:32 -0700 (PDT)
+        Thu, 17 Apr 2025 07:25:35 -0700 (PDT)
 From: Ulf Hansson <ulf.hansson@linaro.org>
 To: Saravana Kannan <saravanak@google.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -75,9 +75,9 @@ Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
 	Ulf Hansson <ulf.hansson@linaro.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 01/11] pmdomain: core: Convert genpd_power_off() to void
-Date: Thu, 17 Apr 2025 16:24:59 +0200
-Message-ID: <20250417142513.312939-2-ulf.hansson@linaro.org>
+Subject: [PATCH 03/11] pmdomain: core: Use genpd->opp_table to simplify error/remove path
+Date: Thu, 17 Apr 2025 16:25:01 +0200
+Message-ID: <20250417142513.312939-4-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250417142513.312939-1-ulf.hansson@linaro.org>
 References: <20250417142513.312939-1-ulf.hansson@linaro.org>
@@ -89,106 +89,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-At some point it made sense to have genpd_power_off() to return an error
-code. That hasn't been the case for quite some time, so let's convert it
-into a static void function and simplify some of the corresponding code.
+While we add an OF-provider we may, based upon a specific condition, also
+assign genpd->opp_table. Rather using the same specific condition in the
+error/remove path, let's check genpd->opp_table instead as it makes the
+code easier.
 
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- drivers/pmdomain/core.c | 26 +++++++++++---------------
- 1 file changed, 11 insertions(+), 15 deletions(-)
+ drivers/pmdomain/core.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
-index 3523d0331cec..574a0de1696a 100644
+index 34a85bf347ad..035b65563947 100644
 --- a/drivers/pmdomain/core.c
 +++ b/drivers/pmdomain/core.c
-@@ -908,13 +908,12 @@ static void genpd_queue_power_off_work(struct generic_pm_domain *genpd)
-  * If all of the @genpd's devices have been suspended and all of its subdomains
-  * have been powered down, remove power from @genpd.
-  */
--static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
--			   unsigned int depth)
-+static void genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
-+			    unsigned int depth)
- {
- 	struct pm_domain_data *pdd;
- 	struct gpd_link *link;
- 	unsigned int not_suspended = 0;
--	int ret;
+@@ -2343,6 +2343,7 @@ int pm_genpd_init(struct generic_pm_domain *genpd,
+ 	genpd->provider = NULL;
+ 	genpd->device_id = -ENXIO;
+ 	genpd->has_provider = false;
++	genpd->opp_table = NULL;
+ 	genpd->accounting_time = ktime_get_mono_fast_ns();
+ 	genpd->domain.ops.runtime_suspend = genpd_runtime_suspend;
+ 	genpd->domain.ops.runtime_resume = genpd_runtime_resume;
+@@ -2617,7 +2618,7 @@ int of_genpd_add_provider_simple(struct device_node *np,
  
- 	/*
- 	 * Do not try to power off the domain in the following situations:
-@@ -922,7 +921,7 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
- 	 * (2) System suspend is in progress.
- 	 */
- 	if (!genpd_status_on(genpd) || genpd->prepared_count > 0)
--		return 0;
-+		return;
+ 	ret = genpd_add_provider(np, genpd_xlate_simple, genpd);
+ 	if (ret) {
+-		if (!genpd_is_opp_table_fw(genpd) && genpd->set_performance_state) {
++		if (genpd->opp_table) {
+ 			dev_pm_opp_put_opp_table(genpd->opp_table);
+ 			dev_pm_opp_of_remove_table(&genpd->dev);
+ 		}
+@@ -2697,7 +2698,7 @@ int of_genpd_add_provider_onecell(struct device_node *np,
+ 		genpd->provider = NULL;
+ 		genpd->has_provider = false;
  
- 	/*
- 	 * Abort power off for the PM domain in the following situations:
-@@ -932,7 +931,7 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
- 	if (genpd_is_always_on(genpd) ||
- 			genpd_is_rpm_always_on(genpd) ||
- 			atomic_read(&genpd->sd_count) > 0)
--		return -EBUSY;
-+		return;
+-		if (!genpd_is_opp_table_fw(genpd) && genpd->set_performance_state) {
++		if (genpd->opp_table) {
+ 			dev_pm_opp_put_opp_table(genpd->opp_table);
+ 			dev_pm_opp_of_remove_table(&genpd->dev);
+ 		}
+@@ -2729,11 +2730,10 @@ void of_genpd_del_provider(struct device_node *np)
+ 				if (gpd->provider == &np->fwnode) {
+ 					gpd->has_provider = false;
  
- 	/*
- 	 * The children must be in their deepest (powered-off) states to allow
-@@ -943,7 +942,7 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
- 	list_for_each_entry(link, &genpd->parent_links, parent_node) {
- 		struct generic_pm_domain *child = link->child;
- 		if (child->state_idx < child->state_count - 1)
--			return -EBUSY;
-+			return;
- 	}
- 
- 	list_for_each_entry(pdd, &genpd->dev_list, list_node) {
-@@ -957,15 +956,15 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
- 
- 		/* The device may need its PM domain to stay powered on. */
- 		if (to_gpd_data(pdd)->rpm_always_on)
--			return -EBUSY;
-+			return;
- 	}
- 
- 	if (not_suspended > 1 || (not_suspended == 1 && !one_dev_on))
--		return -EBUSY;
-+		return;
- 
- 	if (genpd->gov && genpd->gov->power_down_ok) {
- 		if (!genpd->gov->power_down_ok(&genpd->domain))
--			return -EAGAIN;
-+			return;
- 	}
- 
- 	/* Default to shallowest state. */
-@@ -974,12 +973,11 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
- 
- 	/* Don't power off, if a child domain is waiting to power on. */
- 	if (atomic_read(&genpd->sd_count) > 0)
--		return -EBUSY;
-+		return;
- 
--	ret = _genpd_power_off(genpd, true);
--	if (ret) {
-+	if (_genpd_power_off(genpd, true)) {
- 		genpd->states[genpd->state_idx].rejected++;
--		return ret;
-+		return;
- 	}
- 
- 	genpd->status = GENPD_STATE_OFF;
-@@ -992,8 +990,6 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
- 		genpd_power_off(link->parent, false, depth + 1);
- 		genpd_unlock(link->parent);
- 	}
+-					if (genpd_is_opp_table_fw(gpd) || !gpd->set_performance_state)
+-						continue;
 -
--	return 0;
- }
+-					dev_pm_opp_put_opp_table(gpd->opp_table);
+-					dev_pm_opp_of_remove_table(&gpd->dev);
++					if (gpd->opp_table) {
++						dev_pm_opp_put_opp_table(gpd->opp_table);
++						dev_pm_opp_of_remove_table(&gpd->dev);
++					}
+ 				}
+ 			}
  
- /**
 -- 
 2.43.0
 
