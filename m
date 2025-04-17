@@ -1,130 +1,117 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E66225A3B
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8588189B8C;
+	Thu, 17 Apr 2025 09:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744883416; cv=none; b=Tw7YG3J64Vw7BZAOuXagWNxDN9xqk+Lmf3DLlRX9+Ine1/M5F9FxGd+r11FeA6iGYpGwnl+9Z0GH6Z5/ree9VkbWNY27OvTwQuHhjUIN22/9EYdQNYB09sMqnNxkkuTiQzqaBq59wlojHmT1ivaT+Tq4xCtJ2qDq12TmWl0wb0A=
+	t=1744883463; cv=none; b=Dhh4xch1MqYY3f9RYDwHAWUk/+kFbtkHOIveGCP32J2gvOL9IipwTSBL4fEKFbQITJbR/6e5c0fWRQjnyyhcDseLJTZ4ncjOfqzynjwNPHZw39GLTb4yaDzgKmc4qhZ+BTryKZy0/STE9w7QH3xkZl1gCC+bAJQL7TQok/YAtgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744883416; c=relaxed/simple;
-	bh=8ZUxKLXf9vq9waQbjl+f4Y4qonVQkqHJNmtY+21wbqA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BpqJRcQGFgD060M/DzjSf6Hp0Uci5ZCS73T8/H38h/NzNYMuGtyn2DmdbLLOmo1j8hZIDclKQZClVRXHcfANv/b85aEO0fixA3Ktgu3jLnUzPjnblV3mthlxIVAfGsA1ikT9Ebm3WgjwGFojtn/uTchGkdINzoNBaB1uBJQ/7Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Dgqexjx7; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=usVT6zTx; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1744883463; c=relaxed/simple;
+	bh=L8o2PSkGeZxi2mBoFN19BApuLbghB6wGeSWpWaGCaTE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NztdZFaTxbgYqv2wEry9SX23Bybauq4dzeHUUGaGRlrww6M3eOxSX7p/psZagXUMdrsUFfTyiMnMjqLkDhlginn+Bn9j38IGOMZ/57PPsJGM8X4qvQWz7g5darCp5H/91MFCbXisbfAHUboXKiIc2JNjnx6QDI4BYHajjKYuFuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XJNeDJ5a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Dgqexjx7";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="usVT6zTx"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id EF0E621175;
-	Thu, 17 Apr 2025 09:50:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1744883413; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=qfiQ6961dCOMHWEgtdCh51TFHLHOvYD1aDKH/ZVB6EQ=;
-	b=Dgqexjx7F4p1y7vIUY2/G3UUl51EuhLLHJbmpORHHB4zAIszVMy1Fifp7qf4YOMyrrwI0X
-	cm/NEXTmrdCldHsEe+JktI4REYg0IDei6pD3iuz78JcCta9F9dn20WoCIyxUVv8heP6EP2
-	9Opqlm5yI05lwjt1EFUQMdxNq5x72lA=
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1744883412; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=qfiQ6961dCOMHWEgtdCh51TFHLHOvYD1aDKH/ZVB6EQ=;
-	b=usVT6zTx4R7T88BgkQ2hodjrbVwlrPNWqsIbfr5WwXxOnb7HipYLeIiScQ3DEnLaM9Kpok
-	VgJFVBSn2mcTRZMG+sQ6ROH7MbTGTVM3J52PRftnFBWLmL2IFzYQeyMFDg/zq+OqR+DHYe
-	nEJ5EO9TUjHrnIoidfe/oUCn7Y2P4/s=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DDC1F137CF;
-	Thu, 17 Apr 2025 09:50:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Ww0eNtTOAGhqfQAAD6G6ig
-	(envelope-from <dsterba@suse.com>); Thu, 17 Apr 2025 09:50:12 +0000
-From: David Sterba <dsterba@suse.com>
-To: torvalds@linux-foundation.org
-Cc: David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fixes for 6.15-rc3
-Date: Thu, 17 Apr 2025 11:49:55 +0200
-Message-ID: <cover.1744883021.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XJNeDJ5a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48A01C4CEE7;
+	Thu, 17 Apr 2025 09:51:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744883463;
+	bh=L8o2PSkGeZxi2mBoFN19BApuLbghB6wGeSWpWaGCaTE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XJNeDJ5a7rXZB3aV5DxX/MCGa77oE21mxbt+dYjy8W71i8SMQO9lI+JRJj1MuTNeK
+	 PDtBEUTxmJ2BNwI3Fd7DLt8En85mkjUdTsW1S86vhnxYwRLFYQb3E3QwE5q93BSl6L
+	 NbLhvoO+haS/iQAhYM2pjNLjdiOhjb4kvMDApTd/EAXCqOChB23jnwFoM0tF4Ubg5E
+	 gfR8iVWMe3lQ0+NwEzvn9TttR8k586DAsrO5dff9ZU5JaRpMVosi2yM+0yKkAZdUma
+	 2etP+icr4Mq/WjSeZ6JK96g0XYbgGXjrkrSTQmZLk7TB8FMKmdk+avpl4VxsuzShhr
+	 2VEUUKsMosSrw==
+Date: Thu, 17 Apr 2025 11:51:01 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, linux-pwm@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, Biju Das <biju.das.au@gmail.com>
+Subject: Re: [PATCH v24 3/4] pwm: Add support for RZ/G2L GPT
+Message-ID: <wapp2p55vrdpgwy7dpnrbxallcdu4yvk6a3nqimbyb565crqg2@7ljkanddwmjz>
+References: <20250226144531.176819-1-biju.das.jz@bp.renesas.com>
+ <20250226144531.176819-4-biju.das.jz@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,imap1.dmz-prg2.suse.org:helo];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="oo3vkt6iyksbvgcq"
+Content-Disposition: inline
+In-Reply-To: <20250226144531.176819-4-biju.das.jz@bp.renesas.com>
 
-Hi,
 
-please pull a few fixes, thanks.
+--oo3vkt6iyksbvgcq
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v24 3/4] pwm: Add support for RZ/G2L GPT
+MIME-Version: 1.0
 
-- handle encoded read ioctl returning EAGAIN so it does not mistakenly
-  free the work structure
+Hello Biju,
 
-- escape subvolume path in mount option list so it cannot be wrongly
-  parsed when the path contains ","
+On Wed, Feb 26, 2025 at 02:45:22PM +0000, Biju Das wrote:
+> RZ/G2L General PWM Timer (GPT) composed of 8 channels with 32-bit timer
+> (GPT32E). It supports the following functions
+>  * 32 bits x 8 channels
+>  * Up-counting or down-counting (saw waves) or up/down-counting
+>    (triangle waves) for each counter.
+>  * Clock sources independently selectable for each channel
+>  * Two I/O pins per channel
+>  * Two output compare/input capture registers per channel
+>  * For the two output compare/input capture registers of each channel,
+>    four registers are provided as buffer registers and are capable of
+>    operating as comparison registers when buffering is not in use.
+>  * In output compare operation, buffer switching can be at crests or
+>    troughs, enabling the generation of laterally asymmetric PWM waveforms.
+>  * Registers for setting up frame cycles in each channel (with capability
+>    for generating interrupts at overflow or underflow)
+>  * Generation of dead times in PWM operation
+>  * Synchronous starting, stopping and clearing counters for arbitrary
+>    channels
+>  * Starting, stopping, clearing and up/down counters in response to input
+>    level comparison
+>  * Starting, clearing, stopping and up/down counters in response to a
+>    maximum of four external triggers
+>  * Output pin disable function by dead time error and detected
+>    short-circuits between output pins
+>  * A/D converter start triggers can be generated (GPT32E0 to GPT32E3)
+>  * Enables the noise filter for input capture and external trigger
+>    operation
 
-- remove folio size assertions when writing super block to device with
-  enabled large folios
+I now finally looked over this patch and I'm ok with it. So I will apply
+patches 1 and 3 to
 
-----------------------------------------------------------------
-The following changes since commit 35fec1089ebb5617f85884d3fa6a699ce6337a75:
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-next
 
-  btrfs: zoned: fix zone finishing with missing devices (2025-03-18 20:35:57 +0100)
+for now. Note this doesn't mean 2 and 4 are bad, just I
+didn't find the time yet to look into these.
 
-are available in the Git repository at:
+I will send a patch on top of this for a low-hanging improvement.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.15-rc2-tag
+Best regards
+Uwe
 
-for you to fetch changes up to 65f2a3b2323edde7c5de3a44e67fec00873b4217:
+--oo3vkt6iyksbvgcq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  btrfs: remove folio order ASSERT()s in super block writeback path (2025-04-01 01:02:42 +0200)
+-----BEGIN PGP SIGNATURE-----
 
-----------------------------------------------------------------
-Johannes Kimmel (1):
-      btrfs: correctly escape subvol in btrfs_show_options()
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgAzwIACgkQj4D7WH0S
+/k6F3wf+Noa4373MKa5MYVacKyVz7WLzOdwsr3d/DMwV1+M3hE4L2euGaaZS85+U
+k3G4c/LqIoOFFQUFF/qYiIQADWKNoRY269Rj0c3jFKwzs0ZoW6GKROlSv7FOLvJN
+5BIqudas5hvjTmuOmFivMyRfc3s/nMoABNgkpZvZ7PEa7FKkQyF+KMdpE8VCgaZQ
+6g1y9IC7sgzYUmIZL3HBbEgJ2zefddY0h2WFxqvZ5F9MNXnXxhxg5sEr2Sf3RFkS
+BgkebDoyXdo3l14GhfVunSdggvHYpWaKfX4ad3Zkox+vyp76SEhRIr9fRh0yXfZL
+3S8/sMk9wxwxvQg6raINc5lHW6XZdA==
+=z9MA
+-----END PGP SIGNATURE-----
 
-Qu Wenruo (1):
-      btrfs: remove folio order ASSERT()s in super block writeback path
-
-Sidong Yang (1):
-      btrfs: ioctl: don't free iov when btrfs_encoded_read() returns -EAGAIN
-
- fs/btrfs/disk-io.c | 2 --
- fs/btrfs/ioctl.c   | 2 ++
- fs/btrfs/super.c   | 3 +--
- 3 files changed, 3 insertions(+), 4 deletions(-)
+--oo3vkt6iyksbvgcq--
