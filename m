@@ -1,111 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2D72566DE;
-	Thu, 17 Apr 2025 17:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D2D1A0730;
+	Thu, 17 Apr 2025 17:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744910334; cv=none; b=qQgE2yCTX0Fmb0imuEzfuGCTXl6GBGd2I4kNqzn0ZaK7bUcMX04ArtleKy+dFGpWIyKDL61l/907fGZp+BdtT+yaQpucI83DQ6RxQvx8XZGqIZ31/1J7pJ2jyJnANXZQzY5aeyLD6nMqJ/Ha+vaC+Lin0kTXwg2fH03FEGhtxPc=
+	t=1744910541; cv=none; b=nVJWf1UeD4tHverpNEDi6f4CHTd0pz3vLqD76ntysLSHUwG2pUaetBiI5ExiUrXbENWP4rFdeAIwPGxqx39GJiWw2UVneN6HknPBQUtZi/m3OtZ2JsMqAu7UWOX3t278WOn0+gSAC4RX32VIQczLvqEvUosMTsRSzCF/Ohw/gYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744910334; c=relaxed/simple;
-	bh=rwzHyfxRSjWAcBaUHLb1QsSWYIpjHdvWq0pbmdTtM1U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dq95Rweoi1Gd3rWTcr9yYk63PMhhr1aTYzPVU849pnUag7vhTmlPBlyLAhwhzMLRd3k2KWW7W9fnsHniCAZiTCdMD2IOxof4pwycR47A+htW6nan9YejdnjhAelIkg2ygjSy2itfd1eKl9RiaDIYlOjj0bkrZuvZ6eiEsu759uU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QOa8XR4I; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QOa8XR4I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744910333; x=1776446333;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rwzHyfxRSjWAcBaUHLb1QsSWYIpjHdvWq0pbmdTtM1U=;
-  b=QOa8XR4Iuhl2+s4MPGCre00uWGMDbFEKrt/EvtTg/EttWWPbAAigWsPd
-   zC9RjtbmoL48PsXRKYd0sBl1QCI9zNAyQK+rrnfUNfKLQ+SSCFoVT3c2m
-   y+jc3siRnG0gJUf+t06lF2lRzEVB385eAkIqlInTn+9gAPi5R1/Ybo3WP
-   OoYzxj3+8IgA37B2EwUT/yFWZLBFp3hAfPIoQ1siyfrVPGoYeBdpAgczc
-   hb+kykh/tD/XSGE+e8j/cxX+KI4X6uk7n8IokcG672y202Xq+r2H75yx1
-   8AedHADuCyoKml37chok6JQ7XKeKIDMRmsqZOVegefIiO1/Ff+s6/23WO
-   Q==;
-X-CSE-ConnectionGUID: n+HOBfcpQz6NQc2pDNqFMQ==
-X-CSE-MsgGUID: GmOhghatQP+GY/11mb/M9g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="46440136"
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="46440136"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:18:53 -0700
-X-CSE-ConnectionGUID: 8+aK4r2vR4qyObwriQ1+pQ==
-X-CSE-MsgGUID: 8edGMLbPSMeeUEEDDCcQ+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="161827307"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:18:50 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u5Ssx-0000000DGTg-0IoD;
-	Thu, 17 Apr 2025 20:18:47 +0300
-Date: Thu, 17 Apr 2025 20:18:46 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu,
-	GaryWang@aaeon.com.tw
-Subject: Re: [PATCH v3 05/10] gpio: aggregator: refactor the forwarder
- registration part
-Message-ID: <aAE39r-et5CPvzyA@smile.fi.intel.com>
-References: <20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com>
- <20250416-aaeon-up-board-pinctrl-support-v3-5-f40776bd06ee@bootlin.com>
+	s=arc-20240116; t=1744910541; c=relaxed/simple;
+	bh=QaiiSw2sc68sB4+5GNZUMgQk4P7YNtfdfuop79iBfVg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t9L7iOz++fw756E4BVPhiW9vzAjQ837Qo20FTKVIGrfl4LE/GkNuy4xGdYun2EQpKzNScCp4RIImEy8BB+ulZOUcxfNQZMKO2bFzKVqo9j8Dtho5FlrXmqAY61+A24VQfwPVTRhxxedHopvkeRG6yX+qofPG7WwvXg6ieu9lZgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zdl3B2gGGz6M4fj;
+	Fri, 18 Apr 2025 01:18:14 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 21D01140145;
+	Fri, 18 Apr 2025 01:22:15 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 17 Apr
+ 2025 19:22:14 +0200
+Date: Thu, 17 Apr 2025 18:22:12 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
+	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
+	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<lukas@wunner.de>, <ming.li@zohomail.com>,
+	<PradeepVineshReddy.Kodamati@amd.com>
+Subject: Re: [PATCH v8 14/16] cxl/pci: Remove unnecessary CXL Endpoint
+ handling helper functions
+Message-ID: <20250417182212.000078d2@huawei.com>
+In-Reply-To: <20250327014717.2988633-15-terry.bowman@amd.com>
+References: <20250327014717.2988633-1-terry.bowman@amd.com>
+	<20250327014717.2988633-15-terry.bowman@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416-aaeon-up-board-pinctrl-support-v3-5-f40776bd06ee@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, Apr 16, 2025 at 04:08:13PM +0200, Thomas Richard wrote:
-> Add a new function gpiochip_fwd_register(), which finalizes the
-> initialization of the forwarder and registers the corresponding gpiochip.
+On Wed, 26 Mar 2025 20:47:15 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-with one nit-pick below.
+> The cxl_handle_endpoint_cor_ras()/cxl_handle_endpoint_ras() functions
+> are unnecessary helper function and only used for Endpoints. Remove these
+> functions because they are not necessary and do not align with a common
+> handling API for all CXL devices' errors.
+Having done this, what does the double underscore in the naming denote?
+I assume original intent was perhaps that only the wrappers should
+ever be called.  If that's not the case after this change maybe get
+rid of the __ prefix?
 
-...
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> ---
+>  drivers/cxl/core/pci.c | 17 ++++-------------
+>  1 file changed, 4 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index f2139b382839..a67925dfdbe1 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -670,11 +670,6 @@ static void __cxl_handle_cor_ras(struct device *cxl_dev, struct device *pcie_dev
+>  	trace_cxl_aer_correctable_error(cxl_dev, pcie_dev, serial, status);
+>  }
+>  
+> -static void cxl_handle_endpoint_cor_ras(struct cxl_dev_state *cxlds)
+> -{
+> -	return __cxl_handle_cor_ras(&cxlds->cxlmd->dev, NULL, cxlds->serial, cxlds->regs.ras);
+Previously second parameter was NULL. After this change you pass &pdev->dev.
+That makes it look at least like there is a functional change here.
+If this doesn't matter perhaps you should explain why in the description.
 
-> +static int gpiochip_fwd_register(struct gpiochip_fwd *fwd)
-> +{
-> +	struct gpio_chip *chip = &fwd->chip;
+> -}
+> -
+>  /* CXL spec rev3.0 8.2.4.16.1 */
+>  static void header_log_copy(void __iomem *ras_base, u32 *log)
+>  {
+> @@ -732,14 +727,8 @@ static pci_ers_result_t __cxl_handle_ras(struct device *cxl_dev, struct device *
+>  	return PCI_ERS_RESULT_PANIC;
+>  }
+>  
+> -static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
+> -{
+> -	return __cxl_handle_ras(&cxlds->cxlmd->dev, NULL, cxlds->serial, cxlds->regs.ras);
+> -}
+> -
+>  #ifdef CONFIG_PCIEAER_CXL
+>  
+> -
 
-> +	int error;
+Unrelated change. I think this ifdef was added earlier in series so avoid
+adding the bonus line wherever it came from...
 
-Not needed in this change.
-
-> +	if (chip->can_sleep)
-> +		mutex_init(&fwd->mlock);
-> +	else
-> +		spin_lock_init(&fwd->slock);
-
-> +	error = devm_gpiochip_add_data(chip->parent, chip, fwd);
-> +
-> +	return error;
-
-	return devm_...
-
-Make it differently when you will need this.
-
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+>  void cxl_port_cor_error_detected(struct device *cxl_dev,
+>  				 struct cxl_prot_error_info *err_info)
+>  {
+> @@ -868,7 +857,8 @@ void cxl_cor_error_detected(struct device *dev, struct cxl_prot_error_info *err_
+>  		if (cxlds->rcd)
+>  			cxl_handle_rdport_errors(cxlds);
+>  
+> -		cxl_handle_endpoint_cor_ras(cxlds);
+> +		__cxl_handle_cor_ras(&cxlds->cxlmd->dev, &pdev->dev,
+> +				     cxlds->serial, cxlds->regs.ras);
+>  	}
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_cor_error_detected, "CXL");
+> @@ -907,7 +897,8 @@ pci_ers_result_t cxl_error_detected(struct device *dev,
+>  		 * chance the situation is recoverable dump the status of the RAS
+>  		 * capability registers and bounce the active state of the memdev.
+>  		 */
+> -		ue = cxl_handle_endpoint_ras(cxlds);
+> +		ue = __cxl_handle_ras(&cxlds->cxlmd->dev, &pdev->dev,
+> +				      cxlds->serial, cxlds->regs.ras);
+>  	}
+>  
+>  	if (ue)
 
