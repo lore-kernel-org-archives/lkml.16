@@ -1,170 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412B1253B78;
-	Thu, 17 Apr 2025 15:09:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C92F252905
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744902568; cv=none; b=PVXLSZZ14kEWiRX9er0LIUlXOiNxtvsPXy3VmE/REVpOhbL2lx9F9hYIu3shqq/10XipmPmCuti62qNdFLbrWzqk1QsQ8bvcVK/IAk4bbKl2U7/Bbnglx7R2r9zPPZbAxs/AmbjIZn3qpkgo1RGYYTPNvLcAo8M39Nq7hfUnMmc=
+	t=1744902628; cv=none; b=g0x5CZH8Q4JXMPkr/FjLmMHggfKZVWtcPhhu6RU2AGKJHT27ZjD/7CZcvJeHzJ3JikSG9S8v4h8mLbQv5PeJOi8j4yA5rsy/6QkTrLSFabq71kzT+hTYqFG36ovYvP42sOi03fTFn0VoRibcKQknUJ1GiM4J3jL60qqBnlPeT5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744902568; c=relaxed/simple;
-	bh=AdFC9QPAdrG+ZuiF0LMjbfb7m0Ibpa1So+c1GMQJ9Zc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fbEBockRAhHBbiS7JUQjNJ+eCr+BagbbuFTfir6wsQZYkDBoLVv3CcJt35Ne8t1i/nkIzcNlS3cxeqMwA9nb0Yx9CEJHFdzd2b6BMYeL5g2p65afpV46jg4UE8F0m6+kVRCEsB2QYAMiUzVBk4szdyPtIUseo9dep77vhipk8eY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OIfd5xhx; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OIfd5xhx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744902567; x=1776438567;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AdFC9QPAdrG+ZuiF0LMjbfb7m0Ibpa1So+c1GMQJ9Zc=;
-  b=OIfd5xhxf8vDbgbr31zSFqxCHDLhIUJpxasKBLdWqfdykwTFwNa98UMX
-   +1wT9LN92MPNbuoA+kvXzHjQrKleFFJEq8jKC1A4MWaxxEIRIzMjWnNVs
-   HYW7JDZqms7C5Jas60jtrWxgKzjYvw+25y93b49zwDnLJ+tHOZaEebtPW
-   zw2MmtHikTyVRhlEH2Aka7yoD7g4i/fLlUUpEOeTpGc1AxRQy6vBSxEB4
-   mTdR59Ggwky0QnIGPQAwiRi7XwMKESx3S2dkQaYwMrqQ6x5itCE2NLdjC
-   eMx+Z68b/z73wvVE6wX0PabMmsTQN+xaG73d1VV5/OeYoj39T0tRWuc3+
-   Q==;
-X-CSE-ConnectionGUID: atWwOe9GTiikVPDfalxlYw==
-X-CSE-MsgGUID: 4MyW9Dx+TO+9sdNr6qjhgw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="57488756"
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="57488756"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 08:09:27 -0700
-X-CSE-ConnectionGUID: BXXrn+CxTlak/hFwHn9DmA==
-X-CSE-MsgGUID: 8thGXoyRTOeuF5R7/Ihm/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="161876948"
-Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 08:09:24 -0700
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-To: Tony Luck <tony.luck@intel.com>
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-	Feng Xu <feng.f.xu@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>,
-	Yi Lai <yi1.lai@intel.com>,
-	Shawn Fan <shawn.fan@intel.com>,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 7/7] EDAC/{skx_common,i10nm}: Add RRL support for Intel Granite Rapids server
-Date: Thu, 17 Apr 2025 23:07:24 +0800
-Message-ID: <20250417150724.1170168-8-qiuxu.zhuo@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250417150724.1170168-1-qiuxu.zhuo@intel.com>
-References: <20250417150724.1170168-1-qiuxu.zhuo@intel.com>
+	s=arc-20240116; t=1744902628; c=relaxed/simple;
+	bh=NMIIw60GZShTg37kMSUEMuZsYQy8pT1XRO1gez+5lBs=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Paz+2xjZQFpaHr+B8r0dSZ7t/J45itl1IwL2H31pvn83n1NlEDUkz+wTN48BXVLJIzhONVXFjlobweXTWiSsHYp+Jfiir0guDhSQc0elaZYAR8Zadr66lYL4jjYV0+IWI7u+SD2xIcYYyWTxacHUXmuTmBzFJ3Iz3JGN/mzShJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-851a991cf8bso165431539f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:10:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744902626; x=1745507426;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TUjzBO5ydnB/W6FtODgX9yEBNVVZZQFEaYNiWI1bNw0=;
+        b=qgUudEjdfjGUzUoU8oqQIB47gTZGlfAQ+kMa1oOHaeOTz3X149Me64iOC2Tn0JF8Np
+         OB10YXKQGHCQLgQlR2afZYWI+t2Zs/6vZFiJgnD7ZN/822LJ6kc+vKfW3res8kBeRoL4
+         uV/YjXhEP8OxPH4yu2F5zgZdAhbdlgGvv3Xyd+5vG6ZXvO92JACqDpEm37fk7rwOze2n
+         IRTrR7E5CH3smCvEmhY4EqUtoC25QzQld0VAF2SEMCwQE/kQFqPdt8K9ft59ju7O1lVJ
+         83IdtgDKQWVxPws2HByAbj+T3r+yNRr01tDX9Q5AwXWEwuShqdQgCQv8f6Ve7lFauBvn
+         /rdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXgCKNkXg/qXhMVUwx33FLyrisCGZ6/R/D3YoAH7WOKRn8IhqlOjZjiLXclrK0G3Z0LU6oUq82fEtadz3Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqmRNG3Zk0i1rNzY3218IviDytGBnMhQj/uNWuqngNp+CQe1dq
+	M/xTBypVQSzZQkrrotfPkmJ88o4KNbEtJH2uW0aB8JaRRqdptakwU7W8oa57/4B2Tl4IpX+8z+B
+	m4EeoxktSMBqd0qoDFyTreIm2XFZBnwyivlsGT3BEtYKhmOm9GANuRv0=
+X-Google-Smtp-Source: AGHT+IGZU5H5xeXB3WqaLpJtOEzTMwvl9FOcphlngfzZaGtW+CRzNzUbjQZwcPyUIQN+JeoMHBCgGeib9R8pPPZIn/s4z4eUb2Yf
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:c67:b0:3d2:ed3c:67a8 with SMTP id
+ e9e14a558f8ab-3d821d3070emr2138045ab.4.1744902625994; Thu, 17 Apr 2025
+ 08:10:25 -0700 (PDT)
+Date: Thu, 17 Apr 2025 08:10:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <680119e1.050a0220.243d89.0011.GAE@google.com>
+Subject: [syzbot] [dri?] [virt?] WARNING in virtio_gpu_queue_fenced_ctrl_buffer
+From: syzbot <syzbot+5afbc12ca70811c2bffb@syzkaller.appspotmail.com>
+To: airlied@redhat.com, dri-devel@lists.freedesktop.org, 
+	gurchetansingh@chromium.org, kraxel@redhat.com, linux-kernel@vger.kernel.org, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, olvaffe@gmail.com, 
+	simona@ffwll.ch, syzkaller-bugs@googlegroups.com, tzimmermann@suse.de, 
+	virtualization@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Compared to previous generations, Granite Rapids defines the RRL control
-bits {en_patspr, noover, en} in different positions, adds an extra RRL set
-for the new mode of the first patrol-scrub read error, and extends the
-number of CORRERRCNT registers from 4 to 8, encoding one counter per
-CORRERRCNT register.
+Hello,
 
-Add a Granite Rapids reg_rrl configuration table and adjust the code to
-accommodate the differences mentioned above for RRL support.
+syzbot found the following issue on:
 
-Tested-by: Feng Xu <feng.f.xu@intel.com>
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+HEAD commit:    7cdabafc0012 Merge tag 'trace-v6.15-rc1' of git://git.kern..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=108e7870580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4c918722cb7e3d7
+dashboard link: https://syzkaller.appspot.com/bug?extid=5afbc12ca70811c2bffb
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-7cdabafc.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/0a779724c40f/vmlinux-7cdabafc.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/00583806b168/bzImage-7cdabafc.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5afbc12ca70811c2bffb@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 3 PID: 34 at drivers/gpu/drm/virtio/virtgpu_vq.c:414 virtio_gpu_queue_ctrl_sgs drivers/gpu/drm/virtio/virtgpu_vq.c:414 [inline]
+WARNING: CPU: 3 PID: 34 at drivers/gpu/drm/virtio/virtgpu_vq.c:414 virtio_gpu_queue_fenced_ctrl_buffer+0xbcf/0xfc0 drivers/gpu/drm/virtio/virtgpu_vq.c:497
+Modules linked in:
+CPU: 3 UID: 0 PID: 34 Comm: kworker/3:0 Not tainted 6.15.0-rc1-syzkaller-00325-g7cdabafc0012 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: events drm_fb_helper_damage_work
+RIP: 0010:virtio_gpu_queue_ctrl_sgs drivers/gpu/drm/virtio/virtgpu_vq.c:414 [inline]
+RIP: 0010:virtio_gpu_queue_fenced_ctrl_buffer+0xbcf/0xfc0 drivers/gpu/drm/virtio/virtgpu_vq.c:497
+Code: df e8 a5 45 d5 fe 48 89 9c 24 a8 01 00 00 c7 44 24 30 02 00 00 00 48 c7 44 24 18 00 00 00 00 e9 4f f6 ff ff e8 f2 97 c3 fb 90 <0f> 0b 90 e9 02 fa ff ff e8 e4 97 c3 fb 90 0f 0b e8 dc 97 c3 fb 90
+RSP: 0018:ffffc900006df488 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: 00000000fffffffb RCX: ffffffff85f79f81
+RDX: ffff88801e2d4880 RSI: ffffffff85f7a57e RDI: 0000000000000005
+RBP: ffff888104ea7c00 R08: 0000000000000005 R09: 0000000000000000
+R10: 00000000fffffffb R11: 0000000000000000 R12: ffffed10209d4f85
+R13: ffff8880245976f8 R14: ffff888025553ac8 R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff8880d6cb2000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fa4a49be440 CR3: 000000000e182000 CR4: 0000000000352ef0
+DR0: 00000000000007ff DR1: 0000000000000009 DR2: 0002000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ virtio_gpu_update_dumb_bo drivers/gpu/drm/virtio/virtgpu_plane.c:175 [inline]
+ virtio_gpu_primary_plane_update+0xda0/0x1540 drivers/gpu/drm/virtio/virtgpu_plane.c:264
+ drm_atomic_helper_commit_planes+0x954/0x1010 drivers/gpu/drm/drm_atomic_helper.c:2838
+ drm_atomic_helper_commit_tail+0x69/0xf0 drivers/gpu/drm/drm_atomic_helper.c:1788
+ commit_tail+0x35b/0x400 drivers/gpu/drm/drm_atomic_helper.c:1873
+ drm_atomic_helper_commit+0x2fd/0x380 drivers/gpu/drm/drm_atomic_helper.c:2111
+ drm_atomic_commit+0x231/0x300 drivers/gpu/drm/drm_atomic.c:1518
+ drm_atomic_helper_dirtyfb+0x5fd/0x780 drivers/gpu/drm/drm_damage_helper.c:181
+ drm_fbdev_shmem_helper_fb_dirty+0x1c9/0x340 drivers/gpu/drm/drm_fbdev_shmem.c:117
+ drm_fb_helper_fb_dirty drivers/gpu/drm/drm_fb_helper.c:379 [inline]
+ drm_fb_helper_damage_work+0x27b/0x5f0 drivers/gpu/drm/drm_fb_helper.c:402
+ process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c2/0x780 kernel/kthread.c:464
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+
 ---
- drivers/edac/i10nm_base.c | 37 +++++++++++++++++++++++++++++++++++--
- drivers/edac/skx_common.h |  4 ++--
- 2 files changed, 37 insertions(+), 4 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/edac/i10nm_base.c b/drivers/edac/i10nm_base.c
-index aefc448283d3..8863f1fb4caf 100644
---- a/drivers/edac/i10nm_base.c
-+++ b/drivers/edac/i10nm_base.c
-@@ -164,6 +164,29 @@ static struct reg_rrl spr_reg_rrl_hbm_pch1 = {
- 	.cecnt_widths	= {4, 4, 4, 4},
- };
- 
-+static struct reg_rrl gnr_reg_rrl_ddr = {
-+	.set_num = 4,
-+	.reg_num = 6,
-+	.modes = {FRE_SCRUB, FRE_DEMAND, LRE_SCRUB, LRE_DEMAND},
-+	.offsets = {
-+		{0x2f10, 0x2f20, 0x2f30, 0x2f50, 0x2f60, 0xba0},
-+		{0x2f14, 0x2f24, 0x2f38, 0x2f54, 0x2f64, 0xba8},
-+		{0x2f18, 0x2f28, 0x2f40, 0x2f58, 0x2f68, 0xbb0},
-+		{0x2f1c, 0x2f2c, 0x2f48, 0x2f5c, 0x2f6c, 0xbb8},
-+	},
-+	.widths		= {4, 4, 8, 4, 4, 8},
-+	.v_mask		= BIT(0),
-+	.uc_mask	= BIT(1),
-+	.over_mask	= BIT(2),
-+	.en_patspr_mask	= BIT(14),
-+	.noover_mask	= BIT(15),
-+	.en_mask	= BIT(12),
-+
-+	.cecnt_num	= 8,
-+	.cecnt_offsets	= {0x2c10, 0x2c14, 0x2c18, 0x2c1c, 0x2c20, 0x2c24, 0x2c28, 0x2c2c},
-+	.cecnt_widths	= {4, 4, 4, 4, 4, 4, 4, 4},
-+};
-+
- static u64 read_imc_reg(struct skx_imc *imc, int chan, u32 offset, u8 width)
- {
- 	switch (width) {
-@@ -353,8 +376,17 @@ static void show_retry_rd_err_log(struct decoded_addr *res, char *msg,
- 			width = rrl->cecnt_widths[i];
- 			corr = read_imc_reg(imc, ch, offset, width);
- 
--			n += snprintf(msg + n, len - n, "%.4llx %.4llx ",
--				      corr & 0xffff, corr >> 16);
-+			/* CPUs {ICX,SPR} encode two counters per 4-byte CORRERRCNT register. */
-+			if (res_cfg->type <= SPR) {
-+				n += snprintf(msg + n, len - n, "%.4llx %.4llx ",
-+					      corr & 0xffff, corr >> 16);
-+			} else {
-+			/* CPUs {GNR} encode one counter per CORRERRCNT register. */
-+				if (width == 4)
-+					n += snprintf(msg + n, len - n, "%.8llx ", corr);
-+				else
-+					n += snprintf(msg + n, len - n, "%.16llx ", corr);
-+			}
- 		}
- 
- 		/* Move back one space. */
-@@ -985,6 +1017,7 @@ static struct res_config gnr_cfg = {
- 	.uracu_bdf		= {0, 0, 1},
- 	.ddr_mdev_bdf		= {0, 5, 1},
- 	.sad_all_offset		= 0x300,
-+	.reg_rrl_ddr		= &gnr_reg_rrl_ddr,
- };
- 
- static const struct x86_cpu_id i10nm_cpuids[] = {
-diff --git a/drivers/edac/skx_common.h b/drivers/edac/skx_common.h
-index 8f0f4af2cb27..ec4966f7ea40 100644
---- a/drivers/edac/skx_common.h
-+++ b/drivers/edac/skx_common.h
-@@ -80,11 +80,11 @@
- #define MCACOD_EXT_MEM_ERR	0x280
- 
- /* Max RRL register sets per {,sub-,pseudo-}channel. */
--#define NUM_RRL_SET		3
-+#define NUM_RRL_SET		4
- /* Max RRL registers per set. */
- #define NUM_RRL_REG		6
- /* Max correctable error count registers. */
--#define NUM_CECNT_REG		4
-+#define NUM_CECNT_REG		8
- 
- /* Modes of RRL register set. */
- enum rrl_mode {
--- 
-2.43.0
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
