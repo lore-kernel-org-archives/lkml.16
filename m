@@ -1,95 +1,171 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E91A13C82E
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C96A935
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:42:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744850208; cv=none; b=B7+AzBkXO32e9wRRMQiQnuvY2XWC6xWGJVGI5mAdLPXD1thAx57chG8lRXdYbMcjj4RnT9/wzJsVeQh9IFf9jk2mpOuGGHG7CgyUtQJvr4D2UL8OcLuWhzEGRSIyCwEp6we7TMPeSgTAFGk0RvR7oc7vMo8GlEdmqwD1S71MqYs=
+	t=1744850535; cv=none; b=O5+i5DDlkaFZEhCUSfWJDy7yuhpv/vZ8bsTkSUyypJvFkTNKuLcZwrfnAGHUW1ROOmDxNadTPoe+npzZTR6B2oXkuxzGz2FMHihRf6Uk+bOOS9vUN+gqB/kTMnbjktePHeLxkIqJAMDXuyIqHhiC7u7hl6O/ygXXKtHAvC6Cm0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744850208; c=relaxed/simple;
-	bh=lrhUAO2ZO0O7cddUmG8H+oajQEEq4UOcN2sxu6227eY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=NvaSPBGQegiohGFOw+LhRRZ8PYkLwma6A1EkyeK6uKoMwYynbB/zcTNZgDO1bwX9dfwDJKYJeh/t6r8y2Q7E7jxuHBHiOKarhbqekL8ixtyUTR09otdrnsTDgUjzgOneDUwxbh0AW3g9lzA3dBL1XE3z8W7CHw1DwjZzfvuxViY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=b39YbBfa; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	s=arc-20240116; t=1744850535; c=relaxed/simple;
+	bh=tst8LNMMFDT11WQgOBgJHKA16AjK4S4lrg0QCndvF5U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t2OoPx2ALJLbnxYo/trU5XdxPT0o2OJpaOScgSYBT7CzlrY+6t9Jbt009jEYQrTWJDVCnzkAST6Yc34VmngsRdenPoglTANNR/WSa37zXkSQgFGAjxSzSKGYEBTIsnS0XRejkyrOh7SId8mIDSnFMCXaYdqSE86wdnWwNTsm1OA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KI64PYDI; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="b39YbBfa"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id D7E982C03DC;
-	Thu, 17 Apr 2025 12:36:43 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1744850203;
-	bh=lrhUAO2ZO0O7cddUmG8H+oajQEEq4UOcN2sxu6227eY=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-	b=b39YbBfaqhM5YByQILxiMMtuTHBfeE5fYrQGsrpdipJ5cRIbaOY0OSNM5DBAZT4Bg
-	 /yiXTSNDTEw7gGD8XpMuiv5UYll1d6D1gc1jSozcYls2QeJeC1CYhhzfI6WEBRnhEd
-	 krXDGYlW9giRlWfJCx2KL37PGck0r8okEu9D1Dr7iHjjnPZ9s6JzbVDtvbgZNwmLCt
-	 h0tZltUTlI5mus3RbBVsfJsP50R6Vah4YjpWg8fGNPmWicXUQk06dCF/jNgHffDI0o
-	 wmEncIbjj14dtU5vIvdtXpFYLp532zc45CmUX6SMBwo1QAAhfB2z82xZZw+f+g13n5
-	 O0kPomOqPMvXg==
-Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B68004d1b0001>; Thu, 17 Apr 2025 12:36:43 +1200
-Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
- svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 17 Apr 2025 12:36:43 +1200
-Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
- svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
- 15.02.1544.014; Thu, 17 Apr 2025 12:36:43 +1200
-From: Rutger van Kruiningen <Rutger.vanKruiningen@alliedtelesis.co.nz>
-To: "andrew@lunn.ch" <andrew@lunn.ch>
-CC: "horms@kernel.org" <horms@kernel.org>, "davem@davemloft.net"
-	<davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>, "kuba@kernel.org" <kuba@kernel.org>
-Subject: Re: [PATCH v0] net: ethtool: Only set supplied eee ethtool settings
-Thread-Topic: [PATCH v0] net: ethtool: Only set supplied eee ethtool settings
-Thread-Index: AQHbrxyse1JWtHWT2USdHgkWBWpOW7OmGJ6AgAAhk4A=
-Date: Thu, 17 Apr 2025 00:36:43 +0000
-Message-ID: <19ffa505b6c4341e6c66370fb76f6447b820aacd.camel@alliedtelesis.co.nz>
-References: <20250416221230.1724319-1-rutger.vankruiningen@alliedtelesis.co.nz>
-	 <6694f2c8-cfc8-41ed-9ceb-3e0b10aec6b9@lunn.ch>
-In-Reply-To: <6694f2c8-cfc8-41ed-9ceb-3e0b10aec6b9@lunn.ch>
-Accept-Language: en-US, en-NZ
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1DB9F8F088F3284C912CDE8C7AEAFF97@alliedtelesis.co.nz>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KI64PYDI"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7369ce5d323so137576b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 17:42:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744850533; x=1745455333; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=3JzZW8Vec/M6PKHJMF8TNngqQQy5yNrBF4bogvL3NjQ=;
+        b=KI64PYDIkYbdX9m5p6yz5lBOzEMpvy5CxV71A1XEv88RbC8bxuxDh5Z7rwWkyUXeLt
+         ClczbZXCK4DypB/rIkQ2zhKet7CydVDU9Glscq2ZF88IjH30ja73vQGzjp6azCYNuypV
+         zmKOvpKguZzT4DK78d60SAHKeHaRhVyndK+vOgi4EsekMqZAWJCFDduQ+w3jzFdHYEkC
+         53po0k0V6ZD1car7obzn0BOrf3mRQCYhRTti29fqHsDsRtCu7l17ydXGCJ0bPvmHHDHi
+         ORfR45iKHAejU5pdAm4W8yjjr2Sf5UVd0fpvJuo0qt5+nM7zcB7SncvgUncDvBpv4FsS
+         5BbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744850533; x=1745455333;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3JzZW8Vec/M6PKHJMF8TNngqQQy5yNrBF4bogvL3NjQ=;
+        b=wP/BWSW17J1XRtEId2txXlVGMTggRBeQIUnsupONvv0LA1fC3vZw1pUJ6X07Dp5Zsh
+         FtIL3LOZwLGefdiCUS6dM9hNiHVuw9OT6fqHHbzMEi2xpE7nIm1SukBPaeOqtzozgvOL
+         DbCLlvWt47kuL+QwFK9fiysxEuuGkaAmsYDMNeIX2DA3wbV7ilP8Hju+o6y8IKbHnv0u
+         v9PHzbwshiywIdkVz6BTIfPCW+6lfTbnP3PkrhCq5NUusRKQDsdZNMC6+phbiynh8foF
+         ZpqMuQ62Y8rW7F2z/WhlG0Ifjv6f2KC0qiofUYdWHBLodIZgLvkEA64WkH7FRA1OSbWq
+         ByoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVMiqYAoO4Xd1ycp+Haxq4JJBnd5dOjPsSQ/FPoczhQaA20Btymfdf9lrbOvuJ+wjajYKcZAS4kWvf0tZY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsqaJy7aM1P04AuBBl+AP1y9XjNelOfEeao5U5Le0G0Akl6FTl
+	MHX9EJBR8NesyZdGjLcqQtIOUKR2KUbrJKBeug/e2T4Y1KceL0AbbctVqg==
+X-Gm-Gg: ASbGncvgWiO1uxVw+L8DgAPAlE7voiNxmzDgWuHT8sha6cp4Ttnhmzwxh6Tpm63TVgK
+	+lRjF85ntpsraAGeHeeXOw3N2ZDLIITSxkvYI96FGZMEZhw0JUfq6o36tL2fttPIkmNdjiybQMO
+	u1liuYLpdIbKZe97XZFsws8fX1qf7NOvLC7MLMTmFe3jbrpDGScNeYnFLZet6ZOmXpW7u55AGZw
+	7t3ki4NqZZn0zUVNgO2TBSxK/Ub/UYEP44JpwpjJJEFiPOmivFbdi3od55vOJDfeQG9geNObrZJ
+	wGSmmdT1u1p5S7HZCk5BMSiLtB4cpu+rch4g+JUS7Fj6ZuohHORc+h2HB7QXF35h3ve2hofYAVg
+	W6pn2zu6uSPiIyg==
+X-Google-Smtp-Source: AGHT+IGtl8krBpdNuNd64dWA6eV3pmtc+QqPmwzIy+wCqg8g43+fSIjlzpcUOWZlrbxD5ySNeSEAvg==
+X-Received: by 2002:a05:6a00:3a06:b0:736:3fa8:cf7b with SMTP id d2e1a72fcca58-73c2671dbc2mr4679954b3a.13.1744850532709;
+        Wed, 16 Apr 2025 17:42:12 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0b22216855sm1888795a12.64.2025.04.16.17.42.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 17:42:12 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <a589599f-e069-4aaf-aed6-5cc02b322f1f@roeck-us.net>
+Date: Wed, 16 Apr 2025 17:42:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=W+WbVgWk c=1 sm=1 tr=0 ts=68004d1b a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=-DMz-g34_tEA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=qZ8f-K6C4Mv00eEDbOsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-SEG-SpamProfiler-Score: 0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] x86/Kconfig: Fix allyesconfig
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Alexander Potapenko <glider@google.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, kasan-dev@googlegroups.com,
+ linux-kernel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>
+References: <20250416230559.2017012-1-linux@roeck-us.net>
+ <20250416170359.a0267b77d3db85ff6d5f8ac0@linux-foundation.org>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20250416170359.a0267b77d3db85ff6d5f8ac0@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-T24gVGh1LCAyMDI1LTA0LTE3IGF0IDAwOjM2ICswMjAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
-T24gVGh1LCBBcHIgMTcsIDIwMjUgYXQgMTA6MTI6MzBBTSArMTIwMCwgUnV0Z2VyIHZhbiBLcnVp
-bmluZ2VuDQo+IHdyb3RlOg0KPiA+IE9yaWdpbmFsbHkgYWxsIGV0aHRvb2wgZWVlIHNldHRpbmcg
-dXBkYXRlcyB3ZXJlIGF0dGVtcHRlZCBldmVuIGlmDQo+ID4gdGhlDQo+ID4gc2V0dGluZ3Mgd2Vy
-ZSBub3Qgc3VwcGxpZWQsIGNhdXNpbmcgYSBudWxsIHBvaW50ZXIgY3Jhc2guDQo+ID4gDQo+ID4g
-QWRkIGNoZWNrIGZvciBlYWNoIGVlZSBzZXR0aW5nIGFuZCBvbmx5IHVwZGF0ZSBpZiBpdCBleGlz
-dHMuDQo+IA0KPiBJIHNlZSB3aGF0IHlvdSBtZWFuLCBidXQgaSdtIHNvbWV3aGF0IHN1cnByaXNl
-ZCB3ZSBoYXZlIG5vdCBzZWVuIHRoaXMNCj4gY3Jhc2guIERvIHlvdSBoYXZlIGEgc2ltcGxlIHJl
-cHJvZHVjZXI/IEkganVzdCBkaWQNCj4gDQo+IGV0aHRvb2wgLS1kZWJ1ZyAyNTUgLS1zZXQtZWVl
-IGV0aDAgZWVlIG9uDQo+IA0KPiBhbmQgaXQgZGlkIG5vdCBjcmFzaCwgZGVzcGl0ZToNCj4gDQo+
-IHNlbmRpbmcgZ2VuZXRsaW5rIHBhY2tldCAoNDQgYnl0ZXMpOg0KPiDCoMKgwqAgbXNnIGxlbmd0
-aCA0NCBldGhvb2wgRVRIVE9PTF9NU0dfRUVFX1NFVA0KPiDCoMKgwqAgRVRIVE9PTF9NU0dfRUVF
-X1NFVA0KPiDCoMKgwqDCoMKgwqDCoCBFVEhUT09MX0FfRUVFX0hFQURFUg0KPiDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIEVUSFRPT0xfQV9IRUFERVJfREVWX05BTUUgPSAiZXRoMCINCj4gwqDCoMKg
-wqDCoMKgwqAgRVRIVE9PTF9BX0VFRV9FTkFCTEVEID0gb24NCj4gDQo+IFNvIGl0IG9ubHkgcHJv
-dmlkZWQgRVRIVE9PTF9BX0VFRV9FTkFCTEVEIGFuZCBub25lIG9mIHRoZSBvdGhlcnMuDQo+IA0K
-PiDCoMKgwqDCoMKgwqDCoMKgQW5kcmV3DQpTb3JyeSBpdCBzZWVtcyB0aGF0IHRoZXJlIGFjdHVh
-bGx5IGlzbid0IGEgcHJvYmxlbSBoZXJlLiBJIHRob3VnaHQgdGhlDQpidWcgSSBoYWQgd2FzIHJl
-bGF0ZWQgdG8gdGhpcyBidXTCoGl0IG11c3QgaGF2ZSBiZWVuIGZvciBzb21ldGhpbmcgZWxzZQ0K
-YW5kIHdhcyBmaXhlZCBhdCB0aGUgc2FtZSB0aW1lIG9mIGFkZGluZyB0aGlzIGNvZGUuDQoNCllv
-dSBjYW4gZGlzcmVndWFyZCB0aGlzIHBhdGNoLg0KDQpUaGFua3MsIFJ1dGdlci4NCg==
+On 4/16/25 17:03, Andrew Morton wrote:
+> On Wed, 16 Apr 2025 16:05:59 -0700 Guenter Roeck <linux@roeck-us.net> wrote:
+> 
+>> 64-bit allyesconfig builds fail with
+>>
+>> x86_64-linux-ld: kernel image bigger than KERNEL_IMAGE_SIZE
+>>
+>> Bisect points to commit 6f110a5e4f99 ("Disable SLUB_TINY for build
+>> testing") as the responsible commit. Reverting that patch does indeed
+>> fix the problem. Further analysis shows that disabling SLUB_TINY enables
+>> KASAN, and that KASAN is responsible for the image size increase.
+>>
+>> Solve the build problem by disabling KASAN for test builds.
+>>
+> 
+> Excluding KASAN from COMPILE_TEST builds is regrettable.
+> 
+> Can we address this some other way?  One way might be to alter or
+> disable the KERNEL_IMAGE_SIZE check if COMPILE_TEST?  That will be sad
+> for anyone who tries to boot a COMPILE_TEST kernel, but who the heck
+> does that?
+
+As mentioned before, increasing KERNEL_IMAGE_SIZE did not help.
+However, it turns out that this works:
+
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index ccdc45e5b759..647d4f47486d 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -468,8 +468,10 @@ SECTIONS
+  /*
+   * The ASSERT() sink to . is intentional, for binutils 2.14 compatibility:
+   */
++#ifndef CONFIG_COMPILE_TEST
+  . = ASSERT((_end - LOAD_OFFSET <= KERNEL_IMAGE_SIZE),
+            "kernel image bigger than KERNEL_IMAGE_SIZE");
++#endif
+
+I'll send v3.
+
+Guenter
+
