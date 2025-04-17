@@ -1,31 +1,54 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F3242A97
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4CD206F18
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744879742; cv=none; b=KsApx8LW3cPOgjj0BP67UrSByyW8IlOVl7bIQohgi1W8JEgMoYTwmspkhPG4E5jzSZUd8RVmLbK8CzuP/vs/QjfLsHxBaBpYVRP9+uxvja65Wjh35CcFZKojAFbeG8SjZaUSiOUJB2IDu0CEjK/z1Ug2PK5xz9ARtatOfwHMbOA=
+	t=1744879762; cv=none; b=iL0TNUIAIwFnXXWFoVG1iKK15VXWdRkkxIuKyoEx0tWbG/IgEZZ9IkWa4NtsrZRNnUnF4lgEYPu9drHHJUCzLUWdo8yAEy1Lv1M7Qz6OMa83SnNtsnraIHN3mbyrH2niXj824TPAP9n4aJD5CD1+a8wCRy5qLcJ1AJZUp/w0h/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744879742; c=relaxed/simple;
-	bh=F0uOQqpLHruq4l+tIs5Ah6SOn4SpgbFQCnW3maZffxA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OPODeUYyJHY1Zl3wcxkDhXgMpWwD+MVm3iC1GcuA31PvrvhzZ1XMeowI2T2csW0qEYC2LBeoibjYbeWEIr8PD0wGU9sksE05DCLZ2N+bbO5hZjpvZCDHHDoIESwOPZimZ1/0dlp144NTsAiZB4gsjvXMKXPzt9q04P7s91AZyKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowADHcT5zwABooPGACQ--.43279S2;
-	Thu, 17 Apr 2025 16:48:52 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: nm@ti.com,
-	ssantosh@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] soc: ti: knav_qmss_queue: Remove unnecessary NULL check before free_percpu()
-Date: Thu, 17 Apr 2025 16:48:36 +0800
-Message-Id: <20250417084836.937452-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1744879762; c=relaxed/simple;
+	bh=lwFT2om0gA0NMLnET6K2sX/lZXnSg1xuKywK/RoGYwY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V7wqHTamR8yRDaBHjMAXqZPOvJDCGKESphmbWiBsPtNZjmEVuIOF/N02SD3gZK10InoAq6RpdlLvBTbglrc9SUXYcqPXaCHVDBRxFoDh8CNgpWvr4UVA1/HWodIaXMPpEFGpl+vY1B1mQNG8qrRpd0AIhrWhWbkGisjGdXrFe4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BQ+wC7Fc; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BQ+wC7Fc"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53H8n9wE585312
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 17 Apr 2025 03:49:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744879749;
+	bh=fDmzne7+xTc8To/XJ2g3KJqulYJmb1DMD0eRayD9sOA=;
+	h=From:To:CC:Subject:Date;
+	b=BQ+wC7FcKGIUtIX4J0WfiJtmZ9CCnlta4k14Nap1Bn3AnvG7MjYG+Yj7Kqst7WgBB
+	 efBoRNcQM71xHjrMSepivZCShTVNPzluKlqmEU8xjPB0VaKDhieHZLg+NWzemAfFHE
+	 4zpbVkI3x35gvn0YIhj23FO77NkXxJi73SzhOxu4=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53H8n9tf081642
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 17 Apr 2025 03:49:09 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 17
+ Apr 2025 03:49:08 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 17 Apr 2025 03:49:08 -0500
+Received: from uda0132425.dhcp.ti.com (dhcp-10-24-69-185.dhcp.ti.com [10.24.69.185])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53H8n6LK046219;
+	Thu, 17 Apr 2025 03:49:06 -0500
+From: Vignesh Raghavendra <vigneshr@ti.com>
+To: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, <bb@ti.com>
+Subject: [PATCH] soc: ti: k3-socinfo: Add JTAG ID for AM62LX
+Date: Thu, 17 Apr 2025 14:19:03 +0530
+Message-ID: <20250417084904.2869369-1-vigneshr@ti.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,47 +56,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowADHcT5zwABooPGACQ--.43279S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xw43Ww4fGry3Xr1xXFyxKrg_yoWxKwcE9r
-	4fZFn8JryvkryYgry7Gr13ZFyI9a4xWa1Iqa1jg3sxAr90vw15WF1IvryfCrW7W390kFy3
-	CrWqgr1fX3W7XjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbV8FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v2
-	6r126r1DMxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
-	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
-	1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
-	IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
-	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
-	DU0xZFpf9x0JUf8nOUUUUU=
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-free_percpu() checks for NULL pointers internally.
-Remove unneeded NULL check here.
+Add JTAG ID information for AM62Lx SoC so as to enable SoC detection in
+kernel.
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 ---
- drivers/soc/ti/knav_qmss_queue.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/soc/ti/k3-socinfo.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/soc/ti/knav_qmss_queue.c b/drivers/soc/ti/knav_qmss_queue.c
-index ea52425864a9..6e56e7609ccd 100644
---- a/drivers/soc/ti/knav_qmss_queue.c
-+++ b/drivers/soc/ti/knav_qmss_queue.c
-@@ -252,8 +252,7 @@ static struct knav_queue *__knav_queue_open(struct knav_queue_inst *inst,
- 	return qh;
+diff --git a/drivers/soc/ti/k3-socinfo.c b/drivers/soc/ti/k3-socinfo.c
+index 704039eb3c07..d716be113c84 100644
+--- a/drivers/soc/ti/k3-socinfo.c
++++ b/drivers/soc/ti/k3-socinfo.c
+@@ -43,6 +43,7 @@
+ #define JTAG_ID_PARTNO_AM62AX		0xBB8D
+ #define JTAG_ID_PARTNO_AM62PX		0xBB9D
+ #define JTAG_ID_PARTNO_J722S		0xBBA0
++#define JTAG_ID_PARTNO_AM62LX		0xBBA7
  
- err:
--	if (qh->stats)
--		free_percpu(qh->stats);
-+	free_percpu(qh->stats);
- 	devm_kfree(inst->kdev->dev, qh);
- 	return ERR_PTR(ret);
- }
+ static const struct k3_soc_id {
+ 	unsigned int id;
+@@ -58,6 +59,7 @@ static const struct k3_soc_id {
+ 	{ JTAG_ID_PARTNO_AM62AX, "AM62AX" },
+ 	{ JTAG_ID_PARTNO_AM62PX, "AM62PX" },
+ 	{ JTAG_ID_PARTNO_J722S, "J722S" },
++	{ JTAG_ID_PARTNO_AM62LX, "AM62LX" },
+ };
+ 
+ static const char * const j721e_rev_string_map[] = {
 -- 
-2.25.1
+2.49.0
 
