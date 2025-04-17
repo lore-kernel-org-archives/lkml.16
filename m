@@ -1,162 +1,121 @@
-Received: from mxout4.routing.net (mxout4.routing.net [134.0.28.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E352206BD;
-	Thu, 17 Apr 2025 07:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B08221F30
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744876378; cv=none; b=PtAx5aBIKaQajAFmfcXY380DZfxDep9532lEl2smUYNCMeRoO0vHsPitJKZwMWAmHnskqWNIUNOF1UV+hwnUqpqS/MkTRwRcI3uq1NgLVOIrVNTve0iPfmS3COu1sNEtogkKy1NsQbLBClJ/nMZ0MCLpo6sxGh8aVvvm96ujANE=
+	t=1744876404; cv=none; b=YpZB7NKeSUyxIqcKjIMddJGOopjwvIbVhT/7aRKckCWDgx37K93G9iew3pzz2EwsBKt+63pLBHWG3PnN4xWa1HAy18cv60JzjUrqlEGgD9Roe1pnFOipKbUg0UcPCCzUBzzA876XZ1w1enLuLQe9FDlmCKTSY7bZBnZsiSuvfrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744876378; c=relaxed/simple;
-	bh=Se+Pb5gvAeaBxEvyD3+E41BEMYCQFUvRfuCjMCS7ljI=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=aRjRJBqDcPtOON21TeYax5192/p6VJTy5GZCoFbqptSORzfhcMvpb6pwQXIfXG2TShXLvE7qgrP+gs5e3uAFg1y/c6N40YFq9+nlghdMMNcswASITlOC39Ron4V3chpW4PXY6R+Shwx5xeOg3Iof9gTqN4YEr5Fv6YVBnYsCRMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=xN4EnJrd; arc=none smtp.client-ip=134.0.28.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+	s=arc-20240116; t=1744876404; c=relaxed/simple;
+	bh=pOcJBUPrO3IHcq4bNWfUkk9NpnjdVXjrL/ybQbsKrdM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fHMVEyxJmRNR9DENyxFVGr0K9jQR76sT0wyGPA+6wCdydynbdXqA0AwEg44mLN6LeKDFrXASw3nKd82QXjYjPfaZSMjVTgBpfRBokBv7GRsxNyfQybpdJAa3EbrHOLb3MMiStdtsV1fF9wO5Hqa3Vynb6l1kvicp/6Ko74UQt1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pa2s6fQT; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="xN4EnJrd"
-Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
-	by mxout4.routing.net (Postfix) with ESMTP id A4E8A1008FA;
-	Thu, 17 Apr 2025 07:52:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1744876372;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q82aXZ96SkZQkHH0ZlbXPXUKG4cthRJar29R9w4dfJE=;
-	b=xN4EnJrdVeEEGXY1Uw/cWRtXIx7OgNpTRak8FB9wUaT8xQr96zt6iiIs4H9BNit/k7AFpA
-	b/qa0UTAJVIKjhaGbOTXYxIEWwUqXAj2F399mutRq8k0GBh+apnsVIRCShTmXp9AtFQk/0
-	oZ53q8OoA7fc3ycuuJLtOCKM6Kzq6aE=
-Received: from webmail.hosting.de (unknown [134.0.26.148])
-	by mxbox3.masterlogin.de (Postfix) with ESMTPSA id C3E213605AA;
-	Thu, 17 Apr 2025 07:52:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pa2s6fQT"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e82396baaeso95381a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:53:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744876401; x=1745481201; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ldtjm18t2KR0i37dRzkUBtGT6ZljIzsaE7OH3uDOb4U=;
+        b=pa2s6fQTLPjxHm58e8D2FvB8+0xZdkb9JDmjKuLZi7ftYF7DH/PnX6jxfckks8o3iJ
+         nh1VZUJS7FzPsGOPrlj4lvcNOimg56QX0yxnokCGM+f9W5gkIri4a+KLh6/YYgn7uKrV
+         VIQdLtSBaoFemjbdxzXMbMMlIFPe8qlkaq7AKAjAwOZKePUjHEiG70dNsWg2MT1QHmhO
+         M7aZvLjLbnDQAjOPOHmGvatbsd8Uy646MuPP2c3fDq8Mtv+Q+o2jF8LlnqyG87QyHq0I
+         VJ9CjeTbph/HBfn84cUZLegXctBvj2iGhQnjFQvPhXUjPh42+UoZewXIlnpPQczDHn9/
+         Zxlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744876401; x=1745481201;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ldtjm18t2KR0i37dRzkUBtGT6ZljIzsaE7OH3uDOb4U=;
+        b=krXv4yxCxU/SQy2vqUA2O/uEX7305TaIU/YcwXnj94LWuxprU9G2anCZ/SKOhOUgi8
+         kT/QSKv6OfpHi1TyvqIYdO6ugckr15BrKmY1r24iFQNRLSVp9ZG7bmUXMLOTkP6TL/OJ
+         +k4YhMxyEMAei72S2Z3alt6rOtA/V6Fe9R+xJgQZE95BfUuZFdRUzEy6F/qkDLLUcUIu
+         BrT7XDJGwPEae9YaAOjaQvP9ANyCd/Wy1M2YswWa6MOGgKL/aDmpA7AjikwFFupF4aKk
+         uYeML7MLeWsAwglqk3pU/uMAy5dLUYaoBrHh83JXP+qD4vpYYnDknYpK21f1NqyCL9bz
+         duzg==
+X-Forwarded-Encrypted: i=1; AJvYcCVSojSdtr8lF8E5gCbCPJVkiO8gpZ6jiTsuOlggOIlHcz3t6efLf+1g59NNPam8SsFov5H98Wtl2UjAShw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAenznbxJDsSBrkgLS6TJZJV1kRTfr5JT0FAYaYtBHZ4VlWxcr
+	04+xjViLI9EbrWsDhwJEPgeiWIhPjGKaPwl/5f+gpfsSgha6G9TCPodvKqkK5nvEX5gGzWBlHBZ
+	k
+X-Gm-Gg: ASbGncv18V/54HrKNRVcePkcinFGmUUcJamxjSF7diLY3FLXWNtRxlojvln7Vm8PZ/I
+	iLyxvXXk/8YKlC0vKdwRlQI57xxAkx8I7Z/R0UMOw6tYdFrhxwf5ft8WI1fEtdNZvPPdIG93Lu/
+	0CcujMuagq3uURYL6/fZw5ivW9E55pn2YNOR4qcShg4DSoWQdHJQn4Ec4HlKxyzHxo9RHeAZBc0
+	iGPa+FXH2kPDmsBee7TVusQlQPQHo93iQiRWuwxmG9XlssgsmqSzmglcLoKBi3ozRUa4ce+8S51
+	Zj1GHr8r5VRhI4X+rmTxux9XgfbI/OX5Ii19xFP00KjMFA1dU3uZLff5qxJiJ57oC1lwLr8X+Oe
+	glv5obw==
+X-Google-Smtp-Source: AGHT+IHuV0Ir2ulqdSy8+QnxiDUvWr3BWSdW2/52LujDrmAOVewyJjR5ucyVhKSbc9kdBrxbWkJOjg==
+X-Received: by 2002:a5d:598e:0:b0:39e:cbe0:415f with SMTP id ffacd0b85a97d-39ee5baf496mr1500376f8f.14.1744876016114;
+        Thu, 17 Apr 2025 00:46:56 -0700 (PDT)
+Received: from kuoka.. (46.150.74.144.lvv.nat.volia.net. [46.150.74.144])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae9780a0sm19424565f8f.50.2025.04.17.00.46.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 00:46:54 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] mtd: Do not enable by default during compile testing
+Date: Thu, 17 Apr 2025 09:46:52 +0200
+Message-ID: <20250417074653.81593-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 17 Apr 2025 09:52:51 +0200
-From: "Frank Wunderlich (linux)" <linux@fw-web.de>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, Chunfeng Yun
- <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>, Kishon Vijay
- Abraham I <kishon@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Frank
- Wunderlich <frank-w@public-files.de>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82eck?=
- =?UTF-8?Q?i?= <rafal@milecki.pl>, Daniel Golle <daniel@makrotopia.org>, Sean
- Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org
-Subject: Re: [PATCH v3 4/8] dt-bindings: phy: mtk-xs-phy: support type switch
- by pericfg
-In-Reply-To: <20250417-competent-rattlesnake-of-intensity-98d6ff@kuoka>
-References: <20250416095402.90543-1-linux@fw-web.de>
- <20250416095402.90543-5-linux@fw-web.de>
- <20250417-competent-rattlesnake-of-intensity-98d6ff@kuoka>
-Message-ID: <d2da81ccb6b9b267288a3d2f5b1bb977@fw-web.de>
-X-Sender: linux@fw-web.de
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-Mail-ID: ffcf56f2-7a7a-4451-b290-b3cd6b547b72
+Content-Transfer-Encoding: 8bit
 
-Hi Krzysztof,
+Enabling the compile test should not cause automatic enabling of all
+drivers, but only allow to choose to compile them.
 
-thanks for review.
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-basicly i used the same binding like for tphy.
+---
 
-Am 2025-04-17 08:56, schrieb Krzysztof Kozlowski:
-> On Wed, Apr 16, 2025 at 11:53:56AM GMT, Frank Wunderlich wrote:
->> From: Frank Wunderlich <frank-w@public-files.de>
->> 
->> Add support for type switch by pericfg register between USB3/PCIe.
->> 
->> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
->> ---
->>  .../devicetree/bindings/phy/mediatek,xsphy.yaml  | 16 
->> ++++++++++++++++
->>  1 file changed, 16 insertions(+)
->> 
->> diff --git a/Documentation/devicetree/bindings/phy/mediatek,xsphy.yaml 
->> b/Documentation/devicetree/bindings/phy/mediatek,xsphy.yaml
->> index 3b5253659e6f..5033d77c1239 100644
->> --- a/Documentation/devicetree/bindings/phy/mediatek,xsphy.yaml
->> +++ b/Documentation/devicetree/bindings/phy/mediatek,xsphy.yaml
->> @@ -151,6 +151,22 @@ patternProperties:
->>          minimum: 1
->>          maximum: 31
->> 
->> +      mediatek,syscon-type:
->> +        $ref: /schemas/types.yaml#/definitions/phandle-array
->> +        maxItems: 1
->> +        description:
->> +          A phandle to syscon used to access the register of type 
->> switch,
->> +          the field should always be 3 cells long.
->> +        items:
->> +          items:
-> 
-> Missing -, because you have one phandle.
+For longer rationale:
+https://lore.kernel.org/all/191543a8-2e2e-4ac4-9b2b-d253820a0c9f@app.fastmail.com/
+---
+ drivers/mtd/devices/Kconfig  | 2 +-
+ drivers/mtd/nand/raw/Kconfig | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-ok, then i need to drop MaxItems and indent 2 spaces more, but no 
-problem
+diff --git a/drivers/mtd/devices/Kconfig b/drivers/mtd/devices/Kconfig
+index ff2f9e55ef28..aed653ce8fa2 100644
+--- a/drivers/mtd/devices/Kconfig
++++ b/drivers/mtd/devices/Kconfig
+@@ -98,7 +98,7 @@ config MTD_MCHP48L640
+ config MTD_SPEAR_SMI
+ 	tristate "SPEAR MTD NOR Support through SMI controller"
+ 	depends on PLAT_SPEAR || COMPILE_TEST
+-	default y
++	default PLAT_SPEAR
+ 	help
+ 	  This enable SNOR support on SPEAR platforms using SMI controller
+ 
+diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
+index b8035df8f732..421b6feec090 100644
+--- a/drivers/mtd/nand/raw/Kconfig
++++ b/drivers/mtd/nand/raw/Kconfig
+@@ -34,7 +34,7 @@ config MTD_NAND_DENALI_DT
+ config MTD_NAND_AMS_DELTA
+ 	tristate "Amstrad E3 NAND controller"
+ 	depends on MACH_AMS_DELTA || COMPILE_TEST
+-	default y
++	default MACH_AMS_DELTA
+ 	help
+ 	  Support for NAND flash on Amstrad E3 (Delta).
+ 
+-- 
+2.45.2
 
->> +            - description:
->> +                The first cell represents a phandle to syscon
-> 
-> Don't repeat constraints in free form text. "Foo bar system controller"
-> or "Phandle to foo bar system controller"
-
-i would write only "phandle to system controller". on mt7988 it is the 
-topmisc syscon, but maybe on
-other SoC it is different name.
-
->> +            - description:
->> +                The second cell represents the register offset
-> 
-> "Baz register offset"
-
-same here, only "register offset".
-
->> +            - description:
->> +                The third cell represents the index of config segment
-> 
-> "Index of config segment", but what is index of config?
-
-unfortunately we have no detailed documentation here, but based on 
-driver (i guess daniel ported it
-from SDK) this value is multiplied with BITS_PER_BYTE so it can handle 
-up to 4 config-segments in
-the 32bit register (maybe configuring 4 phys). But on mt7988 we use only 
-the first config-segment
-(last cell=0 in dts-patch).
-
-at the end it will look like this:
-
-       mediatek,syscon-type:
-         $ref: /schemas/types.yaml#/definitions/phandle-array
-         description:
-           A phandle to syscon used to access the register of type 
-switch,
-           the field should always be 3 cells long.
-         items:
-           - items:
-               - description:
-                   Phandle to system controller
-               - description:
-                   Register offset
-               - description:
-                   Index of config segment
-                 enum: [0, 1, 2, 3]
-
-would this be ok?
-
-> Best regards,
-> Krzysztof
-
-regards Frank
