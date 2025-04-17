@@ -1,113 +1,159 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C2315A868
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44A9252298;
+	Thu, 17 Apr 2025 14:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744900233; cv=none; b=M51pmkSlIv5LetRuNq+jJZ/uLGnN8oPwUiupFNpZh6ir7Xm4jwIZQGjpt+NzTiPj7Hw9L/ERA6UrpatT0NGVCqP+zU9CDS/zb3226ynwhhOWWrgsQOdvDyFwg77h4c2LPmAEu5Ohy1k+RDvUPt0AqY+6mYwHFX9LXSk9GiuT8rU=
+	t=1744900259; cv=none; b=JTgoWILl6IvfsxrYgTyUWHLoLv1Yg68oIC7ANr3BiJ4UEk2SkCEEgZqwadnBGY0zF1KSZFEPXxFFkrn/MoB0TqYv/X6Uh08T9InifsMuwwkFUlrEh23ANRKy43nf4nyVmQhnWLc6YNHC/mG7QhEn7OqpgMOSbdx7k85WZQonC9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744900233; c=relaxed/simple;
-	bh=YfCtmVGoFSkKpjhL5I0rf5Nt3BlAznqyCmYY6G7xfjg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vv0ePlprHDbTRjkN9vCThVwG3037NtI4W/11i/9Xg8gzJmZoLJM6sZSEchzAi6Kvfg2X3PirM2w/24Com93c1KJka7A3jo6ROdOBTjnf0UFZHKYSY+nyOy0ewpIudzL7PIeoLptChXM6STkVZRv8lrkFqgukqZF7WIknFQLezPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NBY5wZli; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744900259; c=relaxed/simple;
+	bh=1ltn3613f7HEMi5ZWjZisneXP6W/zCl1thCIl/3UhVU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ohT/EwHO2pcM6TE1p3Intixnia//dU0toQpICSv4Zu7OO7lxUfBYCkkcUHwKjsFTJVeRONjJgcg+5ZhepZuTHpuVJljd8Zkxs7i5P/W3W4VtR6AzXDuK3cHoXQqW7YamcFvCMuewHMpQlx2MKKZH635UmQL6d5H0Drj4i7iSb5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=hi4+4DiJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PLcu5gbJ; arc=none smtp.client-ip=202.12.124.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBY5wZli"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e6ff035e9aso1606461a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:30:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744900230; x=1745505030; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YfCtmVGoFSkKpjhL5I0rf5Nt3BlAznqyCmYY6G7xfjg=;
-        b=NBY5wZli+mGhu80tt4Re9qjqMjo9M+95mJ6ODhRNeg3cpdaiCya4fic30ncfIGgK2H
-         CBhHvoAJJZsd4cxXdSBRSZ1RkLWMwxExI3BrZq4d0lQ2CRZem1m2uyz7yVmgQsJzbfIZ
-         gFZIbobLC4MON7Lxl2cuw27ocYFrDdmMNmRqmDDr/6RaeDbccEqsc75db3L/MqODKasI
-         8X8e4odH3i9zNk6r91dwggZ/q1i5cKePdoicc8tqR/NmYZ8PWAYpKeZH7/6MRyzXNbQm
-         lrMU/xT8J0nsUpNLARHAIqIPKDnOpWuAqnBg8AeFzCLJSo++hsMJ0BVrWnQIkEflybpO
-         Z01Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744900230; x=1745505030;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YfCtmVGoFSkKpjhL5I0rf5Nt3BlAznqyCmYY6G7xfjg=;
-        b=fCsW8uTFqOVFXtAMPaVCXYZCNpOtXn9pALDR5tCKIK9K294nPV3qXCOue0AKnh1BaA
-         P+ui7GwH17kiYqXCxbK69QKAWBrgK9Yyf8U012HyCt0tm63FFQgN6nDPXUhcg+Q+iJYM
-         auiGQW4T68V7ubf0M4lSbMzxzK772mZ11NMnejVVt5NqVoALNLLTBY3lsFOQWctoqLWN
-         F0ODhihB9csbw/8IomaM6/CDq11cXbQ3/49NDXVEbi7t3++DEzv6Dvet4W8VIZnARKyf
-         sza4n+utG4i/2zhs2geIJQZ/GeHYelCgy/oTDhJc1Fz+g+4tT1TlL1PB/M9g+Rxse1ee
-         3z3g==
-X-Forwarded-Encrypted: i=1; AJvYcCVSTzpODLi+H0hCHAUkm4i5MtD6mDTBK99wBxojbawIX5HzZHDpUNqKinCMtfPEJ1Y7cU2xt+yaQVRs0tc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywg5Aw3325A7K93raEsJukGf4YNHtKf8gU5Cz4CN0XTx9U9T9ea
-	Ji1lX2cVCw9V4YDgQSorON+UFE9ba3FrfhjyQwyodZjSakIIIab3ygpA5gFZjrGqI3i0swu+v4N
-	lVI3b5ul/ZHPNuwTk3ElIHh0xX7X/23+ivQc=
-X-Gm-Gg: ASbGnctAXcV/Ykrhmo4pF8LMmta7JSA52nIajhHczoky8IPKuab1vOLZ2tRofuKCVXc
-	ue2ae1r4odQv7fuNs2UCQ9wUSdlnBcmp37lARONQQNxVDuxmoQyZIzDJQChuvZ2Qm2b9KTVaA3T
-	8YK4yIZNwZw4FE2BAbmRwEXA==
-X-Google-Smtp-Source: AGHT+IFZxqd6dHZ0yHZmXrWMeY0rwSMIk+68ltLSOlPISm2OgLSk5QDRQZVgLHh6syHr4hIv6K8BM9jF09iabjeO2LQ=
-X-Received: by 2002:a05:6402:13c8:b0:5f3:f04b:5663 with SMTP id
- 4fb4d7f45d1cf-5f4b75c4f09mr5402272a12.24.1744900230191; Thu, 17 Apr 2025
- 07:30:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="hi4+4DiJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PLcu5gbJ"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id A42032540281;
+	Thu, 17 Apr 2025 10:30:56 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Thu, 17 Apr 2025 10:30:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1744900256; x=1744986656; bh=Y9UlWkrYrc
+	CSocQlqR1lz6nZLSVUBMh9qLl6PcNgpsI=; b=hi4+4DiJRcQdlfIcSoGdIlTUr4
+	r0B3bcJadKJ/Et3IE7kFcQiTBg4ihJX9Q/oAKawJKgJ2FC8TJF4B2YgkNzyVjIhN
+	1mUJZ4YQxF9jkoDK1yWTll8KZ22PMVdLy5QuCL5a3duoZ3u0AQ52fWOqOOzVIek+
+	MRB6T3pNvr18Kb5tF59a40n4pD3LqSVvrnAf3wTx2My7108l+2dwZHyDdQXJvZZg
+	9WF5Vc17M5avo4Eh70Wp7vaq9iCGSUp3As/5FBHetU1MlwnG4Gedpx8Ul/ZJaU57
+	FuCHyxw7+afB1jezZLKFjuOLS3+S1+x6qnpRqd1XqtR5ABKGvNsSIJNS+7Fw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1744900256; x=1744986656; bh=Y9UlWkrYrcCSocQlqR1lz6nZLSVUBMh9qLl
+	6PcNgpsI=; b=PLcu5gbJoV/5Np/VkgmPz4MSk5drfQ6BMLjlddB6xTEE7wsnR3j
+	3AUo6mMQ8wqCKP/3gp42U6yZcgv8bCcoICmRtR6A/Akigvdz1+ZLoTFXunUvXQag
+	QnprGD0gbd3xu0D0k5mHkj4W8346Ms9rm7SzLlPNzk/UNkUO7rM6kXAuSoIPUVR/
+	Sg+oyS7w9kIBwnhe+9rWGyjcqeeMwo3G6srMTtsQ5kP7oVaetnNtgTLab50esieu
+	PcwKEJQonKYptwyWHFwNDDvxQ1Roiw6bT9D47QTV3RAKnEN380pZwtju2kLrwyoF
+	3gago81rtLmKSEcdNmjMEP32vc+c3uzBcEg==
+X-ME-Sender: <xms:nxABaKR_eXYOIWQS1iJ9lsqAsoSQlwnRP_EQJzRZBBscAGABtFWsyQ>
+    <xme:nxABaPzMjsXEVDX9g2qvdTGjNNrXvvrAopE3HbVnYahIeL6TbpRpLGEIDrAtMB_TW
+    wCIHBaj5CmJ5A8HwoI>
+X-ME-Received: <xmr:nxABaH0HqOEU8oqsbdMp_mENT4UGl1ZhfAU02DhkOMWR_E91wl7O_IPpvlZjfez1sJJDOiCY08IgzIqIw234yvr-0XiEYHh9bg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdelheduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    jeenucfhrhhomheplfgrnhhnvgcuifhruhhnrghuuceojhesjhgrnhhnrghurdhnvghtqe
+    enucggtffrrghtthgvrhhnpefgvdffveelgedujeeffeehheekheelheefgfejffeftedu
+    geethfeuudefheefteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpehjsehjrghnnhgruhdrnhgvthdpnhgspghrtghpthhtohepudefpdhmohgu
+    vgepshhmthhpohhuthdprhgtphhtthhopehsrhhinhhisehkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopehfnhhklhdrkhgvrhhnvghlsehgmhgrihhlrdgtohhmpdhrtghpthhtohep
+    shhvvghnsehsvhgvnhhpvghtvghrrdguvghvpdhrtghpthhtoheprghlhihsshgrsehroh
+    hsvghniiifvghighdrihhopdhrtghpthhtohepnhgvrghlsehgohhmphgrrdguvghvpdhr
+    tghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoug
+    htsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtoheprghsrghhiheslhhishhtshdrlhhinhhugidruggvvh
+X-ME-Proxy: <xmx:nxABaGDqZJ30XV5JbHhh688GI4-8scwlx1lGHRsFhjTomCsCrvb2xg>
+    <xmx:nxABaDjPTTvGkctdQcNF_lk7oa8iM0qsD9Gd_FXJfRTG6nrip_0nbQ>
+    <xmx:nxABaCon1EDu-8B7H_pzMDyClPXSRTqWk1z7o-UiWwAFlkBCao7x3Q>
+    <xmx:nxABaGj62S79UIwKrzAs9ykvSo2pnWv7inU3-BtA7ha2RQj-zjt3PQ>
+    <xmx:oBABaDB0oWczrFrZYoUcGcyoenlO7_Z1PVBVb-6U5K3HLW-ZXAkb4Q2i>
+Feedback-ID: i47b949f6:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 17 Apr 2025 10:30:54 -0400 (EDT)
+Date: Thu, 17 Apr 2025 16:30:53 +0200
+From: Janne Grunau <j@jannau.net>
+To: Srinivas Kandagatla <srini@kernel.org>
+Cc: fnkl.kernel@gmail.com, Sven Peter <sven@svenpeter.dev>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Neal Gompa <neal@gompa.dev>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>
+Subject: Re: [PATCH 2/3] nvmem: Add spmi-nvmem driver
+Message-ID: <20250417143053.GD8400@robin.jannau.net>
+References: <20250415-spmi-nvmem-v1-0-22067be253cf@gmail.com>
+ <20250415-spmi-nvmem-v1-2-22067be253cf@gmail.com>
+ <81fb1290-fb39-40b7-9d79-f147fae5b269@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417124908.58543-1-ioworker0@gmail.com> <a825b3c3-55f7-4d90-a318-e20acf55e0cd@redhat.com>
- <CAK1f24mkswwY71EKourpw1y-KiFi08OkGzZSBkutoj+UCgbLMg@mail.gmail.com> <cc0d709a-3d9d-4802-b9ff-898cf7e5012f@redhat.com>
-In-Reply-To: <cc0d709a-3d9d-4802-b9ff-898cf7e5012f@redhat.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Thu, 17 Apr 2025 22:29:53 +0800
-X-Gm-Features: ATxdqUFYz3uVZQ_i9Zh-WSIN1oYikhls0KPlV16HT-oXK5AZCnELPn8l460NKd4
-Message-ID: <CAK1f24mYjKK0_cM0RA=FdKTro9CBwoPTWwkSYRzysUOMyHYmsA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] mm/rmap: add CONFIG_MM_ID guard for folio_test_large_maybe_mapped_shared()
-To: David Hildenbrand <david@redhat.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Mingzhe Yang <mingzhe.yang@ly.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <81fb1290-fb39-40b7-9d79-f147fae5b269@kernel.org>
 
-On Thu, Apr 17, 2025 at 9:26=E2=80=AFPM David Hildenbrand <david@redhat.com=
-> wrote:
->
-> On 17.04.25 15:24, Lance Yang wrote:
-> > Hi David,
-> >
-> > Thanks for taking the time to review!
-> >
-> > On Thu, Apr 17, 2025 at 8:56=E2=80=AFPM David Hildenbrand <david@redhat=
-.com> wrote:
-> >>
-> >> On 17.04.25 14:49, Lance Yang wrote:
-> >>> Add a compile-time check to make sure folio_test_large_maybe_mapped_s=
-hared()
-> >>> is only used with CONFIG_MM_ID enabled, as it directly accesses the _=
-mm_ids
-> >>> field that only works under CONFIG_MM_ID.
-> >>>
-> >>> Suggested-by: David Hildenbrand <david@redhat.com>
-> >>> Signed-off-by: Mingzhe Yang <mingzhe.yang@ly.com>
-> >>
-> >> ^ should that be here?
-> >
-> > Yep, that's my email too ;p
->
-> Best to stick to only one here -- same individual :)
+On Thu, Apr 17, 2025 at 02:34:37PM +0100, Srinivas Kandagatla wrote:
+> 
+> 
+> On 15/04/2025 22:52, Sasha Finkelstein via B4 Relay wrote:
+> > From: Hector Martin <marcan@marcan.st>
+> > 
+> > This driver exposes a SPMI device as an NVMEM device.
+> > It is intended to be used with e.g. PMUs/PMICs that are used to
+> > hold power management configuration, such as used on Apple Silicon
+> > Macs.
+> > 
+> > Signed-off-by: Hector Martin <marcan@marcan.st>
+> > Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
+> > ---
+> >   MAINTAINERS                |  1 +
+> >   drivers/nvmem/Kconfig      | 14 +++++++++++
+> >   drivers/nvmem/Makefile     |  2 ++
+> >   drivers/nvmem/spmi-nvmem.c | 62 ++++++++++++++++++++++++++++++++++++++++++++++
+> >   4 files changed, 79 insertions(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index e7b2d0df81b387ba5398957131971588dc7b89dc..63c12f901aed1f3e6de8227d6db34af1bd046fe6 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -2298,6 +2298,7 @@ F:	drivers/iommu/io-pgtable-dart.c
+> >   F:	drivers/irqchip/irq-apple-aic.c
+> >   F:	drivers/nvme/host/apple.c
+> >   F:	drivers/nvmem/apple-efuses.c
+> > +F:	drivers/nvmem/spmi-nvmem.c
+> >   F:	drivers/pinctrl/pinctrl-apple-gpio.c
+> >   F:	drivers/pwm/pwm-apple.c
+> >   F:	drivers/soc/apple/*
+> > diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+> > index 8671b7c974b933e147154bb40b5d41b5730518d2..9ec907d8aa6ef7df0ea45cc35e92d8239d2705ee 100644
+> > --- a/drivers/nvmem/Kconfig
+> > +++ b/drivers/nvmem/Kconfig
+> > @@ -310,6 +310,20 @@ config NVMEM_SNVS_LPGPR
+> >   	  This driver can also be built as a module. If so, the module
+> >   	  will be called nvmem-snvs-lpgpr.
+> >   
+> > +config NVMEM_SPMI
+> > +	tristate "Generic SPMI NVMEM"
+> > +	default ARCH_APPLE
+> Why default is set to ARCH_APPLE?
+> 
+> This will endup with y in arm64 defconfig, means increasing the size of 
+> kernel.
+> 
+> should it be:
+> 
+> depends on ARCH_APPLE || COMPILE_TEST
 
-Got it. I'll keep that in mind next time ;)
+I don't think it should depend on ARCH_APPLE. There is nothing
+ARCH_APPLE specific in the driver or dt-bindings even apple platforms
+are currently only user.
 
-Thanks,
-Lance
+`default m if ARCH_APPLE` might an alternative but in this specific case
+the driver which will uses the nvmem cells should just select it. So I
+would remove the default.
 
->
-> --
-> Cheers,
->
-> David / dhildenb
->
+Janne
