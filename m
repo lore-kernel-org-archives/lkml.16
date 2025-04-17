@@ -1,89 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89BB03C0C;
-	Thu, 17 Apr 2025 16:39:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A3D3C0C;
+	Thu, 17 Apr 2025 16:39:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744907941; cv=none; b=U1BIBXQ6ORjNi/hbIscetReScLy0uf0bZd2UkTobIRw1GVfSMB1nDBRzkbefSC16di9zPH5Ppyh5/SBcptvulDhEk0vdkbck8Bp7epKnqi/CtV8eF/BxtygyqGcmi81fA2Y/GDBMVKG+NcEdqxxR+UHf+LZXyNITcJhMBO+CqIU=
+	t=1744907946; cv=none; b=koBZ/m+3gm7ctV7kY2hWT4oEDY4JpQwUlBgEGOi0eA0WHyYUCfAFIyPYFcRhhpVmgzTn11wOHCWGwsys1Ribp+KYfZLIENQ2rWi25fTjO0DNUfXTaNrQHULGTM9M5sdigajD68+ajhdxjB8I6qvKYyLWBzmhk+mvMrl0uPcw51A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744907941; c=relaxed/simple;
-	bh=a09kTRXyeb+tIE08IjODC9KUoIDIkWigBgRcwJ0P5uY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rLW3EuT3NWdexoObxDWA5vYLqN3qW9x+7Vonoby8XuxQXmoQ/DXVePmEhw32ZnCk8O84yb5uoalU+bjLmnsGnV4fZaNYA8wq2tJ5MntcF4YecROukZm2Q70Y+/hUSlJjuo9nCRbdIXrv4aLbZ+DYKUiEWAc2NFntyisrCyKhxAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iWbWcZdy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744907946; c=relaxed/simple;
+	bh=3bVynOwOhRnPTp6Qdaz4+H3O1NgzpHkzWFZ3znhf9uo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=VVRvya14RPu9Ky6+EjenE63McBk5s6uIavWrCLaHkNi1HHTbd1AIbXuTNuLf+0jNn7I7EvogL1oAw5pwxmLUO5s+mHQJVzZVcbbNF3PWdUWF/gzpnlfArN4EypidgXPliIDkkPbrnjN3YxIA7BuKgDCMkc6pryNKybYs+2GeABI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SvZnOc/I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWbWcZdy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3751C4CEE4;
-	Thu, 17 Apr 2025 16:39:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SvZnOc/I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88995C4CEE4;
+	Thu, 17 Apr 2025 16:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744907941;
-	bh=a09kTRXyeb+tIE08IjODC9KUoIDIkWigBgRcwJ0P5uY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=iWbWcZdy6eEF7eNIpwCwxm+i22ZZ+S5M362wIfimQc3O+UXJQAD4N2LgKIoMUb6oC
-	 BfQYscAmTU5gU+TsFnME2DDguir7oSn/qKPArC+6KXGbUhBFEhHHfBMiYrchNDRwae
-	 wlQRS2BhsPqLOFFTHpcN3SpSl062cLQ6zxavtiPcbCgx8pem1lpro+jDYpZt0CGNdL
-	 L1N2Kg1mmtm1CoEHYa0zKKGCJ7rZ1ek2uHkf5I6KnVnAWHzTJciuN7vfBfTZfhh9qV
-	 0gh7fJG+kXyA9gQjTQXzgG1cvQaLVVhWg8Uh43ln+cT/PpKaItWzMnA0jPCk7VXApR
-	 lHTxEjp0y9K6w==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-s390@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	Heiko Carstens <hca@linux.ibm.com>
-Subject: [PATCH] s390/crc32: Remove no-op module init and exit functions
-Date: Thu, 17 Apr 2025 09:38:29 -0700
-Message-ID: <20250417163829.4599-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	s=k20201202; t=1744907945;
+	bh=3bVynOwOhRnPTp6Qdaz4+H3O1NgzpHkzWFZ3znhf9uo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=SvZnOc/I85gqJZkwDZjnKynKc9xfXK2fv/cyICHQQbwvMBE0KFtY6wuKGmzL9mPwG
+	 Xtz400JLslF3YFx3+bs5sZQc1SKCHJVJBw3CzP0bJh55VYeyzK4+87+Nvqe2e0llg/
+	 4N9LTR8XSWegH/g65+lWJ6yKxy7h621LGdjpvpsXvmwtnJLUIy4RRJkEjm8HuJiK9d
+	 pRW8ZuMarCZvE8P9Fcwypgco114DDX7HooRZzkplniyzF5hZM5AglsFLfBc+UNn03T
+	 JBrx8m8PHmiPm18GhmJ4bodD6XpW4r9r88xsb1SFChG1/dcsHYvuYSPWLJVMrhs391
+	 CycdmYU0iEq/A==
+Date: Thu, 17 Apr 2025 11:39:04 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Igor Mammedov <imammedo@redhat.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
+Subject: Re: [PATCH 1/1] PCI: Restore assigned resources fully after release
+Message-ID: <20250417163904.GA114476@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250403093137.1481-1-ilpo.jarvinen@linux.intel.com>
 
-From: Eric Biggers <ebiggers@google.com>
+On Thu, Apr 03, 2025 at 12:31:37PM +0300, Ilpo Järvinen wrote:
+> PCI resource fitting code in __assign_resources_sorted() runs in
+> multiple steps. A resource that was successfully assigned may have to
+> be released before the next step attempts assignment again. The
+> assign+release cycle is destructive to a start-aligned struct resource
+> (bridge window or IOV resource) because the start field is overwritten
+> with the real address when the resource got assigned.
+> 
+> Properly restore the resource after releasing it. The start, end, and
+> flags fields must be stored into the related struct pci_dev_resource in
+> order to be able to restore the resource to its original state.
+> 
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Fixes: 96336ec70264 ("PCI: Perform reset_resource() and build fail list in sync")
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-Now that the crc32-s390 module init function is a no-op, there is no
-need to define it.  Remove it.  The removal of the init function also
-makes the exit function unnecessary, so remove that too.
+Applied to pci/for-linus for v6.15, thanks!
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
+I'd like to add the following to the commit log if it's accurate:
 
-I'll take this via the crc tree.
+  + One symptom:
 
- arch/s390/lib/crc32-glue.c | 11 -----------
- 1 file changed, 11 deletions(-)
+  +   pci 0002:00:00.0: bridge window [mem size 0x00100000]: can't assign; bogus alignment
 
-diff --git a/arch/s390/lib/crc32-glue.c b/arch/s390/lib/crc32-glue.c
-index 649ed7e8b99c..3c4b344417c1 100644
---- a/arch/s390/lib/crc32-glue.c
-+++ b/arch/s390/lib/crc32-glue.c
-@@ -59,21 +59,10 @@
- 
- DEFINE_CRC32_VX(crc32_le_arch, crc32_le_vgfm_16, crc32_le_base)
- DEFINE_CRC32_VX(crc32_be_arch, crc32_be_vgfm_16, crc32_be_base)
- DEFINE_CRC32_VX(crc32c_arch, crc32c_le_vgfm_16, crc32c_base)
- 
--static int __init crc32_s390_init(void)
--{
--	return 0;
--}
--arch_initcall(crc32_s390_init);
--
--static void __exit crc32_s390_exit(void)
--{
--}
--module_exit(crc32_s390_exit);
--
- u32 crc32_optimizations(void)
- {
- 	if (cpu_has_vx()) {
- 		return CRC32_LE_OPTIMIZATION |
- 		       CRC32_BE_OPTIMIZATION |
+    Reported-by: Guenter Roeck <linux@roeck-us.net>
+  + Closes: https://lore.kernel.org/r/01eb7d40-f5b5-4ec5-b390-a5c042c30aff@roeck-us.net/
+  + Reported-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+  + Closes: https://lore.kernel.org/r/3578030.5fSG56mABF@workhorse
 
-base-commit: 34a3ebfb22d694cc07addae5ce0a8f83139592bd
--- 
-2.49.0
+Let me know if that's wrong or there are additional reports.
 
+> ---
+>  drivers/pci/setup-bus.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index 54d6f4fa3ce1..e994c546422c 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -187,6 +187,9 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
+>  			panic("%s: kzalloc() failed!\n", __func__);
+>  		tmp->res = r;
+>  		tmp->dev = dev;
+> +		tmp->start = r->start;
+> +		tmp->end = r->end;
+> +		tmp->flags = r->flags;
+>  
+>  		/* Fallback is smallest one or list is empty */
+>  		n = head;
+> @@ -545,6 +548,7 @@ static void __assign_resources_sorted(struct list_head *head,
+>  		pci_dbg(dev, "%s %pR: releasing\n", res_name, res);
+>  
+>  		release_resource(res);
+> +		restore_dev_resource(dev_res);
+>  	}
+>  	/* Restore start/end/flags from saved list */
+>  	list_for_each_entry(save_res, &save_head, list)
+> 
+> base-commit: 7d06015d936c861160803e020f68f413b5c3cd9d
+> -- 
+> 2.39.5
+> 
