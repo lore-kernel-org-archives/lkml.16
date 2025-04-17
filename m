@@ -1,142 +1,138 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB6E23645F
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 11:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA8323814E
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 11:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744888373; cv=none; b=G2xlQV+2j9aFI9r4wzq1oDy6YYFaS5mu7US0GbDkzn+JmerWwCewcWGyjbJNw6aL/wIHVck+Hi/m9HZWcIT51k6qlsc1s/RZdP9Ipzr7DYfc5TJ3krO6fx86iil68GGBLYV5nrj8JtmhisVZJC0RFMy3iuAQdG1CnJ3tG7t4rWM=
+	t=1744888379; cv=none; b=LBI238DTjy5K0UvxowodlYVxoapquSHlZonwCZC6zXo2bRsrhJYXEzhiSuEwxtmA6i23VgQojvdWs2LleS2HZuJ4HuE3x+kP75+4GyfQmZvGcad2nNzbz3ew6+jyXSUjmjzK8YK0kJPYSNo7Mro6N755wYVg2g89vQBm2DIPISU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744888373; c=relaxed/simple;
-	bh=rGrFUoXQoplPibJ78I99/Bog8ZqlUwebwpq52DCwoRM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pFDTI+MdTsiSus2lrv/ds3mAXKpLP4XjBpNHknRDYRrabxkjRa3Cp9fd1de5/RnHuyVBGsVzEWcby0Kz/t3bcX2HjRztGalo9XIndJx8X5QbNx+EwHqWeOSBj/8dn/Bh+UkNuHHKG6h2L4HmFVDyRaGnNxpw6cMULdLWrjrJLbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QuVbiVgC; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744888379; c=relaxed/simple;
+	bh=D+FiOtVMhclsAvlG1hV6jofzj5deZucBeiDODH+PZJg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gvF0NoDio0aPKTcZBSxAOiaYiG58B5F29cCSdKlEhmA/EOIvXF63sHtNeLl01iUuj5Zd2+jWYg+GF5waYOS5Lzy0/vPgrMK1YMRg0caiftfN+tCKClSD1xVYVW3PUkd4eWCiFfHJub9EXkyhmzlYc7msvHNm6ev/ZvqC9Of4aYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=adcDkBd6; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QuVbiVgC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Z8l0bhIFoYlmtBrA9usXNwgbcvylvbX/S2GTeKjB0kQ=; b=QuVbiVgCrf6F9vQnPmN5JL1ETH
-	FYHymfTy68EKhZiN/OKB/6WJvmqHUQ91SuAltSkqlHL6s16sbS7ENYYfUBB/+PNcVD/cPxsUA3Lrj
-	3CvBmxV9iN55PPjZXdhpWG2rEdHtVMmJly79Lxdt471dtB2KeiC5tSA/LlN4XQH9kQtHdIbuPFeiE
-	DTQHLZ70D50i5xp/wkgMNZuEBxt8CpTe4zmz+EAbZP+NLJ9XyrQFGnDVrF+O4Gfxdc8TnQ3FTM/FR
-	q8L6y2dfx54fJMw+GL5VN1IJAtqVZ/k2VPlZV0eZ9JGejIeGB3OoWclcOlnIFfSjjwZMzK1vTRVwn
-	0VtgPObQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u5NAa-0000000AGF1-1QE3;
-	Thu, 17 Apr 2025 11:12:36 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B0A44300619; Thu, 17 Apr 2025 13:12:35 +0200 (CEST)
-Date: Thu, 17 Apr 2025 13:12:35 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: John Stultz <jstultz@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman <mgorman@suse.de>,
-	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Metin Kaya <Metin.Kaya@arm.com>,
-	Xuewen Yan <xuewen.yan94@gmail.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Suleiman Souhlal <suleiman@google.com>, kernel-team@android.com
-Subject: Re: [PATCH v16 4/7] sched: Fix runtime accounting w/ split exec &
- sched contexts
-Message-ID: <20250417111235.GK38216@noisy.programming.kicks-ass.net>
-References: <20250412060258.3844594-1-jstultz@google.com>
- <20250412060258.3844594-5-jstultz@google.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="adcDkBd6"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53H5l44V026050
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 11:12:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	qxLfze/zTU8C+QNrMs305310NbgxbagwueNtXuKqL/E=; b=adcDkBd6wQd9KwXu
+	Y5qcUyfKvzgCP77H6O5zK0SV93bKBEX5htjINmUWG/bw9UlxjHHMf1diagE82Jl+
+	nzmjGhh4kFl1k7kNcMa1PoD7Ep3nos1gibHRpcBjOztQSAKz3iT2SXW6ebuCwVxO
+	4i6d6K8fuAERCOiGwVYnJa4+QoRJCLd/aGFnaoQx267Dvyqercxlb5PsZlWC6r9R
+	16fND/5wGGvmnZ1sIFuJS81Ai6iYr3MO8tJyPcfiPd3JfZq9E0+c1d5qRRQWrBef
+	qxnTBx/crw9bXR+CCdw51hD/5G68rnzn/9ygQ24oemKZ7nbFx754P58AIIR7jRU/
+	JegZiw==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yg8wppqu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 11:12:56 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6f0c76e490cso955236d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 04:12:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744888376; x=1745493176;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qxLfze/zTU8C+QNrMs305310NbgxbagwueNtXuKqL/E=;
+        b=bcNRASELsfIvCyTOo+xxtcaFApu+ll49tDudSR5/7/SZ29BIR+zuehu6gYo4whqNVW
+         auWBa+x+lX6kPimmJ1XHKPZlVYhij5QVkAmq5JflNxVJ9464a9yuyKKlEeYAdZSyr2Mu
+         J1bX9Ia4nYptCzW86Dxrgyp46ut2fDGHkFaS1mbUf5SqcL5uGLWVQCLtWPaZFd5g6PYt
+         BhxIO3YZnw7OI7GM2rg+uP89EV1q10A9ss7znSn4UTh45FzfMUrXnKRr/X//5rA/6MsS
+         /9a/E4PcMINqkOqNKtq6IVkLsG1EN+2iwPqthMv6XCGN6Sg+JU5mZzFPxoUANr9VPYoL
+         9yow==
+X-Forwarded-Encrypted: i=1; AJvYcCVojxN/gf5e3v6xMRqqdaXYlJoMDWxvR8/lUbkCC0DRMVLgCVC2ARTNQiuGnDGrVg/Uq4U8Iix7U6LOFUk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4s3xQ0PI4tchC5XyeyMu600S3+8JX/2ZLc3oxtNGDGeq3V9L1
+	l/SSOSfaMxa+a2XHq4WqjGGATPy+rTxs9mYCg1pLJ6zWvMC44QEZ1/p+lqOl+tXv2EYEvB9mY1p
+	PV4XT3Zm0DoXBd+QWNq22blV6Ox8N/lWmUKl7aSvcU894vpzx/tEN0Ffsh36zDbE=
+X-Gm-Gg: ASbGnctj7sEPSw9Ko9lJwwt+VFZfJ46ucNR7Vejfn6kNnuSKPSLlmQCe+EXsHZBk9hk
+	e6P3Zn1aLdlI8IxQXdTEoHcw6d3Y7p+0clnqt6CyI7yMfg4xaJ9rLEMXnbxMu3q/FFgaPhIII9R
+	+oR5Ba+sGzQ7rOBE4TOujOjmNslZ5587t0rXksJ2MpHLa1nh9U0V1dzO+Oqc8nUMTFNeuCmAPZX
+	A1Fq1K47p1oESvoCjlF9bCSXf410FkKzYwijA0e+vuKWcDKku9eN44uEKZhs3Fc3XKL6yaImiN0
+	A4c+Lhntw9OIf6vuEHGN0gEfDTWOXkuZbE228STazLR27APFDuO4aUlIzrrHd9fuSw==
+X-Received: by 2002:a05:622a:19a0:b0:474:e7de:8595 with SMTP id d75a77b69052e-47ad8159564mr27694981cf.14.1744888375715;
+        Thu, 17 Apr 2025 04:12:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGPBxjpffnmkirnLBBB0Y2hOG9UcPArMHvszmAnlUI030yse54CdKoXRd2cuVM3FD9w0+N0bA==
+X-Received: by 2002:a05:622a:19a0:b0:474:e7de:8595 with SMTP id d75a77b69052e-47ad8159564mr27694831cf.14.1744888375327;
+        Thu, 17 Apr 2025 04:12:55 -0700 (PDT)
+Received: from [192.168.65.58] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36f527df0sm10099976a12.71.2025.04.17.04.12.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Apr 2025 04:12:54 -0700 (PDT)
+Message-ID: <7b559f03-f131-435e-95de-b5faee37b4d5@oss.qualcomm.com>
+Date: Thu, 17 Apr 2025 13:12:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250412060258.3844594-5-jstultz@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/10] dt-bindings: display/msm: dp-controller:
+ describe SAR2130P
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar
+ <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Kuogee Hsieh <quic_khsieh@quicinc.com>,
+        Krishna Manikandan <quic_mkrishn@quicinc.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>, Konrad Dybcio <konradybcio@kernel.org>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+        linux-arm-kernel@lists.infradead.org
+References: <20250417-sar2130p-display-v4-0-b91dd8a21b1a@oss.qualcomm.com>
+ <20250417-sar2130p-display-v4-1-b91dd8a21b1a@oss.qualcomm.com>
+ <20250417-arboreal-turkey-of-acumen-e1e3da@shite>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250417-arboreal-turkey-of-acumen-e1e3da@shite>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=E9TNpbdl c=1 sm=1 tr=0 ts=6800e238 cx=c_pps a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=hUMovHauaXhaw1qFzIsA:9 a=QEXdDO2ut3YA:10
+ a=1HOtulTD9v-eNWfpl4qZ:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: ach36DshQ4s-6K8tyo_8s309Uz39d408
+X-Proofpoint-GUID: ach36DshQ4s-6K8tyo_8s309Uz39d408
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-17_03,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ mlxscore=0 bulkscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
+ suspectscore=0 mlxlogscore=764 spamscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504170084
 
-On Fri, Apr 11, 2025 at 11:02:38PM -0700, John Stultz wrote:
+On 4/17/25 8:03 AM, Krzysztof Kozlowski wrote:
+> On Thu, Apr 17, 2025 at 02:16:31AM GMT, Dmitry Baryshkov wrote:
+>> From: Dmitry Baryshkov <lumag@kernel.org>
+>>
+>> Describe DisplayPort controller present on Qualcomm SAR2130P platform.
+>>
+>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> 
+> Addresses do not match. You re-authored the commit, so now everywhere is
+> mess.
 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index e43993a4e5807..da8b0970c6655 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -1143,22 +1143,33 @@ static void update_tg_load_avg(struct cfs_rq *cfs_rq)
->  }
->  #endif /* CONFIG_SMP */
->  
-> -static s64 update_curr_se(struct rq *rq, struct sched_entity *curr)
-> +static s64 update_se_times(struct rq *rq, struct sched_entity *se)
+It's git's fault with replacing the linaro address based on .mailmap
 
-update_se() 
-
->  {
->  	u64 now = rq_clock_task(rq);
->  	s64 delta_exec;
->  
-> -	delta_exec = now - curr->exec_start;
-> +	delta_exec = now - se->exec_start;
->  	if (unlikely(delta_exec <= 0))
->  		return delta_exec;
->  
-> -	curr->exec_start = now;
-> -	curr->sum_exec_runtime += delta_exec;
-> +	se->exec_start = now;
-> +	if (entity_is_task(se)) {
-> +		struct task_struct *running = rq->curr;
-> +		/*
-> +		 * If se is a task, we account the time against the running
-> +		 * task, as w/ proxy-exec they may not be the same.
-> +		 */
-> +		running->se.exec_start = now;
-> +		running->se.sum_exec_runtime += delta_exec;
-> +	} else {
-> +		/* If not task, account the time against se */
-> +		se->sum_exec_runtime += delta_exec;
-> +	}
-
-
-So I am confused; you're accounting runtime to the actual running task,
-but then accounting the same runtime to the cgroup of the donor.
-
-This seems somewhat irregular.
-
-Please consider all of update_curr_task(), and if they all want to be
-against rq->curr, rather than rq->donor then more changes are needed.
-
-
-> @@ -1213,7 +1224,7 @@ s64 update_curr_common(struct rq *rq)
->  	struct task_struct *donor = rq->donor;
->  	s64 delta_exec;
->  
-> -	delta_exec = update_curr_se(rq, &donor->se);
-> +	delta_exec = update_se_times(rq, &donor->se);
->  	if (likely(delta_exec > 0))
->  		update_curr_task(donor, delta_exec);
->  
-> @@ -1233,7 +1244,7 @@ static void update_curr(struct cfs_rq *cfs_rq)
->  	if (unlikely(!curr))
->  		return;
->  
-> -	delta_exec = update_curr_se(rq, curr);
-> +	delta_exec = update_se_times(rq, curr);
->  	if (unlikely(delta_exec <= 0))
->  		return;
-
-I think I've tripped over this before, on how update_curr_common() uses
-donor and update_curr() curr. This definitely needs a comment. Because
-at first glance they're not the same.
+Konrad
