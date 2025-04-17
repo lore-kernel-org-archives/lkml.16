@@ -1,214 +1,105 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292CF79C4
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC04579C4
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744866218; cv=none; b=GQx5gG/Hqhv4rTE4ZjG8IMbhKAWgRjz5uYn1LFpuiqAnDvlMRG9MxYPtwQ5E6EPFn+4TPND0mSSy2oWdSxVAT//4DmsyVauIklNbRACNzdKZ8JVUFKSzyxwfb/9d+v0Fi4E6IQPqCdttRMURZyDW/zHCHOoSEOinCuoFK1RmVEc=
+	t=1744866350; cv=none; b=uq57hD7x6uYwt5UT8T0Us2VbDB/eNwGoxBR1NXuIAqHkQJzqZIdOFSfihhJZFKbWN6/AXgDsop41oFVdkG8hwODMgK/AiZOgL/8CpaqmqSLZrOz+uEG9nllxtVydb9TnMPWT2n5X4xM49hW5c2anJJEDj/GVUbNqpwK/dUFTFdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744866218; c=relaxed/simple;
-	bh=I7wIEYnpxcz/BApB48jy+atPoGsInFFcNendN5f2mEc=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=O41Z/AWbf/2tMh6mc3NWN7rB02hohkIcgM1ie/DEHQmVxL6PN44NQMxxzWPA6DCSm4vraoDK/RCN2ehg52SwVUxvmlet7gM0MEMIM8oDw+OTtd9zAiWUPE3ysknFh6RCqfqnBx7p8GNGwjLZaHb6IxUHb/N3x4cTsRM40K7aMTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GTDn7W0Z; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744866350; c=relaxed/simple;
+	bh=GJLzL4W7tGH3HdN0Q5I+YGoEl8Jci+/Z5ADXQz/c/YY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=MO/ZJbUrlbOtniEKgEgpnh75dZt0Zrbft3pweBNBX+aWD2EoSyvqKPXps7TrPF3hD3IpbVcKqtao1hVFzS+nfws3/zNF7n6IWlXpA7tB44u9/vNqpSm1jmwLOu+MT2BwEKK+1hDQHqgLJuVixHVAjoU8bkI6T7wwn4pAyt9aHbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Acg66gBU; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GTDn7W0Z"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-224191d92e4so4102995ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:03:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Acg66gBU"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-391324ef4a0so59965f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:05:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744866216; x=1745471016; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bz/XOU6GJUjnIHziBMa/ejaxLXDiuXn3yPYLfVwKjWo=;
-        b=GTDn7W0Z1Vv5x69Cv9GF14wZ7i+KDOwD6kdf7sE+21DVl5wMvWuvMUEMjBjMy8YoUg
-         lQBbSMXEVfGiVvM1r7KJSmY+bLU5orx/a7+Rgm1als9hDISlnThCaqkMwjxpJqs7rDWY
-         jlQbXjMNkusC5vvip4cABskBUNZx66b3e15Uq73+ntis68gXDiRwmJDC9hQWcul6BKLt
-         j9+GHvEp3rQ9XUOt4TU5MGdd5GK9FP6Gntu146qhAR1/kMZGTZpuxZWCVgaFaYQ/e+nq
-         8NODKpMsP+lfDenxq1zCcWcecORTfACclfbbG8l8XAjUozUmviKrYQMbhKVU15bfTesI
-         sytA==
+        d=suse.com; s=google; t=1744866345; x=1745471145; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=eqgFD33s9tERk+XOzZm6KcVao6q/j/zXR+/Lp4rdROg=;
+        b=Acg66gBUAr+MQbx/+PFNKOaLUmcAyQUR8kMWblgQ2brVIQ6uQLgg3DYwoixIn3U3i1
+         7LUEjRl2Vk26aa/3iOJTby7jF0Tj7g3Ev3ma1hcBzZXxBo5gE9yW1v45Z3TdIjh9xMH/
+         Wia1U6ZmC4G5eT8LPyMIianrU0F5bY90f6u3iyP9my/WN0Ef4L+4AaoByvlWEryRCdee
+         lN3IjldrOb9hFA7gzpkFYFnF/nZbdO8pVGdb2I0ZezxAu0TTgj9/l4qOhFZNSPoqu19V
+         k5UovWT+Ck+4vjDnYKRVZv+9QCxPcETdrbH9GTPNm5gMClqdjQYLs6fbnzpDbIIhfuc1
+         hPvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744866216; x=1745471016;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bz/XOU6GJUjnIHziBMa/ejaxLXDiuXn3yPYLfVwKjWo=;
-        b=PfZ/N93qnQF+v/ixXTicyqjln7KBKCDciw8Pnq4jZwJ5NDZtV1savI22oIbF+dhaaE
-         luEJe1b2FHslyXaXBTPbUhELUtIuvKf/SldhQF9qUJhBUtHNSBALPrgH4It5NLMZfn6y
-         /lietUp2/OJm4Ltuv/XNB2jIav+yO3x8dt+D9aA9rOcVuWMJ+zCJXbyVooP8WM6tcP1Y
-         ROZxTcbPUNNxAGi/O0BSfwF2zEwPQykRYNG6SVv/uJr4yydWhWskufYI4ksm4ZyhCkl6
-         lPCt035YPGuCwN229XlNNMcN41CI2s0/85dSZOIdmk/eDyIB0T6w/wdNQfaD5eoUfIfx
-         CAyg==
-X-Forwarded-Encrypted: i=1; AJvYcCU61f9/NUZQGIGQOcja5KDm99BwdR4OA274jXwPsortKil4z18Ax0uk9HFgDryK0Ec1JGQL4sYPDDlAhcc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxITH+gLkhPL5z07AQ7vUBH+rcQd/Jif8344o4/HBDrVhnd0Tec
-	xeRiZUk+QglrIhQUc9vrhE78oh05YQMSe6EZVhxOc/aRXd77oXy9qbSgl6BSZw==
-X-Gm-Gg: ASbGncupE6rTRmkmWPtqypFfE8EdfawqT4IKvK4F47JlFoAwYyjJJRTwP0Uh59cd9j8
-	5MBEkzetQqFR0gMVjK0zQ+975rcuImcOVwpttPz/S6YcIWy6OLfuxKED8ed9uOznTwISzHf5TQN
-	C4ZA5Wpj6ZFMdRb/fjjDXd7JzJRDbIXfBaQbkmshIYJFOvmuvzTxp3vO+KfgDYYXoXGyrVvbh9e
-	hor1qRYllKSliH9m1tMFcKGUm1GXEjeaLSWpEgKQAxniAruKKrOLhDk4xEp4LR2P0oNlXKsZsAW
-	83+esQZeY4N2ZpAkKQif+qR51SMDmA+AFTnZaTPf9/t6wocfU1QQawdBfJgwO7SK873zK3Dltzm
-	6fEUnQqPNNM0aRUSu3q84lXpA
-X-Google-Smtp-Source: AGHT+IERG0jv4hzWyJchJgTRcqJ4HywpEjypOZy8IrUAQQsiFDrXebt5WGosFtJLR6VQALxZ6cQziw==
-X-Received: by 2002:a17:902:c405:b0:224:2384:5b40 with SMTP id d9443c01a7336-22c35916c90mr72088015ad.24.1744866216101;
-        Wed, 16 Apr 2025 22:03:36 -0700 (PDT)
-Received: from darker.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33fa5f59sm24056305ad.129.2025.04.16.22.03.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 22:03:35 -0700 (PDT)
-Date: Wed, 16 Apr 2025 22:03:33 -0700 (PDT)
-From: Hugh Dickins <hughd@google.com>
-To: Zi Yan <ziy@nvidia.com>
-cc: Gavin Guo <gavinguo@igalia.com>, linux-mm@kvack.org, 
-    akpm@linux-foundation.org, willy@infradead.org, linmiaohe@huawei.com, 
-    hughd@google.com, revest@google.com, kernel-dev@igalia.com, 
-    linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-    Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Subject: Re: [PATCH] mm/huge_memory: fix dereferencing invalid pmd migration
- entry
-In-Reply-To: <A049A15F-1287-4943-8EE4-833CEEC4F988@nvidia.com>
-Message-ID: <eec1be5d-8b42-6dbb-432d-488650b79c40@google.com>
-References: <20250414072737.1698513-1-gavinguo@igalia.com> <A049A15F-1287-4943-8EE4-833CEEC4F988@nvidia.com>
+        d=1e100.net; s=20230601; t=1744866345; x=1745471145;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eqgFD33s9tERk+XOzZm6KcVao6q/j/zXR+/Lp4rdROg=;
+        b=IlWGqxCVxwtEaX7434o00TO/sCsdNdzSGzm0jOF6KmnF3/IUcgwShysqIupuv4xn/S
+         b7aW9d6me40agaXP2TA1WCvVIGAbX4gd3GbG755UjA9e5+JOpFnmqImADd6uqAkB+F9c
+         IOoX+l5zMp8IviKs02kNSMJnAYpyRj8hnRvTXilrILDOIEJUUIn6d1FwqnRmdDMUD9iY
+         28nztBJKXHN+8Daa0UPVifP+7XCLr7lCtno/JoTA0/l8kpX/fTB6jvds+yT2c9QvVcfV
+         AsMgLp5tHoUy6/CWVRJz9776CDUBkvUkms1cFA0hkaErqSnxTh18c9nAPq6pFraTwPEb
+         D18A==
+X-Forwarded-Encrypted: i=1; AJvYcCU4qZy2K4nfuZUTVO/0ItoCPwLo1KfmZzT9s3aZh7g4Tha7iZIVq21FknhhP4O5ptteBi5Qvi8QalA0Xbs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxuh/W08uKbxPqka6O9+zSHvosId3WBrtACwsiNgXI6ozn1TMr+
+	6pZfrrJiPDsjWJgh3XrdZjxwFEY45ne7h8n5245ZHE2XhTd42nKl1rpr+hVmm1o=
+X-Gm-Gg: ASbGncvNDIPOnIiaSR8IDOWI8mR5hxWsUFW8On+Bl1rU4wDbLSf6fn/ak2ArM13x6jY
+	S87iYsjuqXnJLF+EXXB6xQLn9Gf9iKQSCD7V92NEl3XfA30sy1O/VmxfOKi/q5oKqNBCeFhal87
+	wHf+Mtjz7SnMKiJv8YQmdLghCwi/HZBBu0R86bVPUYKj0HcK3+UPxTT6waEzruWQZB/oJNqQFHp
+	8ENUit1P6yJYrPdLcYIefZoNzSflPXbte/KsCCDJlEruSiGOI9PrEOiUb4nQlXyvPZbeQEjNZT2
+	Gy/YRbu05c1H7vxFw54V9qpAK1ScxcbSJCNiWQPrLzPwFms=
+X-Google-Smtp-Source: AGHT+IEIW9jNhRjthZn/BEslNneJQaLVBe+fgLEIl/mEON7+W3b64NCMmO3cDGrOFfpRmmABz1KKgg==
+X-Received: by 2002:a5d:5c84:0:b0:39a:c6c4:f855 with SMTP id ffacd0b85a97d-39ee5addad3mr1286873f8f.0.1744866345044;
+        Wed, 16 Apr 2025 22:05:45 -0700 (PDT)
+Received: from [10.202.112.30] ([202.127.77.110])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30861212fa6sm2650958a91.27.2025.04.16.22.05.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 22:05:44 -0700 (PDT)
+Message-ID: <e426eaa2-3c17-42d6-906f-c41443ac48d3@suse.com>
+Date: Thu, 17 Apr 2025 13:05:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-1463770367-916831765-1744866215=:4537"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [ocfs2?] possible deadlock in
+ ocfs2_finish_quota_recovery
+To: syzbot <syzbot+f59a1ae7b7227c859b8f@syzkaller.appspotmail.com>,
+ jack@suse.cz, joseph.qi@linux.alibaba.com, linux-kernel@vger.kernel.org,
+ m.masimov@mt-integration.ru, ocfs2-devel@lists.linux.dev,
+ syzkaller-bugs@googlegroups.com
+References: <680081ae.050a0220.d9ef5.0003.GAE@google.com>
+From: Heming Zhao <heming.zhao@suse.com>
+Content-Language: en-US
+In-Reply-To: <680081ae.050a0220.d9ef5.0003.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 4/17/25 12:21, syzbot wrote:
+> Hello,
+> 
+> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+> unregister_netdevice: waiting for DEV to become free
+> 
+> unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
 
----1463770367-916831765-1744866215=:4537
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+This is another module's issue, and the deadlock issue disappeared.
 
-On Mon, 14 Apr 2025, Zi Yan wrote:
-> On 14 Apr 2025, at 3:27, Gavin Guo wrote:
->=20
-> > When migrating a THP, concurrent access to the PMD migration entry
-> > during a deferred split scan can lead to a page fault, as illustrated
->=20
-> It is an access violation, right? Because pmd_folio(*pmd_migration_entry)
-> does not return a folio address. Page fault made this sounded like not
-> a big issue.
->=20
-> > below. To prevent this page fault, it is necessary to check the PMD
-> > migration entry and return early. In this context, there is no need to
-> > use pmd_to_swp_entry and pfn_swap_entry_to_page to verify the equality
-> > of the target folio. Since the PMD migration entry is locked, it cannot
-> > be served as the target.
->=20
-> You mean split_huge_pmd_address() locks the PMD page table, so that
-> page migration cannot proceed, or the THP is locked by migration,
-> so that it cannot be split? The sentence is a little confusing to me.
+- Heming
+> 
+> 
+> Tested on:
+> 
+> commit:         11376431 ocfs2: Stop quota recovery before disabling q..
+> git tree:       https://github.com/zhaohem/linux jans_ocfs2
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14183a3f980000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=5348e7fd1b89a770
+> dashboard link: https://syzkaller.appspot.com/bug?extid=f59a1ae7b7227c859b8f
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> 
+> Note: no patches were applied.
 
-No, split_huge_pmd_address() locks nothing. But its caller holds the
-folio lock on this folio (as split_huge_pmd_locked() asserts with a=20
-VM_WARN_ON_ONCE); and page migration holds folio lock on its folio
-(as various swapops.h functions assert with BUG_ON).
-
-So any PMD migration entry found here cannot be for the folio which
-split_huge_pmd_address() is passing down.  (And even if the impossible
-did occur, what woud we want to do?  Skip it as the patch does.)
-
->=20
-> >
-> > BUG: unable to handle page fault for address: ffffea60001db008
-> > CPU: 0 UID: 0 PID: 2199114 Comm: tee Not tainted 6.14.0+ #4 NONE
-> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-=
-1.16.3-2 04/01/2014
-> > RIP: 0010:split_huge_pmd_locked+0x3b5/0x2b60
-> > Call Trace:
-> > <TASK>
-> > try_to_migrate_one+0x28c/0x3730
-> > rmap_walk_anon+0x4f6/0x770
-> > unmap_folio+0x196/0x1f0
-> > split_huge_page_to_list_to_order+0x9f6/0x1560
-> > deferred_split_scan+0xac5/0x12a0
-> > shrinker_debugfs_scan_write+0x376/0x470
-> > full_proxy_write+0x15c/0x220
-> > vfs_write+0x2fc/0xcb0
-> > ksys_write+0x146/0x250
-> > do_syscall_64+0x6a/0x120
-> > entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> >
-> > The bug is found by syzkaller on an internal kernel, then confirmed on
-> > upstream.
-> >
-> > Fixes: 84c3fc4e9c56 ("mm: thp: check pmd migration entry in common path=
-")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Gavin Guo <gavinguo@igalia.com>
-> > ---
-> >  mm/huge_memory.c | 18 ++++++++++++++----
-> >  1 file changed, 14 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> > index 2a47682d1ab7..0cb9547dcff2 100644
-> > --- a/mm/huge_memory.c
-> > +++ b/mm/huge_memory.c
-> > @@ -3075,6 +3075,8 @@ static void __split_huge_pmd_locked(struct vm_are=
-a_struct *vma, pmd_t *pmd,
-> >  void split_huge_pmd_locked(struct vm_area_struct *vma, unsigned long a=
-ddress,
-> >  =09=09=09   pmd_t *pmd, bool freeze, struct folio *folio)
-> >  {
-> > +=09bool pmd_migration =3D is_pmd_migration_entry(*pmd);
-> > +
-> >  =09VM_WARN_ON_ONCE(folio && !folio_test_pmd_mappable(folio));
-> >  =09VM_WARN_ON_ONCE(!IS_ALIGNED(address, HPAGE_PMD_SIZE));
-> >  =09VM_WARN_ON_ONCE(folio && !folio_test_locked(folio));
-> > @@ -3085,10 +3087,18 @@ void split_huge_pmd_locked(struct vm_area_struc=
-t *vma, unsigned long address,
-> >  =09 * require a folio to check the PMD against. Otherwise, there
-> >  =09 * is a risk of replacing the wrong folio.
-> >  =09 */
-> > -=09if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) ||
-> > -=09    is_pmd_migration_entry(*pmd)) {
-> > -=09=09if (folio && folio !=3D pmd_folio(*pmd))
-> > -=09=09=09return;
-> > +=09if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) || pmd_migration) {
-> > +=09=09if (folio) {
-> > +=09=09=09/*
-> > +=09=09=09 * Do not apply pmd_folio() to a migration entry; and
-> > +=09=09=09 * folio lock guarantees that it must be of the wrong
-> > +=09=09=09 * folio anyway.
->=20
-> Why does the folio lock imply it is a wrong folio?
-
-Because you cannot have two tasks holding folio lock on the same folio
-at the same time.  So therefore it is a different ("wrong") folio.
-
->=20
-> > +=09=09=09 */
-> > +=09=09=09if (pmd_migration)
-> > +=09=09=09=09return;
-> > +=09=09=09if (folio !=3D pmd_folio(*pmd))
-> > +=09=09=09=09return;
-> > +=09=09}
->=20
-> Why not just
->=20
-> if (folio && pmd_migration)
-> =09return;
-
-That looks nicer, less indentation, I agree.  But Gavin's patch is
-keeping the relevant check next to the "pmd_folio(*pmd)" to be avoided:
-also good. I have no opinion which is the better.
-
-Hugh
-
->=20
-> if (pmd_trans_huge() =E2=80=A6) {
-> =09=E2=80=A6
-> }
-> ?
->=20
-> Thanks.
->=20
-> Best Regards,
-> Yan, Zi
->=20
----1463770367-916831765-1744866215=:4537--
