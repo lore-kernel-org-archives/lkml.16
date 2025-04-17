@@ -1,47 +1,47 @@
 Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25BD921577A;
-	Thu, 17 Apr 2025 06:56:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCEB215762;
+	Thu, 17 Apr 2025 06:56:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744872986; cv=none; b=iqg+PPx20NY8QZ4fF8CdVHJuyrcMuXD8Sm1jZCGDXhJHXwLWOxcr9nz7zcv4WxSQSN7hyoFReq9R4On+gY/QEkblGlZ9CJUUEsTBU2oLIKBTfvkVGRmwX4h/ydZelbRPdCAh7q6EwhN02/VfFzcL6JdBtq378yNoHRINQEHdXN0=
+	t=1744872998; cv=none; b=IrbHDzYIHnZOPrBm3W4F3U9S/I8Ub4+uzZ6xX6afi3IS0mPfFHnGVh6zMaxvf2GidPI2vh5OaDuVw1dZRRfSahPjXgXqxwydTxWIsSlSF+B1Fnd4guLuEJAUs9nSf+5NIq8bcFx0QDwjeQXThMDbIyRqimQjh1PJXB04R2BgCeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744872986; c=relaxed/simple;
-	bh=eKUbog7ByjbCzszjmKnoWmiXcqjhQpaHvibxbPfdaFw=;
+	s=arc-20240116; t=1744872998; c=relaxed/simple;
+	bh=UzeCNc3kvqNUBHp1h3V2vU3Zl7otOobqjSERfyPvGrA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fkIBPfuCnfHB8GGjOARToIc8wJ3yQ9AmxJipWTTQy409jqKo+3w+Ecmg18sOGDIBUbeXktV7/dPXO+AgC6C2f1P1Sbobpq0agV7RC5m+JnD81KphoJq+k1h/6nVkODFvsPxcYBcohhRM+VO0wrci5np3Km49wg34QvMsbeqy7ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=iV8thFYW; arc=none smtp.client-ip=198.47.19.245
+	 MIME-Version:Content-Type; b=cwlTLlZnU02pGw8Cyhbp5KoiiWd1fbJHNRYVeFQlhfjDDFvM8jG9SVTStHjD9X6ZN5UeisB19zH4Sha7YAdZkg/Ws0SB30vVQwQOan7yna3b+kOVVRNLuw2T1yBiWdtn4kbb3VMvYJMNZ/UTNnD13/1zTAJvVvhjukZcEUKm2Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YrK92PDl; arc=none smtp.client-ip=198.47.19.245
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iV8thFYW"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53H6u7MH2898253
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YrK92PDl"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53H6uPHe2898289
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 17 Apr 2025 01:56:07 -0500
+	Thu, 17 Apr 2025 01:56:25 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744872967;
-	bh=rkcxpZ3llEim82hMYH41kGN9u9yRPKFQ+84gL96Vkog=;
+	s=ti-com-17Q1; t=1744872985;
+	bh=f3zK1WKnAiIa0AV2NWKMND0tyvzAmQriqOdxky0e2w4=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=iV8thFYWmD85hwaCpJw2BP858YrzCTb1TSN8WhqUZrLnPAWOBFxv2ykCJMAjsh6tF
-	 ZlgTgnSyhoNkbGdOfho27yoq+TcgAC4XfW2wVRKhmXuR0drt9TGBtYXuWxvt8cC350
-	 VTqYKT5SVWs54IYv12Wjy3zswl4LkJJR/7TpxWBk=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53H6u7e4012906
+	b=YrK92PDlSzkdDWSwncxoaq9lwkonEIFBsTqWPQ6OXLrCeotGEHdEAh1fV5paNb9RW
+	 qg6BA3ArPTh0J5xHo+kN4H3pLF1gy031Jj3iNfPtaIgo795hphaUva36Rw3YXxBOkp
+	 LTdwTqMB/hdVScQD9QcgBMnBl6giVV8tfooQg7ek=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53H6uPBo004141
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 17 Apr 2025 01:56:07 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+	Thu, 17 Apr 2025 01:56:25 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 17
- Apr 2025 01:56:06 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2025 01:56:24 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 17 Apr 2025 01:56:06 -0500
+ Frontend Transport; Thu, 17 Apr 2025 01:56:23 -0500
 Received: from ws.dhcp.ti.com (ws.dhcp.ti.com [10.24.69.232])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53H6tsx1035403;
-	Thu, 17 Apr 2025 01:56:01 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53H6tsx4035403;
+	Thu, 17 Apr 2025 01:56:18 -0500
 From: Rishikesh Donadkar <r-donadkar@ti.com>
 To: <jai.luthra@linux.dev>, <mripard@kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
@@ -52,9 +52,9 @@ CC: <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
         <hverkuil-cisco@xs4all.nl>, <tomi.valkeinen@ideasonboard.com>,
         <jai.luthra@ideasonboard.com>, <changhuang.liang@starfivetech.com>,
         <jack.zhu@starfivetech.com>, <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH v3 01/13] dt-bindings: media: ti,j721e-csi2rx-shim: Support 32 dma chans
-Date: Thu, 17 Apr 2025 12:25:42 +0530
-Message-ID: <20250417065554.437541-2-r-donadkar@ti.com>
+Subject: [PATCH v3 04/13] media: ti: j721e-csi2rx: allocate DMA channel based on context index
+Date: Thu, 17 Apr 2025 12:25:45 +0530
+Message-ID: <20250417065554.437541-5-r-donadkar@ti.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250417065554.437541-1-r-donadkar@ti.com>
 References: <20250417065554.437541-1-r-donadkar@ti.com>
@@ -68,86 +68,43 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Jai Luthra <j-luthra@ti.com>
+From: Pratyush Yadav <p.yadav@ti.com>
 
-The CSI2RX SHIM IP can support 32x DMA channels. These can be used to
-split incoming "streams" of data on the CSI-RX port, distinguished by
-MIPI Virtual Channel (or Data Type), into different locations in memory.
+With multiple contexts, there needs to be a different DMA channel for
+each context. Earlier, the DMA channel name was hard coded to "rx0" for
+the sake of simplicity. Generate the DMA channel name based on its index
+and get the channel corresponding to the context.
 
-Actual number of DMA channels allocated to CSI-RX is dependent on the
-usecase, and can be modified using the K3 Resource Partitioning tool [1].
-So set the minimum channels as 1 and maximum as 32.
-
-Link: https://software-dl.ti.com/processor-sdk-linux/esd/AM62X/10_00_07_04/exports/docs/linux/How_to_Guides/Host/K3_Resource_Partitioning_Tool.html [1]
-Link: https://www.ti.com/lit/pdf/spruiv7
+Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 Signed-off-by: Jai Luthra <j-luthra@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
 Signed-off-by: Rishikesh Donadkar <r-donadkar@ti.com>
 ---
- .../bindings/media/ti,j721e-csi2rx-shim.yaml  | 39 +++++++++++++++++--
- 1 file changed, 36 insertions(+), 3 deletions(-)
+ drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/media/ti,j721e-csi2rx-shim.yaml b/Documentation/devicetree/bindings/media/ti,j721e-csi2rx-shim.yaml
-index b9f033f2f3ce4..bf62998b0445a 100644
---- a/Documentation/devicetree/bindings/media/ti,j721e-csi2rx-shim.yaml
-+++ b/Documentation/devicetree/bindings/media/ti,j721e-csi2rx-shim.yaml
-@@ -20,11 +20,44 @@ properties:
-     const: ti,j721e-csi2rx-shim
+diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
+index d03dc4e56d306..523c890139098 100644
+--- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
++++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
+@@ -1015,6 +1015,7 @@ static int ti_csi2rx_init_dma(struct ti_csi2rx_ctx *ctx)
+ 	struct dma_slave_config cfg = {
+ 		.src_addr_width = DMA_SLAVE_BUSWIDTH_16_BYTES,
+ 	};
++	char name[32];
+ 	int ret;
  
-   dmas:
--    maxItems: 1
-+    minItems: 1
-+    maxItems: 32
+ 	INIT_LIST_HEAD(&ctx->dma.queue);
+@@ -1023,7 +1024,8 @@ static int ti_csi2rx_init_dma(struct ti_csi2rx_ctx *ctx)
  
-   dma-names:
-+    minItems: 1
-     items:
-       - const: rx0
-+      - const: rx1
-+      - const: rx2
-+      - const: rx3
-+      - const: rx4
-+      - const: rx5
-+      - const: rx6
-+      - const: rx7
-+      - const: rx8
-+      - const: rx9
-+      - const: rx10
-+      - const: rx11
-+      - const: rx12
-+      - const: rx13
-+      - const: rx14
-+      - const: rx15
-+      - const: rx16
-+      - const: rx17
-+      - const: rx18
-+      - const: rx19
-+      - const: rx20
-+      - const: rx21
-+      - const: rx22
-+      - const: rx23
-+      - const: rx24
-+      - const: rx25
-+      - const: rx26
-+      - const: rx27
-+      - const: rx28
-+      - const: rx29
-+      - const: rx30
-+      - const: rx31
+ 	ctx->dma.state = TI_CSI2RX_DMA_STOPPED;
  
-   reg:
-     maxItems: 1
-@@ -62,8 +95,8 @@ examples:
+-	ctx->dma.chan = dma_request_chan(ctx->csi->dev, "rx0");
++	snprintf(name, sizeof(name), "rx%u", ctx->idx);
++	ctx->dma.chan = dma_request_chan(ctx->csi->dev, name);
+ 	if (IS_ERR(ctx->dma.chan))
+ 		return PTR_ERR(ctx->dma.chan);
  
-     ti_csi2rx0: ticsi2rx@4500000 {
-         compatible = "ti,j721e-csi2rx-shim";
--        dmas = <&main_udmap 0x4940>;
--        dma-names = "rx0";
-+        dmas = <&main_udmap 0x4940>, <&main_udmap 0x4941>;
-+        dma-names = "rx0", "rx1";
-         reg = <0x4500000 0x1000>;
-         power-domains = <&k3_pds 26 TI_SCI_PD_EXCLUSIVE>;
-         #address-cells = <1>;
 -- 
 2.34.1
 
