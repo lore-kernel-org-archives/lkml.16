@@ -1,60 +1,61 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9ED2522BF
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:16:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032FF253B4B
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744903011; cv=none; b=L9THir8KkzbQo+xY7v1w8uzqgd2rnHI9E9PC7ybcyIr+SyeUlA8tfpXtL0klUY7zkjdD5/3OYOWP63uMUNsKT0BM1uUJTT9pUiRrytmsTgoJerRYzuSql/zN3+vaXY8MkJx63CzmM6+k1T0OYwCDBjs+uLxB1nhHBmpQNXP9HxU=
+	t=1744903015; cv=none; b=iQlYRfNw+mCnuBD8awrWgLNwshcPof0CmQxStab+qdjBPwnZkSqPDbdWEiZyQdfNiEdCDfRgNqzdkiagGHUmLTaP9Ur5u/+fyLUD05PPJ9Zjza9Pd82XF02NOjkonBc5RnVIrBzkTy2/OSN/P/FAK4tBd0gk2zZzWnuSw06xQjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744903011; c=relaxed/simple;
-	bh=Ys2EqgACX0cL+daHoP5EiN4rYMl0rh5or5GCGkkGTKI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oWJ7qiYf1tOwCc+HtdhNj7pPtTLpB3740O4pZ8zo9FjtSDfvx24JlGQZt9aPG5noCsXstzOiyHa99WVE2UL0Ho6u4X2F6HZcjgbGX6WC/ViTpOGqLAUyKjkPNcclj0yh5ZviL1IDugRa2Ois6f7CGl2RPR5RUqYosTtP4JR7cmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aEfH70VK; arc=none smtp.client-ip=209.85.128.49
+	s=arc-20240116; t=1744903015; c=relaxed/simple;
+	bh=+6j2YyU2I4AMeSkYQPmXkGCB/aD0jbaZkg4BVD4smnU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dzXQvVfp9RjUbtXU42nFAIeY6z1P4es6ajLXD2zMD6UdrBZx4eW67jMxbvwk8mbeFRw5YysmWL9zE6+5kGKBeY9kDSdrZWcc/0cOJ/DU3GUkhfSYAYYtw7gsbgitl11oST+zo2EKaiHrHuyjs+FLaH3TxKLy4JI4orga7i/BKQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rj/rU+Z7; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aEfH70VK"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso8427865e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:16:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rj/rU+Z7"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39c1efc457bso543588f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:16:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744903007; x=1745507807; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=J8+TpeWUK0EnK7TAevGTAydH5jdr7kBGeMy1Oq63Os0=;
-        b=aEfH70VK/huuxFsI7uQXqUlBBZvfCK1z7eALVozk6IqVbdr3XqBaqo3EZftgaS7xNs
-         pcCmLt8fkx95QwKJVfFe8i5n03aEnuhc6vpxV1gyZF1hkJRpSAXXXG1tr1JlaFxS/srl
-         zyrLH96Q8KImvIUeoAVjDKu19DXRpp4byBiNp3b6tVXY8WzCdf08Tl56Ds0PYmI6J8g8
-         982bquQOAgZ+DIjVCl+PIq6uSkm/GQmxpgzvZHqUlOq0LgcFXAtS/06CV+lJRN1Topvv
-         Z8/gPJoEmxkDJ4YwQfRrzPhPa2bktbDsrNukRUvQW3JAvVivr2qcOhKNZCSGvPQkQ1m0
-         z8/Q==
+        d=linaro.org; s=google; t=1744903011; x=1745507811; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KCt9HM5J8mDC2T2Qr7aKXtqKry6PyjzOv49rLCCphuA=;
+        b=rj/rU+Z7N0HplW17RsHbtHgl8LAz9eEB0nfo+Q8Kk/Er+t7dcfW0kqX9k11vMH80ST
+         V1AlfIHEOahvLrP1EMtjTeHtsBlgWxc47U1r19Jq2qSDjAh++sgW0xHS0XSGLFzGTYZ1
+         Ruyk6zU/h4O5xG3C54re0Hoyi/uGobLxdcYXAH7Gvl6ktqvDjf0+o09bLsm7nFWzjSwj
+         hSzXr/B66z8N8UQEG/RREML8gsYjGWlGwAKZ7CLAzfdOUkUnCxDW1ZwYeXxu4QwxffcR
+         rqiUojH7ecd9sejG1D/4M2Ju8jdePzHlV2HlbQv/NHC6w4PwnZ7hgRiXzA5k/H2IOl0L
+         P8Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744903007; x=1745507807;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=J8+TpeWUK0EnK7TAevGTAydH5jdr7kBGeMy1Oq63Os0=;
-        b=l4yWFyz6hnIgYhY23wXJrKU6EcOyV3+RLWHRyH+yZUZ69WNZ+NrxwV1pYIlbGBneat
-         dBHWsbz5loQ8H2zvx9cnLCnJy5357XeZuSLaqAVlQhGbv5RmgHV9rPECovn6xvhxLyg4
-         aUi6xtOZeFEmE5fvy/eucbjPiO+hZCS3BNOQKZ1QX7UlcY/UYDJxq5AQ8UstRQ4H4isM
-         zpkGF17mmvcx+d8/0dhq3SPO3h2WLUPLO4smJNY2KHqb9hHmOhd3Omr/YhdepXnEOoj0
-         vwGXaEOoffAO+OjDyFK/r9va45/CLWx9/Cyasxiau+DDEVUG7ESDY+1NFpKV9QYQ611e
-         bouQ==
-X-Gm-Message-State: AOJu0YxrHxZzOhKn61JMFVa6MW0d4exJMzqGHOtV5ESvASqstRF3H4qK
-	opDs5tsLo+l11dU6wGePKKl+/n1nxpBYW31q1ovENB0j21RvsONb9zidnxonwupS8nNXRHxUr7N
-	I
-X-Gm-Gg: ASbGncsz1UhMc1UE7ifmGf+EVqd5ij5dzC0BMLgdWWXOr8ItiHON9w5dThm1ohKyMTd
-	eH+oipEXJy9gzjxUf0fteU8n0dYiCKIruglO0QZ1jmNFHEFAGLun5uOfCWtp4VJQ8fzzNrM9hUY
-	OiBB0xXeRXbCYajfr8/fXvsDyVlN0uh/SMEbXz72TuHSG6jeTYH9eIqbHFxotHGZpI1eHAzYGKE
-	sNVJQMWhD17pD1t3xqQuZARv+mXROHJxqoqWR+dd/DoS36vNu6udAN2ExynIs+6cd6vnydr9WhE
-	w77IHbx6jT/VthmmP/b3HxeTTrwKmwhSoLiblT688wCmoc2QMKjQ2nb62kA+7xlCsvY=
-X-Google-Smtp-Source: AGHT+IEdRyryYWgHaL0fwAW/Sj5APK5Alf2wY8uJlmGrsmsoRU/YRkadjOMvEcs84ubN/8NU1/Z10w==
-X-Received: by 2002:a05:600c:1e0d:b0:43d:4e9:27ff with SMTP id 5b1f17b1804b1-4405d5fcd26mr64938685e9.7.1744903007316;
-        Thu, 17 Apr 2025 08:16:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744903011; x=1745507811;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KCt9HM5J8mDC2T2Qr7aKXtqKry6PyjzOv49rLCCphuA=;
+        b=nZo8+uyRRQ3WxRJ10N5uOn3uZNnX+TlEUivHGIkTSo8xfBuPyRNpzvZ4tSsXS7htQK
+         rmiWhToC7OolOoNBc8IXy1VZiSrjUO02QNHvPOtXZmfXuM5az8TKqgAa+/RWForSef5X
+         MmUC4vnWa6N+ubiWVww10v719BIFpRmU2CeMhgOBSZ3N/2VlD8Vrrbr/sap5YhdZOc3q
+         pXBCY7+8kLG4FeUX0e1gbD/6iaTIoMB8kpIEsJ+lGEgAdYIVEDUvsnjfMzZdYmBIWr5o
+         mCWyvL+cAnynvdCGuybmTM81tdO/STvzc3NVPKf0xMNDRhkARVfpyp3d2y7odneVb6og
+         LrRg==
+X-Gm-Message-State: AOJu0Yy63EB2HtuJCY9wL896zNHZvXk1lbOOb1xT/eXn4OfM3azu3vz7
+	mhTS1wnRBA6YylU609HFXS1bf5QapVVEG98T5SKT/t2eW0dwzGM6PTTiiaOXb5g=
+X-Gm-Gg: ASbGncu2ZdgxpXKh8Cpbu9pQdvb/qRcjD4mCTQrMT/8pTYdTGnnskrW2si701wjypP9
+	8uKapYbaG7eoCD1re4lPiosZtjgen/l8SZraBogCTsBHL7DE0qJ0g3BKmYe+ojsFVToWQB/5h81
+	AMAnKkXVwtnUl5ApdT/N42Q2d/BMPH7SZVVhPKS9iAw4eAM+yOiGNRwFi9U4wiCtfbZhDYHssxx
+	tuSHNUiRAih5z1KTFdYHQr8rRVCJTtfM2DwFxbNxzfX0+2D7PNwm1Sj3MtPPqwx1L6CQ/XtWD9/
+	di7kNQIzKI84I5emTALo5VZD4jMViyofqKoubG97KIutEjeqpUgpbB8pXePjboG4tQM=
+X-Google-Smtp-Source: AGHT+IEONMUQIFnudwL0Y9Twoy76WitfoTjggM2FFYsSm4ms/R7wr1rx7aM9u2nAk3VteC7wf+AxNg==
+X-Received: by 2002:a5d:5f82:0:b0:390:f6aa:4e72 with SMTP id ffacd0b85a97d-39ee5b16e7bmr6016358f8f.18.1744903010992;
+        Thu, 17 Apr 2025 08:16:50 -0700 (PDT)
 Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf445315sm20528346f8f.82.2025.04.17.08.16.46
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf445315sm20528346f8f.82.2025.04.17.08.16.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 08:16:46 -0700 (PDT)
+        Thu, 17 Apr 2025 08:16:50 -0700 (PDT)
 From: Daniel Lezcano <daniel.lezcano@linaro.org>
 To: daniel.lezcano@linaro.org,
 	tglx@linutronix.de
@@ -63,11 +64,18 @@ Cc: linux-kernel@vger.kernel.org,
 	Larisa.Grigore@nxp.com,
 	ghennadi.procopciuc@nxp.com,
 	krzysztof.kozlowski@linaro.org,
-	S32@nxp.com
-Subject: [PATCH v5 0/2] Add the System Timer Module for the NXP S32 architecture
-Date: Thu, 17 Apr 2025 17:16:17 +0200
-Message-ID: <20250417151623.121109-1-daniel.lezcano@linaro.org>
+	S32@nxp.com,
+	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-stm32@st-md-mailman.stormreply.com (moderated list:ARM/STM32 ARCHITECTURE),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/STM32 ARCHITECTURE)
+Subject: [PATCH v5 2/2] clocksource/drivers/nxp-timer: Add the System Timer Module for the s32gx platforms
+Date: Thu, 17 Apr 2025 17:16:19 +0200
+Message-ID: <20250417151623.121109-3-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250417151623.121109-1-daniel.lezcano@linaro.org>
+References: <20250417151623.121109-1-daniel.lezcano@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,87 +85,588 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-These couple of changes bring the System Timer Module - STM which is
-part of the NXP S32 architecture.
+STM supports commonly required system and application software timing
+functions. STM includes a 32-bit count-up timer and four 32-bit
+compare channels with a separate interrupt source for each
+channel. The timer is driven by the STM module clock divided by an
+8-bit prescale value (1 to 256).
 
-The timer module has one counter and four comparators, an interrupt
-line when one of the comparator matches the counter. That means the
-interrupt is shared across the comparator.
+STM has the following features:
+    • One 32-bit count-up timer with an 8-bit prescaler
+    • Four 32-bit compare channels
+    • An independent interrupt source for each channel
+    • Ability to stop the timer in Debug mode
 
-The number of STM is equal to the number of core available on the
-system. For the s32g2 variant, there are three Cortex-M3 and four
-Cortex-A53, consequently there are seven STM modules dedicated to
-those.
+The s32g platform is declined into two versions, the s32g2 and the
+s32g3. The former has a STM block with 8 timers and the latter has 12
+timers.
 
-In addition, there is a STM variant which is read-only, so the counter
-can not be set because it is tied to another STM module dedicated to
-timestamp. These special STM modules are apart and will be handled
-differently as they can not be used as a clockevent. They are not part
-of these changes.
+The platform is designed to have one usable STM instance per core on
+the system which is composed of 3 x Cortex-M3 + 4 Cortex-A53 for the
+s32g2 and 3 x Cortex-M3 + 8 Cortex-A53 for the s32g3.
 
-The choice is to have one STM instance, aka one STM description in the
-device tree, which initialize a clocksource and a clockevent per
-CPU. The latter is assigned to a CPU given the order of their
-description. First is CPU0, second is CPU1, etc ...
+There is a special STM instance called STM_TS which is dedicated to
+the timestamp. The 7th STM instance STM_07 is directly tied to the
+STM_TS which means it is not usable as a clockevent.
 
-Changelog:
+The driver instantiate each STM described in the device tree as a
+clocksource and a clockevent conforming to the reference manual even
+if the Linux system does not use all of the clocksource. Each
+clockevent will have a cpumask set for a specific CPU.
 
- - v5
-   - Fixed typos in the comments (Ghennadi Procopciuc)
-   - Added clocks bindings for the module and the register (Ghennadi Procopciuc)
-   - Fixed help in the Kconfig option (Ghennadi Procopciuc)
-   - Changed max_ticks to ULONG_MAX when registering the clockevent
-   - Removed Reviewed-by tag from Krzysztof Kozlowski as the binding changed
+Given the counter is shared between the clocksource and the
+clockevent, the STM module can not be disabled by one or another so
+the refcounting mechanism is used to stop the counter when it reaches
+zero and to start it when it is one. The suspend and resume relies on
+the refcount to stop the module.
 
- - v4
-   - Removed useless compatible string (Krzysztof Kozlowski)
-   - Dropped of_match_ptr() (Krzysztof Kozlowski)
+As the device tree will have multiple STM entries, the driver can be
+probed in parallel with the async option but it is not enabled
+yet. However, the driver code takes care of preventing a race by
+putting a lock to protect the number of STM instances global variable
+which means it is ready to support the option when enough testing will
+be done with the underlying time framework.
 
- - v3
-   - Fixed bindings, compatible description and name (Krzysztof Kozlowski)
-   - Fixed bindings filename to fit the compatible (Krzysztof Kozlowski)
-   - Fixed a couple of typos in the driver changelog (Ghennadi Procopciuc)
-   - Enclosed macro into parenthesis (Ghennadi Procopciuc)
-   - Replaced irq_of_parse_and_map() by platform_get_irq() (Ghennadi Procopciuc)
-   - Fixed checkpatch --script reports
-   - Removed debugfs as the driver is not considered complex enough (Arnd Bergmann)
-
- - v2:
-   - Fixed errors reported by 'make dt_binding_check' (Rob Herring)
-   - Removed unneeded '|' symbol (Rob Herring)
-   - Removed 'clocks' description (Rob Herring)
-   - Removed 'clock-names' because there is only one description (Rob Herring)
-   - Renamed 'stm@' to 'timer@' in the DT binding example (Rob Herring)
-   - Fixed dt bindings patch subject (Krzysztof Kozlowski)
-   - Dropped 'OneOf' in the DT bindings (Krzysztof Kozlowski)
-   - Dropped the STM instances structure
-   - Use the dev_err_probe() helper (Krzysztof Kozlowski)
-   - Use the dev_err_probe() helper (Krzysztof Kozlowski)
-   - Use devm_clk_get_enabled() (Krzysztof Kozlowski)
-   - Removed unneeded headers (Ghennadi Procopciuc)
-   - Removed unused macro (Ghennadi Procopciuc)
-   - Replaced 'int' by 'unsigned int' (Ghennadi Procopciuc)
-   - Removed dev_set_drvdata() (Ghennadi Procopciuc)
-   - Prevent disabling the entire module and set min delta (Ghennadi Procopciuc)
-   - Factored out the clocksource / clockevent init routine (Ghennadi Procopciuc)
-   - Use devm_request_irq() (Ghennadi Procopciuc.)
-   - Use irq_dispose_mapping() for error rollbacking (Ghennadi Procopciuc)
-
- - v1: initial post
-
-Daniel Lezcano (2):
-  dt-bindings: timer: Add NXP System Timer Module
-  clocksource/drivers/nxp-timer: Add the System Timer Module for the
-    s32gx platforms
-
- .../bindings/timer/nxp,s32g2-stm.yaml         |  64 +++
- drivers/clocksource/Kconfig                   |   8 +
- drivers/clocksource/Makefile                  |   2 +
- drivers/clocksource/timer-nxp-stm.c           | 495 ++++++++++++++++++
- 4 files changed, 569 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/nxp,s32g2-stm.yaml
+Cc: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Thomas Fossati <thomas.fossati@linaro.org>
+Suggested-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/clocksource/Kconfig         |   8 +
+ drivers/clocksource/Makefile        |   2 +
+ drivers/clocksource/timer-nxp-stm.c | 495 ++++++++++++++++++++++++++++
+ 3 files changed, 505 insertions(+)
  create mode 100644 drivers/clocksource/timer-nxp-stm.c
 
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 487c85259967..2861b2c89631 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -763,4 +763,12 @@ config RALINK_TIMER
+ 	  Enables support for system tick counter present on
+ 	  Ralink SoCs RT3352 and MT7620.
+ 
++config NXP_STM_TIMER
++	bool "NXP System Timer Module driver"
++	depends on ARCH_S32 || COMPILE_TEST
++	select CLKSRC_MMIO
++	help
++          Enables the support for NXP System Timer Module found in the
++          s32g NXP platform series.
++
+ endmenu
+diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+index 43ef16a4efa6..c3a92e6b9f94 100644
+--- a/drivers/clocksource/Makefile
++++ b/drivers/clocksource/Makefile
+@@ -92,3 +92,5 @@ obj-$(CONFIG_GXP_TIMER)			+= timer-gxp.o
+ obj-$(CONFIG_CLKSRC_LOONGSON1_PWM)	+= timer-loongson1-pwm.o
+ obj-$(CONFIG_EP93XX_TIMER)		+= timer-ep93xx.o
+ obj-$(CONFIG_RALINK_TIMER)		+= timer-ralink.o
++obj-$(CONFIG_NXP_STM_TIMER)		+= timer-nxp-stm.o
++
+diff --git a/drivers/clocksource/timer-nxp-stm.c b/drivers/clocksource/timer-nxp-stm.c
+new file mode 100644
+index 000000000000..d7ccf9001729
+--- /dev/null
++++ b/drivers/clocksource/timer-nxp-stm.c
+@@ -0,0 +1,495 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright 2016 Freescale Semiconductor, Inc.
++ * Copyright 2018,2021-2025 NXP
++ *
++ * NXP System Timer Module:
++ *
++ *  STM supports commonly required system and application software
++ *  timing functions. STM includes a 32-bit count-up timer and four
++ *  32-bit compare channels with a separate interrupt source for each
++ *  channel. The timer is driven by the STM module clock divided by an
++ *  8-bit prescale value (1 to 256). It has ability to stop the timer
++ *  in Debug mode
++ */
++#include <linux/clk.h>
++#include <linux/clockchips.h>
++#include <linux/cpuhotplug.h>
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/of_irq.h>
++#include <linux/platform_device.h>
++#include <linux/sched_clock.h>
++#include <linux/units.h>
++
++#define STM_CR(__base)		(__base)
++
++#define STM_CR_TEN		BIT(0)
++#define STM_CR_FRZ		BIT(1)
++#define STM_CR_CPS_OFFSET	8u
++#define STM_CR_CPS_MASK		GENMASK(15, STM_CR_CPS_OFFSET)
++
++#define STM_CNT(__base)		((__base) + 0x04)
++
++#define STM_CCR0(__base)	((__base) + 0x10)
++#define STM_CCR1(__base)	((__base) + 0x20)
++#define STM_CCR2(__base)	((__base) + 0x30)
++#define STM_CCR3(__base)	((__base) + 0x40)
++
++#define STM_CCR_CEN		BIT(0)
++
++#define STM_CIR0(__base)	((__base) + 0x14)
++#define STM_CIR1(__base)	((__base) + 0x24)
++#define STM_CIR2(__base)	((__base) + 0x34)
++#define STM_CIR3(__base)	((__base) + 0x44)
++
++#define STM_CIR_CIF		BIT(0)
++
++#define STM_CMP0(__base)	((__base) + 0x18)
++#define STM_CMP1(__base)	((__base) + 0x28)
++#define STM_CMP2(__base)	((__base) + 0x38)
++#define STM_CMP3(__base)	((__base) + 0x48)
++
++#define STM_ENABLE_MASK	(STM_CR_FRZ | STM_CR_TEN)
++
++struct stm_timer {
++	void __iomem *base;
++	unsigned long rate;
++	unsigned long delta;
++	unsigned long counter;
++	struct clock_event_device ced;
++	struct clocksource cs;
++	atomic_t refcnt;
++};
++
++static DEFINE_PER_CPU(struct stm_timer *, stm_timers);
++
++static struct stm_timer *stm_sched_clock;
++
++/*
++ * Global structure for multiple STMs initialization
++ */
++static int stm_instances;
++
++/*
++ * This global lock is used to prevent race conditions with the
++ * stm_instances in case the driver is using the ASYNC option
++ */
++static DEFINE_MUTEX(stm_instances_lock);
++
++DEFINE_GUARD(stm_instances, struct mutex *, mutex_lock(_T), mutex_unlock(_T))
++
++static struct stm_timer *cs_to_stm(struct clocksource *cs)
++{
++	return container_of(cs, struct stm_timer, cs);
++}
++
++static struct stm_timer *ced_to_stm(struct clock_event_device *ced)
++{
++	return container_of(ced, struct stm_timer, ced);
++}
++
++static u64 notrace nxp_stm_read_sched_clock(void)
++{
++	return readl(STM_CNT(stm_sched_clock->base));
++}
++
++static u32 nxp_stm_clocksource_getcnt(struct stm_timer *stm_timer)
++{
++	return readl(STM_CNT(stm_timer->base));
++}
++
++static void nxp_stm_clocksource_setcnt(struct stm_timer *stm_timer, u32 cnt)
++{
++	writel(cnt, STM_CNT(stm_timer->base));
++}
++
++static u64 nxp_stm_clocksource_read(struct clocksource *cs)
++{
++	struct stm_timer *stm_timer = cs_to_stm(cs);
++
++	return (u64)nxp_stm_clocksource_getcnt(stm_timer);
++}
++
++static void nxp_stm_module_enable(struct stm_timer *stm_timer)
++{
++	u32 reg;
++
++	reg = readl(STM_CR(stm_timer->base));
++
++	reg |= STM_ENABLE_MASK;
++
++	writel(reg, STM_CR(stm_timer->base));
++}
++
++static void nxp_stm_module_disable(struct stm_timer *stm_timer)
++{
++	u32 reg;
++
++	reg = readl(STM_CR(stm_timer->base));
++
++	reg &= ~STM_ENABLE_MASK;
++
++	writel(reg, STM_CR(stm_timer->base));
++}
++
++static void nxp_stm_module_put(struct stm_timer *stm_timer)
++{
++	if (atomic_dec_and_test(&stm_timer->refcnt))
++		nxp_stm_module_disable(stm_timer);
++}
++
++static void nxp_stm_module_get(struct stm_timer *stm_timer)
++{
++	if (atomic_inc_return(&stm_timer->refcnt) == 1)
++		nxp_stm_module_enable(stm_timer);
++}
++
++static int nxp_stm_clocksource_enable(struct clocksource *cs)
++{
++	struct stm_timer *stm_timer = cs_to_stm(cs);
++
++	nxp_stm_module_get(stm_timer);
++
++	return 0;
++}
++
++static void nxp_stm_clocksource_disable(struct clocksource *cs)
++{
++	struct stm_timer *stm_timer = cs_to_stm(cs);
++
++	nxp_stm_module_put(stm_timer);
++}
++
++static void nxp_stm_clocksource_suspend(struct clocksource *cs)
++{
++	struct stm_timer *stm_timer = cs_to_stm(cs);
++
++	nxp_stm_clocksource_disable(cs);
++	stm_timer->counter = nxp_stm_clocksource_getcnt(stm_timer);
++}
++
++static void nxp_stm_clocksource_resume(struct clocksource *cs)
++{
++	struct stm_timer *stm_timer = cs_to_stm(cs);
++
++	nxp_stm_clocksource_setcnt(stm_timer, stm_timer->counter);
++	nxp_stm_clocksource_enable(cs);
++}
++
++static void __init devm_clocksource_unregister(void *data)
++{
++	struct stm_timer *stm_timer = data;
++
++	clocksource_unregister(&stm_timer->cs);
++}
++
++static int __init nxp_stm_clocksource_init(struct device *dev, struct stm_timer *stm_timer,
++					   const char *name, void __iomem *base, struct clk *clk)
++{
++	int ret;
++
++	stm_timer->base = base;
++	stm_timer->rate = clk_get_rate(clk);
++
++	stm_timer->cs.name = name;
++	stm_timer->cs.rating = 460;
++	stm_timer->cs.read = nxp_stm_clocksource_read;
++	stm_timer->cs.enable = nxp_stm_clocksource_enable;
++	stm_timer->cs.disable = nxp_stm_clocksource_disable;
++	stm_timer->cs.suspend = nxp_stm_clocksource_suspend;
++	stm_timer->cs.resume = nxp_stm_clocksource_resume;
++	stm_timer->cs.mask = CLOCKSOURCE_MASK(32);
++	stm_timer->cs.flags = CLOCK_SOURCE_IS_CONTINUOUS;
++
++	ret = clocksource_register_hz(&stm_timer->cs, stm_timer->rate);
++	if (ret)
++		return ret;
++
++	ret = devm_add_action_or_reset(dev, devm_clocksource_unregister, stm_timer);
++	if (ret) {
++		clocksource_unregister(&stm_timer->cs);
++		return ret;
++	}
++
++	stm_sched_clock = stm_timer;
++
++	sched_clock_register(nxp_stm_read_sched_clock, 32, stm_timer->rate);
++
++	dev_dbg(dev, "Registered clocksource %s\n", name);
++
++	return 0;
++}
++
++static int nxp_stm_clockevent_read_counter(struct stm_timer *stm_timer)
++{
++	return readl(STM_CNT(stm_timer->base));
++}
++
++static void nxp_stm_clockevent_disable(struct stm_timer *stm_timer)
++{
++	writel(0, STM_CCR0(stm_timer->base));
++}
++
++static void nxp_stm_clockevent_enable(struct stm_timer *stm_timer)
++{
++	writel(STM_CCR_CEN, STM_CCR0(stm_timer->base));
++}
++
++static int nxp_stm_clockevent_shutdown(struct clock_event_device *ced)
++{
++	struct stm_timer *stm_timer = ced_to_stm(ced);
++
++	nxp_stm_clockevent_disable(stm_timer);
++
++	return 0;
++}
++
++static int nxp_stm_clockevent_set_next_event(unsigned long delta, struct clock_event_device *ced)
++{
++	struct stm_timer *stm_timer = ced_to_stm(ced);
++	u32 val;
++
++	nxp_stm_clockevent_disable(stm_timer);
++
++	stm_timer->delta = delta;
++
++	val = nxp_stm_clockevent_read_counter(stm_timer) + delta;
++
++	writel(val, STM_CMP0(stm_timer->base));
++
++	/*
++	 * The counter is shared across the channels and can not be
++	 * stopped while we are setting the next event. If the delta
++	 * is very small it is possible the counter increases above
++	 * the computed 'val'. The min_delta value specified when
++	 * registering the clockevent will prevent that. The second
++	 * case is if the counter wraps while we compute the 'val' and
++	 * before writing the comparator register. We read the counter,
++	 * check if we are back in time and abort the timer with -ETIME.
++	 */
++	if (val > nxp_stm_clockevent_read_counter(stm_timer) + delta)
++		return -ETIME;
++
++	nxp_stm_clockevent_enable(stm_timer);
++
++	return 0;
++}
++
++static int nxp_stm_clockevent_set_periodic(struct clock_event_device *ced)
++{
++	struct stm_timer *stm_timer = ced_to_stm(ced);
++
++	return nxp_stm_clockevent_set_next_event(stm_timer->rate, ced);
++}
++
++static void nxp_stm_clockevent_suspend(struct clock_event_device *ced)
++{
++	struct stm_timer *stm_timer = ced_to_stm(ced);
++
++	nxp_stm_module_put(stm_timer);
++}
++
++static void nxp_stm_clockevent_resume(struct clock_event_device *ced)
++{
++	struct stm_timer *stm_timer = ced_to_stm(ced);
++
++	nxp_stm_module_get(stm_timer);
++}
++
++static int __init nxp_stm_clockevent_per_cpu_init(struct device *dev, struct stm_timer *stm_timer,
++						  const char *name, void __iomem *base, int irq,
++						  struct clk *clk, int cpu)
++{
++	stm_timer->base = base;
++	stm_timer->rate = clk_get_rate(clk);
++
++	stm_timer->ced.name = name;
++	stm_timer->ced.features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
++	stm_timer->ced.set_state_shutdown = nxp_stm_clockevent_shutdown;
++	stm_timer->ced.set_state_periodic = nxp_stm_clockevent_set_periodic;
++	stm_timer->ced.set_next_event = nxp_stm_clockevent_set_next_event;
++	stm_timer->ced.suspend = nxp_stm_clockevent_suspend;
++	stm_timer->ced.resume = nxp_stm_clockevent_resume;
++	stm_timer->ced.cpumask = cpumask_of(cpu);
++	stm_timer->ced.rating = 460;
++	stm_timer->ced.irq = irq;
++
++	per_cpu(stm_timers, cpu) = stm_timer;
++
++	nxp_stm_module_get(stm_timer);
++
++	dev_dbg(dev, "Initialized per cpu clockevent name=%s, irq=%d, cpu=%d\n", name, irq, cpu);
++
++	return 0;
++}
++
++static int nxp_stm_clockevent_starting_cpu(unsigned int cpu)
++{
++	struct stm_timer *stm_timer = per_cpu(stm_timers, cpu);
++	int ret;
++
++	if (WARN_ON(!stm_timer))
++		return -EFAULT;
++
++	ret = irq_force_affinity(stm_timer->ced.irq, cpumask_of(cpu));
++	if (ret)
++		return ret;
++
++	/*
++	 * The timings measurement show reading the counter register
++	 * and writing to the comparator register takes as a maximum
++	 * value 1100 ns at 133MHz rate frequency. The timer must be
++	 * set above this value and to be secure we set the minimum
++	 * value equal to 2000ns, so 2us.
++	 *
++	 * minimum ticks = (rate / MICRO) * 2
++	 */
++	clockevents_config_and_register(&stm_timer->ced, stm_timer->rate,
++					(stm_timer->rate / MICRO) * 2, ULONG_MAX);
++
++	return 0;
++}
++
++static irqreturn_t nxp_stm_module_interrupt(int irq, void *dev_id)
++{
++	struct stm_timer *stm_timer = dev_id;
++	struct clock_event_device *ced = &stm_timer->ced;
++	u32 val;
++
++	/*
++	 * The interrupt is shared across the channels in the
++	 * module. But this one is configured to run only one channel,
++	 * consequently it is pointless to test the interrupt flags
++	 * before and we can directly reset the channel 0 irq flag
++	 * register.
++	 */
++	writel(STM_CIR_CIF, STM_CIR0(stm_timer->base));
++
++	/*
++	 * Update STM_CMP value using the counter value
++	 */
++	val = nxp_stm_clockevent_read_counter(stm_timer) + stm_timer->delta;
++
++	writel(val, STM_CMP0(stm_timer->base));
++
++	/*
++	 * stm hardware doesn't support oneshot, it will generate an
++	 * interrupt and start the counter again so software needs to
++	 * disable the timer to stop the counter loop in ONESHOT mode.
++	 */
++	if (likely(clockevent_state_oneshot(ced)))
++		nxp_stm_clockevent_disable(stm_timer);
++
++	ced->event_handler(ced);
++
++	return IRQ_HANDLED;
++}
++
++static int __init nxp_stm_timer_probe(struct platform_device *pdev)
++{
++	struct stm_timer *stm_timer;
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	const char *name = of_node_full_name(np);
++	struct clk *clk;
++	void __iomem *base;
++	int irq, ret;
++
++	/*
++	 * The device tree can have multiple STM nodes described, so
++	 * it makes this driver a good candidate for the async probe.
++	 * It is still unclear if the time framework correctly handles
++	 * parallel loading of the timers but at least this driver is
++	 * ready to support the option.
++	 */
++	guard(stm_instances)(&stm_instances_lock);
++
++	/*
++	 * The S32Gx are SoCs featuring a diverse set of cores. Linux
++	 * is expected to run on Cortex-A53 cores, while other
++	 * software stacks will operate on Cortex-M cores. The number
++	 * of STM instances has been sized to include at most one
++	 * instance per core.
++	 *
++	 * As we need a clocksource and a clockevent per cpu, we
++	 * simply initialize a clocksource per cpu along with the
++	 * clockevent which makes the resulting code simpler.
++	 *
++	 * However if the device tree is describing more STM instances
++	 * than the number of cores, then we ignore them.
++	 */
++	if (stm_instances >= num_possible_cpus())
++		return 0;
++
++	base = devm_of_iomap(dev, np, 0, NULL);
++	if (IS_ERR(base))
++		return dev_err_probe(dev, PTR_ERR(base), "Failed to iomap %pOFn\n", np);
++
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0)
++		return dev_err_probe(dev, irq, "Failed to get IRQ\n");
++
++	clk = devm_clk_get_enabled(dev, NULL);
++	if (IS_ERR(clk))
++		return dev_err_probe(dev, PTR_ERR(clk), "Clock not found\n");
++
++	stm_timer = devm_kzalloc(dev, sizeof(*stm_timer), GFP_KERNEL);
++	if (!stm_timer)
++		return -ENOMEM;
++
++	ret = devm_request_irq(dev, irq, nxp_stm_module_interrupt,
++			       IRQF_TIMER | IRQF_NOBALANCING, name, stm_timer);
++	if (ret)
++		return dev_err_probe(dev, ret, "Unable to allocate interrupt line\n");
++
++	ret = nxp_stm_clocksource_init(dev, stm_timer, name, base, clk);
++	if (ret)
++		return ret;
++
++	/*
++	 * Next probed STM will be a per CPU clockevent, until we
++	 * probe as many as we have CPUs available on the system, we
++	 * do a partial initialization
++	 */
++	ret = nxp_stm_clockevent_per_cpu_init(dev, stm_timer, name,
++					      base, irq, clk,
++					      stm_instances);
++	if (ret)
++		return ret;
++
++	stm_instances++;
++
++	/*
++	 * The number of probed STMs for per CPU clockevent is
++	 * equal to the number of available CPUs on the
++	 * system. We install the cpu hotplug to finish the
++	 * initialization by registering the clockevents
++	 */
++	if (stm_instances == num_possible_cpus()) {
++		ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "STM timer:starting",
++					nxp_stm_clockevent_starting_cpu, NULL);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
++static const struct of_device_id nxp_stm_of_match[] = {
++	{ .compatible = "nxp,s32g2-stm" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, nxp_stm_of_match);
++
++static struct platform_driver nxp_stm_probe = {
++	.probe	= nxp_stm_timer_probe,
++	.driver	= {
++		.name		= "nxp-stm",
++		.of_match_table	= nxp_stm_of_match,
++	},
++};
++module_platform_driver(nxp_stm_probe);
++
++MODULE_DESCRIPTION("NXP System Timer Module driver");
++MODULE_LICENSE("GPL");
 -- 
 2.43.0
 
