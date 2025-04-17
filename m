@@ -1,96 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCA4433A4;
-	Thu, 17 Apr 2025 12:39:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E151A39ACF
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744893595; cv=none; b=EaB2QMLpUK9AwUisquFgSUqXQUr6YK9oQH3Q9XNAxdYEwJweTc/PBKOq/LtcvSo/f2XwHmOxuh+HgYzvQwx/wRrbQM7SBin+ixEhcnajD7sPWhdeqjGEdrtf4jljg0nb1QRi/TfYBqbdd67lpp3i4IC5UxwOPoLuedDxGnppTRQ=
+	t=1744893643; cv=none; b=EOVx3lOZHuEhqzqczWaHowEXTG3/VnID+MyEoMFneSlUkhWiubDspTxUVUXXa/0tj9aUVAnfD/9uT+HlNHLhO6xLVCTACayMLenCLTU86GOd6You5gGdeTqaZN6+OTpILKbG6+5L0TWtyId8MU0TdClVqiybugMU+eqoIJ1YPaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744893595; c=relaxed/simple;
-	bh=eLj7R8phBBElsYRDrQHT8P+l90EZfuo0+Uzh9OS6ikQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gQ9vH4/0hDiZCPe++6VXJWHn/O+i//hIKrMPniLucYm6lwaa4bJHXlNLKO0OfGc0EunNfk+xWEIIeI48ax3Ngk9NibwtngvJerKM1rwjJ0BVk7n8ubei+qd8TBF/cLQMtuO6ifFPvRgF44PXyAj+h9d5AmXYFFTFxHdDJFzTyXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TwJiZBMz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TwJiZBMz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51F56C4CEEB;
-	Thu, 17 Apr 2025 12:39:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744893595;
-	bh=eLj7R8phBBElsYRDrQHT8P+l90EZfuo0+Uzh9OS6ikQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=TwJiZBMzZLnoDSSwd7NBmdOdrKp7Ric5v5Wxmms25sfFS+WP3gebE/K4nMwU+RI7m
-	 khv7vJbjl/zh4yXSv2wiutfPbgtJCvNwGJhRiJIKTKWuoZk4jjZhcLeBll4JeRnbQz
-	 os4QRO7v8Fb8e/Z0V9AfcrQs6byxwb+3zwaX5l2E9C2RdvdFJln0eVfYAh+VSlVeLL
-	 gUik7O+11A9QFfcer4YXzaOJmBi6G8hnT7areJ0pJtJ2sA8Jh4V+lUeFju+VwUW4tu
-	 vY8AG1tfk4KCxTjO9TZeo9Yjt8AKmRseVs0mNn6Kqizyr8cnu1cTEzga2wc+Y8HjG8
-	 yZ9gk2CE4YrBg==
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-72a4793d4e2so439976a34.2;
-        Thu, 17 Apr 2025 05:39:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX6IYdaoDtOOshi74HJ44TkmhpbqE9XxtNHcH6QU2Ym0aRnKZ3fnuodjQaURO4BixaMq78YYUCG/Ck=@vger.kernel.org, AJvYcCXRXbKV2cSVcfiXymPACG3Ke0oAA2kAY87LEX1VUX6fH8/8CLaLxomtGOYpSJdxv+amL96w9Zq8v9ZblaM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3T1DXhkSnL/Sf+7xGMfY6uXnomWYPW+gC+FPAm7NSRDpWKre4
-	8LxznLc1qNPn5VqXMA0fjBcPXbLPQa+n1qRnfa5CqExF6XkZh6kH4iQ05kIm2lAAEpWhA4YQxNG
-	r2cFGgncDiD2GChUG+f6F4/Gp43o=
-X-Google-Smtp-Source: AGHT+IFA8iU1qJvlKUs1pUOZAThmJzcJGxHgdwHwSAcBFkQkXCxuYhMfRqt9sBhJ0CdGMWGQ5G+hhH8sxutROVa4Ids=
-X-Received: by 2002:a05:6871:2083:b0:29e:2da3:3f7b with SMTP id
- 586e51a60fabf-2d4d29d7d61mr3284724fac.7.1744893594640; Thu, 17 Apr 2025
- 05:39:54 -0700 (PDT)
+	s=arc-20240116; t=1744893643; c=relaxed/simple;
+	bh=mi5sL7/CvHDMCBHx0lnzGhM6BGM7czEnX+UU1vD0W5s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HbRg0scDenBFOhh5ZGbLRXTjhPPbxkxpD2M4mnn6jljx48CNojzMaOFwGSIvCIWU66vQWyNCxmMSXyT7Pape83dTaLKKGRNFYYMe16/iRxR1GUXBfgezE7TdK6+NgTcp7DNYYcdyP7h6ArAFTze8PseIbZPYl7XGmrYOebtF3V0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u5OXW-0007dT-AI; Thu, 17 Apr 2025 14:40:22 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u5OXV-000kg9-39;
+	Thu, 17 Apr 2025 14:40:21 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u5OXV-005xy7-2i;
+	Thu, 17 Apr 2025 14:40:21 +0200
+Date: Thu, 17 Apr 2025 14:40:21 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	Simon Horman <horms@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+	Kyle Swenson <kyle.swenson@est.tech>,
+	Dent Project <dentproject@linuxfoundation.org>,
+	kernel@pengutronix.de,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v8 08/13] net: ethtool: Add PSE port priority
+ support feature
+Message-ID: <aAD2tSgeZS4UNlWN@pengutronix.de>
+References: <20250416-feature_poe_port_prio-v8-0-446c39dc3738@bootlin.com>
+ <20250416-feature_poe_port_prio-v8-8-446c39dc3738@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2c788c2ca0cab09a8ef4e384f272af928a880b0e.1744781329.git.viresh.kumar@linaro.org>
- <20250417015424.36487-1-nic.c3.14@gmail.com> <20250417050226.c6kdp2s5du3y3a3j@vireshk-i7>
- <20250417050911.xycjkalehqsg3i6x@vireshk-i7>
-In-Reply-To: <20250417050911.xycjkalehqsg3i6x@vireshk-i7>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 17 Apr 2025 14:39:43 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iO4=nHcATzPyiKiWumdETFRR32C97K_RH=yhD--Tai=g@mail.gmail.com>
-X-Gm-Features: ATxdqUHxL_09M8-Iuvj-KLdobmF2J2sovGq5uwpr4jjnpmSvUwcMl5fpjTRG6PI
-Message-ID: <CAJZ5v0iO4=nHcATzPyiKiWumdETFRR32C97K_RH=yhD--Tai=g@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: acpi: Don't enable boost on policy exit
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Nicholas Chin <nic.c3.14@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, rafael.j.wysocki@intel.com, rafael@kernel.org, 
-	vincent.guittot@linaro.org, zhenglifeng1@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250416-feature_poe_port_prio-v8-8-446c39dc3738@bootlin.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Thu, Apr 17, 2025 at 7:09=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.o=
-rg> wrote:
->
-> Copying more information from Bugzilla here (Nicholas, it would be
-> faster if you can put all your observations here first, more people
-> are looking at emails than bugzilla).
->
-> > Nicholas Chin wrote:
-> > I did some more testing and debugging and it seems like when
-> > cpufreq_online() runs after waking the system, policy->boost_enabled
-> > and cpufreq_boost_enabled() are both 0, so the set_boost() at the end
-> > of that function is never run.
->
-> Right, this is what I wanted to do with the $Subject patch. Don't
-> update boost anymore in suspend/resume
+On Wed, Apr 16, 2025 at 03:44:23PM +0200, Kory Maincent wrote:
+> From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+> 
+> This patch expands the status information provided by ethtool for PSE c33
+> with current port priority and max port priority. It also adds a call to
+> pse_ethtool_set_prio() to configure the PSE port priority.
+> 
+> Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+ 
+Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-This is going to work for suspend-to-idle, but not necessarily for S3.
-
-BTW, the patch is correct IMV, so I'm not going to drop it, but it
-looks like something more is needed on top of it.
-
-> > cpufreq_boost_enabled() being 0 indicates that the MSR has boosting
-> > disabled, but when I read out that MSR using rdmsr the bit seems to
-> > indicate that it is actually enabled (I am aware of the inverted logic
-> > of that bit). set_boost() seems to be the only place in the kernel
-> > that causes that MSR to be modified, and I didn't see any extra calls
-> > to it in my debug logs, so it seems like something else (outside the
-> > kernel?) is setting that MSR.
->
-> And this is what I feel too, something else in kernel or outside of it
-> is doing something tricky.
-
-On a resume from S3, you actually don't know if the platform firmware
-has preserved the configuration from before the suspend transition.
-It may not.
+Thank you!
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
