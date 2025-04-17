@@ -1,146 +1,135 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFED11C7015
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 04:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B9717A2E5
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 04:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744864026; cv=none; b=J+B3RH3/jl+nB5QU52mcYPNRrr8S6Cx3kCoCnIbEND1/U+Rni5+DRBC9HHD6V3zfMvq7drApt5OkQHMLSicbwMq7Y1Ag9322Rpuc6YnZS2JYLHpJmuh9X44y9XFVKr0axJyYIaWROjp7yvwEq9EdzF6wqlanFE9pP3Q2PxuUi5o=
+	t=1744864265; cv=none; b=aPJhDH00seNPvEJHVZ6N+/Nus3qx4XBCmjUtVyMVJExBRRQCT3aRRZiVI3+gEGbWLKmGgyC5zxZob+qZeSIQdeCu7HtZM9yqa43adyU8uuJax24BDchD8CpKwp8TXD1m00KAeoOUYQHSJ4MQ1xoXAqtpHc7cDhMt/kc8htAvJLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744864026; c=relaxed/simple;
-	bh=6jOEeU7bOgzh5OB+/IJlCLlBlZShBgRYFPeIoAwUKag=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=MSSz8Wa08Pl4tAJo1xKd4gZT1tN0QWwA5xGjiV4Mtx5Fz8OK8HVpADtxvVZiCmuQVI1+QYx1BDnuVmP5uleC+BhHevGkuweXNhee6+gmqo2r1KI9j3PpRJmFhFMs9c96WJBZgQ5DSJTaHQdbxJzya3gLISgIZL2ubmwe3Og464k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=GbeIeKCO; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1744864265; c=relaxed/simple;
+	bh=+sk7hb8P47bWgI1AKQvmM/ONosvVBAHXLTSOV6y0dT8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CeHXKpYf1nZduzc54TY6p+cf96TZRH9q/JVA8cTXEBKK/tWeej6TfsCR/asZ8kPDBJ9Z5WdXqbmGwf5NWPGzfus7n68UailKOwEdhTl4UQ1lECgNrI/SVs3Rgqx3K8HH6nhTDinVXstQrMqIXyCJQSc5ZVn6rzvxXU6v/VZ5Dek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Sk4wdvgL; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GbeIeKCO"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250417042701epoutp016249621e10c35390718aae2ef8c498be~3AJU9a5Tf2881228812epoutp01T
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 04:27:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250417042701epoutp016249621e10c35390718aae2ef8c498be~3AJU9a5Tf2881228812epoutp01T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1744864021;
-	bh=0Mic3eQzqMW/WfkrWpTIHGqVKKLxGpW/SU0aNfBKGsc=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=GbeIeKCOgd9mws+jvTRMqzlGrxn1BmIpcGpaSscdqOnJjPBFPpyhVDV6LmtP4LrqS
-	 QrcIOyHIW+l2eEUql0xbbIWBYt7AQYjB2hxuprpWItFQc8JLXq3BwCz3lEQIh3TMYu
-	 Wp/ZjQfYeuMr/rTadqNGOi4fCJOeKVER9aX9To2M=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250417042700epcas5p2514834948b2daceefd1688f1ccb002fc~3AJUDAH1G0731807318epcas5p29;
-	Thu, 17 Apr 2025 04:27:00 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.183]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4ZdPxG3CVGz3hhTH; Thu, 17 Apr
-	2025 04:26:58 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	47.76.10173.21380086; Thu, 17 Apr 2025 13:26:58 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250417042427epcas5p2df3d35803adcb24da7d83e5df586380d~3AHFOTaz21902119021epcas5p2L;
-	Thu, 17 Apr 2025 04:24:27 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250417042427epsmtrp1b1574df5707787771602dac61e22863d~3AHFLvhO22341023410epsmtrp1p;
-	Thu, 17 Apr 2025 04:24:27 +0000 (GMT)
-X-AuditID: b6c32a44-8b5fb700000027bd-86-680083128d7b
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	43.6C.07818.B7280086; Thu, 17 Apr 2025 13:24:27 +0900 (KST)
-Received: from bose.samsungds.net (unknown [107.108.83.9]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250417042425epsmtip17c9190f71841f505db572cea3f01579a~3AHDr5wkd0578705787epsmtip1L;
-	Thu, 17 Apr 2025 04:24:25 +0000 (GMT)
-From: Faraz Ata <faraz.ata@samsung.com>
-To: alim.akhtar@samsung.com, krzk@kernel.org, gregkh@linuxfoundation.org,
-	jirislaby@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	dev.tailor@samsung.com, rosa.pila@samsung.com, faraz.ata@samsung.com
-Subject: [PATCH v3] tty: serial: samsung_tty: support 18 uart ports
-Date: Thu, 17 Apr 2025 10:04:27 +0530
-Message-Id: <20250417043427.1205626-1-faraz.ata@samsung.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sk4wdvgL"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so272320b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 21:31:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744864263; x=1745469063; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZlaUAntWl+FAG4ssmQ8ExU+LE+kWPisBX4TPYFCKWz8=;
+        b=Sk4wdvgLxh7t8CnDvpPrsGOBwWqDUGeCuhEaERDm0wi+2YMM9Ddou6atk9/CW2vwjs
+         yYsQFzViefx/70pcNDEnWx8s93az7hA24r6uGwr5aj5BdYf5Dx0+pcDANpelOrjzwrSw
+         wByuo35f1in7gBts/M+sebAu4lfHEEO8EQyT8VdIxRTxA6ZdaYxlpnWzbY9IgZrSLs9v
+         wXnhC+v0V0sd6kY5ofbbV6hy+Aw/zhD52xwL2Zq050VYUgxcrtz8L3blXzLvAHQ7MUys
+         GxEQFFXU2lOH9Zgh8e4NM4ROsR6c1tjHGhyPOmH4jeZvqgU3x9+6qMTk22o1kTCJ/vKB
+         KPpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744864263; x=1745469063;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZlaUAntWl+FAG4ssmQ8ExU+LE+kWPisBX4TPYFCKWz8=;
+        b=DWLtsxN2FtwuxvUxiEcJcFS/tdewDd48qyDkXPaotO4Z0HGKP9KcW5QhUOiv7CyZtx
+         HYC9uLBT8EiQ32oQuKHZyMGRKdWsc5064MTM3cc7KXOY6dPQKsEyJGLs2t2jszBhJIY4
+         tIFYnIbSBKdzdCi/CclltOH/H+q32Ux/MWX3hZB3UZd8ZZcdotvCaLbSF3VbWEAtZtLY
+         aDEowDGkzIFitDiipcIHg/NuSE1iwG1PfnRQvC4dDckZmTORI6f2e/Hyw+DhqiKPwoBQ
+         SOXrPui/hONuCSZEs3V5XxMlSujcKFeYg5TE3pRJffPSMRdYMYtPtXjkOI9HiiY5L2s/
+         VlzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWnFbJBfSdyAhenPeMyF67AW6LrxxzaJx/aM+5YVebRWPxs80Oua7uahD3h6BeZjwj8iJCFeCHmI/eMnqw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKPSa7MZY3XAUIZrNfMibc/9I7Se5EZ0LSPTDTW8w8AFxG+H01
+	PuEmd/YGElIXwmlMMDnl76VUjHC6g2Dbk+hrbVfQ7cioIK8ilwMeh6EDI+/Kbo0=
+X-Gm-Gg: ASbGnctcShsuEMBcE8M2WyFi0WYZefDoUjNw9PTY2Oms7LOlbx2tLurRl1oLs9A5gHI
+	xsfwRBArFhX3YH0d591pYdhtb8jqwduiClpyQBtxJdk2y5exq12DvaPBo+DxHxddfzXqk5PcGE3
+	ayGKmPXptpu+6jm+k+QMTeY+O6Vb0egUCnCDjWkWWUTGQ/tJffJ4HAaeeQQ6cpFInaSilCsBpbW
+	WcbkqL9W6COcK5O4pMJTgqwZ/kEHn5v5OdghOYYrnu2rRT53hELCXC58oKoczyQkhBTHMX4ywAn
+	BvsMp/Dfl6ZmL+ck5Ql1eokhW03BPmbOHeGaR0Trzw==
+X-Google-Smtp-Source: AGHT+IEg1IOSKx3TC5x7KXjPRVc1J+SeCE9LoLwfSMtCe4XckXlEc0yAzy5LghooDosu7gaIzIG1lQ==
+X-Received: by 2002:a05:6a00:240c:b0:736:a8db:93bb with SMTP id d2e1a72fcca58-73c266b9927mr6133644b3a.5.1744864262953;
+        Wed, 16 Apr 2025 21:31:02 -0700 (PDT)
+Received: from localhost ([122.172.83.32])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd22f120csm11306099b3a.85.2025.04.16.21.31.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 21:31:02 -0700 (PDT)
+Date: Thu, 17 Apr 2025 10:01:00 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>,
+	Christian Loehle <christian.loehle@arm.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Sultan Alsawaf <sultan@kerneltoast.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH v3] cpufreq: Avoid using inconsistent policy->min and
+ policy->max
+Message-ID: <20250417043100.dq6yw4ktbimms2au@vireshk-i7>
+References: <5907080.DvuYhMxLoT@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIJsWRmVeSWpSXmKPExsWy7bCmuq5QM0OGQfM/UYsH87axWdzbsYzd
-	4tqNhewWzYvXs1m8mytjcf78BnaLTY+vsVpc3jWHzWLG+X1MFmcW97JbfPn5gNmB22PTqk42
-	j/1z17B7bF5S79G3ZRWjx+dNcgGsUdk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW
-	5koKeYm5qbZKLj4Bum6ZOUCHKSmUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKTAr0
-	ihNzi0vz0vXyUkusDA0MjEyBChOyMzb9+cdUsICjYsfsZqYGxk72LkZODgkBE4m7bdeBbC4O
-	IYHdjBJXrvUzQjifGCUezPvGCuF8Y5Q49HszUxcjB1jLkx9mIN1CAnsZJXbNjoWoeQ/U8HgC
-	K0iCTUBdYuaNIywgtohAgkTnhyNMIEXMAhcZJZ6sP84IkhAWcJY4O+Ee2FAWAVWJTQ3KIGFe
-	ARuJY9PeMEOcJy+x/+BZZoi4oMTJmU/AZjIDxZu3zmYGmSkh8JZd4vmNJ4wQx7lIHOmNgegV
-	lnh1fAvUm1ISL/vboGwficlHv0GVZ0jcWSsCEbaXWL3gDCtImFlAU2L9Ln2IsKzE1FPrmCC2
-	8kn0/n7CBBHnldgxD8ZWlji5Zw8rhC0pcej2CyjbQ2LJo0awkUICsRL7XsROYJSfheSXWUh+
-	mYWweAEj8ypGydSC4tz01GTTAsO81HJ4pCbn525iBKdNLZcdjDfm/9M7xMjEwXiIUYKDWUmE
-	95z5v3Qh3pTEyqrUovz4otKc1OJDjKbA8J3ILCWanA9M3Hkl8YYmlgYmZmZmJpbGZoZK4rzN
-	O1vShQTSE0tSs1NTC1KLYPqYODilGpjYmRhK7/YzpaVfZPefY+nTnsVke3zbNSFgtK9gC9H4
-	cH/PrOhtsjnTc2ZZKOdJdrKlexz4XporqC7dc/Z6Pc8U45y9dWxXNKdoWOr9W3Dgeoymqo6J
-	EvuZQ1N1nOY9fn+0ZKrdl3t991/ZVCjwOD65UJhh+2nmjGVqh2UiZ039v1+Dder8ws/HhXeu
-	iLYs6xD5b6+3q2qLvGF4jVLEiWreD7dn3ps4R/hI2s9EgZQFTuEXY6edCOG9Yb7v+IxJXfnq
-	hsFsgovMPHZuSPbk2rCi+I1SxLRDK4v7V3vukHy8IlanKdbocfsqD2X/24rfLf47vLmTGOPJ
-	V9b2neXKZa8NP4oDHu1+82pZSPLmuUosxRmJhlrMRcWJAO48mbwkBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPLMWRmVeSWpSXmKPExsWy7bCSnG51E0OGweE3XBYP5m1js7i3Yxm7
-	xbUbC9ktmhevZ7N4N1fG4vz5DewWmx5fY7W4vGsOm8WM8/uYLM4s7mW3+PLzAbMDt8emVZ1s
-	HvvnrmH32Lyk3qNvyypGj8+b5AJYo7hsUlJzMstSi/TtErgyNv35x1SwgKNix+xmpgbGTvYu
-	Rg4OCQETiSc/zLoYuTiEBHYzSjz8vwMozgkUl5Q4/PQuK4QtLLHy33N2iKK3jBKda2czgiTY
-	BNQlZt44wgIySEQgRWL/XSaQGmaBm4wSW1uXgg0SFnCWODvhHhNIDYuAqsSmBmWQMK+AjcSx
-	aW+YIebLS+w/eJYZIi4ocXLmExYQmxko3rx1NvMERr5ZSFKzkKQWMDKtYpRMLSjOTc9NNiww
-	zEst1ytOzC0uzUvXS87P3cQIDmMtjR2M77416R9iZOJgPMQowcGsJMJ7zvxfuhBvSmJlVWpR
-	fnxRaU5q8SFGaQ4WJXHelYYR6UIC6YklqdmpqQWpRTBZJg5OqQamBFOm00HW9e9y/7/JFZLj
-	clvpmVm84s8jzv/sHJN3TnrLwi1yoTklKur7L8Va38v/zi8rDvSXPrY++8vVkxv/VUzxslZf
-	o+lhKXxtw70f6coS3lEm3XPVf+curvrWNsVgr2ra5ekTy1527kto39OsKL0vIT77wdW1Wr4f
-	Xz3bt/FDdbzgr6a77iGWfo9utzpsM88W/PR41zxd9zynTXPXRU8urhAWzV5wz2zDodVF/5L/
-	HMz+K63NEvsk3dqO3S4lac61b1c9qn/9897/99yvR3klK1YuNclUXpIx4WjelsIA+RqWNY3p
-	4Uf6s/zrT+4++9Nj74xFT+Y0Wk7/u6qq101EbZKNeNlpi6VaV0pKlFiKMxINtZiLihMBcGMY
-	sdICAAA=
-X-CMS-MailID: 20250417042427epcas5p2df3d35803adcb24da7d83e5df586380d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250417042427epcas5p2df3d35803adcb24da7d83e5df586380d
-References: <CGME20250417042427epcas5p2df3d35803adcb24da7d83e5df586380d@epcas5p2.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5907080.DvuYhMxLoT@rjwysocki.net>
 
-ExynosAutov920 SoC supports 18 UART ports, update
-the value of UART_NR to accommodate the same.
+On 16-04-25, 16:12, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Since cpufreq_driver_resolve_freq() can run in parallel with
+> cpufreq_set_policy() and there is no synchronization between them,
+> the former may access policy->min and policy->max while the latter
+> is updating them and it may see intermediate values of them due
+> to the way the update is carried out.  Also the compiler is free
+> to apply any optimizations it wants both to the stores in
+> cpufreq_set_policy() and to the loads in cpufreq_driver_resolve_freq()
+> which may result in additional inconsistencies.
+> 
+> To address this, use WRITE_ONCE() when updating policy->min and
+> policy->max in cpufreq_set_policy() and use READ_ONCE() for reading
+> them in cpufreq_driver_resolve_freq().  Moreover, rearrange the update
+> in cpufreq_set_policy() to avoid storing intermediate values in
+> policy->min and policy->max with the help of the observation that
+> their new values are expected to be properly ordered upfront.
+> 
+> Also modify cpufreq_driver_resolve_freq() to take the possible reverse
+> ordering of policy->min and policy->max, which may happen depending on
+> the ordering of operations when this function and cpufreq_set_policy()
+> run concurrently, into account by always honoring the max when it
+> turns out to be less than the min (in case it comes from thermal
+> throttling or similar).
+> 
+> Fixes: 151717690694 ("cpufreq: Make policy min/max hard requirements")
+> Cc: 5.16+ <stable@vger.kernel.org> # 5.16+
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> 
+> This replaces the last 3 patches in
+> 
+> https://lore.kernel.org/linux-pm/6171293.lOV4Wx5bFT@rjwysocki.net/
+> 
+> v2 -> v3:
+>    * Fold 3 patches into one.
+>    * Drop an unrelated white space fixup change.
+>    * Fix a typo in a comment (Christian).
+> 
+> v1 -> v2: Cosmetic changes
+> 
+> ---
+>  drivers/cpufreq/cpufreq.c |   32 +++++++++++++++++++++++++-------
+>  1 file changed, 25 insertions(+), 7 deletions(-)
 
-Signed-off-by: Faraz Ata <faraz.ata@samsung.com>
----
-Changes in v3:
-- Fixed review comments from Krzysztof
-- Link to v2: https://patchwork.kernel.org/project/linux-samsung-soc/patch/20250404135006.1263827-1-faraz.ata@samsung.com/
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Changes in v2:
-- Rebased on the latest linux-next and added reviewers as per get_maintainer
-- Link to v1: https://patchwork.kernel.org/project/linux-samsung-soc/patch/20250312061932.1797993-1-faraz.ata@samsung.com/
-
- drivers/tty/serial/samsung_tty.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
-index 210fff7164c1..9a5211b730fb 100644
---- a/drivers/tty/serial/samsung_tty.c
-+++ b/drivers/tty/serial/samsung_tty.c
-@@ -52,7 +52,7 @@
- #define S3C24XX_SERIAL_MINOR	64
- 
- #ifdef CONFIG_ARM64
--#define UART_NR			12
-+#define UART_NR			18
- #else
- #define UART_NR			CONFIG_SERIAL_SAMSUNG_UARTS
- #endif
 -- 
-2.34.1
-
+viresh
