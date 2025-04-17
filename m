@@ -1,117 +1,138 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482C1241CBA;
-	Thu, 17 Apr 2025 14:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CFE22E40F;
+	Thu, 17 Apr 2025 14:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744898900; cv=none; b=Ncdn1J3cvE0wQUXCTOYdyGIfcSkhHgvJ/V5+olPhor2oV3NK9QkUKdKdy0uQnBrzxRUAg7rfr7BzI0qdqzmzOXQWXINsKJjtgxcrEbAQS9zh3TlSbaVrtx7InepZB9Ow3N3db7R+YMZHtYf339e2NU+bkZnQ4tIvWen8FAy+JMQ=
+	t=1744898917; cv=none; b=cAimk9+e/HotBJjfxaYrwNwLT8anmAQT0xSGAVUkv9LT53vt3RnwTh2wgEeE+lHDZ7eO/W+rciMVte3AV0NIDzww4rBTA4fo4a8AmNojFYeM/6xsp+eO5B9ynuGSGTrNoeuPUk4kvMmnibhZduqV+gINVgQfEYD6s2TBhKnbJgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744898900; c=relaxed/simple;
-	bh=8HQ2ILyk1/v+DMbmi1jemdXFcmYahfo3ffBlDN37T0A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aCEGL2lETMutQHU/fqNu+2aIbwH9PJdmZyxDSPj8CflBhMKXKZEgUpyL1rFai2g4qqqV4H5ww7FkF8VBdGsmpu8LybSM9PL6hlsrSlBc5lpUMZgx44jNXteVMR2dN2sSsrPSImnI/7pUJTqaSOqB2f2x91WL98ET7kUIrKiI9hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=OXELkmMb; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744898917; c=relaxed/simple;
+	bh=TPLMm1ZndoiDToH+KUk2/lN3biqed27I3c3jpuhsKvA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cfQubIF9JwEsPQxkZ9/UGRTBkdDbUouZfg2VT6MD8A6G/OPBQyMnXUOrEo3iMlsv659Y3zdyAA4rO+RGYA7H9x+kGBSm9ExvMQJ4vVmltcESo4MrcXnV7FK5PnaWn0tXUOHnaqaZ/CzaZez1Z0eABsTxG7k2dDWvAgFvlW0gnEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HZGRSEao; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="OXELkmMb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=RGSXHdvTRkZSD37t4oi9SPpteL7kOeLJUaL/e11tDgc=; b=OX
-	ELkmMb7DstUMjddyzZpTLWIfGtWss8RYuAndOzwYLwOlwrl75083oPNe/XGTQf5y6cyiR6aSyA8rl
-	M1FSy/fua8LE2lDW3xvyoBPDgv3CJFVKNcD5LOomruNLfrMxj1T6ZYJjcwd5NO42jYIVmaO8ys8Pu
-	upYEtm81WZpCRCg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u5PuS-009n7O-3S; Thu, 17 Apr 2025 16:08:08 +0200
-Date: Thu, 17 Apr 2025 16:08:08 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Qasim Ijaz <qasdev00@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, davem@davemloft.net,
-	edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
-	linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 5/5] net: ch9200: avoid triggering NWay restart on
- non-zero PHY ID
-Message-ID: <b492cef9-7cdd-464e-80fe-8ce3276395a4@lunn.ch>
-References: <20250412183829.41342-1-qasdev00@gmail.com>
- <20250412183829.41342-6-qasdev00@gmail.com>
- <b49e6c21-8e0a-4e54-86eb-c18f1446c430@lunn.ch>
- <20250415205230.01f56679@kernel.org>
- <20250415205648.4aa937c9@kernel.org>
- <aAD-RDUdJaL_sIqQ@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HZGRSEao"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 256C9C4CEED;
+	Thu, 17 Apr 2025 14:08:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744898917;
+	bh=TPLMm1ZndoiDToH+KUk2/lN3biqed27I3c3jpuhsKvA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=HZGRSEaoi+oQbsNROhJiRLUVIfgxqTSPTNtMFtRxthU/aLNxaoIw3NxN7jYvtCKW/
+	 B1Gohm2E9jSlQPq9yNq9CqO8L14Sd88RSaPsAQussnHTiR9RF17mFM0kF8zH7Qzlqf
+	 Lg29hVkepKat6sey+Yce5/KqJ69XEwzyL3NTsyt9rtRxez9GH7jDOv8YdohPlR8FQQ
+	 ZDgamB2stsRFXRN9lsNL+6B9AgaLAushp4m7R1yH6IHQ9QltsAh3Si5wGmSPjKCAMe
+	 yhHWTVcXzh4Msu+VxmWtttSKm45c2PHc5QeyPjW4UjyMiZqnBX9aYeIc3XY4rZaVVQ
+	 EtcZgLS5g8WJw==
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30bfb6ab47cso7492391fa.3;
+        Thu, 17 Apr 2025 07:08:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVXJ3PB+tkhrdwf8Nu6EIaJCrlS+tvUXjblmB+OFnleZeHMXVm/IwxPIjZ7Aihl6w9Dh9ZxXVqHIQvjEjQ=@vger.kernel.org, AJvYcCWffx7OhX9UJ8qKsMdhZIG6t9A4w4nITrpOGqyxkuucxGlsXonFFYYk6qXAg8aVeJZiqqJZwAmobYbYi7F16tk5@vger.kernel.org, AJvYcCXxYLowet4VM/8J7uUE8a/4uLBZ37QnJhD6j8nBLR3P1fFcaOLPQaFHz068iVX5qDQVdch4R7kgBt5NSMB2@vger.kernel.org
+X-Gm-Message-State: AOJu0YwO2CpoCRnxP0CAXS6KDs9yIEVySN1Ulr4ziPpMsfIhgxazxNZu
+	rfHw1I63BUaeimJOcv5ebl4tfU8pubhL+WBi9dJG1BJgaMZUnOEULvtce7Z2luHmFFgInIJsB8P
+	WDWfpVl0AXC6D6/zvilwrNl4nH2s=
+X-Google-Smtp-Source: AGHT+IEaWJ0x/aIHicJH+1QFpi6ZvgoGXGxaTEIbros01uIBaTwGaYG+LL59AV/3MLt6Wza4qg4HBbIxWtRg0LWEKGU=
+X-Received: by 2002:a05:651c:983:b0:307:e498:1254 with SMTP id
+ 38308e7fff4ca-3107f73b152mr23930761fa.35.1744898915141; Thu, 17 Apr 2025
+ 07:08:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aAD-RDUdJaL_sIqQ@gmail.com>
+References: <20250416220135.work.394-kees@kernel.org> <CAMj1kXHfearSZG6TFTxxX87qmRkUmAefQm-TfPNS8j09kWxujQ@mail.gmail.com>
+ <994E520B-64B1-4387-8DFF-88755346FE55@kernel.org> <208BFA1D-F3E9-4D9F-A4A1-4E4C3F4CA309@coly.li>
+In-Reply-To: <208BFA1D-F3E9-4D9F-A4A1-4E4C3F4CA309@coly.li>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 17 Apr 2025 16:08:22 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHwBKu1K=yjJprnEArZFKphvDPsfZzA5KgTtyo5L866=w@mail.gmail.com>
+X-Gm-Features: ATxdqUHUUxsySpjImSVW-rg1mZFOWA4rV7sSuMoXiMZYR4kYnV5xepnxWqT88QY
+Message-ID: <CAMj1kXHwBKu1K=yjJprnEArZFKphvDPsfZzA5KgTtyo5L866=w@mail.gmail.com>
+Subject: Re: [PATCH] md/bcache: Mark __nonstring look-up table
+To: Coly Li <i@coly.li>
+Cc: Kees Cook <kees@kernel.org>, Coly Li <colyli@kernel.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, linux-bcache@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 17, 2025 at 02:12:36PM +0100, Qasim Ijaz wrote:
-> On Tue, Apr 15, 2025 at 08:56:48PM -0700, Jakub Kicinski wrote:
-> > On Tue, 15 Apr 2025 20:52:30 -0700 Jakub Kicinski wrote:
-> > > On Tue, 15 Apr 2025 03:35:07 +0200 Andrew Lunn wrote:
-> > > > > @@ -182,7 +182,7 @@ static int ch9200_mdio_read(struct net_device *netdev, int phy_id, int loc)
-> > > > >  		   __func__, phy_id, loc);
-> > > > >  
-> > > > >  	if (phy_id != 0)
-> > > > > -		return -ENODEV;
-> > > > > +		return 0;    
-> > > > 
-> > > > An actually MDIO bus would return 0xffff is asked to read from a PHY
-> > > > which is not on the bus. But i've no idea how the ancient mii code
-> > > > handles this.
-> > > > 
-> > > > If this code every gets updated to using phylib, many of the changes
-> > > > you are making will need reverting because phylib actually wants to
-> > > > see the errors. So i'm somewhat reluctant to make changes like this.  
-> > > 
-> > > Right.
-> > > 
-> > > I mean most of the patches seem to be adding error checking, unlike
-> > > this one, but since Qasim doesn't have access to this HW they are
-> > > more likely to break stuff than fix. I'm going to apply the first
-> > > patch, Qasim if you'd like to clean up the rest I think it should
-> > > be done separately without the Fixes tags, if at all.
-> > 
-> > Ah, no, patch 1 also does return 0. Hm. Maybe let's propagate the real
-> > error to silence the syzbot error and if someone with access to the HW
-> 
-> Hi Andrew and Jakub
-> 
-> Since there is uncertainty on whether these patches would break things 
-> how about I refactor the patches to instead return what the function 
-> already returns, this way we include error handling but maintain consistency 
-> with what the function already returns and does so there is no chance of 
-> breaking stuff. I think including the error handling would be a good idea
-> overall because we have already seen 1 bug where the root cause is insufficient 
-> error handling right? Furthermore this driver has not been updated in 4 years, 
-> so for the near‑term surely improving these aspects can only be a good thing.
+On Thu, 17 Apr 2025 at 15:12, Coly Li <i@coly.li> wrote:
+>
+>
+>
+> > 2025=E5=B9=B44=E6=9C=8817=E6=97=A5 15:10=EF=BC=8CKees Cook <kees@kernel=
+.org> =E5=86=99=E9=81=93=EF=BC=9A
+> >
+> >
+> >
+> > On April 16, 2025 11:16:45 PM PDT, Ard Biesheuvel <ardb@kernel.org> wro=
+te:
+> >> On Thu, 17 Apr 2025 at 00:01, Kees Cook <kees@kernel.org> wrote:
+> >>>
+> >>> GCC 15's new -Wunterminated-string-initialization notices that the 16
+> >>> character lookup table "zero_uuid" (which is not used as a C-String)
+> >>> needs to be marked as "nonstring":
+> >>>
+> >>> drivers/md/bcache/super.c: In function 'uuid_find_empty':
+> >>> drivers/md/bcache/super.c:549:43: warning: initializer-string for arr=
+ay of 'char' truncates NUL terminator but destination lacks 'nonstring' att=
+ribute (17 chars into 16 available) [-Wunterminated-string-initialization]
+> >>>  549 |         static const char zero_uuid[16] =3D "\0\0\0\0\0\0\0\0\=
+0\0\0\0\0\0\0\0";
+> >>>      |                                           ^~~~~~~~~~~~~~~~~~~~=
+~~~~~~~~~~~~~~
+> >>>
+> >>> Add the annotation to silence the GCC warning.
+> >>>
+> >>> Signed-off-by: Kees Cook <kees@kernel.org>
+> >>> ---
+> >>> Cc: Coly Li <colyli@kernel.org>
+> >>> Cc: Kent Overstreet <kent.overstreet@linux.dev>
+> >>> Cc: linux-bcache@vger.kernel.org
+> >>> ---
+> >>> drivers/md/bcache/super.c | 2 +-
+> >>> 1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+> >>> index e42f1400cea9..577d048170fe 100644
+> >>> --- a/drivers/md/bcache/super.c
+> >>> +++ b/drivers/md/bcache/super.c
+> >>> @@ -546,7 +546,7 @@ static struct uuid_entry *uuid_find(struct cache_=
+set *c, const char *uuid)
+> >>>
+> >>> static struct uuid_entry *uuid_find_empty(struct cache_set *c)
+> >>> {
+> >>> -       static const char zero_uuid[16] =3D "\0\0\0\0\0\0\0\0\0\0\0\0=
+\0\0\0\0";
+> >>> +       static const char zero_uuid[] __nonstring =3D "\0\0\0\0\0\0\0=
+\0\0\0\0\0\0\0\0\0";
+> >>>
+> >>
+> >> Just
+> >>
+> >> static const char zero_uuid[16] =3D {};
+> >>
+> >> should work fine here too. No need for the initializer.
+> >
+> > =F0=9F=A4=A6 Yes. This is what I get for fixing dozens of these. I'll s=
+end a v2...
+>
+>
+> Can we do this,
+>
+> static const char zero_uuid[16] =3D {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, =
+0, 0, 0, 0};
+>
+> I like the explicit array element number 16, and the explicit uuid conten=
+t by obvious zero (=E2=80=980=E2=80=99) symbols. They provide redundant inf=
+ormation.
+> Not sure whether GCC 15 complains or not.
+>
 
-It is not a simple thing to decided if we should make changes or not,
-if we don't have the hardware. The test robot is saying things are
-potentially wrong, but we don't have any users complaining it is
-broken. If we make the test robot happy, without testing the changes,
-we can make users unhappy by breaking it. And that is the opposite of
-what we want.
+Even the {} initializer is entirely redundant, given that the variable
+has static linkage, and so C guarantees that it will be zero
+initialized.
 
-We also need to think about "return on investment". Is anybody
-actually using this device still? Would it be better to spend our time
-on other devices we know are actually used?
-
-If you can find a board which actually has this device, or can find
-somebody to run tests, then great, we are likely to accept them. But
-otherwise please focus on minimum low risk changes which are obviously
-correct, or just leave the test robot unhappy.
-
-	Andrew
+Could you use NULL_GUID and be done with it?
