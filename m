@@ -1,48 +1,65 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA83245020;
-	Thu, 17 Apr 2025 17:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9E6245020
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 17:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744912247; cv=none; b=QTMK9cRyY97MzrUBCyK5hfsleuxK07LRRWu5h4mEZgkw6D2pqHZVp8J9AcGS2ZqeBTxpt7rrzy5i+OZSlrz+7U09iSrskWkj0mZUj2TBG1M3Lpy3nkU4f8ob/J6TfnpkRPoARdANU6drTdRMTkzKNAA3rtEHK33tJy/9bC0t2Uw=
+	t=1744912253; cv=none; b=Nsf5J+EFhcJ8k6L/797OdOj2Jtt5pcX6M7BVo5mXnVeM0XKlkGWRbqOC5Swudq8/SFefIPZqi4k8JBozHYFSuAR8sLd3UwnaLYUIJ/UWyTh9VCmDrhnls6gTT2UaqxZg+wzBnNKaEoYWDFlgj6LIFGmAPogRfx/+R1CZkGVfqfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744912247; c=relaxed/simple;
-	bh=sTyGtcQUUZ5500fifnvKW9nGT1pncjcRhU4Z9XW7OpU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ea4IB1sul2+342neCtxZiuqP9qwlZmiqcN8tICUtgWvLpRtdHClmR2MJDzWJypoi0Xl/a7f+4lbD0NNLa3GSn/4PHvSuJrXwq/v7iDBqWqq5yij6VjjrjclD2jIJpcGR4hfnIQnJ3Vn04qEUP9uX4rP1M50W1WivqnJLHZszuGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=R/bv6tIG; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744912253; c=relaxed/simple;
+	bh=xU+Ub2pz1MmrAYtgcSogtgx+Zh+dkjYo4CLqOFQ1YFE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FqiDPConXlhB/l5IGz51fK8ofaY+9IAJBlK7VjhK54FzryCFE3VSCOt7ZqW/e4uubD3CZYkX6z5VPvCZfthdn7NNHrv7n96G9ySLnMZH6pn6pE2YVZ1UjmmLrQx9sg18BDg+MGCwsd3jdcPUkzyAFKFr0ZmNoBMZn1KzrNyYC9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SKlIunNz; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="R/bv6tIG"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53HClUpC013325;
-	Thu, 17 Apr 2025 17:50:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	rtVvrMeTc6F3JJHkRyxqWivaPaY3sC3Dhgxn6S1HvY8=; b=R/bv6tIGWCs2g9v+
-	4jUStXZY1cTFa5c2PqqHnq2RYMMjuCF9TzcHP4/Xa64d7tK/OZDK8RW+L5aqgtAO
-	R9AbTO1HVcJRBkILrkdKUAAz9XOFdLbr1UUID6fG5XMS4e1fkGi3rLDbIsJjNcsr
-	2o/fFf6tuKgPt7NeGAEJfT+wR/EOui8BzIG3ocXamdkRX9nEifufVSFTz0dZJBfN
-	MGmZxoG1PJR5HSrzCshz+SyNgDc+G3cJ5xkYr6lgSmUMdHVY3GH+hOUVO1Ycd7KT
-	4zSvO+4lMUvarq6Zb7hzJQdKXlUhbL7tpiiIeolLZACWbTtUsO5aalmbswHPrOXB
-	PQ7MAQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4628rvd2e4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 17:50:35 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53HHoYCb020419
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 17:50:34 GMT
-Received: from [10.216.6.49] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 17 Apr
- 2025 10:50:28 -0700
-Message-ID: <1282bf58-e431-4a07-97e5-628437e7ce5f@quicinc.com>
-Date: Thu, 17 Apr 2025 23:20:25 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SKlIunNz"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cfecdd8b2so8374945e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 10:50:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744912250; x=1745517050; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wY6w8TH9Q+VdzLtPkQXB54SVYMjTjltbub+aLf76WgY=;
+        b=SKlIunNzD+3y1MXBdkouWBhxsxnZcLRT4dOnnKuaGzPwi7/zcrjKFM4EozxrfdcH+W
+         j4jnxtoHa5BttVemCBqjEVX+DmKgIJqnFxpQaR4fEWYaiuRFD/GMlXtKrwHOr/HooXOz
+         HG+FLAZh/Dy6tUeUcJ2GsAS1MzJM2oE8G+4b8XnfvFz9/9VL2hl/c7mV7JQn3a3Oh0VQ
+         u4FKa2IfniILPVIXYoWrdGaqMbc+dYSP3ITBLGeNrlep79OG4gF6XtuaaCi+Wl2BuCr/
+         +uApF8gPyz8IHjXVd+h4vw5IePY27f7lIWoWyQXGAy8kuJ5ZDL08FH7RFD9AdY0A/3L6
+         8b4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744912250; x=1745517050;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wY6w8TH9Q+VdzLtPkQXB54SVYMjTjltbub+aLf76WgY=;
+        b=D21m17ZZovL82/q5Ozb7dy2DzyjkoQdF0jUYrprM+Rkwv0qg18RmTD5z4l5A1MY+50
+         9gjOF590n9gr+I06rbsgzHWWVF5F+MynyWJXxe117+uAKt18zI//Nb80YgRHPrULe3di
+         Idelr+wERbpxdTLiA2z+3FSjcnjbhMPk+BaUwSpA/rWqzyBvZ+ViOzNqWgXWZEvkDlP/
+         tL5UDJmr8nJrxMUDUcbwl/TSAozhRZKnYZcyUTtBHxSaUeBEawmZCdUIWA5HVYHt9+nm
+         PtQ2bmPBZ2VmXZ2mBs4LIA4bJWd0sYIbU+qRdEiBQh1gjx6iL6MJ2lMdDxtKYVD2Qps2
+         45qg==
+X-Forwarded-Encrypted: i=1; AJvYcCVioDFd6BuV8tmRAOBg4ozMsc4yE+RJ12up/cmo18T2QuqoL1lz/mIEHhBsmvEDul+6BRqd+ScyTOh6pMI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywwg0xhKnAAS+Aboi/8tYLH239rg9k4AKryh0VHJgWnvmyKus0J
+	RUIWPlFB1jEfZTyAbjzgEXsTx9dQOZJSrdMvPBQvpOeSreeKVQttr3KjuImU
+X-Gm-Gg: ASbGnctUTZMatrp2O0J6Z3ZlZnzoT6vGFm0y7xdtcRa8MPOMlumQtY9L0hId6a4Gb/i
+	/8cu4UWQ8NNXK4JfGPfNcoztqM8fi10KcJxlT0a9tdRoyIdfBJPoGzbJlFwQXCcFnJQ4hyK5JxG
+	uG+XCwTjw81uME/kSBec6vYfTOYPc9CeWWtq5NZ3RUf3CuydmEiKiyitYkJ5hr30jRCKmYKF/2p
+	hd1N2YL8sQ0SeQBij/LKvOSF9+w2B6/Nd6f77mOkq+np6JhXQ/x8wDbbNpAqmmT+XIG0BUc3ejl
+	H2v0QYbADQbmpmd8ojgIeyhhDp9OqLdi09M3zq7ldaARR/Yq7w4O/Ou3CiXcE4WzODwKVXodM3a
+	AXVpsTMunfUYGJXK+R7LC/sYVsOC1DVSZkQ==
+X-Google-Smtp-Source: AGHT+IFx+EV6MaaXa09YxGdxb0I1bxWeMUdH/lPcryr996yGdvxOdd7NFB53GcnVDqF0YV0bnQ0+Zg==
+X-Received: by 2002:a05:600c:5012:b0:43d:b51:46fb with SMTP id 5b1f17b1804b1-4405d5fd33bmr78066495e9.2.1744912249911;
+        Thu, 17 Apr 2025 10:50:49 -0700 (PDT)
+Received: from ?IPV6:2a02:6b67:d752:5f00:c46:86ac:45ea:7590? ([2a02:6b67:d752:5f00:c46:86ac:45ea:7590])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b4c7eeesm64545105e9.1.2025.04.17.10.50.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Apr 2025 10:50:49 -0700 (PDT)
+Message-ID: <25ac1d9c-c7e4-4dcf-b297-254fa51c6f2a@gmail.com>
+Date: Thu, 17 Apr 2025 18:50:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,165 +67,97 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] drm/msm/a6xx: Get HBB dynamically, if available
-To: Connor Abbott <cwabbott0@gmail.com>
-CC: Konrad Dybcio <konradybcio@kernel.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva"
-	<gustavoars@kernel.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul
-	<sean@poorly.run>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        "Dmitry
- Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>,
-        David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Dmitry Baryshkov
-	<lumag@kernel.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>,
-        Konrad Dybcio
-	<konrad.dybcio@oss.qualcomm.com>
-References: <20250410-topic-smem_dramc-v2-0-dead15264714@oss.qualcomm.com>
- <20250410-topic-smem_dramc-v2-3-dead15264714@oss.qualcomm.com>
- <20911703-ab4e-4eb2-8611-294730a06d2f@quicinc.com>
- <CACu1E7HDmQXDNtEQCXpHXsOKPCOgrWgo+_kcgizo9Mp1ntjDbA@mail.gmail.com>
-From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Subject: Re: [PATCH] alloc_tag: introduce Kconfig option for default
+ compressed profiling
+To: Suren Baghdasaryan <surenb@google.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ hannes@cmpxchg.org, linux-kernel@vger.kernel.org, kernel-team@meta.com
+References: <20250416180653.3438158-1-usamaarif642@gmail.com>
+ <CAJuCfpEKrX+1_SJ5fOyT6JLDSNcDxjcfBMj9_siVZt-rX5WQ=w@mail.gmail.com>
+ <72pac6pkjebt6xo7engiuuu7r3zr7fu6fh6bj77f22m7gslxgr@3gjawofplas2>
+ <CAJuCfpHcUfXb8RaGCExLc5U2HK3xcA0CjY1diM=S6DDqNFFykg@mail.gmail.com>
+ <ogiahgnqihzg6nfew6oifgzjvetiwo25utp6jwskrhw4axdevp@rwqbgeraivym>
+ <CAJuCfpE3JgJVB3+-ZZPU3kFDjPSJyo4WFtwmtMUnXJ6q0E09dA@mail.gmail.com>
 Content-Language: en-US
-In-Reply-To: <CACu1E7HDmQXDNtEQCXpHXsOKPCOgrWgo+_kcgizo9Mp1ntjDbA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <CAJuCfpE3JgJVB3+-ZZPU3kFDjPSJyo4WFtwmtMUnXJ6q0E09dA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: cMn6x-EFO9oBXysgklTroujnCc8dLfN4
-X-Authority-Analysis: v=2.4 cv=RbSQC0tv c=1 sm=1 tr=0 ts=68013f6b cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=XE3sDmP-oFqBkbK9aEsA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: cMn6x-EFO9oBXysgklTroujnCc8dLfN4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-17_06,2025-04-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 adultscore=0 impostorscore=0 clxscore=1015 bulkscore=0
- phishscore=0 priorityscore=1501 spamscore=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504170131
 
-On 4/17/2025 9:02 PM, Connor Abbott wrote:
-> On Thu, Apr 17, 2025 at 3:45 AM Akhil P Oommen <quic_akhilpo@quicinc.com> wrote:
+
+
+On 17/04/2025 17:00, Suren Baghdasaryan wrote:
+> On Thu, Apr 17, 2025 at 8:47 AM Shakeel Butt <shakeel.butt@linux.dev> wrote:
 >>
->> On 4/10/2025 11:13 PM, Konrad Dybcio wrote:
->>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>> On Wed, Apr 16, 2025 at 05:11:11PM -0700, Suren Baghdasaryan wrote:
+>>> On Wed, Apr 16, 2025 at 2:41 PM Shakeel Butt <shakeel.butt@linux.dev> wrote:
+>>>>
+>>>> On Wed, Apr 16, 2025 at 02:08:31PM -0700, Suren Baghdasaryan wrote:
+>>>>> On Wed, Apr 16, 2025 at 11:06 AM Usama Arif <usamaarif642@gmail.com> wrote:
+>>>>>>
+>>>>>> With this Kconfig option enabled, the kernel stores allocation tag references
+>>>>>> in the page flags by default.
+>>>>>>
+>>>>>> There are 2 reasons to introduce this:
+>>>>>> - As mentioned in [1], compressed tags dont have system memory overhead
+>>>>>> and much lower performance overhead. It would be preferrable to have this as
+>>>>>> the default option, and to be able to switch it at compile time. Another
+>>>>>> option is to just declare the static key as true by default?
+>>>>>> - As compressed option is the best one, it doesn't make sense to have to
+>>>>>> change both defconfig and command line options to enable memory
+>>>>>> allocation profiling. Changing commandline across a large number of services
+>>>>>> can result in signifcant work, which shouldn't be needed if the kernel
+>>>>>> defconfig needs to be changed anyways.
+>>>>>
+>>>>> The reason tag compression is not the default option is because it
+>>>>> works only if there are enough free bits in the page flags to store a
+>>>>> tag index. If you configure it to use page flags and your build does
+>>>>> not have enough free bits, the profiling will be disabled (see
+>>>>> alloc_tag_sec_init()).
+>>>>
+>>>> Is it possible to fail the build in that case i.e. check the page flags
+>>>> availability at build time?
 >>>
->>> The Highest Bank address Bit value can change based on memory type used.
->>>
->>> Attempt to retrieve it dynamically, and fall back to a reasonable
->>> default (the one used prior to this change) on error.
->>>
->>> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->>> ---
->>>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 15 ++++++++++++++-
->>>  1 file changed, 14 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
->>> index 06465bc2d0b4b128cddfcfcaf1fe4252632b6777..a6232b382bd16319f20ae5f8f5e57f38ecc62d9f 100644
->>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
->>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
->>> @@ -13,6 +13,7 @@
->>>  #include <linux/firmware/qcom/qcom_scm.h>
->>>  #include <linux/pm_domain.h>
->>>  #include <linux/soc/qcom/llcc-qcom.h>
->>> +#include <linux/soc/qcom/smem.h>
->>>
->>>  #define GPU_PAS_ID 13
->>>
->>> @@ -587,6 +588,8 @@ static void a6xx_set_cp_protect(struct msm_gpu *gpu)
->>>
->>>  static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
->>>  {
->>> +     int hbb;
->>> +
->>>       gpu->ubwc_config.rgb565_predicator = 0;
->>>       gpu->ubwc_config.uavflagprd_inv = 0;
->>>       gpu->ubwc_config.min_acc_len = 0;
->>> @@ -635,7 +638,6 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
->>>           adreno_is_a690(gpu) ||
->>>           adreno_is_a730(gpu) ||
->>>           adreno_is_a740_family(gpu)) {
->>> -             /* TODO: get ddr type from bootloader and use 2 for LPDDR4 */
->>>               gpu->ubwc_config.highest_bank_bit = 16;
->>>               gpu->ubwc_config.amsbc = 1;
->>>               gpu->ubwc_config.rgb565_predicator = 1;
->>> @@ -664,6 +666,13 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
->>>               gpu->ubwc_config.highest_bank_bit = 14;
->>>               gpu->ubwc_config.min_acc_len = 1;
->>>       }
->>> +
->>> +     /* Attempt to retrieve the data from SMEM, keep the above defaults in case of error */
->>> +     hbb = qcom_smem_dram_get_hbb();
->>> +     if (hbb < 0)
->>> +             return;
->>> +
->>> +     gpu->ubwc_config.highest_bank_bit = hbb;
+>>> The difficulty is finding out the number of allocation tags in the
+>>> kernel before it gets built. Maybe there is a way to add an additional
+>>> post-build stage to run that check.
 >>
->> I am worried about blindly relying on SMEM data directly for HBB for
->> legacy chipsets. There is no guarantee it is accurate on every chipset
->> and every version of firmware. Also, until recently, this value was
->> hardcoded in Mesa which matched the value in KMD.
+>> Yeah that would be good to have.
+>>
+>>> But even then making this option
+>>> default and causing build failures does not seem like a good idea to
+>>> me but maybe I'm being too cautious?
+>>
+>> Oh my question was orthogonal to the patch. Basically some users may
+>> want build time guarantee for this and they can enable such
+>> build-failing opt-in config/check.
 > 
-> To be clear about this, from the moment we introduced host image
-> copies in Mesa we added support for querying the HBB from the kernel,
-> explicitly so that we could do what this series does without Mesa ever
-> breaking. Mesa will never assume the HBB unless the kernel is too old
-> to support querying it. So don't let Mesa be the thing that stops us
-> here.
+> Yes, that would require the post-build step to check the number of
+> tags vs the number of available page flag bits. I'll add it to my TODO
+> list but it won't be at the top, sorry :) Volunteers to help with that
+> would be highly appreciated.
 
-Thanks for clarifying about Mesa. I still don't trust a data source that
-is unused in production.
+Hi Suren,
 
-I have a related question about HBB. Blob driver doesn't support
-host_image_copy, but it still use HBB configuration. I was under the
-impression this was required for UMD for compression related
-configurations. Is that not true for turnip/freedreno?
+A question orthogonal to the patch, the defconfig entry is defined as below:
 
--Akhil.
+config MEM_ALLOC_PROFILING
+	bool "Enable memory allocation profiling"
+	default n
+	depends on MMU
+	depends on PROC_FS
+	depends on !DEBUG_FORCE_WEAK_PER_CPU
+	select CODE_TAGGING
+	select PAGE_EXTENSION
+	select SLAB_OBJ_EXT
 
-> 
-> Connor
-> 
->> So it is better to
->> make this opt in, for newer chipsets or those which somebody can verify.
->> We can invert this logic to something like this:
->>
->> if (!gpu->ubwc_config.highest_bank_bit)
->>     gpu->ubwc_config.highest_bank_bit = qcom_smem_dram_get_hbb();
->>
->>>  }
->>>
->>>  static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
->>> @@ -2467,6 +2476,10 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device *dev)
->>>       bool is_a7xx;
->>>       int ret;
->>>
->>> +     /* We need data from SMEM to retrieve HBB in calc_ubwc_config() */
->>> +     if (!qcom_smem_is_available())
->>> +             return ERR_PTR(-EPROBE_DEFER);
->>> +
->>
->> We should add "depends on QCOM_SMEM" to Kconfig. Is SMEM device present
->> in all Qcom SoC devicetrees? I wonder if there is a scenario where there
->> might be an infinite EPROBE_DEFER here.
->>
->> -Akhil.
->>
->>>       a6xx_gpu = kzalloc(sizeof(*a6xx_gpu), GFP_KERNEL);
->>>       if (!a6xx_gpu)
->>>               return ERR_PTR(-ENOMEM);
->>>
->>
+i.e. we select PAGE_EXTENSION even if we use compressed profiling and use page flags
+instead of page extension. Which means the 0.2% (8 bytes per struct page) memory overhead
+will still exist even when we dont need it?
 
+Should we have some defconfig option (happy with any other way) that only allows compressed
+profiling (otherwise nothing), so that we don't have the dependency on page extension
+and thus not have the overhead if we only plan to use compressed profiling?
+
+Thanks
