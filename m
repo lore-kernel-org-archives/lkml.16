@@ -1,190 +1,326 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6CF21C177
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 23:12:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD5F221737
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 23:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744931549; cv=none; b=od5wDdWuvcqC/gkMLeALmeMc+bDotyIRRcK5be54vf73bcj9rU03O+oYGhj1T5OyBsfrgljoSe0prcahmE5tg3m9yXLhghQYfoaF3ZDVTB5g/6SkwxLNqLLE/SigRVzi8PGhc50eO+9Mp808gmQvtmCqOmYHIi/QAuhu2AcSPNQ=
+	t=1744931746; cv=none; b=KLiXAghIzY2jv36bKn0lCUg2DZjhGMKSyvInKVpl7NVohmS7/Iu2ycidMccqkKXicGwrsKj8lxjIwIeVFSIpd74HHHPMep2XsbEqP32x06FhAqLXnN6g8FKvVz4V8180oA/5lJblAv+m4wfzsQW9wZBCHUhKSniFUNL/wWPLK0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744931549; c=relaxed/simple;
-	bh=sK+K61gcxO6m17bJ4fFtOTiisn1JcKzaBb6hmlYNlow=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i8BtOuqxn7EAAB9NkIJ7azA5LKVI8suDdQlhuDU3i5dV3X+89F0+B6c4fQTE+u/Fm2/RIZAvUvf4dI8M98dmaXGT/6XfXHB/PqSgCPo20vdxmK9iLvvOIlHp0+EtMDM6GfETnZPL1nuyD/IVu0kGH6Pr5pnFgWClRdEf9WjB5Os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fmXX/tUe; arc=none smtp.client-ip=209.85.214.182
+	s=arc-20240116; t=1744931746; c=relaxed/simple;
+	bh=BHBb1CGqfVkBq5p1joAjwZM6RdIF3ify/rYCXHSdX5Q=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=jRRMRxCbluf5z0PSW/flvMD0+3XU30FdXSCkeN4qcneQxeFrgRAUirNxbIElz0KEEm0sqDNdT4SHFWnBW+L1x/4ROSAaU6rCjr3a6rnuOiKRMaPFLLBRHsj9LH54jVq5Mt3lI6BwzKXTjbMAIRwtrJs3S/CkRxjp5rBrwnDhm5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G6pe0r1K; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fmXX/tUe"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2240aad70f2so94525ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:12:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G6pe0r1K"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-af96cdd7f5bso789281a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:15:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744931547; x=1745536347; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1eeYizTITU+B3gKv1exCccb1cLi2y8PamBFk1DM+qjk=;
-        b=fmXX/tUeUM16qcBjD459lcN1mjL4AsQyVkCXGtN7WpJ0vaMyt+44zOV9NMaKy+HKSh
-         1SLTicwQhxYA5caU86K3TV0kUIAQtCEGqh1qJJBZqw+PwFbP9YtszHaw8S6Fj7gLYcxd
-         4Jq5M5UUr9fU9JeaByAfqmFScCGoP3rrZe0Ng6xV1h+BiY48mhXP9S5C5zQ0GvRnXaUB
-         Qom53w3jxfeR1/AyQiFplnL/mKuk+uWPpkWroxW5o4l0OXNngLg9/1NzpktDeONzSwsr
-         ji1ccyHXSwF0LQLqbwTNLGpdgJxuLCWy6ZE3jpFGa9pvRPzDVQUHBLeF1No4sDcBiigy
-         13dg==
+        d=google.com; s=20230601; t=1744931743; x=1745536543; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=959uz33BV//g+a794CDjMebjZF60Bgf+wfJg9Elzli0=;
+        b=G6pe0r1Kw0b56XGEGkM82jOLDgYkMHhx2DP2tMD8WydCz86NCiLUTVBp+QRDGUHUy/
+         Xyx3HYlcw7o7voTbXHKm7B/BbOq28mdHe9qU/pZueOjEJO0WLcNfJtI6RBZr7IJKlbVs
+         nESWUX3FMQb1nfoztdTyIoa4ZkNgyPCBMyxJMKrNMxJY9bI1YMf5wS/0oCDizhpfZkEv
+         4SsGtMCYIF6jdEZkjzKTDvcvgoofSYYp2sQBpQ8d4zOkFCG23l6c4nsk7bc0DKvRNEjV
+         8LY9lAb8EpNgEDJvijysgF8aVf8ImyHwnvhtUHlVwoXYUI82GQuWOr2pZTaBmmmSjzlU
+         4SFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744931547; x=1745536347;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1eeYizTITU+B3gKv1exCccb1cLi2y8PamBFk1DM+qjk=;
-        b=JWySHxG665NQaO8ErDFeJysCZpeU8601dEXi0p5PhYp4muIclAp/B+2nx/lYk0aQ4N
-         EKjm9UAAWhOK+3WwLpLrv9rp7uYmXHUuXg93CIBlSszMqFvRl9wsvo+D4xxaIH3OXlcy
-         1BlLxudy7WNDmJ+YOav39Z0+s82tSYMR6j6N5C/sFc5oo0msw9JTvQukO5ukZbtnvt5u
-         +rJvA8bDxFqJp7jWjRNGP1+iyYgoBGwbEpLxIkybil0oDDYngtj2o6yP9yxanIvQf/zR
-         Ntj+t1PtLrpN8hIWjH+aSefxYkHTvqod4pEfM/7ypw/h8862xTRHH2U1CHU6Ckgzh13J
-         iR2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWfCyKdJ0tjqgey5gdyWqm7bMT5Ot/q6ScswH8pvHaBWS+zG27zaP5U7qyrfi3h1qeER1yUwCOS/YGItxs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvXWR7R78Pmkksm9OlV29NRTY+6UPWmw/7ri4R4ZWo8ujBV9UC
-	al/8UPNhlpY/493w17DL3Au7PZ9SkoOr1oazunhVupWI5MxmiFqQhJnFu0MLLOrVQBxE93jvCra
-	1VSmjXjYQJGvloATZImITb5v4v2E4bYAAIMsH
-X-Gm-Gg: ASbGncvhPYyoNSCit851U2jULwSbZexVgdGFMTVfD6C0uz3AwZvGOEsb/T4/VuXWZnc
-	gKe1YoDidR+NwzEILSA3BxZ/3HHcOji3hd2jes4ZeMCAmDUtHrjvSwUxFsnd68FEl08BabYcZYr
-	03Z1mwcm0O4RmyVAFTtHbRqrGBZgt1Ie1EuuGTBSsDum2J5wPyiHC3ARXmXlXbjQ==
-X-Google-Smtp-Source: AGHT+IGTXo89UWIMnenwDzm7bJl3ibD7/0kXpr1Avf1oYe9YyIOG/R6WwsyJeZjtpDfAoZzDUkbYdiBpE/xVn5Y4jRM=
-X-Received: by 2002:a17:902:ce0a:b0:220:ce33:6385 with SMTP id
- d9443c01a7336-22c54797b1bmr509205ad.9.1744931547028; Thu, 17 Apr 2025
- 16:12:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744931743; x=1745536543;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=959uz33BV//g+a794CDjMebjZF60Bgf+wfJg9Elzli0=;
+        b=N3DyoWWRDpTyozUWpzAtYltulVAcnpS21FtnHIazmMbyHXw+I5bm9Ykcgjjl1dJ2kA
+         ktcBTyYiChgnmMpIqttg552zS+n2iix4mHmlRVS2ZqdGdL+SxGpqoITvll09CZeaKBkE
+         v/pzxCkCkj0iUuZAyBXG6hYrPQbhwaLfZQQfRxHOpu76PCduunCaaAWutgtCsm08UWsC
+         AKgmQAuawlHJ5y3hyqgvVDUUNif3P9WYmmwPCmhMEDGZPCVpkf8eX4xcTedLlqvFBrw8
+         Qr7kgRf980TiVrvL23ANYLzr+asZTFiGqhl1IJouLS5gz6WdLdmr3YoauQvflFAwojBY
+         FnWw==
+X-Forwarded-Encrypted: i=1; AJvYcCWygMH19h1yl71QIXx1yuazrc/KjVi1GJ29Mqp7FNj4spNKfLwMo8KB4ni5DCj2fHZ5j1KvIR6UrpqPP5A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXhm3GGrlc0Rw3gwUmrmyFUxmPTp0NpSiFhAIS7SBW5+ElRsr/
+	ea46BcBsZuID4Duc9+Z9fvSWaVe/HCFWI8PF+EwwCVraQ1mxdvChVBYDtbwEzBPEmBlB02dE7br
+	86cvOboBOWWBz1k4b96T+SQ==
+X-Google-Smtp-Source: AGHT+IFywzm8aNSuk5tkiTEUKcvGh1SYZ627hVg8fZBmCQjKu2wWWhuI42PIrHslPjHURPGcIAGhg6LGZrXtcp1wgQ==
+X-Received: from pjbeu15.prod.google.com ([2002:a17:90a:f94f:b0:2f7:d453:e587])
+ (user=almasrymina job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:280b:b0:2fe:b470:dde4 with SMTP id 98e67ed59e1d1-3087bb48e31mr1260040a91.12.1744931742908;
+ Thu, 17 Apr 2025 16:15:42 -0700 (PDT)
+Date: Thu, 17 Apr 2025 23:15:31 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <aABlDyhAYz95vOM1@x1> <CAP-5=fXeykYoqLJ8t6Gq31cO8eYGOnppgc86PHfWnBoz4xgw-g@mail.gmail.com>
- <aAF5mIul8qhDUYz8@x1>
-In-Reply-To: <aAF5mIul8qhDUYz8@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 17 Apr 2025 16:12:16 -0700
-X-Gm-Features: ATxdqUFi-tMR8ibqkWmz-tk-QuDdac5Fcz2SSEKgt8jSnq7cGz3oRXYZwgeq_go
-Message-ID: <CAP-5=fXxxaBs_JGqZVM8rZzg837Po4_p2wOARBj2i6183kXgjA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] tools build: Remove libbfd from the set of expected
- libraries to build perf
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: arnaldo.melo@gmail.com, Namhyung Kim <namhyung@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Quentin Monnet <qmo@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+Message-ID: <20250417231540.2780723-1-almasrymina@google.com>
+Subject: [PATCH net-next v9 0/9] Device memory TCP TX
+From: Mina Almasry <almasrymina@google.com>
+To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, io-uring@vger.kernel.org, 
+	virtualization@lists.linux.dev, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, Donald Hunter <donald.hunter@gmail.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	Jeroen de Borst <jeroendb@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn <willemb@google.com>, Jens Axboe <axboe@kernel.dk>, 
+	Pavel Begunkov <asml.silence@gmail.com>, David Ahern <dsahern@kernel.org>, 
+	Neal Cardwell <ncardwell@google.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	"=?UTF-8?q?Eugenio=20P=C3=A9rez?=" <eperezma@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
+	Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>, sdf@fomichev.me, dw@davidwei.uk, 
+	Jamal Hadi Salim <jhs@mojatatu.com>, Victor Nogueira <victor@mojatatu.com>, 
+	Pedro Tammela <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 17, 2025 at 2:58=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
-> > There is a wider set of cleanups that remove BUILD_NONDISTRO and
-> > libbfd that I posted back in January:
-> > https://lore.kernel.org/lkml/20250122174308.350350-1-irogers@google.com=
-/
->
-> I thought that discussion hadn't come to a conclusion, then I was in
-> vacation in January + LSFMM/BPF, lost track of it, will read your
-> message below and look at it again.
->
-> Its just that I recreated my toolbox container for building perf to a
-> fedora:42 based one and went on trying to build it from the base system
-> that gets installed in such containers till the point where I found the
-> above problem.
->
-> Now doing 'make -C tools/perf build-test' I'm getting this after the
-> above patch:
->
->             make_nondistro_O: cd . && make BUILD_NONDISTRO=3D1 FEATURES_D=
-UMP=3D/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j3=
-2 O=3D/tmp/tmp.NssFD0ssxu DESTDIR=3D/tmp/tmp.oEuROiOLtI
-> cd . && make BUILD_NONDISTRO=3D1 FEATURES_DUMP=3D/home/acme/git/perf-tool=
-s-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=3D/tmp/tmp.NssFD0ssxu DEST=
-DIR=3D/tmp/tmp.oEuROiOLtI
->   BUILD:   Doing 'make -j32' parallel build
-> Warning: Kernel ABI header differences:
->   diff -u tools/include/uapi/linux/bits.h include/uapi/linux/bits.h
->   diff -u tools/include/linux/bits.h include/linux/bits.h
->   diff -u tools/include/vdso/unaligned.h include/vdso/unaligned.h
->   diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/c=
-putype.h
-> Makefile.config:952: Old version of libbfd/binutils things like PE execut=
-able profiling will not be available
-> Makefile.config:968: No libllvm 13+ found, slower source file resolution,=
- please install llvm-devel/llvm-dev
-> Makefile.config:1147: No openjdk development package found, please instal=
-l JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
->
->   GEN     /tmp/tmp.NssFD0ssxu/common-cmds.h
-> <SNIP>
-> In file included from util/disasm_bpf.c:18:
-> /home/acme/git/perf-tools-next/tools/include/tools/dis-asm-compat.h:10:6:=
- error: redeclaration of =E2=80=98enum disassembler_style=E2=80=99
->    10 | enum disassembler_style {DISASSEMBLER_STYLE_NOT_EMPTY};
->       |      ^~~~~~~~~~~~~~~~~~
-> In file included from util/disasm_bpf.c:15:
-> /usr/include/dis-asm.h:53:6: note: originally defined here
->    53 | enum disassembler_style
->       |      ^~~~~~~~~~~~~~~~~~
-> /home/acme/git/perf-tools-next/tools/include/tools/dis-asm-compat.h: In f=
-unction =E2=80=98init_disassemble_info_compat=E2=80=99:
-> /home/acme/git/perf-tools-next/tools/include/tools/dis-asm-compat.h:50:9:=
- error: too few arguments to function =E2=80=98init_disassemble_info=E2=80=
-=99; expected 4, have 3
->    50 |         init_disassemble_info(info, stream,
->       |         ^~~~~~~~~~~~~~~~~~~~~
-> /usr/include/dis-asm.h:482:13: note: declared here
->   482 | extern void init_disassemble_info (struct disassemble_info *dinfo=
-, void *stream,
->       |             ^~~~~~~~~~~~~~~~~~~~~
-> util/disasm_bpf.c: In function =E2=80=98symbol__disassemble_bpf=E2=80=99:
-> util/disasm_bpf.c:109:36: error: incompatible type for argument 1 of =E2=
-=80=98disassembler=E2=80=99
->   109 |         disassemble =3D disassembler(bfdf);
->       |                                    ^~~~
->       |                                    |
->       |                                    bfd *
-> /usr/include/dis-asm.h:411:63: note: expected =E2=80=98enum bfd_architect=
-ure=E2=80=99 but argument is of type =E2=80=98bfd *=E2=80=99
->   411 | extern disassembler_ftype disassembler (enum bfd_architecture arc=
-,
->       |                                         ~~~~~~~~~~~~~~~~~~~~~~^~~
-> util/disasm_bpf.c:109:23: error: too few arguments to function =E2=80=98d=
-isassembler=E2=80=99; expected 4, have 1
->   109 |         disassemble =3D disassembler(bfdf);
->       |                       ^~~~~~~~~~~~
-> /usr/include/dis-asm.h:411:27: note: declared here
->   411 | extern disassembler_ftype disassembler (enum bfd_architecture arc=
-,
->       |                           ^~~~~~~~~~~~
-> make[6]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:8=
-6: /tmp/tmp.NssFD0ssxu/util/disasm_bpf.o] Error 1
-> make[6]: *** Waiting for unfinished jobs....
->   CC      /tmp/tmp.NssFD0ssxu/bench/mem-memcpy-x86-64-asm.o
-> <SNIP>
-> make[5]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:1=
-42: util] Error 2
-> make[4]: *** [Makefile.perf:798: /tmp/tmp.NssFD0ssxu/perf-util-in.o] Erro=
-r 2
-> make[4]: *** Waiting for unfinished jobs....
->   LD      /tmp/tmp.NssFD0ssxu/tests/workloads/perf-test-in.o
->   LD      /tmp/tmp.NssFD0ssxu/tests/perf-test-in.o
->   LD      /tmp/tmp.NssFD0ssxu/perf-test-in.o
->   LD      /tmp/tmp.NssFD0ssxu/perf-in.o
->   CC      /tmp/tmp.NssFD0ssxu/pmu-events/pmu-events.o
->   LD      /tmp/tmp.NssFD0ssxu/pmu-events/pmu-events-in.o
-> make[3]: *** [Makefile.perf:290: sub-make] Error 2
-> make[2]: *** [Makefile:76: all] Error 2
-> make[1]: *** [tests/make:341: make_nondistro_O] Error 1
-> make: *** [Makefile:109: build-test] Error 2
-> make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
+v9: https://lore.kernel.org/netdev/20250415224756.152002-1-almasrymina@google.com/
 
-Looked like a bad cherry pick, I sent rebased versions of the patches
-and an extra small cleanup patch in the v4 patch series:
-https://lore.kernel.org/lkml/20250417230740.86048-1-irogers@google.com/
+Changelog:
+- Use priv->bindings list instead of sock_bindings_list. This was missed
+  during the rebase as the bindings have been updated to use
+  priv->bindings recently (thanks Stan!)
 
-Thanks,
-Ian
+v8: https://lore.kernel.org/netdev/20250308214045.1160445-1-almasrymina@google.com/
 
-> - Arnaldo
+Only address minor comments on V7
+
+Changelog:
+- Use netdev locking instead of rtnl_locking to match rx path.
+- Now that iouring zcrx is in net-next, use NET_IOV_IOURING instead of
+  NET_IOV_UNSPECIFIED.
+- Post send binding to net_devmem_dmabuf_bindings after it's been fully
+  initialized (Stan).
+
+v7: https://lore.kernel.org/netdev/20250227041209.2031104-1-almasrymina@google.com/
+===
+
+Changelog:
+- Check the dmabuf net_iov binding belongs to the device the TX is going
+  out on. (Jakub)
+- Provide detailed inspection of callsites of
+  __skb_frag_ref/skb_page_unref in patch 2's changelog (Jakub)
+
+v6: https://lore.kernel.org/netdev/20250222191517.743530-1-almasrymina@google.com/
+===
+
+v6 has no major changes. Addressed a few issues from Paolo and David,
+and collected Acks from Stan. Thank you everyone for the review!
+
+Changes:
+- retain behavior to process MSG_FASTOPEN even if the provided cmsg is
+  invalid (Paolo).
+- Rework the freeing of tx_vec slightly (it now has its own err label).
+  (Paolo).
+- Squash the commit that makes dmabuf unbinding scheduled work into the
+  same one which implements the TX path so we don't run into future
+  errors on bisecting (Paolo).
+- Fix/add comments to explain how dmabuf binding refcounting works
+  (David).
+
+v5: https://lore.kernel.org/netdev/20250220020914.895431-1-almasrymina@google.com/
+===
+
+v5 has no major changes; it clears up the relatively minor issues
+pointed out to in v4, and rebases the series on top of net-next to
+resolve the conflict with a patch that raced to the tree. It also
+collects the review tags from v4.
+
+Changes:
+- Rebase to net-next
+- Fix issues in selftest (Stan).
+- Address comments in the devmem and netmem driver docs (Stan and Bagas)
+- Fix zerocopy_fill_skb_from_devmem return error code (Stan).
+
+v4: https://lore.kernel.org/netdev/20250203223916.1064540-1-almasrymina@google.com/
+===
+
+v4 mainly addresses the critical driver support issue surfaced in v3 by
+Paolo and Stan. Drivers aiming to support netmem_tx should make sure not
+to pass the netmem dma-addrs to the dma-mapping APIs, as these dma-addrs
+may come from dma-bufs.
+
+Additionally other feedback from v3 is addressed.
+
+Major changes:
+- Add helpers to handle netmem dma-addrs. Add GVE support for
+  netmem_tx.
+- Fix binding->tx_vec not being freed on error paths during the
+  tx binding.
+- Add a minimal devmem_tx test to devmem.py.
+- Clean up everything obsolete from the cover letter (Paolo).
+
+v3: https://patchwork.kernel.org/project/netdevbpf/list/?series=929401&state=*
+===
+
+Address minor comments from RFCv2 and fix a few build warnings and
+ynl-regen issues. No major changes.
+
+RFC v2: https://patchwork.kernel.org/project/netdevbpf/list/?series=920056&state=*
+=======
+
+RFC v2 addresses much of the feedback from RFC v1. I plan on sending
+something close to this as net-next  reopens, sending it slightly early
+to get feedback if any.
+
+Major changes:
+--------------
+
+- much improved UAPI as suggested by Stan. We now interpret the iov_base
+  of the passed in iov from userspace as the offset into the dmabuf to
+  send from. This removes the need to set iov.iov_base = NULL which may
+  be confusing to users, and enables us to send multiple iovs in the
+  same sendmsg() call. ncdevmem and the docs show a sample use of that.
+
+- Removed the duplicate dmabuf iov_iter in binding->iov_iter. I think
+  this is good improvment as it was confusing to keep track of
+  2 iterators for the same sendmsg, and mistracking both iterators
+  caused a couple of bugs reported in the last iteration that are now
+  resolved with this streamlining.
+
+- Improved test coverage in ncdevmem. Now multiple sendmsg() are tested,
+  and sending multiple iovs in the same sendmsg() is tested.
+
+- Fixed issue where dmabuf unmapping was happening in invalid context
+  (Stan).
+
+====================================================================
+
+The TX path had been dropped from the Device Memory TCP patch series
+post RFCv1 [1], to make that series slightly easier to review. This
+series rebases the implementation of the TX path on top of the
+net_iov/netmem framework agreed upon and merged. The motivation for
+the feature is thoroughly described in the docs & cover letter of the
+original proposal, so I don't repeat the lengthy descriptions here, but
+they are available in [1].
+
+Full outline on usage of the TX path is detailed in the documentation
+included with this series.
+
+Test example is available via the kselftest included in the series as well.
+
+The series is relatively small, as the TX path for this feature largely
+piggybacks on the existing MSG_ZEROCOPY implementation.
+
+Patch Overview:
+---------------
+
+1. Documentation & tests to give high level overview of the feature
+   being added.
+
+1. Add netmem refcounting needed for the TX path.
+
+2. Devmem TX netlink API.
+
+3. Devmem TX net stack implementation.
+
+4. Make dma-buf unbinding scheduled work to handle TX cases where it gets
+   freed from contexts where we can't sleep.
+
+5. Add devmem TX documentation.
+
+6. Add scaffolding enabling driver support for netmem_tx. Add helpers, driver
+feature flag, and docs to enable drivers to declare netmem_tx support.
+
+7. Guard netmem_tx against being enabled against drivers that don't
+   support it.
+
+8. Add devmem_tx selftests. Add TX path to ncdevmem and add a test to
+   devmem.py.
+
+Testing:
+--------
+
+Testing is very similar to devmem TCP RX path. The ncdevmem test used
+for the RX path is now augemented with client functionality to test TX
+path.
+
+* Test Setup:
+
+Kernel: net-next with this RFC and memory provider API cherry-picked
+locally.
+
+Hardware: Google Cloud A3 VMs.
+
+NIC: GVE with header split & RSS & flow steering support.
+
+Performance results are not included with this version, unfortunately.
+I'm having issues running the dma-buf exporter driver against the
+upstream kernel on my test setup. The issues are specific to that
+dma-buf exporter and do not affect this patch series. I plan to follow
+up this series with perf fixes if the tests point to issues once they're
+up and running.
+
+Special thanks to Stan who took a stab at rebasing the TX implementation
+on top of the netmem/net_iov framework merged. Parts of his proposal [2]
+that are reused as-is are forked off into their own patches to give full
+credit.
+
+[1] https://lore.kernel.org/netdev/20240909054318.1809580-1-almasrymina@google.com/
+[2] https://lore.kernel.org/netdev/20240913150913.1280238-2-sdf@fomichev.me/T/#m066dd407fbed108828e2c40ae50e3f4376ef57fd
+
+Cc: sdf@fomichev.me
+Cc: asml.silence@gmail.com
+Cc: dw@davidwei.uk
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Victor Nogueira <victor@mojatatu.com>
+Cc: Pedro Tammela <pctammela@mojatatu.com>
+Cc: Samiullah Khawaja <skhawaja@google.com>
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>
+
+
+Mina Almasry (8):
+  netmem: add niov->type attribute to distinguish different net_iov
+    types
+  net: add get_netmem/put_netmem support
+  net: devmem: Implement TX path
+  net: add devmem TCP TX documentation
+  net: enable driver support for netmem TX
+  gve: add netmem TX support to GVE DQO-RDA mode
+  net: check for driver support in netmem TX
+  selftests: ncdevmem: Implement devmem TCP TX
+
+Stanislav Fomichev (1):
+  net: devmem: TCP tx netlink api
+
+ Documentation/netlink/specs/netdev.yaml       |  12 +
+ Documentation/networking/devmem.rst           | 150 ++++++++-
+ .../networking/net_cachelines/net_device.rst  |   1 +
+ Documentation/networking/netdev-features.rst  |   5 +
+ Documentation/networking/netmem.rst           |  23 +-
+ drivers/net/ethernet/google/gve/gve_main.c    |   4 +
+ drivers/net/ethernet/google/gve/gve_tx_dqo.c  |   8 +-
+ include/linux/netdevice.h                     |   2 +
+ include/linux/skbuff.h                        |  17 +-
+ include/linux/skbuff_ref.h                    |   4 +-
+ include/net/netmem.h                          |  34 +-
+ include/net/sock.h                            |   1 +
+ include/uapi/linux/netdev.h                   |   1 +
+ io_uring/zcrx.c                               |   1 +
+ net/core/datagram.c                           |  48 ++-
+ net/core/dev.c                                |  34 +-
+ net/core/devmem.c                             | 139 ++++++--
+ net/core/devmem.h                             |  83 ++++-
+ net/core/netdev-genl-gen.c                    |  13 +
+ net/core/netdev-genl-gen.h                    |   1 +
+ net/core/netdev-genl.c                        |  75 ++++-
+ net/core/skbuff.c                             |  48 ++-
+ net/core/sock.c                               |   6 +
+ net/ipv4/ip_output.c                          |   3 +-
+ net/ipv4/tcp.c                                |  50 ++-
+ net/ipv6/ip6_output.c                         |   3 +-
+ net/vmw_vsock/virtio_transport_common.c       |   5 +-
+ tools/include/uapi/linux/netdev.h             |   1 +
+ .../selftests/drivers/net/hw/devmem.py        |  26 +-
+ .../selftests/drivers/net/hw/ncdevmem.c       | 300 +++++++++++++++++-
+ 30 files changed, 1009 insertions(+), 89 deletions(-)
+
+
+base-commit: 240ce924d2718b8f6f622f2a9a9c219b9da736e8
+-- 
+2.49.0.805.g082f7c87e0-goog
+
