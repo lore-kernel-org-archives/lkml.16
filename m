@@ -1,151 +1,160 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A011E253324
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6439D253F23
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744907601; cv=none; b=YCyXKvnr/f/Pq08bYWyd7QO8Q/nd9UUVoyc4fM4j4lgwI2l3ed9M+NhMyqA0NLjIdvb1LeSDtSex/HdBD64Dr7zr2Tg35SAZxl7LBDSVvF5TiZ1ClP0QrY2vlIZTtbJbJw/+7iJXsD4vpdV44yU9iCaURRPeSqHIpyLu4F7DRtQ=
+	t=1744907624; cv=none; b=hn02hDCtV18Q+SX3tBpRmdPtYXyUOTBsdM1+rlU7PiZT0CW0HGfPvkO9papLgvOPJvyQ2sU0k4+18rrC4xaz701uS4mBwoL3d8/fyA+Kn/O2eykGS2vhXwGAz5/KUg7i2k5xmRgx4b+U7naI/2XvgsQY0yHkftrbPYvgFx1Dyqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744907601; c=relaxed/simple;
-	bh=MorJ0Vcovdi4XLQZKAYt8UWHrt+gqIuT1WCj8KBdkGk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LYLVmYU9lb3OQPeYDC1SwJrjU59L6c8hsGhsisZ0HdKrnZgBdlL6btd4PmCwkH2Q/EXidJd2ESyWS9pPYmhJzuzCy8KSwbSXBVkazWLkfpL7QxQSLQDNJSEGQg6KZEvrNytCNCoEgy7hdvb9KTiPJtGMXJ+ti0dWY2dp8vnuOq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=L2BHWXuB; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1744907624; c=relaxed/simple;
+	bh=jT21jRK0J8SRlzjyqosDW759opx+ZsN7MPAvUOaGObs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R6BUVlNciG9scBONCbtBvkA5RcZM/tefupgSvgJimMud2hL4xtLt/tJumFMd7vwUOl+JrC35uyFTWLL/cHg3hvYRy9AyvYOOP9VRYP5Ys/diTFGWZtEvFJOyOa/XOIDOQFR/LV6Unr6qXHgbYekZYj1nsDNh0SFnHKA4q3+ylr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kW95vDOn; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="L2BHWXuB"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2240b4de12bso15663325ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:33:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kW95vDOn"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-476ae781d21so9813641cf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:33:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1744907598; x=1745512398; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mprfwwo0Da4LxnvcuRCJo8vR8B5fCLfrLhkCs2VqZg0=;
-        b=L2BHWXuBfQDvEXIUJ2E9Y9ISzkb04o6NxilKIALyLn2k/F1a/k/Jhtew0qp5NcaQR+
-         yBdIBb8V6lIarsQgoYIsyEUKb3xUnfQacsT219Ndp3wvcv099AiTTvzUUq2YQmyiX/y8
-         QyAwIvSBEgeqtE6O7ZOsAZUTJUcM29nhF2obE=
+        d=gmail.com; s=20230601; t=1744907620; x=1745512420; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qO5+04CaWSRFQ4SaFhOjMQvO97IJAoXY2FwR++5c1UQ=;
+        b=kW95vDOnhaeljY2ezTd6XpKK7n/jbmTQj0xFSs13MlNWFYjUNbG5G4J8x6jROHmKtd
+         zekhKghqDQjKaZZrAQBUflaR0hRzCD96Y2wjGYrEd4/JJFEPxkaRpKcsTVMAWNofm1tM
+         t/vWTut2U+ElEcVdjwImcIGKcSEYPpvM7QyXwWHh9BlxpysiUW8/1ZarxrDAq+FFIwqy
+         K8HJojLXsHYnDFgVddONdjEhvzNiQNYRlyZuE09+Xt1I+wVajvy7dWA9KJCAOy8mw/wH
+         JApfMRQZ94oVo3IaC+gUgj+2GrGv+NL3eE5XAQuwNgZL8YARvDXbWDmSfubvhXLKDUWP
+         vU4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744907598; x=1745512398;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mprfwwo0Da4LxnvcuRCJo8vR8B5fCLfrLhkCs2VqZg0=;
-        b=P+itQxeO+yHmFHQwkep8u8aw4BTMOupCkJeGbbG5NPKdWDD7X7NHRawSyEeIfmD9Rc
-         BYtVESVUQY0N2J5XWhOD4oeqLvcIFlMSoyK1GnfyrhsMiuVq01f4wWlFhEzQpMevk+tl
-         YhYZVexErYWBLe/hjvrWSbduFLI8ILXb+BDsgLIUQxvKzri1ALNPLzP0YMXBT+vgVVnC
-         g8oA8HjKFi5jVh+63barz1T5c3Vub8qQ3XESqAoh0HKkL/qBznatZn2HzICKcHyXJnmc
-         IcmismY8YoX1M3QdsxnujnqOe2TrSUtD75n+DyoLML15rmGYRX206w/EjUDiw98kr/7r
-         v73A==
-X-Forwarded-Encrypted: i=1; AJvYcCXI3V1J8wFFyArEZ9n483ldrgO4foyBYtoTqWCYXeyiiZPVVXBJQqpKPvC7kYVCXGbhZJXZddpFkqF4bkE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxEwpU/JL03I4JXE/aJK5UHut/oLulLJbjX9YTFTn9EN4E0RrL
-	SjpbfYZMgf74vIh7nvWjpcBGxQFex1HirIv7rN7P386OHZrFnIiYIcrnzOmdplk=
-X-Gm-Gg: ASbGncuEOgzXLO7ixp1z2QUN7D/OWMC9At/hNVarSi0IWGW2vdx0jGR8Q0lrh34UlMd
-	evujkFuZoK/S7m2aEIy2VYmcOS+m6WtsOOgGff/1IiFkdQXLnvtInnJMQ4X253bSysPrw98cjog
-	+uF70UWyY5Dau5oPKPiWYQZT5y7zBqekQCm7wWCz8LhKUAcWGimYglA4pyIMSq3nR6NOF4RMdJS
-	o7undGJv9yD5f1eQDXpYpFiu1tyGCFZNBKHL2lXsPACxDC7AdhRLpO751eJ/6FY5ADOr4DqhdVY
-	Wyyjb0NxYhai94gtcwXuSG4V7rZpMr9WklFw6cmyZp9p3BCNUsi8QN8YXuEoNfVr5kLwPDgdYfm
-	NNFQhCkIg1697
-X-Google-Smtp-Source: AGHT+IGJpmGDv/RmZoBpASwHCPsKTxrbaXtrzgvFEb/fiM5N6VFMbYf2bDKD9j/RfqFYVUJiTtyDyA==
-X-Received: by 2002:a17:902:ce91:b0:224:1ce1:a3f4 with SMTP id d9443c01a7336-22c358c543amr88775005ad.1.1744907597917;
-        Thu, 17 Apr 2025 09:33:17 -0700 (PDT)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bdae5dsm2114315ad.35.2025.04.17.09.33.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 09:33:17 -0700 (PDT)
-Date: Thu, 17 Apr 2025 09:33:14 -0700
-From: Joe Damato <jdamato@fastly.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, kuba@kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Shuah Khan <shuah@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
-	"open list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)" <bpf@vger.kernel.org>
-Subject: Re: [PATCH net-next v2 4/4] selftests: drv-net: Test that NAPI ID is
- non-zero
-Message-ID: <aAEtSppgCFNd8vr4@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-	kuba@kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Shuah Khan <shuah@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
-	"open list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)" <bpf@vger.kernel.org>
-References: <20250417013301.39228-1-jdamato@fastly.com>
- <20250417013301.39228-5-jdamato@fastly.com>
- <b1fa9607-f9bd-4feb-a22f-55453a9403e9@redhat.com>
+        d=1e100.net; s=20230601; t=1744907620; x=1745512420;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qO5+04CaWSRFQ4SaFhOjMQvO97IJAoXY2FwR++5c1UQ=;
+        b=OalWJw6wwlODQSPl6W9Gs8zLDOudciv3LkyFG5XoZVg1IKHRocJxSff3oir7VXn31u
+         VyGXLV7wlwgCB9bJq5fT+xT6K5sCU8DCS7NZJ7DILOB9I5cTSeb3jx0kYCRyp/08poGR
+         cDF3wbVDztBXpivOV4eWkGTCrJpAe5pRXjTi+TTMhO8mv2Tghd7QkpBYmqjZ5ssSTMkK
+         0nozolf4s63fkllLygXRpGvl/7O8ebM4MUvkV9O9E1SfdSp0oWHGAqVwDkA1kU1XQr8k
+         Qj3SDaT1ex4o3s9/CH1BM9xF4PuR/tycRvO32lZtToRHJBzZ/cp3e/tgfv9JZ8waQAiM
+         wrjA==
+X-Forwarded-Encrypted: i=1; AJvYcCVm3xE7Ftrleee5DBTAwlFsvO/xC0YnLk7N1FQfw7P5Q/t4rHfgxLjrfLHpRPY8ptOVJi3Mn4OdWGri8ho=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPYG5346OuW02gPZg32zaUquejfwGMubRYxmpgZCTEDHnvRauZ
+	92VMivWv3Psg1nwOoT255aIYNfZNqKVWA6VUtXDxfEEsjmHAZwJ4qN0ifY9a2063rsHlURLFJZM
+	UTW7rw6yUcRftWDZJH+7/X13nDUY=
+X-Gm-Gg: ASbGnct3Q8WHOT3jwYkhX5KDJEkdB2Yq/7OuHSiQmcmryIaMzaGHVpW6X3/RlcoupVs
+	BJFR4bUzuz/+rw00KmswZwP+G7K90mrYes64QRofXvBCFNNFINd5ASo2191arJNuH3RgM116yC+
+	La5B7UqFV0tWsjchqN38Us
+X-Google-Smtp-Source: AGHT+IF+1GF9Iqdb9twp+aheYHmHxlG6UmiaDmWmwJgTii/i+RPjNbiZu6npNwyTdDwS042MrCkog9QKWRra+9xpJuw=
+X-Received: by 2002:a05:622a:178b:b0:476:b783:c946 with SMTP id
+ d75a77b69052e-47ad810e2a9mr124221401cf.33.1744907620151; Thu, 17 Apr 2025
+ 09:33:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b1fa9607-f9bd-4feb-a22f-55453a9403e9@redhat.com>
+References: <Z/bA4tMF5uKLe55p@ubuntu> <2025041402-colonize-rocker-1db1@gregkh>
+ <CADYq+fa18G25hfTeWTxwyxc+A=xHmk_je_9kjWbDdwbo0seaZQ@mail.gmail.com> <2025041448-destiny-hate-1b70@gregkh>
+In-Reply-To: <2025041448-destiny-hate-1b70@gregkh>
+From: Samuel Abraham <abrahamadekunle50@gmail.com>
+Date: Thu, 17 Apr 2025 17:33:30 +0100
+X-Gm-Features: ATxdqUEL1gesoQZzTPywh9XHBFhXyu8wX2c91GK7fMi0Vlnqf3F6jGWNea334bw
+Message-ID: <CADYq+fYWFqPQTJABt4sKo3NsENLrDbVh7Sn+uu9sLNumc0wt9w@mail.gmail.com>
+Subject: Re: [PATCH] staging: rtl8723bs: Replace `& 0xfff` with `% 4096u`
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: julia.lawall@inria.fr, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, david.laight.linux@gmail.com, 
+	dan.carpenter@linaro.org, andy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 17, 2025 at 09:26:22AM +0200, Paolo Abeni wrote:
-> On 4/17/25 3:32 AM, Joe Damato wrote:
-> > diff --git a/tools/testing/selftests/drivers/net/napi_id.py b/tools/testing/selftests/drivers/net/napi_id.py
-> > new file mode 100755
-> > index 000000000000..aee6f90be49b
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/drivers/net/napi_id.py
-> > @@ -0,0 +1,24 @@
-> > +#!/usr/bin/env python3
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +
-> > +from lib.py import ksft_run, ksft_exit
-> > +from lib.py import ksft_eq, NetDrvEpEnv
-> > +from lib.py import bkg, cmd, rand_port, NetNSEnter
-> > +
-> > +def test_napi_id(cfg) -> None:
-> > +    port = rand_port()
-> > +    listen_cmd = f'{cfg.test_dir / "napi_id_helper"} {cfg.addr_v['4']} {port}'
-> 
-> Not really a full review, but this is apparently causing self-tests
-> failures:
-> 
-> # selftests: drivers/net: napi_id.py
-> #   File
-> "/home/virtme/testing-17/tools/testing/selftests/drivers/net/./napi_id.py",
-> line 10
-> #     listen_cmd = f'{cfg.test_dir / "napi_id_helper"} {cfg.addr_v['4']}
-> {port}'
-> #                                                                   ^
-> # SyntaxError: f-string: unmatched '['
-> not ok 1 selftests: drivers/net: napi_id.py # exit=1
-> 
-> the second "'" char is closing the python format string, truncating the
-> cfg.addr_v['4'] expression.
-> 
-> Please run the self test locally before the next submission, thanks!
+On Mon, Apr 14, 2025 at 10:00=E2=80=AFAM Greg KH <gregkh@linuxfoundation.or=
+g> wrote:
+>
+> On Mon, Apr 14, 2025 at 08:38:53AM +0100, Samuel Abraham wrote:
+> > On Mon, Apr 14, 2025 at 8:23=E2=80=AFAM Greg KH <gregkh@linuxfoundation=
+.org> wrote:
+> > >
+> > > On Wed, Apr 09, 2025 at 06:48:02PM +0000, Abraham Samuel Adekunle wro=
+te:
+> > > > The sequence number is constrained to a range of [0, 4095], which
+> > > > is a total of 4096 values. The bitmask operation using `& 0xfff` is
+> > > > used to perform this wrap-around. While this is functionally correc=
+t,
+> > > > it obscures the intended semantic of a 4096-based wrap.
+> > > >
+> > > > Using a modulo operation `% 4096u` makes the wrap-around logic
+> > > > explicit and easier to understand. It clearly signals that the
+> > > > sequence number cycles through a range of 4096 values.
+> > > > It also makes the code robust against potential changes of the 4096
+> > > > upper limit, especially when it becomes a non power-of-2 value whil=
+e
+> > > > the AND(&) works solely for power-of-2 values.
+> > > >
+> > > > The use of `% 4096u` also guarantees that the modulo operation is
+> > > > performed with unsigned arithmetic, preventing potential issues wit=
+h
+> > > > the signed types.
+> > > >
+> > > > Found by Coccinelle.
+> > > >
+> > > > Suggested by Andy Shevchenko <andy@kernel.org>
+> > > > Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com=
+>
+> > > > ---
+> > > > Coccinelle semantic patch used to find cases:
+> > > > @@
+> > > > expression e;
+> > > >
+> > > > @@
+> > > > * e & 0xfff
+> > > >
+> > > > To ensure this change does not affect the functional
+> > > > behaviour, I compared the generated object files before and
+> > > > after the change using the `cmp` which compares the two
+> > > > object files byte by byte as shown below:
+> > > >
+> > > > $ make drivers/staging/rtl8723bs/core/rtw_xmit.o
+> > > > $ cmp rtw_xmit_before.o rtw_xmit_after.o
+> > > >
+> > > > No differences were found in the output, confirming that the
+> > > > change does not alter the compiled output.
+> > >
+> > > This is version 11, right?  What happened to the list of previous
+> > > versions and what changed down here?
+> > >
+> > > confused,
+> >
+> > Hello Greg,
+> >
+> > I collapsed this patch to the previous patchset I had worked on that
+> > made the same changes to the same driver.
+> > So this patch was collapsed into PATCH v10, which is the last version
+> > for this change.
+> >
+> > The change log in "[PATCH v10 0/2] staging: rtl8723bs: Improve
+> > readability and clarity of sequence number wrapping" explains this.
+> > This patch was collapsed into patch 2 of this patchset.
+>
+> Think about it from my side.  I get hundreds of patches each day to
+> review.  If I see a v10 and then a patch with no version at all, what am
+> I supposed to do?  I would assume something went really wrong and just
+> delete this "obviously old" version as it would have been the first
+> version of the patch, especially as there was no version information
+> below the --- line.
+>
+> So, what would you do in my situation?  What would you want to see if
+> you were in my situation?
 
-I did run it locally, many times, and it works for me:
+Hello Greg, I'm sorry once again,
+Please, do I send a PATCH v11 for this change?
+It seems my mistake had made you delete the PATCH v10.
 
-$ sudo ./tools/testing/selftests/drivers/net/napi_id.py
-TAP version 13
-1..1
-ok 1 napi_id.test_napi_id
-# Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
-
-Maybe this has something to do with the Python version on my system
-vs yours/the test host?
-
-I am using Python 3.13.1 from Ubuntu 24.04.
-
-Please let me know what Python version you are using so I can try to
-reproduce this locally ?
+Thanks.
+Adekunle
