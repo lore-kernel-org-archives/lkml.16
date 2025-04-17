@@ -1,184 +1,179 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B1AB22FDEF;
-	Thu, 17 Apr 2025 08:08:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.8
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB512309A8
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744877319; cv=none; b=R9cPz+yHCYgbYhka+cNi+JfXsF4qD4X8xThCTR3KkzLY+ZlaH3tUiTbrOZvJXV7E6a3ddDWzVeOMt1yseb8LWc8YN9yhlnxdYRumsXEfxUmYzdXE/a3PUOBgrW5QI0+/MMO6iCXxZZiv+lkZ7s9j6QMA4DqKnxkWiR30pGjNxQs=
+	t=1744877323; cv=none; b=aD67QIUuh9k0sCL/AViJNq2KXwJoM0duZW4UEZn9woy9KUpOs+Gd4BRHhVfK5NlulOx2D5YGIZlLIzPhbbU+l7FMCkYxJDECc107bz/hBh/PcXPftAaFX1apprs77lgFZehMu0KnDjkpkP2k9m7+PieHJwUTmpjepbNaTPiei84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744877319; c=relaxed/simple;
-	bh=oAkNIcTrbsDjg2rCO20P27VhVYo/dVZFJ2QIK1NQ5hY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=i3atIN9ZuHwcLZt6F/ZcvO3zUB7K9TOwlBVg2N0Br4ndhITVCHlSvNR0c5GoFVgI83g1EKVO0jkMIQz5OCR6u5HE9aVCR0cDnlx+X9q39uje4jUbVOy3Xr5wAhgISjnNAwG2JDKAwJT/lQaGUT3APqrNS04wot24PubQk6yox0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=dRjKZ2jz; arc=none smtp.client-ip=220.197.31.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1744877323; c=relaxed/simple;
+	bh=vkyoWugRoTksrbmWHNnd8BkwVMcRxQLEaw53gk79Rvs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BWBxwNkTARix1uMDsvtLxE80XR3R7A2KV0FdH75mXno1+CZWEJqUxzFIVzTFDe8wwAPYgeANv1Pg6V1pMUEHjvi39Rr4O+EcSrSM6Lmq538Iu2bgr+Djj+NXLo/vyrfErX5RPcQKbsf3QwoBoFCbVsQ4j1q+M5GJ9TGS/+cO5b0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2OdyfI2w; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="dRjKZ2jz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=5zMWL
-	w2oBotcMAyoCNuk8WRvwhj38gyFAUUeStJrHxg=; b=dRjKZ2jz7rRhF23qlb7mp
-	fFw0MqW0BKwbwsV0nVwkZSfr7wE+aUfahDTsn2aat5E7hGHbnbLTyBdtAtWwasIw
-	7SzgP1X+zOB6j/Z5s5QX8blhuVu+kItffFulRumLQBgYlKc4pPnxL/BPqgx1h+8J
-	Zg6NUFcfepBb2ZWax9plAA=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wD3BxOttgBoy+aUBA--.4732S3;
-	Thu, 17 Apr 2025 16:07:12 +0800 (CST)
-From: Honglei Wang <jameshongleiwang@126.com>
-To: tj@kernel.org,
-	void@manifault.com,
-	arighi@nvidia.com,
-	changwoo@igalia.com
-Cc: mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	joshdon@google.com,
-	brho@google.com,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	jameshongleiwang@126.com
-Subject: [PATCH 1/2] sched_ext: change the variable name for slice refill event
-Date: Thu, 17 Apr 2025 16:07:07 +0800
-Message-Id: <20250417080708.1333-2-jameshongleiwang@126.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250417080708.1333-1-jameshongleiwang@126.com>
-References: <20250417080708.1333-1-jameshongleiwang@126.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2OdyfI2w"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac41514a734so68581966b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 01:08:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744877319; x=1745482119; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wtHyIUQ7PPZmcAeyFR/vgm01NmNP155YBbbcOUPlqcw=;
+        b=2OdyfI2wtcznKDXY8x8i7Aa7BBQNIELl0cHWq5D7BfPM5JiwrCxPc5Of6ByjbVYbFv
+         IXGCaQd3rF/PDPSiGY3w/BDWZy8aX+l1ZTCBxLtT97569l6ek/OHjGIS0j3Bii1kNNKL
+         wRY9YIJ5y5ni7jsV+AYeBSxT486SVA5HmLJl9XQDp4S/t4qhzZAs7CyaLRe4FBts4I3+
+         StvFmSgenO7Wr/Tgz6dBRHWfTR1c6iEW1XJV7DQd5qm2GEWpZ+2f/mYT3ELawkAFLvS1
+         ISdJVWLdvYUfjHjdz+fTKaQrmWAhVk2PN8vi/jt5M5W0sbhbfuZYvXYgWB2OZWjJBVYJ
+         1K7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744877319; x=1745482119;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wtHyIUQ7PPZmcAeyFR/vgm01NmNP155YBbbcOUPlqcw=;
+        b=rgLI/nNvuhxSbkiVfgYrVe+KsmzLk4qq3XiTZ4dZjM3o9cjqlo1KiE1uQ3XgffX46E
+         NpZtinFXNPtuKAQOEQhKEqPqGv9NSi5h8ujeGqkYCMaKxMeM7UrQ2xqBVOJBzfhtYwmy
+         x24oUbL/vDqAb87tIrkx1H9o2DRW9XCTz7/8xcmcNFFT3FnwCCZ48t2IKr0ThAfPHpN0
+         CfeH7FS310LwOJG86sGuAQqbovN+qMUHIwHdFKMG6rF57OMBVtXr8dlH5sU1zlan4Ksi
+         RUtCuXkLqSJQP6FuNkwmKKAM7AYcny3PN6ZP3c07J0YD+lacAfjIGEOEFJfe8/fvmYVK
+         Rrkg==
+X-Forwarded-Encrypted: i=1; AJvYcCUw3aWAG/dtXzmUy7SahTQczDZNuJ6Y/mrE5Ns5yHYRCaOFE67mtGBFQGAp3OWFgX48Ikr6OiBBM2Z/1Mg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEOLmksHLhHO1YCIu3Nv5UblJ6h9/mveb19nT69pj9qlrtyLZZ
+	40AcokA1dAf9EoOi7Z28pcrwYsGAXYbLqHC15i9k+TfBwnXxZeD43RXt4rFwGCCNUT1m9ZAE1Vx
+	KgCriaC0SawvqzsPtghMMZKr9EtCeKBWcHBO8
+X-Gm-Gg: ASbGncs/oxCcKGIzx7TfUFIt3SZgi8u1fABNj1rn15wQR8dpRsGavuKO16hXj6HXNAY
+	34RtxmwZq5svwr9jYYx497UPp6YXUIPQP0m8uVnV0xeqAYxkfpRes4yR1H/jqMRH9BB0FfNIDJ0
+	JOKpvaV5C3j/yiYZxkzgjydTs8AHvSz15pI0ymZBNdItJPJAnm
+X-Google-Smtp-Source: AGHT+IGpESoslQHTK0ogEW6yQ7GTAZkJZOLnAr+AoJwj8UFQjOudRmdKb0q0bSeFruID8VwGWPn9BWN2wlym/51A+Ok=
+X-Received: by 2002:a17:906:9f91:b0:ac2:9683:ad25 with SMTP id
+ a640c23a62f3a-acb429f1deamr444633566b.34.1744877319462; Thu, 17 Apr 2025
+ 01:08:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3BxOttgBoy+aUBA--.4732S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Gr4DXrW8Aw4Dtw4fAF1rtFb_yoW7CF48p3
-	W5G345tr48t3y2vrWFqF4ku3WaqrWFqw1qkF95W393ZF1jgwn0yFyYyrWaqFyYgrs5CF1S
-	kw4UKF43ArZY9rDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRRRRiUUUUU=
-X-CM-SenderInfo: 5mdpv2pkrqwzphlzt0bj6rjloofrz/1tbirwUyrWgArS3H+wACsj
+References: <20250403183638.3386628-1-korneld@google.com> <38049b58-a504-4223-9f6d-537609931fb4@arm.com>
+ <CACF_fqnevOo9NSRwDAh7KVQZTHTkP0pc2NKEXrWFapMYLf0Wkw@mail.gmail.com> <6f1af7bf-a354-4b90-bf82-edc8cc6e71fe@arm.com>
+In-Reply-To: <6f1af7bf-a354-4b90-bf82-edc8cc6e71fe@arm.com>
+From: =?UTF-8?Q?Kornel_Dul=C4=99ba?= <korneld@google.com>
+Date: Thu, 17 Apr 2025 10:08:27 +0200
+X-Gm-Features: ATxdqUHWXjxt6FKkLeRswNUzasHECz8dNyCr3yjMNkHFGcVaT-gsxFCFilKbj7I
+Message-ID: <CACF_fq=yFLUO2P0qrZFizUJe8J2FGYUK7w3DykKL3x7_R87UQA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: Support ARM64_VA_BITS=52 when setting ARCH_MMAP_RND_BITS_MAX
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Steve Capper <steve.capper@arm.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, ssradjacoumar@google.com, 
+	chromeos-krk-upstreaming@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SCX_EV_ENQ_SLICE_DFL gives the impression that the event only occurs
-when the tasks were enqueued, which seems not accurate. What it actually
-means is the refilling with defalt slice, and this can occur either when
-enqueue or pick_task. Let's change the variable to
-SCX_EV_REFILL_SLICE_DFL.
+On Thu, Apr 17, 2025 at 7:15=E2=80=AFAM Anshuman Khandual
+<anshuman.khandual@arm.com> wrote:
+>
+>
+>
+> On 4/4/25 22:16, Kornel Dul=C4=99ba wrote:
+> > On Thu, Apr 3, 2025 at 11:46=E2=80=AFPM Anshuman Khandual
+> > <anshuman.khandual@arm.com> wrote:
+> >>
+> >>
+> >>
+> >> On 4/4/25 00:06, Kornel Dul=C4=99ba wrote:
+> >>> When the 52-bit virtual addressing was enabled the select like
+> >>> ARCH_MMAP_RND_BITS_MAX logic was never updated to account for it.
+> >>> Because of that the rnd max bits would be set to the default value of
+> >>> 18 when ARM64_VA_BITS=3D52.
+> >>> Fix this by setting ARCH_MMAP_RND_BITS_MAX to the same value that wou=
+ld
+> >>> be used if 48-bit addressing was used. That's because the 52-bit
+> >>> addressing is used only if the caller provides a hint to mmap, with a
+> >>> fallback to 48-bit addressing.
+> >>
+> >> Why should ARCH_MMAP_RND_BITS_MAX value be same for both 48 bits and 5=
+2
+> >> bits VA in case the user does request for 52 bit VA via mmap() hint an=
+d
+> >> the HW supports it ?
+> >
+> > Two reasons really.
+> > 1. The whole behavior is controlled through a global knob -
+> > /proc/sys/vm/mmap_rnd_bits. ARCH_MMAP_RND_BITS_MAX is used as an upper
+> > bound for the value that can be set to that knob.
+> > So we have a single setting for all processes. Some might want 52 bit
+> > addressing, others will stick with 48.
+> > 2. Quoting the documentation for this knob:
+> >
+> > """
+> > mmap_rnd_bits
+> > This value can be used to select the number of bits to use to
+> > determine the random offset to the base address of vma regions
+> > resulting from mmap allocations on architectures which support tuning
+> > address space randomization. This value will be bounded by the
+> > architecture=E2=80=99s minimum and maximum supported values.
+> > """
+> >
+> > I suppose that it's legal for some calls to mmap from the same process
+> > to request a 52 bit VA, while other calls will want only 48 bits.
+> > Because of that the random offset can't be larger than what would work
+> > for the 48 bit case.
+>
+> Agreed but should not this rationale also be added in the commit
+> message as well ?
 
-Signed-off-by: Honglei Wang <jameshongleiwang@126.com>
----
- kernel/sched/ext.c             | 22 +++++++++++-----------
- tools/sched_ext/scx_qmap.bpf.c |  4 ++--
- 2 files changed, 13 insertions(+), 13 deletions(-)
+Sure, I will update this in v2.
+>
+>
+> >
+> >>
+> >>>
+> >>> Fixes: b6d00d47e81a ("arm64: mm: Introduce 52-bit Kernel VAs")
+>
+> Correct commit to be attributed for this fix.
 
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index 66bcd40a28ca..594087ac4c9e 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -1517,10 +1517,10 @@ struct scx_event_stats {
- 	s64		SCX_EV_ENQ_SKIP_MIGRATION_DISABLED;
- 
- 	/*
--	 * The total number of tasks enqueued (or pick_task-ed) with a
--	 * default time slice (SCX_SLICE_DFL).
-+	 * The total number of tasks slice refill with default time slice
-+	 * (SCX_SLICE_DFL).
- 	 */
--	s64		SCX_EV_ENQ_SLICE_DFL;
-+	s64		SCX_EV_REFILL_SLICE_DFL;
- 
- 	/*
- 	 * The total duration of bypass modes in nanoseconds.
-@@ -2197,7 +2197,7 @@ static void do_enqueue_task(struct rq *rq, struct task_struct *p, u64 enq_flags,
- 	 */
- 	touch_core_sched(rq, p);
- 	p->scx.slice = SCX_SLICE_DFL;
--	__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
-+	__scx_add_event(SCX_EV_REFILL_SLICE_DFL, 1);
- local_norefill:
- 	dispatch_enqueue(&rq->scx.local_dsq, p, enq_flags);
- 	return;
-@@ -2205,7 +2205,7 @@ static void do_enqueue_task(struct rq *rq, struct task_struct *p, u64 enq_flags,
- global:
- 	touch_core_sched(rq, p);	/* see the comment in local: */
- 	p->scx.slice = SCX_SLICE_DFL;
--	__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
-+	__scx_add_event(SCX_EV_REFILL_SLICE_DFL, 1);
- 	dispatch_enqueue(find_global_dsq(p), p, enq_flags);
- }
- 
-@@ -3296,7 +3296,7 @@ static struct task_struct *pick_task_scx(struct rq *rq)
- 		p = prev;
- 		if (!p->scx.slice) {
- 			p->scx.slice = SCX_SLICE_DFL;
--			__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
-+			__scx_add_event(SCX_EV_REFILL_SLICE_DFL, 1);
- 		}
- 	} else {
- 		p = first_local_task(rq);
-@@ -3313,7 +3313,7 @@ static struct task_struct *pick_task_scx(struct rq *rq)
- 				scx_warned_zero_slice = true;
- 			}
- 			p->scx.slice = SCX_SLICE_DFL;
--			__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
-+			__scx_add_event(SCX_EV_REFILL_SLICE_DFL, 1);
- 		}
- 	}
- 
-@@ -3399,7 +3399,7 @@ static int select_task_rq_scx(struct task_struct *p, int prev_cpu, int wake_flag
- 		if (cpu >= 0) {
- 			p->scx.slice = SCX_SLICE_DFL;
- 			p->scx.ddsp_dsq_id = SCX_DSQ_LOCAL;
--			__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
-+			__scx_add_event(SCX_EV_REFILL_SLICE_DFL, 1);
- 		} else {
- 			cpu = prev_cpu;
- 		}
-@@ -4413,7 +4413,7 @@ static ssize_t scx_attr_events_show(struct kobject *kobj,
- 	at += scx_attr_event_show(buf, at, &events, SCX_EV_DISPATCH_KEEP_LAST);
- 	at += scx_attr_event_show(buf, at, &events, SCX_EV_ENQ_SKIP_EXITING);
- 	at += scx_attr_event_show(buf, at, &events, SCX_EV_ENQ_SKIP_MIGRATION_DISABLED);
--	at += scx_attr_event_show(buf, at, &events, SCX_EV_ENQ_SLICE_DFL);
-+	at += scx_attr_event_show(buf, at, &events, SCX_EV_REFILL_SLICE_DFL);
- 	at += scx_attr_event_show(buf, at, &events, SCX_EV_BYPASS_DURATION);
- 	at += scx_attr_event_show(buf, at, &events, SCX_EV_BYPASS_DISPATCH);
- 	at += scx_attr_event_show(buf, at, &events, SCX_EV_BYPASS_ACTIVATE);
-@@ -5148,7 +5148,7 @@ static void scx_dump_state(struct scx_exit_info *ei, size_t dump_len)
- 	scx_dump_event(s, &events, SCX_EV_DISPATCH_KEEP_LAST);
- 	scx_dump_event(s, &events, SCX_EV_ENQ_SKIP_EXITING);
- 	scx_dump_event(s, &events, SCX_EV_ENQ_SKIP_MIGRATION_DISABLED);
--	scx_dump_event(s, &events, SCX_EV_ENQ_SLICE_DFL);
-+	scx_dump_event(s, &events, SCX_EV_REFILL_SLICE_DFL);
- 	scx_dump_event(s, &events, SCX_EV_BYPASS_DURATION);
- 	scx_dump_event(s, &events, SCX_EV_BYPASS_DISPATCH);
- 	scx_dump_event(s, &events, SCX_EV_BYPASS_ACTIVATE);
-@@ -7313,7 +7313,7 @@ __bpf_kfunc void scx_bpf_events(struct scx_event_stats *events,
- 		scx_agg_event(&e_sys, e_cpu, SCX_EV_DISPATCH_KEEP_LAST);
- 		scx_agg_event(&e_sys, e_cpu, SCX_EV_ENQ_SKIP_EXITING);
- 		scx_agg_event(&e_sys, e_cpu, SCX_EV_ENQ_SKIP_MIGRATION_DISABLED);
--		scx_agg_event(&e_sys, e_cpu, SCX_EV_ENQ_SLICE_DFL);
-+		scx_agg_event(&e_sys, e_cpu, SCX_EV_REFILL_SLICE_DFL);
- 		scx_agg_event(&e_sys, e_cpu, SCX_EV_BYPASS_DURATION);
- 		scx_agg_event(&e_sys, e_cpu, SCX_EV_BYPASS_DISPATCH);
- 		scx_agg_event(&e_sys, e_cpu, SCX_EV_BYPASS_ACTIVATE);
-diff --git a/tools/sched_ext/scx_qmap.bpf.c b/tools/sched_ext/scx_qmap.bpf.c
-index 26c40ca4f36c..c3cd9a17d48e 100644
---- a/tools/sched_ext/scx_qmap.bpf.c
-+++ b/tools/sched_ext/scx_qmap.bpf.c
-@@ -784,8 +784,8 @@ static int monitor_timerfn(void *map, int *key, struct bpf_timer *timer)
- 		   scx_read_event(&events, SCX_EV_DISPATCH_KEEP_LAST));
- 	bpf_printk("%35s: %lld", "SCX_EV_ENQ_SKIP_EXITING",
- 		   scx_read_event(&events, SCX_EV_ENQ_SKIP_EXITING));
--	bpf_printk("%35s: %lld", "SCX_EV_ENQ_SLICE_DFL",
--		   scx_read_event(&events, SCX_EV_ENQ_SLICE_DFL));
-+	bpf_printk("%35s: %lld", "SCX_EV_REFILL_SLICE_DFL",
-+		   scx_read_event(&events, SCX_EV_REFILL_SLICE_DFL));
- 	bpf_printk("%35s: %lld", "SCX_EV_BYPASS_DURATION",
- 		   scx_read_event(&events, SCX_EV_BYPASS_DURATION));
- 	bpf_printk("%35s: %lld", "SCX_EV_BYPASS_DISPATCH",
--- 
-2.45.2
+What commit would you like me to point at? I selected b6d00d47e81a,
+because it introduced "ARM64_VA_BITS=3D52".
+Looking at git blame, ARCH_MMAP_RND_BITS_MAX logic was introduced back
+in 2016 in 8f0d3aa9de57 ("arm64: mm: support ARCH_MMAP_RND_BITS"),
+which is before "ARM64_VA_BITS=3D52" was a thing.
+I suppose that there's also 3cb7e662a930 ("arm64: Kconfig: Fix
+indentation and add comments"), but that's just some whitespace
+adjustments.
 
+>
+>
+> >>> Signed-off-by: Kornel Dul=C4=99ba <korneld@google.com>
+> >>> ---
+> >>>  arch/arm64/Kconfig | 6 +++---
+> >>>  1 file changed, 3 insertions(+), 3 deletions(-)
+> >>>
+> >>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> >>> index 748c34dc953c..38e0bac567f5 100644
+> >>> --- a/arch/arm64/Kconfig
+> >>> +++ b/arch/arm64/Kconfig
+> >>> @@ -332,9 +332,9 @@ config ARCH_MMAP_RND_BITS_MAX
+> >>>       default 24 if ARM64_VA_BITS=3D39
+> >>>       default 27 if ARM64_VA_BITS=3D42
+> >>>       default 30 if ARM64_VA_BITS=3D47
+> >>> -     default 29 if ARM64_VA_BITS=3D48 && ARM64_64K_PAGES
+> >>> -     default 31 if ARM64_VA_BITS=3D48 && ARM64_16K_PAGES
+> >>> -     default 33 if ARM64_VA_BITS=3D48
+> >>> +     default 29 if (ARM64_VA_BITS=3D48 || ARM64_VA_BITS=3D52) && ARM=
+64_64K_PAGES
+> >>> +     default 31 if (ARM64_VA_BITS=3D48 || ARM64_VA_BITS=3D52) && ARM=
+64_16K_PAGES
+> >>> +     default 33 if (ARM64_VA_BITS=3D48 || ARM64_VA_BITS=3D52)
+> >>>       default 14 if ARM64_64K_PAGES
+> >>>       default 16 if ARM64_16K_PAGES
+> >>>       default 18
+>
+> Otherwise LGTM.
+>
+> Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
