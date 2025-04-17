@@ -1,108 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D409152532;
-	Thu, 17 Apr 2025 18:10:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153B718C034;
+	Thu, 17 Apr 2025 18:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744913442; cv=none; b=p5cwK8Q27XaIPbCCoK44J95sfpfs1dQY/NWAJoCpA4rN9Y7AF3/HPp/OA3qg3D3Pqltz8gBDnDvSS1owONi3Qz/IHUc5/FtPY8OxjOIwzmQ9vcIo4GptDdYYV8WK4nuAkcIHWAuAPLva3/CAfb7t6c424oVGTcnZFWwl0RCAaUQ=
+	t=1744913467; cv=none; b=Y6Z/3aUl2nTsDzA7yMqlc0vbaYxrjFjlpppF9rUZEkyd6wkfqBtaqvNk8ZkLt/ZbYO23P3y8+Mn3lmbaVf+wW7YpADqDCYVTCJ+rhePW4H3CK+hzNLTtJxwdmgh1H192JUaXZeNHA8AYiHs7ztrgkFhb7uD0Pf5YStUoQ7IbTjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744913442; c=relaxed/simple;
-	bh=rTs86itJLPxp9kyMzUv6qxKC83UEq2ZjsgbRujBTqis=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mYEQ9jvxogUwuvyKzY09641qZQxnOO1k3/EXqJ/DE5W5G2tCp9AY6EoRLl3s0zkYKDfLQ2CBPFDMmF+QqgeoP015gmYEHJV79pLdMIYte/JQZlRZLPcGkFyBIvOXvWAGHqsz6Mm+nykiniOdEnml/L25wAqYW1kQzJs9WwpfHeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=s3EMX1KT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744913467; c=relaxed/simple;
+	bh=FNJOavUKqvP5gonkka8SPdNbPtncJedVaRPBsPRzNOs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ils+z1+Gq5/dH9nEvZXM07vMNUe872Douk7ADI1ARjrlIqAHYjyrasIH1GgcbGkiTREZdNb59vaBOs3CvnCSbaV4/64DLHi69iVvqGUjkAT92aR8f0BllM6u1Q2OjoqRovh1PSxCV7YC2cEaeA+kH3UVNvJRkYscIUVUyxUNhGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Yho7JQOy; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="s3EMX1KT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F24E5C4CEE4;
-	Thu, 17 Apr 2025 18:10:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744913442;
-	bh=rTs86itJLPxp9kyMzUv6qxKC83UEq2ZjsgbRujBTqis=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=s3EMX1KTjF+Idi+RH7c/SIs3YDr3OiXwxaHMPkg+UMVuxwdeMnWqxPfiq+SrA93Wu
-	 DolY8RI6J0HgC1YVCRbwx3zjSGvsqLR0incqlxmLydEPpICQIbeQVHlKiacnyiuKdR
-	 IqVzNrehqYHHS+JwpQfzjhacDuffL5CjWspJRQ64=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	Peter Griffin <peter.griffin@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	tudor.ambarus@linaro.org,
-	andre.draszik@linaro.org,
-	kernel-team@android.com,
-	willmcvicker@google.com,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 6.14 341/449] arm64: dts: exynos: gs101: disable pinctrl_gsacore node
-Date: Thu, 17 Apr 2025 19:50:29 +0200
-Message-ID: <20250417175131.922393961@linuxfoundation.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250417175117.964400335@linuxfoundation.org>
-References: <20250417175117.964400335@linuxfoundation.org>
-User-Agent: quilt/0.68
-X-stable: review
-X-Patchwork-Hint: ignore
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Yho7JQOy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=rACPyzLfzjBAKxNw4xEGN0eJ6oVIpnK7ZYH00wZ3y8I=; b=Yho7JQOyU3R/liFGOVuB0Ckxom
+	ANKDM1xdcYAn1/pWOkwZ/23CN/cuABVSO+zE7WJM1+D32dweyAXTgwKIP7cd1Rbnv0oEehqRLK9oC
+	JVzfWq2wf79uVnlWqzKuhIaySZswb4rCraxIHXnGxDyw7SIDI+3E34/SyoYlUMSePe5M=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u5ThU-009of8-HT; Thu, 17 Apr 2025 20:11:00 +0200
+Date: Thu, 17 Apr 2025 20:11:00 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Thangaraj.S@microchip.com
+Cc: netdev@vger.kernel.org, fiona.klute@gmx.de, andrew+netdev@lunn.ch,
+	linux-usb@vger.kernel.org, davem@davemloft.net,
+	Rengarajan.S@microchip.com, kernel-list@raspberrypi.com,
+	linux-kernel@vger.kernel.org, kuba@kernel.org, pabeni@redhat.com,
+	edumazet@google.com, UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH net v2] net: phy: microchip: force IRQ polling mode for
+ lan88xx
+Message-ID: <3c6abdaf-b4e4-440f-9d75-745741287007@lunn.ch>
+References: <20250416102413.30654-1-fiona.klute@gmx.de>
+ <fcd60fa6-4bb5-47ec-89ab-cbc94f8a62ce@gmx.de>
+ <ebb1fe9a31abc4045b2f95072c6d3d94ee83239e.camel@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ebb1fe9a31abc4045b2f95072c6d3d94ee83239e.camel@microchip.com>
 
-6.14-stable review patch.  If anyone has any objections, please let me know.
+On Thu, Apr 17, 2025 at 02:17:20PM +0000, Thangaraj.S@microchip.com wrote:
+> Hi Flona,
+> We haven't observed this issue with our LAN7801 + LAN88xx setup during
+> testing in our setups. Issue reported  specifically in RPI and NVidea
+> with which we have not tested recently. Additionally, community
+> discussions suggest that this issue may have been introduced due to
+> driver updates in the LAN78xx. There's no hardware errata indicating
+> any problems with the interrupts in LAN88xx.
+> 
+> If the issue lies in the interrupt handling within the LAN78xx, it's
+> likely that similar problems could arise with other PHYs that support
+> interrupt handling. This need to be debugged and addressed from LAN78xx
+> driver rather than removing interrupt support in LAN88xx. 
 
-------------------
+Hi Thangaraj
 
-From: Peter Griffin <peter.griffin@linaro.org>
+It is an easily available platform. Maybe you can get one and try to
+debug it?
 
-commit 168e24966f10ff635b0ec9728aa71833bf850ee5 upstream.
+This is a self contained simple fix. From a pragmatic standpoint, it
+solves an issue which is bothering people. If you do find and fix an
+issue in the LAN78xx this change can be easily reverted. So i'm
+learning towards merging it.
 
-gsacore registers are not accessible from normal world.
-
-Disable this node, so that the suspend/resume callbacks
-in the pinctrl driver don't cause a Serror attempting to
-access the registers.
-
-Fixes: ea89fdf24fd9 ("arm64: dts: exynos: google: Add initial Google gs101 SoC support")
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-To: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Conor Dooley <conor+dt@kernel.org>
-To: Alim Akhtar <alim.akhtar@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: tudor.ambarus@linaro.org
-Cc: andre.draszik@linaro.org
-Cc: kernel-team@android.com
-Cc: willmcvicker@google.com
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20250106-contrib-pg-pinctrl_gsacore_disable-v1-1-d3fc88a48aed@linaro.org
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/arm64/boot/dts/exynos/google/gs101.dtsi |    1 +
- 1 file changed, 1 insertion(+)
-
---- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-+++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-@@ -1454,6 +1454,7 @@
- 			/* TODO: update once support for this CMU exists */
- 			clocks = <0>;
- 			clock-names = "pclk";
-+			status = "disabled";
- 		};
- 
- 		cmu_top: clock-controller@1e080000 {
-
-
+	Andrew
