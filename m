@@ -1,172 +1,181 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750E524060D
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 11:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F1D239586
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 11:27:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744889236; cv=none; b=HW8jJcUERSIo9aFTKBLJJNDn9CYHXgPa0jQC9QQnv0FYQ3JUbybUjhKjrkFgviLWRhmFc566unOZdDKzeWpAzsEUoc4H48OE5Uvp+UPHPciBnhPJ4smDHp+ARr6hYUdEpXvYrNvQh7mV1E7mp3YaDvorFx4Lpu0l2KnVsYt72S8=
+	t=1744889270; cv=none; b=c6TFMuLqXKVeiFinBF11Uwc+jxxXAUdLX/yeTCYYPnKmSPVWJeXuXbht6jX9dxakOnCX3Eoa7jRO+/Fj/Kl9IeV56dAtkJiSb2qMs5/pOvgBqj/AHCIy4mW2q7phQDMpSwFWK0N2ohcn30L+2i3FdG2cqK8Brj/IUJ+qXZQooWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744889236; c=relaxed/simple;
-	bh=2nnKPnNKSenGk7oH+W/zKyt+Vs9nyo2TyOcvxnYkJUo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AvXU31Sy0n8+72JhDegS46Qvcb2k0xschDBBRrC/YvOCXaeBfFA4HzHrjLchZESZcAwi3QNwAXgW7XwyOVmqT8831ajkR6qSGh80Dk0t4yXxPgcQJY6vlNojoWL1OG7PjwkPcYPkmxAjIom/WMrGO0ORH6B8JjwldfPofBndfZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qce22+Mm; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744889270; c=relaxed/simple;
+	bh=1u1es34ZEsnn78fuTN+H7GucVaaez2L/ecju3pZniiE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kE6T6/O2KETFMKKJCypZ4ftg6ToMq0bsf5MIyLyD0MAHtfN0M0MRGsrh/4gBozhJmF5oLjSlKTvde97M+uRxJH4ge4haWQK/RNg4H0NHl5edFZVRj30vw4Isbozn6lWBOJjs+SoU2jn/lOK68kRRO1DhRKNYI9fU5GmcQhMKpqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=K47WesQY; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qce22+Mm"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso5406985e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 04:27:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744889233; x=1745494033; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Mn6UYVV7ZzZexDC3IKQgx7MkJK5bKEbv3iNQ8BNX+8I=;
-        b=qce22+MmVOpq8gspYBBebktf0hkeW/6Dw0KtR75F68pVR7+Hl6BcvJoOFpwKp/TZwe
-         kmvzaPWy/5TlOKoDwRZRF42Jny/EKAI6ws6Ps3KNqJ9dpEXabrScj30unZ2AEftMUkBh
-         Mn5laNRNtXwnCTQb1YUPk20l29xDFUTX6HQygtp+ulkjCcemC8C20WUGlZXxH2zFgTyO
-         o/DhMVogOebZG6vU7u5jNkhoelx64jEVrTPoVtHB2jHIJTIsufBu47wO84N2rQOvLSxu
-         iwzJbqSTYS84i0IhJK3T2A7lGneE53g6D+SFrb2eCAoE78ceJ9KBJja4sIQlSVkhjf+T
-         ZaHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744889233; x=1745494033;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mn6UYVV7ZzZexDC3IKQgx7MkJK5bKEbv3iNQ8BNX+8I=;
-        b=xI+cTAm8NnA0+iLYCyKb9P17zUIzrJ7b5TGH4g1lhtGuWyjlf5LYG/etv5F0BsW5ND
-         rNW257EBQ631H1cvHLIjtETEAD0k48aHJDGfwCoy2b6BlFzusasNipKlNz3e82iqkDOd
-         2QW2tyw6NRFHeDTozUkjM1oVjcE2gFYBBGhHjHQHcy66up3VcbiC1A8ayMAdk5K/QduY
-         r8oZeoHaKhuwNu8y3htO5lJ3/C6g2e8ERLuN8hnxhQrkuG7U1IZENnT8lcZBJRFmWPcO
-         eVX4L6IoDOBf9lP/24dS8ZbPDYSyE3iAMaSoSGoD1j1pJfW5s0KUukbCzz/RGdR/fH6+
-         cyCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW6r4yvzu3DBD3X9lmkLnCozbjIzqDmJpANWTZ43LP6N5FkcXw7XLGrviT02K69cGwGMvGf4XHs2QczvdI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqwRoZYTghlq39knwKIgu/037wBI2CeQG4mAHYvJdYQgTsxuq9
-	++rfPN9DDry+N5HaM+Cs5183gnFDlQJIAlQuOElC5Ze+39cj77USw41Elafzr1s=
-X-Gm-Gg: ASbGnctZODqNrxGtgPxxPwn9MT6XW56eHi6P7H87JR2Pfcwik2/GDHWbwVNpobFlrOa
-	3jrJ6c+Is6Kc4e8QdEj8bkDTH20QSjcB+wS/0c0pTLS4rRd5QvvJf8j6f/5yD/6Mcu1SUGa6qw/
-	8ZSvQUpT7SUjdITaY/FEO2Ejx1GUTI/YqL1gOfzF+ti664AphJZDoykuMNN6sidrNIXHGouf6KV
-	gOpl6TMIiafk0Mgg4mv71oX0i+OHmokj2og2Bt31pN+5VLVPRboho/t4ZT1n2waj2247EJXBB2H
-	E2oPhGTiMZIVdiCyo6o98/sbxWBPBVGc10Ee/UWfWxz0u+7UGZjtWVZxATlM2WV2NBEMBWhd1NY
-	M9xYR4Q==
-X-Google-Smtp-Source: AGHT+IEUqScCO1azSIC6mQA8vGrm3CDpp/x7AVftuXoA1RfRc/gtPvrF3kjcLdpXweKxDtGUu+/VdA==
-X-Received: by 2002:a05:600c:c0b:b0:43d:934:ea97 with SMTP id 5b1f17b1804b1-4405d6df1fcmr54165755e9.27.1744889232626;
-        Thu, 17 Apr 2025 04:27:12 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96400dsm20144063f8f.11.2025.04.17.04.27.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 04:27:12 -0700 (PDT)
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Date: Thu, 17 Apr 2025 12:27:07 +0100
-Subject: [PATCH v7 6/6] arm64: dts: qcom: x1e80100-crd: Define RGB sensor
- for cci1_i2c1
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="K47WesQY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=m/7PFydCEc2cZqSSU1AuQ2J36xZLv3+FkoNbKaaeGj4=; b=K47WesQYhwNtLulRh8JWWEZpT3
+	p543PrdOuRmvUtpC5s4B/QylNakqkKZFYzenYDKgzg7UfwspTCXs6+3lZUEqw8gfr4t+g1eD4bQm+
+	tmiskSzxz//9oj1DZfIlBpgmWLCwU+7GGtx6MxUfsarejvkYq4aKdhYN3q1alix4r3DD6TZReDc/h
+	NFkyfdwKvrKy4m/hVqA1RiFJ0xncu+b8I9x2PJD7j5+einpRpvmwpDh5BiAyjZh9jLRZhPY7UUlZJ
+	0JE9JAuuiS1aLQNhg3YvtFSB9rJLgpMcqnPiJP9q1M3U3nwlpKs+4MNERjpWJbG8niAVAhD29OMHE
+	R1HNyBaw==;
+Received: from [90.241.98.187] (helo=[192.168.0.101])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1u5NP0-000mgU-4r; Thu, 17 Apr 2025 13:27:30 +0200
+Message-ID: <3ac34c84-fd84-4598-96e1-239418b7109f@igalia.com>
+Date: Thu, 17 Apr 2025 12:27:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250417-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v7-6-3fd4124cf35a@linaro.org>
-References: <20250417-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v7-0-3fd4124cf35a@linaro.org>
-In-Reply-To: <20250417-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v7-0-3fd4124cf35a@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Robert Foss <rfoss@kernel.org>, 
- Todor Tomov <todor.too@gmail.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-media@vger.kernel.org, Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-X-Mailer: b4 0.14.2
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/5] drm/sched: Warn if pending list is not empty
+To: phasta@kernel.org, Lyude Paul <lyude@redhat.com>,
+ Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250407152239.34429-2-phasta@kernel.org>
+ <20250407152239.34429-5-phasta@kernel.org>
+ <9607e5a54b8c5041dc7fc134425cc36c0c70b5f3.camel@mailbox.org>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+In-Reply-To: <9607e5a54b8c5041dc7fc134425cc36c0c70b5f3.camel@mailbox.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Define ov08x40 on cci1_i2c1. The RGB sensor appears on the AON CCI pins
-connected to CSIPHY4 in four lane mode.
 
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
----
- arch/arm64/boot/dts/qcom/x1-crd.dtsi | 60 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+On 17/04/2025 08:45, Philipp Stanner wrote:
+> On Mon, 2025-04-07 at 17:22 +0200, Philipp Stanner wrote:
+>> drm_sched_fini() can leak jobs under certain circumstances.
+>>
+>> Warn if that happens.
+>>
+>> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+>> ---
+>>   drivers/gpu/drm/scheduler/sched_main.c | 4 ++++
+> 
+> I hear a lot of amazed silence for this series ^_^
+> 
+> If there's no major pushback, my intention is to pull this in once the
+> blocking Nouveau-bug has been fixed (by pulling my patch).
 
-diff --git a/arch/arm64/boot/dts/qcom/x1-crd.dtsi b/arch/arm64/boot/dts/qcom/x1-crd.dtsi
-index 74bf2f48d93522d3f5b7ca990c06519ca664d905..048e49aa805c7239e1a22b59bd784683d1d0da08 100644
---- a/arch/arm64/boot/dts/qcom/x1-crd.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1-crd.dtsi
-@@ -894,6 +894,66 @@ &gpu {
- 	status = "okay";
- };
- 
-+&camcc {
-+	status = "okay";
-+};
-+
-+&camss {
-+	vdd-csiphy-0p8-supply = <&vreg_l2c_0p8>;
-+	vdd-csiphy-1p2-supply = <&vreg_l1c_1p2>;
-+
-+	status = "okay";
-+
-+	ports {
-+		/*
-+		 * port0 => csiphy0
-+		 * port1 => csiphy1
-+		 * port2 => csiphy2
-+		 * port3 => csiphy4
-+		 */
-+		port@3 {
-+			csiphy4_ep: endpoint@4 {
-+				reg = <4>;
-+				clock-lanes = <7>;
-+				data-lanes = <0 1 2 3>;
-+				remote-endpoint = <&ov08x40_ep>;
-+			};
-+		};
-+	};
-+};
-+
-+&cci1 {
-+	status = "okay";
-+};
-+
-+&cci1_i2c1 {
-+	camera@36 {
-+		compatible = "ovti,ov08x40";
-+		reg = <0x36>;
-+
-+		reset-gpios = <&tlmm 237 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&cam_rgb_default>;
-+
-+		clocks = <&camcc CAM_CC_MCLK4_CLK>;
-+		assigned-clocks = <&camcc CAM_CC_MCLK4_CLK>;
-+		assigned-clock-rates = <19200000>;
-+
-+		orientation = <0>; /* front facing */
-+
-+		avdd-supply = <&vreg_l7b_2p8>;
-+		dovdd-supply = <&vreg_l3m_1p8>;
-+
-+		port {
-+			ov08x40_ep: endpoint {
-+				data-lanes = <1 2 3 4>;
-+				link-frequencies = /bits/ 64 <400000000>;
-+				remote-endpoint = <&csiphy4_ep>;
-+			};
-+		};
-+	};
-+};
-+
- &i2c0 {
- 	clock-frequency = <400000>;
- 
+It was on my todo list to read it but failed to get to it due various 
+reasons.
 
--- 
-2.49.0
+I only managed to skim over it it and am not quite convinced. But 
+because I did not have time to think about it very much my feedback at 
+this point is not very deep.
+
+On the high level I understand for nouveau the series is "net zero", 
+right? No leaks before, no leaks after. What about other drivers? Which 
+ones have known leaks which could be addressed by them implementing this 
+new callback?
+
+Presumably you would document the callback should only be implemented by 
+drivers which are 100% sure the clean up can always reliably done? 
+Otherwise unkillable process on stuck hardware or drivers with not good 
+enough reset support can still happen. (Which would be worse than a leak 
+on shutdown.)
+
+Have you thought about any observable effects from the userspace point 
+of view? For example something if which now works, such as submitting a 
+job which writes to a shared buffer and then exiting could stop working 
+after the callback is implemented? I don't see it, because it would be 
+unreliable even today (timing dependent whether job is in the queue or 
+scheduled at exit time) so just thinking out loud.
+
+Also, since the cover letter mentions job reference counting was one 
+idea that was discarded another related problem is about the lifetimes. 
+I think it would be good to discuss potentially reference counting 
+"everything" because for instance today I can crash the kernel trivially 
+with the xe driver*. Probably other drivers too.
+
+Problem exactly is that jobs can outlive the entities and the scheduler, 
+while some userspace may have a dma fence reference to the job via sync 
+file. This new callback would not solve it for xe, but if everything 
+required was reference counted it would.
+
+Back to the series.
+
+On the design level it feels like it adds too much state machine and 
+makes things hard to follow/maintain. It would be nice to find a 
+solutiuon where we end up with less state machine and not more.
+
+On the low level there are some patch ordering and naming, spelling and 
+other small improvements to be made.
+
+But as said at the start, I would need to set aside more time to provide 
+better comments and/or ideas.
+
+*)
+https://patchwork.freedesktop.org/patch/642709/?series=146211&rev=2
+
+> In the mean time, let me review my own stuff:
+> 
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/scheduler/sched_main.c
+>> b/drivers/gpu/drm/scheduler/sched_main.c
+>> index 6b72278c4b72..ae3152beca14 100644
+>> --- a/drivers/gpu/drm/scheduler/sched_main.c
+>> +++ b/drivers/gpu/drm/scheduler/sched_main.c
+>> @@ -1465,6 +1465,10 @@ void drm_sched_fini(struct drm_gpu_scheduler
+>> *sched)
+>>   	sched->ready = false;
+>>   	kfree(sched->sched_rq);
+>>   	sched->sched_rq = NULL;
+>> +
+>> +	if (!list_empty(&sched->pending_list))
+>> +		dev_err(sched->dev, "%s: Tearing down scheduler
+>> while jobs are pending!\n",
+>> +			__func__);
+
+It isn't fair to add this error since it would out of the blue start 
+firing for everyone expect nouveau, no? Regardless if there is a leak or 
+not.
+
+> 
+> The "%s" here will be removed since dev_err() alreday prints the
+> function name.
+
+It does? But anyway, function name is redundant and irrelevant and 
+should not be logged IMO. I would rather prefer we replaced sched->dev 
+with sched->drm so could use drm loggers for clarity throughout.
+
+> I find this dev_err() print more useful than the stack a WARN_ON prints
+> (telling you about invalid_asm_exec_op or stuff like that).
+> 
+> Plus, I guess the places where drivers call drm_sched_fini() are very
+> well defined and known, so a callstack wouldn't really be useful in the
+> first place.
+
+Agreed.
+
+Regards,
+
+Tvrtko
+
+> 
+> P.
+> 
+>>   }
+>>   EXPORT_SYMBOL(drm_sched_fini);
+>>   
+> 
 
