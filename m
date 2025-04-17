@@ -1,62 +1,86 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921E02517A7;
-	Thu, 17 Apr 2025 17:28:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E5F1ADC8D;
+	Thu, 17 Apr 2025 17:29:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744910914; cv=none; b=MEq/opsqPdHgFQBNc2OiNd/HjYfZHs8ZezSkSAU8+qccQbYDvOWYgDjtoJcx+rA2jUiG/5PV6TWGcUtbJB+1qdXGvdr/HvHIJGOhI2ijGdb+DNNGzYOY1VDi2HAS7NSy26UW77EfXk8OBBZXGFiNjOTP5dXI0J7/KdXVk3TYq7c=
+	t=1744910944; cv=none; b=V2vHnv0pDBHYIDdJthIjLG1kXlZXBdVkgE67keVfEx90KdKxaH1PYOgSeThSwA/cvex6arkoBiKI4OczxqCpzAyzr/AnH+lWULjiCH1uOH80xQvmFoYzGhlS7SVqe7kZCeN9coaS6EY6ABhchhOIDeHVVxVvPVv3j4gq0lyET6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744910914; c=relaxed/simple;
-	bh=IZ27aO0p5WK6eVXz7aikyRTaG/D9jAX/ZN21m5ODZP0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nqAlt661iwBzqEt38RObug1NXlzdKZhVzBH1VO0C8a54W7NMXv/9PozsQe4NwbyH8tb8fD2DtqoLbEbzLmp/DlRGBrXBBvntB+QJHWLkJlffcRopVxWxWRKgI5DupF3Nhlljmwjd0q8CNSUOh9PmFKm7qezZlV5TvBRJvtLINio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=VtmVkxQB; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="VtmVkxQB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=my6RB4B1SqEjGjJYQecPt1/jUm3kCBQXDfaFQK4rq3Q=; b=VtmVkxQB0paQAhoEife9zaeVK4
-	qhIGuianKk/myGAMpH+06dNIcTlMRTWJ7weZdC+WW0ioDadKkIm01NDoC86BtP9qooILRSXSSECXr
-	iZ+4ogmxVnEY8G6IBj5d6qnkuZmrudPb/IwQGEdvMTUxZUaQnK10CJERFNjD6zuIgcTo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u5T2H-009oNn-BO; Thu, 17 Apr 2025 19:28:25 +0200
-Date: Thu, 17 Apr 2025 19:28:25 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-renesas-soc@vger.kernel.org, netdev@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next][V2] net: dsa: rzn1_a5psw: Make the read-only array
- offsets static const
-Message-ID: <7f9c3991-8c37-4fd0-bb38-82351dd2f1d8@lunn.ch>
-References: <20250417161353.490219-1-colin.i.king@gmail.com>
+	s=arc-20240116; t=1744910944; c=relaxed/simple;
+	bh=k9js8k1DblZUqKO1N8ynxGv/BOYalCNLHuHhyMjosWk=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dzgd6F4bMStGQzt5aHGaG0Ib76nuIOhWZ8Q5L+IrT6TPucwKFI6uOsO0If54nwN/C/uoXw74UEJ2hn0HbZD03Q/AJds+vnx9fDBj+rMAIcdQukfBJ0pfjq8JPGShSfr3+mdoQBUoba5uuRQ2keVKbnZfd2ThA4n9BOw15/9Zz0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZdlBd67RWz6K8r4;
+	Fri, 18 Apr 2025 01:24:41 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 71D3D140145;
+	Fri, 18 Apr 2025 01:28:59 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 17 Apr
+ 2025 19:28:58 +0200
+Date: Thu, 17 Apr 2025 18:28:57 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: David Lechner <dlechner@baylibre.com>
+CC: Jonathan Cameron <jic23@kernel.org>, Nuno =?ISO-8859-1?Q?S=E1?=
+	<nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Matthias Brugger
+	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Lars-Peter Clausen
+	<lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, "Cosmin
+ Tanislav" <cosmin.tanislav@analog.com>, Tomasz Duszynski
+	<tduszyns@gmail.com>, Jean-Baptiste Maneyrol
+	<jean-baptiste.maneyrol@tdk.com>, Andreas Klinger <ak@it-klinger.de>, "Petre
+ Rodan" <petre.rodan@subdimension.ro>, <linux-iio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH 1/8] iio: adc: dln2-adc: use aligned_s64 for timestamp
+Message-ID: <20250417182857.00002561@huawei.com>
+In-Reply-To: <20250417-iio-more-timestamp-alignment-v1-1-eafac1e22318@baylibre.com>
+References: <20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
+	<20250417-iio-more-timestamp-alignment-v1-1-eafac1e22318@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417161353.490219-1-colin.i.king@gmail.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, Apr 17, 2025 at 05:13:52PM +0100, Colin Ian King wrote:
-> Don't populate the read-only array offsets on the stack at run time,
-> instead make it static const.
+On Thu, 17 Apr 2025 11:52:33 -0500
+David Lechner <dlechner@baylibre.com> wrote:
+
+> Follow the pattern of other drivers and use aligned_s64 for the
+> timestamp. This will ensure the struct itself it also 8-byte aligned.
 > 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+>  drivers/iio/adc/dln2-adc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/adc/dln2-adc.c b/drivers/iio/adc/dln2-adc.c
+> index a1e48a756a7b519105393f77c4aebde1f2f85d50..359e26e3f5bcfe16d723f621bdfc01df2dfcf6a9 100644
+> --- a/drivers/iio/adc/dln2-adc.c
+> +++ b/drivers/iio/adc/dln2-adc.c
+> @@ -466,7 +466,7 @@ static irqreturn_t dln2_adc_trigger_h(int irq, void *p)
+>  	struct iio_dev *indio_dev = pf->indio_dev;
+>  	struct {
+>  		__le16 values[DLN2_ADC_MAX_CHANNELS];
+> -		int64_t timestamp_space;
+> +		aligned_s64 timestamp_space;
+Bug :( So needs a fixes tag ideally.  Fine to just reply with one
+(or I might go digging if I get time).
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+>  	} data;
+>  	struct dln2_adc_get_all_vals dev_data;
+>  	struct dln2_adc *dln2 = iio_priv(indio_dev);
+> 
 
-    Andrew
