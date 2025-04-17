@@ -1,138 +1,115 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55EB22F38C
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 10:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26DF233144
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 10:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744886890; cv=none; b=sjxO6rGNBHzM6sweSJq4I35RA23BiOM6VD23QpqVV/bpeBP+utzznCZRZwUri3CswNVwvjugS2z8JIBDEqIm9Sacnn9fSeiGWaqjfPPFuMD3jHkblz2XQduOKpeaQu5pd/9uLlTTFUfJq2hHtZt0bXim1mSxl/CalaGwcoWXdE0=
+	t=1744886896; cv=none; b=GRgeFshGtmObD31a8bYx9hi5EfxmmNYhw142eEXM6q4MyHLfgYWzkixL0URnRtzDp8jz1p846tMBr0q7cmHZ6BGyu/QK89vY/76vT8va4te1gDbL/Ecb2+Yc5ZaeTA8rrbITcv47KBaGi7EX0jYNSLo5KTYlhbbJUDS/CrExTyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744886890; c=relaxed/simple;
-	bh=BTrhh55yMb7cCbPZyADxkhifxyh70Jy6fVzDF7gg+Go=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=Gtb819lK9ICDub+BKfcgDKthjLfariajgwSLvo/mll8E9E8nU0txCMCspaAKVXjDBS3TYzPhxW+pSDPOETMBnujBVz90OyhuMrULnzeTJIYyvUQm7OqNVjiyUJK5YmZueydWqvekHBFIxi4yrKuUuEnmCD54PZMQKJf/k1qxr+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FQMLOvU6; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744886896; c=relaxed/simple;
+	bh=XhGacwTcE6A+IWJQpQyCMN16TVH3Z6owtk1R8JSA4+A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bsu+djcN4J2aPQg0n6H+EqbVhYqSgi28j0rzIytR6yLE9BM6bs/n9EhqbN3THPxEnVx9EvmmHRZR3thl1jVXcP9iiZL3K/Yzsu6FQmnBL7I0DdUwuXrw9MNtaji3tI22JwB5esehA5lnnMGHOj7u66H1m1foJv16RtA6/KVerO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CYj/IJ4R; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FQMLOvU6"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53H5l4b0009289;
-	Thu, 17 Apr 2025 10:47:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	2vUtnJERmDPMRwfb9WPRiqeU5l4lGHI2IYPwOWBEt0Q=; b=FQMLOvU6JaUT+O2F
-	Cpxl96N85uMFfEvZs8UsynDIb1V5Lwjftw3Oc2ZQSU/OvMaSc0mkzRxJ75t6lV5K
-	uDjRksZzL4zkVR+/HgPTzahrAUDP9ejSfwIYjF+WLYy/opS2litjlIWpd/FTDkI1
-	7on2leP6WzcuaHHKipzObOVP10k2s8Zkt7wuYYjH9IqfHjLL5uidf2+5hQB/JGgV
-	xcydMZe9+ItMzlPDyKzjUHO+syMnohg+jTewlU7gcWOX333uWtpAxKnyfH9nibkY
-	Z5IUvy74PLqVIAxYHk5w0j/C5PhYpsa+VUDKAPXKALKkW5pSU+Q3Tx6FinR/4Mqb
-	wLg3Nw==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4628rvbuw8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 10:47:45 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53HAliWc013807
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 10:47:44 GMT
-Received: from nsssdc-sh01-lnx.ap.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 17 Apr 2025 03:47:40 -0700
-From: Luo Jie <quic_luoj@quicinc.com>
-Date: Thu, 17 Apr 2025 18:47:12 +0800
-Subject: [PATCH v3 5/6] arm64: kvm: Convert the opencoded field modify
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CYj/IJ4R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744886893;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OudEsC2htuXU3a1BRgDOXrN8cqmum79c1G5XjX0b0Ts=;
+	b=CYj/IJ4RRldEBDBj1ag7dWJmTek3U/cRZlHlufqdrMALS1eHyQnNNvuFvVfrRX26Zo3DWY
+	r0etfLnaxRq+pV8mDDyXMJINocfR006S+Zuki1ietbPTpampz201MIXfC2kfTjG+0+TUG8
+	Ozmk8oPjZ32B+HZhfwb6KamXaN4/caU=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-635-VM7mjO3HPESTRBWyATi48A-1; Thu, 17 Apr 2025 06:48:11 -0400
+X-MC-Unique: VM7mjO3HPESTRBWyATi48A-1
+X-Mimecast-MFC-AGG-ID: VM7mjO3HPESTRBWyATi48A_1744886891
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6ece036a581so12502736d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 03:48:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744886891; x=1745491691;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OudEsC2htuXU3a1BRgDOXrN8cqmum79c1G5XjX0b0Ts=;
+        b=YomcAflA1Wr18UJbSNLC2N6kG7cDjXbTtvB/HHlrYpaDamSVyCRqXEdDgnpzeXRs+t
+         4di4eOxq92SClrzYhcajV0GOVeHQJGNUNr+aeTGyviWn5Vdu79GCM44kiEDVRNk+t+hw
+         0/L+0wJNNGF+T1YOiEki46vVlsauHOta7mQ8Hnz8pTzRZqXEvXXrnMjJWd/g3JVPQYE3
+         ApQXYbxAgr7qfGFUe9xK8CdPDuBWfAXKD2ihbK0as2sN/hXRB9hrien/pS+sK59TAs40
+         jAfM7EXGIJ/dLx+vbb8Mr2tSqZ/jmLZ6PksgRqBvhnPlZoLr4VcobsxhDD2hUlXyNaKB
+         4l7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUlQi3PCtoDh/Huy4CSXOaCiImRKoAstNEzQq7kxl+C828fO47zxGLoWAsAd51l8jk4eCSK87lZ2PYVD9c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjoSK6yimBAgBcyToIbp10aMcpfQ625OV4lWezJiqJXLcL8Ce1
+	H3nOn9a5gqMiPf9eR20DN9SwMuQMDUDfyekF71TgvVpSTPoue2MnlIoDcke+MxWJ4kRsogKIL8i
+	Or2QVeGHH+gBVOMCDvFu6CFoTKt+yWhXERuAFjwOfNJB5hbIblIdGbb1myQyZRA==
+X-Gm-Gg: ASbGncs9bm6qxmsNzi+6Cn0p/9Gl0ibD7LjaiTu3IyubJZeoJDmj4Byv5nxe8r1rokj
+	gI4KMEZd+PZaN6adnTTgb0QMdcysQZ+dIUNDJOypxVnFblzxv7AOMv+tJOWAAYKBoLwtfU3gHNh
+	xL5tPi69iK0vQmFsnVPPKwDHahQsvw+g+hdm4GKASn5lQEIVeDIfXaViqslFL+yJbW32USwaH4W
+	QuzCQFcUE/jSOhy2jJXH1zoJdFxtSJRWGV75yI6iz5EyCkkabishImzqcydVo7ZE/eLmONduOtw
+	Ho78gtInMrNCn00KwsMJI6oEbOlEjYC9w9IWGwXVAg==
+X-Received: by 2002:a05:6214:3008:b0:6e8:fa72:be49 with SMTP id 6a1803df08f44-6f2b2f421b9mr65124536d6.12.1744886891276;
+        Thu, 17 Apr 2025 03:48:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFRD2S2lNf87+n5j2F4wP6+GtOIfe7KgdYGkxqrRR5TEwTDQjpW1zM73oytFXas9ITp16LLpQ==
+X-Received: by 2002:a05:6214:3008:b0:6e8:fa72:be49 with SMTP id 6a1803df08f44-6f2b2f421b9mr65124216d6.12.1744886890999;
+        Thu, 17 Apr 2025 03:48:10 -0700 (PDT)
+Received: from [192.168.88.253] (146-241-55-253.dyn.eolo.it. [146.241.55.253])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0de982274sm125717616d6.64.2025.04.17.03.48.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Apr 2025 03:48:10 -0700 (PDT)
+Message-ID: <8bfc6c5f-4bfc-4df4-ac52-b96d902a9d7f@redhat.com>
+Date: Thu, 17 Apr 2025 12:48:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v26 00/23] Introducing OpenVPN Data Channel
+ Offload
+To: Antonio Quartulli <antonio@openvpn.net>, netdev@vger.kernel.org,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Donald Hunter <donald.hunter@gmail.com>, Shuah Khan <shuah@kernel.org>,
+ sd@queasysnail.net, ryazanov.s.a@gmail.com,
+ Andrew Lunn <andrew+netdev@lunn.ch>
+Cc: Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>,
+ steffen.klassert@secunet.com, antony.antony@secunet.com,
+ willemdebruijn.kernel@gmail.com, David Ahern <dsahern@kernel.org>,
+ Andrew Lunn <andrew@lunn.ch>, Shuah Khan <skhan@linuxfoundation.org>
+References: <20250415-b4-ovpn-v26-0-577f6097b964@openvpn.net>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250415-b4-ovpn-v26-0-577f6097b964@openvpn.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250417-field_modify-v3-5-6f7992aafcb7@quicinc.com>
-References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
-In-Reply-To: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
-To: Yury Norov <yury.norov@gmail.com>,
-        Rasmus Villemoes
-	<linux@rasmusvillemoes.dk>,
-        Julia Lawall <Julia.Lawall@inria.fr>,
-        "Nicolas
- Palix" <nicolas.palix@imag.fr>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Oliver Upton
-	<oliver.upton@linux.dev>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Suzuki K Poulose
-	<suzuki.poulose@arm.com>,
-        Zenghui Yu <yuzenghui@huawei.com>
-CC: <linux-kernel@vger.kernel.org>, <cocci@inria.fr>,
-        <linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-        <andrew@lunn.ch>, <quic_kkumarcs@quicinc.com>,
-        <quic_linchen@quicinc.com>, <quic_leiwei@quicinc.com>,
-        <quic_suruchia@quicinc.com>, <quic_pavir@quicinc.com>,
-        Luo Jie <quic_luoj@quicinc.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744886837; l=1186;
- i=quic_luoj@quicinc.com; s=20250209; h=from:subject:message-id;
- bh=BTrhh55yMb7cCbPZyADxkhifxyh70Jy6fVzDF7gg+Go=;
- b=1gr9ETSiHP3k6QWOSYu135b7vjV0vFrWM2/Ustgl5P5f0ECA/OXVDu3t5wuXJO6lJzCe0zJcQ
- LsIs71XfDeWDAb3/qKUu5c5biObRUw18F/vqMqTSj7RNady0wTT17pv
-X-Developer-Key: i=quic_luoj@quicinc.com; a=ed25519;
- pk=pzwy8bU5tJZ5UKGTv28n+QOuktaWuriznGmriA9Qkfc=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: g1EP1rhd-Txj9pSSyCiq3labrXcTMZHR
-X-Authority-Analysis: v=2.4 cv=RbSQC0tv c=1 sm=1 tr=0 ts=6800dc51 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=ZOzjf2MOAAAA:8 a=COk6AnOGAAAA:8 a=UT3M8-a78LFy_Dz9DhAA:9
- a=QEXdDO2ut3YA:10 a=1Mhi-5-LkjG4w5oc0yAU:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: g1EP1rhd-Txj9pSSyCiq3labrXcTMZHR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-17_03,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=719
- suspectscore=0 adultscore=0 impostorscore=0 clxscore=1015 bulkscore=0
- phishscore=0 priorityscore=1501 spamscore=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504170080
 
-Replaced below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
-- reg &= ~MASK;
-- reg |= FIELD_PREP(MASK, val);
-The semantic patch that makes this change is available
-in scripts/coccinelle/misc/field_modify.cocci.
+On 4/15/25 1:17 PM, Antonio Quartulli wrote:
+> Notable changes since v25:
+> * removed netdev notifier (was only used for our own devices)
+> * added .dellink implementation to address what was previously
+>   done in notifier
+> * removed .ndo_open and moved netif_carrier_off() call to .ndo_init
+> * fixed author in MODULE_AUTHOR()
+> * properly indented checks in ovpn.yaml
+> * switched from TSTATS to DSTATS
+> * removed obsolete comment in ovpn_socket_new()
+> * removed unrelated hunk in ovpn_socket_new()
+> 
+> The latest code can also be found at:
+> 
+> https://github.com/OpenVPN/ovpn-net-next
 
-More information about semantic patching is available at
-https://coccinelle.gitlabpages.inria.fr/website
+I think it's finally time to merge this. Thanks Anotonio for your
+patience and persistence and thank you Sabrina for the huge review effort.
 
-Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
----
- arch/arm64/kvm/vgic/vgic-mmio-v3.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v3.c b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-index ae4c0593d114..946db5b3500f 100644
---- a/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-+++ b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-@@ -123,10 +123,8 @@ static void vgic_mmio_write_v3_misc(struct kvm_vcpu *vcpu,
- 			val &= ~GICD_CTLR_nASSGIreq;
- 
- 		/* Dist stays enabled? nASSGIreq is RO */
--		if (was_enabled && dist->enabled) {
--			val &= ~GICD_CTLR_nASSGIreq;
--			val |= FIELD_PREP(GICD_CTLR_nASSGIreq, is_hwsgi);
--		}
-+		if (was_enabled && dist->enabled)
-+			FIELD_MODIFY(GICD_CTLR_nASSGIreq, &val, is_hwsgi);
- 
- 		/* Switching HW SGIs? */
- 		dist->nassgireq = val & GICD_CTLR_nASSGIreq;
-
--- 
-2.34.1
+/P
 
