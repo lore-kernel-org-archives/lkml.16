@@ -1,139 +1,147 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085881172A
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 01:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F30157E99;
+	Thu, 17 Apr 2025 01:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744854413; cv=none; b=L5Pm+D2BUclIjzpzmfG4p4pPYmO7w+Fc2DmLn7rtApiHSUGt5CghvBH1tiopEtdFloVhVJH4/SLFMAzpcmiqRjUfxoBBcrUjiOnCjOAVWxpj9tysnxhyTu50N+6EV9JpZf2UkkWNP1NALJKmJqLdCUTJi1Mav6sJJhed4V480D8=
+	t=1744854435; cv=none; b=HjgjAvNa+qZXg/mEw+mXiYwssU70s+QTZzCGvmShNmx0VaIwGiWMuN0JNhuZqEcu1QUyr+mBhXoHGumsNDKEo17WaB8JFSfr8r6a4UYKwiFshWbIddvocZKzAfxlQkWkrr9/mGv8efRADBdLny+H6UJQTs7N9lAUsOosmf112Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744854413; c=relaxed/simple;
-	bh=t7DareaskXUsnLKOeBmxAEkx9R1wyPt7VJVzWAmf33s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kZxq95eT4lBFi+G6R4p6rSwM9wmhMxP3qyY7Kge9mDpvZTuxIKQLr+mX1OWr23C5XyZNg1H/jA/QSdq3Uj12oJFlGXVfhX6mGoTWkO3zyuU9lx7vspPFtS41ddUBHFNcRdKzt0Qj/HWwK5iLWl3Q4TR9yyhb9VqnYf0Hm04+XPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=FBWhdLxx; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="FBWhdLxx"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22928d629faso2801005ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:46:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1744854411; x=1745459211; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Xrkt0T8eTu16gqA53V0agVggjbvcWP87Rtvx20jrF/k=;
-        b=FBWhdLxxiFufWBg2cMAwulklCl7qDfJOiCkDDFM/xFhR0rFUCMGKxiH/VRskqx1r9d
-         Lv1O6SVfJca9ZjXIr1edfVavgl5T2jMXFwjaT26XmHj7AXyUXw35XPozHlvAmqs3plBB
-         VVUWKcRBmC4Nm2NThwjpHpOQ7B3COXh6wWbWzia58U3G7xZH0MeYLYYJW2YVbhG8gbfJ
-         VKyxopQhGFdykArebeIvlBkIvaDrZ17J9p4Xmi+jF6K2kNUpKYOCzo3wjzSpLYIF5j+S
-         aLyAgZio5jcmYjZHGr0+i92nO7X4VsMVVGU4AEkVyFXB8UlOyHthkdo6QIi2D11cmBQW
-         NLyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744854411; x=1745459211;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xrkt0T8eTu16gqA53V0agVggjbvcWP87Rtvx20jrF/k=;
-        b=SnHqyTyEzQS5DTXBcoO24LaCmviy+y4a9JOiduTuzLYL1JuOIzmjfklVkbWHk080Qz
-         nZQllgdPyLd+2QRz6KqWbaG7HUnhk1hmlS1Nfd/LY4jDwT3LfQGzwHc2FULHCiobEH6P
-         4pImPwQEEf4Exp/LpEzlNTl/hiUazaCibsOZUOD74yv3Jvc2k8NufxCc9sQX/z4ErBUh
-         P1kT2BeawNz3OhjZaC//sn/2vusv1Z3ZyMUSBppiHZWmq8ZOIfmTY2YtCobXd/WsrEfe
-         9dQfJ3BHz16mdoywQTzIeJPsFnEuAcEFl/Hej5XUOTCj9/TZGdVjDSqUnjqPkHeD2oin
-         zXPA==
-X-Forwarded-Encrypted: i=1; AJvYcCU2WBbdN8RybBm8m6xrT/zCmjJxNRHBqXOVWjQiSE26NLeee2JRTU7avu2+9B0gZLHp7SqIQM4mjC8gNiM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaCPIWdPtWwqPHdolvvxSuu/OFlU1gD3WARt1DxTWICzUu5cts
-	FD/qkAe9ZSnsJHjIpAmze467jnC2CRDmITIAczzBkMj2vtWkwbOKSX7Wrtty+lk=
-X-Gm-Gg: ASbGncuOBNzPT11qcAqPW3QnMAka5bv4OiJ039UdXtjQYYsG4XplrznRddGWqM6D/U+
-	Kwjm4llHUtwSn/NTsPfodgvvtsL5PVBQ9MrB/l3yt/6TeFiAWyZRiinV1PFSy2T/3kpW8EKzKM9
-	pwL4tawrBWk1vVWzRiLn0RByiHdR5BQnL+H/iK2PnTh8moFA1V7lIcj3rtQ/+VTkf6ewyeOh7aA
-	SIMDPuV8pX1EbLxJxrzDX95Fzxtpz9aGTjNY4Sg5wugH97FE78psqtBDBguKlSm+WxSrLWSQSc8
-	jXIbAL1f+vWklTBXAHPPfSeksz3/NJyE+sECQH78NwEXo4bEvoUtIcCEJP2S6TKyKVN/ynDIrA=
-	=
-X-Google-Smtp-Source: AGHT+IFsX+PqKZk9D3Uny/tD7FhInwa03DmQRsZ7lR2VZkpIAgn6LMjwNXt/Ss/mApVfjpVWh/HtIQ==
-X-Received: by 2002:a17:903:2c8:b0:220:df73:b639 with SMTP id d9443c01a7336-22c3595dec4mr66016065ad.36.1744854411140;
-        Wed, 16 Apr 2025 18:46:51 -0700 (PDT)
-Received: from xldev1604-tmpl.dev.purestorage.com ([208.88.159.128])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33fa5e74sm21447975ad.151.2025.04.16.18.46.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 18:46:50 -0700 (PDT)
-Date: Wed, 16 Apr 2025 19:46:42 -0600
-From: Michael Liang <mliang@purestorage.com>
-To: Randy Jennings <randyj@purestorage.com>
-Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	Mohamed Khalfella <mkhalfella@purestorage.com>,
-	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nvme-tcp: wait socket wmem to drain in queue stop
-Message-ID: <20250417014642.ljhowsbvkn2waipw@xldev1604-tmpl.dev.purestorage.com>
-References: <20250405054848.3773471-1-mliang@purestorage.com>
- <CAPpK+O3_3KLxA6QuLSu7QbBwAt9jLBKmihbqQUYfmJwNzNGQ1g@mail.gmail.com>
+	s=arc-20240116; t=1744854435; c=relaxed/simple;
+	bh=vAcIja/yPzEK6VYFQ9AlYR0BZHj9McAx2cs4ghgRe8M=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=YIQQ1p46w+78En6R1qDBpeSklbUto58hsARw6SynOfnhCTi7Q9v3CLd2ew75BZ3ND14ddgfr3p1i2Iqy3f+x2LsiV30FVEXFZxqRu/JW+0EYrd43b/Gq/+NXw/9I4Vq4gubfdZ4F0M5rMxL1rVnfGkyCCodEz7BsSZDqvX8S4x4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZdLNN1q5Xz4f3jdC;
+	Thu, 17 Apr 2025 09:46:44 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id EF9051A1332;
+	Thu, 17 Apr 2025 09:47:07 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgD3W2CaXQBok7DVJg--.731S3;
+	Thu, 17 Apr 2025 09:47:07 +0800 (CST)
+Subject: Re: [PATCH 3/4] md: fix is_mddev_idle()
+To: Xiao Ni <xni@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: axboe@kernel.dk, song@kernel.org, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+ yi.zhang@huawei.com, yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20250412073202.3085138-1-yukuai1@huaweicloud.com>
+ <20250412073202.3085138-4-yukuai1@huaweicloud.com>
+ <c085664e-3a52-4a1c-b973-8d2ba6e5d509@redhat.com>
+ <42cbe72e-1db5-1723-789d-a93b5dc95f8f@huaweicloud.com>
+ <4358e07e-f78b-cd32-bbed-c597b8bb4c19@huaweicloud.com>
+ <CALTww294r=ZFrmyK4=s8NMs4MZfdvZ-m6cLTQqXy+b+tW7gkBA@mail.gmail.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <2acd0bd5-f514-6c59-e90e-18a6d46174c2@huaweicloud.com>
+Date: Thu, 17 Apr 2025 09:47:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <CALTww294r=ZFrmyK4=s8NMs4MZfdvZ-m6cLTQqXy+b+tW7gkBA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPpK+O3_3KLxA6QuLSu7QbBwAt9jLBKmihbqQUYfmJwNzNGQ1g@mail.gmail.com>
+X-CM-TRANSID:gCh0CgD3W2CaXQBok7DVJg--.731S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7uF18XrW8ZrWfAw1kJF47urg_yoW8CFyfpa
+	4Uu3W5tFWUGry3KwsFv3Z3Wa45t3yfXwnIqr15tr17u398KrnYkay8t3s5u34rWr1kZr1j
+	qw4jgay7AF15AFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Tue, Apr 08, 2025 at 02:07:24PM -0700, Randy Jennings wrote:
-> On Fri, Apr 4, 2025 at 10:49 PM Michael Liang <mliang@purestorage.com> wrote:
-> >
-> > This patch addresses a data corruption issue observed in nvme-tcp during
-> > testing.
-> >
-> > Issue description:
-> > In an NVMe native multipath setup, when an I/O timeout occurs, all inflight
-> > I/Os are canceled almost immediately after the kernel socket is shut down.
-> > These canceled I/Os are reported as host path errors, triggering a failover
-> > that succeeds on a different path.
-> >
-> > However, at this point, the original I/O may still be outstanding in the
-> > host's network transmission path (e.g., the NIC’s TX queue). From the
-> > user-space app's perspective, the buffer associated with the I/O is considered
-> > completed since they're acked on the different path and may be reused for new
-> > I/O requests.
-> >
-> > Because nvme-tcp enables zero-copy by default in the transmission path,
-> > this can lead to corrupted data being sent to the original target, ultimately
-> > causing data corruption.
-> >
-> > We can reproduce this data corruption by injecting delay on one path and
-> > triggering i/o timeout.
-> >
-> > To prevent this issue, this change ensures that all inflight transmissions are
-> > fully completed from host's perspective before returning from queue stop.
-> > This aligns with the behavior of queue stopping in other NVMe fabric transports.
-> >
-> > Reviewed-by: Mohamed Khalfella <mkhalfella@purestorage.com>
-> > Reviewed-by: Randy Jennings <randyj@purestorage.com>
-> > Signed-off-by: Michael Liang <mliang@purestorage.com>
-> 
-> Through additional testing, we have recreated the corruption with this
-> patch.  We had a previous iteration of the patch that ran some time
-> without the corruption, and we convinced ourselves internally that a
-> portion of that version should not be needed.  So, unfortunately, it
-> looks like this patch is not sufficient to prevent the data
-> corruption.  We do believe the issue is still with the zero-copy and
-> too-quick retransmission (our tests showed that data that was only in
-> the buffer while userspace controlled the buffer was transmitted on
-> the wire), but we are still investigating.
-> 
-> Sincerely,
-> Randy Jennings
-We identified what was missing in the patch. In cases where concurrent I/O
-timeouts occur on multiple namespaces under the same controller, there's a
-race condition when stopping the same I/O queue. Due to the current patch's
-queue liveness check, only the first timeout handler waits, while the others
-roceed to fail I/Os immediately.
+Hi,
 
-To address this race, we've modified the logic to always wait during queue
-stop, regardless of the queue state. This resolves the issue. We'll post an
-updated patch shortly.
+在 2025/04/16 17:44, Xiao Ni 写道:
+> On Wed, Apr 16, 2025 at 5:29 PM Yu Kuai <yukuai1@huaweicloud.com> wrote:
+>>
+>> Hi,
+>>
+>> 在 2025/04/16 15:42, Yu Kuai 写道:
+>>> Hi,
+>>>
+>>> 在 2025/04/16 14:20, Xiao Ni 写道:
+>>>>> +static bool is_rdev_idle(struct md_rdev *rdev, bool init)
+>>>>> +{
+>>>>> +    unsigned long last_events = rdev->last_events;
+>>>>> +
+>>>>> +    if (!bdev_is_partition(rdev->bdev))
+>>>>> +        return true;
+>>>>
+>>>>
+>>>> For md array, I think is_rdev_idle is not useful. Because
+>>>> mddev->last_events must be increased while upper ios come in and idle
+>>>> will be set to false. For dm array, mddev->last_events can't work. So
+>>>> is_rdev_idle is for dm array. If member disk is one partition,
+>>>> is_rdev_idle alwasy returns true, and is_mddev_idle always return
+>>>> true. It's a bug here. Do we need to check bdev_is_partition here?
+>>>
+>>> is_rdev_idle() is not used for current array, for example:
+>>>
+>>> sda1 is used for array md0, and user doesn't issue IO to md0, while
+>>> user issues IO to sda2. In this case, is_mddev_idle() still fail for
+>>> array md0 because is_rdev_idle() fail.
+> 
+> Thanks very much for the explanation. It makes sense :)
+> 
+>>
+>> Perhaps the name is_rdev_holder_idle() is better.
+> 
+> Your suggestion is better. And it's better to add some comments before
+> this function.
+> 
+> But how about dm-raid? Can this patch work for dm-raid?
+
+is_rdev_holder_idle() can work for dm-raid, however, the part to
+check if normal IO is inflight or completed can't work for dm-raid,
+currently there is no way to grab dm gendisk from mddev. However, I
+think there won't be regression since the old buggy is_mddev_idle()
+almost always return false.
 
 Thanks,
-Michael Liang
+Kuai
+
+> 
+> Regards
+> Xiao
+> 
+>>
+>> Thanks,
+>> Kuai
+>>
+>>>
+>>> This is just inherited from the old behaviour.
+>>>
+>>> Thanks,
+>>> Kuai
+>>>
+>>>>
+>>>> Best Regards
+>>>>
+>>>> Xiao
+>>>
+>>> .
+>>>
+>>
+> 
+> 
+> .
+> 
+
