@@ -1,298 +1,164 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2047.outbound.protection.outlook.com [40.107.22.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784592475C7
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744902772; cv=none; b=X0SfYvLsp41Kg6N/sP6uQbmL8YK83KzB+rXwZ76hyzGn/69OLLtpRY3LR48517mdeilCtM7MjrkY+mj8NPWYi7TVNzxVvVDr414uEWvcfymIzMQYNT4zKQ4Ps5usL8jpSjAgUD0hfq9OVRLTY1k8z1n5WnG3VVIy/xDKqMm7M0M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744902772; c=relaxed/simple;
-	bh=3uh6mdsrNsrsm6YjcZWflQUkgFQg1KT8S2ESk08d3ws=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=L6jrEv92jVhzntyYMjqm41hI6qV8AoSxOxi8qyNOh7EzQWAATAboEd3FmYGOWbjnqpVWGlgHILmZlo8kIFlhOaVjt+DfydjbHefIpgfEW4/EdJa2vNn6D3HvKBD1Y4kFUpvSHQ/auK6XAYudLfYRz9az0iW0MPyqw9tAlJrE8Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gFDnxD2L; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08542505AC;
+	Thu, 17 Apr 2025 15:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744902796; cv=fail; b=sI16MxwccEU7KVdB0PcjENR5wxicvFc22PgqNl869XhuD/U8+qp3rsbOwEqggfCUS10cM6VwWPfJjqyA7HRZE2wDPPVyG2O3OwfixMAYbkvWdnTDgc3VgdUaIwPdp6j29ywC023oXra6zObe2TDXWUO/r/tr6bdbvo6j8JznLsk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744902796; c=relaxed/simple;
+	bh=Y10v/6kGEYr4f1Ki+0aYf+BHFXup5QkneNu9mh+hk00=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=IWnANzT2g4JzkLKwAUFwTdQsfR5nW5Q7Z5tz5Be0XjnG9sgBuR6KP0i8nOPJHIrhPX+uC+vmtt7+8bgNnchLK3X/UixvNFUZlu9el2SMlvQljBzEj1tLFDSBLJdloabH9Rppsp6qy+DJS9+hwyc/hJtalIF3aVjqwX5WcKzshy0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=cluzJyTF; arc=fail smtp.client-ip=40.107.22.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gFDnxD2L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744902769;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZvIv6s5NoNu7fgPy/v1DfxlqNul94q/qhEPwAqUT6ok=;
-	b=gFDnxD2LJiObsYPUX/mUvm8N/bCTLgsd256uDQq6BEvwDTswOjMvzbO2MpDT8JuO2EFA2B
-	3ScoxNivUUVlo0Sqrh8zbo93wqPrLIXMCGadrzryoKA3kT3xFj0E3OVJGeHvVDdkwQLPcG
-	5IgbSShGPTVKHSxSvbXjBDuDjyfIP/M=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-550-jQAyl1mQPTWxS2MsBuKsjw-1; Thu,
- 17 Apr 2025 11:12:45 -0400
-X-MC-Unique: jQAyl1mQPTWxS2MsBuKsjw-1
-X-Mimecast-MFC-AGG-ID: jQAyl1mQPTWxS2MsBuKsjw_1744902762
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6873E19560BB;
-	Thu, 17 Apr 2025 15:12:42 +0000 (UTC)
-Received: from [10.44.33.28] (unknown [10.44.33.28])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 098D119560BA;
-	Thu, 17 Apr 2025 15:12:36 +0000 (UTC)
-Message-ID: <eb4b9a30-0527-4fa0-b3eb-c886da31cc80@redhat.com>
-Date: Thu, 17 Apr 2025 17:12:35 +0200
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="cluzJyTF"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=p3ZY391Re1wPsxvX36tHZu+Xb00n1CR9CX59sHzHEn7WX/57Ojgic9sfPpFHSdJPyLMpndOj7CX63k5gKcgnz6n6xLX8RDTy4817X4OHQEIyxZckoEm9SujhxJ6pU6zUb2V6S27vc6kPEchaIyO2Bfwh/Z1+kcvDf0lw7JXX3AqBt3FlyNUfm1ymZIRRzYTEVdKptPWjoMLg8jiPlDpzjMkA19+RR6beGTwAxpcr9oJkUXSX52wFtbC7lBiM4ztsobXfb8yRUj0LTSLKbCrum5+KXVPq16rOv/KDnuBodHWWegSF+roAapPSVp6U87WrcGsbfWT73QT2sQwcT+zuCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jVIzq6ufQRI6sBArrbRPlj6d/HzIECqoYrBIqNhnsZE=;
+ b=SFlBMsnZHqNvzkfPpYBXjocKSV562qlYD/lx/WT/rnaVmBNtZdby8TDP/eA8Fx/dxP/7JiQYrNEZyIwBzsPKh7jLIVPja54jC5Yy8uIvl1r9yQs3zy8z3Zdq5lYm7Dxi6A0qePQaHS3tgdB33zCnEWsrwhMblCeJGta5G5h5FkFAiDD0bwfrO3pAjSyQ9v+APjsKynKRDoad4RarZdM966fkb+TuUNn2q8wdISq53PVQBVApyAg26wXqwZuKQiCaxKwCmTriO3giRoOS5T+wsAxiExztQLdViflYNknh0q5Txgmr4OrXuxE3CxhHQgm4pTWtho/0jgk4LnNScpn6GQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jVIzq6ufQRI6sBArrbRPlj6d/HzIECqoYrBIqNhnsZE=;
+ b=cluzJyTFMz7beBYGAJDUkkJBp0O4tW88B+BhkA7TApGBI75gOWktGN53nLuSHShgPq0V5ppYtjik0jCmR5d3z4z8+D/8qSnzWr8h842cR1tArfOURzMJTda4pJPAmefpVbmPo6SZjQzlGTRfLvtNCB95ja2we6Caw/Za5ZjkHxIYJcPXVTL5ANYEYFmxWZ8bHs8bgPNheKq8K5hIc9mKujqB+CkjLHyXkXFyNktesqQmTT/1K7NIoek/SPNIuCLa5FSSXosLGvnXNTLVDb41CPXvqArHQLPx/Zu7vzclFPbRCv5OaS1X2i7jszRixLC88iaivilwNPgKgpKO37utog==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AM0PR04MB6817.eurprd04.prod.outlook.com (2603:10a6:208:17e::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Thu, 17 Apr
+ 2025 15:13:12 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8632.035; Thu, 17 Apr 2025
+ 15:13:12 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-mmc@vger.kernel.org (open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND...),
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-kernel@vger.kernel.org (open list)
+Cc: imx@lists.linux.dev
+Subject: [PATCH 1/1] dt-bindings: mmc: fsl,esdhc: add compatible string fsl,ls1021a-esdhc
+Date: Thu, 17 Apr 2025 11:13:00 -0400
+Message-Id: <20250417151300.3570021-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: PH8PR22CA0008.namprd22.prod.outlook.com
+ (2603:10b6:510:2d1::20) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 net-next 3/8] mfd: Add Microchip ZL3073x support
-From: Ivan Vecera <ivecera@redhat.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250416162144.670760-1-ivecera@redhat.com>
- <20250416162144.670760-4-ivecera@redhat.com>
- <8fc9856a-f2be-4e14-ac15-d2d42efa9d5d@lunn.ch>
- <CAAVpwAsw4-7n_iV=8aXp7=X82Mj7M-vGAc3f-fVbxxg0qgAQQA@mail.gmail.com>
- <894d4209-4933-49bf-ae4c-34d6a5b1c9f1@lunn.ch>
- <03afdbe9-8f55-4e87-bec4-a0e69b0e0d86@redhat.com>
-Content-Language: en-US
-In-Reply-To: <03afdbe9-8f55-4e87-bec4-a0e69b0e0d86@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM0PR04MB6817:EE_
+X-MS-Office365-Filtering-Correlation-Id: ca633628-50d0-4d08-0aad-08dd7dc25eaf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|1800799024|366016|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?V5FdwngDmpSWnSRKcQhHS04rBEhZk3dW0SQPRzqQP6mJzOyZ7xG3OlqEYgoK?=
+ =?us-ascii?Q?+11X2Vkk1eagWSDyulcEnwpIal7YU7oNtOeyLzI1y4bXUxldFpEv2IdqzBcJ?=
+ =?us-ascii?Q?WcdQk4b9+fQMBxkwKAEwpQW46/rzK+Q/3X3TMnVhBqHweKix+8rCFiE6fC09?=
+ =?us-ascii?Q?f/SM6wZPFTUcHszTVZhM+nodYbPKAgK8h/1jgxFSS0ZI0jJPjRyLDOcdfygM?=
+ =?us-ascii?Q?N3Qy286ixYPiimC9NHWEaDGWlbE/ocG+kwZOkkX3yjvXXUq8etHjP3EdWUoN?=
+ =?us-ascii?Q?Jc2f++r9ojERyPiV2DkRbH8NLxGsLUz4k5rJNYvhT2D/ZcsaDQEVGruNvEBh?=
+ =?us-ascii?Q?sP3LrvI/RVFsh4QpsPWUBnP7qS0zGcXIYigcOs2FoCFEe4mDOimIaNphmtKq?=
+ =?us-ascii?Q?3z9iCo4aKG73sXNHm7xRxCxcNEq6nmGJ21sjI3sKBmslTNGRWPsMZGlln5SJ?=
+ =?us-ascii?Q?DdiL4f5zB7a35+oVSon5Baq8hnejFWGpEn8FU+pWZsIIgmDVEsjUEMjqND0r?=
+ =?us-ascii?Q?NDIF8prfo4xtS9U36EbOq8c+4XzZ2gJ8INBFhkfZDzrMN/lNHFSBztIzdOJO?=
+ =?us-ascii?Q?9UsvwyXk7h4+N5TJpWbxqNTYYtLojRKZ1YKd5FAxDi2ysTYWqDVv06k4/fOG?=
+ =?us-ascii?Q?jV8Ff/o7/HfsGw3439DLGxjRXWJI/nohGTJ4HN2hgEkXfjVmsNXe55bVwuEs?=
+ =?us-ascii?Q?/tDrEQi8znO+jCsSGB7y0U85Rna1BeboHX1gFOdyssfEg5QGUZ1iqNLBOdGK?=
+ =?us-ascii?Q?bbXkfgFuFKKODUofXM/gWUiYdSOULh7IYiSsGp7nLnutlRN5EaQjEmQAkNa9?=
+ =?us-ascii?Q?OsVg00X1so690XSCxDUibnpAAJmmg6p2in8wGudp3YBOBowKZ7Vd2LE9APEI?=
+ =?us-ascii?Q?JVZOw4+WZUOcf69niEiUAsfL/iyC271PDLK0BdSs3v3efjGChbe1mGE/3zFc?=
+ =?us-ascii?Q?WKBiCzaJHDSxvU9LqYfJV2q/R+ZZkB0QdzstHP5SRw1AJ3Gf0ba49Pfx7CK4?=
+ =?us-ascii?Q?6KesdlGO6+MZz76huYXnt845ak4y3X/SW7oCHAQpSMEZyE4nmRpf1x7M/FNj?=
+ =?us-ascii?Q?2LLf/UsV/xiYFTNWZ9DAmScFrOo6TST6yTLOdjNperjFsBkmXGpfc3sQ4NrL?=
+ =?us-ascii?Q?1CNYP9jnwv/0p7EmjoWO0Djer6VouqwSXsqT5X8wMfTM6iRauPhypzlzU91G?=
+ =?us-ascii?Q?zFr0fv6S4GVQGWhPeFW26C82UMkQOhUoNXVAnBYA2F+fbxvAC0jWOCwZ9E7b?=
+ =?us-ascii?Q?tsTLItWP5nmVEnIxLWuwtab362WO/YwZUrsk15H9/aHXA/LHVkBNxgC1WABj?=
+ =?us-ascii?Q?yivkILYjHu6XkNRdhhhagjFOoprFLz8oUh1hKFloKvPn2afQBZ4yzhIB5jP5?=
+ =?us-ascii?Q?hkapVo0uCCw6EQjyvIb3tkVqPIkYvBiqTk5Bju7ssxaj+w0Eoi64affhHoXw?=
+ =?us-ascii?Q?1SNmffXE9+yMrOBhK03dehOIZnOy1ly1SH610YLQGQ0+XBKHNDjW4w=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(1800799024)(366016)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?5IW5U/a4S1RoKHgDTYPj0FYbHplKZtzU8zEc6TPzxi/8UtI6NhWehpjEALpT?=
+ =?us-ascii?Q?5kkY4cUW283THFbgV2QiaDc+XsEgNOTmBGR/NlVjSbzTu4J7TOoSGS9OQtKS?=
+ =?us-ascii?Q?o6aStVm8kejIbhKDLg11kDjrw6zKvL+yyG2LMVAaxIJGNGFvPFAj11qhgKpd?=
+ =?us-ascii?Q?tww5+ZerWnK04CEj0XfaEnXkijVlIy+If2uZ+4i9KbJpJm2MCgjVfn5GKL9y?=
+ =?us-ascii?Q?jTvo9EJA/bzx2rs6/iognMvY65jJMQWWRU9ZIxcnxForU3ZpUVGuic0xfSQn?=
+ =?us-ascii?Q?pNUEO7DgxeYrFom2GxgTyuiscF/B6755bT4EdVEw/8d2I9IkDVKjBcZOPisx?=
+ =?us-ascii?Q?ogNoegyZ2PL34W8ACHkEKTDeiVI7K6eO2UMniz4zUMAEqJ0gaw8vGL9mWyHi?=
+ =?us-ascii?Q?e+/PA4a73D475pEnZ+AIuCY7lQs+Akjw3xQiQqXXEi+3HMelEjPBu8+nwBrf?=
+ =?us-ascii?Q?ggTQHngRwM1mVjoc8nqMUUnmPZKtcpTUG1B287oyA7tSyujPsG+kjz23Nf9Y?=
+ =?us-ascii?Q?FDr+39S4AjGmRdxtHpSVl80k3aXLaV3Hq2lHxC7v4tgpMRfFk9PAkwuiZ22k?=
+ =?us-ascii?Q?78t1JRoPH7sCL4VIxPZe/b6cBQiBYSssI4MO/R0xtq0ITEYK9+hLD1Gjox30?=
+ =?us-ascii?Q?3bFUwuDaP+Fa9X4lqsyWeOyxc4TPZbHoO67yXvx+6G2K8RLUDFjxCC5YBG+p?=
+ =?us-ascii?Q?iJCOMGfHAaQjkK2ouhJYcgFF421dBlGaob/x7CkfV++6G073j2Pg+Joo0Otp?=
+ =?us-ascii?Q?uWaU2KRATn81O0gGeEr0rchwuZRNOk+Le0N7k56g96mb5b1BgqZdEluMZLIK?=
+ =?us-ascii?Q?QK5HNjLkoiGzYJM6Svk5akHiBK93DrFZJnCpDD6jc0xz6fe8hUvG0hn/mYKh?=
+ =?us-ascii?Q?9SEH4C6ZRagu3apg6biWYAwwUrqIdsdvkDFTLDFZOs6h+NhKK9R6Ja6w94t7?=
+ =?us-ascii?Q?b8nKkip1pTNnVmMnKldkzgV4ptaD+jzXG4dbUpYKYnJnHMAH1MUt13wOEHcW?=
+ =?us-ascii?Q?meceybTqs7aIkJ6H1VROFPXJqGVTLiNrEv3/E02N5YvFCpzjlKzbTbVobVot?=
+ =?us-ascii?Q?AndZyxEf76mTzpteLvvNiyrY6EJlLBpJ64V8r9l94IDmULClfhNCIVhlxTdX?=
+ =?us-ascii?Q?cUn4GkS3eIeZS7+euu49wVqFOsJjX6UuxIb81o6pgJ6nYl9F/nvzx0wcTaha?=
+ =?us-ascii?Q?cCsXfjrYz4y4N4amDxBV53m6SWubcm3D6RFBBrArYBmYP1ogCimfvo54HSnA?=
+ =?us-ascii?Q?tdgU8R6opvuvKtYOAnAgYzHrMvb+qk7MIUSoWukAACuXc0MemzVRa/jOeU7u?=
+ =?us-ascii?Q?VivAI8EqqCicxkHDyOv0ZOk5nCf0UXkAoDj7bRan8FL2rKzxIc99hvt28p/x?=
+ =?us-ascii?Q?r7C4Ir9PYmcarFBtYjiICJzYEmJqBsgyPF6/0qEFa1bS1PddDsW+UvLCOqwG?=
+ =?us-ascii?Q?ke5g0ePRtOYpDmpMDZ7iveX8y/jMBYkMaOFrLsKZE7EeUc1ACi+DMD5sTaY0?=
+ =?us-ascii?Q?utTPtEvK/2WkhwX+kQbDdoOzEueyKnjPg6IXHzq97TbTJs0H/QHPB31OfGzW?=
+ =?us-ascii?Q?oTaLr7BfBNfPN7GymqA=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca633628-50d0-4d08-0aad-08dd7dc25eaf
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 15:13:12.5707
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ipQZwxeJG9bQRABsA5mhsSzpvBn/7P98QewMM4yz/rMrLwffyMqGg/xpnjC6fX66d/831Hcy5koDWZQcg2rfLQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6817
 
-On 17. 04. 25 4:50 odp., Ivan Vecera wrote:
-> 
-> 
-> On 17. 04. 25 3:13 odp., Andrew Lunn wrote:
->> On Wed, Apr 16, 2025 at 08:19:25PM +0200, Ivan Vecera wrote:
->>> On Wed, Apr 16, 2025 at 7:11 PM Andrew Lunn <andrew@lunn.ch> wrote:
->>>
->>>      > +++ b/include/linux/mfd/zl3073x_regs.h
->>>      > @@ -0,0 +1,105 @@
->>>      > +/* SPDX-License-Identifier: GPL-2.0-only */
->>>      > +
->>>      > +#ifndef __LINUX_MFD_ZL3073X_REGS_H
->>>      > +#define __LINUX_MFD_ZL3073X_REGS_H
->>>      > +
->>>      > +#include <asm/byteorder.h>
->>>      > +#include <linux/lockdep.h>
->>>
->>>      lockdep?
->>>
->>>
->>> lockdep_assert*() is used in later introduced helpers.
->>
->> nitpicking, but you generally add headers as they are needed.
-> 
-> +1
-> 
-> 
->>>      > +#include <linux/mfd/zl3073x.h>
->>>      > +#include <linux/regmap.h>
->>>      > +#include <linux/types.h>
->>>      > +#include <linux/unaligned.h>
->>>      > +
->>>      > +/* Registers are mapped at offset 0x100 */
->>>      > +#define ZL_RANGE_OFF        0x100
->>>      > +#define ZL_PAGE_SIZE        0x80
->>>      > +#define ZL_REG_ADDR(_pg, _off) (ZL_RANGE_OFF + (_pg) * 
->>> ZL_PAGE_SIZE +
->>>      (_off))
->>>      > +
->>>      > +/**************************
->>>      > + * Register Page 0, General
->>>      > + **************************/
->>>      > +
->>>      > +/*
->>>      > + * Register 'id'
->>>      > + * Page: 0, Offset: 0x01, Size: 16 bits
->>>      > + */
->>>      > +#define ZL_REG_ID ZL_REG_ADDR(0, 0x01)
->>>      > +
->>>      > +static inline __maybe_unused int
->>>      > +zl3073x_read_id(struct zl3073x_dev *zldev, u16 *value)
->>>      > +{
->>>      > +     __be16 temp;
->>>      > +     int rc;
->>>      > +
->>>      > +     rc = regmap_bulk_read(zldev->regmap, ZL_REG_ID, &temp, 
->>> sizeof
->>>      (temp));
->>>      > +     if (rc)
->>>      > +             return rc;
->>>      > +
->>>      > +     *value = be16_to_cpu(temp);
->>>      > +     return rc;
->>>      > +}
->>>
->>>      It seems odd these are inline functions in a header file.
->>>
->>>
->>> There are going to be used by dpll_zl3073x sub-driver in series part 2.
->>
->> The subdriver needs to know the ID, firmware version, etc?
-> 
-> No
-> 
->> Anyway, look around. How many other MFD, well actually, any sort of
->> driver at all, have a bunch of low level helpers as inline functions
->> in a header? You are aiming to write a plain boring driver which looks
->> like every other driver in Linux....
-> 
-> Well, I took inline functions approach as this is safer than macro usage
-> and each register have own very simple implementation with type and
-> range control (in case of indexed registers).
-> 
-> It is safer to use:
-> zl3073x_read_ref_config(..., &v);
-> ...
-> zl3073x_read_ref_config(..., &v);
-> 
-> than:
-> zl3073x_read_reg8(..., ZL_REG_REF_CONFIG, &v);
-> ...
-> zl3073x_read_reg16(..., ZL_REG_REF_CONFIG, &v); /* wrong */
-> 
-> With inline function defined for each register the mistake in the 
-> example cannot happen and also compiler checks that 'v' has correct type.
-> 
->> Think about your layering. What does the MFD need to offer to sub
->> drivers so they can work? For lower registers, maybe just
->> zl3073x_read_u8(), zl3073x_read_u16() & zl3073x_read_read_u32(). Write
->> variants as well. Plus the API needed to safely access the mailbox.
->> Export these using one of the EXPORT_SYMBOL_GPL() variants, so the sub
->> drivers can access them. The #defines for the registers numbers can be
->> placed into a shared header file.
-> 
-> Would it be acceptable for you something like this:
-> 
-> int zl3073x_read_reg{8,16,32,48}(..., unsigned int reg, u{8,16,32,64} *v);
-> int zl3073x_write_reg{8,16,32,48}(..., unsigned int reg, u{8,16,32,64} v);
-> int zl3073x_read_idx_reg{8,16,32,48}(..., unsigned int reg, unsigned int 
-> idx, unsigned int max_idx, unsigned int stride, u{8,16,32,64} *v);
-> int zl3073x_write_idx_reg{8,16,32,48}(..., unsigned int reg, unsigned 
-> int idx, unsigned int max_idx, unsigned int stride, u{8,16,32,64} v);
-> 
-> /* Simple non-indexed register */
-> #define ZL_REG_ID    ZL_REG_ADDR(0 /* page */, 0x01 /* offset */
-> #define ZL_REG_ID_BITS    8
-> 
-> /* Simple indexed register */
-> #define ZL_REG_REF_STATUS    ZL_REG_ADDR(2, 0x44)
-> #define ZL_REG_REF_STATUS_BITS    16
-> #define ZL_REG_REF_STATUS_ITEMS    10
-> #define ZL_REG_REF_STATUS_STRIDE 2
-> 
-> /* Read macro for non-indexed register */
-> #define ZL3073X_READ_REG(_zldev, _reg, _v)    \
->      __PASTE(zl3073x_read_reg, _reg##_BITS)(_zldev, _reg, _v)
-> 
-> /* For indexed one */
-> #define ZL3073X_READ_IDX_REG(_zldev, _reg, _idx, _v)    \
->      __PASTE(zl3073x_read_idx_reg, _reg##_BITS)(_zldev, _reg, _v,
->                             _idx, \
->                             _reg##_ITEMS, \
->                             _reg##_STRIDE, _v)
-> 
-> This would allow to call simply
-> ZL3073X_READ_REG(zldev, ZL_REG_ID, &val);
-> or
-> ZL3073X_READ_IDX_REG(zldev, ZL_REG_REF_STATUS, 4);
-> 
-> and caller does not need to know register size and range constraints.
-> 
-> WDYT?
+Add compatible string fsl,ls1021a-esdhc for LS1021a SoC.
 
-Or another approach could be:
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+ Documentation/devicetree/bindings/mmc/fsl,esdhc.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-struct zl_reg {
-	unsigned int addr;
-	unsigned int bits;
-	unsigned int items;
-	unsigned int stride;
-};
-
-#define ZL_DEF_IDX_REG(_name, _addr, _bits, _items, _stride)	\
-static const struct zl_reg _name = {
-	.addr = _addr,
-	.bits = _bits,
-	.items = _items,
-	.stride = _stride,
-}
-
-#define ZL_DEF_REG(_name, _addr, _bits)	\
-	ZL_DEF_IDX_REG(_name, _addr, _bits, 1, 0)
-
-static inline int zl_read_reg(..., const struct zl_reg reg, void *value)
-{
-	int rc;
-	/* Check that all fields in reg are known constant at build time */
-	BUILD_BUG_ON(!const_true(reg.addr));
-	BUILD_BUG_ON(reg.items != 1);
-	switch (reg.bits) {
-	case 8:
-		rc = zl_read_reg8(zldev, reg.addr, value);
-	...
-	case 48:
-		rc = zl_read_reg48(zldev, reg.addr, value);
-	}
-	return rc;
-}
-
-static inline int zl_read_idx_reg(..., const struct zl_reg reg,
-				  unsigned int idx, void *value)
-{
-	unsigned int addr;
-	int rc;
-	/* Check that all fields in reg are known constant at build time */
-	BUILD_BUG_ON(!const_true(reg.addr));
-	BUILD_BUG_ON(reg.items > 1);
-	
-	if (idx >= reg.items)
-		return -EINVAL;
-
-	addr = reg.addr + (idx * reg.stride);
-	switch (reg.bits) {
-	case 8:
-		rc = zl_read_reg8(zldev, addr, value);
-	...
-	case 48:
-		rc = zl_read_reg48(zldev, addr, value);
-	}
-	return rc;
-}
-
-// page 0, offset 0x01, bits 8
-ZL_DEF_REG(id, ZL_REG_ADDR(0, 0x01, 8);
-
-// page 2, offset 0x55, bits 16, 10 items, 2 bytes between them
-ZL_DEF_IDX_REG(ref_config, ZL_REG_ADDR(2, 0x55, 16, 10, 2))
-
-Caller:
-rc = zl_read_reg(zldev, id, &val);
-rc = zl_read_idx_reg(zldev, ref_config, 5, &val);
-
-Passing constant structures ensures that all 'reg' fields are known
-during compilation and zl_read_*reg() functions are rendered into tiny 
-assembler output.
-
-WDYT?
-
-Ivan
+diff --git a/Documentation/devicetree/bindings/mmc/fsl,esdhc.yaml b/Documentation/devicetree/bindings/mmc/fsl,esdhc.yaml
+index b86ffb53b18b5..62087cf920df8 100644
+--- a/Documentation/devicetree/bindings/mmc/fsl,esdhc.yaml
++++ b/Documentation/devicetree/bindings/mmc/fsl,esdhc.yaml
+@@ -24,6 +24,7 @@ properties:
+           - fsl,t1040-esdhc
+           - fsl,t4240-esdhc
+           - fsl,ls1012a-esdhc
++          - fsl,ls1021a-esdhc
+           - fsl,ls1028a-esdhc
+           - fsl,ls1088a-esdhc
+           - fsl,ls1043a-esdhc
+-- 
+2.34.1
 
