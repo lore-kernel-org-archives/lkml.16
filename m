@@ -1,213 +1,57 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2B319CC0A
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 20:30:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9AE741C63;
+	Thu, 17 Apr 2025 20:32:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744921819; cv=none; b=rLTAwUu1q5ilkZF0keCMKCa+E7Fx8KOkOklrgOQzIwlnQ++6/tGDnDPHVNfSSPxJ5ZlNcW4ZfQbgVwXMaZV1EeAey7F6wEsnPjQMV5oc1mrBsojL+s5Kp3fVXASSnWyG33T2441Uz5HoEek9keTYYXgBbb7ItN0SA2kD7oObCqg=
+	t=1744921978; cv=none; b=YMHV/b+rbq4ZxZY2lPtBLl3dHIBYvHetTDqb1ndwInWUWx+h6wk0YLvUC45ZNMcx0lR+1ajbJv6XkDODuAoi5PU1OOTqXjBGFpNXAYFQ8ys5K37pVQmaATz7kiqF+lLVnrDSUt3f1aAWf9hhzUizjbC/C0gtf/JY5DI7m2yFdPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744921819; c=relaxed/simple;
-	bh=8jvzjrzeUI+f//PctZuZkUbQH5+8B60A4PubCW3hXS4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bmMImCNTjEH+GD0LQyvmYULZYdfnKCan9uqCBqYIEiBPuINmGgO+VvVoEQcD+8ll3Dn5BKKY2ZMO+dXZ3DjDEl2heo2KtBknA2W++vPq2W23WgPVbIb4UK8J6DxMf0kKtcD6erPFTGL8xKBgr0gnW/CHn9V4m9PUjk97D3vxDN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dcj5R6bk; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dcj5R6bk"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-47666573242so119171cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 13:30:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744921816; x=1745526616; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KSYCQlCdJRvaCsoVa8PuzWUQ/r1Df/jdHAjvC1U2+0s=;
-        b=dcj5R6bkuO/QhPK2CmWhfY7Z+Smn9SaWL6updtA7/8vbxUZH0U16XvSLSpkgLXGU98
-         r3pQm1EfS+a6tiVt/7q6dCquonLW8zoJCJzRsJBHBQcntc6kNjshXMqCZlkd+m1cBNJk
-         nQDvV7w2kusAUIyDiy3sYLX5HBKl73CF+UWjLZaxq4yfCNbb3SxN57nuAhBRNpkOneF3
-         mgK6Rurl2kDOG295gtU2BLMRmUPZbvua+Y6BJCFX9DFUd3J2fqSfCaEpoDAYpQQl0z3C
-         OXlgxfvvqIwTGVgoLTIS20DlzB8oH0aYjBCAr3bDKhSX6vMLZ4iftjwZs+Nvk3iwrYTR
-         jTYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744921816; x=1745526616;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KSYCQlCdJRvaCsoVa8PuzWUQ/r1Df/jdHAjvC1U2+0s=;
-        b=gjCN2mAPDdSoD7Xz1MXZVTcVa4n7M40h/C/a17uy1VAGb3VhthJ1h53o0hqauBByMZ
-         uFBW0BMexLExtdbFNQWxeRj/11XAiSzaveKWUR5HIk07bYCOe5YpU9addJfvBA/iv28z
-         TDIXhFcEYimVIDJGiy/4R0ySMx8+0DfDkue5MCSNxt3htM/nkwhNLx5QxP9CsotwUIF4
-         mY1DlxbRGJnbPQrT/7XSFmbsBSy29C9biXY+r0jqMnD72F2m8tR5fcUl501y7LNegm0d
-         j/AixO0+kWkQnUcLsigV+XhonmaL3gcsIcaaRfD8SwlNS1U6YXcDFk7pbXtwc1s/oYUr
-         WIOg==
-X-Forwarded-Encrypted: i=1; AJvYcCUyDXwNrdwgNgjAb7nZXgfW63ITNG059PcFwQDEhQkHi6k8ccIj2GhL2RaGL1JTXxTxjrg9arCSxurhPlo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxpk2HvOWIJ6Wqyu7w/t5TAInHTPhGjPil5RdwDZf2a82tqOX9Y
-	BFQX8zDh02ppbGH9saQrkg97BU6aJ25kGe7mqB0TyYzqyFZmYD7ORoCqDUgh3+OlVj/FXOKa8se
-	/z3DPYNpljoS9zT7fjRzBthuwNBXeXYqT7kY8kA4VlbtggcM6VBMT
-X-Gm-Gg: ASbGncuaAuNYrlfjNpzntCho+Pn0YdMc/jW/vR003c623bIVCPsxzkayMb3rutg1W1b
-	cy44g/MaWiHAyPQuA5SEMkkX+5A91mS87BNbLEYr1+M3/9i7k1k9YQ4zXBDDwCw8+nguIVIdHN0
-	zzfF4PBjgtBwtwDwXSKNu4++GQb529Z565kSP9gus1YdyqhTIIJ9EK
-X-Google-Smtp-Source: AGHT+IEX2UtNOppZD3tHg7Ft0MDhrbQphb7UixP6vmBL/AgRj7UjnQUm4ayBLDq7gljiyyLvRT6k/CWMaevWIuA7DlE=
-X-Received: by 2002:a05:622a:1a18:b0:477:1f86:178c with SMTP id
- d75a77b69052e-47aeb26fddbmr899271cf.26.1744921815900; Thu, 17 Apr 2025
- 13:30:15 -0700 (PDT)
+	s=arc-20240116; t=1744921978; c=relaxed/simple;
+	bh=m23KjCoPEHiG9Nh0xssttmwcgzej8sTFwc5KLi6yrMo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cwDC6rlH/i+z/kQLOVaas+I+hQqZaVAJ4HEkbwJNEhj/1YPvA5Uo456mVRR41kqomMwfNq/sHK4Pcj3Nt6fa+FCHShXzCRz22GZ4EMJ10pPCxm3Iy3F/Y704rVTG3u9waoiOTFbt5FI65WRfNlYXtm6D+CCrs2ocg2WgoyKhtsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A90AC4CEE4;
+	Thu, 17 Apr 2025 20:32:57 +0000 (UTC)
+Date: Thu, 17 Apr 2025 16:34:36 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Junxuan Liao <ljx@cs.wisc.edu>
+Cc: Frederic Weisbecker <frederic@kernel.org>, "Paul E. McKenney"
+ <paulmck@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: Interface for enabling context tracking
+Message-ID: <20250417163436.599e50a1@gandalf.local.home>
+In-Reply-To: <3ce02a98-0ac2-4d34-b6f7-ba85088399d7@cs.wisc.edu>
+References: <9e2ac1e3-d07d-4f17-970e-6b7a5248a5bb@cs.wisc.edu>
+	<20250410150555.7797d195@gandalf.local.home>
+	<3ce02a98-0ac2-4d34-b6f7-ba85088399d7@cs.wisc.edu>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415171954.3970818-1-jyescas@google.com> <536596bf-8f5b-462b-add7-a203b6cd1e46@amd.com>
- <CAJDx_rjrAgJiyOV2KcTYp574w=9mjNQ5jY3VYdG12mMuroVQ9Q@mail.gmail.com> <21cbda3a-1997-4ac0-ad5d-6e6d447fc11c@amd.com>
-In-Reply-To: <21cbda3a-1997-4ac0-ad5d-6e6d447fc11c@amd.com>
-From: Juan Yescas <jyescas@google.com>
-Date: Thu, 17 Apr 2025 13:30:04 -0700
-X-Gm-Features: ATxdqUFqpr3SUaYyrcoHC1l0zJVY8cIEh8mxRUqzXl69R4ekay5l-uDxnSIYlUw
-Message-ID: <CAJDx_rjY_myNpTm0XzA0sPn54GKzN1W_qZ8HEOhCBy9An-3ZkA@mail.gmail.com>
-Subject: Re: [PATCH] dma-buf: heaps: Set allocation orders for larger page sizes
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, "T.J. Mercier" <tjmercier@google.com>, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	linux-kernel@vger.kernel.org, baohua@kernel.org, 
-	dmitry.osipenko@collabora.com, jaewon31.kim@samsung.com, 
-	Guangming.Cao@mediatek.com, surenb@google.com, kaleshsingh@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 17, 2025 at 1:06=E2=80=AFAM Christian K=C3=B6nig
-<christian.koenig@amd.com> wrote:
->
-> Am 16.04.25 um 23:51 schrieb Juan Yescas:
->
-> On Wed, Apr 16, 2025 at 4:34=E2=80=AFAM Christian K=C3=B6nig
-> <christian.koenig@amd.com> wrote:
->
->
-> Am 15.04.25 um 19:19 schrieb Juan Yescas:
->
-> This change sets the allocation orders for the different page sizes
-> (4k, 16k, 64k) based on PAGE_SHIFT. Before this change, the orders
-> for large page sizes were calculated incorrectly, this caused system
-> heap to allocate from 2% to 4% more memory on 16KiB page size kernels.
->
-> This change was tested on 4k/16k page size kernels.
->
-> Signed-off-by: Juan Yescas <jyescas@google.com>
-> ---
->  drivers/dma-buf/heaps/system_heap.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/dma-buf/heaps/system_heap.c b/drivers/dma-buf/heaps/=
-system_heap.c
-> index 26d5dc89ea16..54674c02dcb4 100644
-> --- a/drivers/dma-buf/heaps/system_heap.c
-> +++ b/drivers/dma-buf/heaps/system_heap.c
-> @@ -50,8 +50,15 @@ static gfp_t order_flags[] =3D {HIGH_ORDER_GFP, HIGH_O=
-RDER_GFP, LOW_ORDER_GFP};
->   * to match with the sizes often found in IOMMUs. Using order 4 pages in=
-stead
->   * of order 0 pages can significantly improve the performance of many IO=
-MMUs
->   * by reducing TLB pressure and time spent updating page tables.
-> + *
-> + * Note: When the order is 0, the minimum allocation is PAGE_SIZE. The p=
-ossible
-> + * page sizes for ARM devices could be 4K, 16K and 64K.
->   */
-> -static const unsigned int orders[] =3D {8, 4, 0};
-> +#define ORDER_1M (20 - PAGE_SHIFT)
-> +#define ORDER_64K (16 - PAGE_SHIFT)
-> +#define ORDER_FOR_PAGE_SIZE (0)
-> +static const unsigned int orders[] =3D {ORDER_1M, ORDER_64K, ORDER_FOR_P=
-AGE_SIZE};
-> +#
->
-> Good catch, but I think the defines are just overkill.
->
-> What you should do instead is to subtract page shift when using the array=
-.
->
-> There are several occurrences of orders in the file and I think it is
-> better to do the calculations up front in the array. Would you be ok
-> if we get rid of the defines as per your suggestion and make the
-> calculations during the definition of the array. Something like this:
->
-> static const unsigned int orders[] =3D {20 - PAGE_SHIFT, 16 - PAGE_SHIFT,=
- 0};
->
->
-> Yeah that totally works for me as well. Just make sure that a code commen=
-t nearby explains why 20, 16 and 0.
->
+On Thu, 17 Apr 2025 14:10:53 -0500
+Junxuan Liao <ljx@cs.wisc.edu> wrote:
 
-Thanks, the changes were added in the [PATCH v3].
+> Just found out that the exit tracepoints for syscalls aren't always
+> exactly preceding the exit to userspace. The kernel can still spend
+> quite some time in task_work_run after the tracepoints are triggered.
+> Has that bothered you before?
 
-> Apart from that using 1M, 64K and then falling back to 4K just sounds ran=
-dom to me. We have especially pushed back on 64K more than once because it =
-is actually not beneficial in almost all cases.
->
-> In the hardware where the driver is used, the 64K is beneficial for:
->
-> Arm SMMUv3 (4KB granule size):
->            64KB (contiguous bit groups 16 4KB pages)
->
-> SysMMU benefits from 64KB (=E2=80=9Clarge=E2=80=9D page) on 4k/16k page s=
-izes.
->
->
-> Question could this HW also work with pages larger than 64K? (I strongly =
-expect yes).
->
+It's been a while, but what I usually do when I want to see entry into the
+kernel is also to run:
 
-Yes, if the page sizes in the SMMUv3 are:
-      - 4k, we can have 2MiB pages
-     - 16k, we can have 32MiB pages
+  trace-cmd set -p function_graph --max-graph-depth 1
 
-> I suggest to fix the code in system_heap_allocate to not over allocate in=
-stead and just try the available orders like TTM does. This has proven to b=
-e working architecture independent.
->
-> Do you mean to have an implementation similar to __ttm_pool_alloc()?
->
->
-> Yeah something like that.
->
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
-ee/drivers/gpu/drm/ttm/ttm_pool.c?h=3Dv6.15-rc2#n728
->
-> If that is the case, we can try the change, run some benchmarks and
-> submit the patch if we see positive results.
->
->
-> Could be that this doesn't matter for your platform, but it's minimal ext=
-ra overhead asking for larger chunks first and it just avoids fragmenting e=
-verything into 64K chunks.
->
-> That is kind of important since the code in DMA-heaps should be platform =
-neutral if possible.
+Which tracks the first function call into the kernel. It obviously now
+misses entry and exit from user mode due to noinstr, but if a task_work
+function is called, it will usually catch that too.
 
-I agree, I'll make the change in another patch.
-
-Thanks
-Juan
-
->
-> Regards,
-> Christian.
->
->
-> Thanks
-> Juan
->
-> Regards,
-> Christian.
->
->  #define NUM_ORDERS ARRAY_SIZE(orders)
->
->  static struct sg_table *dup_sg_table(struct sg_table *table)
->
->
+-- Steve
