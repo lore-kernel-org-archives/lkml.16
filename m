@@ -1,139 +1,146 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4AB42065;
-	Thu, 17 Apr 2025 04:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFED11C7015
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 04:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744864006; cv=none; b=l3WZyR83fVr778wfTg7jUUDOxI07bUcuIeLN/F0m+PRdqC26EbKR7kYx5ggvi8MAIfNdawb0wLQ+4n48SZfHpbAYfcaUPJ4NAOgdTvfeGbK8AVl+A+Cr9dSG2foHE2gGiY8J1l/tcwAFym0v2SXjtFVfi8F/s+TX9dh4Er8hRGk=
+	t=1744864026; cv=none; b=J+B3RH3/jl+nB5QU52mcYPNRrr8S6Cx3kCoCnIbEND1/U+Rni5+DRBC9HHD6V3zfMvq7drApt5OkQHMLSicbwMq7Y1Ag9322Rpuc6YnZS2JYLHpJmuh9X44y9XFVKr0axJyYIaWROjp7yvwEq9EdzF6wqlanFE9pP3Q2PxuUi5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744864006; c=relaxed/simple;
-	bh=i+L8jTjPD0ik2pCvSNzTyOooHNoLje8NKu436vjLZgU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q1MmUPr3HOARYTFKw9Q5HMcDYEHtOxLttZDBnuzeKFipOrjoq0RQw+mVsKcbV8cIu4A6kD/gUT8o+CjSOzTNodWi8QQzsqCZou5UTvqU3XBJlOAcT+LZVzOY5CkRKwPaa8X5bPkoXmS6CAc3QSMnzwHJ8TZRvaBGDwE827tvyHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=TKGLnctk; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1744864026; c=relaxed/simple;
+	bh=6jOEeU7bOgzh5OB+/IJlCLlBlZShBgRYFPeIoAwUKag=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=MSSz8Wa08Pl4tAJo1xKd4gZT1tN0QWwA5xGjiV4Mtx5Fz8OK8HVpADtxvVZiCmuQVI1+QYx1BDnuVmP5uleC+BhHevGkuweXNhee6+gmqo2r1KI9j3PpRJmFhFMs9c96WJBZgQ5DSJTaHQdbxJzya3gLISgIZL2ubmwe3Og464k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=GbeIeKCO; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TKGLnctk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1744863998;
-	bh=+3m97MTJ+N0KGqyOod6LMCb1XHbHUgGTPA6db0+tFsE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TKGLnctk2CoXrf+IYCywZ/wEfLg7KP1dXMBpj5TBPSG3fazpZs0UJ0qAgFij/GCvZ
-	 HFvYecPowWVS3Kwb5pRlwQoxbX422KNhvEAVy8WljoUinM4CFZws9pM6wzcZiNmKLt
-	 oP8jcXCFD9PPlBe3E3FNVjvs7bReqcwACAMyfhmZArAwd9t3+AEFDckauQrHaN4sey
-	 t7JJg0ivbAOQjhZDs8+I3K6LeklNQGtriu3lIbMkGU19foa1uYh/ZMMjqzdOuTEc2p
-	 XFrToLk3DbeXHgtSusIEWBDlEk+9x17E2k6nCMrhOF+4w2SKClmVAcXdv2insOi3qz
-	 1Hw1LKcGAkSrg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZdPws3gRyz4xM1;
-	Thu, 17 Apr 2025 14:26:37 +1000 (AEST)
-Date: Thu, 17 Apr 2025 14:26:36 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Tejun Heo <tj@kernel.org>
-Cc: Tamir Duberstein <tamird@gmail.com>, Benno Lossin
- <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, Andreas
- Hindborg <a.hindborg@kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the workqueues tree
-Message-ID: <20250417142636.0e73728a@canb.auug.org.au>
-In-Reply-To: <Z_50QbWczACrwL5f@slm.duckdns.org>
-References: <20250415140116.13544ac6@canb.auug.org.au>
-	<CAJ-ks9kUBCX6PjOeOSVQNXYGcy9gkYw++BEmHZ0eFbsyZeBZcQ@mail.gmail.com>
-	<Z_50QbWczACrwL5f@slm.duckdns.org>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GbeIeKCO"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250417042701epoutp016249621e10c35390718aae2ef8c498be~3AJU9a5Tf2881228812epoutp01T
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 04:27:01 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250417042701epoutp016249621e10c35390718aae2ef8c498be~3AJU9a5Tf2881228812epoutp01T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744864021;
+	bh=0Mic3eQzqMW/WfkrWpTIHGqVKKLxGpW/SU0aNfBKGsc=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=GbeIeKCOgd9mws+jvTRMqzlGrxn1BmIpcGpaSscdqOnJjPBFPpyhVDV6LmtP4LrqS
+	 QrcIOyHIW+l2eEUql0xbbIWBYt7AQYjB2hxuprpWItFQc8JLXq3BwCz3lEQIh3TMYu
+	 Wp/ZjQfYeuMr/rTadqNGOi4fCJOeKVER9aX9To2M=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250417042700epcas5p2514834948b2daceefd1688f1ccb002fc~3AJUDAH1G0731807318epcas5p29;
+	Thu, 17 Apr 2025 04:27:00 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.183]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4ZdPxG3CVGz3hhTH; Thu, 17 Apr
+	2025 04:26:58 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	47.76.10173.21380086; Thu, 17 Apr 2025 13:26:58 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250417042427epcas5p2df3d35803adcb24da7d83e5df586380d~3AHFOTaz21902119021epcas5p2L;
+	Thu, 17 Apr 2025 04:24:27 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250417042427epsmtrp1b1574df5707787771602dac61e22863d~3AHFLvhO22341023410epsmtrp1p;
+	Thu, 17 Apr 2025 04:24:27 +0000 (GMT)
+X-AuditID: b6c32a44-8b5fb700000027bd-86-680083128d7b
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	43.6C.07818.B7280086; Thu, 17 Apr 2025 13:24:27 +0900 (KST)
+Received: from bose.samsungds.net (unknown [107.108.83.9]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250417042425epsmtip17c9190f71841f505db572cea3f01579a~3AHDr5wkd0578705787epsmtip1L;
+	Thu, 17 Apr 2025 04:24:25 +0000 (GMT)
+From: Faraz Ata <faraz.ata@samsung.com>
+To: alim.akhtar@samsung.com, krzk@kernel.org, gregkh@linuxfoundation.org,
+	jirislaby@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	dev.tailor@samsung.com, rosa.pila@samsung.com, faraz.ata@samsung.com
+Subject: [PATCH v3] tty: serial: samsung_tty: support 18 uart ports
+Date: Thu, 17 Apr 2025 10:04:27 +0530
+Message-Id: <20250417043427.1205626-1-faraz.ata@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/hqcHcv.5R_L3Wd9f_o/DOYV";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIJsWRmVeSWpSXmKPExsWy7bCmuq5QM0OGQfM/UYsH87axWdzbsYzd
+	4tqNhewWzYvXs1m8mytjcf78BnaLTY+vsVpc3jWHzWLG+X1MFmcW97JbfPn5gNmB22PTqk42
+	j/1z17B7bF5S79G3ZRWjx+dNcgGsUdk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW
+	5koKeYm5qbZKLj4Bum6ZOUCHKSmUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKTAr0
+	ihNzi0vz0vXyUkusDA0MjEyBChOyMzb9+cdUsICjYsfsZqYGxk72LkZODgkBE4m7bdeBbC4O
+	IYHdjBJXrvUzQjifGCUezPvGCuF8Y5Q49HszUxcjB1jLkx9mIN1CAnsZJXbNjoWoeQ/U8HgC
+	K0iCTUBdYuaNIywgtohAgkTnhyNMIEXMAhcZJZ6sP84IkhAWcJY4O+Ee2FAWAVWJTQ3KIGFe
+	ARuJY9PeMEOcJy+x/+BZZoi4oMTJmU/AZjIDxZu3zmYGmSkh8JZd4vmNJ4wQx7lIHOmNgegV
+	lnh1fAvUm1ISL/vboGwficlHv0GVZ0jcWSsCEbaXWL3gDCtImFlAU2L9Ln2IsKzE1FPrmCC2
+	8kn0/n7CBBHnldgxD8ZWlji5Zw8rhC0pcej2CyjbQ2LJo0awkUICsRL7XsROYJSfheSXWUh+
+	mYWweAEj8ypGydSC4tz01GTTAsO81HJ4pCbn525iBKdNLZcdjDfm/9M7xMjEwXiIUYKDWUmE
+	95z5v3Qh3pTEyqrUovz4otKc1OJDjKbA8J3ILCWanA9M3Hkl8YYmlgYmZmZmJpbGZoZK4rzN
+	O1vShQTSE0tSs1NTC1KLYPqYODilGpjYmRhK7/YzpaVfZPefY+nTnsVke3zbNSFgtK9gC9H4
+	cH/PrOhtsjnTc2ZZKOdJdrKlexz4XporqC7dc/Z6Pc8U45y9dWxXNKdoWOr9W3Dgeoymqo6J
+	EvuZQ1N1nOY9fn+0ZKrdl3t991/ZVCjwOD65UJhh+2nmjGVqh2UiZ039v1+Dder8ws/HhXeu
+	iLYs6xD5b6+3q2qLvGF4jVLEiWreD7dn3ps4R/hI2s9EgZQFTuEXY6edCOG9Yb7v+IxJXfnq
+	hsFsgovMPHZuSPbk2rCi+I1SxLRDK4v7V3vukHy8IlanKdbocfsqD2X/24rfLf47vLmTGOPJ
+	V9b2neXKZa8NP4oDHu1+82pZSPLmuUosxRmJhlrMRcWJAO48mbwkBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPLMWRmVeSWpSXmKPExsWy7bCSnG51E0OGweE3XBYP5m1js7i3Yxm7
+	xbUbC9ktmhevZ7N4N1fG4vz5DewWmx5fY7W4vGsOm8WM8/uYLM4s7mW3+PLzAbMDt8emVZ1s
+	HvvnrmH32Lyk3qNvyypGj8+b5AJYo7hsUlJzMstSi/TtErgyNv35x1SwgKNix+xmpgbGTvYu
+	Rg4OCQETiSc/zLoYuTiEBHYzSjz8vwMozgkUl5Q4/PQuK4QtLLHy33N2iKK3jBKda2czgiTY
+	BNQlZt44wgIySEQgRWL/XSaQGmaBm4wSW1uXgg0SFnCWODvhHhNIDYuAqsSmBmWQMK+AjcSx
+	aW+YIebLS+w/eJYZIi4ocXLmExYQmxko3rx1NvMERr5ZSFKzkKQWMDKtYpRMLSjOTc9NNiww
+	zEst1ytOzC0uzUvXS87P3cQIDmMtjR2M77416R9iZOJgPMQowcGsJMJ7zvxfuhBvSmJlVWpR
+	fnxRaU5q8SFGaQ4WJXHelYYR6UIC6YklqdmpqQWpRTBZJg5OqQamBFOm00HW9e9y/7/JFZLj
+	clvpmVm84s8jzv/sHJN3TnrLwi1yoTklKur7L8Va38v/zi8rDvSXPrY++8vVkxv/VUzxslZf
+	o+lhKXxtw70f6coS3lEm3XPVf+curvrWNsVgr2ra5ekTy1527kto39OsKL0vIT77wdW1Wr4f
+	Xz3bt/FDdbzgr6a77iGWfo9utzpsM88W/PR41zxd9zynTXPXRU8urhAWzV5wz2zDodVF/5L/
+	HMz+K63NEvsk3dqO3S4lac61b1c9qn/9897/99yvR3klK1YuNclUXpIx4WjelsIA+RqWNY3p
+	4Uf6s/zrT+4++9Nj74xFT+Y0Wk7/u6qq101EbZKNeNlpi6VaV0pKlFiKMxINtZiLihMBcGMY
+	sdICAAA=
+X-CMS-MailID: 20250417042427epcas5p2df3d35803adcb24da7d83e5df586380d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250417042427epcas5p2df3d35803adcb24da7d83e5df586380d
+References: <CGME20250417042427epcas5p2df3d35803adcb24da7d83e5df586380d@epcas5p2.samsung.com>
 
---Sig_/hqcHcv.5R_L3Wd9f_o/DOYV
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+ExynosAutov920 SoC supports 18 UART ports, update
+the value of UART_NR to accommodate the same.
 
-Hi Tejun,
+Signed-off-by: Faraz Ata <faraz.ata@samsung.com>
+---
+Changes in v3:
+- Fixed review comments from Krzysztof
+- Link to v2: https://patchwork.kernel.org/project/linux-samsung-soc/patch/20250404135006.1263827-1-faraz.ata@samsung.com/
 
-On Tue, 15 Apr 2025 04:59:13 -1000 Tejun Heo <tj@kernel.org> wrote:
->
-> On Tue, Apr 15, 2025 at 09:24:32AM -0400, Tamir Duberstein wrote:
-> > On Tue, Apr 15, 2025 at 12:01=E2=80=AFAM Stephen Rothwell <sfr@canb.auu=
-g.org.au> wrote: =20
-> > >
-> > > After merging the workqueues tree, today's linux-next build (x86_64
-> > > allmodconfig) failed like this:
-> > >
-> > > error[E0308]: mismatched types =20
-> > >    --> rust/kernel/lib.rs:204:9 =20
-> > >     |
-> > > 204 |           ptr.sub(offset) as *const $type
-> > >     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ types differ in mutab=
-ility
-> > >     |
-> > >    ::: rust/kernel/workqueue.rs:495:18
-> > >     |
-> > > 495 |               ) -> *mut Self {
-> > >     |                    --------- expected `*mut ClosureWork<T>` bec=
-ause of return type
-> > > ...
-> > > 505 | / impl_has_work! {
-> > > 506 | |     impl{T} HasWork<Self> for ClosureWork<T> { self.work }
-> > > 507 | | }
-> > >     | |_- in this macro invocation
-> > >     |
-> > >     =3D note: expected raw pointer `*mut ClosureWork<T>`
-> > >                found raw pointer `*const ClosureWork<T>`
-> > >     =3D note: this error originates in the macro `$crate::container_o=
-f` which comes from the expansion of the macro `impl_has_work` (in Nightly =
-builds, run with -Z macro-backtrace for more info)
-> > >
-> > > error: aborting due to 1 previous error
-> > >
-> > > For more information about this error, try `rustc --explain E0308`.
-> > >
-> > > Caused by commit
-> > >
-> > >   345e029b561e ("rust: workqueue: remove HasWork::OFFSET")
-> > >
-> > > I have used the workqueues tree from next-20250414 for today. =20
-> >=20
-> > HI Stephen, I believe Tejun plans to back this out. See
-> > https://lore.kernel.org/all/CAJ-ks9k2FEfL4SWw3ThhhozAeHB=3DUe9-_1pxb9XV=
-PRR2E1Z+SQ@mail.gmail.com/. =20
->=20
-> Yeah, sorry about that. It was in the tree only for a couple hours and th=
-en
-> got rewound, but we got a bit unfortunate with linux-next pulling. Should=
- be
-> okay today.
+Changes in v2:
+- Rebased on the latest linux-next and added reviewers as per get_maintainer
+- Link to v1: https://patchwork.kernel.org/project/linux-samsung-soc/patch/20250312061932.1797993-1-faraz.ata@samsung.com/
 
-I am still seeing this failure.  Forgot to push out?
+ drivers/tty/serial/samsung_tty.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---=20
-Cheers,
-Stephen Rothwell
+diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+index 210fff7164c1..9a5211b730fb 100644
+--- a/drivers/tty/serial/samsung_tty.c
++++ b/drivers/tty/serial/samsung_tty.c
+@@ -52,7 +52,7 @@
+ #define S3C24XX_SERIAL_MINOR	64
+ 
+ #ifdef CONFIG_ARM64
+-#define UART_NR			12
++#define UART_NR			18
+ #else
+ #define UART_NR			CONFIG_SERIAL_SAMSUNG_UARTS
+ #endif
+-- 
+2.34.1
 
---Sig_/hqcHcv.5R_L3Wd9f_o/DOYV
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgAgvwACgkQAVBC80lX
-0Gx4kAf8CyyGLJI3BHnCKvjA32ifhppP8teDbmxVK3F7OQi2cR+d5bzcZf40BCA0
-k4K3PpcE9XyGHwHk0Bd+KXnwXN6G/Yy5pa14oAknhjgWDbfxNDxp7KWdQ2ZOPSc4
-W559x7PKZ0Lg9Xb8lqytAotF4kz448Ctq7WqwkOAXOzPeKtWARss5koayqxIj2dZ
-ylGeuvDSPrxrkblfxnTCXrvIGWp1zEem4+Xjrj9ZMMHaSLRgQScHrSnLkaJxyh72
-66TyKiij5Y3NvpFRfFFhxz76nate5G71DbU3THXDiWwstpi2EBAQVsZmqdtSPyY5
-nNzTR7crwQwP2MueLsWIJpJOzHoX6g==
-=ar5p
------END PGP SIGNATURE-----
-
---Sig_/hqcHcv.5R_L3Wd9f_o/DOYV--
