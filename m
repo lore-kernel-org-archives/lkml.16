@@ -1,66 +1,63 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43ADE221544
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 23:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC8B204583
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 23:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744931278; cv=none; b=e4hccWgfRL5kACNNpp4gLYn2TuRXNYWgFSL42VGa8UGJkZqr9crogZINPk6lLdVVgf/f/qG9kv1Z8L8nmY9w0DpBFyeuTUmq26gMEb4BsCEEmlsyMhiPdec1x/gs5V1oHXK0cWxgBzjN9jlmAuv6EVfkvtZejD85tu7jRzysgKc=
+	t=1744931278; cv=none; b=chd+rGPLFx6TJHs2XF9Ek1IhdEmGuTro3K2zq7/AKlFliUQsisaFC9+cHBOJ8bnrrqlUoW7LDQVbmrqk7MISYfkXfmuGakk/5uYX8QdRAJDj0zsCfDscBkO0Cs4w1piT6tiv4zDIS8K/v1jmHMRJQKRgCcGVbEU+Q7rKs7z2bz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744931278; c=relaxed/simple;
-	bh=DUhmjAhpzI4glFlJFVyHh6Dy0isdHfkiubMes37ZCtA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=SbC5l0TH+aT9yBPtKTRRZ5p9Txgr1h6RKsoXR8WXKghFmVOP5Ms375i4UB6SUjNiw+w6S1zuHeJ1UkPG5W+CReNM2KkbASx9EmFhxwx/Cr9+f28M8l3g+kt2gfJXU5iqgXi6IjrR0XeR4DbbbWrWDaT+Uh+gXCzy88rwMl6QknI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Tatps3Ue; arc=none smtp.client-ip=209.85.214.202
+	bh=eW+pVPNq6pUpwn/R+30APLTaXgT/SOPjE0za0HesyJU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=JLJ7AKylny72SBPsmuMIaKcVifQbZWRXvZlxmvvzHKzHNNzyTp8ON6kLmbU/ybm8U3fikZJ/a89v2rTWlA57YzTCHqXD8mboafXvSwpHNVrUAwUNJikEt7sD4nrXXQT7MPuAGdp6p2gdU39UUTgX+Cr60FpuWPlN1p2m/Cjexcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YYl8EkgO; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tatps3Ue"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2264e5b2b7cso11878865ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:07:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YYl8EkgO"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff8340d547so1026672a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:07:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744931276; x=1745536076; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qnICyJ2RGS0Y400AqNRs1KksXFmr5hh/vv3vYVQnBHQ=;
-        b=Tatps3UeOf3aVg+3xmw+Ju+O8rdbwyVWbCD32mkYDDwu7ibuc/j4wotSFOrASJSFQZ
-         eaNO+oRAD82RTlqH+Cxqe8w6QJCd8WJ/0uVVOhG2PCTrqbygl4immiLzgtzlTVvaFmP/
-         +ET3q0RiWqjkj03aJ+uS0Rcory8jkt3EbXsrbzb+GjsSUoNDUfea8CGncx29InN3wJnN
-         Wxj8GTNYkUG2/79z7HSHIprwC8NhBySAk1SS5rq3xO3b/5eWtHq42dSz3k/G8dcW6fTP
-         64H4J0GBlewWDWE0+nBSik8eDIQK+4b/JUlE9AiSZUY2wa/wI3XrmcRKrx43UtauIjTO
-         o7Nw==
+        d=google.com; s=20230601; t=1744931274; x=1745536074; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=z/2zlq2Tj6tj35k6ZfjHuLZ56orcGGKn/8U/e3f/O4Q=;
+        b=YYl8EkgO0QWlOrXtO+BAKcPr5AyI6qc1A3Oq2ZRVUBBYxnfXsHfJ+Z8U1dv0c3l39h
+         mDw85VWDKu0M9AmIPQnYZRtAud1oYSZXUEoCDxhTt8coUB+GQ6Xwk99MOoLIhcijiIyN
+         2mFOjgOk1Idn9jpryWPVFPmvIe1+xZF33pVbbWIso7QXZuis1nWCvURhI7+LFxk1O/xq
+         ijpOQ3oe47IrlmLwefgLmXKaio0zgh4V0z/EP7el5NwWZ8KP9cyiZRPoSduyMrNzYMlP
+         JTkvlKxuRc5H2P/YctbcVlJlmnZ0Q0NJ71QkRB8BW4KdKIljhTgdHAB71HOpMMipjMsN
+         L/1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744931276; x=1745536076;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qnICyJ2RGS0Y400AqNRs1KksXFmr5hh/vv3vYVQnBHQ=;
-        b=beuRqYoReeEBw6FSPfBbJP198eEln9UvaiYXbqTf7F3iA317iU65fOCOEWwNJ22Ljx
-         XD7KuNoQ4oxb03UD/5KkSbGQQh2xm42YYY/1mrUqGZJpG9QFcUQQ2CBl/5k5bF88sKzO
-         /WfMfGIms3kyVJda3Hm7wmmJnFuIvAwGBY9LXE1lPbxY/JDcBiFFgiuTHKNWFfmwdA6+
-         u91MhGz7rXkhmjU9edQBj++dh5erNL5dmReTrm6hV7OcXF6y/AJ45bvW0ahWckYhpzmd
-         LbPSSyycf7viUBNZYcih2Z5quEm3zPNz9Mgu0iDCnYJ5AHVksmYbOjvgeQoY01PhCxue
-         XL6w==
-X-Forwarded-Encrypted: i=1; AJvYcCWlUPegljkURC+OCJoi4qhe4VSfm7W9XQ729e4sTvPvG2Vkd8rfc5q4beTnVD9MxKL9z65vPB1EFLkagnU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxw1hmjgBhDdgXW7BNONAW8Giqn+zLYpjy7A1u1jcueLavC31ud
-	k2769BWnnkRTw2wtmboPx3FevQaYD24WXZ9dtyDR9fhrnqYL/AMUoAp/1ECuqx3ZhqUnLzZYMhb
-	lqlHLMg==
-X-Google-Smtp-Source: AGHT+IEwa/KfQTqntEV82qp0baymPwWs4os7wo5Uctj1zdlTuJFxSq6S5ewEmLz+IORlKXcqOKBHo7BSNgld
-X-Received: from plkj8.prod.google.com ([2002:a17:902:6908:b0:220:d79f:a9bd])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ecd1:b0:226:5dbf:373f
- with SMTP id d9443c01a7336-22c53379f8amr10249835ad.10.1744931276358; Thu, 17
- Apr 2025 16:07:56 -0700 (PDT)
-Date: Thu, 17 Apr 2025 16:07:22 -0700
-In-Reply-To: <20250417230740.86048-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1744931274; x=1745536074;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=z/2zlq2Tj6tj35k6ZfjHuLZ56orcGGKn/8U/e3f/O4Q=;
+        b=FlZxgEBYG8WGt2UFpVR/94F3AoY9imfByyt8KBwB6Rfg28+k6reF+OVF8GsemdxqjY
+         1aJIluC6EQPHaTqUc+c2PcU3bKO/VTeywTBJt4D/ugt0Y8Pwq8tLWUvYkpcYAjMMoUOM
+         FpqbtkG1rBpI1ssBnDxWLPJRfWC/4Hc9IlEhtGa/PpER786/U+GPyTrTbX0P3VNR6+4X
+         J3qP4fgeuL7SXd5m40iHmyMaw2nt9fwgVo1HrMb5ko0NcQWkxm3wkzFDrvrPiJYIivwx
+         UqRkVDLPOP0AahRJKPxGI5bC9cHXxpNdrn1G+b1y7Y3hfawOzmDqZDa+4PC1dLM18Z5n
+         9neA==
+X-Forwarded-Encrypted: i=1; AJvYcCUz7Op5jwbkVGPrbmR/gVuIXet0n0wS+2c+Egxuu1Rl7bzX39tmbsJTsDYkS1xcKfK2xxO9wRDZ7jbinJA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2UGAAIlTeoTGXP2dEpbm00dk+uHmbJVo4X1N/zTtIMqkc6bpm
+	BfwteZ3rpLV7UiNz3RpUjmxqmdf2kpH2ycT4sFAPL63HM3TQf6/DYiMCqNp1CL+w6Cxz0UcrQkQ
+	B47DgJQ==
+X-Google-Smtp-Source: AGHT+IEme5uVtpReSBx4abFiN+jJPl/IKgYONZ9vbXWEHG+mWi3mIf7Qt5/n0zi1ykh4AU2sL9xoZ6I/RVCW
+X-Received: from pjbsj11.prod.google.com ([2002:a17:90b:2d8b:b0:2e0:915d:d594])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5184:b0:301:1d03:93cd
+ with SMTP id 98e67ed59e1d1-3087bbbcd83mr1170053a91.24.1744931274238; Thu, 17
+ Apr 2025 16:07:54 -0700 (PDT)
+Date: Thu, 17 Apr 2025 16:07:21 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250417230740.86048-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
-Message-ID: <20250417230740.86048-2-irogers@google.com>
-Subject: [PATCH v4 01/19] perf build: Remove libtracefs configuration
+Message-ID: <20250417230740.86048-1-irogers@google.com>
+Subject: [PATCH v4 00/19] Support dynamic opening of capstone/llvm remove BUILD_NONDISTRO
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,40 +77,121 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Song Liu <song@kernel.org>, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-libtracefs isn't used by perf but not having it installed causes build
-warnings. Given the library isn't used, there is no need for the
-configuration or warnings so remove.
+Linking against libcapstone and libLLVM can be a significant increase
+in dependencies and file size if building statically. For something
+like `perf record` the disassembler and addr2line functionality won't
+be used. Support dynamically loading these libraries using dlopen and
+then calling the appropriate functions found using dlsym.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Makefile.config | 14 --------------
- 1 file changed, 14 deletions(-)
+BUILD_NONDISTRO is used to build perf against the license incompatible
+libbfd and libiberty libraries. As this has been opt-in for nearly 2
+years, commit dd317df07207 ("perf build: Make binutil libraries opt
+in"), remove the code to simplify the code base.
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 9f08a6e96b35..f31b240cd23e 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -1176,20 +1176,6 @@ ifneq ($(NO_LIBTRACEEVENT),1)
-   else
-     $(error ERROR: libtraceevent is missing. Please install libtraceevent-dev/libtraceevent-devel and/or set LIBTRACEEVENT_DIR or build with NO_LIBTRACEEVENT=1)
-   endif
--
--  ifeq ($(feature-libtracefs), 1)
--    CFLAGS +=  $(shell $(PKG_CONFIG) --cflags libtracefs)
--    LDFLAGS += $(shell $(PKG_CONFIG) --libs-only-L libtracefs)
--    EXTLIBS += $(shell $(PKG_CONFIG) --libs-only-l libtracefs)
--    LIBTRACEFS_VERSION := $(shell $(PKG_CONFIG) --modversion libtracefs).0.0
--    LIBTRACEFS_VERSION_1 := $(word 1, $(subst ., ,$(LIBTRACEFS_VERSION)))
--    LIBTRACEFS_VERSION_2 := $(word 2, $(subst ., ,$(LIBTRACEFS_VERSION)))
--    LIBTRACEFS_VERSION_3 := $(word 3, $(subst ., ,$(LIBTRACEFS_VERSION)))
--    LIBTRACEFS_VERSION_CPP := $(shell expr $(LIBTRACEFS_VERSION_1) \* 255 \* 255 + $(LIBTRACEFS_VERSION_2) \* 255 + $(LIBTRACEFS_VERSION_3))
--    CFLAGS += -DLIBTRACEFS_VERSION=$(LIBTRACEFS_VERSION_CPP)
--  else
--    $(warning libtracefs is missing. Please install libtracefs-dev/libtracefs-devel)
--  endif
- endif
- 
- # Among the variables below, these:
+The patch series:
+1) does some initial clean up;
+2) moves the capstone and LLVM code to their own C files,
+3) simplifies a little the capstone code;
+4) adds perf_ variants of the functions that will either directly call
+   the function or use dlsym to discover it;
+5) adds BPF JIT disassembly support to LLVM and capstone disassembly;
+6) removes the BUILD_NONDISTRO code, reduces scope and removes what's possible;
+7) adds fallback to srcline's addr2line so that llvm_addr2line is
+   tried first and then the forked command tried next, moving the code
+   for forking out of the main srcline.c file in the process.
+
+The addr2line LLVM functionality is written in C++. To avoid linking
+against libLLVM for this, a new LIBLLVM_DYNAMIC option is added where
+the C++ code with the libLLVM dependency will be built into a
+libperf-llvm.so and that dlsym-ed and called against. Ideally LLVM
+would extend their C API to avoid this.
+
+The libbfd BPF disassembly supported source lines, this wasn't ported
+to the capstone and LLVM disassembly.
+
+v4: Rebase and addition of a  patch removing an unused struct variable.
+v3: Add srcline addr2line fallback trying LLVM first then forking a
+    process. This came up in conversation with Steinar Gunderson
+    <sesse@google.com>.
+    Tweak the cover letter message to try to address Andi Kleen's
+    <ak@linux.intel.com> feedback that the series doesn't really
+    achieve anything.
+v2: Add mangling of the function names in libperf-llvm.so to avoid
+    potential infinite recursion. Add BPF JIT disassembly support to
+    LLVM and capstone. Add/rebase the BUILD_NONDISTRO cleanup onto the
+    series from:
+    https://lore.kernel.org/lkml/20250111202851.1075338-1-irogers@google.com/
+    Some other minor additional clean up.
+
+Ian Rogers (19):
+  perf build: Remove libtracefs configuration
+  perf map: Constify objdump offset/address conversion APIs
+  perf capstone: Move capstone functionality into its own file
+  perf llvm: Move llvm functionality into its own file
+  perf capstone: Remove open_capstone_handle
+  perf capstone: Support for dlopen-ing libcapstone.so
+  perf llvm: Support for dlopen-ing libLLVM.so
+  perf llvm: Mangle libperf-llvm.so function names
+  perf dso: Move read_symbol from llvm/capstone to dso
+  perf dso: Support BPF programs in dso__read_symbol
+  perf llvm: Disassemble cleanup
+  perf dso: Clean up read_symbol error handling
+  perf build: Remove libbfd support
+  perf build: Remove libiberty support
+  perf build: Remove unused defines
+  perf disasm: Remove disasm_bpf
+  perf disasm: Make ins__scnprintf and ins__is_nop static
+  perf srcline: Fallback between addr2line implementations
+  perf disasm: Remove unused evsel from annotate_args
+
+ tools/perf/Documentation/perf-check.txt |   1 -
+ tools/perf/Makefile.config              |  90 +--
+ tools/perf/Makefile.perf                |  35 +-
+ tools/perf/builtin-check.c              |   1 -
+ tools/perf/builtin-script.c             |   2 -
+ tools/perf/tests/Build                  |   1 -
+ tools/perf/tests/builtin-test.c         |   1 -
+ tools/perf/tests/make                   |   4 +-
+ tools/perf/tests/pe-file-parsing.c      | 101 ----
+ tools/perf/tests/tests.h                |   1 -
+ tools/perf/util/Build                   |   6 +-
+ tools/perf/util/addr2line.c             | 439 ++++++++++++++
+ tools/perf/util/addr2line.h             |  20 +
+ tools/perf/util/annotate.c              |   1 -
+ tools/perf/util/annotate.h              |   1 -
+ tools/perf/util/capstone.c              | 682 +++++++++++++++++++++
+ tools/perf/util/capstone.h              |  24 +
+ tools/perf/util/config.c                |   2 +-
+ tools/perf/util/demangle-cxx.cpp        |  22 +-
+ tools/perf/util/disasm.c                | 628 +------------------
+ tools/perf/util/disasm.h                |   6 +-
+ tools/perf/util/disasm_bpf.c            | 195 ------
+ tools/perf/util/disasm_bpf.h            |  12 -
+ tools/perf/util/dso.c                   |  98 +++
+ tools/perf/util/dso.h                   |   4 +
+ tools/perf/util/llvm-c-helpers.cpp      | 120 +++-
+ tools/perf/util/llvm-c-helpers.h        |  24 +-
+ tools/perf/util/llvm.c                  | 484 +++++++++++++++
+ tools/perf/util/llvm.h                  |  21 +
+ tools/perf/util/map.c                   |  19 +-
+ tools/perf/util/map.h                   |   6 +-
+ tools/perf/util/print_insn.c            | 117 +---
+ tools/perf/util/srcline.c               | 772 +-----------------------
+ tools/perf/util/srcline.h               |   7 +-
+ tools/perf/util/symbol-elf.c            |  95 ---
+ tools/perf/util/symbol.c                | 135 -----
+ tools/perf/util/symbol.h                |   4 -
+ 37 files changed, 2020 insertions(+), 2161 deletions(-)
+ delete mode 100644 tools/perf/tests/pe-file-parsing.c
+ create mode 100644 tools/perf/util/addr2line.c
+ create mode 100644 tools/perf/util/addr2line.h
+ create mode 100644 tools/perf/util/capstone.c
+ create mode 100644 tools/perf/util/capstone.h
+ delete mode 100644 tools/perf/util/disasm_bpf.c
+ delete mode 100644 tools/perf/util/disasm_bpf.h
+ create mode 100644 tools/perf/util/llvm.c
+ create mode 100644 tools/perf/util/llvm.h
+
 -- 
 2.49.0.805.g082f7c87e0-goog
 
