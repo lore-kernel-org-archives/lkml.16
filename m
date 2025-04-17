@@ -1,124 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2560A2DFA2F;
-	Thu, 17 Apr 2025 05:34:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA9B2DFA2F;
+	Thu, 17 Apr 2025 05:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744868059; cv=none; b=oEMwyJsK9tbknAZNU2PUBfcP9dw4rgplOV6JmmfCAPs9Y8lVvxL+fyMZQyoPVBKYYcvlgGI7UyBT/xP3DxOPeoc3BOxkjcsCEV8BR6scnZSazu7GPTG+n7D1V69lRo5PXslyIOPL00OEQxIrar/qehpcRy9DPAhEXQA8A5YD7TU=
+	t=1744868136; cv=none; b=UpAFlDFNeoA7POxuFE+WoBVN2mvzuwbyndFBW5IQW+y4GpEKGDUnlbP4rhs+57xNwc0BnBbx2GD6OfnE4mcmD4m7WNzfDPFWvK6VlKtoC1tFVWFqfWnYzHxzj74wtWVq1C9/xpbTrgJX2vB/rLtBC0t5J8VHGOOsUMAJQeLZ+ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744868059; c=relaxed/simple;
-	bh=zyJNg9uFmfkUUAFiN7I/bWvyZM4TumdpS5tAIZnJYBY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=paU0QaT4HHVGVN6EL8cEqc8Al5ts+QDR0iLcHZro/Q7ajfAgtYGXwcNw7UA/yH9SQzs/LqnT4INOVG/G93rhF+7GORU2RdGnabjy2BarLuFy2VftGNVQjRpKCKYDBBQBUzzoWIJnzFQFV2pIjkrCJl9QaGTV1s+uNca8Zx13HS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pY51bz0v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744868136; c=relaxed/simple;
+	bh=Slvx1D6twob46gSrZLqBdVv7oyktOZCDbUx61Hxl6Ww=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GLjlQEjsIS1k6GrYzIHoJwXNlYIR5GSqOqL1IUU5T3AdETgMYmX4/ldV5BjwD1gq/XVUDwvmDxpxg/Fd4pF/Fxma0whuMcPVrWHJ7Xb8tR5jI1jj0WqqnG1k4cs95nJ+UPQ5E1bmUNBhG8iyctZ0yAOux32Ms3vYaPKWeHBVrZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=QucMYgwf; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CAnFn2N0; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pY51bz0v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6B97C4CEE4;
-	Thu, 17 Apr 2025 05:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744868058;
-	bh=zyJNg9uFmfkUUAFiN7I/bWvyZM4TumdpS5tAIZnJYBY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pY51bz0vJT44hG2BCVrlTQNlRl2zbbQ2Ls87R6m1/+ew6dJsL9SrZ4UW8Ne4NYYec
-	 O/CuBpZuLev7XSemR8/yUPZDVkIAlj/QeXd5aLekzqGT0jq0mzp13siwGtTSxlPu4D
-	 sEYaLUA1ar2fcMH3l16Voxt9TvhnVLp+qiNKiShW2t7tV0RrDX/XkGzgqZ5f9cGDkF
-	 Mjl+1ODl+GussYybJERu3UH+Mj3kxVg+3UyfDVfQrOVzZHO1ZIkVmm3ADERFsirjng
-	 rzIi+NqBi0OqP9KUPzvoU9SOt2bp4jFQOEtWBL/32Qq8NanewwBi4aaCQvvpILDysI
-	 2SrPZbY8HZRUQ==
-Message-ID: <209070b3-4758-416e-a408-480b2a8e4fbc@kernel.org>
-Date: Thu, 17 Apr 2025 07:34:11 +0200
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="QucMYgwf";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CAnFn2N0"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 64EA11140295;
+	Thu, 17 Apr 2025 01:35:32 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Thu, 17 Apr 2025 01:35:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1744868132; x=1744954532; bh=C646+KxKq2
+	N5WzwP+wIgUiP5cHyRP6fbp7IlKQwHZFc=; b=QucMYgwf3pY1sSSCnjYILzHnnt
+	qePWQYLwJfie+AjYhohu6ZP9iCjCQ4XnRJmrA7be5d/VB+9eykScL00D5iog1ffu
+	SW78cCUJx3ArrYHx8vtQ1rX/R2/6OhgkS+DGZXW4pRA5szAgtderV0xqoNjk1NTC
+	tOuiamgnfrrV0+zhnynZcnclFV7PyNvwJj9zWi7kjDZPpacK/RlG32LJ4m+JpGtH
+	bCrdGUMnjxdE+GS1WGkXOw3ug8NmDaklbxeFOIDrA8tzM/GxB5Fg5UK8fZ7ed1DU
+	wByMKHwrpxoyFW1xgbq+iEFNn6V+vhPVS8aTxWxLLMnIxcNGKTbm6dssruQA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1744868132; x=1744954532; bh=C646+KxKq2N5WzwP+wIgUiP5cHyRP6fbp7I
+	lKQwHZFc=; b=CAnFn2N0oWSeY5NaTQaUlm5W7RKbUILrpY9OBEc3OQEZnnftgu5
+	HyFNtQDbL9Ezs+UtAWN971AyUgyFaEoTMqDOGBF8sp1FxdqJWa8Jxspu3WiI9rUH
+	Z/MDW6QZ2LY65S29mB/NvyC4edbaTxNNiOBJSU6X9b7j2GJVL9qnNzkc6s+AAQs9
+	FAFVssKk6cCCaTr1NMCVRKuDgRi6ox2WoTVXW3G4FjVoRhRj0L7sRbSuKFndH/bi
+	vpx+VSrn7G86URTUmFiAQ8rBhKFgIM/EPq2qy3Gishk95S6c7/GZP81MEbYTn4zj
+	JyLeYHpTu27mYcSnIwremb5+hCOTn0lFjHQ==
+X-ME-Sender: <xms:I5MAaD3k_2bZXeDhJkI5FlvC3FsSG92RZTYpK-P75cF41z6sTrxheA>
+    <xme:I5MAaCEYNVj-F9n-AMFx_hE6kuDlx1bMM93v-sJoXeblrsRL6QrcoL0EMuX2hR4H2
+    wjEwscWGD0a5w>
+X-ME-Received: <xmr:I5MAaD5EFRaFO1xeMyZNsw2BOL7CMSMLQC713ds3aAm4xlwZcc21AGM74RScdejZWFX5ACXx_O-dp0Ipkp4CXSOC83jbRbI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdekgeefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecugg
+    ftrfgrthhtvghrnhepheegvdevvdeljeeugfdtudduhfekledtiefhveejkeejuefhtdeu
+    fefhgfehkeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
+    homhepghhrvghgsehkrhhorghhrdgtohhmpdhnsggprhgtphhtthhopeduvddpmhhouggv
+    pehsmhhtphhouhhtpdhrtghpthhtohepshhfrhestggrnhgsrdgruhhughdrohhrghdrrg
+    hupdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgvggv
+    rhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtoheplhhinhhugidqkh
+    gvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidq
+    nhgvgihtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfihsrgdorhgvnh
+    gvshgrshesshgrnhhgqdgvnhhgihhnvggvrhhinhhgrdgtohhm
+X-ME-Proxy: <xmx:I5MAaI0uaXQfzFA3lmVHO3CzgR9PeE-6o5jHyu96t0a8ZUTsn5PCKw>
+    <xmx:I5MAaGFE23yzfHu9SBnYAhUdJ33bcCTnyPLwiLjmLh8XJN7gf4yiYQ>
+    <xmx:I5MAaJ_fHdEw3fIBfg9TsEMBbdUpQtfe1CwY8zYTus6kEka0Y-q4NA>
+    <xmx:I5MAaDmi0lv5lk2fiN3IfLxVTTyF7Ef-3ZD9m1tZvVA2STiw4UYu4w>
+    <xmx:JJMAaHwem31P8l6yFRaTsnbO05vMOzAUvqyS9C0AHDYYSgpkpY4_1HYR>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 17 Apr 2025 01:35:31 -0400 (EDT)
+Date: Thu, 17 Apr 2025 07:33:55 +0200
+From: Greg KH <greg@kroah.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Rob Herring <robh@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: Re: linux-next: manual merge of the tty tree with the devicetree tree
+Message-ID: <2025041745-swifter-dove-7095@gregkh>
+References: <20250417144625.4be32ba7@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/13] ARM: dts: vt8500: Use generic compatibles for EHCI
-To: Alexey Charkov <alchark@gmail.com>, Andi Shyti <andi.shyti@kernel.org>,
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mmc@vger.kernel.org, netdev@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
- <20250416-wmt-updates-v1-10-f9af689cdfc2@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250416-wmt-updates-v1-10-f9af689cdfc2@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417144625.4be32ba7@canb.auug.org.au>
 
-On 16/04/2025 10:21, Alexey Charkov wrote:
-> VIA/WonderMedia SoCs don't have anything special about their EHCI
-> controllers: in fact, vendor provided kernels just use the
-
-It does not have to do anything special - dedicated compatible properly
-describes the hardware.
-
-> generic PCI driver by emulating a virtual PCI bus with fixed MMIO
-
-PCI? But this is USB.
-
-> mappings just to bind the existing driver as-is. So switch to the
-> generic compatible to save further additions to bindings.
+On Thu, Apr 17, 2025 at 02:46:25PM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Note that these devices have only ever supported appended-DTB boot,
-> so changing the compatible should not affect any existing users.
+> Today's linux-next merge of the tty tree got a conflict in:
+> 
+>   Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
+> 
+> between commit:
+> 
+>   672da444fccd ("dt-bindings: remove RZ/N1S bindings")
+> 
+> from the devicetree tree and commit:
+> 
+>   0ed228275485 ("dt-bindings: serial: snps-dw-apb-uart: Simplify DMA-less RZ/N1 rule")
+> 
+> from the tty tree.
+> 
+> I fixed it up (Ijust used the latter) and can carry the fix as
+> necessary. This is now fixed as far as linux-next is concerned, but any
+> non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
 
-And other users of the DTS?
+Looks good, thanks!
 
-I don't see benefits in this patch.
-
-Best regards,
-Krzysztof
+greg k-h
