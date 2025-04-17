@@ -1,140 +1,266 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01A115FA7B;
-	Thu, 17 Apr 2025 13:01:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D7115FA7B;
+	Thu, 17 Apr 2025 13:01:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744894886; cv=none; b=Qzb9IN+ZLodIaa4iGH1S8R0Vu9JwnQJ7hDcbkTUuuebtB3K9L+k8zsLdq8L/xdLlxvg21K948jeoDTBs1XcWrj0VdXvESNQs2PnTEpbHIfqAfGQiMrWCYTmvKqBayy352k4nIMrXXfgvgj+D4xBm6SLgry1fQZmenMDkUmiNz44=
+	t=1744894892; cv=none; b=BBWmZIE7DUNjfMxGxHhAQmb/6loM1LpAW7yOusaUigemKOYNJjQPeE49u8SMvrcJs69Q4Y5GvGG5kOikYBH2k74DFMUESEbIXrDl9wrhbwyuhRU8Qi9nwMghpRMv+C6iscsRKsh2/mh7B+8Cs4BTBYnyyTqaFECUPWegf55pzhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744894886; c=relaxed/simple;
-	bh=KWnWVfOA8c1Wv+4gBL063mnR9c9nhvCmbY4Ut2JRHDU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OHQJr0v5HG2iZYAP0r3VNNmpguKjAEYjOrfEF6grDw3S3s/fRr50/tSuIRb9q20bOLv+0IG1bd5ZbivGK2Q+2HV3+YTsXT55nq1pdzIpaeVzQVfNIqNy2NUsRyLZFHeauqr06h19I4rQXDOPCO3eA5s7yzoFEthpMN40bk4V63I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fYC9e/a9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744894892; c=relaxed/simple;
+	bh=fECKlvMu5BkYf9tc7tr//mqbSe3skE9YCWbjfZCnFGg=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=F/EV4Gg/IxTzA2SIPVXW10uKYfOR+FQNUFlJlVkFH0kUBV0A0HYU12FOhlUxG8qgN1d7CWBoZ3Ep3ZkZpd1FQQtRGZFJm5WJnIcf9orvWz7/SYJv5ywm3nY2LXDe8l6hFgkKUTLzPIH15rCA/7k/XE6rpllPjsjMrlkw/s4iqN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=P4q1zsVL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=u+yc/nyU; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fYC9e/a9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE41BC4CEEA;
-	Thu, 17 Apr 2025 13:01:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744894885;
-	bh=KWnWVfOA8c1Wv+4gBL063mnR9c9nhvCmbY4Ut2JRHDU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fYC9e/a9vcPImM0qEXijPfQ1ABcyZ/YSN0M5omRfHnQdKjTQ/MTG1pAZ0gcZOjxmf
-	 gJgBXfQsGVUa+gFtKGaWb9jxY+bxpsUkvgwmPKGxwaEYGtwY5tHXLyYDYueE9Wznfe
-	 mogT4qQpQN93bCm/kSx771bVkBG9QkVUanbzbbcCYpOiqyDxWCcbWr8+NBBXbtdwYJ
-	 l+TEgSazXJ6xudLSSaIpWoaQ3Y64azRqpZEpv8VzEqj+dmYoPrt0xZMY3h35zwSDmA
-	 /DPNiFTmT/exx4m+vkS3irGJNU3sAfYWDfGsJw+hMiri2Bkv64q1lfCkD/q4KNbDv4
-	 nb8vOAFmnJs9A==
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2c6ed7efb1dso450793fac.2;
-        Thu, 17 Apr 2025 06:01:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU9YPgSltNvq77+BfybfPkL7PCBzFGKxYtlOewq7YMGJzzdGLgW/1tCZm2gJriCAuEUfRyEWQIixB4jPKY=@vger.kernel.org, AJvYcCWkavvn50GOR1WKHI/EcWll8VogSTKqaQ/kKaFgdHYXnXqgkQyVIcePG0NffiEfTs1L1IqAkoAcSXE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0Qnl9C/PUSGeYMXZAgKaztigRYk04ka8WREDGvUtuWx0TsMCi
-	wctaHeKR1cyJ+zHvNreTpNg0kbLUsmLo8hVq7CDoqyjvNb46LGIyeIhzkyNDKBKr5faXI7F5q4p
-	DTAtSTgS7tfrh/3YlcApHFp+s/LU=
-X-Google-Smtp-Source: AGHT+IHOwV/UB7P82bRaQrXpDMI4M9ZvLUWLgqZFXu0lDZJnl1aeIwkdOWHX+F3XBWb05sq3u4gNN+OwtYP4tLLq6bo=
-X-Received: by 2002:a05:6870:1708:b0:2bc:7d6f:fa86 with SMTP id
- 586e51a60fabf-2d4d2d58f98mr3838358fac.35.1744894883674; Thu, 17 Apr 2025
- 06:01:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="P4q1zsVL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="u+yc/nyU"
+Date: Thu, 17 Apr 2025 13:01:25 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744894888;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+PRA3usMlmUSSN8CTM4DQivW5POLKqtOif0m4vXOib4=;
+	b=P4q1zsVLzmGcwJ+3jBk0wr/SNfPoS2u//r/1N+crRRQykQmAw39a82Pdyp4u/y37uzzTFU
+	uTouth2Dn3dVurDYpG8IqQXb0HIJAVrXONYnpBiJqg8M3B7UgIPYtZO/6hOTecZExx+g2/
+	PQQvcT6p+KQSmoRRbXtq/Sd6j0HUNCBwev0icXzrVF3xk02Gkc+lm3VokFRLPBr/9kYhIA
+	cbT7fGjc9mqslS3C/nrw7qnZzptCCWyqKKihTTgJfDsgdIoO7o9Mg1Nx/l5LDdlI+BzekB
+	v6+8z5zJ7x3WvmwGeEU1TmGu28a/CueFjjXi/HGFZ8vaqkDCF/PsA4mC6cfKug==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744894888;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+PRA3usMlmUSSN8CTM4DQivW5POLKqtOif0m4vXOib4=;
+	b=u+yc/nyUK1kEYyPK8lcn4SyEm+4AALKrGih2k3S0egN6rqPtIHfTvisl5ZtmaYa3abl+4q
+	IE5x+b49h4yKJSBA==
+From: "tip-bot2 for Dapeng Mi" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: perf/core] perf/x86/intel: Rename x86_pmu.pebs to x86_pmu.ds_pebs
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250415114428.341182-6-dapeng1.mi@linux.intel.com>
+References: <20250415114428.341182-6-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <3344336.aeNJFYEL58@rjwysocki.net> <8554829.NyiUUSuA9g@rjwysocki.net>
- <e439a75c-fe36-4fba-b394-c154adeff15a@arm.com>
-In-Reply-To: <e439a75c-fe36-4fba-b394-c154adeff15a@arm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 17 Apr 2025 15:01:12 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jxoKaGOsXqUqd=n95ATxzDTueSy_je_ktxOdm6B=+20A@mail.gmail.com>
-X-Gm-Features: ATxdqUFqVAGSUxvggDc1DQyXBFEDUMLQGnrSY7wE1mYSzgRkQRC0XbcSOOwjyZ4
-Message-ID: <CAJZ5v0jxoKaGOsXqUqd=n95ATxzDTueSy_je_ktxOdm6B=+20A@mail.gmail.com>
-Subject: Re: [RFT][PATCH v1 3/8] cpufreq/sched: Allow .setpolicy() cpufreq
- drivers to enable EAS
-To: Christian Loehle <christian.loehle@arm.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, 
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, 
-	Pierre Gondois <pierre.gondois@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174489488597.31282.541756394086494598.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 17, 2025 at 2:19=E2=80=AFPM Christian Loehle
-<christian.loehle@arm.com> wrote:
->
-> On 4/16/25 19:01, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > Some cpufreq drivers, like intel_pstate, have built-in governors that
-> > are used instead of regular cpufreq governors, schedutil in particular,
-> > but they can work with EAS just fine, so allow EAS to be used with
-> > those drivers.
-> >
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >
-> > v0.3 -> v1
-> >      * Rebase on top of the new [1-2/8].
-> >      * Update the diagnostic message printed if the conditions are not =
-met.
-> >
-> > This patch is regarded as a cleanup for 6.16.
-> >
-> > ---
-> >  drivers/cpufreq/cpufreq.c |   13 +++++++++++--
-> >  1 file changed, 11 insertions(+), 2 deletions(-)
-> >
-> > --- a/drivers/cpufreq/cpufreq.c
-> > +++ b/drivers/cpufreq/cpufreq.c
-> > @@ -3054,7 +3054,16 @@
-> >
-> >       guard(cpufreq_policy_read)(policy);
-> >
-> > -     return sugov_is_governor(policy);
-> > +     /*
-> > +      * For EAS compatibility, require that either schedutil is the po=
-licy
-> > +      * governor or the policy is governed directly by the cpufreq dri=
-ver.
-> > +      *
-> > +      * In the latter case, it is assumed that EAS can only be enabled=
- by the
-> > +      * cpufreq driver itself which will not enable EAS if it does not=
- meet
-> > +      * the EAS' expectations regarding performance scaling response.
-> > +      */
-> > +     return sugov_is_governor(policy) || (!policy->governor &&
-> > +             policy->policy !=3D CPUFREQ_POLICY_UNKNOWN);
-> >  }
-> >
-> >  bool cpufreq_ready_for_eas(const struct cpumask *cpu_mask)
-> > @@ -3064,7 +3073,7 @@
-> >       /* Do not attempt EAS if schedutil is not being used. */
-> >       for_each_cpu(cpu, cpu_mask) {
-> >               if (!cpufreq_policy_is_good_for_eas(cpu)) {
-> > -                     pr_debug("rd %*pbl: schedutil is mandatory for EA=
-S\n",
-> > +                     pr_debug("rd %*pbl: EAS requirements not met\n",
-> >                                cpumask_pr_args(cpu_mask));
->
-> I'd prefer to have at least "EAS cpufreq requirements" printed here.
+The following commit has been merged into the perf/core branch of tip:
 
-Sure.
+Commit-ID:     acb727e0956a2424f22e5ab8c1ff9a39d1acb150
+Gitweb:        https://git.kernel.org/tip/acb727e0956a2424f22e5ab8c1ff9a39d1acb150
+Author:        Dapeng Mi <dapeng1.mi@linux.intel.com>
+AuthorDate:    Tue, 15 Apr 2025 11:44:11 
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 17 Apr 2025 14:21:24 +02:00
 
-> with that caveat
-> Reviewed-by: Christian Loehle <christian.loehle@arm.com>
->
-> Maybe we should amend the EAS documentation to reflect this?
+perf/x86/intel: Rename x86_pmu.pebs to x86_pmu.ds_pebs
 
-Yes, the documentation should be updated.  Which piece of it in
-particular I need to look at?
+Since architectural PEBS would be introduced in subsequent patches,
+rename x86_pmu.pebs to x86_pmu.ds_pebs for distinguishing with the
+upcoming architectural PEBS.
 
-> (And also emphasise that EAS will make cpufreq assumptions as if sugov
-> was the governor regardless.)
+Besides restrict reserve_ds_buffers() helper to work only for the
+legacy DS based PEBS and avoid it to corrupt the pebs_active flag and
+release PEBS buffer incorrectly for arch-PEBS since the later patch
+would reuse these flags and alloc/release_pebs_buffer() helpers for
+arch-PEBS.
 
-Right.
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20250415114428.341182-6-dapeng1.mi@linux.intel.com
+---
+ arch/x86/events/intel/core.c |  6 +++---
+ arch/x86/events/intel/ds.c   | 32 ++++++++++++++++++--------------
+ arch/x86/events/perf_event.h |  2 +-
+ 3 files changed, 22 insertions(+), 18 deletions(-)
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 16049ba..7bbc7a7 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4584,7 +4584,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+ 		.guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_mask,
+ 	};
+ 
+-	if (!x86_pmu.pebs)
++	if (!x86_pmu.ds_pebs)
+ 		return arr;
+ 
+ 	/*
+@@ -5764,7 +5764,7 @@ static __init void intel_clovertown_quirk(void)
+ 	 * these chips.
+ 	 */
+ 	pr_warn("PEBS disabled due to CPU errata\n");
+-	x86_pmu.pebs = 0;
++	x86_pmu.ds_pebs = 0;
+ 	x86_pmu.pebs_constraints = NULL;
+ }
+ 
+@@ -6252,7 +6252,7 @@ tsx_is_visible(struct kobject *kobj, struct attribute *attr, int i)
+ static umode_t
+ pebs_is_visible(struct kobject *kobj, struct attribute *attr, int i)
+ {
+-	return x86_pmu.pebs ? attr->mode : 0;
++	return x86_pmu.ds_pebs ? attr->mode : 0;
+ }
+ 
+ static umode_t
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index d894cf3..1d6b3fa 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -624,7 +624,7 @@ static int alloc_pebs_buffer(int cpu)
+ 	int max, node = cpu_to_node(cpu);
+ 	void *buffer, *insn_buff, *cea;
+ 
+-	if (!x86_pmu.pebs)
++	if (!x86_pmu.ds_pebs)
+ 		return 0;
+ 
+ 	buffer = dsalloc_pages(bsiz, GFP_KERNEL, cpu);
+@@ -659,7 +659,7 @@ static void release_pebs_buffer(int cpu)
+ 	struct cpu_hw_events *hwev = per_cpu_ptr(&cpu_hw_events, cpu);
+ 	void *cea;
+ 
+-	if (!x86_pmu.pebs)
++	if (!x86_pmu.ds_pebs)
+ 		return;
+ 
+ 	kfree(per_cpu(insn_buffer, cpu));
+@@ -734,7 +734,7 @@ void release_ds_buffers(void)
+ {
+ 	int cpu;
+ 
+-	if (!x86_pmu.bts && !x86_pmu.pebs)
++	if (!x86_pmu.bts && !x86_pmu.ds_pebs)
+ 		return;
+ 
+ 	for_each_possible_cpu(cpu)
+@@ -750,7 +750,8 @@ void release_ds_buffers(void)
+ 	}
+ 
+ 	for_each_possible_cpu(cpu) {
+-		release_pebs_buffer(cpu);
++		if (x86_pmu.ds_pebs)
++			release_pebs_buffer(cpu);
+ 		release_bts_buffer(cpu);
+ 	}
+ }
+@@ -761,15 +762,17 @@ void reserve_ds_buffers(void)
+ 	int cpu;
+ 
+ 	x86_pmu.bts_active = 0;
+-	x86_pmu.pebs_active = 0;
+ 
+-	if (!x86_pmu.bts && !x86_pmu.pebs)
++	if (x86_pmu.ds_pebs)
++		x86_pmu.pebs_active = 0;
++
++	if (!x86_pmu.bts && !x86_pmu.ds_pebs)
+ 		return;
+ 
+ 	if (!x86_pmu.bts)
+ 		bts_err = 1;
+ 
+-	if (!x86_pmu.pebs)
++	if (!x86_pmu.ds_pebs)
+ 		pebs_err = 1;
+ 
+ 	for_each_possible_cpu(cpu) {
+@@ -781,7 +784,8 @@ void reserve_ds_buffers(void)
+ 		if (!bts_err && alloc_bts_buffer(cpu))
+ 			bts_err = 1;
+ 
+-		if (!pebs_err && alloc_pebs_buffer(cpu))
++		if (x86_pmu.ds_pebs && !pebs_err &&
++		    alloc_pebs_buffer(cpu))
+ 			pebs_err = 1;
+ 
+ 		if (bts_err && pebs_err)
+@@ -793,7 +797,7 @@ void reserve_ds_buffers(void)
+ 			release_bts_buffer(cpu);
+ 	}
+ 
+-	if (pebs_err) {
++	if (x86_pmu.ds_pebs && pebs_err) {
+ 		for_each_possible_cpu(cpu)
+ 			release_pebs_buffer(cpu);
+ 	}
+@@ -805,7 +809,7 @@ void reserve_ds_buffers(void)
+ 		if (x86_pmu.bts && !bts_err)
+ 			x86_pmu.bts_active = 1;
+ 
+-		if (x86_pmu.pebs && !pebs_err)
++		if (x86_pmu.ds_pebs && !pebs_err)
+ 			x86_pmu.pebs_active = 1;
+ 
+ 		for_each_possible_cpu(cpu) {
+@@ -2662,12 +2666,12 @@ void __init intel_pebs_init(void)
+ 	if (!boot_cpu_has(X86_FEATURE_DTES64))
+ 		return;
+ 
+-	x86_pmu.pebs = boot_cpu_has(X86_FEATURE_PEBS);
++	x86_pmu.ds_pebs = boot_cpu_has(X86_FEATURE_PEBS);
+ 	x86_pmu.pebs_buffer_size = PEBS_BUFFER_SIZE;
+ 	if (x86_pmu.version <= 4)
+ 		x86_pmu.pebs_no_isolation = 1;
+ 
+-	if (x86_pmu.pebs) {
++	if (x86_pmu.ds_pebs) {
+ 		char pebs_type = x86_pmu.intel_cap.pebs_trap ?  '+' : '-';
+ 		char *pebs_qual = "";
+ 		int format = x86_pmu.intel_cap.pebs_format;
+@@ -2759,7 +2763,7 @@ void __init intel_pebs_init(void)
+ 
+ 		default:
+ 			pr_cont("no PEBS fmt%d%c, ", format, pebs_type);
+-			x86_pmu.pebs = 0;
++			x86_pmu.ds_pebs = 0;
+ 		}
+ 	}
+ }
+@@ -2768,7 +2772,7 @@ void perf_restore_debug_store(void)
+ {
+ 	struct debug_store *ds = __this_cpu_read(cpu_hw_events.ds);
+ 
+-	if (!x86_pmu.bts && !x86_pmu.pebs)
++	if (!x86_pmu.bts && !x86_pmu.ds_pebs)
+ 		return;
+ 
+ 	wrmsrl(MSR_IA32_DS_AREA, (unsigned long)ds);
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index ac6743e..2ef407d 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -898,7 +898,7 @@ struct x86_pmu {
+ 	 */
+ 	unsigned int	bts			:1,
+ 			bts_active		:1,
+-			pebs			:1,
++			ds_pebs			:1,
+ 			pebs_active		:1,
+ 			pebs_broken		:1,
+ 			pebs_prec_dist		:1,
