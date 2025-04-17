@@ -1,116 +1,100 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3CA1172A
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC88A937;
+	Thu, 17 Apr 2025 07:46:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744875946; cv=none; b=LYA9NLZXIMEQuKdn9P8rDmfUCph/kcBD30/tr93uRggW+V/Zp7YfD6mNoekWof0IlhT3Bp0BTrzlXpUt90ukYhrqjzL2Wu5vCWk2ezmnQss+Q0M4skqUG7RG8OSBEJuzuXydmswja/LeW8GVfqskGFjZSNsj81jRjnX3a1bwnMU=
+	t=1744875983; cv=none; b=oq7lMUh8sBeMDOeBG98HCC3pFruYKq30GkfhmrnCUBRrpjvtA4PF0I5bAVsI1TlhukU6Ikwug4oHQ3KM4KvKPzcKGnHJ8ycZXvqOvryOkjLBGmJ47NkgjxSTzTd4BUPoS4xJ7SgeDmkVQ5aByxJUsQrqcO0gB9kGlYCHlYTNqNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744875946; c=relaxed/simple;
-	bh=NWuj/z3Lu9fKv1xasdH3+8IObzXT3UiA5n97fEPAIG4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=duZ/oRAh2bim0YTWudUnbZ215iiN6m0nxSxV4r46SggcAQlgcub6DAw+omEFFKuRfSHXl7DMQ0eXoQbDbLCDu0PzXPdLxoykyBkwliqkZyWJIaMFO4gMlC5ywiJRQdUOkIeaDrDyUZ7vIk5t2Oqd56lqkRL+YSj9hjbLQ8KZwXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=g0892s9B; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1744875983; c=relaxed/simple;
+	bh=aVH9/RoovkU8v4WklJXZULaKkSsySrY6Xc4+YksCzr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d0//buBXPxAFKkRvRc3Y227tH0/qYghsK5weaVquSghdeAlNH5xuUnkPat/Pp86Rv9RgEE/v1FupWYhUd2J27clyHJ/3e9nSATFTcG9eMY/tcvYv4dLXVU5UIVX87t20EY3x/gfDiv3gcxZcCNpqJNF2KQXJyi156yA3/JRLvQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EGN6brhj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="g0892s9B"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZdVLY0tS3z9snh;
-	Thu, 17 Apr 2025 09:45:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1744875941; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o01QhRRBt9kbGlZJekh53pp9WB+AZ1VXMfcDIjz0TJ4=;
-	b=g0892s9BhUhMNN64iMQ6epD56Kl8AfSwwketorczIHbAL2mlAxPhjNk9ToLepZYUOpKzh4
-	DSlDKbgZJjvtp3kzU9wBKftCRNySChuK8SbG6m34MI7DACrM2rxf5RDwkhjoh4zDex07+D
-	HpFJQjBURim06m+Fq5OA7SNRQMRvyOAAOusKV5q24Br2cqywBbWNnxKIQ93gSLYAAR23dJ
-	hvaioSVBjtF0AJdkMOtrsfgpKag7DATK59lSf/JYWm5ZwK4myuoqa9brQT9QgUc86TPN64
-	9s2eavL7DOVxBwGHD+2XSiF/kE/rOBBPmK4glF8bDrT5CAMBN7CKBeW6ze/Uvg==
-Message-ID: <9607e5a54b8c5041dc7fc134425cc36c0c70b5f3.camel@mailbox.org>
-Subject: Re: [PATCH 3/5] drm/sched: Warn if pending list is not empty
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Philipp Stanner <phasta@kernel.org>, Lyude Paul <lyude@redhat.com>, 
- Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
- Christian =?ISO-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Tvrtko
- Ursulin <tvrtko.ursulin@igalia.com>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Date: Thu, 17 Apr 2025 09:45:35 +0200
-In-Reply-To: <20250407152239.34429-5-phasta@kernel.org>
-References: <20250407152239.34429-2-phasta@kernel.org>
-	 <20250407152239.34429-5-phasta@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGN6brhj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48E33C4CEE7;
+	Thu, 17 Apr 2025 07:46:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744875982;
+	bh=aVH9/RoovkU8v4WklJXZULaKkSsySrY6Xc4+YksCzr0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EGN6brhjfp3LgOEiWPYOOUaubua4z6Rr87Qix91C4cn0+ZeKhbehrA36p2YRJOMcU
+	 nPw9J2JjVyFswd5XI1lOe10RAV9sXj1r2E5s82GgPmLUSUxo5qqtk+cYpCuR6oPZyU
+	 ERyQzBpZrZOBNs5P4QpMvCQgRoyfN/yjYPdCDu3lmq7BlGmoBitobBGZfnawRDUWp8
+	 HiPejRvX8Lc4pyRNl4pPFQTRF64LPkG1U9h0+Vk77gSBCKgB5U6DI15LHeqx3hpCxE
+	 0lHBv9uFdbDAoEVdY/Y/d26kDe6GXPcx0YneInAzT739pyHKhyv5SLkm5/zhsnZlu4
+	 dC8rraFQpi++Q==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u5Jwz-000000000Z9-2KLU;
+	Thu, 17 Apr 2025 09:46:22 +0200
+Date: Thu, 17 Apr 2025 09:46:21 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	"Rob Herring (Arm)" <robh@kernel.org>, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] cpufreq: fix compile-test defaults
+Message-ID: <aACxzWi4KqDdylfj@hovoldconsulting.com>
+References: <20250417065535.21358-1-johan+linaro@kernel.org>
+ <a0739b6b-b043-47f1-8044-f6ed68d39f2c@linaro.org>
+ <aACsQUADxYHTQDi1@hovoldconsulting.com>
+ <f957e366-51e1-4447-982c-93374d0fde2e@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-META: ht1k5cx6yf918cstjfpo94f1fsqmah66
-X-MBO-RS-ID: 72d8f281a13a97fa464
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f957e366-51e1-4447-982c-93374d0fde2e@linaro.org>
 
-On Mon, 2025-04-07 at 17:22 +0200, Philipp Stanner wrote:
-> drm_sched_fini() can leak jobs under certain circumstances.
->=20
-> Warn if that happens.
->=20
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> ---
-> =C2=A0drivers/gpu/drm/scheduler/sched_main.c | 4 ++++
+On Thu, Apr 17, 2025 at 09:28:43AM +0200, Krzysztof Kozlowski wrote:
+> On 17/04/2025 09:22, Johan Hovold wrote:
 
-I hear a lot of amazed silence for this series ^_^
+> >>> Fix the default values for drivers that can be compile tested and that
+> >>> should be enabled by default when not compile testing.
+> >>>
+> >>> Fixes: 3f66425a4fc8 ("cpufreq: Enable COMPILE_TEST on Arm drivers")
+> >>
+> >>
+> >>> Fixes: d4f610a9bafd ("cpufreq: Do not enable by default during compile testing")
+> >>
+> >> That's not correct tag - it introduced no new issues, did not make
+> >> things worse, so nothing to fix there, if I understand correctly.
+> > 
+> > Fair enough, I could have used dependency notation for this one.
+> > 
+> > Let me do that in v3.
+> 
+> OK. I have doubts that this should be marked as a fix in the first place
+> - even skipping my commit. Some (several?) people were always
+> considering COMPILE_TEST as enable everything, thus for them this was
+> the intention, even if it causes such S3C64xx cpufreq warnings:
+> 
+> https://lore.kernel.org/all/8b6ede05-281a-4fb1-bcdc-457e6f2610ff@roeck-us.net/
 
-If there's no major pushback, my intention is to pull this in once the
-blocking Nouveau-bug has been fixed (by pulling my patch).
+Sounds like you, me and Arnd and least have the same understanding of
+how COMPILE_TEST should work.
 
+I use it all the time when fixing issues that have been reproduced in
+several drivers which I then enable manually. And I usually keep them
+enabled in my development kernels for a while after in case something
+needs to be reworked.
 
-In the mean time, let me review my own stuff:
+If you want to compile everything as well you should do an allmodconfig
+build.
 
-> =C2=A01 file changed, 4 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/scheduler/sched_main.c
-> b/drivers/gpu/drm/scheduler/sched_main.c
-> index 6b72278c4b72..ae3152beca14 100644
-> --- a/drivers/gpu/drm/scheduler/sched_main.c
-> +++ b/drivers/gpu/drm/scheduler/sched_main.c
-> @@ -1465,6 +1465,10 @@ void drm_sched_fini(struct drm_gpu_scheduler
-> *sched)
-> =C2=A0	sched->ready =3D false;
-> =C2=A0	kfree(sched->sched_rq);
-> =C2=A0	sched->sched_rq =3D NULL;
-> +
-> +	if (!list_empty(&sched->pending_list))
-> +		dev_err(sched->dev, "%s: Tearing down scheduler
-> while jobs are pending!\n",
-> +			__func__);
+> I had also talks about this in the past that one should never boot
+> compile test kernel.
 
-The "%s" here will be removed since dev_err() alreday prints the
-function name.
+I have never noticed any issues with that until the other day with the
+cpufreq driver, but yeah, I can imagine that other "default y" entries
+could potentially cause issues.
 
-I find this dev_err() print more useful than the stack a WARN_ON prints
-(telling you about invalid_asm_exec_op or stuff like that).
-
-Plus, I guess the places where drivers call drm_sched_fini() are very
-well defined and known, so a callstack wouldn't really be useful in the
-first place.
-
-
-P.
-
-> =C2=A0}
-> =C2=A0EXPORT_SYMBOL(drm_sched_fini);
-> =C2=A0
-
+Johan
