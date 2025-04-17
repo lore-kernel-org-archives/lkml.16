@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B13C1CAA67;
-	Thu, 17 Apr 2025 01:40:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0371DB361;
+	Thu, 17 Apr 2025 01:40:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744854021; cv=none; b=Ys9XtPtxJc2+2Fe4ODk410WZ5enQ0HmB8pHbLJqyMDcrj7bWiAd5MiQQ0uqlY7vKXgkEPkEhdoGjtSf5z21/L9PnyPd7V5q1vjHRuHStYyzWGp7VN73bcGAJXcwN8YJi7a8NVdqHx6F95bQcKSJqsVLZMvYx/0G26ZTvPsBFgoM=
+	t=1744854026; cv=none; b=ipSyYVGjccGQGWuiJAX7aARPYTogcuCpgFpdO8tsGb/lkuGJL4eT4+9vu6QuQFuDy8vkd4XczrhPcMoPhBrxSA4xsS41ISqB6QYPxdpRPHQ0bQDlOBh2yO5VWFF/9amYnL4HGwdG9a398Utooe2wXREtyocQFjzw7WXuNRSK7lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744854021; c=relaxed/simple;
-	bh=ET/4I+nNRcyKeeXS5wbO1KsqaFhtwKBA1fxuw2rYgrA=;
+	s=arc-20240116; t=1744854026; c=relaxed/simple;
+	bh=t4D2/T+vglGNaV3PdR5qkIJnEsy9z3I9N5XZvJOO41k=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=YPaVh9eump5DNIpaGpo3npfDKIZx8PDWTkAnfy7gH/+svyBVaiXRt6gW3rUJoJYhUDkUeGGTMtIP0xh6hWVxEIb8EUXcEXsitM/ZDSlmW8h8WAS5tm7z3hCzOhA0PFVLDXAjIqjqb5A7udWCqSHob9DBcfUtw/6iQvBGQ/u8Gu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mj0GBV6P; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=pvxfDylFsH9Nhcu3gFhfEibL0H9PNx/Y69Rs0oHatRNkYRJtNosOuPPdNMohQUgP7nl57QJekzOakbI85urhguEsKmZVZq1e2blr+djOQdIICxZD01OgBeEhGwhQpNSriqyntdXoTaH9S2bbNc0Xhk1K1UjXvVng8Rf1Juqp37o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a9BtF9eT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mj0GBV6P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA2F6C4CEE2;
-	Thu, 17 Apr 2025 01:40:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a9BtF9eT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A517FC4CEEA;
+	Thu, 17 Apr 2025 01:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744854020;
-	bh=ET/4I+nNRcyKeeXS5wbO1KsqaFhtwKBA1fxuw2rYgrA=;
+	s=k20201202; t=1744854025;
+	bh=t4D2/T+vglGNaV3PdR5qkIJnEsy9z3I9N5XZvJOO41k=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Mj0GBV6PCqcsXOwQcMHMyGdH76LRzaN2qg5riNQaNW7zhJHiVQJ7wMlYLtzMuZlHS
-	 dTmjkMRUZ4Yia463BvC1gUAD6vdhLH8nG6lfvfYP5nfkdbphmNtUrpz0hosD5RNPlk
-	 l11S+qiR4dOz/zgaKLvKEa3UJf/V7BpYvj2D51Pmc1WCy0KgQoMQvXhy0LBz8qXe9Z
-	 GtlJ6S2rDLW110r7gbjMFaDACDNg/gwXrynXlKKVtGVtXT9d8bPKgG+H+csy3JpU7H
-	 S06Nep9enp6PlznQJfsdrG6JJBWxt91S43GLFyznRX+mpRqhAGs7InAalH4FTLqalL
-	 K9JSebfprPWZQ==
+	b=a9BtF9eTB3daneJ7yWHYfwITdGSs8JR9ok8iZfLxFAMyq8lUUkLaMTyq6IIihEk7d
+	 vV33+dA81Z/blWBrJpXw05MbCTcFJDB5R1tLXu5xpeHyepOAjys7IDA7B4pfkvAOmy
+	 A1OIQ4VyZYQj209YAgjtemv+9SIc1W0elbL8TBEwDuu7VQZwnX6kYcl9xMvwqatBrZ
+	 IVy5iK3XEMBiR1maPJ83ZwvakLjJ2bFxOE7lzNmL4c3fmuIUmQ1Zbr0nC6civMDtc1
+	 WaYPd3XUvDQ9atG3kbq9NIua5xcgyBqd4t/Q6e6PWCVtlfh7xArulOy7I3L3NWcAd7
+	 EyjY2wWGqyhWw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAD2C3822D5A;
-	Thu, 17 Apr 2025 01:40:59 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAD913822D5A;
+	Thu, 17 Apr 2025 01:41:04 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,43 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [net-next PATCH] net: phy: mediatek: init val in
- .phy_led_polarity_set for AN7581
+Subject: Re: [PATCH net-next v3] net: lan743x: Allocate rings outside ZONE_DMA
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <174485405850.3559972.15890998079426748195.git-patchwork-notify@kernel.org>
-Date: Thu, 17 Apr 2025 01:40:58 +0000
-References: <20250415105313.3409-1-ansuelsmth@gmail.com>
-In-Reply-To: <20250415105313.3409-1-ansuelsmth@gmail.com>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: daniel@makrotopia.org, dqfext@gmail.com, SkyLake.Huang@mediatek.com,
- andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- horms@kernel.org
+ <174485406349.3559972.7757010421778323268.git-patchwork-notify@kernel.org>
+Date: Thu, 17 Apr 2025 01:41:03 +0000
+References: <20250415044509.6695-1-thangaraj.s@microchip.com>
+In-Reply-To: <20250415044509.6695-1-thangaraj.s@microchip.com>
+To: Thangaraj Samynathan <thangaraj.s@microchip.com>
+Cc: netdev@vger.kernel.org, bryan.whitehead@microchip.com,
+ UNGLinuxDriver@microchip.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
 This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Tue, 15 Apr 2025 12:53:05 +0200 you wrote:
-> Fix smatch warning for uninitialised val in .phy_led_polarity_set for
-> AN7581 driver.
+On Tue, 15 Apr 2025 10:15:09 +0530 you wrote:
+> The driver allocates ring elements using GFP_DMA flags. There is
+> no dependency from LAN743x hardware on memory allocation should be
+> in DMA_ZONE. Hence modifying the flags to use only GFP_ATOMIC. This
+> is consistent with other callers of lan743x_rx_init_ring_element().
 > 
-> Correctly init to 0 to set polarity high by default.
-> 
-> Reported-by: Simon Horman <horms@kernel.org>
-> Fixes: 6a325aed130b ("net: phy: mediatek: add Airoha PHY ID to SoC driver")
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> Reported-by: Zhang, Liyin(CN) <Liyin.Zhang.CN@windriver.com>
+> Signed-off-by: Thangaraj Samynathan <thangaraj.s@microchip.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next] net: phy: mediatek: init val in .phy_led_polarity_set for AN7581
-    https://git.kernel.org/netdev/net-next/c/00868d034818
+  - [net-next,v3] net: lan743x: Allocate rings outside ZONE_DMA
+    https://git.kernel.org/netdev/net-next/c/8a8f3f499176
 
 You are awesome, thank you!
 -- 
