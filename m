@@ -1,88 +1,156 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009D71E0DE8;
-	Thu, 17 Apr 2025 06:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C46B1E0DE8;
+	Thu, 17 Apr 2025 06:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744871229; cv=none; b=qroXsaGmSVX2d2rhBK51ptNIpsT3CQecin6zq6TSQl7M4OPJPcznays5+OQgo5KkZ9DG/GN07csFke2wztDTHLF16ql2EYg2Ft/eOCXjlqfkgJ4bHhvjz+HHJ//+5/D+l9ezh7k14ZGS6cQMv0z+IpJc115NdY6omWSnNrQkNDk=
+	t=1744871243; cv=none; b=I5R86iwoD2/rlJxOODQhZ1K1NJre0drZuCOsu2TVyUMgzky8asc5XjfHEQ+u+RTEUbSydl0oa+IwVWYa2hG9Gox7b6Ont2ywEb13R9HmOJDGnxgitigXuSJVBmEyMhVE2/hEbH5QO8gdFILtLNcb8eRl5EpNRTZ3La+4pLgD338=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744871229; c=relaxed/simple;
-	bh=FfMDAim8sO3P09XvanHJKt4bgNLDXYyL0jx1kT3ZXF4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ZCuX8B0/myeZE1wTdB27gL8aqXjZaMVV2oHYKiwUK0ioqn9chkrhiUTtYqd/FNGTmThcpqoK25oa9d226bKCD/KnUFq138nYW63m5TD3AyFkvZImGC4PmeAONOnIjroIOdUpfUB7Q9SeosLLFyKt2QYWjbgeW0W0YrB55bq+pns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Nfr8OBTB; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1744871243; c=relaxed/simple;
+	bh=hzJBWmW8lICSwnMRPi/LH9kPNvWBF+pCWcOfKl3VUD8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dRUuc6VT6DZmpqh3Iss3VhErDezgMj2EzYIS7gWSby5+HauJwOTOx4KnoFiovPQ4oJWZCVi5kNVa+xP0mOHigt3lmKJCvNhGIKF1sWXzTRiMEiPrASGrk2VnD+gqvb1Y68Ua2t+mr0E4aOoX+v7kQNL47jhzcTMj+ncU5d8coVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K0f8DkOx; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Nfr8OBTB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1744871222;
-	bh=OqW1VK/tv6rsYLnqe2G7guXAQbjvwED2FJapG1wrtLc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Nfr8OBTBMrcY4ktq2JTB3gYW5UMukGA7z4ul8VIcuyTegC9GVXw8RaS66RWvsESuS
-	 2lDklrD4A5bVHmcZelgkganGtVOJ3Nb9Dr+N0+cSQqYi6XEkcnk5cZTYGKieKz5AE0
-	 vzob/1o7CXkvJAKstPsVZAXpkOLYq1cA4URyVLAtRc7MyOUyxBwpSD13/p/s3BVqBJ
-	 Lh9NeNuVDbqzmghEwA94+GgupoYcM6tJXTlvZ0sxaSXE62Op4J7i/hz95/cWOlQ6aL
-	 1wF+z79oDzLcbFdXE+DRbOB/oBIGE0DLrn80uKesZ1gyqsUdlInU3qRLZi3HFDETfu
-	 HLSHuDqXP8rlw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZdSbn41njz4xQm;
-	Thu, 17 Apr 2025 16:27:01 +1000 (AEST)
-Date: Thu, 17 Apr 2025 16:27:00 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>
-Cc: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: build warning after merge of the pwm tree
-Message-ID: <20250417162700.728e14e5@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K0f8DkOx"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6ecf99dd567so6222576d6.0;
+        Wed, 16 Apr 2025 23:27:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744871240; x=1745476040; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lYASVlhOcfaq1av7/fl04126jANP6cWR4NufJae7Xbg=;
+        b=K0f8DkOxBPpGU9vtVJk6I/BydF3S3qqcM7t49DV2rOGwOX/6flFpHtD/GcKeeF0LJh
+         yzEZMCll0Pv7m2QpG9mTA2iDBVeKFgnDrj82MnZYPSoKJcfbiWQa4ETqkPmBi7FPRpJW
+         C/BCPBBgJRZgzZtOM3QXwvu+W+v+WtwQMLdGXlDkHZNNCTUhXftQ45zeUG29QTI+kWia
+         dG6HC8bx9Ys8Xs5+L45jJl5+ywnzNEiEr7ffdxcbQ78VDdPpKwiW9qjg/q4WihUow4EW
+         MA2zYHTKRGRiPQc6JAeoDyk7FnnYSUOhe/Y9GlrCPGu32PPWpVg/SGKCKsdZff78n9VQ
+         a3hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744871240; x=1745476040;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lYASVlhOcfaq1av7/fl04126jANP6cWR4NufJae7Xbg=;
+        b=qV+BHr81na6jHrS1WoLDBxVqwi04diD8ToJNMiAjzwJO3qdsrr204KJv2Hw037lYe/
+         eYG2ygH5zydn3BTMCQX4/8BPOp+Oh/9K8NEbTTRmSfFnRP2RE21L2aG6owm+dDtnY/LE
+         g1YTEpvnm9gKdpF5XYQ5p00vGxXqpyGdzzBrIDJERgymjrhhBYxIcdRM+FVKjeQvuKXX
+         ybANPmszuelBUVhlkWHl1i0FS3tbORbk4i6vUsTl7spcXpSz6L+Z6zmtaxficnUWsgeu
+         yQItQrESz/qaaHJbRvt6yezFjg4NfUQ8E69n5vmZD9cWT7Y+DBgE7rxGBnhG79AMjDEV
+         6rlA==
+X-Forwarded-Encrypted: i=1; AJvYcCUbe098sOYVIlQ/182OY7H/HnBErSVGKudYl7f79ACXBMvX03THl635tiutIDvDm9qQdy4QjOeo552w@vger.kernel.org, AJvYcCUyVoj70R/m0SzHw36e/esswnqZTBO1kuu57DMZWACJncJP336K9DXjjBya9dj20avN2GaKbxpdhzTU@vger.kernel.org, AJvYcCVbQOx80itgI5HzcOqVCiYoHMosXq17ZYQjZqsMiz6yfFWc1RDflf2iYe3X3fOvOIthmpKQSHAfH7cv@vger.kernel.org, AJvYcCWhWx5ROiTkx6IuLIZ3Wl6+m0WpTgukoXkmiD2QvvygCpBFsmMABOwQ+RoM0aFk/athx3jYKTQoaK9kHaxP@vger.kernel.org, AJvYcCWqVO6Dd6OhDkPmytxXJeSTIJUMbuZIZ4jCAe2nVblnruc0a7KvPQWm9t1wIytZNyImR2bUnkoKT24o@vger.kernel.org, AJvYcCX398VqUskBjUoUYFQ3e77RZJPnUUPVXi/dQiHkQCUsPPzuLZrMEQM/VdWL/64Io2pXN+W55c2x@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx80vLtUDyXI2mAwtSoSsm6JRx5QBGidP1Na5ekHf2SNFmd+wsE
+	FDZoIkJM5E3U2QvYNGuzJfUHbUQA3JqT9dvquzaEd9frwg7q1g/bwhQ5ADihBPMhL2fEmLFrFMS
+	qHVz9NRZyuIXn7W+4MfzMOkYHmbE=
+X-Gm-Gg: ASbGnctFSpW6wanqwVFxnfFfIpp6K1zek80cgDatkUJNqT8wtc7svJY8uXBqd9wRdVY
+	nwCWpVD1I8bcqvYdoxOvuRcpUgiGxjYAfmpw567KMOzrZMHtum7hhwNjS2G0YYrsmos3wHbMszT
+	/XQQo1Yb4U8bpmURuXvrKyU9Tof8uCeGp1EIFi+KjR0qeEGjTisqCYKlo=
+X-Google-Smtp-Source: AGHT+IFtGW1OUCxVsFYK0aS+AATgm+R1KxN8WtGUG42EZWSWUImsJZzN5NBoIDk83tn8feVZCpeI87IWUhbWn44GVCc=
+X-Received: by 2002:ac8:7f8c:0:b0:478:dcdd:a257 with SMTP id
+ d75a77b69052e-47ad80c2478mr62378561cf.25.1744871240118; Wed, 16 Apr 2025
+ 23:27:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/6cqZMclfWsjISY9uBtAGXBJ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/6cqZMclfWsjISY9uBtAGXBJ
-Content-Type: text/plain; charset=US-ASCII
+References: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
+ <20250416-wmt-updates-v1-5-f9af689cdfc2@gmail.com> <20250416201523.GD3811555-robh@kernel.org>
+In-Reply-To: <20250416201523.GD3811555-robh@kernel.org>
+From: Alexey Charkov <alchark@gmail.com>
+Date: Thu, 17 Apr 2025 10:27:15 +0400
+X-Gm-Features: ATxdqUFawBnxynRxMiSVdRnmhaCCPBo4utOuqT_7dUg0IVBqoTqf8a1fVYs9mBE
+Message-ID: <CABjd4Yw5g8oKn=j08a6pr2o=TK7bMPx_NgfEh5cMFX9MVfgP-g@mail.gmail.com>
+Subject: Re: [PATCH 05/13] dt-bindings: pwm: vt8500-pwm: Convert to YAML
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Thu, Apr 17, 2025 at 12:15=E2=80=AFAM Rob Herring <robh@kernel.org> wrot=
+e:
+>
+> On Wed, Apr 16, 2025 at 12:21:30PM +0400, Alexey Charkov wrote:
+> > Rewrite the textual description for the WonderMedia PWM controller
+> > as YAML schema, and switch the filename to follow the compatible
+> > string.
+> >
+> > Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> > ---
+> >  .../devicetree/bindings/pwm/via,vt8500-pwm.yaml    | 43 ++++++++++++++=
+++++++++
+> >  .../devicetree/bindings/pwm/vt8500-pwm.txt         | 18 ---------
+> >  MAINTAINERS                                        |  1 +
+> >  3 files changed, 44 insertions(+), 18 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml =
+b/Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..a5f77fa848e0f604bed63c3=
+6b8e0996cf599cec0
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml
+> > @@ -0,0 +1,43 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pwm/via,vt8500-pwm.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: VIA/Wondermedia VT8500/WM8xxx series SoC PWM controller
+> > +
+> > +maintainers:
+> > +  - Alexey Charkov <alchark@gmail.com>
+> > +
+> > +allOf:
+> > +  - $ref: pwm.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - const: via,vt8500-pwm
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  '#pwm-cells':
+> > +    const: 3
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    pwm1: pwm@d8220000 {
+> > +        #pwm-cells =3D <3>;
+> > +        compatible =3D "via,vt8500-pwm";
+> > +        reg =3D <0xd8220000 0x1000>;
+> > +        clocks =3D <&clkpwm>;
+>
+> Same order as in 'properties'.
 
-After merging the pwm tree, today's linux-next build (htmldocs) produced
-this warning:
+Noted, thanks, will adjust.
 
-ocumentation/driver-api/miscellaneous:47: drivers/pwm/core.c:232: WARNING: =
-Inline emphasis start-string without end-string. [docutils]
-
-Introduced by commit
-
-  bde5547f2e87 ("pwm: Better document return value of pwm_round_waveform_mi=
-ght_sleep()")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/6cqZMclfWsjISY9uBtAGXBJ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgAnzQACgkQAVBC80lX
-0Gx/7wf/RNNWv0eywgcRUbxsojkFvQclaiMlfHtW6qNzFSVjx6fOKkYYSIxWOUbv
-YTQ218GAEaSq7Ca9TGcEFw0S5z9UBidaDbA5JUoA9mCXBHwS2LMqt0PYAmqf1+Vm
-sLVNAK9qFjzD5+3grXfBwNdNAY7GpRTPFLP03ycVEstWjN9gXKda3jhibJP/Y2Sl
-NlrJOnTOf0WBXiSftT6gq3DEnf0bqIP4cd13louB5nftEkH9OdkmSq4UEQsj4sEX
-Z2cUBeq14YZJdEaTKClVKnrwn4UuUF7UVqLbdm86jwqRT7l1Eb3Ee3DMYZuUGjnb
-s+eA1pljBg9M/x6o+Kyv990ACIw+Fw==
-=ZGn3
------END PGP SIGNATURE-----
-
---Sig_/6cqZMclfWsjISY9uBtAGXBJ--
+Best regards,
+Alexey
