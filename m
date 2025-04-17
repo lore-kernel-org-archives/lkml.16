@@ -1,114 +1,136 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D91257432
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 18:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662D91D5CCD;
+	Thu, 17 Apr 2025 18:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744916259; cv=none; b=tkZhIiptmpDY+BoPuE0VpnLLs5J26V/SVgORoYSyjDi6zXf2WaNFUJxZzREKCJ9Wb+OE4lS6Q0d4dl7uv31479aHctjFTbW0HRJk5opSTZ3xxmMZjsGJ1hSBrMGMFtPbr6GiTIuFAY0nbGVqB+qRRsI4ntT9Cr0aMJVUl7IFJ8o=
+	t=1744916281; cv=none; b=Fj17JEaC+JJIUaGMY/q2DwAZY928uxHtj0LnDBepnzcbwcv8By7xx/eJsIe78xvQgIfORU0vm9+SuktkE89mOcXKQ4bSEYHVqphhtuqHVpDeyvX9dZC0U3sUImV/CDyeUCqnefNQZvbBoEX4jKSgPJhs5rPhq+4BvXobOIrODd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744916259; c=relaxed/simple;
-	bh=t7kXMWDKZwfq3mZ55GHgTwyiy8JS88zhCJ5ZzCZBfX0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kd9cmZTj7eIUFPG3WeeiaKBbZKgRhZlvthER0+pdZnMC/Tgaz65+CQNUf3ecRF/Uj873iSgVyNURodcmQ1LJW+Isl46gZSmnI8S9zrekZOSBnuGaZLID5m/xvzJgVR3WsVIARzuJlPugMqn9fPk/d2yx52omiS9NXYa15uKZkRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=3G1WCeSD; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1744916281; c=relaxed/simple;
+	bh=GPBMti6d1eSxgbQ8ztbQA0OHM3kaeJTJ/wvTbSk+gUg=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=d4ZAKYYs9hbB6+zf6NlUplKS33swYQEUIhfyNuUmiyhNIxcEU77TgBZEMibIAekLea/alZj4WM7Ejn45ALo5eQqDBZfuhJA2nw908yxvur0mYdi/6wIYRE81uVD3NhdlDWudlRwhcWEZGXDbgL1ft9I5n2rQosO8tH55GV4vutw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AQqPdT5i; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="3G1WCeSD"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30bfc79ad97so24439691fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 11:57:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744916256; x=1745521056; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t7kXMWDKZwfq3mZ55GHgTwyiy8JS88zhCJ5ZzCZBfX0=;
-        b=3G1WCeSDT9jUNnIrECM3f4L4pQUSaeKNGDlUJKFhCvOIt06g6Izf5iwq7P186/y/Vk
-         6MXf7yVd2hJbGW/ccJi/uGrkozMBaI08G9NVkcfeqx3jI2BiyDyNKJcNta2cRbZR4YzM
-         RsqqorMH13dhFLMRjLwlQblQShm+PX2z4IccnqOqOM1+tu6l39XtQToCorhCe36HxdQD
-         mP3+rjWJhUtmLfEOPSoGSsxM9IT24V0W78YQppAoteEY51pD4UDJ65jo8UWfXNnJj9m2
-         ovmWAYa06npQAWMIfXOEil4x41kJGiIdxKv9yZCQMWNwMRlmUryR1ZTRilqVN54zA9Xu
-         Z1iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744916256; x=1745521056;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t7kXMWDKZwfq3mZ55GHgTwyiy8JS88zhCJ5ZzCZBfX0=;
-        b=i5SpDJxBo8gQ4/AbbdMGbwtBquLK8AtXDu/dw/YuMX4oOesFs1ZfxFDhMyFTuT0vn9
-         sW9sX2eLrlfWVXGpEB64rSce8wX8XNQj9SK6+RJkl+MWUhKwEUtWl1UHEjeDcB9FIZdV
-         ififYshILBcKoZwKPmRPCl4xgDkl7cXbBonEc1S0Fj9/4rxI44xHDxo7mxBUAHUkZbb/
-         XtwSXsE2NZCqp07QWSHZlD50EtvKrbolAnFuL7QfCl6VtAawxrqXk0wCf6NoIXcfAZxF
-         4CDp3io0f3hp00oPt5gJ2lQ43KagJw8btlGQHSALjN5gDZPyRpqS22O7Ic+DLb5S8FTz
-         qqJA==
-X-Forwarded-Encrypted: i=1; AJvYcCWOW6oMCxjWOOriHtRlRXARLCxB8LZrqCaQ80d/hMMqxCxnEUs2nd0OO7keM4BGNRvVjmuylgUymN9I2E4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhlOZVETTdEuY8hVQtjmuk1tNiMOlMPtLUKo/aoop2hEK8LXUu
-	xooNZO+f5DzSbPw7bHzUwVtwvGGDY9qTkq0tVy4JdYYal7aD7QHY5JndNpFajWHHyTsr+QesGRR
-	4QEtFbD7rxibALJSpxvD5oyd9l6vxr4Y2lMXoIw==
-X-Gm-Gg: ASbGncvTp55yZ2YcWcLfTHlwnwWXBIriggzUm2SweL6vvkB2OQwA5i/d5wL8tf78kqc
-	H4iDBvJJgWG8PgMvT/EwDhkWIfOTMu0Ca8d87tyWA3hxxQrqmijJnkO7w0WmI5x0b7py9dpVwPH
-	/oRRLNpR3x5MzPg5GMZQ1qcAG+w6mHmS8xevixmGl8w4Wv9LJiX0BXNnA=
-X-Google-Smtp-Source: AGHT+IETGSl1uxRRGha8frlIqsblK4r0WHTu9TdM47HpMpf5Ho/Nb4xRr21zs0tQQbaFZkPqBaK3ooec8pUWDP2zoKk=
-X-Received: by 2002:a05:6512:1151:b0:54b:f99:776c with SMTP id
- 2adb3069b0e04-54d6dc055ebmr334374e87.24.1744916255653; Thu, 17 Apr 2025
- 11:57:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AQqPdT5i"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53HClbql032076;
+	Thu, 17 Apr 2025 18:57:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=OBfeZV99OcZGZ91PDlA/RN
+	KVq2HYA5a7cy8i2TvYJsE=; b=AQqPdT5iHWRJceMlyC5Sbm8qDVNeqVOvAPJxnl
+	93jevP10+ubxkOKdFdZhwtkqGSm2QhY2Xz7mF+IGv+JB+8dYGlYOOv0D8d3k/GFT
+	pO2wKxDjMwIan3H3JA1H+XwmeUWKn8dzYlIHLuquPrNOtgf4OMTGeHSaNKGRA1C8
+	lhBHWVAiGjjCHWZGS+7OC0udy5Y7Pkl45nn7EZkeNyyTNmnI74gbgQFQ01BRHLvz
+	66SyTzW8sreCN8aAwaJc4H2fW4VGjQiNNpa7qgqaGBViuJM03jqZ68zMRZ8Fa2GR
+	5+8tvQy4ddZU8TbON334+7v8GKDblNIYbz5Y5zqXe/b6oHfg==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yg8wr04w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 18:57:55 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53HIvstZ026641
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 18:57:54 GMT
+Received: from hu-vgarodia-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 17 Apr 2025 11:57:49 -0700
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+Subject: [PATCH 0/4] media: qcom: iris: add support for QCS8300
+Date: Fri, 18 Apr 2025 00:27:30 +0530
+Message-ID: <20250418-qcs8300_iris-v1-0-67792b39ba21@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
- <c8ca3c8a-3201-4dde-9050-69bc2c9152c4@sirena.org.uk> <CAMRc=Mcq9yag6yBswhW0OJ8MKzGBpscwo+UGpfCo2aha93LzXA@mail.gmail.com>
- <846010c0-7dc1-421c-8136-9ae2894c9acd@sirena.org.uk> <CAMRc=Mff0TkeiHbM3TAJLJ2HYU_nnPFUpUjbWsdCnW6O4E=+gQ@mail.gmail.com>
- <c3bb82f9-5a2f-4a14-9726-f3e10bf5d427@sirena.org.uk> <CAMRc=Mc_nXwvj_9w6w8cB3K58AVLHBLCV+MOO1z_6y+uuT86Og@mail.gmail.com>
- <CACRpkdaBNVyXUwErHTtGBnUjh4+6Ojb6fu9M4E7LnRCu_Oovpg@mail.gmail.com>
-In-Reply-To: <CACRpkdaBNVyXUwErHTtGBnUjh4+6Ojb6fu9M4E7LnRCu_Oovpg@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 17 Apr 2025 20:57:24 +0200
-X-Gm-Features: ATxdqUGcQlRT-2l2du6IEq8CPJq-yhYNzC5ncqkeIscW_F55DHxr0702vBChsyI
-Message-ID: <CAMRc=McFBAG9Gi3UBfsdoQ=78fL3sTK+ZMToXWGF=KOw6zwPiQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] gpio: deprecate and track the removal of GPIO
- workarounds for regulators
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABpPAWgC/0XOzQqDMAzA8VeRnlfoR6rVVxky2hq3HNTZOhHEd
+ 1+nhx3/IfmRnSWMhIk1xc4irpRoGnPIW8HCy41P5NTlZkooI0BaPodktRAPipR45WrEUoCW4Fg
+ +eUfsaTu5e3t1xPmT1eUa/tGmOEmlDF+mNwWeBrsZwU93lYI7JWtvnfVQVc1a/XjvEvIwDQMt+
+ UUApfugHeTN3oMuu85ZA0ZoXWNQvpe19Lpk7XF8AUEoPLjnAAAA
+X-Change-ID: 20250418-qcs8300_iris-7a9ee604314a
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Vikash Garodia
+	<quic_vgarodia@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744916269; l=1713;
+ i=quic_vgarodia@quicinc.com; s=20241104; h=from:subject:message-id;
+ bh=GPBMti6d1eSxgbQ8ztbQA0OHM3kaeJTJ/wvTbSk+gUg=;
+ b=JxvPIIpXzVobX6XWCUpH7zkvmajQDjhSQD6SX5Kd3DO7mVHUOd6tMSdtrlFZcG0lqmoofYaPy
+ 4xTPorS2x+vD7zwjKSnmWcJp9HqdndH46yNZS1XHNZx5JL798SLlFYr
+X-Developer-Key: i=quic_vgarodia@quicinc.com; a=ed25519;
+ pk=LY9Eqp4KiHWxzGNKGHbwRFEJOfRCSzG/rxQNmvZvaKE=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=E9TNpbdl c=1 sm=1 tr=0 ts=68014f33 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8
+ a=5mqJRpXAQT99iV-CYE4A:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: FOljNYk_acLNy_8B4W7xz36lQ7QKZQoE
+X-Proofpoint-GUID: FOljNYk_acLNy_8B4W7xz36lQ7QKZQoE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-17_06,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ mlxscore=0 bulkscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
+ suspectscore=0 mlxlogscore=892 spamscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504170139
 
-On Tue, Apr 15, 2025 at 11:33=E2=80=AFPM Linus Walleij <linus.walleij@linar=
-o.org> wrote:
->
-> Hi Bartosz,
->
-> this caused me to think about a thing:
->
-> On Wed, Apr 2, 2025 at 12:05=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
-l> wrote:
->
-> > This is bothering me. This is the abstraction reversal I'm talking
-> > about. Should the regulator drivers even be concerned about whether
-> > they share resources or not?
-> (...)
-> > The part where "the higher level users want to understand that there
-> > is GPIO sharing going on" does not sound correct.
->
-> There are precedents for this type of semantic IRQF_SHARED
-> is used whenever two devices share the same IRQ line,
-> and that is something the drivers have to specify, i.e. the
-> driver has to be aware that it may be sharing the IRQ
-> with other devices, and whenever it gets an IRQ it has
-> to check "was it for me?" and in case it was, return
-> IRQ_HANDLED else IRQ_NONE.
->
+add support for video hardware acceleration on QCS8300 platform.
 
-First: this flag has existed (as SA_SHIRQ) since before git days and
-could be considered legacy. But also: it's a bit of a different story
-as sometimes you get an interrupt and need to read a specific register
-to check from the status bits whether it concerns you. This never
-happens with a GPIO so I don't think it's a good argument for this
-specific case.
+This series depends on
+https://lore.kernel.org/all/20250417-topic-sm8x50-iris-v10-v7-1-f020cb1d0e98@linaro.org/
 
-Bartosz
+Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+---
+Vikash Garodia (4):
+      dt-bindings: media: qcom,sm8550-iris: document QCS8300 IRIS accelerator
+      arm64: dts: qcom: qcs8300: add support for video node
+      arm64: dts: qcom: qcs8300-ride: enable video
+      media: iris: add qcs8300 platform data
+
+ .../bindings/media/qcom,sm8550-iris.yaml           |   1 +
+ arch/arm64/boot/dts/qcom/qcs8300-ride.dts          |   4 +
+ arch/arm64/boot/dts/qcom/qcs8300.dtsi              |  71 ++++++++++++
+ .../platform/qcom/iris/iris_platform_common.h      |   1 +
+ .../media/platform/qcom/iris/iris_platform_gen2.c  |  57 ++++++++++
+ .../platform/qcom/iris/iris_platform_qcs8300.h     | 124 +++++++++++++++++++++
+ drivers/media/platform/qcom/iris/iris_probe.c      |   4 +
+ 7 files changed, 262 insertions(+)
+---
+base-commit: 14423fc3a4a21fb436dda85450339ec2bf191b36
+change-id: 20250418-qcs8300_iris-7a9ee604314a
+prerequisite-change-id: 20250225-topic-sm8x50-iris-v10-a219b8a8b477:v7
+prerequisite-patch-id: afffe7096c8e110a8da08c987983bc4441d39578
+prerequisite-patch-id: b93c37dc7e09d1631b75387dc1ca90e3066dce17
+prerequisite-patch-id: b7b50aa1657be59fd51c3e53d73382a1ee75a08e
+prerequisite-patch-id: 30960743105a36f20b3ec4a9ff19e7bca04d6add
+prerequisite-patch-id: 2bba98151ca103aa62a513a0fbd0df7ae64d9868
+prerequisite-patch-id: 0e43a6d758b5fa5ab921c6aa3c19859e312b47d0
+prerequisite-patch-id: 35f8dae1416977e88c2db7c767800c01822e266e
+
+Best regards,
+-- 
+Vikash Garodia <quic_vgarodia@quicinc.com>
+
