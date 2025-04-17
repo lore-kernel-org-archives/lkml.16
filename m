@@ -1,179 +1,182 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2083.outbound.protection.outlook.com [40.107.102.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E542063D8
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 20:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744923386; cv=none; b=HYSsb4jkqFTYE+/+7OzXpwgKiCV/x+3dBMvYKDtphXGiq6KJ49RipT8BwQcJty+1Z/kp92op4q6CpJShMocOJJiLiTBukrhPz2oriWVZrXk+PdOMigpx1bhfUO9l+CgkSso6ydgv4zJ9Cxiksw/ocl8/2Z9PCWPN/+ZRujbmxwE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744923386; c=relaxed/simple;
-	bh=V7PDpk2GFXR6cXkHRnlnFl27UJzlnxaonCAEGxbDy5g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=be0fv+bnHMFHuuyaNgASCXu1I/aLg4lZVQnLBvrJNx5yiT/8yDYIIwZq4loE5KfcWyDNu8i/2K2k1dNSsLJmIxL2CrjQyqIbWlVUukeNUy5UrnIFNCZFkoTwmhHa/OS54tJVIfYyFvpm/4/xr/hhzFiE5LWVPjL4tM+Vj42fAx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HfbTr0Pk; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1D241C63;
+	Thu, 17 Apr 2025 21:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744923756; cv=fail; b=u5wKxM19t9q7RWrSnCzmU/UCHDsCdWTbyo9+7cfDkytENwVy2MyOP66GhuUiVx0wLXHEUTglrFduytcWzXu4k20gBoq9wzXK4bD5TrfdgiiaoU2tjZvWiv4M0z4Af1/UUcRR2d9lLBf6Fvu8KWLagSBkjJGRsRXX9cvAzqxgQF4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744923756; c=relaxed/simple;
+	bh=xRF8ZTvfrbDMDcP8Hl9jDqJ1Vku5Ctkt3ugJnXkeqoQ=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=kK43EVGPKoheQnq2Ibs7sW+R6TMTOl7Qi2hd+R3dI11vp0nGQFRrnvzoWbIonjAi3+goEfsrtw7O8K3opQFSIX7tZYpptMQWQL+YMhvY0HJlvCYHa9DlXUDXuwuebMlCh2nZXIVcAbPOUj79QUHPqsol0ZmOuPltXOR1VLjvBvY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wkn/Ki01; arc=fail smtp.client-ip=40.107.102.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HfbTr0Pk"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54acc0cd458so1448615e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 13:56:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744923383; x=1745528183; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8Fv+1SPiZIDJMfYYyVTz9JfiGK8xQsdvl6qvFoYBv9E=;
-        b=HfbTr0PkzoLMdpZO4YpL1iyPUywtbZBkIIRNonyTsKFQQWZvs9vdgYNhJU2dWK3so7
-         kzVqQqO1CuqdchSYfAIoKHVjZLbQT6V9x78VLERRzIXtFrw8sk5pMGK4PHZMtaaPdwdm
-         l28UkxLSbMSYhisM7oIjCKf1e0nSaud2aDOm6qREWLCduYRmq8/zU0d6PyG5am4ltNdL
-         jSmoHCh15BGli5AhlyEvFuzny397votXAqEBnmpOe3kStAI1nZxopR3ouLZBDgeWdGMu
-         VJ0hp4o4kjAq1mmnSFmJbY+Ma8RKpNz+UMx3S2et3Oc4HzcsIMTY36ZB/B58qxncDrPq
-         5yQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744923383; x=1745528183;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8Fv+1SPiZIDJMfYYyVTz9JfiGK8xQsdvl6qvFoYBv9E=;
-        b=fjfO8TkQg5gNPPorwkgML6ghgqcyml7xtpjnNzpUQHJWyyWBPT1b/Nz2ekNULZbkEy
-         H1u7hSkADF6vIhHLYD+T8cS7TOWmHrpFdn+hpDB+o1eFk/6Wup5IFwmE1uXlC1bIg48C
-         NyFed3xDAo2aG4zuJH6nOV6WtGzOB5QIdWfBRhExALYIUCljFW2x3OlbyxdaDNwPnKLR
-         1QS1NqpNEPzuNh3l9oEHJ9Swt7e2vDyMKkpBM4ckGAY1ImEBxltUe8Z1qW/QmRgNkjsr
-         DF/N2RbL4cY/0DwFxEfxx/RcUFnwOJQX0nchTudE4Zjj30UOt3yIpCc/BTFRVuWo6+9s
-         Sf+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUUe4VTWj8H3UR9qIk/DQRbOpGIn09zh9UOvv7AgdIcio6S3zXYKqZOujjG2o/1CVzKa8qGD5ZASxfGXWg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzh4S5vve+yDxElymc5P6CZayvUP34yVPG20TkUB00CSrJf6nlT
-	oanU/oXA6/FtEqevMPm4cR8S0rdh76jT+E8XmbyCmEuGLM+fH6Y6toxm1j/CMVJTt2/cxadGXVZ
-	E9/aJTe6Cu3vgv9AENgiv2+FtNi8U/LmQYs1K
-X-Gm-Gg: ASbGncvO+Wx4VglbctJLSkggH77+EChg7wcXlpJVE0XjyQTAlxHtmCCDWY1XFZhXAK+
-	lozjxznj6F69oifbzoWGDXwRo9aXrftWrwmyKbUKlLW00pXxe4KdONXFd4E0sRbtCth5JjWVINS
-	daqR7WDCBgj7xRw/UPVZ8T3JhsYxJwitD/CHcNFF+ORCLn5MJPCA==
-X-Google-Smtp-Source: AGHT+IF0A2qLak23h90FXemjjq1QSkYxyUlJpX0SxLY+jGfQkwpWy77tDR0Zm8B6OSQfWtCedekDAXvMVmWnr/eLmso=
-X-Received: by 2002:a05:6512:15aa:b0:545:576:cbca with SMTP id
- 2adb3069b0e04-54d6e61d361mr87421e87.8.1744923382449; Thu, 17 Apr 2025
- 13:56:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wkn/Ki01"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=C110KRL9wu/CsGgt1ZlvdWZqPTwbbZmbxNnKHRi0C6f1vwSpynEXy1poaOoG6rBQ/iKMkEwQtYYCxfaU/jslPIZfMVHgS2PlqDWnSoJlI23+yQct0+MvzvInqBd8n/mxVZi/jqT17Nkh+FS79FXN94yNPGScNJQ92fJMZxoQXN2fd9hii0BTYyjLvlTNFWiOq/tU3i6UQvV92Q8W9rMdNR21yTxp+KZu3MEHdbRZjTSy63E+FQrvgH+ijCRJfOLGMXcFpEgH3y2gQnuxg11VvnreXbIhBRegpCk81FTnpatwOWN5eLQMFBbjWob1+UQtBMOWL/adD4R41WQRbimsUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OdaH9sIZsoYvT7ITArsmuIHBNm6OdMF8Py35Q48Vwdk=;
+ b=G0t4Fdtli4zZpIB0WDMS+cAULGaMwxcH9VHBAtTtlsiQGtYNkYahzIY9rVawgQeSAeVCG8D77S/dfL4VRd89B5Q9N/Mor+SUY8h3e1RoOU5dX7ISwBUGlEe/0I4TXRgn9uGUH6U1pSMo1hmEuIo+Qnmjh4y0N3nHtbhWTWzYyZwy27umRBPKVo94iFfrMAkbwSlCB0RmiixzNScFj+YoNS8P8Kt1vA1r6gVBSsOrZjmP4Sh7TixU5TH5ybhyaglg/O33/POw7eHo6RI1c5OHEgOBKq81JwYXzkuz7sy54d+7JihDS0LN3Szv24ejOy9gw9rIRI4BGJD/y2SzU2hM4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OdaH9sIZsoYvT7ITArsmuIHBNm6OdMF8Py35Q48Vwdk=;
+ b=wkn/Ki01UTgrZf1N7j0UJ7Fnza2DH1NIJdQ+46tAT6UBhcI4DEB43xlEEdkgu1I2Ux9hj0tSDhpZEmpPkrfNP1wwjOcL/VkUSC6Rp1lYBx+zRvocANLO8HtUFZVAh180cHxFfI/+IUAJfBVWLfmmhcE1egp4GN5hVAU6PNNRN/g=
+Received: from PH8P221CA0047.NAMP221.PROD.OUTLOOK.COM (2603:10b6:510:346::26)
+ by MW4PR12MB6898.namprd12.prod.outlook.com (2603:10b6:303:207::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Thu, 17 Apr
+ 2025 21:02:30 +0000
+Received: from SJ1PEPF000026CA.namprd04.prod.outlook.com
+ (2603:10b6:510:346:cafe::e9) by PH8P221CA0047.outlook.office365.com
+ (2603:10b6:510:346::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.18 via Frontend Transport; Thu,
+ 17 Apr 2025 21:02:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF000026CA.mail.protection.outlook.com (10.167.244.107) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8655.12 via Frontend Transport; Thu, 17 Apr 2025 21:02:30 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 17 Apr
+ 2025 16:02:29 -0500
+From: Nathan Lynch <nathan.lynch@amd.com>
+To: Eder Zulian <ezulian@redhat.com>, <Basavaraj.Natikar@amd.com>,
+	<vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <jsnitsel@redhat.com>, <ddutile@redhat.com>, Eder Zulian
+	<ezulian@redhat.com>
+Subject: Re: [PATCH RFC 1/1] dmaengine: ptdma: use SLAB_TYPESAFE_BY_RCU for
+ the DMA descriptor slab
+In-Reply-To: <20250411194148.247361-2-ezulian@redhat.com>
+References: <20250411194148.247361-1-ezulian@redhat.com>
+ <20250411194148.247361-2-ezulian@redhat.com>
+Date: Thu, 17 Apr 2025 16:02:23 -0500
+Message-ID: <87ikn2lcww.fsf@AUSNATLYNCH.amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417142513.312939-1-ulf.hansson@linaro.org> <20250417142513.312939-6-ulf.hansson@linaro.org>
-In-Reply-To: <20250417142513.312939-6-ulf.hansson@linaro.org>
-From: Saravana Kannan <saravanak@google.com>
-Date: Thu, 17 Apr 2025 13:55:46 -0700
-X-Gm-Features: ATxdqUFg-9XKLQu-Jp_yqmPhQEY6HN_legQJia2_mCP7a2s8KIX0565-yrMa0hQ
-Message-ID: <CAGETcx9bHGuJ_J6yF14x0NJJXGWgoDn_X_ScBKaGdD4aTBvo5w@mail.gmail.com>
-Subject: Re: [PATCH 05/11] pmdomain: core: Use device_set_node() to assign the
- fwnode too
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Michael Grzeschik <m.grzeschik@pengutronix.de>, Bjorn Andersson <andersson@kernel.org>, 
-	Abel Vesa <abel.vesa@linaro.org>, Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>, 
-	Peng Fan <peng.fan@oss.nxp.com>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
-	Johan Hovold <johan@kernel.org>, Maulik Shah <maulik.shah@oss.qualcomm.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000026CA:EE_|MW4PR12MB6898:EE_
+X-MS-Office365-Filtering-Correlation-Id: ad8895bd-4c25-458c-1232-08dd7df32ad3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?2L//a7penKciMWg426D1MDPLCaV8YQ4bIES0ZxYZwWZQGn5RMkVJXT5FjeZR?=
+ =?us-ascii?Q?GtPDbddPycFZ/Ye9bcK//XGcCj5Pv4ochXzLqa8ylK0j46yJvM4yCTDUuMRq?=
+ =?us-ascii?Q?QfMydRN0gpv27Ogf+sQK8xAFieaoAA+vDGbi/tP4uRRVxDzXnJo1Zw9ASNOr?=
+ =?us-ascii?Q?A5WipefORYGwkvbGENISBqubzAMjHVpoPN3zWQlFl4NB7/6PLt4/W7mBOuAy?=
+ =?us-ascii?Q?1oJtO/42gSEcQuCVs1vVDce4YzIt1SYYw54hOF/fn9P63ycdnMCyHsyyCrX/?=
+ =?us-ascii?Q?OJPvLhKnGnhPfyPY1vm5FP/2pyLYT+S6hhubU5nts/1fr4WBjqsCr6hsxvKh?=
+ =?us-ascii?Q?7EUTyG4pkZ7jjxTZMXipk0de24YvD/AQH7YB0YrGzvE2cuR/fYbZlSA5tHv0?=
+ =?us-ascii?Q?bzdarnltcnkGqADNlhplSM36tuH0GmTMzkQQlageSN+qBD6ViGxNl8V0KHUG?=
+ =?us-ascii?Q?wZXd9FHQbGKDCAVccJlQdbA+fLk+ENLwHpm6ccdfGm1bLFnUwoKjb5khEyDN?=
+ =?us-ascii?Q?CgsXykFs8vjLOZCgSMQw7eb6Nx4s+UWyGf4uxf+odudW/jzHRRLCvFD21gtc?=
+ =?us-ascii?Q?qAMG9qbTa9bZ+YvEkDjOz58/3e2nKYHqjpA6JXLNti2LMdkyzXdDJv1WZauV?=
+ =?us-ascii?Q?DW5TBhQVZlXceM52fFl7hD5W0agGjWDW7aUeAH0VjOnJQeYCj7Mm14u5cTCJ?=
+ =?us-ascii?Q?GfZash4Tg2rpnvpOX6Mtp7JDS80pSylSv9uGLE5naqgqz5zjwvnfrQL0XrLL?=
+ =?us-ascii?Q?NFIXZA2NgRzAGitfnR6n4wLxPecolE2FzsxWQ9RFh25J8BZVsu6K8WBC1QMc?=
+ =?us-ascii?Q?FhIcRp+J/bLbYJfeD02YQNrRsyXquMiPIvaQI+sWYN7+/2sD5ipoN0G9TuPW?=
+ =?us-ascii?Q?KbzA0U+DF00kzohZ3b3DcUpihP6ujMRyGZ/fZFVdxcBJ024UajmSWn7T1GNd?=
+ =?us-ascii?Q?eonBM4fAbxPX84bjd9VZ+WFg50W/CV07zScK1bsE8to89/oW2fxqIfvZuaR0?=
+ =?us-ascii?Q?PS3IB9iTQ4/rn9VpCw4TNDbi9u5nm0yVFp+oVR5mJBioqE24Z8NpRgP8M4jE?=
+ =?us-ascii?Q?USc9IZSjDRNm2o+24Ca2CrG7ntErYd/8bUu8nHp2pY091SnIK4BA82bJuFMA?=
+ =?us-ascii?Q?d6dqg6S5MWiMhwpqMsFTx3CcoH+7uNKlxjt7dNCXbZBC1aLNcF5fF6QIkoVI?=
+ =?us-ascii?Q?5cqoKhv1mkbgPaAkbExwkiEE/aW0Z4H5ErJht3+cEbs6zR1Lh59QQKBvYA0M?=
+ =?us-ascii?Q?OXaF0TW8lcX3WmFur3K1l/uPxXUsLNnHsLI7XkaRoCkHbhzbpAJUhNFLXrey?=
+ =?us-ascii?Q?Ca5Ki9TS1WJgLlQDHJmgGUbxZhhg9bSdkl45YA+MvKbcVAp3kEUo+/qag513?=
+ =?us-ascii?Q?U/fGuL9B6qCRezmEjm85zX9ecy8yK3Mc6UQDk3FaQsu2xI3Rg6IAlfvNpKvz?=
+ =?us-ascii?Q?NgO7WXlwKdkthITe9bQYX5MXy1RcFNF2/6lHY7mIosSqdAaUT6ST1y0ZD1a5?=
+ =?us-ascii?Q?/ujC2trHObT5odkm5nppH4e1m5aD3bFfD7dJ?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 21:02:30.4072
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad8895bd-4c25-458c-1232-08dd7df32ad3
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF000026CA.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6898
 
-On Thu, Apr 17, 2025 at 7:25=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.org=
-> wrote:
+Eder Zulian <ezulian@redhat.com> writes:
+> The SLAB_TYPESAFE_BY_RCU flag prevents a change of type for objects
+> allocated from the slab cache (although the memory may be reallocated to
+> a completetly different object of the same type.) Moreover, when the
+> last reference to an object is dropped the finalization code must not
+> run until all __rcu pointers referencing the object have been updated,
+> and then a grace period has passed.
 >
-> Rather than just assigning the dev->of_node for the genpd's device, let's
-> use device_set_node() to make sure the fwnode gets assigned too. This is
-> needed to allow fw_devlink to work correctly, for example.
->
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Eder Zulian <ezulian@redhat.com>
 > ---
->  drivers/pmdomain/core.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
+>  drivers/dma/amd/ptdma/ptdma-dmaengine.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 >
-> diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
-> index da51a61a974c..3911d3e96626 100644
-> --- a/drivers/pmdomain/core.c
-> +++ b/drivers/pmdomain/core.c
-> @@ -2627,6 +2627,7 @@ static bool genpd_present(const struct generic_pm_d=
-omain *genpd)
->  int of_genpd_add_provider_simple(struct device_node *np,
->                                  struct generic_pm_domain *genpd)
->  {
-> +       struct fwnode_handle *fwnode;
->         int ret;
->
->         if (!np || !genpd)
-> @@ -2635,7 +2636,9 @@ int of_genpd_add_provider_simple(struct device_node=
- *np,
->         if (!genpd_present(genpd))
->                 return -EINVAL;
->
-> -       genpd->dev.of_node =3D np;
-> +       fwnode =3D &np->fwnode;
+> diff --git a/drivers/dma/amd/ptdma/ptdma-dmaengine.c b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+> index 715ac3ae067b..b70dd1b0b9fb 100644
+> --- a/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+> +++ b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+> @@ -597,7 +597,8 @@ int pt_dmaengine_register(struct pt_device *pt)
+>  
+>  	pt->dma_desc_cache = kmem_cache_create(desc_cache_name,
+>  					       sizeof(struct pt_dma_desc), 0,
+> -					       SLAB_HWCACHE_ALIGN, NULL);
+> +					       SLAB_HWCACHE_ALIGN |
+> +					       SLAB_TYPESAFE_BY_RCU, NULL);
 
-Use of_fwnode_handle() please.
+No, this code wasn't written to exploit SLAB_TYPESAFE_BY_RCU and this
+change can only obscure the problem. There's likely a data race in the
+driver.
 
-> +
-> +       device_set_node(&genpd->dev, fwnode);
->
->         /* Parse genpd OPP table */
->         if (!genpd_is_opp_table_fw(genpd) && genpd->set_performance_state=
-) {
-> @@ -2661,7 +2664,7 @@ int of_genpd_add_provider_simple(struct device_node=
- *np,
->                 return ret;
->         }
->
-> -       genpd->provider =3D &np->fwnode;
-> +       genpd->provider =3D fwnode;
->         genpd->has_provider =3D true;
->
->         return 0;
-> @@ -2677,6 +2680,7 @@ int of_genpd_add_provider_onecell(struct device_nod=
-e *np,
->                                   struct genpd_onecell_data *data)
->  {
->         struct generic_pm_domain *genpd;
-> +       struct fwnode_handle *fwnode;
->         unsigned int i;
->         int ret =3D -EINVAL;
->
-> @@ -2686,6 +2690,8 @@ int of_genpd_add_provider_onecell(struct device_nod=
-e *np,
->         if (!data->xlate)
->                 data->xlate =3D genpd_xlate_onecell;
->
-> +       fwnode =3D &np->fwnode;
-> +
+I suspect pt_cmd_callback_work() has a bug:
 
-Use of_fwnode_handle() please.
+        spin_lock_irqsave(&chan->vc.lock, flags);
+        if (desc) {
+                if (desc->status != DMA_COMPLETE) {
+                        if (desc->status != DMA_ERROR)
+                                desc->status = DMA_COMPLETE;
 
--Saravana
+                        dma_cookie_complete(tx_desc);
+                        dma_descriptor_unmap(tx_desc);
+                } else {
+                        tx_desc = NULL;
+                }
+        }
+        spin_unlock_irqrestore(&chan->vc.lock, flags);
 
->         for (i =3D 0; i < data->num_domains; i++) {
->                 genpd =3D data->domains[i];
->
-> @@ -2694,7 +2700,7 @@ int of_genpd_add_provider_onecell(struct device_nod=
-e *np,
->                 if (!genpd_present(genpd))
->                         goto error;
->
-> -               genpd->dev.of_node =3D np;
-> +               device_set_node(&genpd->dev, fwnode);
->
->                 /* Parse genpd OPP table */
->                 if (!genpd_is_opp_table_fw(genpd) && genpd->set_performan=
-ce_state) {
-> @@ -2713,7 +2719,7 @@ int of_genpd_add_provider_onecell(struct device_nod=
-e *np,
->                         WARN_ON(IS_ERR(genpd->opp_table));
->                 }
->
-> -               genpd->provider =3D &np->fwnode;
-> +               genpd->provider =3D fwnode;
->                 genpd->has_provider =3D true;
->         }
->
-> --
-> 2.43.0
->
+        if (tx_desc) {
+                dmaengine_desc_get_callback_invoke(tx_desc, NULL);
+                dma_run_dependencies(tx_desc);
+>>>>            list_del(&desc->vd.node); <<< must be done under vc.lock
+                vchan_vdesc_fini(vd);
+        }
+
+But that's relatively new code that may not be in the kernel you're
+running.
