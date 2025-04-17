@@ -1,60 +1,47 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B8624E4B3
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:49:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3800714A4C7;
+	Thu, 17 Apr 2025 14:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744901399; cv=none; b=acB9syAkS1A/z+pOvD8AoqIZKnS0ffSOjdLgfBnv8PGcoshBn6YG/fKuvRo3tGzEQuamJ4vPo+MHxlMhyDxlVFZII6ZsVrPh6np4aPz5KPo9APMo0PSGITd0ZuoqpdvDwh3USAYhkuS8UUwHqO5AqytX4ewV6GujkVs6Ui7mh90=
+	t=1744901430; cv=none; b=ZxoSQRq5QGWS/hD1SEmqASFMSplnbTEHbp5j31k6yP7aGw020Urlg+ctLyiNsWx+9iv4ed+MOSudK3DmDOoRTfAMwgO523VDwffldBzc5YOyMjCoPRocfynzIfFX6KTFlCGynroe/6hoSdcwgng34+pLQGkx+cabgi7o7ur3L0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744901399; c=relaxed/simple;
-	bh=wkUhe+5UgXQ62adGuCrJlWozx3nrM1pQzJP3RGiT9xI=;
+	s=arc-20240116; t=1744901430; c=relaxed/simple;
+	bh=ydLwQu78BFvyikLXpxEaVTRiTBaEQwxwQL+LQghN1WU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=caVBtL6x14ZOAgrC1L+3Hw5R7zqYBpNaGUwBWr5HerTR0AYgdpNs7jAIeDWXrF24W4MTZyK8+gtb6Tb+1Q56PGrfoauYKjjl7Zx7qqOE6mie6fTRxjXDc9ZxsADoAZx02P860e124OpGWtwM9a80/CtaJxHPSoHXy7mhDY3Hfb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso138036766b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:49:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744901396; x=1745506196;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TEu/dMMv1x05lJznx/hka4ssdz4rcEJBZoJlf12fbOI=;
-        b=dv79ljHQ+RrUcwVYJfvc0TWHA9yQuFtJ4dqsYMTu2o+la+7K5aphRrDgd1JR+FD7S8
-         YCEBvZ8sxKx+BgJY4FLAFRNf/hkxES4A18Bjk6Rxcf6bAOY1c3c1EPIsNECwSnQqxp20
-         Y3PluArngWOGXjR6DJFGEwCAWZz89BqkYOibYl0w1lyM02vDGxd9VaIf7DYVhNkM6ZHB
-         hmHc86lNF8vkV+IfSURWCKoKx7pCN/+8p7qNmCj55SsIe8fa4tVDIy9kh5xFq+lRbuAL
-         UKV5BTOlA2F8vWlfVJsTAEfK+5E2YSnjjIZouXweDXoOt4HyLL1COzzm/TkfjnHJ1rRj
-         R7Ew==
-X-Forwarded-Encrypted: i=1; AJvYcCXljwaakdZtuv8U7nt5aV6EXp/OgspMD6lZkObR4/kfWsF5NRPWVyXViMf61bUrH8JnFWfR7VcQv3ynO/0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyq71CSYvW43/AzSuC1jRP5Q089jSZSZpkpTKb22iFLdsW/YC0e
-	6XW0M0dW8XaOZmfYkOX4X8DrjubJhm5HZ6IbWFVuG1vxIL6FB2t0
-X-Gm-Gg: ASbGncuJ1ICCTvgGaGKYK50g9JuV0I7zzjeoNaL9YYxasKiHEBpTx0u1r4bCvP5vjeh
-	NgPwlOkg0hJl9Rewy/F1/uCh4k5o7QbCcZYtFV5TNfObdlDH4rKt3lnZ/dtFJ3UPfzLzi0q8EUk
-	UlXXrD6UgFOHzE8jrd3+hEqqpOnX0s0o2hCT4hZnkyoqkOJ8fbF0g6KuQB1857QlFoa0jZEgF2C
-	BQIMJnjEgpojBfuy0SC96Bli1aEeVgslBzmg1L8wnX9saVvSYgGP9MUyxGqcmNsnh14lRCcFGIT
-	6y7eKSxrvzrWQAvGjObNgHnYROamIbL9
-X-Google-Smtp-Source: AGHT+IEIMmu3af40R7kHw6ePT8DVPeAMApcM5GlDcLLxD/3QmaFeTvU18SzEn//5nYdBgFZpTp3D9g==
-X-Received: by 2002:a17:907:7206:b0:ac8:1efc:b993 with SMTP id a640c23a62f3a-acb42ad9886mr602106366b.44.1744901396081;
-        Thu, 17 Apr 2025 07:49:56 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:41::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec90950sm4027666b.75.2025.04.17.07.49.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 07:49:55 -0700 (PDT)
-Date: Thu, 17 Apr 2025 07:49:53 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: Joel Becker <jlbec@evilplan.org>,
-	Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
-	Zijun Hu <quic_zijuhu@quicinc.com>
-Subject: Re: [PATCH v2 3/3] configfs: Correct error value returned by API
- config_item_set_name()
-Message-ID: <aAEVEbcjtK3W7K3z@gmail.com>
-References: <20250415-fix_configfs-v2-0-fcd527dd1824@quicinc.com>
- <20250415-fix_configfs-v2-3-fcd527dd1824@quicinc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=A4s8cmPcXdL9w5fqQRafRWNINm/PMpSXQ/RJ7oDAWH46KRWvzlJtWsROhv++lPbgt5VyJRrIBUD6QMpZlQWI2PO/3OW3BP8utr5w3lMKIR/JDPzBxY4e0Zyo0WWH80X5+1PQSJvAkKfnxw8e0lR0gRlPXQVnj3kTe/TsikYPbVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a6rBNo+2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a6rBNo+2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8413DC4CEE4;
+	Thu, 17 Apr 2025 14:50:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744901429;
+	bh=ydLwQu78BFvyikLXpxEaVTRiTBaEQwxwQL+LQghN1WU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a6rBNo+21GFbSyFtRSgtRLtdRBEHmGBjkySwyyv8xVXSZB9hXmetX8jJGOr/9lcf7
+	 G6088TMvGliHy0mpHsB2NS7yIJtrVHg7067cwIlBMaJNLtbxGhqe/vsNKAktU5NMJT
+	 TY28aVCpRZrico48wx8Wy8qERIAQ6XCCkfn+1P8knxStX68c4rSfB8DRArvkGVoRzM
+	 h4KSd0FMEkEZvY7dX61dEI8XrzL1Hrd8uw2gSZ0HvZbb+26cdbMgNWys25axYOIxci
+	 96r1znetQ1aLdxN0U0pK3PEC1y/O2k9D6vBfQ1h649OFj6KGI9OqrjPgI+gjxJ2BHb
+	 la2CzQ+I0BqXA==
+Date: Thu, 17 Apr 2025 15:50:23 +0100
+From: Srinivas Kandagatla <srini@kernel.org>
+To: Janne Grunau <j@jannau.net>
+Cc: fnkl.kernel@gmail.com, Sven Peter <sven@svenpeter.dev>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Neal Gompa <neal@gompa.dev>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>
+Subject: Re: [PATCH 2/3] nvmem: Add spmi-nvmem driver
+Message-ID: <20250417145023.GA34166@srini-hackbase>
+References: <20250415-spmi-nvmem-v1-0-22067be253cf@gmail.com>
+ <20250415-spmi-nvmem-v1-2-22067be253cf@gmail.com>
+ <81fb1290-fb39-40b7-9d79-f147fae5b269@kernel.org>
+ <20250417143053.GD8400@robin.jannau.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,37 +50,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250415-fix_configfs-v2-3-fcd527dd1824@quicinc.com>
+In-Reply-To: <20250417143053.GD8400@robin.jannau.net>
 
-On Tue, Apr 15, 2025 at 08:34:27PM +0800, Zijun Hu wrote:
-> From: Zijun Hu <quic_zijuhu@quicinc.com>
+On Thu, Apr 17, 2025 at 04:30:53PM +0200, Janne Grunau wrote:
+> On Thu, Apr 17, 2025 at 02:34:37PM +0100, Srinivas Kandagatla wrote:
+> > 
+> > 
+> > On 15/04/2025 22:52, Sasha Finkelstein via B4 Relay wrote:
+> > > From: Hector Martin <marcan@marcan.st>
+> > > 
+> > > This driver exposes a SPMI device as an NVMEM device.
+> > > It is intended to be used with e.g. PMUs/PMICs that are used to
+> > > hold power management configuration, such as used on Apple Silicon
+> > > Macs.
+> > > 
+> > > Signed-off-by: Hector Martin <marcan@marcan.st>
+> > > Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
+> > > ---
+> > >   MAINTAINERS                |  1 +
+> > >   drivers/nvmem/Kconfig      | 14 +++++++++++
+> > >   drivers/nvmem/Makefile     |  2 ++
+> > >   drivers/nvmem/spmi-nvmem.c | 62 ++++++++++++++++++++++++++++++++++++++++++++++
+> > >   4 files changed, 79 insertions(+)
+> > > 
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index e7b2d0df81b387ba5398957131971588dc7b89dc..63c12f901aed1f3e6de8227d6db34af1bd046fe6 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -2298,6 +2298,7 @@ F:	drivers/iommu/io-pgtable-dart.c
+> > >   F:	drivers/irqchip/irq-apple-aic.c
+> > >   F:	drivers/nvme/host/apple.c
+> > >   F:	drivers/nvmem/apple-efuses.c
+> > > +F:	drivers/nvmem/spmi-nvmem.c
+> > >   F:	drivers/pinctrl/pinctrl-apple-gpio.c
+> > >   F:	drivers/pwm/pwm-apple.c
+> > >   F:	drivers/soc/apple/*
+> > > diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+> > > index 8671b7c974b933e147154bb40b5d41b5730518d2..9ec907d8aa6ef7df0ea45cc35e92d8239d2705ee 100644
+> > > --- a/drivers/nvmem/Kconfig
+> > > +++ b/drivers/nvmem/Kconfig
+> > > @@ -310,6 +310,20 @@ config NVMEM_SNVS_LPGPR
+> > >   	  This driver can also be built as a module. If so, the module
+> > >   	  will be called nvmem-snvs-lpgpr.
+> > >   
+> > > +config NVMEM_SPMI
+> > > +	tristate "Generic SPMI NVMEM"
+> > > +	default ARCH_APPLE
+> > Why default is set to ARCH_APPLE?
+> > 
+> > This will endup with y in arm64 defconfig, means increasing the size of 
+> > kernel.
+> > 
+> > should it be:
+> > 
+> > depends on ARCH_APPLE || COMPILE_TEST
 > 
-> kvasprintf() failure is often caused by memory allocation which has error
-> code -ENOMEM, but config_item_set_name() returns -EFAULT for the failure.
+> I don't think it should depend on ARCH_APPLE. There is nothing
+> ARCH_APPLE specific in the driver or dt-bindings even apple platforms
+> are currently only user.
+
+irrespective of this is generic or not none of the drivers should have
+default set to y.
+
+
 > 
-> Fix by returning -ENOMEM instead of -EFAULT for the failure.
+> `default m if ARCH_APPLE` might an alternative but in this specific case
+> the driver which will uses the nvmem cells should just select it. So I
+> would remove the default.
+
+remove the default, and let it be selected in defconfig as m as
+required, like any other drivers.
+
+--srini
 > 
-> Reviewed-by: Joel Becker <jlbec@evilplan.org>
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
-
-Reviewed-by: Breno Leitao <leitao@debian.org>
-
-> ---
->  fs/configfs/item.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/configfs/item.c b/fs/configfs/item.c
-> index 254170a82aa337d95cbfbdf1a2db1023db3a2907..c378b5cbf87d28387a509c3cabb93eccfb520c9c 100644
-> --- a/fs/configfs/item.c
-> +++ b/fs/configfs/item.c
-> @@ -66,7 +66,7 @@ int config_item_set_name(struct config_item *item, const char *fmt, ...)
->  		name = kvasprintf(GFP_KERNEL, fmt, args);
->  		va_end(args);
->  		if (!name)
-> -			return -EFAULT;
-> +			return -ENOMEM;
-
-I've checked that all the config_item_set_name() callers, who check for
-the return value, are fine with this change also.
-
---breno
+> Janne
