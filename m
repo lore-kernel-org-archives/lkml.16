@@ -1,144 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D335F239586;
-	Thu, 17 Apr 2025 11:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26A523E351;
+	Thu, 17 Apr 2025 11:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744889302; cv=none; b=k6H7FyBTMidi+1W/DHtB2HqQLNYe6F2vXzlA3hB9hXGbRV08pbTxD3pcsHjU4qmOi1f3Phtifsxqp0nsayR4a4zCzJPP6Ii0VLfIPbnMRBjjsx5I9pC0t3USldmn5UBfRFF5rBjD0jglGsA3bsfJe79BENQ9AqaRbK6+T9q7Ix0=
+	t=1744889413; cv=none; b=XZJQ+fBUKv6pDgfzf1+41krVIjIpvg+7CEWw+tAqUAS4t23xV8YWdS+TfpRn15jp14dDrjkQXm3mm5JJnrCztgdreWykAxTVG75VR/baZWt+wFj2c5I0fyxRPA+E9FX86Xbd25l3wdMlmsWDiOarqrswukQl2T2PHVYY1D/DmY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744889302; c=relaxed/simple;
-	bh=cs4O7XXFIy6Qc3WN5GJl6FjUSo/LOyNVrBmbU74T9W8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Eegwqt75Zle+mpaWUFLPK52hpmP0cQQPd05hOUP+96eQGQu3FZBe/VQQMuvi8pkVnmg8ALPbpllN0ZahjvqTHDyyWpWTZdOoL1s+gE6eKOutbqjUDurKOyNL5O3s46oc1CZfOC8zeclYX2x0hyqO1qhXFXOp/gAo6KHXBLPbXmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wnf3ZZx9; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744889413; c=relaxed/simple;
+	bh=F2FkW6HpzGcrMfu76O8qYCIk3IsbJvtavVlnU3g/Dys=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=I1tLxecU7/IKfdm4tYedslrk4Jy71+2tayRTstJiqpLubl5H1CtTYD4bzBd6u8KAHz+/Jd7+Ls5aZcjj+MjfbjCs+bBkn7NgZYU5J33vcsPzM/wjYBJ4yTumvZrYmVdcQHBGUi0h1rL+BbpyVrcxJGD+MUQYDkg5gU3hHZHaf0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1/G38Xhc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WXCCh9aI; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wnf3ZZx9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744889301; x=1776425301;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=cs4O7XXFIy6Qc3WN5GJl6FjUSo/LOyNVrBmbU74T9W8=;
-  b=Wnf3ZZx9WPDi757oj6/7J+KPXEgb+CIPaqrzyeKAFEL0FfUbwiqNjYTV
-   hTTMHNi7AcZmjBLaJ6ybb+bR74Heml3eBHClEhyRnhENpULR/R5H2/j3h
-   MU3+zj4BZwBNMB5g3s6Z7AoixyQHFIMpNEyVzgOhHuBh+FCT9C4hkUPYC
-   4QdcoS89d30zIGTx3NezX04iWJW6SpSaRY2dQzVAifCX3dX8/IvD/+E/k
-   i05uALoCzXxOJvHq2yRntERXvuGVyy5+sNa9Ooru8jrTrDHXMArq6altS
-   BVhyfa+nTlfmFIrWnEwlHxs8Quo/Y5qKn1nDLAE9rNzIP7Pquj3tAPXSO
-   Q==;
-X-CSE-ConnectionGUID: GpqEMqyHTtuiKmTe8+U1OA==
-X-CSE-MsgGUID: //MzNYTBShqEqWxBbLrGUw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="71857776"
-X-IronPort-AV: E=Sophos;i="6.15,218,1739865600"; 
-   d="scan'208";a="71857776"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 04:28:19 -0700
-X-CSE-ConnectionGUID: tiZUrZo7Q0KQWiJXhKJiWA==
-X-CSE-MsgGUID: TChb/UyMSBqrW2AVN4YZKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,218,1739865600"; 
-   d="scan'208";a="135589771"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.144])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 04:28:16 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 17 Apr 2025 14:28:13 +0300 (EEST)
-To: =?ISO-8859-15?Q?Ga=A8per_Nemgar?= <gasper.nemgar@gmail.com>
-cc: ikepanhc@gmail.com, Hans de Goede <hdegoede@redhat.com>, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCHv5] platform/x86: ideapad-laptop: added support for some
- new buttons
-In-Reply-To: <20250417112425.107749-1-gasper.nemgar@gmail.com>
-Message-ID: <c024e668-1eb4-255b-d1e3-60ee46e759cd@linux.intel.com>
-References: <20250417112425.107749-1-gasper.nemgar@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1/G38Xhc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WXCCh9aI"
+Date: Thu, 17 Apr 2025 11:30:03 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744889409;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aEVxWaYPmPTMnblGckSO4LjwU6cfLemZFXMtF0N2uv4=;
+	b=1/G38Xhcd+PiQIxp+AAC9POXi9FGl1DMlS9glEUDHYw8N6HFyE4SZGsjp5oo5uN2q1WVm8
+	cqkMsD8v3l2jix0BDsvz4iEpyEqbmwrZdqvXHOv7wq8LCwzKAUbaPbg3Miy6gjJ8r8aDvE
+	7d7lHSSwjSSyXjLv5L8F+CjkActETkB6CnlEi9G9+QhHn6Njnpvm+pNEStmilSPVCw56h7
+	TMlc2IlpFaA277XjjRwwZq4/jg4HkizZB/HZnwDTe3PnKRKnmsTJqtXuHvp1jlWg7umC7q
+	NPu8fsS24Scv403lz1RGTpUkMCEW2nOQHmfWywfjlyOMK5aVU8H7qG3AOmK/Dg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744889409;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aEVxWaYPmPTMnblGckSO4LjwU6cfLemZFXMtF0N2uv4=;
+	b=WXCCh9aIzHIlaEVVM2xg5POoUeOhRPwqtH6/qdW+HjweUQHC2usb9izIP6FT66GwoheY5z
+	+fmiA4igb2+orbAA==
+From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf/core: Fix perf-stat / read()
+Cc: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
+ James Clark <james.clark@linaro.org>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250417080725.GH38216@noisy.programming.kicks-ass.net>
+References: <20250417080725.GH38216@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-859231818-1744889216=:939"
-Content-ID: <53167a7b-a489-1cd5-4940-bbb25f6fd7ba@linux.intel.com>
+Message-ID: <174488940302.31282.13464297816136814347.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+The following commit has been merged into the perf/core branch of tip:
 
---8323328-859231818-1744889216=:939
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <40ba1a2f-0101-88ce-6e52-187b776115ca@linux.intel.com>
+Commit-ID:     75195453f7b17ae604dc28a91f19937b1906b333
+Gitweb:        https://git.kernel.org/tip/75195453f7b17ae604dc28a91f19937b1906b333
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Wed, 16 Apr 2025 20:50:27 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 17 Apr 2025 13:24:49 +02:00
 
-On Thu, 17 Apr 2025, Ga=A8per Nemgar wrote:
+perf/core: Fix perf-stat / read()
 
-> Signed-off-by: Ga=A8per Nemgar <gasper.nemgar@gmail.com>"
+In the zeal to adjust all event->state checks to include the new
+REVOKED state, one adjustment was made in error. Notably it resulted
+in read() on the perf filedesc to stop working for any state lower
+than ERROR, specifically EXIT.
 
-This too seems wrong. Using git send-email might be helpful as it can send=
-=20
-directly the file from git format-patch.
+This leads to problems with (among others) perf-stat, which wants to
+read the counts after a program has finished execution.
 
-> ---
-> Changes in v5:
->  - Changed performance button to KE_KEY=20
-> Changes in v4:
->  - Changed performace button to KE_IGNORE
-> Changes in v3:
->  - Minor changes
-> Changes in v2:
->  - Added more codes that trigger with key combos (Fn+N, Fn+M, ...)
->  - Added performence toggle in wmi_notify()
-> Changes in v1:
->  - Added codes for buttons on laptop(performance, star, ...)
-> ---
->  drivers/platform/x86/ideapad-laptop.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86=
-/ideapad-laptop.c
-> index 17a09b778..320ce9d2d 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -1294,6 +1294,16 @@ static const struct key_entry ideapad_keymap[] =3D=
- {
->  =09/* Specific to some newer models */
->  =09{ KE_KEY,=090x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
->  =09{ KE_KEY,=090x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
-> +=09/* Star- (User Assignable Key) */
-> +=09{ KE_KEY,=090x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
-> +=09/* Eye */
-> +=09{ KE_KEY,=090x45 | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
-> +=09/* Performance toggle also Fn+Q, handled inside ideapad_wmi_notify() =
-*/
-> +=09{ KE_IGNORE,=090x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
-> +=09/* shift + prtsc */
-> +=09{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
-> +=09{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
-> +=09{ KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
-> =20
->  =09{ KE_END },
->  };
-> @@ -2080,6 +2090,14 @@ static void ideapad_wmi_notify(struct wmi_device *=
-wdev, union acpi_object *data)
->  =09=09dev_dbg(&wdev->dev, "WMI fn-key event: 0x%llx\n",
->  =09=09=09data->integer.value);
-> =20
-> +=09=09/* performance button triggered by 0x3d */
-> +=09=09if (data->integer.value =3D=3D 0x3d) {
-> +=09=09=09if (priv->dytc) {
-> +=09=09=09=09platform_profile_cycle();
-> +=09=09=09=09break;
-> +=09=09=09}
-> +=09=09}
-> +
->  =09=09/* 0x02 FnLock, 0x03 Esc */
->  =09=09if (data->integer.value =3D=3D 0x02 || data->integer.value =3D=3D =
-0x03)
->  =09=09=09ideapad_fn_lock_led_notify(priv, data->integer.value =3D=3D 0x0=
-2);
->=20
+Fixes: da916e96e2de ("perf: Make perf_pmu_unregister() useable")
+Reported-by: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Reported-by: James Clark <james.clark@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20250417080725.GH38216@noisy.programming.kicks-ass.net
+---
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
---=20
- i.
---8323328-859231818-1744889216=:939--
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 2eb9cd5..e4d7a0c 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6021,7 +6021,7 @@ __perf_read(struct perf_event *event, char __user *buf, size_t count)
+ 	 * error state (i.e. because it was pinned but it couldn't be
+ 	 * scheduled on to the CPU at some point).
+ 	 */
+-	if (event->state <= PERF_EVENT_STATE_ERROR)
++	if (event->state == PERF_EVENT_STATE_ERROR)
+ 		return 0;
+ 
+ 	if (count < event->read_size)
