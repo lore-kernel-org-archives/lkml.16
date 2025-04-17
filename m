@@ -1,110 +1,117 @@
-Received: from smtp.smtpout.orange.fr (smtp-73.smtpout.orange.fr [80.12.242.73])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1820220A5C3
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 21:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85D521D07BA
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 21:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744923972; cv=none; b=g6Ii18mZfZfOLe4PbGSy5K6YFNh2RJJoAUlBuZbtGS87Pnu+zbdC9fPm7A9ejIpmpStSmtddjmOGZT+bn4BU8/vGI+pvrB48FnnQ6cdTM1Xwx/kY74bbkGTwkSNYiK5F2A48m9HP5fi7uU5hGwpm2u5FvH2DuVo8j7sf4SMWx0s=
+	t=1744924038; cv=none; b=pUgH6qbfzecNBrHF6GDa/et/XN23KA0mYoxqKWyjiv+QcxIu7g6TN1pDREuWGAZG+UvSzVbUwGJURPfsWsAwEUxLQgHyNG/uivcYyygBqu5AYNHKNo3bP+zwRYynMocVYrmEthmhYXk86KP6ffte3YQ8XNstCJRo61CopAwpHTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744923972; c=relaxed/simple;
-	bh=c90eBYcUytbvHTx30qrG/03FOXwBOODWH63LkdXpJPI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MNUdFLySCC5ktBSKqJd524zig68vGMS7uDBuDQt1loShISE7WNGnS9zAc+LSMJer2Tvd430zvao6XBv+zyFpXVyYELJ1hZsDP/3848HaOUEv9Mi3nrIUehyJP4Pp/ypXcJo/woXKIb/1eUCuqPVfvvti6tyvqyV7A796+HVUxWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=UJlCPua9; arc=none smtp.client-ip=80.12.242.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1744924038; c=relaxed/simple;
+	bh=FSHaLk8QPpM/v3S68vYzV0LMHrrbtmhPLPGbdpRe0Vw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=syvtyVfAxodY9xKXkUL+PawTqkRXsnY0i3Jv1ZosKEOuSTLTnESxBG6zc+NAIUvJKwZdvox4XWVIi1g2iBvmQBeN6xQB4PDIbNxIq4vl0UK46AHcC/6vh2Klc3DxLxpKFg2HKip1IVgbK/CbzFTYEKTzJ0XU2sG4ON+tvP+/i1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zbe1vOOv; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="UJlCPua9"
-Received: from localhost.localdomain ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id 5WPju9RZpCZIm5WQ1uOdEQ; Thu, 17 Apr 2025 23:05:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1744923909;
-	bh=9B0EuenjQ9zP2HXkUxbNq6nKhRgcdF/8wpSLRR9fe24=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=UJlCPua9/AiS6k3Dp2oK5zTkqe8m/AkjuzXyC5VZY27zR3y6SfrsUtZ9ZS8DHd2/v
-	 ZLzCNIH4K7S9GkwQW0TU1uKf2+4NM+CYJV11zJgHhA9+p0RhPyb1Z8/SgTCD2X+vDm
-	 HcNMECQKw+ILYgMhRlA9LZHaFNqgLt1+tOi4H47mJicEoKSjLaQknNGozKYuzOn29X
-	 H9doqILM4zMi6y0ph6f6ECPuYuN4gFENN/OXVyD1iX9nWg9DZwX48ou7XB1GRJYCTX
-	 gIKafY2AZet7rvwB0P4oLzGEWg2l3XYGJvLy6tCHHnWj4V07Z4gRv5hhjkKGKK3YIh
-	 mpCF4qJp5E7tQ==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 17 Apr 2025 23:05:09 +0200
-X-ME-IP: 90.11.132.44
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Stefani Seibold <stefani@seibold.net>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH 3/3] kfifo: Fix some white spaces issues
-Date: Thu, 17 Apr 2025 23:04:35 +0200
-Message-ID: <63513bef7d65f93829cd7c189ae16265c459def8.1744923838.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <e25c871bd379f0f3595c2045925d3d25731bb194.1744923838.git.christophe.jaillet@wanadoo.fr>
-References: <e25c871bd379f0f3595c2045925d3d25731bb194.1744923838.git.christophe.jaillet@wanadoo.fr>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zbe1vOOv"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-736aa9d0f2aso1519023b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:07:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744924036; x=1745528836; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8hGDO9m37F8olfB2fdhlZB0IsLu+CvliE5NlH9VjBk0=;
+        b=Zbe1vOOvaQCjiq9MmPvJjNDPOAyhIlWnXS/Bud/8EbpeLmuM4uRbvBAUwNFZN+TlbK
+         nnah4KpqRN8Sw8N+J8p7Rk6tlPSgiVFkbSZfaa//6cIPxHMjqpnfGEg/rcL/ZLZU8sO9
+         VqtmxtxFEv0wMIq8eunajVMc/ILaZJA6R7y4lR8KauwQwjchuWN0r8KkH8JBdfOf4tp4
+         +kkdu1+vu8zMJQYoH8jAC+yCr5F7kE7D1Y/NXpj4OSmH4HU3WlZ+ASGsQwLhuHVxDoEg
+         hbVvbYMEkFTC6Eqd/1WdDgoaJgISyPSvZwy5Gjwt6bCC1yoNHlOkKVNL0bR9n8YCJ9V1
+         UmDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744924036; x=1745528836;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8hGDO9m37F8olfB2fdhlZB0IsLu+CvliE5NlH9VjBk0=;
+        b=wtOj41g/OUz+CMEWSLpBpdWxpoh/auLscXR5uXYc9r5you5BIIYbh51qz5yEYFCEjc
+         f1I8bM1YAdl7YJFjpIBB1waMLLpusKwrQ41nAgLnoqpL1/jOZjO+Uj5LgHC5mu5GpfVM
+         ljXyvSVuX2pmGSyb1JtUS0zj786nSPSIierdPQLmr5eBMATEk0geNT5SrDhWvrATuPnO
+         qEelUvX9uyjfgzBB02xx0/xR1TyYOVNQtP74BbM6M7yAiPVHv5UX1cBbn7yA4Ib5fmDT
+         wcP8wx+ZU6kj+bDQIu3Na8ZWVCpQEEG5urNur90jbijDh8y4T6EOW8YQbwnqquhtSAWe
+         Dejw==
+X-Forwarded-Encrypted: i=1; AJvYcCWFUaRM960YB3neuftcBUFYQjUTVm85y8WrHMHKYv7ceoxjvXnlhRCzoryePUjMqHLNOXOSH1mD98Zi+RM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGaA5Fed7iuZyNugnxGinocoG2Ts3sInnw0Z8MYPlZb2/LAlXh
+	6TpZ/tmfln+PBtxQePcZNXVn1z7cwT35zvYYPiBBwdwDjWNPeD0dREmoExIjTSF2XnIMz+x73q6
+	sGgcszIk0jongttEc76FWetb4fXI=
+X-Gm-Gg: ASbGncsVxO3NYSEJY+Oj5z66PZPB+TTfoe+FYrp1YeMO/QH7YkNhBS+MN0fsi8i8GlS
+	1n3x1ioKqvZ6oUJ5UMW6teP0kCUMU1eFm7LoD+2yPDKEEPssVR6Mpvu1brtork4PwZirDDhI/Ef
+	0iw/egYwUsB/zdW/N1/IJ1GhP5Vnsh/LDoFRO7Ew==
+X-Google-Smtp-Source: AGHT+IEp2h1PChq+hq+IZtAH+fTv1kA9Edtc3QCZPZK50mz8+fRy67JCrHzW/SDMcLPwXeh0/h2rV3TwJ095hr7FSik=
+X-Received: by 2002:a05:6a00:3990:b0:730:99cb:7c2f with SMTP id
+ d2e1a72fcca58-73dc148fabcmr386498b3a.6.1744924035769; Thu, 17 Apr 2025
+ 14:07:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250417152808.722409-1-mykyta.yatsenko5@gmail.com> <20250417134006.60e0d6b3fc963bcbec1255b0@linux-foundation.org>
+In-Reply-To: <20250417134006.60e0d6b3fc963bcbec1255b0@linux-foundation.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 17 Apr 2025 14:07:04 -0700
+X-Gm-Features: ATxdqUEFTmpRrsv6w29jFE4h3SsG8NbT9GQel-Hr3_4AXYZwwT22CpCkhYoG-0w
+Message-ID: <CAEf4BzZrQbpp9ZrSj3PTm2P1CAT1YG6O8zN6dc0FdJjHLXTP7w@mail.gmail.com>
+Subject: Re: [PATCH mm] maccess: fix strncpy_from_user_nofault empty string handling
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>, linux-mm@kvack.org, rostedt@goodmis.org, 
+	mhiramat@kernel.org, andrii@kernel.org, kernel-team@meta.com, 
+	linux-kernel@vger.kernel.org, Mykyta Yatsenko <yatsenko@meta.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Some unneeded double spaces are used in some places, and 1 space is missing
-before a trailing \.
+On Thu, Apr 17, 2025 at 1:40=E2=80=AFPM Andrew Morton <akpm@linux-foundatio=
+n.org> wrote:
+>
+> On Thu, 17 Apr 2025 16:28:08 +0100 Mykyta Yatsenko <mykyta.yatsenko5@gmai=
+l.com> wrote:
+>
+> > strncpy_from_user_nofault should return the length of the copied string
+> > including the trailing NUL, but if the argument unsafe_addr points to
+> > an empty string ({'\0'}), the return value is 0.
+> >
+> > This happens as strncpy_from_user copies terminal symbol into dst
+> > and returns 0 (as expected), but strncpy_from_user_nofault does not
+> > modify ret as it is not equal to count and not greater than 0, so 0 is
+> > returned, which contradicts the contract.
+>
+> Looks right, I think.
+>
+> But why do strncpy_from_user() and strncpy_from_user_nofault() have
+> different interfaces?
+>
+> /**
+>  * strncpy_from_user: - Copy a NUL terminated string from userspace.
+>  * ...
+>  * On success, returns the length of the string (not including the traili=
+ng
+>  * NUL).
+>
+> /**
+>  * strncpy_from_user_nofault: - Copy a NUL terminated string from unsafe =
+user
+>  *                              address.
+>  * ...
+>  * On success, returns the length of the string INCLUDING the trailing NU=
+L.
+>
+> This is surprising and I'm wondering what led us to do this?
 
-Make the needed clean-up for the sake of consistency.
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- include/linux/kfifo.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/include/linux/kfifo.h b/include/linux/kfifo.h
-index 707dd90138d2..9b13a733efa9 100644
---- a/include/linux/kfifo.h
-+++ b/include/linux/kfifo.h
-@@ -132,9 +132,9 @@ struct kfifo_rec_ptr_2 __STRUCT_KFIFO_PTR(unsigned char, 2, void);
- 	struct __kfifo *__kfifo = &__tmp->kfifo; \
- 	__kfifo->in = 0; \
- 	__kfifo->out = 0; \
--	__kfifo->mask = __is_kfifo_ptr(__tmp) ? 0 : ARRAY_SIZE(__tmp->buf) - 1;\
-+	__kfifo->mask = __is_kfifo_ptr(__tmp) ? 0 : ARRAY_SIZE(__tmp->buf) - 1; \
- 	__kfifo->esize = sizeof(*__tmp->buf); \
--	__kfifo->data = __is_kfifo_ptr(__tmp) ?  NULL : __tmp->buf; \
-+	__kfifo->data = __is_kfifo_ptr(__tmp) ? NULL : __tmp->buf; \
- })
- 
- /**
-@@ -268,7 +268,7 @@ __kfifo_int_must_check_helper(int val)
- })
- 
- /**
-- * kfifo_is_empty_spinlocked_noirqsave  - returns true if the fifo is empty
-+ * kfifo_is_empty_spinlocked_noirqsave - returns true if the fifo is empty
-  * using a spinlock for locking, doesn't disable interrupts
-  * @fifo: address of the fifo to be used
-  * @lock: spinlock to be used for locking
-@@ -679,7 +679,7 @@ __kfifo_uint_must_check_helper( \
- 	const size_t __recsize = sizeof(*__tmp->rectype); \
- 	struct __kfifo *__kfifo = &__tmp->kfifo; \
- 	(__recsize) ? \
--	__kfifo_from_user_r(__kfifo, __from, __len,  __copied, __recsize) : \
-+	__kfifo_from_user_r(__kfifo, __from, __len, __copied, __recsize) : \
- 	__kfifo_from_user(__kfifo, __from, __len, __copied); \
- }) \
- )
-@@ -784,7 +784,7 @@ __kfifo_int_must_check_helper( \
-  */
- #define	kfifo_dma_out_prepare_mapped(fifo, sgl, nents, len, dma) \
- ({ \
--	typeof((fifo) + 1) __tmp = (fifo);  \
-+	typeof((fifo) + 1) __tmp = (fifo); \
- 	struct scatterlist *__sgl = (sgl); \
- 	int __nents = (nents); \
- 	unsigned int __len = (len); \
--- 
-2.49.0
-
+Agreed, this is very surprising and error-prone. strncpy_from_user()
+semantics is a bit better, IMO, in that it allows to "detect" empty
+string even if buffer size is 1 byte. And there isn't a lot of places
+where we use strncpy_from_user_nofault (only 6, it seems). Maybe we
+should just change the semantics of strncpy_from_user_nofault?
