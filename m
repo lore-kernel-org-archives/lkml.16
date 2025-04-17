@@ -1,205 +1,96 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43C5189BAC
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCA4433A4;
+	Thu, 17 Apr 2025 12:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744893541; cv=none; b=cJ4EZpPTPZgk25X8/s7BCguzGSmxDt6uGHGCelB9vztVzHd0oNs5GyyRnIMHxSZAtyS8STIEi7dUwW/KnRS75xKMIHwPjPmgiE1W8YP4jRH6w5iqJP4iGtUWcvlEDIB+0Sn+/vnPWHlwmJTqCsqg9PLJapBX/utyEWIl1XIzID4=
+	t=1744893595; cv=none; b=EaB2QMLpUK9AwUisquFgSUqXQUr6YK9oQH3Q9XNAxdYEwJweTc/PBKOq/LtcvSo/f2XwHmOxuh+HgYzvQwx/wRrbQM7SBin+ixEhcnajD7sPWhdeqjGEdrtf4jljg0nb1QRi/TfYBqbdd67lpp3i4IC5UxwOPoLuedDxGnppTRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744893541; c=relaxed/simple;
-	bh=EkVsj9981T9qm0e5vxfXaEMAgIxpgdNeruEjFa24wvI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fxeETFgWDW0WbNG7iFQYtAiQ6WyAl3b4jJ+ey0g+GmKRE+5rZhcIy1uFJMRLpiO/Hdu2gAA5Ys662nNLQsqJ7XowoUfFqtWTbS8NQeU093ekrooD3QQmwaBrAfq9/7EQ8IAXfyDMy0wrdQDDfWUUVLky2tAuIhSyl33ejJxEf8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=ND4O5eDd; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1744893595; c=relaxed/simple;
+	bh=eLj7R8phBBElsYRDrQHT8P+l90EZfuo0+Uzh9OS6ikQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gQ9vH4/0hDiZCPe++6VXJWHn/O+i//hIKrMPniLucYm6lwaa4bJHXlNLKO0OfGc0EunNfk+xWEIIeI48ax3Ngk9NibwtngvJerKM1rwjJ0BVk7n8ubei+qd8TBF/cLQMtuO6ifFPvRgF44PXyAj+h9d5AmXYFFTFxHdDJFzTyXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TwJiZBMz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="ND4O5eDd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=DhN1xrm3btmQ9MDmtBh97AmEqa32qb4yE0YewSaFB6g=; b=ND4O5eDdmzLluNp/684ZQtG+Lx
-	k7pYohrLoorYBxM5hH15IqgHs0F6o4kkw47ciUNyXg0w+3t8mYgHA/Mw3kTqFUeQy2T0+D3McYIkn
-	kmO1sXggweT8hvyisJPWttTp2zqnOfzSK/TbUPDVR8w9eltd7FF5WPZiF+RWs++/5Pt3GmZoB7rys
-	42DuIV3zAJvplq8mpjGEze1Y9VbgXRO05FCGJyXRqLaY/nAUf15eS0EzzDFohUj6w8+FPGwe9XFBu
-	mHM/8dyhYpqnOhYbv9zS3u4iLg3H2fqkbGb6ApvDJGim+JLUwqPj2GQAOIW4RtQTVDMiPkXAI3Mxi
-	DjurjBMA==;
-Received: from 39-14-49-133.adsl.fetnet.net ([39.14.49.133] helo=[192.168.220.43])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1u5OVr-000nvR-4H; Thu, 17 Apr 2025 14:38:39 +0200
-Message-ID: <492b58a8-ff4a-4afe-b317-6fd1bafc874e@igalia.com>
-Date: Thu, 17 Apr 2025 20:38:30 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TwJiZBMz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51F56C4CEEB;
+	Thu, 17 Apr 2025 12:39:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744893595;
+	bh=eLj7R8phBBElsYRDrQHT8P+l90EZfuo0+Uzh9OS6ikQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TwJiZBMzZLnoDSSwd7NBmdOdrKp7Ric5v5Wxmms25sfFS+WP3gebE/K4nMwU+RI7m
+	 khv7vJbjl/zh4yXSv2wiutfPbgtJCvNwGJhRiJIKTKWuoZk4jjZhcLeBll4JeRnbQz
+	 os4QRO7v8Fb8e/Z0V9AfcrQs6byxwb+3zwaX5l2E9C2RdvdFJln0eVfYAh+VSlVeLL
+	 gUik7O+11A9QFfcer4YXzaOJmBi6G8hnT7areJ0pJtJ2sA8Jh4V+lUeFju+VwUW4tu
+	 vY8AG1tfk4KCxTjO9TZeo9Yjt8AKmRseVs0mNn6Kqizyr8cnu1cTEzga2wc+Y8HjG8
+	 yZ9gk2CE4YrBg==
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-72a4793d4e2so439976a34.2;
+        Thu, 17 Apr 2025 05:39:55 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX6IYdaoDtOOshi74HJ44TkmhpbqE9XxtNHcH6QU2Ym0aRnKZ3fnuodjQaURO4BixaMq78YYUCG/Ck=@vger.kernel.org, AJvYcCXRXbKV2cSVcfiXymPACG3Ke0oAA2kAY87LEX1VUX6fH8/8CLaLxomtGOYpSJdxv+amL96w9Zq8v9ZblaM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3T1DXhkSnL/Sf+7xGMfY6uXnomWYPW+gC+FPAm7NSRDpWKre4
+	8LxznLc1qNPn5VqXMA0fjBcPXbLPQa+n1qRnfa5CqExF6XkZh6kH4iQ05kIm2lAAEpWhA4YQxNG
+	r2cFGgncDiD2GChUG+f6F4/Gp43o=
+X-Google-Smtp-Source: AGHT+IFA8iU1qJvlKUs1pUOZAThmJzcJGxHgdwHwSAcBFkQkXCxuYhMfRqt9sBhJ0CdGMWGQ5G+hhH8sxutROVa4Ids=
+X-Received: by 2002:a05:6871:2083:b0:29e:2da3:3f7b with SMTP id
+ 586e51a60fabf-2d4d29d7d61mr3284724fac.7.1744893594640; Thu, 17 Apr 2025
+ 05:39:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/huge_memory: fix dereferencing invalid pmd migration
- entry
-To: Zi Yan <ziy@nvidia.com>
-Cc: David Hildenbrand <david@redhat.com>, Hugh Dickins <hughd@google.com>,
- linux-mm@kvack.org, akpm@linux-foundation.org, willy@infradead.org,
- linmiaohe@huawei.com, revest@google.com, kernel-dev@igalia.com,
- linux-kernel@vger.kernel.org
-References: <20250414072737.1698513-1-gavinguo@igalia.com>
- <27d13454-280f-4966-b694-d7e58d991547@redhat.com>
- <6787d0ea-a1b9-08cf-1f48-e361058eec20@google.com>
- <83f17b85-c9fa-43a0-bec1-22c8565b67ad@redhat.com>
- <98d1d195-7821-4627-b518-83103ade56c0@redhat.com>
- <7d0ef7b5-043b-beca-72a9-6ae98b0d55fb@google.com>
- <05a7d51e-f065-445a-af0e-481f3461a76e@redhat.com>
- <f344d741-962c-48d3-84b7-ce3de5619122@igalia.com>
- <412E70A4-4775-4AF7-A878-7FEBF9A122D8@nvidia.com>
- <667354f3-7076-4e64-9506-56e81e7d9234@igalia.com>
- <CD959F2D-FD0B-42C3-B451-ABCE254485E7@nvidia.com>
-Content-Language: en-US
-From: Gavin Guo <gavinguo@igalia.com>
-In-Reply-To: <CD959F2D-FD0B-42C3-B451-ABCE254485E7@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <2c788c2ca0cab09a8ef4e384f272af928a880b0e.1744781329.git.viresh.kumar@linaro.org>
+ <20250417015424.36487-1-nic.c3.14@gmail.com> <20250417050226.c6kdp2s5du3y3a3j@vireshk-i7>
+ <20250417050911.xycjkalehqsg3i6x@vireshk-i7>
+In-Reply-To: <20250417050911.xycjkalehqsg3i6x@vireshk-i7>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 17 Apr 2025 14:39:43 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iO4=nHcATzPyiKiWumdETFRR32C97K_RH=yhD--Tai=g@mail.gmail.com>
+X-Gm-Features: ATxdqUHxL_09M8-Iuvj-KLdobmF2J2sovGq5uwpr4jjnpmSvUwcMl5fpjTRG6PI
+Message-ID: <CAJZ5v0iO4=nHcATzPyiKiWumdETFRR32C97K_RH=yhD--Tai=g@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: acpi: Don't enable boost on policy exit
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Nicholas Chin <nic.c3.14@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, rafael.j.wysocki@intel.com, rafael@kernel.org, 
+	vincent.guittot@linaro.org, zhenglifeng1@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/17/25 20:10, Zi Yan wrote:
-> On 17 Apr 2025, at 8:02, Gavin Guo wrote:
-> 
->> On 4/17/25 19:32, Zi Yan wrote:
->>> On 17 Apr 2025, at 7:21, Gavin Guo wrote:
->>>
->>>> On 4/17/25 17:04, David Hildenbrand wrote:
->>>>> On 17.04.25 10:55, Hugh Dickins wrote:
->>>>>> On Thu, 17 Apr 2025, David Hildenbrand wrote:
->>>>>>> On 17.04.25 09:18, David Hildenbrand wrote:
->>>>>>>> On 17.04.25 07:36, Hugh Dickins wrote:
->>>>>>>>> On Wed, 16 Apr 2025, David Hildenbrand wrote:
->>>>>>>>>>
->>>>>>>>>> Why not something like
->>>>>>>>>>
->>>>>>>>>> struct folio *entry_folio;
->>>>>>>>>>
->>>>>>>>>> if (folio) {
->>>>>>>>>>     if (is_pmd_migration_entry(*pmd))
->>>>>>>>>>         entry_folio = pfn_swap_entry_folio(pmd_to_swp_entry(*pmd)));
->>>>>>>>>>     else
->>>>>>>>>>      entry_folio = pmd_folio(*pmd));
->>>>>>>>>>
->>>>>>>>>>     if (folio != entry_folio)
->>>>>>>>>>           return;
->>>>>>>>>> }
->>>>>>>>>
->>>>>>>>> My own preference is to not add unnecessary code:
->>>>>>>>> if folio and pmd_migration entry, we're not interested in entry_folio.
->>>>>>>>> But yes it could be written in lots of other ways.
->>>>>>>>
->>>>>>>> While I don't disagree about "not adding unnecessary code" in general,
->>>>>>>> in this particular case just looking the folio up properly might be the
->>>>>>>> better alternative to reasoning about locking rules with conditional
->>>>>>>> input parameters :)
->>>>>>>>
->>>>>>>
->>>>>>> FWIW, I was wondering if we can rework that code, letting the caller to the
->>>>>>> checking and getting rid of the folio parameter. Something like this
->>>>>>> (incomplete, just to
->>>>>>> discuss if we could move the TTU_SPLIT_HUGE_PMD handling).
->>>>>>
->>>>>> Yes, I too dislike the folio parameter used for a single case, and agree
->>>>>> it's better for the caller who chose pmd to check that *pmd fits the folio.
->>>>>>
->>>>>> I haven't checked your code below, but it looks like a much better way
->>>>>> to proceed, using the page_vma_mapped_walk() to get pmd lock and check;
->>>>>> and cutting out two or more layers of split_huge_pmd obscurity.
->>>>>>
->>>>>> Way to go.  However... what we want right now is a fix that can easily
->>>>>> go to stable: the rearrangements here in 6.15-rc mean, I think, that
->>>>>> whatever goes into the current tree will have to be placed differently
->>>>>> for stable, no seamless backports; but Gavin's patch (reworked if you
->>>>>> insist) can be adapted to stable (differently for different releases)
->>>>>> more more easily than the future direction you're proposing here.
->>>>>
->>>>> I'm fine with going with the current patch and looking into cleaning it up properly (if possible).
->>>>>
->>>>> So for this patch
->>>>>
->>>>> Acked-by: David Hildenbrand <david@redhat.com>
->>>>>
->>>>> @Gavin, can you look into cleaning that up?
->>>>
->>>> Thank you for your review. Before I begin the cleanup, could you please
->>>> confirm the following action items:
->>>>
->>>> Zi Yan's suggestions for the patch are:
->>>> 1. Replace the page fault with an invalid address access in the commit
->>>>      description.
->>>>
->>>> 2. Simplify the nested if-statements into a single if-statement to
->>>>      reduce indentation.
->>>
->>> 3. Can you please add Huge’s explanation below in the commit log?
->>> That clarifies the issue. Thank you for the fix.
->>
->> Sure, will send out another patch for your review. Thank you for the review.
->>
-> Thanks. Do you mind sharing the syzkaller reproducer if that is
-> possible and easy? I am trying to understand more about the issue.
+On Thu, Apr 17, 2025 at 7:09=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.o=
+rg> wrote:
+>
+> Copying more information from Bugzilla here (Nicholas, it would be
+> faster if you can put all your observations here first, more people
+> are looking at emails than bugzilla).
+>
+> > Nicholas Chin wrote:
+> > I did some more testing and debugging and it seems like when
+> > cpufreq_online() runs after waking the system, policy->boost_enabled
+> > and cpufreq_boost_enabled() are both 0, so the set_boost() at the end
+> > of that function is never run.
+>
+> Right, this is what I wanted to do with the $Subject patch. Don't
+> update boost anymore in suspend/resume
 
-Sure, this is the reproducer:
-https://drive.google.com/file/d/1eDBV6VfIzyqD9SeYGQBah-BJXO32Piy8/view
+This is going to work for suspend-to-idle, but not necessarily for S3.
 
-Reproducing steps
-1). gcc -o repro -lpthread -static ./repro.c
+BTW, the patch is correct IMV, so I'm not going to drop it, but it
+looks like something more is needed on top of it.
 
-2). ./repro
+> > cpufreq_boost_enabled() being 0 indicates that the MSR has boosting
+> > disabled, but when I read out that MSR using rdmsr the bit seems to
+> > indicate that it is actually enabled (I am aware of the inverted logic
+> > of that bit). set_boost() seems to be the only place in the kernel
+> > that causes that MSR to be modified, and I didn't see any extra calls
+> > to it in my debug logs, so it seems like something else (outside the
+> > kernel?) is setting that MSR.
+>
+> And this is what I feel too, something else in kernel or outside of it
+> is doing something tricky.
 
-3). Find the group number and replace 2539 in the following
-sudo cat /sys/kernel/debug/shrinker/thp-deferred_split-12/count
-
-4). Run the following command in multiple sessions
-for i in $(seq 10000); do echo "2539 0 100" | sudo tee 
-/sys/kernel/debug/shrinker/thp-deferred_split-12/scan ; done
-
-Generally, the bug will be triggered within 5 minutes.
-
-> 
->>>
->>> “
->>> an anon_vma lookup points to a
->>> location which may contain the folio of interest, but might instead
->>> contain another folio: and weeding out those other folios is precisely
->>> what the "folio != pmd_folio((*pmd)" check (and the "risk of replacing
->>> the wrong folio" comment a few lines above it) is for.
->>> ”
->>>
->>> With that, Acked-by: Zi Yan <ziy@nvidia.com>
->>>
->>>>
->>>> David, based on your comment, I understand that you are recommending the
->>>> entry_folio implementation. Also, from your discussion with Hugh, it
->>>> appears you agreed with my original approach of returning early when
->>>> encountering a PMD migration entry, thereby avoiding unnecessary checks.
->>>> Is that correct? If so, I will keep the current logic. Do you have any
->>>> additional cleanup suggestions?
->>>>
->>>> I will start the cleanup work after confirmation.
->>>>
->>>>>
->>>>>>
->>>>>> (Hmm, that may be another reason for preferring the reasoning by
->>>>>> folio lock: forgive me if I'm misremembering, but didn't those
->>>>>> page migration swapops get renamed, some time around 5.11?)
->>>>>
->>>>> I remember that we did something to PTE handling stuff in the context of PTE markers. But things keep changing all of the time .. :)
->>>>>
->>>
->>>
->>> Best Regards,
->>> Yan, Zi
-> 
-> 
-> Best Regards,
-> Yan, Zi
-
+On a resume from S3, you actually don't know if the platform firmware
+has preserved the configuration from before the suspend transition.
+It may not.
