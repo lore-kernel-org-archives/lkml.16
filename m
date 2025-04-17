@@ -1,94 +1,100 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-210.mail.qq.com (out203-205-221-210.mail.qq.com [203.205.221.210])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2128D21D599
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:47:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574D01DE3BA;
+	Thu, 17 Apr 2025 07:48:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744876028; cv=none; b=F1shMY1KMOtVwx6orbMhKkXhFWdYjjJyD3F9CAh1MrlE5O/FbyAh/RXRaXdxThA3eWwnAeyzzk8rh3HP2KoV1lRCEldsq3MsVG6CAEejEs4jjhC8FW1gEmwScsmeRgBuylqqEr5OZMD/5jNrvXaspMI9jQLMw4r1ztkHgISEuCA=
+	t=1744876102; cv=none; b=fKJOCiKNZfuAZPsL71r+6jnUecfgjaZvxRnbf/43zdAO7pob4uIBnq4C7zt0eIkzAkgZv4ZvHtItjQx26vFp0WcjJ+aajJlSFXZKoFCsH+9Gbg9a9wKOrRfga9AFMGmAymLJbMqcnNECWPEcB6W5t4aQFdNUSbyEt7kX27OVeLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744876028; c=relaxed/simple;
-	bh=WEyznqoBqrdJu6XKj04AtQkuSGwFcw9ym4LfF8stkeo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X5obFG39ndXdY4viP96d2r2euEbc7s+lH4auZJBRAt4mKBsawy9T+B/KBpk88rF1JrkrdmSC8RY15/IpCFoDeY60oxYYUxYUu/l7skZknexqIrIiPYUsVhzUNuVd1nNN1k1H62FRGh32EZgr5O9UoTq6S7wtrcJQ35zHP08QY70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IjLwB52n; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744876102; c=relaxed/simple;
+	bh=g69U3MXxWXrTcJzezoDF5hQtVmdFyUMPr2vui6AhBd8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ona6zFl/TL55hSSS90gg13onWzhAP3c3GW72EsKUM5jhFfC7ZeR90VV8khQy9zq+yzZ0IpacidDC9MAMXxtT29ccaTrMsaeljuBGL/QSWsNbu7Ia+njtB+b3mlA5LyzLxNNMayfuocHOdNHxPF8kv5MLkYZ0t+zj++9Vrx3gfE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=bvJrstqz; arc=none smtp.client-ip=203.205.221.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IjLwB52n"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-548409cd2a8so654763e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:47:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744876024; x=1745480824; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WEyznqoBqrdJu6XKj04AtQkuSGwFcw9ym4LfF8stkeo=;
-        b=IjLwB52n60q3Q9VFKKP6XWVr6fust+tzRAz6Jg9rFcPHO+R1OsIThj5zvLyXvAnsej
-         0m0gnoYOfXokeje20IoVvefHq4k4vf+dGcw4l+ZD/de4DFG2ByzRpG4UQRdoc5vFTu0F
-         wbis8hSL7RIxWyMpA7nugFAL+CDgUE8JItkfXWZVOKJLwca50+krEIuG22Ws4gIx/gMb
-         fo2hqWtwkyHSlnAdvGdreeOKULJEyIArlVpbIT40ojQjy+f50CS9F9KJW/BPhEKWqnIg
-         ziK9pJsXYBD2oPtAXbukwaGZsrau0Myv8dA7jqiGsahbxPnFFD7mq2ZHcB571Cbl5x21
-         QkTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744876024; x=1745480824;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WEyznqoBqrdJu6XKj04AtQkuSGwFcw9ym4LfF8stkeo=;
-        b=g0VSg5jN2fR0skkHuuEb6vTDbHQhYJnBw++9aWRNsmlXShpSNXhnK5XLiFBQj7/Lg6
-         yeoNPgTDxwkNx22K6CtnPI0RbTaReXCz+qoa1ulwSMXo0Mtxs7Kgz1Pk7XlbosVQhdgb
-         PQAp6KtGUtC1/Wf7XUdPmQWV72gFLKjWfJJUSz00uUsKE5+I0I1+3OKEW2fyA3slXUlB
-         Ta9SO5nLAMDialOhzEsmVW7Zx4TZtWMlnNIXvdcjlsFCBeUOqheJCcuskaMcnGen6+QJ
-         eBy6MS6LHpAJZjd3+mmvqYNmpa/ERECxGaotojKRxfx4U+nYcpZWEURxvJWOYQzib/nH
-         kBLw==
-X-Forwarded-Encrypted: i=1; AJvYcCUGEyw16K2/5Gr6sIAgU9bOguB150hXGRjDJjPpRAx2HqWVxX3Lt4u2Ebv7hbhTEZ7XeCsKNCTWiFEEobo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzb82R0O5S5TbiAq+JhBppBKjWPded9c2zfqvgWtoNgNO2KCp0M
-	+bxK7riOM4zrTZoVi9uiwl0/7joXODAuDTJA4M4H1flzRfHhOux/qvsUBTfPn5pLiqhJAbkmR+M
-	24ajwgB9y/IISSMrFwG1lYLY7KPq9FPh/Bomq/A==
-X-Gm-Gg: ASbGncvEUONUPqIkpDwPfjBODqE5zPOPUjpzh/JxBASBk1mbAAw0Dbj+AdBCBeV+vNt
-	Pwv8qpKy4TKbS0LcmJavVcTMc6M9ZvNtq7Qg/JdTaMfv+lwQ0ELPEXkrQn3f6ujIntU/tiK7b3b
-	4Rc6hIZy1v0wcmYyL4g6pFLg==
-X-Google-Smtp-Source: AGHT+IHsWIAbtRpfryXnt3qAIwy3EE4NveEHC7HyLBuEny9/7E3MO+B1CV3UsgSfANPfkNtKQcLRY1ygdj94mYcsZKI=
-X-Received: by 2002:a05:6512:3d29:b0:54c:a7c:cbd5 with SMTP id
- 2adb3069b0e04-54d64aab2dbmr1542697e87.33.1744876024309; Thu, 17 Apr 2025
- 00:47:04 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="bvJrstqz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1744876088; bh=jtLqqxgkkS7hjzhrNQSkLpeFrvyKORWwVkpEiRFM2y8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=bvJrstqzWSBhPkVWeMYuT4HIziUbUr2BmpzDrBQUj9Aj+f6SdLWVxoUWR/PA7X7E/
+	 XaF3W1MVMkWlEOwAt1sYQiXWyQqe+vD9rXwHI7L92zGR6FIOYqeHiGkhd/c/PPfPrn
+	 /SawPI1AAUjKf5cOPHXoG+dyDSMW9pCf4JHBEdW0=
+Received: from [10.42.13.21] ([116.128.244.169])
+	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
+	id A7A83A38; Thu, 17 Apr 2025 15:41:58 +0800
+X-QQ-mid: xmsmtpt1744875718tyr8k8gfy
+Message-ID: <tencent_7F0AB62F9DA4BF9F250063A7421F23AC3908@qq.com>
+X-QQ-XMAILINFO: Ntt/5q+SsafOsnPnwUxg9cH2jNPvQoJzy31D/qLKszyBC1og0zhcJchIQtlALw
+	 yhx15RO9RGMw20WtvpxUWUQo20XfMgAfPdLgw+wKOYbTvty1D9A3BPY5mDdcZXA8kGUlQ6MeoRQz
+	 /ZJC81lKrRE2ViL5gjYfMb/V8y5poj4OG6byl/wOFmwWyiRah8joVvZF5bQjJ3J3DRbIYtmG2Kiv
+	 2qRyNkjpH6fN6uv9TuCakoF7A1yolmQ0z6hhsHEWNPDp/R/VxQp2GkLFA9q7VIx0P0XbQG7E/Ekj
+	 OvY/BSzVoOelpQJ/tZHl5TAmOaN5mH2/l/xZQhvA4bxlIPtqWhJ5lUZzOTBG23CH6XU28+RtGodS
+	 0jMRKlUefrQD4Z6MCcB1yA247Rn8egl9Un4AzfRIAyZ8DHUE56yF4Lxhcyvmv8gp6lZP7E9x7Ixt
+	 bObvD8JGkmjRr8nWbVgnFMUkVWgQHJBEiPF4IA+z5csJGd7KrUHPWtpqXLtonmRMd+H6e6dmNERX
+	 vbsNV74B+BAT8pOsMs9wqmTotDoBPjzV3WjjykVFFcL3Z8cBO1M2M/4Jm+kMl6tKuGEU02Vjsc5K
+	 R8lBwCeXRgYRTgOwH0YlP3a815PNuFzmc3O6AKENw6nJULxm1G2T0J6yPjDLia5ZIqhMA7WouB3c
+	 yM7yCLhagWCeicBWMhWdwnThoKWfJVCXttrr577B2vvHWrJgmDN13AtxiC4YwsjiRdZ78aNPTiT9
+	 TsWsu3TAvz8q1QkKBlEpZTowIQYUNJe8bXSnJ6YcbaljQYTpMUtxhQzseIp3WKLni4gMZDmeMdqG
+	 MAo/xIaxinbMgSKdL9BcyzDcKOUW5BmpPUELmQcBo0HRxZOAIvMmH7TmVmSdrSvbTVEMiKSuiDPC
+	 X4+PF7yY9M3CV50P9eCCZ9HPb0TbvyeHZxu+mFLPa4WeITYu/BSs3caw0yjgrLAA7RZ4+yGlTlU7
+	 7a8FCGy9crh+Aeg6wyA5aT8wGTtgfgTvFgLOCBRKxwzGnYQf4HoEDqvF7ZJgXnEDvCPXj3zPYUvM
+	 d4azrXsp5PxJmD9HPDKx5CEXsYHzU=
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+X-OQ-MSGID: <e7ecc530-af6e-4ac5-92ea-b3976aa0f13d@qq.com>
+Date: Thu, 17 Apr 2025 15:41:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416150847.3422218-1-Frank.Li@nxp.com>
-In-Reply-To: <20250416150847.3422218-1-Frank.Li@nxp.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 17 Apr 2025 09:46:53 +0200
-X-Gm-Features: ATxdqUE6Yg7082az8t1vUSLeJgtF1F2xgv02wcz0LZ7Q-4BmoWJnqMUoGaW2MtA
-Message-ID: <CACRpkda42xO+7tmp+CHPfNgx1YEXn6tYDoDXYJo-EnphH9cTXQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] dt-bindings: pinctrl: convert fsl,vf610-pinctrl.txt
- to yaml format
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	"open list:PIN CONTROLLER - FREESCALE" <linux-gpio@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	imx@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] PM: EM: Fix potential division-by-zero error in
+ em_compute_costs()
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Yaxiong Tian <tianyaxiong@kylinos.cn>,
+ rafael@kernel.org, Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+References: <tencent_EE27C7D1D6BDB3EE57A2C467CC59A866C405@qq.com>
+ <143378b0-5740-4f2b-9a79-f04cf9ef1f77@arm.com>
+ <tencent_C16C813B177E434BEAC73E842C46D872BC09@qq.com>
+ <CAMuHMdVAvMuzmn48aVB-xshMjbENXFc1MmYB=r7iPrMvfDZjDg@mail.gmail.com>
+Content-Language: en-US
+From: Yaxiong Tian <iambestgod@qq.com>
+In-Reply-To: <CAMuHMdVAvMuzmn48aVB-xshMjbENXFc1MmYB=r7iPrMvfDZjDg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 16, 2025 at 5:09=E2=80=AFPM Frank Li <Frank.Li@nxp.com> wrote:
 
-> Convert fsl,vf610-pinctrl.txt to yaml format.
->
-> Additional changes:
-> - subnode name force pattern to 'grp$' to align other imx chips.
->
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Patch applied!
+在 2025/4/17 15:20, Geert Uytterhoeven 写道:
+> Hi Yaxiong,
+> 
+> On Mon, 14 Apr 2025 at 11:14, Yaxiong Tian <iambestgod@qq.com> wrote:
+>> I wasn’t sure whether the new patch should reuse the current Message-ID
+>> or create a new one, so I checked with ChatGPT and kept the original
+>> Message-ID for v2. If a new Message-ID is required, I can resend the
+>> email.
+> 
+> Different (revisions of) patches must have different Message-IDs,
+> else they can no longer be distinguished by our tooling.
+> Fortunately it seems like you didn't succeed (which is good ;-),
+> as all four revisions do have different Message-IDs:
+> 
+> https://lore.kernel.org/all/tencent_8478BF8F2549630842D323E7394CB6F49D08@qq.com/
+> https://lore.kernel.org/all/tencent_EE27C7D1D6BDB3EE57A2C467CC59A866C405@qq.com/
+> https://lore.kernel.org/all/tencent_6D2374392DB66C9D23BF6E2546638A42EC08@qq.com/
+> https://lore.kernel.org/all/tencent_2256A7C02F7849F1D89390E488704E826D06@qq.com/
+> 
+> Gr{oetje,eeting}s,
+> 
+>                          Geert
+> 
+Thank you for your explanation. My previous description might have been
+a bit unclear. Actually, what I meant was whether it should be --in-
+reply-to=original Message-ID. I think if it's a patch, replying to the
+  original Message-ID would be better.
 
-Yours,
-Linus Walleij
