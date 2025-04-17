@@ -1,228 +1,219 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2066.outbound.protection.outlook.com [40.107.220.66])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 082B41CB9F0;
-	Thu, 17 Apr 2025 16:08:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744906111; cv=fail; b=KQ7u1fJ9xisFl2BVYst+Omd6kdCoZ+m+/3qErAmaDfLWPd9DiS7FAyKWSruCd6O5K0pGk0jkt8PKfYgUZg8n05xKpsqm7aRVlgX63bsu0LWXvNVkRMVzSkhk0n+qEzcHPZ1qGwsj2c0kWvBIwXJ2zvgHjuUy44NXzosoOudoG6U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744906111; c=relaxed/simple;
-	bh=MJd2F1eZj2Zeg3iGPXN3Nc2XSDm6PuKVVVCQ0P1MV/w=;
-	h=Message-ID:Date:To:Cc:References:From:Subject:In-Reply-To:
-	 Content-Type:MIME-Version; b=Rlp6CocdLMI5PT9agdHW6Edr8ekXAAu2tc2a2tjMy7dAd92utN+dKmbLvLDgscsuIWrINQ0LeDDiCxxETEnLCAHh2AKFnTuN+BvRzsAy5ug7WJX/SMR06EtIZVSwq3pkZomXUNVbR8h6uzDkgbXW137R+dKmMphapMB0+UZABIs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=l+Sm/shU; arc=fail smtp.client-ip=40.107.220.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0628025485D
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744906117; cv=none; b=uHCfkJzpOSWBSbDFdlKb2JdqrP8QQqzX2miEu/Oj+ANsOU7Bn6iBPCgCy3oD7+TOGDZbkoUvpuSKmZD+Z7YYUK8UsYg+6mxfGGcUUp8NSDQE9PVpZuE+fFjGRdu3M55ilyd8qpU++GInoYVwlF+EC5fEZBE6Jz+RxnFdFuW8+OI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744906117; c=relaxed/simple;
+	bh=f8zZDWruHrcQGuKQ5HkTvcISSDRv2jhyHs7dosgfHEI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=It414FR7QcnOCNHCgqQjp3TQWP6CyyGgDVXnGNYtYtIdhcicLIimc7v5Eq2kOWX5WmWLXttmnnwn2CinXDrPLNmxhLp343yRxtzEO0mwdRQmC63hpALVtjdsZrTBpM09XSPlDV2zczi5vDyiqnKeoTZY7dOB/udEzQjYlAxkvCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=f68hHFSV; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="l+Sm/shU"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IOZg1FgjNWV76l3RcehrzGXHD8RbhMNIJjXrZqpa9i9H2tfIDh1fdCPOLdHVbBR8mUk/Yl30HxYRoXjHRXL6ziqBMxbV/qqqJ77DghL2ol6z+dylKQdo19P06mmwB4e0nV7qhvAXgbRIczcblFaBkvq/aTl8uUSpIMcc6+EfhJg4W2axQjRiENClQ38eDT+lENMPotVTp4jVZ2y1aSwY5mp65gbDcoT58TRYRutfhLtUT6RLRCoBY/1hltmh8p1QBER9mQ3OLS/cnfwDK3vrytlRDyOv3PHJXhSJ4cCr2CPk1Tg4gMVb9tVZiX7bQgjwFRSoxONM1P77Lumo6mohuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mF7R9/shulS14B/tn2zCgmdm1jgNBpLQjEGTl2io4Ls=;
- b=XQpQsEZ0qEkVzpUOLwvA47JGDnTYBcdoqGaAaQYLevnyOPycUyHSuuc+e3afKi+yLFlpbrnRd+4KTyuG/+/0Hlao63K96jZXLt2W3OHjrcicXsNLWkyFYtEml+hJH+t+srsrxeDpyz1ZKwKfvFWqfkrtEJJIXBiehLYXxYBhEFxOMytue0vntHYCWHSeP+B4TnpezX5B8AeJpANMVE2J99Iny20TlmvM0d+5eC/9ZApyk0VmlBiSCZ+WTnM7HDVR81V39eM6ilH5Xn3pfRXv9FJWSgJjHn3Y8ssGzLq0V/bl9vVilP9PE8UfZWw5vGMup3e8nMjm1HgUbL90FynEiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mF7R9/shulS14B/tn2zCgmdm1jgNBpLQjEGTl2io4Ls=;
- b=l+Sm/shU5R+Z8Pv92KrKF89C/imGqme6LPfeXi8xEWp6Z+9E0WO0PeaMgixtuLVU+BEy2H4vQyYIk9TQU0Rt5Z4SOj6fCdXw2G2Q2+b/RuIczY4eMcrJXkRJfmynhkOzDLH7wfs//qKPI0o/4nfOpW72vYEIgJcxd/vLhk2EAWw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
- by IA0PR12MB8085.namprd12.prod.outlook.com (2603:10b6:208:400::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Thu, 17 Apr
- 2025 16:08:25 +0000
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e%5]) with mapi id 15.20.8655.022; Thu, 17 Apr 2025
- 16:08:25 +0000
-Message-ID: <3f2b0089-a641-1e0c-3558-0a8dc174d1ec@amd.com>
-Date: Thu, 17 Apr 2025 11:08:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Content-Language: en-US
-To: Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-efi@vger.kernel.org,
- x86@kernel.org, mingo@kernel.org, linux-kernel@vger.kernel.org,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Dionna Amalie Glaze <dionnaglaze@google.com>,
- Kevin Loughlin <kevinloughlin@google.com>
-References: <20250410132850.3708703-2-ardb+git@google.com>
- <20250411184113.GBZ_liSYllx10eT-l1@renoirsky.local>
- <CAMj1kXEqWxokyJf_WUE5Owwz3fO6b-Wq8sSNxFmMVAA+Q47uPQ@mail.gmail.com>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH v3] x86/boot/sev: Avoid shared GHCB page for early memory
- acceptance
-In-Reply-To: <CAMj1kXEqWxokyJf_WUE5Owwz3fO6b-Wq8sSNxFmMVAA+Q47uPQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1PR02CA0019.namprd02.prod.outlook.com
- (2603:10b6:806:2cf::12) To DM4PR12MB5070.namprd12.prod.outlook.com
- (2603:10b6:5:389::22)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="f68hHFSV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=guOC1EANmX1Zli2zwBi3sAECd7mZ2rkKhzb5e/7yiwM=; b=f68hHFSVUmeemdwLH+XOWRg5NS
+	3rbqxpcIHat6AG8FT/e4kp4SywBoRq0B2Qt5ql2Wx3ESLFEGmgDn5kuhlUfxrxXsDxk4xWRYLf6T3
+	8YmmDtXf3cuTEQqWkMP3NyzOquKp6irgscQlQQA9RtNuvndxdlttL8HrwF05MQJ1OF7x4knqPhPvo
+	o0inba+0+lQFN16MfvCVbFIh+dkU6a0BEoJwopj0/qmO8JXxWEB2YjIAoZMRrpd6rF3werQIg8YWC
+	pU/U9w/Bmyjm1Vz37CLm3lDk/00EU9KjLRxp0yPJcQsfqS75m24Xcya4aNnAfsW09UaSrZQXsJOIr
+	XSHIbtLQ==;
+Received: from [90.241.98.187] (helo=[192.168.0.101])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1u5Rmf-000sOK-H7; Thu, 17 Apr 2025 18:08:13 +0200
+Message-ID: <0e8313dc-b1bb-4ce7-b5b7-b8b3e027adb7@igalia.com>
+Date: Thu, 17 Apr 2025 17:08:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|IA0PR12MB8085:EE_
-X-MS-Office365-Filtering-Correlation-Id: 77cd8bbd-c3e5-43f7-9dc6-08dd7dca154f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WGhRaFN6N0dkSzVDTEhGdzdJOUYycGdJcHIwWmRoTGcyaGtCbytYd0tNbHk1?=
- =?utf-8?B?OUt3eWVhaUloaVNBcytYMWk0NjczanpSRlRySzF4NzJ4RjZmaUlLYlhnVFpa?=
- =?utf-8?B?VXZaeXVYUFNGcU55MTJzSyt1cndFZDhMQlRPM0N2UENGVkUxYlpZbURLalQz?=
- =?utf-8?B?SC9wVDRlWjA2YlVBeHNSQUJMMjBXTGRwWFpidFZFS2Z3SWp3a3haWnd3UkFT?=
- =?utf-8?B?aHVFblAzSFNxU1JNZjA3bTJHRjRSNjQwalIvRDM4bkJOeWhFdzNhcGRxVWM5?=
- =?utf-8?B?QmE2ZkRhVkJPcHA2T1BZR3FyQytwN3RoV0tuU1VQVU5QZTBGUk52NjRxTDFD?=
- =?utf-8?B?dHVNekNJSWtwQnZXNTJBVTU0WkF6bjN2R256d2Z2SllmYy9jQ3E2R0xWU3Jm?=
- =?utf-8?B?S3ZFNzNoSWUyVUcxdVVmTDE2UnQxdVFpK2ZsanFjaWR0aWNtZDBZWVdKRWdx?=
- =?utf-8?B?SWVwUkpzdDVGMEFyNGJ3L0phSFBNZ1dPVnB0VWE2N2IwRkJTbCtFSWJZcXUv?=
- =?utf-8?B?WGNkWk9QaDJ6NWdrcFY1SjBnZGhlQUlRbjdmT1RKN1NkL1lrdDEvenk1OXRn?=
- =?utf-8?B?LzRabG1ISFhzb0kyZmNDTC9Xb0cvOE9IN0hKSVU1MlBxaXBSSWNxYUxNbmtY?=
- =?utf-8?B?bE44QlRzSmF1SUpiWU5TaU1WS3lZdXRxZlhWYzZSMU0rL0RVbVpLN0tRWjFV?=
- =?utf-8?B?WEE1RjZYTkVzTlg4M0lDMmdqbWFWOFdqbmpVNXM1MDA5V3o5MFJPQ0R5bUFZ?=
- =?utf-8?B?ZGhEOTQySkdxQWQyeVZlbXltQWZiRFhFUE9iNzZNWVd5TGROeGF2a3c0QU9F?=
- =?utf-8?B?L1JGQmNDQjFaM2Q0T1ZvMEIxNVFuSTQ2Uk9LK3ZtZVpJRDhMWGNyK0pMNDQw?=
- =?utf-8?B?VWVmdnJGclcxeUhGc25aS3JDbUx4MWZCb213L1pYVzM4aGEwbG1acGdrUHpu?=
- =?utf-8?B?TFBnSzlBeUNWZ2hnREEwd1BhcURISmFuMzR5bjNyaEhkcU43Mi96SWZmUkpo?=
- =?utf-8?B?STNnRXZkWnpmejR2MDNrQmZTUElwQjdQbnJHYkhYSElMdCt6TjNwYk90NTlE?=
- =?utf-8?B?ajdiL0Mvams0SXRiN3VVZTFNdUphMGhtcmxsRWdpdk5DMXRMQmVBWVVOVmFC?=
- =?utf-8?B?bHdBT3hvaFRrK0JuVk84NE5lemF4a3lDVGhVQlZQc1F4QzVTVENvWlFXWW5l?=
- =?utf-8?B?MmhEM2RHTlZNRzZHUDFyOVlhd0FlOUEzaTlNdzJNckNsaU91VG9RSjRIdG8r?=
- =?utf-8?B?dmZFeXYxazM5ZDFsK2VWZVVpa2tTTDYzYWV4MUJUSXNsakZLampyNXlFMmRw?=
- =?utf-8?B?MThsR3daZ3FmTjYwYk5hRWZ0N09aTjlnVTEwQ2dGcW9JUU02dkJEOWpwdnNy?=
- =?utf-8?B?TUJMNktTTWR6TFI0dzFWdDJOekJrcEtNT1hkYVJwNW42N0pmOEw4SGJ3VkVO?=
- =?utf-8?B?S3NhbTR4ZnIwamYzNmxiNFBmaVJSUkRwL2pnamlPTTl6VHcvZlJRK2trK3Zz?=
- =?utf-8?B?V1NaSTduVVVDUTNWWHc2MUJwWlhzdTE1bUZZTjE3c3o0NkJ1bmhicG5UTVF6?=
- =?utf-8?B?eEVJbGEzVE5NOE8rYWh1aFhvZGlYVFY2MEI4SHYzY3pBdVlQSjlxbkc3Z1VS?=
- =?utf-8?B?YnlHMzI4Mkg5QXBVMmdHVGJOLzNEYUNzcU9uK2dTUXlOSFFtYWI0N3JGNFpR?=
- =?utf-8?B?c2E5MjNkYlEyc1hLa2hkMzEzVlVDb1duM09MMmRCR25WWWhJcFUxS0dpN1V0?=
- =?utf-8?B?WDNaRWJONnlxa2JtVWJBWmo5eGpvaWREKy9yQnQwSmpJSGFKNTVVSU1PWFhi?=
- =?utf-8?B?Y3VwYlBja0tuZ1h2ZmVLcFJQQXc5SUR6eERDcENneXRYek1aY09Md3daTmtI?=
- =?utf-8?B?SDBXTW1TZnQ1ZlI5TWJsR3RaS2RIeGhVWEQ3THRhRWxBL2tSQ2M0WjNValVT?=
- =?utf-8?Q?ZYT2HM8Tfvs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UnJ2RWlZRHZxVzhseXg0cldGcWtkeEpnYzVGdkYyOUsxQzAwWlVlSGM3Y0M1?=
- =?utf-8?B?VkhvVnNLVmRVNERiRWc3Zm1rOWF3Y2p3L3U1VXdqMXdJUXFOUUE5SThxVTd4?=
- =?utf-8?B?bHl0SHZiczZWWk9KVVo5M01QNFRodm16MkcwVjQ2YVkvK2IxWU5vMFlIQmla?=
- =?utf-8?B?Y3A0SG5tSWhNNjE5VUx3c0gwZUswTFNSZnhLQ1padmRzSjE5N2dVRzZyT3BZ?=
- =?utf-8?B?cVJSQTAvMkRzRFhQOEgza3FMWTZGdFc5bzNVUEpHbmg1M21KQVpDaDhTb0pC?=
- =?utf-8?B?bmE1dlBJYkxzYk54aldkSFNOS3ZseW5kMUZERGNVcStDVnF0QjJJSStNTGFl?=
- =?utf-8?B?R3N5S2NicC81VkppTUZRMmtuSjcrMjdlN3NyQ0xmVlN3Rm1CU1Z1UTZ4VVFO?=
- =?utf-8?B?L04xek9NZVBod0ZseGtqL2lSOVNBanRCTVdXdTJmMkNNMzdPclhlTW8xZGJK?=
- =?utf-8?B?c1ltbmpUa0Y3TmhvQnBKVVFBdlo3RWRjNTdnSU1nc3ZRNThRZ2ZGemdEdDJQ?=
- =?utf-8?B?Z2ZOTitQUUk2U2pkeTE0WElJOE9kUWFmNDFRbTRIWXVpRytka01RTjNWOGpk?=
- =?utf-8?B?TDZ2cXNvVTZCYWp1Q0gzUzhnTExCd0g5Y004dXAvVGM0d0dKbDdnSTE0L01n?=
- =?utf-8?B?NUVhU1NKNzlOY1BJdUVDLzJQKzZHaE4wQTBFc0pCRGE3SU5nTjYvMlN5cjEz?=
- =?utf-8?B?ZHlNTjJ2L0ZYM21zSUZNOTM0dHJhSU81aXBJSjgvK3NDN1FUMWJ3WTNJZkxQ?=
- =?utf-8?B?U1ZkYUhoeVZ2eHpRVzJtdk5UL1RLU2hkV1pOa3BvblZnOTlIM3FLb2drdlpL?=
- =?utf-8?B?SlRwRGpqdzFhSEJlbC9XR3RKczhLdnRyRzd5Q3hqamw4Y1EraC9IUlgwdktx?=
- =?utf-8?B?MXcvU25sTWlNelFreG5vU08vWDRRb3UvaFE0b2FieU1RcHFjVkF3U2FHVFBH?=
- =?utf-8?B?TWtHTTNvd0RiczRqNFJ1TUZzOGdhZEpZOTVRbEN0Z0dxVG5JTzlieEV1SDUy?=
- =?utf-8?B?WkpFMkpHenUvVUJjSnRTbDMzeXJTckN4R0hzMStqMXpnbFB2OW5uRy9pZkl0?=
- =?utf-8?B?eUFzM2V4Y0plQkNiWk5oeFVnd0d1ZDUyTTZYWHM5TnN5MGpWNENKRytmbm1Z?=
- =?utf-8?B?d2x1RGw1aGFZUTZsdFhjMVNmdHA2bTlzaG56Rk9JdzJPV2FmZkpLTWI0ZjUx?=
- =?utf-8?B?bUtTd01tU1lrMG5Ob043bDUzVWFLeWVhUGdYZnhIZDJHV3FjUFFDc2NDdTZX?=
- =?utf-8?B?NWhXbHNPZXpxQ3N1YUo3dDZQaFdyZWQwSWpJR0cwMlBwZlNwWWNaNXNUMmFu?=
- =?utf-8?B?SzVoSXpURStmeDBsMXk3dkFNWTdRdFEvWnFRai91ektiVjh0QXV6S3NkT1pR?=
- =?utf-8?B?aU9OSFVrRHpqcWJMOW4zaDdiSTVOQzB0Y1MzaW04bWxNVXNDM3N0YnQxR0FU?=
- =?utf-8?B?ZHJKWlRGb0hHRWhKY0FyVWRhVjRrRXp5WFU0Q1A2VWY5dWtYSnNHYUtYS0N4?=
- =?utf-8?B?cVRFbDZ1K1ZqU2pIdElVRERRdGZXcVV3ZlJMRVVmSGhtWmRreHNTNEtocFcv?=
- =?utf-8?B?YUdaWmxTTEpwYVdSbzZNQ2FLNW5Fc2E4bElyYkxDdytXTVhnRGh3ZS9za2pr?=
- =?utf-8?B?VDVDTDMydGFJdnZGRU8vMEE5a2Z1Y3NJNTBHaE5YMzgwL3pPWUpId3Q3UkRZ?=
- =?utf-8?B?SzM4Z2tXdiszQms3cWpKckhONnhhbVhjazBQbTBJUnZHdWJMMVVnQmcvRDQ2?=
- =?utf-8?B?MFlqL2tqanQzV2dRcEpEYWlDV1RPN2MwYnVHOUpZSnBxVHNaNkpQSXExQ3F5?=
- =?utf-8?B?bnhsUjBHcFloTnpZRzlSc2kxL1hxKzhKdnBqZHJ2NFdRdzNSRVloOHA0OVB1?=
- =?utf-8?B?blFHTHFSZFIvcTBnbjJKMlg3VkxDQWU0Q2tSdnJXSUJmSGxYOElIYVJjQUJT?=
- =?utf-8?B?SkdOSkZPNWsrOEpyYVFUUzg4bHdkVjBabFp6a0dMNlBqU1ZmM0tNOUFtcjV1?=
- =?utf-8?B?c1FxQldPL0JiWmpkRHZpdWRnR2tSQ1FhVU40UlgrTEo2WEJ1U3lRYmhwSi94?=
- =?utf-8?B?RDE3eDQ4b21JSThEc3hhbytkaXl3N2p1MXB2bEZreFFQYWlUTUNEZXYxZWpt?=
- =?utf-8?Q?Z+VJoC3pWhC53bFGIMSjb7Fcc?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 77cd8bbd-c3e5-43f7-9dc6-08dd7dca154f
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 16:08:25.2633
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MpdtDWX5gLh7k++pxV6IMh1X6shA8vRRvhjt+8UNscpI0K2Mhnxt5YPppchKILDsaC12XKFfRRqnyqUZ0XMjbQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8085
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/5] drm/sched: Warn if pending list is not empty
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: phasta@kernel.org, Lyude Paul <lyude@redhat.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Matthew Brost <matthew.brost@intel.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250407152239.34429-2-phasta@kernel.org>
+ <20250407152239.34429-5-phasta@kernel.org>
+ <9607e5a54b8c5041dc7fc134425cc36c0c70b5f3.camel@mailbox.org>
+ <3ac34c84-fd84-4598-96e1-239418b7109f@igalia.com> <aADv4ivXZoJpEA7k@pollux>
+ <83758ca7-8ece-433e-b904-3d21690ead23@igalia.com>
+ <aAEUwjzZ9w9xlKRY@cassiopeiae>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+In-Reply-To: <aAEUwjzZ9w9xlKRY@cassiopeiae>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 4/11/25 14:00, Ard Biesheuvel wrote:
-> On Fri, 11 Apr 2025 at 20:40, Borislav Petkov <bp@alien8.de> wrote:
+
+On 17/04/2025 15:48, Danilo Krummrich wrote:
+> On Thu, Apr 17, 2025 at 03:20:44PM +0100, Tvrtko Ursulin wrote:
 >>
->> On Thu, Apr 10, 2025 at 03:28:51PM +0200, Ard Biesheuvel wrote:
->>> From: Ard Biesheuvel <ardb@kernel.org>
+>> On 17/04/2025 13:11, Danilo Krummrich wrote:
+>>> On Thu, Apr 17, 2025 at 12:27:29PM +0100, Tvrtko Ursulin wrote:
+>>>>
+>>>> On 17/04/2025 08:45, Philipp Stanner wrote:
+>>>>> On Mon, 2025-04-07 at 17:22 +0200, Philipp Stanner wrote:
+>>>>
+>>>> Problem exactly is that jobs can outlive the entities and the scheduler,
+>>>> while some userspace may have a dma fence reference to the job via sync
+>>>> file. This new callback would not solve it for xe, but if everything
+>>>> required was reference counted it would.
 >>>
->>> Communicating with the hypervisor using the shared GHCB page requires
->>> clearing the C bit in the mapping of that page. When executing in the
->>> context of the EFI boot services, the page tables are owned by the
->>> firmware, and this manipulation is not possible.
+>>> I think you're mixing up the job and the dma_fence here, if a job outlives the
+>>> scheduler, it clearly is a bug, always has been.
 >>>
->>> So switch to a different API for accepting memory in SEV-SNP guests, one
+>>> AFAIK, Xe reference counts it's driver specific job structures *and* the driver
+>>> specific scheduler structure, such that drm_sched_fini() won't be called before
+>>> all jobs have finished.
 >>
->> That being the GHCB MSR protocol, it seems.
->>
+>> Yes, sorry, dma fence. But it is not enough to postpone drm_sched_fini until
+>> the job is not finished. Problem is exported dma fence holds the pointer to
+>> drm_sched_fence (and so oopses in drm_sched_fence_get_timeline_name on
+>> fence->sched->name) *after* job had finished and driver was free to tear
+>> everything down.
 > 
-> Yes.
+> Well, that's a bug in drm_sched_fence then and independent from the other topic.
+> Once the finished fence in a struct drm_sched_fence has been signaled it must
+> live independent of the scheduler.
 > 
->> And since Tom co-developed, I guess we wanna do that.
->>
->> But then how much slower do we become?
->>
-> 
-> Non-EFI stub boot will become slower if the memory that is used to
-> decompress the kernel has not been accepted yet. But given how heavily
-> SEV-SNP depends on EFI boot, this typically only happens on kexec, as
-> that is the only boot path that goes through the traditional
-> decompressor.
+> The lifetime of the drm_sched_fence is entirely independent from the scheduler
+> itself, as you correctly point out.
 
-Some quick testing showed no significant differences in kexec booting
-and testing shows everything seems to be good.
+Connection (re. independent or not) I made was *if* drm_sched would be 
+reference counted, would that satisfy both the requirement to keep 
+working drm_sched_fence_get_timeline_name and to allow a different 
+flavour of the memory leak fix.
 
-But, in testing with non-2M sized memory (e.g. a guest with 4097M of
-memory) and without the change to how SNP is detected before
-sev_enable() is called, we hit the error path in arch_accept_memory() in
-arch/x86/boot/compressed/mem.c and the boot crashes.
+I agree drm_sched_fence_get_timeline_name can also be fixed by removing 
+the fence->sched dereference and losing the (pretty) name. Historically 
+there has been a lot of trouble with those names so maybe that would be 
+acceptable.
 
-Thanks,
-Tom
+Revoking s_fence->sched on job completion as an alternative does not 
+sound feasible.
 
-> 
->> And nothing in here talks about why that GHCB method worked or didn't
->> work before and that it is ok or not ok why we're axing that off.
+To further complicate matters, I suspect rmmod gpu-sched.ko is also 
+something which would break exported fences since that would remove the 
+fence ops. But that is solvable by module_get/put().
+
+> Starting to reference count things to keep the whole scheduler etc. alive as
+> long as the drm_sched_fence lives is not the correct solution.
+
+To catch up on why if you could dig out the links to past discussions it 
+would be helpful.
+
+I repeat how there is a lot of attractiveness to reference counting. 
+Already mentioned memory leak, s_fence oops, and also not having to 
+clear job->entity could be useful for things like tracking per entity 
+submission stats (imagine CFS like scheduling, generic scheduling DRM 
+cgroup controller). So it would be good for me to hear what pitfalls 
+were identified in this space.
+
+>>> Multiple solutions have been discussed already, e.g. just wait for the pending
+>>> list to be empty, reference count the scheduler for every pending job. Those all
+>>> had significant downsides, which I don't see with this proposal.
+>>>
+>>> I'm all for better ideas though -- what do you propose?
 >>
+>> I think we need to brainstorm both issues and see if there is a solution
+>> which solves them both, with bonus points for being elegant.
 > 
-> ---%<---
-> The GHCB shared page method never worked for accepting memory from the
-> EFI stub, but this is rarely needed in practice: when using the higher
-> level page allocation APIs, the firmware will make sure that memory is
-> accepted before it is returned. The only use case for explicit memory
-> acceptance by the EFI stub is when populating the 'unaccepted memory'
-> bitmap, which tracks unaccepted memory at a 2MB granularity, and so
-> chunks of unaccepted memory that are misaligned wrt that are accepted
-> without being allocated or used.
-> ---%<---
+> The problems are not related. As mentioned above, once signaled a
+> drm_sched_fence must not depend on the scheduler any longer.
 > 
->> I'm somehow missing that aspect of why that change is warranted...
+>>>>>> diff --git a/drivers/gpu/drm/scheduler/sched_main.c
+>>>>>> b/drivers/gpu/drm/scheduler/sched_main.c
+>>>>>> index 6b72278c4b72..ae3152beca14 100644
+>>>>>> --- a/drivers/gpu/drm/scheduler/sched_main.c
+>>>>>> +++ b/drivers/gpu/drm/scheduler/sched_main.c
+>>>>>> @@ -1465,6 +1465,10 @@ void drm_sched_fini(struct drm_gpu_scheduler
+>>>>>> *sched)
+>>>>>>     	sched->ready = false;
+>>>>>>     	kfree(sched->sched_rq);
+>>>>>>     	sched->sched_rq = NULL;
+>>>>>> +
+>>>>>> +	if (!list_empty(&sched->pending_list))
+>>>>>> +		dev_err(sched->dev, "%s: Tearing down scheduler
+>>>>>> while jobs are pending!\n",
+>>>>>> +			__func__);
+>>>>
+>>>> It isn't fair to add this error since it would out of the blue start firing
+>>>> for everyone expect nouveau, no? Regardless if there is a leak or not.
+>>>
+>>> I think it is pretty fair to warn when detecting a guaranteed bug, no?
+>>>
+>>> If drm_sched_fini() is call while jobs are still on the pending_list, they won't
+>>> ever be freed, because all workqueues are stopped.
 >>
+>> Is it a guaranteed bug for drivers are aware of the drm_sched_fini()
+>> limitation and are cleaning up upon themselves?
 > 
-> This never worked correctly for SEV-SNP, we're just lucky the firmware
-> appears to accept memory in 2+ MB batches and so these misaligned
-> chunks are rare in practice. Tom did manage to trigger it IIUC by
-> giving a VM an amount of memory that is not a multiple of 2M.
+> How could a driver clean up on itself (unless the driver holds its own list of
+> pending jobs)?
+> 
+> Once a job is in flight (i.e. it's on the pending_list) we must guarantee that
+> free_job() is called by the scheduler, which it can't do if we call
+> drm_sched_fini() before the pending_list is empty.
+> 
+>> In other words if you apply the series up to here would it trigger for
+>> nouveau?
+> 
+> No, because nouveau does something very stupid, i.e. replicate the pending_list.
+
+Ah okay I see it now, it waits for all jobs to finish before calling 
+drm_sched_fini(). For some reason I did not think it was doing that 
+given the cover letter starts with how that is a big no-no.
+
+>> Reportedly it triggers for the mock scheduler which also has no
+>> leak.
+> 
+> That sounds impossible. How do you ensure you do *not* leak memory when you tear
+> down the scheduler while it still has pending jobs? Or in other words, who calls
+> free_job() if not the scheduler itself?
+
+Well the cover letter says it triggers so it is possible. :)
+
+Mock scheduler also tracks the pending jobs itself, but different from 
+nouveau it does not wait for jobs to finish and free worker to process 
+them all, but having stopped the "hw" backend it cancels them and calls 
+the free_job vfunc directly.
+
+Going back to the topic of this series, if we go with a solution along 
+the lines of the proposed, I wonder if it would be doable without 
+mandating that drivers keep a list parallel to pending_list. Instead 
+have a vfunc DRM scheduler would call to cancel job at a time from *its* 
+pending list. It would go nicely together with prepare/run/timedout/free.
+
+Would it allow getting rid of the new state machinery and just 
+cancelling and freeing in one go directly from drm_sched_fini()?
+
+Regards,
+
+Tvrtko
+
+>> Also, I asked in my initial reply if we have a list of which of the current
+>> drivers suffer from memory leaks. Is it all or some etc.
+> 
+> Not all, but quite some I think. The last time I looked (which is about a year
+> ago) amdgpu for instance could leak memory when you unbind the driver while
+> enough jobs are in flight.
+
