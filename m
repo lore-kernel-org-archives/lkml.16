@@ -1,103 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249F32561A8
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 17:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D37253928;
+	Thu, 17 Apr 2025 17:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744911472; cv=none; b=GMev2Fgc24oWBtrKAedBnHKuDJB/qcEecuNzcnj7q5CQ6CiTqdmXg8OPWnuDDZOTOwfiyY/vsTZTON8hA+p5bkzl0blbt4e985S85qtjztHRP9JjG0xd4/sjcIFlHGjlnkwRSCFvZ1z+BKzaoFxl8+kzbjpl6C8eqo+gxfr5N1s=
+	t=1744911521; cv=none; b=W4ikuh3CPzNzi7PwQ4LxwwNaU6CUmDnIbHLV6Vdqk3ouFMXny7cPARxQrekul6mxdheeMaQ7U6sB10FWrh7KDILwz+ynQVm0AZVEOLgOp5tBJKfTXClxTNGD1O3AGiaos4FnWR0hFVfuztrkmsCKSxqoShiXyQaWn9U1vjuXpmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744911472; c=relaxed/simple;
-	bh=Z0sFzb5brbKQVaF0C8OLPsVeNcVcEevptZnWFDnVwVA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S7sVcg6QfZOgUrH3N1/eY73F2K45NzoTp3l5RyUDqTn/gr/jFpjI0DcxuSPJh+tWvPhvo94ogJ2tKhUEebm9xJARo2vPdlWlMZVfvbiZ2S5LdAt7+02kBptZ1YhQ7ELY3YSmyp4QC4+fa8x66jnCksr+lQcKEu8XWFYKSoh6lcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hGWGHyv6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744911521; c=relaxed/simple;
+	bh=aBBES7qWAwrLY1U9W4TcOgMEondA+0Z/D1I4wcYL/K4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nnUQ/dYtpPdf8gpO89oBCujfzj48f/FnIfAZdzDtYWAd9e61ccSwP5GpGVlod1wn2tSH5BvqpgkJMrcTMMOE2XjVkzBBZ4DSLi2xrqMY0I9TyNkSYPwSbKN2eN8RZceAAe4A5yDY0ckEgCsS4GMmdB+alI8GME9vKZXkz0hu2K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EApIwmRK; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hGWGHyv6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744911469;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z0sFzb5brbKQVaF0C8OLPsVeNcVcEevptZnWFDnVwVA=;
-	b=hGWGHyv6DFvRgckJ4Zn6FLvvrJ+gX3WsDg92DVgoqCCeorrHJkZ9GnPQEW0Nf1i6hv5GYf
-	oqJLEa5fCBtUSTgTMjBo/cD0SmWVkKNC8lsKWHti6MTxpmTysZLa5txvfZ51+llXT6hfE4
-	KoH1w9c2DDmyNYBnhP54gbO3g4YFxYY=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-550-PBiRFF7KMUGYie5YpkzaLQ-1; Thu, 17 Apr 2025 13:37:48 -0400
-X-MC-Unique: PBiRFF7KMUGYie5YpkzaLQ-1
-X-Mimecast-MFC-AGG-ID: PBiRFF7KMUGYie5YpkzaLQ_1744911467
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d00017e9dso6088645e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 10:37:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744911467; x=1745516267;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z0sFzb5brbKQVaF0C8OLPsVeNcVcEevptZnWFDnVwVA=;
-        b=AK/TUex2GXuVdQj/gFAc7+bJEuZGs18LN9AZIgkhY+2JHx036WZJKmzGXlPZpfgDTS
-         9XFxtDeL8R9XymLuZ/6WdLzFP11l/CeS/kxkqblVidY2IgjeeuVFWouWXVv8vs02mpvw
-         5AlPgCEwS9NY3T235FsmgvA3IpXCE+zsP0t5XUmQpA9kkJMgiGMC512kJBmBg8m+YPpT
-         T1nCDYlEtSTn3CYe6LAH67tsTnLYH0DlyZkatkX8lUYcGb8DMYFJMkeuCdagNuVnrpud
-         6thmoZ7mB9ORJHEan2t6HQLeoKuNgUe3LkX1E0zaxTQlYQFcGSJ/SmQYXazYLvA7yPD6
-         s74A==
-X-Forwarded-Encrypted: i=1; AJvYcCUOV6nDufu86LBVnVyS6JB2Unl/e6jf1mVSfN/sLRKxY5wJ7pnoxSo6yacC5BSELVjkveuGDJTXnjqdAmQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzcgy8T7qQXNuoN2QAR62nBbSTTpMfSerPJzH+25r7Fr3s3A6Qn
-	h9DRpZGJu9vbwi/k+viAIVnqhynY3SF9POSm2Hkxvn+4PMCGTj+ECKSnEEA9gW1S8KGDJEGNiSm
-	NrWqTzMmG9y/0fhBhHni7NoizOiNdxx3itSAYzm6Wa5hyyk5UM2CN1EHHbBXuuukDRTQ4vITTpW
-	M8eF13n4QPuKZX1Icz6qDTssRYpwifk3mofpHj
-X-Gm-Gg: ASbGncsCHvBbUhgS38qv2JQZj+9X4VcZWShl2V+1H0o0XEtxtE4P2H8ZnmfzMHGTFz9
-	JEvJ47UpYWWLeosDy2M2uQRyQDIrR4MYbTdPz2bYK3QFRcwaYfLkwwbokSX8DSSmkMwyudw==
-X-Received: by 2002:a05:600c:384b:b0:43c:e7ae:4bcf with SMTP id 5b1f17b1804b1-4405d5bdb1cmr78617395e9.0.1744911467339;
-        Thu, 17 Apr 2025 10:37:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEB6JNchYDi6dPBvFLX5ceNDlu/RLfP5VkTWs33YKOj+4WfauYjEYQ8SROPk+2SXPnT+n9TJHZTcIOdUpA2GS0=
-X-Received: by 2002:a05:600c:384b:b0:43c:e7ae:4bcf with SMTP id
- 5b1f17b1804b1-4405d5bdb1cmr78617165e9.0.1744911466985; Thu, 17 Apr 2025
- 10:37:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EApIwmRK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744911519; x=1776447519;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=aBBES7qWAwrLY1U9W4TcOgMEondA+0Z/D1I4wcYL/K4=;
+  b=EApIwmRKKUnAtQluYonLqYjb6PvDWSyu3KlksdrFEXk0z52nTLQx/TdX
+   iFcdCGk0BA0bIG/NKpFTIOdn/5wj3NTAl5WIBkYn0aYxxCGIb446uqs43
+   rJcqbo8dXUXOVCDUtmvgaxqtmepbZMcInu0k5zen+xtQ2T2lJwXH/J3iA
+   C/v5i93JFyx4+v/4k+HpATJav0c8is6S9tZfqttNgcO1l0XrPfpT3S9Lj
+   axo18WpZgiMj3sI66tRGb+6aG2Oi8sts26Z3iBTM6FwTnvUqJLInDUjdL
+   ET5SVr/tjgh2EhvQUhZVYX39RwEDXK2Lfq7h0QsquDDTwy71PrbGIFP7m
+   w==;
+X-CSE-ConnectionGUID: PqujK4iZS7OmObZ4t4eyFg==
+X-CSE-MsgGUID: DylYVFxJSxCbkwDf1yuWyw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="57185898"
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="57185898"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:38:39 -0700
+X-CSE-ConnectionGUID: /Jww+DIbQQCwjuaWkg/lCA==
+X-CSE-MsgGUID: 0uzxvsNNSBGFgt51Y0Nusg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="130827780"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:38:36 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u5TC5-0000000DGlm-2S6L;
+	Thu, 17 Apr 2025 20:38:33 +0300
+Date: Thu, 17 Apr 2025 20:38:33 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu,
+	GaryWang@aaeon.com.tw
+Subject: Re: [PATCH v3 08/10] gpio: aggregator: handle runtime registration
+ of gpio_desc in gpiochip_fwd
+Message-ID: <aAE8mY2YjWt4PB1o@smile.fi.intel.com>
+References: <20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com>
+ <20250416-aaeon-up-board-pinctrl-support-v3-8-f40776bd06ee@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404193923.1413163-1-seanjc@google.com> <20250404193923.1413163-7-seanjc@google.com>
- <0895007e-95d9-410e-8b24-d17172b0b908@amd.com> <Z_ki0uZ9Rp3Fkrh1@google.com>
- <fcc15956-aad0-49ea-b947-eac1c88d0542@amd.com> <Z_7X3hoRdbHsTnc8@google.com> <de563c32-b124-433e-9d16-2544c41e2be6@amd.com>
-In-Reply-To: <de563c32-b124-433e-9d16-2544c41e2be6@amd.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Thu, 17 Apr 2025 19:37:35 +0200
-X-Gm-Features: ATxdqUFeNPvQVED7_AzqwVcYqyNzFA-G-bDhGMcN4bAaQKzHQa7gq22ssnm_MNc
-Message-ID: <CABgObfb5QngpP_DGLx_6Y+wD+-3aSOnYUsdHCpym+V6VxY8krg@mail.gmail.com>
-Subject: Re: [PATCH 06/67] iommu/amd: WARN if KVM attempts to set vCPU
- affinity without posted intrrupts
-To: Sairaj Kodilkar <sarunkod@amd.com>
-Cc: Sean Christopherson <seanjc@google.com>, Vasant Hegde <vasant.hegde@amd.com>, 
-	Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>, 
-	Lu Baolu <baolu.lu@linux.intel.com>, kvm@vger.kernel.org, iommu@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>, 
-	Joao Martins <joao.m.martins@oracle.com>, David Matlack <dmatlack@google.com>, 
-	Naveen N Rao <naveen.rao@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416-aaeon-up-board-pinctrl-support-v3-8-f40776bd06ee@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Apr 16, 2025 at 11:47=E2=80=AFAM Sairaj Kodilkar <sarunkod@amd.com>=
- wrote:
-> I think it is safe to have this WARN_ON(!dev_data->use_vapic) without
-> any false positives. IOMMU driver sets the dev_data->use_vapic only when
-> the device is in UNMANAGE_DOMAIN and it is 0 if the device is in any
-> other domain (DMA, DMA_FQ, IDENTITY).
->
-> We have a bigger problem from the VFIO side if we hit this WARN_ON()
-> as device is not in a UNMANGED_DOMAIN.
+On Wed, Apr 16, 2025 at 04:08:16PM +0200, Thomas Richard wrote:
+> Add request() callback to check if the GPIO descriptor was well registered
+> in the gpiochip_fwd before to use it. This is done to handle the case
+> where GPIO descriptor is added at runtime in the forwarder.
+> 
+> If at least one GPIO descriptor was not added before the forwarder
+> registration, we assume the forwarder can sleep as if a GPIO is added at
+> runtime it may sleep.
 
-This does seem safe, but its more of a VFIO/iommu change than a KVM
-one so I'm not too comfortable with merging it myself; please submit
-it as a separate patch.
+...
 
-Paolo
+> +int gpio_fwd_request(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
+> +
+> +	return fwd->descs[offset] ? 0 : -ENODEV;
+
+ENODEV? Hmm... Why has that error code been chosen?
+
+> +}
+
+...
+
+>  int gpio_fwd_register(struct gpiochip_fwd *fwd)
+>  {
+>  	struct gpio_chip *chip = &fwd->chip;
+> +	unsigned int ndescs = 0, i;
+
+Slightly better (from maintenance perspective) to decouple assignment as it's
+not a standalone function that just counts them. So it means some code may
+appear in between and in long-term someone might screw up with the initial
+value for that.
+
+>  	int error;
+
+	ndescs = 0;
+
+> +	for (i = 0; i < chip->ngpio; i++)
+> +		if (fwd->descs[i])
+> +			ndescs++;
+> +
+> +	/*
+> +	 * Some gpio_desc were not registers. They will be registered at runtime
+
+registered
+
+> +	 * but we have to suppose they can sleep.
+> +	 */
+> +	if (ndescs != chip->ngpio)
+> +		chip->can_sleep = true;
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
