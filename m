@@ -1,110 +1,93 @@
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E772147FB;
-	Thu, 17 Apr 2025 07:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A0812147FB;
+	Thu, 17 Apr 2025 07:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744874446; cv=none; b=b3F57tG2eALzM3XWRNfVn/CUcO2reWp6aaywlpJV45M94WwPt/EzYzu0dZ1LorUizdUGMZaRWhlN/MKhhukPWxT8aTumMcj37l7YaSpcG4NpzTeocMnDYpK1qZLyGiAPvfbJjauTYLWQCojJyTbSYog7AcpFN3e+D4AOtDlJ2UE=
+	t=1744874518; cv=none; b=hTIVuWu9S5QApr4nb9IyuBzWPX/6rlD+1OGDkU2gxBP3JHG/2QrtmGETJ6ob9E+0UfYchmxXEZHsSsVi/3tvV1ceWawAAT062c/uYTuzBB3e10fsC0tkE8lfCZW11ACP5WuAfKFMxZc88gxge2xsU3dk8AKLRqMFa/CbMSOVTm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744874446; c=relaxed/simple;
-	bh=QyhbxHAbNWI97LfKLS2k+ny8t1SV9wPT6bs06/rAvAU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eY6+DDGUx9JVKfx/0aqZ9d8NrgvpzgCOy/5y/PmgGyyhAzxdD9rXXFY2G9qqqbdZsycBwvf8g6Ws/FE7KsmTCegvgVA2KeCiVQaq27AFvzTIxA7UDbEFzqM4dLL+/uG/ysVb8NehhumSLBpQhrhF/o0KJUP6SQvk47ILnVdXDcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-5242f137a1eso197796e0c.1;
-        Thu, 17 Apr 2025 00:20:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744874441; x=1745479241;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wJlwgfdjlKlj72m9IIHqT+BTPyJAYFDO/iuqVhlAcZU=;
-        b=IxHqa3U5jpTXNvJXMJRi/Gocwu1En/EElXG5hCq8BfFIB28pSR0SkcFe6T51wSY8AA
-         c8XvFkcvWzFIAGTvdiaYh9/f+iGPB//dfMm4v3rlDiMijMdM+qmxs3pvIa/GDaZ9HQLx
-         PDcocScf3BJyeb7v/4wHCqg6j6XA9Jn88l+M9R2slu/TdYP5PxOmqqnMbaeXmNCeZ7Uc
-         eAQ5e8Bb/BWokJ0ApZFPgz99EeN/HVZSYjhWTlgGmb1ofsHYUujqeFa343H8O/0IFig7
-         0xouYGcWxZoFohqnMpi5XXOyBw+Z1IhGgp3UifzEXaIO/jxA2MlIoiZq73VLlYcUt+qu
-         u7fA==
-X-Forwarded-Encrypted: i=1; AJvYcCViSbg4rmmRX/+qyfvCHPU9Q5diI68OaWkJYYEBUZiOIaCb2RKFIvd0etj3jL+i4GRtJBg7oK8xUYE=@vger.kernel.org, AJvYcCWRzjpwwR2LRJ23YZ9L50As40orsQR/D/y6Ic5JIHcUCQlDExHNYRJt6GDNVJ30/PRvtURD0o50Z/HFfgU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGmO+/HsiGWfMcxvX954XLcXoNOjoNsO7GoFRJI80fhYRf3aNL
-	8qIbnEnFFCFeC0/VnJru1ko50yR74md1Ks5BugvL8Hj1qrV6sE8/KBD39cqK
-X-Gm-Gg: ASbGnctE23ExKGBE4t2gn1saA9pwQFSuARyO+UlPA5l/nliunktM1+haiwkFT/26yJ6
-	SYy8tGjocftzMv2zoLUoxI+angaO8yuQaNJ1VZN+Z2qe6+J2POJUSbmuMi2ot3oJ+/FOuhWi4E0
-	VOuXZsXUp0OoO2NoWkQ47hWld3h8+hAycC+6A82u5c7z5xANq5ObmF4YZLiSLFaQiSguaxiHSQ0
-	wPSmA617gU3x1ytRyhqHx9ppxzTSoCqWCyrBYClY5dl7g3taTbGfG6PF2KkDTCYv7b2M4LgTl4N
-	FY8NeVvrWIZmmwZSULxxIITiqCkC/pxCzhlsbsSg7EObwzcl9HXeed3jyAMBuLpvo7KpXIxncY2
-	Xlsk=
-X-Google-Smtp-Source: AGHT+IEVjDeBrfr9Jcm8shhx4xC2+uyxs+Cp1nRsUo6xK/0cGrd/NBqVyAMuJcWAl55aixkFbvDhsQ==
-X-Received: by 2002:a05:6122:2001:b0:528:bd71:8a8e with SMTP id 71dfb90a1353d-5290dfe1882mr3795822e0c.5.1744874440992;
-        Thu, 17 Apr 2025 00:20:40 -0700 (PDT)
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-527abe8d74bsm3459815e0c.35.2025.04.17.00.20.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Apr 2025 00:20:40 -0700 (PDT)
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-86fab198f8eso192592241.1;
-        Thu, 17 Apr 2025 00:20:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWUxuElXMAYlGS+/6AYxbHrAwhslz7G7O5wSw3WQiL+DZFjCqykCuYS7EOPaPzLKwPuKHSydVduMEGeeMM=@vger.kernel.org, AJvYcCWl/Grh+AUs/Dpl1L/gW3+ry/Z+EInoYJBxdWmDFChMgOlSHBDEl6k84YWCNJK0HkvtWydURR8QIUI=@vger.kernel.org
-X-Received: by 2002:a05:6102:55d3:b0:4bb:9b46:3f8a with SMTP id
- ada2fe7eead31-4cb591b7d30mr2988752137.2.1744874439951; Thu, 17 Apr 2025
- 00:20:39 -0700 (PDT)
+	s=arc-20240116; t=1744874518; c=relaxed/simple;
+	bh=D6FUsCg0Gpw8z0w/zqu3Oewsd1avSCrPubcu3vTtGiM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S6r+aNPvQdfg0b1G1OPka9ZdDmHgXZJOCFAhFOuHbNuorvZZxSbC155ooV8SOtntcIclspNRsFzAkqaADgsHesZQP3dH7Enq9q3fFESH8c8PuA1em4AKwBKHGf/QTvUx/yF3i03P30fkh5/SDwRMhPUPyCf6hS96qJY5uiyTPxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=m2xZjzmn; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="m2xZjzmn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=9kw9FMXD/wPGWa+Txh7gPuISKMppmLAsTHqS5svg0z0=; b=m2xZjzmnbaV1GAQlzHYGXRlrUL
+	fdZofOEhaKFYsBYK18yKTMJ7q+s63Jm2OLSXzwAFwFxMuHCkBBa5GlFl7OI3Ru2Ybj9o19CxLrS2B
+	7m5EQ2MbXd1ZtKBI6l7w1VdX6MY/RKnZxu/CgnA0/XkP9xO5ov8kTIZEdIHJKhYVECy+bPd0UmE7h
+	/fSgTR/5nJdbdiWzrn48HfJ+1nqj9YyUOq1PAWQsC+mmRzZicngojjAaIu24RtFza+IZ73cNQyVcQ
+	elbTrGBfe2aY0GdLyTHSrVBiniwvb4U/axuz/sEKkAREUY4ffQ3BRIGbhwwUu2/xbNPdkS47Jd7pH
+	t5TeE0DA==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u5JZ3-00GPE6-0G;
+	Thu, 17 Apr 2025 15:21:38 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 17 Apr 2025 15:21:37 +0800
+Date: Thu, 17 Apr 2025 15:21:37 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Qingfang Deng <dqfext@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	linux-crypto@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Christoph =?iso-8859-1?Q?M=FCllner?= <christoph.muellner@vrull.eu>,
+	Heiko Stuebner <heiko.stuebner@vrull.eu>,
+	Qingfang Deng <qingfang.deng@siflower.com.cn>
+Subject: Re: [RFC PATCH] crypto: riscv: scalar accelerated GHASH
+Message-ID: <aACsAT0sOzkqFblQ@gondor.apana.org.au>
+References: <20250417064940.68469-1-dqfext@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <tencent_EE27C7D1D6BDB3EE57A2C467CC59A866C405@qq.com>
- <143378b0-5740-4f2b-9a79-f04cf9ef1f77@arm.com> <tencent_C16C813B177E434BEAC73E842C46D872BC09@qq.com>
-In-Reply-To: <tencent_C16C813B177E434BEAC73E842C46D872BC09@qq.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 17 Apr 2025 09:20:27 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVAvMuzmn48aVB-xshMjbENXFc1MmYB=r7iPrMvfDZjDg@mail.gmail.com>
-X-Gm-Features: ATxdqUGiXYh3QJkTgWt9shrcBT3lBi2PArasakP1xODfxivBaBiSHWBEneAs48k
-Message-ID: <CAMuHMdVAvMuzmn48aVB-xshMjbENXFc1MmYB=r7iPrMvfDZjDg@mail.gmail.com>
-Subject: Re: [PATCH v2] PM: EM: Fix potential division-by-zero error in em_compute_costs()
-To: Yaxiong Tian <iambestgod@qq.com>
-Cc: Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Yaxiong Tian <tianyaxiong@kylinos.cn>, rafael@kernel.org, 
-	Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417064940.68469-1-dqfext@gmail.com>
 
-Hi Yaxiong,
+On Thu, Apr 17, 2025 at 02:49:38PM +0800, Qingfang Deng wrote:
+>
+> +static int riscv64_clmul_ghash_update(struct shash_desc *desc, const u8 *src, unsigned int srclen)
+> +{
+> +	struct riscv64_clmul_ghash_ctx *ctx = crypto_shash_ctx(desc->tfm);
+> +	struct riscv64_clmul_ghash_desc_ctx *dctx = shash_desc_ctx(desc);
+> +	unsigned int len;
+> +
+> +	if (dctx->bytes) {
+> +		if (dctx->bytes + srclen < GHASH_DIGEST_SIZE) {
+> +			memcpy(dctx->buffer + dctx->bytes, src, srclen);
+> +			dctx->bytes += srclen;
+> +			return 0;
+> +		}
+> +		memcpy(dctx->buffer + dctx->bytes, src, GHASH_DIGEST_SIZE - dctx->bytes);
+> +
+> +		gcm_ghash_rv64i_zbc(&dctx->shash, ctx->key, dctx->buffer, GHASH_DIGEST_SIZE);
+> +
+> +		src += GHASH_DIGEST_SIZE - dctx->bytes;
+> +		srclen -= GHASH_DIGEST_SIZE - dctx->bytes;
+> +		dctx->bytes = 0;
+> +	}
 
-On Mon, 14 Apr 2025 at 11:14, Yaxiong Tian <iambestgod@qq.com> wrote:
-> I wasn=E2=80=99t sure whether the new patch should reuse the current Mess=
-age-ID
-> or create a new one, so I checked with ChatGPT and kept the original
-> Message-ID for v2. If a new Message-ID is required, I can resend the
-> email.
+If this progresses beyond an RFC, you will need to do convert this
+into a block-only algorithm on top of:
 
-Different (revisions of) patches must have different Message-IDs,
-else they can no longer be distinguished by our tooling.
-Fortunately it seems like you didn't succeed (which is good ;-),
-as all four revisions do have different Message-IDs:
+https://patchwork.kernel.org/project/linux-crypto/patch/b2eb753b083c029785c5e18238ca6cf06f48c86a.1744784515.git.herbert@gondor.apana.org.au/
 
-https://lore.kernel.org/all/tencent_8478BF8F2549630842D323E7394CB6F49D08@qq=
-.com/
-https://lore.kernel.org/all/tencent_EE27C7D1D6BDB3EE57A2C467CC59A866C405@qq=
-.com/
-https://lore.kernel.org/all/tencent_6D2374392DB66C9D23BF6E2546638A42EC08@qq=
-.com/
-https://lore.kernel.org/all/tencent_2256A7C02F7849F1D89390E488704E826D06@qq=
-.com/
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
