@@ -1,120 +1,121 @@
-Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCBE15F41F;
-	Thu, 17 Apr 2025 22:01:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4645B1F8908
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 22:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744927304; cv=none; b=bBvkExpE7vJUomI7MeF9iPpcg/WBj1+ZkZQvEX3Muo1lzwVL1GwR05whDx5bk0FSBV7mWRdldr+18U6wQDD/eNr8HNL4xv5mqWFt4ozMBuzDZ3EM2DCtURX20/5b5bYHOls7d35tGunFHKkPnK60AiYyOvX9g9GCPb3lHui6gdU=
+	t=1744927358; cv=none; b=lbSli9LJFwWLjLfpkhFvZjcsO96xb8vSpZ4QLa9aVhlQAE4MI4aaPrl22ITxa4Son9+946aVztudfyLV2YB0zIqopPpdDBniJqK+tpTRwjtrKXiHY/RyqsmVAVFOYxZPR2DLPbJPB1VNSEHALemz6xrozLRjaQ0oeqcms+f6Ed4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744927304; c=relaxed/simple;
-	bh=OaXB4fLPHtrHN4grz6cdFv8ey7snuB80R+wmzvAR9Vs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XqBMj86XaeLGHkpufwNBw6pPzWwKT2JcxoyzrfBn4oH5Ha84cM5bAmlfd7gV8ihEX7IEUZFVE7ISiFhlcGaldujLTuiv08RthiQ/G8a9tSWkudyQs6UY+yAV0Nbb6Hq9Zqi5zg/GnFPm2pc8duZAYi5DtD/EgI9k6ly1VJClxyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=DM/GnyzB; arc=none smtp.client-ip=99.78.197.217
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1744927358; c=relaxed/simple;
+	bh=W7CCP9L5bFkXyfewGBcCIklWH0IrMGEJ2hwOO7sWpfc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Vfa0vwLs/YrvTA0DtJQmjk7OwApo/T9qXM70U0dB0zkfV7uv4DasPmQcuxR+qGjFB2B69sTtAhbLeNjqLslNA7E5Pi9hn0T0Niod1ZnkRp+504iwqT6jyJXqjbRg3gdn2ZGVTb6hOuPqOrEgzL57avB/a2zZZPwV+pqvA58HmIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=dySeBa+/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="DM/GnyzB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1744927303; x=1776463303;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=V7XDSMpKqaVHW9HAPkpM4lBrMTUfKs0N4vmQKegdIyQ=;
-  b=DM/GnyzBDlHbWc6sNjN+vOdXKAp2LFC9nNBnRh3TgLqQHOSyJO22mpJS
-   eYevtnQIcy6fhw2GptwMmWRrWmkCQz2v+3FsK4ovnENhz8oUsFcsiLzxE
-   k/fZaigv+pH0WDWcV65OYjZBDBbgvHkJwsN5XVn89DcvmBWPiUk7ZwgXW
-   Q=;
-X-IronPort-AV: E=Sophos;i="6.15,220,1739836800"; 
-   d="scan'208";a="41612147"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 22:00:33 +0000
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.21.151:14380]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.59.110:2525] with esmtp (Farcaster)
- id bdcd9d70-1547-44c9-8884-e38e937c49bc; Thu, 17 Apr 2025 22:00:32 +0000 (UTC)
-X-Farcaster-Flow-ID: bdcd9d70-1547-44c9-8884-e38e937c49bc
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.204) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 17 Apr 2025 22:00:32 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.94.49.59) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 17 Apr 2025 22:00:29 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <purvayeshi550@gmail.com>
-CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
-	<horms@kernel.org>, <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <pabeni@redhat.com>
-Subject: Re: [PATCH] net: ipv4: Fix uninitialized pointer warning in fnhe_remove_oldest
-Date: Thu, 17 Apr 2025 15:00:07 -0700
-Message-ID: <20250417220022.23265-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250417094126.34352-1-purvayeshi550@gmail.com>
-References: <20250417094126.34352-1-purvayeshi550@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="dySeBa+/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C37CBC4CEE4;
+	Thu, 17 Apr 2025 22:02:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1744927358;
+	bh=W7CCP9L5bFkXyfewGBcCIklWH0IrMGEJ2hwOO7sWpfc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dySeBa+/bT7WPrUOlSM+GoWCvzrThfqEJXPqBeuo0dWsgt0rn9h/R9bhCxF5FrYlS
+	 ViWqh6qDmJedlPmZ2QyiLDJvNlF6GEcmwLp4kuQYiQwlD4ukyP35Tu3bGtfJ20KkcY
+	 6vRLNACAJKwqw+SBClHwSgxJw0zN+tIN5O1SoFOY=
+Date: Thu, 17 Apr 2025 15:02:37 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Lance Yang <ioworker0@gmail.com>
+Cc: david@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Mingzhe Yang <mingzhe.yang@ly.com>
+Subject: Re: [PATCH 1/1] mm/rmap: add CONFIG_MM_ID guard for
+ folio_test_large_maybe_mapped_shared()
+Message-Id: <20250417150237.ba3bbb3f55f992c692932841@linux-foundation.org>
+In-Reply-To: <20250417124908.58543-1-ioworker0@gmail.com>
+References: <20250417124908.58543-1-ioworker0@gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D037UWB001.ant.amazon.com (10.13.138.123) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Purva Yeshi <purvayeshi550@gmail.com>
-Date: Thu, 17 Apr 2025 15:11:26 +0530
-> Fix Smatch-detected issue:
-> net/ipv4/route.c:605 fnhe_remove_oldest() error:
-> uninitialized symbol 'oldest_p'.
+On Thu, 17 Apr 2025 20:49:08 +0800 Lance Yang <ioworker0@gmail.com> wrote:
+
+> Add a compile-time check to make sure folio_test_large_maybe_mapped_shared()
+> is only used with CONFIG_MM_ID enabled, as it directly accesses the _mm_ids
+> field that only works under CONFIG_MM_ID.
 > 
-> Initialize oldest_p to NULL to avoid uninitialized pointer warning in
-> fnhe_remove_oldest.
-
-How does it remain uninitialised ?
-
-update_or_create_fnhe() ensures the bucket is not empty before
-calling fnhe_remove_oldest().
-
-
-> 
-> Check that oldest_p is not NULL after the loop to ensure no dereferencing
-> of uninitialized pointers.
-> 
-> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
-> ---
->  net/ipv4/route.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/net/ipv4/route.c b/net/ipv4/route.c
-> index 753704f75b2c..2e5159127cb9 100644
-> --- a/net/ipv4/route.c
-> +++ b/net/ipv4/route.c
-> @@ -587,7 +587,7 @@ static void fnhe_flush_routes(struct fib_nh_exception *fnhe)
+> ...
+>
+> --- a/include/linux/page-flags.h
+> +++ b/include/linux/page-flags.h
+> @@ -1232,6 +1232,8 @@ static inline int folio_has_private(const struct folio *folio)
 >  
->  static void fnhe_remove_oldest(struct fnhe_hash_bucket *hash)
+>  static inline bool folio_test_large_maybe_mapped_shared(const struct folio *folio)
 >  {
-> -	struct fib_nh_exception __rcu **fnhe_p, **oldest_p;
-> +	struct fib_nh_exception __rcu **fnhe_p, **oldest_p = NULL;
->  	struct fib_nh_exception *fnhe, *oldest = NULL;
->  
->  	for (fnhe_p = &hash->chain; ; fnhe_p = &fnhe->fnhe_next) {
-> @@ -601,9 +601,12 @@ static void fnhe_remove_oldest(struct fnhe_hash_bucket *hash)
->  			oldest_p = fnhe_p;
->  		}
->  	}
-> -	fnhe_flush_routes(oldest);
-> -	*oldest_p = oldest->fnhe_next;
-> -	kfree_rcu(oldest, rcu);
-> +
-> +	if (oldest_p) {  /* Ensure to have valid oldest_p element */
-> +		fnhe_flush_routes(oldest);
-> +		*oldest_p = oldest->fnhe_next;
-> +		kfree_rcu(oldest, rcu);
-> +	}
+> +	/* This function should never be called without CONFIG_MM_ID enabled. */
+> +	BUILD_BUG_ON(!IS_ENABLED(CONFIG_MM_ID));
+>  	return test_bit(FOLIO_MM_IDS_SHARED_BITNUM, &folio->_mm_ids);
 >  }
->  
->  static u32 fnhe_hashfun(__be32 daddr)
-> -- 
+>  #undef PF_ANY
+
+I don't get it.  Sounds like we're adding a compile-time check to check
+for a compilation error which would have happened anyway.
+
+If folio_test_large_maybe_mapped_shared() is only used with
+CONFIG_MM_ID enabled, then do
+
+#ifdef CONFIG_MM_ID
+static inline bool folio_test_large_maybe_mapped_shared(...)
+{
+}
+#endif
+
+?
+
+Or, as "_mm_ids field only works under CONFIG_MM_ID", make it
+not-even-present when !CONFIG_MM_ID?
+
+--- a/include/linux/mm_types.h~a
++++ a/include/linux/mm_types.h
+@@ -438,7 +438,9 @@ struct folio {
+ 					mm_id_mapcount_t _mm_id_mapcount[2];
+ 					union {
+ 						mm_id_t _mm_id[2];
++#ifdef CONFIG_MM_ID
+ 						unsigned long _mm_ids;
++#endif
+ 					};
+ 	/* private: the union with struct page is transitional */
+ 				};
+_
+
+or
+
+--- a/include/linux/mm_types.h~a
++++ a/include/linux/mm_types.h
+@@ -436,10 +436,12 @@ struct folio {
+ 					atomic_t _pincount;
+ #endif /* CONFIG_64BIT */
+ 					mm_id_mapcount_t _mm_id_mapcount[2];
++#ifdef CONFIG_MM_ID
+ 					union {
+ 						mm_id_t _mm_id[2];
+ 						unsigned long _mm_ids;
+ 					};
++#endif
+ 	/* private: the union with struct page is transitional */
+ 				};
+ 				unsigned long _usable_1[4];
+_
+
+
+
+I dunno, it sounds like something hasn't been fully thought through
+here.  It's hard to say because the changelog is unclear.  Perhaps
+start out by fully describing what problem the patch is addressing?
+
