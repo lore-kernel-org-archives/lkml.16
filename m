@@ -1,123 +1,78 @@
-Received: from mxout2.routing.net (mxout2.routing.net [134.0.28.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855D1229B1A;
-	Thu, 17 Apr 2025 09:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.12
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC6D1205E00
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:35:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744882505; cv=none; b=UkMb3E0XKWtvTFMCGmP+NB6t/nLQr/VIHjDBACocW9slUFSZd9VaUrvYcbhpG9ein0kTKiaYfhSXky4SShxWJ3SVMDpI+nCCUM2EhZDkB4ww7jaj3vgGrycwJdoJtPanfxdhGh8jF+06JgELX3DxcpZo/RxXr8THOyF0m3a/Ox8=
+	t=1744882523; cv=none; b=JHO83QZZk8TI0fwtRbHLn7J9MTT9iisIYN2cPLxxCwCpqpdamaF79iUGjRexSmg66f+tau2fSl9OMdimdMqhTauLrjfeoqpxe0ZyU24DDY3mKu5GCJlHcnVW306lJfp9v7xF8mk3NtZpxBu6rWP/Hh0mMtzfQPGD/RxOnZFoKqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744882505; c=relaxed/simple;
-	bh=LscmuqaZON/XGTxe02U2DdWPh5Oj32TKOPp8x1HkAOQ=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=mc+DjhCmX9/6SwGJCpvfsCK7lddOO/hjs3l0mpxTgB/i4dU2CJLMwmCVMFMVXhXF2U691KBiw4oDd55DL61yXpOQBkXadglK/i42monNQiFB9slBpGir/DC8FMOwe402pkVT2hkNXmoYuzGe8dpkszfW7tGCemna++AKgOEEfEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=wFDyNzYg; arc=none smtp.client-ip=134.0.28.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="wFDyNzYg"
-Received: from mxbox1.masterlogin.de (unknown [192.168.10.88])
-	by mxout2.routing.net (Postfix) with ESMTP id 37E595FDE7;
-	Thu, 17 Apr 2025 09:35:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1744882501;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kKEFfy22Ovcnvkpz67OvpKpbb8xNVHKeALBqrUjpiLg=;
-	b=wFDyNzYg1F9BxMYJkyYCP+a3ZIXfZiRk5I12m2dwgUUHCeHitJo2vZnmEAwA0xtFcV0rC9
-	l470vX/M1F1rLFuKb000aTbOlGYC71jXSo0nqF7TD6X6KNvdVkzMtKvARBQMb3LwpeL3pS
-	tvq07rfpyOyCEWdpBObo77XsjYhg/BQ=
-Received: from webmail.hosting.de (unknown [134.0.26.148])
-	by mxbox1.masterlogin.de (Postfix) with ESMTPSA id 5DEBB40089;
-	Thu, 17 Apr 2025 09:35:00 +0000 (UTC)
+	s=arc-20240116; t=1744882523; c=relaxed/simple;
+	bh=nNHU0usZowE7TIaRkDpQKntsUv2BaRTkYdjYYLPNsmc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VoAW6w9aU3ZGTsNxmbeB/HZ7UlnNjKYEnS9wfCt+reVC0h/ji5jYO0jwpqHtl5crqxXWqJLN6V4eQtnaVAFlZcLNnqGiLeW1X3BvlZzNGojXvlg6ucOtbwWgTT0unavUXJf9TjMRok+ilczP9seh30hivXMM3C/QNsQffkyv0cI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AAFA41516;
+	Thu, 17 Apr 2025 02:35:17 -0700 (PDT)
+Received: from [10.163.75.58] (unknown [10.163.75.58])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 25A5E3F59E;
+	Thu, 17 Apr 2025 02:35:17 -0700 (PDT)
+Message-ID: <c655ec08-1adc-4c50-878a-bdc6445875b7@arm.com>
+Date: Thu, 17 Apr 2025 15:05:14 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 17 Apr 2025 11:35:00 +0200
-From: "Frank Wunderlich (linux)" <linux@fw-web.de>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, Chunfeng Yun
- <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>, Kishon Vijay
- Abraham I <kishon@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Frank
- Wunderlich <frank-w@public-files.de>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82eck?=
- =?UTF-8?Q?i?= <rafal@milecki.pl>, Daniel Golle <daniel@makrotopia.org>, Sean
- Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org
-Subject: Re: [PATCH v3 4/8] dt-bindings: phy: mtk-xs-phy: support type switch
- by pericfg
-In-Reply-To: <caf3da77-f35d-4a39-9102-9592d722d900@kernel.org>
-References: <20250416095402.90543-1-linux@fw-web.de>
- <20250416095402.90543-5-linux@fw-web.de>
- <20250417-competent-rattlesnake-of-intensity-98d6ff@kuoka>
- <d2da81ccb6b9b267288a3d2f5b1bb977@fw-web.de>
- <caf3da77-f35d-4a39-9102-9592d722d900@kernel.org>
-Message-ID: <b59ccb4541f4eac24fd38a65de770c8c@fw-web.de>
-X-Sender: linux@fw-web.de
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/vmscan: Modify the assignment logic of the scan and
+ total_scan variables
+To: Hao Ge <hao.ge@linux.dev>, Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Hao Ge <gehao@kylinos.cn>
+References: <20250417092422.1333620-1-hao.ge@linux.dev>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <20250417092422.1333620-1-hao.ge@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mail-ID: 3fd65e47-3ca8-4c33-8858-deb75b092cd6
 
-Am 2025-04-17 09:59, schrieb Krzysztof Kozlowski:
-> On 17/04/2025 09:52, Frank Wunderlich (linux) wrote:
->>>> 
->>>> +      mediatek,syscon-type:
->>>> +        $ref: /schemas/types.yaml#/definitions/phandle-array
->>>> +        maxItems: 1
->>>> +        description:
->>>> +          A phandle to syscon used to access the register of type
->>>> switch,
->>>> +          the field should always be 3 cells long.
->>>> +        items:
->>>> +          items:
->>> 
->>> Missing -, because you have one phandle.
->> 
->> ok, then i need to drop MaxItems and indent 2 spaces more, but no
->> problem
-> 
-> I missed that maxItems - should not be placed above description, but
-> immediately around items.
 
-dt_binding_check complains about maxItems should not be set when having 
-only 1 item ;)
-so i dropped it in my current version completely.
 
->> 
->>>> +            - description:
->>>> +                The first cell represents a phandle to syscon
->>> 
->>> Don't repeat constraints in free form text. "Foo bar system 
->>> controller"
->>> or "Phandle to foo bar system controller"
->> 
->> i would write only "phandle to system controller". on mt7988 it is the
->> topmisc syscon, but maybe on
->> other SoC it is different name.
+On 17/04/25 2:54 pm, Hao Ge wrote:
+> From: Hao Ge <gehao@kylinos.cn>
 > 
-> This must be specific to what sort of system controller you point. You
-> are not interested in phandle to any system controller.
+> The scan and total_scan variables can be initialized to 0
+> when they are defined, replacing the separate assignment statements.
+> 
+> Signed-off-by: Hao Ge <gehao@kylinos.cn>
 
-how about phy configuration controller/register?
+Acked-by: Dev Jain <dev.jain@arm.com>
 
->> 
->>>> +            - description:
->>>> +                The second cell represents the register offset
->>> 
->>> "Baz register offset"
->> 
->> same here, only "register offset".
+> ---
+>   mm/vmscan.c | 6 ++----
+>   1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> Also not. You need specific register, not any register.
-> 
-> 
-> Best regards,
-> Krzysztof
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index b620d74b0f66..bf360ac4f1cf 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1725,13 +1725,11 @@ static unsigned long isolate_lru_folios(unsigned long nr_to_scan,
+>   	unsigned long nr_taken = 0;
+>   	unsigned long nr_zone_taken[MAX_NR_ZONES] = { 0 };
+>   	unsigned long nr_skipped[MAX_NR_ZONES] = { 0, };
+> -	unsigned long skipped = 0;
+> -	unsigned long scan, total_scan, nr_pages;
+> +	unsigned long skipped = 0, total_scan = 0, scan = 0;
+> +	unsigned long nr_pages;
+>   	unsigned long max_nr_skipped = 0;
+>   	LIST_HEAD(folios_skipped);
+>   
+> -	total_scan = 0;
+> -	scan = 0;
+>   	while (scan < nr_to_scan && !list_empty(src)) {
+>   		struct list_head *move_to = src;
+>   		struct folio *folio;
+
