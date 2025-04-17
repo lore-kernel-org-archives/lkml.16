@@ -1,104 +1,121 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14AC91C27
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AABCF1C27;
+	Thu, 17 Apr 2025 12:32:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744893081; cv=none; b=YDrjUfrgaNlin5w/abn5txnqyB8E7sMAPlE2dQ0hzKyncPTukBbh2aUY/dRA4ehFbDBp18uULnwS0nbtuIEfdS5EEpuUEVs1qe5H88WbJV3OLWWgSA2AepZj4tZC6/eLPa8pQVY3+nQQaQLylDlHg6796Z3yZvjQUBT8RqCGZc0=
+	t=1744893179; cv=none; b=aRvsYrpudPSDSMvDzLjdwAXt+tfXV5UFI6owMABSMp2WVeltcNu03Q+u9seRDuoOpk7btAErhLP0lmFQUN2MNNz1pDZk8WgoTysZyqfg4pjHQQCysw3GieuipBiMLG36cWFgnqKMsk2R8wAM54/QWSS+LfKJpe4RX7nzxR+2/Mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744893081; c=relaxed/simple;
-	bh=/028alYvfCoTc2vQjwYWmnSIHtFEfMTsk65Rr1ndCoY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hsWpoMRAIWCESXhG0XRIBl9SaYjdGhHCZ9Q6mQZ+XDZmLuOTXlXynrekcCPiTA8aqqqsTGvjsDMCkw1K5p2OgLAbQiLpAQ5JtVR8OtovD6QW0PumVv83zLvGMhpBIxT7n/qN94ugNlApCjnFmq7hk2LyjjZwJY2nlQXCqizV+GY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zo1h+Odg; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1744893179; c=relaxed/simple;
+	bh=Ii05zIHwE5PtGR8fmg0C/JKjvqQ+oPVsnJtjyK1EOF0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kKWQgYXC+vVmYzi7k5sEnXa4bkFYZDQmkubrq/5xGGzAILL6og3ZWYboBGGKTCtHbMGEAluLEqucmitgbN7tM97KI2+lToCisPODV+nAJjEZLyOK310VS8v1ud7bx87rLdWks+9UHCDLxq7djUUKIPYS4/SW9LRD8aUq9P7KigE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=JnKSTnWw; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zo1h+Odg"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30beedb99c9so6048591fa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:31:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744893077; x=1745497877; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/028alYvfCoTc2vQjwYWmnSIHtFEfMTsk65Rr1ndCoY=;
-        b=zo1h+Odgj2BjI1UvpP/fyO4DOMPHo3KHDOQkg/ojISC9lpbAssRL/c9WW/uS4hCKNz
-         0L5clCFLqdQNKaxUeRXSiS/zRUBOSzcjF83jJ0ZNQQM7YTTo/GmSRo71TUPKhW7Rz+Gc
-         rPR1OoASftp1gQ7QOoPVwbIAsrkgfoEbdq+g6do6bALIt+s65q/PYlEHdjcpSjnm+r7d
-         7Jr/mB1tRJehjhpDrhfcvofgYviJYvdjpELb6J18hmDf3+4rzH2a5P9DZiqJpjeF9qn0
-         w0N9JvcXeH8G1W/+XFa5OYAr0JFCLCb6IkTplok8bS7a4SYktS1xGl4PxwTf2/1mSJOM
-         X6DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744893077; x=1745497877;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/028alYvfCoTc2vQjwYWmnSIHtFEfMTsk65Rr1ndCoY=;
-        b=EuOOcXiO3Y6zsX8T7jhE973x8Goa1VQ9hxaQa5JunJTT7vQdPnbp1lNNHnZ+kbOBQo
-         7ldFf1nd8vseNsGizYlWF6zfiWuNzcA+DttAxaygXW8hsP+c3rfpqXbNYwKYbtq9jXFG
-         8MDx9C12xBUYVtX720qdSKQzJs/q244vk7j13N68YDLbGKLkr8aDmZ0ylMitYWm4wok5
-         Fok4fIlwUCOT7+xhfWRRLu6Otvc82KunweEWypJX+aoA88XRqum1MKxw4F18ndStxuhF
-         QFqD1SwTsTIo39QBzyXV2G48yF1mxeTr9Pob8CGw+Kpj/SyXN681GweqMPaqIJ9s6xBG
-         V+Mg==
-X-Forwarded-Encrypted: i=1; AJvYcCWoXiOR6caOC+2VWpx0BVvYXBf3DFEH6hKeKncGYYpBeYdO6/4MVDqyAKcfxjAn23TMyr6TBHBL8NUEcug=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZ+fhkmWFRf84PipV5eqtdL4f3XlEg5w3WAbEu/cQ/YN/1XV33
-	v4739K1ceOAm9pxm9HjgYP8Mxdhd7P9M6npgg+1ngMK+VTvYPxoh2XggokJqa+JdM2LkInOyqff
-	o/K+HDV8ghL2YaYxORZxUiWhnKGyN+M0rbdoJnQ==
-X-Gm-Gg: ASbGncs7oailQGaoUrTUj3hPs+nNme3eHKDsmp62YKLUK5XYibjgDWQwJcu/rCO5KRr
-	Xgh/tteDK5RizWrDhTYjY0NRpjyFD731ZNdrhJU7TT+mYjY/H2/+h0CmCstMAG6B5HmiVRQx3Xj
-	rp0863aE3EmlMN0MNtmm8K1Yi0cV0yxt72q6u5qRbGfuHQPxPxNsTUrHk=
-X-Google-Smtp-Source: AGHT+IGP1dApfllXXDsCObAfwGkahvUpSVf52HT62aS2XIJAu1bZsKQsEyFG35E5DVrCOKXX4YAtzdOvl6nhDbntla8=
-X-Received: by 2002:a05:651c:2209:b0:30a:448a:467 with SMTP id
- 38308e7fff4ca-3107f6cd11fmr22495631fa.21.1744893077166; Thu, 17 Apr 2025
- 05:31:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JnKSTnWw"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53HCWpHk691161
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 17 Apr 2025 07:32:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744893171;
+	bh=gY5xaGXP02UKsHjzScQaLSQMWROzx3JrkxRyvWtZiEs=;
+	h=From:To:CC:Subject:Date;
+	b=JnKSTnWwK0T9zGwACqEuTOILuB3S4ncoJzRY/fXZPi9hyQhzxw9XLS1ySEgHMo2XB
+	 uXwhjC/xqtsbo5nRBhcOAXT8G2scPtdJ+4E+9+9Z+GJ5pA4KHMvFoITIl2wCLbcwXh
+	 0JLp4ipU6RmLDfyPbTe7fF2VWT0tUMq1d43PADwo=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53HCWphO094055
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 17 Apr 2025 07:32:51 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 17
+ Apr 2025 07:32:51 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 17 Apr 2025 07:32:51 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53HCWkMO038275;
+	Thu, 17 Apr 2025 07:32:47 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <rogerq@kernel.org>,
+        <u-kumar1@ti.com>
+CC: <stable@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: [PATCH v3 0/4] J722S: Disable WIZ0 and WIZ1 in SoC file
+Date: Thu, 17 Apr 2025 18:02:42 +0530
+Message-ID: <20250417123246.2733923-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407-gpiochip-set-rv-input-v1-0-a8b45b18e79c@linaro.org>
- <20250407-gpiochip-set-rv-input-v1-3-a8b45b18e79c@linaro.org> <4cd7b1ea029f7cdb6312f61b1008116b58b85efe.camel@gmail.com>
-In-Reply-To: <4cd7b1ea029f7cdb6312f61b1008116b58b85efe.camel@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 17 Apr 2025 14:31:05 +0200
-X-Gm-Features: ATxdqUEAzNwY5e_RshB2yNn08iuk9w64m9O78zyE1xLCj5YCYSrYuzRw9BJIhYw
-Message-ID: <CAMRc=Mcd=6tgk-NwqrSxes96tkV1PmxKFNwDV==XAUkLtDKj-Q@mail.gmail.com>
-Subject: Re: [PATCH 3/3] Input: adp5589 - use new GPIO line value setter callbacks
-To: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
-Cc: Michael Hennerich <michael.hennerich@analog.com>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, Apr 15, 2025 at 11:06=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@gmail.co=
-m> wrote:
->
-> On Mon, 2025-04-07 at 09:19 +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > struct gpio_chip now has callbacks for setting line values that return
-> > an integer, allowing to indicate failures. Convert the driver to using
-> > them.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
->
-> Let's maybe drop this one? I'll send a new version of this [1] that will =
-drop
-> this driver...
->
-> BTW, I can already change my v2 and use .set_rv()...
->
-> [1]: https://lore.kernel.org/linux-input/20250313-dev-adp5589-fw-v1-13-20=
-e80d4bd4ea@analog.com/
->
+Hello,
 
-Sure, as long as the new variant is used, I don't care.
+This series disables the "serdes_wiz0" and "serdes_wiz1" device-tree
+nodes in the J722S SoC file and enables them in the board files where
+they are required along with "serdes0" and "serdes1". There are two
+reasons behind this change:
+1. To follow the existing convention of disabling nodes in the SoC file
+   and enabling them in the board file as required.
+2. To address situations where a board file hasn't explicitly disabled
+   "serdes_wiz0" and "serdes_wiz1" (example: am67a-beagley-ai.dts)
+   as a result of which booting the board displays the following errors:
+     wiz bus@f0000:phy@f000000: probe with driver wiz failed with error -12
+     ...
+     wiz bus@f0000:phy@f010000: probe with driver wiz failed with error -12
 
-Bart
+Additionally, another series for DT cleanup at:
+https://lore.kernel.org/r/20250412052712.927626-1-s-vadapalli@ti.com/
+has been squashed into this series as patches 3 and 4.
+This has been done based on Nishanth's suggestion at:
+https://lore.kernel.org/r/20250414143916.zhskssezbffmvnsz@dragonfly/
+
+Series is based on linux-next tagged next-20250417.
+NOTE: For patches 1 and 2 of this series which are "Fixes", it has also
+been verified that this series applies to the following commit
+cfb2e2c57aef Merge tag 'mm-hotfixes-stable-2025-04-16-19-59' of git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+of Mainline Linux.
+
+v2 of this series is at:
+https://lore.kernel.org/r/20250408103606.3679505-1-s-vadapalli@ti.com/
+Changes since v2:
+- Collected Reviewed-by tags from Udit Kumar <u-kumar1@ti.com>.
+- Squashed the DT cleanup series at:
+  https://lore.kernel.org/r/20250412052712.927626-1-s-vadapalli@ti.com/
+  as patches 3 and 4 of this series.
+
+v1 of this series is at:
+https://lore.kernel.org/r/20250408060636.3413856-1-s-vadapalli@ti.com/
+Changes since v1:
+- Added "Fixes" tag and updated commit message accordingly.
+
+Regards,
+Siddharth.
+
+Siddharth Vadapalli (4):
+  arm64: dts: ti: k3-j722s-evm: Enable "serdes_wiz0" and "serdes_wiz1"
+  arm64: dts: ti: k3-j722s-main: Disable "serdes_wiz0" and "serdes_wiz1"
+  arm64: dts: ti: k3-j722s-main: don't disable serdes0 and serdes1
+  arm64: dts: ti: k3-j722s-evm: drop redundant status within
+    serdes0/serdes1
+
+ arch/arm64/boot/dts/ti/k3-j722s-evm.dts   | 10 ++++++++--
+ arch/arm64/boot/dts/ti/k3-j722s-main.dtsi |  8 ++++----
+ 2 files changed, 12 insertions(+), 6 deletions(-)
+
+-- 
+2.34.1
+
