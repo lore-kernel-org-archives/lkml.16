@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9A02AEE3
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:07:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C2239ACC
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:07:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744848440; cv=none; b=pnO8/t+gtJx419UoLUrlagQ5LFXcsRwfKbSZrn9wtONM1ALpXoJvshhI3o1y8zOBo2qNGNiqZJFn/WEa3RP9/suswmZzhOlr/GZCtVi0E1S6LqqZP2OWsLA2AnzccABTZfDUQwNaal7xAHwyw10wHvB0M81rbfkZ4QM6vDSQxHQ=
+	t=1744848449; cv=none; b=FoL7n/1d7piUhjJtBnFqnoAL59l2ygRYW8bnYvQgVFzPD2FHW5MiQ4Vqj875IypqbvB4SSBrvHFFmIPqSmooRY2pddnmlr+/B2qID9+AML6f3BAXd3l1McgSNuxK2TjzX9CIj+68tevZXZ6Lj9lbTe0SfOSxx5d5bqD2v2xJwxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744848440; c=relaxed/simple;
-	bh=IE0gC7o6hNsoND2tuOCeaxpU5otZVFuSoZ+rZOBH7O0=;
+	s=arc-20240116; t=1744848449; c=relaxed/simple;
+	bh=oltoYPMQc50i+E0eWwNf5tbHqCPAnW3mSrRMCnH/NtM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FUD6kTTGVEysXDbHa91yPI01V0wwBAQuHKpe7m2O1hM+U2dlXUVvA0UP00HzoOqvNdJ3/oNraD6CkyPeyCW7yf7Ix0cFRYpelLAbqpwf0YuXTP0GumqUc3hzkIDh8Li0hLa8SnHaWio17fXhoJrCkKbbmi5wdW050wtw/K4hbUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AYbPJ+Mh; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=LJhCfjnasQsAa9cS86PjTpdge2H0PWJKsefxdZ3X/7Bw3vqR+CTqVTVxdG2S5uyqOqD5ahgKZiiN0vkMclEZmW9FpB3yf3vWp+5iQDqwmBcQyz7KuqH2/aGTxEojkCwXZc2yoZpoSjfoyt+Eoz9MVEbFdFgDFunFVUsf3VU6QZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AWoK71JV; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AYbPJ+Mh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AWoK71JV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744848437;
+	s=mimecast20190719; t=1744848446;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wvGGHwPJPZqUW/dQIdiDaj2uVcEBeMtL7Go603/skoE=;
-	b=AYbPJ+MhuBc7K0RsIYM0a5ascoo+Rnvm49J4cm5Tby6R1DWS8MGB+7dskhTwoC/MIOr0rb
-	10jr/X8xuOkIPCp85upBIz1xTolo9Zv4a0E2GkyXFQwyxOrBd+C8CoB3gIjpATQfzLQxAF
-	Ys3IWKoJUX+Y8RV0g9P/S+Tc+fZV3AM=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+	bh=lT7Le5l3OvCTeyxGbSyLQ+XqGfqD4qwGKJUaU5ZKhXs=;
+	b=AWoK71JVKP3d7h8naSr7dwCZRzE8GSkVC3TCHzaHj6eQWrv3GY+VPtLur7yeJvInTINdtb
+	uW1+0LcjI9RN6EpE1ycLK/h/Y4zdrzQmvRWsoO2jdBJ1t46DUlnut2ntdNies8xg8U9z+s
+	mmbdthKWlaQ8S5N4ZNmOp++g2uQYN4E=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-567-K9oCAep0OguwUoDCGGw4Pg-1; Wed,
- 16 Apr 2025 20:07:14 -0400
-X-MC-Unique: K9oCAep0OguwUoDCGGw4Pg-1
-X-Mimecast-MFC-AGG-ID: K9oCAep0OguwUoDCGGw4Pg_1744848431
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-445-eXBT7ml8MMi_oRCb4gBEvA-1; Wed,
+ 16 Apr 2025 20:07:23 -0400
+X-MC-Unique: eXBT7ml8MMi_oRCb4gBEvA-1
+X-Mimecast-MFC-AGG-ID: eXBT7ml8MMi_oRCb4gBEvA_1744848439
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E974218001D5;
-	Thu, 17 Apr 2025 00:07:10 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A0230180036E;
+	Thu, 17 Apr 2025 00:07:19 +0000 (UTC)
 Received: from h1.redhat.com (unknown [10.22.88.34])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 809E1180045B;
-	Thu, 17 Apr 2025 00:07:02 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4933F180045B;
+	Thu, 17 Apr 2025 00:07:11 +0000 (UTC)
 From: Nico Pache <npache@redhat.com>
 To: linux-mm@kvack.org,
 	linux-doc@vger.kernel.org,
@@ -83,9 +83,9 @@ Cc: akpm@linux-foundation.org,
 	rientjes@google.com,
 	mhocko@suse.com,
 	rdunlap@infradead.org
-Subject: [PATCH v4 08/12] khugepaged: skip collapsing mTHP to smaller orders
-Date: Wed, 16 Apr 2025 18:02:34 -0600
-Message-ID: <20250417000238.74567-9-npache@redhat.com>
+Subject: [PATCH v4 09/12] khugepaged: avoid unnecessary mTHP collapse attempts
+Date: Wed, 16 Apr 2025 18:02:35 -0600
+Message-ID: <20250417000238.74567-10-npache@redhat.com>
 In-Reply-To: <20250417000238.74567-1-npache@redhat.com>
 References: <20250417000238.74567-1-npache@redhat.com>
 Precedence: bulk
@@ -97,40 +97,43 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-khugepaged may try to collapse a mTHP to a smaller mTHP, resulting in
-some pages being unmapped. Skip these cases until we have a way to check
-if its ok to collapse to a smaller mTHP size (like in the case of a
-partially mapped folio).
+There are cases where, if an attempted collapse fails, all subsequent
+orders are guaranteed to also fail. Avoid these collapse attempts by
+bailing out early.
 
-This patch is inspired by Dev Jain's work on khugepaged mTHP support [1].
-
-[1] https://lore.kernel.org/lkml/20241216165105.56185-11-dev.jain@arm.com/
-
-Co-developed-by: Dev Jain <dev.jain@arm.com>
-Signed-off-by: Dev Jain <dev.jain@arm.com>
 Signed-off-by: Nico Pache <npache@redhat.com>
 ---
- mm/khugepaged.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ mm/khugepaged.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
 diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index ece39fd71fe6..383aff12cd43 100644
+index 383aff12cd43..738dd9c5751d 100644
 --- a/mm/khugepaged.c
 +++ b/mm/khugepaged.c
-@@ -625,7 +625,12 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
- 		folio = page_folio(page);
- 		VM_BUG_ON_FOLIO(!folio_test_anon(folio), folio);
+@@ -1366,6 +1366,23 @@ static int khugepaged_scan_bitmap(struct mm_struct *mm, unsigned long address,
+ 				collapsed += (1 << order);
+ 				continue;
+ 			}
++			/*
++			 * Some ret values indicate all lower order will also
++			 * fail, dont trying to collapse smaller orders
++			 */
++			if (ret == SCAN_EXCEED_NONE_PTE ||
++				ret == SCAN_EXCEED_SWAP_PTE ||
++				ret == SCAN_EXCEED_SHARED_PTE ||
++				ret == SCAN_PTE_NON_PRESENT ||
++				ret == SCAN_PTE_UFFD_WP ||
++				ret == SCAN_ALLOC_HUGE_PAGE_FAIL ||
++				ret == SCAN_CGROUP_CHARGE_FAIL ||
++				ret == SCAN_COPY_MC ||
++				ret == SCAN_PAGE_LOCK ||
++				ret == SCAN_PAGE_COUNT)
++				goto next;
++			else
++				break;
+ 		}
  
--		/* See hpage_collapse_scan_pmd(). */
-+		if (order != HPAGE_PMD_ORDER && folio_order(folio) >= order) {
-+			result = SCAN_PTE_MAPPED_HUGEPAGE;
-+			goto out;
-+		}
-+
-+		/* See khugepaged_scan_pmd(). */
- 		if (folio_maybe_mapped_shared(folio)) {
- 			++shared;
- 			if (order != HPAGE_PMD_ORDER || (cc->is_khugepaged &&
+ next:
 -- 
 2.48.1
 
