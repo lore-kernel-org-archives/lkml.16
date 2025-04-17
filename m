@@ -1,140 +1,194 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF65F229B32;
-	Thu, 17 Apr 2025 10:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6EE7225A37
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 10:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744886333; cv=none; b=kADp0QPkZBvW5NRkpUeHao6HIg6oalFKIlLWtwDidpAkt5tq2JAqgezfaKYdlIrFl8XPtcYK1dlBlmAb7OQZEYSXuQIOpTC23p4TcaJmsX31+UEYqTntEVK3M6zCTQXup3UWonv7s3XRQpyvfeCMWLIb9YK98SCGRGOC2q+zo24=
+	t=1744886360; cv=none; b=gip9uX65+LxvpPX1i8Xf4/7sh+hTSWFx/X1lH+T8/B/aShW+ubijUlGGct2/AWOaiqUxcOleOTm9ItN3wXHYvZ7/7jgeopkpjE29N3zleyPwQTvULxwD6CSUrjsrpYTe63dKXO3VLRulIamAcahNjJvG5JEczko+p86swuphhqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744886333; c=relaxed/simple;
-	bh=6GduKB4eSI9n0FJJ84G3bZkSKesGpPT0qWaOqfMeQrw=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=I5S12wssOQHyfmFoO4KfgqrXkMreHeuBX6P+Ze9LcJPvoJvpUuJol3WbGC2XpbPpbgjuSlohflfiCi01ZkBmjICpkXAiRHqr2dPF1Ju5m4ePomY+KUEbmzrgWHjGD1S0UarXM5kzn4RMCvNo9xjf0U6Du5H0lWy7XKOP1aiZATc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MJws/Uds; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FxxbrGL/; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744886360; c=relaxed/simple;
+	bh=FScuytPa7BVtESYhlq0/ySpyt5XQoXcBSARNnZUAQk8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mUKT5XX0d6lhIiKj40sXAnCaxC17L2hRGKFPnGW1f4AxZLFgIDjVkOxzx8QI9R1RPsFMMTK+1H+vHrQ+KiP5UCNHe62xuX0XTv0xaLm2L0SNft2uW4u6AEgb1kdnzRjf8l5ldFZiZqoRPmHuq3RZrrl520LxMPBIQp0mztMJQp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=OblIvBKG; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MJws/Uds";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FxxbrGL/"
-Date: Thu, 17 Apr 2025 10:38:49 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744886329;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="OblIvBKG"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4ZdZBg4Db6z9scS;
+	Thu, 17 Apr 2025 12:39:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1744886347; h=from:from:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LdTK0N8yov+FY/Dz2ajYDTW5yxVEjx34PNll+sZkjb8=;
-	b=MJws/UdsCjhL1ViPcyEzhkHbF0zekrQYJxWm+9O9iLtBYzuiYHgQhZEEPdexXaYAcy/Q2C
-	HtS7BnfryV4RRaomHaHvRSNaI6y/8ovIWr7w2AkMlmVbW6yRJkKIZhtLsRvEHRmBSJDms2
-	YBa1fkuofhLr+ZX+ZMCYsXT9UpOdK0hIq/MSah8qI0LH/xa2uRwY4h+ZQbKHkxOKEmcejy
-	QeJ3fkr8TSr6TnKJq7OccTWurMadJnvj4iPCSm7xR4uZYVgzXmvz8EvGE3NwFYTvAJrhLT
-	HwMaF46GvrwtZJxw5MyTXjNIGSK/gXG7R3w+X7t+lxla6ALBEwkgMxhY7qqrPQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744886329;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LdTK0N8yov+FY/Dz2ajYDTW5yxVEjx34PNll+sZkjb8=;
-	b=FxxbrGL/7yjEY9Val+XhtJRDMFnPoCU4g3k8JzCTDyW93aWq7UR8Hjj3KdUBKo69W5j4/d
-	z10HL+TV89YngeCA==
-From: "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/x86/intel/uncore: Fix the scale of IIO free
- running counters on SNR
-Cc: Kan Liang <kan.liang@linux.intel.com>, Ingo Molnar <mingo@kernel.org>,
- stable@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250416142426.3933977-1-kan.liang@linux.intel.com>
-References: <20250416142426.3933977-1-kan.liang@linux.intel.com>
+	bh=bQLlTUlWNFBKex/ZjXydkFbFf0c+8GjaEBRE38VDF7g=;
+	b=OblIvBKGl8ll6MyS+W5A1C0MjamQS+o1lKEP9iaU9ZGIVGIIBlFrfbC2oGs1ziIzSt6PAz
+	FYeIk7racX2GXO+3SzkaRZdwz6+pSzOyE6K8Dcv91ZQXQU+8vhNAxENqh37r6FesJ4P/DX
+	wwdiFmxPoBJVI3vo1Yp0OeJdDQ/1uQU1GCbUUySBnb/sNhopi4Ew+HAF5p99mi4V80ZS64
+	3448dg5D0nimWTxQ2z+0xriyya+CoNCINTyTRuxA/A+etbPgSe0HAqjFpJCmDGhzgqRVYK
+	Eq7Na8OYujERjr+BUt34DopaHs/gmAvKxqRLgQxbn2kyWoUDRu0Wgme+DdVIwQ==
+Message-ID: <a57d5f6f47ec8ba2860df853aca324e96320eba5.camel@mailbox.org>
+Subject: Re: [EXTERNAL] [PATCH] vdpa/octeon_ep: Use non-hybrid PCI devres API
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Vamsi Krishna Attunuru <vattunuru@marvell.com>, Philipp Stanner
+ <phasta@kernel.org>, Srujana Challa <schalla@marvell.com>, "Michael S.
+ Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
+ <xuanzhuo@linux.alibaba.com>, Eugenio =?ISO-8859-1?Q?P=E9rez?=
+ <eperezma@redhat.com>, Shijith Thotton <sthotton@marvell.com>, Dan
+ Carpenter <dan.carpenter@linaro.org>, Satha Koteswara Rao Kottidi
+ <skoteshwar@marvell.com>
+Cc: "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>, 
+ "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>
+Date: Thu, 17 Apr 2025 12:39:03 +0200
+In-Reply-To: <MW4PR18MB5244915E54967510C5356B4DA6BC2@MW4PR18MB5244.namprd18.prod.outlook.com>
+References: <20250417080211.19970-2-phasta@kernel.org>
+	 <MW4PR18MB5244915E54967510C5356B4DA6BC2@MW4PR18MB5244.namprd18.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174488632910.31282.4542746589511002502.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-MBO-RS-META: rb5uzba7q5c5x9fspej4193ndgothiej
+X-MBO-RS-ID: 87fe8f476df6e81c675
 
-The following commit has been merged into the perf/urgent branch of tip:
+On Thu, 2025-04-17 at 09:02 +0000, Vamsi Krishna Attunuru wrote:
+>=20
+>=20
+> > -----Original Message-----
+> > From: Philipp Stanner <phasta@kernel.org>
+> > Sent: Thursday, April 17, 2025 1:32 PM
+> > To: Srujana Challa <schalla@marvell.com>; Vamsi Krishna Attunuru
+> > <vattunuru@marvell.com>; Michael S. Tsirkin <mst@redhat.com>; Jason
+> > Wang <jasowang@redhat.com>; Xuan Zhuo <xuanzhuo@linux.alibaba.com>;
+> > Eugenio P=C3=A9rez <eperezma@redhat.com>; Shijith Thotton
+> > <sthotton@marvell.com>; Dan Carpenter <dan.carpenter@linaro.org>;
+> > Philipp Stanner <phasta@kernel.org>; Satha Koteswara Rao Kottidi
+> > <skoteshwar@marvell.com>
+> > Cc: virtualization@lists.linux.dev; linux-kernel@vger.kernel.org
+> > Subject: [EXTERNAL] [PATCH] vdpa/octeon_ep: Use non-hybrid PCI
+> > devres
+> > API
+> >=20
+> > octeon enables its PCI device with pcim_enable_device(). This,
+> > implicitly,
+> > switches the function pci_request_region() into managed mode, where
+> > it
+> > becomes a devres function. The PCI subsystem wants to remove this
+> > hybrid
+> > nature from its interfaces.=20
+> > octeon enables its PCI device with pcim_enable_device(). This,
+> > implicitly,
+> > switches the function pci_request_region() into managed mode, where
+> > it
+> > becomes a devres function.
+> >=20
+> > The PCI subsystem wants to remove this hybrid nature from its
+> > interfaces. To
+> > do so, users of the aforementioned combination of functions must be
+> > ported
+> > to non-hybrid functions.
+> >=20
+> > Moreover, since both functions are already managed in this driver,
+> > the calls to
+> > pci_release_region() are unnecessary.
+> >=20
+> > Remove the calls to pci_release_region().
+> >=20
+> > Replace the call to sometimes-managed pci_request_region() with one
+> > to the
+> > always-managed pcim_request_region().
+>=20
 
-Commit-ID:     73ff7904cab2289e9332013d2bcd40f3885e5a96
-Gitweb:        https://git.kernel.org/tip/73ff7904cab2289e9332013d2bcd40f3885e5a96
-Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Wed, 16 Apr 2025 07:24:24 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 17 Apr 2025 12:19:17 +02:00
+Hi,
 
-perf/x86/intel/uncore: Fix the scale of IIO free running counters on SNR
+> Thanks you, Philipps, for the patch. The Octeon EP driver does not
+> use managed calls for handling resource regions.=20
+> This is because the PCIe PF function reduces its resources to share
+> them with its VFs and later restores them to original size
+> once the VFs are released. Due to this resource sharing requirement,
+> the driver cannot use the always-managed request
+> regions calls.
 
-There was a mistake in the SNR uncore spec. The counter increments for
-every 32 bytes of data sent from the IO agent to the SOC, not 4 bytes
-which was documented in the spec.
+so this would mean that the driver is already broken.
+pci_request_region() in your driver is always-managed since you call
+pcim_enable_device(). Or am I missing something?
 
-The event list has been updated:
+The only way for you to, currently, have non-managed versions is by
+using pci_enable_device() instead and then doing pci_disable_device()
+manually in remove() and the other appropriate places.
 
-  "EventName": "UNC_IIO_BANDWIDTH_IN.PART0_FREERUN",
-  "BriefDescription": "Free running counter that increments for every 32
-		       bytes of data sent from the IO agent to the SOC",
+This patch should not change behavior in any way.
 
-Update the scale of the IIO bandwidth in free running counters as well.
+If you're sure that having no management is not a problem, then we
+could simply drop this patch and I later remove the hybrid feature from
+PCI. Then your call to pci_request_region() will become unmanaged, even
+if you keep the pcim_enable_device().
 
-Fixes: 210cc5f9db7a ("perf/x86/intel/uncore: Add uncore support for Snow Ridge server")
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20250416142426.3933977-1-kan.liang@linux.intel.com
----
- arch/x86/events/intel/uncore_snbep.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Tell me if you have a preference.
 
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index 60973c2..35da2c4 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -4891,28 +4891,28 @@ static struct uncore_event_desc snr_uncore_iio_freerunning_events[] = {
- 	INTEL_UNCORE_EVENT_DESC(ioclk,			"event=0xff,umask=0x10"),
- 	/* Free-Running IIO BANDWIDTH IN Counters */
- 	INTEL_UNCORE_EVENT_DESC(bw_in_port0,		"event=0xff,umask=0x20"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port0.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port0.scale,	"3.0517578125e-5"),
- 	INTEL_UNCORE_EVENT_DESC(bw_in_port0.unit,	"MiB"),
- 	INTEL_UNCORE_EVENT_DESC(bw_in_port1,		"event=0xff,umask=0x21"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port1.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port1.scale,	"3.0517578125e-5"),
- 	INTEL_UNCORE_EVENT_DESC(bw_in_port1.unit,	"MiB"),
- 	INTEL_UNCORE_EVENT_DESC(bw_in_port2,		"event=0xff,umask=0x22"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port2.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port2.scale,	"3.0517578125e-5"),
- 	INTEL_UNCORE_EVENT_DESC(bw_in_port2.unit,	"MiB"),
- 	INTEL_UNCORE_EVENT_DESC(bw_in_port3,		"event=0xff,umask=0x23"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port3.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port3.scale,	"3.0517578125e-5"),
- 	INTEL_UNCORE_EVENT_DESC(bw_in_port3.unit,	"MiB"),
- 	INTEL_UNCORE_EVENT_DESC(bw_in_port4,		"event=0xff,umask=0x24"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port4.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port4.scale,	"3.0517578125e-5"),
- 	INTEL_UNCORE_EVENT_DESC(bw_in_port4.unit,	"MiB"),
- 	INTEL_UNCORE_EVENT_DESC(bw_in_port5,		"event=0xff,umask=0x25"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port5.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port5.scale,	"3.0517578125e-5"),
- 	INTEL_UNCORE_EVENT_DESC(bw_in_port5.unit,	"MiB"),
- 	INTEL_UNCORE_EVENT_DESC(bw_in_port6,		"event=0xff,umask=0x26"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port6.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port6.scale,	"3.0517578125e-5"),
- 	INTEL_UNCORE_EVENT_DESC(bw_in_port6.unit,	"MiB"),
- 	INTEL_UNCORE_EVENT_DESC(bw_in_port7,		"event=0xff,umask=0x27"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port7.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port7.scale,	"3.0517578125e-5"),
- 	INTEL_UNCORE_EVENT_DESC(bw_in_port7.unit,	"MiB"),
- 	{ /* end: all zeroes */ },
- };
+P.
+
+>=20
+> >=20
+> > Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> > ---
+> > drivers/vdpa/octeon_ep/octep_vdpa_main.c | 4 +---
+> > 1 file changed, 1 insertion(+), 3 deletions(-)
+> >=20
+> > diff --git a/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+> > b/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+> > index f3d4dda4e04c..e0da6367661e 100644
+> > --- a/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+> > +++ b/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+> > @@ -391,7 +391,7 @@ static int octep_iomap_region(struct pci_dev
+> > *pdev,
+> > u8 __iomem **tbl, u8 bar)=C2=A0 {
+> > 	int ret;
+> >=20
+> > -	ret =3D pci_request_region(pdev, bar,
+> > OCTEP_VDPA_DRIVER_NAME);
+> > +	ret =3D pcim_request_region(pdev, bar,
+> > OCTEP_VDPA_DRIVER_NAME);
+> > 	if (ret) {
+> > 		dev_err(&pdev->dev, "Failed to request BAR:%u
+> > region\n",
+> > bar);
+> > 		return ret;
+> > @@ -400,7 +400,6 @@ static int octep_iomap_region(struct pci_dev
+> > *pdev,
+> > u8 __iomem **tbl, u8 bar)
+> > 	tbl[bar] =3D pci_iomap(pdev, bar, pci_resource_len(pdev,
+> > bar));
+> > 	if (!tbl[bar]) {
+> > 		dev_err(&pdev->dev, "Failed to iomap BAR:%u\n",
+> > bar);
+> > -		pci_release_region(pdev, bar);
+> > 		ret =3D -ENOMEM;
+> > 	}
+> >=20
+> > @@ -410,7 +409,6 @@ static int octep_iomap_region(struct pci_dev
+> > *pdev,
+> > u8 __iomem **tbl, u8 bar)=C2=A0 static void octep_iounmap_region(struct
+> > pci_dev
+> > *pdev, u8 __iomem **tbl, u8 bar)=C2=A0 {
+> > 	pci_iounmap(pdev, tbl[bar]);
+> > -	pci_release_region(pdev, bar);
+> > }
+> >=20
+> > static void octep_vdpa_pf_bar_shrink(struct octep_pf *octpf)
+> > --
+> > 2.48.1
+>=20
+
