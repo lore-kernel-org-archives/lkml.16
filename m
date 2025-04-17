@@ -1,306 +1,146 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A86F226D09;
-	Thu, 17 Apr 2025 08:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD55215F4C;
+	Thu, 17 Apr 2025 08:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744879325; cv=none; b=SyDN+Fc6lSSZPcAJoGUe9WrPjPf890THYbBGLbBKCweGg1B76YfFN9mHSgklKetS+O1KKuDluX5hiCUZyjsVJO66FGo58QSau6DDqZRWo9Ew7GlN9pzMofsekRmw4mmho7z8IZhm65TvyS6S2xqXTsVXmkLHbQ0dM+Zmp3fsvNU=
+	t=1744879378; cv=none; b=Hki/Wn8FcoIp7kl8cGgw60RjjEXqEUxslSggyhAhRwpTJLxBZNKwSQWMjFAOAeV3h52bApqRAHQ2zrlXwZJ7E009dSRrMf1MkWgkbzFCLVauGfUtM8m5iYkCfgK1FkJ+KX8sKdKHrYfmNLGdgMhR4qIRue8nkl5fhy3MvzXFArQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744879325; c=relaxed/simple;
-	bh=6caOs6U87G0VQ2nA9ev7vB/5SnkwSf+VqKNRgLsq2Zk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EvkYKvwu6+GTa5RecS3+EWcWJ8I6y/+E0X+9dkKUwN6e4sF5p6wVTOdsVewnbBwMTBqWN5F50m4YIEn0tFY21RHiQKQg44+/ZVQchqvHJfiRQOEdOwbdjQXsvD3QGogDowGGxRgdUPQGc3PlmjzoY4ZAlsTtFMTkYduKcuOyD2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F/FfWWXV; arc=none smtp.client-ip=209.85.128.54
+	s=arc-20240116; t=1744879378; c=relaxed/simple;
+	bh=0vW4NcGEDGioTo3EBjeBzi8jLHnCF7eXadZ47IZhMsw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=thQAfPv+gidOyGGYJLenRO9bZFCFdq5Qr8tDnACfP0OMKwXqCfeSGEXNvPr5pb3xUu3joc7BotbypAhlapJZu2fJV7xmQBilAp5zYhtbNoB+XJ231np3/qI33SpoM68HsY0xqnGGe1Y/z/JQ4WplHsnfZPLLRNsGxxf0fSJfMkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fj9FQ6iz; arc=none smtp.client-ip=209.85.219.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F/FfWWXV"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so4870745e9.3;
-        Thu, 17 Apr 2025 01:42:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fj9FQ6iz"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e5372a2fbddso480117276.3;
+        Thu, 17 Apr 2025 01:42:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744879322; x=1745484122; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1744879376; x=1745484176; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=D3UVmLbw05nY1bIJLdntt1cb4T+VHhtyOYBFetAFNM8=;
-        b=F/FfWWXVB1PHI9r9tEZ9qo02PsxzYE36eco8uAGM6/NHfztdoXXQRhHc4Z4SN5Ug1V
-         hnfmZIWtWH2/39sx0XwgxJdZ7CJBt3xynAUBXUyuRkClSw47XptkStnwYSH++7YCRFXC
-         xtyhxbHGHS0TSoMV8iMHDljXJ0qdgiqhu+XNTBDBaeLs0W0QpsE2GjrSqVnRX6wZJLdB
-         sBAtR2WAGP3ffhLPqXNyAo70T5SxWVEVgGKIMuY+YR6+wMQNDw5P74kV21HqHOLulCby
-         E47O0qKM/eDCu+rvtCF8VqMATjWW2aSl/EaynljfWlBi/qmPYqHpwMavaugGIwOMFQgI
-         g3Lg==
+        bh=gyDG2C1fOJ7sS+KyT/XBqXKFbi/J2aTw+uyXNBnFAdg=;
+        b=fj9FQ6izjNo30HiRGY0H6If2j6COoCZ8WtTg2c09FFNipw9DRQVl7UkHwwaukHw+xO
+         2SgjZ5Sh7lyoukM4XxZTPTvyEgCP4l3l1hsNyT4YpBjOyaYFEow6HwW7/V3fQ17HBzHk
+         SAZlAQ4jLGbm3tAO23yBlPqKOAOf7vUgCXfzK6I4vCuBO3rt27rGiIeRGuhcfc1KKNb6
+         eRKDQAXWa5EmUjzRcvBwPTXIoJ6gki6Z7KsqztsyyJ1N2De51KpW/nmRwtMLOT89SuW8
+         MeWgeaPE6hhG302udfondHiljlMiVW6pvD06fMzdngTlA9szJLzhnYjQ5TKDfog5RuwG
+         uPEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744879322; x=1745484122;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744879376; x=1745484176;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=D3UVmLbw05nY1bIJLdntt1cb4T+VHhtyOYBFetAFNM8=;
-        b=RJT0WIowZiZHPVQ1wdeanmBhR+ha/9FFDnhSm7ImbTbRxwej3x/3bG5uTqLDPs3NmE
-         MV7WsdJTl+gIQGf/sjdHDne12vZBesjFEKh8SdY7ySf92sEidwic8u8OP8GK3MGlBTwd
-         /mWmup2/gdVodgZx9/PLhTZPS+f0tTGVD9sC8hZeSLsJSF1dAyy3z2Rx2P3dL55wGIBX
-         fhXis5dIjy1t0GQgIr47MHZWlcRGNY+qTC/oV4vVD20VGme89dDlG8UQuY+o/Hbdl2WU
-         imv7j81h1ynEPE1edjPbPECX8abGvD5rs92Qlxlum47h+iTCaoKXwM4lY3akzsZuwEQ9
-         tGRA==
-X-Forwarded-Encrypted: i=1; AJvYcCUudgW1VT96iIJc8WMyA0L90OCo5X/OW+jUNlt4v5WIsTQ3ZbO4V3QWHQbchsd0ISo2CAz1YZFkX1t3hmvWYPgPqBM=@vger.kernel.org, AJvYcCVN9sK6kzwidRh4ftDTxBP6YNHcx662wYJbxA4j14qlUppeRHJ9k54PI0GVBEmE1c8nv1MEYJJmtf5o@vger.kernel.org, AJvYcCX6jMz14vkRX8uFN2OP2DYitOWPEws29Cv55qZaGV18rfvdua4VHQE3nHXIM98yR17cLc8nLHkjc+ZdHyY6@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxz4s4SSgYALufzOzMdd9FWfEwzzOSWfo6v/xYivxFGfMRLyDlF
-	QFAUuZ2sUXZnrWpW521wQKJWyterhZKpsPAibUolbq16JNli0ZIs
-X-Gm-Gg: ASbGncucb4KVCEFGXjBaylQqHStGVmPjUtTKqQf/QHAElH+zqmSO6EpBX5ucfcIS55D
-	1Mvo7ofUFo9q9bn9gNkwdTN/RqHOCZgZkx37NAe2/3gpECOIxA6YqgXmv/1romvnskiCF6bKyhx
-	nUcKwO+sfS1nKUMIETg2ax7P39m7ryk6FsitsybZJZ9Sj4W4O0fmJ+R0HeCNngxG5UasEOuJE7K
-	K71RltL0ncNo14o01iLGL9hXhaCAvaFbyc/uRG740dp5aUqjHW8omZ5DOuBmTTg28QabGA8tG0n
-	frJOEUOHkDB3UeFSizmoR3yXXcxNqTD1CrqmRk+cXC2hYN5S1TnfMGfwUWWppP1KRsMbBUeG3KI
-	=
-X-Google-Smtp-Source: AGHT+IEKs+6jhZ985uIK+btCMwuIhDugVlaE5upqmp/6lm+E6MjhS8dGU3Cbrgnk209p7sVuYILBsg==
-X-Received: by 2002:a05:600c:a110:b0:43c:f87c:24ce with SMTP id 5b1f17b1804b1-4406815ee8cmr323245e9.21.1744879321536;
-        Thu, 17 Apr 2025 01:42:01 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:3f0f:d684:f4a:34e6])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96cf1asm19657712f8f.39.2025.04.17.01.42.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 01:42:00 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-	Jose Abreu <joabreu@synopsys.com>
-Cc: netdev@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH net-next v8 3/4] net: stmmac: Add DWMAC glue layer for Renesas GBETH
-Date: Thu, 17 Apr 2025 09:40:14 +0100
-Message-ID: <20250417084015.74154-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250417084015.74154-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250417084015.74154-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        bh=gyDG2C1fOJ7sS+KyT/XBqXKFbi/J2aTw+uyXNBnFAdg=;
+        b=rLDcu8N61KAwimKpOVBF7n7zza/M4RtSVF565jYpoZmU0gyw1Swy0NFD3xAokJZ/Db
+         qjhhVIMXMGHnsg5kXzyAeXPNG/oGk1CR9YbKOglhDG+7JWgzkHKof5ZoBcKaVBatlv3A
+         JFYWkks5THB7OVVO9F1tPdu3MwyVzYkUdFOKDylCnJaqVf5IeJjXX3muCv7+fVsSYHl7
+         79MvaotxhMBxDVMprEfSSUGhai1QfMPB5Tzu/0JvQSt0R5XvjmzJfDb9yLCQo99cZY7z
+         2nlNkHlHGSFiCfSK5zgF1yPEbDn4sVUzzR5NDnWEqsRGx0+U2meHeaTCEWrUspn2ktsH
+         w96w==
+X-Forwarded-Encrypted: i=1; AJvYcCV641zOAUF/GoohpXLh9L4girQV6HorlgcToEN4aS7C0enJbl3HvGuJZZyDyKk2nptPQyulucxwrAgViLQQ@vger.kernel.org, AJvYcCVHW0LkVn5Raxi9fp21p0dnKFv9b0AvSvwbgCdY9z7sV9IvSVodDEdXF1fTRWaDxg+7itoLpdUkIRBmBaQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywxih5m7AbylUMwsBuMy4KhpwVbpRBfSgqEAPRquveot/AbagWT
+	+9+z1noTjOe0fyb4prFb6gaU+EljEFQp/bFVTl5u2uB6P7ZG9bPnwLSawKypuPhV+rCfHwrLM5L
+	xy5k99xFX7Brts7eL6cVPjCbgbK4=
+X-Gm-Gg: ASbGnct5IoP9b8f2Eq/TQNF/2YnW0nHwsIRSCvnh7kHKhsT2TLbUb1Gwv9Hzzcqnq/G
+	vkkGhdN/aeLRePQr6dXN8DKOdlWFAw+mfEJZpo3JYTt0FNj7UmpJFEZRDBaYM9umvH/WNLMi/FT
+	k/ss/bW4cZ7CuSb6NEa/BcocFhMwulAHNgDZSCLw==
+X-Google-Smtp-Source: AGHT+IEMDK/SY2xCkPcdfnpadxE5dUl1bSX3/cSEvi6KsT9DeYcFnhL4p/6HqW2SE4cLabXs0QINa9JISpmITtGKnHg=
+X-Received: by 2002:a05:6902:2b8a:b0:e58:3209:bdb6 with SMTP id
+ 3f1490d57ef6-e7275967363mr6403514276.16.1744879376263; Thu, 17 Apr 2025
+ 01:42:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250417064940.68469-1-dqfext@gmail.com> <CAMj1kXFPAVXOtPoETKvHB49kjZUPYrsAqsJwdL7p5Cu4xk75Rg@mail.gmail.com>
+ <CALW65jY=LnVBYoKPOQnSKgGSA0brKzmo0vqoRDcqF_=jofLAng@mail.gmail.com> <CAMj1kXH-u7hiKGQfgYHj_16V4ATN_aHmA_wkvMSyLh+E3+QaAA@mail.gmail.com>
+In-Reply-To: <CAMj1kXH-u7hiKGQfgYHj_16V4ATN_aHmA_wkvMSyLh+E3+QaAA@mail.gmail.com>
+From: Qingfang Deng <dqfext@gmail.com>
+Date: Thu, 17 Apr 2025 16:42:46 +0800
+X-Gm-Features: ATxdqUGF5I5enMnn55N96efB0kMcC0Ath0bpVVj7yzS5lSH1IQrB6kbXGiv0Iic
+Message-ID: <CALW65jZVYUZoka7Gbjcoh43qbkD7rGpw8gTZjjOYpZD-BhLyBQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] crypto: riscv: scalar accelerated GHASH
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Eric Biggers <ebiggers@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	"David S. Miller" <davem@davemloft.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, linux-crypto@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	=?UTF-8?Q?Christoph_M=C3=BCllner?= <christoph.muellner@vrull.eu>, 
+	Heiko Stuebner <heiko.stuebner@vrull.eu>, Qingfang Deng <qingfang.deng@siflower.com.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Thu, Apr 17, 2025 at 3:58=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org> wr=
+ote:
+> > >
+> > > What is the use case for this? AIUI, the scalar AES instructions were
+> > > never implemented by anyone, so how do you expect this to be used in
+> > > practice?
+> >
+> > The use case _is_ AES-GCM, as you mentioned. Without this, computing
+> > GHASH can take a considerable amount of CPU time (monitored by perf).
+> >
+>
+> I see. But do you have a particular configuration in mind? Does it
+> have scalar AES too? I looked into that a while ago but I was told
+> that nobody actually incorporates that. So what about these
+> extensions? Are they commonly implemented?
 
-Add the DWMAC glue layer for the GBETH IP found in the Renesas RZ/V2H(P)
-SoC.
+It's aes-generic.c (LUT-based) with accelerated GHASH.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
----
- drivers/net/ethernet/stmicro/stmmac/Kconfig   |  11 ++
- drivers/net/ethernet/stmicro/stmmac/Makefile  |   1 +
- .../stmicro/stmmac/dwmac-renesas-gbeth.c      | 146 ++++++++++++++++++
- 3 files changed, 158 insertions(+)
- create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
+>
+> [0] https://web.git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/lo=
+g/?h=3Driscv-scalar-aes
+>
+> > > ...
+> > > > +static __always_inline __uint128_t get_unaligned_be128(const u8 *p=
+)
+> > > > +{
+> > > > +       __uint128_t val;
+> > > > +#ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+> > >
+> > > CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS means that get_unaligned_xxx()
+> > > helpers are cheap. Casting a void* to an aligned type is still UB as
+> > > per the C standard.
+> >
+> > Technically an unaligned access is UB but this pattern is widely used
+> > in networking code.
+> >
+>
+> Of course. But that is no reason to keep doing it.
+>
+> > >
+> > > So better to drop the #ifdef entirely, and just use the
+> > > get_unaligned_be64() helpers for both cases.
+> >
+> > Currently those helpers won't generate rev8 instructions, even if
+> > HAVE_EFFICIENT_UNALIGNED_ACCESS and RISCV_ISA_ZBB is set, so I have to
+> > implement my own version of this to reduce the number of instructions,
+> > and to align with the original OpenSSL implementation.
+> >
+>
+> So fix the helpers.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-index 3c820ef56775..2c99b23f0faa 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
-+++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-@@ -131,6 +131,17 @@ config DWMAC_QCOM_ETHQOS
- 	  This selects the Qualcomm ETHQOS glue layer support for the
- 	  stmmac device driver.
- 
-+config DWMAC_RENESAS_GBETH
-+	tristate "Renesas RZ/V2H(P) GBETH support"
-+	default ARCH_RENESAS
-+	depends on OF && (ARCH_RENESAS || COMPILE_TEST)
-+	help
-+	  Support for Gigabit Ethernet Interface (GBETH) on Renesas
-+	  RZ/V2H(P) SoCs.
-+
-+	  This selects the Renesas RZ/V2H(P) Soc specific glue layer support
-+	  for the stmmac device driver.
-+
- config DWMAC_ROCKCHIP
- 	tristate "Rockchip dwmac support"
- 	default ARCH_ROCKCHIP
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Makefile b/drivers/net/ethernet/stmicro/stmmac/Makefile
-index 594883fb4164..91050215511b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Makefile
-+++ b/drivers/net/ethernet/stmicro/stmmac/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_DWMAC_LPC18XX)	+= dwmac-lpc18xx.o
- obj-$(CONFIG_DWMAC_MEDIATEK)	+= dwmac-mediatek.o
- obj-$(CONFIG_DWMAC_MESON)	+= dwmac-meson.o dwmac-meson8b.o
- obj-$(CONFIG_DWMAC_QCOM_ETHQOS)	+= dwmac-qcom-ethqos.o
-+obj-$(CONFIG_DWMAC_RENESAS_GBETH) += dwmac-renesas-gbeth.o
- obj-$(CONFIG_DWMAC_ROCKCHIP)	+= dwmac-rk.o
- obj-$(CONFIG_DWMAC_RZN1)	+= dwmac-rzn1.o
- obj-$(CONFIG_DWMAC_S32)		+= dwmac-s32.o
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
-new file mode 100644
-index 000000000000..9a774046455b
---- /dev/null
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
-@@ -0,0 +1,146 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * dwmac-renesas-gbeth.c - DWMAC Specific Glue layer for Renesas GBETH
-+ *
-+ * The Rx and Tx clocks are supplied as follows for the GBETH IP.
-+ *
-+ *                         Rx / Tx
-+ *   -------+------------- on / off -------
-+ *          |
-+ *          |            Rx-180 / Tx-180
-+ *          +---- not ---- on / off -------
-+ *
-+ * Copyright (C) 2025 Renesas Electronics Corporation
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset.h>
-+
-+#include "stmmac_platform.h"
-+
-+struct renesas_gbeth {
-+	struct plat_stmmacenet_data *plat_dat;
-+	struct reset_control *rstc;
-+	struct device *dev;
-+};
-+
-+static const char *const renesas_gbeth_clks[] = {
-+	"tx", "tx-180", "rx", "rx-180",
-+};
-+
-+static int renesas_gbeth_init(struct platform_device *pdev, void *priv)
-+{
-+	struct plat_stmmacenet_data *plat_dat;
-+	struct renesas_gbeth *gbeth = priv;
-+	int ret;
-+
-+	plat_dat = gbeth->plat_dat;
-+
-+	ret = reset_control_deassert(gbeth->rstc);
-+	if (ret) {
-+		dev_err(gbeth->dev, "Reset deassert failed\n");
-+		return ret;
-+	}
-+
-+	ret = clk_bulk_prepare_enable(plat_dat->num_clks,
-+				      plat_dat->clks);
-+	if (ret)
-+		reset_control_assert(gbeth->rstc);
-+
-+	return ret;
-+}
-+
-+static void renesas_gbeth_exit(struct platform_device *pdev, void *priv)
-+{
-+	struct plat_stmmacenet_data *plat_dat;
-+	struct renesas_gbeth *gbeth = priv;
-+	int ret;
-+
-+	plat_dat = gbeth->plat_dat;
-+
-+	clk_bulk_disable_unprepare(plat_dat->num_clks, plat_dat->clks);
-+
-+	ret = reset_control_assert(gbeth->rstc);
-+	if (ret)
-+		dev_err(gbeth->dev, "Reset assert failed\n");
-+}
-+
-+static int renesas_gbeth_probe(struct platform_device *pdev)
-+{
-+	struct plat_stmmacenet_data *plat_dat;
-+	struct stmmac_resources stmmac_res;
-+	struct device *dev = &pdev->dev;
-+	struct renesas_gbeth *gbeth;
-+	unsigned int i;
-+	int err;
-+
-+	err = stmmac_get_platform_resources(pdev, &stmmac_res);
-+	if (err)
-+		return dev_err_probe(dev, err,
-+				     "failed to get resources\n");
-+
-+	plat_dat = devm_stmmac_probe_config_dt(pdev, stmmac_res.mac);
-+	if (IS_ERR(plat_dat))
-+		return dev_err_probe(dev, PTR_ERR(plat_dat),
-+				     "dt configuration failed\n");
-+
-+	gbeth = devm_kzalloc(dev, sizeof(*gbeth), GFP_KERNEL);
-+	if (!gbeth)
-+		return -ENOMEM;
-+
-+	plat_dat->num_clks = ARRAY_SIZE(renesas_gbeth_clks);
-+	plat_dat->clks = devm_kcalloc(dev, plat_dat->num_clks,
-+				      sizeof(*plat_dat->clks), GFP_KERNEL);
-+	if (!plat_dat->clks)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < plat_dat->num_clks; i++)
-+		plat_dat->clks[i].id = renesas_gbeth_clks[i];
-+
-+	err = devm_clk_bulk_get(dev, plat_dat->num_clks, plat_dat->clks);
-+	if (err < 0)
-+		return err;
-+
-+	plat_dat->clk_tx_i = stmmac_pltfr_find_clk(plat_dat, "tx");
-+	if (!plat_dat->clk_tx_i)
-+		return dev_err_probe(dev, -EINVAL,
-+				     "error finding tx clock\n");
-+
-+	gbeth->rstc = devm_reset_control_get_exclusive(dev, NULL);
-+	if (IS_ERR(gbeth->rstc))
-+		return PTR_ERR(gbeth->rstc);
-+
-+	gbeth->dev = dev;
-+	gbeth->plat_dat = plat_dat;
-+	plat_dat->bsp_priv = gbeth;
-+	plat_dat->set_clk_tx_rate = stmmac_set_clk_tx_rate;
-+	plat_dat->init = renesas_gbeth_init;
-+	plat_dat->exit = renesas_gbeth_exit;
-+	plat_dat->flags |= STMMAC_FLAG_HWTSTAMP_CORRECT_LATENCY |
-+			   STMMAC_FLAG_EN_TX_LPI_CLK_PHY_CAP |
-+			   STMMAC_FLAG_SPH_DISABLE;
-+
-+	return devm_stmmac_pltfr_probe(pdev, plat_dat, &stmmac_res);
-+}
-+
-+static const struct of_device_id renesas_gbeth_match[] = {
-+	{ .compatible = "renesas,rzv2h-gbeth", },
-+	{ /* Sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, renesas_gbeth_match);
-+
-+static struct platform_driver renesas_gbeth_driver = {
-+	.probe  = renesas_gbeth_probe,
-+	.driver = {
-+		.name		= "renesas-gbeth",
-+		.of_match_table	= renesas_gbeth_match,
-+	},
-+};
-+module_platform_driver(renesas_gbeth_driver);
-+
-+MODULE_AUTHOR("Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>");
-+MODULE_DESCRIPTION("Renesas GBETH DWMAC Specific Glue layer");
-+MODULE_LICENSE("GPL");
--- 
-2.49.0
+The issue is that RISC-V GCC doesn=E2=80=99t emit efficient unaligned loads=
+ by default:
+- Not all RISC-V CPUs support unaligned access efficiently, so GCC
+falls back to conservative byte-wise code.
+- There=E2=80=99s no clean way to force the optimized path - GCC only emits
+fast unaligned loads if tuned for a specific CPU (e.g., -mtune=3Dsize or
+-mtune=3Dthead-c906), which the kernel doesn't typically do, even with
+HAVE_EFFICIENT_UNALIGNED_ACCESS.
 
+Maybe we should raise this with the GCC maintainers. An explicit
+option to enable optimized unaligned access could help.
+
+As for rev8, there's a patch pending to implement the swab macros.
+
+-- Qingfang
