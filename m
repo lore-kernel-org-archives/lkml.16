@@ -1,197 +1,129 @@
-Received: from smtp01.aussiebb.com.au (smtp01.aussiebb.com.au [121.200.0.92])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f66.google.com (mail-lf1-f66.google.com [209.85.167.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71576282F1;
-	Thu, 17 Apr 2025 10:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.200.0.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B461F1FBCAF;
+	Thu, 17 Apr 2025 10:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744885046; cv=none; b=Dvo8zIDSzcFkoEQWv2AEF3zugTdFh8MFL/ViYHeI2BI3eNTElOQoBh42LVPUffhYx8TyPNZFHqsV0R9sP/yue+M9MdhCkq571/09ONb5xMXplI+hGD4r0Bq1FHWzJpef0UAblENA3EaC6pIfIwyYBpKq+9fMATrrPYNwV6Q5HSk=
+	t=1744885052; cv=none; b=KeW7EPvV8pw4I94vh7vE755IFV8F/0eB1U8sQZV0f//qdAdN2PpsywaTIbtt0lCyrnoelDM2HJ0d/9zmRWxj4rh9V8nIZJGBbUVYBKEHgQuJ2HfdHuSMxgPMrAGyNj1djTxtbKw4KA4bO0Rhpr2Egku6/xZJKqJ1BIpSOPNLj5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744885046; c=relaxed/simple;
-	bh=AqX8HaBkhX9xGDH3YKFQNEKSEUlkIV9DvJ5twuJWzak=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nWSVSIPtbv1pKqTmPpJwl9DnixJHQLF0VdY2qgE03Q66B6BLYoX3tuauP9FdKp+F/euqeWcpsEhIqcN8REgvFyyk8IJs8mNSiVOeaZIVtOOdpFhZ61Wmnv1jEPcETj1IabFtBjhucODA7JboZ4ArHrSiv5QXsZZ2VzcmG05UxaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=themaw.net; spf=fail smtp.mailfrom=themaw.net; arc=none smtp.client-ip=121.200.0.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=themaw.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=themaw.net
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp01.aussiebb.com.au (Postfix) with ESMTP id C0EAE1003E0;
-	Thu, 17 Apr 2025 20:17:05 +1000 (AEST)
-X-Virus-Scanned: Debian amavisd-new at smtp01.aussiebb.com.au
-Received: from smtp01.aussiebb.com.au ([127.0.0.1])
-	by localhost (smtp01.aussiebb.com.au [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id V2XTr_C5aTGV; Thu, 17 Apr 2025 20:17:05 +1000 (AEST)
-Received: by smtp01.aussiebb.com.au (Postfix, from userid 116)
-	id A69C810115B; Thu, 17 Apr 2025 20:17:05 +1000 (AEST)
-X-Spam-Level: 
-Received: from [192.168.0.229] (159-196-82-144.9fc452.per.static.aussiebb.net [159.196.82.144])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: ian146@aussiebb.com.au)
-	by smtp01.aussiebb.com.au (Postfix) with ESMTPSA id B9642100664;
-	Thu, 17 Apr 2025 20:17:02 +1000 (AEST)
-Message-ID: <fb566638-a739-41dc-bafc-aa8c74496fa4@themaw.net>
-Date: Thu, 17 Apr 2025 18:17:01 +0800
+	s=arc-20240116; t=1744885052; c=relaxed/simple;
+	bh=h3UCEJIIGeY1tUsuc/qIZ1JHXh0UjMxmhnt8IJ/77uw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nBZ4OX7+fSq+sA6IlUZg4Tf8qE+fb/LALoX5UupOQ+VDA2eBC+LVc1fguheqcA1pAOjU2bNd5MDiegWTZY+8mQ7TEovHKiYxRXS4Oudl1BS943edNH8IwG4Qhm67EYQXu5/5gbfI0FH177yTvOoNxBwZZzKhRnYjK8qc7La/bwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nC+aK3nt; arc=none smtp.client-ip=209.85.167.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nC+aK3nt"
+Received: by mail-lf1-f66.google.com with SMTP id 2adb3069b0e04-54ac9b3ddf6so596966e87.1;
+        Thu, 17 Apr 2025 03:17:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744885049; x=1745489849; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mr4iHssyb6BG/1AKbGKXTkraXilD33gxEVEHI0uTy7c=;
+        b=nC+aK3ntAniqwQhQogNGGRXFghF4H6gVk3M4EL0OMwxvhIFHc+HoBKDzWqXbvrSJ+3
+         bfa/RXi/OFjyWvfuBwmSzRvRhursXrn0bWkOaeGqXEuhUEfjbLGcHaal5MamR4NfoK5D
+         PFgQ9itbY37hj3276QiglP02ddDK6qE52QATmoNiyb8hbCOTYxP+B0M1MZ37n8kQQLP6
+         UeGW5aKR2yrYzSTHsA3C7i8D4N5khsXsofhH8H0LwwxC5X9eO940Y9lGQts/diBF7DyQ
+         GMbnSAIxgvFcqQ+nfEFsGr6yMLBpnhO+NbsWa2tx57F6Io4cxC4j4+nT6P1c3op4Yifo
+         VrQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744885049; x=1745489849;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mr4iHssyb6BG/1AKbGKXTkraXilD33gxEVEHI0uTy7c=;
+        b=UgB/7OGzhhhIqYcSq74uAHzLtXKz/KtcLHJgQBxV8lTRUHmWOo4evkqw82k6nzpVyv
+         n/MDlKylpxhfg30RPLyg+vc9G03l77OCA8jnI03AlqfvVo1S72nzU9vg5xI7fsw1EUWs
+         aUdG2Y3dSf60vBvls2NGBA30GTGmAGldT5HzYKZjWQq+NvO/QJD7k71lOLCpDQppsw8k
+         XLBnI6rgbQZY9lS8yRJX9z3bVKgiF9Ih4Y5vhMwgprEM+NU9x2NAlTP7hidX8iFDmqub
+         5feidsroZsvSD74vJ/H/QaUreBDkgLuZcKsOoTfssWd2lTttma8eWeEyhwRy6qbZE9ho
+         zerw==
+X-Forwarded-Encrypted: i=1; AJvYcCW6NVSAfQ5NChOvKT9QaYyap8tywtJ8Tpr/wxPGdrkreMrTSXHw9sDks1OdWeEqD14mbKzg0Ef51qogY2nQ@vger.kernel.org, AJvYcCWj0crG4NaXqq+mwzVd/UKhHg/fEptPqbzYUCLZssMCIs9vgVA4+2EijsmWVhir7PvFnl8U4WZ9jTc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqAd/0eDIKsNDwEM6CA8O0SP58cZhs19vGYXkAb+VYWG9wqODR
+	yvgxJFL6CMOkAvSar85m1gUpXAqJo8cVKa/zxwV9WN6tFJhVT/Mgv3mu6X/JJeaiiCk/cMgbsYI
+	EmfCNWrdMuDqSdxzV5tpQKG2jNI8=
+X-Gm-Gg: ASbGncvBNWBTVCx69wscDP6oPyiPXJquHQyXYjWlWyy47Q9cOAZeya7mD1R1kAfAE3j
+	FPsb9YkUDiH9vdyDKIji+EHH11y84nC0hIerXAuGWxUheRIfd150pH0C8IHlbfgKx5njepUwTTz
+	W3547eRCRTXgqLujDnrfnImA==
+X-Google-Smtp-Source: AGHT+IEvRSTyP0SY5ojVdpl7yM7WjI0aehemNKpV20d6KfCvjuDMKOIi2DQC57sqiNxjCYpB1GvaF2rMc9iGaUjrjwM=
+X-Received: by 2002:a05:6512:3b8f:b0:545:fc8:e155 with SMTP id
+ 2adb3069b0e04-54d64a9c105mr1945636e87.20.1744885048467; Thu, 17 Apr 2025
+ 03:17:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
-To: Christian Brauner <brauner@kernel.org>, Mark Brown <broonie@kernel.org>,
- Eric Chanudet <echanude@redhat.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Ian Kent <ikent@redhat.com>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
- Alexander Larsson <alexl@redhat.com>, Lucas Karpinski <lkarpins@redhat.com>,
- Aishwarya.TCV@arm.com
-References: <20250408210350.749901-12-echanude@redhat.com>
- <fbbafa84-f86c-4ea4-8f41-e5ebb51173ed@sirena.org.uk>
- <20250417-wolfsrudel-zubewegt-10514f07d837@brauner>
-Content-Language: en-US
-From: Ian Kent <raven@themaw.net>
-Autocrypt: addr=raven@themaw.net; keydata=
- xsFNBE6c/ycBEADdYbAI5BKjE+yw+dOE+xucCEYiGyRhOI9JiZLUBh+PDz8cDnNxcCspH44o
- E7oTH0XPn9f7Zh0TkXWA8G6BZVCNifG7mM9K8Ecp3NheQYCk488ucSV/dz6DJ8BqX4psd4TI
- gpcs2iDQlg5CmuXDhc5z1ztNubv8hElSlFX/4l/U18OfrdTbbcjF/fivBkzkVobtltiL+msN
- bDq5S0K2KOxRxuXGaDShvfbz6DnajoVLEkNgEnGpSLxQNlJXdQBTE509MA30Q2aGk6oqHBQv
- zxjVyOu+WLGPSj7hF8SdYOjizVKIARGJzDy8qT4v/TLdVqPa2d0rx7DFvBRzOqYQL13/Zvie
- kuGbj3XvFibVt2ecS87WCJ/nlQxCa0KjGy0eb3i4XObtcU23fnd0ieZsQs4uDhZgzYB8LNud
- WXx9/Q0qsWfvZw7hEdPdPRBmwRmt2O1fbfk5CQN1EtNgS372PbOjQHaIV6n+QQP2ELIa3X5Z
- RnyaXyzwaCt6ETUHTslEaR9nOG6N3sIohIwlIywGK6WQmRBPyz5X1oF2Ld9E0crlaZYFPMRH
- hQtFxdycIBpTlc59g7uIXzwRx65HJcyBflj72YoTzwchN6Wf2rKq9xmtkV2Eihwo8WH3XkL9
- cjVKjg8rKRmqIMSRCpqFBWJpT1FzecQ8EMV0fk18Q5MLj441yQARAQABzRtJYW4gS2VudCA8
- cmF2ZW5AdGhlbWF3Lm5ldD7CwXsEEwECACUCGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheA
- BQJOnjOcAhkBAAoJEOdnc4D1T9iphrYQALHK3J5rjzy4qPiLJ0EE9eJkyV1rqtzct5Ah9pu6
- LSkqxgQCfN3NmKOoj+TpbXGagg28qTGjkFvJSlpNY7zAj+fA11UVCxERgQBOJcPrbgaeYZua
- E4ST+w/inOdatNZRnNWGugqvez80QGuxFRQl1ttMaky7VxgwNTXcFNjClW3ifdD75gHlrU0V
- ZUULa1a0UVip0rNc7mFUKxhEUk+8NhowRZUk0nt1JUwezlyIYPysaN7ToVeYE4W0VgpWczmA
- tHtkRGIAgwL7DCNNJ6a+H50FEsyixmyr/pMuNswWbr3+d2MiJ1IYreZLhkGfNq9nG/+YK/0L
- Q2/OkIsz8bOrkYLTw8WwzfTz2RXV1N2NtsMKB/APMcuuodkSI5bzzgyu1cDrGLz43faFFmB9
- xAmKjibRLk6ChbmrZhuCYL0nn+RkL036jMLw5F1xiu2ltEgK2/gNJhm29iBhvScUKOqUnbPw
- DSMZ2NipMqj7Xy3hjw1CStEy3pCXp8/muaB8KRnf92VvjO79VEls29KuX6rz32bcBM4qxsVn
- cOqyghSE69H3q4SY7EbhdIfacUSEUV+m/pZK5gnJIl6n1Rh6u0MFXWttvu0j9JEl92Ayj8u8
- J/tYvFMpag3nTeC3I+arPSKpeWDX08oisrEp0Yw15r+6jbPjZNz7LvrYZ2fa3Am6KRn0zsFN
- BE6c/ycBEADZzcb88XlSiooYoEt3vuGkYoSkz7potX864MSNGekek1cwUrXeUdHUlw5zwPoC
- 4H5JF7D8q7lYoelBYJ+Mf0vdLzJLbbEtN5+v+s2UEbkDlnUQS1yRo1LxyNhJiXsQVr7WVA/c
- 8qcDWUYX7q/4Ckg77UO4l/eHCWNnHu7GkvKLVEgRjKPKroIEnjI0HMK3f6ABDReoc741RF5X
- X3qwmCgKZx0AkLjObXE3W769dtbNbWmW0lgFKe6dxlYrlZbq25Aubhcu2qTdQ/okx6uQ41+v
- QDxgYtocsT/CG1u0PpbtMeIm3mVQRXmjDFKjKAx9WOX/BHpk7VEtsNQUEp1lZo6hH7jeo5me
- CYFzgIbXdsMA9TjpzPpiWK9GetbD5KhnDId4ANMrWPNuGC/uPHDjtEJyf0cwknsRFLhL4/NJ
- KvqAuiXQ57x6qxrkuuinBQ3S9RR3JY7R7c3rqpWyaTuNNGPkIrRNyePky/ZTgTMA5of8Wioy
- z06XNhr6mG5xT+MHztKAQddV3xFy9f3Jrvtd6UvFbQPwG7Lv+/UztY5vPAzp7aJGz2pDbb0Q
- BC9u1mrHICB4awPlja/ljn+uuIb8Ow3jSy+Sx58VFEK7ctIOULdmnHXMFEihnOZO3NlNa6q+
- XZOK7J00Ne6y0IBAaNTM+xMF+JRc7Gx6bChES9vxMyMbXwARAQABwsFfBBgBAgAJBQJOnP8n
- AhsMAAoJEOdnc4D1T9iphf4QAJuR1jVyLLSkBDOPCa3ejvEqp4H5QUogl1ASkEboMiWcQJQd
- LaH6zHNySMnsN6g/UVhuviANBxtW2DFfANPiydox85CdH71gLkcOE1J7J6Fnxgjpc1Dq5kxh
- imBSqa2hlsKUt3MLXbjEYL5OTSV2RtNP04KwlGS/xMfNwQf2O2aJoC4mSs4OeZwsHJFVF8rK
- XDvL/NzMCnysWCwjVIDhHBBIOC3mecYtXrasv9nl77LgffyyaAAQZz7yZcvn8puj9jH9h+mr
- L02W+gd+Sh6Grvo5Kk4ngzfT/FtscVGv9zFWxfyoQHRyuhk0SOsoTNYN8XIWhosp9GViyDtE
- FXmrhiazz7XHc32u+o9+WugpTBZktYpORxLVwf9h1PY7CPDNX4EaIO64oyy9O3/huhOTOGha
- nVvqlYHyEYCFY7pIfaSNhgZs2aV0oP13XV6PGb5xir5ah+NW9gQk/obnvY5TAVtgTjAte5tZ
- +coCSBkOU1xMiW5Td7QwkNmtXKHyEF6dxCAMK1KHIqxrBaZO27PEDSHaIPHePi7y4KKq9C9U
- 8k5V5dFA0mqH/st9Sw6tFbqPkqjvvMLETDPVxOzinpU2VBGhce4wufSIoVLOjQnbIo1FIqWg
- Dx24eHv235mnNuGHrG+EapIh7g/67K0uAzwp17eyUYlE5BMcwRlaHMuKTil6
-In-Reply-To: <20250417-wolfsrudel-zubewegt-10514f07d837@brauner>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <CAPY8ntAFHW3kiqCnXjFtzL9FnRoQ69v8+3yJ+jR8_W8Bb+6d8A@mail.gmail.com>
+ <20250402020513.42628-1-bsdhenrymartin@gmail.com> <14654c19-fa26-4d37-8f0f-9cf092982b67@gmx.net>
+In-Reply-To: <14654c19-fa26-4d37-8f0f-9cf092982b67@gmx.net>
+From: henry martin <bsdhenrymartin@gmail.com>
+Date: Thu, 17 Apr 2025 18:17:20 +0800
+X-Gm-Features: ATxdqUHZfP5CWnv2EfUodjm25gfdmY6UfSse5sOTHfNb3TCeaJauUAPMA3I37KI
+Message-ID: <CAEnQdOqoCuiN67oWisJs7RYandhHxcvbPXXxHKmPaoS5=puPyw@mail.gmail.com>
+Subject: Re: [PATCH v2] clk: bcm: rpi: Add NULL check in raspberrypi_clk_register()
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, florian.fainelli@broadcom.com, 
+	bcm-kernel-feedback-list@broadcom.com, popcornmix@gmail.com, 
+	mripard@kernel.org, u.kleine-koenig@baylibre.com, linux-clk@vger.kernel.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, nathan@kernel.org, 
+	dave.stevenson@raspberrypi.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+> Just a note, please don't send new patch versions as a reply to older
+> ones. This makes them harder to find.
 
-On 17/4/25 17:01, Christian Brauner wrote:
-> On Wed, Apr 16, 2025 at 11:11:51PM +0100, Mark Brown wrote:
->> On Tue, Apr 08, 2025 at 04:58:34PM -0400, Eric Chanudet wrote:
->>> Defer releasing the detached file-system when calling namespace_unlock()
->>> during a lazy umount to return faster.
->>>
->>> When requesting MNT_DETACH, the caller does not expect the file-system
->>> to be shut down upon returning from the syscall. Calling
->>> synchronize_rcu_expedited() has a significant cost on RT kernel that
->>> defaults to rcupdate.rcu_normal_after_boot=1. Queue the detached struct
->>> mount in a separate list and put it on a workqueue to run post RCU
->>> grace-period.
->> For the past couple of days we've been seeing failures in a bunch of LTP
->> filesystem related tests on various arm64 systems.  The failures are
->> mostly (I think all) in the form:
->>
->> 20101 10:12:40.378045  tst_test.c:1833: TINFO: === Testing on vfat ===
->> 20102 10:12:40.385091  tst_test.c:1170: TINFO: Formatting /dev/loop0 with vfat opts='' extra opts=''
->> 20103 10:12:40.391032  mkfs.vfat: unable to open /dev/loop0: Device or resource busy
->> 20104 10:12:40.395953  tst_test.c:1170: TBROK: mkfs.vfat failed with exit code 1
->>
->> ie, a failure to stand up the test environment on the loopback device
->> all happening immediately after some other filesystem related test which
->> also used the loop device.  A bisect points to commit a6c7a78f1b6b97
->> which is this, which does look rather relevant.  LTP is obviously being
->> very much an edge case here.
-> Hah, here's something I didn't consider and that I should've caught.
+Noted, thanks for the review! I'll make sure to send new patch versions as
+separate emails in the future.
+
+Regards,
+Henry
+
+Stefan Wahren <wahrenst@gmx.net> =E4=BA=8E2025=E5=B9=B44=E6=9C=8817=E6=97=
+=A5=E5=91=A8=E5=9B=9B 18:09=E5=86=99=E9=81=93=EF=BC=9A
 >
-> Look, on current mainline no matter if MNT_DETACH/UMOUNT_SYNC or
-> non-MNT_DETACH/UMOUNT_SYNC. The mntput() calls after the
-> synchronize_rcu_expedited() calls will end up in task_work():
+> Am 02.04.25 um 04:05 schrieb Henry Martin:
+> > devm_kasprintf() returns NULL when memory allocation fails. Currently,
+> > raspberrypi_clk_register() does not check for this case, which results
+> > in a NULL pointer dereference.
+> >
+> > Add NULL check after devm_kasprintf() to prevent this issue.
+> >
+> > Fixes: 93d2725affd6 ("clk: bcm: rpi: Discover the firmware clocks")
+> > Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+> > Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+> Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
 >
->          if (likely(!(mnt->mnt.mnt_flags & MNT_INTERNAL))) {
->                  struct task_struct *task = current;
->                  if (likely(!(task->flags & PF_KTHREAD))) {
->                          init_task_work(&mnt->mnt_rcu, __cleanup_mnt);
->                          if (!task_work_add(task, &mnt->mnt_rcu, TWA_RESUME))
->                                  return;
->                  }
->                  if (llist_add(&mnt->mnt_llist, &delayed_mntput_list))
->                          schedule_delayed_work(&delayed_mntput_work, 1);
->                  return;
->          }
+> Just a note, please don't send new patch versions as a reply to older
+> ones. This makes them harder to find.
 >
-> because all of those mntput()s are done from the task's contect.
+> Thanks
+> > ---
+> > V1 -> V2: Correct the commit hash in the Fixes: tag.
+> >
+> >   drivers/clk/bcm/clk-raspberrypi.c | 2 ++
+> >   1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-ra=
+spberrypi.c
+> > index 0e1fe3759530..720acc10f8aa 100644
+> > --- a/drivers/clk/bcm/clk-raspberrypi.c
+> > +++ b/drivers/clk/bcm/clk-raspberrypi.c
+> > @@ -286,6 +286,8 @@ static struct clk_hw *raspberrypi_clk_register(stru=
+ct raspberrypi_clk *rpi,
+> >       init.name =3D devm_kasprintf(rpi->dev, GFP_KERNEL,
+> >                                  "fw-clk-%s",
+> >                                  rpi_firmware_clk_names[id]);
+> > +     if (!init.name)
+> > +             return ERR_PTR(-ENOMEM);
+> >       init.ops =3D &raspberrypi_firmware_clk_ops;
+> >       init.flags =3D CLK_GET_RATE_NOCACHE;
+> >
 >
-> IOW, if userspace does umount(MNT_DETACH) and the task has returned to
-> userspace it is guaranteed that all calls to cleanup_mnt() are done.
->
-> With your change that simply isn't true anymore. The call to
-> queue_rcu_work() will offload those mntput() to be done from a kthread.
-> That in turn means all those mntputs end up on the delayed_mntput_work()
-> queue. So the mounts aren't cleaned up by the time the task returns to
-> userspace.
->
-> And that's likely problematic even for the explicit MNT_DETACH use-case
-> because it means EBUSY errors are a lot more likely to be seen by
-> concurrent mounters especially for loop devices.
->
-> And fwiw, this is exactly what I pointed out in a prior posting to this
-> patch series.
-
-And I didn't understand what you said then but this problem is more
-
-understandable to me now.
-
-
->
-> But we've also worsened that situation by doing the deferred thing for
-> any non-UMOUNT_SYNC. That which includes namespace exit. IOW, if the
-> last task in a new mount namespace exits it will drop_collected_mounts()
-> without UMOUNT_SYNC because we know that they aren't reachable anymore,
-> after all the mount namespace is dead.
->
-> But now we defer all cleanup to the kthread which means when the task
-> returns to userspace there's still mounts to be cleaned up.
-
-Correct me if I'm wrong but the actual problem is that the mechanism used
-
-to wait until there are no processes doing an rcu-walk on mounts in the
-
-discard list is unnecessarily long according to what Eric has seen. So a
-
-different was to know there are no processes doing an rcu-walk for one of
-
-these mounts is needed.
-
-
-There must be a better way to do this than the current rcu wait method ...
-
-
-Ian
-
