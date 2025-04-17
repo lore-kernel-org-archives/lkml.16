@@ -1,103 +1,95 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD3E2153DA
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 22:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC7120F087;
+	Thu, 17 Apr 2025 22:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744929467; cv=none; b=lA7mty0IuLShgNFc+wk2tid0iQfbH6fzoNO9lDrjHTmj9Qpb4ljFL64+mJ0mh4lJR72Xl28dPwEfVvhOEvAdconJbh2RzDBYKM5PR7yxLDqy6NSvLBtxFeYcYxem5NTnuZcuXTxGn86GTcFv97EIpMBhTkj3UqwnBmqJ73izN7Y=
+	t=1744929555; cv=none; b=D6B9F9Jmu7EcoRi738LbJVlVydZzOeCon8jOlu1XKEicJOz4l4/TczrooAJa0hyiPwCKSyx6aw+RVkMmG2bGazKiMaNR+6Ul8R3zgxODirRIY0oTKqMNESZS9pCd2j/318bxwfKqjI/L71y+v8Ef+Un3WRI7Zp8+/VZ9ppDckM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744929467; c=relaxed/simple;
-	bh=3DpawYJNdPiK+Wj1dDUe9l1ENJfOB0aohxjotazsNzI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aoQhyLW4J7Vj0LMHt/Kh2PBUzJ32pEwJnBUaGKRqgHD+I2Y36c4I4LUukJnP47/9aPBOUW6jm740zgQEBgQHJSWZpK0uU+DkbQQRd0jiweYIMHT4fvoTn0vNZwyOa4u9Ak3tMqtaClY86K0AG/R22zQ/zAHglHxqpn+MKBKg/F8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mg9NHyVK; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744929555; c=relaxed/simple;
+	bh=5WqWlcIveNteoAGBdrjqB+Xha02+8TcvSi1tpAGku3g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=fUcbWSqLwYwvx98M+2E727nSqiM9kxOYQVyvjkUhc/xw0Z8+ISHuQaxGSHOoWubSyLJx3YZ37i8DDsqXDrT3xEn4OkW25w72tXYb2dMy4QVm9cVsTuts9h18IAlEj5vBwNwBrFn8hMsOO32ED6tBFcm+LBOK744dEHeiAQH77j8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=SB786bVS; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mg9NHyVK"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744929461;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=A0Zj7XbH7jorqAvhaNTeetJGNlbxYBB7mbYxezOdBjw=;
-	b=mg9NHyVKo06KpJrkXnTktGn7K+I+YkOSat2k210PdPOm/xKbRzkHONH9VJiObQWMzFgVdz
-	YTPm1JGGz1LmhJEBQNd0Y4S+94SkYZA8tHcxAeJ1sUKxjX1ldj8SgBpobWUuv+wiCuzvsk
-	xKMy0Xuo7LMLaXDPhJA8optufs+gspA=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: engine - Realign struct crypto_engine to save 8 bytes
-Date: Fri, 18 Apr 2025 00:36:49 +0200
-Message-ID: <20250417223650.72687-2-thorsten.blum@linux.dev>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SB786bVS"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53HMckqm128952
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 17 Apr 2025 17:38:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744929526;
+	bh=AWUb8tvMlFEEKiPyxJvkrbL7zQiJ0ZFreEAhyJ2fFBM=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=SB786bVSicD/RGT2a0FA9PliFRhuiEAqaSH6x58qO4otFNDogMgJUa4MwgUbpC6Yy
+	 NorwiI+ILQbf0baXQrEFnOI+Wa5FCDqvJ6D4lsMN3GWdfddS6i5gTMOMny00IRKQw9
+	 N0NdtXLWdJqQAZCkQSyyQiyepX8aDSONeUGkJhb8=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53HMckfe095464
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 17 Apr 2025 17:38:46 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 17
+ Apr 2025 17:38:45 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 17 Apr 2025 17:38:45 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53HMcjf6099463;
+	Thu, 17 Apr 2025 17:38:45 -0500
+Message-ID: <41cb896b-be6c-4594-aa73-a5a475d49d05@ti.com>
+Date: Thu, 17 Apr 2025 17:38:45 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] Fix V1P8_SIGNAL_ENA
+To: Francesco Dolcini <francesco@dolcini.it>
+CC: Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter
+	<adrian.hunter@intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, <linux-mmc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Josua Mayer <josua@solid-run.com>, Moteen
+ Shah <m-shah@ti.com>,
+        Hiago De Franco <hiagofranco@gmail.com>
+References: <20250417182652.3521104-1-jm@ti.com>
+ <aAFU8K9j4fZ-njwP@gaggiata.pivistrello.it>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <aAFU8K9j4fZ-njwP@gaggiata.pivistrello.it>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Realign struct crypto_engine to reduce its size by 8 bytes. Total size
-is now 192 bytes, allowing it to fit within 3 cachelines instead of 4.
+Hi Francesco,
 
-pahole output before:
+On 4/17/25 2:22 PM, Francesco Dolcini wrote:
+> On Thu, Apr 17, 2025 at 01:26:50PM -0500, Judith Mendez wrote:
+>> There are eMMC boot failures seen with V1P8_SIGNAL_ENA on Kingston
+>> eMMC and variouse types of SD cards on Sitara K3 SoCs due to the
+>> sequencing when enumerating to HS200 mode. Since V1P8_SIGNAL_ENA is
+>> optional for eMMC, do not set V1P8_SIGNAL_ENA by default for eMMC.
+>> For SD cards we shall parse DT for ti,suppress-v1p8-ena property
+>> to determine whether to apply the quirk.
+> 
+> I assume this ti,suppress-v1p8-ena should be added to some SoC dtsi, am I
+> wrong?
+> 
 
-  /* size: 200, cachelines: 4, members: 17 */
-  /* sum members: 183, holes: 3, sum holes: 17 */
-  /* paddings: 1, sum paddings: 4 */
-  /* last cacheline: 8 bytes */
+I was planning to add in a separate series once this was merged but I
+can add to v3 no problem, thanks for reviewing.
 
-and after:
-
-  /* size: 192, cachelines: 3, members: 17 */
-  /* sum members: 183, holes: 2, sum holes: 9 */
-  /* paddings: 1, sum paddings: 4 */
-
-No functional changes intended.
-
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- include/crypto/internal/engine.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/include/crypto/internal/engine.h b/include/crypto/internal/engine.h
-index fbf4be56cf12..b6a4ea2240fc 100644
---- a/include/crypto/internal/engine.h
-+++ b/include/crypto/internal/engine.h
-@@ -27,10 +27,10 @@ struct device;
-  * @retry_support: indication that the hardware allows re-execution
-  * of a failed backlog request
-  * crypto-engine, in head position to keep order
-+ * @rt: whether this queue is set to run as a realtime task
-  * @list: link with the global crypto engine list
-  * @queue_lock: spinlock to synchronise access to request queue
-  * @queue: the crypto queue of the engine
-- * @rt: whether this queue is set to run as a realtime task
-  * @prepare_crypt_hardware: a request will soon arrive from the queue
-  * so the subsystem requests the driver to prepare the hardware
-  * by issuing this call
-@@ -51,14 +51,13 @@ struct crypto_engine {
- 	bool			running;
- 
- 	bool			retry_support;
-+	bool			rt;
- 
- 	struct list_head	list;
- 	spinlock_t		queue_lock;
- 	struct crypto_queue	queue;
- 	struct device		*dev;
- 
--	bool			rt;
--
- 	int (*prepare_crypt_hardware)(struct crypto_engine *engine);
- 	int (*unprepare_crypt_hardware)(struct crypto_engine *engine);
- 	int (*do_batch_requests)(struct crypto_engine *engine);
--- 
-2.49.0
+~ Judith
 
