@@ -1,137 +1,228 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B0E25486B
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F50D251785;
+	Thu, 17 Apr 2025 16:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744906345; cv=none; b=k34VuRUZ/1AD1a/I+qnMvD63I9vIaqSIzwXyXIut5xCwTeu0Lk6cPGtvpQM5aphGOEIE5KI0bwZ8ez0BOoJKMgcvFND/zrrrwdybJBSWjERJyqLbJRLb94UgKd3Z2UlYYULTdMkCV5OAuW6oMotkrb85ymSNfRfa8CP2UtXdahg=
+	t=1744906408; cv=none; b=da5CUv8WCY6zja8uFRCxvtSTKg16IaE64madOImRVe3vixSaRi9qmXJMOWkdP7PcVKxnncghUqCaiCj3XnHzVRP5MPTqP/ysR+8Y5zPgQsBLXvjD/IgVmrcBAM+HCugjl+6cGBHGJbSUMm+40rsqcflRZb4dL2fSu+3cmf5781Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744906345; c=relaxed/simple;
-	bh=HHChYfKbM+SU9AXTrRbUPGZWH+5EKrgHjJrOlOxv6og=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jjeSV8ulAiY7sTYshsYwZhfWmJmYOBm60OttezFm7KMajrH5irtQ3D1cMNyEl73OezuIyQYM8cB++OxRv9c2upeXG+/bSWhXkM6klYbdC+ibX5UMUd3EnEAT1iXE3Hx8wWvxI4djc/IGHaySQEIvlsv62/wL8hyqoVrgWbn6bfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vh1wPAd7; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744906408; c=relaxed/simple;
+	bh=B2jx6RLRF1IkGKeilRDgu5BJ5hcrH20ogEfV5LNYn+4=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PSFCa3R4zNjhybLsnZKwSNJsCCyf+qVovtQAZgUl7GNs3PD8ub2sUds/HTZeb3dYOClRwMKdIBeY83FBqcSgCiDYEjnkWkXaRsVTM2MufQINAN2akqdd7fn0137kY7BgEiqFqAuGpaBXEJEbQQr3wCHwzmb/lhu8D1Ic3Vhg20E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UxaLAkcp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vh1wPAd7"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-548409cd2a8so1319830e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:12:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744906342; x=1745511142; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kiIA8fIy8YmbCJnZvN/tju1TgqCKi7yKEus7AdngHaA=;
-        b=Vh1wPAd736inirq24jtgAnIzwoFgeRekSWnKvUF7dj2OGoguJ9y8iwVRIFkOziZRep
-         f3niLLew2UjWcnnGVH2iN3UmuA0Rm6g4pHjnLr0fIvuiWaTyJQkZ/Vzwe/nYE6k0JJQC
-         VKthn1R0v7DE/XE1PB4T1MVCcIYwL2u960FCdJz3kcSvPIu/+m9gMhopj9vHvF5/A4S5
-         3ea1nK6kgNbr3W7hEGZRZ8NRbsTiBZSU/yysQgExa5xglU1G2VQEKmM4k80Fq2dmNHNM
-         fEXmFWoNUqx2g6SoqCb9NSMH5G+PhAAR0GhhBNVC2scAMky0AzYj7n5Vfa4l8i2lTdj/
-         e2og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744906342; x=1745511142;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kiIA8fIy8YmbCJnZvN/tju1TgqCKi7yKEus7AdngHaA=;
-        b=MmNr6N+LR77sWwyEN0THmy0kyrZUt5dD0qMnxcfDlcxNUvas8TT+NPSeKg3WdFKSpu
-         IzyLskRGQQ1MVOGbGD1bEWTcFcmB4T+4fNVkUkk0TGTQyEn1SxF4DqscgUBagIDlH8If
-         n9xTrvHidiCNDWO+14aJGm3jCvipCP9VUumr3R3PUKz4Vm8/tvsmVo+LP1+qI7UUAQ7H
-         GpqROv78rcEvfHOO8qmCdkKxlaabVLEm9EoKel8M/FbK9ZfBXhGCdtwA+OIn/8hhNHMz
-         uOZG3Vny3fDujdTjJE2btHzWcxgQbtCkfkGxbJDJmvGzofat9whSFn7dX5Dx71KIUO0R
-         oV/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWNXwbOkwSqjSZoBMW76+eedUKCHP2YVfOaYgf+aeBJocqNNB+ASI0/NFAW6upvw9edU+zyD5l0EJLD/kQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3zAy7oCY89bmsZr9xXvfBZyIh1IDyaqTiTF7h2+jDYBEY6TJc
-	2LVfT6rSWikhgfSA6BgQVH3yjjDT588s4D3JqGvQ8ZnrI/MXQkPk
-X-Gm-Gg: ASbGncsXeL6e0Utxy+1XobFK6JuL9dbNL283hlYpfHSqWGShJgFeogyRdP0KTVcLLyj
-	3cCHOGV1vZ2pvWwxSOqa8ml7xvRfwJghJlRQGBvXOgj/z+7SMcTjhINsPTfZD37k0ljg9VUyrFE
-	FSCW+gHw9yAbxtruL3aJytD2dbjupy3j24yE7NjDGpyGGJ6QrdLNsaq4puTM4WifayMvNM02/CL
-	bI5TZ2NMDGPVIy2UTebUfU5PYs82OIkl4BNnsF2dFwUiRxiaR7O7Y8jqzNg/xTKFJrbCL/RfcgA
-	/iMMQcJUsRUgcTVeQtxYdCM6SAEilN6gKyks
-X-Google-Smtp-Source: AGHT+IHEqcCUYv49u9TJin5pQQY9jjmHnrt6QzVErhvQ26P4aN8IZwhobOglByroR8+wQnj41vZmsQ==
-X-Received: by 2002:a05:6512:a87:b0:545:ee3:f3be with SMTP id 2adb3069b0e04-54d64a7b390mr2599564e87.10.1744906341619;
-        Thu, 17 Apr 2025 09:12:21 -0700 (PDT)
-Received: from pc638.lan ([2001:9b1:d5a0:a500:2d8:61ff:fec9:d743])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6df60cf6sm2882e87.66.2025.04.17.09.12.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 09:12:21 -0700 (PDT)
-From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Baoquan He <bhe@redhat.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH 4/4] vmalloc: Align nr_vmalloc_pages and vmap_lazy_nr
-Date: Thu, 17 Apr 2025 18:12:16 +0200
-Message-Id: <20250417161216.88318-4-urezki@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250417161216.88318-1-urezki@gmail.com>
-References: <20250417161216.88318-1-urezki@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UxaLAkcp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F49BC4CEEA;
+	Thu, 17 Apr 2025 16:13:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744906407;
+	bh=B2jx6RLRF1IkGKeilRDgu5BJ5hcrH20ogEfV5LNYn+4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UxaLAkcpBpFYZB41WTPpqXXc+KpvKi9sfsG8Kkr5Jo+QD+Hx1Fdmwh0HoerQYDcPb
+	 NWAWipXBTWmihgJkq+ZoTX/0cAaLO1TA3qFbauX1gGg3+O/Bi5X1hwHOk6uDxUuRLt
+	 +PVUOTq9eetFMY1WXx24MuNGjVPQt4dqhNeVgoSWYfIIwsU3ZQUmzTxILCw0NsQO8e
+	 2Q1q1D3uzTWpScVjJNwBPyYL4U5qUBQUpruZqpQgvAwiZKpbqsUH1vzx1woyO8xwSO
+	 xuP37ozwYvL3XxLuQ2Yx4W5rXRqEFiqitHwXV2gX+dmFv0b6CQj5Qn4GVaVUhv39XO
+	 hdKuUUh1/aOXA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1u5Rrf-006Tml-PF;
+	Thu, 17 Apr 2025 17:13:24 +0100
+Date: Thu, 17 Apr 2025 17:13:23 +0100
+Message-ID: <86plhakbq4.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: D Scott Phillips <scott@os.amperecomputing.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Joey Gouly
+ <joey.gouly@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Suzuki K
+ Poulose <suzuki.poulose@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Zenghui
+ Yu <yuzenghui@huawei.com>,
+	kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] KVM: arm64: fix config.hcr used uninitialized in __kvm_at_s1e01_fast
+In-Reply-To: <86sem7yanc.fsf@scott-ph-mail.amperecomputing.com>
+References: <20250415154656.1698522-1-scott@os.amperecomputing.com>
+	<8634e9l1y8.wl-maz@kernel.org>
+	<86sem7yanc.fsf@scott-ph-mail.amperecomputing.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: scott@os.amperecomputing.com, catalin.marinas@arm.com, joey.gouly@arm.com, oliver.upton@linux.dev, suzuki.poulose@arm.com, will@kernel.org, yuzenghui@huawei.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Currently both atomics share one cache-line:
+On Thu, 17 Apr 2025 00:00:39 +0100,
+D Scott Phillips <scott@os.amperecomputing.com> wrote:
+>=20
+> Marc Zyngier <maz@kernel.org> writes:
+>=20
+> > On Tue, 15 Apr 2025 16:46:55 +0100,
+> > D Scott Phillips <scott@os.amperecomputing.com> wrote:
+> >>=20
+> >> In the skip_mmu_switch case, config.hcr was used uninitialized. On my
+> >> machine that caused garbage to be written to HCR_EL2 and then the CPU
+> >> got stuck at the synchronous exception handler. Also, the restore of
+> >> HCR_EL2 was missing at the end of the function in the same case.
+> >
+> > Huh, how embarrassing. Thanks for spotting this one.
+> >
+> >>=20
+> >> In skip_mmu_switch case, initialize config.hcr with HCR_HOST_VHE_FLAGS.
+> >>=20
+> >> Signed-off-by: D Scott Phillips <scott@os.amperecomputing.com>
+> >> ---
+> >>  arch/arm64/kvm/at.c | 8 ++++++--
+> >>  1 file changed, 6 insertions(+), 2 deletions(-)
+> >>=20
+> >> diff --git a/arch/arm64/kvm/at.c b/arch/arm64/kvm/at.c
+> >> index f74a66ce3064b..ff4b06ce661af 100644
+> >> --- a/arch/arm64/kvm/at.c
+> >> +++ b/arch/arm64/kvm/at.c
+> >> @@ -1233,8 +1233,10 @@ static u64 __kvm_at_s1e01_fast(struct kvm_vcpu =
+*vcpu, u32 op, u64 vaddr)
+> >>  	 * the right one (as we trapped from vEL2). If not, save the
+> >>  	 * full MMU context.
+> >>  	 */
+> >> -	if (vcpu_el2_e2h_is_set(vcpu) && vcpu_el2_tge_is_set(vcpu))
+> >> +	if (vcpu_el2_e2h_is_set(vcpu) && vcpu_el2_tge_is_set(vcpu)) {
+> >> +		config.hcr =3D read_sysreg(hcr_el2);
+> >>  		goto skip_mmu_switch;
+> >> +	}
+> >> =20
+> >>  	/*
+> >>  	 * Obtaining the S2 MMU for a L2 is horribly racy, and we may not
+> >> @@ -1299,7 +1301,9 @@ static u64 __kvm_at_s1e01_fast(struct kvm_vcpu *=
+vcpu, u32 op, u64 vaddr)
+> >>  	if (!fail)
+> >>  		par =3D read_sysreg_par();
+> >> =20
+> >> -	if (!(vcpu_el2_e2h_is_set(vcpu) && vcpu_el2_tge_is_set(vcpu)))
+> >> +	if (vcpu_el2_e2h_is_set(vcpu) && vcpu_el2_tge_is_set(vcpu))
+> >> +		write_sysreg(config.hcr, hcr_el2);
+> >> +	else
+> >>  		__mmu_config_restore(&config);
+> >> =20
+> >>  	return par;
+> >
+> > I think the diff below should do the trick (and incidently matches
+> > your commit message).
+>=20
+> Looks good Marc, thanks
+>=20
+> Reviewed-by: D Scott Phillips <scott@os.amperecomputing.com>
 
-<snip>
-...
-ffffffff83eab400 b vmap_lazy_nr
-ffffffff83eab408 b nr_vmalloc_pages
-...
-<snip>
+Actually, we can do much better, because the more I look at this, the
+more I find it silly. How about the patch below? It also fixes a
+latent issue where HCR_PTW was never set... I quickly tested it on my
+Q box, and nothing exploded. But at the same time, nothing exploded
+with the buggy code...
 
-those are global variables and they are only 8 bytes apart.
-Since they are modified by different threads this causes a
-false sharing. This can lead to a performance drop due to
-unnecessary cache invalidations.
+Thanks,
 
-After this patch it is aligned to a cache line boundary:
+	M.
 
-<snip>
-...
-ffffffff8260a600 d vmap_lazy_nr
-ffffffff8260a640 d nr_vmalloc_pages
-...
-<snip>
+=46rom 0191a6dfbeb52b41b2c8aa81edf7812b56a3612f Mon Sep 17 00:00:00 2001
+From: Marc Zyngier <maz@kernel.org>
+Date: Thu, 17 Apr 2025 16:24:29 +0100
+Subject: [PATCH] KVM: arm64: Don't feed uninitialised data to HCR_EL2
 
-Cc: Mateusz Guzik <mjguzik@gmail.com>
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+When the guest executes an AT S1E{0,1} from EL2, and that its
+HCR_EL2.{E2H,TGE}=3D=3D{1,1}, then this is a pure S1 translation
+that doesn't involve a guest-supplied S2, and the full S1
+context is already in place. This allows us to take a shortcut
+and avoid save/restoring a bunch of registers.
+
+However, we set HCR_EL2 to a value suitable for the use of AT
+in guest context. And we do so by using the value that we saved.
+Or not. In the case described above, we restore whatever junk
+was on the stack, and carry on with it until the next entry.
+
+Needless to say, this is completely broken.
+
+But this also triggers the realisation that saving HCR_EL2 is
+a bit pointless. We are always in host context at the point where
+reach this code, and what we program to enter the guest is a known
+value (vcpu->arch.hcr_el2).
+
+Drop the pointless save/restore, and wrap the AT operations with
+writes that switch between guest and host values for HCR_EL2.
+
+Reported-by: D Scott Phillips <scott@os.amperecomputing.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- mm/vmalloc.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/arm64/kvm/at.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 77da4613f07ff..54f60d62051da 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -1008,7 +1008,8 @@ static BLOCKING_NOTIFIER_HEAD(vmap_notify_list);
- static void drain_vmap_area_work(struct work_struct *work);
- static DECLARE_WORK(drain_vmap_work, drain_vmap_area_work);
- 
--static atomic_long_t nr_vmalloc_pages;
-+static __cacheline_aligned_in_smp atomic_long_t nr_vmalloc_pages;
-+static __cacheline_aligned_in_smp atomic_long_t vmap_lazy_nr;
- 
- unsigned long vmalloc_nr_pages(void)
- {
-@@ -2117,8 +2118,6 @@ static unsigned long lazy_max_pages(void)
- 	return log * (32UL * 1024 * 1024 / PAGE_SIZE);
+diff --git a/arch/arm64/kvm/at.c b/arch/arm64/kvm/at.c
+index ea497ffbd1b19..da5359668b9c9 100644
+--- a/arch/arm64/kvm/at.c
++++ b/arch/arm64/kvm/at.c
+@@ -464,7 +464,6 @@ struct mmu_config {
+ 	u64	sctlr;
+ 	u64	vttbr;
+ 	u64	vtcr;
+-	u64	hcr;
+ };
+=20
+ static void __mmu_config_save(struct mmu_config *config)
+@@ -487,13 +486,10 @@ static void __mmu_config_save(struct mmu_config *conf=
+ig)
+ 	config->sctlr	=3D read_sysreg_el1(SYS_SCTLR);
+ 	config->vttbr	=3D read_sysreg(vttbr_el2);
+ 	config->vtcr	=3D read_sysreg(vtcr_el2);
+-	config->hcr	=3D read_sysreg(hcr_el2);
  }
- 
--static atomic_long_t vmap_lazy_nr = ATOMIC_LONG_INIT(0);
+=20
+ static void __mmu_config_restore(struct mmu_config *config)
+ {
+-	write_sysreg(config->hcr,	hcr_el2);
 -
- /*
-  * Serialize vmap purging.  There is no actual critical section protected
-  * by this lock, but we want to avoid concurrent calls for performance
--- 
-2.39.5
+ 	/*
+ 	 * ARM errata 1165522 and 1530923 require TGE to be 1 before
+ 	 * we update the guest state.
+@@ -1248,8 +1244,8 @@ static u64 __kvm_at_s1e01_fast(struct kvm_vcpu *vcpu,=
+ u32 op, u64 vaddr)
+ 	__load_stage2(mmu, mmu->arch);
+=20
+ skip_mmu_switch:
+-	/* Clear TGE, enable S2 translation, we're rolling */
+-	write_sysreg((config.hcr & ~HCR_TGE) | HCR_VM,	hcr_el2);
++	/* Temporarily switch back to guest context */
++	write_sysreg(vcpu->arch.hcr_el2, hcr_el2);
+ 	isb();
+=20
+ 	switch (op) {
+@@ -1281,6 +1277,8 @@ static u64 __kvm_at_s1e01_fast(struct kvm_vcpu *vcpu,=
+ u32 op, u64 vaddr)
+ 	if (!fail)
+ 		par =3D read_sysreg_par();
+=20
++	write_sysreg(HCR_HOST_VHE_FLAGS, hcr_el2);
++
+ 	if (!(vcpu_el2_e2h_is_set(vcpu) && vcpu_el2_tge_is_set(vcpu)))
+ 		__mmu_config_restore(&config);
+=20
+--=20
+2.39.2
 
+
+--=20
+Without deviation from the norm, progress is not possible.
