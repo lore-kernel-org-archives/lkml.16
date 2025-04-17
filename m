@@ -1,134 +1,115 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA362DFA56
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 01:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F1C1547C9;
+	Thu, 17 Apr 2025 01:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744852197; cv=none; b=Mmso4upS3k64G1kJNGvF/mwRQSQN1dRTetXHIoUhSIrDblicsYvjuydDGtoh7sk2dVlOklGRz7HC2pLf6x5R6Rm8H2WPBsqlx2nbySM4nbc39bCgD4yAL6tfIvgACvL0PlqLF0ffUtcO2S9VRToKO+RJqPN9B6A99HxbjW/o7Go=
+	t=1744852208; cv=none; b=qA6Pda2msgauAxAqtpQfdfHyTxdxS1a4H3Gv41ZBWdgkdNpxxzVlUCH7ttTKMxjUzrLxgPn/hTWcTSL2mtzheL+BVO1WfCvJ5hZS/e/knq/kiu2adCmEmtwXmzW/8opVgkeEiK5X+YjKNxV0bL+PtzuiUQHDf45DDrnw4oIR5Cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744852197; c=relaxed/simple;
-	bh=F5llYk/jvz/itdeLiJyPvg4xOwWa9USvY293RU1USxA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GbuqfEMqNrKGNzTutu70McaxZ6JL5902FNnY5teeDy6GQNZ+UAqeKpAdo/6YHo73caPd2mfZIH4IItO7KbPIOhmRjegn3N7/7uv9hopAcFVYg4EeklzPTtcMqRSzKcwyx50HytCq6nV+mWFfVATUIzIWExQTT8G1aTseKa6vVRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YQNbjydI; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744852208; c=relaxed/simple;
+	bh=sCk4s2BEvqzj6Ctkri/ogbGb7GtmwjvsewhjBHtEO70=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kz4SvGp531L9HMUkO0o8Yp4SOGBXlWPbf8BSaMjARdialJrRKe/XsqLDYX+kPhwG3inCC1e6L1T7DBehWlMH/+byuzNgkgBWt9SNutXJWodH/ajUBqf+hEpjwZP0Wi13VMWUeo/pXgkO+2Z3YsC+EJ1MWEhT/Azk/mVSJo+zsyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=n86RXRgp; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YQNbjydI"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-223fb0f619dso3148265ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:09:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744852195; x=1745456995; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=KsBDMVl4tNJg6O1Gee8OEApious2Fe54yEWMkZNyBdY=;
-        b=YQNbjydIS7q28aN+yxVDUhxjM/wiHkw2Lo0PD8sOCOSAnKU1ENCC/jGVFG2xHqGCh5
-         a5IRJyWzxdZu7A+I4yNDvFDmhlAQicmyLOwEcqS9JhkK7H2OgyiOd8Hpw6FfiV4WfeMb
-         l4jpNZtqNS6MZqmWz3QRLWHolBrGgzzD+wH43OjaRpKI7dV/cIhzoaNF7Flzo7unor7c
-         8kaaE/WMXBg9llpJKWfQTUGe9l3tei3RSfM+tBGgGqZpadvSjMjb9NftyKRzocRrfLQo
-         mT0ANtsdGPbKjuO/vfYJ3AlSIurZCspmAyWH99Xf7eBDNPY0ne2WZvdR5UWsJwguyoTi
-         nygw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744852195; x=1745456995;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KsBDMVl4tNJg6O1Gee8OEApious2Fe54yEWMkZNyBdY=;
-        b=PMo2oSWPdaPsDLUfCxe7lg9PStbcnT7L69YVvHFURYXzK56EgWAAJwUbP48z8P+TRO
-         nMp2oKuaOrUZ9o7bmm3AXlxKw3iS+hhfZ8foNVi1/xMrhnMLww45DKevrANpDSdvxYX3
-         jROeEbymles7zZAaoD+LQuQA36O59/wPwXokOCcKZX5/dM89B4y4/38nRHAK2dXx9a+8
-         IIy9aOatg85oiENWBAiOK1EhRgvBgNzVcasfJv6E7S/xAn8ujNn55ZVQ8Kqxj8QfH6Uj
-         9C1Jg1xv4lFcPzXKF1WddFtHE8eI2ja/DpPmX/d8Cie8Q4bgj2DV6jXPGF/lNkh0js8R
-         jyug==
-X-Forwarded-Encrypted: i=1; AJvYcCWXEwjxrfT4o59Xy3OLsTvrB5LaSMrdekof51gpCR+QkGWXVRNFWRe95trbNEVP2c49bRpopw+GWs1WYys=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiU7aA6jJmt7AL5Nj+P8qP/+c6GjShR/7Id1jyPw9uiM/J7DjS
-	nmNzIOPmfBwJrm01XFu4i44DGwTJwwDc4Jb7pqlQ1uXpYPSYTIZh
-X-Gm-Gg: ASbGnctRRv8jBlK4OT6VRlrNxVMWSqmgd9h/hHx5+mwG0cvXqPGhtter+64rcLGrUpl
-	qiVicY0BYQegtRtmIZ8f9J8BdVtSrU4uWB8MtbJbIiQksIrF9sXQKve7F0xJbRH9c37XS46Sing
-	2m/bWStKCrWY9bpKX94iBiu03vF7eaeU4py6cuPCukOmeGAdUxTYTAuT15m+Yc4Dl3YpTf4Dg+f
-	BiKfKX6mPiVh1MyalS7d/fuDfXicaQkkbXbI4xDNd9kFAXz2+E4G7E6wkU4/KnUesaufLKlAnY+
-	BQ/iXiHxBZYWXi6CIPmC7mpsHXSmNcS03A80Xqxl5Te60mrdNE9CRQ==
-X-Google-Smtp-Source: AGHT+IEZL6pI4Ex/keg3vUL8nPRfLGBdHObS4FhlH+oHXonnYx6padUDmkTxJiGZ5TDCOtBhUrbTkw==
-X-Received: by 2002:a17:903:40ce:b0:223:fb3a:8631 with SMTP id d9443c01a7336-22c358ebfe1mr71952975ad.24.1744852194837;
-        Wed, 16 Apr 2025 18:09:54 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21949e5sm11110095b3a.4.2025.04.16.18.09.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 18:09:54 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-To: x86@kernel.org
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	kasan-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH v3] x86: Disable image size check for test builds
-Date: Wed, 16 Apr 2025 18:09:50 -0700
-Message-ID: <20250417010950.2203847-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="n86RXRgp"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GLW826019008;
+	Thu, 17 Apr 2025 01:09:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=ah/lLz
+	BmfOIHy5wOwIFiZy+sp117fbDDGICRD88/xh8=; b=n86RXRgper66X0nQGr/SIC
+	rYc7HochvI/iHrEML50CySpLEsaptWcfK7HSgDf7O8qS6C/zNnQPxwfo4pgb6+eX
+	AkQxleDMoK8rlIxBFadOqGo2jcEr4rie3dbIIax0MMF++ZMn6pd0zad6QNsvFpZx
+	/0fSVrfPEJLBVnApDjCByVBoqWCvNyqec4O5LUGn4DvyKYCUyG7xKmK24f0qfszi
+	hQAonjj02jIGh2uAOBqZQy5tHmE96XC2phK+ohnOB0X9wmvLcUwp4SoheHCcLnKg
+	2b1tARm921vHxIxNAf0JizkFpHIPUNgWVtNyCYPGmfBx29Pn784UoflR7LhTwiSQ
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 462mhu0r9h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 01:09:28 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53GNSmTf010392;
+	Thu, 17 Apr 2025 01:09:27 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4604qkaym2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 01:09:27 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53H19QBm24380138
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 17 Apr 2025 01:09:27 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 96C895805F;
+	Thu, 17 Apr 2025 01:09:26 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DADCF5805A;
+	Thu, 17 Apr 2025 01:09:24 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 17 Apr 2025 01:09:24 +0000 (GMT)
+Message-ID: <4a2f7fde-99ee-4bcd-a97d-fe0db418fd5f@linux.ibm.com>
+Date: Wed, 16 Apr 2025 21:09:24 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 0/9] ima: kexec: measure events between kexec load and
+ execute
+To: steven chen <chenste@linux.microsoft.com>, zohar@linux.ibm.com,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+        code@tyhicks.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+        James.Bottomley@HansenPartnership.com, bhe@redhat.com,
+        vgoyal@redhat.com, dyoung@redhat.com
+References: <20250416021028.1403-1-chenste@linux.microsoft.com>
+Content-Language: en-US
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <20250416021028.1403-1-chenste@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=Hvd2G1TS c=1 sm=1 tr=0 ts=680054c8 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=yMhMjlubAAAA:8 a=VnNF1IyMAAAA:8 a=KXIcZCm0EDoHl9fo71cA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: j6fdTeznLc-rslj-Y7d3L1utxejtCVup
+X-Proofpoint-GUID: j6fdTeznLc-rslj-Y7d3L1utxejtCVup
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_09,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 spamscore=0 mlxlogscore=999 suspectscore=0
+ malwarescore=0 bulkscore=0 clxscore=1015 impostorscore=0 mlxscore=0
+ phishscore=0 priorityscore=1501 classifier=spam authscore=0 adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504170006
 
-64-bit allyesconfig builds fail with
 
-x86_64-linux-ld: kernel image bigger than KERNEL_IMAGE_SIZE
 
-Bisect points to commit 6f110a5e4f99 ("Disable SLUB_TINY for build
-testing") as the responsible commit. Reverting that patch does indeed
-fix the problem. Further analysis shows that disabling SLUB_TINY enables
-KASAN, and that KASAN is responsible for the image size increase.
+On 4/15/25 10:10 PM, steven chen wrote:
+> From: Steven Chen <chenste@linux.microsoft.com>
+> 
+> The current kernel behavior is IMA measurements snapshot is taken at
+> kexec 'load' and not at kexec 'execute'.  IMA log is then carried
+> over to the new kernel after kexec 'execute'.
+> 
+> Currently, the kernel behavior during kexec load is to fetch the IMA
+> measurements log from TPM PCRs and store it in a buffer. When a kexec
+> reboot is triggered, this stored log buffer is carried over to the second
+> kernel. However, the time gap between kexec load and kexec reboot can be
+> very long. During this time window, new events extended into TPM PCRs miss
+> the chance to be carried over to the second kernel. This results in
+> mismatch between TPM PCR quotes and the actual IMA measurements list after
+> kexec soft reboot, which in turn results in remote attestation failure.
 
-Solve the build problem by disabling the image size check for test
-builds.
-
-Fixes: 6f110a5e4f99 ("Disable SLUB_TINY for build testing")
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
-v3: Disabled image size check instead of disabling KASAN
-    Updated subject to match change
-    Updated Cc: list to reflect affected maintainers
-
-v2: Disabled KASAN unconditionally for test builds
-    Link: https://lore.kernel.org/lkml/20250416230559.2017012-1-linux@roeck-us.net/
-
-Link to RFC:
-    https://lore.kernel.org/lkml/20250414011345.2602656-1-linux@roeck-us.net/
-
- arch/x86/kernel/vmlinux.lds.S | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index ccdc45e5b759..647d4f47486d 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -468,8 +468,10 @@ SECTIONS
- /*
-  * The ASSERT() sink to . is intentional, for binutils 2.14 compatibility:
-  */
-+#ifndef CONFIG_COMPILE_TEST
- . = ASSERT((_end - LOAD_OFFSET <= KERNEL_IMAGE_SIZE),
- 	   "kernel image bigger than KERNEL_IMAGE_SIZE");
-+#endif
- 
- /* needed for Clang - see arch/x86/entry/entry.S */
- PROVIDE(__ref_stack_chk_guard = __stack_chk_guard);
--- 
-2.45.2
+Tested-by: Stefan Berger <stefanb@linux.ibm.com> # ppc64/kvm
 
