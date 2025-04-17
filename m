@@ -1,128 +1,116 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3CE1B4223
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155301A314B;
+	Thu, 17 Apr 2025 06:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744869567; cv=none; b=mmi5/Lo4nEB6u1lNvMSfGEDfAyHBJgJtK3fAZHg+vgB8D08Jc+1n95ZNW7GjLLRRzFVqZxpLAjBqF1Iu1ZCA+iBbpaSEsBLF6Y8OP7XF6T0MghxSaJvM/A62POzaal6msmP9sNst9S+dpNtRuwUBi1X8J93dpEhhXr2XLAiZivU=
+	t=1744869702; cv=none; b=M7zqJehqiRLOMID0Ubth4Ac2rUs0wiRGkcLRji9uIuKm8CTycox2IOVY2EOBoSMvqTBfUOfgGbUtx+ennP0HERnOKAimxhmVYtJ22xEveCjnMycoOWBQVd3a5A2t8kZxmao6txGDn0k3i0D43Q+nUlO4dl8gphBgbR+3gXoN0KQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744869567; c=relaxed/simple;
-	bh=0iFoUgnREDBc/ZlkVrSYb4nxLYJIRHF5kS2B/alzlVc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jeHJlwKOEcguQI6VzXHzAEygXwIz01YvkZVDLV16rv5FXDRxo3ssbcdWYmX3n1j2DZVFjFd3hX1YOYTUY1q17q8s91r2WNvd6YOpsSn2lZj9jtlW+kEn/2ZkHtlgwHqcELiGTn+BAICpvCLibNYGRe4xYHzQRHj6YeDaPc+mJ3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jeH+NcaQ; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744869702; c=relaxed/simple;
+	bh=4kH/J9yRA5h+U0NTvsYz1RB3H5NWTJgszXCPS/hlPCc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H+A0GWJIy3S651NTpcSJ67JxzrwN+YYq81boBAJpoYCqMaDcJICXNTuzh+9Teifjz8/LyirH5qnPEexKD7fjkmMfVaK489tB9SiEBe6huxFRfCvfhDsdbSVRqB6EtimvQWtr/weNKAwIfPYH7TLQSilObWcZDMVxsbklL79+Slc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CmUP/QO8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jeH+NcaQ"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2241053582dso6027775ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:59:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744869565; x=1745474365; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Gf5v6WUNE0KkGFompqgKh9fVytzNPfs6PdhAhx8i7h8=;
-        b=jeH+NcaQ136Cny5JE6BzgT/yh9Y+QiMe7/XWlZ82ZplqgFqPpUJmLv+BcHd1m8iAAm
-         Kuaiq7ZwZSlBV+HlCEiikFvX/C1hEhW6DcoJva8Rzzl3wpYxgBI1je3kEzh1Qj46trqR
-         ACV4KSaG6ax0QLeftv1OvUxH5oZ8bYWwjwuZoDubu0hWr1olXL3PXqc7IRd0YYrczNfC
-         D7d7UcqH94khR5vgQ65voGX3RhRpvp8LAjgrL8gdt+RfKTLBPGbq1csU0IbWzzlcY76l
-         huFoFRz5bUmjHl65GAdWUHFUQRnUsHhj/zKfUqWJi0lxi8cX9fV3+SBFMkjmVkk9pKOU
-         fUEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744869565; x=1745474365;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gf5v6WUNE0KkGFompqgKh9fVytzNPfs6PdhAhx8i7h8=;
-        b=KDfTq+2h0NWv8eOzlurgVMZOcepJGGqKPgpBrr+1VX7KSSAUw7oSLqJMrQn6HcqFyF
-         32cYM/wqBqruOibGQ9tJr5m/yoZGvUnAT6OAkP60NR6CDSLerxICdvPsl7I/ZKz3bjmg
-         l3C6wqgnD1kDn/O+3iN6brePJHDmtbDLrkjPU/g259WxGZ82rF9qTWh+LXXEpE5xk+5K
-         20ua5ed2NmrdfsDrNgjYaHXzeDn7cWGpMUPArIzLSHRPbHzxDvSODRCGhdJvyns2WiQ3
-         5z1mYazWjWcFlXqGIU82W2DooslXUBJC9JNMjpCSobJgH+EidFFaz1BMrYXE4ERfEuIw
-         ViCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxX4fu6V0ysGfybf9EDQ85caqJYqwer9lRHuU+9eqeOI1NctUJiJIn4zJ7fKQLzVbSCWrY2/0pEfVi1l8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzy711yjR/zA+D8IY5ZCHjk/Ljt+vjDFDUWXNIHTRs1TeEUp7wS
-	QUo+baV+10B/MDBjrk2I59XTFVYvdGpBxZn0+h9ymSkrA2gOndsUuc6pP4Jd
-X-Gm-Gg: ASbGnctbbM6Gd0DKQJAfwlehnKkzMGfOiaoG7BOz7nMxxIKCsEmpnO6KdELIIz40aRi
-	lYQtlZFBSNnIJrG3rnOILHf01Qy7mhTrqCZlz+U08vCKNkBe50FoecEPvsbBndKNB2Jum5klkso
-	BK/WkzNWW7+iIRYn5/GWeFQqr+Fk1ESCbotdnePsmCjvMuk2BE1Kp7uari8a1TqrlZzTh/hkseG
-	f8JuejPuAWFjxkwdDvBVwmtxvQx3BhrEZvBTkLmAw/n/MCwAk9GGv6w6jH4kmoAn5JP4r5L8jls
-	K6nWyolDdExn7NnLan/pkiG0AOujLMcuajg3JIuL2nPFL6Kzng==
-X-Google-Smtp-Source: AGHT+IGOpIi8n49rg5GPxgP5C8C9KBM2mgfe0CKcnaU5ra4euhedv6ChDXYp2gZNQ30AVod4qdgISA==
-X-Received: by 2002:a17:902:d48e:b0:224:5a8:ba29 with SMTP id d9443c01a7336-22c359a22c0mr69420315ad.43.1744869565054;
-        Wed, 16 Apr 2025 22:59:25 -0700 (PDT)
-Received: from [192.168.0.161] ([14.139.108.62])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33fe6df9sm25021375ad.231.2025.04.16.22.59.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 22:59:24 -0700 (PDT)
-Message-ID: <927ff3f8-8814-4f95-ab85-0e0c14c6ed85@gmail.com>
-Date: Thu, 17 Apr 2025 11:29:20 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CmUP/QO8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E89EC4CEE4;
+	Thu, 17 Apr 2025 06:01:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744869701;
+	bh=4kH/J9yRA5h+U0NTvsYz1RB3H5NWTJgszXCPS/hlPCc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CmUP/QO880tjH/2Zpb+If0g44/vQswWmgepdZDjP9akYzXQH0uE/T/Ls2vO58rOCv
+	 3ROSjGzNouL2IG1jujMqYJpqOv7DuzbwepOsAgkNfGgMPTNTqOk0+IauwPYWpa4Zuf
+	 s3XTSdarSX+bihYVDgB0E0iEULdrXRak1nYXWFhpMYJmo6FD1IhF7j00RT4d7N8Afz
+	 1hNoaxaeQjAgJ3vykt0TqbEcFyifUUIDqLpuimu+wF+8wp5yqcPDHOClOuqDmwlZ0r
+	 NZZ+3dUueK0OD8QCYpsYJdMtzraAE62ZnwpWi8+U3j6FHRYqSxPzmxNHHF1zPAdlvW
+	 8wySxFxE/rn9Q==
+Date: Thu, 17 Apr 2025 08:01:35 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, lpieralisi@kernel.org, kw@linux.com,
+	bhelgaas@google.com, heiko@sntech.de,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	jingoohan1@gmail.com, thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
+Message-ID: <aACZP48pWk5Y62dK@ryzen>
+References: <20250416204051.GA78956@bhelgaas>
+ <bb40385c-6839-484c-90b2-d6c7ecb95ba9@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] char: mwave: smapi: Make usSmapiOK signed to fix warning
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: arnd@arndb.de, linux-kernel@vger.kernel.org
-References: <20250409211929.213360-1-purvayeshi550@gmail.com>
- <2025041520-culinary-obsessive-1dc3@gregkh>
-Content-Language: en-US
-From: Purva Yeshi <purvayeshi550@gmail.com>
-In-Reply-To: <2025041520-culinary-obsessive-1dc3@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bb40385c-6839-484c-90b2-d6c7ecb95ba9@163.com>
 
-On 15/04/25 20:22, Greg KH wrote:
-> On Thu, Apr 10, 2025 at 02:49:29AM +0530, Purva Yeshi wrote:
->> Fix Smatch-detected warning:
->> drivers/char/mwave/smapi.c:69 smapi_request() warn:
->> assigning (-5) to unsigned variable 'usSmapiOK'
->>
->> Assigning a negative value (-EIO, which is -5) to an unsigned short
->> (usSmapiOK) causes a Smatch warning because negative values cannot
->> be correctly represented in an unsigned type, leading to unexpected
->> behavior.
->>
->> Change the type of usSmapiOK from unsigned short to short to allow
->> storing negative values like -EIO without causing a type mismatch or
->> logic error.
->>
->> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
->> ---
->>   drivers/char/mwave/smapi.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/char/mwave/smapi.c b/drivers/char/mwave/smapi.c
->> index f8d79d393b69..37da1339357e 100644
->> --- a/drivers/char/mwave/smapi.c
->> +++ b/drivers/char/mwave/smapi.c
->> @@ -66,7 +66,7 @@ static int smapi_request(unsigned short inBX, unsigned short inCX,
->>   	unsigned short myoutDX = 5, *pmyoutDX = &myoutDX;
->>   	unsigned short myoutDI = 6, *pmyoutDI = &myoutDI;
->>   	unsigned short myoutSI = 7, *pmyoutSI = &myoutSI;
->> -	unsigned short usSmapiOK = -EIO, *pusSmapiOK = &usSmapiOK;
->> +	short usSmapiOK = -EIO, *pusSmapiOK = &usSmapiOK;
+On Thu, Apr 17, 2025 at 10:19:10AM +0800, Hans Zhang wrote:
+> On 2025/4/17 04:40, Bjorn Helgaas wrote:
+> > On Wed, Apr 16, 2025 at 11:19:26PM +0800, Hans Zhang wrote:
+> > > The RK3588's PCIe controller defaults to a 128-byte max payload size,
+> > > but its hardware capability actually supports 256 bytes. This results
+> > > in suboptimal performance with devices that support larger payloads.
+> > > 
+> > > Signed-off-by: Hans Zhang <18255117159@163.com>
+> > > ---
+> > >   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 18 ++++++++++++++++++
+> > >   1 file changed, 18 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> > > index c624b7ebd118..5bbb536a2576 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> > > @@ -477,6 +477,22 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
+> > >   	return IRQ_HANDLED;
+> > >   }
+> > > +static void rockchip_pcie_set_max_payload(struct rockchip_pcie *rockchip)
+> > > +{
+> > > +	struct dw_pcie *pci = &rockchip->pci;
+> > > +	u32 dev_cap, dev_ctrl;
+> > > +	u16 offset;
+> > > +
+> > > +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> > > +	dev_cap = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCAP);
+> > > +	dev_cap &= PCI_EXP_DEVCAP_PAYLOAD;
+> > > +
+> > > +	dev_ctrl = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
+> > > +	dev_ctrl &= ~PCI_EXP_DEVCTL_PAYLOAD;
+> > > +	dev_ctrl |= dev_cap << 5;
+> > > +	dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, dev_ctrl);
+> > > +}
+> > 
+> > I can't really complain too much about this since meson does basically
+> > the same thing, but there are some things I don't like about this:
+> > 
+> >    - I don't think it's safe to set MPS higher in all cases.  If we set
+> >      the Root Port MPS=256, and an Endpoint only supports MPS=128, the
+> >      Endpoint may do a 256-byte DMA read (assuming its MRRS>=256).  In
+> >      that case the RP may respond with a 256-byte payload the Endpoint
+> >      can't handle.  The generic code in pci_configure_mps() might be
+> >      smart enough to avoid that situation, but I'm not confident about
+> >      it.  Maybe I could be convinced.
+> > 
 > 
-> This no longer a "us" variable type :(
+> Dear Bjorn,
 > 
-> The joy of using this type of notation, ick.  Please fix this up to use
-> an explicit type (like s16), and fix the variable name at the same time.
-> 
-> thanks,
-> 
-> greg k-h
+> Thank you very much for your reply. If we set the Root Port MPS=256, and an
+> Endpoint only supports MPS=128. Finally, Root Port is also set to MPS=128 in
+> pci_configure_mps.
 
-Hi Greg,
+In you example below, the Endpoint has:
+ DevCap: MaxPayload 512 bytes
 
-Thanks for the feedback.
+So at least your example can't be used to prove this specific point.
+But perhaps you just wanted to show that your Max Payload Size increase
+actually works?
 
-I’ll update the patch to use an explicit s16 type and rename the 
-usSmapiOK with SmapiOK to match the new type. I’ll send a v2 shortly.
 
-Best regards,
-Purva
+Kind regards,
+Niklas
