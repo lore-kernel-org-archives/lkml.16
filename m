@@ -1,210 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DF52139DC;
-	Thu, 17 Apr 2025 13:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4004A24E00A;
+	Thu, 17 Apr 2025 13:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744897864; cv=none; b=MZc+wzg+cZPpZEe51GXoYmOMr4GG7qau4Juh0bvZktALWGbA6bV7AclnidU0UWnXKdjCzzIBQgWBfAYPgEJAxjCRhnN7jySaSiLyQi8cJHF4meMqVIyXRga7nT9hOog0dy9JWD0iJYvJ5FlT8qGIAiXO4c57U885Jt3OK6X1bxE=
+	t=1744897909; cv=none; b=XaxKqO+1/NLedPsNLmkiFGb0IIfxlXBeJUfs19wj16vh9qSnytS/d65p0kPlqGG7sPZez7T0SmdLeO59PBcFTjd4kIaMXMFnj/dBCA404+hqJRxsxMsVF09zp5XydZ27RG4o/4qJgzBRIOyvWf1pHwPT1lxrPJKjvfO/YIG5FEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744897864; c=relaxed/simple;
-	bh=lYK4pj/r9Xudb2nVt3/iLvT2yys4OYhshyiKWFUrNmY=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=LEY6qaETg64jAeNmMRhmVWKvvIeZVXph5Y3+fk8jXEHRYX09aa3yP7JjmZUXkPEhL5Elo5ltiYdJj8g/+igGaOs+8OKaT9J1mjYmxDH4bG+LmUnnZROIe+A9xQpfBJ1S8iqP0ARyBmbJh66hqyJbBlRZCjQuxPhcgDvl7DJvqQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FpHK1+eD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744897909; c=relaxed/simple;
+	bh=kvDzvFLykr8zaiqq2xGfd9BwL+jtTVVfZKHIilgYdb8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UM5xbSsW2WOSN/ByRvCbONR9BdgUAp19HrWMyvQNTrz3bC1cJQf0NRSHx0Ih1puCNCMp1LhZWIv346h+xtXxexCxsgJYtguMN4yAl5UkAIV6BpkhY7t2R29jTMqpsK47XepISS8zVXRy/ZFBBabY1GyyouSupmGy4naxnCGrBO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=GldvO/F3; arc=none smtp.client-ip=18.194.254.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FpHK1+eD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10095C4CEEA;
-	Thu, 17 Apr 2025 13:51:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744897864;
-	bh=lYK4pj/r9Xudb2nVt3/iLvT2yys4OYhshyiKWFUrNmY=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=FpHK1+eDGri/Q06V1lMnLWhOP49mBDukV/gF+Rs/IkycbV9ny4rbWaMtBCsUEg7Jm
-	 T/ex9G3w+Vd5RhzeBwAnfgZfexSq12/jqvIXdIjLl+Ds0+sJAb5TAyL1qFERazvvgO
-	 v4p9qVZWXpCR/NBnBllQi5FPpIKDS3SyFZ3WLWVQPrPONZ/XGFLqdGmCNydptKUiL8
-	 38/kLvLlq9aB6S930EWPMCRDk98NMd6JTKNicPyfBpGexX4wb0mmRGTLk69JLJzKU4
-	 tKUCU1HNrVR83FJrdsrFHoeXtNy42A1InIzwkNp0MxKA9G2IcKk5NMG23PfxKFoWuG
-	 /2uRR5HG/XdQA==
-Date: Thu, 17 Apr 2025 08:51:02 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="GldvO/F3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1744897843;
+	bh=Ns6Wz60bvg65EUaf96SxqpbEI3mWfKuVkE4GOkJviJg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=GldvO/F36l6xO24szOvfSfNy9tPpqStJNQmuoZsAxxaPZ1JUePMyIX/ESAcDtrYdU
+	 FOQGFMA+RiFR9Pls0CiCuVR82RqShU6IaejVGhWcsfvw1t/kTkcOoeMsfmtOiRLVbV
+	 aTmGJsS3rzVnYXEhhAeMZiqwhuThlu/8o+C9j1/w=
+X-QQ-mid: zesmtpip3t1744897830tbf94db9b
+X-QQ-Originating-IP: Ioc86VluU8HiyFet5Pq+rt4In2cPZ1QrjoazMmwPlL4=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 17 Apr 2025 21:50:28 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 14252534519279305629
+EX-QQ-RecipientCnt: 13
+From: WangYuli <wangyuli@uniontech.com>
+To: even.xu@intel.com,
+	xinpeng.sun@intel.com,
+	jikos@kernel.org,
+	bentiss@kernel.org
+Cc: mpearson-lenovo@squebb.ca,
+	srinivas.pandruvada@linux.intel.com,
+	guanwentao@uniontech.com,
+	phasta@kernel.org,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>
+Subject: [PATCH] HID: intel-thc-hid: intel-quicki2c: pass correct arguments to acpi_evaluate_object
+Date: Thu, 17 Apr 2025 21:50:23 +0800
+Message-ID: <DA446911D078F45A+20250417135023.543707-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
- Robert Foss <rfoss@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bjorn Andersson <andersson@kernel.org>, devicetree@vger.kernel.org, 
- Todor Tomov <todor.too@gmail.com>, 
- Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250417-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v7-0-3fd4124cf35a@linaro.org>
-References: <20250417-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v7-0-3fd4124cf35a@linaro.org>
-Message-Id: <174489760555.1657266.9336071214730240829.robh@kernel.org>
-Subject: Re: [PATCH v7 0/6] Add dt-bindings and dtsi changes for CAMSS on
- x1e80100 silicon
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NnvXaJ5yySl8yLYlWckH/4W0jvQ20VLgPRTgTbRtPfX+PhALBf3qUW5b
+	EbaC+N9jz+b4dkhwUeiCaIMDyuE6m4KegSeyINwEW9y6s07dChQAlWK/W9axxcaIsNi/qbc
+	Sr//EfRp22hTWiodD2NGC7KVoHykpZeJqmTjKLAtcpGy98Jv4fuB03djHtx/P1E+pDfOfKZ
+	jSyBV+F9fhOnwLDlww4l4v+DVCCXDnX7lgnp1Fu7PBYf9JujtbFFt0xdC8Ev0bQuehlYQ96
+	l6gBtUaKuiPqMeKCAKy2tzrfBwIVcDuZVwvplNMvnIDStGP7wL+O03KSjmxes5YyGGQPL9z
+	puunYdrhtkxUtNCNYmIViq+EziTV9NiKTFKB0O98U4kIKeIQn8uhKnk7YUiYZTrJdY4G2ct
+	c7IdaRFWJGg9OpTLN1IN3gjL6UjeC5lzWrZCEi9yHG+oH7rh5dBwTWrytZVYTJgTvAiJa4J
+	OVfXP7lFUmpgOq0M/hBbYsgggamGErU97d5ClfawwxVXu8QUy1EhS8R/ouqYdJ4Tdzx8Kgo
+	/zCm4UCLo8mRPVqCOaGV50y3xyXsRli5NlcrZ0taMiA0URTDGm6DtW2T1vGQU4KXmKcCGbf
+	dr+nF4RLESlxOGGYi3CQJuwAiiPGNmrphjKpePAuso3Zu6hz1nZ5R6Q5yB0zrnBLzND9wZC
+	m54t4BdAsc/eGlX9+ZMfi1ff4aEEVv7CxgGFfpJYFvThk5oSDk7wZQh8mRZrlrbTlFL0MOx
+	Q4deUUhbRzyRVL79rniPqq3ulO1px40yu5vKAf4hgao1YBBqerQohH9EdZOyAE8iRfAQZrr
+	eRL7VWlydto94dp3Pbl8GKzXTynRcz6E+mlxbRTueClL15FfGFba3cGjrrkKxeZURhzuLmk
+	5v57d6RnlASWhjuE5vEYo0rWmpvW3OlxRqO3Zp8wPoFwpleJJh4QFpGebax7sB80mHKDPvW
+	w8Pwiy/cQ8LBpyXC01RgomXjwHgmfOFh9wOTpqW79GBugrm0+IgkRtwrDRFEUoGA5+DmEmU
+	NGfg/gQZCN5FqjAz4tGxuI3WmzWLwxCOr4Abxu20Zyu5KFIm2W
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+X-QQ-RECHKSPAM: 0
 
+From: Wentao Guan <guanwentao@uniontech.com>
 
-On Thu, 17 Apr 2025 12:27:01 +0100, Bryan O'Donoghue wrote:
-> Changes in v7:
-> - camss compat string is in media-comitters for 6.16 so it should
->   be possible to merge the core DTSI stuff in this series now.
-> - Adds RB as indicated in previous cycle.
-> - Changes <0 0xvalue 0 0xvalue> to <0x0 0xvalue 0x0 0xvalue> per
->   current comments on linux-arm-msm.
-> - Includes CRD dtsi for the ov08x40.
-> - Link to v6: https://lore.kernel.org/r/20250314-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v6-0-edcb2cfc3122@linaro.org
-> - Link to media-comitters: https://gitlab.freedesktop.org/linux-media/media-committers
-> 
-> Changes in v6:
-> - Removes 'A phandle to an OPP node describing' per Krzysztof's comment
->   on patch #1
-> - Drops Fixes: from patch #1 - Krzysztof
-> - The ordering of opp description MXC and MMXC is kept as it matches the
->   power-domain ordering - Krzysztof/bod
-> - Link to v5: https://lore.kernel.org/r/20250313-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v5-0-846c9a6493a8@linaro.org
-> 
-> v5:
-> - Picks up a Fixes: that is a valid precursor for this series - Vlad
-> - Applies RB from Vlad
-> - Drops "cam" prefix in interconnect names - Krzysztof/Vlad
-> - Amends sorting of regs, clocks consistent with recent 8550 - Depeng/Vlad
-> - Link to v4: https://lore.kernel.org/r/20250119-b4-linux-next-24-11-18-dtsi-x1e80100-camss-v4-0-c2964504131c@linaro.org
-> 
-> v4:
-> - Applies RB from Konrad
-> - Adds the second CCI I2C bus to CCI commit log description.
->   I previously considered leaving out the always on pins but, decided
->   to include them in the end and forgot to align the commit log.
-> - Alphabetises the camcc.h included in the dtsi. - Vlad
-> - Link to v3: https://lore.kernel.org/r/20250102-b4-linux-next-24-11-18-dtsi-x1e80100-camss-v3-0-cb66d55d20cc@linaro.org
-> 
-> v3:
-> - Fixes ordering of headers in dtsi - Vlad
-> - Changes camcc to always on - Vlad
-> - Applies RB as indicated - Krzysztof, Konrad
-> - Link to v2: https://lore.kernel.org/r/20241227-b4-linux-next-24-11-18-dtsi-x1e80100-camss-v2-0-06fdd5a7d5bb@linaro.org
-> 
-> v2:
-> 
-> I've gone through each comment and implemented each suggestion since IMO
-> they were all good/correct comments.
-> 
-> Detail:
-> 
-> - Moves x1e80100 camcc to its own yaml - Krzysztof
-> - csid_wrapper comes first because it is the most relevant
->   register set - configuring all CSID blocks subordinate to it - bod, Krzysztof
-> - Fixes missing commit log - Krz
-> - Updates to latest format established @ sc7280 - bod
-> - Includes CSID lite which I forgot to add @ v1 - Konrad, bod
-> - Replaces static ICC parameters with defines - Konrad
-> - Drops newlines between x and x-name - Konrad
-> - Drops redundant iommu extents - Konrad
-> - Leaves CAMERA_AHB_CLK as-is - Kronrad, Dmitry
->   Link: https://lore.kernel.org/r/3f1a960f-062e-4c29-ae7d-126192f35a8b@oss.qualcomm.com
-> - Interrupt EDGE_RISING - Vladimir
-> - Implements suggested regulator names pending refactor to PHY API - Vladimir
-> - Drop slow_ahb_src clock - Vladimir
-> 
-> Link to v1:
-> https://lore.kernel.org/r/20241119-b4-linux-next-24-11-18-dtsi-x1e80100-camss-v1-0-54075d75f654@linaro.org
-> 
-> Working tree:
-> https://git.codelinaro.org/bryan.odonoghue/kernel/-/tree/arm-laptop/wip/x1e80100-6.13-rc3
-> 
-> v1:
-> 
-> This series adds dt-bindings and dtsi for CAMSS on x1e80100.
-> 
-> The primary difference between x1e80100 and other platforms is a new VFE
-> and CSID pair at version 680.
-> 
-> Some minor driver churn will be required to support outside of the new VFE
-> and CSID blocks but nothing too major.
-> 
-> The CAMCC in this silicon requires two, not one power-domain requiring
-> either this fix I've proposed here or something similar:
-> 
-> https://lore.kernel.org/linux-arm-msm/bad60452-41b3-42fb-acba-5b7226226d2d@linaro.org/T/#t
-> 
-> That doesn't gate adoption of the binding description though.
-> 
-> A working tree in progress can be found here:
-> https://git.codelinaro.org/bryan.odonoghue/kernel/-/tree/x1e80100-6.12-rc7+camss?ref_type=heads
-> 
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
-> Bryan O'Donoghue (6):
->       arm64: dts: qcom: x1e80100: Add CAMCC block definition
->       arm64: dts: qcom: x1e80100: Add CCI definitions
->       arm64: dts: qcom: x1e80100: Add CAMSS block definition
->       arm64: dts: qcom: x1e80100-crd: Define RGB camera clock and reset pinout
->       arm64: dts: qcom: x1e80100-crd: Add pm8010 CRD pmic,id=m regulators
->       arm64: dts: qcom: x1e80100-crd: Define RGB sensor for cci1_i2c1
-> 
->  arch/arm64/boot/dts/qcom/x1-crd.dtsi   | 106 ++++++++++
->  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 352 +++++++++++++++++++++++++++++++++
->  2 files changed, 458 insertions(+)
-> ---
-> base-commit: 0316f040a04804ff1f45e51ccd42b45552c54a60
-> change-id: 20250313-b4-linux-next-25-03-13-dtsi-x1e80100-camss-1506f74bbd3a
-> 
-> Best regards,
-> --
-> Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> 
-> 
-> 
+Delete unused argument, pass correct argument to acpi_evaluate_object.
 
+Log:
+  intel_quicki2c 0000:00:10.0: enabling device (0000 -> 0002)
+  ACPI: \_SB.PC00.THC0.ICRS: 1 arguments were passed to a non-method ACPI object (Buffer) (20230628/nsarguments-211)
+  ACPI: \_SB.PC00.THC0.ISUB: 1 arguments were passed to a non-method ACPI object (Buffer) (20230628/nsarguments-211)
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+Fixes: 5282e45ccbfa ("HID: intel-thc-hid: intel-quicki2c: Add THC QuickI2C ACPI interfaces")
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ drivers/hid/intel-thc-hid/intel-quicki2c/pci-quicki2c.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: using specified base-commit 0316f040a04804ff1f45e51ccd42b45552c54a60
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250417-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v7-0-3fd4124cf35a@linaro.org:
-
-arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dtb: /soc@0/isp@acb6000: failed to match any schema with compatible: ['qcom,x1e80100-camss']
-arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dtb: /soc@0/isp@acb6000: failed to match any schema with compatible: ['qcom,x1e80100-camss']
-arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s-oled.dtb: /soc@0/isp@acb6000: failed to match any schema with compatible: ['qcom,x1e80100-camss']
-arch/arm64/boot/dts/qcom/x1p42100-crd.dtb: /soc@0/isp@acb6000: failed to match any schema with compatible: ['qcom,x1e80100-camss']
-arch/arm64/boot/dts/qcom/x1e001de-devkit.dtb: /soc@0/isp@acb6000: failed to match any schema with compatible: ['qcom,x1e80100-camss']
-arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dtb: /soc@0/isp@acb6000: failed to match any schema with compatible: ['qcom,x1e80100-camss']
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: /soc@0/isp@acb6000: failed to match any schema with compatible: ['qcom,x1e80100-camss']
-arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtb: /soc@0/isp@acb6000: failed to match any schema with compatible: ['qcom,x1e80100-camss']
-arch/arm64/boot/dts/qcom/x1e80100-asus-vivobook-s15.dtb: /soc@0/isp@acb6000: failed to match any schema with compatible: ['qcom,x1e80100-camss']
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus15.dtb: /soc@0/isp@acb6000: failed to match any schema with compatible: ['qcom,x1e80100-camss']
-arch/arm64/boot/dts/qcom/x1e80100-crd.dtb: /soc@0/isp@acb6000: failed to match any schema with compatible: ['qcom,x1e80100-camss']
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus13.dtb: /soc@0/isp@acb6000: failed to match any schema with compatible: ['qcom,x1e80100-camss']
-
-
-
-
+diff --git a/drivers/hid/intel-thc-hid/intel-quicki2c/pci-quicki2c.c b/drivers/hid/intel-thc-hid/intel-quicki2c/pci-quicki2c.c
+index fa51155ebe39..8a8c4a46f927 100644
+--- a/drivers/hid/intel-thc-hid/intel-quicki2c/pci-quicki2c.c
++++ b/drivers/hid/intel-thc-hid/intel-quicki2c/pci-quicki2c.c
+@@ -82,15 +82,10 @@ static int quicki2c_acpi_get_dsd_property(struct acpi_device *adev, acpi_string
+ {
+ 	acpi_handle handle = acpi_device_handle(adev);
+ 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+-	union acpi_object obj = { .type = type };
+-	struct acpi_object_list arg_list = {
+-		.count = 1,
+-		.pointer = &obj,
+-	};
+ 	union acpi_object *ret_obj;
+ 	acpi_status status;
+ 
+-	status = acpi_evaluate_object(handle, dsd_method_name, &arg_list, &buffer);
++	status = acpi_evaluate_object(handle, dsd_method_name, NULL, &buffer);
+ 	if (ACPI_FAILURE(status)) {
+ 		acpi_handle_err(handle,
+ 				"Can't evaluate %s method: %d\n", dsd_method_name, status);
+-- 
+2.49.0
 
