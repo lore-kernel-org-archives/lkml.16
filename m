@@ -1,58 +1,66 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0955E2135D1
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:51:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1208B189915
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744879883; cv=none; b=LQ5a/+m2LTojgeqWunqjJr4qCBj7A0eXzvNhg7bxLTxIimVcZj1AKPv7IeAmmDvCgFtjOe7fVGNL5jjk31lnibUESfhkuTsvFNPgqKhApb33xqUCPkv5lrcisBD+E4K0j102PStEmmDcEVnHA2wkGp0rm6ossJuemaThytR60UQ=
+	t=1744879988; cv=none; b=u1+Z8ipbtCCEq0Zx2F1kz5APTSHCxuOT0FTmbX0A8OgY5ma4kDIe0UhPekykIPHxlW/8KrYgVtIa7HnRwdbKjaae6j7h0MDd18K/laq7cpTc1gYmmZNkm9LznYs1SPDvFvx2uy3JHE/2QhQUXMDZI1yktMajkZ76Bth6tM24qoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744879883; c=relaxed/simple;
-	bh=n6wml9RQwizzT5c+Rq6nZJDe8JBi4Fz5jKbqCbWDcyg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RYKMPeM8y0ZUoPPY0i72NY4GnvPO+u/jvbIUfV+eLI7kuZOqEpt9HZp5eF/uLwzP9Mr9FUCQbfN5MR6gscTC08jW6ARh+IMgTrbdtmwdlEuOVZotiVjMWlnMk0muFW4MopsvG+mx1dWoHZNO8/pkINpFUnkzIdXE67GLRj8HYmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=u3oKFiV5; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=u3oKFiV5; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1744879988; c=relaxed/simple;
+	bh=ulmDyV6ejDkgRmyzV3e8qxu62ibEhtoFBaAVkVuOShI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=nTwZm9rXgTzArGluBsrvg1rS0dGJbIv6KpwS61ENfGznnTTR/fdrZEQKaPVB6Qthr3xMJxtxT7KhRcnfLN8VqtkINNvhP24lkawbT03tTY/VEM/CiJSvylBz54cwffWKczIua+MBrmBTFCxAj0UfcaVCV8V6PtWHtA0D9KJ9PMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nuuHecBo; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="u3oKFiV5";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="u3oKFiV5"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1797C2118B;
-	Thu, 17 Apr 2025 08:51:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1744879879; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=n6wml9RQwizzT5c+Rq6nZJDe8JBi4Fz5jKbqCbWDcyg=;
-	b=u3oKFiV5tYM9EYubncbLIKQci6N4///LivxzJ4UPIg2Gh1GbS4tIrlsH4fiHhiSL/n9sep
-	hLwxW8BuKyeFkyTXZjTsQzR8qRYtbdZsBQjBqtVszxXercghcV307MpQDYwdRgg6pnR3+5
-	ZZ4D52/CMpjGF8+aqQLehxMOoVT9qRk=
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=u3oKFiV5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1744879879; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=n6wml9RQwizzT5c+Rq6nZJDe8JBi4Fz5jKbqCbWDcyg=;
-	b=u3oKFiV5tYM9EYubncbLIKQci6N4///LivxzJ4UPIg2Gh1GbS4tIrlsH4fiHhiSL/n9sep
-	hLwxW8BuKyeFkyTXZjTsQzR8qRYtbdZsBQjBqtVszxXercghcV307MpQDYwdRgg6pnR3+5
-	ZZ4D52/CMpjGF8+aqQLehxMOoVT9qRk=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 806571388F;
-	Thu, 17 Apr 2025 08:51:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 16UWHQbBAGhWaQAAD6G6ig
-	(envelope-from <jgross@suse.com>); Thu, 17 Apr 2025 08:51:18 +0000
-Message-ID: <ed8dec2a-f507-49be-a6f3-fb8a91bfef01@suse.com>
-Date: Thu, 17 Apr 2025 10:51:17 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nuuHecBo"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-38f2f391864so255187f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 01:53:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744879984; x=1745484784; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EGKAqyuIjX6qKrR5avqIVFacXI3YnxkxDjWkOaT6EAs=;
+        b=nuuHecBotzM8tZM7IAP6vZvE0UvxTwGpci3Ilz9r0FAJetn0b4tkqUztg7kb6ArdoB
+         B23U4I7J/wgyPJqGAAv42B3BveHOlrUu2tmH1bxHjUAFOZ/U2jxyBxgcLfO5ZFCQ5DOq
+         GV372golVoVrIV50un+ThfWytwMaH5ObA2xMjvTIf0OtXmqLZmlgSIZUuVzRYiWXK59t
+         5uaPaV+QbhqyKoddTEJD7+OM4hJ3tu9qgGfd8dflX/c5KBQmlw/YHLrFLG0LT9QDsYGv
+         4O34hFgk+/WI2DIOytJqkQMiK2ZxhEwhgeQ2lxuIDwv0+sMdd+3TYbCmljJCKD2eQnO/
+         ZUIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744879984; x=1745484784;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EGKAqyuIjX6qKrR5avqIVFacXI3YnxkxDjWkOaT6EAs=;
+        b=RhUxni+w5g3afANI/pdZCDdhvC8sZJcpbFHNMac6YQnrcMTpU5KtPy1DY5LxyZyWfy
+         0xoIAL5HN60KtA8Uvshl1G0jeiWZFMwA5UZPsNgp0XIDua7fQtPgP5kxsoFWbfed9Qng
+         RN9QT9Ulx4WhZ2J5e07K89ml0MBqFtTMwImP2D4ReDiJrufyS0ecbu8LrDpwWPHDuoj6
+         0HdrQ1snuhPVL1w2G7rjPXXISA98MzH3FxcwsR8g8g5VENaFJAYEjvT3RCjClrISTn7M
+         HNH+e7FXUxkrIAhCTzaSREtLM0a7ACGBo/rUKl2Cf/far8sXmMlIupyDCpZCz/2rXhFd
+         RNXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVp9TWnUPXsQo4pJ+VAgpp7KTdht84EQ4Pzm0IGUsLqATjVnSIaWBDzSKWcThhP+zfAQj98kZSRc8E3yPI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzK22XlSR3Ppe+wXB4E6qt6PO/mKvGvw7RqHpT4x7K9Fv+7+ZRr
+	yufvAEum8wOiZcXJPLxz1XyriDcRwZhb2vT3VCZGyF2yGzISwWo8NFCWAOSyR7k=
+X-Gm-Gg: ASbGncsSywWFIY7/lGpoitj+Efm4gPXTG5TiZQOXw/cHx6o/xwouuZCCiVGxzCUYX0U
+	G4DHsDprSc3cXQBCRBbcRqisOKl0/3IdJrRDae6YkOteWaE9IZs9qA+yWfojeD3TL4GtXpCvsO3
+	AAUlyk9WLgCXcanPffUTtnPFlKpifqCIOW6jEQAInblGJk8r8ydktH1jCdiPQZRAKoyG3lVDR4S
+	hqi8P3Nbgc4cnytSaUfjmlz6EIFtOa5jaumGor4kujwoReonBcZCo08VQoPrQps0uCR9BDjokMP
+	jHYAiN37hXaCL8Eycp9q4OTC1/xISu2tu7DFHxrZepLPLTQaIZQ=
+X-Google-Smtp-Source: AGHT+IHGYZBSyUm6aNN3kVG6WDLNsN53LUSe5EdIFECbYFqnyY0ClZBqXL8OnzRDjYUkhaVCHYNczA==
+X-Received: by 2002:a05:6000:402b:b0:39c:1257:dba8 with SMTP id ffacd0b85a97d-39ee5bae6c7mr4229613f8f.56.1744879984239;
+        Thu, 17 Apr 2025 01:53:04 -0700 (PDT)
+Received: from [172.20.10.3] ([37.166.173.208])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae978023sm19457102f8f.47.2025.04.17.01.53.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Apr 2025 01:53:03 -0700 (PDT)
+Message-ID: <68313fff-89d6-4a17-9006-75db971554c0@linaro.org>
+Date: Thu, 17 Apr 2025 10:50:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,234 +68,239 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] xen-netfront: handle NULL returned by
- xdp_convert_buff_to_frame()
-To: Alexey <sdl@nppct.ru>, Jakub Kicinski <kuba@kernel.org>
-Cc: Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, xen-devel@lists.xenproject.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- lvc-project@linuxtesting.org, stable@vger.kernel.org
-References: <20250414183403.265943-1-sdl@nppct.ru>
- <20250416175835.687a5872@kernel.org>
- <fa91aad9-f8f3-4b27-81b3-4c963e2e64aa@nppct.ru>
- <0c29a3f9-9e22-4e44-892d-431f06555600@suse.com>
- <452bac2e-2840-4db7-bbf4-c41e94d437a8@nppct.ru>
-Content-Language: en-US
-From: Juergen Gross <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <452bac2e-2840-4db7-bbf4-c41e94d437a8@nppct.ru>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------wVwpB04kRJxN5XByJ6VYIVNj"
-X-Rspamd-Queue-Id: 1797C2118B
-X-Spam-Score: -4.91
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.91 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SIGNED_PGP(-2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MIME_GOOD(-0.20)[multipart/signed,multipart/mixed,text/plain];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_UNKNOWN(0.10)[application/pgp-keys];
-	MIME_BASE64_TEXT(0.10)[];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+,4:~,5:~];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_TRACE(0.00)[suse.com:+];
-	FREEMAIL_CC(0.00)[kernel.org,epam.com,davemloft.net,google.com,redhat.com,iogearbox.net,gmail.com,lists.xenproject.org,vger.kernel.org,linuxtesting.org];
-	RCVD_COUNT_TWO(0.00)[2];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	HAS_ATTACHMENT(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------wVwpB04kRJxN5XByJ6VYIVNj
-Content-Type: multipart/mixed; boundary="------------AixPbTA0XpiumzqKcwDJVOSY";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: Alexey <sdl@nppct.ru>, Jakub Kicinski <kuba@kernel.org>
-Cc: Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, xen-devel@lists.xenproject.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- lvc-project@linuxtesting.org, stable@vger.kernel.org
-Message-ID: <ed8dec2a-f507-49be-a6f3-fb8a91bfef01@suse.com>
-Subject: Re: [PATCH] xen-netfront: handle NULL returned by
- xdp_convert_buff_to_frame()
-References: <20250414183403.265943-1-sdl@nppct.ru>
- <20250416175835.687a5872@kernel.org>
- <fa91aad9-f8f3-4b27-81b3-4c963e2e64aa@nppct.ru>
- <0c29a3f9-9e22-4e44-892d-431f06555600@suse.com>
- <452bac2e-2840-4db7-bbf4-c41e94d437a8@nppct.ru>
-In-Reply-To: <452bac2e-2840-4db7-bbf4-c41e94d437a8@nppct.ru>
-
---------------AixPbTA0XpiumzqKcwDJVOSY
-Content-Type: multipart/mixed; boundary="------------ZDjXjs9NJKgYc0AtBDlv4qgT"
-
---------------ZDjXjs9NJKgYc0AtBDlv4qgT
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v6 7/7] media: platform: qcom/iris: add sm8650 support
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250415-topic-sm8x50-iris-v10-v6-0-8ad319094055@linaro.org>
+ <20250415-topic-sm8x50-iris-v10-v6-7-8ad319094055@linaro.org>
+ <085acdab-87b0-3a94-72fd-881d517d95cb@quicinc.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <085acdab-87b0-3a94-72fd-881d517d95cb@quicinc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 
-T24gMTcuMDQuMjUgMTA6NDUsIEFsZXhleSB3cm90ZToNCj4gDQo+IE9uIDE3LjA0LjIwMjUg
-MTA6MTIsIErDvHJnZW4gR3Jvw58gd3JvdGU6DQo+PiBPbiAxNy4wNC4yNSAwOTowMCwgQWxl
-eGV5IHdyb3RlOg0KPj4+DQo+Pj4gT24gMTcuMDQuMjAyNSAwMzo1OCwgSmFrdWIgS2ljaW5z
-a2kgd3JvdGU6DQo+Pj4+IE9uIE1vbiwgMTQgQXByIDIwMjUgMTg6MzQ6MDEgKzAwMDAgQWxl
-eGV5IE5lcG9tbnlhc2hpaCB3cm90ZToNCj4+Pj4+IMKgwqDCoMKgwqDCoMKgwqDCoCBnZXRf
-cGFnZShwZGF0YSk7DQo+Pj4+IFBsZWFzZSBub3RpY2UgdGhpcyBnZXRfcGFnZSgpIGhlcmUu
-DQo+Pj4+DQo+Pj4+PiDCoMKgwqDCoMKgwqDCoMKgwqAgeGRwZiA9IHhkcF9jb252ZXJ0X2J1
-ZmZfdG9fZnJhbWUoeGRwKTsNCj4+Pj4+ICvCoMKgwqDCoMKgwqDCoCBpZiAodW5saWtlbHko
-IXhkcGYpKSB7DQo+Pj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB0cmFjZV94ZHBfZXhj
-ZXB0aW9uKHF1ZXVlLT5pbmZvLT5uZXRkZXYsIHByb2csIGFjdCk7DQo+Pj4+PiArwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCBicmVhazsNCj4+Pj4+ICvCoMKgwqDCoMKgwqDCoCB9DQo+Pj4g
-RG8geW91IG1lYW4gdGhhdCBpdCB3b3VsZCBiZSBiZXR0ZXIgdG8gbW92ZSB0aGUgZ2V0X3Bh
-Z2UocGRhdGEpIGNhbGwgbG93ZXIsDQo+Pj4gYWZ0ZXIgY2hlY2tpbmcgZm9yIE5VTEwgaW4g
-eGRwZiwgc28gdGhhdCB0aGUgcmVmZXJlbmNlIGNvdW50IGlzIG9ubHkgaW5jcmVhc2VkDQo+
-Pj4gYWZ0ZXIgYSBzdWNjZXNzZnVsIGNvbnZlcnNpb24/DQo+Pg0KPj4gSSB0aGluayB0aGUg
-ZXJyb3IgaGFuZGxpbmcgaGVyZSBpcyBnZW5lcmFsbHkgYnJva2VuIChvciBhdCBsZWFzdCB2
-ZXJ5DQo+PiBxdWVzdGlvbmFibGUpLg0KPj4NCj4+IEkgc3VzcGVjdCB0aGF0IGluIGNhc2Ug
-b2YgYXQgbGVhc3Qgc29tZSBlcnJvcnMgdGhlIGdldF9wYWdlKCkgaXMgbGVha2luZw0KPj4g
-ZXZlbiB3aXRob3V0IHRoaXMgbmV3IHBhdGNoLg0KPj4NCj4+IEluIGNhc2UgSSdtIHdyb25n
-IGEgY29tbWVudCByZWFzb25pbmcgd2h5IHRoZXJlIGlzIG5vIGxlYWsgc2hvdWxkIGJlDQo+
-PiBhZGRlZC4NCj4+DQo+Pg0KPj4gSnVlcmdlbg0KPiANCj4gSSB0aGluayBwZGF0YSBpcyBm
-cmVlZCBpbiB4ZHBfcmV0dXJuX2ZyYW1lX3J4X25hcGkoKSAtPiBfX3hkcF9yZXR1cm4oKQ0K
-DQpBZ3JlZWQuIEJ1dCB3aGF0IGlmIHhlbm5ldF94ZHBfeG1pdCgpIHJldHVybnMgYW4gZXJy
-b3IgPCAwPw0KDQpJbiB0aGlzIGNhc2UgeGRwX3JldHVybl9mcmFtZV9yeF9uYXBpKCkgd29u
-J3QgYmUgY2FsbGVkLg0KDQoNCkp1ZXJnZW4NCg==
---------------ZDjXjs9NJKgYc0AtBDlv4qgT
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+On 16/04/2025 12:25, Dikshita Agarwal wrote:
+> 
+> 
+> On 4/15/2025 7:17 PM, Neil Armstrong wrote:
+>> Add support for the SM8650 platform by re-using the SM8550
+>> definitions and using the vpu33 ops.
+>>
+>> Move the reset tables that diffes in a per-SoC platform
+>> header, that will contain mode SoC specific data when
+>> more codecs are introduced.
+>>
+>> The SM8650/vpu33 requires more reset lines, but the H.264
+>> decoder capabilities are identical.
+>>
+>> Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # x1e Dell
+>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+>> ---
+>>   .../platform/qcom/iris/iris_platform_common.h      |  1 +
+>>   .../media/platform/qcom/iris/iris_platform_gen2.c  | 65 +++++++++++++++++++++-
+>>   .../platform/qcom/iris/iris_platform_sm8550.h      | 11 ++++
+>>   .../platform/qcom/iris/iris_platform_sm8650.h      | 13 +++++
+>>   drivers/media/platform/qcom/iris/iris_probe.c      |  4 ++
+>>   5 files changed, 92 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h b/drivers/media/platform/qcom/iris/iris_platform_common.h
+>> index fdd40fd80178c4c66b37e392d07a0a62f492f108..6bc3a7975b04d612f6c89206eae95dac678695fc 100644
+>> --- a/drivers/media/platform/qcom/iris/iris_platform_common.h
+>> +++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
+>> @@ -35,6 +35,7 @@ enum pipe_type {
+>>   
+>>   extern struct iris_platform_data sm8250_data;
+>>   extern struct iris_platform_data sm8550_data;
+>> +extern struct iris_platform_data sm8650_data;
+>>   
+>>   enum platform_clk_type {
+>>   	IRIS_AXI_CLK,
+>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_gen2.c b/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+>> index 35d278996c430f2856d0fe59586930061a271c3e..6d1771bd68689d96b5b9087b0ad32b934f7295ee 100644
+>> --- a/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+>> +++ b/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+>> @@ -10,6 +10,9 @@
+>>   #include "iris_platform_common.h"
+>>   #include "iris_vpu_common.h"
+>>   
+>> +#include "iris_platform_sm8550.h"
+>> +#include "iris_platform_sm8650.h"
+>> +
+>>   #define VIDEO_ARCH_LX 1
+>>   
+>>   static struct platform_inst_fw_cap inst_fw_cap_sm8550[] = {
+>> @@ -142,8 +145,6 @@ static const struct icc_info sm8550_icc_table[] = {
+>>   	{ "video-mem",  1000, 15000000 },
+>>   };
+>>   
+>> -static const char * const sm8550_clk_reset_table[] = { "bus" };
+>> -
+>>   static const struct bw_info sm8550_bw_table_dec[] = {
+>>   	{ ((4096 * 2160) / 256) * 60, 1608000 },
+>>   	{ ((4096 * 2160) / 256) * 30,  826000 },
+>> @@ -264,3 +265,63 @@ struct iris_platform_data sm8550_data = {
+>>   	.dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
+>>   	.dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
+>>   };
+>> +
+>> +/*
+>> + * Shares most of SM8550 data except:
+>> + * - vpu_ops to iris_vpu33_ops
+>> + * - clk_rst_tbl to sm8650_clk_reset_table
+>> + * - controller_rst_tbl to sm8650_controller_reset_table
+>> + * - fwname to "qcom/vpu/vpu33_p4.mbn"
+>> + */
+>> +struct iris_platform_data sm8650_data = {
+>> +	.get_instance = iris_hfi_gen2_get_instance,
+>> +	.init_hfi_command_ops = iris_hfi_gen2_command_ops_init,
+>> +	.init_hfi_response_ops = iris_hfi_gen2_response_ops_init,
+>> +	.vpu_ops = &iris_vpu33_ops,
+>> +	.set_preset_registers = iris_set_sm8550_preset_registers,
+>> +	.icc_tbl = sm8550_icc_table,
+>> +	.icc_tbl_size = ARRAY_SIZE(sm8550_icc_table),
+>> +	.clk_rst_tbl = sm8650_clk_reset_table,
+>> +	.clk_rst_tbl_size = ARRAY_SIZE(sm8650_clk_reset_table),
+>> +	.controller_rst_tbl = sm8650_controller_reset_table,
+>> +	.controller_rst_tbl_size = ARRAY_SIZE(sm8650_controller_reset_table),
+>> +	.bw_tbl_dec = sm8550_bw_table_dec,
+>> +	.bw_tbl_dec_size = ARRAY_SIZE(sm8550_bw_table_dec),
+>> +	.pmdomain_tbl = sm8550_pmdomain_table,
+>> +	.pmdomain_tbl_size = ARRAY_SIZE(sm8550_pmdomain_table),
+>> +	.opp_pd_tbl = sm8550_opp_pd_table,
+>> +	.opp_pd_tbl_size = ARRAY_SIZE(sm8550_opp_pd_table),
+>> +	.clk_tbl = sm8550_clk_table,
+>> +	.clk_tbl_size = ARRAY_SIZE(sm8550_clk_table),
+>> +	/* Upper bound of DMA address range */
+>> +	.dma_mask = 0xe0000000 - 1,
+>> +	.fwname = "qcom/vpu/vpu33_p4.mbn",
+>> +	.pas_id = IRIS_PAS_ID,
+>> +	.inst_caps = &platform_inst_cap_sm8550,
+>> +	.inst_fw_caps = inst_fw_cap_sm8550,
+>> +	.inst_fw_caps_size = ARRAY_SIZE(inst_fw_cap_sm8550),
+>> +	.tz_cp_config_data = &tz_cp_config_sm8550,
+>> +	.core_arch = VIDEO_ARCH_LX,
+>> +	.hw_response_timeout = HW_RESPONSE_TIMEOUT_VALUE,
+>> +	.ubwc_config = &ubwc_config_sm8550,
+>> +	.num_vpp_pipe = 4,
+>> +	.max_session_count = 16,
+>> +	.max_core_mbpf = ((8192 * 4352) / 256) * 2,
+>> +	.input_config_params =
+>> +		sm8550_vdec_input_config_params,
+>> +	.input_config_params_size =
+>> +		ARRAY_SIZE(sm8550_vdec_input_config_params),
+>> +	.output_config_params =
+>> +		sm8550_vdec_output_config_params,
+>> +	.output_config_params_size =
+>> +		ARRAY_SIZE(sm8550_vdec_output_config_params),
+>> +	.dec_input_prop = sm8550_vdec_subscribe_input_properties,
+>> +	.dec_input_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_input_properties),
+>> +	.dec_output_prop = sm8550_vdec_subscribe_output_properties,
+>> +	.dec_output_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_output_properties),
+>> +
+>> +	.dec_ip_int_buf_tbl = sm8550_dec_ip_int_buf_tbl,
+>> +	.dec_ip_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_ip_int_buf_tbl),
+>> +	.dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
+>> +	.dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
+>> +};
+>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8550.h b/drivers/media/platform/qcom/iris/iris_platform_sm8550.h
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000..ac8847edb585e4a9ce6b669a3a5988e7809972af
+>> --- /dev/null
+>> +++ b/drivers/media/platform/qcom/iris/iris_platform_sm8550.h
+>> @@ -0,0 +1,11 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+>> + */
+>> +
+>> +#ifndef __IRIS_PLATFORM_SM8550_H__
+>> +#define __IRIS_PLATFORM_SM8550_H__
+>> +
+>> +static const char * const sm8550_clk_reset_table[] = { "bus" };
+>> +
+>> +#endif
+> There is no need of iris_platform_sm8550.h, you can keep this entry in
+> gen2.c file itself. As we are making that our base.
+> You can just have iris_platform_sm8650.h which overrides this entry with
+> SOC specific reset requirements for SM8650.
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+Ok, so this was requested by Vikash, but it seemed weird, but as Dmitry sais
+kind of symmetrical and ok in fact.
 
-xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjri
-oyspZKOBycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2
-kaV2KL9650I1SJvedYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i
-1TXkH09XSSI8mEQ/ouNcMvIJNwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/B
-BLUVbDa4+gmzDC9ezlZkTZG2t14zWPvxXP3FAp2pkW0xqG7/377qptDmrk42GlSK
-N4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEBAAHNHEp1ZXJnZW4gR3Jvc3Mg
-PGpnQHBmdXBmLm5ldD7CwHkEEwECACMFAlOMcBYCGwMHCwkIBwMCAQYVCAIJCgsE
-FgIDAQIeAQIXgAAKCRCw3p3WKL8TL0KdB/93FcIZ3GCNwFU0u3EjNbNjmXBKDY4F
-UGNQH2lvWAUy+dnyThpwdtF/jQ6j9RwE8VP0+NXcYpGJDWlNb9/JmYqLiX2Q3Tye
-vpB0CA3dbBQp0OW0fgCetToGIQrg0MbD1C/sEOv8Mr4NAfbauXjZlvTj30H2jO0u
-+6WGM6nHwbh2l5O8ZiHkH32iaSTfN7Eu5RnNVUJbvoPHZ8SlM4KWm8rG+lIkGurq
-qu5gu8q8ZMKdsdGC4bBxdQKDKHEFExLJK/nRPFmAuGlId1E3fe10v5QL+qHI3EIP
-tyfE7i9Hz6rVwi7lWKgh7pe0ZvatAudZ+JNIlBKptb64FaiIOAWDCx1SzR9KdWVy
-Z2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+wsB5BBMBAgAjBQJTjHCvAhsDBwsJ
-CAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/Ey/HmQf/RtI7kv5A2PS4
-RF7HoZhPVPogNVbC4YA6lW7DrWf0teC0RR3MzXfy6pJ+7KLgkqMlrAbN/8Dvjoz7
-8X+5vhH/rDLa9BuZQlhFmvcGtCF8eR0T1v0nC/nuAFVGy+67q2DH8As3KPu0344T
-BDpAvr2uYM4tSqxK4DURx5INz4ZZ0WNFHcqsfvlGJALDeE0LhITTd9jLzdDad1pQ
-SToCnLl6SBJZjDOX9QQcyUigZFtCXFst4dlsvddrxyqT1f17+2cFSdu7+ynLmXBK
-7abQ3rwJY8SbRO2iRulogc5vr/RLMMlscDAiDkaFQWLoqHHOdfO9rURssHNN8WkM
-nQfvUewRz80hSnVlcmdlbiBHcm9zcyA8amdyb3NzQG5vdmVsbC5jb20+wsB5BBMB
-AgAjBQJTjHDXAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/
-Ey8PUQf/ehmgCI9jB9hlgexLvgOtf7PJnFOXgMLdBQgBlVPO3/D9R8LtF9DBAFPN
-hlrsfIG/SqICoRCqUcJ96Pn3P7UUinFG/I0ECGF4EvTE1jnDkfJZr6jrbjgyoZHi
-w/4BNwSTL9rWASyLgqlA8u1mf+c2yUwcGhgkRAd1gOwungxcwzwqgljf0N51N5Jf
-VRHRtyfwq/ge+YEkDGcTU6Y0sPOuj4Dyfm8fJzdfHNQsWq3PnczLVELStJNdapwP
-OoE+lotufe3AM2vAEYJ9rTz3Cki4JFUsgLkHFqGZarrPGi1eyQcXeluldO3m91NK
-/1xMI3/+8jbO0tsn1tqSEUGIJi7ox80eSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1
-c2UuZGU+wsB5BBMBAgAjBQJTjHDrAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgEC
-F4AACgkQsN6d1ii/Ey+LhQf9GL45eU5vOowA2u5N3g3OZUEBmDHVVbqMtzwlmNC4
-k9Kx39r5s2vcFl4tXqW7g9/ViXYuiDXb0RfUpZiIUW89siKrkzmQ5dM7wRqzgJpJ
-wK8Bn2MIxAKArekWpiCKvBOB/Cc+3EXE78XdlxLyOi/NrmSGRIov0karw2RzMNOu
-5D+jLRZQd1Sv27AR+IP3I8U4aqnhLpwhK7MEy9oCILlgZ1QZe49kpcumcZKORmzB
-TNh30FVKK1EvmV2xAKDoaEOgQB4iFQLhJCdP1I5aSgM5IVFdn7v5YgEYuJYx37Io
-N1EblHI//x/e2AaIHpzK5h88NEawQsaNRpNSrcfbFmAg987ATQRTjHAWAQgAyzH6
-AOODMBjgfWE9VeCgsrwH3exNAU32gLq2xvjpWnHIs98ndPUDpnoxWQugJ6MpMncr
-0xSwFmHEgnSEjK/PAjppgmyc57BwKII3sV4on+gDVFJR6Y8ZRwgnBC5mVM6JjQ5x
-Dk8WRXljExRfUX9pNhdE5eBOZJrDRoLUmmjDtKzWaDhIg/+1Hzz93X4fCQkNVbVF
-LELU9bMaLPBG/x5q4iYZ2k2ex6d47YE1ZFdMm6YBYMOljGkZKwYde5ldM9mo45mm
-we0icXKLkpEdIXKTZeKDO+Hdv1aqFuAcccTg9RXDQjmwhC3yEmrmcfl0+rPghO0I
-v3OOImwTEe4co3c1mwARAQABwsBfBBgBAgAJBQJTjHAWAhsMAAoJELDendYovxMv
-Q/gH/1ha96vm4P/L+bQpJwrZ/dneZcmEwTbe8YFsw2V/Buv6Z4Mysln3nQK5ZadD
-534CF7TDVft7fC4tU4PONxF5D+/tvgkPfDAfF77zy2AH1vJzQ1fOU8lYFpZXTXIH
-b+559UqvIB8AdgR3SAJGHHt4RKA0F7f5ipYBBrC6cyXJyyoprT10EMvU8VGiwXvT
-yJz3fjoYsdFzpWPlJEBRMedCot60g5dmbdrZ5DWClAr0yau47zpWj3enf1tLWaqc
-suylWsviuGjKGw7KHQd3bxALOknAp4dN3QwBYCKuZ7AddY9yjynVaD5X7nF9nO5B
-jR/i1DG86lem3iBDXzXsZDn8R3/CwO0EGAEIACAWIQSFEmdy6PYElKXQl/ew3p3W
-KL8TLwUCWt3w0AIbAgCBCRCw3p3WKL8TL3YgBBkWCAAdFiEEUy2wekH2OPMeOLge
-gFxhu0/YY74FAlrd8NAACgkQgFxhu0/YY75NiwD/fQf/RXpyv9ZX4n8UJrKDq422
-bcwkujisT6jix2mOOwYBAKiip9+mAD6W5NPXdhk1XraECcIspcf2ff5kCAlG0DIN
-aTUH/RIwNWzXDG58yQoLdD/UPcFgi8GWtNUp0Fhc/GeBxGipXYnvuWxwS+Qs1Qay
-7/Nbal/v4/eZZaWs8wl2VtrHTS96/IF6q2o0qMey0dq2AxnZbQIULiEndgR625EF
-RFg+IbO4ldSkB3trsF2ypYLij4ZObm2casLIP7iB8NKmQ5PndL8Y07TtiQ+Sb/wn
-g4GgV+BJoKdDWLPCAlCMilwbZ88Ijb+HF/aipc9hsqvW/hnXC2GajJSAY3Qs9Mib
-4Hm91jzbAjmp7243pQ4bJMfYHemFFBRaoLC7ayqQjcsttN2ufINlqLFPZPR/i3IX
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+But I'll respin without this file if you request it.
 
---------------ZDjXjs9NJKgYc0AtBDlv4qgT--
+neil
 
---------------AixPbTA0XpiumzqKcwDJVOSY--
+> 
+> Thanks,
+> Dikshita
+>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8650.h b/drivers/media/platform/qcom/iris/iris_platform_sm8650.h
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000..75e9d572e788de043a56cf85a4cb634bd02226b9
+>> --- /dev/null
+>> +++ b/drivers/media/platform/qcom/iris/iris_platform_sm8650.h
+>> @@ -0,0 +1,13 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+>> + */
+>> +
+>> +#ifndef __IRIS_PLATFORM_SM8650_H__
+>> +#define __IRIS_PLATFORM_SM8650_H__
+>> +
+>> +static const char * const sm8650_clk_reset_table[] = { "bus", "core" };
+>> +
+>> +static const char * const sm8650_controller_reset_table[] = { "xo" };
+>> +
+>> +#endif
+>> diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
+>> index 4f8bce6e2002bffee4c93dcaaf6e52bf4e40992e..7cd8650fbe9c09598670530103e3d5edf32953e7 100644
+>> --- a/drivers/media/platform/qcom/iris/iris_probe.c
+>> +++ b/drivers/media/platform/qcom/iris/iris_probe.c
+>> @@ -345,6 +345,10 @@ static const struct of_device_id iris_dt_match[] = {
+>>   			.data = &sm8250_data,
+>>   		},
+>>   #endif
+>> +	{
+>> +		.compatible = "qcom,sm8650-iris",
+>> +		.data = &sm8650_data,
+>> +	},
+>>   	{ },
+>>   };
+>>   MODULE_DEVICE_TABLE(of, iris_dt_match);
+>>
 
---------------wVwpB04kRJxN5XByJ6VYIVNj
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmgAwQYFAwAAAAAACgkQsN6d1ii/Ey9G
-Mwf/Twwj0Wp2RcDpMdqCIkz7JMosHd3tyx3p/6SDcDG8CVLIgsJF52bWZHC7K0NuM54LVw9PH5DZ
-nzB3ROStaOyRzdbKrqxRq0P2rvDCUmqtdV/LJtoee2SYLWSJbM8Qo4GZVxD54/kQPRqHA1RF/YbP
-yuuUbXEEMAEudV7KZwla1hfkgpqEgj8bsUmEopVciVAYcsA1568RduxAEl3NKshkczIXsEtHVJyI
-wvUyl+2OxeyNIGn450wvbHXHjDFtumi8ovB3SVuURKUBOGN78aB7wFev0WZQ0B0a1huSThYeD+mI
-osTx4FSCrtzrewc8Mb6iT4IiT22K63ziIgTYPCm1hw==
-=lEbj
------END PGP SIGNATURE-----
-
---------------wVwpB04kRJxN5XByJ6VYIVNj--
