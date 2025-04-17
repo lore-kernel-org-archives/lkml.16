@@ -1,159 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0033B2517A3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0B0251795
 	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744901321; cv=none; b=LYyVP05TPLcfm+9feapSIs5W2WEv44GZWcrd62z3eyEinm46Tk0V1WSA2i29vuag/Bk17szYKp3jOYbee8ScVyWEsZCGkGp0rJxIcKZKEH7TNr+fS8YmpOkOFSW9Op742E+PYTNlFLE7/Uh2MWW7OAte5qF7bR2ZXDH3Q1lL1oI=
+	t=1744901324; cv=none; b=KxctCF+w8KaBcvfSqApBD3Etunh4vHT15cYEQOMkd7lydYkWmIIBtrPJXdC1vDJo+Bua2OLSqXARcQ/9WkUue9BeowEeqdvQWTY7ZENB2ZY9/6IU4MW5XrE8am4ywp0qY6Xq2A5cXUIy/sSOJDB/RXOolE9M5O8L3WwmvTVOwK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744901321; c=relaxed/simple;
-	bh=RI/pNBGOBuU1tex11uln3ZwTbH6w91FDPPlShMn6CMY=;
+	s=arc-20240116; t=1744901324; c=relaxed/simple;
+	bh=pNcBMs7ZlrUB8XX3Hza9aW8YwzWbd47vRBseMGVQzkQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bp8AJJ6nBBqT+XFFBre+ezDT8womhvheOdSnZyXIgqfIy/N6vZ6VZ4lQOkl5KMAoDZFOwtEsbw/xxv+H9uCBD1vWKffA3yXRAAV+lR5Kibdj55GcBF5Yj/6Wyewa4W3Ze60ZI4LLf2z/1eDF8Dvnh75ItY3fKxwYSoMt2GdYoso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BaMbbMiV; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mO500QtZHlHLnl3kPnTmUWtJJKRP/h8O27OjpyBZyqpT+/yPykNrW32rd5GKHZTI3jSMyad6D650Iqb864PP1g2ZkJJeCUZ6HjuL2jvHnHWkrp9au3znCDZzFWdE3YQbDdt0E9kNYE5BaQL6xn1Z2wB34CQhapTd2NvY+mReYYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=qWI2p/4d; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BaMbbMiV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1C73C4CEE4;
-	Thu, 17 Apr 2025 14:48:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744901320;
-	bh=RI/pNBGOBuU1tex11uln3ZwTbH6w91FDPPlShMn6CMY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BaMbbMiVO72PWqE+wuhllqZfSj1/11mbYrcY3ytogNL6BTf/uS27sNzpQw6FUvXUn
-	 ou3fGk/g+RImiLZEXMgEQOxRUMIARQFUnNQ/qUhO4wEkPjyTuFAD1HtPqimfzmmmNO
-	 l5jkFSHRA1uGhwy5hrZbpWyf/1s1YbQ3oviafPEOCBO6l+HPioi/cccK4EyhIuJ5Mf
-	 AHr4YhvXN8snAD4m4nL6CdexEBU8MPFm8yb4RUgMD1YKA/TZy9tJA/0Q06EQtbfkmh
-	 BYgG41G7daMyrjKi9cBQE/X3RELHy00IpjV8US1lNmsNntENQjPwjkbIJYENOo7Avf
-	 rfS4hnN/PlwCw==
-Date: Thu, 17 Apr 2025 16:48:34 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-Cc: phasta@kernel.org, Lyude Paul <lyude@redhat.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] drm/sched: Warn if pending list is not empty
-Message-ID: <aAEUwjzZ9w9xlKRY@cassiopeiae>
-References: <20250407152239.34429-2-phasta@kernel.org>
- <20250407152239.34429-5-phasta@kernel.org>
- <9607e5a54b8c5041dc7fc134425cc36c0c70b5f3.camel@mailbox.org>
- <3ac34c84-fd84-4598-96e1-239418b7109f@igalia.com>
- <aADv4ivXZoJpEA7k@pollux>
- <83758ca7-8ece-433e-b904-3d21690ead23@igalia.com>
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="qWI2p/4d"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6e8f254b875so8666036d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:48:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1744901320; x=1745506120; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=72y1EmznVSmoY7TT1dLdPEUbLZhpUALLN+CNBenUUDE=;
+        b=qWI2p/4dGO9N7gJ60X+1Qzens5N5nqExaoZZ95ERHV6OzaE4DUfZKD5bsU0l0+FIWT
+         PIaJIOOcuCj3uF8cMFxMb9L1Ylnl81Me7BjNAf1lO62pFZ9dXtf0locwGrNUZKmeQgic
+         DtYDIg+2VZQk1IztLVQprAadY7ZoOZDGfhXKiD7utogtUApKZfQjCgDkTlfYdOb0zhKg
+         +PyBjXEQLdladYfD0MuayctK39isfBv8/NT+2NgA7HEKs6rkpvJbATEYUl09QzGY7keJ
+         MRFkTKzaj0jKUv50wA7FWjX9rNq1PZnkggqcKzJunIbDCEBVjoNwlM5dZfvdmD/zbRsk
+         5bpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744901320; x=1745506120;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=72y1EmznVSmoY7TT1dLdPEUbLZhpUALLN+CNBenUUDE=;
+        b=uJ70/8i7jidKCWcZLcnVZr9c3fuHFgA5m6lCQJBBtYbJpkdVuctyZHjeVv8hu5lzOu
+         hTOiCjBONts0d1VOxaCkFFfBp20GjG2EaOfXa/xdq7jqiXBer6Gjy+7Qd4jAnhck8C6D
+         82c/cqLG6lv7GIeHj+HKtL76hd2rSJMMCvWDTl/8UtvKLNEna2vagIt7zXn/qcCiVVQQ
+         OSevtp5niQ3Chf4axXacXvJiWtaPIIrY71PweC/DPGOsf0oZIRhI4mlSdQlnMgQxPiWN
+         EMWu9kcfNePzCV1y/hfrWXtpGCVm2BHqzkg9lG+d4cNlgnBCKEsVSfnlBVT2D5r6EfTh
+         xxFg==
+X-Forwarded-Encrypted: i=1; AJvYcCXfNgPrwkrrGqEr2JbCYaJ/2OC3SIdzEapspSVvsFzoTCN3AXkbYy7wwiENDWGtK6G8ET4CATWb6CIa/IY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNMFtT0eAjiI6IGpmqlm8hYluqEHvdAIUqPKohRflqawRBZXiM
+	bacOeNBzGmTLZHRYyx3dUQLqKdONs5Gjkbz2xZ62T6j6n8PF4U6egmVFDZwvWfs=
+X-Gm-Gg: ASbGncujgEjEYH8xRrsyt5RalZ4oU0amUInq4kNsAuVRUAmuUFz7HhzOEnohDZKR697
+	5sNSXeU1M+yOsajvTeRH5DzGjRXxzPAUB/BQ0/jKAiKaJZ7zxOwhspvTvqJJry0ESRt8ttOvvUK
+	om+GtwdMCoUZokXTjH2KgznFOTh9f4rPZcMH55YPpMD8h46l2iGzpubN1gY1DccfqK/0IuQ8UnW
+	19X/S2oq1CHAPovsHOcp5Yz07TlYuNTcfDgzfAzF2e8Qtyu8AP6bTwKDc1Ae73392o9mgcTI/Xm
+	9BfpGLmwqLzKVUjhhORlIuB7xbBB8wxmtffrpbs=
+X-Google-Smtp-Source: AGHT+IGDYG8scGbGiGtdjWD5Tl+oF+abCIBc/cfLvyS8vBIxcfDBykRawx8ajQXIXSc3ZbLJsuLZ1g==
+X-Received: by 2002:a0c:c589:0:b0:6f2:c181:19db with SMTP id 6a1803df08f44-6f2c1811d13mr8653966d6.43.1744901319739;
+        Thu, 17 Apr 2025 07:48:39 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f2a4b60a2fsm38477396d6.120.2025.04.17.07.48.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 07:48:39 -0700 (PDT)
+Date: Thu, 17 Apr 2025 10:48:35 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Muchun Song <songmuchun@bytedance.com>
+Cc: mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
+	muchun.song@linux.dev, akpm@linux-foundation.org,
+	david@fromorbit.com, zhengqi.arch@bytedance.com,
+	yosry.ahmed@linux.dev, nphamcs@gmail.com, chengming.zhou@linux.dev,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, hamzamahfooz@linux.microsoft.com,
+	apais@linux.microsoft.com
+Subject: Re: [PATCH RFC 02/28] mm: memcontrol: use folio_memcg_charged() to
+ avoid potential rcu lock holding
+Message-ID: <20250417144835.GE780688@cmpxchg.org>
+References: <20250415024532.26632-1-songmuchun@bytedance.com>
+ <20250415024532.26632-3-songmuchun@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <83758ca7-8ece-433e-b904-3d21690ead23@igalia.com>
+In-Reply-To: <20250415024532.26632-3-songmuchun@bytedance.com>
 
-On Thu, Apr 17, 2025 at 03:20:44PM +0100, Tvrtko Ursulin wrote:
+On Tue, Apr 15, 2025 at 10:45:06AM +0800, Muchun Song wrote:
+> If a folio isn't charged to the memory cgroup, holding an rcu read lock
+> is needless. Users only want to know its charge status, so use
+> folio_memcg_charged() here.
 > 
-> On 17/04/2025 13:11, Danilo Krummrich wrote:
-> > On Thu, Apr 17, 2025 at 12:27:29PM +0100, Tvrtko Ursulin wrote:
-> > > 
-> > > On 17/04/2025 08:45, Philipp Stanner wrote:
-> > > > On Mon, 2025-04-07 at 17:22 +0200, Philipp Stanner wrote:
-> > > 
-> > > Problem exactly is that jobs can outlive the entities and the scheduler,
-> > > while some userspace may have a dma fence reference to the job via sync
-> > > file. This new callback would not solve it for xe, but if everything
-> > > required was reference counted it would.
-> > 
-> > I think you're mixing up the job and the dma_fence here, if a job outlives the
-> > scheduler, it clearly is a bug, always has been.
-> > 
-> > AFAIK, Xe reference counts it's driver specific job structures *and* the driver
-> > specific scheduler structure, such that drm_sched_fini() won't be called before
-> > all jobs have finished.
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> ---
+>  mm/memcontrol.c | 11 ++++-------
+>  1 file changed, 4 insertions(+), 7 deletions(-)
 > 
-> Yes, sorry, dma fence. But it is not enough to postpone drm_sched_fini until
-> the job is not finished. Problem is exported dma fence holds the pointer to
-> drm_sched_fence (and so oopses in drm_sched_fence_get_timeline_name on
-> fence->sched->name) *after* job had finished and driver was free to tear
-> everything down.
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 61488e45cab2..0fc76d50bc23 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -797,20 +797,17 @@ void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
+>  void __lruvec_stat_mod_folio(struct folio *folio, enum node_stat_item idx,
+>  			     int val)
+>  {
+> -	struct mem_cgroup *memcg;
+>  	pg_data_t *pgdat = folio_pgdat(folio);
+>  	struct lruvec *lruvec;
+>  
+> -	rcu_read_lock();
+> -	memcg = folio_memcg(folio);
+> -	/* Untracked pages have no memcg, no lruvec. Update only the node */
+> -	if (!memcg) {
+> -		rcu_read_unlock();
+> +	if (!folio_memcg_charged(folio)) {
+> +		/* Untracked pages have no memcg, no lruvec. Update only the node */
+>  		__mod_node_page_state(pgdat, idx, val);
+>  		return;
+>  	}
+>  
+> -	lruvec = mem_cgroup_lruvec(memcg, pgdat);
+> +	rcu_read_lock();
+> +	lruvec = mem_cgroup_lruvec(folio_memcg(folio), pgdat);
+>  	__mod_lruvec_state(lruvec, idx, val);
+>  	rcu_read_unlock();
 
-Well, that's a bug in drm_sched_fence then and independent from the other topic.
-Once the finished fence in a struct drm_sched_fence has been signaled it must
-live independent of the scheduler.
-
-The lifetime of the drm_sched_fence is entirely independent from the scheduler
-itself, as you correctly point out.
-
-Starting to reference count things to keep the whole scheduler etc. alive as
-long as the drm_sched_fence lives is not the correct solution.
-
-> > Multiple solutions have been discussed already, e.g. just wait for the pending
-> > list to be empty, reference count the scheduler for every pending job. Those all
-> > had significant downsides, which I don't see with this proposal.
-> > 
-> > I'm all for better ideas though -- what do you propose?
-> 
-> I think we need to brainstorm both issues and see if there is a solution
-> which solves them both, with bonus points for being elegant.
-
-The problems are not related. As mentioned above, once signaled a
-drm_sched_fence must not depend on the scheduler any longer.
-
-> > > > > diff --git a/drivers/gpu/drm/scheduler/sched_main.c
-> > > > > b/drivers/gpu/drm/scheduler/sched_main.c
-> > > > > index 6b72278c4b72..ae3152beca14 100644
-> > > > > --- a/drivers/gpu/drm/scheduler/sched_main.c
-> > > > > +++ b/drivers/gpu/drm/scheduler/sched_main.c
-> > > > > @@ -1465,6 +1465,10 @@ void drm_sched_fini(struct drm_gpu_scheduler
-> > > > > *sched)
-> > > > >    	sched->ready = false;
-> > > > >    	kfree(sched->sched_rq);
-> > > > >    	sched->sched_rq = NULL;
-> > > > > +
-> > > > > +	if (!list_empty(&sched->pending_list))
-> > > > > +		dev_err(sched->dev, "%s: Tearing down scheduler
-> > > > > while jobs are pending!\n",
-> > > > > +			__func__);
-> > > 
-> > > It isn't fair to add this error since it would out of the blue start firing
-> > > for everyone expect nouveau, no? Regardless if there is a leak or not.
-> > 
-> > I think it is pretty fair to warn when detecting a guaranteed bug, no?
-> > 
-> > If drm_sched_fini() is call while jobs are still on the pending_list, they won't
-> > ever be freed, because all workqueues are stopped.
-> 
-> Is it a guaranteed bug for drivers are aware of the drm_sched_fini()
-> limitation and are cleaning up upon themselves?
-
-How could a driver clean up on itself (unless the driver holds its own list of
-pending jobs)?
-
-Once a job is in flight (i.e. it's on the pending_list) we must guarantee that
-free_job() is called by the scheduler, which it can't do if we call
-drm_sched_fini() before the pending_list is empty.
-
-> In other words if you apply the series up to here would it trigger for
-> nouveau?
-
-No, because nouveau does something very stupid, i.e. replicate the pending_list.
-
-> Reportedly it triggers for the mock scheduler which also has no
-> leak.
-
-That sounds impossible. How do you ensure you do *not* leak memory when you tear
-down the scheduler while it still has pending jobs? Or in other words, who calls
-free_job() if not the scheduler itself?
-
-> Also, I asked in my initial reply if we have a list of which of the current
-> drivers suffer from memory leaks. Is it all or some etc.
-
-Not all, but quite some I think. The last time I looked (which is about a year
-ago) amdgpu for instance could leak memory when you unbind the driver while
-enough jobs are in flight.
+Hm, but untracked pages are the rare exception. It would seem better
+for that case to take the rcu_read_lock() unnecessarily, than it is to
+look up folio->memcg_data twice in the fast path?
