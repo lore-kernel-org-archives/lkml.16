@@ -1,135 +1,95 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97131216E30
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:33:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E91A13C82E
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744849993; cv=none; b=tBc1uxsDus+OYinVspV55bY5N0O+lRwfboYS6Ax8xnB/1LvrJ46U2zIibDQN6RhxP1Kd4VgcU4/xdLwzN0y8ULKB16SfI2XGHiGJ0hMtgGhrFoX0Xn7SBiQ+PtBpFWLx5nRjjib8HIGw5aXYt94MZdcJwfFB4ZEc3GjMFS2PisQ=
+	t=1744850208; cv=none; b=B7+AzBkXO32e9wRRMQiQnuvY2XWC6xWGJVGI5mAdLPXD1thAx57chG8lRXdYbMcjj4RnT9/wzJsVeQh9IFf9jk2mpOuGGHG7CgyUtQJvr4D2UL8OcLuWhzEGRSIyCwEp6we7TMPeSgTAFGk0RvR7oc7vMo8GlEdmqwD1S71MqYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744849993; c=relaxed/simple;
-	bh=1yv5YY4t0Wi3X/jvcxjgbarzHO5IICMFfCZkUFOWK6w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MIEkuMPANzDV+44NFsQnAvvsg3clIHC736FlPBV2bLVmpFWG3PF9pS3bNa0+Qw1MFcB8BRzs80reMBn6uHXkZGP6SVKgDTatGhcqF+k6omcZDZlWVb90Hrb1PbMr9DFZ+ZVNgcVZsd2anEcmKCuojChsDPyLW/3usN59/7sZJAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=jsMxdm1U; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neverthere.org
+	s=arc-20240116; t=1744850208; c=relaxed/simple;
+	bh=lrhUAO2ZO0O7cddUmG8H+oajQEEq4UOcN2sxu6227eY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=NvaSPBGQegiohGFOw+LhRRZ8PYkLwma6A1EkyeK6uKoMwYynbB/zcTNZgDO1bwX9dfwDJKYJeh/t6r8y2Q7E7jxuHBHiOKarhbqekL8ixtyUTR09otdrnsTDgUjzgOneDUwxbh0AW3g9lzA3dBL1XE3z8W7CHw1DwjZzfvuxViY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=b39YbBfa; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="jsMxdm1U"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-224100e9a5cso2613185ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 17:33:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neverthere.org; s=google; t=1744849990; x=1745454790; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mNJv0lcmYb9f27nCiWvpiCIAVgYIbFQyGmxFaNMZD0I=;
-        b=jsMxdm1Ukn6hsC+94BPnFfE0p0y3iljCjlWOwAoFOpFfwnTUN8IsGVVSx4sN8xYnLB
-         2p9w6WdNRDHJrAbswzPtAexHx2V7u1ZizI3WgnPY4oF7pDxnxeFoap4Bw+uwzwCSTX0F
-         nrc+u8ORWzbceWR/oZGCoFzduOddZIpH85CmnAsYznnm3iDSl1LGTMI4tKHNBtQgBWr8
-         Un15y+LOoWRr+8JQLOYmsLHgF4+vXrbyBlv3pQv1XZHRfV2Sy7NdJqH9lvZ/xQ0m4eBx
-         O00MCefTALhzyxKS11Z13Xw/E2uE62eYNTTAV16oSUZxt3aHAMEflKUhI1fbCxbQtEtq
-         XQRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744849990; x=1745454790;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mNJv0lcmYb9f27nCiWvpiCIAVgYIbFQyGmxFaNMZD0I=;
-        b=eL/aaNCVTCvjDR0O+/kCr4wnoZmNlY2hJHZAr99DWPOKfNCJAW2C/J/EUvEgmlxldg
-         JLdmaaMG0I/oJ+lJXkbkbMGS7EXv6xLYg8A1yRrGbZgn27CijyyHGze5KzCJ2Y1svmHC
-         HPLUga86UNcrQB7Ap3iUrzrC1LunTnj0D5g7ty2pjl+MytXoaXdK/whFYeyQToHCFH/I
-         ZF3iyBhMCKqF+9VVPEjuJXAbHFj8qiHX7r05p+UWvUJWPwJ5icmlsfqCzOpkVvge3fq9
-         c/rLVduTTLQDqjB246Z2HOgNu3He6idJNpkdYhqzOlTPef0q80AAnZKvN03MT+CeJvSG
-         QjHg==
-X-Forwarded-Encrypted: i=1; AJvYcCXeLYuBJB5tbXaXjapNdPTGbea6dwyWttBZJK3Iz+j/GRJtt01/sedMead4NLnYMVN8FnWu3YDO1sRypUs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvqDOfhUxSGTeCL6ltWRcGL9vLqqfvaIi1SbVKx54buOrQc9Lq
-	ZLeYWJr11Wb2tqZrE5/xwcy2mTPt+9bN5wCE6FgNgf618p7ROYqzyQgMDk5msA==
-X-Gm-Gg: ASbGncsP5YkSurNvqHFkGMIYgbkAxqvOHDaXDHE9k/sKgPxY29PI/aP26Epoxmdpn6c
-	ISRH4EXw+Pi89ZL0Ea4KCTqNKCyo9uHfO2BQcndfpqvrNABaO32ohR/5tbpd+tDe8im4mznhV4C
-	5ov7f+LZUPiD+4dAmDPG4m5rzAKjsJeBxcrasGb/BTCYVCxfN3F3nDrgVVr99x8bRhnSqitK06T
-	s5Cqx3+vmHo4JyHMLRkm0WfG6zHg9agl9IiU2kEnVBdyk4PQS5FmDcFdY3iSGJBUQwHHH7VgsvL
-	ZuaapjUbafKU6RH3TgKhQXbg/YxMd/PmZCzcYLnh+HkQCs2H3gY39QHgpWj0u9xUJ3M41RoQagK
-	6a+6PEw==
-X-Google-Smtp-Source: AGHT+IFt5YbjpyD8D2gQOKv05BlHP4z3woA0O9Kc4hWd9HjFvBJUKUheFmrQ3NAFaHH4nieVN2A+aw==
-X-Received: by 2002:a17:902:ecc6:b0:224:2715:bf44 with SMTP id d9443c01a7336-22c358d710amr58076925ad.19.1744849989906;
-        Wed, 16 Apr 2025 17:33:09 -0700 (PDT)
-Received: from tiamat (c-69-181-214-135.hsd1.ca.comcast.net. [69.181.214.135])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33ef0e6dsm20876565ad.52.2025.04.16.17.33.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 17:33:09 -0700 (PDT)
-From: Michael Rubin <matchstick@neverthere.org>
-To: gregkh@linuxfoundation.org,
-	dpenkler@gmail.com,
-	dan.carpenter@linaro.org
-Cc: linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Michael Rubin <matchstick@neverthere.org>
-Subject: [PATCH v3 18/18] staging: gpib: Removing typedef gpib_interface_t
-Date: Thu, 17 Apr 2025 00:32:46 +0000
-Message-ID: <20250417003246.84445-19-matchstick@neverthere.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250417003246.84445-1-matchstick@neverthere.org>
-References: <20250417003246.84445-1-matchstick@neverthere.org>
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="b39YbBfa"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id D7E982C03DC;
+	Thu, 17 Apr 2025 12:36:43 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1744850203;
+	bh=lrhUAO2ZO0O7cddUmG8H+oajQEEq4UOcN2sxu6227eY=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+	b=b39YbBfaqhM5YByQILxiMMtuTHBfeE5fYrQGsrpdipJ5cRIbaOY0OSNM5DBAZT4Bg
+	 /yiXTSNDTEw7gGD8XpMuiv5UYll1d6D1gc1jSozcYls2QeJeC1CYhhzfI6WEBRnhEd
+	 krXDGYlW9giRlWfJCx2KL37PGck0r8okEu9D1Dr7iHjjnPZ9s6JzbVDtvbgZNwmLCt
+	 h0tZltUTlI5mus3RbBVsfJsP50R6Vah4YjpWg8fGNPmWicXUQk06dCF/jNgHffDI0o
+	 wmEncIbjj14dtU5vIvdtXpFYLp532zc45CmUX6SMBwo1QAAhfB2z82xZZw+f+g13n5
+	 O0kPomOqPMvXg==
+Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B68004d1b0001>; Thu, 17 Apr 2025 12:36:43 +1200
+Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
+ svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 17 Apr 2025 12:36:43 +1200
+Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
+ svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
+ 15.02.1544.014; Thu, 17 Apr 2025 12:36:43 +1200
+From: Rutger van Kruiningen <Rutger.vanKruiningen@alliedtelesis.co.nz>
+To: "andrew@lunn.ch" <andrew@lunn.ch>
+CC: "horms@kernel.org" <horms@kernel.org>, "davem@davemloft.net"
+	<davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, "kuba@kernel.org" <kuba@kernel.org>
+Subject: Re: [PATCH v0] net: ethtool: Only set supplied eee ethtool settings
+Thread-Topic: [PATCH v0] net: ethtool: Only set supplied eee ethtool settings
+Thread-Index: AQHbrxyse1JWtHWT2USdHgkWBWpOW7OmGJ6AgAAhk4A=
+Date: Thu, 17 Apr 2025 00:36:43 +0000
+Message-ID: <19ffa505b6c4341e6c66370fb76f6447b820aacd.camel@alliedtelesis.co.nz>
+References: <20250416221230.1724319-1-rutger.vankruiningen@alliedtelesis.co.nz>
+	 <6694f2c8-cfc8-41ed-9ceb-3e0b10aec6b9@lunn.ch>
+In-Reply-To: <6694f2c8-cfc8-41ed-9ceb-3e0b10aec6b9@lunn.ch>
+Accept-Language: en-US, en-NZ
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1DB9F8F088F3284C912CDE8C7AEAFF97@alliedtelesis.co.nz>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=W+WbVgWk c=1 sm=1 tr=0 ts=68004d1b a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=-DMz-g34_tEA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=qZ8f-K6C4Mv00eEDbOsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
 
-Removing gpib_interface_t to adhere to Linux code style.
-
-Reported by checkpatch.pl
-
-In general, a pointer, or a struct that has elements that can reasonably be
-directly accessed should never be a typedef.
-
-Signed-off-by: Michael Rubin <matchstick@neverthere.org>
----
- drivers/staging/gpib/include/gpib_types.h | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/staging/gpib/include/gpib_types.h b/drivers/staging/gpib/include/gpib_types.h
-index 712987ca139f..0dbe45894884 100644
---- a/drivers/staging/gpib/include/gpib_types.h
-+++ b/drivers/staging/gpib/include/gpib_types.h
-@@ -8,7 +8,7 @@
- #define _GPIB_TYPES_H
- 
- #ifdef __KERNEL__
--/* gpib_interface_t defines the interface
-+/* gpib_interface defines the interface
-  * between the board-specific details dealt with in the drivers
-  * and generic interface provided by gpib-common.
-  * This really should be in a different header file.
-@@ -22,7 +22,6 @@
- #include <linux/timer.h>
- #include <linux/interrupt.h>
- 
--typedef struct gpib_interface gpib_interface_t;
- struct gpib_board;
- 
- /* config parameters that are only used by driver attach functions */
-@@ -212,7 +211,7 @@ static inline void init_gpib_pseudo_irq(struct gpib_pseudo_irq *pseudo_irq)
- /* list so we can make a linked list of drivers */
- struct gpib_interface_list {
- 	struct list_head list;
--	gpib_interface_t *interface;
-+	struct gpib_interface *interface;
- 	struct module *module;
- };
- 
-@@ -222,7 +221,7 @@ struct gpib_interface_list {
-  */
- struct gpib_board {
- 	/* functions used by this board */
--	gpib_interface_t *interface;
-+	struct gpib_interface *interface;
- 	/* Pointer to module whose use count we should increment when
- 	 * interface is in use
- 	 */
--- 
-2.43.0
-
+T24gVGh1LCAyMDI1LTA0LTE3IGF0IDAwOjM2ICswMjAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
+T24gVGh1LCBBcHIgMTcsIDIwMjUgYXQgMTA6MTI6MzBBTSArMTIwMCwgUnV0Z2VyIHZhbiBLcnVp
+bmluZ2VuDQo+IHdyb3RlOg0KPiA+IE9yaWdpbmFsbHkgYWxsIGV0aHRvb2wgZWVlIHNldHRpbmcg
+dXBkYXRlcyB3ZXJlIGF0dGVtcHRlZCBldmVuIGlmDQo+ID4gdGhlDQo+ID4gc2V0dGluZ3Mgd2Vy
+ZSBub3Qgc3VwcGxpZWQsIGNhdXNpbmcgYSBudWxsIHBvaW50ZXIgY3Jhc2guDQo+ID4gDQo+ID4g
+QWRkIGNoZWNrIGZvciBlYWNoIGVlZSBzZXR0aW5nIGFuZCBvbmx5IHVwZGF0ZSBpZiBpdCBleGlz
+dHMuDQo+IA0KPiBJIHNlZSB3aGF0IHlvdSBtZWFuLCBidXQgaSdtIHNvbWV3aGF0IHN1cnByaXNl
+ZCB3ZSBoYXZlIG5vdCBzZWVuIHRoaXMNCj4gY3Jhc2guIERvIHlvdSBoYXZlIGEgc2ltcGxlIHJl
+cHJvZHVjZXI/IEkganVzdCBkaWQNCj4gDQo+IGV0aHRvb2wgLS1kZWJ1ZyAyNTUgLS1zZXQtZWVl
+IGV0aDAgZWVlIG9uDQo+IA0KPiBhbmQgaXQgZGlkIG5vdCBjcmFzaCwgZGVzcGl0ZToNCj4gDQo+
+IHNlbmRpbmcgZ2VuZXRsaW5rIHBhY2tldCAoNDQgYnl0ZXMpOg0KPiDCoMKgwqAgbXNnIGxlbmd0
+aCA0NCBldGhvb2wgRVRIVE9PTF9NU0dfRUVFX1NFVA0KPiDCoMKgwqAgRVRIVE9PTF9NU0dfRUVF
+X1NFVA0KPiDCoMKgwqDCoMKgwqDCoCBFVEhUT09MX0FfRUVFX0hFQURFUg0KPiDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIEVUSFRPT0xfQV9IRUFERVJfREVWX05BTUUgPSAiZXRoMCINCj4gwqDCoMKg
+wqDCoMKgwqAgRVRIVE9PTF9BX0VFRV9FTkFCTEVEID0gb24NCj4gDQo+IFNvIGl0IG9ubHkgcHJv
+dmlkZWQgRVRIVE9PTF9BX0VFRV9FTkFCTEVEIGFuZCBub25lIG9mIHRoZSBvdGhlcnMuDQo+IA0K
+PiDCoMKgwqDCoMKgwqDCoMKgQW5kcmV3DQpTb3JyeSBpdCBzZWVtcyB0aGF0IHRoZXJlIGFjdHVh
+bGx5IGlzbid0IGEgcHJvYmxlbSBoZXJlLiBJIHRob3VnaHQgdGhlDQpidWcgSSBoYWQgd2FzIHJl
+bGF0ZWQgdG8gdGhpcyBidXTCoGl0IG11c3QgaGF2ZSBiZWVuIGZvciBzb21ldGhpbmcgZWxzZQ0K
+YW5kIHdhcyBmaXhlZCBhdCB0aGUgc2FtZSB0aW1lIG9mIGFkZGluZyB0aGlzIGNvZGUuDQoNCllv
+dSBjYW4gZGlzcmVndWFyZCB0aGlzIHBhdGNoLg0KDQpUaGFua3MsIFJ1dGdlci4NCg==
