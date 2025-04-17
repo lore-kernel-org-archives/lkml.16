@@ -1,47 +1,37 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34902219A76;
-	Thu, 17 Apr 2025 07:28:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D993219A76;
+	Thu, 17 Apr 2025 07:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744874938; cv=none; b=pFuGrHgJE/AgvLMT9Ne2UNhiCfAVO7tGKTwv0O50nGfnJqABE6nyarPoxx036Bbajdo/mcM3kRofbS/NGtiNKYsfRuLmz8yOhMiDUyjhtRK0UTYHBuQXxoNF/7nyyuCsCq/LY0GyCEWmGPtGPvfgm7ZMiT85f9eQxyvkJ2/HBas=
+	t=1744874953; cv=none; b=CWs5vOSvZzRo/fKXrILKZYD3voTlYH5mivpFxxpowiYpvHydcNzupyqKFuZdKlrH0d0VyaaQ0Y8RthOjcNLCCXvdLZfpj0YUcI+LUEl8HYFfzbDIwq6vmN1LdggU0Afs2zbValUJZj8vo9DExgk1wEeK1FrfegyyHpVkMBdfUbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744874938; c=relaxed/simple;
-	bh=1Go1rOeSwKFJb+OGsYoOU4Np68HqJFr1nvpQbJt93ck=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S7ifJx53pD96RH8fHNGOVvijSs9EIWFWmSKeXD41DzyzaLeJvg1j60ibx2OUW7WXPYSS5Zw1D51Tw7z03cSzz5ek1Ojtczg7ffwqCAP7Fll4czrnH615KV84Y6fvFGvDxkFHWuY2TFshvJIQCwCQAWPzhvX4gHir3Dy2KI+qLfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vFy10jB2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vFy10jB2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E447C4CEE4;
-	Thu, 17 Apr 2025 07:28:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744874937;
-	bh=1Go1rOeSwKFJb+OGsYoOU4Np68HqJFr1nvpQbJt93ck=;
-	h=From:To:Cc:Subject:Date:From;
-	b=vFy10jB2gwIdklMCwQUJWAbjJg5c0eS9HYkRp8cdZat4o4XaI3cO2neYY/aslV5rO
-	 4LdlCsnmUTplRIAl4Ij7mm5jGWFXUoI40fW5X4FuUMrM+lHFSGfAvEXckACb8rwsXk
-	 4bI07zOTbXmMoRHJx6GX5OFgOwgbMukafjWTXbEJtQmTFHjkn2H+4b3xSFxlajbqOy
-	 1nhfaglzyMb0xyq0Uk0vSPY8Bea8gTLpihzAv67MB5BKHmj4gJBqTkYZRY2LCzKhGc
-	 +29UXUCsNu9CBZ+s9CIUy8XUemRqW/3DO6DGvJgctmQ1LVPAMvvzTM5PypUHIRSMUt
-	 AiEIkae5VfCFw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1u5Jg8-000000000CH-31wy;
-	Thu, 17 Apr 2025 09:28:57 +0200
-From: Johan Hovold <johan+linaro@kernel.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rob Herring (Arm)" <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-pm@vger.kernel.org,
+	s=arc-20240116; t=1744874953; c=relaxed/simple;
+	bh=bKXHuTaUCZ2Xb/kzNU41+ezyI5P4/jk2iouHpcNh4qU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aIsrjzuSEnA7Jc8IJpd0CO5qaqonfYRXCLJkyAZdVis8CHHn3m4Ymly6ePO3Jxjgt52i3Qp8OZP0iUEpFW+vYcggajR/2oJ8cf1mJZJZ/BN2eF31fASvXgvs9ajRbs+mSSk5CZJPBWe6oQxnrb7r3tUbcrGYW+Ipk4koN8AQMtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-b0-6800adbbfdce
+From: Rakie Kim <rakie.kim@sk.com>
+To: akpm@linux-foundation.org
+Cc: gourry@gourry.net,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>,
-	stable@vger.kernel.org
-Subject: [PATCH v3] cpufreq: fix compile-test defaults
-Date: Thu, 17 Apr 2025 09:28:38 +0200
-Message-ID: <20250417072838.734-1-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	david@redhat.com,
+	Jonathan.Cameron@huawei.com,
+	osalvador@suse.de,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	rakie.kim@sk.com
+Subject: [PATCH v9 0/3] Enhance sysfs handling for memory hotplug in weighted interleave
+Date: Thu, 17 Apr 2025 16:28:34 +0900
+Message-ID: <20250417072839.711-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,83 +39,119 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrALMWRmVeSWpSXmKPExsXC9ZZnke7utQwZBg+2GlrMWb+GzWL61AuM
+	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9XizLQii9VrMhy4PXbOusvu
+	0d12md2j5chbVo/Fe14yeWz6NInd48SM3yweOx9aerzfd5XNY/Ppao/Pm+QCuKK4bFJSczLL
+	Uov07RK4Mg71bWUveKhQ8XLOKZYGxqvSXYycHBICJhIrLm1j7mLkgLB3uIKYbAJKEsf2xoBU
+	iAjISkz9e56li5GLg1ngMZPEo+cvGEESwgIREue/7mcHsVkEVCV2HP3JBmLzChhLXN6zkQli
+	vKZEw6V7TBBxQYmTM5+wgNjMAvISzVtnM4MMlRC4zyax+edVqAZJiYMrbrBMYOSdhaRnFpKe
+	BYxMqxiFMvPKchMzc0z0MirzMiv0kvNzNzECw3lZ7Z/oHYyfLgQfYhTgYFTi4T2x6H+6EGti
+	WXFl7iFGCQ5mJRHec+b/0oV4UxIrq1KL8uOLSnNSiw8xSnOwKInzGn0rTxESSE8sSc1OTS1I
+	LYLJMnFwSjUw5n2VXvA7imON59mJziziR5g76qtsn7rLmIqtCNh+0netxnyjlkORqpdWWx+1
+	q5zWPkXBt1rq13rP5s6FzzR3NpjJ9xW8Ez39X/iU+tz9gZZJvjf/2nTpGK6+nD5z9g8WJw1m
+	zgMuQa8C92erMane/1sZ+9FGqjnIxdOFkf2F0ZQKjSn2SkuVWIozEg21mIuKEwENuAoFYwIA
+	AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFLMWRmVeSWpSXmKPExsXCNUNNS3f3WoYMg4NPlC3mrF/DZjF96gVG
+	i6/rfzFb/Lx7nN3i87PXzBarFl5jszi+dR67xeG5J1ktzs86xWJxedccNot7a/6zWpyZVmRx
+	6NpzVovVazIsfm9bwebA77Fz1l12j+62y+weLUfesnos3vOSyWPTp0nsHidm/Gbx2PnQ0uP9
+	vqtsHt9ue3gsfvGByWPz6WqPz5vkAniiuGxSUnMyy1KL9O0SuDIO9W1lL3ioUPFyzimWBsar
+	0l2MHBwSAiYSK3a4gphsAkoSx/bGdDFycogIyEpM/XuepYuRi4NZ4DGTxKPnLxhBEsICERLn
+	v+5nB7FZBFQldhz9yQZi8woYS1zes5EJxJYQ0JRouHSPCSIuKHFy5hMWEJtZQF6ieets5gmM
+	XLOQpGYhSS1gZFrFKJKZV5abmJljqlecnVGZl1mhl5yfu4kRGMLLav9M3MH45bL7IUYBDkYl
+	Ht4Ti/6nC7EmlhVX5h5ilOBgVhLhPWf+L12INyWxsiq1KD++qDQntfgQozQHi5I4r1d4aoKQ
+	QHpiSWp2ampBahFMlomDU6qB8bhKYvJ9o0W3bTh+f7hRwPpwJYdCwQyOydp/dtpH7Bde4eg1
+	M1hfsknBgPPrb2WJ6Vr2awu7tT7deVU1/8E+jydnzz2Oq9gb16TCnhzMc3yt23vflEJT3rvC
+	FT8KvSW8Bef2fBHaKM51mMPy+/d6Bi9/bw8Ws8faJj3XP6/N4frZaO55idFLiaU4I9FQi7mo
+	OBEAsbaAJV0CAAA=
+X-CFilter-Loop: Reflected
 
-Commit 3f66425a4fc8 ("cpufreq: Enable COMPILE_TEST on Arm drivers")
-enabled compile testing of most Arm CPUFreq drivers but left the
-existing default values unchanged so that many drivers are enabled by
-default whenever COMPILE_TEST is selected.
+The following patch series enhances the weighted interleave policy in the
+memory management subsystem by improving sysfs handling, fixing memory leaks,
+and introducing dynamic sysfs updates for memory hotplug support.
 
-This specifically results in the S3C64XX CPUFreq driver being enabled
-and initialised during boot of non-S3C64XX platforms with the following
-error logged:
+Changes from v8:
+https://lore.kernel.org/all/20250416113123.629-1-rakie.kim@sk.com/
+- Updated lock usage during sysfs entry creation
+- Fixed sysfs removal warning triggered during exception handling paths
 
-	cpufreq: Unable to obtain ARMCLK: -2
+Changes from v7:
+https://lore.kernel.org/all/20250408073243.488-1-rakie.kim@sk.com/
+- Refactored error handling paths to remove unnecessary `goto` usage
+- Renamed unclear variables and functions for better readability
 
-Commit d4f610a9bafd ("cpufreq: Do not enable by default during compile
-testing") recently fixed most of the default values, but two entries
-were missed and two could use a more specific default condition.
+Changes from v6:
+https://lore.kernel.org/all/20250404074623.1179-1-rakie.kim@sk.com/
+- Removed redundant error handling in MEM_OFFLINE case
 
-Fix the default values for drivers that can be compile tested and that
-should be enabled by default when not compile testing.
+Changes from v5:
+https://lore.kernel.org/all/20250402014906.1086-1-rakie.kim@sk.com/
+- Added lock protection to sensitive sections
 
-Fixes: 3f66425a4fc8 ("cpufreq: Enable COMPILE_TEST on Arm drivers")
-Cc: stable@vger.kernel.org	# 6.12: d4f610a9bafd
-Cc: Rob Herring (Arm) <robh@kernel.org>
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
+Changes from v4:
+https://lore.kernel.org/all/20250401090901.1050-1-rakie.kim@sk.com/
+- Added missing `kobject_del()` when removing a kobject
+- Extended locking coverage to protect shared state
 
-Changes in v3:
- - use stable backport dependency notation instead of a Fixes tag for
-   the partial fix
+Changes from v3:
+https://lore.kernel.org/all/20250320041749.881-1-rakie.kim@sk.com/
+- Added error handling for allocation and cleanup paths
+- Replaced static node attribute list with flexible array
+- Reorganized four patches into three based on their functional scope
 
-Changes in v2:
- - rebase on commit d4f610a9bafd ("cpufreq: Do not enable by default
-   during compile testing")
+Changes from v2:
+https://lore.kernel.org/all/20250312075628.648-1-rakie.kim@sk.com/
+- Clarified commit messages
+- Refactored to avoid passing the global structure as a parameter
+
+Changes from v1:
+https://lore.kernel.org/all/20250307063534.540-1-rakie.kim@sk.com/
+- Fixed memory leaks related to `kobject` lifecycle
+- Refactored sysfs layout for hotplug readiness
+- Introduced initial memory hotplug support for weighted interleave
+
+### Introduction
+The weighted interleave policy distributes memory allocations across multiple
+NUMA nodes based on their performance weight, thereby optimizing memory
+bandwidth utilization. The weight values are configured through sysfs.
+
+Previously, sysfs entries for weighted interleave were managed statically
+at initialization. This led to several issues:
+- Memory Leaks: Improper `kobject` teardown caused memory leaks
+  when initialization failed or when nodes were removed.
+- Lack of Dynamic Updates: Sysfs attributes were created only during
+  initialization, preventing nodes added at runtime from being recognized.
+- Handling of Unusable Nodes: Sysfs entries were generated for all
+  possible nodes (`N_POSSIBLE`), including memoryless or unavailable nodes,
+  leading to sysfs entries for unusable nodes and potential
+  misconfigurations.
+
+### Patch Overview
+1. [PATCH 1/3] mm/mempolicy: Fix memory leaks in weighted interleave sysfs
+   - Ensures proper cleanup of `kobject` allocations.
+   - Adds `kobject_del()` before `kobject_put()` to clean up sysfs state correctly.
+   - Prevents memory/resource leaks and improves teardown behavior.
+   - Ensures that `sysfs_remove_file()` is not called from the release path
+     after `kobject_del()` has cleared sysfs state, to avoid potential
+     inconsistencies and warnings in the kernfs subsystem.
+
+2. [PATCH 2/3] mm/mempolicy: Prepare weighted interleave sysfs for memory hotplug
+   - Refactors static sysfs layout into a new `sysfs_wi_group` structure.
+   - Makes per-node sysfs attributes accessible to external modules.
+   - Lays groundwork for future hotplug support by enabling runtime modification.
+
+3. [PATCH 3/3] mm/mempolicy: Support memory hotplug in weighted interleave
+   - Dynamically adds/removes sysfs entries when nodes are online/offline.
+   - Limits sysfs creation to nodes with memory, avoiding unusable node entries.
+   - Hooks into memory hotplug notifier for runtime updates.
+
+These patches have been tested under CXL-based memory configurations,
+including hotplug scenarios, to ensure proper behavior and stability.
+
+ mm/mempolicy.c | 240 ++++++++++++++++++++++++++++++-------------------
+ 1 file changed, 148 insertions(+), 92 deletions(-)
 
 
- drivers/cpufreq/Kconfig.arm | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index d4d625ded285..0d46402e3094 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -76,7 +76,7 @@ config ARM_VEXPRESS_SPC_CPUFREQ
- config ARM_BRCMSTB_AVS_CPUFREQ
- 	tristate "Broadcom STB AVS CPUfreq driver"
- 	depends on (ARCH_BRCMSTB && !ARM_SCMI_CPUFREQ) || COMPILE_TEST
--	default ARCH_BRCMSTB
-+	default y if ARCH_BRCMSTB && !ARM_SCMI_CPUFREQ
- 	help
- 	  Some Broadcom STB SoCs use a co-processor running proprietary firmware
- 	  ("AVS") to handle voltage and frequency scaling. This driver provides
-@@ -88,7 +88,7 @@ config ARM_HIGHBANK_CPUFREQ
- 	tristate "Calxeda Highbank-based"
- 	depends on ARCH_HIGHBANK || COMPILE_TEST
- 	depends on CPUFREQ_DT && REGULATOR && PL320_MBOX
--	default m
-+	default m if ARCH_HIGHBANK
- 	help
- 	  This adds the CPUFreq driver for Calxeda Highbank SoC
- 	  based boards.
-@@ -133,7 +133,7 @@ config ARM_MEDIATEK_CPUFREQ
- config ARM_MEDIATEK_CPUFREQ_HW
- 	tristate "MediaTek CPUFreq HW driver"
- 	depends on ARCH_MEDIATEK || COMPILE_TEST
--	default m
-+	default m if ARCH_MEDIATEK
- 	help
- 	  Support for the CPUFreq HW driver.
- 	  Some MediaTek chipsets have a HW engine to offload the steps
-@@ -256,7 +256,7 @@ config ARM_TEGRA194_CPUFREQ
- 	tristate "Tegra194 CPUFreq support"
- 	depends on ARCH_TEGRA_194_SOC || ARCH_TEGRA_234_SOC || (64BIT && COMPILE_TEST)
- 	depends on TEGRA_BPMP
--	default ARCH_TEGRA
-+	default ARCH_TEGRA_194_SOC || ARCH_TEGRA_234_SOC
- 	help
- 	  This adds CPU frequency driver support for Tegra194 SOCs.
- 
+base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
 -- 
-2.49.0
+2.34.1
 
