@@ -1,92 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2902035962;
-	Thu, 17 Apr 2025 08:13:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31FC225785;
+	Thu, 17 Apr 2025 08:14:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744877626; cv=none; b=OPwPROR70/Qf7pJtK9NcNYMl0w59+qbv8OjYDmOWYjEnCtOw4kw2kT5VY30pgeWfq1cLdtKh2TftPmj6aGn0ii+MHl5l0dusHBATx4YOlbDvX3oOusv5sSeON5dUD3evwl8t9+DBm49PAtOo839McNN28iii0cUo3peakHHt8KM=
+	t=1744877644; cv=none; b=CdnLV2dBjOtpmTnbJtwEGZN+VJ19/SjoAcSLeC0vzoxEPJXAd7Lt3kXVz5e9H22xVBv/y3Gdpa1DmcOIGPTGTXKnnd/NPa6bKcxwspuXOeF/XZm6SlTlJG6YXT0Su8TK89UBzlClFqLPr+Gd7VGavufOGTJouJKhgUbUje12sEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744877626; c=relaxed/simple;
-	bh=zyU+Avmsupi03n5Di+kk3CCOVSwpjgJNzIO0CDPpUu4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H5ROccLrspj8F9O0/zWDtqf5lT3aeYPxETXVtQ31bS4EGa7Gu3vyHrpdt5Rr+FBP509h25eUyqesCChZWnY5bcG6S4Tz76C6wI1qhmyHp6iceBEZaj8GMx9C96CqrOKHQBuIpi4Y7vKhzYVJrHmmnZpafBYLTtMWzq8+rw+JXyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JMUsly6C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744877644; c=relaxed/simple;
+	bh=MwepOx7zs2heluVdedWctNgQH1Q2ccAbcwPdl6bA4tw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fTo5XhYMM+t6vky5pnzcFeE92fcMImw2anAm8+0GPAHXNcqnjkV++JWvKC7B+kc/Tn8HjUXP3tDkJkZx8HUASjVCRjiia8ea17BQTzFiJ3Glab4sPdp+Nvios2hfXpnMYYqq9+xaKw1C+cl3sOv8bub4guNWE2TPZQHm3kUbco0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cld+u/Jc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JMUsly6C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56139C4CEEC;
-	Thu, 17 Apr 2025 08:13:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cld+u/Jc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE08C4CEE4;
+	Thu, 17 Apr 2025 08:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744877625;
-	bh=zyU+Avmsupi03n5Di+kk3CCOVSwpjgJNzIO0CDPpUu4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=JMUsly6CkJBosudFvHyYQiPEAS77Sz/TzCUbyo3NPgAPy444unATlz2zFtmuFjd0E
-	 GIJFNBF4NPTOeACGcAQINWkdlACY1DDuvm2J/OzclZ6D9Ii7NNTfEoee+Tn42CKUm4
-	 rtRH8tQPuPpAKKwK14Er0QO0iCBCDotee6A8SdYN+z/t1iTZfPaTUZftaCTUk4S/Iv
-	 93LWgZCuGzM07dviRIyK86w1ED9b7+qRmFG5vpV42WRw2u8jTsO5fPZZOkVtaThLaQ
-	 k5fVV+Up9ZKHe9nbaysX8EOFL8IjJz54oNxG7GH0x0Lg1dqjgvh7Ebd3UQ1JQD9GlZ
-	 cBFEhsfzpL0NQ==
-From: Philipp Stanner <phasta@kernel.org>
-To: Jiri Slaby <jirislaby@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	Philipp Stanner <phasta@kernel.org>
-Subject: [PATCH] mxser: Use non-hybrid PCI devres API
-Date: Thu, 17 Apr 2025 10:13:34 +0200
-Message-ID: <20250417081333.20917-2-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	s=k20201202; t=1744877643;
+	bh=MwepOx7zs2heluVdedWctNgQH1Q2ccAbcwPdl6bA4tw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Cld+u/JcLCjQWyrbdYUIkrIg1xfu7iOwxBuvjfwhvqCVcPHsz/LMH28VMEpv/8TqL
+	 NIORsv1kGbMwhKtx8lFXopYH1tJUpqLqK5dwFT+oTfokwGgSHAgRliQJh37bE8A0YJ
+	 wnxNTGWwF0bhH+4TqxuJylD0cuyd+i0AJPtvMZY94gmeacL6ZlZYhrjgJOWOvTBsHk
+	 GBMNhSKM1WjQuslSganp33+9nl4+IWnolDyHfrEhvt+4dHXysan2LC22CirdgTNTSJ
+	 HpwXfS05v3BgJl0fbRuOHTDx6xR8WmDy89GVwXRbnnq2qsug3QFHTbaiThsvwcee5m
+	 1dCKgFX8SFp4A==
+From: Christian Brauner <brauner@kernel.org>
+To: David Howells <dhowells@redhat.com>,
+	Kees Cook <kees@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Paulo Alcantara <pc@manguebit.com>,
+	netfs@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] netfs: Mark __nonstring lookup tables
+Date: Thu, 17 Apr 2025 10:13:57 +0200
+Message-ID: <20250417-manchmal-verbal-7f84877a2c63@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250416221654.work.028-kees@kernel.org>
+References: <20250416221654.work.028-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1839; i=brauner@kernel.org; h=from:subject:message-id; bh=MwepOx7zs2heluVdedWctNgQH1Q2ccAbcwPdl6bA4tw=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQw7HDzmua4Xa0lvovN5u2fGmlee4v3aQs+ya7dvmHP9 v0J9fccOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACYio8Pw33OzUMSFtfrJGuun rtU1KT7U/Yrvfr3W78DfSt92vb82rZiR4VpwYe+Gtau6o9f/Nay6ZfXz2d+uh8oXKmau8WIUeK1 +jRsA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-mxser enables its PCI device with pcim_enable_device(). This,
-implicitly, switches the function pci_request_region() into managed
-mode, where it becomes a devres function.
+On Wed, 16 Apr 2025 15:16:55 -0700, Kees Cook wrote:
+> GCC 15's new -Wunterminated-string-initialization notices that the
+> character lookup tables "fscache_cache_states" and "fscache_cookie_states"
+> (which are not used as a C-String) need to be marked as "nonstring":
+> 
+> fs/netfs/fscache_cache.c:375:67: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (6 chars into 5 available) [-Wunterminated-string-initialization]
+>   375 | static const char fscache_cache_states[NR__FSCACHE_CACHE_STATE] = "-PAEW";
+>       |                                                                   ^~~~~~~
+> fs/netfs/fscache_cookie.c:32:69: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (11 chars into 10 available) [-Wunterminated-string-initialization]
+>    32 | static const char fscache_cookie_states[FSCACHE_COOKIE_STATE__NR] = "-LCAIFUWRD";
+>       |                                                                     ^~~~~~~~~~~~
+> 
+> [...]
 
-The PCI subsystem wants to remove this hybrid nature from its
-interfaces. To do so, users of the aforementioned combination of
-functions must be ported to non-hybrid functions.
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
-Replace the call to sometimes-managed pci_request_region() with one to
-the always-managed pcim_request_region().
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
----
- drivers/tty/mxser.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-diff --git a/drivers/tty/mxser.c b/drivers/tty/mxser.c
-index 4d45eca4929a..2fc13cc02cc5 100644
---- a/drivers/tty/mxser.c
-+++ b/drivers/tty/mxser.c
-@@ -1812,7 +1812,7 @@ static int mxser_probe(struct pci_dev *pdev,
- 
- 	/* io address */
- 	ioaddress = pci_resource_start(pdev, 2);
--	retval = pci_request_region(pdev, 2, "mxser(IO)");
-+	retval = pcim_request_region(pdev, 2, "mxser(IO)");
- 	if (retval)
- 		goto err_zero;
- 
-@@ -1822,7 +1822,7 @@ static int mxser_probe(struct pci_dev *pdev,
- 
- 	/* vector */
- 	ioaddress = pci_resource_start(pdev, 3);
--	retval = pci_request_region(pdev, 3, "mxser(vector)");
-+	retval = pcim_request_region(pdev, 3, "mxser(vector)");
- 	if (retval)
- 		goto err_zero;
- 	brd->vector = ioaddress;
--- 
-2.48.1
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
+
+[1/1] netfs: Mark __nonstring lookup tables
+      https://git.kernel.org/vfs/vfs/c/58db1c3cd0ce
