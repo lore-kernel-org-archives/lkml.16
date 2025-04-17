@@ -1,119 +1,144 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED2B81DE883;
-	Thu, 17 Apr 2025 12:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F8939851
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744892282; cv=none; b=T98xxEI5lWg118NaWzP3r+dh99qxMvbN8caRLKjEvnAyyp3ykpLoU9wk6y3L88SRBGYGMneUJiVnV63P815CNcV0wakgCIhkMCIYxQVMg4oQYR85DDrTmyf4tr7j4HcK4+9DatvjBovPUJvrRjUHm1qVjNii6S964OSAoD8tpMA=
+	t=1744892285; cv=none; b=t7BtA26UfRC4rdSSLrp/WHgZ6T4+gNwDxVpPs/IZTPsXZ+JOS0zbDWPCyqpasSjrza++qaB6H77OGkJ1XNUxne2X+MpbFmZASJQQv4cmtsiQrLZ0kGfIGT+ZfkdcRcIf+P5he8gcoYkBrd7Upc8hYlcdC6FZRHObbj5OrRSTWXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744892282; c=relaxed/simple;
-	bh=kfHszNzAZfsaqq0U9qY2KazKIPhdc2BsY3BGtdK8yzs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HBGsEW5/F6zKuQC55FWsUDSpiC/Qdp2PJi3PX5yViz0J5NfC1xr4VKlYupE0HH+vYes5Iqep7g1n+3NPEqFJIMrX7lp9U4nOMYbW/W6Epxi99uG1SM6kpBiFmDgbDPOzCyINdKUDlB9WWhpSIDIkpg5midhGBe2fA2NXXcZgOTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HrFTplON; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744892285; c=relaxed/simple;
+	bh=aI5HTFtXWensYCzuorIVAP9oUM4ihcHFh41OUyrv4QE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iiT3r3acxXWHgZhnjRhOAhplpaol6fxG91yxs8LLvnMmxrJ939i8u0S+PFI70viTCA8/pqK/k6mqUzOt8pbgUhAU4YJyni31aYmxxB3+MDB3+K0jZxUwDSN9vyV3Wmhzki4P6jp0sef5FsWmcKcmPucPB+0AbqPDVgxTBuDK7nM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=uLRCuR7+; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HrFTplON"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53HAeaEa015627;
-	Thu, 17 Apr 2025 12:17:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=8s1djKeL3fc4H9gWVuhC844rgRl5PgneXVqXQ6Os7
-	m8=; b=HrFTplON4eaEVIY8pRzY0DPFDgOLuOfTJqijR744NQ2xpz60nr+RSxnoF
-	CJMKMINuFT3O1SC2t5vXI5Yfmryub9LneukT3UT7jdP0PRf2fW2xkktNRPU12wl7
-	4ZGQ07zJ2/Agx7G3Yjv1EEx4vHxWPCp+cPFeAI2KWCEYZOYUuvLKxVKOC8rHpPM6
-	pxx6JhPFkNxU8Erds7KRzthkniSo/OfpTAslc5kY0Wlw9OXfRXIgweC6qVqnIBum
-	MGkLiUgknaB8dhUpO3c86qDDMry+mwNr1rsy4Xb0H4v/VmAsgNwdj4pvJgg7t8h+
-	GKOjd4ugUzVngtqQfpZQjo7Pba4uQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46303rrdfa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 12:17:42 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53HCHgda028278;
-	Thu, 17 Apr 2025 12:17:42 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46303rrdf8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 12:17:42 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53HBcuAj010392;
-	Thu, 17 Apr 2025 12:17:41 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4604qkdamn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 12:17:41 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53HCHb5U29754010
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 17 Apr 2025 12:17:37 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BD56020043;
-	Thu, 17 Apr 2025 12:17:37 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0978720040;
-	Thu, 17 Apr 2025 12:17:36 +0000 (GMT)
-Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.in.ibm.com (unknown [9.204.206.66])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 17 Apr 2025 12:17:35 +0000 (GMT)
-From: Gautam Menghani <gautam@linux.ibm.com>
-To: maddy@linux.ibm.com, npiggin@gmail.com, mpe@ellerman.id.au,
-        christophe.leroy@csgroup.eu, naveen@kernel.org
-Cc: Gautam Menghani <gautam@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: PPC: Kconfig: Enable CONFIG_VPA_PMU with KVM
-Date: Thu, 17 Apr 2025 17:47:23 +0530
-Message-ID: <20250417121727.267280-1-gautam@linux.ibm.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="uLRCuR7+"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6f0ad74483fso8271516d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:18:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1744892281; x=1745497081; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6zGWREKiNSbSEtD4UDjmKU/QdI2LbKnHVnU0n3Ksd+g=;
+        b=uLRCuR7+9YS47KbMtu6APXFRS+ah+/KfiOG4iWikCPq+U5XYWQ6YDmlYeY9YjI6iUc
+         yxLiOhdcW+ZSjOQugOqYNZHSBWl+RESnSEWjd1f5hiAxJ6bc+azhyDAjvk1KOgUTc+AQ
+         Rs1s24JPwR+Ulib0Fv4FwaRM7klV1bOKH2w+byjpB4JDyIJZVoz++6jQKRdpFAEIlKbs
+         TBB2Vc3khVejT/M0x9lY9xHyKu7WMBcHWy+KpCerjuLmQ7TF4pVaNQoXiwDVzrEZy9W+
+         WAOwx/XGd8RHzlPidNVh5uJ5xRaS4D3VY7tRaByk8div6r3DADrxJSINFiA2O/AIukRr
+         neUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744892281; x=1745497081;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6zGWREKiNSbSEtD4UDjmKU/QdI2LbKnHVnU0n3Ksd+g=;
+        b=AeXbGQ6BKSJkC16zlsib0Dn9VUW98D7Nr9OG+WN3ihpkG2pBRI30tp56gEsceIdz5C
+         pRQS7ePUNNafXddPpnbjj3BwHGNo20X4RSmwF5f4t+lS7GlH00tb/LeYUjqANw4fz1Jg
+         ioesahh0O/AKxn1WBYw5iOa/7PAFgVcM3vBRfzTdzYbdfmmbun2t+q2GObznqDYZl8tI
+         UofbtGLzCi3/2W4RFR9JbFvf2IKk3nj0PMpj+lOC66EfVzyNZlhc6nNyipaQFSpHgvLa
+         uLA6fxHktGkt77/UZ2rhNs9rwbbxwovnFgqBktTBYY89PK1+DtZLi9VvIQg/KDEe3h2a
+         GFjA==
+X-Forwarded-Encrypted: i=1; AJvYcCX7RMU2HHm46bbJUjfr+8NZcsMjxLlp1MT8/J/wyLNEneiwcNhRG7dcrrYkLftA9++F8foxlcW0a0daxlM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+CbvCQfjB4j1AwY15XWjcx1mlOYN7M0jXN96oQ1YlQ3VHizG0
+	cM/nhiaZcL8f0MLsEAiL9/jgTtAASHtetJ2jcsaH1yzmzJ8xcaz54GZnhDZnIdA=
+X-Gm-Gg: ASbGncs7Dq77ITbTAcnq5Ma1BreqVv4y35rHxU4YvSNORAKNgCif7YIrpTdseYS7EFg
+	EtSajVGJs/7jT0vIR0b80mmY8EO6CmFHsHRgrR6dmMdIIFfCZoTAi4x5Oi9zI34n6BfuAHnRGT4
+	0MU8E8Iu5U2YxTNAmmvWVNSAgZRcpmxRKQFGcoEUTmO1NczyoPg19gyce0VCuyQDLuQ5r0HTz7w
+	rdSHlKvY/xRlI4vC6qI3OMWMwnuME3+vMpddlHe8+kDDAz2PraUI5FFyHsYsBUTJoZUSVgZh1FE
+	DjOVm/We1UzNbeEhZnkUbMl1ABv4OrLqt0+BdJg=
+X-Google-Smtp-Source: AGHT+IHqIQIkHHKFNpzRwxoPPSkGF/U7CIZx4JLl8hQ4M4aX6BdWZoE18416/VYbXnz2bZdENGdsrg==
+X-Received: by 2002:a05:6214:5293:b0:6e4:7307:51c6 with SMTP id 6a1803df08f44-6f2b30516c4mr96452066d6.34.1744892280753;
+        Thu, 17 Apr 2025 05:18:00 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f0dea07d4csm126932316d6.84.2025.04.17.05.17.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 05:17:59 -0700 (PDT)
+Date: Thu, 17 Apr 2025 08:17:55 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Barry Song <21cnbao@gmail.com>
+Cc: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Barry Song <v-songbaohua@oppo.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Ryan Roberts <ryan.roberts@arm.com>, Zi Yan <ziy@nvidia.com>
+Subject: Re: [RFC PATCH] mm: don't promote exclusive file folios of dying
+ processes
+Message-ID: <20250417121755.GB780688@cmpxchg.org>
+References: <CAGsJ_4yUUK8LoejaUrXWscpPSQevq8jB4eFwpd6+Gw3T5JxdNg@mail.gmail.com>
+ <6259cc1d-93a8-4293-9009-a6119166f023@redhat.com>
+ <CAGsJ_4wnqyaZntmtOvtTZRq2XuKsKRTokwf1GeX91FpfqW_nzw@mail.gmail.com>
+ <d5cd2055-62ea-4534-b5e2-c6a5bfa9b1c4@redhat.com>
+ <20250416141531.GD741145@cmpxchg.org>
+ <239cfe47-9826-402b-8008-de707faa160e@redhat.com>
+ <20250416181835.GA779666@cmpxchg.org>
+ <CAGsJ_4zt2Yuornri1bO=3o7myey1Q2dmvtjn2baD0ahxOyoNjw@mail.gmail.com>
+ <20250416235849.GA780688@cmpxchg.org>
+ <CAGsJ_4wfWLbDC5SruF5TtH-VXE08OWxan12qNYSV3vGzBfe5Bg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=C/bpyRP+ c=1 sm=1 tr=0 ts=6800f166 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=4sdRRrpyhxI9_uLjM3gA:9
-X-Proofpoint-ORIG-GUID: 7HBlp_NFM4J29MT9buZP-ezNtNQhPCdp
-X-Proofpoint-GUID: 0ZTnXM6xgeaJkUNPnWFG_kiOFaa3C1ZH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-17_03,2025-04-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
- lowpriorityscore=0 priorityscore=1501 impostorscore=0 adultscore=0
- mlxscore=0 suspectscore=0 spamscore=0 mlxlogscore=999 bulkscore=0
- malwarescore=0 phishscore=0 classifier=spam authscore=0 adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504170090
+In-Reply-To: <CAGsJ_4wfWLbDC5SruF5TtH-VXE08OWxan12qNYSV3vGzBfe5Bg@mail.gmail.com>
 
-Enable CONFIG_VPA_PMU with KVM to enable its usage. Currently, the
-vpa-pmu driver cannot be used since it is not enabled in distro configs.
+Hi Barry,
 
-On fedora kernel 6.13.7, the config option is disabled:
-$ cat /boot/config-6.13.7-200.fc41.ppc64le | grep VPA
- # CONFIG_VPA_PMU is not set
+On Thu, Apr 17, 2025 at 10:43:20AM +0800, Barry Song wrote:
+> On Thu, Apr 17, 2025 at 7:58 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> > On Thu, Apr 17, 2025 at 05:54:57AM +0800, Barry Song wrote:
+> > > I agree that "access locality and recent use" is generally a good heuristic,
+> > > but it must have some correlation (strong or weak) with the process lifecycle.
+> >
+> > I don't agree. It's a cache shared between past, present and future
+> > processes. The lifecycle of an individual processes is not saying much.
+> >
+> > Unless you know something about userspace, and the exact data at hand,
+> > that the kernel doesn't, which is why the Android usecase of MADV_COLD
+> > or PAGEOUT for background apps makes sense to me, but generally tying
+> > it to a process death does not.
+> 
+> I agree that MADV_COLD or PAGEOUT makes sense for background apps,
+> but I still believe process death is somewhat underestimated by you :-) In
+> Android, process death is actually a strong signal that an app is inactive and
+> consuming much memory—leading to its termination by either userspace or
+> the kernel's OOM mechanism.
 
-Fixes: 176cda0619b6c ("powerpc/perf: Add perf interface to expose vpa counters")
-Cc: stable@vger.kernel.org # v6.13+
-Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
----
- arch/powerpc/kvm/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+That's exactly what I'm saying, though. You know something about
+userspace that the kernel doesn't, which results from the unique way
+in which app scheduling and killing works on Android. Where you have
+recent foreground apps, idle background apps that you can kill and
+switching back to them later transparently restarts them and shows the
+user a fresh instance. But you have to admit that this is a unique
+microcosm modeled on top of a conventional Unix process model.
 
-diff --git a/arch/powerpc/kvm/Kconfig b/arch/powerpc/kvm/Kconfig
-index dbfdc126bf14..209627e57d07 100644
---- a/arch/powerpc/kvm/Kconfig
-+++ b/arch/powerpc/kvm/Kconfig
-@@ -84,6 +84,7 @@ config KVM_BOOK3S_64_HV
- 	select KVM_BOOK3S_HV_POSSIBLE
- 	select KVM_GENERIC_MMU_NOTIFIER
- 	select CMA
-+	select VPA_PMU if HV_PERF_CTRS
- 	help
- 	  Support running unmodified book3s_64 guest kernels in
- 	  virtual machines on POWER7 and newer processors that have
--- 
-2.49.0
+So this doesn't necessarily translate to other Linux systems, like
+servers or desktops. There is much higher concurrency, workingsets are
+more static, there is no systematic distinction between foreground and
+background apps (not in the Android sense), OOM killing is a rare
+cornercase most setups ususally try hard to avoid etc.
 
+But surely even Android has system management components, daemons
+etc. that fit more into that second category?
+
+> We actually took a more aggressive approach by implementing a hook to demote
+> exclusive folios of dying apps, which yielded good results—reducing kswapd
+> overhead, refaults, and thrashing. Of course, it is even much more controversial
+> than this patch.
+
+That doesn't sound wrong to me for Android apps.
+
+How about a prctl() to request the behavior for those specific app
+processes where you have clear usage signal? And then by all means,
+outright demote the pages, or even invalidate the cache.
+
+Delete the files, discard the flash blocks! (Ok that was a joke).
