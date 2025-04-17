@@ -1,33 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BD41DED6F;
-	Thu, 17 Apr 2025 05:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AFC52DFA2F;
+	Thu, 17 Apr 2025 05:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744868190; cv=none; b=O7KLxucWWO/oYsJYcvIz3Nv8e8pRiEiK5cm3cHDhtCtye36aFTM2XxchXh5JY254idKWNnqhD+9gBwa0Mi1VPh0z4lKFHdErRklrlnxKqwoKtb3zxl7LpDDa07mANndNHTipLY7zKfmfBapflRKpweQaXPml8+XZomBgf+2MQXM=
+	t=1744868362; cv=none; b=M9dr53hx4vis/2DWuQrk2qjsJUmy4Eldrj7UXrYOEGfT2i+DErYyUsVHhFyy93OeMWMiVTE8K9gpT2D8aT1wXppr1GCjeGLPrUAFo1Gz8PelCf+w+uwphIvBvYE42pb/U7rOYQpENGg85XpXua/jC8R1ZHprH9BIXUm/plT8sek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744868190; c=relaxed/simple;
-	bh=OS0b2KsauNvvGfkShk9mjUrLdvrCpTHIPPjb1jv7SNY=;
+	s=arc-20240116; t=1744868362; c=relaxed/simple;
+	bh=Rzd2yE0g4gqaFtFYIhYtHCRfy1E0nHomvZgN21JrlzQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tqem9djKjRxKYqkNpHR82g5gVyfqKdhEscmEVBLu40r7RBbNZgeHbBkH90+kgXfy7M7ptj9kk0eI9027NTkVACa+FatyeAgppdCpoGslmTChfnRhd4QHouL4ukv95duAJXWpWDsW6/vjfG3KqYMK3/iHKMmlI2yiKh8iyDuci5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pVIVUQga; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=SsU7ztnB6P/YF6CCtCpWCww/g2TmdXH+dMjAlZLhuH7vm309nSIK0Qfm/+MFZY685AG5ueNaAiZhx3xaG3l954tywX2611L6LGN9Yd1QZpSEB6sh2Nb87QnZrLffBHa6eRpKHSE36I/INWUMnDGfeFjmDRncz+OlErTfYwSw+9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ye7w7YYE; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pVIVUQga"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BCF8C4CEE4;
-	Thu, 17 Apr 2025 05:36:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744868190;
-	bh=OS0b2KsauNvvGfkShk9mjUrLdvrCpTHIPPjb1jv7SNY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pVIVUQgaKxIv4Vsg2DvnV8+yqDzspXRYYrI6prsA7A58vOzMEdcQ5blCfM3Dax/3f
-	 Br0c3U3D8QdIaWLRBlu/pGSVOVcvzmXEhjBu7UAOSMKeH62Qd8+JosyD/HCh+HVmWC
-	 QS/rBaL7MuqdLBH8icXBHN7zxFuBR3my4L4SgSkH0I+5c//XRM7tcf15QCkpzPgQ04
-	 /fs90d9RUD3xWIkeQtRlCF/U24GBA8zKKAJfNE7M5bj1sAatPGwlVWD/ERpdUGIlCs
-	 x8h5XTKlv9sC89IZRGWurswbuE0OQfVBckpjlaMsIf+GWiK69/NVR6Yf4YFu7BCPUl
-	 H2nHzjgxozELw==
-Message-ID: <8feea1ba-2d4a-4898-9882-cf3ec8b03852@kernel.org>
-Date: Thu, 17 Apr 2025 07:36:20 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ye7w7YYE"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-225df540edcso16549965ad.0;
+        Wed, 16 Apr 2025 22:39:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744868358; x=1745473158; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=24x0GQ0PkA6+zr9zBlahx+1SY3PmBt3xsKYJkkmlKZ0=;
+        b=Ye7w7YYEyPxR1TaB91AkeVoisCd2bel5Wrw8GvTSH3PJUn/yXeIkLNhRL0HMZFLbGw
+         uGmn+w6woPJk6E+NAID0HYGgc6JEtDh8Ae738w6RuLIKK1MS0sIepTO5qChDgV9OaBBG
+         D8AwHDAlaFwvvN7A2yyv/F79GNTt0HY9PMVHCcNd+UETp+Nwx0AZYfPZn7tnWiDWeQp6
+         vZtWO0zZBtci1wtXeZMqhKwjAB+IviJnuEq/2wFa2yMwBkjWRT+Vl2QESOIWFVZCy12K
+         gH23xASSOF4HBRN8eQz+D+HKqo8q+EQw0M8/Fgi/xxoIvCxZ2d0t9F/cE2zflB4V25qL
+         1F4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744868358; x=1745473158;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=24x0GQ0PkA6+zr9zBlahx+1SY3PmBt3xsKYJkkmlKZ0=;
+        b=DzvXHEq4SIOBymT1flpwjJ053+bkzDJFiyfLPUexmrW2IsC1u7uTxCIrbtURWytld3
+         3/nS6kFdBHKkiHWgzvbmM5lkFpqaAvc23x+vK0UDuczRO1rOwAqv51zjoxr3U/K2aUu5
+         liGKqTwKwQpIV3G/n9+SebCvXCO+EbSd728ivepvQR/8x7dPTN7DfDIubkIqCzAFPGeD
+         qrdxLhRvHLERfNHkNNhBgQ69nXt676TQCOKK/HPnlVwLWnywlEaDY3AoIRS1VWzQ2ZTI
+         Oxm1a/eoxyeCsvsQ2vAQ9sP0ZXGW9o9InSRnBdpywnQscP2FPsCXXRSWGCsDCQro1d4u
+         PqyA==
+X-Forwarded-Encrypted: i=1; AJvYcCWcn9zMTa7pDoYL4GnXGY0+2wZA3EznUWxSBkBA8ZmoCvolhflF4lIfZkeeobOQOpkfZJnhZQAE2Ik75qI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx69h1NEOcwCn7L00CamwtPstwyc5shTf62F452xBkoIAKXsFeY
+	8hUiavqb7PyH6FbiiiItbwgcBi+w/3f6oCriz20VX1pmMZizyryTImO0f8H1
+X-Gm-Gg: ASbGncs8qa7LpFzqoUYavz505W+Tp4Ez0SxQ/4ObVJmnPWotmrJrQMvHp+mLuvPGSIf
+	pBMYGgfWvhlMrawHlPBiY4pVi57h1yEfCsSHg42UYuGHL7IigQK6zHA5OM3MaPm2u73BPZ7rJFX
+	fJRi8/1pNl4j0+egJbZLQJGfZgM/4DhhTcigFq03pj6aY/hq3quhLbRR40kljd/XfXinKL2C3Qn
+	lAgCWBgSHsr2Tn84cfW1HWUPlQtUWsnvpwyYwUHiHH7rMijhTBzbw985S0SM0imcoHHG9TPHOOn
+	C6X8RSO766hbcqtqdySio1Zez4cMS72cfzmKXJD7/Zpd8V+nsQ==
+X-Google-Smtp-Source: AGHT+IEYI2mZ5pqppiYJEHMxeSskqOZW/A6Fj6tplgWB4OIO//BTRKIAqK+VzAW9q8NYNjUr/OKCnQ==
+X-Received: by 2002:a17:902:d587:b0:223:607c:1d99 with SMTP id d9443c01a7336-22c41b65eeemr27176765ad.0.1744868358225;
+        Wed, 16 Apr 2025 22:39:18 -0700 (PDT)
+Received: from [192.168.0.161] ([14.139.108.62])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33f1d199sm24591105ad.90.2025.04.16.22.39.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 22:39:17 -0700 (PDT)
+Message-ID: <f0f6604f-30aa-471a-9f21-40d423285499@gmail.com>
+Date: Thu, 17 Apr 2025 11:09:14 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,95 +66,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 12/13] ARM: dts: vt8500: Add VIA APC Rock/Paper board
-To: Alexey Charkov <alchark@gmail.com>, Andi Shyti <andi.shyti@kernel.org>,
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mmc@vger.kernel.org, netdev@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
- <20250416-wmt-updates-v1-12-f9af689cdfc2@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] dma: idxd: cdev: Fix uninitialized use of sva in
+ idxd_cdev_open
+To: Dave Jiang <dave.jiang@intel.com>, vinicius.gomes@intel.com,
+ vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250410110216.21592-1-purvayeshi550@gmail.com>
+ <23417f4a-05fe-44d3-b257-7a5991d252cb@intel.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250416-wmt-updates-v1-12-f9af689cdfc2@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Purva Yeshi <purvayeshi550@gmail.com>
+In-Reply-To: <23417f4a-05fe-44d3-b257-7a5991d252cb@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 16/04/2025 10:21, Alexey Charkov wrote:
-> diff --git a/arch/arm/boot/dts/vt8500/Makefile b/arch/arm/boot/dts/vt8500/Makefile
-> index 255f4403af91c1d6a22416ab694b8eab44bf98a2..c5a2e57d53af4babe40fe2d79b2f8d9c1ae1b8db 100644
-> --- a/arch/arm/boot/dts/vt8500/Makefile
-> +++ b/arch/arm/boot/dts/vt8500/Makefile
-> @@ -4,4 +4,5 @@ dtb-$(CONFIG_ARCH_VT8500) += \
->  	wm8505-ref.dtb \
->  	wm8650-mid.dtb \
->  	wm8750-apc8750.dtb \
-> -	wm8850-w70v2.dtb
-> +	wm8850-w70v2.dtb \
-> +	wm8950a-apc-rock.dtb
-> diff --git a/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts b/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..58b3c8deb4f20ae072bf1381f1dfa5e5adeb414a
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts
-> @@ -0,0 +1,21 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
+On 11/04/25 02:30, Dave Jiang wrote:
+> 
+> 
+> On 4/10/25 4:02 AM, Purva Yeshi wrote:
+>> Fix Smatch-detected issue:
+>> drivers/dma/idxd/cdev.c:321 idxd_cdev_open() error:
+>> uninitialized symbol 'sva'.
+>>
+>> 'sva' pointer may be used uninitialized in error handling paths.
+>> Specifically, if PASID support is enabled and iommu_sva_bind_device()
+>> returns an error, the code jumps to the cleanup label and attempts to
+>> call iommu_sva_unbind_device(sva) without ensuring that sva was
+>> successfully assigned. This triggers a Smatch warning about an
+>> uninitialized symbol.
+>>
+>> Initialize sva to NULL at declaration and add a check using
+>> IS_ERR_OR_NULL() before unbinding the device. This ensures the
+>> function does not use an invalid or uninitialized pointer during
+>> cleanup.
+>>
+>> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> 
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
+Hi Dave,
 
-Odd license, we don't do GPL v4 in the kernel. We do however dual
-license for bindings and DTS. Why choosing such license? Did you take
-the code from somewhere?
+Thank you for the review and the Reviewed-by tag.
 
+>> ---
+>>   drivers/dma/idxd/cdev.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+>> index ff94ee892339..7bd031a60894 100644
+>> --- a/drivers/dma/idxd/cdev.c
+>> +++ b/drivers/dma/idxd/cdev.c
+>> @@ -222,7 +222,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
+>>   	struct idxd_wq *wq;
+>>   	struct device *dev, *fdev;
+>>   	int rc = 0;
+>> -	struct iommu_sva *sva;
+>> +	struct iommu_sva *sva = NULL;
+>>   	unsigned int pasid;
+>>   	struct idxd_cdev *idxd_cdev;
+>>   
+>> @@ -317,7 +317,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
+>>   	if (device_user_pasid_enabled(idxd))
+>>   		idxd_xa_pasid_remove(ctx);
+>>   failed_get_pasid:
+>> -	if (device_user_pasid_enabled(idxd))
+>> +	if (device_user_pasid_enabled(idxd) && !IS_ERR_OR_NULL(sva))
+>>   		iommu_sva_unbind_device(sva);
+>>   failed:
+>>   	mutex_unlock(&wq->wq_lock);
+> 
 
 Best regards,
-Krzysztof
+Purva
