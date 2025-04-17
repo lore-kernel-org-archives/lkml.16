@@ -1,52 +1,171 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61E543D994;
-	Thu, 17 Apr 2025 10:37:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B9E2DFA36;
+	Thu, 17 Apr 2025 10:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744886276; cv=none; b=Lui+iqgnmske9nt8sFRu1fVoxPItOjHpgqtQP8q+VXUDvq/V5QjH5p+FhNXVB19Oy9oNpzNFTu/8icHY/XL/fakPJkJvNv5l2lXFoHOEnkpLEaiSQ6Vs1d8cO+1lyXZWF2L04JVdMbwxu14DjyA9x56GvCGhMm9c1WBgcHbnI48=
+	t=1744886331; cv=none; b=SdeB2QdlQEB5gDKq4Wie8qz2wGshllOoXBXf5tQULIk3R2+o2JBOyxYAO6PZEkcjw8WYFrW//2R0X0S0ZqErbphreDGLS5tH3PlmH4cnanipvGK9BNqB5JDHftMG3uDzv9LTypGAlv0BSCi2ZDD5itb9C6jinq0+GrPf0hX2nCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744886276; c=relaxed/simple;
-	bh=3wwJBnbscPWhREJodr63Mof+CmE9FyAyP+HTDxaHdOk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r7fAwnGQkAs1Ry72DNhwZGqYB5cd+D1S7ziIeCA+AfIdrdwu/lqhKWY/22LfOL715E/URK65GpY7MiVkIarbBXlHbRRuKorRm6ZNzeLl5gy3ysNyjo7qhtwlIoh3q4bX6ypJXxyUan9D+fmlDbj4MQQCySy1/PFgK3B8REpEpN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB92D1515;
-	Thu, 17 Apr 2025 03:37:49 -0700 (PDT)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 292163F694;
-	Thu, 17 Apr 2025 03:37:51 -0700 (PDT)
-Date: Thu, 17 Apr 2025 11:37:44 +0100
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pmdomain: arm: Do not enable by default during compile
- testing
-Message-ID: <aADZ-EKpQ2Sd5KV2@pluto>
-References: <20250417074645.81480-1-krzysztof.kozlowski@linaro.org>
+	s=arc-20240116; t=1744886331; c=relaxed/simple;
+	bh=xonJg7W42UPLSQsgfP8JGFoFa32UGzzae3XJSsNaJZw=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Qr186fe3kzPjDye5Hc0wl9+/WOwZANBD5Eqh0wJNtOSd7Ck0eY3OAA5k6pLxMsUSlV+9qhmr5Pk7CTgnZD8YlIwIFQnMcKxBeyqkGJgP8SbunmHYDFGd1mOP85KeK7EyY01BqmAFT1aJlMGhjs3eyGDVhGvnt6UcDqfZ+21NBao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aVNA1kHX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ji7LdVm9; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aVNA1kHX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ji7LdVm9"
+Date: Thu, 17 Apr 2025 10:38:46 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744886327;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ULvRywzbxkzPtNwCqyS9fWRdHnvPu4lleiveImyrjuU=;
+	b=aVNA1kHXIzkl7mzFQD/wQy0x2YrFZ8brmpQR6QOKkBZj2abFfLtQGT1N0jGYl21s6sgXLz
+	EIfYYbtyYyC/f8P+tmty78yW7TYjicu/r9A7xPHgnBe+AqqEeA9YQRwnAx6q1wzizvLy+u
+	qPFoAAMawWSaDZenNsEi3Z/haA4LHI3xZDIq7mUkh+AQL9zsjP3F8FHqGs8QodMBulmdPV
+	7B7yW4e73Gs876DCnzesprHaQYMK5GdNso3cxEeqcObAFx5IR36IOzgvA78lbONP8mbZwe
+	6gsDDAAX8IAJ2SdBw/JSPujZTpIB+8vg9cV4odZWybEHVW8+W5izF8fIirAGEQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744886327;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ULvRywzbxkzPtNwCqyS9fWRdHnvPu4lleiveImyrjuU=;
+	b=ji7LdVm9sfXjK1KfQLgWk8K4DvQB88s72cU1Xcb71BN/AQR1Tzfs5KqLDHENfsOeVdtOJq
+	MWpNNVozhfRVq4BQ==
+From: "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf/x86/intel/uncore: Fix the scale of IIO free
+ running counters on SPR
+Cc: Tang Jun <dukang.tj@alibaba-inc.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Ingo Molnar <mingo@kernel.org>,
+ stable@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250416142426.3933977-3-kan.liang@linux.intel.com>
+References: <20250416142426.3933977-3-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417074645.81480-1-krzysztof.kozlowski@linaro.org>
+Message-ID: <174488632624.31282.2503994657457992785.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 17, 2025 at 09:46:45AM +0200, Krzysztof Kozlowski wrote:
-> Enabling the compile test should not cause automatic enabling of all
-> drivers, but only allow to choose to compile them.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+The following commit has been merged into the perf/urgent branch of tip:
 
-Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
+Commit-ID:     97757ffedde4edf1bb86b009316f8bd42327fcd5
+Gitweb:        https://git.kernel.org/tip/97757ffedde4edf1bb86b009316f8bd42327fcd5
+Author:        Kan Liang <kan.liang@linux.intel.com>
+AuthorDate:    Wed, 16 Apr 2025 07:24:26 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 17 Apr 2025 12:19:17 +02:00
 
-Thanks,
-Cristian
+perf/x86/intel/uncore: Fix the scale of IIO free running counters on SPR
+
+The scale of IIO bandwidth in free running counters is inherited from
+the ICX. The counter increments for every 32 bytes rather than 4 bytes.
+
+The IIO bandwidth out free running counters don't increment with a
+consistent size. The increment depends on the requested size. It's
+impossible to find a fixed increment. Remove it from the event_descs.
+
+Fixes: 0378c93a92e2 ("perf/x86/intel/uncore: Support IIO free-running counters on Sapphire Rapids server")
+Reported-by: Tang Jun <dukang.tj@alibaba-inc.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20250416142426.3933977-3-kan.liang@linux.intel.com
+---
+ arch/x86/events/intel/uncore_snbep.c | 58 +---------------------------
+ 1 file changed, 1 insertion(+), 57 deletions(-)
+
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index fb08911..76d96df 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -6289,69 +6289,13 @@ static struct freerunning_counters spr_iio_freerunning[] = {
+ 	[SPR_IIO_MSR_BW_OUT]	= { 0x3808, 0x1, 0x10, 8, 48 },
+ };
+ 
+-static struct uncore_event_desc spr_uncore_iio_freerunning_events[] = {
+-	/* Free-Running IIO CLOCKS Counter */
+-	INTEL_UNCORE_EVENT_DESC(ioclk,			"event=0xff,umask=0x10"),
+-	/* Free-Running IIO BANDWIDTH IN Counters */
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port0,		"event=0xff,umask=0x20"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port0.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port0.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port1,		"event=0xff,umask=0x21"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port1.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port1.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port2,		"event=0xff,umask=0x22"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port2.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port2.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port3,		"event=0xff,umask=0x23"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port3.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port3.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port4,		"event=0xff,umask=0x24"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port4.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port4.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port5,		"event=0xff,umask=0x25"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port5.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port5.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port6,		"event=0xff,umask=0x26"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port6.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port6.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port7,		"event=0xff,umask=0x27"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port7.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port7.unit,	"MiB"),
+-	/* Free-Running IIO BANDWIDTH OUT Counters */
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port0,		"event=0xff,umask=0x30"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port0.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port0.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port1,		"event=0xff,umask=0x31"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port1.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port1.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port2,		"event=0xff,umask=0x32"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port2.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port2.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port3,		"event=0xff,umask=0x33"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port3.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port3.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port4,		"event=0xff,umask=0x34"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port4.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port4.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port5,		"event=0xff,umask=0x35"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port5.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port5.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port6,		"event=0xff,umask=0x36"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port6.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port6.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port7,		"event=0xff,umask=0x37"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port7.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port7.unit,	"MiB"),
+-	{ /* end: all zeroes */ },
+-};
+-
+ static struct intel_uncore_type spr_uncore_iio_free_running = {
+ 	.name			= "iio_free_running",
+ 	.num_counters		= 17,
+ 	.num_freerunning_types	= SPR_IIO_FREERUNNING_TYPE_MAX,
+ 	.freerunning		= spr_iio_freerunning,
+ 	.ops			= &skx_uncore_iio_freerunning_ops,
+-	.event_descs		= spr_uncore_iio_freerunning_events,
++	.event_descs		= snr_uncore_iio_freerunning_events,
+ 	.format_group		= &skx_uncore_iio_freerunning_format_group,
+ };
+ 
