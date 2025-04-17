@@ -1,63 +1,67 @@
-Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B9AF3594B
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744901156; cv=none; b=t+CQl8YM4kbG/OQ5rxK5fWxa5FeZ+EcSz2dtf3tZNo13Jj63z0jmBL/E9bLaLTkxaMr6umXml9Qh2cP8oVIs4p84hsBLC7cUWxq5dOI9bGEZOpwnJlITbRbjiDfgATc58/cAZrlCAj3qQ37BNNCe7ypFigyW0bZHlWKWVBBnhW8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744901156; c=relaxed/simple;
-	bh=YaH/LyqCwysYz4Kz69ylUWgHb/lHm6J0FZUcgH1QP6o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H1yjIPboDI4he4zmlkgv7H8PaCuVl5+rTPLR0rfw1Jo5BAgwNpZMOSNRO/UNGSdTpvsQQhSnBa9r1zr8Hk1i9e5faqj0yCbfZn9NVvZRnd9qk+QJ2nik7i6LKJgKgbwoyQyBVhQiHIp5IIsUWb1urRRlWYulIeoVdCQUfgcAWZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=sdG/rHKi; arc=none smtp.client-ip=85.214.250.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="sdG/rHKi"
-Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.8bytes.org (Postfix) with ESMTPSA id 5E69A4844C;
-	Thu, 17 Apr 2025 16:45:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
-	s=default; t=1744901154;
-	bh=YaH/LyqCwysYz4Kz69ylUWgHb/lHm6J0FZUcgH1QP6o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sdG/rHKiKcjq9SH+Gha5d9it5hNR1asHCUtAsozMgd7NqQi/QZW0Bk5YGLMHL85wU
-	 iPG/TTRlaVq3MruWEhh/vr/YUHrtCT7KbrxjWLw6+II1jhyZtTpkL2iF1TLwHgNY4L
-	 1FgtIBVO5ul7kJ411gZEh7d5cW/yraN00S7YR78DPHkRldDQw6A+jZg2n4BVwNfm5D
-	 xsIgzRmYC60usidDD0lpw5duS2qnGS9jRydqDPd0SKrpTYfu/8SquSEXvuQsP1miqT
-	 z/LnNeXz0bDnGTH8BBzXQvn2jWLXuHHFYw6AyMcWuxDGn4/ub2pTtj+S0yIBR0k3Iw
-	 TXtHCP/TORnOQ==
-Date: Thu, 17 Apr 2025 16:45:53 +0200
-From: Joerg Roedel <joro@8bytes.org>
-To: Lu Baolu <baolu.lu@linux.intel.com>
-Cc: Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] iommu/vt-d: Revert ATS timing change to fix boot
- failure
-Message-ID: <aAEUIWTohmveAvMk@8bytes.org>
-References: <20250416073608.1799578-1-baolu.lu@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05CA814037F;
+	Thu, 17 Apr 2025 14:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744901194; cv=none; b=QWC6n9K6jamJnCt5a6AhxjyIoHhnPfFaCxfjFfKe71dYapHcp06j0SjSoPAXa5PpK4axODV0nnXcDD5TMJG2d1/4CSZ7ji82JYkgrNrpAj7bBWI4R2vVZcPym7tts2IljfSnxVEiqHiSrwRDO2r73nOiseMwGiKD1Py/q7+exv4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744901194; c=relaxed/simple;
+	bh=60nlQ13YV+FsAbd90MFcqmmoghPcWG/rWq+3sENGxNc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X480xlzOrqQ2bpTizS5Gt/0fgQMo/Qn3JufNOmFdKn1Tn/Mze/hM8s9Phz783gjQ5q1tFvoFI6DhE8wzMicCRTVylXGfXrK5xA0zeidcvCm/jFpHNwJC7wUYxzCYsYx90B0yptglt7OznYDxQMxuOwoPH+r4ywXVK6jsS2tnOwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B294CC4CEE4;
+	Thu, 17 Apr 2025 14:46:32 +0000 (UTC)
+Date: Thu, 17 Apr 2025 10:48:11 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: kernel test robot <oliver.sang@intel.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, <oe-lkp@lists.linux.dev>,
+ <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [linus:master] [tracing]  a3dc2983ca:
+ WARNING:suspicious_RCU_usage
+Message-ID: <20250417104811.38a4bb88@gandalf.local.home>
+In-Reply-To: <202504172239.4a2422e2-lkp@intel.com>
+References: <202504172239.4a2422e2-lkp@intel.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416073608.1799578-1-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 16, 2025 at 03:36:08PM +0800, Lu Baolu wrote:
-> Fixes: 5518f239aff1 ("iommu/vt-d: Move scalable mode ATS enablement to probe path")
-> Reported-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-> Closes: https://lore.kernel.org/linux-iommu/01b9c72f-460d-4f77-b696-54c6825babc9@linux.intel.com/
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->  drivers/iommu/intel/iommu.c | 31 +++++++++++++++++++------------
->  1 file changed, 19 insertions(+), 12 deletions(-)
+On Thu, 17 Apr 2025 22:42:55 +0800
+kernel test robot <oliver.sang@intel.com> wrote:
 
-Applied for -rc, thanks.
+> Hello,
+> 
+> kernel test robot noticed "WARNING:suspicious_RCU_usage" on:
+> 
+> commit: a3dc2983ca7b90fd35f978502de6d4664d965cfb ("tracing: fprobe: Cleanup fprobe hash when module unloading")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> 
+> [test failed on linus/master      834a4a689699090a406d1662b03affa8b155d025]
+> [test failed on linux-next/master b425262c07a6a643ebeed91046e161e20b944164]
+> 
+> in testcase: boot
+> 
+> config: x86_64-randconfig-r052-20250414
+> compiler: gcc-12
+> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+> 
+> (please refer to attached dmesg/kmsg for entire log/backtrace)
+
+There's already a fix for this:
+
+  https://lore.kernel.org/linux-trace-kernel/20250410-fprobe-v1-1-068ef5f41436@debian.org
+
+Masami,
+
+Are you going to pick this up?
+
+-- Steve
