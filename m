@@ -1,183 +1,159 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA7A252284
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0033B2517A3
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744901295; cv=none; b=NG36DLyfkTRMfqFwQQkaKooj0o2RtqlJUloud5Wz2lj/z8153N9CtZ33y8ePYcTcR/COqV+QqSi/m8VXIftL4NNXPLzjix19DZDMdhhgLRkoTSMfcubwxT3V6qpG8MRXYhQYQvg8GA3rPRKbWBCd9wxeLtfJFxQrXXnwOUMvNOk=
+	t=1744901321; cv=none; b=LYyVP05TPLcfm+9feapSIs5W2WEv44GZWcrd62z3eyEinm46Tk0V1WSA2i29vuag/Bk17szYKp3jOYbee8ScVyWEsZCGkGp0rJxIcKZKEH7TNr+fS8YmpOkOFSW9Op742E+PYTNlFLE7/Uh2MWW7OAte5qF7bR2ZXDH3Q1lL1oI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744901295; c=relaxed/simple;
-	bh=RY5mdWHGD5kfzWhvtf5E8Sp/to3iuvXGYpo1Vpthnn4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YGHC894dNmHLSOsl/V/z7PBIbW6AtUOuM3a18QHIzq0WpqVRobuFORs2emiz/1yDlV6Z04MrHQ3KqLHZHCXRW4pb7HMeRxtwlWJHInRrBcbZJ4m9jew8H/2j9oQHxi+HnStsEPDMqNK5nc/KRpjzr7+jnM2gsJBXj8jMgDpOvUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Yjg5SSfw; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Yjg5SSfw; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1744901321; c=relaxed/simple;
+	bh=RI/pNBGOBuU1tex11uln3ZwTbH6w91FDPPlShMn6CMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bp8AJJ6nBBqT+XFFBre+ezDT8womhvheOdSnZyXIgqfIy/N6vZ6VZ4lQOkl5KMAoDZFOwtEsbw/xxv+H9uCBD1vWKffA3yXRAAV+lR5Kibdj55GcBF5Yj/6Wyewa4W3Ze60ZI4LLf2z/1eDF8Dvnh75ItY3fKxwYSoMt2GdYoso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BaMbbMiV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Yjg5SSfw";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Yjg5SSfw"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 71F7A2116B;
-	Thu, 17 Apr 2025 14:48:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1744901291; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=URyoU8ysBuk6krIvolEQ5LBEHfOYYs9TThhoUc7ox78=;
-	b=Yjg5SSfw++a9DxyJ9eE+LRLtw2f2jldBH7kwe0Lj8DyyBj4pXJ3S3tg2yXEiSaZnJ7u5SQ
-	cgiglz969Lm0kvpv2bY119Q0s4lLv8jZ/+lK7QxwUBWmEM91vPNiMdvnNDsJy238foJ8ds
-	7MiBgJmCfmr7vKFsdwwjpK1rr2pj+7Y=
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1744901291; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=URyoU8ysBuk6krIvolEQ5LBEHfOYYs9TThhoUc7ox78=;
-	b=Yjg5SSfw++a9DxyJ9eE+LRLtw2f2jldBH7kwe0Lj8DyyBj4pXJ3S3tg2yXEiSaZnJ7u5SQ
-	cgiglz969Lm0kvpv2bY119Q0s4lLv8jZ/+lK7QxwUBWmEM91vPNiMdvnNDsJy238foJ8ds
-	7MiBgJmCfmr7vKFsdwwjpK1rr2pj+7Y=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0F5F8137CF;
-	Thu, 17 Apr 2025 14:48:11 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 36JCAqsUAWjaWQAAD6G6ig
-	(envelope-from <jgross@suse.com>); Thu, 17 Apr 2025 14:48:11 +0000
-From: Juergen Gross <jgross@suse.com>
-To: linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Cc: Juergen Gross <jgross@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	=?UTF-8?q?Petr=20Van=C4=9Bk?= <arkamar@atlas.cz>,
-	stable@vger.kernel.org
-Subject: [PATCH] x86/mm: fix _pgd_alloc() for Xen PV mode
-Date: Thu, 17 Apr 2025 16:48:08 +0200
-Message-ID: <20250417144808.22589-1-jgross@suse.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BaMbbMiV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1C73C4CEE4;
+	Thu, 17 Apr 2025 14:48:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744901320;
+	bh=RI/pNBGOBuU1tex11uln3ZwTbH6w91FDPPlShMn6CMY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BaMbbMiVO72PWqE+wuhllqZfSj1/11mbYrcY3ytogNL6BTf/uS27sNzpQw6FUvXUn
+	 ou3fGk/g+RImiLZEXMgEQOxRUMIARQFUnNQ/qUhO4wEkPjyTuFAD1HtPqimfzmmmNO
+	 l5jkFSHRA1uGhwy5hrZbpWyf/1s1YbQ3oviafPEOCBO6l+HPioi/cccK4EyhIuJ5Mf
+	 AHr4YhvXN8snAD4m4nL6CdexEBU8MPFm8yb4RUgMD1YKA/TZy9tJA/0Q06EQtbfkmh
+	 BYgG41G7daMyrjKi9cBQE/X3RELHy00IpjV8US1lNmsNntENQjPwjkbIJYENOo7Avf
+	 rfS4hnN/PlwCw==
+Date: Thu, 17 Apr 2025 16:48:34 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+Cc: phasta@kernel.org, Lyude Paul <lyude@redhat.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] drm/sched: Warn if pending list is not empty
+Message-ID: <aAEUwjzZ9w9xlKRY@cassiopeiae>
+References: <20250407152239.34429-2-phasta@kernel.org>
+ <20250407152239.34429-5-phasta@kernel.org>
+ <9607e5a54b8c5041dc7fc134425cc36c0c70b5f3.camel@mailbox.org>
+ <3ac34c84-fd84-4598-96e1-239418b7109f@igalia.com>
+ <aADv4ivXZoJpEA7k@pollux>
+ <83758ca7-8ece-433e-b904-3d21690ead23@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -3.30
-X-Spam-Flag: NO
+In-Reply-To: <83758ca7-8ece-433e-b904-3d21690ead23@igalia.com>
 
-Recently _pgd_alloc() was switched from using __get_free_pages() to
-pagetable_alloc_noprof(), which might return a compound page in case
-the allocation order is larger than 0.
+On Thu, Apr 17, 2025 at 03:20:44PM +0100, Tvrtko Ursulin wrote:
+> 
+> On 17/04/2025 13:11, Danilo Krummrich wrote:
+> > On Thu, Apr 17, 2025 at 12:27:29PM +0100, Tvrtko Ursulin wrote:
+> > > 
+> > > On 17/04/2025 08:45, Philipp Stanner wrote:
+> > > > On Mon, 2025-04-07 at 17:22 +0200, Philipp Stanner wrote:
+> > > 
+> > > Problem exactly is that jobs can outlive the entities and the scheduler,
+> > > while some userspace may have a dma fence reference to the job via sync
+> > > file. This new callback would not solve it for xe, but if everything
+> > > required was reference counted it would.
+> > 
+> > I think you're mixing up the job and the dma_fence here, if a job outlives the
+> > scheduler, it clearly is a bug, always has been.
+> > 
+> > AFAIK, Xe reference counts it's driver specific job structures *and* the driver
+> > specific scheduler structure, such that drm_sched_fini() won't be called before
+> > all jobs have finished.
+> 
+> Yes, sorry, dma fence. But it is not enough to postpone drm_sched_fini until
+> the job is not finished. Problem is exported dma fence holds the pointer to
+> drm_sched_fence (and so oopses in drm_sched_fence_get_timeline_name on
+> fence->sched->name) *after* job had finished and driver was free to tear
+> everything down.
 
-On x86 this will be the case if CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
-is set, even if PTI has been disabled at runtime.
+Well, that's a bug in drm_sched_fence then and independent from the other topic.
+Once the finished fence in a struct drm_sched_fence has been signaled it must
+live independent of the scheduler.
 
-When running as a Xen PV guest (this will always disable PTI), using
-a compound page for a PGD will result in VM_BUG_ON_PGFLAGS being
-triggered when the Xen code tries to pin the PGD.
+The lifetime of the drm_sched_fence is entirely independent from the scheduler
+itself, as you correctly point out.
 
-Fix the Xen issue together with the not needed 8k allocation for a
-PGD with PTI disabled by using a variable holding the PGD allocation
-order in case CONFIG_MITIGATION_PAGE_TABLE_ISOLATION is set.
+Starting to reference count things to keep the whole scheduler etc. alive as
+long as the drm_sched_fence lives is not the correct solution.
 
-Reported-by: Petr VanÄ›k <arkamar@atlas.cz>
-Fixes: a9b3c355c2e6 ("asm-generic: pgalloc: provide generic __pgd_{alloc,free}")
-Cc: stable@vger.kernel.org
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- arch/x86/include/asm/pgalloc.h | 7 ++++++-
- arch/x86/mm/pgtable.c          | 4 ++++
- arch/x86/mm/pti.c              | 3 +++
- 3 files changed, 13 insertions(+), 1 deletion(-)
+> > Multiple solutions have been discussed already, e.g. just wait for the pending
+> > list to be empty, reference count the scheduler for every pending job. Those all
+> > had significant downsides, which I don't see with this proposal.
+> > 
+> > I'm all for better ideas though -- what do you propose?
+> 
+> I think we need to brainstorm both issues and see if there is a solution
+> which solves them both, with bonus points for being elegant.
 
-diff --git a/arch/x86/include/asm/pgalloc.h b/arch/x86/include/asm/pgalloc.h
-index a33147520044..754f95bddf98 100644
---- a/arch/x86/include/asm/pgalloc.h
-+++ b/arch/x86/include/asm/pgalloc.h
-@@ -34,8 +34,13 @@ static inline void paravirt_release_p4d(unsigned long pfn) {}
-  * Instead of one PGD, we acquire two PGDs.  Being order-1, it is
-  * both 8k in size and 8k-aligned.  That lets us just flip bit 12
-  * in a pointer to swap between the two 4k halves.
-+ *
-+ * As PTI can be runtime disabled (either via boot parameter or due to
-+ * running as a Xen PV guest), store the actually needed allocation
-+ * order in a global variable.
-  */
--#define PGD_ALLOCATION_ORDER 1
-+#define PGD_ALLOCATION_ORDER pgd_allocation_order
-+extern unsigned int pgd_allocation_order;
- #else
- #define PGD_ALLOCATION_ORDER 0
- #endif
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index a05fcddfc811..f61b2d6be311 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -12,6 +12,10 @@ phys_addr_t physical_mask __ro_after_init = (1ULL << __PHYSICAL_MASK_SHIFT) - 1;
- EXPORT_SYMBOL(physical_mask);
- #endif
- 
-+#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
-+unsigned int pgd_allocation_order = 0;
-+#endif
-+
- pgtable_t pte_alloc_one(struct mm_struct *mm)
- {
- 	return __pte_alloc_one(mm, GFP_PGTABLE_USER);
-diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
-index 5f0d579932c6..44b7120c63e3 100644
---- a/arch/x86/mm/pti.c
-+++ b/arch/x86/mm/pti.c
-@@ -38,6 +38,7 @@
- #include <asm/desc.h>
- #include <asm/sections.h>
- #include <asm/set_memory.h>
-+#include <asm/pgalloc.h>
- 
- #undef pr_fmt
- #define pr_fmt(fmt)     "Kernel/User page tables isolation: " fmt
-@@ -97,6 +98,8 @@ void __init pti_check_boottime_disable(void)
- 	if (pti_mode == PTI_AUTO && !boot_cpu_has_bug(X86_BUG_CPU_MELTDOWN))
- 		return;
- 
-+	pgd_allocation_order = 1;
-+
- 	setup_force_cpu_cap(X86_FEATURE_PTI);
- }
- 
--- 
-2.43.0
+The problems are not related. As mentioned above, once signaled a
+drm_sched_fence must not depend on the scheduler any longer.
 
+> > > > > diff --git a/drivers/gpu/drm/scheduler/sched_main.c
+> > > > > b/drivers/gpu/drm/scheduler/sched_main.c
+> > > > > index 6b72278c4b72..ae3152beca14 100644
+> > > > > --- a/drivers/gpu/drm/scheduler/sched_main.c
+> > > > > +++ b/drivers/gpu/drm/scheduler/sched_main.c
+> > > > > @@ -1465,6 +1465,10 @@ void drm_sched_fini(struct drm_gpu_scheduler
+> > > > > *sched)
+> > > > >    	sched->ready = false;
+> > > > >    	kfree(sched->sched_rq);
+> > > > >    	sched->sched_rq = NULL;
+> > > > > +
+> > > > > +	if (!list_empty(&sched->pending_list))
+> > > > > +		dev_err(sched->dev, "%s: Tearing down scheduler
+> > > > > while jobs are pending!\n",
+> > > > > +			__func__);
+> > > 
+> > > It isn't fair to add this error since it would out of the blue start firing
+> > > for everyone expect nouveau, no? Regardless if there is a leak or not.
+> > 
+> > I think it is pretty fair to warn when detecting a guaranteed bug, no?
+> > 
+> > If drm_sched_fini() is call while jobs are still on the pending_list, they won't
+> > ever be freed, because all workqueues are stopped.
+> 
+> Is it a guaranteed bug for drivers are aware of the drm_sched_fini()
+> limitation and are cleaning up upon themselves?
+
+How could a driver clean up on itself (unless the driver holds its own list of
+pending jobs)?
+
+Once a job is in flight (i.e. it's on the pending_list) we must guarantee that
+free_job() is called by the scheduler, which it can't do if we call
+drm_sched_fini() before the pending_list is empty.
+
+> In other words if you apply the series up to here would it trigger for
+> nouveau?
+
+No, because nouveau does something very stupid, i.e. replicate the pending_list.
+
+> Reportedly it triggers for the mock scheduler which also has no
+> leak.
+
+That sounds impossible. How do you ensure you do *not* leak memory when you tear
+down the scheduler while it still has pending jobs? Or in other words, who calls
+free_job() if not the scheduler itself?
+
+> Also, I asked in my initial reply if we have a list of which of the current
+> drivers suffer from memory leaks. Is it all or some etc.
+
+Not all, but quite some I think. The last time I looked (which is about a year
+ago) amdgpu for instance could leak memory when you unbind the driver while
+enough jobs are in flight.
