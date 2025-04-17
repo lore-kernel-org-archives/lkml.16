@@ -1,57 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9AE741C63;
-	Thu, 17 Apr 2025 20:32:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2C441C63;
+	Thu, 17 Apr 2025 20:36:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744921978; cv=none; b=YMHV/b+rbq4ZxZY2lPtBLl3dHIBYvHetTDqb1ndwInWUWx+h6wk0YLvUC45ZNMcx0lR+1ajbJv6XkDODuAoi5PU1OOTqXjBGFpNXAYFQ8ys5K37pVQmaATz7kiqF+lLVnrDSUt3f1aAWf9hhzUizjbC/C0gtf/JY5DI7m2yFdPE=
+	t=1744922178; cv=none; b=d9aU1n/62eWVP1IW9wLihA2Tr5AKgHvitxGhWBiyDPvK2GVgoUUTQyj5wOzOf8zbAs3dH2zqIR03/I0MsZY0nATj8jDDc7Rgl2CWd66DkddykQfHA0za7++UigNoLtFwuXDCsP6VqdchUgOtrY+W4coQmDzfBfWmuXJz4Tp9F8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744921978; c=relaxed/simple;
-	bh=m23KjCoPEHiG9Nh0xssttmwcgzej8sTFwc5KLi6yrMo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cwDC6rlH/i+z/kQLOVaas+I+hQqZaVAJ4HEkbwJNEhj/1YPvA5Uo456mVRR41kqomMwfNq/sHK4Pcj3Nt6fa+FCHShXzCRz22GZ4EMJ10pPCxm3Iy3F/Y704rVTG3u9waoiOTFbt5FI65WRfNlYXtm6D+CCrs2ocg2WgoyKhtsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A90AC4CEE4;
-	Thu, 17 Apr 2025 20:32:57 +0000 (UTC)
-Date: Thu, 17 Apr 2025 16:34:36 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Junxuan Liao <ljx@cs.wisc.edu>
-Cc: Frederic Weisbecker <frederic@kernel.org>, "Paul E. McKenney"
- <paulmck@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: Interface for enabling context tracking
-Message-ID: <20250417163436.599e50a1@gandalf.local.home>
-In-Reply-To: <3ce02a98-0ac2-4d34-b6f7-ba85088399d7@cs.wisc.edu>
-References: <9e2ac1e3-d07d-4f17-970e-6b7a5248a5bb@cs.wisc.edu>
-	<20250410150555.7797d195@gandalf.local.home>
-	<3ce02a98-0ac2-4d34-b6f7-ba85088399d7@cs.wisc.edu>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744922178; c=relaxed/simple;
+	bh=TJBw7hzRm0pclI2UfUvquj4FkU2UVt08LL8fo8kchb8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=psjMxRcRr5WERbOnq2KD3TMITwD5Tgy+iBnFlG0ENHftkoERNz++vzbqe8RpduJbVkazn7kKrzJqgwjlnHsXyiMalXWzcVTcHkSwQLheA4Rn+Blt3Tb7QQwJinQ1dC3ARqxl3BzBj457H5kWFVlxeSWheIHWeZW6Sb5xHhMvj5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MtZjWXCb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MtZjWXCb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45480C4CEE4;
+	Thu, 17 Apr 2025 20:36:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744922177;
+	bh=TJBw7hzRm0pclI2UfUvquj4FkU2UVt08LL8fo8kchb8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MtZjWXCbR8CkAy7jhwWK7Aphg3G1rHrRwej1d3PuexsNhI53vevjI3fgeqJrh8qmC
+	 nIRuevWIFDvuCgO9dLuDvIOZSY/p+l4a6bM/ec6bulBQFB0SbObz+6C+69URG8UDm/
+	 jmiKPo1QNzFUZ+Y1p9utalE/5MA2izYwZJZCuf5l+93Deqmr8rEw9XF+kXnkvNwI8R
+	 ardH22spwg/boEfr++UtTnQ+ILkqeI8q54xx0Xr/e4ej1F7tl9GwKavpNN0oJ7PvN6
+	 PpKoaOL8Qyxfosv1j0orHNUpJ8sV7TETCWeXtDVtSxSw0gTdNT3YdQJh5xt7gzp6zL
+	 OX3hSFNn5MnYg==
+Date: Thu, 17 Apr 2025 22:36:11 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Tejun Heo <tj@kernel.org>, phasta@kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] workqueue: rust: add creation of workqueues
+Message-ID: <aAFmO0FhHrzG_F8H@cassiopeiae>
+References: <20250411-create-workqueue-v1-1-f7dbe7f1e05f@google.com>
+ <Z_1QzTdV8mHJYdQ6@cassiopeiae>
+ <Z_4gb8ZAlbfhobgW@google.com>
+ <Z_45kDv_wAHIBNpI@cassiopeiae>
+ <Z_-f7Bgjw35iXkui@google.com>
+ <CAH5fLgiKxDpWg=dDsTJsrB6Kmkw32GZ9WPO-SrpWm4TZDxGVtg@mail.gmail.com>
+ <aAALmSjLyWqrcQ45@slm.duckdns.org>
+ <59c1e09a5c47a60e26c5fb10c3305356328a98a6.camel@mailbox.org>
+ <aACtqnC7okO7eZEg@slm.duckdns.org>
+ <CAH5fLgg3RrsWy-ArWb9502st3O=DsmPsBsXoZ5M_nS7oWggJuA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH5fLgg3RrsWy-ArWb9502st3O=DsmPsBsXoZ5M_nS7oWggJuA@mail.gmail.com>
 
-On Thu, 17 Apr 2025 14:10:53 -0500
-Junxuan Liao <ljx@cs.wisc.edu> wrote:
+On Thu, Apr 17, 2025 at 10:26:04PM +0200, Alice Ryhl wrote:
+> On Thu, Apr 17, 2025 at 9:28 AM Tejun Heo <tj@kernel.org> wrote:
+> >
+> > On Thu, Apr 17, 2025 at 09:22:40AM +0200, Philipp Stanner wrote:
+> > > I assume you, ultimately, mean that the list of delayed_work's would be
+> > > accessible through workqueue_struct, correct?
+> > >
+> > > And then destroy_workqueue() could loop over all of them with
+> > > cancel_delayed_work_sync()?
+> >
+> > Yeap, I was thinking flush_delayed_work() but maybe
+> > cancel_delayed_work_sync() is better.
+> 
+> But doesn't that have a cleanup problem? If the work item owns an
+> allocation or a refcount that's cleared by the work item's run
+> function, then using cancel_delayed_work_sync() will fail to clean
+> that up. Whereas flush_delayed_work() avoids this problem.
 
-> Just found out that the exit tracepoints for syscalls aren't always
-> exactly preceding the exit to userspace. The kernel can still spend
-> quite some time in task_work_run after the tracepoints are triggered.
-> Has that bothered you before?
+I also think it may be a bit unexpected to users if pending "normal" work "will
+be done first", but delayed work is canceled instead.
 
-It's been a while, but what I usually do when I want to see entry into the
-kernel is also to run:
-
-  trace-cmd set -p function_graph --max-graph-depth 1
-
-Which tracks the first function call into the kernel. It obviously now
-misses entry and exit from user mode due to noinstr, but if a task_work
-function is called, it will usually catch that too.
-
--- Steve
+That sounds like a good source for wrong use. :(
