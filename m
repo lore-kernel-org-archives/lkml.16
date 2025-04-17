@@ -1,63 +1,63 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3E0251790
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4DD725392F
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:25:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744899947; cv=none; b=ZRQ+N3ge9kiCHD1DDMgdJqzUgy9ZEc6BNYOrZNnvZZiGoH6omOPZoxxB66ddueq1faEVD77HnA7wL4tMXpxDJCOzuSaK5h+UP+iv9Jl/Ak8GIf2WnYW11KM1BA3J1pEM7C1MsWYjWVQntA2Q6Wu0A/fIoV8qM5MwDmcZbVk5pL0=
+	t=1744899949; cv=none; b=qnN1U/DXp/22cI99r37pYF7KwRAddIxiwOd+tfqhX2VI2avTPHKJZpLPAoY2/5ML/svGfpKdhWWSXtOeVCAyOwctgrafUxOKR7HartqyDOiokCv6GnNQZV0lbjNnB5/T8JPRW2TWA+k0IhDbaxMTflwz92PA7PkDfniRqMtL0oI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744899947; c=relaxed/simple;
-	bh=FqR3ie5m0T6TcJOI5Kn3DIPxCD+sBdJQs7QWqLz654U=;
+	s=arc-20240116; t=1744899949; c=relaxed/simple;
+	bh=aN8FEk2gTwraQmA2Okw28VZvXnn4IpMUEhiRqft6pRM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IOENhCZmB4RPBdQGlgawi9kpjaOXjP32ckZlQa3r5sTx0kOP/SL7HRhNR35UF+DdqV5tA1kgbdROQkffglI9oMPc6NFCvbt6/u4stUSDfe+GVZZzYwqXCmbcSZUV9Vrxrs7uW7tuuvVolu4n+zCYNt0kI/SRvvKMOYyRrBvidDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YqrtB9e/; arc=none smtp.client-ip=209.85.167.54
+	 MIME-Version; b=dmDuvejiqz1hV51kWdBS3oC1y+YfnZogLaM0zfL107z9uUdXzHD7SXeUMgh4JwNM3JocCAhR0e6RV6ZRn1B6YN7WwTupaPBVel8z1x6tUU+qHxxabcmV28MLGR32wIzz3ETLx1JZfJr7jacUyBu2kqhJabHsNKDgBKVx9aVPyBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yVy5L502; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YqrtB9e/"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-549967c72bcso989150e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:25:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yVy5L502"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5497590ffbbso820404e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:25:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744899943; x=1745504743; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744899945; x=1745504745; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zs1DiDLKgL3lDGnxl5GpSbOlFK1Fei/oMNx+3W/PVKs=;
-        b=YqrtB9e/dAIQd68nqjFw+ZhU5O6J8ph+hwiTU2zM+nnYJDz38FYcEyvM1hzRMkingf
-         FaKDMWdDnkt/UItpPReuufZxklkw78xT/Pge2adoHgMCDlvJbUp9zL+Tqg4NToeeXu7K
-         +rlv61dmedqmJlDbO1cFVBtL0Ht94lvXskO614M7Z3s533glvg6gms0vunDP25IfQ8BQ
-         rRwgu7VOCXO89fGRQGJ+CWCqjVOi/DFjK1A/afgpPQrxmOr8qDfVzQoXqLLpdijfHSvl
-         zsptgAauzDTXAVKpya8/sCEetQb634YcE8fw8WEOmSaHbEGvoOlE7DiyhaICJyZ37UfZ
-         fTwQ==
+        bh=/DgFXHRgSnMuDIPCx1JNgWD3fMJlP6odjvf+kJnYpPA=;
+        b=yVy5L5027EaTAPgylmnLEUY4rL1ClD7aXMlPabQGjdrOWE3+rJHrvCarDc1m1xPcUM
+         yOciC6OW8iEeQ04/nYzhTtDI+SK8I9yOdIX3JR2WRnQY00VNz8NnJw6z83j81GGa4YKG
+         0kcpmfruS7MiTPIUNjKoo+oPgfDXyDk4Q1A2mKGSY3Q9VEyza/ES5bmgcdCRrL9qzkuc
+         gPAt5DO1fRLK+bD3TXEnD8aFD6CFFVBeagf2Bdvujg8x6YhUd1K/q08u6jRPHsy+dHVP
+         1bAbsT/buFntkLuF0M4AAgSeyeeilCBtLjlwuEp9ZVXt3GliXvHO7kce5tE272FmXUq6
+         sD/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744899943; x=1745504743;
+        d=1e100.net; s=20230601; t=1744899945; x=1745504745;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zs1DiDLKgL3lDGnxl5GpSbOlFK1Fei/oMNx+3W/PVKs=;
-        b=atdRiwIA+C9om2rMfg58jcjQJip+cLRVgXAgzpCLiHCjaMRGvtGGqgvKX6hFQXJXrX
-         7vM4r4SOM7PoMcvifDhadUwViyRSYWxKAGS7MDmwt2MMT+zNgW4Gq3YUsWA+3H8jdxCU
-         kAXu2lx2CbONriRzSJcYNTSdO0sjznnzWmGaeuebvtZLnaI5YJC2ZH+qo8wEDrk9KLqu
-         NtDcrUE/fOZ+dyba2cD8+mn2Rg2uR7WfSd9qd4HSetNW5vNFXBSiaTZxDcnJTZhRx419
-         sGUJV+jsWqbC+KQQDZCBwR21MBscSIHtDxH9ozwEvPWfR21YRyZwkOOAS8Vf9+OmAJVH
-         Caeg==
-X-Forwarded-Encrypted: i=1; AJvYcCWkp0t22CmNx/6GP6DWX9/pBu5IFTFxmxs2IC2Eyhh5nYBHSP6O0FWww3sZ1qCH6gNN3ziY27tbbxH45XQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOe/NRC+d9ZdG7+NjUy/+tPe7tGWLPlZn9gLx3SCF4ceQFDZfo
-	98sMIYKpOBejlGnP7ZB90+wB37xqHfnnMv3d2FotyRcQZy0lz3RWwG0EXeDCXB0=
-X-Gm-Gg: ASbGncvCiq4wAYRqPoog380zR5A+ZJcZe0SJOcEpojWK4qlpr9Bpisd1CmeqYJWoz7N
-	H49t9ND4Jp4sIyw7RC1PM13pyU/6z7zaGlHdgJHKma/Tz0TSp0DEyWGuY1YY7FOfzAAzX9NZaJv
-	+Ou+7V+GEfETy0+TvZHebTkKddaq2Izyy9JyVpZgEmJp+z1/WgkEcIcHrFXvQLD2a8H9WPSE48z
-	azBcK+zhis+0hggU5NKQ3OTV9bKoPlShV53J901yLP5SC7Vdx8BKHRA5/TV0Wab7wb08R7/kFyT
-	eGb15w5gSlCdngzpGoPqFp2qz3CMnSuhYFqnvY+Lslg0jpBNt3dzc+THpdf3MS0AfmnvmWSjwHg
-	g8dObPwg5Q/2W1vk=
-X-Google-Smtp-Source: AGHT+IFUfAkPBWbRU7FiTAZgfCwrsStrMYMu+aAN9vO0F45zoHnvuEwiowloBQTqx+0Po2lAcPUf0g==
-X-Received: by 2002:a05:6512:3d0d:b0:549:39b1:65c2 with SMTP id 2adb3069b0e04-54d64af049dmr2076429e87.48.1744899943408;
-        Thu, 17 Apr 2025 07:25:43 -0700 (PDT)
+        bh=/DgFXHRgSnMuDIPCx1JNgWD3fMJlP6odjvf+kJnYpPA=;
+        b=hOZ/9qetl7ZIQop7M4TLvRiEU5Mn3EMsuQJ0RB2ecxucR/hLTxqJp6FzuPCvCykVy7
+         PHn4++7laZnbrjK7+A+CbkjmSabbS5Tkz9rKDvYH5Gw0AStBsxG5YgOc4DrsfX6wB9Tj
+         oihv+Hh8gVrHf8UWhym3j2j9WO0zkKPkv1jW3g+EFFuoVjS2aK7NH/BpJnNV/KFhlz18
+         xEWL/QfDMcVph+hF0Elz6PZqKTOOnqqEo0nUxvJ9z9uBPscT3bE3WN6JmhvHbKS1anUt
+         srd/X/cEvXBEGf04P7zxuyZGDtMEdqXcbbnM50ZkcWPrJDTD3EYcJgHQm9FBTHFaCQ6t
+         lKWg==
+X-Forwarded-Encrypted: i=1; AJvYcCV5SHSZyoj27TxUKASfHtvndKlzA16xSzuJeKBZWhgqAfUqS94sLKGCexrywsSEGHgH3A85V1P667xK7Ss=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzM/0mt0Fw40bkVZAzc/DPl4QyJ5XbWaef8N23E0FTRjDCBPNKN
+	+F/umdne3EQdgsUosm52fqMwpz5HBDB+zXHgIujqsyHZy6+8uTV1gMbQj2rvlgM=
+X-Gm-Gg: ASbGncvFNsCwkE4srD/lzGu+QQw8MI2PqnMLlbLb7r9VxudGDTH3i7/QDeSF2uBbm8s
+	pXjb0i7KGW1D/NhxZ9N+ujgrLimLJ7PBn1nqlwTjZT/bDrZeCOoSn7lOaTA0Q2btzKNwHbRtU+j
+	G9+fJ4ijI/heJVow8Bq3eo5zGprVRSn5ukPRTTF7dtLGu7KTRteHqy/w40woKA69pSyA7xnoXFk
+	MN+PcbNic1Onp+kt/jvTmp0mOT5KOLCvwj00REqwFoY68t4x22AL7UXzs1jQtXth5H1ScXB00Yo
+	sX9dBZ6hrkJa4wE79VP97wnjD6K9De/E2JbpLsd+CmvUB9CDc8wpiioQosI9V171kMoKGar+FjD
+	bmoEhjt3Hsf3+Tt8=
+X-Google-Smtp-Source: AGHT+IHdJaQxomsfYSS+f0K9itIKdmZijhFhwWEW6ghpA5npqy5MAC8rCQkmORhb5jt3ng77hEg7hw==
+X-Received: by 2002:a05:6512:3055:b0:54b:117c:a070 with SMTP id 2adb3069b0e04-54d64af157dmr2157090e87.57.1744899944885;
+        Thu, 17 Apr 2025 07:25:44 -0700 (PDT)
 Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d65e43647sm370096e87.58.2025.04.17.07.25.42
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d65e43647sm370096e87.58.2025.04.17.07.25.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 07:25:42 -0700 (PDT)
+        Thu, 17 Apr 2025 07:25:44 -0700 (PDT)
 From: Ulf Hansson <ulf.hansson@linaro.org>
 To: Saravana Kannan <saravanak@google.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -75,9 +75,9 @@ Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
 	Ulf Hansson <ulf.hansson@linaro.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 07/11] pmdomain: core: Export a common ->sync_state() helper for genpd providers
-Date: Thu, 17 Apr 2025 16:25:05 +0200
-Message-ID: <20250417142513.312939-8-ulf.hansson@linaro.org>
+Subject: [PATCH 08/11] pmdomain: core: Add internal ->sync_state() support for genpd providers
+Date: Thu, 17 Apr 2025 16:25:06 +0200
+Message-ID: <20250417142513.312939-9-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250417142513.312939-1-ulf.hansson@linaro.org>
 References: <20250417142513.312939-1-ulf.hansson@linaro.org>
@@ -89,80 +89,136 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In some cases the typical platform driver that act as genpd provider, may
-need its own ->sync_state() callback to manage various things. In this
-regards, the provider most likely wants to allow its corresponding genpds
-to be powered-off.
+If the genpd provider's fwnode doesn't have an associated struct device
+with it, we can make use of the generic genpd->dev and it corresponding
+driver internally in genpd to manage ->sync_state().
 
-For this reason, let's introduce a new genpd helper function,
-of_genpd_sync_state() that helps genpd provider drivers to achieve this.
+More precisely, while adding a genpd OF provider let's check if the fwnode
+has a device and if not, make the preparation to handle ->sync_state()
+internally through the genpd_provider_driver and the genpd_provider_bus.
 
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- drivers/pmdomain/core.c   | 28 ++++++++++++++++++++++++++++
- include/linux/pm_domain.h |  3 +++
- 2 files changed, 31 insertions(+)
+ drivers/pmdomain/core.c   | 36 ++++++++++++++++++++++++++++++++++++
+ include/linux/pm_domain.h |  7 +++++++
+ 2 files changed, 43 insertions(+)
 
 diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
-index 5aba66ac78f1..512f89e6d302 100644
+index 512f89e6d302..9c5a77bf59d2 100644
 --- a/drivers/pmdomain/core.c
 +++ b/drivers/pmdomain/core.c
-@@ -2619,6 +2619,34 @@ static bool genpd_present(const struct generic_pm_domain *genpd)
- 	return ret;
+@@ -2374,6 +2374,7 @@ int pm_genpd_init(struct generic_pm_domain *genpd,
+ 	INIT_WORK(&genpd->power_off_work, genpd_power_off_work_fn);
+ 	atomic_set(&genpd->sd_count, 0);
+ 	genpd->status = is_off ? GENPD_STATE_OFF : GENPD_STATE_ON;
++	genpd->sync_state = GENPD_SYNC_STATE_OFF;
+ 	genpd->device_count = 0;
+ 	genpd->provider = NULL;
+ 	genpd->device_id = -ENXIO;
+@@ -2656,6 +2657,7 @@ int of_genpd_add_provider_simple(struct device_node *np,
+ 				 struct generic_pm_domain *genpd)
+ {
+ 	struct fwnode_handle *fwnode;
++	struct device *dev;
+ 	int ret;
+ 
+ 	if (!np || !genpd)
+@@ -2665,6 +2667,10 @@ int of_genpd_add_provider_simple(struct device_node *np,
+ 		return -EINVAL;
+ 
+ 	fwnode = &np->fwnode;
++	dev = fwnode->dev;
++
++	if (!dev)
++		genpd->sync_state = GENPD_SYNC_STATE_SIMPLE;
+ 
+ 	device_set_node(&genpd->dev, fwnode);
+ 
+@@ -2718,8 +2724,10 @@ int of_genpd_add_provider_onecell(struct device_node *np,
+ {
+ 	struct generic_pm_domain *genpd;
+ 	struct fwnode_handle *fwnode;
++	struct device *dev;
+ 	unsigned int i;
+ 	int ret = -EINVAL;
++	bool sync_state = false;
+ 
+ 	if (!np || !data)
+ 		return -EINVAL;
+@@ -2728,6 +2736,10 @@ int of_genpd_add_provider_onecell(struct device_node *np,
+ 		data->xlate = genpd_xlate_onecell;
+ 
+ 	fwnode = &np->fwnode;
++	dev = fwnode->dev;
++
++	if (!dev)
++		sync_state = true;
+ 
+ 	for (i = 0; i < data->num_domains; i++) {
+ 		genpd = data->domains[i];
+@@ -2737,6 +2749,11 @@ int of_genpd_add_provider_onecell(struct device_node *np,
+ 		if (!genpd_present(genpd))
+ 			goto error;
+ 
++		if (sync_state) {
++			genpd->sync_state = GENPD_SYNC_STATE_ONECELL;
++			sync_state = false;
++		}
++
+ 		device_set_node(&genpd->dev, fwnode);
+ 
+ 		ret = device_add(&genpd->dev);
+@@ -3453,6 +3470,25 @@ static void genpd_provider_remove(struct device *dev)
+ 
+ static void genpd_provider_sync_state(struct device *dev)
+ {
++	struct generic_pm_domain *genpd = container_of(dev, struct generic_pm_domain, dev);
++
++	switch (genpd->sync_state) {
++	case GENPD_SYNC_STATE_OFF:
++		break;
++
++	case GENPD_SYNC_STATE_ONECELL:
++		of_genpd_sync_state(dev);
++		break;
++
++	case GENPD_SYNC_STATE_SIMPLE:
++		genpd_lock(genpd);
++		genpd_power_off(genpd, false, 0);
++		genpd_unlock(genpd);
++		break;
++
++	default:
++		break;
++	}
  }
  
-+/**
-+ * of_genpd_sync_state() - A common sync_state function for genpd providers
-+ * @dev: The device the genpd provider is associated with.
-+ *
-+ * The @dev that corresponds to a genpd provider may provide one or multiple
-+ * genpds. This function makes use of the device node for @dev to find the
-+ * genpds that belongs to the provider. For each genpd we try a power-off.
-+ */
-+void of_genpd_sync_state(struct device *dev)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct generic_pm_domain *genpd;
-+
-+	if (!np)
-+		return;
-+
-+	mutex_lock(&gpd_list_lock);
-+	list_for_each_entry(genpd, &gpd_list, gpd_list_node) {
-+		if (genpd->provider == &np->fwnode) {
-+			genpd_lock(genpd);
-+			genpd_power_off(genpd, false, 0);
-+			genpd_unlock(genpd);
-+		}
-+	}
-+	mutex_unlock(&gpd_list_lock);
-+}
-+EXPORT_SYMBOL_GPL(of_genpd_sync_state);
-+
- /**
-  * of_genpd_add_provider_simple() - Register a simple PM domain provider
-  * @np: Device node pointer associated with the PM domain provider.
+ static struct genpd_provider_drv genpd_provider_drv = {
 diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-index 0b18160901a2..e9a1f8975c4f 100644
+index e9a1f8975c4f..2185ee9e4f7c 100644
 --- a/include/linux/pm_domain.h
 +++ b/include/linux/pm_domain.h
-@@ -418,6 +418,7 @@ struct genpd_onecell_data {
+@@ -127,6 +127,12 @@ enum genpd_notication {
+ 	GENPD_NOTIFY_ON,
  };
  
- #ifdef CONFIG_PM_GENERIC_DOMAINS_OF
-+void of_genpd_sync_state(struct device *dev);
- int of_genpd_add_provider_simple(struct device_node *np,
- 				 struct generic_pm_domain *genpd);
- int of_genpd_add_provider_onecell(struct device_node *np,
-@@ -438,6 +439,8 @@ struct device *genpd_dev_pm_attach_by_id(struct device *dev,
- struct device *genpd_dev_pm_attach_by_name(struct device *dev,
- 					   const char *name);
- #else /* !CONFIG_PM_GENERIC_DOMAINS_OF */
-+static inline void of_genpd_sync_state(struct device *dev) {}
++enum genpd_sync_state {
++	GENPD_SYNC_STATE_OFF = 0,
++	GENPD_SYNC_STATE_SIMPLE,
++	GENPD_SYNC_STATE_ONECELL,
++};
 +
- static inline int of_genpd_add_provider_simple(struct device_node *np,
- 					struct generic_pm_domain *genpd)
- {
+ struct dev_power_governor {
+ 	bool (*power_down_ok)(struct dev_pm_domain *domain);
+ 	bool (*suspend_ok)(struct device *dev);
+@@ -187,6 +193,7 @@ struct generic_pm_domain {
+ 	unsigned int performance_state;	/* Aggregated max performance state */
+ 	cpumask_var_t cpus;		/* A cpumask of the attached CPUs */
+ 	bool synced_poweroff;		/* A consumer needs a synced poweroff */
++	enum genpd_sync_state sync_state; /* How sync_state is managed. */
+ 	int (*power_off)(struct generic_pm_domain *domain);
+ 	int (*power_on)(struct generic_pm_domain *domain);
+ 	struct raw_notifier_head power_notifiers; /* Power on/off notifiers */
 -- 
 2.43.0
 
