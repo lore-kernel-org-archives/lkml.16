@@ -1,108 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0039E21E0AD;
-	Thu, 17 Apr 2025 07:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D5622068F
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744876316; cv=none; b=NNy+cQ8dVrHHkVKrETWCfE6KEZvxQ6sLd2Bm0bBZUsnBx3jUjblTbmPSbQ5paVNShlHYMgW8wSWGSj6ODoyY0QPcwiksdtA+V31XpqmtCJmpNWCQ7FgolAkx2V5Ca5FUSbknBscBMOBGz03GCZDBHJaBpYUnECExCtpAt7G6dzg=
+	t=1744876339; cv=none; b=Sf4Jw19ZJz/bwTnbaxiPM/3foaZ9vtLuh7tiE/gN2z8jvXqxAQW79SNwXg1qzdUrU91JcQ/z/w/fheixJ4uhNPQ4IpKyC7DX5/fyTKZ1+gjvR82TvOgWlr24VkTLzeaTbVauzi59pFi3dDQFHnlaad64nFY7E3iYv8loMsvEnxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744876316; c=relaxed/simple;
-	bh=xdQ49OGT7gqtw3dV/HE2bLNsPQs2ZW7i2WkiE6mwXy0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BadhkrTPEbjvCT+HeP+VW6h9mPOUZ6aaZM5gXJDmfybFyzUSTvNyUlXITAmj/ef9SYKOsRrG89HOQCNtOhCgCW7BWf7dxSM6hR8f6+XGZenkBc5UTwcGKTD/q3EHT4ae9WUVRE3keooXV14mZHoJWXNZI2QSlOmfCtTa+bb3LaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OGAC/9Be; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744876339; c=relaxed/simple;
+	bh=SXMciIpogizc4tBQaQQyNO7iWTL7anFQVWebf4a2WWM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=otPJdOw17cicZMLdIlIsYtyjO3iKH2+s2nfXarfeO+zKCVdiDBbmBT0qBqMmIRrr8+pfdMp1CU1ggJlLCmrPWf/RqHtn7gZmGhR15lVVM6e1CcD0jGWFD+YsiqPwec10RIlyGFe/nqvMfCevXmBI8VM6O+U7Uym2ZhmCZEYvMhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C2bwkqlp; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OGAC/9Be"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9554CC4CEE4;
-	Thu, 17 Apr 2025 07:51:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744876315;
-	bh=xdQ49OGT7gqtw3dV/HE2bLNsPQs2ZW7i2WkiE6mwXy0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OGAC/9BeXi4Z7H9ixfodAS+ryCXIIXgNBtVNGX0AGqfunukgZWmT2JpzkUF6xg2es
-	 4DBrbvQBCyl2uOTHyfN8U7KQgmgdAnibx8sthY5Mf5wMuBnowLeZWu2TdNiJN0GxyN
-	 bSf7D3hfx+0OX5jmglG8LpgekcvNJYzBnKAFO1rFK/OFn6kyuZdvzr0u4DT/okqWxi
-	 xxS4YJ3dNkI03Gka6EKVjzkDkBwPZmwSK31wk2FUBYuK68OJqRX6JF5w4ueShLLSiJ
-	 MrZzKcQ4p9/LILVt5eMeN1grdnG/ppv3kbooN4V9RhA0bfxBo/29E0CMJq+wXVOG0c
-	 W4I8LnYTCVQjw==
-Date: Thu, 17 Apr 2025 09:51:50 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
-	robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, treding@nvidia.com,
-	jonathanh@nvidia.com, kthota@nvidia.com, mmaddireddy@nvidia.com,
-	sagar.tv@gmail.com, Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH V3] PCI: dwc: tegra194: Broaden architecture dependency
-Message-ID: <aACzFo2wNYpo4-TN@ryzen>
-References: <20250417074607.2281010-1-vidyas@nvidia.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C2bwkqlp"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30dd5a93b49so4504111fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:52:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744876335; x=1745481135; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SXMciIpogizc4tBQaQQyNO7iWTL7anFQVWebf4a2WWM=;
+        b=C2bwkqlpq1LXBQFWZcVLMP1vheGoGAhIwCt68k05aHMLxKoEYWem24ysdjCARGkvtt
+         zZ7ZAuC1NpfqN3DRa3n8UfLK3mZxUKsPgxeRFAckxaDmnyc/mSPfWkjyo9NPYyFe3Iwe
+         Iafy0RwDYRyNLKYLAoV1bsnUYejO7bT0voBrFUWXi35qFsuxgdRi1Yf48iCd3Mr5Xgsv
+         DWML2/d2xpcM8SYj1Nz/49ALHFYYwFSP/Uzs2XE+eM/JYzD6Ot7YyqTJtXO1EyLqYbd+
+         JlBejyKVQND7yEDR+2ckwApNmfO5RpNJW2WjPfY7MhFBKP+9k7qW/fHbXdAgpCuZ2spt
+         d0Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744876335; x=1745481135;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SXMciIpogizc4tBQaQQyNO7iWTL7anFQVWebf4a2WWM=;
+        b=qQ8EGhM/3h/h9DD8hLDgdH1B5D3oao5IQgmzdk1DGCfaVBXg6fw31U9WMdz9N6P1h6
+         s39VVTve0lyTa7XaGozM8gHmgIXiDP7nCr5YoHDVAZ3026HCAg7ql85xIVpepDF6lmUn
+         eLB2R9CjCDupjSfo9dD//JlL7Uw9Y9Iaks43VD+LXgW1FqMuaHrpgW4ZENCAapnuHYIC
+         2si+lJOITUfSnX75w7YlseOXjTGy7P6F0XCcyFlD0W/YlFFUH40fJc1vPkLMaa5AYHzd
+         R+bHVjsG3J+8dGam9ATiguBpQH47NgzNrgggy9hDA8WpCY1NQwwvQ4EmXqDYyk1ub/+j
+         S3qw==
+X-Forwarded-Encrypted: i=1; AJvYcCV/oveBYUgB43iqyjcK+VU9TVWsRv3M6xMnkbMBUWmIO6i+YzQBxNJA7+Idl1moa8RHPJLhVbSfp02C+aE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBmDcJxRenwlMjWLFydoKOrib38QHGqeBDDeY7hI9F/3XIGADc
+	qtIFCWvRpvcBYvY1FvxdUJz/fniSp8x8op8b6yUNTcMRIcNUaefB9LhHQNfCu9SREQJ02i5c5qO
+	MOSTZxqenfa4HF5Uk/i49OaZctsTJy1DV3mC5Tg==
+X-Gm-Gg: ASbGncvo3gR9vEqoyXRpjicqBkpn0ZtHfcBWQvd8IkSl6FQPPgy63rp3GzK1Mj9cSYb
+	eSedqpGvvIxDi4ufua2NPFYZqeXtiWTg5QHejVJxgOV6kc05Sze//lXNvHAjLTEB8D23+IYid4P
+	+UsTwwR8W7K8vyI1iqyesZjA==
+X-Google-Smtp-Source: AGHT+IHJ9+FIBb1TWyrAVx2oUDniSfeXB/Oq3HnfMthWO0+aKUi8sMZxOnwo3TSSS1hKDknErn0vN0cWBKLzO/nllow=
+X-Received: by 2002:a2e:bea5:0:b0:30b:f2d6:8aab with SMTP id
+ 38308e7fff4ca-3107f719dcamr21044461fa.32.1744876335142; Thu, 17 Apr 2025
+ 00:52:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417074607.2281010-1-vidyas@nvidia.com>
+References: <20250416-aaeon-up-board-pinctrl-support-v3-0-9ca13aa57312@bootlin.com>
+ <20250416-aaeon-up-board-pinctrl-support-v3-2-9ca13aa57312@bootlin.com>
+In-Reply-To: <20250416-aaeon-up-board-pinctrl-support-v3-2-9ca13aa57312@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 17 Apr 2025 09:52:04 +0200
+X-Gm-Features: ATxdqUHuW6BLizFBmvxGJmtIAMW4yS0uo1YYLPFOyB_Zbz8jQMgx6GMVm8Zfpi0
+Message-ID: <CACRpkda5om6Uik+YnN4i1ePJr_NLGskdBe5GmYkrzU9bzN3+XA@mail.gmail.com>
+Subject: Re: [PATCH v3 02/10] pinctrl: core: add devm_pinctrl_register_mappings()
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, 
+	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-+CC PHY maintainer.
+On Wed, Apr 16, 2025 at 4:00=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
 
-On Thu, Apr 17, 2025 at 01:16:07PM +0530, Vidya Sagar wrote:
-> Replace ARCH_TEGRA_194_SOC dependency with a more generic ARCH_TEGRA
-> check, allowing the PCIe controller to be built on Tegra platforms
-> beyond Tegra194. Additionally, ensure compatibility by requiring
-> ARM64 or COMPILE_TEST.
-> 
-> Link: https://patchwork.kernel.org/project/linux-pci/patch/20250128044244.2766334-1-vidyas@nvidia.com/
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> v3:
-> * Addressed warning from kernel test robot
-> 
-> v2:
-> * Addressed review comments from Niklas Cassel and Manivannan Sadhasivam
-> 
->  drivers/pci/controller/dwc/Kconfig | 4 ++--
->  drivers/phy/tegra/Kconfig          | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index d9f0386396ed..815b6e0d6a0c 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -226,7 +226,7 @@ config PCIE_TEGRA194
->  
->  config PCIE_TEGRA194_HOST
->  	tristate "NVIDIA Tegra194 (and later) PCIe controller (host mode)"
-> -	depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
-> +	depends on ARCH_TEGRA && (ARM64 || COMPILE_TEST)
->  	depends on PCI_MSI
->  	select PCIE_DW_HOST
->  	select PHY_TEGRA194_P2U
-> @@ -241,7 +241,7 @@ config PCIE_TEGRA194_HOST
->  
->  config PCIE_TEGRA194_EP
->  	tristate "NVIDIA Tegra194 (and later) PCIe controller (endpoint mode)"
-> -	depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
-> +	depends on ARCH_TEGRA && (ARM64 || COMPILE_TEST)
->  	depends on PCI_ENDPOINT
->  	select PCIE_DW_EP
->  	select PHY_TEGRA194_P2U
-> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
-> index f30cfb42b210..342fb736da4b 100644
-> --- a/drivers/phy/tegra/Kconfig
-> +++ b/drivers/phy/tegra/Kconfig
-> @@ -13,7 +13,7 @@ config PHY_TEGRA_XUSB
->  
->  config PHY_TEGRA194_P2U
->  	tristate "NVIDIA Tegra194 PIPE2UPHY PHY driver"
-> -	depends on ARCH_TEGRA_194_SOC || ARCH_TEGRA_234_SOC || COMPILE_TEST
-> +	depends on ARCH_TEGRA || COMPILE_TEST
->  	select GENERIC_PHY
->  	help
->  	  Enable this to support the P2U (PIPE to UPHY) that is part of Tegra 19x
-> -- 
-> 2.25.1
-> 
+> Using devm_pinctrl_register_mappings(), the core can automatically
+> unregister pinctrl mappings.
+>
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+
+This is useful and good!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
