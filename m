@@ -1,131 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2066.outbound.protection.outlook.com [40.107.96.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C042479CF;
-	Thu, 17 Apr 2025 00:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744848539; cv=none; b=BaJ3Ryej6OupE+K2VoFtl+hfhN+q13sL9+haIJAe+o0PkOPsKUaRs4VgNLyZN+uEDZvZUAtMZ6ZrrQnzDPybiGJtmszgFqrEzSmVEQRsb/TIEy0k8O8o7AF9mXYbMCQkwCbUusRd6pgr/tCu7p1llJ3bdtPNeauY08fqdeSE2rQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744848539; c=relaxed/simple;
-	bh=VS3LVZY+zuP2UHLVuC8I4hhS1Y2XmPsmcUWcoKDowOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DZ6XgzXz+2sz4PFuEdrnINPH8QufcU+BzoUyB8RjjPw3SpUenWOwJzsr6CeQ2y6rvQRsY/1/vCUUuoGz/MfGqsqz1AUwy+/M84mjLJFKsqU9SusoPwtNOJPVCA2DM3uqSKpYFr9+ThxIwNWjzUV6zgGAMR4Xodki8bQixCS2Pc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hr7E1RmL; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644904A02
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744848591; cv=fail; b=uxeLRW7wwY4o+Plb9CzMts7eGc6/3nndiGWmMqgB/fDVkWFthxr9vJItZhoByfcHsAeB6ZavJbjuQfSMbZWk6QlGM/RhjfN2ibK2H88ZdWpXQbMVLLLX0Flchh8jlie/dJcE8phYjZZpY/ZYyAEyc9Wrsp93dWL1ZCGnDGi7pdQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744848591; c=relaxed/simple;
+	bh=WbOTfEUxXJQ3g/Y+8Zic0TYPa8Q/H0BNIQkeMykiaC4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=elrwc3M0KuceV/4jCjfUbNmT5GN9/By4dlCTwIsmdSrodlYpSVtXVDiwMaM+ek0Ujc/mUw3L8lFqRJPuXhieuCxbzJ8wybfIAAiNunVFNB7cSHxRCO0OtMVdap6blpcvDRK/yyXZrjn9rfxQZYRKntf2C08V3l+rJsNjfuh5Zgo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4X3RVDub; arc=fail smtp.client-ip=40.107.96.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hr7E1RmL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDC42C4CEE2;
-	Thu, 17 Apr 2025 00:08:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744848539;
-	bh=VS3LVZY+zuP2UHLVuC8I4hhS1Y2XmPsmcUWcoKDowOo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Hr7E1RmL3siQy77g4rph6xqk3Z7uUq3Db/Xd0QyNX1Op3j7rxby2YwRkDQU69deBB
-	 ZsHplT6FQJX5LMfKcUyOJvfOrpRtogg7cSSgCFbFDz7TgmVTFq3pCSWLjsjEk1OV+d
-	 XL555eA1dURtyZ8dvsSMVmNx8VeQrLsOkv7zVmT783inykrCqkIo8v/QU7vvSqsjdu
-	 okljT38q0x/nhqiZLfcJV/nEkxWhmzMWdhQYp/5Q5MCiG6wz0D0FJzpuE/bSxPwMx/
-	 LPfzAwGaOm6jGojbOBhqd1xokqt37vnhoLY7kw0juH8FuHN4RK8bFMJ6SdeKpEwtGB
-	 0hcT/T2H3RJvQ==
-Date: Wed, 16 Apr 2025 17:08:57 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jason Wang <jasowang@redhat.com>
-Cc: Bui Quang Minh <minhquangbui99@gmail.com>,
- virtualization@lists.linux.dev, "Michael S . Tsirkin" <mst@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Andrew Lunn
- <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, John
- Fastabend <john.fastabend@gmail.com>, Eugenio =?UTF-8?B?UMOpcmV6?=
- <eperezma@redhat.com>, "David S . Miller" <davem@davemloft.net>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] selftests: net: add a virtio_net deadlock
- selftest
-Message-ID: <20250416170857.2e46a3be@kernel.org>
-In-Reply-To: <CACGkMEvceXT+=HJRRe6D3Zk3k40E2ADJiXNb4qqAYm=PZnxNpQ@mail.gmail.com>
-References: <20250415074341.12461-1-minhquangbui99@gmail.com>
-	<20250415074341.12461-4-minhquangbui99@gmail.com>
-	<20250415212709.39eafdb5@kernel.org>
-	<1603c373-024d-4ec2-b655-b9e7fb942bba@gmail.com>
-	<CACGkMEvceXT+=HJRRe6D3Zk3k40E2ADJiXNb4qqAYm=PZnxNpQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4X3RVDub"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kZLoJHGyRzSBpNB7EAMB8CSWkNkIe9PHnmqNDRWaO58HOEvfd6P5OIne46qkwBi5GALNfo3T5fGQU7kvr7bIc1rcm7i+sfoc7ACFVhpIsYF6KeRYHIf9j+X+wIc5AuAF/kW3IkErbp0jkFq9qkJuZNpbdr4rkZuS2QKS3eV0+zndx0tW/JVAS8SSd9b5TMzDS7Bgw4JWA2V8W0FwdwRF5oxAO+TNdVE6HWy7dfHDSL6wwx6e2UC6uAEbn9y7TpnIAfb1v/qO3tJIomTnKLWo3vbuJqY6l6vcOrUzCqiI4vfzIoACe2YJIBzGx2E2ALd1VUpgZcWMDxpREVavrzJidA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VWns1xIlV8sVPRFIGtcNhxweO5hBLP1rWkEn6oRXD3g=;
+ b=nhlpO4cma+fv17Asqmpqcb4tfghtiVUcS0UeMnInRVwVPP1YKPQquLlocZDeJyHkuXGV9wmTBtXwFRm5Sbf2T/stLW35R8IS+Eq26kCnMzmWKc6Ty+0gL3uxOidzoVfuh2IR1veJhRITVMQLCDOy5mEuxI/Q6+xXv04tV6eEEOVDvcoRw8JLaS7pxGbX6EHv72fEtRf4CX1lE0Bg5qoVVrpSKRbNuP59ZA2HEoCcXTOnrWMphGOUWoIGB/ul5tHzPMtS3lfCnyTSkqAXZf7k9gCVcOaFzPzTYAVsCCw6WK5Qu8EB4cbRiKnWbDMqKgfkdEAun7IC+E6+YhnhFxLwFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linuxfoundation.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VWns1xIlV8sVPRFIGtcNhxweO5hBLP1rWkEn6oRXD3g=;
+ b=4X3RVDub4Alb0JOwr9PmEOUG7K1yOA6hWU8yiw3BOLqvzbtY26Q1EUSVuQeDnf9Japl/SkVpRwaC51aiFeRqQ8Tpi0hkohctX70G5QEZh3TnmFxX8CowPmjt1fGgUzh8xUDdltLs8ET5csYPf/8YC8FUZKd5MggOaAXWPG2pjTU=
+Received: from BL6PEPF00016414.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:22e:400:0:1004:0:c) by MN2PR12MB4206.namprd12.prod.outlook.com
+ (2603:10b6:208:1d5::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Thu, 17 Apr
+ 2025 00:09:44 +0000
+Received: from BL6PEPF00020E62.namprd04.prod.outlook.com
+ (2a01:111:f403:c901::1) by BL6PEPF00016414.outlook.office365.com
+ (2603:1036:903:4::a) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.23 via Frontend Transport; Thu,
+ 17 Apr 2025 00:09:44 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ BL6PEPF00020E62.mail.protection.outlook.com (10.167.249.23) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8655.12 via Frontend Transport; Thu, 17 Apr 2025 00:09:44 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 16 Apr
+ 2025 19:09:44 -0500
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 16 Apr
+ 2025 19:09:43 -0500
+Received: from [172.19.74.139] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Wed, 16 Apr 2025 19:09:43 -0500
+Message-ID: <0738f3eb-bb3a-4190-929e-d533c4b7f9f8@amd.com>
+Date: Wed, 16 Apr 2025 17:09:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V0 0/3] Add versal-pci driver
+To: Greg KH <gregkh@linuxfoundation.org>
+CC: <arnd@arndb.de>, <linux-kernel@vger.kernel.org>, <lizhi.hou@amd.com>,
+	<christophe.jaillet@wanadoo.fr>
+References: <20250303044313.679012-1-yidong.zhang@amd.com>
+ <2025041504-ultimatum-unmade-e54a@gregkh>
+Content-Language: en-US
+From: Yidong Zhang <yidong.zhang@amd.com>
+In-Reply-To: <2025041504-ultimatum-unmade-e54a@gregkh>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Received-SPF: None (SATLEXMB05.amd.com: yidong.zhang@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF00020E62:EE_|MN2PR12MB4206:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3e228560-b42b-4304-e773-08dd7d442848
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WlRqdzdLTFBsaXNxNVhvRTY0NEMvS0R6YStsU0NlNkl2WCtFd3lpQk14a3Vt?=
+ =?utf-8?B?VlNJOXhhYUZITlh2RVl2Y2xEeCtIQkJGMEg3REdINWtoSTN1WWN4THJ4YzNZ?=
+ =?utf-8?B?dm5xZGxNWFVEYVFrbVBjVUl6ZDZMeHNvQlVhTEJtVlB2WFlneGQ2UnBuS29Y?=
+ =?utf-8?B?Rm9HeFJ0c2lvZ1BreUNEd3ovNU80MjMxdkFCdGFpdUhDS2NqYkd3Q0JpSE9l?=
+ =?utf-8?B?L25FVWQ0WjFvVmpQam9QQ3Q4ZG8wQXZHcTFKeU8zTzI4cmJSNmdsd05HQklI?=
+ =?utf-8?B?anRiMnhNQmw4SUgvSFBFMm5Xc0U4WC83ckwvWVBVeEQ5V1AxZDRhY1d5UHNu?=
+ =?utf-8?B?QkhUZ0pQdUxFb3dLTDdRSTMrU2c4dDduUGkxL1hhRnA2c3g5WG9zTjBwRzJy?=
+ =?utf-8?B?Y0tMTUR4TVFxcGlnK1o1TnBFZEhsc1pTVy9GeGV4OFVZSENZMGZEMGE1Lzlm?=
+ =?utf-8?B?M3VvVXRYaGZMcmFiVW9oRnIwVmJMS2FYdWRmbFljbnhxWU42bE9WZjlOY2xa?=
+ =?utf-8?B?Z3R1NGROdmFZV2U5eWk0QWNJZm9jN0MvckhZOVJYbVMzSlhCNnJZamtlVUps?=
+ =?utf-8?B?R083dG1PK01ZZGJhTm1EbDJxRzl4Q1FsMTBOeVUwVCttZm5odlhyVVEvSUs5?=
+ =?utf-8?B?QzBpNzYzRmpUQWN1azVDd2hmVVpvMEUyVnluY3JIY2xxWnYybVNoalJnQ3ht?=
+ =?utf-8?B?SC8yWVJTNm1FdnFMN2RZZVhXVHdFSlpOcHlFTm5qdWxUQ2pCYUlvMnczdmdL?=
+ =?utf-8?B?L1QzSVVkZEZpY0laWVBpa3NaVFMzTTUvbEFOMmdvMnl3SS9TcnpWZGl4Mk9H?=
+ =?utf-8?B?c0l2Q1VKN2MvbkhiY3NaSzM2NTNaV1NpRnFvdDYwUmpwcHBaRXp0WHFMakFz?=
+ =?utf-8?B?UDUxRWk4aWpVZHRtUUplWVk4OFJCc0ZUQWc1cGxyOWkxR20rQWVTVFZHdk01?=
+ =?utf-8?B?OS9US2tiSVl5azlvd1V5TlRsRHpYc2xrVHAxYUswUEQvZW50NFh3MjMwa1d5?=
+ =?utf-8?B?YVlidjdYU2N3dUlEdGNqSTdWMk9hUFF3QlJhSmZpelJZaElhbjU5blpPSWQ1?=
+ =?utf-8?B?NENPMmZiNXRmTDdPOFg2ZVBPdVpITi9tRTRBck90R3dJRUZNTjdEWWkzTlNr?=
+ =?utf-8?B?aUhVTk95VHJ2czZrVDNSS1BUNkdnWFlkRjIwa3NPZUJBdnBaTWVUNy9iWmM5?=
+ =?utf-8?B?Y2FDZkp6MnZvbVRpMDlaWWRpakxGQ3VZZnd5SUh4L0kxV3dPUFpEb0tBNzhB?=
+ =?utf-8?B?QlJiNjZ4STNVT1ZjTWtmWElZOTV5OFI1dFBJbm9hR1ViVjlLbHEwN2Jra1pp?=
+ =?utf-8?B?RW4rc1YvYUlDOERyMjJMQm03M3RxelZPYWdjTTRvRENCWndtbVpKaXZ1dGh0?=
+ =?utf-8?B?TFZvZWpkaDlwVCtmL0IzSnl3RUJIVUdvOVVYU0E2Tjd3UVAxMUlYQW9pOFJ4?=
+ =?utf-8?B?ZjNVTGVsWHZScHNleC9qWlJBcVM0ZDBvemFUcTBBNXRrekppaS9FbFJ3S1FJ?=
+ =?utf-8?B?SFFFN0JWeHIxRUJqTWNvSWcrYTA4a1k5YlhxSjhHazRRVnZpQkhBajA2L0JK?=
+ =?utf-8?B?eHBiOHpaa1hGNDV5SHdsT0xLck8zQ0d5Q1hkRmg0NzBGMUFVOG53SFJXUWtQ?=
+ =?utf-8?B?YnpJSDl5R2pmN0tKSUs0dFY4cVZTRXUrMmZHMWxuYTQ2NEo0QlRZMVlMNU9W?=
+ =?utf-8?B?TXRxZGJDMWpBcjMvVlM5Ny9WY0ZYK2FjcWdiV3BhWXhMMk10NzVuUEpxVVBu?=
+ =?utf-8?B?WmxseExrYVZZQzRpaERZYVVTQWw3T2c2US9IYm4xUDN2UWlBcWxyd3draitQ?=
+ =?utf-8?B?Y2lJeTdQZFc2NVY2Y3NPYklkd2NYbWY1emRrbDU4RlNGSkNYY0M1WUQ2SGdD?=
+ =?utf-8?B?WVI0cm9OVmtkVWhqL3h5cjBOVXVmTWpuK3BrbHF2NWZ4RTR4ZkVPUllLZm9x?=
+ =?utf-8?B?NzRwL3V2cEl4NzBwY2JyUFFJY1dFV0tkWGE1aDdDMHVBaHY5SUdEQTJOVDJm?=
+ =?utf-8?B?ajF1MDMrbHpSSzNQVmRBbFJ3eHlEZysvdU1RL3dQK2duMCtsZlJxRm53YUhs?=
+ =?utf-8?Q?f/NsXB?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 00:09:44.3280
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e228560-b42b-4304-e773-08dd7d442848
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF00020E62.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4206
 
-On Wed, 16 Apr 2025 15:46:42 +0800 Jason Wang wrote:
-> On Wed, Apr 16, 2025 at 2:54=E2=80=AFPM Bui Quang Minh <minhquangbui99@gm=
-ail.com> wrote:
-> > On 4/16/25 11:27, Jakub Kicinski wrote: =20
-> > > Unfortunately this doesn't work on a basic QEMU setup:
-> > >
-> > > # ethtool -G eth0 rx 128
-> > > [   15.680655][  T287] virtio_net virtio2 eth0: resize rx fail: rx qu=
-eue index: 0 err: -2
-> > > netlink error: No such file or directory
-> > >
-> > > Is there a way to enable more capable virtio_net with QEMU? =20
->=20
-> What's the qemu command line and version?
->=20
-> Resize depends on queue_reset which should be supported from Qemu 7.2
 
-I'm using virtme-ng with --net loop and:
 
-QEMU emulator version 9.1.3 (qemu-9.1.3-2.fc41)
+On 4/15/25 07:11, Greg KH wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+> 
+> 
+> On Sun, Mar 02, 2025 at 08:43:09PM -0800, Yidong Zhang wrote:
+>> This patchset introduces a new Linux Kernel Driver, versal-pci for AMD
+>> Alevo Versal based PCIe Card.
+>>
+>> The AMD Alevo Versal based PCIe Card, including V70 and RAVE, is the first
+>> Alevo production card leveraging AMD XDNA architecture with AI Engines. It
+>> is designed for AI inference efficiency and is tuned for video analytics
+>> and natural language processing applications [1].
+> 
+> accelerator drivers should be under drivers/accel/, please work with the
+> maintainers there to get it reviewed properly in that location.
 
---net loop resolves to:
+Hi Greg,
 
-	-device virtio-net-device,netdev=3Dn0 \
-	-netdev hubport,id=3Dn0,hubid=3D0 \
-	-device virtio-net-device,netdev=3Dn1 \
-	-netdev hubport,id=3Dn1,hubid=3D0
+We will work with drivers/accel community and send updated patches to 
+them for further review.
 
-> > I guess that virtio-pci-legacy is used in your setup. =20
->=20
-> Note that modern devices are used by default.
->=20
-> >
-> > Here is how I setup virtio-net with Qemu
-> >
-> >      -netdev tap,id=3Dhostnet1,vhost=3Don,script=3D$NETWORK_SCRIPT,down=
-script=3Dno \
-> >      -device
-> > virtio-net-pci,netdev=3Dhostnet1,iommu_platform=3Don,disable-legacy=3Do=
-n \
+Thank you so much for taking your time guiding us the right direction.
 
-That works! I rejigged the CI, for posterity I used two times:
+Thanks,
+David
 
-	-device	virtio-net-pci,netdev=3Dn0,iommu_platform=3Don,disable-legacy=3Don=
-,mq=3Don,vectors=3D18
-	-netdev tap,id=3Dn0,ifname=3Dtap4,vhost=3Don,script=3Dno,downscript=3Dno,q=
-ueues=3D8=20
-
-and then manually bridged the taps together on the hypervisor side.
-
-> > The iommu_platform=3Don is necessary to make vring use dma API which is=
- a
-> > requirement to enable xsk_pool in virtio-net (XDP socket will be in
-> > zerocopy mode for this case). Otherwise, the XDP socket will fallback to
-> > copy mode, xsk_pool is not enabled in virtio-net that makes the
-> > probability to reproduce bug to be very small. Currently, when you don't
-> > have iommu_platform=3Don, you can pass the test even before the fix, so=
- I
-> > think I will try to harden the selftest to make it return skip in this =
-case. =20
->=20
-> I would like to keep the resize test as it doesn't require iommu_platform.
-
-Sounds good but lets just add them to the drivers/net/hw directory.
-I don't think there's anything virtio specific in the test itself?
-
-Right now drivers/net/virtio_net has a test which expects to see
-both netdevs in the VM, while drivers / Python based tests expect
-to have the env prepared where only one end is on the local machine,=20
-and the other is accessible over SSH or in another netns. So it's a bit
-painful to marry the two kinds of tests in the CI. At least our netdev
-CI does not know how to figure this out :( It preps the env and then
-runs the whole kselftest TARGET in the same setup.
+> 
+> thanks,
+> 
+> greg k-h
