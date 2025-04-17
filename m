@@ -1,96 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA0A64A98;
-	Thu, 17 Apr 2025 07:04:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D932063FD;
+	Thu, 17 Apr 2025 07:05:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744873495; cv=none; b=UDqp1KasU/mYWTf6AhbxLlYW1lq8D4qaRCs8xHWS72lecBPHgIEFDAOu9RhNDcugdFFy7H0tVtyK3wbs2knR92I17CzXR9EV30l1rfE0yiyuKmuMf2ZZVCBb0Ht/7kEdo4SjLB2s4DjyFBKSu/r7Jfj+YiDzQiFwGuSjnu3/XPQ=
+	t=1744873512; cv=none; b=QIPaW2uDLVVlq5QktuIM7YTrkfjp1L2nZ6uwWBR/6o8mhyTVbaZNiWjqjdXPnf8HkDjCIq9JLA6EIiI7gpO9K0c2sG6aXscJj2DzSsg16a0SvQzG9ANRFKDZLnU+QS1bAcI4GtHiaUMI51ejCSnHkIm2uKGFYB4zv1wQX7TqXgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744873495; c=relaxed/simple;
-	bh=A1UXWE3ilQY9BEMls0KvjFVXoarU66FDUevVVhE2dx4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uhsT9C5NEAP/lSVp5xqAEwgnt4mvjU/KCYZBTSm5FIWb+1PZchjoX6OKLSjVps6IzJtXKnSscrdZ1yjEnlrzru7txByy91tZJmG77WomDlQYmNZpVYBBOZjmKl9wG+oiXKcGWzbNuKRGUP25P+xmYJ9QTBrtqbS1mlY1H2WWYuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIwTodbB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744873512; c=relaxed/simple;
+	bh=CM3c7kttlAmkfG9mpn/1GKkcT/fF1wsADoMjIZhEQ9c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AmWooFmHy793cnNyjYAS26SMohUGzc50lpQ4iXAYldQKZ8yYvaLQ/UDhIItXOLfDptMQh3MqTJD+xmmKJCTNJYJNYtUwPI/tI+utolDtzrurOuiT0lYQRtNrPTqzVnOXqpWr9tdduZslzSeSypasXrb+/z7zBxuNE2IM826GDkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nFrqZ3AZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIwTodbB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FE57C4CEE4;
-	Thu, 17 Apr 2025 07:04:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nFrqZ3AZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C6A0C4CEE4;
+	Thu, 17 Apr 2025 07:05:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744873495;
-	bh=A1UXWE3ilQY9BEMls0KvjFVXoarU66FDUevVVhE2dx4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XIwTodbBMR171TZ4AX8MxpAiVF4LBuFV++eunfuyLDo2jIZl1zpE5f4KhmHssGfLC
-	 OQcWFRyNDLhjyrvxLCrUbTGEW1ae4TIKGUIkdZHEH1NoTrjwGrtue3XXw2feCYrEPI
-	 LfulYwe5IAACEvI2AMz6m1mwVHEACaQgKRbvPWUVI6nuluOU3JuRSKEftCtGpNqQcp
-	 nnPIZslkezsAeBIYHpTjhNklZpwxRwuaHjQkftxs+VKglhBHChG7m8SfxxYRO3aOK8
-	 2KzqtRqP1C9aIPeKXiT08gJunojmUrEiCg1S9pg8zGTa7YBou++qIYu1YbmAt1xDo/
-	 +HcDrKaJ0Ga1w==
-Date: Thu, 17 Apr 2025 09:04:50 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
-	heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	jingoohan1@gmail.com, thomas.richard@bootlin.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
-Message-ID: <aACoEpueUHBLjgbb@ryzen>
-References: <20250416151926.140202-1-18255117159@163.com>
+	s=k20201202; t=1744873511;
+	bh=CM3c7kttlAmkfG9mpn/1GKkcT/fF1wsADoMjIZhEQ9c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nFrqZ3AZisIRdjloO6fSLrsVfn0ugOh83hUZCtuHtmWP7g1SvlXGH3m3W0YyWDEIM
+	 b+/wjqJ/rKAqzy12/DP/652fqkVdNM+52j0nCLzk9kP2aN0dAYsc2Kp79Oe8TLQLdB
+	 XSYyJJ2ZndPf5PkUzBew8WXBiPBd9JSjzdjtkCNvX37WHWQ4keFa7/JU/GCOkM/XJz
+	 GW2FPM6uxMUiboM/EPSEgoisMdOV64xcT/GhK6u6ExaPz8wvquMgVHvQCUXyQ2rOUU
+	 1VZxon0MYC2EP05YONUFCJUoK/b8n2Reyhr8LXQznwh3ZWS4/rEzcoDP3W6jzfPaiD
+	 jjFOIE5W1e7mQ==
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+To: Lee Jones <lee@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>,
+	linux-leds@vger.kernel.org,
+	Andy Shevchenko <andy@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+Subject: [PATCH leds] leds: turris-omnia: Drop commas in the terminator entries
+Date: Thu, 17 Apr 2025 09:05:07 +0200
+Message-ID: <20250417070507.24929-1-kabel@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416151926.140202-1-18255117159@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello Hans,
+Drop commas in terminator entries of `struct attribute` array and
+`struct of_device_id` array.
 
-On Wed, Apr 16, 2025 at 11:19:26PM +0800, Hans Zhang wrote:
-> The RK3588's PCIe controller defaults to a 128-byte max payload size,
-> but its hardware capability actually supports 256 bytes. This results
-> in suboptimal performance with devices that support larger payloads.
+Signed-off-by: Marek Behún <kabel@kernel.org>
+---
+ drivers/leds/leds-turris-omnia.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Patch looks good to me, but please always reference the TRM when you can.
+diff --git a/drivers/leds/leds-turris-omnia.c b/drivers/leds/leds-turris-omnia.c
+index 4fe1a9c0bc1b..25ee5c1eb820 100644
+--- a/drivers/leds/leds-turris-omnia.c
++++ b/drivers/leds/leds-turris-omnia.c
+@@ -361,7 +361,7 @@ static DEVICE_ATTR_RW(gamma_correction);
+ static struct attribute *omnia_led_controller_attrs[] = {
+ 	&dev_attr_brightness.attr,
+ 	&dev_attr_gamma_correction.attr,
+-	NULL,
++	NULL
+ };
+ ATTRIBUTE_GROUPS(omnia_led_controller);
+ 
+@@ -527,7 +527,7 @@ static void omnia_leds_remove(struct i2c_client *client)
+ 
+ static const struct of_device_id of_omnia_leds_match[] = {
+ 	{ .compatible = "cznic,turris-omnia-leds", },
+-	{},
++	{ }
+ };
+ MODULE_DEVICE_TABLE(of, of_omnia_leds_match);
+ 
+-- 
+2.49.0
 
-Before this patch:
-		DevCap: MaxPayload 256 bytes
-		DevCtl: MaxPayload 128 bytes
-
-
-As per rk3588 TRM, section "11.4.3.8 DSP_PCIE_CAP Detail Registers Description"
-
-DevCap is per the register description of DSP_PCIE_CAP_DEVICE_CAPABILITIES_REG,
-field PCIE_CAP_MAX_PAYLOAD_SIZE.
-Which claims that the value after reset is 0x1 (256B).
-
-DevCtl is per the register description of
-DSP_PCIE_CAP_DEVICE_CONTROL_DEVICE_STATUS, field PCIE_CAP_MAX_PAYLOAD_SIZE_CS.
-Which claims that the reset value is 0x0 (128B).
-
-Both of these match the values above.
-
-As per the description of PCIE_CAP_MAX_PAYLOAD_SIZE_CS:
-"Permissible values that
-can be programmed are indicated by the Max_Payload_Size
-Supported field (PCIE_CAP_MAX_PAYLOAD_SIZE) in the Device
-Capabilities (DEVICE_CAPABILITIES_REG) register (for more
-details, see section 7.5.3.3 of PCI Express Base Specification)."
-
-So your patch looks good.
-
-I guess I'm mostly surprised that the e.g. pci_configure_mps() does not
-already set DevCtl to the max(DevCap.MPS of the host, DevCap.MPS of the
-endpoint).
-
-Apparently pci_configure_mps() only decreases MPS from the reset values?
-It never increases it?
-
-
-Kind regards,
-Niklas
