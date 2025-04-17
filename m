@@ -1,345 +1,310 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67484186E2E;
-	Thu, 17 Apr 2025 17:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F12522371B;
+	Thu, 17 Apr 2025 17:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744909261; cv=none; b=rqe31+pJnr9PulxKPFkSog9Lpo8HwMtsgabdSb0nRBgrdG0y6Jj5iydOu5gE+fI4XJRCOgb3S8Y9J5K9dvPnvs+LomuQV3P6lr1BExfVGWFIx4foAJZzo4fW0mF1VF6hNBXsDQ/uGLfC3GAspE81ZFkVMxj0RbH66lHV0locbY4=
+	t=1744909278; cv=none; b=j64bznkXdghki4pMdGhoBZg5PKDosBMQhRzjwy8qIlHLeC4AfrIk2jeeyJpJOgrqrbNEtlt/ienllO7lYs8csPvx8vRnTvoVCvPPTzzOzZjgYd81Hsd+WsLlWDUBMrdAMLqUyYQLYM4VuzZq9y26zL/wk07cxuJuQPb0LkpIwzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744909261; c=relaxed/simple;
-	bh=yki21CE/K9OnkYZd8bEGLviArYgHVfjnuMBHqgrosSA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mWA6F2jwdNc43SStR8uQ7NIZPYTrFQTiDTNGEEfrU3C8FGyeZZ+WM4roT5t73xSlKrsYOUR9qPjCX4hAcHDKd5j7v+V9lp2gvz6upWSJfPsriqpria76lcFSKAogyaHEExpcwzNML8V3Zp98d5IR45b7hoyQMMEP4aZssLSsGME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EnO/thSu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744909278; c=relaxed/simple;
+	bh=9oEB2dkP3S7X/B2dnDJe2lnfHeb3jiQQLugvRc19tac=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o/GQ1h75UNkm6bcKbsxgyBfEq/QkdwRYvCm9vqPNRTG4k8gxSRctMoYuCqKyGx/1FOJWHbtgG/MttI+VTa8U5sEouk5ImglukKzH84++TIA+5q+OpnC3SaDultlSd6Kq0csSMHnvOlJWEtRRLSIZBkdU48BYivs+1N9gNFsxvzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hsSm4LF6; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EnO/thSu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89140C4CEE4;
-	Thu, 17 Apr 2025 17:01:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744909260;
-	bh=yki21CE/K9OnkYZd8bEGLviArYgHVfjnuMBHqgrosSA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=EnO/thSuyOYRJhXJK64cTvTJQvIIgQUL3qBrEc2z37XkakUizRHvWWj3/iPlJGXpR
-	 JZ03BVoqvtkpnSE40bWxRB0VXmRqJdZhQYQ2CEyk2jqz5+QCKFJyXGAxUzCa1EtECs
-	 vSj6482XNMN9Y3W9cZOSGmZC37vQy4rqAFYuaBVIJxm9A7OmWYHgrPKXkLjGHDXQ5z
-	 jL0HVMdA1id1zkuVu1LDPrFcJOZaDQde8A9kJaBYplXxiaxEpCOyRTnaKHumhARxUQ
-	 82hwy+uW3Ez5KScLH55dEbITRPep1j3u+FnIJfTo3G8k9fdVsqPmqJ0AWcoa1YsXVJ
-	 ooqRyKhj0IFTw==
-From: Jakub Kicinski <kuba@kernel.org>
-To: torvalds@linux-foundation.org
-Cc: kuba@kernel.org,
-	davem@davemloft.net,
-	netdev@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hsSm4LF6"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e8f05acc13so11900386d6.2;
+        Thu, 17 Apr 2025 10:01:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744909274; x=1745514074; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SXWRs1cTjol07xpBkUHs8BYxQsZJt8nnKpT27OeCG9Q=;
+        b=hsSm4LF6AL1k/+6YYBwQOlDkLQ08Auwz/rOpsApiPnElsUIM8I3SaBHu+egHMz0my+
+         Ou8RARSI3/PmQ12BINHhRNkSPKYT4ooqVYSdnx2Ahy/46gh934uZY2F+MzQflLv8m9Fe
+         CMQPCVDfQzRgSkaW7jWV1kIrq6Q5nHo6Sjyhcu1vw8REcBa1/mOB1cbizifPjUWK9qSu
+         G2PEngVpwN3ezFRim9bj4XnJ6m0iqOnSZAUvOJFdBcg7/f2WS7ySpZ9Q4Qb+wpUA3Xlb
+         3HGn8y44l8B+atYULs0pVh9rHJfI4YsGOjJ5CeSyAdTpKidzZPLphDhhHbrODTMfkSaG
+         +bbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744909274; x=1745514074;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SXWRs1cTjol07xpBkUHs8BYxQsZJt8nnKpT27OeCG9Q=;
+        b=ampN679vmhOfrZeUU7EO/zT8luwdTc3wQDT9TuIoHuWupHBn8Ls+d0GRwlKIfExwIA
+         T9mZnoQvb3sxTaExXFzbBNJdJZ18WqCWT7Xj4EmCj8pzNCWqaZkt8Ao+9MaGomKjFoow
+         QLhlPRVAGlvARRo1pmxM5fDAFa1yWPgl3q0BNv69EcpKUyttzvvx1GqUYEDdQf2Nexg/
+         CN0QGT2c98V+lLKLM8Sbd4QgEzrLNiMf0sngEiXVH1NJaHQZtlKL7c9fPgB5DU8e7tfO
+         VWqmS01c6eJRYe8nZzvMh5Eu9vgwKnxSHgXHRR7C3ZPWMjkrTQQFM4CsKZKHlQfFVBdB
+         hCLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUAzBOmh33sy0xKIFvRER44PuzW3v/DRWwbxb3tGpD1neLN6r8NimJ5VMvgyBUY5giGfgFnbcnb@vger.kernel.org, AJvYcCUaevvTuKJKB1KXzXNrKS1LRuMQiQuH9Npi1F5xxMv9VN1Ubn9/5SwDdvATW7JO3DEiMu20DZ9BShD262Wt@vger.kernel.org, AJvYcCXOFgcNT8q72CkIcv1C5hvQzOoVIQnZBgPtEk0JzCAG/A24DAhPgvZgdLUzVFJ76i8M2MaN0U4bs9E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzR4eXBRH8MBdIW7mV1XBvGmDXrBAs1dt5L9y6M8DWsA6pbx8FW
+	kDvEP7zsTcS4Vw30Spc8aPcoTdY86cyGp+ATrtnZ4ebeMLnuEz4q
+X-Gm-Gg: ASbGnctd1/NykRIk3qytMokluVlv/uuqxWF2SQieCIWGuaUYoO68ajmvKhWQZ5W+4FD
+	2lfFuY2dIFkngfGQbIpVkN9jIhYZcca1H6MInvzkwnlPQWY7/les72qBMqSPvFC/swkcT9xA2MX
+	Jv/11cj7xftnxw9vhCX/IwZa0p4YiZxjoTWCHnrLMt5Ee4Bkf0P0MQr/d6tvJI0LBZ6f0lFkTHg
+	mF3I/uhIwzlmnk0pkMTp8iLQazUH9daiSmFfuuOarXNIQfxAzvBRK2VqRWM1+M9jaOL8+Ky0pkS
+	9afW4kBvxo7FDizj71LsLAylu6+1FQUVbhEG9qJSaIvBgtRLbOObSVk=
+X-Google-Smtp-Source: AGHT+IHYzgvyals3Cpf2qth3nNDQ//h870rA/XXk4zzkO6uy9etL5tq59U7gkjqSLQAvzlKJg1Ozaw==
+X-Received: by 2002:a0c:ed52:0:b0:6f2:bcbf:101d with SMTP id 6a1803df08f44-6f2bcbf11f5mr39617326d6.38.1744909273730;
+        Thu, 17 Apr 2025 10:01:13 -0700 (PDT)
+Received: from theriatric.mshome.net ([73.123.232.110])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2bfcc26sm1082906d6.92.2025.04.17.10.01.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 10:01:13 -0700 (PDT)
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+To: gregkh@linuxfoundation.org,
+	jic23@kernel.org,
+	lars@metafoo.de,
+	linux-iio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	pabeni@redhat.com
-Subject: [GIT PULL] Networking for v6.15-rc3
-Date: Thu, 17 Apr 2025 10:00:59 -0700
-Message-ID: <20250417170059.4012070-1-kuba@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	linux-staging@lists.linux.dev,
+	Michael.Hennerich@analog.com,
+	sonic.zhang@analog.com,
+	vapier@gentoo.org
+Cc: gshahrouzi@gmail.com,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: [PATCH v2] iio: adc: Include valid channel for channel selection
+Date: Thu, 17 Apr 2025 13:01:09 -0400
+Message-ID: <20250417170109.602659-1-gshahrouzi@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Linus!
+According to the datasheet on page 9 under the channel selection table,
+all devices (AD7816/7/8) are able to use the channel marked as 7. This
+channel is used for diagnostic purposes by routing the internal 1.23V
+bandgap source through the MUX to the input of the ADC.
+
+Replace checking for string equality with checking for the same chip ID
+to reduce time complexity.
+
+Group invalid channels for all devices together because they are
+processed the same way.
+
+Fixes: 7924425db04a ("staging: iio: adc: new driver for AD7816 devices")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+---
+Changes since v2:
+	- Refactor by adding chip_info struct which simplifies
+	  condtional logic.
+---
+ drivers/staging/iio/adc/ad7816.c | 68 ++++++++++++++++++--------------
+ 1 file changed, 38 insertions(+), 30 deletions(-)
+
+diff --git a/drivers/staging/iio/adc/ad7816.c b/drivers/staging/iio/adc/ad7816.c
+index 6c14d7bcdd675..ec955cbf06c17 100644
+--- a/drivers/staging/iio/adc/ad7816.c
++++ b/drivers/staging/iio/adc/ad7816.c
+@@ -41,8 +41,20 @@
+  * struct ad7816_chip_info - chip specific information
+  */
+ 
++enum ad7816_type {
++	ID_AD7816,
++	ID_AD7817,
++	ID_AD7818,
++};
++
+ struct ad7816_chip_info {
+-	kernel_ulong_t id;
++	const char *name;
++	enum ad7816_type type;
++	u8 max_channels;
++};
++
++struct ad7816_state {
++	const struct ad7816_chip_info *chip_info;
+ 	struct spi_device *spi_dev;
+ 	struct gpio_desc *rdwr_pin;
+ 	struct gpio_desc *convert_pin;
+@@ -52,16 +64,11 @@ struct ad7816_chip_info {
+ 	u8  mode;
+ };
+ 
+-enum ad7816_type {
+-	ID_AD7816,
+-	ID_AD7817,
+-	ID_AD7818,
+-};
+ 
+ /*
+  * ad7816 data access by SPI
+  */
+-static int ad7816_spi_read(struct ad7816_chip_info *chip, u16 *data)
++static int ad7816_spi_read(struct ad7816_state *chip, u16 *data)
+ {
+ 	struct spi_device *spi_dev = chip->spi_dev;
+ 	int ret;
+@@ -84,7 +91,7 @@ static int ad7816_spi_read(struct ad7816_chip_info *chip, u16 *data)
+ 		gpiod_set_value(chip->convert_pin, 1);
+ 	}
+ 
+-	if (chip->id == ID_AD7816 || chip->id == ID_AD7817) {
++	if (chip->chip_info->type == ID_AD7816 || chip->chip_info->type == ID_AD7817) {
+ 		while (gpiod_get_value(chip->busy_pin))
+ 			cpu_relax();
+ 	}
+@@ -102,7 +109,7 @@ static int ad7816_spi_read(struct ad7816_chip_info *chip, u16 *data)
+ 	return ret;
+ }
+ 
+-static int ad7816_spi_write(struct ad7816_chip_info *chip, u8 data)
++static int ad7816_spi_write(struct ad7816_state *chip, u8 data)
+ {
+ 	struct spi_device *spi_dev = chip->spi_dev;
+ 	int ret;
+@@ -121,7 +128,7 @@ static ssize_t ad7816_show_mode(struct device *dev,
+ 				char *buf)
+ {
+ 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+-	struct ad7816_chip_info *chip = iio_priv(indio_dev);
++	struct ad7816_state *chip = iio_priv(indio_dev);
+ 
+ 	if (chip->mode)
+ 		return sprintf(buf, "power-save\n");
+@@ -134,7 +141,7 @@ static ssize_t ad7816_store_mode(struct device *dev,
+ 				 size_t len)
+ {
+ 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+-	struct ad7816_chip_info *chip = iio_priv(indio_dev);
++	struct ad7816_state *chip = iio_priv(indio_dev);
+ 
+ 	if (strcmp(buf, "full")) {
+ 		gpiod_set_value(chip->rdwr_pin, 1);
+@@ -167,7 +174,7 @@ static ssize_t ad7816_show_channel(struct device *dev,
+ 				   char *buf)
+ {
+ 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+-	struct ad7816_chip_info *chip = iio_priv(indio_dev);
++	struct ad7816_state *chip = iio_priv(indio_dev);
+ 
+ 	return sprintf(buf, "%d\n", chip->channel_id);
+ }
+@@ -178,7 +185,7 @@ static ssize_t ad7816_store_channel(struct device *dev,
+ 				    size_t len)
+ {
+ 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+-	struct ad7816_chip_info *chip = iio_priv(indio_dev);
++	struct ad7816_state *chip = iio_priv(indio_dev);
+ 	unsigned long data;
+ 	int ret;
+ 
+@@ -186,17 +193,10 @@ static ssize_t ad7816_store_channel(struct device *dev,
+ 	if (ret)
+ 		return ret;
+ 
+-	if (data > AD7816_CS_MAX && data != AD7816_CS_MASK) {
+-		dev_err(&chip->spi_dev->dev, "Invalid channel id %lu for %s.\n",
+-			data, indio_dev->name);
+-		return -EINVAL;
+-	} else if (strcmp(indio_dev->name, "ad7818") == 0 && data > 1) {
++	if (data > chip->chip_info->max_channels && data != AD7816_CS_MASK) {
+ 		dev_err(&chip->spi_dev->dev,
+-			"Invalid channel id %lu for ad7818.\n", data);
+-		return -EINVAL;
+-	} else if (strcmp(indio_dev->name, "ad7816") == 0 && data > 0) {
+-		dev_err(&chip->spi_dev->dev,
+-			"Invalid channel id %lu for ad7816.\n", data);
++			"Invalid channel id %lu for %s (max regular: %u).\n", data,
++			chip->chip_info->name, chip->chip_info->max_channels);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -215,7 +215,7 @@ static ssize_t ad7816_show_value(struct device *dev,
+ 				 char *buf)
+ {
+ 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+-	struct ad7816_chip_info *chip = iio_priv(indio_dev);
++	struct ad7816_state *chip = iio_priv(indio_dev);
+ 	u16 data;
+ 	s8 value;
+ 	int ret;
+@@ -271,7 +271,7 @@ static ssize_t ad7816_show_oti(struct device *dev,
+ 			       char *buf)
+ {
+ 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+-	struct ad7816_chip_info *chip = iio_priv(indio_dev);
++	struct ad7816_state *chip = iio_priv(indio_dev);
+ 	int value;
+ 
+ 	if (chip->channel_id > AD7816_CS_MAX) {
+@@ -292,7 +292,7 @@ static inline ssize_t ad7816_set_oti(struct device *dev,
+ 				     size_t len)
+ {
+ 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+-	struct ad7816_chip_info *chip = iio_priv(indio_dev);
++	struct ad7816_state *chip = iio_priv(indio_dev);
+ 	long value;
+ 	u8 data;
+ 	int ret;
+@@ -345,14 +345,22 @@ static const struct iio_info ad7816_info = {
+ 	.event_attrs = &ad7816_event_attribute_group,
+ };
+ 
++static const struct ad7816_chip_info ad7816_chip_infos[] = {
++	[ID_AD7816] = { .name = "ad7816", .max_channels = 0, .type = ID_AD7816 },
++	[ID_AD7817] = { .name = "ad7817", .max_channels = 3, .type = ID_AD7817 },
++	[ID_AD7818] = { .name = "ad7818", .max_channels = 1, .type = ID_AD7818 },
++};
++
+ /*
+  * device probe and remove
+  */
+ 
+ static int ad7816_probe(struct spi_device *spi_dev)
+ {
+-	struct ad7816_chip_info *chip;
++	struct ad7816_state *chip;
+ 	struct iio_dev *indio_dev;
++	const struct spi_device_id *id = spi_get_device_id(spi_dev);
++	enum ad7816_type chip_type = (enum ad7816_type)id->driver_data;
+ 	int i, ret;
+ 
+ 	indio_dev = devm_iio_device_alloc(&spi_dev->dev, sizeof(*chip));
+@@ -361,12 +369,12 @@ static int ad7816_probe(struct spi_device *spi_dev)
+ 	chip = iio_priv(indio_dev);
+ 	/* this is only used for device removal purposes */
+ 	dev_set_drvdata(&spi_dev->dev, indio_dev);
++	chip->chip_info = &ad7816_chip_infos[chip_type];
+ 
+ 	chip->spi_dev = spi_dev;
+ 	for (i = 0; i <= AD7816_CS_MAX; i++)
+ 		chip->oti_data[i] = 203;
+ 
+-	chip->id = spi_get_device_id(spi_dev)->driver_data;
+ 	chip->rdwr_pin = devm_gpiod_get(&spi_dev->dev, "rdwr", GPIOD_OUT_HIGH);
+ 	if (IS_ERR(chip->rdwr_pin)) {
+ 		ret = PTR_ERR(chip->rdwr_pin);
+@@ -382,7 +390,7 @@ static int ad7816_probe(struct spi_device *spi_dev)
+ 			ret);
+ 		return ret;
+ 	}
+-	if (chip->id == ID_AD7816 || chip->id == ID_AD7817) {
++	if (chip->chip_info->type == ID_AD7816 || chip->chip_info->type == ID_AD7817) {
+ 		chip->busy_pin = devm_gpiod_get(&spi_dev->dev, "busy",
+ 						GPIOD_IN);
+ 		if (IS_ERR(chip->busy_pin)) {
+@@ -393,7 +401,7 @@ static int ad7816_probe(struct spi_device *spi_dev)
+ 		}
+ 	}
+ 
+-	indio_dev->name = spi_get_device_id(spi_dev)->name;
++	indio_dev->name = chip->chip_info->name;
+ 	indio_dev->info = &ad7816_info;
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 
+-- 
+2.43.0
 
-The following changes since commit ab59a8605604f71bbbc16077270dc3f39648b7fc:
-
-  Merge tag 'net-6.15-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2025-04-10 08:52:18 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git tags/net-6.15-rc3
-
-for you to fetch changes up to 1b66124135f5f8640bd540fadda4b20cdd23114b:
-
-  net: ethernet: mtk_eth_soc: revise QDMA packet scheduler settings (2025-04-17 08:13:41 -0700)
-
-----------------------------------------------------------------
-Including fixes from Bluetooth, CAN and Netfilter.
-
-Current release - regressions:
-
- - 2 fixes for the netdev per-instance locking
-
- - batman-adv: fix double-hold of meshif when getting enabled
-
-Current release - new code bugs:
-
- - Bluetooth: increment TX timestamping tskey always for stream sockets
-
- - wifi: static analysis and build fixes for the new Intel sub-driver
-
-Previous releases - regressions:
-
- - net: fib_rules: fix iif / oif matching on L3 master (VRF) device
-
- - ipv6: add exception routes to GC list in rt6_insert_exception()
-
- - netfilter: conntrack: fix erroneous removal of offload bit
-
- - Bluetooth:
-  - fix sending MGMT_EV_DEVICE_FOUND for invalid address
-  - l2cap: process valid commands in too long frame
-  - btnxpuart: Revert baudrate change in nxp_shutdown
-
-Previous releases - always broken:
-
- - ethtool: fix memory corruption during SFP FW flashing
-
- - eth: hibmcge: fixes for link and MTU handling, pause frames etc.
-
- - eth: igc: fixes for PTM (PCIe timestamping)
-
- - dsa: b53: enable BPDU reception for management port
-
-Misc:
-
- - fixes for Netlink protocol schemas
-
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-
-----------------------------------------------------------------
-Abdun Nihaal (7):
-      wifi: at76c50x: fix use after free access in at76_disconnect
-      wifi: brcmfmac: fix memory leak in brcmf_get_module_param
-      wifi: wl1251: fix memory leak in wl1251_tx_work
-      pds_core: fix memory leak in pdsc_debugfs_add_qcq()
-      net: ngbe: fix memory leak in ngbe_probe() error path
-      cxgb4: fix memory leak in cxgb4_init_ethtool_filters() error path
-      net: txgbe: fix memory leak in txgbe_probe() error path
-
-Arnd Bergmann (1):
-      iwlwifi: mld: fix building with CONFIG_PM_SLEEP disabled
-
-Bo-Cun Chen (3):
-      net: ethernet: mtk_eth_soc: reapply mdc divider on reset
-      net: ethernet: mtk_eth_soc: correct the max weight of the queue limit for 100Mbps
-      net: ethernet: mtk_eth_soc: revise QDMA packet scheduler settings
-
-Chenyuan Yang (1):
-      octeontx2-pf: handle otx2_mbox_get_rsp errors
-
-Christopher S M Hall (6):
-      igc: fix PTM cycle trigger logic
-      igc: increase wait time before retrying PTM
-      igc: move ktime snapshot into PTM retry loop
-      igc: handle the IGC_PTP_ENABLED flag correctly
-      igc: cleanup PTP module if probe fails
-      igc: add lock preventing multiple simultaneous PTM transactions
-
-Damodharam Ammepalli (1):
-      ethtool: cmis_cdb: use correct rpl size in ethtool_cmis_module_poll()
-
-Dan Carpenter (2):
-      wifi: iwlwifi: mld: silence uninitialized variable warning
-      Bluetooth: btrtl: Prevent potential NULL dereference
-
-David Wei (1):
-      io_uring/zcrx: enable tcp-data-split in selftest
-
-Davide Caratti (1):
-      can: fix missing decrement of j1939_proto.inuse_idx
-
-Dmitry Baryshkov (1):
-      Bluetooth: qca: fix NV variant for one of WCN3950 SoCs
-
-Florian Westphal (1):
-      netfilter: conntrack: fix erronous removal of offload bit
-
-Frédéric Danis (2):
-      Bluetooth: l2cap: Check encryption key size on incoming connection
-      Bluetooth: l2cap: Process valid commands in too long frame
-
-Ido Schimmel (2):
-      net: fib_rules: Fix iif / oif matching on L3 master device
-      selftests: fib_rule_tests: Add VRF match tests
-
-Ilya Maximets (1):
-      net: openvswitch: fix nested key length validation in the set() action
-
-Jakub Kicinski (20):
-      Merge tag 'for-net-2025-04-10' of git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth
-      Merge tag 'wireless-2025-04-11' of https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless
-      Merge branch 'there-are-some-bugfix-for-hibmcge-driver'
-      net: don't mix device locking in dev_close_many() calls
-      netlink: specs: ovs_vport: align with C codegen capabilities
-      Merge branch '1GbE' of git://git.kernel.org/pub/scm/linux/kernel/git/tnguy/net-queue
-      eth: bnxt: fix missing ring index trim on error path
-      Merge branch 'fib_rules-fix-iif-oif-matching-on-l3-master-device'
-      Merge tag 'linux-can-fixes-for-6.15-20250415' of git://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can
-      tools: ynl-gen: don't declare loop iterator in place
-      tools: ynl-gen: move local vars after the opening bracket
-      tools: ynl-gen: individually free previous values on double set
-      tools: ynl-gen: make sure we validate subtype of array-nest
-      netlink: specs: rt-link: add an attr layer around alt-ifname
-      netlink: specs: rtnetlink: attribute naming corrections
-      netlink: specs: rt-link: adjust mctp attribute naming
-      netlink: specs: rt-neigh: prefix struct nfmsg members with ndm
-      Merge branch 'ynl-avoid-leaks-in-attr-override-and-spec-fixes-for-c'
-      Merge branch 'collection-of-dsa-bug-fixes'
-      net: don't try to ops lock uninitialized devs
-
-Jijie Shao (7):
-      net: hibmcge: fix incorrect pause frame statistics issue
-      net: hibmcge: fix incorrect multicast filtering issue
-      net: hibmcge: fix the share of irq statistics among different network ports issue
-      net: hibmcge: fix wrong mtu log issue
-      net: hibmcge: fix the incorrect np_link fail state issue.
-      net: hibmcge: fix not restore rx pause mac addr after reset issue
-      net: hibmcge: fix multiple phy_stop() issue
-
-Johannes Berg (4):
-      wifi: iwlwifi: mld: fix PM_SLEEP -Wundef warning
-      wifi: add wireless list to MAINTAINERS
-      wifi: iwlwifi: pcie: set state to no-FW before reset handshake
-      Revert "wifi: mac80211: Update skb's control block key in ieee80211_tx_dequeue()"
-
-Jonas Gorski (2):
-      net: b53: enable BPDU reception for management port
-      net: bridge: switchdev: do not notify new brentries as changed
-
-Kees Cook (1):
-      Bluetooth: vhci: Avoid needless snprintf() calls
-
-Kuniyuki Iwashima (1):
-      smc: Fix lockdep false-positive for IPPROTO_SMC.
-
-Luiz Augusto von Dentz (1):
-      Bluetooth: hci_event: Fix sending MGMT_EV_DEVICE_FOUND for invalid address
-
-Lukas Wunner (1):
-      wifi: iwlwifi: mld: Restart firmware on iwl_mld_no_wowlan_resume() error
-
-Matt Johnston (1):
-      net: mctp: Set SOCK_RCU_FREE
-
-Meghana Malladi (3):
-      net: ti: icssg-prueth: Fix kernel warning while bringing down network interface
-      net: ti: icssg-prueth: Fix possible NULL pointer dereference inside emac_xmit_xdp_frame()
-      net: ti: icss-iep: Fix possible NULL pointer dereference for perout request
-
-Michael Walle (1):
-      net: ethernet: ti: am65-cpsw: fix port_np reference counting
-
-Neeraj Sanjay Kale (2):
-      Bluetooth: btnxpuart: Revert baudrate change in nxp_shutdown
-      Bluetooth: btnxpuart: Add an error message if FW dump trigger fails
-
-Paolo Abeni (3):
-      Merge branch 'bug-fixes-from-xdp-and-perout-series'
-      Merge tag 'for-net-2025-04-16' of git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth
-      Merge tag 'nf-25-04-17' of git://git.kernel.org/pub/scm/linux/kernel/git/netfilter/nf
-
-Pauli Virtanen (1):
-      Bluetooth: increment TX timestamping tskey always for stream sockets
-
-Remi Pommarel (2):
-      wifi: mac80211: Update skb's control block key in ieee80211_tx_dequeue()
-      wifi: mac80211: Purge vif txq in ieee80211_do_stop()
-
-Sagi Maimon (1):
-      ptp: ocp: fix start time alignment in ptp_ocp_signal_set
-
-Stanislav Fomichev (1):
-      bonding: hold ops lock around get_link
-
-Sven Eckelmann (1):
-      batman-adv: Fix double-hold of meshif when getting enabled
-
-Toke Høiland-Jørgensen (1):
-      selftests/tc-testing: Add test for echo of big TC filters
-
-Vladimir Oltean (5):
-      net: dsa: mv88e6xxx: avoid unregistering devlink regions which were never registered
-      net: dsa: mv88e6xxx: fix -ENOENT when deleting VLANs and MST is unsupported
-      net: dsa: clean up FDB, MDB, VLAN entries on unbind
-      net: dsa: free routing table on probe failure
-      net: dsa: avoid refcount warnings when ds->ops->tag_8021q_vlan_del() fails
-
-Weizhao Ouyang (1):
-      can: rockchip_canfd: fix broken quirks checks
-
-Xin Long (1):
-      ipv6: add exception routes to GC list in rt6_insert_exception
-
-Yedidya Benshimol (1):
-      wifi: iwlwifi: mld: reduce scope for uninitialized variable
-
- Documentation/netlink/specs/ovs_vport.yaml         |   4 +-
- Documentation/netlink/specs/rt_link.yaml           |  20 ++--
- Documentation/netlink/specs/rt_neigh.yaml          |  14 +--
- MAINTAINERS                                        |   6 ++
- drivers/bluetooth/btnxpuart.c                      |  21 ++--
- drivers/bluetooth/btqca.c                          |   2 +-
- drivers/bluetooth/btrtl.c                          |   2 +
- drivers/bluetooth/hci_vhci.c                       |  10 +-
- drivers/net/bonding/bond_main.c                    |  13 ++-
- drivers/net/can/rockchip/rockchip_canfd-core.c     |   7 +-
- drivers/net/dsa/b53/b53_common.c                   |  10 ++
- drivers/net/dsa/mv88e6xxx/chip.c                   |  13 ++-
- drivers/net/dsa/mv88e6xxx/devlink.c                |   3 +-
- drivers/net/ethernet/amd/pds_core/debugfs.c        |   5 +-
- drivers/net/ethernet/broadcom/bnxt/bnxt.c          |   4 +-
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c |   1 +
- .../net/ethernet/hisilicon/hibmcge/hbg_common.h    |   8 +-
- .../net/ethernet/hisilicon/hibmcge/hbg_debugfs.c   |  11 +-
- .../net/ethernet/hisilicon/hibmcge/hbg_diagnose.c  |   2 +-
- drivers/net/ethernet/hisilicon/hibmcge/hbg_err.c   |   3 +
- drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c    |   7 ++
- drivers/net/ethernet/hisilicon/hibmcge/hbg_irq.c   |  24 +++--
- drivers/net/ethernet/hisilicon/hibmcge/hbg_main.c  |   8 +-
- drivers/net/ethernet/hisilicon/hibmcge/hbg_mdio.c  |  11 +-
- drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h   |   3 +
- drivers/net/ethernet/intel/igc/igc.h               |   1 +
- drivers/net/ethernet/intel/igc/igc_defines.h       |   6 +-
- drivers/net/ethernet/intel/igc/igc_main.c          |   1 +
- drivers/net/ethernet/intel/igc/igc_ptp.c           | 113 +++++++++++++-------
- drivers/net/ethernet/marvell/octeontx2/nic/rep.c   |   2 +
- drivers/net/ethernet/mediatek/mtk_eth_soc.c        |  49 +++++----
- drivers/net/ethernet/mediatek/mtk_eth_soc.h        |   1 +
- drivers/net/ethernet/ti/am65-cpsw-nuss.c           |  15 ++-
- drivers/net/ethernet/ti/icssg/icss_iep.c           | 117 ++++++++++-----------
- drivers/net/ethernet/ti/icssg/icssg_common.c       |   9 +-
- drivers/net/ethernet/wangxun/ngbe/ngbe_main.c      |   3 +-
- drivers/net/ethernet/wangxun/txgbe/txgbe_main.c    |   3 +-
- drivers/net/wireless/atmel/at76c50x-usb.c          |   2 +-
- .../wireless/broadcom/brcm80211/brcmfmac/common.c  |   4 +-
- drivers/net/wireless/intel/iwlwifi/mld/d3.c        |   8 +-
- drivers/net/wireless/intel/iwlwifi/mld/debugfs.c   |   2 +-
- drivers/net/wireless/intel/iwlwifi/mld/iface.h     |   2 +-
- drivers/net/wireless/intel/iwlwifi/mld/mac80211.c  |   7 +-
- .../net/wireless/intel/iwlwifi/pcie/trans-gen2.c   |   8 +-
- drivers/net/wireless/ti/wl1251/tx.c                |   4 +-
- drivers/ptp/ptp_ocp.c                              |   1 +
- include/net/fib_rules.h                            |   2 +
- include/net/flow.h                                 |   1 +
- include/net/l3mdev.h                               |  27 +++++
- net/batman-adv/hard-interface.c                    |   1 -
- net/bluetooth/hci_conn.c                           |   8 +-
- net/bluetooth/hci_event.c                          |   5 +-
- net/bluetooth/l2cap_core.c                         |  21 +++-
- net/bridge/br_vlan.c                               |   4 +-
- net/can/j1939/socket.c                             |   1 +
- net/core/dev.c                                     |  19 +++-
- net/core/fib_rules.c                               |  48 +++++++--
- net/core/rtnetlink.c                               |   5 +-
- net/dsa/dsa.c                                      |  59 +++++++++--
- net/dsa/tag_8021q.c                                |   2 +-
- net/ethtool/cmis_cdb.c                             |   2 +-
- net/ipv6/route.c                                   |   1 +
- net/l3mdev/l3mdev.c                                |   4 +-
- net/mac80211/iface.c                               |   3 +
- net/mctp/af_mctp.c                                 |   3 +
- net/netfilter/nf_flow_table_core.c                 |  10 +-
- net/openvswitch/flow_netlink.c                     |   3 +-
- net/smc/af_smc.c                                   |   5 +
- tools/net/ynl/pyynl/ynl_gen_c.py                   |  96 ++++++++++++-----
- tools/testing/selftests/drivers/net/hw/iou-zcrx.py |   4 +
- tools/testing/selftests/net/fib_rule_tests.sh      |  34 ++++++
- .../tc-testing/tc-tests/infra/actions.json         |  22 ++++
- 72 files changed, 684 insertions(+), 276 deletions(-)
