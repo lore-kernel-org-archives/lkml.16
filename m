@@ -1,40 +1,51 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E14C1172A;
-	Thu, 17 Apr 2025 01:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAC0015820C;
+	Thu, 17 Apr 2025 01:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744854622; cv=none; b=sEnT3BBleJbhGes0Or3M44XG73EDhTHnT3mxrv05Pu/pv8UNLYS+ignuJ+ZNwzu+DURGvTpRgh71CyerLQzWjTjJvaOQwrETUm90e0E0rnoB579NhFqlkZCvaC5r+OT3GwpxlTQn4f/c+0x8lohF+PEAGwEslIfXpWQGo7RXk+Y=
+	t=1744854680; cv=none; b=uaVfhNxxBcKWv73mdbawarUnxuHK2Cnr0Eod/H/hjTxDFonfOC8SbJ/E9srJEg9nhd3SFNvxmphorxHs+XexSAgS+lCQtuKVLQdIErMKgvqkliHEAaczPtY85m0Ab3LA1LOJhO1gTC6/plftcw7h/L9i7A9+4J/DuGFiDUCiD9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744854622; c=relaxed/simple;
-	bh=X71LVokWEWz+T20vPZCEQZFivCkXXJKdbRQ5XPf+lBQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uNOPltuGDQzZmIqsggHkbsB8B6XdxjqvVZIeYlGK8RTnGiMdJ+V0IXuokT1/+oYc0x9+a3KIKxrnFshHq6JgWrNfvujktHccmPleeF9BJRhYDIonoTIySGNpIrPnWZDCyHamK1fbjSHDOlKDX6yyCkMUAAWyoN8dBYjqxKlhzk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-18-68005e54eb85
-From: Rakie Kim <rakie.kim@sk.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: gourry@gourry.net,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com,
-	ying.huang@linux.alibaba.com,
-	david@redhat.com,
-	Jonathan.Cameron@huawei.com,
-	osalvador@suse.de,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	rakie.kim@sk.com,
-	akpm@linux-foundation.org
-Subject: Re: [PATCH v8 1/3] mm/mempolicy: Fix memory leaks in weighted interleave sysfs
-Date: Thu, 17 Apr 2025 10:49:38 +0900
-Message-ID: <20250417015009.650-1-rakie.kim@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <6800270845306_1302d294a4@dwillia2-xfh.jf.intel.com.notmuch>
-References: 
+	s=arc-20240116; t=1744854680; c=relaxed/simple;
+	bh=vfzTLFgEK9ucCRsjhN2J0R5F3hhlSepXruccDpC8wTw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=D6ybqnt7n4tKmoDzFOqYRv4L5ldEzGsEybPpMSPXVBx5iUjflRe/bZr8oRyo0RfFVbNvGknFBfvTkn7EGfP5IjkbFXr3YK4/9iwEnnNAaglEUFtTF1qjTpuwDG809w93qRAJLvpa7sn38EhZvx147Jyv/ld+53yY6buDsmTSwUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=k2XxDKhN; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="k2XxDKhN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=ojiGs
+	O5bxjyFDGZgVnWiGgTpQU825RoxetCXi4uKK24=; b=k2XxDKhNbK/vrVtaFL0Ot
+	5N5LHPiyKghuLNvkm4RgJEXBShyVBUn5Jk3AVmseeSxvDuhOBqfaM6k0XiXs6ICG
+	WcFGW883em6GCOJs08cm9CgQLmJ/nIxBNM+QB0gBStPMx2RQZiikDESxCEBfu1ru
+	9aWwalTIGA3eQbIdnwHyIM=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgA3kaEGXgBopyyzAg--.31710S3;
+	Thu, 17 Apr 2025 09:48:59 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	hengqi.chen@gmail.com,
+	olsajiri@gmail.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 bpf-next 1/3] libbpf: Fix event name too long error
+Date: Thu, 17 Apr 2025 09:48:46 +0800
+Message-Id: <20250417014848.59321-2-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250417014848.59321-1-yangfeng59949@163.com>
+References: <20250417014848.59321-1-yangfeng59949@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,338 +53,160 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsXC9ZZnkW5IHEOGwa4vNhZz1q9hs5g+9QKj
-	xdf1v5gtft49zm6xauE1NovjW+exW5yfdYrF4vKuOWwW99b8Z7U4M63IYvWaDAduj52z7rJ7
-	dLddZvdoOfKW1WPxnpdMHps+TWL3ODHjN4vHzoeWHu/3XWXz2Hy62uPzJrkArigum5TUnMyy
-	1CJ9uwSujBer+Qv2ulY0rP/B1sD4w6SLkZNDQsBEYueGaeww9pW3E1i7GDk42ASUJI7tjQEJ
-	iwhoS0ycc5C5i5GLg1ngCZPE3CNL2UASwgLhErte/wazWQRUJZ41NDKC2LwCxhL3Nl+Fmqkp
-	0XDpHhOIzSngKXFi8WFWEFtIgEfi1Yb9UPWCEidnPmEBsZkF5CWat84GWyYh8J1NovvcLUaI
-	QZISB1fcYJnAyD8LSc8sJD0LGJlWMQpl5pXlJmbmmOhlVOZlVugl5+duYgSG/7LaP9E7GD9d
-	CD7EKMDBqMTDe2LR/3Qh1sSy4srcQ4wSHMxKIrznzP+lC/GmJFZWpRblxxeV5qQWH2KU5mBR
-	Euc1+laeIiSQnliSmp2aWpBaBJNl4uCUamBkeMz/MG61tu2twj9ic+fe3mEof8LonKJfWs6L
-	G56FyjeaYl/PyvVtdy9Yu9tre7Txy0OlqtuclW5VW5QdD9BZ9Pmy4tSZJX0tKu997aJfSNfx
-	zbMzu+hX8fHv98sXI5iydPL45LbfmXNF4ubCxLZytfPJlXO6KlMERJz19r0rqfulG5PMZ6fE
-	UpyRaKjFXFScCAAg+EhBewIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrELMWRmVeSWpSXmKPExsXCNUNNSzckjiHD4Mc9A4s569ewWUyfeoHR
-	4uv6X8wWP+8eZ7f4/Ow1s8WqhdfYLI5vncducXjuSVaL87NOsVhc3jWHzeLemv+sFmemFVkc
-	uvac1WL1mgyL39tWsDnwe+ycdZfdo7vtMrtHy5G3rB6L97xk8tj0aRK7x4kZv1k8dj609Hi/
-	7yqbx7fbHh6LX3xg8th8utrj8ya5AJ4oLpuU1JzMstQifbsErowXq/kL9rpWNKz/wdbA+MOk
-	i5GTQ0LAROLK2wmsXYwcHGwCShLH9saAhEUEtCUmzjnI3MXIxcEs8IRJYu6RpWwgCWGBcIld
-	r3+D2SwCqhLPGhoZQWxeAWOJe5uvskPM1JRouHSPCcTmFPCUOLH4MCuILSTAI/Fqw36oekGJ
-	kzOfsIDYzALyEs1bZzNPYOSZhSQ1C0lqASPTKkaRzLyy3MTMHFO94uyMyrzMCr3k/NxNjMCQ
-	X1b7Z+IOxi+X3Q8xCnAwKvHwnlj0P12INbGsuDL3EKMEB7OSCO8583/pQrwpiZVVqUX58UWl
-	OanFhxilOViUxHm9wlMThATSE0tSs1NTC1KLYLJMHJxSDYwPzlQGuve/r9z4yd1zVeOcg08X
-	rgzbpZ099+gkwbLneifarKRYrhtPeGGq9kDFP7Rqw+Uz3dLZNg++lB/gXGC7aFfw0cNlXy3E
-	d17gZWL43J3au9H4lZqrt/0iDY6Tvxj8byxv58z57fWmQ9MqXOK5ZNHnL0vzGP5dKvrVWX7z
-	b8XkCGu1/7lKLMUZiYZazEXFiQD6h9JQdQIAAA==
-X-CFilter-Loop: Reflected
+X-CM-TRANSID:QCgvCgA3kaEGXgBopyyzAg--.31710S3
+X-Coremail-Antispam: 1Uf129KBjvJXoWxtw1fAFy5Ar48WF48KrWrAFb_yoW7uw17pF
+	s8Zrn0yF4ftF42vFZ8Jr18ZryFvr4kGF4UJr1DJrsxZF4xWa1UZa42kF4kC34rWrWvvw15
+	Za1jgry3Xa4xAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j1q2NUUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiTRkyeGgAWamzWgAAsv
 
-On Wed, 16 Apr 2025 14:54:16 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
-> Rakie Kim wrote:
-> > +
-> > +static void iw_table_free(void)
-> > +{
-> > +	u8 *old;
-> > +
-> > +	mutex_lock(&iw_table_lock);
-> > +	old = rcu_dereference_protected(iw_table,
-> > +					lockdep_is_held(&iw_table_lock));
-> > +	if (old) {
-> > +		rcu_assign_pointer(iw_table, NULL);
-> > +		mutex_unlock(&iw_table_lock);
-> > +
-> > +		synchronize_rcu();
-> > +		kfree(old);
-> > +	} else
-> > +		mutex_unlock(&iw_table_lock);
-> 
-> This looks correct. I personally would not have spent the effort to
-> avoid the synchronize_rcu() because this is an error path that rarely
-> gets triggered, and kfree(NULL) is already a nop, so no pressing need to be
-> careful there either:
-> 
-> 	mutex_lock(&iw_table_lock);
-> 	old = rcu_dereference_protected(iw_table,
-> 					lockdep_is_held(&iw_table_lock));
-> 	rcu_assign_pointer(iw_table, NULL);
-> 	mutex_unlock(&iw_table_lock);
-> 	synchronize_rcu();
-> 	kfree(old);
+From: Feng Yang <yangfeng@kylinos.cn>
 
-I will modify the structure as you suggested.
+When the binary path is excessively long, the generated probe_name in libbpf
+exceeds the kernel's MAX_EVENT_NAME_LEN limit (64 bytes).
+This causes legacy uprobe event attachment to fail with error code -22.
 
-> 
-> > +}
-> > +
-> > +static void wi_kobj_release(struct kobject *wi_kobj)
-> > +{
-> > +	iw_table_free();
-> 
-> This memory can be freed as soon as node_attrs have been deleted. By
-> waiting until final wi_kobj release it confuses the lifetime rules.
-> 
-> > +	kfree(node_attrs);
-> 
-> This memory too can be freed as soon as the attributes are deleted.
-> 
-> ...the rationale for considering these additional cleanups below:
-> 
+The fix reorders the fields to place the unique ID before the name.
+This ensures that even if truncation occurs via snprintf, the unique ID
+remains intact, preserving event name uniqueness. Additionally, explicit
+checks with MAX_EVENT_NAME_LEN are added to enforce length constraints.
 
-I created a new function named wi_cleanup(), as you proposed.
-static void wi_cleanup(struct kobject *wi_kobj) {
-	sysfs_wi_node_delete_all(wi_kobj);
-	iw_table_free();
-	kfree(node_attrs);
-}
-And I changed the error handling code to call this function.
-static int add_weighted_interleave_group(struct kobject *root_kobj)
-{
-...
-err_cleanup_kobj:
-	wi_cleanup(wi_kobj);
-	kobject_del(wi_kobj);
-err_put_kobj:
-	kobject_put(wi_kobj);
-	return err;
-}
+Before Fix:
+	./test_progs -t attach_probe/kprobe-long_name
+	......
+	libbpf: failed to add legacy kprobe event for 'bpf_testmod_looooooooooooooooooooooooooooooong_name+0x0': -EINVAL
+	libbpf: prog 'handle_kprobe': failed to create kprobe 'bpf_testmod_looooooooooooooooooooooooooooooong_name+0x0' perf event: -EINVAL
+	test_attach_kprobe_long_event_name:FAIL:attach_kprobe_long_event_name unexpected error: -22
+	test_attach_probe:PASS:uprobe_ref_ctr_cleanup 0 nsec
+	#13/11   attach_probe/kprobe-long_name:FAIL
+	#13      attach_probe:FAIL
 
-However, I have one question.
-With this change, iw_table and node_attrs will not be freed at system
-shutdown. Is it acceptable to leave this memory unfreed on shutdown?
-(As you previously noted, the sysfs files in this patch are also
-not removed during system shutdown.)
+	./test_progs -t attach_probe/uprobe-long_name
+	......
+	libbpf: failed to add legacy uprobe event for /root/linux-bpf/bpf-next/tools/testing/selftests/bpf/test_progs:0x13efd9: -EINVAL
+	libbpf: prog 'handle_uprobe': failed to create uprobe '/root/linux-bpf/bpf-next/tools/testing/selftests/bpf/test_progs:0x13efd9' perf event: -EINVAL
+	test_attach_uprobe_long_event_name:FAIL:attach_uprobe_long_event_name unexpected error: -22
+	#13/10   attach_probe/uprobe-long_name:FAIL
+	#13      attach_probe:FAIL
+After Fix:
+	./test_progs -t attach_probe/uprobe-long_name
+	#13/10   attach_probe/uprobe-long_name:OK
+	#13      attach_probe:OK
+	Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
 
-> > +	kfree(wi_kobj);
-> >  }
-> >  
-> >  static const struct kobj_type wi_ktype = {
-> >  	.sysfs_ops = &kobj_sysfs_ops,
-> > -	.release = sysfs_wi_release,
-> > +	.release = wi_kobj_release,
-> >  };
-> >  
-> >  static int add_weight_node(int nid, struct kobject *wi_kobj)
-> > @@ -3525,41 +3548,42 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
-> >  	struct kobject *wi_kobj;
-> >  	int nid, err;
-> >  
-> > +	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
-> > +			     GFP_KERNEL);
-> > +	if (!node_attrs)
-> > +		return -ENOMEM;
-> > +
-> >  	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
-> > -	if (!wi_kobj)
-> > +	if (!wi_kobj) {
-> > +		kfree(node_attrs);
-> >  		return -ENOMEM;
-> > +	}
-> >  
-> >  	err = kobject_init_and_add(wi_kobj, &wi_ktype, root_kobj,
-> >  				   "weighted_interleave");
-> 
-> If you fix wi_kobj_release() to stop being responsible to free memory
-> that should have been handled in the delete path (@node_attrs,
-> iw_table_free()), then you can also drop the wi_ktype and
-> wi_kobj_release() callback altogether.
+	./test_progs -t attach_probe/kprobe-long_name
+	#13/11   attach_probe/kprobe-long_name:OK
+	#13      attach_probe:OK
+	Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
 
-I understand your suggestion about simplifying the kobject
-handling.
-If we only consider Patch1, then replacing kobject_init_and_add
-with kobject_create_and_add would be the right choice.
+Fixes: 46ed5fc33db9 ("libbpf: Refactor and simplify legacy kprobe code")
+Fixes: cc10623c6810 ("libbpf: Add legacy uprobe attaching support")
+Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+---
+ tools/lib/bpf/libbpf.c | 43 ++++++++++++++++--------------------------
+ 1 file changed, 16 insertions(+), 27 deletions(-)
 
-However, in Patch2, the code changes as follows:
-struct sysfs_wi_group {
-	struct kobject wi_kobj;
-	struct iw_node_attr *nattrs[];
-};
-static struct sysfs_wi_group *wi_group;
-...
-static void wi_kobj_release(struct kobject *wi_kobj)
-{
-	kfree(wi_group);
-}
-...
-static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
-{
-	int nid, err;
-
-	wi_group = kzalloc(struct_size(wi_group, nattrs, nr_node_ids),
-			   GFP_KERNEL);
-
-In this case, wi_kobj_release() is responsible for freeing the
-container struct wi_group that includes the kobject.
-Therefore, it seems more appropriate to use kobject_init_and_add
-in this context.
-I would appreciate your thoughts on this.
-
-> 
-> I.e. once releasing @wi_kobj is just "kfree(wi_kobj)", then this
-> sequence:
-> 
-> 	wi_kobj = kzalloc(...)
-> 	kobject_init_and_add(wi_kob, &wi_ktype, ...)
-> 
-> Can simply become:
-> 
-> 	wi_kobj = kobject_create_and_add("weighted_interleave", root_kobj);
-> 
-> > -	if (err) {
-> > -		kfree(wi_kobj);
-> > -		return err;
-> > -	}
-> > +	if (err)
-> > +		goto err_put_kobj;
-> >  
-> >  	for_each_node_state(nid, N_POSSIBLE) {
-> >  		err = add_weight_node(nid, wi_kobj);
-> >  		if (err) {
-> >  			pr_err("failed to add sysfs [node%d]\n", nid);
-> > -			break;
-> > +			goto err_cleanup_kobj;
-> >  		}
-> >  	}
-> > -	if (err)
-> > -		kobject_put(wi_kobj);
-> > +
-> >  	return 0;
-> > +
-> > +err_cleanup_kobj:
-> > +	sysfs_wi_node_delete_all(wi_kobj);
-> > +	kobject_del(wi_kobj);
-> > +err_put_kobj:
-> > +	kobject_put(wi_kobj);
-> > +	return err;
-> >  }
-> >  
-> >  static void mempolicy_kobj_release(struct kobject *kobj)
-> >  {
-> > -	u8 *old;
-> > -
-> > -	mutex_lock(&iw_table_lock);
-> > -	old = rcu_dereference_protected(iw_table,
-> > -					lockdep_is_held(&iw_table_lock));
-> > -	rcu_assign_pointer(iw_table, NULL);
-> > -	mutex_unlock(&iw_table_lock);
-> > -	synchronize_rcu();
-> > -	kfree(old);
-> > -	kfree(node_attrs);
-> >  	kfree(kobj);
-> >  }
-> >  
-> > @@ -3573,37 +3597,24 @@ static int __init mempolicy_sysfs_init(void)
-> >  	static struct kobject *mempolicy_kobj;
-> >  
-> >  	mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
-> > -	if (!mempolicy_kobj) {
-> > -		err = -ENOMEM;
-> > -		goto err_out;
-> > -	}
-> > -
-> > -	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
-> > -			     GFP_KERNEL);
-> > -	if (!node_attrs) {
-> > -		err = -ENOMEM;
-> > -		goto mempol_out;
-> > -	}
-> > +	if (!mempolicy_kobj)
-> > +		return -ENOMEM;
-> >  
-> >  	err = kobject_init_and_add(mempolicy_kobj, &mempolicy_ktype, mm_kobj,
-> >  				   "mempolicy");
-> 
-> Similar comment as above, now that mempolicy_kobj_release() is simply
-> kfree(@kobj), you can use kobject_create_and_add() and make this all
-> that much simpler.
-
-For the mempolicy_kobj, I will update the code as you suggested
-and use kobject_create_and_add().
-
-With all your recommendations applied, Patch1 would now look like this:
-@@ -3488,20 +3488,21 @@ static void iw_table_free(void)
-        mutex_lock(&iw_table_lock);
-        old = rcu_dereference_protected(iw_table,
-                                        lockdep_is_held(&iw_table_lock));
--       if (old) {
--               rcu_assign_pointer(iw_table, NULL);
--               mutex_unlock(&iw_table_lock);
-+       rcu_assign_pointer(iw_table, NULL);
-+       mutex_unlock(&iw_table_lock);
-
--               synchronize_rcu();
--               kfree(old);
--       } else
--               mutex_unlock(&iw_table_lock);
-+       synchronize_rcu();
-+       kfree(old);
- }
-
--static void wi_kobj_release(struct kobject *wi_kobj)
--{
-+static void wi_cleanup(struct kobject *wi_kobj) {
-+       sysfs_wi_node_delete_all(wi_kobj);
-        iw_table_free();
-        kfree(node_attrs);
-+}
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index b2591f5cab65..940c265acfe2 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -60,6 +60,8 @@
+ #define BPF_FS_MAGIC		0xcafe4a11
+ #endif
+ 
++#define MAX_EVENT_NAME_LEN	64
 +
-+static void wi_kobj_release(struct kobject *wi_kobj)
-+{
-        kfree(wi_kobj);
+ #define BPF_FS_DEFAULT_PATH "/sys/fs/bpf"
+ 
+ #define BPF_INSN_SZ (sizeof(struct bpf_insn))
+@@ -11136,16 +11138,16 @@ static const char *tracefs_available_filter_functions_addrs(void)
+ 			     : TRACEFS"/available_filter_functions_addrs";
  }
-
-@@ -3575,45 +3576,30 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
-        return 0;
-
- err_cleanup_kobj:
--       sysfs_wi_node_delete_all(wi_kobj);
-+       wi_cleanup(wi_kobj);
-        kobject_del(wi_kobj);
- err_put_kobj:
-        kobject_put(wi_kobj);
-        return err;
+ 
+-static void gen_kprobe_legacy_event_name(char *buf, size_t buf_sz,
+-					 const char *kfunc_name, size_t offset)
++static void gen_probe_legacy_event_name(char *buf, size_t buf_sz,
++					const char *name, size_t offset)
+ {
+ 	static int index = 0;
+ 	int i;
+ 
+-	snprintf(buf, buf_sz, "libbpf_%u_%s_0x%zx_%d", getpid(), kfunc_name, offset,
+-		 __sync_fetch_and_add(&index, 1));
++	snprintf(buf, buf_sz, "libbpf_%u_%d_%s_0x%zx", getpid(),
++		 __sync_fetch_and_add(&index, 1), name, offset);
+ 
+-	/* sanitize binary_path in the probe name */
++	/* sanitize name in the probe name */
+ 	for (i = 0; buf[i]; i++) {
+ 		if (!isalnum(buf[i]))
+ 			buf[i] = '_';
+@@ -11270,9 +11272,9 @@ int probe_kern_syscall_wrapper(int token_fd)
+ 
+ 		return pfd >= 0 ? 1 : 0;
+ 	} else { /* legacy mode */
+-		char probe_name[128];
++		char probe_name[MAX_EVENT_NAME_LEN];
+ 
+-		gen_kprobe_legacy_event_name(probe_name, sizeof(probe_name), syscall_name, 0);
++		gen_probe_legacy_event_name(probe_name, sizeof(probe_name), syscall_name, 0);
+ 		if (add_kprobe_event_legacy(probe_name, false, syscall_name, 0) < 0)
+ 			return 0;
+ 
+@@ -11328,10 +11330,10 @@ bpf_program__attach_kprobe_opts(const struct bpf_program *prog,
+ 					    func_name, offset,
+ 					    -1 /* pid */, 0 /* ref_ctr_off */);
+ 	} else {
+-		char probe_name[256];
++		char probe_name[MAX_EVENT_NAME_LEN];
+ 
+-		gen_kprobe_legacy_event_name(probe_name, sizeof(probe_name),
+-					     func_name, offset);
++		gen_probe_legacy_event_name(probe_name, sizeof(probe_name),
++					    func_name, offset);
+ 
+ 		legacy_probe = strdup(probe_name);
+ 		if (!legacy_probe)
+@@ -11875,20 +11877,6 @@ static int attach_uprobe_multi(const struct bpf_program *prog, long cookie, stru
+ 	return ret;
  }
-
--static void mempolicy_kobj_release(struct kobject *kobj)
+ 
+-static void gen_uprobe_legacy_event_name(char *buf, size_t buf_sz,
+-					 const char *binary_path, uint64_t offset)
 -{
--       kfree(kobj);
+-	int i;
+-
+-	snprintf(buf, buf_sz, "libbpf_%u_%s_0x%zx", getpid(), binary_path, (size_t)offset);
+-
+-	/* sanitize binary_path in the probe name */
+-	for (i = 0; buf[i]; i++) {
+-		if (!isalnum(buf[i]))
+-			buf[i] = '_';
+-	}
 -}
 -
--static const struct kobj_type mempolicy_ktype = {
--       .release = mempolicy_kobj_release
--};
--
- static int __init mempolicy_sysfs_init(void)
+ static inline int add_uprobe_event_legacy(const char *probe_name, bool retprobe,
+ 					  const char *binary_path, size_t offset)
  {
-        int err;
-        static struct kobject *mempolicy_kobj;
+@@ -12312,13 +12300,14 @@ bpf_program__attach_uprobe_opts(const struct bpf_program *prog, pid_t pid,
+ 		pfd = perf_event_open_probe(true /* uprobe */, retprobe, binary_path,
+ 					    func_offset, pid, ref_ctr_off);
+ 	} else {
+-		char probe_name[PATH_MAX + 64];
++		char probe_name[MAX_EVENT_NAME_LEN];
+ 
+ 		if (ref_ctr_off)
+ 			return libbpf_err_ptr(-EINVAL);
+ 
+-		gen_uprobe_legacy_event_name(probe_name, sizeof(probe_name),
+-					     binary_path, func_offset);
++		gen_probe_legacy_event_name(probe_name, sizeof(probe_name),
++					    strrchr(binary_path, '/') ? : binary_path,
++					    func_offset);
+ 
+ 		legacy_probe = strdup(probe_name);
+ 		if (!legacy_probe)
+-- 
+2.43.0
 
--       mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
-+       mempolicy_kobj = kobject_create_and_add("mempolicy", mm_kobj);
-        if (!mempolicy_kobj)
-                return -ENOMEM;
-
--       err = kobject_init_and_add(mempolicy_kobj, &mempolicy_ktype, mm_kobj,
--                                  "mempolicy");
--       if (err)
--               goto err_put_kobj;
--
-        err = add_weighted_interleave_group(mempolicy_kobj);
-        if (err)
--               goto err_del_kobj;
-+               goto err_kobj;
-
-        return 0;
-
--err_del_kobj:
-+err_kobj:
-        kobject_del(mempolicy_kobj);
--err_put_kobj:
-        kobject_put(mempolicy_kobj);
-        return err;
- }
-
-Rakie
-
-> 
-> So the patch looks technically correct as is, but if you make those
-> final cleanups I will add my review tag.
