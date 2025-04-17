@@ -1,72 +1,31 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1681F236A77
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 11:11:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D39423644A
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 11:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744888287; cv=none; b=OM+Up3a7wZ1KQl6QRxiAvu8xof1+lkpwIipA1bisRAQHJtA2PC1IncvV6QDek0dg5V3UFWOec7Op0r/m8DYivBpWJgufVzyPNEuAQLXfscC2bZhup+4wGPIdhpr7xCIQqPCp5CYHzOPUh68kzUNYrI4293v6PQap16rmxL+IAlk=
+	t=1744888297; cv=none; b=hsP2kOfH2JsMOOYyJQhOuX6s5OuZ/+ORrErhC1bsuzp/sf5TNjARO6MzoytOt30OPJCMfN8PFzO7Dhihdo0d77Q6V+FwQUfCi3oCEFlvvyOyjDw9690oCVATOnQZLDpSqbIWxDSlewHwsW+mv7lBZMZq6HlYTa66Q8v/CTIn8nY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744888287; c=relaxed/simple;
-	bh=cQFl5PUzH6hg0oQP041Wr6N3dkwwS+iRu/+8WAAEhHg=;
+	s=arc-20240116; t=1744888297; c=relaxed/simple;
+	bh=iPlBiPeQvYwklJSnGwieziVFHlC8ZbDVfSa4gQiyems=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hN2DNWdD+obuxvZgraKZBLdPWfthQB/WU+8k6H1pMtgDK9MUXqheA+et6TUEHdeoeez8gvvGBr8x80vrlUhApGpTFA6FmcXJSC+y+sgVs6DAjzAEhNP5xyQz6dTZrnp+R2BQBtFFiRpP2vTEtxKJybRGcRGNhElnZYxHVKhdaT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=JAvYzxEN; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=V8caBTE9RorD8euHQUUR3ulkxECczinFxpuLS5lLjfHQzx7tWh71TYT4KmfT+JSoGAgwQ9LRyOFtXlSI1x7NWEK+y6sb3cCPDj1RFl6QiRpTUeFzrLRg1JPhLAUouqk/1gFRvz0ytdXhJTzMwFqJEX6Rx2ulA8b2b056TPXTkQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=gvpg8SEw; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="JAvYzxEN"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53H5l7BU006999
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 11:11:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	cQFl5PUzH6hg0oQP041Wr6N3dkwwS+iRu/+8WAAEhHg=; b=JAvYzxEN2qi+MMUi
-	ZC1VD7t5J625JEd9CrPq3AAkROFDv7AVAMbvQkO3obP0OSyN5T9Ucmzz5OGPg+4Z
-	UXHDA1S+yX2j6xA/0Eu0PNDPmynTwngd0hpDdNMU/y1vuUHOhtdt6w+VoySpxsnl
-	XAsxSHSuhnDGRC3s4lXR1skfZ6T0fHlx1QX3K0k6M7Ruw9tyAdVd9OfmpLs103UM
-	IzgwJVxmKDOcVGSEZ14f2DbJljZbVF8vgrrHDkResKonzukGlYlzK55OyhK0eH91
-	kfd2h57cfjtPI/KieNACUEQGSw/cy+f9j6VrolxIznyDvBMiBqTVs+H0RwTfEbrv
-	/UKxcA==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yfs1ejna-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 11:11:22 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6f0c76e490cso952736d6.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 04:11:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744888282; x=1745493082;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cQFl5PUzH6hg0oQP041Wr6N3dkwwS+iRu/+8WAAEhHg=;
-        b=xAI0apiWi2VM7a1FKaghT3+36dWO18AQAzOPJ0K9/ZSoKH3T8Mv5w2kGuyUIEEQrHA
-         gcHVUW2I/7V9PYdKu6Ijpuv7y4ETsw5wmdcBuh49s4nPN1alnmIYT1ILavwlmGSbW3qE
-         KQ6LSTw+98Ym3rcamkWav686H1fxUyUSGeRgWI/fMvDjs4GaPvFUFfrWeCvNDk+WAyvn
-         +mp4EM6j2F/j3nGogiWCgtV4GAXtxIdewVBMrn6I88ljzBkR4f9lJBTV9qnjOj5qSJAv
-         FqzC2fB/qe24OZAvs+mmD0EYY255Jfsk3+fYlgG8GNKyhsLxT/4V5/ynMdurngo0vxhM
-         AKCw==
-X-Forwarded-Encrypted: i=1; AJvYcCWN028ZPmFg5W0/+l6I9UOOno9ltSkRLzjV86sbgJVg1NH+BhLFylIxgzZtnw1nWtAZkfqfysjhsUXtsx8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6J9F1GfSgYKt2mSHpzjhRf+67b2ADNuLDiUnYBVhXRg7zbRPC
-	cNJibH3yNPCHw8avPxhXEU+YFOfla62W277glGjPjYc//Gh/JhkbuylKD41Ua6zWm1FVc3VZNJ4
-	mXb/zJdDbGh8EV+3hB3829sjbnFdcj3cHGeRf0XIusdWPe0zUREWupnNYCFzHkEc=
-X-Gm-Gg: ASbGncs7XZpM/rRFcnbaY4NMCXJYv8VNXYIiYTd/NqiF6YYtM6chf/SraXK2EEhtPeQ
-	L965m3S8rlzcHwc/kbmhxJTU2M415aIVRr3i/2vIDyYwU98hOUK/vruXGHH9jhE2BnTySId92ZP
-	iIJ/DQCtT9bqOvrXhgsWbDJWpwyialI/gK9y5OGKM64bhlz/pwq8bBteQ79WMHYoVI7M+HwiFRV
-	XE+OrNnv1RaxKF/98xG72gBO+/20B7deSQjQJhIWx3EOP9enctitlrOR/dCZ32c1CPJ0n9pz6cg
-	fOE1c/44JaiBkJzwlDQhcuVd73Xnx8bRtD8KOl+CH9prCMvNvmstqKSZBC40MlZSbw==
-X-Received: by 2002:a05:6214:b11:b0:6f2:c10b:db04 with SMTP id 6a1803df08f44-6f2c10be8bcmr1283256d6.1.1744888282058;
-        Thu, 17 Apr 2025 04:11:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF5kju+O/dWoPIE9Ybn1kg3pBvJPXA+KWO908qYET4dQsJeQp8XiEZRcojtLSXCqXemg9A1+Q==
-X-Received: by 2002:a05:6214:b11:b0:6f2:c10b:db04 with SMTP id 6a1803df08f44-6f2c10be8bcmr1282886d6.1.1744888281656;
-        Thu, 17 Apr 2025 04:11:21 -0700 (PDT)
-Received: from [192.168.65.58] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3cd6257bsm278243066b.13.2025.04.17.04.11.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Apr 2025 04:11:21 -0700 (PDT)
-Message-ID: <bfc3247e-16e7-4897-bdbd-dc7d82d45fa3@oss.qualcomm.com>
-Date: Thu, 17 Apr 2025 13:11:16 +0200
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="gvpg8SEw"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1744888284; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Ih4D2hjc1RuSPbkNyhYdhil7SRFVem/SvdPeGCUUw2w=;
+	b=gvpg8SEwawWkJpE28CaNwp5mgUbxYySJi8WlY443CZZGHP0dJfC2rEDHwIoKeOnsRdI/TU6xJLiBA108osA4PysWN5hspQiBO/brCVXMV+qj6saA9dtyEjqr9jred2sTPOKrRvilfNQMuIJF+bFm/gh6drtM8SctEdIN3XxvL8I=
+Received: from 30.221.145.47(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0WXEiprf_1744888283 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 17 Apr 2025 19:11:24 +0800
+Message-ID: <518cd8d7-394c-4b19-a0b9-f73219c621de@linux.alibaba.com>
+Date: Thu, 17 Apr 2025 19:11:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,77 +33,172 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/6] arm64: dts: qcom: Add initial support for MSM8937
-To: barnabas.czeman@mainlining.org
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>,
-        Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Dmitry Baryshkov <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        iommu@lists.linux.dev, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, phone-devel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, linux@mainlining.org,
-        Dang Huynh <danct12@riseup.net>
-References: <20250315-msm8937-v4-0-1f132e870a49@mainlining.org>
- <20250315-msm8937-v4-4-1f132e870a49@mainlining.org>
- <f85195a1-f55e-41ea-967d-b758014cba06@oss.qualcomm.com>
- <93ea35691deaa1ff38d229225e26cf41@mainlining.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <93ea35691deaa1ff38d229225e26cf41@mainlining.org>
+Subject: Re: [PATCH v2 1/1] ocfs2: fix the issue with discontiguous allocation
+ in the global_bitmap
+To: Heming Zhao <heming.zhao@suse.com>, akpm <akpm@linux-foundation.org>
+Cc: ocfs2-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
+ gautham.ananthakrishna@oracle.com
+References: <20250414060125.19938-1-heming.zhao@suse.com>
+ <20250414060125.19938-2-heming.zhao@suse.com>
+From: Joseph Qi <joseph.qi@linux.alibaba.com>
+In-Reply-To: <20250414060125.19938-2-heming.zhao@suse.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=P9I6hjAu c=1 sm=1 tr=0 ts=6800e1da cx=c_pps a=wEM5vcRIz55oU/E2lInRtA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=OuZLqq7tAAAA:8 a=bBqXziUQAAAA:8 a=L7gxQ87vPTAOeZ-rjWYA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=OIgjcC2v60KrkQgK7BGD:22 a=AKGiAy9iJ-JzxKVHQNES:22 a=BjKv_IHbNJvPKzgot4uq:22
-X-Proofpoint-GUID: Nhv8tN3ren86QRTRAMXBlZ2wmne5w-Gw
-X-Proofpoint-ORIG-GUID: Nhv8tN3ren86QRTRAMXBlZ2wmne5w-Gw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-17_03,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 bulkscore=0 impostorscore=0 phishscore=0 suspectscore=0
- mlxscore=0 spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501
- mlxlogscore=716 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504170084
+Content-Transfer-Encoding: 7bit
 
-On 4/17/25 8:20 AM, barnabas.czeman@mainlining.org wrote:
-> On 2025-04-14 22:55, Konrad Dybcio wrote:
->> On 3/15/25 3:57 PM, Barnabás Czémán wrote:
->>> From: Dang Huynh <danct12@riseup.net>
->>>
->>> Add initial support for MSM8937 SoC.
->>>
->>> Signed-off-by: Dang Huynh <danct12@riseup.net>
->>> Co-developed-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
->>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
->>> ---
 
-[...]
 
->> 0xff is overly broad, please document the existing known speed bins
-> There are no speedbins for 8937 gpu. 8940 have but 8940 is not scope of this series.
+On 2025/4/14 14:01, Heming Zhao wrote:
+> The commit 4eb7b93e0310 ("ocfs2: improve write IO performance when
+> fragmentation is high") introduced another regression.
+> 
+> The following ocfs2-test case can trigger this issue:
+>> discontig_runner.sh => activate_discontig_bg.sh => resv_unwritten:
+>> ${RESV_UNWRITTEN_BIN} -f ${WORK_PLACE}/large_testfile -s 0 -l \
+>> $((${FILE_MAJOR_SIZE_M}*1024*1024))
+> 
+> In my env, test disk size (by "fdisk -l <dev>"):
+>> 53687091200 bytes, 104857600 sectors.
+> 
+> Above command is:
+>> /usr/local/ocfs2-test/bin/resv_unwritten -f \
+>> /mnt/ocfs2/ocfs2-activate-discontig-bg-dir/large_testfile -s 0 -l \
+>> 53187969024
+> 
+> Error log:
+>> [*] Reserve 50724M space for a LARGE file, reserve 200M space for future test.
+>> ioctl error 28: "No space left on device"
+>> resv allocation failed Unknown error -1
+>> reserve unwritten region from 0 to 53187969024.
+> 
+> Call flow:
+> __ocfs2_change_file_space //by ioctl OCFS2_IOC_RESVSP64
+>  ocfs2_allocate_unwritten_extents //start:0 len:53187969024
+>   while()
+>    + ocfs2_get_clusters //cpos:0, alloc_size:1623168 (cluster number)
+>    + ocfs2_extend_allocation
+>      + ocfs2_lock_allocators
+>      |  + choose OCFS2_AC_USE_MAIN & ocfs2_cluster_group_search
+>      |
+>      + ocfs2_add_inode_data
+>         ocfs2_add_clusters_in_btree
+>          __ocfs2_claim_clusters
+>           ocfs2_claim_suballoc_bits
+>           + During the allocation of the final part of the large file
+> 	    (after ~47GB), no chain had the required contiguous
+>             bits_wanted. Consequently, the allocation failed.
+> 
+> How to fix:
+> When OCFS2 is encountering fragmented allocation, the file system should
+> stop attempting bits_wanted contiguous allocation and instead provide the
+> largest available contiguous free bits from the cluster groups.
+> 
+> Reported-by: Gautham Ananthakrishna <gautham.ananthakrishna@oracle.com>
+> Signed-off-by: Heming Zhao <heming.zhao@suse.com>
+> Fixes: 4eb7b93e0310 ("ocfs2: improve write IO performance when fragmentation is high")
 
-So it would make sense to either drop them, or fill in the actual
-values here
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+> ---
+>  fs/ocfs2/suballoc.c | 38 ++++++++++++++++++++++++++++++++------
+>  fs/ocfs2/suballoc.h |  1 +
+>  2 files changed, 33 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/ocfs2/suballoc.c b/fs/ocfs2/suballoc.c
+> index f7b483f0de2a..6ac4dcd54588 100644
+> --- a/fs/ocfs2/suballoc.c
+> +++ b/fs/ocfs2/suballoc.c
+> @@ -698,10 +698,12 @@ static int ocfs2_block_group_alloc(struct ocfs2_super *osb,
+>  
+>  	bg_bh = ocfs2_block_group_alloc_contig(osb, handle, alloc_inode,
+>  					       ac, cl);
+> -	if (PTR_ERR(bg_bh) == -ENOSPC)
+> +	if (PTR_ERR(bg_bh) == -ENOSPC) {
+> +		ac->ac_which = OCFS2_AC_USE_MAIN_DISCONTIG;
+>  		bg_bh = ocfs2_block_group_alloc_discontig(handle,
+>  							  alloc_inode,
+>  							  ac, cl);
+> +	}
+>  	if (IS_ERR(bg_bh)) {
+>  		status = PTR_ERR(bg_bh);
+>  		bg_bh = NULL;
+> @@ -1794,6 +1796,7 @@ static int ocfs2_search_chain(struct ocfs2_alloc_context *ac,
+>  {
+>  	int status;
+>  	u16 chain;
+> +	u32 contig_bits;
+>  	u64 next_group;
+>  	struct inode *alloc_inode = ac->ac_inode;
+>  	struct buffer_head *group_bh = NULL;
+> @@ -1819,10 +1822,21 @@ static int ocfs2_search_chain(struct ocfs2_alloc_context *ac,
+>  	status = -ENOSPC;
+>  	/* for now, the chain search is a bit simplistic. We just use
+>  	 * the 1st group with any empty bits. */
+> -	while ((status = ac->ac_group_search(alloc_inode, group_bh,
+> -					     bits_wanted, min_bits,
+> -					     ac->ac_max_block,
+> -					     res)) == -ENOSPC) {
+> +	while (1) {
+> +		if (ac->ac_which == OCFS2_AC_USE_MAIN_DISCONTIG) {
+> +			contig_bits = le16_to_cpu(bg->bg_contig_free_bits);
+> +			if (!contig_bits)
+> +				contig_bits = ocfs2_find_max_contig_free_bits(bg->bg_bitmap,
+> +						le16_to_cpu(bg->bg_bits), 0);
+> +			if (bits_wanted > contig_bits && contig_bits >= min_bits)
+> +				bits_wanted = contig_bits;
+> +		}
+> +
+> +		status = ac->ac_group_search(alloc_inode, group_bh,
+> +				bits_wanted, min_bits,
+> +				ac->ac_max_block, res);
+> +		if (status != -ENOSPC)
+> +			break;
+>  		if (!bg->bg_next_group)
+>  			break;
+>  
+> @@ -1982,6 +1996,7 @@ static int ocfs2_claim_suballoc_bits(struct ocfs2_alloc_context *ac,
+>  	victim = ocfs2_find_victim_chain(cl);
+>  	ac->ac_chain = victim;
+>  
+> +search:
+>  	status = ocfs2_search_chain(ac, handle, bits_wanted, min_bits,
+>  				    res, &bits_left);
+>  	if (!status) {
+> @@ -2022,6 +2037,16 @@ static int ocfs2_claim_suballoc_bits(struct ocfs2_alloc_context *ac,
+>  		}
+>  	}
+>  
+> +	/* Chains can't supply the bits_wanted contiguous space.
+> +	 * We should switch to using every single bit when allocating
+> +	 * from the global bitmap. */
+> +	if (i == le16_to_cpu(cl->cl_next_free_rec) &&
+> +	    status == -ENOSPC && ac->ac_which == OCFS2_AC_USE_MAIN) {
+> +		ac->ac_which = OCFS2_AC_USE_MAIN_DISCONTIG;
+> +		ac->ac_chain = victim;
+> +		goto search;
+> +	}
+> +
+>  set_hint:
+>  	if (status != -ENOSPC) {
+>  		/* If the next search of this group is not likely to
+> @@ -2365,7 +2390,8 @@ int __ocfs2_claim_clusters(handle_t *handle,
+>  	BUG_ON(ac->ac_bits_given >= ac->ac_bits_wanted);
+>  
+>  	BUG_ON(ac->ac_which != OCFS2_AC_USE_LOCAL
+> -	       && ac->ac_which != OCFS2_AC_USE_MAIN);
+> +	       && ac->ac_which != OCFS2_AC_USE_MAIN
+> +	       && ac->ac_which != OCFS2_AC_USE_MAIN_DISCONTIG);
+>  
+>  	if (ac->ac_which == OCFS2_AC_USE_LOCAL) {
+>  		WARN_ON(min_clusters > 1);
+> diff --git a/fs/ocfs2/suballoc.h b/fs/ocfs2/suballoc.h
+> index b481b834857d..bcf2ed4a8631 100644
+> --- a/fs/ocfs2/suballoc.h
+> +++ b/fs/ocfs2/suballoc.h
+> @@ -29,6 +29,7 @@ struct ocfs2_alloc_context {
+>  #define OCFS2_AC_USE_MAIN  2
+>  #define OCFS2_AC_USE_INODE 3
+>  #define OCFS2_AC_USE_META  4
+> +#define OCFS2_AC_USE_MAIN_DISCONTIG  5
+>  	u32    ac_which;
+>  
+>  	/* these are used by the chain search */
 
-Konrad
