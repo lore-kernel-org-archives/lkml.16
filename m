@@ -1,172 +1,151 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F1031172A;
-	Thu, 17 Apr 2025 01:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30204154C0D;
+	Thu, 17 Apr 2025 02:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744854972; cv=none; b=NNAnWK++xJJdDiDbemJ7ng372ntV8g/iBlH4rMSs5zzMbEUTmuy3KuRzfwfnujJ7zp0nIOedAcy0m7PYqBJxiaTYayrOCMLK+bnDAHgTQkRKRtzOUryFv5hUWogUWXrJLGLT1gZwzlAbF9quuZaJc2rWfs7niDS84B9/Doky73Q=
+	t=1744855212; cv=none; b=LxGuC+rYKaAMq6E38sF7Er7nCJB3WJWBURFk1DtsI9tslJw6QoENOn0B9Uw6QlCAp+0mw/tLIN9JeA5QvbVIeKev6KRXbtALWb2G4QBwsbg7El7RVp+tVpy3dBUNFkbUdYK6pSJA3WjXYRE622/aUFSMl1tmsS3gpc69U+EbOOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744854972; c=relaxed/simple;
-	bh=nV0XAzhuvzxqrFlXRHsn3+SUZGp/iNsb52WBlKr1hVc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YnhNFAKCvH2f7SbwD20L3MyS+4PJwE3UHJuePUaAJym+0bemxEZoj+1zmyJfpOI8NtsL66bsCHq/BWIIMac/coRqqpqVCZKJhH+Muxa5RGGYctx2FAAKU8yVQH2W78A9xcEqPoB3EYQi5StNN/iR08R2ngwNncWNB+59cUqfji0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-3d-68005fb3903e
-From: Rakie Kim <rakie.kim@sk.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: gourry@gourry.net,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com,
-	ying.huang@linux.alibaba.com,
-	david@redhat.com,
-	Jonathan.Cameron@huawei.com,
-	osalvador@suse.de,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	rakie.kim@sk.com,
-	akpm@linux-foundation.org
-Subject: Re: [PATCH v8 2/3] mm/mempolicy: Prepare weighted interleave sysfs for memory hotplug
-Date: Thu, 17 Apr 2025 10:55:52 +0900
-Message-ID: <20250417015600.661-1-rakie.kim@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <68003826cb17d_1302d294e@dwillia2-xfh.jf.intel.com.notmuch>
-References: 
+	s=arc-20240116; t=1744855212; c=relaxed/simple;
+	bh=SNHQCgYPPuktylCF1w4UKYr5L1ItGqxSFhQnyoMe0wo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KCtu1Zoc7Ncgs0UPzPNjm7/SMT6jZtQKGbb1GgulFuWfOpTwVn3uYPv/ZaTUYf07mOzt5RnT6Fn5JwUrXGthB0c7CthPSZBGDYz73P/KsQ8x9qoKHHWC4QvOfDK94q3GFCWrirQ4BTTfuf6/89v6bL+kNMao/RZSWDjaOnamhBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CiKQAkZN; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CiKQAkZN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744855212; x=1776391212;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=SNHQCgYPPuktylCF1w4UKYr5L1ItGqxSFhQnyoMe0wo=;
+  b=CiKQAkZNQ9TU3y4RaXEpDc3Nv+mPP/+yPa9CKJb9ZsaQa09LEoqH/AJZ
+   ndApLXYH9u1SMRR1R9tnK8FvR0uN79+UmCLEh0dXT69D5HWQrHx31WO1y
+   6hbwy5Xumw/7B3MwiS5mtleezxLXE9CgYYxPs1HuHlpbDMYVqY8eHxaVJ
+   7cIId9BK1MPu2E+t2KAR7vGtXXeujbo03raomS+aU0v2UcJD2UbZlOqf8
+   YQVdxesItthSJeDOZF69IaAIH/2IUMqeIAmYRtkbpCL7kI2DAXEUyFj9C
+   BbdbbOaFIW6pcT1qshqvK5RajA9g4r6xwt1G5kWyNwSqfWWTOyGeJ/Z0A
+   w==;
+X-CSE-ConnectionGUID: OKRLOK14Sn2i6mNx/rYN9Q==
+X-CSE-MsgGUID: KB+gfqDySKq1Vppt2IbVpQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="50236329"
+X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
+   d="scan'208";a="50236329"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 19:00:09 -0700
+X-CSE-ConnectionGUID: F7ZYATMxSgCgCK7sXXbNpg==
+X-CSE-MsgGUID: owziaZAiTN+1EC2LITxSWg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
+   d="scan'208";a="135476179"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 19:00:02 -0700
+Message-ID: <486ac73c-f409-4b56-8d54-dcd3a73d155e@linux.intel.com>
+Date: Thu, 17 Apr 2025 10:00:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v3 16/22] perf/core: Support to capture higher width
+ vector registers
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
+ <20250415114428.341182-17-dapeng1.mi@linux.intel.com>
+ <20250415143626.GF4031@noisy.programming.kicks-ass.net>
+ <26799b7e-c3a6-4de2-afd1-7bda0639fa37@linux.intel.com>
+ <20250416155327.GD17910@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250416155327.GD17910@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsXC9ZZnoe7meIYMg6/NthZz1q9hs5g+9QKj
-	xdf1v5gtft49zm6xauE1NovjW+exW5yfdYrF4vKuOWwW99b8Z7U4M63IYvWaDAduj52z7rJ7
-	dLddZvdoOfKW1WPxnpdMHps+TWL3ODHjN4vHzoeWHu/3XWXz2Hy62uPzJrkArigum5TUnMyy
-	1CJ9uwSujOMNnAW7ZCt2v33G3MB4X7yLkZNDQsBEYvGzF6ww9qQ585i6GDk42ASUJI7tjQEJ
-	iwhoS0ycc5C5i5GLg1ngCZPE3CNL2UASwgJxEie2P2QCsVkEVCVWXz0PZvMKGEvs6DnHBjFT
-	U6Lh0j2wOKeAh8SuvcvYQWwhAR6JVxv2M0LUC0qcnPmEBcRmFpCXaN46G2yZhMB3Nolpj39B
-	HScpcXDFDZYJjPyzkPTMQtKzgJFpFaNQZl5ZbmJmjoleRmVeZoVecn7uJkZg+C+r/RO9g/HT
-	heBDjAIcjEo8vCcW/U8XYk0sK67MPcQowcGsJMJ7zvxfuhBvSmJlVWpRfnxRaU5q8SFGaQ4W
-	JXFeo2/lKUIC6YklqdmpqQWpRTBZJg5OqQbG4F8TueVTjrmmPPpcm8G3JX3+joAg9tee6mmd
-	CXfPW7GkCbgINF/d2TZFLlZgekLHRNteg/6KG9zJwv1Lzy5/opre+tp66f50M+ujpevzBEvO
-	SE+YW/U5W5bv60FJ9ZvpL2dHRi+aymy989d5Ke0+x3Jv3hVPhO6m7JHeLtZmZ/bCMiKQrUKJ
-	pTgj0VCLuag4EQCIQsjyewIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrELMWRmVeSWpSXmKPExsXCNUNNS3dzPEOGwYJGfYs569ewWUyfeoHR
-	4uv6X8wWP+8eZ7f4/Ow1s8WqhdfYLI5vncducXjuSVaL87NOsVhc3jWHzeLemv+sFmemFVkc
-	uvac1WL1mgyL39tWsDnwe+ycdZfdo7vtMrtHy5G3rB6L97xk8tj0aRK7x4kZv1k8dj609Hi/
-	7yqbx7fbHh6LX3xg8th8utrj8ya5AJ4oLpuU1JzMstQifbsErozjDZwFu2Qrdr99xtzAeF+8
-	i5GTQ0LARGLSnHlMXYwcHGwCShLH9saAhEUEtCUmzjnI3MXIxcEs8IRJYu6RpWwgCWGBOIkT
-	2x8ygdgsAqoSq6+eB7N5BYwldvScY4OYqSnRcOkeWJxTwENi195l7CC2kACPxKsN+xkh6gUl
-	Ts58wgJiMwvISzRvnc08gZFnFpLULCSpBYxMqxhFMvPKchMzc0z1irMzKvMyK/SS83M3MQJD
-	flntn4k7GL9cdj/EKMDBqMTDe2LR/3Qh1sSy4srcQ4wSHMxKIrznzP+lC/GmJFZWpRblxxeV
-	5qQWH2KU5mBREuf1Ck9NEBJITyxJzU5NLUgtgskycXBKNTCGsVyYsTyHxe3jqkeSNxLuzA4M
-	jyj21du3vGTtvxMZl/jm3m2ddGfz6eLLjm/vCq3fLaRXtYaThWX1VSGGtfHtnAt3L3B9na2e
-	W8UkdzWv9fSSI8d0TRp6Dmx4pR/6Nmhy14WQxbNY1pxQWyx5ecPCpCnXe/xX8Ty8UcuxeKJB
-	VbfFdZPjgl9alViKMxINtZiLihMBRKJt6XUCAAA=
-X-CFilter-Loop: Reflected
 
-On Wed, 16 Apr 2025 16:07:18 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
-> Rakie Kim wrote:
-> > Previously, the weighted interleave sysfs structure was statically
-> > managed during initialization. This prevented new nodes from being
-> > recognized when memory hotplug events occurred, limiting the ability
-> > to update or extend sysfs entries dynamically at runtime.
-> > 
-> > To address this, this patch refactors the sysfs infrastructure and
-> > encapsulates it within a new structure, `sysfs_wi_group`, which holds
-> > both the kobject and an array of node attribute pointers.
-> > 
-> > By allocating this group structure globally, the per-node sysfs
-> > attributes can be managed beyond initialization time, enabling
-> > external modules to insert or remove node entries in response to
-> > events such as memory hotplug or node online/offline transitions.
-> > 
-> > Instead of allocating all per-node sysfs attributes at once, the
-> > initialization path now uses the existing sysfs_wi_node_add() and
-> > sysfs_wi_node_delete() helpers. This refactoring makes it possible
-> > to modularly manage per-node sysfs entries and ensures the
-> > infrastructure is ready for runtime extension.
-> > 
-> > Signed-off-by: Rakie Kim <rakie.kim@sk.com>
-> > Reviewed-by: Gregory Price <gourry@gourry.net>
-> > Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
-> > ---
-> >  mm/mempolicy.c | 60 ++++++++++++++++++++++++--------------------------
-> >  1 file changed, 29 insertions(+), 31 deletions(-)
-> > 
-> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> > index dcf03c389b51..998635127e9d 100644
-> > --- a/mm/mempolicy.c
-> > +++ b/mm/mempolicy.c
-> > @@ -3419,6 +3419,13 @@ struct iw_node_attr {
-> >  	int nid;
-> >  };
-> >  
-> > +struct sysfs_wi_group {
-> > +	struct kobject wi_kobj;
-> > +	struct iw_node_attr *nattrs[];
-> > +};
-> > +
-> > +static struct sysfs_wi_group *wi_group;
-> > +
-> >  static ssize_t node_show(struct kobject *kobj, struct kobj_attribute *attr,
-> >  			 char *buf)
-> >  {
-> > @@ -3461,24 +3468,23 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
-> >  	return count;
-> >  }
-> >  
-> > -static struct iw_node_attr **node_attrs;
-> > -
-> > -static void sysfs_wi_node_delete(struct iw_node_attr *node_attr,
-> > -				 struct kobject *parent)
-> > +static void sysfs_wi_node_delete(int nid)
-> >  {
-> > -	if (!node_attr)
-> > +	if (!wi_group->nattrs[nid])
-> >  		return;
-> > -	sysfs_remove_file(parent, &node_attr->kobj_attr.attr);
-> > -	kfree(node_attr->kobj_attr.attr.name);
-> > -	kfree(node_attr);
-> > +
-> > +	sysfs_remove_file(&wi_group->wi_kobj,
-> > +			  &wi_group->nattrs[nid]->kobj_attr.attr);
-> > +	kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
-> > +	kfree(wi_group->nattrs[nid]);
-> >  }
-> >  
-> > -static void sysfs_wi_node_delete_all(struct kobject *wi_kobj)
-> > +static void sysfs_wi_node_delete_all(void)
-> >  {
-> >  	int nid;
-> >  
-> >  	for (nid = 0; nid < nr_node_ids; nid++)
-> > -		sysfs_wi_node_delete(node_attrs[nid], wi_kobj);
-> > +		sysfs_wi_node_delete(nid);
-> >  }
-> >  
-> >  static void iw_table_free(void)
-> > @@ -3501,8 +3507,7 @@ static void iw_table_free(void)
-> >  static void wi_kobj_release(struct kobject *wi_kobj)
-> >  {
-> >  	iw_table_free();
-> > -	kfree(node_attrs);
-> > -	kfree(wi_kobj);
-> > +	kfree(wi_group);
-> 
-> Ah, look just one more iw_table_free() deletion to be able to switch to
-> kobject_create_and_add() flow.
-> 
-> For what this patch is though you can add:
-> 
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 
-Thank you for the suggestion.
-I have already removed the iw_table_free() and kfree(node_attrs) from
-the release path in Patch1 as part of wi_cleanup().
+On 4/16/2025 11:53 PM, Peter Zijlstra wrote:
+> On Wed, Apr 16, 2025 at 02:42:12PM +0800, Mi, Dapeng wrote:
+>
+>> Just think twice, using bitmap to represent these extended registers indeed
+>> wastes bits and is hard to extend, there could be much much more vector
+>> registers if considering AMX.
+> *Groan* so AMX should never have been register state :-(
+>
+>
+>> Considering different arch/HW may support different number vector register,
+>> like platform A supports 8 XMM registers and 8 YMM registers, but platform
+>> B only supports 16 XMM registers, a better way to represent these vector
+>> registers may add two fields, one is a bitmap which represents which kinds
+>> of vector registers needs to be captures. The other field could be a u16
+>> array which represents the corresponding register length of each kind of
+>> vector register. It may look like this.
+>>
+>> #define    PERF_SAMPLE_EXT_REGS_XMM    BIT(0)
+>> #define    PERF_SAMPLE_EXT_REGS_YMM    BIT(1)
+>> #define    PERF_SAMPLE_EXT_REGS_ZMM    BIT(2)
+>>     __u32    sample_regs_intr_ext;
+>>     __u16    sample_regs_intr_ext_len[4];
+>>     __u32    sample_regs_user_ext;
+>>     __u16    sample_regs_user_ext_len[4];
+>>
+>>
+>> Peter, how do you think this? Thanks.
+> I'm not entirely sure I understand.
+>
+> How about something like:
+>
+> 	__u16 sample_simd_reg_words;
+> 	__u64 sample_simd_reg_intr;
+> 	__u64 sample_simd_reg_user;
 
-Rakie
+If only considering x86 XMM/YMM/ZMM registers, it should be enough since
+higher width vector registers always contain the lower width vector
+registers on x86 platforms, but I'm not sure if we can have such assumption
+for other archs. If not, then it's not enough since user may hope to sample
+multiple vector registers with different width at the same time.
+Furthermore, considering there could be more other registers like APX
+registers need to be supported in the future, we'd better define a more
+generic and easily extended interface. That's why I suggest to add a bitmap
+like above"sample_regs_intr_ext" which can represent multiple kinds of
+registers simultaneously.
+
+
+>
+> Then the simd_reg_words tell us how many (quad) words per register (8 for
+> 512) and simd_reg_{intr,user} are a simple bitmap, one bit per actual
+> simd reg.
+>
+> So then all of XMM would be:
+>
+>   words = 2;
+>   intr = user = 0xFFFF;
+>
+> (16 regs, 128 wide)
+>
+> Whereas ZMM would be:
+>
+>   words = 8
+>   intr = user = 0xFFFFFFFF;
+>
+> (32 regs, 512 wide)
+>
+>
+> Would this be sufficient? Possibly we can split the words thing into two
+> __u8, but does it make sense to ask for different vector width for
+> intr and user ?
+
+Yes, we need it. Users may need to sample interrupt registers and user
+space registers simultaneously although it sounds a little bit weird.
+
 
