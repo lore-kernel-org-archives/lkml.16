@@ -1,97 +1,109 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A8A253B7B;
-	Thu, 17 Apr 2025 15:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E887253928
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744904583; cv=none; b=YvtvvB/MyHZ1Ilb4rnLUb57LhTp2BvJVVqOGUty4yc+880kSNM3+5OvAAVeM6mDOjhFsYeBOM1xFhYdSS5+Aol2NW+C+jznze2Ax8J8rQix5a6WNdZY9ExFozjRglwlLrKGg72u+f75r+quO9+eQZfs6CCezjS3wSTr6DCajnwk=
+	t=1744904597; cv=none; b=chjOcqrvTcv9WoxQDCKbOZzsA1g+X0HbBzbUwX937FeqwB0V+O/3lruSH2Lt6AaHMs9LpjLSw4nXgpKvqCZaVE9N8aYeuddXvxUzTHckJ1CfDVbM0V0PMADrd1NRAqG4rlU2wDUlS7qOf27QUI8m3JsA3t3Ja+5cUXs80NNkC28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744904583; c=relaxed/simple;
-	bh=YJ8LpTKQW+D2AUqysghHq+yImGwgrWT7DRfZaQ/LtWQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aEtVrGxiM3fI9LwQsN0fvUZ0qJLmNvrr7FkWs2CGcZ77tRXRYJeQEc2dAKr5CRjCxjs0rsWpsmvPxRMXO8+edA4flAxXrBhnq73yMPnYYVPMsltaZ17puOrrGjTEmp0W46qtc/ITmvNLeI5Qtr4AS35RgnbpPdcoM8gEC7naBiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=m38jqekq; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744904597; c=relaxed/simple;
+	bh=JunynEHKwcDuDA+6MH8FuW3dXFyO4ffcAIP8h6y2R7I=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=iXb0Iwu1Uxqz1nWanNrNpQ9vb2GJdUBpQXHrtP5XiwmQ35e21Wgueex2yjvCCAUr2qZ5bUab/jWcGE2o2BRF8BWqwfVH0RrHmwMAguxHiV2B51Q/2G1pUegB3mkwrID43cFd3cPs9jcEyzVgrPulpiXz+ZR9/WurQUvoB6Muul8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VEaoxotw; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="m38jqekq"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D9C8A439AE;
-	Thu, 17 Apr 2025 15:42:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744904579;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LZp/NeDHcn4kz4i8YEhiZ7BJXzOynMSoJ4YpajxDv9Y=;
-	b=m38jqekqN4LLyjuSzkr9b68XeNZ/fLMNDbqHEZyi3Gj55qmnrcebhrmp1ePWxiXt8rPd00
-	yA5xxuF8w6OYc9xjjtalMIDVipq+edkpI59JeI/V1jX6PRwLKyq4Q/z2WZcuXeIlNwmb3V
-	7FTk22k2WZ1Uywvzo7gQNRbKs/XL0RvFnM5ZlXKvwH280acGfoV38tDvXnJevaUr0SDTQ1
-	s1bGigazo7VVOyfVMoQq8fiGn+J8vgJmlx9MswhLPH7aayxQuaXLqNLF+zrN/wrIUksvP8
-	uM902u8R+jbUo2bfD6sKSMz11oOjrVFLY54bxE1G6PsDdSZgVcyCKFWMDLVwZA==
-Date: Thu, 17 Apr 2025 17:42:56 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Lee Jones <lee@kernel.org>
-Cc: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>,
-	Chanwoo Choi <cw00.choi@samsung.com>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
-	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v4 00/32] Samsung S2MPG10 PMIC MFD-based drivers
-Message-ID: <2025041715425693974c6d@mail.local>
-References: <20250409-s2mpg10-v4-0-d66d5f39b6bf@linaro.org>
- <20250415160212.GA372032@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VEaoxotw"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so8035775e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:43:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744904594; x=1745509394; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kiy6O1+ukmiBCdmursvfIZ1ixOUonC4Bg5yCWPYc6cs=;
+        b=VEaoxotwSMEhos2MmPbRtrImMDPjXI6tlNJebUk1aR5YidNAr30HPuTvNV6Ujk4pqE
+         L31v2Hyk32J19Dynt7Zp7im8yeOGjO5WeK5i0jdXw06MXRk6VNR+72pvvNvWjXDkgkvk
+         xzWn8Dbw0hwQQkbdza9pNDyaOG/XMBy0oc5YuSaB/dzBOBx77LVIEaS1+qZXvXFGiLVF
+         Zvwi5hfoBcvxKow108xycpmQ/Z//mq1PEVDrYpC28z5bSXvj+pPqKnBvx8Jx2ls7M2C+
+         4UZCa1+Arfqt4GIGIm8rtfauzXN4zVhkmnKMpae2q0/dqcuvD9ZPfFV7IYoy767jj9/w
+         E6KQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744904594; x=1745509394;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kiy6O1+ukmiBCdmursvfIZ1ixOUonC4Bg5yCWPYc6cs=;
+        b=iAtCn+x+r/4JN+ZCOGA6znyITToqC3DUljrgR6CYeg+TNO3+iHweWtXnsa7XzbgAKQ
+         0uHGhZzY6xfFZYmHMjcyYCQw/RIJdYeLU4BGNE/cZ8DwzbbK1wgTxe1yo6bWavljrbDv
+         sG27UO+sZE3i1K+LeBHaSDqGwH0D3eONhJ6dmidWJJe+MDeGrs77ZEzzxFCL5jDrnSoE
+         Z4wMAX4VwwtQTRocIjEpTv9p57iEEHrCvXgkrB6HLcPiGoL1UfWCvfeY+EbP3uS6AFuo
+         gkuO4T9A8bv70gHXdkhML/9yAR09TU9YzNsRg2IEYAPHbcxrGY1XyR9T9DAuqF+AvKJt
+         68gA==
+X-Forwarded-Encrypted: i=1; AJvYcCWoe1gAokAQN3oRbp10vKSsPbHLgRdImKyedqCXOAm/Ql/G1M5ACD6LuFMDIbH19d6/qabl39F11/jKzPA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5owD8HemyPiVYLoVr9uJSz/2j3vAr2afqPIzFZ32iudLTIfGN
+	DiflQ9R7YKHB+ephFkHVxvcSwfJ0fggZMapylQ3e+VlUePwI5HnJLTsLiyxBOGk=
+X-Gm-Gg: ASbGncsAHT0aoEML3YTXz3vyuIic2z9YmaS0GNF1aEapAGdXPLWs6/ZwKId7LbeVLf2
+	7cd2k5ix+EdeZ6uIsR3PAeWEhLo5ovexoSvf0SvLilALK2kgPpLQFpRYgB1njjrEKa/Inn9+UqZ
+	Cov2/2VE4+YtVEGChfN2NX5rrBODEndyKRmycNebar3/uH0Zla0osPpmmOIUQMQnbyiojgN/f3J
+	z+mFG9Lnwo+/b3mtpiEZ3yr2Q36o3K1Cc3z5AeKUSazaJSOTEa2FFp6U7AX+aPRMLcVXMlU3fTe
+	ZQhxwY52KHE5XFoE0lIWmss+gLsSKaWVVBtlNGEae5Fjb22zqoyqvYsfdEJ26Q==
+X-Google-Smtp-Source: AGHT+IGul/ExpZp37TdPvsaZIQLJkYja32KQl4f188bFltaB6kMTGBke5KI4F7K8YdebH3KDbIM3SQ==
+X-Received: by 2002:a5d:59ae:0:b0:39e:dbee:f644 with SMTP id ffacd0b85a97d-39ee5b8954amr5771154f8f.46.1744904593983;
+        Thu, 17 Apr 2025 08:43:13 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf44577dsm20773640f8f.94.2025.04.17.08.43.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 08:43:13 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ "Pu, Hui" <Hui.Pu@gehealthcare.com>, dri-devel@lists.freedesktop.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Conor Dooley <conor.dooley@microchip.com>, stable@vger.kernel.org
+In-Reply-To: <20250411-tianma-p0700wxf1mbaa-v3-0-acbefe9ea669@bootlin.com>
+References: <20250411-tianma-p0700wxf1mbaa-v3-0-acbefe9ea669@bootlin.com>
+Subject: Re: [PATCH v3 0/3] drm/panel: simple: add Tianma P0700WXF1MBAA and
+ improve Tianma TM070JDHG34-00
+Message-Id: <174490459305.1152288.16433755651449379930.b4-ty@linaro.org>
+Date: Thu, 17 Apr 2025 17:43:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415160212.GA372032@google.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdelieehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetlhgvgigrnhgurhgvuceuvghllhhonhhiuceorghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeeiudeuteehhfekgeejveefhfeiudejuefhgfeljefgjeegkeeujeeugfehgefgnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemugekjegvmedusgdusgemledtkeegmegttghftgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemugekjegvmedusgdusgemledtkeegmegttghftgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdegpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvgdrughrrghsiihikheslhhinhgrrhhordhorhhgpdhrtghpthhtohepkhhriihksehkv
- ghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhnrgifrhhotghkihesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopegtfidttddrtghhohhisehsrghmshhunhhgrdgtohhmpdhrtghpthhtoheprghlihhmrdgrkhhhthgrrhesshgrmhhsuhhnghdrtghomh
-X-GND-Sasl: alexandre.belloni@bootlin.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On 15/04/2025 17:02:12+0100, Lee Jones wrote:
-> >  drivers/mfd/Kconfig                                |  35 +-
-> >  drivers/mfd/Makefile                               |   5 +-
-> >  drivers/mfd/sec-acpm.c                             | 442 +++++++++++++++++++
-> >  drivers/mfd/sec-common.c                           | 301 +++++++++++++
-> >  drivers/mfd/sec-core.c                             | 481 ---------------------
-> >  drivers/mfd/sec-core.h                             |  23 +
-> >  drivers/mfd/sec-i2c.c                              | 239 ++++++++++
-> >  drivers/mfd/sec-irq.c                              | 460 +++++++-------------
+Hi,
+
+On Fri, 11 Apr 2025 21:19:43 +0200, Luca Ceresoli wrote:
+> This short series adds power on/off timings to the Tianma TM070JDHG34-00
+> panel and adds support for the the Tianma P0700WXF1MBAA panel.
 > 
-> >  drivers/rtc/rtc-s5m.c                              | 197 ++++++---
-> 
-> MFD parts look okay to me now.
-> 
-> With Acks from the Clk and RTC maintainers, I can merge all of the
-> driver stuff together and submit a PR for others to pull from.
 > 
 
-I don't think the RTC part depends on the MFD one so I was going to
-apply the patches in my tree if this is fine for everyone.
+Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-next)
 
+[1/3] dt-bindings: display: simple: Add Tianma P0700WXF1MBAA panel
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/12ad686ffdf51920000e7353351b163f3851c474
+[2/3] drm/panel: simple: Tianma TM070JDHG34-00: add delays
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/716c75afd83c837f14042309126e838de040658b
+[3/3] drm/panel: simple: add Tianma P0700WXF1MBAA panel
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/178ac975357e9563ff09d95a9142a0c451480f67
 
 -- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Neil
+
