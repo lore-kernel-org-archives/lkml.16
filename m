@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880C2253F30;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C5F2550DE;
 	Thu, 17 Apr 2025 17:16:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744910197; cv=none; b=CGEneD0BSiJ2dyFG0DA+TlWC4EcYnBYX9jHCNjmrc+Y4hAQK91cjv9Z/UN42syihb1xoBHm5LHTdSWSjqgktrFP21oqWOvOsY5KGHYbYNsWgDKBEYDrqJy7loefXAWYOTakCXiUvoW0mr3S6Y0wOq8EYSxtlw/j1DXS35LM1vms=
+	t=1744910197; cv=none; b=W/ulm8H8YG4qAPWfKhJrzxkdgE6pB3mEi6EMOOlR2Ljs+dnqcFHGiZbJdRdEtqoP6DHmfr68mMQ06EOIuq3av3D4LMW6ueiT3Pttlle+I3RD3TNXefTAoG3pw060tRh9txnwraCYeAHckfPMHq7Mhf2/Yw6S0RnT3cAckZCm0lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744910197; c=relaxed/simple;
-	bh=v5E+aOtX1b+E5OwEtcvzwlG6BCHoSNdwgBUEf0TStt0=;
+	bh=KCV1iT8WMRH+l5LBGG+rXSmP2tVeZLWG6EnkHpY31/A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YdIOz6Yc3P+qVUmRhC4sNQtlPZChL113gGCalfO18ZsEktknUPvP0Ew+G5J21nl4YB3d3/Tgjb7Dyrl7gUn9CBgpyPZYD/F1qjS7aTS5hwHb773vfctZ47oTEnteJCgRn15TFzV0IKvZGet+4tlKkyYX1Bz5nC4+fEMnsobTTEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ctwSy7B8; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=aE9vZ1Jlr+qqJDf7SU9j+4PtedVvnmeOuK4SFnLF17AbHdL/hz9reBASPl27oeAsy6AcUulx9hiJNfObaNAbF6S56L1HRA0qShhDb6oIgZ1UT7LK1FypmnAQmHamJOrtJrHdRA1chWX7cGuYnezru5fyihwEAZcr8DhVOBy7Lg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NCpR/Ca4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ctwSy7B8"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 14678C4CEF0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NCpR/Ca4"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 37A41C4AF18;
 	Thu, 17 Apr 2025 17:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744910197;
-	bh=v5E+aOtX1b+E5OwEtcvzwlG6BCHoSNdwgBUEf0TStt0=;
+	bh=KCV1iT8WMRH+l5LBGG+rXSmP2tVeZLWG6EnkHpY31/A=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ctwSy7B8nmyoVXDxWs6hs3cFnwafrmay3FmIFjuUX4tXVlTPaUb6SECJCuyZ6m1p4
-	 gCqQ+U5tcxB5xcIBEPC5NcUF2HBD8htaxAOxsQctMiJORxCRqnGmpsjVsW/92EeAOd
-	 j9GFgWQIR01eXEZMR0kjiyTcZS4WNKvjMsK5BluzGqfuJ0S4zm5riOR2Z0h7dX7wdL
-	 Jobb/hH66cizg3Eaez2r8ch3NEpjbTBObP2seHvHFdwaMi7cQw9wUK0VDl2KMgYYr9
-	 0IjhrBjybxOokpU+2y1qALbAgtEoQWL2mB3XoeQSXtuURXHPd+s0Hqb6pZczEgOhaz
-	 ZTnhb6EWJ8YLA==
+	b=NCpR/Ca4drOZO/oB/h5cd0gecR61NjHWVfGlKtC354DYmLj/h0zKIozoB+tHYcI9s
+	 ACmhKqN4hqdPSefK/9gHVfYGOAvzXE4E0XegZh4FYoUYKqOrf3nRbjcZ32SvYTzrN+
+	 HESbSb7KdwuKmm6cjRMoj/KJQj8C4ixJvDVdEKfSvZQzMjjGANOzVuyo72AhexLsqx
+	 HOq23Z036bOiKuPbUOG6JeFhbmmIoXSnJVFoxNp/SmPkTjcpur8HPz34dCCk0V1eL/
+	 i+Y+rsTB7UQLeVIJ59rI/mi77IH36m0DlJhki+nGATV5iSKxbgHjg4Q6bltkv1Z43P
+	 kJlnQ5n9T2kfQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DDDC369C9;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C107C369CF;
 	Thu, 17 Apr 2025 17:16:37 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Date: Thu, 17 Apr 2025 22:46:29 +0530
-Subject: [PATCH v3 3/5] PCI: host-common: Make the driver as a common
- library for host controller drivers
+Date: Thu, 17 Apr 2025 22:46:31 +0530
+Subject: [PATCH v3 5/5] PCI: qcom: Add support for resetting the slot due
+ to link down event
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250417-pcie-reset-slot-v3-3-59a10811c962@linaro.org>
+Message-Id: <20250417-pcie-reset-slot-v3-5-59a10811c962@linaro.org>
 References: <20250417-pcie-reset-slot-v3-0-59a10811c962@linaro.org>
 In-Reply-To: <20250417-pcie-reset-slot-v3-0-59a10811c962@linaro.org>
 To: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
@@ -60,16 +60,16 @@ Cc: dingwei@marvell.com, cassel@kernel.org, Lukas Wunner <lukas@wunner.de>,
  linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7466;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6894;
  i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=K/sPDFj1hecH/GGD3XDJ2CIncZKealVndyMKk1UM77I=;
- b=owGbwMvMwMUYOl/w2b+J574ynlZLYshgNM/fpqvZ+L5CtHvib4WcqW/iGq9cFvty3XjdrHMSM
- Q5s/R12nYzGLAyMXAyyYoos6UudtRo9Tt9YEqE+HWYQKxPIFAYuTgGYyIrjHAxNiles352M92uO
- OjP1m35YeOSWSV77GLewZYXO+1O/KlS3In+LwaTI/5fqLHxLja0FLefO8+PifCu8/vnF63P2ODr
- EH9VXZu1yOs2QHHvZN5ndqv9rmHKX+01BTpXDIgx8nY6uc2bFHzVvWBls9UbNX2jXuYzi+b+3fx
- abMKHDwapNT9kmg/PzMdNS84nf879Vrd3Y1PohItN27t8Vbvs4+c61/M4v95d/6Hluu+/esGt2J
- 7StD7IFXprMPVdjb3nd5BKVnfVJpu/1nPY35tmpmC5bOlVQ7+VCUUUtQwGhnw3+tV2/ZkzpTHmo
- HrhH8W9MrGMXm/9dBq5uLcuEmpYPc5XWhn4rlRVLdnwPAA==
+ bh=F8rjzuhgErigDd+67mYFhyxszrxpDL8l0bnIc6Ml+ng=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBoATdxsG341Wf5dBlOsI8tJmdXDVYFgFqoRpofL
+ CEHKYEUUJmJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaAE3cQAKCRBVnxHm/pHO
+ 9ZrfB/42ORiF/Z6dza/s1zud3oUewjLIhKQXIvAaBQGTZ596+MFN4a6uCB2TjBxdHj+d5oY3FQa
+ Qrgl7Kxh18wo27x0w998SmXalgBL6rpA1kWD748rFI8JITVoGofp3h6v/ltYvEZdoNWUiZ7NqtS
+ u5RibOHN1cvIGFcDKOx0DlYs37iTjr6+oV3WRYOm/K/Ts20aqGdnOVQMepiai4J4T0XEejbSg/C
+ Ox3WiPW79vr8Uh6fv4Hvt2nx4gPGGFhfDpO38jMTbubnHYJw8o0bmgGpbjK4+hxBrxeRIW6w6pc
+ 2MT0Q149ejvN8avjAc0arW8Ue/QDOODzKESk7WYbwcQF4kKq
 X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -79,193 +79,214 @@ Reply-To: manivannan.sadhasivam@linaro.org
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-This common library will be used as a placeholder for helper functions
-shared by the host controller drivers. This avoids placing the host
-controller drivers specific helpers in drivers/pci/*.c, to avoid enlarging
-the kernel Image on platforms that do not use host controller drivers at
-all (like x86/ACPI platforms).
+The PCIe link can go down under circumstances such as the device firmware
+crash, link instability, etc... When that happens, the PCIe slot needs to
+be reset to make it operational again. Currently, the driver is not
+handling the link down event, due to which the users have to restart the
+machine to make PCIe link operational again. So fix it by detecting the
+link down event and resetting the slot.
 
-Suggested-by: Lukas Wunner <lukas@wunner.de>
+Since the Qcom PCIe controllers report the link down event through the
+'global' IRQ, enable the link down event by setting PARF_INT_ALL_LINK_DOWN
+bit in PARF_INT_ALL_MASK register.
+
+Then in the case of the event, call pci_host_handle_link_down() API
+in the handler to let the PCI core handle the link down condition.
+
+The API will internally call, 'pci_host_bridge::reset_slot()' callback to
+reset the slot in a platform specific way. So implement the callback to
+reset the slot by first resetting the PCIe core, followed by reinitializing
+the resources and then finally starting the link again.
+
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/controller/Kconfig                    |  8 ++++----
- drivers/pci/controller/dwc/pcie-hisi.c            |  1 +
- drivers/pci/controller/pci-host-common.c          |  6 ++++--
- drivers/pci/controller/pci-host-common.h          | 16 ++++++++++++++++
- drivers/pci/controller/pci-host-generic.c         |  2 ++
- drivers/pci/controller/pci-thunder-ecam.c         |  2 ++
- drivers/pci/controller/pci-thunder-pem.c          |  1 +
- drivers/pci/controller/pcie-apple.c               |  2 ++
- drivers/pci/controller/plda/pcie-microchip-host.c |  1 +
- include/linux/pci-ecam.h                          |  6 ------
- 10 files changed, 33 insertions(+), 12 deletions(-)
+ drivers/pci/controller/dwc/Kconfig     |  1 +
+ drivers/pci/controller/dwc/pcie-qcom.c | 90 +++++++++++++++++++++++++++++++++-
+ 2 files changed, 89 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 9800b768105402d6dd1ba4b134c2ec23da6e4201..9bb8bf669a807272777b6168d042f8fd7490aeec 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -3,6 +3,10 @@
- menu "PCI controller drivers"
- 	depends on PCI
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index d9f0386396edf66ad0e514a0f545ed24d89fcb6c..ce04ee6fbd99cbcce5d2f3a75ebd72a17070b7b7 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -296,6 +296,7 @@ config PCIE_QCOM
+ 	select PCIE_DW_HOST
+ 	select CRC8
+ 	select PCIE_QCOM_COMMON
++	select PCI_HOST_COMMON
+ 	help
+ 	  Say Y here to enable PCIe controller support on Qualcomm SoCs. The
+ 	  PCIe controller uses the DesignWare core plus Qualcomm-specific
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index dc98ae63362db0422384b1879a2b9a7dc564d091..6b18a2775e7fcde1d634b3f58327ecc7d028e4ec 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -34,6 +34,7 @@
+ #include <linux/units.h>
  
-+config PCI_HOST_COMMON
-+	tristate
-+	select PCI_ECAM
-+
- config PCI_AARDVARK
- 	tristate "Aardvark PCIe controller"
- 	depends on (ARCH_MVEBU && ARM64) || COMPILE_TEST
-@@ -119,10 +123,6 @@ config PCI_FTPCI100
- 	depends on OF
- 	default ARCH_GEMINI
- 
--config PCI_HOST_COMMON
--	tristate
--	select PCI_ECAM
--
- config PCI_HOST_GENERIC
- 	tristate "Generic PCI host controller"
- 	depends on OF
-diff --git a/drivers/pci/controller/dwc/pcie-hisi.c b/drivers/pci/controller/dwc/pcie-hisi.c
-index 8904b5b85ee589576afcb6c81bb4bd39ff960c15..3c17897e56fcb60ec08cf522ee1485f90a2f36a3 100644
---- a/drivers/pci/controller/dwc/pcie-hisi.c
-+++ b/drivers/pci/controller/dwc/pcie-hisi.c
-@@ -15,6 +15,7 @@
- #include <linux/pci-acpi.h>
- #include <linux/pci-ecam.h>
  #include "../../pci.h"
 +#include "../pci-host-common.h"
+ #include "pcie-designware.h"
+ #include "pcie-qcom-common.h"
  
- #if defined(CONFIG_PCI_HISI) || (defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS))
+@@ -55,6 +56,7 @@
+ #define PARF_INT_ALL_STATUS			0x224
+ #define PARF_INT_ALL_CLEAR			0x228
+ #define PARF_INT_ALL_MASK			0x22c
++#define PARF_STATUS				0x230
+ #define PARF_SID_OFFSET				0x234
+ #define PARF_BDF_TRANSLATE_CFG			0x24c
+ #define PARF_DBI_BASE_ADDR_V2			0x350
+@@ -130,8 +132,11 @@
  
-diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
-index f441bfd6f96a8bde1c07fcf97d43d0693c424a27..f93bc7034e697250711833a5151f7ef177cd62a0 100644
---- a/drivers/pci/controller/pci-host-common.c
-+++ b/drivers/pci/controller/pci-host-common.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Generic PCI host driver common code
-+ * Common library for PCI host controller drivers
-  *
-  * Copyright (C) 2014 ARM Limited
-  *
-@@ -15,6 +15,8 @@
- #include <linux/pci-ecam.h>
- #include <linux/platform_device.h>
+ /* PARF_LTSSM register fields */
+ #define LTSSM_EN				BIT(8)
++#define SW_CLEAR_FLUSH_MODE			BIT(10)
++#define FLUSH_MODE				BIT(11)
  
-+#include "pci-host-common.h"
+ /* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
++#define PARF_INT_ALL_LINK_DOWN			BIT(1)
+ #define PARF_INT_ALL_LINK_UP			BIT(13)
+ #define PARF_INT_MSI_DEV_0_7			GENMASK(30, 23)
+ 
+@@ -145,6 +150,9 @@
+ /* PARF_BDF_TO_SID_CFG fields */
+ #define BDF_TO_SID_BYPASS			BIT(0)
+ 
++/* PARF_STATUS fields */
++#define FLUSH_COMPLETED				BIT(8)
 +
- static void gen_pci_unmap_cfg(void *ptr)
+ /* ELBI_SYS_CTRL register fields */
+ #define ELBI_SYS_CTRL_LT_ENABLE			BIT(0)
+ 
+@@ -169,6 +177,7 @@
+ 						PCIE_CAP_SLOT_POWER_LIMIT_SCALE)
+ 
+ #define PERST_DELAY_US				1000
++#define FLUSH_TIMEOUT_US			100
+ 
+ #define QCOM_PCIE_CRC8_POLYNOMIAL		(BIT(2) | BIT(1) | BIT(0))
+ 
+@@ -274,11 +283,14 @@ struct qcom_pcie {
+ 	struct icc_path *icc_cpu;
+ 	const struct qcom_pcie_cfg *cfg;
+ 	struct dentry *debugfs;
++	int global_irq;
+ 	bool suspended;
+ 	bool use_pm_opp;
+ };
+ 
+ #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
++static int qcom_pcie_reset_slot(struct pci_host_bridge *bridge,
++				  struct pci_dev *pdev);
+ 
+ static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
  {
- 	pci_ecam_free((struct pci_config_window *)ptr);
-@@ -94,5 +96,5 @@ void pci_host_common_remove(struct platform_device *pdev)
- }
- EXPORT_SYMBOL_GPL(pci_host_common_remove);
+@@ -1263,6 +1275,8 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
+ 			goto err_assert_reset;
+ 	}
  
--MODULE_DESCRIPTION("Generic PCI host common driver");
-+MODULE_DESCRIPTION("Common library for PCI host controller drivers");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/pci/controller/pci-host-common.h b/drivers/pci/controller/pci-host-common.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..30253ff26e01fb445ecf67b795209e6d0a9ec7c4
---- /dev/null
-+++ b/drivers/pci/controller/pci-host-common.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Common library for PCI host controller drivers
-+ *
-+ * Copyright (C) 2025 Linaro Limited
-+ *
-+ * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+ */
++	pp->bridge->reset_slot = qcom_pcie_reset_slot;
 +
-+#ifndef _PCI_HOST_COMMON_H
-+#define _PCI_HOST_COMMON_H
+ 	return 0;
+ 
+ err_assert_reset:
+@@ -1300,6 +1314,73 @@ static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
+ 	.post_init	= qcom_pcie_host_post_init,
+ };
+ 
++static int qcom_pcie_reset_slot(struct pci_host_bridge *bridge,
++				  struct pci_dev *pdev)
++{
++	struct pci_bus *bus = bridge->bus;
++	struct dw_pcie_rp *pp = bus->sysdata;
++	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++	struct qcom_pcie *pcie = to_qcom_pcie(pci);
++	struct device *dev = pcie->pci->dev;
++	u32 val;
++	int ret;
 +
-+int pci_host_common_probe(struct platform_device *pdev);
-+void pci_host_common_remove(struct platform_device *pdev);
++	/* Wait for the pending transactions to be completed */
++	ret = readl_relaxed_poll_timeout(pcie->parf + PARF_STATUS, val,
++					 val & FLUSH_COMPLETED, 10,
++					 FLUSH_TIMEOUT_US);
++	if (ret) {
++		dev_err(dev, "Flush completion failed: %d\n", ret);
++		goto err_host_deinit;
++	}
 +
-+#endif
-diff --git a/drivers/pci/controller/pci-host-generic.c b/drivers/pci/controller/pci-host-generic.c
-index 4051b9b61dace669422e5a6453cc9f58a081beb5..c1bc0d34348f44c9fdd549811f637fb50fe89c64 100644
---- a/drivers/pci/controller/pci-host-generic.c
-+++ b/drivers/pci/controller/pci-host-generic.c
-@@ -14,6 +14,8 @@
- #include <linux/pci-ecam.h>
- #include <linux/platform_device.h>
- 
-+#include "pci-host-common.h"
++	/* Clear the FLUSH_MODE to allow the core to be reset */
++	val = readl(pcie->parf + PARF_LTSSM);
++	val |= SW_CLEAR_FLUSH_MODE;
++	writel(val, pcie->parf + PARF_LTSSM);
 +
- static const struct pci_ecam_ops gen_pci_cfg_cam_bus_ops = {
- 	.bus_shift	= 16,
- 	.pci_ops	= {
-diff --git a/drivers/pci/controller/pci-thunder-ecam.c b/drivers/pci/controller/pci-thunder-ecam.c
-index 08161065a89c35a95714df935ef437dfc8845697..b5b4a958e6a22b21501cad45bb242a95a784efc1 100644
---- a/drivers/pci/controller/pci-thunder-ecam.c
-+++ b/drivers/pci/controller/pci-thunder-ecam.c
-@@ -11,6 +11,8 @@
- #include <linux/pci-ecam.h>
- #include <linux/platform_device.h>
- 
-+#include "pci-host-common.h"
++	/* Wait for the FLUSH_MODE to clear */
++	ret = readl_relaxed_poll_timeout(pcie->parf + PARF_LTSSM, val,
++					 !(val & FLUSH_MODE), 10,
++					 FLUSH_TIMEOUT_US);
++	if (ret) {
++		dev_err(dev, "Flush mode clear failed: %d\n", ret);
++		goto err_host_deinit;
++	}
 +
- #if defined(CONFIG_PCI_HOST_THUNDER_ECAM) || (defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS))
- 
- static void set_val(u32 v, int where, int size, u32 *val)
-diff --git a/drivers/pci/controller/pci-thunder-pem.c b/drivers/pci/controller/pci-thunder-pem.c
-index f1bd5de67997cddac173723bc7f4ec20aaf20064..5fa037fb61dc356f3029d1b5cae632ae1da5bb9b 100644
---- a/drivers/pci/controller/pci-thunder-pem.c
-+++ b/drivers/pci/controller/pci-thunder-pem.c
-@@ -14,6 +14,7 @@
- #include <linux/platform_device.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
- #include "../pci.h"
-+#include "pci-host-common.h"
- 
- #if defined(CONFIG_PCI_HOST_THUNDER_PEM) || (defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS))
- 
-diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-index 18e11b9a7f46479348815c3f706319189e0a80b5..edd4c8c683c6a693401b47f5f056641c13ae89f8 100644
---- a/drivers/pci/controller/pcie-apple.c
-+++ b/drivers/pci/controller/pcie-apple.c
-@@ -29,6 +29,8 @@
- #include <linux/of_irq.h>
- #include <linux/pci-ecam.h>
- 
-+#include "pci-host-common.h"
++	qcom_pcie_host_deinit(pp);
 +
- #define CORE_RC_PHYIF_CTL		0x00024
- #define   CORE_RC_PHYIF_CTL_RUN		BIT(0)
- #define CORE_RC_PHYIF_STAT		0x00028
-diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
-index 3fdfffdf027001bf88df8e1c2538587298228220..24bbf93b8051fa0d9027ce6983eae34cad81065e 100644
---- a/drivers/pci/controller/plda/pcie-microchip-host.c
-+++ b/drivers/pci/controller/plda/pcie-microchip-host.c
-@@ -23,6 +23,7 @@
- #include <linux/wordpart.h>
++	ret = qcom_pcie_host_init(pp);
++	if (ret) {
++		dev_err(dev, "Host init failed\n");
++		return ret;
++	}
++
++	ret = dw_pcie_setup_rc(pp);
++	if (ret)
++		goto err_host_deinit;
++
++	/*
++	 * Re-enable global IRQ events as the PARF_INT_ALL_MASK register is
++	 * non-sticky.
++	 */
++	if (pcie->global_irq)
++		writel_relaxed(PARF_INT_ALL_LINK_UP | PARF_INT_ALL_LINK_DOWN |
++			       PARF_INT_MSI_DEV_0_7, pcie->parf + PARF_INT_ALL_MASK);
++
++	qcom_pcie_start_link(pci);
++	dw_pcie_wait_for_link(pci);
++
++	dev_dbg(dev, "Slot reset completed\n");
++
++	return 0;
++
++err_host_deinit:
++	qcom_pcie_host_deinit(pp);
++
++	return ret;
++}
++
+ /* Qcom IP rev.: 2.1.0	Synopsys IP rev.: 4.01a */
+ static const struct qcom_pcie_ops ops_2_1_0 = {
+ 	.get_resources = qcom_pcie_get_resources_2_1_0,
+@@ -1571,6 +1652,9 @@ static irqreturn_t qcom_pcie_global_irq_thread(int irq, void *data)
+ 		pci_unlock_rescan_remove();
  
- #include "../../pci.h"
-+#include "../pci-host-common.h"
- #include "pcie-plda.h"
+ 		qcom_pcie_icc_opp_update(pcie);
++	} else if (FIELD_GET(PARF_INT_ALL_LINK_DOWN, status)) {
++		dev_dbg(dev, "Received Link down event\n");
++		pci_host_handle_link_down(pp->bridge);
+ 	} else {
+ 		dev_WARN_ONCE(dev, 1, "Received unknown event. INT_STATUS: 0x%08x\n",
+ 			      status);
+@@ -1732,8 +1816,10 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+ 			goto err_host_deinit;
+ 		}
  
- #define MC_MAX_NUM_INBOUND_WINDOWS		8
-diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
-index 3a10f8cfc3ad5c90585a8fc971be714011ed18fe..d930651473b4d0b406e657a24ede87e09517d091 100644
---- a/include/linux/pci-ecam.h
-+++ b/include/linux/pci-ecam.h
-@@ -93,10 +93,4 @@ extern const struct pci_ecam_ops al_pcie_ops;	/* Amazon Annapurna Labs PCIe */
- extern const struct pci_ecam_ops tegra194_pcie_ops; /* Tegra194 PCIe */
- extern const struct pci_ecam_ops loongson_pci_ecam_ops; /* Loongson PCIe */
- #endif
--
--#if IS_ENABLED(CONFIG_PCI_HOST_COMMON)
--/* for DT-based PCI controllers that support ECAM */
--int pci_host_common_probe(struct platform_device *pdev);
--void pci_host_common_remove(struct platform_device *pdev);
--#endif
- #endif
+-		writel_relaxed(PARF_INT_ALL_LINK_UP | PARF_INT_MSI_DEV_0_7,
+-			       pcie->parf + PARF_INT_ALL_MASK);
++		writel_relaxed(PARF_INT_ALL_LINK_UP | PARF_INT_ALL_LINK_DOWN |
++			       PARF_INT_MSI_DEV_0_7, pcie->parf + PARF_INT_ALL_MASK);
++
++		pcie->global_irq = irq;
+ 	}
+ 
+ 	qcom_pcie_icc_opp_update(pcie);
 
 -- 
 2.43.0
