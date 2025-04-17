@@ -1,106 +1,103 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A943221517D
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 06:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91F121516C
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 06:50:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744872600; cv=none; b=qbZF9X2MaV778T2KWhiDXcH/mYW9cIGWFCyrZHbxeWOGn5AvPG2xnAslqyHNcXx4I0hWl0EUfRzyGNv/0PRyeGD7JKw1R2/Y3B3qX5PS/Va/rI0actbi20T9VtFf7jAThijT4ZrgUAKU5A52aTXX+YljRT0pOe/SIKESVYbMN+s=
+	t=1744872650; cv=none; b=jERRjhIzu82arm9Da6phbOcpzplmdMrDY8mVq3p34nkKh4Y63D11709n1hdOq6rqPtc3M/tSO2FysxSpmB0Fshuir/S65b7PCqWr3CWjAAeU8Q5blCb7MR3SCXg0fzNownnjB6H4D4/EL1vXSTiZRlIQKGOLJ0pLb7UnVo1EBAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744872600; c=relaxed/simple;
-	bh=UErh6bV6SHHEsvkhQXXNwjSjG/7ukkr3U1JEjAGk9UU=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=p2ouzg8AdVjo1Z09Q1o/l0BuCA08Qk+F4YKDSm1/eSMSdymagOSRHuaDc2lo7jxDzVp+pECATFrutfUfAmez2BPGjdMBQIJ4egH/5SFUCl2/k2UgOhNEbW6xsCz5MMzE3P5rpkXCaKebk8hlAiiL82Cu22WDyqoGzGKrJXc1iXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.1.26] (dynamic-176-000-055-081.176.0.pool.telefonica.de [176.0.55.81])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 45D6561E64782;
-	Thu, 17 Apr 2025 08:49:05 +0200 (CEST)
-Message-ID: <074c2637-1b65-428e-b3e2-24384780e936@molgen.mpg.de>
-Date: Thu, 17 Apr 2025 08:49:04 +0200
+	s=arc-20240116; t=1744872650; c=relaxed/simple;
+	bh=bPjPMZZeZS9G3i+WPgcWsNdB0nFuNYWj9ognqEq6Ixw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aJEPV+Oc0i+oPqJ5WLTfO7ayq2BXjlhNg5WSUHEdGD9kJ2FyNBOxE2JtHjL5/GgX+duaCehyLrQivSwDPSYi1B8P6cQ4oDDAirpP3EVu/TwjqbxCofED4MyRIO7t8AFa9nd9GvusRA8Ly/gWFcmW+IzbK+eeDRnud+/IIFxZ+pQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=umich.edu; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=cWynsFDX; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=umich.edu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="cWynsFDX"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e53a91756e5so386890276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 23:50:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1744872647; x=1745477447; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Rs0M3P6oIi+Elu8s3MYKXWE+m43BDKwint0NyeRoHW0=;
+        b=cWynsFDXjK1xi96giHo8rVj+6rlvrXAphRctr25IljzQc+njQafEf+YPXHXgxj3mCg
+         V7EBJVm7PZQX/l8aBb0vxSEO4CjA7nQVsYY6kmNE5p+jRdrsEHBLObkSbDc+dB2G10tI
+         laJnKLw5u6+kixDcv+EaJRruIDppGm43bgL3PQ9A7ZspQt6KGSpHkzTsB2Zd0IS2rP3X
+         RbH8BYcJvR2Uf0OcTcBvha+k5BetMDRQSFrwE9gERylES1ClDy0swYkTuQQBAMfgH5yd
+         0Z2/VAmfuDQ4fjR6AYWIHybKRdJO080UqfOExsc4CUZ67ProNnRgIeih/nU7YaHl9yHw
+         fvAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744872647; x=1745477447;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Rs0M3P6oIi+Elu8s3MYKXWE+m43BDKwint0NyeRoHW0=;
+        b=aZwIv+S1vkyXd8JsoISHNBERCmhtuMBYZKu/u3vL/4qu+oc80OVv60VLmlWMglzbdH
+         F/XYAGAeNqgzvbqznFvUfqRfrdBQ7nNaW/CDMyVCNxmsnWLnagzlfe5AuMpIFYIzu9lp
+         CMzXa/vOX5BfJqrzVp24ClLbLc03Edq1k3cQtMkAOYTHccsSlt3PakEwzqeULWJCP0sP
+         3dEvYsdqX3rCCzlH/Bov62AEQSXcg+/T2H+wrqU96qvZAfI3ALWRzwGtLicP0NxnL1At
+         LWAVRsFmeXtYwJCeSWiHFxCVyIhYiRG+tOGZcbGJ1A5snNn/SUqLJquQunJ2aQx0ERKJ
+         q2dA==
+X-Forwarded-Encrypted: i=1; AJvYcCWJ3AgMj0c8Aog5LgrVKRRcsWRdCVn2ASGanFTOywSzf957W3CF09bvt5CBsiE/nDkZmp3uc/pzsNpPS+Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzuhyc/ZurEmAoP6ASE7j+QijIRv56zEPx8oumofAOCafgA8XkG
+	VjiXOCbc7kjwludPEcToejGoVfQ1alCkPQDJTXKhyc1JOOKUGnUUEDaRjdRYUY166mo+NaWHZCD
+	zV8CarRtNS0FgDC4P6rjQGNtsopbHW7LmFQZoDA==
+X-Gm-Gg: ASbGncsNqBAbQWkE9QozHgLFDV0iMnugiG+iOuuY2h4Wwqb2CQQO9TBY+Dy7jnaZ6dk
+	20vzbcztgJVsksl4eov78D/a0QUiT/jujjxTq6zErYWlaVkm6jAnBynYB89XwvJ/dXh3WuAXo0e
+	1xtlYtYRfq8pFGYx7fNGxFqQ==
+X-Google-Smtp-Source: AGHT+IHOrQMgB8vPNp5Fecv62Hb3xWs4T5EZbTbfvscdpVT+/Zj4LX8xvv3X7FDShQp4HFXvzZvhweG2X9fqQl16ad8=
+X-Received: by 2002:a05:6902:991:b0:e61:1339:31b with SMTP id
+ 3f1490d57ef6-e7275dec059mr6013055276.31.1744872646872; Wed, 16 Apr 2025
+ 23:50:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>
-Subject: e820: Undefined type not treated as AddressRangeReserved
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250325-rust-analyzer-host-v5-0-385e7f1e1e23@gmail.com> <20250325-rust-analyzer-host-v5-1-385e7f1e1e23@gmail.com>
+In-Reply-To: <20250325-rust-analyzer-host-v5-1-385e7f1e1e23@gmail.com>
+From: Trevor Gross <tmgross@umich.edu>
+Date: Thu, 17 Apr 2025 01:50:35 -0500
+X-Gm-Features: ATxdqUEBa1ilwoJd-re6g56K23IrasyBGKA84QjB2U8ROdrzwewV-DC9EYbNqP0
+Message-ID: <CALNs47t6+yX=rM78ggmC+og=-vnYrrcWHq507B9Tas-iRssaUw@mail.gmail.com>
+Subject: Re: [PATCH v5 01/13] scripts: generate_rust_analyzer.py: add missing whitespace
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Danilo Krummrich <dakr@kernel.org>, 
+	Boris-Chengbiao Zhou <bobo1239@web.de>, Kees Cook <kees@kernel.org>, Fiona Behrens <me@kloenk.dev>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Lukas Wirth <lukas.wirth@ferrous-systems.com>, 
+	Daniel Almeida <daniel.almeida@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Dear Linux folks,
+On Tue, Mar 25, 2025 at 3:06=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
+>
+> Add a space before the `/` operator for consistency with surrounding
+> code and code formatting tools. Add a second newline between top-level
+> items in accordance with PEP 8[1]:
+>
+> > Surround top-level function and class definitions with two blank
+> lines.
+>
+> This change was made by a code formatting tool.
+>
+> Link: https://peps.python.org/pep-0008/ [1]
+> Reviewed-by: Fiona Behrens <me@kloenk.dev>
+> Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
+> Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+>  scripts/generate_rust_analyzer.py | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-
-Some firmware, like coreboot with older FILO payload [1] or GRUB as 
-payload [2], mark memory regions(?) with type E820 type 13 (Undefined), 
-that is reserved for future use. Other payloads like SeaBIOS mark it as 
-2 (AddressRangeReserved). As a result, userspace is not able to access 
-this region, which can be worked around by booting with `iomem=relaxed`, 
-or probably with the `memmap` parameter.
-
-     $ grep -A1 3ff7b000 /proc/iomem # FILO
-     3ff7b000-3fffffff : Unknown E820 type
-       3ffa1000-3ffa8fff : BOOT0000:00
-
-     $ grep -A1 3ff7b000 /proc/iomem # SeaBIOS, that marks it as reserved
-     3ff7b000-3fffffff : Reserved
-       3ffa1000-3ffa8fff : BOOT0000:00
-
-Table 15-374 *Address Range Types* in the ACPI specification 6.3 says:
-
- > Reserved for future use. OSPM must treat any range of this type as if
- > the type returned was AddressRangeReserved.
-
-Could and should Linux be adapted to follow the specification, and fix 
-some real-world use cases? I looked at 
-`arch/x86/include/asm/e820/types.h` and `arch/x86/kernel/e820.c`, but 
-failed to find the place where to implement this, and how to name the 
-macros for the undefined regions.
-
-
-Kind regards,
-
-Paul
-
-
-[1]: https://review.coreboot.org/c/filo/+/51120
-[2]: https://ticket.coreboot.org/issues/590
-[3]: https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf
-
-
-diff --git a/arch/x86/include/asm/e820/types.h 
-b/arch/x86/include/asm/e820/types.h
-index 80c4a7266629..1b341914d438 100644
---- a/arch/x86/include/asm/e820/types.h
-+++ b/arch/x86/include/asm/e820/types.h
-@@ -14,6 +14,10 @@ enum e820_type {
-         E820_TYPE_NVS           = 4,
-         E820_TYPE_UNUSABLE      = 5,
-         E820_TYPE_PMEM          = 7,
-+       E820_TYPE_UNDEFINED_8   = 8, /* reserved for future use */
-+       E820_TYPE_UNDEFINED_9   = 9, /* reserved for future use */
-+       E820_TYPE_UNDEFINED_10  = 10, /* reserved for future use */
-+       E820_TYPE_UNDEFINED_11  = 11, /* reserved for future use */
-
-         /*
-          * This is a non-standardized way to represent ADR or
-@@ -28,6 +32,8 @@ enum e820_type {
-          */
-         E820_TYPE_PRAM          = 12,
-
-+       E820_TYPE_UNDEFINED_13  = 13, /* reserved for future use */
-+
-         /*
-          * Special-purpose memory is indicated to the system via the
-          * EFI_MEMORY_SP attribute. Define an e820 translation of this
+Reviewed-by: Trevor Gross <tmgross@umich.edu>
