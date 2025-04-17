@@ -1,115 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9865F1DE8A0;
-	Thu, 17 Apr 2025 17:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44ADA253928;
+	Thu, 17 Apr 2025 17:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744911290; cv=none; b=crLAwXIhUeqTOFbU6yHSSXPTcV8MZRPDRstVcZyQGfxkMu7/nPxiea+8lur9U3MqCzbLD1BG3RGi+z5vuK7azxGW+2Zti74OjzsNfXblS981SDu3X6J28Ad3vXnexoiw9oCPNdZr9+6RLX45jNGgeG2laLoxE4vo8CWSCmy/0FY=
+	t=1744911343; cv=none; b=F97iEUwb4EFYDB25Bee81RCAwkxqt1uaUytn8SSNiVoVkNLvRamJUH+s3DRvbZ2lIZu9D8vGbqR0+aeNkdsE286h7itWfzqttK3fnc0/hMnIyMnmy1fgQhrY3eOG42iPCaxMZHqf8RWtNfySa2xO9hiRJz3rHGVom7XtKjwnRdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744911290; c=relaxed/simple;
-	bh=EHZc5LMdgJ00DcUsoV0jPdgjkEA6ta40k6qpttoth8o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BVhq1gsqNWW4kW2Gru63uH27cMuBMVxEWMqQheEY+5bTT5GoLbFWk6tpLA+g2Mx8wmzxgQhIdWSU1zJAb/nzCbr1wsh0SX8VuvPklJR2OeY7Sbz2+6q0b91et0TmrITH5fxO8JV7X57LLU+twmMi0KHN+oSqtujwprkP94pViz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H8MD+GSM; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H8MD+GSM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744911288; x=1776447288;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=EHZc5LMdgJ00DcUsoV0jPdgjkEA6ta40k6qpttoth8o=;
-  b=H8MD+GSMngBR4Cr5xknuW7XFKp7Xl3cobwvY8qQKhV+KeiRf+OzU2vNm
-   TH6vrShrciqQ3FAn3rmrLpRQQU2EUnQRhcEMo6gAjap3+Ypl9BpNPIn+a
-   vq2TcefJomGgthWLJVPw344ppMIgjfPm7thwdl5wzRzlPIesBwvjZbHP3
-   ZnTN/2OT9J+eDlsnAGEgp6e8+Pzozp21A8LwmVSxyzIVXFSPr2Y5kSGM/
-   7tnOEtGq/RrIo6wxoJj1W/nksEPW5/JX0qDwl/onc4GheIL3coy9MGIJr
-   AI/bfdQ5EGdTHjII7iIlN2MA7rVSMkAD/7ih2di7JPEU8gcA4puo6zH0M
-   g==;
-X-CSE-ConnectionGUID: c351F0N2Q8qmZSNC1cJ+bw==
-X-CSE-MsgGUID: 34oQHdL8TXifUSbbifr7JA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="57899720"
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="57899720"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:34:47 -0700
-X-CSE-ConnectionGUID: YDg0VbreS/OpgF+Gy/FaGg==
-X-CSE-MsgGUID: ls8Qr6NGTgi39WVQ6RC6gw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="161920992"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:33:33 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u5T7D-0000000DGhE-0RSO;
-	Thu, 17 Apr 2025 20:33:31 +0300
-Date: Thu, 17 Apr 2025 20:33:30 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu,
-	GaryWang@aaeon.com.tw
-Subject: Re: [PATCH v3 07/10] gpio: aggregator: export symbols of the GPIO
- forwarder library
-Message-ID: <aAE7akcsktz1wc2w@smile.fi.intel.com>
-References: <20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com>
- <20250416-aaeon-up-board-pinctrl-support-v3-7-f40776bd06ee@bootlin.com>
+	s=arc-20240116; t=1744911343; c=relaxed/simple;
+	bh=EvmR28y/PtXtMFHJ4dfKhEEr/eVouoJM5RqnN8E+CPU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uBkIVDodk+MheW07owepSG7zG+wGb2THwMfSRDEgWkfLuGR/6/3WpDAhQG2S3RMLCjCBzzsgxUgpYtaoK6ViTY5BtNdj9TC6CF3CV+3cdyP0RC02MhFUspvmegL4bP/alibug8TtEsCpLlUWbOHO5C2v4DlN/iccPSeXdjx+Slw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZdlLH61B4z6K8r4;
+	Fri, 18 Apr 2025 01:31:19 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 701A5140146;
+	Fri, 18 Apr 2025 01:35:37 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 17 Apr
+ 2025 19:35:36 +0200
+Date: Thu, 17 Apr 2025 18:35:35 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: David Lechner <dlechner@baylibre.com>
+CC: Jonathan Cameron <jic23@kernel.org>, Nuno =?ISO-8859-1?Q?S=E1?=
+	<nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Matthias Brugger
+	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Lars-Peter Clausen
+	<lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, "Cosmin
+ Tanislav" <cosmin.tanislav@analog.com>, Tomasz Duszynski
+	<tduszyns@gmail.com>, Jean-Baptiste Maneyrol
+	<jean-baptiste.maneyrol@tdk.com>, Andreas Klinger <ak@it-klinger.de>, "Petre
+ Rodan" <petre.rodan@subdimension.ro>, <linux-iio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH 4/8] iio: chemical: pms7003: use aligned_s64 for
+ timestamp
+Message-ID: <20250417183535.00004d87@huawei.com>
+In-Reply-To: <20250417-iio-more-timestamp-alignment-v1-4-eafac1e22318@baylibre.com>
+References: <20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
+	<20250417-iio-more-timestamp-alignment-v1-4-eafac1e22318@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416-aaeon-up-board-pinctrl-support-v3-7-f40776bd06ee@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, Apr 16, 2025 at 04:08:15PM +0200, Thomas Richard wrote:
-> Export all symbols and create header file for the GPIO forwarder library.
+On Thu, 17 Apr 2025 11:52:36 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-...
+> Follow the pattern of other drivers and use aligned_s64 for the
+> timestamp. This will ensure that the timestamp is correctly aligned on
+> all architectures.
+> 
+> Also move the unaligned.h header while touching this since it was the
+> only one not in alphabetical order.
+> 
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+>  drivers/iio/chemical/pms7003.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/chemical/pms7003.c b/drivers/iio/chemical/pms7003.c
+> index d0bd94912e0a3492641acd955adbc2184f4a11b3..e05ce1f12065c65d14b66ab86e291fab47805dec 100644
+> --- a/drivers/iio/chemical/pms7003.c
+> +++ b/drivers/iio/chemical/pms7003.c
+> @@ -5,7 +5,6 @@
+>   * Copyright (c) Tomasz Duszynski <tduszyns@gmail.com>
+>   */
+>  
+> -#include <linux/unaligned.h>
+>  #include <linux/completion.h>
+>  #include <linux/device.h>
+>  #include <linux/errno.h>
+> @@ -19,6 +18,8 @@
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+>  #include <linux/serdev.h>
+> +#include <linux/types.h>
+> +#include <linux/unaligned.h>
+>  
+>  #define PMS7003_DRIVER_NAME "pms7003"
+>  
+> @@ -76,7 +77,7 @@ struct pms7003_state {
+>  	/* Used to construct scan to push to the IIO buffer */
+>  	struct {
+>  		u16 data[3]; /* PM1, PM2P5, PM10 */
+> -		s64 ts;
+> +		aligned_s64 ts;
 
-> -struct gpiochip_fwd_timing {
-> -	u32 ramp_up_us;
-> -	u32 ramp_down_us;
-> -};
-> -
-> -struct gpiochip_fwd {
-> -	struct gpio_chip chip;
-> -	struct gpio_desc **descs;
-> -	union {
-> -		struct mutex mlock;	/* protects tmp[] if can_sleep */
-> -		spinlock_t slock;	/* protects tmp[] if !can_sleep */
-> -	};
-> -	struct gpiochip_fwd_timing *delay_timings;
-> -	unsigned long tmp[];		/* values and descs for multiple ops */
-> -};
+Bug I think..  So another one that really needs a fixes tag.
+For all these we might be lucky with padding on the allocations
+but we shouldn't really rely on that.
 
-I don't like this piece at all. It will repeat one of the biggest mistake done
-with many (old) subsystems and core.
-
-Looking at the last patch ahead, I can tell that this is not needed. Instead
-add a couple of APIs:
-- getter for the gpiochip
-- getter for the specific private data
-
-and use the error code filtering for the existed GPIO descriptor, I actually
-don't understand why for the existed descriptor you return there 0 and not an
-error.
-
-TL;DR: Follow OOP and make this an opaque pointer, no need to move it to the
-header. The rest looks okay on the first glance.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+>  	} scan;
+>  };
+>  
+> 
 
