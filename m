@@ -1,60 +1,60 @@
-Received: from sonic313-20.consmr.mail.gq1.yahoo.com (sonic313-20.consmr.mail.gq1.yahoo.com [98.137.65.83])
+Received: from sonic316-54.consmr.mail.gq1.yahoo.com (sonic316-54.consmr.mail.gq1.yahoo.com [98.137.69.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486931FDE22
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 19:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.137.65.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA981F585C
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 19:13:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.137.69.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744917222; cv=none; b=JSEvYnnOw4DSA3nxm8QPeP6lYtPFD2+l7r8uBsoYI5+Bclk0Vw7XnGrJ+QJDMHts6fIej56hsRrJHndgCVYLJEPnkX3jo7zPPsfmk7RtU5qI5Wn6r1OBGoZJZwMy1lruJX1L0LT8DQGLwdczkZdiCn1gGiTT116Ro2tqiCkOX0A=
+	t=1744917227; cv=none; b=SGyVzUI9lzFJ11MoasyXi9vPbaLW8VsIgp4nmI5sTv7gZd64SmVshoWaXhbqX05IoE/miRFWa+4Pyn9rSWIXnOmy9vBLk9WZKfvpl2/VFGuibLprJ6kODZohYUTSKoSGkZ0sxV/iMHpqyP05+7JxkZdmV1QPxKhg2U2sjzuWd6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744917222; c=relaxed/simple;
-	bh=nZ2A3xhjqAAosSOM41l3fcubkQjRFiw/l46hUanQaFQ=;
+	s=arc-20240116; t=1744917227; c=relaxed/simple;
+	bh=l+faO+RgsbGAeTKrc0X2D9Jjpr9SfV8kocsGn6s2wdc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AVhLx2GdkBLkZfDV7o/6AFC7EzeNqpXmtqNsoncuduBPHt9yGmfjhfktZtOARNQz9QqXhibajY+PFknJqKc+if6OXtCEOK6vRm6mrnLMKOoOpDdSF3g2M6yJNnDTbEifLRncvKpv5TbrhwfYfBoxyHGEuLKKVOZ4fqsqIOHF+Ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com; spf=pass smtp.mailfrom=aol.com; dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b=WY36LsYv; arc=none smtp.client-ip=98.137.65.83
+	 MIME-Version; b=eq0odp54clsQLmdXv/KeC1f1YEakE+BuHwVjfCnkg86p3o2p5lDB43HgWArtb9b3tGEoNUFs+jDhyyd6H+9sp5W80BdHx4uTZJIP57fLIaVB7pvRDN69HZd1vy3amOyMxvn6Y/joy/JYfjPEFluOcrZwcc96sfvjzlHs5Y0fe3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com; spf=pass smtp.mailfrom=aol.com; dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b=iZqKjfnk; arc=none smtp.client-ip=98.137.69.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aol.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="WY36LsYv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1744917220; bh=dQTkHFw+WBxoe+kShWgqjblniE2Ch2UOPNmjzkNX9iM=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=WY36LsYvqgCUHaXMabVLDBBzjdwM5QvlbZB4E2N36JuyOajuELVYFvvmgPYHQmXEOSSiHJO6DKXHhakjfwYIeTVvnGivfHDMJmS2RASmXjgsgnjFlWBjjZPXV2rvz+sn1J3Ki1zhcLLDFvASiSbF4Fpn1D40x/fMYy5PPxh/JlK/brUPd4ULNTqonvmdlxM8qji+uLbhSB3UUY9unoB6zWqkv9kROZrNE2Nt74tGnWkeuB86DYp1INXm3pTW+8bkaCMnbw3SS0u8f2YbCHJ6XzLZ9EsbfJ0dw4Qrn8jOW3sutdL2H/OBTvgKWzZJKOb5owU/PAOfQBXttShpr0KVfQ==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1744917220; bh=c+HrsRytxfw09RLCttkcbLR20LM8RKUyZaICzXQOp+Z=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=YvtWnpUdwItfQaXuODRPOEpgbnG6/LTqz8o9bn40fShgbgDjKBoiBhylD54d4ddAPkiRv/tU6TEQm4LlemjN7U6s5jW9eTQo4MLQZpmBSLm3HUwqOTarZ+lDjb3xoHblEfV47vOdjmMgvZbzCEGQ4ycCXm6Tr8cXwvb/x/CpEitAdtpGUVQCwhoKuNw0jwZX/gqItt8xdk0931mPTQVJb77lrD0u9PZ5SziFGyMFBNVztSyco6zkcUZVTGwyiUDSjZjA0RqAS8voUlcw5z1KZjAjXWnhHjKZOMC4W0bFTiTsujCPPy9BmOgc7PAQxj2jEG6Ad9gNAMNHdB6nLYt+tw==
-X-YMail-OSG: .nEgz4UVM1nMwFoSNME3ln9MK2iyat_qRGodUAyOuOiGcwLfK9jMtoIu4oivoop
- eQjgg0D611f6Osi_5OA_Y1yUCk9cMu2MeSEuBaR726XD4v0sX9UZKa9ZNTVkNXAO.QtzEnwgw7_d
- 3r6kMDZDHpK8mPQOUoesJJt2cb2RnkLK5_DM94xM2vDaWzWRZI2bUrY4wtWM3AtuG0tMx6rTg2pC
- QwiU0y6yfbRHHVz_sJ9op_3EFXG1ODlF8DpbIxkFxjPl3u3kSSIJdM5HB2ZE65hGt6quQNorAvxL
- lCRCK.6l7VoBNT6MScxxiys5PzNGKv_ASENVHjztGsE_g.kpJvoJIgz3AgVGGP4uiySYWgAS1ZkK
- qIpG_tl9W_R8BfacfI.QbeDQVhqjpJG_lBO9vWlAEX2H9CetnY7UU76Ip14CGbCSfvoGp_7T1anc
- 8oY5wq3MUSFWxmim42sTgx2L2IE086lyv_2eCPtnJLMRiD.618fc8yEBdWVfwNFFottzI_0z2O3B
- 1egTcyPod5c_oEdt5xmcvcnXmZ9LLzQQ9x7k16Joxu.lvzVvpqxQjeQZn2K.rLH9LZUWMztH9NwC
- J315Tlyya2sb4Ji6C5qRG.C1X9d3npSZfFMahy.NZkQuaYRWALvjtYBgREQ1KLXk9_FC7Rvyjid8
- NPTzVC92rbMTchJdm.pPELJ0aHxsXbl63jFpGNxFB6F9FZ5hC5keWPjQn.BZ_LTj0fAclAdqL6HQ
- 19.bJBXmySqq20UF2sStpM0.IyP_pq_OzNVhwTp42sYljSxG5wr0Vk5XxIOAy.TOyWS9sIY3DQgs
- 2kTKJifTzT1vNpzo5lpvYKU3ptWUXk7yuVWaHNuY0NayaGcJcZKmx2emOaAXwkgIs91FXkEURAad
- QJx7Ci46X1ESzNWwedv7D_4wB_smZpA9uEsz8x0IEmV83edSlIwdhKiZOH2z5KCINV46D.rukCpD
- nsmp5GadVf8qFD0Kogq_ccXCVMkd7cA4bPYANmbDjG1LjvxLngVaQ5Mg_bEMdhveHqqmzX8P4Dgj
- .GG9_NzLp0bP9d2lJZdIQ8ENNyBGNIlYbQq29Ut0MLREMrYEuUhzEqZhWm3Gromd.5Gx.HlRkQ8b
- 8lj7NWBdXexA7PFI72yeObxOJiuplO.RFqsVQDHvZbwTAn.Fe4411S2T2w2H_MR9PXmYrzn_vUmE
- RVy9BsD0YSVMlc2SXPy5Q05TOGogH74UYGi6SriDD5yW6AA__fIoeZ.Lu.QIaEdNawkz17X8AaCF
- peNerG4wuUB9jvWpn7WF.2.lfX05g6Jnrpc.qBw12DSjI8xEKuGHeMVMBsVDNDSF88trTnSo7Awt
- J1jQOrYVvEb8AKmKYOjH_9d8bUQzJs31r9eKzJ_lDxYAu4jRlumEin2n0od3.jR15_jeLiHGJkaQ
- DSPnao0CXA83vNgr8LMe8YLb3TGrd4LdYUu7WOvSGazQfTFy.TeN76ZaYZPcCtHm1LK8qUxweG1c
- CaHFTOJJOvD9plGNsziLOnuC31D6sSb.T5psKNsJ_aSlZ.ptryojx719kMAzArvi.bWMWNdicHPk
- aaXBFqF7gEh.M5BCfzHqfZ48tlC5ndb3Jlrlq2fc4Xce6ihGGxNm_Zg1fhblbTKmmy6PYj3446jB
- tWYaDYAw4vamJOmv_pYkTOby3QNXcJZsxTM4UrqrSO0dOuey06c9nEvKzgwPhqDIVFv0xGkscmLh
- d55ywJ3nHzLgrL8uLSeuhEJtk43u3SM19zak2UYoL8x6SHsn6qaUowC3p9Tr6lIecjrS9e8hB.GE
- FAJW9jYqpJxUPl8CZuWxVYa7aYtLRVwh4lcXdP6YtgP.iQo2bQYs17kBViPQCqdO964yDzPxEpXP
- ypNNvTjGBTEIer7ARTSB8lzCc1fhNnmiEIHgeRlWv_3y9OyQh7OOkHrq2EsCoxH6UfuIx8dCbb7B
- cqVaEsDOE50.mFaiNm2kEIVXPU3zIbtzqpdqkYGx3kylj4DKIWH7Q7aBHBWuUeA3N0iObo6B5PMu
- VF4BD_ngGnqh6YOGV3mqQ8wevuQmIvDn8ePSJiF.11BAaK7HxWCtrlZkoMUIleyP952EsXblqtq8
- VRWkSX0lbbtv.mN1Iz6czPMcjMeImvQoUFTF8PYBzsSrhEUWQwSowEqO6oQmNNiULNCmBgc7JhMV
- fgU.CkolmE6Ri1lgFSroVDNb8ScmioIbkCbUWW8yrqUJCryABffrURgpZ4WzDYXaSrqvoD1ThtMP
- 6Srg6QkHMlkTXOseDm4XN6r1Imd781MGD3Mhr5Dq3Ng7DLEDmI3WH7YjbxG_huAb9qelsF5p4nbM
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="iZqKjfnk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1744917226; bh=tviXDqZ3qgAM4ss81QBX4Z4ntCgva3sRNImNRAnb3Ac=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=iZqKjfnkn/l7tylikZIC05vVQa3tTpP3pHzaEIwadHdxHJ5kV7pYSFpBYB8R+BZAcT98EaDvVQ7wAHA4ZBG86WwWNPYG35EYtY8WP0E/PDsnZjT+erT1E4Y5KZ/4vK56kC845bf3Gs+8SrNX8ch+ei2YzKQemFLEYWcqKXUWT4DjxHimZAZfR6VHAY8asam3/IHXZGVC/klsPU2gQKs9SxaBIzcrrzZHmsqMdwi6zgcpgrGu0/IC3qctP5PtQfrywjZuVR2TsKDoyD3gBPY4QQGu+EvSgQZhcheRm7xsJ+75SEwKQUG9KPLXSkhAY5fM/Ts1gBSWKE9+GzO2XLbnqQ==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1744917226; bh=pkrpMg8p2HhY//jzutMB6bAvwmlyxci74EkWV4E/JNQ=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=VHhE0od4ZoJwlX5cIR4x7iw70VNaGTNkP+7vOseT4tQGEN6BVJLK87e4tA8X22I1Itbdpd0vjnmtqB9kXrz8ZbT/Dyd3+qbE3usxV0Q+wS0GOq4lfNX8D7aqFoHSRBPJQ+iUR9Lcjtsa1b1qtImAgkNhJRdwzOLcgHawowjiY4SqiQfzU4jR9AkoWGLLv72G1jECYDx7tMSQlpUjjTFQjEyHS56hheyDVx2tjAGyUzqhLslxMqPF4xDWfxOG/EsuBNQN5JDtkLwDPDOEU59Gh/TTQDn1rDGJ18KcRgmgML+lL3FJtN68P4YAs/AOibZHbF8wWF9w3IkreSaWFJ6WRQ==
+X-YMail-OSG: rHms8LQVM1kMnFCLH01LtvprEuoyScfccxV891YyvBDVpR27PvO6sZlIInSsn1J
+ Cj6PCG1NxJHsoqgSC73lpO5atacUABAm4iAuxcWYySdpNtgqAjfy9ZR8YHZTxpILA.6rn_aZqjgF
+ GHZDTu8Qkh9JEh1j5V_9bK..UhFOo9QeQE5CFYw0BZIuJq181TDwr9ZprwAFsl5aiQ0B359pBWKs
+ tVd42bXHXkqGW3mdq9LRGBRHmCnYfdpmSpRBf9Uu4vamqRaByZMZ2l7A_jd_rH1u294IVvPNT.L5
+ MqAW9EnvSX2VcMaLt8a6FczDerWlKtYEEXClLoE2zUwuqu.xRITHnxc13tEF7eRSkltMhdBwCl7A
+ fpaC2e26bqxvn2KBX8Vg9jMJYH45Zs7lt2vn_e65x8IRa9YnuoVgOw6eBYFAzgBywMarJh16vwGt
+ X8ticGBuM9Yk78pei7b43RHS6.YgB_3ZP_a4khpeYwskHQByRX7LP7SKlcjibixznV0gUZvvbF.F
+ GXeunmasYwPtEYIqbL75g3LYoUCOkZWl9uzjFzWx.Yyxlxp8ovhhZLDLluKOj_oPVgUUbRGVXFVK
+ TXDXzA7f7pRqG.GS1IAF0hqp722SvJp2msj.BMW.c_Gg9Fzh5Warlawd1B6PYYBnWZoOrSWrAFCg
+ cTDSvb10RtpVYVoRAOpkNy11HqEfVQI0ZJeW6tiUdM.VtCtz_qrCJQmaMMZqMT5ReJ3FnaVOUh9Y
+ 2lHKZpqWSZPEALDRYfpJ9ES9WIo2GrJF5n3QF8VyPzRBjMVRYIXc.iJNAG0Fx9uF89xkQIvMuKko
+ Y4xpz2GiX.ZEntjg51AbymhQ4ziI_dDbM_AmAemQk9eT3qFJ2ZnqZY00LMf7Xo1NtEWuS0e5dDSl
+ moUDEKg0MqAgBIgkcxi1a0vIGWQkxBlhIc77j5vQ4FX4JQV_yoq31e8RSLmmfcDU9WElYb9QbpfS
+ JIeXsY0wUPOVg38cR1Moa8ojjL2WBfST6iK9kd2tYdOSvwVlekAee2Ijs1lBzQxW1KpgNmOA88pt
+ 6g6rjN5limOvS8iqecOa20aBjAgkBrcfd76xqRzv2tH._oC_xJlcW2yPIhvY4wzHqWeHRuOey3iy
+ DEcSB00e2SiMvycqzqS3kwNyE5rana7bZvEQXBbIgxzyb5bMjhVtIBjUL1rvwZ40X5KGBxyZpVNV
+ hO.p2u2xOlD1i.p0HPkKdhf0l5aifL7_fV2oMvP5lTvjvInzF1SwNALKk3fPlgO1PAfExOwsaZnb
+ j30r2zeQpZQK4ecwutuvbwvSDlXrRgzYj4fz1dTbnzCxLb6tG6EcO.ABXMNUz2XqCfoOg_0grqqH
+ URhJpYtqGrvgMODWy0RTI2LJpoIS4QlDCoZL37yvZ57kSqSgE.TaEeCvIFYiI21910IuK5KovE4x
+ fCi77530HCFGSzrCEP_YzySHZWe6HUuAmC_XpNkQCCepPFg_bzs3uEW.WlkmWbY3JiRfyMCM74hX
+ AN3wRVvEbeLG0jhnNP9MVjfKSEu8YCtIjLp8arCSpcLgpdCJ_TJWkjZmUQ8mw_GNVNjyzY9J9c8n
+ 5zbm.gPFZo1STJe.en9aizn2vpu5jlM7ZqxxTAY2bw5Migw9UoI9L_nyi0Mrbhobvf.03PDP11LK
+ 404fA1kyKqbV9I8HHGOyBN7Ogzlbe3YFC36BPPZFgTsdsjHk93q9nnnrUbRhAmh.H6L8tRDnLyrs
+ JI5f3SVO7HqihGnqGTJVglmnd.AV1avof01tLjw9iYUWP9fgENln6SpWzyb6_urkspjLREYvRdoe
+ TkEm6Q10pXJr7KqkoiHMPd9iMTj2evC6iNbk451G8vi.DMy54FT91uKMi6wc8lIJih4J22NOG8.J
+ lCtoZwC5Xn1iz3pkrXY0DlNFci7UdovoCBX326Xo72qh7ufGl5qtvFlDJFHhkpX_zzlEhu5jrbmx
+ aWZglSN1KvKTeHTqzgsSxfjrkpaqwAuRgz_GZEwoVlO5b7ye6jPHXJm_QaIz8wBM5QW3uham0cTr
+ Y5OUJV6YfZ0dJFACg3WCEgVKPDqNQN0LmMk6h0kTmyIAFFRqsNVgqOZ850O0vgs.bJFQtH7NkuhP
+ _.6ET4Y3Hom0.cEfupmzYlb6lB20LcMOk3d9jIGZeQ3jsGEkZN8pA5xnYzUnk.H84R8C66CULnDL
+ I7Gkw6hd_jj0gk5E_xF3ABRM44a0JBzcp2dwyXA5CNQ7qVhcRJM_Nsal2xNQ2onRjkWdKq9rsIj_
+ vslS6fhf4_u..MxyG8pGuVcqIQ3MMItI4BLKJXnlS.GBz_1aIYOvD.vWWhPCjW4iy0QOnUyVSpw-
  -
 X-Sonic-MF: <rubenru09@aol.com>
-X-Sonic-ID: df9aa4d9-7349-4be8-91d4-71c297b4ca3b
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.gq1.yahoo.com with HTTP; Thu, 17 Apr 2025 19:13:40 +0000
+X-Sonic-ID: 66a68990-e52b-47ad-aab4-4f8a9e40fee4
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.gq1.yahoo.com with HTTP; Thu, 17 Apr 2025 19:13:46 +0000
 Received: by hermes--production-ir2-858bd4ff7b-9r9sx (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 6040ee699aaf3d3f072b53831b62751d;
-          Thu, 17 Apr 2025 19:03:29 +0000 (UTC)
+          Thu, 17 Apr 2025 19:03:36 +0000 (UTC)
 From: Ruben Wauters <rubenru09@aol.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
@@ -64,9 +64,9 @@ Cc: Ruben Wauters <rubenru09@aol.com>,
 	linux-fbdev@vger.kernel.org,
 	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/8] staging: sm750fb: rename gDviCtrlChipName
-Date: Thu, 17 Apr 2025 20:02:50 +0100
-Message-ID: <20250417190302.13811-3-rubenru09@aol.com>
+Subject: [PATCH 5/8] staging: sm750fb: rename sii164_set_power's param
+Date: Thu, 17 Apr 2025 20:02:53 +0100
+Message-ID: <20250417190302.13811-6-rubenru09@aol.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250417190302.13811-1-rubenru09@aol.com>
 References: <20250417190302.13811-1-rubenru09@aol.com>
@@ -78,43 +78,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Renames gDviCtrlChipName to dvi_controller_chip_name
-This fixes checkpatch.pl's camel case check.
+Renames sii164_set_power's param from powerUp to power
+
+This fixes checkpatch.pl's camel case check
 
 Signed-off-by: Ruben Wauters <rubenru09@aol.com>
-
 ---
-
-I changed the name to dvi_controller_chip_name as I
-believe it is somewhat more descriptive than
-g_dvi_ctrl_chip_name. If the second one is wanted instead
-please let me know and I will change it
----
- drivers/staging/sm750fb/ddk750_sii164.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/sm750fb/ddk750_sii164.c | 6 +++---
+ drivers/staging/sm750fb/ddk750_sii164.h | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/staging/sm750fb/ddk750_sii164.c b/drivers/staging/sm750fb/ddk750_sii164.c
-index dd7811b18bf6..d4309e0d807f 100644
+index 9f660a9be5d6..e2da110fab81 100644
 --- a/drivers/staging/sm750fb/ddk750_sii164.c
 +++ b/drivers/staging/sm750fb/ddk750_sii164.c
-@@ -14,7 +14,7 @@
- 
- #ifdef SII164_FULL_FUNCTIONS
- /* Name of the DVI Controller chip */
--static char *gDviCtrlChipName = "Silicon Image SiI 164";
-+static char *dvi_controller_chip_name = "Silicon Image SiI 164";
- #endif
- 
- /*
-@@ -254,7 +254,7 @@ void sii164_reset_chip(void)
+@@ -262,14 +262,14 @@ char *sii164_get_chip_string(void)
+  *      This function sets the power configuration of the DVI Controller Chip.
+  *
+  *  Input:
+- *      powerUp - Flag to set the power down or up
++ *      power - Flag to set the power down or up
   */
- char *sii164_get_chip_string(void)
+-void sii164_set_power(unsigned char powerUp)
++void sii164_set_power(unsigned char power)
  {
--	return gDviCtrlChipName;
-+	return dvi_controller_chip_name;
- }
+ 	unsigned char config;
  
- /*
+ 	config = sm750_hw_i2c_read_reg(SII164_I2C_ADDRESS, SII164_CONFIGURATION);
+-	if (powerUp == 1) {
++	if (power == 1) {
+ 		/* Power up the chip */
+ 		config &= ~SII164_CONFIGURATION_POWER_MASK;
+ 		config |= SII164_CONFIGURATION_POWER_NORMAL;
+diff --git a/drivers/staging/sm750fb/ddk750_sii164.h b/drivers/staging/sm750fb/ddk750_sii164.h
+index 465631d3868a..1730c2116b72 100644
+--- a/drivers/staging/sm750fb/ddk750_sii164.h
++++ b/drivers/staging/sm750fb/ddk750_sii164.h
+@@ -33,7 +33,7 @@ unsigned short sii164_get_device_id(void);
+ #ifdef SII164_FULL_FUNCTIONS
+ void sii164_reset_chip(void);
+ char *sii164_get_chip_string(void);
+-void sii164_set_power(unsigned char powerUp);
++void sii164_set_power(unsigned char power);
+ void sii164_enable_hot_plug_detection(unsigned char enable_hot_plug);
+ unsigned char sii164_is_connected(void);
+ unsigned char sii164_check_interrupt(void);
 -- 
 2.45.2
 
