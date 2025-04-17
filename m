@@ -1,127 +1,115 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2310822DFB2;
-	Thu, 17 Apr 2025 08:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB9F23AD
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:17:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744877746; cv=none; b=tX0yQzJFuEcN7fAIOJx2L9I78x/wRQ32WxLOEYsf9YHXVh4gojen2eriRQ4GVNxkOAZat/rzDBUilvRsDlnnxecJnHnRi5RN4VTvBhpV5eJiFcdl4tBdC7vThKB7b8Cf1Ub7ghYHcHpYomj/3ee9+oYcZPavucrt8bgdq6+SYN4=
+	t=1744877859; cv=none; b=Onbr9O2qrOJ7hSEq3F+f0aRYTfzBSElfTKOX/zqON5pb8ERIrn/TLrNVPkyavsaO9nRr2Di1xujucturiq9E+NAfwB07Ps6spIM70JtRJjI2LTU/dOXV6hoUeiu+QTG7ijmicYZ9+kAwJEgC9JcS51zulsQMPYXw24NwzzWXqs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744877746; c=relaxed/simple;
-	bh=TAdNJmfkqVREx9I+7aJystoVlYGwpOCLoC0+4mjqVQ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZEzNDBlqy1qV/abuVndCnsAU0zuNqdGAakJxZrce82rZzVt+Wle9zTk1hufFvE/4Recut6yGKXHQaD3fk88n+gygJqgWdDnWpeGlVxyb9kOyjgUFhyf94S+FrL8wBHUKWqlvbN19hGpwIYIhhBvO47RqrQ3uuGq7tC2JKvngRXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=DKlkDlpL; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=R3Cz/hsc reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1744877859; c=relaxed/simple;
+	bh=famL4S7dSUz6ZqSkOhO5qr/jBogojbZQw/LDmQPBaJY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rFDNHJEOrqQj6kMc93lxTeBHy0BpoyIPXIsp7g6DLYf+LuOh5+8oT7gm4PkydtelDAtcf8GW8a/y1sTDG1A/eVhO9ItDaqkTLcPAyECPcRBY97n8ahnBjMa5sxsh8JYYaGGzS/v99qTt6JZug6L+gDrGBIUXUFd7zz+koHZ9Th0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=deOZ9+sT; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="DKlkDlpL";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="R3Cz/hsc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1744877743; x=1776413743;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=7dDLIIzSQRg4ePKa66VPyPuGiB/e4Ve/L+L3EXhyXeE=;
-  b=DKlkDlpL61O3Z6EYEpUcJPKHTpT/cE60XvCaUejKgRBZ5l1xZGiKC1Ak
-   S1mqj52vZnZiyoJm753l7T1VxWsIDIZdgEnEcpWurOKLLxkWAjYqEK6M3
-   qkoQ6bq1jupvp0oPh2mg0NwerrbLHwv4KDmkoEmkapj5HdUpORLdJ3yI3
-   /mbcJosQHdJ6HDu2IfxQ/Tccj6G0jQaIclOrsw0TV7KWKEoOIyDCBtMhq
-   tfApqplk2Q5sFMPfUtSb5CWLBXTmsAMCRo7AWvUsMZ0UKJvNm74qWpS5U
-   ml+r3FDqjE6qbsm93vRgxkjj+s1u8nYpM508kNZkyVwwYHj+6MY92SvEV
-   g==;
-X-CSE-ConnectionGUID: gEiNRLgPREq9Xp+u3Qw2DQ==
-X-CSE-MsgGUID: vOjlecO2S8i+w8GGAXPlsA==
-X-IronPort-AV: E=Sophos;i="6.15,218,1739833200"; 
-   d="scan'208";a="43587416"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 17 Apr 2025 10:15:40 +0200
-X-CheckPoint: {6800B8AC-1B-903EAEAC-E04C76C8}
-X-MAIL-CPID: 937D254CC7FA1B77EF185447953CACAE_5
-X-Control-Analysis: str=0001.0A006377.6800B8A7.0092,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C1D1916C3E1;
-	Thu, 17 Apr 2025 10:15:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1744877736;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7dDLIIzSQRg4ePKa66VPyPuGiB/e4Ve/L+L3EXhyXeE=;
-	b=R3Cz/hscaI5rAOXYhFXN1pXFk2voseBsekk06MSWIpUuadu9fXQU0lwxUnXbucG+ezmZsM
-	6cCzbXugsRuuRPaRuIJ9C5n0yoPQrVtdObb7/7BfOkMAJR2I7ul/BLeNVLo8IJy0HGClEh
-	DgNYqujvgblPQ/F3jfw+aMhozyAIHg+uxgOaHB7IpOXMWRvikNj5eTC+MFzYkasKpU2dqw
-	MaKWs2+QxtRZZI6Jqm+6mBYUu4vZ4DvMQXIU3CbR9vkap+mWn/5Kqr3ba2rxZleS9ScQPO
-	RfdCAmLh9JxkVF49KaZcLRu8hMT9LL8ik0kGQ/YKkGL82z8fTWbW7w29KgHQHw==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Markus Niebel <Markus.Niebel@ew.tq-group.com>,
-	linux@ew.tq-group.com,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Alexander Stein <alexander.stein@ew.tq-group.com>
-Subject: [PATCH 2/2] Revert "arm64: dts: imx93-tqma9352-mba93xxla: enable Open Drain for MDIO"
-Date: Thu, 17 Apr 2025 10:15:20 +0200
-Message-ID: <20250417081522.1145586-2-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250417081522.1145586-1-alexander.stein@ew.tq-group.com>
-References: <20250417081522.1145586-1-alexander.stein@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="deOZ9+sT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744877857; x=1776413857;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=famL4S7dSUz6ZqSkOhO5qr/jBogojbZQw/LDmQPBaJY=;
+  b=deOZ9+sTos5QXRuWHy1O9t8j9rnvHBnOI5OSBT3NCkCQBF1PrjesO5Kp
+   /kWpJ1jxQW8yIvGF58lpAH9vNfZF1P2nfh8KEyIOZL4m8We257NRQtxOo
+   t6gybaQ1CYio0AUGRxQ8Gxl3qBilqkuHDN9UONV5G3I63kQ2PNsA7JEZB
+   px2gIwsMeLsZIrIr67lCg5QXF6B7unLoy25oFESKustVLXclBO+62ZsxQ
+   60fwBOpOWkMLrntHKiav285siwvt75hBshKNDW0ZNK5tnSI6Ts11eYn6H
+   EBPRfzZPE4fWwY7cM0/LoO9LcisYQhEWMbWsNSGyQwhA6oJfRXNU5u4W7
+   A==;
+X-CSE-ConnectionGUID: KuGDQMnUS4G4E4t7PGEcXQ==
+X-CSE-MsgGUID: 2L9YoYx+S7CZcGcXrkD2yw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46350301"
+X-IronPort-AV: E=Sophos;i="6.15,218,1739865600"; 
+   d="scan'208";a="46350301"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 01:17:37 -0700
+X-CSE-ConnectionGUID: 1dMtVV7VSHycZhybUS0TLg==
+X-CSE-MsgGUID: YKdHnijbSj63DUoadOSldA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,218,1739865600"; 
+   d="scan'208";a="131264234"
+Received: from dprybysh-mobl.ger.corp.intel.com (HELO localhost) ([10.245.246.139])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 01:17:26 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: feijuan.li@samsung.com, "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+ "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
+ <tzimmermann@suse.de>, "airlied@gmail.com" <airlied@gmail.com>,
+ "simona@ffwll.ch" <simona@ffwll.ch>, "dri-devel@lists.freedesktop.org"
+ <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>
+Cc: =?utf-8?B?5ZSQ57qi6aOe?= <hongfei.tang@samsung.com>, =?utf-8?B?5Lil?=
+ =?utf-8?B?5piO6LS1?= <minggui.yan@samsung.com>
+Subject: Re: [PATCH] drm/edid: fixed the bug that hdr metadata was not cleared
+In-Reply-To: <20250416093607epcms5p344bcffd7430fe5e30ef9b73db73f7388@epcms5p3>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <CGME20250416093607epcms5p344bcffd7430fe5e30ef9b73db73f7388@epcms5p3>
+ <20250416093607epcms5p344bcffd7430fe5e30ef9b73db73f7388@epcms5p3>
+Date: Thu, 17 Apr 2025 11:17:23 +0300
+Message-ID: <87cydbp5gs.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Markus Niebel <Markus.Niebel@ew.tq-group.com>
+On Wed, 16 Apr 2025, =E6=9D=8E=E9=A3=9E=E5=A8=9F <feijuan.li@samsung.com> w=
+rote:
+> From a34a1e2dd7aacd45f18775564fce12b03ae4009c Mon Sep 17 00:00:00 2001
+> From: "feijuan.li" <feijuan.li@samsung.com>
+> Date: Wed, 16 Apr 2025 11:07:39 +0000
+> Subject: [PATCH] drm/edid: fixed the bug that hdr metadata was not cleared
+>
+> When DP connected to a device with HDR capability,
+> the hdr structure was filled.Then connected to another
+> sink device without hdr capability, but the hdr info
+> still exist.
+>
+> Signed-off-by: feijuan.li <feijuan.li@samsung.com>
+> ---
+>  drivers/gpu/drm/drm_edid.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+> index 13bc4c290b17..5cf5d30321b6 100644
+> --- a/drivers/gpu/drm/drm_edid.c
+> +++ b/drivers/gpu/drm/drm_edid.c
+> @@ -5607,6 +5607,7 @@ static void clear_eld(struct drm_connector *connect=
+or)
+>  {
+>  	mutex_lock(&connector->eld_mutex);
+>  	memset(connector->eld, 0, sizeof(connector->eld));
+> +	memset(&connector->hdr_sink_metadata, 0, sizeof(connector->hdr_sink_met=
+adata));
 
-Using the MDIO pins with Open Drain causes spec violations of the
-signals. Revert the changes.
+hdr_sink_metadata is not related to ELD, and should not be cleared
+within clear_eld().
 
-This reverts commit 315d7f301e234b99c1b9619f0b14cf288dc7c33f.
+I think this should be cleared in drm_reset_display_info(), and
+long-term fields like this should be moved within display info.
 
-Signed-off-by: Markus Niebel <Markus.Niebel@ew.tq-group.com>
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
- .../arm64/boot/dts/freescale/imx93-tqma9352-mba93xxla.dts | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+BR,
+Jani.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx93-tqma9352-mba93xxla.dts b/arch/arm64/boot/dts/freescale/imx93-tqma9352-mba93xxla.dts
-index fc68c79fc0d8b..c98319a8fa81e 100644
---- a/arch/arm64/boot/dts/freescale/imx93-tqma9352-mba93xxla.dts
-+++ b/arch/arm64/boot/dts/freescale/imx93-tqma9352-mba93xxla.dts
-@@ -641,8 +641,8 @@ pinctrl_eqos: eqosgrp {
- 		fsl,pins = <
- 			/* PD | FSEL_2 | DSE X4 */
- 			MX93_PAD_ENET1_MDC__ENET_QOS_MDC			0x51e
--			/* SION | HYS | ODE | FSEL_2 | DSE X4 */
--			MX93_PAD_ENET1_MDIO__ENET_QOS_MDIO			0x4000191e
-+			/* SION | HYS | FSEL_2 | DSE X4 */
-+			MX93_PAD_ENET1_MDIO__ENET_QOS_MDIO			0x4000111e
- 			/* HYS | FSEL_0 | DSE no drive */
- 			MX93_PAD_ENET1_RD0__ENET_QOS_RGMII_RD0			0x1000
- 			MX93_PAD_ENET1_RD1__ENET_QOS_RGMII_RD1			0x1000
-@@ -673,8 +673,8 @@ pinctrl_fec: fecgrp {
- 		fsl,pins = <
- 			/* PD | FSEL_2 | DSE X4 */
- 			MX93_PAD_ENET2_MDC__ENET1_MDC			0x51e
--			/* SION | HYS | ODE | FSEL_2 | DSE X4 */
--			MX93_PAD_ENET2_MDIO__ENET1_MDIO			0x4000191e
-+			/* SION | HYS | FSEL_2 | DSE X4 */
-+			MX93_PAD_ENET2_MDIO__ENET1_MDIO			0x4000111e
- 			/* HYS | FSEL_0 | DSE no drive */
- 			MX93_PAD_ENET2_RD0__ENET1_RGMII_RD0		0x1000
- 			MX93_PAD_ENET2_RD1__ENET1_RGMII_RD1		0x1000
--- 
-2.43.0
+>  	mutex_unlock(&connector->eld_mutex);
+>=20=20
+>  	connector->latency_present[0] =3D false;
 
+--=20
+Jani Nikula, Intel
