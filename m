@@ -1,104 +1,121 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19DF1253352
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:38:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954CA23F405;
+	Thu, 17 Apr 2025 15:42:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744904322; cv=none; b=DafjgT81yNpO+PdkU/Bd217NIsFV/ifOl/biPD36xtBVAPNHATjrLB3C7nwgTZT7ziliH/eJIlF6SwW33ffb1NjUYo6pHk3goy0NL3Y3HC0ZOz6UL9wUhGDx78BOfSeVStNDHitALLKUYJjCTSVbP9Bb8tfdKrpN5ItWE5YO7pI=
+	t=1744904570; cv=none; b=pGmRcVfSGxkeg+JZbHZ69utbFqKFgTHUTQxkcOV5b9FJrzbtlNu4fmC7+7bbC+4UmtdYcv36PZb28rTAy22YeUcJ1AJb3K/9Atq0OHp/wxfg2lUGKYXd5GUCE+VLuRfQrgV+hxMDpkioLrOUBEY4WBP0kZwxPMsx8Sgm6LITP6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744904322; c=relaxed/simple;
-	bh=4CmxrQz1pG2CKAvpdKstkQyARIpmzfZ1LOKGQOkWcYM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QbzAfdNt9b0wqci7zPFS1gkHJ/5MSxtGiUwXpezCK+szpIC2vcLoMtrcxVV8y8dEonxY1+EcQL2JflL2B8M78WshPYbKpjJAoDE4FgbmkeIE89gmBpHqLTXeGQYEgpi0vD1584/q5hx5SZIamcWSIixkL9s1uYyKbh5gjxwvA48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=dtQ6BtEJ; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neverthere.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="dtQ6BtEJ"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22409077c06so14456295ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:38:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neverthere.org; s=google; t=1744904320; x=1745509120; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fCFGfuy6JO8coiSlMwlp4uAr22QSVYGIY2uQAoexHHg=;
-        b=dtQ6BtEJ/STEa9j7HWFe3CBCHyjR1XeIn44KemxNSKSvzmqgNQOo0ABmGHBBZ2suol
-         TzrsvWH9i+KHfNgKnVrA8cVoUQUEyEjYQXp3az+z/vEF4M4adTiR8u48gdqWvI1TfnjT
-         oBdyltUnbxAIAK2WmeVpxdMhnUomNj4tT6y6K0YW/JwXQDT1GNEDevF0YWBSqzqOJqNC
-         q6aiOMt2154EcET7lSrEiB49UlZd/0EhQtV2rhK8e51GABMiQYD9Mb4g5i8GNlSq1PGn
-         p+yDJsAN8ZdvVdy4eeZ8+lmlXPach+MU9lt0XLeLTP1Kos8mhWdS/1Fr4RMgpj+XVsP6
-         2MvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744904320; x=1745509120;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fCFGfuy6JO8coiSlMwlp4uAr22QSVYGIY2uQAoexHHg=;
-        b=JQX2bJGWtWrUwcENY5lhBLyNN8rywpYaaW0t62rVH+B+4OpHL9ItJhbwaW+G+BwjoX
-         uc1mBR3OWiv0TiQcWt57+gx7oJwzRHCXR1wXfeOXUeGaPN1BM+RdKp4dhx1ON7x81bJy
-         fCU05aX231cgxhGPQszGv3AJ1KjhJDheE9PFzyik7OFII52bjcRuHT6VI5R6gjK+8Drp
-         pFoORERCADJHkm78hDPzwRIT/3LufIPUtZQHOiLzGSk6xHPOx8EjWpgnIzraC+BMV8fj
-         TVzmf5qdn0CHVIoQM4qzakZO2mfVMWPj9dg3FVyd2i3+4+Pgg1M/ceAR/G9dvu6sSbWY
-         NtAw==
-X-Forwarded-Encrypted: i=1; AJvYcCVuIyIKtNaNJB+/zw8woLYeJv0yH1ERRS1Vt2FmrwtMzqPXBJlHHr2Mi5+1uYCEhMeAWyTYtb5vdQhEjc8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+YKeyMDjrTg7HLUCrulritQO1EJ8wJGJNvrdNMWryA7eVp7Mf
-	GXnzjB6Cpk8rmDoMYjSFOy2g+CFCSlWqqg5ubUz3IqDDI6MN0wFZDLrpSpwR6Yok5lHEBGEjROg
-	=
-X-Gm-Gg: ASbGncvPnYOb6FRzkvk7BxO0vrzjSVJZTQsZmWqhonxhz3DVVZsOQIAPkes8Eh2bW8T
-	qQ2gFGrEP5M12V2XFSTW6dqbqf94exgpaZ6q2R4Qdu9cLkpVSTCMAd5X8KR5/xBB7NeDjmpqLzQ
-	P8IuYtPtMdTnhYxFI0o/K2Z9rSDPNpTyl8lS5ZcC6jakl3F0El2lJNU01nu8ofIJ9DDIrzeNcwd
-	JL0Z720Ke8/a9KWCZiIQ+zBnv89y9cHTaiin1xr5z2PLbLtYd3UgYO89tvAGQdYaM9V6Ky7FIW8
-	fKARmRh0gkcDIJRssI3nWa48rOxO3a8ZMVNAFzJOtXzquPGZyZbIJr2wrXw3WeSvCQ/F1HNnr30
-	mfzBreQ==
-X-Google-Smtp-Source: AGHT+IGPzUqcsg1OrfnfmQdTkvSJAN4C6ee3MKAjTkoPY/+xGNmmw/TfpRhBh3QH4n6tKKGOXDQcIQ==
-X-Received: by 2002:a17:902:db03:b0:224:1c41:a4bc with SMTP id d9443c01a7336-22c358e2060mr94206135ad.12.1744904320238;
-        Thu, 17 Apr 2025 08:38:40 -0700 (PDT)
-Received: from tiamat (c-69-181-214-135.hsd1.ca.comcast.net. [69.181.214.135])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd233787asm12880375b3a.173.2025.04.17.08.38.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 08:38:39 -0700 (PDT)
-From: Michael Rubin <matchstick@neverthere.org>
-To: gregkh@linuxfoundation.org,
-	dpenkler@gmail.com
-Cc: linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Michael Rubin <matchstick@neverthere.org>
-Subject: [PATCH v2] staging: gpib: Removing unused function CFGn
-Date: Thu, 17 Apr 2025 15:38:37 +0000
-Message-ID: <20250417153837.92690-1-matchstick@neverthere.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1744904570; c=relaxed/simple;
+	bh=mKjn5eIbNwGR/xZufF2gLJLVRPVR1sSf5yjcxMCPa9Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oEjXaGzToMRbnMQAg+Ree/CvVQUYHI90kMfuiDp5H6AV4c+TkOOxVCQ4fvsHxvtVeKIGP89ZvjePx8MBfYfnkbixDQgONVVSmL+yhjJBWxVUchoPE3hTtC7TWUrcx/p5SNYUePWDP1mZePfjfCcijByci3NguUgavkfPIKoG46g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: mHW9S22RSaKlrK8RlZunJw==
+X-CSE-MsgGUID: /zPK3vKDS7e/+intr2GRyg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="46426759"
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="46426759"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 08:42:46 -0700
+X-CSE-ConnectionGUID: jF7N0wi5TjSrcpvTp5YgAQ==
+X-CSE-MsgGUID: 5baL8cTUSZCIAI5SVSUleg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="134937092"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 08:42:42 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u5RNv-0000000DF1N-3Krg;
+	Thu, 17 Apr 2025 18:42:39 +0300
+Date: Thu, 17 Apr 2025 18:42:39 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 net-next 3/8] mfd: Add Microchip ZL3073x support
+Message-ID: <aAEhb-6QV2m21pm2@smile.fi.intel.com>
+References: <20250416162144.670760-1-ivecera@redhat.com>
+ <20250416162144.670760-4-ivecera@redhat.com>
+ <8fc9856a-f2be-4e14-ac15-d2d42efa9d5d@lunn.ch>
+ <CAAVpwAsw4-7n_iV=8aXp7=X82Mj7M-vGAc3f-fVbxxg0qgAQQA@mail.gmail.com>
+ <894d4209-4933-49bf-ae4c-34d6a5b1c9f1@lunn.ch>
+ <03afdbe9-8f55-4e87-bec4-a0e69b0e0d86@redhat.com>
+ <eb4b9a30-0527-4fa0-b3eb-c886da31cc80@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <eb4b9a30-0527-4fa0-b3eb-c886da31cc80@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Removing CFGn since it is not called by kernel code nor any of the gpib
-drivers.
+On Thu, Apr 17, 2025 at 05:12:35PM +0200, Ivan Vecera wrote:
+> On 17. 04. 25 4:50 odp., Ivan Vecera wrote:
+> > On 17. 04. 25 3:13 odp., Andrew Lunn wrote:
+> > > On Wed, Apr 16, 2025 at 08:19:25PM +0200, Ivan Vecera wrote:
+> > > > On Wed, Apr 16, 2025 at 7:11 PM Andrew Lunn <andrew@lunn.ch> wrote:
 
-Signed-off-by: Michael Rubin <matchstick@neverthere.org>
----
- drivers/staging/gpib/uapi/gpib_user.h | 5 -----
- 1 file changed, 5 deletions(-)
+...
 
-diff --git a/drivers/staging/gpib/uapi/gpib_user.h b/drivers/staging/gpib/uapi/gpib_user.h
-index eaf7399a164a..1cb6b6219e67 100644
---- a/drivers/staging/gpib/uapi/gpib_user.h
-+++ b/drivers/staging/gpib/uapi/gpib_user.h
-@@ -192,11 +192,6 @@ static inline __u8 PPE_byte(unsigned int dio_line, int sense)
- 	return cmd;
- }
- 
--static inline __u8 CFGn(unsigned int meters)
--{
--	return 0x6 | (meters & 0xf);
--}
--
- /* mask of bits that actually matter in a command byte */
- enum {
- 	gpib_command_mask = 0x7f,
+> > > Anyway, look around. How many other MFD, well actually, any sort of
+> > > driver at all, have a bunch of low level helpers as inline functions
+> > > in a header? You are aiming to write a plain boring driver which looks
+> > > like every other driver in Linux....
+> > 
+> > Well, I took inline functions approach as this is safer than macro usage
+> > and each register have own very simple implementation with type and
+> > range control (in case of indexed registers).
+> > 
+> > It is safer to use:
+> > zl3073x_read_ref_config(..., &v);
+> > ...
+> > zl3073x_read_ref_config(..., &v);
+> > 
+> > than:
+> > zl3073x_read_reg8(..., ZL_REG_REF_CONFIG, &v);
+> > ...
+> > zl3073x_read_reg16(..., ZL_REG_REF_CONFIG, &v); /* wrong */
+> > 
+> > With inline function defined for each register the mistake in the
+> > example cannot happen and also compiler checks that 'v' has correct
+> > type.
+> > 
+> > > Think about your layering. What does the MFD need to offer to sub
+> > > drivers so they can work? For lower registers, maybe just
+> > > zl3073x_read_u8(), zl3073x_read_u16() & zl3073x_read_read_u32(). Write
+> > > variants as well. Plus the API needed to safely access the mailbox.
+> > > Export these using one of the EXPORT_SYMBOL_GPL() variants, so the sub
+> > > drivers can access them. The #defines for the registers numbers can be
+> > > placed into a shared header file.
+> > 
+> > Would it be acceptable for you something like this:
+
+V4L2 (or media subsystem) solve the problem by providing a common helpers for
+reading and writing tons of different registers in cameras. See the commit
+613cbb91e9ce ("media: Add MIPI CCI register access helper functions").
+
+Dunno if it helps here, though.
+
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
