@@ -1,73 +1,183 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA25347B4;
-	Thu, 17 Apr 2025 02:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBD114885D;
+	Thu, 17 Apr 2025 02:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744855324; cv=none; b=P2Rrl4THLV6lWXS4R5AOkv7YBt9ytvtM2zgEZ0kMPn654Zw/YvCSCtxVMZIMnVpSXU7kKKVtYYUXpfzK664U1Ym0FDaXHGJ+f2BxgZYqKrTKoYgPe/7TSP58ExTUAA+zEOc1/nrEi19OOsAAR0epZH3yWIzTin1TLK69yEs7w1I=
+	t=1744855611; cv=none; b=lV3DgF0LX8vYvrX1Enz3wpoeurDuUe8WVrZ0SwV6119XvhCssxy5/IWkPfIUhDEpObxUIYBwxNmNjkvbMq/OZzavZiMx682KMM2CpeuESLdxRFygYlSEkbjRFDixGEXGsa+s2ShYcoOyqA4B6KG3tx6RcRrpcjJQhFssUUEaf4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744855324; c=relaxed/simple;
-	bh=WPDDbhp8WAGufEsLxoMENfzkaZrNQ8xB3RaQ5758HIA=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=u4a0bjljegW8UnwDoZ5WcCDnoGIJ/U53ObmoWy3MhFXr5buucEG2FC32BpYLkqXSU1RC2B+fcXow6q4MOpmkZ0FeKoK8fwyX40qmeI82bv1DKinPxHT9yhZD6a5tvX3dbPre1rkvGa1ho4GMDFHguSsNHGxismDyEUlbBS/2yDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mxct.zte.com.cn (unknown [192.168.251.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZdLjt0tXrz5B1J5;
-	Thu, 17 Apr 2025 10:01:54 +0800 (CST)
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4ZdLjb2flgz51Sc8;
-	Thu, 17 Apr 2025 10:01:39 +0800 (CST)
-Received: from xaxapp01.zte.com.cn ([10.88.99.176])
-	by mse-fl1.zte.com.cn with SMTP id 53H21H4T056359;
-	Thu, 17 Apr 2025 10:01:17 +0800 (+08)
-	(envelope-from jiang.peng9@zte.com.cn)
-Received: from mapi (xaxapp05[null])
-	by mapi (Zmail) with MAPI id mid31;
-	Thu, 17 Apr 2025 10:01:18 +0800 (CST)
-Date: Thu, 17 Apr 2025 10:01:18 +0800 (CST)
-X-Zmail-TransId: 2afc680060ee14f-bf7c5
-X-Mailer: Zmail v1.0
-Message-ID: <20250417100118733FrbRcKrZFI5AZsN2G6nyr@zte.com.cn>
-In-Reply-To: <40981d32-72f4-4935-a62c-444ad78ce336@linux.ibm.com>
-References: 2c04b7ef-dc85-4a40-b0d8-6ae73c20b65d@linux.ibm.com,B34E8075-7F38-4E30-9E51-23E43DDDF06F@linux.ibm.com,1ec497ed-b98c-46aa-a9c2-5fa906790298@linux.ibm.com,99a06f56-08cf-42ce-a231-f9a38c6ece9a@linux.ibm.com,51BBBC12-9A42-4D72-BDBB-84879C940764@linux.ibm.com,40981d32-72f4-4935-a62c-444ad78ce336@linux.ibm.com
+	s=arc-20240116; t=1744855611; c=relaxed/simple;
+	bh=8Vy9aCztAXdVgTN3k4KwowRPP5iUfC36QefL0nSXbdg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=owu4UTCsbMC3c0RAtZqcFrrUou1dd8s+YkU1HIcUzwN+xhlZFLrtsu+2CPnfcgeOYz098X4ducAWE1rSDpaf9KiTKq3BkA574hzUPrDs5KifgWTpf4CoOY3Zyw4DDa0kEFjkmTG9834pq6uP+OKin+4d++Ix6vXvYM7XaktWhqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l+VjPAos; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l+VjPAos"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-225477548e1so2874435ad.0;
+        Wed, 16 Apr 2025 19:06:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744855610; x=1745460410; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5S0Rc5OUApAJHdSC6yQdEbbcqqj1NWTeaGJIvpD8DrQ=;
+        b=l+VjPAosXdFYSJtNVwXmVslZBPhdF5KcPysrCxF7QlbB9Sy9E0SncDmWrHExyg0/UJ
+         jf76LC6VrT7sai/Y5S+4NpBX9uby2r+YsRgS/aEPf+wM93wDF6GgcdN2eXJDb6opnP9s
+         egzkK7stm30e/PRkIq5dEgcJ1qGqBE1x1D5IhBMSf05kgaPTPzbjfBDqxfTApcoxBokx
+         6X19mBqn25QSS3XTZJp99HcFEqPOfC2ATNQhqgarQ6NnpUGUBE9wLvOzDiE5cZH0O+YV
+         /xJa9/etGcJ9o3gLKoWNA33R+ZAoff+p6CzuiQ01Zr8zb4UVOrrHX+ygavlLzF2CHlo7
+         ONqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744855610; x=1745460410;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5S0Rc5OUApAJHdSC6yQdEbbcqqj1NWTeaGJIvpD8DrQ=;
+        b=X0pmwMNEqU0P5mP2tp4e/eo/85m9mmolvdh5GiO/D8NJIGb+tHxuS9YkybQhK9+7r7
+         qag8fuDbxa5NqUliWQuizTPo6eh4gV98FQM2h5P2dCzC0fyrPWLq+6JgXRMe5F+Y6ogE
+         r2M9G3752kEzeLVD9wGlXrsulyKXJtVXylrhINv66d3iYgGTKj3QCETFKKk0Hyk6IjR+
+         GewurtSCK0iTE/qU1NuAosy/cQyvXHfhX3WSiNBFVBIOOrQF+nL/Oqis1DEnFhzn6Woz
+         +FUcAUdVh6TNPE+BAAd7jWDChYKbM/uv0Rs8jnDZJw2RC0i2rmDEQJOQewhW5ix1edYC
+         xmXg==
+X-Forwarded-Encrypted: i=1; AJvYcCWP1ymU7ALzwxTc81DAhCrpXJNt4gBMVjZQDiLmOKFT8xL1CiT9k09qWTe6qKrfYpe+kkHIL331/AmVDFUg@vger.kernel.org, AJvYcCXDMNkRQmPkPOr1ozZrBG+Q26LbUq1iCaakDHF4EVXDlIZ55lu3RB3mBo1/44xqmUYhaFVSWKM1j6ETaQ==@vger.kernel.org, AJvYcCXcN6Zsxpa3pE8Y/QEcUU3FJhcord8mcFcuXwhaoDqqDrAk8dBHP2iND0N/eo7xV+VRirKADyxYTBBY@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZDmx1XlNg2+Zjlwcnhgmw9U/evNt06xbijSpGhord2/5tC/07
+	Vnz9U3yTkzSBw6BNtA4xTgOB5tUv9FI6xrorV/628roKuyxRfn2C
+X-Gm-Gg: ASbGncvJzJHcDGcH/cTcJ8Fp+9sqrhgMVQvv8gTG5GXAZiv6ULDYkVIw7TX+fjKnPUS
+	VbzKtje4KQgOpwy5FM5VRP6yfLpVQj9wgsbdL4Zq7sxZIqQHpyvFWa8MBi/u7CFmv6McVAFU8eL
+	/raftauFAk+e9NiubuSl9MhBinlij0Ek/Ca0XocpwQ/uo4LlGOxquJRkZQCTn9ErjMI6rXeVAqs
+	DVB+fnhM0AfyNv2xRJ2sKuXjF/IL+QCi5HGlNo/7vlPd/jiKrJXJDgAq1h+JN7o8xakquZXFA9A
+	wyMDOfRJsjvGXpMB7Pa75tJ/zwHvb1G1I+IpdmuoOmZQ2B0TjAE+yQ==
+X-Google-Smtp-Source: AGHT+IHOSSVJxwJFTvqTyirKYLKDkNN1HsuII60LpoJlqemuqX/oIQnI0UNsOszF22K4816pi4+qdg==
+X-Received: by 2002:a17:902:dac7:b0:220:d601:a704 with SMTP id d9443c01a7336-22c358d71admr50793935ad.18.1744855609467;
+        Wed, 16 Apr 2025 19:06:49 -0700 (PDT)
+Received: from localhost.localdomain ([171.255.57.44])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33fcea58sm21612685ad.199.2025.04.16.19.06.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 19:06:48 -0700 (PDT)
+From: Nam Tran <trannamatk@gmail.com>
+To: krzk+dt@kernel.org
+Cc: pavel@kernel.org,
+	lee@kernel.org,
+	robh@kernel.org,
+	conor+dt@kernel.org,
+	corbet@lwn.net,
+	devicetree@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/5] dt-bindings: leds: add TI/National Semiconductor LP5812 LED Driver
+Date: Thu, 17 Apr 2025 09:06:22 +0700
+Message-Id: <20250417020622.1562-1-trannamatk@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <a22eff98-86db-47db-a310-5d00dcba14fa@kernel.org>
+References: <a22eff98-86db-47db-a310-5d00dcba14fa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <jiang.peng9@zte.com.cn>
-To: <venkat88@linux.ibm.com>
-Cc: <atrajeev@linux.ibm.com>, <namhyung@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <maddy@linux.ibm.com>,
-        <mingo@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <shao.mingyin@zte.com.cn>, <tglx@linutronix.de>
-Subject: =?UTF-8?B?UmU6IFttYWlubGluZV10b29scy9wZXJmIGJ1aWxkIHdhcm5pbmdz?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 53H21H4T056359
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 68006112.000/4ZdLjt0tXrz5B1J5
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-> I verified with perf-tools-next repo on both branches namely
-> tmp.perf-tools-next and perf-tools-next, and I think this warning got
-> recently introduced.
+On Tue, 15 Apr 2025, Krzysztof Kozlowski wrote:
+
+>On 15/04/2025 11:53, Nam Tran wrote:
+>> On Mon, 14 Apr 2025, Krzysztof Kozlowski wrote:
+>> 
+>>> On 14/04/2025 16:57, Nam Tran wrote:
+>>>> +
+>>>> +description: |
+>>>> +  The LP5812 is an I2C LED Driver that can support LED matrix 4x3.
+>>>> +  For more product information please see the link below:
+>>>> +  https://www.ti.com/product/LP5812#tech-docs
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    const: ti,lp5812
+>>>> +
+>>>> +  reg:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  "#address-cells":
+>>>> +    const: 1
+>>>> +
+>>>> +  "#size-cells":
+>>>> +    const: 0
+>>>
+>>> No need for supply?
+>> 
+>> Since the hardware uses an external power supply,
+>> we decide not to include the supply property in the binding.
 >
-> Git Bisect is pointing to acea9943271b62905033f2f8ca571cdd52d6ea7b as
-> first bad commit.
+>So there is power supply? If so, must be in the binding. Bindings
+>describe given hardware (LP5812), not your particular board/setup.
 
-Hi everyone,
+Thank you for the clarification.
+The LP5812 is externally powered and has a dedicated VCC pin.
+I'll update the binding to include a `vcc-supply` property.
 
-I apologize for the oversight. My commit (acea9943271b62905033f2f8ca571cdd52d6ea7b) updated include/vdso/unaligned.h but I forgot to sync it with tools/include/vdso/unaligned.h. I'll be more careful in the future to avoid such mistakes.
+>> 
+>>>> +
+>>>> +patternProperties:
+>>>> +  "^led@[0-9a-b]$":
+>>>> +    type: object
+>>>> +    $ref: common.yaml#
+>>>> +    unevaluatedProperties: false
+>>>> +
+>>>> +    properties:
+>>>> +      reg:
+>>>> +        minimum: 0
+>>>> +        maximum: 0xb
+>>>> +
+>>>> +      chan-name:
+>>>> +        $ref: /schemas/types.yaml#/definitions/string
+>>>> +        description: LED channel name
+>>>
+>>> My comment stay valid. I don't think LEDs have channels, datasheet also
+>>> has nothing about channels, so again - use existing properties. Or
+>>> better drop it - I don't see any point in the name. The reg already
+>>> defines it.
+>> 
+>> The channel was named for the output channel to each LED, not the LED channels.
+>
+>I don't understand what you want to say. Please explain why existing
+>label property is not correct here.
 
-Thanks for your patience!
+I understand that the label property is deprecated and that the preferred approach now is to use function and color instead.
+However, in the case of the LP5812, which is a matrix LED driver, these properties are not a good fit.
+The LP5812 does not associate each output with a specific function (like "status", "activity"),
+and the LEDs driven by LP5812 are not fixed to a particular color.
 
-Best Regards,
-Peng Jiang
+>> but the person who wants to develop LP5812's matrix-related features can use the "channels" for easy mapping.
+>
+>easy mapping of what? Please show me the usage.
+
+You're right — I cannot provide a meaningful usage example for chan-name.
+The chan-name property was intended to give a more descriptive name for each LED channel, mainly for convenience in user space.
+But since this isn’t standard and you advised against introducing such a property, we’ve decided to drop it.
+
+>> 
+>>>
+>>> However after dropping this, your example has nodes with only reg -
+>>> what's the point of them? Why no properties from common.yaml are
+>>> applicable? If they are not applicable, then the entire subnode should
+>>> be dropped - you don't need them to describe the hardware.
+>> 
+>> Actually, the "color" property can be applied, but the LP5812 is a matrix LED,
+>> so specifying a particular LED color is not necessary when developing LP5812 features.
+>
+>This does not help me much and based on this I see no points in
+>describing individual LEDs, because the only missing information is
+>number of them but even that is fixed for given device, isn't it?
+
+Actually, the number of LED outputs on the LP5812 is not strictly fixed — it depends on the selected operating mode.
+This mode is configurable by the end user at runtime through sysfs interfaces provided by the driver.
+
+I understand your point — if no additional properties from common.yaml are applicable, these subnodes may not be necessary.
+Therefore, we’ve decided to drop them.
+
+Best regards,
+Nam Tran
