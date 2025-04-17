@@ -1,118 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD121991DD;
-	Thu, 17 Apr 2025 22:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097B91A5BBB;
+	Thu, 17 Apr 2025 22:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744929926; cv=none; b=Hbpbty/B29Jejm31G7YZDuGiBsNNlqHyVJMcQX3UlMNV0bAdVGAL7sKg/z2UFfVuqe9iYxmcflza3WkRf2gCX/Ma4mn8InSKdcewbpX9mR6n4C9CnpZJjWECluuqqCjuSzfgd1jVTs3Z19YIgzPRW1ns35y8rqf1fnEokUWnXjI=
+	t=1744929938; cv=none; b=kQ8Mgy9yqtCz00o7AGdflP8sNJ73wmNuMxaycCGJkM4RgZ2lZxQTuAy7a2DpRTR2ZAOccms/aXsd27ckMBvbsUAukVO79XhkzopRZeu3G+VKBajiIyHDNJAGfZSbNbkHs5Z4IYxjKPZsfABPdVClG9mPgGvzcYG4QL3JCNNU0+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744929926; c=relaxed/simple;
-	bh=A/Mp0zLisBIIjllZzrN3JfIF8CokUwQ+aC4E2YlCKUg=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ul3ZmQDTAmx1t/ubKqLQ803hZxwVshngJwqq5zqISjkVCZJ2yBO1YVN6vyRcrhm5rptP2z8yql/QyRnfd5awk70wJDJej+qb9mSsbIpXj6wGfa+Mj7+hiR3WmhK4oJr8l1vk2e1FQ4n9y1dHSlJnFsZdLOtATvrAx9ylkSFCQ4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XRykDGeV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744929938; c=relaxed/simple;
+	bh=EGnAWq3PAIQZybaAJOEJZx3CT6TXDduyQI2GFDKbAQ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UXcqVYuCNiXXf6eyzd7/c78aTDApGj/8C60q0Co/7VSJyvbRd0YpkjPwk82Mfw4bUZuvg2532x5KuGTUX64hphvTHGobNxcw0eArairTYyvcU8sbUo5/93W2UKguEURP05o6DbyKDPDZOBX4VlgODr8PBUkiA2TJPajvDg9NTsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=bWKAMCIU; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XRykDGeV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88D0CC4CEE4;
-	Thu, 17 Apr 2025 22:45:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744929925;
-	bh=A/Mp0zLisBIIjllZzrN3JfIF8CokUwQ+aC4E2YlCKUg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XRykDGeVv/2uepuBb8jPGd64IYp/uBQSTNknwMpv75nhoU8ZIhm19aONskwqQzGPw
-	 aYU3juHTAjrlpDyU17Hr3tj6AsVrMfgESFFtLOufs7n4EHN9I249ZQavQLBEbx5NwG
-	 bDjIfG8tbMBkAQbipZBhng+sDa6wVwmwX8BS2F10T2fauTKpoYlbJWwhUPhkZPf450
-	 5U8PXHNXW8rnwc8nPodk90wNj+t0C/fllaohtJ0hdrQDI9RoYoVnKzQArXGGSBY0/q
-	 Eb8W60jPb7vu1LpWhvBdcSORK9xW7CmzHAHlG3soLe059kktCUE7jZT/YLcEorTo7T
-	 D8US69xLdVk3g==
-Date: Fri, 18 Apr 2025 07:45:23 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tracing: Record trace_clock and recover when reboot
-Message-Id: <20250418074523.ae5e9f56950e431d60fc0c79@kernel.org>
-In-Reply-To: <20250417101804.3117e478@gandalf.local.home>
-References: <174486704950.3973933.810283141514120282.stgit@mhiramat.tok.corp.google.com>
-	<20250417101804.3117e478@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bWKAMCIU"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so13381365e9.3;
+        Thu, 17 Apr 2025 15:45:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1744929935; x=1745534735; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ck/BCeGd5u3fGI1syuC0GfqN57I10Eknap5ds8LXTfk=;
+        b=bWKAMCIUHSyewLhzKd/0hZWwZ0QIx93rALzlGtuzr3Tp+RD1bL94WT6JDv5D9pyUY5
+         yDPQMFoRQcpk4G1446WxexLMQQDxsuyfqf7/mlardrMR5lHkOg/AJG5JZ22hzloydPDf
+         Pfk+IsvExZXgKmg3U114YODsUJlYljm9PcMRy0OAonKqDbWmbPo5XDrr/En5/26EK+KB
+         1QunqQz7OspM5Ao1SUg9Iy5HxBccNP9TA2oyYedya02X20i2d8nSg+fG0gKg09tMK9zf
+         stxO3ZcmiEHyEamxOZrYTG8u22NZ8uR8hyRxYEyazS8pbbjHXcFye+QOp6BDKuUX3ZX4
+         W9Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744929935; x=1745534735;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ck/BCeGd5u3fGI1syuC0GfqN57I10Eknap5ds8LXTfk=;
+        b=v2iJwu+fcbC5iYjl0MgvxSnD7FNh2LeSXPigceJ/LcZPmvuUS5r38oHdaQKkYSSYoW
+         lYjiHyqV/2Ljc9i82tJtAbnf82geDG1JlfaU+xr6eX1h7ghU31g09IHqgc3Z+YaZojIQ
+         JINes4/N4d4/g0WAYm/SDJ+E6JiHCvHxOW/ltDbMOMbCvvMAyRvUMMHwFrQd93NLJJ/J
+         31sC9YlLnhY5nRW+qyyrTMQZMvIj3/5Y3EdOL7cJcruqumjRPat1luxeXEvrkfzscliK
+         Nbve+cE7170ekDHLWjPuaxYnB0zLFqKXLNMyVAueacOowC2UaWtw+8u/txX6BIkGJ1fV
+         aCMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVToYSa3o22bsdedxza+dauChshdXWzruASyuQZOR1jFHfTzk1NPq5EaYDvvs2GbhrYwQuP/KVz@vger.kernel.org, AJvYcCXpaq6GX9upjEBC16wJyoNVi2ezSIddk5Fg5UI61j0ND2uiPWClpBP6jIuRM382MNO5XpZvDTXTPVWwCCA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw77G9oXZeJhZi8iUQGZh4aTMHUijA2j6Woy/7p5bXuWK+QlXqg
+	j8OjN9CVRDnEUs6yfBgie5zI2kcMSyQzv13R6Fk2Fh4LZHdU8XnE4zXY
+X-Gm-Gg: ASbGncsQipZ6s29dK8hqaRBcUIAtQfqAmF/7In6Zlam849IBzbJ9spMK9gK6cV00KkP
+	leEKj4XzmyW/56O0HvfnR0BV/nNIyBr+XSAO9cQ1mhFSeQAMsHnXN6AK03gUXhWPyF1UlNUdIVF
+	0ui1yC/xiWADita7PzltmHXagSjzMt9tiHAlkXnwi5so5mYRLrESfHVXFLNrLuYHTKZbhwdBMhA
+	01NF9tYUaiRnqk6oj8k0nAFRjWgGPR8Dy9CmcwSXv1hlOnzTI3YGoF+xzwJRkJCVIVCYdYzwg8X
+	lddQiO0BWJxcVZtQpcnCiabW9I6jPScQlCfL6NXJN/xsZVpiTCLgc+geJYa5wy7VQOl24XHEIA9
+	LRoVbBWKf6F0e+OLHkfuYJfi/XHFN
+X-Google-Smtp-Source: AGHT+IH0hKr8nGCFTX0glH2QV5NFxX9UnibsOOHGq2Ivr66QNfElAZtEL8q24lXa60FNV8FA5rfqWA==
+X-Received: by 2002:a05:600c:358b:b0:439:9424:1b70 with SMTP id 5b1f17b1804b1-4406ac17329mr5447455e9.30.1744929934978;
+        Thu, 17 Apr 2025 15:45:34 -0700 (PDT)
+Received: from [192.168.1.3] (p5b057cb5.dip0.t-ipconnect.de. [91.5.124.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa433104sm945242f8f.29.2025.04.17.15.45.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Apr 2025 15:45:34 -0700 (PDT)
+Message-ID: <63fa6d57-d8b4-4518-a5f6-8072869992f5@googlemail.com>
+Date: Fri, 18 Apr 2025 00:45:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.12 000/393] 6.12.24-rc1 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250417175107.546547190@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250417175107.546547190@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 17 Apr 2025 10:18:04 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Am 17.04.2025 um 19:46 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.12.24 release.
+> There are 393 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-> On Thu, 17 Apr 2025 14:17:29 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > --- a/kernel/trace/trace.c
-> > +++ b/kernel/trace/trace.c
-> > @@ -6004,6 +6004,7 @@ struct trace_mod_entry {
-> >  };
-> >  
-> >  struct trace_scratch {
-> > +	char			clock[TRACE_CLOCK_NAME_MAX];
-> >  	unsigned long		text_addr;
-> >  	unsigned long		nr_entries;
-> >  	struct trace_mod_entry	entries[];
-> > @@ -6114,6 +6115,8 @@ static void update_last_data(struct trace_array *tr)
-> >  	if (tr->scratch) {
-> >  		struct trace_scratch *tscratch = tr->scratch;
-> >  
-> > +		strscpy(tscratch->clock, trace_clocks[tr->clock_id].name,
-> 
-> Why copy the name and not the clock_id?
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-The name is more robust if we rebooted in the different kernel.
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-> 
-> The clock ids should not change between kernels.
 
-Hmm, I thought it could be changed because we didn't define it.
-
-----
-static struct {
-	u64 (*func)(void);
-	const char *name;
-	int in_ns;		/* is this clock in nanoseconds? */
-} trace_clocks[] = {
-	{ trace_clock_local,		"local",	1 },
-	{ trace_clock_global,		"global",	1 },
-	{ trace_clock_counter,		"counter",	0 },
-	{ trace_clock_jiffies,		"uptime",	0 },
-	{ trace_clock,			"perf",		1 },
-	{ ktime_get_mono_fast_ns,	"mono",		1 },
-	{ ktime_get_raw_fast_ns,	"mono_raw",	1 },
-	{ ktime_get_boot_fast_ns,	"boot",		1 },
-	{ ktime_get_tai_fast_ns,	"tai",		1 },
-	ARCH_TRACE_CLOCKS
-};
-----
-
-So the clock id is just an index of this array. That can be changed
-easily between the kernel version. If we discard the previous boot
-data in that case, I agree with using clock ids.
-
-(Another reason for the implementation is that tracing_set_clock()
- only accepts a name, but this is just due to laziness on my part. :-( )
-
-Thank you,
-
-> 
-> -- Steve
-> 
-> > +			TRACE_CLOCK_NAME_MAX);
-> >  		memset(tscratch->entries, 0,
-> >  		       flex_array_size(tscratch, entries, tscratch->nr_entries));
-> >  		tscratch->nr_entries = 0;
-
+Beste Grüße,
+Peter Schneider
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
+
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
