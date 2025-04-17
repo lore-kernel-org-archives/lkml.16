@@ -1,39 +1,33 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B00240604
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBCA241693;
+	Thu, 17 Apr 2025 12:07:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744891558; cv=none; b=dAsd4syCkUN/UGsL49lTU2wPDV0ikRpkfKzFQ2EF22knnQ5B0m3I64QqVGqxlhPtsV8qxvYlOB4S5DarTm3fcJplN5Sv3MCDMDhc++o5sliZfIO++zNkK5m7VXByyY3Al9TpOYsit8ObTyBoyV90T7IVR72tLJYrpVMDY/E+2WQ=
+	t=1744891668; cv=none; b=ePOk+xC17UWulMr5M8opUPgpyjmfq9DlRfaKHi/Dmfkk5Kqbr/EVw5ZJSpcNFtjiozCovVWBAvOnKZkNcz1YyApUrtl8vK7rDV2yJUFxT4k8QWXTSeqfaCz1vVNG//yirUPDh7fMM0KuHwMOMTyO4iTBv4uY/dF+QABcCayw20w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744891558; c=relaxed/simple;
-	bh=vEnRd9kWhI1UjYDrejJlVwi5KwKAINkZEw3I5aKqyRw=;
+	s=arc-20240116; t=1744891668; c=relaxed/simple;
+	bh=e6imUbkVLSYxslOyA04gkKQdqULW5lSglC/dXRwDQz8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=axRDG9F+DgEJs+YPZP/IrNCf61uy0TI78Z8wv3Z7rzAY2BfHbOHP+ypeN7LyLgYV+HtNKyNNSVhi1RQxaOLDtU4OPydqdIMnnXx33jMcpLlrbF0w9Fa1LCwhV3U4aOQFdspqhgLLiXlM/9UYYhmifyCskNCB7xWSUFoB1GyUEv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=B4M5w1j+; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	 In-Reply-To:Content-Type; b=hkac/BR7cOB9RX8c4hvl3fUSg4S0TlQf8z/ccsOpTMWnj0EMz3LlC3y7rLCQqVawZn/4JOdVUFk+J6TvIWtHS34B8Ts44stwzUXD/4VYxGQD/3ofoP0I088eBIiBc6nSMyXIKtAfccoQ9yYjPG9huJF7Ep3AGPwircjGphj3ero=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WMo0g0wN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="B4M5w1j+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=i5SGbSmQ/nSdHKVfpPRTT0tr56mPKmGz+8C1VufgiV8=; b=B4M5w1j+mLC/XBlkLHgbz9Qtyd
-	1ZQJax4X/Yn9smfWBKDMnR/oqSbN+SLVMU+Vn4rpjQ27zHrwFdl0xn2IThfvtOPOiddgsw+V1+MQL
-	/U7T9lQtCfBVQc+9qGMLmOmZMAZdVJTwTTvmS7L0gvDXoK6PlQgs1iN+1d+7re+w2RLy+46PBf0kc
-	+OvNpvjgz9uNqYYwpNpmS+ihpZPsVWgrn+tAY6vdAZlk9VaBqndmLF3DGHBrNaPRAOqlq0KREE1nH
-	EOPcTEuRaxdoEev6t50902ab3IznhUkGbPiKrFiut10AKNAG9Lpbf4akXuCGku0QjWHQF1N3s0R79
-	Cw/ngwgg==;
-Received: from 39-14-49-133.adsl.fetnet.net ([39.14.49.133] helo=[192.168.220.43])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1u5Nzx-000nJ1-BZ; Thu, 17 Apr 2025 14:05:41 +0200
-Message-ID: <4f9a5c91-6410-456e-9a04-702f8a343a13@igalia.com>
-Date: Thu, 17 Apr 2025 20:05:34 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WMo0g0wN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAA9CC4CEE4;
+	Thu, 17 Apr 2025 12:07:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744891667;
+	bh=e6imUbkVLSYxslOyA04gkKQdqULW5lSglC/dXRwDQz8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WMo0g0wNb/mkwZ+3QmgALVZMBOBodKuzWIcN/N0rBPOH+bGNjksKnOTe5SAfBzVqo
+	 u/0hImxmkwChfalpADpOjBugetDgnroR6yAe7VnJLZikWMioOaFSmd3FXpwKkXj6/Q
+	 GnIqL49ADeQd983rQHaDHM9cmNXppdZyyIPSVbmzRf2WXMkCuLIbHjUfeCWM4K6xm8
+	 WOhOjCp28DaSsOoz9SuFiOPm7XOHF/jnjgMhYgvNu8kJI0/8g8P5jhMB1foaApojBC
+	 OhoOJw7vJO0m8zfDKKO9oGFTSfsRg7r5n7INKVVrvayVcv0t5PcNQCWTFBBd2BBRaZ
+	 rxwTAKQ54yVjg==
+Message-ID: <98dbc394-3628-4244-81cd-6b7f36b47fa4@kernel.org>
+Date: Thu, 17 Apr 2025 14:07:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,122 +35,93 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/huge_memory: fix dereferencing invalid pmd migration
- entry
-To: David Hildenbrand <david@redhat.com>, Hugh Dickins <hughd@google.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, willy@infradead.org,
- ziy@nvidia.com, linmiaohe@huawei.com, revest@google.com,
- kernel-dev@igalia.com, linux-kernel@vger.kernel.org
-References: <20250414072737.1698513-1-gavinguo@igalia.com>
- <27d13454-280f-4966-b694-d7e58d991547@redhat.com>
- <6787d0ea-a1b9-08cf-1f48-e361058eec20@google.com>
- <83f17b85-c9fa-43a0-bec1-22c8565b67ad@redhat.com>
- <98d1d195-7821-4627-b518-83103ade56c0@redhat.com>
- <7d0ef7b5-043b-beca-72a9-6ae98b0d55fb@google.com>
- <05a7d51e-f065-445a-af0e-481f3461a76e@redhat.com>
- <f344d741-962c-48d3-84b7-ce3de5619122@igalia.com>
- <4828e28d-eb56-449b-83c3-b5b2dc2ac6e2@redhat.com>
+Subject: Re: [PATCH v3 4/8] dt-bindings: phy: mtk-xs-phy: support type switch
+ by pericfg
+To: "Frank Wunderlich (linux)" <linux@fw-web.de>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+ Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Frank Wunderlich <frank-w@public-files.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
+ <rafal@milecki.pl>, Daniel Golle <daniel@makrotopia.org>,
+ Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org
+References: <20250416095402.90543-1-linux@fw-web.de>
+ <20250416095402.90543-5-linux@fw-web.de>
+ <20250417-competent-rattlesnake-of-intensity-98d6ff@kuoka>
+ <d2da81ccb6b9b267288a3d2f5b1bb977@fw-web.de>
+ <caf3da77-f35d-4a39-9102-9592d722d900@kernel.org>
+ <b59ccb4541f4eac24fd38a65de770c8c@fw-web.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Gavin Guo <gavinguo@igalia.com>
-In-Reply-To: <4828e28d-eb56-449b-83c3-b5b2dc2ac6e2@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <b59ccb4541f4eac24fd38a65de770c8c@fw-web.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 4/17/25 19:36, David Hildenbrand wrote:
-> On 17.04.25 13:21, Gavin Guo wrote:
->> On 4/17/25 17:04, David Hildenbrand wrote:
->>> On 17.04.25 10:55, Hugh Dickins wrote:
->>>> On Thu, 17 Apr 2025, David Hildenbrand wrote:
->>>>> On 17.04.25 09:18, David Hildenbrand wrote:
->>>>>> On 17.04.25 07:36, Hugh Dickins wrote:
->>>>>>> On Wed, 16 Apr 2025, David Hildenbrand wrote:
->>>>>>>>
->>>>>>>> Why not something like
->>>>>>>>
->>>>>>>> struct folio *entry_folio;
->>>>>>>>
->>>>>>>> if (folio) {
->>>>>>>>    if (is_pmd_migration_entry(*pmd))
->>>>>>>>        entry_folio = pfn_swap_entry_folio(pmd_to_swp_entry(*pmd)));
->>>>>>>>    else
->>>>>>>>     entry_folio = pmd_folio(*pmd));
->>>>>>>>
->>>>>>>>    if (folio != entry_folio)
->>>>>>>>          return;
->>>>>>>> }
->>>>>>>
->>>>>>> My own preference is to not add unnecessary code:
->>>>>>> if folio and pmd_migration entry, we're not interested in 
->>>>>>> entry_folio.
->>>>>>> But yes it could be written in lots of other ways.
->>>>>>
->>>>>> While I don't disagree about "not adding unnecessary code" in 
->>>>>> general,
->>>>>> in this particular case just looking the folio up properly might 
->>>>>> be the
->>>>>> better alternative to reasoning about locking rules with conditional
->>>>>> input parameters :)
->>>>>>
->>>>>
->>>>> FWIW, I was wondering if we can rework that code, letting the caller
->>>>> to the
->>>>> checking and getting rid of the folio parameter. Something like this
->>>>> (incomplete, just to
->>>>> discuss if we could move the TTU_SPLIT_HUGE_PMD handling).
+On 17/04/2025 11:35, Frank Wunderlich (linux) wrote:
+>>>>> +            - description:
+>>>>> +                The first cell represents a phandle to syscon
 >>>>
->>>> Yes, I too dislike the folio parameter used for a single case, and 
->>>> agree
->>>> it's better for the caller who chose pmd to check that *pmd fits the
->>>> folio.
->>>>
->>>> I haven't checked your code below, but it looks like a much better way
->>>> to proceed, using the page_vma_mapped_walk() to get pmd lock and check;
->>>> and cutting out two or more layers of split_huge_pmd obscurity.
->>>>
->>>> Way to go.  However... what we want right now is a fix that can easily
->>>> go to stable: the rearrangements here in 6.15-rc mean, I think, that
->>>> whatever goes into the current tree will have to be placed differently
->>>> for stable, no seamless backports; but Gavin's patch (reworked if you
->>>> insist) can be adapted to stable (differently for different releases)
->>>> more more easily than the future direction you're proposing here.
+>>>> Don't repeat constraints in free form text. "Foo bar system 
+>>>> controller"
+>>>> or "Phandle to foo bar system controller"
 >>>
->>> I'm fine with going with the current patch and looking into cleaning it
->>> up properly (if possible).
->>>
->>> So for this patch
->>>
->>> Acked-by: David Hildenbrand <david@redhat.com>
->>>
->>> @Gavin, can you look into cleaning that up?
+>>> i would write only "phandle to system controller". on mt7988 it is the
+>>> topmisc syscon, but maybe on
+>>> other SoC it is different name.
 >>
->> Thank you for your review. Before I begin the cleanup, could you please
->> confirm the following action items:
->>
->> Zi Yan's suggestions for the patch are:
->> 1. Replace the page fault with an invalid address access in the commit
->>      description.
+>> This must be specific to what sort of system controller you point. You
+>> are not interested in phandle to any system controller.
 > 
-> Yes, that makes sense.
-> 
->>
->> 2. Simplify the nested if-statements into a single if-statement to
->>      reduce indentation.
->>
->> David, based on your comment, I understand that you are recommending the
->> entry_folio implementation. Also, from your discussion with Hugh, it
->> appears you agreed with my original approach of returning early when
->> encountering a PMD migration entry, thereby avoiding unnecessary checks.
->> Is that correct? If so, I will keep the current logic. Do you have any
->> additional cleanup suggestions?
-> 
-> Yes, the current patch is okay for upstream+stable, but we should look 
-> into cleaning that up.
+> how about phy configuration controller/register?
+If that's distinctive enough to identify the controller and its
+register, then sure.
 
-Ah, I understand. I'll clean up the current one and propose another 
-patch based on your RFC patch. Thanks for your review!
-
-> 
-> See the cleanup RFC patch I posted where we remove the folio check 
-> completely. Please let me know if you need more information.
-> 
-
+Best regards,
+Krzysztof
