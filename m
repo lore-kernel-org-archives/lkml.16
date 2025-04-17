@@ -1,285 +1,151 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90314221F3B;
-	Thu, 17 Apr 2025 07:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E509221C19C;
+	Thu, 17 Apr 2025 07:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744876719; cv=none; b=YK2oCvNCAWVKPAxrRdZtYsH9K0TaXr85JmuGH4NXVOlQ/DQrYUCzTampFadgaFW9JUjHfTDKqwWXcMRkZifLS9EB70JJxivC8e4En06TaHa/PVb8+e06eC4BYqNLH/P5L753HfJXdYBBX0vjqFAdWN9F9Edbb01RTaahiojbPTc=
+	t=1744876757; cv=none; b=W1bXEU+7o34/tRm8Kxu6qpyohOYECvESElV9g/rpKc+XQacWW9N8d5xlW2gJdSsZequVV0YjDATQ853xLH4VJi4PoogHQimIHZfAmNnB6q68wcvMKUaLIKI1SfaTisI4QB5a5VAWfYenY/6KKdkJ1F3k2PaUh6A6l6yi3kOxEGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744876719; c=relaxed/simple;
-	bh=NMd9FAxF1iRZDVFTbxG71T/gwRwztLcWuH6WBjodWpM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tsJZH635Dfz1ooKMyu6tZSDSmjS/oHOgv0FE4a9eH0neTdeZ0r8uK2PldosZlbvHEFcSvUztR+clvt9Pxie/LHCcl9sFqse3YhqxK38mEdS1uupBSBrzzMZj5FdFi0gtjgOwE0ugxwxObVKyz/QFKlgg96HCE01NjDYTWA/dGdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53H602qE019651;
-	Thu, 17 Apr 2025 00:57:46 -0700
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45yqpknpe6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 17 Apr 2025 00:57:46 -0700 (PDT)
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Thu, 17 Apr 2025 00:57:45 -0700
-Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Thu, 17 Apr 2025 00:57:41 -0700
-From: <jianqi.ren.cn@windriver.com>
-To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
-CC: <patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <jianqi.ren.cn@windriver.com>, <davem@davemloft.net>,
-        <kuba@kernel.org>, <sashal@kernel.org>, <pabeni@redhat.com>,
-        <edumazet@google.com>, <cascardo@igalia.com>, <yajun.deng@linux.dev>,
-        <yuehaibing@huawei.com>, <dan.streetman@canonical.com>,
-        <steffen.klassert@secunet.com>, <netdev@vger.kernel.org>,
-        <i.maximets@ovn.org>, <kuniyu@amazon.com>
-Subject: [PATCH 5.10.y] net: defer final 'struct net' free in netns dismantle
-Date: Thu, 17 Apr 2025 15:57:40 +0800
-Message-ID: <20250417075740.1747626-1-jianqi.ren.cn@windriver.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1744876757; c=relaxed/simple;
+	bh=ltOSBA1CpfWUytOEeCBbrYTdHgz8H9UN/rQ4NISs/Wk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d0JEd5UqDUJ1OFvw2ssOJzY0JZtz4o1L9RkgEDD3oPOtK9/ibqagMjbF8nJM85JfZS+R93X1W8Uzx/ZIo9AKOP69Jk3IS/GNgpYZ1xyM7l+Y2bZTdkZDWmoZ4yPj4fS1+a5UaUL/jhZI0m4eTXe7JxMnphMKvuVgyZUMeG0zl7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mL5Paba8; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mL5Paba8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AE67C4CEE4;
+	Thu, 17 Apr 2025 07:59:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744876755;
+	bh=ltOSBA1CpfWUytOEeCBbrYTdHgz8H9UN/rQ4NISs/Wk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mL5Paba83xIKR3EQKPY8iqdamc2Dd5Lhk8p/SjYOXJfH5D6MQNyvET/OzVp+ACKXQ
+	 /47yQdngZ+/xmalOw+7HAlqHvF9Jl9gPwuS6rLiXzzoayO+K9YZvpNGUdcddq5JY/A
+	 wDFODj9bivjqOk+5ovE+AGpOKcrJxpsM3EYcsZ5v2jLBr8vlsf8Z6qAD0YXdLcAEO4
+	 dB46vOLaGO+7cYAc2LK5rtg7tgq7eiNqiW6oXR5Xg7wAzOvj++g5oPvoC3wJ1jXU46
+	 ulJVPTeV+EEH5KaYwxar9suTlEYxvNKiVgvt9kURnwnXDJ+7HTOjJotM3zlBREeN+4
+	 ftl3Idu/9eIuA==
+Message-ID: <caf3da77-f35d-4a39-9102-9592d722d900@kernel.org>
+Date: Thu, 17 Apr 2025 09:59:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: MMfemu-Lcjb2KfFTZnYSvbNiOZimDoIX
-X-Proofpoint-GUID: MMfemu-Lcjb2KfFTZnYSvbNiOZimDoIX
-X-Authority-Analysis: v=2.4 cv=UZBRSLSN c=1 sm=1 tr=0 ts=6800b47a cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=bC-a23v3AAAA:8 a=1XWaLZrsAAAA:8 a=P8mRVJMrAAAA:8 a=20KFwNOVAAAA:8
- a=vggBfdFIAAAA:8 a=t7CeM3EgAAAA:8 a=sogmP-z4RixR6Pyh5rEA:9 a=-FEs8UIgK8oA:10 a=FO4_E8m0qiDe52t0p3_H:22 a=Vc1QvrjMcIoGonisw6Ob:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-17_01,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1011
- priorityscore=1501 mlxscore=0 impostorscore=0 phishscore=0 malwarescore=0
- spamscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.21.0-2502280000
- definitions=main-2504170061
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/8] dt-bindings: phy: mtk-xs-phy: support type switch
+ by pericfg
+To: "Frank Wunderlich (linux)" <linux@fw-web.de>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+ Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Frank Wunderlich <frank-w@public-files.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
+ <rafal@milecki.pl>, Daniel Golle <daniel@makrotopia.org>,
+ Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org
+References: <20250416095402.90543-1-linux@fw-web.de>
+ <20250416095402.90543-5-linux@fw-web.de>
+ <20250417-competent-rattlesnake-of-intensity-98d6ff@kuoka>
+ <d2da81ccb6b9b267288a3d2f5b1bb977@fw-web.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <d2da81ccb6b9b267288a3d2f5b1bb977@fw-web.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Eric Dumazet <edumazet@google.com>
+On 17/04/2025 09:52, Frank Wunderlich (linux) wrote:
+>>>
+>>> +      mediatek,syscon-type:
+>>> +        $ref: /schemas/types.yaml#/definitions/phandle-array
+>>> +        maxItems: 1
+>>> +        description:
+>>> +          A phandle to syscon used to access the register of type 
+>>> switch,
+>>> +          the field should always be 3 cells long.
+>>> +        items:
+>>> +          items:
+>>
+>> Missing -, because you have one phandle.
+> 
+> ok, then i need to drop MaxItems and indent 2 spaces more, but no 
+> problem
 
-[ Upstream commit 0f6ede9fbc747e2553612271bce108f7517e7a45 ]
+I missed that maxItems - should not be placed above description, but
+immediately around items.
 
-Ilya reported a slab-use-after-free in dst_destroy [1]
+> 
+>>> +            - description:
+>>> +                The first cell represents a phandle to syscon
+>>
+>> Don't repeat constraints in free form text. "Foo bar system controller"
+>> or "Phandle to foo bar system controller"
+> 
+> i would write only "phandle to system controller". on mt7988 it is the 
+> topmisc syscon, but maybe on
+> other SoC it is different name.
 
-Issue is in xfrm6_net_init() and xfrm4_net_init() :
+This must be specific to what sort of system controller you point. You
+are not interested in phandle to any system controller.
 
-They copy xfrm[46]_dst_ops_template into net->xfrm.xfrm[46]_dst_ops.
+> 
+>>> +            - description:
+>>> +                The second cell represents the register offset
+>>
+>> "Baz register offset"
+> 
+> same here, only "register offset".
 
-But net structure might be freed before all the dst callbacks are
-called. So when dst_destroy() calls later :
+Also not. You need specific register, not any register.
 
-if (dst->ops->destroy)
-    dst->ops->destroy(dst);
 
-dst->ops points to the old net->xfrm.xfrm[46]_dst_ops, which has been freed.
-
-See a relevant issue fixed in :
-
-ac888d58869b ("net: do not delay dst_entries_add() in dst_release()")
-
-A fix is to queue the 'struct net' to be freed after one
-another cleanup_net() round (and existing rcu_barrier())
-
-[1]
-
-BUG: KASAN: slab-use-after-free in dst_destroy (net/core/dst.c:112)
-Read of size 8 at addr ffff8882137ccab0 by task swapper/37/0
-Dec 03 05:46:18 kernel:
-CPU: 37 UID: 0 PID: 0 Comm: swapper/37 Kdump: loaded Not tainted 6.12.0 #67
-Hardware name: Red Hat KVM/RHEL, BIOS 1.16.1-1.el9 04/01/2014
-Call Trace:
- <IRQ>
-dump_stack_lvl (lib/dump_stack.c:124)
-print_address_description.constprop.0 (mm/kasan/report.c:378)
-? dst_destroy (net/core/dst.c:112)
-print_report (mm/kasan/report.c:489)
-? dst_destroy (net/core/dst.c:112)
-? kasan_addr_to_slab (mm/kasan/common.c:37)
-kasan_report (mm/kasan/report.c:603)
-? dst_destroy (net/core/dst.c:112)
-? rcu_do_batch (kernel/rcu/tree.c:2567)
-dst_destroy (net/core/dst.c:112)
-rcu_do_batch (kernel/rcu/tree.c:2567)
-? __pfx_rcu_do_batch (kernel/rcu/tree.c:2491)
-? lockdep_hardirqs_on_prepare (kernel/locking/lockdep.c:4339 kernel/locking/lockdep.c:4406)
-rcu_core (kernel/rcu/tree.c:2825)
-handle_softirqs (kernel/softirq.c:554)
-__irq_exit_rcu (kernel/softirq.c:589 kernel/softirq.c:428 kernel/softirq.c:637)
-irq_exit_rcu (kernel/softirq.c:651)
-sysvec_apic_timer_interrupt (arch/x86/kernel/apic/apic.c:1049 arch/x86/kernel/apic/apic.c:1049)
- </IRQ>
- <TASK>
-asm_sysvec_apic_timer_interrupt (./arch/x86/include/asm/idtentry.h:702)
-RIP: 0010:default_idle (./arch/x86/include/asm/irqflags.h:37 ./arch/x86/include/asm/irqflags.h:92 arch/x86/kernel/process.c:743)
-Code: 00 4d 29 c8 4c 01 c7 4c 29 c2 e9 6e ff ff ff 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 66 90 0f 00 2d c7 c9 27 00 fb f4 <fa> c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 90
-RSP: 0018:ffff888100d2fe00 EFLAGS: 00000246
-RAX: 00000000001870ed RBX: 1ffff110201a5fc2 RCX: ffffffffb61a3e46
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffffb3d4d123
-RBP: 0000000000000000 R08: 0000000000000001 R09: ffffed11c7e1835d
-R10: ffff888e3f0c1aeb R11: 0000000000000000 R12: 0000000000000000
-R13: ffff888100d20000 R14: dffffc0000000000 R15: 0000000000000000
-? ct_kernel_exit.constprop.0 (kernel/context_tracking.c:148)
-? cpuidle_idle_call (kernel/sched/idle.c:186)
-default_idle_call (./include/linux/cpuidle.h:143 kernel/sched/idle.c:118)
-cpuidle_idle_call (kernel/sched/idle.c:186)
-? __pfx_cpuidle_idle_call (kernel/sched/idle.c:168)
-? lock_release (kernel/locking/lockdep.c:467 kernel/locking/lockdep.c:5848)
-? lockdep_hardirqs_on_prepare (kernel/locking/lockdep.c:4347 kernel/locking/lockdep.c:4406)
-? tsc_verify_tsc_adjust (arch/x86/kernel/tsc_sync.c:59)
-do_idle (kernel/sched/idle.c:326)
-cpu_startup_entry (kernel/sched/idle.c:423 (discriminator 1))
-start_secondary (arch/x86/kernel/smpboot.c:202 arch/x86/kernel/smpboot.c:282)
-? __pfx_start_secondary (arch/x86/kernel/smpboot.c:232)
-? soft_restart_cpu (arch/x86/kernel/head_64.S:452)
-common_startup_64 (arch/x86/kernel/head_64.S:414)
- </TASK>
-Dec 03 05:46:18 kernel:
-Allocated by task 12184:
-kasan_save_stack (mm/kasan/common.c:48)
-kasan_save_track (./arch/x86/include/asm/current.h:49 mm/kasan/common.c:60 mm/kasan/common.c:69)
-__kasan_slab_alloc (mm/kasan/common.c:319 mm/kasan/common.c:345)
-kmem_cache_alloc_noprof (mm/slub.c:4085 mm/slub.c:4134 mm/slub.c:4141)
-copy_net_ns (net/core/net_namespace.c:421 net/core/net_namespace.c:480)
-create_new_namespaces (kernel/nsproxy.c:110)
-unshare_nsproxy_namespaces (kernel/nsproxy.c:228 (discriminator 4))
-ksys_unshare (kernel/fork.c:3313)
-__x64_sys_unshare (kernel/fork.c:3382)
-do_syscall_64 (arch/x86/entry/common.c:52 arch/x86/entry/common.c:83)
-entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
-Dec 03 05:46:18 kernel:
-Freed by task 11:
-kasan_save_stack (mm/kasan/common.c:48)
-kasan_save_track (./arch/x86/include/asm/current.h:49 mm/kasan/common.c:60 mm/kasan/common.c:69)
-kasan_save_free_info (mm/kasan/generic.c:582)
-__kasan_slab_free (mm/kasan/common.c:271)
-kmem_cache_free (mm/slub.c:4579 mm/slub.c:4681)
-cleanup_net (net/core/net_namespace.c:456 net/core/net_namespace.c:446 net/core/net_namespace.c:647)
-process_one_work (kernel/workqueue.c:3229)
-worker_thread (kernel/workqueue.c:3304 kernel/workqueue.c:3391)
-kthread (kernel/kthread.c:389)
-ret_from_fork (arch/x86/kernel/process.c:147)
-ret_from_fork_asm (arch/x86/entry/entry_64.S:257)
-Dec 03 05:46:18 kernel:
-Last potentially related work creation:
-kasan_save_stack (mm/kasan/common.c:48)
-__kasan_record_aux_stack (mm/kasan/generic.c:541)
-insert_work (./include/linux/instrumented.h:68 ./include/asm-generic/bitops/instrumented-non-atomic.h:141 kernel/workqueue.c:788 kernel/workqueue.c:795 kernel/workqueue.c:2186)
-__queue_work (kernel/workqueue.c:2340)
-queue_work_on (kernel/workqueue.c:2391)
-xfrm_policy_insert (net/xfrm/xfrm_policy.c:1610)
-xfrm_add_policy (net/xfrm/xfrm_user.c:2116)
-xfrm_user_rcv_msg (net/xfrm/xfrm_user.c:3321)
-netlink_rcv_skb (net/netlink/af_netlink.c:2536)
-xfrm_netlink_rcv (net/xfrm/xfrm_user.c:3344)
-netlink_unicast (net/netlink/af_netlink.c:1316 net/netlink/af_netlink.c:1342)
-netlink_sendmsg (net/netlink/af_netlink.c:1886)
-sock_write_iter (net/socket.c:729 net/socket.c:744 net/socket.c:1165)
-vfs_write (fs/read_write.c:590 fs/read_write.c:683)
-ksys_write (fs/read_write.c:736)
-do_syscall_64 (arch/x86/entry/common.c:52 arch/x86/entry/common.c:83)
-entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
-Dec 03 05:46:18 kernel:
-Second to last potentially related work creation:
-kasan_save_stack (mm/kasan/common.c:48)
-__kasan_record_aux_stack (mm/kasan/generic.c:541)
-insert_work (./include/linux/instrumented.h:68 ./include/asm-generic/bitops/instrumented-non-atomic.h:141 kernel/workqueue.c:788 kernel/workqueue.c:795 kernel/workqueue.c:2186)
-__queue_work (kernel/workqueue.c:2340)
-queue_work_on (kernel/workqueue.c:2391)
-__xfrm_state_insert (./include/linux/workqueue.h:723 net/xfrm/xfrm_state.c:1150 net/xfrm/xfrm_state.c:1145 net/xfrm/xfrm_state.c:1513)
-xfrm_state_update (./include/linux/spinlock.h:396 net/xfrm/xfrm_state.c:1940)
-xfrm_add_sa (net/xfrm/xfrm_user.c:912)
-xfrm_user_rcv_msg (net/xfrm/xfrm_user.c:3321)
-netlink_rcv_skb (net/netlink/af_netlink.c:2536)
-xfrm_netlink_rcv (net/xfrm/xfrm_user.c:3344)
-netlink_unicast (net/netlink/af_netlink.c:1316 net/netlink/af_netlink.c:1342)
-netlink_sendmsg (net/netlink/af_netlink.c:1886)
-sock_write_iter (net/socket.c:729 net/socket.c:744 net/socket.c:1165)
-vfs_write (fs/read_write.c:590 fs/read_write.c:683)
-ksys_write (fs/read_write.c:736)
-do_syscall_64 (arch/x86/entry/common.c:52 arch/x86/entry/common.c:83)
-entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
-
-Fixes: a8a572a6b5f2 ("xfrm: dst_entries_init() per-net dst_ops")
-Reported-by: Ilya Maximets <i.maximets@ovn.org>
-Closes: https://lore.kernel.org/netdev/CANn89iKKYDVpB=MtmfH7nyv2p=rJWSLedO5k7wSZgtY_tO8WQg@mail.gmail.com/T/#m02c98c3009fe66382b73cfb4db9cf1df6fab3fbf
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Link: https://patch.msgid.link/20241204125455.3871859-1-edumazet@google.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[Minor conflict resolved due to code context change.]
-Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
----
-Verified the build test
----
- include/net/net_namespace.h |  1 +
- net/core/net_namespace.c    | 21 ++++++++++++++++++++-
- 2 files changed, 21 insertions(+), 1 deletion(-)
-
-diff --git a/include/net/net_namespace.h b/include/net/net_namespace.h
-index 3cf6a5c17b84..1f985b64a666 100644
---- a/include/net/net_namespace.h
-+++ b/include/net/net_namespace.h
-@@ -80,6 +80,7 @@ struct net {
- 						 * or to unregister pernet ops
- 						 * (pernet_ops_rwsem write locked).
- 						 */
-+	struct llist_node	defer_free_list;
- 	struct llist_node	cleanup_list;	/* namespaces on death row */
- 
- #ifdef CONFIG_KEYS
-diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-index bcf3533cb8ff..feee95cf2991 100644
---- a/net/core/net_namespace.c
-+++ b/net/core/net_namespace.c
-@@ -455,11 +455,28 @@ static struct net *net_alloc(void)
- 	goto out;
- }
- 
-+static LLIST_HEAD(defer_free_list);
-+
-+static void net_complete_free(void)
-+{
-+	struct llist_node *kill_list;
-+	struct net *net, *next;
-+
-+	/* Get the list of namespaces to free from last round. */
-+	kill_list = llist_del_all(&defer_free_list);
-+
-+	llist_for_each_entry_safe(net, next, kill_list, defer_free_list)
-+		kmem_cache_free(net_cachep, net);
-+
-+}
-+
- static void net_free(struct net *net)
- {
- 	if (refcount_dec_and_test(&net->passive)) {
- 		kfree(rcu_access_pointer(net->gen));
--		kmem_cache_free(net_cachep, net);
-+
-+		/* Wait for an extra rcu_barrier() before final free. */
-+		llist_add(&net->defer_free_list, &defer_free_list);
- 	}
- }
- 
-@@ -643,6 +660,8 @@ static void cleanup_net(struct work_struct *work)
- 	 */
- 	rcu_barrier();
- 
-+	net_complete_free();
-+
- 	/* Finally it is safe to free my network namespace structure */
- 	list_for_each_entry_safe(net, tmp, &net_exit_list, exit_list) {
- 		list_del_init(&net->exit_list);
--- 
-2.34.1
-
+Best regards,
+Krzysztof
