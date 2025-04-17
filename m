@@ -1,99 +1,129 @@
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBB91B043C
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BD41DED6F;
+	Thu, 17 Apr 2025 05:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744868188; cv=none; b=HubtCa6T7FDzmG46WbccUFONLerwX8rLppIILvmSynhg12LD3rNBwu4jBMGnu7iVdyo1bE904Oa05cc/aJfYT36d7rPpD3rAxHSf0pWprUD65Z60i/asBob59PibcLauw4Xil5/MvhccwkyL3gFreQzp4fBbSDYkWuP2wb34MRo=
+	t=1744868190; cv=none; b=O7KLxucWWO/oYsJYcvIz3Nv8e8pRiEiK5cm3cHDhtCtye36aFTM2XxchXh5JY254idKWNnqhD+9gBwa0Mi1VPh0z4lKFHdErRklrlnxKqwoKtb3zxl7LpDDa07mANndNHTipLY7zKfmfBapflRKpweQaXPml8+XZomBgf+2MQXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744868188; c=relaxed/simple;
-	bh=bJjDby/9sZrijN+ids6A58NLkAwjWoyw3fhTfNm3dp0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=pvv6nHMKKc7Fjitf+GGdNthBc0s4ZFZWWMzMJz3ZEPusjWPMSlQmUpIzKU0DCeGTz7g2Q7+4oOL55hnr50ZeXhaIXExM57ztFKZjANfkOR4J6R7tEdTTeyK6PuG2RWdtH16cVlxXL8Gz4GdCK86PZZESKw5uSbSb13FfrOvkM9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PKif0DD/; arc=none smtp.client-ip=209.85.161.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744868190; c=relaxed/simple;
+	bh=OS0b2KsauNvvGfkShk9mjUrLdvrCpTHIPPjb1jv7SNY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Tqem9djKjRxKYqkNpHR82g5gVyfqKdhEscmEVBLu40r7RBbNZgeHbBkH90+kgXfy7M7ptj9kk0eI9027NTkVACa+FatyeAgppdCpoGslmTChfnRhd4QHouL4ukv95duAJXWpWDsW6/vjfG3KqYMK3/iHKMmlI2yiKh8iyDuci5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pVIVUQga; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PKif0DD/"
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-601fcbff303so180632eaf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:36:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744868186; x=1745472986; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rbAxcGwpoL1a/w6FaoeJcZ41p0yQgucNaRioNQZI0nQ=;
-        b=PKif0DD/JEPD13VFfoXpAURvY11ir5KHvBltcMHdfaozUytmXKoeB3GZ2Fn1i2K5CW
-         Svx0WzpK+5aOtHjzvYbT32BGGT7m/WxSDXg8i10/YGvH+aYLJbG6CNSz80CY6jpfIRbP
-         8J54W0PGPZJxS9eN6bEDOqGNZ0c1ZR8Yz2OhBMLEAz/lqjqEJcoEZN3ehi5F9YizZUUe
-         j4P+l9TLP6LQvA1qZblMzrgipUUCaYd17EkxiDyNAcCnmFQKbGwRpcuX4B49S3QtJmZB
-         AAnt+WXeBP80FVdDd0vpmWMbBgkXrEIbFfzEE1u959hk12dqIXRtyPqzflFHaT5es3E1
-         qrNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744868186; x=1745472986;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rbAxcGwpoL1a/w6FaoeJcZ41p0yQgucNaRioNQZI0nQ=;
-        b=FjhAm17f5Ej1R/9TZLOdQ8gmpFcTnOlg748tE503I1zHryet8W9NMEFnjGjGpAcUIi
-         Yn0hInwZbLVIxNqzTdaksigwPIaSd++v1ETb9E5WxHHUo8AnJZJTu1Py70ccYatNwtIu
-         f7ZgB1hKJWclX9O/hlIaNgy6DDMLb34FWuenlqUu/1TfEbMnFa5fWxaAo9iZIzi/8iTF
-         TbwXMb6LlUbvnbYohyqT8j1IpBmZ9OF3Rjk0UhZc+orkpJYxuKAPpuJXFFhUYbvHAxnA
-         kz1heP0G+uxoO9YJDe71T6HPBilv8eb3C6r9ZvNUUr1K8JlFXSa98MSt6UNkvhVKGZYE
-         3utw==
-X-Forwarded-Encrypted: i=1; AJvYcCWIeWWEPMz9i1Vw1fMhjsE+OUwAqZoH92FAe11S8pOtFr92R9yfd5Vew/KMn7fJPTS0GVPg63UWIq1mWGE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcVkkgsU2T9GcBXs4VDiBWppIhuxwRLA96o0FaZzF6LnnscF0+
-	zcE712Nn5F61gsncf2yOJvM42V0l+u5I1lo42fxLkjfENOSzGqSF4wZareF0xw==
-X-Gm-Gg: ASbGncsqWH2dvQnv2t8ppLE/4vZm13e98lmr6knf8g5XT9gxjiwT+kv0nr6EREEJIi+
-	VifCeswkLOXVqmEnvrM0DXH9oz0YHYl+Mou8cEFJJ7J0bVSYxDbXBDHMzuduwYRcXnRK7IMD8kY
-	VL0y8aKWv2qzbSTheyOTMlJ1efvsNWOryNRqpeW26YaiPDclBZuNhF1HI7OlYv6lgoKjehMHp1g
-	S85RKedGTaOuaLjf059+L7+ryaTrH9kpqsiNKN8Ow5TMm16aqBhJqJJ9kcB+ggKcTn3+XPq2f9G
-	0Q6dGkl/LCZTxrG3gHLPswOozdk0Ep0drXLmtJhZgDuW996lfb6dG3GSUvPTfoCASHVYFT5EoE/
-	Re78LWFOs5h9oLXsNTJ44y0PEzusJFAGWf/g=
-X-Google-Smtp-Source: AGHT+IHlY4uh4tg72MBZCncFUC4exIqngNyCqdf/5lSaKqmLEKhl+cIGqkzQ7/LtQKu1vqtXnBQMzQ==
-X-Received: by 2002:a05:6871:7420:b0:2c2:b85b:71ff with SMTP id 586e51a60fabf-2d4d29cca06mr2569333fac.8.1744868186033;
-        Wed, 16 Apr 2025 22:36:26 -0700 (PDT)
-Received: from darker.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d096a20194sm3745837fac.30.2025.04.16.22.36.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 22:36:24 -0700 (PDT)
-Date: Wed, 16 Apr 2025 22:36:22 -0700 (PDT)
-From: Hugh Dickins <hughd@google.com>
-To: David Hildenbrand <david@redhat.com>
-cc: Gavin Guo <gavinguo@igalia.com>, linux-mm@kvack.org, 
-    akpm@linux-foundation.org, willy@infradead.org, ziy@nvidia.com, 
-    linmiaohe@huawei.com, hughd@google.com, revest@google.com, 
-    kernel-dev@igalia.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/huge_memory: fix dereferencing invalid pmd migration
- entry
-In-Reply-To: <27d13454-280f-4966-b694-d7e58d991547@redhat.com>
-Message-ID: <6787d0ea-a1b9-08cf-1f48-e361058eec20@google.com>
-References: <20250414072737.1698513-1-gavinguo@igalia.com> <27d13454-280f-4966-b694-d7e58d991547@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pVIVUQga"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BCF8C4CEE4;
+	Thu, 17 Apr 2025 05:36:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744868190;
+	bh=OS0b2KsauNvvGfkShk9mjUrLdvrCpTHIPPjb1jv7SNY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pVIVUQgaKxIv4Vsg2DvnV8+yqDzspXRYYrI6prsA7A58vOzMEdcQ5blCfM3Dax/3f
+	 Br0c3U3D8QdIaWLRBlu/pGSVOVcvzmXEhjBu7UAOSMKeH62Qd8+JosyD/HCh+HVmWC
+	 QS/rBaL7MuqdLBH8icXBHN7zxFuBR3my4L4SgSkH0I+5c//XRM7tcf15QCkpzPgQ04
+	 /fs90d9RUD3xWIkeQtRlCF/U24GBA8zKKAJfNE7M5bj1sAatPGwlVWD/ERpdUGIlCs
+	 x8h5XTKlv9sC89IZRGWurswbuE0OQfVBckpjlaMsIf+GWiK69/NVR6Yf4YFu7BCPUl
+	 H2nHzjgxozELw==
+Message-ID: <8feea1ba-2d4a-4898-9882-cf3ec8b03852@kernel.org>
+Date: Thu, 17 Apr 2025 07:36:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 12/13] ARM: dts: vt8500: Add VIA APC Rock/Paper board
+To: Alexey Charkov <alchark@gmail.com>, Andi Shyti <andi.shyti@kernel.org>,
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mmc@vger.kernel.org, netdev@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
+ <20250416-wmt-updates-v1-12-f9af689cdfc2@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250416-wmt-updates-v1-12-f9af689cdfc2@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 16 Apr 2025, David Hildenbrand wrote:
-> 
-> Why not something like
-> 
-> struct folio *entry_folio;
-> 
-> if (folio) {	
-> 	if (is_pmd_migration_entry(*pmd))
-> 		entry_folio = pfn_swap_entry_folio(pmd_to_swp_entry(*pmd)));
-> 	else
-> 		entry_folio = pmd_folio(*pmd));
-> 
-> 	if (folio != entry_folio)
-> 		return;
-> }
+On 16/04/2025 10:21, Alexey Charkov wrote:
+> diff --git a/arch/arm/boot/dts/vt8500/Makefile b/arch/arm/boot/dts/vt8500/Makefile
+> index 255f4403af91c1d6a22416ab694b8eab44bf98a2..c5a2e57d53af4babe40fe2d79b2f8d9c1ae1b8db 100644
+> --- a/arch/arm/boot/dts/vt8500/Makefile
+> +++ b/arch/arm/boot/dts/vt8500/Makefile
+> @@ -4,4 +4,5 @@ dtb-$(CONFIG_ARCH_VT8500) += \
+>  	wm8505-ref.dtb \
+>  	wm8650-mid.dtb \
+>  	wm8750-apc8750.dtb \
+> -	wm8850-w70v2.dtb
+> +	wm8850-w70v2.dtb \
+> +	wm8950a-apc-rock.dtb
+> diff --git a/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts b/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..58b3c8deb4f20ae072bf1381f1dfa5e5adeb414a
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts
+> @@ -0,0 +1,21 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
 
-My own preference is to not add unnecessary code: 
-if folio and pmd_migration entry, we're not interested in entry_folio.
-But yes it could be written in lots of other ways.
 
-Hugh
+Odd license, we don't do GPL v4 in the kernel. We do however dual
+license for bindings and DTS. Why choosing such license? Did you take
+the code from somewhere?
+
+
+Best regards,
+Krzysztof
