@@ -1,112 +1,184 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44572A937;
-	Thu, 17 Apr 2025 07:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD3AA937;
+	Thu, 17 Apr 2025 07:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744875915; cv=none; b=m1Z9nXKl3i9AYYwgiidjHkWrBy+EJosCAVfcnRYqnCdfGSHH/ygdadfJlU1x11jY/LcIwjQCJ2XmsLwegw6/yQAGC35LKdFJzqWwGf6kYLrzsJVChgctgXBUaIvImHVtbJZFVzujG7GTMfIf0EVmvE0NIu+9imewwTZSjUcxHUU=
+	t=1744875945; cv=none; b=i2hbW+jWGbJIVN+nHTciAHYwhJfe4X+nhWUbF0X9ItfeTW/AMy2EqfW7HI82xTI0WTEkZNFE4gihvqtMmFczKyVE91c4SUsKuMBKsfWR4AED8LOkdH3jTNb7ww9dKJCZ68QElmcS9rEfxleEMgiIaQaqNdxum22v8gPNtkqyOBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744875915; c=relaxed/simple;
-	bh=Vkng84A1VO7UZA2qLJswMZFcaLIzTAdafSby743weXM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=khlFELxhPSvq7EFBtcXDlPQqF3yVriAv32w3V86UMKsk/muUZ3OUXP0BQkHsGL92QOal9kY2EgcJmMdKe5FfVXFX1pLxO31Udo8FWSga3pCbxC7AE9Q/lR0L7kvUSYFEIeZI6gP0vzgrW8PrhHCyv61Ikaia3d6rO2ESITAU8Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XXditUeo; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744875945; c=relaxed/simple;
+	bh=hkTrmrFOU7GxX5XLjscCU+8EFaktWa03BbxcL95VB4I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XgJ13yM1aSbwgAcLpekO9CFxNcSYdt6qlJUW6/+7TEcKQ+7dnaOxlzw48whMlVi6ZeI18iW/+Naqezl9bl8AMt17nXCJG4gA9pP2y+jiVNMgD0JGx4rdoRT5axGRj4nefWbGHcB3/A6Ot4MsXc/KT9EMfoRj7xinRmj9DOU41pE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oau3UoiT; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XXditUeo"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e589c258663so460522276.1;
-        Thu, 17 Apr 2025 00:45:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744875913; x=1745480713; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mcssgBbbVj+a/uBXXE9RC1cUGNGu+ygdY+cVqccmccM=;
-        b=XXditUeoyk7dipu+sb8he/ySrTaDQAj8ujg8Uy+FNJ8dWc/sUWE4lAtrVOVIL6pbaN
-         aDxXShdQzQtr8cY6SxRzB5FOa34QYmQSu6j76XW6eVlHNhe0iFgzMKpvyAmELFsUFuxw
-         RozhFq4lenJJctcSi8tix/60dHhbdGtMOx59/Vcg2KsY7tlbBuhsomba/UYQ3EYdyI6t
-         VUP80EjJ/tRRAjbxq/q8UOdn2QBA0N7DQgJEf6wlSDctK7V+ogp9NuB3awmIjpvq6jKE
-         MJ+zCr8VqUwtWaK6V1dWUmpvEwliSiejVmB58kICpBJCTYgag7DSkmiY2vB2yrcxNIMY
-         fAzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744875913; x=1745480713;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mcssgBbbVj+a/uBXXE9RC1cUGNGu+ygdY+cVqccmccM=;
-        b=IvpAkgj0oWwgEkD72qIBIccxWCR8DIb0xQby3A52OzAcfvWF3cz8fUKtdkWyPLgMLq
-         IxUrUN5MJzDyPyWecrcn4sx/jNTCxhsRm6H2QrBnCQtvuomozXSFSME+z+XH/i9wLiIM
-         gMinzJjTGkT+SxW++rYzQswvpoGwHJFzGo+KzQC7tVboNA2Jyq+XQUqGk8S77RezZ3iR
-         oeYlrJWPBR5Zqd3xTOISjvN39WdHQDkCRZzMb6IN08x9DgFtJCpwA2SgDfCLvKk6b2+u
-         s+DmP871FJ0YaQp2eLukkLGqVjMzxhFc1AM1bKFx+VBgGWtnQ/FP6IU9kNgQbtEoBhCy
-         OWjg==
-X-Forwarded-Encrypted: i=1; AJvYcCU7dmY3XE0jQu0+1AwNbv3LTY9zIhFPfoTYivKPY4LlBig3SrlZusj8kFeV9yltwY+ej0I2+N9ZKF7Teng=@vger.kernel.org, AJvYcCUw00xAWDJ/8+JCVPC/HM9/iU5ysGoz7Bzo4ieq1OIpLe1AKYlom8g7Ly4P2fImg7WXBvyhx/LFamWORdTe@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2RHTE6GFtQYxvTDzkNarrFVqO3RuzraUeEPpH0dZzyrG9Yam4
-	/VL0j2ndeMwIr7e76ERzTNmtBxwOvvz4oX7H2r/wDF/RYGU3hcRJnlCCBHTFs+0iTA4wKAw6xtY
-	zXEuaX9rtieMUgXbsKM/8TXor1E8=
-X-Gm-Gg: ASbGncsfb28jiQWi0prw+fb0S5IVRN03jNCbhAV1VldK+O+G2l2rFk7eMCjkGqcOCoz
-	Fp9xS07wL3+BEbITHkQRxLeQdwom84AO1tEx++OmK945H69dLYLV9JvKmT7DGO4wPhdRXRnIbQc
-	9CQnslKoMz6Xk7INEFE+9i4mJAc7k82WJQg1lPCA==
-X-Google-Smtp-Source: AGHT+IGAR6lg2fMrbxA05CvZYcwcoxr2wuX/4XKhCG2jkWZV60uluWoRnjmCRD/x3C4szfiM33Qvp74JQs4FBRcBiiE=
-X-Received: by 2002:a05:6902:10c4:b0:e6e:b3d:6f87 with SMTP id
- 3f1490d57ef6-e7275f2995bmr6717565276.40.1744875913212; Thu, 17 Apr 2025
- 00:45:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oau3UoiT"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53H5lcgf022725;
+	Thu, 17 Apr 2025 07:45:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ohJkgmWZHjmK4M5DZdPTsNUzOeS2abtFjmhwenkskEc=; b=oau3UoiTvvy4N648
+	rymPTp/G3vCBhichF4Cgs9jULAoIgrpEKYsgvhj+glpsD5+6UN0U/onQslTUCSBS
+	NA7J9nx9wz4zS16Z/pk5wH84seSVjmOY4EHxoj9ZApXLxkgc7R1HpnokW8uADoYg
+	bstEtcomebkTyPFlXCDCh46pQa+Wmcoqlbf6R4iradSy/4inHSebdpLDezG09Iu/
+	S8iyBueVAba0fvTdJ1ZRD2d7g6cD6XbAw9r3nPc7+BEt+EADKzgSczkHZYtS/jvn
+	EuxzP67ocEln9HrV3MZItP+9zE6s8x4uiPYn/2r2K9j/NkmhghfuGdvJIkjpJK8B
+	KiOBWg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yhbpwvkm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 07:45:29 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53H7jS2b028358
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 07:45:28 GMT
+Received: from [10.216.6.49] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 17 Apr
+ 2025 00:45:22 -0700
+Message-ID: <20911703-ab4e-4eb2-8611-294730a06d2f@quicinc.com>
+Date: Thu, 17 Apr 2025 13:15:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417064940.68469-1-dqfext@gmail.com> <CAMj1kXFPAVXOtPoETKvHB49kjZUPYrsAqsJwdL7p5Cu4xk75Rg@mail.gmail.com>
- <CALW65jY=LnVBYoKPOQnSKgGSA0brKzmo0vqoRDcqF_=jofLAng@mail.gmail.com> <CAH8yC8=9u42jK0-FrHOXvWDM-Z3jUKSSSFznTMVWUiPAgCFcTA@mail.gmail.com>
-In-Reply-To: <CAH8yC8=9u42jK0-FrHOXvWDM-Z3jUKSSSFznTMVWUiPAgCFcTA@mail.gmail.com>
-From: Qingfang Deng <dqfext@gmail.com>
-Date: Thu, 17 Apr 2025 15:45:03 +0800
-X-Gm-Features: ATxdqUH8LtN62wtWOBNCijYJvfLyDx2fGZykb1xFl1cR53g-9tp1DwUwsjdUDSI
-Message-ID: <CALW65jZvieqvHei31Ufikz4SVEGvDZwGyLGf=9Myqw1hS9m-sg@mail.gmail.com>
-Subject: Re: [RFC PATCH] crypto: riscv: scalar accelerated GHASH
-To: noloader@gmail.com
-Cc: Ard Biesheuvel <ardb@kernel.org>, Eric Biggers <ebiggers@kernel.org>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, linux-crypto@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	=?UTF-8?Q?Christoph_M=C3=BCllner?= <christoph.muellner@vrull.eu>, 
-	Qingfang Deng <qingfang.deng@siflower.com.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] drm/msm/a6xx: Get HBB dynamically, if available
+To: Konrad Dybcio <konradybcio@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva"
+	<gustavoars@kernel.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul
+	<sean@poorly.run>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        "Dmitry
+ Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>,
+        David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dmitry Baryshkov
+	<lumag@kernel.org>
+CC: Marijn Suijten <marijn.suijten@somainline.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>,
+        Konrad Dybcio
+	<konrad.dybcio@oss.qualcomm.com>
+References: <20250410-topic-smem_dramc-v2-0-dead15264714@oss.qualcomm.com>
+ <20250410-topic-smem_dramc-v2-3-dead15264714@oss.qualcomm.com>
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <20250410-topic-smem_dramc-v2-3-dead15264714@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Spj1uZnIe82_3M7CjYuxQzY3doSiZGES
+X-Proofpoint-GUID: Spj1uZnIe82_3M7CjYuxQzY3doSiZGES
+X-Authority-Analysis: v=2.4 cv=I+plRMgg c=1 sm=1 tr=0 ts=6800b199 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=tRh8Vh706W9Pm3wTBG4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-17_01,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
+ bulkscore=0 mlxlogscore=999 clxscore=1011 impostorscore=0 malwarescore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504170059
 
-Hi Jeffrey,
+On 4/10/2025 11:13 PM, Konrad Dybcio wrote:
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+> The Highest Bank address Bit value can change based on memory type used.
+> 
+> Attempt to retrieve it dynamically, and fall back to a reasonable
+> default (the one used prior to this change) on error.
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> index 06465bc2d0b4b128cddfcfcaf1fe4252632b6777..a6232b382bd16319f20ae5f8f5e57f38ecc62d9f 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/firmware/qcom/qcom_scm.h>
+>  #include <linux/pm_domain.h>
+>  #include <linux/soc/qcom/llcc-qcom.h>
+> +#include <linux/soc/qcom/smem.h>
+>  
+>  #define GPU_PAS_ID 13
+>  
+> @@ -587,6 +588,8 @@ static void a6xx_set_cp_protect(struct msm_gpu *gpu)
+>  
+>  static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+>  {
+> +	int hbb;
+> +
+>  	gpu->ubwc_config.rgb565_predicator = 0;
+>  	gpu->ubwc_config.uavflagprd_inv = 0;
+>  	gpu->ubwc_config.min_acc_len = 0;
+> @@ -635,7 +638,6 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+>  	    adreno_is_a690(gpu) ||
+>  	    adreno_is_a730(gpu) ||
+>  	    adreno_is_a740_family(gpu)) {
+> -		/* TODO: get ddr type from bootloader and use 2 for LPDDR4 */
+>  		gpu->ubwc_config.highest_bank_bit = 16;
+>  		gpu->ubwc_config.amsbc = 1;
+>  		gpu->ubwc_config.rgb565_predicator = 1;
+> @@ -664,6 +666,13 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+>  		gpu->ubwc_config.highest_bank_bit = 14;
+>  		gpu->ubwc_config.min_acc_len = 1;
+>  	}
+> +
+> +	/* Attempt to retrieve the data from SMEM, keep the above defaults in case of error */
+> +	hbb = qcom_smem_dram_get_hbb();
+> +	if (hbb < 0)
+> +		return;
+> +
+> +	gpu->ubwc_config.highest_bank_bit = hbb;
 
-On Thu, Apr 17, 2025 at 3:40=E2=80=AFPM Jeffrey Walton <noloader@gmail.com>=
- wrote:
->
-> On Thu, Apr 17, 2025 at 3:25=E2=80=AFAM Qingfang Deng <dqfext@gmail.com> =
-wrote:
-> >
-> > Hi Ard,
-> >
-> > On Thu, Apr 17, 2025 at 2:58=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org=
-> wrote:
-> > > [...]
-> > >
-> > > Also, do you need to test for int128 support? Or is that guaranteed
-> > > for all compilers that are supported by the RISC-V port?
-> >
-> > I believe int128 support is available for all 64-bit targets.
->
-> You can verify the compiler supports int128 with the following macro:
->
->     #if (__SIZEOF_INT128__ >=3D 16)
->     ...
->     #endif
->
-> Also see <https://gcc.gnu.org/pipermail/gcc-help/2015-August/124862.html>=
-.
+I am worried about blindly relying on SMEM data directly for HBB for
+legacy chipsets. There is no guarantee it is accurate on every chipset
+and every version of firmware. Also, until recently, this value was
+hardcoded in Mesa which matched the value in KMD. So it is better to
+make this opt in, for newer chipsets or those which somebody can verify.
+We can invert this logic to something like this:
 
-There is a Kconfig symbol ARCH_SUPPORTS_INT128. I may switch to that.
+if (!gpu->ubwc_config.highest_bank_bit)
+    gpu->ubwc_config.highest_bank_bit = qcom_smem_dram_get_hbb();
 
->
-> Jeff
+>  }
+>  
+>  static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
+> @@ -2467,6 +2476,10 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device *dev)
+>  	bool is_a7xx;
+>  	int ret;
+>  
+> +	/* We need data from SMEM to retrieve HBB in calc_ubwc_config() */
+> +	if (!qcom_smem_is_available())
+> +		return ERR_PTR(-EPROBE_DEFER);
+> +
+
+We should add "depends on QCOM_SMEM" to Kconfig. Is SMEM device present
+in all Qcom SoC devicetrees? I wonder if there is a scenario where there
+might be an infinite EPROBE_DEFER here.
+
+-Akhil.
+
+>  	a6xx_gpu = kzalloc(sizeof(*a6xx_gpu), GFP_KERNEL);
+>  	if (!a6xx_gpu)
+>  		return ERR_PTR(-ENOMEM);
+> 
+
