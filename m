@@ -1,131 +1,241 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C151E4929;
-	Thu, 17 Apr 2025 07:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65386214A6C
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744873587; cv=none; b=eSb/8RkGA2uCCscewwF8lME8yGQV64h/7qwvX2ACLrLhqi0gG6w7cyGITR95cqRkdpVclR8ROw/ELXEqR2/JwBJn04JrEjrin6b903tRmrC8oPdUN6Lcp7IIqjh/Qx7RtvMyQT+7+nbJgrbYTMDNpawiul3IOTcmNCRQUTC2A64=
+	t=1744873664; cv=none; b=Dj9Q7TsAUNXSiDIPTqMCV+35NQ5zhZHKVNC7rRBcKsNZjgxC2zVBL85glIrLB/3kTXoKuqiJLRM74/bjzhDscd+qUn6G5Vog6MRpiMtvCX02FHx8CU4YTIU2Eh7rwHJz/UBpYcerbEsL3K8dZUYQ2N5MEZEC2SKZNe3NzH3rkOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744873587; c=relaxed/simple;
-	bh=D4WDT+HfXbAerAjkuEcCYbswy7cp7J2BzO7vNLERtIY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Yt5559rsgKJJBGxl5URf9O5abFINECf8AxoT2THOfroOOceNAXhA/IGJ4LwHrG8W6Qc09gggczG4zjeK7eQ/qOEm8o+4lrZG28+xLbwMM6k7x3PuZPFs61FKFPOhQaCMV4NwM6Ensyoc8i7S2vuSb+dOtHk5I2lkGmOdXE3Swow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4ZdTNX59rDz2CdZR;
-	Thu, 17 Apr 2025 15:02:20 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id 62163140142;
-	Thu, 17 Apr 2025 15:05:47 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by kwepemg500017.china.huawei.com
- (7.202.181.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 17 Apr
- 2025 15:05:46 +0800
-From: Li Lingfeng <lilingfeng3@huawei.com>
-To: <trondmy@kernel.org>, <anna@kernel.org>, <jlayton@kernel.org>,
-	<bcodding@redhat.com>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>,
-	<lilingfeng3@huawei.com>
-Subject: [PATCH] nfs: handle failure of nfs_get_lock_context in unlock path
-Date: Thu, 17 Apr 2025 15:25:08 +0800
-Message-ID: <20250417072508.3850532-1-lilingfeng3@huawei.com>
-X-Mailer: git-send-email 2.31.1
+	s=arc-20240116; t=1744873664; c=relaxed/simple;
+	bh=VcH901qcljndDAkf6FKG0mL6ZW97IUPuNheWF2bFrwA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dqbWsIFrFTTgvgWKnIHE1WJzLhxbjc8CZcc7S9bi4slPhCURnHmu4G5uGT5UnoQHPL2Lr8WvGx10VB4870vy4jDWBPYngIrUXNtRyPJ1Pod2b9wctHjeC3cykSqBF28ZgQk7o+jXkwUOSxjGu2w+vSyF3/g6H+TmWEXN3CFgkgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1fF3agDF; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7PqzR5Rz; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1fF3agDF; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7PqzR5Rz; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1fF3agDF";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7PqzR5Rz";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1fF3agDF";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7PqzR5Rz"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1390C1F457;
+	Thu, 17 Apr 2025 07:07:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744873655; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=w+J/9yJ67aCLrPoS8RxKMt4E/7nOHMoej776qBrTYZE=;
+	b=1fF3agDF2wSsAzGB5ey594HlOXQH2H5zofC+ZaKlmURmcWFxMpADn/oOxCEdBD2exQ5UKC
+	R6i6zr+5Wd2Zd2/26Md9qZQygObkxXiuSNwwhajeqzq0uutdpoku478Ib4p/BAQea2Rc3w
+	08k/1x9zUq2NbUvExAEHkyLj/8//KcY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744873655;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=w+J/9yJ67aCLrPoS8RxKMt4E/7nOHMoej776qBrTYZE=;
+	b=7PqzR5Rzfe3fMt1/sgxADxY3KNP9StqUImSAI1B1kNJZp/+iu5FzLZVbOlm79FvST0DZKz
+	tLZpDKNfHzfu8xDQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=1fF3agDF;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=7PqzR5Rz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744873655; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=w+J/9yJ67aCLrPoS8RxKMt4E/7nOHMoej776qBrTYZE=;
+	b=1fF3agDF2wSsAzGB5ey594HlOXQH2H5zofC+ZaKlmURmcWFxMpADn/oOxCEdBD2exQ5UKC
+	R6i6zr+5Wd2Zd2/26Md9qZQygObkxXiuSNwwhajeqzq0uutdpoku478Ib4p/BAQea2Rc3w
+	08k/1x9zUq2NbUvExAEHkyLj/8//KcY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744873655;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=w+J/9yJ67aCLrPoS8RxKMt4E/7nOHMoej776qBrTYZE=;
+	b=7PqzR5Rzfe3fMt1/sgxADxY3KNP9StqUImSAI1B1kNJZp/+iu5FzLZVbOlm79FvST0DZKz
+	tLZpDKNfHzfu8xDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9CA9F137CF;
+	Thu, 17 Apr 2025 07:07:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Lb5mJLaoAGjGSAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Thu, 17 Apr 2025 07:07:34 +0000
+Message-ID: <d6315206-6ef5-4c44-8450-85aac01946c9@suse.de>
+Date: Thu, 17 Apr 2025 09:07:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemg500017.china.huawei.com (7.202.181.81)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] virtgpu: don't reset on shutdown
+To: Gerd Hoffmann <kraxel@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
+ Eric Auger <eauger@redhat.com>, Jocelyn Falempe <jfalempe@redhat.com>,
+ David Airlie <airlied@redhat.com>,
+ Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
+ <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Simona Vetter <simona@ffwll.ch>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev
+References: <8490dbeb6f79ed039e6c11d121002618972538a3.1744293540.git.mst@redhat.com>
+ <ge6675q3ahypfncrwbiodtcjnoftuza6ele5fhre3jmdeifsez@yy53fbwoulgo>
+ <20250415095922-mutt-send-email-mst@kernel.org>
+ <lgizdflxcku5ew2en55ux3r72u37d6aycuoosn5i5a5wagz6sc@d2kha7ycmmpy>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <lgizdflxcku5ew2en55ux3r72u37d6aycuoosn5i5a5wagz6sc@d2kha7ycmmpy>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 1390C1F457
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	URIBL_BLOCKED(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[vger.kernel.org,redhat.com,chromium.org,gmail.com,linux.intel.com,kernel.org,ffwll.ch,linux.alibaba.com,lists.freedesktop.org,lists.linux.dev];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-When memory is insufficient, the allocation of nfs_lock_context in
-nfs_get_lock_context() fails and returns -ENOMEM. If we mistakenly treat
-an nfs4_unlockdata structure (whose l_ctx member has been set to -ENOMEM)
-as valid and proceed to execute rpc_run_task(), this will trigger a NULL
-pointer dereference in nfs4_locku_prepare. For example:
+Hi
 
-BUG: kernel NULL pointer dereference, address: 000000000000000c
-PGD 0 P4D 0
-Oops: Oops: 0000 [#1] SMP PTI
-CPU: 15 UID: 0 PID: 12 Comm: kworker/u64:0 Not tainted 6.15.0-rc2-dirty #60
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-2.fc40
-Workqueue: rpciod rpc_async_schedule
-RIP: 0010:nfs4_locku_prepare+0x35/0xc2
-Code: 89 f2 48 89 fd 48 c7 c7 68 69 ef b5 53 48 8b 8e 90 00 00 00 48 89 f3
-RSP: 0018:ffffbbafc006bdb8 EFLAGS: 00010246
-RAX: 000000000000004b RBX: ffff9b964fc1fa00 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: fffffffffffffff4 RDI: ffff9ba53fddbf40
-RBP: ffff9ba539934000 R08: 0000000000000000 R09: ffffbbafc006bc38
-R10: ffffffffb6b689c8 R11: 0000000000000003 R12: ffff9ba539934030
-R13: 0000000000000001 R14: 0000000004248060 R15: ffffffffb56d1c30
-FS: 0000000000000000(0000) GS:ffff9ba5881f0000(0000) knlGS:00000000
-CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000000000c CR3: 000000093f244000 CR4: 00000000000006f0
-Call Trace:
- <TASK>
- __rpc_execute+0xbc/0x480
- rpc_async_schedule+0x2f/0x40
- process_one_work+0x232/0x5d0
- worker_thread+0x1da/0x3d0
- ? __pfx_worker_thread+0x10/0x10
- kthread+0x10d/0x240
- ? __pfx_kthread+0x10/0x10
- ret_from_fork+0x34/0x50
- ? __pfx_kthread+0x10/0x10
- ret_from_fork_asm+0x1a/0x30
- </TASK>
-Modules linked in:
-CR2: 000000000000000c
----[ end trace 0000000000000000 ]---
+Am 16.04.25 um 15:57 schrieb Gerd Hoffmann:
+> On Tue, Apr 15, 2025 at 10:00:48AM -0400, Michael S. Tsirkin wrote:
+>> On Tue, Apr 15, 2025 at 01:16:32PM +0200, Gerd Hoffmann wrote:
+>>>    Hi,
+>>>
+>>>> +static void virtio_gpu_shutdown(struct virtio_device *vdev)
+>>>> +{
+>>>> +	/*
+>>>> +	 * drm does its own synchronization on shutdown.
+>>>> +	 * Do nothing here, opt out of device reset.
+>>>> +	 */
+>>> I think a call to 'drm_dev_unplug()' is what you need here.
+>>>
+>>> take care,
+>>>    Gerd
+>> My patch reverts the behaviour back to what it was, so pls go
+>> ahead and send a patch on top? I won't be able to explain
+>> what it does and why it's needed.
+> See below.  Untested.
+>
+> Eric, can you give this a spin?
+>
+> thanks,
+>    Gerd
+>
+> ----------------------- cut here -------------------------------
+>  From f3051dd52cb2004232941e6d2cbc0c694e290534 Mon Sep 17 00:00:00 2001
+> From: Gerd Hoffmann <kraxel@redhat.com>
+> Date: Wed, 16 Apr 2025 15:53:04 +0200
+> Subject: [PATCH] drm/virtio: implement virtio_gpu_shutdown
+>
+> Calling drm_dev_unplug() is the drm way to say the device
+> is gone and can not be accessed any more.
+>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>   drivers/gpu/drm/virtio/virtgpu_drv.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> index e32e680c7197..71c6ccad4b99 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> @@ -130,10 +130,10 @@ static void virtio_gpu_remove(struct virtio_device *vdev)
+>   
+>   static void virtio_gpu_shutdown(struct virtio_device *vdev)
+>   {
+> -	/*
+> -	 * drm does its own synchronization on shutdown.
+> -	 * Do nothing here, opt out of device reset.
+> -	 */
+> +	struct drm_device *dev = vdev->priv;
+> +
+> +	/* stop talking to the device */
+> +	drm_dev_unplug(dev);
+>   }
 
-Free the allocated nfs4_unlockdata when nfs_get_lock_context() fails and
-return NULL to terminate subsequent rpc_run_task, preventing NULL pointer
-dereference.
+It's the correct approach but also requires drm_dev_enter() and 
+drm_dev_exit() around all of the driver's hardware access.
 
-Fixes: f30cb757f680 ("NFS: Always wait for I/O completion before unlock")
-Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
----
- fs/nfs/nfs4proc.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+Best regards
+Thomas
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 970f28dbf253..9f5689c43a50 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -7074,10 +7074,18 @@ static struct nfs4_unlockdata *nfs4_alloc_unlockdata(struct file_lock *fl,
- 	struct nfs4_unlockdata *p;
- 	struct nfs4_state *state = lsp->ls_state;
- 	struct inode *inode = state->inode;
-+	struct nfs_lock_context *l_ctx;
- 
- 	p = kzalloc(sizeof(*p), GFP_KERNEL);
- 	if (p == NULL)
- 		return NULL;
-+	l_ctx = nfs_get_lock_context(ctx);
-+	if (!IS_ERR(l_ctx)) {
-+		p->l_ctx = l_ctx;
-+	} else {
-+		kfree(p);
-+		return NULL;
-+	}
- 	p->arg.fh = NFS_FH(inode);
- 	p->arg.fl = &p->fl;
- 	p->arg.seqid = seqid;
-@@ -7085,7 +7093,6 @@ static struct nfs4_unlockdata *nfs4_alloc_unlockdata(struct file_lock *fl,
- 	p->lsp = lsp;
- 	/* Ensure we don't close file until we're done freeing locks! */
- 	p->ctx = get_nfs_open_context(ctx);
--	p->l_ctx = nfs_get_lock_context(ctx);
- 	locks_init_lock(&p->fl);
- 	locks_copy_lock(&p->fl, fl);
- 	p->server = NFS_SERVER(inode);
+>   
+>   static void virtio_gpu_config_changed(struct virtio_device *vdev)
+
 -- 
-2.31.1
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
