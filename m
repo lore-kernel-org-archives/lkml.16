@@ -1,128 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7582F1C6B4;
-	Thu, 17 Apr 2025 20:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AC21C6B4
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 20:19:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744921061; cv=none; b=Icpv+65FvuYcgwP8xX8Bi8IQtOARBjbx/DROkHqQUHsfyBh8Losa4XD5NCpWTi5EEGOrWd1Dy0eeeNYIHbaXB1NNxlFBG6P13V4CwteNK1mvTgTCO4dT0GKH+Xd7VoD82ovujawhDKq+LhZ6qwQg1ExTh87YeBcDbV3augk32N0=
+	t=1744921162; cv=none; b=gpBNwBaZQnFR93JXizj1oj3fExgQiv1yAFw03Bmy0Us7Ll2feUP/1WFQDAswtSJX4rE8frawv1+/IWFsOL2I4xdiY23G2T8l3sfO3e5yynnGAul4fz3JEnV8Jsd5xKcCcrYHpR5BTxeX4p+gjmggqjQdBvKjM3fpjkqzYR7q99A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744921061; c=relaxed/simple;
-	bh=ylGcaqXs2CkFWNWnobHXJhkjC4qMgA3tVJ/2Z20Won8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GzK492Im5exh73Ic6xyOhx3NYkp4lyx6ABBgFH4iv+0YrrCP4dZVSUzSucbVDHpvTFR08SA0bakPsIVKratJ+e+o+P5U8aUiygaZlqS4i/YNRMkgzpqbIUKhObl4sWOCPVksm/Xsq9eFHYGDVMSoDF9QxAIVNrhpM90FiEn32FE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HXdyBTlb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744921162; c=relaxed/simple;
+	bh=uL9FnUafBcSm4Xo8blgLdW7ATAt7SFP6K2MYu6fZWgs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=MOY2Xnbphd3eV4xO41HEMSMjoGrwKsaNzYXNmgKmYKTCLJW4Ta8D+qS/iAo4A6GRKNa0GFcrzNDmiEWs8n6ZSSpTXD1EJHNWSFrfzdfx9niQvbKDqklK7HWatvi4yW6X4AVBTnIXQdwx9Lk+ZNpwUs/pTpThQhugibrerIPrmmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jyescas.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VaGKF5jR; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jyescas.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HXdyBTlb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 336A0C4CEEA;
-	Thu, 17 Apr 2025 20:17:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744921061;
-	bh=ylGcaqXs2CkFWNWnobHXJhkjC4qMgA3tVJ/2Z20Won8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HXdyBTlbCt1dyeHOdi+EfWelczNK7KQOAal+MxUXpQ9gfQX4ZpO46koDmzJsH47+3
-	 R47YGuoMCFROd3N33EbJ145UGi9OghOdX+w9+fmti7wHE979u1+WY582foSJq09y5W
-	 VwN+0OYcmHZyY8IeKY/BkCdrlGSMzyol3Vr41GGSmZ21X9OWm2PZNmo2ewVhApgvyR
-	 S9sqC0OyaJ9EiVm788Tuxpmf+SP0SULtPM/Q2llejb3o5vCkQmm47Kfi/UsNzQKOIY
-	 cROdKIICtnFYQqs+ndn/DJGUuA+nDoPoJJUQxPZ9QW9eqXB0GgRVEku8RB+lPsS5SI
-	 1CI1Fzz96v60w==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-549963b5551so1312691e87.2;
-        Thu, 17 Apr 2025 13:17:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU+kwl+tMRjXq36syAbqeMpK7h80XHUU1k2ahD5ySX/9ng5SJAJggLm6Epu1bRjT7vBnINj4erzAMY=@vger.kernel.org, AJvYcCUJtkP1P10tMDY7zmiBrS27Ix0xLrdna88lyK/we0jE0rpOPYBlMWmGz+8vP3ZC6hskt8eBDfEjEoDcGLye@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3GDVMy+OI7s0tAIGTO5uak0i5iNxQPQAxhQsYFZm2vGY53Qws
-	uBEYjJA5+XAdIYrArLFF7VyXjZfLGF1py5Ku9VLUBakB10U8tAn+ob/kn70XpfTgr11+rE3equW
-	WOKFHtuYh02Y2PZsVCYvk6/VD+cc=
-X-Google-Smtp-Source: AGHT+IHC/qjBvVDkg0bOLRN2tbFVMMZ5e3m89Q/YIRaiRPwLsvxG2Cb9dZK4Juivo6D/U18CdE9gOG+RbuNpIoJVcqg=
-X-Received: by 2002:a05:6512:1282:b0:545:2f0d:8836 with SMTP id
- 2adb3069b0e04-54d6e662b3bmr46045e87.40.1744921059532; Thu, 17 Apr 2025
- 13:17:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VaGKF5jR"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff4b130bb2so1172655a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 13:19:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744921160; x=1745525960; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=szmwZh/snPTv0r4g4X3cMAtrvCVPEjXRIc5jf6i3HMI=;
+        b=VaGKF5jRy7ptVR4y9U3kR9F+k17WuInUKR5DsCc1aaD7A7Ftv4/riVeiIPRe86dBBb
+         i3zxfJ/YU0uNaWoeMKt8DbptuKKp0Zf13/daoKZVHscvi6UrN6eRNByqJNRbbPhPCmCP
+         HiRSh4OIK01zLCy+aS+oUetuvFItnlZm8NgTV+K5r4zSZplI9y8nv7bufMzJBLcfsIMR
+         2pgD7+0fr0jZkFQIbya6iPQ8Fqasj0S+BSC2asKETzsh4QdlJ4fAlSEXK9bsTtyuo9b/
+         xOSAVzGsfFBMm6//pMAYeUAfIEG4AHpS20NLr9Q69HECB6T+CPUoTHoTJEU2ULRbiYCA
+         8/OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744921160; x=1745525960;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=szmwZh/snPTv0r4g4X3cMAtrvCVPEjXRIc5jf6i3HMI=;
+        b=BmW5xiPV8+7co0RQW+4Y1uGtrIClDe2b65HbKM88YceSuRSQ01biq4N5Niw3mvtbXa
+         fSGXV1pTGf82HOFHieR5fE5d+VekjXJeMthhG3yevXnmcfwfVwkk4DSweC4PChVnLtOE
+         lj8cKqKaKMo7TxutVWV6noCWzYq5f6MGT2Lr22TtsaW6l/wqVqOBFg5F/npFYRqmLXM7
+         aeHYM6sXNq6R6rDG4c5i4k4VSGl4LIV2y7zlSQ/tOMUQISgLmvnnDcwv13cMsYlfZGiX
+         yxqFGNnU7BujwDOTmgRQGHFjetGmApzo9pgq+JuXuuyx7ENirx8ctMCPXMKeWCvOG2HH
+         AB/g==
+X-Forwarded-Encrypted: i=1; AJvYcCV7dM10XaIlPB8o4DqcI3WwDSnEtOREvgnOPuCpDwbm3S9lwB6t6lZKt51U28akDM0essBBJ2pdjOy5n0I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNVr3o9hP4lGarPf7WOCpmo7n+T5dTzoL7VXROJR/M/FOzqF/8
+	GMwJIJJrAuZxqWNWoJvev6db6VcAvj5RwVc9uwR4I5N2y6BDimj5IEHAeT/J7GMxmQ4twJfPX2h
+	IPBlG1A==
+X-Google-Smtp-Source: AGHT+IHqVo64+FhTZ9ieKVGFwpqJFtKlYfDnSlq2xKJP48CFVf++acfJ/rmzTtjop5b8jMgM80+OJ2bsTKlP
+X-Received: from pjbsv3.prod.google.com ([2002:a17:90b:5383:b0:308:65f7:9f24])
+ (user=jyescas job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2809:b0:301:1c29:a1d9
+ with SMTP id 98e67ed59e1d1-3087bb66b26mr432491a91.21.1744921160042; Thu, 17
+ Apr 2025 13:19:20 -0700 (PDT)
+Date: Thu, 17 Apr 2025 13:19:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250410132850.3708703-2-ardb+git@google.com> <20250411184113.GBZ_liSYllx10eT-l1@renoirsky.local>
- <CAMj1kXEqWxokyJf_WUE5Owwz3fO6b-Wq8sSNxFmMVAA+Q47uPQ@mail.gmail.com>
- <3f2b0089-a641-1e0c-3558-0a8dc174d1ec@amd.com> <CAMj1kXGvLQwea2J0E72tMhY-9iDCTmQm3drrHCTLyZ=hCP_iAg@mail.gmail.com>
- <96762dec-616b-b906-02b3-e006d43a8535@amd.com> <CAMj1kXFVeygkdnhtkGHsKfRgGXoMRpdjQ-wTO1RBLU_wERs_=Q@mail.gmail.com>
- <3196bc53-cb39-5501-b585-de175eed83af@amd.com> <c606da9b-f8f3-60ee-9e19-30e75a435c92@amd.com>
-In-Reply-To: <c606da9b-f8f3-60ee-9e19-30e75a435c92@amd.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 17 Apr 2025 22:17:27 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXH4e3cFBZaaLpNqiE6A-T-zAKqfuSOuRX-Zz+M=e2Fr2Q@mail.gmail.com>
-X-Gm-Features: ATxdqUHt0nH0JCb8hC_2A7962M_IHPT0IamO-24koQHBjBgHHsleghHD4fTmCSU
-Message-ID: <CAMj1kXH4e3cFBZaaLpNqiE6A-T-zAKqfuSOuRX-Zz+M=e2Fr2Q@mail.gmail.com>
-Subject: Re: [PATCH v3] x86/boot/sev: Avoid shared GHCB page for early memory acceptance
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Borislav Petkov <bp@alien8.de>, Ard Biesheuvel <ardb+git@google.com>, linux-efi@vger.kernel.org, 
-	x86@kernel.org, mingo@kernel.org, linux-kernel@vger.kernel.org, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+Message-ID: <20250417201913.2393655-1-jyescas@google.com>
+Subject: [PATCH v3] dma-buf: system_heap: Set allocation orders for larger
+ page sizes
+From: Juan Yescas <jyescas@google.com>
+To: Sumit Semwal <sumit.semwal@linaro.org>, 
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
+	John Stultz <jstultz@google.com>, "T.J. Mercier" <tjmercier@google.com>, 
+	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	linux-kernel@vger.kernel.org
+Cc: jyescas@google.com, baohua@kernel.org, dmitry.osipenko@collabora.com, 
+	jaewon31.kim@samsung.com, surenb@google.com, kaleshsingh@google.com
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 17 Apr 2025 at 22:01, Tom Lendacky <thomas.lendacky@amd.com> wrote:
->
-> On 4/17/25 12:26, Tom Lendacky wrote:
-> > On 4/17/25 11:38, Ard Biesheuvel wrote:
-> >> On Thu, 17 Apr 2025 at 18:21, Tom Lendacky <thomas.lendacky@amd.com> wrote:
-> >>>
-> >>> On 4/17/25 11:14, Ard Biesheuvel wrote:
-> >>>> On Thu, 17 Apr 2025 at 18:08, Tom Lendacky <thomas.lendacky@amd.com> wrote:
-> >>>>>
-> >>>>> On 4/11/25 14:00, Ard Biesheuvel wrote:
-> >>>>>> On Fri, 11 Apr 2025 at 20:40, Borislav Petkov <bp@alien8.de> wrote:
-> >>>>>>>
-> >>>>>>> On Thu, Apr 10, 2025 at 03:28:51PM +0200, Ard Biesheuvel wrote:
-> >>>>>>>> From: Ard Biesheuvel <ardb@kernel.org>
-> >>>>>>>>
-> >>>>>>>> Communicating with the hypervisor using the shared GHCB page requires
-> >>>>>>>> clearing the C bit in the mapping of that page. When executing in the
-> >>>>>>>> context of the EFI boot services, the page tables are owned by the
-> >>>>>>>> firmware, and this manipulation is not possible.
-> >>>>>>>>
-> >>>>>>>> So switch to a different API for accepting memory in SEV-SNP guests, one
-> >>>>>>>
-> >>>>>>> That being the GHCB MSR protocol, it seems.
-> >>>>>>>
-> >>>>>>
-> >>>>>> Yes.
-> >>>>>>
-> >>>>>>> And since Tom co-developed, I guess we wanna do that.
-> >>>>>>>
-> >>>>>>> But then how much slower do we become?
-> >>>>>>>
-> >>>>>>
-> >>>>>> Non-EFI stub boot will become slower if the memory that is used to
-> >>>>>> decompress the kernel has not been accepted yet. But given how heavily
-> >>>>>> SEV-SNP depends on EFI boot, this typically only happens on kexec, as
-> >>>>>> that is the only boot path that goes through the traditional
-> >>>>>> decompressor.
-> >>>>>
-> >>>>> Some quick testing showed no significant differences in kexec booting
-> >>>>> and testing shows everything seems to be good.
-> >>>>>
-> >>>>
-> >>>> Thanks.
-> >>>>
-> >>>>> But, in testing with non-2M sized memory (e.g. a guest with 4097M of
-> >>>>> memory) and without the change to how SNP is detected before
-> >>>>> sev_enable() is called, we hit the error path in arch_accept_memory() in
-> >>>>> arch/x86/boot/compressed/mem.c and the boot crashes.
-> >>>>>
-> >>>>
-> >>>> Right. So this is because sev_snp_enabled() is based on sev_status,
-> >>>> which has not been set yet at this point, right?
-> >>>
-> >>> Correct.
-> >>>
-> >>
-> >> OK. Would this do the trick? (with asm/sev.h added to the #includes)
-> >
-> > Yes, that works for booting. Let me do some kexec testing and get back
-> > to you. Sorry, that might not be until tomorrow, though.
->
-> Ok, found some time... looks good with kexec, too.
->
+This change sets the allocation orders for the different page sizes
+(4k, 16k, 64k) based on PAGE_SHIFT. Before this change, the orders
+for large page sizes were calculated incorrectly, this caused system
+heap to allocate from 2% to 4% more memory on 16KiB page size kernels.
 
-Thanks!
+This change was tested on 4k/16k page size kernels.
+
+Signed-off-by: Juan Yescas <jyescas@google.com>
+Acked-by: John Stultz <jstultz@google.com>
+Reviewed-by: T.J. Mercier <tjmercier@google.com>
+---
+
+Changes in v2:
+  - Add John's Acked-by tag.
+  - Add TJ's Reviewed-by tag
+  - Use dma-buf: system_heap: in the subject since this is specific to the
+    system heap, as per TJ.
+  - Remove extra space in if statement.
+
+Changes in v3:
+  - Remove defines for the orders as per Christian.
+  - Update the order array for 64k page sizes as per TJ
+
+ drivers/dma-buf/heaps/system_heap.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/dma-buf/heaps/system_heap.c b/drivers/dma-buf/heaps/system_heap.c
+index 26d5dc89ea16..8c10c0f2b473 100644
+--- a/drivers/dma-buf/heaps/system_heap.c
++++ b/drivers/dma-buf/heaps/system_heap.c
+@@ -18,6 +18,7 @@
+ #include <linux/mm.h>
+ #include <linux/module.h>
+ #include <linux/scatterlist.h>
++#include <linux/sizes.h>
+ #include <linux/slab.h>
+ #include <linux/vmalloc.h>
+ 
+@@ -44,14 +45,28 @@ struct dma_heap_attachment {
+ #define HIGH_ORDER_GFP  (((GFP_HIGHUSER | __GFP_ZERO | __GFP_NOWARN \
+ 				| __GFP_NORETRY) & ~__GFP_RECLAIM) \
+ 				| __GFP_COMP)
+-static gfp_t order_flags[] = {HIGH_ORDER_GFP, HIGH_ORDER_GFP, LOW_ORDER_GFP};
+ /*
+  * The selection of the orders used for allocation (1MB, 64K, 4K) is designed
+  * to match with the sizes often found in IOMMUs. Using order 4 pages instead
+  * of order 0 pages can significantly improve the performance of many IOMMUs
+  * by reducing TLB pressure and time spent updating page tables.
++ *
++ * Note: When the order is 0, the minimum allocation is PAGE_SIZE. The possible
++ * page sizes for ARM devices could be 4K, 16K and 64K.
++ */
++#if (PAGE_SIZE == SZ_64K)
++static gfp_t order_flags[] = {HIGH_ORDER_GFP, LOW_ORDER_GFP};
++/* 1MiB allocs are calculated with (2 ^ (20 - PAGE_SHIFT)) * PAGE_SIZE = 1MiB */
++static const unsigned int orders[] = {20 - PAGE_SHIFT, 0};
++#else
++static gfp_t order_flags[] = {HIGH_ORDER_GFP, HIGH_ORDER_GFP, LOW_ORDER_GFP};
++/*
++ * 1MiB allocs are calculated with (2 ^ (20 - PAGE_SHIFT)) * PAGE_SIZE = 1MiB
++ * 64KiB allocs are calculated with (2 ^ (16 - PAGE_SHIFT)) * PAGE_SIZE = 64KiB
+  */
+-static const unsigned int orders[] = {8, 4, 0};
++static const unsigned int orders[] = {20 - PAGE_SHIFT, 16 - PAGE_SHIFT, 0};
++#endif
++
+ #define NUM_ORDERS ARRAY_SIZE(orders)
+ 
+ static struct sg_table *dup_sg_table(struct sg_table *table)
+@@ -318,7 +333,7 @@ static struct page *alloc_largest_available(unsigned long size,
+ 	int i;
+ 
+ 	for (i = 0; i < NUM_ORDERS; i++) {
+-		if (size <  (PAGE_SIZE << orders[i]))
++		if (size < (PAGE_SIZE << orders[i]))
+ 			continue;
+ 		if (max_order < orders[i])
+ 			continue;
+-- 
+2.49.0.805.g082f7c87e0-goog
+
