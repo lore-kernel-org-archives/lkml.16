@@ -1,65 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E785E282F5;
-	Thu, 17 Apr 2025 11:09:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25031282F5;
+	Thu, 17 Apr 2025 11:09:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744888150; cv=none; b=pRFLkk8BDpoFsHNu4bvLmZN9QPLogw9jio8MpFkrgADhGlOWOJybbMesI26JR2F4/j+MgscfHq7th0UjR4k1jwGdVV8xvOuI1R5iv25Vnyu1T+Dz0vz6ig3HE6lAvT2gCs2c+pew9lBENhRO654k0YFD/0LJ8S+MTaDA8tLhhFY=
+	t=1744888159; cv=none; b=KN5xeFD3l2SL7iWuydZvQKU8Jqt0DgTt6ZkBIepy33V67CYwKtzHes8suFl5+yXN9npIABgxpoWvrF4qkksA6C2OFgCsO2sOl/oqP3GGA38JreUrVMi25w5HWcvi82j/Z0WrecNUfQVPEH3d1qb7U+hpOvKnQF/MH9hzc6BUXfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744888150; c=relaxed/simple;
-	bh=DMRPs6Pg9YVDPOXdyTSZNoTtok8ps/JAKSlHPeisvoM=;
+	s=arc-20240116; t=1744888159; c=relaxed/simple;
+	bh=569Vl79qE9wxBCgdTtnVWyUSAIMktPNuoFwl7F2vJOU=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=STD8sNGcnKWVWoIYCT5Krf0eI/75TLCqRnl0LZEYzW9bYY7Eu7e3B/eHXi+LSFrF9MkRHPF7e8ISY8XF5Vvg5+0CP+LL6Zl9QUBmbe0yMUkMKMtM/kAZOtLuXzM3kvpDL0sFn5Qv9OTw7URKmN2a8IfQ+q7tPIn33RebnHq16S4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LYMjsHgV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sUXvyNUi; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=MAblx+EN/KC3DWbIxXRFYjttqvGuOHJPlAa0V0d2EwEUqt6MYuxifvU1i+igPizKA+IEbwFEC5jmbY88M9GlXL2slevhoRGOEvfARzJAOo25DsxO7XbPe/SA5Oq4CVrFau2Sxt7+kH20TZRXzZuanjKQaJbG6K5xK8+su2IS6Hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2oECC+Ok; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qGBs5Rxg; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LYMjsHgV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sUXvyNUi"
-Date: Thu, 17 Apr 2025 11:09:03 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2oECC+Ok";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qGBs5Rxg"
+Date: Thu, 17 Apr 2025 11:09:15 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744888147;
+	s=2020; t=1744888156;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=h9xAsHwuZuHioxK7TNKzzVFd35a3MwUcAAl7xcFNIpc=;
-	b=LYMjsHgVfW9n+1M9o7SRzYWrcEScFC4KoJ8GEGZHaxEZbh82cufLBPKbU/YmJZdasb4OJ1
-	W7KYzSnxLzO18EJAq3f1TKDt2azSk0u7LGEu/q+S6NSuNVgzDlH48nBxugZZtcKVWRCEKt
-	rzzjAGwAEyHdoCCQK6Bkpmhm6RTeBE2YG9XKjAR3CBy54NljwJ9+ST+AhsSqvEj7ck5D30
-	GdU3QsShU1fEQlg0tLrgYq2AosI6e/uGsOz1lXbVyHgQqgV/0WvqWshAGse7CPx7NRXRa9
-	lWbzCk3SwcPh1KLxT/jydRzzQFhCFArbAnf0fW01dEXWvFpsLMAqpPCjc5+PJg==
+	bh=GzArZZa9Qxkr/GWJ2jSL4BIuKleIDz7osPoXYKOSEmk=;
+	b=2oECC+OkhZVKiGd4quuLnSGCcZlwxggcY0f3F8kdzD5UKVp6RG4XdP1WDvlejccXqxRVId
+	ET2kWPeKglamDp0jRiKaZhprWCYZep/+XjlSKuAI2sJBeWW+lOCe4sUZEvHOujq98lljps
+	FRzPDDWotbJ3VrVmFTmyuGTmOgsLM7a6IGTae/PnLztH0AiYd8FslTflu0KBWlW/jmBFwo
+	+TuTRhq3O3mMu6d6pCOcgUhVJzr7p/nK7aGfctoJtH+kpy6Ut03yY8EBBFPfh/VK9+LMZY
+	I6NRpONTGUvttO5K9NCbDlYRIB7Mvm/amBIPVNpGEO2bgTWo2wn4zcXlu9dt4w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744888147;
+	s=2020e; t=1744888156;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=h9xAsHwuZuHioxK7TNKzzVFd35a3MwUcAAl7xcFNIpc=;
-	b=sUXvyNUiyyhQ4yc0+aCtbdoV/jHToZu8+NhbJkgJI/iCKgh3iHOVR7WU05hPsprnQ99+RW
-	aWXFAeBh/rZd8oCQ==
+	bh=GzArZZa9Qxkr/GWJ2jSL4BIuKleIDz7osPoXYKOSEmk=;
+	b=qGBs5Rxg20bS9YMG7kk362D+k5rfI2zjy/EnFYCdUF/NuA8WVS8WKuRXBNFYME+PQwwC68
+	elXx0ahvJCh+YPAw==
 From: "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
 Subject: [tip: perf/urgent] perf/x86/intel/uncore: Fix the scale of IIO free
- running counters on SPR
-Cc: Tang Jun <dukang.tj@alibaba-inc.com>,
- Kan Liang <kan.liang@linux.intel.com>, Ingo Molnar <mingo@kernel.org>,
+ running counters on SNR
+Cc: Kan Liang <kan.liang@linux.intel.com>, Ingo Molnar <mingo@kernel.org>,
  Peter Zijlstra <a.p.zijlstra@chello.nl>, stable@vger.kernel.org,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250416142426.3933977-3-kan.liang@linux.intel.com>
-References: <20250416142426.3933977-3-kan.liang@linux.intel.com>
+In-Reply-To: <20250416142426.3933977-1-kan.liang@linux.intel.com>
+References: <20250416142426.3933977-1-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174488814342.31282.6685848537217689272.tip-bot2@tip-bot2>
+Message-ID: <174488815597.31282.9087365988248723967.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,105 +68,75 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     506f981ab40f0b03a11a640cfd77f48b09aff330
-Gitweb:        https://git.kernel.org/tip/506f981ab40f0b03a11a640cfd77f48b09aff330
+Commit-ID:     96a720db59ab330c8562b2437153faa45dac705f
+Gitweb:        https://git.kernel.org/tip/96a720db59ab330c8562b2437153faa45dac705f
 Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Wed, 16 Apr 2025 07:24:26 -07:00
+AuthorDate:    Wed, 16 Apr 2025 07:24:24 -07:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 17 Apr 2025 12:57:32 +02:00
+CommitterDate: Thu, 17 Apr 2025 12:57:20 +02:00
 
-perf/x86/intel/uncore: Fix the scale of IIO free running counters on SPR
+perf/x86/intel/uncore: Fix the scale of IIO free running counters on SNR
 
-The scale of IIO bandwidth in free running counters is inherited from
-the ICX. The counter increments for every 32 bytes rather than 4 bytes.
+There was a mistake in the SNR uncore spec. The counter increments for
+every 32 bytes of data sent from the IO agent to the SOC, not 4 bytes
+which was documented in the spec.
 
-The IIO bandwidth out free running counters don't increment with a
-consistent size. The increment depends on the requested size. It's
-impossible to find a fixed increment. Remove it from the event_descs.
+The event list has been updated:
 
-Fixes: 0378c93a92e2 ("perf/x86/intel/uncore: Support IIO free-running counters on Sapphire Rapids server")
-Reported-by: Tang Jun <dukang.tj@alibaba-inc.com>
+  "EventName": "UNC_IIO_BANDWIDTH_IN.PART0_FREERUN",
+  "BriefDescription": "Free running counter that increments for every 32
+		       bytes of data sent from the IO agent to the SOC",
+
+Update the scale of the IIO bandwidth in free running counters as well.
+
+Fixes: 210cc5f9db7a ("perf/x86/intel/uncore: Add uncore support for Snow Ridge server")
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20250416142426.3933977-3-kan.liang@linux.intel.com
+Link: https://lore.kernel.org/r/20250416142426.3933977-1-kan.liang@linux.intel.com
 ---
- arch/x86/events/intel/uncore_snbep.c | 58 +---------------------------
- 1 file changed, 1 insertion(+), 57 deletions(-)
+ arch/x86/events/intel/uncore_snbep.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index fb08911..76d96df 100644
+index 60973c2..35da2c4 100644
 --- a/arch/x86/events/intel/uncore_snbep.c
 +++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -6289,69 +6289,13 @@ static struct freerunning_counters spr_iio_freerunning[] = {
- 	[SPR_IIO_MSR_BW_OUT]	= { 0x3808, 0x1, 0x10, 8, 48 },
- };
- 
--static struct uncore_event_desc spr_uncore_iio_freerunning_events[] = {
--	/* Free-Running IIO CLOCKS Counter */
--	INTEL_UNCORE_EVENT_DESC(ioclk,			"event=0xff,umask=0x10"),
--	/* Free-Running IIO BANDWIDTH IN Counters */
--	INTEL_UNCORE_EVENT_DESC(bw_in_port0,		"event=0xff,umask=0x20"),
+@@ -4891,28 +4891,28 @@ static struct uncore_event_desc snr_uncore_iio_freerunning_events[] = {
+ 	INTEL_UNCORE_EVENT_DESC(ioclk,			"event=0xff,umask=0x10"),
+ 	/* Free-Running IIO BANDWIDTH IN Counters */
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port0,		"event=0xff,umask=0x20"),
 -	INTEL_UNCORE_EVENT_DESC(bw_in_port0.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port0.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port1,		"event=0xff,umask=0x21"),
++	INTEL_UNCORE_EVENT_DESC(bw_in_port0.scale,	"3.0517578125e-5"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port0.unit,	"MiB"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port1,		"event=0xff,umask=0x21"),
 -	INTEL_UNCORE_EVENT_DESC(bw_in_port1.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port1.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port2,		"event=0xff,umask=0x22"),
++	INTEL_UNCORE_EVENT_DESC(bw_in_port1.scale,	"3.0517578125e-5"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port1.unit,	"MiB"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port2,		"event=0xff,umask=0x22"),
 -	INTEL_UNCORE_EVENT_DESC(bw_in_port2.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port2.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port3,		"event=0xff,umask=0x23"),
++	INTEL_UNCORE_EVENT_DESC(bw_in_port2.scale,	"3.0517578125e-5"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port2.unit,	"MiB"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port3,		"event=0xff,umask=0x23"),
 -	INTEL_UNCORE_EVENT_DESC(bw_in_port3.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port3.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port4,		"event=0xff,umask=0x24"),
++	INTEL_UNCORE_EVENT_DESC(bw_in_port3.scale,	"3.0517578125e-5"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port3.unit,	"MiB"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port4,		"event=0xff,umask=0x24"),
 -	INTEL_UNCORE_EVENT_DESC(bw_in_port4.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port4.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port5,		"event=0xff,umask=0x25"),
++	INTEL_UNCORE_EVENT_DESC(bw_in_port4.scale,	"3.0517578125e-5"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port4.unit,	"MiB"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port5,		"event=0xff,umask=0x25"),
 -	INTEL_UNCORE_EVENT_DESC(bw_in_port5.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port5.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port6,		"event=0xff,umask=0x26"),
++	INTEL_UNCORE_EVENT_DESC(bw_in_port5.scale,	"3.0517578125e-5"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port5.unit,	"MiB"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port6,		"event=0xff,umask=0x26"),
 -	INTEL_UNCORE_EVENT_DESC(bw_in_port6.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port6.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port7,		"event=0xff,umask=0x27"),
++	INTEL_UNCORE_EVENT_DESC(bw_in_port6.scale,	"3.0517578125e-5"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port6.unit,	"MiB"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port7,		"event=0xff,umask=0x27"),
 -	INTEL_UNCORE_EVENT_DESC(bw_in_port7.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port7.unit,	"MiB"),
--	/* Free-Running IIO BANDWIDTH OUT Counters */
--	INTEL_UNCORE_EVENT_DESC(bw_out_port0,		"event=0xff,umask=0x30"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port0.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port0.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port1,		"event=0xff,umask=0x31"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port1.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port1.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port2,		"event=0xff,umask=0x32"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port2.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port2.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port3,		"event=0xff,umask=0x33"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port3.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port3.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port4,		"event=0xff,umask=0x34"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port4.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port4.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port5,		"event=0xff,umask=0x35"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port5.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port5.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port6,		"event=0xff,umask=0x36"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port6.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port6.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port7,		"event=0xff,umask=0x37"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port7.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port7.unit,	"MiB"),
--	{ /* end: all zeroes */ },
--};
--
- static struct intel_uncore_type spr_uncore_iio_free_running = {
- 	.name			= "iio_free_running",
- 	.num_counters		= 17,
- 	.num_freerunning_types	= SPR_IIO_FREERUNNING_TYPE_MAX,
- 	.freerunning		= spr_iio_freerunning,
- 	.ops			= &skx_uncore_iio_freerunning_ops,
--	.event_descs		= spr_uncore_iio_freerunning_events,
-+	.event_descs		= snr_uncore_iio_freerunning_events,
- 	.format_group		= &skx_uncore_iio_freerunning_format_group,
++	INTEL_UNCORE_EVENT_DESC(bw_in_port7.scale,	"3.0517578125e-5"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port7.unit,	"MiB"),
+ 	{ /* end: all zeroes */ },
  };
- 
