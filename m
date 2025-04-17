@@ -1,76 +1,84 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA921F3FE3
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26CD021C162;
+	Thu, 17 Apr 2025 08:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744879145; cv=none; b=c4bNkifhero3QIuW+MgSLaM6nbt8q9LeQs5qC0gMcQqB7MOOAWT27OfBiY7DClyg7OO+dusVXVZZTrODOSdRKRL28ykknM4h10RcpAPkuik0RIl+4xumXaFw6ZuQSVQod0Rqo88O3WTpHFmu8TB25nhHGvD25v23+PZ5Y0OyMk0=
+	t=1744879161; cv=none; b=pNatJHReqgVBz+85fxbSUSYn9DiHIK6x0SvzuAQ2f0G1kwtihN4JcNFAz7uL+AX8FcfijLQvkFoBUU3lzCFy5DVWulY0wGWSN6OzgFZn8dZA/diRuswnmWNCNtYtq/tLuGtkGAYoA5yMrnlNM8t499ri738auhLzet2VQJgMNC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744879145; c=relaxed/simple;
-	bh=roVPv8OjVfBI7qZDFvWUBhng+U4m821lTmU3vfQ+cJ4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IH0jVHOqZYbnJ7HSR804+mFGRkPDr13umCZP2hiM20/9RLlkuY5bE97kgNnkq5teiSyXYKPRuso7oi/JFxMH1jRirTARJwpz/b2USYNAFgOrC51Ti4i9qspOcYi8lF+QywG95bi0LEAeRCe7yzv0v5oFALfocX9tIf5Gq944kUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowACHNUIXvgBokIaACQ--.7289S2;
-	Thu, 17 Apr 2025 16:38:47 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: agruenba@redhat.com
-Cc: gfs2@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] gfs2: Remove unnecessary NULL check before free_percpu()
-Date: Thu, 17 Apr 2025 16:38:39 +0800
-Message-Id: <20250417083839.937319-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1744879161; c=relaxed/simple;
+	bh=mnWlmqe4IrOKaDGbZ+1tech8QlQNZjf7aBIdhncEGXo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k8kWcPBzENBxOvC3e1l5okSnANT7PUYB7r91ulPfEOoyhm/yWXZY3tLQexA/eQ6EtjaDw8ilYgRKCqZQ+AvGaJ2mHKtMupviVbIH477bTy9QWXPJ62TLsVg5yK2+hrJNSlLoR/48jvMkPfKMzu14zu683GTwRejxsHwk0s9CClY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fH+Ci1ff; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fH+Ci1ff"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54954fa61c9so649569e87.1;
+        Thu, 17 Apr 2025 01:39:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744879157; x=1745483957; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mnWlmqe4IrOKaDGbZ+1tech8QlQNZjf7aBIdhncEGXo=;
+        b=fH+Ci1ffNhy3giUs8BL/WQVgwkIGj4Xld0ECWUXzkXSuZcgWeWAxZDybGONiCTa+gw
+         vW2GaArkKOnLuRZbngOv5eBcmxakHKhr6GUFMBNrq1Wqfjjnq3I5HuBmQwnkMultNA1b
+         tWdmALjqoY3ATBvjbPu73AePCUI9S9oYTH5XvihD0ZxxI4E00FFXOUBS5OAWiuq2V+/y
+         +PuSdX7Bcdg/zL6Df/9mam4wm6PLxQxJPbZ9abOrzi4ykPwNjYT1afSUWtdWyxCP5yH7
+         DA9BpVh8jRzbpY6fgQvPGd51UbqkNsbidBfGGIOVt5GWtisI/D3J4f1I3Uk5zIYFxicP
+         m0dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744879157; x=1745483957;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mnWlmqe4IrOKaDGbZ+1tech8QlQNZjf7aBIdhncEGXo=;
+        b=gY2aFGnTDUU5K8Zv4aWjF7Pa7GptfYMbE1sv2aYI/GuBWcV+g2vRJniOJkLXHUm5qP
+         s+/peAfOKkvHU+xG9wKDPknUOSxh6oVmbOqc3xsqx6fvOjOeksvhk7TJqvNyJx1ltAHl
+         G9o3MWxsVKAiobW1DlOUdh7R1HrfIqNcZf5C9Ct/6HqedVIXiYif5nqIGkbO6zDQAESd
+         sL8jjb2TPx+GdOwUQQNmY2v55EnWrE0AHh4Hzbrl9KCsIxjCKE+9Z+Y/QWAiB76xLXRO
+         3N+B/kvH/NWMCy5Jzgyuz6T9eiQTcBOOcvH8HM6s+jU9uf3wPeBRpH6tH8BYjUL3jSCd
+         VLuA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQETTd5oDfct8lX7vQGjgfNk9ssMJs7buLroOOscVBMPhI5GHH8qRMvPn4zUUEZn9K6Dqn7PlBYFhiIrvjhlI=@vger.kernel.org, AJvYcCXu+g0IhnLDZ++PO2dn3mITFZ1z8sPaj9uUkSlT1fwo5tq/yMU+JGTqIYdPKYWFCh6K8kV65GKRBXiPZks=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRxbGmaV1cRNZP8/9xXLX/bR2osTvVdwd23wp7Yr0/Edl6Rr8R
+	oMAahLYxgEh2C9AGuHiCnkVs+ZMHkLn03sZ76VkjJ1qvcRAVco0WseiYeA==
+X-Gm-Gg: ASbGnctXZlTnvAtBXETBOWCMszWGYJGlr224KauSS5rcRGfm5hckv6jwIzuxxihrJFl
+	ed6Z8qBykJafMO8H2sXQf55QS/5tftAue8sjsLxU8uWHu+2HSxz3iFdwGPS6GOd27KNk5Msqa3Y
+	pJi+7vscbTXWmyJ6DnKmWnBYQpwWFpzMaqpQQdiX9ipnvbov4SRpsgVhDc9zzRMPW6W4BMLNbP4
+	LesSUEQBnHdfoLQ3EopeXcCW0kHv306ik+VemVAdVjc6r7bPOYi9eXkZ43n5KfxFl2rXVbiIHgN
+	U3qlportzTP7ybXSoo0P3ghAQxkgFf1x3mrH
+X-Google-Smtp-Source: AGHT+IHa+OV9uWC95P4ZIC7KOF9Q2HCxY7fQmZuEL8m3yN4+QqZq3ZVQUPgT79ckX8yjmWEsakpHRQ==
+X-Received: by 2002:a05:6512:4028:b0:545:aa5:d44f with SMTP id 2adb3069b0e04-54d64aab1b9mr1552456e87.30.1744879156862;
+        Thu, 17 Apr 2025 01:39:16 -0700 (PDT)
+Received: from localhost ([83.149.199.15])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d51006bsm1910467e87.170.2025.04.17.01.39.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 01:39:16 -0700 (PDT)
+Date: Thu, 17 Apr 2025 11:39:15 +0300
+From: Fedor Pchelkin <boddah8794@gmail.com>
+To: Ping-Ke Shih <pkshih@realtek.com>
+Cc: Bernie Huang <phhuang@realtek.com>, 
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [Bug report] rtw89: 8852b: IO_PAGE_FAULTs with beacon filter
+ feature enabled
+Message-ID: <fbkxtp5wb5tv2t7rotvtbjpszhqdy3tm2jcezdggwxv7iaszex@k4iuy57yruyt>
+References: <uidltsdsuujrczrtzgerhh5cw2tztxktfen6yvztnc7gttzgvk@jccomj7f4gul>
+ <148ed65c53be4ef29246d372dd0fef8e@realtek.com>
+ <z54thedngt3wnhr5bfer3yg7id2c4uqgw2jjvyausv6p66ys4k@guqol77fpugz>
+ <dcf695a6621f43e38a20eb860194191a@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowACHNUIXvgBokIaACQ--.7289S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY-7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E
-	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
-	cVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87
-	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
-	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWxJVW8Jr1lOx
-	8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIF
-	xwCY1x0262kKe7AKxVWUAVWUtwCY02Avz4vE14v_GFyl42xK82IYc2Ij64vIr41l4I8I3I
-	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-	GVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-	0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
-	rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r
-	4UYxBIdaVFxhVjvjDU0xZFpf9x0JUf8nOUUUUU=
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <dcf695a6621f43e38a20eb860194191a@realtek.com>
 
-free_percpu() checks for NULL pointers internally.
-Remove unneeded NULL check here.
+On Thu, 17. Apr 01:05, Ping-Ke Shih wrote:
+> Could you help to test when we have updated firmware?
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- fs/gfs2/ops_fstype.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
-index ea5b3c5c6e1c..8f9bb6677db7 100644
---- a/fs/gfs2/ops_fstype.c
-+++ b/fs/gfs2/ops_fstype.c
-@@ -64,8 +64,7 @@ static void gfs2_tune_init(struct gfs2_tune *gt)
- 
- void free_sbd(struct gfs2_sbd *sdp)
- {
--	if (sdp->sd_lkstats)
--		free_percpu(sdp->sd_lkstats);
-+	free_percpu(sdp->sd_lkstats);
- 	kfree(sdp);
- }
- 
--- 
-2.25.1
-
+Yes.
