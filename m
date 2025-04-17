@@ -1,246 +1,428 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69D051CAA92;
-	Thu, 17 Apr 2025 06:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A2F1CAA92;
+	Thu, 17 Apr 2025 06:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744872498; cv=none; b=jSPu1OC96BUi06gSDjYpoCvOYabcriB7AGwyB6akk3BzkDiqaPpOo+zD9HjMcylh4Dt1MyGwRyzyAbryETWylsFYH58bnNWSeYCvwjCzRXgGJSj9K5ztPCfHIt0dpLJ+5RwIHgYZjZgGMdUzY11H72ByJXMtrYLu9Jwj9nvBpgQ=
+	t=1744872588; cv=none; b=K3OvcPE09mZNtgfIQ6hJceFMqFONS9eDiFQ+nZaXvJeoAbzdrjMpCQ85B9dXzT3B/baqBQspwJPruFNGnEJz6f9sR1JWvKad6knW/GcNTlpPCoJlbbVjIaRk5/D3Dbm+7xIDXD06JTGfOCXkUMgMHI2JUYLcXv4XhJlZDbOuGf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744872498; c=relaxed/simple;
-	bh=ukCcaMdJXQ5rliM6c9NU2hGSoLfFjHJkx8DMketdcSU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CqyNgzfs69Rk/vanVxtJOtWmd/ExNo2qQndIC0vW2prOFk0lNZkyWE0dvZX7Pangcq8jR6B5dvmGfMAVrJl/2LO/497BxXKCfR6nOzg6jWFaWeY3RMXIgZeTy1ca5FJeMuajWwDXlfxrANvENi4UlQ1ejVworeLQI07+fqcqF9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=kK5v809E; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744872588; c=relaxed/simple;
+	bh=KAmtj40+mb5153rX4LnofGPDdYa1AOTgOJ9c8iLLZZg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SdsW7621oBBl2pYHceRfuAl9QPhNDb5iXWbVlsT2xxyN5B1fDt1tT6u+Kw0Yocz8Fiv0bZ0JScQjGZZ9HL28utISZOHMxO4/RduJnGUvcdGH60C/MvzqhdV71wKKU78VBq653coQmZzmUq/IwykwmWHetcx+DmyURC309ojkc6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ML+jS5jL; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="kK5v809E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=rbiGEnPXfTJBFF8/Jzz38hsNkOYWx3lXorEkxn6cETU=;
-	b=kK5v809ETPJ3ci6A09qlTPH3adIYbW9/Wauc6MkwQWvQRd9/IEBmozRHpc54gC
-	beR3IZ7QNyYS2A6bsWB9lC2X4ufe5Z1KXmlpjYrAVWcIYRMQBuayV0qNfqbvNePj
-	fFU4aG/eE57jAb6wKfZwxdKctJIffsLPv2dTN1P9fNeWM=
-Received: from [192.168.142.52] (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wBn37D7owBo5BmAAg--.29857S2;
-	Thu, 17 Apr 2025 14:47:26 +0800 (CST)
-Message-ID: <a8cc995e-c6d5-4079-b6d9-765f76a7ec7a@163.com>
-Date: Thu, 17 Apr 2025 14:47:23 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ML+jS5jL"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-225df540edcso17021625ad.0;
+        Wed, 16 Apr 2025 23:49:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744872586; x=1745477386; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9YMfDtiPIBm1mjpyWsSE2L94WCWtJEZ4yISF+jitXmY=;
+        b=ML+jS5jLCQkPaSGt5iNbyBZqQFI4ssRJJNAmtw8SLseQ4YVdsakvlyqzdVPkjVAM5t
+         enI7avhN797F13LoarawIzRdNjppOAUCMt/RXlsIvzcXW6YELxYh16bWqJ1NwP4523NK
+         DfWg3u86EaKsDOzKk4HGvCizxV9eibkxiUWZOEfU/mT1Vf40Sx6DwplIURZWOKuTgBcB
+         DMJpGfz8FyeZQE0Jw19cwCVjeJZkfy87obxSo4PQw7moTY04qaCpQ2+n3wAeus5Qj3CK
+         W7K0eUjdlErufzLFricnU/fP/nLUJcFz5OIi9eLd5mdc4J6yZcMp8vMO4F2+UuHh6h/M
+         +nZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744872586; x=1745477386;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9YMfDtiPIBm1mjpyWsSE2L94WCWtJEZ4yISF+jitXmY=;
+        b=vk9vUu24B11GM6yYvjoor+x+4BF6BasjQUfrXGKLC0mEXkAAwZUo4DvFP5idhw6L+w
+         bC+nEmDTnG2/gzp1hYw8WNYQe8n7JZqQtJOQnSq8egE6OnpagwQOR50oEN17YPUmu5LI
+         Z3DPV7EmOpr8j5ecIbHdaKU1Nfc09QxtICbd9Qpb5AW1Zcnca7iFhi/83U2K6ySp9M+Z
+         ybpr0rAA7Ha/a2Jjci76b2B8TtU3fyX7k+mPm92Blr3MocfzKZbc2AYh3Q09xONKxmha
+         t12TWjXMz96Yk6KV5DxR2z4gIya3ozFABmjkWMH8CJx8StkZqrAuAkyTOI+lPR4S+37T
+         u4/A==
+X-Forwarded-Encrypted: i=1; AJvYcCV4ckiZOGn6UpNg6aJWmC9TK3xK1XPINaV+QIZpELKjm2hMbnHVl/bQKjbQhAoE7nigIy+Q3skl0I92nXP5@vger.kernel.org, AJvYcCVTCWlTIKk/Zz1v4jGX0LRhiGT7J4PQYkgpJeFIHRIgzL1QLDNUZZCPP4HZA9eqq1pjcIy0ygh+YbIlcpk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzofi9GNMMTRI3ZZGAYIaWJgs5dDvAqGoFHEoNoSW22rPAlpbiO
+	3jmKJXAXrsvxhs1LEIHT4bg82mWxeAwI4MCHn6elSr8LKxJHoXkL
+X-Gm-Gg: ASbGncvAxefo9iENSDlSB5MlnmWNV0xt1987+/4m0SfSgYzhGg12ERlpvwnLdFWwAhB
+	UedX+YeZCjQyW7j435d/+D2Ngvtq+Dj2AvvNqshVLKs8arKypPOU4kBr0HZCzWBQo+VJNUMF4Do
+	mIptPTn5XFYQWWubyHb3XnSaSVQEIAVb3tqbeob/nfJ9lKiqwFL5hfNPp0/fYEuB6WDunRxgyU5
+	iP+3ca0pZUKVUCBRyPT2TUI+bwumaULpBw6O+nRaGm2E0Dn8h2/z43ee+zD2jw/nS3g4D5XmPrs
+	QLMUAkIRxvD89YOQ7xqERRjSUVq+yRtaTYa9/Ux6oSAA
+X-Google-Smtp-Source: AGHT+IH06tnUkG6buwymrXxr/yQbpbdQ3t87juqs5171jY1Q6arc8q1JJROlVIT02INqgtBqb707oA==
+X-Received: by 2002:a17:902:e5c3:b0:215:44fe:163d with SMTP id d9443c01a7336-22c41d6836dmr24028295ad.17.1744872585488;
+        Wed, 16 Apr 2025 23:49:45 -0700 (PDT)
+Received: from gmail.com ([116.237.135.88])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33ef0f41sm25978565ad.41.2025.04.16.23.49.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 23:49:44 -0700 (PDT)
+From: Qingfang Deng <dqfext@gmail.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	linux-crypto@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Christoph=20M=C3=BCllner?= <christoph.muellner@vrull.eu>,
+	Heiko Stuebner <heiko.stuebner@vrull.eu>,
+	Qingfang Deng <qingfang.deng@siflower.com.cn>
+Subject: [RFC PATCH] crypto: riscv: scalar accelerated GHASH
+Date: Thu, 17 Apr 2025 14:49:38 +0800
+Message-ID: <20250417064940.68469-1-dqfext@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, lpieralisi@kernel.org, kw@linux.com,
- bhelgaas@google.com, heiko@sntech.de, manivannan.sadhasivam@linaro.org,
- robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- Shawn Lin <shawn.lin@rock-chips.com>
-References: <20250416204051.GA78956@bhelgaas>
- <bb40385c-6839-484c-90b2-d6c7ecb95ba9@163.com> <aACZP48pWk5Y62dK@ryzen>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <aACZP48pWk5Y62dK@ryzen>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wBn37D7owBo5BmAAg--.29857S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Ww15ZrW5WFW5urWkAr4fZrb_yoW3ZF15p3
-	4ayF13KrWkJrW7K3Z5tF1DGr1xtr1qyF4UGF45G34rtF1a9r1Dtry29r1Sqa47Wry5JFya
-	gw4UJ3yIvw45J3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UmiihUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxMyo2gAnhDdWQAAs7
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+From: Qingfang Deng <qingfang.deng@siflower.com.cn>
 
+Add a scalar implementation of GHASH for RISC-V using the Zbc (carry-less
+multiplication) and Zbb (bit-manipulation) extensions. This implementation
+is adapted from OpenSSL but rewritten in plain C for clarity.
 
-On 2025/4/17 14:01, Niklas Cassel wrote:
-> On Thu, Apr 17, 2025 at 10:19:10AM +0800, Hans Zhang wrote:
->> On 2025/4/17 04:40, Bjorn Helgaas wrote:
->>> On Wed, Apr 16, 2025 at 11:19:26PM +0800, Hans Zhang wrote:
->>>> The RK3588's PCIe controller defaults to a 128-byte max payload size,
->>>> but its hardware capability actually supports 256 bytes. This results
->>>> in suboptimal performance with devices that support larger payloads.
->>>>
->>>> Signed-off-by: Hans Zhang <18255117159@163.com>
->>>> ---
->>>>    drivers/pci/controller/dwc/pcie-dw-rockchip.c | 18 ++++++++++++++++++
->>>>    1 file changed, 18 insertions(+)
->>>>
->>>> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->>>> index c624b7ebd118..5bbb536a2576 100644
->>>> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->>>> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->>>> @@ -477,6 +477,22 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
->>>>    	return IRQ_HANDLED;
->>>>    }
->>>> +static void rockchip_pcie_set_max_payload(struct rockchip_pcie *rockchip)
->>>> +{
->>>> +	struct dw_pcie *pci = &rockchip->pci;
->>>> +	u32 dev_cap, dev_ctrl;
->>>> +	u16 offset;
->>>> +
->>>> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->>>> +	dev_cap = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCAP);
->>>> +	dev_cap &= PCI_EXP_DEVCAP_PAYLOAD;
->>>> +
->>>> +	dev_ctrl = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
->>>> +	dev_ctrl &= ~PCI_EXP_DEVCTL_PAYLOAD;
->>>> +	dev_ctrl |= dev_cap << 5;
->>>> +	dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, dev_ctrl);
->>>> +}
->>>
->>> I can't really complain too much about this since meson does basically
->>> the same thing, but there are some things I don't like about this:
->>>
->>>     - I don't think it's safe to set MPS higher in all cases.  If we set
->>>       the Root Port MPS=256, and an Endpoint only supports MPS=128, the
->>>       Endpoint may do a 256-byte DMA read (assuming its MRRS>=256).  In
->>>       that case the RP may respond with a 256-byte payload the Endpoint
->>>       can't handle.  The generic code in pci_configure_mps() might be
->>>       smart enough to avoid that situation, but I'm not confident about
->>>       it.  Maybe I could be convinced.
->>>
->>
->> Dear Bjorn,
->>
->> Thank you very much for your reply. If we set the Root Port MPS=256, and an
->> Endpoint only supports MPS=128. Finally, Root Port is also set to MPS=128 in
->> pci_configure_mps.
-> 
-> In you example below, the Endpoint has:
->   DevCap: MaxPayload 512 bytes
-> 
-> So at least your example can't be used to prove this specific point.
-> But perhaps you just wanted to show that your Max Payload Size increase
-> actually works?
-> 
+Unlike the OpenSSL one that rely on bit-reflection of the data, this
+version uses a pre-computed (reflected and multiplied) key, inspired by
+the approach used in Intel's CLMUL driver, to avoid reflections during
+runtime.
 
-Dear Niklas,
+Signed-off-by: Qingfang Deng <qingfang.deng@siflower.com.cn>
+---
+ arch/riscv/crypto/Kconfig               |  16 +-
+ arch/riscv/crypto/Makefile              |   2 +
+ arch/riscv/crypto/ghash-riscv64-clmul.c | 270 ++++++++++++++++++++++++
+ 3 files changed, 287 insertions(+), 1 deletion(-)
+ create mode 100644 arch/riscv/crypto/ghash-riscv64-clmul.c
 
-Do you have an Endpoint with MPS=128? If so, you can also help verify 
-the logic of the pci_configure_mps function. I don't have an Endpoint 
-with MPS=128 here.
-
-
-The processing logic of the pci_configure_mps function has been verified 
-on our own SOC platform. Please refer to the following log.
-Our Root Port will set MPS=512.
-
-
-0002:30:00.0 PCI bridge: Device 1f6c:0001 (prog-if 00 [Normal decode])
-         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
-ParErr- Stepping- SERR- FastB2B- DisINTx+
-         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-         Latency: 0
-         Interrupt: pin A routed to IRQ 167
-         Bus: primary=30, secondary=31, subordinate=5f, sec-latency=0
-         I/O behind bridge: 300000-300fff [size=4K] [16-bit]
-         Memory behind bridge: 38300000-383fffff [size=1M] [32-bit]
-         Prefetchable memory behind bridge: 
-00000000fff00000-00000000000fffff [disabled] [64-bit]
-         Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- 
-<TAbort- <MAbort- <SERR- <PERR-
-         Expansion ROM at 38200000 [virtual] [disabled] [size=1M]
-         BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16- MAbort- >Reset- 
-FastB2B-
-                 PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-         Capabilities: [80] Power Management version 3
-                 Flags: PMEClk- DSI- D1+ D2- AuxCurrent=0mA 
-PME(D0+,D1+,D2-,D3hot+,D3cold-)
-                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-         Capabilities: [90] MSI: Enable+ Count=1/32 Maskable+ 64bit+
-                 Address: 000000000e060040  Data: 0000
-                 Masking: fffffffe  Pending: 00000000
-         Capabilities: [b0] MSI-X: Enable- Count=2 Masked-
-                 Vector table: BAR=0 offset=00000040
-                 PBA: BAR=0 offset=00000040
-         Capabilities: [c0] Express (v2) Root Port (Slot-), MSI 00
-                 DevCap: MaxPayload 512 bytes, PhantFunc 0
-                         ExtTag- RBE+
-                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
-                         MaxPayload 256 bytes, MaxReadReq 1024 bytes
-
-
-0002:31:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. 
-RTL8125 2.5GbE Controller (rev 05)
-         Subsystem: Realtek Semiconductor Co., Ltd. RTL8125 2.5GbE 
-Controller
-         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
-ParErr- Stepping- SERR- FastB2B- DisINTx+
-         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-         Latency: 0, Cache Line Size: 64 bytes
-         Interrupt: pin A routed to IRQ 166
-         Region 0: I/O ports at 300000 [size=256]
-         Region 2: Memory at 38300000 (64-bit, non-prefetchable) [size=64K]
-         Region 4: Memory at 38310000 (64-bit, non-prefetchable) [size=16K]
-         Capabilities: [40] Power Management version 3
-                 Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA 
-PME(D0+,D1+,D2+,D3hot+,D3cold+)
-                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-         Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
-                 Address: 0000000000000000  Data: 0000
-                 Masking: 00000000  Pending: 00000000
-         Capabilities: [70] Express (v2) Endpoint, MSI 01
-                 DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s 
-<512ns, L1 <64us
-                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset- 
-SlotPowerLimit 0W
-                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop-
-                         MaxPayload 256 bytes, MaxReadReq 2048 bytes
-
-
-hans@hans:~$ iperf3 -s
------------------------------------------------------------
-Server listening on 5201
------------------------------------------------------------
-Accepted connection from ethernet_ip, port 47114
-[  5] local ubuntu_host_ip port 5201 connected to ethernet_ip port 47122
-[ ID] Interval           Transfer     Bitrate
-[  5]   0.00-1.00   sec   108 MBytes   902 Mbits/sec
-[  5]   1.00-2.00   sec   112 MBytes   941 Mbits/sec
-[  5]   2.00-3.00   sec   112 MBytes   941 Mbits/sec
-[  5]   3.00-4.00   sec   112 MBytes   941 Mbits/sec
-[  5]   4.00-5.00   sec   112 MBytes   941 Mbits/sec
-[  5]   5.00-6.00   sec   112 MBytes   941 Mbits/sec
-[  5]   6.00-7.00   sec   112 MBytes   941 Mbits/sec
-[  5]   7.00-8.00   sec   112 MBytes   941 Mbits/sec
-[  5]   8.00-9.00   sec   112 MBytes   941 Mbits/sec
-[  5]   9.00-10.00  sec   112 MBytes   941 Mbits/sec
-[  5]  10.00-10.04  sec  4.92 MBytes   941 Mbits/sec
-- - - - - - - - - - - - - - - - - - - - - - - - -
-[ ID] Interval           Transfer     Bitrate
-[  5]   0.00-10.04  sec  1.10 GBytes   938 Mbits/sec 
-receiver
------------------------------------------------------------
-
-
-root@cix-localhost:~# iperf3 -c ubuntu_host_ip
-Connecting to host ubuntu_host_ip, port 5201
-[  5] local ethernet_ip port 47122 connected to ubuntu_host_ip port 5201
-[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-[  5]   0.00-1.00   sec   114 MBytes   958 Mbits/sec    0    484 KBytes
-[  5]   1.00-2.00   sec   113 MBytes   946 Mbits/sec    0    535 KBytes
-[  5]   2.00-3.00   sec   112 MBytes   936 Mbits/sec    0    559 KBytes
-[  5]   3.00-4.00   sec   113 MBytes   946 Mbits/sec    0    587 KBytes
-[  5]   4.00-5.00   sec   112 MBytes   939 Mbits/sec    0    587 KBytes
-[  5]   5.00-6.00   sec   113 MBytes   948 Mbits/sec    0    587 KBytes
-[  5]   6.00-7.00   sec   112 MBytes   936 Mbits/sec    0    587 KBytes
-[  5]   7.00-8.00   sec   112 MBytes   939 Mbits/sec    0    587 KBytes
-[  5]   8.00-9.00   sec   112 MBytes   942 Mbits/sec    0    619 KBytes
-[  5]   9.00-10.00  sec   113 MBytes   945 Mbits/sec    0    677 KBytes
-- - - - - - - - - - - - - - - - - - - - - - - - -
-[ ID] Interval           Transfer     Bitrate         Retr
-[  5]   0.00-10.00  sec  1.10 GBytes   944 Mbits/sec    0             sender
-[  5]   0.00-10.04  sec  1.10 GBytes   938 Mbits/sec 
-receiver
-
-Best regards,
-Hans
+diff --git a/arch/riscv/crypto/Kconfig b/arch/riscv/crypto/Kconfig
+index 6392e1e11bc9..03b74d4116cb 100644
+--- a/arch/riscv/crypto/Kconfig
++++ b/arch/riscv/crypto/Kconfig
+@@ -26,7 +26,7 @@ config CRYPTO_CHACHA_RISCV64
+ 	default CRYPTO_LIB_CHACHA_INTERNAL
+ 
+ config CRYPTO_GHASH_RISCV64
+-	tristate "Hash functions: GHASH"
++	tristate "Hash functions: GHASH (vector accelarated)"
+ 	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
+ 	select CRYPTO_GCM
+ 	help
+@@ -35,6 +35,20 @@ config CRYPTO_GHASH_RISCV64
+ 	  Architecture: riscv64 using:
+ 	  - Zvkg vector crypto extension
+ 
++config CRYPTO_GHASH_RISCV64_CLMUL
++	tristate "Hash functions: GHASH (CLMUL scalar accelerated)"
++	depends on 64BIT && TOOLCHAIN_HAS_ZBB && TOOLCHAIN_HAS_ZBC
++	select CRYPTO_GCM
++	help
++	  GCM GHASH function (NIST SP 800-38D)
++
++	  Architecture: riscv64 using:
++	  - Zbb Bitmanipulation extension
++	  - Zbc Carry-less multiplication
++	    OR
++	  - Zbkb Bit-manipulation for Cryptography
++	  - Zbkc Carry-less multiplication for Cryptography
++
+ config CRYPTO_SHA256_RISCV64
+ 	tristate "Hash functions: SHA-224 and SHA-256"
+ 	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
+diff --git a/arch/riscv/crypto/Makefile b/arch/riscv/crypto/Makefile
+index 247c7bc7288c..b5dc497d398c 100644
+--- a/arch/riscv/crypto/Makefile
++++ b/arch/riscv/crypto/Makefile
+@@ -10,6 +10,8 @@ chacha-riscv64-y := chacha-riscv64-glue.o chacha-riscv64-zvkb.o
+ obj-$(CONFIG_CRYPTO_GHASH_RISCV64) += ghash-riscv64.o
+ ghash-riscv64-y := ghash-riscv64-glue.o ghash-riscv64-zvkg.o
+ 
++obj-$(CONFIG_CRYPTO_GHASH_RISCV64_CLMUL) += ghash-riscv64-clmul.o
++
+ obj-$(CONFIG_CRYPTO_SHA256_RISCV64) += sha256-riscv64.o
+ sha256-riscv64-y := sha256-riscv64-glue.o sha256-riscv64-zvknha_or_zvknhb-zvkb.o
+ 
+diff --git a/arch/riscv/crypto/ghash-riscv64-clmul.c b/arch/riscv/crypto/ghash-riscv64-clmul.c
+new file mode 100644
+index 000000000000..4777aa8e94cb
+--- /dev/null
++++ b/arch/riscv/crypto/ghash-riscv64-clmul.c
+@@ -0,0 +1,270 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * GHASH using the RISC-V Zbc/Zbkc (CLMUL) extension
++ *
++ * Copyright (C) 2023 VRULL GmbH
++ * Author: Christoph Müllner <christoph.muellner@vrull.eu>
++ *
++ * Copyright (C) 2025 Siflower Communications Ltd
++ * Author: Qingfang Deng <qingfang.deng@siflower.com.cn>
++ */
++
++#include <linux/crypto.h>
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/types.h>
++#include <crypto/ghash.h>
++#include <crypto/internal/hash.h>
++
++#define GHASH_MOD_POLY	0xc200000000000000
++
++struct riscv64_clmul_ghash_ctx {
++	__uint128_t key;
++};
++
++struct riscv64_clmul_ghash_desc_ctx {
++	__uint128_t shash;
++	u8 buffer[GHASH_DIGEST_SIZE];
++	int bytes;
++};
++
++static __always_inline u64 riscv_zbb_swab64(u64 val)
++{
++	asm (".option push\n"
++	     ".option arch,+zbb\n"
++	     "rev8 %0, %1\n"
++	     ".option pop\n"
++	     : "=r" (val) : "r" (val));
++	return val;
++}
++
++static __always_inline __uint128_t get_unaligned_be128(const u8 *p)
++{
++	__uint128_t val;
++#ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
++	val = *(__uint128_t *)p;
++	val = riscv_zbb_swab64(val >> 64) | (__uint128_t)riscv_zbb_swab64(val) << 64;
++#else
++	val = (__uint128_t)p[0] << 120;
++	val |= (__uint128_t)p[1] << 112;
++	val |= (__uint128_t)p[2] << 104;
++	val |= (__uint128_t)p[3] << 96;
++	val |= (__uint128_t)p[4] << 88;
++	val |= (__uint128_t)p[5] << 80;
++	val |= (__uint128_t)p[6] << 72;
++	val |= (__uint128_t)p[7] << 64;
++	val |= (__uint128_t)p[8] << 56;
++	val |= (__uint128_t)p[9] << 48;
++	val |= (__uint128_t)p[10] << 40;
++	val |= (__uint128_t)p[11] << 32;
++	val |= (__uint128_t)p[12] << 24;
++	val |= (__uint128_t)p[13] << 16;
++	val |= (__uint128_t)p[14] << 8;
++	val |= (__uint128_t)p[15];
++#endif
++	return val;
++}
++
++static __always_inline void put_unaligned_be128(__uint128_t val, u8 *p)
++{
++#ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
++	*(__uint128_t *)p = riscv_zbb_swab64(val >> 64) | (__uint128_t)riscv_zbb_swab64(val) << 64;
++#else
++	p[0] = val >> 120;
++	p[1] = val >> 112;
++	p[2] = val >> 104;
++	p[3] = val >> 96;
++	p[4] = val >> 88;
++	p[5] = val >> 80;
++	p[6] = val >> 72;
++	p[7] = val >> 64;
++	p[8] = val >> 56;
++	p[9] = val >> 48;
++	p[10] = val >> 40;
++	p[11] = val >> 32;
++	p[12] = val >> 24;
++	p[13] = val >> 16;
++	p[14] = val >> 8;
++	p[15] = val;
++#endif
++}
++
++static __always_inline __attribute_const__
++__uint128_t clmul128(u64 a, u64 b)
++{
++	u64 hi, lo;
++
++	asm(".option push\n"
++	    ".option arch,+zbc\n"
++	    "clmul	%0, %2, %3\n"
++	    "clmulh	%1, %2, %3\n"
++	    ".option pop\n"
++	    : "=&r" (lo), "=&r" (hi) : "r" (a), "r" (b));
++	return (__uint128_t)hi << 64 | lo;
++}
++
++static int riscv64_clmul_ghash_init(struct shash_desc *desc)
++{
++	struct riscv64_clmul_ghash_desc_ctx *dctx = shash_desc_ctx(desc);
++
++	dctx->bytes = 0;
++	dctx->shash = 0;
++	return 0;
++}
++
++/* Compute GMULT (Xi*H mod f) using the Zbc (clmul) extensions.
++ * Using the no-Karatsuba approach and clmul for the final reduction.
++ * This results in an implementation with minimized number of instructions.
++ * HW with clmul latencies higher than 2 cycles might observe a performance
++ * improvement with Karatsuba. HW with clmul latencies higher than 6 cycles
++ * might observe a performance improvement with additionally converting the
++ * reduction to shift&xor. For a full discussion of this estimates see
++ * https://github.com/riscv/riscv-crypto/blob/master/doc/supp/gcm-mode-cmul.adoc
++ */
++static void gcm_ghash_rv64i_zbc(__uint128_t *Xi, __uint128_t k, const u8 *inp, size_t len)
++{
++	u64 k_hi = k >> 64, k_lo = k, p_hi, p_lo;
++	__uint128_t hash = *Xi, p;
++
++	do {
++		__uint128_t t0, t1, t2, t3, lo, mid, hi;
++
++		/* Load the input data, byte-reverse them, and XOR them with Xi */
++		p = get_unaligned_be128(inp);
++
++		inp += GHASH_BLOCK_SIZE;
++		len -= GHASH_BLOCK_SIZE;
++
++		p ^= hash;
++		p_hi = p >> 64;
++		p_lo = p;
++
++		/* Multiplication (without Karatsuba) */
++		t0 = clmul128(p_lo, k_lo);
++		t1 = clmul128(p_lo, k_hi);
++		t2 = clmul128(p_hi, k_lo);
++		t3 = clmul128(p_hi, k_hi);
++		mid = t1 ^ t2;
++		lo = t0 ^ (mid << 64);
++		hi = t3 ^ (mid >> 64);
++
++		/* Reduction with clmul */
++		mid = clmul128(lo, GHASH_MOD_POLY);
++		lo ^= mid << 64;
++		hi ^= lo ^ (mid >> 64);
++		hi ^= clmul128(lo >> 64, GHASH_MOD_POLY);
++		hash = hi;
++	} while (len);
++
++	*Xi = hash;
++}
++
++static int riscv64_clmul_ghash_setkey(struct crypto_shash *tfm, const u8 *key, unsigned int keylen)
++{
++	struct riscv64_clmul_ghash_ctx *ctx = crypto_shash_ctx(tfm);
++	__uint128_t k;
++
++	if (keylen != GHASH_BLOCK_SIZE)
++		return -EINVAL;
++
++	k = get_unaligned_be128(key);
++	k = (k << 1 | k >> 127) ^ (k >> 127 ? (__uint128_t)GHASH_MOD_POLY << 64 : 0);
++	ctx->key = k;
++
++	return 0;
++}
++
++static int riscv64_clmul_ghash_update(struct shash_desc *desc, const u8 *src, unsigned int srclen)
++{
++	struct riscv64_clmul_ghash_ctx *ctx = crypto_shash_ctx(desc->tfm);
++	struct riscv64_clmul_ghash_desc_ctx *dctx = shash_desc_ctx(desc);
++	unsigned int len;
++
++	if (dctx->bytes) {
++		if (dctx->bytes + srclen < GHASH_DIGEST_SIZE) {
++			memcpy(dctx->buffer + dctx->bytes, src, srclen);
++			dctx->bytes += srclen;
++			return 0;
++		}
++		memcpy(dctx->buffer + dctx->bytes, src, GHASH_DIGEST_SIZE - dctx->bytes);
++
++		gcm_ghash_rv64i_zbc(&dctx->shash, ctx->key, dctx->buffer, GHASH_DIGEST_SIZE);
++
++		src += GHASH_DIGEST_SIZE - dctx->bytes;
++		srclen -= GHASH_DIGEST_SIZE - dctx->bytes;
++		dctx->bytes = 0;
++	}
++
++	len = round_down(srclen, GHASH_BLOCK_SIZE);
++	if (len) {
++		gcm_ghash_rv64i_zbc(&dctx->shash, ctx->key, src, len);
++		src += len;
++		srclen -= len;
++	}
++
++	if (srclen) {
++		memcpy(dctx->buffer, src, srclen);
++		dctx->bytes = srclen;
++	}
++	return 0;
++}
++
++static int riscv64_clmul_ghash_final(struct shash_desc *desc, u8 out[GHASH_DIGEST_SIZE])
++{
++	struct riscv64_clmul_ghash_ctx *ctx = crypto_shash_ctx(desc->tfm);
++	struct riscv64_clmul_ghash_desc_ctx *dctx = shash_desc_ctx(desc);
++	int i;
++
++	if (dctx->bytes) {
++		for (i = dctx->bytes; i < GHASH_DIGEST_SIZE; i++)
++			dctx->buffer[i] = 0;
++		gcm_ghash_rv64i_zbc(&dctx->shash, ctx->key, dctx->buffer, GHASH_DIGEST_SIZE);
++		dctx->bytes = 0;
++	}
++	put_unaligned_be128(dctx->shash, out);
++	return 0;
++}
++
++struct shash_alg riscv64_clmul_ghash_alg = {
++	.init = riscv64_clmul_ghash_init,
++	.update = riscv64_clmul_ghash_update,
++	.final = riscv64_clmul_ghash_final,
++	.setkey = riscv64_clmul_ghash_setkey,
++	.descsize = sizeof(struct riscv64_clmul_ghash_desc_ctx),
++	.digestsize = GHASH_DIGEST_SIZE,
++	.base = {
++		 .cra_blocksize = GHASH_BLOCK_SIZE,
++		 .cra_ctxsize = sizeof(struct riscv64_clmul_ghash_ctx),
++		 .cra_priority = 250,
++		 .cra_name = "ghash",
++		 .cra_driver_name = "ghash-riscv64-clmul",
++		 .cra_module = THIS_MODULE,
++	},
++};
++
++static int __init riscv64_clmul_ghash_mod_init(void)
++{
++	bool has_clmul, has_rev8;
++
++	has_clmul = riscv_isa_extension_available(NULL, ZBC) ||
++		    riscv_isa_extension_available(NULL, ZBKC);
++	has_rev8 = riscv_isa_extension_available(NULL, ZBB) ||
++		   riscv_isa_extension_available(NULL, ZBKB);
++	if (has_clmul && has_rev8)
++		return crypto_register_shash(&riscv64_clmul_ghash_alg);
++
++	return -ENODEV;
++}
++
++static void __exit riscv64_clmul_ghash_mod_fini(void)
++{
++	crypto_unregister_shash(&riscv64_clmul_ghash_alg);
++}
++
++module_init(riscv64_clmul_ghash_mod_init);
++module_exit(riscv64_clmul_ghash_mod_fini);
++
++MODULE_DESCRIPTION("GHASH (RISC-V CLMUL accelerated)");
++MODULE_AUTHOR("Qingfang Deng <dqfext@gmail.com>");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS_CRYPTO("ghash");
+-- 
+2.43.0
 
