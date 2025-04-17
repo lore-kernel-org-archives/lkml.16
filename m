@@ -1,99 +1,94 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D36D161321
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202351B6CE5
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744849223; cv=none; b=uSch9WaKjUeuVnBgnID9fCgEza9oj8AYYChaskbLT5VPGhA0iX07/fyzO1OJj7W86lzhV9ApUPZlQEuxfH2raC0fwwfTlOCBlbNilsjrTWKxslkTv+VpX9gC9a2P7GtURTDiTuXvRnS5Lkm62aIATrmKYQ59f+wuG4vUYfwLPx0=
+	t=1744849226; cv=none; b=YJ8NQYEW+EFVXhM2Cb2JOddMWG3PHer3LUgFwS/MgvJdhCea0y/Bv5CDX5u2BLjKzI7xiHIIqgAOAtFWd/Bk0ThwBMinVuOvRVkTw7tFBnPHalofqS+bEmhB4TiDJsnZYrN0cVzBh4yc6bvxWQb1W+4MRkw5n+MJL2XN/BRQeoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744849223; c=relaxed/simple;
-	bh=VP42e3JZfKvbDI0ooyfOHhztdSFzkob0S0fpP+PH/Ik=;
+	s=arc-20240116; t=1744849226; c=relaxed/simple;
+	bh=al6SKl71NAiNJnVYkq84dOJI0VdWszLtxLtJW6ZOVVk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Slvsp1doUX2WNBnuX9PLMkXn6vKTJa7LOSIInvru47EhO18DLL8dqidT1F0X0+8o5LVwhajZRljMP4HukyQtJy9Fqj72BwoATa6UO5TaU6rCsIum/kuPXVovWicYg1L2O7WfhIKpxQ9z7K7xqvGYzPE+HHzY4rHssOmL8R92jGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=F4zrrPWI; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 MIME-Version; b=OpbxudxVs7xg7rUZA5qlVleUh6xlyO9fSVLVpNHTY+3Lt21tlo+OsX5jVq0ErcnHUQ1XP0zwyJgAuF4EGCwgF+FFL/qCp2DtCa2EAR4Kdn+LvMSLqjnxdOqyFTuOf8N9u1JiMw8AJ2DmgLdamqc+iIYMuFYUcAuhkzVwLNdioyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VsC5z/lv; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F4zrrPWI"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22438c356c8so2606355ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 17:20:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1744849220; x=1745454020; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9d1zeenHo/WIdiHzlhPJ54CYp3ToWYLsArkbPVUXbsw=;
-        b=F4zrrPWIcguk6SioFjSVXIiXyEy1gtu7ZE2ypRomNPScixTqH2uAXuJ9jTZf87VCmk
-         Mh9p5vWCdxKR50xcZujHBmV1mC8RMhGpB6PBuX9zBON0wbo7Oa+J5Rbs2UzVH8zJnS1v
-         MhTTbEvU9KnUTXI/4VTdZIJ1DjLslX+pb9z10=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744849220; x=1745454020;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9d1zeenHo/WIdiHzlhPJ54CYp3ToWYLsArkbPVUXbsw=;
-        b=gx0uBVsp1YHM/ZK3aukSOcMuYA0q/M2QnjaWNgJ5Jk718m983MjcPaRMOj1PDSbe//
-         qrGlfQQLzwWuW5mRXf7yEoQXF1sbSoXb6eVGNsHdtJnMIeNq5kRiA6ucCqRTAAuO9NK8
-         XTV9SfdBLB+uGBtIeY6wIrKCM+T8wulYH1Zcg/+s3gj8VBCBi5rDVa40hVMXeyvYfDb4
-         yr7ORNg99YZnsq3n0BceiPWHHIhTh9ZX/0Wtw0cL3hxmyQp6lbGhD3kPMmW6FMJt+L0W
-         3Zl8wySUmscUD3ISbSIQw1RZJNAmE0bYBFiThBVxbmVG/iKZ8Y3J+ltrs5UZ+QJ6iCxP
-         8+Hw==
-X-Forwarded-Encrypted: i=1; AJvYcCXg2gVs/3g8PmYAnEBuF4/kWo+fEiXKlpjya7CoVC/SzX+KgysZofny45/+1xILm8rmSrjwx7hhLTVIAPs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeNe0LboYAFTsgjBSG+ylIc9k2yL3HPLOuAM5SJ7sivMp8GaK+
-	tuFtDQc0Aqh/JR7AO2l3hQ8naL9csAlzPxGOFfizO91aBGRn9qw6jc5b1Y2R5g==
-X-Gm-Gg: ASbGncs9sCHEexV9qiY9MIaKlSMFrXurkn9vWwBbWTzwPZZGGR3nbRojdIsIi5JLbZA
-	kF08JXF8UKioz44G4/Rjz6D4r9gjirx4nOv1ZpDOWtRBpbFm4KEUh2zvTBAkC9CZtm68CG24EQu
-	wdginzqSjMPKHaKoZgKtnxucEBPPVmH2sA6IjG3J7qhRHH03PU0bUrwoW4bzKHFxB3c+tWbG+AW
-	PKGCM3S3QiqZo+TPeRzs+depDzsyz24/TlHNQaz5kxQVB90gbYggXkfnA8wWOncCZ93QzBZl1+4
-	OOPB+zMWxlBry5i7u+65rHviSeRpXKgn75EYA6+vfrQXOko5cIM+VDFkptbl8WJwrffWspD+4tD
-	i/mqZ7jgR9QUUVuORfPylVzsmN4i7aZ77
-X-Google-Smtp-Source: AGHT+IFzYIV/9mXR0m0O/AxlmrF16OfOBFQ+0jrJUZKzp7v11JEoGIiIxamuwnoqAODi21WwPq6gSg==
-X-Received: by 2002:a17:903:19cf:b0:223:f9a4:3f99 with SMTP id d9443c01a7336-22c3591883bmr62046785ad.29.1744849220600;
-        Wed, 16 Apr 2025 17:20:20 -0700 (PDT)
-Received: from li-cloudtop.c.googlers.com.com (132.197.125.34.bc.googleusercontent.com. [34.125.197.132])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33f1cd87sm20719205ad.73.2025.04.16.17.20.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 17:20:20 -0700 (PDT)
-From: Li Li <dualli@chromium.org>
-To: dualli@google.com,
-	corbet@lwn.net,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	donald.hunter@gmail.com,
-	gregkh@linuxfoundation.org,
-	arve@android.com,
-	tkjos@android.com,
-	maco@android.com,
-	joel@joelfernandes.org,
-	brauner@kernel.org,
-	cmllamas@google.com,
-	surenb@google.com,
-	omosnace@redhat.com,
-	shuah@kernel.org,
-	arnd@arndb.de,
-	masahiroy@kernel.org,
-	bagasdotme@gmail.com,
-	horms@kernel.org,
-	tweek@google.com,
-	paul@paul-moore.com,
-	linux-kernel@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VsC5z/lv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744849224;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7n76Fvpmfa8LN30y0qvCHdYcw71Um4Eimev9X0oBxqU=;
+	b=VsC5z/lvZYqSwvJeTAoIVqma8ocNGtEkO4DEbDOt7+x1dda+vcMGSSDiXY6e18c9UV6WzP
+	16QrCqTj2tkVKbUduw9C1WSSkJU/bQpuxKR2y4UC3mHBaVmdf58hKqIrB5gHzyeyF6WZG8
+	sIeCtVi0OXPkrWAmGnM7YVRpSl3DZvw=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-533-CvnZAHuzPYSmoVkEBRTivg-1; Wed,
+ 16 Apr 2025 20:20:22 -0400
+X-MC-Unique: CvnZAHuzPYSmoVkEBRTivg-1
+X-Mimecast-MFC-AGG-ID: CvnZAHuzPYSmoVkEBRTivg_1744849219
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9A02A1800264;
+	Thu, 17 Apr 2025 00:20:18 +0000 (UTC)
+Received: from h1.redhat.com (unknown [10.22.88.34])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3796119560A3;
+	Thu, 17 Apr 2025 00:20:08 +0000 (UTC)
+From: Nico Pache <npache@redhat.com>
+To: linux-mm@kvack.org,
 	linux-doc@vger.kernel.org,
-	netdev@vger.kernel.org,
-	selinux@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	hridya@google.com
-Cc: smoreland@google.com,
-	ynaffit@google.com,
-	kernel-team@android.com
-Subject: [PATCH RESEND v17 3/3] binder: transaction report binder_features flag
-Date: Wed, 16 Apr 2025 17:20:04 -0700
-Message-ID: <20250417002005.2306284-4-dualli@chromium.org>
-X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
-In-Reply-To: <20250417002005.2306284-1-dualli@chromium.org>
-References: <20250417002005.2306284-1-dualli@chromium.org>
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: akpm@linux-foundation.org,
+	corbet@lwn.net,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	david@redhat.com,
+	baohua@kernel.org,
+	baolin.wang@linux.alibaba.com,
+	ryan.roberts@arm.com,
+	willy@infradead.org,
+	peterx@redhat.com,
+	shuah@kernel.org,
+	ziy@nvidia.com,
+	wangkefeng.wang@huawei.com,
+	usamaarif642@gmail.com,
+	sunnanyong@huawei.com,
+	vishal.moola@gmail.com,
+	thomas.hellstrom@linux.intel.com,
+	yang@os.amperecomputing.com,
+	kirill.shutemov@linux.intel.com,
+	aarcange@redhat.com,
+	raquini@redhat.com,
+	dev.jain@arm.com,
+	anshuman.khandual@arm.com,
+	catalin.marinas@arm.com,
+	tiwai@suse.de,
+	will@kernel.org,
+	dave.hansen@linux.intel.com,
+	jack@suse.cz,
+	cl@gentwo.org,
+	jglisse@google.com,
+	surenb@google.com,
+	zokeefe@google.com,
+	hannes@cmpxchg.org,
+	rientjes@google.com,
+	mhocko@suse.com,
+	rdunlap@infradead.org
+Subject: [PATCH v4 4/4] selftests: mm: add defer to thp setting parser
+Date: Wed, 16 Apr 2025 18:18:46 -0600
+Message-ID: <20250417001846.81480-5-npache@redhat.com>
+In-Reply-To: <20250417001846.81480-1-npache@redhat.com>
+References: <20250417001846.81480-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -101,63 +96,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-From: Li Li <dualli@google.com>
+add the defer setting to the selftests library for reading thp settings.
 
-Add a flag to binder_features to indicate that the transaction report
-feature via generic netlink is available.
-
-Signed-off-by: Li Li <dualli@google.com>
+Signed-off-by: Nico Pache <npache@redhat.com>
 ---
- drivers/android/binderfs.c                                | 8 ++++++++
- .../selftests/filesystems/binderfs/binderfs_test.c        | 1 +
- 2 files changed, 9 insertions(+)
+ tools/testing/selftests/mm/thp_settings.c | 1 +
+ tools/testing/selftests/mm/thp_settings.h | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-index 98da8c4eea59..bf9c3becca1e 100644
---- a/drivers/android/binderfs.c
-+++ b/drivers/android/binderfs.c
-@@ -59,6 +59,7 @@ struct binder_features {
- 	bool oneway_spam_detection;
- 	bool extended_error;
- 	bool freeze_notification;
-+	bool transaction_report;
+diff --git a/tools/testing/selftests/mm/thp_settings.c b/tools/testing/selftests/mm/thp_settings.c
+index ad872af1c81a..b2f9f62b302a 100644
+--- a/tools/testing/selftests/mm/thp_settings.c
++++ b/tools/testing/selftests/mm/thp_settings.c
+@@ -20,6 +20,7 @@ static const char * const thp_enabled_strings[] = {
+ 	"always",
+ 	"inherit",
+ 	"madvise",
++	"defer",
+ 	NULL
  };
  
- static const struct constant_table binderfs_param_stats[] = {
-@@ -76,6 +77,7 @@ static struct binder_features binder_features = {
- 	.oneway_spam_detection = true,
- 	.extended_error = true,
- 	.freeze_notification = true,
-+	.transaction_report = true,
+diff --git a/tools/testing/selftests/mm/thp_settings.h b/tools/testing/selftests/mm/thp_settings.h
+index fc131d23d593..0d52e6d4f754 100644
+--- a/tools/testing/selftests/mm/thp_settings.h
++++ b/tools/testing/selftests/mm/thp_settings.h
+@@ -11,6 +11,7 @@ enum thp_enabled {
+ 	THP_ALWAYS,
+ 	THP_INHERIT,
+ 	THP_MADVISE,
++	THP_DEFER,
  };
  
- static inline struct binderfs_info *BINDERFS_SB(const struct super_block *sb)
-@@ -619,6 +621,12 @@ static int init_binder_features(struct super_block *sb)
- 	if (IS_ERR(dentry))
- 		return PTR_ERR(dentry);
- 
-+	dentry = binderfs_create_file(dir, "transaction_report",
-+				      &binder_features_fops,
-+				      &binder_features.transaction_report);
-+	if (IS_ERR(dentry))
-+		return PTR_ERR(dentry);
-+
- 	return 0;
- }
- 
-diff --git a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
-index 81db85a5cc16..39a68078a79b 100644
---- a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
-+++ b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
-@@ -65,6 +65,7 @@ static int __do_binderfs_test(struct __test_metadata *_metadata)
- 		"oneway_spam_detection",
- 		"extended_error",
- 		"freeze_notification",
-+		"transaction_report",
- 	};
- 
- 	change_mountns(_metadata);
+ enum thp_defrag {
 -- 
-2.49.0.805.g082f7c87e0-goog
+2.48.1
 
