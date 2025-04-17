@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FFD20408A;
-	Thu, 17 Apr 2025 20:14:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44052205E2F;
+	Thu, 17 Apr 2025 20:14:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744920894; cv=none; b=NT1tBQbC6vvRJQovT9WzKFGhyE1IPWoCHwjR9zKedgCZCjcYCrF2miE2qZT0BUX1Uhyi5IsR+vjU7JMW3kZP0/Q6M9sBNumvV2msYadEYcEGgddgJUyihJN8bOqViQ7q2bzFjKgVDwA+pTBqUe8IBpRbwZe0aNNMOA/2B/E/Evg=
+	t=1744920894; cv=none; b=lRJYHGto1IkwkjyBj8NnLI6WnFjoPugmGQE3SbJrf14B/v2mBX9/gP7mFOaMgQj7gXQGxKd0vqdaR+LPuEgsbroALRaBd99dr7oEt/NtP83cEUM++O9gQ9HRcdnO97H6yZNFpeQ7i681rVy5K35/qQypAw7UtZN4LpWfhVERFPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744920894; c=relaxed/simple;
-	bh=VtNJxmhsI2s39FgW3VY4pSVvAt5jJYa2aFza7f+ewM0=;
+	bh=cL0NbqoPrjxln+M7eg5VJqlhg4NHXso2/3QwkVlw3u4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sOluyp2v7cc6Pz9wp6Vwe+FlbUkyhEVKrpbi+KkyBuslITnkPCFF5SxZNx6lURurigUY0IHxuovWJWQYrXj/I7iX/IQvz6l+INb4PeiZ3vTB4dML5vIN8fMZboPxmNyp8duce3qM+vGFdhJI4cWwo/2zrd08dAuC86hmt922cnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u61sfBLn; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=EG/nrOBQoKXVgNhKEzcWZaoBNx9ndeiXgqhE8xUWHlI7UAfxShIS7rN6nxrtdxHxqncH7bIYsCZ27OSRLRd+5OfUdIcJNtDeApCQlHixbA5v7RoGnE+9A0bgd6Ce49TiGhTxnHNWIq64gQstQ6uMIjUqC0cUDSUoOvFjlh6wYT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RbUWdE1K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u61sfBLn"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B4627C4CEE7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RbUWdE1K"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BEFB1C4CEF1;
 	Thu, 17 Apr 2025 20:14:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744920893;
-	bh=VtNJxmhsI2s39FgW3VY4pSVvAt5jJYa2aFza7f+ewM0=;
+	bh=cL0NbqoPrjxln+M7eg5VJqlhg4NHXso2/3QwkVlw3u4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=u61sfBLnkFbVfo//3Npl2efxEIChuX9BNhuGj/kF8i3KeN9nkqNbaP8ngKuY/YXZv
-	 Ckzgm1M7k9GkEd33UtGT+bZ440U4YSnLzVBEn+nsxe0JV/vZg+lSN8g/cofZq0jJ1p
-	 C8yRrXE06iKfBuSXLTkFZNnhfIm6NlvsWbChdCOk+nrq3TvFSYVDSw+2aDbQ/RWovm
-	 gGZtlml5+yIVhE4y291bz1Gv8FgxEUaRrCGqDuaS2xc4d6Np0WRMmMRyDedCcvBCjQ
-	 Nv2Rt6zm6nXW3JZT20sPUBDdcB7+Tzid8xDBahurXJHoR5/zw7nh6GHPuv/5RlD4vI
-	 OwE8SdK5KZEeA==
+	b=RbUWdE1Kk3F0m64YGHn2DU3QVcsO45kku6DKPv3KNNBWvL2GqNjiSbK4P4rV8PXig
+	 700l5bF+9c+eu46lnGf7ZuZzD1KIqdBJqP1VpKKxF6cKYg544WS89IalcyknI89/Ci
+	 d7tylv6wAuKVnWZwL4jLPb+1eT9H/9ZB6Lz6udKvW3CbXuEmfoPjaohlR90kG9NaqX
+	 PFwC8wVzHrskfpP/PBgyJpj+93UUR66xb0puI4fHR3VmU7eX19Y2PTZg/eJegwlO8h
+	 m9KL+fxqo0j0JNWZ8tU3dck9rgeGpR59t9D7iZ6WZ2hIN6AD3U/1RmpAzS2FJUad36
+	 9xy0/L46wyOWQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBCDC369D0;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3397C369CB;
 	Thu, 17 Apr 2025 20:14:53 +0000 (UTC)
 From: Sasha Finkelstein via B4 Relay <devnull+fnkl.kernel.gmail.com@kernel.org>
-Date: Thu, 17 Apr 2025 22:14:50 +0200
-Subject: [PATCH v2 2/3] nvmem: Add spmi-nvmem driver
+Date: Thu, 17 Apr 2025 22:14:51 +0200
+Subject: [PATCH v2 3/3] arm64: dts: apple: Add PMU NVMEM
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250417-spmi-nvmem-v2-2-b88851e34afb@gmail.com>
+Message-Id: <20250417-spmi-nvmem-v2-3-b88851e34afb@gmail.com>
 References: <20250417-spmi-nvmem-v2-0-b88851e34afb@gmail.com>
 In-Reply-To: <20250417-spmi-nvmem-v2-0-b88851e34afb@gmail.com>
 To: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
@@ -52,11 +52,11 @@ Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Sasha Finkelstein <fnkl.kernel@gmail.com>, Hector Martin <marcan@marcan.st>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744920892; l=4485;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744920892; l=6119;
  i=fnkl.kernel@gmail.com; s=20241124; h=from:subject:message-id;
- bh=QxvKeCxMx0fhrb/mzZRj0aBarxG7UUKFK3NomXpfiRA=;
- b=T/XlRbf/iR6QeRjUc4OpBst1lMVqTc3/dcAAYKyRb3CFRagS9Kjvzn0fA67TcIbYgQTpI171o
- sxVCLUf2f/ODsbmtkXPcojhHWWqfgud+omcttBWrXAx3spi9TM3Oqhr
+ bh=r3FXIrQkL2BPaLQ9NPi9PQxQaHbfYnGD3KEb4Aoaexs=;
+ b=In7D/S1SqE8ML03r0v4/Q27rhkgpXJh+W6qeLcyT2U4yunqQzRLkOktYLajotf0lvnibKIzPk
+ mKpCH074UH4CAC0Rei2siOEs7n/dfIWsdyMQ6BG12Egf9EmuL80KQ6g
 X-Developer-Key: i=fnkl.kernel@gmail.com; a=ed25519;
  pk=aSkp1PdZ+eF4jpMO6oLvz/YfT5XkBUneWwyhQrOgmsU=
 X-Endpoint-Received: by B4 Relay for fnkl.kernel@gmail.com/20241124 with
@@ -66,139 +66,226 @@ Reply-To: fnkl.kernel@gmail.com
 
 From: Hector Martin <marcan@marcan.st>
 
-This driver exposes a SPMI device as an NVMEM device.
-It is intended to be used with e.g. PMUs/PMICs that are used to
-hold power management configuration, such as used on Apple Silicon
-Macs.
+Add device tree entries for NVMEM cells present on the PMU
 
-Reviewed-by: Neal Gompa <neal@gompa.dev>
 Signed-off-by: Hector Martin <marcan@marcan.st>
 Co-developed-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
 Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
 ---
- MAINTAINERS                |  1 +
- drivers/nvmem/Kconfig      | 13 ++++++++++
- drivers/nvmem/Makefile     |  2 ++
- drivers/nvmem/spmi-nvmem.c | 62 ++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 78 insertions(+)
+ arch/arm64/boot/dts/apple/t6001.dtsi      |  1 +
+ arch/arm64/boot/dts/apple/t6002.dtsi      |  1 +
+ arch/arm64/boot/dts/apple/t600x-die0.dtsi | 50 +++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/apple/t8103.dtsi      | 50 +++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/apple/t8112.dtsi      | 50 +++++++++++++++++++++++++++++++
+ 5 files changed, 152 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e7b2d0df81b387ba5398957131971588dc7b89dc..63c12f901aed1f3e6de8227d6db34af1bd046fe6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2298,6 +2298,7 @@ F:	drivers/iommu/io-pgtable-dart.c
- F:	drivers/irqchip/irq-apple-aic.c
- F:	drivers/nvme/host/apple.c
- F:	drivers/nvmem/apple-efuses.c
-+F:	drivers/nvmem/spmi-nvmem.c
- F:	drivers/pinctrl/pinctrl-apple-gpio.c
- F:	drivers/pwm/pwm-apple.c
- F:	drivers/soc/apple/*
-diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-index 8671b7c974b933e147154bb40b5d41b5730518d2..c25c599fc79648e890ccc4e003224c9a218f393f 100644
---- a/drivers/nvmem/Kconfig
-+++ b/drivers/nvmem/Kconfig
-@@ -310,6 +310,19 @@ config NVMEM_SNVS_LPGPR
- 	  This driver can also be built as a module. If so, the module
- 	  will be called nvmem-snvs-lpgpr.
+diff --git a/arch/arm64/boot/dts/apple/t6001.dtsi b/arch/arm64/boot/dts/apple/t6001.dtsi
+index 620b17e4031f069874aaabadbf06b7b29ec4031e..d2cf81926f284ccf7627701cc82edff31d4d72d6 100644
+--- a/arch/arm64/boot/dts/apple/t6001.dtsi
++++ b/arch/arm64/boot/dts/apple/t6001.dtsi
+@@ -11,6 +11,7 @@
+ #include <dt-bindings/interrupt-controller/apple-aic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/pinctrl/apple.h>
++#include <dt-bindings/spmi/spmi.h>
  
-+config NVMEM_SPMI
-+	tristate "Generic SPMI NVMEM"
-+	depends on SPMI
-+	select REGMAP_SPMI
-+	help
-+	  Say y here to build a generic driver to expose a SPMI device
-+	  as a NVMEM provider. This can be used for PMIC/PMU devices which
-+	  are used to store power and RTC-related settings on certain
-+	  platforms, such as Apple Silicon Macs.
+ #include "multi-die-cpp.h"
+ 
+diff --git a/arch/arm64/boot/dts/apple/t6002.dtsi b/arch/arm64/boot/dts/apple/t6002.dtsi
+index a963a5011799a0480f88688fb4372a31f0bbf806..e36f422d257d8fe3a62bfa6e0f0e0dc6c34608a4 100644
+--- a/arch/arm64/boot/dts/apple/t6002.dtsi
++++ b/arch/arm64/boot/dts/apple/t6002.dtsi
+@@ -11,6 +11,7 @@
+ #include <dt-bindings/interrupt-controller/apple-aic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/pinctrl/apple.h>
++#include <dt-bindings/spmi/spmi.h>
+ 
+ #include "multi-die-cpp.h"
+ 
+diff --git a/arch/arm64/boot/dts/apple/t600x-die0.dtsi b/arch/arm64/boot/dts/apple/t600x-die0.dtsi
+index 4c224e686ffe5602329f7f394d3354559c4130ab..fba01727ee8bd67990cb001a5727d5dd2d01e2ee 100644
+--- a/arch/arm64/boot/dts/apple/t600x-die0.dtsi
++++ b/arch/arm64/boot/dts/apple/t600x-die0.dtsi
+@@ -50,6 +50,56 @@ nub_spmi0: spmi@2920a1300 {
+ 		reg = <0x2 0x920a1300 0x0 0x100>;
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
 +
-+	  This driver can also be built as a module. If so, the module
-+	  will be called nvmem-spmi.
++		pmic1: pmic@f {
++			compatible = "apple,maverick-pmic", "spmi-nvmem";
++			reg = <0xf SPMI_USID>;
 +
- config NVMEM_SPMI_SDAM
- 	tristate "SPMI SDAM Support"
- 	depends on SPMI
-diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-index 5b77bbb6488bf89bfb305750a1cbf4a6731a0a58..b639f4284184db026bb27b11e04d54b8f7ff166f 100644
---- a/drivers/nvmem/Makefile
-+++ b/drivers/nvmem/Makefile
-@@ -64,6 +64,8 @@ obj-$(CONFIG_NVMEM_SC27XX_EFUSE)	+= nvmem-sc27xx-efuse.o
- nvmem-sc27xx-efuse-y			:= sc27xx-efuse.o
- obj-$(CONFIG_NVMEM_SNVS_LPGPR)		+= nvmem_snvs_lpgpr.o
- nvmem_snvs_lpgpr-y			:= snvs_lpgpr.o
-+obj-$(CONFIG_NVMEM_SPMI)		+= nvmem_spmi.o
-+nvmem_spmi-y				:= spmi-nvmem.o
- obj-$(CONFIG_NVMEM_SPMI_SDAM)		+= nvmem_qcom-spmi-sdam.o
- nvmem_qcom-spmi-sdam-y			+= qcom-spmi-sdam.o
- obj-$(CONFIG_NVMEM_SPRD_EFUSE)		+= nvmem_sprd_efuse.o
-diff --git a/drivers/nvmem/spmi-nvmem.c b/drivers/nvmem/spmi-nvmem.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..fff6162cb22dd7ab45883f004f5b63ebae014698
---- /dev/null
-+++ b/drivers/nvmem/spmi-nvmem.c
-@@ -0,0 +1,62 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
-+/*
-+ * Generic SPMI NVMEM driver
-+ *
-+ * Copyright The Asahi Linux Contributors
-+ */
++			nvmem-layout {
++				compatible = "fixed-layout";
++				#address-cells = <1>;
++				#size-cells = <1>;
 +
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/nvmem-provider.h>
-+#include <linux/of.h>
-+#include <linux/spmi.h>
-+#include <linux/regmap.h>
++				pm_setting: pm-setting@1405 {
++					reg = <0x1405 0x1>;
++				};
 +
-+static const struct regmap_config spmi_regmap_config = {
-+	.reg_bits	= 16,
-+	.val_bits	= 8,
-+	.max_register	= 0xffff,
-+};
++				rtc_offset: rtc-offset@1411 {
++					reg = <0x1411 0x6>;
++				};
 +
-+static int spmi_nvmem_probe(struct spmi_device *sdev)
-+{
-+	struct regmap *regmap;
-+	struct nvmem_config nvmem_cfg = {
-+		.dev = &sdev->dev,
-+		.name = "spmi_nvmem",
-+		.id = NVMEM_DEVID_AUTO,
-+		.word_size = 1,
-+		.stride = 1,
-+		.size = 0xffff,
-+		.reg_read = (void *)regmap_bulk_read,
-+		.reg_write = (void *)regmap_bulk_write,
-+	};
++				boot_stage: boot-stage@6001 {
++					reg = <0x6001 0x1>;
++				};
 +
-+	regmap = devm_regmap_init_spmi_ext(sdev, &spmi_regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
++				boot_error_count: boot-error-count@6002 {
++					reg = <0x6002 0x1>;
++					bits = <0 4>;
++				};
 +
-+	nvmem_cfg.priv = regmap;
++				panic_count: panic-count@6002 {
++					reg = <0x6002 0x1>;
++					bits = <4 4>;
++				};
 +
-+	return PTR_ERR_OR_ZERO(devm_nvmem_register(&sdev->dev, &nvmem_cfg));
-+}
++				boot_error_stage: boot-error-stage@6003 {
++					reg = <0x6003 0x1>;
++				};
 +
-+static const struct of_device_id spmi_nvmem_id_table[] = {
-+	{ .compatible = "spmi-nvmem" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, spmi_nvmem_id_table);
++				shutdown_flag: shutdown-flag@600f {
++					reg = <0x600f 0x1>;
++					bits = <3 1>;
++				};
 +
-+static struct spmi_driver spmi_nvmem_driver = {
-+	.probe = spmi_nvmem_probe,
-+	.driver = {
-+		.name = "spmi-nvmem",
-+		.of_match_table	= spmi_nvmem_id_table,
-+	},
-+};
++				fault_shadow: fault-shadow@867b {
++					reg = <0x867b 0x10>;
++				};
 +
-+module_spmi_driver(spmi_nvmem_driver);
++				socd: socd@8b00 {
++					reg = <0x8b00 0x400>;
++				};
++			};
++		};
+ 	};
+ 
+ 	wdt: watchdog@2922b0000 {
+diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
+index bdb1cb9e406a441e458b1c735359b0148146e91b..3892fbe6a955513cad2ae836acc3e83009ab7cc5 100644
+--- a/arch/arm64/boot/dts/apple/t8103.dtsi
++++ b/arch/arm64/boot/dts/apple/t8103.dtsi
+@@ -747,6 +747,56 @@ nub_spmi: spmi@23d0d9300 {
+ 			reg = <0x2 0x3d0d9300 0x0 0x100>;
+ 			#address-cells = <2>;
+ 			#size-cells = <0>;
 +
-+MODULE_LICENSE("Dual MIT/GPL");
-+MODULE_AUTHOR("Hector Martin <marcan@marcan.st>");
-+MODULE_DESCRIPTION("SPMI NVMEM driver");
++			pmic1: pmic@f {
++				compatible = "apple,sera-pmic", "spmi-nvmem";
++				reg = <0xf SPMI_USID>;
++
++				nvmem-layout {
++					compatible = "fixed-layout";
++					#address-cells = <1>;
++					#size-cells = <1>;
++
++					boot_stage: boot-stage@9f01 {
++						reg = <0x9f01 0x1>;
++					};
++
++					boot_error_count: boot-error-count@9f02 {
++						reg = <0x9f02 0x1>;
++						bits = <0 4>;
++					};
++
++					panic_count: panic-count@9f02 {
++						reg = <0x9f02 0x1>;
++						bits = <4 4>;
++					};
++
++					boot_error_stage: boot-error-stage@9f03 {
++						reg = <0x9f03 0x1>;
++					};
++
++					shutdown_flag: shutdown-flag@9f0f {
++						reg = <0x9f0f 0x1>;
++						bits = <3 1>;
++					};
++
++					fault_shadow: fault-shadow@a67b {
++						reg = <0xa67b 0x10>;
++					};
++
++					socd: socd@ab00 {
++						reg = <0xab00 0x400>;
++					};
++
++					pm_setting: pm-setting@d001 {
++						reg = <0xd001 0x1>;
++					};
++
++					rtc_offset: rtc-offset@d100 {
++						reg = <0xd100 0x6>;
++					};
++				};
++			};
+ 		};
+ 
+ 		pinctrl_nub: pinctrl@23d1f0000 {
+diff --git a/arch/arm64/boot/dts/apple/t8112.dtsi b/arch/arm64/boot/dts/apple/t8112.dtsi
+index 950d1f906ba3023c1d118179207a2099345aae94..325e2ac22b3c88d863b2270c39a0a05d625e3f10 100644
+--- a/arch/arm64/boot/dts/apple/t8112.dtsi
++++ b/arch/arm64/boot/dts/apple/t8112.dtsi
+@@ -787,6 +787,56 @@ nub_spmi: spmi@23d714000 {
+ 			reg = <0x2 0x3d714000 0x0 0x100>;
+ 			#address-cells = <2>;
+ 			#size-cells = <0>;
++
++			pmic1: pmic@e {
++				compatible = "apple,stowe-pmic", "spmi-nvmem";
++				reg = <0xe SPMI_USID>;
++
++				nvmem-layout {
++					compatible = "fixed-layout";
++					#address-cells = <1>;
++					#size-cells = <1>;
++
++					fault_shadow: fault-shadow@867b {
++						reg = <0x867b 0x10>;
++					};
++
++					socd: socd@8b00 {
++						reg = <0x8b00 0x400>;
++					};
++
++					boot_stage: boot-stage@f701 {
++						reg = <0xf701 0x1>;
++					};
++
++					boot_error_count: boot-error-count@f702 {
++						reg = <0xf702 0x1>;
++						bits = <0 4>;
++					};
++
++					panic_count: panic-count@f702 {
++						reg = <0xf702 0x1>;
++						bits = <4 4>;
++					};
++
++					boot_error_stage: boot-error-stage@f703 {
++						reg = <0xf703 0x1>;
++					};
++
++					shutdown_flag: shutdown-flag@f70f {
++						reg = <0xf70f 0x1>;
++						bits = <3 1>;
++					};
++
++					pm_setting: pm-setting@f801 {
++						reg = <0xf801 0x1>;
++					};
++
++					rtc_offset: rtc-offset@f900 {
++						reg = <0xf900 0x6>;
++					};
++				};
++			};
+ 		};
+ 
+ 		pinctrl_smc: pinctrl@23e820000 {
 
 -- 
 2.49.0
