@@ -1,173 +1,343 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294A135979
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744894583; cv=none; b=cq6KHIiuaDWJuVBwKxGjy/ZAhaLsdeDjQGjLpSwwNCyhl74+wRwfWqsumUJkkLEjxyQivM3dbNykik/fB/WhG04ZRNCFufXrx24/7OO0H5tPI+dMMwQzRr49QomQNkv2Z7yW+JEAUziCfFVXrebVWDyfL4QWIHz9sXockKWWrMI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744894583; c=relaxed/simple;
-	bh=g+daQNX4dTaJc60JSp8lrCqBN98a2sXsIUmhEpU1d/c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=St852ckjHz9Jk2srakTUIe33AXgoo1c/IhvRZpH14/a19uQ0eIn9xVqoxQrC7imQ6ULCbOHeP3cGB2s1h4PsHMtQumQjiQ3QrUm3VG8w8KC7ZB771wr+c1gLA8MI9d1eyzLc+g8O1zOZ7tk8lUe3fnLMpFWsi59M7ZAJRufRn/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ronb4LvM; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AC235979
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.156.173
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744894602; cv=fail; b=giyKLsUOVjwwrt6nXtrAecEKeGbVziSGH7mawaYzg7YhxtrXxShzLvNTbvwIGrtGM8cFkvduOoQNXbX8fs83drePESgP1doNT2lJdRw4IE7+c3DDq+QXSd1KFXgTYQfJIRiUPSmFch9C2purJsfcyBTV1FwMaReo//MxCkqIGyM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744894602; c=relaxed/simple;
+	bh=VDnyBIEvZiPzNrF7Nw7RJfLemt7SFQ7AouUaFQYjLVE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=gmO0I25roJqCuelfoSi0pmor6FeBVvIHHFKx8fltUhzJdem90e97GDWCQnpAq9ttRUbeklR7SdT20rzfLdAoVciVLuvzyoD4+kRgSlYcrSuxY/cRceKkFDfEIXklLV8ovCKR14v6ltsN3XpLLVldt3masL22y+uwCgTmyJioYo4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=fail (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b=OsimisQE reason="signature verification failed"; arc=fail smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ronb4LvM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744894580;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=PP6r3Tc0odzOLdnN1Mh6zo2XTeq4+ZCWbhdNqWqpYfQ=;
-	b=Ronb4LvMk81ikeW+CIg7+9jrxyPucAzyc5EBxkObGgRD6TdmVImB1jD3cS950U1RJzOe+Q
-	ejywBgGRX0s0DSrhxr5+m/h5Ftx5/qMaqRO3nu8QhjDKuwPsFwctpJD+kXvFO21KKJyY/s
-	5x44qtgKBSU0rRwi01nGbde9oDskaZc=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-256-cQ2lCdl4OPm96BBdn0QkvA-1; Thu, 17 Apr 2025 08:56:18 -0400
-X-MC-Unique: cQ2lCdl4OPm96BBdn0QkvA-1
-X-Mimecast-MFC-AGG-ID: cQ2lCdl4OPm96BBdn0QkvA_1744894577
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3912fc9861cso242312f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:56:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744894577; x=1745499377;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PP6r3Tc0odzOLdnN1Mh6zo2XTeq4+ZCWbhdNqWqpYfQ=;
-        b=t+KMjNrX9xctXZE66brXQV4nHcbXRLPYiWtI0Ff0u23vVYyt4X6S83kPaTAZxr552r
-         uW3VRS/QYeRIwxtpOcJqapMCPdAyOy6FAvdYFdgHqXx4viEIN224VDbf+0CXPjUylIkl
-         k0TB+B5PqFFdUd/2ErnoS9aXCK1k1Sb/71S7m52PA1i58IiUf61XVK584h+76aEHpRHO
-         iJwuSrrt2o6TnpqsOioUWphxSXHEo1GXRL+C2py9+8nL3cvRWRkWD9cYQBjMYTBN9oiH
-         ax6Je4kcopUfwLCJ3c1o0K3SmEE45ryRDMiJ42yRQsg4bDasQztJHwvVn3KMaqU3z89a
-         OiTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUT99E/RNGvpG0dmlTdjwbUYZEkk9WXmZygqKQYSpKNAynMHt2KLslkOcMTGFJUcE7di55IWDY8x650Tx4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbI+CiDGoakm9f8Adl3oM0CxCOnJsNkE1v0soYvXKMfeF5Faaq
-	KCegSfOCwAQadmkXZn3CWbjVilf0pEK9bWBGTpnzek20WaKoV7C6f/tOJevt8aZcWQab2M0q51e
-	YDd+PN/Xglql4dyVDYPGFXYW8nRC27dfXRkqUali+GNfD1rb/8K791vFnlHdAvQ==
-X-Gm-Gg: ASbGnctctd4hTKWCa/ve8L0HGLq5zM08vR2kr6wDidDTFu86XfTX60LUiDVv8eGbKpy
-	vi168/JD96A3FSyQ/R86upVSC24ev2EI1np2euY3yQbSozh+D+3r1B59hTIaLvZ7vpE6u9b3dab
-	Xz1tPBB98FjFgQ8eyFBpWQ0yqFxeSZJuTNlpIzu5wchgo3wG+pPocQHfi7W18XPJsved1PTVrZE
-	VnpmufAerg49fEOtZScCI0xVFpH+oaCP7J+o7f+2azS24GfqRAQ3t+Z2KF50QLxKF6+Sd2zTqL/
-	wQc1dGVFHJSh9/OGg8EKqszBe3LnLxYDMvzDaiWJiyYU+TZ0VPR4J4Nig/m4sVc4XOFIvOQqsZb
-	1CCCTRnShQflBjSoaoHa+RfNWkpI3UpCjJGwdjeM=
-X-Received: by 2002:a05:6000:22ca:b0:391:4999:778b with SMTP id ffacd0b85a97d-39ee5b37b2dmr5018839f8f.28.1744894577323;
-        Thu, 17 Apr 2025 05:56:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFhcDh+lOBj95mWyR4xq7n9fZ9ItU2YUKtea/qun2d7Jab+8iRIylTGcc/lV2a/wDdAT6UsCA==
-X-Received: by 2002:a05:6000:22ca:b0:391:4999:778b with SMTP id ffacd0b85a97d-39ee5b37b2dmr5018824f8f.28.1744894577007;
-        Thu, 17 Apr 2025 05:56:17 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c706:2700:abf9:4eac:588c:adab? (p200300cbc7062700abf94eac588cadab.dip0.t-ipconnect.de. [2003:cb:c706:2700:abf9:4eac:588c:adab])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43ce30sm20586336f8f.62.2025.04.17.05.56.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Apr 2025 05:56:16 -0700 (PDT)
-Message-ID: <a825b3c3-55f7-4d90-a318-e20acf55e0cd@redhat.com>
-Date: Thu, 17 Apr 2025 14:56:15 +0200
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b="OsimisQE"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53HArWif006042;
+	Thu, 17 Apr 2025 05:56:19 -0700
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2045.outbound.protection.outlook.com [104.47.56.45])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 45yqpjm28r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 05:56:19 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WPaL8YT13w2/XaC6CsUWu1cFJMA1pOzYxZf7CDkkZVnuuVMeiCcnKDQUJ9fgeeTPw9/LU4Nmgpzh0Jsg1tZdNEWuT0r4ddCxoC5aAZ8QQq8MUP2oZp1WlNArx+iT5elyb2yV3PrIwr5SDFQTeCOmtpDIHybl33mTROr5SLTQfn4iOuvVx/yNW1zPf1aTJ9kQVVLVm0jrrOMwxUbtZefxOw+ic9Cx4vB8Id+iemOyM4Yz7k1TxEB19QNnSnHnlgqucqr9k9JEns/8lC/Je6rJa5JWY8OGoSBIpyLMzYxWZZBEPbDrv7758hcCYOZ0wBaoxyxu33xg3cWozeU1Cz53Bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/lkUaD4gAA8aWkqLLNiUCBaBQays5CQdhips4q6JkqE=;
+ b=PRKdp7cd+Na/sJ3GtrbS8GJbmdmlMjUuPM+Ti+p3bSYCxy/l6WuT/em1qnc8PA8Ru2w4KX3OXnCiqepAWIEX70HsnywaK85X2sOFaEkm2VYjPTjchUrGgrB4N7D8IiCnw85kQ/3s1gBNp4dx7+E4X6juBzzDNgSEhXFzoLu3F5FPGtLext6cc4iu7AEpEcwA5+7JCCQsA6nJ+wzyGmlPF2BojmP+XQbueosV/i2ArbBzYhpwFEz9Y54vvm9xL9bZ2SmB2YTkk4HWwK0JRzboDQ/hLyBwtN+Uw1ez+7vbpO0q00mCLrZf0/1+k72/9Lbp1Z5jls1WsyFkQFAPGYGwYg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/lkUaD4gAA8aWkqLLNiUCBaBQays5CQdhips4q6JkqE=;
+ b=OsimisQEn1UkEcywYyMj2KU6MngNRUpOPU4vPq6x0jg7LHSBS7hqZVvhteVvbpSIxUTi15NblOBlo7ljbN8HCm9fYBA6AX2PlYjIqOAbAgG/SttV09ruGqfS6lEXYAzu3UGfT0eOWcaDwxCNsFrRVEUoN9LMXYHUsDd6XxlEuBQ=
+Received: from MW4PR18MB5244.namprd18.prod.outlook.com (2603:10b6:303:1e0::16)
+ by DM6PR18MB3505.namprd18.prod.outlook.com (2603:10b6:5:28e::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Thu, 17 Apr
+ 2025 12:56:14 +0000
+Received: from MW4PR18MB5244.namprd18.prod.outlook.com
+ ([fe80::52f3:9792:ee42:90b]) by MW4PR18MB5244.namprd18.prod.outlook.com
+ ([fe80::52f3:9792:ee42:90b%6]) with mapi id 15.20.8655.022; Thu, 17 Apr 2025
+ 12:56:14 +0000
+From: Vamsi Krishna Attunuru <vattunuru@marvell.com>
+To: "phasta@kernel.org" <phasta@kernel.org>,
+        Srujana Challa
+	<schalla@marvell.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang
+	<jasowang@redhat.com>,
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        =?utf-8?B?RXVnZW5pbyBQw6lyZXo=?= <eperezma@redhat.com>,
+        Shijith Thotton
+	<sthotton@marvell.com>,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        Satha
+ Koteswara Rao Kottidi <skoteshwar@marvell.com>
+CC: "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXTERNAL] [PATCH] vdpa/octeon_ep: Use non-hybrid PCI devres API
+Thread-Topic: [EXTERNAL] [PATCH] vdpa/octeon_ep: Use non-hybrid PCI devres API
+Thread-Index: AQHbr29ELSp8NJgL1kWOf97yfETcxrOnjC/QgAAe0YCAACGnMA==
+Date: Thu, 17 Apr 2025 12:56:14 +0000
+Message-ID:
+ <MW4PR18MB5244B9A5E105A514BB3D5272A6BC2@MW4PR18MB5244.namprd18.prod.outlook.com>
+References: <20250417080211.19970-2-phasta@kernel.org>
+	 <MW4PR18MB5244915E54967510C5356B4DA6BC2@MW4PR18MB5244.namprd18.prod.outlook.com>
+ <a57d5f6f47ec8ba2860df853aca324e96320eba5.camel@mailbox.org>
+In-Reply-To: <a57d5f6f47ec8ba2860df853aca324e96320eba5.camel@mailbox.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW4PR18MB5244:EE_|DM6PR18MB3505:EE_
+x-ms-office365-filtering-correlation-id: fd5e2db9-7463-42d8-90b7-08dd7daf3c93
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?UU1SWlRDbzlyNkJkM3dhNXZ1dXc4TEVRaVI0ZTZsVXl6NW42L1ZSRGY1a2JI?=
+ =?utf-8?B?dlFwMTl0WURDdkdkNnZSYzJVNnJKMExpTEF4Z3I2RkRHaVlsVUVNNnJaMU44?=
+ =?utf-8?B?WDJUM0lCa2lmek8zMlZKUWZRWjR3cnFwWklSamRoNmJvYWhwVlo2dnA5Q2ZX?=
+ =?utf-8?B?YjRBcXg0QTA3bTcvK0lXODlPV2NhTW1CSmdzcnkvNSsxazFuc1dPNWFmbWpm?=
+ =?utf-8?B?Yi94bGVVZFVvNVIxWXdUczBLRElORC9nRnJMd3ordWdRUmFUaEhmYzFqK0U5?=
+ =?utf-8?B?OXVGaGM3eUxremlTNUQwSEMyekZUdnovcExMQ2xXZnV3TkxqMHZUdUpyY0ZJ?=
+ =?utf-8?B?ekF6Q3ppNUt5Z0NObXFEb1g0NmowaU1GbXhEaHRIVWMrRHNYVlJOSFRxRXdS?=
+ =?utf-8?B?dFRCTGN2NGhrOXVrOS9MV0VKczdoMWEvemo4NjV6WjdqSDBZL3RrbUJVNnpt?=
+ =?utf-8?B?Zi9YMzFNZjU5Ykt6aWxoalBURWUySUgxdDJwMUVXUXZVQkxYSWtUQ3NBUDhT?=
+ =?utf-8?B?SFk2cjg2MHBPSDBVY3JjRmcyc2J5eDAxKzhnL3gwWTl2MFMwdFdiYmZRK1hq?=
+ =?utf-8?B?WTN6NjhaRHVCVDFvaVppcjhRcjNPdURMWVdsMWMwcDRKbmRTeXNQM2ErWnpl?=
+ =?utf-8?B?ai9MSVFjOGlHRkJFa2VpNWIrcC8vcmtpaFJCbTlaajlXTmptdnUzdzEzWjRI?=
+ =?utf-8?B?VkdxZWY3WDUwdUJZV3BNeExjeXNTSHY1NE03SlVvR2ptZDBDejJraUt6SEsy?=
+ =?utf-8?B?a3NqL0hGUzd6cUpiaGRDRnpDVm9YYmF5RThtZkJleW9DSmRYbUlhWEFnSStC?=
+ =?utf-8?B?WnQwQjN3Y05YWXdiYnpyVjZWRENwV0IxWkpkdC9vUDRtM016Z2JDQ0Q4TFgz?=
+ =?utf-8?B?RS9HQ1pYdERva0dOYzYvem1wenp5WE9WeUtSVlBmYVNrSlZ0TldNa2lpaENn?=
+ =?utf-8?B?cGt3Qk1mVU5uRGVGNm1odGVsOVc4dHk3UWRNeGl5UFl6YUY2cUZHRm05RnJt?=
+ =?utf-8?B?ZTVqTWdld3A1SzZ4enpBekxwUHdRRnZmSEJQbld0a0krZDNKZ01JMmVPRkRs?=
+ =?utf-8?B?dWx1YmRXWTJhZEUrcEQwL0cyblN3aXkybWprU3YzTXVyT0VORERBOThSSWtD?=
+ =?utf-8?B?V2NBZVpEOXNIUGlVTmZiUlp3NkZWNTgxSlBJbTdMTHpJdEIvS044VFUvSWNX?=
+ =?utf-8?B?Q0JYS0xZSm1abGNTZ3g2SkRSSWZlS0NEMzJYaFVoNUF6UlJRZW5CemFVNTdw?=
+ =?utf-8?B?QUErRENNWFFsemZqcnlZWDRPcy92blNTbzdqL3BCQTh1dCtrMHBOTUEvenlu?=
+ =?utf-8?B?SktyVjhXbmxHaWdrQWV0RnBQa1FXVk82enl2Q1R3c045KzJvbkMzT2tWam93?=
+ =?utf-8?B?dWYxYUVLY1EwbE1USy9uMUxXTGNJUjY4Uksyc3psZ3BpK1RkZFVOY3IzK2lL?=
+ =?utf-8?B?M1pYZnVmS2k2NkxRbGpVTWRrSkhrSHBhV0VnMVpiR0RyNGNUcFVGRFluMjFB?=
+ =?utf-8?B?L1lQdGppNy9tSDh1bjZ3S0VMbkxYaXp6WEx6UkhFTXRLdnJNdlFrZ25TY2NO?=
+ =?utf-8?B?blpOU0k0MmV5N3lRSFkxNnU0NzVKRWk4Zk1PdVVTaitlalEveHVKdmhVRmVB?=
+ =?utf-8?B?UGtkbmIyZjVuL0c0Uzh6NStLN0x3T1VJSzZzN29vSUJobXR4Rk9NK0dtUUpW?=
+ =?utf-8?B?Q3N1UGxXLytQVXJPcFdWbWFTUWNuTVQ0SWNYZWQwbGRmVkV4SkMzQ3dRQytQ?=
+ =?utf-8?B?OEp1TklhS2YySlRCcEU1QldNN256dkZ4MkFyOHJkcGpJd2NHUmd2TlFyZHhl?=
+ =?utf-8?B?OGQzZ0VKVGVvYTZtelY5ODcwOGNCaHFCYlNTT0toZ2Z3WnJJNHJSSkw0MkF0?=
+ =?utf-8?B?bndMZFlvdmdjYWMyR0tOWjJiQjArSnozQnA3b2o3K3IwSTcyYUovZkV0WE54?=
+ =?utf-8?Q?6M24wId7lkk=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR18MB5244.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?anNkZ0RwNGFrTlpJVWlqMXdEamlrRW40eUJhbTdXaUxuOG1aNVpKSDJTa25G?=
+ =?utf-8?B?Zkowd0F5a01mTjZ0dWpGUDhwWU1hSG5mQVpJOVEyZFUyRkFKbUF6QS9HVWVk?=
+ =?utf-8?B?TEc3T2M3UERrTGlMZFFIcHppbXlydHlKVFgwQ3o4YW0wUGNpdGZyRVNxdFRJ?=
+ =?utf-8?B?SW8vZ2Q4ekZLc25SQ3M4TjFiVDRMRkQ5bVhHRm1mM3lYNUVFNDZxR2NEZzhS?=
+ =?utf-8?B?eE9nUW01ZG9KczZmbS8yM3hvSW9ISlJUdWM2amdIai82OW1TS3Y1ZEZLeWky?=
+ =?utf-8?B?NjJHNjRPMXBKQll4T1JhM3I3ejBDdEhZaCt3SWZRNks0OTVZRHRlYWdTamZ4?=
+ =?utf-8?B?eDhIZW9hdm1mM05IV1RQeFFiQUVGL1pHVVU3ck5lM216KzArdU1VcHFka205?=
+ =?utf-8?B?OTZ3c2sxeWZiOTVPWmIwalRXWUk0aTAyUksvUGRvQjJ2OUZDbVRyY0h3Mi84?=
+ =?utf-8?B?bDBHZVpubDdFdVpwcFJScXd1bUlIL1Y4WkhjYnZsY01GS1gxVWdEZXNKZGRI?=
+ =?utf-8?B?S2Z0clZ0S1JxVDBzWUtueDEzY0dENWtTQzJTbmhwd3dhY1FWNVhyTUczRDlT?=
+ =?utf-8?B?RU9sclQxSVlWNzQyek42WjdjdFNiMDFnYlg4SVcrczN5ZDdsNVg0bEFNU2g3?=
+ =?utf-8?B?UzRHZmovRDJBWGRFczhjUGpwSnRVajZycEcxb2dhYTZObTBZMnFYMmRYSXdh?=
+ =?utf-8?B?WmNzWUdNT0l4TlNqNmVTYXlLS2FwT3N6eXBud0VPYytjSDd5Q1ZBUURDZHJq?=
+ =?utf-8?B?WWh2WVRQZnBmQ3pEbjVkZFZVQ3loN3ZST2ExSTBwc0JXTmJZMmFsRDYrWUZX?=
+ =?utf-8?B?VWRsK3U5ZndMeHBGdlhHTFlSbERCNUVLUFNRVzI2LzFPNmtKMDZFUUIyOU1k?=
+ =?utf-8?B?d29OMWtSeUkyVktjc2c1M1E2eWFzcThPNkpVcnlSUVN5T2hoYU16ZndDTXpK?=
+ =?utf-8?B?clo0Qmg0d3lBeERiZERvbmM0WjZkd2VFOVFxekxOOEFaN0p1dzljN1Zkbm4y?=
+ =?utf-8?B?YzUyWTFXU2VLcjloaUhHdFBxMmhxTGcweTVieHlPRTErQjQwRlBHdERDQTR5?=
+ =?utf-8?B?UWltbU5sdURENEpKN0YzZ2xyTmV4eGo1NXdZU1JxUk9mUlBoVVovT21DS3Jh?=
+ =?utf-8?B?dXRUS0VyMFdTMTR2U3NLM0tWZDdjeXBzU0gwMlFqQUhvMmhvRW4ralJzL0Mw?=
+ =?utf-8?B?dTY2Tm5GTElrQ0xzdUxJZlNEcHYyb3dxVFBFV1Brd2M3ek4rZGNzL2s2RW1o?=
+ =?utf-8?B?TllaRXZGU0dTQngrTTRxaVJHMHNta0N0Q3Q1WXl4R0s5NnRzODJ0NFZDSzNR?=
+ =?utf-8?B?SlZnSmZTOThXeEUrRUx6dVlYZDR3aFZ6NGhZVzlTSzJGd0hxdkpRZTRFS1RL?=
+ =?utf-8?B?SmluZnladVJ3cjN1VmxuMXFGWENxMzJid1JHeGUvUUtxNWgySkJITGlsdmhw?=
+ =?utf-8?B?Qko2Q1RidWduUVl3eHM5NmczcHRDd1BIRnUzM2RreHB1NElERzQ2T0poYldL?=
+ =?utf-8?B?YjlxYnFDV3lYb01NaVZVaThxMUhGNWorZFhYS0Z5WGlGd3RiRnNwSTdicERM?=
+ =?utf-8?B?MENpb0FrVlJjeHJIMDdSbjdZL3hYZHI5c01YRzBpSkR4d201VzEzd3puVjN1?=
+ =?utf-8?B?OG9EellVNkN0OEpnQ0VMZHJDS0xSZDJZeHJGNUdtNExEZCs2TGlpbzZ0YmNG?=
+ =?utf-8?B?dDgxdFZmSzFUdHliUUdvRlZJeTVid3VDUkJBNzVyYllTdXBVVERaSm9Sb2ww?=
+ =?utf-8?B?OExjaVg0d1VCRXJSOVJ0Z0Z5eEVRYnkyaDZGalIrOSswclVzaHREaHRGOUdY?=
+ =?utf-8?B?T25xTWtIUFdFcE4wSjlya2RZblVQSVFrblNMcW8zRmM0cXNlQ09SRk9OVE14?=
+ =?utf-8?B?K1RZUXJBYUlmN25sWGo1QUw0UDBOV1YxRkw0RWRPZWNtU1ErMVBjWnpEWm9i?=
+ =?utf-8?B?bTBwRWFqN1UrQ3E5U09uZFEyZ2pSMEJDTng3Yys2Q0lzUXVUNWpJVmovc0pU?=
+ =?utf-8?B?RU93TnliN1BzMW5aMWlSMUxTd1lhUC9zMXdIRWRDdjlmQkZkdi82RUJuZUI0?=
+ =?utf-8?B?RkV3SW1CUktLL0pXOXY3UzhCd093cWwwd1pYMG5mMCsrcTNBVlpMTjNsTlIw?=
+ =?utf-8?Q?ZwymjEA75rYF5DmSPS99pTRpM?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] mm/rmap: add CONFIG_MM_ID guard for
- folio_test_large_maybe_mapped_shared()
-To: Lance Yang <ioworker0@gmail.com>, akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Mingzhe Yang <mingzhe.yang@ly.com>
-References: <20250417124908.58543-1-ioworker0@gmail.com>
-Content-Language: en-US
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250417124908.58543-1-ioworker0@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: marvell.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR18MB5244.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd5e2db9-7463-42d8-90b7-08dd7daf3c93
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2025 12:56:14.4958
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /GONZZkGC7xb9ZXm7J+QgeIyrmBNsJ/HBSAup5WkaDF4zcCzXNBF2eQBedWhVGkNGllQjFcpoOvG5zy0iMnZqg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR18MB3505
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-ORIG-GUID: L8wfp5tmdk1Py0Sl9BkiaaLqcifMpBYU
+X-Authority-Analysis: v=2.4 cv=ZOvXmW7b c=1 sm=1 tr=0 ts=6800fa73 cx=c_pps a=fpyyTn7Kx2iM0+fj1eipXw==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=XR8D0OoHHMoA:10 a=-AAbraWEqlQA:10 a=b3CbU_ItAAAA:8 a=M5GUcnROAAAA:8 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=SRrdq9N9AAAA:8 a=KKAkSRfTAAAA:8 a=RpNjiQI2AAAA:8 a=_LJuURw_w5ljwYwsAHIA:9 a=QEXdDO2ut3YA:10 a=Rv2g8BkzVjQTVhhssdqe:22 a=OBjm3rFKGHvpk9ecZwUJ:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: L8wfp5tmdk1Py0Sl9BkiaaLqcifMpBYU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-17_03,2025-04-17_01,2024-11-22_01
 
-On 17.04.25 14:49, Lance Yang wrote:
-> Add a compile-time check to make sure folio_test_large_maybe_mapped_shared()
-> is only used with CONFIG_MM_ID enabled, as it directly accesses the _mm_ids
-> field that only works under CONFIG_MM_ID.
-> 
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Mingzhe Yang <mingzhe.yang@ly.com>
 
-^ should that be here?
 
-> Signed-off-by: Lance Yang <ioworker0@gmail.com>
-> ---
->   include/linux/page-flags.h | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index d3909cb1e576..6bd9b9043976 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -1232,6 +1232,8 @@ static inline int folio_has_private(const struct folio *folio)
->   
->   static inline bool folio_test_large_maybe_mapped_shared(const struct folio *folio)
->   {
-> +	/* This function should never be called without CONFIG_MM_ID enabled. */
-> +	BUILD_BUG_ON(!IS_ENABLED(CONFIG_MM_ID));
->   	return test_bit(FOLIO_MM_IDS_SHARED_BITNUM, &folio->_mm_ids);
->   }
->   #undef PF_ANY
+>-----Original Message-----
+>From: Philipp Stanner <phasta@mailbox.org>
+>Sent: Thursday, April 17, 2025 4:09 PM
+>To: Vamsi Krishna Attunuru <vattunuru@marvell.com>; Philipp Stanner
+><phasta@kernel.org>; Srujana Challa <schalla@marvell.com>; Michael S.
+>Tsirkin <mst@redhat.com>; Jason Wang <jasowang@redhat.com>; Xuan
+>Zhuo <xuanzhuo@linux.alibaba.com>; Eugenio P=C3=A9rez
+><eperezma@redhat.com>; Shijith Thotton <sthotton@marvell.com>; Dan
+>Carpenter <dan.carpenter@linaro.org>; Satha Koteswara Rao Kottidi
+><skoteshwar@marvell.com>
+>Cc: virtualization@lists.linux.dev; linux-kernel@vger.kernel.org
+>Subject: Re: [EXTERNAL] [PATCH] vdpa/octeon_ep: Use non-hybrid PCI
+>devres API
+>
+>On Thu, 2025-04-17 at 09:=E2=80=8A02 +0000, Vamsi Krishna Attunuru wrote: =
+> > > > -----
+>Original Message----- > > From: Philipp Stanner <phasta@=E2=80=8Akernel.=
+=E2=80=8Aorg> > >
+>Sent: Thursday, April 17, 2025 1:=E2=80=8A32 PM > > To: Srujana
+>
+>On Thu, 2025-04-17 at 09:02 +0000, Vamsi Krishna Attunuru wrote:
+>>
+>>
+>> > -----Original Message-----
+>> > From: Philipp Stanner <phasta@kernel.org>
+>> > Sent: Thursday, April 17, 2025 1:32 PM
+>> > To: Srujana Challa <schalla@marvell.com>; Vamsi Krishna Attunuru
+>> > <vattunuru@marvell.com>; Michael S. Tsirkin <mst@redhat.com>; Jason
+>> > Wang <jasowang@redhat.com>; Xuan Zhuo
+><xuanzhuo@linux.alibaba.com>;
+>> > Eugenio P=C3=A9rez <eperezma@redhat.com>; Shijith Thotton
+>> > <sthotton@marvell.com>; Dan Carpenter <dan.carpenter@linaro.org>;
+>> > Philipp Stanner <phasta@kernel.org>; Satha Koteswara Rao Kottidi
+>> > <skoteshwar@marvell.com>
+>> > Cc: virtualization@lists.linux.dev; linux-kernel@vger.kernel.org
+>> > Subject: [EXTERNAL] [PATCH] vdpa/octeon_ep: Use non-hybrid PCI
+>> > devres API
+>> >
+>> > octeon enables its PCI device with pcim_enable_device(). This,
+>> > implicitly, switches the function pci_request_region() into managed
+>> > mode, where it becomes a devres function. The PCI subsystem wants to
+>> > remove this hybrid nature from its interfaces.
+>> > octeon enables its PCI device with pcim_enable_device(). This,
+>> > implicitly, switches the function pci_request_region() into managed
+>> > mode, where it becomes a devres function.
+>> >
+>> > The PCI subsystem wants to remove this hybrid nature from its
+>> > interfaces. To do so, users of the aforementioned combination of
+>> > functions must be ported to non-hybrid functions.
+>> >
+>> > Moreover, since both functions are already managed in this driver,
+>> > the calls to
+>> > pci_release_region() are unnecessary.
+>> >
+>> > Remove the calls to pci_release_region().
+>> >
+>> > Replace the call to sometimes-managed pci_request_region() with one
+>> > to the always-managed pcim_request_region().
+>>
+>
+>Hi,
+>
+>> Thanks you, Philipps, for the patch. The Octeon EP driver does not use
+>> managed calls for handling resource regions.
+>> This is because the PCIe PF function reduces its resources to share
+>> them with its VFs and later restores them to original size once the
+>> VFs are released. Due to this resource sharing requirement, the driver
+>> cannot use the always-managed request regions calls.
+>
+>so this would mean that the driver is already broken.
+>pci_request_region() in your driver is always-managed since you call
+>pcim_enable_device(). Or am I missing something?
 
-That should work. I can throw this into a cross-compile setup later if I 
-get to it.
+Driver is not actually broken. Yes, pci_request_region is always managed in=
+ the driver due to pcim_enable_device().
+But inside pcim_request_region(), res->type is considered as PCIM_ADDR_DEVR=
+ES_TYPE_REGION and
+pcim_addr_resource_release() releases entire bar. Whereas my driver needs t=
+ype=3DPCIM_ADDR_DEVRES_TYPE_MAPPING
+so that pci_iounmap() get called. If I use this patch, driver reload was fa=
+iling for VF devices with below errors
 
-Acked-by: David Hildenbrand <david@redhat.com>
+[90662.789921] octep_vdpa 0000:17:02.0: BAR 4: can't reserve [mem 0x207ff00=
+00000-0x207ff07fffff 64bit pref]
+[90662.789922] octep_vdpa 0000:17:02.0: Failed to request BAR:4 region
 
--- 
-Cheers,
+As you suggested below, I prefer to have non-managed version (use pci_reque=
+st_region()) and explicit remove() at required
+places for now.
 
-David / dhildenb
+>
+>The only way for you to, currently, have non-managed versions is by using
+>pci_enable_device() instead and then doing pci_disable_device() manually in
+>remove() and the other appropriate places.
+>
+>This patch should not change behavior in any way.
+>
+>If you're sure that having no management is not a problem, then we could
+>simply drop this patch and I later remove the hybrid feature from PCI. Then
+>your call to pci_request_region() will become unmanaged, even if you keep
+>the pcim_enable_device().
+>
+>Tell me if you have a preference.
+>
+>P.
+>
+>>
+>> >
+>> > Signed-off-by: Philipp Stanner <phasta@kernel.org>
+>> > ---
+>> > drivers/vdpa/octeon_ep/octep_vdpa_main.c | 4 +---
+>> > 1 file changed, 1 insertion(+), 3 deletions(-)
+>> >
+>> > diff --git a/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+>> > b/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+>> > index f3d4dda4e04c..e0da6367661e 100644
+>> > --- a/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+>> > +++ b/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+>> > @@ -391,7 +391,7 @@ static int octep_iomap_region(struct pci_dev
+>> > *pdev,
+>> > u8 __iomem **tbl, u8 bar)  {
+>> > 	int ret;
+>> >
+>> > -	ret =3D pci_request_region(pdev, bar,
+>> > OCTEP_VDPA_DRIVER_NAME);
+>> > +	ret =3D pcim_request_region(pdev, bar,
+>> > OCTEP_VDPA_DRIVER_NAME);
+>> > 	if (ret) {
+>> > 		dev_err(&pdev->dev, "Failed to request BAR:%u region\n",
+>bar);
+>> > 		return ret;
+>> > @@ -400,7 +400,6 @@ static int octep_iomap_region(struct pci_dev
+>> > *pdev,
+>> > u8 __iomem **tbl, u8 bar)
+>> > 	tbl[bar] =3D pci_iomap(pdev, bar, pci_resource_len(pdev, bar));
+>> > 	if (!tbl[bar]) {
+>> > 		dev_err(&pdev->dev, "Failed to iomap BAR:%u\n", bar);
+>> > -		pci_release_region(pdev, bar);
+>> > 		ret =3D -ENOMEM;
+>> > 	}
+>> >
+>> > @@ -410,7 +409,6 @@ static int octep_iomap_region(struct pci_dev
+>> > *pdev,
+>> > u8 __iomem **tbl, u8 bar)  static void octep_iounmap_region(struct
+>> > pci_dev *pdev, u8 __iomem **tbl, u8 bar)  {
+>> > 	pci_iounmap(pdev, tbl[bar]);
+>> > -	pci_release_region(pdev, bar);
+>> > }
+>> >
+>> > static void octep_vdpa_pf_bar_shrink(struct octep_pf *octpf)
+>> > --
+>> > 2.48.1
+>>
 
