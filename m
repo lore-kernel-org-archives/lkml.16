@@ -1,228 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F50D251785;
-	Thu, 17 Apr 2025 16:13:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17841F463D;
+	Thu, 17 Apr 2025 16:14:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744906408; cv=none; b=da5CUv8WCY6zja8uFRCxvtSTKg16IaE64madOImRVe3vixSaRi9qmXJMOWkdP7PcVKxnncghUqCaiCj3XnHzVRP5MPTqP/ysR+8Y5zPgQsBLXvjD/IgVmrcBAM+HCugjl+6cGBHGJbSUMm+40rsqcflRZb4dL2fSu+3cmf5781Q=
+	t=1744906440; cv=none; b=loAt+4f2GN+ARWQB7wJcFZBGoBsqpj4DS/S/kLNRXaAnndQG5GoD7MVcDFrZAIno0vqdb+E4eXWT1W96MnxdwhB3ws94CFkrE7rTZx2nHP/QI2Or8RirnIQyR3CQt/+cqboqLWiqBWybRyM5rc3TSF+htgvnmjBOFrFRFiu98sE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744906408; c=relaxed/simple;
-	bh=B2jx6RLRF1IkGKeilRDgu5BJ5hcrH20ogEfV5LNYn+4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PSFCa3R4zNjhybLsnZKwSNJsCCyf+qVovtQAZgUl7GNs3PD8ub2sUds/HTZeb3dYOClRwMKdIBeY83FBqcSgCiDYEjnkWkXaRsVTM2MufQINAN2akqdd7fn0137kY7BgEiqFqAuGpaBXEJEbQQr3wCHwzmb/lhu8D1Ic3Vhg20E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UxaLAkcp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744906440; c=relaxed/simple;
+	bh=dF5zKEgbrCzKFWBhVkcf46aE/op9JDA8TSByk+hkA4U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bVCvlmd/aBVNAd6B/nZWXmrjPbNg/lt1KasP5hwY6CN6GG2qNzR0z1jW6QRA7kdaXqEdsC1tn4rvfeTxH9RaXUH/h5CqmkBEAzKjvKTqLE5/s7jJLYyoqAoTybi8a/lYPz1ZX5XoXS/Rz3apjfTf5mN271cDIwFG70mUE37OHUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n3t5H8dG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UxaLAkcp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F49BC4CEEA;
-	Thu, 17 Apr 2025 16:13:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n3t5H8dG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20F09C4CEE4;
+	Thu, 17 Apr 2025 16:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744906407;
-	bh=B2jx6RLRF1IkGKeilRDgu5BJ5hcrH20ogEfV5LNYn+4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=UxaLAkcpBpFYZB41WTPpqXXc+KpvKi9sfsG8Kkr5Jo+QD+Hx1Fdmwh0HoerQYDcPb
-	 NWAWipXBTWmihgJkq+ZoTX/0cAaLO1TA3qFbauX1gGg3+O/Bi5X1hwHOk6uDxUuRLt
-	 +PVUOTq9eetFMY1WXx24MuNGjVPQt4dqhNeVgoSWYfIIwsU3ZQUmzTxILCw0NsQO8e
-	 2Q1q1D3uzTWpScVjJNwBPyYL4U5qUBQUpruZqpQgvAwiZKpbqsUH1vzx1woyO8xwSO
-	 xuP37ozwYvL3XxLuQ2Yx4W5rXRqEFiqitHwXV2gX+dmFv0b6CQj5Qn4GVaVUhv39XO
-	 hdKuUUh1/aOXA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1u5Rrf-006Tml-PF;
-	Thu, 17 Apr 2025 17:13:24 +0100
-Date: Thu, 17 Apr 2025 17:13:23 +0100
-Message-ID: <86plhakbq4.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: D Scott Phillips <scott@os.amperecomputing.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Joey Gouly
- <joey.gouly@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Suzuki K
- Poulose <suzuki.poulose@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Zenghui
- Yu <yuzenghui@huawei.com>,
-	kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] KVM: arm64: fix config.hcr used uninitialized in __kvm_at_s1e01_fast
-In-Reply-To: <86sem7yanc.fsf@scott-ph-mail.amperecomputing.com>
-References: <20250415154656.1698522-1-scott@os.amperecomputing.com>
-	<8634e9l1y8.wl-maz@kernel.org>
-	<86sem7yanc.fsf@scott-ph-mail.amperecomputing.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1744906440;
+	bh=dF5zKEgbrCzKFWBhVkcf46aE/op9JDA8TSByk+hkA4U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n3t5H8dGUaUqklAbXEvHhseo4XcV2hw4gHpfEy/k0DfICyQ3QTeK21zwgNv0rV/u0
+	 yl4kozrNVlNxW2kq+kVmAR5w7Y8GfVOCnqpfhjQO2DMMT3/wPB8A+18HYYd+9ZhgHv
+	 kjF4qe+Cwcnh136y2EZQEOJm/myjBBo+YpxCbZ/erXNsTh8As0oGeQUdtWuTGEj3A7
+	 5ADgnr/fInKHi5oIvH0T4+pfhbJa9nKFGRF/e34RW0X1h9HdqNn9JsT5EKKgJuw5p6
+	 crYScCIzN2fcDXjTWcuQcgQz1PWP4SPzdMRjkpKz2runtZ+i5KFLZXaWQG7T32zqNh
+	 RgGYGohFwDnhw==
+Date: Thu, 17 Apr 2025 17:13:54 +0100
+From: Lee Jones <lee@kernel.org>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 net-next 5/8] mfd: zl3073x: Add functions to work with
+ register mailboxes
+Message-ID: <20250417161354.GF372032@google.com>
+References: <20250416162144.670760-1-ivecera@redhat.com>
+ <20250416162144.670760-6-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: scott@os.amperecomputing.com, catalin.marinas@arm.com, joey.gouly@arm.com, oliver.upton@linux.dev, suzuki.poulose@arm.com, will@kernel.org, yuzenghui@huawei.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250416162144.670760-6-ivecera@redhat.com>
 
-On Thu, 17 Apr 2025 00:00:39 +0100,
-D Scott Phillips <scott@os.amperecomputing.com> wrote:
->=20
-> Marc Zyngier <maz@kernel.org> writes:
->=20
-> > On Tue, 15 Apr 2025 16:46:55 +0100,
-> > D Scott Phillips <scott@os.amperecomputing.com> wrote:
-> >>=20
-> >> In the skip_mmu_switch case, config.hcr was used uninitialized. On my
-> >> machine that caused garbage to be written to HCR_EL2 and then the CPU
-> >> got stuck at the synchronous exception handler. Also, the restore of
-> >> HCR_EL2 was missing at the end of the function in the same case.
-> >
-> > Huh, how embarrassing. Thanks for spotting this one.
-> >
-> >>=20
-> >> In skip_mmu_switch case, initialize config.hcr with HCR_HOST_VHE_FLAGS.
-> >>=20
-> >> Signed-off-by: D Scott Phillips <scott@os.amperecomputing.com>
-> >> ---
-> >>  arch/arm64/kvm/at.c | 8 ++++++--
-> >>  1 file changed, 6 insertions(+), 2 deletions(-)
-> >>=20
-> >> diff --git a/arch/arm64/kvm/at.c b/arch/arm64/kvm/at.c
-> >> index f74a66ce3064b..ff4b06ce661af 100644
-> >> --- a/arch/arm64/kvm/at.c
-> >> +++ b/arch/arm64/kvm/at.c
-> >> @@ -1233,8 +1233,10 @@ static u64 __kvm_at_s1e01_fast(struct kvm_vcpu =
-*vcpu, u32 op, u64 vaddr)
-> >>  	 * the right one (as we trapped from vEL2). If not, save the
-> >>  	 * full MMU context.
-> >>  	 */
-> >> -	if (vcpu_el2_e2h_is_set(vcpu) && vcpu_el2_tge_is_set(vcpu))
-> >> +	if (vcpu_el2_e2h_is_set(vcpu) && vcpu_el2_tge_is_set(vcpu)) {
-> >> +		config.hcr =3D read_sysreg(hcr_el2);
-> >>  		goto skip_mmu_switch;
-> >> +	}
-> >> =20
-> >>  	/*
-> >>  	 * Obtaining the S2 MMU for a L2 is horribly racy, and we may not
-> >> @@ -1299,7 +1301,9 @@ static u64 __kvm_at_s1e01_fast(struct kvm_vcpu *=
-vcpu, u32 op, u64 vaddr)
-> >>  	if (!fail)
-> >>  		par =3D read_sysreg_par();
-> >> =20
-> >> -	if (!(vcpu_el2_e2h_is_set(vcpu) && vcpu_el2_tge_is_set(vcpu)))
-> >> +	if (vcpu_el2_e2h_is_set(vcpu) && vcpu_el2_tge_is_set(vcpu))
-> >> +		write_sysreg(config.hcr, hcr_el2);
-> >> +	else
-> >>  		__mmu_config_restore(&config);
-> >> =20
-> >>  	return par;
-> >
-> > I think the diff below should do the trick (and incidently matches
-> > your commit message).
->=20
-> Looks good Marc, thanks
->=20
-> Reviewed-by: D Scott Phillips <scott@os.amperecomputing.com>
+On Wed, 16 Apr 2025, Ivan Vecera wrote:
 
-Actually, we can do much better, because the more I look at this, the
-more I find it silly. How about the patch below? It also fixes a
-latent issue where HCR_PTW was never set... I quickly tested it on my
-Q box, and nothing exploded. But at the same time, nothing exploded
-with the buggy code...
+> Registers present in page 10 and higher are called mailbox type
+> registers. Each page represents a mailbox and is used to read and write
+> configuration of particular object (dpll, output, reference & synth).
+> 
+> The mailbox page contains mask register that is used to select an index of
+> requested object to work with and semaphore register to indicate what
+> operation is requested.
+> 
+> The rest of registers in the particular register page are latch
+> registers that are filled by the firmware during read operation or by
+> the driver prior write operation.
+> 
+> For read operation the driver...
+> 1) ... updates the mailbox mask register with index of particular object
+> 2) ... sets the mailbox semaphore register read bit
+> 3) ... waits for the semaphore register read bit to be cleared by FW
+> 4) ... reads the configuration from latch registers
+> 
+> For write operation the driver...
+> 1) ... writes the requested configuration to latch registers
+> 2) ... sets the mailbox mask register for the DPLL to be updated
+> 3) ... sets the mailbox semaphore register bit for the write operation
+> 4) ... waits for the semaphore register bit to be cleared by FW
+> 
+> Add functions to read and write mailboxes for all supported object types.
+> 
+> All these functions as well as functions accessing mailbox latch registers
+> (zl3073x_mb_* functions) have to be called with zl3073x_dev->mailbox_lock
+> held and a caller is responsible to take this lock.
+> 
+> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+> v1->v3:
+> * dropped ZL3073X_MB_OP macro usage
+> ---
+>  drivers/mfd/zl3073x-core.c       | 232 +++++++++++++++++++++++
+>  include/linux/mfd/zl3073x.h      |  12 ++
+>  include/linux/mfd/zl3073x_regs.h | 304 +++++++++++++++++++++++++++++++
+>  3 files changed, 548 insertions(+)
 
-Thanks,
+> +/*
+> + * Mailbox operations
+> + */
+> +int zl3073x_mb_dpll_read(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_dpll_write(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_output_read(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_output_write(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_ref_read(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_ref_write(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_synth_read(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_synth_write(struct zl3073x_dev *zldev, u8 index);
 
-	M.
+Why aren't these being placed into drivers/mailbox?
 
-=46rom 0191a6dfbeb52b41b2c8aa81edf7812b56a3612f Mon Sep 17 00:00:00 2001
-From: Marc Zyngier <maz@kernel.org>
-Date: Thu, 17 Apr 2025 16:24:29 +0100
-Subject: [PATCH] KVM: arm64: Don't feed uninitialised data to HCR_EL2
-
-When the guest executes an AT S1E{0,1} from EL2, and that its
-HCR_EL2.{E2H,TGE}=3D=3D{1,1}, then this is a pure S1 translation
-that doesn't involve a guest-supplied S2, and the full S1
-context is already in place. This allows us to take a shortcut
-and avoid save/restoring a bunch of registers.
-
-However, we set HCR_EL2 to a value suitable for the use of AT
-in guest context. And we do so by using the value that we saved.
-Or not. In the case described above, we restore whatever junk
-was on the stack, and carry on with it until the next entry.
-
-Needless to say, this is completely broken.
-
-But this also triggers the realisation that saving HCR_EL2 is
-a bit pointless. We are always in host context at the point where
-reach this code, and what we program to enter the guest is a known
-value (vcpu->arch.hcr_el2).
-
-Drop the pointless save/restore, and wrap the AT operations with
-writes that switch between guest and host values for HCR_EL2.
-
-Reported-by: D Scott Phillips <scott@os.amperecomputing.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- arch/arm64/kvm/at.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm64/kvm/at.c b/arch/arm64/kvm/at.c
-index ea497ffbd1b19..da5359668b9c9 100644
---- a/arch/arm64/kvm/at.c
-+++ b/arch/arm64/kvm/at.c
-@@ -464,7 +464,6 @@ struct mmu_config {
- 	u64	sctlr;
- 	u64	vttbr;
- 	u64	vtcr;
--	u64	hcr;
- };
-=20
- static void __mmu_config_save(struct mmu_config *config)
-@@ -487,13 +486,10 @@ static void __mmu_config_save(struct mmu_config *conf=
-ig)
- 	config->sctlr	=3D read_sysreg_el1(SYS_SCTLR);
- 	config->vttbr	=3D read_sysreg(vttbr_el2);
- 	config->vtcr	=3D read_sysreg(vtcr_el2);
--	config->hcr	=3D read_sysreg(hcr_el2);
- }
-=20
- static void __mmu_config_restore(struct mmu_config *config)
- {
--	write_sysreg(config->hcr,	hcr_el2);
--
- 	/*
- 	 * ARM errata 1165522 and 1530923 require TGE to be 1 before
- 	 * we update the guest state.
-@@ -1248,8 +1244,8 @@ static u64 __kvm_at_s1e01_fast(struct kvm_vcpu *vcpu,=
- u32 op, u64 vaddr)
- 	__load_stage2(mmu, mmu->arch);
-=20
- skip_mmu_switch:
--	/* Clear TGE, enable S2 translation, we're rolling */
--	write_sysreg((config.hcr & ~HCR_TGE) | HCR_VM,	hcr_el2);
-+	/* Temporarily switch back to guest context */
-+	write_sysreg(vcpu->arch.hcr_el2, hcr_el2);
- 	isb();
-=20
- 	switch (op) {
-@@ -1281,6 +1277,8 @@ static u64 __kvm_at_s1e01_fast(struct kvm_vcpu *vcpu,=
- u32 op, u64 vaddr)
- 	if (!fail)
- 		par =3D read_sysreg_par();
-=20
-+	write_sysreg(HCR_HOST_VHE_FLAGS, hcr_el2);
-+
- 	if (!(vcpu_el2_e2h_is_set(vcpu) && vcpu_el2_tge_is_set(vcpu)))
- 		__mmu_config_restore(&config);
-=20
---=20
-2.39.2
-
-
---=20
-Without deviation from the norm, progress is not possible.
+-- 
+Lee Jones [李琼斯]
