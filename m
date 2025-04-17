@@ -1,64 +1,75 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941192566CE
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 18:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0542561A2;
+	Thu, 17 Apr 2025 18:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744913489; cv=none; b=Xzzsb+aQTuc/pyrm/RCZVA23Cy/1zViiMFsjrO5iNk1klCNaMHNU7sZ1hV0DZOkRnpeOxk5hXyZQ4QtYe6MZGj1ATl2vkQncJEvPOqPKnGZyGY8RgBaT7FTaFhOpEB+7H0KhzGPSVNv9KlkcUrUGGdTlmBJ93H8NqzbGF5ejqEk=
+	t=1744913634; cv=none; b=BMZB0fNXoJmHN68VmBGeOgv+CU2ti1NWYy6Q6W8Oc05hPMLWDG2lk5L+25tL4+qPReRo+mPzclU5JNTwo6NT3apDaNIocJTI8asEuPsYFc9wGyQAvPTazYAI+0KD9mBH3MDGeGsKnaikEi9IThPON/cC+LY10EdVOAYsjwnMAhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744913489; c=relaxed/simple;
-	bh=Firc0cRgV1ArBlilPVIKy29fSByQMjw0rGUzbaoNpwc=;
+	s=arc-20240116; t=1744913634; c=relaxed/simple;
+	bh=jhQcOuzugiusV1wCkewmVx873muTFqglAedGjPVY23w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ME0ItDOpgOh+9BT5pJpsNmI/QT/wa1/bOeI32OMeHQUKTQ1Yhgom8YN3dHukmG9IMefPTl7y2nVk379s2XgnYxKbOpCU0BenALBQj0J/wKGToykIJlT6wD7xcoy0Z3sm8brjvoOFR412hoohD85OdCJC9GfWAVePYcA4T6o5r2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=aInTtjNq; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=tGLyzrJMRtVVId+tUM0tAPBgwDNz+rdmEQ/kLOwtOZpXeIZMiAHB2hag2cNcmLMTsA2Li795ipPHmp/1EsCXcmKSZTw8aAhofW51S3+QmzQ1r5OnqwYJSA3sVEQ60Amr28BRomfbYbfqENsyhciUnpKa7L1ZCkc6rnTWoxrtiDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J2+ypom3; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="aInTtjNq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=VHYbpwLHuvljn8dVbt/fXb3LbUKc7Sc+NNW5fjMzCUU=; b=aInTtjNqwlrROOwNVA9D6/KOgb
-	tdljBolfEjvm5NfCpi86ZldFZoGJKfxFdNAWfSPV12YVSfK09E53mETYDb8yeJt35iNS4GKQ8YOBn
-	Lf76bylRCZiVU2F7O9DTElD+j2Z+yjB1zzBufle0HD92rcof6bd8zBhVqq9WAui1CgoRT14He4hTE
-	2psFzmGVL3CD4xG+2TMEmxat4si0N+Tl2jEWNzPZnYd4ho7pdp7eoOQVFrcPbazJDYG78qH77dVTm
-	eAYwTGT3BpdmHV/sudXjyVmeWr5caNNum07ficSULUB8L3u0tm1/R6Eq9z+nYS0KFN5EryidJ/Ten
-	VSUmjoBg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:57866)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u5Thg-0007nk-0W;
-	Thu, 17 Apr 2025 19:11:12 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u5Tha-0002fW-1R;
-	Thu, 17 Apr 2025 19:11:06 +0100
-Date: Thu, 17 Apr 2025 19:11:06 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Luo Jie <quic_luoj@quicinc.com>
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>, linux-kernel@vger.kernel.org,
-	cocci@inria.fr, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, andrew@lunn.ch, quic_kkumarcs@quicinc.com,
-	quic_linchen@quicinc.com, quic_leiwei@quicinc.com,
-	quic_suruchia@quicinc.com, quic_pavir@quicinc.com
-Subject: Re: [PATCH v3 3/6] arm64: tlb: Convert the opencoded field modify
-Message-ID: <aAFEOr_PnZRH2ocR@shell.armlinux.org.uk>
-References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
- <20250417-field_modify-v3-3-6f7992aafcb7@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J2+ypom3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744913632; x=1776449632;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jhQcOuzugiusV1wCkewmVx873muTFqglAedGjPVY23w=;
+  b=J2+ypom3ybiab0tmxYnB4lG08kK+Sls0tZXWPEKIzA/pXXQjp5gFeWRG
+   3htAxfFt3Ql2uWW+7xjPgYeE0iE69HVOaW8EtHM+167pXwvMlbJc55dGO
+   J4HE5x1b+WGCsLgLD6++joEb1yg3NHkMf9eG5c+FSNNK/15H3ot+vV/h1
+   35OVMKVPUBwKLqjjvrspVIEGb6rQnNdD6vwX8BgFzl3QakrvLld/j9pUc
+   3m9NEu5NT4MHufqZ6WaQkOmWa7DCdqDczfRyQPHEHKkLe6saM2SnLmjw1
+   tRzlCF/Fu3DIal0g7XSvvDp3XWU9TY1Z+OzQ37SunEmb43agqed87ODGp
+   A==;
+X-CSE-ConnectionGUID: CwItz0+WRhiMj6vKMFjDjQ==
+X-CSE-MsgGUID: j5ERu+XMSha7JZ0j/Kax6g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="57516499"
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="57516499"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 11:13:52 -0700
+X-CSE-ConnectionGUID: 8G43IVxDQH25aqgxxkbV7w==
+X-CSE-MsgGUID: QzEElvMvQuGTYcHTJLzjrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="130843461"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 11:13:47 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1u5Tk7-0000000DHFe-3Nus;
+	Thu, 17 Apr 2025 21:13:43 +0300
+Date: Thu, 17 Apr 2025 21:13:43 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v6 09/12] gpio: max7360: Add MAX7360 gpio support
+Message-ID: <aAFE18Yn5rtnuooc@smile.fi.intel.com>
+References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
+ <20250409-mdb-max7360-support-v6-9-7a2535876e39@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,41 +78,150 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250417-field_modify-v3-3-6f7992aafcb7@quicinc.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20250409-mdb-max7360-support-v6-9-7a2535876e39@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Apr 17, 2025 at 06:47:10PM +0800, Luo Jie wrote:
-> Replaced below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
-> - reg &= ~MASK;
-> - reg |= FIELD_PREP(MASK, val);
-> The semantic patch that makes this change is available
-> in scripts/coccinelle/misc/field_modify.cocci.
+On Wed, Apr 09, 2025 at 04:55:56PM +0200, Mathieu Dubois-Briand wrote:
+> Add driver for Maxim Integrated MAX7360 GPIO/GPO controller.
 > 
-> More information about semantic patching is available at
-> https://coccinelle.gitlabpages.inria.fr/website
-> 
-> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
-> ---
->  arch/arm64/include/asm/tlbflush.h | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-> index eba1a98657f1..0d250ef4161c 100644
-> --- a/arch/arm64/include/asm/tlbflush.h
-> +++ b/arch/arm64/include/asm/tlbflush.h
-> @@ -112,8 +112,7 @@ static inline unsigned long get_trans_granule(void)
->  	    level >= 0 && level <= 3) {					\
->  		u64 ttl = level & 3;					\
->  		ttl |= get_trans_granule() << 2;			\
-> -		arg &= ~TLBI_TTL_MASK;					\
-> -		arg |= FIELD_PREP(TLBI_TTL_MASK, ttl);			\
-> +		FIELD_MODIFY(TLBI_TTL_MASK, &arg, ttl);			\
+> Two sets of GPIOs are provided by the device:
+> - Up to 8 GPIOs, shared with the PWM and rotary encoder functionalities.
+>   These GPIOs also provide interrupts on input changes.
+> - Up to 6 GPOs, on unused keypad columns pins.
 
-This could equally be:
-		arg = u64_replace_bits(arg, ttl, TLBI_TTL_MASK);
+...
 
-which already exists, so doesn't require a new macro to be introduced.
+> +#include <linux/bitfield.h>
+> +#include <linux/bitmap.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/gpio/regmap.h>
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/mfd/max7360.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/regmap.h>
+
+> +#include <linux/slab.h>
+
+I don't think you use this header directly.
+
+...
+
+> +static int max7360_gpio_probe(struct platform_device *pdev)
+> +{
+> +	struct regmap_irq_chip *irq_chip;
+> +	struct gpio_regmap_config gpio_config = { };
+> +	struct device *dev = &pdev->dev;
+> +	unsigned long gpio_function;
+> +	struct regmap *regmap;
+> +	unsigned int outconf;
+> +	int ret;
+> +
+> +	regmap = dev_get_regmap(dev->parent, NULL);
+> +	if (!regmap)
+> +		return dev_err_probe(dev, -ENODEV, "could not get parent regmap\n");
+
+> +	gpio_function = (uintptr_t)device_get_match_data(dev);
+
+Somebody pointed me out the Linus' rant on uintptr_t, so he prefers not to see
+this in the entire kernel. He suggested to use (unsigned long), but ideally one
+should operate with the info structures instead.
+
+...
+
+> +	if (gpio_function == MAX7360_GPIO_PORT) {
+> +		if (device_property_read_bool(dev, "interrupt-controller")) {
+> +			/*
+> +			 * Port GPIOs with interrupt-controller property: add IRQ
+> +			 * controller.
+> +			 */
+> +			gpio_config.regmap_irq_flags = IRQF_ONESHOT | IRQF_SHARED;
+> +			gpio_config.regmap_irq_irqno =
+> +				fwnode_irq_get_byname(dev_fwnode(dev->parent), "inti");
+> +			if (gpio_config.regmap_irq_irqno < 0)
+> +				return dev_err_probe(dev, gpio_config.regmap_irq_irqno,
+> +						     "Failed to get IRQ\n");
+> +
+> +			irq_chip = devm_kzalloc(dev, sizeof(*irq_chip), GFP_KERNEL);
+> +			gpio_config.regmap_irq_chip = irq_chip;
+> +			if (!irq_chip)
+> +				return -ENOMEM;
+> +
+> +			irq_chip->name = dev_name(dev);
+> +			irq_chip->status_base = MAX7360_REG_GPIOIN;
+> +			irq_chip->status_is_level = true;
+> +			irq_chip->num_regs = 1;
+> +			irq_chip->num_irqs = MAX7360_MAX_GPIO;
+> +			irq_chip->irqs = max7360_regmap_irqs;
+> +			irq_chip->handle_mask_sync = max7360_handle_mask_sync;
+> +			irq_chip->irq_drv_data = regmap;
+> +
+> +			for (unsigned int i = 0; i < MAX7360_MAX_GPIO; i++) {
+> +				ret = regmap_write_bits(regmap, MAX7360_REG_PWMCFG(i),
+> +							MAX7360_PORT_CFG_INTERRUPT_EDGES,
+> +							MAX7360_PORT_CFG_INTERRUPT_EDGES);
+> +				if (ret)
+> +					return dev_err_probe(dev, ret,
+> +							     "Failed to enable interrupts\n");
+> +			}
+> +		}
+> +
+> +		/*
+> +		 * Port GPIOs: set output mode configuration (constant-current or not).
+> +		 * This property is optional.
+> +		 */
+> +		outconf = 0;
+> +		ret = device_property_read_u32(dev, "maxim,constant-current-disable", &outconf);
+> +		if (!ret) {
+> +			ret = regmap_write(regmap, MAX7360_REG_GPIOOUTM, outconf);
+> +			if (ret)
+> +				return dev_err_probe(dev, ret,
+> +						     "Failed to set constant-current configuration\n");
+> +		}
+
+This will look better as if-else:
+
+		ret = device_property_read_u32(dev, "maxim,constant-current-disable", &outconf);
+		if (ret) {
+			outconf = 0;
+		} else {
+			ret = regmap_write(regmap, MAX7360_REG_GPIOOUTM, outconf);
+			if (ret)
+				return dev_err_probe(dev, ret,
+						     "Failed to set constant-current configuration\n");
+		}
+
+> +	}
+> +
+> +	/* Add gpio device. */
+> +	gpio_config.parent = dev;
+> +	gpio_config.regmap = regmap;
+> +	if (gpio_function == MAX7360_GPIO_PORT) {
+> +		gpio_config.ngpio = MAX7360_MAX_GPIO;
+> +		gpio_config.reg_dat_base = GPIO_REGMAP_ADDR(MAX7360_REG_GPIOIN);
+> +		gpio_config.reg_set_base = GPIO_REGMAP_ADDR(MAX7360_REG_PWMBASE);
+> +		gpio_config.reg_dir_out_base = GPIO_REGMAP_ADDR(MAX7360_REG_GPIOCTRL);
+> +		gpio_config.ngpio_per_reg = MAX7360_MAX_GPIO;
+> +		gpio_config.reg_mask_xlate = max7360_gpio_reg_mask_xlate;
+> +	} else {
+> +		ret = max7360_set_gpos_count(dev, regmap);
+> +		if (ret)
+> +			return dev_err_probe(dev, ret, "Failed to set GPOS pin count\n");
+> +
+> +		gpio_config.reg_set_base = GPIO_REGMAP_ADDR(MAX7360_REG_PORTS);
+> +		gpio_config.ngpio = MAX7360_MAX_KEY_COLS;
+> +		gpio_config.init_valid_mask = max7360_gpo_init_valid_mask;
+> +	}
+> +
+> +	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &gpio_config));
+> +}
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+With Best Regards,
+Andy Shevchenko
+
+
