@@ -1,294 +1,92 @@
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013055.outbound.protection.outlook.com [52.101.72.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EB7253356;
-	Thu, 17 Apr 2025 15:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744903189; cv=fail; b=fgmmZlspomvUlTeIhTf/PuVAdojEzYjJrIrbXeLOvz6KXQP82UwC2SOQRTdDqbHqntYgH2aZAY8x5uttekHvHv0ercdw/WRAT2+HJYvj35zrEhkKtTk4gV674PkC7eKSmePsU3NCpES5OZQTeiihFObMpEe45oTcQ6SEt1PWZM0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744903189; c=relaxed/simple;
-	bh=Epj7672Ro/8rSqblGnJbiANxCexUiTL3vdQ3slnGyWY=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=tAZxaD3Fwg+LgUO43LfzXwK4vxzqJs85ocJmaGEGoboQzgOXitQExeoVe9tKmS9WoDFaPeFT7S5LpLKIm0BD5Putm4B/dU5UuoAu7yaiV6cl1PLTJTHxiWRdP6ypjZzCJNo4+7WazGHUv6ZT2X1wERHovSE4AbYY/YD+BtKYKKY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=GBG0rMaN; arc=fail smtp.client-ip=52.101.72.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32308253B46;
+	Thu, 17 Apr 2025 15:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744903204; cv=none; b=IEJndcAgz7xbKj+eJUKzlJv7O7W3swTOESHlR2wu0vsJ4gw3Gj9UghLYUEtYtBo12/8jy8/cG4c9eE9sxf8uFmRGeBi0AQo/SkPfsEkIops1cPzBBCGpDpCzm5BA+jF/luXxQKH86LSh83BPnQt7TgKaC9YnpWGS9fEVBtuatCU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744903204; c=relaxed/simple;
+	bh=iF0MFNdSqNf+d8zIASv5RomdNLV7tGRC5qSAGQtei6s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pyu5/Tz6fmqGsCWfnHI5/yI+FHSB4oFHBUx92RDXqd11O3ER6EkuqxUAH84cZZDt/v+7gFKTPVtykiLC8YPaiCMb3Z/NTQ5Z+/D6UK+nx2OhU9EGeOaJ57wts4ownexDmw1gAP2coWC7fJ//ugx38uKgHOZ7JXK1934mbM9bwlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l1fuFtYz; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="GBG0rMaN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AhoBi9ORYI82nq6evyiM1k8ny/MVUqeE3GZOy10tzDCgUL6Phx01X50ve6uJy1jThVlQO37654ksM9RLFwu5zaSJlAvXHXB0wf53oOHMKnNe/zD6vkCVSAxsLk2r7EPnxYJ30CTfVmlJKQLUE/BAABuFwl5jSW/vf6tS8/4kRelEGFw6bsTzEVnJZJUl3cl9JELofRowtlY0JB3tFfsYQgpq8I91sNFZdN3gHp8/Y9u4+ewt+VWLq6BbpUJC4y9PiySzVwCfaLpUHPRdOYED2HuS39yi6mHeMfghp14lG93mMOt+G3xzwqGlyCSxRAc4IdLOhDHIbGtXL3pI/ZCNnw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ddy6oeQ7LY7f/zJVMwgRq9adocUsCevCMk7YKSiUMrA=;
- b=iYrdwATkpD/RSvvZZw3CXigsCHvKyrTZoR8kmOtGKN0sXrHY1HtU3lkymx+eyVfDJr3Dw8YQe1P/oLRyospXENcLhMOoxumYms8Guy6yotc9nq42uvFds+afdWNAFk1lPiiJ9hIsOaSsLYbkzs+jTDZKMbfl3vtYDJfZo5roTdLp8g4jNBSfdZRFQ9OnqBpkMF9bbsbIflmXqZkonaD5awTmQEa0foXxCDPzJKFLQQ6hFYtgFerIfygsd1noZOy+2CesMkMO8gW8KWC7yKE0iYJFVq9uzL6QPONMbi0Bu5+WmrD5Z99PBMCdkcv/Uy9X5VzxE5zwvM2Zycy4mmF/GQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ddy6oeQ7LY7f/zJVMwgRq9adocUsCevCMk7YKSiUMrA=;
- b=GBG0rMaN/Ts7MAkJIx9Hzqnc2s3KDc1yALjKXbJO3wp7VYy3GYovRZfxVqFKQtaO1RDaZ49c5RmH7j5n6QCM6ODIqNa5E0u5Bm/RInp6uahn+guMBrcX+B9FhtOLo9dZuGRwVOR23wzc6Wtd4IYCGFi6Wc0+UMNUrsKV2H/iipHYQnvlEkB6A1bPgWa5t/tKZRhNdnGcd1mJ1HpDDqBnJLQj6cprn9YcjWy25a4KoVobIh6AsASpMmZVpWxEp3/YnnG1LO35nhPZOSJg/X8n6cMuGju/FWY4+7KJ0Mt/QjkBYeqZ2+sGvGFhfPgHjkGiQ1CYDGlUn1sIwAcWm43Kgw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DU4PR04MB10957.eurprd04.prod.outlook.com (2603:10a6:10:584::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Thu, 17 Apr
- 2025 15:19:45 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8632.035; Thu, 17 Apr 2025
- 15:19:44 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Stefan Agner <stefan@agner.ch>,
-	Alison Wang <alison.wang@nxp.com>,
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list)
-Cc: imx@lists.linux.dev
-Subject: [PATCH 1/1] dt-bindings: display: imx: convert fsl,dcu.txt to yaml format
-Date: Thu, 17 Apr 2025 11:19:33 -0400
-Message-Id: <20250417151934.3570681-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR03CA0009.eurprd03.prod.outlook.com
- (2603:10a6:208:14::22) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l1fuFtYz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744903203; x=1776439203;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=iF0MFNdSqNf+d8zIASv5RomdNLV7tGRC5qSAGQtei6s=;
+  b=l1fuFtYzUWUNuuiOqWUVDCRLPlE8aMXf5SRsmbw19g66cpGbrEN51VDM
+   DUzshMKpTlKYiF2qNVLepYBmsf2QbzCEwu7eKtHTB1SyBIdi9jCEZL1Zu
+   /nf/5zrQKN4aWvGkBGTxJSL5BbhEk39ml025DwbOQYB7d6YAurJyqbnpq
+   HAVoyhoRzfvL/a6ss5ICFGXTDsMF/GuvFSulqWcyX9znZHjpWL8udnLhL
+   DsttNvkMpWd4Q+UqZTZ9P1RhWJ5sTU1Z263WRT196I9HIwx/FHtcIY9ZL
+   nuHhep3tTnks/GBcoj2kVKyKbbOKFSRa8xYiWQwRVD02VxjGmGKYzPDaQ
+   w==;
+X-CSE-ConnectionGUID: JUsv5irySo+n04BaI1rMjg==
+X-CSE-MsgGUID: sERTl/3+T6meWxZX8GWjGw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="46625080"
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="46625080"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 08:20:03 -0700
+X-CSE-ConnectionGUID: Tlt1Fk2nQ/OQgo63fGVrxQ==
+X-CSE-MsgGUID: pODSp18WQcO3fPjhgp67OQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="130689869"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP; 17 Apr 2025 08:20:01 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id E2EC75D9; Thu, 17 Apr 2025 18:19:59 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mark Brown <broonie@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: David Lechner <dlechner@baylibre.com>
+Subject: [PATCH v2 0/2] spi: Introduce and use spi_bpw_to_bytes()
+Date: Thu, 17 Apr 2025 18:17:51 +0300
+Message-ID: <20250417151958.490174-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU4PR04MB10957:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5687ec63-36c0-4cad-3186-08dd7dc34882
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|52116014|7416014|1800799024|366016|921020|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?rH7JqfDHcS8+KdR3FSowBUuqWJGH771TbS6LE0waysme/ERyrGawe32Vfr0j?=
- =?us-ascii?Q?FIN4RxLAwGWhM+LtHx/jU2hM/zZPIStvqCEMzgZWlIzoEo/fKwWhzaQrJXR0?=
- =?us-ascii?Q?FHKy6hPjzuFOGh//LLjc8FbvF4fVA4ghw5zVYPYvNndKSOGgB6f8+kdhTuJZ?=
- =?us-ascii?Q?l70azB2U1Zx9ZuYtNDAHjawWyNnDJfGXbz7UO8lJ6JJ0nL3wsa05SfMNshyt?=
- =?us-ascii?Q?ov6mWbp3fmy6EYJhDhujWwCPlZduNi1ifWVDVpZvGZZJBQ0fvzrVnitXr7y+?=
- =?us-ascii?Q?aoH35BnttMAl25nZN2s/4ZAfVxF13OzE3jqkeneut3O1/qfeAIX7BTLZ7Z3n?=
- =?us-ascii?Q?DGCCW4zAoQz57xhR/iwzG50SmhVbh/3KJHNuci4TAvfnW+MIPHSNBVn6P0Ms?=
- =?us-ascii?Q?nvi0s7FXFf8Q91U2h/RFFrURco/3o6j5veex1YlSywdm76OljX0drWH76qNz?=
- =?us-ascii?Q?8w5jGZb2KxnpfUSTHB3FTTiSONt+h/S6VfIbZLJGkxbNVJxysVTN8nwo5VFc?=
- =?us-ascii?Q?XzPbnXFluw8nLW4vQ3fqqysCH86urK20xi1R6pPMFhVhKHViP+PLmCV2Xskz?=
- =?us-ascii?Q?MSfXEAPzJk9fnOWTQI+WOi49A/EOki0HUXiJhUvJ0SDf2ZK9KLyhPF31CYIP?=
- =?us-ascii?Q?MJfXzdrl5ceZvn/kzFYngF0Rq7RZo2h877Yn56XgY/dh3a+z2tKMwmdqaqVY?=
- =?us-ascii?Q?NSyF+6ve9aJgYjXLSy1IhX1izgKNaf1Rh8ZkpOHh7siGvSD4e8fr9VYkv8Yl?=
- =?us-ascii?Q?89QWtn8hz5LVx8rpd4rHMNurXSn2bt2JDku20C8Nwhet1V3sAFn8+fiyhd4/?=
- =?us-ascii?Q?0CIM9a4zR9KgKgfG4xamOaB2TOaYE4grrN2Mf+ZtqeY5n7MoIM5LxDdP/fEy?=
- =?us-ascii?Q?kO1gR0x3iS1A24aDrlKIL6eDNr4BIsgytUeo+90N4s3NqMLM5HyKqxJkCyYK?=
- =?us-ascii?Q?I2LWzgFXXU/O8AELqUuT8JxlFStLj1tf4VEFZ17P5pNLta8w8Z9byDSVHQ+w?=
- =?us-ascii?Q?47ciSyz/TAxwVXDBCPK1hC4eWp/nVEYm3HFgeAtiJZ8vhAvTX1S2vgT1eNsN?=
- =?us-ascii?Q?e32S/fpCPSF/mOHREhhEpPCg/574cI+NPz2xctLgwWjKu21Fj8IKRT2Xciy5?=
- =?us-ascii?Q?VKQJ5Pqpczqa45jgrTPpdkJjC6OHTnrsFTCGDejNHs0MC4wzAZ1S+AXQ+z1t?=
- =?us-ascii?Q?1OFVY4jiM7Hbfyp7ZxezVri7MrN3AP9CT+ua8wr4siJu/IZHbZZSxKF6b8U9?=
- =?us-ascii?Q?bVcAzTsqr+4vwvrQ7deWTyjjlytrV409w25KEhte3+/WDrMriNh9XE6TU2oG?=
- =?us-ascii?Q?6lxvKQcwCwV3BJHD88OTCQU/fHoz83Lq+6b7q0N0zVCkqSvOMGIk5KLAQKlo?=
- =?us-ascii?Q?/ov4r2R4GDkwYklYrt3Unb8Klhe/T7PU9lGew+QCa3WvCDON9H6eRzG7/yWw?=
- =?us-ascii?Q?4bIS2PaUof0qJYL27/PNuuoyFMHRwwwT?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(7416014)(1800799024)(366016)(921020)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?60/3GlTeGjj15pTxUzJj0jA77T4V63vMi5jxRsuBrkTSecXRjQngUizv9oFB?=
- =?us-ascii?Q?zkMSLDvxMI+9NgWg3+2V08rzuSKylVpBI19rFAd1jCT7gwd93HcJ+ik3FiFl?=
- =?us-ascii?Q?mKPjFsRAOY1WcHmlOSpdZMPh2VYQ4R5ie2YTq8JNTkCOvjnc3KR1UqNPhJ8z?=
- =?us-ascii?Q?GIgwXn7KEscf8V9t4LgPchLBWXx0ADrfVIwxHFj43xpfuUgbdAwdkUCOrA03?=
- =?us-ascii?Q?SCfQwPhWnQ4Fzzg1bqNyG+1934PsA7OyjJbexn/MaWJ4crE/Yb8KvpjAHqD8?=
- =?us-ascii?Q?LDSFUp2PN393RKXChAAXMy7DW8nAnS4bMT9MhDZR/0soWEuXlxlCvU2fwLUp?=
- =?us-ascii?Q?OtBbEKpJoR8fiRLwc+5VenKWjtasJR5AXr5B6xvFn9ZZPn1iFFjpAJw3qD4O?=
- =?us-ascii?Q?wWj+5JIX4wQQmEQZLS0OOjAkbJIviN6Qkf0p4xNnp1y2/qD7MWR1a4LNJMOU?=
- =?us-ascii?Q?GjReOjaufJKQ00v78qsNQQbI7qi+SkqNBq22SQ22N3KM6Z5j2bqirjljmHC/?=
- =?us-ascii?Q?LPGU9foFi6zAVJfDRwv8kKJIZAoZz1iqWs4K0FPj9d2OQQKeNunXzEufdRPo?=
- =?us-ascii?Q?IGNdFVYw+rtR3Rhh9UWOY5htue7B4LhpVqgebF3rAycSe0V3peToV1hWHcCc?=
- =?us-ascii?Q?YxCTJ0LGMwSpXGgaZ8zIrdENQZJcJM5XpVY7aRKGOa+csWk34AMDwaMgm+Qg?=
- =?us-ascii?Q?UfHBUT4ZVsIZ/CAeVckay8gd0LklQ895bz6TgK+CIREbk/MRU3KM7AzqcfhE?=
- =?us-ascii?Q?NZbUKgAh1yWKEvhHS3eZot1lBSdlImLKwcXDqIvbCSE9QQPdsAbQGkuH2VnZ?=
- =?us-ascii?Q?XerGxy/HRtmDImVCp0jlGsOfeqmu1KF80xU2K/E/pprCsx7mBa/0PysrTept?=
- =?us-ascii?Q?QiDHZrn0hLuSlGGBJ5ClV0MWR2On+HoHqzbyaEwGeoD5dratbhlT6l4pX7EE?=
- =?us-ascii?Q?wRB5LUEg6dej0cWvkjqHgjNes+eKWyF+LVnmKv9O2M0B9Ao5QcB4reaApMyP?=
- =?us-ascii?Q?QUmmcdp5YDEugt9ZqMuh7wvLrxi1XuI/TpbkG6BKwgwoHQWG1Y3kXtP4vs3P?=
- =?us-ascii?Q?Y0fCpmnckWEGmsh23vE7VET8u7CGLQzDesfh35H06Mu9Ws6fGcLO/sx3+OtV?=
- =?us-ascii?Q?iego8Vb164bH6La+4s5Z+qvjQ/Dv3uwKk3xJhAVny/c/QZ5mJivUVSS74SjW?=
- =?us-ascii?Q?HpVvVpU27BgdVdNkj0EYDHCgnzGp7ITXgazquKn9xDjDkD2e+r+Zzr4JXRPY?=
- =?us-ascii?Q?CyST/yPI9Hdaoe9pimljIMu1Pnt6VHwHpWmBeo3KE2ak/gpStA+1plh/fSSM?=
- =?us-ascii?Q?XNaMgGteW4Z1e9CUVcynHeEhjBC4w2LLWLS4S2GkGmzKR7yfcYoHa8fcAa6t?=
- =?us-ascii?Q?hlhPD8fLTVlgb1hbT1K5Bx7GEni256zL1JFwwxqlCBv7DjvmPLmcs4RVtWkd?=
- =?us-ascii?Q?+W3VQZNbKQvhhkPjG+Z2XD6dWNwZAvtlXBVlyBKssgBpk/QSlZGGLyQRTiSg?=
- =?us-ascii?Q?fE+ZNspy/cLtr26kPWZfC8a45/o5JEcLBPyqjxhncTipeDyY+ugvcGje9PrF?=
- =?us-ascii?Q?bc1tDMunJptoD2EWN3U=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5687ec63-36c0-4cad-3186-08dd7dc34882
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 15:19:44.8644
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TF4jxES/9UP2gsqR1KdSSGnyx5N2UzYXTz4xpKdHuya9oxbxVBcaV2LfAiFHHXWGmNVaYKgQsC3wYQCP7acLcQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB10957
+Content-Transfer-Encoding: 8bit
 
-Convert fsl,dcu.txt to yaml format.
+Recently in the discussion with David the idea of having
+a common helper popped up. The helper converts the given
+bits per word to bytes. The result will always be power-of-two
+(e.g. for 37 bits it returns 8 bytes) or 0 for 0 input.
+More details are in the respective code comment.
 
-Additional changes:
-- remove label in example.
-- change node to display-controller in example.
-- use 32bit address in example.
+This mini-series introduces it and replaces current users
+under drivers/spi and we expect more (and possibly some
+lurking in other subsystems).
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- .../devicetree/bindings/display/fsl,dcu.txt   | 34 ----------
- .../bindings/display/fsl,ls1021a-dcu.yaml     | 68 +++++++++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 69 insertions(+), 35 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/fsl,dcu.txt
- create mode 100644 Documentation/devicetree/bindings/display/fsl,ls1021a-dcu.yaml
+Mark, if you okay with the idea, please, make this to be
+an immutable branch or tag for others to pull.
 
-diff --git a/Documentation/devicetree/bindings/display/fsl,dcu.txt b/Documentation/devicetree/bindings/display/fsl,dcu.txt
-deleted file mode 100644
-index 63ec2a624aa94..0000000000000
---- a/Documentation/devicetree/bindings/display/fsl,dcu.txt
-+++ /dev/null
-@@ -1,34 +0,0 @@
--Device Tree bindings for Freescale DCU DRM Driver
--
--Required properties:
--- compatible:		Should be one of
--	* "fsl,ls1021a-dcu".
--	* "fsl,vf610-dcu".
--
--- reg:			Address and length of the register set for dcu.
--- clocks:		Handle to "dcu" and "pix" clock (in the order below)
--			This can be the same clock (e.g. LS1021a)
--			See ../clocks/clock-bindings.txt for details.
--- clock-names:		Should be "dcu" and "pix"
--			See ../clocks/clock-bindings.txt for details.
--- big-endian		Boolean property, LS1021A DCU registers are big-endian.
--- port			Video port for the panel output
--
--Optional properties:
--- fsl,tcon:		The phandle to the timing controller node.
--
--Examples:
--dcu: dcu@2ce0000 {
--	compatible = "fsl,ls1021a-dcu";
--	reg = <0x0 0x2ce0000 0x0 0x10000>;
--	clocks = <&platform_clk 0>, <&platform_clk 0>;
--	clock-names = "dcu", "pix";
--	big-endian;
--	fsl,tcon = <&tcon>;
--
--	port {
--		dcu_out: endpoint {
--			remote-endpoint = <&panel_out>;
--	     };
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/fsl,ls1021a-dcu.yaml b/Documentation/devicetree/bindings/display/fsl,ls1021a-dcu.yaml
-new file mode 100644
-index 0000000000000..7246c89271a8d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/fsl,ls1021a-dcu.yaml
-@@ -0,0 +1,68 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/fsl,ls1021a-dcu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale DCU DRM Driver
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,ls1021a-dcu
-+      - fsl,vf610-dcu
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: dcu
-+      - const: pix
-+
-+  big-endian: true
-+
-+  port:
-+    $ref: /schemas/graph.yaml#/$defs/port-base
-+    unevaluatedProperties: false
-+    description: Video port for the panel output
-+
-+    properties:
-+      endpoint:
-+        $ref: /schemas/media/video-interfaces.yaml#
-+        unevaluatedProperties: false
-+
-+  fsl,tcon:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: The phandle to the timing controller node.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    display-controller@2ce0000 {
-+        compatible = "fsl,ls1021a-dcu";
-+        reg = <0x2ce0000 0x10000>;
-+        clocks = <&platform_clk 0>, <&platform_clk 0>;
-+        clock-names = "dcu", "pix";
-+        big-endian;
-+        fsl,tcon = <&tcon>;
-+
-+        port {
-+            endpoint {
-+                remote-endpoint = <&panel_out>;
-+            };
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 65e0716554203..02504134e1f5d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7894,7 +7894,7 @@ M:	Alison Wang <alison.wang@nxp.com>
- L:	dri-devel@lists.freedesktop.org
- S:	Supported
- T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
--F:	Documentation/devicetree/bindings/display/fsl,dcu.txt
-+F:	Documentation/devicetree/bindings/display/fsl,ls1021a-dcu.yaml
- F:	Documentation/devicetree/bindings/display/fsl,tcon.txt
- F:	drivers/gpu/drm/fsl-dcu/
- 
+In v2:
+- improved examples in the code comment and commit message (David)
+
+Andy Shevchenko (2):
+  spi: Add spi_bpw_to_bytes() helper and use it
+  spi: dw: Use spi_bpw_to_bytes() helper
+
+ drivers/spi/spi-dw-core.c |  2 +-
+ drivers/spi/spi.c         |  2 +-
+ include/linux/spi/spi.h   | 25 +++++++++++++++++++++++++
+ 3 files changed, 27 insertions(+), 2 deletions(-)
+
 -- 
-2.34.1
+2.47.2
 
