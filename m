@@ -1,157 +1,117 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3186D215066
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA9B215066
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744876624; cv=none; b=VHAOFsHxeHu6UZToeZtE+lyqM4LdIV60AcUCd3SKSOsl9QYkSUVlWIt5fByRzyhPyoz3dyz8fJYqQhIE2TZdCQ2TfTQp8prrcb3hNW4CJJZ/qp6N65CWMR7G/tWsIgqrA1z42bv/+23ELtXgZEiX8M7qJl++msmIdSTBbu9RuD0=
+	t=1744876638; cv=none; b=GGz2lKRBxtNyLdfhJIe2II4eU9BEqobaOXcmWmVlDK8ZDLxiHlGH8KeXgOEFY3vrIrANmU58VeOC/5QNaAje7K+yCuLqDL1uEnb1zTkDnEbcxlvFL0d9lNWgmQXGfuSRmFTG5PjohhoLIONPA0kSq6PTvvpY5lvKPiDmWJIoSJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744876624; c=relaxed/simple;
-	bh=0maapx+puLJD8HeExH55iSbormFMtyDkhin8jmIBhU0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nXEZKWUrYUBT4+5Riizm0ppomxTkXPFpZ87Gy6jPr1TkrgrPMAGurwHezdydzRRe8LM5HG3U/saIjCbI5tplQE1lMaDe1FvG8j20MwDG69v3ni/Vt4DFxLe2H+n7hQPikhIuMnPSnJQacYmQsaOYs+1WsY59JproS6h3TrUX/Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RZ4hj3Xe; arc=none smtp.client-ip=209.85.128.43
+	s=arc-20240116; t=1744876638; c=relaxed/simple;
+	bh=H9C3ShvGEXD3FDi73Pb6nidSwsvRSbYWc02XP8/91pI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HqQJYCbScnt02ac6FTVcOkPqlTh1NFwO8Tfq8h2YhuN11g1V5WVplJgjMRVIxWeRPMI7TrBGIpzLfvfUhcVDTB23jzNkpdRQbgSVUIE3MO8Xs+23l2TfPkRZOfB0DMaKn7BgtxiLtb+lt8Li2E2ZbxBHz2xsN2VZzQXWbXff5JI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xvr4TQm0; arc=none smtp.client-ip=209.85.208.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RZ4hj3Xe"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43d72b749dcso120075e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:57:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xvr4TQm0"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30bef9b04adso4716911fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:57:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744876621; x=1745481421; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=KROor9kCUHkUSzbgI+BbIiI3hlB+o+1EBwE76dtEqSU=;
-        b=RZ4hj3XepPs0OcjC8Odzf6f5vnU3IsP2KT4fgimCWNEdQSXG5RCsG0wHmzSlU7zhez
-         l9pd8WBkGBe+eBT2ItjJSfMYmezIg6Gpku3BYEd0Qu2e0wDBOvl0T4OzsbtNpTFAujvw
-         z16YJrDRiMF3g6w5lns12zEQZGZI+GIc159WRqQIMWVmSZGGJef/dMr5BvnEOv+/yvqR
-         osSl2zKeVw9HvM+tC/rEcDj9LgALPoqd2+AV5dUeVQMnLYlegV0b58mkTzCs9JxWeXo8
-         rti5G0c9LgJwI2hePgCfgcRAx/hAaa30O2J3mBA1rk/9VECjuulgS17TqeGX/BMSDPoN
-         I/1Q==
+        d=linaro.org; s=google; t=1744876634; x=1745481434; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6/Jl42SonUBh7uWEDi8GR/xF1KhzAcVX2ukREj09fKE=;
+        b=xvr4TQm0tJdTM9IqKzMdOI0N6PLfe09A2/JISDy+jRDvL1deIlCJAFjJAY0Zni1XPN
+         +QjHNPebArcv6suLlx5I7mOyatc+kHZ47n3/JNTRN/5Kvwde/Zal5cA/u8bq9BZ8Cc2I
+         yBgVKqO5yVt9WEzHbr3vxtbhwZqxkqz1I0ObmRH8foaXedQBC+HSavptzVlnwRIBo0+E
+         JthpKZn7H50pjPHFJLy/iijz5fszqq36FuIBNeBoD1hSbYwbNVIXhO7cWpONa1hOobZ1
+         VNSDUKVFngldsVsHsRTn8FRJAZBZMoaCaTpXDTUUQsHdeS7a4WzDjlWW1xqDnPZEzBl2
+         qGdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744876621; x=1745481421;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KROor9kCUHkUSzbgI+BbIiI3hlB+o+1EBwE76dtEqSU=;
-        b=pbgTXQGPCoQRr1L0yvsjACrUxmfpdWVLwoxQYDkXaahkHgsFmsXCoJCczZYvIV8hoA
-         kegXZadFzAlZE6IOOVC6P/sLPp9yaqJOn0Q32Sex/mwrAKqYbfgE+Plj0X1d1Sejaj/0
-         YW+EhAI4kmtpE4HX6ykxiaMYsMfbmAF4oK6q2hzxrhv+deAb8mSrzhAamjU/GSVOsE3J
-         xgtlFJGhRwEW6vgIcza4u7LrNqBpoAJVY+MPx8U2CQ0w4WqACuLeLQOtKVc3N+IE1eS5
-         bF8rhFY6fwOaTagoM6f5ZWAfA2qiRG5JFJKCUuHIYa6y8UTI80K4N6nm645AD93gw1Ls
-         Lxhw==
-X-Forwarded-Encrypted: i=1; AJvYcCXYObgiBNV0jcDUy5tFpN+qf+D16ZiFPXVRNgX3gUCo1MM6ng+51W5w5FkUPxBy6US5JK/w14ezg5WMJrU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywj7q+qWOjiQLkOnYICXoEpnn378eqSGL2N2Guz8cQ0rrJmQRv2
-	9psR4Fu2T7PW+0SxEKkWjGPwoTaWNx5x3GeqbgELHC7dISyG3ryGIxJhJXbOcvfeBg8Ilc6CJx6
-	H
-X-Gm-Gg: ASbGncv0tYFmA4E1vd/Yp3/mjVXHc+WDV4GWikxWsGhS8WZwWiwztp2vTznHxlx1b/j
-	Ri9R2crveEvOmCvtknbDa/WHlZXNdaSP1TnplpRfSg/qbltycWji/WQQjvLAHakcs8ImM9rtuqH
-	EXBPlhlbOA2po1h56yFjtmsa3AwKaq9JlCN/XfIB8ybbWHDE4gQS6fc0y9jRpU110D3fyKgIVtc
-	8We3NUwr3QZC0B6o6IM/0qiVAyHLEOxNucAgEuUH3yPniIvGCzu7004qrR3iE59s4+8X7TrotvZ
-	jql9xpp8yTTYRYL2lA2aFJU4hPgvC+0coVtwHex4uz6p4zy8qTDHH8xnlOFrO1ck9vedli3yHyO
-	Vpp9qKIk91cQNpkDg
-X-Google-Smtp-Source: AGHT+IH2sbshKBs3Sur59oR9qNsu2uH1NODmS1i36feBSwNKcuiKVV8WvMHJp5hcJN9YIHC0QeJUGw==
-X-Received: by 2002:a05:600c:b90:b0:439:9a40:aa1a with SMTP id 5b1f17b1804b1-44062a3b804mr6424845e9.6.1744876621333;
-        Thu, 17 Apr 2025 00:57:01 -0700 (PDT)
-Received: from [192.168.0.101] (46.150.74.144.lvv.nat.volia.net. [46.150.74.144])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b4f3356sm43560295e9.20.2025.04.17.00.57.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Apr 2025 00:57:00 -0700 (PDT)
-Message-ID: <f151f848-d337-4bf3-b88d-8a032e843ae1@linaro.org>
-Date: Thu, 17 Apr 2025 09:56:59 +0200
+        d=1e100.net; s=20230601; t=1744876634; x=1745481434;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6/Jl42SonUBh7uWEDi8GR/xF1KhzAcVX2ukREj09fKE=;
+        b=DOXFN1rZKGCRgEcACPfKzc1/3e4793OHulB0W+sNzBN9F4lETFCuVYdjP0Hyk2HFCO
+         TLsBQq/+qlYYQeGD6IrrP9BmUZFaQMUdizCyNJzkhwe1LpKAZriT4rVqCHhWO2o6+mLh
+         wakY3m81NRrqEGLLd1+SItlyVU+UrpvR1ahNVwg9kXMT49ThfpUpbtU3ggrRIYr2e473
+         R6X1rTnAnkbpfbBRPtOizIa+nqZGh8+xPYNko5/BRjQLIiInVCH3Rw/qNpr+CxZAwZRE
+         pZVqpD7Y0Eww80iVyY2nGAXnKOaltoLOQRcrWdh1oDy7mj1HHXwcBE40gilmxTTqM8G4
+         DuJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU0MxdyRkW8OFoufLKxYGb50YqIx2PNddDl0m6W6NuBiSenIz8SgvbU37044c/X/iwUORfBX67Zhp8TxeQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxa/9rCVenRKB1hWubMYnSsJpzOqjDkybqdyLYczSoUqPFYPRAu
+	2lDq7mUzO6uVbMRN+4MgevMifhNiuF40BPiQia/AwsY4HbGAQdaer9GI2wSoqSHd1e5jOjfBLya
+	eMD3ue9LG0BJYKH/i1iGaqnceAM0W0T/ZpLG/0w==
+X-Gm-Gg: ASbGncv7SOqtmw8niDhP0ZiW47qcHYoUg/Z8N6tjw4sc1eMRls343kzhU6ye3iD5H4/
+	EkRjGVlhXJArhudeLgBo5WuFqkenc+NtRwCZttolvDd2kvhzyeaivm81y3mTESxk99LM0T4BzZv
+	bTDVRz8RiMVoxVWBdn8Ot4Tw==
+X-Google-Smtp-Source: AGHT+IFbq7ZcNiiPt5sbevvUX1breN319anukYgU/eYzOsa570CJPpK8YzBEG5vusdZekARs8CQoaMTOyB0+fg/Ao5U=
+X-Received: by 2002:a05:651c:1247:b0:310:8258:c09f with SMTP id
+ 38308e7fff4ca-3108258c126mr11913731fa.26.1744876634235; Thu, 17 Apr 2025
+ 00:57:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] cpufreq: fix compile-test defaults
-To: Johan Hovold <johan+linaro@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rob Herring (Arm)" <robh@kernel.org>, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250417072838.734-1-johan+linaro@kernel.org>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
- m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
- XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
- mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
- v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
- cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
- rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
- qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
- aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
- gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
- dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
- NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
- hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
- oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
- H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
- yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
- 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
- 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
- +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
- FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
- 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
- DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
- oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
- 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
- Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
- qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
- /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
- qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
- EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
- KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
- fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20250417072838.734-1-johan+linaro@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com>
+ <20250416-aaeon-up-board-pinctrl-support-v3-10-f40776bd06ee@bootlin.com>
+In-Reply-To: <20250416-aaeon-up-board-pinctrl-support-v3-10-f40776bd06ee@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 17 Apr 2025 09:57:02 +0200
+X-Gm-Features: ATxdqUFyphNfFRPd_Qt-ltWr9LjJT8Eu93B2bQsVaMpP0d1EbU0HffBXtAWIxW0
+Message-ID: <CACRpkdY1bu11Gj95DQQBirkPDPzhQvCTqk+4FP+WhyuzxuLVAA@mail.gmail.com>
+Subject: Re: [PATCH v3 10/10] pinctrl: Add pin controller driver for AAEON UP boards
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, 
+	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 17/04/2025 09:28, Johan Hovold wrote:
-> Commit 3f66425a4fc8 ("cpufreq: Enable COMPILE_TEST on Arm drivers")
-> enabled compile testing of most Arm CPUFreq drivers but left the
-> existing default values unchanged so that many drivers are enabled by
-> default whenever COMPILE_TEST is selected.
-> 
-> This specifically results in the S3C64XX CPUFreq driver being enabled
-> and initialised during boot of non-S3C64XX platforms with the following
-> error logged:
-> 
-> 	cpufreq: Unable to obtain ARMCLK: -2
-> 
-> Commit d4f610a9bafd ("cpufreq: Do not enable by default during compile
-> testing") recently fixed most of the default values, but two entries
-> were missed and two could use a more specific default condition.
-> 
-> Fix the default values for drivers that can be compile tested and that
-> should be enabled by default when not compile testing.
-> 
-> Fixes: 3f66425a4fc8 ("cpufreq: Enable COMPILE_TEST on Arm drivers")
+On Wed, Apr 16, 2025 at 4:08=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
 
-I would not consider original code a bug, but a feature, however I am
-fine with other choice as well, so to close discussion from my side:
+> This enables the pin control support of the onboard FPGA on AAEON UP
+> boards.
+>
+> This FPGA acts as a level shifter between the Intel SoC pins and the pin
+> header, and also as a mux or switch.
+>
+> +---------+          +--------------+             +---+
+>           |          |              |             |   |
+>           | PWM0     |       \      |             | H |
+>           |----------|------  \-----|-------------| E |
+>           | I2C0_SDA |              |             | A |
+> Intel SoC |----------|------\       |             | D |
+>           | GPIO0    |       \------|-------------| E |
+>           |----------|------        |             | R |
+>           |          |     FPGA     |             |   |
+> ----------+          +--------------+             +---+
+>
+> For most of the pins, the FPGA opens/closes a switch to enable/disable
+> the access to the SoC pin from a pin header.
+> Each switch, has a direction flag that is set depending the status of the
+> SoC pin.
+>
+> For some other pins, the FPGA acts as a mux, and routes one pin (or the
+> other one) to the header.
+>
+> The driver provides also a gpiochip. It requests SoC pins in GPIO mode,
+> and drives them in tandem with FPGA pins (switch/mux direction).
+>
+> This commit adds support only for UP Squared board
+>
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+From a pin control PoV this looks good:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-
-Best regards,
-Krzysztof
+Yours,
+Linus Walleij
