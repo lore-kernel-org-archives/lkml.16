@@ -1,69 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DD72475C7;
-	Thu, 17 Apr 2025 15:13:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F79E24E01F;
+	Thu, 17 Apr 2025 15:14:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744902808; cv=none; b=PWrtbKId3+EKsGOsu9ZjoDCpiHduRWb6KNndkqDZUnYL1JdZRTvQNWHD7/msvbcYtvJVgLcnWWsxcXSoizFPzZxhULjniehgT+krPk2ZASu4K83IttXZDqoCQF9Ivq1L9C3o5gmFo/nTq/Iy1uted3MoG7Fs/ymfAi3WkVsafrM=
+	t=1744902848; cv=none; b=a0PMwq28G6baYroLX/mXZANXLG3IPJ4ntQPqsPT2mZjtJTfsv5LN2HWgkBa6Pe602Q/0ePARVZRWs+fKYrs6UjKlYJY8bCec08WzoHPr4Ld/vetU5zlxmwRKVEepZc0JtVxdvH/0BVGsrDjAB8Ef0j9nKQb3uNRVRYRuGGkusMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744902808; c=relaxed/simple;
-	bh=vDbkTIHc0zXTAQW1oy0wD2cr80Dbn7VA7qtXP2ydKjY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=btkcUBaklimByQ9oUA6r9yLsMQcH1Jk7aMT+Ky9NyDnGbwSxpoHWat+xXJl0iLi0am1wcAcv0CoPv/t7YAAJQ1/9cvgm6IKTnvnng4tUIMmIz46KIdIWQcFv6s3ZU5QsHkNPIUbTWFU5Z63hS17aTrWfTX+4mvAOi9/yqrv3xUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=djt00QHq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744902848; c=relaxed/simple;
+	bh=EP97wmXESng5EY5BT5Sy+b2r7SMfbW3Af0nkrEO3vX0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HvbpzjNrSZgVvoo7kkEgp3TxLXXcUb19tPrKyUok1qDWozLPL1qfD2b2djCMHcLbP2RwjG2V2ja8wNhH51Zn0eqb08rZ4sNjZGA5Mbnb+ZcqYcuYJz4CpfkE8Or1AwdrX5uvluE6yN8XJ6suB1j+IhwmsAP/kh0Sn9xe4IuxLOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FTcCvCNg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="djt00QHq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9BE8C4CEE4;
-	Thu, 17 Apr 2025 15:13:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FTcCvCNg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E230C4CEEA;
+	Thu, 17 Apr 2025 15:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744902807;
-	bh=vDbkTIHc0zXTAQW1oy0wD2cr80Dbn7VA7qtXP2ydKjY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=djt00QHqYgsHYUVrBdoVCvURtrC+CMCxIT/lZiGZsqCUApnoRK35Ks6D2PjVB7YMH
-	 bxoP+RxujXuPqfm+YwF4JJAa8E6bN87A10k9iIUnK/s5m6caOsPHBGPMmh9ag08+MD
-	 gAC1EbYxT2s3OHFRLVzHmIzbVbJ60IYZL1xaoeLRLHqJtbn04zy4jwvAr4UGB4dgzB
-	 zEd70H3SChtnOxGKEyqa+CFkGh4owK4d+PsxwWTok1gDGQW8xxJMZFHomRsW0vxNrU
-	 nB7+i2VpZ8i8A4dSwjQaCYERAJKxOaEYJ2QA8desbiVmn2IcqxKlQDC/4nAeQ5f8oS
-	 G0DiHBvBDjuRg==
-Date: Thu, 17 Apr 2025 08:13:25 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Matthias Brugger
- <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Florian Fainelli
- <f.fainelli@gmail.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net v2 5/5] net: ethernet: mtk_eth_soc: convert cap_bit
- in mtk_eth_muxc struct to u64
-Message-ID: <20250417081325.0e0345ee@kernel.org>
-In-Reply-To: <99177094f957c7ad66116aba0ef877df42590dec.1744764277.git.daniel@makrotopia.org>
-References: <8ab7381447e6cdcb317d5b5a6ddd90a1734efcb0.1744764277.git.daniel@makrotopia.org>
-	<99177094f957c7ad66116aba0ef877df42590dec.1744764277.git.daniel@makrotopia.org>
+	s=k20201202; t=1744902847;
+	bh=EP97wmXESng5EY5BT5Sy+b2r7SMfbW3Af0nkrEO3vX0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FTcCvCNg1AE6weIgg7SbqM1lwrzGDeoVYtbqYBA0hVnKq9otsiZbCs0+wxYMUKSTd
+	 FdlWPJAuSbJ0lUYHv/4ddSEozz0/MhMu2MkWrYAWn4Jd77uxVrArOEQt+SpD2HAAbF
+	 AJhcqu8+0luaDe0/GbVDQA3H9jS2Txpb/EDI/0UYA9FJ0Bk36vHWKSDLAM3FfJjsle
+	 7ZaqxlvQdVqYpAq9GeQBSb1MNizUYXDi6AZ9RwUSlmqW7IClQHV2rVKUazJkwwDAK0
+	 QqIcCkUATATRuXg7vGBwbR64PJZSUBWZdcK+10baeCicucvtsNXAnTYzKsN0Yk9vwU
+	 8qPwr9vf4JxWg==
+Date: Thu, 17 Apr 2025 17:14:01 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: bhelgaas@google.com, kwilczynski@kernel.org, gregkh@linuxfoundation.org,
+	rafael@kernel.org, abdiel.janulgue@gmail.com
+Cc: ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	daniel.almeida@collabora.com, robin.murphy@arm.com,
+	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/9] Implement "Bound" device context
+Message-ID: <aAEaubIVd9XDflxc@cassiopeiae>
+References: <20250413173758.12068-1-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250413173758.12068-1-dakr@kernel.org>
 
-On Wed, 16 Apr 2025 01:52:03 +0100 Daniel Golle wrote:
-> The capabilities bitfield was converted to a 64-bit value, but a cap_bit
-> in struct mtk_eth_muxc which is used to store a full bitfield (rather
-> than the bit number, as the name would suggest) still holds only a
-> 32-bit value.
+On Sun, Apr 13, 2025 at 07:36:55PM +0200, Danilo Krummrich wrote:
+> Currently, we do not ensure that APIs that require a bound device instance can
+> only be called with a bound device.
 > 
-> Change the type of cap_bit to u64 in order to avoid truncating the
-> bitfield which results in path selection to not work with capabilities
-> above the 32-bit limit.
+> Examples of such APIs are Devres, dma::CoherentAllocation and
+> pci::Device::iomap_region().
+> 
+> This patch series introduces the "Bound" device context such that we can ensure
+> to only ever pass a bound device to APIs that require this precondition.
+> 
+> In order to get there, we need some prerequisites:
+> 
+> (1) Implement macros to consistently derive Deref implementations for the
+>     different device contexts. For instance, Device<Core> can be dereferenced to
+>     Device<Bound>, since all device references we get from "core" bus callbacks
+>     are guaranteed to be from a bound device. Device<Bound> can always be
+>     dereferenced to Device (i.e. Device<Normal>), since the "Normal" device
+>     context has no specific requirements.
+> 
+> (2) Implement device context support for the generic Device type. Some APIs such
+>     as Devres and dma::CoherentAllocation work with generic devices.
+> 
+> (3) Preserve device context generics in bus specific device' AsRef
+>     implementation, such that we can derive the device context when converting
+>     from a bus specific device reference to a generic device reference.
+> 
+> With this, Devres::new(), for instance, can take a &Device<Bound> argument and
+> hence ensure that it can't be called with a Device reference that is not
+> guaranteed to be bound to a driver.
+> 
+> A branch containing the patches can be found in [1].
+> 
+> [1] https://web.git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?h=rust/device-bound
 
-Could you please be more specific and name a bit or a field that goes
-over 32b? Since this is a fix ideally we'd also have impact to the user
-described in the commit message. But having enough info for the reviewer
-to quickly validate the change is the bare minimum.
+With the following changes, applied to driver-core/topic/device-context, thanks!
+
+  *  Add missing `::` prefix in macros.
+  *  Fix typos pointed out by Bjorn.
+
+- Danilo
