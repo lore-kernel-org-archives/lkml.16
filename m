@@ -1,112 +1,82 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFB821171B;
-	Thu, 17 Apr 2025 23:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F82222564;
+	Thu, 17 Apr 2025 23:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744932651; cv=none; b=ljFNByKdaUanc+cAbZ56H3GCR9dt0JtRyqgaJrjPJfaytx/E7IvPyxF+19tvcUD0gHxLU+lrA+RhU+TfaypcfGCvbOKCtV9MDWf5L/pObWmTSe1pk9Gm4wMXdhe+6P8oDZvYTYWrccrwUWMsGnOoFZdlmpGs1vtcgWE2xYKo6Dk=
+	t=1744932711; cv=none; b=o21Ho89Hgj2Sz6qY9NNq7sK1uj0sX4XxZLNW1T+WfsN5dR8S8ZAkSgbcblI/U4JFQR9PPaAX6PdIutz8qtmEuiFBsy0XZ9FGKAZRmU2Ot2oMvYNTn7oapNjUyLUawK9GZRbi7Qh0HFq0Cy1hiHZbwOFfzruU/MILa1SyvOGMS/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744932651; c=relaxed/simple;
-	bh=BfJiwkLkvySlUqXwGm3ZKtU3x3W4JG5MrgirFZNZ8pE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o++DN4Lt8OInIwfV64JKQtFrQGtzavtGZvecy/xvZOE4u8XY3cq8jczONzschl3u+QyvNxCqtieLsW1Nz0m89RIkroBzK2Ph+Ren34AGvKoeEwjFczLNtb/sojn0SbXDNeQb2dX2VR4jQ2qBQpiy5YT3nj7KNB1PKhC4j670vGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=M6F16maQ; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744932711; c=relaxed/simple;
+	bh=voDmLeRkXhnBh06zKO+SDWJ4p+ieK+pSNyDhd0/wngs=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=EDwSoBFFsD+qmL8O8SJPcMkfu4+ZSFcogIenNo4P/RVTHxBQjFTibGP5YwxyVYswGxO4HSvX7FyTXWcUnsQvccYyOw5qhjPnfig7SY4lpFumqvthhDLCzne5Y/KrTw+NBO7oWeUwPs7Rm/QWY1sHWcS1ZSOdHp2nM8nKgXijFvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=yk3Nt81H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M6F16maQ"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53HNUeWG136184
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 17 Apr 2025 18:30:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744932640;
-	bh=Y7z9JvDramw6cqnxYpFzhEM432yH7Ax9tg4umCAmI7w=;
-	h=From:To:CC:Subject:Date;
-	b=M6F16maQrI/tO2YKeE6kYIaoXwZ0OCK/bjBA+EnB7XOP64Vizv3C1+iRZtgnQVkwV
-	 yh2Omw80GXjG1OB7YN47ImPbweluHaqs3/gWRt4EGuAw+68Mw92EhoubS1n1O6/kDr
-	 iFF38jTGwGkccm0rcU2W4/yiaFLYa76X3QgpVZ+k=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53HNUeg6096091
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 17 Apr 2025 18:30:40 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 17
- Apr 2025 18:30:39 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 17 Apr 2025 18:30:40 -0500
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53HNUePe023286;
-	Thu, 17 Apr 2025 18:30:40 -0500
-From: Judith Mendez <jm@ti.com>
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Moteen Shah <m-shah@ti.com>
-Subject: [PATCH v2 0/5] Misc MMC updates
-Date: Thu, 17 Apr 2025 18:30:35 -0500
-Message-ID: <20250417233040.3658761-1-jm@ti.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="yk3Nt81H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CB59C4CEE4;
+	Thu, 17 Apr 2025 23:31:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1744932710;
+	bh=voDmLeRkXhnBh06zKO+SDWJ4p+ieK+pSNyDhd0/wngs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=yk3Nt81HyWt8AB2Z4Zy0KzCNdCaAaL+E4nyoP35V0A8XO5tprE9Aj0S6sKaTHdo6U
+	 RFNu9nPpT9lIEJFybkOlWDTRVvoRjfNZgieypSBpLEkmXWTLm76bTbPxbaRGOmtNjM
+	 YtHmij0mEPrRJ7/ELuHB222LXFbe6X+NZTwGhLno=
+Date: Thu, 17 Apr 2025 16:31:49 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Rakie Kim <rakie.kim@sk.com>, <gourry@gourry.net>, <linux-mm@kvack.org>,
+ <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+ <joshua.hahnjy@gmail.com>, <ying.huang@linux.alibaba.com>,
+ <david@redhat.com>, <Jonathan.Cameron@huawei.com>, <osalvador@suse.de>,
+ <kernel_team@skhynix.com>, <honggyu.kim@sk.com>, <yunjeong.mun@sk.com>
+Subject: Re: [PATCH v9 0/3] Enhance sysfs handling for memory hotplug in
+ weighted interleave
+Message-Id: <20250417163149.c918137ef2f9742daf79083f@linux-foundation.org>
+In-Reply-To: <6801839a2481_71fe29462@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250417072839.711-1-rakie.kim@sk.com>
+	<20250417081106.732-1-rakie.kim@sk.com>
+	<20250417153505.c921f75a035089906bb38fe6@linux-foundation.org>
+	<6801839a2481_71fe29462@dwillia2-xfh.jf.intel.com.notmuch>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-This patch series includes updates for eMMC and SD nodes across
-Sitara K3 SoC boards:
+On Thu, 17 Apr 2025 15:41:30 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
 
-Set eMMC clock parents to default to avoid any potential issues with
-non-glitch free muxes when switching eMMC PLL source.
-Add boot phase flag to MMC nodes and dependency nodes to support SD and
-eMMC boot. 
-Add missing itapdlysel for default speed and high speed SDR modes on
-am65x SoC. 
-Add non-removable flag to eMMC nodes to void having to redetect
-eMMC after suspend/resume.
-Remove disable-wp for eMMC nodes since property is specific to SD.
+> Andrew Morton wrote:
+> > On Thu, 17 Apr 2025 17:10:08 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
+> > 
+> > > I sincerely apologize for causing repeated inconvenience. The series of
+> > > patches version v8 that was merged into -mm, mm-new today needs
+> > > additional corrections.
+> > > Link: https://lore.kernel.org/all/6800742de6315_130fd2949c@dwillia2-mobl3.amr.corp.intel.com.notmuch/
+> > > Therefore, I have updated a new version v9, in which the problems have
+> > > been addressed.
+> > 
+> > No probs, this is why mm.git workflow (mm-new -> mm-unstable ->
+> > mm-stable -> mainline) operates as it does - to easily permit revisions
+> > and replacements as patches move towards their final state.
+> > 
+> > Please note that I added a cc:stable to your [1/N] patch - sysfs leaks
+> > should be fixed in earlier kernels.  I considered this to be low
+> > priority - if it's higher priority than this patch should best have
+> > been separated from the series, so it can take a different merge path
+> > from the other patches.  
+> 
+> The risk of leak is low because it only appears to trigger if setup
+> fails. Setup only fails due to -ENOMEM which is unlikely to happen from
+> a late_initcall() when memory pressure is low.
 
-Changes since v1:
-- Add patch 1 and 2
-- remove disable-wp for more boards with eMMCs
+Oh, OK, thanks.  I added the above paragraph to the changelog and
+removed the cc:stable.
 
-Link to v1:
-- https://lore.kernel.org/linux-devicetree/20241014194722.358444-1-jm@ti.com/
-
-Judith Mendez (5):
-  arm64: dts: ti: k3-am6*: Set eMMC clock parents to default
-  arm64: dts: ti: k3-am6*: Add boot phase flag to support MMC boot
-  arm64: dts: ti: k3-am65-main: Add missing taps to sdhci0
-  arm64: dts: ti: k3-am62*: Add non-removable flag for eMMC
-  arm64: dts: ti: k3-am6*: Remove disable-wp for eMMC
-
- arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts             | 12 ++++++++++++
- arch/arm64/boot/dts/ti/k3-am62-main.dtsi             |  2 --
- arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi      |  1 -
- arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts       |  2 +-
- arch/arm64/boot/dts/ti/k3-am62a-main.dtsi            |  2 --
- arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi     |  1 -
- arch/arm64/boot/dts/ti/k3-am62a7-sk.dts              |  3 ++-
- .../boot/dts/ti/k3-am62p-j722s-common-main.dtsi      |  2 --
- arch/arm64/boot/dts/ti/k3-am62p5-sk.dts              |  2 +-
- arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi       |  2 +-
- arch/arm64/boot/dts/ti/k3-am642-evm.dts              |  1 -
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi             |  2 ++
- arch/arm64/boot/dts/ti/k3-am654-base-board.dts       |  1 -
- .../dts/ti/k3-am6548-iot2050-advanced-common.dtsi    |  1 -
- arch/arm64/boot/dts/ti/k3-am69-sk.dts                |  1 -
- 15 files changed, 19 insertions(+), 16 deletions(-)
-
--- 
-2.49.0
-
+Generally, we assume that -ENOMEM doesn't happen in __init code.  If it
+does, the kernel is totally messed up anyway)
