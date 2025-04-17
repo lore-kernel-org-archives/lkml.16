@@ -1,67 +1,67 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96723192D8F
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C19253334
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744904801; cv=none; b=NXtOIDKqOnEFDxH4OIJqCDE8BMl6o3gLGB+2BjIaFsPtvBOqEDOO8QChyKq5mxgctEAbbque3tzJWJXJnXx2ieFRQoPv7P2N8yQ8z1x2n62Zevv5m9/zU4xImQG9NEKyFy27dJ4jQZ2iJ8n8Tv0TJqkSESnTRiRZMaWQ7+Ax68k=
+	t=1744904824; cv=none; b=Pt2UGe5G1IoaHqPcJgJTj7d3TjGbBKAblz3SV/LNzlPayDA29USQEC6SDkSz8Lt+IUDJzqy35W7n/HxSGUFCfwMtFQqjKxyiwheanOOUu1u/yK34ixn3MYFttRggiwtE53ejckQSvSMtNvBjUE+g7ZLJ2hFPQ2GsRElUU4+Lhnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744904801; c=relaxed/simple;
-	bh=iHM0/JATaw0Rhpd8DMq+GWRGIRy0INTDt5N7o2Yt808=;
+	s=arc-20240116; t=1744904824; c=relaxed/simple;
+	bh=hW8DhRmQLt+7PNyHqQIgbj6TarVq/ro6XL6rQ01jk/c=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ttqwbRh6W7O+YglNIl5Ezrh0MltVYNYtpUHsAAV1i7g6t0IffSc/tmNsFOtuz7ks0wS3sBKlhezXDtQ1lMQvLnbf8zlI08v+QfSmEiq2CJxBw/Q+m1UB5tgTSeeG6utjuLFACXNUy6GV3HgHix/iW69QGq7mHAEIwRLBI7PWCoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oiLQXYGL; arc=none smtp.client-ip=209.85.128.49
+	 In-Reply-To:Content-Type; b=VBzsAKlhwzYU9+pVApv1mLrkHvfRM5iN3KQcyL6vkt/Sjwwb215Oxdxdg4mpsQ4lz6zNCRvkNgyUueGdkRwR32oRE983n2vClJMMC+0ACRIWzIWdvy/VDlthXxpmc1Atiz0IBO8bul2Y0uY1QAs9r0EC61dhifLGdvIwhG+tF2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NMf30haC; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oiLQXYGL"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so9109945e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:46:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NMf30haC"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so11369975e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:47:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744904798; x=1745509598; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744904821; x=1745509621; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=k9aaMCuzqkcLFnGt1mdv/nspPtYR2d3K7Y5FHZPd5iE=;
-        b=oiLQXYGLGgw5Yy2uAjHDEG8cvIQMxwW/4fy1Z2J2d2aiTAYID2SbHQLsvZcbCUbtVK
-         OoF77aCghGGAFBYNGL/CBjtw0TJ/cmjrt0XGQwA1Gh930gJZDLtOa/eQi6VD6lNSAo75
-         Mt8u3vCHomj0yFDhh0ItTOnBNyVzrIAWx8+DzYvI0dJJb1CaLPtV8V4V6x4CMA1x3jYv
-         uwhQTP8z61jw7NzWW6Lng/C3bCjF9fkLP1BhdBKfSJ11ESgmWJDENBoaeNfjGbupISZ0
-         XFSY+mOtCSRZQeE8Vsyu04u0tNMw6+lhMWLEquJFMMOkLM+v4CApM8/pZStIAR+QxKvD
-         aJ1A==
+        bh=anQWKWRFiVVDUJzraGwpnlX/WovoTh3Ia3dOa/VFF9w=;
+        b=NMf30haCYTsI9pIy82WeA/PzjduL7ARYTX4562bWxyDZ4sjTOFVeeDoINjMJTdxaor
+         tLlrac6gHE7XmaiG8ctg43Si/fRwJHsmXQ9t4hHyiglLBRvBZAnx6/3lodUSOa5BkYz4
+         gaOXhe+sCxQn99CvlIhSuoYe3Z6tHwz9jPASO+QOR8/ago3s/jHKZyxayTccYDb1vpdh
+         a682PNsBq5awyA0/t94wkW1s+uo/trSuRY7ldvCIVEgH9n9ghmxD9x/nxTIdbUYzDPlF
+         jlvumepJxF1hIfjIMO4o0ePmLQfuAp4ljz23KueRxcZilL0CIHtn6nie8aZTHBqIemrc
+         7l+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744904798; x=1745509598;
+        d=1e100.net; s=20230601; t=1744904821; x=1745509621;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=k9aaMCuzqkcLFnGt1mdv/nspPtYR2d3K7Y5FHZPd5iE=;
-        b=GudPBdnYkQS+ddJ/wxxRi+LdL2cIspCJ5pd2deN6PC/cPUQJNXiJPj1SBvVf+QujkU
-         C6mPBqnKjvuSiv2rkGMidwGZr82EtEseF6NZcbqdfgbQYAKch9awA1V/H7IEc+5LfYt0
-         kD182wFAOdFXtUUlHbp5A41qTaaJvzdqAba8U0pQAphTBoDah53MXHUGiYNYjc/+2gxN
-         ER72cYREAhfWdIf2kqHvRAxvrAUBeaNFFYOdx9e8JDb7WIEo6QLvVA0q4JnOatYvQpYw
-         pYnAnWrPZaHItWqm9wuhEj9aOB09VdRn9SYIhsQDlhHPRdQ/kA/np7G/MYATO0lXODRz
-         3D7g==
-X-Forwarded-Encrypted: i=1; AJvYcCWXz1YaD9erOhs6jCxN5nT2ybH3YyLgN0/zFNWVGQWTXWrT5gqEfYwpj1iHGPTeYT5f95/YOgZJdzip30U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpXe5Q856pVH+cDQinTmF+S7JYZpfyjwCJyBDcl2fiexoedDbG
-	AFDxAweQpotf/FF0lFZftZyD/AG5J1KIy9NO0WAnSGJthVvqM9VF+retqGDtJbk=
-X-Gm-Gg: ASbGncs3xkeVg6dcfKppaayFUelT0YafZlyRahlg2qqPKzwnpeZlbREIail+cKVGihT
-	a1R0pEUwP/RdIGonqFJwAIU8q6lswcqEZePcbKZldvB6iKOokw5fQVQBZk062Ll4xXVirgfRy0d
-	g1ZI1Qgiq+OZ0BQBshfbrHZSZ1aEmLsKL+zLx4D9Z8yyFqMkBoXvVJ1O5v/zEpzSHxe8lTabxMO
-	EUa4JnSqbfklQ48JlE/i4m3dGZUBg0Mnrx4BgLpv8gDKyu+6b6yMysum6DYaBz+W1evG5MBI3B7
-	ocl545Ku6bpG32emn0prYyit8R7PZUelzjw9ktjwcE1sPp66FDw4+IHVlidAVSPyg3hCVzUWihq
-	JG4WXvmPHHR5djU8=
-X-Google-Smtp-Source: AGHT+IGgXij9vrKLTY0luZtINa4N/TV4YimxUEXPo+0Kea36LPVR8W8Ln1lPTHq41iF4KCTK5tf2zw==
-X-Received: by 2002:a5d:64ab:0:b0:38f:30a3:51fe with SMTP id ffacd0b85a97d-39ee5b9d97dmr5526601f8f.42.1744904797932;
-        Thu, 17 Apr 2025 08:46:37 -0700 (PDT)
+        bh=anQWKWRFiVVDUJzraGwpnlX/WovoTh3Ia3dOa/VFF9w=;
+        b=gCpF2m3PXpFwVAGjCov3eDNXwBgNP3F/rO597XuW6UfTlkJoveUYuM2uWnxQKHblTj
+         xLMBvzsqN5V6vBP+HpZTbsgnZKH4y+ZGLTXNw5jdYnOlENPoN3oemJLxPACLa4Ae5B+Q
+         Uupn6gvIUMVWpC2oSAiiABSYu8eNiyLjltXPu6Z91uDyY9KqnEjf9Wdk2xzmXNNDRv40
+         QTrtlLqeOsHysHB0T01aHQyR6EksOkR7xouycofyjBx1O3sJqyddd8k18QNx3hTyF/s3
+         Fik5nIpS04S2k37w8FOUputGeAWgQtxHBrj3abo7BWb/YAMBikWGMyFW3cOc53wJN4qO
+         Hulw==
+X-Forwarded-Encrypted: i=1; AJvYcCVVnkaJS1EtoiJe23oCebxl7/3OZePwcBfeozXZHD3qJdg1oueme1wHLow7H3P2qBgde9Ol0nn5ibBPz7s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw59iE4zxUQ3xIorSA+euGRFefOTFhCFF1iINYkJFm2MCtxKz3q
+	Es8T2R3UkHmqpK3ppmNoIuK1eOJpoqmDGZhJFe96g+WsQQIcCd4AUaXmFJiojmU=
+X-Gm-Gg: ASbGncuwBMzyTe2Hk1F2eGYte5R4rgrkCf7YZVlO/STdtpbGeuHt9OP5FTaM6AWldXP
+	KGAGrmDtb9G9FiRfcRryWdMbh2yPSIj7VR+olgC37zaQKV2VQEOhHdpKQ4JtKZX8EfazFg9os/w
+	T1TVVknVR4igorESWcFJlqvqsX9dcQRX2VIuCXjQLYl1DpW1ApNehvPxeUSmVEzPqBTFKGSOGZw
+	7qmCfZ6pGGh92Yfdtp0q8Z5+f1/q7BjfiqLUaSZmFUSlT91+uYpi8aG0NxT7VClQHP6qk9Y6OTy
+	7wgsUOYFpbcREJIscNijZ90i/MmkTvxbpU1pIT56+CRlnXnMuBSbmBwoNEaO9+lCgwqvaf5DTM+
+	ZJe6rHeVvXFkmG7c=
+X-Google-Smtp-Source: AGHT+IGMaUh3Zh+gjjizVrvwEl709RDrx64QXefOl9IuZfv8jiedE9zPcg4C+YDL5xN6PNvjm2Ss7Q==
+X-Received: by 2002:a05:600c:3b18:b0:43c:ec97:75db with SMTP id 5b1f17b1804b1-44062d6cb7emr29226165e9.11.1744904821005;
+        Thu, 17 Apr 2025 08:47:01 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:3d9:2080:a7f9:634b:42d:1546? ([2a01:e0a:3d9:2080:a7f9:634b:42d:1546])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39ee3f12dc9sm5426249f8f.8.2025.04.17.08.46.37
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96c661sm20374371f8f.29.2025.04.17.08.47.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Apr 2025 08:46:37 -0700 (PDT)
-Message-ID: <729958d5-6daf-4056-95ae-c6b685e120f3@linaro.org>
-Date: Thu, 17 Apr 2025 17:46:36 +0200
+        Thu, 17 Apr 2025 08:47:00 -0700 (PDT)
+Message-ID: <d16755ba-8a68-46fd-a92c-9404512ae6c2@linaro.org>
+Date: Thu, 17 Apr 2025 17:47:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,8 +71,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Neil Armstrong <neil.armstrong@linaro.org>
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 2/7] drm/bridge: analogix_dp: drop unused argument to
- analogix_dp_prepare_panel()
+Subject: Re: [PATCH 3/7] drm/bridge: analogic_dp: drop panel_is_modeset
 To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
  Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>,
  Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
@@ -83,7 +82,7 @@ To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
  Jessica Zhang <quic_jesszhan@quicinc.com>
 Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 References: <20250401-panel-return-void-v1-0-93e1be33dc8d@oss.qualcomm.com>
- <20250401-panel-return-void-v1-2-93e1be33dc8d@oss.qualcomm.com>
+ <20250401-panel-return-void-v1-3-93e1be33dc8d@oss.qualcomm.com>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -110,90 +109,66 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20250401-panel-return-void-v1-2-93e1be33dc8d@oss.qualcomm.com>
+In-Reply-To: <20250401-panel-return-void-v1-3-93e1be33dc8d@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 01/04/2025 07:11, Dmitry Baryshkov wrote:
-> After previous cleanup all calling sites pass true as is_modeset_prepare
-> argument to analogix_dp_prepare_panel(). Drop dead code depending on
-> that argument being false.
+> The dp->panel_is_modeset is now a write-only field. Drop it completely.
 > 
 > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 > ---
->   drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 19 +++++--------------
->   1 file changed, 5 insertions(+), 14 deletions(-)
+>   drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 11 +----------
+>   drivers/gpu/drm/bridge/analogix/analogix_dp_core.h |  1 -
+>   2 files changed, 1 insertion(+), 11 deletions(-)
 > 
 > diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-> index ab1cfc340aa95bbf13fe021bd33227b565a5458d..82dc4b01806f9728dc882b0128171838e81f21b0 100644
+> index 82dc4b01806f9728dc882b0128171838e81f21b0..704c6169116eb2601d2ad02dc7294455ceff5460 100644
 > --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
 > +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-> @@ -963,13 +963,13 @@ static int analogix_dp_disable_psr(struct analogix_dp_device *dp)
->    * If @prepare is true, this function will prepare the panel. Conversely, if it
+> @@ -964,9 +964,7 @@ static int analogix_dp_disable_psr(struct analogix_dp_device *dp)
 >    * is false, the panel will be unprepared.
 >    *
-> - * If @is_modeset_prepare is true, the function will disregard the current state
-> + * The function will disregard the current state
->    * of the panel and either prepare/unprepare the panel based on @prepare. Once
->    * it finishes, it will update dp->panel_is_modeset to reflect the current state
->    * of the panel.
+>    * The function will disregard the current state
+> - * of the panel and either prepare/unprepare the panel based on @prepare. Once
+> - * it finishes, it will update dp->panel_is_modeset to reflect the current state
+> - * of the panel.
+> + * of the panel and either prepare/unprepare the panel based on @prepare.
 >    */
 >   static int analogix_dp_prepare_panel(struct analogix_dp_device *dp,
-> -				     bool prepare, bool is_modeset_prepare)
-> +				     bool prepare)
->   {
->   	int ret = 0;
+>   				     bool prepare)
+> @@ -983,12 +981,6 @@ static int analogix_dp_prepare_panel(struct analogix_dp_device *dp,
+>   	else
+>   		ret = drm_panel_unprepare(dp->plat_data->panel);
 >   
-> @@ -978,13 +978,6 @@ static int analogix_dp_prepare_panel(struct analogix_dp_device *dp,
->   
->   	mutex_lock(&dp->panel_lock);
->   
-> -	/*
-> -	 * Exit early if this is a temporary prepare/unprepare and we're already
-> -	 * modeset (since we neither want to prepare twice or unprepare early).
-> -	 */
-> -	if (dp->panel_is_modeset && !is_modeset_prepare)
+> -	if (ret)
 > -		goto out;
 > -
->   	if (prepare)
->   		ret = drm_panel_prepare(dp->plat_data->panel);
->   	else
-> @@ -993,8 +986,7 @@ static int analogix_dp_prepare_panel(struct analogix_dp_device *dp,
->   	if (ret)
->   		goto out;
->   
-> -	if (is_modeset_prepare)
-> -		dp->panel_is_modeset = prepare;
-> +	dp->panel_is_modeset = prepare;
->   
->   out:
+> -	dp->panel_is_modeset = prepare;
+> -
+> -out:
 >   	mutex_unlock(&dp->panel_lock);
-> @@ -1072,7 +1064,6 @@ analogix_dp_detect(struct drm_connector *connector, bool force)
->   {
->   	struct analogix_dp_device *dp = to_dp(connector);
->   	enum drm_connector_status status = connector_status_disconnected;
-> -	int ret;
->   
->   	if (dp->plat_data->panel)
->   		return connector_status_connected;
-> @@ -1194,7 +1185,7 @@ static void analogix_dp_bridge_atomic_pre_enable(struct drm_bridge *bridge,
->   	if (old_crtc_state && old_crtc_state->self_refresh_active)
->   		return;
->   
-> -	ret = analogix_dp_prepare_panel(dp, true, true);
-> +	ret = analogix_dp_prepare_panel(dp, true);
->   	if (ret)
->   		DRM_ERROR("failed to setup the panel ret = %d\n", ret);
+>   	return ret;
 >   }
-> @@ -1294,7 +1285,7 @@ static void analogix_dp_bridge_disable(struct drm_bridge *bridge)
+> @@ -1532,7 +1524,6 @@ analogix_dp_probe(struct device *dev, struct analogix_dp_plat_data *plat_data)
+>   	dp->dpms_mode = DRM_MODE_DPMS_OFF;
 >   
->   	pm_runtime_put_sync(dp->dev);
+>   	mutex_init(&dp->panel_lock);
+> -	dp->panel_is_modeset = false;
 >   
-> -	ret = analogix_dp_prepare_panel(dp, false, true);
-> +	ret = analogix_dp_prepare_panel(dp, false);
->   	if (ret)
->   		DRM_ERROR("failed to setup the panel ret = %d\n", ret);
+>   	/*
+>   	 * platform dp driver need containor_of the plat_data to get
+> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
+> index 774d11574b095b093ddf2818ad5b84be6605c9bf..b679d5b71d276f458d905c936160f107225bc6c5 100644
+> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
+> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
+> @@ -170,7 +170,6 @@ struct analogix_dp_device {
+>   	bool			psr_supported;
 >   
+>   	struct mutex		panel_lock;
+> -	bool			panel_is_modeset;
+>   
+>   	struct analogix_dp_plat_data *plat_data;
+>   };
 > 
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
