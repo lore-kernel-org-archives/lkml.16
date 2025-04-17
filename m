@@ -1,40 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB6D1D5CF8;
-	Thu, 17 Apr 2025 16:58:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3930F1D5CF8;
+	Thu, 17 Apr 2025 16:58:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744909110; cv=none; b=pFj1RKgF/9gGLCiR42+yYuyAorN9EolNvazGNMmxlxllKwxXDM2yml8uOK7vMjk6AmDJ5B+KwAnt0oxVcIO3GzC1YNqzSOpSkiN1h2VTLg/flOongjtqrDhyYhLkmvEp8Kv/vZjU0C+ZmoI6D5BZeMrnLRa8VqP52qQnLCiC+mY=
+	t=1744909140; cv=none; b=CZI095ga8TVcnAbv2uoT1YBP5b7BP81vhk4rOIWkUsBAVpwP+0bVurfVygIwGyjeHrN8mjFEIY/as8yLoFyp8KBMk5EOF0Tkn8Rs3N+d4LyjV/cIXWOSrmnxsu+euJwNg7pXRimICW7423E4NM7UGPdTEyRgyGVsV5NLJAgZHmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744909110; c=relaxed/simple;
-	bh=oyecEjtFxSiSXV+JxcPsWM/y71I0VWC84UikDttwnUQ=;
+	s=arc-20240116; t=1744909140; c=relaxed/simple;
+	bh=jxIXxKxaNPo3dQmGxoi0tG5S1YbEPJ8HH1VVwK4JwsQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cheI9rRoDfqqDdZcdzbxECwDK1m2lV7Tc1qRDraJcGzG/7dnrBoXAH8E+I1amz7TIAOqywP5+6IQKu2dvT3O3qQ6CpHtL7waPjYMJWfS7h9X2Q6350L4GpXHo10jBFggRqWt5t1kSsOOv/PuybPsJP6hNtTjjwOQH5JUlnqDnjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=oDXrM9lR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=AUimLyWcrlmyllnYPuChe5sRaYKdDNeM2wtJct6MauOTGK2J5Z5myLYkEp9lQVTqKiNtlrDcIJTajE+iOZmyexegFkWr4lJRh8GZA0lUka7WD0OLiMCPNNNcAaOcZnkbDIx7qjZfln344BgCnYHAtGcD5vYQb7lUalm3/iveAsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N8AX4HSl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="oDXrM9lR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5305DC4CEE4;
-	Thu, 17 Apr 2025 16:58:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744909108;
-	bh=oyecEjtFxSiSXV+JxcPsWM/y71I0VWC84UikDttwnUQ=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N8AX4HSl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B39E2C4CEE4;
+	Thu, 17 Apr 2025 16:58:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744909139;
+	bh=jxIXxKxaNPo3dQmGxoi0tG5S1YbEPJ8HH1VVwK4JwsQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oDXrM9lR5SdztaQ2Gr3aY++/60X+JPQO/E8xO9Z86jtR0+Syp60N9pyaBW8JaiKif
-	 p7VdNSv6ZzLs0NgZ/qOKswCmAtVYq5y1M51Ar4y+zIzWQrvUWourMl/vNxzC61XNke
-	 5QUdgyXTzFJ7ByV6ZtMFD0x21NWDPQp/YuoJa2Y4=
-Date: Thu, 17 Apr 2025 18:58:25 +0200
-From: Greg Korah-Hartman <gregkh@linuxfoundation.org>
-To: Ruben Wauters <rubenru09@aol.com>
-Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-	Teddy Wang <teddy.wang@siliconmotion.com>,
-	Sudip Mukherjee <sudip.mukherjee@codethink.co.uk>,
-	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: sm750fb: fix instances of camel case
-Message-ID: <2025041758-mounting-populace-458f@gregkh>
-References: <20250417153101.353645-1-rubenru09.ref@aol.com>
- <20250417153101.353645-1-rubenru09@aol.com>
+	b=N8AX4HSlMyK+6vjGU6LNISIWaMI2Kvl2ZIRqMHxyDAt/Vmem72yJ1zLaip+GqanQC
+	 roC/3ASqU987M0/pMgs09BI3a7n17pIPMzEmba0a+moJ47+F4yhsVk0jx/GHxtke1g
+	 sYl5I0WW57wSgkij+x1IH+ySGmYxZeZNYLY4mdXW2Nl2ycVCqmdrdoOwi6BNGJ/zpC
+	 eoZaqiX+XCZN3nQOYCC9V43vKoHRrp8TBYF4aJqbYMAih+fJPsNb0j9+Tl3bhq+uf7
+	 LR7WJaM6XqazLHqR1lV4SDC5PxKdSMInlgW59aaXMAHlHsCeFYKgLWrTMV/htMXQWT
+	 JfeVOXg8AU9DQ==
+Date: Thu, 17 Apr 2025 09:58:56 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Qingfang Deng <dqfext@gmail.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	linux-crypto@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Christoph =?iso-8859-1?Q?M=FCllner?= <christoph.muellner@vrull.eu>,
+	Heiko Stuebner <heiko.stuebner@vrull.eu>,
+	Qingfang Deng <qingfang.deng@siflower.com.cn>
+Subject: Re: [RFC PATCH] crypto: riscv: scalar accelerated GHASH
+Message-ID: <20250417165856.GB800@quark.localdomain>
+References: <20250417064940.68469-1-dqfext@gmail.com>
+ <CAMj1kXFPAVXOtPoETKvHB49kjZUPYrsAqsJwdL7p5Cu4xk75Rg@mail.gmail.com>
+ <CALW65jY=LnVBYoKPOQnSKgGSA0brKzmo0vqoRDcqF_=jofLAng@mail.gmail.com>
+ <CAMj1kXH-u7hiKGQfgYHj_16V4ATN_aHmA_wkvMSyLh+E3+QaAA@mail.gmail.com>
+ <CALW65jZVYUZoka7Gbjcoh43qbkD7rGpw8gTZjjOYpZD-BhLyBQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,69 +55,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250417153101.353645-1-rubenru09@aol.com>
+In-Reply-To: <CALW65jZVYUZoka7Gbjcoh43qbkD7rGpw8gTZjjOYpZD-BhLyBQ@mail.gmail.com>
 
-On Thu, Apr 17, 2025 at 04:27:47PM +0100, Ruben Wauters wrote:
-> As per the kernel style guidelines, and as reported by checkpatch.pl,
-> replaced instances of camel case with snake_case where appropriate and
-> aligned names in the header with those in the c file.
+On Thu, Apr 17, 2025 at 04:42:46PM +0800, Qingfang Deng wrote:
+> > I see. But do you have a particular configuration in mind? Does it
+> > have scalar AES too? I looked into that a while ago but I was told
+> > that nobody actually incorporates that. So what about these
+> > extensions? Are they commonly implemented?
 > 
-> Signed-off-by: Ruben Wauters <rubenru09@aol.com>
-> ---
->  drivers/staging/sm750fb/ddk750_sii164.c | 113 ++++++++++++------------
->  drivers/staging/sm750fb/ddk750_sii164.h |  26 +++---
->  2 files changed, 69 insertions(+), 70 deletions(-)
-> 
-> diff --git a/drivers/staging/sm750fb/ddk750_sii164.c b/drivers/staging/sm750fb/ddk750_sii164.c
-> index 89700fc5dd2e..20c2f386220c 100644
-> --- a/drivers/staging/sm750fb/ddk750_sii164.c
-> +++ b/drivers/staging/sm750fb/ddk750_sii164.c
-> @@ -12,11 +12,11 @@
->  #define USE_HW_I2C
->  
->  #ifdef USE_HW_I2C
-> -    #define i2cWriteReg sm750_hw_i2c_write_reg
-> -    #define i2cReadReg  sm750_hw_i2c_read_reg
-> +    #define I2C_WRITE_REG sm750_hw_i2c_write_reg
-> +    #define I2C_READ_REG  sm750_hw_i2c_read_reg
+> It's aes-generic.c (LUT-based) with accelerated GHASH.
 
-Close, but these are really a function name, not a macro, right?
+That's an odd combination.  Normally accelerated AES and GHASH go together.
+Presumably you're targeting some specific RISC-V CPU.  Is this going to be a
+one-off thing for that specific CPU?  Or can we expect many RISC-V CPUs to have
+GHASH acceleration without AES?  And if so, why?
 
-And what sets this #define?  If it's always enabled, then unwrap this
-indirection instead of keeping it around
-
->  #else
-> -    #define i2cWriteReg sm750_sw_i2c_write_reg
-> -    #define i2cReadReg  sm750_sw_i2c_read_reg
-> +    #define I2C_WRITE_REG sm750_sw_i2c_write_reg
-> +    #define I2C_READ_REG  sm750_sw_i2c_read_reg
->  #endif
->  
->  /* SII164 Vendor and Device ID */
-> @@ -25,7 +25,7 @@
->  
->  #ifdef SII164_FULL_FUNCTIONS
->  /* Name of the DVI Controller chip */
-> -static char *gDviCtrlChipName = "Silicon Image SiI 164";
-> +static char *dvi_controller_chip_name = "Silicon Image SiI 164";
-
-This is a totally different thing.
-
->  #endif
->  
->  /*
-> @@ -37,14 +37,14 @@ static char *gDviCtrlChipName = "Silicon Image SiI 164";
->   */
->  unsigned short sii164_get_vendor_id(void)
->  {
-> -	unsigned short vendorID;
-> +	unsigned short vendor;
-
-Why change this?
-
-This is a mix of lots of different changes, please break things up into
-"one logical change per patch"
-
-thanks,
-
-greg k-h
+- Eric
