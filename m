@@ -1,51 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C6A263F24;
-	Thu, 17 Apr 2025 18:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E8E2571A2;
+	Thu, 17 Apr 2025 18:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744914427; cv=none; b=Yfi4kTfIgQKSov5h47LqJw+vD7LTgTnrAaRtt+f4V1b6T0S/HC2Pc0Fvterr/SpRNSf0308yJqsXtcRM1+vef0XgjM26pqvvgrgOf/3NJfmHdGvniySTA+EjSiha035DdBt5HylzoQBdmRJG7nCUIDWawBZlAdQReILjsTMcwX8=
+	t=1744914428; cv=none; b=RGHVfWIUwmRdObDJGaXKeN+71WeM54p0tgFJpNrDrvfpGkc+c1p50+TUeouH1QsAIo5V/NYxEgH2WJCQXoQDSVrlQS0N/nk+rhIW9e5Ni7nojQazjRt6WUWCHVokJMM3q2G5my65pYQjJstDTdCrw+cIEndkqKdul0F0WPwwQYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744914427; c=relaxed/simple;
-	bh=nXbV1Uvq4c8RL4YhRp/ivGFjNzOtTa70IujwafR6+UE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rfnQ+Jidud3R1l1Qom68znfU06e8QC+5b5ZUFy9n9vnx0yoszsZ5lzyBfvDjuuypwv1aBnFpxo71CE9DFcwBFtE/okbyETwf1ptaO2/K6HMK5qkfAJIUPdAH7BXlTYKqpur8pP3WPoC+bTfSIAy6j3U9UcSZbrSVul/7bBaTa5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=toxBea61; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744914428; c=relaxed/simple;
+	bh=H8Gg2/vmGXAh1NRzYa4sj4x7tuVsEvUxUuM05P0cWTM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dKDChbn6+6jMH3frfQR/TwLGKhNlNfhvz6x+5v2TNNkv3OCZcM2xFX5+gb7bN23mWVgdWtAtrvY54uyJGq+PnUdLe/Phmm4g96+b9dbySnMqei6DmWKoxTYHuRWgEPQsjAOcQbarTeCWGHJZJ15YejRjggi0z7eg4h6+z5qK6w0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=w2Nwi3CE; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="toxBea61"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8307C4CEEC;
-	Thu, 17 Apr 2025 18:27:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744914427;
-	bh=nXbV1Uvq4c8RL4YhRp/ivGFjNzOtTa70IujwafR6+UE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=toxBea61JWC5/trBUl49NvCsVkVAmNhju3B87UReIfBHz8VnRyE/LuVybLVF2k/nY
-	 ozG0hZ8OBwzDL6uS4Zi1cnO2Mrn+mq1gQ/r8Oq+czYCLjfyTD/V03RB7fCo5SP71wf
-	 zlxk4RJm3o05FtCFrRaAKTzpr6oWDwo/e21dJwjhdxrVVorZg+xwqsKTLym49Olhvz
-	 SwdxWMKOu8BP6ibmjf8JnzW3kYR8b7Naf0ZpIJmNV9xQkNMUjmcXpx+iFVvnhelZFG
-	 WffphaS/N+aHynjqKlRMXoA+AQi8OOH4tWYJ2rqeMi/Rw6uFqtGdZWOBgLIHH2X50p
-	 7wDfzUig2kHFw==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org,
-	"Jason A . Donenfeld " <Jason@zx2c4.com>,
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 02/15] crypto: arm64 - drop redundant dependencies on ARM64
-Date: Thu, 17 Apr 2025 11:26:10 -0700
-Message-ID: <20250417182623.67808-3-ebiggers@kernel.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="w2Nwi3CE"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53HIQqih090275
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 17 Apr 2025 13:26:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744914412;
+	bh=Rj9Gdvv9SiqoqsOg8hwrpex+4pw5LevQJozBqu2sNWw=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=w2Nwi3CEp+oCtCLVBvkVITK+hjFaNBwc2cFFFK0bQjfW8VKdkNNuKKQDoH+d4NEXn
+	 1SdDe3OsOPR6ESEjK7gZpv8xKfp5czmt/a+dU8FPFob/yg87RH/NSt4wcHU8y1y5R2
+	 osvEbdDh/5bF4ZuMReX6bfFpRujz3ksDj6OVJwEM=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53HIQqG7062727
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 17 Apr 2025 13:26:52 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 17
+ Apr 2025 13:26:52 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 17 Apr 2025 13:26:51 -0500
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53HIQqh6078217;
+	Thu, 17 Apr 2025 13:26:52 -0500
+From: Judith Mendez <jm@ti.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter
+	<adrian.hunter@intel.com>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, <linux-mmc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Josua Mayer
+	<josua@solid-run.com>, Moteen Shah <m-shah@ti.com>,
+        Francesco Dolcini
+	<francesco@dolcini.it>,
+        Hiago De Franco <hiagofranco@gmail.com>
+Subject: [PATCH v2 1/2] mmc: sdhci_am654: Add sdhci_am654_start_signal_voltage_switch
+Date: Thu, 17 Apr 2025 13:26:51 -0500
+Message-ID: <20250417182652.3521104-2-jm@ti.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250417182623.67808-1-ebiggers@kernel.org>
-References: <20250417182623.67808-1-ebiggers@kernel.org>
+In-Reply-To: <20250417182652.3521104-1-jm@ti.com>
+References: <20250417182652.3521104-1-jm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,47 +67,112 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Eric Biggers <ebiggers@google.com>
+The sdhci_start_signal_voltage_switch function sets
+V1P8_SIGNAL_ENA by default after switching to 1v8 signaling.
+V1P8_SIGNAL_ENA has a timing component where it determines
+whether to launch cmd/data on neg edge (half cycle timing)
+or pos edge (full cycle timing) of clock. V1P8_SIGNAL_ENA also
+has a voltage switch component where if there exists an internal
+LDO, for SD this bit is used to switch from 3.3V to 1.8V IO
+signal voltage.
 
-arch/arm64/crypto/Kconfig is sourced only when CONFIG_ARM64=y, so there
-is no need for the symbols defined inside it to depend on ARM64.
+The sequence is to switch to 1.8 IO voltage, set V1P8_SIGNAL_ENA,
+change bus width, then update HIGH_SPEED_ENA & UHS_MODE_SELECT.
+During bus width change is when eMMC failures are seen with
+Kingston eMMC and various types SD cards across Sitara K3 SoCs.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+So, add a quirk to suppress V1P8_SIGNAL_ENA and do not enable by
+default for eMMC since it is anyways optional for this interface
+and parse DT property: ti,fails-without-test-cd to apply the quirk
+for SD cards.
+
+Signed-off-by: Judith Mendez <jm@ti.com>
+Suggested-by: Hiago De Franco <hiago.franco@toradex.com>
 ---
- arch/arm64/crypto/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mmc/host/sdhci_am654.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/arch/arm64/crypto/Kconfig b/arch/arm64/crypto/Kconfig
-index 7c2f63f2e307..704d0b7e1d13 100644
---- a/arch/arm64/crypto/Kconfig
-+++ b/arch/arm64/crypto/Kconfig
-@@ -135,11 +135,11 @@ config CRYPTO_AES_ARM64
+diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
+index f75c31815ab00..2d9f1406d06eb 100644
+--- a/drivers/mmc/host/sdhci_am654.c
++++ b/drivers/mmc/host/sdhci_am654.c
+@@ -87,6 +87,7 @@
+ #define CLOCK_TOO_SLOW_HZ	50000000
+ #define SDHCI_AM654_AUTOSUSPEND_DELAY	-1
+ #define RETRY_TUNING_MAX	10
++#define BUS_WIDTH_8		8
  
- 	  Architecture: arm64
+ /* Command Queue Host Controller Interface Base address */
+ #define SDHCI_AM654_CQE_BASE_ADDR 0x200
+@@ -155,6 +156,7 @@ struct sdhci_am654_data {
+ 	u32 tuning_loop;
  
- config CRYPTO_AES_ARM64_CE
- 	tristate "Ciphers: AES (ARMv8 Crypto Extensions)"
--	depends on ARM64 && KERNEL_MODE_NEON
-+	depends on KERNEL_MODE_NEON
- 	select CRYPTO_ALGAPI
- 	select CRYPTO_LIB_AES
- 	help
- 	  Block ciphers: AES cipher algorithms (FIPS-197)
+ #define SDHCI_AM654_QUIRK_FORCE_CDTEST BIT(0)
++#define SDHCI_AM654_QUIRK_SUPPRESS_V1P8_ENA BIT(1)
+ };
  
-@@ -252,11 +252,11 @@ config CRYPTO_SM4_ARM64_NEON_BLK
- 	  Architecture: arm64 using:
- 	  - NEON (Advanced SIMD) extensions
+ struct window {
+@@ -356,6 +358,29 @@ static void sdhci_j721e_4bit_set_clock(struct sdhci_host *host,
+ 	sdhci_set_clock(host, clock);
+ }
  
- config CRYPTO_AES_ARM64_CE_CCM
- 	tristate "AEAD cipher: AES in CCM mode (ARMv8 Crypto Extensions)"
--	depends on ARM64 && KERNEL_MODE_NEON
-+	depends on KERNEL_MODE_NEON
- 	select CRYPTO_ALGAPI
- 	select CRYPTO_AES_ARM64_CE
- 	select CRYPTO_AES_ARM64_CE_BLK
- 	select CRYPTO_AEAD
- 	select CRYPTO_LIB_AES
++static int sdhci_am654_start_signal_voltage_switch(struct mmc_host *mmc, struct mmc_ios *ios)
++{
++	struct sdhci_host *host = mmc_priv(mmc);
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_am654_data *sdhci_am654 = sdhci_pltfm_priv(pltfm_host);
++	int ret;
++
++	if ((sdhci_am654->quirks & SDHCI_AM654_QUIRK_SUPPRESS_V1P8_ENA) &&
++	    ios->signal_voltage == MMC_SIGNAL_VOLTAGE_180) {
++		if (!IS_ERR(mmc->supply.vqmmc)) {
++			ret = mmc_regulator_set_vqmmc(mmc, ios);
++			if (ret < 0) {
++				pr_err("%s: Switching to 1.8V signalling voltage failed,\n",
++				       mmc_hostname(mmc));
++				return -EIO;
++			}
++		}
++		return 0;
++	}
++
++	return sdhci_start_signal_voltage_switch(mmc, ios);
++}
++
+ static u8 sdhci_am654_write_power_on(struct sdhci_host *host, u8 val, int reg)
+ {
+ 	writeb(val, host->ioaddr + reg);
+@@ -803,6 +828,7 @@ static int sdhci_am654_get_of_property(struct platform_device *pdev,
+ 	struct device *dev = &pdev->dev;
+ 	int drv_strength;
+ 	int ret;
++	u32 bus_width;
+ 
+ 	if (sdhci_am654->flags & DLL_PRESENT) {
+ 		ret = device_property_read_u32(dev, "ti,trm-icp",
+@@ -844,6 +870,11 @@ static int sdhci_am654_get_of_property(struct platform_device *pdev,
+ 	if (device_property_read_bool(dev, "ti,fails-without-test-cd"))
+ 		sdhci_am654->quirks |= SDHCI_AM654_QUIRK_FORCE_CDTEST;
+ 
++	/* Suppress V1P8_SIGNAL_ENA for eMMC */
++	device_property_read_u32(dev, "bus-width", &bus_width);
++	if (bus_width == BUS_WIDTH_8 || device_property_read_bool(dev, "ti,suppress-v1p8-ena"))
++		sdhci_am654->quirks |= SDHCI_AM654_QUIRK_SUPPRESS_V1P8_ENA;
++
+ 	sdhci_get_of_property(pdev);
+ 
+ 	return 0;
+@@ -940,6 +971,7 @@ static int sdhci_am654_probe(struct platform_device *pdev)
+ 		goto err_pltfm_free;
+ 	}
+ 
++	host->mmc_host_ops.start_signal_voltage_switch = sdhci_am654_start_signal_voltage_switch;
+ 	host->mmc_host_ops.execute_tuning = sdhci_am654_execute_tuning;
+ 
+ 	pm_runtime_get_noresume(dev);
 -- 
 2.49.0
 
