@@ -1,165 +1,205 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF1742A97;
-	Thu, 17 Apr 2025 02:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71E517A2EB
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 02:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744858294; cv=none; b=cNtOQDYBVn9V6YGUVJZzn1+8aT7XhTeNgjGZTbuVKzw4lVG+yQAg/hEImAMMnxMMLv/WGjC6AGeiPaumiW+Nd+F/sIsuU+Hzes8ySzz95Gov2uKkqckJG0nAUco2raM5SARw+eAwNAJzlvUce/yvHwgvfetIjI4b1PN8ze74ff4=
+	t=1744858315; cv=none; b=R32zD9vPk0ufY4n0dM6Fvd07DLMCeR8Ck7OdIThQlL/zQM5GT3upYszYFDqE+0xyRKEYjr3lPjwG9btz4F0T7psTfurmTT4B/bA1/e3Dbt2V2yXW8zSi+x+Sgd6Q2texSb5E8kTUwG5uahjezCgU6If1MRqw7+W3+NZi1hDMxmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744858294; c=relaxed/simple;
-	bh=Jeaywli96hv/EbWucT4fOWHO6iJyomoHYw2JzjAf4/Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J8puTH178IgQ/g0Jd6r9azR54X7taTP3IgVL03L3K7LwVqb3PIfYSsrJbHOIODgrtHzvoT+2xDVq7+YYAMKZWJEPZ5gMFo+c1RFVa+CxIF+S8BZLcYXGdfBeHvcVr59InimchlUVYZw64AgBG6x4UobpSXo2yQEIHhQc4kniOIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WKm+0GLr; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744858315; c=relaxed/simple;
+	bh=HthTZrW1fFlDP7peSxbU7m3AZR6L8cuFXO9yDWb+kIE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a7CIoGKNnve/fpz9+rE/PmO/Vg537uXyaJ+EBBFOb20Dikugdo6VQr/7xP2XOikjq36DtUFAami4TvwKKQjzqBkOrV5MweVZkztPDSG3r/zI6WAS4TG/A0LfrYdMJ6FYnRj8MQALtOt2zXWlZ48vZE+GdBLqIsXzWaTmioA0fB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L7P2CCYp; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WKm+0GLr"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-3105ef2a071so3374571fa.1;
-        Wed, 16 Apr 2025 19:51:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744858290; x=1745463090; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IxlW381mFl1gcMmWQlg2/YJ47n7wnlOLEuu/f/VFJUk=;
-        b=WKm+0GLr/1w4CpJhlprMNNq5heecbeXXWfYnbdgkM+qRoao+EZjMimnOswvYuatmO7
-         6hsQUyYHlZhnfGRF9FSQ0g9gF5MxLjzm3mSQ0av22SKZWMPso/bUnanJK9ccHnvLJK2g
-         VB4yR/j/qZPK6RlA2vB5E2Prg7rVwrYjlw36ihaessdnxZMAdGlbEUz0MHGdGieJ/T+P
-         Y0+oVT7IvVLzcPg63BjBzu9zNPyekBbZx1CC2YBN76XIPHgFDj4hdLpAQW4x7+kOh4lj
-         Ze5sQrPGCFtZtLlFL25Xq9rrg+/2uaFzxUakiHlMxgKNv1rGG51a9iyWy2MTghs7pMMa
-         Z+fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744858290; x=1745463090;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IxlW381mFl1gcMmWQlg2/YJ47n7wnlOLEuu/f/VFJUk=;
-        b=HC2tDsbKSgBN5oQihImWnjBo3k1wiQuyE3GbU5T3i+q0ggUEcLa02X1a9Uqw+Fnxvw
-         cBvLrQET396bOjP90TbTr82r9+2PSEnc3RCOgaaZi6wmrCo4RuBiTVr94cfVeAbM7H+K
-         WSGWqpAInVtXZjTZNZFaB1PGryj3rq/eTQCEoHULqE8SCliyf0KUG+Fh01zDmcsUEouB
-         gEl+5MkEHf41Si9Ym+6aW5wBj4ann5LXeUNXYMu3l6yyJ/6tLxyO4SOYrIe4MAPjSm9m
-         LP4H5fhzTepbycNEZBHFiI51LXmPGVC4YjlOWZ4bB8msNa1zNnOD2SytQjTdP80q2maz
-         3uMA==
-X-Forwarded-Encrypted: i=1; AJvYcCWkFZnHWTcBghOLXhJ9nY3lmpj13d3ICI7rQPJsQuW3USQ6DXFRMj5mt0+3tqA0g6PnM+4TobUAI7stnnA=@vger.kernel.org, AJvYcCXe6g1BMgAONZenr/EiC47705x5nCjYCZQWC1wbP0Dx/dsuGEdQdYTpLXyau0xaIezttKo0R6MZZWiB8uhLYBEDXXrlYA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTMhPIOKcUjviFWwDO69cXDQANbI89k584sTZWIpHfLQtBy/2f
-	bP3NA3NRuc8PCpSrPx73TLIhA7pWAbaDKjWx90fnS8gYtM9zOCKGPyAgzWM6qCBpdj/0RQ2kwhw
-	4y4L0fKf+PECMlLc9dkK1UlitIxXLN4K3d+K3nEO5Pa4=
-X-Gm-Gg: ASbGncsBOpMT2sTq/5xyRJLrYAjYNN4agkzf8ms+bD+TYt9zOKPT1+qi9lN4vpsahAv
-	tMc8p5bRk3V3cphbIRacx9cdT3jcizVyq5CByURrAX1p28FQSq4VyaAq1Id/osuwlUbexDyJgUW
-	U4rLrlyYvHSKJBHLcoeaqN0Q==
-X-Google-Smtp-Source: AGHT+IFlzCZEIobw7iTvuOvepzEy1mIFBOVGDJk83j4517Ybo39jCA2Zb3rliOfCx5vXazI1n9tzq62SE8IQgb5tDK4=
-X-Received: by 2002:a2e:a58e:0:b0:30b:8f84:49c5 with SMTP id
- 38308e7fff4ca-3107f719c34mr14775481fa.28.1744858289936; Wed, 16 Apr 2025
- 19:51:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L7P2CCYp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744858312;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ec8d2eZYYN3bmIE5DgcqPHjtkZ1mFIafiLgKn16k8Po=;
+	b=L7P2CCYpITngDDfDX0cO0ddBq1jGLLhJRh1vSxZBsoQEhaYVdTXxJF/mrf5WntG0wGtGkh
+	OZAc1kmGeZhydtnXS5u1+zpNppmRBy2oD92Pl5vIJH7WbJjfA5Zl/CGJ/+vHvTRUr+36Do
+	Fmuor4HWG4snKlJN6j/yao58VGeK4LQ=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-167-xMZjQky3OMyOfkf1U10anw-1; Wed,
+ 16 Apr 2025 22:51:51 -0400
+X-MC-Unique: xMZjQky3OMyOfkf1U10anw-1
+X-Mimecast-MFC-AGG-ID: xMZjQky3OMyOfkf1U10anw_1744858310
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0B00C19560A1;
+	Thu, 17 Apr 2025 02:51:50 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.38])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BFF6530001A1;
+	Thu, 17 Apr 2025 02:51:48 +0000 (UTC)
+Date: Thu, 17 Apr 2025 10:51:44 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] mm/vmalloc.c: optimize code in decay_va_pool_node()
+ a little bit
+Message-ID: <aABswErLwX7o7OXa@MiWiFi-R3L-srv>
+References: <20250415023952.27850-1-bhe@redhat.com>
+ <20250415023952.27850-4-bhe@redhat.com>
+ <Z_-1ozajrbaVLq6m@pc636>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416033842.67394-1-shouyeliu@gmail.com> <da00e02b7ae32331794314b4d877987a6f2b1cf2.camel@linux.intel.com>
-In-Reply-To: <da00e02b7ae32331794314b4d877987a6f2b1cf2.camel@linux.intel.com>
-From: liu shouye <shouyeliu@gmail.com>
-Date: Thu, 17 Apr 2025 10:51:18 +0800
-X-Gm-Features: ATxdqUFBqpeOZENFsEPA_DUcUMGmzUIyn5IPMTxK2NmPF_7qfceFnSaIDy7guvg
-Message-ID: <CAAscG3UOKirX9OjKy3SR8ZfNDG2axjk9RzEKCrRrSmjUZJRT2Q@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/x86/intel-uncore-freq: Fix missing uncore
- sysfs during CPU hotplug
-To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Shouye Liu <shouyeliu@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_-1ozajrbaVLq6m@pc636>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-srinivas pandruvada <srinivas.pandruvada@linux.intel.com> =E4=BA=8E2025=E5=
-=B9=B44=E6=9C=8817=E6=97=A5=E5=91=A8=E5=9B=9B 04:40=E5=86=99=E9=81=93=EF=BC=
-=9A
->
-> On Wed, 2025-04-16 at 11:38 +0800, shouyeliu wrote:
-> > From: Shouye Liu <shouyeliu@tencent.com>
-> >
-> > In certain situations, the sysfs for uncore may not be present when
-> > all
-> > CPUs in a package are offlined and then brought back online after
-> > boot.
-> >
-> > This issue can occur if there is an error in adding the sysfs entry
-> > due
-> > to a memory allocation failure. Retrying to bring the CPUs online
-> > will
-> > not resolve the issue, as the uncore_cpu_mask is already set for the
-> > package before the failure condition occurs.
-> >
-> > This issue does not occur if the failure happens during module
-> > initialization, as the module will fail to load in the event of any
-> > error.
-> >
-> > To address this, ensure that the uncore_cpu_mask is not set until the
-> > successful return of uncore_freq_add_entry().
-> >
-> Fixes: dbce412a7733 ("platform/x86/intel-uncore-freq: Split common and
-> enumeration part")
->
-> > Signed-off-by: Shouye Liu <shouyeliu@tencent.com>
-> Cc: stable@vger.kernel.org
->
-> Thanks,
-> Srinivas
-
-Got it, I will update it in v3 version
-Thanks,
-Shouye
-
->
+On 04/16/25 at 03:50pm, Uladzislau Rezki wrote:
+> On Tue, Apr 15, 2025 at 10:39:50AM +0800, Baoquan He wrote:
+> > When purge lazily freed vmap areas, VA stored in vn->pool[] will also be
+> > taken away into free vmap tree partially or completely accordingly, that
+> > is done in decay_va_pool_node(). When doing that, for each pool of node,
+> > the whole list is detached from the pool for handling. At this time,
+> > that pool is empty. It's not necessary to update the pool size each time
+> > when one VA is removed and addded into free vmap tree.
+> > 
+> > Here change code to update the pool size when attaching the pool back.
+> > 
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
 > > ---
-> >  .../x86/intel/uncore-frequency/uncore-frequency.c   | 13 +++++++++--
-> > --
-> >  1 file changed, 9 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
-> > frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-
-> > frequency.c
-> > index 40bbf8e45fa4..bdee5d00f30b 100644
-> > --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-> > +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-> > @@ -146,15 +146,13 @@ static int uncore_event_cpu_online(unsigned int
-> > cpu)
-> >  {
-> >       struct uncore_data *data;
-> >       int target;
-> > +     int ret;
-> >
-> >       /* Check if there is an online cpu in the package for uncore
-> > MSR */
-> >       target =3D cpumask_any_and(&uncore_cpu_mask,
-> > topology_die_cpumask(cpu));
-> >       if (target < nr_cpu_ids)
-> >               return 0;
-> >
-> > -     /* Use this CPU on this die as a control CPU */
-> > -     cpumask_set_cpu(cpu, &uncore_cpu_mask);
+> >  mm/vmalloc.c | 23 +++++++++++------------
+> >  1 file changed, 11 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > index 488d69b56765..bf735c890878 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -2150,7 +2150,7 @@ decay_va_pool_node(struct vmap_node *vn, bool full_decay)
+> >  	LIST_HEAD(decay_list);
+> >  	struct rb_root decay_root = RB_ROOT;
+> >  	struct vmap_area *va, *nva;
+> > -	unsigned long n_decay;
+> > +	unsigned long n_decay, len;
+> >  	int i;
+> >  
+> >  	for (i = 0; i < MAX_VA_SIZE_PAGES; i++) {
+> > @@ -2164,22 +2164,20 @@ decay_va_pool_node(struct vmap_node *vn, bool full_decay)
+> >  		list_replace_init(&vn->pool[i].head, &tmp_list);
+> >  		spin_unlock(&vn->pool_lock);
+> >  
+> > -		if (full_decay)
+> > -			WRITE_ONCE(vn->pool[i].len, 0);
+> > +		len = n_decay = vn->pool[i].len;
+> > +		WRITE_ONCE(vn->pool[i].len, 0);
+> >  
+> >  		/* Decay a pool by ~25% out of left objects. */
+> > -		n_decay = vn->pool[i].len >> 2;
+> > +		if (!full_decay)
+> > +			n_decay >>= 2;
+> > +		len -= n_decay;
+> >  
+> >  		list_for_each_entry_safe(va, nva, &tmp_list, list) {
+> > +			if (!n_decay)
+> > +				break;
+> >  			list_del_init(&va->list);
+> >  			merge_or_add_vmap_area(va, &decay_root, &decay_list);
 > > -
-> >       data =3D uncore_get_instance(cpu);
-> >       if (!data)
-> >               return 0;
-> > @@ -163,7 +161,14 @@ static int uncore_event_cpu_online(unsigned int
-> > cpu)
-> >       data->die_id =3D topology_die_id(cpu);
-> >       data->domain_id =3D UNCORE_DOMAIN_ID_INVALID;
-> >
-> > -     return uncore_freq_add_entry(data, cpu);
-> > +     ret =3D uncore_freq_add_entry(data, cpu);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     /* Use this CPU on this die as a control CPU */
-> > +     cpumask_set_cpu(cpu, &uncore_cpu_mask);
-> > +
-> > +     return 0;
-> >  }
-> >
-> >  static int uncore_event_cpu_offline(unsigned int cpu)
->
+> > -			if (!full_decay) {
+> > -				WRITE_ONCE(vn->pool[i].len, vn->pool[i].len - 1);
+> > -
+> > -				if (!--n_decay)
+> > -					break;
+> > -			}
+> > +			n_decay--;
+> >  		}
+> >  
+> >  		/*
+> > @@ -2188,9 +2186,10 @@ decay_va_pool_node(struct vmap_node *vn, bool full_decay)
+> >  		 * can populate the pool therefore a simple list replace
+> >  		 * operation takes place here.
+> >  		 */
+> > -		if (!full_decay && !list_empty(&tmp_list)) {
+> > +		if (!list_empty(&tmp_list)) {
+> >  			spin_lock(&vn->pool_lock);
+> >  			list_replace_init(&tmp_list, &vn->pool[i].head);
+> > +			vn->pool[i].len = len;
+> >  			spin_unlock(&vn->pool_lock);
+> >  		}
+> >  	}
+> > -- 
+> > 2.41.0
+> > 
+> Which Linux version this patch is based on? I can not apply it.
+
+I can apply them on the latest mainline kernel, next/master and
+mm-new branch of akpm/mm.git. I checked just now.
+
+> 
+> Small nits:
+> 
+> <snip>
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index c909b8fea6eb..0ae53c997219 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -2150,7 +2150,7 @@ decay_va_pool_node(struct vmap_node *vn, bool full_decay)
+>  	LIST_HEAD(decay_list);
+>  	struct rb_root decay_root = RB_ROOT;
+>  	struct vmap_area *va, *nva;
+> -	unsigned long n_decay, len;
+> +	unsigned long n_decay, pool_len;
+>  	int i;
+>  
+>  	for (i = 0; i < MAX_VA_SIZE_PAGES; i++) {
+> @@ -2164,21 +2164,20 @@ decay_va_pool_node(struct vmap_node *vn, bool full_decay)
+>  		list_replace_init(&vn->pool[i].head, &tmp_list);
+>  		spin_unlock(&vn->pool_lock);
+>  
+> -		len = n_decay = vn->pool[i].len;
+> +		pool_len = n_decay = vn->pool[i].len;
+>  		WRITE_ONCE(vn->pool[i].len, 0);
+>  
+>  		/* Decay a pool by ~25% out of left objects. */
+>  		if (!full_decay)
+>  			n_decay >>= 2;
+> -		len -= n_decay;
+> +		pool_len -= n_decay;
+>  
+>  		list_for_each_entry_safe(va, nva, &tmp_list, list) {
+> -			if (!n_decay)
+> +			if (!n_decay--)
+>  				break;
+>  
+>  			list_del_init(&va->list);
+>  			merge_or_add_vmap_area(va, &decay_root, &decay_list);
+> -			n_decay--;
+>  		}
+>  
+>  		/*
+> @@ -2190,7 +2189,7 @@ decay_va_pool_node(struct vmap_node *vn, bool full_decay)
+>  		if (!list_empty(&tmp_list)) {
+>  			spin_lock(&vn->pool_lock);
+>  			list_replace_init(&tmp_list, &vn->pool[i].head);
+> -			vn->pool[i].len = len;
+> +			vn->pool[i].len = pool_len;
+>  			spin_unlock(&vn->pool_lock);
+>  		}
+>  	}
+> <snip>
+> 
+> on top of this?
+> 
+> a) decay in "if" statement, no need extra line;
+> b) rename len to something obvious - pool_len.
+
+All look good, will add them to this patch 3 of v2. Thanks a lot.
+
