@@ -1,121 +1,104 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B08221F30
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813B1221F30
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744876404; cv=none; b=YpZB7NKeSUyxIqcKjIMddJGOopjwvIbVhT/7aRKckCWDgx37K93G9iew3pzz2EwsBKt+63pLBHWG3PnN4xWa1HAy18cv60JzjUrqlEGgD9Roe1pnFOipKbUg0UcPCCzUBzzA876XZ1w1enLuLQe9FDlmCKTSY7bZBnZsiSuvfrA=
+	t=1744876411; cv=none; b=kevw21RBl35v/b6OIieNUxfKIH7YeQHRPUl/YUSlrZ8tTrzkPc7UY4n39IlKXssa5XQYHD7AsDE4ewq/lpW43Zajti3TrX5QpnmyzibaU1mRQCg8a1ULlF32CkWiuIs9A9aWIGrAMxZFc4F3vBkOEwbgzCKNPUO+0d1y63ucnjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744876404; c=relaxed/simple;
-	bh=pOcJBUPrO3IHcq4bNWfUkk9NpnjdVXjrL/ybQbsKrdM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fHMVEyxJmRNR9DENyxFVGr0K9jQR76sT0wyGPA+6wCdydynbdXqA0AwEg44mLN6LeKDFrXASw3nKd82QXjYjPfaZSMjVTgBpfRBokBv7GRsxNyfQybpdJAa3EbrHOLb3MMiStdtsV1fF9wO5Hqa3Vynb6l1kvicp/6Ko74UQt1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pa2s6fQT; arc=none smtp.client-ip=209.85.208.43
+	s=arc-20240116; t=1744876411; c=relaxed/simple;
+	bh=Q3+YaSQtPKXC0cuE5RjCpyH+Pf71thLokmXHjSKya4A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XBe7CAviEDieRh842abjG6meVgigDtoRQSNKDMAzaWe1ea9C0me344MW1ucXiNBxuDZ5jAhniPsblgYCNpVxDOBojsH5+W8e+UOx6yM1/y9Vq9hQM60OcM8c+lHaBJJRyW1bQU6r8wTZNtCW+L0qR2tR66OGdW0pQf0lRyR5AEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VFkf4dvL; arc=none smtp.client-ip=209.85.208.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pa2s6fQT"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e82396baaeso95381a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:53:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VFkf4dvL"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3105ef2a070so4756371fa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:53:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744876401; x=1745481201; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ldtjm18t2KR0i37dRzkUBtGT6ZljIzsaE7OH3uDOb4U=;
-        b=pa2s6fQTLPjxHm58e8D2FvB8+0xZdkb9JDmjKuLZi7ftYF7DH/PnX6jxfckks8o3iJ
-         nh1VZUJS7FzPsGOPrlj4lvcNOimg56QX0yxnokCGM+f9W5gkIri4a+KLh6/YYgn7uKrV
-         VIQdLtSBaoFemjbdxzXMbMMlIFPe8qlkaq7AKAjAwOZKePUjHEiG70dNsWg2MT1QHmhO
-         M7aZvLjLbnDQAjOPOHmGvatbsd8Uy646MuPP2c3fDq8Mtv+Q+o2jF8LlnqyG87QyHq0I
-         VJ9CjeTbph/HBfn84cUZLegXctBvj2iGhQnjFQvPhXUjPh42+UoZewXIlnpPQczDHn9/
-         Zxlg==
+        d=linaro.org; s=google; t=1744876408; x=1745481208; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q3+YaSQtPKXC0cuE5RjCpyH+Pf71thLokmXHjSKya4A=;
+        b=VFkf4dvLKxbatPWImfVfFhvjNhlfjCdJu7/w1DE/80tzosAQTYLLi89ink/uzEnaIo
+         r0vA+MsYx5HR0C/6oUwgGNuR41Oo1+qP5QiOPA8eMcEqCYav84trJCq2k6Ga9u+CdltA
+         RgINGCtHhm2WTDKsuxMiVM7vOPEP5zyClelnQ/vyvrrrbcfTNDLS+bpLx7RFkv3nE868
+         nOAljNlMP3F437YD7qkAuJZ0VOVig8ZXIMmqaND6hSqsTjedZqvdAJyIrWXW/J8xS2be
+         C6GPVc+i5gJsl9q0/Jm6WI8vo5phXiHz8QvNQT22k3ZBlmJj7qpAK9w6N+wBxss1mF1z
+         MeFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744876401; x=1745481201;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ldtjm18t2KR0i37dRzkUBtGT6ZljIzsaE7OH3uDOb4U=;
-        b=krXv4yxCxU/SQy2vqUA2O/uEX7305TaIU/YcwXnj94LWuxprU9G2anCZ/SKOhOUgi8
-         kT/QSKv6OfpHi1TyvqIYdO6ugckr15BrKmY1r24iFQNRLSVp9ZG7bmUXMLOTkP6TL/OJ
-         +k4YhMxyEMAei72S2Z3alt6rOtA/V6Fe9R+xJgQZE95BfUuZFdRUzEy6F/qkDLLUcUIu
-         BrT7XDJGwPEae9YaAOjaQvP9ANyCd/Wy1M2YswWa6MOGgKL/aDmpA7AjikwFFupF4aKk
-         uYeML7MLeWsAwglqk3pU/uMAy5dLUYaoBrHh83JXP+qD4vpYYnDknYpK21f1NqyCL9bz
-         duzg==
-X-Forwarded-Encrypted: i=1; AJvYcCVSojSdtr8lF8E5gCbCPJVkiO8gpZ6jiTsuOlggOIlHcz3t6efLf+1g59NNPam8SsFov5H98Wtl2UjAShw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAenznbxJDsSBrkgLS6TJZJV1kRTfr5JT0FAYaYtBHZ4VlWxcr
-	04+xjViLI9EbrWsDhwJEPgeiWIhPjGKaPwl/5f+gpfsSgha6G9TCPodvKqkK5nvEX5gGzWBlHBZ
-	k
-X-Gm-Gg: ASbGncv18V/54HrKNRVcePkcinFGmUUcJamxjSF7diLY3FLXWNtRxlojvln7Vm8PZ/I
-	iLyxvXXk/8YKlC0vKdwRlQI57xxAkx8I7Z/R0UMOw6tYdFrhxwf5ft8WI1fEtdNZvPPdIG93Lu/
-	0CcujMuagq3uURYL6/fZw5ivW9E55pn2YNOR4qcShg4DSoWQdHJQn4Ec4HlKxyzHxo9RHeAZBc0
-	iGPa+FXH2kPDmsBee7TVusQlQPQHo93iQiRWuwxmG9XlssgsmqSzmglcLoKBi3ozRUa4ce+8S51
-	Zj1GHr8r5VRhI4X+rmTxux9XgfbI/OX5Ii19xFP00KjMFA1dU3uZLff5qxJiJ57oC1lwLr8X+Oe
-	glv5obw==
-X-Google-Smtp-Source: AGHT+IHuV0Ir2ulqdSy8+QnxiDUvWr3BWSdW2/52LujDrmAOVewyJjR5ucyVhKSbc9kdBrxbWkJOjg==
-X-Received: by 2002:a5d:598e:0:b0:39e:cbe0:415f with SMTP id ffacd0b85a97d-39ee5baf496mr1500376f8f.14.1744876016114;
-        Thu, 17 Apr 2025 00:46:56 -0700 (PDT)
-Received: from kuoka.. (46.150.74.144.lvv.nat.volia.net. [46.150.74.144])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae9780a0sm19424565f8f.50.2025.04.17.00.46.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 00:46:54 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] mtd: Do not enable by default during compile testing
-Date: Thu, 17 Apr 2025 09:46:52 +0200
-Message-ID: <20250417074653.81593-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1744876408; x=1745481208;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q3+YaSQtPKXC0cuE5RjCpyH+Pf71thLokmXHjSKya4A=;
+        b=UEfvSuim8QaAOqQu2tKX9x4M2HJ8D7Ag2gIQ+lzkkCUFXA03ycS7IReJgPCrymvIvG
+         nYblh9VkrkFu6Y7DuYxgbLita3FcItC+ATw7nuprxQ9anmqDjgbeTkDswRMIxcZ3ahC7
+         UIIVpQs5DwTk4jHb6G8+Qe+ebf8/vpRCLTnqqC9PGlXfPu0jjMV4gd9B2t8B4LfR+d/H
+         jkZUlyBN0XPCOQ1kzEM8HD6eX4c2JoRClP0H1xYnl3xsuOAyUeyG3RosbZIyR/0bpBHf
+         IwQLA7FJb9xanQxwOi744QHRlm9dWWortzLJm5pCZiUKSewooh1C+B0EVfTGh8YJNr3d
+         u4Yw==
+X-Forwarded-Encrypted: i=1; AJvYcCVlfs4SsicVg/GI8rGYdsigE2P2c5rnTH9HstUtbrnPgKSIkdcbahTAwhXHtG2hOSzWpzSoBva6TpRVeqk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsIWemdtx3F5nWQ2C/UyuedCYFfBz8+U8Y+4u90VErS4f7dh0u
+	TSeERtfkePwyAvHpqvTPiW/JBHXfCfcGYdR5Id+i8kT2WoxD659er69rZ9iJAt4Y68vdL4xhJj9
+	rnP6d4yQuJTC03es1b5hKv+9PP4RAGw2xTb/E8g==
+X-Gm-Gg: ASbGnctCDILTf3lqmuF3nPuH90IebIyIAu9mFDK4FCZbe1OZiPTEYdhhyLTaTwX4iQm
+	8Dtb6XmRCjTfYjAEMk8pK84suqIBLb1WShV8RrDE+se3MqbQrfDAdnuzJzOCw1b3JxQ5QLrad0x
+	UiNViYNRrqp3dasn541WZsZg==
+X-Google-Smtp-Source: AGHT+IG6fH8i73HZcByMHNF5RXrO9SAK28PBO/AFODMukbnw4fFfbSNlkijjqFOir4rIjJV1QWIs7u0W5Rh/Tw30EAQ=
+X-Received: by 2002:a2e:be1c:0:b0:30b:e983:9ba0 with SMTP id
+ 38308e7fff4ca-3107f6cd893mr18106361fa.23.1744876407724; Thu, 17 Apr 2025
+ 00:53:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250416-aaeon-up-board-pinctrl-support-v3-0-9ca13aa57312@bootlin.com>
+In-Reply-To: <20250416-aaeon-up-board-pinctrl-support-v3-0-9ca13aa57312@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 17 Apr 2025 09:53:16 +0200
+X-Gm-Features: ATxdqUHbFi-Z7SI6e_TKuBrx9cROKcb5-SqU1LRW63Sr0A6JqXuYgLtul-_YeLE
+Message-ID: <CACRpkdYo8bHYKdkFLLqkCTZzy44pk=xPri=E3ogXP=BiywL9zQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/10] Add pinctrl support for the AAEON UP board FPGA
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, 
+	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Enabling the compile test should not cause automatic enabling of all
-drivers, but only allow to choose to compile them.
+On Wed, Apr 16, 2025 at 4:00=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> This is the third version of this series (rebased on v6.15-rc2).
+>
+> The gpiolib part has been reworked, the gpiochip_add_pin_range() was
+> renamed to gpiochip_add_pin_range_with_pins() and a new pins parameter wa=
+s
+> addded. Two stubs were created to add consecutive or sparse pin range.
+>
+> For the forwarder library, a namespace was added and patches were splitte=
+d
+> to more simpler changes.
+>
+> In the pinctrl core, the function devm_pinctrl_register_mappings() was
+> created.
+>
+> No big changes in the upboard pinctrl driver, only few fixes and
+> improvements.
+>
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 
----
+From a pin control view this looks fine, I expect the whole thing
+to be merged into the GPIO tree, so I'll just ACK the pinctrl
+patches.
 
-For longer rationale:
-https://lore.kernel.org/all/191543a8-2e2e-4ac4-9b2b-d253820a0c9f@app.fastmail.com/
----
- drivers/mtd/devices/Kconfig  | 2 +-
- drivers/mtd/nand/raw/Kconfig | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/mtd/devices/Kconfig b/drivers/mtd/devices/Kconfig
-index ff2f9e55ef28..aed653ce8fa2 100644
---- a/drivers/mtd/devices/Kconfig
-+++ b/drivers/mtd/devices/Kconfig
-@@ -98,7 +98,7 @@ config MTD_MCHP48L640
- config MTD_SPEAR_SMI
- 	tristate "SPEAR MTD NOR Support through SMI controller"
- 	depends on PLAT_SPEAR || COMPILE_TEST
--	default y
-+	default PLAT_SPEAR
- 	help
- 	  This enable SNOR support on SPEAR platforms using SMI controller
- 
-diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
-index b8035df8f732..421b6feec090 100644
---- a/drivers/mtd/nand/raw/Kconfig
-+++ b/drivers/mtd/nand/raw/Kconfig
-@@ -34,7 +34,7 @@ config MTD_NAND_DENALI_DT
- config MTD_NAND_AMS_DELTA
- 	tristate "Amstrad E3 NAND controller"
- 	depends on MACH_AMS_DELTA || COMPILE_TEST
--	default y
-+	default MACH_AMS_DELTA
- 	help
- 	  Support for NAND flash on Amstrad E3 (Delta).
- 
--- 
-2.45.2
-
+Yours,
+Linus Walleij
