@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3358F1EB1BF;
-	Thu, 17 Apr 2025 18:03:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729B32566FF;
+	Thu, 17 Apr 2025 18:03:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744913009; cv=none; b=tLDDjgWoSV28qYC36oGec+413ba1LyY7IbyJJRwmEIeAfOQdnETyd9tej4nzUu2t/OE7vhZWv0DgaYcA+jYOz/Ngs4AE3eDKhqoDL2Dox164md1s/yRIwm93CVQc2s7H9vA4VTVWU1YKtutHuxvVAP4FfXfGuR8H2fFcGaRVkwI=
+	t=1744913010; cv=none; b=j+obMViEZv/8Xm2TUEfJnPR7/cK3igpTf2FvnSY9rC+sx+wNRQGRH2Urrq1gdVD1kTU2GRyuyaEkfkhMxJd60KGQHsx0/OrQP2NSmFNqBrqBETrUnziDIzvO2HFlSn5WvknlShrR/+I3t1O2JYZNdNxX1iXOZFjijQ0hGhjEoAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744913009; c=relaxed/simple;
-	bh=xPztG5wmdGiJK341Tf8Fn890tlmGDPg15aKO2BJHYaE=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=gHZcmOQ/VJbt3JI1gyDibp+n/QHX37oss+uboN34oTPUHPrAsyWXZJS3IPiYnTDAMWPlsA39eGylom5VeMiL+FE37YtDF6n1DT7W0uNWQ6W4TZX1m2lQkTKQ/+GZYJ31wsVFq+He7m8scp7IVhWWWdA/4vBsODo5Lc5nJ7yKPME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MVGD7xjF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rbuVZ9Vl; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1744913010; c=relaxed/simple;
+	bh=k9KQF39sL8U9DnczBqy42a8lQJ196/z1UHtJXCTe2Zg=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=Nd7J0toHstaqzkT4VF4t1kv1fr5EO3V2aa5FwoZVaARsJo17c9GoWVTE2MUsym+eFzk+GYULxmB0tLezuefbj02Unn+js2yEJCOxr26wlt2pD0AydZ7RJUfdwH4p2hXefgrQNgj3YTGuWv4t2iyLnXbL7PTBnOiFo/yeyM+eDOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PiQOdX+D; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RaiK5M8B; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MVGD7xjF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rbuVZ9Vl"
-Date: Thu, 17 Apr 2025 18:03:24 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PiQOdX+D";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RaiK5M8B"
+Date: Thu, 17 Apr 2025 18:03:26 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1744913006;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=uhEx+dFtU5a+nA+flpSZ6OqqcO6apZEwjUbR4CHkMUI=;
-	b=MVGD7xjFUQ5qRNujvy2LzYhZu8AcG7TRVomoZhGdTSWYmR/nlkY1qtj/2u1eLD5I7/xo5Y
-	ZV286W42fm1BH/SsHcPYJJDWG9UuEhruC/Q7crJJzRvtNEJloAL4Haqp4H38jdw72U2olN
-	YqXr5sTLLriLLOZRrpLEuFyK45fz2KhZZgYNMZKClahXn8jOS/+9ouHbaa17YzXtF6eUGJ
-	a0o83B/bRGG7TP8acEYSYeQp7nb2Y6l0VGBNvbSvUHJ3RjoZXW/gI8cYHzDNcaWI//9Mvp
-	kbBzdjiuX9vEYPHiQ5Xz0bc+N0XzEMN7V626nh99hSp1TYJCS1K82AP/QOyHjw==
+	bh=sJbQuqoWP+GsAY3WuVYjsUpzEgTzSBa5tJXKUhExR5c=;
+	b=PiQOdX+DMM+7cfj3njvqo7GQubjtz2C/UEK/5z8ZcvUzrQ9W00laFvOTyVEJYCVWj/snO8
+	/0saBjeWTMbx5bT20aWaKJlkaJPvZSmK4L47qEluQLfq0H7CD8F9ODCubKoHVH1y4g0hTN
+	A8Sjqu9y0gkjJw4Je6zqcoKSLr87tR/9f0Bv4LHLBbyeqAkVvJ9A4uPiZFcQPECgH4wsE5
+	ltUN1KVDI3C8sm29QiahyvtwHUy8lVeZ1LcfnnHXe45hDyUhaEoqQlVsvUS/A1Vsf30/Dl
+	3y+stl5UauL8elXZ6GRl9Vmp0auuWmyemYvTNJFwMBVYVUueuomGjyvP1IaIrw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1744913006;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=uhEx+dFtU5a+nA+flpSZ6OqqcO6apZEwjUbR4CHkMUI=;
-	b=rbuVZ9Vl0MjvhCMZsxzbClAHC7JQ9rTw3CRwLiD4m3WuPDT5QPJQuerPYPDKcTYFOATCSl
-	olbqwiy7yL2mUQCw==
+	bh=sJbQuqoWP+GsAY3WuVYjsUpzEgTzSBa5tJXKUhExR5c=;
+	b=RaiK5M8BUDY99VdSnof0Gxv08iSelqHSOKPxmwJ2p3qIZ2dooWIcrLSkRJP+KYD7Ap34vZ
+	QlFyj8MlfoPN31BA==
 From: "tip-bot2 for Dave Hansen" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/mm: Preallocate all PAE page tables
+Subject: [tip: x86/mm] x86/mm: Fix up comments around PMD preallocation
 Cc: Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
 Precedence: bulk
@@ -49,7 +49,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174491300499.31282.12749824705521273948.tip-bot2@tip-bot2>
+Message-ID: <174491300601.31282.7910421211046512242.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,57 +59,48 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/mm branch of tip:
 
-Commit-ID:     454e65b4fb38ddeea62472649ef16b5e8d285015
-Gitweb:        https://git.kernel.org/tip/454e65b4fb38ddeea62472649ef16b5e8d285015
+Commit-ID:     82f120010f3b86c2f9c1279452c1ecab7bc117d2
+Gitweb:        https://git.kernel.org/tip/82f120010f3b86c2f9c1279452c1ecab7bc117d2
 Author:        Dave Hansen <dave.hansen@linux.intel.com>
-AuthorDate:    Mon, 14 Apr 2025 10:32:41 -07:00
+AuthorDate:    Mon, 14 Apr 2025 10:32:40 -07:00
 Committer:     Dave Hansen <dave.hansen@linux.intel.com>
 CommitterDate: Thu, 17 Apr 2025 10:39:25 -07:00
 
-x86/mm: Preallocate all PAE page tables
+x86/mm: Fix up comments around PMD preallocation
 
-Finally, move away from having PAE kernels share any PMDs across
-processes.
-
-This was already the default on PTI kernels which are  the common
-case.
+The "paravirt environment" is no longer in the tree. Axe that part of the
+comment. Also add a blurb to remind readers that "USER_PMDS" refer to
+the PTI user *copy* of the page tables, not the user *portion*.
 
 Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lore.kernel.org/all/20250414173241.1288CAB4%40davehans-spike.ostc.intel.com
+Link: https://lore.kernel.org/all/20250414173240.5B1AB322%40davehans-spike.ostc.intel.com
 ---
- arch/x86/mm/pgtable.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ arch/x86/mm/pgtable.c |  9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index ca07db5..f4fa8fa 100644
+index 027e1d3..ca07db5 100644
 --- a/arch/x86/mm/pgtable.c
 +++ b/arch/x86/mm/pgtable.c
-@@ -80,16 +80,11 @@ struct mm_struct *pgd_page_get_mm(struct page *page)
- 
- static void pgd_ctor(struct mm_struct *mm, pgd_t *pgd)
- {
--	/* If the pgd points to a shared pagetable level (either the
--	   ptes in non-PAE, or shared PMD in PAE), then just copy the
--	   references from swapper_pg_dir. */
--	if (CONFIG_PGTABLE_LEVELS == 2 ||
--	    (CONFIG_PGTABLE_LEVELS == 3 && SHARED_KERNEL_PMD) ||
--	    CONFIG_PGTABLE_LEVELS >= 4) {
-+	/* PAE preallocates all its PMDs.  No cloning needed. */
-+	if (!IS_ENABLED(CONFIG_X86_PAE))
- 		clone_pgd_range(pgd + KERNEL_PGD_BOUNDARY,
- 				swapper_pg_dir + KERNEL_PGD_BOUNDARY,
- 				KERNEL_PGD_PTRS);
--	}
- 
- 	/* List used to sync kernel mapping updates */
- 	pgd_set_mm(pgd, mm);
-@@ -122,8 +117,7 @@ static void pgd_dtor(pgd_t *pgd)
+@@ -121,16 +121,17 @@ static void pgd_dtor(pgd_t *pgd)
+  * processor notices the update.  Since this is expensive, and
   * all 4 top-level entries are used almost immediately in a
   * new process's life, we just pre-populate them here.
+- *
+- * Also, if we're in a paravirt environment where the kernel pmd is
+- * not shared between pagetables (!SHARED_KERNEL_PMDS), we allocate
+- * and initialize the kernel pmds here.
   */
--#define PREALLOCATED_PMDS	(static_cpu_has(X86_FEATURE_PTI) ? \
--					PTRS_PER_PGD : KERNEL_PGD_BOUNDARY)
-+#define PREALLOCATED_PMDS	PTRS_PER_PGD
+ #define PREALLOCATED_PMDS	(static_cpu_has(X86_FEATURE_PTI) ? \
+ 					PTRS_PER_PGD : KERNEL_PGD_BOUNDARY)
  #define MAX_PREALLOCATED_PMDS	PTRS_PER_PGD
  
  /*
++ * "USER_PMDS" are the PMDs for the user copy of the page tables when
++ * PTI is enabled. They do not exist when PTI is disabled.  Note that
++ * this is distinct from the user _portion_ of the kernel page tables
++ * which always exists.
++ *
+  * We allocate separate PMDs for the kernel part of the user page-table
+  * when PTI is enabled. We need them to map the per-process LDT into the
+  * user-space page-table.
