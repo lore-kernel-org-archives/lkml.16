@@ -1,253 +1,346 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7961D215063;
-	Thu, 17 Apr 2025 21:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E18020FAB1;
+	Thu, 17 Apr 2025 21:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744927105; cv=none; b=LXLEL6iwH0D+2XMUTZ83Eem5hE7eQsfhdhM2eGNAPJf4rxpXyy5uS4MiLJKf5cQgQtCxT4iZCV6kSWUuvblDXJictIhxgZD3l+M+fHt/aHdQ/4gj6Uv9xviTA1pajNlM04VTD8j39Y6V5KkiS6zotYi8qzsGEK9MAJbjOtxcl5Y=
+	t=1744927131; cv=none; b=T+gHujW9gSqppCfmFrRrtStbtzxx9PUYFTiqB8zL9n+ffTAVi4noZ9LVr4rlfShHpo3zPibb5wSml4LB92qpOxvJ0WQkbE3iV3hxigzVfyaTHN/pP7bzVj9mEagpZUtts0g3fRS3+Jt44mjXz/SXAQNo6Xfftx+8KaIPfimjHTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744927105; c=relaxed/simple;
-	bh=bYeuAgZ86wBD1ei3lQM5xfSpuEibv4vRhDGU/zzY5XM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Vq06tzeHPOT7k8AQDYlD/b2eXpiCpR6hA338H90zxJmOprUce3X+3CUtMJ03WZY6jSvozUp0RyjAuQ1SxcYIEDkYgXAHiB2oBcO74uSYNDTmPadmfHGzk1nkQzHlZehDqkZGe1aGV2jGW5BZ2lMFymCeVDob7QKrg2W2xPH6lPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=W9p+por9; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1744927131; c=relaxed/simple;
+	bh=J9XB0Q4DA4mZ2mIvCD89MBke9cSxQDueC8x3saNRq/0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ncjOBvpqbM4zs5adoRaldAKFAfOH2uZs0Rrlom0EuHAZJNaHZkhuU64RZ5tYUWAHC72Z+nk2ZMlp2epmdFHBHmAKiE0ORsGEXTYG9mFWLPCH+5aZskg//bUY1WT6d0XDi1JmeupgE6t+HR2FcxQTTUjWynOqhSTto2DfIdTPJCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VtaoKBki; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="W9p+por9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744927101;
-	bh=bYeuAgZ86wBD1ei3lQM5xfSpuEibv4vRhDGU/zzY5XM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=W9p+por95qgpqE83Xz59vfAfoq8S6/nhTkzuroUkLvafTxD/gv6ec9aTXZmKX049q
-	 Duo1u4G86L6BF6A63jsdvh5oQI2jqXp+Y8g5MWpZiRGaU/q+50mUsLjuxPYoWTPEmO
-	 5JRV/kMQF2RgSM3tig7e99i6aRowL9LnsTAgG0qqFEq79owzB7rFEYy4QCbUWA7tdH
-	 CyjK9HW1wKF0jJ5TG4+VrlCV+8qzg5vkFkhArcFTwXhV5TNyygZK86h6JsH/QiHty4
-	 Hpk79oQ9NUd8pJEuCUxwIqOs8iqNngAzc7aGRXnJWF4acRGJnen4FzcFeHyVHApId9
-	 Ta+a3CezN6yUQ==
-Received: from [192.168.13.3] (unknown [IPv6:2606:6d00:15:9913::c73])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id CA94217E3689;
-	Thu, 17 Apr 2025 23:58:20 +0200 (CEST)
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Date: Thu, 17 Apr 2025 17:58:01 -0400
-Subject: [PATCH v9 4/4] media: rkvdec: h264: Support High 10 and 4:2:2
- profiles
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VtaoKBki"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 851D6C4CEE4;
+	Thu, 17 Apr 2025 21:58:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744927131;
+	bh=J9XB0Q4DA4mZ2mIvCD89MBke9cSxQDueC8x3saNRq/0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VtaoKBkiUsJ/MFU64a9i4oQ2p0kidYkHz1gPMkUgno1/qUgr+MY2RR8krHUPh5ytl
+	 JemV7UBuBlSNTXCl4kVbQIWtp72j2NmOc3DTA1b6sncUN8ImDnbo3FALwoFiWXh3Ei
+	 g1ovCbNAnxEPI4phvjg8+qD6ZTcYrc2e3iUh0H3pQ+tLAPUx+uV50LejhQpfyhyE3+
+	 VxfEbta+SnGWnSxQxPvfVNrsrTzpgKpfbX9HBTylDRdeUELCZpHQfN9YUI91bdvMS6
+	 b9tcCxrWnatKqD3m7U05ZvGMrthqQScTnqPYYaouXiELv2de5cEbJZLlqe1xCJ7/id
+	 47m/qV51JjKlg==
+Date: Thu, 17 Apr 2025 18:58:48 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: arnaldo.melo@gmail.com, Namhyung Kim <namhyung@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Quentin Monnet <qmo@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/1] tools build: Remove libbfd from the set of expected
+ libraries to build perf
+Message-ID: <aAF5mIul8qhDUYz8@x1>
+References: <aABlDyhAYz95vOM1@x1>
+ <CAP-5=fXeykYoqLJ8t6Gq31cO8eYGOnppgc86PHfWnBoz4xgw-g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250417-b4-rkvdec_h264_high10_and_422_support-v9-4-0e8738ccb46b@collabora.com>
-References: <20250417-b4-rkvdec_h264_high10_and_422_support-v9-0-0e8738ccb46b@collabora.com>
-In-Reply-To: <20250417-b4-rkvdec_h264_high10_and_422_support-v9-0-0e8738ccb46b@collabora.com>
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
- linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Nicolas Dufresne <nicolas.dufresne@collabora.com>, 
- Jonas Karlman <jonas@kwiboo.se>, 
- Christopher Obbard <christopher.obbard@linaro.org>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXeykYoqLJ8t6Gq31cO8eYGOnppgc86PHfWnBoz4xgw-g@mail.gmail.com>
 
-From: Jonas Karlman <jonas@kwiboo.se>
+On Thu, Apr 17, 2025 at 08:49:35AM -0700, Ian Rogers wrote:
+> On Wed, Apr 16, 2025 at 7:18 PM <arnaldo.melo@gmail.com> wrote:
+> >
+> > The tools/build/feature/test-all.c file tries to build with the most
+> > common set of libraries expected to be present to build perf, and these
+> > days libbfd (binutils) isn't one since it was made opt-in via
+> > BUILD_NONDISTRO=1 on the make command line as it has license issues.
+> >
+> > Fix this by removing the tests from there.
+> >
+> > Fixes: dd317df072071903 ("perf build: Make binutil libraries opt in")
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Ian Rogers <irogers@google.com>
+> > Cc: James Clark <james.clark@linaro.org>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Kan Liang <kan.liang@linux.intel.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Quentin Monnet <qmo@kernel.org>
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-Add support and enable decoding of H264 High 10 and 4:2:2 profiles.
-
-Decoded CAPTURE buffer width is aligned to 64 pixels to accommodate HW
-requirement of 10-bit format buffers, fixes decoding of all the 4:2:2
-and 10bit 4:2:2 flusters tests except two stream that present some
-visual artifacts.
-
-- Hi422FREXT17_SONY_A
-- Hi422FREXT19_SONY_A
-
-The get_image_fmt() ops is implemented to select an image format
-required for the provided SPS control, and returns RKVDEC_IMG_FMT_ANY
-for other controls.
-
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Tested-by: Christopher Obbard <chris.obbard@collabora.com>
-Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
----
- drivers/staging/media/rkvdec/rkvdec-h264.c | 37 ++++++++++++++++++++++-------
- drivers/staging/media/rkvdec/rkvdec.c      | 38 +++++++++++++++++++++++-------
- drivers/staging/media/rkvdec/rkvdec.h      |  3 +++
- 3 files changed, 60 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
-index 8bce8902b8dda39bb2058c8504bd52ccae6b4204..d14b4d173448dbcce4ab978a83806064b100ca24 100644
---- a/drivers/staging/media/rkvdec/rkvdec-h264.c
-+++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
-@@ -1027,24 +1027,42 @@ static int rkvdec_h264_adjust_fmt(struct rkvdec_ctx *ctx,
- 	return 0;
- }
+Thanks.
  
-+static enum rkvdec_image_fmt rkvdec_h264_get_image_fmt(struct rkvdec_ctx *ctx,
-+						       struct v4l2_ctrl *ctrl)
-+{
-+	const struct v4l2_ctrl_h264_sps *sps = ctrl->p_new.p_h264_sps;
-+
-+	if (ctrl->id != V4L2_CID_STATELESS_H264_SPS)
-+		return RKVDEC_IMG_FMT_ANY;
-+
-+	if (sps->bit_depth_luma_minus8 == 0) {
-+		if (sps->chroma_format_idc == 2)
-+			return RKVDEC_IMG_FMT_422_8BIT;
-+		else
-+			return RKVDEC_IMG_FMT_420_8BIT;
-+	} else if (sps->bit_depth_luma_minus8 == 2) {
-+		if (sps->chroma_format_idc == 2)
-+			return RKVDEC_IMG_FMT_422_10BIT;
-+		else
-+			return RKVDEC_IMG_FMT_420_10BIT;
-+	}
-+
-+	return RKVDEC_IMG_FMT_ANY;
-+}
-+
- static int rkvdec_h264_validate_sps(struct rkvdec_ctx *ctx,
- 				    const struct v4l2_ctrl_h264_sps *sps)
- {
- 	unsigned int width, height;
- 
--	/*
--	 * TODO: The hardware supports 10-bit and 4:2:2 profiles,
--	 * but it's currently broken in the driver.
--	 * Reject them for now, until it's fixed.
--	 */
--	if (sps->chroma_format_idc > 1)
--		/* Only 4:0:0 and 4:2:0 are supported */
-+	if (sps->chroma_format_idc > 2)
-+		/* Only 4:0:0, 4:2:0 and 4:2:2 are supported */
- 		return -EINVAL;
- 	if (sps->bit_depth_luma_minus8 != sps->bit_depth_chroma_minus8)
- 		/* Luma and chroma bit depth mismatch */
- 		return -EINVAL;
--	if (sps->bit_depth_luma_minus8 != 0)
--		/* Only 8-bit is supported */
-+	if (sps->bit_depth_luma_minus8 != 0 && sps->bit_depth_luma_minus8 != 2)
-+		/* Only 8-bit and 10-bit is supported */
- 		return -EINVAL;
- 
- 	width = (sps->pic_width_in_mbs_minus1 + 1) * 16;
-@@ -1190,4 +1208,5 @@ const struct rkvdec_coded_fmt_ops rkvdec_h264_fmt_ops = {
- 	.stop = rkvdec_h264_stop,
- 	.run = rkvdec_h264_run,
- 	.try_ctrl = rkvdec_h264_try_ctrl,
-+	.get_image_fmt = rkvdec_h264_get_image_fmt,
- };
-diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
-index 6c6fe411f48772419e1810d869ab40d168848e65..26f8b8cfcf64f872de73b49b9da9df22ce22d98b 100644
---- a/drivers/staging/media/rkvdec/rkvdec.c
-+++ b/drivers/staging/media/rkvdec/rkvdec.c
-@@ -186,9 +186,10 @@ static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
- 	{
- 		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_PROFILE,
- 		.cfg.min = V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_BASELINE,
--		.cfg.max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
-+		.cfg.max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH_422_INTRA,
- 		.cfg.menu_skip_mask =
--			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
-+			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED) |
-+			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_HIGH_444_PREDICTIVE),
- 		.cfg.def = V4L2_MPEG_VIDEO_H264_PROFILE_MAIN,
- 	},
- 	{
-@@ -203,11 +204,23 @@ static const struct rkvdec_ctrls rkvdec_h264_ctrls = {
- 	.num_ctrls = ARRAY_SIZE(rkvdec_h264_ctrl_descs),
- };
- 
--static const struct rkvdec_decoded_fmt_desc rkvdec_h264_vp9_decoded_fmts[] = {
-+static const struct rkvdec_decoded_fmt_desc rkvdec_h264_decoded_fmts[] = {
- 	{
- 		.fourcc = V4L2_PIX_FMT_NV12,
- 		.image_fmt = RKVDEC_IMG_FMT_420_8BIT,
- 	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_NV15,
-+		.image_fmt = RKVDEC_IMG_FMT_420_10BIT,
-+	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_NV16,
-+		.image_fmt = RKVDEC_IMG_FMT_422_8BIT,
-+	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_NV20,
-+		.image_fmt = RKVDEC_IMG_FMT_422_10BIT,
-+	},
- };
- 
- static const struct rkvdec_ctrl_desc rkvdec_vp9_ctrl_descs[] = {
-@@ -230,21 +243,28 @@ static const struct rkvdec_ctrls rkvdec_vp9_ctrls = {
- 	.num_ctrls = ARRAY_SIZE(rkvdec_vp9_ctrl_descs),
- };
- 
-+static const struct rkvdec_decoded_fmt_desc rkvdec_vp9_decoded_fmts[] = {
-+	{
-+		.fourcc = V4L2_PIX_FMT_NV12,
-+		.image_fmt = RKVDEC_IMG_FMT_420_8BIT,
-+	},
-+};
-+
- static const struct rkvdec_coded_fmt_desc rkvdec_coded_fmts[] = {
- 	{
- 		.fourcc = V4L2_PIX_FMT_H264_SLICE,
- 		.frmsize = {
--			.min_width = 48,
-+			.min_width = 64,
- 			.max_width = 4096,
--			.step_width = 16,
-+			.step_width = 64,
- 			.min_height = 48,
- 			.max_height = 2560,
- 			.step_height = 16,
- 		},
- 		.ctrls = &rkvdec_h264_ctrls,
- 		.ops = &rkvdec_h264_fmt_ops,
--		.num_decoded_fmts = ARRAY_SIZE(rkvdec_h264_vp9_decoded_fmts),
--		.decoded_fmts = rkvdec_h264_vp9_decoded_fmts,
-+		.num_decoded_fmts = ARRAY_SIZE(rkvdec_h264_decoded_fmts),
-+		.decoded_fmts = rkvdec_h264_decoded_fmts,
- 		.subsystem_flags = VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF,
- 	},
- 	{
-@@ -259,8 +279,8 @@ static const struct rkvdec_coded_fmt_desc rkvdec_coded_fmts[] = {
- 		},
- 		.ctrls = &rkvdec_vp9_ctrls,
- 		.ops = &rkvdec_vp9_fmt_ops,
--		.num_decoded_fmts = ARRAY_SIZE(rkvdec_h264_vp9_decoded_fmts),
--		.decoded_fmts = rkvdec_h264_vp9_decoded_fmts,
-+		.num_decoded_fmts = ARRAY_SIZE(rkvdec_vp9_decoded_fmts),
-+		.decoded_fmts = rkvdec_vp9_decoded_fmts,
- 	}
- };
- 
-diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
-index e466a2753ccfc13738e0a672bc578e521af2c3f2..9a9f4fced7a184b952d341d75c7faedaa75163d6 100644
---- a/drivers/staging/media/rkvdec/rkvdec.h
-+++ b/drivers/staging/media/rkvdec/rkvdec.h
-@@ -80,6 +80,9 @@ struct rkvdec_coded_fmt_ops {
- enum rkvdec_image_fmt {
- 	RKVDEC_IMG_FMT_ANY = 0,
- 	RKVDEC_IMG_FMT_420_8BIT,
-+	RKVDEC_IMG_FMT_420_10BIT,
-+	RKVDEC_IMG_FMT_422_8BIT,
-+	RKVDEC_IMG_FMT_422_10BIT,
- };
- 
- struct rkvdec_decoded_fmt_desc {
+> There is a wider set of cleanups that remove BUILD_NONDISTRO and
+> libbfd that I posted back in January:
+> https://lore.kernel.org/lkml/20250122174308.350350-1-irogers@google.com/
 
--- 
-2.49.0
+I thought that discussion hadn't come to a conclusion, then I was in
+vacation in January + LSFMM/BPF, lost track of it, will read your
+message below and look at it again.
 
+Its just that I recreated my toolbox container for building perf to a
+fedora:42 based one and went on trying to build it from the base system
+that gets installed in such containers till the point where I found the
+above problem.
+
+Now doing 'make -C tools/perf build-test' I'm getting this after the
+above patch:
+
+            make_nondistro_O: cd . && make BUILD_NONDISTRO=1 FEATURES_DUMP=/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.NssFD0ssxu DESTDIR=/tmp/tmp.oEuROiOLtI
+cd . && make BUILD_NONDISTRO=1 FEATURES_DUMP=/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.NssFD0ssxu DESTDIR=/tmp/tmp.oEuROiOLtI
+  BUILD:   Doing 'make -j32' parallel build
+Warning: Kernel ABI header differences:
+  diff -u tools/include/uapi/linux/bits.h include/uapi/linux/bits.h
+  diff -u tools/include/linux/bits.h include/linux/bits.h
+  diff -u tools/include/vdso/unaligned.h include/vdso/unaligned.h
+  diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
+Makefile.config:952: Old version of libbfd/binutils things like PE executable profiling will not be available
+Makefile.config:968: No libllvm 13+ found, slower source file resolution, please install llvm-devel/llvm-dev
+Makefile.config:1147: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
+
+  GEN     /tmp/tmp.NssFD0ssxu/common-cmds.h
+<SNIP>
+In file included from util/disasm_bpf.c:18:
+/home/acme/git/perf-tools-next/tools/include/tools/dis-asm-compat.h:10:6: error: redeclaration of ‘enum disassembler_style’
+   10 | enum disassembler_style {DISASSEMBLER_STYLE_NOT_EMPTY};
+      |      ^~~~~~~~~~~~~~~~~~
+In file included from util/disasm_bpf.c:15:
+/usr/include/dis-asm.h:53:6: note: originally defined here
+   53 | enum disassembler_style
+      |      ^~~~~~~~~~~~~~~~~~
+/home/acme/git/perf-tools-next/tools/include/tools/dis-asm-compat.h: In function ‘init_disassemble_info_compat’:
+/home/acme/git/perf-tools-next/tools/include/tools/dis-asm-compat.h:50:9: error: too few arguments to function ‘init_disassemble_info’; expected 4, have 3
+   50 |         init_disassemble_info(info, stream,
+      |         ^~~~~~~~~~~~~~~~~~~~~
+/usr/include/dis-asm.h:482:13: note: declared here
+  482 | extern void init_disassemble_info (struct disassemble_info *dinfo, void *stream,
+      |             ^~~~~~~~~~~~~~~~~~~~~
+util/disasm_bpf.c: In function ‘symbol__disassemble_bpf’:
+util/disasm_bpf.c:109:36: error: incompatible type for argument 1 of ‘disassembler’
+  109 |         disassemble = disassembler(bfdf);
+      |                                    ^~~~
+      |                                    |
+      |                                    bfd *
+/usr/include/dis-asm.h:411:63: note: expected ‘enum bfd_architecture’ but argument is of type ‘bfd *’
+  411 | extern disassembler_ftype disassembler (enum bfd_architecture arc,
+      |                                         ~~~~~~~~~~~~~~~~~~~~~~^~~
+util/disasm_bpf.c:109:23: error: too few arguments to function ‘disassembler’; expected 4, have 1
+  109 |         disassemble = disassembler(bfdf);
+      |                       ^~~~~~~~~~~~
+/usr/include/dis-asm.h:411:27: note: declared here
+  411 | extern disassembler_ftype disassembler (enum bfd_architecture arc,
+      |                           ^~~~~~~~~~~~
+make[6]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:86: /tmp/tmp.NssFD0ssxu/util/disasm_bpf.o] Error 1
+make[6]: *** Waiting for unfinished jobs....
+  CC      /tmp/tmp.NssFD0ssxu/bench/mem-memcpy-x86-64-asm.o
+<SNIP>
+make[5]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:142: util] Error 2
+make[4]: *** [Makefile.perf:798: /tmp/tmp.NssFD0ssxu/perf-util-in.o] Error 2
+make[4]: *** Waiting for unfinished jobs....
+  LD      /tmp/tmp.NssFD0ssxu/tests/workloads/perf-test-in.o
+  LD      /tmp/tmp.NssFD0ssxu/tests/perf-test-in.o
+  LD      /tmp/tmp.NssFD0ssxu/perf-test-in.o
+  LD      /tmp/tmp.NssFD0ssxu/perf-in.o
+  CC      /tmp/tmp.NssFD0ssxu/pmu-events/pmu-events.o
+  LD      /tmp/tmp.NssFD0ssxu/pmu-events/pmu-events-in.o
+make[3]: *** [Makefile.perf:290: sub-make] Error 2
+make[2]: *** [Makefile:76: all] Error 2
+make[1]: *** [tests/make:341: make_nondistro_O] Error 1
+make: *** [Makefile:109: build-test] Error 2
+make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
+
+- Arnaldo
+
+> These changes are carried in:
+> https://github.com/googleprodkernel/linux-perf/commits/google_tools_master/
+> The remaining use of libbfd for BPF JIT code disassembly is converted
+> to using either capstone or LLVM:
+> https://lore.kernel.org/lkml/20250122174308.350350-11-irogers@google.com/
+> Namhyung had concerns over code like:
+> https://github.com/googleprodkernel/linux-perf/blob/google_tools_master/tools/perf/util/capstone.c#L23-L132
+> where structs and enums derived from pahole are declared rather than
+> gathered from a #include. Doing things this way was deliberate in the
+> patch series so that the code could assume capstone or llvm support
+> may be present, falling back when not, and that the build wouldn't
+> need to have support for a no header file option that could do nothing
+> (this option would always be to try to fallback on dlopen and nobody
+> could create a less enabled build by forgetting to have a header
+> file). Theoretically the structs and defines, incorporated by way of
+> pahole, could change and a header file dependency would be robust to
+> this. In practice this would be an ABI incompatible change just as
+> changing a function name looked up by dlsym would be. Namhyung took
+> onboard my suggestion that we could reduce the set of structs/enums/..
+> for capstone by disabling the `print_insn_x86` when using dlopen, but
+> I think such a change should warn the user of reduced functionality,
+> cleaning up the warning would just bring back the code as I had
+> proposed:
+> https://lore.kernel.org/lkml/CAP-5=fXL0hXFT+t6gHp2RFd4dKnebSkd+rewudpmdentKGPURw@mail.gmail.com/
+> 
+> I think the patch series should be a priority to land as:
+> 1) there is substantial cleanup wrt libbfd, libiberty, .. with
+> dependencies being factored out into their our C files;
+> 2) the dependencies on libcapstone and libllvm are broken at build
+> time, allowing distributions to ship perf with a more minimal set of
+> dependencies and then later get the faster code or better support by
+> installing the libraries - I think ideally we'd do the same for the
+> libpython dependency as Namhyung has done in his uftrace;
+> 3) the series adds BPF JIT disassembly.
+> 
+> Maybe this can be an occasion we respect the opinions of the patch
+> author and land what may be just a good patch series, but not quite
+> perfect to someone else's definition of perfect. We can always put
+> patches on top to make things perfect and discuss the merits at that
+> moment.
+> 
+> Thanks,
+> Ian
+> 
+> > ---
+> >  tools/build/Makefile.feature   | 12 ------------
+> >  tools/build/feature/Makefile   |  2 +-
+> >  tools/build/feature/test-all.c | 19 -------------------
+> >  tools/perf/Makefile.config     |  1 +
+> >  4 files changed, 2 insertions(+), 32 deletions(-)
+> >
+> > diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+> > index 57bd995ce6afa318..da025a8040a9a154 100644
+> > --- a/tools/build/Makefile.feature
+> > +++ b/tools/build/Makefile.feature
+> > @@ -42,17 +42,12 @@ endef
+> >  #
+> >  #   All the others should have lines in tools/build/feature/test-all.c like:
+> >  #
+> > -#    #define main main_test_disassembler_init_styled
+> > -#    # include "test-disassembler-init-styled.c"
+> > -#    #undef main
+> > -#
+> >  #    #define main main_test_libzstd
+> >  #    # include "test-libzstd.c"
+> >  #    #undef main
+> >  #
+> >  #    int main(int argc, char *argv[])
+> >  #    {
+> > -#      main_test_disassembler_four_args();
+> >  #      main_test_libzstd();
+> >  #      return 0;
+> >  #    }
+> > @@ -60,7 +55,6 @@ endef
+> >  #    If the sample above works, then we end up with these lines in the FEATURE-DUMP
+> >  #    file:
+> >  #
+> > -#    feature-disassembler-four-args=1
+> >  #    feature-libzstd=1
+> >  #
+> >  FEATURE_TESTS_BASIC :=                  \
+> > @@ -71,8 +65,6 @@ FEATURE_TESTS_BASIC :=                  \
+> >          get_current_dir_name            \
+> >          gettid                         \
+> >          glibc                           \
+> > -        libbfd                          \
+> > -        libbfd-buildid                 \
+> >          libelf                          \
+> >          libelf-getphdrnum               \
+> >          libelf-gelf_getnote             \
+> > @@ -102,8 +94,6 @@ FEATURE_TESTS_BASIC :=                  \
+> >          setns                          \
+> >          libaio                         \
+> >          libzstd                                \
+> > -        disassembler-four-args         \
+> > -        disassembler-init-styled       \
+> >          file-handle
+> >
+> >  # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
+> > @@ -119,8 +109,6 @@ FEATURE_TESTS_EXTRA :=                  \
+> >           hello                          \
+> >           libbabeltrace                  \
+> >           libcapstone                    \
+> > -         libbfd-liberty                 \
+> > -         libbfd-liberty-z               \
+> >           libopencsd                     \
+> >           cxx                            \
+> >           llvm                           \
+> > diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> > index b8b5fb183dd40693..76724931f68e1b92 100644
+> > --- a/tools/build/feature/Makefile
+> > +++ b/tools/build/feature/Makefile
+> > @@ -110,7 +110,7 @@ all: $(FILES)
+> >  __BUILD = $(CC) $(CFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.c,$(@F)) $(LDFLAGS)
+> >    BUILD = $(__BUILD) > $(@:.bin=.make.output) 2>&1
+> >    BUILD_BFD = $(BUILD) -DPACKAGE='"perf"' -lbfd -ldl
+> > -  BUILD_ALL = $(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -DPACKAGE='"perf"' -lbfd -ldl -lz -llzma -lzstd
+> > +  BUILD_ALL = $(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -lz -llzma -lzstd
+> >
+> >  __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(@F)) $(LDFLAGS)
+> >    BUILDXX = $(__BUILDXX) > $(@:.bin=.make.output) 2>&1
+> > diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+> > index 03ddaac6f4c4dfa2..1010f233d9c1ad49 100644
+> > --- a/tools/build/feature/test-all.c
+> > +++ b/tools/build/feature/test-all.c
+> > @@ -66,14 +66,6 @@
+> >  # include "test-libslang.c"
+> >  #undef main
+> >
+> > -#define main main_test_libbfd
+> > -# include "test-libbfd.c"
+> > -#undef main
+> > -
+> > -#define main main_test_libbfd_buildid
+> > -# include "test-libbfd-buildid.c"
+> > -#undef main
+> > -
+> >  #define main main_test_backtrace
+> >  # include "test-backtrace.c"
+> >  #undef main
+> > @@ -158,14 +150,6 @@
+> >  # include "test-reallocarray.c"
+> >  #undef main
+> >
+> > -#define main main_test_disassembler_four_args
+> > -# include "test-disassembler-four-args.c"
+> > -#undef main
+> > -
+> > -#define main main_test_disassembler_init_styled
+> > -# include "test-disassembler-init-styled.c"
+> > -#undef main
+> > -
+> >  #define main main_test_libzstd
+> >  # include "test-libzstd.c"
+> >  #undef main
+> > @@ -193,8 +177,6 @@ int main(int argc, char *argv[])
+> >         main_test_libelf_gelf_getnote();
+> >         main_test_libelf_getshdrstrndx();
+> >         main_test_libslang();
+> > -       main_test_libbfd();
+> > -       main_test_libbfd_buildid();
+> >         main_test_backtrace();
+> >         main_test_libnuma();
+> >         main_test_numa_num_possible_cpus();
+> > @@ -213,7 +195,6 @@ int main(int argc, char *argv[])
+> >         main_test_setns();
+> >         main_test_libaio();
+> >         main_test_reallocarray();
+> > -       main_test_disassembler_four_args();
+> >         main_test_libzstd();
+> >         main_test_libtraceevent();
+> >         main_test_libtracefs();
+> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > index 9f08a6e96b351707..7e9aa3d910c2cdcc 100644
+> > --- a/tools/perf/Makefile.config
+> > +++ b/tools/perf/Makefile.config
+> > @@ -917,6 +917,7 @@ ifneq ($(NO_JEVENTS),1)
+> >  endif
+> >
+> >  ifdef BUILD_NONDISTRO
+> > +  $(call feature_check,libbfd)
+> >    ifeq ($(feature-libbfd), 1)
+> >      EXTLIBS += -lbfd -lopcodes
+> >    else
+> > --
+> > 2.49.0
+> >
