@@ -1,135 +1,158 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25BB91C5D70
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 04:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A806C79F2
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 04:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744864543; cv=none; b=Gcuan0yJwKT6iJ1SbJkWzDFAU7Hbh2eCdow2McN3GphqiI5sHxX+5CiBdpsU5cvmzD0oO3q5nVt41145pBNf992JMz5vWO6zwjvmMMDJGjHgkao+E1uwzCLs3guaIM8/UBJuxYlUNDt/i9NdGlMfrCOae4qwi0ustpXdCQ477Ig=
+	t=1744864745; cv=none; b=MnUHA8axEYvZAc7wi8glOffeSPTrwW2Z0j3gqVDLBEJ9DHQfG3w1r38rDbXPnWt81t93ajZ6XhFChcFwb/nuvFiJf446okR7Nq/0Butw0N9gaDFJEmxIQAdtKzYpIWCqQe4yvGMBuXLON9W3v7fnu5Nu17vM4cZQWWjds9/6TDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744864543; c=relaxed/simple;
-	bh=P0naeDKs18PRc4JK0iPeu074AYU0v3jDpdpAb3Mc0Zo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sCdHG9ykEnClLuXRYJTNsvNhAJK80CvMy0+FkG7IBacbhbxojix+3/MByscu+XfSHcnbqMee/kT9jLapZ9VnM3i3O/sOBNXkKFU9rbBWs3JWaeGW7epNarD6+78lAy4PLwcD7msM7JOmVz57sNgxMguXun/1hD+X2XauMv3EspU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 53H4ZbdU075302;
-	Thu, 17 Apr 2025 12:35:37 +0800 (+08)
-	(envelope-from Xuewen.Yan@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4ZdQ5m2JJ6z2K25fm;
-	Thu, 17 Apr 2025 12:34:20 +0800 (CST)
-Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.48; Thu, 17 Apr 2025 12:35:33 +0800
-From: Xuewen Yan <xuewen.yan@unisoc.com>
-To: <vincent.guittot@linaro.org>, <dietmar.eggemann@arm.com>,
-        <mingo@redhat.com>, <peterz@infradead.org>, <juri.lelli@redhat.com>
-CC: <rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
-        <vschneid@redhat.com>, <hongyan.xia2@arm.com>,
-        <linux-kernel@vger.kernel.org>, <ke.wang@unisoc.com>,
-        <di.shen@unisoc.com>, <xuewen.yan94@gmail.com>,
-        <kprateek.nayak@amd.com>, <kuyo.chang@mediatek.com>,
-        <juju.sung@mediatek.com>, <qyousef@layalina.io>
-Subject: [PATCH V3 2/2] sched/uclamp: Align uclamp and util_est and call before freq update
-Date: Thu, 17 Apr 2025 12:34:57 +0800
-Message-ID: <20250417043457.10632-3-xuewen.yan@unisoc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250417043457.10632-1-xuewen.yan@unisoc.com>
-References: <20250417043457.10632-1-xuewen.yan@unisoc.com>
+	s=arc-20240116; t=1744864745; c=relaxed/simple;
+	bh=rmrMqfrgVM2s/104PEkFge+dI0TQZAYKGMW+EKZ939M=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=jaP5CfuEsthgwEtkTeTwUqJEUjUkE55H8SH4fa6AdhwM8hu2gBvaMOfVvGnmHnkMqH18HnkOwdG7kDjNzrjueOiVJydp6Pl5fzq0JzoLC2zhfGKiByLdYzjvVC2GuB0aXslgfLWGSgVQSqzFGiPj7Ind1LCnJ0Yv4O0aWHu7vPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m4RgsZD0; arc=none smtp.client-ip=209.85.160.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m4RgsZD0"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2c7e5f7f0e3so77050fac.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 21:39:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744864742; x=1745469542; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=10iRaLFldXjpc2qVrp58ahO+2Bmb/5Z6tVyg4OHvZeI=;
+        b=m4RgsZD01gcdy96ya4rQADcqGukoKVrhUBJVGfWgmRxgk+dBFgZvJ72sVHeSYiMJeM
+         p18GZNyXcGvlcsYrIVJL9SCLH9yzsR5AmmO4ItvtuEQ5NSxuK5D0btdAcXT3H2O6CYtJ
+         riA4nYx+HBC94yevcW4SVX+lZvA6p8vV2ZBmvvqv8RBbmgPePslIbB3pNI8LwLbEQ1L+
+         IpVmJwBotDS8XgevpaqwUnqTQeBO85jIPSqpfPB86/WPATSVHNcngW0VJ37ZF/GZmAx1
+         XUdon58EmhOEnqS0hojk7LiLL2PAPn7K9hwNP7Ze88gOHp8vtrd6OfPrJFpjrSWkR+9N
+         5DDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744864742; x=1745469542;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=10iRaLFldXjpc2qVrp58ahO+2Bmb/5Z6tVyg4OHvZeI=;
+        b=ZasbMg/P/IAu2zVVHjgA8407xs/0R0YTFmaWdEVOfUywKCVcIlkb9TUMsaRDClqgGK
+         vB0344hwDff9ngBj4ExT1kM6Y5oDyYkgPwiGa1LgcR/5+BzAMxVFxc6/uQ1f8G1QgMWu
+         L4494k1bv4QDOGdh592Q2pYTdIdLSL4xrZVIpJv9zOaNg6dnlI9Uyaqn/8WWVt2xJk2q
+         ydZz7leM+9nLV0w5JXbKVIT8odBVhG4tk79oZDKMBBtbsJKUx3iHSaitaDvxo6eSxU/M
+         eOA0I3/CbeHfWUHu12bmXTpCU7/Lhi9lFtPNb2tAePnHNsg4lDLHKnv7LzgIf6LFRB6W
+         43SA==
+X-Forwarded-Encrypted: i=1; AJvYcCXBMoLDGVeDZ5ow342zR8xQMjoh0dJEtuSLzGnJUVUTndb2GXlh7YeYIQNjSnq55vEClz46EasLS3E7Rl0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxZSuPtg/0BT53gzDQqtqbz/RBhZpiUQMkf403rmBwtd3JfL3e
+	Li0U7ZWeFPI4IphnKBbDRHBzKAmoLR9zmeNhAnN2qhmuHkKEZp21dKzh8V5FMQ==
+X-Gm-Gg: ASbGncs8I99/0z6C5eT2OtBAXrFBu3k1gKa6+sSyPU0g8my2ku7ZtcoCbp3saUKxbzM
+	xRRrapzrS6wDP16cUWbTay/FsC44bz8Ehatgve9zkrYDPWJ0HN0GrNlUPyNwvRnZxLcDmGJgWsz
+	eMXTfOAH40V1Hn+HHXAhCagj/LcQmzazHhjjluQgf1ampGHS/UwvyeThacPVPkdzm12cEjkcj9Z
+	FZMcgfPgu7NYGDpACXNCkP2LeBbG+cM9O5IDP9U124gR4oGq4r6lH5aJLPv8Wf24G9w4mbvyDoA
+	HZrZdQJMOqHQXe+KPBG+dqMStoiAgh3VkKQMY+7IuGr8lZKH2Y6anpfGku5e05ugQd8ah+lg1QB
+	lsdcdiRk1A89Ap+MraGcpVCC0
+X-Google-Smtp-Source: AGHT+IEd5xLqq86VBi5eN/EoU2LY/yhvy73M2exqpfZC2Jpf/FlPr/CrjfoTIjJl6gHW1Q2SHfBu4Q==
+X-Received: by 2002:a05:6871:a594:b0:29e:6f32:6d91 with SMTP id 586e51a60fabf-2d4d2d8e5f3mr2774034fac.33.1744864742476;
+        Wed, 16 Apr 2025 21:39:02 -0700 (PDT)
+Received: from darker.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d0969589basm3630397fac.19.2025.04.16.21.39.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 21:39:01 -0700 (PDT)
+Date: Wed, 16 Apr 2025 21:38:51 -0700 (PDT)
+From: Hugh Dickins <hughd@google.com>
+To: Gavin Guo <gavinguo@igalia.com>
+cc: linux-mm@kvack.org, akpm@linux-foundation.org, willy@infradead.org, 
+    ziy@nvidia.com, linmiaohe@huawei.com, hughd@google.com, revest@google.com, 
+    david@redhat.com, kernel-dev@igalia.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/huge_memory: fix dereferencing invalid pmd migration
+ entry
+In-Reply-To: <20250414072737.1698513-1-gavinguo@igalia.com>
+Message-ID: <cff8d4e0-0c84-45ed-0ecb-646ec9841030@google.com>
+References: <20250414072737.1698513-1-gavinguo@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 53H4ZbdU075302
+Content-Type: text/plain; charset=US-ASCII
 
-The commit dfa0a574cbc47 ("sched/uclamg: Handle delayed dequeue")
-has add the sched_delayed check to prevent double uclamp_dec/inc.
-However, it put the uclamp_rq_inc() after enqueue_task().
-This may lead to the following issues:
-When a task with uclamp goes through enqueue_task() and could trigger
-cpufreq update, its uclamp won't even be considered in the cpufreq
-update. It is only after enqueue will the uclamp be added to rq
-buckets, and cpufreq will only pick it up at the next update.
-This could cause a delay in frequency updating. It may affect
-the performance(uclamp_min > 0) or power(uclamp_max < 1024).
+On Mon, 14 Apr 2025, Gavin Guo wrote:
 
-So, just like util_est, put the uclamp_rq_inc() before enqueue_task().
-And as for the sched_delayed_task, same as util_est, using the
-sched_delayed flag to prevent inc the sched_delayed_task's uclamp,
-using the ENQUEUE_DELAYED flag to allow inc the sched_delayed_task's uclamp
-which is being woken up.
+> When migrating a THP, concurrent access to the PMD migration entry
+> during a deferred split scan can lead to a page fault, as illustrated
+> below. To prevent this page fault, it is necessary to check the PMD
+> migration entry and return early. In this context, there is no need to
+> use pmd_to_swp_entry and pfn_swap_entry_to_page to verify the equality
+> of the target folio. Since the PMD migration entry is locked, it cannot
+> be served as the target.
+> 
+> BUG: unable to handle page fault for address: ffffea60001db008
+> CPU: 0 UID: 0 PID: 2199114 Comm: tee Not tainted 6.14.0+ #4 NONE
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> RIP: 0010:split_huge_pmd_locked+0x3b5/0x2b60
+> Call Trace:
+> <TASK>
+> try_to_migrate_one+0x28c/0x3730
+> rmap_walk_anon+0x4f6/0x770
+> unmap_folio+0x196/0x1f0
+> split_huge_page_to_list_to_order+0x9f6/0x1560
+> deferred_split_scan+0xac5/0x12a0
+> shrinker_debugfs_scan_write+0x376/0x470
+> full_proxy_write+0x15c/0x220
+> vfs_write+0x2fc/0xcb0
+> ksys_write+0x146/0x250
+> do_syscall_64+0x6a/0x120
+> entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> 
+> The bug is found by syzkaller on an internal kernel, then confirmed on
+> upstream.
+> 
+> Fixes: 84c3fc4e9c56 ("mm: thp: check pmd migration entry in common path")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gavin Guo <gavinguo@igalia.com>
 
-Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
----
-v3:
-- rework the commit message;
-- remove the util_est change;
-v2:
-- simply the util-est's en/dequeue check;
----
- kernel/sched/core.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+Acked-by: Hugh Dickins <hughd@google.com>
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index c81cf642dba0..0f4ab0c17c58 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1752,7 +1752,7 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
- 	}
- }
- 
--static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
-+static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p, int flags)
- {
- 	enum uclamp_id clamp_id;
- 
-@@ -1768,7 +1768,8 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
- 	if (unlikely(!p->sched_class->uclamp_enabled))
- 		return;
- 
--	if (p->se.sched_delayed)
-+	/* Only inc the delayed task which being woken up. */
-+	if (p->se.sched_delayed && !(flags & ENQUEUE_DELAYED))
- 		return;
- 
- 	for_each_clamp_id(clamp_id)
-@@ -2036,7 +2037,7 @@ static void __init init_uclamp(void)
- }
- 
- #else /* !CONFIG_UCLAMP_TASK */
--static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p) { }
-+static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p, int flags) { }
- static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) { }
- static inline void uclamp_fork(struct task_struct *p) { }
- static inline void uclamp_post_fork(struct task_struct *p) { }
-@@ -2072,12 +2073,14 @@ void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
- 	if (!(flags & ENQUEUE_NOCLOCK))
- 		update_rq_clock(rq);
- 
--	p->sched_class->enqueue_task(rq, p, flags);
- 	/*
--	 * Must be after ->enqueue_task() because ENQUEUE_DELAYED can clear
--	 * ->sched_delayed.
-+	 * Can be before ->enqueue_task() because uclamp considers the
-+	 * ENQUEUE_DELAYED task before its ->sched_delayed gets cleared
-+	 * in ->enqueue_task().
- 	 */
--	uclamp_rq_inc(rq, p);
-+	uclamp_rq_inc(rq, p, flags);
-+
-+	p->sched_class->enqueue_task(rq, p, flags);
- 
- 	psi_enqueue(p, flags);
- 
--- 
-2.25.1
-
+> ---
+>  mm/huge_memory.c | 18 ++++++++++++++----
+>  1 file changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 2a47682d1ab7..0cb9547dcff2 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -3075,6 +3075,8 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
+>  void split_huge_pmd_locked(struct vm_area_struct *vma, unsigned long address,
+>  			   pmd_t *pmd, bool freeze, struct folio *folio)
+>  {
+> +	bool pmd_migration = is_pmd_migration_entry(*pmd);
+> +
+>  	VM_WARN_ON_ONCE(folio && !folio_test_pmd_mappable(folio));
+>  	VM_WARN_ON_ONCE(!IS_ALIGNED(address, HPAGE_PMD_SIZE));
+>  	VM_WARN_ON_ONCE(folio && !folio_test_locked(folio));
+> @@ -3085,10 +3087,18 @@ void split_huge_pmd_locked(struct vm_area_struct *vma, unsigned long address,
+>  	 * require a folio to check the PMD against. Otherwise, there
+>  	 * is a risk of replacing the wrong folio.
+>  	 */
+> -	if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) ||
+> -	    is_pmd_migration_entry(*pmd)) {
+> -		if (folio && folio != pmd_folio(*pmd))
+> -			return;
+> +	if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) || pmd_migration) {
+> +		if (folio) {
+> +			/*
+> +			 * Do not apply pmd_folio() to a migration entry; and
+> +			 * folio lock guarantees that it must be of the wrong
+> +			 * folio anyway.
+> +			 */
+> +			if (pmd_migration)
+> +				return;
+> +			if (folio != pmd_folio(*pmd))
+> +				return;
+> +		}
+>  		__split_huge_pmd_locked(vma, pmd, address, freeze);
+>  	}
+>  }
+> 
+> base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
+> -- 
+> 2.43.0
