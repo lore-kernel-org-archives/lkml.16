@@ -1,55 +1,55 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3332722AE4E
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 23:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E13622B8C0
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 23:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744931302; cv=none; b=dbXkQf+TWkUJ20b70w3lux3y9Yh/3JPSdLBJouqf8THjZwQmPWW4eWFsn2zYxmMYMllcHvcyY0H0/hrOuDTR8wqTFD7vn2v7GSI8mZk1YXvH8QkX5ZfwKk/nLOtFDNcI4n3wpQ91FOsRVGpFHX8QW/FP8o1nJ0vkZQPNVZh/WFA=
+	t=1744931305; cv=none; b=FPq1ijIwG4BasmuRtrx8+Q7Q4j+5/WkDKYrwGQVURhuRrjXpsZNpFpF9e2vBMAbdE5uyG0TeTZZ3ov1sFgz8N+QGZRe/SYc5/yG3YXQhPXA5+A6EPNCGxxQ/v/JUYCQY7CAdouHgGZvp+ItYixrca4sGdJKQXiGdEKhDqtm0oO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744931302; c=relaxed/simple;
-	bh=r/o/FTdC44ei+b0RvMj4m3YZsDqShIjlMhUtWnKQGP0=;
+	s=arc-20240116; t=1744931305; c=relaxed/simple;
+	bh=WlrESCObcpLxlvArnGyAQPVRYZZxf1CeQ6rfvuHIhQI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=ABAXEC2IOnzr8j6I7HapbHzBfGT3LzngMJS1VTQlqAJv87KTWgus/9Z1xLS5yxeoWDIAvp/v4mc1O4ou9rGQCpDz2S69f4PfKhzgIlpJgp6fhsI2WN+YDHegrDeTdFXsiFj38PZNDYyZAjJzwG+xAhteB8NY3INOFXaPOgFMNts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j1r67Gc1; arc=none smtp.client-ip=209.85.216.74
+	 To:Content-Type; b=ColbxKD8J8h15z4J/xZlAqce6AodA0p3WnmriEvOELh1VU02faBOOJBCjtydWjWKdSLkTj1lDjjE+LKU4tnxsGL2XVIyF4dDVTS0+CHsTG/r4ZEkW/KX7E+31cW1aA7YAMzZHxyX82zc8QVzeN56Voz9mMuJppAehe0qNhih3d8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CkQ3pIAD; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j1r67Gc1"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3086107d023so1287667a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:08:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CkQ3pIAD"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-225429696a9so17499215ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:08:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744931299; x=1745536099; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744931303; x=1745536103; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=EHDpsk8SNrUR44AfS89J23CqH741UDdp/AyDnz+ulKM=;
-        b=j1r67Gc1Jzt+ERQ5lTOFPuYRllOZJgSLfD97cO7RV6tCEqj8ZFoQhHYdmqSB8GvaU6
-         SawuumxS1mlhaYIRowIrRNjsRuRCceNmGP9CXQ/+cDDq5O8kqOSqzd5/eUJOrwl8C445
-         4drKxsGvlenA4I1TV+DoEWEelmqafEZiSG3n7763ZNAPt4kNcLPyLaPADe//jIQlVj6o
-         VLFSW2LfVfq75mdyvE9nxgDO8r5VAXGKMMtDD1P4eUcxXXRCA/BP+TKc8+Rwnhzm1WfS
-         Ut62JPwQifTd4HHE8EdEX0t9ZGM0jXqDqwHltgg2CAMSuReJDfuQoJmVxykYbTUJZxvS
-         Ag6g==
+        bh=T5IiGvkesbLwU2LRHglyxF2fGjepXBF/Pg+PTt606Ww=;
+        b=CkQ3pIADn3jWQu7qkm9wU0o1PKJ0c0ztlV0p6bspOGprrFb/04SWyl2xIzPLzdZFyd
+         2nm6w9v/kovw7ePwrdlLWY32fFFabqtNY2HV07WXWVKwlcKhlrEd7HsUtuq0cOMnvWVP
+         lDUd3Q9ECOSkfQqfwxCRzS4zb5cvJvKm78eBeTvAwYgtOMMbJju7EBcOkKp70pDTe3Do
+         /z2LZaKRv/ANFeINMm7Dynr3FMTwOJxIKz58Ds5dGuJm5CQH0Ht1N1arYfZQHyDOjLNy
+         l3OtZCweTwZ4bsTc3Hlqwt+ZPd6PqNx72VTssgN7f1WvKQGIiUVP/KY6FAuo+aC0dx45
+         1yRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744931299; x=1745536099;
+        d=1e100.net; s=20230601; t=1744931303; x=1745536103;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EHDpsk8SNrUR44AfS89J23CqH741UDdp/AyDnz+ulKM=;
-        b=PvA783diDSrugnSgRtQPwU9RnNJfKzkCwqjEQ4uyYw5p4UY9izDKIuAn7pdOcMwMri
-         xBfEWaeQI+0K0uVDqtlGIKDJW5828RbwSA6mNJfdEL2gp/4kUeotnKi/JuKSqkzxPNYS
-         /LPfrldBkdmrIHKqsADGWBGXzeA6G8t7bIC6vIr+X1xCX5MnEfSTKuZPeFVGEHAI1DfL
-         ZnasawUHzjebwVmWgiDCCPhMYuICB3PU0jZ3zwHOFxzHJ976VU3ccuSECuDGHpA2pV//
-         HkUiiklGw+zmuEakkkwOuaFYxmo4/i4uSFdhUnqUwvqnC68K9si0SSsDzw94II9JMA7J
-         x3kg==
-X-Forwarded-Encrypted: i=1; AJvYcCVVo5lAZZ3PvYwlX7tlHHJm5jsmo0Y6PefeVnth/0OBTy61W+YsYSvYrwq2DjF+21u+oayBPhavNkUXEWI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBo8eilWDnGXc11HECrYsLTe6GMgn95rV+xqeDFD9rApvxU+ho
-	GvhkoL8S3VAxxjwoNWczumIBAq0ku0lbpJFxAQ0Y3iy6uJSyau9G/NS4xnL1okGMSuKAPYM2tpd
-	mLTYqvQ==
-X-Google-Smtp-Source: AGHT+IFYwuA7D18/EJ4yrdKqcla6KAmqMKe4gcSykzoeeKn1WlVOiGHm924Np2e3rbawCT909KQILgiK9qYN
-X-Received: from pjx16.prod.google.com ([2002:a17:90b:5690:b0:2ff:852c:ceb8])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3b8d:b0:2ee:aed2:c15c
- with SMTP id 98e67ed59e1d1-3087bbaeb98mr890482a91.28.1744931299447; Thu, 17
- Apr 2025 16:08:19 -0700 (PDT)
-Date: Thu, 17 Apr 2025 16:07:33 -0700
+        bh=T5IiGvkesbLwU2LRHglyxF2fGjepXBF/Pg+PTt606Ww=;
+        b=dkwE8iFGsm77m/dHeVle5iEf0e61cL5bTSw4fuvMX5jhqgS1Rj4WRyitcxIS8b0NwV
+         hUYFhMUB6MQU4abhsVskEjx8KZFs4Mkoz6znxLCC1uFQRgOnN8a8VA9s700ATCnoGBkx
+         XseHiSXRkJ1oWpl2Ov0bYmKnWPCo4URZSaxdeItAboFfdWDbXmenwn9CsT1J+584RjHu
+         QGichS7r4CAFo9qv/t8kFhEHzXxSOAk2H2Gc9kFqbghosWmmtXDhe8EI2O2TB+rFcgUl
+         QySHreaFhvS4w9oDHKZbwnFQVgximv5MdcPjk/NfdkJyv05K7zbcdS+gmX1nVqFpzpLP
+         OB1A==
+X-Forwarded-Encrypted: i=1; AJvYcCUznqwGXkOr2oLx1czUKfB530yXS4hYBqmd+w5xDlf2ObSCBtbnOM+udETXzEk1ubqaSxp1M4TflPCPI2M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmeRKNR5Ea64m9VEPiEPvTRf/YaIfuZAe1IlAYc5/9IHbv7iuf
+	8H7IjkrtuLNQGb+Wq1xEMHGu+4ZKdGGszzx74qjEf7vQmRRtIp51qjpgAiWoi194GfK/1bdAaEj
+	at5aFYg==
+X-Google-Smtp-Source: AGHT+IG5F2LOaTgg/mX1XvwpFVLktCGd2m3MhUHdYc74oU2szNJdxzhC36EWYALgHq+zFbkNF9kxs7APIa5a
+X-Received: from plhn17.prod.google.com ([2002:a17:903:1111:b0:21f:3ef1:c029])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1a6b:b0:223:f408:c3e2
+ with SMTP id d9443c01a7336-22c5357f39cmr10467445ad.14.1744931303485; Thu, 17
+ Apr 2025 16:08:23 -0700 (PDT)
+Date: Thu, 17 Apr 2025 16:07:35 -0700
 In-Reply-To: <20250417230740.86048-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250417230740.86048-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
-Message-ID: <20250417230740.86048-13-irogers@google.com>
-Subject: [PATCH v4 12/19] perf dso: Clean up read_symbol error handling
+Message-ID: <20250417230740.86048-15-irogers@google.com>
+Subject: [PATCH v4 14/19] perf build: Remove libiberty support
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,116 +80,156 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Song Liu <song@kernel.org>, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Ensure errno is set and return to caller for error handling. Unusually
-for perf the value isn't negated as expected by
-symbol__strerror_disassemble.
+libiberty is license incompatible with perf and building requires the
+BUILD_NONDISTRO=1 build flag. libiberty is used for
+HAVE_CPLUS_DEMANGLE_SUPPORT. Remove the code to simplify the code base
+as it can't be distributed. Remove the BUILD_NONDISTRO build flag and
+test as they no longer enable/disable support.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/capstone.c |  3 ++-
- tools/perf/util/dso.c      | 14 ++++++++++++--
- tools/perf/util/llvm.c     |  3 ++-
- 3 files changed, 16 insertions(+), 4 deletions(-)
+ tools/perf/Makefile.config       | 12 ------------
+ tools/perf/Makefile.perf         | 11 ++++-------
+ tools/perf/tests/make            |  2 --
+ tools/perf/util/demangle-cxx.cpp | 13 +------------
+ tools/perf/util/symbol-elf.c     | 13 -------------
+ 5 files changed, 5 insertions(+), 46 deletions(-)
 
-diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
-index f103988184c8..032548828925 100644
---- a/tools/perf/util/capstone.c
-+++ b/tools/perf/util/capstone.c
-@@ -12,6 +12,7 @@
- #include "symbol.h"
- #include "thread.h"
- #include <dlfcn.h>
-+#include <errno.h>
- #include <fcntl.h>
- #include <inttypes.h>
- #include <string.h>
-@@ -463,7 +464,7 @@ int symbol__disassemble_capstone(const char *filename __maybe_unused,
- 	buf = dso__read_symbol(dso, filename, map, sym,
- 			       &code_buf, &buf_len, &is_64bit);
- 	if (buf == NULL)
--		return -1;
-+		return errno;
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 870451929771..3ed047ffb4f5 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -954,18 +954,6 @@ ifndef NO_DEMANGLE
+     CXXFLAGS += -DHAVE_CXA_DEMANGLE_SUPPORT
+     $(call detected,CONFIG_CXX_DEMANGLE)
+   endif
+-  ifdef BUILD_NONDISTRO
+-    ifeq ($(filter -liberty,$(EXTLIBS)),)
+-      $(call feature_check,cplus-demangle)
+-      ifeq ($(feature-cplus-demangle), 1)
+-        EXTLIBS += -liberty
+-      endif
+-    endif
+-    ifneq ($(filter -liberty,$(EXTLIBS)),)
+-      CFLAGS += -DHAVE_CPLUS_DEMANGLE_SUPPORT
+-      CXXFLAGS += -DHAVE_CPLUS_DEMANGLE_SUPPORT
+-    endif
+-  endif
+ endif
  
- 	/* add the function address and name */
- 	scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index d08e2a1f49c1..243fc33cc449 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -1809,6 +1809,7 @@ const u8 *dso__read_symbol(struct dso *dso, const char *symfs_filename,
+ ifndef NO_LZMA
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index fc65537d5821..58982d8d1014 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -123,9 +123,6 @@ include ../scripts/utilities.mak
+ #
+ # Set BUILD_BPF_SKEL to 0 to override BUILD_BPF_SKEL and not build BPF skeletons
+ #
+-# Define BUILD_NONDISTRO to enable building an linking against libbfd and
+-# libiberty distribution license incompatible libraries.
+-#
+ # Define EXTRA_TESTS to enable building extra tests useful mainly to perf
+ # developers, such as:
+ #	x86 instruction decoder - new instructions test
+@@ -298,10 +295,10 @@ LIBSYMBOL_DIR   = $(srctree)/tools/lib/symbol/
+ LIBPERF_DIR     = $(srctree)/tools/lib/perf/
+ DOC_DIR         = $(srctree)/tools/perf/Documentation/
  
- 	if (dso__binary_type(dso) == DSO_BINARY_TYPE__BPF_IMAGE) {
- 		pr_debug("No BPF image disassembly support\n");
-+		errno = EOPNOTSUPP;
- 		return NULL;
- 	} else if (dso__binary_type(dso) == DSO_BINARY_TYPE__BPF_PROG_INFO) {
- #ifdef HAVE_LIBBPF_SUPPORT
-@@ -1827,6 +1828,7 @@ const u8 *dso__read_symbol(struct dso *dso, const char *symfs_filename,
- 		assert(len <= info_linear->info.jited_prog_len);
- #else
- 		pr_debug("No BPF program disassembly support\n");
-+		errno = EOPNOTSUPP;
- 		return NULL;
+-# Set FEATURE_TESTS to 'all' so all possible feature checkers are executed.
+-# Without this setting the output feature dump file misses some features, for
+-# example, liberty. Select all checkers so we won't get an incomplete feature
+-# dump file.
++# Set FEATURE_TESTS to 'all' so all possible feature checkers are
++# executed.  Without this setting the output feature dump file misses
++# some features. Select all checkers so we won't get an incomplete
++# feature dump file.
+ ifeq ($(config),1)
+ ifdef MAKECMDGOALS
+ ifeq ($(filter feature-dump,$(MAKECMDGOALS)),feature-dump)
+diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+index 44d76eacce49..4a1ed20bff7e 100644
+--- a/tools/perf/tests/make
++++ b/tools/perf/tests/make
+@@ -68,7 +68,6 @@ python_perf_so := $(shell $(MAKE) python_perf_target|grep "Target is:"|awk '{pri
+ make_clean_all      := clean all
+ make_python_perf_so := $(python_perf_so)
+ make_debug          := DEBUG=1
+-make_nondistro      := BUILD_NONDISTRO=1
+ make_extra_tests    := EXTRA_TESTS=1
+ make_jevents_all    := JEVENTS_ARCH=all
+ make_no_bpf_skel    := BUILD_BPF_SKEL=0
+@@ -139,7 +138,6 @@ MAKE_F := $(MAKE) -f $(MK)
+ endif
+ run += make_python_perf_so
+ run += make_debug
+-run += make_nondistro
+ run += make_extra_tests
+ run += make_jevents_all
+ run += make_no_bpf_skel
+diff --git a/tools/perf/util/demangle-cxx.cpp b/tools/perf/util/demangle-cxx.cpp
+index bd657eb37efc..36801ea327a6 100644
+--- a/tools/perf/util/demangle-cxx.cpp
++++ b/tools/perf/util/demangle-cxx.cpp
+@@ -8,13 +8,6 @@
+ #include <cxxabi.h>
  #endif
- 	} else {
-@@ -1837,26 +1839,34 @@ const u8 *dso__read_symbol(struct dso *dso, const char *symfs_filename,
- 			.ip = start,
- 		};
- 		u8 *code_buf = NULL;
-+		int saved_errno;
  
- 		nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
- 		fd = open(symfs_filename, O_RDONLY);
-+		saved_errno = errno;
- 		nsinfo__mountns_exit(&nsc);
--		if (fd < 0)
-+		if (fd < 0) {
-+			errno = saved_errno;
- 			return NULL;
-+		}
+-#if defined(HAVE_CPLUS_DEMANGLE_SUPPORT)
+-#ifndef DMGL_PARAMS
+-#define DMGL_PARAMS     (1 << 0)  /* Include function args */
+-#define DMGL_ANSI       (1 << 1)  /* Include const, volatile, etc */
+-#endif
+-#endif
+-
+ /*
+  * Demangle C++ function signature
+  *
+@@ -24,11 +17,7 @@ extern "C"
+ char *cxx_demangle_sym(const char *str, bool params __maybe_unused,
+                        bool modifiers __maybe_unused)
+ {
+-#if defined(HAVE_CPLUS_DEMANGLE_SUPPORT)
+-        int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
+-
+-        return cplus_demangle(str, flags);
+-#elif defined(HAVE_CXA_DEMANGLE_SUPPORT)
++#if defined(HAVE_CXA_DEMANGLE_SUPPORT)
+         char *output;
+         int status;
  
--		if (file__read_maps(fd, /*exe=*/true, find_file_offset, &data, is_64bit) == 0) {
-+		if (file__read_maps(fd, /*exe=*/true, find_file_offset, &data, is_64bit) <= 0) {
- 			close(fd);
-+			errno = ENOENT;
- 			return NULL;
- 		}
- 		buf = code_buf = malloc(len);
- 		if (buf == NULL) {
- 			close(fd);
-+			errno = ENOMEM;
- 			return NULL;
- 		}
- 		count = pread(fd, code_buf, len, data.offset);
-+		saved_errno = errno;
- 		close(fd);
- 		if ((u64)count != len) {
- 			free(code_buf);
-+			errno = saved_errno;
- 			return NULL;
- 		}
- 		*out_buf = code_buf;
-diff --git a/tools/perf/util/llvm.c b/tools/perf/util/llvm.c
-index a28f130c8951..1607364ee736 100644
---- a/tools/perf/util/llvm.c
-+++ b/tools/perf/util/llvm.c
-@@ -9,6 +9,7 @@
- #include "srcline.h"
- #include "symbol.h"
- #include <dlfcn.h>
-+#include <errno.h>
- #include <fcntl.h>
- #include <inttypes.h>
- #include <unistd.h>
-@@ -365,7 +366,7 @@ int symbol__disassemble_llvm(const char *filename, struct symbol *sym,
- 	buf = dso__read_symbol(dso, filename, map, sym,
- 			       &code_buf, &buf_len, &is_64bit);
- 	if (buf == NULL)
--		return -1;
-+		return errno;
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 856819bbba59..6e0cf3d2aec5 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -28,13 +28,6 @@
+ #include <symbol/kallsyms.h>
+ #include <internal/lib.h>
  
- 	init_llvm();
- 	if (arch__is(args->arch, "x86")) {
+-#if defined(HAVE_CPLUS_DEMANGLE_SUPPORT)
+-#ifndef DMGL_PARAMS
+-#define DMGL_PARAMS     (1 << 0)  /* Include function args */
+-#define DMGL_ANSI       (1 << 1)  /* Include const, volatile, etc */
+-#endif
+-#endif
+-
+ #ifndef EM_AARCH64
+ #define EM_AARCH64	183  /* ARM 64 bit */
+ #endif
+@@ -287,13 +280,7 @@ static bool want_demangle(bool is_kernel_sym)
+ char *cxx_demangle_sym(const char *str __maybe_unused, bool params __maybe_unused,
+ 		       bool modifiers __maybe_unused)
+ {
+-#if defined(HAVE_CPLUS_DEMANGLE_SUPPORT)
+-	int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
+-
+-	return cplus_demangle(str, flags);
+-#else
+ 	return NULL;
+-#endif
+ }
+ #endif /* !HAVE_CXA_DEMANGLE_SUPPORT */
+ 
 -- 
 2.49.0.805.g082f7c87e0-goog
 
