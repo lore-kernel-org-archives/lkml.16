@@ -1,144 +1,88 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B39245007;
-	Thu, 17 Apr 2025 12:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5076824290F
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744893844; cv=none; b=GqEw4cNuqQ6oecMk9hLvEN+rbM+vYrtVEoGIusyjsUS9oo6fa3bp975aaO8OWiFN1OMCBdEfjhOYSXAx//mo9AXk+fUg0VkTIpBuKnHgqJL80k0HBTfRj2kHJCyjDSJDWZPZgU3fXB9g9MdmUCVSi2tD/2Rq9RwwxGnN4FnFu5M=
+	t=1744893876; cv=none; b=N3aua281ppTArs/oqSdwXKw/Gi5K7BNfvedDDKDb8fuzonlUSQgewtOGAszOIEYYWsJPx4BA+S+DMMU5YwkvUKOub7oZroVsSXQ9fxze8HqBqO+drjddty7x6XOo9wsYtY1xbXIr4iXthxbQQq3ttG/TDhiH3q7+ZqPzurVXrtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744893844; c=relaxed/simple;
-	bh=r5+VfJcA6q9S12ZXAwVAe67Sk2WT28EwKDZnWFqwZQ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZcJKNygCybe0eK34+FoicJRWXtbEx7fOIrsPu0x2l87IyoL2fjk2pxyHLDrLO3u+I80PxCBGsKl6Ab9addJ+wdlJzyiQ2+O/Qq7S0Dyd8EMuKYiK4pweVMKWZq7sWQ9PKlp4LEflnDrSnyMDKQvo1+S+MeZx8lMsxB/SyaX6JA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Ld2woqDD; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744893876; c=relaxed/simple;
+	bh=/Q1QqZcrRDm+z4zKny6B/oOLvOzzSnBzA1wNvjUJPDU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZvvuqJJzAxmc7XTF5w75XPZt2HgxGvA6f3vLhV75a622+SxePAk7k77IO5b/UmZx3Vpzwx0G9YpKJlnKweVS1ivCoLp4kf5YxVLiq1bj4T4sNoR7payo6Al8kBmtUy1xzrL0J/gYQOcD6FtgqfzR7Zg30uUVHO2LJMS6NN9KTkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Kt1agLx4; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ld2woqDD"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6EB0943A13;
-	Thu, 17 Apr 2025 12:43:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744893832;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zufU3+K/sKPxmcFt6qRZblMLMAi4WpaGiVvI0GTB3Uc=;
-	b=Ld2woqDDcMfyZnn7f56vCjolM1DtvQhent67HrJ2EoRcCrpySd07IDW8rb8lvY/fOlQ5yr
-	Fuly8XIJDG1un47mkiuBScSTAtFnuLbkDPv7B6sZyksvkPSaK+qdLrEezrkWh8iXpJdfW0
-	YGRYBuu0bk/+LxyCk3gwOfD+ZmQBczODsroK1JgLcGVKzz0pK4caGWJVGv4jA5ueyOsXZz
-	RjiVK0B0fF0D/ZquawL3MTLV+llZaCEMKogE/UJeeLiBAw22Sa6eKfbE8ouCrdZziJJUuJ
-	mhvGEfJcQJMSDhNvGzR9aBs5lNF736brKLxxigqHGPMdPtLkYuHo/aXFkfA+SQ==
-Date: Thu, 17 Apr 2025 14:43:49 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Donald Hunter
- <donald.hunter@gmail.com>, Rob Herring <robh@kernel.org>, Andrew Lunn
- <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>, Heiner Kallweit
- <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Liam
- Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, Dent
- Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v8 02/13] net: pse-pd: Add support for
- reporting events
-Message-ID: <20250417144349.5b30afec@fedora.home>
-In-Reply-To: <20250416-feature_poe_port_prio-v8-2-446c39dc3738@bootlin.com>
-References: <20250416-feature_poe_port_prio-v8-0-446c39dc3738@bootlin.com>
-	<20250416-feature_poe_port_prio-v8-2-446c39dc3738@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kt1agLx4"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e8f4c50a8fso6845976d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:44:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744893874; x=1745498674; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/Q1QqZcrRDm+z4zKny6B/oOLvOzzSnBzA1wNvjUJPDU=;
+        b=Kt1agLx4MSD3094uu5DWA8HxqcrEtOw4iu/2Q37D3Dhj75BP1plHyw5ZbLGuq3EG23
+         uX+or6n3iCDVEUCCuwdQU+mcbJYuxBpht8ubOyWMsKlqvtWIQ5spMFDXFA4JWrmH6iCJ
+         9dHmJOJDa5oEqKlnTSD6lcspR70OHFfylb/NfIfTtg8C3NcFzqM/oX9Hji/R+M9dpNWz
+         VDnCffS1dh7JZMMK87pwnMSaXQCt+5finZz/BtpzbMglakocxC0GuthKOZ1TWfKJGfOL
+         HnQyXkNsH7CZ33dpjxYqlNfu4wYovi+qk/Q/Z+66ke7qXJh1uTkglg7uYE2lkpf/rOql
+         bCAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744893874; x=1745498674;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/Q1QqZcrRDm+z4zKny6B/oOLvOzzSnBzA1wNvjUJPDU=;
+        b=fjP0rswRYLfuPwWljmJ6oYFU7Gi9F2jfg6td/RpS/ONL7Rvst+CQy82QYw/u6gpuhX
+         nPJ7GxE7Zu+Xt/WpFr+gNYEzOcG6heqzhe95wXHjb+wnsX0vDt9+kC/YRRP8gH8NQkqp
+         zQ4quWSRrpFGVhUxq1U4R0/4SccmJa44b1KZcOWbj2n0aTIJyEmF6ab1u83+u6fYrTFQ
+         vKuaeH2EJYmoI2PLvZPZc0rMN1iksTPCVM9GEdK1zlnNS6nV6yfSkwxP5LE5IXJI4yO/
+         kes/tjbM4R805Imd+wA8SeC5Vnv4jmcf4J8ClElbFWtQH9Kamz5QIehcMqI0o7cUDtqS
+         mi9w==
+X-Gm-Message-State: AOJu0YyuY4wQen7MVyPebArV400dGDCZlxibrR0Q4tlV8ZNYbZ8x8O9e
+	bvMEf6ah9z6p1oomVXC3u4TWoUtISWG6e6ocAYj0aGmks9kOCNGk1vM03AVg1p9mp3X6hhxqg5q
+	UPVFpQLoaqWFZxbRdBKuGaiyz37R4nC4j5snH
+X-Gm-Gg: ASbGncsLJ6M4IbeK1LJnV3g2N7G9ANbz6Jphz2jUAki/65LH7u2chXC8C+VSnizAgky
+	1kyjjJVTCJbbYwyoUTrlWHC+O+GNM0EmWrFRNy+wThbiBmT7VG0e0H66TEiOElwMWcQkgyDRQEP
+	OdXHDuT2dihpXOhliHfCKFW4lvAIvcl5spXX4xe/cJxd/fUiAn5m0W
+X-Google-Smtp-Source: AGHT+IGDKku5hzsXeufF9xTbqlxVlKhjCgIAnMWYEftHB8mcdakBNxGXHUr6s1yQgujbrtUlTM9gptqG2IOLlbY+obo=
+X-Received: by 2002:a0c:aa07:0:b0:6f2:bcbf:1030 with SMTP id
+ 6a1803df08f44-6f2bcbf11a4mr17778526d6.43.1744893873997; Thu, 17 Apr 2025
+ 05:44:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdelvdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepuefhfefggfdthffghfdvhffhhfetuedtkeetgffhteevheehjeejgfduieduhedunecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdeipdhrtghpthhtohepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehordhrvghmphgvlhesphgvnhhguhhtrhhonhhig
- idruggvpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvght
-X-GND-Sasl: maxime.chevallier@bootlin.com
+References: <20250416085446.480069-1-glider@google.com> <aAB9sUllq/xR/Maf@hu-jiangenj-sha.qualcomm.com>
+In-Reply-To: <aAB9sUllq/xR/Maf@hu-jiangenj-sha.qualcomm.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Thu, 17 Apr 2025 14:43:56 +0200
+X-Gm-Features: ATxdqUHPHhj8x6Foqmh22Sf3Tnz5IYfxqO1r6Iz-bl_MdJoEp9NcRi1P5468ovk
+Message-ID: <CAG_fn=WyvDopbDN3YrrUzS-aUgbVKTDRv6D5vArnQbSkp_xB6Q@mail.gmail.com>
+Subject: Re: [PATCH 0/7] RFC: coverage deduplication for KCOV
+To: Joey Jiao <quic_jiangenj@quicinc.com>
+Cc: linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, 
+	Aleksandr Nogikh <nogikh@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Marco Elver <elver@google.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi K=C3=B6ry,
+> > Below are the average stats from the runs.
+> Is there test without trace collection? Is bitmap only enough?
 
-On Wed, 16 Apr 2025 15:44:17 +0200
-Kory Maincent <kory.maincent@bootlin.com> wrote:
+If we bump the bitmap size to ~16K, it should be enough to keep all
+the fuzzing results from a single run.
+We haven't experimented with it much though, because syzkaller
+currently processes coverage as an array of PCs, not a bitmap.
+Changing this would require a major rework of syzkaller, given that
+the positions in the bitmap may differ between different machines, so
+we'll need to maintain a reverse mapping between bits and PCs in every
+executor.
 
-> From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
->=20
-> Add support for devm_pse_irq_helper() to register PSE interrupts and repo=
-rt
-> events such as over-current or over-temperature conditions. This follows a
-> similar approach to the regulator API but also sends notifications using a
-> dedicated PSE ethtool netlink socket.
->=20
-> Introduce an attached_phydev field in the pse_control structure to store
-> the phydev attached to the PSE PI, ensuring that PSE ethtool notifications
-> are sent to the correct network interface.
->=20
-> The attached_phydev pointer is directly tied to the PHY lifecycle. It
-> is set when the PHY is registered and cleared when the PHY is removed.
-> There is no need to use a refcount, as doing so could interfere with
-> the PHY removal process.
->=20
-> Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
-> Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
-
-[...]
-
-> +void ethnl_pse_send_ntf(struct phy_device *phydev, unsigned long notifs,
-> +			struct netlink_ext_ack *extack)
-> +{
-> +	struct net_device *netdev =3D phydev->attached_dev;
-> +	struct genl_info info;
-> +	void *reply_payload;
-> +	struct sk_buff *skb;
-> +	int reply_len;
-> +	int ret;
-> +
-> +	if (!netdev || !notifs)
-> +		return;
-> +
-> +	ethnl_info_init_ntf(&info, ETHTOOL_MSG_PSE_NTF);
-> +	info.extack =3D extack;
-> +
-> +	reply_len =3D ethnl_reply_header_size() +
-> +		    nla_total_size(sizeof(u32)); /* _PSE_NTF_EVENTS */
-> +
-> +	skb =3D genlmsg_new(reply_len, GFP_KERNEL);
-
-I think you need to check skb here before using it.
-
-> +	reply_payload =3D ethnl_bcastmsg_put(skb, ETHTOOL_MSG_PSE_NTF);
-> +	if (!reply_payload)
-> +		goto err_skb;
-> +
-> +	ret =3D ethnl_fill_reply_header(skb, netdev,
-> +				      ETHTOOL_A_PSE_NTF_HEADER);
-> +	if (ret < 0)
-> +		goto err_skb;
-> +
-> +	if (nla_put_u32(skb, ETHTOOL_A_PSE_NTF_EVENTS, notifs))
-> +		goto err_skb;
-> +
-> +	genlmsg_end(skb, reply_payload);
-> +	ethnl_multicast(skb, netdev);
-> +	return;
-> +
-> +err_skb:
-> +	nlmsg_free(skb);
-> +}
-> +EXPORT_SYMBOL_GPL(ethnl_pse_send_ntf);
->=20
-
-Maxime
+Such a mapping could be implemented on the kernel side on top of the
+proposed patches, once someone proves a need for that.
