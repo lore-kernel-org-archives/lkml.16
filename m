@@ -1,90 +1,105 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9A4225785;
-	Thu, 17 Apr 2025 08:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A2922423C;
+	Thu, 17 Apr 2025 08:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744877013; cv=none; b=gFVB6VXXfe78LembQXrOlMFbWgD7T+XAuRRAc2DqdDjwWjqXxtiLP3SvS2FxIejv30PoIp5Nv/SWfzZobtdRlbaJgcvJVUBQ5lxQEoc7i2TYcw0zjEKE2rd6OuX14Ubzt6z+fMudZLptCfTxQRCySeFKZWVhoMPEr3s6ZQcAnFE=
+	t=1744877030; cv=none; b=ci5TBMZTtLIBfDdpBbRRO4AR2AbNBJYznE5BuBNclBWagqSIgaF4sMzjyG8A9dNE2/CZVRmD383r8+2DBfhiNNHJWByWwPvTAUkQTSdgCQ+FB9B++JgAYwJ7XBdFUfAZvG2z6ERMPFouFb8lmfJp2uZ+YCZng4+7ZLE6B5rFRZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744877013; c=relaxed/simple;
-	bh=Nxc71yiCbB7TEaX5Vo82BTatLhGZxUaMB0WX5lsJVcc=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=cb4OZ/t5MDAGQR/v/qvxfOnpu12a4s5bJ6YDpwShrsA+aEC45zBVg8DtZDjexRYccvEZo3g0cQSPI4KWaJim9lNcAiNlmGWjQ4stHz516plEb7wO3fR8IDY3QHh8A0ORSrIJQZVSqSmHXVUZDqq1uZD9d3jtRk1gcPYx79CkrO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Ujqd1l4e; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1744877030; c=relaxed/simple;
+	bh=/hss0P/gPPDydOlWxQkzm7ADD0P5tj2HUtGEQ57EIhM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qe5tqz7Mf2wlO3mCEg8X3Ru6V62WnRQTXyg+XTpTzR816GaRoVIbxa6KzWgLOf9C3ac9/WzI/u7TJ1Sxyq3wkbDG7eZaVWlctdT2PlkH5v6eRryKjQiVQwgPPCJGOEztksDGf5CryYucsDB3tyrEY6VX6QyfCQN8N7Y87gQv3E8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hYwxILuk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Ujqd1l4e"
-Received: from pendragon.ideasonboard.com (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 07A626A2;
-	Thu, 17 Apr 2025 10:01:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1744876886;
-	bh=Nxc71yiCbB7TEaX5Vo82BTatLhGZxUaMB0WX5lsJVcc=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=Ujqd1l4eUkZKLv5qCIlP4bv0ZTxc2cvp4IAKW7vxY841cs7+rxev8cOpeBow7aXym
-	 6/CLNQIe+k8Wv5ktuPUX9NghkoPV2c0LXhx4cz6NHP4U9fPCuQ89IIbAc34jtMqFEA
-	 aLm94FPmQLm2VpCW/glSumOQVO8WcUFSNsKv04NE=
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hYwxILuk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAE5FC4CEE4;
+	Thu, 17 Apr 2025 08:03:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744877030;
+	bh=/hss0P/gPPDydOlWxQkzm7ADD0P5tj2HUtGEQ57EIhM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hYwxILuk4Sz9tlsH3G54+Fj5sDipxOqnfv6fdd1gtZSBdcL275XE+ICi/r2d3ikN1
+	 sy+e8J9yXQz2+lwDt7NGLczIy4SBtmxlZBEhq9nm4u0FRgWtvGNt4L8Dgn7COPUL6q
+	 +qU9fdCWw559VaVJ8JLg5wJRY4LToZr6aaWpRU1Ogh0TIFao5i/0ffAQdSaazpnx5b
+	 rSexkDHLqfuElOw3YXQBfyKS9s438t9trhrupFGndagV+OQh+zLIhKue+8EZEaSzMY
+	 S9c52ie1waCiQX+C2GkY57tNQ6zaHBd+cBlSOqXlS0nadWFHq5vgpxJvHDopG0iXmu
+	 Bjurcs9n+UJnw==
+From: Philipp Stanner <phasta@kernel.org>
+To: schalla@marvell.com,
+	vattunuru@marvell.com,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	Shijith Thotton <sthotton@marvell.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Philipp Stanner <phasta@kernel.org>,
+	Satha Rao <skoteshwar@marvell.com>
+Cc: virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] vdpa/octeon_ep: Use non-hybrid PCI devres API
+Date: Thu, 17 Apr 2025 10:02:12 +0200
+Message-ID: <20250417080211.19970-2-phasta@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250417-adv7511-ec-const-v1-1-74301e17646e@oss.qualcomm.com>
-References: <20250417-adv7511-ec-const-v1-1-74301e17646e@oss.qualcomm.com>
-Subject: Re: [PATCH RESEND] media: adv7511-v4l2: use constants for BT.2020 colorimetry
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Date: Thu, 17 Apr 2025 09:03:26 +0100
-Message-ID: <174487700624.494853.2007394433912766175@ping.linuxembedded.co.uk>
-User-Agent: alot/0.10
+Content-Transfer-Encoding: 8bit
 
-Quoting Dmitry Baryshkov (2025-04-16 23:46:01)
-> Replace numeric values with constants from hdmi.h.
->=20
+octeon enables its PCI device with pcim_enable_device(). This,
+implicitly, switches the function pci_request_region() into managed
+mode, where it becomes a devres function.
 
-[x] adv7511-v4l2.c includes hdmi.h=20
-[x] hdmi.h defines the same values (through an enum)
+The PCI subsystem wants to remove this hybrid nature from its
+interfaces. To do so, users of the aforementioned combination of
+functions must be ported to non-hybrid functions.
 
-Checks out for me.
+Moreover, since both functions are already managed in this driver, the
+calls to pci_release_region() are unnecessary.
 
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Remove the calls to pci_release_region().
 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
->  drivers/media/i2c/adv7511-v4l2.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/media/i2c/adv7511-v4l2.c b/drivers/media/i2c/adv7511=
--v4l2.c
-> index f95a99d85360aa782279a127eee37132f9ad08fb..853c7806de928da2129f603e7=
-cb673440a1fcfac 100644
-> --- a/drivers/media/i2c/adv7511-v4l2.c
-> +++ b/drivers/media/i2c/adv7511-v4l2.c
-> @@ -1370,9 +1370,9 @@ static int adv7511_set_fmt(struct v4l2_subdev *sd,
->         case V4L2_COLORSPACE_BT2020:
->                 c =3D HDMI_COLORIMETRY_EXTENDED;
->                 if (y && format->format.ycbcr_enc =3D=3D V4L2_YCBCR_ENC_B=
-T2020_CONST_LUM)
-> -                       ec =3D 5; /* Not yet available in hdmi.h */
-> +                       ec =3D HDMI_EXTENDED_COLORIMETRY_BT2020_CONST_LUM;
->                 else
-> -                       ec =3D 6; /* Not yet available in hdmi.h */
-> +                       ec =3D HDMI_EXTENDED_COLORIMETRY_BT2020;
->                 break;
->         default:
->                 break;
->=20
-> ---
-> base-commit: 2bdde620f7f2bff2ff1cb7dc166859eaa0c78a7c
-> change-id: 20250408-adv7511-ec-const-b46796340439
->=20
-> Best regards,
-> --=20
-> Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
->
+Replace the call to sometimes-managed pci_request_region() with one to
+the always-managed pcim_request_region().
+
+Signed-off-by: Philipp Stanner <phasta@kernel.org>
+---
+ drivers/vdpa/octeon_ep/octep_vdpa_main.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/vdpa/octeon_ep/octep_vdpa_main.c b/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+index f3d4dda4e04c..e0da6367661e 100644
+--- a/drivers/vdpa/octeon_ep/octep_vdpa_main.c
++++ b/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+@@ -391,7 +391,7 @@ static int octep_iomap_region(struct pci_dev *pdev, u8 __iomem **tbl, u8 bar)
+ {
+ 	int ret;
+ 
+-	ret = pci_request_region(pdev, bar, OCTEP_VDPA_DRIVER_NAME);
++	ret = pcim_request_region(pdev, bar, OCTEP_VDPA_DRIVER_NAME);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to request BAR:%u region\n", bar);
+ 		return ret;
+@@ -400,7 +400,6 @@ static int octep_iomap_region(struct pci_dev *pdev, u8 __iomem **tbl, u8 bar)
+ 	tbl[bar] = pci_iomap(pdev, bar, pci_resource_len(pdev, bar));
+ 	if (!tbl[bar]) {
+ 		dev_err(&pdev->dev, "Failed to iomap BAR:%u\n", bar);
+-		pci_release_region(pdev, bar);
+ 		ret = -ENOMEM;
+ 	}
+ 
+@@ -410,7 +409,6 @@ static int octep_iomap_region(struct pci_dev *pdev, u8 __iomem **tbl, u8 bar)
+ static void octep_iounmap_region(struct pci_dev *pdev, u8 __iomem **tbl, u8 bar)
+ {
+ 	pci_iounmap(pdev, tbl[bar]);
+-	pci_release_region(pdev, bar);
+ }
+ 
+ static void octep_vdpa_pf_bar_shrink(struct octep_pf *octpf)
+-- 
+2.48.1
+
