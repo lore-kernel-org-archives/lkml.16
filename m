@@ -1,46 +1,49 @@
-Received: from smtp.smtpout.orange.fr (smtp-74.smtpout.orange.fr [80.12.242.74])
+Received: from smtp.smtpout.orange.fr (smtp-73.smtpout.orange.fr [80.12.242.73])
 	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4890205519
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 21:06:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1820220A5C3
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 21:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744923970; cv=none; b=htYo42R77OVllxLpgTm7KaSL0LNWRbtN18DfP499dw4lNZCwttOZwTQJ3wQW/2F1HeNeyuWY/syBh+Ky5qPP+Sdr2IvbNzXhOt145MBMPMUvh5/xNYpJTXFTvXTAEcPl9thbxJh6gm1VhRMmzq6y1JAQxmMxzXyS6QSEv1z1Vic=
+	t=1744923972; cv=none; b=g6Ii18mZfZfOLe4PbGSy5K6YFNh2RJJoAUlBuZbtGS87Pnu+zbdC9fPm7A9ejIpmpStSmtddjmOGZT+bn4BU8/vGI+pvrB48FnnQ6cdTM1Xwx/kY74bbkGTwkSNYiK5F2A48m9HP5fi7uU5hGwpm2u5FvH2DuVo8j7sf4SMWx0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744923970; c=relaxed/simple;
-	bh=2vPaLziEm58oUXJkqjA9a9mHTrQT3I+I40GkuJYfO+U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D1jgMdlqz7tD2++IZs1XDKPEkv5lmm5g1RKfQ0KVEEhyMOgEvMMu5dhbf/Fo0S7ZvGa0ap4qw8S7sbhB+CMk9Y1eLDuIGpUpq8jzwjM7dfPcwurlkEUbPXhii7cwgc4itXgE4bjmo6wlNzZrsNny5JZ8yyrHirY/d+zO2zo9t8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=LzCtGioE; arc=none smtp.client-ip=80.12.242.74
+	s=arc-20240116; t=1744923972; c=relaxed/simple;
+	bh=c90eBYcUytbvHTx30qrG/03FOXwBOODWH63LkdXpJPI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MNUdFLySCC5ktBSKqJd524zig68vGMS7uDBuDQt1loShISE7WNGnS9zAc+LSMJer2Tvd430zvao6XBv+zyFpXVyYELJ1hZsDP/3848HaOUEv9Mi3nrIUehyJP4Pp/ypXcJo/woXKIb/1eUCuqPVfvvti6tyvqyV7A796+HVUxWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=UJlCPua9; arc=none smtp.client-ip=80.12.242.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="LzCtGioE"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="UJlCPua9"
 Received: from localhost.localdomain ([90.11.132.44])
 	by smtp.orange.fr with ESMTPA
-	id 5WPju9RZpCZIm5WPmuOcq4; Thu, 17 Apr 2025 23:04:55 +0200
+	id 5WPju9RZpCZIm5WQ1uOdEQ; Thu, 17 Apr 2025 23:05:09 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1744923895;
-	bh=IdKaA0l6JpiE94V82MTyqFzKEu9YwwkBRqC03GJEZb8=;
+	s=t20230301; t=1744923909;
+	bh=9B0EuenjQ9zP2HXkUxbNq6nKhRgcdF/8wpSLRR9fe24=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=LzCtGioEJPeBH8Qgj4mnWg1rn0QT8C8M60ASJLytMCzKyhXdlbzzOUTZpjIRelNNh
-	 OdB64aoLtKR1R46ia958geLIOc9H5b+rr1PY8Ffx5nPNuGG0MmOTn16tpkP2LGbOE9
-	 sjMEj0tGvUKq0SiEY3ySSW2eAGG23SKkaCISbC9Ik/p63s61eQkpZwAwPueiGdU7zs
-	 rI0Hgr9SFM+P4s0cfaBwDSCWYLgzfW297VBt3Pg79sgYguHiPGoQRsxCJGgAAQjuuh
-	 eD0v7ZoL8zK+GZ8iIFK0uPV/fRH+7SKGna7YwaPTHGKelWCsOKoBq9ZUzkliYo0TfX
-	 YwsLeKboIU2mw==
+	b=UJlCPua9/AiS6k3Dp2oK5zTkqe8m/AkjuzXyC5VZY27zR3y6SfrsUtZ9ZS8DHd2/v
+	 ZLzCNIH4K7S9GkwQW0TU1uKf2+4NM+CYJV11zJgHhA9+p0RhPyb1Z8/SgTCD2X+vDm
+	 HcNMECQKw+ILYgMhRlA9LZHaFNqgLt1+tOi4H47mJicEoKSjLaQknNGozKYuzOn29X
+	 H9doqILM4zMi6y0ph6f6ECPuYuN4gFENN/OXVyD1iX9nWg9DZwX48ou7XB1GRJYCTX
+	 gIKafY2AZet7rvwB0P4oLzGEWg2l3XYGJvLy6tCHHnWj4V07Z4gRv5hhjkKGKK3YIh
+	 mpCF4qJp5E7tQ==
 X-ME-Helo: localhost.localdomain
 X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 17 Apr 2025 23:04:55 +0200
+X-ME-Date: Thu, 17 Apr 2025 23:05:09 +0200
 X-ME-IP: 90.11.132.44
 From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 To: Stefani Seibold <stefani@seibold.net>
 Cc: linux-kernel@vger.kernel.org,
 	kernel-janitors@vger.kernel.org,
 	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH 1/3] kfifo: Fix the description of kfifo_alloc()
-Date: Thu, 17 Apr 2025 23:04:33 +0200
-Message-ID: <e25c871bd379f0f3595c2045925d3d25731bb194.1744923838.git.christophe.jaillet@wanadoo.fr>
+Subject: [PATCH 3/3] kfifo: Fix some white spaces issues
+Date: Thu, 17 Apr 2025 23:04:35 +0200
+Message-ID: <63513bef7d65f93829cd7c189ae16265c459def8.1744923838.git.christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <e25c871bd379f0f3595c2045925d3d25731bb194.1744923838.git.christophe.jaillet@wanadoo.fr>
+References: <e25c871bd379f0f3595c2045925d3d25731bb194.1744923838.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,28 +52,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The 'size' parameter of kfifo_alloc() does not need to be a power of 2. If
-it is not, it will be rounded up to the next power of 2 automatically, as
-already correctly explained a few lines below.
+Some unneeded double spaces are used in some places, and 1 space is missing
+before a trailing \.
+
+Make the needed clean-up for the sake of consistency.
 
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- include/linux/kfifo.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/kfifo.h | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/include/linux/kfifo.h b/include/linux/kfifo.h
-index fd743d4c4b4b..54fbe2ae6fbd 100644
+index 707dd90138d2..9b13a733efa9 100644
 --- a/include/linux/kfifo.h
 +++ b/include/linux/kfifo.h
-@@ -349,7 +349,7 @@ __kfifo_uint_must_check_helper( \
+@@ -132,9 +132,9 @@ struct kfifo_rec_ptr_2 __STRUCT_KFIFO_PTR(unsigned char, 2, void);
+ 	struct __kfifo *__kfifo = &__tmp->kfifo; \
+ 	__kfifo->in = 0; \
+ 	__kfifo->out = 0; \
+-	__kfifo->mask = __is_kfifo_ptr(__tmp) ? 0 : ARRAY_SIZE(__tmp->buf) - 1;\
++	__kfifo->mask = __is_kfifo_ptr(__tmp) ? 0 : ARRAY_SIZE(__tmp->buf) - 1; \
+ 	__kfifo->esize = sizeof(*__tmp->buf); \
+-	__kfifo->data = __is_kfifo_ptr(__tmp) ?  NULL : __tmp->buf; \
++	__kfifo->data = __is_kfifo_ptr(__tmp) ? NULL : __tmp->buf; \
+ })
+ 
  /**
-  * kfifo_alloc - dynamically allocates a new fifo buffer
-  * @fifo: pointer to the fifo
-- * @size: the number of elements in the fifo, this must be a power of 2
-+ * @size: the number of elements in the fifo
-  * @gfp_mask: get_free_pages mask, passed to kmalloc()
-  *
-  * This macro dynamically allocates a new fifo buffer.
+@@ -268,7 +268,7 @@ __kfifo_int_must_check_helper(int val)
+ })
+ 
+ /**
+- * kfifo_is_empty_spinlocked_noirqsave  - returns true if the fifo is empty
++ * kfifo_is_empty_spinlocked_noirqsave - returns true if the fifo is empty
+  * using a spinlock for locking, doesn't disable interrupts
+  * @fifo: address of the fifo to be used
+  * @lock: spinlock to be used for locking
+@@ -679,7 +679,7 @@ __kfifo_uint_must_check_helper( \
+ 	const size_t __recsize = sizeof(*__tmp->rectype); \
+ 	struct __kfifo *__kfifo = &__tmp->kfifo; \
+ 	(__recsize) ? \
+-	__kfifo_from_user_r(__kfifo, __from, __len,  __copied, __recsize) : \
++	__kfifo_from_user_r(__kfifo, __from, __len, __copied, __recsize) : \
+ 	__kfifo_from_user(__kfifo, __from, __len, __copied); \
+ }) \
+ )
+@@ -784,7 +784,7 @@ __kfifo_int_must_check_helper( \
+  */
+ #define	kfifo_dma_out_prepare_mapped(fifo, sgl, nents, len, dma) \
+ ({ \
+-	typeof((fifo) + 1) __tmp = (fifo);  \
++	typeof((fifo) + 1) __tmp = (fifo); \
+ 	struct scatterlist *__sgl = (sgl); \
+ 	int __nents = (nents); \
+ 	unsigned int __len = (len); \
 -- 
 2.49.0
 
