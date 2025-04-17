@@ -1,110 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C5D1DF260;
-	Thu, 17 Apr 2025 23:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FD5A20896E;
+	Thu, 17 Apr 2025 23:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744932772; cv=none; b=i7c0r5m7jJsx/UQ314LLXENjt+xpkaRpzJ2JfD4un49gPb2gg2wBLuoFRyCqRLQMgM8Nywr4MLnTkYtX+elHZjI/vkrRn7cei2rr5Dw/lY8LxCm5GjCS9AaCqdoy5mUKI+y61wRW9W0mAjGyoffhkvfaqY4tsv4uu0PFlNt6W1w=
+	t=1744932795; cv=none; b=FFbVxoNu9zQoXYJBxO3ExR4jTEPs5AnLwF1o+jkIfWPxm69N8jrvPbrhqQiF+g0c78cizScpvD4rjLC0DBMTWiOz1cV8e90c1vhHdtXJtr0bkFcGA36FnJX/yHPIjdDHV9K86fHMD6TwHgKXaHvgXAA7+FnsNqQoUaqL7LG2zWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744932772; c=relaxed/simple;
-	bh=NjeDRiJTwUo1cP3hkUv6xDm1gfr1mj3fB9ermM3sWkI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=mSYw/+bmSuVeHS4GnXamFBjIx/U+6A6we4b48Q8TClUjIrCjQH5RHv8mVg42hnslsdi0rS1dt13MTTdY8nLz+KzsUy92SYfc6nPNafLzxoJW2e8V6Ydue5Eb6Wt9qxobty6dvAt1f+Gbn61bHOsFziU+Ay48Fxd4OvmcPyqBGq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OW6CQJvs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744932795; c=relaxed/simple;
+	bh=erZofjZhCWmZmRiwoxBvNBUbwiHNIsVy4EpyGf6PUVk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QyeJAP1qUrPI6ANXEJcGlpYKxAi5AD2sCk45gZXwVnwFbFZ+hlPb5IiFnvOGLlEq3+xet2/PL3GrVH4dt4Qhr4gCZUjM2WOm2ejgrsYpaU0Zqu4X7FWGQP5yVm41aSucMt7lJ+v3BH0lGzf7B8yAR8Dv8LQFnr5tr8eMra3HzoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=thYIlQJ7; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OW6CQJvs"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 31C8EC4CEEA;
-	Thu, 17 Apr 2025 23:32:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744932772;
-	bh=NjeDRiJTwUo1cP3hkUv6xDm1gfr1mj3fB9ermM3sWkI=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=OW6CQJvs7mRM8Ph4luHzB5TaTF/gDC0wIDwXS+GHSid/HWyY1ZfwUKwWc1BAZgOIq
-	 Q3o98pAK+tt/DmxJPBEZuy+EXseDivse2c8XsEUTc7pL/h+VGzVC3FsJqi4FbKvhAA
-	 UKA2uDXMHQOtT9j2/8Ege7CcHaLs1ezhtfZCC65c3oBV60Qo614sRF/bb9ajKT0Joz
-	 cpuLFja2dsor6zIobA9IS3EVzklgprGS9Dzn5QLu/7S64VbtkNoxDYGbwAcJCcPW3g
-	 8hjN65fsgewJ7aAuetF07k+Nb7judNAoXsaBp93TA58OfR8qE3Pe5ADfIvHQIrAa/k
-	 8CgSu3zoYTy0g==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3D4C369C2;
-	Thu, 17 Apr 2025 23:32:52 +0000 (UTC)
-From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Date: Fri, 18 Apr 2025 01:32:49 +0200
-Subject: [PATCH] ARM: dts: allwinner: orangepi-zero: Enable audio codec
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="thYIlQJ7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=tGvXsJp/LowZicDO/bSfzJCHWFfJAHzlFFxjaLMPbDQ=; b=thYIlQJ7VkCBcw8BfHqh/4KjzR
+	TWN2oAUvkZ9h8rSC0mZgEOQ9jZ8LzhZNj9dc5ZbRHLrEU4aDaxgUti4rkUbxf8tGYfZfj8Q5ANn8u
+	x5q7SDFesLmNOD2qhDylDrEimxtTetBL/q4cVQcqUL4h6rvt0eUnaP/0/H7LVtgow5tLFFThfftk1
+	9xC3EinUBJeqtvojeIMoDRWwxbp7Qlv9xnIgBdnMcNWzZMu3zckKobPXSgnifhOwPImSIn8eCkIH8
+	Cmeh/xAy4tCIcjYob2XR/F+Obzc9HD5zg1x5cInLZF/Xq3ktKE6DWUMluEQkhkyCfKsmpXDo7U9tx
+	87ltfq+w==;
+Received: from [50.39.124.201] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u5YeK-0000000Bpcf-1whY;
+	Thu, 17 Apr 2025 23:28:06 +0000
+Message-ID: <b0450e23-2556-489f-8f4e-cca7aed9d975@infradead.org>
+Date: Thu, 17 Apr 2025 16:28:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250418-opz-audio-v1-1-4e86bb5bc734@posteo.net>
-X-B4-Tracking: v=1; b=H4sIAKCPAWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDE0Nz3fyCKt3E0pTMfF0LSwMLE8tki6Qko1QloPqCotS0zAqwWdGxtbU
- AXPuJz1sAAAA=
-X-Change-ID: 20250417-opz-audio-890849c8bb2e
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
- Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
- =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744932771; l=1299;
- i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=k/eQQFQjUWyBWBOWbfy/ABZzzwLp3ynUUvGy69783PQ=;
- b=XFDURnfsrz3fEywg3lhFqDKzoRTAi/FcZG9XBdQ96YdDa7CZFBotwe5QPeCWFtnsRKebQD/SK
- u4ZHjkpmgcCB6noff2Vt0VoZe7aulUZBUyOZs83ORW4NTGoV7Puxm/G
-X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
- pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
-X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
- auth_id=156
-X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-Reply-To: j.ne@posteo.net
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Tree for Apr 17 (drivers/pinctrl/pinctrl-sx150x.o)
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250417174117.014a23d2@canb.auug.org.au>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250417174117.014a23d2@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: "J. Neuschäfer" <j.ne@posteo.net>
 
-Line out playback and microphone capture work, after enabling the
-corresponding ALSA controls. Tested with the Orange Pi Zero interface
-board, which is a (mostly) passive adapter from the 13-pin header to
-standard connectors (2x USB A, 1x Audio/Video output, 1x built-in
-microphone).
 
-  https://orangepi.com/index.php?route=product/product&product_id=871
+On 4/17/25 12:41 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> News: there will be no linux-next releases tomorrow or Monday, next
+> Friday.
+> 
+> Changes since 20250416:
+> 
 
-Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
----
- arch/arm/boot/dts/allwinner/sun8i-h2-plus-orangepi-zero.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+on x86_64:
+CONFIG_PINCTRL_SX150X=y
+CONFIG_I2C=m
+CONFIG_COMPILE_TEST=y
 
-diff --git a/arch/arm/boot/dts/allwinner/sun8i-h2-plus-orangepi-zero.dts b/arch/arm/boot/dts/allwinner/sun8i-h2-plus-orangepi-zero.dts
-index 1b001f2ad0efd2e77218742efe6d8edfdd18a816..d65ede3dd6ed1206248a39c91e46065684e7ba29 100644
---- a/arch/arm/boot/dts/allwinner/sun8i-h2-plus-orangepi-zero.dts
-+++ b/arch/arm/boot/dts/allwinner/sun8i-h2-plus-orangepi-zero.dts
-@@ -112,6 +112,14 @@ wifi_pwrseq: pwrseq {
- 	};
- };
- 
-+&codec {
-+	allwinner,audio-routing =
-+		"Line Out", "LINEOUT",
-+		"MIC1", "Mic",
-+		"Mic",  "MBIAS";
-+	status = "okay";
-+};
-+
- &cpu0 {
- 	cpu-supply = <&reg_vdd_cpux>;
- };
 
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250417-opz-audio-890849c8bb2e
+ld: drivers/pinctrl/pinctrl-sx150x.o: in function `sx150x_regmap_reg_read':
+/home/rdunlap/lnx/next/linux-next-20250417/X64/drivers/pinctrl/pinctrl-sx150x.c:1061:(.text+0xff2): undefined reference to `i2c_smbus_read_byte_data'
+ld: drivers/pinctrl/pinctrl-sx150x.o: in function `sx150x_probe':
+/home/rdunlap/lnx/next/linux-next-20250417/X64/drivers/pinctrl/pinctrl-sx150x.c:1138:(.text+0x12ce): undefined reference to `i2c_get_match_data'
+ld: drivers/pinctrl/pinctrl-sx150x.o: in function `sx150x_regmap_reg_write':
+/home/rdunlap/lnx/next/linux-next-20250417/X64/drivers/pinctrl/pinctrl-sx150x.c:1087:(.text+0x22cf): undefined reference to `i2c_smbus_write_byte_data'
+ld: drivers/pinctrl/pinctrl-sx150x.o: in function `sx150x_init':
+/home/rdunlap/lnx/next/linux-next-20250417/X64/drivers/pinctrl/pinctrl-sx150x.c:1266:(.init.text+0xa): undefined reference to `i2c_register_driver'
 
-Best regards,
+
+
 -- 
-J. Neuschäfer <j.ne@posteo.net>
-
+~Randy
 
