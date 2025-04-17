@@ -1,180 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2061.outbound.protection.outlook.com [40.107.105.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D6A1C27;
-	Thu, 17 Apr 2025 12:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744893216; cv=none; b=Aqpsl7m1AAzO2slYLwWbLPj2ip0mpFH2awY75hwWv4Lvt3KgN2H8GnNUlMh69b5n9R+Kfv3Qztj08uhRxiwAjuVePCOpNCToJcJxNW40UE/LaZ6wfNucUUl0oRnY40VbqrXRgORjdIEJuzT+DlQVlfmXxelLUbcjFrXHP5QHe60=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744893216; c=relaxed/simple;
-	bh=FDErxuFL1wK6kbPUAEjtU+rfiDMxx23rRpdS+uMtd/w=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=YSLL6sloqkwM53hGV8G2VCtpKj/SZJmiQuQJrBrBX8i3MnShBdGC4lXK24sfWfXsh6e7h6FfJseIgr7j9TzOKrNF8SMrjz6GI1J/o8Qqm/pKtEWw882rBn3IhSSQ7/wDv7oKivNnWVRd0cnJdykiX9S5eRLTBxSBPDH2Tgjuv4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SM0nEeY7; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10FE24502A;
+	Thu, 17 Apr 2025 12:33:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744893222; cv=fail; b=SGQrPBsIg1MNQGNtDnjJoFwnd4ygb9/YGwi94VPDh8jnYClW/oVkOKZqOxNPjKqyjfbRv3FQ3wCkZvYgUjX9Q/XtvO4/00GtnS5fInrKkjlU3cZPQvfbDh7D+sR1qTyz2ts/GjkHKwbg0K+5VWGiPl6eXPQLXnMOeWqgTyrt2D8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744893222; c=relaxed/simple;
+	bh=+BzMrrx7UH8CxzQx8gybYJMssefKjIAjKWVDj624sfU=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=D9+OVX9VOOrB6+wDmlQZzbnP0gOxIUVr4IZ7WuaFf+aQiJbDx1Edq7jP9xjQlkTeHBvfpT6yxnZ5G/wUm0cntxcPKK5rPWs9w8NaHmKOr1braZHSw4+Mce6Jy8Uj287iBn21UxCEJX6NV9za/GnTtb49vKEbltVwYOgBCZSf0Ck=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com; spf=fail smtp.mailfrom=mt.com; dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b=WTUyIHo9; arc=fail smtp.client-ip=40.107.105.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=mt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SM0nEeY7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA465C4CEE4;
-	Thu, 17 Apr 2025 12:33:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744893214;
-	bh=FDErxuFL1wK6kbPUAEjtU+rfiDMxx23rRpdS+uMtd/w=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=SM0nEeY7jvsOvq/cHvFBCTnXMjgpLsUEv0R7oN3PuA2Ciojm8VCh8NdVId+ddg7ep
-	 qN1zatvbev/E/8h43ut2tuWPL4d/5h4VABXPVF5RIlJ5wwyccV3dGrkQh0xrPp9BgQ
-	 t4urY7eXJpYxwovCAkFYix+S05yaZ7fta7IU73o2p1IBTSTb1FoJcV6JK9WZhzwdwE
-	 u8rgJNkw/bwOW6wNoAqJTzOgb9IhTkevdSLgZe70eAyOZK7dNIKV8fSNMXnxU9yF2t
-	 YGUxBaLL5Da8I9XMuiMPA1AE+zJfwkStduak8uM3/Ki9NObMcYKGSppkp6Rk6Ed3tD
-	 8LuzLSgdzFX5A==
-Date: Thu, 17 Apr 2025 07:33:33 -0500
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b="WTUyIHo9"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RVgJz4r6/Tej/GadN7z50z1WeUn8hgpLUhYt6XGHmGjXjKAZifvzqPwgJ4q6edirZmMy6iiKxys1M/TcxjVfldLLKNfRpq07sQ7HOaoBxwm6Io0yToBF1qwAs2jlglxXU1rF+yiDuXKbB56USU+I5+7A8RZYLeMkzhzW1CbyIsVj3Bvc7ZiJ7liZTWYJ18h/oOTceFlGsiUu7bX1ZyEaAW35IdBTNCLvh17UV50856xtthGmjbX9rdlYAtlQnakLuOzAZrDtZ/GfHlRWoWObplciyGoOxk7hiyIfconhsQJ94fOGRmZ34Psk6KicCQBub/y3FIJSC86TrzgxkhDUxw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=P9i9XnNvYyeyPvpbkPUbDuJlvvs6ehtEyGqGy315pDs=;
+ b=GgzrvD6TlNLEYvuF7NmqvguJA6y1HbilHqeWbVgAZ5TvQz4Y7Kky78U2PMy/AjoSwt+s6eBO8QvGQD4X22JX4OYjUsv1DN+IP8yKiJW3BXTAFVGAyLbBrflH0fTfBH/97L1r87L4oseq7VTRUeq5EhVK2k2HfP0Tg02a3WcIyB8I7kh7w+cVX7S5HHM99MkaWwuunG9b4Kg4ChHpkI/rKLmm8xgnWN4HOaxIcdLK7cGTQcPz0t4LBA6vQrJpWvS3/HHYnJkBAQte4Is260A2an+cozS01LFRPf9NXR6f+N+Ng6vjt32cImSDJ3GLPfLAuSBHPjmSjP2ieqkC+X9T5A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mt.com; dmarc=pass action=none header.from=mt.com; dkim=pass
+ header.d=mt.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P9i9XnNvYyeyPvpbkPUbDuJlvvs6ehtEyGqGy315pDs=;
+ b=WTUyIHo9VePxjTSkrnC7qF0bm2InbzwtAVrOZHNgjf4/qqLeIgelkvDYa6n8Qo2sK5k1HXWfM4I+cEy3gO8gzlREUqGp3/VsqoVDv3aPMO78nB9odoVlD6vAV25zI8mviubXixSpumhwxUUnkx8xz3brpePNzl0wYVRZ+h3POIm4DOvT5EIxqdJP3YpIuq5ESYGpsWKz6ZjT5pAPt9Dudit+EZ31oMN8IhGknxjCMd8xKZ8YqSxaMnAXx7FcYeX3WxRXwFTjRw2O5ur4YquCaN/1wtXnpn3Yy4/Qe0r1lMWOkKUy4ziI43T6plxifopUe4JKXxDlvLr2CkFaDxWdOA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mt.com;
+Received: from AM6PR0302MB3413.eurprd03.prod.outlook.com
+ (2603:10a6:209:24::15) by AS4PR03MB8627.eurprd03.prod.outlook.com
+ (2603:10a6:20b:58a::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Thu, 17 Apr
+ 2025 12:33:36 +0000
+Received: from AM6PR0302MB3413.eurprd03.prod.outlook.com
+ ([fe80::fd5:7b7c:3b2:8d1f]) by AM6PR0302MB3413.eurprd03.prod.outlook.com
+ ([fe80::fd5:7b7c:3b2:8d1f%7]) with mapi id 15.20.8632.030; Thu, 17 Apr 2025
+ 12:33:36 +0000
+From: Wojciech Dubowik <Wojciech.Dubowik@mt.com>
+To: linux-kernel@vger.kernel.org
+Cc: Wojciech Dubowik <Wojciech.Dubowik@mt.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] arm64: dts: freescale: imx8m[mp]-verdin: Add vs-supply to hwmon
+Date: Thu, 17 Apr 2025 14:32:54 +0200
+Message-ID: <20250417123255.819309-1-Wojciech.Dubowik@mt.com>
+X-Mailer: git-send-email 2.47.2
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MI0P293CA0015.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:290:44::8) To AM6PR0302MB3413.eurprd03.prod.outlook.com
+ (2603:10a6:209:24::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Abel Vesa <abel.vesa@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org, 
- devicetree@vger.kernel.org, maud_spierings@hotmail.com, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- linux-kernel@vger.kernel.org, dmitry.baryshkov@oss.qualcomm.com, 
- linux-usb@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Bjorn Andersson <andersson@kernel.org>
-To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-In-Reply-To: <20250416232345.5240-1-alex.vinarskis@gmail.com>
-References: <20250416232345.5240-1-alex.vinarskis@gmail.com>
-Message-Id: <174489319505.1442449.5614787992702738392.robh@kernel.org>
-Subject: Re: [PATCH v3 0/4] X1E Asus Zenbook A14 support
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR0302MB3413:EE_|AS4PR03MB8627:EE_
+X-MS-Office365-Filtering-Correlation-Id: 43f04911-cf8c-46a2-64c1-08dd7dac12b6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|52116014|376014|7416014|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?WdQqJpZsl69pUmCUlIrJsGr2yJ7oyhiKIvgKvizBqZgfNgPBzQuTXjxnmPpO?=
+ =?us-ascii?Q?33EfqFh+t6SCYD8nhh3hITV8NaGnKD0gJwx+hyQ1DlVt0M8bY50BkIF+9G3K?=
+ =?us-ascii?Q?Orp7pqDrkyFe5CEFacHth/Nrt763M4cqLiPP6HLmIp/WMdxYkRKdnlikiYOE?=
+ =?us-ascii?Q?NTxpTosUXBWEzNlQ9O3beU2rSRKtixTH54UpF1EPn8NOe4ET75i/o0xHmSwL?=
+ =?us-ascii?Q?eQ/SAqRw7oIVF9EkcHZgyYI/YWT5+5uQPJXy84SuA8ncCRv2S3Y4JzvRD/Cp?=
+ =?us-ascii?Q?X+x730sfLajhRAySyXpFXM+T4yRBtO3Fz0qZeh+Yt9uolwLxdo4XuHHDZ16T?=
+ =?us-ascii?Q?WwslvOutonFt9XxcGyeNZTJ7IKlnO+2CNFqbFTF2q/IkmqQKkdhoyzY24jaF?=
+ =?us-ascii?Q?0E+a9amfUSJmdHhPLLDAbhF8rNLl7XCau6WGyonzaFB+5Phh/8OvZfpJGYF1?=
+ =?us-ascii?Q?4XFaH+Hwd/ypZDID7EnD9Xn0jv2JJOShy0Cl+HoS53JvW9NcnwArymYY+IWb?=
+ =?us-ascii?Q?oRP4h/UqqGlZErGYoppr/HSHtZFRCH+/I+VNgZgWpow+uWD0/0+bE9vvrsMh?=
+ =?us-ascii?Q?JPETzgrfZ7iyIe/9UvZVnrAqC2yKudM0i9I6U1bViqtQupDkuOpvaZkr1Idj?=
+ =?us-ascii?Q?+MeDV+/fWYApwQblKtt7N8tqK3INSeHvjBbqnWcn3PNnhFTn8WLLQoH1JWhP?=
+ =?us-ascii?Q?ENGao93l1IS/oczbzmkzNJUjyqekyl8inR47m1G4NnA+r41VhUw3l4AvJVVR?=
+ =?us-ascii?Q?gsJta+jcGAwP+uczokvYzNOjTfy86G8rktzqtMfdddhHovINfLG40sp3rwkA?=
+ =?us-ascii?Q?qfHJ/47CIy7Q9dJEq7itbtvZ4XFp976WVDmIYZjiVk5ybaLlUbyct9AVUFFn?=
+ =?us-ascii?Q?NUuU8L2geICh+JxZ1i+HUZpYwbfBq/MpUf399tQGqqYxXH0scHygsoDjjb0V?=
+ =?us-ascii?Q?j9zL58EzX8fsxRKRyFo/pf6QhuZXZEJUwA7T0lVR/haFzLe87L7IStWZHq3e?=
+ =?us-ascii?Q?sRWeeaGZQGN3UTX0Dl6vC1SGDeQGbZv93TaeDXBcGI+M33mhCvbZDRdfW1oj?=
+ =?us-ascii?Q?LLjomrZQJCp1azVUG/ICwoQK3ApGyfjC2ajK23UOnLFo8OIg5VFIAc9knOey?=
+ =?us-ascii?Q?UIjrxBRdcbjRJk4SKXrp0KfPe1zYnfzB5p8IbfeHOY/9DIX/jIqAhYlWm5li?=
+ =?us-ascii?Q?rnAAVUBMW2Kq9tqDic5m6CcWcWgtHQTprebDaLJzmi+9kxoOX357C/BiKN3M?=
+ =?us-ascii?Q?R+A7NQCIcmj8pmRgdGj+IqAjNg41jmPWLKKRiPojaNn6aQHSnq1MMFko3VOQ?=
+ =?us-ascii?Q?MORsXMihBe+yoqnxBZ0+eVon5nHwTR5oIUike/CKCC4jWPS6NGQeY4ul9MGk?=
+ =?us-ascii?Q?yrVZef9nYgX/eWIenC2VcIFKyOLGuzIiQbz/qMaJQAEXMdZ82LjkDZvIvSr1?=
+ =?us-ascii?Q?W0d4vXOu/kxzAhuMHUOnihEzjyS0tT98dHuLq2hty6g7WjNYukotKw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0302MB3413.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(376014)(7416014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?eYpsLcCCCmshrtaWWu8hSG9c1wxtYAqREo3jdNxnT9Zin21LuQT03mnKMuQJ?=
+ =?us-ascii?Q?u99NbshthvQMGuz1ZJPhVy3U1Id1Rf0J+gDMkCnLD+ObuO1qBRd8c5C9rqOZ?=
+ =?us-ascii?Q?cgo7Z1F8eKrtnI9XeND/Ews6Rv8hDp98oBFPJnShyCJ5/Pm6le9BSKOfni4j?=
+ =?us-ascii?Q?E2N0CZt42hZYbexZBK57ticmeOt8aZf+K4JmuLZraQDKdVT2ejYslu6fTA1s?=
+ =?us-ascii?Q?gSi26ZWmbJD5l1CorWugzhVunijYwba6cGzcp2KUZLxYMG3okLHkbRTkuaMQ?=
+ =?us-ascii?Q?bAX4dLDx6ehQM2eCOmQtIP9xUn3nzOS8uDEHksnTeBTKLPNUB8Qffrvm4WOP?=
+ =?us-ascii?Q?BSEJ7dZSb0C+HRG843R4YjSy4BUvIwGnLS1fPgFMBzne7+WIIrrtx+mKwRHG?=
+ =?us-ascii?Q?mE3Q6yPy7IWMVCDCMfFQMdtNs6jTB0PTbnDfY5iEgDhqufpvKEG8D2SU1bXj?=
+ =?us-ascii?Q?G61ab9xs/KfBXXb1eDL6oj9HK5N80yS5wHKbUkAFZrDHCem24rwGZONF3y2m?=
+ =?us-ascii?Q?SCTKIOdJmV3gYPOJZwu9aQtp6jEpsBdTNrW6WgdlbepTl2Eun0ZxVWkjRMru?=
+ =?us-ascii?Q?GiZZFgDQByGS7b3gZaxVi2FAq2cao6Eq8RBTSfIj9e56nl9dUFwisUpEBrlC?=
+ =?us-ascii?Q?9vE3g/Jm/TMm02L09kuocNDfQds6WEZTocVB4zvTrbla/T3UxjcJ8c6RgO8z?=
+ =?us-ascii?Q?8EOR/BEwxtufGq+tC/o+MPYsws2mqmm4ZfTUwOTXz7PnPj5OEdiZUdf0foMM?=
+ =?us-ascii?Q?yxfbGMmwmsiHPhaAXUoMiABSRnDZRuFAffttYk5qoPAjKPsd54qzU/Eob+wz?=
+ =?us-ascii?Q?mxJdT9odQUkQu/xFGSUpwfyEdqGkdxs7anUq28aBhGHMGiFVeu+L0BPWTtPP?=
+ =?us-ascii?Q?gQZ8PMQQTB2nxikgNsN+e1+WEyvysdcNCDqXpEOGL/QePIJjhAgDDR5bY5US?=
+ =?us-ascii?Q?rHMylqSfdZ4zGjAiRp+Sl8rh+S+DVG0pw20rIWKFn9dM+dq17uh5aSKv52Um?=
+ =?us-ascii?Q?IZwQ95WjEA2zva28Grq0x040BNfsNaQOgzYjfGWcGhP1zGmytRUMgBetZgM2?=
+ =?us-ascii?Q?/TVIiwk4oep+9viAL3ZNCBT4ymXEswPwrOziYH50Mn6hbe3Ef9qM9pIy3KbJ?=
+ =?us-ascii?Q?447/df8KNf54GFi49zXb3ZqZII+8ciBYiACUp1EZXU3/0lL6cElGfo4NeYck?=
+ =?us-ascii?Q?U3ON5TOxT6ClzhWTUeKeAWaIpyGOvP9LdAiePgoLPd4XB1XZTp5OeVo/4dop?=
+ =?us-ascii?Q?r8zl9ez27ST4dD+gQX068SEQ4erqX+9fVrpAMhscKSDtn4Yheacm5RP7CWMt?=
+ =?us-ascii?Q?KNRUlN1xsA4TWPd9Q7SbCHDgq8AT3Db9L3ADNTRy6Gy4z66piVTq3jBbH8f3?=
+ =?us-ascii?Q?P0sMLjHfw+nhIANmNphXNU1Cbhk/fsHlXcsZ0yuqbCDF4IvgsCbRL4+xgqSM?=
+ =?us-ascii?Q?ObG3V0kidPJn8brQOlmLmANC6KuYXtkbYPvZb7IXO5zzJ5r7XjlmkPrRqYMB?=
+ =?us-ascii?Q?szjmgU8NJKFj3zxnr4NzH0ncRsRauS74nx16T16nyBB4Wb/mFIuB9g02gpAx?=
+ =?us-ascii?Q?ZWtOUguyVjid5dZGbtKIAerH80DN/anS+zPSnsNM?=
+X-OriginatorOrg: mt.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 43f04911-cf8c-46a2-64c1-08dd7dac12b6
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR0302MB3413.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 12:33:35.9504
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fb4c0aee-6cd2-482f-a1a5-717e7c02496b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8vtJAjpofq1KFUNC1BwF3EM53sP2O5SO0dZRPzs+yPtt4HOG+EDJVWmxxp2gXTxS6avXQ38elE9V6XY+GrYTAg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR03MB8627
 
+INA219 current measurement chip is connected to +V3.3_SW rail
+so add vs-supply definition.
 
-On Thu, 17 Apr 2025 01:20:47 +0200, Aleksandrs Vinarskis wrote:
-> Introduce support for the mentioned laptop.
-> 
-> Particular device exists in two model numbers:
-> * UX3407QA: X1P-42-100 or X1-26-100 (as tested)
-> * UX3407RA: X1E-78-100
-> 
-> Mostly similar to other X1-based laptops. Notable differences are:
-> * Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
->   and Qualcomm FastConnect 7800 on UX3407RA
-> * USB Type-C retimers are Parade PS8833, appear to behave identical
->   to Parade PS8830
-> * gpio90 is TZ protected
-> 
-> When comparing device firmware between UX3407QA, UX3407RA, it seems
-> that only ADSP firmware is different, CDSP and GPU firmware appears to
-> be the same. (At least assuming the GPU firmware name in both cases is
-> `qcdxkmsuc8380.mbn`). Since at least some blobs are different betweeen
-> X1E and X1/X1P, define new firmware directory for `qcom/x1p42100`. This
-> also makes it easier for distros to automatically extract firmware from
-> Windows and place all blobs for the model under the same path. If/When
-> firmware blobs make it to linux-firmware, same blobs can be easily
-> symlinked between `qcom/x1e80100` and `qcom/x1p42100`.
-> 
-> NVMe SSD depends on [1]. USB Type-A over USB MP controller  depends on
-> [2], or equivalent proposed solution.
-> 
-> Qualcomm FastConnect 6900 on UX3407QA did not work out of the box, and
-> additionally required both newer firmware and patches to `board-2.bin`.
-> I added a short how-to [3], as it is not exactly trivial.
-> 
-> ACPI dumps can be found on aarch64-laptops' github [4]. HWids on
-> dtbloader's github [5].
-> 
-> [1] https://lore.kernel.org/linux-arm-msm/20250319094544.3980357-1-quic_wenbyao@quicinc.com/
-> [2] https://lore.kernel.org/all/20250318-xps13-fingerprint-v1-1-fbb02d5a34a7@oss.qualcomm.com/
-> [3] https://github.com/alexVinarskis/linux-x1e80100-zenbook-a14?tab=readme-ov-file#wcn688x-wifi
-> [4] https://github.com/aarch64-laptops/build/pull/134/files
-> [5] https://github.com/TravMurav/dtbloader/pull/4/files
-> 
-> Changes to v1:
-> * Fix/re-add PS8833 as fallback
-> * Add EC's i2c address
-> * Add pwrseq for wcn6855, placeholder for wcn7850 until its tested
-> * Rename x1-zenbook.dtsi to x1-asus-zenbook.dtsi
-> Link to v2: https://lore.kernel.org/all/20250402084646.10098-1-alex.vinarskis@gmail.com/
-> 
-> Changes to v1:
-> * Drop PS8833 variant, fallback to PS8830 as they behave the same
-> * Drop wrong pcie6a_phy compatible revert
-> * Drop redundant comments, fix order of properties in the device-tree
-> * Fix device name bindings, express in model names instead of the soc
-> * Fix GPU firmware name for UX3407QA
-> * Fix model string, enclose variant in parenthesis
-> * Added missing new lines before 'status = "okay";'
-> * Updated cover letter to reflect some of the above changes
-> * Left SPI10 disabled as it is unknown how/what for to use it as of now
-> Link to v1: https://lore.kernel.org/all/20250331215720.19692-1-alex.vinarskis@gmail.com/
-> 
-> Aleksandrs Vinarskis (4):
->   dt-bindings: usb: Add Parade PS8833 Type-C retimer variant
->   dt-bindings: arm: qcom: Add Asus Zenbook A14
->   firmware: qcom: scm: Allow QSEECOM on Asus Zenbook A14
->   arm64: dts: qcom: Add support for X1-based Asus Zenbook A14
-> 
->  .../devicetree/bindings/arm/qcom.yaml         |    2 +
->  .../bindings/usb/parade,ps8830.yaml           |    7 +-
->  arch/arm64/boot/dts/qcom/Makefile             |    2 +
->  .../boot/dts/qcom/x1-asus-zenbook-a14.dtsi    | 1307 +++++++++++++++++
->  .../dts/qcom/x1e80100-asus-zenbook-a14.dts    |   44 +
->  .../dts/qcom/x1p42100-asus-zenbook-a14.dts    |  137 ++
->  drivers/firmware/qcom/qcom_scm.c              |    2 +
->  7 files changed, 1499 insertions(+), 2 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/qcom/x1-asus-zenbook-a14.dtsi
->  create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dts
-> 
-> --
-> 2.45.2
-> 
-> 
-> 
+Signed-off-by: Wojciech Dubowik <Wojciech.Dubowik@mt.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mm-verdin-dev.dtsi | 1 +
+ arch/arm64/boot/dts/freescale/imx8mp-verdin-dev.dtsi | 1 +
+ 2 files changed, 2 insertions(+)
 
-
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: attempting to guess base-commit...
- Base: tags/next-20250416 (exact match)
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250416232345.5240-1-alex.vinarskis@gmail.com:
-
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth (qcom,wcn7850-bt): 'vddrfacmn-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth (qcom,wcn7850-bt): 'vddaon-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth (qcom,wcn7850-bt): 'vddwlcx-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth (qcom,wcn7850-bt): 'vddwlmx-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth (qcom,wcn7850-bt): 'vddrfa0p8-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth (qcom,wcn7850-bt): 'vddrfa1p2-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth (qcom,wcn7850-bt): 'vddrfa1p8-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-
-
-
-
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-verdin-dev.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-verdin-dev.dtsi
+index 1d8d146d9eeb..33a134961a3d 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-verdin-dev.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm-verdin-dev.dtsi
+@@ -66,6 +66,7 @@ &flexspi {
+ 
+ /* Current measurement into module VCC */
+ &hwmon {
++	vs-supply = <&reg_3p3v>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-verdin-dev.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-verdin-dev.dtsi
+index a38e7c947a42..600efa8aca1d 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp-verdin-dev.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mp-verdin-dev.dtsi
+@@ -143,6 +143,7 @@ &hdmi_tx_phy {
+ 
+ /* Current measurement into module VCC */
+ &hwmon {
++	vs-supply = <&reg_3p3v>;
+ 	status = "okay";
+ };
+ 
+-- 
+2.47.2
 
