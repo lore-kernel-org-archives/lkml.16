@@ -1,28 +1,29 @@
 Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895791B6D08
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895181ACEBE
 	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 04:35:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744864541; cv=none; b=TJLp9ogHDkS8AAzFJ5iXs75xsg2oqcq3/lAWHkYPEe1OMKMlwewoT4FTWsTW2cM8ruXVx211ORmiuI9cu+Sjk+1Vo6BagpuTVrmtRwz73nxHOR5B/vNhGYd66O+TVhtspd8DqUzt7wpPBa82Nc3NS5vp20HmdHK4PEWI4+vqnCE=
+	t=1744864542; cv=none; b=RbrQy8qYUpwquVdqOZAtkIWfaQ1QhwY4zb8Ib7+LD3lVbfhAyMhzmB39RxKjFKficu8CPP6156QBHAhp8/sFAqvz8X9IFk+w9nrD2/LBDobb1HKVbYfYeqRzjoqGQsw9L5FhEiqfZN4LWX2NPlmYg+BcksXeyYSXz+JAj01HVlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744864541; c=relaxed/simple;
-	bh=hAM7je+z6OhJoZDOw541Lcf6flKOl4JvfWLznaipbmE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=K64z7NChvWwHjHwFjM1vyWhNfzB9CwT8yOnH7L6u4tqRGfoH6pVD3fzOnlB4Tb5PHNZmePbpl1z04jmNJmCubcfeLv3et+uR6vQrnD/TZCXtE3yJpiR2zfZ6yMA+shWixEB8SV2nFd5KLo+m/x3ByHath7TbXxtkdPaIwGp35t4=
+	s=arc-20240116; t=1744864542; c=relaxed/simple;
+	bh=tP61bF0crTIs7tkEr4P6HXPSXJFNINEJ//g8KY7W2PI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FtaGDi3mNtTsFqEvCKYhyTAhfJBX70koJuRILljpthb2n5eZ4EjySlxxr/6iCW191m8l3UcanHFLaeRWsYZwnGwl7zm4h2juNG/tQvqYF99ggCdKS9hTD7E0IvF6RxwcjOV5GfjOEAaG93ddRv7xCzRLVhLKaTUMuKCFh9biuck=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
 Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 53H4ZO8I073778;
-	Thu, 17 Apr 2025 12:35:24 +0800 (+08)
+	by SHSQR01.spreadtrum.com with ESMTP id 53H4ZVwf074552;
+	Thu, 17 Apr 2025 12:35:31 +0800 (+08)
 	(envelope-from Xuewen.Yan@unisoc.com)
 Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4ZdQ5W6r0Pz2K25JB;
-	Thu, 17 Apr 2025 12:34:07 +0800 (CST)
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4ZdQ5g4Cdgz2K25fm;
+	Thu, 17 Apr 2025 12:34:15 +0800 (CST)
 Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
  BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.48; Thu, 17 Apr 2025 12:35:21 +0800
+ 15.0.1497.48; Thu, 17 Apr 2025 12:35:28 +0800
 From: Xuewen Yan <xuewen.yan@unisoc.com>
 To: <vincent.guittot@linaro.org>, <dietmar.eggemann@arm.com>,
         <mingo@redhat.com>, <peterz@infradead.org>, <juri.lelli@redhat.com>
@@ -32,10 +33,12 @@ CC: <rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
         <di.shen@unisoc.com>, <xuewen.yan94@gmail.com>,
         <kprateek.nayak@amd.com>, <kuyo.chang@mediatek.com>,
         <juju.sung@mediatek.com>, <qyousef@layalina.io>
-Subject: [PATCH V3 0/2] sched: Align uclamp and util_est
-Date: Thu, 17 Apr 2025 12:34:55 +0800
-Message-ID: <20250417043457.10632-1-xuewen.yan@unisoc.com>
+Subject: [PATCH V3 1/2] sched/util_est: Simply the condition for util_est_dequeue/enqueue
+Date: Thu, 17 Apr 2025 12:34:56 +0800
+Message-ID: <20250417043457.10632-2-xuewen.yan@unisoc.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250417043457.10632-1-xuewen.yan@unisoc.com>
+References: <20250417043457.10632-1-xuewen.yan@unisoc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,37 +49,65 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
  BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 53H4ZO8I073778
+X-MAIL:SHSQR01.spreadtrum.com 53H4ZVwf074552
 
-Now, both uclamp and util_est have been adapted for DELAYED_DEQUEUE,
-and the double enqueue/dequeue issue no longer exists.
-However, there is still room for optimization in both uclamp and util_est.
-Previous discussions as following:
-https://lore.kernel.org/all/CAB8ipk8pEvOtCm-d0o1rsekwxPWUHk9iBGtt9TLTWW-iWTQKiA@mail.gmail.com/
-https://lore.kernel.org/all/84441660bef0a5e67fd09dc3787178d0276dad31.1740664400.git.hongyan.xia2@arm.com/T/#u
-https://lore.kernel.org/all/CAB8ipk9LpbiUDnbcV6+59+Sa=Ai7tFzO===mpLD3obNdV4=J-A@mail.gmail.com/T/#u
-https://lore.kernel.org/all/aa8baf67-a8ec-4ad8-a6a8-afdcd7036771@arm.com/
-https://lore.kernel.org/all/20250325014733.18405-1-xuewen.yan@unisoc.com/
+To prevent double enqueue/dequeue of the util-est for sched_delayed tasks,
+commit 729288bc6856 ("kernel/sched: Fix util_est accounting for DELAY_DEQUEUE")
+added the corresponding check. This check excludes double en/dequeue during
+task migration and priority changes.
 
-patch[1]: Simply the condition for util_est_dequeue/enqueue; 
-patch[2] aligns uclamp and util_est and call before freq update to improve
-the performance and power.
+In fact, these conditions can be simplified.
 
-Xuewen Yan (2):
-  sched/util_est: Simply the condition for util_est_dequeue/enqueue
-  sched/uclamp: Align uclamp and util_est and call before freq update
+For util_est_dequeue, we know that sched_delayed flag is set in dequeue_entity.
+When the task is sleeping, we need to call util_est_dequeue to subtract
+util-est from the cfs_rq. At this point, sched_delayed has not yet been set.
+If we find that sched_delayed is already set, it indicates that this task
+has already called dequeue_task_fair once. In this case, there is no need to
+call util_est_dequeue again. Therefore, simply checking the sched_delayed flag
+should be sufficient to prevent unnecessary util_est updates during the dequeue.
 
- kernel/sched/core.c | 17 ++++++++++-------
- kernel/sched/fair.c |  4 ++--
- 2 files changed, 12 insertions(+), 9 deletions(-)
+For util_est_enqueue, our goal is to add the util_est to the cfs_rq
+when task enqueue. However, we don't want to add the util_est of a
+sched_delayed task to the cfs_rq because the task is sleeping.
+Therefore, we can exclude the util_est_enqueue for sched_delayed tasks
+by checking the sched_delayed flag. However, when waking up a delayed task,
+the sched_delayed flag is cleared after util_est_enqueue. As a result,
+if we only check the sched_delayed flag, we would miss the util_est_enqueue.
+Since waking up a sched_delayed task calls enqueue_task with the ENQUEUE_DELAYED flag,
+we can determine whether to call util_est_enqueue by checking if the
+enqueue_flag contains ENQUEUE_DELAYED.
 
+Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
 ---
 v3:
-- split previous patch in 2 patches.
- 
-v2:
-- simply the util-est's en/dequeue check;
+- Separated from the previous patch.
+- rework the commit message.
 ---
+ kernel/sched/fair.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index e43993a4e580..18c85857bff0 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6941,7 +6941,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 	 * Let's add the task's estimated utilization to the cfs_rq's
+ 	 * estimated utilization, before we update schedutil.
+ 	 */
+-	if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & ENQUEUE_RESTORE))))
++	if (!p->se.sched_delayed || (flags & ENQUEUE_DELAYED))
+ 		util_est_enqueue(&rq->cfs, p);
+ 
+ 	if (flags & ENQUEUE_DELAYED) {
+@@ -7183,7 +7183,7 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
+  */
+ static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ {
+-	if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & DEQUEUE_SAVE))))
++	if (!p->se.sched_delayed)
+ 		util_est_dequeue(&rq->cfs, p);
+ 
+ 	util_est_update(&rq->cfs, p, flags & DEQUEUE_SLEEP);
 -- 
 2.25.1
 
