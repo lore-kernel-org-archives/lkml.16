@@ -1,136 +1,135 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB3222A1D5;
-	Thu, 17 Apr 2025 10:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5456822D4C3
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 11:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744887502; cv=none; b=l6qPVtKMweEhYYad1UTO8zuMxFBGmn1LJuFGmNdpZ6/7Hovw5ddIlgKsssmV+qZLGXWqtjsooYho2liAhGcmrOIvu7839pYav4g7ZTFESf3m+EkXHr5KrzqXer2vabHhRU6+FH22SKfpTb5jHFiu6oxjyD0XgKxpBAUqxIAd3pg=
+	t=1744887611; cv=none; b=XI+v1AkoQFkM91p1ruF/rk+9P5IyrdBf+e85wLtifoLFMP8Nd3zkx3qZ8LY94SlJdDDKxxMAiT08KoQ7PWgtPvmJ3skizuMRm4DwGI93gP8pKlzMyzngEpLkRx/0ghUzZdiar9NDFt+iMvoEu45+kXEkqMvyLIwaYQ/N/KMew8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744887502; c=relaxed/simple;
-	bh=6pApmvsVQVsQmnATukOO7BvLu0XhL5vPN5/CoEIDPr0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=R6RcVDfwhgScnnFB6jNq3CFJygPuDfgyc4FPd15eqZllc08U1davh86WtUlxzW2pTPpEF6GoCylLgE1g1Ezv1iUUetG/aTUDlYcvRzs3SQ8Hh1eSn6egCsURCCb2+51c07kbaSvfHGBv4iHdCZ0WEkMNcxUmNPcxBfPrGlPez30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FNhEoVDW; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744887611; c=relaxed/simple;
+	bh=X6tljyeoJCuwor1cd6cNwVaGQL05xjYEdjb/uanKFc0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R//F4pM322U7dOz5FSa/h+r65wzltJjK0zt+jIt+NY2HrnOm1YSTGUY0LpgnTLnewT5sixBTVqJATcw64oJwE7j9rybyVP0lqkk9lgrAfYcObjdKX/lhH6JpWezgIsBhSQ/cwuKSxTd81fNeiPeCneNTs1GwSOqGXi66yCuUcb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JqP+3grM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FNhEoVDW"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3914bc3e01aso356969f8f.2;
-        Thu, 17 Apr 2025 03:58:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744887499; x=1745492299; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4GrUlyk74WjltV2K0kWiBgfuLaCstnwmS8DfLOMBDsk=;
-        b=FNhEoVDWbPp/TrUyhnuLYvmBWdIQTsegAdw/wnMcE+CnA3TysBfnLla0YB5BGNNjR5
-         aAAl05YMoGWhuOuwKVVCDqvScxpx54nxs0c65WjdkGxIriWR4UY9fovAtULFK5zmt0Fi
-         YLayC9tDtWK4vpa+/OkfMdfooyoTiPMQ54y3tmPDMhwO8J5iQGeTleil8hCk+6hZrdEG
-         sNfHR2e/Z7osyAL+5nCcN+4bFbn4cZGZWO7yuhHi+iglAST8LJfsJ12iPdACPir1jcda
-         R2m9HHQAQX3/E05Byt5pERl5Uxjli718xhMCaScXye6z8ZVlGZZa6/PAl+VsIi/vSqUF
-         MqJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744887499; x=1745492299;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4GrUlyk74WjltV2K0kWiBgfuLaCstnwmS8DfLOMBDsk=;
-        b=vJEMvvJH+qdQuk32l6H6BHtWaestJNnMtT/zLeulCnqD9mwC0BoQvHzOXQQpu3BnSL
-         aKdZs76X9sO8nIvGivpllyAH295tqHaouwQJPq3I7aCGcmsDw/OFZrSiN9Jt5qxr2urN
-         b+HwRv5sd4ceOYdq9V2kG+xWXjp26QO0lGLvowxO6V0nIZW0vIWmQ2WjnAYeZIBjZx76
-         wN+qJxGAQEEJdo9ZmPsNv9CDCAFxKgNN/yvwOfN8uBssRol8d8hren90aNnhPOaPFx0Y
-         BJVLUSqTuOuqjIuOClZoN1uHtTSE4Ly5DqrflHXhsWhsLd5/XiNtCmx1f1cDDCmgcr5w
-         ZJLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVGyvJ6PrOyEknYHeHob4CNj3GAFhSsHhjoYRFhN2oUI2pfl7x1R0T2zTTkUP2lth0PwWz7gomzSEjamZm3KyHdvhbDTQ==@vger.kernel.org, AJvYcCW7gtCNVAd8+0723wu+UazKvuVgmZ4ndm80E6UwGCNdeFbIHnqOz++scg6Mfcy1+Q6gDUhGCF6D+y1A8CQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyd5t20V7v1riR9tQsIOuUEIfLTq2EhLnTMPtMXoqw422FS38rv
-	zvT94Hjg58d3EUKL3gk/wtnkCxjVsmYav4pgeCro0Q7a/jMdnYei
-X-Gm-Gg: ASbGncukwtxuztD7Q0zCK+T7tcQjSIePi7PJjO2AqZDhdKKdsgU2qLnDzms1DG7vrKp
-	YvFbZ/r/rRu9uyTbI+JodVTGn7FXOQj7x1pLurwLbtVSpWqa95LndFNXb+n0OwQon4CxKusPSvK
-	CJIHfEdWhyQ5gO+zSnsSt1d3kbt+W2FgYn6YPfrfIixkYvZyuyLQG0C/e3T2zZ0O4uhwI5JQdyy
-	nEL3DUrJHrmBi1PkujYEkwBhGOyDup8iEATngqUy/uzo/mI3PYJc1DXnK4mP+WWYAMq21FvC0zb
-	c0W8vkdSi2l4I5s+FIWAhFa3dEeZspaDz3XMOQM6BTJIU8tEL7RFQ0lBEr/OhA==
-X-Google-Smtp-Source: AGHT+IG0PYQiJFZINtUaPciBIboDtC5A735X1xBsUNdqImMGNzueSKa5sJ8oBIjpqFgCr0mbUKvK4A==
-X-Received: by 2002:a5d:6da6:0:b0:390:f738:246b with SMTP id ffacd0b85a97d-39ee5b1891bmr5027735f8f.15.1744887499123;
-        Thu, 17 Apr 2025 03:58:19 -0700 (PDT)
-Received: from pop-os.fkkt.uni-lj.si ([2001:1470:ffef:fe01:b721:35c:4932:2a11])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b58cc0csm49421255e9.32.2025.04.17.03.58.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 03:58:18 -0700 (PDT)
-From: =?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
-To: ikepanhc@gmail.com
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JqP+3grM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33B37C4CEE4;
+	Thu, 17 Apr 2025 11:00:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744887609;
+	bh=X6tljyeoJCuwor1cd6cNwVaGQL05xjYEdjb/uanKFc0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=JqP+3grMeNmBu8sQuvELQHNZQHvQbrfGEsDwhQ3uS9ngiT7oomZCvtzdA1eIdnrOZ
+	 i1mpyE26F10OYQpUKN2woYvm+CzRGsyfiIw12jFOTvlcG1npG0LRsBMz4To1kWwiPz
+	 ngqPUqBDo2ngEqcteiRR62HGdyh5vy1kRJTKp1j0wOOBndQ6YtcLLPXgJM+tv/oYqo
+	 SkEmP3Kl2u3SsUokhpL9IXHVTED8bFqQHGm1bJUabQJwId9hujOBOjDUWfr90F7jA8
+	 k1C0QCjlsa73GkP7rr3mlestNTfLf9Hn7y3aqiKzY2OW+AhMUqv5U9pbYmcoLCRG7+
+	 ++Vcq2afnkZFg==
+From: Philipp Stanner <phasta@kernel.org>
+To: Zack Rusin <zack.rusin@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	=?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
-Subject: [PATCHv5] platform/x86: ideapad-laptop: added support for some new buttons
-Date: Thu, 17 Apr 2025 12:57:58 +0200
-Message-Id: <20250417105758.100675-1-gasper.nemgar@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	Philipp Stanner <phasta@kernel.org>
+Subject: [PATCH] drm/vmgfx: Use non-hybrid PCI devres API
+Date: Thu, 17 Apr 2025 12:59:32 +0200
+Message-ID: <20250417105931.32716-2-phasta@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Added entries to unsupported wmi codes in ideapad_keymap[]
-and one check in wmi_nofify in order to get wmi code 0x13d to trigger platform_profile_cycle
+vmgfx enables its PCI device with pcim_enable_device(). This,
+implicitly, switches the function pci_request_regions() into managed
+mode, where it becomes a devres function.
 
-Signed-off-by: Gašper Nemgar <gasper.nemgar@gmail.com>"
----
-Changes in v5:
- - Changed performance button to KE_KEY 
-Changes in v4:
- - Changed performace button to KE_IGNORE
-Changes in v3:
- - Minor changes
-Changes in v2:
- - Added more codes that trigger with key combos (Fn+N, Fn+M, ...)
- - Added performence toggle in wmi_notify()
-Changes in v1:
- - Added codes for buttons on laptop(performance, star, ...)
----
- drivers/platform/x86/ideapad-laptop.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+The PCI subsystem wants to remove this hybrid nature from its
+interfaces. To do so, users of the aforementioned combination of
+functions must be ported to non-hybrid functions.
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 17a09b778..72d3306ef 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -1294,6 +1294,16 @@ static const struct key_entry ideapad_keymap[] = {
- 	/* Specific to some newer models */
- 	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
- 	{ KE_KEY,	0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
-+	/* Star- (User Asignable Key) */
-+	{ KE_KEY,	0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
-+	/* Eye */
-+	{ KE_KEY,	0x45 | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
-+	/* Performance toggle also Fn+Q, handled inside ideapad_wmi_notify() */
-+	{ KE_IGNORE,	0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
-+	/* shift + prtsc */
-+	{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
-+	{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
-+	{ KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
+Moreover, since both functions are already managed in this driver, the
+calls to pci_release_regions() are unnecessary.
+
+Remove the calls to pci_release_regions().
+
+Replace the call to sometimes-managed pci_request_regions() with one to
+the always-managed pcim_request_all_regions().
+
+Signed-off-by: Philipp Stanner <phasta@kernel.org>
+---
+ drivers/gpu/drm/vmwgfx/vmwgfx_drv.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
+index 0f32471c8533..59e100222cad 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
+@@ -733,7 +733,7 @@ static int vmw_setup_pci_resources(struct vmw_private *dev,
  
- 	{ KE_END },
- };
-@@ -2080,6 +2090,14 @@ static void ideapad_wmi_notify(struct wmi_device *wdev, union acpi_object *data)
- 		dev_dbg(&wdev->dev, "WMI fn-key event: 0x%llx\n",
- 			data->integer.value);
+ 	pci_set_master(pdev);
  
-+		/* performance button triggered by 0x3d  */
-+		if (data->integer.value == 0x3d) {
-+			if (priv->dytc) {
-+				platform_profile_cycle();
-+				break;
-+			}
-+		}
+-	ret = pci_request_regions(pdev, "vmwgfx probe");
++	ret = pcim_request_all_regions(pdev, "vmwgfx probe");
+ 	if (ret)
+ 		return ret;
+ 
+@@ -753,7 +753,6 @@ static int vmw_setup_pci_resources(struct vmw_private *dev,
+ 		if (!dev->rmmio) {
+ 			drm_err(&dev->drm,
+ 				"Failed mapping registers mmio memory.\n");
+-			pci_release_regions(pdev);
+ 			return -ENOMEM;
+ 		}
+ 	} else if (pci_id == VMWGFX_PCI_ID_SVGA2) {
+@@ -774,11 +773,9 @@ static int vmw_setup_pci_resources(struct vmw_private *dev,
+ 		if (IS_ERR(dev->fifo_mem)) {
+ 			drm_err(&dev->drm,
+ 				  "Failed mapping FIFO memory.\n");
+-			pci_release_regions(pdev);
+ 			return PTR_ERR(dev->fifo_mem);
+ 		}
+ 	} else {
+-		pci_release_regions(pdev);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -872,7 +869,7 @@ static int vmw_driver_load(struct vmw_private *dev_priv, u32 pci_id)
+ 		return ret;
+ 	ret = vmw_detect_version(dev_priv);
+ 	if (ret)
+-		goto out_no_pci_or_version;
++		return ret;
+ 
+ 
+ 	for (i = vmw_res_context; i < vmw_res_max; ++i) {
+@@ -1172,8 +1169,7 @@ static int vmw_driver_load(struct vmw_private *dev_priv, u32 pci_id)
+ 
+ 	if (dev_priv->ctx.staged_bindings)
+ 		vmw_binding_state_free(dev_priv->ctx.staged_bindings);
+-out_no_pci_or_version:
+-	pci_release_regions(pdev);
 +
- 		/* 0x02 FnLock, 0x03 Esc */
- 		if (data->integer.value == 0x02 || data->integer.value == 0x03)
- 			ideapad_fn_lock_led_notify(priv, data->integer.value == 0x02);
+ 	return ret;
+ }
+ 
+@@ -1216,8 +1212,6 @@ static void vmw_driver_unload(struct drm_device *dev)
+ 		idr_destroy(&dev_priv->res_idr[i]);
+ 
+ 	vmw_mksstat_remove_all(dev_priv);
+-
+-	pci_release_regions(pdev);
+ }
+ 
+ static void vmw_postclose(struct drm_device *dev,
 -- 
-2.34.1
+2.48.1
 
