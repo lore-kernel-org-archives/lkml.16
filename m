@@ -1,161 +1,136 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6692C250F8;
-	Thu, 17 Apr 2025 13:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEF32459D3
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 13:25:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744896272; cv=none; b=cd3ycatW+5YqMKtl/efA+j6zwK8ZH+S+VxvZoWdQkGAscITIXARePAEJU5U/jIQVSYd0FPbdlYdsw+XRIgEgQmG/Fxg9TQPNo78jj3rj52cFQBYoJe1KF0Blqi428sAcxJjabwl5yzuOYQCd4vg/vJCl3LVOxUq3ucqylOl9WBk=
+	t=1744896313; cv=none; b=O3/bqfLcB0YCHMkQZOrXd0+wRH/kNM1QEOU33F9yr413SZvcSy6cy3QP6MCY3uTKvM9i+UUknZTcuB9MqLblKrN8ViGNgDku5IU4odHdlU0AMO/Dkqvgz5r9OiRSI/713qkyUfRxATC6kl4CkuTxWpHPftGg//yic/nYizOjQWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744896272; c=relaxed/simple;
-	bh=diY3/1u1/WD+p9AEblri3iZQKdyS25WqDi9NW4HFrU8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LVKfkOjHkXn4nWjiJELQG1kwQS6/U0eRTyAAnpzMuJKV0qfsZAEFSH+o+eTK+7u9SRko62lwLKATo8C2jyNpyH2LZVVRh0qKB/kpbfdUlw4bKRqEwiFHP0PtdNiDJt4SUSCBDLbRuKE4/CNAfrAM2WzDDolxWCYTbxuEwMh3zNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fbDRWQzp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zQoH4xjI; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744896313; c=relaxed/simple;
+	bh=uPx/gCmeGJxZJPFsRmqNBUDw0IV9MPk4j42a+Nwd25A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VGrxAXCYHI9YKLC/CVyPuGH7nDwEuFyUfIFZYiJGkjIinUwmkr5BQnrn5Eo4VQDPO6or0k1rmUXJFXdY9jioiKpcxlwQbNpjcBV9Oea2gT4oAmYAWV6g1jLzlNre2LkLbKhiF+/JcWwZA8BsnyiNUs3a/994YBjEtZ227xll1uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fDTJcQ0q; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fbDRWQzp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zQoH4xjI"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744896268;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yv/yVcQSzfawPhO9WVstK9PTMY/wLQfruBnhAUCsfAY=;
-	b=fbDRWQzpi7ZI2L84xB0GMDiNCDS9oE2v5WODK9yI2Lw7ds6HyprYuki7TsuITKqfUrKe7r
-	zVofSi59gYrAP4UsXteEW5eCMygD5/csLPKpy3WPcF3qkLguCVwyQzh0h2CwbWP/IQBaaj
-	jw7mUUlfYS79pgTjx2vN7YcpVgZc90iKCiIZAPMbrribuhKezmzZbs7EKuQCQJRV95jD12
-	WzAVWoQNnpsnhtvERcBl7TalwvxTFQHTspEN0bkg2bbz0wDju/ln8ylaNFPimFeLSqRROt
-	L92C5rAx2to6Wh58GesPfk77h9v6v13iiGuQ/eBye2B3/wtdOUC4LBEmWdpf8A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744896268;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yv/yVcQSzfawPhO9WVstK9PTMY/wLQfruBnhAUCsfAY=;
-	b=zQoH4xjIHV2evLgbauFfFAIC5fyOPZTaZac1Pa51iMmHmQjkPCO2rbk0ctR4TTKoQzN+w1
-	UjxmqH1mZubEcoBw==
-Date: Thu, 17 Apr 2025 15:24:01 +0200
-Subject: [PATCH net-next v2 1/2] ice: Don't use %pK through printk or
- tracepoints
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fDTJcQ0q"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e614da8615so1638725a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 06:25:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744896310; x=1745501110; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kpNf6w6GnEUetZaJA+rqBWn6AFuG6sqOCwucLcmthoc=;
+        b=fDTJcQ0qtdG7fsKjGgQfcDJha/U8r1uT6mJ+uA7i656kepTDNJQ/Hey0k6HlTlwn0c
+         Npih6h4nYAzRPLj6tMzetqPlGecJcPHJQ1d6ZNuC8N3oRd5NjRJaBexoOEuBV3PTaXEz
+         mHqD6yku7yrQv5NE1jlDy2UjAAIVbW1zB4z5EC3ztI0u0x5Ky7hoXsecLTD/W/l4EJfZ
+         +mAqUFlpcnb+xkK64WEJ2xbUNl/WV1bspmvRy9M16UTR72NHDn0DYdoIv1JoxNmlNv3p
+         ZG3pMZx+FcauXLUmauPBp86SRcY461+5SRUERZa+mUpmzcl2/lBV97etK/gZDd+vK+Iw
+         X6cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744896310; x=1745501110;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kpNf6w6GnEUetZaJA+rqBWn6AFuG6sqOCwucLcmthoc=;
+        b=PHFxoAINxs7eiF0FiFKFynLF873XKJE90LwqcH13yqUefesU8TXmulGOLu9GvWTD1U
+         bHuVlK3MRMxyHth58FpQuP2e6bnm3i42VYhps3uotQFXL6R1rxHJosjx4LAfa9j9ntSI
+         jzD7xmDdBGO2O24o9eK83xAVxFNGfYAU6RDaQC9Pq85BR1AXe8SATQ1mY+cdpcULHhUZ
+         uO/jOxTId62MhV9ZNZdoedHedTGJeeSFhIcP0IwFi2BGgeQP6C99tcvYkBrbedwUPYci
+         2u8BkoQTuu059DWsqvm1Kj2+rx25yiMvfIpLOleEtj+errrjHOfxlusMQFB0pSHwqcMB
+         z40Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUkS9Pz/TAW9HkpjWN/pdhTgIzWiQ4LkyRw3YiIdTeOUaeGbU8fUqAG7wxoSZPgZx00m1EovrV5nDGMowo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2uPHWL1IbiWfzBeRfbhjaQAjVnakaAVAQg+QavdVuR59pHWon
+	QHvSJu0SIcvoPkcqZ6pkTL1Qn31toUYPy5f8tewbkHHCEU3CIn2nSe6EQyIFUScbf1/eRGmtX4A
+	um33fNThabf836C72Lq3WDdw67RQ=
+X-Gm-Gg: ASbGncvr9rbWZtCNiHQ1JFf77fismhpY+THyj+bjtGyvaxnzovrZheUJgsgwskuC+fD
+	/ykjx7fyYnPD/zDv1EVju3dqZrKxG81iQIOlSlXnGqH3pCpaRfMCfgSGYmRC7M9oP9FsDdxQoM8
+	nRNVBkyzK7V1fRc7BYSWi1fQ==
+X-Google-Smtp-Source: AGHT+IE4wbCf7TezOopemIV0fOYus0Gx4w/ZoyD0bBV1TFMSzOb8alw5GhhnENcFKPzNOqWxc/bAQglhq8CL9qZtIs4=
+X-Received: by 2002:a05:6402:520f:b0:5e0:752a:1c7c with SMTP id
+ 4fb4d7f45d1cf-5f4d1377d11mr2619228a12.1.1744896310073; Thu, 17 Apr 2025
+ 06:25:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250417-restricted-pointers-net-v2-1-94cf7ef8e6ae@linutronix.de>
-References: <20250417-restricted-pointers-net-v2-0-94cf7ef8e6ae@linutronix.de>
-In-Reply-To: <20250417-restricted-pointers-net-v2-0-94cf7ef8e6ae@linutronix.de>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>, 
- Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>, 
- Tariq Toukan <tariqt@nvidia.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
- Aleksandr Loktionov <aleksandr.loktionov@intel.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744896267; l=3588;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=diY3/1u1/WD+p9AEblri3iZQKdyS25WqDi9NW4HFrU8=;
- b=X6vciUhrsEvEEpC3TTcgTLXn8O3sT1d1CblIZFEYqrRLtkA11cMHCPGRs/NdhFzKiCM9EGnwS
- D61fP/C3rCVC98l+ZTGTatHc3xTQc9sv+0b9QbtLFLyMyYpWYBicYKs
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+References: <20250417124908.58543-1-ioworker0@gmail.com> <a825b3c3-55f7-4d90-a318-e20acf55e0cd@redhat.com>
+In-Reply-To: <a825b3c3-55f7-4d90-a318-e20acf55e0cd@redhat.com>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Thu, 17 Apr 2025 21:24:33 +0800
+X-Gm-Features: ATxdqUED3wkrDBOxfYANPvf-Dj0nW7Nq8Qoxfvbu9oI8rK9kDfgiQD8DT1tprds
+Message-ID: <CAK1f24mkswwY71EKourpw1y-KiFi08OkGzZSBkutoj+UCgbLMg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mm/rmap: add CONFIG_MM_ID guard for folio_test_large_maybe_mapped_shared()
+To: David Hildenbrand <david@redhat.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Mingzhe Yang <mingzhe.yang@ly.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In the past %pK was preferable to %p as it would not leak raw pointer
-values into the kernel log.
-Since commit ad67b74d2469 ("printk: hash addresses printed with %p")
-the regular %p has been improved to avoid this issue.
-Furthermore, restricted pointers ("%pK") were never meant to be used
-through printk(). They can still unintentionally leak raw pointers or
-acquire sleeping looks in atomic contexts.
+Hi David,
 
-Switch to the regular pointer formatting which is safer and
-easier to reason about.
-There are still a few users of %pK left, but these use it through seq_file,
-for which its usage is safe.
+Thanks for taking the time to review!
 
-Acked-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Reviewed-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
----
- drivers/net/ethernet/intel/ice/ice_main.c  |  2 +-
- drivers/net/ethernet/intel/ice/ice_trace.h | 10 +++++-----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+On Thu, Apr 17, 2025 at 8:56=E2=80=AFPM David Hildenbrand <david@redhat.com=
+> wrote:
+>
+> On 17.04.25 14:49, Lance Yang wrote:
+> > Add a compile-time check to make sure folio_test_large_maybe_mapped_sha=
+red()
+> > is only used with CONFIG_MM_ID enabled, as it directly accesses the _mm=
+_ids
+> > field that only works under CONFIG_MM_ID.
+> >
+> > Suggested-by: David Hildenbrand <david@redhat.com>
+> > Signed-off-by: Mingzhe Yang <mingzhe.yang@ly.com>
+>
+> ^ should that be here?
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index d390157b59fe1873ddab78323cdc0bbaea6ad0c5..d27e8816a48fef5014148cae27e52c1801eaaada 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -9118,7 +9118,7 @@ static int ice_create_q_channels(struct ice_vsi *vsi)
- 		list_add_tail(&ch->list, &vsi->ch_list);
- 		vsi->tc_map_vsi[i] = ch->ch_vsi;
- 		dev_dbg(ice_pf_to_dev(pf),
--			"successfully created channel: VSI %pK\n", ch->ch_vsi);
-+			"successfully created channel: VSI %p\n", ch->ch_vsi);
- 	}
- 	return 0;
- 
-diff --git a/drivers/net/ethernet/intel/ice/ice_trace.h b/drivers/net/ethernet/intel/ice/ice_trace.h
-index 07aab6e130cd553fa1fcaa2feac9d14f0433239a..4f35ef8d6b299b4acd6c85992c2c93b164a88372 100644
---- a/drivers/net/ethernet/intel/ice/ice_trace.h
-+++ b/drivers/net/ethernet/intel/ice/ice_trace.h
-@@ -130,7 +130,7 @@ DECLARE_EVENT_CLASS(ice_tx_template,
- 				   __entry->buf = buf;
- 				   __assign_str(devname);),
- 
--		    TP_printk("netdev: %s ring: %pK desc: %pK buf %pK", __get_str(devname),
-+		    TP_printk("netdev: %s ring: %p desc: %p buf %p", __get_str(devname),
- 			      __entry->ring, __entry->desc, __entry->buf)
- );
- 
-@@ -158,7 +158,7 @@ DECLARE_EVENT_CLASS(ice_rx_template,
- 				   __entry->desc = desc;
- 				   __assign_str(devname);),
- 
--		    TP_printk("netdev: %s ring: %pK desc: %pK", __get_str(devname),
-+		    TP_printk("netdev: %s ring: %p desc: %p", __get_str(devname),
- 			      __entry->ring, __entry->desc)
- );
- DEFINE_EVENT(ice_rx_template, ice_clean_rx_irq,
-@@ -182,7 +182,7 @@ DECLARE_EVENT_CLASS(ice_rx_indicate_template,
- 				   __entry->skb = skb;
- 				   __assign_str(devname);),
- 
--		    TP_printk("netdev: %s ring: %pK desc: %pK skb %pK", __get_str(devname),
-+		    TP_printk("netdev: %s ring: %p desc: %p skb %p", __get_str(devname),
- 			      __entry->ring, __entry->desc, __entry->skb)
- );
- 
-@@ -205,7 +205,7 @@ DECLARE_EVENT_CLASS(ice_xmit_template,
- 				   __entry->skb = skb;
- 				   __assign_str(devname);),
- 
--		    TP_printk("netdev: %s skb: %pK ring: %pK", __get_str(devname),
-+		    TP_printk("netdev: %s skb: %p ring: %p", __get_str(devname),
- 			      __entry->skb, __entry->ring)
- );
- 
-@@ -228,7 +228,7 @@ DECLARE_EVENT_CLASS(ice_tx_tstamp_template,
- 		    TP_fast_assign(__entry->skb = skb;
- 				   __entry->idx = idx;),
- 
--		    TP_printk("skb %pK idx %d",
-+		    TP_printk("skb %p idx %d",
- 			      __entry->skb, __entry->idx)
- );
- #define DEFINE_TX_TSTAMP_OP_EVENT(name) \
+Yep, that's my email too ;p
 
--- 
-2.49.0
+>
+> > Signed-off-by: Lance Yang <ioworker0@gmail.com>
+> > ---
+> >   include/linux/page-flags.h | 2 ++
+> >   1 file changed, 2 insertions(+)
+> >
+> > diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+> > index d3909cb1e576..6bd9b9043976 100644
+> > --- a/include/linux/page-flags.h
+> > +++ b/include/linux/page-flags.h
+> > @@ -1232,6 +1232,8 @@ static inline int folio_has_private(const struct =
+folio *folio)
+> >
+> >   static inline bool folio_test_large_maybe_mapped_shared(const struct =
+folio *folio)
+> >   {
+> > +     /* This function should never be called without CONFIG_MM_ID enab=
+led. */
+> > +     BUILD_BUG_ON(!IS_ENABLED(CONFIG_MM_ID));
+> >       return test_bit(FOLIO_MM_IDS_SHARED_BITNUM, &folio->_mm_ids);
+> >   }
+> >   #undef PF_ANY
+>
+> That should work. I can throw this into a cross-compile setup later if I
+> get to it.
+>
 
+Yeah, just built kernels with and without both CONFIG_MM_ID and
+CONFIG_TRANSPARENT_HUGEPAGE -- no issues either way ;p
+
+> Acked-by: David Hildenbrand <david@redhat.com>
+
+Thanks again for your time,
+Lance
+
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
