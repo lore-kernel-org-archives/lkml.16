@@ -1,179 +1,107 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB512309A8
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F8621ADDB
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744877323; cv=none; b=aD67QIUuh9k0sCL/AViJNq2KXwJoM0duZW4UEZn9woy9KUpOs+Gd4BRHhVfK5NlulOx2D5YGIZlLIzPhbbU+l7FMCkYxJDECc107bz/hBh/PcXPftAaFX1apprs77lgFZehMu0KnDjkpkP2k9m7+PieHJwUTmpjepbNaTPiei84=
+	t=1744877354; cv=none; b=L+A0vQAsIGr4fmY08s9j0+p7xqUdN9rILIvlW+tNTvShKht5iK+xyc2y6TVSbDCI0RzFPrAEu+XdGgnJd5h0t9fIJM/P+h9sIOEJm2gQCkcz/ocaG+XAr3znq53bOhfaYNfD//PRS153JiqA3pQh3OoLnYb5X0A6bwLtQnAjwxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744877323; c=relaxed/simple;
-	bh=vkyoWugRoTksrbmWHNnd8BkwVMcRxQLEaw53gk79Rvs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BWBxwNkTARix1uMDsvtLxE80XR3R7A2KV0FdH75mXno1+CZWEJqUxzFIVzTFDe8wwAPYgeANv1Pg6V1pMUEHjvi39Rr4O+EcSrSM6Lmq538Iu2bgr+Djj+NXLo/vyrfErX5RPcQKbsf3QwoBoFCbVsQ4j1q+M5GJ9TGS/+cO5b0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2OdyfI2w; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744877354; c=relaxed/simple;
+	bh=LvPXnh51V+FxKza9w5I8Oa/g8MHXOgAa70guwTdd9x4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EstyvMUkpB8Hr301IdeaOhNXuiDVXIBtIxscawZOa5tnu9IQcZrKm5TWNhy5VMmEKFNl1ek6gY7xd/Y2i2YrZEYv+FT7jucNIVDaDQn1xK84df+O45U91LIysKQs+IUdpT9MNB274Bm1krCbdkgmzZk4GHnRimXfwQd482hFYmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=dpP/pLMS; arc=none smtp.client-ip=54.206.16.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2OdyfI2w"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac41514a734so68581966b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 01:08:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744877319; x=1745482119; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wtHyIUQ7PPZmcAeyFR/vgm01NmNP155YBbbcOUPlqcw=;
-        b=2OdyfI2wtcznKDXY8x8i7Aa7BBQNIELl0cHWq5D7BfPM5JiwrCxPc5Of6ByjbVYbFv
-         IXGCaQd3rF/PDPSiGY3w/BDWZy8aX+l1ZTCBxLtT97569l6ek/OHjGIS0j3Bii1kNNKL
-         wRY9YIJ5y5ni7jsV+AYeBSxT486SVA5HmLJl9XQDp4S/t4qhzZAs7CyaLRe4FBts4I3+
-         StvFmSgenO7Wr/Tgz6dBRHWfTR1c6iEW1XJV7DQd5qm2GEWpZ+2f/mYT3ELawkAFLvS1
-         ISdJVWLdvYUfjHjdz+fTKaQrmWAhVk2PN8vi/jt5M5W0sbhbfuZYvXYgWB2OZWjJBVYJ
-         1K7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744877319; x=1745482119;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wtHyIUQ7PPZmcAeyFR/vgm01NmNP155YBbbcOUPlqcw=;
-        b=rgLI/nNvuhxSbkiVfgYrVe+KsmzLk4qq3XiTZ4dZjM3o9cjqlo1KiE1uQ3XgffX46E
-         NpZtinFXNPtuKAQOEQhKEqPqGv9NSi5h8ujeGqkYCMaKxMeM7UrQ2xqBVOJBzfhtYwmy
-         x24oUbL/vDqAb87tIrkx1H9o2DRW9XCTz7/8xcmcNFFT3FnwCCZ48t2IKr0ThAfPHpN0
-         CfeH7FS310LwOJG86sGuAQqbovN+qMUHIwHdFKMG6rF57OMBVtXr8dlH5sU1zlan4Ksi
-         RUtCuXkLqSJQP6FuNkwmKKAM7AYcny3PN6ZP3c07J0YD+lacAfjIGEOEFJfe8/fvmYVK
-         Rrkg==
-X-Forwarded-Encrypted: i=1; AJvYcCUw3aWAG/dtXzmUy7SahTQczDZNuJ6Y/mrE5Ns5yHYRCaOFE67mtGBFQGAp3OWFgX48Ikr6OiBBM2Z/1Mg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEOLmksHLhHO1YCIu3Nv5UblJ6h9/mveb19nT69pj9qlrtyLZZ
-	40AcokA1dAf9EoOi7Z28pcrwYsGAXYbLqHC15i9k+TfBwnXxZeD43RXt4rFwGCCNUT1m9ZAE1Vx
-	KgCriaC0SawvqzsPtghMMZKr9EtCeKBWcHBO8
-X-Gm-Gg: ASbGncs/oxCcKGIzx7TfUFIt3SZgi8u1fABNj1rn15wQR8dpRsGavuKO16hXj6HXNAY
-	34RtxmwZq5svwr9jYYx497UPp6YXUIPQP0m8uVnV0xeqAYxkfpRes4yR1H/jqMRH9BB0FfNIDJ0
-	JOKpvaV5C3j/yiYZxkzgjydTs8AHvSz15pI0ymZBNdItJPJAnm
-X-Google-Smtp-Source: AGHT+IGpESoslQHTK0ogEW6yQ7GTAZkJZOLnAr+AoJwj8UFQjOudRmdKb0q0bSeFruID8VwGWPn9BWN2wlym/51A+Ok=
-X-Received: by 2002:a17:906:9f91:b0:ac2:9683:ad25 with SMTP id
- a640c23a62f3a-acb429f1deamr444633566b.34.1744877319462; Thu, 17 Apr 2025
- 01:08:39 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="dpP/pLMS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1744877292;
+	bh=BXpHJIusXX/IjXfyhBs6rYyVHN78GVwZVH7M4sTBy4I=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=dpP/pLMS94WMcr29wC5e3TMBL4p/3MasyT8JtRZ4LYme0zOsxvdFx/ZvFM1B6sJAa
+	 uEQ9iNK1+XdqcXbEvNnNR5ip9wUPeLvjrzwH46asES0rfjllNnaeFZnOgf4FiA18Rh
+	 A8jUr/jr9W5kbHJl9+ElHm9+GYjn6qErxEFSgeEg=
+X-QQ-mid: zesmtpip2t1744877281ta446f0d2
+X-QQ-Originating-IP: KgSWvsVE5LlZFuuA8sg1K79V3p+hHggUJiMUP3zDgVU=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 17 Apr 2025 16:07:59 +0800 (CST)
+X-QQ-SSF: 0002000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 8397205687042694865
+EX-QQ-RecipientCnt: 12
+From: WangYuli <wangyuli@uniontech.com>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	jiaxun.yang@flygoat.com,
+	liuyun@loongson.cn,
+	chenhuacai@loongson.cn,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	guanwentao@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>,
+	Erpeng Xu <xuerpeng@uniontech.com>
+Subject: [PATCH] LoongArch: Select ARCH_USE_MEMTEST
+Date: Thu, 17 Apr 2025 16:07:46 +0800
+Message-ID: <CC80F694AAFA2099+20250417080746.352276-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403183638.3386628-1-korneld@google.com> <38049b58-a504-4223-9f6d-537609931fb4@arm.com>
- <CACF_fqnevOo9NSRwDAh7KVQZTHTkP0pc2NKEXrWFapMYLf0Wkw@mail.gmail.com> <6f1af7bf-a354-4b90-bf82-edc8cc6e71fe@arm.com>
-In-Reply-To: <6f1af7bf-a354-4b90-bf82-edc8cc6e71fe@arm.com>
-From: =?UTF-8?Q?Kornel_Dul=C4=99ba?= <korneld@google.com>
-Date: Thu, 17 Apr 2025 10:08:27 +0200
-X-Gm-Features: ATxdqUHWXjxt6FKkLeRswNUzasHECz8dNyCr3yjMNkHFGcVaT-gsxFCFilKbj7I
-Message-ID: <CACF_fq=yFLUO2P0qrZFizUJe8J2FGYUK7w3DykKL3x7_R87UQA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: Support ARM64_VA_BITS=52 when setting ARCH_MMAP_RND_BITS_MAX
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Steve Capper <steve.capper@arm.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, ssradjacoumar@google.com, 
-	chromeos-krk-upstreaming@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: ODtOp3q7LZp1JSPzBJGD3Nmsc+fXMszNTto8IS0/OJqetBWt48vcnATg
+	aQB5A8b1bReT0/+0KfnXe1dv35vZVNOAbGFT4f04TnjV25RZ+c1LDcA/K5bIdO5Cyi506PR
+	pDA5x3I7dlXaSWhj/hrv+ooYjTVkubLDf+1HA1dfkSc0sSonvKIu3cQTWnSYAr41gK2VWSY
+	B9DnPZCP6KJJu4CFzlLW5tahR4bjkVqdXvxfPy+rNWal2Rw42LL8G9QmLB0oSdBikxR4lFt
+	/1eHTNoeGxMW8NfsRIzdqQx5GvSz4FweUbmnC0+EHY3CByVwS01Z5eYoaPu27Ef/2kiGFV9
+	7Dt3Z/Jco6SVUXwCvtW0h2B51Q/FChX51pk/oIvkTZzmdRKP0dja96j94JQFCEnaViq38eG
+	MgH6wtc0NSZo0OyEAnmn+uxsleWre05nZ32HLigliNyuHEr2fpRfcQV4dIkdUhrIXCyU16D
+	ZiTVBKYx/9O2t8fuHXPkuVpHH+fvHSJMJeNyZvN3DpmYqbp+9vSTv5f+U4I5tH1vK6+Ic29
+	hreRlzKdCY9exlf7Co/Tjw3MDbZvg0bxEzTtJYWeZYMI/k13Shxqr11W6ebUGnJP/bVzFHQ
+	ryJz3FRwA7/Nat/NCpWoU+KUyumNDCdwPhh1dS09rx54N4fI1kdNIA9DLxziM2DcFkrS9Eo
+	V97kATnuVAmwKizq7otIEGd4CZ1hLTBsvPcvLPUGnqW8MGqvtXdaquZ0M14N4AQDnovtdOD
+	U7rP2ZQ1qy3pRtAQ0sEb71llSxj4UKd4egupVXmIMwA16juJznJwcJCWKVsA0Bcpluqcfmv
+	vsU94Hho3DM7a8r9+dsluiSvzs1rPIE5bVbUfm/MLbvwSX8dmqlUM963WH9t8NQC0bOojZM
+	dmQ3rdzd0Is/HxDxT0z+lxPEKklBjSb90HGmh26M80I98+6f6cZgRXb7skh2WX2h60izQzj
+	Xacs9OLhKFhQhBCEJWckJipfytDGkctaaNv5iIhnC6cM6uL0AWtVJaSmawKBdhbEpM762I/
+	HlF2kBU4Lfaczr1Z7ScHyZMFOrIwj5uVfUz0tpHrOqwEZZGMMt
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-On Thu, Apr 17, 2025 at 7:15=E2=80=AFAM Anshuman Khandual
-<anshuman.khandual@arm.com> wrote:
->
->
->
-> On 4/4/25 22:16, Kornel Dul=C4=99ba wrote:
-> > On Thu, Apr 3, 2025 at 11:46=E2=80=AFPM Anshuman Khandual
-> > <anshuman.khandual@arm.com> wrote:
-> >>
-> >>
-> >>
-> >> On 4/4/25 00:06, Kornel Dul=C4=99ba wrote:
-> >>> When the 52-bit virtual addressing was enabled the select like
-> >>> ARCH_MMAP_RND_BITS_MAX logic was never updated to account for it.
-> >>> Because of that the rnd max bits would be set to the default value of
-> >>> 18 when ARM64_VA_BITS=3D52.
-> >>> Fix this by setting ARCH_MMAP_RND_BITS_MAX to the same value that wou=
-ld
-> >>> be used if 48-bit addressing was used. That's because the 52-bit
-> >>> addressing is used only if the caller provides a hint to mmap, with a
-> >>> fallback to 48-bit addressing.
-> >>
-> >> Why should ARCH_MMAP_RND_BITS_MAX value be same for both 48 bits and 5=
-2
-> >> bits VA in case the user does request for 52 bit VA via mmap() hint an=
-d
-> >> the HW supports it ?
-> >
-> > Two reasons really.
-> > 1. The whole behavior is controlled through a global knob -
-> > /proc/sys/vm/mmap_rnd_bits. ARCH_MMAP_RND_BITS_MAX is used as an upper
-> > bound for the value that can be set to that knob.
-> > So we have a single setting for all processes. Some might want 52 bit
-> > addressing, others will stick with 48.
-> > 2. Quoting the documentation for this knob:
-> >
-> > """
-> > mmap_rnd_bits
-> > This value can be used to select the number of bits to use to
-> > determine the random offset to the base address of vma regions
-> > resulting from mmap allocations on architectures which support tuning
-> > address space randomization. This value will be bounded by the
-> > architecture=E2=80=99s minimum and maximum supported values.
-> > """
-> >
-> > I suppose that it's legal for some calls to mmap from the same process
-> > to request a 52 bit VA, while other calls will want only 48 bits.
-> > Because of that the random offset can't be larger than what would work
-> > for the 48 bit case.
->
-> Agreed but should not this rationale also be added in the commit
-> message as well ?
+As of commit dce44566192e ("mm/memtest: add ARCH_USE_MEMTEST"),
+architectures must select ARCH_USE_MEMTESET to enable CONFIG_MEMTEST.
 
-Sure, I will update this in v2.
->
->
-> >
-> >>
-> >>>
-> >>> Fixes: b6d00d47e81a ("arm64: mm: Introduce 52-bit Kernel VAs")
->
-> Correct commit to be attributed for this fix.
+Commit 628c3bb40e9a ("LoongArch: Add boot and setup routines") added
+support for early_memtest but did not select ARCH_USE_MEMTESET.
 
-What commit would you like me to point at? I selected b6d00d47e81a,
-because it introduced "ARM64_VA_BITS=3D52".
-Looking at git blame, ARCH_MMAP_RND_BITS_MAX logic was introduced back
-in 2016 in 8f0d3aa9de57 ("arm64: mm: support ARCH_MMAP_RND_BITS"),
-which is before "ARM64_VA_BITS=3D52" was a thing.
-I suppose that there's also 3cb7e662a930 ("arm64: Kconfig: Fix
-indentation and add comments"), but that's just some whitespace
-adjustments.
+Fixes: 628c3bb40e9a ("LoongArch: Add boot and setup routines")
+Tested-by: Erpeng Xu <xuerpeng@uniontech.com>
+Tested-by: Yuli Wang <wangyuli@uniontech.com>
+Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+---
+ arch/loongarch/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
->
->
-> >>> Signed-off-by: Kornel Dul=C4=99ba <korneld@google.com>
-> >>> ---
-> >>>  arch/arm64/Kconfig | 6 +++---
-> >>>  1 file changed, 3 insertions(+), 3 deletions(-)
-> >>>
-> >>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> >>> index 748c34dc953c..38e0bac567f5 100644
-> >>> --- a/arch/arm64/Kconfig
-> >>> +++ b/arch/arm64/Kconfig
-> >>> @@ -332,9 +332,9 @@ config ARCH_MMAP_RND_BITS_MAX
-> >>>       default 24 if ARM64_VA_BITS=3D39
-> >>>       default 27 if ARM64_VA_BITS=3D42
-> >>>       default 30 if ARM64_VA_BITS=3D47
-> >>> -     default 29 if ARM64_VA_BITS=3D48 && ARM64_64K_PAGES
-> >>> -     default 31 if ARM64_VA_BITS=3D48 && ARM64_16K_PAGES
-> >>> -     default 33 if ARM64_VA_BITS=3D48
-> >>> +     default 29 if (ARM64_VA_BITS=3D48 || ARM64_VA_BITS=3D52) && ARM=
-64_64K_PAGES
-> >>> +     default 31 if (ARM64_VA_BITS=3D48 || ARM64_VA_BITS=3D52) && ARM=
-64_16K_PAGES
-> >>> +     default 33 if (ARM64_VA_BITS=3D48 || ARM64_VA_BITS=3D52)
-> >>>       default 14 if ARM64_64K_PAGES
-> >>>       default 16 if ARM64_16K_PAGES
-> >>>       default 18
->
-> Otherwise LGTM.
->
-> Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 54ed5b59a690..1ce9b8f5fd03 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -74,6 +74,7 @@ config LOONGARCH
+ 	select ARCH_SUPPORTS_RT
+ 	select ARCH_USE_BUILTIN_BSWAP
+ 	select ARCH_USE_CMPXCHG_LOCKREF
++	select ARCH_USE_MEMTEST
+ 	select ARCH_USE_QUEUED_RWLOCKS
+ 	select ARCH_USE_QUEUED_SPINLOCKS
+ 	select ARCH_WANT_DEFAULT_BPF_JIT
+-- 
+2.49.0
+
