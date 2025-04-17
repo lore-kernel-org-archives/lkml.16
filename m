@@ -1,173 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A07241667;
-	Thu, 17 Apr 2025 12:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8852C23AE7C
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744891439; cv=none; b=onTUJyS8Ct2ie9rCpKJhQDUVW7zI+cAyOkUN6D4oPw2ief6t0Zs/UGbE1bN9l2T4mW/K9UCrp52kUBqo06jM4Wp5hAuMdcu3ss5fh6w0979kDmlmfUV/MhTc8I/NAhj9Ez+5yg7EAzBV42QUl1FQHCBkNZGfFKSeiiGqqrM0pOE=
+	t=1744891455; cv=none; b=rcsCLQWKOWVfy7c1KKyNSnJ6rGx9qYMfXrbVLWXd3Oe7uuxhAz+d1+x7O3jh4IX1SW8/MUGcXfXJ6clvScylP4zmVvP8wPFfdNs9zTySm/QMWoRc12m7mPXuHPFkVSjQri0imVtZDLFQkSBGp4adi/BqiVBfR5zaL+ufDw+5sTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744891439; c=relaxed/simple;
-	bh=2JZS5eIe1ON0EHD3QKIZWeAakJBfbzWDc3CKofn5RLI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fDmmjxcYkACSCiVQHNQS0Gts+r1k5NutmmqTh/B9FXYS4HLRap4BYoRY5kFXCT00kdGSvsF2vpkQAuTb3lmMkUdNCKKAIBQ+BvRGNHJ1kP/MSalsM18ob71i0eTGB/xKZsCLDPNfDgEMoUwOxErgCvuUbLbZw3qL0SV9BS4Nuwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=omJ8nD5G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744891455; c=relaxed/simple;
+	bh=dnPw/6WDA5NvkvubmkIBTjNuGbUeGZwq+sspzVMsaT8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J8U/KqfNBFMw9sTfs+XXTl5dpQ6EE2laCVwxCRfy76k7SH3qmuInUOkbUTkoyIqxehySYvDyUuR+CrXHCbpkqZdbG2naausB/ccB2j1GrZCuOssw+JJpQO8pB3KCZFE1rabxiPSDb4mcJR0XQhFp+U0k+805VCunTwY/KrXcVgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A+BXfnyd; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="omJ8nD5G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD3C7C4CEE4;
-	Thu, 17 Apr 2025 12:03:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744891438;
-	bh=2JZS5eIe1ON0EHD3QKIZWeAakJBfbzWDc3CKofn5RLI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=omJ8nD5Gnh7AW0sOLU+A8W0tj5UQSP5n2U3bHAzK/0YX0GpdTJyNTVJSbYAfsjOFr
-	 lQk3Sccx8r7gWS8kkZbNZJb4+4dysqKEi76oehvZbjTNM2OFkXcOSu0wTGapQWrV9E
-	 B4tZZZNInmV1s2qTXFHlKyM6V4kXSv2jU1wlcQ/0Q+yYba4hPuyP6DlHlI8tRPDw1Z
-	 FJqANqpDplWwEjyi//T6gLrmkqpkQrPp/3HWzFk8UbBf0tAwoSVrbVPwIwogvRoeDM
-	 vo9L8NKJtI7Jjy1rR+JnKeV4lIG19Ai5o9Qg+Ezsh1Sc/CORL0Th/y+0/qgVaHSedT
-	 gEeJJzE8t1hoQ==
-Date: Thu, 17 Apr 2025 14:03:55 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>, x86@kernel.org
-Subject: Re: [tip: perf/core] perf: Simplify perf_event_free_task() wait
-Message-ID: <aADuK4jhKT2AGOYp@gmail.com>
-References: <20250307193723.044499344@infradead.org>
- <174413910413.31282.5179470093314736126.tip-bot2@tip-bot2>
- <Z_ZvmEhjkAhplCBE@localhost.localdomain>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A+BXfnyd"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43ce4e47a85so855285e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:04:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744891451; x=1745496251; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=AIdCl/5qC9ELUd0iM51tsEop4bjwaQ4gO/Adiu/i0gc=;
+        b=A+BXfnydeJSmilbhCgUlt9Cas6WVbTGg5FNU6cmMIER8ahwL1W2MbPOchTSqhbXTri
+         MpPYU2mgXlm53uPBL1Jsj2xJ2BAAJrDyzYW2FxdulIS4q0S4T9RRiatyo1w0f3+m9ssV
+         wVX46kNraOd2BIfnom48kcGkDKT+CA47/LzE41orX47h1vprISGgskaZ6zSM6wJywfn0
+         PEWtcMsegHyODpIbGLxQIP16C/ZmhokhhoiqaOFYptW8mKsy0E+Q2RgPtHvNc8xDeltp
+         4cR+EX/0W1mUzk5rUNJBiHiRSz/acoUmNuqDj68yzDy5sHVpLd7zzX0ciCiZ009CENna
+         owVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744891451; x=1745496251;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AIdCl/5qC9ELUd0iM51tsEop4bjwaQ4gO/Adiu/i0gc=;
+        b=TGxZzNVxi8BxfFUuszw0u3ZzhJMoqtZdqGy6t5ZvHfc2oD1FSx5+gdcWcydJskA/fL
+         FxkU9F45E3WfishQD7s5+84RngEI25jW6PlHiZb6Ld2hbn85iMR0n6F4nFIig7Y4cPax
+         YkugWth49UTibpUAbBwHCOr2QXDGNd7dns7l7pgNgB39qW1ONIkuYIhXZuqjKdIyAZ1Q
+         Z3XBR+y6jzhP62lYHqOwikloFNvNYJE6L5kAKzfWxXXxORacMJBAeVzRpyVUm3TsvD0a
+         Qmc2rGg75+WJUOkb3BMIgzRjX3wEsT2vOmy17RDeT/ms09uXe7wQ/uG+vJ0txUuhwwdJ
+         Cnfw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPPRtPBUzRiCIDJn2X9ehjqOUK+VhsvicqJ6VT+nsvGeovnBDzhfC3Oog7QV67pdh+HXSApigYkvJkQAw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZ09BgkjPBz38UxMBJGP+JsQUie1Bz1yfW/KOX8OVxqKp659Mg
+	VziXIm84r2Aa0kqwwFt6oO+mTuTS9fOkeeq9/PILBzmsjz7VlTUPTf60wmDa/wE=
+X-Gm-Gg: ASbGncusKJQJM96eU9KCto3RCrKWgk8TmF2fugcudZIjEBucGD6fu2vZ4NYebYb0Zwu
+	OEFPulEu70lLD+x/8aWi5XeI3sitejixruDVONeb/+M1ylMHTbjISM+PwEPaBytDwOpqgXz7INv
+	pRGg1B8BrERXfLuDdpm7lOBYwqWm4662xntvnp1k9cGpmkuf3tKBSxlsd8AzzeHIbPvCZ4y6te+
+	09W9yxH5AqvlzeUu2Vzo2GgoScZ4iz9BkY0oz/E+RLAn2asHf27zDdbgFRrkAaQKvwjUO4sZLkq
+	V7ppHYuRsZhPW+qljlbdTV6rlR9COD4Y4porWKoHL3pnKgr7jDVACvj5xBksSmEwZg5sPthr1Er
+	isKa3XZ+UIWyNd/VJ
+X-Google-Smtp-Source: AGHT+IED1Xnj9v0JnQwcOVttYnoHyhkKM/R+mA/Fw2SQCf/1dnCXdY6vmR1cIpyP4BRWLBv6GiuwYA==
+X-Received: by 2002:a05:6000:4026:b0:391:c42:dae with SMTP id ffacd0b85a97d-39ee8fa23e1mr1035766f8f.4.1744891450761;
+        Thu, 17 Apr 2025 05:04:10 -0700 (PDT)
+Received: from [192.168.0.101] (46.150.74.144.lvv.nat.volia.net. [46.150.74.144])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96c5f2sm20184959f8f.34.2025.04.17.05.04.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Apr 2025 05:04:10 -0700 (PDT)
+Message-ID: <a8f7f571-e81a-49d6-a40d-895960165039@linaro.org>
+Date: Thu, 17 Apr 2025 14:04:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z_ZvmEhjkAhplCBE@localhost.localdomain>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/10] dt-bindings: display/msm: dp-controller:
+ describe SAR2130P
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar
+ <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <lumag@kernel.org>,
+ Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Kuogee Hsieh <quic_khsieh@quicinc.com>,
+ Krishna Manikandan <quic_mkrishn@quicinc.com>,
+ Jonathan Marek <jonathan@marek.ca>, Bjorn Andersson <andersson@kernel.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+References: <20250417-sar2130p-display-v4-0-b91dd8a21b1a@oss.qualcomm.com>
+ <20250417-sar2130p-display-v4-1-b91dd8a21b1a@oss.qualcomm.com>
+ <20250417-arboreal-turkey-of-acumen-e1e3da@shite>
+ <7b559f03-f131-435e-95de-b5faee37b4d5@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <7b559f03-f131-435e-95de-b5faee37b4d5@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 17/04/2025 13:12, Konrad Dybcio wrote:
+> On 4/17/25 8:03 AM, Krzysztof Kozlowski wrote:
+>> On Thu, Apr 17, 2025 at 02:16:31AM GMT, Dmitry Baryshkov wrote:
+>>> From: Dmitry Baryshkov <lumag@kernel.org>
+>>>
+>>> Describe DisplayPort controller present on Qualcomm SAR2130P platform.
+>>>
+>>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>>
+>> Addresses do not match. You re-authored the commit, so now everywhere is
+>> mess.
+> 
+> It's git's fault with replacing the linaro address based on .mailmap
+No. You can easily see:
+$ git show 51a6256b00008a3c520f6f31bcd62cd15cb05960
+top author is like you say - mailmapped, but Sob is my @samsung.com
 
-* Frederic Weisbecker <frederic@kernel.org> wrote:
+$ git format-patch 51a6256b00008a3c520f6f31bcd62cd15cb05960 -1
+What is in "From" field? Samsung, not mailmapped.
 
-> Le Tue, Apr 08, 2025 at 07:05:04PM -0000, tip-bot2 for Peter Zijlstra a écrit :
-> > The following commit has been merged into the perf/core branch of tip:
-> > 
-> > Commit-ID:     59f3aa4a3ee27e96132e16d2d2bdc3acadb4bf79
-> > Gitweb:        https://git.kernel.org/tip/59f3aa4a3ee27e96132e16d2d2bdc3acadb4bf79
-> > Author:        Peter Zijlstra <peterz@infradead.org>
-> > AuthorDate:    Fri, 17 Jan 2025 15:27:07 +01:00
-> > Committer:     Peter Zijlstra <peterz@infradead.org>
-> > CommitterDate: Tue, 08 Apr 2025 20:55:46 +02:00
-> > 
-> > perf: Simplify perf_event_free_task() wait
-> > 
-> > Simplify the code by moving the duplicated wakeup condition into
-> > put_ctx().
-> > 
-> > Notably, wait_var_event() is in perf_event_free_task() and will have
-> > set ctx->task = TASK_TOMBSTONE.
-> > 
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> > Link: https://lkml.kernel.org/r/20250307193723.044499344@infradead.org
-> > ---
-> >  kernel/events/core.c | 25 +++----------------------
-> >  1 file changed, 3 insertions(+), 22 deletions(-)
-> > 
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 3c92b75..fa6dab0 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -1270,6 +1270,9 @@ static void put_ctx(struct perf_event_context *ctx)
-> >  		if (ctx->task && ctx->task != TASK_TOMBSTONE)
-> >  			put_task_struct(ctx->task);
-> >  		call_rcu(&ctx->rcu_head, free_ctx);
-> > +	} else if (ctx->task == TASK_TOMBSTONE) {
-> > +		smp_mb(); /* pairs with wait_var_event() */
-> > +		wake_up_var(&ctx->refcount);
-> 
-> So there are three situations:
-> 
-> * If perf_event_free_task() has removed all the children from the parent list
->   before perf_event_release_kernel() got a chance to even iterate them, then
->   it's all good as there is no get_ctx() pending.
-> 
-> * If perf_event_release_kernel() iterates a child event, but it gets freed
->   meanwhile by perf_event_free_task() while the mutexes are temporarily
->   unlocked, it's all good because while locking again the ctx mutex,
->   perf_event_release_kernel() observes TASK_TOMBSTONE.
-> 
-> * But if perf_event_release_kernel() frees the child event before
->   perf_event_free_task() got a chance, we may face this scenario:
-> 
->     perf_event_release_kernel()                                  perf_event_free_task()
->     --------------------------                                   ------------------------
->     mutex_lock(&event->child_mutex)
->     get_ctx(child->ctx)
->     mutex_unlock(&event->child_mutex)
-> 
->     mutex_lock(ctx->mutex)
->     mutex_lock(&event->child_mutex)
->     perf_remove_from_context(child)
->     mutex_unlock(&event->child_mutex)
->     mutex_unlock(ctx->mutex)
-> 
->                                                                  // This lock acquires ctx->refcount == 2
->                                                                  // visibility
->                                                                  mutex_lock(ctx->mutex)
->                                                                  ctx->task = TASK_TOMBSTONE
->                                                                  mutex_unlock(ctx->mutex)
->                                                                  
->                                                                  wait_var_event()
->                                                                      // enters prepare_to_wait() since
->                                                                      // ctx->refcount == 2
->                                                                      // is guaranteed to be seen
->                                                                      set_current_state(TASK_INTERRUPTIBLE)
->                                                                      smp_mb()
->                                                                      if (ctx->refcount != 1)
->                                                                          schedule()
->     put_ctx()
->        // NOT fully ordered! Only RELEASE semantics
->        refcount_dec_and_test()
->            atomic_fetch_sub_release()
->        // So TASK_TOMBSTONE is not guaranteed to be seen
->        if (ctx->task == TASK_TOMBSTONE)
->            wake_up_var()
-> 
-> Basically it's a broken store buffer:
-> 
->     perf_event_release_kernel()                                  perf_event_free_task()
->     --------------------------                                   ------------------------
->     ctx->task = TASK_TOMBSTONE                                   smp_store_release(&ctx->refcount, ctx->refcount - 1)
->     smp_mb()
->     READ_ONCE(ctx->refcount)                                     READ_ONCE(ctx->task)
-> 
-> 
-> So you need this:
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index fa6dab08be47..c4fbbe25361a 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -1270,9 +1270,10 @@ static void put_ctx(struct perf_event_context *ctx)
->  		if (ctx->task && ctx->task != TASK_TOMBSTONE)
->  			put_task_struct(ctx->task);
->  		call_rcu(&ctx->rcu_head, free_ctx);
-> -	} else if (ctx->task == TASK_TOMBSTONE) {
-> +	} else {
->  		smp_mb(); /* pairs with wait_var_event() */
-> -		wake_up_var(&ctx->refcount);
-> +		if (ctx->task == TASK_TOMBSTONE)
-> +			wake_up_var(&ctx->refcount);
->  	}
->  }
+I believe that's a known problem in b4, already reported. I don't
+remember if this was fixed, but till it is - you need to use some sort
+of workaround.
 
-JFYI, I've added your SOB:
-
-    Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-
-Thanks,
-
-	Ingo
+Best regards,
+Krzysztof
