@@ -1,234 +1,256 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC98A2288C3
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9487A22A811;
+	Thu, 17 Apr 2025 09:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744881579; cv=none; b=OAObK1xxI3lZx6KfHTZerFpzB+sLeKImCBmaQgIOGo65UCi92KLjjFw7Wb5YhpCcdoWD3CecY/1AVwO7t7Xm02rxuwpc/P+nALeoTPB0j8W02DX+8YQGwitGmQV3PQKpbfxXDgxfgx2B115kXPRKGpQJGWR/m8PR8yVSJedmD4g=
+	t=1744881583; cv=none; b=poT0aBVt15wMBFvZmXRjAqOwYOMTUwbyMhhwLkYtdSLxDt1olwRq70Hi4GBnixAKOM5/HwTvfVNLv+shl3+haWpQmq2yUHfaQtYlEPkgxF6ArrtLzC28lLXymgmTbO8eq/d7RpJ4J6DaQOyjGZuy0C4OwtmCcnayWYOEVFKIX10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744881579; c=relaxed/simple;
-	bh=Ylf0Ip+j+wp+NQRSGRA5HQfnG83N9uNyl5OVFc/4JbU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZUgHpCQW5VFzNjtO0NUgkYDkzAWLFrxiVgfV8eWXOzr7UXfwL5HTnkKM+jNm/BCa4uAubZ7Pu66jX6UK/01A0B3ePilOOFmZDWT48c9nOp7mh+VTUo/Vil8vghaCs5+SJ+xXE8ObCqoZZWBy0m4TwlSOt74ghoudAcdHxih5N4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Gi9qwnLt; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744881583; c=relaxed/simple;
+	bh=Rd8dR5mrLxtA4cWdfHrGRP8CZ4syR8GqQIiI8cKDki4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hkf7Vj5LJfpyOxou0AoQOh2TvG7BnyiAVohMZ886Q5I7X/82jWjE9/8aiSQnrMCqNj70mPOSRbFlebpP3wgxrEEcSLWx5jGXrIwr4rW74v06GJeAxj4DmbXkVqXXjNrL06WEUkNriA0R9d2/qBPLmafb98o77YYYzTOLD13OTVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FD9KAabj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Gi9qwnLt"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GLdEHw016618;
-	Thu, 17 Apr 2025 09:19:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=c8WnN0
-	y0wFJKqb7B3e+6L+n496yH9B+pysfyySy9kJc=; b=Gi9qwnLtm1FL3FemqBl1gp
-	BiBQstU5PEj6uriKWajZO7PAufz5xvcKurJTtfjRAuxrSJgbrlM0EoNK/Np/Ms53
-	Ve+mVWLzWipUmM3mN2+scTNkoc9SqgRA1+ys1KetAlJndeE6pAg+YAR6lToooEU8
-	cnSh0jb91z69/eWgAtWtbI1iF1vzq1RQMz7eGoZYpsE5CV3mIR2jPdCw4xWVM8lM
-	SecN2FbOYFkDIkQxStIqzzoBkDZLZ4qDRpifnizys5FjkwqMW8jKA0aqTJQJtn0u
-	3Ccvpum8yJJ67oLGoYH4asUMDercd5Gzoox0CVXuWTchrrdguwOHLmw3QjyzRFNQ
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 462mn7tkvy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 09:19:28 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53H8e8RH024874;
-	Thu, 17 Apr 2025 09:19:27 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4602gtn8ja-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 09:19:27 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53H9JQXl33817338
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 17 Apr 2025 09:19:26 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0121A20043;
-	Thu, 17 Apr 2025 09:19:26 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4A68120040;
-	Thu, 17 Apr 2025 09:19:24 +0000 (GMT)
-Received: from [9.39.24.204] (unknown [9.39.24.204])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 17 Apr 2025 09:19:24 +0000 (GMT)
-Message-ID: <82baaf6c-f3d9-4c3e-be69-24389eadb18c@linux.ibm.com>
-Date: Thu, 17 Apr 2025 14:49:23 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FD9KAabj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61089C4CEEE;
+	Thu, 17 Apr 2025 09:19:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744881581;
+	bh=Rd8dR5mrLxtA4cWdfHrGRP8CZ4syR8GqQIiI8cKDki4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FD9KAabj+GLPxJZyVB0XxL2tOJpdpCb0zHp5EfdMtghZZs0tI8Hr4DRmvItDg+FXw
+	 R+VcjgwKDgKZ10FCnp0bUto0evEKZdxSfn/Fiu1kWfxZIPoOKEpKfWL7SR7xZHAL21
+	 aE/vkmF6ddvoJ/ZJ7LFX/C7vimUg+qaKsrjRqKgLc2tpBPYewyC4J9odk7emTJHq30
+	 5mcNDuWxHiSQIXNbe1ykg/u2pCznT2z+GbEiOFYTxtLvFMM9in7h7Z+OLropK5DqWT
+	 lq/TAxo8X9NLowo93xVCB+awHqAygPv0kON9wIi0iErpsaGtIlXcprl0tyPkX8OfKE
+	 7cgDHC7sYVm8g==
+Date: Thu, 17 Apr 2025 10:19:36 +0100
+From: Simon Horman <horms@kernel.org>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>, upstream@airoha.com,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [net-next PATCH v3 03/11] net: pcs: Add subsystem
+Message-ID: <20250417091936.GB2430521@horms.kernel.org>
+References: <20250415193323.2794214-1-sean.anderson@linux.dev>
+ <20250415193323.2794214-4-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched: Skip useless sched_balance_running acquisition if
- load balance is not due
-To: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>,
-        Doug Nelson <doug.nelson@intel.com>,
-        Mohini Narkhede <mohini.narkhede@intel.com>,
-        linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, "Chen, Yu C" <yu.c.chen@intel.com>
-References: <20250416035823.1846307-1-tim.c.chen@linux.intel.com>
- <fbe29b49-92af-4b8c-b7c8-3c15405e5f15@linux.ibm.com>
- <667f2076-fbcd-4da7-8e4b-a8190a673355@intel.com>
- <5e191de4-f580-462d-8f93-707addafb9a2@linux.ibm.com>
- <23e05939e7a19151d9b17d011e48a85d650b4e8a.camel@linux.intel.com>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <23e05939e7a19151d9b17d011e48a85d650b4e8a.camel@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=ANnAolku c=1 sm=1 tr=0 ts=6800c7a0 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=j9ACozpduBSlqxEhICoA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: daWXHAUEoCY0nVC9eRDj_emvx_je2tLs
-X-Proofpoint-ORIG-GUID: daWXHAUEoCY0nVC9eRDj_emvx_je2tLs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-17_02,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 adultscore=0 spamscore=0 mlxscore=0 bulkscore=0
- suspectscore=0 phishscore=0 clxscore=1015 impostorscore=0
- priorityscore=1501 lowpriorityscore=0 classifier=spam authscore=0 adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504170070
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415193323.2794214-4-sean.anderson@linux.dev>
 
-
-
-On 4/16/25 21:49, Tim Chen wrote:
-> On Wed, 2025-04-16 at 14:46 +0530, Shrikanth Hegde wrote:
->>
-
->>
-> You mean doing a should_we_balance() check?  I think we should not
-> even consider that if balance time is not due and this balance due check should
-> come first.
+On Tue, Apr 15, 2025 at 03:33:15PM -0400, Sean Anderson wrote:
+> This adds support for getting PCS devices from the device tree. PCS
+> drivers must first register with phylink_register_pcs. After that, MAC
+> drivers may look up their PCS using phylink_get_pcs.
 > 
-Hi Tim.
+> We wrap registered PCSs in another PCS. This wrapper PCS is refcounted
+> and can outlive the wrapped PCS (such as if the wrapped PCS's driver is
+> unbound). The wrapper forwards all PCS callbacks to the wrapped PCS,
+> first checking to make sure the wrapped PCS still exists. This design
+> was inspired by Bartosz Golaszewski's talk at LPC [1].
+> 
+> pcs_get_by_fwnode_compat is a bit hairy, but it's necessary for
+> compatibility with existing drivers, which often attach to (devicetree)
+> nodes directly. We use the devicetree changeset system instead of
+> adding a (secondary) software node because mdio_bus_match calls
+> of_driver_match_device to match devices, and that function only works on
+> devicetree nodes.
+> 
+> [1] https://lpc.events/event/17/contributions/1627/
+> 
+> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
 
-This is the code I was suggesting.
+Hi Sean,
 
----
+I noticed a few build problems after sending my previous email.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 0c19459c8042..e712934973e7 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -11723,6 +11723,21 @@ static void update_lb_imbalance_stat(struct lb_env *env, struct sched_domain *sd
-                 break;
-         }
-  }
-+/*
-+ * This flag serializes load-balancing passes over large domains
-+ * (above the NODE topology level) - only one load-balancing instance
-+ * may run at a time, to reduce overhead on very large systems with
-+ * lots of CPUs and large NUMA distances.
-+ *
-+ * - Note that load-balancing passes triggered while another one
-+ *   is executing are skipped and not re-tried.
-+ *
-+ * - Also note that this does not serialize rebalance_domains()
-+ *   execution, as non-SD_SERIALIZE domains will still be
-+ *   load-balanced in parallel.
-+ */
-+static atomic_t sched_balance_running = ATOMIC_INIT(0);
-+
-  
-  /*
-   * Check this_cpu to ensure it is balanced within domain. Attempt to move
-@@ -11738,6 +11753,7 @@ static int sched_balance_rq(int this_cpu, struct rq *this_rq,
-         struct rq *busiest;
-         struct rq_flags rf;
-         struct cpumask *cpus = this_cpu_cpumask_var_ptr(load_balance_mask);
-+       int need_serialize = 0;
-         struct lb_env env = {
-                 .sd             = sd,
-                 .dst_cpu        = this_cpu,
-@@ -11760,6 +11776,12 @@ static int sched_balance_rq(int this_cpu, struct rq *this_rq,
-                 goto out_balanced;
-         }
-  
-+       need_serialize = (idle!=CPU_NEWLY_IDLE) && sd->flags & SD_SERIALIZE;
-+       if (need_serialize) {
-+               if (atomic_cmpxchg_acquire(&sched_balance_running, 0, 1))
-+                       return ld_moved;
-+       }
-+
-         group = sched_balance_find_src_group(&env);
-         if (!group) {
-                 schedstat_inc(sd->lb_nobusyg[idle]);
-@@ -11884,6 +11906,8 @@ static int sched_balance_rq(int this_cpu, struct rq *this_rq,
-                         if (!cpumask_subset(cpus, env.dst_grpmask)) {
-                                 env.loop = 0;
-                                 env.loop_break = SCHED_NR_MIGRATE_BREAK;
-+                               if (need_serialize)
-+                                       atomic_set_release(&sched_balance_running, 0);
-                                 goto redo;
-                         }
-                         goto out_all_pinned;
-@@ -12000,6 +12024,9 @@ static int sched_balance_rq(int this_cpu, struct rq *this_rq,
-             sd->balance_interval < sd->max_interval)
-                 sd->balance_interval *= 2;
-  out:
-+       if (need_serialize)
-+               atomic_set_release(&sched_balance_running, 0);
-+
-         return ld_moved;
-  }
-  
-@@ -12124,21 +12151,6 @@ static int active_load_balance_cpu_stop(void *data)
-         return 0;
-  }
-  
--/*
-- * This flag serializes load-balancing passes over large domains
-- * (above the NODE topology level) - only one load-balancing instance
-- * may run at a time, to reduce overhead on very large systems with
-- * lots of CPUs and large NUMA distances.
-- *
-- * - Note that load-balancing passes triggered while another one
-- *   is executing are skipped and not re-tried.
-- *
-- * - Also note that this does not serialize rebalance_domains()
-- *   execution, as non-SD_SERIALIZE domains will still be
-- *   load-balanced in parallel.
-- */
--static atomic_t sched_balance_running = ATOMIC_INIT(0);
--
-  /*
-   * Scale the max sched_balance_rq interval with the number of CPUs in the system.
-   * This trades load-balance latency on larger machines for less cross talk.
-@@ -12188,7 +12200,7 @@ static void sched_balance_domains(struct rq *rq, enum cpu_idle_type idle)
-         /* Earliest time when we have to do rebalance again */
-         unsigned long next_balance = jiffies + 60*HZ;
-         int update_next_balance = 0;
--       int need_serialize, need_decay = 0;
-+       int need_decay = 0;
-         u64 max_cost = 0;
-  
-         rcu_read_lock();
-@@ -12213,12 +12225,6 @@ static void sched_balance_domains(struct rq *rq, enum cpu_idle_type idle)
-  
-                 interval = get_sd_balance_interval(sd, busy);
-  
--               need_serialize = sd->flags & SD_SERIALIZE;
--               if (need_serialize) {
--                       if (atomic_cmpxchg_acquire(&sched_balance_running, 0, 1))
--                               goto out;
--               }
--
-                 if (time_after_eq(jiffies, sd->last_balance + interval)) {
-                         if (sched_balance_rq(cpu, rq, sd, idle, &continue_balancing)) {
-                                 /*
-@@ -12232,9 +12238,7 @@ static void sched_balance_domains(struct rq *rq, enum cpu_idle_type idle)
-                         sd->last_balance = jiffies;
-                         interval = get_sd_balance_interval(sd, busy);
-                 }
--               if (need_serialize)
--                       atomic_set_release(&sched_balance_running, 0);
--out:
-+
-                 if (time_after(next_balance, sd->last_balance + interval)) {
-                         next_balance = sd->last_balance + interval;
-                         update_next_balance = 1;
+I was able to exercise them using variants of the following to
+generate small configs. I include this here in case it is useful to you.
+
+make tinyconfig
+
+cat >> .config << __EOF__
+CONFIG_MODULES=y
+CONFIG_NET=y
+CONFIG_NETDEVICES=y
+CONFIG_PCS=y
+CONFIG_PHYLIB=m
+__EOF__
+
+cat >> .config << __EOF__
+CONFIG_OF=y
+CONFIG_OF_UNITTEST=y
+CONFIG_OF_DYNAMIC=y
+__EOF__
+
+yes "" | make oldconfig
+
+...
+
+> diff --git a/drivers/net/pcs/core.c b/drivers/net/pcs/core.c
+
+...
+
+> +/**
+> + * _pcs_get() - Get a PCS from a fwnode property
+> + * @dev: The device to get a PCS for
+> + * @fwnode: The fwnode to find the PCS with
+> + * @id: The name of the PCS to get. May be %NULL to get the first PCS.
+> + * @fallback: An optional fallback property to use if pcs-handle is absent
+> + * @optional: Whether the PCS is optional
+> + *
+> + * Find a PCS referenced by @mac_node and return a reference to it. Every call
+> + * to _pcs_get_by_fwnode() must be balanced with one to pcs_put().
+> + *
+> + * Return: a PCS if found, %NULL if not, or an error pointer on failure
+> + */
+> +struct phylink_pcs *_pcs_get(struct device *dev, struct fwnode_handle *fwnode,
+> +			     const char *id, const char *fallback,
+> +			     bool optional)
+> +{
+> +	struct fwnode_handle *pcs_fwnode;
+> +	struct phylink_pcs *pcs;
+> +
+> +	pcs_fwnode = pcs_find_fwnode(fwnode, id, fallback, optional);
+> +	if (IS_ERR(pcs_fwnode))
+> +		return ERR_CAST(pcs_fwnode);
+> +
+> +	pcs = _pcs_get_tail(dev, pcs_fwnode, NULL);
+> +	fwnode_handle_put(pcs_fwnode);
+> +	return pcs;
+> +}
+> +EXPORT_SYMBOL_GPL(_pcs_get);
+> +
+> +static __maybe_unused void of_changeset_cleanup(void *data)
+> +{
+> +	struct of_changeset *ocs = data;
+
+Code in pcs_get_by_fwnode_compat is conditionally compiled
+based on CONFIG_OF_DYNAMIC. I think that is needed here too,
+because of_changeset_revert() doesn't exist unless CONFIG_OF_DYNAMIC is set.
+
+> +
+> +	if (WARN(of_changeset_revert(ocs),
+> +		 "could not revert changeset; leaking memory\n"))
+> +		return;
+> +
+> +	of_changeset_destroy(ocs);
+> +	kfree(ocs);
+> +}
+> +
+> +/**
+> + * pcs_get_by_fwnode_compat() - Get a PCS with a compatibility fallback
+> + * @dev: The device requesting the PCS
+> + * @fwnode: The &struct fwnode_handle of the PCS itself
+> + * @fixup: Callback to fix up @fwnode for compatibility
+> + * @data: Passed to @fixup
+> + *
+> + * This function looks up a PCS and retries on failure after fixing up @fwnode.
+> + * It is intended to assist in backwards-compatible behavior for drivers that
+> + * used to create a PCS directly from a &struct device_node. This function
+> + * should NOT be used in new drivers.
+> + *
+> + * @fixup modifies a devicetree changeset to create any properties necessary to
+> + * bind the PCS's &struct device_node. At the very least, it should use
+> + * of_changeset_add_prop_string() to add a compatible property.
+> + *
+> + * Note that unlike pcs_get_by_fwnode, @fwnode is the &struct fwnode_handle of
+> + * the PCS itself, and not that of the requesting device. @fwnode could be
+> + * looked up with pcs_find_fwnode() or determined by some other means for
+> + * compatibility.
+> + *
+> + * Return: A PCS on success or an error pointer on failure
+> + */
+> +struct phylink_pcs *
+> +pcs_get_by_fwnode_compat(struct device *dev, struct fwnode_handle *fwnode,
+> +			 int (*fixup)(struct of_changeset *ocs,
+> +				      struct device_node *np, void *data),
+> +			 void *data)
+> +{
+> +#ifdef CONFIG_OF_DYNAMIC
+> +	struct mdio_device *mdiodev;
+> +	struct of_changeset *ocs;
+> +	struct phylink_pcs *pcs;
+> +	struct device_node *np;
+> +	struct device *pcsdev;
+> +	int err;
+> +
+> +	/* First attempt */
+> +	pcs = _pcs_get_tail(dev, fwnode, NULL);
+> +	if (PTR_ERR(pcs) != -EPROBE_DEFER)
+> +		return pcs;
+> +
+> +	/* No luck? Maybe there's no compatible... */
+> +	np = to_of_node(fwnode);
+> +	if (!np || of_property_present(np, "compatible"))
+> +		return pcs;
+> +
+> +	/* OK, let's try fixing things up */
+> +	pr_warn("%pOF is missing a compatible\n", np);
+> +	ocs = kmalloc(sizeof(*ocs), GFP_KERNEL);
+> +	if (!ocs)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	of_changeset_init(ocs);
+> +	err = fixup(ocs, np, data);
+> +	if (err)
+> +		goto err_ocs;
+> +
+> +	err = of_changeset_apply(ocs);
+> +	if (err)
+> +		goto err_ocs;
+> +
+> +	err = devm_add_action_or_reset(dev, of_changeset_cleanup, ocs);
+> +	if (err)
+> +		return ERR_PTR(err);
+> +
+> +	mdiodev = fwnode_mdio_find_device(fwnode);
+
+fwnode_mdio_find_device() is unavailable for linking if PHYLIB is a module
+(and PCS is built-in).
+
+> +	if (mdiodev) {
+> +		/* Clear that pesky PHY flag so we can match PCS drivers */
+> +		device_lock(&mdiodev->dev);
+> +		mdiodev->flags &= ~MDIO_DEVICE_FLAG_PHY;
+> +		device_unlock(&mdiodev->dev);
+> +		pcsdev = &mdiodev->dev;
+> +	} else {
+> +		pcsdev = get_device(fwnode->dev);
+> +		if (!pcsdev)
+> +			return ERR_PTR(-EPROBE_DEFER);
+> +	}
+> +
+> +	err = device_reprobe(pcsdev);
+> +	put_device(pcsdev);
+> +	if (err)
+> +		return ERR_PTR(err);
+> +
+> +	return _pcs_get_tail(dev, fwnode, NULL);
+> +
+> +err_ocs:
+> +	of_changeset_destroy(ocs);
+> +	kfree(ocs);
+> +	return ERR_PTR(err);
+> +#else
+> +	return _pcs_get_tail(dev, fwnode, NULL);
+> +#endif
+> +}
+> +EXPORT_SYMBOL_GPL(pcs_get_by_fwnode_compat);
+
+...
