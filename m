@@ -1,70 +1,132 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C601FECB0;
-	Thu, 17 Apr 2025 19:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6F77E1;
+	Thu, 17 Apr 2025 19:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744918350; cv=none; b=UixlPcY3SL9A+RP1GfNgeOYHJRtshpFlkGrTnN6+HErr1OF2BUZwo04opCuylaHkUzg5uL5x3qqxEFjsj8St5J6D9GdfPQ1uzYB/t+wsJQwKWPZwtrPh2IrsNINoONkzrejDzjydSBUw/zdWVJixlDkzIZhvL3VYM+qFPl7IjH8=
+	t=1744918414; cv=none; b=aTzfdnUdw/SmwakLtzBT1qxlOTCsyRkSwTIm+9IyiA1qnL2UM0iLB5u7cJ9kBAlCTb2GSeP48mcxp+KLMPmf70nRUDkUNARtzrYkRDfXbs47e87QnMpu+1g3rdtYJvoB1f23Li9yssKBdKKy2YXT3B9tSt8zhDdwEYzqtmw+rRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744918350; c=relaxed/simple;
-	bh=MIc4Fa3UNak1GOKDFG/+Phqs38nCj6oMBoNExcxtdu8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PGry1dujIqB7qJVJHEjFDogxBjcW59u0mvc6jiX+C0pJm+FhxEZ7FO6FcoVF7Xo2xfXbJJMmQ4ASSpXHrl5OJMivQB6bf5BjskMRjAZU3HlA/HpcA9Uf1YgQ/+2uY4SS6GqUn9oOsktEJUHRQNFa9MN3a0jsryld05et9+VXrgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=VBPn+fdt; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744918414; c=relaxed/simple;
+	bh=E7QLYiPVgNh86rCfxPxTHHHQkTStPgPD9nZacPlf+Mo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SrMTTOzRhcN3XheCKSf/aInvEq5N4qfSDzi8zfxMpCbIlSeO7rrcii6UQBdfave9aqhF4xo7lBE58jQtGHbmXfODJhLyzUc7VveY/ftISit/ucQqwFw53ZLcx1zWzvfJBsPGQ3/FKHE92apdgGDGSfPewls3tWbWiJ54OTSS50w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RJ22Z7Ll; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="VBPn+fdt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=ax2uSXScmj7yDhI+qlN3Eb7imhRX9BqV/YdJ2tBns6w=; b=VBPn+fdttnap7ChBbym3IH8GGX
-	Pc6up9go8ANclrT4BvHXPSWt5C5Wh6HpqYXisS5YDerXxpms+N4RWFxOa5NIaduiwV5iFErhb5Oig
-	OIBP7rDLHFCUsBeKjaONQjiWEWXs8G72o/clXbUfZpn/fwaQF7QjH9s2P9FeQNdaTjq4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u5UyD-009pCG-Tg; Thu, 17 Apr 2025 21:32:21 +0200
-Date: Thu, 17 Apr 2025 21:32:21 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Qasim Ijaz <qasdev00@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Subject: Re: [PATCH v3 0/8] ref_tracker: add ability to register a debugfs
- file for a ref_tracker_dir
-Message-ID: <0f25e2ae-70e4-442d-af45-fd927c6faafe@lunn.ch>
-References: <20250417-reftrack-dbgfs-v3-0-c3159428c8fb@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RJ22Z7Ll"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744918413; x=1776454413;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=E7QLYiPVgNh86rCfxPxTHHHQkTStPgPD9nZacPlf+Mo=;
+  b=RJ22Z7LlzqQdRGHN+PnpJ/4YdNTREFF8agVh097DiD+gBbRvkfRmF6xN
+   d3mhRr7jrdMCmTqI7hitjDsq8ub3OyuQbHjNHJcmzZtIJMLPS7638VwhB
+   y0+DH0XRueCoyGuEMZ3tOxwHdqboTKN/coKqAEUqYiP82Q0Ed5Cyn3vh8
+   iU/u67XrNtkKp5q8hDmc9bBZWUT5xapGQgUrPA5r0X5id7qtBxmyc/plP
+   jgPzJqDTUaZQsay+lLFOPw4cbLnrIPjSj7CKGAoq9LgfAuRtRwDoMvjZC
+   M6oE0WL5tX6FXcqRDqAAeh5JmpBYBbXCPL/bBfG9Hans3wsfilT0TnTz/
+   Q==;
+X-CSE-ConnectionGUID: TdpMCw7qSH6vgr3JdDQv+A==
+X-CSE-MsgGUID: AWSL3K53SMWlhRJNu6U8jA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="57901008"
+X-IronPort-AV: E=Sophos;i="6.15,220,1739865600"; 
+   d="scan'208";a="57901008"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 12:33:32 -0700
+X-CSE-ConnectionGUID: KOKFi6IxTuGtGSA7H7ndrg==
+X-CSE-MsgGUID: oMZqxEjGSYexkTi8Zb3R1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,220,1739865600"; 
+   d="scan'208";a="130755317"
+Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.223.169]) ([10.124.223.169])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 12:33:31 -0700
+Message-ID: <73f393a9-32e4-4f39-9834-249068ca3294@intel.com>
+Date: Thu, 17 Apr 2025 12:33:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417-reftrack-dbgfs-v3-0-c3159428c8fb@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] x86/devmem: Drop /dev/mem access for confidential
+ guests
+To: Dan Williams <dan.j.williams@intel.com>, dave.hansen@linux.intel.com
+Cc: x86@kernel.org, Kees Cook <kees@kernel.org>,
+ Ingo Molnar <mingo@kernel.org>, Naveen N Rao <naveen@kernel.org>,
+ Vishal Annapurve <vannapurve@google.com>,
+ Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+ Nikolay Borisov <nik.borisov@suse.com>, stable@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev
+References: <174491711228.1395340.3647010925173796093.stgit@dwillia2-xfh.jf.intel.com>
+ <174491712829.1395340.5054725417641299524.stgit@dwillia2-xfh.jf.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <174491712829.1395340.5054725417641299524.stgit@dwillia2-xfh.jf.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 17, 2025 at 09:11:03AM -0400, Jeff Layton wrote:
-> I had previously sent some patches to add debugfs files for the net
-> namespace refcount trackers, but Andrew convinced me to make this more
-> generic and better-integrated into the ref_tracker infrastructure.
-> 
-> This adds a new ref_tracker_dir_debugfs() call that subsystems can call
-> to finalize the name of their dir and register a debugfs file for it.
-> The last two patches add these calls for the netns and netdev
-> ref_trackers.
+On 4/17/25 12:12, Dan Williams wrote:
+...
+> +	/*
+> +	 * Enforce encrypted mapping consistency and avoid unaccepted
+> +	 * memory conflicts, "lockdown" /dev/mem for confidential
+> +	 * guests.
+> +	 */
+> +	if (IS_ENABLED(CONFIG_STRICT_DEVMEM) &&
+> +	    cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+> +		return -EPERM;
+> +
+A lot of /dev/mem use seems to be poking at random hardware details like
+BIOS internals, ACPI tables or hardware devices. Those all have modern
+alternatives. So while I worry that this will make some userspace mad, I
+have a hard time imagining that it's _relevant_ userspace on a modern
+x86 CoCo platform where that userspace isn't buggy already.
 
-Thanks for reworking this to make is more subsystem generic. I hope
-the GPU people also find it useful.
-
-	Andrew
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
