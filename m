@@ -1,68 +1,122 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56AC314F90;
-	Thu, 17 Apr 2025 17:26:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2342F1ADC6C
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 17:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744910814; cv=none; b=kHIO7orepT2FTF8YgTRp9jK3YhLMSmx776+rRAkFWn4Ud//b5falTVdU65tig42k7s9h1ALQywIvFSzMOTeTp+TB1WrSKQl5XOn/1T/ufjy5kS6hhz3gxFQwu6hGoD9/HXMpe94Ln7BdWBRMNjBCLuNTOc2pZjI2tVQzivkG5Zg=
+	t=1744910827; cv=none; b=A6gugdE7CO2t0o2J4D+NXffIVRKapwnf63woJ5TO+vQvBf0BMu0NDsC5KdJug1LFgxe777iF4njx1BdTZnlta3n8sBlrzqZbst8tf9cs5DdUVoTEjkwLmWUlDBDhSMeghlwLiYoimhzZCD+sNGmNEcEh40UYF58lSegceWClXUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744910814; c=relaxed/simple;
-	bh=MhwF/BwHo6EQq2Mw/JlLGUsZKi6aWNKmwAb9vucDW6A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PvMBf+3fv/GSopxWSR6R6ZC6wgdB9z0lCdevqk9/y+BCy/qnYK3NAMp3cqJYGNG7o+ui4yppkHNsZtTV3RvdXvF9CcjK4eV00QXkEBG24/KFHvT02vyq5Rttp4ql+l7uPafXZoApk24fArGI1TUi1m+7Z3olD1EOiccILtli9sI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=BDfj3BtD; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744910827; c=relaxed/simple;
+	bh=n5minbvQKRDdzRXAgO5LmYLGqHrSYkxYUYinpIYV8MY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=EhQ0Kofsv46xnU3UiIh7T4x7zJ597xIiMvRfsPBCyxllAdRyuqJfQSsyuIruSVuxZfVSn0QA3CsGv2ssupZBlHrOGmhgVjESqHlq1VxLOk4Hv9SlRhoA+FHzxJ2fnH7XhLQF6cfH14A29hSoXHEY6vhYLfBqQ2vG/28HXrmSvSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=L7AHkC6E; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="BDfj3BtD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=mwH5L53HDNq+argaP1eYSzJK66XTnQVpZ9LqansbCzs=; b=BDfj3BtDbRYXNvTqh5rzikbE3R
-	CkZNiGTRvdNV0dSi1QUVqpFs3jTX6mtxkjH+rnFnzZipMcEEryYMybNEXbQstbvx7AZOZ80xoMoQX
-	jRfA/0pwoBiEc9hd9jJIOPuq5nRKwYloZV36gZ1Y5OjF13QGLBUnDs5F0dGn/+X5amgU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u5T0f-009oLn-FS; Thu, 17 Apr 2025 19:26:45 +0200
-Date: Thu, 17 Apr 2025 19:26:45 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: davem@davemloft.net, Russell King <linux@armlinux.org.uk>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com, Simon Horman <horms@kernel.org>,
-	Alexis =?iso-8859-1?Q?Lothor=E9?= <alexis.lothore@bootlin.com>,
-	Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH net] MAINTAINERS: Add entry for Socfpga DWMAC ethernet
- glue driver
-Message-ID: <03dd6fb9-fb9d-42e2-8f9f-e53c77e34bac@lunn.ch>
-References: <20250416125453.306029-1-maxime.chevallier@bootlin.com>
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="L7AHkC6E"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 33FD5240104
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 19:27:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1744910823; bh=n5minbvQKRDdzRXAgO5LmYLGqHrSYkxYUYinpIYV8MY=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version:From;
+	b=L7AHkC6E5RBkL1rT1997zm3B7ie3EDz68H5HIW2eOKb03e9onfATyQxiLiUdEE62v
+	 TIu6OmncN/41P0WlXHoSLnCkDyPj0YSVCBTF/Ys7UIjy7nrPvwxFU8CExwVP1Ji+Gc
+	 z1z51WJ/uFDi3RjSBq1+ERDOZKW/SiOr8FGyQ0bT4dLqcus1TqqThD4wHVUNF2f8b1
+	 RSqtnai/6a7ruIVVw8iLrmQTj2vvpj6g0i8NO/Gj5dW7pEl+gGjCdOneNm/VvpuNIW
+	 wk0InwnpldGmQxzx8K1iw9QPj3zeGrE7yMw1BfN+CS4AG0MZ7vUxvFpjHqLSEkDPIA
+	 peG6E5VdxzRGw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4ZdlFK2NvTz6tvd;
+	Thu, 17 Apr 2025 19:27:01 +0200 (CEST)
+Message-ID: <8578fcea4ae682e8bb8b60b21df3c27d757b019c.camel@posteo.net>
+Subject: Re: [PATCH] iio: frequency:: Remove unused parameter from data
+ documentation
+From: Charalampos Mitrodimas <charmitro@posteo.net>
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev, 
+	gregkh@linuxfoundation.org, jic23@kernel.org, lars@metafoo.de, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-staging@lists.linux.dev, Michael.Hennerich@analog.com
+Date: Thu, 17 Apr 2025 17:26:57 +0000
+In-Reply-To: <CAKUZ0zK58DgEN6C9U34dyxrVuoq3PoQFQ1_O0ve4GQYy+bUJOA@mail.gmail.com>
+References: <20250417143220.572261-1-gshahrouzi@gmail.com>
+	 <56edfb88d3f31939fb343149bfad436f24671f9d.camel@posteo.net>
+	 <2cc70f19c1b001ea7f2cf0632618d060f69faef0.camel@posteo.net>
+	 <CAKUZ0zK58DgEN6C9U34dyxrVuoq3PoQFQ1_O0ve4GQYy+bUJOA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416125453.306029-1-maxime.chevallier@bootlin.com>
 
-On Wed, Apr 16, 2025 at 02:54:48PM +0200, Maxime Chevallier wrote:
-> Socfpga's DWMAC glue comes in a variety of flavours with multiple
-> options when it comes to physical interfaces, making it not so easy to
-> test. Having access to a Cyclone5 with RGMII as well as Lynx PCS
-> variants, add myself as a maintainer to help with reviews and testing.
+On Thu, 2025-04-17 at 13:17 -0400, Gabriel Shahrouzi wrote:
+> On Thu, Apr 17, 2025 at 11:57=E2=80=AFAM Charalampos Mitrodimas
+> <charmitro@posteo.net> wrote:
+> >=20
+> > On Thu, 2025-04-17 at 15:53 +0000, Charalampos Mitrodimas wrote:
+> > > On Thu, 2025-04-17 at 10:32 -0400, Gabriel Shahrouzi wrote:
+> > > > The AD9832 driver uses the Common Clock Framework (CCF) to
+> > > > obtain
+> > > > the
+> > > > master clock (MCLK) frequency rather than relying on a
+> > > > frequency
+> > > > value
+> > > > passed from platform data.
+> > > >=20
+> > > > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> > > > ---
+> > > > =C2=A0drivers/staging/iio/frequency/ad9832.h | 1 -
+> > > > =C2=A01 file changed, 1 deletion(-)
+> > > >=20
+> > > > diff --git a/drivers/staging/iio/frequency/ad9832.h
+> > > > b/drivers/staging/iio/frequency/ad9832.h
+> > > > index 98dfbd9289ab8..d0d840edb8d27 100644
+> > > > --- a/drivers/staging/iio/frequency/ad9832.h
+> > > > +++ b/drivers/staging/iio/frequency/ad9832.h
+> > > > @@ -13,7 +13,6 @@
+> > > >=20
+> > > > =C2=A0/**
+> > > > =C2=A0 * struct ad9832_platform_data - platform specific informatio=
+n
+> > > > - * @mclk:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 master clock in Hz
+> > >=20
+> > > Hi Gabriel,
+> > >=20
+> > > This seems to be a leftover from
+> > > 566564e80b0ed23ffa4c40f7ad4224bf3327053a ("staging: iio: ad9832:
+> > > use
+> > > clock framework for clock reference")
+> Ah ok. I will include this in the body as a reference. I guess for
+> small clean up patches like this, they would have been most likely to
+> be included in a larger patch that covered other changes but
+> forgotten. In this case, should they be referenced?
 
-Thanks for signing up to maintain this, and helping out Russell with
-testing. We need more developers to take ownership of the stmmac glue
-files.
+Yes, you can just have a reference to it on your v2 (if a v2 is
+needed).
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
-
+> >=20
+> > That said, a Fixes: tag might be helpful?
+> >=20
+> > >=20
+> > >=20
+> > >=20
+> > > > =C2=A0 * @freq0:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 power up freq0 tuning word in Hz
+> > > > =C2=A0 * @freq1:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 power up freq1 tuning word in Hz
+> > > > =C2=A0 * @phase0:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 power up phase0 value [0..4095]
+> > > > correlates
+> > > > with 0..2PI
+> > >=20
+> > >=20
+> >=20
 
