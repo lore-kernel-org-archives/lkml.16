@@ -1,123 +1,230 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950341A2554;
-	Thu, 17 Apr 2025 06:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E071E5B75;
+	Thu, 17 Apr 2025 06:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744870806; cv=none; b=KVZ/+z7iqVny9lVRl2Q1lOlI5OBs4tlCM86dvnUxqt2Ljg55feTUiiu0PWTLozMhhAUk//OZqgBtO8n3pC6zS+YDbgy1gFpLC8L9ZuEkzmETfDwDgQxfUMfURCyyPKVcgJjvqgQ5isTPfrou07VCZG7uB43YJnRb2ygowwNHpQI=
+	t=1744870841; cv=none; b=XkJ6GgzPgD5D2e2MXQ1MPiK+GG1nHmVAR9QV1zze0IGKrUMymaPwAOrICC0Jwvox6++iFrlwWrLD7E+69oxwZPkXnGZdY8WHhPZ3qWDd1kvUP6Fb1o/IyBoLMZ0kG6NTZ3qLtS+XvYNBs6yQ/JZx3r23jFDbfnAuOzvBXCyt3uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744870806; c=relaxed/simple;
-	bh=VxT2po+NrQ8fXUrsS07RF7B08VPOX96rVFAn6InJZkY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ro/WOhhLEgyPCFZ5lIPuOQ86Lv9JphisvQNTi5Q+6rovoSOzyXbgHtCcBAkFlIuQXedITK1dEFoL5mI/7ibhQKxg3fTyK7zI4PCC6a+i9p2wgbV21uRa1ffAYVRPZ9sZ05LQTGosBopTN18XWkWjqPqRIGEaurk3rK5ng/CINXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bD5bEvTO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744870841; c=relaxed/simple;
+	bh=jWdWYL2xljv5vybxvl3qY4QI5KxWxjAA4vZnrXfmHks=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=HUdQkIuev1g9f/hqDijqhyLMItJqIeLDDrxFMJ/XD2QV8AxZ86pqYg5QfM9Bch+PgLRdPW4nmhNXgFhhtvH0GedTR2kkjE4CaHQvQUQkky+E7QC+837sGGPTTA58LWaDlPmxLg1sBbrKJ92nWdedXumsJbus80sqbByzMPStEx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=kKGEobHR; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bD5bEvTO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BCC9C4CEE4;
-	Thu, 17 Apr 2025 06:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744870806;
-	bh=VxT2po+NrQ8fXUrsS07RF7B08VPOX96rVFAn6InJZkY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bD5bEvTOOBmNe2dEZDW+QRm1ApRTTLCQx2B4FxjwMtQ6pgWHQlAomv/5WQiPVL+Ve
-	 DW74XatObh8k6eqy9RP3IV7WHmWnXJtzjdKeKAYGd+UvOcjNEVb+i/taZlm5fhPDI3
-	 ORhW5Nx7/YkWOVXdtEOintxXHGpcAgr33iOaoDwBogHCG/qP9GH6nilAPgC7kpXSZQ
-	 0vvbWSGwHc4vjf9Rykpa47g/ZqdPCVFXwMyGOm3Gq2Qj6X+paPGP+wTJ+/7Vy3NUn0
-	 5uwzvAWZncF4xk0fPTRTHxoYFfvdCuN/l+cHwXvAsBUHt69Pwd4FRMPeFja5G1H2pG
-	 JGB7lnNLRhkrg==
-Message-ID: <cef48ecc-94b6-40a0-9f9c-a616814878fb@kernel.org>
-Date: Thu, 17 Apr 2025 08:19:59 +0200
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="kKGEobHR"
+Received: from localhost (web.docker-mailserver_default [172.18.0.2])
+	by mail.mainlining.org (Postfix) with ESMTPSA id 6B705BBAD2;
+	Thu, 17 Apr 2025 06:20:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1744870836;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vINGxXd1a/HvJqBAZg5qAK4jrccoMyLLJvCH80uIjEo=;
+	b=kKGEobHRSReKJ1RvO2JA11xM/eViImkOIcHP3mrAOubxN+UtDvrII4KRy90i6k5bPBDIxT
+	szymDQiM9mbUgeEAd+KC8kJj4nNTqMOtsXfegsmboLsNM9nF0NaFXgRLtF8reYVZ+X4j70
+	eWpZCm1qaIh+JSMAaxId0BwWa/iiFqEdOiJfPZY9M7Q7DTHYq8khJz7+GBYZmI/KXdUHej
+	GWRv94Oq5IAOHG+4U3UoYBhps/O6touiPhMBHdgavS8A24LcSel9RT68m+cRBoGYoD2Ojw
+	vqEltuN9kIh+Qe0hYbnsP36WWfGc0tbAdntaxQ7ro6DSZmtgp2I3ulVQygqZmQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 09/10] arm64: dts: cix: add initial CIX P1(SKY1) dts
- support
-To: Peter Chen <peter.chen@cixtech.com>, soc@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com,
- will@kernel.org, arnd@arndb.de, jassisinghbrar@gmail.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
- maz@kernel.org, kajetan.puchalski@arm.com,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Fugang Duan <fugang.duan@cixtech.com>, Guomin Chen
- <Guomin.Chen@cixtech.com>, Gary Yang <gary.yang@cixtech.com>
-References: <20250415072724.3565533-1-peter.chen@cixtech.com>
- <20250415072724.3565533-10-peter.chen@cixtech.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250415072724.3565533-10-peter.chen@cixtech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Thu, 17 Apr 2025 08:20:36 +0200
+From: barnabas.czeman@mainlining.org
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>,
+ =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, Linus Walleij
+ <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, Srinivas Kandagatla
+ <srinivas.kandagatla@linaro.org>, Joerg Roedel <joro@8bytes.org>, Will
+ Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Konrad Dybcio
+ <konradybcio@kernel.org>, Rob Clark <robdclark@gmail.com>, Sean Paul
+ <sean@poorly.run>, Abhinav Kumar <quic_abhinavk@quicinc.com>, Marijn Suijten
+ <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, Simona
+ Vetter <simona@ffwll.ch>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Dmitry Baryshkov
+ <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ iommu@lists.linux.dev, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, phone-devel@vger.kernel.org,
+ ~postmarketos/upstreaming@lists.sr.ht, linux@mainlining.org, Dang Huynh
+ <danct12@riseup.net>
+Subject: Re: [PATCH v4 4/6] arm64: dts: qcom: Add initial support for MSM8937
+In-Reply-To: <f85195a1-f55e-41ea-967d-b758014cba06@oss.qualcomm.com>
+References: <20250315-msm8937-v4-0-1f132e870a49@mainlining.org>
+ <20250315-msm8937-v4-4-1f132e870a49@mainlining.org>
+ <f85195a1-f55e-41ea-967d-b758014cba06@oss.qualcomm.com>
+Message-ID: <93ea35691deaa1ff38d229225e26cf41@mainlining.org>
+X-Sender: barnabas.czeman@mainlining.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 15/04/2025 09:27, Peter Chen wrote:
-> CIX SKY1 SoC is high performance Armv9 SoC designed by Cixtech,
-> and Orion O6 is the motherboard launched by Radxa. See below for
-> detail:
-> https://docs.radxa.com/en/orion/o6/getting-started/introduction
+On 2025-04-14 22:55, Konrad Dybcio wrote:
+> On 3/15/25 3:57 PM, Barnabás Czémán wrote:
+>> From: Dang Huynh <danct12@riseup.net>
+>> 
+>> Add initial support for MSM8937 SoC.
+>> 
+>> Signed-off-by: Dang Huynh <danct12@riseup.net>
+>> Co-developed-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>> ---
 > 
-> In this commit, it adds sky1 base, mailbox, clock (scmi firmware baseed)
-> and uart, and the kernel could boot up to console.
+> [...]
 > 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-You added several new device nodes, so obviously this is not true anymore.
-
-This is explained in submitting patches - you must drop the review when
-making substantial changes. Adding several nodes is a substantial change.
-
-> Acked-by: Fugang Duan <fugang.duan@cixtech.com>
-
-And this as well
-
-
-
-Best regards,
-Krzysztof
+>> +			power-domains = <&cpu_pd0>;
+>> +			power-domain-names = "psci";
+> 
+> So CPU4-7 get "nicer" idle, but 0-3 don't?
+> 
+> [...]
+> 
+>> +		cpu-map {
+>> +			/* The MSM8937 has 2 cluster A53 setup. */
+> 
+> This comment seems superfluous
+> 
+> [...]
+> 
+>> +	timer {
+> 
+> 'p' < 't', please sort top-level nodes alphabetically
+> 
+> [...]
+> 
+>> +				wcss-wlan2-pins {
+>> +					pins = "gpio76";
+>> +					function = "wcss_wlan2";
+>> +					drive-strength = <6>;
+> 
+> please unify this order (drive-strength before bias)
+> 
+>> +					bias-pull-up;
+>> +
+>> +				};
+> 
+> Extra newline
+> 
+> [...]
+> 
+>> +		gpu: gpu@1c00000 {
+>> +			compatible = "qcom,adreno-505.0", "qcom,adreno";
+>> +			reg = <0x1c00000 0x40000>;
+>> +			reg-names = "kgsl_3d0_reg_memory";
+>> +			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+>> +			interrupt-names = "kgsl_3d0_irq";
+>> +			#cooling-cells = <2>;
+>> +			clocks = <&gcc GCC_OXILI_GFX3D_CLK>,
+>> +				<&gcc GCC_OXILI_AHB_CLK>,
+>> +				<&gcc GCC_BIMC_GFX_CLK>,
+>> +				<&gcc GCC_BIMC_GPU_CLK>,
+>> +				<&gcc GCC_OXILI_TIMER_CLK>,
+>> +				<&gcc GCC_OXILI_AON_CLK>;
+> 
+> Please align the <s
+> 
+>> +			clock-names = "core",
+>> +				      "iface",
+>> +				      "mem_iface",
+>> +				      "alt_mem_iface",
+>> +				      "rbbmtimer",
+>> +				      "alwayson";
+>> +			operating-points-v2 = <&gpu_opp_table>;
+>> +			power-domains = <&gcc OXILI_GX_GDSC>;
+>> +
+>> +			iommus = <&adreno_smmu 0>;
+>> +
+>> +			status = "disabled";
+>> +
+>> +			gpu_opp_table: opp-table {
+>> +				compatible = "operating-points-v2";
+>> +
+>> +				opp-19200000 {
+>> +					opp-hz = /bits/ 64 <19200000>;
+>> +					opp-supported-hw = <0xFF>;
+> 
+> 0xff is overly broad, please document the existing known speed bins
+There are no speedbins for 8937 gpu. 8940 have but 8940 is not scope of 
+this series.
+> 
+> [...]
+> 
+>> +		adreno_smmu: iommu@1c40000 {
+>> +			compatible = "qcom,msm8996-smmu-v2",
+>> +				     "qcom,adreno-smmu",
+>> +				     "qcom,smmu-v2";
+>> +			reg = <0x1c40000 0x10000>;
+> 
+> Does it work as-is, without iommu changes?
+> 
+> [...]
+> 
+>> +	thermal_zones: thermal-zones {
+>> +		aoss-thermal {
+>> +			polling-delay-passive = <250>;
+> 
+> There are no passive trip points> +
+>> +			thermal-sensors = <&tsens 0>;
+>> +
+>> +			trips {
+>> +				aoss_alert0: trip-point0 {
+>> +					temperature = <85000>;
+>> +					hysteresis = <2000>;
+>> +					type = "hot";
+>> +				};
+> 
+> Please convert these to 'critical' instead
+> 
+> [...]
+> 
+>> +		cpuss1-thermal {
+>> +			polling-delay-passive = <250>;
+> 
+> You can drop polling-delay-passive under CPU tzones, as threshold
+> crossing is interrupt-driven
+> 
+>> +
+>> +			thermal-sensors = <&tsens 4>;
+>> +
+>> +			cooling-maps {
+>> +				map0 {
+>> +					trip = <&cpuss1_alert0>;
+>> +					cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+>> +							 <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+>> +							 <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+>> +							 <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>> +				};
+>> +			};
+>> +
+>> +			trips {
+>> +				cpuss1_alert0: trip-point0 {
+>> +					temperature = <75000>;
+>> +					hysteresis = <2000>;
+>> +					type = "passive";
+>> +				};
+>> +
+>> +				cpuss1_alert1: trip-point1 {
+>> +					temperature = <85000>;
+>> +					hysteresis = <2000>;
+>> +					type = "hot";
+>> +				};
+> 
+> On newer platforms we rely on LMH to shut down the device if it
+> were to reach the junction temperature, but let's leave them here
+> as probably no one remembers for sure how reliable that is on these
+> older platforms and you're most likely not willing to test that
+> 
+> Konrad
