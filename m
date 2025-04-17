@@ -1,205 +1,89 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2995E255227;
-	Thu, 17 Apr 2025 17:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6C1255223;
+	Thu, 17 Apr 2025 17:14:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744910028; cv=none; b=qcs0RJs+y1mewmXRZiuoCQlXxvKsydmge0ruYHQRQYKdSKo+R3pQmwiNVMa/2rkZ9VPnbg40HyQjfigs4QT2B9EhBdTvwx5RSl0zkqfGPFzoCKaq/Kx8a6AfD+ZGCli581WafPw7dWzPUAsMt43zdEBEMwq/GVmE8dUsgL72UNs=
+	t=1744910077; cv=none; b=l3Mp0yEo/zq9WsfQiU83mwgsZIpdxBZ/28uImbjPKPre9hDrjW7sxxSStDIDoDNrdRuOuKMLhC8J5og9VNe+dHMHms/eTj70mB/n1TAXdw4h9b6IeL/2EUirz53+rMBmzJWEM1jz/xbKiz4ZtwTpei0GYRq6+Kw5Z6OSfTyw3bU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744910028; c=relaxed/simple;
-	bh=ClXKge+s0+Ub2mg760Y3fWyvgn0KGdmf2n1ls9/1cQ4=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RCOkx6i9LwU4HmEf4RUdWzaf8m4zg9YoEIYh+IartBwwC+GgoJ4T4/pzUShLUKkKG3UilfFGmCVd8E4I5o8Ir5VXZvarWf+PncX8Z6Fm05RpIo5IiaEBciJtJDYaWH4AJIz0RkwzijYYxEWvPi8/p1Cg1ljCiL7pRh8WWQB1oXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cJ+07d1O; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744910077; c=relaxed/simple;
+	bh=mznnJHuLbKpYgm+SG5uyUsVWXj7gHH37CxevZHUxBVI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=DlK9Tm+mn+L32cKB1Xu07fxDwJLDSCNDgEYncsJ2gGW228qv/Y0mlgGkNxoWAK8QkMNfwRdGcQgqMbUWaqnShCqxhOGhHn+Bd3zE44gyC7TYtrfC801Cl7dd2DRJMNhwbuLNJAubsnQq9NzBgZxt7GqG1C9SUc3BReup6PzqvUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=AD08Bybc; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJ+07d1O"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6ecfa716ec1so10451066d6.2;
-        Thu, 17 Apr 2025 10:13:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744910026; x=1745514826; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:feedback-id
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=uMiNN63eUUM5t6fmwQT7MGcJeOTU1iqkIGAVW80wSWM=;
-        b=cJ+07d1OEuUmDXsNNIezebyDQpYhFn6WZCYc7/xTmYME0f5EKDqF61a81MLJURIT/C
-         Muva7nhr6xwbxWlE/NTx+c9A07tGvayU+r/IZGjhGMtxbB0z4/53Du2RNrZA9VXOMuzr
-         wpZrb9nTf2TuObiI0EjBLnIZCzzekkqyodMtidy7gy/CD/exOb56TOIThqW4kPppHnaq
-         oYecbRLtG2SZlVeT48dwp7t9whSPsnMU5KXk7uiqu+0LO4/szUK57dB+oVYp3UgKK+ln
-         WIUVmPuLum9Oy5RKOKyX8vCoKudeKaPxJJE9dzRbS1F1eY55pg81YraQ/qL8CCGfiNuU
-         H+Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744910026; x=1745514826;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:feedback-id
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uMiNN63eUUM5t6fmwQT7MGcJeOTU1iqkIGAVW80wSWM=;
-        b=JXooNIik3wHzwM3Ux2zPeqFuKUAn63re1ezdBfFsZBK+K+rULnOYgfI0bQuA+YYU0u
-         l3gbwd4Yrn15cWAhBn/8lgBglGC84yFQUiESo0sh8PrZhzQ1uthqnq/+9ovjyEdRk7MX
-         A6LjBx6fF1+PVGvA1oZYeuKzZg4o+qyzOogzuxNSxfV6qM4MwBz575ixgbsq1GXc6ref
-         3UguCXa1kLavfm+0bxYXr6eSJHxQKqkPAFbBitqArSpKl3TbofyP/MrkCw/XzmAix9EL
-         Se8IcfeILWDrSAOXYUhzMuVup6ED7XcRQ+th2m6g/bAnb9h+AgrUfm+uKgT4S6z8rRHK
-         C5cw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+Ho2NrnGPiOhOclnxE2Mr2+P41skGwSXWk2B1B5t7vrIWqHi4Q6ziHwkzm5ToLmD5atscLn5vZ9Dd@vger.kernel.org, AJvYcCUeYF8vB1VBe8qlgsOqsm9TUD5H13onbrWFysgCjfSRO1k4W/LV3mGT67Kiak9+KrNQhJeDngzj41up52IT@vger.kernel.org, AJvYcCUpbWxFViwKYunlrE4aK2VgYbdssrVk//JWeQKaBa7EtQ78ZbNOQJKiSMYG/WPVascYsU2ccLQ427Oy@vger.kernel.org, AJvYcCVIByMDtyjdFYbgpnA0t36jy0oPI4BM57+okLiMT8K9EmOrfH5+k2q9JxA8bzG4fCgvLiOfhbWXJrF8/do=@vger.kernel.org, AJvYcCVWHxnyrPsrAG0wrJIgIhlUs11o3ZxMiusMr+lupl5ja2qX5pG7oRoDP824kzJ+XN5ot8IaG685@vger.kernel.org, AJvYcCVnye0uvgqnwAE7OO/KaNxfkEW1jVJdGluaE5Auzcb+QnFQoEUrj7SaISCkV+G5H4H/CZN6kl61K3KVgzbqy34=@vger.kernel.org, AJvYcCVxSU2ZBu58SBGyEUPlyIbikGy58uIJNCion2td/FTguY1yYLmTUsB3xi47nf2g6qUmWtyXcp76TvZOkzgf@vger.kernel.org, AJvYcCXuM3Nh3228ousIRky9KPcpfnpUeGU9Vq9H/Hh0Yx31JluKVJUdKhmErz0+7WkJLhx5rNJiM/8qqU/vrfuA+FV3@vger.kernel.org
-X-Gm-Message-State: AOJu0YxS73WHSy5BwkiClAlwyWP5J53DTXp0KfVoXbfYBcfCZDYljf2g
-	xtICUZE5l3uxTlB3JDZwdZc0ui+ZtujoFiKz01CFnkCcKIbi3HhJ
-X-Gm-Gg: ASbGncvURpN4aQe0oHv9za4x1exOccqzWk9IeudYPOv82uesxrDH7upqNBLccgP0I6G
-	OBYa74WnOheNX5CLuiYJBuPgiJbpcPtdQU+FvQ8D0Rr7NWeVO4NaBXE2TmVZ3iFgWhdHGf8rdYR
-	+L/1kKH/3b32zP2RoE7fBABZHPDGiL+tf9a9RPbfttZmjUKrAsosL5Rrz3885pXEjlGjNVAzPnz
-	ZL/kTD8sBVY7ySCsNgVzv5CH81TuW63fW5VSRZNekvBLgQeAqpgc7ALdX00yEuoVi25ArLNFubf
-	4SATTvwbDp/u0lG3v4a/MPIl0ScaiBg30VnBVzTk9+uhmurm7Pab3LNvhHO3hLzmqdeUt89k0G4
-	lasuE02OLiv/gL5Cp2IMGlejxtxF+56k=
-X-Google-Smtp-Source: AGHT+IFjAMymz+o8QFD3zeYcOgfTsX1rJmYVCrC8UuklVGxVBRToXezBFVxai8deeydLj3G4kuqUbg==
-X-Received: by 2002:a05:6214:29ca:b0:6f2:aefb:948d with SMTP id 6a1803df08f44-6f2b2f47dafmr111323006d6.15.1744910025787;
-        Thu, 17 Apr 2025 10:13:45 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2c21d85sm1193506d6.107.2025.04.17.10.13.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 10:13:45 -0700 (PDT)
-Message-ID: <680136c9.d40a0220.3a40bc.0bd0@mx.google.com>
-X-Google-Original-Message-ID: <aAE2xsLJq-QnGamy@winterfell.>
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 4A7821200043;
-	Thu, 17 Apr 2025 13:13:44 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Thu, 17 Apr 2025 13:13:44 -0400
-X-ME-Sender: <xms:yDYBaKP-8D2Cc1Qasl15QzYIKWEXmuEJNyu7NeylH87LFVV_OyaoUg>
-    <xme:yDYBaI_5nESWhc4x7XO7Kw4SC8rxSyDiRyMg0FcQNLUttVtEKp05ZjLA7qGXWUc-L
-    bswlrf6bKx-KuONyA>
-X-ME-Received: <xmr:yDYBaBQUQUgJSQ_cEe2LZpJkNWc6_9yJwwld8UVgtygkbo3-_CO0cFVCfm8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdelkeefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnegoufhushhpvggtthffohhmrghinhculdegledmnecujfgu
-    rhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpeeuohhquhhnuc
-    fhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthht
-    vghrnhepfedvkeettdeluedtjeevleeugfehiedvuefhgfdvleduheegvdekudegvefhue
-    ffnecuffhomhgrihhnpehgihhthhhusgdrihhonecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrh
-    hsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgv
-    nhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhope
-    egjedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepthgrmhhirhgusehgmhgrihhl
-    rdgtohhmpdhrtghpthhtohepmhgrshgrhhhirhhohieskhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtohepnhgrthhhrghnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehojhgvuggr
-    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrih
-    hlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthht
-    ohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthhtohepsg
-    gvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgvpdhrtghpthhtoheprgdrhhhinhgu
-    sghorhhgsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:yDYBaKvwEls1Zv6MdJG_fBGROyvSZPi_smjaTZit-e5mcuMjphUgRw>
-    <xmx:yDYBaCffMS8uRoKqZ7odUAvP81el5qkqHjyOniSsrdgkC12UYxz4FA>
-    <xmx:yDYBaO2pk_HMexV47hY4tJuwpSETKzXzexChsPkbiSfrQ6HAuB9-hA>
-    <xmx:yDYBaG_ZoyUhjasgiehzWnKMBRUdZTU7eKXpRc5jx2qcFp0R-6dfRQ>
-    <xmx:yDYBaB8bIvlKrY0p0lTwqimjLRsBSCtP3OJvaLaUDpHBMf4dz94q4W3O>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 17 Apr 2025 13:13:43 -0400 (EDT)
-Date: Thu, 17 Apr 2025 10:13:42 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Frederic Weisbecker <frederic@kernel.org>,	Lyude Paul <lyude@redhat.com>,
- Thomas Gleixner <tglx@linutronix.de>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org,
-	linux-block@vger.kernel.org, devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v9 3/6] rust: enable `clippy::as_ptr_cast_mut` lint
-References: <20250416-ptr-as-ptr-v9-0-18ec29b1b1f3@gmail.com>
- <20250416-ptr-as-ptr-v9-3-18ec29b1b1f3@gmail.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="AD08Bybc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744910073;
+	bh=mznnJHuLbKpYgm+SG5uyUsVWXj7gHH37CxevZHUxBVI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=AD08BybcgLy+pTShD49cTezcxU3iPdwqN2KO2qpUIiKpMSBEDSUgE/KN8zL2VqEF5
+	 7+6huuAMb0k1amJE1oCspJW7DTf5qXDWX8hfe//S2yMrihc4P8jsXoQCA1shRIx2Mk
+	 Plab3FEkBoI1HIAADg5+7nY8JddV9uHmzEZir4qOi4JXhoFXcc7/hVrSgrTKU8rD0g
+	 JPfcR7NX447uQsJphOXs5dD6zDoK80/5qCbjm397oukx5ETKuEX9xMxQ44hAXN8l9I
+	 GWdfbyh6bj74MuvuTI0AYwUnI7uD1IOhXxU/9IFmj3MzQx6OPxyXgUloQlFEA148bF
+	 0HKACGbqVKspQ==
+Received: from [192.168.13.3] (unknown [IPv6:2606:6d00:15:9913::c73])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6E13B17E0702;
+	Thu, 17 Apr 2025 19:14:32 +0200 (CEST)
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Date: Thu, 17 Apr 2025 13:14:23 -0400
+Subject: [PATCH v8 1/3] media: rkvdec: h264: Limit minimum profile to
+ constrained baseline
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250416-ptr-as-ptr-v9-3-18ec29b1b1f3@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250417-b4-rkvdec_h264_high10_and_422_support-v8-1-423fe0a2ee7e@collabora.com>
+References: <20250417-b4-rkvdec_h264_high10_and_422_support-v8-0-423fe0a2ee7e@collabora.com>
+In-Reply-To: <20250417-b4-rkvdec_h264_high10_and_422_support-v8-0-423fe0a2ee7e@collabora.com>
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>, kernel@collabora.com, 
+ Sebastian Fricke <sebastian.fricke@collabora.com>
+X-Mailer: b4 0.14.2
 
-On Wed, Apr 16, 2025 at 01:36:07PM -0400, Tamir Duberstein wrote:
-> In Rust 1.66.0, Clippy introduced the `as_ptr_cast_mut` lint [1]:
-> 
-> > Since `as_ptr` takes a `&self`, the pointer won’t have write
-> > permissions unless interior mutability is used, making it unlikely
-> > that having it as a mutable pointer is correct.
-> 
-> There is only one affected callsite, and the change amounts to replacing
-> `as _` with `.cast_mut().cast()`. This doesn't change the semantics, but
-> is more descriptive of what's going on.
-> 
-> Apply this change and enable the lint -- no functional change intended.
-> 
-> Link: https://rust-lang.github.io/rust-clippy/master/index.html#as_ptr_cast_mut [1]
-> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+From: Sebastian Fricke <sebastian.fricke@collabora.com>
 
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+Neither the hardware nor the kernel API support FMO/ASO features
+required by the full baseline profile. Therefore limit the minimum
+profile to the constrained baseline profile explicitly.
 
-Regards,
-Boqun
+Suggested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Signed-off-by: Sebastian Fricke <sebastian.fricke@collabora.com>
+Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+---
+ drivers/staging/media/rkvdec/rkvdec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->  Makefile              | 1 +
->  rust/kernel/devres.rs | 2 +-
->  2 files changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index 7b85b2a8d371..04a5246171f9 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -474,6 +474,7 @@ export rust_common_flags := --edition=2021 \
->  			    -Wrust_2018_idioms \
->  			    -Wunreachable_pub \
->  			    -Wclippy::all \
-> +			    -Wclippy::as_ptr_cast_mut \
->  			    -Wclippy::ignored_unit_patterns \
->  			    -Wclippy::mut_mut \
->  			    -Wclippy::needless_bitwise_bool \
-> diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-> index 9e649d70716a..f7e8f5f53622 100644
-> --- a/rust/kernel/devres.rs
-> +++ b/rust/kernel/devres.rs
-> @@ -143,7 +143,7 @@ fn remove_action(this: &Arc<Self>) {
->              bindings::devm_remove_action_nowarn(
->                  this.dev.as_raw(),
->                  Some(this.callback),
-> -                this.as_ptr() as _,
-> +                this.as_ptr().cast_mut().cast(),
->              )
->          };
->  
-> 
-> -- 
-> 2.49.0
-> 
+diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
+index dd7e57a902640d363d26be887cb535c2668d5b15..65c6f1d07a493e017ae941780b823d41314a49b8 100644
+--- a/drivers/staging/media/rkvdec/rkvdec.c
++++ b/drivers/staging/media/rkvdec/rkvdec.c
+@@ -150,7 +150,7 @@ static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
+ 	},
+ 	{
+ 		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_PROFILE,
+-		.cfg.min = V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE,
++		.cfg.min = V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_BASELINE,
+ 		.cfg.max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
+ 		.cfg.menu_skip_mask =
+ 			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
+
+-- 
+2.49.0
+
