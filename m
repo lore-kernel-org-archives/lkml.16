@@ -1,90 +1,101 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D5622068F
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:52:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEAF2206B8;
+	Thu, 17 Apr 2025 07:52:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744876339; cv=none; b=Sf4Jw19ZJz/bwTnbaxiPM/3foaZ9vtLuh7tiE/gN2z8jvXqxAQW79SNwXg1qzdUrU91JcQ/z/w/fheixJ4uhNPQ4IpKyC7DX5/fyTKZ1+gjvR82TvOgWlr24VkTLzeaTbVauzi59pFi3dDQFHnlaad64nFY7E3iYv8loMsvEnxk=
+	t=1744876365; cv=none; b=VU0vEusXeggC3A6BbPQESBt/FuqCMDlfRn4JjoKDUtoJG2yvHiAQQ9cFT6RgNc3xuYIZyuc0msPXSx6iD9LEDQPnrUFMx9wWkhiSuG7GPrm6D2OFuKj5yb6LsL1I0e49Nyl8v06oeuN/Ey+fuFbKy2EDs1NK/r8qZp17rWagaMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744876339; c=relaxed/simple;
-	bh=SXMciIpogizc4tBQaQQyNO7iWTL7anFQVWebf4a2WWM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=otPJdOw17cicZMLdIlIsYtyjO3iKH2+s2nfXarfeO+zKCVdiDBbmBT0qBqMmIRrr8+pfdMp1CU1ggJlLCmrPWf/RqHtn7gZmGhR15lVVM6e1CcD0jGWFD+YsiqPwec10RIlyGFe/nqvMfCevXmBI8VM6O+U7Uym2ZhmCZEYvMhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C2bwkqlp; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C2bwkqlp"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30dd5a93b49so4504111fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:52:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744876335; x=1745481135; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SXMciIpogizc4tBQaQQyNO7iWTL7anFQVWebf4a2WWM=;
-        b=C2bwkqlpq1LXBQFWZcVLMP1vheGoGAhIwCt68k05aHMLxKoEYWem24ysdjCARGkvtt
-         zZ7ZAuC1NpfqN3DRa3n8UfLK3mZxUKsPgxeRFAckxaDmnyc/mSPfWkjyo9NPYyFe3Iwe
-         Iafy0RwDYRyNLKYLAoV1bsnUYejO7bT0voBrFUWXi35qFsuxgdRi1Yf48iCd3Mr5Xgsv
-         DWML2/d2xpcM8SYj1Nz/49ALHFYYwFSP/Uzs2XE+eM/JYzD6Ot7YyqTJtXO1EyLqYbd+
-         JlBejyKVQND7yEDR+2ckwApNmfO5RpNJW2WjPfY7MhFBKP+9k7qW/fHbXdAgpCuZ2spt
-         d0Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744876335; x=1745481135;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SXMciIpogizc4tBQaQQyNO7iWTL7anFQVWebf4a2WWM=;
-        b=qQ8EGhM/3h/h9DD8hLDgdH1B5D3oao5IQgmzdk1DGCfaVBXg6fw31U9WMdz9N6P1h6
-         s39VVTve0lyTa7XaGozM8gHmgIXiDP7nCr5YoHDVAZ3026HCAg7ql85xIVpepDF6lmUn
-         eLB2R9CjCDupjSfo9dD//JlL7Uw9Y9Iaks43VD+LXgW1FqMuaHrpgW4ZENCAapnuHYIC
-         2si+lJOITUfSnX75w7YlseOXjTGy7P6F0XCcyFlD0W/YlFFUH40fJc1vPkLMaa5AYHzd
-         R+bHVjsG3J+8dGam9ATiguBpQH47NgzNrgggy9hDA8WpCY1NQwwvQ4EmXqDYyk1ub/+j
-         S3qw==
-X-Forwarded-Encrypted: i=1; AJvYcCV/oveBYUgB43iqyjcK+VU9TVWsRv3M6xMnkbMBUWmIO6i+YzQBxNJA7+Idl1moa8RHPJLhVbSfp02C+aE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBmDcJxRenwlMjWLFydoKOrib38QHGqeBDDeY7hI9F/3XIGADc
-	qtIFCWvRpvcBYvY1FvxdUJz/fniSp8x8op8b6yUNTcMRIcNUaefB9LhHQNfCu9SREQJ02i5c5qO
-	MOSTZxqenfa4HF5Uk/i49OaZctsTJy1DV3mC5Tg==
-X-Gm-Gg: ASbGncvo3gR9vEqoyXRpjicqBkpn0ZtHfcBWQvd8IkSl6FQPPgy63rp3GzK1Mj9cSYb
-	eSedqpGvvIxDi4ufua2NPFYZqeXtiWTg5QHejVJxgOV6kc05Sze//lXNvHAjLTEB8D23+IYid4P
-	+UsTwwR8W7K8vyI1iqyesZjA==
-X-Google-Smtp-Source: AGHT+IHJ9+FIBb1TWyrAVx2oUDniSfeXB/Oq3HnfMthWO0+aKUi8sMZxOnwo3TSSS1hKDknErn0vN0cWBKLzO/nllow=
-X-Received: by 2002:a2e:bea5:0:b0:30b:f2d6:8aab with SMTP id
- 38308e7fff4ca-3107f719dcamr21044461fa.32.1744876335142; Thu, 17 Apr 2025
- 00:52:15 -0700 (PDT)
+	s=arc-20240116; t=1744876365; c=relaxed/simple;
+	bh=vAS/7HrbMdGDLRFHygkOO/AhYxPfFTm/pThX7WtCmnQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n9DrPlYAO0QjkXLQbDZWdqbk+eP+C8yHIlCWtHU80/dsWcg4Hle/B7gMDplN8hqnYchFCx5Z1nLW7YkpilryU6LmR3RcWNxuxLHpd/6j7iSUYRC+aaaXssN4I1HH9593D2inSazMB3Opx3RylMk+j1LEc4unAf2/EjJ3i9aQdCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53H6A2ot001881;
+	Thu, 17 Apr 2025 00:51:51 -0700
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45ykf3nuc4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 17 Apr 2025 00:51:51 -0700 (PDT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Thu, 17 Apr 2025 00:51:50 -0700
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Thu, 17 Apr 2025 00:51:47 -0700
+From: <jianqi.ren.cn@windriver.com>
+To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
+CC: <sfrench@samba.org>, <linux-cifs@vger.kernel.org>,
+        <samba-technical@lists.samba.org>, <pc@manguebit.com>,
+        <stfrench@microsoft.com>, <patches@lists.linux.dev>,
+        <linux-kernel@vger.kernel.org>, <jianqi.ren.cn@windriver.com>
+Subject: [PATCH 5.10.y 2/2] smb: client: fix potential UAF in cifs_stats_proc_show()
+Date: Thu, 17 Apr 2025 15:51:47 +0800
+Message-ID: <20250417075147.1721726-1-jianqi.ren.cn@windriver.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416-aaeon-up-board-pinctrl-support-v3-0-9ca13aa57312@bootlin.com>
- <20250416-aaeon-up-board-pinctrl-support-v3-2-9ca13aa57312@bootlin.com>
-In-Reply-To: <20250416-aaeon-up-board-pinctrl-support-v3-2-9ca13aa57312@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 17 Apr 2025 09:52:04 +0200
-X-Gm-Features: ATxdqUHuW6BLizFBmvxGJmtIAMW4yS0uo1YYLPFOyB_Zbz8jQMgx6GMVm8Zfpi0
-Message-ID: <CACRpkda5om6Uik+YnN4i1ePJr_NLGskdBe5GmYkrzU9bzN3+XA@mail.gmail.com>
-Subject: Re: [PATCH v3 02/10] pinctrl: core: add devm_pinctrl_register_mappings()
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, 
-	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: HBHwV9Q37oEnOb8dwRTD4S7SxSCdijA6
+X-Authority-Analysis: v=2.4 cv=Wd0Ma1hX c=1 sm=1 tr=0 ts=6800b317 cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=XR8D0OoHHMoA:10 a=Li1AiuEPAAAA:8 a=VwQbUJbxAAAA:8 a=yMhMjlubAAAA:8 a=t7CeM3EgAAAA:8 a=i5IeLDUB_GyS7Qvew-AA:9
+ a=qGKPP_lnpMOaqR3bcYHU:22 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: HBHwV9Q37oEnOb8dwRTD4S7SxSCdijA6
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-17_01,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 priorityscore=1501 spamscore=0 clxscore=1015
+ impostorscore=0 suspectscore=0 malwarescore=0 adultscore=0 phishscore=0
+ mlxlogscore=999 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
+ definitions=main-2504170060
 
-On Wed, Apr 16, 2025 at 4:00=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
+From: Paulo Alcantara <pc@manguebit.com>
 
-> Using devm_pinctrl_register_mappings(), the core can automatically
-> unregister pinctrl mappings.
->
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+commit 0865ffefea197b437ba78b5dd8d8e256253efd65 upstream.
 
-This is useful and good!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Skip sessions that are being teared down (status == SES_EXITING) to
+avoid UAF.
 
-Yours,
-Linus Walleij
+Cc: stable@vger.kernel.org
+Signed-off-by: Paulo Alcantara (Red Hat) <pc@manguebit.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+[ cifs_debug.c was moved from fs/cifs to fs/smb/client since
+38c8a9a52082 ("smb: move client and server files to common directory fs/smb").
+The cifs_ses_exiting() was introduced to cifs_debug.c since
+ca545b7f0823 ("smb: client: fix potential UAF in cifs_debug_files_proc_show()")
+ which has been sent to upstream already.]
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+Verified the build test
+---
+ fs/cifs/cifs_debug.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/cifs/cifs_debug.c b/fs/cifs/cifs_debug.c
+index 8b88b0705481..257eae4673d2 100644
+--- a/fs/cifs/cifs_debug.c
++++ b/fs/cifs/cifs_debug.c
+@@ -593,6 +593,8 @@ static int cifs_stats_proc_show(struct seq_file *m, void *v)
+ 		list_for_each(tmp2, &server->smb_ses_list) {
+ 			ses = list_entry(tmp2, struct cifs_ses,
+ 					 smb_ses_list);
++			if (cifs_ses_exiting(ses))
++				continue;
+ 			list_for_each(tmp3, &ses->tcon_list) {
+ 				tcon = list_entry(tmp3,
+ 						  struct cifs_tcon,
+-- 
+2.34.1
+
