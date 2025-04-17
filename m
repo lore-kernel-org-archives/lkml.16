@@ -1,133 +1,161 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F47C145B24;
-	Thu, 17 Apr 2025 13:27:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D6E58F6C;
+	Thu, 17 Apr 2025 13:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744896479; cv=none; b=TLTS9avybp3bwaAO+NOnnwo3QM2x3babqFqGS4NhyPuzanUCFmqOHs5x5zJXLl9KcJCYNGJE2JqEoPDrbIjeRyPVKRVSBrhj2ZEP6vPIcgF8xjhvFvpo2upysPGV2ofFH9hZyOfpA+/JKaE3Cuf1F5cCdwWE/MSWT7xKqLL/794=
+	t=1744896483; cv=none; b=hYJQ4uhIC/Jxr5T90SVr1UQVq212DeVW07ydsgyYvRrR2630FtZi34lJ661jiWHjAj1OdQ67UCwVjLrsDpEs+UMBq6hd/DhdPXv8AgzrHp08Q2qXgC0PtBWyMYVZS/vLR+KUY+9vwReWQFGWlmPb1cvVWKIJf/Qzpr9NKkrmHZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744896479; c=relaxed/simple;
-	bh=l5TPKEBA5ZuQO87D/xku61a7xBIQtvTjQwvx/XVDRZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j2jRFcZBXrIdw7dNFjdKr9omcJzsWg6/hSZ0may3K41EgVfJXAmSDfAxz3nPfieIwZK2CsiwFhyRb2jvCBdd7nzodBFT1CBsNuHb1Zujw2JQBeY4C0tgzbzHLmqi3r3kWUktFrinWcfpPVDJE03QzsH00zAGmv06VBos7g5gwJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=LrWD0/Ln; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="LrWD0/Ln"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=OtjfNcK8nf/oL7Io05d9rm6yCGzKjtQGJGfg5Tphs4M=; b=LrWD0/LnUmxjKJBDEZus3atGbA
-	hyccSUwWOlK4gHnMOeKVfos4Y1xRkBByNZbhTtgdMTA6XP6SoZFEpfH+imdqZEHzPFS038JWRL4CZ
-	lgUTPxTh7Z9PkYSeOgPUl4px4n6RfSZMKNu/DhPhe2Mx6G6wN8/NQr9WLr7HZsmWkHu0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u5PHM-009mr7-TJ; Thu, 17 Apr 2025 15:27:44 +0200
-Date: Thu, 17 Apr 2025 15:27:44 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 net-next 5/8] mfd: zl3073x: Add functions to work with
- register mailboxes
-Message-ID: <09c3730a-f6f1-4226-ae29-fe02b1663fe7@lunn.ch>
-References: <20250416162144.670760-1-ivecera@redhat.com>
- <20250416162144.670760-6-ivecera@redhat.com>
- <d286dec9-a544-409d-bf62-d2b84ef6ecd4@lunn.ch>
- <CAAVpwAvVO7RGLGMXCBxCD35kKCLmZEkeXuERG0C2GHP54kCGJw@mail.gmail.com>
- <e22193d6-8d00-4dbc-99be-55a9d6429730@redhat.com>
+	s=arc-20240116; t=1744896483; c=relaxed/simple;
+	bh=T5lxbj+4bLeAq9HZRlJ8VOzzlHzVsOhXgHcaNrXz6F4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QlfVGm3SPDOUe6+MdUj07kX1E74IpZgdmyjpiae/JPOpzKc2Hy+ncsIvgsZKxbwjTfgU+JkIFb3g2Vjwg4qmhApFQVkBNGHmw6+nOMpLEvmuaN5R+f4m7vCrjK8id9exe9njI3p/KjRoFXx+BFQ4+1KC+71yIMp8Sbqszh92DYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23E451515;
+	Thu, 17 Apr 2025 06:27:55 -0700 (PDT)
+Received: from [10.57.72.153] (unknown [10.57.72.153])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5D883F59E;
+	Thu, 17 Apr 2025 06:27:56 -0700 (PDT)
+Message-ID: <1a7f6279-c21c-4d6f-a5ee-48766b1ca34e@arm.com>
+Date: Thu, 17 Apr 2025 14:27:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e22193d6-8d00-4dbc-99be-55a9d6429730@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] PM: EM: Fix potential division-by-zero error in
+ em_compute_costs()
+To: Yaxiong Tian <iambestgod@qq.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Yaxiong Tian <tianyaxiong@kylinos.cn>, rafael@kernel.org
+References: <tencent_EE27C7D1D6BDB3EE57A2C467CC59A866C405@qq.com>
+ <tencent_2256A7C02F7849F1D89390E488704E826D06@qq.com>
+ <1ca192e6-3a45-45c6-b4f0-be6a89eaf192@arm.com>
+ <tencent_91D93A837FF94A06C7FE8492461472B86D09@qq.com>
+Content-Language: en-US
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <tencent_91D93A837FF94A06C7FE8492461472B86D09@qq.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-> Anyway, I have a different idea... completely abstract mailboxes from the
-> caller. The mailbox content can be large and the caller is barely interested
-> in all registers from the mailbox but this could be resolved this way:
-> 
-> The proposed API e.g for Ref mailbox:
-> 
-> int zl3073x_mb_ref_read(struct zl3073x_dev *zldev, u8 index,
->                         struct zl3073x_mb_ref *mb);
-> int zl3073x_mb_ref_write(struct zl3073x_dev *zldev, u8 index,
->                          struct zl3073x_mb_ref *mb);
-> 
-> struct zl3073x_mb_ref {
-> 	u32	flags;
-> 	u16	freq_base;
-> 	u16	freq_mult;
-> 	u16	ratio_m;
-> 	u16	ratio_n;
-> 	u8	config;
-> 	u64	phase_offset_compensation;
-> 	u8	sync_ctrl;
-> 	u32	esync_div;
-> }
-> 
-> #define ZL3073X_MB_REF_FREQ_BASE			BIT(0)
-> #define ZL3073X_MB_REF_FREQ_MULT			BIT(1)
-> #define ZL3073X_MB_REF_RATIO_M				BIT(2)
-> #define ZL3073X_MB_REF_RATIO_N			 	BIT(3)
-> #define ZL3073X_MB_REF_CONFIG			 	BIT(4)
-> #define ZL3073X_MB_REF_PHASE_OFFSET_COMPENSATION 	BIT(5)
-> #define ZL3073X_MB_REF_SYNC_CTRL			BIT(6)
-> #define ZL3073X_MB_REF_ESYNC_DIV			BIT(7)
-> 
-> Then a reader can read this way (read freq and ratio of 3rd ref):
-> {
-> 	struct zl3073x_mb_ref mb;
-> 	...
-> 	mb.flags = ZL3073X_MB_REF_FREQ_BASE |
-> 		   ZL3073X_MB_REF_FREQ_MULT |
-> 		   ZL3073X_MB_REF_RATIO_M |
-> 		   ZL3073X_MB_REF_RATIO_N;
-> 	rc = zl3073x_mb_ref_read(zldev, 3, &mb);
-> 	if (rc)
-> 		return rc;
-> 	/* at this point mb fields requested via flags are filled */
-> }
-> A writer similarly (write config of 5th ref):
-> {
-> 	struct zl3073x_mb_ref mb;
-> 	...
-> 	mb.flags = ZL3073X_MB_REF_CONFIG;
-> 	mb.config = FIELD_PREP(SOME_MASK, SOME_VALUE);
-> 	rc = zl3073x_mb_ref_write(zldev, 5, &mb);
-> 	...
-> 	/* config of 5th ref was commited */
-> }
-> 
-> The advantages:
-> * no explicit locking required from the callers
-> * locking is done inside mailbox API
-> * each mailbox type can have different mutex so multiple calls for
->   different mailbox types (e.g ref & output) can be done in parallel
-> 
-> WDYT about this approach?
 
-I would say this is actually your next layer on top of the basic
-mailbox API. This makes it more friendly to your sub driver and puts
-all the locking in one place where it can easily be reviewed.
 
-One question would be, where does this code belong. Is it in the MFD,
-or in the subdrivers? I guess it is in the subdrivers.
+On 4/17/25 08:43, Yaxiong Tian wrote:
+> 
+> 
+> 在 2025/4/17 13:57, Lukasz Luba 写道:
+>>
+>>
+>> On 4/17/25 02:07, Yaxiong Tian wrote:
+>>> From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+>>>
+>>> When the device is of a non-CPU type, table[i].performance won't be
+>>> initialized in the previous em_init_performance(), resulting in division
+>>> by zero when calculating costs in em_compute_costs().
+>>>
+>>> Since the 'cost' algorithm is only used for EAS energy efficiency
+>>> calculations and is currently not utilized by other device drivers, we
+>>> should add the _is_cpu_device(dev) check to prevent this 
+>>> division-by-zero
+>>> issue.
+>>>
+>>> Fixes: 1b600da51073 ("PM: EM: Optimize em_cpu_energy() and remove 
+>>> division")
+>>> Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
+>>> ---
+>>>   kernel/power/energy_model.c | 4 ++++
+>>>   1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
+>>> index d9b7e2b38c7a..41606247c277 100644
+>>> --- a/kernel/power/energy_model.c
+>>> +++ b/kernel/power/energy_model.c
+>>> @@ -233,6 +233,10 @@ static int em_compute_costs(struct device *dev, 
+>>> struct em_perf_state *table,
+>>>       unsigned long prev_cost = ULONG_MAX;
+>>>       int i, ret;
+>>> +    /* This is needed only for CPUs and EAS skip other devices */
+>>> +    if (!_is_cpu_device(dev))
+>>> +        return 0;
+>>> +
+>>>       /* Compute the cost of each performance state. */
+>>>       for (i = nr_states - 1; i >= 0; i--) {
+>>>           unsigned long power_res, cost;
+>>
+>>
+>> Please stop for a while. I have to check what happened that you
+>> faced the issue in the first place. I have been testing the GPU
+>> EMs and there was no issues...
+>>
+>> Let me debug that today.
+> 
+> Of course. Since I don't have actual hardware, I can only logically
+> deduce that this issue might exist.
+> 
+> 
 
-	Andrew
+I have run with the GPU EM registered in the boot:
+
+-------------------------------------------------------
+[    2.753333] panfrost ff9a0000.gpu: EM: created perf domain
+[    2.759863] panfrost ff9a0000.gpu: mali-t860 id 0x860 major 0x2 minor 
+0x0 status 0x0
+[    2.768530] panfrost ff9a0000.gpu: features: 00000000,00000407, 
+issues: 00000000,24040400
+[    2.777678] panfrost ff9a0000.gpu: Features: L2:0x07120206 
+Shader:0x00000000 Tiler:0x00000809 Mem:0x1 MMU:0x00002830 AS:0xff JS:0x7
+[    2.780746] mmc_host mmc2: Bus speed (slot 0) = 148500000Hz (slot req 
+150000000Hz, actual 148500000HZ div = 0)
+[    2.790905] panfrost ff9a0000.gpu: shader_present=0xf l2_present=0x1
+
+root@arm:~# cat /sys/kernel/debug/energy_model/ff9a0000.gpu/flags 
+
+0x1
+root@arm:~# grep . /sys/kernel/debug/energy_model/ff9a0000.gpu/ps*/*
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:200000/cost:0
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:200000/frequency:200000
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:200000/inefficient:1
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:200000/performance:0
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:200000/power:404250
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:300000/cost:0
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:300000/frequency:300000
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:300000/inefficient:1
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:300000/performance:0
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:300000/power:606375
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:400000/cost:0
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:400000/frequency:400000
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:400000/inefficient:1
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:400000/performance:0
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:400000/power:808500
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:600000/cost:0
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:600000/frequency:600000
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:600000/inefficient:0
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:600000/performance:0
+/sys/kernel/debug/energy_model/ff9a0000.gpu/ps:600000/power:1505790
+
+--------------------------------------------------------
+
+The EM for the GPU is not modified during the boot like the CPUs'
+EM are, thus this code is not triggered. Although, the API is
+open and in theory the GPU EM can be modified at runtime
+as well and it will reach that em_compute_costs() issue
+with 'performance' field having value 0.
+
+So this v4 patch would be needed in this case.
+
+Please re-send this v4 patch as a completely new message.
+
+Thanks for looking at that code path and the fix for potential
+issue.
+
+You can also add my:
+
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+
+Regrds,
+Lukasz
+
