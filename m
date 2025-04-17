@@ -1,136 +1,98 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f65.google.com (mail-lf1-f65.google.com [209.85.167.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E4F4C91;
-	Thu, 17 Apr 2025 02:26:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFF91AB52F
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 02:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744856808; cv=none; b=H4vTq3fRmxN6D4FO7a1Hh2JZSyKze7XKPsgKxN5HTDh7iKQzDGXwfdF6CJuogxtKhC0TnLBuLHl58VFB4alIhwJRUp3s+v8Q+xQGctuATKXklIljrsxyjQ/k69FzkaLPRbwPEKHv4/x+Nva6dQXjHtATllx90pvvtJ+Xr09Dn2M=
+	t=1744856985; cv=none; b=StkKqyw4X+geoNGV450syocz/WI2Ov/MCxvsBD8HQb8OaaZzxYvvpLNKPYIU5fAgIedffMdLMkU9WB+RWnH///uO1sdWGSE89YbXeSdjCC84H+kLRjKK59Ap2A6ugGllwjCr3cOerUR9aQkmnNWdnVYeOIKe4r9tIFIoS8PENHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744856808; c=relaxed/simple;
-	bh=uAl0/bX1bo/E8cYxxBa99UHbh98ErTeMCNf3j7GsGNg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lUemN0DAxLc2pjSy+Ukf2/YYSZgmHgo5DDp7s1VL2HwFzwLGUcR/5A9sa+H5/g+xb1hvwH+atRtglnYEppNK2bOh/cY+eVhN3JepRhkTXSroH/+rM6UX/A0460735QHzVk8iU/0ZjnxLgrgucAG346y6jIMi6UDmLT3l85CS16Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=XoExxfSG; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1744856985; c=relaxed/simple;
+	bh=6UW+pphW9nJj9i6q808BjRh2mm54X0eNgjTHvKDcaXs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D4vrsB0mhmAnCJzc5lNN/MLwh6oFA37BqNxnTHGQKDxkrNfhM5ot4Vf6vq02YPh86VDOZtOWn/5ul/FbDAq6i26mxnd7uiO4V2IrHL/SC1Ro4sQ3rZELyMff+Cxwn2gEU6+JLmFw9K2S/GQyBjvQmuH2f3iYLVZeNpfOJMHTM4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gMu0MQp8; arc=none smtp.client-ip=209.85.167.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="XoExxfSG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=+cJH1NNz3aSIiKeY3vly5wDD6i9k8qaw7IDZWgMMWfs=; b=XoExxfSGdrIeSwoQv99XAFWZ4s
-	CxrxVvlbQ03AcN6vBEpUrOq0H5gfseJI2R4Dg46H5BoXWhKLDvVoMmkoVJCe4lOFwY2ms1zjvzLyB
-	tbPXWlCst5Edt6OaTMoptFHYQqa/yebOgNCW84vodVug59FhnfUO7IgKV1fFi9yonN3YArZDhqN38
-	un4iJMI1Lk9ENgftEqIgD25RsbkEDtyoQ7x+h68oltSA9If22/X4ux4R1rhtp7SuSNAmYlFhAtAOM
-	EdWlFD+BzJUUzUjzJYnrf0EJpd553jldNuVxF7iRgaTbVHEo5cfWGtK0GZLBaYQpWgxUzRJp/nBSX
-	WPqND9bA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u5ExQ-00GMgW-2r;
-	Thu, 17 Apr 2025 10:26:29 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 17 Apr 2025 10:26:28 +0800
-Date: Thu, 17 Apr 2025 10:26:28 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: [PATCH] powerpc/crc: Include uaccess.h and others
-Message-ID: <aABm1F_dvMhakYVt@gondor.apana.org.au>
-References: <cover.1744356724.git.herbert@gondor.apana.org.au>
- <c2a0a6a3467c6ff404e524d564f777fad31c9ebc.1744356724.git.herbert@gondor.apana.org.au>
- <20250416170943.GB189808@quark.localdomain>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMu0MQp8"
+Received: by mail-lf1-f65.google.com with SMTP id 2adb3069b0e04-549963b5551so324189e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 19:29:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744856982; x=1745461782; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6UW+pphW9nJj9i6q808BjRh2mm54X0eNgjTHvKDcaXs=;
+        b=gMu0MQp8Apw4xR4znvJUqjyRaEnwT4BUHrLclgQV1r39n58gwhMrcnWSy7pMRVF5ML
+         txp/yNqPYhf4UlRwWKV3scupajTxsKpaDVWqyplj2nGIhhVvgwFz++srtSoTrSl4MC+Z
+         ybxdizsma6mMKIOrZYol1D/Wi22MPIhh1f0H/NWkbJQ+eKJsJi8FfCdFRRnlRLnXFRcY
+         aLeVRZOculQwq9UYV0MwLZpX9QIP1AaE5i0wrxy2U+wzNxJsugd4sEoUowG8cMZOg6Ya
+         /olfgHmrO+OZhHuVa0oI3iWwlj33RrnLEtgWvQCg/OKkCTsRxLo0Jowsa/FGDsTtoaJ/
+         jFKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744856982; x=1745461782;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6UW+pphW9nJj9i6q808BjRh2mm54X0eNgjTHvKDcaXs=;
+        b=OoA7xZlqBp3KTbCIgnlSQ/C+LYXA52ZIcjF4ymdEeGEW7A/Val1vtZGTGzKiWB7w6C
+         XemvZVJZCPlbLuNDsOL3NC1QigXM1uxkeURXI+jKTRvML9M9LhnrvOGNkd4EeEb6aA6A
+         yBFMpQE+MLaBhsqZOmp342pz8GuXzv4583gvjThm2Q8tL9g+E5/rIOBkzbSJnWZ2r4f6
+         FWriQMkGifS2CgMFjbnA1OeKPdvlNSDF2RBBxNRN0rdOwC//a5Iz+TCP7tGHgNyV8ov0
+         hF9OpzDbcWEt2l6lJvpljJL31FhBd01gAU5R33aFu91C88UsRmS3Mq1xsfx1y7GjM1/1
+         Gaqg==
+X-Gm-Message-State: AOJu0YwKSUtUh73aPKbWWHLDw4hDxIZUuhl6c0F17b/DN+NiKgpt3SFQ
+	V70cIrhg5jaZMOGAjPkE2DA3WMsW0fLS4fjdfKyR4SN3gc7GPloSkA03CZ1Agl1O70pKS45Kr/H
+	dt7aIOiIEMrO2+CUahpN+2+iMFVI=
+X-Gm-Gg: ASbGncsHHXuut4TcBp6bysBlb3L726xvkG9kZzx9qcDD0CgZSPgpMBO3FheT43BZ1f0
+	nXFdLthbiAO5bvh2To+kv2CpoYZZY0emtWwQou6DRqunyBZgPnhk8d6kqulINee++77JUSVfxk9
+	/bVVg1Vzx10tWbyUYRQcHY6zKJZMCofCPdiQ==
+X-Google-Smtp-Source: AGHT+IEuTxrCKchXylugtbbFB0n8PhnMW/W7EUsoZqCu2l0kl58R5ZjDOaTPudgH+wtLDfMtmERcUUCzR761JH4a+iA=
+X-Received: by 2002:a05:6512:3f03:b0:54c:a49:d3ee with SMTP id
+ 2adb3069b0e04-54d64a7a4e3mr1419476e87.3.1744856981612; Wed, 16 Apr 2025
+ 19:29:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416170943.GB189808@quark.localdomain>
+References: <20250407134712.93062-1-hupu.gm@gmail.com> <CANDhNCosvML9XKH8HV1QBXKzxt3zMWxzsPSUfYxoyPCORf6Krw@mail.gmail.com>
+ <CADHxFxS+qpmD8r1uxru+VWLj=K616=jLKbBgUR3Ed7ZBY1gidg@mail.gmail.com>
+ <CANDhNCqgCGtWubkuMpn=GdfLwP6d5kMEvbhoQL4oef5yf_74ug@mail.gmail.com> <CANDhNCqv0iFMJanxj4uTyOHGUGxfCqb18Ku+w5y9JFKRm0M=Rg@mail.gmail.com>
+In-Reply-To: <CANDhNCqv0iFMJanxj4uTyOHGUGxfCqb18Ku+w5y9JFKRm0M=Rg@mail.gmail.com>
+From: hupu <hupu.gm@gmail.com>
+Date: Thu, 17 Apr 2025 10:29:29 +0800
+X-Gm-Features: ATxdqUERt9n7rjNiKo4-isYQHXZbgQ1AG3q-6F_I97mh1Xvm4UGTXlyNndRAOpk
+Message-ID: <CADHxFxQoNOBCOMDsh0iNrdD=ke=YweVZgZrTWbBQRA8SYy9McA@mail.gmail.com>
+Subject: Re: [RFC 1/1] sched: Skip redundant operations for proxy tasks
+ needing return migration
+To: John Stultz <jstultz@google.com>
+Cc: linux-kernel@vger.kernel.org, juri.lelli@redhat.com, peterz@infradead.org, 
+	vschneid@redhat.com, mingo@redhat.com, vincent.guittot@linaro.org, 
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
+	mgorman@suse.de, hupu@transsion.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 16, 2025 at 10:09:43AM -0700, Eric Biggers wrote:
-> 
-> This patch broke the powerpc build:
-> 
-> ../arch/powerpc/lib/crc32-glue.c: In function 'crc32c_arch':
-> ../arch/powerpc/lib/crc32-glue.c:44:17: error: implicit declaration of function 'pagefault_disable'; did you mean 'preempt_disable'? [-Wimplicit-function-declaration]
->    44 |                 pagefault_disable();
+On Thu, Apr 17, 2025 at 8:24=E2=80=AFAM John Stultz <jstultz@google.com> wr=
+ote:
+>
+> Oh, also I enable locktorture and boot with:
+> "torture.random_shuffle=3D1 locktorture.writer_fifo=3D1
+> locktorture.torture_type=3Dmutex_lock locktorture.nested_locks=3D8
+> locktorture.rt_boost=3D1 locktorture.rt_boost_factor=3D50
+> locktorture.stutter=3D0 "
+>
 
-Sorry, I should've done a grep for asm/simd.h.
+Hi John,
 
----8<---
-The powerpc crc code was relying on pagefault_disable from being
-pulled in by random header files.
+Thank you so much for your feedback.
 
-Fix this by explicitly including uaccess.h.  Also add other missing
-header files to prevent similar problems in future.
+I=E2=80=99ll follow the methods you=E2=80=99ve outlined to try and reproduc=
+e the same
+issue, and will get back to you for further discussion.
 
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Fixes: 7ba8df47810f ("asm-generic: Make simd.h more resilient")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-
-diff --git a/arch/powerpc/lib/crc-t10dif-glue.c b/arch/powerpc/lib/crc-t10dif-glue.c
-index f411b0120cc5..fa988e249f01 100644
---- a/arch/powerpc/lib/crc-t10dif-glue.c
-+++ b/arch/powerpc/lib/crc-t10dif-glue.c
-@@ -6,15 +6,15 @@
-  * [based on crc32c-vpmsum_glue.c]
-  */
- 
--#include <linux/crc-t10dif.h>
--#include <crypto/internal/simd.h>
--#include <linux/init.h>
--#include <linux/module.h>
--#include <linux/string.h>
--#include <linux/kernel.h>
--#include <linux/cpufeature.h>
--#include <asm/simd.h>
- #include <asm/switch_to.h>
-+#include <crypto/internal/simd.h>
-+#include <linux/cpufeature.h>
-+#include <linux/crc-t10dif.h>
-+#include <linux/jump_label.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/preempt.h>
-+#include <linux/uaccess.h>
- 
- #define VMX_ALIGN		16
- #define VMX_ALIGN_MASK		(VMX_ALIGN-1)
-diff --git a/arch/powerpc/lib/crc32-glue.c b/arch/powerpc/lib/crc32-glue.c
-index dbd10f339183..28450fe04e86 100644
---- a/arch/powerpc/lib/crc32-glue.c
-+++ b/arch/powerpc/lib/crc32-glue.c
-@@ -1,12 +1,13 @@
- // SPDX-License-Identifier: GPL-2.0-only
--#include <linux/crc32.h>
--#include <crypto/internal/simd.h>
--#include <linux/init.h>
--#include <linux/module.h>
--#include <linux/kernel.h>
--#include <linux/cpufeature.h>
--#include <asm/simd.h>
- #include <asm/switch_to.h>
-+#include <crypto/internal/simd.h>
-+#include <linux/cpufeature.h>
-+#include <linux/crc32.h>
-+#include <linux/jump_label.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/preempt.h>
-+#include <linux/uaccess.h>
- 
- #define VMX_ALIGN		16
- #define VMX_ALIGN_MASK		(VMX_ALIGN-1)
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Thanks again,
+hupu
