@@ -1,528 +1,110 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE2723E22B;
-	Thu, 17 Apr 2025 13:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EAA82376E6;
+	Thu, 17 Apr 2025 13:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744896124; cv=none; b=F1p1Do5kyyjyrRZ9sz2skh1dGjyKOA4B35YHeB7xgKSFLRIAP0Uknxu8H7CM/gWpBz/daU/IIlDR4z40j2McWlgbbCWm3OTpFl1TZu897ZMJd/ZNKVVPDmYkawZefxdClhqk46GL6pe9GZ2ARkskNJVtN/ginLCAfQKTphlFWE0=
+	t=1744896140; cv=none; b=moVbkS4EgN8PViuF9OCHTYdVhcSSRRvZiTxXs+HSWrOIoCcGh3ucbaKJTrPj32ZoHs+N7hltyMNaZSqxRAloD5TGxuqkpFrrPb8RvyzPbYkA7SmGbv6AhGwENKc8xGUNfwI4vaeYEgnDk4KcYfnT+dg35+BVWGu9KC9L5J1JJe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744896124; c=relaxed/simple;
-	bh=ZR8c93lYMZ35uBkjZaBiqh5/4O6qmJYw5vL/ffCV9e0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jHh231iSKLCP14xG3Q5jnDHqaDH3x6ESiqZkgCExeUGju763gJmWxi4WYsL0OqPKcJyb9TkEt7JYMrC75YVfjsz2BHJ7OJMlqgAPTetvS/7Lu9jo6aCDkvoW6XBNBxu1mMitzENznwTj0HcjhgTMYFfrGqPM6237/VLiCkk+fbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=wBRmo+oo; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1744896140; c=relaxed/simple;
+	bh=ik4yyhcU8jgswd+NtfzGVUXGJUNQisUDoA4lQE9/eno=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=JzG34WHkjCeKYlB6M7oI9xnGK9gjEOUhDRiuHzBmahRjdBcRYXiyQsMM9uSAyMDa6lU5+kOpQwH9wr4/3AklqIQWk96/12c/pLpbeTkxK2ih6tQQUVCSh5dbhQVmjGYygH8TCsUL3fcHD5uiG4tIN9qLyfv/SbjuX7HfK71I5io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MeOblCg/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZHCL3HKn; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="wBRmo+oo"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53HC0mJ4019578;
-	Thu, 17 Apr 2025 15:21:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	EsiTrVqcU6FvkDS2nQpl+nifSpcRYa8kTFkQ/UO9ftc=; b=wBRmo+ooKG9b8DRX
-	kVN8CJzRQ3PbpahaTdMw+SX882vJlTI2Qm+rfnsk9xnULYp+AGVlw8/WB9M+UMUN
-	I4sstPEl3U3jhxngVqYwZMfUTSDJTlvvUDDJKHbv234OhtsSEbUy+mkHso95GUOC
-	Bq4ujjH9yi4a9mhBwstXbtIBA+i3jiZwJyXDeA87Gj07BslF36PZtLpRgJ0nohGF
-	IcgmpmmuKgphXt8fyRpaTBM4JI6QlkAt7h/Kgu5Bzo2cuZoC+Lxr6U9T9ie97syL
-	QNTsVfh+TStw8BEkiAmHT+P7kV0hyQ1tR7jYDFol7+FFZFWs5X5retMEBlDOQuSW
-	qJqXOw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45yda9gb32-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 15:21:29 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 724C340056;
-	Thu, 17 Apr 2025 15:20:07 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4E8579968D5;
-	Thu, 17 Apr 2025 15:18:50 +0200 (CEST)
-Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 17 Apr
- 2025 15:18:49 +0200
-From: Christian Bruel <christian.bruel@foss.st.com>
-To: <christian.bruel@foss.st.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <p.zabel@pengutronix.de>, <thippeswamy.havalige@amd.com>,
-        <shradha.t@samsung.com>, <quic_schintav@quicinc.com>,
-        <cassel@kernel.org>, <johan+linaro@kernel.org>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 2/9] PCI: stm32: Add PCIe host support for STM32MP25
-Date: Thu, 17 Apr 2025 15:18:26 +0200
-Message-ID: <20250417131833.3427126-3-christian.bruel@foss.st.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250417131833.3427126-1-christian.bruel@foss.st.com>
-References: <20250417131833.3427126-1-christian.bruel@foss.st.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MeOblCg/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZHCL3HKn"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744896137;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=LL3Om1CQV7/B9h3iAO3+lpGzVzoHmKfBTyBvybZrEYo=;
+	b=MeOblCg/RNRK11gQcdDVTxWd2Xn2Q3u3wG+CQj86SDs8fByW3TkGZvnQlJ8Gepmvn0FyR+
+	kQrxQjXXkW/4eG5P7gKOXxxH6AcFINz+58itRC3IItpWPrcujqQmWa7no85MYoX5t1L5EM
+	RpoyNKGW4z2zvyasoxum/WL9YZttEEW9hMRoc4Qkfyg0BtlmgW/RuXKa+5KgXxupicTtBK
+	eSVEUdaZiT0zZ2fUlOqj2GMrSUTHIVCW4qV2W3efP9+chyDEmYc1K+gAS7oB3EW2PTJKHz
+	ZaoTiRhVGAD7WLU0BE3B/+FYO/SduFfAX91tgR9yJEXDm/jcef0g3LGdVTogLA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744896137;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=LL3Om1CQV7/B9h3iAO3+lpGzVzoHmKfBTyBvybZrEYo=;
+	b=ZHCL3HKno7ya0Efm59ULAjGN59waN3eS+WTKRJK/OezcqJmiLegK5j4BkV7dAeFYYdsEp4
+	49gACDe4VDg12FDg==
+Date: Thu, 17 Apr 2025 15:21:54 +0200
+Subject: [PATCH wireless-next] wifi: mwifiex: Don't use %pK through printk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-17_03,2025-04-17_01,2024-11-22_01
+Message-Id: <20250417-restricted-pointers-wifi-v1-1-b79cdaae5579@linutronix.de>
+X-B4-Tracking: v=1; b=H4sIAHEAAWgC/x3MwQqDMBBF0V+RWXdAg63QXyldSPLSPihRZkIVx
+ H9v6PIs7j3EYYTLvTvE8KVzKQ3DpZP4nssLytQsoQ/XfhwmNXg1xoqk68JSYa4bMzVMc5zHfEs
+ xQFq+GjL3//ohGw0fuGvBXuV5nj8fVTRYeQAAAA==
+X-Change-ID: 20250417-restricted-pointers-wifi-27aca4f6dc2e
+To: Brian Norris <briannorris@chromium.org>, 
+ Francesco Dolcini <francesco@dolcini.it>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+ Aleksandr Loktionov <aleksandr.loktionov@intel.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744896137; l=1819;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=ik4yyhcU8jgswd+NtfzGVUXGJUNQisUDoA4lQE9/eno=;
+ b=FSHEuH9ei3I4nUx1dSzL2AxG0vO2/VuXuOigPV+CjdMcXBA/6UeZFhuofn6Wt0IDGFC1hhEUO
+ 6cvosipEIEACw153QAx6AKEtQoPfwdzaXqijuRZEdjd2xJutB0wI57l
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Add driver for the STM32MP25 SoC PCIe Gen1 2.5 GT/s and Gen2 5GT/s
-controller based on the DesignWare PCIe core.
+In the past %pK was preferable to %p as it would not leak raw pointer
+values into the kernel log.
+Since commit ad67b74d2469 ("printk: hash addresses printed with %p")
+the regular %p has been improved to avoid this issue.
+Furthermore, restricted pointers ("%pK") were never meant to be used
+through printk(). They can still unintentionally leak raw pointers or
+acquire sleeping looks in atomic contexts.
 
-Supports MSI via GICv2m, Single Virtual Channel, Single Function
+Switch to the regular pointer formatting which is safer and
+easier to reason about.
+There are still a few users of %pK left, but these use it through seq_file,
+for which its usage is safe.
 
-Supports WAKE# GPIO.
-
-Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Reviewed-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
 ---
- drivers/pci/controller/dwc/Kconfig      |  12 +
- drivers/pci/controller/dwc/Makefile     |   1 +
- drivers/pci/controller/dwc/pcie-stm32.c | 370 ++++++++++++++++++++++++
- drivers/pci/controller/dwc/pcie-stm32.h |  15 +
- 4 files changed, 398 insertions(+)
- create mode 100644 drivers/pci/controller/dwc/pcie-stm32.c
- create mode 100644 drivers/pci/controller/dwc/pcie-stm32.h
+This was originally part of
+https://lore.kernel.org/lkml/20250414-restricted-pointers-net-v1-0-12af0ce46cdd@linutronix.de/
+---
+ drivers/net/wireless/marvell/mwifiex/pcie.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index d9f0386396ed..2aec5d2f9a46 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -410,6 +410,18 @@ config PCIE_SPEAR13XX
- 	help
- 	  Say Y here if you want PCIe support on SPEAr13XX SoCs.
+diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
+index dd2a42e732f2398892915e1a3ac88b7d3fb4ed3f..a760de191fce7340040b1bc74efb35cf52ce8368 100644
+--- a/drivers/net/wireless/marvell/mwifiex/pcie.c
++++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
+@@ -2971,7 +2971,7 @@ static int mwifiex_init_pcie(struct mwifiex_adapter *adapter)
+ 		goto err_iomap2;
+ 	}
  
-+config PCIE_STM32_HOST
-+	tristate "STMicroelectronics STM32MP25 PCIe Controller (host mode)"
-+	depends on ARCH_STM32 || COMPILE_TEST
-+	depends on PCI_MSI
-+	select PCIE_DW_HOST
-+	help
-+	  Enables support for the DesignWare core based PCIe host controller
-+	  found in STM32MP25 SoC.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called pcie-stm32.
-+
- config PCI_DRA7XX
- 	tristate
+-	pr_notice("PCI memory map Virt0: %pK PCI memory map Virt2: %pK\n",
++	pr_notice("PCI memory map Virt0: %p PCI memory map Virt2: %p\n",
+ 		  card->pci_mmap, card->pci_mmap1);
  
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index 908cb7f345db..9d3b43504725 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -30,6 +30,7 @@ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
- obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
- obj-$(CONFIG_PCIE_VISCONTI_HOST) += pcie-visconti.o
- obj-$(CONFIG_PCIE_RCAR_GEN4) += pcie-rcar-gen4.o
-+obj-$(CONFIG_PCIE_STM32_HOST) += pcie-stm32.o
- 
- # The following drivers are for devices that use the generic ACPI
- # pci_root.c driver but don't support standard ECAM config access.
-diff --git a/drivers/pci/controller/dwc/pcie-stm32.c b/drivers/pci/controller/dwc/pcie-stm32.c
-new file mode 100644
-index 000000000000..66ace64d4e43
---- /dev/null
-+++ b/drivers/pci/controller/dwc/pcie-stm32.c
-@@ -0,0 +1,370 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * STMicroelectronics STM32MP25 PCIe root complex driver.
-+ *
-+ * Copyright (C) 2025 STMicroelectronics
-+ * Author: Christian Bruel <christian.bruel@foss.st.com>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_platform.h>
-+#include <linux/phy/phy.h>
-+#include <linux/pinctrl/devinfo.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pm_wakeirq.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+#include "pcie-designware.h"
-+#include "pcie-stm32.h"
-+#include "../../pci.h"
-+
-+struct stm32_pcie {
-+	struct dw_pcie pci;
-+	struct regmap *regmap;
-+	struct reset_control *rst;
-+	struct phy *phy;
-+	struct clk *clk;
-+	struct gpio_desc *perst_gpio;
-+	struct gpio_desc *wake_gpio;
-+};
-+
-+static void stm32_pcie_deassert_perst(struct stm32_pcie *stm32_pcie)
-+{
-+	/* Delay PERST# de-assertion t least 100ms he power to become stable */
-+	msleep(PCIE_T_PVPERL_MS);
-+
-+	gpiod_set_value(stm32_pcie->perst_gpio, 0);
-+
-+	/* Wait 100ms for the REFCLK to becode stable  */
-+	if (stm32_pcie->perst_gpio)
-+		msleep(PCIE_T_RRS_READY_MS);
-+}
-+
-+static void stm32_pcie_assert_perst(struct stm32_pcie *stm32_pcie)
-+{
-+	gpiod_set_value(stm32_pcie->perst_gpio, 1);
-+}
-+
-+static int stm32_pcie_start_link(struct dw_pcie *pci)
-+{
-+	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
-+
-+	return regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
-+				  STM32MP25_PCIECR_LTSSM_EN,
-+				  STM32MP25_PCIECR_LTSSM_EN);
-+}
-+
-+static void stm32_pcie_stop_link(struct dw_pcie *pci)
-+{
-+	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
-+
-+	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
-+			   STM32MP25_PCIECR_LTSSM_EN, 0);
-+}
-+
-+static int stm32_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = dw_pcie_suspend_noirq(&stm32_pcie->pci);
-+	if (ret)
-+		return ret;
-+
-+	stm32_pcie_assert_perst(stm32_pcie);
-+
-+	clk_disable_unprepare(stm32_pcie->clk);
-+
-+	if (!device_wakeup_path(dev))
-+		phy_exit(stm32_pcie->phy);
-+
-+	return pinctrl_pm_select_sleep_state(dev);
-+}
-+
-+static int stm32_pcie_resume_noirq(struct device *dev)
-+{
-+	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
-+	int ret;
-+
-+	/*
-+	 * The core clock is gated with CLKREQ# from the COMBOPHY REFCLK,
-+	 * thus if no device is present, must force it low with an init pinmux
-+	 * to be able to access the DBI registers.
-+	 */
-+	if (!IS_ERR(dev->pins->init_state))
-+		ret = pinctrl_select_state(dev->pins->p, dev->pins->init_state);
-+	else
-+		ret = pinctrl_pm_select_default_state(dev);
-+
-+	if (ret) {
-+		dev_err(dev, "Failed to activate pinctrl pm state: %d\n", ret);
-+		return ret;
-+	}
-+
-+	if (!device_wakeup_path(dev)) {
-+		ret = phy_init(stm32_pcie->phy);
-+		if (ret) {
-+			pinctrl_pm_select_default_state(dev);
-+			return ret;
-+		}
-+	}
-+
-+	ret = clk_prepare_enable(stm32_pcie->clk);
-+	if (ret)
-+		goto err_phy_exit;
-+
-+	stm32_pcie_deassert_perst(stm32_pcie);
-+
-+	ret = dw_pcie_resume_noirq(&stm32_pcie->pci);
-+	if (ret)
-+		goto err_disable_clk;
-+
-+	pinctrl_pm_select_default_state(dev);
-+
-+	return 0;
-+
-+err_disable_clk:
-+	stm32_pcie_assert_perst(stm32_pcie);
-+	clk_disable_unprepare(stm32_pcie->clk);
-+
-+err_phy_exit:
-+	phy_exit(stm32_pcie->phy);
-+	pinctrl_pm_select_default_state(dev);
-+
-+	return ret;
-+}
-+
-+static const struct dev_pm_ops stm32_pcie_pm_ops = {
-+	NOIRQ_SYSTEM_SLEEP_PM_OPS(stm32_pcie_suspend_noirq,
-+				  stm32_pcie_resume_noirq)
-+};
-+
-+static const struct dw_pcie_host_ops stm32_pcie_host_ops = {
-+};
-+
-+static const struct dw_pcie_ops dw_pcie_ops = {
-+	.start_link = stm32_pcie_start_link,
-+	.stop_link = stm32_pcie_stop_link
-+};
-+
-+static int stm32_add_pcie_port(struct stm32_pcie *stm32_pcie,
-+			       struct platform_device *pdev)
-+{
-+	struct device *dev = stm32_pcie->pci.dev;
-+	unsigned int wake_irq;
-+	int ret;
-+
-+	/* Start to enable resources with PERST# asserted */
-+
-+	ret = phy_set_mode(stm32_pcie->phy, PHY_MODE_PCIE);
-+	if (ret)
-+		return ret;
-+
-+	ret = phy_init(stm32_pcie->phy);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
-+				 STM32MP25_PCIECR_TYPE_MASK,
-+				 STM32MP25_PCIECR_RC);
-+	if (ret)
-+		goto err_phy_exit;
-+
-+	stm32_pcie_deassert_perst(stm32_pcie);
-+
-+	if (stm32_pcie->wake_gpio) {
-+		wake_irq = gpiod_to_irq(stm32_pcie->wake_gpio);
-+		ret = dev_pm_set_dedicated_wake_irq(dev, wake_irq);
-+		if (ret) {
-+			dev_info(dev, "Failed to enable wake# %d\n", ret);
-+			goto err_assert_perst;
-+		}
-+		irq_set_irq_type(wake_irq, IRQ_TYPE_EDGE_FALLING);
-+	}
-+
-+	return 0;
-+
-+err_assert_perst:
-+	stm32_pcie_assert_perst(stm32_pcie);
-+
-+err_phy_exit:
-+	phy_exit(stm32_pcie->phy);
-+
-+	return ret;
-+}
-+
-+static void stm32_remove_pcie_port(struct stm32_pcie *stm32_pcie)
-+{
-+	stm32_pcie_assert_perst(stm32_pcie);
-+
-+	phy_exit(stm32_pcie->phy);
-+}
-+
-+static int stm32_pcie_parse_port(struct stm32_pcie *stm32_pcie)
-+{
-+	struct device *dev = stm32_pcie->pci.dev;
-+	struct device_node *root_port;
-+
-+	root_port = of_get_next_available_child(dev->of_node, NULL);
-+
-+	stm32_pcie->phy = devm_of_phy_get(dev, root_port, NULL);
-+	if (IS_ERR(stm32_pcie->phy)) {
-+		of_node_put(root_port);
-+		return dev_err_probe(dev, PTR_ERR(stm32_pcie->phy),
-+				     "Failed to get pcie-phy\n");
-+	}
-+
-+	stm32_pcie->perst_gpio = devm_fwnode_gpiod_get(dev, of_fwnode_handle(root_port),
-+						       "reset", GPIOD_OUT_HIGH, NULL);
-+	if (IS_ERR(stm32_pcie->perst_gpio)) {
-+		if (PTR_ERR(stm32_pcie->perst_gpio) != -ENOENT) {
-+			of_node_put(root_port);
-+			return dev_err_probe(dev, PTR_ERR(stm32_pcie->perst_gpio),
-+					     "Failed to get reset GPIO\n");
-+		}
-+		stm32_pcie->perst_gpio = NULL;
-+	}
-+
-+	stm32_pcie->wake_gpio = devm_fwnode_gpiod_get(dev, of_fwnode_handle(root_port),
-+						      "wake", GPIOD_IN, NULL);
-+
-+	if (IS_ERR(stm32_pcie->wake_gpio)) {
-+		if (PTR_ERR(stm32_pcie->wake_gpio) != -ENOENT) {
-+			of_node_put(root_port);
-+			return dev_err_probe(dev, PTR_ERR(stm32_pcie->wake_gpio),
-+					     "Failed to get wake GPIO\n");
-+		}
-+		stm32_pcie->wake_gpio = NULL;
-+	}
-+
-+	of_node_put(root_port);
-+
-+	return 0;
-+}
-+
-+static int stm32_pcie_probe(struct platform_device *pdev)
-+{
-+	struct stm32_pcie *stm32_pcie;
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	stm32_pcie = devm_kzalloc(dev, sizeof(*stm32_pcie), GFP_KERNEL);
-+	if (!stm32_pcie)
-+		return -ENOMEM;
-+
-+	stm32_pcie->pci.dev = dev;
-+	stm32_pcie->pci.ops = &dw_pcie_ops;
-+	stm32_pcie->pci.pp.ops = &stm32_pcie_host_ops;
-+
-+	stm32_pcie->regmap = syscon_regmap_lookup_by_compatible("st,stm32mp25-syscfg");
-+	if (IS_ERR(stm32_pcie->regmap))
-+		return dev_err_probe(dev, PTR_ERR(stm32_pcie->regmap),
-+				     "No syscfg specified\n");
-+
-+	stm32_pcie->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(stm32_pcie->clk))
-+		return dev_err_probe(dev, PTR_ERR(stm32_pcie->clk),
-+				     "Failed to get PCIe clock source\n");
-+
-+	stm32_pcie->rst = devm_reset_control_get_exclusive(dev, NULL);
-+	if (IS_ERR(stm32_pcie->rst))
-+		return dev_err_probe(dev, PTR_ERR(stm32_pcie->rst),
-+				     "Failed to get PCIe reset\n");
-+
-+	ret = stm32_pcie_parse_port(stm32_pcie);
-+	if (ret)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, stm32_pcie);
-+
-+	ret = pm_runtime_set_active(dev);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to activate runtime PM %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = devm_pm_runtime_enable(dev);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to enable runtime PM %d\n", ret);
-+		return ret;
-+	}
-+
-+	pm_runtime_get_noresume(dev);
-+
-+	ret = stm32_add_pcie_port(stm32_pcie, pdev);
-+	if (ret) {
-+		pm_runtime_put_noidle(&pdev->dev);
-+		return ret;
-+	}
-+
-+	reset_control_assert(stm32_pcie->rst);
-+	reset_control_deassert(stm32_pcie->rst);
-+
-+	ret = clk_prepare_enable(stm32_pcie->clk);
-+	if (ret) {
-+		dev_err(dev, "Core clock enable failed %d\n", ret);
-+		goto err_remove_port;
-+	}
-+
-+	ret = dw_pcie_host_init(&stm32_pcie->pci.pp);
-+	if (ret)
-+		goto err_disable_clk;
-+
-+	if (stm32_pcie->wake_gpio) {
-+		device_set_wakeup_capable(dev, true);
-+		device_wakeup_enable(dev);
-+	}
-+
-+	return 0;
-+
-+err_disable_clk:
-+	clk_disable_unprepare(stm32_pcie->clk);
-+
-+err_remove_port:
-+	stm32_remove_pcie_port(stm32_pcie);
-+	pm_runtime_put_noidle(&pdev->dev);
-+
-+	return ret;
-+}
-+
-+static void stm32_pcie_remove(struct platform_device *pdev)
-+{
-+	struct stm32_pcie *stm32_pcie = platform_get_drvdata(pdev);
-+	struct dw_pcie_rp *pp = &stm32_pcie->pci.pp;
-+
-+	if (stm32_pcie->wake_gpio)
-+		device_init_wakeup(&pdev->dev, false);
-+
-+	dw_pcie_host_deinit(pp);
-+
-+	clk_disable_unprepare(stm32_pcie->clk);
-+
-+	stm32_remove_pcie_port(stm32_pcie);
-+
-+	pm_runtime_put_noidle(&pdev->dev);
-+}
-+
-+static const struct of_device_id stm32_pcie_of_match[] = {
-+	{ .compatible = "st,stm32mp25-pcie-rc" },
-+	{},
-+};
-+
-+static struct platform_driver stm32_pcie_driver = {
-+	.probe = stm32_pcie_probe,
-+	.remove = stm32_pcie_remove,
-+	.driver = {
-+		.name = "stm32-pcie",
-+		.of_match_table = stm32_pcie_of_match,
-+		.pm = &stm32_pcie_pm_ops,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+};
-+
-+module_platform_driver(stm32_pcie_driver);
-+
-+MODULE_AUTHOR("Christian Bruel <christian.bruel@foss.st.com>");
-+MODULE_DESCRIPTION("STM32MP25 PCIe Controller driver");
-+MODULE_LICENSE("GPL");
-+MODULE_DEVICE_TABLE(of, stm32_pcie_of_match);
-diff --git a/drivers/pci/controller/dwc/pcie-stm32.h b/drivers/pci/controller/dwc/pcie-stm32.h
-new file mode 100644
-index 000000000000..387112c4e42c
---- /dev/null
-+++ b/drivers/pci/controller/dwc/pcie-stm32.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * ST PCIe driver definitions for STM32-MP25 SoC
-+ *
-+ * Copyright (C) 2025 STMicroelectronics - All Rights Reserved
-+ * Author: Christian Bruel <christian.bruel@foss.st.com>
-+ */
-+
-+#define to_stm32_pcie(x)	dev_get_drvdata((x)->dev)
-+
-+#define STM32MP25_PCIECR_TYPE_MASK	GENMASK(11, 8)
-+#define STM32MP25_PCIECR_LTSSM_EN	BIT(2)
-+#define STM32MP25_PCIECR_RC		BIT(10)
-+
-+#define SYSCFG_PCIECR			0x6000
+ 	ret = mwifiex_pcie_alloc_buffers(adapter);
+
+---
+base-commit: cfb2e2c57aef75a414c0f18445c7441df5bc13be
+change-id: 20250417-restricted-pointers-wifi-27aca4f6dc2e
+
+Best regards,
 -- 
-2.34.1
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
