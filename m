@@ -1,137 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C671DE3C8;
-	Thu, 17 Apr 2025 10:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB3222A1D5;
+	Thu, 17 Apr 2025 10:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744887447; cv=none; b=m7OzJH9vKy3hl1KfQY69pufQ0UoNDg5oeuTl+lKNY1UVSuKIL4ChZLfVrUqrnrFW7Rc69is+sZVENWkoaITqzC9ePg3TnDruKPyulSC16FiQ4RBv6N1aV7LmOfOvBLMKS/vTztEpBp7rqJLrk3fSxL4FrS69/V3/SQgDVW9pbew=
+	t=1744887502; cv=none; b=l6qPVtKMweEhYYad1UTO8zuMxFBGmn1LJuFGmNdpZ6/7Hovw5ddIlgKsssmV+qZLGXWqtjsooYho2liAhGcmrOIvu7839pYav4g7ZTFESf3m+EkXHr5KrzqXer2vabHhRU6+FH22SKfpTb5jHFiu6oxjyD0XgKxpBAUqxIAd3pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744887447; c=relaxed/simple;
-	bh=hFOa2BS0aExJdAHSEfdu2JskXGSCCJ6rQUiOk0oimqM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=XKYjfmUCdF7Jx3zvir1WELsup8JlWWBTCJguc0QEEBw9ho4DHyQPU6kaejSG4ejXODMgooEyEI2qDKU6G+gqs276NaR/pblOo0+KY3LHLqD9/dhSNQC4OGtvp7Vht2h42/+Im6/RXvmxDf9O9g8aGPkM18y4LOGx3ojihi9AC0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d01UBAQe; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744887502; c=relaxed/simple;
+	bh=6pApmvsVQVsQmnATukOO7BvLu0XhL5vPN5/CoEIDPr0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=R6RcVDfwhgScnnFB6jNq3CFJygPuDfgyc4FPd15eqZllc08U1davh86WtUlxzW2pTPpEF6GoCylLgE1g1Ezv1iUUetG/aTUDlYcvRzs3SQ8Hh1eSn6egCsURCCb2+51c07kbaSvfHGBv4iHdCZ0WEkMNcxUmNPcxBfPrGlPez30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FNhEoVDW; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d01UBAQe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744887445; x=1776423445;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=hFOa2BS0aExJdAHSEfdu2JskXGSCCJ6rQUiOk0oimqM=;
-  b=d01UBAQeH64UC23PtBF8AejbYpjd3FHT3Ba9fdaGvsAP0z6QdmEtRlrZ
-   63dJMytO7UzTU9avUY1n4OUmBzlvLU5X/WP65xVpKDfMu44nbI1XJiDu3
-   eb0Uy2bk3/HrY79A1JzEEqaLWcAFgSTxgz6nRTX6Z7CthCyWaDnI4Gokw
-   Dkci7gZ3XboDOqwKpfqb3YFqaKh5Xw13TsoQrW8hN24JrZlp7egL9ayVm
-   isTT/IhQZbIf8+6/pF+skla2Y8SDHVREc2fq+7xaSyFyBjJtwXrEtO4Vk
-   yo9AZJwj2w0g1u9PJcha4ZfbkFtJpmWIXVUP1XxwsPYLdcpOJfHls7IO1
-   Q==;
-X-CSE-ConnectionGUID: uBe6ZhEMR8Sh32+DRJ0RkQ==
-X-CSE-MsgGUID: Sw4Uj+kHRueLZwb0fyrKVg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46479183"
-X-IronPort-AV: E=Sophos;i="6.15,218,1739865600"; 
-   d="scan'208";a="46479183"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 03:57:24 -0700
-X-CSE-ConnectionGUID: v/7bF07rTAuPdWrC31WDEg==
-X-CSE-MsgGUID: PTVWmvVNT+upn4DkBReWGg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,218,1739865600"; 
-   d="scan'208";a="131304273"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.144])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 03:57:22 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 17 Apr 2025 13:57:19 +0300 (EEST)
-To: Kurt Borja <kuurtb@gmail.com>
-cc: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, 
-    Mario Limonciello <mario.limonciello@amd.com>, 
-    platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Dan Carpenter <dan.carpenter@linaro.org>
-Subject: Re: [PATCH] platform/x86: alienware-wmi-wmax: Fix uninitialized
- variable due to bad error handling
-In-Reply-To: <20250416-smatch-fix-v1-1-35491b462d8f@gmail.com>
-Message-ID: <14424f02-c800-a482-4d23-fd05f61cec82@linux.intel.com>
-References: <20250416-smatch-fix-v1-1-35491b462d8f@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FNhEoVDW"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3914bc3e01aso356969f8f.2;
+        Thu, 17 Apr 2025 03:58:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744887499; x=1745492299; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4GrUlyk74WjltV2K0kWiBgfuLaCstnwmS8DfLOMBDsk=;
+        b=FNhEoVDWbPp/TrUyhnuLYvmBWdIQTsegAdw/wnMcE+CnA3TysBfnLla0YB5BGNNjR5
+         aAAl05YMoGWhuOuwKVVCDqvScxpx54nxs0c65WjdkGxIriWR4UY9fovAtULFK5zmt0Fi
+         YLayC9tDtWK4vpa+/OkfMdfooyoTiPMQ54y3tmPDMhwO8J5iQGeTleil8hCk+6hZrdEG
+         sNfHR2e/Z7osyAL+5nCcN+4bFbn4cZGZWO7yuhHi+iglAST8LJfsJ12iPdACPir1jcda
+         R2m9HHQAQX3/E05Byt5pERl5Uxjli718xhMCaScXye6z8ZVlGZZa6/PAl+VsIi/vSqUF
+         MqJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744887499; x=1745492299;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4GrUlyk74WjltV2K0kWiBgfuLaCstnwmS8DfLOMBDsk=;
+        b=vJEMvvJH+qdQuk32l6H6BHtWaestJNnMtT/zLeulCnqD9mwC0BoQvHzOXQQpu3BnSL
+         aKdZs76X9sO8nIvGivpllyAH295tqHaouwQJPq3I7aCGcmsDw/OFZrSiN9Jt5qxr2urN
+         b+HwRv5sd4ceOYdq9V2kG+xWXjp26QO0lGLvowxO6V0nIZW0vIWmQ2WjnAYeZIBjZx76
+         wN+qJxGAQEEJdo9ZmPsNv9CDCAFxKgNN/yvwOfN8uBssRol8d8hren90aNnhPOaPFx0Y
+         BJVLUSqTuOuqjIuOClZoN1uHtTSE4Ly5DqrflHXhsWhsLd5/XiNtCmx1f1cDDCmgcr5w
+         ZJLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVGyvJ6PrOyEknYHeHob4CNj3GAFhSsHhjoYRFhN2oUI2pfl7x1R0T2zTTkUP2lth0PwWz7gomzSEjamZm3KyHdvhbDTQ==@vger.kernel.org, AJvYcCW7gtCNVAd8+0723wu+UazKvuVgmZ4ndm80E6UwGCNdeFbIHnqOz++scg6Mfcy1+Q6gDUhGCF6D+y1A8CQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyd5t20V7v1riR9tQsIOuUEIfLTq2EhLnTMPtMXoqw422FS38rv
+	zvT94Hjg58d3EUKL3gk/wtnkCxjVsmYav4pgeCro0Q7a/jMdnYei
+X-Gm-Gg: ASbGncukwtxuztD7Q0zCK+T7tcQjSIePi7PJjO2AqZDhdKKdsgU2qLnDzms1DG7vrKp
+	YvFbZ/r/rRu9uyTbI+JodVTGn7FXOQj7x1pLurwLbtVSpWqa95LndFNXb+n0OwQon4CxKusPSvK
+	CJIHfEdWhyQ5gO+zSnsSt1d3kbt+W2FgYn6YPfrfIixkYvZyuyLQG0C/e3T2zZ0O4uhwI5JQdyy
+	nEL3DUrJHrmBi1PkujYEkwBhGOyDup8iEATngqUy/uzo/mI3PYJc1DXnK4mP+WWYAMq21FvC0zb
+	c0W8vkdSi2l4I5s+FIWAhFa3dEeZspaDz3XMOQM6BTJIU8tEL7RFQ0lBEr/OhA==
+X-Google-Smtp-Source: AGHT+IG0PYQiJFZINtUaPciBIboDtC5A735X1xBsUNdqImMGNzueSKa5sJ8oBIjpqFgCr0mbUKvK4A==
+X-Received: by 2002:a5d:6da6:0:b0:390:f738:246b with SMTP id ffacd0b85a97d-39ee5b1891bmr5027735f8f.15.1744887499123;
+        Thu, 17 Apr 2025 03:58:19 -0700 (PDT)
+Received: from pop-os.fkkt.uni-lj.si ([2001:1470:ffef:fe01:b721:35c:4932:2a11])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b58cc0csm49421255e9.32.2025.04.17.03.58.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 03:58:18 -0700 (PDT)
+From: =?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
+To: ikepanhc@gmail.com
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	=?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
+Subject: [PATCHv5] platform/x86: ideapad-laptop: added support for some new buttons
+Date: Thu, 17 Apr 2025 12:57:58 +0200
+Message-Id: <20250417105758.100675-1-gasper.nemgar@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 16 Apr 2025, Kurt Borja wrote:
+Added entries to unsupported wmi codes in ideapad_keymap[]
+and one check in wmi_nofify in order to get wmi code 0x13d to trigger platform_profile_cycle
 
-> wmax_thermal_information() may also return -ENOMSG, which would leave
-> `id` uninitialized in thermal_profile_probe.
-> 
-> Reorder and modify logic to catch all errors.
-> 
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/r/Z_-KVqNbD9ygvE2X@stanley.mountain
-> Fixes: 27e9e6339896 ("platform/x86: alienware-wmi: Refactor thermal control methods")
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
-> Hi all,
-> 
-> @Ilpo: This will definitely conflict with the for-next branch when
-> merging.
+Signed-off-by: Gašper Nemgar <gasper.nemgar@gmail.com>"
+---
+Changes in v5:
+ - Changed performance button to KE_KEY 
+Changes in v4:
+ - Changed performace button to KE_IGNORE
+Changes in v3:
+ - Minor changes
+Changes in v2:
+ - Added more codes that trigger with key combos (Fn+N, Fn+M, ...)
+ - Added performence toggle in wmi_notify()
+Changes in v1:
+ - Added codes for buttons on laptop(performance, star, ...)
+---
+ drivers/platform/x86/ideapad-laptop.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Okay, thanks for the heads up (I'll eventually merge fixes into for-next
-once I merge this fix).
-
-> Also, the fixes tag references a commit from before the split (same
-> series though), but ofc this fix is meant to be applied on top of it
-> (fixes branch). Is this ok or would it be better to change the fixes
-> tag to the "split" commit?
-
-Pointing to the correct commit is preferred.
-
-It doesn't look very likely that the series would be "split" such that 
-only a part of it appears in a specific stable kernel so the difference 
-shouldn't matter anyway.
-
-In general, stable people would just send you a notification if something 
-cannot be backported to some stable version due to a conflict, and they'd 
-depend on you to submit the amended backport anyway so it's not much extra 
-"work" for them if something ends up conflicting. (And I don't think your 
-inbox would be exactly filling from stable notifications unlike mine --- 
-one of those joys of being a subsystem maintainer).
-
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 17a09b778..72d3306ef 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -1294,6 +1294,16 @@ static const struct key_entry ideapad_keymap[] = {
+ 	/* Specific to some newer models */
+ 	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
+ 	{ KE_KEY,	0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
++	/* Star- (User Asignable Key) */
++	{ KE_KEY,	0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
++	/* Eye */
++	{ KE_KEY,	0x45 | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
++	/* Performance toggle also Fn+Q, handled inside ideapad_wmi_notify() */
++	{ KE_IGNORE,	0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
++	/* shift + prtsc */
++	{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
++	{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
++	{ KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
+ 
+ 	{ KE_END },
+ };
+@@ -2080,6 +2090,14 @@ static void ideapad_wmi_notify(struct wmi_device *wdev, union acpi_object *data)
+ 		dev_dbg(&wdev->dev, "WMI fn-key event: 0x%llx\n",
+ 			data->integer.value);
+ 
++		/* performance button triggered by 0x3d  */
++		if (data->integer.value == 0x3d) {
++			if (priv->dytc) {
++				platform_profile_cycle();
++				break;
++			}
++		}
++
+ 		/* 0x02 FnLock, 0x03 Esc */
+ 		if (data->integer.value == 0x02 || data->integer.value == 0x03)
+ 			ideapad_fn_lock_led_notify(priv, data->integer.value == 0x02);
 -- 
- i.
+2.34.1
 
-> ---
->  drivers/platform/x86/dell/alienware-wmi-wmax.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> index 3d3014b5adf046c94c1ebf39a0e28a92622b40d6..b8e71f06fdde347573bff5c27a9ba53a0efcacae 100644
-> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> @@ -607,12 +607,10 @@ static int thermal_profile_probe(void *drvdata, unsigned long *choices)
->  	for (u32 i = 0; i < sys_desc[3]; i++) {
->  		ret = wmax_thermal_information(priv->wdev, WMAX_OPERATION_LIST_IDS,
->  					       i + first_mode, &out_data);
-> -
-> -		if (ret == -EIO)
-> -			return ret;
-> -
->  		if (ret == -EBADRQC)
->  			break;
-> +		if (ret)
-> +			return ret;
->  
->  		if (!is_wmax_thermal_code(out_data))
->  			continue;
-> 
-> ---
-> base-commit: fcf27a6a926fd9eeba39e9c3fde43c9298fe284e
-> change-id: 20250416-smatch-fix-d1191e2514f5
-> 
-> Best regards,
-> 
