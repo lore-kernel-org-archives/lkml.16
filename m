@@ -1,120 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D491547C0;
-	Thu, 17 Apr 2025 08:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50DBA33FD
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 08:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744878640; cv=none; b=t2zSP+W5SCN4GzIQE0QSFGk8+HfX1ICinAsXTugNf+qjw4V6GGi9K74IvolbwDWjqoCR+HFS57KKuaYoKvbLtF6temq1//x8wopRs4lJ8UsD6GgpQC5EJ+u2UOLn8qyWswsbQGvsKxbbsmYao3gXGsU3ENs6aJqx1v6cXyCU3cM=
+	t=1744878734; cv=none; b=PuZL8W+0m45NzteGi3yLyZHt/VsTLHDKwyf6K6X5BnvO918da/z0uDOWbfcvkgMi5i9jXzXUG/D0aC3BWL1cWsRL42FHAg4yZFKmwlV7llymNRrahU+4ftpn+osnGHBITXa3aRzUP/TDsn1wZzVn09rkK4g7crgMnh8CQlPNLzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744878640; c=relaxed/simple;
-	bh=Hn6sMpUGDk+JUipbQWheHD+NmGTDLgQNE42Wjv/lnIw=;
+	s=arc-20240116; t=1744878734; c=relaxed/simple;
+	bh=gqE0xc1rYegcSo7HWStN1ftYp7Vosk0cOKSXbGaXXJw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=daRA9aWd2gZcO2izm0gPRd5aAzMvxhUO3szQ1XrUoQaNi858q/ow68UutrSJa2MLadCUWKGj5VG2aMTMD5C6rVe6kc4ylJR7yJXf+bCLSdQZEV5E7b3dOP+UjNPTMr5LtFJVzJFsenQ/Mz9Z7BczTqxu64yXMNbYuEeBTOhU41Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d3YvJumz; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=aKD58kCjNkUijdMXFYJrIxvUGPpf2Q3pqq6xPGwCcHN0mvASUZkTJW6xRYfrLJkbOFIkwngLWJ4zlesFVKe7uLRceUPqErqEo1uB8QstcRcSAwCs1p5/oHIxKHYKlDtn/cBPthBl0/K4xL+bNA+ZdX3WjRevWkC85sREE4vCTUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=UeL/qWwB; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d3YvJumz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744878639; x=1776414639;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Hn6sMpUGDk+JUipbQWheHD+NmGTDLgQNE42Wjv/lnIw=;
-  b=d3YvJumzvdgSRWuWHoGJTsn+efztldvDYTihqx4Xm5IMh3FGJWUbGSQr
-   v12IsTx8ovnZffjQZCB3iGtllZnO/ntownOFK/yVVTKZ/8MP2J15hbxka
-   3JGVvqCsODr/eAawqb4Z1DDdAGqJn0GnmICiXzvJeUcU+KIeLmpCL5MS0
-   +rSfoyG+hGzGnWj9fXAS5BqX6oFD6X4wlg54PO/uDyycy+XCGtzKA10Sw
-   ouvOh42/AWrykDoBa19s0Sk/tXOGI7PJENeazwF5N6Jnk7dHzzakrrRrT
-   xTpCjWScVZit3pUhJdLQ3kEL3gpIpuyrP+JOgdUvY+m5nXBJFmRJgE2PT
-   g==;
-X-CSE-ConnectionGUID: On5q+0CTQtyn/FFNKvidpg==
-X-CSE-MsgGUID: ivBNmqHARFOjjdo8A6B9IA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="49150281"
-X-IronPort-AV: E=Sophos;i="6.15,218,1739865600"; 
-   d="scan'208";a="49150281"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 01:30:38 -0700
-X-CSE-ConnectionGUID: 8uaoSk4OT9aCn4gd9CKUHQ==
-X-CSE-MsgGUID: OYbjFTdNSI+C10E72WFhSw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,218,1739865600"; 
-   d="scan'208";a="135706576"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 17 Apr 2025 01:30:36 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u5Kdl-000LzE-2D;
-	Thu, 17 Apr 2025 08:30:33 +0000
-Date: Thu, 17 Apr 2025 16:30:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: Nicolas Pitre <nico@fluxnic.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Nicolas Pitre <npitre@baylibre.com>,
-	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 06/13] vt: use new tables in ucs.c
-Message-ID: <202504171646.NDaNfFql-lkp@intel.com>
-References: <20250415192212.33949-7-nico@fluxnic.net>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="UeL/qWwB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=gqE0
+	xc1rYegcSo7HWStN1ftYp7Vosk0cOKSXbGaXXJw=; b=UeL/qWwB3H59mQU8e+bP
+	vDXTYy+POGfCfzdljtZi4TFfeHjtQmBpZE8UddEAlyFPVNwTp97TjC2NyAuUceyx
+	5nDXZjI7UQtfiQRGLeXRuVo2D+Qxjmx5STOiPghd4240U/ydT8xha4EevG9j/6mn
+	/qgcRmLxbgLJJ9/2pOQRvggHrkkGxOkZ9GfeUjakxfuCom2CTJRGYyufwjtiaRu2
+	Trh9HjX/bs8kfN+0KvKVZ71ans0MWLdhtJNxAUMEiTT17JzYuqWQz8tMZpZeUl/8
+	AubJGfKjr9gG/kXbVayGPbO6oqKKHmoEU2M5Xe5O4BjoC3FOR88NLDSCBYHBCjSB
+	HA==
+Received: (qmail 1019652 invoked from network); 17 Apr 2025 10:32:00 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 17 Apr 2025 10:32:00 +0200
+X-UD-Smtp-Session: l3s3148p1@uQ1LPPUySOIgAwDPXyfYALbiJ46yNPq3
+Date: Thu, 17 Apr 2025 10:31:59 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Chris Brandt <chris.brandt@renesas.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Andy Shevchenko <andy@kernel.org>
+Subject: Re: [PATCH v8] i2c: riic: Implement bus recovery
+Message-ID: <aAC8f0dAMERD8GjW@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Chris Brandt <chris.brandt@renesas.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Andy Shevchenko <andy@kernel.org>
+References: <20250407121859.131156-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="my8PveaXmdni+pX0"
+Content-Disposition: inline
+In-Reply-To: <20250407121859.131156-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+
+--my8PveaXmdni+pX0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250415192212.33949-7-nico@fluxnic.net>
+Content-Transfer-Encoding: quoted-printable
 
-Hi Nicolas,
+On Mon, Apr 07, 2025 at 01:18:59PM +0100, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>=20
+> Implement bus recovery by reinitializing the hardware to reset the bus
+> state and generating 9 clock cycles (and a stop condition) to release
+> the SDA line.
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Tested-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> Reviewed-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-kernel test robot noticed the following build warnings:
+As I wrote in the other thread: I took your generic_scl approach and
+replaced bus_free() with get_sda(). Works fine here with my G3S:
 
-[auto build test WARNING on tty/tty-linus]
-[also build test WARNING on linus/master v6.15-rc2]
-[cannot apply to tty/tty-testing tty/tty-next next-20250416]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+# echo 0x1a > /sys/kernel/debug/i2c/i2c-2/incomplete_address_phase ; i2cget=
+ -f -y 0 0x1a 3
+0x0c
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Nicolas-Pitre/vt-minor-cleanup-to-vc_translate_unicode/20250416-142136
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tty-linus
-patch link:    https://lore.kernel.org/r/20250415192212.33949-7-nico%40fluxnic.net
-patch subject: [PATCH v2 06/13] vt: use new tables in ucs.c
-config: arc-randconfig-002-20250417 (https://download.01.org/0day-ci/archive/20250417/202504171646.NDaNfFql-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 13.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250417/202504171646.NDaNfFql-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504171646.NDaNfFql-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/tty/vt/ucs.c:43: warning: Function parameter or struct member 'cp' not described in 'ucs_is_zero_width'
->> drivers/tty/vt/ucs.c:43: warning: expecting prototype for Determine if a Unicode code point is zero(). Prototype was for ucs_is_zero_width() instead
-   drivers/tty/vt/ucs.c:55: warning: Function parameter or struct member 'cp' not described in 'ucs_is_double_width'
-   drivers/tty/vt/ucs.c:55: warning: expecting prototype for Determine if a Unicode code point is double(). Prototype was for ucs_is_double_width() instead
+And I see 9 pulses in the scope. Can you try this with your setup
+please?
 
 
-vim +43 drivers/tty/vt/ucs.c
+--my8PveaXmdni+pX0
+Content-Type: application/pgp-signature; name="signature.asc"
 
-    35	
-    36	/**
-    37	 * Determine if a Unicode code point is zero-width.
-    38	 *
-    39	 * @param cp: Unicode code point (UCS-4)
-    40	 * Return: true if the character is zero-width, false otherwise
-    41	 */
-    42	bool ucs_is_zero_width(u32 cp)
-  > 43	{
-    44		return cp_in_range(cp, ucs_zero_width_ranges,
-    45				   ARRAY_SIZE(ucs_zero_width_ranges));
-    46	}
-    47	
+-----BEGIN PGP SIGNATURE-----
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgAvHwACgkQFA3kzBSg
+KbYArw/+O85cUgxtrUoTEkvDPIZuaeKPeLYh/pH9fWJaCcnwtzZR+belZLsB44Jx
+hXkkFt3FilATzXwx/uDlZmAgUcNPYtziHDEEnge1J/l3ibIqd1vco44F8R2vapmc
+est/NjSYlU7qiquQTJDZcBK4sj9CuumDc7hPT9FDF5QcXb3JelOeFQlV0xutE7Xp
+OfwZ3REHBWPNGkpBzQcbKBQK2yYvgkpQeHzMVgM97xO305tWjBiRHJdQndtD4MZx
+ArBZZHdO8TUDSuTpf+dVkWxO7+uAiLObqw4QMc2gGvXIwvS4oLlzEFv5A/9j9Pue
+8HFBKxx4iyzKWOiYekeW811lumsMWV9b8Sh1xZKx32gXfBdGe0+ghI60oDufVilw
+UjLyMZdghhfE73l+9hERxO+WIthAclmAx3c4KAfSscJrqrEqSnbn4cf1BX3EXW9C
+z++fVcal5B1YpDAM3ucjO8vRYb5YCn/aWnBWL8x7xuCcTGN9Hylg+y6BvkayqgGb
+ihZso9kGhDjadK2aftbNgi1tiAqW3No2jXjfIeK5ng4Os/zSbq+jdkgG5NqSVGtw
+6tAa2EWc/0rQ05TsgWgmHzeyrwRWiAsaKLqlSO6Z9+vPx8f/NfDEUdLWZHr8OFuX
+aDDFjh8NHrP7Bh3PuU9bL6pLq5OBd2UEVvMU6EPXEZYYGZOZwrU=
+=Ib2a
+-----END PGP SIGNATURE-----
+
+--my8PveaXmdni+pX0--
