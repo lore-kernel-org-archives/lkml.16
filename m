@@ -1,101 +1,146 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB5124290F
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8961D242917;
+	Thu, 17 Apr 2025 12:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744893711; cv=none; b=gfHax6nmsc224zbpq5g+SxUTUSvHg4cy6mScpslvWZ3qJM/KOUia0PgkA9wfn9ZyuKGZXB77T8q5KWp6wehNyxHiqGPb2JfgmQCBDZIYJt5rN7usd2zN/kHPH5lG+VNnKZtRHwmLvtyqVj71JTSwO4KnaMoIV95lypA1NR/f3Xg=
+	t=1744893737; cv=none; b=E4QKXrV+T8pasTaaZkknqR96N7xckaUpY359OudqFpnXVwJGLClLIEQy3XPPt4B20Zyg3MtCRqtSoFeUTmRegiBoljHl3MrF9GQqon0sjI2Kp8uRsF/maLJMAYtQIzaVkHSgJWBUoiVXO5Xx0JFg6/uypFjwkc43rn9GP7n0QWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744893711; c=relaxed/simple;
-	bh=nQIIrU067YTPjOc8LmZh4/vPjF2wg8asBmSLf3GZb2Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kvee42ma+MzCZxI/qYnl1MJ0lSfnusSPfo1AbhY7VloeKgwlPhVoP6sQqXwW5q2qyUhdBJmja/52o1Bqa3ckhIiW0LRosH1M/OnhYPWOjXzOrnSWDti4CwUGQyLZGfexeRcaoUZ/QVj4z+6mQiRFL+fZ0csARGBMVqnQ1kJQzsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=g42nueKz; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="g42nueKz"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54c090fc7adso815365e87.2
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:41:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744893708; x=1745498508; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lZ5lyKYfN+K0uYV9se5bx7j4N0g/Y1mbf+XUFGCcm+I=;
-        b=g42nueKzZ04eVy6vvZmlMsoemoK8Hj/WzbiclabKX+DVq23/NEUMdXtZ9Td/5lkqy8
-         RSA+kXAClrcSFInJCXyLPz44r8/WmmaW5eT0MU3682gv2zhITYNPgmkSwnC2GDQ/QCWf
-         lf/EJyozmkFYDa0gyInvRi7wSzVHXll+UUOWKO+QZ1nl4vtFLfwm9b4/CCpMP+wvUfJ5
-         qtupkr6jGWpGDBePjwPsKOL5NzXrbgUeQYgZUiylvrtN9MS/0oB7UxP/2FqYrhSZuI8I
-         Yeo6tWuzs0nne1XOHSBEqFQpjthZlh7ZLPfKOs+qVaVxfW2LsbLnV1qUR/zdk5mrBNHG
-         6VrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744893708; x=1745498508;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lZ5lyKYfN+K0uYV9se5bx7j4N0g/Y1mbf+XUFGCcm+I=;
-        b=cgqsf0voilWGrL2QSMgOq2zhuJ5Z2WELwOOlIxzbilEzi0fOgL323L0ttxJvG4GN9c
-         WHxDnq39XCTa25vlDXp7C5yfG+0H1YgbQFJVbJfSoFg3gLJSqExWsfHqWJCliBr/F/oK
-         pLMvknF7l8pdesr+Dnj3RVwqkEOszIQffRZPudyRtzjLIrVJJ5SwKi1PC5XX0yEaAkA0
-         L8vouWwyK5lI7B+786kUStzljbXsXtObKe48bXB4p6Xv38HU9AMO0id/DZT3PyANnF+y
-         JXO/wTlE8bWFeWtDM3dHj27hvEBLmUnLIibp0fiKRTD2bTCauw2J1WJenNODj7jYnb83
-         k9DA==
-X-Forwarded-Encrypted: i=1; AJvYcCXh5EvmI/+xeCQJFTe9nlfzZYXtzz1QXbFWb2n6cS1hTjQphny8mTNQN0FyoU1E81t9sGQZ2c6ISNM8ecg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMflqQsgNf0pzSramT3n73ANP4xRuGfrSXqgDJMTHt9Y7pMxIn
-	HHTyV89OFJuaxi+7PylVcXrC4XhVvOi+bNx4lCfGP0tQONU05/ANT8oESBPR5Cxv8/Byrkn80zV
-	DK/UG+BHOHNwC7JxuuEWtyIM+Un0FYLKQOs852A==
-X-Gm-Gg: ASbGncsR579PCnxAE/YbvJWPXYUtw2enMDdLkRIBTgKJv0yBcuP1enyFvTfIp80q685
-	ZwyHkUsH8eJIyZOGhBJFrcli6b55Odq7elUjVgw5k0Uds1ume36HezwORgTNgaRdHnFVDELMQh4
-	Udc74GKrmVPgd2jiLzN+yGbktQXe4wK/mkkucuxmze7q8xL4J2h8e0qxg=
-X-Google-Smtp-Source: AGHT+IGCeVLIonXAZLoZuX26dLN3o/5NzBTerYwwXcLsLxVnsPGKrq48ijHC2fwB40UH+JZf3EjGuDJ2/FAZWXTNCFQ=
-X-Received: by 2002:a05:6512:3d0d:b0:545:1082:91a1 with SMTP id
- 2adb3069b0e04-54d64a7b6f0mr1692690e87.7.1744893707675; Thu, 17 Apr 2025
- 05:41:47 -0700 (PDT)
+	s=arc-20240116; t=1744893737; c=relaxed/simple;
+	bh=2SpWKf4ZPt9JumY9RoMh5nejz0XyYw6hMSWrET+8/Ws=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M5kne9djTZg4MgIWeKXDV7GqdC1ffRy2mK+IbtKqAykWZUwtin8pdw3zfW3uDR/7F+N2L/apHHLc/mdd9JV2eTI5CI37SdZ6Pe6zcYPeVY5CF194EMrZTJ2CIgJ5m86rznvxIVxDijXGRwjIXZQQRW2H0aNf3JYEhgWFNX7exsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 48C0E1515;
+	Thu, 17 Apr 2025 05:42:11 -0700 (PDT)
+Received: from [10.1.25.43] (e127648.arm.com [10.1.25.43])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B9E73F694;
+	Thu, 17 Apr 2025 05:42:12 -0700 (PDT)
+Message-ID: <b8832097-71bd-4e68-918a-1e986457d03b@arm.com>
+Date: Thu, 17 Apr 2025 13:42:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com> <20250409-mdb-max7360-support-v6-9-7a2535876e39@bootlin.com>
-In-Reply-To: <20250409-mdb-max7360-support-v6-9-7a2535876e39@bootlin.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 17 Apr 2025 14:41:36 +0200
-X-Gm-Features: ATxdqUHVnRgKXXdU0felXL5SR5G-r5Je-4YU4gveufkl7eBQ6Hnf24ePYuscRak
-Message-ID: <CAMRc=MdKswkm2jzok6Uw3cG6uDkVq+CMXbJgP3fRY+jHo+rPkQ@mail.gmail.com>
-Subject: Re: [PATCH v6 09/12] gpio: max7360: Add MAX7360 gpio support
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
-	=?UTF-8?Q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFT][PATCH v1 7/8] cpufreq: intel_pstate: Align perf domains
+ with L2 cache
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Morten Rasmussen <morten.rasmussen@arm.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+ Pierre Gondois <pierre.gondois@arm.com>,
+ Tim Chen <tim.c.chen@linux.intel.com>
+References: <3344336.aeNJFYEL58@rjwysocki.net>
+ <1964444.taCxCBeP46@rjwysocki.net>
+Content-Language: en-US
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <1964444.taCxCBeP46@rjwysocki.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 9, 2025 at 4:56=E2=80=AFPM Mathieu Dubois-Briand
-<mathieu.dubois-briand@bootlin.com> wrote:
->
-> Add driver for Maxim Integrated MAX7360 GPIO/GPO controller.
->
-> Two sets of GPIOs are provided by the device:
-> - Up to 8 GPIOs, shared with the PWM and rotary encoder functionalities.
->   These GPIOs also provide interrupts on input changes.
-> - Up to 6 GPOs, on unused keypad columns pins.
->
-> Co-developed-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+On 4/16/25 19:10, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> On some hybrid platforms a group of cores (referred to as a module) may
+> share an L2 cache in which case they also share a voltage regulator and
+> always run at the same frequency (while not in idle states).
+> 
+> For this reason, make hybrid_register_perf_domain() in the intel_pstate
+> driver add all CPUs sharing an L2 cache to the same perf domain for EAS.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > ---
+> 
+> New in v1.
+> 
+> ---
+>  drivers/cpufreq/intel_pstate.c |   23 +++++++++++++++++++++--
+>  1 file changed, 21 insertions(+), 2 deletions(-)
+> 
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -999,8 +999,11 @@
+>  {
+>  	static const struct em_data_callback cb
+>  			= EM_ADV_DATA_CB(hybrid_active_power, hybrid_get_cost);
+> +	struct cpu_cacheinfo *cacheinfo = get_cpu_cacheinfo(cpu);
+> +	const struct cpumask *cpumask = cpumask_of(cpu);
+>  	struct cpudata *cpudata = all_cpu_data[cpu];
+>  	struct device *cpu_dev;
+> +	int ret;
+>  
+>  	/*
+>  	 * Registering EM perf domains without enabling asymmetric CPU capacity
+> @@ -1014,9 +1017,25 @@
+>  	if (!cpu_dev)
+>  		return false;
+>  
+> -	if (em_dev_register_perf_domain(cpu_dev, HYBRID_EM_STATE_COUNT, &cb,
+> -					cpumask_of(cpu), false))
+> +	if (cacheinfo) {
+> +		unsigned int i;
+> +
+> +		/* Find the L2 cache and the CPUs sharing it. */
+> +		for (i = 0; i < cacheinfo->num_leaves; i++) {
+> +			if (cacheinfo->info_list[i].level == 2) {
+> +				cpumask = &cacheinfo->info_list[i].shared_cpu_map;
+> +				break;
+> +			}
+> +		}
+> +	}
+> +
+> +	ret = em_dev_register_perf_domain(cpu_dev, HYBRID_EM_STATE_COUNT, &cb,
+> +					  cpumask, false);
+> +	if (ret) {
+> +		cpudata->em_registered = ret == -EEXIST;
+> +
+>  		return false;
+> +	}
+>  
+>  	cpudata->em_registered = true;
+>  
+> 
 
-Looks good to me.
+debugfs already provides a way to retrieve that information, but with more
+complex perf domain constructions like here maybe this would be useful
+(maybe it already is):
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+--->8---
+
+Subject: [PATCH] PM: EM: Print CPUs of perf domains
+
+In preparation for future EAS users who make the relation from CPU
+to perf-domain not strictly based on cpufreq policies print the
+affected CPUs when registering a perf-domain.
+
+Signed-off-by: Christian Loehle <christian.loehle@arm.com>
+---
+ kernel/power/energy_model.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
+index 99a1ae324c2d..a202968b2ee9 100644
+--- a/kernel/power/energy_model.c
++++ b/kernel/power/energy_model.c
+@@ -627,7 +627,7 @@ int em_dev_register_perf_domain(struct device *dev, unsigned int nr_states,
+ 	em_cpufreq_update_efficiencies(dev, em_table->state);
+ 
+ 	em_debug_create_pd(dev);
+-	dev_info(dev, "EM: created perf domain\n");
++	dev_info(dev, "EM: created perf domain for CPUs %*pbl\n", cpumask_pr_args(cpus));
+ 
+ unlock:
+ 	mutex_unlock(&em_pd_mutex);
+-- 
+2.34.1
+
