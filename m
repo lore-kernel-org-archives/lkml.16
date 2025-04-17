@@ -1,120 +1,94 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13971D63D6;
-	Thu, 17 Apr 2025 10:13:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6241D63D6;
+	Thu, 17 Apr 2025 10:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744884803; cv=none; b=IhF0w8dGToMUpwYFc/2gb69zPdLi7Sh2SXZPIJdlZ17qoyzkA4bj7FXbqvDKfuYWIeC/1sr5Dq1H/bGNc0yKeF9aVjd/4weV71bs4OWBwAWyjRoubsvDpgdZrezfD21LVLOfxjM4kP/eaPn0D8ERdRRbyCqpfPSIqSV9rxLwNEY=
+	t=1744884850; cv=none; b=oi3tMxpwzizyZuYzGlrsu9e7Ttepb2ho9Z23g46oU40Igg2hdBFrlATW6JlZFWGxV7judjynsgGPMKCwokwIOISJw8sfUWxugB08tU6t5Xc0xnqg10B3awykDnE2hY8p84roFn4kHRKrVK1w37PN3pLlDKXr86/H257aUE52QQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744884803; c=relaxed/simple;
-	bh=/i89Akd76Mhyz5w3Hye3H1Pj5d4OFWyxCf/sdlT3SQc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=onrlgo1kG7teguSzRBr7cRgBWsGOwsmwFJjo2MlJOPcggAlhyFNKmhcU9LN+QPClqIxhWXoCZykR2iLrqAVtUBEjLKxcantownsPEls5gRzrDCHTMK7Rsz3NLn5ufBoFG1zZAt9UeHIKQEKBfmWELfGYYprz084cVy9D35Utcac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZdYWp4Wvwz6K9Kg;
-	Thu, 17 Apr 2025 18:08:54 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5C46B14050C;
-	Thu, 17 Apr 2025 18:13:11 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 17 Apr
- 2025 12:13:10 +0200
-Date: Thu, 17 Apr 2025 11:13:09 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: "Bowman, Terry" <terry.bowman@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
-	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
-	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
-	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<lukas@wunner.de>, <ming.li@zohomail.com>,
-	<PradeepVineshReddy.Kodamati@amd.com>
-Subject: Re: [PATCH v8 16/16] CXL/PCI: Disable CXL protocol errors during
- CXL Port cleanup
-Message-ID: <20250417111309.00000672@huawei.com>
-In-Reply-To: <97a53556-4e01-40ed-80da-0369f401ceda@amd.com>
-References: <20250327014717.2988633-1-terry.bowman@amd.com>
-	<20250327014717.2988633-17-terry.bowman@amd.com>
-	<20250404180427.00007602@huawei.com>
-	<97a53556-4e01-40ed-80da-0369f401ceda@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1744884850; c=relaxed/simple;
+	bh=xj1/d4nkyU14Uz0z2ygXiCJS8S9VEH7Pg1iUVkAGGlY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hj/m3vEHXWsS3IJi9hoS9R1P6lWLwXww4Bp8nhXjA+GzY8DiOoEKKIHt7s4LduZOpORM/LO2H4vIlLtoqTQGwDmxI1Mk64onw98XLsPNHtxxzwtXcVLN7JoMfHe5oKKZUoMHD8RL0gMTy7lzqEaJrE4yWBgkxZdHy861tql0qr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PBfnB0aN; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PBfnB0aN"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C4FB2C4CEEA;
+	Thu, 17 Apr 2025 10:14:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744884849;
+	bh=xj1/d4nkyU14Uz0z2ygXiCJS8S9VEH7Pg1iUVkAGGlY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=PBfnB0aNfU8hGseMf41FpeEALg9ud8kLHTahacQXeKpr6yfm0TanYkxVBn2NJdTPh
+	 AHFp/p/OZ9xmoRT3RZjZcCv/8SrPMN2riSadvE5v4NkmXsp0mVccLczX36VYMmUjWT
+	 MUD5N/ZhkUDXdHKgXWeV6xCtMGNgVCsA+vqGM8ucUGtJLR3yl4CKHfAnQsCsRxYGyh
+	 4VNDVjWAnu8LfDYKyo99AyCcTl641y1NGaRSm2mvIkAZEO0wc0kIda0WDsNd+Fxb2l
+	 9f04dzPzgyYckN6S3e4O9BRzOzEub7w8nYsnBDB1aAyYzZ3OPRqYol9qRcjnMstER9
+	 TAFZDkwRLk9IQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B55DAC369CB;
+	Thu, 17 Apr 2025 10:14:09 +0000 (UTC)
+From: Maud Spierings via B4 Relay <devnull+maudspierings.gocontroll.com@kernel.org>
+Date: Thu, 17 Apr 2025 12:14:02 +0200
+Subject: [PATCH v6 1/8] dt-bindings: arm: fsl: Add GOcontroll Moduline
+ Display
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250417-initial_display-v6-1-3c6f6d24c7af@gocontroll.com>
+References: <20250417-initial_display-v6-0-3c6f6d24c7af@gocontroll.com>
+In-Reply-To: <20250417-initial_display-v6-0-3c6f6d24c7af@gocontroll.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ Maud Spierings <maudspierings@gocontroll.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744884848; l=1206;
+ i=maudspierings@gocontroll.com; s=20250214; h=from:subject:message-id;
+ bh=7LK5io9tXyJrf5fT7pNPykcX/YAUSsMUIEqjia8Pbmw=;
+ b=S3ALawpLUqLsFBcbRmOMWg8NM2CFovsmER7HM8wWKyeJiVVxHDRacwEUtzTPXdQjw2gCKauv4
+ J3CMfOxmyHdCVWhq08RM6707ej8uDvWVV7YwrXDm6TRvCQ6YvmRpjRk
+X-Developer-Key: i=maudspierings@gocontroll.com; a=ed25519;
+ pk=7chUb8XpaTQDvWhzTdHC0YPMkTDloELEC7q94tOUyPg=
+X-Endpoint-Received: by B4 Relay for maudspierings@gocontroll.com/20250214
+ with auth_id=341
+X-Original-From: Maud Spierings <maudspierings@gocontroll.com>
+Reply-To: maudspierings@gocontroll.com
 
-Hi Terry,
+From: Maud Spierings <maudspierings@gocontroll.com>
 
-> >> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> >> index d3068f5cc767..d1ef0c676ff8 100644
-> >> --- a/drivers/pci/pcie/aer.c
-> >> +++ b/drivers/pci/pcie/aer.c
-> >> @@ -977,6 +977,31 @@ void pci_aer_unmask_internal_errors(struct pci_dev *dev)
-> >>  }
-> >>  EXPORT_SYMBOL_NS_GPL(pci_aer_unmask_internal_errors, "CXL");
-> >>  
-> >> +/**
-> >> + * pci_aer_mask_internal_errors - mask internal errors
-> >> + * @dev: pointer to the pcie_dev data structure
-> >> + *
-> >> + * Masks internal errors in the Uncorrectable and Correctable Error
-> >> + * Mask registers.
-> >> + *
-> >> + * Note: AER must be enabled and supported by the device which must be
-> >> + * checked in advance, e.g. with pcie_aer_is_native().
-> >> + */
-> >> +void pci_aer_mask_internal_errors(struct pci_dev *dev)
-> >> +{
-> >> +	int aer = dev->aer_cap;
-> >> +	u32 mask;
-> >> +
-> >> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, &mask);
-> >> +	mask |= PCI_ERR_UNC_INTN;
-> >> +	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, mask);
-> >> +  
-> > It does an extra clear we don't need, but....
-> > 	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_UNCOR_MASK,
-> > 				       0, PCI_ERR_UNC_INTN);
-> >
-> > 	is at very least shorter than the above 3 lines.  
-> Doing so will overwrite the existing mask. CXL normally only uses AER UIE/CIE but if the device
-> happens to lose alternate training and no longer identifies as a CXL device than this mask
-> value would be critical for reporting PCI AER errors and would need UCE/CE enabled (other
-> than UIE/CIE).
-I'm not seeing that.  Implementation of pci_clear_and_set_config_dword() is:
-void pci_clear_and_set_config_dword(const struct pci_dev *dev, int pos,
-				    u32 clear, u32 set)
-{
-	u32 val;
+Document the compatible strings for the Moduline Display controller.
 
-	pci_read_config_dword(dev, pos, &val);
-	val &= ~clear;
-	val |= set;
-	pci_write_config_dword(dev, pos, val);
-}
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-With clear parameter as zero it will do the same the open coded
-version you have above as the ~clear will be all 1s and hence
-&= ~clear has no affect.
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 1b90870958a22e49355dd1f932bf3d84cd864b5f..ecde2123ea0fae38ef233929c7ad343812851a58 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -1095,6 +1095,7 @@ properties:
+               - gateworks,imx8mp-gw74xx   # i.MX8MP Gateworks Board
+               - gateworks,imx8mp-gw75xx-2x # i.MX8MP Gateworks Board
+               - gateworks,imx8mp-gw82xx-2x # i.MX8MP Gateworks Board
++              - gocontroll,moduline-display # GOcontroll Moduline Display controller
+               - skov,imx8mp-skov-basic # SKOV i.MX8MP baseboard without frontplate
+               - skov,imx8mp-skov-revb-hdmi # SKOV i.MX8MP climate control without panel
+               - skov,imx8mp-skov-revb-lt6 # SKOV i.MX8MP climate control with 7” panel
 
-Arguably we could add pci_clear_config_dword() and pci_set_config_dword()
-that both take one fewer parameter but I guess that is not worth
-the bother.
-
-Jonathan
-
+-- 
+2.49.0
 
 
