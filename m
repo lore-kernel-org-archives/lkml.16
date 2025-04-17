@@ -1,50 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6AA245020
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 17:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA83245020;
+	Thu, 17 Apr 2025 17:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744912211; cv=none; b=KZYUzT50S3zSZQATMpQcGfPzM09H7DIIMBGr8WuBAQJ6CeEeLAmGzSeau3KnzTHxTbjdQHdFB4gUaYkSKFOEJctcKtyks5Ur+qy8I7oMHUWR2daPBvL1+U1HMeq4bues8tVC8pnDTMAS5h3k5XH1PKRM3hzbOIvsV9wRwGjGXAU=
+	t=1744912247; cv=none; b=QTMK9cRyY97MzrUBCyK5hfsleuxK07LRRWu5h4mEZgkw6D2pqHZVp8J9AcGS2ZqeBTxpt7rrzy5i+OZSlrz+7U09iSrskWkj0mZUj2TBG1M3Lpy3nkU4f8ob/J6TfnpkRPoARdANU6drTdRMTkzKNAA3rtEHK33tJy/9bC0t2Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744912211; c=relaxed/simple;
-	bh=nCCjzpTSCcXm+1IPLyHcAdliR/oKCYb7vO5mpicWDDg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bifJ1ekzGu6LVkLHWvT1FZEARDIX30RSXNNWahy/XC+5uA9kRW5RJ4WafHucGE5fj4l5752s4825EejH6NNN/mMA/EMoqHfMmxcl0xLEQB0hnMqtoWhM471q69pErvFCl1SHz+YklreZBFF/jf79JZ+EqtV6qxLJ3y356LCjb2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rq36PpCs; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744912247; c=relaxed/simple;
+	bh=sTyGtcQUUZ5500fifnvKW9nGT1pncjcRhU4Z9XW7OpU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ea4IB1sul2+342neCtxZiuqP9qwlZmiqcN8tICUtgWvLpRtdHClmR2MJDzWJypoi0Xl/a7f+4lbD0NNLa3GSn/4PHvSuJrXwq/v7iDBqWqq5yij6VjjrjclD2jIJpcGR4hfnIQnJ3Vn04qEUP9uX4rP1M50W1WivqnJLHZszuGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=R/bv6tIG; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rq36PpCs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744912209; x=1776448209;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=nCCjzpTSCcXm+1IPLyHcAdliR/oKCYb7vO5mpicWDDg=;
-  b=Rq36PpCsSEi6BGq7R85t15Qjt19/sORU1HK7sGg8P1ggBIo+AgGNg7BO
-   9bvNodDEPLOCn0fbEQbjXJUogUrxmXQDucujlOW2IyK5ZyZH96FOP9io2
-   insRvkH3EwKQCxNoGFQjerp+todZ8YlzYG7y3QvdiEcx5+ksk92H7lYAI
-   qyg47Y8rwU7alRplg9WaXCeQrgNhic0uONtx3FnKqnQ0cGS88NkfjaxmL
-   lZLgTHZQZjBVTGRqfHNS1bShHbMkAr/dYScx42Xc2yPeGj/8pu/Fu+K3B
-   NyFVFFHcCqESuR88pefwh+Zc45Mjsomlcsl7Zbg4Q5BshqNAxXa1T4a+K
-   Q==;
-X-CSE-ConnectionGUID: 5B6I6+rQT02gu9BJFixR7A==
-X-CSE-MsgGUID: 7Z2E12F8QMeDLaAPpaX31Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="45653154"
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="45653154"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:50:08 -0700
-X-CSE-ConnectionGUID: /DOnGeQQRRaAeKUHOOaJhg==
-X-CSE-MsgGUID: wnT8KGPgTK+Vq6cci1YFNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="135995936"
-Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.223.169]) ([10.124.223.169])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:50:07 -0700
-Message-ID: <7bd03311-0c4c-41e6-b6dc-803b6455f170@intel.com>
-Date: Thu, 17 Apr 2025 10:50:06 -0700
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="R/bv6tIG"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53HClUpC013325;
+	Thu, 17 Apr 2025 17:50:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	rtVvrMeTc6F3JJHkRyxqWivaPaY3sC3Dhgxn6S1HvY8=; b=R/bv6tIGWCs2g9v+
+	4jUStXZY1cTFa5c2PqqHnq2RYMMjuCF9TzcHP4/Xa64d7tK/OZDK8RW+L5aqgtAO
+	R9AbTO1HVcJRBkILrkdKUAAz9XOFdLbr1UUID6fG5XMS4e1fkGi3rLDbIsJjNcsr
+	2o/fFf6tuKgPt7NeGAEJfT+wR/EOui8BzIG3ocXamdkRX9nEifufVSFTz0dZJBfN
+	MGmZxoG1PJR5HSrzCshz+SyNgDc+G3cJ5xkYr6lgSmUMdHVY3GH+hOUVO1Ycd7KT
+	4zSvO+4lMUvarq6Zb7hzJQdKXlUhbL7tpiiIeolLZACWbTtUsO5aalmbswHPrOXB
+	PQ7MAQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4628rvd2e4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 17:50:35 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53HHoYCb020419
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 17:50:34 GMT
+Received: from [10.216.6.49] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 17 Apr
+ 2025 10:50:28 -0700
+Message-ID: <1282bf58-e431-4a07-97e5-628437e7ce5f@quicinc.com>
+Date: Thu, 17 Apr 2025 23:20:25 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,81 +50,165 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/virt/tdx: Make TDX and kexec mutually exclusive at
- runtime
-To: Kai Huang <kai.huang@intel.com>, bp@alien8.de, tglx@linutronix.de,
- peterz@infradead.org, mingo@redhat.com
-Cc: kirill.shutemov@linux.intel.com, hpa@zytor.com, x86@kernel.org,
- linux-kernel@vger.kernel.org, pbonzini@redhat.com, seanjc@google.com,
- rick.p.edgecombe@intel.com, reinette.chatre@intel.com,
- isaku.yamahata@intel.com, dan.j.williams@intel.com, thomas.lendacky@amd.com,
- ashish.kalra@amd.com, nik.borisov@suse.com, sagis@google.com
-References: <20250416230259.97989-1-kai.huang@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v2 3/4] drm/msm/a6xx: Get HBB dynamically, if available
+To: Connor Abbott <cwabbott0@gmail.com>
+CC: Konrad Dybcio <konradybcio@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva"
+	<gustavoars@kernel.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul
+	<sean@poorly.run>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        "Dmitry
+ Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>,
+        David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dmitry Baryshkov
+	<lumag@kernel.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>,
+        Konrad Dybcio
+	<konrad.dybcio@oss.qualcomm.com>
+References: <20250410-topic-smem_dramc-v2-0-dead15264714@oss.qualcomm.com>
+ <20250410-topic-smem_dramc-v2-3-dead15264714@oss.qualcomm.com>
+ <20911703-ab4e-4eb2-8611-294730a06d2f@quicinc.com>
+ <CACu1E7HDmQXDNtEQCXpHXsOKPCOgrWgo+_kcgizo9Mp1ntjDbA@mail.gmail.com>
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250416230259.97989-1-kai.huang@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CACu1E7HDmQXDNtEQCXpHXsOKPCOgrWgo+_kcgizo9Mp1ntjDbA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: cMn6x-EFO9oBXysgklTroujnCc8dLfN4
+X-Authority-Analysis: v=2.4 cv=RbSQC0tv c=1 sm=1 tr=0 ts=68013f6b cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=XE3sDmP-oFqBkbK9aEsA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: cMn6x-EFO9oBXysgklTroujnCc8dLfN4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-17_06,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=0 adultscore=0 impostorscore=0 clxscore=1015 bulkscore=0
+ phishscore=0 priorityscore=1501 spamscore=0 mlxscore=0 lowpriorityscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504170131
 
-On 4/16/25 16:02, Kai Huang wrote:
-> Full support for kexec on a TDX host would require complex work.
-> The cache flushing required would need to happen while stopping
-> remote CPUs, which would require changes to a fragile area of the
-> kernel.
+On 4/17/2025 9:02 PM, Connor Abbott wrote:
+> On Thu, Apr 17, 2025 at 3:45 AM Akhil P Oommen <quic_akhilpo@quicinc.com> wrote:
+>>
+>> On 4/10/2025 11:13 PM, Konrad Dybcio wrote:
+>>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>>
+>>> The Highest Bank address Bit value can change based on memory type used.
+>>>
+>>> Attempt to retrieve it dynamically, and fall back to a reasonable
+>>> default (the one used prior to this change) on error.
+>>>
+>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>> ---
+>>>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 15 ++++++++++++++-
+>>>  1 file changed, 14 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+>>> index 06465bc2d0b4b128cddfcfcaf1fe4252632b6777..a6232b382bd16319f20ae5f8f5e57f38ecc62d9f 100644
+>>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+>>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+>>> @@ -13,6 +13,7 @@
+>>>  #include <linux/firmware/qcom/qcom_scm.h>
+>>>  #include <linux/pm_domain.h>
+>>>  #include <linux/soc/qcom/llcc-qcom.h>
+>>> +#include <linux/soc/qcom/smem.h>
+>>>
+>>>  #define GPU_PAS_ID 13
+>>>
+>>> @@ -587,6 +588,8 @@ static void a6xx_set_cp_protect(struct msm_gpu *gpu)
+>>>
+>>>  static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+>>>  {
+>>> +     int hbb;
+>>> +
+>>>       gpu->ubwc_config.rgb565_predicator = 0;
+>>>       gpu->ubwc_config.uavflagprd_inv = 0;
+>>>       gpu->ubwc_config.min_acc_len = 0;
+>>> @@ -635,7 +638,6 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+>>>           adreno_is_a690(gpu) ||
+>>>           adreno_is_a730(gpu) ||
+>>>           adreno_is_a740_family(gpu)) {
+>>> -             /* TODO: get ddr type from bootloader and use 2 for LPDDR4 */
+>>>               gpu->ubwc_config.highest_bank_bit = 16;
+>>>               gpu->ubwc_config.amsbc = 1;
+>>>               gpu->ubwc_config.rgb565_predicator = 1;
+>>> @@ -664,6 +666,13 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+>>>               gpu->ubwc_config.highest_bank_bit = 14;
+>>>               gpu->ubwc_config.min_acc_len = 1;
+>>>       }
+>>> +
+>>> +     /* Attempt to retrieve the data from SMEM, keep the above defaults in case of error */
+>>> +     hbb = qcom_smem_dram_get_hbb();
+>>> +     if (hbb < 0)
+>>> +             return;
+>>> +
+>>> +     gpu->ubwc_config.highest_bank_bit = hbb;
+>>
+>> I am worried about blindly relying on SMEM data directly for HBB for
+>> legacy chipsets. There is no guarantee it is accurate on every chipset
+>> and every version of firmware. Also, until recently, this value was
+>> hardcoded in Mesa which matched the value in KMD.
+> 
+> To be clear about this, from the moment we introduced host image
+> copies in Mesa we added support for querying the HBB from the kernel,
+> explicitly so that we could do what this series does without Mesa ever
+> breaking. Mesa will never assume the HBB unless the kernel is too old
+> to support querying it. So don't let Mesa be the thing that stops us
+> here.
 
-Doesn't kexec already stop remote CPUs? Doesn't this boil down to a
-WBINVD? How is that complex?
+Thanks for clarifying about Mesa. I still don't trust a data source that
+is unused in production.
 
-> It would also require resetting TDX private pages, which is non-
-> trivial since the core kernel does not track them.
+I have a related question about HBB. Blob driver doesn't support
+host_image_copy, but it still use HBB configuration. I was under the
+impression this was required for UMD for compression related
+configurations. Is that not true for turnip/freedreno?
 
-Why? The next kernel will just use KeyID-0 which will blast the old
-pages away with no side effects... right?
+-Akhil.
 
-> Lastly, it would have to rely on a yet-to-be documented behavior
-> around the TME key (KeyID 0).
+> 
+> Connor
+> 
+>> So it is better to
+>> make this opt in, for newer chipsets or those which somebody can verify.
+>> We can invert this logic to something like this:
+>>
+>> if (!gpu->ubwc_config.highest_bank_bit)
+>>     gpu->ubwc_config.highest_bank_bit = qcom_smem_dram_get_hbb();
+>>
+>>>  }
+>>>
+>>>  static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
+>>> @@ -2467,6 +2476,10 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device *dev)
+>>>       bool is_a7xx;
+>>>       int ret;
+>>>
+>>> +     /* We need data from SMEM to retrieve HBB in calc_ubwc_config() */
+>>> +     if (!qcom_smem_is_available())
+>>> +             return ERR_PTR(-EPROBE_DEFER);
+>>> +
+>>
+>> We should add "depends on QCOM_SMEM" to Kconfig. Is SMEM device present
+>> in all Qcom SoC devicetrees? I wonder if there is a scenario where there
+>> might be an infinite EPROBE_DEFER here.
+>>
+>> -Akhil.
+>>
+>>>       a6xx_gpu = kzalloc(sizeof(*a6xx_gpu), GFP_KERNEL);
+>>>       if (!a6xx_gpu)
+>>>               return ERR_PTR(-ENOMEM);
+>>>
+>>
 
-I'll happily wait for the documentation if you insist on it (I don't).
