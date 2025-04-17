@@ -1,131 +1,93 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F38254868;
-	Thu, 17 Apr 2025 16:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA3035973;
+	Thu, 17 Apr 2025 16:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744908082; cv=none; b=uazhmhB0aCK+OwCR3t47S6LFWFk3iL2HcF5ZvfL5W5nXTfo+NkuKsS4deWyIC+yz0ygH85L/HuEe3iDdjlbRnp+2MyeYmtAep0Mdq19M8x2nSg9UH+BK90n4umWLHQlCiSaCCE+aGT0eZyC3AQn4h3BOci4KY57eFjs0XJzztPU=
+	t=1744908139; cv=none; b=Uzl19JD61WLu1iZ5aidbnI9OXBvsYQGCVfLqescDyLC7VmtNDH0ObxB7oj1aiET3dIlrNHtNn7R61PaaUqgSfTFGvKpQs9GgWvZe8orAQwbWXmXlYwse5ED05+gdZY8whcQ1Ur7hb6rmdgtyu6edo4SfHka7WnI+vUzgz3Huwhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744908082; c=relaxed/simple;
-	bh=CQji9dlUgIhzqLqQUjW1kt9OkpkCdNxh/9ccAq+a1JM=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=sJYicJSTJW+3CrxJ2os1g6jLRG+7aGxGJ55oaMGREAcvrD92jOW7SO5v/kNYrBam7bzrjSOgqmjqk3Usn8KV4gqbdCi9G6EJ6uii5CI+OGQfD2PaMNc2gxsXOpN7dyokheO14LMcRoaS1wYT4ecKLHhLLcIxwYvjm0qq90HbHDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.98.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1u5SG0-000000002Yi-3JBN;
-	Thu, 17 Apr 2025 16:41:10 +0000
-Date: Thu, 17 Apr 2025 17:41:07 +0100
-From: Daniel Golle <daniel@makrotopia.org>
-To: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH net v3] net: ethernet: mtk_eth_soc: net: revise NETSYSv3
- hardware  configuration
-Message-ID: <b71f8fd9d4bb69c646c4d558f9331dd965068606.1744907886.git.daniel@makrotopia.org>
+	s=arc-20240116; t=1744908139; c=relaxed/simple;
+	bh=9Z7zBFITen5PF+y8xcxXkcjNm2Fxh2599HAlAnQpbdc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=lFwFQOM3Gsad8mWEYCyAPgIKPcudkJzemMmofI25MOoYXSmdGNl81/k3mJjEw447hCBHv/tk0MA1cJRWX8px8qV3lm9zggkcv1sMaM3AcMfWX4hw0MwbA6LICl4VLneSOTDlBha4UnUO6ThdgSJf7Uy7MG2DfEQgQx/meUCdrEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b4LNlipi; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b4LNlipi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C792AC4CEE4;
+	Thu, 17 Apr 2025 16:42:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744908138;
+	bh=9Z7zBFITen5PF+y8xcxXkcjNm2Fxh2599HAlAnQpbdc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=b4LNlipiHMvrWTAjLoHe+ZwMoIeK2hjXpW23gk4aIrdi/420f1KjZFYcMbrCsxsYA
+	 NbizB1LwKEPz7s1osOFZogR2ovTj02RQBC1VhE+Z5u8A3jntOBYK8auHEmqk2fLrcD
+	 zP0JTHvRL9CILuHpJb1h6E4kDv2D8I7XSqSoNtov3mtMriQht3xUFEd7lJ4Jkirblw
+	 +MzdZRPREZcem9JGuLXoKYCwqtLAUt/WDzJ6KdDYnVUBbOa1QLujt669Gw0ea/fkCO
+	 Y1pBv7Y77WZQ3mU+df3USCgk3DneWDn7cmZ4DaFfyCT2WV397zrdGUICKq/TGsgRXg
+	 SHGc0Od+wJ/rQ==
+Date: Thu, 17 Apr 2025 11:42:17 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Shuah Khan <shuah@kernel.org>, Yi Lai <yi1.lai@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] selftests/pcie_bwctrl: Fix test progs list
+Message-ID: <20250417164217.GA114940@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250417124529.11391-1-ilpo.jarvinen@linux.intel.com>
 
-From: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
+On Thu, Apr 17, 2025 at 03:45:29PM +0300, Ilpo Järvinen wrote:
+> The commit df6f8c4d72ae ("selftests/pcie_bwctrl: Add
+> 'set_pcie_speed.sh' to TEST_PROGS") added set_pcie_speed.sh into
+> TEST_PROGS but that script is a helper that is only being called by
+> set_pcie_cooling_state.sh, not a test case itself. When
+> set_pcie_speed.sh is in TEST_PROGS, selftest harness will execute also
+> it leading to bwctrl selftest errors:
+> 
+>   # selftests: pcie_bwctrl: set_pcie_speed.sh
+>   # cat: /cur_state: No such file or directory
+>   not ok 2 selftests: pcie_bwctrl: set_pcie_speed.sh # exit=1
+> 
+> Place set_pcie_speed.sh into TEST_FILES instead to have it included
+> into installed test files but not execute it from the test harness.
+> 
+> Fixes: df6f8c4d72ae ("selftests/pcie_bwctrl: Add 'set_pcie_speed.sh' to TEST_PROGS")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-Change hardware configuration for the NETSYSv3.
- - Enable PSE dummy page mechanism for the GDM1/2/3
- - Enable PSE drop mechanism when the WDMA Rx ring full
- - Enable PSE no-drop mechanism for packets from the WDMA Tx
- - Correct PSE free drop threshold
- - Correct PSE CDMA high threshold
+Applied to pci/for-linus for v6.15, thanks, Ilpo!
 
-Fixes: 1953f134a1a8b ("net: ethernet: mtk_eth_soc: add NETSYS_V3 version support")
-Signed-off-by: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
----
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 24 +++++++++++++++++----
- drivers/net/ethernet/mediatek/mtk_eth_soc.h | 10 ++++++++-
- 2 files changed, 29 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index bdb98c9d8b1c1..47807b2023104 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -4043,11 +4043,27 @@ static int mtk_hw_init(struct mtk_eth *eth, bool reset)
- 	mtk_w32(eth, 0x21021000, MTK_FE_INT_GRP);
- 
- 	if (mtk_is_netsys_v3_or_greater(eth)) {
--		/* PSE should not drop port1, port8 and port9 packets */
--		mtk_w32(eth, 0x00000302, PSE_DROP_CFG);
-+		/* PSE dummy page mechanism */
-+		mtk_w32(eth, PSE_DUMMY_WORK_GDM(1) | PSE_DUMMY_WORK_GDM(2) |
-+			PSE_DUMMY_WORK_GDM(3) | DUMMY_PAGE_THR, PSE_DUMY_REQ);
-+
-+		/* PSE free buffer drop threshold */
-+		mtk_w32(eth, 0x00600009, PSE_IQ_REV(8));
-+
-+		/* PSE should not drop port8, port9 and port13 packets from
-+		 * WDMA Tx
-+		 */
-+		mtk_w32(eth, 0x00002300, PSE_DROP_CFG);
-+
-+		/* PSE should drop packets to port8, port9 and port13 on WDMA Rx
-+		 * ring full
-+		 */
-+		mtk_w32(eth, 0x00002300, PSE_PPE_DROP(0));
-+		mtk_w32(eth, 0x00002300, PSE_PPE_DROP(1));
-+		mtk_w32(eth, 0x00002300, PSE_PPE_DROP(2));
- 
- 		/* GDM and CDM Threshold */
--		mtk_w32(eth, 0x00000707, MTK_CDMW0_THRES);
-+		mtk_w32(eth, 0x08000707, MTK_CDMW0_THRES);
- 		mtk_w32(eth, 0x00000077, MTK_CDMW1_THRES);
- 
- 		/* Disable GDM1 RX CRC stripping */
-@@ -4064,7 +4080,7 @@ static int mtk_hw_init(struct mtk_eth *eth, bool reset)
- 		mtk_w32(eth, 0x00000300, PSE_DROP_CFG);
- 
- 		/* PSE should drop packets to port 8/9 on WDMA Rx ring full */
--		mtk_w32(eth, 0x00000300, PSE_PPE0_DROP);
-+		mtk_w32(eth, 0x00000300, PSE_PPE_DROP(0));
- 
- 		/* PSE Free Queue Flow Control  */
- 		mtk_w32(eth, 0x01fa01f4, PSE_FQFC_CFG2);
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-index 39709649ea8d1..88ef2e9c50fc1 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-@@ -151,7 +151,15 @@
- #define PSE_FQFC_CFG1		0x100
- #define PSE_FQFC_CFG2		0x104
- #define PSE_DROP_CFG		0x108
--#define PSE_PPE0_DROP		0x110
-+#define PSE_PPE_DROP(x)		(0x110 + ((x) * 0x4))
-+
-+/* PSE Last FreeQ Page Request Control */
-+#define PSE_DUMY_REQ		0x10C
-+/* PSE_DUMY_REQ is not a typo but actually called like that also in
-+ * MediaTek's datasheet
-+ */
-+#define PSE_DUMMY_WORK_GDM(x)	BIT(16 + (x))
-+#define DUMMY_PAGE_THR		0x1
- 
- /* PSE Input Queue Reservation Register*/
- #define PSE_IQ_REV(x)		(0x140 + (((x) - 1) << 2))
--- 
-2.49.0
+> ---
+> 
+> I'm sorry I didn't realize this while the fix was submitted, I'm not that
+> familiar with all the kselftest harness variables and the justification
+> given for the fix sounded valid enough to raise any alarm bells in my
+> mind that something would be off with the approach the fix patch used.
+> 
+>  tools/testing/selftests/pcie_bwctrl/Makefile | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/pcie_bwctrl/Makefile b/tools/testing/selftests/pcie_bwctrl/Makefile
+> index 48ec048f47af..277f92f9d753 100644
+> --- a/tools/testing/selftests/pcie_bwctrl/Makefile
+> +++ b/tools/testing/selftests/pcie_bwctrl/Makefile
+> @@ -1,2 +1,3 @@
+> -TEST_PROGS = set_pcie_cooling_state.sh set_pcie_speed.sh
+> +TEST_PROGS = set_pcie_cooling_state.sh
+> +TEST_FILES = set_pcie_speed.sh
+>  include ../lib.mk
+> 
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> -- 
+> 2.39.5
+> 
