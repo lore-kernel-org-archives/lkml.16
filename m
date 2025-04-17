@@ -1,132 +1,97 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3F6221F07
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 23:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3F9360
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744847939; cv=none; b=YM3mXJBN9WWBlcykR2+FJRtlvVcHa6/c7zRFZprxo5EzzXErlxen2mXsbRwidmnxSpIxxkhKLaxYNGGKFISQLm/5EI2wq6roLDT2N5yNv3iq/RAXdD1WaeaBk0nJJwze1QBBXEYxglHP94xq8J6l8ZmRbWQtvHGJ6hZrZwTyNT0=
+	t=1744848144; cv=none; b=P9PCGXMLqOgj6r1k2WM/mjLDb7037B1sRdNgfEuN3IJXAJt4Zg2htCqG2x3tptwDQWyHdNCEVPN5+3G51i2G0nRv1mhFZKmqGxMq3JxGlNPLIXsTR7RQy3j7bWikBT1HfwG/BrB7nxkGFhb4tb9WEnoKpStRukLSNHiR7/De0XA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744847939; c=relaxed/simple;
-	bh=EsahowD4Zw7aUaF+4Tx6dzA0FPkIdFHJGOzkkdrRXQ4=;
+	s=arc-20240116; t=1744848144; c=relaxed/simple;
+	bh=leTkvuBL2+CH2NIWIXHwfaqIV4DIQSCQR9GO9YuXAAs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t42vO7sI+CC/QLh3OTbDzsmPEyRFA+krHE7QvYE/qMnzTYv9qKUDgxXv4C6KHYG9LDqg3HfCJzjBcbhmnyp6neQQViIv+857GJc0UwD8DeW2+Xf/ttrKuasDVeo5y6i9lNLrZ/Lxj8jUYEVEnXXkou3JUTp7QvqiFYUB/sKEaUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=SNAYdCWO; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=QS8lkFBYwoZst31P2w1JYaWjpLOJLiKg9fcK5MQkWW7rcP6Wpq+qIJXePbiromrM6mNza+xf5/AjhKyNnS+JqQ7OV+TZwS5+tec8SgfcfJXqYMZFme4fCEEv4auimhBobWqhVujBBq1il+MucuiArBcwjhqbgerIIEEs43735K0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gKS5ouD4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="SNAYdCWO"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c54b651310so23137785a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:58:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1744847935; x=1745452735; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Zh8uU7uakGhMlcLYvDd0MrxARRrHNSKhl0MuXczUf1U=;
-        b=SNAYdCWORBlOspyQM715EP4s3sEdor/mq/xduuQGwaRSSyxIABMXCf2nAJ91/1kMuL
-         FO7/3TalQaTfY0wCj+ac6z6fIPtW1E7oft/92QQFYTiXIePnm2ohTu/UtbFBoQNs93XV
-         cvpKeew+bDl5cXfWZlSzD71ZK3uOBOyphGbBm2PCREJBpNagJyZ+7o3HvND4+lW0siPl
-         osW0KDNFgWN9fEChimPlLBBPMnYVVYULUPnUSzOr9cI2MPfaMPcLM6gVd+eK4dlpQuBF
-         /ACxTjOkkIOjA41hG2NbUeOnN9uaDD3fLF6AuNNpM/pnFZuSLoS0qriLGuTWKoNzBNSC
-         WHWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744847935; x=1745452735;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zh8uU7uakGhMlcLYvDd0MrxARRrHNSKhl0MuXczUf1U=;
-        b=kBbp9zj7KL6d+KboNQMVRw9Izj2McWZKqvZB+vrZ4GLMmmg2vP4VrZ1LvhR5BsRArU
-         0P3Kw258kjOSFdUEKkHZaRyFwUoUpGdO3F/RfboenD2ntuJ4KE2aCd1jhmEwOdhOx5vm
-         nscnFoVwZCcy60EuIstOxlR2/UJkOA7Z7IBDtQn2Eec7/xiohWAtcVMTkCeaYf3wGToD
-         qf6z0hQoTVQzjFIh5T4hU5/BgP+1hJRi3G1hSP9UkAb0PJOXafgwMj3IhMc8rnJN3Mka
-         a2fzCK3Y5aJyf/XEz76pjCbG9nmy7XklR/G7ElaGLChL3XS086QH83XsjPB7xSB0xurA
-         ZQlg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMyFVcHmaT729mV/9XbffYlu4yiFZPu1a8v7wckghN1KL0yL09Mfv/s6Y/15/OOfoZVCFocWe4K/IGtis=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1PPCY9nNYPw6J86JQtPoXu4Qk5DRr6HrXmRndHqMDVcsE3wvP
-	Uwi+GsE1Wdz5JcVJk0LwR38+PEQ5u/De/wPmPXncVfmZFvU7Nmrfda6bUQoYgUWOfGk0sxcqqIR
-	q
-X-Gm-Gg: ASbGncuqso7QIF7Kqqj+5rIywgIJF3v9Itk2OGtbNnaLU6vEVcm3oqLX9G93FLsejWs
-	0XMKJkDODT1urGEnO1KFXLGX0YTyojz4aALhyaO3gWlS2LSUE/7lJLYSCuX+BM4EPihOjEJQS9f
-	LB4CX5TMzEN4yQfX4gSqsBqa3AXbPLa35ELgcziR4sgl/01dYYi+AIWTqfCVQSlvLYvuJV6jRWc
-	ckeCt40NVPqs7IlpR9I8yeQjqA+uamsW5Mc0Db3kcCZIhmjzmd1rKzyfErj8+s1kdpQpS3m4bdE
-	H3jCBYOdziFITuZCS5RmPz6Gsk6LPFYMvNby/Qg=
-X-Google-Smtp-Source: AGHT+IGCPxa/oE9FU6zpR+xk2jsOSdtIvGnraH/d9sq/Igu9HvsOW22M91TtJ5dndDCcLboijmocsw==
-X-Received: by 2002:a05:620a:c54:b0:7c7:af68:b6f3 with SMTP id af79cd13be357-7c919004ae0mr499778885a.33.1744847934700;
-        Wed, 16 Apr 2025 16:58:54 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c7b7cd5f4fsm791180885a.54.2025.04.16.16.58.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 16:58:53 -0700 (PDT)
-Date: Wed, 16 Apr 2025 19:58:49 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Barry Song <21cnbao@gmail.com>
-Cc: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Barry Song <v-songbaohua@oppo.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Ryan Roberts <ryan.roberts@arm.com>, Zi Yan <ziy@nvidia.com>
-Subject: Re: [RFC PATCH] mm: don't promote exclusive file folios of dying
- processes
-Message-ID: <20250416235849.GA780688@cmpxchg.org>
-References: <20250412085852.48524-1-21cnbao@gmail.com>
- <34c54df6-9a7c-475d-9b91-0f8acb118231@redhat.com>
- <CAGsJ_4yUUK8LoejaUrXWscpPSQevq8jB4eFwpd6+Gw3T5JxdNg@mail.gmail.com>
- <6259cc1d-93a8-4293-9009-a6119166f023@redhat.com>
- <CAGsJ_4wnqyaZntmtOvtTZRq2XuKsKRTokwf1GeX91FpfqW_nzw@mail.gmail.com>
- <d5cd2055-62ea-4534-b5e2-c6a5bfa9b1c4@redhat.com>
- <20250416141531.GD741145@cmpxchg.org>
- <239cfe47-9826-402b-8008-de707faa160e@redhat.com>
- <20250416181835.GA779666@cmpxchg.org>
- <CAGsJ_4zt2Yuornri1bO=3o7myey1Q2dmvtjn2baD0ahxOyoNjw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gKS5ouD4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744848141;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7C8pt7xjKTm03hAbrHAkAPdxLOrqJf60jzN2DFbg1R0=;
+	b=gKS5ouD4TG9cnYfzm9TEHcxRxvPNF0YTXKtm1vCo21ZH7IJju0xx8qtq13tEAK5jbatDcq
+	hfBC1vhSVmW4FiV/jhgX2hYLzDSZFro0Hw7Yt+IUP9qc/0vcxBvNwndgPyBbkjFRNqKka7
+	D8H1J+rRt3CrjxjJpTi9QJQVf++9b5o=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-625-iGQLUlroOPGrFGNe8uC6cw-1; Wed,
+ 16 Apr 2025 20:02:19 -0400
+X-MC-Unique: iGQLUlroOPGrFGNe8uC6cw-1
+X-Mimecast-MFC-AGG-ID: iGQLUlroOPGrFGNe8uC6cw_1744848138
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9DABE195608C;
+	Thu, 17 Apr 2025 00:02:18 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.82])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 67451180045C;
+	Thu, 17 Apr 2025 00:02:15 +0000 (UTC)
+Date: Thu, 17 Apr 2025 08:02:10 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ublk: remove unnecessary ubq checks
+Message-ID: <aABFAg563W1g_4QS@fedora>
+References: <20250416170154.3621609-1-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGsJ_4zt2Yuornri1bO=3o7myey1Q2dmvtjn2baD0ahxOyoNjw@mail.gmail.com>
+In-Reply-To: <20250416170154.3621609-1-csander@purestorage.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Thu, Apr 17, 2025 at 05:54:57AM +0800, Barry Song wrote:
-> On Thu, Apr 17, 2025 at 2:18 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > Right, I'm more broadly objecting to the patch and its premise, but
-> > thought the exclusive filtering would at least mitigate its downsides
-> > somewhat. You raise good points that it's not as clear cut.
-> >
-> > IMO this is too subtle and unpredictable for everybody else. The
-> > kernel can't see the future, but access locality and recent use is a
-> > proven predictor. We generally don't discard access information,
-> > unless the user asks us to, and that's what the madvise calls are for.
+On Wed, Apr 16, 2025 at 11:01:53AM -0600, Caleb Sander Mateos wrote:
+> ublk_init_queues() ensures that all nr_hw_queues queues are initialized,
+> with each ublk_queue's q_id set to its index. And ublk_init_queues() is
+> called before ublk_add_chdev(), which creates the cdev. Is is therefore
+> impossible for the !ubq || ub_cmd->q_id != ubq->q_id condition to hit in
+> __ublk_ch_uring_cmd(). Remove it to avoids some branches in the I/O path.
 > 
-> David pointed out some exceptions - the recency of dying processes might
-> still be useful to new processes, particularly in cases like:
+> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+> ---
+>  drivers/block/ublk_drv.c | 3 ---
+>  1 file changed, 3 deletions(-)
 > 
->   while true; do app; done
-> 
-> Here, 'app' is repeatedly restarted but always maintains a single running
-> instance. I agree this seems correct.
-> 
-> However, we can also find many cases where a dying process means its folios
-> instantly become cold. For example:
+> diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+> index cdb1543fa4a9..bc86231f5e27 100644
+> --- a/drivers/block/ublk_drv.c
+> +++ b/drivers/block/ublk_drv.c
+> @@ -1947,13 +1947,10 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
+>  
+>  	if (ub_cmd->q_id >= ub->dev_info.nr_hw_queues)
+>  		goto out;
+>  
+>  	ubq = ublk_get_queue(ub, ub_cmd->q_id);
+> -	if (!ubq || ub_cmd->q_id != ubq->q_id)
+> -		goto out;
+> -
 
-Of course, there are many of them. Just like any access could be the
-last one to that page for the next hour. But you don't know which ones
-they are. Just like you don't know if I'm shutting down firefox
-because that's enough internet for one day, or if I'm just restarting
-it to clear out the 107 tabs I've lost track off.
+Looks correct, ubq->q_id is always same with the index passed to
+ublk_get_queue().
 
-> I agree that "access locality and recent use" is generally a good heuristic,
-> but it must have some correlation (strong or weak) with the process lifecycle.
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-I don't agree. It's a cache shared between past, present and future
-processes. The lifecycle of an individual processes is not saying much.
 
-Unless you know something about userspace, and the exact data at hand,
-that the kernel doesn't, which is why the Android usecase of MADV_COLD
-or PAGEOUT for background apps makes sense to me, but generally tying
-it to a process death does not.
+Thanks,
+Ming
+
