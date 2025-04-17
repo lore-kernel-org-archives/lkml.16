@@ -1,138 +1,97 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA271DDA0C;
-	Thu, 17 Apr 2025 07:14:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0256C1A2642
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:15:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744874067; cv=none; b=Oa6pRsWtwa+eObRL1X3N0J4LaouTTQtd3Wj6Uta7gqBYpcWW+zKcDSdFsHCE7OAJAcgnlRTBw+aHrQCUurJDVGwNjUGTFJJT8Ez9nL5ujqIjlRw9L0sf2JpNJKZEuuh8oaWYwNF+EE4O63J9n6ouN9HKrpIsgIF+fBtc08dLsIQ=
+	t=1744874126; cv=none; b=rzPZzu/1osozehBt0wu4JA5BPapowJyH5mxe5fQFbZ37vzWzxx2g/AEEir3I0o8k+37wraRrTBCiIaF56H7QK06l06+jra+bWY0I1q0WXZ3QD1mmRONBnunvpn54tY/600q/T+xuDw1nWiKXKIEFPlEAD3/5vm4zF/LINExop/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744874067; c=relaxed/simple;
-	bh=YYgBl4XslUIPANcfaH0UDI8ZQnEJjTNt9jHQJbKWOHU=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:Mime-Version:
-	 References:In-Reply-To; b=lm0PeDGs3hwBWWjopQ6frs0a5Uc7DFPgwZ1UJ0jtwTbpA2uwmHFVuMixmKHvBUC8hv10I6y5ZodCSw9QGiS6BsfWFMF2mGwDa9xLEP50Y1BDezmCq3aV7w7Q0vjhHEtwYSj3yU2VcVMKrj3GTxlbfUvfUICREAfPSQKEQn01EXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YEhNjld6; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744874126; c=relaxed/simple;
+	bh=VYfVmy7X/WssySlGcNy6ceZ6Q8XEOmeTMWxQTP9Qcq4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AVIPcQ+m/jDNS3S3HC02J3HX0xfti04wECBXkF7ROj5tiL/szZpL3etUKlcXS7OUMh72ky8AxYVqfNwp6WqWa0isph0eTyVnSFLIhEQTLAHLWJvkqdoCF9qBw26wBwEInVpP1/mRRy2jlqc6lncICpKR4wMXIISNE/5uleTqHsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=umich.edu; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=jMLO852d; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=umich.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YEhNjld6"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4313F439D4;
-	Thu, 17 Apr 2025 07:14:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744874062;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YYgBl4XslUIPANcfaH0UDI8ZQnEJjTNt9jHQJbKWOHU=;
-	b=YEhNjld6ymNJqLjNHhBzpSnN7oxSp7ezkwtyyDXqHLLiBD8JhNvqejYTXoBMtvZDkSP9do
-	k/g8vZ3fmZQuP3/3LiwBWp9ucZU5wxsKptb6ID4sRXNlXlDzNCdwKBE4ud8E4tGTCxlp8L
-	r8mhLATCbpRcjr3kWeU0PDea0TtRrFjiETGwKZZLdbapYValXtnWGRLPuXGOGxpyB6ZoN+
-	ox0SjwLvBXBPurAx36kStx7furqEBRLvFub9fqKWABp708RJsO3lOioWNEgT0zqj7dQbbR
-	7wM7fZzmaeCPebZvlE5TDNCHnvG32PEWeTnAiwHpspnGjirRTX/je3h/ohWATw==
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 17 Apr 2025 09:14:16 +0200
-Message-Id: <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com>
-Cc: "Alexei Starovoitov" <ast@kernel.org>, "Daniel Borkmann"
- <daniel@iogearbox.net>, "John Fastabend" <john.fastabend@gmail.com>,
- "Andrii Nakryiko" <andrii@kernel.org>, "Martin KaFai Lau"
- <martin.lau@linux.dev>, "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu"
- <song@kernel.org>, "Yonghong Song" <yonghong.song@linux.dev>, "KP Singh"
- <kpsingh@kernel.org>, "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo"
- <haoluo@google.com>, "Jiri Olsa" <jolsa@kernel.org>, "Puranjay Mohan"
- <puranjay@kernel.org>, "Xu Kuohai" <xukuohai@huaweicloud.com>, "Catalin
- Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- "Mykola Lysenko" <mykolal@fb.com>, "Shuah Khan" <shuah@kernel.org>, "Maxime
- Coquelin" <mcoquelin.stm32@gmail.com>, "Alexandre Torgue"
- <alexandre.torgue@foss.st.com>, "Florent Revest" <revest@chromium.org>,
- "Bastien Curutchet" <bastien.curutchet@bootlin.com>,
- <ebpf@linuxfoundation.org>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, <bpf@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-kselftest@vger.kernel.org>,
- <linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH RFC bpf-next 1/4] bpf: add struct largest member size in
- func model
-From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-To: "Andrii Nakryiko" <andrii.nakryiko@gmail.com>
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="jMLO852d"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e6df4507690so432102276.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:15:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1744874124; x=1745478924; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LkmZIBCSiq/3tP7fuImNAJD2QkaV7orTUQqgfA3kRdo=;
+        b=jMLO852dlHBTF/eY7S8susI66r8lPw2Mtxs3gQ8pGJuQbH8XvHRTjvGAJ5aswiu59I
+         yeLtJly+v1JhPPOxn+WSRFHBztzVpRy3r33zZnghTNlQc5E4+Il7f6TVDjqV2L0n1ary
+         r5512nLQzL07nBD6wZTacNKAGBFk71VRYYx6hVUJF5vILZED3uOI01isk00UnjyiNGmh
+         ncE/RlyRhzr2FIlMZyWKWLbnJgYBsnsu+0xkXPyrR85n4GW950aF6Axpp7dAbUmrVwXC
+         3iBUuetwtUkUW10BLafPctftbGdeN3AqtoK+YrVsdSMBewSabxsw2FLXhQY9qwRniqIJ
+         o3Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744874124; x=1745478924;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LkmZIBCSiq/3tP7fuImNAJD2QkaV7orTUQqgfA3kRdo=;
+        b=qWn0truG7IRyNH3VOOYTRGHaINc/DouxTl5QEAtLeBBslu10VCOSUj5nRHYLHtBEbZ
+         BGmfZvPLp3vkez7OXNdEZNql3Diu5kUd05oW+YoAMeA2v0Hrz6ztOviNkSSl/AQmFDhe
+         IJAZquZkEGtI0ns443AvbDZNtYLCmW+6rPJ6GICKMIPaAymYLBn8JHPqemr4y7u9ldmN
+         rhR0GoJYh1JIQo7nnnSAtgdMFCGeKRkvMdEg9nwiTJFZXCLIw9h21Z6d2/ccv1xf5X6e
+         G24DuTBD+tltMjXhiAXP3DXPfcpTROVtJpzUOurbwPWCxLvcXxHiqeCw9k6lRkz4K22n
+         P/UA==
+X-Forwarded-Encrypted: i=1; AJvYcCUmiQQQqA1BTpa6aBGsGHaSzR7n9s8Okk3Kd0YFtfZzIoyIYnWTTRtDWYlvQNfepVdySsu3+HkAfHF8YVQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxqc7zgcIEY8ALCOmigp+JHXFQUPOMAbiB2ERrtxCX3xoxVkXRw
+	RTtbOM1AumV1XJyUXjbtgKpZjnCLk6Vjhc9jNFey95nIdm1kO7v3ScsIm27Q9Sies6J/cPhpond
+	1szMLu5gbWb0tQtv0K8oRQymzBKk6axVUgxQ5rA==
+X-Gm-Gg: ASbGncugfKJhoac/gvzubkeLUUtuIdcmoXxssetf7PhfZMq7rf0w8QgtFpGM7y4L2ua
+	lAXIbX49icyUyPvtngc14rgU3q3wP2Li/CJto4t3rYEiLP9LE1XdCva2+Y3YazrALlAH/4MIsqd
+	YblIhgn9uPtI5QvS+XiQaOAQ==
+X-Google-Smtp-Source: AGHT+IHa34X9uZg27Vbrd90PmSZC7ztvDf7wJ3joxnRx7QyRa6KXBoTyYAnsoQMCjk1tPkCNQ+hkrfRpf0U5lhlDFNs=
+X-Received: by 2002:a05:6902:1a4a:b0:e70:a83d:da74 with SMTP id
+ 3f1490d57ef6-e7282c5de71mr2037459276.9.1744874123987; Thu, 17 Apr 2025
+ 00:15:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250325-rust-analyzer-host-v5-0-385e7f1e1e23@gmail.com> <20250325-rust-analyzer-host-v5-8-385e7f1e1e23@gmail.com>
+In-Reply-To: <20250325-rust-analyzer-host-v5-8-385e7f1e1e23@gmail.com>
+From: Trevor Gross <tmgross@umich.edu>
+Date: Thu, 17 Apr 2025 02:15:12 -0500
+X-Gm-Features: ATxdqUF6T0mjxQ8n7sHeVZP_NkSnb8-dYbGj_0aQ89N-76hbxs8n3wEm2pYKYzw
+Message-ID: <CALNs47vN8gMzSdm_g7uLa1uks8oC3UJXfkwH6RAJGS=Skv0vBA@mail.gmail.com>
+Subject: Re: [PATCH v5 08/13] scripts: generate_rust_analyzer.py: use str(pathlib.Path)
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Danilo Krummrich <dakr@kernel.org>, 
+	Boris-Chengbiao Zhou <bobo1239@web.de>, Kees Cook <kees@kernel.org>, Fiona Behrens <me@kloenk.dev>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Lukas Wirth <lukas.wirth@ferrous-systems.com>, 
+	Daniel Almeida <daniel.almeida@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
- <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com>
- <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
-In-Reply-To: <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdekieefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegtfffkvefuhffvggfgofhfjgesthhqredtredtjeenucfhrhhomheptehlvgigihhsucfnohhthhhorhoruceorghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvhfdvjeektefggfdvhfejveehleeugfeiieelgfffheeggefhvddvudefiedtfeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedtpdhrtghpthhtoheprghnughrihhirdhnrghkrhihihhkohesghhmrghilhdrtghomhdprhgtphhtthhopegrshhtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhesihhoghgvrghrsghogidrnhgvthdprhgtphhtthhopehjohhhnhdrfhgrshhtrggsvghnugesghhmrghilhdrtghomhdprhgtphhtthhopegrnhgur
- hhiiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhtihhnrdhlrghusehlihhnuhigrdguvghvpdhrtghpthhtohepvgguugihiiekjeesghhmrghilhdrtghomhdprhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: alexis.lothore@bootlin.com
 
-Hi Andrii,
-
-On Wed Apr 16, 2025 at 11:24 PM CEST, Andrii Nakryiko wrote:
-> On Fri, Apr 11, 2025 at 1:32=E2=80=AFPM Alexis Lothor=C3=A9 (eBPF Foundat=
-ion)
-> <alexis.lothore@bootlin.com> wrote:
->>
->> In order to properly JIT the trampolines needed to attach BPF programs
->> to functions, some architectures like ARM64 need to know about the
->> alignment needed for the function arguments. Such alignment can
->> generally be deduced from the argument size, but that's not completely
->> true for composite types. In the specific case of ARM64, the AAPCS64 ABI
->> defines that a composite type which needs to be passed through stack
->> must be aligned on the maximum between 8 and the largest alignment
->> constraint of its first-level members. So the JIT compiler needs more
->> information about the arguments to make sure to generate code that
->> respects those alignment constraints.
->>
->> For struct arguments, add information about the size of the largest
->> first-level member in the struct btf_func_model to allow the JIT
->> compiler to guess the needed alignment. The information is quite
+On Tue, Mar 25, 2025 at 3:07=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
 >
-> I might be missing something, but how can the *size* of the field be
-> used to calculate that argument's *alignment*? i.e., I don't
-> understand why arg_largest_member_size needs to be calculated instead
-> of arg_largest_member_alignment...
-
-Indeed I initially checked whether I could return directly some alignment
-info from btf, but it then involves the alignment computation in the btf
-module. Since there could be minor differences between architectures about
-alignment requirements, I though it would be better to in fact keep alignme=
-nt
-computation out of the btf module. For example, I see that 128 bits values
-are aligned on 16 bytes on ARM64, while being aligned on 8 bytes on S390.=
-=20
-
-And since for ARM64, all needed alignments are somehow derived from size
-(it is either directly size for fundamental types, or alignment of the
-largest member for structs, which is then size of largest member),
-returning the size seems to be enough to allow the JIT side to compute
-alignments.
-
->> specific, but it allows to keep arch-specific concerns (ie: guessing the
->> final needed alignment for an argument) isolated in each JIT compiler.
+> Use the `/` operator on `pathlib.Path` rather than directly crafting a
+> string. This is consistent with all other path manipulation in this
+> script.
 >
-> couldn't all this information be calculated in the JIT compiler (if
-> JIT needs that) from BTF?
+> Reviewed-by: Fiona Behrens <me@kloenk.dev>
+> Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
+> Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+>  scripts/generate_rust_analyzer.py | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-From what I understand, the JIT compiler does not have access to BTF info,
-only a substract from it, arranged in a struct btf_func_model ? This
-struct btf_func_model already has size info for standard types, but for
-structs we need some additional info about the members, hence this
-arg_largest_member_alignment addition in btf_func_model.
-
-Thanks,
-
-Alexis
-
---=20
-Alexis Lothor=C3=A9, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Reviewed-by: Trevor Gross <tmgross@umich.edu>
