@@ -1,343 +1,360 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2E31DF728;
-	Thu, 17 Apr 2025 18:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF63D250C15;
+	Thu, 17 Apr 2025 18:58:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744916298; cv=none; b=IZhctPvNPQQtEvfDVedMRyxfpTZkgYALPfi6IlaVaMZRVFpupjBoHlPc3r7YruFCcs7EYdd4XuLxNa8yrYX5rQEJaG74YB0mQ8wX4VCtonaoULPJ9MJS+sqi7nXe5WhtxwIdChwRkK1PqAwBxo2cN8enHsev9WFiEfWSOw7j1kY=
+	t=1744916312; cv=none; b=nVUTqrzjd7u3odh1HV4bJJxAws8xCxo6B+I2culGkOmWbk08fCJ4XuXdXr5T0hZGAu1RwknvDln7ccAgA8gZfDa39P3NdKAfLi8++RuKxRR0MSVMFJIKUP+qHwnDXqb8laNUJG+3ahP8C+5Fts9ObuimG/4pZhjylImFW+ZMUWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744916298; c=relaxed/simple;
-	bh=ZXZPMgdCiLPNtLDdf8dTWa06fTMMBzDvSNhm12/e/lA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=jlmyRTtV3tYzCMpMi8QWlVkteHk5+401BYphof4SVWbuRvK6QWbSi4BtbmZdnoZIQksHcdPsQ2x01W8lLP0r1TF+ITopK9pnh5RannQeUTsAGTWW1fYNMYR3KsyMNL3+87c30JxUQi/tSX0CC1rnJl9GJ0D6ISWhoQYfLB4fNc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NyFID3TX; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NyFID3TX"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53HClSbi032057;
-	Thu, 17 Apr 2025 18:58:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	rt9KQz4N5mADlnWOMntwvLVE5AQ1pUrBPMdieEmQQ3I=; b=NyFID3TXYdtuzklp
-	KN466vDCnCjCuLPhnsWSsBAknV7zlhUEO3Ff08F4XgM2hgu/sIcsd2OYL7KxoNrC
-	2Q4sjrdxToLI8U2QinI3P4yDQswAISIa6cIk8NIG7tPuSQs4gI04skb+TQbYkilP
-	c8c4uOVToztslBV9yda5a5JV/IQGpsJJKPv0hEhssTMDlm4fWR55S08U5EMlYapj
-	7/XDKsyoIz8NtdU+QtQg/kybQcIPoN6fvPOTkbRU4fyg6mV8cBL6DHiuciBiLcVA
-	VCuvjkLa/zhTsLsvFUGC+BvuhaovKwexQ2+CmrghQqs5vtqIDrGxayruoDmyjPq/
-	JQYwkA==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yg8wr05n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 18:58:11 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53HIwAFc010429
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 18:58:10 GMT
-Received: from hu-vgarodia-hyd.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 17 Apr 2025 11:58:06 -0700
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-Date: Fri, 18 Apr 2025 00:27:34 +0530
-Subject: [PATCH 4/4] media: iris: add qcs8300 platform data
+	s=arc-20240116; t=1744916312; c=relaxed/simple;
+	bh=8CmoRriRyFYHBixZL/sCTGY1bigSueRq4oH621iAsgA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=qNJSIuoM5NXoIJyQHWOD1K4n0v1HRDXLMTpWXgdGTImSrlJ9oYYpMLiNLS5b+XpxH/lTunJmxkxbB29CsC2k25eh/1OsI4ae9ewb/1iIllXpi7eGQGkeUcG7eTxnfFbpDvL2Dmlh0xKhFNDGcKHuVb2VeujYoAUn9V8dqjFCXyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so9464695e9.1;
+        Thu, 17 Apr 2025 11:58:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744916309; x=1745521109;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=p3zm44wKFTQ/Kk8Jlchw5I9yDW5/t3thKxZTe9gayVY=;
+        b=Q1HkLviiunwj0ULCe9CDr0PJdKCY2+jP88TiSn+qW9SYdskE6GJwd3dxUJDuiIOd5Y
+         +mnWBqcawYiyU8uqKbBPDHz567F4uu60owhqJUvDEaGVaJuMnuZO+MPg8Mj6l+JaHPg1
+         7m4nZYXzNX4Dhekgyvc1cn5Apk4qP2mydnRrdeWJ0SMI8b3nnVnsZIFNoLeyKV3KdHNn
+         5BuwU7e2fyqH6o+V21wzTlmq8keHXKcq/SZ4T1YnmP0ng1t4fcGRpCgzuTn8f9nUKunX
+         Lzbvi1wCOZ15glfakoYcfZSQiMUvuwR6uCuvxQhSyeqi5jbYn0Zn9djfntnzPxKksXZ8
+         3E0g==
+X-Forwarded-Encrypted: i=1; AJvYcCUu4Bf66qdxFOZe+pQzi8zSf0Y5yf+DlPIW82g6YokFWUQla/u4hbt7B6Qd1T++GR1aXROuh3hdfJ7OaxoeKPuxa5HJ@vger.kernel.org, AJvYcCXWm5h/YyfkTffqQIko5SC94nmi0W6lgltAAbz3NQRsOume3CGYHWVA3VPEw37br3XwvwBQIyjd3Dp8DYg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNPQFTHqxpBI6cwPiZn/YKNqs/FmdKXabvtP61mZdxnBt1CEwV
+	eeu1c5UQo1U8ev/Pjcp0hxVvJBWiJTARw4GA1uR1JiRvDuvUVWdo
+X-Gm-Gg: ASbGncvCnOY0mXLDf2G8NAggCzY3SmY/PWjgCiro2ETF08sDHTX/+8gQbGil3IfG7Ne
+	lKqcC5bHkUqdfqOZrEhHg7MrEq/nzl9ejIviqAwl4vYe6bLlmav3j+gln9eDo8OJKoPvYOwrinH
+	a4pfxE1ejOTDLLSV2GyhHXtws2l/XnyfGomH1mXhdfPwR1EDFv24z5dP00xW6gS9rFNFuprSF/X
+	R8QK9KPWe+eEikmXWGMfC+VmQ/+AEi7k9VzAWa+Da2vt8DASQQIRVCqBf/bCvtxr73oUm5A/Dpg
+	RDnQY0ZAretynKg5BW/TbEAXZ0hvk9fk0LsplRaTQdZNjXOzybNT8UlEIIc/j1oXfA==
+X-Google-Smtp-Source: AGHT+IEVZ3kQFa3O2/hzn7qbIAkoloCFkN+GKmIgRPcq25lYxJpYGZE8cGMsFX/6UPD4M4rRn3aCYw==
+X-Received: by 2002:a05:6000:1844:b0:39c:2665:2bfc with SMTP id ffacd0b85a97d-39efbaf1332mr44960f8f.52.1744916308685;
+        Thu, 17 Apr 2025 11:58:28 -0700 (PDT)
+Received: from costa-tp.bos2.lab ([2a00:a041:e280:5300:f8dc:acb8:77bb:8cf8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa5a2300sm420680f8f.101.2025.04.17.11.58.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 11:58:28 -0700 (PDT)
+From: Costa Shulyupin <costa.shul@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	John Kacur <jkacur@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	Eder Zulian <ezulian@redhat.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Jan Stancek <jstancek@redhat.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] rtla: Set distinctive exit value for failed tests
+Date: Thu, 17 Apr 2025 21:56:16 +0300
+Message-ID: <20250417185757.2194541-1-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250418-qcs8300_iris-v1-4-67792b39ba21@quicinc.com>
-References: <20250418-qcs8300_iris-v1-0-67792b39ba21@quicinc.com>
-In-Reply-To: <20250418-qcs8300_iris-v1-0-67792b39ba21@quicinc.com>
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Vikash Garodia
-	<quic_vgarodia@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744916269; l=8816;
- i=quic_vgarodia@quicinc.com; s=20241104; h=from:subject:message-id;
- bh=ZXZPMgdCiLPNtLDdf8dTWa06fTMMBzDvSNhm12/e/lA=;
- b=oLFLN7jOPpcOX11ro0rhqT2ourHoCBaVuCT9qdKtMyyMN9cFWnz+gYWrWkEyypayFTCMX6zuF
- EBskGeCy8B3CP3GfX3Fqiw6L3QDgNqfY982r6q0SBeLGL4lKwr40dDp
-X-Developer-Key: i=quic_vgarodia@quicinc.com; a=ed25519;
- pk=LY9Eqp4KiHWxzGNKGHbwRFEJOfRCSzG/rxQNmvZvaKE=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=E9TNpbdl c=1 sm=1 tr=0 ts=68014f43 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=glt1T1EG--dW8uzeodgA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: yPs4sQ514Ebm8TXypCYOHtpLLD4T9Azs
-X-Proofpoint-GUID: yPs4sQ514Ebm8TXypCYOHtpLLD4T9Azs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-17_06,2025-04-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- mlxscore=0 bulkscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
- suspectscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504170139
+Content-Transfer-Encoding: 8bit
 
-QCS8300 has a downscaled video core compared to SM8550, while it has
-same bindings as that of SM8550. QCS8300.h captures the capabilities for
-QCS8300 which is delta from SM8550.
+A test is considered failed when a sample trace exceeds the threshold.
+Failed tests return the same exit code as passed tests, requiring test
+frameworks to determine the result by searching for "hit stop tracing"
+in the output.
 
-Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+Assign a distinct exit code for failed tests to enable the use of shell
+expressions and seamless integration with testing frameworks without the
+need to parse output.
+
+Add enum type for return value.
+
+Update `make check`.
+
+Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+
 ---
- .../platform/qcom/iris/iris_platform_common.h      |   1 +
- .../media/platform/qcom/iris/iris_platform_gen2.c  |  57 ++++++++++
- .../platform/qcom/iris/iris_platform_qcs8300.h     | 124 +++++++++++++++++++++
- drivers/media/platform/qcom/iris/iris_probe.c      |   4 +
- 4 files changed, 186 insertions(+)
+v2: Expanded the patch description as requested by Tomas
 
-diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h b/drivers/media/platform/qcom/iris/iris_platform_common.h
-index 6bc3a7975b04d612f6c89206eae95dac678695fc..3191a910653ce4bd71de9a0b4465fd583602adf6 100644
---- a/drivers/media/platform/qcom/iris/iris_platform_common.h
-+++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
-@@ -36,6 +36,7 @@ enum pipe_type {
- extern struct iris_platform_data sm8250_data;
- extern struct iris_platform_data sm8550_data;
- extern struct iris_platform_data sm8650_data;
-+extern struct iris_platform_data qcs8300_data;
- 
- enum platform_clk_type {
- 	IRIS_AXI_CLK,
-diff --git a/drivers/media/platform/qcom/iris/iris_platform_gen2.c b/drivers/media/platform/qcom/iris/iris_platform_gen2.c
-index 5ff82296ee8ea5ad3954bd2254594048adcb8404..723e9f4cef42408168aca22b34ccd0a674a4fd25 100644
---- a/drivers/media/platform/qcom/iris/iris_platform_gen2.c
-+++ b/drivers/media/platform/qcom/iris/iris_platform_gen2.c
-@@ -11,6 +11,7 @@
- #include "iris_vpu_common.h"
- 
- #include "iris_platform_sm8650.h"
-+#include "iris_platform_qcs8300.h"
- 
- #define VIDEO_ARCH_LX 1
- 
-@@ -326,3 +327,59 @@ struct iris_platform_data sm8650_data = {
- 	.dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
- 	.dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
- };
-+
-+/*
-+ * Shares most of SM8550 data except:
-+ * - inst_caps to platform_inst_cap_qcs8300
-+ * - inst_fw_caps to inst_fw_cap_qcs8300
-+ */
-+struct iris_platform_data qcs8300_data = {
-+	.get_instance = iris_hfi_gen2_get_instance,
-+	.init_hfi_command_ops = iris_hfi_gen2_command_ops_init,
-+	.init_hfi_response_ops = iris_hfi_gen2_response_ops_init,
-+	.vpu_ops = &iris_vpu3_ops,
-+	.set_preset_registers = iris_set_sm8550_preset_registers,
-+	.icc_tbl = sm8550_icc_table,
-+	.icc_tbl_size = ARRAY_SIZE(sm8550_icc_table),
-+	.clk_rst_tbl = sm8550_clk_reset_table,
-+	.clk_rst_tbl_size = ARRAY_SIZE(sm8550_clk_reset_table),
-+	.bw_tbl_dec = sm8550_bw_table_dec,
-+	.bw_tbl_dec_size = ARRAY_SIZE(sm8550_bw_table_dec),
-+	.pmdomain_tbl = sm8550_pmdomain_table,
-+	.pmdomain_tbl_size = ARRAY_SIZE(sm8550_pmdomain_table),
-+	.opp_pd_tbl = sm8550_opp_pd_table,
-+	.opp_pd_tbl_size = ARRAY_SIZE(sm8550_opp_pd_table),
-+	.clk_tbl = sm8550_clk_table,
-+	.clk_tbl_size = ARRAY_SIZE(sm8550_clk_table),
-+	/* Upper bound of DMA address range */
-+	.dma_mask = 0xe0000000 - 1,
-+	.fwname = "qcom/vpu/vpu30_p4_s6.mbn",
-+	.pas_id = IRIS_PAS_ID,
-+	.inst_caps = &platform_inst_cap_qcs8300,
-+	.inst_fw_caps = inst_fw_cap_qcs8300,
-+	.inst_fw_caps_size = ARRAY_SIZE(inst_fw_cap_qcs8300),
-+	.tz_cp_config_data = &tz_cp_config_sm8550,
-+	.core_arch = VIDEO_ARCH_LX,
-+	.hw_response_timeout = HW_RESPONSE_TIMEOUT_VALUE,
-+	.ubwc_config = &ubwc_config_sm8550,
-+	.num_vpp_pipe = 2,
-+	.max_session_count = 16,
-+	.max_core_mbpf = ((4096 * 2176) / 256) * 4,
-+	.input_config_params =
-+		sm8550_vdec_input_config_params,
-+	.input_config_params_size =
-+		ARRAY_SIZE(sm8550_vdec_input_config_params),
-+	.output_config_params =
-+		sm8550_vdec_output_config_params,
-+	.output_config_params_size =
-+		ARRAY_SIZE(sm8550_vdec_output_config_params),
-+	.dec_input_prop = sm8550_vdec_subscribe_input_properties,
-+	.dec_input_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_input_properties),
-+	.dec_output_prop = sm8550_vdec_subscribe_output_properties,
-+	.dec_output_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_output_properties),
-+
-+	.dec_ip_int_buf_tbl = sm8550_dec_ip_int_buf_tbl,
-+	.dec_ip_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_ip_int_buf_tbl),
-+	.dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
-+	.dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
-+};
-diff --git a/drivers/media/platform/qcom/iris/iris_platform_qcs8300.h b/drivers/media/platform/qcom/iris/iris_platform_qcs8300.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..7b198c9c1246e6bafaf7bb09c3e00b3e9057ed62
---- /dev/null
-+++ b/drivers/media/platform/qcom/iris/iris_platform_qcs8300.h
-@@ -0,0 +1,124 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2022-2025 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+struct platform_inst_fw_cap inst_fw_cap_qcs8300[] = {
-+	{
-+		.cap_id = PROFILE,
-+		.min = V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE,
-+		.max = V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_HIGH,
-+		.step_or_mask = BIT(V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE) |
-+			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_HIGH) |
-+			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_BASELINE) |
-+			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_MAIN) |
-+			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_HIGH),
-+		.value = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
-+		.hfi_id = HFI_PROP_PROFILE,
-+		.flags = CAP_FLAG_OUTPUT_PORT | CAP_FLAG_MENU,
-+		.set = iris_set_u32_enum,
-+	},
-+	{
-+		.cap_id = LEVEL,
-+		.min = V4L2_MPEG_VIDEO_H264_LEVEL_1_0,
-+		.max = V4L2_MPEG_VIDEO_H264_LEVEL_6_2,
-+		.step_or_mask = BIT(V4L2_MPEG_VIDEO_H264_LEVEL_1_0) |
-+			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_1B)  |
-+			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_1_1) |
-+			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_1_2) |
-+			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_1_3) |
-+			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_2_0) |
-+			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_2_1) |
-+			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_2_2) |
-+			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_3_0) |
-+			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_3_1) |
-+			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_3_2) |
-+			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_4_0) |
-+			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_4_1) |
-+			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_4_2) |
-+			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_5_0) |
-+			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_5_1) |
-+			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_5_2) |
-+			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_6_0) |
-+			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_6_1) |
-+			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_6_2),
-+		.value = V4L2_MPEG_VIDEO_H264_LEVEL_6_1,
-+		.hfi_id = HFI_PROP_LEVEL,
-+		.flags = CAP_FLAG_OUTPUT_PORT | CAP_FLAG_MENU,
-+		.set = iris_set_u32_enum,
-+	},
-+	{
-+		.cap_id = INPUT_BUF_HOST_MAX_COUNT,
-+		.min = DEFAULT_MAX_HOST_BUF_COUNT,
-+		.max = DEFAULT_MAX_HOST_BURST_BUF_COUNT,
-+		.step_or_mask = 1,
-+		.value = DEFAULT_MAX_HOST_BUF_COUNT,
-+		.hfi_id = HFI_PROP_BUFFER_HOST_MAX_COUNT,
-+		.flags = CAP_FLAG_INPUT_PORT,
-+		.set = iris_set_u32,
-+	},
-+	{
-+		.cap_id = STAGE,
-+		.min = STAGE_1,
-+		.max = STAGE_2,
-+		.step_or_mask = 1,
-+		.value = STAGE_2,
-+		.hfi_id = HFI_PROP_STAGE,
-+		.set = iris_set_stage,
-+	},
-+	{
-+		.cap_id = PIPE,
-+		.min = PIPE_1,
-+		.max = PIPE_2,
-+		.step_or_mask = 1,
-+		.value = PIPE_2,
-+		.hfi_id = HFI_PROP_PIPE,
-+		.set = iris_set_pipe,
-+	},
-+	{
-+		.cap_id = POC,
-+		.min = 0,
-+		.max = 2,
-+		.step_or_mask = 1,
-+		.value = 1,
-+		.hfi_id = HFI_PROP_PIC_ORDER_CNT_TYPE,
-+	},
-+	{
-+		.cap_id = CODED_FRAMES,
-+		.min = CODED_FRAMES_PROGRESSIVE,
-+		.max = CODED_FRAMES_PROGRESSIVE,
-+		.step_or_mask = 0,
-+		.value = CODED_FRAMES_PROGRESSIVE,
-+		.hfi_id = HFI_PROP_CODED_FRAMES,
-+	},
-+	{
-+		.cap_id = BIT_DEPTH,
-+		.min = BIT_DEPTH_8,
-+		.max = BIT_DEPTH_8,
-+		.step_or_mask = 1,
-+		.value = BIT_DEPTH_8,
-+		.hfi_id = HFI_PROP_LUMA_CHROMA_BIT_DEPTH,
-+	},
-+	{
-+		.cap_id = RAP_FRAME,
-+		.min = 0,
-+		.max = 1,
-+		.step_or_mask = 1,
-+		.value = 1,
-+		.hfi_id = HFI_PROP_DEC_START_FROM_RAP_FRAME,
-+		.flags = CAP_FLAG_INPUT_PORT,
-+		.set = iris_set_u32,
-+	},
-+};
-+
-+struct platform_inst_caps platform_inst_cap_qcs8300 = {
-+	.min_frame_width = 96,
-+	.max_frame_width = 4096,
-+	.min_frame_height = 96,
-+	.max_frame_height = 4096,
-+	.max_mbpf = (4096 * 2176) / 256,
-+	.mb_cycles_vpp = 200,
-+	.mb_cycles_fw = 326389,
-+	.mb_cycles_fw_vpp = 44156,
-+	.num_comv = 0,
-+};
-diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
-index 7cd8650fbe9c09598670530103e3d5edf32953e7..e5f1896e55c390e920d206e7fc2c2be283bb39d8 100644
---- a/drivers/media/platform/qcom/iris/iris_probe.c
-+++ b/drivers/media/platform/qcom/iris/iris_probe.c
-@@ -349,6 +349,10 @@ static const struct of_device_id iris_dt_match[] = {
- 		.compatible = "qcom,sm8650-iris",
- 		.data = &sm8650_data,
- 	},
-+	{
-+		.compatible = "qcom,qcs8300-iris",
-+		.data = &qcs8300_data,
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, iris_dt_match);
+---
+ tools/tracing/rtla/src/osnoise_hist.c  |  5 +++--
+ tools/tracing/rtla/src/osnoise_top.c   |  5 +++--
+ tools/tracing/rtla/src/timerlat_hist.c |  5 +++--
+ tools/tracing/rtla/src/timerlat_top.c  |  5 +++--
+ tools/tracing/rtla/src/utils.h         |  6 ++++++
+ tools/tracing/rtla/tests/engine.sh     |  7 +++++--
+ tools/tracing/rtla/tests/hwnoise.t     |  4 ++--
+ tools/tracing/rtla/tests/osnoise.t     |  6 +++---
+ tools/tracing/rtla/tests/timerlat.t    | 12 ++++++------
+ 9 files changed, 34 insertions(+), 21 deletions(-)
 
+diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
+index d9d15c8f27c71..8d579bcee7090 100644
+--- a/tools/tracing/rtla/src/osnoise_hist.c
++++ b/tools/tracing/rtla/src/osnoise_hist.c
+@@ -766,8 +766,8 @@ int osnoise_hist_main(int argc, char *argv[])
+ 	struct osnoise_params *params;
+ 	struct osnoise_tool *record = NULL;
+ 	struct osnoise_tool *tool = NULL;
++	enum result return_value = ERROR;
+ 	struct trace_instance *trace;
+-	int return_value = 1;
+ 	int retval;
+ 
+ 	params = osnoise_hist_parse_args(argc, argv);
+@@ -889,12 +889,13 @@ int osnoise_hist_main(int argc, char *argv[])
+ 
+ 	osnoise_print_stats(params, tool);
+ 
+-	return_value = 0;
++	return_value = PASSED;
+ 
+ 	if (osnoise_trace_is_off(tool, record)) {
+ 		printf("rtla osnoise hit stop tracing\n");
+ 		save_trace_to_file(record ? record->trace.inst : NULL,
+ 				   params->trace_output);
++		return_value = FAILED;
+ 	}
+ 
+ out_hist:
+diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
+index 3455ee73e2e69..2c12780c8aa92 100644
+--- a/tools/tracing/rtla/src/osnoise_top.c
++++ b/tools/tracing/rtla/src/osnoise_top.c
+@@ -594,8 +594,8 @@ int osnoise_top_main(int argc, char **argv)
+ 	struct osnoise_params *params;
+ 	struct osnoise_tool *record = NULL;
+ 	struct osnoise_tool *tool = NULL;
++	enum result return_value = ERROR;
+ 	struct trace_instance *trace;
+-	int return_value = 1;
+ 	int retval;
+ 
+ 	params = osnoise_top_parse_args(argc, argv);
+@@ -715,12 +715,13 @@ int osnoise_top_main(int argc, char **argv)
+ 
+ 	osnoise_print_stats(params, tool);
+ 
+-	return_value = 0;
++	return_value = PASSED;
+ 
+ 	if (osnoise_trace_is_off(tool, record)) {
+ 		printf("osnoise hit stop tracing\n");
+ 		save_trace_to_file(record ? record->trace.inst : NULL,
+ 				   params->trace_output);
++		return_value = FAILED;
+ 	}
+ 
+ out_top:
+diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
+index 9d9efeedc4c2c..36d2294c963d1 100644
+--- a/tools/tracing/rtla/src/timerlat_hist.c
++++ b/tools/tracing/rtla/src/timerlat_hist.c
+@@ -1141,11 +1141,11 @@ int timerlat_hist_main(int argc, char *argv[])
+ 	struct timerlat_params *params;
+ 	struct osnoise_tool *record = NULL;
+ 	struct timerlat_u_params params_u;
++	enum result return_value = ERROR;
+ 	struct osnoise_tool *tool = NULL;
+ 	struct osnoise_tool *aa = NULL;
+ 	struct trace_instance *trace;
+ 	int dma_latency_fd = -1;
+-	int return_value = 1;
+ 	pthread_t timerlat_u;
+ 	int retval;
+ 	int nr_cpus, i;
+@@ -1378,7 +1378,7 @@ int timerlat_hist_main(int argc, char *argv[])
+ 
+ 	timerlat_print_stats(params, tool);
+ 
+-	return_value = 0;
++	return_value = PASSED;
+ 
+ 	if (osnoise_trace_is_off(tool, record) && !stop_tracing) {
+ 		printf("rtla timerlat hit stop tracing\n");
+@@ -1388,6 +1388,7 @@ int timerlat_hist_main(int argc, char *argv[])
+ 
+ 		save_trace_to_file(record ? record->trace.inst : NULL,
+ 				   params->trace_output);
++		return_value = FAILED;
+ 	}
+ 
+ out_hist:
+diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
+index 79cb6f28967fc..7365e08fe9866 100644
+--- a/tools/tracing/rtla/src/timerlat_top.c
++++ b/tools/tracing/rtla/src/timerlat_top.c
+@@ -985,12 +985,12 @@ int timerlat_top_main(int argc, char *argv[])
+ 	struct timerlat_params *params;
+ 	struct osnoise_tool *record = NULL;
+ 	struct timerlat_u_params params_u;
++	enum result return_value = ERROR;
+ 	struct osnoise_tool *top = NULL;
+ 	struct osnoise_tool *aa = NULL;
+ 	struct trace_instance *trace;
+ 	int dma_latency_fd = -1;
+ 	pthread_t timerlat_u;
+-	int return_value = 1;
+ 	char *max_lat;
+ 	int retval;
+ 	int nr_cpus, i;
+@@ -1197,7 +1197,7 @@ int timerlat_top_main(int argc, char *argv[])
+ 
+ 	timerlat_print_stats(params, top);
+ 
+-	return_value = 0;
++	return_value = PASSED;
+ 
+ 	if (osnoise_trace_is_off(top, record) && !stop_tracing) {
+ 		printf("rtla timerlat hit stop tracing\n");
+@@ -1207,6 +1207,7 @@ int timerlat_top_main(int argc, char *argv[])
+ 
+ 		save_trace_to_file(record ? record->trace.inst : NULL,
+ 				   params->trace_output);
++		return_value = FAILED;
+ 	} else if (params->aa_only) {
+ 		/*
+ 		 * If the trace did not stop with --aa-only, at least print the
+diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/utils.h
+index 101d4799a0090..a2a6f89f342d0 100644
+--- a/tools/tracing/rtla/src/utils.h
++++ b/tools/tracing/rtla/src/utils.h
+@@ -83,3 +83,9 @@ int auto_house_keeping(cpu_set_t *monitored_cpus);
+ 
+ #define ns_to_usf(x) (((double)x/1000))
+ #define ns_to_per(total, part) ((part * 100) / (double)total)
++
++enum result {
++	PASSED = 0, /* same as EXIT_SUCCESS */
++	ERROR = 1,  /* same as EXIT_FAILURE, an error in arguments */
++	FAILED = 2, /* test hit the stop tracing condition */
++};
+diff --git a/tools/tracing/rtla/tests/engine.sh b/tools/tracing/rtla/tests/engine.sh
+index b1697b3e3f528..f2616a8e4179e 100644
+--- a/tools/tracing/rtla/tests/engine.sh
++++ b/tools/tracing/rtla/tests/engine.sh
+@@ -39,6 +39,7 @@ reset_osnoise() {
+ }
+ 
+ check() {
++	expected_exitcode=${3:-0}
+ 	# Simple check: run rtla with given arguments and test exit code.
+ 	# If TEST_COUNT is set, run the test. Otherwise, just count.
+ 	ctr=$(($ctr + 1))
+@@ -49,7 +50,7 @@ check() {
+ 		# Run rtla; in case of failure, include its output as comment
+ 		# in the test results.
+ 		result=$(stdbuf -oL $TIMEOUT "$RTLA" $2 2>&1); exitcode=$?
+-		if [ $exitcode -eq 0 ]
++		if [ $exitcode -eq $expected_exitcode ]
+ 		then
+ 			echo "ok $ctr - $1"
+ 		else
+@@ -68,12 +69,14 @@ check_with_osnoise_options() {
+ 	# Save original arguments
+ 	arg1=$1
+ 	arg2=$2
++	arg3=$3
+ 
+ 	# Apply osnoise options (if not dry run)
+ 	if [ -n "$TEST_COUNT" ]
+ 	then
+ 		[ "$NO_RESET_OSNOISE" == 1 ] || reset_osnoise
+ 		shift
++		shift
+ 		while shift
+ 		do
+ 			[ "$1" == "" ] && continue
+@@ -84,7 +87,7 @@ check_with_osnoise_options() {
+ 		done
+ 	fi
+ 
+-	NO_RESET_OSNOISE=1 check "$arg1" "$arg2"
++	NO_RESET_OSNOISE=1 check "$arg1" "$arg2" "$arg3"
+ }
+ 
+ set_timeout() {
+diff --git a/tools/tracing/rtla/tests/hwnoise.t b/tools/tracing/rtla/tests/hwnoise.t
+index bbed175805374..5f71401a139e6 100644
+--- a/tools/tracing/rtla/tests/hwnoise.t
++++ b/tools/tracing/rtla/tests/hwnoise.t
+@@ -10,11 +10,11 @@ check "verify help page" \
+ check "detect noise higher than one microsecond" \
+ 	"hwnoise -c 0 -T 1 -d 5s -q"
+ check "set the automatic trace mode" \
+-	"hwnoise -a 5 -d 30s"
++	"hwnoise -a 5 -d 30s" 2
+ check "set scheduling param to the osnoise tracer threads" \
+ 	"hwnoise -P F:1 -c 0 -r 900000 -d 1M -q"
+ check "stop the trace if a single sample is higher than 1 us" \
+-	"hwnoise -s 1 -T 1 -t -d 30s"
++	"hwnoise -s 1 -T 1 -t -d 30s" 2
+ check "enable a trace event trigger" \
+ 	"hwnoise -t -e osnoise:irq_noise trigger=\"hist:key=desc,duration:sort=desc,duration:vals=hitcount\" -d 1m"
+ 
+diff --git a/tools/tracing/rtla/tests/osnoise.t b/tools/tracing/rtla/tests/osnoise.t
+index e5995c03c790f..44908fc01abfd 100644
+--- a/tools/tracing/rtla/tests/osnoise.t
++++ b/tools/tracing/rtla/tests/osnoise.t
+@@ -10,9 +10,9 @@ check "verify help page" \
+ check "verify the --priority/-P param" \
+ 	"osnoise top -P F:1 -c 0 -r 900000 -d 1M -q"
+ check "verify the --stop/-s param" \
+-	"osnoise top -s 30 -T 1 -t"
++	"osnoise top -s 30 -T 1 -t" 2
+ check "verify the  --trace param" \
+-	"osnoise hist -s 30 -T 1 -t"
++	"osnoise hist -s 30 -T 1 -t" 2
+ check "verify the --entries/-E param" \
+ 	"osnoise hist -P F:1 -c 0 -r 900000 -d 1M -b 10 -E 25"
+ 
+@@ -20,6 +20,6 @@ check "verify the --entries/-E param" \
+ # and stopping on threshold.
+ # If default period is not set, this will time out.
+ check_with_osnoise_options "apply default period" \
+-	"osnoise hist -s 1" period_us=600000000
++	"osnoise hist -s 1" 2 period_us=600000000
+ 
+ test_end
+diff --git a/tools/tracing/rtla/tests/timerlat.t b/tools/tracing/rtla/tests/timerlat.t
+index e939ff71d6be3..579c12a85e8f3 100644
+--- a/tools/tracing/rtla/tests/timerlat.t
++++ b/tools/tracing/rtla/tests/timerlat.t
+@@ -21,21 +21,21 @@ export RTLA_NO_BPF=$option
+ check "verify help page" \
+ 	"timerlat --help"
+ check "verify -s/--stack" \
+-	"timerlat top -s 3 -T 10 -t"
++	"timerlat top -s 3 -T 10 -t" 2
+ check "verify -P/--priority" \
+ 	"timerlat top -P F:1 -c 0 -d 1M -q"
+ check "test in nanoseconds" \
+-	"timerlat top -i 2 -c 0 -n -d 30s"
++	"timerlat top -i 2 -c 0 -n -d 30s" 2
+ check "set the automatic trace mode" \
+-	"timerlat top -a 5 --dump-tasks"
++	"timerlat top -a 5 --dump-tasks" 2
+ check "print the auto-analysis if hits the stop tracing condition" \
+-	"timerlat top --aa-only 5"
++	"timerlat top --aa-only 5" 2
+ check "disable auto-analysis" \
+-	"timerlat top -s 3 -T 10 -t --no-aa"
++	"timerlat top -s 3 -T 10 -t --no-aa" 2
+ check "verify -c/--cpus" \
+ 	"timerlat hist -c 0 -d 30s"
+ check "hist test in nanoseconds" \
+-	"timerlat hist -i 2 -c 0 -n -d 30s"
++	"timerlat hist -i 2 -c 0 -n -d 30s" 2
+ done
+ 
+ test_end
 -- 
-2.34.1
+2.48.1
 
