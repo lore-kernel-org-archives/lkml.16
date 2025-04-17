@@ -1,49 +1,39 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0E9252290
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98001ACECB
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 14:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744899543; cv=none; b=gbuDaHOg4E9Sa4+9pYc3cUQM2mBvJ6O7A0uHuHRLLOdG3VEOtX+hHnrgGJBXnknRNrtG9uKezmHTL3gDREESrLICpxWRr6fuwHJXS9LUqjAN/t1h53soxmYc5+VBXnaGocz8NeIxGoLjZeChDfVXrdBGx8w6BltjCb0SNaQ24lc=
+	t=1744899668; cv=none; b=mAvuYDe5BMDqDzG5Ep/5b6F21ukZWakAi3O2bZmCXKKIph8JzrnZzxTS+3UVeUe5/nKnXZdvE642Fc4feaFw5eI9W7zKAUW6GBcQ3/vGEw93/Bh40pKnA2ZedHoQ89zYwpEjIxDn5SZTyc1bw0cmOO63YYJ3k2K4ggfQyMIHs0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744899543; c=relaxed/simple;
-	bh=qquF4gAWxlLcl0NloBMan4FuZEm0GYnvDkpACC9vTGA=;
+	s=arc-20240116; t=1744899668; c=relaxed/simple;
+	bh=Qga/Sq+dY4LTlciqz8z3S6H86UWJJiLqOSO602bWIFs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gVuT29ClJQRrJCvXNhRasNU5emvq7N37S21uVl4vNki0oYRuUIFlVgr1IfC9YJnOarELos86C0WOwhWFgg3dF+Oal6KGK/Y65kC77mSTdTty6ipzavjhEBoymlQ2RH+CFBJ9IRSlNEKNKpMXJv+uLczAvE1ds8/JMrpjZNuwh/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I/Pu0HdJ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=YzBPCLauEGE6XNYgJjSMFXGwspurNNL3/tfnm2jUYZ0ryKMU5EbK6hvjhEB1hfsfIDsw5xXMZNDsIw7f8DGd9V2SzQdK9WXxPqZg+Lt/Vq479m4Wp75t2ZSSy7fVyLMGZkihOArf92uXvAiVRtyd2F8GN/nwUF7APwbyWeFydxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=UwnBzE7k; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I/Pu0HdJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744899541;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kzF6UYdjczKDEkThEfvJNGwHGPfnks2hj7tHch2bIQQ=;
-	b=I/Pu0HdJSCqtpZ1musLOXbL7l7DN/p53QE6H1GETDDUFTfeviglUtsoFHX93ZrYThVAdOH
-	DG0Gr5nokG7ov8jThI7XkCtGZaQX/cACqPRcnO6CCpXnHPmGE4H1aMz77OjrneD/0mV3yh
-	qQTI5zGtuEH2xEH9XPwoQ+6p6Jw7IaQ=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-450-XFk4lmz7PRSOlAP3HKoenA-1; Thu,
- 17 Apr 2025 10:18:55 -0400
-X-MC-Unique: XFk4lmz7PRSOlAP3HKoenA-1
-X-Mimecast-MFC-AGG-ID: XFk4lmz7PRSOlAP3HKoenA_1744899533
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4AD4C180056F;
-	Thu, 17 Apr 2025 14:18:52 +0000 (UTC)
-Received: from [10.44.33.28] (unknown [10.44.33.28])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E3CA419560BA;
-	Thu, 17 Apr 2025 14:18:46 +0000 (UTC)
-Message-ID: <ee0b1569-1c01-4e7b-b4a0-ec1de4634e89@redhat.com>
-Date: Thu, 17 Apr 2025 16:18:39 +0200
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="UwnBzE7k"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=SrHLvNcniYohE8XO+5XRKCxxfp6aOiTWHwmdhysUG3Y=; b=UwnBzE7k6TePTiVU0Uf1b110ys
+	mASwtReo6tJ3z9BNQAM6v1eddR8ss2JGtr8qZoWHBlsHRFavqSR46ZiW/+4AMKnmlFlvubvUigBSf
+	pzF3klYWXB0Sg4RVBANpVJsUDZ5Cy3R3lsvC/womdbtnlMb4+CBW9nMLvJo+9dgFID/JwjDawHmy3
+	QudsRAp/K0UkziM5EgXe97F6AuDSBcwicBsxNCA9N6TaX7zUrTZmdrdLbD2Go5gk2RpHhyFq2IBYb
+	30OZpf2mWLliXXM60WJrxbCXMr06oJsIzSR0g9ICWlz0o+Boq26kcH4DBOn2c9w5Hh0vVdBTsSt1/
+	pzx296AQ==;
+Received: from [90.241.98.187] (helo=[192.168.0.101])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1u5Q6f-000qCP-Ta; Thu, 17 Apr 2025 16:20:45 +0200
+Message-ID: <83758ca7-8ece-433e-b904-3d21690ead23@igalia.com>
+Date: Thu, 17 Apr 2025 15:20:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,107 +41,119 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 net-next 5/8] mfd: zl3073x: Add functions to work with
- register mailboxes
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250416162144.670760-1-ivecera@redhat.com>
- <20250416162144.670760-6-ivecera@redhat.com>
- <d286dec9-a544-409d-bf62-d2b84ef6ecd4@lunn.ch>
- <CAAVpwAvVO7RGLGMXCBxCD35kKCLmZEkeXuERG0C2GHP54kCGJw@mail.gmail.com>
- <8802b276-b6dd-4235-87dd-18b835edb196@lunn.ch>
-Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <8802b276-b6dd-4235-87dd-18b835edb196@lunn.ch>
+Subject: Re: [PATCH 3/5] drm/sched: Warn if pending list is not empty
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: phasta@kernel.org, Lyude Paul <lyude@redhat.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Matthew Brost <matthew.brost@intel.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250407152239.34429-2-phasta@kernel.org>
+ <20250407152239.34429-5-phasta@kernel.org>
+ <9607e5a54b8c5041dc7fc134425cc36c0c70b5f3.camel@mailbox.org>
+ <3ac34c84-fd84-4598-96e1-239418b7109f@igalia.com> <aADv4ivXZoJpEA7k@pollux>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+In-Reply-To: <aADv4ivXZoJpEA7k@pollux>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Transfer-Encoding: 8bit
 
 
+On 17/04/2025 13:11, Danilo Krummrich wrote:
+> On Thu, Apr 17, 2025 at 12:27:29PM +0100, Tvrtko Ursulin wrote:
+>>
+>> On 17/04/2025 08:45, Philipp Stanner wrote:
+>>> On Mon, 2025-04-07 at 17:22 +0200, Philipp Stanner wrote:
+>>
+>> Problem exactly is that jobs can outlive the entities and the scheduler,
+>> while some userspace may have a dma fence reference to the job via sync
+>> file. This new callback would not solve it for xe, but if everything
+>> required was reference counted it would.
+> 
+> I think you're mixing up the job and the dma_fence here, if a job outlives the
+> scheduler, it clearly is a bug, always has been.
+> 
+> AFAIK, Xe reference counts it's driver specific job structures *and* the driver
+> specific scheduler structure, such that drm_sched_fini() won't be called before
+> all jobs have finished.
 
-On 17. 04. 25 3:22 odp., Andrew Lunn wrote:
->>>> +/*
->>>> + * Mailbox operations
->>>> + */
->>>> +int zl3073x_mb_dpll_read(struct zl3073x_dev *zldev, u8 index);
->>>> +int zl3073x_mb_dpll_write(struct zl3073x_dev *zldev, u8 index);
->>>> +int zl3073x_mb_output_read(struct zl3073x_dev *zldev, u8 index);
->>>> +int zl3073x_mb_output_write(struct zl3073x_dev *zldev, u8 index);
->>>> +int zl3073x_mb_ref_read(struct zl3073x_dev *zldev, u8 index);
->>>> +int zl3073x_mb_ref_write(struct zl3073x_dev *zldev, u8 index);
->>>> +int zl3073x_mb_synth_read(struct zl3073x_dev *zldev, u8 index);
->>>> +int zl3073x_mb_synth_write(struct zl3073x_dev *zldev, u8 index);
->>>
->>> I assume these are the only valid ways to access a mailbox?
->>>
->>> If so:
->>>
->>>> +static inline __maybe_unused int
->>>> +zl3073x_mb_read_ref_mb_mask(struct zl3073x_dev *zldev, u16 *value)
->>>> +{
->>>> +     __be16 temp;
->>>> +     int rc;
+Yes, sorry, dma fence. But it is not enough to postpone drm_sched_fini 
+until the job is not finished. Problem is exported dma fence holds the 
+pointer to drm_sched_fence (and so oopses in 
+drm_sched_fence_get_timeline_name on fence->sched->name) *after* job had 
+finished and driver was free to tear everything down.
+
+That is what the "fini callback" wouldn't solve but reference counting 
+would.
+
+I don't see that any other driver which can export a fence couldn't 
+suffer from the same problem, and even if I agree this maybe isn't 
+strictly a scheduler problem, I cannot see it solvable without involving 
+the scheduler, and in any other way than reference counting. And if 
+reference counting could solve both problems then it feels attractive.
+
+> The reference counting solution, however, potentially creates subsequent
+> lifetime problems, which I think have been discussed already in a different
+> thread already. Philipp can probably link in the corresponding discussion.
+
+I don't doubt it causes problems but maybe there will be no other way 
+than to tackle them.
+
+>> On the design level it feels like it adds too much state machine and makes
+>> things hard to follow/maintain. It would be nice to find a solutiuon where
+>> we end up with less state machine and not more.
+> 
+> Multiple solutions have been discussed already, e.g. just wait for the pending
+> list to be empty, reference count the scheduler for every pending job. Those all
+> had significant downsides, which I don't see with this proposal.
+> 
+> I'm all for better ideas though -- what do you propose?
+
+I think we need to brainstorm both issues and see if there is a solution 
+which solves them both, with bonus points for being elegant.
+
+Use after free is IMO even a worse problem so if reference counting is 
+the only way then lets try that. But I will wait for those links to 
+catch up on the past discussions.
+
+>>>> diff --git a/drivers/gpu/drm/scheduler/sched_main.c
+>>>> b/drivers/gpu/drm/scheduler/sched_main.c
+>>>> index 6b72278c4b72..ae3152beca14 100644
+>>>> --- a/drivers/gpu/drm/scheduler/sched_main.c
+>>>> +++ b/drivers/gpu/drm/scheduler/sched_main.c
+>>>> @@ -1465,6 +1465,10 @@ void drm_sched_fini(struct drm_gpu_scheduler
+>>>> *sched)
+>>>>    	sched->ready = false;
+>>>>    	kfree(sched->sched_rq);
+>>>>    	sched->sched_rq = NULL;
 >>>> +
->>>> +     lockdep_assert_held(&zldev->mailbox_lock);
->>>> +     rc = regmap_bulk_read(zldev->regmap, ZL_REG_REF_MB_MASK, &temp,
->>>> +                           sizeof(temp));
->>>> +     if (rc)
->>>> +             return rc;
->>>> +
->>>> +     *value = be16_to_cpu(temp);
->>>> +     return rc;
->>>> +}
->>>
->>> These helpers can be made local to the core. You can then drop the
->>> lockdep_assert_held() from here, since the only way to access them is
->>> via the API you defined above, and add the checks in those API
->>> functions.
+>>>> +	if (!list_empty(&sched->pending_list))
+>>>> +		dev_err(sched->dev, "%s: Tearing down scheduler
+>>>> while jobs are pending!\n",
+>>>> +			__func__);
 >>
->> This cannot be done this way... the above API just simplifies the
->> operation of read and write latch registers from/to mailbox.
->>
->> Whole operation is described in the commit description.
->>
->> E.g. read something about DPLL1
->> 1. Call zl3073x_mb_dpll_read(..., 1)
->>     This selects DPLL1 in the DPLL mailbox and performs read operation
->> and waits for finish
->> 2. Call zl3073x_mb_read_dpll_mode()
->>     This reads dpll_mode latch register
->>
->> write:
->> 1. Call zl3073x_mb_write_dpll_mode(...)
->>     This writes mode to dpll_mode latch register
->> 2. Call zl3073x_mb_dpll_read(..., 1)
->>     This writes all info from latch registers to DPLL1
->>
->> The point is that between step 1 and 2 nobody else cannot touch
->> latch_registers or mailbox select register and op semaphore.
+>> It isn't fair to add this error since it would out of the blue start firing
+>> for everyone expect nouveau, no? Regardless if there is a leak or not.
 > 
-> Again, think about your layering. What does your lower level mailbox
-> API look like? What does the MFD need to export for a safe API?
+> I think it is pretty fair to warn when detecting a guaranteed bug, no?
 > 
-> So maybe you need zl3073x_mb_read_u8(), zl3073x_mb_read_u16(),
-> zl3073x_mb_read_u32(), as part of your mailbox API. These assert the
-> lock is held.
-> 
-> You could even make zl3073x_mb_read_u8() validate the register is in
-> the upper range, and that zl3073x_read_u8() the register is in the
-> lower range.
+> If drm_sched_fini() is call while jobs are still on the pending_list, they won't
+> ever be freed, because all workqueues are stopped.
 
-Yes, this LGTM... Anyway if the MB API would provide reading and writing 
-MBs at once then zl3073x_mb_{read,write}_u* are not necessary as the 
-only caller of these functions is MFD itself and they would be called 
-under MB API that holds the lock.
+Is it a guaranteed bug for drivers are aware of the drm_sched_fini() 
+limitation and are cleaning up upon themselves?
 
-Ivan
+In other words if you apply the series up to here would it trigger for 
+nouveau? Reportedly it triggers for the mock scheduler which also has no 
+leak.
+
+Also, I asked in my initial reply if we have a list of which of the 
+current drivers suffer from memory leaks. Is it all or some etc.
+
+Regards,
+
+Tvrtko
 
