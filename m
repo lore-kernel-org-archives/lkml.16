@@ -1,180 +1,97 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 627A2219E99
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC2C219E99
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744875738; cv=none; b=GcYW9lRFDnpEjsr5hEh5YIUWD+0JfP+oBIL3VMKguM6eiUN3bX5JmX8cxmF7Hpbwi8bYgyNo/PtM9JTIcraOwpTc/LDAo91MNYFlX0kylNW5Tpd3ynKtLPIntLs/ikmCDI1pelvyEbl9aLkn9CNW11eoF8e5h6RCz5lwkfsXna0=
+	t=1744875749; cv=none; b=L/PzsGXnjAUh8qtL/WcILQgO17KM8IKl3tkk+EKkcOeYVVh1UXPYYo4QTMiNU5DJlq6yeCGEWvYY3NpUQGtcUYLT2xvvYskoI7Z2Sp39ncG7+GuZsAymohHMnZ/+/cz8UQ7CEGKKcCiPCFrzQlivzgfMipiu57g/Km4SqDPmDww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744875738; c=relaxed/simple;
-	bh=mVQwtEZSIlgHa/mm1mmUYoeDx30+E8QTcMPkDxPlNF8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PxsITIIbQVd48gwBe+9Ycm1x8XBHV4CqwqGvEnc03pwLQdriUp3ZRJciwnQUzqsIUNsG+KCXy8aO7XmaGaLzhTMkNCVsSi1BwjHxttVCSuCHW2RCgRz2yOckF/RC42zEXeDcRuCN1ypk0Z9QhPd/wKwj9EgZdsXAlDytxTu8tsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wQqR4Pm8; arc=none smtp.client-ip=209.85.214.181
+	s=arc-20240116; t=1744875749; c=relaxed/simple;
+	bh=l9yxI+Mba9CUaTNrgCthTIf1TjoMCLU0SYdNd1ClZ+0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YGY48czjQmBm2cshBAvk+zG4tZ7XlUA/w+kGqPSE0epiWBLUYe2BXr0/f+jUEc30MkR/Iil9RFyEafpwrnJxlNaKJTq7h9VQytj0jpPV51NZdhw/SChU02DafRJX+uBdzDtY/ndAtHMe5DYtIfuSxtLBJaXtGuZf8+5eszMdi5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wnap2H9g; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wQqR4Pm8"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22401f4d35aso6025115ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:42:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wnap2H9g"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30eef9ce7feso4760431fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:42:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744875735; x=1745480535; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=eDgB7wJ22ie3HmeLXVm86GHefERwHEPMmaPgZUtFTeM=;
-        b=wQqR4Pm8rBZKdlxXyseRgKtd9U9JpvKFaxiVpgCLU69FG7KhNy3kcP064s6ki0Cabx
-         H3nhgMN3CavkbM0vZ7svGG+PzM4ZLYWrVwNOz7OvR4KLKbMcOs/r8IMyumx+MJL5xa2h
-         B7s7sCeZGLgfKdh0KWN5LXfqzfHSmYwYp1drtgqYeELQVcyk5PvKv2qDZfQWcXCkdGf8
-         K47PsP2JXVDe7YjntJMr5OgyHcR8hWbCu0A27Qto6czighlnSyqIsoZOdEJra60xtudP
-         8+90v6WsznqbIFsIbmQZrKki8WdDv7E3kzTJd4Uk8iuMtfsM/NvC/Tyk6o67AVJVg/Bw
-         G+EQ==
+        d=linaro.org; s=google; t=1744875746; x=1745480546; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l9yxI+Mba9CUaTNrgCthTIf1TjoMCLU0SYdNd1ClZ+0=;
+        b=wnap2H9gAK9NNteg++8ryeSQa13UjKbjK5x1IyIbpzWmN40rnBiVOp2GN9au7vocBE
+         By+9iQFOxEbx6q1caCk+cyaO69oBPvp22y0bwwnhQXReJa7VmYkQ+rMeE8zyenLb7owJ
+         b7Src8UWf/7rdM+cr3+YYKSpXBMu/hzBOCMCQdSCunqSYp40qzb463awgut7wzrhabyS
+         i+NbP4bX61SXTx/RxmLupBwL/h1qXj20BOuw0B0w0DYANCEYTTpl2LbMvwTM6eVN9NAY
+         xQY7qkMhxkPP2RHT+T34uWBhE9hHDD2Imyg52dgx12GxBMAyp+/48pzbraNZ26amMv0v
+         I4Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744875735; x=1745480535;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eDgB7wJ22ie3HmeLXVm86GHefERwHEPMmaPgZUtFTeM=;
-        b=EzQ20x0eJbbv4WIdXPW6LnjaPfzbDGpJRVvnCn16BSgUdltcdYXucm++K4XpQOtC1l
-         S4YukaSmOngsizSTNVAa7cZzXRd44iG2Z9ca9GuUvBc3YcFx6QRTEEpWmWsp/FyEJoTa
-         9reHS85F1W6nOaWbTzEuWJiAUAFH1DqLZ4+Gn7xlrkpmH7pial5pmMSHEuwiJcNzOMs4
-         km4Be8vqnnGYtXG1zw3agYZ0qWCXNIa4+AFQVEOY8JI2HznhNtArQVCfoxiujQTtwWPW
-         pUIGC8Gx3m+5I2rXsr6xF/NXUBZcZRVei0JUJolkdJqv20f4sP8tD+N3KaceZm7u2h3F
-         FysA==
-X-Forwarded-Encrypted: i=1; AJvYcCWJW0yLP47FAOcXOxOVXFyh/C1zqMOLD43jsvkUOwE80yIAydXccc/wChP5WWisZbQDWWrNdetv9BdXqaA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiKpPbmy1M4biG98DpypoSxnukv2v/siViSN28YeIY+hlsvWBb
-	GyDxvHeo+UIDkkSIltbCdDxAVVTf/rk8hiJ4DKx/Xqm8p/dXdqhf9RaoypVgsQ==
-X-Gm-Gg: ASbGnctdqta3n+CJMmoJ5ek/rba3WCprm6Iv8aVdihTA0msI5Sq8uy3x5Y1jCFAbUoa
-	J1tmEPv/0u0gQUMvEDjA5xSael9VCFuod3iZYe9TWY9I0+AUdYx0DT7+rnQ8PX3beLfltsCWWv5
-	M0IAk1PdCTIRg8Ap8C4Ds+VGXIFvDq2ZHZYqLXCb632s0rgoQ6c0N+R3Thbs5J0vz14j4jVgz36
-	x02uO0lEaCXuWLHgOixNZbxKafqd+xsJqf6H6RCyPhXqgek5B0t6uZso+JG2pSZJIxS/van3AY7
-	IL9Dj2mTFc7IuSPsPNC0PwR+5So2Ngx47ccameO0euNjxGIlLCjQRj6NlZY=
-X-Google-Smtp-Source: AGHT+IG/Yi/qk4YGrJvgZRoRnXd14pk5pi5diwpsqtszPlC13bqbgZFlocoYN6rPXNF0yZn07MCGQQ==
-X-Received: by 2002:a17:902:dacc:b0:223:35cb:e421 with SMTP id d9443c01a7336-22c35985d1dmr68962035ad.49.1744875735660;
-        Thu, 17 Apr 2025 00:42:15 -0700 (PDT)
-Received: from thinkpad ([120.60.54.0])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c3e0e19d2sm15264935ad.91.2025.04.17.00.42.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 00:42:15 -0700 (PDT)
-Date: Thu, 17 Apr 2025 13:12:08 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof Wilczy??ski <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, dingwei@marvell.com, cassel@kernel.org, 
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] PCI: Add link down handling for host bridges
-Message-ID: <doyt4kcaffgjm5u5notcjnqur7ydim3dpo4se5em2an36wa3rp@xzntx4sa47dl>
-References: <20250416-pcie-reset-slot-v2-0-efe76b278c10@linaro.org>
- <20250416-pcie-reset-slot-v2-3-efe76b278c10@linaro.org>
- <Z__hZ2M8wDHn2XSn@wunner.de>
+        d=1e100.net; s=20230601; t=1744875746; x=1745480546;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l9yxI+Mba9CUaTNrgCthTIf1TjoMCLU0SYdNd1ClZ+0=;
+        b=eH6rcThAj9Ydnt6iRYjErxMNLZ0vH2gw2bLIxhQS6RDSYHxgFyjc1pfm6ellxJBFRJ
+         LInpAXGqwpYZHONDos5aN4Wf8kRhbcIhvCk0f1ObB7Gkbwkt+LWpWXZYJ7LvfQtPVpEi
+         nzJZJ6tahd+Al1d2xVhYxxKLOw8/ZbPp0jBObThngWQ3V3NQItYy3wVgCqjqv+5rA11M
+         S54niHUIo+5iaX7oh6fFAPzzZ+QDRTTnET8sx/isM3VkSLhArVNn9ZUm7XOYqNuEyHzk
+         WuZuci8horIIZszE6HtL/sBiWEsvUah2d2MBjG9KZePnvArWaPbIfEGaGJuar9SsM57A
+         Cqhw==
+X-Forwarded-Encrypted: i=1; AJvYcCUKQieALM1mJVWD6cE0aMabVYFkR1ud1sLrzEzUsHoDc/kRs49AgiVLm/7ICYCbyJYHrCkka9whrVQg4DE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGWQXjRXN4JXLDT/MXrgC1Is2uNy6Im5jaRGhG0dE5RpVlcr5C
+	QlLBpXBxd4RDgVFXR5nBgPOaytiyogTlHJ9XSNUAfl0V7Pn7XK13oPY/SLp6a6Jeew0XQAAoOSs
+	koxXKJ/4I3XLn3XbvikPzTOHGKoKyqKG5LCiaww==
+X-Gm-Gg: ASbGncui5OA46iCYxcsYMWOqj8kLGWgJhZBti5FdDbE7nB1gcstW0/SuqZMQrOyvuv2
+	LQxGi30GLJB3tP9DyzBI62a5mCifAvxnWoZVTUv8a7GkH8z7ajMkUR/PWJefoTkZXLYQplHfR7i
+	J4nsMk67gpfj4v024UemXCrg==
+X-Google-Smtp-Source: AGHT+IGS1IRdJZGaZOGBt2o7TAzE4ajC3kXe2lrY8hS5Zx1+HVIOORQPGpXWTLFIUHBjt1Qe5pOZPC9xWwoJZ+1T0rQ=
+X-Received: by 2002:a2e:ab19:0:b0:30b:a20b:eccc with SMTP id
+ 38308e7fff4ca-3107f6bde0emr19717881fa.11.1744875746101; Thu, 17 Apr 2025
+ 00:42:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z__hZ2M8wDHn2XSn@wunner.de>
+References: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
+ <20250408-gpiochip-set-rv-pinctrl-part1-v1-7-c9d521d7c8c7@linaro.org>
+ <20250416223706.GA3230303@ax162> <CACMJSevPHdo9ZGaOyGV8rrhJHTN4+-0UB0+sz=Z5jc_eZybjcA@mail.gmail.com>
+In-Reply-To: <CACMJSevPHdo9ZGaOyGV8rrhJHTN4+-0UB0+sz=Z5jc_eZybjcA@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 17 Apr 2025 09:42:14 +0200
+X-Gm-Features: ATxdqUEL04h0FlK145WkXx_Q9dTs068nZ1YOBn95bqrfuRW3dCGJeGM7IpJjU74
+Message-ID: <CACRpkdY5KJzCk1sfznG6DFMmX9T=pu=im_a6jTeAT68pO9SBAQ@mail.gmail.com>
+Subject: Re: [PATCH 07/10] pinctrl: sx150x: enable building modules with COMPILE_TEST=y
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Ludovic Desroches <ludovic.desroches@microchip.com>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Xianwei Zhao <xianwei.zhao@amlogic.com>, Patrick Rudolph <patrick.rudolph@9elements.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 16, 2025 at 06:57:11PM +0200, Lukas Wunner wrote:
-> On Wed, Apr 16, 2025 at 09:59:05PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> > --- a/drivers/pci/pcie/err.c
-> > +++ b/drivers/pci/pcie/err.c
-> > @@ -270,3 +270,30 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> >  
-> >  	return status;
-> >  }
-> > +
-> > +static pci_ers_result_t pcie_do_slot_reset(struct pci_dev *dev)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = pci_bus_error_reset(dev);
-> > +	if (ret) {
-> > +		pci_err(dev, "Failed to reset slot: %d\n", ret);
-> > +		return PCI_ERS_RESULT_DISCONNECT;
-> > +	}
-> > +
-> > +	pci_info(dev, "Slot has been reset\n");
-> > +
-> > +	return PCI_ERS_RESULT_RECOVERED;
-> > +}
-> > +
-> > +void pcie_do_recover_slots(struct pci_host_bridge *host)
-> > +{
-> > +	struct pci_bus *bus = host->bus;
-> > +	struct pci_dev *dev;
-> > +
-> > +	for_each_pci_bridge(dev, bus) {
-> > +		if (pci_is_root_bus(bus))
-> > +			pcie_do_recovery(dev, pci_channel_io_frozen,
-> > +					 pcie_do_slot_reset);
-> > +	}
-> > +}
-> 
-> Since pcie_do_slot_reset(), pcie_do_recover_slots() and
-> pcie_do_recover_slots() are only needed on platforms with a
-> specific host controller (and not, say, on x86), it would be good
-> if they could be kept e.g. in a library in drivers/pci/controller/
-> to avoid unnecessarily enlarging the .text section for everyone else.
-> 
-> One option would be the existing pci-host-common.c, another a
-> completely new file.
-> 
+On Thu, Apr 17, 2025 at 8:42=E2=80=AFAM Bartosz Golaszewski
+<bartosz.golaszewski@linaro.org> wrote:
 
-I don't like introducing a new file, so I'll make pci-host-common as a common
-library for host controller drivers and move this code there.
+> Makes sense. Linus: Can you just drop this or do you prefer a formal reve=
+rt?
 
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -966,6 +966,7 @@ int pci_aer_clear_status(struct pci_dev *dev);
-> >  int pci_aer_raw_clear_status(struct pci_dev *dev);
-> >  void pci_save_aer_state(struct pci_dev *dev);
-> >  void pci_restore_aer_state(struct pci_dev *dev);
-> > +void pcie_do_recover_slots(struct pci_host_bridge *host);
-> >  #else
-> >  static inline void pci_no_aer(void) { }
-> >  static inline void pci_aer_init(struct pci_dev *d) { }
-> > @@ -975,6 +976,26 @@ static inline int pci_aer_clear_status(struct pci_dev *dev) { return -EINVAL; }
-> >  static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
-> >  static inline void pci_save_aer_state(struct pci_dev *dev) { }
-> >  static inline void pci_restore_aer_state(struct pci_dev *dev) { }
-> > +static inline void pcie_do_recover_slots(struct pci_host_bridge *host)
-> > +{
-> > +	struct pci_bus *bus = host->bus;
-> > +	struct pci_dev *dev;
-> > +	int ret;
-> > +
-> > +	if (!host->reset_slot)
-> > +		dev_warn(&host->dev, "Missing reset_slot() callback\n");
-> > +
-> > +	for_each_pci_bridge(dev, bus) {
-> > +		if (!pci_is_root_bus(bus))
-> > +			continue;
-> > +
-> > +		ret = pci_bus_error_reset(dev);
-> > +		if (ret)
-> > +			pci_err(dev, "Failed to reset slot: %d\n", ret);
-> > +		else
-> > +			pci_info(dev, "Slot has been reset\n");
-> > +	}
-> > +}
-> >  #endif
-> 
-> Unusual to have such a large inline function in a header.
-> Can this likewise be moved to some library file and separated
-> from the other version via #ifdef please?
-> 
+I just dropped it, no problem.
 
-Sure.
+I'm amazed there was not more fallout from the patches
+so all is good!
 
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Yours,
+Linus Walleij
