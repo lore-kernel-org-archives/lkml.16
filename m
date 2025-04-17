@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93537257451;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A76257AD1;
 	Thu, 17 Apr 2025 18:03:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744913011; cv=none; b=rFyz1dvh6MEdJ17TOn23Quo0IbkI5TqsH8Sb6whD5SmY69Ti3PVCiIe831Ur6IkiCVLaBVHYHBU1vwf+zNc0fwdwY7JHrkFZc0fK7jHnhkXH/i25BG8btFk8t1Po6oszOiR7IyYqgqo8YLSvK3rq9D2mmhXMfW0V0rm1dZjI3Ag=
+	t=1744913011; cv=none; b=dYoDJ3rtx9KZQqidPWMtLp6zHN9VABoJAVY+w4H1FQSDL4hiJpYtPL15W235v240I4o7yuXAtX6ZOvsd1jOstCtzcFYyqXyrrmfjuTUyG22R9SXmlS62PxXCcBYhGwtKZSqaMQhexdMfUftqzV2vjvFLlRpQspdV1qMgNXc/1+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744913011; c=relaxed/simple;
-	bh=ZvMaNtTc6Gm2PvC9YtSSuxInQDyRED54ncDNlu94fBo=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=IqUeuXiTx8+AIVS43DNL+7acvQgiwxZG/RDwNtxrNQjub09kgaarguFywsQCRZjkC6s4nSpj45RNRjd2r+wobPyXqe7hQPNximRYEAVKIzYVE8y9AX0y04tJ3be2PHMInjckRJEidR7KweKoT7eD5YBeNSKUog595WSVVuvmiew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UglaqSNn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RrR3DvVQ; arc=none smtp.client-ip=193.142.43.55
+	bh=SHagOM7q8YotFbO/VX8Cd8VQdTdJhrU2B6P3R8m43U0=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=ryTxE+eTI7uefeo5TTqF2CFmNAqYAgbHvqwKzgWIve1OD51BN8iA4meNwlIEe0v8vNSRVgY1hEVbHcBIf012Lsf40qic7zKDz3f24S3LA7c2byLgbYZsPex+SFQhTWSwqyROIQA21vUKo4pP59rzzm3o8LXCLUWgiAVnp6slwbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kS8atxwC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PU5oAnSj; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UglaqSNn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RrR3DvVQ"
-Date: Thu, 17 Apr 2025 18:03:26 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kS8atxwC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PU5oAnSj"
+Date: Thu, 17 Apr 2025 18:03:27 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744913007;
+	s=2020; t=1744913008;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=aCyqZYsbGLAaO0GmNOqxYS3gBjZBlryVgZ0+1AzxPQM=;
-	b=UglaqSNnIOfJW8/uQREqbooS7m90gdfWYPuigksXUyNV3DKto4EfXyCTLhtjUDQ8Hzn0yd
-	XsFsERmZQdTWFl95Q2dftv8W2MFHgq6FRjuqArGvEWgqhz5Olo1UGysnEbQkLt1X7OpOFT
-	QoDq8Qp2OuEN+WB1Y1YAqcRP86J7QV6Tr97b9hdUOhlp3XYYJR9isE7rbQCF2NEJ2KgDPJ
-	bjHLKdZ1U7RKaiZisgsMbrS11v9qfV9yNJHmJeGbXnZQev0gJmqwP32SvuzvhYAug0yLAA
-	4eKT4GWcXV3CCu51Ck2sd51CVqttqeVa0bdSbUnEJOQh23fGi4OxTRBljuve7A==
+	bh=vH8JDT/bgq6XEaGBXPCAdqlVPFUvFzuv7efqS6ba+Aw=;
+	b=kS8atxwCnXKdsXkNqOFLZPBnr5lIpkwHqjPWSOPEcZDMYG94+aIYk3lACj1YdN0hDxQN+k
+	I72rg7QTG8KJ2kSkW6cYv4pYUR6Ogrz6mSMe67Z0/F6txOQr63JZTSRqiMHzRNggUV4DHt
+	WGDp0Ou6ikIE4EloZtp3V0t8Z6LcaV3GkrzbTAUqm3D8ftUlkFIuzG4YEYB6gqT2Lvd/dr
+	Y0DOk1qnmPpiIaxu0d11izEW09au1Z09YFR86JS8fx0WqT+71/bdAev6um2mBH4ZaxsMHN
+	xId/uwLFmvIwPmVc9xYthPIYZpRaRyPtF9waiLrOcYHldsfVoAYKDcztUKamIw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744913007;
+	s=2020e; t=1744913008;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=aCyqZYsbGLAaO0GmNOqxYS3gBjZBlryVgZ0+1AzxPQM=;
-	b=RrR3DvVQzKeMVMU0nEaV301OOL21uA47fNXfQweZ7/BfH25MKmii+nNVaD62RsH8qL2hsN
-	ic+ea86GGDHoEGBQ==
+	bh=vH8JDT/bgq6XEaGBXPCAdqlVPFUvFzuv7efqS6ba+Aw=;
+	b=PU5oAnSjoMwRF6f2fQRqC+UQj4Ogsl+fkmEgXV3Hb8p68sAkQirX384MI8867pl+2pH9lo
+	n8dnge7v5MpRD8AA==
 From: "tip-bot2 for Dave Hansen" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/mm: Simplify PAE PGD sharing macros
+Subject: [tip: x86/mm] x86/mm: Always tell core mm to sync kernel mappings
 Cc: Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
 Precedence: bulk
@@ -49,7 +49,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174491300671.31282.764853988155878867.tip-bot2@tip-bot2>
+Message-ID: <174491300738.31282.6790702061292691578.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,56 +59,49 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/mm branch of tip:
 
-Commit-ID:     45fb940563f80b8138f465f18d71c2d3e4a0724e
-Gitweb:        https://git.kernel.org/tip/45fb940563f80b8138f465f18d71c2d3e4a0724e
+Commit-ID:     eb9c7f00f22d6ea2a94e00eb4f33a79064681564
+Gitweb:        https://git.kernel.org/tip/eb9c7f00f22d6ea2a94e00eb4f33a79064681564
 Author:        Dave Hansen <dave.hansen@linux.intel.com>
-AuthorDate:    Mon, 14 Apr 2025 10:32:38 -07:00
+AuthorDate:    Mon, 14 Apr 2025 10:32:37 -07:00
 Committer:     Dave Hansen <dave.hansen@linux.intel.com>
 CommitterDate: Thu, 17 Apr 2025 10:39:25 -07:00
 
-x86/mm: Simplify PAE PGD sharing macros
+x86/mm: Always tell core mm to sync kernel mappings
 
-There are a few too many levels of abstraction here.
+Each mm_struct has its own copy of the page tables. When core mm code
+makes changes to a copy of the page tables those changes sometimes
+need to be synchronized with other mms' copies of the page tables. But
+when this synchronization actually needs to happen is highly
+architecture and configuration specific.
 
-First, just expand the PREALLOCATED_PMDS macro in place to make it
-clear that it is only conditional on PTI.
+In cases where kernel PMDs are shared across processes
+(SHARED_KERNEL_PMD) the core mm does not itself need to do that
+synchronization for kernel PMD changes. The x86 code communicates
+this by clearing the PGTBL_PMD_MODIFIED bit cleared in those
+configs to avoid expensive synchronization.
 
-Second, MAX_PREALLOCATED_PMDS is only used in one spot for an
-on-stack allocation. It has a *maximum* value of 4. Do not bother
-with the macro MAX() magic.  Just set it to 4.
+The kernel is moving toward never sharing kernel PMDs on 32-bit.
+Prepare for that and make 32-bit PAE always set PGTBL_PMD_MODIFIED,
+even if there is no modification to synchronize. This obviously adds
+some synchronization overhead in cases where the kernel page tables
+are being changed.
 
 Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lore.kernel.org/all/20250414173238.6E3CDA56%40davehans-spike.ostc.intel.com
+Link: https://lore.kernel.org/all/20250414173237.EC790E95%40davehans-spike.ostc.intel.com
 ---
- arch/x86/mm/pgtable.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ arch/x86/include/asm/pgtable-3level_types.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index f1c5886..027e1d3 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -68,12 +68,6 @@ static inline void pgd_list_del(pgd_t *pgd)
- 	list_del(&ptdesc->pt_list);
- }
+diff --git a/arch/x86/include/asm/pgtable-3level_types.h b/arch/x86/include/asm/pgtable-3level_types.h
+index 9d5b257..9759fa0 100644
+--- a/arch/x86/include/asm/pgtable-3level_types.h
++++ b/arch/x86/include/asm/pgtable-3level_types.h
+@@ -29,7 +29,7 @@ typedef union {
  
--#define UNSHARED_PTRS_PER_PGD				\
--	(SHARED_KERNEL_PMD ? KERNEL_PGD_BOUNDARY : PTRS_PER_PGD)
--#define MAX_UNSHARED_PTRS_PER_PGD			\
--	MAX_T(size_t, KERNEL_PGD_BOUNDARY, PTRS_PER_PGD)
--
--
- static void pgd_set_mm(pgd_t *pgd, struct mm_struct *mm)
- {
- 	virt_to_ptdesc(pgd)->pt_mm = mm;
-@@ -132,8 +126,9 @@ static void pgd_dtor(pgd_t *pgd)
-  * not shared between pagetables (!SHARED_KERNEL_PMDS), we allocate
-  * and initialize the kernel pmds here.
-  */
--#define PREALLOCATED_PMDS	UNSHARED_PTRS_PER_PGD
--#define MAX_PREALLOCATED_PMDS	MAX_UNSHARED_PTRS_PER_PGD
-+#define PREALLOCATED_PMDS	(static_cpu_has(X86_FEATURE_PTI) ? \
-+					PTRS_PER_PGD : KERNEL_PGD_BOUNDARY)
-+#define MAX_PREALLOCATED_PMDS	PTRS_PER_PGD
+ #define SHARED_KERNEL_PMD	(!static_cpu_has(X86_FEATURE_PTI))
+ 
+-#define ARCH_PAGE_TABLE_SYNC_MASK	(SHARED_KERNEL_PMD ? 0 : PGTBL_PMD_MODIFIED)
++#define ARCH_PAGE_TABLE_SYNC_MASK	PGTBL_PMD_MODIFIED
  
  /*
-  * We allocate separate PMDs for the kernel part of the user page-table
+  * PGDIR_SHIFT determines what a top-level page table entry can map
