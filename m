@@ -1,63 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41783204583;
-	Thu, 17 Apr 2025 23:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811D01DF260;
+	Thu, 17 Apr 2025 23:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744932569; cv=none; b=LNcw/r0lq7By8gZU1GYMo14vIswet9Z0Ji3y6WFP3n98m040fCzQlnOMc56GnnUAAbqCP1+/WJWy4c5cEUa1yWqmV687Gznd+d4q7JelzodjUtYnd/tdjGVjPLSvoEQMfJcSGP5itAaV022SQwuxbG0k1zDGSSTwHdDdB5On1K8=
+	t=1744932648; cv=none; b=YwZcYFNDm8UkBMYDOpTT2wNRQun8XqN+9e4AmyWdUUQcAya0Wp3ukqiVUDMT4SzfnyH50/2blNnfH4rRZgEHQVdXJwpXP+y/MVRvTQmg2p78H4or3WFuGCTgoAX8OSSuN47sKcqBAjneklQlTqikskcwBgk5gNnzVKXmsIvZM7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744932569; c=relaxed/simple;
-	bh=wjYgKY975jAFrgsX+2PJ2j8ySX7rgcB8HC8tFI9lXTI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=kPNj2lCAr5/17Ww71QF2mjD8KCeDM+GsimmFPlGrICxgpbnZU46Yc/i7HQm2R2S5bKHBYsiNn4vhdASECqTE1nP0ASBNh4KMkhkbNd0f8gZ7MysA3P2zG4DrXWaJA51Iw4WpdJpW/olpIApGk8LZ4GeOGa/dY6Hqf7yqtSHaWys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=jEv6yVEb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744932648; c=relaxed/simple;
+	bh=5zsOBMyKDRrYus2KS6jpmLIaZ3RdH7jmamJy8CjOZZ8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EP0sQIXZ1BvZVGho69bfw0B54VHWS9DM45hYoQDbxVajGRDiEiTNgouxTOMsMWYeRi5CIQMbbHTvcizzkwrdAG27mQUP1AbA8VQGNb8Cr/F3opyoZqZE/RcB40o+yH4OimI7+141HPDZCsaJ3bYd60zOuRbX4Z+bgUQayhVuleo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NC4wC3iA; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="jEv6yVEb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22DB6C4CEE4;
-	Thu, 17 Apr 2025 23:29:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1744932568;
-	bh=wjYgKY975jAFrgsX+2PJ2j8ySX7rgcB8HC8tFI9lXTI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jEv6yVEba3ZswWp5mklpexfv2IRZvURZ4QIWTMv3cmgl009NEq7N4/lK7oDJkdnvj
-	 cftSMi3Se1rZgYH+IORieYtFEyXrqUocKStYDWE/iZL6IlLBkpmAvgc8Tu28esR5ou
-	 vIsQXBfxjNjMaVRWnnbYHVxpCgE59YAvrJCczFEY=
-Date: Thu, 17 Apr 2025 16:29:27 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrii Nakryiko <andrii.nakryiko@gmail.com>, Mykyta Yatsenko
- <mykyta.yatsenko5@gmail.com>
-Subject: Re: [PATCH] tracing: Fix filter string testing
-Message-Id: <20250417162927.e1117ce02e612e29a34985ef@linux-foundation.org>
-In-Reply-To: <20250417183003.505835fb@gandalf.local.home>
-References: <20250417183003.505835fb@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NC4wC3iA"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53HNUeWv781174
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 17 Apr 2025 18:30:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744932640;
+	bh=LlfNYEA3GcNF5ETHru+TFzjorIT8qkTiM1wG+X+ViQo=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=NC4wC3iAOVY5D0vY+Zm9YDvjshgfXj3KKiSscRdf/SBQqbmVZH3Bjhmbedp/RVbLL
+	 l/BIBhMmZP+9Pa2FrQ9Dj1xpITcZM+gfE9QyXZ2Zgtf8A/EyvWixvsEE7tC3YHD+Ts
+	 puh8nEE0TTEz/cPRY/LPHXZkUSnJh9/foQKttKa8=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53HNUekk003887
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 17 Apr 2025 18:30:40 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 17
+ Apr 2025 18:30:40 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 17 Apr 2025 18:30:40 -0500
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53HNUePh023286;
+	Thu, 17 Apr 2025 18:30:40 -0500
+From: Judith Mendez <jm@ti.com>
+To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
+CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Moteen Shah <m-shah@ti.com>
+Subject: [PATCH v2 3/5] arm64: dts: ti: k3-am65-main: Add missing taps to sdhci0
+Date: Thu, 17 Apr 2025 18:30:38 -0500
+Message-ID: <20250417233040.3658761-4-jm@ti.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250417233040.3658761-1-jm@ti.com>
+References: <20250417233040.3658761-1-jm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Thu, 17 Apr 2025 18:30:03 -0400 Steven Rostedt <rostedt@goodmis.org> wrote:
+For am65x, add missing ITAPDLYSEL values for Default Speed and High
+Speed SDR modes to sdhci0 node according to the device datasheet [0].
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> The filter string testing uses strncpy_from_kernel/user_nofault() to
-> retrieve the string to test the filter against. The if() statement was
-> incorrect as it considered 0 as a fault, when it is only negative that it
-> faulted.
+Fixes: eac99d38f861 ("arm64: dts: ti: k3-am654-main: Update otap-del-sel values")
+[0] https://www.ti.com/lit/gpn/am6548
+Signed-off-by: Judith Mendez <jm@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-changelog forgot to describe the userspace-visible effects of the bug?
-
-> Cc: stable@vger.kernel.org
-
-Which is more important when proposing this!
-
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index 94a812a1355ba..5ebf7ada6e485 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -449,6 +449,8 @@ sdhci0: mmc@4f80000 {
+ 		ti,otap-del-sel-mmc-hs = <0x0>;
+ 		ti,otap-del-sel-ddr52 = <0x5>;
+ 		ti,otap-del-sel-hs200 = <0x5>;
++		ti,itap-del-sel-legacy = <0xa>;
++		ti,itap-del-sel-mmc-hs = <0x1>;
+ 		ti,itap-del-sel-ddr52 = <0x0>;
+ 		dma-coherent;
+ 		status = "disabled";
+-- 
+2.49.0
 
