@@ -1,179 +1,90 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD0B1E5216;
-	Thu, 17 Apr 2025 05:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E93195FE8;
+	Thu, 17 Apr 2025 05:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744868607; cv=none; b=aNAt5+CbeoF5j1Q/3Ok3Wqt4InkZSItVYmSZxK1Gv8odLkZJFIcVdZVpi/UZp7Fo/FVq88RWPcgdGOK//AU+m5JGgZeBOKQ4uiHHR5T8uplMEBJPJTfkgdBIdMR2TvStmfq/Sgr76ve8fKYy1AAjtuI3ePp7SaUNAjW2EJ7uAgU=
+	t=1744868695; cv=none; b=bFmo4AJbk939Ik72S+xswO9PekbJ1JVxNwYI9y2Ex40JR+tLhh2iiDXEFpgGs2SkiAZMwujXw9lGTd7hPLBUMk+I46vRcDr9eL13q69lin+X75LZdHmNvYxf8NFFcE1FmtqTat4Nw45n2aWSuIpe9/M8ebp5UML9p6fG7PI2aZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744868607; c=relaxed/simple;
-	bh=FMIpPYafwfnkDabtlrEmI7ulS7B4pPOqair5B9WAoBA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n3JdZUrt+ND6v/aBYlUMMfrCmdNRRu40huacE1FNDY2jcW+SvMYrzwyWZFkb/eYcGx/qx/8xYD5JKww7722rRYNyV6tQAqLnAfZ4fzmkUdegJwDRuwhouzC8X84qtEd9X02fIFsoYHZopzOrEUDBwBmh3YTjoPHVxObTosKzlAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b5D8VjIv; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744868695; c=relaxed/simple;
+	bh=Si3AfpSIXUZWHEBNXUEisWaaiZp9N8CK2LqUyKMe1sw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=LXWsERFPxZZhvGztPbRVLsUxgJQ5PQWLQpChFnH7ACZeiMRVaAFsB0nI9ihINbZ4zJl8Hn43rbHL1CLliN+4m/brFgHZ4yuvGQDLV7IKNR095r19TfjILNzjMGMNYUE3ee4/NSFRA4BTKR8In0WhCl9K0xcUkBvaiP2QRecgCxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=C+DJRvEn; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b5D8VjIv"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b0b2d1f2845so260015a12.3;
-        Wed, 16 Apr 2025 22:43:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744868605; x=1745473405; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9g+SVkavFRSacmyVfOEHphPFAH3/AYZFW+0PJY+HSIA=;
-        b=b5D8VjIvGC5XDDKEvWy2z+f+K+PiH6K0OaCzgE2OtlHUnjqojXu4z+VTkCkMAsdzEn
-         TaGkSMrEK6tN2WKRA55m8tomOZuyQr7pAq9JgYI0BGpM4cGfXsXieIOFNsAzT5AZkMqI
-         qZFU6twUA5BmDJ6Lq2hnakI74p/Tq3EtZj89yhMJdcvAHBw/PGpnwY3I+weXA6ArBJj9
-         NdIGHrqB5Z/OUNIt5wR06Z1UjOziJVIBKWuLFMvEn92y65dLPYl2bUBSRcw94pXQXYOn
-         sA2qCyWx8PM5LJPZ1t6Ueu04wXYKzHYIWTu6aDB3U3IAQp/yruPbu+NSY4fSE/lkkset
-         mcgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744868605; x=1745473405;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9g+SVkavFRSacmyVfOEHphPFAH3/AYZFW+0PJY+HSIA=;
-        b=IDOzg0BCIrsOurJAF7TesLHB41CEjv+w3YUj1BgFyestH6lgVhXOfcdaKXykONDYSB
-         umKB6fjZngXDSXV2mmOduSy8+jhv02NYUuRN4mUV1wKwLWwGBsR6U2CbHS+63V6L8tIx
-         awYMaYeMQrRPDxpdVft6MGVYBTsTk1FP/6MNYjRK0JGpzwgrN6MeKSbr8yo6z4T4HUWV
-         4M01LDVeFJs5enWXkNHBtwDHVzvNjZWh1bnU9sIviowewU4guGJXoCGzyVGgXn7RXq0G
-         gMSyarze0eTJ2Za9qimCX1KqGi1y0RiNMXlthgSSrb0Kq7s+jhwWAEiUjdAQlUiU76J2
-         fZqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUioEPMq8KfIgtVA7mltYZcSa+48L5Y9wOCN1Q4TdzWZArUhoNq4p9tI7ubwc7TSj7TgQ13iSj5ahzSMVE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWZlmlW9YhR3mxrfWwVc9tgbcGFjbhFP0BUpbDhFNWmfB4nBr4
-	rXnlRARi+yGwIsiryuB5vFiwYchTIrX7fsl1Lg9PtlPhLBtjhWp4
-X-Gm-Gg: ASbGncuagXxyEL3NPYHwuAHdgPgoPA56qLgtV98aUSpQGZfdsEh1bDFHuhNAVOzeAFR
-	Vr0pC7nld9y5X48x3xE1AjgrKPkylepKTEuR0uY92C0pZqdetrN9Kik8BKuNO12hx/D7d2swZqk
-	fExh82Rk+SJUoMHgURT0tmPG/3u57vqaRD8EiTf78FqNeUZDIWU78w9soOsk6xfO9b9Cbh9obEF
-	qUW+Ru45TVOFV8IWvLphBnZ3MmmEnIHRz1ugyxUwS5uUwYpgJfSC7nNlbacoWVKiyxI63dCvE3X
-	UML86HXLylFkTv2aP28nw54O9Mm7mm/4pT2oM9+1FZmuZtAv+g==
-X-Google-Smtp-Source: AGHT+IGDFwjAU8gK8vB7c4HiWkRT1h+o4JFppXo1da2T6aikyD9BsPygXAqD6QGn+Ck9y4Ccqmemnw==
-X-Received: by 2002:a17:90b:5683:b0:2f8:34df:5652 with SMTP id 98e67ed59e1d1-30863f303f7mr6544849a91.21.1744868604686;
-        Wed, 16 Apr 2025 22:43:24 -0700 (PDT)
-Received: from [192.168.0.161] ([14.139.108.62])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30861212c3esm2698249a91.25.2025.04.16.22.43.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 22:43:24 -0700 (PDT)
-Message-ID: <383030aa-2312-4f11-ba80-c8dd54fc9010@gmail.com>
-Date: Thu, 17 Apr 2025 11:13:19 +0530
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="C+DJRvEn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1744868688;
+	bh=+G/l/IR8gz7cAHFKnICiUwkMBvH+qUera4e3n1Le9+c=;
+	h=Date:From:To:Cc:Subject:From;
+	b=C+DJRvEn0uGPHYSTXZhLiLPTgjeYgj4aUoKfc9CXEgCyFmAu4sNxWpXKtMCuhzaBp
+	 HNOtf7hnIkm4QAg/1mXST26JFO1ZdhJll51DIneKOAZ28jdLocJJo0oIZYuDK++131
+	 bYmBCjgCfdx0jn7BGOKL155lvCLNdTZpHMWNgclJBItsjukJtbLhsvyVYZdweNlNm9
+	 LpmNO3hf/wmfIMB60Pv0Ob+Us22aL4/k9uQWtIHoetbdo5ELDqOHHcN8UWvoM/u9LB
+	 274uzKk6HWRiCN8IapD7Bi/7HzBS0vx5o1XXuE0SMX/X2If2bpH/IvX1UspyPH5gsq
+	 UGrI1N3a8UR/w==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZdRg41jGlz4x5k;
+	Thu, 17 Apr 2025 15:44:47 +1000 (AEST)
+Date: Thu, 17 Apr 2025 15:44:47 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski
+ <brgl@bgdev.pl>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patches in the gpio-intel tree
+Message-ID: <20250417154447.642f2ec4@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: addac: ad74115: Fix use of uninitialized variable
- rate
-To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
- David Lechner <dlechner@baylibre.com>, cosmin.tanislav@analog.com,
- lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250409202945.205088-1-purvayeshi550@gmail.com>
- <1254dfd7-e872-4c65-bd17-8015e1b2eba4@baylibre.com>
- <10a9dd5cdf55b6a9845fb9543cdef5f2251ffa6a.camel@gmail.com>
- <f5f40475-fae5-487f-b5ce-dc6c5dfe3600@gmail.com>
- <5cb7ab70be67f8b97b5fd09eefab0f2c33d99d20.camel@gmail.com>
-Content-Language: en-US
-From: Purva Yeshi <purvayeshi550@gmail.com>
-In-Reply-To: <5cb7ab70be67f8b97b5fd09eefab0f2c33d99d20.camel@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/Cg0v1yfqYb36Wgsb=RoL6Ym";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 11/04/25 17:47, Nuno Sá wrote:
-> On Fri, 2025-04-11 at 14:39 +0530, Purva Yeshi wrote:
->> On 11/04/25 11:19, Nuno Sá wrote:
->>> On Thu, 2025-04-10 at 09:51 -0500, David Lechner wrote:
->>>> On 4/9/25 3:29 PM, Purva Yeshi wrote:
->>>>> Fix Smatch-detected error:
->>>>> drivers/iio/addac/ad74115.c:823 _ad74115_get_adc_code() error:
->>>>> uninitialized symbol 'rate'.
->>>>>
->>>>> The variable rate was declared but not given any value before being used
->>>>> in a division. If the code reached that point without setting rate, it
->>>>> would cause unpredictable behavior.
->>>>>
->>>>> Declare and initialize 'rate' to zero inside the 'else' block where it
->>>>> is
->>>>> used. This ensures 'rate' is always initialized before being passed to
->>>>> DIV_ROUND_CLOSEST.
->>>>>
->>>>> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
->>>>> ---
->>>>>    drivers/iio/addac/ad74115.c | 2 +-
->>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/iio/addac/ad74115.c b/drivers/iio/addac/ad74115.c
->>>>> index a7e480f2472d..26770c68e5fa 100644
->>>>> --- a/drivers/iio/addac/ad74115.c
->>>>> +++ b/drivers/iio/addac/ad74115.c
->>>>> @@ -814,7 +814,7 @@ static int _ad74115_get_adc_code(struct
->>>>> ad74115_state *st,
->>>>>    			return -ETIMEDOUT;
->>>>>    	} else {
->>>>>    		unsigned int regval, wait_time;
->>>>> -		int rate;
->>>>> +		int rate = 0;
->>>>>    
->>>>>    		ret = ad74115_get_adc_rate(st, channel, &rate);
->>>>>    		if (ret < 0)
->>>>
->>>> I don't see how rate could be used uninitialized since we are
->>>> returning the error if ad74115_get_adc_rate() fails.
->>>>
->>>> Also, initializing to 0 would then cause a divide by 0 error
->>>> if that value was actually used later in the code.
->>>>
->>>
->>> Agreed... A better check could actually be (in ad74115_get_adc_rate()):
->>>
->>>
->>> if (i >= ARRAY_SIZE(ad74115_get_adc_rate))
->>>       return -EIO;
->>>
->>> Kind of a paranoid check but just making sure a faulty chip does not lead to
->>> an out
->>> of bounds access.
->>>
->>> - Nuno Sá
->>
->> Hi Nuno,
->>
->> Thank you for your suggestion regarding the paranoid check.
->>
->> However, ad74115_get_adc_rate is a function, not an array, pointer, or
->> vector. Therefore, using ARRAY_SIZE on it results in a compilation error.
->>
->> I believe the intended check was:
->>
->> if (i >= ARRAY_SIZE(ad74115_adc_conv_rate_tbl))
->>       return -EIO;
->>
-> 
-> Oh yes, bad copy-paste...
-> 
->>
->> This ensures that the index i does not exceed the bounds of the
->> ad74115_adc_conv_rate_tbl array, preventing potential out-of-bounds access.
->>
->> This check prevents potential out-of-bounds access, it does not address
->> the Smatch warning about the uninitialized variable 'rate'. Smatch may
->> still flag 'rate' as potentially uninitialized if it cannot determine
->> that ad74115_get_adc_rate() always initializes it before use.
->>
-> 
-> Well, as said, this is a false positive...
-> 
-> - Nuno Sá
-> 
+--Sig_/Cg0v1yfqYb36Wgsb=RoL6Ym
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi Nuno,
+Hi all,
 
-Thank you for the review. I'll drop the patch.
+The following commits are also in the gpio-brgl tree as different commits
+(but the same patches):
 
-Best regards,
-Purva
+  8f4543e980ff ("gpio: ich: use new line value setter callbacks")
+  b7a49fd57be3 ("gpio: graniterapids: use new line value setter callbacks")
 
+These are commits
+
+  69e230a0a288 ("gpio: ich: use new line value setter callbacks")
+  04eaa41eb8eb ("gpio: graniterapids: use new line value setter callbacks")
+
+in the gpio-bgrl tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Cg0v1yfqYb36Wgsb=RoL6Ym
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgAlU8ACgkQAVBC80lX
+0Gy9oAf+Lb5Rm5+EF8v0d8fHHFwP+bYZJ8zkautSLRV9acQ9owluHk6umU/4p1VR
+sZtSEbUD2lv9ETnj5Ia3Xt/MyjT/E+vdpmYCrjbAAh2KCC/5JR7aJROV3WnbA9j5
+eDmfLJAQppgWV/R5vJUWgLeGgjMn44mRL83Amvcff2mrEJOQ/su9zuEIr7BAbj9w
+ejjU6jHhmmYFoVY5rbPQ0HswzTZ6L6F+3jYlj2x8vFrL6gOBRgcKEzsfUUbft/el
+80ffYpXy3qXcalSpOreGpPFdLCQ2gG+3dYNbJZL5ptHNvH/W3H/2rZc3rQEH1nZT
+d2fFyMKVoWF381sBooQWm79D9hKvwg==
+=Q1JZ
+-----END PGP SIGNATURE-----
+
+--Sig_/Cg0v1yfqYb36Wgsb=RoL6Ym--
