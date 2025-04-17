@@ -1,95 +1,175 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m21468.qiye.163.com (mail-m21468.qiye.163.com [117.135.214.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2681F63F9
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 07:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71ECD2147FB;
+	Thu, 17 Apr 2025 07:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.214.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744874405; cv=none; b=r7RM4f8q656Ye6n/l7UOW/0WH4Vm01knZ2Ntb2iU+gVxidkJLmEI0V5hdKYFzFi30AxjxiP20BLILx3p9yctiGgbe58fs359+Q5/GJ2TFzb+90GYVn3VJOGp3L8fVYYwurYw37CF09ixzXdFeWdur7cTv0bC/hWeJ3W0otY3Ts8=
+	t=1744874435; cv=none; b=rJ52OnGA012bf3DVSlq7vNWQRPEhmkbVPxGExegPPVAjN4ZgnR4gcRa1BpKZ/QoCmnUx1R+yFqYCwS6aKSveGqcoLOJw6v6jZoeQ9aFZ2sYem39nhU4g+rpZWjXk8ZnVCkw7Scj6TO93t8PdXNXtGEN3mtY3yWrB9Fo8BYcaeX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744874405; c=relaxed/simple;
-	bh=rvbzzbyIt38638XUwt2IokS25EPoQQKWLDft0IbfC3U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=exZ/cZpMSj5oBhTcbAxho7xrxtQoC8yTNgUK42d/H+cxtp8mGW6f/jkyq7mDtIUf9oAgkBcl/n0aScewNbIkHyP2yFhLprls9g/ggNYqPRR+6CD3aRHvBmc5+lakcBT4zXW2ca7o6FTaKz62UauqFnkf+tQJnMt1i1ecmhwuF8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=umich.edu; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=Y3oA72xK; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=umich.edu
+	s=arc-20240116; t=1744874435; c=relaxed/simple;
+	bh=RlL5RNTTt9RTjRUIgbyuAwTkkmOCTYDBtWrqbJ8spd4=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=MlLbaPptIV1xM5Y9PTdIB0twN2O1Dxh3uMkM8f77lP72NxqRvKZb6bola3bT7vQkHbFpm/xJaaiNQZgwy/QiPflEOgKJePLHJlHYcXPbpp0U7+yIkc4jj9oBFNwR9r0nWSmCehM7JBwdv+h+JC/mNTWGD0/sMFQMZwA6LqNawW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=ESDZnh8a; arc=none smtp.client-ip=117.135.214.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="Y3oA72xK"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e702cffe590so378772276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:20:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1744874402; x=1745479202; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yu0QNh1tbtBnsibOOQ7JhloRzOCSdcHTsH/2taEqzT8=;
-        b=Y3oA72xKM7d90dc4xU9IrFvxOpgFCUNGtlc8mWkKHA/ZALMDfUs7V1wjf1ZuCLF6qB
-         9yy1DIX3i8924oVaVsn4V3A+tRmvoUJI3Ni2+Fk7DCgNzprRJblYXurwIa9Z5nVg6lzg
-         LEkJ2DfoxgZV/7zJLDWwlZlgmLy1fBLw0wXptcc0v6WK+emDg84AJqLeSvlFegpIOib2
-         7NxxVaQziBK/gtd0MU5JWvxjK1nzwXAivpyC9U/YXVFp0V/CG4ED24Cm2yMS+ZiY9AOL
-         zy9TmG/K79ifxoIxTQTUwA4Yagnr6Fw8eHVDJoXj597aeVmDth723WUOoorDrIC2aUBl
-         F50A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744874402; x=1745479202;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Yu0QNh1tbtBnsibOOQ7JhloRzOCSdcHTsH/2taEqzT8=;
-        b=t+l6GCQmwhclzjqQ2OLK7n1VfCCkTi9PiAfCSlxQz76sZoqTOj8WgPnNIZfh5myDGQ
-         o5icxzGOFyTiti9uXggS6OMTZ6UBGpoOoh/WiFmm7m0SAKNwpRGTve3StDY7nAv8Ktfe
-         ZdL0kYGcmN9JLiohWn8XrUsyIpr0RRXPKWQn5rjhd4vGLpca72CpYI7f5zmXjWdT34qU
-         rujUq35eD1xj71S5yCWHIQY9NFicvm2CwiDk0x0+wuDmCxhHPXe4ftBZBwhEOG7LLI0u
-         QMjpoMDY9HakG3HEGCSHyHR59nsAze60zQhSJqU/s8ioUFfvS6CUJWV3IH+zqviRd3fU
-         uIgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXRUGRw3rphNpyuji0mz9Eptv6Ot6H6A2StzBfB2hAsOTP15vr8Q+uevZx0yhsmjOy5sekUntW0qd3i8zA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2aUdSIvRzEgyZJMet+sBkLGkWyn8moM3O5AVGV71jrduRmQFn
-	4WeQZMf1kyVjx3HAGQ0OotbH62CP81a/2mSBFuJC8hptk0zfDeq0JLnT1gyhxmqjmlTNJCN3EL0
-	amE5i8FEiwLnjHuLzZ5lP07l2SELNo1L/vZJ9ow==
-X-Gm-Gg: ASbGnculU5AhhgHQfyIhnqjcD5DZRtri5f4N/Y7Lng8uelixuhjy604vIxx9ASIbeP0
-	yZsuAK07Gj2NuegfodMwKDe2DDBHKanlAsahHeFcwmMnwzwHP/7+RfRmM9VtzRU8bhhS1xwVlAj
-	PJe1QIsfvy1hpEl9W2c5Ixgg==
-X-Google-Smtp-Source: AGHT+IGJQAARqDZoOSPzwzCpDAzhpoGiPTB9Z+UpBz1/KjS/Xy32RpLnadI9jr0F9SZTmBleBsB0xGvMkaLK027XqjY=
-X-Received: by 2002:a05:6902:15c7:b0:e60:a16c:d017 with SMTP id
- 3f1490d57ef6-e7275f01225mr7332971276.49.1744874402570; Thu, 17 Apr 2025
- 00:20:02 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="ESDZnh8a"
+Received: from [172.16.12.129] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1231f10fc;
+	Thu, 17 Apr 2025 14:44:54 +0800 (GMT+08:00)
+Message-ID: <b9db4ac1-4657-236a-3cf1-6672961b2199@rock-chips.com>
+Date: Thu, 17 Apr 2025 14:44:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325-rust-analyzer-host-v5-0-385e7f1e1e23@gmail.com> <20250325-rust-analyzer-host-v5-11-385e7f1e1e23@gmail.com>
-In-Reply-To: <20250325-rust-analyzer-host-v5-11-385e7f1e1e23@gmail.com>
-From: Trevor Gross <tmgross@umich.edu>
-Date: Thu, 17 Apr 2025 02:19:51 -0500
-X-Gm-Features: ATxdqUGjGjoAzKGuMfy_tgb3N3bcwvdlNAOSKPXLcZL1a1OnfJ-Q-7dmbokdxkA
-Message-ID: <CALNs47t-VEBO__NL=CM5ty-x4naHonKSPnri8uLL5j7JrpEdeg@mail.gmail.com>
-Subject: Re: [PATCH v5 11/13] scripts: generate_rust_analyzer.py: avoid FD leak
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Boris-Chengbiao Zhou <bobo1239@web.de>, Kees Cook <kees@kernel.org>, Fiona Behrens <me@kloenk.dev>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Lukas Wirth <lukas.wirth@ferrous-systems.com>, 
-	Daniel Almeida <daniel.almeida@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Cc: shawn.lin@rock-chips.com, Detlev Casanova
+ <detlev.casanova@collabora.com>, linux-pm@vger.kernel.org,
+ linux-mmc@vger.kernel.org,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ kernel@collabora.com, linux-arm-kernel@lists.infradead.org,
+ Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>,
+ Elaine Zhang <zhangqing@rock-chips.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Finley Xiao <finley.xiao@rock-chips.com>,
+ "jon.lin@rock-chips.com" <jon.lin@rock-chips.com>
+Subject: Re: [PATCH v2] mmc: sdhci-of-dwcmshc: add PD workaround on RK3576
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+References: <20250412-rk3576-emmc-fix-v2-1-830e653ad4f0@collabora.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <20250412-rk3576-emmc-fix-v2-1-830e653ad4f0@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGRhJQlZPGR8eGhhJTE5PS0hWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a96427e485009cckunm1231f10fc
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MVE6TRw6HjJJDhAxSAlOS08X
+	NSMKFAxVSlVKTE9PQ0xJSUJNT01DVTMWGhIXVQgTGgwVVRcSFTsJFBgQVhgTEgsIVRgUFkVZV1kS
+	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQU1LTkg3Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=ESDZnh8aikfHaiq7IYfnOrYeq/BkvCKQAqvo4IVcY0+CXNTby3f/4GuZNdzUdwpK9O2L1cEzqORm0A8kFleCu/E2GV/q6pZcjEkyPHJzPCEa2G1aUKdKpWqnOQ6CUVF1q5eq5nZYTA/H44Z9DXUezOY9Nf9OpTC9VcaKWrsDEqc=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=mOf8GWaAUa3y0Ll4tMagrn3LdiJZ5rNNldT2O6sNcvU=;
+	h=date:mime-version:subject:message-id:from;
 
-On Tue, Mar 25, 2025 at 3:07=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> Use a context manager to avoid leaking file descriptors.
->
-> Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
-> Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
-> Reviewed-by: Fiona Behrens <me@kloenk.dev>
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
++ Jon, who may have some comment on FSPI0 part as mentioned below.
+
+在 2025/04/13 星期日 4:45, Nicolas Frattaroli 写道:
+> RK3576's power domains have a peculiar problem where the PD_NVM
+> power domain, of which the sdhci controller is a part, seemingly does
+> not have idempotent disable/enable. The end effect is that if PD_NVM
+> gets turned off by the generic power domain logic because all the
+> devices depending on it are suspended, then the next time the sdhci
+> device is unsuspended, it'll hang the SoC as soon as it tries accessing
+> the CQHCI registers.
+> 
+> RK3576's UFS support needed a new dev_pm_genpd_rpm_always_on function
+> added to the generic power domains API to handle what appears to be a
+> similar hardware issue.
+> 
+> Use this new function to ask for the same treatment in the sdhci
+> controller by giving rk3576 its own platform data with its own postinit
+> function. The benefit of doing this instead of marking the power domains
+> always on in the power domain core is that we only do this if we know
+> the platform we're running on actually uses the sdhci controller. For
+> others, keeping PD_NVM always on would be a waste, as they won't run
+> into this specific issue. The only other IP in PD_NVM that could be
+> affected is FSPI0. If it gets a mainline driver, it will probably want
+> to do the same thing.
+> 
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 > ---
->  scripts/generate_rust_analyzer.py | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-
-Reviewed-by: Trevor Gross <tmgross@umich.edu>
+> Changes in v2:
+> - Rewrite patch to use dev_pm_genpd_rpm_always_on in sdhci driver
+>    instead, after Ulf Hansson made me aware of its existence
+> - Link to v1: https://lore.kernel.org/r/20250408-rk3576-emmc-fix-v1-1-3009828b1b31@collabora.com
+> ---
+>   drivers/mmc/host/sdhci-of-dwcmshc.c | 39 +++++++++++++++++++++++++++++++++++++
+>   1 file changed, 39 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> index 09b9ab15e4995f0bddf57dd309c010c849be40d9..a00aec05eff2da8197cc64690ba9665be756e54a 100644
+> --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
+> +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> @@ -17,6 +17,7 @@
+>   #include <linux/module.h>
+>   #include <linux/of.h>
+>   #include <linux/platform_device.h>
+> +#include <linux/pm_domain.h>
+>   #include <linux/pm_runtime.h>
+>   #include <linux/reset.h>
+>   #include <linux/sizes.h>
+> @@ -745,6 +746,28 @@ static void dwcmshc_rk35xx_postinit(struct sdhci_host *host, struct dwcmshc_priv
+>   	}
+>   }
+>   
+> +static void dwcmshc_rk3576_postinit(struct sdhci_host *host, struct dwcmshc_priv *dwc_priv)
+> +{
+> +	struct device *dev = mmc_dev(host->mmc);
+> +	int ret;
+> +
+> +	/*
+> +	 * This works around what appears to be a silicon bug, which makes the
+> +	 * PD_NVM power domain, which the sdhci controller on the RK3576 is in,
+> +	 * never come back the same way once it's turned off once. This can
+> +	 * happen during early kernel boot if no driver is using either PD_NVM
+> +	 * or its child power domain PD_SDGMAC for a short moment, leading to it
+> +	 * being turned off to save power. By keeping it on, sdhci suspending
+> +	 * won't lead to PD_NVM becoming a candidate for getting turned off.
+> +	 */
+> +	ret = dev_pm_genpd_rpm_always_on(dev, true);
+> +	if (ret && ret != -EOPNOTSUPP)
+> +		dev_warn(dev, "failed to set PD rpm always on, SoC may hang later: %pe\n",
+> +			 ERR_PTR(ret));
+> +
+> +	dwcmshc_rk35xx_postinit(host, dwc_priv);
+> +}
+> +
+>   static int th1520_execute_tuning(struct sdhci_host *host, u32 opcode)
+>   {
+>   	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> @@ -1176,6 +1199,18 @@ static const struct dwcmshc_pltfm_data sdhci_dwcmshc_rk35xx_pdata = {
+>   	.postinit = dwcmshc_rk35xx_postinit,
+>   };
+>   
+> +static const struct dwcmshc_pltfm_data sdhci_dwcmshc_rk3576_pdata = {
+> +	.pdata = {
+> +		.ops = &sdhci_dwcmshc_rk35xx_ops,
+> +		.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN |
+> +			  SDHCI_QUIRK_BROKEN_TIMEOUT_VAL,
+> +		.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+> +			   SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN,
+> +	},
+> +	.init = dwcmshc_rk35xx_init,
+> +	.postinit = dwcmshc_rk3576_postinit,
+> +};
+> +
+>   static const struct dwcmshc_pltfm_data sdhci_dwcmshc_th1520_pdata = {
+>   	.pdata = {
+>   		.ops = &sdhci_dwcmshc_th1520_ops,
+> @@ -1274,6 +1309,10 @@ static const struct of_device_id sdhci_dwcmshc_dt_ids[] = {
+>   		.compatible = "rockchip,rk3588-dwcmshc",
+>   		.data = &sdhci_dwcmshc_rk35xx_pdata,
+>   	},
+> +	{
+> +		.compatible = "rockchip,rk3576-dwcmshc",
+> +		.data = &sdhci_dwcmshc_rk3576_pdata,
+> +	},
+>   	{
+>   		.compatible = "rockchip,rk3568-dwcmshc",
+>   		.data = &sdhci_dwcmshc_rk35xx_pdata,
+> 
+> ---
+> base-commit: 64e9fdfc89a76fed38d8ddeed72d42ec71957ed9
+> change-id: 20250317-rk3576-emmc-fix-7dc81a627422
+> 
+> Best regards,
