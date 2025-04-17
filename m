@@ -1,189 +1,129 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3BC6182B4
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.nppct.ru (mail.nppct.ru [195.133.245.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBDE182B4
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.245.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744892492; cv=none; b=WCdcMPSZHCiNOkRjN8bT60Jnl4tdw8v/5YDRjwHhPVOw6F5hy1Zyqv46Dvkfj2BA+S1fJ1ZQFvNFRgO0LDgTRe1Ntd0vIiKJzCSe0S6fhWrzrIr1r8vrNuaVrQzfyuxMKLWjRl0s8BH+xTkOuJHZxR9zjjYxnm95CmRK3/2X6QQ=
+	t=1744892509; cv=none; b=pk1CkhG8OAcWb0YiOI2vB6BYtJ4Bn/KovpUU6G9247F5R9qmb3Xd0oMMx67R0i+lKahmlNKnVzheHlRvH7Uzw7EQ4lHBIA1XBNlkhxGmeFFwmOzi+b6JhltpTUrWhqkTHb4Spxfz8X2GakaplcBEwwFryfzLduAaSiXkjz4opQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744892492; c=relaxed/simple;
-	bh=0HoRUL637Bn27DpyE5Zov2nUDg1rsrVH2nJv5TSs1TY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dwyqE0nCFEow/AFhErFCcSm0p3QWyREx5hQP/F3wxj94WknixKtI2cRM04a4KoGeC33cZI++K0PBeV4emrL9QQbL9c6SugNXRJT0I5xnl1nZ1jrDT8VT1r9/02nWwqVZhB2nFeu0iYvsBukJunltHViGRDxv924Doiusj9lPfnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A88681515
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:21:27 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E07E63F694
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:21:29 -0700 (PDT)
-Date: Thu, 17 Apr 2025 13:21:17 +0100
-From: Liviu Dudau <liviu.dudau@arm.com>
-To: =?utf-8?Q?Adri=C3=A1n?= Larumbe <adrian.larumbe@collabora.com>
-Cc: Boris Brezillon <boris.brezillon@collabora.com>,
-	Steven Price <steven.price@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	kernel@collabora.com, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 1/4] drm/panthor: Introduce BO labeling
-Message-ID: <aADyPXxNOHHoE-9U@e110455-lin.cambridge.arm.com>
-References: <20250415191539.55258-1-adrian.larumbe@collabora.com>
+	s=arc-20240116; t=1744892509; c=relaxed/simple;
+	bh=yim53aUfLmVou/JvqKYODc4xwB/wJ3VFd3Zy7HjYysY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FRaVjnR+g/Y4nbYA2X73NWdzeuGiWven3MsCwRLIpwJjLDVw+jCJcuzcyXPj+rzpf3shyRbrNW4BiptFIj1/Gzhm2WREpeabSJwzoWUf5HMKtbzwA4pVbEMtdaNE2dDLNhOb43XVMX8u7GiZ4976XqTUxPE8j8Nx5wgzNdXsGMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=XOc9N1kG; arc=none smtp.client-ip=195.133.245.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nppct.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="XOc9N1kG"
+Received: from mail.nppct.ru (localhost [127.0.0.1])
+	by mail.nppct.ru (Postfix) with ESMTP id 36F551C0E84
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:21:39 +0300 (MSK)
+Authentication-Results: mail.nppct.ru (amavisd-new); dkim=pass (1024-bit key)
+	reason="pass (just generated, assumed good)" header.d=nppct.ru
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nppct.ru; h=
+	content-transfer-encoding:mime-version:x-mailer:message-id:date
+	:date:subject:subject:to:from:from; s=dkim; t=1744892498; x=
+	1745756499; bh=yim53aUfLmVou/JvqKYODc4xwB/wJ3VFd3Zy7HjYysY=; b=X
+	Oc9N1kG+w3/vx99U9s8X5y6758ClWEjdx19507zYFz9q2Do3Y8vk+aqtdbjqvuO0
+	gaYW9Hv7+/VfmiJBmrptxC76ElMdYVcSwt9UQvZErnFNwBoihJsgLDLU5GK2Dz0p
+	tfywXE5fd0bSHBjAhK6xZV+AXrqxCVgNTbgDDGPFBM=
+X-Virus-Scanned: Debian amavisd-new at mail.nppct.ru
+Received: from mail.nppct.ru ([127.0.0.1])
+	by mail.nppct.ru (mail.nppct.ru [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id bujqojlHZP2W for <linux-kernel@vger.kernel.org>;
+	Thu, 17 Apr 2025 15:21:38 +0300 (MSK)
+Received: from localhost.localdomain (unknown [87.249.24.51])
+	by mail.nppct.ru (Postfix) with ESMTPSA id B90721C08D8;
+	Thu, 17 Apr 2025 15:21:30 +0300 (MSK)
+From: Alexey Nepomnyashih <sdl@nppct.ru>
+To: Juergen Gross <jgross@suse.com>
+Cc: Alexey Nepomnyashih <sdl@nppct.ru>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	xen-devel@lists.xenproject.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: [PATCH v2] xen-netfront: handle NULL returned by xdp_convert_buff_to_frame()
+Date: Thu, 17 Apr 2025 12:21:17 +0000
+Message-ID: <20250417122118.1009824-1-sdl@nppct.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250415191539.55258-1-adrian.larumbe@collabora.com>
 
-On Tue, Apr 15, 2025 at 08:15:30PM +0100, Adrián Larumbe wrote:
-> Add a new character string Panthor BO field, and a function that allows
-> setting it from within the driver.
-> 
-> Driver takes care of freeing the string when it's replaced or no longer
-> needed at object destruction time, but allocating it is the responsibility
-> of callers.
-> 
-> Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
-> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+The function xdp_convert_buff_to_frame() may return NULL if it fails
+to correctly convert the XDP buffer into an XDP frame due to memory
+constraints, internal errors, or invalid data. Failing to check for NULL
+may lead to a NULL pointer dereference if the result is used later in
+processing, potentially causing crashes, data corruption, or undefined
+behavior.
 
-Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
+On XDP redirect failure, the associated page must be released explicitly
+if it was previously retained via get_page(). Failing to do so may result
+in a memory leak, as the pages reference count is not decremented.
 
-Best regards,
-Liviu
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-> ---
->  drivers/gpu/drm/panthor/panthor_gem.c | 46 +++++++++++++++++++++++++++
->  drivers/gpu/drm/panthor/panthor_gem.h | 17 ++++++++++
->  2 files changed, 63 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panthor/panthor_gem.c b/drivers/gpu/drm/panthor/panthor_gem.c
-> index 8244a4e6c2a2..8dd7fa63f1ff 100644
-> --- a/drivers/gpu/drm/panthor/panthor_gem.c
-> +++ b/drivers/gpu/drm/panthor/panthor_gem.c
-> @@ -2,6 +2,7 @@
->  /* Copyright 2019 Linaro, Ltd, Rob Herring <robh@kernel.org> */
->  /* Copyright 2023 Collabora ltd. */
->  
-> +#include <linux/cleanup.h>
->  #include <linux/dma-buf.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/err.h>
-> @@ -18,6 +19,14 @@ static void panthor_gem_free_object(struct drm_gem_object *obj)
->  	struct panthor_gem_object *bo = to_panthor_bo(obj);
->  	struct drm_gem_object *vm_root_gem = bo->exclusive_vm_root_gem;
->  
-> +	/*
-> +	 * Label might have been allocated with kstrdup_const(),
-> +	 * we need to take that into account when freeing the memory
-> +	 */
-> +	kfree_const(bo->label.str);
-> +
-> +	mutex_destroy(&bo->label.lock);
-> +
->  	drm_gem_free_mmap_offset(&bo->base.base);
->  	mutex_destroy(&bo->gpuva_list_lock);
->  	drm_gem_shmem_free(&bo->base);
-> @@ -196,6 +205,7 @@ struct drm_gem_object *panthor_gem_create_object(struct drm_device *ddev, size_t
->  	obj->base.map_wc = !ptdev->coherent;
->  	mutex_init(&obj->gpuva_list_lock);
->  	drm_gem_gpuva_set_lock(&obj->base.base, &obj->gpuva_list_lock);
-> +	mutex_init(&obj->label.lock);
->  
->  	return &obj->base.base;
->  }
-> @@ -247,3 +257,39 @@ panthor_gem_create_with_handle(struct drm_file *file,
->  
->  	return ret;
->  }
-> +
-> +void
-> +panthor_gem_bo_set_label(struct drm_gem_object *obj, const char *label)
-> +{
-> +	struct panthor_gem_object *bo = to_panthor_bo(obj);
-> +	const char *old_label;
-> +
-> +	scoped_guard(mutex, &bo->label.lock) {
-> +		old_label = bo->label.str;
-> +		bo->label.str = label;
-> +	}
-> +
-> +	kfree_const(old_label);
-> +}
-> +
-> +void
-> +panthor_gem_kernel_bo_set_label(struct panthor_kernel_bo *bo, const char *label)
-> +{
-> +	const char *str;
-> +
-> +	/* We should never attempt labelling a UM-exposed GEM object */
-> +	if (drm_WARN_ON(bo->obj->dev, bo->obj->handle_count > 0))
-> +		return;
-> +
-> +	if (!label)
-> +		return;
-> +
-> +	str = kstrdup_const(label, GFP_KERNEL);
-> +	if (!str) {
-> +		/* Failing to allocate memory for a label isn't a fatal condition */
-> +		drm_warn(bo->obj->dev, "Not enough memory to allocate BO label");
-> +		return;
-> +	}
-> +
-> +	panthor_gem_bo_set_label(bo->obj, str);
-> +}
-> diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/panthor/panthor_gem.h
-> index 1a363bb814f4..af0d77338860 100644
-> --- a/drivers/gpu/drm/panthor/panthor_gem.h
-> +++ b/drivers/gpu/drm/panthor/panthor_gem.h
-> @@ -46,6 +46,20 @@ struct panthor_gem_object {
->  
->  	/** @flags: Combination of drm_panthor_bo_flags flags. */
->  	u32 flags;
-> +
-> +	/**
-> +	 * @label: BO tagging fields. The label can be assigned within the
-> +	 * driver itself or through a specific IOCTL.
-> +	 */
-> +	struct {
-> +		/**
-> +		 * @label.str: Pointer to NULL-terminated string,
-> +		 */
-> +		const char *str;
-> +
-> +		/** @lock.str: Protects access to the @label.str field. */
-> +		struct mutex lock;
-> +	} label;
->  };
->  
->  /**
-> @@ -91,6 +105,9 @@ panthor_gem_create_with_handle(struct drm_file *file,
->  			       struct panthor_vm *exclusive_vm,
->  			       u64 *size, u32 flags, uint32_t *handle);
->  
-> +void panthor_gem_bo_set_label(struct drm_gem_object *obj, const char *label);
-> +void panthor_gem_kernel_bo_set_label(struct panthor_kernel_bo *bo, const char *label);
-> +
->  static inline u64
->  panthor_kernel_bo_gpuva(struct panthor_kernel_bo *bo)
->  {
-> -- 
-> 2.48.1
-> 
+Cc: stable@vger.kernel.org # v5.9+
+Fixes: 6c5aa6fc4def ("xen networking: add basic XDP support for xen-netfront")
+Signed-off-by: Alexey Nepomnyashih <sdl@nppct.ru>
+---
+ drivers/net/xen-netfront.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/net/xen-netfront.c b/drivers/net/xen-netfront.c
+index 63fe51d0e64d..1d3ff57a6125 100644
+--- a/drivers/net/xen-netfront.c
++++ b/drivers/net/xen-netfront.c
+@@ -985,20 +985,27 @@ static u32 xennet_run_xdp(struct netfront_queue *queue, struct page *pdata,
+ 	act = bpf_prog_run_xdp(prog, xdp);
+ 	switch (act) {
+ 	case XDP_TX:
+-		get_page(pdata);
+ 		xdpf = xdp_convert_buff_to_frame(xdp);
+-		err = xennet_xdp_xmit(queue->info->netdev, 1, &xdpf, 0);
+-		if (unlikely(!err))
+-			xdp_return_frame_rx_napi(xdpf);
+-		else if (unlikely(err < 0))
++		if (unlikely(!xdpf)) {
+ 			trace_xdp_exception(queue->info->netdev, prog, act);
++			break;
++		}
++		get_page(pdata);
++		err = xennet_xdp_xmit(queue->info->netdev, 1, &xdpf, 0);
++		if (unlikely(err <= 0)) {
++			if (err < 0)
++				trace_xdp_exception(queue->info->netdev, prog, act);
++			xdp_return_frame_rx_napi(xdpf);
++		}
+ 		break;
+ 	case XDP_REDIRECT:
+ 		get_page(pdata);
+ 		err = xdp_do_redirect(queue->info->netdev, xdp, prog);
+ 		*need_xdp_flush = true;
+-		if (unlikely(err))
++		if (unlikely(err)) {
+ 			trace_xdp_exception(queue->info->netdev, prog, act);
++			xdp_return_buff(xdp);
++		}
+ 		break;
+ 	case XDP_PASS:
+ 	case XDP_DROP:
 -- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+2.43.0
+
