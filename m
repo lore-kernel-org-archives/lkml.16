@@ -1,176 +1,172 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E9274BED;
-	Thu, 17 Apr 2025 01:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F1031172A;
+	Thu, 17 Apr 2025 01:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744854869; cv=none; b=F1yR9RHnTtVQ6L6pypDQxmhFPoPfneQkOj5a4SCYOBqjrTMuO3OHaaMpVwuT2yaABQJD8tPYOIysB6M9Ou7qaIfdWsP2x7TA5GXsG5mHH7ZPpSe9o8uKSg6TxnMEDFFo5Vyf/iceaiKxzirVXrK1EtOe1dSryu8bGAjFeO0mH/8=
+	t=1744854972; cv=none; b=NNAnWK++xJJdDiDbemJ7ng372ntV8g/iBlH4rMSs5zzMbEUTmuy3KuRzfwfnujJ7zp0nIOedAcy0m7PYqBJxiaTYayrOCMLK+bnDAHgTQkRKRtzOUryFv5hUWogUWXrJLGLT1gZwzlAbF9quuZaJc2rWfs7niDS84B9/Doky73Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744854869; c=relaxed/simple;
-	bh=QP4ODaNaN1KboXunGpzQyfBrzXtLdX7TP/eL97q/U7M=;
+	s=arc-20240116; t=1744854972; c=relaxed/simple;
+	bh=nV0XAzhuvzxqrFlXRHsn3+SUZGp/iNsb52WBlKr1hVc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AxBrdxpBiv56k23ihmo/HSf/D9gSuJGyhGr75bF+mi8u6wn/4CcZo4YsyhxrfQBRmRsa3tEPIpA5z5qEXppfY/vBCz0dg/6PltNq0+SM6W6QWhJPE85VqlC0W8qwh7kcNDeLQSHJ40Ee7ErINHytzz6VjvWzxiIgy8ZyAbquF54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lh52Sgty; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lh52Sgty"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-227cf12df27so2350275ad.0;
-        Wed, 16 Apr 2025 18:54:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744854867; x=1745459667; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=up4XsEv2q453RocDCOXJp7W3nOSAznfroF3bFHl1ywU=;
-        b=Lh52SgtyDad1d6C+5d2OBm6Pho6bOwFdeDLpUzf37cCHPmRloym87GWcUM7vUy4poJ
-         fl6/AE7xEU3qj68dw7SF//fZe+FWVqsCiD2ZBJfaNl7dO6v7WabVKOxlX6oHoitEXSN6
-         OYguwGtilPal5y06W/Dp5jwa0dxlgWqmXgKiPwojZm5Upii898uGib/20V1qknGBU9+P
-         ZYJuIDc/DOqgyqsHhCSI0m+5WXHkZHqlXHuaE2pPjGUmnh7Zn05Yt9RUADyfXAhBQ+vr
-         NeQi25o656kCWo8Szpov1qjlfiA4uFdUhfyub2vxyDyRlBMiO3C+0N6ctQp82JI49zih
-         SYZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744854867; x=1745459667;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=up4XsEv2q453RocDCOXJp7W3nOSAznfroF3bFHl1ywU=;
-        b=rsDdmchUyGQ5oxlaRpupazNokEF4vN0EfSkZQqTmRBDh2faMPd4kNsJdVpztYFbCLW
-         bMN4iLAAYnFjDMpCtbCeivptYzHK8NwcWz6myZVujr8XVSmqzbrm7RmZ+MWy/ldZfDIv
-         yTcQgCq61QxSmowodI7bxM80+ay1jY/wGRVyjdrcLg8QUaUtuexHXwXE+S6DecbrOm6V
-         wlpzKYVZcJA23E1WbXaIwCJos6Yb/J3oqxISCVnDbVYKTe5cmxT34+cNMeznzFUKc7a8
-         oqR8TK5q0qWgCP262q2sdAc17P5kXyMVHg0/7JtqH294ZEGm2U2dKStImeOmMX7K0CKp
-         BHIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWUt6CWK2Zacq0ClH8QGROUKaKoz/zSWs+wTZJKVJZ+LigU+d4Cn/s27SjX7l8aOFIyfhoxBYDKYw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiQ5E2zGByJFoV42v5vdQpup2iShYj6yMjGxG2xNpeLjDAtsYv
-	Q7vB6+NU1vqAZc0mWZKDtQELi68jLAsdRHfGyftR/xgTW4Nl6Lm+
-X-Gm-Gg: ASbGncveSCb+xJOQx5YYHFxXncbAzBWsPr0wfmF5GLlUTb9XQpWT6hI7Ustzly6Gpf/
-	tHIhPwLpIjoQ+Ar2u7onBpg9wudxvv3iq8Jis1U3WIUbQo1BMbwIEh2Z0FGdHgEKs/pWm6Ja+G8
-	6nHlH2VvoTyyQtNi5HqhxSopNBAlpeBZVJ5R9dHGYEviiuyclJAcxdf0NqbT+IDcuNQ+8v7b07b
-	PU/mX3yvWSS7u2Pfy3a8CFS3+htqadyS1I+Aet5VEfCtEfJ1wq6YrzrMOYGF9EPaZRp0qi4h4Xs
-	wIUzJoSzJsFhyqXK0qmj7T0F40wZYwENepGQKOQvpuaP04FNV7jZNTH06UjV
-X-Google-Smtp-Source: AGHT+IH5yEEayLyYxk+VP2FS/dUd6X0Bn606MWyZXsomwPQlIQWlOA1vA3Id4BOZpHp2g0hyQDW11A==
-X-Received: by 2002:a17:902:d50e:b0:220:cfb7:56eb with SMTP id d9443c01a7336-22c41db324dmr14047535ad.26.1744854867121;
-        Wed, 16 Apr 2025 18:54:27 -0700 (PDT)
-Received: from Inspiron5000.localdomain ([2001:56a:f6b2:4a00:7181:6803:4a12:f331])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33fe692dsm21647555ad.224.2025.04.16.18.54.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 18:54:26 -0700 (PDT)
-From: Nicholas Chin <nic.c3.14@gmail.com>
-To: viresh.kumar@linaro.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	nic.c3.14@gmail.com,
-	rafael.j.wysocki@intel.com,
-	rafael@kernel.org,
-	vincent.guittot@linaro.org,
-	zhenglifeng1@huawei.com
-Subject: Re: [PATCH] cpufreq: acpi: Don't enable boost on policy exit
-Date: Wed, 16 Apr 2025 19:54:17 -0600
-Message-ID: <20250417015424.36487-1-nic.c3.14@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <2c788c2ca0cab09a8ef4e384f272af928a880b0e.1744781329.git.viresh.kumar@linaro.org>
-References: <2c788c2ca0cab09a8ef4e384f272af928a880b0e.1744781329.git.viresh.kumar@linaro.org>
+	 MIME-Version; b=YnhNFAKCvH2f7SbwD20L3MyS+4PJwE3UHJuePUaAJym+0bemxEZoj+1zmyJfpOI8NtsL66bsCHq/BWIIMac/coRqqpqVCZKJhH+Muxa5RGGYctx2FAAKU8yVQH2W78A9xcEqPoB3EYQi5StNN/iR08R2ngwNncWNB+59cUqfji0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-3d-68005fb3903e
+From: Rakie Kim <rakie.kim@sk.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: gourry@gourry.net,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
+	ying.huang@linux.alibaba.com,
+	david@redhat.com,
+	Jonathan.Cameron@huawei.com,
+	osalvador@suse.de,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	rakie.kim@sk.com,
+	akpm@linux-foundation.org
+Subject: Re: [PATCH v8 2/3] mm/mempolicy: Prepare weighted interleave sysfs for memory hotplug
+Date: Thu, 17 Apr 2025 10:55:52 +0900
+Message-ID: <20250417015600.661-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+In-Reply-To: <68003826cb17d_1302d294e@dwillia2-xfh.jf.intel.com.notmuch>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsXC9ZZnoe7meIYMg6/NthZz1q9hs5g+9QKj
+	xdf1v5gtft49zm6xauE1NovjW+exW5yfdYrF4vKuOWwW99b8Z7U4M63IYvWaDAduj52z7rJ7
+	dLddZvdoOfKW1WPxnpdMHps+TWL3ODHjN4vHzoeWHu/3XWXz2Hy62uPzJrkArigum5TUnMyy
+	1CJ9uwSujOMNnAW7ZCt2v33G3MB4X7yLkZNDQsBEYvGzF6ww9qQ585i6GDk42ASUJI7tjQEJ
+	iwhoS0ycc5C5i5GLg1ngCZPE3CNL2UASwgJxEie2P2QCsVkEVCVWXz0PZvMKGEvs6DnHBjFT
+	U6Lh0j2wOKeAh8SuvcvYQWwhAR6JVxv2M0LUC0qcnPmEBcRmFpCXaN46G2yZhMB3Nolpj39B
+	HScpcXDFDZYJjPyzkPTMQtKzgJFpFaNQZl5ZbmJmjoleRmVeZoVecn7uJkZg+C+r/RO9g/HT
+	heBDjAIcjEo8vCcW/U8XYk0sK67MPcQowcGsJMJ7zvxfuhBvSmJlVWpRfnxRaU5q8SFGaQ4W
+	JXFeo2/lKUIC6YklqdmpqQWpRTBZJg5OqQbG4F8TueVTjrmmPPpcm8G3JX3+joAg9tee6mmd
+	CXfPW7GkCbgINF/d2TZFLlZgekLHRNteg/6KG9zJwv1Lzy5/opre+tp66f50M+ujpevzBEvO
+	SE+YW/U5W5bv60FJ9ZvpL2dHRi+aymy989d5Ke0+x3Jv3hVPhO6m7JHeLtZmZ/bCMiKQrUKJ
+	pTgj0VCLuag4EQCIQsjyewIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrELMWRmVeSWpSXmKPExsXCNUNNS3dzPEOGwYJGfYs569ewWUyfeoHR
+	4uv6X8wWP+8eZ7f4/Ow1s8WqhdfYLI5vncducXjuSVaL87NOsVhc3jWHzeLemv+sFmemFVkc
+	uvac1WL1mgyL39tWsDnwe+ycdZfdo7vtMrtHy5G3rB6L97xk8tj0aRK7x4kZv1k8dj609Hi/
+	7yqbx7fbHh6LX3xg8th8utrj8ya5AJ4oLpuU1JzMstQifbsErozjDZwFu2Qrdr99xtzAeF+8
+	i5GTQ0LARGLSnHlMXYwcHGwCShLH9saAhEUEtCUmzjnI3MXIxcEs8IRJYu6RpWwgCWGBOIkT
+	2x8ygdgsAqoSq6+eB7N5BYwldvScY4OYqSnRcOkeWJxTwENi195l7CC2kACPxKsN+xkh6gUl
+	Ts58wgJiMwvISzRvnc08gZFnFpLULCSpBYxMqxhFMvPKchMzc0z1irMzKvMyK/SS83M3MQJD
+	flntn4k7GL9cdj/EKMDBqMTDe2LR/3Qh1sSy4srcQ4wSHMxKIrznzP+lC/GmJFZWpRblxxeV
+	5qQWH2KU5mBREuf1Ck9NEBJITyxJzU5NLUgtgskycXBKNTCGsVyYsTyHxe3jqkeSNxLuzA4M
+	jyj21du3vGTtvxMZl/jm3m2ddGfz6eLLjm/vCq3fLaRXtYaThWX1VSGGtfHtnAt3L3B9na2e
+	W8UkdzWv9fSSI8d0TRp6Dmx4pR/6Nmhy14WQxbNY1pxQWyx5ecPCpCnXe/xX8Ty8UcuxeKJB
+	VbfFdZPjgl9alViKMxINtZiLihMBRKJt6XUCAAA=
+X-CFilter-Loop: Reflected
 
-> The boost-related code in cpufreq has undergone several changes over the
-> years, but this particular piece remained unchanged and is now outdated.
+On Wed, 16 Apr 2025 16:07:18 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
+> Rakie Kim wrote:
+> > Previously, the weighted interleave sysfs structure was statically
+> > managed during initialization. This prevented new nodes from being
+> > recognized when memory hotplug events occurred, limiting the ability
+> > to update or extend sysfs entries dynamically at runtime.
+> > 
+> > To address this, this patch refactors the sysfs infrastructure and
+> > encapsulates it within a new structure, `sysfs_wi_group`, which holds
+> > both the kobject and an array of node attribute pointers.
+> > 
+> > By allocating this group structure globally, the per-node sysfs
+> > attributes can be managed beyond initialization time, enabling
+> > external modules to insert or remove node entries in response to
+> > events such as memory hotplug or node online/offline transitions.
+> > 
+> > Instead of allocating all per-node sysfs attributes at once, the
+> > initialization path now uses the existing sysfs_wi_node_add() and
+> > sysfs_wi_node_delete() helpers. This refactoring makes it possible
+> > to modularly manage per-node sysfs entries and ensures the
+> > infrastructure is ready for runtime extension.
+> > 
+> > Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+> > Reviewed-by: Gregory Price <gourry@gourry.net>
+> > Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+> > ---
+> >  mm/mempolicy.c | 60 ++++++++++++++++++++++++--------------------------
+> >  1 file changed, 29 insertions(+), 31 deletions(-)
+> > 
+> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> > index dcf03c389b51..998635127e9d 100644
+> > --- a/mm/mempolicy.c
+> > +++ b/mm/mempolicy.c
+> > @@ -3419,6 +3419,13 @@ struct iw_node_attr {
+> >  	int nid;
+> >  };
+> >  
+> > +struct sysfs_wi_group {
+> > +	struct kobject wi_kobj;
+> > +	struct iw_node_attr *nattrs[];
+> > +};
+> > +
+> > +static struct sysfs_wi_group *wi_group;
+> > +
+> >  static ssize_t node_show(struct kobject *kobj, struct kobj_attribute *attr,
+> >  			 char *buf)
+> >  {
+> > @@ -3461,24 +3468,23 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
+> >  	return count;
+> >  }
+> >  
+> > -static struct iw_node_attr **node_attrs;
+> > -
+> > -static void sysfs_wi_node_delete(struct iw_node_attr *node_attr,
+> > -				 struct kobject *parent)
+> > +static void sysfs_wi_node_delete(int nid)
+> >  {
+> > -	if (!node_attr)
+> > +	if (!wi_group->nattrs[nid])
+> >  		return;
+> > -	sysfs_remove_file(parent, &node_attr->kobj_attr.attr);
+> > -	kfree(node_attr->kobj_attr.attr.name);
+> > -	kfree(node_attr);
+> > +
+> > +	sysfs_remove_file(&wi_group->wi_kobj,
+> > +			  &wi_group->nattrs[nid]->kobj_attr.attr);
+> > +	kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
+> > +	kfree(wi_group->nattrs[nid]);
+> >  }
+> >  
+> > -static void sysfs_wi_node_delete_all(struct kobject *wi_kobj)
+> > +static void sysfs_wi_node_delete_all(void)
+> >  {
+> >  	int nid;
+> >  
+> >  	for (nid = 0; nid < nr_node_ids; nid++)
+> > -		sysfs_wi_node_delete(node_attrs[nid], wi_kobj);
+> > +		sysfs_wi_node_delete(nid);
+> >  }
+> >  
+> >  static void iw_table_free(void)
+> > @@ -3501,8 +3507,7 @@ static void iw_table_free(void)
+> >  static void wi_kobj_release(struct kobject *wi_kobj)
+> >  {
+> >  	iw_table_free();
+> > -	kfree(node_attrs);
+> > -	kfree(wi_kobj);
+> > +	kfree(wi_group);
 > 
-> The cpufreq core currently manages boost settings during initialization,
-> and only when necessary. As such, there's no longer a need to enable
-> boost explicitly when entering system suspend.
+> Ah, look just one more iw_table_free() deletion to be able to switch to
+> kobject_create_and_add() flow.
 > 
-> Previously, this wasn’t causing issues because boost settings were
-> force-updated during policy initialization. However, commit 2b16c631832d
-> ("cpufreq: ACPI: Remove set_boost in acpi_cpufreq_cpu_init()") changed
-> that behavior—correctly—by avoiding unnecessary updates.
+> For what this patch is though you can add:
 > 
-> As a result of this change, if boost was disabled prior to suspend, it
-> remains disabled on resume—as expected. But due to the current code
-> forcibly enabling boost at suspend time, the system ends up with boost
-> frequencies enabled after resume, even if the global boost flag was
-> disabled. This contradicts the intended behavior.
-> 
-> Fix this by not enabling boost on policy exit.
-> 
-> Fixes: 2b16c631832d ("cpufreq: ACPI: Remove set_boost in acpi_cpufreq_cpu_init()")
-> Closes:https://bugzilla.kernel.org/show_bug.cgi?id=220013
-> Reported-by: Nicholas Chin<nic.c3.14@gmail.com>
-> Signed-off-by: Viresh Kumar<viresh.kumar@linaro.org>
-> ---
-> drivers/cpufreq/acpi-cpufreq.c | 23 +++--------------------
-> 1 file changed, 3 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
-> index 924314cdeebc..85b5a88f723f 100644
-> --- a/drivers/cpufreq/acpi-cpufreq.c
-> +++ b/drivers/cpufreq/acpi-cpufreq.c
-> @@ -89,8 +89,9 @@ static bool boost_state(unsigned int cpu)
->       return false;
-> }
-> 
-> -static int boost_set_msr(bool enable)
-> +static void boost_set_msr_each(void *p_en)
-> {
-> +	bool enable = (bool) p_en;
->       u32 msr_addr;
->       u64 msr_mask, val;
-> 
-> @@ -107,7 +108,7 @@ static int boost_set_msr(bool enable)
->   	      msr_mask = MSR_K7_HWCR_CPB_DIS;
->   	      break;
->       default:
-> -		return -EINVAL;
-> +		return;
->       }
-> 
->       rdmsrl(msr_addr, val);
-> @@ -118,14 +119,6 @@ static int boost_set_msr(bool enable)
->   	      val |= msr_mask;
-> 
->       wrmsrl(msr_addr, val);
-> -	return 0;
-> -}
-> -
-> -static void boost_set_msr_each(void *p_en)
-> -{
-> -	bool enable = (bool) p_en;
-> -
-> -	boost_set_msr(enable);
-> }
-> 
-> static int set_boost(struct cpufreq_policy *policy, int val)
-> @@ -532,15 +525,6 @@ static void free_acpi_perf_data(void)
->       free_percpu(acpi_perf_data);
-> }
-> 
-> -static int cpufreq_boost_down_prep(unsigned int cpu)
-> -{
-> -	/*
-> -	 * Clear the boost-disable bit on the CPU_DOWN path so that
-> -	 * this cpu cannot block the remaining ones from boosting.
-> -	 */
-> -	return boost_set_msr(1);
-> -}
-> -
-> /*
->  * acpi_cpufreq_early_init - initialize ACPI P-States library
->  *
-> @@ -931,7 +915,6 @@ static void acpi_cpufreq_cpu_exit(struct cpufreq_policy *policy)
-> 
->       pr_debug("%s\n", __func__);
-> 
-> -	cpufreq_boost_down_prep(policy->cpu);
->       policy->fast_switch_possible = false;
->       policy->driver_data = NULL;
->       acpi_processor_unregister_performance(data->acpi_perf_cpu);
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 
-Unfortunately the issue I reported still seems to be present after applying this patch. Upon resuming from suspend, the system is still entering boost states descpite the boost flag being set to 0.
+Thank you for the suggestion.
+I have already removed the iw_table_free() and kfree(node_attrs) from
+the release path in Patch1 as part of wi_cleanup().
+
+Rakie
+
