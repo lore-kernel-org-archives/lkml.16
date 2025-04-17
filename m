@@ -1,201 +1,138 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EABA828EA;
-	Thu, 17 Apr 2025 14:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA5315A8;
+	Thu, 17 Apr 2025 14:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744898539; cv=none; b=fWuggRf5tlOA0vwq9BcUJnUVeNamxWknQJAGBGJJ+qc80FFO8bKIeJrHMjsNhfjM2azzR1TMnYpeEqmfLU/RE13UjJkYSacsVRn3o4+pNxmz7kmjDxEISv5e2TeXgnaZboKskNhxeuXVc2BGnhLlS5FEsRy4QiRvsD0Y3pZmMtE=
+	t=1744898690; cv=none; b=B/7DAvWFqKOyx91nv2zL0BejSOMO2mL7g8s8oPBq7BqraTLkDQN1682oksAmQpTAOlK3I6bPHAjtIZ0OGTh+OZIH7rtkfrbnPBxmUQeEGqlVywlp2oIRUv7KiA308nUf43cuzKMq1iyOSgaaBXgnoVKdAfqpteeIGteNRhEMWu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744898539; c=relaxed/simple;
-	bh=DTOqT1+PTZJBISr8HA/bmXH4lG1FGpYPyWAzwLPEWEw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=skCk29CxZLxbK2jOCKzcdAf4ucUxNK/ZGhPSZShpit2PDCMXj5KwOgBb3iiOuvdvrIJ0pPZaP+Z6ZMynZ/ZC0oYukzDFEIiaxI/3b+O/9UMNGLMF5d202CeRx7h8cEZVY1fA2ffoT31enHFwrz+ZHSaSOJs2P2oT04WTj31Jzp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JlOvltn1; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1744898690; c=relaxed/simple;
+	bh=Yk+wZFNaFDZKvswPt07qohNns+m610liX4+96rtDdD4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p0xQUa66k1RZXTSy+vaP6GkKQ16LZkVYykNzkdsqzQpchUC3/zC/fJoMRbLXSzztLbf67kDoRHKT1WQ1PlqcW+4LeoP3D3auHtXuKvx6SBeaGrQpQAIYecyomIqIIbvF5HmlPG9EAhg/6fflMAWxXQDWKNOcX31hzqOnIfoXHMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JlOvltn1"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so14660275e9.1;
-        Thu, 17 Apr 2025 07:02:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744898535; x=1745503335; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=A5M+PaEx9mKM/jp1AQJiBtjhvl/i2iXkXqHvC6WDNvQ=;
-        b=JlOvltn1LXtU4Q/ZwVztabccO+J0+C0reKWFCDeKHz0xSJ0bGs4b+BRfPZinM9KxCy
-         rQi6yefqhF9kfL2i2mGJ3jmiYY5M5RDEq+EzMvrXm4YU7FQefwgHSAdOYRfDs5Xu46q3
-         kvZeq+DPPdSQXAkHjHO0a6mukdRAs9um/qOERqJ7Hrn6OGqFSjiJVej5i2P+z3X8my3c
-         EgAXsga1NYWu4n2/yU/u0kztwD/6AB06LunoB0m/1OWXvlrLVX1vByXfC0WZgkUwRh4p
-         NnWPzeg3ZeoiSq9jQvEgkBCJC13m0DI6H6meG+8TI43V95Au7Cy1ECbrjiDlpz4aqBFJ
-         BLPw==
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2c759bf1b2eso348512fac.1;
+        Thu, 17 Apr 2025 07:04:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744898535; x=1745503335;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=A5M+PaEx9mKM/jp1AQJiBtjhvl/i2iXkXqHvC6WDNvQ=;
-        b=b0zgIyF7OkYTCmzVVOCbSvIxX6Z1ILZ9UecX68X56YVy06xikI2dz8ei3IAoQa9qr0
-         Kn+/T7vbGwJg1A/bQJMz0fz6HrXd3QizxXTgTApbeDaIckDiiSu6ZrEho5LJIfbAJtnL
-         CTgFw6HpVT0KJTYvzyCL4/DTzUDyeGogjwYNY3tyIUK5/b5VhRqvFYWS3xjM5p5HmKzw
-         Vqurng+NuWz6wdQSuiubG8FBoV6CpBjiXF65whYkfeCHPtWVeh5SaSroxDeAsNsL45is
-         iU/pLOh4gEk0IaUM3b2csNE4HyCvEhdvpf5p0iYk2Cfhs69ikYtbdABZn8AcLdq/d8rL
-         zzpA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBNO7mV/cs2aHz+24lZCqefWDz65AKcD/noa47Xo7D8L0XljtFZPo9mNHRdW+rF0qfO6opAYjVG9ktmnIc@vger.kernel.org, AJvYcCVJEbNUOIs7a72FveF9gDsH5g49GIR5P6JmqP4n0WczCMbVknzH+9FvtMmfOxf7eqgg+nMVLq8P04M=@vger.kernel.org, AJvYcCWn0o2ZWJ+PYPc3rXd/DK3zfvBuwg7xidOCnpmVuqjzIVWZwON1WglH6REbLwOKEF/E9npAxFGC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5DoNszdg7leHnInpqSLkzg2X6wMYp0I7MM1yk4p0lfiF9p+Bk
-	xQHyV6IAC95StbbsqfDO+FIRcGK96IW4gEpiYNbblfudqmpOZ+Ue
-X-Gm-Gg: ASbGncuqOwA8XJqchmbNEi7qQTdqDyaYZLnoRR5bHEmWiuD58yOmBKwVIr74JvQmGU/
-	UVpLBbZQ4/HJri/b9meHPC0X7RfjCZit3lEfPvP3o/b9vNGJcCGvMnUiCAyUFcx5FxeWdMSCo10
-	3ak0Uufnp7Rq83j3BtMmO32xGmKWd2tKURdyg84xjitH6nCwWLOwg0rLNMqRIirIYl1zSAtiZHX
-	/oug3XZ+7EA1LnGCRPGk+sjY3anT9V4XDu5W+PdCzIjYrFnoW12MfJ7vbdUvYx9Z6JMkj/lrnDd
-	j8al6gMScNz2DiwUpDUMl1OHbI3xhUhhVokdtfk/GVI8/WEOSsRZGYfEaq6B0Sn9sK0tBPl6Oa5
-	IAhK89Ouss+KE
-X-Google-Smtp-Source: AGHT+IHqGFAC+bEXnpOU0lSmklsH2ZD4OjyvRqUVn11XS9rxZL/VuFPFv7nsOuSyizmkj3sssiGxvg==
-X-Received: by 2002:a05:600c:3b88:b0:439:8e95:796a with SMTP id 5b1f17b1804b1-440636a4008mr22042115e9.13.1744898534473;
-        Thu, 17 Apr 2025 07:02:14 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b5abc3fsm55849605e9.37.2025.04.17.07.02.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 07:02:14 -0700 (PDT)
-Message-ID: <e8b24cf22c87e5b5ce0cc8919eca79f6e60ab6e3.camel@gmail.com>
-Subject: Re: [PATCH] iio: adc: Revoke valid channel for error path
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: gregkh@linuxfoundation.org, jic23@kernel.org, lars@metafoo.de, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-staging@lists.linux.dev, Michael.Hennerich@analog.com, 
-	sonic.zhang@analog.com, vapier@gentoo.org, skhan@linuxfoundation.org, 
-	kernelmentees@lists.linuxfoundation.org, stable@vger.kernel.org
-Date: Thu, 17 Apr 2025 15:02:16 +0100
-In-Reply-To: <CAKUZ0zL88AyuRxzhoAv2iZO7N7qOMy1G3yKscqG3rQiiOS0gog@mail.gmail.com>
-References: <20250415182038.523186-1-gshahrouzi@gmail.com>
-	 <fb712c034eda0d5d711a90a00b6382315fb5f929.camel@gmail.com>
-	 <CAKUZ0zL88AyuRxzhoAv2iZO7N7qOMy1G3yKscqG3rQiiOS0gog@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 
+        d=1e100.net; s=20230601; t=1744898687; x=1745503487;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZvFyF+BBvF0HVX/Uomd5Xk9bwcsXrKluPPWDQNN673E=;
+        b=WjopAnTUCZa/pCzyPm0JSnW+7XG05g2HdxRUoy5eHHQV7cb17uLp/4kizn8j/fOs6P
+         3k3zTSueINq4orhdaTH5mMA2AFBLuCq+UsDbslo07L9obTi3rF57/82NRUy/p0ObE0Eo
+         Qgmz+NlHP81tYyQlphVr36CdlvhlP/FUSJQydhLWc2cK+zuhDNmewtTp7PJ2AULsauRL
+         JQ8zGxuqqnkfGmLEObq4JCfN7mXMXxL1P6QsGQbQFKpOlRWvTdLBN7s4HkGH6dJ2TAeI
+         lUN3vIU4PtJ2k5+IBQIW60D6u8WQjhkCsTnfzzJGLRP8BTOInJ/MK3RacU634crD0ioE
+         2Qwg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlSTMaJJMNq3rz19RC5Ey8e2MwdO6OJIcI+cRXhDZWXXlRD56KvxpHH8lRRXXkM0wS/n8bxv21igfM@vger.kernel.org, AJvYcCW67FW75Jfq+19z3ivpAPk1zOAEHveYwwouvZp9CkwXLBFeP6iM1srAx9hqpu9HjMhoKQswcbH6F5WPXNy0GLWrCv4=@vger.kernel.org, AJvYcCWV5icnVm5qExSImawhvK0JeiR49oiNzBVVTBPzzdko0fUt+MHzq7SYUu3bQQ/KkYvlCCaKcUGxcK2sVQuq@vger.kernel.org, AJvYcCWokPnzKR3nVgBhSbhyp8Xe5A1NqlTJdepb77R6M2xfgcpS1/TiYOCk0ceZCKfSecRQX11YQBhzSuUbUmTU@vger.kernel.org
+X-Gm-Message-State: AOJu0YwC79U8LQUu0afr+ADu8scAepqhwboqnC2lmkXDHhUi6GP6fo6y
+	gKHHpP3HiFrMotrsMMTkN9sDkKKZVy51knfkww8RkeNzAdrBoK3L1sq0d4tS
+X-Gm-Gg: ASbGncuhXw+/2tjWyus5cEuE6hyQ9CUBUezxrj+6xn/z8RmvKy7HPawPEl5ouFkgGDC
+	F6ZBlf6oVOzT6hjY4a7eLGKX5+hMRsRSAsw/LLzB/Ax/U1O9dtVca8TESd8YiCEy4hH6SKxs2H8
+	4nx+qqgwW7aHr2F5K5613+zgr0Lqp4ppPSZOWXapxmhz9XtnJy+/n6TsVI04AQ3olxDsvE0aC52
+	VbgOQbkOQ5bWtLC2LSu89RTkc9CJG8DLPCSat9sojVtz+TDJto8Aidwp8mjmUJYFv8pM1iMciNO
+	MZxfjHJQcRxl4wmBYpNrC+n7Ww7gR7MW4h4tFRSLBffE7vjbHRxceg2L+JCWBTnEiRod7rTWI2q
+	Z4huaaBA=
+X-Google-Smtp-Source: AGHT+IE8Sn1aeEhsQaOUt4SdflvykCARKukOOVnpz8ozpC03b/WBhy4luTc10bEhwWXCO+YKbVsLGg==
+X-Received: by 2002:a05:6871:9c02:b0:2c2:371a:2b4e with SMTP id 586e51a60fabf-2d4d2d60206mr3887068fac.32.1744898687175;
+        Thu, 17 Apr 2025 07:04:47 -0700 (PDT)
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com. [209.85.167.182])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d096cd2528sm3882376fac.36.2025.04.17.07.04.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Apr 2025 07:04:46 -0700 (PDT)
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3fea67e64caso445732b6e.2;
+        Thu, 17 Apr 2025 07:04:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVVe3UEPrlUQYTGX8MAExwxvEagykmhZWjxOU7iXhAFVwLTItyd2FjcllMWhZ4wsQZOlxBNfNVVPRBt@vger.kernel.org, AJvYcCVlU1Ts6dH6vawZqT3e+6YmAZnPw5qYhMsun2M81SYC7ssoh8oXisHum58sYqOdasQ6dczp0LJz1PCCH7R8@vger.kernel.org, AJvYcCWYgCJihGlZkeIDz0weoGFD6Xpt4Hs5lUYlRNpqe5mGo4UhmZNyWvdWKlu9wMPiBssXymyDCleipEoKaWHB4JgTNFU=@vger.kernel.org, AJvYcCWmNrQbxiEM6Pt60c6mCa+/9exn6eHANDv40864e/QalkGR7RuVYLmw2NqfSwjBYXz50FdJsb7/P0gAq1BI@vger.kernel.org
+X-Received: by 2002:a05:6808:2a0b:b0:3fb:2e8f:4dd8 with SMTP id
+ 5614622812f47-400b01cfdc8mr2774727b6e.15.1744898686644; Thu, 17 Apr 2025
+ 07:04:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250403212919.1137670-1-thierry.bultel.yh@bp.renesas.com> <20250403212919.1137670-4-thierry.bultel.yh@bp.renesas.com>
+In-Reply-To: <20250403212919.1137670-4-thierry.bultel.yh@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 17 Apr 2025 16:04:35 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVaE7uk_5yyVTmZJGu3cOzPu9UPCwJNdXM9S1VBjfWK7Q@mail.gmail.com>
+X-Gm-Features: ATxdqUEUOz646on2in1vPvmLuXpNy4v_-5FFuAqji-VFYjOUXpEOS1iB-FBTrpM
+Message-ID: <CAMuHMdVaE7uk_5yyVTmZJGu3cOzPu9UPCwJNdXM9S1VBjfWK7Q@mail.gmail.com>
+Subject: Re: [PATCH v7 03/13] dt-bindings: serial: Add compatible for Renesas
+ RZ/T2H SoC in sci
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org, 
+	paul.barker.ct@bp.renesas.com, Rob Herring <robh@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 2025-04-17 at 08:53 -0400, Gabriel Shahrouzi wrote:
-> On Thu, Apr 17, 2025 at 6:06=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@gmail.c=
-om> wrote:
-> >=20
-> > On Tue, 2025-04-15 at 14:20 -0400, Gabriel Shahrouzi wrote:
-> > > According to the datasheet on page 9 under the channel selection tabl=
-e,
-> > > all devices (AD7816/7/8) are able to use the channel marked as 7. Thi=
-s
-> > > channel is used for diagnostic purposes by routing the internal 1.23V
-> > > bandgap source through the MUX to the input of the ADC.
-> > >=20
-> > > Replace checking for string equality with checking for the same chip =
-ID
-> > > to reduce time complexity.
-> > >=20
-> > > Group invalid channels for all devices together because they are
-> > > processed the same way.
-> > >=20
-> > > Fixes: 7924425db04a ("staging: iio: adc: new driver for AD7816 device=
-s")
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> > > ---
-> > > =C2=A0drivers/staging/iio/adc/ad7816.c | 15 +++++----------
-> > > =C2=A01 file changed, 5 insertions(+), 10 deletions(-)
-> > >=20
-> > > diff --git a/drivers/staging/iio/adc/ad7816.c
-> > > b/drivers/staging/iio/adc/ad7816.c
-> > > index 6c14d7bcdd675..d880fe0257697 100644
-> > > --- a/drivers/staging/iio/adc/ad7816.c
-> > > +++ b/drivers/staging/iio/adc/ad7816.c
-> > > @@ -186,17 +186,12 @@ static ssize_t ad7816_store_channel(struct devi=
-ce
-> > > *dev,
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 return ret;
-> > >=20
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0 if (data > AD7816_CS_MAX && data !=3D AD781=
-6_CS_MASK) {
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 dev_err(&chip->spi_dev->dev, "Invalid channel id %lu for
-> > > %s.\n",
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data, indio_dev->nam=
-e);
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 return -EINVAL;
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0 } else if (strcmp(indio_dev->name, "ad7818"=
-) =3D=3D 0 && data > 1) {
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 dev_err(&chip->spi_dev->dev,
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid channel id =
-%lu for ad7818.\n", data);
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 return -EINVAL;
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0 } else if (strcmp(indio_dev->name, "ad7816"=
-) =3D=3D 0 && data > 0) {
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 if (data !=3D AD7816_CS_MASK &&
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (data > AD7816_CS_M=
-AX ||
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (chip->id =3D=3D ID=
-_AD7818 && data > 1) ||
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (chip->id =3D=3D ID=
-_AD7816 && data > 0))) {
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 dev_err(&chip->spi_dev->dev,
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid channel id =
-%lu for ad7816.\n", data);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid channel id =
-%lu for %s.\n", data, indio_dev-
-> > > > name);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 return -EINVAL;
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> >=20
-> > Hmm, maybe I'm missing something but the code just looks the same as be=
-fore
-> > (from a functionality point of view)? I'm really not seeing any fix...
-> I might have to change it for readability. From my understanding, if
-> channel 7 is selected (AD7816_CS_MASK), it never enters the error path
-> whereas in the old code, if the chip were either ad7816 or ad7818, it wou=
-ld
-> end up returning an error because it skips all channels above either 0
-> or 1.
+Hi Thierry,
 
-Ahh, right!
+On Thu, 3 Apr 2025 at 23:29, Thierry Bultel
+<thierry.bultel.yh@bp.renesas.com> wrote:
+> RSCI of RZ/T2H SoC (a.k.a r9a09g077), as a lot
+> of similarities with SCI in other Renesas SoC like G2L, G3S, V2L;
+> However, it has a different set of registers, and in addition to serial,
+> this IP also supports SCIe (encoder), SmartCard, i2c and spi.
+> This is why the 'renesas,sci' fallback for generic SCI does not apply for it.
+>
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> ---
+> Changes v6->v7:
+>   - Moved all rsci in a separate file
+>   - Added example
 
-One good refactor is to add a chip_info struct (renaming the existing one) =
-with
-let's say a name and max_channels. Then, the condition could be reduced to:
+Thanks for your patch, which is now commit 25422e8f46c1fd14
+("dt-bindings: serial: Add compatible for Renesas RZ/T2H SoC in sci")
+in tty/tty-next.
 
-if (data > st->chip->max_channel && data !=3D AD7816_CS_MASK {
-	dev_err(...);
-	return -EINVAL;
-}
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
 
-Being this in staging, I guess we don't care much about having the fix as t=
-he
-first patch to make it easier to backport.
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/renesas-cpg-mssr.h>
+> +
+> +    aliases {
+> +        serial0 = &sci0;
+> +    };
 
-- Nuno S=C3=A1
+Aliases are not really needed in examples; the DT janitors may send
+a patch to remove this ;-).
 
->=20
-> >=20
-> > Having said the above, not sure if grouping helps with readability. But=
- I do
-> > agree with moving from string comparison to use chip->id. And we also h=
-ave
-> > redundants 'else'
-> >=20
-> > - Nuno S=C3=A1
-> >=20
+> +
+> +    sci0: serial@80005000 {
+> +        compatible = "renesas,r9a09g077-rsci";
+> +        reg = <0x80005000 0x400>;
+> +        interrupts = <GIC_SPI 590 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 591 IRQ_TYPE_EDGE_RISING>,
+> +                     <GIC_SPI 592 IRQ_TYPE_EDGE_RISING>,
+> +                     <GIC_SPI 593 IRQ_TYPE_LEVEL_HIGH>;
+> +        interrupt-names = "eri", "rxi", "txi", "tei";
+> +        clocks = <&cpg CPG_MOD 108>;
+
+Shouldn't that be 8 instead of 108?
+Doesn't matter much, as this file is just an example...
+
+> +        clock-names = "fck";
+> +        power-domains = <&cpg>;
+> +    };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
