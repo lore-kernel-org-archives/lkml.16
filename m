@@ -1,115 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9E3225A22;
-	Thu, 17 Apr 2025 09:15:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6033F33FD
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 09:15:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744881302; cv=none; b=PYUU7J2P44OwoLaeY4ju1m3gvqQjUWa1omIhSxCFV+jhVgWRMGAaFXUtDhnqEDhMBFx0/u2FPFXFcPL02o9U3P514GTpC2GgE349HhEjeMnyU6vsJiZxMokeGMG1lBUBoaZNb6NX7ggsZPGmaU4xlL1py75nXfz44EdthNYRjEY=
+	t=1744881351; cv=none; b=JP/rbuxx7vWNESSjA1T+GV5mfl8rS5M2xgoqUAREprhu6fVgJOgIs4dRJ70N/x7xMgljWwS/WTJ458aWtivTnh4NbhAw7JDHrj2NyMdkXvWagGlgFE85hymInbarQO1mg5XVBUcLwkZ8QA02/dSfJt8GCqnCR0g6+pf9HlFvdkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744881302; c=relaxed/simple;
-	bh=Z7NTpZ0nEG3ynbwc2X/V/VqBUTzzuWAmCSR5JVqRIQw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LqitTP/OAN0OeWT/ZOJI0gkoWyfjIqq+/b33KhYc14iRlVTmIyCJZsw8FkWODuqPJ8VtSzQkn8EdzznybFcGotEza3WnvV1UggOKmx5X4Hv+/8uXDShWHtPBDxw0jl+bwlUZjXhwyrJ6LFYxQ509ZGgSRwrJUvF321Al7ESvfdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=v4ADDzSW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744881351; c=relaxed/simple;
+	bh=Wh1rntBo/7Kj0BaXQsAlsvwKGLep8F7aMQhIyJwLwH0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eX5RhFvdun4xhZ+oySDWD5sXCR+rG0ckGv9XzCt6SjWmMA4UmfvGvbSnh0xOQ86ONpvK/c3ySpzsD0uazqfCoiDsWBvtZathUJAmjsKTgdhdaGgDQclhub610NODjAPBnsLenfv1n26OHabPxcNEmtIkI2Kr1mLpHkvT+pn3mEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HhojJtsA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="v4ADDzSW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B240DC4CEE4;
-	Thu, 17 Apr 2025 09:15:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744881302;
-	bh=Z7NTpZ0nEG3ynbwc2X/V/VqBUTzzuWAmCSR5JVqRIQw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=v4ADDzSWCqGjjDj88whX+Y9ipXj/9Qbrt8PbWuAAqz0Jzqre5F+QeiFHm+SQYxNJq
-	 Rk6l1Fb27DiUDOOnLZS2kFvGxxVi8fEjv4YpAoRgn1wkFp/KddI2i9Kr4mRHilzLIg
-	 25foBpkVOIIWLyaDqvndE70UW6zvZvZThl6k0xM0=
-Date: Thu, 17 Apr 2025 11:14:54 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Michael Rubin <matchstick@neverthere.org>
-Cc: dpenkler@gmail.com, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] staging: gpib: Removing unused function CFGn
-Message-ID: <2025041717-unnatural-scaling-f4d7@gregkh>
-References: <20250409181809.401724-1-matchstick@neverthere.org>
- <2025041522-startling-parlor-aa65@gregkh>
- <aABR5Ykv5lawt_BE@tiamat>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HhojJtsA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 849F2C4CEE4;
+	Thu, 17 Apr 2025 09:15:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744881350;
+	bh=Wh1rntBo/7Kj0BaXQsAlsvwKGLep8F7aMQhIyJwLwH0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HhojJtsA2xP33puhQkUFP4pjtN5CcBnanw9BnqAcif6La6UAlCf8teSJ0FbFAHH5S
+	 CwT/7wpUUAU2pvuSEOpUPXfrF0Gaj7YiQb+zhqz7q5VGbBpmWe1wCpc0iDDQyIPmfD
+	 HcP/jGEEutw4+NQgPX6lrkT3qpTpqG1V/QpLB9MkOikBb99EsF013rRCkJG3U2FOKo
+	 vVf+xiZpPViyTSQOkL0dWkxZpmsbYj+PoTTsRpcMMZI/fXEEvAWtTIYYEcdn5nB/t0
+	 1DNd2gx+8P3xu4YZauCGMgCYCpQZ5zeaHz/5FYI3Wipm2ltlGphJH9q/B6VdQJfLK7
+	 kbfVE4EjVaO4A==
+From: Philipp Stanner <phasta@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Philipp Stanner <phasta@kernel.org>,
+	Desnes Nunes <desnesn@redhat.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] misc: cardreader: Use non-hybrid PCI devres API
+Date: Thu, 17 Apr 2025 11:15:32 +0200
+Message-ID: <20250417091532.26520-2-phasta@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aABR5Ykv5lawt_BE@tiamat>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 17, 2025 at 12:57:09AM +0000, Michael Rubin wrote:
-> On Tue, Apr 15, 2025 at 04:47:34PM +0200, Greg KH wrote:
-> > On Wed, Apr 09, 2025 at 06:18:09PM +0000, Michael Rubin wrote:
-> > Already in my tree?  I'm confused, this didn't apply at all.
-> 
-> Sorry for the hassle here. I will be keeping my tree much closer to yours
-> going forward.
-> 
-> I just did a comparison of your tree and mine with the following commands:
-> 
-> $ git fetch origin
-> $ git rebase origin/staging-testing
-> Current branch work-next is up to date.
-> $ git log --oneline origin/staging-testing..HEAD
-> 01bb7ebee650 (HEAD -> work-next) staging: gpib: tnt4882: u8 over uint8_t
-> b362526c049a staging: gpib: lpvo_usb_gpib: u8 over uint8_t
-> c0086ac9f8c6 staging: gpib: gpib_ioctl: u64 over uint64_t
-> dfde322a6458 staging: gpib: pc2: u8 over uint8_t
-> 0d68978f157c staging: gpib: ni_usb: u8 over uint8_t
-> 6c1d83dae00e staging: gpib: hp_82341: u8 over uint8_t
-> 6e47dd2b355e staging: gpib: hp_82335: u8 over uint8_t
-> 066df8151ebc staging: gpib: gpib_bitbang: u8 over uint8_t
-> e2f98401b6cc staging: gpib: gpib_os: u8 over uint8_t
-> d39283e31564 staging: gpib: cec: u8 over uint8_t
-> 76ca6178f5ac staging: gpib: agilent_82357a: u8 over uint8_t
-> 83a4047b9a77 staging: gpib: agilent_82350b: u8 over uint8_t
-> e3e09b3c0b18 staging: gpib: gpib_user: u8 over uint8_t
-> 7de94cbc8071 staging: gpib: gpib_ioctl: u8 over uint8_t
-> 98b2ae8ac973 staging: gpib: Removing typedef gpib_interface_t
-> 9d1d6dfa3871 staging: gpib: tnt4882: struct gpib_interface
-> 914975f8fc96 staging: gpib: pc2: struct gpib_interface
-> 64c745a7adb7 staging: gpib: ni_usb: struct gpib_interface
-> c303323266fe staging: gpib: lpvo_usb: struct gpib_interface
-> 576eb9e6c1fa staging: gpib: ines: struct gpib_interface
-> 5f2fb6ca422e staging: gpib: gpibP: struct gpib_interface
-> 0033454014c8 staging: gpib: hp2341: struct gpib_interface
-> b1ab383f5d09 staging: gpib: hp_82335: struct gpib_interface
-> 41ebb7c070bf staging: gpib: gpio: struct gpib_interface
-> ef391db774c0 staging: gpib: fmh: struct gpib_interface
-> 701c5a45b91a staging: gpib: fluke: struct gpib_interface
-> 88d5e0847f06 staging: gpib: common: struct gpib_interface
-> 77b611bf3468 staging: gpib: cec: struct gpib_interface
-> 803d5bfacf86 staging: gpib: cb7210: struct gpib_interface
-> 294e66a9b7bc staging: gpib: agilent_82357a: gpib_interface
-> 6eafa79e636a staging: gpib: agilent_82350b: gpib_interface
-> 7a309862d53f staging: gpib: struct typing for gpib_interface
-> b248b9d75062 staging: gpib: uapi: Fix CamelCase and IBA Dup
-> $
-> 
-> I sent over the following series:
-> 
-> 1) v2: u8 and u64 remaining patches
-> 
-> 2) v3: the gpib_interface_t series (I broke the tree with v2).
-> 
-> 3) The IBA Camel Case patch.
+cardreader enables its PCI device with pcim_enable_device(). This,
+implicitly, switches the function pci_request_regions() into managed
+mode, where it becomes a devres function.
 
-I've taken all of these now, thanks!
+The PCI subsystem wants to remove this hybrid nature from its
+interfaces. To do so, users of the aforementioned combination of
+functions must be ported to non-hybrid functions.
 
-> See if you can apply the CFGn patch after all the clean up. Not sure why that
-> does not apply cleanly. It does in my tree right now after the sync and rebase.
+Moreover, since both functions are already managed in this driver, the
+calls to pci_release_regions() are unnecessary.
 
-Can you resend the CFGn patch, it's long-gone from my patch review
-queue.
+Remove the calls to pci_release_regions().
 
-After that, I think I'm caught up, right?
+Replace the call to sometimes-managed pci_request_regions() with one to
+the always-managed pcim_request_all_regions().
 
-thanks,
+Signed-off-by: Philipp Stanner <phasta@kernel.org>
+---
+ drivers/misc/cardreader/alcor_pci.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-greg k-h
+diff --git a/drivers/misc/cardreader/alcor_pci.c b/drivers/misc/cardreader/alcor_pci.c
+index a5549eaf52d0..43f08b0db742 100644
+--- a/drivers/misc/cardreader/alcor_pci.c
++++ b/drivers/misc/cardreader/alcor_pci.c
+@@ -121,7 +121,7 @@ static int alcor_pci_probe(struct pci_dev *pdev,
+ 	priv->cfg = cfg;
+ 	priv->irq = pdev->irq;
+ 
+-	ret = pci_request_regions(pdev, DRV_NAME_ALCOR_PCI);
++	ret = pcim_request_all_regions(pdev, DRV_NAME_ALCOR_PCI);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Cannot request region\n");
+ 		ret = -ENOMEM;
+@@ -131,13 +131,13 @@ static int alcor_pci_probe(struct pci_dev *pdev,
+ 	if (!(pci_resource_flags(pdev, bar) & IORESOURCE_MEM)) {
+ 		dev_err(&pdev->dev, "BAR %d is not iomem. Aborting.\n", bar);
+ 		ret = -ENODEV;
+-		goto error_release_regions;
++		goto error_free_ida;
+ 	}
+ 
+ 	priv->iobase = pcim_iomap(pdev, bar, 0);
+ 	if (!priv->iobase) {
+ 		ret = -ENOMEM;
+-		goto error_release_regions;
++		goto error_free_ida;
+ 	}
+ 
+ 	/* make sure irqs are disabled */
+@@ -147,7 +147,7 @@ static int alcor_pci_probe(struct pci_dev *pdev,
+ 	ret = dma_set_mask_and_coherent(priv->dev, AU6601_SDMA_MASK);
+ 	if (ret) {
+ 		dev_err(priv->dev, "Failed to set DMA mask\n");
+-		goto error_release_regions;
++		goto error_free_ida;
+ 	}
+ 
+ 	pci_set_master(pdev);
+@@ -169,8 +169,6 @@ static int alcor_pci_probe(struct pci_dev *pdev,
+ error_clear_drvdata:
+ 	pci_clear_master(pdev);
+ 	pci_set_drvdata(pdev, NULL);
+-error_release_regions:
+-	pci_release_regions(pdev);
+ error_free_ida:
+ 	ida_free(&alcor_pci_idr, priv->id);
+ 	return ret;
+@@ -186,7 +184,6 @@ static void alcor_pci_remove(struct pci_dev *pdev)
+ 
+ 	ida_free(&alcor_pci_idr, priv->id);
+ 
+-	pci_release_regions(pdev);
+ 	pci_clear_master(pdev);
+ 	pci_set_drvdata(pdev, NULL);
+ }
+-- 
+2.48.1
+
