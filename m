@@ -1,122 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD22B2DFA56
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 01:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69EC03D3B8
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 01:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744853310; cv=none; b=EgO+LHW0OYnKx0EVRNWU5D3xg8+mtJUCJ1+zl4uzpBB0tikHRFvaWo8satUeGTgOWaH85QOdjJZgQcGnQ3IgMIkeugi6cm1B+u/y4TbhCgj66XmVXhitiHjBhA313huKEGDtnvIkz4m+IDYufo27U2vhv8LdNnzO+K+zUkE8h/w=
+	t=1744853387; cv=none; b=stPUBkhxT/Lmei+mXDTwq4ZOhMGaBt8sjeh/6sUUN9CDkFp8cYZNSJ6q5ZOefiy3TqTD1ShkYjxt3nPmla1aiqnmz+mfozN1BHQctiunkcPkaVaOfftmT+D9xuBYM+SafrlfGtZsBh1rcNyMHS1TFTe9D5k81v1e+BQOisSg/Kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744853310; c=relaxed/simple;
-	bh=AYo/5za/1R1q9XRadHM+Z/+GYRmY4y6c3WSUoQN6ZPc=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=T9DbbSGmdoUb8utgusR7Nb0jAIXGcsAcHIa3FhjwbjwBycJEEfoPd7p03vp9EYLQ1MzzNpUBLehMA+I/0ThbQneLW1e0+WEgHWJIwVwfAQD2fj4M9Kk3TJN+pxpfcYmpMPxyluvqXW5QdsCASAzfRt65W05YWM2KOfTO7TpzHrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=TKcD+2C0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744853387; c=relaxed/simple;
+	bh=OSmayF2pnpISa8neO/2EAXmlFcilAJ7icqw/Tfm2+DA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ORrWDBLOff59oSXrlK9UsXNADf9+/v7gADZZj62bsAisXAE3dgbMGpeJaoF6yyhQcaWkHziy4puQiEsIMEVuQ68LifAObCMV9UhZNuUJBOFHkUUcu4qqnjZZR9ctfbeAhZcFBaIF0UMXARNIxCBFadyMs1l2zFN2InEni0mzvNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=N1cHkyiM; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="TKcD+2C0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4D2DC4CEE2;
-	Thu, 17 Apr 2025 01:28:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1744853309;
-	bh=AYo/5za/1R1q9XRadHM+Z/+GYRmY4y6c3WSUoQN6ZPc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TKcD+2C0SqRS0g+QepWitAAWvj93i7dH5iy0pHn5oMFN1T4Yp7xpNjxuKfZuNbamc
-	 M6XKsntqkzReU8JspA871O7uXdSxx+LbfSwMXjy8P/akMteg29ZZ90PVZ/Gnwl0hZL
-	 FU3AEHkZD6bDgSZP+JXDBH47ztPL6yzU/jHX/Sng=
-Date: Wed, 16 Apr 2025 18:28:28 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko
- <glider@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov
- <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
- kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, Linus Torvalds
- <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2] x86/Kconfig: Fix allyesconfig
-Message-Id: <20250416182828.9e2b312a75ed90b706483250@linux-foundation.org>
-In-Reply-To: <4d9cb937-2a8a-4b3c-af32-f8fae922aa5c@roeck-us.net>
-References: <20250416230559.2017012-1-linux@roeck-us.net>
-	<20250416170359.a0267b77d3db85ff6d5f8ac0@linux-foundation.org>
-	<4d9cb937-2a8a-4b3c-af32-f8fae922aa5c@roeck-us.net>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="N1cHkyiM"
+Message-ID: <665652ac-2e94-48b4-bf47-32870b823464@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744853372;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L0gLeQVBA/1TN3OHnR2dfCZ1PPm9waoie4D5AdMGKf4=;
+	b=N1cHkyiMXLR7vMguTWELg9BfjiIi0zSwEppi4YHck13tnQjhoTnwyYaEipVrO+TdbGv13g
+	R2SdWUpFNt20o/7l57O5Lsf/22qE2xhmhgCpv89sRVZ1KckOtpXshr/3MLA0t4C5gC9Dei
+	Nht/vCEsl6z7QxDjdqTaDnEy2sdrG1Y=
+Date: Thu, 17 Apr 2025 09:29:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-On Wed, 16 Apr 2025 17:17:00 -0700 Guenter Roeck <linux@roeck-us.net> wrote:
-
-> On 4/16/25 17:03, Andrew Morton wrote:
-> > On Wed, 16 Apr 2025 16:05:59 -0700 Guenter Roeck <linux@roeck-us.net> wrote:
-> > 
-> >> 64-bit allyesconfig builds fail with
-> >>
-> >> x86_64-linux-ld: kernel image bigger than KERNEL_IMAGE_SIZE
-> >>
-> >> Bisect points to commit 6f110a5e4f99 ("Disable SLUB_TINY for build
-> >> testing") as the responsible commit. Reverting that patch does indeed
-> >> fix the problem. Further analysis shows that disabling SLUB_TINY enables
-> >> KASAN, and that KASAN is responsible for the image size increase.
-> >>
-> >> Solve the build problem by disabling KASAN for test builds.
-> >>
-> > 
-> > Excluding KASAN from COMPILE_TEST builds is regrettable.
-> > 
-> > Can we address this some other way?  One way might be to alter or
-> > disable the KERNEL_IMAGE_SIZE check if COMPILE_TEST?  That will be sad
-> > for anyone who tries to boot a COMPILE_TEST kernel, but who the heck
-> > does that?
-> 
-> I tried increasing the limit. It didn't work. With the RFC I sent earlier
-> I made it dependent on allmodconfig, but Linus said I should just disable
-> it for test builds (which was the cases anyway until commit 6f110a5e4f99).
-> 
-> Personally I don't have a preference either way. I can also do nothing and
-> stop testing allyesconfig. That would help reducing the load on my testbed,
-> so I would be all for it.
-
-How about this?
+MIME-Version: 1.0
+Subject: Re: [PATCH] tools/drgn: Add script to display page state for a given
+ PID and VADDR
+To: paulmck@kernel.org, Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ linux-toolchains@vger.kernel.org, linux-mm@kvack.org,
+ Ye Liu <liuye@kylinos.cn>, Omar Sandoval <osandov@osandov.com>
+References: <20250415075024.248232-1-ye.liu@linux.dev>
+ <20250415191414.a64de2d228ab5f43a5390acf@linux-foundation.org>
+ <42f50a48-10da-4739-9e51-f865fbf04bdd@linux.dev>
+ <098e977c-55cd-498b-bd36-725333c06210@dorminy.me>
+ <7e45afc8-dde0-481a-b0bf-0237f551ebe0@paulmck-laptop>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ye Liu <ye.liu@linux.dev>
+In-Reply-To: <7e45afc8-dde0-481a-b0bf-0237f551ebe0@paulmck-laptop>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
 
+在 2025/4/16 12:02, Paul E. McKenney 写道:
+> On Tue, Apr 15, 2025 at 11:28:41PM -0400, Sweet Tea Dorminy wrote:
+>>
+>> On 4/15/25 10:46 PM, Ye Liu wrote:
+>>> 在 2025/4/16 10:14, Andrew Morton 写道:
+>>>> On Tue, 15 Apr 2025 15:50:24 +0800 Ye Liu <ye.liu@linux.dev> wrote:
+>>>>
+>>>>> From: Ye Liu <liuye@kylinos.cn>
+>>>>>
+>>>>> Introduces a new drgn script, `show_page_info.py`, which allows users
+>>>>> to analyze the state of a page given a process ID (PID) and a virtual
+>>>>> address (VADDR). This can help kernel developers or debuggers easily
+>>>>> inspect page-related information in a live kernel or vmcore.
+>>>>>
+>>>>> The script extracts information such as the page flags, mapping, and
+>>>>> other metadata relevant to diagnosing memory issues.
+>>>>>
+>>>>> Currently, there is no specific maintainer entry for `tools/drgn/` in the
+>>>>> MAINTAINERS file. Therefore, this patch is sent to the general kernel and
+>>>>> tools mailing lists for review.
+>>>> Help.  My copy of linux has no tools/drgn/
+>>> I noticed that the current upstream Linux tree doesn't contain a
+>>> `tools/drgn/` directory.
+>>>
+>>> I'm interested in contributing a drgn script tool as well.
+>>> Given that this directory does not yet exist in mainline, where would
+>>> be the appropriate place to add new drgn scripts? Would it make sense
+>>> to create a new `tools/drgn/` directory, or is there a preferred
+>>> location for such debugging scripts?
+>>>
+>>> Thanks,
+>>> Ye
+>> I believe the traditional thing to do with new drgn scripts is to add them
+>> to the contrib directory in drgn via pull request:
+>> https://github.com/osandov/drgn/blob/main/contrib/README.rst
+> I have an RCU-related drgn script in tools/rcu, so maybe this one should
+> go in tools/mm.
 
---- a/arch/x86/kernel/vmlinux.lds.S~a
-+++ a/arch/x86/kernel/vmlinux.lds.S
-@@ -466,10 +466,19 @@ SECTIONS
- }
- 
- /*
-- * The ASSERT() sink to . is intentional, for binutils 2.14 compatibility:
-+ * COMPILE_TEST kernels can be large - CONFIG_KASAN, for example, can cause
-+ * this.  Let's assume that nobody will be running a COMPILE_TEST kernel and
-+ * let's assert that fuller build coverage is more valuable than being able to
-+ * run a COMPILE_TEST kernel.
-+ */
-+#ifndef CONFIG_COMPILE_TEST
-+/*
-+/*
-+ * The ASSERT() sync to . is intentional, for binutils 2.14 compatibility:
-  */
- . = ASSERT((_end - LOAD_OFFSET <= KERNEL_IMAGE_SIZE),
- 	   "kernel image bigger than KERNEL_IMAGE_SIZE");
-+#endif
- 
- /* needed for Clang - see arch/x86/entry/entry.S */
- PROVIDE(__ref_stack_chk_guard = __stack_chk_guard);
-_
 
+To determine the most appropriate place to submit this script, I looked
 
-(contains gratuitous s/sink/sync/)
+into existing drgn-based tooling in the kernel tree. Several drgn scripts
+have already been added under `tools/`, such as:
 
+- `tools/sched_ext/scx_show_state.py`
+- `tools/cgroup/iocost_monitor.py`
+- `tools/cgroup/memcg_slabinfo.py`
+- `tools/writeback/wb_monitor.py`
+- `tools/rcu/rcu-cbs.py`
+- `tools/workqueue/wq_dump.py`
+- `tools/workqueue/wq_monitor.py`
 
-I'd like to add
+Given this precedent, I believe it would be reasonable to place
+`show_page_info.py` under `tools/mm/`, since it's focused on memory
+subsystem internals and would follow a similar organizational pattern
+to the above.
 
-#else
-	WARN((_end - LOAD_OFFSET <= KERNEL_IMAGE_SIZE),
- 	   "kernel image bigger than KERNEL_IMAGE_SIZE - kernel probably will not work");
-#endif	/* CONFIG_COMPILE_TEST */
+I'd appreciate any input on whether this is a suitable direction.
+I'm happy to send the script for review once the location is agreed upon.
 
-but I lack the patience to figure out how to do that.
+Thanks,  
+
+Ye Liu
+
+                                                                   
+
