@@ -1,91 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F4F23958E;
-	Thu, 17 Apr 2025 11:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21CA323959B
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 11:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744888724; cv=none; b=rXnZg2c77m3rOgOIQYMbQQPkkXZAJRgQoifdLbJeWkoq3ikkDFNFjyZtIFRAwnpLzzD4fDWiZu3Y2lnQQMgdUaFrmO+j3QqGdrLhBsz+1FPC/oLygUdF64tQVRig8ng3V9w/4rRtsiQweBCVjuIJsdqLTsT99owtwxHTj9lTPGw=
+	t=1744888731; cv=none; b=ST4gl+BdWzeTKAcQ9w1OznCNKuvyHYn98KIlz5NqdCvKPeTZVstUw0Hh1YliUrUcRD4xvLgBPbD7E5iTUUbuALt12DIKsoD95csprRPVISPleiuj+wfKQqpc80W87vKQ7JM5LNBJJ5nt+W/+iv/KlEOBX0lnX9aQOLX3CdZYn6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744888724; c=relaxed/simple;
-	bh=7DcjQ1DXZHJuotHGzYuDvwCSxpaG9C9yPkh4AHK8f/4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=nzRiPsLR4zN4TREfzz+kVSRV34najHgJoohS3VP8ADIkmzKt54SmsgReD6bsZlF0NDw2ywLMrTVGflRBkBErXzMq5wf6w8hEUvlcMYzAYW9VeS0MuXdDoBC1m6yYrZ5a4rEi24lPoK/uX3UYGi0jTh4LmYAkOvST7g7vtDED85g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a1vn59Zq; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744888731; c=relaxed/simple;
+	bh=QP4WJhLzhiPmueTxbzmrg0FhGQy8DBMRnIoWrTDMJ0w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PzkqPe+81P1MSxcatEYt9PpzjMyRLSf052yNwqkVyxIBsxQ1g0b6pef5UVzZbR5Cq+pxu2g3zCKuBxbuNAODz9v1FjCgzN6MENobNl2yY/mRDOKuzgnh8eHunLRUvMbhdgiKtbOzQnQOyEwY+jMYSqjbcJFCHYU8r/l7BRs4Sfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OvPvRw8u; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a1vn59Zq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744888724; x=1776424724;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=7DcjQ1DXZHJuotHGzYuDvwCSxpaG9C9yPkh4AHK8f/4=;
-  b=a1vn59ZqUDbBnNLz8lAlOvPPawZ1FSE5ADY0r9qGpKhSyGWGlchZjuf4
-   lDV2hVamklGv8sWaNVN4sMNHb8ATBbxGr1o1yb/prVnlqfpb10kjqxDr4
-   ltT+tnvTe2y4em1C29kxcxsBTfWrN9VM/HZmlWQOSSxXEazBMgzLg0kRH
-   X/kNg+U54A2TRSPfWlF+cDGqkCYLfQ776Ou1aTfhHOSz9131oHLtBAQgv
-   rArv3EwX5l0U04JRodpFCh4JV0JjN3loEzVRspx27wW7IFWWlWuqJttua
-   E4sqRj7jRozCui30/PFU57Op5L4FBSW68Z5BbD6V5CB5zIyQdrRz+uzLN
-   g==;
-X-CSE-ConnectionGUID: W71sshEeQsSCTCQ7R8ghXw==
-X-CSE-MsgGUID: LUB+JUVRQW6M26KWSBG2pw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46366558"
-X-IronPort-AV: E=Sophos;i="6.15,218,1739865600"; 
-   d="scan'208";a="46366558"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 04:18:43 -0700
-X-CSE-ConnectionGUID: w4ZSW/hEREe5FLKsI9cMmQ==
-X-CSE-MsgGUID: +yDStAT+R/WzNPUDrzRnfQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,218,1739865600"; 
-   d="scan'208";a="131677643"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.144])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 04:18:40 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: srinivas.pandruvada@linux.intel.com, hdegoede@redhat.com, 
- shouyeliu <shouyeliu@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org, Shouye Liu <shouyeliu@tencent.com>
-In-Reply-To: <20250417032321.75580-1-shouyeliu@gmail.com>
-References: <20250417032321.75580-1-shouyeliu@gmail.com>
-Subject: Re: [PATCH v3] platform/x86/intel-uncore-freq: Fix missing uncore
- sysfs during CPU hotplug
-Message-Id: <174488871345.2548.2694845839583512280.b4-ty@linux.intel.com>
-Date: Thu, 17 Apr 2025 14:18:33 +0300
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OvPvRw8u"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=/23N940ohMw0VBNQcTEvKfr8hQpkaVBTR/ywBfH/25I=; b=OvPvRw8uwg0qWV1CLUE2iVsU/n
+	TkqRKu2F4MjPShhKFip3riLQMi9nNr8Zxnna3HCVcV+vOOR83y3YhY9dZ6Ie2JmmXNM/YWwNuXtj2
+	ZrQj8lUcmCUVK9qW0HuDHygot3TfbIPQktDV14HYj2IgWsJ6wMnv/1hLuEjXizpz3PbuJXEm5fdwV
+	Ah4ZoLbFFsu6JVZoC5VD4qrbukVYr455sgsI07hmfxe4vuqZkZZxPblccTgY5kWmwQdnWEvnXTiXg
+	cOgSSGOD3kTobXyQH4s1T5i5yqFlSQqKLvRO++tNmM8jVw3bTKeU18a05Jf6EqHaNTh2gHBcw8B4j
+	Mesb8gQg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u5NGU-0000000AGHW-0X1Y;
+	Thu, 17 Apr 2025 11:18:42 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id AD874300619; Thu, 17 Apr 2025 13:18:41 +0200 (CEST)
+Date: Thu, 17 Apr 2025 13:18:41 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: John Stultz <jstultz@google.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman <mgorman@suse.de>,
+	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Metin Kaya <Metin.Kaya@arm.com>,
+	Xuewen Yan <xuewen.yan94@gmail.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Suleiman Souhlal <suleiman@google.com>, kernel-team@android.com
+Subject: Re: [PATCH v16 5/7] sched: Add an initial sketch of the
+ find_proxy_task() function
+Message-ID: <20250417111841.GL38216@noisy.programming.kicks-ass.net>
+References: <20250412060258.3844594-1-jstultz@google.com>
+ <20250412060258.3844594-6-jstultz@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412060258.3844594-6-jstultz@google.com>
 
-On Thu, 17 Apr 2025 11:23:21 +0800, shouyeliu wrote:
+On Fri, Apr 11, 2025 at 11:02:39PM -0700, John Stultz wrote:
+> +#ifdef CONFIG_SCHED_PROXY_EXEC
+> +static inline struct task_struct *proxy_resched_idle(struct rq *rq)
+> +{
+> +	put_prev_set_next_task(rq, rq->donor, rq->idle);
+> +	rq_set_donor(rq, rq->idle);
+> +	set_tsk_need_resched(rq->idle);
+> +	return rq->idle;
+> +}
+> +
+> +static bool __proxy_deactivate(struct rq *rq, struct task_struct *donor)
+> +{
+> +	unsigned long state = READ_ONCE(donor->__state);
+> +
+> +	/* Don't deactivate if the state has been changed to TASK_RUNNING */
+> +	if (state == TASK_RUNNING)
+> +		return false;
+> +	/*
+> +	 * Because we got donor from pick_next_task, it is *crucial*
 
-> In certain situations, the sysfs for uncore may not be present when all
-> CPUs in a package are offlined and then brought back online after boot.
-> 
-> This issue can occur if there is an error in adding the sysfs entry due
-> to a memory allocation failure. Retrying to bring the CPUs online will
-> not resolve the issue, as the uncore_cpu_mask is already set for the
-> package before the failure condition occurs.
-> 
-> [...]
+pick_next_task()
 
+> +	 * that we call proxy_resched_idle before we deactivate it.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
+proxy_resched_idle()
 
-The list of commits applied:
-[1/1] platform/x86/intel-uncore-freq: Fix missing uncore sysfs during CPU hotplug
-      commit: 8d6955ed76e8a47115f2ea1d9c263ee6f505d737
+> +	 * As once we deactivate donor, donor->on_rq is set to zero,
+> +	 * which allows ttwu to immediately try to wake the task on
 
---
- i.
+ttwu()
 
+> +	 * another rq. So we cannot use *any* references to donor
+> +	 * after that point. So things like cfs_rq->curr or rq->donor
+> +	 * need to be changed from next *before* we deactivate.
+> +	 */
+> +	proxy_resched_idle(rq);
+> +	return try_to_block_task(rq, donor, state, true);
+> +}
+> +
+> +static struct task_struct *proxy_deactivate(struct rq *rq, struct task_struct *donor)
+> +{
+> +	if (!__proxy_deactivate(rq, donor)) {
+> +		/*
+> +		 * XXX: For now, if deactivation failed, set donor
+> +		 * as unblocked, as we aren't doing proxy-migrations
+> +		 * yet (more logic will be needed then).
+> +		 */
+> +		donor->blocked_on = NULL;
+> +	}
+> +	return NULL;
+> +}
+> +
+> +/*
+> + * Initial simple sketch that just deactivates the blocked task
+> + * chosen by pick_next_task() so we can then pick something that
+> + * isn't blocked.
+> + */
+> +static struct task_struct *
+> +find_proxy_task(struct rq *rq, struct task_struct *donor, struct rq_flags *rf)
+> +{
+> +	struct task_struct *p = donor;
+> +	struct mutex *mutex;
+> +
+> +	mutex = p->blocked_on;
+> +	/* Something changed in the chain, so pick again */
+> +	if (!mutex)
+> +		return NULL;
+> +	/*
+> +	 * By taking mutex->wait_lock we hold off concurrent mutex_unlock()
+> +	 * and ensure @owner sticks around.
+> +	 */
+> +	guard(raw_spinlock)(&mutex->wait_lock);
+> +
+> +	/* Check again that p is blocked with blocked_lock held */
+> +	if (!task_is_blocked(p) || mutex != __get_task_blocked_on(p)) {
+> +		/*
+> +		 * Something changed in the blocked_on chain and
+> +		 * we don't know if only at this level. So, let's
+> +		 * just bail out completely and let __schedule
+
+__schedule()
+
+> +		 * figure things out (pick_again loop).
+> +		 */
+> +		return NULL; /* do pick_next_task again */
+
+pick_next_task()
+
+> +	}
+> +	return proxy_deactivate(rq, donor);
+
+I was expecting a for() loop here, this only follows blocked_on once,
+right?
+
+> +}
