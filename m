@@ -1,110 +1,75 @@
-Received: from smtp.smtpout.orange.fr (smtp-81.smtpout.orange.fr [80.12.242.81])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6161F585C;
-	Thu, 17 Apr 2025 22:11:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241BFA927;
+	Thu, 17 Apr 2025 22:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744927901; cv=none; b=a6+T2PEiCqErUqteArkPu8wlzxAeQk37Ku8M2ibk1LkDbJZl3OtxGqvDieLfqyTtss2x9lK4nTrN96JvB1zI+8DDeAMipfWM1H7Zpl7djUAx3JUr2xgTL9LTFLZblHQu4RdWp0oeXNXBIX/l52AB2fsrIDUQAAdmzExlz0wt1qQ=
+	t=1744928197; cv=none; b=GEAxMHgcEVSwB6VKu0RsxWPxJaKrrPBqDFsvcRv3cuSvOySMg8zT0E128GEPmSSJj7FTd29vmam4WchcvR5I+i4TnFJcQZR5Fv1fzlLlV3A/JfiMb6PCYJkt7svClrNuRMGkQa0UM9oaUHi8i7rEW8M6SJrZwuAIca2cYmxO8zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744927901; c=relaxed/simple;
-	bh=PE+TjdUopxSp8BkidKGkIbGWLaP1+fCPSat8nwKEV50=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M4dt2yTraRmPbV7VE4GgVBfht3KR4cdQMfeO0NbtaQGtQMq71dD/RboBUngIVR4qt6FN4P33OvIw2DGyQb8zIzKRP62aLcpN3OkjuX/FBwOsh3QeW4VZwx1Xez001/GKJjdB77ZJ/44Iz9gGdEcFyfPUlaTih68VGXJH+oOgmmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Sb4W16iu; arc=none smtp.client-ip=80.12.242.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1744928197; c=relaxed/simple;
+	bh=CXMpZCl5Wu/tLvmsWoMbeqnU6gAzWcoiyyA72jODzX4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U1gSCQLFSjxnbe72TjndDm1ASwTF6Zr2IKMonuUaFyob//u1W5PN87VPy9AMNESA8SKQPgtbPPXRV6cKD4EzbbsDYfbUELvXSkbwmwYGegGyqebgyR4ijrTkrsj3qMM4aEdb1ZwkEU2YtaSltfm6dK3csFRf+YQlDm3N9b7Ol1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d7/HSPDa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Sb4W16iu"
-Received: from localhost.localdomain ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id 5XJDuPve2ZSWC5XJHufye6; Fri, 18 Apr 2025 00:02:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1744927335;
-	bh=jtp8GYhjZseAjbyWNNzA/7uP91uP4NjtvHa4qyzcjGA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=Sb4W16iujH9X2qQIj0Drugo+28BaX6cz1IW1IjU0SCgR/iHoMQkIOcGRqYmIggfbt
-	 lIJDs+oAbaDbpe+8J000u+0+cdGbQxmRCsZh/aCcDXfCFHLf6IMtYyLpLSSxCff9Rd
-	 orAFpHvZmZRJGoMmwYDsXhFgIhHw//k+C/75XTuqIRwtqNzN5nzvIf1k07qt2UHT9u
-	 oaGsXg6VSZfTxeuxDVMJebvlSS1RWesZXDyAhP6KMfGrPK/ebbcFIHkNzVymdmbslr
-	 ChExic6tYWiafGJo6GECbLwX8xksxi2cohEtMVnBagrCaLYNZEpXYU+UCqsxZo7u+b
-	 eBYKZ7UWHCMrQ==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 18 Apr 2025 00:02:15 +0200
-X-ME-IP: 90.11.132.44
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Ming Qian <ming.qian@nxp.com>,
-	Zhou Peng <eagle.zhou@nxp.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-media@vger.kernel.org
-Subject: [PATCH] media: amphion: Slightly simplify vpu_core_register()
-Date: Fri, 18 Apr 2025 00:01:58 +0200
-Message-ID: <e59b3387479fcdaa4ae0faf9fe30eb92a8f6034b.1744927294.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d7/HSPDa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93B88C4CEE4;
+	Thu, 17 Apr 2025 22:16:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744928196;
+	bh=CXMpZCl5Wu/tLvmsWoMbeqnU6gAzWcoiyyA72jODzX4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d7/HSPDaumbLgqxH1r9FzCH2ruApgckzrDuuqNGEgMT2Yv/tYfA3K10EUtGX8NQyZ
+	 uQZMcJo3WYFCXoqkhjGIeNYY6yx03lKC9o/752srvTjg8ziOx/1/oHCDnId8YmYcpP
+	 lmMhSIBVWqO5Qbos/hKzttPM5HowAqM1wsrMuzoLDigRtNrLDHIWoWAXUO0w34X4nI
+	 KDpwi0b/2T9Y5xS+RnTcxQX4aT11+3/Zzz3rxuawMAD0ZTS2V2BpHqm4zcvWhUK0S6
+	 pjDjqjxXVRuUPlXFZ6ALof9xoVWAqHuegT/StO6CREqi+6X6GFClgcMKxVSKuf0yIL
+	 I8wNk914utzyA==
+Date: Fri, 18 Apr 2025 00:16:31 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Yazen Ghannam <yazen.ghannam@amd.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, 
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Hans de Goede <hdegoede@redhat.com>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>, "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>, 
+	kernel test robot <lkp@intel.com>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v4 2/5] i2c: piix4: Depends on X86
+Message-ID: <p25szqqrnvvcut7bbmbhjhxjpqj4wgzvxfqigiopwnv4sspid3@caru7peqpvwz>
+References: <20250415002658.1320419-1-superm1@kernel.org>
+ <20250415002658.1320419-3-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415002658.1320419-3-superm1@kernel.org>
 
-"vpu_core->msg_buffer_size" is unused out-side of vpu_core_register().
-There is no need to save this value in struct vpu_core.
+Hi Mario,
 
-Remove it and use a local variable instead.
+On Mon, Apr 14, 2025 at 07:26:55PM -0500, Mario Limonciello wrote:
+> PIIX4 and compatible controllers are only for X86. As some headers are
+> being moved into x86 specific headers PIIX4 won't compile on non-x86.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202504120558.sq3IpWdH-lkp@intel.com/
+> Closes: https://lore.kernel.org/oe-kbuild-all/202504120432.0F8lOF3k-lkp@intel.com/
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/media/platform/amphion/vpu.h      | 1 -
- drivers/media/platform/amphion/vpu_core.c | 7 ++++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+givent that the next patch is not merged anywhere yet, the above
+three tags are not needed.
 
-diff --git a/drivers/media/platform/amphion/vpu.h b/drivers/media/platform/amphion/vpu.h
-index 22f0da26ccec..1451549c9dd2 100644
---- a/drivers/media/platform/amphion/vpu.h
-+++ b/drivers/media/platform/amphion/vpu.h
-@@ -162,7 +162,6 @@ struct vpu_core {
- 	struct delayed_work msg_delayed_work;
- 	struct kfifo msg_fifo;
- 	void *msg_buffer;
--	unsigned int msg_buffer_size;
- 
- 	struct vpu_dev *vpu;
- 	void *iface;
-diff --git a/drivers/media/platform/amphion/vpu_core.c b/drivers/media/platform/amphion/vpu_core.c
-index 8df85c14ab3f..da00f5fc0e5d 100644
---- a/drivers/media/platform/amphion/vpu_core.c
-+++ b/drivers/media/platform/amphion/vpu_core.c
-@@ -250,6 +250,7 @@ static void vpu_core_get_vpu(struct vpu_core *core)
- static int vpu_core_register(struct device *dev, struct vpu_core *core)
- {
- 	struct vpu_dev *vpu = dev_get_drvdata(dev);
-+	unsigned int buffer_size;
- 	int ret = 0;
- 
- 	dev_dbg(core->dev, "register core %s\n", vpu_core_type_desc(core->type));
-@@ -263,14 +264,14 @@ static int vpu_core_register(struct device *dev, struct vpu_core *core)
- 	}
- 	INIT_WORK(&core->msg_work, vpu_msg_run_work);
- 	INIT_DELAYED_WORK(&core->msg_delayed_work, vpu_msg_delayed_work);
--	core->msg_buffer_size = roundup_pow_of_two(VPU_MSG_BUFFER_SIZE);
--	core->msg_buffer = vzalloc(core->msg_buffer_size);
-+	buffer_size = roundup_pow_of_two(VPU_MSG_BUFFER_SIZE);
-+	core->msg_buffer = vzalloc(buffer_size);
- 	if (!core->msg_buffer) {
- 		dev_err(core->dev, "failed allocate buffer for fifo\n");
- 		ret = -ENOMEM;
- 		goto error;
- 	}
--	ret = kfifo_init(&core->msg_fifo, core->msg_buffer, core->msg_buffer_size);
-+	ret = kfifo_init(&core->msg_fifo, core->msg_buffer, buffer_size);
- 	if (ret) {
- 		dev_err(core->dev, "failed init kfifo\n");
- 		goto error;
--- 
-2.49.0
+BTW, can I already take the two i2c patches?
 
+Thanks,
+Andi
+
+> Suggested-by: Ingo Molnar <mingo@kernel.org>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
