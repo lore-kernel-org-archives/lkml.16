@@ -1,128 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8987208994;
-	Thu, 17 Apr 2025 20:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8D41DDA2F;
+	Thu, 17 Apr 2025 20:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744921584; cv=none; b=iRtoyGtSbhoswWFVGOaZ+r8qYvyqOQPhQadCIVHoBMm72NMV6+KspM9TYck45aSXVOwYJvIWLxBnjD4xsTy08+ORceBk11y6oZpEqY6LSNPdppZVJBOFcN2Yp5o0+HxMb4Dm5yvF70X8dNAm/LaF9noT6Nd2O3drjga+ICp2jOo=
+	t=1744921668; cv=none; b=Pbzk9yMoElpy3iBpQoCdEFXFxx8y2ixfGfYwnibolzbZ/Jt8KUwFlEkWvFboCx2rXA5RZv5cK/G057D4eYROomOLcudtzW0hniFx1Sfe5KFZGzebwfnVTSPL7a3vXUxl/FEHAufl9qZDfTqkZNZ1XMmsaoAuTI4C8Hj97c4qbow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744921584; c=relaxed/simple;
-	bh=MSIoVWYIYAa+sUrhLyrq1Kjxud8OtJpQnV0I5LjBO3c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eVswUqoexNm7yLL8U16cLMfEXWcnVlz6m0WOBUmx+G1XO2GHXXoK5AUAnbfcMjtnMuFOyrNVRhae4kRSDYWMNWP/p4uBTo0sZuser/kcNdf3S7fW6kgve+ve3nbTVx5s6laWfcxZiqM+wS2rGiwhsUPFDqGCii4xXb+UbG8MRMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N6W+nuAg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744921668; c=relaxed/simple;
+	bh=lIA/HRcL6BkCZF6NyQXASHIt+r/PGpnGcRYZxTpdBOs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=pHSVGCg2WTSbJxDzlOSmPZw7De87y3PWfootD+NsXaBZ1Q1IDcUdAFXNagtc3bRLj3szDOCmfx+t6csOG+24UrCKgps9lDlUu6XTMearV+1bn7S3sSzB7mzBHgQZQt6oIDDTfgL/WmuUQCbSQcgApbh2Hk0DG4aJNl2X1dsBqHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NXuhXcTa; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N6W+nuAg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58EA8C4CEEE;
-	Thu, 17 Apr 2025 20:26:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744921583;
-	bh=MSIoVWYIYAa+sUrhLyrq1Kjxud8OtJpQnV0I5LjBO3c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=N6W+nuAgF8wmxKr9Z/HKX+7tNCeuSss8zKQJLTwMz+IlsS4t7ZGGhILI/OR6ppTfq
-	 l60y43C66mjR1XBnTy6Tvsl+Enal2NTF4guNNvdWNaeI98/J8uSl3BW6KKuDieWcY3
-	 AOFRjW4JSrXy4KVbSNAIGZW0hwTlRJwCN93DnuiaaPgHG6Omn0WuFNn+Txuf3Fcb5e
-	 OMdtwBBITtFF4V7zQlc5VKa+f6flSy3a2n2Ap2A0cQNfLB8TjfZtxMphcDH8BUTlCx
-	 Hzzg1UQzL/VnNePd/2jGcqXSq2xM5tEpwLtEEJI51FY05tI8qQ19ovPSQ2TpKjclGk
-	 IM98KcsvSEaUQ==
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-227d6b530d8so14687315ad.3;
-        Thu, 17 Apr 2025 13:26:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU0H0j4l7uJhkyI51k5/xqlY1BOk8oADCT0uof/EqQ5blG7OXro29NN21HHGozE4KxSwVWu3DzYjEUCm58=@vger.kernel.org, AJvYcCVLTBz1DQsqdlzPqakDWDI5/0okKXZKEc6Aug/HxSyJkyXlTEfWXYxFF0RGrzXA08fc5AGez8jitlgq@vger.kernel.org, AJvYcCWgqXDw+jwOzxYtt2uVqiclsOgNbqFZgqJ82e/0DQ11kf87dPPZOrgGzHGqLjEIfqtqEDw=@vger.kernel.org, AJvYcCXI6Uq7FOgz2sAsNusnV0BlpJCUzYmn3kfRhdsuS4Iqs/lLBkuJ8NA/+3V7TWFApbd6QuHUShAEnDeYsgpCHFHP@vger.kernel.org, AJvYcCXqRb/cKMq1cfCX198aNz4GVbld77109eUMJ2RfHlhUffsxmwvU1K4H0uwaCOSxM+fl36DCjakqNhUSJd6T@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXsq1YjyJMZwu0TI04ljx12iQiipW1TMYP+VDZ49mIClgUqiOL
-	YmTcz/JYNu1Muo01L9WmsDvvGsWqjFp2su2mHADcdaL+BUIUbZo+FmpyAc8oovNpLFgfxTHD3rh
-	hlaiv6KUD1wUlFDg2mzlJG2au4WQ=
-X-Google-Smtp-Source: AGHT+IFIdrqkfQ2yDNhbz/9FblYuTge4nV1XL6JmTPE16v3aMPcbe2NW0UpaM5bS7OK2a90u3v9z9kEDj0ljXDeJmJ8=
-X-Received: by 2002:a17:902:e5ca:b0:220:c911:3f60 with SMTP id
- d9443c01a7336-22c536283ffmr3670365ad.47.1744921582932; Thu, 17 Apr 2025
- 13:26:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXuhXcTa"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-736b350a22cso1112790b3a.1;
+        Thu, 17 Apr 2025 13:27:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744921665; x=1745526465; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lIA/HRcL6BkCZF6NyQXASHIt+r/PGpnGcRYZxTpdBOs=;
+        b=NXuhXcTaG9rqsURAz4b22lYEINxF14pfo70Zak0E11Xsfh/UrpCe/MEkIKtfZgqIED
+         Y1GSYBjc00HCOWKMTAfHjh6UcxH+Q+vCiBQC2ezO4zIz4X79a+/eoxDZDOrWvCCzhcDa
+         qtpZkBS85zJXLFRr/G92HUJ0+pg9IyE8ceXN1R0TsUt8DRmWyPG4+o3LFEvLUpAZ2umx
+         0H9ybkhwyP48R1ZTcCr9/r2Dq2XUlS9q3M7UOjvJ3h8scIF3RQAwBJWwDJOsSjjxkFQ2
+         etQNlolwdOttZtJ+napm4PeHBJ50oYoLprzssbUU1kJ5aoHIuDZbTX5r1GJWxfTabLsM
+         3Uxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744921665; x=1745526465;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=lIA/HRcL6BkCZF6NyQXASHIt+r/PGpnGcRYZxTpdBOs=;
+        b=YJRsiGGvjNX+sap2YXJhmSos00H6s8cT8uKEt/aYCz5Dwm1X9vaNxVbU0P2hKhB+1c
+         WdtV/XQZvHbSVqYWxo51lO82wyQJ67z96pCiLxD5NEZq2YtZLiS917K6TekI5VAZen9x
+         8hWMo80ILLYcTrAi40uEV0PVoF7QfPIFHdYiCQUz6Y7IFHd5+SHBAIK5czonK8Rmi5m3
+         tdpntQlfDhdGZp99pRAfp7av6rhywKb+5qYpaaQ2QusSK23jUgl7pA1uCcvsgCvpw/Q2
+         D/e/+SAierXzb3YDsyG5TPzJ2piVCMkDZ4Iyb7zHjtdCPBczrCMbJbva3FBw9DbFhuCk
+         WFfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUkzr/fJQTloJ9+ZI/OBDpsyQ/R72Fo+2FJzl6mX4ifPKD26MhB+i2j1KYugn07kQwuaqR/yw9atD1LZbk=@vger.kernel.org, AJvYcCVB44Pxdue168TSqoVnqkakvfXJmIPUL9Tl61Pd65lE2VDcPEd8MXtqIwroEvMLpS2g+lJNmdnpxRzFNG0+b4GsUwP4eg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFy9d3F0RpRaAPmT0pDRBUNMtPSbqyYFcfXNqb1kE/Eg/0ldRM
+	Pygg9x+spKNpb55+3RXZrNhMwAOCB50TzctzB+ONZgWw0/d4hGt9
+X-Gm-Gg: ASbGncvhBARw07h2zzJgNmfVzPhPI/RHQD3TK+itZT8H02cISJzm6ChZsozzHVyWmje
+	qz1dGKkwOrAW0/Ey1L2JOxyk9/B76TqS35gWAbSgyAoq2JqQEplwKSdLNeKfwbuyUs4hAXXxbWC
+	bm2AiNqUCCEueRM6HWKNg5HQTkBHA2LcTzOTManCOYOeXiN/wDHRaGnVE1gbWox0dbHvlxbF2VL
+	ru7qHsRte0yZuIHz7L+TM+VLnlBGtT3nyJxZH1Pz5fNc51xzIHo/S7i3ofs1VBH7QGWrd0TsShO
+	mgMh+TjcHYACkvfn3dgS3XRM5RvyOJxi6A==
+X-Google-Smtp-Source: AGHT+IEbKrBbVR/RHruqfYQbJuZavlzmY0ghM2eiyPcM/+gQdCRo8cGBs1yIK6cNohKY1nwH7HyNoA==
+X-Received: by 2002:a05:6a00:3911:b0:736:5753:12f7 with SMTP id d2e1a72fcca58-73dc145740amr351604b3a.3.1744921664399;
+        Thu, 17 Apr 2025 13:27:44 -0700 (PDT)
+Received: from localhost ([181.91.133.137])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8e3ba8sm307156b3a.68.2025.04.17.13.27.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Apr 2025 13:27:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250414225227.3642618-1-tjmercier@google.com>
- <20250414225227.3642618-3-tjmercier@google.com> <CAPhsuW6sgGvjeAcciskmGO7r6+eeDo_KVS3y7C8fCDPptzCebw@mail.gmail.com>
- <CABdmKX0bgxZFYuvQvQPK0AnAHEE3FebY_eA1+Vo=ScH1MbfzMg@mail.gmail.com>
- <CAPhsuW72Q2--E9tQQY8xADghTV6bYy9vHpFQoCWNh0V_QBWafA@mail.gmail.com>
- <CABdmKX1tDv3fSFURDN7=txFSbQ1xTjp8ZhLP8tFAvLcO9_-4_A@mail.gmail.com>
- <CAPhsuW7xvSYjWvy8K9Ev_tMwDRy2dpEiBcHYai3n-wAa0xvLow@mail.gmail.com>
- <CABdmKX1p0KgbipTSW1Ywi4bTBabQmsg21gA14Bp5atYHg8FeXQ@mail.gmail.com>
- <CAPhsuW4f2=M_K553+BVnGJq=ddZ7sXj4CfCAHeYQ=4cpihBCzA@mail.gmail.com> <CABdmKX0P1tpa-jxzN1_TCyk6Cw6drYM+KRZQ5YQcjNOBFtOFJw@mail.gmail.com>
-In-Reply-To: <CABdmKX0P1tpa-jxzN1_TCyk6Cw6drYM+KRZQ5YQcjNOBFtOFJw@mail.gmail.com>
-From: Song Liu <song@kernel.org>
-Date: Thu, 17 Apr 2025 13:26:10 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5bgBNu6zY0rn7ZH4VK54nruryU4bS4LrDDsxnCfqQicQ@mail.gmail.com>
-X-Gm-Features: ATxdqUGujoL1qIc8Dt7pK8kwCaaGN6jWIU0L4gFL9hmFjqYOACzGGnezHayKk80
-Message-ID: <CAPhsuW5bgBNu6zY0rn7ZH4VK54nruryU4bS4LrDDsxnCfqQicQ@mail.gmail.com>
-Subject: Re: [PATCH 2/4] bpf: Add dmabuf iterator
-To: "T.J. Mercier" <tjmercier@google.com>
-Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	skhan@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, android-mm@google.com, 
-	simona@ffwll.ch, corbet@lwn.net, eddyz87@gmail.com, yonghong.song@linux.dev, 
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
-	jolsa@kernel.org, mykolal@fb.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 17 Apr 2025 17:27:41 -0300
+Message-Id: <D9973T381GI3.KMDIB14GR4LO@gmail.com>
+Cc: "Hans de Goede" <hdegoede@redhat.com>, "Armin Wolf" <W_Armin@gmx.de>,
+ "Mario Limonciello" <mario.limonciello@amd.com>,
+ <platform-driver-x86@vger.kernel.org>, <Dell.Client.Kernel@dell.com>,
+ "LKML" <linux-kernel@vger.kernel.org>, "Dan Carpenter"
+ <dan.carpenter@linaro.org>
+Subject: Re: [PATCH] platform/x86: alienware-wmi-wmax: Fix uninitialized
+ variable due to bad error handling
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250416-smatch-fix-v1-1-35491b462d8f@gmail.com>
+ <14424f02-c800-a482-4d23-fd05f61cec82@linux.intel.com>
+In-Reply-To: <14424f02-c800-a482-4d23-fd05f61cec82@linux.intel.com>
 
-On Thu, Apr 17, 2025 at 9:05=E2=80=AFAM T.J. Mercier <tjmercier@google.com>=
- wrote:
+On Thu Apr 17, 2025 at 7:57 AM -03, Ilpo J=C3=A4rvinen wrote:
+> On Wed, 16 Apr 2025, Kurt Borja wrote:
 >
-> On Wed, Apr 16, 2025 at 9:56=E2=80=AFPM Song Liu <song@kernel.org> wrote:
-> >
-> > On Wed, Apr 16, 2025 at 7:09=E2=80=AFPM T.J. Mercier <tjmercier@google.=
-com> wrote:
-> > >
-> > > On Wed, Apr 16, 2025 at 6:26=E2=80=AFPM Song Liu <song@kernel.org> wr=
-ote:
-> > [...]
-> > > >
-> > > > Here is another rookie question, it appears to me there is a file d=
-escriptor
-> > > > associated with each DMA buffer, can we achieve the same goal with
-> > > > a task-file iterator?
-> > >
-> > > That would find almost all of them, but not the kernel-only
-> > > allocations. (kernel_rss in the dmabuf_dump output I attached earlier=
-.
-> > > If there's a leak, it's likely to show up in kernel_rss because some
-> > > driver forgot to release its reference(s).) Also wouldn't that be a
-> > > ton more iterations since we'd have to visit every FD to find the
-> > > small portion that are dmabufs? I'm not actually sure if buffers that
-> > > have been mapped, and then have had their file descriptors closed
-> > > would show up in task_struct->files; if not I think that would mean
-> > > scanning both files and vmas for each task.
-> >
-> > I don't think scanning all FDs to find a small portion of specific FDs
-> > is a real issue. We have a tool that scans all FDs in the system and
-> > only dump data for perf_event FDs. I think it should be easy to
-> > prototype a tool by scanning all files and all vmas. If that turns out
-> > to be very slow, which I highly doubt will be, we can try other
-> > approaches.
+>> wmax_thermal_information() may also return -ENOMSG, which would leave
+>> `id` uninitialized in thermal_profile_probe.
+>>=20
+>> Reorder and modify logic to catch all errors.
+>>=20
+>> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+>> Closes: https://lore.kernel.org/r/Z_-KVqNbD9ygvE2X@stanley.mountain
+>> Fixes: 27e9e6339896 ("platform/x86: alienware-wmi: Refactor thermal cont=
+rol methods")
+>> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+>> ---
+>> Hi all,
+>>=20
+>> @Ilpo: This will definitely conflict with the for-next branch when
+>> merging.
 >
-> But this will not find *all* the buffers, and that defeats the purpose
-> of having the iterator.
-
-Do you mean this approach cannot get kernel only allocations? If
-that's the case, we probably do need a separate iterator. I am
-interested in other folks thoughts on this.
-
-> > OTOH, I am wondering whether we can build a more generic iterator
-> > for a list of objects. Adding a iterator for each important kernel list=
-s
-> > seems not scalable in the long term.
+> Okay, thanks for the heads up (I'll eventually merge fixes into for-next
+> once I merge this fix).
 >
-> I think the wide variety of differences in locking for different
-> objects would make this difficult to do in a generic way.
+>> Also, the fixes tag references a commit from before the split (same
+>> series though), but ofc this fix is meant to be applied on top of it
+>> (fixes branch). Is this ok or would it be better to change the fixes
+>> tag to the "split" commit?
+>
+> Pointing to the correct commit is preferred.
+>
+> It doesn't look very likely that the series would be "split" such that=20
+> only a part of it appears in a specific stable kernel so the difference=
+=20
+> shouldn't matter anyway.
 
-Agreed it is not easy to build a generic solution. But with the
-help from BTF, we can probably build something that covers
-a large number of use cases.
+Yeah, this is what I thought too.
 
-Thanks,
-Song
+>
+> In general, stable people would just send you a notification if something=
+=20
+> cannot be backported to some stable version due to a conflict, and they'd=
+=20
+> depend on you to submit the amended backport anyway so it's not much extr=
+a=20
+> "work" for them if something ends up conflicting. (And I don't think your=
+=20
+> inbox would be exactly filling from stable notifications unlike mine ---=
+=20
+> one of those joys of being a subsystem maintainer).
+
+Guess I'm still lucky :)
+
+Thanks for the explanation. I'm going to stop worrying so much about
+stable haha
+
+--=20
+ ~ Kurt
