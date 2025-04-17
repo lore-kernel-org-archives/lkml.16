@@ -1,48 +1,46 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0022517A7;
-	Thu, 17 Apr 2025 14:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B17F2528EF;
+	Thu, 17 Apr 2025 14:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744901017; cv=none; b=UG/ydPsw2bLHtud4qk5SYOFpSTGmfnNk+qZ22zCgMtwBdrH4sx05aQD4MBzXgWBu7RCvR9fAyf6NXUX3PLrFaFBahzkw+0WYHA55i26UWuljnFeBTnnRKGi3D+/2jjOFv129iX31em9QJbpMuO3/2IbIEVAia5U68v3j21klrsc=
+	t=1744901022; cv=none; b=jpR3i/Nvsfkec26fGVRrLV0S43qMGbXUvkAIk38lszYpNebdTdTSzbk5aAGk9ECAXqCN78Jx5IeqIsdyiKbCheJ3sX/DbpMmR5p3GPybp6rwjPyjXBJBCrnT6LsCOlpIT3SR9XHRH+70O1jAPRWzbOZZgUFsd96TuGoaptMtd9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744901017; c=relaxed/simple;
-	bh=S5ZVaseqUuvrABoaIpwk0yu6FEYrxOLklzkrs//Q+eQ=;
+	s=arc-20240116; t=1744901022; c=relaxed/simple;
+	bh=dxTlmjDTebXWEac5ztfrfWgKTc2cMxPySJMYSK+qkVw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rQXthp6X8IC0ueYret/w18hvpz5Kd3YANABzcC4GO21l6j8r1Ek4STK2aQeq0vwlwV5rQf8WiImM43L2ERwsjdWjOs+0b8D6XleCUaEXUkUvJg/ZZmtYmyGuRAGL7LGwKOyJJ/xFGweSfjZpCddPG5v6pISohQo07UZAl/C+iOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A2cl2VpN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rY/SPstEigR0hEagggb00Hu954cxZZ8g/Yey/zgZ9GvzBQOWROyxPSk/E53gvH6168D21S0dhcUMOqBUs0PCg1pbclOWMZwX4QGJyKZXSY6x0DWuc/X9Ao8FEGH7fwu4bgmGGMA0MtN9EiKxFMV7hC6hW1SbgWE8BYOBcp3ExRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=TP2EBB6H; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A2cl2VpN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90346C4CEEA;
-	Thu, 17 Apr 2025 14:43:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744901016;
-	bh=S5ZVaseqUuvrABoaIpwk0yu6FEYrxOLklzkrs//Q+eQ=;
+	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="TP2EBB6H"
+Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id 5260648658;
+	Thu, 17 Apr 2025 16:43:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
+	s=default; t=1744901019;
+	bh=dxTlmjDTebXWEac5ztfrfWgKTc2cMxPySJMYSK+qkVw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A2cl2VpN0eoon2IuVVtJZ84THZGWSgoQt4AZf+EudG7D3pBjk/4CeZCY4GHhhtOZU
-	 7fKp+/5U3Q5+/e/h65mXl++6XQPlOAqSWJiRPYKsHlJkzVeG3YB6uW8LIIfwGz8HV9
-	 BATM0TdruGKibHKJFXc59Ub6l+6n2Pd3EZAfcC+uagnoAtCP7aBtAV6HyeSwOe4++F
-	 x2SQCUuvfW6hhiY/iRdYI0QsGw8N30r3V753hxkx/WKHHv9rnO2PHmDZK4jFjmUULx
-	 E/Z7HXHFW8OjsAjPLlJzv7nmP87tZrEW6csnYlxs3kg2u5deILG849IgbAXljxAVu0
-	 0O+Xlob8ylo2w==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1u5QSm-0000000016t-457c;
-	Thu, 17 Apr 2025 16:43:37 +0200
-Date: Thu, 17 Apr 2025 16:43:36 +0200
-From: Johan Hovold <johan@kernel.org>
-To: jens.glathe@oldschoolsolutions.biz
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: x1e80100-lenovo-yoga-slim7x: add
- retimers, dp altmode support
-Message-ID: <aAETmEB4liEf29bP@hovoldconsulting.com>
-References: <20250417-slim7x-retimer-v1-1-5813a7835903@oldschoolsolutions.biz>
+	b=TP2EBB6H5l59SwArwldVyKHLQRYTXvJyj65/7XMGJdEcHw+aiytXyCb/NSisFHyPE
+	 hntT0OoHHCtJbGPXnn5bypd5Ja8XxLPXkpnfX+ScO0HNMOKnBlJ6Wm9skXUskQjRAf
+	 4yxrao0PvUXBu583G5R1B7+3x3uRL30TaF/JyPeM7+TyBYyDrezHf++8SElyUw5alL
+	 cqLHWFj4aA8vPvW0PNol8vhVgRcKMxgfTj0dJ/BLKQppPhSWSpYZvhTyiKPA1JE/GC
+	 YBagk98Fj4jW6sj4nBHZ9snL8SLjGBbPdudiiW45LdJnHHG/6Zqvqq2MRnJ9vbpiXH
+	 3tYhI3dGgbFtg==
+Date: Thu, 17 Apr 2025 16:43:38 +0200
+From: Joerg Roedel <joro@8bytes.org>
+To: Matthew Rosato <mjrosato@linux.ibm.com>
+Cc: will@kernel.org, robin.murphy@arm.com, gerald.schaefer@linux.ibm.com,
+	schnelle@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
+	agordeev@linux.ibm.com, svens@linux.ibm.com,
+	borntraeger@linux.ibm.com, clg@redhat.com, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH v5 0/5] iommu/s390: support additional table regions
+Message-ID: <aAETmiPYrK8_Toqm@8bytes.org>
+References: <20250411202433.181683-1-mjrosato@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,42 +49,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250417-slim7x-retimer-v1-1-5813a7835903@oldschoolsolutions.biz>
+In-Reply-To: <20250411202433.181683-1-mjrosato@linux.ibm.com>
 
-On Thu, Apr 17, 2025 at 01:38:39PM +0200, Jens Glathe via B4 Relay wrote:
-> From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+On Fri, Apr 11, 2025 at 04:24:28PM -0400, Matthew Rosato wrote:
+> Matthew Rosato (5):
+>   iommu/s390: set appropriate IOTA region type
+>   iommu/s390: support cleanup of additional table regions
+>   iommu/s390: support iova_to_phys for additional table regions
+>   iommu/s390: support map/unmap for additional table regions
+>   iommu/s390: allow larger region tables
 > 
-> comparing with CRD and other dts for a more complete support of the 7X
-> 
-> Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
- 
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/input/gpio-keys.h>
-> +#include <dt-bindings/input/input.h>
+>  arch/s390/include/asm/pci_dma.h |   3 +
+>  drivers/iommu/s390-iommu.c      | 345 ++++++++++++++++++++++++++++----
+>  2 files changed, 314 insertions(+), 34 deletions(-)
 
-Unrelated change.
-
-> +#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-
-Not needed with another unrelated change further down dropped.
-
->  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
->  
->  #include "x1e80100.dtsi"
-
-> +&pm8550ve_8_gpios {
-> +	misc_3p3_reg_en: misc-3p3-reg-en-state {
-> +		pins = "gpio6";
-> +		function = "normal";
-> +		bias-disable;
-> +		input-disable;
-> +		output-enable;
-> +		drive-push-pull;
-> +		power-source = <1>; /* 1.8 V */
-> +		qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
-> +	};
-> +};
-
-Unrelated change.
-
-Johan
+Applied, thanks.
