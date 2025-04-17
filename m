@@ -1,111 +1,115 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964C62561A2;
-	Thu, 17 Apr 2025 17:33:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9865F1DE8A0;
+	Thu, 17 Apr 2025 17:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744911229; cv=none; b=ec2pob2veBFq3nXB0l8iRdWNQ3cUB1ZSbnsjjuiBP6Mo6qZyXYz8YdYUVKafge+vrZdhpQs9F+o0EL3PVkbZcpQQ1h6jvHdgZL07VXCLP3TsnGY+KZJ3iauWqbj19c/73RWGiloPiws5BI7IXJHEWNVV7qsPYFntGhWCIpFv9OE=
+	t=1744911290; cv=none; b=crLAwXIhUeqTOFbU6yHSSXPTcV8MZRPDRstVcZyQGfxkMu7/nPxiea+8lur9U3MqCzbLD1BG3RGi+z5vuK7azxGW+2Zti74OjzsNfXblS981SDu3X6J28Ad3vXnexoiw9oCPNdZr9+6RLX45jNGgeG2laLoxE4vo8CWSCmy/0FY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744911229; c=relaxed/simple;
-	bh=B3oiwQ06L6toD7AGLQE3aUk9GxID3uGGOBMZ1m/kEz0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=INeq+dc8klOOyOJjVr0mHITwDuB1Z2sg4uBUb90aZfj+9KSh21LSWj8UKzc0fvkzBe3vcdf0lluoI6mpznUME4nVwHy3c95YfXPxlAWz75SsBJxKxjZWaQn8p1ebBktbcN+D744mmJh/REWwebfZX/BqPKhr6ZQRVW16+3jqpoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TbFhuWAj; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744911290; c=relaxed/simple;
+	bh=EHZc5LMdgJ00DcUsoV0jPdgjkEA6ta40k6qpttoth8o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BVhq1gsqNWW4kW2Gru63uH27cMuBMVxEWMqQheEY+5bTT5GoLbFWk6tpLA+g2Mx8wmzxgQhIdWSU1zJAb/nzCbr1wsh0SX8VuvPklJR2OeY7Sbz2+6q0b91et0TmrITH5fxO8JV7X57LLU+twmMi0KHN+oSqtujwprkP94pViz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H8MD+GSM; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TbFhuWAj"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6ed16ce246bso6157016d6.3;
-        Thu, 17 Apr 2025 10:33:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744911226; x=1745516026; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=G1UCgSsSJ9uUnGpJjZsHgiNtHFzddYOd1P3ndYRWxOk=;
-        b=TbFhuWAj+lrhWLIYDwnEfqlzMCtj+/+X9/TQiP8weuzbzH1Bt89jfRTu4TBWj970oj
-         MXbZ7schDjVLwrPHg2wclujq/QKkzWlGe4qHktl5hLUn237kpQBCH2shZZRteJEDAhPa
-         JZTSPBVPCs0H1yIPG7Qhb3eOYExngdXLnB/rLqHJTxTMyjr48N1DKzbB+v3xh1H0o3yX
-         GKDaDCJF4Ec8nNvrr2EfX+9BGx/QIgDBNAJKhazLOhI9OJ7+7GKNrHQRS+WlMoYr0qRA
-         v2wVe0ES+XAEc7C6oDJTG4A1Wv6zF5f9FyHlJoSpfwawgH9344zT0+rYj+yAyS6LD/XJ
-         Q73Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744911226; x=1745516026;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=G1UCgSsSJ9uUnGpJjZsHgiNtHFzddYOd1P3ndYRWxOk=;
-        b=nDZMrojkYkymzrsBWQ2MmG7Jwi4L4WoOf4IHwH+fEfYXlMy2EXL871HYqCHpPFhb/B
-         Lm/3SzHuGRlEEz+KDZyFJi5VQ4TZ9KVC+b7A4WYsMzMNSF4UXzQ4AV0fEkcr7uHab8aR
-         shq3+8ON0kso/rXm4zLqRHNfjMINEc/ZegTtfK3xEz6+zV4V3eG52FMsDp/OHPbb07is
-         MPhxBuY97plzRrxBvbfBAO6/JclJXj6WxntphqUm5WbenEd7sM8l5lXS4QU9vLd8a5ou
-         4hRwtlVk2PF01oUZnfFEUy1RYDNTLCO/sXVpgdijUFHT/s37PzHzQ1vccnUE/+brolAj
-         rIyA==
-X-Forwarded-Encrypted: i=1; AJvYcCVddBwhKDOJuJXfNpYgbQPSVjqUOuuhqM7AZG6WiDOLPyej9nyt660Zf/djDZ/sjbSvrvfKktkT4X51yaio@vger.kernel.org, AJvYcCXaz1+JUwrDCPSiGVCmTqvl32DOIRMeCSsGA7k9+LHBFQ4BUSxtPqZtJLvQDKnwsRltjrb9cNFXJKU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4bLNgf8fv7UH4Um/UHJLwHUxYUstvJ6kD+xqlD+twRHxsOStR
-	kqO2nfWuhcRvnGPIVx3HjaKpC75I6PFNbZI44lQVPDI3DKz1In9n
-X-Gm-Gg: ASbGncv7ccWZhtzUW59g7pZJXYNRG4/83lr4vhBioHXxZMK7bMW3F4PWn/S2exr/Y5p
-	nl2gnZTqBhxhJioVUl+wH7G4zdJwPzkkj+fA9AoT5p2NfSfNPY+liQ50H8XZ74yrL6VYeDndXaG
-	EAl3B0oqNfoQWjr673MsPJE7HmeJ2jbCOqhdvY9VYsxw0aLoXPvZI7ZkBADFwJ3FGMg5BinO67W
-	Bj4etXDZpW20zQA6OD/Uw+Bbx5W1PHvPpcjJa0BXpSTRbtdjeSH9M2zvjR5qhvvLsA53D3qXiy3
-	33nFA6HYyAl02pQ13RN/1Rtb1pAL5Ru8dEzY/8wvDXxP06AHCINEX0UqhqIADVmgDA==
-X-Google-Smtp-Source: AGHT+IGRC5CoH8reAVUroHZt/4NSL+Ssvd0PhZUbQ6lj1DRgpN5BrYRY0BCSdA4WUtaH5kleDzjDWQ==
-X-Received: by 2002:a05:6214:e89:b0:6ea:d033:2853 with SMTP id 6a1803df08f44-6f2b2f306a3mr112410116d6.16.1744911226285;
-        Thu, 17 Apr 2025 10:33:46 -0700 (PDT)
-Received: from theriatric.mshome.net ([73.123.232.110])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2c217casm1375946d6.99.2025.04.17.10.33.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 10:33:46 -0700 (PDT)
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-To: gregkh@linuxfoundation.org,
-	jic23@kernel.org,
-	lars@metafoo.de,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	Michael.Hennerich@analog.com
-Cc: gshahrouzi@gmail.com,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: [PATCH v2] iio: frequency: ad9832: Remove unused parameter from data documentation
-Date: Thu, 17 Apr 2025 13:33:33 -0400
-Message-ID: <20250417173333.607844-1-gshahrouzi@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H8MD+GSM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744911288; x=1776447288;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=EHZc5LMdgJ00DcUsoV0jPdgjkEA6ta40k6qpttoth8o=;
+  b=H8MD+GSMngBR4Cr5xknuW7XFKp7Xl3cobwvY8qQKhV+KeiRf+OzU2vNm
+   TH6vrShrciqQ3FAn3rmrLpRQQU2EUnQRhcEMo6gAjap3+Ypl9BpNPIn+a
+   vq2TcefJomGgthWLJVPw344ppMIgjfPm7thwdl5wzRzlPIesBwvjZbHP3
+   ZnTN/2OT9J+eDlsnAGEgp6e8+Pzozp21A8LwmVSxyzIVXFSPr2Y5kSGM/
+   7tnOEtGq/RrIo6wxoJj1W/nksEPW5/JX0qDwl/onc4GheIL3coy9MGIJr
+   AI/bfdQ5EGdTHjII7iIlN2MA7rVSMkAD/7ih2di7JPEU8gcA4puo6zH0M
+   g==;
+X-CSE-ConnectionGUID: c351F0N2Q8qmZSNC1cJ+bw==
+X-CSE-MsgGUID: 34oQHdL8TXifUSbbifr7JA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="57899720"
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="57899720"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:34:47 -0700
+X-CSE-ConnectionGUID: YDg0VbreS/OpgF+Gy/FaGg==
+X-CSE-MsgGUID: ls8Qr6NGTgi39WVQ6RC6gw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="161920992"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:33:33 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u5T7D-0000000DGhE-0RSO;
+	Thu, 17 Apr 2025 20:33:31 +0300
+Date: Thu, 17 Apr 2025 20:33:30 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu,
+	GaryWang@aaeon.com.tw
+Subject: Re: [PATCH v3 07/10] gpio: aggregator: export symbols of the GPIO
+ forwarder library
+Message-ID: <aAE7akcsktz1wc2w@smile.fi.intel.com>
+References: <20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com>
+ <20250416-aaeon-up-board-pinctrl-support-v3-7-f40776bd06ee@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416-aaeon-up-board-pinctrl-support-v3-7-f40776bd06ee@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-This is a leftover from the patch: commit 566564e80b0e ("staging: iio:
-ad9832: use clock framework for clock reference").
+On Wed, Apr 16, 2025 at 04:08:15PM +0200, Thomas Richard wrote:
+> Export all symbols and create header file for the GPIO forwarder library.
 
-The AD9832 driver uses the Common Clock Framework (CCF) to obtain the
-master clock (MCLK) frequency rather than relying on a frequency value
-passed from platform data.
+...
 
-Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
----
-Changes since v2:
-	- Specify driver in the title.
-	- Include referenced patch.
----
- drivers/staging/iio/frequency/ad9832.h | 1 -
- 1 file changed, 1 deletion(-)
+> -struct gpiochip_fwd_timing {
+> -	u32 ramp_up_us;
+> -	u32 ramp_down_us;
+> -};
+> -
+> -struct gpiochip_fwd {
+> -	struct gpio_chip chip;
+> -	struct gpio_desc **descs;
+> -	union {
+> -		struct mutex mlock;	/* protects tmp[] if can_sleep */
+> -		spinlock_t slock;	/* protects tmp[] if !can_sleep */
+> -	};
+> -	struct gpiochip_fwd_timing *delay_timings;
+> -	unsigned long tmp[];		/* values and descs for multiple ops */
+> -};
 
-diff --git a/drivers/staging/iio/frequency/ad9832.h b/drivers/staging/iio/frequency/ad9832.h
-index 98dfbd9289ab8..d0d840edb8d27 100644
---- a/drivers/staging/iio/frequency/ad9832.h
-+++ b/drivers/staging/iio/frequency/ad9832.h
-@@ -13,7 +13,6 @@
- 
- /**
-  * struct ad9832_platform_data - platform specific information
-- * @mclk:		master clock in Hz
-  * @freq0:		power up freq0 tuning word in Hz
-  * @freq1:		power up freq1 tuning word in Hz
-  * @phase0:		power up phase0 value [0..4095] correlates with 0..2PI
+I don't like this piece at all. It will repeat one of the biggest mistake done
+with many (old) subsystems and core.
+
+Looking at the last patch ahead, I can tell that this is not needed. Instead
+add a couple of APIs:
+- getter for the gpiochip
+- getter for the specific private data
+
+and use the error code filtering for the existed GPIO descriptor, I actually
+don't understand why for the existed descriptor you return there 0 and not an
+error.
+
+TL;DR: Follow OOP and make this an opaque pointer, no need to move it to the
+header. The rest looks okay on the first glance.
+
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
