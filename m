@@ -1,129 +1,61 @@
-Received: from mail.nppct.ru (mail.nppct.ru [195.133.245.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBDE182B4
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.245.4
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF0F122E412;
+	Thu, 17 Apr 2025 12:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744892509; cv=none; b=pk1CkhG8OAcWb0YiOI2vB6BYtJ4Bn/KovpUU6G9247F5R9qmb3Xd0oMMx67R0i+lKahmlNKnVzheHlRvH7Uzw7EQ4lHBIA1XBNlkhxGmeFFwmOzi+b6JhltpTUrWhqkTHb4Spxfz8X2GakaplcBEwwFryfzLduAaSiXkjz4opQw=
+	t=1744892629; cv=none; b=dEMdxp8g8wMbaDlcDmJt+gA9B0hzaZb6c3dzbNEgF2yG4TENgMf9Ha7Dvmt5zR45glYjXYHxHvA6Mq2+LwmLBesDn9e0Pz4s0iAg8XBSXvj7zdeh3vzuLQ5MSmPIcQTd9847PwX+88XgDcoyfRYeZUq20C+uLMgSVX1OlJ/wMro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744892509; c=relaxed/simple;
-	bh=yim53aUfLmVou/JvqKYODc4xwB/wJ3VFd3Zy7HjYysY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FRaVjnR+g/Y4nbYA2X73NWdzeuGiWven3MsCwRLIpwJjLDVw+jCJcuzcyXPj+rzpf3shyRbrNW4BiptFIj1/Gzhm2WREpeabSJwzoWUf5HMKtbzwA4pVbEMtdaNE2dDLNhOb43XVMX8u7GiZ4976XqTUxPE8j8Nx5wgzNdXsGMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=XOc9N1kG; arc=none smtp.client-ip=195.133.245.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nppct.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="XOc9N1kG"
-Received: from mail.nppct.ru (localhost [127.0.0.1])
-	by mail.nppct.ru (Postfix) with ESMTP id 36F551C0E84
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 15:21:39 +0300 (MSK)
-Authentication-Results: mail.nppct.ru (amavisd-new); dkim=pass (1024-bit key)
-	reason="pass (just generated, assumed good)" header.d=nppct.ru
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nppct.ru; h=
-	content-transfer-encoding:mime-version:x-mailer:message-id:date
-	:date:subject:subject:to:from:from; s=dkim; t=1744892498; x=
-	1745756499; bh=yim53aUfLmVou/JvqKYODc4xwB/wJ3VFd3Zy7HjYysY=; b=X
-	Oc9N1kG+w3/vx99U9s8X5y6758ClWEjdx19507zYFz9q2Do3Y8vk+aqtdbjqvuO0
-	gaYW9Hv7+/VfmiJBmrptxC76ElMdYVcSwt9UQvZErnFNwBoihJsgLDLU5GK2Dz0p
-	tfywXE5fd0bSHBjAhK6xZV+AXrqxCVgNTbgDDGPFBM=
-X-Virus-Scanned: Debian amavisd-new at mail.nppct.ru
-Received: from mail.nppct.ru ([127.0.0.1])
-	by mail.nppct.ru (mail.nppct.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id bujqojlHZP2W for <linux-kernel@vger.kernel.org>;
-	Thu, 17 Apr 2025 15:21:38 +0300 (MSK)
-Received: from localhost.localdomain (unknown [87.249.24.51])
-	by mail.nppct.ru (Postfix) with ESMTPSA id B90721C08D8;
-	Thu, 17 Apr 2025 15:21:30 +0300 (MSK)
-From: Alexey Nepomnyashih <sdl@nppct.ru>
-To: Juergen Gross <jgross@suse.com>
-Cc: Alexey Nepomnyashih <sdl@nppct.ru>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	xen-devel@lists.xenproject.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	stable@vger.kernel.org
-Subject: [PATCH v2] xen-netfront: handle NULL returned by xdp_convert_buff_to_frame()
-Date: Thu, 17 Apr 2025 12:21:17 +0000
-Message-ID: <20250417122118.1009824-1-sdl@nppct.ru>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1744892629; c=relaxed/simple;
+	bh=U2w5Y1yKb1SyuJm1REWVhM+80qvh+DHvLiIsZMbe3PA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CMswmQjNViCoxmJyS2pmNUdzbGz6Rs+14g1saKn7aFHOUfOUJJ4ZzpUJDYO4Yt8IOFQ8UlX412WoUKOmwN5D/ssI7gpRt9DT8wzwulmE5o0fCS8c4RnNb180lO28FnCyBHmcxd5rm8Dnil0ctLB4o2/fU8hci6pXUfRrLfpH1N8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C55AB1515;
+	Thu, 17 Apr 2025 05:23:44 -0700 (PDT)
+Received: from [10.1.25.43] (e127648.arm.com [10.1.25.43])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB8853F694;
+	Thu, 17 Apr 2025 05:23:45 -0700 (PDT)
+Message-ID: <e535ae92-89ff-4053-865d-523567753006@arm.com>
+Date: Thu, 17 Apr 2025 13:23:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFT][PATCH v1 1/8] cpufreq/sched: schedutil: Add helper for
+ governor checks
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Morten Rasmussen <morten.rasmussen@arm.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+ Pierre Gondois <pierre.gondois@arm.com>
+References: <3344336.aeNJFYEL58@rjwysocki.net>
+ <10640940.nUPlyArG6x@rjwysocki.net>
+Content-Language: en-US
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <10640940.nUPlyArG6x@rjwysocki.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The function xdp_convert_buff_to_frame() may return NULL if it fails
-to correctly convert the XDP buffer into an XDP frame due to memory
-constraints, internal errors, or invalid data. Failing to check for NULL
-may lead to a NULL pointer dereference if the result is used later in
-processing, potentially causing crashes, data corruption, or undefined
-behavior.
+On 4/16/25 18:48, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Add a helper for checking if schedutil is the current governor for
+> a given cpufreq policy and use it in sched_is_eas_possible() to avoid
+> accessing cpufreq policy internals directly from there.
+> 
+> No intentional functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-On XDP redirect failure, the associated page must be released explicitly
-if it was previously retained via get_page(). Failing to do so may result
-in a memory leak, as the pages reference count is not decremented.
-
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Cc: stable@vger.kernel.org # v5.9+
-Fixes: 6c5aa6fc4def ("xen networking: add basic XDP support for xen-netfront")
-Signed-off-by: Alexey Nepomnyashih <sdl@nppct.ru>
----
- drivers/net/xen-netfront.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/xen-netfront.c b/drivers/net/xen-netfront.c
-index 63fe51d0e64d..1d3ff57a6125 100644
---- a/drivers/net/xen-netfront.c
-+++ b/drivers/net/xen-netfront.c
-@@ -985,20 +985,27 @@ static u32 xennet_run_xdp(struct netfront_queue *queue, struct page *pdata,
- 	act = bpf_prog_run_xdp(prog, xdp);
- 	switch (act) {
- 	case XDP_TX:
--		get_page(pdata);
- 		xdpf = xdp_convert_buff_to_frame(xdp);
--		err = xennet_xdp_xmit(queue->info->netdev, 1, &xdpf, 0);
--		if (unlikely(!err))
--			xdp_return_frame_rx_napi(xdpf);
--		else if (unlikely(err < 0))
-+		if (unlikely(!xdpf)) {
- 			trace_xdp_exception(queue->info->netdev, prog, act);
-+			break;
-+		}
-+		get_page(pdata);
-+		err = xennet_xdp_xmit(queue->info->netdev, 1, &xdpf, 0);
-+		if (unlikely(err <= 0)) {
-+			if (err < 0)
-+				trace_xdp_exception(queue->info->netdev, prog, act);
-+			xdp_return_frame_rx_napi(xdpf);
-+		}
- 		break;
- 	case XDP_REDIRECT:
- 		get_page(pdata);
- 		err = xdp_do_redirect(queue->info->netdev, xdp, prog);
- 		*need_xdp_flush = true;
--		if (unlikely(err))
-+		if (unlikely(err)) {
- 			trace_xdp_exception(queue->info->netdev, prog, act);
-+			xdp_return_buff(xdp);
-+		}
- 		break;
- 	case XDP_PASS:
- 	case XDP_DROP:
--- 
-2.43.0
-
+Reviewed-by: Christian Loehle <christian.loehle@arm.com>
