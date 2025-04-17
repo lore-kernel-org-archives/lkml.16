@@ -1,141 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E1C1254B14
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 16:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AAA83C0C;
+	Thu, 17 Apr 2025 16:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744907822; cv=none; b=f931L3uwhO7c+eqiKWgteQiGk8gvFCH/oQI2Ifh9bwyHrV33oaC6lAONXGX52Lwv5pq08pgauBiUwBMDwasa/bp7Bfb9UIgYKLzcXUrT5kG2nLtGGsQmpmKuF16m5QWQhykGuDQDoB4TAT/IkUSs4/AnssZlWEYBTavq/KRiOCw=
+	t=1744907901; cv=none; b=hrOi5Qd0oV3A8WEMF+pfsk5ivCeYnirXKXz0XemAyg6iaCH9ZR0UnBjbn+OAKR6CUoz0mIaAb+UffS+7onwRq1E1LZy9axEa2JS5DV4Gc0I4Z7Hb9SNZPSy4BvypelatvbcyBYy3fT0TLSZGu4TzGZYj6sCbE4zZub/KrKFOdjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744907822; c=relaxed/simple;
-	bh=ZB1x85E9TZSV27ACI1YbITPS8W7AaqTCmW3E93K4f0g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DZ9UTGHD+Dfo2zgbwCO8p7c8LueO9Hyhw1NU1/Da/UGDyXjiEcnftsPskX93S7kyrLQ8n1FYjxeWqtqi9j3KJ6tkmXlO5YJuYl80f8y/blCXbYhGsooZdz9c0pQfHFqagZTH6tKR/yuRrwC1q+u6OB0zSFoCyo0AGNBLTLlXNPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B8Ky6Pvh; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744907901; c=relaxed/simple;
+	bh=rFqPdgaxq5bPHs1u3HIibyPQvV0xl51RdnOC/QZNAfk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gJZy/e/RTSJ2bfjBpyOig8JZfMAbqjmJZb7d2SJvlOzUDCXrs/+dpfD+kFX265Jimci6E1SjBG4sKdi5DU56QQiZwbf60Udm9Lu9BGrbWl4wCUUFTzT3VDmXhcSqX9znJGshu2or9mU6UtIaAJR9SNTFdjDlzCclgDVFkxM3w4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dndm/+Yg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B8Ky6Pvh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744907819;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LHtvPer+uhTnTZr30khXohx3R0vSZbxSNnylVoOnq58=;
-	b=B8Ky6PvhY5KN0EJ9JvwsbvGtOuJ7ydjjRIsI08di9nzIJSe1Gvx+6JyDsKKUrxx3xRb7Z8
-	itbWlFoEFVyUDaZMDXFgr1AEBpujReVd77bXq7Wykr27TSQuAHyaBW6L9tZmgYkZ0IKQyw
-	pt4K+kbGUX+8Ibmw+JXb6Qo6aJ9LM2I=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-44-t5j63oQ2PAmH5IVFq-QmPQ-1; Thu,
- 17 Apr 2025 12:36:55 -0400
-X-MC-Unique: t5j63oQ2PAmH5IVFq-QmPQ-1
-X-Mimecast-MFC-AGG-ID: t5j63oQ2PAmH5IVFq-QmPQ_1744907812
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D6668182FF46;
-	Thu, 17 Apr 2025 16:35:57 +0000 (UTC)
-Received: from [10.44.33.28] (unknown [10.44.33.28])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C28A21956095;
-	Thu, 17 Apr 2025 16:35:52 +0000 (UTC)
-Message-ID: <76f668a7-1cd6-445b-9e62-cb314bdeefa9@redhat.com>
-Date: Thu, 17 Apr 2025 18:35:51 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dndm/+Yg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71DEAC4CEEC;
+	Thu, 17 Apr 2025 16:38:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744907900;
+	bh=rFqPdgaxq5bPHs1u3HIibyPQvV0xl51RdnOC/QZNAfk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dndm/+YgYxPI4jAp9TaBHia9Kin485PblCLd1Iomrb1zEz+zkvYvg8aPUNHcr+geO
+	 9NQIgnJCvPwQ+v9vd7eiuS6LsKeDQ0YtbRkAQJH8oD7I6H9YePLxC2W8lJPwLEgdrH
+	 htmRm3bcBaTXOyz7rZYCahBU5JzV8gjwTmSOcTrPRSrtPcfs6UpORj24n2fsM1HACI
+	 /ivzDsDAe6jaoji/9KYlARYYXoMeQPgIn7ttGw0Y1Y3TL5lVlYvy/iTN2c6cMr629v
+	 Jl0p7wl3M2aANiZUdz3r4I90HgmcgxBU2djdW7VWpMkKFJwLNkTD2zB6Zobz15+dRv
+	 O5qKbCf6VE5IA==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54af20849adso1038454e87.1;
+        Thu, 17 Apr 2025 09:38:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUuDtJcOQ2q14jOIdx4hrtkkdGp/wib2Ik4dycLnNbM60xxZQNpD0uRga4jCXKcapRwBFPoT7Nw3DQ=@vger.kernel.org, AJvYcCVklJvemAGEVX4pL8Cy2f2SiuD5Qatx9XJ/PQui/Lqk9XUmxR6UVBF5BFfMWS5pE/3QUjnek+C10Q75MGHJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRYlLwqUxxPXcTEcPDlDGTLIKTMC6sm7Yof6okLZAC4Isbw+Qs
+	f85l0DHpD8FCJqc0k4PRnfzLcX6wNBnvJ8lG6SI3x9asRHMvuPDXK8TfydpbamoD/n18iuojMOu
+	Xz6VkqBcYP4qPgGsNyGk/mzTqrmE=
+X-Google-Smtp-Source: AGHT+IGh8+ZdSAxEZ29/KmbIXxXGUdJyYwzfj73vB80z1W5XlJrUd5nSlg98cr+P77Z6KAOL6RkSdE35KZOQGsAjvWM=
+X-Received: by 2002:a05:6512:398d:b0:54d:3ea7:9110 with SMTP id
+ 2adb3069b0e04-54d6dc05ca4mr194995e87.27.1744907898782; Thu, 17 Apr 2025
+ 09:38:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 net-next 5/8] mfd: zl3073x: Add functions to work with
- register mailboxes
-To: Lee Jones <lee@kernel.org>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250416162144.670760-1-ivecera@redhat.com>
- <20250416162144.670760-6-ivecera@redhat.com>
- <20250417161354.GF372032@google.com>
-Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <20250417161354.GF372032@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+References: <20250410132850.3708703-2-ardb+git@google.com> <20250411184113.GBZ_liSYllx10eT-l1@renoirsky.local>
+ <CAMj1kXEqWxokyJf_WUE5Owwz3fO6b-Wq8sSNxFmMVAA+Q47uPQ@mail.gmail.com>
+ <3f2b0089-a641-1e0c-3558-0a8dc174d1ec@amd.com> <CAMj1kXGvLQwea2J0E72tMhY-9iDCTmQm3drrHCTLyZ=hCP_iAg@mail.gmail.com>
+ <96762dec-616b-b906-02b3-e006d43a8535@amd.com>
+In-Reply-To: <96762dec-616b-b906-02b3-e006d43a8535@amd.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 17 Apr 2025 18:38:07 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFVeygkdnhtkGHsKfRgGXoMRpdjQ-wTO1RBLU_wERs_=Q@mail.gmail.com>
+X-Gm-Features: ATxdqUHFhrBPmzFKFU1HhH2paC89etivSFLWAn32Cw95YDOaMRzXx_XbhDYpGLs
+Message-ID: <CAMj1kXFVeygkdnhtkGHsKfRgGXoMRpdjQ-wTO1RBLU_wERs_=Q@mail.gmail.com>
+Subject: Re: [PATCH v3] x86/boot/sev: Avoid shared GHCB page for early memory acceptance
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>, Ard Biesheuvel <ardb+git@google.com>, linux-efi@vger.kernel.org, 
+	x86@kernel.org, mingo@kernel.org, linux-kernel@vger.kernel.org, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
+On Thu, 17 Apr 2025 at 18:21, Tom Lendacky <thomas.lendacky@amd.com> wrote:
+>
+> On 4/17/25 11:14, Ard Biesheuvel wrote:
+> > On Thu, 17 Apr 2025 at 18:08, Tom Lendacky <thomas.lendacky@amd.com> wrote:
+> >>
+> >> On 4/11/25 14:00, Ard Biesheuvel wrote:
+> >>> On Fri, 11 Apr 2025 at 20:40, Borislav Petkov <bp@alien8.de> wrote:
+> >>>>
+> >>>> On Thu, Apr 10, 2025 at 03:28:51PM +0200, Ard Biesheuvel wrote:
+> >>>>> From: Ard Biesheuvel <ardb@kernel.org>
+> >>>>>
+> >>>>> Communicating with the hypervisor using the shared GHCB page requires
+> >>>>> clearing the C bit in the mapping of that page. When executing in the
+> >>>>> context of the EFI boot services, the page tables are owned by the
+> >>>>> firmware, and this manipulation is not possible.
+> >>>>>
+> >>>>> So switch to a different API for accepting memory in SEV-SNP guests, one
+> >>>>
+> >>>> That being the GHCB MSR protocol, it seems.
+> >>>>
+> >>>
+> >>> Yes.
+> >>>
+> >>>> And since Tom co-developed, I guess we wanna do that.
+> >>>>
+> >>>> But then how much slower do we become?
+> >>>>
+> >>>
+> >>> Non-EFI stub boot will become slower if the memory that is used to
+> >>> decompress the kernel has not been accepted yet. But given how heavily
+> >>> SEV-SNP depends on EFI boot, this typically only happens on kexec, as
+> >>> that is the only boot path that goes through the traditional
+> >>> decompressor.
+> >>
+> >> Some quick testing showed no significant differences in kexec booting
+> >> and testing shows everything seems to be good.
+> >>
+> >
+> > Thanks.
+> >
+> >> But, in testing with non-2M sized memory (e.g. a guest with 4097M of
+> >> memory) and without the change to how SNP is detected before
+> >> sev_enable() is called, we hit the error path in arch_accept_memory() in
+> >> arch/x86/boot/compressed/mem.c and the boot crashes.
+> >>
+> >
+> > Right. So this is because sev_snp_enabled() is based on sev_status,
+> > which has not been set yet at this point, right?
+>
+> Correct.
+>
 
+OK. Would this do the trick? (with asm/sev.h added to the #includes)
 
-On 17. 04. 25 6:13 odp., Lee Jones wrote:
-> On Wed, 16 Apr 2025, Ivan Vecera wrote:
-> 
->> Registers present in page 10 and higher are called mailbox type
->> registers. Each page represents a mailbox and is used to read and write
->> configuration of particular object (dpll, output, reference & synth).
->>
->> The mailbox page contains mask register that is used to select an index of
->> requested object to work with and semaphore register to indicate what
->> operation is requested.
->>
->> The rest of registers in the particular register page are latch
->> registers that are filled by the firmware during read operation or by
->> the driver prior write operation.
->>
->> For read operation the driver...
->> 1) ... updates the mailbox mask register with index of particular object
->> 2) ... sets the mailbox semaphore register read bit
->> 3) ... waits for the semaphore register read bit to be cleared by FW
->> 4) ... reads the configuration from latch registers
->>
->> For write operation the driver...
->> 1) ... writes the requested configuration to latch registers
->> 2) ... sets the mailbox mask register for the DPLL to be updated
->> 3) ... sets the mailbox semaphore register bit for the write operation
->> 4) ... waits for the semaphore register bit to be cleared by FW
->>
->> Add functions to read and write mailboxes for all supported object types.
->>
->> All these functions as well as functions accessing mailbox latch registers
->> (zl3073x_mb_* functions) have to be called with zl3073x_dev->mailbox_lock
->> held and a caller is responsible to take this lock.
->>
->> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
->> v1->v3:
->> * dropped ZL3073X_MB_OP macro usage
->> ---
->>   drivers/mfd/zl3073x-core.c       | 232 +++++++++++++++++++++++
->>   include/linux/mfd/zl3073x.h      |  12 ++
->>   include/linux/mfd/zl3073x_regs.h | 304 +++++++++++++++++++++++++++++++
->>   3 files changed, 548 insertions(+)
-> 
->> +/*
->> + * Mailbox operations
->> + */
->> +int zl3073x_mb_dpll_read(struct zl3073x_dev *zldev, u8 index);
->> +int zl3073x_mb_dpll_write(struct zl3073x_dev *zldev, u8 index);
->> +int zl3073x_mb_output_read(struct zl3073x_dev *zldev, u8 index);
->> +int zl3073x_mb_output_write(struct zl3073x_dev *zldev, u8 index);
->> +int zl3073x_mb_ref_read(struct zl3073x_dev *zldev, u8 index);
->> +int zl3073x_mb_ref_write(struct zl3073x_dev *zldev, u8 index);
->> +int zl3073x_mb_synth_read(struct zl3073x_dev *zldev, u8 index);
->> +int zl3073x_mb_synth_write(struct zl3073x_dev *zldev, u8 index);
-> 
-> Why aren't these being placed into drivers/mailbox?
+--- a/arch/x86/boot/compressed/mem.c
++++ b/arch/x86/boot/compressed/mem.c
+@@ -34,11 +34,14 @@ static bool early_is_tdx_guest(void)
 
-I think the only common thing of this with drivers/mailbox is only the
-name. Mailbox (this comes from datasheet) here is just an atomic way to
-read or write some range of registers.
+ void arch_accept_memory(phys_addr_t start, phys_addr_t end)
+ {
++       static bool sevsnp;
++
+        /* Platform-specific memory-acceptance call goes here */
+        if (early_is_tdx_guest()) {
+                if (!tdx_accept_memory(start, end))
+                        panic("TDX: Failed to accept memory\n");
+-       } else if (sev_snp_enabled()) {
++       } else if (sevsnp || (sev_get_status() & MSR_AMD64_SEV_SNP_ENABLED)) {
++               sevsnp = true;
+                snp_accept_memory(start, end);
+        } else {
+                error("Cannot accept memory: unknown platform\n");
 
-How can be that used here?
+> >
+> > And for the record, could you please indicate whether you are ok with
+> > the co-developed-by/signed-off-by credits on this patch (and
+> > subsequent revisions)?
+>
+> Yep, I'm fine with that.
+>
 
-Ivan
-
+Thanks.
