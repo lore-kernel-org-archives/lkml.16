@@ -1,40 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7622225485D;
-	Thu, 17 Apr 2025 16:08:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE50254843;
+	Thu, 17 Apr 2025 16:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744906123; cv=none; b=KKvNyuLAyFAHgTmgtAxmTUjV81Ba/yt9mzaSxhMiAj/Eecx8cX7PjbpxRYvQXPpDXQ8MVG5jYTjXSAeCoSFurNYZxl+AMjpbBh5pCoJ1vJUrSVo8LeK/p1lKMwtFfl4id+S3xFs3QeLX7LfQBcc6+YvKl01OcBuWDQep2sAcsBc=
+	t=1744906144; cv=none; b=aavI4GaAlaWgLywvsrvqehXZwRhwnPdsFcItfvMjZF9VszL8fKWCEniWY0eC886qCxwddrhHqJDFz+evFVRHWRTBzJfWVw6z5iOvb0IxaRnWJj2iSMK0/c3sszOPiG2rPV/7RqPHvaQc6QrL3KFoHLITt49fBRNvotWbzWgu+2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744906123; c=relaxed/simple;
-	bh=5P/fK1tsHJhnyaMTuBiMf8Zin/Aete3BdacTSOwEOiA=;
+	s=arc-20240116; t=1744906144; c=relaxed/simple;
+	bh=GwGY6CO303Usvicakl4M5GZ5cgW6/60SATjXouEiCCM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MtKaIh8eK7LCX/UKQmgk0O2ULHpSBLHpwrpT2Hl/LEd/qiMpGtqbnfM0bpPVTV50XtDvRKlc34b7kgIC35EFD0d+7Cuv2+KDGQBeRKXBMZsy5YHAlo2FSGkbv7KeXZtIjaimgRwjly9HIckWzCOXJdSCWABAjebp6qovHXiQUxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pu+5Oevj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=se6LRPxZfzdDcJ4EQXk8J5Lrw3an2ZmnWY/Fv8/3QFuVvGn+GgAnRmXhXtQrU/uDKR5EtQNKkpTuV72TeIokedKPgE88Pp0otY2N6Cb5AcnJOgAM6sGBSV1bQZxawvq+WBAsbDcdJFhSsHzME6VxqzaYdGN+IKn/220sotXPMDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mUsh/INX; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pu+5Oevj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B2DBC4CEE4;
-	Thu, 17 Apr 2025 16:08:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744906122;
-	bh=5P/fK1tsHJhnyaMTuBiMf8Zin/Aete3BdacTSOwEOiA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Pu+5OevjUBKHPuXZE8V+/eRoPTgH8gmSnWUwAhndzCgmGAbuDD+dJNW/SaI+08glw
-	 K8NQq2mHZEqKvDFq0rYI4ernuZf4tbjjAmPM1OwbzfTa/IIp9Vpz/2jPqaM+J9jaZR
-	 EiC7S75qIYz35AOxbNfNvQFpRTqMsiCYMGrcWxYRqF+RVTLemw8hyfi3h+d3Mt0oLY
-	 iE1tr9Y4XfU30HaVUvsvzCuRMrTuC9uzLoBZleC7C3kglGhmZuG0pZXVVlRFNqVMev
-	 WtY28ieQnGebWEePLNWxTX516NnUhN6JyoAoEecuqOL2NX6obBpCixXRcS4bvig3MM
-	 WHHA4zPhdMuBQ==
-Date: Thu, 17 Apr 2025 18:08:38 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Markus Elfring <Markus.Elfring@web.de>, 
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v14 0/1] i2c: octeon: add block-mode r/w
-Message-ID: <ii7ditpkwb6w5d436ql7fxxo7kvrn7megtchv2lqyixtg6bn7z@msj34kx7lbcm>
-References: <20250324192946.3078712-1-aryan.srivastava@alliedtelesis.co.nz>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mUsh/INX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744906141; x=1776442141;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GwGY6CO303Usvicakl4M5GZ5cgW6/60SATjXouEiCCM=;
+  b=mUsh/INXWS3SQk1HyUo4tEqBvbFA9sRAPj61WcRAX+qRMOtTYIDaz/Mb
+   ik13zsjLhODCO2gjvmRQmx5J4bhe93po3dGsC2s/lPsjB+09O71mPxE/e
+   +qWZ8fbb4OWcCZVf5BpbRCgANWfC/qXgOVk7uySnD/2sUKXgOWTR3HwfB
+   VGRg+gNIM8am0ISl8tWWkb9O+DuDUCQ4mHc5S0rGSgUvPUkEsOdTBgcve
+   txxv0wkyuhpLK/riP9qYj/EgYg75n3or8qdeX47t3QPL/SfxCXuH/D0ls
+   BoiVWW7vCNKGI1IxHwl3WK7YS1rnavbCMuf3KTlmR/wjEnqieJD+zmEje
+   g==;
+X-CSE-ConnectionGUID: QJq0PDz7SaWgVMo8UYEkww==
+X-CSE-MsgGUID: T20xbA2HSLe3u1n8dz/S+Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="71895011"
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="71895011"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 09:09:00 -0700
+X-CSE-ConnectionGUID: S5WOtJR7S+G7uCE+9PLbOA==
+X-CSE-MsgGUID: rRXo41YGRxmmae8X5wXoOw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
+   d="scan'208";a="135963225"
+Received: from lkp-server01.sh.intel.com (HELO 61e10e65ea0f) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 17 Apr 2025 09:08:58 -0700
+Received: from kbuild by 61e10e65ea0f with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u5RnM-0000Tz-0M;
+	Thu, 17 Apr 2025 16:08:56 +0000
+Date: Fri, 18 Apr 2025 00:07:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: Thomas Richard <thomas.richard@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu,
+	GaryWang@aaeon.com.tw, Thomas Richard <thomas.richard@bootlin.com>
+Subject: Re: [PATCH v3 02/10] pinctrl: core: add
+ devm_pinctrl_register_mappings()
+Message-ID: <202504172328.mrC81ooJ-lkp@intel.com>
+References: <20250416-aaeon-up-board-pinctrl-support-v3-2-f40776bd06ee@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,22 +70,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250324192946.3078712-1-aryan.srivastava@alliedtelesis.co.nz>
+In-Reply-To: <20250416-aaeon-up-board-pinctrl-support-v3-2-f40776bd06ee@bootlin.com>
 
-Hi Aryan,
+Hi Thomas,
 
-On Tue, Mar 25, 2025 at 08:29:45AM +1300, Aryan Srivastava wrote:
-> Add support for block mode read/write operations on
-> Thunderx chips.
-> 
-> -Refactor common code for i2c transactions (merged in v11).
-> -Correct function docs (merged in v13).
-> -Remove 10-bit addressing considerations (merged in v13).
-> -Add block mode transaction functionality.
-> 
-> Signed-off-by: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>
+kernel test robot noticed the following build warnings:
 
-merged to i2c/i2c-host.
+[auto build test WARNING on 8a834b0ac9ceb354a6e0b8cf5b363edca8221bdd]
 
-Thanks,
-Andi
+url:    https://github.com/intel-lab-lkp/linux/commits/Thomas-Richard/gpiolib-add-support-to-register-sparse-pin-range/20250416-221852
+base:   8a834b0ac9ceb354a6e0b8cf5b363edca8221bdd
+patch link:    https://lore.kernel.org/r/20250416-aaeon-up-board-pinctrl-support-v3-2-f40776bd06ee%40bootlin.com
+patch subject: [PATCH v3 02/10] pinctrl: core: add devm_pinctrl_register_mappings()
+config: i386-buildonly-randconfig-001-20250417 (https://download.01.org/0day-ci/archive/20250417/202504172328.mrC81ooJ-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250417/202504172328.mrC81ooJ-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504172328.mrC81ooJ-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from drivers/pinctrl/renesas/pfc-r8a7791.c:12:
+   In file included from drivers/pinctrl/renesas/sh_pfc.h:12:
+   In file included from include/linux/pinctrl/pinconf-generic.h:16:
+>> include/linux/pinctrl/machine.h:158:50: warning: declaration of 'struct device' will not be visible outside of this function [-Wvisibility]
+     158 | extern int devm_pinctrl_register_mappings(struct device *dev,
+         |                                                  ^
+   1 warning generated.
+
+
+vim +158 include/linux/pinctrl/machine.h
+
+   155	
+   156	extern int pinctrl_register_mappings(const struct pinctrl_map *map,
+   157					     unsigned int num_maps);
+ > 158	extern int devm_pinctrl_register_mappings(struct device *dev,
+   159						  const struct pinctrl_map *map,
+   160						  unsigned int num_maps);
+   161	extern void pinctrl_unregister_mappings(const struct pinctrl_map *map);
+   162	extern void pinctrl_provide_dummies(void);
+   163	#else
+   164	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
