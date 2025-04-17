@@ -1,329 +1,227 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893E91CEADB
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 21:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744926354; cv=none; b=jhLXGM7TTQqUpFzGpEGC6M/6uIviu+Du3kKVANSyuW4zhJMvglWhH4POkqhT4KNZDTR4JnpzEwiw3WPWzqgEGhAiBHBVLwlVXKpPFViWMwytfBwy1KaDdhz8BeKNeH1GfypFrthKFby5PDs0Y04iW/0e3PGIieJo8q94ESfJfDs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744926354; c=relaxed/simple;
-	bh=xHJ0U/NNew0D9559C+9DS7UY5fxxKEpGxBszJk6LAB4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DiZ+pJHrBti9ad5dN7xZeTcGhBgWoXjXFcK5N1adLNlfrriFoD7aq3+OeozAsWWM0cXJuxqSk32P8SV99xaojPbqKzU7nublssgOsEIZyRLhE+webPJQROUZZKbCJ6OD/Q9uxLSoCy6nCVaJFNjyUNFpVMilIwkTbLfhNvC0wNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fWi9QmVW; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08A51CEADB;
+	Thu, 17 Apr 2025 21:46:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.156.1
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744926406; cv=fail; b=ZKiz4l2IEOKftZHdX/qSgyUct6UxZz4z/f3BdgM6Y4Q9mxBm8kaHKWeCANQrJ55VIfA7HXMURMUwH3+GmzL3Cu0YiAp5fh10iQbNi55Qo05irDdDB2gnyWoaSRnkXOWs2xhAi2drdRhEendbnaZUnFXxnaqMSKfWEBe8/r79+oE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744926406; c=relaxed/simple;
+	bh=pU+vYXz9pIBTLvfD7icFi7eG1mtNXyC3qyi24iXH//g=;
+	h=From:To:CC:Date:Message-ID:References:In-Reply-To:Content-Type:
+	 MIME-Version:Subject; b=CCLwSbjesFRzbs9Dj5vlUqmFZJaHw9qWxxs3ltY+ob0limJefsFAAwjfmw4cyncVSetDMmveCaL1zsaE7Br/NYGrqdTMMPCBlzqTtg2ltjdpnCg4hf31itU7falaL6vGR9PaaXC3w/dHI9yoLx3RiXF6kGHAEonCOHTaX1aj28g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ibm.com; spf=pass smtp.mailfrom=ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Mko+9ySO; arc=fail smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fWi9QmVW"
-Date: Thu, 17 Apr 2025 21:45:29 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744926337;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YyL22TIdx0Q5a8q6LIr4f7OFCQiot5vdD9q+5r2Pq1M=;
-	b=fWi9QmVWTQXLS+cHrsXzp9VdFCl1Wu6eF3gWaUI/LYpxjL8da362t/2VrISfu29y/nqiFp
-	7ppv8G5hA1hR6BA2OWNgdTxsQc/elTxKxO3iQ+TP9ZtPCI050IpT+KTUCT2gOJ1a/ZG7Xv
-	Rvu6+PRuCarcI1mA0/+dFIUbp5DvO5Q=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Kairui Song <ryncsn@gmail.com>
-Cc: Muchun Song <muchun.song@linux.dev>,
-	Muchun Song <songmuchun@bytedance.com>, hannes@cmpxchg.org,
-	mhocko@kernel.org, shakeel.butt@linux.dev,
-	akpm@linux-foundation.org, david@fromorbit.com,
-	zhengqi.arch@bytedance.com, yosry.ahmed@linux.dev,
-	nphamcs@gmail.com, chengming.zhou@linux.dev,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, hamzamahfooz@linux.microsoft.com,
-	apais@linux.microsoft.com, yuzhao@google.com
-Subject: Re: [PATCH RFC 00/28] Eliminate Dying Memory Cgroup
-Message-ID: <aAF2eUG26_xDYIDU@google.com>
-References: <20250415024532.26632-1-songmuchun@bytedance.com>
- <CAMgjq7BAfh-op06++LEgXf4UM47Pp1=ER+1WvdOn3-6YYQHYmw@mail.gmail.com>
- <F9BDE357-C7DA-4860-A167-201B01A274FC@linux.dev>
- <CAMgjq7D+GXce=nTzxPyR+t6YZSLWf-8eByo+0NpprQf61gXjPA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Mko+9ySO"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53HLYAT4031522;
+	Thu, 17 Apr 2025 21:44:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-id:content-transfer-encoding:content-type:date:from
+	:in-reply-to:message-id:mime-version:references:subject:to; s=
+	pp1; bh=pU+vYXz9pIBTLvfD7icFi7eG1mtNXyC3qyi24iXH//g=; b=Mko+9ySO
+	0VlnN1hEBls3v8/8WcL5O/H5hnFz7PJIvSzmBQJjukE/NS2AfhZjYIMcvVzTSgtu
+	6mz06IDKFJJdJjYiRgkTbPKbdMmHwKJDdiKjJglaAup8UcTfTxYEp5sXI6d2DWSv
+	k9DGiV4DPCkkiwJnMqCpDdzNql5BQT+jyzsuDozH/e9aqcjlRvNl3A1oEFbB8YXP
+	RiQLKvCJBOPiin1W0ih9AUFovSjGTpWUyAJhGfaKSUjHMSPtihPhFWT8tVobHT1Z
+	1nF8U1nz+wuabK2nPXI7psuEpnRqZh4Z12sQCDMAAqh/T79lamNVfGk5FG5l593J
+	uysZhg2sj/po3Q==
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2048.outbound.protection.outlook.com [104.47.70.48])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 462yjjb92e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 21:44:52 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oY47nRAswn1a4xaRdCA97wsXkbJfOmDlcV+JfLvgviXKTn8zAl4iVIsgeEFq+Y76nACWikUwceXzhPNS7uC4/hBWikJe9bo0XiF/Fzr4XI1OFF3eUD8D5E0Q5DR/xHrWIpcokUBFUu4Z/8UYzrkaq2LkeRPovpiHTZfw9Z37EU6JyY0EVHsaHgK9oAor04so+x51uzeo5ZM1Xphp0OuS86TdK74uqAtekqh67HbUUPrCx9p8WjOwT9OC7AS4fw/yWdbY7VLZVbRMBaUwSNjSvGjaPuOWJNNn3HGJrfl9Ng33x13dDdMVVBUD9WWk2M6ySGRT7woMR9dKijLSv30W8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pU+vYXz9pIBTLvfD7icFi7eG1mtNXyC3qyi24iXH//g=;
+ b=BtI+xxP3P4djbBoaVEUp4xcQOnnqOip19D1rx8iWdRJ9SBTV8c48ZJw8W0oFFDeRCggem2DHse1gOqV8o8WJ+bIL3Tq0+AUxgPMlm/f4ECyt/em5gXlQgaYtmzKTJo2jm/ATPYqpeo4HPAR399NnosR4sNGHnJdIe3suGsHPUPJkTYCtrJsaPJUVsB9eXMAppd3mO2m+K6Fax1sORrAA67DT3A1g4Sn/6TARgv2KHb+Qf3T1eEi3+NphJqyYW+8cMKWJsjv3taij1IqaLDdjS+4b3kk0+0zIaVc18vP/OSApj6TP3XfMxLf73ct/UYmH/ogfy7ZNjSor+UFwdgp6IQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=ibm.com; dmarc=pass action=none header.from=ibm.com; dkim=pass
+ header.d=ibm.com; arc=none
+Received: from SA1PR15MB5819.namprd15.prod.outlook.com (2603:10b6:806:338::8)
+ by BL1PPF97109ECA9.namprd15.prod.outlook.com (2603:10b6:20f:fc04::e36) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Thu, 17 Apr
+ 2025 21:44:49 +0000
+Received: from SA1PR15MB5819.namprd15.prod.outlook.com
+ ([fe80::6fd6:67be:7178:d89b]) by SA1PR15MB5819.namprd15.prod.outlook.com
+ ([fe80::6fd6:67be:7178:d89b%3]) with mapi id 15.20.8632.030; Thu, 17 Apr 2025
+ 21:44:49 +0000
+From: Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>
+To: "glaubitz@physik.fu-berlin.de" <glaubitz@physik.fu-berlin.de>,
+        "djwong@kernel.org" <djwong@kernel.org>,
+        "brauner@kernel.org"
+	<brauner@kernel.org>
+CC: "jack@suse.com" <jack@suse.com>,
+        "linux-fsdevel@vger.kernel.org"
+	<linux-fsdevel@vger.kernel.org>,
+        "dsterba@suse.cz" <dsterba@suse.cz>,
+        "sandeen@redhat.com" <sandeen@redhat.com>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "torvalds@linux-foundation.org"
+	<torvalds@linux-foundation.org>,
+        "viro@zeniv.linux.org.uk"
+	<viro@zeniv.linux.org.uk>,
+        "willy@infradead.org" <willy@infradead.org>,
+        "josef@toxicpanda.com" <josef@toxicpanda.com>
+Thread-Topic: [EXTERNAL] Re: [PATCH] hfs{plus}: add deprecation warning
+Thread-Index:
+ AQHbrhWWXaRwwnXSdkukdsi2+kZKRrOl1QqAgACQ7wCAAC+YAIABBJgAgACRlICAAAEmAIAAOtSA
+Date: Thu, 17 Apr 2025 21:44:49 +0000
+Message-ID: <5e5403b1f1a7903c48244afba813bfb15890eac4.camel@ibm.com>
+References: <20250415-orchester-robben-2be52e119ee4@brauner>
+					 <20250415144907.GB25659@frogsfrogsfrogs>
+					 <20250416-willen-wachhalten-55a798e41fd2@brauner>
+					 <20250416150604.GB25700@frogsfrogsfrogs>
+				 <4ecc225c641c0fee9725861670668352d305ad29.camel@ibm.com>
+			 <0e27414d94d981d4eee45b09caf329fa66084cd3.camel@physik.fu-berlin.de>
+		 <6fcb2ee90de570908eebaf007a4584fc19f1c630.camel@ibm.com>
+	 <1d16c046a5c9e1ee83f1013951d77d9376d8fb64.camel@physik.fu-berlin.de>
+In-Reply-To:
+ <1d16c046a5c9e1ee83f1013951d77d9376d8fb64.camel@physik.fu-berlin.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR15MB5819:EE_|BL1PPF97109ECA9:EE_
+x-ms-office365-filtering-correlation-id: c7d55db4-9d68-4099-54c3-08dd7df91442
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|10070799003|366016|376014|7416014|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?bU1aZW9FV3gvSU92RFY0bklWRjhaWGEwbE1qdGJWRHhzeDR5ejJ6U01VT0hL?=
+ =?utf-8?B?Vis1ZTBVU2lRcEZwb01JeFpReWRXbnhLSHV5cklvbmx0d3NjamZjVDJCMHRR?=
+ =?utf-8?B?SkVDbnR6VDFpUjIzdUt6ZWZhUGc3RHVPTjc5SktoUXV2aWNiNk1ib0hGV2li?=
+ =?utf-8?B?eE1yRG9FOGhGb005QmY1T1BaY2xwR2JaenFqTFVheHlwNlRNUzY3NEE1TVox?=
+ =?utf-8?B?T3Jzd011QUxuS2piN0VtZk1INnNmTEFFOGJMcTlVL3E1K3pCaWRsNVNqSVg2?=
+ =?utf-8?B?bVA4VUplVTJwaktaTE0vNWtlcjFGM0NTSnRPZmpDdlFtZldOQVhRVUpOZmRo?=
+ =?utf-8?B?aGZxT3dRNHVNNzhaVktBT3lOdjM0K3diY2ZFNlBxMmtLQVYyY01NOGNkRnZH?=
+ =?utf-8?B?TDlXZVJ2ZFF3Y0R4aTV3aEJOQitDdnppUG4yUUFCRUhHU1hDMmpUTjZpV3hB?=
+ =?utf-8?B?ZEFQRlhhVm9Wd2hldk5kVTdHZ1pLeW1DaStiRHRnWU8vYVo1Z3orMXB4elE5?=
+ =?utf-8?B?dFVpVXJvc0RjMVh1ZEwwdld6RnhTZVc2enBMcW5pTU1BV0lwV3lJT0Y0UE54?=
+ =?utf-8?B?VkxZbmpYYUlsaFdLNXpVT1RJUVVJajdDOE1CcWlBZmJtUSttQVhmNGx6MVZy?=
+ =?utf-8?B?NG5sditESEJvR3paa0pLQXY2cG5BRUVDa0plY2lKZWdqdzVXMmk0dEV5dndC?=
+ =?utf-8?B?L2FUTWxqWHBGN2t3MjNObkJxZm1BaTE3WGtGVTdkUTdUWGhSeXdJWVppb2dx?=
+ =?utf-8?B?dVgwS0lrVUtYNk0yR0hDWnczQnB6UkpmSDhVWHMxaHdsNnZVaDh5U2RNazdG?=
+ =?utf-8?B?L2JMWWQxQmp6S0NyNldobTY4b3dFV1VrNWFvYWNoWm9rTGtnSmdRZWh5amJZ?=
+ =?utf-8?B?TDZDNkpaSlRrU1dySVRDV2JWR3p3Ykc5U2kzRmtnWm1lQTIzQUtPK0syYXVC?=
+ =?utf-8?B?bUV6azFoM0JWdUxGc3MxdW1VL0tLRm15QW5oTXZyYjhGSWFpYWlPRy9zUjRI?=
+ =?utf-8?B?YjAvM01GYngvKzFvemY1U1F1dU9xWHd4eGRnMTZQcVpLZkdHZFQ2YVVmNU81?=
+ =?utf-8?B?b05hR244UTNnVlRtT0xvaVZzRThyVk43R1l3bnJkVGorc0I4VDd1a1ZzaWRI?=
+ =?utf-8?B?OC85WktjTUpWcTFnWU5NK3RtMnk1cjNQUVAwM2tsYlRONUwzK3FLdE9zaHVU?=
+ =?utf-8?B?SVdWbE14TnR1bzVyRGlZQXlpSFFPR0R2dWlhY1h1OWEvVFMxSFNjaUFmK0pS?=
+ =?utf-8?B?VlppQUdUQ1RkMTdzSDdoRHJWaVpETFA2TmxaZi82RDlGbEl4MzBhb1BpV3Fs?=
+ =?utf-8?B?UW1JdEhxbFQ0R2FlWnVYSXQvaFpmaWlmK2ZlUy9rOXc0dUpYVlJJbnA0NXJE?=
+ =?utf-8?B?TEx1RDFrZjdJWGoySWFTOC9nYUk5TmxHenZMb2wrMFJBdC83eXdMSjB2KzRY?=
+ =?utf-8?B?aFFrc3VHRGxwRnVLc2U0UTQrRzhRTXBCTlZhTmhUeG55UXJueUhpQUp5SHFu?=
+ =?utf-8?B?M0NGSUZxQVQxSGJUOWJMZUxGTGFHQ1VrWEZncXdDNkpRaEtMb2huNFhyMnpn?=
+ =?utf-8?B?V1NwbG1nTnAyc1NEanJEdG1GWjdVME5DeDRwVVhWNHhQTklzamFaRWVKTmRy?=
+ =?utf-8?B?Ulc1WWNoQUtIMjg3T0s4c21QdEt1TG81R3YzaDdXaExOWlNDcEJlNmJNK2xm?=
+ =?utf-8?B?SEwwM1hqbWRpTm9CZytNUWRMMm02Z0daYTZQS1gwN0hQcVg3dEF6dkV4TUpa?=
+ =?utf-8?B?N1hrKzh4aXAwQjJpbUtFbjV4dnlFb3FRL0p6YzNxd1g2YnZXK1hJZWFpUGtZ?=
+ =?utf-8?B?bllKOVppL1V6STlUcHl6eDlJc1paK2Z5U0VhVlBWc2h1UDR1MCtETWtEb2tu?=
+ =?utf-8?B?Q3RrN01VM0JVWFdKVFdZRkNsOGcxWXppZVp6ZFhzSmwrVzRucUE5RDBFODBD?=
+ =?utf-8?B?bGRpTFdDVkh1aHBiM3Bia1czTEJEQVZhOU82Z3c3dHBiK053Skk3ZTc3UlBi?=
+ =?utf-8?B?VlpMNmZrUnZRPT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR15MB5819.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(376014)(7416014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?bXNKQURyQkhxSW5YUnBEUTBNa2pQS1lsL3p1WGFzTXRFbU9qTGM3bEcrQWZQ?=
+ =?utf-8?B?NDB6UnZqQXY5TWV1c2xxbkZwVFppZjc1QTJ0VmJpQnNiZW5WY2tLL0RxWGtD?=
+ =?utf-8?B?NlFlcHQydHdkeGpSVWc2V1NYUmh3TDhXYUFyOHVHZEg3eGhEOFRRWnVyVFla?=
+ =?utf-8?B?M3VFeGw2L3ZuTkJoYjRUUXNXMkxQQkkwUTVXaldGYSt0MHo0MG9kUDdINnFP?=
+ =?utf-8?B?TXRNNFFlSDhQV2lFWHhMLzFtUHVveW9hOTVWMk52cDI2RWZRTEh5YjV6OVRo?=
+ =?utf-8?B?bnlQSUlUWFRiYlRKeTMvS1E5ZEZGT0VzY3pjQjhVMkxYd0JPWnA4Y1Z4QUtW?=
+ =?utf-8?B?Y0pBOVU4M3poVTJOM0hMVDdTWVBrRnV1bElCOHhYOXZaUVBvZ0xsQmpTUGhO?=
+ =?utf-8?B?eFFqTm9SdThrUE1WTXlTcXdTN2krcWM3YkRMbmtrWG5mU0FpQnYvZ29pUkZL?=
+ =?utf-8?B?NTNuU3hZVkd5aUJrdkRhbEZsVVBwL2taajgvUGNncmpYVXAxYzF1VzU5MmF6?=
+ =?utf-8?B?ejYwc2hIdis0TXlIbWllZW13UDNVNkVIdHZOSGVUSXZ2TVBhM1BxWXRBSVlq?=
+ =?utf-8?B?OUdPdVAvYjltOW5NaHBYZlcwYk5hdEZUVVIwcVRheEg3OHZJYUFKaDVoYjNi?=
+ =?utf-8?B?RDdsOWRmVTIrUGFkb2k3a3FrTEh4enNOTDBQaXVlTEJia3dNWktxcmoyT0VK?=
+ =?utf-8?B?dkVsUlh3RUVjVlNVQzFZUEFPczhEbmh6VjZKRzZFK2RKazh4T1dRSzEwRzJL?=
+ =?utf-8?B?UEJmOVRPR1dNN3g4ZVdzM3Y0dXhIL2ZYMnBkckpYbmRaYkNSYWNoaC9rUHNm?=
+ =?utf-8?B?T2ZWTTNrQno5bXNySjZWaXVvZS9HaHpFa0p3YWZHeHo2b3FoSEFFdlpFQ3JR?=
+ =?utf-8?B?Um9peG5iZzZyelBQRUhvcEFhVGFoT3lYSytVTnBESmNmU3JROCtJdnVwRm5Q?=
+ =?utf-8?B?WnRjL04wamRYeVYzTFdWb2k3SDQ3VGVzaUFIM2I5OXdVeW45NnpNVVVWYUw5?=
+ =?utf-8?B?aEdzVjd1ajBuanpOblhPZytOWEdGK0p5UmIwODcwc0JQSy9VWC9Ib0RkUDND?=
+ =?utf-8?B?cEYrZjRrZFFHckpZKzI5QWRUTzJwS05OVElkempsWTN6UUs0cW1pWVBrdnAz?=
+ =?utf-8?B?alRsOWpVM0dDeFQ0MDlBWUI2MVI0ZXN0TkpzL01OMGhCOTBNOFA3NDZ6TjU4?=
+ =?utf-8?B?c1pLRVhnd2ttcnlMSk1KeVFPcml5cGlMeW1XUFJMbW9wMTZGVnNVL1ZMeFlu?=
+ =?utf-8?B?ME1sMStpSlRPSmtBT1NIamdqWUQvby9BbVZyVkNCRzVzcWt2WlhmdGQ5V2M4?=
+ =?utf-8?B?N2NGeXJlUllzSkRFKzNLTWJ1ekxCTHpsZkU0K3Y1OFgrTGpSck5yc2RZSXI1?=
+ =?utf-8?B?UmkxYktqV2pucERyVk1jd3REOXJYZWlYZk1welFxZEMyNzkwaWpnQTdmcElO?=
+ =?utf-8?B?M2o4Q2F4UEd1Nm1YNWZiQWVHalJlK29yZWJWc2JuNDg3Tm5TV2c0cTB5RnMx?=
+ =?utf-8?B?OXJiQmV4ZG9KVTZsSm8rdzBLaDN3SDJvRmF2azR1eFdmZU9wQklYRXdiVm02?=
+ =?utf-8?B?bjlQc2RiY3J5cGprM1NvQ0NpVklIM1YvUTQ3OFloWGJzMmJKS2xiL0lramc4?=
+ =?utf-8?B?SXZCNkk3Mk80YlJWSjZCakd1Q3NJNmNyZi9Jcll1ZWp4dUZqbXVobnp4bzll?=
+ =?utf-8?B?cjBpT2kxVkJhN3JQck5BNUh2MlQzNmQxN1VId01VOExjZnlhOUhWcWVqU2RB?=
+ =?utf-8?B?dDRDOEhEakljcFlKdFZYcGZvdjRFTUNoVGxFeEIzUWtOWlAwT1M1bkhIQkpG?=
+ =?utf-8?B?Vm5idUVsTGlSYVNBVzl3OHYrM1I2dDdlclVUM1FaYVpyekxvUWZScDdFYlFU?=
+ =?utf-8?B?ZXF1YWRPT2dHOXd0MjZuNXNxV3lYZFNINnppak5yNjRKSHV5RWpvN1lnbHB1?=
+ =?utf-8?B?TFEvcXEwUUlXSTliQUhCNVo0QVBVSU9ua2VGVUZzdDdDRTF5NTFQY3pWVTBq?=
+ =?utf-8?B?YXRJSTlaeU5XNXpsUGw2REtxb1h4aHM2UVVvQzQ0OUltcUllVjdTKzdTL3Ay?=
+ =?utf-8?B?WVVJOFpHWXlCdTZ2ZUdsd1ZxSjZza3M5cUk5cE1BQStRNzgva0p5bHQyb2E0?=
+ =?utf-8?B?dXZlWXQ2b3IwRjBwcUQxczg3aklqWjZPRDNwbU04MlMwSkkzN1I4UFcrRnUv?=
+ =?utf-8?Q?tawNrRYwaOSiRoRa4GMY2Uo=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FE9F1E46DE7E7842BF1D1D1E54969DED@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMgjq7D+GXce=nTzxPyR+t6YZSLWf-8eByo+0NpprQf61gXjPA@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+X-OriginatorOrg: ibm.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR15MB5819.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c7d55db4-9d68-4099-54c3-08dd7df91442
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2025 21:44:49.6477
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: fcf67057-50c9-4ad4-98f3-ffca64add9e9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: K65MJM51xNpA/4EBkiLWkoG0UXqcMtPD+/2MvOuYuhXtuzPYXzmCdbtW/wHU0byHBvUZdEOauIzhIyz4XxzTow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PPF97109ECA9
+X-Proofpoint-ORIG-GUID: zOosj7d-4MuD63KWxirwbvpnIKrR4f9g
+X-Authority-Analysis: v=2.4 cv=MsNS63ae c=1 sm=1 tr=0 ts=68017654 cx=c_pps a=PK5aExQQjalka8oDlC/sVA==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=XR8D0OoHHMoA:10 a=0thV8z8ouDnOtpEuCUIA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: zOosj7d-4MuD63KWxirwbvpnIKrR4f9g
+Subject: RE: [PATCH] hfs{plus}: add deprecation warning
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-17_07,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=743
+ suspectscore=0 priorityscore=1501 phishscore=0 mlxscore=0
+ lowpriorityscore=0 spamscore=0 clxscore=1015 bulkscore=0 impostorscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504170159
 
-On Fri, Apr 18, 2025 at 02:22:12AM +0800, Kairui Song wrote:
-> On Tue, Apr 15, 2025 at 4:02 PM Muchun Song <muchun.song@linux.dev> wrote:
-> >
-> >
-> >
-> > > On Apr 15, 2025, at 14:19, Kairui Song <ryncsn@gmail.com> wrote:
-> > >
-> > > On Tue, Apr 15, 2025 at 10:46 AM Muchun Song <songmuchun@bytedance.com> wrote:
-> > >>
-> > >> This patchset is based on v6.15-rc2. It functions correctly only when
-> > >> CONFIG_LRU_GEN (Multi-Gen LRU) is disabled. Several issues were encountered
-> > >> during rebasing onto the latest code. For more details and assistance, refer
-> > >> to the "Challenges" section. This is the reason for adding the RFC tag.
-> > >>
-> > >> ## Introduction
-> > >>
-> > >> This patchset is intended to transfer the LRU pages to the object cgroup
-> > >> without holding a reference to the original memory cgroup in order to
-> > >> address the issue of the dying memory cgroup. A consensus has already been
-> > >> reached regarding this approach recently [1].
-> > >>
-> > >> ## Background
-> > >>
-> > >> The issue of a dying memory cgroup refers to a situation where a memory
-> > >> cgroup is no longer being used by users, but memory (the metadata
-> > >> associated with memory cgroups) remains allocated to it. This situation
-> > >> may potentially result in memory leaks or inefficiencies in memory
-> > >> reclamation and has persisted as an issue for several years. Any memory
-> > >> allocation that endures longer than the lifespan (from the users'
-> > >> perspective) of a memory cgroup can lead to the issue of dying memory
-> > >> cgroup. We have exerted greater efforts to tackle this problem by
-> > >> introducing the infrastructure of object cgroup [2].
-> > >>
-> > >> Presently, numerous types of objects (slab objects, non-slab kernel
-> > >> allocations, per-CPU objects) are charged to the object cgroup without
-> > >> holding a reference to the original memory cgroup. The final allocations
-> > >> for LRU pages (anonymous pages and file pages) are charged at allocation
-> > >> time and continues to hold a reference to the original memory cgroup
-> > >> until reclaimed.
-> > >>
-> > >> File pages are more complex than anonymous pages as they can be shared
-> > >> among different memory cgroups and may persist beyond the lifespan of
-> > >> the memory cgroup. The long-term pinning of file pages to memory cgroups
-> > >> is a widespread issue that causes recurring problems in practical
-> > >> scenarios [3]. File pages remain unreclaimed for extended periods.
-> > >> Additionally, they are accessed by successive instances (second, third,
-> > >> fourth, etc.) of the same job, which is restarted into a new cgroup each
-> > >> time. As a result, unreclaimable dying memory cgroups accumulate,
-> > >> leading to memory wastage and significantly reducing the efficiency
-> > >> of page reclamation.
-> > >>
-> > >> ## Fundamentals
-> > >>
-> > >> A folio will no longer pin its corresponding memory cgroup. It is necessary
-> > >> to ensure that the memory cgroup or the lruvec associated with the memory
-> > >> cgroup is not released when a user obtains a pointer to the memory cgroup
-> > >> or lruvec returned by folio_memcg() or folio_lruvec(). Users are required
-> > >> to hold the RCU read lock or acquire a reference to the memory cgroup
-> > >> associated with the folio to prevent its release if they are not concerned
-> > >> about the binding stability between the folio and its corresponding memory
-> > >> cgroup. However, some users of folio_lruvec() (i.e., the lruvec lock)
-> > >> desire a stable binding between the folio and its corresponding memory
-> > >> cgroup. An approach is needed to ensure the stability of the binding while
-> > >> the lruvec lock is held, and to detect the situation of holding the
-> > >> incorrect lruvec lock when there is a race condition during memory cgroup
-> > >> reparenting. The following four steps are taken to achieve these goals.
-> > >>
-> > >> 1. The first step  to be taken is to identify all users of both functions
-> > >>   (folio_memcg() and folio_lruvec()) who are not concerned about binding
-> > >>   stability and implement appropriate measures (such as holding a RCU read
-> > >>   lock or temporarily obtaining a reference to the memory cgroup for a
-> > >>   brief period) to prevent the release of the memory cgroup.
-> > >>
-> > >> 2. Secondly, the following refactoring of folio_lruvec_lock() demonstrates
-> > >>   how to ensure the binding stability from the user's perspective of
-> > >>   folio_lruvec().
-> > >>
-> > >>   struct lruvec *folio_lruvec_lock(struct folio *folio)
-> > >>   {
-> > >>           struct lruvec *lruvec;
-> > >>
-> > >>           rcu_read_lock();
-> > >>   retry:
-> > >>           lruvec = folio_lruvec(folio);
-> > >>           spin_lock(&lruvec->lru_lock);
-> > >>           if (unlikely(lruvec_memcg(lruvec) != folio_memcg(folio))) {
-> > >>                   spin_unlock(&lruvec->lru_lock);
-> > >>                   goto retry;
-> > >>           }
-> > >>
-> > >>           return lruvec;
-> > >>   }
-> > >>
-> > >>   From the perspective of memory cgroup removal, the entire reparenting
-> > >>   process (altering the binding relationship between folio and its memory
-> > >>   cgroup and moving the LRU lists to its parental memory cgroup) should be
-> > >>   carried out under both the lruvec lock of the memory cgroup being removed
-> > >>   and the lruvec lock of its parent.
-> > >>
-> > >> 3. Thirdly, another lock that requires the same approach is the split-queue
-> > >>   lock of THP.
-> > >>
-> > >> 4. Finally, transfer the LRU pages to the object cgroup without holding a
-> > >>   reference to the original memory cgroup.
-> > >>
-> > >
-> > > Hi, Muchun, thanks for the patch.
-> >
-> > Thanks for your reply and attention.
-> >
-> > >
-> > >> ## Challenges
-> > >>
-> > >> In a non-MGLRU scenario, each lruvec of every memory cgroup comprises four
-> > >> LRU lists (i.e., two active lists for anonymous and file folios, and two
-> > >> inactive lists for anonymous and file folios). Due to the symmetry of the
-> > >> LRU lists, it is feasible to transfer the LRU lists from a memory cgroup
-> > >> to its parent memory cgroup during the reparenting process.
-> > >
-> > > Symmetry of LRU lists doesn't mean symmetry 'hotness', it's totally
-> > > possible that a child's active LRU is colder and should be evicted
-> > > first before the parent's inactive LRU (might even be a common
-> > > scenario for certain workloads).
-> >
-> > Yes.
-> >
-> > > This only affects the performance not the correctness though, so not a
-> > > big problem.
-> > >
-> > > So will it be easier to just assume dying cgroup's folios are colder?
-> > > Simply move them to parent's LRU tail is OK. This will make the logic
-> > > appliable for both active/inactive LRU and MGLRU.
-> >
-> > I think you mean moving all child LRU list to the parent memcg's inactive
-> > list. It works well for your case. But sometimes, due to shared page cache
-> > pages, some pages in the child list may be accessed more frequently than
-> > those in the parent's. Still, it's okay as they can be promoted quickly
-> > later. So I am fine with this change.
-> >
-> > >
-> > >>
-> > >> In a MGLRU scenario, each lruvec of every memory cgroup comprises at least
-> > >> 2 (MIN_NR_GENS) generations and at most 4 (MAX_NR_GENS) generations.
-> > >>
-> > >> 1. The first question is how to move the LRU lists from a memory cgroup to
-> > >>   its parent memory cgroup during the reparenting process. This is due to
-> > >>   the fact that the quantity of LRU lists (aka generations) may differ
-> > >>   between a child memory cgroup and its parent memory cgroup.
-> > >>
-> > >> 2. The second question is how to make the process of reparenting more
-> > >>   efficient, since each folio charged to a memory cgroup stores its
-> > >>   generation counter into its ->flags. And the generation counter may
-> > >>   differ between a child memory cgroup and its parent memory cgroup because
-> > >>   the values of ->min_seq and ->max_seq are not identical. Should those
-> > >>   generation counters be updated correspondingly?
-> > >
-> > > I think you do have to iterate through the folios to set or clear
-> > > their generation flags if you want to put the folio in the right gen.
-> > >
-> > > MGLRU does similar thing in inc_min_seq. MGLRU uses the gen flags to
-> > > defer the actual LRU movement of folios, that's a very important
-> > > optimization per my test.
-> >
-> > I noticed that, which is why I asked the second question. It's
-> > inefficient when dealing with numerous pages related to a memory
-> > cgroup.
-> >
-> > >
-> > >>
-> > >> I am uncertain about how to handle them appropriately as I am not an
-> > >> expert at MGLRU. I would appreciate it if you could offer some suggestions.
-> > >> Moreover, if you are willing to directly provide your patches, I would be
-> > >> glad to incorporate them into this patchset.
-> > >
-> > > If we just follow the above idea (move them to parent's tail), we can
-> > > just keep the folio's tier info untouched here.
-> > >
-> > > For mapped file folios, they will still be promoted upon eviction if
-> > > their access bit are set (rmap walk), and MGLRU's table walker might
-> > > just promote them just fine.
-> > >
-> > > For unmapped file folios, if we just keep their tier info and add
-> > > child's MGLRU tier PID counter back to the parent. Workingset
-> > > protection of MGLRU should still work just fine.
-> > >
-> > >>
-> > >> ## Compositions
-> > >>
-> > >> Patches 1-8 involve code refactoring and cleanup with the aim of
-> > >> facilitating the transfer LRU folios to object cgroup infrastructures.
-> > >>
-> > >> Patches 9-10 aim to allocate the object cgroup for non-kmem scenarios,
-> > >> enabling the ability that LRU folios could be charged to it and aligning
-> > >> the behavior of object-cgroup-related APIs with that of the memory cgroup.
-> > >>
-> > >> Patches 11-19 aim to prevent memory cgroup returned by folio_memcg() from
-> > >> being released.
-> > >>
-> > >> Patches 20-23 aim to prevent lruvec returned by folio_lruvec() from being
-> > >> released.
-> > >>
-> > >> Patches 24-25 implement the core mechanism to guarantee binding stability
-> > >> between the folio and its corresponding memory cgroup while holding lruvec
-> > >> lock or split-queue lock of THP.
-> > >>
-> > >> Patches 26-27 are intended to transfer the LRU pages to the object cgroup
-> > >> without holding a reference to the original memory cgroup in order to
-> > >> address the issue of the dying memory cgroup.
-> > >>
-> > >> Patch 28 aims to add VM_WARN_ON_ONCE_FOLIO to LRU maintenance helpers to
-> > >> ensure correct folio operations in the future.
-> > >>
-> > >> ## Effect
-> > >>
-> > >> Finally, it can be observed that the quantity of dying memory cgroups will
-> > >> not experience a significant increase if the following test script is
-> > >> executed to reproduce the issue.
-> > >>
-> > >> ```bash
-> > >> #!/bin/bash
-> > >>
-> > >> # Create a temporary file 'temp' filled with zero bytes
-> > >> dd if=/dev/zero of=temp bs=4096 count=1
-> > >>
-> > >> # Display memory-cgroup info from /proc/cgroups
-> > >> cat /proc/cgroups | grep memory
-> > >>
-> > >> for i in {0..2000}
-> > >> do
-> > >>    mkdir /sys/fs/cgroup/memory/test$i
-> > >>    echo $$ > /sys/fs/cgroup/memory/test$i/cgroup.procs
-> > >>
-> > >>    # Append 'temp' file content to 'log'
-> > >>    cat temp >> log
-> > >>
-> > >>    echo $$ > /sys/fs/cgroup/memory/cgroup.procs
-> > >>
-> > >>    # Potentially create a dying memory cgroup
-> > >>    rmdir /sys/fs/cgroup/memory/test$i
-> > >> done
-> > >>
-> > >> # Display memory-cgroup info after test
-> > >> cat /proc/cgroups | grep memory
-> > >>
-> > >> rm -f temp log
-> > >> ```
-> > >>
-> > >> ## References
-> > >>
-> > >> [1] https://lore.kernel.org/linux-mm/Z6OkXXYDorPrBvEQ@hm-sls2/
-> > >> [2] https://lwn.net/Articles/895431/
-> > >> [3] https://github.com/systemd/systemd/pull/36827
-> > >
-> > > How much overhead will it be? Objcj has some extra overhead, and we
-> > > have some extra convention for retrieving memcg of a folio now, not
-> > > sure if this will have an observable slow down.
-> >
-> > I don't think there'll be an observable slowdown. I think objcg is
-> > more effective for slab objects as they're more sensitive than user
-> > pages. If it's acceptable for slab objects, it should be acceptable
-> > for user pages too.
-> 
-> We currently have some workloads running with `nokmem` due to objcg
-> performance issues. I know there are efforts to improve them, but so
-> far it's still not painless to have. So I'm a bit worried about
-> this...
-
-Do you mind sharing more details here?
-
-Thanks!
+SGkgQWRyaWFuLA0KDQpPbiBUaHUsIDIwMjUtMDQtMTcgYXQgMjA6MTQgKzAyMDAsIEpvaG4gUGF1
+bCBBZHJpYW4gR2xhdWJpdHogd3JvdGU6DQo+IEhpIFNsYXZhLA0KPiANCj4gT24gVGh1LCAyMDI1
+LTA0LTE3IGF0IDE4OjEwICswMDAwLCBWaWFjaGVzbGF2IER1YmV5a28gd3JvdGU6DQo+ID4gU291
+bmRzIGdvb2QhIFllcywgSSBhbSBpbnRlcmVzdGVkIGluIHdvcmtpbmcgdG9nZXRoZXIgb24gdGhl
+IEhGUy9IRlMrIGRyaXZlci4gOikNCj4gPiBBbmQsIHllcywgSSBjYW4gY29uc2lkZXIgdG8gYmUg
+dGhlIG1haW50YWluZXIgb2YgSEZTL0hGUysgZHJpdmVyLiBXZSBjYW4NCj4gPiBtYWludGFpbiB0
+aGUgSEZTL0hGUysgZHJpdmVyIHRvZ2V0aGVyIGJlY2F1c2UgdHdvIG1haW50YWluZXJzIGFyZSBi
+ZXR0ZXIgdGhhbg0KPiA+IG9uZS4gRXNwZWNpYWxseSwgaWYgdGhlcmUgaXMgdGhlIHByYWN0aWNh
+bCBuZWVkIG9mIGhhdmluZyBIRlMvSEZTKyBkcml2ZXIgaW4NCj4gPiBMaW51eCBrZXJuZWwuDQo+
+IA0KPiBPSywgdGhlbiBsZXQncyBkbyB0aGlzIHRvZ2V0aGVyISBXaGlsZSBJJ20gYWxyZWFkeSBh
+IGtlcm5lbCBtYWludGFpbmVyIChmb3IgYXJjaC9zaCksDQo+IEkgd291bGRuJ3QgY2FsbCBteXNl
+bGYgYW4gZXhwZXJ0IG9uIGZpbGVzeXN0ZW1zIGFuZCBJIGZlZWwgd2F5IG1vcmUgY29tZm9ydGFi
+bGUgd29ya2luZw0KPiBvbiB0aGlzIHdoZW4gdGhlcmUgaXMgYSBzZWNvbmQgcGVyc29uIGFyb3Vu
+ZCB3aXRoIGV4cGVyaWVuY2Ugd2l0aCBoYWNraW5nIG9uIGZpbGVzeXN0ZW1zLg0KPiANCj4gQ2Fu
+IHlvdSBzZW5kIGEgcGF0Y2ggdG8gdXBkYXRlIE1BSU5UQUlORVJTPw0KPiANCg0KU3VyZS4gTGV0
+IG1lIHByZXBhcmUgdGhlIHBhdGNoLg0KDQpUaGFua3MsDQpTbGF2YS4NCg0KPiBNeSBtYWlsIGVu
+dHJ5IHdvdWxkIGJlOg0KPiANCj4gSm9obiBQYXVsIEFkcmlhbiBHbGF1Yml0eiA8Z2xhdWJpdHpA
+cGh5c2lrLmZ1LWJlcmxpbi5kZT4NCj4gDQo+IEFkcmlhbg0KDQo=
