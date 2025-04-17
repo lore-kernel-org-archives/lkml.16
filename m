@@ -1,97 +1,67 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3F9360
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F247E1
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 00:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744848144; cv=none; b=P9PCGXMLqOgj6r1k2WM/mjLDb7037B1sRdNgfEuN3IJXAJt4Zg2htCqG2x3tptwDQWyHdNCEVPN5+3G51i2G0nRv1mhFZKmqGxMq3JxGlNPLIXsTR7RQy3j7bWikBT1HfwG/BrB7nxkGFhb4tb9WEnoKpStRukLSNHiR7/De0XA=
+	t=1744848241; cv=none; b=EyOecT87IotpT4dsnKvayTDcbSwT6kj2yutyHurRTY0++vEAHRct23YLVYzmrXHLH6kt9LKmGDGeWhxx0N1dNhXCHC7zeAy2fMwOiw4Avnihx3MHyGRbPiJY9ndZHYSWYLMkW9PSvl6EY7f6cqxUaiHFXYINp9bxgj5MOZLNk+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744848144; c=relaxed/simple;
-	bh=leTkvuBL2+CH2NIWIXHwfaqIV4DIQSCQR9GO9YuXAAs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QS8lkFBYwoZst31P2w1JYaWjpLOJLiKg9fcK5MQkWW7rcP6Wpq+qIJXePbiromrM6mNza+xf5/AjhKyNnS+JqQ7OV+TZwS5+tec8SgfcfJXqYMZFme4fCEEv4auimhBobWqhVujBBq1il+MucuiArBcwjhqbgerIIEEs43735K0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gKS5ouD4; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744848241; c=relaxed/simple;
+	bh=/m6KF7Byx6i9ROs9eccEVpOFlRh3oyb+mWGRC2yBlYc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=URjqLIC3d4r20R9EF8Uw7PiZMFmBDWWbdg2xhQ1OFkjgUk3s8H/lYdhiuyS65/uhugQuWZ/GnGGoSMRTJZCUrXMAPXf0+qpG/w6PXO43jT31mW8gf+FPjXOihk1y5sEFCbzhwsZl1+uD+fbUFBTY2v91x2Ke054b9ZVXz7CxURw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=2baDOuUR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gKS5ouD4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744848141;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7C8pt7xjKTm03hAbrHAkAPdxLOrqJf60jzN2DFbg1R0=;
-	b=gKS5ouD4TG9cnYfzm9TEHcxRxvPNF0YTXKtm1vCo21ZH7IJju0xx8qtq13tEAK5jbatDcq
-	hfBC1vhSVmW4FiV/jhgX2hYLzDSZFro0Hw7Yt+IUP9qc/0vcxBvNwndgPyBbkjFRNqKka7
-	D8H1J+rRt3CrjxjJpTi9QJQVf++9b5o=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-625-iGQLUlroOPGrFGNe8uC6cw-1; Wed,
- 16 Apr 2025 20:02:19 -0400
-X-MC-Unique: iGQLUlroOPGrFGNe8uC6cw-1
-X-Mimecast-MFC-AGG-ID: iGQLUlroOPGrFGNe8uC6cw_1744848138
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9DABE195608C;
-	Thu, 17 Apr 2025 00:02:18 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.82])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 67451180045C;
-	Thu, 17 Apr 2025 00:02:15 +0000 (UTC)
-Date: Thu, 17 Apr 2025 08:02:10 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ublk: remove unnecessary ubq checks
-Message-ID: <aABFAg563W1g_4QS@fedora>
-References: <20250416170154.3621609-1-csander@purestorage.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="2baDOuUR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 369DFC4CEE2;
+	Thu, 17 Apr 2025 00:04:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1744848240;
+	bh=/m6KF7Byx6i9ROs9eccEVpOFlRh3oyb+mWGRC2yBlYc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=2baDOuURtgnHmxLxT0eGvbB/yfMwFB1s8iWVl1/vd5WVvuiT2bXhQagW/UfyT+QQA
+	 BR1EyxyGrxf6BFkzaNXFKYCPskM9Xz9kjXNtqNtELQFbzIGn/EvroVXPgpg4zWv/ZF
+	 LlwOox0Pkkz9iikOQf3ATJUqyWO+Ivo20UBm0qh0=
+Date: Wed, 16 Apr 2025 17:03:59 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko
+ <glider@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov
+ <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2] x86/Kconfig: Fix allyesconfig
+Message-Id: <20250416170359.a0267b77d3db85ff6d5f8ac0@linux-foundation.org>
+In-Reply-To: <20250416230559.2017012-1-linux@roeck-us.net>
+References: <20250416230559.2017012-1-linux@roeck-us.net>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416170154.3621609-1-csander@purestorage.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 16, 2025 at 11:01:53AM -0600, Caleb Sander Mateos wrote:
-> ublk_init_queues() ensures that all nr_hw_queues queues are initialized,
-> with each ublk_queue's q_id set to its index. And ublk_init_queues() is
-> called before ublk_add_chdev(), which creates the cdev. Is is therefore
-> impossible for the !ubq || ub_cmd->q_id != ubq->q_id condition to hit in
-> __ublk_ch_uring_cmd(). Remove it to avoids some branches in the I/O path.
+On Wed, 16 Apr 2025 16:05:59 -0700 Guenter Roeck <linux@roeck-us.net> wrote:
+
+> 64-bit allyesconfig builds fail with
 > 
-> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-> ---
->  drivers/block/ublk_drv.c | 3 ---
->  1 file changed, 3 deletions(-)
+> x86_64-linux-ld: kernel image bigger than KERNEL_IMAGE_SIZE
 > 
-> diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> index cdb1543fa4a9..bc86231f5e27 100644
-> --- a/drivers/block/ublk_drv.c
-> +++ b/drivers/block/ublk_drv.c
-> @@ -1947,13 +1947,10 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
->  
->  	if (ub_cmd->q_id >= ub->dev_info.nr_hw_queues)
->  		goto out;
->  
->  	ubq = ublk_get_queue(ub, ub_cmd->q_id);
-> -	if (!ubq || ub_cmd->q_id != ubq->q_id)
-> -		goto out;
-> -
+> Bisect points to commit 6f110a5e4f99 ("Disable SLUB_TINY for build
+> testing") as the responsible commit. Reverting that patch does indeed
+> fix the problem. Further analysis shows that disabling SLUB_TINY enables
+> KASAN, and that KASAN is responsible for the image size increase.
+> 
+> Solve the build problem by disabling KASAN for test builds.
+> 
 
-Looks correct, ubq->q_id is always same with the index passed to
-ublk_get_queue().
+Excluding KASAN from COMPILE_TEST builds is regrettable.
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-
-
-Thanks,
-Ming
-
+Can we address this some other way?  One way might be to alter or
+disable the KERNEL_IMAGE_SIZE check if COMPILE_TEST?  That will be sad
+for anyone who tries to boot a COMPILE_TEST kernel, but who the heck
+does that?
