@@ -1,131 +1,112 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304621B0405
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 17:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78071B6CE5;
+	Thu, 17 Apr 2025 17:08:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744909664; cv=none; b=RI84fdoY1XMzTgoSw+jqwqt+/E5NUs+6mXcT0FVhmQo8RpGrsPXYZV2B0swPWjHG9f4F7EDVW2ZmRVonKG4N+b3F4nOJ7eA9FtQNs8E48/qj0zPA2Ddl/69SrFPfqszg3sy6ZIClWuoqOeJSSRl7Xr9FtXwnJdOcRwStUd4w+24=
+	t=1744909686; cv=none; b=D8vs31RC+bqnf6Cl/BdzeUPr0jHCWLAmMwMYSaB3KzM2gqRkDytOd7W6e6ZUaxvammJHsZWct8RQ5EsUvDtCW9QdVm341Y5Jlc1bZwE4BIiPRtXn5a319TuWZzvwge/EZ1dQNzjiLynt7G/YuiFEvw5s+LKoiG6HGTPw0jfTCJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744909664; c=relaxed/simple;
-	bh=QTblW1Gq1v1BLqv3bQj+TbvXE9AnXYXO/4GsN9Rn0IE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MEBvMbjawH++LEiPwFdNnpbOlvSB5ADpj06by2gktdq2lKXHbFhbrzJgQ7h33lqkGK2fRjoNm9wr1by2q2C73P8UFxFfvDqBIyDif+dZIRC5iwm9CrUkaiS62qCNHT9BMLLFR4n72ZmI/0bXCAVbLDQ+4dSaASRmneGhIxFwWbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=gj2Y7Uk3; arc=none smtp.client-ip=209.85.161.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1744909686; c=relaxed/simple;
+	bh=P6WoVi4ryTfmG7rzbEbizit9HWFl+3mgjgEU9XKwk84=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=Ja972g356s+rxHU/xtpG57MA6LH4pHECh3HJ5TvBDJK3IucShwiG2P8BBufCT82UdMuGKjmARFDjfWuEDRUZMTtCEalUs+sK8LqNyzslK3GuwSspYziiKSytRwlqp10aUds4yzcel9nLQyUtS98qZgaOmok7zWnXdEqNXv07gDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YFH4n0xb; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="gj2Y7Uk3"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-605ff8aa9d2so24560eaf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 10:07:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744909661; x=1745514461; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iJO4GXL7dOZjeP6V87YS4vJmfeGtcMABTZh3kn2uUsg=;
-        b=gj2Y7Uk3x7EwWduQIwOzFt/vbkv10ZETT3diWxK7T+pg6s0cH1SuAi8Kp7ogVNv7yc
-         BsRTTarBzuZTV/LptAzJFdiijtjFXpSCDzqcNo1GhAv4KxXpOefZ/f5y6Tu77eOvA/D8
-         qrKxGHLHi1ASoy1QgFfO85dxNy0BlhF7UftWrI4SwNF1LealvCd/BY5Urzj5GiImhOtS
-         v6/16RF0/auEVRUgQzpiff5I1Wux1o3kZcZbK1cASxkQXsuQSb5l7iBdVSfGQsERKaui
-         0QOegz2jgzA/cdplbOewf2kG7dN5X/iweAZNmRPXnomR74HLBr3AZvTxc61OVBDE1BAr
-         yXPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744909661; x=1745514461;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iJO4GXL7dOZjeP6V87YS4vJmfeGtcMABTZh3kn2uUsg=;
-        b=RxJc41tHxyhPp1zccHLU74ab1Yw0TGs0h8Dr/HN0JcSrJJkfZM5W0lEmLL3iyVTRjp
-         34zTV4UZsCpUtlXBsfSInuzKG5nALcxMtokUHT8wcgYtQAzgzOCZY1fbaP/6wzeNHz2p
-         ln9KcT2T2QK32JO5Y9QEltmmDugXPbV5eK5G63T5rn5sDXiwieZD4mjBZhyIy02GfG7L
-         wGYSsNyiJ6JjnuoIwM5sCiqJHyeiX5OgbR+UTMy/TuS1yYrfiV2T29hv/GdUGyY+HF1F
-         uYW1mbknBUvxqEyclMKCsknaH6wpGgkGouSrl3FKFnLI3K5DGIwhg08CnRbDfwJlmklN
-         qeHg==
-X-Forwarded-Encrypted: i=1; AJvYcCXEj0hX5XhGPP4c/j/88bNYLOHuRqGuaqjsZJIVNN4cEgBLz0Ew5PwOUOktEN040gAsuyNZwoBM4Z8M6m8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw53342LrY1xivJn8/obMiyRKOR05DL2TW6Qz8WiDRAvw348afD
-	NGZ+EXuj/B1Av4sdLxD+5cEzIIMTmNyl9JiUAsxBypw0Y6Y157Hc8ejmMakBWiE=
-X-Gm-Gg: ASbGnct0c1KtgmOmVpAOPTgfQdWRO/ah5MOhm99ln147oby3LB2Suhjk4TFqI3/+Pfb
-	ViNRVjzD6knFLccmzP79vJtEm5qdRpv1oVufFOHQfiHtbcX56aAsGDV0dXtQURmvDHTHCVY4DM0
-	T5Ng5MRwEiHxnJOG4zYxBXwFJEpo3ADCShjF9SjUnsm08TQxhgqb4cek+adxzAAdaOOLlbLEO7T
-	8j5hhzGvrpKypKt+TRx7J58MyRIuYL2REHEJHIbR0WYbRq87WLI/RMrMTTKVvloUw/rEANOa+42
-	BZj6uLQOidtHiKD5CBh9EbWXD38wpUtJoGaNnnY7NsGIGaTO4R/W7fwTxvc4C9JfJHLFDbBwKs4
-	AtpMiY/sjPRQwsHValQ==
-X-Google-Smtp-Source: AGHT+IHbLABiWinLwjfZ0DTmEnAkfAixBYu8A7EcycIAgYoLkSVTlOq/Pw+F15KcRSPJ7k1qWk67rg==
-X-Received: by 2002:a05:6820:180c:b0:603:fada:ac47 with SMTP id 006d021491bc7-604a91e814cmr3847196eaf.1.1744909661228;
-        Thu, 17 Apr 2025 10:07:41 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:c91b:eea3:7afd:2dee? ([2600:8803:e7e4:1d00:c91b:eea3:7afd:2dee])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-605ff5d8c40sm33099eaf.3.2025.04.17.10.07.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Apr 2025 10:07:39 -0700 (PDT)
-Message-ID: <f4db1a95-106f-4fa4-9318-3ee172e29cdb@baylibre.com>
-Date: Thu, 17 Apr 2025 12:07:37 -0500
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YFH4n0xb"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53HClKIE014436;
+	Thu, 17 Apr 2025 17:08:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=+6ES9yVqy0rpTR+mjru3bG
+	JLqoJwMupw2CdCmzfVYWU=; b=YFH4n0xbtY2Rn/9zc8lFdJCQc8jCLntoZx85y2
+	z1N+ztyOjOgxGpLT0DGymVm+WyYGFfSjrtq7cMcUiE8qQTwWPR9LOs+sC68wlqpz
+	cv3H5ZPTOJfOudrgO8uGYNgvGTWFQsDusOF8nd07XmY9iSS5hCyNbxy/pNaI6Rht
+	AqRkuqI/zx8qiDFgVgMaNhY8zfDSzSpVwrTG/yputTdG6KiEsyC2UUtmdFFSRnKc
+	6wzVHn0rU1tBzqeIsdNqzGcKYV00aEeKQ1vmMiPdIMB1Av/RyplJR5XxpWQlPyzj
+	yyt3cpWMbtqT6F4pg0CKWM0ZXjPQE/ERtg0BPvg1tax2EPiA==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygd6qrww-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 17:07:59 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53HH7w3E024374
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 17:07:59 GMT
+Received: from hu-ajipan-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 17 Apr 2025 10:07:54 -0700
+From: Ajit Pandey <quic_ajipan@quicinc.com>
+Subject: [PATCH 0/3] pmdomain: qcom: rpmhpd: Add SM4450 power domains
+Date: Thu, 17 Apr 2025 22:37:38 +0530
+Message-ID: <20250417-sm4450_rpmhpd-v1-0-361846750d3a@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/8] iio: imu: adis16550: align buffers for timestamp
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Cosmin Tanislav <cosmin.tanislav@analog.com>,
- Tomasz Duszynski <tduszyns@gmail.com>,
- Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>,
- Andreas Klinger <ak@it-klinger.de>, Petre Rodan
- <petre.rodan@subdimension.ro>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
- <20250417-iio-more-timestamp-alignment-v1-6-eafac1e22318@baylibre.com>
- <aAEzeY_p6a8Pr-zn@smile.fi.intel.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <aAEzeY_p6a8Pr-zn@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFo1AWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDE0Nz3eJcExNTg/iigtyMghRds0RzE3NLkxSD5MQkJaCegqLUtMwKsHn
+ RsbW1AOLFRH1fAAAA
+X-Change-ID: 20250417-sm4450_rpmhpd-6a74794d0cab
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+CC: Imran Shaik <quic_imrashai@quicinc.com>,
+        Taniya Das
+	<quic_tdas@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>,
+        "Satya
+ Priya Kakitapalli" <quic_skakitap@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        Ajit Pandey
+	<quic_ajipan@quicinc.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: yYaou16QsglqcelIR8jYYhxhjpn14VUU
+X-Proofpoint-GUID: yYaou16QsglqcelIR8jYYhxhjpn14VUU
+X-Authority-Analysis: v=2.4 cv=ANaQCy7k c=1 sm=1 tr=0 ts=6801356f cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=DN_wUKf7fpAkojsRBh4A:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-17_05,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ mlxlogscore=685 suspectscore=0 clxscore=1011 lowpriorityscore=0
+ phishscore=0 impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504170125
 
-On 4/17/25 11:59 AM, Andy Shevchenko wrote:
-> On Thu, Apr 17, 2025 at 11:52:38AM -0500, David Lechner wrote:
->> Align the buffers used with iio_push_to_buffers_with_timestamp() to
->> ensure the s64 timestamp is aligned to 8 bytes.
->>
->>  drivers/iio/accel/bmc150-accel.h | 2 +-
->>  drivers/iio/imu/adis16550.c      | 2 +-
-> 
-> Looks like a stray squash of the two independent commits.
+This series add power domains exposed by RPMh in the Qualcomm SM4450 platform.
 
-Oops, sure enough.
+Signed-off-by: Ajit Pandey <quic_ajipan@quicinc.com>
+---
+Ajit Pandey (3):
+      dt-bindings: power: qcom,rpmpd: Add SM4450 compatible
+      pmdomain: qcom: rpmhpd: Add SM4450 power domains
+      arm64: dts: qcom: sm4450: Add RPMh power domains support
 
-> 
-> ...
-> 
->>  	struct bmc150_accel_trigger triggers[BMC150_ACCEL_TRIGGERS];
->>  	struct mutex mutex;
->>  	u8 fifo_mode, watermark;
->> -	s16 buffer[8];
->> +	s16 buffer[8] __aligned(8);
-> 
-> As for the code, would it be possible to convert to actually use a sturcture
-> rather than an array?
+ .../devicetree/bindings/power/qcom,rpmpd.yaml      |  1 +
+ arch/arm64/boot/dts/qcom/sm4450.dtsi               | 68 ++++++++++++++++++++++
+ drivers/pmdomain/qcom/rpmhpd.c                     | 16 +++++
+ 3 files changed, 85 insertions(+)
+---
+base-commit: f660850bc246fef15ba78c81f686860324396628
+change-id: 20250417-sm4450_rpmhpd-6a74794d0cab
 
-I do personally prefer the struct pattern, but there are very many other drivers
-using this buffer pattern that I was not tempted to try to start converting them.
-
-> 
-> ...
-> 
->>  	struct iio_poll_func *pf = p;
->> -	__be32 data[ADIS16550_MAX_SCAN_DATA];
->> +	__be32 data[ADIS16550_MAX_SCAN_DATA] __aligned(8);
->>  	struct iio_dev *indio_dev = pf->indio_dev;
->>  	struct adis16550 *st = iio_priv(indio_dev);
-> 
-> Ditto.
-> 
+Best regards,
+-- 
+Ajit Pandey <quic_ajipan@quicinc.com>
 
