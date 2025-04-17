@@ -1,68 +1,76 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9581D6AA
-	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 19:07:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BFC1D6AA;
+	Thu, 17 Apr 2025 19:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744916854; cv=none; b=t5v3uvGaN257c6TcPLMPWPDRXW/y9Aybb3OvkJhm2AADRR19QcW9GOH0CogQjXYaTmjLW7tGINblPleFnWW6u9fWg17RqzRA58g7rsLxQWz0auzYEulEWwTCuWn0BlFhe5ohdOEIg5s2vxD42CgRr3WuNUDZ7Q8lgtLzvEWygt8=
+	t=1744916927; cv=none; b=tWR+WKcuXQ46WYjcUHB4zrgi/N0xO2LVQVtFZQNm0PZ/2VissV9wTTgMwLiyBsq89t1676ip/4CnaN55VuZYGCWJanG7yAkIKzZ1Ky65GwfM/9Jmigc3e3NLlWEdeAfDSIiyjp2MQgoU94kaMXhygyT9sc+Cx3OOWHxhrvLKEfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744916854; c=relaxed/simple;
-	bh=l89CVAgrf6NbjXmZn493UzIPoQWHNO4/bSGwMhKuVLE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JU/eyqUMq/bixQL6DDHY4hJNH3Pi2ZZP1mcV72gbKTWVoW30xB1lXX5pN3xfiy6ifGCPKd0gHniOhLDQQUiHKUxuYnhlqokzGN5Gav7cZlCCltlVy4ASrQOgJUWuyn60CElRlxB8+iFHxXqpIxtJdLyPClnyGoJNeQxKb1FN1+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=K/+Fjgqw; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744916927; c=relaxed/simple;
+	bh=pTz0A13GV9IAZv13xMwTkwVBhBOD1CeNPXi3q//p8FI=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=doMaMypxc36w2MtJEK2B8GiNl8EPkFq13qsLPqKqb8zV8jeCTeMU8M2ltq9SvID1MAN3F3iM+09ORHAaG9r7JFVXqE82IhOXOoguYye0LOxaF/OBBvRJJF/Mh8hPGACWuAiUHm/QiVse6oN7cvnxF68OD0LiwFN+sEOOVs+bNSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bxEftnz2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="K/+Fjgqw"
-Date: Thu, 17 Apr 2025 15:07:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744916839;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8GprfIetrM71UV4LpfxlA9bNdKUkj0bUgUS9fchsWN8=;
-	b=K/+FjgqwT7RApRch1+XZLA1LElSsAzzbevpFTvvz9dnhgU45n3x98DigF6Uk8GcdbJzlAm
-	63ocMb/YbwSVXQWeHhslSVi9qNhc9nGsCcIn7unIUvNnPfGOc8kOFb9VLP681o9RAL3v8a
-	5m2qWH89HSGu4/DswQiGjTqH2MUucLY=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: syzbot <syzbot+7b8a2c442d5a4859b680@syzkaller.appspotmail.com>
-Cc: brauner@kernel.org, jack@suse.cz, linux-bcachefs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, mmpgouride@gmail.com, 
-	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Subject: Re: [syzbot] [bcachefs?] kernel BUG in bch2_btree_node_iter_init
-Message-ID: <5ak2ca4mmahamjzapplnuwffuxp256dlfamn237vu5qrjq3uyf@qe62gpj5ffvb>
-References: <679ff200.050a0220.163cdc.0032.GAE@google.com>
- <680150de.050a0220.297747.0000.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bxEftnz2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BE34C4CEE4;
+	Thu, 17 Apr 2025 19:08:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744916926;
+	bh=pTz0A13GV9IAZv13xMwTkwVBhBOD1CeNPXi3q//p8FI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bxEftnz2rOJUGONa/XfGdESKQpt5Z3ZJvnyjxjtU2Mx7nYyt/jEgzaZQG3Qvdheps
+	 aaf5uNGAhsvMK8unz/WVD972iTDLZ6bK5eeDBXwkA9S70ECcQiAJpCjesNnXldJkcN
+	 x9plOlrs+ly/pCa6fxd5Ya/d3FwInVatmHId/Nxw8G+sseka6Rt+wphDalIizIsL3g
+	 ApoAf/m0x9DYKETbT2E4xyPPoovRy7LLjJ3CXxSSU63YLVpl9wZ2kHWOHec7NpaUye
+	 hgDzFWdp25iIClvtbuNjT4a8wOWlPzMXXdKRzR+el0MGI89EPXXJKE8Qerc1ZSj7vL
+	 7EKbNopQeWliw==
+Message-ID: <2391fa16200e50aa1a9379b791d0b7a3.broonie@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [GIT PULL] SPI fixes for v6.15-rc2
+Date: Thu, 17 Apr 2025 20:08:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <680150de.050a0220.297747.0000.GAE@google.com>
-X-Migadu-Flow: FLOW_OUT
 
-On Thu, Apr 17, 2025 at 12:05:02PM -0700, syzbot wrote:
-> syzbot suspects this issue was fixed by commit:
-> 
-> commit 3a04334d6282d08fbdd6201e374db17d31927ba3
-> Author: Alan Huang <mmpgouride@gmail.com>
-> Date:   Fri Mar 7 16:58:27 2025 +0000
-> 
->     bcachefs: Fix b->written overflow
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=125aba3f980000
-> start commit:   6537cfb395f3 Merge tag 'sound-6.14-rc4' of git://git.kerne..
-> git tree:       upstream
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=6cc40dfe827ffb85
-> dashboard link: https://syzkaller.appspot.com/bug?extid=7b8a2c442d5a4859b680
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1055c7f8580000
-> 
-> If the result looks correct, please mark the issue as fixed by replying with:
- 
-#syz fix: bcachefs: Fix b->written overflow
+The following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444:
+
+  Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.15-rc2
+
+for you to fetch changes up to 951a04ab3a2db4029debfa48d380ef834b93207e:
+
+  spi: spi-imx: Add check for spi_imx_setupxfer() (2025-04-17 12:25:12 +0100)
+
+----------------------------------------------------------------
+spi: Fixes for v6.15
+
+A few more device specific fixes plus one trivial quirk.  There's a
+couple of patches for Tegra which avoid some fairly spectacular log spam
+if the hardware breaks in ways which were actually seen in production,
+plus a fix for the i.MX driver to propagate errors properly when setting
+up the hardware.  We also have a trivial patch marking the sun4i driver
+as being compatible with GPIO chip selects.
+
+----------------------------------------------------------------
+Breno Leitao (2):
+      spi: tegra210-quad: use WARN_ON_ONCE instead of WARN_ON for timeouts
+      spi: tegra210-quad: add rate limiting and simplify timeout error message
+
+Mans Rullgard (1):
+      spi: sun4i: add support for GPIO chip select lines
+
+Tamura Dai (1):
+      spi: spi-imx: Add check for spi_imx_setupxfer()
+
+ drivers/spi/spi-imx.c           | 5 ++++-
+ drivers/spi/spi-sun4i.c         | 1 +
+ drivers/spi/spi-tegra210-quad.c | 6 +++---
+ 3 files changed, 8 insertions(+), 4 deletions(-)
