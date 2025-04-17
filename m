@@ -1,116 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155301A314B;
-	Thu, 17 Apr 2025 06:01:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103F61DE4F6;
+	Thu, 17 Apr 2025 06:01:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744869702; cv=none; b=M7zqJehqiRLOMID0Ubth4Ac2rUs0wiRGkcLRji9uIuKm8CTycox2IOVY2EOBoSMvqTBfUOfgGbUtx+ennP0HERnOKAimxhmVYtJ22xEveCjnMycoOWBQVd3a5A2t8kZxmao6txGDn0k3i0D43Q+nUlO4dl8gphBgbR+3gXoN0KQ=
+	t=1744869714; cv=none; b=bbHPY0TIjeAjZ0tp7qYLNbnhxekc2xWS7M7IUB542MNwvTD6VDej+MQOOyafIw7Q25fkA8H+583TXvlEA2J8dj/xlfJk5ktQiDum4ckexNTVF+2Qz8ee/ddSJxQPKj1F0OpCE0qZpUuZ3WdEw0wnISeZeBbEbKVpD9K4ij2LX1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744869702; c=relaxed/simple;
-	bh=4kH/J9yRA5h+U0NTvsYz1RB3H5NWTJgszXCPS/hlPCc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H+A0GWJIy3S651NTpcSJ67JxzrwN+YYq81boBAJpoYCqMaDcJICXNTuzh+9Teifjz8/LyirH5qnPEexKD7fjkmMfVaK489tB9SiEBe6huxFRfCvfhDsdbSVRqB6EtimvQWtr/weNKAwIfPYH7TLQSilObWcZDMVxsbklL79+Slc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CmUP/QO8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744869714; c=relaxed/simple;
+	bh=KpV+jFENVgflhlgCLLNEqk737rf20tIu6cxYp9KlZII=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uYYNRkmSB3MwXH+YBeD1ZGFCEp6a/Iv3V3BJlr9C7vqmW1i6uWXn6Idr54U6NSo/gn3J1IxWk+uA5EKg9F86rtQCzi+Drkm/MSjaGeR3Z9XDha+smlFWWBegIHnEmsdaV0Rzuy/Ya3HsxyATohTJh/AOowNLXLiPKJLaBUe3N9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IetuOzlP; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CmUP/QO8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E89EC4CEE4;
-	Thu, 17 Apr 2025 06:01:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744869701;
-	bh=4kH/J9yRA5h+U0NTvsYz1RB3H5NWTJgszXCPS/hlPCc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CmUP/QO880tjH/2Zpb+If0g44/vQswWmgepdZDjP9akYzXQH0uE/T/Ls2vO58rOCv
-	 3ROSjGzNouL2IG1jujMqYJpqOv7DuzbwepOsAgkNfGgMPTNTqOk0+IauwPYWpa4Zuf
-	 s3XTSdarSX+bihYVDgB0E0iEULdrXRak1nYXWFhpMYJmo6FD1IhF7j00RT4d7N8Afz
-	 1hNoaxaeQjAgJ3vykt0TqbEcFyifUUIDqLpuimu+wF+8wp5yqcPDHOClOuqDmwlZ0r
-	 NZZ+3dUueK0OD8QCYpsYJdMtzraAE62ZnwpWi8+U3j6FHRYqSxPzmxNHHF1zPAdlvW
-	 8wySxFxE/rn9Q==
-Date: Thu, 17 Apr 2025 08:01:35 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, lpieralisi@kernel.org, kw@linux.com,
-	bhelgaas@google.com, heiko@sntech.de,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	jingoohan1@gmail.com, thomas.richard@bootlin.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
-Message-ID: <aACZP48pWk5Y62dK@ryzen>
-References: <20250416204051.GA78956@bhelgaas>
- <bb40385c-6839-484c-90b2-d6c7ecb95ba9@163.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IetuOzlP"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4769aef457bso4775121cf.2;
+        Wed, 16 Apr 2025 23:01:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744869712; x=1745474512; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KZZ0OiCh3i8QphKEZyGH0TyGWbIM9TA+BFLKz7OvmdY=;
+        b=IetuOzlPyoGfl2KluHxAmlji4J0yKcLsOuVSIfgdctOtL6PVZoyOS2Sw8iSGlMLcIq
+         jYYsC0CM5u7u4g1RialybjDkr56pIkMkKkArKXr2XnsNl+AfbXOFOtclWJO/OCdX8DJ6
+         utrlnbCnt+CU1wNXrFNlP4dFBLxanj7I/r6Gtb7iQKE+icXC5rLq9cTLao9YTtRmR6a/
+         WQynC6KsrMCKnp6MiJMH6v4g+ZdLEweVah8FUsVmbI7A+sZl5HOJJTT+oS56ZWWGSht1
+         LsTV9STI9I+QCETXnBLqa0C3Q3IG3Bh06t/4efpwYjonPPdGgUaH2993URM0rMR3J9in
+         Z3/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744869712; x=1745474512;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KZZ0OiCh3i8QphKEZyGH0TyGWbIM9TA+BFLKz7OvmdY=;
+        b=rvHQPRwp9gbIESLzl/U5LuEHAr83CyChJijFNJkX+3Esr+c/by0NISksMBhNuq5CCV
+         5L3nUjce4yWjwtOjaqCdl+grE0lU48jQCsgZOO1oa2AyhJWOF3sW4ie8RKYSwfiPRt64
+         zNan6u2aEFcBDYsyPM7RcCGN40An9BD3jkivyA4B98zP0QOVaqZjkklj6uMfJfXV1nhY
+         9Kws2d7BPpOqNlEt/9kN9o7WjWh+sDKcWnCVHYurrb1KeW2m5sER6Q2FPhs2WtU/c8Yf
+         aHH+t145oLcxihH7N3YDJQysQrRFgVs4YjW8+v03uQgiD2K1w/tnuicHv7AUWhOP+gBP
+         qG/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUxNLMa2FYNRsBmhk/GLuVpyz42hi9cPYKyNxuDx+avlE/P0dGsVWfpPom4AdVcngRJgXIxuIv/m44+Mncl@vger.kernel.org, AJvYcCWDwy78k7IrPcMadHtwY+9zO4fkgh1H4XvbFLl0t7/ZzaCwsJdNNnaSrTUUsO2kyPs/m2vfHV3ntVmT@vger.kernel.org, AJvYcCWP6ndmCwalMyhoEBWcAs5yZNquG3nZjjxwyj8A0mv4KxsntuV/mBX4WcLGLRz/0eKL989D+Po9XSpA@vger.kernel.org, AJvYcCX/4re0EbXBedcCH5/zKkO1siKCYQwOg8zueDLchJCIakWsXdfn1GIC8lV0v9LB6xGULf8Q0Cp2QPOn@vger.kernel.org, AJvYcCXUBDOzXuiVK67A3ALMgG/JIFZTVDDtDKiYfwKxiva6H0xHu6q9/IZgBkplfFK0ihEW/V3u7WDT@vger.kernel.org, AJvYcCXtlcExQXLqMJUqNJb5X/rS7oAgcdp+y+vQbYZg5FO6bUy7Y5R0IJOg72SnKufOYYST/eD5GNm+nuPz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7hX8IPJ2LzcMhRJd2byMj5jLyxQ7yru3idTVRY17Wj6J12Pin
+	H0xAI2olWWk3AI1do++m8MmQbcoBkn7dkEXzgB7JIPekurV/rFc0Ui/TtUzTGiZVG5r/13/b+GU
+	HT7EssjMmhX5KTW58Oi+I/DQSx7M=
+X-Gm-Gg: ASbGncuV26qEgRcrPHEdxRLESpyY4ftcQ3cC4ACiUbr8CwhtO980H5DYp/4ca2I3TIp
+	1ZQ+MDCzW01S1MgJ0hQHgQkBxydrP7THXu6K5sAOd4JtuVgtD8S+ecMj/csETk58uHVR5gC19Qq
+	hBG7fcUixhDfrWtfjliFT708KoIyZE03y1gU5AErYKLXZ5ZZjrYh4KK5g=
+X-Google-Smtp-Source: AGHT+IF8tMblL4zzcQke4qYiQBnX4U0VMVjKusdYcCfocK8IStZ6GIbCT+kwGjMmzlxIaiYYv7SzQwcpgCKgqbWryyE=
+X-Received: by 2002:ac8:7d8f:0:b0:476:98d6:141d with SMTP id
+ d75a77b69052e-47ad811527fmr75350031cf.32.1744869711825; Wed, 16 Apr 2025
+ 23:01:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bb40385c-6839-484c-90b2-d6c7ecb95ba9@163.com>
+References: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
+ <20250416-wmt-updates-v1-12-f9af689cdfc2@gmail.com> <8feea1ba-2d4a-4898-9882-cf3ec8b03852@kernel.org>
+In-Reply-To: <8feea1ba-2d4a-4898-9882-cf3ec8b03852@kernel.org>
+From: Alexey Charkov <alchark@gmail.com>
+Date: Thu, 17 Apr 2025 10:01:47 +0400
+X-Gm-Features: ATxdqUHbb-NLlWiY3v98GpI67Jq817VdD6NkjDUJu2KmL6qXEllQohh5zOadrGI
+Message-ID: <CABjd4YzkUYE3B7sPCm97NFcv7=nkwQTNFjSiomjCHzTFRDCLZg@mail.gmail.com>
+Subject: Re: [PATCH 12/13] ARM: dts: vt8500: Add VIA APC Rock/Paper board
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 17, 2025 at 10:19:10AM +0800, Hans Zhang wrote:
-> On 2025/4/17 04:40, Bjorn Helgaas wrote:
-> > On Wed, Apr 16, 2025 at 11:19:26PM +0800, Hans Zhang wrote:
-> > > The RK3588's PCIe controller defaults to a 128-byte max payload size,
-> > > but its hardware capability actually supports 256 bytes. This results
-> > > in suboptimal performance with devices that support larger payloads.
-> > > 
-> > > Signed-off-by: Hans Zhang <18255117159@163.com>
-> > > ---
-> > >   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 18 ++++++++++++++++++
-> > >   1 file changed, 18 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > > index c624b7ebd118..5bbb536a2576 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > > @@ -477,6 +477,22 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
-> > >   	return IRQ_HANDLED;
-> > >   }
-> > > +static void rockchip_pcie_set_max_payload(struct rockchip_pcie *rockchip)
-> > > +{
-> > > +	struct dw_pcie *pci = &rockchip->pci;
-> > > +	u32 dev_cap, dev_ctrl;
-> > > +	u16 offset;
-> > > +
-> > > +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> > > +	dev_cap = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCAP);
-> > > +	dev_cap &= PCI_EXP_DEVCAP_PAYLOAD;
-> > > +
-> > > +	dev_ctrl = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
-> > > +	dev_ctrl &= ~PCI_EXP_DEVCTL_PAYLOAD;
-> > > +	dev_ctrl |= dev_cap << 5;
-> > > +	dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, dev_ctrl);
-> > > +}
-> > 
-> > I can't really complain too much about this since meson does basically
-> > the same thing, but there are some things I don't like about this:
-> > 
-> >    - I don't think it's safe to set MPS higher in all cases.  If we set
-> >      the Root Port MPS=256, and an Endpoint only supports MPS=128, the
-> >      Endpoint may do a 256-byte DMA read (assuming its MRRS>=256).  In
-> >      that case the RP may respond with a 256-byte payload the Endpoint
-> >      can't handle.  The generic code in pci_configure_mps() might be
-> >      smart enough to avoid that situation, but I'm not confident about
-> >      it.  Maybe I could be convinced.
-> > 
-> 
-> Dear Bjorn,
-> 
-> Thank you very much for your reply. If we set the Root Port MPS=256, and an
-> Endpoint only supports MPS=128. Finally, Root Port is also set to MPS=128 in
-> pci_configure_mps.
+On Thu, Apr 17, 2025 at 9:36=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+>
+> On 16/04/2025 10:21, Alexey Charkov wrote:
+> > diff --git a/arch/arm/boot/dts/vt8500/Makefile b/arch/arm/boot/dts/vt85=
+00/Makefile
+> > index 255f4403af91c1d6a22416ab694b8eab44bf98a2..c5a2e57d53af4babe40fe2d=
+79b2f8d9c1ae1b8db 100644
+> > --- a/arch/arm/boot/dts/vt8500/Makefile
+> > +++ b/arch/arm/boot/dts/vt8500/Makefile
+> > @@ -4,4 +4,5 @@ dtb-$(CONFIG_ARCH_VT8500) +=3D \
+> >       wm8505-ref.dtb \
+> >       wm8650-mid.dtb \
+> >       wm8750-apc8750.dtb \
+> > -     wm8850-w70v2.dtb
+> > +     wm8850-w70v2.dtb \
+> > +     wm8950a-apc-rock.dtb
+> > diff --git a/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts b/arch/arm/bo=
+ot/dts/vt8500/wm8950-apc-rock.dts
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..58b3c8deb4f20ae072bf138=
+1f1dfa5e5adeb414a
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts
+> > @@ -0,0 +1,21 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+>
+>
+> Odd license, we don't do GPL v4 in the kernel. We do however dual
+> license for bindings and DTS. Why choosing such license? Did you take
+> the code from somewhere?
 
-In you example below, the Endpoint has:
- DevCap: MaxPayload 512 bytes
+I picked the license identifier of the wm8850.dtsi include, which
+defines most of the functionality for this board. No preference from
+my side, and happy to use whichever license is common practice for
+DTS, but I'm simply not sure how differently licensed files and
+includes combine together - thus the conservative choice to stick to
+what's already there. The original .dtsi was written by Tony Prisk,
+not me.
 
-So at least your example can't be used to prove this specific point.
-But perhaps you just wanted to show that your Max Payload Size increase
-actually works?
-
-
-Kind regards,
-Niklas
+Best regards,
+Alexey
