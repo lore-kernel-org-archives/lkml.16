@@ -1,130 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8D42550D2;
-	Thu, 17 Apr 2025 17:16:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9EB42550D7
+	for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 17:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744910217; cv=none; b=J1oTw/FvhcvB5Ynl/yFLurObra9OMNpqQmIN8dK3qCNYXxsVVKdf0mdcZIfVN3hw4VLYktS7C1PXpKd1ZQ7RIJaFU0egJA+SxAZNYgSoHjCtyHMJCwmiPbjGmMK5z06/fMl7AyoSIgZ5pv0QUbcHhy7gQonj+wuyBghevg3/tBw=
+	t=1744910217; cv=none; b=PdeMh+itbHMCXEgWbnywv1bfenAorpWxO/AEmcMR8wlxtgQEoC8FYVXMabODumvxViOqHsEsIolK4rhhPFYEaLEpadr99b7LIfNXzKseEnzh6YPRQGhNqvKoaWdcavvnD9aJ19BODZNtcKbM6pzIr6N6XOn9GspTOwRCeNI1FHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744910217; c=relaxed/simple;
-	bh=+G1rBLGmLoEg80EjAe3XaAfK5omvCAbji4Of0r0raAc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XE68BHh8B+FI/WE2t6ds9M82MbTAPnAZ8ssM+3be5k9dCx1IuNRDTJPlKxm1VNcpRpHzCwrWV7JF4m+nKP4IMU0JtKOUv7cNOktja0f9gneVrHCHC/GvXRWvjUlNgLQ6HNS7h4qGKk/ddAHj033zZr0FhnsI5TtF2bgl4xC42uE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=imhKxBZC; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=kI3m2dSSi5DaU0S+gonJqqPl8NDyXRdj0RJkeMs3+PE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DPxhdLMqwKC0TpSumEU9oHae4xm4X9IGU2Zgf+i4kMiR7yWK3u/KstVi50vuzSeKllT0SOVJHQF5UtrzOunRUTnZk33cHjriqXY6bImxqbUeO9v8n7I/62xu8ue5J+3B8oeaVnknnFBWQeHTogdqTvkNTwD0/0eeAQ8irCqCcUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=0HbllX6i; arc=none smtp.client-ip=209.85.210.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="imhKxBZC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744910215; x=1776446215;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+G1rBLGmLoEg80EjAe3XaAfK5omvCAbji4Of0r0raAc=;
-  b=imhKxBZCy/rbKzVBbGWjCccxOOORtdBfubMblbqBD/H7RB19tTUqDe3m
-   qYgS+RQd8PCi3FjP6vkKUEE542tlvprLWXu5jzjLEUH68MZ54Rixd+pah
-   +bpqOdCcnxF04WpP71aRv1ltMXD5kPmATbQFC5g4ebgDXWNxWT0dYUiO7
-   Z0gXsJI10ghVGq0lOHl3oOx/ikrF0qs1S6nCe/t1EIz6F2Qzn1fbAY+HO
-   LMffky8aXEklNChfLZWhmJrFKIrhS4bd+mb3zhqg538qNAbgbP+ivV7XF
-   4gRL+350fQNbxpNqOv5X7YpXKC9I0FNpMHxLHAk6fUMjMBjNHm0dlsHK7
-   Q==;
-X-CSE-ConnectionGUID: blEKMaehSg+Ji4ZNRMniKg==
-X-CSE-MsgGUID: 5+SfsDKlScKcllgE/J+PVg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="46400598"
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="46400598"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:16:54 -0700
-X-CSE-ConnectionGUID: XGjjEqOLTduXzoGcm2sSQw==
-X-CSE-MsgGUID: bI2PSBsWTuizGJo6TcVgDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="161915738"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:16:53 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u5Sr3-0000000DGRV-3aqp;
-	Thu, 17 Apr 2025 20:16:49 +0300
-Date: Thu, 17 Apr 2025 20:16:49 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu,
-	GaryWang@aaeon.com.tw
-Subject: Re: [PATCH v3 04/10] gpio: aggregator: refactor the code to add GPIO
- desc in the forwarder
-Message-ID: <aAE3gRH08WuuIFai@smile.fi.intel.com>
-References: <20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com>
- <20250416-aaeon-up-board-pinctrl-support-v3-4-f40776bd06ee@bootlin.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="0HbllX6i"
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-72c27166ab3so649313a34.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 10:16:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744910214; x=1745515014; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NgF74Y1x7cdnEZ6zTA2j/Rn/3r7hmq1Fkr3Xk5+i6o0=;
+        b=0HbllX6iUzAdRdqZCV6gtZ2JdH8crC5tTngpdeoDqEvpVQycfNBz6BZGXs81jVprKI
+         9Bx4W3NqqKc2Ock8KZbhej6GWJVxBFtGrEl9woD18ORXWVA+ied5tPHQwZ4J0W1TmhG0
+         uMLyk792ISllZf0wlrbqXYoysD1tTuUvMBzVrA/TybikFBso2ZgrlJquLMpY+Wgfg7H5
+         7wdvRSDIzxGIZ+/hey5/OooVAuHQ785EtDJtlfKWB8sz+X1iOdTuddkAG4a2JuuzQzoP
+         BVVjXz3ixlxg7zPgPSoJoob7YqxDKVK614NbIyDuIwHCWg+Oi3DpEtzXziL7cV4t9DaL
+         FTVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744910214; x=1745515014;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NgF74Y1x7cdnEZ6zTA2j/Rn/3r7hmq1Fkr3Xk5+i6o0=;
+        b=m2mRqc7FaTCyXlTjs1fMT5Hx6pHTrBIS4FJFdsYMjcjuGinobV9e34Y1fur/ZM5GBT
+         Mrps/OLDqztBjgR5FXWKI8t5UHhCfluAV/wXgS3u8YK/3jHzfQcxvMFuaTPPNyauJAa9
+         Y2xnBGwN4vg2LXGGLtD9VtlCGYt24CbKZkUUEESERBfGtL/hUEfifI8XPr/WV4J6BFKI
+         AYYmNt1swzvlzSKjJ6WrRdfqOXcprYFOUOl6lfMd3u58reN84fhwS9FdvvCv3kOc/24m
+         X8juOrHmSII9v3GXeGhp/NP6ITmCH7BFs28xQ5TOVdiEdZhVR9c0ZJOCkLEqkXir7Cgc
+         rQHw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUVGfDbPPAbB2rGpC7CmVoHc5bpHhJQ5E68jEUHHIcoRnfYZ6PgQIuf6tqmk9Dp+ZwJfljbo8oOOsQdw8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQejylV5jWYVNTkR6sjzJAHpM01SopjlhCVaqXoFF5ZTN+xINZ
+	IYSxlYCGUFZsGQXngLRfC5d2c1Qcu9GVOufTY/vMot4rGt/UgTkdza+m3nsxZXg=
+X-Gm-Gg: ASbGncsJj8JT3uZtwqeovNUV6Y2mkHiKa3dw6SxN0EanwftdvmH3dJt9gTjtLBS2xUs
+	MEmC9w0cAccWAoBP0KanDOevD6ucXOTeEEAjUXp93chvkG87ku4U6wlpm7potXGgOIAWp7E2NJj
+	juJHrho/DV1sLNO0muf8uzniaZmt0Nnvj8JXI19AXXl3rTszYtaMUg0iBK6Z6wugfduOlvDAG5I
+	J0g0wWYhe3DcvHqIQPYBpoApYTM8X13qahU6JS0ZtjQWES2kibM844jwOrtRz021fcH5i1N3Y+d
+	OnCzVroRwN2lnhs3VejnmERAyvIB4xM6Vx3wgQANX3nSix38kj9f8sdgBq1ZTUuF7jaQNuZrFXQ
+	TzSvfkDhW4XKw5IPD3w==
+X-Google-Smtp-Source: AGHT+IG2ya+SWKqWkEWn8r9JpbAOf9gOHMhtRFWZIjuKx4wF7uh2Oa75D8nMaKP4BJF4mMuOP+61ew==
+X-Received: by 2002:a05:6830:61cc:b0:727:3f3e:53bb with SMTP id 46e09a7af769-72ec6d200d9mr4250103a34.24.1744910214661;
+        Thu, 17 Apr 2025 10:16:54 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:c91b:eea3:7afd:2dee? ([2600:8803:e7e4:1d00:c91b:eea3:7afd:2dee])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-730047caf24sm22509a34.38.2025.04.17.10.16.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Apr 2025 10:16:54 -0700 (PDT)
+Message-ID: <6ff6e3be-6193-4977-977b-24de89c09153@baylibre.com>
+Date: Thu, 17 Apr 2025 12:16:53 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416-aaeon-up-board-pinctrl-support-v3-4-f40776bd06ee@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/8] iio: more timestamp alignment
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Cosmin Tanislav <cosmin.tanislav@analog.com>,
+ Tomasz Duszynski <tduszyns@gmail.com>,
+ Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>,
+ Andreas Klinger <ak@it-klinger.de>, Petre Rodan
+ <petre.rodan@subdimension.ro>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
+ <aAEz2ZD0Ipd1Xuy6@smile.fi.intel.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <aAEz2ZD0Ipd1Xuy6@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 16, 2025 at 04:08:12PM +0200, Thomas Richard wrote:
-> Create a dedicated function to add a GPIO desc in the forwarder. Instead of
-> passing an array of GPIO desc, now the GPIO desc are passed on by one to
-> the forwarder.
+On 4/17/25 12:01 PM, Andy Shevchenko wrote:
+> On Thu, Apr 17, 2025 at 11:52:32AM -0500, David Lechner wrote:
+>> Wile reviewing [1], I noticed a few more cases where we can use
+>> aligned_s64 or need __aligned(8) on data structures used with
+>> iio_push_to_buffers_with_timestamp().
+>>
+>> [1]: https://lore.kernel.org/linux-iio/20250413103443.2420727-1-jic23@kernel.org/
+> 
+> 
+> Link: URL [1] :-)
+> 
+> This will help to maintainer with b4 as it manages tags.
 
-...
+In this case, I don't want b4 to add this Link: to all patches, it is just
+context for the cover letter and not so useful long-term.
 
-> +static int gpiochip_fwd_add_gpio_desc(struct gpiochip_fwd *fwd,
-> +				      struct gpio_desc *desc,
-> +				      unsigned int offset)
-> +{
-> +	struct gpio_chip *parent = gpiod_to_chip(desc);
-> +	struct gpio_chip *chip = &fwd->chip;
-> +
-> +	if (offset > chip->ngpio)
-
->= ?
-
-> +		return -EINVAL;
-
-> +	if (fwd->descs[offset])
-> +		return -EEXIST;
-
-Not sure we need this. I would rather think that something inside struct
-gpiochip_fwd should track this. OTOH, I understand that you want to have
-sparse lists perhaps. I;m wondering why GPIO valid mask can't be used for
-this purposes?
-
-> +	/*
-> +	 * If any of the GPIO lines are sleeping, then the entire forwarder
-> +	 * will be sleeping.
-> +	 * If any of the chips support .set_config(), then the forwarder will
-> +	 * support setting configs.
-> +	 */
-> +	if (gpiod_cansleep(desc))
-> +		chip->can_sleep = true;
-> +
-> +	if (parent && parent->set_config)
-> +		chip->set_config = gpio_fwd_set_config;
-> +
-> +	fwd->descs[offset] = desc;
-> +
-> +	dev_dbg(chip->parent, "%u => gpio %d irq %d\n", offset,
-> +		desc_to_gpio(desc), gpiod_to_irq(desc));
-> +
-> +	return 0;
-> +}
-
-The bottom line is that I'm fine with this change without additional checks,
-add them when function will be used not only in the original loop.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> 
+>> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> 
+> Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> for non-commented patches.
+> 
 
