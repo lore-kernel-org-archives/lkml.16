@@ -1,67 +1,67 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0311826B95E
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 13:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8A32750E3
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 13:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744982563; cv=none; b=QgMDy3VB9dBJuqdKCtjdpR1yIoZhQqyU1O23bcYwMcvyHEa1TYMCjr06siraA6OYUpn4Bh69oIlkFyNuwdwpFKC4/Ej3fd/TQ0402TSwW2svv7yPGC+dXbg1hlwic/2fUauyU9lBMzSG6Qprb2uQpsyL9I76c7HlAqnMNjYvVMc=
+	t=1744982607; cv=none; b=JRwlLH+2qAJvWMPm6JG+JagI0v744Tg9E1a2qpjEnQpukpSFgfVXTQ4DIw4Wffa/ic6cZeKNfFkNCi7kZO8+98Wy/XM0mqLNu7rWdtVXaIEuOMjT5Wlt1wfke61ZcKnUFmevVMyWRSaVT/FGNEYB5dB9lCI774XG4tsWY7iAsRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744982563; c=relaxed/simple;
-	bh=/AVFD8LzpgluQR2DOcjxELaJPEiB/ExBAgzinvv9OAE=;
+	s=arc-20240116; t=1744982607; c=relaxed/simple;
+	bh=Oia/rkgNKHh2/N++KZlkJWuabXAo8hJuINnL3w3Ncyk=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=PZ4sbYag9A+d642JSHBeCbQTLRZGQjcu7P3RLqVCtipTRnJbNaKwi9CXDg/Vxg5gh35ik1ckHXP7QpJrvpRKp158RUyoDCA5j5VaMnN1RwBKVyyBeMYR2AtoH4bvrZaXI8/FqBZkZIyg4dJMaNorPskMSpCd2C/XcJ6qmVFSGqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l27aFM7d; arc=none smtp.client-ip=209.85.221.52
+	 In-Reply-To:Content-Type; b=sWzpnf3+K7UXNQUaMporaC7eXl4+lh2shbfy3Vh3oUzfsv+ZmdiSqj+m6DV1uE+DjDg+lAdT47wuvrQW6GNxfiEj35KIeXg/q4Xp8jcpRTaPLgzJP7AUP+xItdY31gDPpqiuz6wtUoDdimTiq8WHUTD5IREE0To9baHuv0hQ5L8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Un7bvDB2; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l27aFM7d"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39c1efc457bso1088455f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 06:22:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Un7bvDB2"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso17602655e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 06:23:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744982560; x=1745587360; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744982603; x=1745587403; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3nPNAmpQ4uOlcUbj8tZpDHE6nlLkjo04jE6tZHQGka8=;
-        b=l27aFM7dMjgMQIZjeUAeZQ7c9bmLcKV7SXiV6NjcF0BS5dvujGM3CnhFoblqWCklx5
-         9tO0YROON5r6YoKzbdMU8dretuQ5E94KSZk63de0YQCbotmLQh7gvM8PwK9l/GMna4Lv
-         S3VKlnrbXsWQXjOZl6TXI0K7sGSwEpxekr+Mdg2Fokfet3bBd4OsX4zCjrL3d/a1J/MB
-         D8FzRyrMsdIfUZ5N1+FYssnQ//dtbEN+PIlOwTPVzurQUEZ4ROXF6JWqwd4LEhhMvpoB
-         59gsCmiTFzHDMCklkiM6hLmK/+fS7VVQUbuD9wSuQfX806tdkAx5WaH37JCCPErtyjAp
-         h+dA==
+        bh=8+0uPBCTRcJa+XJIyDOCaVN9ER8Mys0My2OlQ2q8Nbw=;
+        b=Un7bvDB2n3MWTJUSop6RjsQMFykd4GvIyaDJAzjqubH0ePTUizdxRJO0oNrrGVLXIi
+         PPC7cVfIjLjHCNefyJocFea1Luojl48UXhl2BkyRvB7TP+m17UIwme1rjyEu4gGHf4AP
+         NKaWhNWZB+tRnld0hcbGiM1WSPrCebxa40USYClx8RL1X/hQN4+mR+panwNzOxfcTqIm
+         H5pQqfE1iOfd+lX70q3LgLOvvgYuDIka1HZhM4KMe85zBk2+zbp9WZdJhw1Csoj1uRmn
+         yFt5C8gmEAEEtVTS/djp2QXa2+nf0iedwp3PcKPSZLItcBYC9mBPHIL8hMPsT8WbxW0x
+         dbKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744982560; x=1745587360;
+        d=1e100.net; s=20230601; t=1744982603; x=1745587403;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=3nPNAmpQ4uOlcUbj8tZpDHE6nlLkjo04jE6tZHQGka8=;
-        b=gM3WppQNdF+lNKpy8plHp3U1SYfiaP7qeO6KKbc8rlamRJreXhigY4B3A4oJb4fzoW
-         HCFkZeDxsp6wdTBvtGZGys7mgNTESYh7Lw2z1wrxPLjOkOGk7RPDVJs+kjRXuhqIg38G
-         UT98VcIwAS6PyT6HzxoGGArxHR918+H0euf3OP17EFZ6HXin8vXEGfyn8LZ1P9lztgG/
-         zu0Vvinut8oc3Zy4MYvT4vcpWw2+9t6F9iFxc0dDw29lReXUME/dpPgQa1HikJF08FOH
-         ao46SrAPbBkehh/hJt3ar1jHYrO4dTk9lUaF71MiNgIWy3F2S8bLyIDd71G11awNWs1T
-         Gzkw==
-X-Forwarded-Encrypted: i=1; AJvYcCUzlKCsAqG9ZV355k/7m8VEroRAgyFqavkQEe3EX6VdFP9ZDr7TfR7R1Jms7k4FRH+RtANcOuJhnTTpFf8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUaC5yB1Y/9SpHPsGe/n+JUm1e4pfHaCkXtJQeFjMsAkyoNmqc
-	t7Douu/jcKCgoQ/nEglVQJmRZF0ae3wa/vXBpmkD71g7voEOwwaiP9OCFxtvpKQ=
-X-Gm-Gg: ASbGncssl+YAJi652zJaGcPI4i/IhXO6L78cYBpVn5akTxLqUSroqmtW27eL3jip2eJ
-	dMZbPTDRCNGn4lEZPFqJ9PL6c4ljr9DaxosYnHbbecbneF77nKEGg8SGPpp81czgsURKbkGadGY
-	8BKZ1BxRBF7FgjTcJg+LsSUNX8vbtjZ7hh38XDkKcWXfNXyRgEbOPqrczteSnGp8krOsaVNemP3
-	BNHILEsS6LLAi7zZxgfkXVt1KxSGnszw8a4iUjbbwmVtIn+NCCRjar1Csmc7otd9sXq3/0N1HKD
-	pbJEJcVHX/aNwmiNka41MoWNyfBmYo5/vIxmeO8jiqY+YQTesl2FQdA6oP9kJrlVinyqTtGkvN/
-	Nc6Hwb3+4BE0lpyF2gg==
-X-Google-Smtp-Source: AGHT+IFNOOW2oODeAWlVCfKeEYLmpeo6ibOMwXQlsAWVEng9c5Elbns2WJGlRXKAds6lbZMvMnC3UA==
-X-Received: by 2002:a05:6000:188d:b0:39c:1424:2827 with SMTP id ffacd0b85a97d-39efba4657amr2309409f8f.15.1744982560266;
-        Fri, 18 Apr 2025 06:22:40 -0700 (PDT)
+        bh=8+0uPBCTRcJa+XJIyDOCaVN9ER8Mys0My2OlQ2q8Nbw=;
+        b=gceyr+wHO4uQvrB27Z1vQlTejJxWZEN86aYkg5HkDem6bZ0uMElbAJvaXAdStYMwMW
+         eoHvXAU2BSzMjLvpaOO138d7wa85IJbt9qffcgKxRpN/mnNchEJOFr4LK8+X7NkSS7mP
+         h9k8JxPJ+VMvUt5Od827Uva9OWALn89UaNwv1dRpihkOCt4dSyxVGm87gddaLBfptfpW
+         0zLHn1GO9bVBWWGpF4gKL0bCyrbJzhVPkDqbC0ar9gHqX8cuY8zh2rHgVswevIoYChyr
+         gz7Vr2qstTKgo8WCiqzIpqSBPUSC1ZU3rFoP3GrYBx6tA6Ml/5LdjwweXaaUCp5q7zx8
+         9oIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUS92CHH98Mai/mQm+OLy5rGB/bl6lmGnNldjpm6icDH4kZV3lAoE+vfoOb14xeI7Zr5unTvy3EJzCoiU8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwODpHhVTkUFgK9ffXczjymZWXmknKLzzQuheiBqkM/pQqrD9wn
+	HmUhhRal4NAMduHGaB6P1iODqbwx51Y/3O5Zvcx7VyNahz4PC2Klc4R63pOs4JU=
+X-Gm-Gg: ASbGncvp1QW7YvXddtirzz1La/wqidmk2wzBYu4VNR92FM4ucaUqSpQztg8B3EApfXN
+	CeP+zcgHnyWWHGt4Rnfl9Q0EkN/i61G9xy6KB7rYCAvYrkJ+vyM+J5Vxg5uuelAFJw1ozeGhsfS
+	t47YDfm3tjhj6eTXgnXTE01n7jog77vTDCAw9u/p0NZ6wdzscIlqaSwJxryKid0gyZKUXIhfnN1
+	QY8s2l2QiQUleag+umocgWzIl9yEIh1/WDA1jM4ANaJxT0l9eRkrOcgqOdFpAeBvzZfEKZFFvAP
+	7JVQbBj7pXkj2DL3e3xtKDUmH6NlAb/Ioj7SbszOnKrEiYMr8imQz9gmvM91bpKp29ZZqNf6GvL
+	bwGsFG6HQYvgsElwLgQ==
+X-Google-Smtp-Source: AGHT+IGJzh9R71bSIKxTajSqWiIGIo/+gzFHTQInZvegKY/vJp4hnU48uSfbPDcFzy+R16bgsGHN1Q==
+X-Received: by 2002:a05:600c:3485:b0:43d:b32:40aa with SMTP id 5b1f17b1804b1-4406ab6897fmr29952425e9.3.1744982603014;
+        Fri, 18 Apr 2025 06:23:23 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:3d9:2080:f8ba:7c24:7066:d010? ([2a01:e0a:3d9:2080:f8ba:7c24:7066:d010])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4a498csm2697352f8f.85.2025.04.18.06.22.39
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5a9ecesm22619665e9.2.2025.04.18.06.23.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Apr 2025 06:22:39 -0700 (PDT)
-Message-ID: <107cd28d-bdb4-4b59-83e4-4b85dce97290@linaro.org>
-Date: Fri, 18 Apr 2025 15:22:39 +0200
+        Fri, 18 Apr 2025 06:23:22 -0700 (PDT)
+Message-ID: <9eab3246-9ae1-46bd-8058-aff7774820a6@linaro.org>
+Date: Fri, 18 Apr 2025 15:23:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,18 +71,13 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Neil Armstrong <neil.armstrong@linaro.org>
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 0/7] drm/panel: make prepare / enable / disable /
- unprepare return void
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Jessica Zhang <quic_jesszhan@quicinc.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250401-panel-return-void-v1-0-93e1be33dc8d@oss.qualcomm.com>
+Subject: Re: [PATCH] clk: qcom: gcc-sm8650: Do not turn off USB GDSCs during
+ gdsc_disable()
+To: Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250305-topic-sm8650-upstream-fix-usb-suspend-v1-1-649036ab0557@linaro.org>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -109,41 +104,57 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20250401-panel-return-void-v1-0-93e1be33dc8d@oss.qualcomm.com>
+In-Reply-To: <20250305-topic-sm8650-upstream-fix-usb-suspend-v1-1-649036ab0557@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 01/04/2025 07:11, Dmitry Baryshkov wrote:
-> While it makes sense for panel callbacks to be able to return an error,
-> the state-management functions from drm_panel API are usually called
-> from atomic callbacks, which can not fails and must return void. Make
-> drm_panel_prepare(), drm_panel_enable(), drm_panel_disable() and
-> drm_panel_unprepare() follow the same calling convention and return
-> void.
+Hi Bjorn,
+
+On 05/03/2025 20:00, Neil Armstrong wrote:
+> With PWRSTS_OFF_ON, USB GDSCs are turned off during gdsc_disable(). This
+> can happen during scenarios such as system suspend and breaks the resume
+> of USB controller from suspend.
 > 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
-> Dmitry Baryshkov (7):
->        drm/bridge: analogix_dp: drop extra calls to analogix_dp_prepare_panel()
->        drm/bridge: analogix_dp: drop unused argument to analogix_dp_prepare_panel()
->        drm/bridge: analogic_dp: drop panel_is_modeset
->        drm/bridge: analogic_dp: drop panel_lock
->        drm/bridge: analogix_dp: inline analogix_dp_prepare_panel()
->        drm/bridge: analogix_dp: ignore return values of drm_panel_* calls
->        drm/panel: make prepare/enable and disable/unprepare calls return void
+> So use PWRSTS_RET_ON to indicate the GDSC driver to not turn off the GDSCs
+> during gdsc_disable() and allow the hardware to transition the GDSCs to
+> retention when the parent domain enters low power state during system
+> suspend.
 > 
->   drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 107 ++-------------------
->   drivers/gpu/drm/bridge/analogix/analogix_dp_core.h |   3 -
->   drivers/gpu/drm/drm_panel.c                        |  54 ++++-------
->   drivers/gpu/drm/panel/panel-newvision-nv3051d.c    |   9 +-
->   include/drm/drm_panel.h                            |   8 +-
->   5 files changed, 33 insertions(+), 148 deletions(-)
+> Fixes: c58225b7e3d7 ("clk: qcom: add the SM8650 Global Clock Controller driver, part 1")
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 > ---
-> base-commit: bfb20a655848a9088e3e9ae24b1dcce1bbf016c2
-> change-id: 20250401-panel-return-void-d461c71ebd35
+>   drivers/clk/qcom/gcc-sm8650.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clk/qcom/gcc-sm8650.c b/drivers/clk/qcom/gcc-sm8650.c
+> index 9dd5c48f33bed5b944a0b25959ef69e7862d0449..fa1672c4e7d814e1e08c79f9cda9463bf1cd1598 100644
+> --- a/drivers/clk/qcom/gcc-sm8650.c
+> +++ b/drivers/clk/qcom/gcc-sm8650.c
+> @@ -3497,7 +3497,7 @@ static struct gdsc usb30_prim_gdsc = {
+>   	.pd = {
+>   		.name = "usb30_prim_gdsc",
+>   	},
+> -	.pwrsts = PWRSTS_OFF_ON,
+> +	.pwrsts = PWRSTS_RET_ON,
+>   	.flags = POLL_CFG_GDSCR | RETAIN_FF_ENABLE,
+>   };
+>   
+> @@ -3506,7 +3506,7 @@ static struct gdsc usb3_phy_gdsc = {
+>   	.pd = {
+>   		.name = "usb3_phy_gdsc",
+>   	},
+> -	.pwrsts = PWRSTS_OFF_ON,
+> +	.pwrsts = PWRSTS_RET_ON,
+>   	.flags = POLL_CFG_GDSCR | RETAIN_FF_ENABLE,
+>   };
+>   
+> 
+> ---
+> base-commit: 7ec162622e66a4ff886f8f28712ea1b13069e1aa
+> change-id: 20250305-topic-sm8650-upstream-fix-usb-suspend-20979d5a0170
 > 
 > Best regards,
 
-I think you can respin with the warning fix on patch 1 and then apply
+Gentle ping !
 
 Neil
