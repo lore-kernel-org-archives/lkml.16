@@ -1,148 +1,109 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676D726AABC;
-	Fri, 18 Apr 2025 08:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBD819EED3;
+	Fri, 18 Apr 2025 08:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744964042; cv=none; b=LwJF2DRzADvKIJiuUnt9yB7xepSA4k9q649D3oQeewcZ8bW2tUECNdYkknG9xKZQYhhYcugjkDFJcShjeC88752p8pExzyfjTTdThG7tDKhnzc1cLOe18OlqgtBYJ6PVLL/o0r0TWW1/6nG2a/3gQKY7BMwbyX9dTTDYU6pumio=
+	t=1744964086; cv=none; b=i2H8IejtXZsyOKgpiPAeq2UVY/qj2GCiQhi1BUEYdIwmpHCorw4uvo5asowZLTkcFfoS3p8g8hjHGG55ywAtQogKCJv+GC5HO3UZn0qsWtfccwdx2fKEg/xgsXywR8AnoGMP0rLYkmBnhOemYBD3zhMhsoosWXEhGEOnS52Ph/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744964042; c=relaxed/simple;
-	bh=GHCa+D5ED4Z7P9UO7A6wuIcTDN5pqLVDOaEFzRs4DS8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=GIMBW5PD9TR9c963Y+gT67AGLIgoAb7VOwtmmjM22pmPqv96s6fMbd2dDzlg5IVvq1lzddIEQ/zyPahaILVi0Jc4DuvqjA6Ya1piJODXhZYzvKYajFvyd8KmMxVUvWyjRE9n5vPCdlf59Lq/B7MET2h62UVdoRulXQVa8y2uPw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KRG3qrrk; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744964086; c=relaxed/simple;
+	bh=XJ02iB/sNPlL8ll61gG2pHZztBaYAqsqo3tsPVveWxg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GUVbNy2i/zPvSZEjfwd26HshUO6NaW0wwM8XHG5WshfGdu7wGijyWEj+6iAZnt6eTVqPnP0Ibp2V+y4EhimzjUXUP3A0uvgqjv0IoOcaGPj+Cz/s/ospCMeCaFbJHqXHz3Xvm9DNCJj9XFsr+sRWt4t4j/VP3EBatcdUxv9wim8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UlhhEMlU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRG3qrrk"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3995ff6b066so901531f8f.3;
-        Fri, 18 Apr 2025 01:14:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744964039; x=1745568839; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ysES0mGIKICmlz7bXkgEqZ80p/S+y8pioakYf1xuDpQ=;
-        b=KRG3qrrk51InaJxgu1BbxtYttPTpXE1mHwftDFvJUZZy/kYKaKiV7QNuibIzRV5has
-         43ZQPVsILJxcSV+3xlxP2Oyi6KpSpKu7UHwvGeah+G2A35PARtxeUbkgNzKkwDHJWONj
-         HWuLZCooZEa16ii1aHczamLttmRSh5grTAFg/c26RBNKDSKixP7/vbyd/zP83GHw81vv
-         l9afk1QGd99j7G39vcwCb6jDATtfD8g8hFKz7/Do5JTz+w46//h1HJVG3KVeEVwTd0dJ
-         DYl+9sM5QdybRJfi4AYP5bpNepfvcbBcmNkJe03Phf2eOi5SfedH7PZ/OvokgmwMfapT
-         F8Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744964039; x=1745568839;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ysES0mGIKICmlz7bXkgEqZ80p/S+y8pioakYf1xuDpQ=;
-        b=rXsdAF+vMfohf429KJxGQdUZMEsQhc9PJ2+eCW6V+k9nf3Zqiknj75P2MvBKdhLOoI
-         VhCQ0p8+ST2z4T2L/3FLXNJoDv5yso+oaSqsmTocN95mtPxaxgM4qA1UYIVesd8ElKuf
-         hnscQjIzVqAGvumwQOJtriBRDgUTjOFWm6kT0R+VKRn2Vb9MkoaRrO6ycWrseBEqolHt
-         8k5C0jbG5ObLw2eRkEWZN8OYm8eAQwAFOP6m/ZGiI3UCK30cdrSLt9L5ucoJOttIYbg+
-         AZQH6SZo0MJEge8vTAU/C+jtyWslEPPG2eyYMN1FdwUzZPwamixBz/fe/89haKW+COsQ
-         zj+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUXF3XSqpK1TFQzJ+BkB4lZoF/4f4r4g4fRUqa77YGb9DJaIs2iaR013S8NBe+/lKzDX3AYhlancVMtI4Yz@vger.kernel.org, AJvYcCVstdKy7wntIfjb+ulEgUD6csuHlyQ9xc5VJaw7gdldq3yXe1NMgE76F6qa5b8QBdZHL5vZ7Pi97ytoCLnAI0LtxLg=@vger.kernel.org, AJvYcCX1nc+l5ADH1IGtcibwhUePzmIVY1I+oT+iozFX47NH2ao29B56i4Z4yfPklvLVowodJM0Y0AFAfJc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMNhpCR9HF5OdNK2f9Ro9heyZvTwBDAxktm8FziGemRDGRTAih
-	oT/OlObbtSc5+5vnd/1uTc5ZIBdtJeysSaRc8N73CcYOEqYNKJPjZo9X3Zu7cmGhNm8k7F1DpNJ
-	S8ijD4/+5tUmyV5WmkE8oRIGPggnyi7aQfZc=
-X-Gm-Gg: ASbGncuarmwIN6xpQXEf4zyOxDeOgFYoa2ddLqO2feVDwy4UbSktO9GrZiBJ+f8vOfm
-	2i6nExIlKJw7Xz/U8TllSXqmIXjgK6qxVdYMWV40Py0cBOmlKoM/5TmgYHRtmSbDaiQQ+pRwtfN
-	tH6qMNjuy3WbMtdlspsCjwnQ==
-X-Google-Smtp-Source: AGHT+IEixeG56vKRHIfQZ9WsOF29rSKcalIFuTYowp5DR2TTigZduRtRr3/kyEZsUTNoi6kty3vschsKLRALWMCsvN4=
-X-Received: by 2002:a05:6000:18af:b0:38f:3a89:fdb5 with SMTP id
- ffacd0b85a97d-39efba39855mr1321236f8f.11.1744964038466; Fri, 18 Apr 2025
- 01:13:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UlhhEMlU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6057C4CEE2;
+	Fri, 18 Apr 2025 08:14:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744964084;
+	bh=XJ02iB/sNPlL8ll61gG2pHZztBaYAqsqo3tsPVveWxg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UlhhEMlUiTHC8/PmN5qOJIW33RSW9/04eF9ACjS36P2xd0Q1GXZCJNADK0LLtG1DR
+	 VzeAI5vhqwaFoonpb4QmvtBUVaul/trJLChtJ6EIgB6xgwmdDCQeXZ0f2pqmvx7eB1
+	 zPSFjmZmPFDz3BGifc2aAO6xa+QunFnoxp6qht6c3F/Ctf3Mxpvk+KW2fwWXZYKnlo
+	 JHlnXgoPTB3y08Cp8Pk5I3mJC7zz1hObun0DDcShf8a6VwBmfC13+6C6jCVXzHS0nI
+	 +Pk3NSF666DOeuAHocAlAfjOT40inrYcvSaOBM4doPAdrHIsOoxrvGlnY5iKVrieeY
+	 fRAj5NKyux3vA==
+Date: Fri, 18 Apr 2025 10:14:40 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Dionna Amalie Glaze <dionnaglaze@google.com>,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	linux-efi@vger.kernel.org, x86@kernel.org
+Subject: Re: [tip: x86/boot] x86/boot/sev: Avoid shared GHCB page for early
+ memory acceptance
+Message-ID: <aAIJ8C5Ho97geYMj@gmail.com>
+References: <20250410132850.3708703-2-ardb+git@google.com>
+ <174448976513.31282.4012948519562214371.tip-bot2@tip-bot2>
+ <CAMj1kXFEXZ8cGMwz6N_ToYp0Wf5Vr9UBFRueWx_MtrwbDLq+LQ@mail.gmail.com>
+ <Z_rQ4eu4LYh6jGzY@gmail.com>
+ <CAMj1kXGTP31w7vM+jWqpbJPmoyPU9vqOrmvXsueoPnBin0y_hQ@mail.gmail.com>
+ <aAICRcfkBV3tHP-G@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407121859.131156-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <aAC8f0dAMERD8GjW@shikoro> <CA+V-a8sM2mFS--zLSZt28mOUDuO2FpW0TsaV50A_VxFZ-juP4Q@mail.gmail.com>
- <aAFgwEB4SdgH-1fQ@shikoro>
-In-Reply-To: <aAFgwEB4SdgH-1fQ@shikoro>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Fri, 18 Apr 2025 09:13:32 +0100
-X-Gm-Features: ATxdqUFA9156Eu4fxE42CTO7RyOYL7H7N298Z-M17LvBAVxksQ4kwAlr1vrCh38
-Message-ID: <CA+V-a8tmTqFi4iqGhR3cfUgKw7mxJrm6ixGAHq747ptrL3t2jA@mail.gmail.com>
-Subject: Re: [PATCH v8] i2c: riic: Implement bus recovery
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	"Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, Andy Shevchenko <andy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAICRcfkBV3tHP-G@gmail.com>
 
-Hi Wolfram,
 
-On Thu, Apr 17, 2025 at 9:12=E2=80=AFPM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
->
->
-> > As suggested I have the below now, (are there any changes Ive missed?)
->
-> Well, get_sda should really only get SDA :)
-> >
-> > +static int riic_get_sda(struct i2c_adapter *adap)
-> > +{
-> > +       struct riic_dev *riic =3D i2c_get_adapdata(adap);
-> > +
-> > +       /* Check if the bus is busy or SDA is not high */
-> > +       if ((riic_readb(riic, RIIC_ICCR2) & ICCR2_BBSY) ||
-> > +           !(riic_readb(riic, RIIC_ICCR1) & ICCR1_SDAI))
-> > +               return -EBUSY;
-> > +
-> > +       return 1;
-> > +}
->
-> I have
->
-> +static int riic_get_sda(struct i2c_adapter *adap)
-> +{
-> +       struct riic_dev *riic =3D i2c_get_adapdata(adap);
-> +
-> +       return !!(riic_readb(riic, RIIC_ICCR1) & ICCR1_SDAI);
-> +}
->
-> I believe the BBSY handling could be why it does not work.
->
-Thanks, that did the trick. The incomplete_write_byte test case is
-passing for me. Now moving onto the incomplete_address_phase case this
-seems to be failing on my side. Did you test this on your side?
+* Ingo Molnar <mingo@kernel.org> wrote:
 
-root@smarc-rzg2l:~/i2c# cat incomplete_address_phase.sh
-cd /sys/kernel/debug/i2c/i2c-4/
-for i in {1..1}; do
-        echo 0x68 > incomplete_address_phase;
-        val=3D$(i2cget -y -f 3 0x68 8)
-        if [ "$?" !=3D "0" ] || [ "${val}" !=3D "0x83" ]; then
-                echo "I2C Read error (ret:$?) ${val}!!"
-                exit 1
-        fi
-        echo "Read val:${val}"
-done
+> 
+> * Ard Biesheuvel <ardb@kernel.org> wrote:
+> 
+> > On Sat, 12 Apr 2025 at 22:45, Ingo Molnar <mingo@kernel.org> wrote:
+> > >
+> > >
+> > > * Ard Biesheuvel <ardb@kernel.org> wrote:
+> > >
+> > > > On Sat, 12 Apr 2025 at 22:29, tip-bot2 for Ard Biesheuvel
+> > > > <tip-bot2@linutronix.de> wrote:
+> > > > >
+> > > > > The following commit has been merged into the x86/boot branch of tip:
+> > > > >
+> > > >
+> > > > This may be slightly premature. I took some of Tom's code, hence the
+> > > > co-developed-by, but the should really confirm that what I did is
+> > > > correct before we queue this up.
+> > >
+> > > OK, I've zapped it again, especially as the rest of the series wasn't
+> > > ready either, please include the latest version of this patch as part
+> > > of the boot/setup/ series, which hard-relies upon it.
+> > >
+> > 
+> > I have sent out a v4 here [0].
+> > 
+> > I am not including it in the next rev of the startup/ refactor series,
+> > given that this change is a fix that also needs to go to stable.
+> > Please apply it as a fix and merge back the branch into tip/x86/boot -
+> > I will rebase the startup/ refactor series on top of that.
+> > 
+> > Thanks,
+> > 
+> > [0] https://lore.kernel.org/linux-efi/20250417202120.1002102-2-ardb+git@google.com/T/#u
+> 
+> Noted, thanks for the heads up!
 
-root@smarc-rzg2l:~/i2c# ./incomplete_address_phase.sh
-Error: Read failed
-I2C Read error (ret:0) !!
-root@smarc-rzg2l:~/i2c# ./incomplete_address_phase.sh
-Read val:0x83
-root@smarc-rzg2l:~/i2c# ./incomplete_address_phase.sh
-Error: Read failed
-I2C Read error (ret:0) !!
-root@smarc-rzg2l:~/i2c# ./incomplete_address_phase.sh
-Read val:0x83
-root@smarc-rzg2l:~/i2c# ./incomplete_address_phase.sh
-Error: Read failed
-I2C Read error (ret:0) !!
-root@smarc-rzg2l:~/i2c#
-root@smarc-rzg2l:~/i2c#
+So there's this new merge commit in tip:x86/boot:
 
-Cheers,
-Prabhakar
+   54f71aa90c84 Merge branch 'x86/urgent' into x86/boot, to merge dependent commit and fixes
+
+which brings this fix into x86/boot:
+
+   a718833cb456 ("x86/boot/sev: Avoid shared GHCB page for early memory acceptance")
+
+thus 54f71aa90c84 should be a proper base the rest of the startup/ 
+series, right?
+
+Thanks,
+
+	Ingo
