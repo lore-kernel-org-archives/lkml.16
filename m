@@ -1,334 +1,315 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4475678F3B
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 12:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859092750F3;
+	Fri, 18 Apr 2025 12:35:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744979750; cv=none; b=DQyV32SAqWYcspSzLvxXRz6a9WwpVxnlTv4zMb14UmLTN4pCuX9Rb7pkb/7u4CIRrTTUk1Yd1w80lye6rh9k+FI4hznMum1t1g8RLN2XwbsmmucSop1GPszAr8eloqanF3nonz9rdIxxFOQHvcVSA1W2xAupuPbGMhpm1wXcRH8=
+	t=1744979757; cv=none; b=ffN5N4tSvdn3fOJErcWWvT3CuLGEo3hFszbtS4VPN/hHX5oX6ALz2q6EOFn2m+ejzgHv2LjO/3dCWFGGqwUQ0CPBtLiMBF75eckRX9uMvnzGe63CtKSy6MZMneuu2s4VAu7V2+3c/bf4Z1uoEDOgg1b+jE7eQKtVUmvkGKxJ9ZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744979750; c=relaxed/simple;
-	bh=Ri+MFqoimvVwoyn+O8wjRhQJH8YuG78xibiFhwSj/vo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sgLU/8qXLaLCKNy1S8bR4tcea3gdV1b5lMzvyFfdc0C9O9JQt6Ny651aaWoSPTzxS96yd4xT7d0zoqm9vwP4RtVwBK/J6RpHpj2WD6z8wJchyMj2GMrYzNe3+5gc4R1MHRTTBXkryt7hUH6XfssuZ2veiCuAMEUTPF5lW4O7CJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iozACYlE; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744979757; c=relaxed/simple;
+	bh=OhTNaGe6t+L42b31PCGDso2W5bay9PbjzWWIs687J7U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pPU4wPjbghCixw3Wzxoflv+sNRPz+9xwPuNaxoibY+gWFaOzQTU13DYrAL5TDmCZIUjyXrIO23KTWFQAc5Df53HOuc2W2saEqEd/ppz9IE8Syi0VlMh2NFnIYEZVkVqyeUFOan3zZVK2a068dCe3CdY1xmMYPJJKgAZ/j7rFDBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h+aPYShd; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iozACYlE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744979748; x=1776515748;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Ri+MFqoimvVwoyn+O8wjRhQJH8YuG78xibiFhwSj/vo=;
-  b=iozACYlEqYJxDwZFhrx7CwGOLZaPs64OpoFhw4rGbeGyYFgHEmY/s1IO
-   AhFa/XkooZToaq3eIFShntsBLFsvtMjnmcWBdR3OmUbnIsuYGIhxGAjBm
-   kJ/p5QqLKc2oFAedOM7KbN9mfEbs6GtaGHpbAgaevTw9J1+0XIBAh1RRZ
-   Osx2Cy7xtSq/HqUDjWsY1mhnK7f33puR4qn1OXJpjgx/jm1+UPUJdqoR3
-   woLZCs3f5DmP+1SYwKl0aajNBddTrgpO/N/o+uZJICDqMZkC6sWxK0gp7
-   O+oadope4l0H1h5+SmDr2CVJ6V4A22D8JqD6NDrIkCdM+rtwNRDAa0535
-   g==;
-X-CSE-ConnectionGUID: uiw1kFcJR0i7XRJnQ5E8XQ==
-X-CSE-MsgGUID: rIRCa1cKQSi8YWw0rt9x8w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="50406376"
-X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
-   d="scan'208";a="50406376"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 05:35:48 -0700
-X-CSE-ConnectionGUID: JQF4jjTlQP6QkeC0KWmr4w==
-X-CSE-MsgGUID: lu6XsW9ZQH+eTJ4dUx7CrQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
-   d="scan'208";a="131123144"
-Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
-  by fmviesa007.fm.intel.com with ESMTP; 18 Apr 2025 05:35:44 -0700
-From: Raag Jadav <raag.jadav@intel.com>
-To: gregkh@linuxfoundation.org,
-	david.m.ertman@intel.com,
-	ira.weiny@intel.com,
-	lee@kernel.org,
-	andriy.shevchenko@linux.intel.com,
-	mika.westerberg@linux.intel.com,
-	heikki.krogerus@linux.intel.com
-Cc: linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v3] mfd: core: Support auxiliary device
-Date: Fri, 18 Apr 2025 18:04:33 +0530
-Message-Id: <20250418123433.2586383-1-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+aPYShd"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-440685d6afcso13557365e9.0;
+        Fri, 18 Apr 2025 05:35:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744979754; x=1745584554; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YqwPQPshsO8eQS5NIebfLmS8Vfi8Zh2J8VbWh6YjdWY=;
+        b=h+aPYShdPlUzL5/HWnkdQjDb3bW+xUZNgUXxBS2mBJBTOHW3ZTjfiM6GbYvQTwkTMY
+         HNtDmckSpxdZE9+c9kgCsKV+J3J1Gz2gVs3jvGQ5pnsWA5CAj1vtOO1EGtLKFM7fMKh5
+         3FUX+u6aSllviyBP40DsGtd80qoN0UjdZf3apfoMZdOZgKa80PTZgU/0daoqQcxe3eTk
+         6ZlV1iB3i9/tKo+60u3rekZpJZd9qPHVpTBmtypbK8X6wLKvGRitqaK9rSTAm8fAOlTT
+         +/s2YccNw3LyJ7NBXHrFlpdFsEa42HNAQXlblneWMVFIJpbofbQrIrJskZ87dYeaN6Xn
+         uyeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744979754; x=1745584554;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YqwPQPshsO8eQS5NIebfLmS8Vfi8Zh2J8VbWh6YjdWY=;
+        b=MmlL9lGn9hjfEbGvNCPX1ZBe04WAmObuHeGVwuumZeruWBciRLAs84TrAlyUE2N/sG
+         xJzUX8HPqGTZjeC35WSe76Ccojz4S2aXJcCmKU/MqnfpzUrBwAvE02ecO3+E4cCGWKQu
+         KjhAwsOI3Bzyr4UQb+IzEncYWng4lsUrdxTIpuJ8ozSxwN3KedWTA9dyaAr7drYD6uIZ
+         287/c008Va66pbtNp+UPXh+4J+ctja9vOEWYrvzRBCoBhf2g/bBilwCARnDqT2Yj+fn4
+         ckg3p34OPbR65Gbx15H5NWIxw1vJfVz8Iwco2sAsZxDrrJqwm1kKiOSzO2TedwhdNZNV
+         5LnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1JxNznh6YlFkPsdf+kn944p1vGx7t6yxlJaug135MDgnouFG2FH2100Nd5+mclwBHFlo1k7z7uCuqMZoGFQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6Rx3/sBm/pboeRzqME32cXF9g7enqXhTxE+OGAJGJJNxO8HS9
+	69yMXSMaSHn76P/YEf45V6qxC0rjAkUMxFdoh7uKpqHTKqiSs8Wm
+X-Gm-Gg: ASbGnctkd9/UpDAnNIBX4aAX4ug+/oWaeZmyhTWec+SMYDQz3/cehoNWoWwqpQLEbfB
+	dSfemi3csIzIs30XTOJKMIjY2hErTTmYIM+gxzmJ/lrj/ncAWfKUBdSDsF5JEV2AsJcVJ974L0G
+	0tGQ7u5YnUsdDmI7j0cq2v8Xf/nct2cBTUdMeSzFRfRJWbj+MB6F8xWTPCw4tZXdq5LfQ7vGP0l
+	vnPSu6rRE4e3g03AmioWGiSKFO/U0GVkKagsw8/LPoj6VaFML1JecYw48DmAU6mf+4VeTZMoehP
+	l+51NokxfPsMH7W6q8VvIyvjPyn6iyIZMEu9ScJY4QiY0lUNWDzyJQ==
+X-Google-Smtp-Source: AGHT+IG9Cw9igckmymm1NIo0b7RjHaTKUJ9cFxvLdR3v8Ed1iHO4a+RAudEX/IPCNXcZe8jla0SnPw==
+X-Received: by 2002:a05:6000:1ac9:b0:39b:fa24:950a with SMTP id ffacd0b85a97d-39efbadeb66mr2079051f8f.36.1744979753486;
+        Fri, 18 Apr 2025 05:35:53 -0700 (PDT)
+Received: from ?IPV6:2001:871:22a:99c5::1ad1? ([2001:871:22a:99c5::1ad1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5cf313sm20899875e9.30.2025.04.18.05.35.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 05:35:53 -0700 (PDT)
+Message-ID: <7f80f64a-e0f6-469f-ab2e-ff40344929b9@gmail.com>
+Date: Fri, 18 Apr 2025 14:35:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] rust: add UnsafePinned type
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+References: <20250418-rust_unsafe_pinned-v1-1-c4c7558399f8@gmail.com>
+Content-Language: en-US, de-DE
+From: Christian Schrefl <chrisi.schrefl@gmail.com>
+In-Reply-To: <20250418-rust_unsafe_pinned-v1-1-c4c7558399f8@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Extend MFD subsystem to support auxiliary child device. This is useful
-for MFD usecases where parent device is on a discoverable bus and doesn't
-fit into the platform device criteria. Purpose of this implementation is
-to provide discoverable MFDs just enough infrastructure to register
-independent child devices with their own memory and interrupt resources
-without abusing the platform device.
 
-Current support is limited to just PCI type MFDs, but this can be further
-extended to support other types like USB in the future.
 
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
----
+On 18.04.25 2:21 PM, Christian Schrefl wrote:
+> `UnsafePinned<T>` is useful for cases where a value might be shared with C
+> code but not directly used by it. In particular this is added for
+> storing additional data in the `MiscDeviceRegistration` which will be
+> shared between `fops->open` and the containing struct.
+> 
+> Similar to `Opaque` but guarantees that the value is always initialized
+> and that the inner value is dropped when `UnsafePinned` is dropped.
+> 
+> This was originally proposed for the IRQ abstractions [0] and is also
+> useful for other where the inner data may be aliased, but is always valid
+> and automatic `Drop` is desired.
+> 
+> Since then the `UnsafePinned` type was added to upstream Rust [1] as a
+> unstable feature, therefore this patch implements the subset required
+> for additional data in `MiscDeviceRegistration` on older rust versions
+> and using the upstream type on new rust versions which include this
+> feature.
+> 
+> Some differences to the upstream type definition are required in the
+> kernel implementation, because upstream type uses some compiler changes
+> to opt out of certain optimizations, this is documented in a comment on
+> the `UnsafePinned` type.
+> 
+> The documentation on is based on the upstream rust documentation with
+> minor modifications.
+> 
+> Link: https://lore.kernel.org/rust-for-linux/CAH5fLgiOASgjoYKFz6kWwzLaH07DqP2ph+3YyCDh2+gYqGpABA@mail.gmail.com [0]
+> Link: https://github.com/rust-lang/rust/pull/137043 [1]
+> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
+> ---
+> This patch is mostly to show how the upstream `UnsafePinned`
+> Rust type can be used once it is stable.
+> 
+> It is probalby not desired to use the unstable feature before
+> that time.
+> 
+> To test using the upsteam implementation a fairly new nightly
+> rust version is required.
+> 
+> Tested with rustc 1.88.0-nightly (78f2104e3 2025-04-16) and
+> rustc 1.78.0 (9b00956e5 2024-04-29).
+> ---
+>  init/Kconfig                       |  3 ++
+>  rust/kernel/lib.rs                 |  1 +
+>  rust/kernel/types.rs               | 34 ++++++++++++++
+>  rust/kernel/types/unsafe_pinned.rs | 90 ++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 128 insertions(+)
+> 
+> diff --git a/init/Kconfig b/init/Kconfig
+> index dd2ea3b9a799205daa4c1f0c694a9027e344c690..f34e96cd3fb8a058a83e38c2ea9cb17737f5e0b6 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -140,6 +140,9 @@ config LD_CAN_USE_KEEP_IN_OVERLAY
+>  config RUSTC_HAS_COERCE_POINTEE
+>  	def_bool RUSTC_VERSION >= 108400
+>  
+> +config RUSTC_HAS_UNSAFE_PINNED
+> +	def_bool RUSTC_VERSION >= 108800
+> +
+>  config PAHOLE_VERSION
+>  	int
+>  	default $(shell,$(srctree)/scripts/pahole-version.sh $(PAHOLE))
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index de07aadd1ff5fe46fd89517e234b97a6590c8e93..c08f0a50f1d8db95799478caa8e85558a1fcae8d 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -17,6 +17,7 @@
+>  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(coerce_unsized))]
+>  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(dispatch_from_dyn))]
+>  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(unsize))]
+> +#![cfg_attr(CONFIG_RUSTC_HAS_UNSAFE_PINNED, feature(unsafe_pinned))]
+>  #![feature(inline_const)]
+>  #![feature(lint_reasons)]
+>  // Stable in Rust 1.82
+> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+> index 9d0471afc9648f2973235488b441eb109069adb1..c4e234d5c07168295499c2a8fccc70e00e83e7ca 100644
+> --- a/rust/kernel/types.rs
+> +++ b/rust/kernel/types.rs
+> @@ -253,6 +253,9 @@ fn drop(&mut self) {
+>  ///
+>  /// [`Opaque<T>`] is meant to be used with FFI objects that are never interpreted by Rust code.
+>  ///
+> +/// In cases where the contained data is only used by Rust, is not allowed to be
+> +/// uninitialized and automatic [`Drop`] is desired [`UnsafePinned`] should be used instead.
+> +///
+>  /// It is used to wrap structs from the C side, like for example `Opaque<bindings::mutex>`.
+>  /// It gets rid of all the usual assumptions that Rust has for a value:
+>  ///
+> @@ -578,3 +581,34 @@ pub enum Either<L, R> {
+>  /// [`NotThreadSafe`]: type@NotThreadSafe
+>  #[allow(non_upper_case_globals)]
+>  pub const NotThreadSafe: NotThreadSafe = PhantomData;
+> +
+> +// When available use the upstream `UnsafePinned` type
+> +#[cfg(CONFIG_RUSTC_HAS_UNSAFE_PINNED)]
+> +pub use core::pin::UnsafePinned;
+> +
+> +// Otherwise us the kernel implementation of `UnsafePinned`
+> +#[cfg(not(CONFIG_RUSTC_HAS_UNSAFE_PINNED))]
+> +mod unsafe_pinned;
+> +#[cfg(not(CONFIG_RUSTC_HAS_UNSAFE_PINNED))]
+> +pub use unsafe_pinned::UnsafePinned;
+> +
+> +/// Trait for creating a [`PinInit`]ialized wrapper containing `T`.
+> +// Needs to be defined in kernel crate to get around the Orphan Rule when upstream `UnsafePinned`
+> +// is used.
+> +pub trait TryPinInitWrapper<T: ?Sized> {
+> +    /// Create an [`Self`] pin-initializer which contains `T`
+> +    fn try_pin_init<E>(value: impl PinInit<T, E>) -> impl PinInit<Self, E>;
+> +}
+> +impl<T: ?Sized> TryPinInitWrapper<T> for UnsafePinned<T> {
+> +    fn try_pin_init<E>(value: impl PinInit<T, E>) -> impl PinInit<Self, E> {
+> +        // SAFETY:
+> +        //   - In case of an error in `value` the error is returned, otherwise `slot` is fully
+> +        //     initialized, since `self.value` is initialized and `_pin` is a zero sized type.
+> +        //   - The `Pin` invariants of `self.value` are upheld, since no moving occurs.
+> +        unsafe {
+> +            pin_init::pin_init_from_closure(move |slot| {
+> +                value.__pinned_init(Self::raw_get_mut(slot))
+> +            })
+> +        }
+> +    }
+> +}
+> diff --git a/rust/kernel/types/unsafe_pinned.rs b/rust/kernel/types/unsafe_pinned.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..e4e8986a044e9fe9215712dc9837ecfdbd6d5176
+> --- /dev/null
+> +++ b/rust/kernel/types/unsafe_pinned.rs
+> @@ -0,0 +1,90 @@
+> +// SPDX-License-Identifier: GPL-2.0
+This probably needs to be Apache-2.0 OR MIT
 
-v2: Introduce a shared struct mfd_aux_device
-    Introduce MFD_AUX_TYPE flag for auxiliary device opt-in
-
-v3: Fix device_type ABI breakage (Andy)
-    Aesthetic adjustments (Andy)
-
-PS: I'm leaning towards leaving the ioremap or regmap complexity out of
-MFD core and think that we should enforce child devices to not overlap.
-
-If there's a need to handle common register access by parent device, then
-I think it warrants its own driver which adds auxiliary devices along with
-a custom interface to communicate with them without involving MFD core.
-
- drivers/mfd/Kconfig      |   1 +
- drivers/mfd/mfd-core.c   | 123 ++++++++++++++++++++++++++++++++++++---
- include/linux/mfd/aux.h  |  30 ++++++++++
- include/linux/mfd/core.h |   3 +
- 4 files changed, 149 insertions(+), 8 deletions(-)
- create mode 100644 include/linux/mfd/aux.h
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 93773201a517..8c8e6797307c 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -8,6 +8,7 @@ menu "Multifunction device drivers"
- 
- config MFD_CORE
- 	tristate
-+	select AUXILIARY_BUS
- 	select IRQ_DOMAIN
- 	default n
- 
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index 76bd316a50af..fc6a34a045be 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -10,8 +10,11 @@
- #include <linux/kernel.h>
- #include <linux/platform_device.h>
- #include <linux/acpi.h>
-+#include <linux/auxiliary_bus.h>
-+#include <linux/pci.h>
- #include <linux/list.h>
- #include <linux/property.h>
-+#include <linux/mfd/aux.h>
- #include <linux/mfd/core.h>
- #include <linux/pm_runtime.h>
- #include <linux/slab.h>
-@@ -136,10 +139,87 @@ static int mfd_match_of_node_to_dev(struct platform_device *pdev,
- 	return 0;
- }
- 
--static int mfd_add_device(struct device *parent, int id,
--			  const struct mfd_cell *cell,
--			  struct resource *mem_base,
--			  int irq_base, struct irq_domain *domain)
-+static void mfd_release_auxiliary_device(struct device *dev)
-+{
-+	struct auxiliary_device *auxdev = to_auxiliary_dev(dev);
-+	struct mfd_aux_device *mfd_aux = auxiliary_dev_to_mfd_aux_dev(auxdev);
-+
-+	kfree(mfd_aux);
-+}
-+
-+static int mfd_add_auxiliary_device(struct device *parent, int id, const struct mfd_cell *cell,
-+				    struct resource *mem_base, int irq_base,
-+				    struct irq_domain *domain)
-+{
-+	struct mfd_aux_device *mfd_aux;
-+	struct auxiliary_device *auxdev;
-+	int r, ret;
-+
-+	mfd_aux = kzalloc(sizeof(*mfd_aux), GFP_KERNEL);
-+	if (!mfd_aux)
-+		return -ENOMEM;
-+
-+	for (r = 0; r < cell->num_resources; r++) {
-+		/* Find out base to use */
-+		if ((cell->resources[r].flags & IORESOURCE_MEM) && mem_base) {
-+			mfd_aux->mem.name = cell->resources[r].name;
-+			mfd_aux->mem.flags = cell->resources[r].flags;
-+
-+			mfd_aux->mem.parent = mem_base;
-+			mfd_aux->mem.start = mem_base->start + cell->resources[r].start;
-+			mfd_aux->mem.end = mem_base->start + cell->resources[r].end;
-+		} else if (cell->resources[r].flags & IORESOURCE_IRQ) {
-+			mfd_aux->irq.name = cell->resources[r].name;
-+			mfd_aux->irq.flags = cell->resources[r].flags;
-+
-+			if (domain) {
-+				/* Unable to create mappings for IRQ ranges */
-+				WARN_ON(cell->resources[r].start != cell->resources[r].end);
-+				mfd_aux->irq.start = mfd_aux->irq.end = irq_create_mapping(
-+						domain, cell->resources[r].start);
-+			} else {
-+				mfd_aux->irq.start = irq_base + cell->resources[r].start;
-+				mfd_aux->irq.end = irq_base + cell->resources[r].end;
-+			}
-+		} else {
-+			mfd_aux->ext.name = cell->resources[r].name;
-+			mfd_aux->ext.flags = cell->resources[r].flags;
-+			mfd_aux->ext.parent = cell->resources[r].parent;
-+			mfd_aux->ext.start = cell->resources[r].start;
-+			mfd_aux->ext.end = cell->resources[r].end;
-+		}
-+	}
-+
-+	auxdev = &mfd_aux->auxdev;
-+	auxdev->name = cell->name;
-+	/* Use parent id for discoverable devices */
-+	auxdev->id = dev_is_pci(parent) ? pci_dev_id(to_pci_dev(parent)) : cell->id;
-+
-+	auxdev->dev.parent = parent;
-+	auxdev->dev.type = &mfd_dev_type;
-+	auxdev->dev.release = mfd_release_auxiliary_device;
-+
-+	ret = auxiliary_device_init(auxdev);
-+	if (ret)
-+		goto fail_aux_init;
-+
-+	ret = __auxiliary_device_add(auxdev, parent->driver->name);
-+	if (ret)
-+		goto fail_aux_add;
-+
-+	return 0;
-+
-+fail_aux_add:
-+	/* auxdev will be freed with the put_device() and .release sequence */
-+	auxiliary_device_uninit(auxdev);
-+fail_aux_init:
-+	kfree(mfd_aux);
-+	return ret;
-+}
-+
-+static int mfd_add_platform_device(struct device *parent, int id, const struct mfd_cell *cell,
-+				   struct resource *mem_base, int irq_base,
-+				   struct irq_domain *domain)
- {
- 	struct resource *res;
- 	struct platform_device *pdev;
-@@ -302,6 +382,16 @@ static int mfd_add_device(struct device *parent, int id,
- 	return ret;
- }
- 
-+static int mfd_add_device(struct device *parent, int id, const struct mfd_cell *cells,
-+			  struct resource *mem_base, int irq_base, struct irq_domain *domain)
-+{
-+	/* TODO: Convert the platform device abusers and remove this flag */
-+	if (dev_is_pci(parent) && id == MFD_AUX_TYPE)
-+		return mfd_add_auxiliary_device(parent, id, cells, mem_base, irq_base, domain);
-+
-+	return mfd_add_platform_device(parent, id, cells, mem_base, irq_base, domain);
-+}
-+
- /**
-  * mfd_add_devices - register child devices
-  *
-@@ -340,16 +430,22 @@ int mfd_add_devices(struct device *parent, int id,
- }
- EXPORT_SYMBOL(mfd_add_devices);
- 
--static int mfd_remove_devices_fn(struct device *dev, void *data)
-+static int mfd_remove_auxiliary_device(struct device *dev, void *data)
-+{
-+	struct auxiliary_device *auxdev = to_auxiliary_dev(dev);
-+
-+	auxiliary_device_delete(auxdev);
-+	auxiliary_device_uninit(auxdev);
-+	return 0;
-+}
-+
-+static int mfd_remove_platform_device(struct device *dev, void *data)
- {
- 	struct platform_device *pdev;
- 	const struct mfd_cell *cell;
- 	struct mfd_of_node_entry *of_entry, *tmp;
- 	int *level = data;
- 
--	if (dev->type != &mfd_dev_type)
--		return 0;
--
- 	pdev = to_platform_device(dev);
- 	cell = mfd_get_cell(pdev);
- 
-@@ -372,6 +468,17 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
- 	return 0;
- }
- 
-+static int mfd_remove_devices_fn(struct device *dev, void *data)
-+{
-+	if (dev->type != &mfd_dev_type)
-+		return 0;
-+
-+	if (dev->bus == &platform_bus_type)
-+		return mfd_remove_platform_device(dev, data);
-+
-+	return mfd_remove_auxiliary_device(dev, data);
-+}
-+
- void mfd_remove_devices_late(struct device *parent)
- {
- 	int level = MFD_DEP_LEVEL_HIGH;
-diff --git a/include/linux/mfd/aux.h b/include/linux/mfd/aux.h
-new file mode 100644
-index 000000000000..826a0a05e9e9
---- /dev/null
-+++ b/include/linux/mfd/aux.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * MFD auxiliary device
-+ *
-+ * Copyright (c) 2025 Raag Jadav <raag.jadav@intel.com>
-+ */
-+
-+#ifndef MFD_AUX_H
-+#define MFD_AUX_H
-+
-+#include <linux/auxiliary_bus.h>
-+#include <linux/container_of.h>
-+#include <linux/ioport.h>
-+
-+/*
-+ * Common structure between MFD parent and auxiliary child device.
-+ * To be used by leaf drivers to access child device resources.
-+ */
-+struct mfd_aux_device {
-+	struct auxiliary_device auxdev;
-+	struct resource	mem;
-+	struct resource	irq;
-+	/* Place holder for other types */
-+	struct resource	ext;
-+};
-+
-+#define auxiliary_dev_to_mfd_aux_dev(auxiliary_dev) \
-+	container_of(auxiliary_dev, struct mfd_aux_device, auxdev)
-+
-+#endif
-diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-index faeea7abd688..96f6ff98a111 100644
---- a/include/linux/mfd/core.h
-+++ b/include/linux/mfd/core.h
-@@ -12,6 +12,9 @@
- 
- #include <linux/platform_device.h>
- 
-+/* TODO: Convert the platform device abusers and remove this flag */
-+#define MFD_AUX_TYPE	BIT(31)
-+
- #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
- 
- #define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, _of_reg, _use_of_reg, _match) \
--- 
-2.34.1
+> +
+> +//! This file provides a implementation of a subset of the upstream rust `UnsafePinned` type
+> +//! for rust versions that don't include this type.
+> +
+> +use core::{cell::UnsafeCell, marker::PhantomPinned};
+> +
+> +/// This type provides a way to opt-out of typical aliasing rules;
+> +/// specifically, `&mut UnsafePinned<T>` is not guaranteed to be a unique pointer.
+> +///
+> +/// However, even if you define your type like `pub struct Wrapper(UnsafePinned<...>)`, it is still
+> +/// very risky to have an `&mut Wrapper` that aliases anything else. Many functions that work
+> +/// generically on `&mut T` assume that the memory that stores `T` is uniquely owned (such as
+> +/// `mem::swap`). In other words, while having aliasing with `&mut Wrapper` is not immediate
+> +/// Undefined Behavior, it is still unsound to expose such a mutable reference to code you do not
+> +/// control! Techniques such as pinning via [`Pin`](core::pin::Pin) are needed to ensure soundness.
+> +///
+> +/// Similar to [`UnsafeCell`], [`UnsafePinned`] will not usually show up in
+> +/// the public API of a library. It is an internal implementation detail of libraries that need to
+> +/// support aliasing mutable references.
+> +///
+> +/// Further note that this does *not* lift the requirement that shared references must be read-only!
+> +/// Use [`UnsafeCell`] for that.
+> +///
+> +/// This type blocks niches the same way [`UnsafeCell`] does.
+> +//
+> +// As opposed to the upstream Rust type this contains a `PhantomPinned`` and `UnsafeCell<T>`
+> +// - `PhantomPinned` to avoid needing a `impl<T> !Unpin for UnsafePinned<T>`
+> +// - `UnsafeCell<T>` instead of T to disallow niche optimizations,
+> +//     which is handled in the compiler in upstream Rust
+> +#[repr(transparent)]
+> +pub struct UnsafePinned<T: ?Sized> {
+> +    _ph: PhantomPinned,
+> +    value: UnsafeCell<T>,
+> +}
+> +
+> +impl<T> UnsafePinned<T> {
+> +    /// Constructs a new instance of [`UnsafePinned`] which will wrap the specified value.
+> +    ///
+> +    /// All access to the inner value through `&UnsafePinned<T>` or `&mut UnsafePinned<T>` or
+> +    /// `Pin<&mut UnsafePinned<T>>` requires `unsafe` code.
+> +    #[inline(always)]
+> +    #[must_use]
+> +    pub const fn new(value: T) -> Self {
+> +        UnsafePinned {
+> +            value: UnsafeCell::new(value),
+> +            _ph: PhantomPinned,
+> +        }
+> +    }
+> +}
+> +impl<T: ?Sized> UnsafePinned<T> {
+> +    /// Get read-only access to the contents of a shared `UnsafePinned`.
+> +    ///
+> +    /// Note that `&UnsafePinned<T>` is read-only if `&T` is read-only. This means that if there is
+> +    /// mutation of the `T`, future reads from the `*const T` returned here are UB! Use
+> +    /// [`UnsafeCell`] if you also need interior mutability.
+> +    ///
+> +    /// [`UnsafeCell`]: core::cell::UnsafeCell
+> +    ///
+> +    /// ```rust,no_build
+> +    /// use kernel::types::UnsafePinned;
+> +    ///
+> +    /// unsafe {
+> +    ///     let mut x = UnsafePinned::new(0);
+> +    ///     let ptr = x.get(); // read-only pointer, assumes immutability
+> +    ///     x.get_mut_unchecked().write(1);
+> +    ///     ptr.read(); // UB!
+> +    /// }
+> +    /// ```
+> +    ///
+> +    /// Note that the `get_mut_unchecked` function used by this example is
+> +    /// currently not implemented in the kernel implementation.
+> +    #[inline(always)]
+> +    #[must_use]
+> +    pub const fn get(&self) -> *const T {
+> +        self.value.get()
+> +    }
+> +
+> +    /// Gets a mutable pointer to the wrapped value.
+> +    ///
+> +    /// The difference from `get_mut_pinned` and `get_mut_unchecked` is that this function
+> +    /// accepts a raw pointer, which is useful to avoid the creation of temporary references.
+> +    ///
+> +    /// These functions mentioned here are currently not implemented in the kernel.
+> +    #[inline(always)]
+> +    #[must_use]
+> +    pub const fn raw_get_mut(this: *mut Self) -> *mut T {
+> +        this as *mut T
+> +    }
+> +}
+> 
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20250418-rust_unsafe_pinned-891dce27418d
+> 
+> Best regards,
 
