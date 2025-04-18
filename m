@@ -1,154 +1,83 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A59218821
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 11:40:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27501885A5;
+	Fri, 18 Apr 2025 11:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744976445; cv=none; b=RNpYhooNnUu6Ngt4uN/5a0vkY4WdNw754JnykjWMpzos3eHTK5Gl2ge8dbMDxg51AZw3GFrIkGFv20IrD/anFbeB1D9DKj8cZCRpIU2JHTCo/H+tznLxHYWHb0diFspLg4WtnwyCrCNSALKy5Wy9iDUMQ43VHvUcsZ4VapcfOBw=
+	t=1744976574; cv=none; b=TgmihCzYgE4f20Ocl715LIVqhc1vePASwm+pjArMWRAgl2GlI1OWVrgskFLPkjNw+IXGJOUSolVslAe4FdZFxr8zBgg7gzrmo7q5uvIu4/WZbt5MWUgEBLf1bNeYgw5StbrtaCMudEPBxfdy1cQ85Uf2eVjC1KzHvp1qMzpy3Gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744976445; c=relaxed/simple;
-	bh=RDOxvXWOIOMrMMQccTTYmfg+gZYjfAFf54l6G++Kqg4=;
+	s=arc-20240116; t=1744976574; c=relaxed/simple;
+	bh=q2HwWwZUlFfb/pfzF1pzLy9h1Mk1BDE2hl7vTSgPZYI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KrigsJcj9FZmdXiF3S/CoJx5JPN4fD82qP1KCxy8zc1novQh4PCWj4mxxuIzWFH8QqOwXrjYHnkwIOF9XzHxpALzqwXmorKejEOyvVCyApstbSVkT+/aqix2BOxhgU+dYWmGaYZeCejB2NEsWX0tu0NwgkJMN7I3VAFoFJ+54ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EtOM8Nb9; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=ie/q1tFbI2ydzwd+T/tbtzqCTgY+CCU61UpcBNh5O9isx9XoShHAm6A6UWzU7T/TG9x1H/cIujmd9W9a/fri95+Rkp/ZmcYLBXpXdbqMUQMtOQGhuyDl1Jml6Al1P2XUSPGWaFsE5Stc1LMxVU+FS5SYCIU6kyl2mFLm9QkW5Vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N/Ig4BN0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EtOM8Nb9"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac2c663a3daso327725566b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 04:40:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744976442; x=1745581242; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vkRjZE5uaIJfPFmn5rKYrxKOhaaT1kGuIn7UK1e/USo=;
-        b=EtOM8Nb9TfalqmmNB88dsxKSLJEYeYVXkwK1JI+Sio5SsyUnKTKPH9Ykwo7ZiKs7UW
-         WTcy739Oh+E4jn742RzfhifGdql11VoGK40W2YDrkIYvI4D3++527/8o+zr4Sx7FCERB
-         hIhs9r4AzxqO+nEdx5UtkN7eqORhgCQmGz6UcRjToUOCfzPeM3b062DSDJMS4kGdkA5/
-         IYArZygujey3boYNF21/hlhXqoFLTcMX1rSmYTUINXVdphhdGSkBwTtKm24CSnM7NOKf
-         IifRslxKAZwzp5vtSiqI7h1rzgws6803JQFRtU3hl2+eunydhSJfK6DJVZRgN3qsAsSn
-         tkyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744976442; x=1745581242;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vkRjZE5uaIJfPFmn5rKYrxKOhaaT1kGuIn7UK1e/USo=;
-        b=NLpSIelrwyOXOjk6g7nzhuZhrYzC3PvFqPTozNcOdH0Lw46OOeZWIeHxKQmDl4y+tc
-         xhUmJg2swxju0wodlKymj8THEfNhDf7g+avC1jpZnQ1eYwbii2+iBq7IDFSX+McgBlBS
-         xe/z2ZU6HXDO6qAVClfLVrFTKDey0vMMeT0Vu4rDe3nEUTcWbVd+OthyTO3BgsySXA2z
-         Qf+FbjOhqH1cPrjzaZG4/lAsSD/0F5z19RBwqG4uQEK1xtxdslG/0NVyeQhSUiFffCzz
-         bAu7hR6GZquelRpMftCrpdOQ0HKMhfRPRI3jZ/wRbCJAyr+Bxlqn5bslRDZIrE4msOML
-         /VYg==
-X-Forwarded-Encrypted: i=1; AJvYcCXjmf0G8m0D7MWb+VOVfW7uo2r8T24dBeFxE34d8kIYNq2DyL5bbZPeCH1ii55MEXih2kTbi+jos3XzvEI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpH1UWVjOjhD42tQ/4v6dFYxNUnAKAsmBomygtZjPKcbDSB2Se
-	Wd5SCNJmkMKHYJhoqzlvjQ9Ugjt6SA4uMyJSIcCsrrOlf1bxfdRayfx19VaLphH+qVkD0nudyWK
-	HkndE69Zy9CzNT67AzuX+SK0guOY5kgG5mGPupw==
-X-Gm-Gg: ASbGncvFOqKye8eW9oJESDDe/m/uZOJCnSYu+rK+hXCP5p9EyB4d8nFGgN25mSqmtcx
-	PDycIrnacb0V8KU6TOXUKmDL5vFr4Z23IU9Xf5ZkWqoXfaTGOCsFbSvaT+IzPH3Uob66rn93Fx2
-	kHJzCQPpy9Vr9vperEkLggoTX4PWnNjZBZ
-X-Google-Smtp-Source: AGHT+IF+QKKkOc6nEoaAOnVO7evTJZw2eZgtbS2yCrRNa1lPqT61GmJ+upDhqIbpwgEmMNJBuyIKgJXC+P6xJHhCw78=
-X-Received: by 2002:a17:906:c154:b0:aca:a162:8707 with SMTP id
- a640c23a62f3a-acb74ad9629mr203403666b.7.1744976441838; Fri, 18 Apr 2025
- 04:40:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N/Ig4BN0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3745DC4CEED;
+	Fri, 18 Apr 2025 11:42:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744976574;
+	bh=q2HwWwZUlFfb/pfzF1pzLy9h1Mk1BDE2hl7vTSgPZYI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=N/Ig4BN0ePJZGay4MCDCzIGzUWxzGIOmsjAnpZL4UnUae9T5QyEhOg8SSVhpURbtc
+	 osA0xn5QsK+0czE8CxpzgayzkUqlBvxdbPAmOCuS3TkB1BNsRcyN86FfXTDGo5senV
+	 pCANRi9nBb2Sidtz406nM3KH//cCeOsBZYwCqI0D6n3CkUFRGwrK6CIB7gTjmagd3J
+	 v9Uqd8TFnxpddqhOpsspzkNb/V2il+AvGFTBT2X/ZM6rktr1+FyJ8NYKEjcPcrhWbD
+	 ChIbsFj5dqZYHXw8sh8Mjb7MVkUYC4u6kE1WKdHZIpHKj7eaZuERF6E/OTVFvMHUav
+	 4oucsFIs9Bn9A==
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54c0fa6d455so2064699e87.1;
+        Fri, 18 Apr 2025 04:42:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV3p/QjhgOZ5T6+1QHcdmkfQoJroqSC15dgUv44RnOfHBxypWkzPzjggxkOix5PQo6Mca17ZLW4NPw=@vger.kernel.org, AJvYcCXflWUMdZnl9On5EWVSr7Eafj5s6xYv2NER9/jbxyVBtFKVP0f5tufrAdbfuclrchB/5zL/uAJ8D9s0wBlrRxDuFJs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKnm1eWLZEXszC0pMOW9Jx8wVdKN+NbTogyWuwzQ4N/gOwnOF/
+	BTe630GKcFfhr6lAy/1QndIEHxepptWWZLXLAFrjWpbh2HEKBZQKEQo1u15SjJLdkO80Or1Jymq
+	jLKKojqgS31/nQgMzrmzB3q7NvtU=
+X-Google-Smtp-Source: AGHT+IHWed/m9sFUEDIG4jqc/aGHnXjfUnlGxJYhffAfE7eyP3d9i6romOJeGyyHRnuWJaLKpeOkFxkUB9k3zyV5AOM=
+X-Received: by 2002:a05:6512:114f:b0:545:8f0:e1a4 with SMTP id
+ 2adb3069b0e04-54d6e662ccdmr678965e87.45.1744976572543; Fri, 18 Apr 2025
+ 04:42:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417124908.58543-1-ioworker0@gmail.com> <20250417150237.ba3bbb3f55f992c692932841@linux-foundation.org>
- <CAK1f24nCWXgOonOpiJ0mEk+-rvGt4WN20yri+wi6-eMf3rf=4w@mail.gmail.com> <413657ae-8271-4a5a-9507-e9161d1f08c2@redhat.com>
-In-Reply-To: <413657ae-8271-4a5a-9507-e9161d1f08c2@redhat.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Fri, 18 Apr 2025 19:40:05 +0800
-X-Gm-Features: ATxdqUEKPGWluWfGztcJ-llCSTg63sxpZ8Hw9sQZZhSMXFi2W3YycPKsD6a7JIw
-Message-ID: <CAK1f24kchcoN4ToW5aPbSA7KDB6ZPtQin2s6wOPQZLTkNzjNow@mail.gmail.com>
-Subject: Re: [PATCH 1/1] mm/rmap: add CONFIG_MM_ID guard for folio_test_large_maybe_mapped_shared()
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Mingzhe Yang <mingzhe.yang@ly.com>
+References: <20250410132850.3708703-2-ardb+git@google.com> <174448976513.31282.4012948519562214371.tip-bot2@tip-bot2>
+ <CAMj1kXFEXZ8cGMwz6N_ToYp0Wf5Vr9UBFRueWx_MtrwbDLq+LQ@mail.gmail.com>
+ <Z_rQ4eu4LYh6jGzY@gmail.com> <CAMj1kXGTP31w7vM+jWqpbJPmoyPU9vqOrmvXsueoPnBin0y_hQ@mail.gmail.com>
+ <aAICRcfkBV3tHP-G@gmail.com> <aAIJ8C5Ho97geYMj@gmail.com>
+In-Reply-To: <aAIJ8C5Ho97geYMj@gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 18 Apr 2025 13:42:41 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGEmyCho_aUsTqZF+Q-CQBFmM50pd=KgVVQhJX78hNCPg@mail.gmail.com>
+X-Gm-Features: ATxdqUGbVHq5MnqFFIMI4W4YfIn5qEv6b1_3THSVq7biSKYvJlYx311RB8xxH8M
+Message-ID: <CAMj1kXGEmyCho_aUsTqZF+Q-CQBFmM50pd=KgVVQhJX78hNCPg@mail.gmail.com>
+Subject: Re: [tip: x86/boot] x86/boot/sev: Avoid shared GHCB page for early
+ memory acceptance
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Dionna Amalie Glaze <dionnaglaze@google.com>, 
+	Kevin Loughlin <kevinloughlin@google.com>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, linux-efi@vger.kernel.org, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 18, 2025 at 6:38=E2=80=AFPM David Hildenbrand <david@redhat.com=
-> wrote:
+On Fri, 18 Apr 2025 at 10:14, Ingo Molnar <mingo@kernel.org> wrote:
 >
-> On 18.04.25 09:26, Lance Yang wrote:
-> > Hi Andrew,
-> >
-> > Thanks for taking the time to review!
-> >
-> > On Fri, Apr 18, 2025 at 6:02=E2=80=AFAM Andrew Morton <akpm@linux-found=
-ation.org> wrote:
-> >>
-> >> On Thu, 17 Apr 2025 20:49:08 +0800 Lance Yang <ioworker0@gmail.com> wr=
-ote:
-> >>
-> >>> Add a compile-time check to make sure folio_test_large_maybe_mapped_s=
-hared()
-> >>> is only used with CONFIG_MM_ID enabled, as it directly accesses the _=
-mm_ids
-> >>> field that only works under CONFIG_MM_ID.
-> >>>
-> >>> ...
-> >>>
-> >>> --- a/include/linux/page-flags.h
-> >>> +++ b/include/linux/page-flags.h
-> >>> @@ -1232,6 +1232,8 @@ static inline int folio_has_private(const struc=
-t folio *folio)
-> >>>
-> >>>   static inline bool folio_test_large_maybe_mapped_shared(const struc=
-t folio *folio)
-> >>>   {
-> >>> +     /* This function should never be called without CONFIG_MM_ID en=
-abled. */
-> >>> +     BUILD_BUG_ON(!IS_ENABLED(CONFIG_MM_ID));
-> >>>        return test_bit(FOLIO_MM_IDS_SHARED_BITNUM, &folio->_mm_ids);
-> >>>   }
-> >>>   #undef PF_ANY
-> >>
-> >> I don't get it.  Sounds like we're adding a compile-time check to chec=
-k
-> >> for a compilation error which would have happened anyway.
-> >>
-> >> If folio_test_large_maybe_mapped_shared() is only used with
-> >> CONFIG_MM_ID enabled, then do
-> >>
-> >> #ifdef CONFIG_MM_ID
-> >> static inline bool folio_test_large_maybe_mapped_shared(...)
-> >> {
-> >> }
-> >> #endif
-> >>
-> >> ?
-> >
-> > Hmm... we considered using '#ifdef CONFIG_MM_ID' for
-> > folio_test_large_maybe_mapped_shared(),
-> > but since this function should never be called without CONFIG_MM_ID
-> > enabled, compile-time errors might be the way to go -- and a compile-ti=
-me
-> > check here does the trick ;)
 >
-> Yeah, I deliberately used plenty of IS_ENABLED to avoid a #ifdef mess
-> all over the place.
+> * Ingo Molnar <mingo@kernel.org> wrote:
 >
-> Maybe clarify in the patch description that we want to prevent the
-> function from getting used without CONFIG_MM_ID, and we don't want to
-> use #ifdef because then we'd have to add even more #ifdef in callers
-> that use IS_ENABLED(CONFIG_MM_ID).
+...
+>
+> So there's this new merge commit in tip:x86/boot:
+>
+>    54f71aa90c84 Merge branch 'x86/urgent' into x86/boot, to merge dependent commit and fixes
+>
+> which brings this fix into x86/boot:
+>
+>    a718833cb456 ("x86/boot/sev: Avoid shared GHCB page for early memory acceptance")
+>
+> thus 54f71aa90c84 should be a proper base the rest of the startup/
+> series, right?
+>
 
-Agreed, the patch description could be clearer. I'll update it to better
-explain what it does and why we are avoiding #ifdef ;)
-
-Thanks for your suggestion,
-Lance
-
->
-> --
-> Cheers,
->
-> David / dhildenb
->
+Yes, perfect. Thanks.
