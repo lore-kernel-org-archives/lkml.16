@@ -1,101 +1,76 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.7])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A7E6261362;
-	Fri, 18 Apr 2025 02:22:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.7
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94BDD770E2;
+	Fri, 18 Apr 2025 02:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744942961; cv=none; b=C7yB0eFUxepbYoA0A3s0XWH1efh0Ee0ae4L0sjZsPN+WNI0TgZJoZ8GbC4hOGfeWyueZAhJzIqIcx6VAmz9o4d2CgWKHd3lQ1Q1cQ5eAZ6AVUzP3QZzHBzFk3ubmgb0KPB3qkXS1KmUAjwIz/kf5FDiAVD01+GDq+LdnvGlc1t8=
+	t=1744943149; cv=none; b=cVXjyaEaRBovJQ8cMaojnnjJrlWQNMX8RuPJa5ote3IXMl6yeMKMYBFWlgVYm/FEctuJtI875hNwHJHK2h3prK28UaLdAwr6LbU27/c5C/kJOtP0UVeUdJ7eUKth3/oT07XfKvsVmhJttnBaTsgJ5pSGZ1rrD+zNH6Cqqris7vM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744942961; c=relaxed/simple;
-	bh=JCzfdM5PNe2ZJFrq9lg1dO7fGrTlR36T84drGygkf/8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l0OjuLiUNB0zx35LeBSzCJrks1wxi3KysTSQur+FAeKdjB73C77a5Jvg73H3VIqqtc7L6bfajv28+9uAmINz/D9bDbF4k9ebuLljxIdAZEnRuZ5lVX+Id0bRpSaUyOGt14oom9Bg8GBcpb6UjvaGxl3HMR+B87HMHjAJjp+jCKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=YQEbBVeH; arc=none smtp.client-ip=220.197.31.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1744943149; c=relaxed/simple;
+	bh=1mXDAI/S5vr5p1X81NHt2LdADcBB2pqbWg9JJmWE/es=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EuOjUIfMTQ218oAJJG6PBCyeapO8xlEGXMBk4uBJme3mWiXR6Kj6cAmlbiJ+AbHCDj2hbsjBHoSftJniautttTWvgcZBcOctFljOwxDCnx+bQpk/v7Gdia+bj9qgLzPSQgeHFTZMRu+lMHj2yVVyujSzP8lZQT5kYxC6EYtDbsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pp3ts+0Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="YQEbBVeH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=xwhX0vOBkVUpBae2W/i8kIt8mM6leS7GZ7Ncbac7mTk=;
-	b=YQEbBVeHOSOosjFKl4Hy6C7rrj/v2lSprceKcqSCY1oAuex7Sor1Rmbx1nSi2g
-	yPa9Mtn4hFC5nKiZeGk7nBlR7vq6zy42+MnA2BTZ4mlSD1MGvBGZDQ/NT9Enu4Cd
-	lel0I8F0q2a5EcGWiB+dwMWd257wE2nWHuvpjUZRuk7nc=
-Received: from [172.24.148.178] (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wD3Xw9VswFoXkCCBA--.42431S2;
-	Fri, 18 Apr 2025 10:05:10 +0800 (CST)
-Message-ID: <a247e016-494d-42a6-8f6a-2ff08366404b@126.com>
-Date: Fri, 18 Apr 2025 10:05:08 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pp3ts+0Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CB72C4CEE4;
+	Fri, 18 Apr 2025 02:25:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744943149;
+	bh=1mXDAI/S5vr5p1X81NHt2LdADcBB2pqbWg9JJmWE/es=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Pp3ts+0YHwbbyHdi6Ek0l9DSU7OyxOaHH2/b8ft6hMtPXeJZRn2yKt7h+gIr4OjpX
+	 Gq21S61jaWKTCEtGnBm+ZiQz1iCq31EQtFYDhrZb2FbtUtnNCbUCUmJvbWkhF4jx4r
+	 nARVCbnAuiWia6OZ/29fF4O1V1eXekXnHn/5b0GX1XVQYBulQMinDYg1GCiQk8+dIw
+	 gMvKdYTsgBOOnrrBEg7lcUkUPaYdRKnjkIZsmXlBgmpf0etlfqQ5LGv9o24PY7ZxsC
+	 fh3UtElZkrsesWYI2o25TbsqIDCGevkzA2bF5eeOpcZ2bSwwiBJEXpIrVzqqfOjVBq
+	 i2axsLj+k9QWA==
+Date: Thu, 17 Apr 2025 19:25:47 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jacob Keller <jacob.e.keller@intel.com>
+Cc: Sathesh B Edara <sedara@marvell.com>, <netdev@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <hgani@marvell.com>,
+ <vimleshk@marvell.com>, Veerasenareddy Burru <vburru@marvell.com>, Shinas
+ Rasheed <srasheed@marvell.com>, Satananda Burla <sburla@marvell.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>
+Subject: Re: [PATCH net v3] octeon_ep_vf: Resolve netdevice usage count
+ issue
+Message-ID: <20250417192547.36a7503e@kernel.org>
+In-Reply-To: <07549649-3712-47b9-917b-c5001f9761cb@intel.com>
+References: <20250416102533.9959-1-sedara@marvell.com>
+	<07549649-3712-47b9-917b-c5001f9761cb@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] sched_ext: change the variable name for slice refill
- event
-To: Andrea Righi <arighi@nvidia.com>
-Cc: tj@kernel.org, void@manifault.com, changwoo@igalia.com, mingo@redhat.com,
- peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com, joshdon@google.com, brho@google.com,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20250417080708.1333-1-jameshongleiwang@126.com>
- <20250417080708.1333-2-jameshongleiwang@126.com> <aAFIvndKUQXm_ix5@gpd3>
-Content-Language: en-US
-From: Honglei Wang <jameshongleiwang@126.com>
-In-Reply-To: <aAFIvndKUQXm_ix5@gpd3>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wD3Xw9VswFoXkCCBA--.42431S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7tw1rXF1DuF1xKFWkCw17Jrb_yoW8Gr1xpr
-	Z3AF1Skan2yayxArWfZr1kXr1Yqa1fGw42gr1rtrs7tw1jkF1Fgr15tr4SgFW5X39akF18
-	t3Wj93ZxGrsFv3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j39N3UUUUU=
-X-CM-SenderInfo: 5mdpv2pkrqwzphlzt0bj6rjloofrz/1tbirxwzrWgBrEGwZwAAs+
 
-Hi Andrea,
+On Wed, 16 Apr 2025 13:26:43 -0700 Jacob Keller wrote:
+> > @@ -834,7 +833,6 @@ static void octep_vf_tx_timeout(struct net_device *netdev, unsigned int txqueue)
+> >  {
+> >  	struct octep_vf_device *oct = netdev_priv(netdev);
+> >  
+> > -	netdev_hold(netdev, NULL, GFP_ATOMIC);
+> >  	schedule_work(&oct->tx_timeout_task);
+> >  }  
+> I guess the thought was that we need to hold because we scheduled a work
+> item?
 
-On 2025/4/18 02:30, Andrea Righi wrote:
-> Hi Honglei,
-> 
-> On Thu, Apr 17, 2025 at 04:07:07PM +0800, Honglei Wang wrote:
->> SCX_EV_ENQ_SLICE_DFL gives the impression that the event only occurs
->> when the tasks were enqueued, which seems not accurate. What it actually
->> means is the refilling with defalt slice, and this can occur either when
->> enqueue or pick_task. Let's change the variable to
->> SCX_EV_REFILL_SLICE_DFL.
->>
->> Signed-off-by: Honglei Wang <jameshongleiwang@126.com>
->> ---
->>  kernel/sched/ext.c             | 22 +++++++++++-----------
->>  tools/sched_ext/scx_qmap.bpf.c |  4 ++--
->>  2 files changed, 13 insertions(+), 13 deletions(-)
->>
->> diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
->> index 66bcd40a28ca..594087ac4c9e 100644
->> --- a/kernel/sched/ext.c
->> +++ b/kernel/sched/ext.c
->> @@ -1517,10 +1517,10 @@ struct scx_event_stats {
->>  	s64		SCX_EV_ENQ_SKIP_MIGRATION_DISABLED;
->>  
->>  	/*
->> -	 * The total number of tasks enqueued (or pick_task-ed) with a
->> -	 * default time slice (SCX_SLICE_DFL).
->> +	 * The total number of tasks slice refill with default time slice
->> +	 * (SCX_SLICE_DFL).
-> 
-> Nit, how about:
-> 
-> Total number of times a task's time slice was refilled with the default
-> value (SCX_SLICE_DFL).
-> 
+Looks like something I would have asked them to do :)
+But it was probably merged before I could review next version ?
 
-OK, will send a update later.
+I mean, passing NULL for the tracker is... quite something.
 
-Thanks,
-Honglei
+> Presumably the driver would simply cancel_work_sync() on this timeout
+> task before it attempts to release its own reference on the netdev, so
+> this really doesn't protect anything.
 
-> Thanks,
-> -Andrea
+It does, but before unregistering :/
 
+Sathesh, schedule_work() returns a value. You should use it.
