@@ -1,38 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5126C226CF9
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 18:33:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 512C8226CFC;
+	Fri, 18 Apr 2025 18:33:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745001227; cv=none; b=TpPugmnte3y6oCIENMgdP5T0iGF2QuqdmrIUp9RkAc98o/QEDkszpyTKRJ3azBwQjCxvybQYP/RqbStiwDr2XQGBGSsXiDS8Js+2ArQEg28e412z7nnrmOgoc2523xB7zv/slC3DiyXZtn1lfw56S34wO24umQ/a33fAGUtxsaA=
+	t=1745001227; cv=none; b=QwR5KN/abgqQpnxdFjEhAVuUgWPk8lTJWiK5LlC7Nxy/ZF2pLTrH6h2I475VNQUUd9Vlth1r8X8+S3DmBEg77kGBxc4blvm5tTfnDy7O9HTEZnueWr9m/zzZdzpXZdjaRVNH8u9h7VRrWAvb/DwO7+sDhMfeajzd2J6CU1spiQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745001227; c=relaxed/simple;
-	bh=kc4nvELlaIu42Fc/h5Y58hmSnnLBUd+sg2L+gOeJlXc=;
+	bh=mAHbmri/ydJCCCNyZ8TtbhRs/REQDtNLw4Sz7n+2K7k=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=qkEu87a4foo9x1Zwg/6bXnBJIYolncGa5YyQGB2Qbi97CxPRtZ4MOBHgjn7nyAOyskzjgGJ9f5LyuAWJ7ouICsV9H4mRzSpokMOnbFTtdWQjc4KSsXkCRKC+4htRPqaw5Dfysw7iHrgj1003en6ZhALmqAy0/bIag+1Np4yxO18=
+	 Content-Type; b=Ju3kEU0UkIHv9mcx3leeUdcltyiceYPdPkjrRQW1rIBSWS0F4D/zGSRjiG55Ga55ob2FypQBPu5wqleJXnY9xilfXixAYpzYI3L08WXoWv7/m4hnrc9IOV+NBV4jwL5Yray0TKyJTGarpNTAFpKxzWKmKEoyEzOKQps/GvLQKmI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0031BC4CEEA;
-	Fri, 18 Apr 2025 18:33:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11BFCC4CEEF;
+	Fri, 18 Apr 2025 18:33:47 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u5qYi-0000000Db9A-43qB;
-	Fri, 18 Apr 2025 14:35:28 -0400
-Message-ID: <20250418183528.814181179@goodmis.org>
+	id 1u5qYj-0000000Db9e-0agq;
+	Fri, 18 Apr 2025 14:35:29 -0400
+Message-ID: <20250418183528.990167813@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 18 Apr 2025 14:34:51 -0400
+Date: Fri, 18 Apr 2025 14:34:52 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Sven Schnelle <svens@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [for-linus][PATCH 5/7] ftrace: Fix type of ftrace_graph_ent_entry.depth
+ stable@vger.kernel.org,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+ Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>
+Subject: [for-linus][PATCH 6/7] tracing: Fix filter string testing
 References: <20250418183446.383784216@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -42,45 +40,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: Steven Rostedt <rostedt@goodmis.org>
 
-ftrace_graph_ent.depth is int, but ftrace_graph_ent_entry.depth is
-unsigned long. This confuses trace-cmd on 64-bit big-endian systems and
-makes it print a huge amount of spaces. Fix this by using unsigned int,
-which has a matching size, instead.
+The filter string testing uses strncpy_from_kernel/user_nofault() to
+retrieve the string to test the filter against. The if() statement was
+incorrect as it considered 0 as a fault, when it is only negative that it
+faulted.
 
+Running the following commands:
+
+  # cd /sys/kernel/tracing
+  # echo "filename.ustring ~ \"/proc*\"" > events/syscalls/sys_enter_openat/filter
+  # echo 1 > events/syscalls/sys_enter_openat/enable
+  # ls /proc/$$/maps
+  # cat trace
+
+Would produce nothing, but with the fix it will produce something like:
+
+      ls-1192    [007] .....  8169.828333: sys_openat(dfd: ffffffffffffff9c, filename: 7efc18359904, flags: 80000, mode: 0)
+
+Link: https://lore.kernel.org/all/CAEf4BzbVPQ=BjWztmEwBPRKHUwNfKBkS3kce-Rzka6zvbQeVpg@mail.gmail.com/
+
+Cc: stable@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Sven Schnelle <svens@linux.ibm.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-Link: https://lore.kernel.org/20250412221847.17310-2-iii@linux.ibm.com
-Fixes: ff5c9c576e75 ("ftrace: Add support for function argument to graph tracer")
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Link: https://lore.kernel.org/20250417183003.505835fb@gandalf.local.home
+Fixes: 77360f9bbc7e5 ("tracing: Add test for user space strings when filtering on string pointers")
+Reported-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Reported-by: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_entries.h | 4 ++--
+ kernel/trace/trace_events_filter.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
-index ee40d4e6ad1c..4ef4df6623a8 100644
---- a/kernel/trace/trace_entries.h
-+++ b/kernel/trace/trace_entries.h
-@@ -80,11 +80,11 @@ FTRACE_ENTRY(funcgraph_entry, ftrace_graph_ent_entry,
- 	F_STRUCT(
- 		__field_struct(	struct ftrace_graph_ent,	graph_ent	)
- 		__field_packed(	unsigned long,	graph_ent,	func		)
--		__field_packed(	unsigned long,	graph_ent,	depth		)
-+		__field_packed(	unsigned int,	graph_ent,	depth		)
- 		__dynamic_array(unsigned long,	args				)
- 	),
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 0993dfc1c5c1..2048560264bb 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -808,7 +808,7 @@ static __always_inline char *test_string(char *str)
+ 	kstr = ubuf->buffer;
  
--	F_printk("--> %ps (%lu)", (void *)__entry->func, __entry->depth)
-+	F_printk("--> %ps (%u)", (void *)__entry->func, __entry->depth)
- );
+ 	/* For safety, do not trust the string pointer */
+-	if (!strncpy_from_kernel_nofault(kstr, str, USTRING_BUF_SIZE))
++	if (strncpy_from_kernel_nofault(kstr, str, USTRING_BUF_SIZE) < 0)
+ 		return NULL;
+ 	return kstr;
+ }
+@@ -827,7 +827,7 @@ static __always_inline char *test_ustring(char *str)
  
- #ifdef CONFIG_FUNCTION_GRAPH_RETADDR
+ 	/* user space address? */
+ 	ustr = (char __user *)str;
+-	if (!strncpy_from_user_nofault(kstr, ustr, USTRING_BUF_SIZE))
++	if (strncpy_from_user_nofault(kstr, ustr, USTRING_BUF_SIZE) < 0)
+ 		return NULL;
+ 
+ 	return kstr;
 -- 
 2.47.2
 
