@@ -1,247 +1,170 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2061.outbound.protection.outlook.com [40.107.22.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA532750F3;
-	Fri, 18 Apr 2025 12:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744979927; cv=none; b=eFEMCJF2z4u4AQqWRgPeM3mtaCcGnwqAlYpKyGPlTLcXqlrovsH1t1g6iKqvSoceW0f0PXFWSmW8EwnKbWHerfYcm092Hd3hvS6TLG2Fl5JLttrweYSznghYU8W/g1ElZY8SKoscZlXFb1QySb09ibHZTVYWXLrBD0HZCBMcbzI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744979927; c=relaxed/simple;
-	bh=Sz2OvhT1YtRxCswr5Ix9aIntavDUyOJ8JgBM2MSHo+Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DT0aIjFftkumctMky2Iv3lNhuGEFwXq1rpgZPWuEMnProgzG2m2gMHmMqJzwnr0cM1GAeTMY2sQH1mx/r9az+fAYKflcntnYnzVK3v+YFbMkkKgflmBAVEqtzY7SKcyTe0eccyAAAklaluPNijuQ+BzH2UnQgkXTDeyKUwyh1a0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SSgW0ree; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63E8D27510B;
+	Fri, 18 Apr 2025 12:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744979929; cv=fail; b=PkrCu+VviVH219QgIgUa+s5YJ4mQGQthC6IdXQQh41Zs6pNC9C4wXJewY3YEmxxZnQWEldu8Bv2X855IkVrfEwpvwoiBXIsh00P2Ono5BmhysZVgL+Vkyei5t2NW5/N9PcGb02ZmXO2ZoP+OL2ApBIfj6d2j9s/4mJQvUYpT1K4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744979929; c=relaxed/simple;
+	bh=haTTeE0Nhos0Dg8RPD1CHVoVMSkFD0lSdoZz9ftvIXY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=giH50LOjoODsGd95UYjxhe5mCZv/neMYrtcEIYnao62aRy4pZDQj+5QihDMAMs43hAG15tgk2OBKCUI6BeCirkxgwxSDxUuiUNmcVj1U+nyg0lsSrtASwxhxZl226qUnsvW6tVLAyyXCvIQbUK3Q7BAhSnFMy/pculIQiGr8xeg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=pM2voUJq; arc=fail smtp.client-ip=40.107.22.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SSgW0ree"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4769bbc21b0so17288491cf.2;
-        Fri, 18 Apr 2025 05:38:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744979924; x=1745584724; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ex4CZQWgxkClQmKHcyHVLX17Io0C6G4ejKLtSY01Ru4=;
-        b=SSgW0reeY78B1eoSwWx+CkIligLnZ2pFiR1IscalmP2AUFDIpNAgtXrOL9sxzIlV/g
-         K7ld9Sn02yEJ17DEC3wx0w8wFZSlOxgVSOz90fQUNe7Sq/ZmsjaNZUvRee4pRJghlr0a
-         CX2sn4HCQ1i2BmuaJKaKMhehTQgKQxNms7j5ALHgpYE8hlrMKnIyPBYtltEe5SirfWWt
-         F8aIeIl+BzI9UcBgxMmturYw0IaTtvdFhS4hsylyh2iTxxCGFVizQwBlYdEHywd+W5+r
-         kO4DZPPcCUiZgJuvc9vN7xUTCnjZJlkIKKz4OJXIFfmt2op+UPi+ConJNe6GU4OebZ8F
-         AXiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744979924; x=1745584724;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ex4CZQWgxkClQmKHcyHVLX17Io0C6G4ejKLtSY01Ru4=;
-        b=U40Dik3n8ZLesvDT3Hbmxe6TicqFA2Bd+PTpkrdruX0W7cI9EqeIQUuhfL25Iqnuce
-         wntF/wArkD1ocWbE7rbkP2F3qlF/4FzBADShpWk1UQWRbAYbSKrXMN5+bKHRP+1Ml8lQ
-         orCo7QyYixtr0pAh/b6MhC/Ihukzj7qjkpBE7ZHBkQgCvaOqYdPE2FU21te2u2P0HS0Z
-         SNzaZ/XMtOziuqN40dTu9jsbXJlHiFoT+5r8IOg3mD6OxVp3OAFJL+unSeP5nqP+jFGS
-         IIRO5FvlQN2mhEA/OrC/aJsqobEMJZGjCShvXDzQ8vuRU9YeD8PCqsNEBO7a+SOMNsm0
-         NQbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUAgmzvyuuPg+WsCzFfQZYNJWKcEbQmU8y5zVADdbhvtweYw7xdAhY85ZvMFotx0qLjgTHuo7xNc3nw@vger.kernel.org, AJvYcCUDU6faJciWOAcPzgIxWnUSPlYoRD7iCuwHLLBV2l5/S9BTjDR6FH4JMP6H6/ccAy0u2oN5nB5xzdjvG6Ha@vger.kernel.org, AJvYcCUweMNquWoF9KR2Z8CMboeoWwq/v8DtmVliBfGShLgbzcTb14M+tbWfBsEO+n1nOkvwt7wTu4bBUV8l@vger.kernel.org, AJvYcCV5sVeqbZ8YwWwVF9B0W55cXS8kpgISV399lw38YK8T7Diza/IcougdG+flYWg4YqdW4z6DIQFTdx0g@vger.kernel.org, AJvYcCWd6M+D4M0JXmjXEGfJe4JR7Og5CsyqrjLBA4w3FYWF7KyAnqg++vWC47NIlIG6IVDGdEtODaKcoWqg@vger.kernel.org, AJvYcCXlis+JTjApgiMTliaUXrPPFq2iO8rLrPHfXYKPdFw7u4fl0l6a1n2xiVca4unrjdygGynylxYz@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEwIbWFeN/+J52IVcWjeQ1jt9p9uCvS9SzQ80mwOtCtYuoPpS6
-	T6Fw7HodvkHQMpKTzs8qtGZVKwdhEyVtO2fnJsHwCRxXsiTlTR1FE56asJz6/oGZu173kqOrQGR
-	4uFTgF9RGbbH2nhQ/+WEIkKTA7tA=
-X-Gm-Gg: ASbGncuQwctuvQCU/G9SEZe+VVKuIPsOB3uSs/RYBzyGW5piyQcGIYlWz/W7Yg73nmQ
-	xGyAH13GLuB6MVs6bejro6HFrOx5+gL1X0d6nxeHJuIDCPEBSLokPs2jS1Ppvv03QvvBUUXDzAI
-	NMqueRCsGN8UIbeDV0XVB8vz/iYeEX0VYfjNMUxKQz6rme0AsxMChBvw==
-X-Google-Smtp-Source: AGHT+IGB0+9rYEJMYSumpu6Vzq9goNJmJbJ95NPX/w0TApxD1IhEm9WvTNPQJ7w305XUYtnHZHJIiC78RgW25GjDsKk=
-X-Received: by 2002:a05:622a:1828:b0:476:8225:dac9 with SMTP id
- d75a77b69052e-47aec4c57a5mr39379541cf.45.1744979924108; Fri, 18 Apr 2025
- 05:38:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="pM2voUJq"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SNt2EkTlC4Bi0yNO3RjvHj2FN3GaGauk7BC8mRpX2jzUAm6Mp03xp3j8tX/l2XNEZVRAQ30+nveZ3kPeOQMTW43RsjL7QgGeh1VPiL9JP8EKr3plZt5xZUZMpnqGMo6ci2dNV++bB6SRVxHT7d9EFhXtfNDhbaPAcpj8AQOtayWd0t9nWox2q0AJm/IwUOuvVXoiNR6v4hxQnDPzGtteyMzPX1WWdQj72chZ0cGy55BinuOEO8ZwPYAMppSnwQZX+01d1XVKlR2eJFo1QeEzy+rMKcwi+5qjoZqO1t2L0UlRNc8hdPA0TXtKaM75TsJ+vfr3ZmJ2k0zbh6duHpfxLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=haTTeE0Nhos0Dg8RPD1CHVoVMSkFD0lSdoZz9ftvIXY=;
+ b=IayFyDYQFM1MZU7suOWQ2hd4M5L8OSetGTdNAZfJZ3wosWL4ypB+MzFBmm4BqQeMi4IIg26hCKpcOIFzB0pUyBSTFhukPiicxj4IWSr8bZviVjXOcMkjeykdkvSNG8CShceO7kKp2p/yl7djgNKTjKbjgMWnZTwFRCpClmNJx/KX9zuMDeDMnjypxQevqEwEYiv+sJVXwvsPETyqruaihbh5llpsXEBsMEIgwPQE+UPmpWkSnBaCXclm1vSJdmsbXcWlIqHZBIsrp9qgJ2hATWW2Ck1XlVKfNGo3aa+ndJrdPecCc3TYPAXzf2K0tdR8rOMrbbudXVPf8ObUpnihIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=haTTeE0Nhos0Dg8RPD1CHVoVMSkFD0lSdoZz9ftvIXY=;
+ b=pM2voUJqwFFcXuBHX+rw4YoWI6cm0gPRtoECMZsY8P7BOW8Tf4EZrlEkt+jmgJzobRW7epUcBjDZ6ZT6sn+7JsMq7bLUqbPC2uZIlEsogTFQuvYTj8ZLXAaK3qRePLZFLy1P+waVikZHEeIPZKHVxXTr/G+NfjOoI79l5TlYP8I4cP0Fsr5wB+zJcf7Xahjyk9BEjCW4EyUhPPJ9e1OCVCCiLog2wxPadFrOdlWCr6UBTH2LB3mlxmpfpS1nbyPBo9ypc1IFvG97+v9LksOEXva7Z4k8GbQd1VqWSto5XPSWRom6AqIYK/DyloY+zYQ1dTrN6zzatbeRl23FW/QHRg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by DBBPR04MB7836.eurprd04.prod.outlook.com (2603:10a6:10:1f3::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Fri, 18 Apr
+ 2025 12:38:42 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8655.022; Fri, 18 Apr 2025
+ 12:38:42 +0000
+Date: Fri, 18 Apr 2025 21:47:21 +0800
+From: Peng Fan <peng.fan@oss.nxp.com>
+To: ulf.hansson@linaro.org, rafael@kernel.org, pavel@kernel.org,
+	len.brown@intel.com, vincent.guittot@linaro.org
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH] pmdomain: core: Introduce
+ device_set/get_out_band_wakeup()
+Message-ID: <20250418134721.GA31933@nxa18884-linux>
+References: <20250311083239.3336439-1-peng.fan@oss.nxp.com>
+ <20250403094629.GA20718@nxa18884-linux>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403094629.GA20718@nxa18884-linux>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: SG2PR06CA0212.apcprd06.prod.outlook.com
+ (2603:1096:4:68::20) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
- <20250416-wmt-updates-v1-3-f9af689cdfc2@gmail.com> <20250416201407.GC3811555-robh@kernel.org>
- <CABjd4YyTKquLcYC+DVg_koi3p7AhqwBNiazCiC713DQKjCaBSA@mail.gmail.com>
-In-Reply-To: <CABjd4YyTKquLcYC+DVg_koi3p7AhqwBNiazCiC713DQKjCaBSA@mail.gmail.com>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Fri, 18 Apr 2025 16:38:40 +0400
-X-Gm-Features: ATxdqUHZEjWs_YUTRnLI_mqfQ2sstLgHtYWGD2PkyOOwUEJjeYm4m7FuAwUHjuc
-Message-ID: <CABjd4Yxi4SLqsAk_fb9C=1BW6XjnZ8LQ_JKYu6KZ3TtMS0fnhg@mail.gmail.com>
-Subject: Re: [PATCH 03/13] dt-bindings: mmc: vt8500-sdmmc: Convert to YAML
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|DBBPR04MB7836:EE_
+X-MS-Office365-Filtering-Correlation-Id: 44ed54bc-3f4c-4d2d-6138-08dd7e75f3d7
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?zLzUD9n2kHvzirlRKf3vaK6uaeEs6civdgbxmQjx2PvT0LFRPHIa4nZfpijc?=
+ =?us-ascii?Q?fs+3RuUs+KftgVkxZeVClZUVzRyUurzfAL5K5L8Z1busDW94avyO/DBa6WLF?=
+ =?us-ascii?Q?3nOgI6qlt6CSncNXgLJcFCvt+kMLuk/Td8XHiAXDSRy8ApV1vjfANOrAOhZX?=
+ =?us-ascii?Q?nQdWtWn7K1CwK4wWi02ng73H/BgZtf3F5CuzxYy+/DmKSgp8VP2bQohK70Xt?=
+ =?us-ascii?Q?JP3+pMquLpfDXTaHiGcSEvy8WZ5RyA7t2X7J244L/tPhFbqHx8OxENFws6hu?=
+ =?us-ascii?Q?SJjyZKdDXvUryr28rIaSyZYU96tZ0tkwV+jkWwpTtITr8bxb1krBIS1j1G+X?=
+ =?us-ascii?Q?SU1Bjw+0F45XGll+VTWS8j4U+l93a24TD9tD3EuXIewC7d6Hgzd0R+tuygJU?=
+ =?us-ascii?Q?R9wbTPdKhJkroMtRze3v4eBe+StyrLQkuuYn1GSNKsYdXbEHPumSwxOc3zBt?=
+ =?us-ascii?Q?vMINoI9Tybm/TJbSNkYtukKqmtNP3AmrW6hDk0wd8//9D4LlQE3+cKtQDKWS?=
+ =?us-ascii?Q?MBm4A9mqiPDAxlOfsVOZDch0JnNbUpbFZyiVRxSTEAvxDHOh08RixqTb5/9r?=
+ =?us-ascii?Q?9Euh4ajXx2k02qXkJkdpX6ghPdbejwVOYLnv74K11sjq16d8IL5H8nctsYcY?=
+ =?us-ascii?Q?J/KxqJxKk6CsPzOpjIH5k0ag8gaNAqIuqWCkU9rPSxRQKKpUVwnA5MWIDnE2?=
+ =?us-ascii?Q?yGnMh2Yy7Au9sBRhgPJePke0l6zrZr3AviC6H1N+I3rFM4vfwpuKs5lT9pSJ?=
+ =?us-ascii?Q?i7IHRByQ/IVCTchS4VdZjtPCIoWSprsxRXFRQuA5+9qmT4uXKnolEkQZ0xQn?=
+ =?us-ascii?Q?2XQOpvxb0Z5mq+VOYXd7Zm9YSg6oByB2khUF8hPWLhnhA383VrZc/JVtvHde?=
+ =?us-ascii?Q?Ukxjcvv38h/yoDRPRr/DVspacV3C7SKgHySNnI5Ax/ptq5YROi2r+iX7fvqT?=
+ =?us-ascii?Q?ybkNwDogLrxwtoIPDqIyaA5uE88rvHnswqXbi+9BbtDlQ9CmgLdvspg7FLrT?=
+ =?us-ascii?Q?QwrUt9arn6oIeO8jRqk0ITuy/Oxk1nIA/mIaGKsYV77gOIw68ToXrN4jkaQL?=
+ =?us-ascii?Q?ZZPEVxjVUPAV/QxYcL6CmWL08I3RT31GuDUNaOAFl/xEiFDuwKDEi8ika+GI?=
+ =?us-ascii?Q?O2dy0DK1OkKIpvWxIlquX7ICAkTnlSs3Iv4rSsBfXwAbvpXKjprtIgGV8O2K?=
+ =?us-ascii?Q?EZIpSsfxD6ICbltRmrohyuz94QhYTOWtr1+/TKaxQlM6NYMbqdUJeSw/muYX?=
+ =?us-ascii?Q?pbPYyeiwnkkL8jlkzkFv8eGFVwlO7c72SEBycniwDuUTJnIq1ny3faTh/YNa?=
+ =?us-ascii?Q?HD8JurbBil59wu2uc0vbRzcbv3bRwTK3Qh3yUYl1ldstdQRkRxtIuBnEHQhK?=
+ =?us-ascii?Q?wBONDRNOwWHDXmYaSa+Xeylkxexu0f0g32t/DQeEYBfmBO0AQmonK0/pYb1L?=
+ =?us-ascii?Q?kJGvzFPrvd/a1zsERXQzDAvLh3MpHV0Ze+3s0b/wCBzfe16en5ShIA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ZJbwj7qaGswBuDP++ogdApJp4YI86wHhVlocaWlmLFtrDDG30/w4S7L/sJ5b?=
+ =?us-ascii?Q?vXePV2rjfrlS3/024MJYVq1wqwMfFfD1f97WoBOBixjpKUMnB2h0DogMkR7H?=
+ =?us-ascii?Q?QhFyDEis2adBT5tNgXhlKpsKYRqRN87S9ZVloXTjVgL3gUk7+Ees0VmLHtzA?=
+ =?us-ascii?Q?dSb1RpJXly8YCBwhxLxJiUWNPQ4nvEJU+NLcNiRVJ4NJwEBECuAtLn+0TUkC?=
+ =?us-ascii?Q?iMatyb2ArKAVYs4ywwxmMuClsHKAj10neseW29uvzjM0RTMIWkPPcns4Ou6R?=
+ =?us-ascii?Q?DB1hO2l0x/1qRkNv2osMfWYFSua/bKojuwSaAzihD8PMu/DpFK3SYKCSJTDY?=
+ =?us-ascii?Q?dQcyovGDo3BvnQY3iMwHALdWcBMTilMwpI/T6nHqn4vfjH8/uM53LV34bEGc?=
+ =?us-ascii?Q?o54INbyv3uMLBnExuZwanPwMYktnvytJb9PxFWymcR8T4qEhuEMzuZxmMY4n?=
+ =?us-ascii?Q?GM7NZH7PFnBt7udnOjOuCq1smIES7HFk0jejIZwCGQgpo188SB3xah1yNlX9?=
+ =?us-ascii?Q?yjtuBgImqLmR5gCphh6qpzsTjiiJAo3nVzNtjrlj3a8gFisHwq9+ANG43fd7?=
+ =?us-ascii?Q?gHpPcIqGf2JVrkpEJhdbT5+n6LsoTJoCPHwTNRwyuQ/w9bH81Dbvw1YvxduA?=
+ =?us-ascii?Q?Tmn4B4WpGNQKlSpxNuYEns0KxWKY/DlPQWhQXaIF4zGi3uZorI4ogkyFpm4o?=
+ =?us-ascii?Q?il94sdZ9c9wp9FqWdtZ6M+p3u56vNQddsxZ7OmtUFF3hGZgtKB6kpmrtpzPN?=
+ =?us-ascii?Q?5YDYbzHzni8D5LzCMgC93TS7C26iHiA6CCiMqdbu7gvH/TVm7FHVApXaXw7S?=
+ =?us-ascii?Q?sGsCq/ILo3ZwO6Gz8EnNeXVGubS+nT6CJVwf0p6ZxzFPHWaOx+aaYNXqutRG?=
+ =?us-ascii?Q?MKPUX7zlwu6e0HEZl7/hwQxQllydV6vYjlb990y7/AKLphLTsqZP17xuIguI?=
+ =?us-ascii?Q?39L0THHrdVCISnfFRxzPLa9JNTsxOstRSpXZkYUsYktw5CDa+2rqTAKbBlHJ?=
+ =?us-ascii?Q?q0kjh4ltznR+QjnMkiJfawGfRKIXj/gJEG2WA8u4/3rcvqvUt2Cj20kvdJUx?=
+ =?us-ascii?Q?zpxqtDk51I1QtqdJ9a8PGjTyqQxVkWLTd93Y5IbfXz9NHAQ62VLnVctClxUP?=
+ =?us-ascii?Q?62cpvaEgLGJDv5jeywfCSIUqZ6gjvq222vShtYX3GtsSZdsFbr+MCQPF06SY?=
+ =?us-ascii?Q?KVhk3n6+i7VV9jIvlZ50pr3+X990WZAbsZxfV9f+y98vlufxn0nBjxKRirB5?=
+ =?us-ascii?Q?u04cQOzyXY1t7IFIjTpLmRlFAbZruoVy7CYQYviPGot2PG6Mz6ix3RvhGp3S?=
+ =?us-ascii?Q?EtO+T1p0uoaBuyQHcdpww8R5y/ZQCOpkldWXOQv88EpDsBxgtK0xqf193iRY?=
+ =?us-ascii?Q?jifRpAbE02Sv+QDkdFEUlfey8OnC6/kI2OZpY7AjPqv2KzFzeEmgj3qzFty9?=
+ =?us-ascii?Q?Sqg5BRgQN2fRJkMkvw3o6jpTpovtLNnTilsPtSUJjdBGau5cuE+HFShnx8sO?=
+ =?us-ascii?Q?UZlrbLiS9Y3Beb5hefIPCCWV3VKSMW/Lb3WzqaoNX5E8+N8QCyTP3/7wDHwZ?=
+ =?us-ascii?Q?Waqi9zSF5GAbqvgycEDSS+ft31EwHXsvpDMKLIFY?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44ed54bc-3f4c-4d2d-6138-08dd7e75f3d7
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2025 12:38:42.5996
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KV9wiF2+JDqDELQ3etFllpOkjp0lKzziKkco1Btdt81yIyiGMh+fJn0VleCjGfNT5VzD0WsWpWrM9bJagQY80A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7836
 
-On Thu, Apr 17, 2025 at 10:25=E2=80=AFAM Alexey Charkov <alchark@gmail.com>=
- wrote:
+Ping..
+
+On Thu, Apr 03, 2025 at 05:46:29PM +0800, Peng Fan wrote:
+>Hi Ulf,
 >
-> On Thu, Apr 17, 2025 at 12:14=E2=80=AFAM Rob Herring <robh@kernel.org> wr=
-ote:
-> >
-> > On Wed, Apr 16, 2025 at 12:21:28PM +0400, Alexey Charkov wrote:
-> > > Rewrite the textual description for the WonderMedia SDMMC controller
-> > > as YAML schema, and switch the filename to follow the compatible
-> > > string.
-> > >
-> > > Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> > > ---
-> > >  .../devicetree/bindings/mmc/vt8500-sdmmc.txt       | 23 --------
-> > >  .../devicetree/bindings/mmc/wm,wm8505-sdhc.yaml    | 61 ++++++++++++=
-++++++++++
-> > >  MAINTAINERS                                        |  1 +
-> > >  3 files changed, 62 insertions(+), 23 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mmc/vt8500-sdmmc.txt b=
-/Documentation/devicetree/bindings/mmc/vt8500-sdmmc.txt
-> > > deleted file mode 100644
-> > > index d7fb6abb3eb8c87e698ca4f30270c949878f3cbf..000000000000000000000=
-0000000000000000000
-> > > --- a/Documentation/devicetree/bindings/mmc/vt8500-sdmmc.txt
-> > > +++ /dev/null
-> > > @@ -1,23 +0,0 @@
-> > > -* Wondermedia WM8505/WM8650 SD/MMC Host Controller
-> > > -
-> > > -This file documents differences between the core properties describe=
-d
-> > > -by mmc.txt and the properties used by the wmt-sdmmc driver.
-> > > -
-> > > -Required properties:
-> > > -- compatible: Should be "wm,wm8505-sdhc".
-> > > -- interrupts: Two interrupts are required - regular irq and dma irq.
-> > > -
-> > > -Optional properties:
-> > > -- sdon-inverted: SD_ON bit is inverted on the controller
-> > > -
-> > > -Examples:
-> > > -
-> > > -sdhc@d800a000 {
-> > > -     compatible =3D "wm,wm8505-sdhc";
-> > > -     reg =3D <0xd800a000 0x1000>;
-> > > -     interrupts =3D <20 21>;
-> > > -     clocks =3D <&sdhc>;
-> > > -     bus-width =3D <4>;
-> > > -     sdon-inverted;
-> > > -};
-> > > -
-> > > diff --git a/Documentation/devicetree/bindings/mmc/wm,wm8505-sdhc.yam=
-l b/Documentation/devicetree/bindings/mmc/wm,wm8505-sdhc.yaml
-> > > new file mode 100644
-> > > index 0000000000000000000000000000000000000000..a7d962bc13c7ff70b5044=
-8201b0416efc7f787af
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mmc/wm,wm8505-sdhc.yaml
-> > > @@ -0,0 +1,61 @@
-> > > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/mmc/wm,wm8505-sdhc.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: WonderMedia SOC SoC SDHCI Controller
-> > > +
-> > > +maintainers:
-> > > +  - Alexey Charkov <alchark@gmail.com>
-> > > +
-> > > +allOf:
-> > > +  - $ref: mmc-controller.yaml#
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    oneOf:
-> > > +      - const: wm,wm8505-sdhc
-> > > +      - items:
-> > > +          - const: wm,wm8650-sdhc
-> > > +          - const: wm,wm8505-sdhc
-> > > +      - items:
-> > > +          - const: wm,wm8750-sdhc
-> > > +          - const: wm,wm8505-sdhc
-> > > +      - items:
-> > > +          - const: wm,wm8850-sdhc
-> > > +          - const: wm,wm8505-sdhc
-> >
-> > Combine the last 3 entries into 1 using 'enum' for the 1st compatible.
+>On Tue, Mar 11, 2025 at 04:32:39PM +0800, Peng Fan (OSS) wrote:
+>>From: Peng Fan <peng.fan@nxp.com>
+>>
+>>For some cases, a device could still wakeup the system even if its power
+>>domain is in off state, because the device's wakeup hardware logic is
+>>in an always-on domain.
+>>
+>>To support this case, introduce device_set/get_out_band_wakeup() to
+>>allow device drivers to control the behaviour in genpd for a device
+>>that is attached to it.
 >
-> Fair enough, will do.
+>Do you have any comments on this patch?
 >
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  clocks:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    items:
-> > > +      - description: SDMMC controller interrupt
-> > > +      - description: SDMMC controller DMA interrupt
-> > > +
-> > > +  sdon-inverted:
-> > > +    type: boolean
-> > > +    description: SD_ON bit is inverted on the controller
-> >
-> > This implies I know what the non-inverted state is. If you know, please
-> > state that here.
+>Thanks,
+>Peng
 >
-> This is a tricky one. The only answer I have is "it's inverted in
-> later versions vs. the first version I saw in the wild, and I'm not
-> sure if it's board related or IP version related - nor if the original
-> was active low or high". No docs, no schematics, no vendor left around
-> to chase for answers.
->
-> Will dig around some more and update the description if I succeed in
-> uncovering any further clues :)
 
-I've found some extra clues and would like to consult on the best way forwa=
-rd.
-
-It turns out (if my understanding of the decompiled binary-only WM8505
-vendor driver is correct) that all chips before (not including) WM8505
-rev. A2 treated their "clock stop" bit (register offset 0x08 a.k.a.
-SDMMC_BUSMODE, bit 0x10 a.k.a. BM_CST in vendor sources, BM_SD_OFF in
-mainline) as "set 1 to disable SD clock", while all the later versions
-treated it as "set 0 to disable SD clock". Which means that there are
-WM8505 based systems that rely on either of those behaviours, while
-any later chips need "set 0 to disable". This is not a board related
-quirk but an on-chip SDMMC controller revision related quirk.
-
-I'd love to switch to a compatible-based logic and drop the
-"sdon-inverted" flag altogether from the binding I'm writing, but here
-are my doubts where I'd love to consult.
-
-* Looks like WM8505 rev. A2 needs a separate compatible string vs.
-prior WM8505. Can we have something like "wm,wm8505a2-sdhc" and
-"wm,wm8505-sdhc" respectively? WM8505a2 not being an actual chip name,
-but something discoverable by reading its hardware ID from a system
-configuration register at runtime
-* If I introduce new compatible strings for "wm,wm8650-sdhc",
-"wm,wm8750-sdhc", "wm,wm8850-sdhc" and "wm,wm8880-sdhc" in bindings,
-DTS and driver code, then the new driver and new DTB should work fine,
-and the DTS should pass schema checks. New driver code won't work with
-older DTB unless I keep the logic to parse "sdon-inverted" which
-wouldn't be part of the binding. Old driver code would not work with
-newer DTB except for pre-A2 versions of WM8505. Is that acceptable?
-* Existing DTS doesn't differentiate between pre-A2 vs. post-A2
-revisions of WM8505 and is bound to fail on the latter
-
-I realize that breaking backward/forward compatibility is undesirable,
-but frankly these systems seem to have few mainline users, and those
-people who do run mainline on them ought to be compiling the kernel
-and its DTB at the same time, because the firmware doesn't know
-anything about DT and any modern kernel can only be booted in
-"appended DTB" mode. I also don't know of any non-Linux code that
-might be using these device trees.
-
-Any guidance would be much appreciated.
-
-Best regards,
-Alexey
+Thanks,
+Peng
