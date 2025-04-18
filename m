@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEB021A459
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF535219E8C
 	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:14:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744996443; cv=none; b=KlS1hZtx8HrprKCi3jQ9nJPp/9GDdF2R35k6Pbh/BRPauqJDvSQcU9uONHTPTdeK1JEqFBweyUtLeCr6rLpbCIWw1/fiPNyct3KcFkJYj3blKUBTd3VFQEOWJ/UB4JLa0PTDnAF+XiB0kQ9hP2wKJW0GdS4FFZqKEyI1SJIekEE=
+	t=1744996442; cv=none; b=PPTjSpPi5AtPqLDqDWF2446YHMFaKTS5Ya10OVdJGELBUdoG3LchzbpJ9Z0tCr38++ndVW8ci6AGa031HZuNBmdv+avOW6MP181Jlzj1LflvRBuaxj1qBAWhHNiGlpwyT9vsTy2F8lAMLzWAD3o9fv8XiWyAUBLl4eeYlZZVs2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744996443; c=relaxed/simple;
-	bh=OZmjqaYou2hOWVgwSLN1prGm2SZUlosb+4HXW4GaF/s=;
+	s=arc-20240116; t=1744996442; c=relaxed/simple;
+	bh=OW4XttqWZSi/Drj8Nfcb9nRfI0qLGHAcFUjx8HdvV4A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ll73e+7r5wxyyE+BxsxMNieEAYkbOyVoVpdymDhgotYDjPg10xj4VT5TDl4YNAi1BZOBqjUgsR3nGCy5Vj3Jrou9zHSFfCeHO5TggSo3MBX/XMX54JxR4g/8bvwj651t+Vg9hbMRcOuni6fCnFj89IZOpsoF8ByKtf/yjEiAcQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lnvfy0p2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=r4OSsNz6WgDHBDFmw8ys1EHIprl8bN4j8A2iGHBHbAtfcpHQswcLgd37xRE6q6nrlJKwLD0RR+6Uy2VD3UwvopCQVZYKOjSI1xS/hZPo0MzkBDbCaUGFS/3mnFH+raHGMGSL2NqrUKiJVp+oh/yacarHgZrZX3kQHYQ5DoQJGvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JNaxnuxZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lnvfy0p2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6707DC4CEF3;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JNaxnuxZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EF6DC4CEEC;
 	Fri, 18 Apr 2025 17:14:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744996442;
-	bh=OZmjqaYou2hOWVgwSLN1prGm2SZUlosb+4HXW4GaF/s=;
+	bh=OW4XttqWZSi/Drj8Nfcb9nRfI0qLGHAcFUjx8HdvV4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lnvfy0p2QOMF7gsoDLe3MV10TIIRdiZCaTWZzcqt8sOh+iFB7VU3UQNMfzYkk3LKj
-	 WCXFCPMaCWZUGhIK6W0OoUuVfApXNaER0yt6pOIQ0E0P3niqeAO2w5qfc3kQ4OIZOt
-	 jnqRxMOtiDmSPYVZ8aXK+bDGo86NzcIaQmmj/2YDW6B4DFPaVJ7VhjPuLDrqrZbDW9
-	 PgwntmM117DGIqmHuZ3ZkddPfpa7n4oT73b9+vNy/aCNNlWz3oFhiP6p0jc5+Qwhk4
-	 wINXj47NC05MDQJIRJpvKnL+WtzajVq6rHpxi81qxO7N9B448ya/3NCwXwJl0N+amy
-	 T0FiOeZsq5d8w==
+	b=JNaxnuxZLJJORZDXiT7yqI1fVhzALaHOrSTXDuyJErE61IU7BAAOHmcsAAfbtiCKk
+	 M0owU/hpKTPIiFGzo1RptjCrdD/ZR9o85bpBCEBpfU8q8jY8qGtbC9YwoqUzgNp2+f
+	 aoiYDxeqi4fMQ94BwKEpy4+VS8hCOIBQEgvnGZ2RWS1Sz5B5iXK0b3z5wQJnyAnMxi
+	 4vW1aZi2v5MIRIREp6MDQGyX3FqVVoTnQF9hX5QTyL52S//FwOvNkeeRcFKbILhRw1
+	 pAfgLTGrf4mCLRKYbscpIZEEdSqu3iKHL+IROoR7ZMzGMwEFd0dXMNvN4ZhkbnVSCM
+	 hZZxUmXZ0sqpg==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id E25EDCE11D5; Fri, 18 Apr 2025 10:14:01 -0700 (PDT)
+	id D9224CE09FA; Fri, 18 Apr 2025 10:14:01 -0700 (PDT)
 From: "Paul E. McKenney" <paulmck@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: kernel-team@meta.com,
@@ -41,19 +41,10 @@ Cc: kernel-team@meta.com,
 	Jon Pan-Doh <pandoh@google.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	kernel test robot <lkp@intel.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Kenneth Feng <kenneth.feng@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Xinhui Pan <Xinhui.Pan@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH v2 ratelimit 05/14] drm/amd/pm: Avoid open-coded use of ratelimit_state structure's internals
-Date: Fri, 18 Apr 2025 10:13:50 -0700
-Message-Id: <20250418171359.1187719-5-paulmck@kernel.org>
+	"Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH v2 ratelimit 02/14] ratelimit: Create functions to handle ratelimit_state internals
+Date: Fri, 18 Apr 2025 10:13:47 -0700
+Message-Id: <20250418171359.1187719-2-paulmck@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <4edcefb0-cdbd-4422-8a08-ffc091de158e@paulmck-laptop>
 References: <4edcefb0-cdbd-4422-8a08-ffc091de158e@paulmck-laptop>
@@ -63,66 +54,114 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The amdgpu_set_thermal_throttling_logging() function directly accesses
-the ratelimit_state structure's ->missed field, which work, but which
-also makes it more difficult to change this field.  Therefore, make
-use of the ratelimit_state_reset_miss() function instead of directly
-accessing the ->missed field.
+A number of ratelimit uses do open-coded access to the ratelimit_state
+structure's ->missed field.  This works, but is a bit messy and makes
+it more annoying to make changes to this field.
 
-Nevertheless, open-coded use of ->burst and ->interval is still permitted,
-for example, for runtime sysfs adjustment of these fields.
+Therefore, provide a ratelimit_state_inc_miss() function that increments
+out the ->missed field ratelimit_state_get_miss() function that reads
+out the ->missed field of the specified ratelimit_state structure,
+and a ratelimit_state_reset_miss() function that reads out that field,
+but that also resets its value to zero.  These functions will replace
+client-code open-coded uses of ->miss.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202503180826.EiekA1MB-lkp@intel.com/
+In addition, a new ratelimit_state_reset_interval() encapsulates what
+was previously open-coded lock acquisition and resetting.
+
+[ paulmck: Apply kernel test robot feedback. ]
+
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: Kenneth Feng <kenneth.feng@amd.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: Xinhui Pan <Xinhui.Pan@amd.com>
-Cc: David Airlie <airlied@gmail.com>
-Cc: Simona Vetter <simona@ffwll.ch>
-Cc: <amd-gfx@lists.freedesktop.org>
-Cc: <dri-devel@lists.freedesktop.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: John Ogness <john.ogness@linutronix.de>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
 ---
- drivers/gpu/drm/amd/pm/amdgpu_pm.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ include/linux/ratelimit.h | 40 ++++++++++++++++++++++++++++++++++-----
+ lib/ratelimit.c           |  8 ++++----
+ 2 files changed, 39 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/pm/amdgpu_pm.c b/drivers/gpu/drm/amd/pm/amdgpu_pm.c
-index 922def51685b0..d533c79f7e215 100644
---- a/drivers/gpu/drm/amd/pm/amdgpu_pm.c
-+++ b/drivers/gpu/drm/amd/pm/amdgpu_pm.c
-@@ -1606,7 +1606,6 @@ static ssize_t amdgpu_set_thermal_throttling_logging(struct device *dev,
- 	struct drm_device *ddev = dev_get_drvdata(dev);
- 	struct amdgpu_device *adev = drm_to_adev(ddev);
- 	long throttling_logging_interval;
--	unsigned long flags;
- 	int ret = 0;
+diff --git a/include/linux/ratelimit.h b/include/linux/ratelimit.h
+index b17e0cd0a30cf..8400c5356c187 100644
+--- a/include/linux/ratelimit.h
++++ b/include/linux/ratelimit.h
+@@ -22,16 +22,46 @@ static inline void ratelimit_default_init(struct ratelimit_state *rs)
+ 					DEFAULT_RATELIMIT_BURST);
+ }
  
- 	ret = kstrtol(buf, 0, &throttling_logging_interval);
-@@ -1617,18 +1616,12 @@ static ssize_t amdgpu_set_thermal_throttling_logging(struct device *dev,
- 		return -EINVAL;
++static inline void ratelimit_state_inc_miss(struct ratelimit_state *rs)
++{
++	rs->missed++;
++}
++
++static inline int ratelimit_state_get_miss(struct ratelimit_state *rs)
++{
++	return rs->missed;
++}
++
++static inline int ratelimit_state_reset_miss(struct ratelimit_state *rs)
++{
++	int ret = rs->missed;
++
++	rs->missed = 0;
++	return ret;
++}
++
++static inline void ratelimit_state_reset_interval(struct ratelimit_state *rs, int interval_init)
++{
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&rs->lock, flags);
++	rs->interval = interval_init;
++	rs->begin = 0;
++	rs->printed = 0;
++	ratelimit_state_reset_miss(rs);
++	raw_spin_unlock_irqrestore(&rs->lock, flags);
++}
++
+ static inline void ratelimit_state_exit(struct ratelimit_state *rs)
+ {
++	int m;
++
+ 	if (!(rs->flags & RATELIMIT_MSG_ON_RELEASE))
+ 		return;
  
- 	if (throttling_logging_interval > 0) {
--		raw_spin_lock_irqsave(&adev->throttling_logging_rs.lock, flags);
- 		/*
- 		 * Reset the ratelimit timer internals.
- 		 * This can effectively restart the timer.
- 		 */
--		adev->throttling_logging_rs.interval =
--			(throttling_logging_interval - 1) * HZ;
--		adev->throttling_logging_rs.begin = 0;
--		adev->throttling_logging_rs.printed = 0;
--		adev->throttling_logging_rs.missed = 0;
--		raw_spin_unlock_irqrestore(&adev->throttling_logging_rs.lock, flags);
--
-+		ratelimit_state_reset_interval(&adev->throttling_logging_rs,
-+					       (throttling_logging_interval - 1) * HZ);
- 		atomic_set(&adev->throttling_logging_enabled, 1);
- 	} else {
- 		atomic_set(&adev->throttling_logging_enabled, 0);
+-	if (rs->missed) {
+-		pr_warn("%s: %d output lines suppressed due to ratelimiting\n",
+-			current->comm, rs->missed);
+-		rs->missed = 0;
+-	}
++	m = ratelimit_state_reset_miss(rs);
++	if (m)
++		pr_warn("%s: %d output lines suppressed due to ratelimiting\n", current->comm, m);
+ }
+ 
+ static inline void
+diff --git a/lib/ratelimit.c b/lib/ratelimit.c
+index ce945c17980b9..85e22f00180c5 100644
+--- a/lib/ratelimit.c
++++ b/lib/ratelimit.c
+@@ -51,12 +51,12 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
+ 		rs->begin = jiffies;
+ 
+ 	if (time_is_before_jiffies(rs->begin + interval)) {
+-		if (rs->missed) {
++		int m = ratelimit_state_reset_miss(rs);
++
++		if (m) {
+ 			if (!(rs->flags & RATELIMIT_MSG_ON_RELEASE)) {
+ 				printk_deferred(KERN_WARNING
+-						"%s: %d callbacks suppressed\n",
+-						func, rs->missed);
+-				rs->missed = 0;
++						"%s: %d callbacks suppressed\n", func, m);
+ 			}
+ 		}
+ 		rs->begin   = jiffies;
 -- 
 2.40.1
 
