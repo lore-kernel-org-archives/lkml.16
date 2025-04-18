@@ -1,118 +1,97 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB44219ED
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 03:04:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795511C831A;
+	Fri, 18 Apr 2025 03:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744945487; cv=none; b=FjVGYl6R4r2/Mn3pZfEpulfq61pmi6pk/TNFXmNSjIImr72j6XsY5XsGjERLMJGSC+oef6hNewHL11wFusV36QO77kZuABRSWxw9oMPmfFWvpq/3dG1VdzX6UF9WHfwrv4Ns/Flv/Q+CWbSOmFdJWwnajgKhlFCqzco6gBcOS28=
+	t=1744945707; cv=none; b=YqGcUzAhT9z8dskTtXNSsmoF9jnp8HF858yMhDtVcBXyGn+xK/76LEalHMXWUpIi8OrGy7KTnaZD7t6yz80H3P+5xn0McUpgBaMfVdKvLY9UyPK9YnDfGkgs9+DFF2/a3hdk/CSe3dvrvVWwcteVVPiZK607qgTbbF1DDxshGWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744945487; c=relaxed/simple;
-	bh=POlyqR7bxQJ/BpFBsufNtXDCrH5Btr8A0wQhLed120M=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=hOhanCrbGKB/yQeqLABLBlGkeyXDb9JUW+FqWy53rsTt6vXxL5NJEXbx4CnH4nYY0JO7b55gU1T1CKSfSesIs59Q1DrLRhNgDJjbR48apneQrLBrIlgsYjJUzKFkp4iSNQKKUc27yTYfBBgBAQwAcXuDNyBp/3wuB9w7j1FP8xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BgXaWFb/; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744945707; c=relaxed/simple;
+	bh=DoSFlNVJWaKhB6ZrZkyvTYjAArw/STYlvQfauxosAXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Ft+MaWpLebIz2KTSduqEA9XEYMMCV0aFfflljfTZ47KBiToxnDKKTx6tU9jyyVOP1VFZr1UYXp2nJD14x3I80vvSJvOquP8gCKskQttCKatrPoAziW/5fP95Ww4pFYNTdHN4d2QMlNIBgrQBxLxgs9BCUYaEe9pekOo1K3yOQp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=Ad2r1puG; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BgXaWFb/"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744945482;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QW73lLVQDBY9HtHolp7BHyp40jQLsHqENKUtxI23Uy4=;
-	b=BgXaWFb/z/6fIAeyooi3ncmg1VmTUKlE9phpAZgqbaA4RHskhpG7t4Luln+2WtKYBozZwV
-	Lchr5k+Rcjod13GCpPf/zg664IGhet4uJuQIdiakGJL/67CHGcPtIXjR42fdQ5h8zHXw+W
-	Ktf30sYm6Y2cWRzf3T1r6cv+STEImz0=
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="Ad2r1puG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
+	From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=cBam+4bEBq9fnDxk0jHRH2r9C5SS6Xd/ZiWHED3RBr8=; b=Ad2r1puGLU+Y1rwUeDUqRhU0qO
+	F7pjd6bV7RlyG39Dh5jEkE+5Cipv8h36HNwxkd/OFyixIJ6MxLwR9Lt/xnU3YlHz/ccXTGPXLJ11z
+	kX3xxqCi5uGmCYV3AHyIGc+2fpgfU0xkYxttXTLSSQsa6Jc5ReCdOCQ9EshaKh69QTcEXZ2QH0dKa
+	OCpbpHKL9L5fZR/YOyt7Z/zLu4/L+bkrOc8irkMvNXS8hOyxoLHQDiLQZthliGKqYzCqrgP19jXwn
+	M9Ki5L0y6D3/MVduXxafDI2dZEU2TwnJJVwxN+sGp+xGVKV7/8ahMXvoJGkt55Cxb+uJ6YEljyPno
+	EUy5oI0Q==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u5c5Q-00GeUL-2y;
+	Fri, 18 Apr 2025 11:08:17 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 18 Apr 2025 11:08:16 +0800
+Date: Fri, 18 Apr 2025 11:08:16 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+	x86@kernel.org, Jason@zx2c4.com, ardb@kernel.org,
+	Alexander Potapenko <glider@google.com>
+Subject: Re: [PATCH 01/15] crypto: arm - remove CRYPTO dependency of library
+ functions
+Message-ID: <aAHCIL_sYIS_1JQH@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH 3/3] mm/hugetlb: Refactor __unmap_hugepage_range() to take
- folio instead of page
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <aAEteJh4Gb8R7gPm@debian>
-Date: Fri, 18 Apr 2025 11:03:59 +0800
-Cc: Sidhartha Kumar <sidhartha.kumar@oracle.com>,
- willy@infradead.org,
- mcgrof@kernel.org,
- a.manzanares@samsung.com,
- dave@stgolabs.net,
- akpm@linux-foundation.org,
- david@redhat.com,
- linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <363E4489-76E8-4FD2-AD17-2E0B46160CAB@linux.dev>
-References: <20250417155530.124073-1-nifan.cxl@gmail.com>
- <20250417155530.124073-3-nifan.cxl@gmail.com>
- <daaeffe6-f9b8-4923-a273-0dab573aa749@oracle.com> <aAEteJh4Gb8R7gPm@debian>
-To: Fan Ni <nifan.cxl@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417182623.67808-2-ebiggers@kernel.org>
+X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel
 
+Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 25ed6f1a7c7a..86fcce738887 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -1753,5 +1753,7 @@ config ARCH_HIBERNATION_POSSIBLE
+>        bool
+>        depends on MMU
+>        default y if ARCH_SUSPEND_POSSIBLE
+> 
+> endmenu
+> +
+> +source "arch/arm/crypto/Kconfig"
 
+...
 
-> On Apr 18, 2025, at 00:34, Fan Ni <nifan.cxl@gmail.com> wrote:
->=20
-> On Thu, Apr 17, 2025 at 12:21:55PM -0400, Sidhartha Kumar wrote:
->> On 4/17/25 11:43 AM, nifan.cxl@gmail.com wrote:
->>> From: Fan Ni <fan.ni@samsung.com>
->>>=20
->>> The function __unmap_hugepage_range() has two kinds of users:
->>> 1) unmap_hugepage_range(), which passes in the head page of a folio.
->>>    Since unmap_hugepage_range() already takes folio and there are no =
-other
->>>    uses of the folio struct in the function, it is natural for
->>>    __unmap_hugepage_range() to take folio also.
->>> 2) All other uses, which pass in NULL pointer.
->>>=20
->>> In both cases, we can pass in folio. Refactor =
-__unmap_hugepage_range() to
->>> take folio.
->>>=20
->>> Signed-off-by: Fan Ni <fan.ni@samsung.com>
->>> ---
->>>=20
->>> Question: If the change in the patch makes sense, should we try to =
-convert all
->>> "page" uses in __unmap_hugepage_range() to folio?
->>>=20
->>=20
->> For this to be correct, we have to ensure that the pte in:
->>=20
->> 	page =3D pte_page(pte);
->>=20
->> only refers to the pte of a head page. pte comes from:
->>=20
->> 	pte =3D huge_ptep_get(mm, address, ptep);
->>=20
->> and in the for loop above:
->>=20
->> 	for (; address < end; address +=3D sz)
->>=20
->> address is incremented by the huge page size so I think address here =
-only
->> points to head pages of hugetlb folios and it would make sense to =
-convert
->> page to folio here.
->>=20
->=20
-> Thanks Sidhartha for reviewing the series. I have similar =
-understanding and
-> wanted to get confirmation from experts in this area.
+> diff --git a/crypto/Kconfig b/crypto/Kconfig
+> index 9322e42e562d..cad71f32e1e3 100644
+> --- a/crypto/Kconfig
+> +++ b/crypto/Kconfig
+> @@ -1424,13 +1424,10 @@ endmenu
+> 
+> config CRYPTO_HASH_INFO
+>        bool
+> 
+> if !KMSAN # avoid false positives from assembly
+> -if ARM
+> -source "arch/arm/crypto/Kconfig"
+> -endif
 
-I think your understanding is right. BTW, you forgot to update =
-definition of
-__unmap_hugepage_range() under !CONFIG_HUGETLB_PAGE case.
+So this removes the KMSAN check.  Is it still needed or not?
 
->=20
-> Thanks.
-> Fan
-
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
