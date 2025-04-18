@@ -1,156 +1,57 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F39770E2;
-	Fri, 18 Apr 2025 03:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85DD923817C
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 04:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744948767; cv=none; b=Gnq2eLCC6E02LhpWUNoOBoLc/VZBgOEn5cBsvHniIKymY0ljuvSaIasXGKLwr3zM63o4xKsG2ZyUn4+p5NG2EqxKqmSiiW4TWgbmLaTbtR60aR31VyqUb/2oCdmDk9WE5c9EghJeAWDx6Jetw4KbQphr+uEajL3pu6AB7qve3Ys=
+	t=1744948815; cv=none; b=rMKEZypKeGF6NZXnD7kRH7i/ZaQgJZ8p8MGSSDFZODCwoLwgap1aVRUpYT9ZRlsbwMwx0FZ29xuUW2OdAKCQh4/IyURBEtoAoykYfza/gV6CUp72o+81IUlybDQpe+1P8Li89C+sOGA4Zsigptvmufxm6/oQ/O7pSBk80LL0Hw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744948767; c=relaxed/simple;
-	bh=zTLpLtCFatq0BP/bO1sVaapNcptTnUAKdd6tFb0ull0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QYhjYXF0WLY3W1UZorW7+X/GQWYRH9TYt5Xoaaur42t20fg7e69PgaOFQBn9jsROGdck3TvNwR0w739rEdjS4awP9aLCabPzT3VkXohSRK+lKymyiDl08zKudvdU8XEByZIetmpNc6Wi5zsalePfNDO9enHdMC9xEAQbcYVLvog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iz4qsG5b; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iz4qsG5b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49951C4CEE2;
-	Fri, 18 Apr 2025 03:59:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744948766;
-	bh=zTLpLtCFatq0BP/bO1sVaapNcptTnUAKdd6tFb0ull0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Iz4qsG5bpDo45A4SVkWv5wqji4qG8oQMkZmupV6uvvHZoGGUayBdl7zYHJ4IvNuSt
-	 ewk5l3qCozIVLGpWHpBFqFLv3KcdSZy1YAvk/OxrKJXleT33sRRpxkvKdXbYc5dnwt
-	 YCLbn0TRWjILOz3bPlW8jVSxjrbybUcD38gKlUGBJpBeUir0Y7MavdikSULt6A2EKb
-	 +dZax1QG0RsrJWHmj27/jlwEuwcFJftA+bTMQD+3+PR2ffMWtZyttQy4lJZGnP7ryo
-	 /WoMN+L4gH+XMOyYlZogn5DbuZAWN4+PRCzuCjzGVddfUKpAbuay+HHvKB7BWieaCz
-	 PqRFyfg6o7sCg==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: lib/chacha - restore ability to remove modules
-Date: Thu, 17 Apr 2025 20:59:09 -0700
-Message-ID: <20250418035909.64902-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1744948815; c=relaxed/simple;
+	bh=fHKEKHdPjoZhYVJRZoCAKKckDq3mCm+7VXF61UEPMbE=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=V0GdInzA4BuMUd24OZykeTAX1mcercq5s/UMUzy07+LZfu7NnpUs39esGOH5FbuBj1zWdUn+K9SMjrdxy704uXTzpHb3GA2O9nlhi+L0fB4Wrsp/YVKNA7f4Z60enGW08fSsQK0044YMIcuiHZcL6hbWYrmKHJ4XqCGDt0Kv2Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d80ac98803so15215285ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 21:00:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744948812; x=1745553612;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fHKEKHdPjoZhYVJRZoCAKKckDq3mCm+7VXF61UEPMbE=;
+        b=UKpC6TRSJr+5mxkpYxHnjC2Vlv13ePW6jq5zQOfoHIJ8TOivrZJojaYGj20/wxCbe7
+         zdhZZOHh9bP/TU0SGWSiH34FYLN9fynzVPwSlOHNdl8tWFmvqFufS0BavtMSOiVk/uDT
+         ik2cNW4Dt2TC7JabUrkRN8XSKHSTd9SOHdTMJibY2ZQdWvgIDk13RrZoseNMm4P4Xo4a
+         7/NNbm7M9M3juPiShtkwkB1/nLAT5Mhw9eaccjF+0UjwfFmPdpcSrzuHPbmWUz1d+uYP
+         b7pkEst2WT19u+ie9yHk7rmJ5cCDGcJmDr8r6ykrx4iNby+aDcc7tXK7w4FsvTMCcjRZ
+         xxyg==
+X-Forwarded-Encrypted: i=1; AJvYcCXPA7THS0QoeOoVtbqyNY18Xsf90mjx7P1Xqc0DmSZMZx4KDGcD0Zkoymcr3abnRL4U4+J0h0Qen4VTfv8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKnj49oloEDsO0uNMe0s2IerHJ7A/aL4agFvauNKFA8BY6HnEz
+	aQMHxSkD/FMPqcRAydKfySgjDHYBecKsfgv2E0nJ85Ejvjp0TV9nyYMwHqTO1u5Y/oi6GyYg19S
+	k1j+X23+4s6Imydr3NO9SxBJkP+0MsECcWm3ls1/InCyADkKLGXVFJWI=
+X-Google-Smtp-Source: AGHT+IEzUru6ibkgeGNXC8u7yW1ax0zndzgxv9QzoghfRsQZA4cfh1MH5s837125qe7BlITDquQbMeDZXaakdd4myRs206UoVCWu
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1565:b0:3d1:97dc:2f93 with SMTP id
+ e9e14a558f8ab-3d88ee51213mr15844865ab.20.1744948812603; Thu, 17 Apr 2025
+ 21:00:12 -0700 (PDT)
+Date: Thu, 17 Apr 2025 21:00:12 -0700
+In-Reply-To: <676879e9.050a0220.226966.0031.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6801ce4c.050a0220.5cdb3.0016.GAE@google.com>
+Subject: Re: [moderation] KCSAN: data-race in io_sq_thread / io_sq_thread_stop
+From: syzbot <syzbot+5988142e8a69a67b1418@syzkaller.appspotmail.com>
+To: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, lizetao1@huawei.com, minhquangbui99@gmail.com, 
+	syzkaller-upstream-moderation@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Eric Biggers <ebiggers@google.com>
-
-Though the module_exit functions are now no-ops, they should still be
-defined, since otherwise the modules become unremovable.
-
-Fixes: 08820553f33a ("crypto: arm/chacha - remove the redundant skcipher algorithms")
-Fixes: 8c28abede16c ("crypto: arm64/chacha - remove the skcipher algorithms")
-Fixes: f7915484c020 ("crypto: powerpc/chacha - remove the skcipher algorithms")
-Fixes: ceba0eda8313 ("crypto: riscv/chacha - implement library instead of skcipher")
-Fixes: 632ab0978f08 ("crypto: x86/chacha - remove the skcipher algorithms")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- arch/arm/crypto/chacha-glue.c           | 5 +++++
- arch/arm64/crypto/chacha-neon-glue.c    | 5 +++++
- arch/powerpc/crypto/chacha-p10-glue.c   | 5 +++++
- arch/riscv/crypto/chacha-riscv64-glue.c | 5 +++++
- arch/x86/crypto/chacha_glue.c           | 5 +++++
- 5 files changed, 25 insertions(+)
-
-diff --git a/arch/arm/crypto/chacha-glue.c b/arch/arm/crypto/chacha-glue.c
-index 3a5c75c95d43b..12afb40cf1ff4 100644
---- a/arch/arm/crypto/chacha-glue.c
-+++ b/arch/arm/crypto/chacha-glue.c
-@@ -122,8 +122,13 @@ static int __init chacha_arm_mod_init(void)
- 	}
- 	return 0;
- }
- arch_initcall(chacha_arm_mod_init);
- 
-+static void __exit chacha_arm_mod_exit(void)
-+{
-+}
-+module_exit(chacha_arm_mod_exit);
-+
- MODULE_DESCRIPTION("ChaCha and HChaCha functions (ARM optimized)");
- MODULE_AUTHOR("Ard Biesheuvel <ard.biesheuvel@linaro.org>");
- MODULE_LICENSE("GPL v2");
-diff --git a/arch/arm64/crypto/chacha-neon-glue.c b/arch/arm64/crypto/chacha-neon-glue.c
-index a0c336b284027..14a2836eff611 100644
---- a/arch/arm64/crypto/chacha-neon-glue.c
-+++ b/arch/arm64/crypto/chacha-neon-glue.c
-@@ -104,8 +104,13 @@ static int __init chacha_simd_mod_init(void)
- 		static_branch_enable(&have_neon);
- 	return 0;
- }
- arch_initcall(chacha_simd_mod_init);
- 
-+static void __exit chacha_simd_mod_exit(void)
-+{
-+}
-+module_exit(chacha_simd_mod_exit);
-+
- MODULE_DESCRIPTION("ChaCha and HChaCha functions (ARM64 optimized)");
- MODULE_AUTHOR("Ard Biesheuvel <ard.biesheuvel@linaro.org>");
- MODULE_LICENSE("GPL v2");
-diff --git a/arch/powerpc/crypto/chacha-p10-glue.c b/arch/powerpc/crypto/chacha-p10-glue.c
-index 9982929573add..351ed409f9b21 100644
---- a/arch/powerpc/crypto/chacha-p10-glue.c
-+++ b/arch/powerpc/crypto/chacha-p10-glue.c
-@@ -87,8 +87,13 @@ static int __init chacha_p10_init(void)
- 		static_branch_enable(&have_p10);
- 	return 0;
- }
- arch_initcall(chacha_p10_init);
- 
-+static void __exit chacha_p10_exit(void)
-+{
-+}
-+module_exit(chacha_p10_exit);
-+
- MODULE_DESCRIPTION("ChaCha stream cipher (P10 accelerated)");
- MODULE_AUTHOR("Danny Tsen <dtsen@linux.ibm.com>");
- MODULE_LICENSE("GPL v2");
-diff --git a/arch/riscv/crypto/chacha-riscv64-glue.c b/arch/riscv/crypto/chacha-riscv64-glue.c
-index ccaab0dea383f..afc4e3be3cac2 100644
---- a/arch/riscv/crypto/chacha-riscv64-glue.c
-+++ b/arch/riscv/crypto/chacha-riscv64-glue.c
-@@ -62,8 +62,13 @@ static int __init riscv64_chacha_mod_init(void)
- 		static_branch_enable(&use_zvkb);
- 	return 0;
- }
- arch_initcall(riscv64_chacha_mod_init);
- 
-+static void __exit riscv64_chacha_mod_exit(void)
-+{
-+}
-+module_exit(riscv64_chacha_mod_exit);
-+
- MODULE_DESCRIPTION("ChaCha stream cipher (RISC-V optimized)");
- MODULE_AUTHOR("Jerry Shih <jerry.shih@sifive.com>");
- MODULE_LICENSE("GPL");
-diff --git a/arch/x86/crypto/chacha_glue.c b/arch/x86/crypto/chacha_glue.c
-index fcc14c006bdeb..59bf63c000726 100644
---- a/arch/x86/crypto/chacha_glue.c
-+++ b/arch/x86/crypto/chacha_glue.c
-@@ -174,8 +174,13 @@ static int __init chacha_simd_mod_init(void)
- 	}
- 	return 0;
- }
- arch_initcall(chacha_simd_mod_init);
- 
-+static void __exit chacha_simd_mod_exit(void)
-+{
-+}
-+module_exit(chacha_simd_mod_exit);
-+
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Martin Willi <martin@strongswan.org>");
- MODULE_DESCRIPTION("ChaCha and HChaCha functions (x86_64 optimized)");
-
-base-commit: da4cb617bc7d827946cbb368034940b379a1de90
--- 
-2.49.0
-
+Auto-closing this bug as obsolete.
+Crashes did not happen for a while, no reproducer and no activity.
