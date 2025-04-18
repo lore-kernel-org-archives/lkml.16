@@ -1,27 +1,28 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76B79270EAF
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE520270EB0
 	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744971820; cv=none; b=BR9YE0MHBYCgeLThjAcvdJc2WZmbNmkJs13A0z2YWUWruT7vwmsVXXngnNjzXlXRHAPkZ/VrdOcpXCY8x1dOHIxorhVZodDTmgh45hqkttFD+9jQ1cJuj6/72jDUrhxIkImDXUe3k7r5H9TNeCCAW9F2gqZOICu7MgmiGODB9X8=
+	t=1744971821; cv=none; b=OMJIvlup4zNZZgbUlkYe5N7Np4oYV4PZzmogQz4v8Kxej69JVTiNjAttWOxwDEe1vD4NOv6H0N7yFnuq11rygAlcsOAaJeQr+jOIndPjOvgEAS/wlTf2D+V6MW0bNECylsw5ZlSakWT4rLjeAcseb9gmUXwiBZwW1ZQKOg4J79Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744971820; c=relaxed/simple;
-	bh=fmgRhL5vXUT7FBS7t9CJnezLjJZ3VCbnBZ4KpmUy6hQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I+rux/tAuWq2Y7Qgy6UpiRS6K778hjEvwDKj1PnJJ416YaKK0IyDxTJwuF3rEI21XiqsBuFs+13SQL1Ynbz7RlC4JAk86T79b7kHWxTSrSr25nHNI8cJ0IMmCIFFz982T4AmOvoEj1Rgmz6qEsJ9k/f8yOUhwK1PNG3aDI5wVXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=hQtio7i4; arc=none smtp.client-ip=220.197.31.4
+	s=arc-20240116; t=1744971821; c=relaxed/simple;
+	bh=pLoJ/wWOxF4hATPeF+S4+nCAv8GTTfh4Rs7e8Jmkcbk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hdLI8CRqXMLer4ypuNcPMu7tLHciNrT2hE2vg0uN8wVARPfOZgQryfO43N0srPqMqVJ/iGn+6cCrPsHw4Y9SfE3DFI9D3lnU0gv/5CNrk5idZsv/PNVloN41hH85jd+v+rLcp0FKWoZXvKuiMNoseyglI3vEeqd8XuF2Dwv4Tt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=jd/zPRsI; arc=none smtp.client-ip=117.135.210.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="hQtio7i4"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="jd/zPRsI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=cC8Ld
-	NPkcT/2u1+ijE6L5FTUaxOiURX2AC0fC5IpUbw=; b=hQtio7i45XsBdvW0furfB
-	S0+QnlQmxaNRB/LCk5JO73Oocg/f0lT84+GA80l0WE3F1oCuou/OVB4/d7FIGkvR
-	LTsmZbJzVQrOGn4uOR61CIWAR7rae++EDhf3uquLh6HGyc+HfpJ5HyiHqnjJKgP6
-	zUV/8hUheMNSZu0MOq/ksI=
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=I2pfP
+	RHCfMx1686AqGSEqHuKYU80CCi4N80MO83xG7I=; b=jd/zPRsIE1TnNrVaNhTM3
+	kxcd/WDZo5qmtQApC/AuzVD8stjDK5bIc5qM73pEmuttirjVkRsB2l5B/FHaXf3f
+	1RfwQg+PvUXykIQDPNX0krnoA4YyKv2PWcw80fsxHCAv/0DrHKxyzdT9XnwiuoAp
+	stDuu4DnxfMpKe+tJXWgS4=
 Received: from node-1.domain.tld (unknown [])
-	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wDX34b+JwJoXuTCAw--.12581S2;
-	Fri, 18 Apr 2025 18:22:56 +0800 (CST)
+	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wDX34b+JwJoXuTCAw--.12581S3;
+	Fri, 18 Apr 2025 18:22:58 +0800 (CST)
 From: Jiayuan Liang <ljykernel@163.com>
 To: Marc Zyngier <maz@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>
@@ -34,10 +35,12 @@ Cc: Joey Gouly <joey.gouly@arm.com>,
 	kvmarm@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Jiayuan Liang <ljykernel@163.com>
-Subject: [RFC PATCH 0/1] KVM-arm: Optimize cache flush by only flushing on vcpu0
-Date: Fri, 18 Apr 2025 18:22:43 +0800
-Message-ID: <20250418102244.2182975-1-ljykernel@163.com>
+Subject: [RFC PATCH 1/1]     KVM: arm: Optimize cache flush by only flushing on vcpu0
+Date: Fri, 18 Apr 2025 18:22:44 +0800
+Message-ID: <20250418102244.2182975-2-ljykernel@163.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250418102244.2182975-1-ljykernel@163.com>
+References: <20250418102244.2182975-1-ljykernel@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,53 +48,64 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDX34b+JwJoXuTCAw--.12581S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Cr15ZF4kXFy3CF48uF1kGrg_yoW8AF1fpF
-	WkA3sYgr4kW34fu3WUJ3yvgw1rGrZ5GFs8JFn8Aw40krs8A3Wvkr9ay3yUZFWUGF95tr47
-	GrWqqFyDZrn0yFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0p_YFCUUUUUU=
-X-CM-SenderInfo: 5om1yvhuqhzqqrwthudrp/1tbiSg0zbmgCIJDq2gAAsw
+X-CM-TRANSID:_____wDX34b+JwJoXuTCAw--.12581S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Zry8Aw4UWrWrtF1xZr47Jwb_yoW8Cw4UpF
+	Z3Cw1kKw4kW34xGay7J395ur1rW395JFs8tF98Gw10vwn8Z34q9r9Yk34UAFWDGryxtF4f
+	tFWavF1UZrs8ZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zic4S8UUUUU=
+X-CM-SenderInfo: 5om1yvhuqhzqqrwthudrp/1tbiYBAzbmgCJ0IXGAAAst
 
-This is an RFC patch to optimize cache flushing behavior in KVM/arm64.
+    When toggling cache state in a multi-vCPU guest, we currently flush the VM's
+    stage2 page tables on every vCPU that transitions cache state. This leads to
+    redundant cache flushes during guest boot, as each vCPU performs the same
+    flush operation.
 
-When toggling cache state in a multi-vCPU guest, we currently flush the VM's
-stage2 page tables on every vCPU that transitions cache state. This leads to
-redundant cache flushes during guest boot, as each vCPU performs the same
-flush operation.
+    In a typical guest boot sequence, vcpu0 is the first to enable caches, and
+    other vCPUs follow afterward. By the time secondary vCPUs enable their caches,
+    the flush performed by vcpu0 has already ensured cache coherency for the
+    entire VM.
 
-In a typical guest boot sequence, vcpu0 is the first to enable caches, and
-other vCPUs follow afterward. By the time secondary vCPUs enable their caches,
-the flush performed by vcpu0 has already ensured cache coherency for the
-entire VM.
+    Optimize this by only performing the stage2_flush_vm() operation on vcpu0,
+    which is sufficient to maintain cache coherency while eliminating redundant
+    flushes on other vCPUs. This can improve performance during guest boot in
+    multi-vCPU configurations.
 
-I'm proposing to optimize this by only performing the stage2_flush_vm() operation 
-on vcpu0, which is sufficient to maintain cache coherency while eliminating redundant
-flushes on other vCPUs. This can improve performance during guest boot in
-multi-vCPU configurations.
+    Testing with a 64-core VM with 128GB memory using hugepages shows dramatic
+    performance improvements, reducing busybox boot time from 33s to 5s.
 
-I'm submitting this as RFC because:
-1. This is my first contribution to the KVM/arm64 subsystem
-2. I want to confirm if this approach is architecturally sound
-3. I'd like feedback on potential corner cases I may have missed:
-   - Could there be scenarios where secondary vCPUs need their own flushes?
-   - Is the assumption about vcpu0 always being first valid?
+    Test command:
+    qemu-kvm \
+        -nographic \
+        -m 128G \
+        -mem-path /dev/hugepages \
+        -mem-prealloc \
+        -cpu host -M virt \
+        -smp 64 \
+        -kernel ./Image \
+        -append "root=/dev/ram earlycon=pl011,0x9000000 console=ttyAMA0 init=/linuxrc systemd.unified_cgroup_hierarchy=1 psi=1"
 
-Implementation details:
-- The patch identifies vcpu0 by checking if vcpu->vcpu_id == 0
-
-Testing with a 64-core VM with 128GB memory using hugepages shows dramatic
-performance improvements, reducing busybox boot time from 33s to 5s.
-
-I'd appreciate any feedback on the correctness and approach of this optimization.
-
-Jiayuan Liang (1):
-  KVM: arm: Optimize cache flush by only flushing on vcpu0
-
+    Signed-off-by: Jiayuan Liang <ljykernel@163.com>
+---
  arch/arm64/kvm/mmu.c | 6 ++++--
  1 file changed, 4 insertions(+), 2 deletions(-)
 
-
-base-commit: fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2
---
+diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+index 754f2fe0cc67..fbc736657666 100644
+--- a/arch/arm64/kvm/mmu.c
++++ b/arch/arm64/kvm/mmu.c
+@@ -2300,8 +2300,10 @@ void kvm_toggle_cache(struct kvm_vcpu *vcpu, bool was_enabled)
+ 	 * If switching it off, need to clean the caches.
+ 	 * Clean + invalidate does the trick always.
+ 	 */
+-	if (now_enabled != was_enabled)
+-		stage2_flush_vm(vcpu->kvm);
++	if (now_enabled != was_enabled) {
++		if (vcpu->vcpu_id == 0)
++			stage2_flush_vm(vcpu->kvm);
++	}
+ 
+ 	/* Caches are now on, stop trapping VM ops (until a S/W op) */
+ 	if (now_enabled)
+-- 
 2.43.0
 
