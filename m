@@ -1,166 +1,440 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CAE5205ACF;
-	Fri, 18 Apr 2025 09:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D0213BC0E
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 09:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744968888; cv=none; b=rzcxBfSC8DOLFgYeHQ+MJeA5rqQL68AbvhMP3ed3Jr93Zm0ehhi58+R6Jitz0QLxZ1bvxaRLynEPeui51XWLL/01/lEsh9nYi8eNCjjlt9EgZd67wH+kYs3EYm+84XOQETcRo9wlrHDfCJ9S9xRVhkHQAlG+udlVfUbxUpdrJF0=
+	t=1744968904; cv=none; b=c64qP0VIs8Zfj9DXT8zu7avmL3bi8rcXtdcvmdOk0X+Dl27+ue+lI4VDU/tPdtRc/ajDBWdDsROUgjO2BPW+fCUenc3ha8ITfrY3S6GCEiTPrYsf4nQdbVPoWFx3iFVsHD7F0evOr8ce7R+bgr5Nhg4wwnt9OpEceCW+6BKtu1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744968888; c=relaxed/simple;
-	bh=+q8KhlDxuSaaDnzDN2QF0Qr9fEZY1wMn2vvENU6RQLs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=tVu7cBhCusjM3/eZpDXxmfzbIRFm2PwBOiJn1gkK4ZAnEe8ILBNqTxr9ow8ULJkO5QS0FmgVCT2mSVvS/Rs/ntkN0ho1Izy7R6fnU8ADXktEh+fmPDbS0s57ZB0gxF8kxwlc917B8Q7CDj5+I3FHCd8IPwfFlhAYCI7EmPX0/18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PEO3dc7i; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744968904; c=relaxed/simple;
+	bh=b44pdG6dFpVeOemUl+zNHzGe7lTNRt/MyWWEo1m0xgc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Fq0Ag/SEeQvBHcd9MdH8rs0QogdoAl24UcU9ARQwQyC7HMKD89l3Gc/PA+JadMA10ewsfiyqLS/XO4pJj6oVh+6MX4AdCRdneV3VpGGlujUW+PgC2gZPYy0kOI5GdpTJVapC3CGdiqncxnZHMBSiMhBvLmEgfYSszP0C9Tk3OOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q+Wf3XfT; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PEO3dc7i"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53I1UZPr012331;
-	Fri, 18 Apr 2025 09:34:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Znw86IU4kiozP/U1IaOS5mXXh2XWycOUjRToJHHs0Wg=; b=PEO3dc7i/jT81MFr
-	qi4+Tn7jM13JTOCg1YBKp6YNkWFa38hE0PZuM7v/OjtR25vXJiTxIEEYgxStkYO+
-	2IX3+1oR3ncFfejVkTs5Xvwcc+0szU3mpJplrzJ74W0V9gqTjsj0OB59atrZWPOf
-	5CQARtQ7njK08nQc/IP/qS/OwNHRlFa+IkMgC0smxriFKs9WswQ49Opn0IUHJhbQ
-	lKld2Wq9qg/DtOBPJnOdcVHstoMfWoNLNhKPtylEoZVnn6mDWyZ56MsXHzjBt1J7
-	FwqXkOtZpFfw3m4xMnvw7phpjiWXosP5niNNuzkBFXL2dIgeTkF3a2ftZzHo2Rq4
-	hB+/mQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4vsqjc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 18 Apr 2025 09:34:44 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53I9YhNJ023614
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 18 Apr 2025 09:34:43 GMT
-Received: from [10.218.37.132] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 18 Apr
- 2025 02:34:41 -0700
-Message-ID: <2ab9a8f9-b051-4213-a9df-4b2c2fa8c6be@quicinc.com>
-Date: Fri, 18 Apr 2025 15:04:38 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q+Wf3XfT"
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-523eb86b31aso642777e0c.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 02:35:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744968900; x=1745573700; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=taYnZJAX9AjJqcs2xWnJr71aItbCvopiMuqAV0c83K0=;
+        b=Q+Wf3XfTn7FzdrnTcgz+kEThoMxQdO0t/NRdQvNA3dtd4ipFOTvGOyiPvWWLe/aCUa
+         fW9Y7PtQhDU/K3PYtDKELTX5bmcZNgQCimqeSnGejUkAcbSA7PnBPyyEVLhAiO+NvqVu
+         uARrKd79iyAwZh3uE+8tslAA6KvnygkZeYN+CPqhxG0n+GOHeCbS+AePazwqXENQyJI6
+         f6M4+hRQgi7x35fXoq4gEfIxF7CFwduavY7tcOjlV0XMzJh/6OT/rnGkT+GuMJTWpxbj
+         F0DrQBa/Zapr9PG9pSsyUleSc+cI+YB0L9+LH4/9ecH/pnmVDEb5sdxtnoIkGQxtrzcj
+         TIdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744968900; x=1745573700;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=taYnZJAX9AjJqcs2xWnJr71aItbCvopiMuqAV0c83K0=;
+        b=trC108lIS2XjcV/YTSVHdtV4IaydnXW8Lf57RNRn+SxFOyJXSY9qWyA0UKYYRi5ChD
+         7OEWq/UMTgEc7DzJd7Yw6eMbOvztqO2PhgGJ09B/6oOnr6zYOZ/ArDdEsG3/FdwT7YVE
+         +ErxgB2UEK4ycLOQokskvfD2tZ2/s8h/jM1gxLYNzGN5XcDyTCKegG3yROOusQC/HVay
+         iD+MBRS30m/HruFP5D+bjtUG9koYSyeh2DKxihObjkReA0MqqFllv2ewwMPSyHV/KbWH
+         v8Pgusnf6n15pklRTN7VVZbEaZI5vjDVVMvw3pwbxRluxHOTvuBp7SkJ1a7qXb6qiaoV
+         03cQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUMTvY82NUxzznDahTPwxCFsFnajXuVKWTdssyndHnZSX0pOZ4KgjOsG6+1/edGIJJa2B6q3sXn5suPP74=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxc6dNmYQRHbyY47J6OPjwvmkUkN/y0En+z9WtAEP6Z3Sv/BrL+
+	Z46mVzy97ocNDOQwc2lNL4XBX9BWdj4TVqmSHK8Wd2l77AE/yysZb9XFTKOF+BI66ODN9G0+h1v
+	mCAPL+WIpCK3mGyGB6CJCUG0fgnbE7LhuaMcF8w==
+X-Gm-Gg: ASbGncv2BcVgLXVRmMDjFFY/CDpKiOZ0ybEPmJwKnfnMinUYkgktvJ511xNwjVCwA1p
+	4TI3m8/UbPg5DF5ARCEfWDALsNDcHihl9EAQlGHvNIGC9XKXpJa1IpNxmb9x4NVyEr/Z9cDBoCp
+	H2SR711j8fSTo9tv5h0WMcoA96JiyFwfG8ovsdU2DUrW2by6t+B82Ruw==
+X-Google-Smtp-Source: AGHT+IHfOCaePsw2Sbbpw78y+pQq5k7hKID3jpJta4FUo5a06bGc5ZvelJDseHPqpVe/Tynq2MzmGaog2gfZnR8ubuM=
+X-Received: by 2002:a05:6122:884:b0:51f:405e:866e with SMTP id
+ 71dfb90a1353d-529253b90dfmr1198298e0c.1.1744968900238; Fri, 18 Apr 2025
+ 02:35:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] bus: mhi: host: pci: Disable runtime PM for QDU100
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: Veerabhadrarao Badiganti <quic_vbadigan@quicinc.com>,
-        <mhi@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250414-vdev_next-20250411_pm_disable-v1-1-e963677636ca@quicinc.com>
- <ec99379e-fd54-42b0-a383-8ed212072396@quicinc.com>
- <o7rv3xgg3btaoqjlzfenbfkrp3fuw54cx6zqojclcfslfg3ha4@c3sqaqqdjdjv>
- <c8699f79-54cc-4adb-8047-b37a69e69d96@quicinc.com>
- <qrb4ozkj3zxfpo733mf6xf35tetfyekytkty6sq7civhycbahm@c6s3wfvmdycs>
-Content-Language: en-US
-From: Vivek Pernamitta <quic_vpernami@quicinc.com>
-In-Reply-To: <qrb4ozkj3zxfpo733mf6xf35tetfyekytkty6sq7civhycbahm@c6s3wfvmdycs>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: cv5Snk7ZWDVtJkCi8usbIV00ro57yIom
-X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=68021cb4 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=W7FBjEr1nMv6UFPOgwQA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: cv5Snk7ZWDVtJkCi8usbIV00ro57yIom
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-18_02,2025-04-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 clxscore=1015 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=999 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504180069
+References: <20250417175107.546547190@linuxfoundation.org>
+In-Reply-To: <20250417175107.546547190@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 18 Apr 2025 15:04:48 +0530
+X-Gm-Features: ATxdqUH1lSys9th2G6SO6a8njOOZsyTXkvrwZQazamKi0EdyXXgNru7FWs-QWgs
+Message-ID: <CA+G9fYtaRQhArip=UYkLt864AnXBD6Y07-06CjOJZYSDZ858SQ@mail.gmail.com>
+Subject: Re: [PATCH 6.12 000/393] 6.12.24-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, 18 Apr 2025 at 00:09, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.12.24 release.
+> There are 393 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 19 Apr 2025 17:49:48 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.12.24-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.12.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+
+The following two regressions found on stable-rc 6.12.24-rc1 review,
+
+1)
+Regressions on arm64 allmodconfig and allyesconfig builds failed
+on the stable rc 6.12.24-rc1.
+
+2)
+Regressions on arm64 dragonboard 410c boot failed with lkftconfig
+on the stable rc 6.12.24-rc1.
+
+First seen on the 6.12.24-rc1
+Good: 6.12.23-rc3
+Bad:  6.12.24-rc1
+
+Regressions found on arm64:
+- build/gcc-13-allmodconfig
+- build/gcc-13-allyesconfig
+- build/clang-20-allmodconfig
+- build/clang-20-allyesconfig
+
+Regressions found on arm64 dragonboard-410c:
+- boot/clang-20-lkftconfig
+
+Regression Analysis:
+- New regression? Yes
+- Reproducibility? Yes
+
+Build regression: arm64 ufs-qcom.c implicit declaration 'devm_of_qcom_ice_g=
+et'
+
+Boot regression: arm64 dragonboard 410c WARNING regulator core.c regulator_=
+put
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Build log arm64
+drivers/ufs/host/ufs-qcom.c: In function 'ufs_qcom_ice_init':
+drivers/ufs/host/ufs-qcom.c:121:15: error: implicit declaration of
+function 'devm_of_qcom_ice_get'; did you mean 'of_qcom_ice_get'?
+[-Werror=3Dimplicit-function-declaration]
+121 |         ice =3D devm_of_qcom_ice_get(dev);
+|               ^~~~~~~~~~~~~~~~~~~~
+|               of_qcom_ice_get
+drivers/ufs/host/ufs-qcom.c:121:13: error: assignment to 'struct
+qcom_ice *' from 'int' makes pointer from integer without a cast
+[-Werror=3Dint-conversion]
+121 |         ice =3D devm_of_qcom_ice_get(dev);
+|             ^
+cc1: all warnings being treated as errors
 
 
+## Boot log arm64 dragonboard 410c:
+[    3.956824] s3: Bringing 0uV into 1250000-1250000uV
+[    3.958010] PM: genpd: Disabling unused power domains
+[    3.961581] s3: failed to enable: (____ptrval____)
+[    3.966149] qcom-rpmpd
+remoteproc:smd-edge:rpm-requests:power-controller: failed to sync cx:
+-1431655766
+[    3.971325] ------------[ cut here ]------------
+[    3.976053] qcom-rpmpd
+remoteproc:smd-edge:rpm-requests:power-controller: failed to sync
+cx_ao: -1431655766
+[    3.985511] WARNING: CPU: 3 PID: 61 at
+drivers/regulator/core.c:2395 regulator_put
+(drivers/regulator/core.c:2418 drivers/regulator/core.c:2416)
+[    3.985536] Modules linked in:
+[    3.985549] CPU: 3 UID: 0 PID: 61 Comm: kworker/u16:3 Not tainted
+6.12.24-rc1 #1
+[    3.990154] qcom-rpmpd
+remoteproc:smd-edge:rpm-requests:power-controller: failed to sync
+cx_vfc: -1431655766
+[    3.992895] sdhci_msm 7864900.mmc: Got CD GPIO
+[    3.999579] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[    3.999587] Workqueue: async async_run_entry_fn
+[    3.999609] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=
+=3D--)
+[    3.999619] pc : regulator_put (drivers/regulator/core.c:2418
+drivers/regulator/core.c:2416)
+[    3.999631] lr : regulator_put (drivers/regulator/core.c:2389
+drivers/regulator/core.c:2416)
+[    3.999640] sp : ffff8000833aba50
+[    3.999645] x29: ffff8000833aba50 x28: 0000000000000000 x27: ffff800081b=
+1e530
+[    3.999661] x26: ffff800081b1e4f0
+[    4.008278] qcom-rpmpd
+remoteproc:smd-edge:rpm-requests:power-controller: failed to sync mx:
+-1431655766
+[    4.011121]  x25: 0000000000000001 x24: 00000000aaaaaaaa
+[    4.011132] x23: ffff00000967e080 x22: ffff0000055e2800
+[    4.018702] qcom-rpmpd
+remoteproc:smd-edge:rpm-requests:power-controller: failed to sync
+mx_ao: -1431655766
+[    4.028477]  x21: ffff0000055e2800
+[    4.028485] x20: ffff0000051f1d40 x19: ffff0000051fac00 x18: 00000000000=
+00002
+[    4.032760] ALSA device list:
+[    4.039587]
+[    4.039590] x17: 0000000000000000 x16: 0000000000000001 x15: 00000000000=
+0010b
+[    4.043862]   No soundcards found.
+[    4.050785] x14: 0000000000100000 x13: ffff8000833a8000 x12: ffff8000833=
+ac000
+[    4.127727] x11: 0000000000000000 x10: 0000000000000000 x9 : 00000000000=
+00000
+[    4.127743] x8 : 0000000000000001 x7 : 0000000000000003 x6 : 00000000000=
+00000
+[    4.127758] x5 : 0000000000000000 x4 : 0000000000000002 x3 : ffff8000833=
+ab630
+[    4.127772] x2 : ffff0000045e0000 x1 : ffff8000801cf41c x0 : ffff0000051=
+fac00
+[    4.127787] Call trace:
+[    4.127793] regulator_put (drivers/regulator/core.c:2418
+drivers/regulator/core.c:2416)
+[    4.127805] regulator_register (drivers/regulator/core.c:5858)
+[    4.127817] devm_regulator_register (drivers/regulator/devres.c:477)
+[    4.127827] rpm_reg_probe
+(drivers/regulator/qcom_smd-regulator.c:1425
+drivers/regulator/qcom_smd-regulator.c:1462)
+[    4.127839] platform_probe (drivers/base/platform.c:1405)
+[    4.127851] really_probe (drivers/base/dd.c:581 drivers/base/dd.c:658)
+[    4.185179] __driver_probe_device (drivers/base/dd.c:0)
+[    4.188819] driver_probe_device (drivers/base/dd.c:830)
+[    4.193158] __device_attach_driver (drivers/base/dd.c:959)
+[    4.197152] bus_for_each_drv (drivers/base/bus.c:459)
+[    4.201664] __device_attach_async_helper
+(arch/arm64/include/asm/jump_label.h:32 drivers/base/dd.c:988)
+[    4.205834] async_run_entry_fn
+(arch/arm64/include/asm/jump_label.h:32 kernel/async.c:131)
+[    4.210866] process_scheduled_works (kernel/workqueue.c:3234
+kernel/workqueue.c:3310)
+[    4.214773] worker_thread (include/linux/list.h:373
+kernel/workqueue.c:946 kernel/workqueue.c:3392)
+[    4.219544] kthread (kernel/kthread.c:391)
+[    4.223102] ret_from_fork (arch/arm64/kernel/entry.S:861)
+[    4.226491] ---[ end trace 000000000000=C3=AF=C2=BF=C2=BD[    4.234746] =
+s4: failed
+to enable: (____ptrval____)
+[    4.234881] ------------[ cut here ]------------
+[    4.238442] WARNING: CPU: 3 PID: 61 at
+drivers/regulator/core.c:2395 regulator_put
+(drivers/regulator/core.c:2418 drivers/regulator/core.c:2416)
+[    4.243226] Modules linked in:
+[    4.251634] CPU: 3 UID: 0 PID: 61 Comm: kworker/u16:3 Tainted: G
+    W          6.12.24-rc1 #1
+[    4.254514] Tainted: [W]=3DWARN
+[    4.263433] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[    4.266397] Workqueue: async async_run_entry_fn
+[    4.273162] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=
+=3D--)
+[    4.277421] pc : regulator_put (drivers/regulator/core.c:2418
+drivers/regulator/core.c:2416)
+[    4.284357] lr : regulator_put (drivers/regulator/core.c:2389
+drivers/regulator/core.c:2416)
+[    4.288522] sp : ffff8000833aba50
+[    4.292427] x29: ffff8000833aba50 x28: 0000000000000000 x27: ffff800081b=
+1e550
+[    4.295651] x26: ffff800081b1e4f0 x25: 0000000000000001 x24: 00000000aaa=
+aaaaa
+[    4.302768] x23: ffff00000967e280 x22: ffff0000055e2800 x21: ffff0000055=
+e2800
+[    4.309885] x20: ffff0000051f1d40 x19: ffff0000051facc0 x18: 00000000112=
+04d65
+[    4.317003] x17: 0000000000000000 x16: 0000000000000001 x15: 00000000000=
+00003
+[    4.324123] x14: ffff8000827de540 x13: 0000000000000003 x12: 00000000000=
+00003
+[    4.331239] x11: 0000000000000000 x10: 0000000000000000 x9 : 00000000000=
+00000
+[    4.338357] x8 : 0000000000000001 x7 : 0720072007200720 x6 : 07200720072=
+00720
+[    4.345477] x5 : ffff000003201f00 x4 : 0000000000000000 x3 : 00000000000=
+00000
+[    4.352594] x2 : 0000000000000000 x1 : ffff8000801cf41c x0 : ffff0000051=
+facc0
+[    4.359713] Call trace:
+[    4.366817] regulator_put (drivers/regulator/core.c:2418
+drivers/regulator/core.c:2416)
+[    4.369077] regulator_register (drivers/regulator/core.c:5858)
+[    4.372899] devm_regulator_register (drivers/regulator/devres.c:477)
+[    4.376806] rpm_reg_probe
+(drivers/regulator/qcom_smd-regulator.c:1425
+drivers/regulator/qcom_smd-regulator.c:1462)
+[    4.381317] platform_probe (drivers/base/platform.c:1405)
+[    4.385050] really_probe (drivers/base/dd.c:581 drivers/base/dd.c:658)
+[    4.388783] __driver_probe_device (drivers/base/dd.c:0)
+[    4.392430] driver_probe_device (drivers/base/dd.c:830)
+[    4.396769] __device_attach_driver (drivers/base/dd.c:959)
+[    4.400764] bus_for_each_drv (drivers/base/bus.c:459)
+[    4.405277] __device_attach_async_helper
+(arch/arm64/include/asm/jump_label.h:32 drivers/base/dd.c:988)
+[    4.409447] async_run_entry_fn
+(arch/arm64/include/asm/jump_label.h:32 kernel/async.c:131)
+[    4.414479] process_scheduled_works (kernel/workqueue.c:3234
+kernel/workqueue.c:3310)
+[    4.418387] worker_thread (include/linux/list.h:373
+kernel/workqueue.c:946 kernel/workqueue.c:3392)
+[    4.423158] kthread (kernel/kthread.c:391)
+[    4.426717] ret_from_fork (arch/arm64/kernel/entry.S:861)
+[    4.430104] ---[ end trace 0000000000000000 ]---
+[    4.435585] l2: Bringing 0uV into 1200000-1200000uV
+[    4.438347] qcom_rpm_smd_regulator
+remoteproc:smd-edge:rpm-requests:regulators: l2:
+devm_regulator_register() failed, ret=3D-517
+[    4.443414] Unable to handle kernel paging request at virtual
+address ffffffffaaaaae6a
+[    4.454358] Mem abort info:
+[    4.462236]   ESR =3D 0x0000000096000005
+[    4.464916]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+[    4.468754]   SET =3D 0, FnV =3D 0
+[    4.474215]   EA =3D 0, S1PTW =3D 0
+[    4.477066]   FSC =3D 0x05: level 1 translation fault
+[    4.480123] Data abort info:
+[    4.484980]   ISV =3D 0, ISS =3D 0x00000005, ISS2 =3D 0x00000000
+[    4.488109]   CM =3D 0, WnR =3D 0, TnD =3D 0, TagAccess =3D 0
+[    4.493413]   GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
+[    4.498527] swapper pgtable: 4k pages, 48-bit VAs, pgdp=3D000000008245a0=
+00
+[    4.503913] [ffffffffaaaaae6a] pgd=3D0000000000000000,
+p4d=3D0000000082e0d003, pud=3D0000000000000000
+[    4.510605] Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
+[    4.519001] Modules linked in:
+[    4.525244] CPU: 3 UID: 0 PID: 61 Comm: kworker/u16:3 Tainted: G
+    W          6.12.24-rc1 #1
+[    4.528383] Tainted: [W]=3DWARN
+[    4.537304] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[    4.540268] Workqueue: async async_run_entry_fn
+[    4.547032] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=
+=3D--)
+[    4.551292] pc : regulator_unregister (drivers/regulator/core.c:5885)
+[    4.558230] lr : devm_rdev_release (drivers/regulator/devres.c:453)
+[    4.563090] sp : ffff8000833abaf0
+[    4.567340] x29: ffff8000833abb10 x28: ffff0000045e0000 x27: 00000000000=
+001c8
+[    4.570563] x26: ffff00000455e040 x25: ffff00000967e200 x24: ffff0000045=
+e0000
+[    4.577682] x23: ffff80008279ecb0 x22: ffff80008236b82e x21: ffff0000051=
+fac00
+[    4.584799] x20: ffff000005601010 x19: ffff8000833abbb8 x18: 00000000000=
+00002
+[    4.591916] x17: 6f74616c75676572 x16: 3a73747365757165 x15: 00000000000=
+03730
+[    4.599036] x14: ffff83ffffffffff x13: ffff8000833a8000 x12: ffff8000833=
+ac000
+[    4.606152] x11: 0000000000000000 x10: 0000000000000000 x9 : ffff800080b=
+14828
+[    4.613272] x8 : d8b163d50d526200 x7 : 3d4e5f454c424954 x6 : 000000004e5=
+14553
+[    4.620390] x5 : 0000000000000008 x4 : ffff8000821e9c67 x3 : ffff8000833=
+aba30
+[    4.627508] x2 : ffff0000045e0000 x1 : ffff0000051fac80 x0 : ffffffffaaa=
+aaaaa
+[    4.634626] Call trace:
+[    4.641732] regulator_unregister (drivers/regulator/core.c:5885)
+[    4.643993] devm_rdev_release (drivers/regulator/devres.c:453)
+[    4.648505] release_nodes (drivers/base/devres.c:506)
+[    4.652410] devres_release_all (drivers/base/devres.c:0)
+[    4.655970] really_probe (drivers/base/dd.c:551 drivers/base/dd.c:724)
+[    4.659963] __driver_probe_device (drivers/base/dd.c:0)
+[    4.663610] driver_probe_device (drivers/base/dd.c:830)
+[    4.667863] __device_attach_driver (drivers/base/dd.c:959)
+[    4.671858] bus_for_each_drv (drivers/base/bus.c:459)
+[    4.676370] __device_attach_async_helper
+(arch/arm64/include/asm/jump_label.h:32 drivers/base/dd.c:988)
+[    4.680541] async_run_entry_fn
+(arch/arm64/include/asm/jump_label.h:32 kernel/async.c:131)
+[    4.685578] process_scheduled_works (kernel/workqueue.c:3234
+kernel/workqueue.c:3310)
+[    4.689481] worker_thread (include/linux/list.h:373
+kernel/workqueue.c:946 kernel/workqueue.c:3392)
+[    4.694251] kthread (kernel/kthread.c:391)
+[    4.697810] ret_from_fork (arch/arm64/kernel/entry.S:861)
+[ 4.701203] Code: d5384108 f9430508 f81f83a8 b4000bc0 (f941e014)
+All code
+=3D=3D=3D=3D=3D=3D=3D=3D
 
-On 4/18/2025 2:06 PM, Manivannan Sadhasivam wrote:
-> On Fri, Apr 18, 2025 at 11:55:24AM +0530, Vivek Pernamitta wrote:
->>
->>
->> On 4/17/2025 11:37 AM, Manivannan Sadhasivam wrote:
->>> On Thu, Apr 17, 2025 at 10:00:38AM +0530, Veerabhadrarao Badiganti wrote:
->>>>
->>>> On 4/14/2025 1:17 PM, Vivek Pernamitta wrote:
->>>>> The QDU100 device does not support the MHI M3 state, necessitating the
->>>>> disabling of runtime PM for this device. Since the PCIe core framework
->>>>> enables runtime PM by default for all clients, it is essential to disable
->>>>> runtime PM if the device does not support Low Power Mode (LPM).
->>>>>
-> 
-> Not true... See below.
-> 
->>>>> Signed-off-by: Vivek Pernamitta<quic_vpernami@quicinc.com>
->>>>> ---
->>>>>     drivers/bus/mhi/host/pci_generic.c | 10 ++++++++++
->>>>>     1 file changed, 10 insertions(+)
->>>>>
->>>>> diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
->>>>> index 03aa887952098661a488650053a357f883d1559b..a011fd2d48c57cf9d1aec74040153267a206d797 100644
->>>>> --- a/drivers/bus/mhi/host/pci_generic.c
->>>>> +++ b/drivers/bus/mhi/host/pci_generic.c
->>>>> @@ -43,6 +43,7 @@
->>>>>      * @mru_default: default MRU size for MBIM network packets
->>>>>      * @sideband_wake: Devices using dedicated sideband GPIO for wakeup instead
->>>>>      *		   of inband wake support (such as sdx24)
->>>>> + * @pm_disable: disables runtime PM (optional)
->>>>>      */
->>>>>     struct mhi_pci_dev_info {
->>>>>     	const struct mhi_controller_config *config;
->>>>> @@ -54,6 +55,7 @@ struct mhi_pci_dev_info {
->>>>>     	unsigned int dma_data_width;
->>>>>     	unsigned int mru_default;
->>>>>     	bool sideband_wake;
->>>>> +	bool pm_disable;
->>>>>     };
->>>>>     #define MHI_CHANNEL_CONFIG_UL(ch_num, ch_name, el_count, ev_ring) \
->>>>> @@ -295,6 +297,7 @@ static const struct mhi_pci_dev_info mhi_qcom_qdu100_info = {
->>>>>     	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
->>>>>     	.dma_data_width = 32,
->>>>>     	.sideband_wake = false,
->>>>> +	.pm_disable = true,
->>>>
->>>> |no_m3|orno_|m3_support|would be more suitable than|pm_disable|
->>>
->>> Yes!
->>>
->>> But does the device not supporting M3 only or D3Hot also? If the former, then we
->>> should prevent MHI host to enter/exit M3 state in mhi_pm_suspend/ mhi_pm_resume.
->>> There is an incentive in allowing D3Hot if the device supports it.
->>>
->>> Also, is there a way we could probe M3 support in the device so that we can
->>> check it during runtime?
->>>
->>> - Mani
->>>
->> In QDU100 device does not support M3 state, D3_hot will be supported. As
->> QDU100 is an accelerator card which needs high-throughout, LPM needs to
->> disabled here. So we are trying to disable runtime PM here, without M3 ,
->> D3_hot will not have effect in QDU100.
->> Also in MHI we don't have provision to check device M3 capability, so we are
->> trying to disable runtime PM here.
->>
-> 
-> Even though PCI core is enabling runtime PM for devices, it also prevents the
-> devices from getting suspended unless the drivers explicitly asks for it. So
-> this driver is using autosuspend feature to allow the devices to be suspended
-> if PME is supported from D3Hot.
-> 
-> If you want to prevent the device from getting runtime suspended, you should
-> just skip autosuspend.
-> 
-> - Mani
-> 
-Thank you, I will upload new patchset accordingly.
+Code starting with the faulting instruction
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[    4.704767] ---[ end trace 0000000000000000 ]---
+[   14.260348] amba 802000.stm: deferred probe pending: (reason unknown)
 
+
+## Source
+* Kernel version: 6.12.24-rc1
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-st=
+able-rc.git
+* Git sha: dacb3f332e4ba2858eafa0751719b49210dd42b0
+* Git describe: v6.12.23-394-gdacb3f332e4b
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12=
+.23-394-gdacb3f332e4b
+* Architectures: arm64
+* Toolchains: clang-20, gcc-13
+* Kconfigs: allmodconfig, allyesconfig
+
+## Build arm64
+* Build log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.=
+y/build/v6.12.23-394-gdacb3f332e4b/testrun/28151361/suite/build/test/gcc-13=
+-allmodconfig/log
+* Build history:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12=
+.23-394-gdacb3f332e4b/testrun/28151361/suite/build/test/gcc-13-allmodconfig=
+/history/
+* Build details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12=
+.23-394-gdacb3f332e4b/testrun/28151361/suite/build/test/gcc-13-allmodconfig=
+/details/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2vrxJK=
+d5cYfMrf4mhq0ZAf3TEkr/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2vrxJKd5cYfMrf4mhq0Z=
+Af3TEkr/config
+
+## Steps to reproduce on arm64
+- tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
+--kconfig allmodconfig
+
+## Boot arm64 dragonboard-410c
+* Boot log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y=
+/build/v6.12.23-394-gdacb3f332e4b/testrun/28151352/suite/boot/test/clang-20=
+-lkftconfig/log
+* Boot history:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12=
+.23-394-gdacb3f332e4b/testrun/28151352/suite/boot/test/clang-20-lkftconfig/=
+history/
+* Boot details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12=
+.23-394-gdacb3f332e4b/testrun/28151352/suite/boot/test/clang-20-lkftconfig/=
+details/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2vrxIB=
+P42aRa8k5i0MyTK2ZgRA8/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2vrxIBP42aRa8k5i0MyT=
+K2ZgRA8/config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
