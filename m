@@ -1,67 +1,50 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0C78C0E;
-	Fri, 18 Apr 2025 07:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7957F25487A;
+	Fri, 18 Apr 2025 07:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744959816; cv=none; b=fdOdRiLbT/2hmK7qNMKBRzrGamX9n6vw0tIO9A8m3OBbNuKN/u2zfRMSlsHs0TcCtxkm4sq1k+gQk8Kwk6vroax2deWVZob2JyYf1kecFWuBTOeSpMmtKHYwwpQMRJqc3XA1WDv79Wb6Pclhw7coclHRMIKV5H5Fj6fC3ebyuNE=
+	t=1744959884; cv=none; b=Qercxyl2dND9XEynJ7glzP5KYYNBv71rczlz3Gue8vvJVZNEgxaS1bfUnH0BfFUKBg0v3fyBajafZ5jbAnO2ZgDZG6Y1r7oUK52vAgJ5W44p5J/CjgHeqQSDD94WujRCP6wmDyURFYhYabCH0fYDkJLfSMGpBNw57KsU068ZLRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744959816; c=relaxed/simple;
-	bh=l12G9/KABGBWRLrSnjVdfQ0Z2bSs/KbpUquxhRC9aSo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=YmRWwnCv9wi9wcvYAx+G8iaHwKrEZNWdNox2GA73Xs146DgeJ/qSUsGihcZTnO7tjXavV4Y0GmE7J69kP/zhaSMunyulnEynfgWgvwl8nYjyzKAefle5FF5DRK/aOOd5zcO4N4OqA/hj4LD3jpYoDrXD++M35/LoR4Sx+WSB+NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YD0BJ4bu; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744959884; c=relaxed/simple;
+	bh=+KIilC/KK10PFDQbziKDb23AVy0Bd3WaO5GJCqpwodc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PqkGwK3jmJON2DucK1seF/Nw/NbJA3BlGMCqpE41FKX46uTdmrIH5KZNLQ0rkxKA78ULbl1rYDL3C39NS8xUK3gUddnGcW0gdEZs1hNwzSU0S0TCViYLchEWPd7gwCAao2c1ipxiMVmyxF+dJ5A3Q3nOCl2tR7BIxEaonQA5r+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GD1MaHrQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YD0BJ4bu"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so11346225e9.0;
-        Fri, 18 Apr 2025 00:03:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744959813; x=1745564613; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0eX8qj76kO14FK/DjeL3E1y5jYurP6zJ1Vl1XJVXa+E=;
-        b=YD0BJ4buvmrY6b4aFCT3rIylIEkfiOFYlSe+hg/ahVIqeTakGOSV8CsFkXGqr+0Y8n
-         ij+/oLlNo9TleQZg50i6q5La3KAvq1SiNi/DHyVccEs/OXTX5NnocbG95JzdF5JVjQ8U
-         yczfafe+K6KwfNQPs6UYeMaulrH8gfCeiSatqvqcpM6FZi7u1+8GKbgGT2un9+Dcr+QZ
-         OtiQlQd7Plqc7qOkSC4a4CQEnBUW/VvkuwmENIZqyq7WjHrfk3hF/n9X5EoDKoinvbrX
-         X/4zD8HzVW5HgrS62SaJhp8WnW4LtCV4sTq2vwg34vjTYnaqGBAB22/HNF+cSwEtNtYj
-         SY4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744959813; x=1745564613;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0eX8qj76kO14FK/DjeL3E1y5jYurP6zJ1Vl1XJVXa+E=;
-        b=mm8Q9jZPVAKGUh8gc/CCtYocwgTgFOdI3FlMJsjGXhEX25mTba1vs+tNfnZHqjimC5
-         BHl8TLVshLU080YohEr9nxKZAfip0AEo9kaz4XdB/swUlJN+klpsSJMeJF8ea3M2uoNS
-         FRporOPURdU/xG+90CgEyTK4lAy6ngFJjnD2CzAEmAFYGmvgdAzBpXNWTYp1eAa293T2
-         7Xt6UzqAmd/CpD3Sw5ir9THeXz8/2mJ1i0CALfDR3fIyUx+Oq72qYR2KY9jEhata00uI
-         a7v6lzrs0RTY8u/b+r8B+quNi+7GXKNFKA9mit1g+wNHX2N7r6MsLB1XnlQ0t/ciRRwD
-         scRw==
-X-Gm-Message-State: AOJu0YwIBFeokRSvrATJRyQetQLgueTFOWhMk1ZrpEaJhHx++XEa1rmI
-	Or5+WTATbG3jrU9n6elxLG9mmxVIm63duLFwOXsw/hwHqk/+RNvlgpA7lJZVpJw=
-X-Gm-Gg: ASbGncsVppdghRv9Mh275ZaMt1mg1yV5Ut16tdREfYuWY8soiyIhPY9vvm5xFe2HOeX
-	gmrGabIwX5SrS0KRCzsTEEGf+Pacgm6vz3G1D+7Dix+sMr0ApcISv8CKEvywH+xHhmweWhTYHL4
-	tx7T3ak/KOS+TnwAmjwKn5Y3O+AT/BWes+nlHJkwwa1uY3uTDkagpbEJ50GG1RKPwtnfWLxJZ40
-	p935zGe36e4uR5fMTp6jZC9HYPjmqyZGPduQyPErI4a03d0fsiL2vf1//kV1hKF9mXcVZ6J1Vb7
-	XmJXv4oO81Prfm2YmrZtdyvrh3DOpunDu0DMrw34ApKEMISjFqtITA==
-X-Google-Smtp-Source: AGHT+IHynW9B2jkcOutJVCRiB33ny1490S+sMTbDI5VQAcQ69Abvk0L/7TqMmkv+GLtqEVSaxgs0lQ==
-X-Received: by 2002:a05:6000:4285:b0:390:fbcf:56be with SMTP id ffacd0b85a97d-39efb94a9cfmr1107828f8f.0.1744959812730;
-        Fri, 18 Apr 2025 00:03:32 -0700 (PDT)
-Received: from localhost ([77.237.184.200])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4a4c0fsm1832613f8f.88.2025.04.18.00.03.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 00:03:32 -0700 (PDT)
-Date: Fri, 18 Apr 2025 10:33:19 +0330
-From: Ali Nasrolahi <a.nasrolahi01@gmail.com>
-To: Linux Newbies <linux-newbie@vger.kernel.org>
-Cc: Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Documentation for Regmap API?
-Message-ID: <4cxpefqeaprynrfpefjdmq6gqxmt3fcpe6rxf4uirtlai6fgn7@ehefex3cebfy>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GD1MaHrQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3221AC4CEE2;
+	Fri, 18 Apr 2025 07:04:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744959883;
+	bh=+KIilC/KK10PFDQbziKDb23AVy0Bd3WaO5GJCqpwodc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GD1MaHrQf7F4sFX62+d0KZnhJ+YiUfKB9JdvR7t5uihY6MeMLljCCGOKOsWkU1ncW
+	 yGI7Ce+N+9XvByDTP45l69juq3Mt6582wIiKgUGmYhiHR0NKl7eGTbiNTP34iwyIOU
+	 qZujrxatZ1SmU2ORTFHM3rYosNtbpRjjPIWxv5e8AGBP00tKCjxGkD83nyF+hy2wFy
+	 QncPStZS8OOpskiVwJZCC9CWbnNTwGi7wWmoNmodyZS7bVBiK1NP4k571Pyanrr7z0
+	 iF27zPXDTWJS3cViu41U9hSbT7e0JTzYYD8yb+i97ROc+dUTOHaau/ioy7SX7i7Pou
+	 VjroniTZSoUCA==
+Date: Fri, 18 Apr 2025 09:04:38 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>
+Subject: Re: [PATCHv3 perf/core 2/2] selftests/bpf: Add 5-byte nop uprobe
+ trigger bench
+Message-ID: <aAH5hvMQ41FUlKPu@gmail.com>
+References: <20250414083647.1234007-1-jolsa@kernel.org>
+ <20250414083647.1234007-2-jolsa@kernel.org>
+ <CAEf4Bzadf-k7vcDWm40yjpq7P4dYEr5pKTKsgthvWs_GqvoRNA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,38 +54,38 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4Bzadf-k7vcDWm40yjpq7P4dYEr5pKTKsgthvWs_GqvoRNA@mail.gmail.com>
 
-Hi,
 
-I've been exploring the Regmap API and
-was wondering if there’s a dedicated documentation page
-that provides an overview or explanation of the API itself.
+* Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 
-So far, I’ve looked into the following:
+> On Mon, Apr 14, 2025 at 1:37 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > Add 5-byte nop uprobe trigger bench (x86_64 specific) to measure
+> > uprobes/uretprobes on top of nop5 instruction.
+> >
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  tools/testing/selftests/bpf/bench.c           | 12 ++++++
+> >  .../selftests/bpf/benchs/bench_trigger.c      | 42 +++++++++++++++++++
+> >  .../selftests/bpf/benchs/run_bench_uprobes.sh |  2 +-
+> >  3 files changed, 55 insertions(+), 1 deletion(-)
+> >
+> 
+> LGTM. Should we land this benchmark patch through the bpf-next tree?
+> It won't break anything, just will be slower until patch #1 gets into
+> bpf-next as well, which is fine.
+> 
+> Ingo or Peter, any objections to me routing this patch separately
+> through bpf-next?
+> 
+> But either way:
+> 
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-1. https://docs.kernel.org/driver-api/index.html
-2. The Documentation/ directory in both the mainline and linux-next trees.
-3. The regmap tree mentioned in the MAINTAINERS file:
----
-   REGISTER MAP ABSTRACTION
-   M:  Mark Brown <broonie@kernel.org>
-   L:  linux-kernel@vger.kernel.org
-   S:  Supported
-   T:  git git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git
-   F:  Documentation/devicetree/bindings/regmap/
-   F:  drivers/base/regmap/
-   F:  include/linux/regmap.h
----
+I've applied this to the perf tree with a few readability edits to the 
+changelogs and the new tags added in.
 
-Despite checking these locations,
-I couldn’t find a dedicated document explaining the Regmap API in detail.
+Thanks,
 
-1. Is there any such documentation available that I might have missed?
-
-2. If not, I’d be happy to contribute and help write one.
-Should I bring this up on the linux-doc mailing list for further guidance on how to proceed?
-
-Any pointers or suggestions would be greatly appreciated.
-
-Thanks a lot,
-Ali
+	Ingo
