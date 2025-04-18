@@ -1,72 +1,72 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0CD21A92F
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E165A21B9CD
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744997700; cv=none; b=RGvTlisDEQg/KPuIFZPh7pMtUtorw4tMpuCEuHThpwQex+Wi04t4yenpe4SSWRAfb2881V1ydRsRNAJFJ6NI/sY0hT4Nnafqc/2L6PPUO3lgs+5FUXzUDvFr4UjhtixgM2UF3BQ0rsllodI3xOM37SWMoTpb7+bNRfGU4QEbNso=
+	t=1744997701; cv=none; b=Pmy27maYU22wmET96LsZUVZLwTP8tSD+ozy5tA+JOuRgkF0ShHE64NCi49Y3SvBi21Wgj8LtbgDH9aUSnCPhOOchvnLNx72UiBQP4VP0u+EUoDQ/DyxwXRG2XSuay6lKHoue7mgePJl3Ietx0oYSGNinCAnirpB26r48rvMuxm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744997700; c=relaxed/simple;
-	bh=912DhBbNZi7td2eyvaGCgvKiyTa/PfJmPgJRBuo1gJ4=;
+	s=arc-20240116; t=1744997701; c=relaxed/simple;
+	bh=Y6+jh/N20q5vgDZ+rUTiFEYPLOfUfkLSliU92OGQsrk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SE0hCLlzLo8ngp4pyW949wm2b4fCnkTUmqHob7n9fsNpedEHZt2NFua2sSgxHFXVsL9RTTmoMhabGPMgUSlIkqF7L4941Xw7n7M9vBlXO6J9pJznrDkh+Grh0ysB80/OxfbynlSx1dcMm0Ie5FxzYz28F1tFZ5HQmHpOHDgmaV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uqra2S+F; arc=none smtp.client-ip=209.85.221.41
+	 MIME-Version; b=GjAVKPYnyFOlVtxnPzdqDVhFiJAjkAgN2F5PE1MFdeG1piunxMn7BFp/yh52nTSkbA8+eNT8hpCmG7BnTV3Tb36HJgFzRpTW9MITuuzhGFdAEAu/cCObyFSdbA5/wYPMb/L4KFYfA4ULQRr/vGh4OJXSDVC25jhKxQiTxuH2Otk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Spra1xXU; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uqra2S+F"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39ee5ac4321so1835766f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:34:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Spra1xXU"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39c31e4c3e5so1421651f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:34:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744997696; x=1745602496; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744997698; x=1745602498; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=E+FOcgEbgZOR6HUZYr+EJt4u9kEg2pRhCKDSCtJHjy4=;
-        b=Uqra2S+FaS0YdWHJjYsXsAAOvJF3ww0z1IbUetOcv6ItTU5EU1KLmuGLYth0EuRapM
-         qoj/PFwaBlBj8QImoH+Hwo9xz72Kj/m6bmCi1nsGRAgdRh0HvN9VtMYcRqHjiHVEBshw
-         iw7tNSpA1b1KA1MKWtbCGz9+NsBAnGhqcgZSfu1XuED4u6Tg2t5nv5+AsG9x2RQHlMMB
-         hAvEsNsnRcWUI5cRN73e93C2BVzy3tGWrCKWG7mjQ8CMitc4R1Or1A6gRASBIGLu+B1O
-         PImXVA6yeCDClsTaXaIOZ5DT2z83d/nhrT4EGI9w+gf76tkDgGdOyu7rWk75u4dKzWYh
-         8tWw==
+        bh=IzATcEFy4yD0nb8pE+dCXra4c1CFrIcpPdFq8ieoLC4=;
+        b=Spra1xXUGFGUnfxipZ8cUFMB8kyNNTXOFrQAQuuq8RA12zy6DPpibjLAibw7DWhIip
+         CzF2yWbY+0xqAALDfBE7dwvM4YPhaz/xpPxa/eXSELGuYq41PrUdOoJ66SOYyz3yM1px
+         uyeuKexZsSsQcENpMZ2EOpW+kA7OOvPJIe1yz9MhmweyNT8fr+wtTHEKkwU1ka6s0bn1
+         hGlD46dptzOuo+hjrEO67HwtdUK3/ZcSTMuWozt9C+07M/+sP7FVfasFXQ/bvs5fWFtt
+         JCTIiJZGNMTJ3Q3do0CIMUZINk6WL/OE8XiI/YGpbnP7UaLadU8hnxqEWMKIA/SFW4Wm
+         iuDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744997696; x=1745602496;
+        d=1e100.net; s=20230601; t=1744997698; x=1745602498;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=E+FOcgEbgZOR6HUZYr+EJt4u9kEg2pRhCKDSCtJHjy4=;
-        b=XgVjCmWhmlVL6JicI2BEBjPEHoZZo+qcuhY0MHpVxaq0M4GhKESPvgnhd2Rd1N8k+T
-         NB3dgiadeTcKuDxSXSpvjCdqhQC8yyl8svX+f5wp8LCl8vaWxOwKf1smZV/7jPWA8JXm
-         RX9yvBxYguw9rXsdXql2nupwAGAwXYJw2E8ffzdbD21f9/h++1kvPe0gpG2miO7YY881
-         J6PEDXAeX9B+iZjfWkXmmJTD8j6JfXjea2Vtiqk0MD0EopSUfLQhwDSb32RO2w+Sc1J/
-         gs/GcRA61123dwj+VOF0TR6ThkCYkwsV4czhPCEW6vRazCZntAYwgJ+5zi8ApLweE2w6
-         pvrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXjGqLQQFv9YaA2aTjCfqqarLmv3qQ1HwbAZoiV0EW0QBx9XmO6Sc1IOt40Pk7ZeQr35Xe0JKTo+GrzWlo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhC7m0guikrAtpmr3DOSIBoJ5fvwPlsjMJVZxJtk66NjTB4aTQ
-	hqbhh/NiGuk7fiONGm8TYH2rZINrzY+AOdNyK8Wy5wBHVxNliJpw
-X-Gm-Gg: ASbGncsV9Zq4XomAFZpQAbRQzVlBnviGGHkQZCIfI8OR9IvopAcvoaZ2AMWeCuqFPVp
-	t2xk/K5p3CZf5sbK7wyrfi8r18WZZ56ym+LdQ8d0/0ozT+7XezhTjg4h9P0+LRa+vSPF7T7mEBH
-	fWgBarf7jYBrE9YIXfMgtC2uObvQ8EibsuI2Sexwb88qEAukY+Tb21GSLzhRrmqgnbSHCMU/bki
-	gmcKlNr66THYnar8ENSFqYcOjyuARW0FcEVrOPIiO96zzj9nPcPKjXNtZhRU5TXpV3iuVYdV944
-	B+RyTLHg877joOhZEbDG7M24/HUdb+OX4o06M8AHpUltHiGsBiSJLPXjfx+YQ49nzQsIDl14ZmJ
-	p
-X-Google-Smtp-Source: AGHT+IGb8/57K9ai+Ha6SyUvyBZ3Kwj0AjmdglALiUn63qt13/kokBa+B6jbxML43drs8/ss8E7FNA==
-X-Received: by 2002:a5d:5987:0:b0:39e:e438:8e4b with SMTP id ffacd0b85a97d-39efbaf6e96mr2691275f8f.50.1744997696571;
-        Fri, 18 Apr 2025 10:34:56 -0700 (PDT)
+        bh=IzATcEFy4yD0nb8pE+dCXra4c1CFrIcpPdFq8ieoLC4=;
+        b=JIQCZIi0uixKyMmHbz2M8m5YWr+64fzIUIlPqTAbF5hTFfgpfgQSZMfFdXVTGRvbSQ
+         TbVqlqEEtP24a9rXD/f/70g/IdIiLAi1mEtNa47vCPcuez+n3T1vjDucHA/Er6XDLHIH
+         MS58qbeocC89+xK1B+K5hOm/oOsXBdgx12nUyRVXK9oR8Sxgb7y+PK2BYH6v3JxS3tEV
+         wP9xfjKIP4vA+I6ybNAG2rtT/7VfNdH/yu28ch5FkIrb6ke6nzkjhGJk/VN7dL2bhcnU
+         r85xfI0wmbpQXkNa7DTjr2cFX8vpQMSze3q8mPo3zKtDdWmLu8CPEIM5YuCGT5kdQ+do
+         txUA==
+X-Forwarded-Encrypted: i=1; AJvYcCUjO6QAyUCUmpZWd7LMhpotj6FD8sTbOAjkQVAumRJF7RA04wlnm/MpI+kiVb8hQqM2VI9lPxSTIqwV1hg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxedzhyx4GRDElBl9tS3Tw96BauL/hqrJs4lxPJoUsrkKu3ykMc
+	WBMeXukppF+WPCPkTHVlp84zMFAWDA90RmxyxdUHkvg39G6YFEDw
+X-Gm-Gg: ASbGncv7knjlpaOA13jzhzwGMuZjSG88Le5HPbdL8K4uu4LV1Dd2nSsrHvSDWIR7JjP
+	QBhqSV+8u8sP42u2TdB+etdChY6PFwaoQndAYol3As2lLhLzCXk8A17zCYQv0vJ10hXWxuA3KzT
+	TrRLJqV1564gxgQHsLTzQJh1ioQ72SXn0aiXwn+IgPAJQPo6N/SAqLIFzFoP78j8QHaJcN5R8PY
+	VwUE0nl1B/bwWteqVNdiFlSOP8RWFgn1Rs8UbguhTnuswzPu3Ofn/iOyotU4sgs1dmCNTFf9rpS
+	jsjG4283avuzkqnH3DxOORRJDOyd/Xd6g5JMcAV1pyFn4llquw0Xs9CFBHc/d2XF4t5Z7OGmMIX
+	4
+X-Google-Smtp-Source: AGHT+IEZf1ha1txArdhgWM8acBtGgyt+WHvJBGwchmFEH5kJ9VtYLcai8G/K+Zp0NjdzZjrfpODs4g==
+X-Received: by 2002:a5d:6d87:0:b0:390:fb37:1ca with SMTP id ffacd0b85a97d-39efbb095eamr3057655f8f.53.1744997697904;
+        Fri, 18 Apr 2025 10:34:57 -0700 (PDT)
 Received: from localhost.localdomain (82-64-73-52.subs.proxad.net. [82.64.73.52])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4332f8sm3287320f8f.40.2025.04.18.10.34.55
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4332f8sm3287320f8f.40.2025.04.18.10.34.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 10:34:56 -0700 (PDT)
+        Fri, 18 Apr 2025 10:34:57 -0700 (PDT)
 From: Dave Penkler <dpenkler@gmail.com>
 To: gregkh@linuxfoundation.org,
 	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org
 Cc: marcello.carla@gmx.com,
 	Dave Penkler <dpenkler@gmail.com>
-Subject: [PATCH 2/8] staging: gpib: Fix setting controller-in-charge
-Date: Fri, 18 Apr 2025 19:34:28 +0200
-Message-ID: <20250418173434.2892-3-dpenkler@gmail.com>
+Subject: [PATCH 3/8] staging: gpib: Enable SRQ irq on request_system_control
+Date: Fri, 18 Apr 2025 19:34:29 +0200
+Message-ID: <20250418173434.2892-4-dpenkler@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250418173434.2892-1-dpenkler@gmail.com>
 References: <20250418173434.2892-1-dpenkler@gmail.com>
@@ -78,41 +78,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The gpio board can only act as system controller.
-By the IEEE488.1 standard a system controller becomes
-controller-in-charge when it asserts the interface-clear control
-line.
+The SRQ irq was being enabled on attach but the board is not
+set up to handle it until it becomes system controller.
 
-Remove the setting of controller-in-charge from bb_take_control
-and move it to bb_interface_clear.
+Move the enabling of the SRQ irq to bb_request_system_control.
 
 Fixes: 4cd654f84769 ("staging: gpib: Add gpio bitbang GPIB driver")
 Tested-by: Dave Penkler <dpenkler@gmail.com>
 Signed-off-by: Dave Penkler <dpenkler@gmail.com>
 ---
- drivers/staging/gpib/gpio/gpib_bitbang.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/gpib/gpio/gpib_bitbang.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/staging/gpib/gpio/gpib_bitbang.c b/drivers/staging/gpib/gpio/gpib_bitbang.c
-index 29aab72c1f0f..a92c4eda99a0 100644
+index a92c4eda99a0..ac9ecb6e0aad 100644
 --- a/drivers/staging/gpib/gpio/gpib_bitbang.c
 +++ b/drivers/staging/gpib/gpio/gpib_bitbang.c
-@@ -872,7 +872,6 @@ static int bb_take_control(struct gpib_board *board, int synchronous)
+@@ -884,6 +884,8 @@ static int bb_go_to_standby(struct gpib_board *board)
+ 
+ static int bb_request_system_control(struct gpib_board *board, int request_control)
  {
- 	dbg_printk(2, "%d\n", synchronous);
- 	set_atn(board, 1);
--	set_bit(CIC_NUM, &board->status);
++	struct bb_priv *priv = board->private_data;
++
+ 	dbg_printk(2, "%d\n", request_control);
+ 	if (!request_control)
+ 		return -EINVAL;
+@@ -895,6 +897,8 @@ static int bb_request_system_control(struct gpib_board *board, int request_contr
+ 
+ 	gpiod_direction_input(SRQ);
+ 
++	ENABLE_IRQ(priv->irq_SRQ, IRQ_TYPE_EDGE_FALLING);
++
  	return 0;
  }
  
-@@ -908,6 +907,7 @@ static void bb_interface_clear(struct gpib_board *board, int assert)
- 		gpiod_direction_output(IFC, 0);
- 		priv->talker_state = talker_idle;
- 		priv->listener_state = listener_idle;
-+		set_bit(CIC_NUM, &board->status);
- 	} else {
- 		gpiod_direction_output(IFC, 1);
- 	}
+@@ -1299,8 +1303,6 @@ static int bb_attach(struct gpib_board *board, const struct gpib_board_config *c
+ 		       IRQF_TRIGGER_NONE))
+ 		goto bb_attach_fail_r;
+ 
+-	ENABLE_IRQ(priv->irq_SRQ, IRQ_TYPE_EDGE_FALLING);
+-
+ 	dbg_printk(0, "attached board %d\n", board->minor);
+ 	goto bb_attach_out;
+ 
 -- 
 2.49.0
 
