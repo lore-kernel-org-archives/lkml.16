@@ -1,152 +1,149 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE46276032
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 13:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E55D2033A;
+	Fri, 18 Apr 2025 13:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744981208; cv=none; b=KW0LOFCprY8EQ01/OVSDTJQCji6XzPJiSDthSk1oQ0gt7lAYL0E+N7H2osvIaP1z9vQs2rANocA4EAzDz2u3jIrrmaeZ8HNhljBvgAuffeSoN1CTh3JR1idGbZclHWMYBjSAbA1zctQiMlkoKUvosQOEswO6kxZVKYCgXZ90cxc=
+	t=1744981269; cv=none; b=f5doQqJneYUXKQjsRy5xFLJF+KrvHp5bTk3ty+VVsmPv8XqqAuXR9D8cGQleV3OfrT2Bv22j2X3R7SH4kR2lBT8XihtZG4m3tmf6xkjQsK+l5dIXhPmPy1ZEWGB1n0TRHwMGxXyW4EwTJXxGin6lqY5bdI+kO8SDf1bLXGl1HOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744981208; c=relaxed/simple;
-	bh=y67QBwOdrRwlxW9MbXSoDjLMBwT9BYwqj6nFoXGWGJs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sKh6dD7Fa8SdkG1wJaqeHpoBBt6mFw15+P+FQIvgGkdZSclaSJwJS8pC6hAD5n6QuHqMsfz8y25fhY4r0Z7gWpaBaRqcQ7aKlZf9OBj0UD6E2slSKSAEYMoUYHBrY7X7XNUYQrqxBW84S9p45WeoMBJkdNAIGOMru0eQkrhAkmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kn1g2eN8; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744981269; c=relaxed/simple;
+	bh=/uYZre4qkYKSHJohff8hCdwS8VH/8ltf2MbR4J+1pzA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=aQBqJE7t6rI9HxlL0CwrAQBKhzmLE9A4vHMX8fcz5iOzBJTU8E/ykewzMH99rUgicp+BgeT3q4oH2IsvjPWtW4PIS0Nbi84FgKmKaq3tX12ZuGFakzu9iCghfOYYibxClxF5NzT3yeD7fLPTHoSZbDyMn1qSWb25JZt345VueuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FlW3vF+n; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kn1g2eN8"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2240b4de10eso3845905ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 06:00:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744981206; x=1745586006; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l8JNtE4WoAq9/1lxNRUODtbBYrROtMNzFv6IeY4kWjg=;
-        b=Kn1g2eN8olY6hsY1lDzWMkPnERtgHOeY+Vy56hI+i7o7psZs19KqmqjDFXPtLO5JCZ
-         /R0Aoy3AL9NeivQ2i8R1Gh+sW3OPvFKlJpNB6AF1z9l7x8kY1vCSWbnmVl+BCY3wlcUf
-         eXjh5J7Al4dejIzsjGL3EKfqJ2CTOjNzhsKr1iwOXI3StT8QYdwOMUPNx4ufRnAXj2Wz
-         6ptk0aN8IF7n1WBqmVD7A/NeDC/I+mXcovTRYb0rl2k6b/RJkHd6ot/04jxBVdD2E6u3
-         DvTWmA3WOmuE6d6ZX/0J6na8TchlaHr2RKeOBsyLpwAdEVsHwjZhmilgxByOIsblNywS
-         h1vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744981206; x=1745586006;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l8JNtE4WoAq9/1lxNRUODtbBYrROtMNzFv6IeY4kWjg=;
-        b=sofmNNau7tajdYywIDgZRe5zPLfGCtiFKlx+iy9AYYv+D5cPMydRXywz2JjQlM8mez
-         n40Md+gWDtRQtlMwJ84qeupisrBIr4X3VRMBx8AYM0lWQnuHufkrfJeOX52etG7Hi/tQ
-         I/Sr5dcyAn9izGqHx3aS7XyF3d3UZRYWsm4BtV5ARY6wJvteyjAnbjhZeXsaBx5zHmEA
-         rExyWjGC7twI7Xcje2gMLpyELcCJ0wimmnFf8rqqivKv04rjIE9K+p4ggyi9wAQZ4FmO
-         X+huLXXQJk4FWNjd8EDAKuL5s8XjY2JGK9ifM+bxnnkPTCCDFvltGv5p4MRtCYIy54BO
-         OwMw==
-X-Forwarded-Encrypted: i=1; AJvYcCUDwtMZPrF5xuVJtjCWKnfyDEFM8/nhABDD/C1AkjMmG1T5cFGwkUtCjSYSyoVhZVjKNS0rNdTva+y7D3c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzT6i0bPHdKphapFHO416SGKMkXEjn9O3TxMphO9v2XMgpOmDCI
-	hQaLccMmjYXt06p348iozTBoBCxu/zyU/St2D2CeS4otBI8pqve+3J6R7vyrqIscQT4PRrewSui
-	g7nnVoeQBS8faigqDT2OSPVzYYtk=
-X-Gm-Gg: ASbGncsQJ0jRJsHbomOr15kpkVk3yXInJipi21fVl3ZAf+xeYkwLt0nAu18TO3/1nyu
-	r+iUzep9+oip97ncuJyN9oeva/P0ZIv7dNTnGzj3Rn5PNt4vEJ90ODtporSqqdEvikZAfy4orL9
-	ewpcPpeLOfeJvCP73L3tYwXA==
-X-Google-Smtp-Source: AGHT+IGXaicF/YetTuwq7s8eBQVZCstjIo+yxIkShv38GuaKB72IC1mUOGVgw6U2wfXMrWNvIRt5K3Celpi0igA/0l4=
-X-Received: by 2002:a17:902:cecf:b0:21d:cdb7:876c with SMTP id
- d9443c01a7336-22c5356dcdemr15485185ad.3.1744981205862; Fri, 18 Apr 2025
- 06:00:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FlW3vF+n"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53I2Zodo031946;
+	Fri, 18 Apr 2025 13:01:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	vcBxXtm1f8aYCr+6mVmNc/jU0+alZPZyythaiyCMuEQ=; b=FlW3vF+n3TDsMq32
+	uxI9L/IaV0iGJ/7raV2m+Lo75zipTwht/mjzUvtz9umAov/LY6ijlW5vpM0lq1eN
+	jA0RJjR51F2Vm6RYNDjLJveMal9lP8ZDZ4BlYRKyaT2ZrooR6amQStqwO4f+LMMs
+	TosEFOSFkz9c3dv3eYlVcws1VeGJXg9p5Onv2JcCjd5k8DwdkXBm5cYNEo6fqcv9
+	/I2sWLcDXB1lY+gc1vY5GZkjbRiVuDwb+bFL63OG4xG+DlJyVuNfUH8aYdWF4qWY
+	J0WJWRKi68/0pXcFbLbiqgwQQqU4N8uExb7usjJS/8gtDk26P99LTvOsUCC/c5KZ
+	808zzQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yg8wt0vj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Apr 2025 13:01:05 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53ID147Y012637
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Apr 2025 13:01:04 GMT
+Received: from [10.216.59.76] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 18 Apr
+ 2025 06:01:01 -0700
+Message-ID: <d567e604-bd24-e6bd-92c8-932e0f18dc1f@quicinc.com>
+Date: Fri, 18 Apr 2025 18:30:58 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418002117.130612-1-linux@treblig.org> <20250418002117.130612-3-linux@treblig.org>
- <ab85b3c9-46cc-4148-9de5-dcaabea130ea@wanadoo.fr>
-In-Reply-To: <ab85b3c9-46cc-4148-9de5-dcaabea130ea@wanadoo.fr>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Fri, 18 Apr 2025 08:59:54 -0400
-X-Gm-Features: ATxdqUEolXit984ANdGjgXNbP2P1Sp8M7f-qILNT6MUa_IQPkkR459ABsXKExIs
-Message-ID: <CADnq5_MrEQ2XGbNho6xd9Um0R6kEEpZBeu0e-97o6-D=juD0gw@mail.gmail.com>
-Subject: Re: [PATCH 2/4] drm/radeon: Remove unused radeon_doorbell_free
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: linux@treblig.org, alexander.deucher@amd.com, harry.wentland@amd.com, 
-	sunpeng.li@amd.com, siqueira@igalia.com, christian.koenig@amd.com, 
-	airlied@gmail.com, simona@ffwll.ch, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2] bus: mhi: host: pci: Disable runtime PM for QDU100
+Content-Language: en-US
+To: Vivek Pernamitta <quic_vpernami@quicinc.com>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>
+CC: <mhi@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250418-vdev_next-20250411_pm_disable-v2-1-27dd8d433f3b@quicinc.com>
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20250418-vdev_next-20250411_pm_disable-v2-1-27dd8d433f3b@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=E9TNpbdl c=1 sm=1 tr=0 ts=68024d11 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8
+ a=quWB0j8F2bd0t1ZcvaEA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: wHFfYsoc-oY6WRnXjcneXIDUmu12JJvE
+X-Proofpoint-GUID: wHFfYsoc-oY6WRnXjcneXIDUmu12JJvE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-18_04,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ mlxscore=0 bulkscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
+ suspectscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504180096
 
-On Fri, Apr 18, 2025 at 2:18=E2=80=AFAM Christophe JAILLET
-<christophe.jaillet@wanadoo.fr> wrote:
->
-> Le 18/04/2025 =C3=A0 02:21, linux@treblig.org a =C3=A9crit :
-> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> >
-> > radeon_doorbell_free() was added in 2013 by
-> > commit 75efdee11b5d ("drm/radeon: implement simple doorbell page
-> > allocator")
-> > but never used.
->
-> Hi,
->
-> I think than instead of being removed, it should be used in the error
-> handling path of cik_init() and in cik_fini().
 
-Yes, ideally.  Care to make a patch to fix that?
 
-Thanks,
-
-Alex
-
->
-> CJ
->
-> >
-> > Remove it.
-> >
-> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> > ---
-> >   drivers/gpu/drm/radeon/radeon.h        |  1 -
-> >   drivers/gpu/drm/radeon/radeon_device.c | 14 --------------
-> >   2 files changed, 15 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/radeon/radeon.h b/drivers/gpu/drm/radeon/r=
-adeon.h
-> > index 8605c074d9f7..58111fdf520d 100644
-> > --- a/drivers/gpu/drm/radeon/radeon.h
-> > +++ b/drivers/gpu/drm/radeon/radeon.h
-> > @@ -686,7 +686,6 @@ struct radeon_doorbell {
-> >   };
-> >
-> >   int radeon_doorbell_get(struct radeon_device *rdev, u32 *page);
-> > -void radeon_doorbell_free(struct radeon_device *rdev, u32 doorbell);
-> >
-> >   /*
-> >    * IRQS.
-> > diff --git a/drivers/gpu/drm/radeon/radeon_device.c b/drivers/gpu/drm/r=
-adeon/radeon_device.c
-> > index bbd39348a7ab..4127ffb4bb6f 100644
-> > --- a/drivers/gpu/drm/radeon/radeon_device.c
-> > +++ b/drivers/gpu/drm/radeon/radeon_device.c
-> > @@ -392,20 +392,6 @@ int radeon_doorbell_get(struct radeon_device *rdev=
-, u32 *doorbell)
-> >       }
-> >   }
-> >
-> > -/**
-> > - * radeon_doorbell_free - Free a doorbell entry
-> > - *
-> > - * @rdev: radeon_device pointer
-> > - * @doorbell: doorbell index
-> > - *
-> > - * Free a doorbell allocated for use by the driver (all asics)
-> > - */
-> > -void radeon_doorbell_free(struct radeon_device *rdev, u32 doorbell)
-> > -{
-> > -     if (doorbell < rdev->doorbell.num_doorbells)
-> > -             __clear_bit(doorbell, rdev->doorbell.used);
-> > -}
-> > -
-> >   /*
-> >    * radeon_wb_*()
-> >    * Writeback is the method by which the GPU updates special pages
->
+On 4/18/2025 5:20 PM, Vivek Pernamitta wrote:
+> The QDU100 device does not support the MHI M3 state, necessitating the
+> disabling of runtime PM for this device. It is essential to disable
+> runtime PM if the device does not support Low Power Mode (LPM).
+> 
+> Signed-off-by: Vivek Pernamitta <quic_vpernami@quicinc.com>
+Reviewed-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+> Changes in v2:
+> - Updated device from getting runtime suspended by avoid skipping autosuspend.
+> - Updated commit message.
+> - Link to v1: https://lore.kernel.org/r/20250414-vdev_next-20250411_pm_disable-v1-1-e963677636ca@quicinc.com
+> ---
+>   drivers/bus/mhi/host/pci_generic.c | 10 ++++++++--
+>   1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
+> index 03aa887952098661a488650053a357f883d1559b..bec1ca17ad69ac89e2ea9142024fef8bded258b6 100644
+> --- a/drivers/bus/mhi/host/pci_generic.c
+> +++ b/drivers/bus/mhi/host/pci_generic.c
+> @@ -43,6 +43,7 @@
+>    * @mru_default: default MRU size for MBIM network packets
+>    * @sideband_wake: Devices using dedicated sideband GPIO for wakeup instead
+>    *		   of inband wake support (such as sdx24)
+> + * @pm_disable: disables runtime PM (optional)
+>    */
+>   struct mhi_pci_dev_info {
+>   	const struct mhi_controller_config *config;
+> @@ -54,6 +55,7 @@ struct mhi_pci_dev_info {
+>   	unsigned int dma_data_width;
+>   	unsigned int mru_default;
+>   	bool sideband_wake;
+> +	bool pm_disable;
+>   };
+>   
+>   #define MHI_CHANNEL_CONFIG_UL(ch_num, ch_name, el_count, ev_ring) \
+> @@ -295,6 +297,7 @@ static const struct mhi_pci_dev_info mhi_qcom_qdu100_info = {
+>   	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
+>   	.dma_data_width = 32,
+>   	.sideband_wake = false,
+> +	.pm_disable = true,
+>   };
+>   
+>   static const struct mhi_channel_config mhi_qcom_sa8775p_channels[] = {
+> @@ -1270,8 +1273,11 @@ static int mhi_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>   	/* start health check */
+>   	mod_timer(&mhi_pdev->health_check_timer, jiffies + HEALTH_CHECK_PERIOD);
+>   
+> -	/* Only allow runtime-suspend if PME capable (for wakeup) */
+> -	if (pci_pme_capable(pdev, PCI_D3hot)) {
+> +	/**
+> +	 * Disable Runtime PM if device doesn't support MHI M3 state
+> +	 * and Allow runtime-suspend if PME capable (for wakeup)
+> +	 */
+> +	if (pci_pme_capable(pdev, PCI_D3hot) && !(info->pm_disable)) {
+>   		pm_runtime_set_autosuspend_delay(&pdev->dev, 2000);
+>   		pm_runtime_use_autosuspend(&pdev->dev);
+>   		pm_runtime_mark_last_busy(&pdev->dev);
+> 
+> ---
+> base-commit: 01c6df60d5d4ae00cd5c1648818744838bba7763
+> change-id: 20250414-vdev_next-20250411_pm_disable-53d5e1acd45e
+> 
+> Best regards,
