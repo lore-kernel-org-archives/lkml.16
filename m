@@ -1,156 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6EA21B180;
-	Fri, 18 Apr 2025 17:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CAB2AE8C;
+	Fri, 18 Apr 2025 17:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744997403; cv=none; b=lR4dY2duVzBvRMx5V9gpN6C7ksTbZW8IjVOK3mmTTGoDy2OeGaGKtUJlsfxS78IP0Kc9BzS9DQQSQG2mnAh1f5znx4kmU1V1pzdwY5+7zTgJYwZZL0SFa1namKxm0jJJeyxhC9a1p3zZAmvA8ucjoL9Yu3WUlen2tCUqERmqjM8=
+	t=1744997529; cv=none; b=oyNMut8OCw9dUTmqlDYh/W/BazIx7MOa3As8Tu+QGYLsiVnWMp5reINf92S3rTDNdlq6xjBAUQmG+PdECHHg+1SXNYV4WrYdcfILdLwTHL5lGvd3vAbVpcv9W1x2+pwI/EfkDqL7J7/GPdT4sl8AqpQEiZNPWWCAGRL09YmQNtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744997403; c=relaxed/simple;
-	bh=bIGvjbRKpxLkpSw3c++ottiUztM75QDoZdCAB6uB9i8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DUuxELmt5bYgS1ttefd74T8SklUTBMeLC0ZUbGI0yrpZ0wC2oa3PIGDK0nwqi2XHfshH//z01UTtr9CR0nVNc/ePw5iG7TNvLRHxgdPoofPb7S6iysC+Vu0MahTxh/J2tphrT0aHwfZ6q2LDzGSRdXyI2eyE54p3idKD6qh3C3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=foD5UtHq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744997529; c=relaxed/simple;
+	bh=jSTCp2ymmy+uFfuftaWDUvFGRj6+FZVVBdAZvDVOzIs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UvptZ3dNQN9Di+UrP277dJrfwFC9Tu/oTilUlZYSSYnP8LRwevuH9w2o1Y1K0i4/2yzIQ2wAX8IrvQpO3Xf/WHBcfdfrrBTOIHfUsflfEDzHTt047Wdt9BXYLBq3HcmsqHNbLgtcFmgJi5rwxoVc2asNwbcUS67L1mSrjBPq1JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ilP5BYNu; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="foD5UtHq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3F03C4CEEC;
-	Fri, 18 Apr 2025 17:30:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744997403;
-	bh=bIGvjbRKpxLkpSw3c++ottiUztM75QDoZdCAB6uB9i8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=foD5UtHqiV5A2pVbJk5KS7xtU/2/x8DE7A9FMhmVD2r8G2TPBvXCb2Ex7JZr6dSH6
-	 Evq6FXmN3J2lXzEPiP1suWDKqCIXoR2XX2XQYwUTw4WxbOrAQ4QfHppYFqM0g3xBn/
-	 TLESZChSKlHLhZEeY8/SqNn+p67ZzxWLcIa+7pqmzGjtmcnmKNohZ9N94tRzGNfW2E
-	 R9tTq34EmiL1pwPiE1GoMjwYTpAUkT8rI4PfAOMCOj2PUrhPrAhhaso8rlkrwMZkZX
-	 LA+CxkrFPjDPt2SliHtO0p6CXMRcLrERPMCcb9zUWEePJVXfkWn3Ni4tiQEXU0Dd+n
-	 MvXJiEAlvKrVA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 7FA13CE0A6C; Fri, 18 Apr 2025 10:30:02 -0700 (PDT)
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	lkmm@lists.linux.dev,
-	kernel-team@meta.com,
-	mingo@kernel.org
-Cc: stern@rowland.harvard.edu,
-	parri.andrea@gmail.com,
-	will@kernel.org,
-	peterz@infradead.org,
-	boqun.feng@gmail.com,
-	npiggin@gmail.com,
-	dhowells@redhat.com,
-	j.alglave@ucl.ac.uk,
-	luc.maranget@inria.fr,
-	akiyks@gmail.com,
-	"Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH 3/4] tools/memory-model: docs/ordering: Fix trivial typos
-Date: Fri, 18 Apr 2025 10:29:59 -0700
-Message-Id: <20250418173000.1188561-3-paulmck@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cd7fb2c4-1895-455c-84f8-8ed7252b93ff@paulmck-laptop>
-References: <cd7fb2c4-1895-455c-84f8-8ed7252b93ff@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ilP5BYNu"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2ff5544af03so454393a91.1;
+        Fri, 18 Apr 2025 10:32:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744997527; x=1745602327; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Clva0yAp0RoLW6mZT6T6ibUR6yq4KrFi2ukw098Q4NI=;
+        b=ilP5BYNuMPdDb8xPKAUEUcr5sI+43CrdbQLn+tl41e5LjbQfhpRGie6YVL5AEK9Kwz
+         BeT040XV1/TJWryqPyB+dvZSzV8Lyp7w1ZpRKMbLiwDujrdc3tZEKtWJTmwb65oyWTfw
+         N7+Tcog7mE6Do6pLFQMhZFlYqxnFSYiSZG6n4s8yg7Z93Ns6v4AkAnWYxSHHKU6s8lRf
+         +feTXcTgaDsL8/4IV6Z6S125QFlYpeHgNEu4YiSChU9hqaHhFnRuSZESgDtbRk/Q2X1h
+         fZ3AErZzta9Jef+21N3V95DP/VV5j6nI0vmp5XXbTJulOsYfgpTP/43hy8Ex1ko6xEqp
+         kdUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744997527; x=1745602327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Clva0yAp0RoLW6mZT6T6ibUR6yq4KrFi2ukw098Q4NI=;
+        b=TsbCSVwmjIRHQ3nLsaIZlHRT65ZPm6Wei/V4VBRtspXlEp9Wx/z69mi0shkdBQ06Xe
+         xWgR/8pHN/TiQ2iyvSkMacHdyW0n61aHn2YCMPLhrjEPhVgXyu+hAe7Iuefba0ICkuUO
+         rGXXiJrtQbP3o0QPobHfj0XjVPFWx06CCXpL+yW5SK29s/OcUUoGnoBWYr4lAJXvc+xN
+         d3jHHswFs9ioLZEL7WVUshT4igtsPzgRNbMRX1t9Bhub8yHGcTcus+sP9MHKtKe23GQQ
+         bEb1gpyQwGBDDO8WZcLKBmJU1lwWep5BNo7nR0dgEPLvDZpKAvlVVCbhlMjOB+2heAma
+         ldyw==
+X-Forwarded-Encrypted: i=1; AJvYcCUtGnUpQ/vFx4tqysTolcIN+1HAVfenVbT0s5NPothUMd8ZzarrfqznHQIqgNghl0lx/deE@vger.kernel.org, AJvYcCVYOpBfI1VNBPLpFSOoMqcuZpRg58oYOkqWdoA96yTaDW2t3zQSiMe27PF+txXsc7G7B//74p1THikHrqDAvk8=@vger.kernel.org, AJvYcCWWxhSVMUPpeB8XqhTQ+jV1xJ7D+URlOLpKbXzAM6fSYYXisU2FXENhblxV40z3Ivm//43vpXd0UWnsUAzR+gQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFBic/IG3Iw9/7T9rl+Nz4r/RTDPwPO782hjyUcuXmjB86mqDM
+	r35K7iuFNz3l/sOTG+Fv9oZuwOD7JuDhfgNpnDMoNMCnazuXu6vK91soIJFmzjoiRE8rl9ZKsp/
+	/nNd02YbHhmrx3TtoBgL85tzlZEddNF2a
+X-Gm-Gg: ASbGnctjcaJOT41qMFsYaldjhO8fGA2M4WkyjbWOymP2Xp8FZTAJ6DnZnCJQBGOD653
+	QAa+zcv9cxlc7TGd9Xs2Jhyn1PGprOMFu8H+dws6YXgljyKUCKa4IHCAiOTzw8C6qsVevyin53I
+	flQoAVlBIH/phY4hqCptxhHQ7qj/hSPCjZ
+X-Google-Smtp-Source: AGHT+IFGCB+IOuDYclJ8K61LbsGJh6E+OoMCYw0lXGpYH6TLuQWhjPe+Saon4Pg8jZd7JDF/yt9S0IEpG25rHBQctZ8=
+X-Received: by 2002:a17:90b:3b82:b0:2ff:6bcf:5411 with SMTP id
+ 98e67ed59e1d1-3087bb313f0mr1841717a91.1.1744997526982; Fri, 18 Apr 2025
+ 10:32:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250418161005.2425391-1-joelagnelf@nvidia.com> <20250418161005.2425391-13-joelagnelf@nvidia.com>
+In-Reply-To: <20250418161005.2425391-13-joelagnelf@nvidia.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 18 Apr 2025 19:31:53 +0200
+X-Gm-Features: ATxdqUGpUf8fRAb7yDV88wH9iP1OHvfJ7PWdDSkSTjg_35u6EVKbNRdG09rwRpM
+Message-ID: <CANiq72nCfBdsfKzP72DWxLBh+Eueack9sS-E97wtsr0UtkAnUA@mail.gmail.com>
+Subject: Re: [PATCH 12/14] torture: Add testing of RCU's Rust bindings to torture.sh
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Josh Triplett <josh@joshtriplett.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Shuah Khan <shuah@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, rcu@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Akira Yokosawa <akiyks@gmail.com>
+On Fri, Apr 18, 2025 at 6:10=E2=80=AFPM Joel Fernandes <joelagnelf@nvidia.c=
+om> wrote:
+>
+> a rust_doctests_kernel kunit run.  Note that kunit wants a clean source
+> tree, so this runs "make mrproper", which might come as a surprise to
+> some users.  Should there be a --mrproper parameter to torture.sh to make
+> the user explicitly ask for it?
 
-Fix trivial typos including:
+One may run KUnit without using `kunit.py`, i.e. by enabling the
+Kconfigs and booting the kernel. Would that help?
 
-  - Repeated "a call to"
-  - Inconsistent forms of referencing functions of rcu_dereference()
-    and rcu_assign_pointer()
-  - Past tense used in describing normal behavior
-
-and other minor ones.
-
-[ paulmck: Wordsmith plus recent LWN RCU API URL. ]
-
-Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- tools/memory-model/Documentation/ordering.txt | 22 +++++++++----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/tools/memory-model/Documentation/ordering.txt b/tools/memory-model/Documentation/ordering.txt
-index 9b0949d3f5ec2..7ab3744929d87 100644
---- a/tools/memory-model/Documentation/ordering.txt
-+++ b/tools/memory-model/Documentation/ordering.txt
-@@ -223,7 +223,7 @@ The Linux kernel's compiler barrier is barrier().  This primitive
- prohibits compiler code-motion optimizations that might move memory
- references across the point in the code containing the barrier(), but
- does not constrain hardware memory ordering.  For example, this can be
--used to prevent to compiler from moving code across an infinite loop:
-+used to prevent the compiler from moving code across an infinite loop:
- 
- 	WRITE_ONCE(x, 1);
- 	while (dontstop)
-@@ -274,7 +274,7 @@ different pieces of the concurrent algorithm.  The variable stored to
- by the smp_store_release(), in this case "y", will normally be used in
- an acquire operation in other parts of the concurrent algorithm.
- 
--To see the performance advantages, suppose that the above example read
-+To see the performance advantages, suppose that the above example reads
- from "x" instead of writing to it.  Then an smp_wmb() could not guarantee
- ordering, and an smp_mb() would be needed instead:
- 
-@@ -394,17 +394,17 @@ from the value returned by the rcu_dereference() or srcu_dereference()
- to that subsequent memory access.
- 
- A call to rcu_dereference() for a given RCU-protected pointer is
--usually paired with a call to a call to rcu_assign_pointer() for that
--same pointer in much the same way that a call to smp_load_acquire() is
--paired with a call to smp_store_release().  Calls to rcu_dereference()
--and rcu_assign_pointer are often buried in other APIs, for example,
-+usually paired with a call to rcu_assign_pointer() for that same pointer
-+in much the same way that a call to smp_load_acquire() is paired with
-+a call to smp_store_release().  Calls to rcu_dereference() and
-+rcu_assign_pointer() are often buried in other APIs, for example,
- the RCU list API members defined in include/linux/rculist.h.  For more
- information, please see the docbook headers in that file, the most
--recent LWN article on the RCU API (https://lwn.net/Articles/777036/),
-+recent LWN article on the RCU API (https://lwn.net/Articles/988638/),
- and of course the material in Documentation/RCU.
- 
- If the pointer value is manipulated between the rcu_dereference()
--that returned it and a later dereference(), please read
-+that returned it and a later rcu_dereference(), please read
- Documentation/RCU/rcu_dereference.rst.  It can also be quite helpful to
- review uses in the Linux kernel.
- 
-@@ -457,7 +457,7 @@ described earlier in this document.
- These operations come in three categories:
- 
- o	Marked writes, such as WRITE_ONCE() and atomic_set().  These
--	primitives required the compiler to emit the corresponding store
-+	primitives require the compiler to emit the corresponding store
- 	instructions in the expected execution order, thus suppressing
- 	a number of destructive optimizations.	However, they provide no
- 	hardware ordering guarantees, and in fact many CPUs will happily
-@@ -465,7 +465,7 @@ o	Marked writes, such as WRITE_ONCE() and atomic_set().  These
- 	operations, unless these operations are to the same variable.
- 
- o	Marked reads, such as READ_ONCE() and atomic_read().  These
--	primitives required the compiler to emit the corresponding load
-+	primitives require the compiler to emit the corresponding load
- 	instructions in the expected execution order, thus suppressing
- 	a number of destructive optimizations.	However, they provide no
- 	hardware ordering guarantees, and in fact many CPUs will happily
-@@ -506,7 +506,7 @@ of the old value and the new value.
- 
- Unmarked C-language accesses are unordered, and are also subject to
- any number of compiler optimizations, many of which can break your
--concurrent code.  It is possible to used unmarked C-language accesses for
-+concurrent code.  It is possible to use unmarked C-language accesses for
- shared variables that are subject to concurrent access, but great care
- is required on an ongoing basis.  The compiler-constraining barrier()
- primitive can be helpful, as can the various ordering primitives discussed
--- 
-2.40.1
-
+Cheers,
+Miguel
