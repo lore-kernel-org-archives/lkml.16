@@ -1,128 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E81277003
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 13:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AE826B95E
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 13:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744982800; cv=none; b=nfT8fJWVmE+hjIYD6pE+61KjXBnbm8jSIqFdiayNykxol/9NDk/5WtLV7iK5ozJce04deCf0BreUGDsL2q2W0HIuArN4xRQo9fZNBNgsIM0LEVFSItHnsKTnWGm0ynv1j+da8ajbDuFpHSwBUnnULeOED67qWcvNNBQOt9X7rcE=
+	t=1744982846; cv=none; b=mDyKb4TPufakAAx0Q+5DkwXHxG/jQJ2ekZRfv1KNGFdAgQnSKtfZroNbm+GV8Vw+YqZ1NcH5C8JHM6eH1O93J8c4I/qgK8on6f6Fr1S1MReVBL+spi6FRhvUZ64qQ1Fn8I4Nkmzwrg2qyc8t/9Zxqp9zrliSffOIXwgOFY+vVK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744982800; c=relaxed/simple;
-	bh=vo1u5R7CKFHLY5Pcf+O8cErwwCHr2sj55TDkno4Z8n8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h8mBTCtHzX/3Ey8tLGZwPdQTvefSmasDFbIxGyC2Wfeyaz68x9/OrtdNSZRGlhpx/BmXLZtPLA0XsJE0+KLvYvMmW9cXbvcuoqLIklXCgZnqTchC/nuwujfAHsAFFatiCcZToJmcr7MvDBARIuSSA3xyLDog2qLXYzO4P7yAd9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dpP0vGNN; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dpP0vGNN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744982796;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SIni5x89I32+x4VeAQQr3m0SnK0e1Dbju4MMocfjk+I=;
-	b=dpP0vGNNgsh6DZRacArBC7N37HHYSAb7KoyuRvZ4j3irY7UAqe02eOWXQm74xxXShL6huE
-	zxyhxdBmYlEf0grLut3J/x3oHwUpY+NPPYUEGUaZB5Q9nRNE3alJ4RSjp2jWUM93bK5wRY
-	6l3pzMMPXCjLhp09m75eyv1rv2A8ZwE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-537-mM6__yF-McWgbZq-SUA0vg-1; Fri,
- 18 Apr 2025 09:26:32 -0400
-X-MC-Unique: mM6__yF-McWgbZq-SUA0vg-1
-X-Mimecast-MFC-AGG-ID: mM6__yF-McWgbZq-SUA0vg_1744982791
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CE2CE18004A7;
-	Fri, 18 Apr 2025 13:26:30 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.18])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9BC9A180094C;
-	Fri, 18 Apr 2025 13:26:29 +0000 (UTC)
-Date: Fri, 18 Apr 2025 21:26:25 +0800
-From: Baoquan He <bhe@redhat.com>
-To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: Re: [PATCH 4/4] vmalloc: Align nr_vmalloc_pages and vmap_lazy_nr
-Message-ID: <aAJTAUwhP1w8v9rD@MiWiFi-R3L-srv>
-References: <20250417161216.88318-1-urezki@gmail.com>
- <20250417161216.88318-4-urezki@gmail.com>
+	s=arc-20240116; t=1744982846; c=relaxed/simple;
+	bh=wu8mSfeIBDO6KqG7W2Vh95W46gAQLgssjJ3cq07VZRo=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=lY0Iao8+zp1P65V62BsBLnGUMKbwM0EYOb/WToJMXkIOyhp/b4nrwIA+D43sEVn5hSnBGl/R/efY7aaAu2YV+jxR/Xlv8J9/j/gysqF8Zxo5e/pPkHuiJkquCi8GEjZuM4zmWPsy4TGlcZZmr9fbxO7q+9B6dz/K3g77sWR3Y8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d80ac98803so18414395ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 06:27:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744982844; x=1745587644;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=W/eyz29Z6M/l4RqhbbbKF7w00kXtBCX6BZPlmNLIfN0=;
+        b=Wik4mtUNrAnc94vmmRJ1o5UG4IkjELjLMeN3FK8v1DKa3eA5oKrfIZKbODQz0ogwIk
+         8mARjUAXcjd9TGSSKVKHhQf2VBLPlcgzJAqaFEOOHW0MOnt8RwSl4/dsQYJH7AEKuCbk
+         5M4Jm6XwwOsKBkPJ11rllL18oceyOTHO6yuYWM5fa94cMgOvOx/eC1SNv7ZlVyQhG9N6
+         kxSOPMoVnRhb8QqIjrRF8KJGz0Nvu3Ov6mheuqIuc/dI68IrKTD5BNxCcHqShHt+V7N9
+         YHIUFyC+YIAFTfKmacmBqEhaM6gTsIMgPEAK/28PBOWuDMQcezD6sRbA+YbJRfszsnIA
+         dg/A==
+X-Forwarded-Encrypted: i=1; AJvYcCUpxoZKp6kYATbG8YFE5vnsefnVQ2R9B/T2hQieRcXuLbTMdOPX1Ep1oJ8rC59hgleY0Suzvms6Vb0qFS4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNC1Dxwt63DeXH0N5XkDOZKKz1a/T7qWpmWym1e7JdAOGPmrMq
+	DUsIXFLV2wQikNplC5h9tHB8qI3L2UWp/lNHA75amPwnTAHhFSiA7cJZ1uW2mjAzqZlGL/fRWcc
+	Qouw+9qGFecJ14YOVPV7O8q+9QoJB5yCIBtBw7g2/t4Xd8sSYAjI09io=
+X-Google-Smtp-Source: AGHT+IFQ+oKFpqmbd51V+7D1W6AygrNigw2YfTqQkpFMV9oFaIishQvozS3JkHCAgrH40/hL/NP44J6g6+z8lKCb8UkJ35jGQtvr
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417161216.88318-4-urezki@gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Received: by 2002:a05:6e02:154f:b0:3d8:20f0:4026 with SMTP id
+ e9e14a558f8ab-3d88ed669e6mr26217775ab.1.1744982844263; Fri, 18 Apr 2025
+ 06:27:24 -0700 (PDT)
+Date: Fri, 18 Apr 2025 06:27:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6802533c.050a0220.5cdb3.001a.GAE@google.com>
+Subject: [syzbot] Monthly afs report (Apr 2025)
+From: syzbot <syzbot+listb78bb39892741cb5f049@syzkaller.appspotmail.com>
+To: linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 04/17/25 at 06:12pm, Uladzislau Rezki (Sony) wrote:
-> Currently both atomics share one cache-line:
-> 
-> <snip>
-> ...
-> ffffffff83eab400 b vmap_lazy_nr
-> ffffffff83eab408 b nr_vmalloc_pages
-> ...
-> <snip>
-> 
-> those are global variables and they are only 8 bytes apart.
-> Since they are modified by different threads this causes a
-> false sharing. This can lead to a performance drop due to
-> unnecessary cache invalidations.
-> 
-> After this patch it is aligned to a cache line boundary:
-> 
-> <snip>
-> ...
-> ffffffff8260a600 d vmap_lazy_nr
-> ffffffff8260a640 d nr_vmalloc_pages
+Hello afs maintainers/developers,
 
-A great catch and improvement.
+This is a 31-day syzbot report for the afs subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/afs
 
-Reviewed-by: Baoquan He <bhe@redhat.com>
+During the period, 5 new issues were detected and 4 were fixed.
+In total, 6 issues are still open and 48 have already been fixed.
 
-> ...
-> <snip>
-> 
-> Cc: Mateusz Guzik <mjguzik@gmail.com>
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> ---
->  mm/vmalloc.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 77da4613f07ff..54f60d62051da 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -1008,7 +1008,8 @@ static BLOCKING_NOTIFIER_HEAD(vmap_notify_list);
->  static void drain_vmap_area_work(struct work_struct *work);
->  static DECLARE_WORK(drain_vmap_work, drain_vmap_area_work);
->  
-> -static atomic_long_t nr_vmalloc_pages;
-> +static __cacheline_aligned_in_smp atomic_long_t nr_vmalloc_pages;
-> +static __cacheline_aligned_in_smp atomic_long_t vmap_lazy_nr;
->  
->  unsigned long vmalloc_nr_pages(void)
->  {
-> @@ -2117,8 +2118,6 @@ static unsigned long lazy_max_pages(void)
->  	return log * (32UL * 1024 * 1024 / PAGE_SIZE);
->  }
->  
-> -static atomic_long_t vmap_lazy_nr = ATOMIC_LONG_INIT(0);
-> -
->  /*
->   * Serialize vmap purging.  There is no actual critical section protected
->   * by this lock, but we want to avoid concurrent calls for performance
-> -- 
-> 2.39.5
-> 
+Some of the still happening issues:
 
+Ref Crashes Repro Title
+<1> 430     Yes   KASAN: slab-out-of-bounds Read in afs_proc_addr_prefs_write
+                  https://syzkaller.appspot.com/bug?extid=7741f872f3c53385a2e2
+<2> 5       Yes   WARNING: ODEBUG bug in delete_node (3)
+                  https://syzkaller.appspot.com/bug?extid=ab13429207fe1c8c92e8
+<3> 1       No    KASAN: slab-use-after-free Read in idr_get_free
+                  https://syzkaller.appspot.com/bug?extid=9197b322744974667353
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
