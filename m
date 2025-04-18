@@ -1,60 +1,70 @@
-Received: from smtp.smtpout.orange.fr (smtp-66.smtpout.orange.fr [80.12.242.66])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1325269CFA;
-	Fri, 18 Apr 2025 06:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF70268C78;
+	Fri, 18 Apr 2025 06:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744958988; cv=none; b=Wrba6ZEJZ6Ev+HJwJvn0h2+WwnwU67aJSJfoA0FO7JQ9ZfXz9MsG/PI6LX7KfZfsttbg8zQRp8Suinm3wH5tiMWQ3VrBTJHtVHxuWQBNEpPnYZJikz0rx9ntkoM4b63NoFH6IozeizYuccQu0s1gPhbU507ixujry0VzXvHmSSs=
+	t=1744959216; cv=none; b=W/bTDeBX4qZ8rc7lx32J3/zz1vOE2rSwXq3HH/m4XDvXCFhKi5sQ8w+caZv4/TBNr91avMv1dlkQhzLOmhuuaz1GIppQ6ROJ//LwxIRfzwdDN+ffnHtlP8Hl8tOr5iweEeXoEeHbnID3S+w+z8Eedyjb6j9rGvNBynJ69yMVjmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744958988; c=relaxed/simple;
-	bh=hInIkt61XHg1R+n8dOF5iCEGHj/EdNamGsRQfLOXhDo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KgBveI/vTClEAePlFRqJt5Y33XP4+O4RPDbs25qcmH+0edm008n49lvRfD71I435LDZGYy3AkunPKRO4R/mvkKcWxWEH726jhNn3d+FzbrfE8M9EPrNuV3lHfCJlslqJvoga7q0A+9fwbUbH/I/2CouPxqIPXdOSvgz8CpIM9/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=kVCqLO7J; arc=none smtp.client-ip=80.12.242.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1744959216; c=relaxed/simple;
+	bh=pJDoCGQOA4rbNDWxVgLkLV3ShMIs5Bw1RHs0J5KHIzY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RxQxNFvp8KiUOXuH35wzq3UJPt4ANLLc7+5ZpCaCU27TMWYX450EcSUqDn08srptVg+inksk5iFXaNgEBF/KddjODnjI8MV7lcGcd93l+Dt5G2dLjtlh63QPI9q2OxFJoJZFy6yBJk4cvHeduwPB9WuKcIgHtxcPZT78FM0rsTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=DVghYwPv; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="kVCqLO7J"
-Received: from localhost.localdomain ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id 5fWXuGf243t2y5fWauMqHj; Fri, 18 Apr 2025 08:48:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1744958915;
-	bh=mUzUYESnOtbixZ8+Khj60v3lZVxQS/Ceo6x8BU3JvB8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=kVCqLO7Jh5F/y2eNTmtidrrI/CkZmZp13K/rFMd0m0VyIOL68hYqyRZoWRyhwdMOt
-	 WA0xOB5GVBqyGo7Uz+FyN8yHaN7b5svSZ/VbVdiRr6VN1uUFtKwoW8aNiN8txg63Ra
-	 Ufd2qDd/Vy8FzMm6MbRlTvxJ0nJmZpDCgikcpYIRG75cS3boa1uD4l7Hy+RBI5QR3N
-	 jXLfSbtDW4jIWu7j2E3mipGgu95d0rJDPpkTsoD3Yi14Nwux/YIXlUDm1bUTGhi8YO
-	 PndvrzZPbC9A977Crh37M3298rOKHVuQvPHqNT+YepWT6ZelmFKZhr9KRs6xQQN83Y
-	 G5Q7XulKH4lEA==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 18 Apr 2025 08:48:35 +0200
-X-ME-IP: 90.11.132.44
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Dmitry Baryshkov <lumag@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH v2] drm/bridge: lt9611uxc: Fix an error handling path in lt9611uxc_probe()
-Date: Fri, 18 Apr 2025 08:48:16 +0200
-Message-ID: <f167608e392c6b4d7d7f6e45e3c21878feb60cbd.1744958833.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="DVghYwPv"
+X-UUID: d15755c01c2111f0aae1fd9735fae912-20250418
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=5vHbr3GvKAc++MOqadyX5zM/RrrbLBRixCrpAU1xBxg=;
+	b=DVghYwPv6s4ErKT3eyWtCWkHvfodbA5z+ISsSopyC7v7KtzbKXgaMr6I+lchnryg9vyxz4x3yNmVJTgFtsgGNk9U3ZB2Yz7+rVSQiKoBSTrYBaKJeIvi/qVU9UQxAbwYjTrbu/lxdmYXyR41GGWCq9HSswmdIB1/eRwcxJe5Awc=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:5b3f398e-e7b3-48b7-9dfa-6763e30e36da,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:5399b9c7-16da-468a-87f7-8ca8d6b3b9f7,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
+	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
+	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: d15755c01c2111f0aae1fd9735fae912-20250418
+Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw01.mediatek.com
+	(envelope-from <bincai.liu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1325768179; Fri, 18 Apr 2025 14:53:22 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Fri, 18 Apr 2025 14:53:20 +0800
+Received: from mszsdhlt06.gcn.mediatek.inc (10.16.6.206) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Fri, 18 Apr 2025 14:53:20 +0800
+From: Bincai Liu <bincai.liu@mediatek.com>
+To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, Philipp Zabel
+	<p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+	<simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Chunfeng Yun
+	<chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>, Kishon Vijay
+ Abraham I <kishon@kernel.org>, Jitao shi <jitao.shi@mediatek.com>, CK Hu
+	<ck.hu@mediatek.com>
+CC: <dri-devel@lists.freedesktop.org>, <linux-mediatek@lists.infradead.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-phy@lists.infradead.org>,
+	Bincai Liu <bincai.liu@mediatek.com>
+Subject: [PATCH 2/5] dt-bindings: dvo: mediatek: add dvo yaml for mt8196
+Date: Fri, 18 Apr 2025 14:52:29 +0800
+Message-ID: <20250418065313.8972-3-bincai.liu@mediatek.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250418065313.8972-1-bincai.liu@mediatek.com>
+References: <20250418065313.8972-1-bincai.liu@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,45 +72,27 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-If lt9611uxc_audio_init() fails, some resources still need to be released
-before returning the error code.
+Add compatible string to support dvo for MT8196.
 
-Use the existing error handling path.
-
-Fixes: 0cbbd5b1a012 ("drm: bridge: add support for lontium LT9611UXC bridge")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Bincai Liu <bincai.liu@mediatek.com>
 ---
-Compile tested only.
+ .../devicetree/bindings/display/mediatek/mediatek,dpi.yaml       | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes in v2:
-  - Add R-b tag
-  - Sync with latest -next
-
-v1: https://lore.kernel.org/all/e09122722190d052cee792a9246c274510f3b928.1710618660.git.christophe.jaillet@wanadoo.fr/
-(this is ~1 year old, but was never applied)
----
- drivers/gpu/drm/bridge/lontium-lt9611uxc.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/bridge/lontium-lt9611uxc.c b/drivers/gpu/drm/bridge/lontium-lt9611uxc.c
-index f4c3ff1fdc69..f6e714feeea5 100644
---- a/drivers/gpu/drm/bridge/lontium-lt9611uxc.c
-+++ b/drivers/gpu/drm/bridge/lontium-lt9611uxc.c
-@@ -880,7 +880,11 @@ static int lt9611uxc_probe(struct i2c_client *client)
- 		}
- 	}
- 
--	return lt9611uxc_audio_init(dev, lt9611uxc);
-+	ret = lt9611uxc_audio_init(dev, lt9611uxc);
-+	if (ret)
-+		goto err_remove_bridge;
-+
-+	return 0;
- 
- err_remove_bridge:
- 	free_irq(client->irq, lt9611uxc);
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
+index b659d79393a8..4f897f05cb36 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
+@@ -28,6 +28,7 @@ properties:
+           - mediatek,mt8192-dpi
+           - mediatek,mt8195-dp-intf
+           - mediatek,mt8195-dpi
++          - mediatek,mt8196-edp-dvo
+       - items:
+           - enum:
+               - mediatek,mt6795-dpi
 -- 
-2.49.0
+2.45.2
 
