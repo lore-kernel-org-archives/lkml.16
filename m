@@ -1,272 +1,153 @@
-Received: from ixit.cz (ip-89-177-23-149.bb.vodafone.cz [89.177.23.149])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFAF199947;
-	Fri, 18 Apr 2025 11:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.177.23.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E4C212D8A;
+	Fri, 18 Apr 2025 11:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744976989; cv=none; b=dG8+MGUUshnpmnOXV+M5NokGmVsbuL/EgfoxZS5daaCxNn+/vkWrF2nshNUI7cG6DAM9ZY7HJAxVD/CXE7CXFVuXFYdeUkXsXbbsz51VVfkkU47GRSfAxzzDaheAih5dS4Zx3R5Z1UiyuvvDJHOgIATggt4oUgL3O5OEASVFaK4=
+	t=1744977031; cv=none; b=l+TsewaDCTSX1ZJBJRUjCMhH5DGLXNjeQOL4vCWf3fNI8CzxEiCUxS3ISbq59vFwn4u1JAkn0I6JkU/S4+rVP+Gv8fmDd/lCeJhIr7IPoFbCwvKT2scr1RHDFI8VOaoc9317iWUTCRanigx7Sf+GNd/7dq+zmatk0ajlD1Ko0hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744976989; c=relaxed/simple;
-	bh=0xqfItQyN6ROhVXcQYA8qrLVNEC/rcSRqgoktrpt8MA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S0yqynB5rSCqZASe1bLdNkD48Cd4evivhEq5XHvqGVjx0XDREnRrbw0LLQi0HXNMeSVlInepCGzqgw1VNyBsu/GdhO0lnqbJoDzqdqfLTVnHpzP65of7CWfKcr1Tfr8rajBC+RQMNZYQ70xXgkNPG5UDdELmP2V4fS33CdB0nSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=GFiW2Fbm; arc=none smtp.client-ip=89.177.23.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
+	s=arc-20240116; t=1744977031; c=relaxed/simple;
+	bh=yPdsexh0RBmoEGSGoqi0jhSZ+wMfPYGmhgJMXRTvWpw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=SXzwz4xJTTtGv126w3bYGaVpW2PjLZ5CnbTAWwylBS3UtZQjSbAn1Y4IZNecnbfMBmBVcS3GDeRCIocVftYrNDm7rgCdn4+RzlMKsS/ptHwhdqizqufG9St6U+U3oNOc6kKlPBx7gjAMdpXZl05E+4Pq+AxOTq2h3w+TuoaPmRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Vp+kISfm; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="GFiW2Fbm"
-Received: from [10.0.0.185] (unknown [10.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ixit.cz (Postfix) with ESMTPSA id A5947166598;
-	Fri, 18 Apr 2025 13:42:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
-	t=1744976521;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=5uRv3rAKMiUBBg+1+0mXz1mGMZQOP4uPKMKJVmKxbCQ=;
-	b=GFiW2FbmlbicCZXJfrIJG7I75y49Jdzrt0L4YwIxh8auJP7c/Out8+Yz9zT9rKQOp46Lr1
-	kcEAlTmznogxdB3SRadvHWJ0jMYLHBo0dSrRx68oUCVacjxfsIWQs44t35ye/Mxr6P6ucP
-	r8aNwRixDO65HkQAbcgR5Ly8XbBKnRc=
-Message-ID: <7ae72214-3f91-4bd7-b5f0-07391006f531@ixit.cz>
-Date: Fri, 18 Apr 2025 13:42:01 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Vp+kISfm"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53I2tAu6013274;
+	Fri, 18 Apr 2025 11:50:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=U4E12rCwVb3hlnjsHyB8Nx
+	tgtGwFnoxCqbeAXkbWhZk=; b=Vp+kISfmpUaTpCqz2MvIKZJZbhRwsAREIgWorg
+	IY9upyUbTgnYugCS5r2hST8d0WFBA5jsSbOi35tkD65cNevSqX6+g3vHLTPyRqaI
+	hA2HuJ/mS2L25jpkPRBXA6wpVh/VjKvrSCiHaFcqFTZ6iWfYBVEOx4dJqL/e53tX
+	Rt9NRkHIG5l7fpnwpXRmMGWV3KzOtBUbpdyQsFelkvkv6XQOsUcqVMpjGOY6RdYn
+	0D10pLdwTsjqHFcU9NazUgzkRMUd+SutdKQzHZg6mFnpFLXsLX3I4LP9VrBuR5e+
+	ZKL4Ra8MkQZc6165t5r2tOxAsYvwhu59kqPTiEyczYwMn2ew==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4628rvf5kc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Apr 2025 11:50:27 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53IBoRtn026066
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Apr 2025 11:50:27 GMT
+Received: from [10.213.96.82] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 18 Apr
+ 2025 04:50:25 -0700
+From: Vivek Pernamitta <quic_vpernami@quicinc.com>
+Date: Fri, 18 Apr 2025 17:20:15 +0530
+Subject: [PATCH v2] bus: mhi: host: pci: Disable runtime PM for QDU100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] media: dt-bindings: Convert Analog Devices ad5820 to
- DT schema
-To: Rob Herring <robh@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Pavel Machek <pavel@kernel.org>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Pavel Machek <pavel@ucw.cz>,
- linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250414-b4-ad5820-dt-yaml-v3-1-39bbb5db7b2b@ixit.cz>
- <20250415223557.GA940473-robh@kernel.org>
-Content-Language: en-US
-From: David Heidelberg <david@ixit.cz>
-Autocrypt: addr=david@ixit.cz; keydata=
- xsFNBF5v1x4BEADS3EddwsNsvVAI1XF8uQKbdYPY/GhjaSLziwVnbwv5BGwqB1tfXoHnccoA
- 9kTgKAbiXG/CiZFhD6l4WCIskQDKzyQN3JhCUIxh16Xyw0lECI7iqoW9LmMoN1dNKcUmCO9g
- lZxQaOl+1bY/7ttd7DapLh9rmBXJ2lKiMEaIpUwb/Nw0d7Enp4Jy2TpkhPywIpUn8CoJCv3/
- 61qbvI9y5utB/UhfMAUXsaAgwEJyGPAqHlC0YZjaTwOu+YQUE3AFzhCbksq95CwDz4U4gdls
- dmv9tkATfu2OmzERZQ6vJTehK0Pu4l5KmCAzYg42I9Dy4E6b17x6NncKbcByQFOXMtG0qVUk
- F1yeeOQUHwu+8t3ZDMBUhCkRL/juuoqLmyDWKMc0hKNNeZ9BNXgB8fXkRLWEUfgDXsFyEkKp
- NxUy5bDRlivf6XfExnikk5kj9l2gGlNQwqROti/46bfbmlmc/a2GM4k8ZyalHNEAdwtXYSpP
- 8JJmlbQ7hNTLkc3HQLRsIocN5th/ur7pPMz1Beyp0gbE9GcOceqmdZQB80vJ01XDyCAihf6l
- AMnzwpXZsjqIqH9r7T7tM6tVEVbPSwPt4eZYXSoJijEBC/43TBbmxDX+5+3txRaSCRQrG9dY
- k3mMGM3xJLCps2KnaqMcgUnvb1KdTgEFUZQaItw7HyRd6RppewARAQABzSBEYXZpZCBIZWlk
- ZWxiZXJnIDxkYXZpZEBpeGl0LmN6PsLBlAQTAQgAPgIbAwULCQgHAgYVCgkICwIEFgIDAQIe
- AQIXgBYhBNd6Cc/u3Cu9U6cEdGACP8TTSSByBQJl+KksBQkPDaAOAAoJEGACP8TTSSBy6IAQ
- AMqFqVi9LLxCEcUWBn82ssQGiVSDniKpFE/tp7lMXflwhjD5xoftoWOmMYkiWE86t5x5Fsp7
- afALx7SEDz599F1K1bLnaga+budu55JEAYGudD2WwpLJ0kPzRhqBwGFIx8k6F+goZJzxPDsf
- loAtXQE62UvEKa4KRRcZmF0GGoRsgA7vE7OnV8LMeocdD3eb2CuXLzauHAfdvqF50IfPH/sE
- jbzROiAZU+WgrwU946aOzrN8jVU+Cy8XAccGAZxsmPBfhTY5f2VN1IqvfaRdkKKlmWVJWGw+
- ycFpAEJKFRdfcc5PSjUJcALn5C+hxzL2hBpIZJdfdfStn+DWHXNgBeRDiZj1x6vvyaC43RAb
- VXvRzOQfG4EaMVMIOvBjBA/FtIpb1gtXA42ewhvPnd5RVCqD9YYUxsVpJ9d+XsAy7uib3BsV
- W2idAEsPtoqhVhq8bCUs/G4sC2DdyGZK8MRFDJqciJSUbqA+5z1ZCuE8UOPDpZKiW6H/OuOM
- zDcjh0lOzr4p+/1TSg1PbUh7fQ+nbMuiT044sC1lLtJK0+Zyn0GwhR82oNM4fldNsaHRW42w
- QGD35+eNo5Pvb3We5XRMlBdhFnj7Siggp4J8/PJ6MJvRyC+RIJPGtbdMB2/RxWunFLn87e5w
- UgwR9jPMHAstuTR1yR23c4SIYoQ2fzkrRzuazsFNBF5v1x4BEADnlrbta2WL87BlEOotZUh0
- zXANMrNV15WxexsirLetfqbs0AGCaTRNj+uWlTUDJRXOVIwzmF76Us3I2796+Od2ocNpLheZ
- 7EIkq8budtLVd1c06qJ+GMraz51zfgSIazVInNMPk9T6fz0lembji5yEcNPNNBA4sHiFmXfo
- IhepHFOBApjS0CiOPqowYxSTPe/DLcJ/LDwWpTi37doKPhBwlHev1BwVCbrLEIFjY0MLM0aT
- jiBBlyLJaTqvE48gblonu2SGaNmGtkC3VoQUQFcVYDXtlL9CVbNo7BAt5gwPcNqEqkUL60Jh
- FtvVSKyQh6gn7HHsyMtgltjZ3NKjv8S3yQd7zxvCn79tCKwoeNevsvoMq/bzlKxc9QiKaRPO
- aDj3FtW7R/3XoKJBY8Hckyug6uc2qYWRpnuXc0as6S0wfek6gauExUttBKrtSbPPHiuTeNHt
- NsT4+dyvaJtQKPBTbPHkXpTO8e1+YAg7kPj3aKFToE/dakIh8iqUHLNxywDAamRVn8Ha67WO
- AEAA3iklJ49QQk2ZyS1RJ2Ul28ePFDZ3QSr9LoJiOBZv9XkbhXS164iRB7rBZk6ZRVgCz3V6
- hhhjkipYvpJ/fpjXNsVL8jvel1mYNf0a46T4QQDQx4KQj0zXJbC2fFikAtu1AULktF4iEXEI
- rSjFoqhd4euZ+QARAQABwsF8BBgBCAAmAhsMFiEE13oJz+7cK71TpwR0YAI/xNNJIHIFAmX4
- qVAFCQ8NoDIACgkQYAI/xNNJIHKN4A/+Ine2Ii7JiuGITjJkcV6pgKlfwYdEs4eFD1pTRb/K
- 5dprUz3QSLP41u9OJQ23HnESMvn31UENk9ffebNoW7WxZ/8cTQY0JY/cgTTrlNXtyAlGbR3/
- 3Q/VBJptf04Er7I6TaKAmqWzdVeKTw33LljpkHp02vrbOdylb4JQG/SginLV9purGAFptYRO
- 8JNa2J4FAQtQTrfOUjulOWMxy7XRkqK3QqLcPW79/CFn7q1yxamPkpoXUJq9/fVjlhk7P+da
- NYQpe4WQQnktBY29SkFnvfIAwqIVU8ix5Oz8rghuCcAdR7lEJ7hCX9bR0EE05FOXdZy5FWL9
- GHvFa/Opkq3DPmFl/0nt4HJqq1Nwrr+WR6d0414oo1n2hPEllge/6iD3ZYwptTvOFKEw/v0A
- yqOoYSiKX9F7Ko7QO+VnYeVDsDDevKic2T/4GDpcSVd9ipiKxCQvUAzKUH7RUpqDTa+rYurm
- zRKcgRumz2Tc1ouHj6qINlzEe3a5ldctIn/dvR1l2Ko7GBTG+VGp9U5NOAEkGpxHG9yg6eeY
- fFYnMme51H/HKiyUlFiE3yd5LSmv8Dhbf+vsI4x6BOOOq4Iyop/Exavj1owGxW0hpdUGcCl1
- ovlwVPO/6l/XLAmSGwdnGqok5eGZQzSst0tj9RC9O0dXO1TZocOsf0tJ8dR2egX4kxM=
-In-Reply-To: <20250415223557.GA940473-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-ID: <20250418-vdev_next-20250411_pm_disable-v2-1-27dd8d433f3b@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAHY8AmgC/42NQQ6CMBBFr0JmbQ0tFKIr7mEIqe0ok0iLLTYY0
+ rtbiQdw85P3Fu9vENATBjgXG3iMFMjZDOJQgB6VvSMjkxlEKWRZ85pFg3GwuC7sp/gwT4OhoK4
+ PZLIyErnSppYIuTF7vNG69y995pHC4vx7v4v8a/8tR844w1NTNW2bR6vu+SJNVh+1m6BPKX0AP
+ otPYMwAAAA=
+X-Change-ID: 20250414-vdev_next-20250411_pm_disable-53d5e1acd45e
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: <mhi@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Vivek Pernamitta <quic_vpernami@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744977024; l=2583;
+ i=quic_vpernami@quicinc.com; s=20241114; h=from:subject:message-id;
+ bh=yPdsexh0RBmoEGSGoqi0jhSZ+wMfPYGmhgJMXRTvWpw=;
+ b=UQkIZ57cKdGGer5Q7jHpOiw9vV7If4osrB+Nv5sj5Kex6FyC/oCHvDN7L3FenBH+wEqaDn9aG
+ ZUDDR0ixl+rBF/IsG5JZ9c5B1FwXHT9pb9DhgkD1nGjKCnDJO4oJOR2
+X-Developer-Key: i=quic_vpernami@quicinc.com; a=ed25519;
+ pk=HDwn8xReb8K52LA6/CJc6S9Zik8gDCZ5LO4Cypff71Y=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: tJ2ikZoE9w6gDi1dq8C0zXL1S73RCQEg
+X-Authority-Analysis: v=2.4 cv=RbSQC0tv c=1 sm=1 tr=0 ts=68023c83 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=BwJktTEAC3VXUIAVO-kA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: tJ2ikZoE9w6gDi1dq8C0zXL1S73RCQEg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-18_03,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=0 adultscore=0 impostorscore=0 clxscore=1015 bulkscore=0
+ phishscore=0 priorityscore=1501 spamscore=0 mlxscore=0 lowpriorityscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504180087
 
-On 16/04/2025 00:35, Rob Herring wrote:
-> On Mon, Apr 14, 2025 at 06:04:01PM +0200, David Heidelberg wrote:
->> Convert the Analog Devices ad5820 to DT schema format.
->>
->> Added the io-channel-cells property, because it's already used by the
-> 
-> You mean #io-channel-cells?
-> 
->> Nokia N900 device-tree and defines ad5820 as having only single output.
->>
->> Acked-by: Pavel Machek <pavel@ucw.cz>
->> Signed-off-by: David Heidelberg <david@ixit.cz>
->> ---
->> Changes in v3:
->> - Removed documentation of io-channel-cells property. Now it's 1:1 to
->>    the original binding. The reference to it from the Nokia N900 dts
->>    was removed in the -next.
-> 
-> Added or removed? I'm confused.
-> 
->> - Link to v2: https://lore.kernel.org/r/20250314-b4-ad5820-dt-yaml-v2-1-287958c3c07c@ixit.cz
->>
->> Changes in v2:
->> - added MAINTAINERS entry for the binding
->> - documented why io-channel-cells got added into the binding.
->> - dropped io-channel-cells in required properties.
->> - adjusted example indentation to 4 spaces.
->> - Link to v1: https://lore.kernel.org/r/20250209203940.159088-1-david@ixit.cz
->> ---
->>   .../devicetree/bindings/media/i2c/ad5820.txt       | 28 ----------
->>   .../devicetree/bindings/media/i2c/adi,ad5820.yaml  | 59 ++++++++++++++++++++++
->>   MAINTAINERS                                        |  1 +
->>   3 files changed, 60 insertions(+), 28 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
->> deleted file mode 100644
->> index 5764cbedf9b73387ad1bfa9acf99c643f959b84a..0000000000000000000000000000000000000000
->> --- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
->> +++ /dev/null
->> @@ -1,28 +0,0 @@
->> -* Analog Devices AD5820 autofocus coil
->> -
->> -Required Properties:
->> -
->> -  - compatible: Must contain one of:
->> -		- "adi,ad5820"
->> -		- "adi,ad5821"
->> -		- "adi,ad5823"
->> -
->> -  - reg: I2C slave address
->> -
->> -  - VANA-supply: supply of voltage for VANA pin
->> -
->> -Optional properties:
->> -
->> -   - enable-gpios : GPIO spec for the XSHUTDOWN pin. The XSHUTDOWN signal is
->> -active low, a high level on the pin enables the device.
->> -
->> -Example:
->> -
->> -       ad5820: coil@c {
->> -               compatible = "adi,ad5820";
->> -               reg = <0x0c>;
->> -
->> -               VANA-supply = <&vaux4>;
->> -               enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
->> -       };
->> -
->> diff --git a/Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml b/Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml
->> new file mode 100644
->> index 0000000000000000000000000000000000000000..93349e7daf262fc8939f984fbe93cf064a0cbaf8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml
->> @@ -0,0 +1,59 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/media/i2c/adi,ad5820.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Analog Devices AD5820 autofocus coil
->> +
->> +maintainers:
->> +  - Pavel Machek <pavel@ucw.cz>
->> +
->> +description:
->> +  The AD5820 is a current sink driver designed for precise control of
->> +  voice coil motors (VCMs) in camera autofocus systems.
->> +
->> +allOf:
->> +  - $ref: /schemas/iio/iio.yaml#
-> 
-> You have the ref, so #io-channel-cells is allowed, but you need to say
-> what the value for it should be for *this* binding. IOW, you still need
-> to list it explicitly.
+The QDU100 device does not support the MHI M3 state, necessitating the
+disabling of runtime PM for this device. It is essential to disable
+runtime PM if the device does not support Low Power Mode (LPM).
 
-I considered to keep the previous and new binding 1:1 and drop 
-#io-channel-chells with the all references to it (missed this one).
+Signed-off-by: Vivek Pernamitta <quic_vpernami@quicinc.com>
+---
+Changes in v2:
+- Updated device from getting runtime suspended by avoid skipping autosuspend.
+- Updated commit message.
+- Link to v1: https://lore.kernel.org/r/20250414-vdev_next-20250411_pm_disable-v1-1-e963677636ca@quicinc.com
+---
+ drivers/bus/mhi/host/pci_generic.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Would that be ok for v4?
+diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
+index 03aa887952098661a488650053a357f883d1559b..bec1ca17ad69ac89e2ea9142024fef8bded258b6 100644
+--- a/drivers/bus/mhi/host/pci_generic.c
++++ b/drivers/bus/mhi/host/pci_generic.c
+@@ -43,6 +43,7 @@
+  * @mru_default: default MRU size for MBIM network packets
+  * @sideband_wake: Devices using dedicated sideband GPIO for wakeup instead
+  *		   of inband wake support (such as sdx24)
++ * @pm_disable: disables runtime PM (optional)
+  */
+ struct mhi_pci_dev_info {
+ 	const struct mhi_controller_config *config;
+@@ -54,6 +55,7 @@ struct mhi_pci_dev_info {
+ 	unsigned int dma_data_width;
+ 	unsigned int mru_default;
+ 	bool sideband_wake;
++	bool pm_disable;
+ };
+ 
+ #define MHI_CHANNEL_CONFIG_UL(ch_num, ch_name, el_count, ev_ring) \
+@@ -295,6 +297,7 @@ static const struct mhi_pci_dev_info mhi_qcom_qdu100_info = {
+ 	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
+ 	.dma_data_width = 32,
+ 	.sideband_wake = false,
++	.pm_disable = true,
+ };
+ 
+ static const struct mhi_channel_config mhi_qcom_sa8775p_channels[] = {
+@@ -1270,8 +1273,11 @@ static int mhi_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	/* start health check */
+ 	mod_timer(&mhi_pdev->health_check_timer, jiffies + HEALTH_CHECK_PERIOD);
+ 
+-	/* Only allow runtime-suspend if PME capable (for wakeup) */
+-	if (pci_pme_capable(pdev, PCI_D3hot)) {
++	/**
++	 * Disable Runtime PM if device doesn't support MHI M3 state
++	 * and Allow runtime-suspend if PME capable (for wakeup)
++	 */
++	if (pci_pme_capable(pdev, PCI_D3hot) && !(info->pm_disable)) {
+ 		pm_runtime_set_autosuspend_delay(&pdev->dev, 2000);
+ 		pm_runtime_use_autosuspend(&pdev->dev);
+ 		pm_runtime_mark_last_busy(&pdev->dev);
 
-> 
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - adi,ad5820
->> +      - adi,ad5821
->> +      - adi,ad5823
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  enable-gpios:
->> +    maxItems: 1
->> +    description:
->> +      GPIO spec for the XSHUTDOWN pin. The XSHUTDOWN signal is active low,
->> +      a high level on the pin enables the device.
->> +
->> +  VANA-supply:
->> +    description: supply of voltage for VANA pin
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - VANA-supply
->> +
->> +unevaluatedProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/gpio/gpio.h>
->> +
->> +    i2c {
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +        coil@c {
->> +            compatible = "adi,ad5820";
->> +            reg = <0x0c>;
->> +
->> +            enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
->> +            VANA-supply = <&vaux4>;
->> +        };
->> +    };
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index af3537005de35dfd0ded11bdc2b9c63e10c70e93..366ed4905fc9b32862a4fd665cf5f4e09fafc989 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -17274,6 +17274,7 @@ M:	Pavel Machek <pavel@kernel.org>
->>   M:	Sakari Ailus <sakari.ailus@iki.fi>
->>   L:	linux-media@vger.kernel.org
->>   S:	Maintained
->> +F:	Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml
->>   F:	drivers/media/i2c/ad5820.c
->>   F:	drivers/media/i2c/et8ek8
->>   
->>
->> ---
->> base-commit: b425262c07a6a643ebeed91046e161e20b944164
->> change-id: 20250314-b4-ad5820-dt-yaml-3220bf2f1e40
->>
->> Best regards,
->> -- 
->> David Heidelberg <david@ixit.cz>
->>
+---
+base-commit: 01c6df60d5d4ae00cd5c1648818744838bba7763
+change-id: 20250414-vdev_next-20250411_pm_disable-53d5e1acd45e
 
+Best regards,
 -- 
-David Heidelberg
+Vivek Pernamitta <quic_vpernami@quicinc.com>
 
