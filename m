@@ -1,61 +1,64 @@
 Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E1F1DF246;
-	Fri, 18 Apr 2025 12:37:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D6678F3B
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 12:38:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744979855; cv=none; b=bAvaipcbJnd35phxbCdjr3fL6vhe4ged76sV9q+SqFV3FnUmQF1vDWkJF6YuwV+iSMbG4b3aTFbY9ez9G3DFOkZNWVMY3J0MpErkwbZfk37Zfg2fC9DMfDOmF5YFQ2qA3w08fsfK6F7kjwsyyHGVetzgfacOavwcxB0k7Z7yVQo=
+	t=1744979923; cv=none; b=jBEQNZlpX7JSJfu3zahH4J9EWZ7YzcL79K3IlqAV+jIAlNVTjJLs/QDsX3JWtBlI0/Xkmt/goctw+N5lKspxqfStIvY4XzQx6obQ1LNMdSDkMypKjlwZQ8Cf+1bIl1JfIb6MwyANmtLf1A0XG7Z7fi5FxyH1CKCNJGc6BS5Csww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744979855; c=relaxed/simple;
-	bh=uUnzL+q7wIgF2mGjWnGorLdgmjHPCsrTUJjyrxQ1HWo=;
+	s=arc-20240116; t=1744979923; c=relaxed/simple;
+	bh=sm0Ki59CjBhnsleMWYWSQGPx4sZzEiQhbqyM72fLn/c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t+mgV9tR9VKFuYOT/ulrGdL9lwsd+ALHcLs8/vGnhUgbCFwZ82MKJu9zlpUW6KGCa0xw0YArqlgHwpeDDNHiqS7Fn/p9MzqZVcfJMh88dyFX/MhTSrgf4w1sFkAV4OiYRMrFT2IVQy4A7lSHrpz5ggUD0QBnLYTBJ/lrXj2eRAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=IaOHOOqw; arc=none smtp.client-ip=65.109.113.108
+	 Content-Type:Content-Disposition:In-Reply-To; b=bx9N73fHex0uWwnR8J+2DgXtNuRn0ptjJYyf0eQiPBCAITjS4E5p7Am3UUfDICabYzexPGC7FXbrThryJJyLGZdbv5J4UaGL6dBrmPxyv6y1iU4RlpECQkw2v7dTh/hcQ+tA5kUmwI5k+S8H57VGEt8dcHB4wK2NObQ61qr3oHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=D0wDdAdS; arc=none smtp.client-ip=65.109.113.108
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="IaOHOOqw"
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="D0wDdAdS"
 Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 78E3F40E024A;
-	Fri, 18 Apr 2025 12:37:31 +0000 (UTC)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3F8D240E0242;
+	Fri, 18 Apr 2025 12:38:39 +0000 (UTC)
 X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
 Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
 	header.d=alien8.de
 Received: from mail.alien8.de ([127.0.0.1])
 	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id wwvSEX_I3nzk; Fri, 18 Apr 2025 12:37:28 +0000 (UTC)
+	with ESMTP id sGL9Zv2dy816; Fri, 18 Apr 2025 12:38:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1744979846; bh=s2mYFoHL8m7enCNSKO0eZ1lDiYgdygcE7DJwYrFMfkQ=;
+	t=1744979916; bh=41vH5Dpnvr8Slt3zU3t7P+jQ5mXsu0YwL/mzwWg/kGA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IaOHOOqw0pQU5ukLw5Y8g5ELkxgpuopfQp1UexiF0eKfEeDwbbPbqyGqlMOoBmK9V
-	 rj4VwFD4xffQnnWOhaqGPK9ZQgol3TwMbocIWekptDwcZ8U7Cc25McHpDJuLsfNVwG
-	 ADMlnBgYxuE5nFlG+0vEY1cEE1wYzcDeQFhFy15a+TTE3u4+jUSwJZTDBD5IUfxIAO
-	 E10GaX4y2KswhQpI5ommRgkMGkouSPgAGPAlf5PTxMc2phPDhdXAwOvz2clfKmNT/l
-	 L6LwbM7rSVhu03qYJaXfxpJe/4D3q6pjpYLSD/p/lg4/9V6dYFEzLn1BI+RoL2lIxk
-	 EnVoSmkAbCqH362K/nMF4yRp0N8nJpwotBoZ2YBg1LhzanSCBYfQeBsShmDA1hvIKG
-	 ywNOWT7ZoDcbieevEZnRMBfvEwQ2qsS1IJSasDbEjr0QQgO+ZORxY4HnmEmD6M9ESV
-	 fpFqIPUJh4zD8T2EIVpWTUEt19sRAveg8W6pfVOhB4BVYCPhol/4NGV0klsCVzwX7q
-	 wRPc2nHiCGcgtTQOyunEoF78C4jD4O3QDTfp46v51vE3XiVUYQJulDol9qHbXNFm+K
-	 9mtSVfv+XzpH64DFYc11Eh8bap+HgX+iPKRljSN1Ez9Fd4xnDvqClYKnqHhBfftSzu
-	 c/KxRyY72ggTpY1NM1GFs+rw=
+	b=D0wDdAdSPRI5e7Ida8wB7Z1vqHEgXZKJPviFSFGNlA1C4V6nJ6YEupF0ZRUJv2lHb
+	 L4drV3kOmX3Pdb+AjICJ1otgFqqzLAba6bDzaBMOu48vN5qH53NzHRgNwvsNe+YHJ1
+	 BSdeOzFLpDpHYK2JYhbJ9oMO2c455nhVbQ6HBaBMYIv0wo4Zp7omYTqtCz78hH2yim
+	 VXM/tPBTn6tBdSq85ECDJYABFJZBcsRE3VelxMs45Of/6LYwBsxigGEGQaXw2Eo4uc
+	 5+xZgNo8eYgGcjqNuQKsdO9WkNQjd7liardctZ3CpZMBktcJCv1Hvn1mM1Bx9ibbzw
+	 P8JpauRJvWkvxffJz+1aj7slQ8ApMT0PUeH8qbX0Bo7DvQ1cTmcy9RcJjjf42lLuvl
+	 eRReB2mgE0Jx5DOQZJQVokFFjJhkBCHCYtO+wtBR5FizSPxdhM3DcOSwyvUby+Eu0f
+	 XzeNw1nzQZQD6bzRwMT0jDVzXJ1BqhUY1ByhU1zv31vDSV/m/GIbIh5a7vVCKeZRBu
+	 wka87nDLG5KP05Pz8TFnDR+gnk8uyOf0avm4LS5hLnDNkrvKn+D6NVcsIr9k0C8pPX
+	 QY4hSqk24MvaCvtcfGw+IZhORdjuTpA4FQCs4zVBy+gwGSkgqKOw6C08+KHwsclu7Q
+	 6rI8fLmPYBbD2bIYfMrJxRko=
 Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9F44240E0247;
-	Fri, 18 Apr 2025 12:37:19 +0000 (UTC)
-Date: Fri, 18 Apr 2025 14:37:13 +0200
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E3AAC40E0200;
+	Fri, 18 Apr 2025 12:38:27 +0000 (UTC)
+Date: Fri, 18 Apr 2025 14:38:26 +0200
 From: Borislav Petkov <bp@alien8.de>
-To: Ingo Molnar <mingo@kernel.org>, Greg KH <gregkh@linuxfoundation.org>,
-	stable <stable@vger.kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	Sandipan Das <sandipan.das@amd.com>, x86@kernel.org
-Subject: Re: [tip: x86/urgent] x86/cpu/amd: Fix workaround for erratum 1054
-Message-ID: <20250418123713.GCaAJHedTC_JWN__Td@fat_crate.local>
-References: <174495817953.31282.5641497960291856424.tip-bot2@tip-bot2>
- <20250418104013.GAaAIsDW2skB12L-nm@renoirsky.local>
- <aAJBgCjGpvyI43E3@gmail.com>
+To: Dmytro Maluka <dmaluka@chromium.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Yue Haibing <yuehaibing@huawei.com>,
+	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/extable: include asm/processor.h for cpu_relax()
+Message-ID: <20250418123826.GDaAJHwh7mOZM3QeBg@fat_crate.local>
+References: <20250418115710.4154311-1-dmaluka@chromium.org>
+ <20250418121203.GBaAJBk9bOo7ad1d4L@fat_crate.local>
+ <aAJHMnQPl5iRO5wy@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,39 +67,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aAJBgCjGpvyI43E3@gmail.com>
+In-Reply-To: <aAJHMnQPl5iRO5wy@google.com>
 
-On Fri, Apr 18, 2025 at 02:11:44PM +0200, Ingo Molnar wrote:
-> No, it doesn't really 'need' a stable tag, it has a Fixes tag already, 
-> which gets processed by the -stable team.
-
-Last time I asked Greg, he said they scan for those tags but it doesn't hurt
-to Cc stable as it helps.
-
-Greg?
-
-> Also, the bug is old, 1.5 years old:
+On Fri, Apr 18, 2025 at 02:36:02PM +0200, Dmytro Maluka wrote:
+> Yeah, I meant precisely: when compiling with CONFIG_X86_MCE disabled and
+> some code enabled that includes asm/extable.h without prior including
+> asm/processor.h.
 > 
->   Date: Sat, 2 Dec 2023 12:50:23 +0100
-> 
-> plus the erratum is a perf-counters information quality bug affecting 
-> what appears to be a limited number of models, with the workaround 
+> I encountered that with the out-of-tree-yet code [1] (which is a part of
+> a prototype implementation of pKVM on x86) which includes asm/sections.h
+> which includes asm/extable.h.
 
-No, the fix is needed because Zen2 and newer won't set
-MSR_K7_HWCR_IRPERF_EN_BIT. It needs to go everywhere.
-
-> likely incorporated in BIOS updates as well.
-
-You can very much forget that argument. I have hard BIOS adoption data which
-paints an abysmal picture. So NEVER EVER rely on BIOS to do anything.
-Especially for Zen1 which is oooold in BIOS time.
-
-> Leave it up to the -stable team whether they think it's severe enough to
-> backport it?
-
-No, they leave it to us section maintainers to decide AFAIK.
-
-Thx.
+Sorry, come back with this when you can trigger this solely with the upstream
+kernel.
 
 -- 
 Regards/Gruss,
