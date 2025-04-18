@@ -1,93 +1,91 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DDCF2749DC
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 13:08:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732F52749D7;
+	Fri, 18 Apr 2025 13:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744981692; cv=none; b=I7Bo3gLlGw1SpxOJgPhJiIRewFlwWGdG6R9xSlk2QVUDZq//JE146RFKHsFyJGkBCPFayCDM6Z9J5nWb3R4YEabpjIoJvAztyilbhbpnxKYUwuDK4w8dOAnpMPmk3ZV++IEAGqonUy0PWjtKsw4NUFN1EYFD4W63qddyYyE/WwQ=
+	t=1744981723; cv=none; b=l/4BiNZO/XzVLbldQVcLG/2mTurPv0CN+F9HX+NdMERvcfXTGVzsPpvWRLinyaKjcYkPKvyxLyvFIPu70Qa4imbw85ilhnYDyCVeVKIWh3pScntulZGMr2VEfbmBf0ik+pT+z2w9hxFm6nfp5D9cWIAO/mrwbgU4HiXbXstR2g8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744981692; c=relaxed/simple;
-	bh=FPdWUg1fPQV/6dEpNOCETZgdT1z+UP3Z1xA0imj7J/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qf6L3eGEeaugq69cYh9Ijtouqp4TOxvz3MvVUvf35YQCjgrkgxrDUQ6K1wZNzFUYabSuvph8Xvq0QbKDfCI7qwPmTiKk9qDMNSJCPr2gLAw/IfZ8zIcFXH5JqDt9axtWEv1vpahxvu6tyYHEPwx3K7YQtW7jZiYPsOgEHPB71n8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EFwVzxo3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744981723; c=relaxed/simple;
+	bh=ZD4cNlSOLZMquN8qyLb4pwWdMwFPd6qAnJFhtRCch5s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=CqElGsJRDtiF6Zebbgo7d7foXYgBDhUmvc9RUHvq+UGv2oGAU0weYuzPI7AkFayOedJJZYsD+wRuV41jd3pchs1/it9jwQAQmk10nZXz5R5rHa3bzf0dL0wFqFklLpA8vy/cStxWDaftpbUCSmnv3tGlswIg/xExMQ1HWOGvRhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B07ULLe8; arc=none smtp.client-ip=209.85.210.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EFwVzxo3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744981690;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b+QNRWScy7VlNTBvv/Zh4APnzyG6J24ppGEfEXO4A/A=;
-	b=EFwVzxo3f4bIJFmacwYhT3lQls2eXasmViHLWUwFFz2o2jNMx1iyyKyVAy3N4cyjjEmiXK
-	mXSyKmuvi1koNdciOpRpeltgx+knojS+Gsh/GHmlJ+BlJnbwvvD9cBPK4kXwe1/AeHLAZ2
-	wPVO8O37/mReL5BTktBpfluUUDpG5bc=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-34-oW3H6YwOPgmS32yPjuGLTQ-1; Fri,
- 18 Apr 2025 09:08:06 -0400
-X-MC-Unique: oW3H6YwOPgmS32yPjuGLTQ-1
-X-Mimecast-MFC-AGG-ID: oW3H6YwOPgmS32yPjuGLTQ_1744981685
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 667DB19560B0;
-	Fri, 18 Apr 2025 13:08:05 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.18])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4FA121800965;
-	Fri, 18 Apr 2025 13:08:02 +0000 (UTC)
-Date: Fri, 18 Apr 2025 21:07:58 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	kexec@lists.infradead.org, kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crash: Fix spelling mistake "crahskernel" ->
- "crashkernel"
-Message-ID: <aAJOrrRMe7ohIaqj@MiWiFi-R3L-srv>
-References: <20250418120331.535086-1-colin.i.king@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B07ULLe8"
+Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-7394945d37eso1516722b3a.3;
+        Fri, 18 Apr 2025 06:08:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744981720; x=1745586520; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:cc:from:references:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O16WL3SgxPZ8win8gZA+6xubYI6PuCGAan8u2mItuww=;
+        b=B07ULLe8ucI7gRWCmxuBWsbkSEhnmipsaXzf1yoB1RJyWHy6d8apUmqKp2fYKwLiqW
+         DO+lXdcqzb+STP1DRkauDif9wxxE6JeJhLih73Wouz9z6ScVLy3Ouj/P+EGSwp3GvebY
+         INpRC1DFYGiOR/r9MQwW1tWIKHbre4cdYZFYHLlPWWdYlApP7xLim9D5Wg9gTLsNV+hk
+         NrSxZ4U0tB+SnYpJ/PQF9CYtpRFJOQffwyHfNh/fLZS0hJAOTMVfr7y8j14QR332cOny
+         GVbHSSpahz/UzPY2VTsZaq8vAjQWvov7Nq8jfgKRdr5i8/1/ZMQjJpDvBYg0RzE9CvZs
+         PGRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744981720; x=1745586520;
+        h=content-transfer-encoding:in-reply-to:cc:from:references:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=O16WL3SgxPZ8win8gZA+6xubYI6PuCGAan8u2mItuww=;
+        b=bZG8FQxyW10Qb+R8blXLxFocykXLB2SrOXNMiQUTQD2bUWr5JMVUek7Ys65idNOWm9
+         /ImDA0I+RRXBtgYZAYHSmvMuKsjuzhSSQ44CuvZB4M0CpAQRRh7ItGKdJXRILqSbKm2d
+         dUZ2WagM3WMyPJOKlC2K6pizCUpxcOi5h46qOX4s5H4oFkCvMfgHANp6ePeXUXPryJst
+         EmCJjfxKTma+JSObxCWfVIsrkNdrdQOJ99vskP5XIFowNWXsXgmhjuy1HNx4okLa6V66
+         jrmrCM4wExl1a4IAH2qObleDf55w5e6YsbuPB2fQVIcx2z95bl9jgHt+JLE5RSfI5SGh
+         reJA==
+X-Forwarded-Encrypted: i=1; AJvYcCVHAVPZJ6hrqbX2FmFe4kmP/ybiOLD05SQWiR8avoXTO/v3yLbMciy7LXsu/7Y0aRQYzFO7s6Kwe7EAf4Q=@vger.kernel.org, AJvYcCXKgDpa/JonZ2wwmyNQTo6MypqWtNeUKmDZwQZCpg+hzVri9ZF3uCJ5GlY8urssykNMInCgm0y0Rq0XV33T/sBRWA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4FcDaPlMUP9Nb4Nvz4loH8h5GxCdu07LuKfQVtZNGKlCn6Xtc
+	XwlZFeZB0PnJoI0lBH7BC8zuqh4U//E1PwNYb5Qew1iigfldyvV7
+X-Gm-Gg: ASbGncv9bp3872hkhMphdpYkYoF6jF8R0YR9BHqNg1g0pmDBEKIqSIhx18eES2EeEMa
+	DYMwxD+gLbyGwr8KuUTsUKO+xdUVcG/x0/gBCaWLc9IbPizVTnb941HIQYMJ/xsDrATjkjodpbT
+	IeB/s/H+f539xqGUMHIqmHDmHz1jOq3FeklqZrtpXl3rrnlR5ZH3ViqdcLqlZdFoYZH9iClPAz7
+	3Cnln3nQSswDjtaaK1r6+nQVErN535Ih7QCXxMGB91M1+fSpivqhR2SuJiilys8q96H7jCyhEBG
+	HCo07FKD8F8HFQrdEKZ3RQqwEfh2USDCT7vhkXZKykG7++ypS+DahhjzDJQr
+X-Google-Smtp-Source: AGHT+IFizGLmDbLdaqHB2YwDJuhvCQ/AMS2mdEAnW8dELZz86oyPH1OXYPLMPTUGlLNKPwdZeoabvQ==
+X-Received: by 2002:a05:6a00:2985:b0:736:64b7:f104 with SMTP id d2e1a72fcca58-73dc1444626mr3452824b3a.5.1744981720523;
+        Fri, 18 Apr 2025 06:08:40 -0700 (PDT)
+Received: from [192.168.3.3] ([27.38.215.143])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8c0228sm1510925b3a.25.2025.04.18.06.08.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 06:08:40 -0700 (PDT)
+Message-ID: <ca94f413-4e35-41fd-9554-c80d6e2707ac@gmail.com>
+Date: Fri, 18 Apr 2025 21:08:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418120331.535086-1-colin.i.king@gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] perf/core: Fix broken throttling when
+ max_samples_per_tick=1
+To: Peter Zijlstra <peterz@infradead.org>
+References: <20250405141635.243786-1-wangqing7171@gmail.com>
+ <20250405141635.243786-3-wangqing7171@gmail.com>
+ <20250418090302.GO38216@noisy.programming.kicks-ass.net>
+From: Qing Wang <wangqing7171@gmail.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com,
+ alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org,
+ kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com,
+ namhyung@kernel.org
+In-Reply-To: <20250418090302.GO38216@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 04/18/25 at 01:03pm, Colin Ian King wrote:
-> There is a spelling mistake in a pr_warn message. Fix it.
-> 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
-> ---
->  kernel/crash_reserve.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
-> index aff7c0fdbefa..acb6bf42e30d 100644
-> --- a/kernel/crash_reserve.c
-> +++ b/kernel/crash_reserve.c
-> @@ -131,7 +131,7 @@ static int __init parse_crashkernel_mem(char *cmdline,
->  			cur++;
->  			*crash_base = memparse(cur, &tmp);
->  			if (cur == tmp) {
-> -				pr_warn("crahskernel: Memory value expected after '@'\n");
-> +				pr_warn("crashkernel: Memory value expected after '@'\n");
->  				return -EINVAL;
+Thank you very much for your review. Do you need me to reorganize the 
+patch and send it out? Because if only the second patch is accepted, its 
+context won't match the current mainline code.
 
-Acked-by: Baoquan He <bhe@redhat.com>
-
->  			}
->  		}
-> -- 
-> 2.49.0
-> 
-
+On 4/18/2025 5:03 PM, Peter Zijlstra wrote:
+> Fair enough I suppose. I'll make this apply without that revert -- it
+> seems pointless to have that in between.
