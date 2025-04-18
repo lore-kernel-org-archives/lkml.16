@@ -1,95 +1,156 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CA5214814
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 16:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A2B2153FE;
+	Fri, 18 Apr 2025 16:13:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744992816; cv=none; b=qyybU0Bxdte5UVoU4nZCxPK0EJIeKSNyH3Bppu+4S/HojWGHQXNO+ioqUnm73sTlyJppJaCGRCBozJLp1n91KQmNyLIhOGp/DBW2BSeN4Vy1Ptxx+Xb9r7cGVtl7Nox39nH42l2GkKTN8XewUCK9tiaWoISpz6pFMSAKnnak6ak=
+	t=1744992819; cv=none; b=Qyu+d8Ctn1hWurj56H1mRoez471tSXK5j25GOrRgZVU9iBMHOi2cS/6iIcut6yLVUv2vEc1bpDuFTQkh8YByVFZ9Kop3cpnMZPhD+Q4j1ybVmRtElhF5ocyikG0LBbhoBI9BVRiBpqKSFjcN7F79Sjn834fyH2bRzb4OXvpPQ/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744992816; c=relaxed/simple;
-	bh=dnPlx1v/5+9ztyxM4DD3uu2rXOji5rsQEo270rydr7I=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=jDi+JvCBI5Bd+IKb3zmthxTNz9hmUnT7FSPP4xnHT5bBFbo75h+MqKy7QWBvOaax6DhZiMBbhMKoK7GBhTA2VEHvkaVlXDOyMzzp1nrERgu+BO2J/rG217Y6KWArBDYRPB2EgmeE2wWZlgr38l38vSwQcPV6wh34j3U+2SMib28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=QaT3PONR; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+	s=arc-20240116; t=1744992819; c=relaxed/simple;
+	bh=uQ/6b7sB1ONhc9820LzU2mrK9lP7Kt5df9XQ5yEtODU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=k4ONJB44kmxkxDCovALs3+f6Jz5AApcitt+1P96/EoOMpyITFOlbzz2Sds2/gFToec/p11Yg+Vxhc1OWpnc67Xw4OfwHkYfDCe/0VNUSVihr9ccjfutGeK323kw8TmxY6O37/G0n/KCcGKjF2TWy2NxVzC6kHu0j+sOdumNUBck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GlQqSyCA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="QaT3PONR"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-acb615228a4so323884466b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 09:13:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1744992813; x=1745597613; darn=vger.kernel.org;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dnPlx1v/5+9ztyxM4DD3uu2rXOji5rsQEo270rydr7I=;
-        b=QaT3PONRArsY3lLNVeDHfsE4UhO014kmIrTkSySDTiTJP7iFtTJyvR2447yF6y5lKF
-         ulPWpPmzKAB8TuHdfWNprw0fCGljGVYNKNVSPOxB8nqhHaE2ysaYPC8NjpX7Hn0tOj0Q
-         hi3WDjmr/8XFEqtt9NqG+yO/ko1ceBNf+4eXuFXqzHFHCOxivcBixorgyMzB1AgWp3PX
-         m5cqqTnz0HTMAEzNsyB/+iO1iJurK6T8GglOuGzIOj4tEduqWiFyBmOuWLEOETtopxN1
-         OrNAbA7tAr+txv7ZCFLwmXxVlB3RKNj6AwnFEQE2bhFdwxhAmpPD1ZDcgTnZeX6R0lqu
-         fDkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744992813; x=1745597613;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dnPlx1v/5+9ztyxM4DD3uu2rXOji5rsQEo270rydr7I=;
-        b=CNRWDScS/i9DWB6G7bWjZg/2bkVUvvw2/weyifulFu7EwTy04x4FfHjuuxPpXDTsqS
-         FBqzk6XuzCMQmb7ZCkCFGpXVX9jN1trok+fyhyfhltd+lvrgU5G5Sh8sfj2CvxT6x26f
-         JlnJMCIHBYlp/RvtMvrF0w7BTEZ2CkzyStJlvTvMuBJhHoBHADDezvXZz+ALrqFgk2WN
-         6nWyePpIX6nLswtT9QjHGsTLJ9/kP13agcbg8lTcoserTjb6HeEhk1NDDpvzGOZpNxkU
-         5yfQOj0u953uGfzzuQImhPD099s+ucHdUTURjMJPrBEZ5cDGmOKouzzb5r6CqqFzcjLI
-         XCLA==
-X-Forwarded-Encrypted: i=1; AJvYcCXQm/16qejNdnsQuEkAW+D7F+Th80ZW108frjrkRZglOsBlb6tP5uHxbLx3EOh70sISfkKVSE2UuwQJyd8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLgDkXDBdSNGNfbIqhkODOYCIP1q9ZvSHYJsHlFDgVebHjuu0S
-	NqTD0bEYUS0u6b+aZi5IUcwzZSGEWkHqwiAZAfppyE3dBSWAG8HQNhx1S6MhdF8=
-X-Gm-Gg: ASbGncuDGxP81INFyw8G2mj/7odlENn0hjQIc6Y3HEKtRnw2txMCgH5XqNU/U07iN24
-	YYve5HPvG7mmrCsG3U7UIi1KxRKbXI0Xx48I4BuI28nOV/UH6UjzFslduW/E4bitPmdzA/MF/e+
-	tgMsgESAiD6mbTxsX4ErD75twPljabCYL0lFViaaWS4SRYe5ld/dMx97axVGY35d7T6UOCEA8de
-	p2tYkek8ky4h2d3gKIr9zZEYbYsROQBZqN2tuScGApgttgULI1jdPSQ+sztgrNB7D+yoCBpAwwp
-	mMSGEGtXZprkQXuuvtMEEsKf/raLiGIMnA==
-X-Google-Smtp-Source: AGHT+IFLgbP7tACquxzJP1RHEXNOH/DlqDIlfnCrIa/5xv6iI7vhI+s5eVpkRTeUtU+t5K/5B3t8Fw==
-X-Received: by 2002:a17:907:6e9e:b0:ac1:17fe:c74f with SMTP id a640c23a62f3a-acb7534d843mr242424666b.21.1744992813109;
-        Fri, 18 Apr 2025 09:13:33 -0700 (PDT)
-Received: from cloudflare.com ([2a09:bac5:506a:2387::38a:4e])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6eefcfb8sm137109166b.111.2025.04.18.09.13.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 09:13:32 -0700 (PDT)
-From: Jakub Sitnicki <jakub@cloudflare.com>
-To: Michal Luczaj <mhal@rbox.co>
-Cc: Andrii Nakryiko <andrii@kernel.org>,  Eduard Zingerman
- <eddyz87@gmail.com>,  Mykola Lysenko <mykolal@fb.com>,  Alexei Starovoitov
- <ast@kernel.org>,  Daniel Borkmann <daniel@iogearbox.net>,  Martin KaFai
- Lau <martin.lau@linux.dev>,  Song Liu <song@kernel.org>,  Yonghong Song
- <yonghong.song@linux.dev>,  John Fastabend <john.fastabend@gmail.com>,  KP
- Singh <kpsingh@kernel.org>,  Stanislav Fomichev <sdf@fomichev.me>,  Hao
- Luo <haoluo@google.com>,  Jiri Olsa <jolsa@kernel.org>,  Shuah Khan
- <shuah@kernel.org>,  Jonathan Corbet <corbet@lwn.net>,
-  bpf@vger.kernel.org,  linux-kselftest@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org
-Subject: Re: [PATCH bpf-next v2 3/9] selftests/bpf: Add u32()/u64() to
- sockmap_helpers
-In-Reply-To: <20250411-selftests-sockmap-redir-v2-3-5f9b018d6704@rbox.co>
-	(Michal Luczaj's message of "Fri, 11 Apr 2025 13:32:39 +0200")
-References: <20250411-selftests-sockmap-redir-v2-0-5f9b018d6704@rbox.co>
-	<20250411-selftests-sockmap-redir-v2-3-5f9b018d6704@rbox.co>
-Date: Fri, 18 Apr 2025 18:13:30 +0200
-Message-ID: <87cyd9a1n9.fsf@cloudflare.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GlQqSyCA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B43D1C4CEE2;
+	Fri, 18 Apr 2025 16:13:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744992818;
+	bh=uQ/6b7sB1ONhc9820LzU2mrK9lP7Kt5df9XQ5yEtODU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GlQqSyCATnqMw0cNI9TJ0C2iLce8Tfu9P002qys+LGSJ4rdxtFcBPqMWgp5GDRd7z
+	 7MEcVadUpLronX7vYhnPM8Whd/l0dtHUkYDDabKvVYe6DeRL4GgMHX6juzeVvuWUFI
+	 WAplctHJ9NOtgxdfbt/L7u3xtKhFpdVfJaZabKJiN5MrBx4/n2aK0mCwo+9uzaQsjd
+	 +hK/shuaqcsKtOjFux1ndgQCiEy0S1MMvcf639FmuqIpH28pq+vrUe6wXfwVCMzR2n
+	 9NLhNLf7/+xbKyXlyAhqz0wamWDMivo7yZBUMIK7OchEHb+FxU42B65mud/wWKWeRF
+	 XkKrhtfVpvIXg==
+Date: Fri, 18 Apr 2025 17:13:26 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Eason Yang <j2anfernee@gmail.com>
+Cc: lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+ javier.carrasco.cruz@gmail.com, gstols@baylibre.com,
+ alisadariana@gmail.com, tgamblin@baylibre.com, olivier.moysan@foss.st.com,
+ antoniu.miclaus@analog.com, eblanc@baylibre.com,
+ andriy.shevchenko@linux.intel.com, joao.goncalves@toradex.com,
+ tobias.sperling@softing.com, marcelo.schmitt@analog.com,
+ angelogioacchino.delregno@collabora.com, thomas.bonnefille@bootlin.com,
+ herve.codina@bootlin.com, chanh@os.amperecomputing.com, KWLIU@nuvoton.com,
+ yhyang2@nuvoton.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] iio: adc: add support for Nuvoton NCT7201
+Message-ID: <20250418171326.07634113@jic23-huawei>
+In-Reply-To: <20250416081734.563111-3-j2anfernee@gmail.com>
+References: <20250416081734.563111-1-j2anfernee@gmail.com>
+	<20250416081734.563111-3-j2anfernee@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 11, 2025 at 01:32 PM +02, Michal Luczaj wrote:
-> Add integer wrappers for convenient sockmap usage.
->
-> While there, fix misaligned trailing slashes.
->
-> Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
-> Signed-off-by: Michal Luczaj <mhal@rbox.co>
-> ---
+On Wed, 16 Apr 2025 16:17:34 +0800
+Eason Yang <j2anfernee@gmail.com> wrote:
 
-Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+> Add Nuvoton NCT7201/NCT7202 system voltage monitor 12-bit ADC driver
+> 
+> NCT7201/NCT7202 supports up to 12 analog voltage monitor inputs and up
+> to 4 SMBus addresses by ADDR pin. Meanwhile, ALERT# hardware event pins
+> for independent alarm signals, and all the threshold values could be set
+> for system protection without any timing delay. It also supports reset
+> input RSTIN# to recover system from a fault condition.
+> 
+> Currently, only single-edge mode conversion and threshold events are
+> supported.
+> 
+> Signed-off-by: Eason Yang <j2anfernee@gmail.com>
+Hi Eason,
+
+A few trivial things from another glance through.
+
+Thanks,
+
+Jonathan
+
+
+> +
+> +static const struct nct7201_adc_model_data nct7201_model_data = {
+> +	.model_name = "nct7201",
+> +	.channels = nct7201_channels,
+> +	.num_channels = ARRAY_SIZE(nct7201_channels),
+> +	.num_vin_channels = 8,
+> +};
+> +
+> +static const struct nct7201_adc_model_data nct7202_model_data = {
+> +	.model_name = "nct7202",
+> +	.channels = nct7202_channels,
+> +	.num_channels = ARRAY_SIZE(nct7202_channels),
+> +	.num_vin_channels = 12,
+> +};
+> +
+> +static int nct7201_init_chip(struct nct7201_chip_info *chip)
+> +{
+> +	struct device *dev = chip->dev;
+> +	__le16 data = cpu_to_le16(NCT7201_REG_CHANNEL_ENABLE_MASK);
+
+Assign this value down near where it is used. That will generally help
+readability.
+
+> +	unsigned int value;
+> +	int err;
+> +
+> +	err = regmap_write(chip->regmap, NCT7201_REG_CONFIGURATION,
+> +			   NCT7201_BIT_CONFIGURATION_RESET);
+> +	if (err)
+> +		return dev_err_probe(dev, err, "Failed to reset chip\n");
+> +
+> +	/*
+> +	 * After about 25 msecs, the device should be ready and then the Power
+> +	 * Up bit will be set to 1. If not, wait for it.
+I'd hyphenate power-up perhaps.
+
+> +	 */
+> +	fsleep(25000);
+> +	err = regmap_read(chip->regmap, NCT7201_REG_BUSY_STATUS, &value);
+> +	if (err)
+> +		return dev_err_probe(dev, err, "Failed to read busy status\n");
+> +	if (!(value & NCT7201_BIT_PWR_UP))
+> +		return dev_err_probe(dev, -EIO, "Failed to power up after reset\n");
+> +
+> +	/* Enable Channel */
+> +	if (chip->num_vin_channels <= 8)
+> +		err = regmap_write(chip->regmap, NCT7201_REG_CHANNEL_ENABLE_1,
+> +				   NCT7201_REG_CHANNEL_ENABLE_MASK);
+
+This is a little odd as I think you are writing an 8 bit register with a 12 bit mask.
+Sure it works, but confusing thing to see.  If some future 6 channel device comes
+along this <= 8 will seem odd too. Maybe generate the mask from teh number
+of channels?
+
+> +	else
+> +		err = regmap_bulk_write(chip->regmap, NCT7201_REG_CHANNEL_ENABLE_1,
+> +					&data, sizeof(data));
+> +	if (err)
+> +		return dev_err_probe(dev, err, "Failed to enable channel\n");
+> +
+> +	err = regmap_bulk_read(chip->regmap, NCT7201_REG_CHANNEL_ENABLE_1,
+> +			       &chip->vin_mask, sizeof(chip->vin_mask));
+> +	if (err)
+> +		return dev_err_probe(dev, err,
+> +				     "Failed to read channel enable register\n");
+> +
+> +	/* Start monitoring if needed */
+> +	err = regmap_set_bits(chip->regmap, NCT7201_REG_CONFIGURATION,
+> +			      NCT7201_BIT_CONFIGURATION_START);
+> +	if (err)
+> +		return dev_err_probe(dev, err, "Failed to start monitoring\n");
+> +
+> +	return 0;
+> +}
+
