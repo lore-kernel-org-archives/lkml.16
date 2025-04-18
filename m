@@ -1,106 +1,93 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF6A2749D7;
-	Fri, 18 Apr 2025 13:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DDCF2749DC
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 13:08:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744981630; cv=none; b=MA4/xqR19vAwDfdcYhH+1ZvmTCAgXlmOQofEa8mAdf/iEMkJ3uakgGhQDm1Niqo6AddlbpjsopRl4LlU3rvfZcVIbTeLEEYT4f8ew6Aj2eRyWxFFY4s+TBOLfXd/6Nec0A+0SozQhDADVZtK3r8INONhWOB4uSOBEc/nPIolnbs=
+	t=1744981692; cv=none; b=I7Bo3gLlGw1SpxOJgPhJiIRewFlwWGdG6R9xSlk2QVUDZq//JE146RFKHsFyJGkBCPFayCDM6Z9J5nWb3R4YEabpjIoJvAztyilbhbpnxKYUwuDK4w8dOAnpMPmk3ZV++IEAGqonUy0PWjtKsw4NUFN1EYFD4W63qddyYyE/WwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744981630; c=relaxed/simple;
-	bh=wUE4dWHvSCik/3H0N3jXNmiIywoqHZpP04FIL16opA0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hAnwFxfc0qg8qHcLou3RPiy9SbtTylFbJZxipLMyYVwjcrP7e6COjLpTaO/8gM1xXft7gjF91H0tR7sMtSzylh4oGvD9uq7FpjyZT09wAzLy8wYJxFex0kCOeGuh9LDLq0tCPAucwe/Ap+u5AYAB7lwnO27W22wKGCzSvmPRhtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mRcd2+Z5; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744981692; c=relaxed/simple;
+	bh=FPdWUg1fPQV/6dEpNOCETZgdT1z+UP3Z1xA0imj7J/8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qf6L3eGEeaugq69cYh9Ijtouqp4TOxvz3MvVUvf35YQCjgrkgxrDUQ6K1wZNzFUYabSuvph8Xvq0QbKDfCI7qwPmTiKk9qDMNSJCPr2gLAw/IfZ8zIcFXH5JqDt9axtWEv1vpahxvu6tyYHEPwx3K7YQtW7jZiYPsOgEHPB71n8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EFwVzxo3; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRcd2+Z5"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso17901905e9.2;
-        Fri, 18 Apr 2025 06:07:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744981627; x=1745586427; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fPmaDVcyCN8xn5x/2E/HujSFy+Zs3h3dzceOeOvtskU=;
-        b=mRcd2+Z5NFIGMiqm6QsNJPzVq1vbfK8eOWkRhvH3DHkfgND92pS8AEdZNGdwl6VMQd
-         7KmaVsDjYom57/qqNwF2E8R44QB5QkQLBQKbtXC69Nmt+1VmVOSUNAkHtGiN97vJBTMe
-         kqSvXZH3wiZ9TelT/Xt/CXQtA4OF1FldC4B19HKu8DEdiZRsXQKa/J8gdvK9j6lJmX2m
-         vCgZiTW8v2oZhu1eAlvczoAtC5fh9BGQq3hdtVqcelNQAc1XFkVk/EKTazf/ae74ID23
-         tQgKLogkvU/GG70awKCTJlVmnimZQWjgzfMDxQQd/ceFBId0fCUwtJDuCALCe/buCje3
-         y9rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744981627; x=1745586427;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fPmaDVcyCN8xn5x/2E/HujSFy+Zs3h3dzceOeOvtskU=;
-        b=oqklzvlGmDyfyUU9PRDH8NA5wkQAe5nYUB8Y0RiYiLX7TbV3w1aADZANxAQIZKkwSs
-         WWoReAVBbw6tmPzcFOYMouifUpumyj050wHYL3aRCtGcTaB6DwMNSrggZIe3swDxEcNe
-         qOwQ9lyrsAzu63FYbUqcYnD0y+u3T2lGIgTqGdmh5ncAk9FwqmRB/8HxNyTIU2Lvunrk
-         zHayvfiDbGEdO97XBcma8+WwKhCd+QHHERsmEMv1/dKEtoM8ImlwyT8/mSN+Lft7XJxA
-         4m9KS8xPFWdHs4XlYkw6zQXWsHZ24lkC+CpOJDzw6DRbFaAsKIjgNc+FFTcXe78gikir
-         dzfg==
-X-Forwarded-Encrypted: i=1; AJvYcCVCCy9OICNLQ5BkgMkEjpPrGAb89C+JU2nuI2/P0MadzBHvlmcmuqzhp9GpQ30YA13l+Hox0lVVS3DbDuQDmktft6k=@vger.kernel.org, AJvYcCWpkCETRi2yYIxDMYSdsSpGjFG3/WJqPOZlJolsJAaKZ7fIIeaeMJtbLbUTxI28TBsYtJNQH0qiebeSNyo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHoyENvxm6l78aC1BbVLQrPjXQX1CkAvECBQ2pfkIsAufW7QRy
-	viGTOvGpMgJAebAy1Swg4irM38LjQ0UkO4MmyBlvOSiqdDdH7oEv
-X-Gm-Gg: ASbGncuJLAAHo9M4aUxAJl6VlaguXMV2W4TX9YC2iox7ehtDViGRmJ6vSxArbGnWFNp
-	kVKn2XhOMMggwEILPl/s0qlSpxaDG7CRJ7LiERU2YPbihpioOQ1XzEWIJjvXtscpTkQ971OK5DR
-	yi10vQqbHtMmRpnLRNbqD+L4f377uXu/LKJwYi7ciwB/XsQePMVRkjA/GKVfkmws7BL+KHAT9Fb
-	SEJ7fY0qA+D2rQ3mVNYsNIzwjTRx+UA8CKJjdMaFT1/hD0phG+IfS7V9hfTmBcV4VCkoXg8k8r3
-	Hkthzc/UwTrFhHAX/YWwLZPDsAuu9/spdIa07EaBZg==
-X-Google-Smtp-Source: AGHT+IExMbsAQz7Mwc12HiLkpWeb7K2O1dS/WK/atDtpdKNgEq1aIQw+33yHgxXO3RSHnYFs46ICbA==
-X-Received: by 2002:a05:600c:1547:b0:43c:e481:3353 with SMTP id 5b1f17b1804b1-4406ababea3mr21349975e9.17.1744981626906;
-        Fri, 18 Apr 2025 06:07:06 -0700 (PDT)
-Received: from localhost ([194.120.133.58])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39efa4330d8sm2796501f8f.33.2025.04.18.06.07.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 06:07:06 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Inki Dae <inki.dae@samsung.com>,
-	Seung-Woo Kim <sw0312.kim@samsung.com>,
-	Kyungmin Park <kyungmin.park@samsung.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EFwVzxo3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744981690;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b+QNRWScy7VlNTBvv/Zh4APnzyG6J24ppGEfEXO4A/A=;
+	b=EFwVzxo3f4bIJFmacwYhT3lQls2eXasmViHLWUwFFz2o2jNMx1iyyKyVAy3N4cyjjEmiXK
+	mXSyKmuvi1koNdciOpRpeltgx+knojS+Gsh/GHmlJ+BlJnbwvvD9cBPK4kXwe1/AeHLAZ2
+	wPVO8O37/mReL5BTktBpfluUUDpG5bc=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-34-oW3H6YwOPgmS32yPjuGLTQ-1; Fri,
+ 18 Apr 2025 09:08:06 -0400
+X-MC-Unique: oW3H6YwOPgmS32yPjuGLTQ-1
+X-Mimecast-MFC-AGG-ID: oW3H6YwOPgmS32yPjuGLTQ_1744981685
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 667DB19560B0;
+	Fri, 18 Apr 2025 13:08:05 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.18])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4FA121800965;
+	Fri, 18 Apr 2025 13:08:02 +0000 (UTC)
+Date: Fri, 18 Apr 2025 21:07:58 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	kexec@lists.infradead.org, kernel-janitors@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] drm/exynos: Fix spelling mistake "enqueu" -> "enqueue"
-Date: Fri, 18 Apr 2025 14:07:00 +0100
-Message-ID: <20250418130700.540590-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+Subject: Re: [PATCH] crash: Fix spelling mistake "crahskernel" ->
+ "crashkernel"
+Message-ID: <aAJOrrRMe7ohIaqj@MiWiFi-R3L-srv>
+References: <20250418120331.535086-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250418120331.535086-1-colin.i.king@gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-There is a spelling mistake in a DRM_DEV_DEBUG_KMS message. Fix it.
+On 04/18/25 at 01:03pm, Colin Ian King wrote:
+> There is a spelling mistake in a pr_warn message. Fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
+>  kernel/crash_reserve.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
+> index aff7c0fdbefa..acb6bf42e30d 100644
+> --- a/kernel/crash_reserve.c
+> +++ b/kernel/crash_reserve.c
+> @@ -131,7 +131,7 @@ static int __init parse_crashkernel_mem(char *cmdline,
+>  			cur++;
+>  			*crash_base = memparse(cur, &tmp);
+>  			if (cur == tmp) {
+> -				pr_warn("crahskernel: Memory value expected after '@'\n");
+> +				pr_warn("crashkernel: Memory value expected after '@'\n");
+>  				return -EINVAL;
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/gpu/drm/exynos/exynos_drm_fimc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Baoquan He <bhe@redhat.com>
 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimc.c b/drivers/gpu/drm/exynos/exynos_drm_fimc.c
-index b150cfd92f6e..09e33a26caaf 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_fimc.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_fimc.c
-@@ -908,7 +908,7 @@ static void fimc_dst_set_buf_seq(struct fimc_context *ctx, u32 buf_id,
- 	u32 buf_num;
- 	u32 cfg;
- 
--	DRM_DEV_DEBUG_KMS(ctx->dev, "buf_id[%d]enqueu[%d]\n", buf_id, enqueue);
-+	DRM_DEV_DEBUG_KMS(ctx->dev, "buf_id[%d]enqueue[%d]\n", buf_id, enqueue);
- 
- 	spin_lock_irqsave(&ctx->lock, flags);
- 
--- 
-2.49.0
+>  			}
+>  		}
+> -- 
+> 2.49.0
+> 
 
