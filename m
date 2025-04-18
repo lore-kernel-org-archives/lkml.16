@@ -1,155 +1,122 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A434275114
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 12:48:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00147275119;
+	Fri, 18 Apr 2025 12:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744980489; cv=none; b=cgckMpQfMFnWAm+O2K9DSb3U0g7ZQMB9TV+0m0UaXL7PWeCrRrfQe94K9onpCyUGGn+8myaOzQCbJap/NuBvwtdT6lHKDDsg7cvEwM5VCD+g1bii6N7stGZMmzTlE5fe5auA6HrpeagGSQhfVeGKVagcYF5YBCYwx0zQr4Z+XFQ=
+	t=1744980500; cv=none; b=UA0Bya0uO7u7Hxb5ldkOEM/Pk5hlJpaznOUTt7k+xYYeoq8AtrQelFC6VIMFdd/JFCAo/w24PLOTkjp3OBLqWTlbLpEiir9VrchpyByilwhqnHlXX1aDMy3scHFoebk1QFtWNu6jQEw2XeRVB3P4+nd81kxLwoNekt7/UWT/IA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744980489; c=relaxed/simple;
-	bh=pV1rzCsr8FYCVhfWMYFrJeFTmf49atITKo8uKg1wnyg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P+eNULktOtsnw3qtSIWGeHo4yHEfZbNqbrcfH0Py3g0ROvsBPQz9C3yC7onQWcoYeqkq5YIAqtHmIwpHp14ZBnSUqQVw2LNQqpkpFoCpUlg6udDysotPrrlWEuUktoIrJV/ZjJAI0RshkOlW82yCRY4Zjoh+31/z+20bIOadV7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dYboGRGQ; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1744980500; c=relaxed/simple;
+	bh=5iP0/iUDHlPimuG6aFa0pmfO3lQC3a/ZyVK3ba58Dfc=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=QJ1gqWA1n/sgjl+NoBmj8d17QpbMO5Swn2Qn/I1zc4W3J8XcMjPi8TZWw5Dv42JizAz7VBPQOxkrgHXMa/i0QjdfTXu6rs34+MNRYlE2A8WouirTnQ3tryq/mhzUKTutM8OgkVaG/HT/jF3EmoLzSHo4vhe4E/uTKh4PXYZS8iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=c7ELrU68; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xb6WSsY4; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dYboGRGQ"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2902f7c2aso283340966b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 05:48:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1744980485; x=1745585285; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7XNN0Tem4xu6RZArPHYvTvbcnQvUc79+UNyXgXNy6Cc=;
-        b=dYboGRGQLK/iphKt7or08i312U/MdrGDeftywb+tVOJQpvcy/mUsyvNaMOBOTJppEO
-         3UsCcvCYjQCsbNfWO0txdRxeXTJO1SluqgTWXoANT74n+IKwn2+GX3jRx7JQLelr2m/0
-         wzJJHAhVLCYEI066TNZ7Yym3ABAt49RqxsGtQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744980485; x=1745585285;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7XNN0Tem4xu6RZArPHYvTvbcnQvUc79+UNyXgXNy6Cc=;
-        b=rjvLVbOjr9ZlEVk3bqHwOvohRF2hd1Blkmk5GwmhQdZ1mQ4Pd22D7852PcisJvvl47
-         B4/RzXFX7HVVtW7EtIimvzAEgGrSoLVpahy8Ph0joq6RBuz4S04uIxf4wGN3/9/PvfB8
-         MkaxRS/6kd5+gReoQyzhO6GwvbrMsSq0CJxxtY5rMFa279bKd/5atbpZJdkgf0WI0Lje
-         ooDvUHOe20yvSKK8PQ5BUPTOPKFAJvEtFJRfkgNFpPcQ+DnNEJJuPstm7WdP/BZQDhvX
-         BIrF08DoEC8MmL1DJvRMfkqI35Rc4Z+2sS9jzE5A1IUwJMK+0MWs1sPdzP02fLLbC7dS
-         YvWg==
-X-Forwarded-Encrypted: i=1; AJvYcCW5Z1GvWwica0lg8TurJm99/0UBhsi/clq/pX/gcbCm7IJ7COwAFminxOiAFgTpA9HffIKuqXmgLd6PScM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKhON+w3QnQ2cb34iIJPv81AycLGr1XXEW7HMNbA55n+3jWfMg
-	3O/gJYpAIjOdcn2aZKQaU65zrkQHWabPG30gsnXtoJtIjZ82q81/ikPesCipsQ==
-X-Gm-Gg: ASbGncunDKIsgKN9yrtofQ4kQ6Z/Oz9TqtYIxB3P24GJzRoy9i8idNLl4/fkWKTigaG
-	UBUrzoc+1ae9jQ5bSwTeC0oajA6SD0ZvU4926Yen8VpfiMTfptJci7BOXBGemoqcXvQC1OKW7lh
-	BTRfvEXJJei/f2XUVdWtT8Mv6igjYFtlBcccYH8mK2d2XLIhQ9kkI9qsG6v3sqpPwFo0K6sv14s
-	Z9W2vqlIcQVwaYN2qQjW6YS9x4qpAc9AhxwOXAxFtvpiEZK3UPV0ZEzGU4KX5S8mjnWFDeSc6N5
-	qsg0AFm7A3RbxEpBw9jdWpqWBodZIHBQifs1SYPtr52uNVuHp7oOzA+Tivxt7bsPUBdMXv9tIoG
-	GQwZfr2nqJxXTyEpFTeZodwTDnwCNMAZeTw==
-X-Google-Smtp-Source: AGHT+IG6P9eJLmL9+eikfNPnUZ7wxWv+V7OiUcpJHJFZyEg5TP66XxZUXXNNSx/PygO5dYxQPBqHMg==
-X-Received: by 2002:a17:907:3d8a:b0:ac7:150e:8013 with SMTP id a640c23a62f3a-acb74b1ce20mr256181666b.15.1744980484716;
-        Fri, 18 Apr 2025 05:48:04 -0700 (PDT)
-Received: from jaz-virt.c.googlers.com.com (8.236.90.34.bc.googleusercontent.com. [34.90.236.8])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec51601sm117445166b.74.2025.04.18.05.48.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 05:48:03 -0700 (PDT)
-From: Grzegorz Jaszczyk <jaszczyk@chromium.org>
-To: tglx@linutronix.de,
-	robh@kernel.org
-Cc: mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	saravanak@google.com,
-	dmaluka@chromium.org,
-	bgrzesik@google.com,
-	jaszczyk@google.com,
-	ilpo.jarvinen@linux.intel.com,
-	usamaarif642@gmail.com,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	tnowicki@google.com,
-	mazurekm@google.com,
-	vineethrp@google.com
-Subject: [PATCH v2 2/2] x86/of: add support for reserved memory defined by DT
-Date: Fri, 18 Apr 2025 12:47:18 +0000
-Message-ID: <20250418124718.1009563-3-jaszczyk@chromium.org>
-X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
-In-Reply-To: <20250418124718.1009563-1-jaszczyk@chromium.org>
-References: <20250418124718.1009563-1-jaszczyk@chromium.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="c7ELrU68";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xb6WSsY4"
+Date: Fri, 18 Apr 2025 12:48:12 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744980494;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iacdnq+pgxmJl7zlTNUCTe0ghULjkxMNxJ5OdN3S12M=;
+	b=c7ELrU68UCywmri+LgYNIGufiFd9QYNc1+l6sqPeUEOuOzg1vOsyGjywrSFZDmxkxrltfU
+	z8jOZKjDs886++w09ISb4VUMG37/W3g5PNP8x6pNyJnXOmunAKamxzcjJ4L54xqzc8mxbT
+	/r7hknNzdZz5EOKYsPsFzHJyiIqB/+YWBbocauxfXZHDqTjxon1BekahCkHE+FkfsdE7Zv
+	N/p8TAJMapf86T529bEnUbkHqZGM2aeeFDtdZOt7SzPSkYmDssoqER7m6xMwes/oZB8PXc
+	zaLa3Vdrse0dADfhBJMndfukgwi5brPUOOSPA23fyGXNpJwDykA0kAViy7ZsiQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744980494;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iacdnq+pgxmJl7zlTNUCTe0ghULjkxMNxJ5OdN3S12M=;
+	b=xb6WSsY4c0VV8M6TTx8qgvb6xRt1FO6fefTNJkvLau1WhXDvcR267LR4oKCql3J+XEnW4g
+	ksp2Dlg6rLkML5Aw==
+From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/alternatives] x86/mm: Fix {,un}use_temporary_mm() IRQ state
+Cc: "Borislav Petkov (AMD)" <bp@alien8.de>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Rik van Riel <riel@surriel.com>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250418095034.GR38216@noisy.programming.kicks-ass.net>
+References: <20250418095034.GR38216@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <174498049254.31282.3233990850246687101.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-From: Grzegorz Jaszczyk <jaszczyk@google.com>
+The following commit has been merged into the x86/alternatives branch of tip:
 
-The DT reserved-memory nodes can be present in DT as described in
-Documentation/devicetree/bindings/reserved-memory/reserved-memory.yaml.
-Similar to other architecture, which supports DT, there is a need to
-create reserved memory regions for such nodes.
+Commit-ID:     aef1d0209ddf127a8069aca5fa3a062be4136b76
+Gitweb:        https://git.kernel.org/tip/aef1d0209ddf127a8069aca5fa3a062be4136b76
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Fri, 18 Apr 2025 11:50:34 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 18 Apr 2025 14:36:18 +02:00
 
-Additionally, the x86 architecture builds its memory map based on E820
-description passed by bootloader and not on DT. Since x86 already has
-some DT support and allows booting with both ACPI and DT at the same
-time, let's register an arch specific hook which will validate if a
-reserved-memory region passed by DT is valid (covered by E820 reserved
-region entry).
+x86/mm: Fix {,un}use_temporary_mm() IRQ state
 
-Without this check, the reserved memory from DT could be successfully
-registered, even though such a region could conflict with e820
-description e.g. it could be described as E820_RAM and could be already
-used at early x86 boot stage for memblock initialization (which happens
-before DT parsing).
+As the function switch_mm_irqs_off() implies, it ought to be called with
+IRQs *off*. Commit 58f8ffa91766 ("x86/mm: Allow temporary MMs when IRQs
+are on") caused this to not be the case for EFI.
 
-Co-developed-by: Bartłomiej Grzesik <bgrzesik@google.com>
-Signed-off-by: Bartłomiej Grzesik <bgrzesik@google.com>
-Signed-off-by: Grzegorz Jaszczyk <jaszczyk@google.com>
+Ensure IRQs are off where it matters.
+
+Fixes: 58f8ffa91766 ("x86/mm: Allow temporary MMs when IRQs are on")
+Reported-by: Borislav Petkov (AMD) <bp@alien8.de>
+Tested-by: Borislav Petkov (AMD) <bp@alien8.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Rik van Riel <riel@surriel.com>
+Link: https://lore.kernel.org/r/20250418095034.GR38216@noisy.programming.kicks-ass.net
 ---
- arch/x86/kernel/devicetree.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/x86/mm/tlb.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
-index dd8748c45529..9a93eddfcedb 100644
---- a/arch/x86/kernel/devicetree.c
-+++ b/arch/x86/kernel/devicetree.c
-@@ -18,6 +18,7 @@
- #include <linux/of_pci.h>
- #include <linux/initrd.h>
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 79c124f..39761c7 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -986,6 +986,7 @@ struct mm_struct *use_temporary_mm(struct mm_struct *temp_mm)
+ 	struct mm_struct *prev_mm;
  
-+#include <asm/e820/api.h>
- #include <asm/irqdomain.h>
- #include <asm/hpet.h>
- #include <asm/apic.h>
-@@ -289,6 +290,11 @@ static void __init x86_dtb_parse_smp_config(void)
- 	dtb_apic_setup();
- }
+ 	lockdep_assert_preemption_disabled();
++	guard(irqsave)();
  
-+static bool __init x86_is_region_reserved(phys_addr_t base, phys_addr_t size)
-+{
-+	return e820__mapped_all(base, base + size, E820_TYPE_RESERVED);
-+}
-+
- void __init x86_flattree_get_config(void)
+ 	/*
+ 	 * Make sure not to be in TLB lazy mode, as otherwise we'll end up
+@@ -1018,6 +1019,7 @@ struct mm_struct *use_temporary_mm(struct mm_struct *temp_mm)
+ void unuse_temporary_mm(struct mm_struct *prev_mm)
  {
- #ifdef CONFIG_OF_EARLY_FLATTREE
-@@ -307,6 +313,9 @@ void __init x86_flattree_get_config(void)
- 		}
+ 	lockdep_assert_preemption_disabled();
++	guard(irqsave)();
  
- 		early_init_dt_verify(dt, __pa(dt));
-+
-+		early_init_set_rsv_region_verifier(x86_is_region_reserved);
-+		early_init_fdt_scan_reserved_mem();
- 	}
- 
- 	unflatten_and_copy_device_tree();
--- 
-2.49.0.805.g082f7c87e0-goog
-
+ 	/* Clear the cpumask, to indicate no TLB flushing is needed anywhere */
+ 	cpumask_clear_cpu(smp_processor_id(), mm_cpumask(this_cpu_read(cpu_tlbstate.loaded_mm)));
