@@ -1,82 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D9C1E492;
-	Fri, 18 Apr 2025 12:32:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F3A78F3B;
+	Fri, 18 Apr 2025 12:32:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744979533; cv=none; b=c76fXMQf0AQHObwPn3z3LAib8127pnBMsa1nfNCqbYTpi2o8RsW8c23f7LygAC1QZImwsCwquimHnDw1l8brKIqbp1osEhNjEFyx9ZLiFG+hKfSCTbLyqM3QUs5XoUC+oh+IXo+voIqwHqwAB/X0unSjo266BPXqgafHaoU8G5w=
+	t=1744979550; cv=none; b=WDHBqhWF7kYkq9NmfF26eZpOf3n5nO/9YcoT/hytgoz4kjA+ohUbrduorE9z1UxhJ53YRlf1xT0vqpBqNnXi6dP9kz5gaaMR1UvwtuamfWzbzaTyllLdbays7nO0SsfXzh2FcpQhOennCn5Iu1R2suJMDAkIegzeiLF56NMPijc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744979533; c=relaxed/simple;
-	bh=NPm4S1GZRDhpjTK6+SqCdr7oBRhy0ptbmVLK3fFFepI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BI1nU9BhupF0BQ2NhENJQ8hxZ7DIsVC9X1e2J6RA39ll3UeA0YEkluyMlucJfQx2s/V/TeJSzJ9MRUKvhmWC+h8R00b4RymH70v2qRAA2+mo8cIUOGen9KDrJZYhW5HafFRhtZNlwkxe1n8AuftSGw8IyzgVPRyRfE8n9M7tqIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E991DC4CEE2;
-	Fri, 18 Apr 2025 12:32:10 +0000 (UTC)
-Date: Fri, 18 Apr 2025 08:33:51 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: David Ahern <dsahern@kernel.org>
-Cc: Breno Leitao <leitao@debian.org>, Willem de Bruijn
- <willemdebruijn.kernel@gmail.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
- <horms@kernel.org>, kuniyu@amazon.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- yonghong.song@linux.dev, song@kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH net-next] udp: Add tracepoint for udp_sendmsg()
-Message-ID: <20250418083351.20a60e64@gandalf.local.home>
-In-Reply-To: <1b17ce33-015f-4a10-9a98-ebea586c3ce4@kernel.org>
-References: <20250416-udp_sendmsg-v1-1-1a886b8733c2@debian.org>
-	<4dd9504c-4bce-4acd-874c-8eed8c311a2f@kernel.org>
-	<aADpIftw30HBT8pq@gmail.com>
-	<8dc4d1a8-184b-4d0d-9b38-d5b65ce7e2a6@kernel.org>
-	<aAElmpUWd6D7UBZY@gmail.com>
-	<1b17ce33-015f-4a10-9a98-ebea586c3ce4@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744979550; c=relaxed/simple;
+	bh=U2YQdKkw5xULbb02aJnZgMz5IzQN9XJtihtLVdheXZk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i6z6GXz0Vf72+53G5u/425NWHgLVTofJlEU3WRjDDeApoeDvQLCOlLxJadYQ5tY6nm/IZx2GOCqbLxO4uoY1VvvyTnciZdVKQvwz/zrNDXf5sPbJQimNCYMCfP9dANzXD1VSTagsaeI4nFc6dafTPg5LnNmcT1HmDjRovoqElD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bDy5clta; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bDy5clta"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB303C4CEE2;
+	Fri, 18 Apr 2025 12:32:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744979549;
+	bh=U2YQdKkw5xULbb02aJnZgMz5IzQN9XJtihtLVdheXZk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bDy5cltaOMPs0cUpPQIzqg3+fdeOAQf6FOB4kSu2K1al3GMXtsGXYqlM3KQVBwELu
+	 UA+Kz8bC+qHkYNrilpLNuzEbgznV2le2Y0go8HhGNIEYckD0zLfcnkSbI2GCkNxjHk
+	 fLnCMa92GaTFOeJifHNqLnfCP5lkrZDS5k3O1qOGi29CJm/pJOMVspaLungsURWzg0
+	 IwkRAPa7/x6Y/S5WZPoT/PfKbJJVuOVdcBE0QcA+tKCoHxb01X3vsT+F+5VRWIxXjt
+	 Y+9cramiwSfMmz4jQVLZ7j5tGeHUzcX0OOGgmhTox3Mf2yJ+RCDoMAtzUBf6I1MDB3
+	 qDtXe5Es8MZLA==
+Date: Fri, 18 Apr 2025 14:32:26 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+	Sandipan Das <sandipan.das@amd.com>, x86@kernel.org
+Subject: Re: [tip: x86/urgent] x86/cpu/amd: Fix workaround for erratum 1054
+Message-ID: <aAJGWpiT6ZwQgIFU@gmail.com>
+References: <174495817953.31282.5641497960291856424.tip-bot2@tip-bot2>
+ <20250418104013.GAaAIsDW2skB12L-nm@renoirsky.local>
+ <aAJBgCjGpvyI43E3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAJBgCjGpvyI43E3@gmail.com>
 
-On Thu, 17 Apr 2025 21:57:56 -0700
-David Ahern <dsahern@kernel.org> wrote:
 
-> On 4/17/25 10:00 AM, Breno Leitao wrote:
-> >> $ git grep trace_ net drivers/net | grep _tp
-> >> net/bpf/test_run.c:	trace_bpf_trigger_tp(nonce);
-> >> net/ipv4/tcp_input.c:	trace_tcp_cwnd_reduction_tp(sk,
-> >> newly_acked_sacked, newly_lost, flag);  
-> > 
-> > Do we want to rename them and remove the _tp? I suppose it is OK given
-> > that tracepoints are not expected to be stable?
-> > 
-> > Also, if we have consensus about this patch, I will remove the _tp from
-> > it.
-> >   
+* Ingo Molnar <mingo@kernel.org> wrote:
+
 > 
-> I am only asking for consistency. Based on existing networking
-> instances, consistency is no _tp suffix.
+> * Borislav Petkov <bp@alien8.de> wrote:
+> 
+> > > Fixes: 232afb557835 ("x86/CPU/AMD: Add X86_FEATURE_ZEN1")
+> > > Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> > > Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> > > Link: https://lore.kernel.org/r/caa057a9d6f8ad579e2f1abaa71efbd5bd4eaf6d.1744956467.git.sandipan.das@amd.com
+> > 
+> > This needs
+> > 
+> > Cc: <stable@kernel.org>
+> 
+> No, it doesn't really 'need' a stable tag, it has a Fixes tag already, 
+> which gets processed by the -stable team.
 
-I was looking at what other tracepoints have "_tp" and found a few. What it
-appears to be is that the "_tp" tracepoints are defined by:
+Anyway, I agree with you that it cannot hurt to have a Cc: stable,
+so I've added the tag along with your Acked-by, thanks Boris!
 
-  DECLARE_TRACEPOINT()
-
-and have no corresponding trace event in tracefs (/sys/kernel/tracing/events).
-
-I like that distinction because it lets the developer know that this
-tracepoint is in kernel only, and not exposed to user space.
-
-Perhaps it should stay as "_tp()" if it's not exposed via tracefs.
-
-In fact, if there is a clean up, it should be adding "_tp" to all
-tracepoints that do not have a corresponding trace event attached to them.
-As they are in kernel only, that change should not cause any ABI breakage.
-
--- Steve
+	Ingo
