@@ -1,147 +1,184 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3D73D994
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 01:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0391DE2A4
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 01:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744940359; cv=none; b=jl6BsmT2YIQ7ANNW+UanoW7gK0o53bJDt2XJwWwFlIJDC9YRTMX3X4LoMqxQMQSLb0S4UHbDY2rf815pIugVPbZ3ZrjVX2KcOFrB6fwKFdsErOl4rTsIpk0c+DLg80EBFg/BGETK2Pqq89xT1rAC7ZI6XVxA80McuOcr/FTak7o=
+	t=1744940523; cv=none; b=tVHhkFmacFzS7WtcaCWXlHYYvuaViibczFReLQhYU4arFTpHDYYokmY4kac6C5UZ0Wodz/ISLqA/epaE7TrYO5+X6/2vggynbJhK+pHkvGncck8wL6tX6l09UnJU337fWJlZ8eE/DixN40sKroOBr4e4j+JwspSwVlrDswN4pxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744940359; c=relaxed/simple;
-	bh=GOGrc1VKJlw7dp1KxJ/BbP3pgPQiZNtQeL1gdFubgqw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fe8e3K5v6EB8OKCtEQTwCE8Y8xTAMCKixxG9Uu+wdyzeNXUBAwSsUwfcxDcUdHK+Gu/JLqqaiDnqN6tPVk2UBuybEVINX6HH6n0owrEo8NHgx53k2aj9YKDvYk/WPm4HpQAtdgj+UAY4UgTvKkdJbn9zgXDzS9/N6thguzLtZdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NIXTQlWK; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744940523; c=relaxed/simple;
+	bh=kom6gDwOvQlLWIY64LaKg/88QJeZpSqlKMB0/S7dG0Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VdHwi1+nPm8wqsTaxRtUgZjd/3iqKwp4JOmEAu0LKu61JfI46ngBwEeNWp/ia2Qbses3Wys2H+gj3EnamJttKlV68ToNbt5BicS0EeqvcRxpRQfICQWjaytm4GcXQk9I48itozU0gDglT9d0hjxB7FD+nGGA2evWI4wPY0DVyUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=antoniohickey.com; spf=pass smtp.mailfrom=byte-forge.io; dkim=pass (2048-bit key) header.d=byte-forge-io.20230601.gappssmtp.com header.i=@byte-forge-io.20230601.gappssmtp.com header.b=O3/7knAw; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=antoniohickey.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=byte-forge.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NIXTQlWK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744940356;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+8nUbQtZksasEVEl3asuqyPAe8dPoXEkms0wEXBqoY0=;
-	b=NIXTQlWKsPPJrtT3lqR8Dr/J4GFS71LlxrUwTSCDqmb/BeYTEZLpgPUydEUt8LSqmXjYHz
-	KAINiBNw/h8qXiqLcio/kno8c6YS/D+cOo79DGAxc9wUdHthRjJfDg+4MrPzy8k85SSn1G
-	DhdZzVz9pStieXm2qQ3/910NX8K1wMU=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-348-TCbWW2igMmaTsHqXuCxV3w-1; Thu,
- 17 Apr 2025 21:39:15 -0400
-X-MC-Unique: TCbWW2igMmaTsHqXuCxV3w-1
-X-Mimecast-MFC-AGG-ID: TCbWW2igMmaTsHqXuCxV3w_1744940354
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F2D161800370;
-	Fri, 18 Apr 2025 01:39:13 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.88])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 82081180176F;
-	Fri, 18 Apr 2025 01:39:10 +0000 (UTC)
-Date: Fri, 18 Apr 2025 09:39:05 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>,
-	Caleb Sander Mateos <csander@purestorage.com>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] ublk: mark ublk_queue as const for
- ublk_handle_need_get_data
-Message-ID: <aAGtOYV2lxvu0Zzo@fedora>
-References: <20250416-ublk_task_per_io-v5-0-9261ad7bff20@purestorage.com>
- <20250416-ublk_task_per_io-v5-4-9261ad7bff20@purestorage.com>
+	dkim=pass (2048-bit key) header.d=byte-forge-io.20230601.gappssmtp.com header.i=@byte-forge-io.20230601.gappssmtp.com header.b="O3/7knAw"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-7043db8491dso13820167b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 18:42:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=byte-forge-io.20230601.gappssmtp.com; s=20230601; t=1744940519; x=1745545319; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8vZX6b4dOJQJVisyqBob3mx0+uYLldeHEIPiM/4owQ0=;
+        b=O3/7knAweN67wPM4h5vOM9kmaVScSrD/GDJVfuqRJ/GfSzPFRbgbwoLVS6TO3u22I3
+         sAX7JbbcQb7PMdv7dbWLZuF1uoJNLTkCkGDENR3p/qa+//24xzUA71r2m0U3ghWZpgii
+         tVAvgKVUUuQylQ1vCXCjHFcw/38VblmJovoCatcZk3RGpIhnoSvMHEwjaUeZZ+DXT1qN
+         L358GdaQHHBqOS4xQCUBus3g4w/8/hZpUfQPw+5mnB8/pkdfI0SwQZDAVwQlZes0cinN
+         O+n2vqfAPoLrJO1ouep19XuQPO/+85V3TZErPNpfz8A/agaMfYcEducpF0308sbbkKpK
+         7Xvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744940519; x=1745545319;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8vZX6b4dOJQJVisyqBob3mx0+uYLldeHEIPiM/4owQ0=;
+        b=PEEnucQ+903LaQ1AVwqqYC59ANpvx42t84kugkY0dJrCGZ+eZ+IE9lzilFF/BYK++4
+         mJM683Ud4OlBW5SFGupeI6sKxOcNJ5y7Eh/+tW0bY0b8vGHMJKH9Flbsz3sHhvu1Q2cR
+         SilNlgrciMzfyGhnaahIe77TncS2+NpDT88ATK9o3pco3nl7MtLOwYiiKKx5S4BP1397
+         Bn5vI2bQqaiEu8ZoI+zYMhEKmiUzqNkIaCfa25T2Nk4LG+369l8B4bYsxHO3pznCzFpV
+         5w0om7VC1vkXbAj5bgDiTCtgispubBAUgTNyTGd81r1UjBR+40Sk2K6jI4apAJkOp7Z2
+         Jczg==
+X-Forwarded-Encrypted: i=1; AJvYcCWb5xk+RJQWvIBR1R5xrQd8ZqclDnBmIkKiAnAjfZeWYzs3OVGgCG+R2GzV3bMgCgnOR4oXer3Up0fVm/8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/ugjllAWphUk4+AfWpNsGOh5w4+XB4/Ad1nP9ycvNcTLlWm0D
+	f7IPQgHuLJR2WRQH4zXNr048CRzai5u8i2PgZz3B2Bhqmuo+e8vhnyvq2qaUJyw=
+X-Gm-Gg: ASbGnctVlCasElGKjfhK/e1VH2zmkExRH6C/5FO4A0qMXNw3qadP6khXtiF9uINZMYw
+	Z8UxS6it1XM4uG39bvkhtvZV4L9wQRfMuM+9cnEPkhNUzZJfVOlmb2hBqm4J7+vazQ3vUhDmjdS
+	aLZFrHqprJKIotJMewy80xynL25V2vzx5fyabY7E4+utclEYoc2OkU9gykaeQCz1o1IehpdEqgZ
+	8Xupa/7N5JKD+GXwIz6W9S/Qr507/8oRLYyjW+6KCyT5MmUeoeBZmpnmSgCWaFVKRv9y+0lybXW
+	QpmaT1Pyx5WfZqnlhJqI0uUwHtIdjJdNViXwkD0+AJUu8FBkkS8AmQhdSzNONgLlRv42KeaTSjh
+	1npOQFT6T2/6zVm3os4Nw+p9XIKSveeekOcS3qWwUl6GEVj8=
+X-Google-Smtp-Source: AGHT+IHKWD99S0F6KCgIeVvybd53+ijSAXdB3OgMVFyeT/tM2oA/5o0gqeKoz8LgS6Bcx3tB8BsaLg==
+X-Received: by 2002:a05:690c:3685:b0:6ff:1fac:c502 with SMTP id 00721157ae682-706ccce2277mr16272657b3.6.1744940519476;
+        Thu, 17 Apr 2025 18:41:59 -0700 (PDT)
+Received: from Machine.localdomain (107-219-75-226.lightspeed.wepbfl.sbcglobal.net. [107.219.75.226])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-706ca44fd13sm2804597b3.20.2025.04.17.18.41.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 18:41:59 -0700 (PDT)
+From: Antonio Hickey <contact@antoniohickey.com>
+To: Benno Lossin <benno.lossin@proton.me>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>
+Cc: Antonio Hickey <contact@antoniohickey.com>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 01/18] rust: init: refactor to use `&raw mut`
+Date: Thu, 17 Apr 2025 21:41:22 -0400
+Message-ID: <20250418014143.888022-2-contact@antoniohickey.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250418014143.888022-1-contact@antoniohickey.com>
+References: <20250418014143.888022-1-contact@antoniohickey.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416-ublk_task_per_io-v5-4-9261ad7bff20@purestorage.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 16, 2025 at 01:46:08PM -0600, Uday Shankar wrote:
-> We now allow multiple tasks to operate on I/Os belonging to the same
-> queue concurrently. This means that any writes to ublk_queue in the I/O
-> path are potential sources of data races. Try to prevent these by
-> marking ublk_queue pointers as const in ublk_handle_need_get_data. Also
-> move a bit more of the NEED_GET_DATA-specific logic into
-> ublk_handle_need_get_data, to make the pattern in __ublk_ch_uring_cmd
-> more uniform.
-> 
-> Suggested-by: Ming Lei <ming.lei@redhat.com>
-> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
-> ---
->  drivers/block/ublk_drv.c | 32 +++++++++++++++++++-------------
->  1 file changed, 19 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> index 215ab45b00e10150e58d7f5ea5b5d13e40a1aa79..5f9679c03305576bee586388cab82a6ea5472f8b 100644
-> --- a/drivers/block/ublk_drv.c
-> +++ b/drivers/block/ublk_drv.c
-> @@ -1291,7 +1291,7 @@ static void ublk_cmd_tw_cb(struct io_uring_cmd *cmd,
->  	ublk_dispatch_req(ubq, pdu->req, issue_flags);
->  }
->  
-> -static void ublk_queue_cmd(struct ublk_queue *ubq, struct request *rq)
-> +static void ublk_queue_cmd(const struct ublk_queue *ubq, struct request *rq)
->  {
->  	struct io_uring_cmd *cmd = ubq->ios[rq->tag].cmd;
->  	struct ublk_uring_cmd_pdu *pdu = ublk_get_uring_cmd_pdu(cmd);
-> @@ -1813,15 +1813,6 @@ static void ublk_mark_io_ready(struct ublk_device *ub, struct ublk_queue *ubq)
->  	mutex_unlock(&ub->mutex);
->  }
->  
-> -static void ublk_handle_need_get_data(struct ublk_device *ub, int q_id,
-> -		int tag)
-> -{
-> -	struct ublk_queue *ubq = ublk_get_queue(ub, q_id);
-> -	struct request *req = blk_mq_tag_to_rq(ub->tag_set.tags[q_id], tag);
-> -
-> -	ublk_queue_cmd(ubq, req);
-> -}
-> -
->  static inline int ublk_check_cmd_op(u32 cmd_op)
->  {
->  	u32 ioc_type = _IOC_TYPE(cmd_op);
-> @@ -1933,6 +1924,20 @@ static int ublk_commit_and_fetch(const struct ublk_queue *ubq,
->  	return 0;
->  }
->  
-> +static int ublk_get_data(const struct ublk_queue *ubq, struct ublk_io *io,
-> +			 struct io_uring_cmd *cmd,
-> +			 const struct ublksrv_io_cmd *ub_cmd,
-> +			 struct request *req)
-> +{
-> +	if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV))
-> +		return -EINVAL;
-> +
-> +	ublk_fill_io_cmd(io, cmd, ub_cmd->addr);
-> +	ublk_queue_cmd(ubq, req);
-> +
-> +	return 0;
-> +}
-> +
->  static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
->  			       unsigned int issue_flags,
->  			       const struct ublksrv_io_cmd *ub_cmd)
-> @@ -2026,10 +2031,11 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
->  			goto out;
->  		break;
->  	case UBLK_IO_NEED_GET_DATA:
-> -		if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV))
-> +		ret = ublk_get_data(
-> +			ubq, io, cmd, ub_cmd,
-> +			blk_mq_tag_to_rq(ub->tag_set.tags[ub_cmd->q_id], tag));
+Replacing all occurrences of `addr_of_mut!(place)`
+with `&raw mut place`.
 
-Same with patch 2, moving request retrieval into ublk_get_data() could be
-cleaner and helpful for switching to store request pointer into `ublk_io`.
+This will allow us to reduce macro complexity, and improve consistency
+with existing reference syntax as `&raw mut` is similar to `&mut`
+making it fit more naturally with other existing code.
 
-Otherwise, looks nice cleanup.
+Suggested-by: Benno Lossin <benno.lossin@proton.me>
+Link: https://github.com/Rust-for-Linux/linux/issues/1148
+Signed-off-by: Antonio Hickey <contact@antoniohickey.com>
+---
+ rust/kernel/init.rs         |  4 ++--
+ rust/pin-init/src/macros.rs | 12 ++++++------
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-Thanks,
-Ming
+diff --git a/rust/kernel/init.rs b/rust/kernel/init.rs
+index 8d228c237954..5646b1079776 100644
+--- a/rust/kernel/init.rs
++++ b/rust/kernel/init.rs
+@@ -69,7 +69,7 @@
+ //! ```rust,ignore
+ //! # #![allow(unreachable_pub, clippy::disallowed_names)]
+ //! use kernel::{prelude::*, types::Opaque};
+-//! use core::{ptr::addr_of_mut, marker::PhantomPinned, pin::Pin};
++//! use core::{marker::PhantomPinned, pin::Pin};
+ //! # mod bindings {
+ //! #     #![allow(non_camel_case_types)]
+ //! #     pub struct foo;
+@@ -105,7 +105,7 @@
+ //!         unsafe {
+ //!             pin_init::pin_init_from_closure(move |slot: *mut Self| {
+ //!                 // `slot` contains uninit memory, avoid creating a reference.
+-//!                 let foo = addr_of_mut!((*slot).foo);
++//!                 let foo = &raw mut (*slot).foo;
+ //!
+ //!                 // Initialize the `foo`
+ //!                 bindings::init_foo(Opaque::raw_get(foo));
+diff --git a/rust/pin-init/src/macros.rs b/rust/pin-init/src/macros.rs
+index 361623324d5c..28a91a1e1218 100644
+--- a/rust/pin-init/src/macros.rs
++++ b/rust/pin-init/src/macros.rs
+@@ -244,7 +244,7 @@
+ //!                     struct __InitOk;
+ //!                     // This is the expansion of `t,`, which is syntactic sugar for `t: t,`.
+ //!                     {
+-//!                         unsafe { ::core::ptr::write(::core::addr_of_mut!((*slot).t), t) };
++//!                         unsafe { ::core::ptr::write(&raw mut (*slot).t, t) };
+ //!                     }
+ //!                     // Since initialization could fail later (not in this case, since the
+ //!                     // error type is `Infallible`) we will need to drop this field if there
+@@ -258,7 +258,7 @@
+ //!                     // of the `unsafe` block, so we bind it here.
+ //!                     {
+ //!                         let x = 0;
+-//!                         unsafe { ::core::ptr::write(::core::addr_of_mut!((*slot).x), x) };
++//!                         unsafe { ::core::ptr::write(&raw mut (*slot).x, x) };
+ //!                     }
+ //!                     // We again create a `DropGuard`.
+ //!                     let __x_guard = unsafe {
+@@ -459,13 +459,13 @@
+ //!         {
+ //!             struct __InitOk;
+ //!             {
+-//!                 unsafe { ::core::ptr::write(::core::addr_of_mut!((*slot).a), a) };
++//!                 unsafe { ::core::ptr::write(&raw mut (*slot).a, a) };
+ //!             }
+ //!             let __a_guard = unsafe {
+ //!                 ::pin_init::__internal::DropGuard::new(::core::addr_of_mut!((*slot).a))
+ //!             };
+ //!             let init = Bar::new(36);
+-//!             unsafe { data.b(::core::addr_of_mut!((*slot).b), b)? };
++//!             unsafe { data.b(&raw mut (*slot).b, b)? };
+ //!             let __b_guard = unsafe {
+ //!                 ::pin_init::__internal::DropGuard::new(::core::addr_of_mut!((*slot).b))
+ //!             };
+@@ -1215,7 +1215,7 @@ fn assert_zeroable<T: $crate::Zeroable>(_: *mut T) {}
+         // SAFETY: `slot` is valid, because we are inside of an initializer closure, we
+         // return when an error/panic occurs.
+         // We also use the `data` to require the correct trait (`Init` or `PinInit`) for `$field`.
+-        unsafe { $data.$field(::core::ptr::addr_of_mut!((*$slot).$field), init)? };
++        unsafe { $data.$field(&raw mut (*$slot).$field, init)? };
+         // Create the drop guard:
+         //
+         // We rely on macro hygiene to make it impossible for users to access this local variable.
+@@ -1277,7 +1277,7 @@ fn assert_zeroable<T: $crate::Zeroable>(_: *mut T) {}
+             // Initialize the field.
+             //
+             // SAFETY: The memory at `slot` is uninitialized.
+-            unsafe { ::core::ptr::write(::core::ptr::addr_of_mut!((*$slot).$field), $field) };
++            unsafe { ::core::ptr::write(&raw mut (*$slot).$field, $field) };
+         }
+         // Create the drop guard:
+         //
+-- 
+2.48.1
 
