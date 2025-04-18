@@ -1,107 +1,251 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116C821ABB1
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:51:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F015F21B8E7
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744998704; cv=none; b=hIblCVglyZdNj1xRjIBCqb5YQU4fnhwfhLMrFmiLsyLArfu9RYiloSxRi4dA8jW3sh1gcbbWQO9idBWTsp8a0s7zFUuXCdGmluVsaeNLb0TqpuPGRzSXh7w+gnsRWP0sPqJanLuqI4SvwvZBmGQfhHF8kXzK3I03X7uJfW/IobI=
+	t=1744998763; cv=none; b=dFiBjC7QpOFf3sTEFBVNBql1J1CT9C3jtr63B2u6XQbx6/7B2xPyTXyQ7zDO5Rs8zfRPxxwOFoM+meJNjvVq1P2Z+BT5EgAIq4zxsqiqUXB2fL3MRhLafVfI3AsS2BQ13rO3OewG+mFzocjGEhEZKjjkJLSSutNma3v7RkwLVmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744998704; c=relaxed/simple;
-	bh=6W+OGcFxI1DS0aqJG6ibEBuiROo06ExhWAkrujlWANU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=umQlBpdC4McbpxnDV3B0jAnQ0KOVVohjfb+UxQFKB34UWUD2VPB1b1EAjQiHwGmPSsLJwWVC702LQU96YnHe8S05DLgaVmZpj1fztygmL9+jkfEbP/nc85j2ITfPQwOfDtxloFvz6B0Vf7frVBefW4u84S10Bsod5T9rOZ3EqnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yPnsI8AF; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1744998763; c=relaxed/simple;
+	bh=4mbPWT/gmCATMZaROBARbZZ9nfhc7WXdi1LY1EDDOPM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E/1gsjgjGWCMioPOxCS1RIqGzmAV2O4bcssDYKlqfxu6FBUGgNMN344mVo2kRghM0mkB6LZsT77gVZPLPtFkqT0fh3/r5t9X8V/SZ8V/S9oJZpjrEAWuLjYqC91rFrvw3oWiSIf5VVj5HJdrLXJuKnP/PZuVfFUy0aUxcXuHV+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Mo08Q3Fx; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yPnsI8AF"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7394792f83cso1559609b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:51:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Mo08Q3Fx"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2ff6cf448b8so2858196a91.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:52:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744998702; x=1745603502; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zYnYOmTALuTZaDDp7zB0k1mzpNniYAqzF9fCSP3qhAw=;
-        b=yPnsI8AFLa1qOl+77HU+Q5eKdDtwiDzGSivmx4766ByjDikV0lPppXlRNfRqE6inbp
-         hzzeCEaPqTY6TXZ2KON5T6Qer7n7JRHTkq2PGvBKAN5aAWNo2L39ZmSbti/s7qbpawOW
-         TbVsDl6RMSFRoalx/uoJzS27rdlIFnAH3awL9weG9FIy1u5XpfEpfnw4aZaaImRG6Dvm
-         mVcdCWS6143Kogv+ENklWj94kSLCtEd3ffpBPf67fehEU+4l960oxCy/G4DOjHw8votE
-         rEcdlr5jFrdGk//g79hMkzIDonS3Eg2U7m4w/dIQblOsWhswolOYkEheDYnZTnGTXhU0
-         o7ng==
+        d=purestorage.com; s=google2022; t=1744998760; x=1745603560; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=TsFYuLGh8xNnT8t0lny4A6t6txQ0jUe2g78tYPIMlyM=;
+        b=Mo08Q3FxX3fpTD+8m1Eh/JVgTtMWyk54FwtdmDthFKkI1IUqg/b5qJ7XJESpI3rUBs
+         IEIohGYuf8LTlrIFRAXYCUzofDId7k40TcpW/IGq9d2Miak7RRnlzQsxm3dLZR33JFuQ
+         Sl806byM3X6AcjaNCb7MCQLtgLsnodFCRr7ZlXGBJ9ezi94jOCLkYw87UKhCgAViR1bD
+         WAPWCYJ628BEsQwt22V8+foAGvwc0Om6jpYAHhQxw3mRJ0bfabjRQEno7A89oP8wQrs2
+         qFWNoS0BqnxkG9y4A6I1igD3uVpur39kk6g+yb1oN9OWz/FxJTzyxHxKuiB41qEyKilq
+         xLpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744998702; x=1745603502;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=zYnYOmTALuTZaDDp7zB0k1mzpNniYAqzF9fCSP3qhAw=;
-        b=OiU/Lyo3+bM+d4K3ZCXMTSCX8KLQZlwaYtt7ovBvqsfGZrKWQ3N/brCK4cjarJHrZO
-         BdapVL4a0Y/6FFAEeOYjDESB9J9RFzVHhhookPe3YgHlNpeWOC682Z5EVBeAl9Dvsgb/
-         10bf3v3r7FSrFao3Nyn921JEpvrq8CstcDVkGrXY0jT40bc/05ReWN5a3CQ7+4DFGnpf
-         eE1/Z/yqfvcq0xPv4NU064pE42QJ7kG2mFMNGsfz+0uSjEnINHyAyMOBudaDUEBjjJeK
-         Ipr2aFCQcTZs27av5P86QyMuBasv0yFwjEwxWDxLr7qxO7uf9MfiMnbAsgiqbN5csgiN
-         EPwg==
-X-Forwarded-Encrypted: i=1; AJvYcCWHvscotlfKmepuLOZGtP2HJLR8Ekh/Cahe6RtUMxOp/s4eX6fg7MPyVqHxO9wxPPrGCr6/Ja/ghTxJ4Uo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwR7JaFw2N45lPl24sW2hZJNsnOVL0Z/0/kZRCMg9FmylXwtVvS
-	8Ks98oETs7sTgZgHGj2pbOCy3YlmYn12DeHKzOQOVHAWKLh5uEXdoO/UkZMxAwvLe2BCGYeK3fA
-	40g==
-X-Google-Smtp-Source: AGHT+IEjytYkIRTk2QN3rHgDKBDCYzzDu9yiVMpU9uRWqwQWvZ1b3SNQlrgoBUpZQvtRiqohVDHw7aYasHE=
-X-Received: from pfbkx23.prod.google.com ([2002:a05:6a00:6f17:b0:730:848d:a5a3])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:4409:b0:732:535d:bb55
- with SMTP id d2e1a72fcca58-73dc147bd25mr4766073b3a.4.1744998702381; Fri, 18
- Apr 2025 10:51:42 -0700 (PDT)
-Date: Fri, 18 Apr 2025 10:51:40 -0700
-In-Reply-To: <CABgObfYzbWspmaEsvSZYkBr1UQ7C5rD0NQ+=UsnSU3OG5tkcDQ@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1744998760; x=1745603560;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TsFYuLGh8xNnT8t0lny4A6t6txQ0jUe2g78tYPIMlyM=;
+        b=nfE+6eZ//Kd5lapTVhlXT1TonH5qoMQ3kLWtqcEj+VkmgW/HTWREn7O/Q2R2fIEhuR
+         KbGP6EDjsW8M+47vtaooMqFrZPPyTB0lw3NFESGS/xtDztVKd/4WqNWJAJzr3LSf5Iih
+         vvaOjX1jXPVJoY6umXP8IMeta9KPOiz8tustcl5KndbjYL+N17XkHfhFyP/KOM+22Wcd
+         VYtfpvDjhsyXDc+kX/aiHsWAvbNauXc+fuqovbePeUC8W2k3C6vaM/KfY4pa6xSFOMUw
+         lvMJ3TZdOn94GZ8O1Lpwt6Fh8r2GaTflwcySigCVC6FEEZdMG81t758jdqA+JUkV1FKE
+         BXPA==
+X-Forwarded-Encrypted: i=1; AJvYcCXgH5nsd6oH//X0VlBqw58hTbMvHBkKYj5xsq1JFqdi04msAysDT2A26lbe1o+m8D2Y78XeQEB6/+qc1mk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnMsYOYfyySWtgY/BbrXV2qfiXVGnZ/JNY2Rd2gEBQst/efXlW
+	tEp6WJ8QuljyZqUT4I7Y3Sg9hg4kVRNhtjNlVAAE7y+EZcP2dLIUSC7vlrAkwYc=
+X-Gm-Gg: ASbGncs6S1CQiWbJNATDbsy/QSHCj1y2b2ywMP3uPmoQpkh2UtFWv8X9lXFWAcTNf/p
+	xkJ6dC3OTy3XGCDs9P+iu7qvIUfoI+YARPhJuPzw1FpXhfeIAeRxl0nfwenxyqVq8tQIxTuXjaR
+	7jD9qRiA3JeL2arrWLAZ77ZYbIlNOvpTARYIWqLktgIH9GU4c1caSz6awQne1K4HuXiRuQXVlXA
+	vNesBnRyt2J29pDBSktynkk1YLG9udQSgq/+JVWQ2AT7ZV5My+c64vkMxirWQ6WjDu752x3/9Xe
+	EBNeTMKTp63KDjORdztNk7vvOOpEnAYIkCzlcxTZvNvdSVXAdCQn0Uo9Vs8=
+X-Google-Smtp-Source: AGHT+IEBHa67QvFzFQWm2yneuLwm8SwQ0zB337f+xHQo9e3mbRKUfgTmVGCA972hVNU/U2G8mQE2CA==
+X-Received: by 2002:a17:90b:1f90:b0:2ff:6ac2:c5a5 with SMTP id 98e67ed59e1d1-3087bcc39b3mr4166935a91.26.1744998760049;
+        Fri, 18 Apr 2025 10:52:40 -0700 (PDT)
+Received: from purestorage.com ([208.88.159.129])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087e0feb21sm1525744a91.32.2025.04.18.10.52.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 10:52:39 -0700 (PDT)
+Date: Fri, 18 Apr 2025 11:52:32 -0600
+From: Michael Liang <mliang@purestorage.com>
+To: Sagi Grimberg <sagi@grimberg.me>
+Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Mohamed Khalfella <mkhalfella@purestorage.com>,
+	Randy Jennings <randyj@purestorage.com>,
+	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] nvme-tcp: wait socket wmem to drain in queue stop
+Message-ID: <20250418175232.7mxlokunrackcjbn@purestorage.com>
+References: <20250417071359.iw3fangcfcuopjza@purestorage.com>
+ <acc46429-6228-475e-8fd8-bc3d43c7f710@grimberg.me>
+ <4683e355-166f-4b9a-a3ea-529f7b058a84@grimberg.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250418130644.227320-1-pbonzini@redhat.com> <CAHk-=wg8VBjy=yrDUmFnvBKdo6eKNab6C=+FNjNZhX=z25QBpw@mail.gmail.com>
- <CABgObfYzbWspmaEsvSZYkBr1UQ7C5rD0NQ+=UsnSU3OG5tkcDQ@mail.gmail.com>
-Message-ID: <aAKRLEiiy9pyHcKB@google.com>
-Subject: Re: [GIT PULL] KVM changes for Linux 6.15-rc3
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4683e355-166f-4b9a-a3ea-529f7b058a84@grimberg.me>
 
-On Fri, Apr 18, 2025, Paolo Bonzini wrote:
-> On Fri, Apr 18, 2025 at 6:13=E2=80=AFPM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> > On Fri, 18 Apr 2025 at 06:06, Paolo Bonzini <pbonzini@redhat.com> wrote=
-:
-> > >   https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-> >
-> > I pulled this, but then I unpulled it, because this doesn't work for
-> > me AT ALL. I get
-> >
-> >    ERROR: modpost: "kvm_arch_has_irq_bypass" [arch/x86/kvm/kvm-amd.ko]
-> > undefined!
-> >
-> > when building it. I assume it's due to the change in commit
-> > 73e0c567c24a ("KVM: SVM: Don't update IRTEs if APICv/AVIC is
-> > disabled") but didn't check any closer.
->=20
-> Yep.
->=20
-> > I think it's literally just because that symbol isn't exported, but I
-> > also suspect that the *right* fix is to make that function be an
-> > inline function that doesn't *need* to be exported.
->=20
-> Yes, that's possible since enable_apicv is already exported. Sorry for
-> the screwup.
+On Fri, Apr 18, 2025 at 02:49:25PM +0300, Sagi Grimberg wrote:
+> 
+> 
+> On 4/18/25 14:30, Sagi Grimberg wrote:
+> > 
+> > 
+> > On 4/17/25 10:13, Michael Liang wrote:
+> > > This patch addresses a data corruption issue observed in nvme-tcp during
+> > > testing.
+> > > 
+> > > Issue description:
+> > > In an NVMe native multipath setup, when an I/O timeout occurs, all
+> > > inflight
+> > > I/Os are canceled almost immediately after the kernel socket is shut
+> > > down.
+> > > These canceled I/Os are reported as host path errors, triggering a
+> > > failover
+> > > that succeeds on a different path.
+> > > 
+> > > However, at this point, the original I/O may still be outstanding in the
+> > > host's network transmission path (e.g., the NIC’s TX queue). From the
+> > > user-space app's perspective, the buffer associated with the I/O is
+> > > considered
+> > > completed since they're acked on the different path and may be
+> > > reused for new
+> > > I/O requests.
+> > > 
+> > > Because nvme-tcp enables zero-copy by default in the transmission path,
+> > > this can lead to corrupted data being sent to the original target,
+> > > ultimately
+> > > causing data corruption.
+> > > 
+> > > We can reproduce this data corruption by injecting delay on one path and
+> > > triggering i/o timeout.
+> > > 
+> > > To prevent this issue, this change ensures that all inflight
+> > > transmissions are
+> > > fully completed from host's perspective before returning from queue
+> > > stop. To handle concurrent I/O timeout from multiple namespaces under
+> > > the same controller, always wait in queue stop regardless of queue's
+> > > state.
+> > > 
+> > > This aligns with the behavior of queue stopping in other NVMe fabric
+> > > transports.
+> > > 
+> > > Reviewed-by: Mohamed Khalfella <mkhalfella@purestorage.com>
+> > > Reviewed-by: Randy Jennings <randyj@purestorage.com>
+> > > Signed-off-by: Michael Liang <mliang@purestorage.com>
+> > > ---
+> > >   drivers/nvme/host/tcp.c | 16 ++++++++++++++++
+> > >   1 file changed, 16 insertions(+)
+> > > 
+> > > diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+> > > index 26c459f0198d..62d73684e61e 100644
+> > > --- a/drivers/nvme/host/tcp.c
+> > > +++ b/drivers/nvme/host/tcp.c
+> > > @@ -1944,6 +1944,21 @@ static void __nvme_tcp_stop_queue(struct
+> > > nvme_tcp_queue *queue)
+> > >       cancel_work_sync(&queue->io_work);
+> > >   }
+> > >   +static void nvme_tcp_stop_queue_wait(struct nvme_tcp_queue *queue)
+> > > +{
+> > > +    int timeout = 100;
+> > > +
+> > > +    while (timeout > 0) {
+> > > +        if (!sk_wmem_alloc_get(queue->sock->sk))
+> > > +            return;
+> > > +        msleep(2);
+> > > +        timeout -= 2;
+> > > +    }
+> > > +    dev_warn(queue->ctrl->ctrl.device,
+> > > +         "qid %d: wait draining sock wmem allocation timeout\n",
+> > > +         nvme_tcp_queue_id(queue));
+> > > +}
+> > > +
+> > >   static void nvme_tcp_stop_queue(struct nvme_ctrl *nctrl, int qid)
+> > >   {
+> > >       struct nvme_tcp_ctrl *ctrl = to_tcp_ctrl(nctrl);
+> > > @@ -1961,6 +1976,7 @@ static void nvme_tcp_stop_queue(struct
+> > > nvme_ctrl *nctrl, int qid)
+> > >       /* Stopping the queue will disable TLS */
+> > >       queue->tls_enabled = false;
+> > >       mutex_unlock(&queue->queue_lock);
+> > > +    nvme_tcp_stop_queue_wait(queue);
+> > >   }
+> > >     static void nvme_tcp_setup_sock_ops(struct nvme_tcp_queue *queue)
+> > 
+> > This makes sense. But I do not want to pay this price serially.
+> > As the concern is just failover, lets do something like: diff --git
+> > a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c index
+> > 5041cbfd8272..d482a8fe2c4b 100644 --- a/drivers/nvme/host/tcp.c +++
+> > b/drivers/nvme/host/tcp.c @@ -2031,6 +2031,8 @@ static void
+> > nvme_tcp_stop_io_queues(struct nvme_ctrl *ctrl) for (i = 1; i <
+> > ctrl->queue_count; i++) nvme_tcp_stop_queue(ctrl, i); + for (i = 1; i <
+> > ctrl->queue_count; i++) + nvme_tcp_stop_queue_wait(&ctrl->queues[i]); }
+> > static int nvme_tcp_start_io_queues(struct nvme_ctrl *ctrl, @@ -2628,8
+> > +2630,10 @@ static void nvme_tcp_complete_timed_out(struct request *rq)
+> > { struct nvme_tcp_request *req = blk_mq_rq_to_pdu(rq); struct nvme_ctrl
+> > *ctrl = &req->queue->ctrl->ctrl; + int idx =
+> > nvme_tcp_queue_id(req->queue); - nvme_tcp_stop_queue(ctrl,
+> > nvme_tcp_queue_id(req->queue)); + nvme_tcp_stop_queue(ctrl, idx); +
+> > nvme_tcp_stop_queue_wait(&ctrl->queues[idx]);
+> > nvmf_complete_timed_out_request(rq); }
+> 
+> Or perhaps something like:
+> --
+> diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+> index 5041cbfd8272..3e206a2cbbf3 100644
+> --- a/drivers/nvme/host/tcp.c
+> +++ b/drivers/nvme/host/tcp.c
+> @@ -1944,7 +1944,7 @@ static void __nvme_tcp_stop_queue(struct
+> nvme_tcp_queue *queue)
+>         cancel_work_sync(&queue->io_work);
+>  }
+> 
+> -static void nvme_tcp_stop_queue(struct nvme_ctrl *nctrl, int qid)
+> +static void nvme_tcp_stop_queue_nowait(struct nvme_ctrl *nctrl, int qid)
+>  {
+>         struct nvme_tcp_ctrl *ctrl = to_tcp_ctrl(nctrl);
+>         struct nvme_tcp_queue *queue = &ctrl->queues[qid];
+> @@ -1963,6 +1963,29 @@ static void nvme_tcp_stop_queue(struct nvme_ctrl
+> *nctrl, int qid)
+>         mutex_unlock(&queue->queue_lock);
+>  }
+> 
+> +static void nvme_tcp_wait_queue(struct nvme_ctrl *nctrl, int qid)
+> +{
+> +       struct nvme_tcp_ctrl *ctrl = to_tcp_ctrl(nctrl);
+> +       struct nvme_tcp_queue *queue = ctrl->queues[qid];
+> +       int timeout = 100;
+> +
+> +       while (timeout > 0) {
+> +               if (!sk_wmem_alloc_get(queue->sock->sk))
+> +                       return;
+> +               msleep(2);
+> +               timeout -= 2;
+> +       }
+> +       dev_warn(queue->ctrl->ctrl.device,
+> +                "qid %d: timeout draining sock wmem allocation expired\n",
+> +                nvme_tcp_queue_id(queue));
+> +}
+> +
+> +static void nvme_tcp_stop_queue(struct nvme_ctrl *nctrl, int qid)
+> +{
+> +       nvme_tcp_stop_queue_nowait(nctrl, qid);
+> +       nvme_tcp_wait_queue(nctrl, qid);
+> +}
+> +
+>  static void nvme_tcp_setup_sock_ops(struct nvme_tcp_queue *queue)
+>  {
+> write_lock_bh(&queue->sock->sk->sk_callback_lock);
+> @@ -2030,7 +2053,9 @@ static void nvme_tcp_stop_io_queues(struct nvme_ctrl
+> *ctrl)
+>         int i;
+> 
+>         for (i = 1; i < ctrl->queue_count; i++)
+> -               nvme_tcp_stop_queue(ctrl, i);
+> +               nvme_tcp_stop_queue_nowait(ctrl, i);
+> +       for (i = 1; i < ctrl->queue_count; i++)
+> +               nvme_tcp_wait_queue(ctrl, i);
+>  }
+> 
+>  static int nvme_tcp_start_io_queues(struct nvme_ctrl *ctrl,
+> --
+Yes, good idea to stop first and then wait all. Will verify this patch.
 
-FWIW, the fixes here came from a big series that was dependent on a much (m=
-uch)
-smaller series that did export kvm_arch_has_irq_bypass(), and that got miss=
-ed
-when these fixes were grabbed early.
-
-But I agree that inlining the thing is a better solution.
-
-https://lore.kernel.org/all/20250401161804.842968-2-seanjc@google.com
+Thanks,
+Michael Liang
