@@ -1,68 +1,67 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8038462;
-	Fri, 18 Apr 2025 08:16:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B551D5ACE;
+	Fri, 18 Apr 2025 08:16:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744964187; cv=none; b=OKnBTsbOrFUofMFsWgN0KfZJKJWBbg1HArgAfIKSWuOahmX0hAuLjmipB8SImgXzLgH+bHwxDo+TmxJ5BoTQj6wY5yqMf6te0qVA8fp0T7wDJPpel8fWQKskjmIfoUPr6O0ANS9HZ7med+Mbl6UM3z9NlPuzQHgTjxsgI08taC8=
+	t=1744964194; cv=none; b=bN0Vx/eIDmyS6jZw1k+vfpjgjBEScWmz2vtmd2VR7LLvw0uwYuG2msnX7F/RmT3B831BY9Wro2V1q+cg+d61l2G3zmuYFvLaOqwR3qjqg1WLxsVtqe6pZtBpxqzJq/itD+2kL67/c/ND+bRdW04iFwiM6geq/ktIaSI9JnsT1yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744964187; c=relaxed/simple;
-	bh=D0h0mUnhXNEPaFia5AGTzABQLfaAoHV0cI3sHPSHmMs=;
+	s=arc-20240116; t=1744964194; c=relaxed/simple;
+	bh=A/cIS9O9ihetzF82juTc/GeppFS9eo1M3cHFEV89k2o=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Hhu5xYaWii3bEpNDJrZXzMHoMHnBDhv8ovHm4UaJUq5xh00Z1Rdq70Ye4uFN+9O9jL73sSf5tsdKPlx0d9lrSYK3JjyWpppnONCs/qhtiJJqPeuF21F9STVywDPOsXjBR7lEtDy/fyy9RTHrdkmwsa51DxRtg+wAngcEAH/R+SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RT53mXyj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5FEeD8AG; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=Wq8D7Cvp350VwAYVGBf8w4fFh+JmtKv2ZwdyV2V5piJrR5/CvGx925ShCsDx4OURp9nqDaBJRFkQ43DlMmajJjVfSTOFVPhtrIo5GVVoGO0qmXKcfHUji5obSlG6yL+k8/ptnszI53pctLSL19sLxZFCyh95SbuRI8dF9h/m/tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3RAbjq6b; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v+zoPpOq; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RT53mXyj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5FEeD8AG"
-Date: Fri, 18 Apr 2025 08:16:16 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3RAbjq6b";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v+zoPpOq"
+Date: Fri, 18 Apr 2025 08:16:29 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744964183;
+	s=2020; t=1744964190;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rQWv/nAPt4yRrWHW7MzrqnD+OpT5LGX/6JwpF6PC6cM=;
-	b=RT53mXyjZJbf8ckaZx+ou1Irnru6+YudYV8psOx1SuQdI7NS4q75IgMeli82uPFH94mE8O
-	yJcnxmesJQlgPnyy0a1kFcjVs7355AaHTxITwfkAyApJi1MnLTJMH4uM98WakGnPbZOQjq
-	IzpHvD2ugq1bKdMivC5ol850F/ZSOiCmzHPY9SuJLVJugltSCKkRaZ0IvxDwCGbBTE3QYD
-	AwMapt62C/vOWUHPaLDWv1yz8/w8Oq+kELp4r0deb6TbUyI5566Ken46HMD8vODEhUR+XO
-	wUfdQoWSLdgSe4TGOYC70aiUaw7gbdL4vESUVE8vu4exrW0IsbtDtGZBw/VssA==
+	bh=JGS99lfdrgA1Vl2luL9p0HsgAfvhOWL6PlH9I7e+0iA=;
+	b=3RAbjq6bjy2BISZjtbSBOPvCfEvYqggoxouchu2OenEX02o9KGH4J4TC4je8efxvNarFHa
+	I/lKFEqGrsl3U+hkaYTJ0CF//qiQlN4+uLSBatPrXeFa8t5TrKMqPyMff1ZMbUUpHpooML
+	r2Ib+5GBrXrEH6FkoKDn4wk6LKRhxx4hAiE+ioBCoP4j6ka5f56IedlZnUMKSJ0B5XePs1
+	zd6RQPlO/Edrn9rW6qzImQJgbib/0WLLDti7bxjFdbHT9odxyE+NDSXNvX2ESnlwywy/8M
+	rG6wWrXXq0TJifQbI5SgO4ySDHIh/15lht1HXWdeIogZ4QT2do3IwvW0Pzq0jA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744964183;
+	s=2020e; t=1744964190;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rQWv/nAPt4yRrWHW7MzrqnD+OpT5LGX/6JwpF6PC6cM=;
-	b=5FEeD8AG5wgxuQ32oyDEyx6aRE5Jpe/b4czgt3kly21GSvIgIzvI6r11wss53rLHqE2rX1
-	Uqrl8usbWuYjtbBg==
-From: "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
+	bh=JGS99lfdrgA1Vl2luL9p0HsgAfvhOWL6PlH9I7e+0iA=;
+	b=v+zoPpOqWgQxzcR/tnjC+5BO1cfKbZ6alctLwx97h3F0GiTgdzoC01sQYop7Ap9VkST11E
+	THGRiAgBSC6UxxBw==
+From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/boot/sev: Avoid shared GHCB page for early
- memory acceptance
-Cc: Tom Lendacky <thomas.lendacky@amd.com>, Ard Biesheuvel <ardb@kernel.org>,
- Ingo Molnar <mingo@kernel.org>,  <stable@vger.kernel.org>,
- Dionna Amalie Glaze <dionnaglaze@google.com>,
- Kevin Loughlin <kevinloughlin@google.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, linux-efi@vger.kernel.org,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250417202120.1002102-2-ardb+git@google.com # final submission>
-References: <20250417202120.1002102-2-ardb+git@google.com # final submission>
+Subject: [tip: x86/boot] x86/boot: Remove semicolon from "rep" prefixes
+Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Josh Poimboeuf <jpoimboe@redhat.com>,
+ Juergen Gross <jgross@suse.com>, Kees Cook <keescook@chromium.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Martin Mares <mj@ucw.cz>,
+ Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250418071437.4144391-1-ubizjak@gmail.com>
+References: <20250418071437.4144391-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174496417635.31282.2634692329527053854.tip-bot2@tip-bot2>
+Message-ID: <174496418962.31282.13369844056848991237.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,202 +69,191 @@ Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/urgent branch of tip:
+The following commit has been merged into the x86/boot branch of tip:
 
-Commit-ID:     a718833cb4567fffec26bc62633081b27fa5f90a
-Gitweb:        https://git.kernel.org/tip/a718833cb4567fffec26bc62633081b27fa5f90a
-Author:        Ard Biesheuvel <ardb@kernel.org>
-AuthorDate:    Thu, 17 Apr 2025 22:21:21 +02:00
+Commit-ID:     0dcc51477b94d87f23aeb400b78fbdfb09363000
+Gitweb:        https://git.kernel.org/tip/0dcc51477b94d87f23aeb400b78fbdfb09363000
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Fri, 18 Apr 2025 09:13:50 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 18 Apr 2025 09:53:32 +02:00
+CommitterDate: Fri, 18 Apr 2025 09:32:57 +02:00
 
-x86/boot/sev: Avoid shared GHCB page for early memory acceptance
+x86/boot: Remove semicolon from "rep" prefixes
 
-Communicating with the hypervisor using the shared GHCB page requires
-clearing the C bit in the mapping of that page. When executing in the
-context of the EFI boot services, the page tables are owned by the
-firmware, and this manipulation is not possible.
+Minimum version of binutils required to compile the kernel is 2.25.
+This version correctly handles the "rep" prefixes, so it is possible
+to remove the semicolon, which was used to support ancient versions
+of GNU as.
 
-So switch to a different API for accepting memory in SEV-SNP guests, one
-which is actually supported at the point during boot where the EFI stub
-may need to accept memory, but the SEV-SNP init code has not executed
-yet.
+Due to the semicolon, the compiler considers "rep; insn" (or its
+alternate "rep\n\tinsn" form) as two separate instructions. Removing
+the semicolon makes asm length calculations more accurate, consequently
+making scheduling and inlining decisions of the compiler more accurate.
 
-For simplicity, also switch the memory acceptance carried out by the
-decompressor when not booting via EFI - this only involves the
-allocation for the decompressed kernel, and is generally only called
-after kexec, as normal boot will jump straight into the kernel from the
-EFI stub.
+Removing the semicolon also enables assembler checks involving "rep"
+prefixes. Trying to assemble e.g. "rep addl %eax, %ebx" results in:
 
-Fixes: 6c3211796326 ("x86/sev: Add SNP-specific unaccepted memory support")
-Tested-by: Tom Lendacky <thomas.lendacky@amd.com>
-Co-developed-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+  Error: invalid instruction `add' after `rep'
+
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: <stable@vger.kernel.org>
-Cc: Dionna Amalie Glaze <dionnaglaze@google.com>
-Cc: Kevin Loughlin <kevinloughlin@google.com>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Kees Cook <keescook@chromium.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-efi@vger.kernel.org
-Link: https://lore.kernel.org/r/20250404082921.2767593-8-ardb+git@google.com # discussion thread #1
-Link: https://lore.kernel.org/r/20250410132850.3708703-2-ardb+git@google.com # discussion thread #2
-Link: https://lore.kernel.org/r/20250417202120.1002102-2-ardb+git@google.com # final submission
+Cc: Martin Mares <mj@ucw.cz>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20250418071437.4144391-1-ubizjak@gmail.com
 ---
- arch/x86/boot/compressed/mem.c |  5 +-
- arch/x86/boot/compressed/sev.c | 67 +++++++--------------------------
- arch/x86/boot/compressed/sev.h |  2 +-
- 3 files changed, 21 insertions(+), 53 deletions(-)
+ arch/x86/boot/bioscall.S          | 4 ++--
+ arch/x86/boot/boot.h              | 4 ++--
+ arch/x86/boot/compressed/string.c | 8 ++++----
+ arch/x86/boot/copy.S              | 8 ++++----
+ arch/x86/boot/header.S            | 2 +-
+ arch/x86/boot/string.c            | 2 +-
+ arch/x86/boot/video.c             | 2 +-
+ 7 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/mem.c b/arch/x86/boot/compressed/mem.c
-index dbba332..f676156 100644
---- a/arch/x86/boot/compressed/mem.c
-+++ b/arch/x86/boot/compressed/mem.c
-@@ -34,11 +34,14 @@ static bool early_is_tdx_guest(void)
+diff --git a/arch/x86/boot/bioscall.S b/arch/x86/boot/bioscall.S
+index aa9b964..cf4a615 100644
+--- a/arch/x86/boot/bioscall.S
++++ b/arch/x86/boot/bioscall.S
+@@ -32,7 +32,7 @@ intcall:
+ 	movw	%dx, %si
+ 	movw	%sp, %di
+ 	movw	$11, %cx
+-	rep; movsl
++	rep movsl
  
- void arch_accept_memory(phys_addr_t start, phys_addr_t end)
+ 	/* Pop full state from the stack */
+ 	popal
+@@ -67,7 +67,7 @@ intcall:
+ 	jz	4f
+ 	movw	%sp, %si
+ 	movw	$11, %cx
+-	rep; movsl
++	rep movsl
+ 4:	addw	$44, %sp
+ 
+ 	/* Restore state and return */
+diff --git a/arch/x86/boot/boot.h b/arch/x86/boot/boot.h
+index 38f17a1..f3771a6 100644
+--- a/arch/x86/boot/boot.h
++++ b/arch/x86/boot/boot.h
+@@ -155,14 +155,14 @@ static inline void wrgs32(u32 v, addr_t addr)
+ static inline bool memcmp_fs(const void *s1, addr_t s2, size_t len)
  {
-+	static bool sevsnp;
-+
- 	/* Platform-specific memory-acceptance call goes here */
- 	if (early_is_tdx_guest()) {
- 		if (!tdx_accept_memory(start, end))
- 			panic("TDX: Failed to accept memory\n");
--	} else if (sev_snp_enabled()) {
-+	} else if (sevsnp || (sev_get_status() & MSR_AMD64_SEV_SNP_ENABLED)) {
-+		sevsnp = true;
- 		snp_accept_memory(start, end);
- 	} else {
- 		error("Cannot accept memory: unknown platform\n");
-diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-index bb55934..89ba168 100644
---- a/arch/x86/boot/compressed/sev.c
-+++ b/arch/x86/boot/compressed/sev.c
-@@ -164,10 +164,7 @@ bool sev_snp_enabled(void)
- 
- static void __page_state_change(unsigned long paddr, enum psc_op op)
- {
--	u64 val;
--
--	if (!sev_snp_enabled())
--		return;
-+	u64 val, msr;
- 
- 	/*
- 	 * If private -> shared then invalidate the page before requesting the
-@@ -176,6 +173,9 @@ static void __page_state_change(unsigned long paddr, enum psc_op op)
- 	if (op == SNP_PAGE_STATE_SHARED)
- 		pvalidate_4k_page(paddr, paddr, false);
- 
-+	/* Save the current GHCB MSR value */
-+	msr = sev_es_rd_ghcb_msr();
-+
- 	/* Issue VMGEXIT to change the page state in RMP table. */
- 	sev_es_wr_ghcb_msr(GHCB_MSR_PSC_REQ_GFN(paddr >> PAGE_SHIFT, op));
- 	VMGEXIT();
-@@ -185,6 +185,9 @@ static void __page_state_change(unsigned long paddr, enum psc_op op)
- 	if ((GHCB_RESP_CODE(val) != GHCB_MSR_PSC_RESP) || GHCB_MSR_PSC_RESP_VAL(val))
- 		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PSC);
- 
-+	/* Restore the GHCB MSR value */
-+	sev_es_wr_ghcb_msr(msr);
-+
- 	/*
- 	 * Now that page state is changed in the RMP table, validate it so that it is
- 	 * consistent with the RMP entry.
-@@ -195,11 +198,17 @@ static void __page_state_change(unsigned long paddr, enum psc_op op)
- 
- void snp_set_page_private(unsigned long paddr)
- {
-+	if (!sev_snp_enabled())
-+		return;
-+
- 	__page_state_change(paddr, SNP_PAGE_STATE_PRIVATE);
+ 	bool diff;
+-	asm volatile("fs; repe; cmpsb" CC_SET(nz)
++	asm volatile("fs repe cmpsb" CC_SET(nz)
+ 		     : CC_OUT(nz) (diff), "+D" (s1), "+S" (s2), "+c" (len));
+ 	return diff;
  }
- 
- void snp_set_page_shared(unsigned long paddr)
+ static inline bool memcmp_gs(const void *s1, addr_t s2, size_t len)
  {
-+	if (!sev_snp_enabled())
-+		return;
-+
- 	__page_state_change(paddr, SNP_PAGE_STATE_SHARED);
+ 	bool diff;
+-	asm volatile("gs; repe; cmpsb" CC_SET(nz)
++	asm volatile("gs repe cmpsb" CC_SET(nz)
+ 		     : CC_OUT(nz) (diff), "+D" (s1), "+S" (s2), "+c" (len));
+ 	return diff;
  }
- 
-@@ -223,56 +232,10 @@ static bool early_setup_ghcb(void)
- 	return true;
- }
- 
--static phys_addr_t __snp_accept_memory(struct snp_psc_desc *desc,
--				       phys_addr_t pa, phys_addr_t pa_end)
--{
--	struct psc_hdr *hdr;
--	struct psc_entry *e;
--	unsigned int i;
--
--	hdr = &desc->hdr;
--	memset(hdr, 0, sizeof(*hdr));
--
--	e = desc->entries;
--
--	i = 0;
--	while (pa < pa_end && i < VMGEXIT_PSC_MAX_ENTRY) {
--		hdr->end_entry = i;
--
--		e->gfn = pa >> PAGE_SHIFT;
--		e->operation = SNP_PAGE_STATE_PRIVATE;
--		if (IS_ALIGNED(pa, PMD_SIZE) && (pa_end - pa) >= PMD_SIZE) {
--			e->pagesize = RMP_PG_SIZE_2M;
--			pa += PMD_SIZE;
--		} else {
--			e->pagesize = RMP_PG_SIZE_4K;
--			pa += PAGE_SIZE;
--		}
--
--		e++;
--		i++;
--	}
--
--	if (vmgexit_psc(boot_ghcb, desc))
--		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PSC);
--
--	pvalidate_pages(desc);
--
--	return pa;
--}
--
- void snp_accept_memory(phys_addr_t start, phys_addr_t end)
+diff --git a/arch/x86/boot/compressed/string.c b/arch/x86/boot/compressed/string.c
+index 81fc1ea..9af19d9 100644
+--- a/arch/x86/boot/compressed/string.c
++++ b/arch/x86/boot/compressed/string.c
+@@ -15,9 +15,9 @@ static void *____memcpy(void *dest, const void *src, size_t n)
  {
--	struct snp_psc_desc desc = {};
--	unsigned int i;
--	phys_addr_t pa;
--
--	if (!boot_ghcb && !early_setup_ghcb())
--		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PSC);
--
--	pa = start;
--	while (pa < end)
--		pa = __snp_accept_memory(&desc, pa, end);
-+	for (phys_addr_t pa = start; pa < end; pa += PAGE_SIZE)
-+		__page_state_change(pa, SNP_PAGE_STATE_PRIVATE);
+ 	int d0, d1, d2;
+ 	asm volatile(
+-		"rep ; movsl\n\t"
++		"rep movsl\n\t"
+ 		"movl %4,%%ecx\n\t"
+-		"rep ; movsb\n\t"
++		"rep movsb"
+ 		: "=&c" (d0), "=&D" (d1), "=&S" (d2)
+ 		: "0" (n >> 2), "g" (n & 3), "1" (dest), "2" (src)
+ 		: "memory");
+@@ -29,9 +29,9 @@ static void *____memcpy(void *dest, const void *src, size_t n)
+ {
+ 	long d0, d1, d2;
+ 	asm volatile(
+-		"rep ; movsq\n\t"
++		"rep movsq\n\t"
+ 		"movq %4,%%rcx\n\t"
+-		"rep ; movsb\n\t"
++		"rep movsb"
+ 		: "=&c" (d0), "=&D" (d1), "=&S" (d2)
+ 		: "0" (n >> 3), "g" (n & 7), "1" (dest), "2" (src)
+ 		: "memory");
+diff --git a/arch/x86/boot/copy.S b/arch/x86/boot/copy.S
+index 6afd05e..3973a67 100644
+--- a/arch/x86/boot/copy.S
++++ b/arch/x86/boot/copy.S
+@@ -22,10 +22,10 @@ SYM_FUNC_START_NOALIGN(memcpy)
+ 	movw	%dx, %si
+ 	pushw	%cx
+ 	shrw	$2, %cx
+-	rep; movsl
++	rep movsl
+ 	popw	%cx
+ 	andw	$3, %cx
+-	rep; movsb
++	rep movsb
+ 	popw	%di
+ 	popw	%si
+ 	retl
+@@ -38,10 +38,10 @@ SYM_FUNC_START_NOALIGN(memset)
+ 	imull	$0x01010101,%eax
+ 	pushw	%cx
+ 	shrw	$2, %cx
+-	rep; stosl
++	rep stosl
+ 	popw	%cx
+ 	andw	$3, %cx
+-	rep; stosb
++	rep stosb
+ 	popw	%di
+ 	retl
+ SYM_FUNC_END(memset)
+diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
+index b5c79f4..9cb9142 100644
+--- a/arch/x86/boot/header.S
++++ b/arch/x86/boot/header.S
+@@ -585,7 +585,7 @@ start_of_setup:
+ 	xorl	%eax, %eax
+ 	subw	%di, %cx
+ 	shrw	$2, %cx
+-	rep; stosl
++	rep stosl
+ 
+ # Jump to C code (should not return)
+ 	calll	main
+diff --git a/arch/x86/boot/string.c b/arch/x86/boot/string.c
+index 84f7a88..f35369b 100644
+--- a/arch/x86/boot/string.c
++++ b/arch/x86/boot/string.c
+@@ -32,7 +32,7 @@
+ int memcmp(const void *s1, const void *s2, size_t len)
+ {
+ 	bool diff;
+-	asm("repe; cmpsb" CC_SET(nz)
++	asm("repe cmpsb" CC_SET(nz)
+ 	    : CC_OUT(nz) (diff), "+D" (s1), "+S" (s2), "+c" (len));
+ 	return diff;
  }
- 
- void sev_es_shutdown_ghcb(void)
-diff --git a/arch/x86/boot/compressed/sev.h b/arch/x86/boot/compressed/sev.h
-index fc725a9..4e463f3 100644
---- a/arch/x86/boot/compressed/sev.h
-+++ b/arch/x86/boot/compressed/sev.h
-@@ -12,11 +12,13 @@
- 
- bool sev_snp_enabled(void);
- void snp_accept_memory(phys_addr_t start, phys_addr_t end);
-+u64 sev_get_status(void);
- 
- #else
- 
- static inline bool sev_snp_enabled(void) { return false; }
- static inline void snp_accept_memory(phys_addr_t start, phys_addr_t end) { }
-+static inline u64 sev_get_status(void) { return 0; }
- 
- #endif
- 
+diff --git a/arch/x86/boot/video.c b/arch/x86/boot/video.c
+index f2e9690..0641c8c 100644
+--- a/arch/x86/boot/video.c
++++ b/arch/x86/boot/video.c
+@@ -292,7 +292,7 @@ static void restore_screen(void)
+ 			     "shrw %%cx ; "
+ 			     "jnc 1f ; "
+ 			     "stosw \n\t"
+-			     "1: rep;stosl ; "
++			     "1: rep stosl ; "
+ 			     "popw %%es"
+ 			     : "+D" (dst), "+c" (npad)
+ 			     : "bdS" (video_segment),
