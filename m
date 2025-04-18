@@ -1,266 +1,217 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.241.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E508A2741CC
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 11:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E822749E7;
+	Fri, 18 Apr 2025 11:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.241.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744975383; cv=none; b=tNa2VxVhB+1FtBKIzerFrih1aTZ2tF7TC3U4qG0tJCeYnuQ2IuQtvAvfsDQLMl+hNTrzLNCgjc347E+3ZicjJreDs449rFSjyxlHkceqTWDhtHBppCnUQe0AROrx2+EB3UeMvDjKrNCOYtBdEO6ncaVhvR7zIRjuR8+rDJi/ays=
+	t=1744975387; cv=none; b=L9VzZpTg1msrEeS1K+R4clwe6z+E+ZRd/77bTqrH35eRapnyNSGrYUkKavGy+oIU7/yT/TMlUXp4rOKK9L/6GIX/f8IpfbyjPXk5kas9eXJ3xB26nCsbWzJY/deOHfDIrVylna+GdJ3y6akxORZFRcJ7aDAkba4uffNvRVbOAKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744975383; c=relaxed/simple;
-	bh=6i1+QoXm49QJYEYcGjGNq6z2EoWpPvD6xRmHxlH46XU=;
-	h=From:Date:Subject:MIME-Version:Message-Id:In-Reply-To:To:Cc:
-	 Content-Type:References; b=rPlhTsDpksGy4iesv+RksEIMDhygfTHFaxCLHm54aYc875NN7ULadbClNE0KCSCg16inGoJGsREgadcwKCBsnCF4pjJkYOyMzbFOR6HJEsGtec1jZsgAPYuTbFbK/4NJ+YxUAtDsqCclp0ncxEFiaQ12UjdQMoJ912hjPnkv9ZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=VrknImwW; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1744975387; c=relaxed/simple;
+	bh=XugppIIAJO9PkEAXCDE1zf/7oX/SgdA4rqZh/Cbb2oE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rj4ix7iSbEi8IuG1L0eoZDLAXtevkNTFPT2IfjC8n0ZB2Mqzpddjp1ixe1OIyhIgJD6sxwSDCG6mZIECnL354oBjL1dWrwHwkIZ/SrDQF43PkVz5SNKYwtznCv7lzBTTg4IoQNXniS95ZPMRK9UKPksNDqD8KUpe5PVft9gbCSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=ysCg+gDi; arc=none smtp.client-ip=159.100.241.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VrknImwW"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250418112300euoutp01658a9bbbd96d600d60d3185722359a27~3Zdz1xNNY2567425674euoutp01A
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 11:23:00 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250418112300euoutp01658a9bbbd96d600d60d3185722359a27~3Zdz1xNNY2567425674euoutp01A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1744975380;
-	bh=MPodoGkYgD+LDDjpcK9QQWYlA+NIEGfrgZ+qS1XcPAU=;
-	h=From:Date:Subject:In-Reply-To:To:Cc:References:From;
-	b=VrknImwWzYK/oZuXjFzTl+K7cNa1l4rZJhsdu8w3NY1pwA0f+KwFoH35hxLsfAJQv
-	 cp0pj/igi68r32dED6RQP1jcn11fpgO+TSI4vXc7HFBWKgJRtTzzXwPwW2NUN6JjLX
-	 t8kjEzQKkmo3QzbfVPSkFG3S096D9CqaRQuUkbmw=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20250418112259eucas1p1a6626dd8eac8b929bc3ffe28ec9d3974~3ZdzS6BU60672806728eucas1p1J;
-	Fri, 18 Apr 2025 11:22:59 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id B3.80.20397.31632086; Fri, 18
-	Apr 2025 12:22:59 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250418112259eucas1p14c8a04007b0e279b8e134db9e1502d7c~3Zdy0pq2o1923119231eucas1p1H;
-	Fri, 18 Apr 2025 11:22:59 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250418112259eusmtrp1c4563c242c38fbb0d4aafc9845af9d96~3Zdy0BbFg2607526075eusmtrp1r;
-	Fri, 18 Apr 2025 11:22:59 +0000 (GMT)
-X-AuditID: cbfec7f5-e59c770000004fad-d7-680236137e23
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id A5.98.19654.31632086; Fri, 18
-	Apr 2025 12:22:59 +0100 (BST)
-Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
-	[106.210.136.40]) by eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250418112258eusmtip296f42d06655dda5479fe46c400db9487~3ZdyF1NmM1751317513eusmtip2C;
-	Fri, 18 Apr 2025 11:22:58 +0000 (GMT)
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-Date: Fri, 18 Apr 2025 13:22:49 +0200
-Subject: [PATCH v6 2/2] drm/imagination: Add reset controller support for
- GPU initialization
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="ysCg+gDi"
+Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.80.155])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id 5022E20076;
+	Fri, 18 Apr 2025 11:22:57 +0000 (UTC)
+Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
+	by relay4.mymailcheap.com (Postfix) with ESMTPS id 470FD2012A;
+	Fri, 18 Apr 2025 11:22:49 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf2.mymailcheap.com (Postfix) with ESMTPSA id BB8BB400F2;
+	Fri, 18 Apr 2025 11:22:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1744975366; bh=XugppIIAJO9PkEAXCDE1zf/7oX/SgdA4rqZh/Cbb2oE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ysCg+gDi0HY22e+jhMxa5iReSpbDDeR/QPiEz3mmOctnS67uNcSf6IohFYCM8uvBr
+	 LfBF0YaBVEsTxaL0G4Vz41pSy/S15+sp3J4jOtjIV2bCtyb3me6xuyLL97Eckw3HGl
+	 it50ZczlJLCDXoD/Bnud391KyjyFjaHTU9uSJ/D0=
+Received: from hrh-ofice.wok.cipunited.com (unknown [60.247.127.212])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id CD13C406FC;
+	Fri, 18 Apr 2025 11:22:41 +0000 (UTC)
+From: Runhua He <hua@aosc.io>
+To: linux-kernel@vger.kernel.org
+Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
+	Runhua He <hua@aosc.io>,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Yemu Lu <prcups@krgm.moe>,
+	Xinhui Yang <cyan@cyano.uk>,
+	Rong Zhang <i@rong.moe>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	linux-acpi@vger.kernel.org
+Subject: [RFC PATCH] ACPI: EC: Set ec_no_wakeup for MECHREVO Wujie 14XA (GX4HRXL)
+Date: Fri, 18 Apr 2025 19:22:27 +0800
+Message-ID: <20250418112229.93075-1-hua@aosc.io>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250418-apr_18_reset_img-v6-2-85a06757b698@samsung.com>
-In-Reply-To: <20250418-apr_18_reset_img-v6-0-85a06757b698@samsung.com>
-To: Frank Binns <frank.binns@imgtec.com>,  Matt Coster
-	<matt.coster@imgtec.com>, David Airlie <airlied@gmail.com>,  Simona Vetter
-	<simona@ffwll.ch>,  Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Michal Wilczynski <m.wilczynski@samsung.com>
-X-Mailer: b4 0.15-dev
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMKsWRmVeSWpSXmKPExsWy7djPc7rCZkwZBvMOalicuL6IyWLN3nNM
-	FvOPnGO1uPL1PZvFuqcX2C1ezrrHZnF51xw2i7VH7rJbrP86n8li4cetLBZLduxitGjrXMZq
-	cffeCRaL/3t2sFvMfref3WLLm4msDgIee78tYPHYOesuu0fPzjOMHptWdbJ5zDsZ6HG/+ziT
-	R/9fA4++LasYPTafrvb4vEkugCuKyyYlNSezLLVI3y6BK2POzsesBW/UKxraz7M0MC5Q7GLk
-	5JAQMJHon3uGrYuRi0NIYAWjxKx7O5khnC+MEkvmHmIEqRIS+Mwo8e9AKEzHjU0TGCGKljNK
-	rNv2mhXCaWOSOLX/NxNIFZuAkcSD5fNZQWwWAVWJ/XPfsIHYwgJxEisnHWMGsXkFBCVOznzC
-	AmIzC8hLbH87ByruKjFzTy/YZk4BN4lJN5+xgywQEXjJLHFh3RKw1cwCvYwSt/++Z4O4SVTi
-	9+RdLBD2dk6Jwx+AJnEA2S4SrWucIcLCEq+Ob2GHsGUkTk/ugSrPl3iw9RMzhF0jsbPnOJRt
-	LXHn3C82kDHMApoS63fpQ4QdJa6fvMEIMZ1P4sZbQYjz+SQmbZsOtZRXoqNNCKJaTWJqTy/c
-	0nMrtjFB2B4Sr7sWM05gVJyFFBCzkAJiFsLeBYzMqxjFU0uLc9NTi43zUsv1ihNzi0vz0vWS
-	83M3MQLT3el/x7/uYFzx6qPeIUYmDsZDjBIczEoivNN1mDKEeFMSK6tSi/Lji0pzUosPMUpz
-	sCiJ8y7a35ouJJCeWJKanZpakFoEk2Xi4JRqYGKWdN/9R6aopvjZ3vkHeeq10+YF/bVYpF8X
-	7zK3qNbzw86qCPfbD9k+nrzgEbbz5bHyvzWdPG0inbyTfaXXtXdLna8IY2N3Pf7W9Fmo/a+J
-	obcXrzHZr/VIOKeLVb5+4rJJq523tdYdvSWk+XO20tElga7B3yqsd+n92fzN9MibzM8iF22T
-	v3ee4Hwwy43P5dqaGYErvvFwB19WuMbn+2Bb7LVTe14ft3eSDZ21TvXWjlR/h2sZPlfmPFyx
-	dtlc2w18Gw8w6l02m78ttklH72zJjXx9013uJwrPzQk5wr/unIbxF58tjzoLl6x61/xrnWCP
-	+g3215oBjzbOuFm47Ki8spnykadZL/J/ra746fZEiaU4I9FQi7moOBEAbqK8vuYDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFIsWRmVeSWpSXmKPExsVy+t/xe7rCZkwZBisfcVqcuL6IyWLN3nNM
-	FvOPnGO1uPL1PZvFuqcX2C1ezrrHZnF51xw2i7VH7rJbrP86n8li4cetLBZLduxitGjrXMZq
-	cffeCRaL/3t2sFvMfref3WLLm4msDgIee78tYPHYOesuu0fPzjOMHptWdbJ5zDsZ6HG/+ziT
-	R/9fA4++LasYPTafrvb4vEkugCtKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srI
-	VEnfziYlNSezLLVI3y5BL2POzsesBW/UKxraz7M0MC5Q7GLk5JAQMJG4sWkCYxcjF4eQwFJG
-	iQc/brBBJGQkrnW/ZIGwhSX+XOtigyhqYZI4++QQE0iCTcBI4sHy+awgNouAqsT+uW/AmoUF
-	4iRWTjrGDGLzCghKnJz5BGgQBwezgKbE+l36IGFmAXmJ7W/nQJW4Sszc08sIUiIEZL/dWAsS
-	5hRwk5h08xk7yFoRgTfMEisffAM7lFmgj1Gi/dRqJojjRCV+T97FMoFRcBaSdbMQ1s1Csm4B
-	I/MqRpHU0uLc9NxiI73ixNzi0rx0veT83E2MwEjeduznlh2MK1991DvEyMTBeIhRgoNZSYR3
-	ug5ThhBvSmJlVWpRfnxRaU5q8SFGU6CXJzJLiSbnA1NJXkm8oZmBqaGJmaWBqaWZsZI4L9uV
-	82lCAumJJanZqakFqUUwfUwcnFINTPv15zuLy57QWWp29/PJtUat37xMO3a9CN7rMtV60ru+
-	o/v/9i470H9kx+8VYm0VZi2T1kmwhe6+wGL240bGjxtZvEsidqgdaDa8wnj9L4P+t91blH/1
-	K7/IS7iiuyEnKk7jaIb00s3Trbw783g2WcpdPZ80/S5jVnShXceNLwtnd4Y/mfb3heJugX8z
-	ehnLvOYK3rV3OxvVZih+vCJl1byffN+X6W1pu/Mos+9O5733su35b8JmLYnyc9ZSTBZtS50Q
-	Vv1IOqnhxcrFhXEfP/H+++U1w1CB+/7E1W/8ty/pYK24q8bZmle0VlXk/5U9zeel7/D8W/Zh
-	ecqFxpt7+VlyRV/EaliefBjYfPOn9XIlluKMREMt5qLiRAAs+EdWbQMAAA==
-X-CMS-MailID: 20250418112259eucas1p14c8a04007b0e279b8e134db9e1502d7c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250418112259eucas1p14c8a04007b0e279b8e134db9e1502d7c
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250418112259eucas1p14c8a04007b0e279b8e134db9e1502d7c
-References: <20250418-apr_18_reset_img-v6-0-85a06757b698@samsung.com>
-	<CGME20250418112259eucas1p14c8a04007b0e279b8e134db9e1502d7c@eucas1p1.samsung.com>
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: BB8BB400F2
+X-Rspamd-Server: nf2.mymailcheap.com
+X-Spamd-Result: default: False [1.40 / 10.00];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_ONE(0.00)[1];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	SPFBL_URIBL_EMAIL_FAIL(0.00)[jeffbai.aosc.io:server fail,hua.aosc.io:server fail,cyan.cyano.uk:server fail,i.rong.moe:server fail,prcups.krgm.moe:server fail];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[]
+X-Rspamd-Action: no action
 
-All IMG Rogue GPUs include a reset line that participates in the
-power-up sequence. On some SoCs (e.g., T-Head TH1520 and Banana Pi
-BPI-F3), this reset line is exposed and must be driven explicitly to
-ensure proper initialization.  On others, such as the currently
-supported TI SoC, the reset logic is handled in hardware or firmware
-without exposing the line directly. In platforms where the reset line is
-externally accessible, if it is not driven correctly, the GPU may remain
-in an undefined state, leading to instability or performance issues.
+MECHREVO Wujie 14XA (GX4HRXL) wakes up immediately after s2idle entry.
+This happens regardless of whether the laptop is plugged into AC power, or
+whether any peripheral is plugged into the laptop.
 
-This commit adds a dedicated reset controller to the drm/imagination
-driver.  By managing the reset line (where applicable) as part of normal
-GPU bring-up, the driver ensures reliable initialization across
-platforms regardless of whether the reset is controlled externally or
-handled internally.
+Using `amd_s2idle.py --debug-ec', we found that the laptop has a wakeup
+event triggered by IRQ 1 (PS/2 Controller) and IRQ 9 (ACPI SCI), and was
+eventually woken up by IRQ 9. Taking a look at `dmesg', we found that the
+EC was quite chatty after s2idle entry:
 
-Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+[ 1842.317151] PM: suspend-to-idle
+[ 1842.317178] ACPI: EC: ACPI EC GPE status set
+[ 1842.317184] ACPI: EC: IRQ (5)
+[ 1842.317190] ACPI: EC: EC_SC(R) = 0x28 SCI_EVT=1 BURST=0 CMD=1 IBF=0 OBF=0
+[ 1842.317196] ACPI: EC: Polling enabled
+[ 1842.317198] ACPI: EC: Command(QR_EC) submitted/blocked
+[ 1842.317202] ACPI: EC: ACPI EC GPE dispatched
+[ 1842.317248] ACPI: EC: Event started
+[ 1842.317259] ACPI: EC: 2: Increase command
+[ 1842.317264] ACPI: EC: Command(QR_EC) started
+[ 1842.317271] ACPI: EC: TASK (14)
+[ 1842.317288] ACPI: EC: EC_SC(R) = 0x28 SCI_EVT=1 BURST=0 CMD=1 IBF=0 OBF=0
+[ 1842.317294] ACPI: EC: EC_SC(W) = 0x84
+[ 1842.317303] ACPI: EC: TASK (14)
+[ 1842.317324] ACPI: EC: EC_SC(R) = 0x2a SCI_EVT=1 BURST=0 CMD=1 IBF=1 OBF=0
+[ 1842.317329] ACPI: EC: TASK (14)
+[ 1842.317336] ACPI: EC: EC_SC(R) = 0x2a SCI_EVT=1 BURST=0 CMD=1 IBF=1 OBF=0
+
+[...]
+
+[ 1842.317399] ACPI: EC: EC_SC(R) = 0x28 SCI_EVT=1 BURST=0 CMD=1 IBF=0 OBF=0
+[ 1842.317405] ACPI: EC: TASK (14)
+[ 1842.317412] ACPI: EC: EC_SC(R) = 0x28 SCI_EVT=1 BURST=0 CMD=1 IBF=0 OBF=0
+[ 1842.317418] ACPI: EC: TASK (14)
+[ 1842.317425] ACPI: EC: EC_SC(R) = 0x29 SCI_EVT=1 BURST=0 CMD=1 IBF=0 OBF=1
+[ 1842.317432] ACPI: EC: EC_DATA(R) = 0x7b
+[ 1842.317436] ACPI: EC: Command(QR_EC) unblocked
+[ 1842.317445] ACPI: EC: Polling quirk
+[ 1842.317448] ACPI: EC: TASK (14)
+[ 1842.317455] ACPI: EC: EC_SC(R) = 0x28 SCI_EVT=1 BURST=0 CMD=1 IBF=0 OBF=0
+[ 1842.317463] ACPI: EC: Polling enabled
+[ 1842.317466] ACPI: EC: Command(QR_EC) submitted/blocked
+[ 1842.317469] ACPI: EC: Polling disabled
+[ 1842.317472] ACPI: EC: Command(QR_EC) completed by hardware
+[ 1842.317476] ACPI: EC: Command(QR_EC) stopped
+[ 1842.317480] ACPI: EC: 1: Decrease command
+[ 1842.317484] ACPI: EC: Query(0x7b) scheduled
+[ 1842.317495] ACPI: EC: 2: Increase command
+[ 1842.317499] ACPI: EC: Command(QR_EC) started
+[ 1842.317504] ACPI: EC: TASK (14)
+[ 1842.317516] ACPI: EC: EC_SC(R) = 0x08 SCI_EVT=0 BURST=0 CMD=1 IBF=0 OBF=0
+[ 1842.317521] ACPI: EC: EC_SC(W) = 0x84
+[ 1842.317529] ACPI: EC: TASK (14)
+[ 1842.317537] ACPI: EC: EC_SC(R) = 0x0a SCI_EVT=0 BURST=0 CMD=1 IBF=1 OBF=0
+[ 1842.317543] ACPI: EC: TASK (14)
+[ 1842.317550] ACPI: EC: EC_SC(R) = 0x0a SCI_EVT=0 BURST=0 CMD=1 IBF=1 OBF=0
+[ 1842.317555] ACPI: EC: TASK (14)
+
+[...]
+
+[ 1842.317638] ACPI: EC: EC_SC(R) = 0x08 SCI_EVT=0 BURST=0 CMD=1 IBF=0 OBF=0
+[ 1842.317643] ACPI: EC: TASK (14)
+[ 1842.317650] ACPI: EC: EC_SC(R) = 0x08 SCI_EVT=0 BURST=0 CMD=1 IBF=0 OBF=0
+[ 1842.317656] ACPI: EC: TASK (14)
+[ 1842.317663] ACPI: EC: EC_SC(R) = 0x09 SCI_EVT=0 BURST=0 CMD=1 IBF=0 OBF=1
+[ 1842.317670] ACPI: EC: EC_DATA(R) = 0x00
+[ 1842.317674] ACPI: EC: Command(QR_EC) unblocked
+[ 1842.317682] ACPI: EC: Polling quirk
+[ 1842.317685] ACPI: EC: TASK (14)
+[ 1842.317692] ACPI: EC: EC_SC(R) = 0x08 SCI_EVT=0 BURST=0 CMD=1 IBF=0 OBF=0
+[ 1842.317697] ACPI: EC: Polling disabled
+[ 1842.317700] ACPI: EC: Command(QR_EC) completed by hardware
+[ 1842.317704] ACPI: EC: Command(QR_EC) stopped
+[ 1842.317707] ACPI: EC: 1: Decrease command
+[ 1842.317711] ACPI: EC: Event stopped
+[ 1842.317723] ACPI: EC: Query(0x7b) started
+[ 1842.318142] ACPI: EC: Query(0x7b) stopped
+[ 1842.318150] ACPI: EC: ACPI EC work flushed
+[ 1842.318158] ACPI: PM: Rearming ACPI SCI for wakeup
+[ 1842.318169] amd_pmc: SMU idlemask s0i3: 0x1ffb3ebd
+[ 1842.318193] PM: Triggering wakeup from IRQ 9
+[ 1842.318244] ACPI: EC: ACPI EC GPE status set
+[ 1842.318249] ACPI: EC: IRQ (5)
+[ 1842.318254] ACPI: EC: EC_SC(R) = 0x08 SCI_EVT=0 BURST=0 CMD=1 IBF=0 OBF=0
+[ 1842.318263] ACPI: PM: Rearming ACPI SCI for wakeup
+
+I'm not quite sure what the EC was during this time. As
+`acpi.ec_no_wakeup=1' works around this issue, I believe that the EC had
+for some reason caused the system to wake up.
+
+Browsing the source code, I found that in `drivers/acpi/ec.c',
+`struct dmi_system_id acpi_ec_no_wakeup[]' records a few machines with
+incorrect suspend behaviors caused by EC wakeup.
+
+As this struct corresponds to a series of machines that needs
+`acpi.ec_no_wakeup' enabled by default, add GX4HRXL to this struct. Note
+that I have only matched the motherboard model, as MECHREVO is a "white
+label" manufacturer using commonly used chassis and motherboards - GX4HRXL
+may be found in a variety of laptops sold under different brands and model
+names.
+
+Since the reason behind this EC wakeup is not yet clear to me, I'm sending
+this patch in hope of getting more comments and guidance on how to further
+debug this issue.
+
+Suggested-by: Mingcong Bai <jeffbai@aosc.io>
+Link: https://zhuanlan.zhihu.com/p/730538041
+Tested-by: Yemu Lu <prcups@krgm.moe>
+Co-developed-by: Xinhui Yang <cyan@cyano.uk>
+Signed-off-by: Xinhui Yang <cyan@cyano.uk>
+Co-developed-by: Rong Zhang <i@rong.moe>
+Signed-off-by: Rong Zhang <i@rong.moe>
+Signed-off-by: Runhua He <hua@aosc.io>
 ---
- drivers/gpu/drm/imagination/pvr_device.c | 21 +++++++++++++++++++++
- drivers/gpu/drm/imagination/pvr_device.h |  9 +++++++++
- drivers/gpu/drm/imagination/pvr_power.c  | 22 +++++++++++++++++++++-
- 3 files changed, 51 insertions(+), 1 deletion(-)
+ drivers/acpi/ec.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/imagination/pvr_device.c b/drivers/gpu/drm/imagination/pvr_device.c
-index 1704c0268589bdeb65fa6535f9ec63182b0a3e94..ef73e95157eeb127f3d7543d77f82242d01a2d43 100644
---- a/drivers/gpu/drm/imagination/pvr_device.c
-+++ b/drivers/gpu/drm/imagination/pvr_device.c
-@@ -25,6 +25,7 @@
- #include <linux/interrupt.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/reset.h>
- #include <linux/slab.h>
- #include <linux/stddef.h>
- #include <linux/types.h>
-@@ -120,6 +121,21 @@ static int pvr_device_clk_init(struct pvr_device *pvr_dev)
- 	return 0;
- }
+diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
+index 3c5f34892..19f1d36a5 100644
+--- a/drivers/acpi/ec.c
++++ b/drivers/acpi/ec.c
+@@ -2329,6 +2329,12 @@ static const struct dmi_system_id acpi_ec_no_wakeup[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "83Q3"),
+ 		}
+ 	},
++	{
++		/* MECHREVO Wujie 14 Series (GX4HRXL) */
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GX4HRXL"),
++		}
++	},
+ 	{ },
+ };
  
-+static int pvr_device_reset_init(struct pvr_device *pvr_dev)
-+{
-+	struct drm_device *drm_dev = from_pvr_device(pvr_dev);
-+	struct reset_control *reset;
-+
-+	reset = devm_reset_control_get_optional_exclusive(drm_dev->dev, NULL);
-+	if (IS_ERR(reset))
-+		return dev_err_probe(drm_dev->dev, PTR_ERR(reset),
-+				     "failed to get gpu reset line\n");
-+
-+	pvr_dev->reset = reset;
-+
-+	return 0;
-+}
-+
- /**
-  * pvr_device_process_active_queues() - Process all queue related events.
-  * @pvr_dev: PowerVR device to check
-@@ -509,6 +525,11 @@ pvr_device_init(struct pvr_device *pvr_dev)
- 	if (err)
- 		return err;
- 
-+	/* Get the reset line for the GPU */
-+	err = pvr_device_reset_init(pvr_dev);
-+	if (err)
-+		return err;
-+
- 	/* Explicitly power the GPU so we can access control registers before the FW is booted. */
- 	err = pm_runtime_resume_and_get(dev);
- 	if (err)
-diff --git a/drivers/gpu/drm/imagination/pvr_device.h b/drivers/gpu/drm/imagination/pvr_device.h
-index 6d0dfacb677b46a880f37f419dfa7b67c68fe63d..f6576c08111c86f2a771dfe99b5518795b6aead7 100644
---- a/drivers/gpu/drm/imagination/pvr_device.h
-+++ b/drivers/gpu/drm/imagination/pvr_device.h
-@@ -131,6 +131,15 @@ struct pvr_device {
- 	 */
- 	struct clk *mem_clk;
- 
-+	/**
-+	 * @reset: Optional reset line.
-+	 *
-+	 * This may be used on some platforms to provide a reset line that needs to be de-asserted
-+	 * after power-up procedure. It would also need to be asserted after the power-down
-+	 * procedure.
-+	 */
-+	struct reset_control *reset;
-+
- 	/** @irq: IRQ number. */
- 	int irq;
- 
-diff --git a/drivers/gpu/drm/imagination/pvr_power.c b/drivers/gpu/drm/imagination/pvr_power.c
-index ba7816fd28ec77e6ca5ce408302a413ce1afeb6e..5944645bf1b2f5ba6c954a841d85d043db171c4b 100644
---- a/drivers/gpu/drm/imagination/pvr_power.c
-+++ b/drivers/gpu/drm/imagination/pvr_power.c
-@@ -15,6 +15,7 @@
- #include <linux/mutex.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/reset.h>
- #include <linux/timer.h>
- #include <linux/types.h>
- #include <linux/workqueue.h>
-@@ -252,6 +253,8 @@ pvr_power_device_suspend(struct device *dev)
- 	clk_disable_unprepare(pvr_dev->sys_clk);
- 	clk_disable_unprepare(pvr_dev->core_clk);
- 
-+	err = reset_control_assert(pvr_dev->reset);
-+
- err_drm_dev_exit:
- 	drm_dev_exit(idx);
- 
-@@ -282,16 +285,33 @@ pvr_power_device_resume(struct device *dev)
- 	if (err)
- 		goto err_sys_clk_disable;
- 
-+	/*
-+	 * According to the hardware manual, a delay of at least 32 clock
-+	 * cycles is required between de-asserting the clkgen reset and
-+	 * de-asserting the GPU reset. Assuming a worst-case scenario with
-+	 * a very high GPU clock frequency, a delay of 1 microsecond is
-+	 * sufficient to ensure this requirement is met across all
-+	 * feasible GPU clock speeds.
-+	 */
-+	udelay(1);
-+
-+	err = reset_control_deassert(pvr_dev->reset);
-+	if (err)
-+		goto err_mem_clk_disable;
-+
- 	if (pvr_dev->fw_dev.booted) {
- 		err = pvr_power_fw_enable(pvr_dev);
- 		if (err)
--			goto err_mem_clk_disable;
-+			goto err_reset_assert;
- 	}
- 
- 	drm_dev_exit(idx);
- 
- 	return 0;
- 
-+err_reset_assert:
-+	reset_control_assert(pvr_dev->reset);
-+
- err_mem_clk_disable:
- 	clk_disable_unprepare(pvr_dev->mem_clk);
- 
-
 -- 
-2.34.1
+2.49.0
 
