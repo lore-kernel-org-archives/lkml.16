@@ -1,121 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65A023537B;
-	Fri, 18 Apr 2025 20:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7424F2A1C9;
+	Fri, 18 Apr 2025 20:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745007521; cv=none; b=rmoZKHsIQcltQXhSOxCpnpJybNdYz0NvnpCSP0A9UuORJ+Hm4LYt9DwO7eNXP+nfpcjQ7I3ESRF7LSj7e+X2zSbXDndAoD9DUJFfQjIsurOrfsYMxe6tpmvjKo6IGUijw4nwLvcA8E2kUbGbFfs1OIajE5RCHCNO1RzsFeM06sA=
+	t=1745007521; cv=none; b=Qt20eBUowZvegcdjvyu2Hg8qNWZNr+BGyKHbgdjI08eGkYqjwZqZtHM+m6DRQ/8QQVh/p/Tcm7kBv1CQZYCDikCy3qv07jL+o2zLFhM24RhiElPGx24RQHHrBrGG2cIzGhZr8EpOHAUalhrHrPUT6QY40GaHfDh+4KsnUi5bHvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745007521; c=relaxed/simple;
-	bh=rxntnv7lHwgv2GqchMX8dNKK+O/aKvl05mNSqeL6/zY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G6rwVr0haUCZstCxlcqzeiH2bASQXIluU71hXBywmRwVWGPZSdtdBjFZUcUQBVzXk45otsrQ0uTTJCMHbdwb1DIyJHc28rYNc4HezT2nrkX7ZeSx9BfN9c7U98pHy67QsFSz4W9kq7i63s0U6i1z84rlMQD4OVbad2pIDgW5LJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=poBR87CH; arc=none smtp.client-ip=10.30.226.201
+	bh=c8nxojaQOgQcyXY1gD2OR0f7FP2pwNRSCMcMPyqrfEA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dLYDa6Bf4zkBDCABDSa+mEKd4Oc+0kpiDr+TLt6Q0JtjLKeXsnJd8soiv9lRozAZvXyGMn7rGxS0iAW7lLMiIME0ZIoskpBSrUSKAjniH9L/bsQkKceKYWAHol3+dValmWTM09Ic3b1TzNCBTjiZJXfDr/6ATLm7bDwm+KLBAnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=C4Hwted9; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="poBR87CH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A330C4CEE2;
-	Fri, 18 Apr 2025 20:18:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745007520;
-	bh=rxntnv7lHwgv2GqchMX8dNKK+O/aKvl05mNSqeL6/zY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=poBR87CHkAjkgL3D8LThtMdByTrTRF3QKMEntMJPrCbL4wLijzAYrJOHRF6mqtv2J
-	 C7oiNXesKPuNj1rfmKwYDFmmVkjqawYgyO3zDPNuPde2PkY1fAvguHahqNoYE4R0mk
-	 vmHQ8R1g+gDeUBlmoelzs0fMJ5B/HbFK9fenLpaz5tydYFFjZfzDQkhrGhmx69fosJ
-	 KnYsXS1JCm1LXDsjmtDImOtRZRgPSHyDb4YL/0v2XTHHr83PPeN+QWbUb/ux+WTqXI
-	 AYqccEegvBpnfWyY97RNNxEcylLg4OV7f8NZPLNt42ryhzR7sihHxV8WA7Xm/Ary7D
-	 pv7LnHlwbglhA==
-From: SeongJae Park <sj@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	stable@vger.kernel.org,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	hargar@microsoft.com,
-	broonie@kernel.org,
-	damon@lists.linux.dev
-Subject: Re: [PATCH 6.12 000/392] 6.12.24-rc2 review
-Date: Fri, 18 Apr 2025 13:18:37 -0700
-Message-Id: <20250418201838.69125-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250418110359.237869758@linuxfoundation.org>
-References: 
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="C4Hwted9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=QwFKe2ISZRDD95Kaksh0NVFyftzgKAb4kAfOTZyXfEY=; b=C4Hwted9QqiCwBlRns8C6ZEFw/
+	tIIAU0L98GYbB6GCZr21h9IL/Qwu0SLqQSVk2ZQa8OcCU7ugu5bcerksfMNb19KVO8uHnw3ZWNkYd
+	hQIWV2G3n0bwhnJJMoreBk8hlXEd9WJV8kE5H6WAjPg063RVGpDIU5JZYkEFuBQ2gI94=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u5sAI-009w9h-4G; Fri, 18 Apr 2025 22:18:22 +0200
+Date: Fri, 18 Apr 2025 22:18:22 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 net-next 3/8] mfd: Add Microchip ZL3073x support
+Message-ID: <5a360c39-405c-4108-9800-0f71307804a0@lunn.ch>
+References: <20250416162144.670760-1-ivecera@redhat.com>
+ <20250416162144.670760-4-ivecera@redhat.com>
+ <8fc9856a-f2be-4e14-ac15-d2d42efa9d5d@lunn.ch>
+ <CAAVpwAsw4-7n_iV=8aXp7=X82Mj7M-vGAc3f-fVbxxg0qgAQQA@mail.gmail.com>
+ <894d4209-4933-49bf-ae4c-34d6a5b1c9f1@lunn.ch>
+ <03afdbe9-8f55-4e87-bec4-a0e69b0e0d86@redhat.com>
+ <eb4b9a30-0527-4fa0-b3eb-c886da31cc80@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb4b9a30-0527-4fa0-b3eb-c886da31cc80@redhat.com>
 
-Hello,
+> > > Anyway, look around. How many other MFD, well actually, any sort of
+> > > driver at all, have a bunch of low level helpers as inline functions
+> > > in a header? You are aiming to write a plain boring driver which looks
+> > > like every other driver in Linux....
+> > 
+> > Well, I took inline functions approach as this is safer than macro usage
+> > and each register have own very simple implementation with type and
+> > range control (in case of indexed registers).
 
-On Fri, 18 Apr 2025 13:05:08 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+Sorry, i was a bit ambiguous. Why inline? Why not just plain
+functions. Are there lots of other drivers with a large number of
+inline functions? No. inline functions are typically only used for
+stubs when code is not being built due to CONFIG_ settings.
 
-> This is the start of the stable review cycle for the 6.12.24 release.
-> There are 392 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 20 Apr 2025 11:02:42 +0000.
-> Anything received after that time might be too late.
-
-This rc kernel passes DAMON functionality test[1] on my test machine.
-Attaching the test results summary below.  Please note that I retrieved the
-kernel from linux-stable-rc tree[2].
-
-Tested-by: SeongJae Park <sj@kernel.org>
-
-[1] https://github.com/damonitor/damon-tests/tree/next/corr
-[2] 7b7562936f80 ("Linux 6.12.24-rc2")
-
-Thanks,
-SJ
-
-[...]
-
----
-
-ok 9 selftests: damon: damos_tried_regions.py
-ok 10 selftests: damon: damon_nr_regions.py
-ok 11 selftests: damon: reclaim.sh
-ok 12 selftests: damon: lru_sort.sh
-ok 13 selftests: damon: debugfs_empty_targets.sh
-ok 14 selftests: damon: debugfs_huge_count_read_write.sh
-ok 15 selftests: damon: debugfs_duplicate_context_creation.sh
-ok 16 selftests: damon: debugfs_rm_non_contexts.sh
-ok 17 selftests: damon: debugfs_target_ids_read_before_terminate_race.sh
-ok 18 selftests: damon: debugfs_target_ids_pid_leak.sh
-ok 19 selftests: damon: sysfs_update_removed_scheme_dir.sh
-ok 20 selftests: damon: sysfs_update_schemes_tried_regions_hang.py
-ok 1 selftests: damon-tests: kunit.sh
-ok 2 selftests: damon-tests: huge_count_read_write.sh
-ok 3 selftests: damon-tests: buffer_overflow.sh
-ok 4 selftests: damon-tests: rm_contexts.sh
-ok 5 selftests: damon-tests: record_null_deref.sh
-ok 6 selftests: damon-tests: dbgfs_target_ids_read_before_terminate_race.sh
-ok 7 selftests: damon-tests: dbgfs_target_ids_pid_leak.sh
-ok 8 selftests: damon-tests: damo_tests.sh
-ok 9 selftests: damon-tests: masim-record.sh
-ok 10 selftests: damon-tests: build_i386.sh
-ok 11 selftests: damon-tests: build_arm64.sh # SKIP
-ok 12 selftests: damon-tests: build_m68k.sh # SKIP
-ok 13 selftests: damon-tests: build_i386_idle_flag.sh
-ok 14 selftests: damon-tests: build_i386_highpte.sh
-ok 15 selftests: damon-tests: build_nomemcg.sh
- [33m
- [92mPASS [39m
+	Andrew
