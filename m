@@ -1,154 +1,174 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mta-64-226.siemens.flowmailer.net (mta-64-226.siemens.flowmailer.net [185.136.64.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E72D8C0E;
-	Fri, 18 Apr 2025 07:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7250B1DF728
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 07:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744961362; cv=none; b=p8vqzjZRHpM/CIKLKZSmO45OBCD2acQfdKFtt/jwrjVyVOUKSWjk5Ekd092DpKIH5C5p5hZQn27XqcoJysQMcbYR2T1tnUAQNe+s9iElxTSyvgb6L+UDBWk1wEtbIwb+Kd8pyH+EpUxBFKCfz1NsO9JwJTbroy0ESxdn9hfKp94=
+	t=1744961457; cv=none; b=uIHsLuBBL4VBRN61xcmQndMx1HhcLtgJ0dSTD2tvrokF36NhZrr2h3AUoHOWNYtCekbBRmROFKkDoCW+4DHojk9+K0RMynLiso7Un8PGx8zK4QkRNM15U4stq32Q/Wfjc0cKHFdT9DtEGEtVP7mkJoHYHpvX7rHrWp0Qs+0rwAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744961362; c=relaxed/simple;
-	bh=49VNuVmkw9o4pRlMwp2CRvW5yS2aKlA6AGaF1i69I+0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=CWwUtIZJ38TeDBYIvNM8PDea/5p6Lhty1epv2cEfTRvUYonnpdOpqVF0a1ii44CDUxyU/zO77iHKx43FSO17oY7hW9RQ6GeMMge31yYPrc9VSi5LgTcSnuS11NO3uXAj9MLaVYz5kdFm/crOjP2wgRoirpsXAXuDChK8gQ5nPEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nmF1F4xI; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744961457; c=relaxed/simple;
+	bh=sDuL54bxRzWLzgXxGkEyqYadhdvtvR5+FkceDXRk6+c=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QV+xQJPl+KD779DIhR29FmGG9qj2Sg73AHUBIDAdgpceXX4imKokyRernYhnBiF1p5fVQ8KAKjfLxHVL7HRy03WfFY/MYVNT35H1U9SEK3+qmHFxuHM5PKrIxVql5TG5u3iy3VTLd8ryY6PVt40TTTJXI73MSssZR1NBASzzZ8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b=eLkDR0Mk; arc=none smtp.client-ip=185.136.64.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nmF1F4xI"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53I1f3mY001224;
-	Fri, 18 Apr 2025 07:29:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	E6kfTTUe2SJkB4ocesJpwtBEmUKPSMD3W1XeWivw2/I=; b=nmF1F4xIxhQm0hyJ
-	XbY1M3Sad6aol6BszePs/4QkBJCG9tNCfMhZcpEK8ffckihH00Vtb9Oz11HiWCm7
-	YQSMP149nsPcu/6VMvQIXqz/a03PASFoVwIw6S4uHnfEBWNnDBBOwrvbhla7Ivca
-	OFwpLbWJzhyn3hcXLD6cg9dRNqCzwl+PMFKvHEReioOsGq3nSY1RXJFj8ZFlcNwy
-	Jm9T6XfaoEekrO6zP4m7d+m8pxT94037+Tk7kyp6DEm8lDW/j0YoNjNm8rtpkRBv
-	e102n4bghR289babDy+ndzt/6nIjowoQDzW0tfx5eeYtUQfgZhUXnxBqlHAtePfC
-	/LllWA==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ydvjhjth-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 18 Apr 2025 07:29:05 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53I7T4e7024662
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 18 Apr 2025 07:29:04 GMT
-Received: from [10.216.47.89] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 18 Apr
- 2025 00:28:57 -0700
-Message-ID: <7fd92093-3efc-4f24-967d-7e267162b26d@quicinc.com>
-Date: Fri, 18 Apr 2025 12:58:53 +0530
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b="eLkDR0Mk"
+Received: by mta-64-226.siemens.flowmailer.net with ESMTPSA id 20250418073045ed07053b6817d3af98
+        for <linux-kernel@vger.kernel.org>;
+        Fri, 18 Apr 2025 09:30:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=huaqian.li@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=7Bm7s0x8m0xotm+8whhHLpDbeWch2/Mvszm5ppknXlk=;
+ b=eLkDR0MkESiN1rZ99/QJB8Fet6JhgMZHVTes3IMqMLf4cLxYAiG838DZ3h91WyUIKuf/Do
+ UhLvTgh8UvbzL01eIqh2j5ejB01+jjdetmhyVzhZkvZX8aMPqWNUBTMZpSGYhLIv8VIS4Ygi
+ b0Itn9GAegOodXYlaBm+PbghGP5NccKktmtVbD7g70UAMFYj2T/Qspd35VxU0lpFTfi6kaBe
+ qjeLmQ3Af17LpkK8CSz9YJbSocAzHHDEaBMJlKvIXk5e59n2tP3GgbFOFaOkaan7vr3/6Zt+
+ 0/nMqHLnneFqJHHS5HNHiW0/7JhDpxRg5zbuV/RY70KgCVpOOPY1kJZg==;
+From: huaqian.li@siemens.com
+To: helgaas@kernel.org,
+	m.szyprowski@samsung.com,
+	robin.murphy@arm.com
+Cc: baocheng.su@siemens.com,
+	bhelgaas@google.com,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	diogo.ivo@siemens.com,
+	huaqian.li@siemens.com,
+	jan.kiszka@siemens.com,
+	kristo@kernel.org,
+	krzk+dt@kernel.org,
+	kw@linux.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	lpieralisi@kernel.org,
+	nm@ti.com,
+	robh@kernel.org,
+	s-vadapalli@ti.com,
+	ssantosh@kernel.org,
+	vigneshr@ti.com,
+	iommu@lists.linux.dev
+Subject: [PATCH v7 0/8] soc: ti: Add and use PVU on K3-AM65 for DMA isolation
+Date: Fri, 18 Apr 2025 15:30:18 +0800
+Message-Id: <20250418073026.2418728-1-huaqian.li@siemens.com>
+In-Reply-To: <20241030205703.GA1219329@bhelgaas>
+References: <20241030205703.GA1219329@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] arm64: dts: qcom: sa8775p: Add support for camss
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <rfoss@kernel.org>,
-        <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
-        <mchehab@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <hverkuil-cisco@xs4all.nl>,
-        <cros-qcom-dts-watchers@chromium.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-media@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Suresh Vankadara <quic_svankada@quicinc.com>
-References: <20250210155605.575367-1-quic_vikramsa@quicinc.com>
- <20250210155605.575367-3-quic_vikramsa@quicinc.com>
- <65663927-cc11-4810-8714-7600786f299b@oss.qualcomm.com>
-Content-Language: en-US
-From: Vikram Sharma <quic_vikramsa@quicinc.com>
-In-Reply-To: <65663927-cc11-4810-8714-7600786f299b@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=ZIrXmW7b c=1 sm=1 tr=0 ts=6801ff41 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=7gLDDzRWUVhiidtGMTcA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: NFa8SKs0Fzf1ME-yH9sPgRCfNjok_44g
-X-Proofpoint-ORIG-GUID: NFa8SKs0Fzf1ME-yH9sPgRCfNjok_44g
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-18_02,2025-04-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0 mlxlogscore=936
- spamscore=0 impostorscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504180053
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-959203:519-21489:flowmailer
+
+From: Li Hua Qian <huaqian.li@siemens.com>
+
+Changes in v7:
+ - add schema expressing dependency as suggested on pci-host bindings
+ - resolve review comments on pci-keystone driver
+ - add a new patch to make IO_TLB_SEGSIZE configurable
+ - improve patches based on checkpath.pl
+
+Changes in v6:
+ - make restricted DMA memory-region available to all pci-keystone
+   devices, moving property to unconditional section (patch 2)
+
+Changes in v5:
+ - resolve review comments on pci-host bindings
+ - reduce DMA memory regions to 1 - swiotlb does not support more
+ - move activation into overlay (controlled via firmware)
+ - use ks_init_vmap helper instead of loop in
+   rework ks_init_restricted_dma
+ - add more comments to pci-keystone
+ - use 2 chained TLBs of PVU to support maximum of swiotlb (320 MB)
+
+Changes in v4:
+ - reorder patch queue, moving all DTS changes to the back
+ - limit activation to IOT2050 Advanced variants
+ - move DMA pool to allow firmware-based expansion it up to 512M
+
+Changes in v3:
+ - fix ti,am654-pvu.yaml according to review comments
+ - address review comments on ti,am65-pci-host.yaml
+ - differentiate between different compatibles in ti,am65-pci-host.yaml
+ - move pvu nodes to k3-am65-main.dtsi
+ - reorder patch series, pulling bindings and generic DT bits to the front
+
+Changes in v2:
+ - fix dt_bindings_check issues (patch 1)
+ - address first review comments (patch 2)
+ - extend ti,am65-pci-host bindings for PVU (new patch 3)
+
+Only few of the K3 SoCs have an IOMMU and, thus, can isolate the system
+against DMA-based attacks of external PCI devices. The AM65 is without
+an IOMMU, but it comes with something close to it: the Peripheral
+Virtualization Unit (PVU).
+
+The PVU was originally designed to establish static compartments via a
+hypervisor, isolate those DMA-wise against each other and the host and
+even allow remapping of guest-physical addresses. But it only provides
+a static translation region, not page-granular mappings. Thus, it cannot
+be handled transparently like an IOMMU.
+
+Now, to use the PVU for the purpose of isolated PCI devices from the
+Linux host, this series takes a different approach. It defines a
+restricted-dma-pool for the PCI host, using swiotlb to map all DMA
+buffers from a static memory carve-out. And to enforce that the devices
+actually follow this, a special PVU soc driver is introduced. The driver
+permits access to the GIC ITS and otherwise waits for other drivers that
+detect devices with constrained DMA to register pools with the PVU.
+
+For the AM65, the first (and possibly only) driver where this is
+introduced is the pci-keystone host controller. Finally, this series
+provides a DT overlay for the IOT2050 Advanced devices (all have
+MiniPCIe or M.2 extension slots) to make use of this protection scheme.
+Application of this overlay will be handled by firmware.
+
+Due to the cross-cutting nature of these changes, multiple subsystems
+are affected. However, I wanted to present the whole thing in one series
+to allow everyone to review with the complete picture in hands. If
+preferred, I can also split the series up, of course.
+
+Jan
 
 
-On 4/14/2025 7:18 PM, Konrad Dybcio wrote:
-> On 2/10/25 4:56 PM, Vikram Sharma wrote:
->> Add changes to support the camera subsystem on the SA8775P.
->>
->> Co-developed-by: Suresh Vankadara <quic_svankada@quicinc.com>
->> Signed-off-by: Suresh Vankadara <quic_svankada@quicinc.com>
->> Signed-off-by: Vikram Sharma <quic_vikramsa@quicinc.com>
->> ---
-> [...]
->
->> +			interrupts = <GIC_SPI 565 IRQ_TYPE_EDGE_RISING>,
->> +				     <GIC_SPI 564 IRQ_TYPE_EDGE_RISING>,
->> +				     <GIC_SPI 468 IRQ_TYPE_EDGE_RISING>,
->> +				     <GIC_SPI 359 IRQ_TYPE_EDGE_RISING>,
->> +				     <GIC_SPI 759 IRQ_TYPE_EDGE_RISING>,
-> 760> +				     <GIC_SPI 758 IRQ_TYPE_EDGE_RISING>,
+Jan Kiszka (7):
+  dt-bindings: soc: ti: Add AM65 peripheral virtualization unit
+  dt-bindings: PCI: ti,am65: Extend for use with PVU
+  soc: ti: Add IOMMU-like PVU driver
+  PCI: keystone: Add support for PVU-based DMA isolation on AM654
+  arm64: dts: ti: k3-am65-main: Add PVU nodes
+  arm64: dts: ti: k3-am65-main: Add VMAP registers to PCI root complexes
+  arm64: dts: ti: iot2050: Add overlay for DMA isolation for devices
+    behind PCI RC
 
-Hi Konrad,
+Li Hua Qian (1):
+  swiotlb: Make IO_TLB_SEGSIZE configurable
 
-We cross checked internal documents to confirm IRQ number for 
-csid_lite2/3 and vfe_lite2/3
-Calculation for IRQ number is done with respect to vector number as
-irq_num = (vector - 32).
-csid_lite2 vector -> 791
-csid_lite3 vector -> 790
-vfe_lite2  vector -> 793
-vfe_lite3  vector -> 792
+ .../bindings/pci/ti,am65-pci-host.yaml        |  34 +-
+ .../bindings/soc/ti/ti,am654-pvu.yaml         |  51 ++
+ arch/arm64/boot/dts/ti/Makefile               |   5 +
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi      |  38 +-
+ ...am6548-iot2050-advanced-dma-isolation.dtso |  33 ++
+ drivers/pci/controller/dwc/pci-keystone.c     | 106 ++++
+ drivers/soc/ti/Kconfig                        |   4 +
+ drivers/soc/ti/Makefile                       |   1 +
+ drivers/soc/ti/ti-pvu.c                       | 500 ++++++++++++++++++
+ include/linux/swiotlb.h                       |   2 +-
+ include/linux/ti-pvu.h                        |  28 +
+ kernel/dma/Kconfig                            |   7 +
+ 12 files changed, 801 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,am654-pvu.yaml
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-dma-isolation.dtso
+ create mode 100644 drivers/soc/ti/ti-pvu.c
+ create mode 100644 include/linux/ti-pvu.h
 
-thus irqs are as
-csid_lite2 -> 759
-csid_lite3 -> 758
-vfe_lite2  -> 761
-vfe_lite3  -> 760
-
-Please let me know if this looks fine to you?
-
->
-> 759
->
->> +				     <GIC_SPI 604 IRQ_TYPE_EDGE_RISING>,
->> +				     <GIC_SPI 477 IRQ_TYPE_EDGE_RISING>,
->> +				     <GIC_SPI 478 IRQ_TYPE_EDGE_RISING>,
->> +				     <GIC_SPI 479 IRQ_TYPE_EDGE_RISING>,
->> +				     <GIC_SPI 448 IRQ_TYPE_EDGE_RISING>,
->> +				     <GIC_SPI 545 IRQ_TYPE_EDGE_RISING>,
->> +				     <GIC_SPI 546 IRQ_TYPE_EDGE_RISING>,
->> +				     <GIC_SPI 547 IRQ_TYPE_EDGE_RISING>,
->> +				     <GIC_SPI 465 IRQ_TYPE_EDGE_RISING>,
->> +				     <GIC_SPI 467 IRQ_TYPE_EDGE_RISING>,
->> +				     <GIC_SPI 469 IRQ_TYPE_EDGE_RISING>,
->> +				     <GIC_SPI 360 IRQ_TYPE_EDGE_RISING>,
->> +				     <GIC_SPI 761 IRQ_TYPE_EDGE_RISING>,
-> 762
->
->> +				     <GIC_SPI 760 IRQ_TYPE_EDGE_RISING>,
-> 761
->
-> Konrad
-
-Best Regards,
-
-Vikram
+-- 
+2.34.1
 
