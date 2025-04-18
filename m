@@ -1,125 +1,154 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D294822D4E3
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 21:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D3141760;
+	Fri, 18 Apr 2025 21:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745012340; cv=none; b=PA36mONEaY3HL9WVPWfxOXYzLqJ+tLPnTA2oieOWxE4+1RablM6LItwV1Qcf9Xd0sreTA88Vgatm4JOTRzvVAeRFuQ+rlqbY+Ng80z1WxWydHKcGN2O4vZuJyMuM1ZDyKhRNnaeEAmuJAK0vHcDXWdLx080BFLSZVxjyQVhVppA=
+	t=1745012364; cv=none; b=pphn8enxvvdTTYQhYeIeQ3S88jcVayEVGsvB7OjmY0nVpX4ZM4SUVgZqcVIIEhcrusJiIWAkhXRzuhCZweH5gw4upF2FC1tkbFN3XCgRJOc+5Po6qkE1fTh6d2S24gjAYwHOHxNHclB3/TlbKHS6MwQijuxwDg3irVkeLXJVPGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745012340; c=relaxed/simple;
-	bh=akhokAyyxuJx/KmpleZXsSJynmRELlCqLTRjS09IYBY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CxiWbdFz0N+RImsUOpO0UZXktwMkTXgEbAEbQqPm4ZTFcKLvp1firakl2Ue26PtoDpVL6WFnj7JG//cLW3jW8IYqIn0HpaK+VY+jV7DYO1TvIp2Pwg8NT3iZROYJBMsKT36t4JSq4gRIR48QHdqmQ7936YSfo7GTViyYD3aFnoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=EVIjeafT; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1745012364; c=relaxed/simple;
+	bh=Dxddxm0RejabRVjCTL14ao3nM8RrH3k/YV8zdVVdCso=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BgPN8fECWa+fK2V4c1S6Gt4K1PPghNA8RAH8ChoThdUvREQUKfZ7p5InceAF2GIKL6G53XvXg4NTQQ7rUUoHX1n8TdBdvl46nI0Hgpou+e0TJMtpEsSqwqq44KQcoC+JFf+3M6yWGunOs/skZNcWJ4ZXYP/HV8ao6BsrLtQ4PI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2WCddnk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="EVIjeafT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=akho
-	kAyyxuJx/KmpleZXsSJynmRELlCqLTRjS09IYBY=; b=EVIjeafTdhRjdFUigNJA
-	iLVz1CXziirZB6FEnltL4s6gvg3uqsO5j0OpWDlN4wi1bTJHDbRtiPH8cI6IbnA2
-	KB08FFrQ8YYjilvGr+sQfmfnaA6KJ6qAayxVp4SJKoHi2RLZuXaj4BJRPHAgZMQq
-	Vy8XckOcRo1hlGx6fLbStFP96bnJLbtUfb0kBZ3kc7N5rx9vXBxTb06HEP9REGOF
-	d/uXHV5gnQMfluLToKwmAtioSinJMS9Ru1T97fYrYfPTMe1OGC0YCmLMlqIsEsr7
-	+6QwMUwnhBa5LRfffEA8Lrzt/DS3r1gab5hQ8vPBAzF1NiYzmjhCAlvg8WeQFwee
-	Zg==
-Received: (qmail 1538474 invoked from network); 18 Apr 2025 23:38:53 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 18 Apr 2025 23:38:53 +0200
-X-UD-Smtp-Session: l3s3148p1@zMZAWBQz6uEujnsE
-Date: Fri, 18 Apr 2025 23:38:53 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andi Shyti <andi.shyti@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Cosmin Tanislav <demonsingur@gmail.com>, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v9 0/9] misc: Support TI FPC202 dual-port controller
-Message-ID: <aALGbZtz9mN3F7q4@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Cosmin Tanislav <demonsingur@gmail.com>, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>
-References: <20250306-fpc202-v9-0-2779af6780f6@bootlin.com>
- <avat6oilygpkcngtpuyentyvjqifav4f3zzvrtnsdybfl6uqja@i2surd4ywu73>
- <2025041525-smoking-among-4b51@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2WCddnk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B194C4CEE2;
+	Fri, 18 Apr 2025 21:39:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745012364;
+	bh=Dxddxm0RejabRVjCTL14ao3nM8RrH3k/YV8zdVVdCso=;
+	h=From:To:Cc:Subject:Date:From;
+	b=G2WCddnkCUd9nuX4LNZaI9Bc6KvI6JUPHUd7atC1tG4qG8yCRUmD3UBZewEiLJ+cS
+	 tp/eU62QRFVpv+UR2Y5SadYgnWE4h9m2J04MizlxXOFzq098DtDK7MBA+aK2mc96+H
+	 tfbawR1cbyMP7vu6WBeQ2hZNQJOYTIscf3PkJsQJY77JGJuctcfP5fKPWe5A/U39jM
+	 qA8yu+v7E5GksMxIGucwygtHLtyy/+yfVU/7UvBi+eg3Tbbf4//3PEbpKy6NRtCRyR
+	 264rLnzRFaknCTjvmRXOk0mNw7P564ZdWP0NSGSTjhCBrlpEt1jm97yP9Kn2STR45Y
+	 MFgOU73WviJbg==
+From: Kees Cook <kees@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Kees Cook <kees@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	kasan-dev@googlegroups.com,
+	linux-mm@kvack.org,
+	linux-kbuild@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] kbuild: Switch from -Wvla to -Wvla-larger-than=0
+Date: Fri, 18 Apr 2025 14:32:39 -0700
+Message-Id: <20250418213235.work.532-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ou49x9tjXwiyVr2v"
-Content-Disposition: inline
-In-Reply-To: <2025041525-smoking-among-4b51@gregkh>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3972; i=kees@kernel.org; h=from:subject:message-id; bh=Dxddxm0RejabRVjCTL14ao3nM8RrH3k/YV8zdVVdCso=; b=owGbwMvMwCVmps19z/KJym7G02pJDBlMR75tUNcXehp4aNuTF9IufZcazwSYsVpMuhT1SYfV7 DZjXfTDjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIlU6zD8sxcrPZD7z3HyfV5/ l5P7Zidtu6JR9j1/s8OLWSp8sROaOxkZ7tvemrNQJZAjpFqnUJfJSVdjfeDhLfxyf09LOTKE/fv OCwA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
+Variable Length Arrays (VLAs) on the stack must not be used in the kernel.
+Function parameter VLAs[1] should be usable, but -Wvla will warn for
+those. For example, this will produce a warning but it is not using a
+stack VLA:
 
---ou49x9tjXwiyVr2v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+    int something(size_t n, int array[n]) { ...
 
+Clang has no way yet to distinguish between the VLA types[2], so
+depend on GCC for now to keep stack VLAs out of the tree by using GCC's
+-Wvla-larger-than=0 option (though GCC may split -Wvla[3] similarly to
+how Clang is planning to).
 
-> > I had a look at the whole series and looks quite all right to me.
->=20
-> I recommend just taking it all through i2c, thanks.
+Switch to -Wvla-larger-than=0 and adjust the two VLA-checking selftests
+to disable the updated option name.
 
-Okay I applied to i2c/for-next, thanks!
+Link: https://en.cppreference.com/w/c/language/array [1]
+Link: https://github.com/llvm/llvm-project/issues/57098 [2]
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=98217 [3]
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nicolas Schier <nicolas.schier@linux.dev>
+Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
+Cc: Bill Wendling <morbo@google.com>
+Cc: Justin Stitt <justinstitt@google.com>
+Cc: <kasan-dev@googlegroups.com>
+Cc: <linux-mm@kvack.org>
+Cc: <linux-kbuild@vger.kernel.org>
+Cc: <llvm@lists.linux.dev>
+---
+ lib/Makefile               | 2 +-
+ mm/kasan/Makefile          | 2 +-
+ scripts/Makefile.extrawarn | 9 +++++++--
+ 3 files changed, 9 insertions(+), 4 deletions(-)
 
+diff --git a/lib/Makefile b/lib/Makefile
+index f07b24ce1b3f..37b6e5782ecb 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -71,7 +71,7 @@ CFLAGS_test_bitops.o += -Werror
+ obj-$(CONFIG_TEST_SYSCTL) += test_sysctl.o
+ obj-$(CONFIG_TEST_IDA) += test_ida.o
+ obj-$(CONFIG_TEST_UBSAN) += test_ubsan.o
+-CFLAGS_test_ubsan.o += $(call cc-disable-warning, vla)
++CFLAGS_test_ubsan.o += $(call cc-option, -Wno-vla-larger-than)
+ CFLAGS_test_ubsan.o += $(call cc-disable-warning, unused-but-set-variable)
+ UBSAN_SANITIZE_test_ubsan.o := y
+ obj-$(CONFIG_TEST_KSTRTOX) += test-kstrtox.o
+diff --git a/mm/kasan/Makefile b/mm/kasan/Makefile
+index 1a958e7c8a46..0e326116a70b 100644
+--- a/mm/kasan/Makefile
++++ b/mm/kasan/Makefile
+@@ -35,7 +35,7 @@ CFLAGS_shadow.o := $(CC_FLAGS_KASAN_RUNTIME)
+ CFLAGS_hw_tags.o := $(CC_FLAGS_KASAN_RUNTIME)
+ CFLAGS_sw_tags.o := $(CC_FLAGS_KASAN_RUNTIME)
+ 
+-CFLAGS_KASAN_TEST := $(CFLAGS_KASAN) $(call cc-disable-warning, vla)
++CFLAGS_KASAN_TEST := $(CFLAGS_KASAN) $(call cc-option, -Wno-vla-larger-than)
+ ifndef CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX
+ # If compiler instruments memintrinsics by prefixing them with __asan/__hwasan,
+ # we need to treat them normally (as builtins), otherwise the compiler won't
+diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+index d75897559d18..0229b10c5d81 100644
+--- a/scripts/Makefile.extrawarn
++++ b/scripts/Makefile.extrawarn
+@@ -45,8 +45,13 @@ endif
+ # These result in bogus false positives
+ KBUILD_CFLAGS += $(call cc-disable-warning, dangling-pointer)
+ 
+-# Variable Length Arrays (VLAs) should not be used anywhere in the kernel
+-KBUILD_CFLAGS += -Wvla
++# Stack Variable Length Arrays (VLAs) must not be used in the kernel.
++# Function array parameters should, however, be usable, but -Wvla will
++# warn for those. Clang has no way yet to distinguish between the VLA
++# types, so depend on GCC for now to keep stack VLAs out of the tree.
++# https://github.com/llvm/llvm-project/issues/57098
++# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=98217
++KBUILD_CFLAGS += $(call cc-option,-Wvla-larger-than=0)
+ 
+ # disable pointer signed / unsigned warnings in gcc 4.0
+ KBUILD_CFLAGS += -Wno-pointer-sign
+-- 
+2.34.1
 
---ou49x9tjXwiyVr2v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgCxmUACgkQFA3kzBSg
-KbZaOxAAhbVhuhyQYC1gaHi1J0SCUVJJBYZwLmkQ8tc2p4O02kYIgZNO1xumXFai
-RqdZsz6fG1x4RLL61oQCdV7Rm/WQ9rU737de6MjtJ3/vn1EmdNQ9+XgwQ+tvSJbj
-oLFGOusP+BNOZba9IwupE26Tfrl/leFnnWm/lp8//DZGLTgOsRpgmIIWRe6PU91T
-XY7oEJ9T6QseZFbH6O3cGZ7QF56FJ9AVLIVhx8aSa9fz3BJq2gAWmSz8whq+383p
-iF1OLVfIxWq7uHtYJUsSLUx4Jmhvj1UpFtdaGcFijCjgmSDGzZF01MFsFvZRD7it
-NRGBcBmWEb1bzQsZMapXuwvUdSAisAO0Zhx4ANFt9039o8XIJPddVJjCSfv05Vjm
-3jfki9O7p3b0LQ+vhDbZPjogThitWk1dQV/X+agUKPYMYZIgTFcASkgxiWuX411N
-ut+VWGlTmtF9p9cggDVSpkWQwCLzyDhW4u47A/vG6bh+3sRIEVcsRM2o/X8cUrsj
-UmBRZkMpr6gH7lFgRYCjuMqdpHqalUoEJYaKsNSx3bKSImX117m0/v63WQv+3uNi
-nQHAF7+SJPy1CyXwMGsrH17+lbqwodXCEoGcGFeBa6fbwTGhrHlne7GR6B1KVIUA
-WzmALhuX0OvCeiVTdZ2oV6SfQYV/HGoayhpqNhD2Pu9X8Mnq/FI=
-=nnhF
------END PGP SIGNATURE-----
-
---ou49x9tjXwiyVr2v--
