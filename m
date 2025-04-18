@@ -1,273 +1,124 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2052.outbound.protection.outlook.com [40.107.96.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8A6217F30
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 16:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744993063; cv=fail; b=RLp4GaMSo6f4Hx4UH6PBCUiVrPQAESUVTsOZU5aqWf5P+vYKSO97UAfmuxFcZokZLqyJWGYPn49Pp5EkrblEVENG/sIXCYHmOVtgArida6P1lEwFybIr7WTIANWJtZO+r45S2gZcz2uaoQbXntW4GZXO3BwE2a5YJ2Jd21PMWeU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744993063; c=relaxed/simple;
-	bh=qtffWf1gssTclUXMJPT9AvR+8HIItC7QHnOMHezmSk8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JSFVgbPFD2JKT5HCDlORZQxwR3OxjZBNZUl5yfWJBOgaNFUrCKaKYLlNhhDGQX6DZ6tlagEAd85tvO8xKe29I3NW1hJ0MBI62j+eRb+y1FLKyhPlIIWC08N9xdq6XT8U0cMIsAyxjmAfYFEPziN4hvsZcyv0UIONzcRorOJ8/R4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rpsu+V15; arc=fail smtp.client-ip=40.107.96.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D8421B9E9
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 16:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744993065; cv=none; b=t8YhIecmF9/HVXxDSa+BE6c+1yeyACdpgZ72GdC49uzG+XQrXci8BbbLM+NfissR9rfatQmqGBkwO60d6g5oY+8gvVXSrqE4zgGVdOT77YufOBZR3A6pXRvTKWr9MWB+KSGDFHfKjNLfyLJ6qM2XRIbaybOny8O4RsG3OD4wpDM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744993065; c=relaxed/simple;
+	bh=Ji2Bufzsf6DgjWf4BBNQD3G1VXMnmCGj6mWGvQqpC6c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=E+SCG2eE2BpWVyeUmzQZFyBvXuq4N5qMSaBvEnVfEKJlt95rJWCvfJB/QMm97sBXAwr3C1MGsh5OoY4pZ11i7gREdQO33s88HRNyjDIKy6wUIFERlLS4PCQ6ELq2HwKRmp8uiX1XGwtBViewgMKtEawn+6unrHpIX2z43GlOWG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NXEGQMmz; arc=none smtp.client-ip=209.85.167.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rpsu+V15"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Kb46EJmLpQEuWei2KT+USgUb5Bn7jVmoepckQtrgb16u+pDWSpvPeyGQBJvWVCRBKfenwdTIucLYkOe1HUQm7QthQUbYepgHU35MUerWydZx3zed6GIorA2K/lSnb9QecM31M2jWBwyW+MBZocB0xRbDVCZRnEZDrRI6TLeqbsFA6sM/NH41IlBMQbd18augHTE8Q9YhFOgdRB5XdPpPGWIjpUCVV4ZxiOn6tPUYjDWZigE9GqQKUcgkrHlG1tzo5E46tEoGBBfJlBCmzTcpqGVQYMZkYGWtOnV7jtjduqkylrTLijg9Omeijz0QM5M8+m1df7nGyRODBDplq4cUPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AbAt0VnNOmUUYoV+umXu/JsfGsS1kJueof43zvJCrYA=;
- b=pnpiNUPYpzxAAfH2IxI/yMM8FQ6aoowsN3hiWURzexRxnsFhkuaVPPV02Bm4psyga+fTIH0q8ITCY9STz4ylzs03atMZWJAkEDEbFCUENWNmPO8biTLUSnWYNRZDAQYtHear6lfQUOvhUquWnuLIvMabjCCFmqmNj29dFqXElw61rlGAjqAzAT6Sb0Hl0LIX1DD+7BoiB0Cia+7fLovemGsM/h+zXMOis0CPL62BSzZTGXLh1jy7buJ0YHhjPwOLudyCDwAZJN/3wQ7czHksxH5aHnued+cEbdMdhzJ7nu9hjqNALJMri1/9pWHwwXXWJF2ppl1L3vlAP7dnjLeKbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AbAt0VnNOmUUYoV+umXu/JsfGsS1kJueof43zvJCrYA=;
- b=rpsu+V15xUfpHvVdFexOl9O9LQTXDxoUpwi5Jthaa14x19jvGZchjB0eFk8TbyTFwtpqWFmP8Rh9uhbBQe/JqINhk32XzBAjW8KNAKtwziFPHpBvw2nA1qj4fDa+vJMFS8SxPoAurDNbtX/WWHdV5u8GA7Sr7huiRjpgo+iXp/U=
-Received: from CH0P220CA0008.NAMP220.PROD.OUTLOOK.COM (2603:10b6:610:ef::6) by
- IA1PR12MB6531.namprd12.prod.outlook.com (2603:10b6:208:3a4::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8632.32; Fri, 18 Apr 2025 16:17:34 +0000
-Received: from DS2PEPF0000343E.namprd02.prod.outlook.com
- (2603:10b6:610:ef:cafe::2d) by CH0P220CA0008.outlook.office365.com
- (2603:10b6:610:ef::6) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.25 via Frontend Transport; Fri,
- 18 Apr 2025 16:17:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS2PEPF0000343E.mail.protection.outlook.com (10.167.18.41) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Fri, 18 Apr 2025 16:17:34 +0000
-Received: from tiny.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 18 Apr
- 2025 11:17:32 -0500
-From: David Kaplan <david.kaplan@amd.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-	Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Ingo Molnar
-	<mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>
-CC: <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 03/16] x86/bugs: Restructure MMIO mitigation
-Date: Fri, 18 Apr 2025 11:17:08 -0500
-Message-ID: <20250418161721.1855190-4-david.kaplan@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250418161721.1855190-1-david.kaplan@amd.com>
-References: <20250418161721.1855190-1-david.kaplan@amd.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NXEGQMmz"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3f7f7b70aebso1078154b6e.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 09:17:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744993062; x=1745597862; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hab2lxvE/fC3IFWY2w9omfjURJU1Di1Tb8agi9lm2zI=;
+        b=NXEGQMmz2CPMXMbgPK/CTPkr3iW1Q4qwgnYuFDdUYUflcuvc7xbX7GezDIUaffmsdS
+         P5YsFCMR1mqDaQv0D0c6BfNNcEf4y1wT7pU1sh7bFAj43J/1q5WgHYJjJJYktlbSyGiC
+         A4aNHWhhgbd51/LBp8c0JBDplJqk+1zvTtU8FrMvuG8QhWL9e4TGONLDXMxEw1GIZ6rO
+         /BwMdhsEjDHmsJ/gw2BXZ6FDD2NdYXpsljTP8dbR6478TRhQNdZ58Ufzq3kGizs1plXB
+         J6rpRY5SqJxjAcD1CliL6cLJDhnifXSnwyF6O8qK/TsWyP/mpxqakAgVOidsX71qNFIk
+         DPqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744993062; x=1745597862;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hab2lxvE/fC3IFWY2w9omfjURJU1Di1Tb8agi9lm2zI=;
+        b=AZuP9Nv+wTCGjBnoxJkuSwfoD4OjSGOKUNo4yZOFPvrQExyrT1mlp9mFfn4nRRody2
+         M4MuuDkiaa21eAryj2VH9cOyqJ3XD1fofKa9EGO9UPLRYnI2D2AdUmqoHE6ooi2ao5Qx
+         KvxKLLdkE2dDKAcvOoy3mMLcFDHgQyB6mhzKmV6YNe1pd+QzUdb4iyi4kB6LclQz+kZV
+         oxXpD9xO8fASzWJ23eS0lMcSVCGiLuPfL599FZgygi/Ict6eEN+MY9FPIuUMm8F74XHS
+         gOzvXRHWwjWT8MxwtdlJ3TJgAuny9KQ1k71AVYV7pDLLnGfP0DOGNxzNZHcr1pxgzc0D
+         exJw==
+X-Forwarded-Encrypted: i=1; AJvYcCUaXhZD0HsYyXHCczvquIBdNuGo2VzN7DFnG7qAl4bhY3DNyBJz3cJxlW0mpWZpSahVstT+lbuDjMP+YSE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxK7xxNmjAU1Hv7F31Zc+5pbuqYWe2p3SMN/WU/IEl9EqB3p9MW
+	MyT8JNUyR+mGKbRmHewvzs/PTyOYf6Hh6po73Wunp79KflK+foUda+LKv2AVstk=
+X-Gm-Gg: ASbGncseoO7LLOmV3+62bydlqpAZrXa3Kcs/Zgwd5R5oIhMW9OY0IRCK37aZJ8b8gXT
+	GAjicdWPXSYzDQFmqHi59Z2lkyJZjiWYvxMiIo6cdZQyQ1Khy1cEa7tOzp0FE/hAGeSPgC/6N+9
+	dxcSZOXoqAkYZmf/pKtCQgN+2cJhIWZXvvvjDOLJ4cDu4FHxqZkVbEtqovvel2t7Pqt9tAuQuU3
+	Gf24mNKmf2uKHvJyRpCpeJ8/BmTEBi5e5/SwjfaApElsYTRBc+tKBlJ+irIvxS9Hh9mkq6ACDgZ
+	R5bQCG0QYAPAro6Qx77AFJehvqu7KWVHWXG0rTaJ1Ws+zD8=
+X-Google-Smtp-Source: AGHT+IG/MpUgMyPK4jKl1uNgegRoH+YvszC0/QY69eyP1nF1ELt8AiR2HwXu0ntYkRWrAaw6L7fBrQ==
+X-Received: by 2002:a05:6808:4e15:b0:400:be08:f6e5 with SMTP id 5614622812f47-401c092e403mr1579080b6e.7.1744993062308;
+        Fri, 18 Apr 2025 09:17:42 -0700 (PDT)
+Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:dcdf:46e0:18e5:c279])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-401beeffe05sm384929b6e.30.2025.04.18.09.17.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 09:17:41 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Date: Fri, 18 Apr 2025 11:17:13 -0500
+Subject: [PATCH v2 1/2] iio: imu: adis16550: align buffers for timestamp
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PEPF0000343E:EE_|IA1PR12MB6531:EE_
-X-MS-Office365-Filtering-Correlation-Id: a137fa94-9eda-4c8d-a5f7-08dd7e948724
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|7416014|36860700013|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?tbS1pfLWiKL/UrjUHWVDxSda2SB4VuVfFmhkl7tDSiYKLGNQarcg+tbRA/5O?=
- =?us-ascii?Q?JRtMLiKhXnCcqKi7ldmbRMo0loL/h6LoShwyEpHRRbpFVBxpWTYphyMF5EOs?=
- =?us-ascii?Q?kbdU49RD9h/3z1aKZJEGeFdYtS4grbhkwh/RdO/7QtRyCg5gCKjii9WqaQ5G?=
- =?us-ascii?Q?pIwU+Lk/6wJNStpHb/s+lEFPAfGQulzMb6wIZH6CC+ql1FHJIsI3vVnJUd4a?=
- =?us-ascii?Q?aIptpxdBTNQKSn99XuLuiDXEAv+7qnnlAMYGMWnFRjWcO2s9nwCWYPZn7DbX?=
- =?us-ascii?Q?sNkOTaFmbeqtltzkbO2/fXkl9xMblet6MkIJ+3bUU5wBW7kc12m58O3qrOZP?=
- =?us-ascii?Q?ZZCR+J6Nq58TVRunQV3PYoh+ULThvrc6eZseMY0H2k+Hcxtsai7HZEkAUGj8?=
- =?us-ascii?Q?h89X5euk5weeIMqFaTquIYICkwKT9ww+PTBz5hTNuGxk/ZBLII/zY5fGP9St?=
- =?us-ascii?Q?UiPaywgLaHG3gMjJwlCW9cc4Ifi9GpFFxd7d0qG+EPWwoFsbvTUleLAthks5?=
- =?us-ascii?Q?WMJBe4yG6x21JMH4M5i61OIm9j/Dcpnfby96seDQKFIrsYsaIlAbzwPm5/1F?=
- =?us-ascii?Q?9LbaZf7iD4dAlx5I58Go9YqbSak3M7K2Wf6IYaM5pExxry1GAMwMvFCDI+8c?=
- =?us-ascii?Q?8XzkaXukrA3aLcP3BjG4Xs6JHFx9F//JqxDvf2qFXcKKB1aLQ3mP5w3Cj3Yn?=
- =?us-ascii?Q?DeuFnDbVp2flkcLuaO86wtQOMymzyhm76raSj0bVt1HyYZlBVVIO7pv5vcNK?=
- =?us-ascii?Q?OuhESwXEIbX05Ff+Fn+UcU+1ukQCB3tz0El1WoRz/itEB7aSVUB0PLU/94pQ?=
- =?us-ascii?Q?04SYEQztxHNWnMI+wwWUlU++N4rk98WG8KWR7As+OVqMaUncy9/xLwYZaUBs?=
- =?us-ascii?Q?KJNSy9llqALNRn+kSLaZmun2dOii7v1hHXy1ZVhYqh9rWiSdO0axfU0NspVL?=
- =?us-ascii?Q?LwUWW166zFOBtzC7s92Gdlq42Kx48cULV+bqDKpfZIrT6pNb5IeAm1FUXBZp?=
- =?us-ascii?Q?IojEHAzIIUsUh7togSFGGVz/YsVj731EmoAjSL009FcwC+cDS2Px8XVzZOKS?=
- =?us-ascii?Q?mIXSTzhQFyUw5wHimi7eavLHgf6USMac9bOXxjlGk3D0e2+OmHxc4NDBJ2D5?=
- =?us-ascii?Q?BT3XEroM2h8RBuXjW4ugGANIGxryzUTr8w6NzkFt0dzfohtazvOxeBbUa8NO?=
- =?us-ascii?Q?y4ePACNEm0VyieUIdlZ5GsBwwVedZ7NDGF42euZ6IHGfworzMpym4Cpf4B4g?=
- =?us-ascii?Q?skGiaGpoaXGkiEMRigEnYHB0Gn2gaoglO5R8+GlurAXCFAj4dek1SYR/obz8?=
- =?us-ascii?Q?N79VDHxhTUzherBUCER/dX66/y9pRD7SQ7mGicKF4jj1Onlzn4tkF0TP+W2l?=
- =?us-ascii?Q?gQ0Es1VFe33b6018XlFzQ5EJ4H2H4HcTSFQTR72Pjp5XyTjLuSdkGiCvy1H7?=
- =?us-ascii?Q?a7EuFmXkKMwxLEMMej0tFmzc7eA5jG+5cBLddX0eLJPU+LFtpM4YghB1sJfp?=
- =?us-ascii?Q?MKtQ9JIKG9hEEwAqyUsF8Fhj3WEh+v/OnY94?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(36860700013)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2025 16:17:34.3215
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a137fa94-9eda-4c8d-a5f7-08dd7e948724
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS2PEPF0000343E.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6531
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250418-iio-more-timestamp-alignment-v2-1-d6a5d2b1c9fe@baylibre.com>
+References: <20250418-iio-more-timestamp-alignment-v2-0-d6a5d2b1c9fe@baylibre.com>
+In-Reply-To: <20250418-iio-more-timestamp-alignment-v2-0-d6a5d2b1c9fe@baylibre.com>
+To: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, 
+ Antoniu Miclaus <antoniu.miclaus@analog.com>, 
+ Ramona Gradinariu <ramona.gradinariu@analog.com>, 
+ Robert Budai <robert.budai@analog.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andreas Klinger <ak@it-klinger.de>, 
+ Petre Rodan <petre.rodan@subdimension.ro>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ David Lechner <dlechner@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=980; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=Ji2Bufzsf6DgjWf4BBNQD3G1VXMnmCGj6mWGvQqpC6c=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoAnsUn+ARff5RlLSjf5RfdY2gi8ublq+tbyrEL
+ 5nV5JOlTEWJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaAJ7FAAKCRDCzCAB/wGP
+ wH92B/42FlsLkWxKApYyrIMJuVdxLFtZ78J6pzL4P+rXHmqEOSiL9eAYiplsxPTvqSvJNT1/BFu
+ YZEuSLECihsYpNtqmKCabfw6N2Cp0iXcrngukUWLjkNClBfpAzaUgareHgyOxBM5WUBShJ/l1y3
+ rd8xYed07q1bKQfjfIi2AUSs7mu4NOk29cIlxkIMmWw3r4zScL1M8kT42JMbCITU2bAUkWSZUgM
+ Z2+WPCof6mLnRhWhZ1N0bvYFT6jzEleKG+xf+QotSM62569wAZUNryQZBqcrryfajIL1nmQ13Kc
+ f8w/wiRlFiW4ywldzntwreV69I90wDr2rJ7SO0tJV6++PEwz
+X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
+ fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-Restructure MMIO mitigation to use select/update/apply functions to
-create consistent vulnerability handling.
+Align the buffers used with iio_push_to_buffers_with_timestamp() to
+ensure the s64 timestamp is aligned to 8 bytes.
 
-Signed-off-by: David Kaplan <david.kaplan@amd.com>
+Fixes: bac4368fab62 ("iio: imu: adis16550: add adis16550 support")
+Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
- arch/x86/kernel/cpu/bugs.c | 74 +++++++++++++++++++++++++-------------
- 1 file changed, 50 insertions(+), 24 deletions(-)
+ drivers/iio/imu/adis16550.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index c0ba034ae1f9..28b55a7457bc 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -68,6 +68,8 @@ static void __init taa_select_mitigation(void);
- static void __init taa_update_mitigation(void);
- static void __init taa_apply_mitigation(void);
- static void __init mmio_select_mitigation(void);
-+static void __init mmio_update_mitigation(void);
-+static void __init mmio_apply_mitigation(void);
- static void __init srbds_select_mitigation(void);
- static void __init l1d_flush_select_mitigation(void);
- static void __init srso_select_mitigation(void);
-@@ -197,6 +199,7 @@ void __init cpu_select_mitigations(void)
- 	l1tf_select_mitigation();
- 	mds_select_mitigation();
- 	taa_select_mitigation();
-+	mmio_select_mitigation();
- 	md_clear_select_mitigation();
- 	srbds_select_mitigation();
- 	l1d_flush_select_mitigation();
-@@ -214,9 +217,11 @@ void __init cpu_select_mitigations(void)
- 	 */
- 	mds_update_mitigation();
- 	taa_update_mitigation();
-+	mmio_update_mitigation();
- 
- 	mds_apply_mitigation();
- 	taa_apply_mitigation();
-+	mmio_apply_mitigation();
- }
- 
- /*
-@@ -516,25 +521,62 @@ static void __init mmio_select_mitigation(void)
- 		return;
- 	}
- 
-+	/* Microcode will be checked in mmio_update_mitigation(). */
-+	if (mmio_mitigation == MMIO_MITIGATION_AUTO)
-+		mmio_mitigation = MMIO_MITIGATION_VERW;
-+
- 	if (mmio_mitigation == MMIO_MITIGATION_OFF)
- 		return;
- 
- 	/*
- 	 * Enable CPU buffer clear mitigation for host and VMM, if also affected
--	 * by MDS or TAA. Otherwise, enable mitigation for VMM only.
-+	 * by MDS or TAA.
- 	 */
--	if (boot_cpu_has_bug(X86_BUG_MDS) || (boot_cpu_has_bug(X86_BUG_TAA) &&
--					      boot_cpu_has(X86_FEATURE_RTM)))
--		setup_force_cpu_cap(X86_FEATURE_CLEAR_CPU_BUF);
-+	if (boot_cpu_has_bug(X86_BUG_MDS) || taa_vulnerable())
-+		verw_mitigation_selected = true;
-+}
-+
-+static void __init mmio_update_mitigation(void)
-+{
-+	if (!boot_cpu_has_bug(X86_BUG_MMIO_STALE_DATA) || cpu_mitigations_off())
-+		return;
-+
-+	if (verw_mitigation_selected)
-+		mmio_mitigation = MMIO_MITIGATION_VERW;
-+
-+	if (mmio_mitigation == MMIO_MITIGATION_VERW) {
-+		/*
-+		 * Check if the system has the right microcode.
-+		 *
-+		 * CPU Fill buffer clear mitigation is enumerated by either an explicit
-+		 * FB_CLEAR or by the presence of both MD_CLEAR and L1D_FLUSH on MDS
-+		 * affected systems.
-+		 */
-+		if (!((x86_arch_cap_msr & ARCH_CAP_FB_CLEAR) ||
-+		      (boot_cpu_has(X86_FEATURE_MD_CLEAR) &&
-+		       boot_cpu_has(X86_FEATURE_FLUSH_L1D) &&
-+		     !(x86_arch_cap_msr & ARCH_CAP_MDS_NO))))
-+			mmio_mitigation = MMIO_MITIGATION_UCODE_NEEDED;
-+	}
-+
-+	pr_info("%s\n", mmio_strings[mmio_mitigation]);
-+}
-+
-+static void __init mmio_apply_mitigation(void)
-+{
-+	if (mmio_mitigation == MMIO_MITIGATION_OFF)
-+		return;
- 
- 	/*
--	 * X86_FEATURE_CLEAR_CPU_BUF could be enabled by other VERW based
--	 * mitigations, disable KVM-only mitigation in that case.
-+	 * Only enable the VMM mitigation if the CPU buffer clear mitigation is
-+	 * not being used.
- 	 */
--	if (boot_cpu_has(X86_FEATURE_CLEAR_CPU_BUF))
-+	if (verw_mitigation_selected) {
-+		setup_force_cpu_cap(X86_FEATURE_CLEAR_CPU_BUF);
- 		static_branch_disable(&cpu_buf_vm_clear);
--	else
-+	} else {
- 		static_branch_enable(&cpu_buf_vm_clear);
-+	}
- 
- 	/*
- 	 * If Processor-MMIO-Stale-Data bug is present and Fill Buffer data can
-@@ -544,21 +586,6 @@ static void __init mmio_select_mitigation(void)
- 	if (!(x86_arch_cap_msr & ARCH_CAP_FBSDP_NO))
- 		static_branch_enable(&mds_idle_clear);
- 
--	/*
--	 * Check if the system has the right microcode.
--	 *
--	 * CPU Fill buffer clear mitigation is enumerated by either an explicit
--	 * FB_CLEAR or by the presence of both MD_CLEAR and L1D_FLUSH on MDS
--	 * affected systems.
--	 */
--	if ((x86_arch_cap_msr & ARCH_CAP_FB_CLEAR) ||
--	    (boot_cpu_has(X86_FEATURE_MD_CLEAR) &&
--	     boot_cpu_has(X86_FEATURE_FLUSH_L1D) &&
--	     !(x86_arch_cap_msr & ARCH_CAP_MDS_NO)))
--		mmio_mitigation = MMIO_MITIGATION_VERW;
--	else
--		mmio_mitigation = MMIO_MITIGATION_UCODE_NEEDED;
--
- 	if (mmio_nosmt || cpu_mitigations_auto_nosmt())
- 		cpu_smt_disable(false);
- }
-@@ -679,7 +706,6 @@ static void __init md_clear_update_mitigation(void)
- 
- static void __init md_clear_select_mitigation(void)
- {
--	mmio_select_mitigation();
- 	rfds_select_mitigation();
- 
- 	/*
+diff --git a/drivers/iio/imu/adis16550.c b/drivers/iio/imu/adis16550.c
+index b14ea8937c7f5a2123e4097dc5b8260492044d1b..28f0dbd0226cbea67bc6c87d892f7812f21e9304 100644
+--- a/drivers/iio/imu/adis16550.c
++++ b/drivers/iio/imu/adis16550.c
+@@ -836,7 +836,7 @@ static irqreturn_t adis16550_trigger_handler(int irq, void *p)
+ 	u16 dummy;
+ 	bool valid;
+ 	struct iio_poll_func *pf = p;
+-	__be32 data[ADIS16550_MAX_SCAN_DATA];
++	__be32 data[ADIS16550_MAX_SCAN_DATA] __aligned(8);
+ 	struct iio_dev *indio_dev = pf->indio_dev;
+ 	struct adis16550 *st = iio_priv(indio_dev);
+ 	struct adis *adis = iio_device_get_drvdata(indio_dev);
+
 -- 
-2.34.1
+2.43.0
 
