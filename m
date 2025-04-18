@@ -1,145 +1,182 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947912222A4;
-	Fri, 18 Apr 2025 10:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F3D204C32
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744971916; cv=none; b=Iv3Gc04y0cNkgkaT8GdP8EP0IGrwM6oRDX1pYh5fGzyIfnDWCcI5+pOCKjuFNx6URhYXW8zS3ab4khcv2TAm/K7DPFQUbb0vko+vsFJ1a/Xk6ZAd1FGOV0Oa3P7HsrbAXwolocJYsTpJUbBlGe31PvF95aPOOThWxChr//9KkGM=
+	t=1744972078; cv=none; b=k4dxkCRXcNZhfOdcbeB3FZuAACahUhi/WHmCwQe4MFAyWBjzOYYnctn9lgP4Ahz/rEPNloW646mTc9uL2lqSzpwG74xGZQJyMwleOumFtgCL2be+eVDWp4hi+3h0RNMq6nYC0d3IpoDHs9VvPlmSROE3LAyRZAFBxIzsmwyzbZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744971916; c=relaxed/simple;
-	bh=kcuQkKYCSl4USmcoi03BAP5hQffQY2sFSoVLQiTnuR4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dmhnF+O8WV2zHoralKps1f+pFHNdio8f4oNoPDotOQoQ3RMhjAoUm5Q3mGqD+c9H6/joz/TkzJyYLWroTKjYnzT4SV1nRqsw6fyNalsBHIKSGZdiMHGGySGefz1/CvFOHTO5aiXVZU+ihy7NHDfV2m7KAfZbUxG6HzInJkkb7VI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=black-desk.cn; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=black-desk.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-476ab588f32so23483001cf.2;
-        Fri, 18 Apr 2025 03:25:14 -0700 (PDT)
+	s=arc-20240116; t=1744972078; c=relaxed/simple;
+	bh=+vnWalud2xUiup/XdBBrUW6ERK+wl4wDLxIJ6KQUR9w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j4pw91nUb2Jc6PS1mo1h7rLzz6pincEXHk8qYqDL3WgJvRxlrGK00F8u7crWVTFsQPd1AHAwbs/kbJy3rVRTu2r3uG4pvXb/KKmg9dCxDkvhgg+CFmbPY5jEDytRnLBjtDVYZhRDsmrA81oJoAvzhQdEBQssrVTu+qNVAl2D4UU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=z8oahwX7; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z8oahwX7"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c0dfba946so1079349f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 03:27:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744972074; x=1745576874; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=57k7pCek81nUSsl2ehblZZG77S+NE+N9+pi5LGTuadY=;
+        b=z8oahwX73y5LB7byXgw2pYYqBm0yixi1pFXzBV0QG9Pj49/fCFjUPju7qVIITT0YRi
+         9UghvWbmXKe5dWZOiVjwokUJoQhmNXk/XAp33GVfTE7ALu9uNUiwKi6PiyTqYG1MwXeJ
+         BIhM3n1DZY0pcKj3ZddEach3XZeN3+9CNC76QiwcU6vT/byLZwh9LHWCYA2j0Pd3pKXF
+         JGv4bmZhiw/XeGD9bN8gwlm5xXZaEIG07RqssJCW18Xspx5GkdFPvrj0CBzmceXFp9Mx
+         gyt1P7AVFMWkYNSJqoPnMOfxQmHKRcSS4Gj3GTu4l0DgFVVf43n0UTWUGsOytcnRyrUL
+         EfbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744971913; x=1745576713;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XMi6RjNLnii56OiqqTtBYh/fDGXu3JBH/VNIF3fIEn0=;
-        b=kwWkuJCvvIs4cCzEyLOzU2W2KTcSpk5lic6IQtPffPaBCfV+0mCrpfQ/8oENZjKhIg
-         hgMETAHD1NEv2XFFT17aN/QdcEup+GZY/Qco531lZrWzHiWaxoHPzBwsIE+CDHTN6AiR
-         KCsJC0/IhuL9V/gVxhlHL4pCkx0sglvgMfPyLosSe9W8aFm1Z9UpWpDNd+EgIoYLgK/V
-         Hv0CfNghJOPpOB0FEcXiUw9IFzm0hz5u8jpInN6HJIv53lXd3CSs0Cb+Wi4T0XvhWHeq
-         nE+FJ867h0iNyGZLihaJQjvc2LsfZ6T0rMl+ARSS7sYxj4C/CZFZBWyq6m3ep16oN2xY
-         2sEA==
-X-Forwarded-Encrypted: i=1; AJvYcCV/BhyLdA8tIjWsqExgThYugoCwgStBnS2zAqKuCVa8cp2mDIuV6a6PJM1vZt4z3c4mB5lQlzMiGVYRbdgM@vger.kernel.org, AJvYcCVC9/rn9oyw2wWj3+PXx6JBa7sVAZYJjMrkOzzw8csAn8OInh7WV1oGRgxXaFBJ2pA16Avqn5gJU4UbEvCQ@vger.kernel.org, AJvYcCVqHWa8z3fRrsu41NvaKWTwq/uLIhZI/tbIfFlN3qTq5ywx6EjvxMtMD2nfhcqUaabDgcyTihAzmz4nw71/emGV@vger.kernel.org, AJvYcCXi8vpe57yLfUnMghlVHEdtgIJwa4+Mn3yM0+4AGgWuE1R01MQ931lzUDko8MrK9A2PWiQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVC3TQfy44rq82yCD/zxkJ/Zyz4X4GZuZYfw7uXyV40ghgaQXU
-	XKQia6F47riI4ZKipfCrpgGLVcWfUG7N/AA+wrSWLAYCJSk3QCb7
-X-Gm-Gg: ASbGncuK1SGXhJPW9UDZuVeoFZtwVbhnSbeXlXrX52PhWBdvxVgnaPm/LoHY2giwDuN
-	LtN8+d8lpgG7GRMyh4hlT25n1j9LiRiDgRemOCCGvgEH35lxPfky0zIq384MYxviEuyIssbTBa9
-	HQGa71tF1gRTp+7iK0xlL+q0NmKlzlLlojPbxWHQNDIxaysHfyvP1xLW6nA72a+7dzn61Yw7fe5
-	o5XchsTsL/WrBLzBbBGRvS2XLyp2dGhNzhMpKgoLZs1CctW0PVcXot3IiUeUIVDtzLrVinxFZ24
-	G7X6Ecoczu8e9tH0Hd+l8qWodykz5GxlGpJcHIdCtI/7olxPhvgrBTiSxujB+Mhl
-X-Google-Smtp-Source: AGHT+IEKJZWW+CA0u03L2I1YwGaBuPS3Jq/Tgj4wyFEY1P0tyWIjeS90rjHfjPUoep1kge+Jl0aKkA==
-X-Received: by 2002:ac8:5807:0:b0:47a:e6e1:c04f with SMTP id d75a77b69052e-47aec4cb1fdmr34086211cf.46.1744971913152;
-        Fri, 18 Apr 2025 03:25:13 -0700 (PDT)
-Received: from localhost.localdomain (ip170.ip-51-81-44.us. [51.81.44.170])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47ae9c17673sm9266701cf.13.2025.04.18.03.25.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 03:25:12 -0700 (PDT)
-From: Chen Linxuan <me@black-desk.cn>
-To: bvanassche@acm.org
-Cc: akpm@linux-foundation.org,
-	alex.williamson@redhat.com,
-	axboe@kernel.dk,
-	changbin.du@intel.com,
-	chenlinxuan@uniontech.com,
-	hch@lst.de,
-	jarkko@kernel.org,
-	jgg@ziepe.ca,
-	justinstitt@google.com,
-	kbusch@kernel.org,
-	kevin.tian@intel.com,
-	kvm@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-nvme@lists.infradead.org,
-	llvm@lists.linux.dev,
-	masahiroy@kernel.org,
-	morbo@google.com,
-	nathan@kernel.org,
-	nick.desaulniers+lkml@gmail.com,
-	nicolas.schier@linux.dev,
-	peterhuewe@gmx.de,
-	sagi@grimberg.me,
-	shameerali.kolothum.thodi@huawei.com,
-	virtualization@lists.linux.dev,
-	wentao@uniontech.com,
-	yishaih@nvidia.com
-Subject: Re: [PATCH RFC v2 5/5] lib/Kconfig.debug: introduce CONFIG_NO_AUTO_INLINE
-Date: Fri, 18 Apr 2025 18:24:53 +0800
-Message-ID: <20250418102453.982042-1-me@black-desk.cn>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <bb713790-0b68-4d91-831c-b18fa1ea01a9@acm.org>
-References: <bb713790-0b68-4d91-831c-b18fa1ea01a9@acm.org>
+        d=1e100.net; s=20230601; t=1744972074; x=1745576874;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=57k7pCek81nUSsl2ehblZZG77S+NE+N9+pi5LGTuadY=;
+        b=IUPKGy1dfTIqXMGg1GyX15i/82ZYlH8lfjbjdcclQcGfQ4C7kbWupaTcqeLg/pnX1R
+         fCE0FjfQ9RcNenaiqyqSeYTZWx0H3PYlJDLnowHMNcQ6biaSZ6UkZlG6b7ZCiD1IxhSL
+         NadGtbExuoTkiBe8a3KPYXTLIbmlOBWVibUKsEBqL8pP89fNRen8HIuN0hA4BojNYBMA
+         6TKzdZXeWTPqsAK7RaCzhQmgcB/sxrymSul4Py44rr9LZQ9bEVXTxu6Pwga+mUk73eR9
+         apR22QQuH3qaU51+SDYkwHqoukd/GHwSyek7qDxnj7gtFAwVv4VUINROGr2BC6yO9hGp
+         fJ9w==
+X-Forwarded-Encrypted: i=1; AJvYcCUGQNBFT3bkgrMYeK7tPzVAYla+XM74qza06cvrFzKmnrFUb3Sl2FOUJMWdQc2ALd30y8FNTJcWlozActY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7sTQ2Ag6MPwmnW4n1wKtjmdK7JbfJmstY8PWa9fePFgQjNj8E
+	kUOsjy/l5RM1WJ9Ah4TbW+D0kfSH3ebP8UJQuOBQEsR5a2gl5DaJzEyYNjyHBmU=
+X-Gm-Gg: ASbGncsUjh4ubq6z6a6x/AAyinAJQ3Nli3diqiu5CZRMQD9IpvukTOpRDQ+EJzLeTBH
+	G7iK+EBUpD/WfI05dgpVDrjyCTGaMWdZX7vlHHqV41feHJ4t7htV/2M0CVasHhRaDYOwVqWR6oG
+	XanOvking/SZaL2k49rzIvyRJEBxCFHQvgE/HYCzo9SCRVeFMNXWsIEPOpBRdJ7iFuq1++ilHpE
+	QIHlScis/+EXGSyTiCa1BLeTHVeI4J0TpZjKRQP5yLgxfHJH5W2tbJZ53C1O/0+bnWRzG44O9l9
+	9KkQL+AllPUTDsnENeZpTZUilhxLo5gMdQf0tMTekwduy2Uljh4xrREXZ5gBnLI6x151h0vvPPw
+	fB3B9oQ==
+X-Google-Smtp-Source: AGHT+IFP8JgAPDCYIyJachPlekRb63SaHAvqzfZ89N17Lamqh8kJlt2t2X30gdARFYG6zJeqr7bpbQ==
+X-Received: by 2002:a05:6000:2203:b0:391:40bd:6222 with SMTP id ffacd0b85a97d-39efba470e8mr1559521f8f.22.1744972074393;
+        Fri, 18 Apr 2025 03:27:54 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5d6cd2sm16577935e9.33.2025.04.18.03.27.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 03:27:53 -0700 (PDT)
+Message-ID: <df97067e-a293-424d-aa19-24a99670a354@linaro.org>
+Date: Fri, 18 Apr 2025 11:27:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/4] arm64: dts: qcom: qcs8300: add support for video
+ node
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250418-qcs8300_iris-v2-0-1e01385b90e9@quicinc.com>
+ <20250418-qcs8300_iris-v2-2-1e01385b90e9@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250418-qcs8300_iris-v2-2-1e01385b90e9@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 4/17/25 5:04 PM, Bart Van Assche wrote:
-> On 4/16/25 2:44 AM, Chen Linxuan via B4 Relay wrote:
-> > 2. Make it depends on X86 and LOONGARCH,
-> >     as I haven't test other architectures
+On 18/04/2025 07:28, Vikash Garodia wrote:
+> Video node enables video on Qualcomm QCS8300 platform.
+
+Add the IRIS video-codec node on QCS8300.
+
+> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> ---
+>   arch/arm64/boot/dts/qcom/qcs8300.dtsi | 71 +++++++++++++++++++++++++++++++++++
+>   1 file changed, 71 insertions(+)
 > 
-> That sounds weird to me. Shouldn't this option be made architecture-
-> independent?
-
-It should, but I have only tested it on X86 and LOONGARCH.
-
+> diff --git a/arch/arm64/boot/dts/qcom/qcs8300.dtsi b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
+> index 4a057f7c0d9fae0ebd1b3cf3468746b382bc886b..158779434f610b10ea82d2cdae08090a7a4402de 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs8300.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
+> @@ -2929,6 +2929,77 @@ usb_2_dwc3: usb@a400000 {
+>   			};
+>   		};
+>   
+> +		iris: video-codec@aa00000 {
+> +			compatible = "qcom,qcs8300-iris";
+> +
+> +			reg = <0x0 0x0aa00000 0x0 0xf0000>;
+> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +			power-domains = <&videocc VIDEO_CC_MVS0C_GDSC>,
+> +					<&videocc VIDEO_CC_MVS0_GDSC>,
+> +					<&rpmhpd RPMHPD_MX>,
+> +					<&rpmhpd RPMHPD_MMCX>;
+> +			power-domain-names = "venus",
+> +					     "vcodec0",
+> +					     "mxc",
+> +					     "mmcx";
+> +
+> +			operating-points-v2 = <&iris_opp_table>;
+> +
+> +			clocks = <&gcc GCC_VIDEO_AXI0_CLK>,
+> +				 <&videocc VIDEO_CC_MVS0C_CLK>,
+> +				 <&videocc VIDEO_CC_MVS0_CLK>;
+> +			clock-names = "iface",
+> +				      "core",
+> +				      "vcodec0_core";
+> +
+> +			interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
+> +					 &config_noc SLAVE_VENUS_CFG QCOM_ICC_TAG_ACTIVE_ONLY>,
+> +					<&mmss_noc MASTER_VIDEO_P0 QCOM_ICC_TAG_ALWAYS
+> +					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
+> +			interconnect-names = "cpu-cfg",
+> +					     "video-mem";
+> +
+> +			memory-region = <&video_mem>;
+> +
+> +			resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>;
+> +			reset-names = "bus";
+> +
+> +			iommus = <&apps_smmu 0x0880 0x0400>,
+> +				 <&apps_smmu 0x0887 0x0400>;
+> +			dma-coherent;
+> +
+> +			status = "disabled";
+> +
+> +			iris_opp_table: opp-table {
+> +				compatible = "operating-points-v2";
+> +
+> +				opp-366000000 {
+> +					opp-hz = /bits/ 64 <366000000>;
+> +					required-opps = <&rpmhpd_opp_svs_l1>,
+> +							<&rpmhpd_opp_svs_l1>;
+> +				};
+> +
+> +				opp-444000000 {
+> +					opp-hz = /bits/ 64 <444000000>;
+> +					required-opps = <&rpmhpd_opp_nom>,
+> +							<&rpmhpd_opp_nom>;
+> +				};
+> +
+> +				opp-533333334 {
+> +					opp-hz = /bits/ 64 <533333334>;
+> +					required-opps = <&rpmhpd_opp_turbo>,
+> +							<&rpmhpd_opp_turbo>;
+> +				};
+> +
+> +				opp-560000000 {
+> +					opp-hz = /bits/ 64 <560000000>;
+> +					required-opps = <&rpmhpd_opp_turbo_l1>,
+> +							<&rpmhpd_opp_turbo_l1>;
+> +				};
+> +			};
+> +		};
+> +
+>   		videocc: clock-controller@abf0000 {
+>   			compatible = "qcom,qcs8300-videocc";
+>   			reg = <0x0 0x0abf0000 0x0 0x10000>;
 > 
-> > +config NO_AUTO_INLINE
-> > +	bool "Disable compiler auto-inline optimizations (EXPERIMENTAL)"
-> > +	default n
-> > +	depends on CC_IS_GCC && (X86 || LOONGARCH)
-> 
-> Why "depends on CC_IS_GCC"? Please make sure that both gcc and clang are
-> supported.
-
-I make it depends on CC_IS_GCC because
-
-1. Clang do not have `-fno-inline-small-functions`
-   and `-fno-inline-functions-called-once`.
-
-2. If we wrap those options with cc-option,
-   Clang 18.1.3 fails to compile test_bitmap_const_eval(),
-   with config KASAN and TEST_BITMAP is enabled.
-
-   Comments above test_bitmap_const_eval() says that:
-
-   > /*
-   >  * FIXME: Clang breaks compile-time evaluations when KASAN and GCOV are enabled.
-   >  * To workaround it, GCOV is force-disabled in Makefile for this configuration.
-   >  */
-
-   It seems there are some issues with Clang's compile-time evaluations.
-
-So I think there are some ways to workaround this problem:
-
-1. Make NO_AUTO_INLINE depends on CC_IS_GCC;
-2. Make NO_AUTO_INLINE depends on KASAN=n;
-3. Disable NO_AUTO_INLINE for TEST_BITMAP
-   like how we handle CC_IS_CLANG && KASAN && GCOV in lib/Makefile:
-
-   > ifeq ($(CONFIG_CC_IS_CLANG)$(CONFIG_KASAN),yy)
-   > # FIXME: Clang breaks test_bitmap_const_eval when KASAN and GCOV are enabled
-   > GCOV_PROFILE_test_bitmap.o := n
-   > endif
-
-Which one do you prefer or do you have any other suggestions?
-
-> 
-> Thanks,
-> 
-> Bart.
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
