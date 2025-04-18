@@ -1,171 +1,214 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC683277817;
-	Fri, 18 Apr 2025 13:32:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3798A20767E;
+	Fri, 18 Apr 2025 13:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744983159; cv=none; b=UZ1Jc7SCX0wWK3jAwICscsCSTIAgB15t5+dc3Ba5JRap2c8e7VsfcI5M+NUEophfCO/4UuQ8ODebdzXOUuuW5Ik+WI0aHITBwd21rOD/sDyH48st+pbRATAyb176J67BGXGOCQ4SRv2a2U8G8JpCSZLOiSbE3to3M/rTG89zFO8=
+	t=1744983226; cv=none; b=X4/aDLZ7c0ZafZLEp9oKNnKzQDttG+dZyhADm6CSEj/PqbrFtOPSiDbnjm+ix9tVECIZYrhdrwyR7bvFFVD+3ECOASFyl1TKuAgppMXU0RqhA8H8N/QhGIjf47pG0JxzXxjzzi1UmMYZs9DmlIoZE+TfQ/W2pbqJm9xVTG2syaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744983159; c=relaxed/simple;
-	bh=7eowmYUF0pclok0D9/mq1P0map8wOZ69347Wa9sCHNs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FOmPcsWKBQKUmfvEzt11wuIkr/TE3rUgzX4KWp0+WmpYD/grf5dmgfR7fcncbUnhdBcWs7PoRduid3nsDgoueMyLDmUqUiQOarBkaolyl94xI6UPxmpTwLSstZ+Yey4bCCzPPQDJ9vFJ/M3qlm/GVHnM3Fh0b9tZOLpwkyQyC+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mABcdzp/; arc=none smtp.client-ip=209.85.208.46
+	s=arc-20240116; t=1744983226; c=relaxed/simple;
+	bh=3Z4YnHM43VypcaF4kkDkg1YapNVsfZNI9IyDQF8iwss=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n4wBesDaB19ttEDLhkqmHFBfnrRSaMnJd4zkOEmVTgamLKK+YREw6XcCuIs3r6XVABn6ZqqaLWpE4LoWT4Q0/dfRUXuW3GpOw84IQ1rcxB603znnpRe8NB97TYcNrpBTrXKInjGpJJMAwojvgp1ODwKc7g8I9iCB9UN8mKe2PGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PpyLvpRd; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mABcdzp/"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e677f59438so2691395a12.2;
-        Fri, 18 Apr 2025 06:32:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PpyLvpRd"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso16106825e9.0;
+        Fri, 18 Apr 2025 06:33:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744983156; x=1745587956; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GXZIWWM8mZYdiQktFqPI0+JPo4B/dX6RUUwchm1Zb5I=;
-        b=mABcdzp/nxhrHSoGB+Ngv2wEIbGjFA9MyAfutbOaFo71RblvJqPLwMDxt1+dEgJ/h3
-         oPjsTd2dieTlSCB6g4KUwsLo3mDDx3S8XvZiwLRo/GbNY7JfysswMFbevuDCe47ZrErv
-         AljF5uEwpMpWN7aaUyPlM0zIDObTvsaSXWXDyUTZDVjPKJbQW3ikVg3ckBU9Yxrajp2W
-         K1WSSBEvvngNETL5Pyj4hTKXpXrS6/8xU1u9wzwuH+DQffC8A4dXqgxNou7I7x1qCBXK
-         4rfc6K5V4T/eZS8J5Cbx5iZLliwb2RlIgwXPG1LGp7/dw2G9Mc9z5JDWs2i94+fAruk2
-         70pA==
+        d=gmail.com; s=20230601; t=1744983222; x=1745588022; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cymBwHPYpEJEkaRMP6s4Kg37tPDaEt+/oHljHuUzLVw=;
+        b=PpyLvpRdhZ5xvOXEvSMaOytVV3Mmx7w5TNmM663n/KiAXUNTM8tuD+vr9GUeqaWM0X
+         2Xd9W4PHKEt8uudH8QCDAlqEjcuQpCle8X/PjlsDvpR2bb1kG/GeaJn+GOVK88KsPgPj
+         JaYHkp7FiiuShHoyL6WRufuxHoZJVnCh0tKsyL5zkH+wnMhMWXLBVP5wDpl40Aaa4hqP
+         QVmktoDXRjcS1uH7fCMEsW04UpihjIYUC7wFA4WY/6Y0cBlrjZJeIG20NwrmhG52+up5
+         O5x53ItXO02Ip5MxpE9T2ZR44T2Z2oOmdj+r3DYXDykrN/FmsLKkcQuFHDp4/CY+Aj5T
+         gsYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744983156; x=1745587956;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GXZIWWM8mZYdiQktFqPI0+JPo4B/dX6RUUwchm1Zb5I=;
-        b=vxw5WGpOZeEbvAID9sw7IFar7t464wNwfZmw2CaUsdRZzWtiE5mHD63Kogicl8GICE
-         aTbMWvPu1w0HMLXm6/Fpr50UI4po9qhpqbtRt9mS1LxA/ZRpeEUUt5PXVa07ZqCIfTE6
-         N+2QJbr1qVbqM/dtDXmbLzYdegixcPWTiL8LJsGAYVoL9hOGFkTLTA/MfQyq501/nYho
-         qsLbtOTANQYVo7E5l5o+nfsg1BNEB6ADquuk+gLirfhwLvUEVhdqyrptyFPv4bsNRS6v
-         J+WGzpglQYv1LYRqunKNYoy4nTInTfizUvLdtfOD4Hp0Fsj3rUeHvsbepIoSgCmRaPJw
-         el+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUiEuq18CnbKlF5lkVbhxRnC6Dsx57a4swdGfTr0GVZclgmyQJiWN2mYDFEpNmJb50Db83TN8+1JC8=@vger.kernel.org, AJvYcCX2ecAKFKaBDwFW466WjNknHHU5Z0qpSLtiIVzUrWMWbvi4WSImKyGT39Fz86AYttHVPof9fKTKpvbJFvA=@vger.kernel.org, AJvYcCXKYJAsJerFRemfq4diYDJMzdiKqpKYaXVFYz8Kq43Hsc+ecce9nG1X+OLhTfIyzVQomQz10nu7WHqR0RpiHHJwmsM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKcpOEYW8DZp0l3N43L/Xqgrl1Y9sgZEJNfXtz5bnHq30oV0zE
-	Ny/Gvm1VVGOJKyFT/6NiM2nQjwL5m5ndRBVOOczjgXEVZyrqqcXttVeNpKpbG+/lmynLMTdwbtg
-	CY5+6dNmZnY9HkCls2k1wiIF7Bk0=
-X-Gm-Gg: ASbGncu87KWTonln75ULy5G+IoUjHfoDjy/32om69yJNfhOdeTj/64BND6WsXNhXk1m
-	nLVT1ISFIM9wrKm4QVqxY92XmZKDYnNns8Rwv7XbqLQQ/+1REbfifW9YEZRcgQExGv9bThs0k9c
-	SMNrsuImcgSGI5zxrLjsCz
-X-Google-Smtp-Source: AGHT+IEf1FP4PE+QPrL3TzSuKDCTAio1byV8qwIANyIcWwl3yMCy7oqqmZBQNjRLb7+OZ1bOcdJO2NJMrjzSMyIelCY=
-X-Received: by 2002:a17:907:6090:b0:abf:4b6e:e107 with SMTP id
- a640c23a62f3a-acb74b52090mr242322666b.25.1744983155938; Fri, 18 Apr 2025
- 06:32:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744983222; x=1745588022;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cymBwHPYpEJEkaRMP6s4Kg37tPDaEt+/oHljHuUzLVw=;
+        b=rO3dSGSuYRCeZteMQPbPydBq5Rmhke7Fu4IQJHjzAeQaJmaWd30mZrEDECqHLGHLTt
+         i9+/ilQqwmUpfaRuDA4HBAgiX5Ul7ytyLlgod2AnXbOW2Dgj46SOF60sImoE9sirjAAL
+         3Y9HQyIU+ovZiRt1zm5q/1yysqWOs7PqcU44VNIGkbz0p2JeJfkDLGncrH9Spuuzxpl3
+         zJO/9kPcto7XDbMawVzCNDBkcecMf84MdD8pPYMCL+iC7OFM5+OryLoZn/k9XIESUSsk
+         tlvlmH4EZ2K2jqcJUDySuOgrH5KLVtd+DzpWoyzzzQJCZKh3IhfrcVY90etv+d8fb/YO
+         o0Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCV6U3Kb6xS6NADM5b0e+BJIVNNxQGw4LzacoPm0jYhTVnrP36NVJH75el2JZ9s8s5ykEZ0Z/kHxKt3LecHgqw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YztOnCsBi8b+ojEjKzZTA8lwBi7SQIGf8NEjuGF29gsD/Afj9qf
+	77W/Ajv42h8+urrIw0lZKi2BO9HHqYrezv0F3FfLdYVfeZBHdrsH
+X-Gm-Gg: ASbGncuFgjtrqlnFpNhmNX7GX5uMVc4yUVbRzITmKL+6wTjYGBRR34gsc9czqhQjh7m
+	jFRzj6KczrWqeIEh5suk0ZEaVWBwv2PPyg9QCqwc7lwBBahrSPEhJhc+9Yz+BbxELJdBw9sPwol
+	weCdM9XsoL/CSO1+VE4A2yz8+vTKuKsjaPwD4ofv88dpJQ49zrZOPpyaGdlv+B6LcR5dPZbCfiW
+	8BGU98N61frQ9RFCqVqX390GKINSKvukQTwjpYZuceDuHUsTHEPX8VeUA/yYk8UJGxuRRx7LJh/
+	xy+p79M7l6WxWmmeRhsO3BoYiCkFuDIsObXLG0G31K4Kg1SpMem+hA==
+X-Google-Smtp-Source: AGHT+IHBVrFm2ZwSGihGjuXl8gvgQdefinioA2Zg9indXx/RiKOxWd0H/obTDd6YQ/hlmhy8Gkh+XQ==
+X-Received: by 2002:a05:600c:1554:b0:43c:fdbe:43be with SMTP id 5b1f17b1804b1-4406ac115e0mr22992475e9.27.1744983222143;
+        Fri, 18 Apr 2025 06:33:42 -0700 (PDT)
+Received: from ?IPV6:2001:871:22a:99c5::1ad1? ([2001:871:22a:99c5::1ad1])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43cb43sm2833495f8f.53.2025.04.18.06.33.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 06:33:41 -0700 (PDT)
+Message-ID: <75b94302-e6ca-431d-95de-044af3061839@gmail.com>
+Date: Fri, 18 Apr 2025 15:33:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410063754.5483-1-linux.amoon@gmail.com> <20250410063754.5483-4-linux.amoon@gmail.com>
- <aAILE01SjRR874jc@mai.linaro.org>
-In-Reply-To: <aAILE01SjRR874jc@mai.linaro.org>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Fri, 18 Apr 2025 19:02:18 +0530
-X-Gm-Features: ATxdqUHbJXVdHhwcS0IwraNdsY4dmTwIZsNctwmfdNkH6lfYcXleJugDkxPs4Aw
-Message-ID: <CANAwSgRK5ONpBM35U7DG=wtHv9N-9kRpbveqyGsVORnJiS5mmg@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] drivers/thermal/exymos: Fixed the efuse min max
- value for exynos5422
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	"open list:SAMSUNG THERMAL DRIVER" <linux-pm@vger.kernel.org>, 
-	"open list:SAMSUNG THERMAL DRIVER" <linux-samsung-soc@vger.kernel.org>, 
-	"moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:CLANG/LLVM BUILD SUPPORT:Keyword:b(?i:clang|llvm)b" <llvm@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] rust: add UnsafePinned type
+To: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+References: <20250418-rust_unsafe_pinned-v1-1-c4c7558399f8@gmail.com>
+ <D99SR99KSGLV.3TUC5AEKPHJHL@proton.me>
+Content-Language: en-US, de-DE
+From: Christian Schrefl <chrisi.schrefl@gmail.com>
+In-Reply-To: <D99SR99KSGLV.3TUC5AEKPHJHL@proton.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Daniel,
+On 18.04.25 3:25 PM, Benno Lossin wrote:
+> On Fri Apr 18, 2025 at 2:21 PM CEST, Christian Schrefl wrote:
+>> `UnsafePinned<T>` is useful for cases where a value might be shared with C
+>> code but not directly used by it. In particular this is added for
+>> storing additional data in the `MiscDeviceRegistration` which will be
+>> shared between `fops->open` and the containing struct.
+>>
+>> Similar to `Opaque` but guarantees that the value is always initialized
+>> and that the inner value is dropped when `UnsafePinned` is dropped.
+>>
+>> This was originally proposed for the IRQ abstractions [0] and is also
+>> useful for other where the inner data may be aliased, but is always valid
+>> and automatic `Drop` is desired.
+>>
+>> Since then the `UnsafePinned` type was added to upstream Rust [1] as a
+>> unstable feature, therefore this patch implements the subset required
+>> for additional data in `MiscDeviceRegistration` on older rust versions
+>> and using the upstream type on new rust versions which include this
+>> feature.
+>>
+>> Some differences to the upstream type definition are required in the
+>> kernel implementation, because upstream type uses some compiler changes
+>> to opt out of certain optimizations, this is documented in a comment on
+>> the `UnsafePinned` type.
+>>
+>> The documentation on is based on the upstream rust documentation with
+>> minor modifications.
+>>
+>> Link: https://lore.kernel.org/rust-for-linux/CAH5fLgiOASgjoYKFz6kWwzLaH07DqP2ph+3YyCDh2+gYqGpABA@mail.gmail.com [0]
+>> Link: https://github.com/rust-lang/rust/pull/137043 [1]
+>> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+>> Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
+> 
+> This probably is another patch by itself, but we should use
+> `UnsafePinned` in `Opaque` instead of re-implementing it there. Feel
+> free to open an issue, send a patch or let me open an issue.
 
-On Fri, 18 Apr 2025 at 13:49, Daniel Lezcano <daniel.lezcano@linaro.org> wr=
-ote:
->
-> On Thu, Apr 10, 2025 at 12:07:50PM +0530, Anand Moon wrote:
-> > As per Exynos5422 user manual e-Fuse range min~max range is 16~76.
-> > if e-Fuse value is out of this range, then thermal sensor may not
-> > sense thermal data properly. Refactors the efuse value
-> > initialization logic within exynos_map_dt_data function by
-> > replacing the nested if-else statements with a switch statement.
-> > Ensures proper initialization of efuse values based on the SOC type.
-> >
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
->
-> Same subject typo: s/exymos/exynos/
+I'll take a look at it once this patch has landed if you want
+or I might include that as a second Patch for a future version.
 
-Thanks for your review comments.
-Opps, I will fix this next version it got skipped.
+>> ---
+>> This patch is mostly to show how the upstream `UnsafePinned`
+>> Rust type can be used once it is stable.
+>>
+>> It is probalby not desired to use the unstable feature before
+>> that time.
+> 
+> Yeah, we don't want to introduce new unstable features where possible.
+> If this one is stabilized quickly, then we should add it, but if not,
+> then we just keep the manual implementation.
 
->
-> > ---
-> > v5: None
-> > v4: None
-> > v3: Improve the logic to convert if/else to switch
-> > ---
-> >  drivers/thermal/samsung/exynos_tmu.c | 19 +++++++++++++++----
-> >  1 file changed, 15 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/sam=
-sung/exynos_tmu.c
-> > index ac3b9d2c900c..a71cde0a4b17 100644
-> > --- a/drivers/thermal/samsung/exynos_tmu.c
-> > +++ b/drivers/thermal/samsung/exynos_tmu.c
-> > @@ -899,12 +899,23 @@ static int exynos_map_dt_data(struct platform_dev=
-ice *pdev)
-> >               data->gain =3D 8;
-> >               data->reference_voltage =3D 16;
-> >               data->efuse_value =3D 55;
-> > -             if (data->soc !=3D SOC_ARCH_EXYNOS5420 &&
-> > -                 data->soc !=3D SOC_ARCH_EXYNOS5420_TRIMINFO)
-> > +             data->max_efuse_value =3D 100;
-> > +             switch (data->soc) {
-> > +             case SOC_ARCH_EXYNOS3250:
-> > +             case SOC_ARCH_EXYNOS4412:
-> > +             case SOC_ARCH_EXYNOS5250:
-> > +             case SOC_ARCH_EXYNOS5260:
-> >                       data->min_efuse_value =3D 40;
-> > -             else
-> > +                     break;
-> > +             case SOC_ARCH_EXYNOS5420:
-> > +             case SOC_ARCH_EXYNOS5420_TRIMINFO:
-> > +                     data->min_efuse_value =3D 16;
-> > +                     data->max_efuse_value =3D 76;
-> > +                     break;
-> > +             default:
-> >                       data->min_efuse_value =3D 0;
-> > -             data->max_efuse_value =3D 100;
-> > +                     break;
-> > +             }
-> >               break;
-> >       case SOC_ARCH_EXYNOS5433:
-> >               data->tmu_set_low_temp =3D exynos5433_tmu_set_low_temp;
->
-> Thanks for taking care of cleaning up this portion of code. IMO, it would=
- be
-> interesting to go a bit further in the house keeping by replacing this bi=
-g
-> switch with a set of structures stored as __init sections. The initializa=
-tion
-> finds the right structure and does a structure copy to 'data'.
->
-> It is up to you to do this change or not.
+My plan was for this RFC to demonstrate the usage of vendored and upsteam
+`UnsafePinned`, with a (not RFC) patch that just adds the vendored
+implementation.  
 
-I'll be sure to check this out.
+> 
+>>
+>> To test using the upsteam implementation a fairly new nightly
+>> rust version is required.
+>>
+>> Tested with rustc 1.88.0-nightly (78f2104e3 2025-04-16) and
+>> rustc 1.78.0 (9b00956e5 2024-04-29).
+>> ---
+>>  init/Kconfig                       |  3 ++
+>>  rust/kernel/lib.rs                 |  1 +
+>>  rust/kernel/types.rs               | 34 ++++++++++++++
+>>  rust/kernel/types/unsafe_pinned.rs | 90 ++++++++++++++++++++++++++++++++++++++
+>>  4 files changed, 128 insertions(+)
+> 
+>> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+>> index 9d0471afc9648f2973235488b441eb109069adb1..c4e234d5c07168295499c2a8fccc70e00e83e7ca 100644
+>> --- a/rust/kernel/types.rs
+>> +++ b/rust/kernel/types.rs
+>> @@ -253,6 +253,9 @@ fn drop(&mut self) {
+>>  ///
+>>  /// [`Opaque<T>`] is meant to be used with FFI objects that are never interpreted by Rust code.
+>>  ///
+>> +/// In cases where the contained data is only used by Rust, is not allowed to be
+>> +/// uninitialized and automatic [`Drop`] is desired [`UnsafePinned`] should be used instead.
+>> +///
+>>  /// It is used to wrap structs from the C side, like for example `Opaque<bindings::mutex>`.
+>>  /// It gets rid of all the usual assumptions that Rust has for a value:
+>>  ///
+>> @@ -578,3 +581,34 @@ pub enum Either<L, R> {
+>>  /// [`NotThreadSafe`]: type@NotThreadSafe
+>>  #[allow(non_upper_case_globals)]
+>>  pub const NotThreadSafe: NotThreadSafe = PhantomData;
+>> +
+>> +// When available use the upstream `UnsafePinned` type
+>> +#[cfg(CONFIG_RUSTC_HAS_UNSAFE_PINNED)]
+>> +pub use core::pin::UnsafePinned;
+>> +
+>> +// Otherwise us the kernel implementation of `UnsafePinned`
+>> +#[cfg(not(CONFIG_RUSTC_HAS_UNSAFE_PINNED))]
+>> +mod unsafe_pinned;
+>> +#[cfg(not(CONFIG_RUSTC_HAS_UNSAFE_PINNED))]
+>> +pub use unsafe_pinned::UnsafePinned;
+>> +
+>> +/// Trait for creating a [`PinInit`]ialized wrapper containing `T`.
+>> +// Needs to be defined in kernel crate to get around the Orphan Rule when upstream `UnsafePinned`
+>> +// is used.
+>> +pub trait TryPinInitWrapper<T: ?Sized> {
+>> +    /// Create an [`Self`] pin-initializer which contains `T`
+>> +    fn try_pin_init<E>(value: impl PinInit<T, E>) -> impl PinInit<Self, E>;
+>> +}
+>> +impl<T: ?Sized> TryPinInitWrapper<T> for UnsafePinned<T> {
+>> +    fn try_pin_init<E>(value: impl PinInit<T, E>) -> impl PinInit<Self, E> {
+>> +        // SAFETY:
+>> +        //   - In case of an error in `value` the error is returned, otherwise `slot` is fully
+>> +        //     initialized, since `self.value` is initialized and `_pin` is a zero sized type.
+>> +        //   - The `Pin` invariants of `self.value` are upheld, since no moving occurs.
+>> +        unsafe {
+>> +            pin_init::pin_init_from_closure(move |slot| {
+>> +                value.__pinned_init(Self::raw_get_mut(slot))
+>> +            })
+>> +        }
+>> +    }
+>> +}
+> 
+> I'd prefer the impl for `core::pin::UnsafePinned` to exist in
+> `pin-init`. Do you mind creating a PR on github [1]? If not, just send a
+> patch and I will upstream it.
 
-Thanks
--Anand
->
-> --
->
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
+It would probably also make sense to add this impl to other 
+Container/Wrapper types in `pin-init`.
+
+I'll start writing up a PR.
+
+Cheers,
+Christian
