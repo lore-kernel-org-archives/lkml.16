@@ -1,63 +1,63 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1CB26982A
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 05:34:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8316C2698AF
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 05:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744954466; cv=none; b=r3hzVHfy9pyusCMSIW5uppt1bMfNofMfFtKAegGM6WeODhDhsgFfqUXJ/8MY4B6WMaFhXsIg80xo1ug0EHF3WCMXxDCiy338mlopVK4KwyhldWr8eaAR/2983zC93E+kPoR/MDDstzKzSu0f81e+6kiBKzTnF/QIEeN1E0OMfPA=
+	t=1744954470; cv=none; b=O6AifxhlNB/7/efmoWycnY25gZG9ip6jyhc6LMTSrYfLxJminmjCZccnLcpM4ZP4rXqkQOaOcrZhFGuzbZq45veNnN7tlTn6ka50z6ejtzOKXoJJQ6V4hoggro0B/kIJn5SoddpAbGqy5U0mAgZWDlIjiFd1xXJsYt/Q0P/fZ1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744954466; c=relaxed/simple;
-	bh=iNvtmhIIdE2E+xRjc7orMQlXMujypCVr1/7GWwD+Wzc=;
+	s=arc-20240116; t=1744954470; c=relaxed/simple;
+	bh=JlciOvrYWEY6b/YhgnP1Ke7pg3E8uGE4s/5/enfMR1Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=m4uahVUFRi6FX/FYY6GJTcBGjcrnCJAQ2FJk9RnG56higWae6beAbbZgw1A5q0xjjpVBXQfX3GhKakzinBVqfkNacoXzVYTBVARbgxmNpBIcKjGsQJWikgxY4RlHPRw/QfsabzyuEr2HjXXWzq350PXP9AbFBOXqB2LVa9pl0/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=GPcXYGaN; arc=none smtp.client-ip=209.85.210.180
+	 MIME-Version; b=GTjADOAyqGH4MpTlUKAcFnXe81KcvB9y3tIciA7bNpseEA+4u0YzqHpx79BfCvzvgOOtXQDZcmf4bDT0oMGWxoh/fvamtOi2m58tC/P152GkoMGSQp0MpmxbN2Hdpr/VIA8ikdh9SJ9OCTAgSnibg0afw/xAn47UXDrhTpaXhiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=SeHkzRgi; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="GPcXYGaN"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-73bb647eb23so1370313b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 22:34:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="SeHkzRgi"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22928d629faso17684225ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 22:34:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1744954465; x=1745559265; darn=vger.kernel.org;
+        d=sifive.com; s=google; t=1744954468; x=1745559268; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BQs7uzZ6Onwkx41wDcc5ghYmXoSRb5gM/5WF7cFYuB0=;
-        b=GPcXYGaNYoB80blbfSFnf/p2fhAS4CEex7JOsmlQjiOPEt1R/luOvKmZ1IadudkGyk
-         xf4gXuCcUSTgfBcGYQop0Bj0JJtjI11KoaiKyoWryqpxqNxx2oZ9486COgxCn4NYFJQt
-         cVWuuvnMlQbg8zHX0pj1TxMULsxxveZr+eSsTUF+uELpTuxtUx97y4UFGkZ6bKT+Wwyb
-         VCFgtBanebl6ghRGIFC6NTrkbJ9t+EHitQszoOPRn3ZGqmpxpJ3GFAe4pPDLq8fOuPnp
-         zOMX56yVwL0lBtreu0KrXKWf8WnAVu0ss2+IP/hoNupuuGroHPySDi+5GQgm/ItkqmFh
-         wpYQ==
+        bh=TI4WLg30HJ0iF2ftd55+vT1VVRqGXHVwe/n9GHUog94=;
+        b=SeHkzRgi0rMLMkQOHq/nyRPnwe+nYchfjLnTmbB+wyj4cj9hAcpuGazgdGGNIZMvz4
+         Ras2TbmWu4xoAiZb8ctyJ9KtGYp8C67xSdNX7vihI9197AH91fMT/jbIBxJrjDH2dXhe
+         jrCAXgrYa/QIhWrWbNKSdzWpdTIAkZzQ8GL6A0b2IvqiTwBA9oRaoRqAvfVK3IndviK9
+         22Lo2XuMeHh1xWLjf7dv852r2g/nKg7xud4zYsmUQDTGLWmJfeNHQtedEgX+yy7xM3Ng
+         eSdhUBlV66jOTAibpHSh4xolsoWn5ILis5qdwHmHutvuAPEtF9H8ZWw1OuIaC8FnOTzh
+         UwHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744954465; x=1745559265;
+        d=1e100.net; s=20230601; t=1744954468; x=1745559268;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BQs7uzZ6Onwkx41wDcc5ghYmXoSRb5gM/5WF7cFYuB0=;
-        b=GdRrDZiaU8h/Tv9a+zSnd6UBE8FdQuTG9l2G8fqQ5CLCmzJZttgIodzOmtrFFnRxoj
-         nOtaa3b7DYS/9o2Nv4+uXykjabi8GvO10RVZUNHlib5l6Qmaw29TI3CterBnOgMS8LaB
-         HALrPIodx4THrXwjIoaJXgPCFZYWaRLsusRFpapJ6OY1BVw8X9SO1ZN7zyg4hWTPrRVv
-         lnACEjCJELnUmlXT5onf9cr7V/fC6p8WSaasM0Unm0QDvlKNZ+K7vVP2fm27tRLHuyXq
-         jhJ8ipfoJjOa/WSAfz+l8EhuxlonQjvQeq+FEIKYVxoZeJwAi4GfOD5tdCd+F5snsOkR
-         KReg==
-X-Forwarded-Encrypted: i=1; AJvYcCVSxyv9sexnYYsluKBP0A6KUyrZTKcPMpWBMmKXwZM8ZMf5jG1/69B10tnu9bSN3XdjW3SYQU3lwGAlTuw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykS+iQ0N4WWCpD+pv6OVYs/w9P/6vrJyp4j74554Hx2xCPNvqE
-	MhH0VD+c8YEIRyA+dd93Mv7Fxe+bWxeMRUiLIiZsDbLhoTBp1OxFDm+sCkNvMSA=
-X-Gm-Gg: ASbGncukP8P2Vr/G9BhIkYOAQwbm9OFKBSA6icb4/gpPPBirRL9TGmXSCd8Y0g9dSxy
-	M99kiUYOfaGjf8z01rgrMLXeSNGvEL8AOzO93r62P7nEVG+DIY1Z/Bh4ZaH4YTdA1dZZ6qhfNDk
-	0a8MexwvQI/DHKJKKExpBm7JYaW0Z2eRU0+SNYA1XoZsuVLh1xsrM+WQUtJ1j92L6Q7KovmN0CV
-	cXC3fkQirO7ETtw9no9K1kiKDd5YSqP87wrjWsESjRJlt/s+Tj+FtfqhARgnJfOXKnt1SktngYx
-	q3Z+ui/TZQ8U/uTy84TpCeT4P+DUYnzXZ1HUQBW27KHlSfWCVICaCkY+EODBdWzMukdqKzX/e4w
-	C
-X-Google-Smtp-Source: AGHT+IF2DvMayvvtqWjev5K9y4IkVU3547WcTSfffFPt6RiuPH7JdExs6M3EHo0S62GLsq0ai7FbqQ==
-X-Received: by 2002:a05:6a00:3a18:b0:736:62a8:e52d with SMTP id d2e1a72fcca58-73dc14c7d0dmr1797266b3a.12.1744954464653;
-        Thu, 17 Apr 2025 22:34:24 -0700 (PDT)
+        bh=TI4WLg30HJ0iF2ftd55+vT1VVRqGXHVwe/n9GHUog94=;
+        b=Ut51YwdxX8uHRgQzw+ziqhpvQZpJ5qdxcWGG9iVHJH/BIQPZAwRsFVnCM1Xl1bsdMV
+         Es4X9XoGQdWhfqjh65H13lBbPbS6yx5iYuH7zpD+51C0N4atPDjITuGSKLuNEWDnWVBm
+         XYd8JhgK8L7GzdYjI4fvRZxiV1d9cNQ8Pfq6p+ZPfPVOC87m5UtqHEXBraIPUg/oFqOw
+         qRoOFDXPH35zlkngaDQIfX86ky2glsT3LCY1qIif7jnQpqCFQiRKqDxHLggzX/1YZLsL
+         FkyX997hpTZB/p4zJvpQ400zl4Z/TfVHYL3NjiDkhTz62PedUXw5Mn14ccZIHTY8oWS1
+         FWug==
+X-Forwarded-Encrypted: i=1; AJvYcCU8Wr5Q1o8nfZrwfX32/mvevJqkZ/0jGMF3J5Q+nSIvUhJATBo51Ao0yvw3Uk9tmHFcO5/1k4HcYERKQnw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRpswpU+T9WeqXs2GXsVQXNvdI6GXrlYjno7AWx9NVRDOWeBYE
+	WNzx7fUvUWg81xk9MTpUw80Jh3xPqDB7VQX9AlwjWYNgUEeUjqw4YK3MQ+P2ZBM=
+X-Gm-Gg: ASbGnctleTz4fZNMn9ms3mMS0wr9y8WoFT6o+2D4KjleyQ9ikg9mXezMAggjuYZLwKY
+	Gp7wBXj/aYR/RhPSXIsxlu/RuZwGcJkiVDt23tkn2hE/ez3HopkH+hU8Ao4cLoihlRh6wkP6R1m
+	O01XVXOwyJPVJpNDrVdZiQ3qByZzMGYAw5wDPLCfzvOBxwWp3XRTvlZYredkS728PnRNGcEFYzk
+	5cnmvOGAufyPPY9HwIymUDSG7xn9A/NKwxRZwxTSTc6pDtEDtZAguvieBAhRdp3eaM8g1FJSCzk
+	Zv3nVHMVvNnM5of6ATAooTUioi+0MFXIkwCyV5dN9oJyIe0F+Fvz9ern7PrU4YD/63h4qx5yvXR
+	t
+X-Google-Smtp-Source: AGHT+IFv1lehPDXJIUVh6U71O3mQnTUUjpaJLVnE2K+fIDs2kQFHDaeWEg6RoPOaNtbqAjKHqbHtow==
+X-Received: by 2002:a17:902:ecd1:b0:226:5dbf:373f with SMTP id d9443c01a7336-22c53379f8amr24165215ad.10.1744954467906;
+        Thu, 17 Apr 2025 22:34:27 -0700 (PDT)
 Received: from cyan-mbp.internal.sifive.com ([136.226.240.168])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaed86csm834555b3a.180.2025.04.17.22.34.21
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaed86csm834555b3a.180.2025.04.17.22.34.24
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 17 Apr 2025 22:34:24 -0700 (PDT)
+        Thu, 17 Apr 2025 22:34:27 -0700 (PDT)
 From: Cyan Yang <cyan.yang@sifive.com>
 To: robh@kernel.org,
 	krzk+dt@kernel.org,
@@ -73,9 +73,9 @@ Cc: linux-doc@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Cyan Yang <cyan.yang@sifive.com>
-Subject: [PATCH 05/12] dt-bindings: riscv: Add xsfvfnrclipxfqf ISA extension description
-Date: Fri, 18 Apr 2025 13:32:32 +0800
-Message-Id: <20250418053239.4351-6-cyan.yang@sifive.com>
+Subject: [PATCH 06/12] riscv: Add SiFive xsfvfnrclipxfqf vendor extension
+Date: Fri, 18 Apr 2025 13:32:33 +0800
+Message-Id: <20250418053239.4351-7-cyan.yang@sifive.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20250418053239.4351-1-cyan.yang@sifive.com>
 References: <20250418053239.4351-1-cyan.yang@sifive.com>
@@ -87,31 +87,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add "xsfvfnrclipxfqf" ISA extension which is provided by SiFive for
-FP32-to-int8 ranged clip instructions support.
+Add SiFive vendor extension "xsfvfnrclipxfqf" support to the kernel.
 
 Signed-off-by: Cyan Yang <cyan.yang@sifive.com>
 ---
- Documentation/devicetree/bindings/riscv/extensions.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/riscv/include/asm/vendor_extensions/sifive.h | 1 +
+ arch/riscv/kernel/vendor_extensions/sifive.c      | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-index d36e7c68d69a..be203df29eb8 100644
---- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-+++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-@@ -675,6 +675,12 @@ properties:
-             See more details in
-             https://www.sifive.com/document-file/sifive-int8-matrix-multiplication-extensions-specification
+diff --git a/arch/riscv/include/asm/vendor_extensions/sifive.h b/arch/riscv/include/asm/vendor_extensions/sifive.h
+index 608004250e2e..2d05e3e73170 100644
+--- a/arch/riscv/include/asm/vendor_extensions/sifive.h
++++ b/arch/riscv/include/asm/vendor_extensions/sifive.h
+@@ -8,6 +8,7 @@
  
-+        - const: xsfvfnrclipxfqf
-+          description:
-+            SiFive FP32-to-int8 Ranged Clip Instructions Extensions Specification.
-+            See more details in
-+            https://www.sifive.com/document-file/fp32-to-int8-ranged-clip-instructions
-+
-         # T-HEAD
-         - const: xtheadvector
-           description:
+ #define RISCV_ISA_VENDOR_EXT_XSFVQMACCDOD		0
+ #define RISCV_ISA_VENDOR_EXT_XSFVQMACCQOQ		1
++#define RISCV_ISA_VENDOR_EXT_XSFVFNRCLIPXFQF		2
+ 
+ extern struct riscv_isa_vendor_ext_data_list riscv_isa_vendor_ext_list_sifive;
+ 
+diff --git a/arch/riscv/kernel/vendor_extensions/sifive.c b/arch/riscv/kernel/vendor_extensions/sifive.c
+index 990ac83b1f81..077315e5b2d7 100644
+--- a/arch/riscv/kernel/vendor_extensions/sifive.c
++++ b/arch/riscv/kernel/vendor_extensions/sifive.c
+@@ -9,6 +9,7 @@
+ 
+ /* All SiFive vendor extensions supported in Linux */
+ const struct riscv_isa_ext_data riscv_isa_vendor_ext_sifive[] = {
++	__RISCV_ISA_EXT_DATA(xsfvfnrclipxfqf, RISCV_ISA_VENDOR_EXT_XSFVFNRCLIPXFQF),
+ 	__RISCV_ISA_EXT_DATA(xsfvqmaccdod, RISCV_ISA_VENDOR_EXT_XSFVQMACCDOD),
+ 	__RISCV_ISA_EXT_DATA(xsfvqmaccqoq, RISCV_ISA_VENDOR_EXT_XSFVQMACCQOQ),
+ };
 -- 
 2.39.5 (Apple Git-154)
 
