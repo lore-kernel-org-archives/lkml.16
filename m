@@ -1,219 +1,198 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333DF224240
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 18:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A430D139579;
+	Fri, 18 Apr 2025 18:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745001878; cv=none; b=JA63E680U2n9Wbbuiq5T1RsHTJU1ukifFB6JQ8DUIz3bGXPHyPoLH8spoQLEHJuPtedUipx3ap4OXTj+2agUIoVhZznz8l2NT0iepFX9HnmrBn8DfwPgE3s3RnUXMtaYi9D+yew/rKlOiuddKc4D4Weqi2LNQ5ZixjrY+e8OgZ0=
+	t=1745002029; cv=none; b=nxdvgiVjKvcocPWwoB8KvOyMUXhYMmigYR0GFnFRN1Or0ukm07piaipui1lBQRT9fkKEnXO5Q/DI3a9MlFR/7dh5QabadRaFNJKwWdY6h3TOS1rwMHma26oqkBr/u82d8fgQlmVEQnyYBQnx8eGyK/gxm4ULai3l6otFc1CRU/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745001878; c=relaxed/simple;
-	bh=A37SRNBh1snDmbZr+v/J41GcTBJOHQzqEBViK5exvn8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=pBMXjiZ8gSYmABU88Jdi/me7RRan/8mkoouKyw7V0G8i/lgDaEPtudmdEGcn2E5hSaqmO4eZl55RUHHuFqOhISygnYbEMUQM4j1zi66Y3Dv37RiDzlU++MzsshmZyRp3bEx942izs7xlPqc/s7k3jNglmvpZAm73xCt2E6A6LkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qBPLsCr5; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745002029; c=relaxed/simple;
+	bh=UCzndLREGOJ1HN8JdvQNSnOAtJ668tQZphVwGg/0G1U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O+vl7zQcIVYJD9GUcrkO0ylMaz8tv6IJbzwh46aSsZNkEDdiGMK1C46jhQejxyRGd0+xQR/KC0fagc7NVQeR5cKCC/ZzBuhJ3kd/RtDkzExuRtSH6Qnq+fhn5/WaANOWQXM5VPM/gEM0hGN1iIzH6nqYANYYmiA+m2WXi7oD7D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dn9aHwf3; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qBPLsCr5"
-Message-ID: <78ff9e8a-5deb-428d-83ed-ffc7c7e4166f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745001870;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3xonVTSIdvXEEvVrxgU3pVjhN9jiUTT/4w0LBQhg7kw=;
-	b=qBPLsCr59vK0sdAztx/MrfGUXpi0LqSVuMUnEl9C3zEJe7S1PtypMv998G5H1/8M3cKlLl
-	YvFac77v+aD6ClqQdOdXi4Z25b4qPyUmOXldA/u0dRHCTwChB/ry3t+cy+ABWT7X+V+gmb
-	DrcvSOUTVjTukEmKGJYeq+UGBezGAIo=
-Date: Fri, 18 Apr 2025 20:43:44 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dn9aHwf3"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso1239927f8f.2;
+        Fri, 18 Apr 2025 11:47:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745002026; x=1745606826; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xf3q8YDPAJeeyFaU7k2MToDpz8/U6cAu9PboxW53bls=;
+        b=Dn9aHwf3dxyI8JMGzzUIWjUw057gibzyWTcz7MaEOu86H7eDT5FUTtNmF4lcEQCJC8
+         F+47vCLht1eaT88uf4R6+fHzNErbaARUw+wb5xsaU1hQ49YIJx8YU3mIzMNWl0F55aEv
+         LJyLdrWqlowpVjO0Op8r+eTfzhS6ID4l+1R7obdyzRLYXDlMP7Sp/ckxHUdJLqseucA6
+         ndw4/ItQggMcpakAnQwYMYdo5xU6rqC3JxdP/vDowSQ8I1OP28/JsEQ02TjUNjn+dcdb
+         YkJVuti58CH1C6qva2nNkifKusVmpYEajdT8LqugqflpbN6tWFGEUNnS0l0YDk3ODan4
+         3S4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745002026; x=1745606826;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xf3q8YDPAJeeyFaU7k2MToDpz8/U6cAu9PboxW53bls=;
+        b=vv12aeotgwY0tvLOzCNDsC245jv1iG3f6OiU1Q5mvr9KqughpoKNEzzXr90xPTYDDW
+         38MxCVLq9ddaSudYbelaQjPmT1XiVZtGRIrbr31McvSOlC6jvTm2+847fleOKDD8CmFs
+         wFVqMI6yqP040NG5x9QX2HqUv3wFJlKZOZUSgky1DToBNlqzhiQrWF5cws3nUUZnIy8n
+         kURm/j52+i8hFRhMqv0x9lSHefhmkjv+5y8etI53BWUffmvUmIOqvu8PE4At2UGBJzqj
+         GjmVaLJngv51IJhniL6l7enNEfqnGWA0hy/VnQPEAozeccxeVOb0nEeP03SoLVDVxytL
+         ZoCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU9Fw1pt0aVJfqARFMtpV8znf+aiN41/nbdekjifyhVIfhxjFE26/g0i3jDpyI9pWHfqUGJx89BKdqb@vger.kernel.org, AJvYcCVYHYyl/GTPJfxXYQM7qS4tR8Le9B7Oq3ADKlzRkUDf1IvxtP1UxtsE5aK7WMkNKydUM7GOJmkOdF12@vger.kernel.org, AJvYcCWBbb/A+XZqn/qsiOTUyKGcZGHuhQEbG1da4gGfIb4Ny7aLAAc+GMceu3ZWZxRLBnDNzkSQSg6mTgq4K1NFLLR9Dik=@vger.kernel.org, AJvYcCWjicdliX8TfF0d9qKuJbW7Qwijhl4zK+ziuOAgs6DAJ5lEZ7dSREUfrGgDGAIq7jHuY9fNh1Atxub+K06N@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgN3k6qC64YYUBovaHPEmPK2wTzZyskcZQcxMHP85+36UhayVE
+	73Y5RH66QaINg8+nwkJqhcPMx8SPTWfB+8vPotfs0qEHIEBfpblH
+X-Gm-Gg: ASbGncsyCDpjiraCnpVmnDydPcnT+LAG/YwLg9S1GmPe2T4Dm25Og1YLtZ1Y1cqE+Wj
+	sCnD1rhmm/eLbqruzmJgcf8S1i4fhazec/tCc08IMWOyzngNcOS2F+DqyoKpraK8gO7sRm31vg8
+	wieOs88LqmKWtxlHz1zJPIaqCgYGBdIwGo92a1kdG0YoEl6Wf1Xi/ENNumluYEwTnCVU09bgLHh
+	GeKoUyLtwfqsPlvjGANu6UeFwEHTKR+Y8ojdZb/lDBuKj/s/TCg6/iM3OMQsQuwgbYXqdOfOaRs
+	W8RC3fSiyDh3RjTqD9H/wQT4U/2nV/kqn7taZ/aPsY1UuzM7EC/dk4t5FnixzhnDMA0AA/+NP3o
+	F
+X-Google-Smtp-Source: AGHT+IHS8vLHpVzBqvxGhBw2n+0p0yJYim/zKB8jUDojxZGyaa9qGnb0KdwqJy/aIiAhn82k2Kx5sQ==
+X-Received: by 2002:a5d:584b:0:b0:391:412b:e23f with SMTP id ffacd0b85a97d-39efba3c819mr2746452f8f.15.1745002025495;
+        Fri, 18 Apr 2025 11:47:05 -0700 (PDT)
+Received: from iku.Home ([2a06:5906:61b:2d00:36cb:c641:13d7:bd3d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4931b8sm3404336f8f.80.2025.04.18.11.47.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 11:47:04 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Magnus Damm <magnus.damm@gmail.com>
+Cc: dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v3 00/15] Add support for DU and DSI on the Renesas RZ/V2H(P) SoC
+Date: Fri, 18 Apr 2025 19:46:43 +0100
+Message-ID: <20250418184658.456398-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [syzbot] [rdma?] INFO: trying to register non-static key in
- rxe_qp_do_cleanup
-To: syzbot <syzbot+4edb496c3cad6e953a31@syzkaller.appspotmail.com>,
- jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org,
- linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com,
- zyjzyj2000@gmail.com
-References: <680240b5.050a0220.297747.0007.GAE@google.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <680240b5.050a0220.297747.0007.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-在 2025/4/18 14:08, syzbot 写道:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    8ffd015db85f Linux 6.15-rc2
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16bc20cc580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=51ecb841db3b3687
-> dashboard link: https://syzkaller.appspot.com/bug?extid=4edb496c3cad6e953a31
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> 
-> Unfortunately, I don't have any reproducer for this issue yet.
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/7aa92e6fb2e5/disk-8ffd015d.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/1458d069253c/vmlinux-8ffd015d.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/fe6dd8111695/bzImage-8ffd015d.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+4edb496c3cad6e953a31@syzkaller.appspotmail.com
-> 
-> INFO: trying to register non-static key.
-> The code is fine but needs lockdep annotation, or maybe
-> you didn't initialize this object before use?
-> turning off the locking correctness validator.
-> CPU: 1 UID: 0 PID: 1151 Comm: kworker/u8:8 Not tainted 6.15.0-rc2-syzkaller #0 PREEMPT(full)
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-> Workqueue: rdma_cm cma_work_handler
-> Call Trace:
->   <TASK>
->   __dump_stack lib/dump_stack.c:94 [inline]
->   dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
->   assign_lock_key kernel/locking/lockdep.c:986 [inline]
->   register_lock_class+0x4a3/0x4c0 kernel/locking/lockdep.c:1300
->   __lock_acquire+0x99/0x1ba0 kernel/locking/lockdep.c:5110
->   lock_acquire kernel/locking/lockdep.c:5866 [inline]
->   lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
->   __timer_delete_sync+0x152/0x1b0 kernel/time/timer.c:1644
->   rxe_qp_do_cleanup+0x5c3/0x7e0 drivers/infiniband/sw/rxe/rxe_qp.c:815>   execute_in_process_context+0x3a/0x160 kernel/workqueue.c:4596
->   __rxe_cleanup+0x267/0x3c0 drivers/infiniband/sw/rxe/rxe_pool.c:232
->   rxe_create_qp+0x3f7/0x5f0 drivers/infiniband/sw/rxe/rxe_verbs.c:604
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-In the function rxe_create_qp, the function rxe_qp_from_init is called 
-to create qp, if this function rxe_qp_from_init fails, rxe_cleanup will 
-be called to handle all the allocated resources, including the timers: 
-retrans_timer and rnr_nak_timer.
+Hi All,
 
-The function rxe_qp_from_init calls the function rxe_qp_init_req to 
-initialize the timers: retrans_timer and rnr_nak_timer.
+This patch series adds support for the Display Unit (DU) and MIPI DSI
+interface on the Renesas RZ/V2H(P) SoC. The initial patches add PLLDSI
+clocks and reset entries for the DSI and LCDC and the later patches add
+support for the DU and DSI drivers. The DU block is similar to the
+RZ/G2L SoC, but the DSI interface is slightly different. The patches
+include updates to the device tree bindings, clock and reset
+controllers, and the DU driver to accommodate these changes.
 
-But these timers are initialized in the end of rxe_qp_init_req. If some 
-errors occur before the initialization of these timers, this problem 
-will occur.
+Note, my initial intention was to split the clock patches and the DU/DSI
+driver patches into two separate series. However, I found that sending
+them together will make it easier for the reviewers to understand clock
+related changes.
 
-235 static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
-236                            struct ib_qp_init_attr *init, struct 
-ib_udata *udata,
-237                            struct rxe_create_qp_resp __user *uresp)
-238 {
-..
-244         err = sock_create_kern(&init_net, AF_INET, SOCK_DGRAM, 0, 
-&qp->sk);
-245         if (err < 0)
-246                 return err;   < --- this will cause this problem
-..
-258         err = rxe_init_sq(qp, init, udata, uresp);
-259         if (err)
-260                 return err; < --- this will cause this problem
-261
-...
-271         if (init->qp_type == IB_QPT_RC) {
-272                 timer_setup(&qp->rnr_nak_timer, rnr_nak_timer, 0);
-273                 timer_setup(&qp->retrans_timer, retransmit_timer, 0);
-274         }
-275         return 0;
-276 }
+Note, the clock patches apply on top of the below patch series:
+- https://lore.kernel.org/all/20250407165202.197570-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
 
-Please comment on the above.
+v2->v3:
+- Update the commit message for patch 1/15 to clarify the purpose
+  of `renesas-rzv2h-dsi.h` header
+- Used mul_u32_u32() in rzv2h_cpg_plldsi_div_determine_rate()
+- Replaced *_mhz to *_millihz for clarity
+- Updated u64->u32 for fvco limits
+- Initialized the members in declaration order for
+  RZV2H_CPG_PLL_DSI_LIMITS() macro
+- Used clk_div_mask() in rzv2h_cpg_plldsi_div_recalc_rate()
+- Replaced `unsigned long long` with u64
+- Dropped rzv2h_cpg_plldsi_clk_recalc_rate() and reused
+  rzv2h_cpg_pll_clk_recalc_rate() instead
+- In rzv2h_cpg_plldsi_div_set_rate() followed the same style
+  of RMW-operation as done in the other functions
+- Renamed rzv2h_cpg_plldsi_set_rate() to rzv2h_cpg_pll_set_rate()
+- Dropped rzv2h_cpg_plldsi_clk_register() and reused
+  rzv2h_cpg_pll_clk_register() instead
+- Added a gaurd in renesas-rzv2h-dsi.h header
+- Reverted CSDIV0_DIVCTL2() to use DDIV_PACK()
+- Renamed plleth_lpclk_div4 -> cdiv4_plleth_lpclk
+- Renamed plleth_lpclk -> plleth_lpclk_gear
+- Collected reviewed tag from Krzysztof for patch 3/15
+- Dropped !dsi->info check in rzg2l_mipi_dsi_probe() as it
+  is not needed.
+- Simplifed V2H DSI timings array to save space
+- Switched to use fsleep() instead of udelay()
 
-Zhu Yanjun
+v1->v2:
+- Rebased the changes on top of v6.15-rc1
+- Kept the sort order for schema validation
+- Added  `port@1: false` for RZ/V2H(P) SoC
+- Added enum for RZ/V2H as suggested by Krzysztof as the list
+  will grow in the future (while adding RZ/G3E SoC).
+- Added Reviewed-by tag from Biju and Krzysztof.
+- Replaced individual flags as reset flag
+- Dropped unused macros
+- Added missing LPCLK flag to rzvv2h info
+- Dropped FCP and VSP documentation patch and sent them separately
 
+Cheers,
+Prabhakar
 
->   create_qp+0x62d/0xa80 drivers/infiniband/core/verbs.c:1250
->   ib_create_qp_kernel+0x9f/0x310 drivers/infiniband/core/verbs.c:1361
->   ib_create_qp include/rdma/ib_verbs.h:3803 [inline]
->   rdma_create_qp+0x10c/0x340 drivers/infiniband/core/cma.c:1144
->   rds_ib_setup_qp+0xc86/0x19a0 net/rds/ib_cm.c:600
->   rds_ib_cm_initiate_connect+0x1e8/0x3d0 net/rds/ib_cm.c:944
->   rds_rdma_cm_event_handler_cmn+0x61f/0x8c0 net/rds/rdma_transport.c:109
->   cma_cm_event_handler+0x94/0x300 drivers/infiniband/core/cma.c:2184
->   cma_work_handler+0x15b/0x230 drivers/infiniband/core/cma.c:3042
->   process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
->   process_scheduled_works kernel/workqueue.c:3319 [inline]
->   worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
->   kthread+0x3c2/0x780 kernel/kthread.c:464
->   ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
->   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
->   </TASK>
-> ------------[ cut here ]------------
-> ODEBUG: assert_init not available (active state 0) object: ffff8880541d8a58 object type: timer_list hint: 0x0
-> WARNING: CPU: 1 PID: 1151 at lib/debugobjects.c:612 debug_print_object+0x1a2/0x2b0 lib/debugobjects.c:612
-> Modules linked in:
-> CPU: 1 UID: 0 PID: 1151 Comm: kworker/u8:8 Not tainted 6.15.0-rc2-syzkaller #0 PREEMPT(full)
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-> Workqueue: rdma_cm cma_work_handler
-> RIP: 0010:debug_print_object+0x1a2/0x2b0 lib/debugobjects.c:612
-> Code: fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 54 41 56 48 8b 14 dd e0 73 f4 8b 4c 89 e6 48 c7 c7 60 68 f4 8b e8 1f db a5 fc 90 <0f> 0b 90 90 58 83 05 76 9b b1 0b 01 48 83 c4 18 5b 5d 41 5c 41 5d
-> RSP: 0018:ffffc90003eb73e8 EFLAGS: 00010282
-> RAX: 0000000000000000 RBX: 0000000000000005 RCX: ffffffff817acff8
-> RDX: ffff888027be8000 RSI: ffffffff817ad005 RDI: 0000000000000001
-> RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000000
-> R10: 0000000000000001 R11: 0000000000000001 R12: ffffffff8bf46f40
-> R13: ffffffff8b8fc880 R14: 0000000000000000 R15: ffffc90003eb74a8
-> FS:  0000000000000000(0000) GS:ffff888124ab2000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000000110c32628d CR3: 000000000e182000 CR4: 00000000003526f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->   <TASK>
->   debug_object_assert_init+0x1ec/0x2f0 lib/debugobjects.c:1020
->   debug_timer_assert_init kernel/time/timer.c:845 [inline]
->   debug_assert_init kernel/time/timer.c:890 [inline]
->   __try_to_del_timer_sync+0x7f/0x170 kernel/time/timer.c:1499
->   __timer_delete_sync+0xf4/0x1b0 kernel/time/timer.c:1662
->   rxe_qp_do_cleanup+0x5c3/0x7e0 drivers/infiniband/sw/rxe/rxe_qp.c:815
->   execute_in_process_context+0x3a/0x160 kernel/workqueue.c:4596
->   __rxe_cleanup+0x267/0x3c0 drivers/infiniband/sw/rxe/rxe_pool.c:232
->   rxe_create_qp+0x3f7/0x5f0 drivers/infiniband/sw/rxe/rxe_verbs.c:604
->   create_qp+0x62d/0xa80 drivers/infiniband/core/verbs.c:1250
->   ib_create_qp_kernel+0x9f/0x310 drivers/infiniband/core/verbs.c:1361
->   ib_create_qp include/rdma/ib_verbs.h:3803 [inline]
->   rdma_create_qp+0x10c/0x340 drivers/infiniband/core/cma.c:1144
->   rds_ib_setup_qp+0xc86/0x19a0 net/rds/ib_cm.c:600
->   rds_ib_cm_initiate_connect+0x1e8/0x3d0 net/rds/ib_cm.c:944
->   rds_rdma_cm_event_handler_cmn+0x61f/0x8c0 net/rds/rdma_transport.c:109
->   cma_cm_event_handler+0x94/0x300 drivers/infiniband/core/cma.c:2184
->   cma_work_handler+0x15b/0x230 drivers/infiniband/core/cma.c:3042
->   process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
->   process_scheduled_works kernel/workqueue.c:3319 [inline]
->   worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
->   kthread+0x3c2/0x780 kernel/kthread.c:464
->   ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
->   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
->   </TASK>
-> 
-> 
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> 
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
-> 
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
-> 
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
-> 
-> If you want to undo deduplication, reply with:
-> #syz undup
+Lad Prabhakar (15):
+  clk: renesas: rzv2h-cpg: Add support for DSI clocks
+  clk: renesas: r9a09g057: Add clock and reset entries for DSI and LCDC
+  dt-bindings: display: renesas,rzg2l-du: Add support for RZ/V2H(P) SoC
+  dt-bindings: display: bridge: renesas,dsi: Add support for RZ/V2H(P)
+    SoC
+  drm: renesas: rz-du: Add support for RZ/V2H(P) SoC
+  drm: renesas: rz-du: mipi_dsi: Add min check for VCLK range
+  drm: renesas: rz-du: mipi_dsi: Simplify HSFREQ calculation
+  drm: renesas: rz-du: mipi_dsi: Use VCLK for HSFREQ calculation
+  drm: renesas: rz-du: mipi_dsi: Add OF data support
+  drm: renesas: rz-du: mipi_dsi: Use mHz for D-PHY frequency
+    calculations
+  drm: renesas: rz-du: mipi_dsi: Add feature flag for 16BPP support
+  drm: renesas: rz-du: mipi_dsi: Add dphy_late_init() callback for
+    RZ/V2H(P)
+  drm: renesas: rz-du: mipi_dsi: Add function pointers for configuring
+    VCLK and mode validation
+  drm: renesas: rz-du: mipi_dsi: Add support for LPCLK handling
+  drm: renesas: rz-du: mipi_dsi: Add support for RZ/V2H(P) SoC
+
+ .../bindings/display/bridge/renesas,dsi.yaml  | 116 +++-
+ .../bindings/display/renesas,rzg2l-du.yaml    |  23 +-
+ drivers/clk/renesas/r9a09g057-cpg.c           |  63 +++
+ drivers/clk/renesas/rzv2h-cpg.c               | 237 ++++++++-
+ drivers/clk/renesas/rzv2h-cpg.h               |  17 +
+ drivers/gpu/drm/renesas/rz-du/rzg2l_du_drv.c  |  11 +
+ .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 498 ++++++++++++++++--
+ .../drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h   |  36 +-
+ include/linux/clk/renesas-rzv2h-dsi.h         | 211 ++++++++
+ 9 files changed, 1144 insertions(+), 68 deletions(-)
+ create mode 100644 include/linux/clk/renesas-rzv2h-dsi.h
+
+-- 
+2.49.0
 
