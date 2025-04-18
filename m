@@ -1,260 +1,232 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2042.outbound.protection.outlook.com [40.107.93.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6F0188A0E;
-	Fri, 18 Apr 2025 11:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744976890; cv=fail; b=bI3CKn02bwcl9fWYjCekmy7vHydcrKXrlKmTa1zun9ullzHdlv2SqejZQYdlxNNx87fF3gm0xMtnDQiFPIXWKm2UjIlbm7rMGueNW3EdsalNPHQQ8H+DgbAbgM3iOQEK9rMnQKoSyfq3KBl146kv1vDjFxTdoAc2RPOAOz6/8aU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744976890; c=relaxed/simple;
-	bh=jsSRyuFluG55phuJIFnaGvzU0crY5G7MSYs07zj8meQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Bx4jj+UFiZCNd1ihjY6i6OJ+JLYJ4br48xH6XmzwJCWL5JZvcEjFQF7XOTRYMF7T/euQ7c6IPCXM9FvZ97yXeX9wJxiM08JtRQ3MRCT+iVqQAJLZuufv+NeJsqcO2YXWxOL7BTH02i/na4FAF+OxMU0j/3FvQCzsKr8MZNfjsSI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=RlYYazZ7; arc=fail smtp.client-ip=40.107.93.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="RlYYazZ7"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bOfn53IfE3GmZ4m4JTHU7LKCzwKlWPlvlWZJDXy+D0fhSfCTLxmlmqRoX+s1CKt1g518vzFR7Ye/tH3hkPeZpEOGR+HRtXx4mz6LmZN0bhYxOPezYMQ1d5BIvvkFx1yGhORycw5xcQk8kzNZGJDFoW222dlMOZzdPGaNwyIN1QJHAZnLirZzoKkfDb4o1g3qnzpcHSkEadzdhqZfiqPjlgZbh/cr84XDeBaNtOUMeu2cdqbJewXRsc5pLKj9k8z5MyYsNWIG+OPp92mhRveuQ3tLXP7qPMYW8xb7nkYrdCznkyfuRLelRVsg3jcVbv49gEwEOUZQtLPWo+9hOIfMdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mUrO7FNeWe59qBs9iNVOZoHW1JeCGbl7PMaKpGvjNzA=;
- b=o1n18VkrfcsIWv8lAgD8bJsg8Ywlz2cwIQcmSHEvU+euASHcWcwmb9Le1BIRT6u2wD0jUiwRkmXUrdzSzEwrwhxSvbXcAAmMWDLLKTYvTrn69YsfUyRA+E5+OxfSLTVid4l7KUJEEaSPwQoCxUC8s5D7kBlAjjqdZ/KgVWpS677paWflZidAKNlM3zpytO7QySX7dv4YwCOf7bM84Qi1fxUkMhosS93Zj0Nt5T2Zz9RunGKonLC5LxzJ+4G8tsXcnXUyYVQXxDWGzuO499oS3d8GbcTytOT6sN/BwQyb0X+SJJE63ebKo37WSdt/mnIuG59NJTDnACPDTORmsqj98Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mUrO7FNeWe59qBs9iNVOZoHW1JeCGbl7PMaKpGvjNzA=;
- b=RlYYazZ7tNr4H/orpi7gHkCB47Y+cWi05HR2un57gw5fsuiq/JSJCMqU6HSb/M9RWfSr84v4JpY52R2E13NTu/FOES3bt6Lrmi/GLPsD5EpH9lqpadn9Ld86QGybFHHhDbVwIc0j9EibFPM2bN+OBzkAL/eUIdLy3lljRkOwdbnzK3sjdDHzFCddXD9s+XChZ/2zyAs/JXhNVJDTsfriFAKdg2ozUjTDIYNydeahIKqb4N5uG7f95lZOWKkbFpnv/SDOH2IN2L7+SO88yuxqkcp9rC4TdvuQGR3sFldvdv55QMt+7uMXBgO+Gqow4xH/uy/87sKxlnD48vAz/1PWpA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- DS0PR12MB7851.namprd12.prod.outlook.com (2603:10b6:8:14a::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8655.25; Fri, 18 Apr 2025 11:48:03 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8632.040; Fri, 18 Apr 2025
- 11:48:03 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Gavin Guo <gavinguo@igalia.com>
-Cc: david@redhat.com, willy@infradead.org, linmiaohe@huawei.com,
- hughd@google.com, revest@google.com, kernel-dev@igalia.com,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, linux-mm@kvack.org,
- akpm@linux-foundation.org
-Subject: Re: [PATCH v2] mm/huge_memory: fix dereferencing invalid pmd
- migration entry
-Date: Fri, 18 Apr 2025 07:48:01 -0400
-X-Mailer: MailMate (2.0r6245)
-Message-ID: <B40DD132-10A1-4DA8-8E42-756758218CBC@nvidia.com>
-In-Reply-To: <983ba47e-ab95-4a43-bca2-97b75c3c90d0@igalia.com>
-References: <20250418085802.2973519-1-gavinguo@igalia.com>
- <983ba47e-ab95-4a43-bca2-97b75c3c90d0@igalia.com>
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: BL1PR13CA0379.namprd13.prod.outlook.com
- (2603:10b6:208:2c0::24) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57D4199947
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 11:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744976971; cv=none; b=Xdl54yNixnPrXqBsE/X2/KnSilE7sD1X0CQRGSMdlBI2OC9kGTurc9fAPMdqEL22nfgrA8+odfgizTL6k5svqh+elK9hM9WEVLs1I3I+AeezZS1nbWoN/JuMGpvWxMU2rSXM9Eo6wyl6hyukLpIt5K+HX/+h6y+4kp/egg+FBXQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744976971; c=relaxed/simple;
+	bh=1uzu1kv2ZLD67E6okRuI51JM7knTFomsz1LXCyXqN/w=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=PpRZkAW2npTA7WKq8FxszOeZqMKe1jtizRyFCsa++dlNfYQsPx610H663p/wktwTAbDFQ6R4K+J+rLGaNev8prBGlwS1JaTPh//PaMQ5FzuanfDcm4p7fKlGA8lawleH87C4zp+8AtAuW87wLwR30/NLGtaO92f0AQgunNqUJ1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so20651765e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 04:49:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744976968; x=1745581768;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EVAZkueF6TO3vmEWTnRcjkq4LoD47LWe63XR/UPIPzA=;
+        b=rSii8sNALiReKqaJtZTG+ZiL3jeN1F6Lo8d0rkqcO3nq4dZESjWMX0T2wYHly+z/3I
+         Sed6RyZGnuaL/VZ52m8EOkOY4kfEp0/zmSxHai7OBzlsCzB+NYXR3k9S6qh0wjNyBbwb
+         8m2sc615WctHzqynsohmGYjSQ1WPdDVJJg28rcPsiaVMIth+dzvUd4BZ2CIj2cq1dXe0
+         ZepEEZdVOi47XAOaboSvWNNMRjQBm7t5vNec4NjfZjIRlURsVzl/Gn0flX2EPLmvRojM
+         CY+ykOX+x39t1n45NUQMitpYBsQBl+if6Bwgtn+E2V/p1pikpkiLh+WGkU0ZvELgJs5J
+         3/vg==
+X-Forwarded-Encrypted: i=1; AJvYcCWfB0wus8yZmXfr5kMgQIdEy3Ks+nJUyCzT5kfvq9p6n4oAut//ktvhduQKfpxU/jRAv7dgBdfvAK6ufLw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyP7OCSlGtqRRLg0qzRWjwPJWvTe2iDFOrsIl6w5yeutdgGmtq7
+	VqZoJnktx8LoiLkOqOOErQj7P+7iRKelQEJ7CuHsbOninLNSL7S9
+X-Gm-Gg: ASbGncujwZxszJGyUfGIyi4aVTiiT8suSpaL7/eHSGOPA8vHaQqwVo7Foek+dUDkyFf
+	TcDHYmwY2+Dtji0n/GO4JsDac6EDq5T9JKTxOmeZk5agqA2ab5UmW7/vQ/YxPf+S6pr2CC42J3w
+	HIOFgEYYtQn444srn8dtnGdrKN8idE9QqFNSXX/JlX/cyG1/TCOts938pQRyoXXr3CfLz8+Eujq
+	eJLcUquREIgHi4al1R7zMmXmiZBSnJkQh/Hi4A7zb7Eyp+gOf4sSZ3iegPm8KduJtSComtPo+SV
+	aG1J7IC7ZJEiFKBIp/SKtUyYsRQsb7K4eXSoibe41vTGgX/CbOU=
+X-Google-Smtp-Source: AGHT+IHAD5tCrAKdlb+hKiBaU767bCq+juH84w7mFehf7472CiKBwwZN5Ga2ogjoWSPneMEPliij4w==
+X-Received: by 2002:a5d:5987:0:b0:39e:e438:8e4b with SMTP id ffacd0b85a97d-39efbaf6e96mr1812477f8f.50.1744976967991;
+        Fri, 18 Apr 2025 04:49:27 -0700 (PDT)
+Received: from [10.100.102.67] ([95.35.174.203])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d6db117sm19288545e9.26.2025.04.18.04.49.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 04:49:27 -0700 (PDT)
+Message-ID: <4683e355-166f-4b9a-a3ea-529f7b058a84@grimberg.me>
+Date: Fri, 18 Apr 2025 14:49:25 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|DS0PR12MB7851:EE_
-X-MS-Office365-Filtering-Correlation-Id: ad68288d-ff1d-4981-f188-08dd7e6ee05a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?SBpLzj4JFYZDhKZhxCA8pHoe+Tbt95Rkj4LZBoiKIgUhUcLcASYZc2bZEvrU?=
- =?us-ascii?Q?7QXWX8PwiQ7cJg1OLavQkTGbolNQjiWwP84LFnOdxMiuPiQKab2GnBoCUvd4?=
- =?us-ascii?Q?6Pc8DPk3kjNZ+AfpGDq2ILnvqIj7EysSp5egxgi3tB4x+RZtAgqDp9eMmgHU?=
- =?us-ascii?Q?p1hsAzrGb47nVM++67qLFWsANbQJJKbdxpNdCKFSbeEHfuOvZbgZhmaZJEAf?=
- =?us-ascii?Q?3AyXKvozsL1bU1EJafHSuQgfSl453JnKVQLNS175mrlJ/FVx8Jyi+mKp3UzU?=
- =?us-ascii?Q?TFF1tI3PVixtr7mv8UgVBUT4PdeHo0SusrHfaxe3+LpCk7vaefvTf4iMBx5j?=
- =?us-ascii?Q?5fUPbAgZCRiqKU1OmbyWbVWvmIu8dn8cQdlFeKMFMGhk5dD59rRTlh9Q0aIA?=
- =?us-ascii?Q?xcnNlCKiEMPDuBmXotQRslZ4uTkBibDIISoqTogEDLqD5SufU6swWVDV5CHm?=
- =?us-ascii?Q?uiXnrA+t7KH6hOaPZ+EQOn3Tpywneo1LT2GLCu/iE6PesD/lXpjcpJbb9VQC?=
- =?us-ascii?Q?W7eVyG2n71yCR5vIAma2frk8yKe7iMAnidZDcv8Cwl4vwABHLnyP76NVRvWv?=
- =?us-ascii?Q?oPQ+8B30tMngDM7j94/b+7h79jccF2J3zieqb4yH/R2sqc+LcRBncmNMJSHz?=
- =?us-ascii?Q?XLnGK+IolHGH07euGEk10C+tteXf4ZdnsjrGLrysobLPVLKmOaj0YHvdNnoX?=
- =?us-ascii?Q?XjKbe95w0nlNbO1nzQ3U8r9EC2FDFOH1gNwmlVMpCfemULaqSZ0mqpUh7v7E?=
- =?us-ascii?Q?H6zHEl/wj/i+wCS+r8ylQ7bbQp3IIxlbqsLxINHT4C59odV1qoA1tKgoq9EC?=
- =?us-ascii?Q?gu1dqeeBxgdH/Sq050APtqO3W/ZDtp/r8O7djT14KmNIYfiTfgSGW24VQfzN?=
- =?us-ascii?Q?CiwoIoh552yKdj8XxD99gWNP1dXrWyB0hceoKRxXfrg+SB4aYuzdReW5aCMK?=
- =?us-ascii?Q?JuxtmZVimWKIyRdp9m8I7geBlvozO1c/8sm0o6kWQju7RDAi1IJ04vAS14JY?=
- =?us-ascii?Q?8UqJl8wY5xGb+y+3bwVTGqf7+hWWWQuR0Z0mdggYUJ1wbz2deOOpCsK6KO25?=
- =?us-ascii?Q?8n7eueiiKBflJmcg+8Qk4cffDXe48ZCafyozNWrOV8corOMQhKFqse1NdXOm?=
- =?us-ascii?Q?rOsE/fN2CYyLT39+Hm6CfpioNLvEiVi3vxE/eWMeJU25HnQ2hXgN2c/yl78B?=
- =?us-ascii?Q?syzEuTfSAJjuUNrFP+tP8edNF0MrWGVxPg2Bm1ZlJrr2LUGaeC/4haoDtJnN?=
- =?us-ascii?Q?Z+bXI2tBoNm6ovAXbwhU3dcxIh9G5UE5LYD/blKvHN9J6w+kwPK92MDw6xHU?=
- =?us-ascii?Q?22te1E762Ipu7ZDWYrJD9y9BrpM22vkZKfocucbzm99YIUYE0LwCDuXiCl55?=
- =?us-ascii?Q?JMfv3A9BA9x56SrIJflIDjANFBmP7Jzbts9SzVeOb2gDheWmEi3p0I4/LK1n?=
- =?us-ascii?Q?QloAXpBXhjc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?lnq/fGlYQ+lyRGGrJqqO8e0kkEjC18cD4UA+NJiCMyqKyX9KdFeUeZl0HdHm?=
- =?us-ascii?Q?8LMah0JxRnNVkwG3Qi3155pt4DY5nHwUi4yERLOZ8VPeyGvQT90LKX5rXrsa?=
- =?us-ascii?Q?iQ+KynOouUMFLPqozGz+06TzXsaUKcqt+NaAqDuGzkMgkTruY8XvTm6hWv3P?=
- =?us-ascii?Q?QHHOLQYQ8kHHeRF06IoQBuX+WgQug7zuGBJ7FNI7Mpc/1+3QY9azydlgzUT/?=
- =?us-ascii?Q?/ce83OLIzsX3jSiiMQWCyS7ouclTsV2kGBhdqzLsAjkhoBZcNDVwRC42Rucb?=
- =?us-ascii?Q?Rqcclt0o/fSgXXWOJvszoodFjYap3KI0wIgvTHLye6iB/DcXsia2qWMCDQ0N?=
- =?us-ascii?Q?Q3qU6JKXNs3bLTIv0YfBLGdg1aqGbb1raAvCFBjs26cCM31aNlNVNGCdUN7Q?=
- =?us-ascii?Q?aAAEdzJXG6cts4BLvkTcVRqPQpcdKn/vfp1OFohxH3CEYur1wW43qmLsx21G?=
- =?us-ascii?Q?VEFCL05D5smFWo42N2LLYxejdOCobxonAn14nZsNIV8EYReEfMclvJ2oobaL?=
- =?us-ascii?Q?sxi5BKwVfhjbMsxKmCHpfNLQCeSmodBR3mlf1ztVu2zGiKQ6NLSZ1hw5Onbm?=
- =?us-ascii?Q?CY748uhPZttrQ8owPf/+WBPSGLrq2SQqawHY1SMFbMuEiD+JB02gMwsZMBLT?=
- =?us-ascii?Q?eHmSbJ73ql+floImC4gsPZsMU2zEf2gBU7jyx2YgyQPjTZnVV/XHOJEzmA3J?=
- =?us-ascii?Q?wnxNIh63SYIVmiNiPBBmy+KxSFgb82plBzO1RdmUux26FQyaFc9bKfv8z1o4?=
- =?us-ascii?Q?OwVEe5TdzrvQmA+F1of/EjDsKeBDI9TAA9IX+Y16KWB0nF3rctfo/Uua1qqi?=
- =?us-ascii?Q?v2UvqjHWOHYUEt+Tx0K9xjmAdtvdctm5aZUjGUz17C2Tu/fMBVm3s+5zc64w?=
- =?us-ascii?Q?hFspTSlfFYnI9N27sh+o06wniEdkfHZQkdHDnZUOJhR0w3czcSyR1Czgwv5t?=
- =?us-ascii?Q?sAMYv0PS1jsKaLO8VHJ0yofutX1413E41mOx6wrpkgCOGT+SNDTmPK1SkiMD?=
- =?us-ascii?Q?bn9UDENBvVJV1guNv0yLcYwUjyEirqOVg1T0Ju7m5r2Qj90i9Pct9a3bncje?=
- =?us-ascii?Q?rULG7ACGufggIax43niO+Q7fQgcq1Sqq6L7oM9+mFqz+FkhPFzKsc/mMqLvT?=
- =?us-ascii?Q?b4Gxck8EMY8gNQan+1BFXFqPKVG4kVmKKdpwiguIwhfkNGi1hJyuMvM31MIa?=
- =?us-ascii?Q?Env3uMA5jgyHJFrAJtQmf1ufvlVJ0CEv88e8tsXGAo0hY9ERKgqDfdNx0VmI?=
- =?us-ascii?Q?MXtkNSRh/iQyisv7Otp/PZguoTSyNuhcEcUr1SGBhy/GOztwNDFdW7u6Uyvy?=
- =?us-ascii?Q?MYCAGAdv2EJw1ZRe+K4I9U/TfD5wqvA9G/fK80rZ4/kxNIEVzq9rqrEQ75NK?=
- =?us-ascii?Q?evgvmyU/4aPB3Xfzii930NVcIrfy/1KnXyXw/umWd+pLXkBSV9nk9+AOfLt4?=
- =?us-ascii?Q?LUn7aOwZj2ADEn5rs3QZiOLh7CyG8Pz3WaVhsWRHW77ITq6xO2ajfdAYSyHw?=
- =?us-ascii?Q?m5gnNOx+MQvzzwe/oUEENMVOpohQIeeBsSo5uw4dKJGvFCBASXIEMhRa95Hb?=
- =?us-ascii?Q?50/EFeiRPafKzhCYVe842Nq6SAk0jBpk1WxSe7Df?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad68288d-ff1d-4981-f188-08dd7e6ee05a
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2025 11:48:03.3795
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5SFF/3jMZb3MsixSrlc+AYnaUNcA8B+CvB3OAHGRaskN6AINqXoADBj2wDnUs7eB
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7851
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] nvme-tcp: wait socket wmem to drain in queue stop
+From: Sagi Grimberg <sagi@grimberg.me>
+To: Michael Liang <mliang@purestorage.com>, Keith Busch <kbusch@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>
+Cc: Mohamed Khalfella <mkhalfella@purestorage.com>,
+ Randy Jennings <randyj@purestorage.com>, linux-nvme@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250417071359.iw3fangcfcuopjza@purestorage.com>
+ <acc46429-6228-475e-8fd8-bc3d43c7f710@grimberg.me>
+Content-Language: en-US
+In-Reply-To: <acc46429-6228-475e-8fd8-bc3d43c7f710@grimberg.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 18 Apr 2025, at 5:03, Gavin Guo wrote:
 
-> On 4/18/25 16:58, Gavin Guo wrote:
->> When migrating a THP, concurrent access to the PMD migration entry
->> during a deferred split scan can lead to a invalid address access, as
->> illustrated below. To prevent this page fault, it is necessary to chec=
-k
->> the PMD migration entry and return early. In this context, there is no=
 
->> need to use pmd_to_swp_entry and pfn_swap_entry_to_page to verify the
->> equality of the target folio. Since the PMD migration entry is locked,=
-
->> it cannot be served as the target.
->>
->> Mailing list discussion and explanation from Hugh Dickins:
->> "An anon_vma lookup points to a location which may contain the folio o=
-f
->> interest, but might instead contain another folio: and weeding out tho=
-se
->> other folios is precisely what the "folio !=3D pmd_folio((*pmd)" check=
-
->> (and the "risk of replacing the wrong folio" comment a few lines above=
-
->> it) is for."
->>
->> BUG: unable to handle page fault for address: ffffea60001db008
->> CPU: 0 UID: 0 PID: 2199114 Comm: tee Not tainted 6.14.0+ #4 NONE
->> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian=
--1.16.3-2 04/01/2014
->> RIP: 0010:split_huge_pmd_locked+0x3b5/0x2b60
->> Call Trace:
->> <TASK>
->> try_to_migrate_one+0x28c/0x3730
->> rmap_walk_anon+0x4f6/0x770
->> unmap_folio+0x196/0x1f0
->> split_huge_page_to_list_to_order+0x9f6/0x1560
->> deferred_split_scan+0xac5/0x12a0
->> shrinker_debugfs_scan_write+0x376/0x470
->> full_proxy_write+0x15c/0x220
->> vfs_write+0x2fc/0xcb0
->> ksys_write+0x146/0x250
->> do_syscall_64+0x6a/0x120
->> entry_SYSCALL_64_after_hwframe+0x76/0x7e
->>
->> The bug is found by syzkaller on an internal kernel, then confirmed on=
-
->> upstream.
->>
->> Fixes: 84c3fc4e9c56 ("mm: thp: check pmd migration entry in common pat=
-h")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Gavin Guo <gavinguo@igalia.com>
->> Acked-by: David Hildenbrand <david@redhat.com>
->> Acked-by: Hugh Dickins <hughd@google.com>
->> Acked-by: Zi Yan <ziy@nvidia.com>
->> Link: https://lore.kernel.org/all/20250414072737.1698513-1-gavinguo@ig=
-alia.com/
->> ---
->> V1 -> V2: Add explanation from Hugh and correct the wording from page
->> fault to invalid address access.
->>
->>   mm/huge_memory.c | 18 ++++++++++++++----
->>   1 file changed, 14 insertions(+), 4 deletions(-)
->>
->> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->> index 2a47682d1ab7..0cb9547dcff2 100644
->> --- a/mm/huge_memory.c
->> +++ b/mm/huge_memory.c
->> @@ -3075,6 +3075,8 @@ static void __split_huge_pmd_locked(struct vm_ar=
-ea_struct *vma, pmd_t *pmd,
->>   void split_huge_pmd_locked(struct vm_area_struct *vma, unsigned long=
- address,
->>   			   pmd_t *pmd, bool freeze, struct folio *folio)
->>   {
->> +	bool pmd_migration =3D is_pmd_migration_entry(*pmd);
->> +
->>   	VM_WARN_ON_ONCE(folio && !folio_test_pmd_mappable(folio));
->>   	VM_WARN_ON_ONCE(!IS_ALIGNED(address, HPAGE_PMD_SIZE));
->>   	VM_WARN_ON_ONCE(folio && !folio_test_locked(folio));
->> @@ -3085,10 +3087,18 @@ void split_huge_pmd_locked(struct vm_area_stru=
-ct *vma, unsigned long address,
->>   	 * require a folio to check the PMD against. Otherwise, there
->>   	 * is a risk of replacing the wrong folio.
->>   	 */
->> -	if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) ||
->> -	    is_pmd_migration_entry(*pmd)) {
->> -		if (folio && folio !=3D pmd_folio(*pmd))
->> -			return;
->> +	if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) || pmd_migration) {
->> +		if (folio) {
->> +			/*
->> +			 * Do not apply pmd_folio() to a migration entry; and
->> +			 * folio lock guarantees that it must be of the wrong
->> +			 * folio anyway.
->> +			 */
->> +			if (pmd_migration)
->> +				return;
->> +			if (folio !=3D pmd_folio(*pmd))
->> +				return;
->> +		}
->>   		__split_huge_pmd_locked(vma, pmd, address, freeze);
->>   	}
->>   }
->>
->> base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
+On 4/18/25 14:30, Sagi Grimberg wrote:
 >
-> Hi Zi, I've carefully reviewed the mailing list and observed that the i=
-ndentation is not a strong concern from the reviews. And the cleanup sugg=
-estion from David will override the modification in this patch. I have de=
-cided to keep the original version (the unindented one). Let me know if y=
-ou have any feedback with the v2 patch. Thank you!
+>
+> On 4/17/25 10:13, Michael Liang wrote:
+>> This patch addresses a data corruption issue observed in nvme-tcp during
+>> testing.
+>>
+>> Issue description:
+>> In an NVMe native multipath setup, when an I/O timeout occurs, all 
+>> inflight
+>> I/Os are canceled almost immediately after the kernel socket is shut 
+>> down.
+>> These canceled I/Os are reported as host path errors, triggering a 
+>> failover
+>> that succeeds on a different path.
+>>
+>> However, at this point, the original I/O may still be outstanding in the
+>> host's network transmission path (e.g., the NIC’s TX queue). From the
+>> user-space app's perspective, the buffer associated with the I/O is 
+>> considered
+>> completed since they're acked on the different path and may be reused 
+>> for new
+>> I/O requests.
+>>
+>> Because nvme-tcp enables zero-copy by default in the transmission path,
+>> this can lead to corrupted data being sent to the original target, 
+>> ultimately
+>> causing data corruption.
+>>
+>> We can reproduce this data corruption by injecting delay on one path and
+>> triggering i/o timeout.
+>>
+>> To prevent this issue, this change ensures that all inflight 
+>> transmissions are
+>> fully completed from host's perspective before returning from queue
+>> stop. To handle concurrent I/O timeout from multiple namespaces under
+>> the same controller, always wait in queue stop regardless of queue's 
+>> state.
+>>
+>> This aligns with the behavior of queue stopping in other NVMe fabric 
+>> transports.
+>>
+>> Reviewed-by: Mohamed Khalfella <mkhalfella@purestorage.com>
+>> Reviewed-by: Randy Jennings <randyj@purestorage.com>
+>> Signed-off-by: Michael Liang <mliang@purestorage.com>
+>> ---
+>>   drivers/nvme/host/tcp.c | 16 ++++++++++++++++
+>>   1 file changed, 16 insertions(+)
+>>
+>> diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+>> index 26c459f0198d..62d73684e61e 100644
+>> --- a/drivers/nvme/host/tcp.c
+>> +++ b/drivers/nvme/host/tcp.c
+>> @@ -1944,6 +1944,21 @@ static void __nvme_tcp_stop_queue(struct 
+>> nvme_tcp_queue *queue)
+>>       cancel_work_sync(&queue->io_work);
+>>   }
+>>   +static void nvme_tcp_stop_queue_wait(struct nvme_tcp_queue *queue)
+>> +{
+>> +    int timeout = 100;
+>> +
+>> +    while (timeout > 0) {
+>> +        if (!sk_wmem_alloc_get(queue->sock->sk))
+>> +            return;
+>> +        msleep(2);
+>> +        timeout -= 2;
+>> +    }
+>> +    dev_warn(queue->ctrl->ctrl.device,
+>> +         "qid %d: wait draining sock wmem allocation timeout\n",
+>> +         nvme_tcp_queue_id(queue));
+>> +}
+>> +
+>>   static void nvme_tcp_stop_queue(struct nvme_ctrl *nctrl, int qid)
+>>   {
+>>       struct nvme_tcp_ctrl *ctrl = to_tcp_ctrl(nctrl);
+>> @@ -1961,6 +1976,7 @@ static void nvme_tcp_stop_queue(struct 
+>> nvme_ctrl *nctrl, int qid)
+>>       /* Stopping the queue will disable TLS */
+>>       queue->tls_enabled = false;
+>>       mutex_unlock(&queue->queue_lock);
+>> +    nvme_tcp_stop_queue_wait(queue);
+>>   }
+>>     static void nvme_tcp_setup_sock_ops(struct nvme_tcp_queue *queue)
+>
+> This makes sense. But I do not want to pay this price serially.
+> As the concern is just failover, lets do something like: diff --git 
+> a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c index 
+> 5041cbfd8272..d482a8fe2c4b 100644 --- a/drivers/nvme/host/tcp.c +++ 
+> b/drivers/nvme/host/tcp.c @@ -2031,6 +2031,8 @@ static void 
+> nvme_tcp_stop_io_queues(struct nvme_ctrl *ctrl) for (i = 1; i < 
+> ctrl->queue_count; i++) nvme_tcp_stop_queue(ctrl, i); + for (i = 1; i 
+> < ctrl->queue_count; i++) + 
+> nvme_tcp_stop_queue_wait(&ctrl->queues[i]); } static int 
+> nvme_tcp_start_io_queues(struct nvme_ctrl *ctrl, @@ -2628,8 +2630,10 
+> @@ static void nvme_tcp_complete_timed_out(struct request *rq) { 
+> struct nvme_tcp_request *req = blk_mq_rq_to_pdu(rq); struct nvme_ctrl 
+> *ctrl = &req->queue->ctrl->ctrl; + int idx = 
+> nvme_tcp_queue_id(req->queue); - nvme_tcp_stop_queue(ctrl, 
+> nvme_tcp_queue_id(req->queue)); + nvme_tcp_stop_queue(ctrl, idx); + 
+> nvme_tcp_stop_queue_wait(&ctrl->queues[idx]); 
+> nvmf_complete_timed_out_request(rq); }
 
-No problem. Thank you for the fix.
+Or perhaps something like:
+--
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index 5041cbfd8272..3e206a2cbbf3 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -1944,7 +1944,7 @@ static void __nvme_tcp_stop_queue(struct 
+nvme_tcp_queue *queue)
+         cancel_work_sync(&queue->io_work);
+  }
 
-Best Regards,
-Yan, Zi
+-static void nvme_tcp_stop_queue(struct nvme_ctrl *nctrl, int qid)
++static void nvme_tcp_stop_queue_nowait(struct nvme_ctrl *nctrl, int qid)
+  {
+         struct nvme_tcp_ctrl *ctrl = to_tcp_ctrl(nctrl);
+         struct nvme_tcp_queue *queue = &ctrl->queues[qid];
+@@ -1963,6 +1963,29 @@ static void nvme_tcp_stop_queue(struct nvme_ctrl 
+*nctrl, int qid)
+         mutex_unlock(&queue->queue_lock);
+  }
+
++static void nvme_tcp_wait_queue(struct nvme_ctrl *nctrl, int qid)
++{
++       struct nvme_tcp_ctrl *ctrl = to_tcp_ctrl(nctrl);
++       struct nvme_tcp_queue *queue = ctrl->queues[qid];
++       int timeout = 100;
++
++       while (timeout > 0) {
++               if (!sk_wmem_alloc_get(queue->sock->sk))
++                       return;
++               msleep(2);
++               timeout -= 2;
++       }
++       dev_warn(queue->ctrl->ctrl.device,
++                "qid %d: timeout draining sock wmem allocation expired\n",
++                nvme_tcp_queue_id(queue));
++}
++
++static void nvme_tcp_stop_queue(struct nvme_ctrl *nctrl, int qid)
++{
++       nvme_tcp_stop_queue_nowait(nctrl, qid);
++       nvme_tcp_wait_queue(nctrl, qid);
++}
++
+  static void nvme_tcp_setup_sock_ops(struct nvme_tcp_queue *queue)
+  {
+write_lock_bh(&queue->sock->sk->sk_callback_lock);
+@@ -2030,7 +2053,9 @@ static void nvme_tcp_stop_io_queues(struct 
+nvme_ctrl *ctrl)
+         int i;
+
+         for (i = 1; i < ctrl->queue_count; i++)
+-               nvme_tcp_stop_queue(ctrl, i);
++               nvme_tcp_stop_queue_nowait(ctrl, i);
++       for (i = 1; i < ctrl->queue_count; i++)
++               nvme_tcp_wait_queue(ctrl, i);
+  }
+
+  static int nvme_tcp_start_io_queues(struct nvme_ctrl *ctrl,
+--
