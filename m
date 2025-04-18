@@ -1,214 +1,259 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D982CCC0;
-	Fri, 18 Apr 2025 16:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94D52101BD
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 16:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744995005; cv=none; b=AMebPMYyOQpvol+QKsgjI5TquNyyjO8a52Rp2jWXCrlvy3CAqmrUITMksVqmT2kPuBQ7MlBIJoTWA6pgf1rpi70+cb7igu33SMjWwadkWh9gRdMDdNqGwQXTnOgLR869cEdDkHXICNmZYhPgyn+yjxLAO9tqj7HWzgpmU56oFnM=
+	t=1744995057; cv=none; b=dXjUDYw58Mc4AxSwlBuI+GJL1KM+1CKXi5pcrRZ9U//U0Ep/W8dksfjQIx1SHNSzoEiL6YxWu0z2LOFpQZ0z1/RfCvqehZipzLOSb2AFkkltWu/WnMzcyRVOwmoeRwzhC2IjAlDgKjxvs/BGmcIiJqJkLXOlHy0anOKF1Z173Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744995005; c=relaxed/simple;
-	bh=4SPvBV/MDlxiR5aX8tf3sSjbLn91cuUdLEqO9PVmDQk=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KGR59Nl5nJCmndkJT8jLFhj0bZGIUxJFxpfEznU0gkQ4hFAapOb6tkMbQPeXovQm1k9pkNlo+CK+yW6H046uI64pBz/E6pE+ILrcm+OsehbMKtQs55yDFRc6dAmQLNlCnQMKGgHw428FZoPQPKpHANF+6ewD7ZOk5oqRVDB5/Jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lrrrf0MS; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744995057; c=relaxed/simple;
+	bh=WE+4kcegKFumEU2/cCwpl70p8Q1yafjeQmFvljLxkuE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gciru5lFYDq1WuZKRJ0B79SdRdmNTHC1cl9Rjh9zgjMRAwYxqU2YfI2Kk5rURhMGovuZ6XIclhRZ97hL1b84sJ+9tRq6FvEIC37F6SFIWY/QIku1De/GZCtnGBduyTfmsH03DrghFBF9ehvF9o4qlWtIJnvz4sIYCRpv1U2ZjTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gfcTRceH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lrrrf0MS"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c5e39d1db2so106419285a.3;
-        Fri, 18 Apr 2025 09:50:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744995002; x=1745599802; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wqsq8yPJja9MfMcD3tAjoUAZlgKfMc3FNlCDKzyz/mQ=;
-        b=lrrrf0MSCUXxj/r/YYaM1WogRuDOimZmPrWclmn8ZFQJvmeyewiIfT7eHJ9zgO7Hmq
-         ZHN28gufvNIPoESOKuvJCgb4TjFHsdOhk9MJAdNPSM2HrNCpjhEdu0KsYdDtG7Wgvrkf
-         4jOA/eE9J2D5FiTVYl6P27rJfdhYW7h0GZzsKhe5mYL8eEsULn+h0luMu61sPKUttKcO
-         tegNKf63mP80s4RRiyB1SBb56kBYC2IpmGxv8134vjRCVLVc3bNNZ3p/7eAWTMqkNQEP
-         xZ7qxaXLcEKdwXi6GruI7lTDKPG0OIQelCtA2xJoEhDk0pLmDigBVqTfGZsSBvetm5f1
-         KqRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744995002; x=1745599802;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wqsq8yPJja9MfMcD3tAjoUAZlgKfMc3FNlCDKzyz/mQ=;
-        b=K7N4+5Vt4wRCfmSPtFkoNPs63xxQY0YkS71Tdr9PhaIyEZ0OlXgLI5T9RxUk4pF4Xc
-         C07SEYuHT4x/glucZoWVswVFon80iIZatlyZupVHr1sOKWCvfoQdgIWCwVVaaWZ7HPA/
-         WOGkGX0Zhiusbfad6NIULHtyAxvqB88NES7IzRNjEiLCv+kfD2TXUQRAW5kY9YbvT4RS
-         wu/ad4b2G4eVpiccRrVqAzu86vLdFL1aIB2bLkMMxZVm7qCh25I3SYnHsBHqIa3yHa7n
-         12NAvAUnlTfLWEZ4BuBEa0So26IM1YD8YkYl1V+KuvKsHEr/L1BXG7BBpi8tCsUimJfX
-         Adkw==
-X-Forwarded-Encrypted: i=1; AJvYcCW2og31Z+WeCdSo8wfv3D5vgJ83JOxt8cwP4kJPknMIsbD4RkZngXdD+Eje38/cU3+FCF79lj3wkJe/IF+ygjQI@vger.kernel.org, AJvYcCW3y2XAb0ivOt7Uqgmu/+fHIhm7iYd6rdUMmD7V5FCJAOKBRdGteZvgoNY42fcWhKIFj/NInU5SeY/gnEes@vger.kernel.org, AJvYcCWDJZI4EZyJLAj473r0JLjitMAr6oihTMUyqWndGMwPr22J3eRUitNgI/+IjehofMDmRfrLJnbu2mJK7y8gR7c=@vger.kernel.org, AJvYcCWLgF/OAO37VKGEyB3dQDYXLZuDbgRZVVvDtdqmsbUbZEqxL99ZEMENvWFEXBPq9sOHnLA1LQEBInWqrtei@vger.kernel.org, AJvYcCWNr1q5lbQj75hg2WkpZewcoU9fkILDCcEsDSVOZi/L8q8X8ll6pqmuiSBvcppaa8yl0gPgEM8GPfKU@vger.kernel.org, AJvYcCXOBnvcn67falgpbTxxH7KDvacVAc3L+qJcP60NodFIiBg9dwVUKg882cwgIMQt5onqmbV2POzq9Qz7df8=@vger.kernel.org, AJvYcCXQbeL0QffPNJ+Inpel/2qRIIZHpaozwD8iSprQE0NdcsS0rYz6tLEPUpQi18wHbeABKUXw31w/@vger.kernel.org, AJvYcCXRoASaZD/WPF7wEjZvDLSHhzlUBwEwkx4wNJ5T5NiSA2hjZmj1pcVfe9V0VQtD3f/B+VMjJAsIilJE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy02AA3biaQOt3ajCn3eXkdhSK1D79qeNRR61vK98Sm6ndSPea+
-	lsw968H3Y9HU1naP6VsI020AI8Ap6JVud0ekCgBtoxgN6kH9Mmne
-X-Gm-Gg: ASbGncvejsFRtG7wuaE1/WrnJswWacjnAwgXLmAIx9zf8bS726ppbk2bt9bGT59K41m
-	XTmRGGi+4t2l91gCD0/BVLB4zRLra3jyXv4o/c1Syc0sWVMV55ZOmVd02UY3sQFVOrAgDodPQ1e
-	dAGXQQUv8yVMFsUZxwYm8vZm93ISjvHtiiw5Baw9rfXh5nPmJ/IOUja2Bh9wT843nvPionC9ot4
-	oZqOMqrrIARgCCHCMUK4KKqlolaN6Q1zrFpS/KhTMnLHQalYaUOU4Tyl+oRp+fx3ZYgZE54G4bP
-	wk6E8cy9sCz+S8H7dZOUAAWiSIKQiorDwDiyy1Jtcls1Qz82dC5LeQPGYP21/2owvi2yfyZaXMS
-	mNNfgjyetk66qCq6fLedGb7t0xUBJCsAuAffSPI/jyw==
-X-Google-Smtp-Source: AGHT+IGjqTF4f9smmVkb3wgWaIXUFVJ5bhyDcAmk4QFxgPcVtKxPUq6oNVaI94PfU1W5J6bp6Dym2A==
-X-Received: by 2002:a05:620a:4112:b0:7c5:9b93:8f64 with SMTP id af79cd13be357-7c92800f4ccmr542294585a.37.1744995001792;
-        Fri, 18 Apr 2025 09:50:01 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925ac5018sm124259085a.52.2025.04.18.09.50.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 09:50:01 -0700 (PDT)
-Message-ID: <680282b9.050a0220.3b746a.5cf9@mx.google.com>
-X-Google-Original-Message-ID: <aAKCtQe8o73FA8db@winterfell.>
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 0E13C1200043;
-	Fri, 18 Apr 2025 12:50:00 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Fri, 18 Apr 2025 12:50:00 -0400
-X-ME-Sender: <xms:t4ICaPrgLkWEbH6GWhTGPaFLVQbWrWOHlfTfkbUonj_YAvDMD-KU1Q>
-    <xme:t4ICaJqChA3dlMw71yhy8csoqqK5Y4iLQ0Z62MWQRL5LWGE5fFQMMMJHqxl4-Vp_7
-    SP1XzVYBXxDcpDtJg>
-X-ME-Received: <xmr:t4ICaMNPGrgxWdPMVCQLF2Mu2gBYuu6YOb47AYWzWqRWmLPK1aR1dgLJ-C0K0Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfedvieejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnegoufhushhpvggtthffohhmrghinhculdegledmnecujfgu
-    rhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcuhf
-    gvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgv
-    rhhnpeekjefgudefhfeigffghfdtheeggfdtuddvkeejleffheeufeffteetvefgfeeuje
-    enucffohhmrghinhepghhithhhuhgsrdhiohenucevlhhushhtvghrufhiiigvpedtnecu
-    rfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrsh
-    honhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghn
-    gheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepge
-    ejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtrghmihhrugesghhmrghilhdr
-    tghomhdprhgtphhtthhopehmrghsrghhihhrohihsehkvghrnhgvlhdrohhrghdprhgtph
-    htthhopehnrghthhgrnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurges
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilh
-    drtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthho
-    pegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdprhgtphhtthhopegsvg
-    hnnhhordhlohhsshhinhesphhrohhtohhnrdhmvgdprhgtphhtthhopegrrdhhihhnuggs
-    ohhrgheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:t4ICaC6UhO1CZnKjR6Ik-hzIl3GtGbvNVc1I-IDE4qls3LYxm5xgUQ>
-    <xmx:t4ICaO4vQPmAJgA9EQ9e4E1UXeaGRebhXTNU3grxc_kkgAjUxFqXfg>
-    <xmx:t4ICaKjYst-8W_IjfguRa7uGthyObF8qia3gL-YVcCE_LCjZovMezA>
-    <xmx:t4ICaA7BSsupuce3_SqR3OsmGrEA4G9TNiV4jY5WZn2qvcS_4fm5JQ>
-    <xmx:uIICaNKT393DPp0R4GPwnosQuFP000EMpmjxlybcE0RtxwLUKggyEoYo>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 18 Apr 2025 12:49:59 -0400 (EDT)
-Date: Fri, 18 Apr 2025 09:49:57 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Frederic Weisbecker <frederic@kernel.org>,	Lyude Paul <lyude@redhat.com>,
- Thomas Gleixner <tglx@linutronix.de>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org,
-	linux-block@vger.kernel.org, devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v10 2/6] rust: enable `clippy::ptr_cast_constness` lint
-References: <20250418-ptr-as-ptr-v10-0-3d63d27907aa@gmail.com>
- <20250418-ptr-as-ptr-v10-2-3d63d27907aa@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gfcTRceH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744995054;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=IwYvfZYZHKsg0xrd3I7bSHuR9+QYC+M2RfO1isygVyE=;
+	b=gfcTRceHHZVb8+FXlyozEzM/vWUjvVGPeTmyBZQFqDN5D3a7PUUfRpC4RgI45PxRDmbCYk
+	tJYnrG7FBXkJHWJaq/tn05esEcRaoQLgPmu76LUQYbxSJ+bCiZws+rvl/G9RkTKZ9sj49l
+	9RpJCH3pHMPqc88sCn/0YDNJVqoL5GE=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-9-__br2OdSO92IMyOgKTTcsQ-1; Fri,
+ 18 Apr 2025 12:50:51 -0400
+X-MC-Unique: __br2OdSO92IMyOgKTTcsQ-1
+X-Mimecast-MFC-AGG-ID: __br2OdSO92IMyOgKTTcsQ_1744995049
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 83A0319560BC;
+	Fri, 18 Apr 2025 16:50:49 +0000 (UTC)
+Received: from redhat.com (unknown [10.96.134.19])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 859611954B0B;
+	Fri, 18 Apr 2025 16:50:48 +0000 (UTC)
+From: "Herton R. Krzesinski" <herton@redhat.com>
+To: linux-modules@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	mcgrof@kernel.org,
+	petr.pavlu@suse.com,
+	samitolvanen@google.com,
+	da.gomez@samsung.com,
+	herton@redhat.com,
+	nathan@kernel.org
+Subject: [PATCH v2] lib/test_kmod: do not hardcode/depend on any filesystem
+Date: Fri, 18 Apr 2025 13:50:47 -0300
+Message-ID: <20250418165047.702487-1-herton@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418-ptr-as-ptr-v10-2-3d63d27907aa@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Fri, Apr 18, 2025 at 11:37:18AM -0400, Tamir Duberstein wrote:
-> In Rust 1.72.0, Clippy introduced the `ptr_cast_constness` lint [1]:
-> 
-> > Though `as` casts between raw pointers are not terrible,
-> > `pointer::cast_mut` and `pointer::cast_const` are safer because they
-> > cannot accidentally cast the pointer to another type.
-> 
-> There are only 2 affected sites:
-> - `*mut T as *const U as *mut U` becomes `(*mut T).cast()`
-> - `&self as *const Self as *mut Self` becomes
->   `core::ptr::from_ref(self).cast_mut()`.
-> 
-> Apply these changes and enable the lint -- no functional change
-> intended.
-> 
-> Link: https://rust-lang.github.io/rust-clippy/master/index.html#ptr_cast_constness [1]
-> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+Right now test_kmod has hardcoded dependencies on btrfs/xfs. That
+is not optimal since you end up needing to select/build them, but it
+is not really required since other fs could be selected for the testing.
+Also, we can't change the default/driver module used for testing on
+initialization.
 
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+Thus make it more generic: introduce two module parameters (start_driver
+and start_test_fs), which allow to select which modules/fs to use for
+the testing on test_kmod initialization. Then it's up to the user to
+select which modules/fs to use for testing based on his config. However,
+keep test_module as required default.
 
-Regards,
-Boqun
+This way, config/modules becomes selectable as when the testing is done
+from selftests (userspace).
 
-> ---
->  Makefile                        | 1 +
->  rust/kernel/block/mq/request.rs | 4 ++--
->  2 files changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index 5d2931344490..7b85b2a8d371 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -481,6 +481,7 @@ export rust_common_flags := --edition=2021 \
->  			    -Aclippy::needless_lifetimes \
->  			    -Wclippy::no_mangle_with_rust_abi \
->  			    -Wclippy::ptr_as_ptr \
-> +			    -Wclippy::ptr_cast_constness \
->  			    -Wclippy::undocumented_unsafe_blocks \
->  			    -Wclippy::unnecessary_safety_comment \
->  			    -Wclippy::unnecessary_safety_doc \
-> diff --git a/rust/kernel/block/mq/request.rs b/rust/kernel/block/mq/request.rs
-> index 4a5b7ec914ef..af5c9ac94f36 100644
-> --- a/rust/kernel/block/mq/request.rs
-> +++ b/rust/kernel/block/mq/request.rs
-> @@ -69,7 +69,7 @@ pub(crate) unsafe fn aref_from_raw(ptr: *mut bindings::request) -> ARef<Self> {
->          // INVARIANT: By the safety requirements of this function, invariants are upheld.
->          // SAFETY: By the safety requirement of this function, we own a
->          // reference count that we can pass to `ARef`.
-> -        unsafe { ARef::from_raw(NonNull::new_unchecked(ptr as *const Self as *mut Self)) }
-> +        unsafe { ARef::from_raw(NonNull::new_unchecked(ptr.cast())) }
->      }
->  
->      /// Notify the block layer that a request is going to be processed now.
-> @@ -155,7 +155,7 @@ pub(crate) fn wrapper_ref(&self) -> &RequestDataWrapper {
->          // the private data associated with this request is initialized and
->          // valid. The existence of `&self` guarantees that the private data is
->          // valid as a shared reference.
-> -        unsafe { Self::wrapper_ptr(self as *const Self as *mut Self).as_ref() }
-> +        unsafe { Self::wrapper_ptr(core::ptr::from_ref(self).cast_mut()).as_ref() }
->      }
->  }
->  
-> 
-> -- 
-> 2.49.0
-> 
+While at it, also change trigger_config_run_type, since at module
+initialization we already set the defaults at __kmod_config_init and
+should not need to do it again in test_kmod_init(), thus we can
+avoid to again set test_driver/test_fs.
+
+v2: also update tools/testing/selftests/kmod/config with the removed
+dependencies.
+
+Signed-off-by: Herton R. Krzesinski <herton@redhat.com>
+---
+ lib/Kconfig.debug                   |  6 ---
+ lib/test_kmod.c                     | 64 +++++++++++++++--------------
+ tools/testing/selftests/kmod/config |  5 ---
+ 3 files changed, 34 insertions(+), 41 deletions(-)
+
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 9fe4d8dfe578..1e0f8cbf0365 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2983,13 +2983,7 @@ config TEST_DYNAMIC_DEBUG
+ config TEST_KMOD
+ 	tristate "kmod stress tester"
+ 	depends on m
+-	depends on NETDEVICES && NET_CORE && INET # for TUN
+-	depends on BLOCK
+-	depends on PAGE_SIZE_LESS_THAN_256KB # for BTRFS
+ 	select TEST_LKM
+-	select XFS_FS
+-	select TUN
+-	select BTRFS_FS
+ 	help
+ 	  Test the kernel's module loading mechanism: kmod. kmod implements
+ 	  support to load modules using the Linux kernel's usermode helper.
+diff --git a/lib/test_kmod.c b/lib/test_kmod.c
+index 064ed0fce75a..f0dd092860ea 100644
+--- a/lib/test_kmod.c
++++ b/lib/test_kmod.c
+@@ -28,14 +28,20 @@
+ 
+ #define TEST_START_NUM_THREADS	50
+ #define TEST_START_DRIVER	"test_module"
+-#define TEST_START_TEST_FS	"xfs"
+ #define TEST_START_TEST_CASE	TEST_KMOD_DRIVER
+ 
+-
+ static bool force_init_test = false;
+-module_param(force_init_test, bool_enable_only, 0644);
++module_param(force_init_test, bool_enable_only, 0444);
+ MODULE_PARM_DESC(force_init_test,
+ 		 "Force kicking a test immediately after driver loads");
++static char *start_driver;
++module_param(start_driver, charp, 0444);
++MODULE_PARM_DESC(start_driver,
++		 "Module/driver to use for the testing after driver loads");
++static char *start_test_fs;
++module_param(start_test_fs, charp, 0444);
++MODULE_PARM_DESC(start_test_fs,
++		 "File system to use for the testing after driver loads");
+ 
+ /*
+  * For device allocation / registration
+@@ -508,6 +514,11 @@ static int __trigger_config_run(struct kmod_test_device *test_dev)
+ 	case TEST_KMOD_DRIVER:
+ 		return run_test_driver(test_dev);
+ 	case TEST_KMOD_FS_TYPE:
++		if (!config->test_fs) {
++			dev_warn(test_dev->dev,
++				 "No fs type specified, can't run the test\n");
++			return -EINVAL;
++		}
+ 		return run_test_fs_type(test_dev);
+ 	default:
+ 		dev_warn(test_dev->dev,
+@@ -721,26 +732,20 @@ static ssize_t config_test_fs_show(struct device *dev,
+ static DEVICE_ATTR_RW(config_test_fs);
+ 
+ static int trigger_config_run_type(struct kmod_test_device *test_dev,
+-				   enum kmod_test_case test_case,
+-				   const char *test_str)
++				   enum kmod_test_case test_case)
+ {
+-	int copied = 0;
+ 	struct test_config *config = &test_dev->config;
+ 
+ 	mutex_lock(&test_dev->config_mutex);
+ 
+ 	switch (test_case) {
+ 	case TEST_KMOD_DRIVER:
+-		kfree_const(config->test_driver);
+-		config->test_driver = NULL;
+-		copied = config_copy_test_driver_name(config, test_str,
+-						      strlen(test_str));
+ 		break;
+ 	case TEST_KMOD_FS_TYPE:
+-		kfree_const(config->test_fs);
+-		config->test_fs = NULL;
+-		copied = config_copy_test_fs(config, test_str,
+-					     strlen(test_str));
++		if (!config->test_fs) {
++			mutex_unlock(&test_dev->config_mutex);
++			return 0;
++		}
+ 		break;
+ 	default:
+ 		mutex_unlock(&test_dev->config_mutex);
+@@ -751,11 +756,6 @@ static int trigger_config_run_type(struct kmod_test_device *test_dev,
+ 
+ 	mutex_unlock(&test_dev->config_mutex);
+ 
+-	if (copied <= 0 || copied != strlen(test_str)) {
+-		test_dev->test_is_oom = true;
+-		return -ENOMEM;
+-	}
+-
+ 	test_dev->test_is_oom = false;
+ 
+ 	return trigger_config_run(test_dev);
+@@ -800,19 +800,24 @@ static unsigned int kmod_init_test_thread_limit(void)
+ static int __kmod_config_init(struct kmod_test_device *test_dev)
+ {
+ 	struct test_config *config = &test_dev->config;
++	const char *test_start_driver = start_driver ? start_driver :
++						       TEST_START_DRIVER;
+ 	int ret = -ENOMEM, copied;
+ 
+ 	__kmod_config_free(config);
+ 
+-	copied = config_copy_test_driver_name(config, TEST_START_DRIVER,
+-					      strlen(TEST_START_DRIVER));
+-	if (copied != strlen(TEST_START_DRIVER))
++	copied = config_copy_test_driver_name(config, test_start_driver,
++					      strlen(test_start_driver));
++	if (copied != strlen(test_start_driver))
+ 		goto err_out;
+ 
+-	copied = config_copy_test_fs(config, TEST_START_TEST_FS,
+-				     strlen(TEST_START_TEST_FS));
+-	if (copied != strlen(TEST_START_TEST_FS))
+-		goto err_out;
++
++	if (start_test_fs) {
++		copied = config_copy_test_fs(config, start_test_fs,
++					     strlen(start_test_fs));
++		if (copied != strlen(start_test_fs))
++			goto err_out;
++	}
+ 
+ 	config->num_threads = kmod_init_test_thread_limit();
+ 	config->test_result = 0;
+@@ -1178,12 +1183,11 @@ static int __init test_kmod_init(void)
+ 	 * lowering the init level for more fun.
+ 	 */
+ 	if (force_init_test) {
+-		ret = trigger_config_run_type(test_dev,
+-					      TEST_KMOD_DRIVER, "tun");
++		ret = trigger_config_run_type(test_dev, TEST_KMOD_DRIVER);
+ 		if (WARN_ON(ret))
+ 			return ret;
+-		ret = trigger_config_run_type(test_dev,
+-					      TEST_KMOD_FS_TYPE, "btrfs");
++
++		ret = trigger_config_run_type(test_dev, TEST_KMOD_FS_TYPE);
+ 		if (WARN_ON(ret))
+ 			return ret;
+ 	}
+diff --git a/tools/testing/selftests/kmod/config b/tools/testing/selftests/kmod/config
+index 259f4fd6b5e2..1f1e63494af9 100644
+--- a/tools/testing/selftests/kmod/config
++++ b/tools/testing/selftests/kmod/config
+@@ -1,7 +1,2 @@
+ CONFIG_TEST_KMOD=m
+ CONFIG_TEST_LKM=m
+-CONFIG_XFS_FS=m
+-
+-# For the module parameter force_init_test is used
+-CONFIG_TUN=m
+-CONFIG_BTRFS_FS=m
+-- 
+2.47.1
+
