@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A36022D4E5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5217D22D7AB;
 	Fri, 18 Apr 2025 19:29:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745004549; cv=none; b=ELWxvjxgr+64tg5sPDbK9DAgzhmOGyaBaSDjI1/5UPq3HMH4fj17Wpe21LL1cCLqL4rqA3dpAVG0shZonuyYXOsP4dxBxVX1TY4tg2WhQCNpElG1sGc7XgvdrBc55C0UJa5nGcVhacVyP1KxHO57IL4Uo4dYvrNiSb4XXN5WSVA=
+	t=1745004549; cv=none; b=Dkq3sv5ov5xwoeyZYX+/yOVk8ajK9XBHQAQVYBlqpDNIlN82BCht91dxOOLyonMeUrYNcxkKOanQJo78ESoNvvq9OohdP8wa5TQnv02sfP586uowj7ApiZmLtLvlOCzAIJB80BGGjcQSMbrdUgjmWYisOFneaPsLtIeD6fkG5lM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745004549; c=relaxed/simple;
-	bh=HKi4/pkN8/8Z6aYIPs2g1TUo9vd+kfLsVo0FqhGriIg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=O5fL2CTAj9cIeCtbrCsuhcCwNd5PtqrF68QIzLM69A4wza5qQD1VGK5HWlVj9Wy7JOjjLvGDYPumiJNavsr+Mab8YJelcEMacH6ZwT3Xa/E52SyxPB+RQaVP2KDhG5Cs9LIFqMWdIox/2Oyv2AXpOze5vXIpJkS5hN1N+Foz0Ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p9VN5oZm; arc=none smtp.client-ip=10.30.226.201
+	bh=RP1N5bHXz63rpt8m5IOjX9qLsKGVIyvS42DszAO2ijA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=V9KCVK/wRy86K6ISsRn5U1+A25+hysK1OoGs5YnpcHaD/fajM9hRUp8U1EwBsoBbmyGiPph1hV0RykJfr0P2ZpNCrs5NoqYfVezSJgf89qRTqZ/QrjIGHW9PDxtgpjr/+Mno+kVSWU+VXoMv3FstA+OrHCNHCkWMHI2XgDUwo5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B/WICEO5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p9VN5oZm"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 767C0C4CEE2;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B/WICEO5"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A479DC4CEF0;
 	Fri, 18 Apr 2025 19:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1745004548;
-	bh=HKi4/pkN8/8Z6aYIPs2g1TUo9vd+kfLsVo0FqhGriIg=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=p9VN5oZmCcrvD+gNpQJxfGDDYGI6k7h02QBJ3JCYzqftx5tzVGVhWEpT/kpvWOFNX
-	 +fzx7aZnQk8yFUTAjI4xKQEgpOMTqFmYJ4sIzuX3rET8a8LEtdPiJjqI5UmfcuSemu
-	 VMhO7FWfsjPE5P+zekBdg81Uu14o25pHJy6EFbthrWxCZ+JgEILw6qgcMsGQMXJuDS
-	 NDPVUlJNH5pXzpFG6gLPYw0OwyWVnrvKJ9RwC9chuYGsmVVA5sxerCZS4HAaRyMaTT
-	 szCt55SCfrUXVeofoDw5rgHGu0GHS6r9f+K7q2evqT6ep+YNg1wYiMBuIW/EF2cwZv
-	 1huyIH0NC9b9g==
+	bh=RP1N5bHXz63rpt8m5IOjX9qLsKGVIyvS42DszAO2ijA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=B/WICEO57KnQkp0UzRW9IVGB8V74zRVW4YF/d46Dr9UmssNl9zSVf94ehpX7fQG1s
+	 PQDXEWO2udvvpXG639JbHPjkMSdeCGg4mjw2+ublGbZQLzqV0C8dr7EMLAFJRheY2Q
+	 RBk4s81d10u6ojBAjRlV8bhSHivWTYmA1TZ4Ysm4YK0w4YHV7n1V8oTIp3cTu9ZGta
+	 +v2qDlMj9c4AAHqKqwo/StvaM6OARw1NNDoBBQVnJyq3alQjwVX6buGQtuGHWTJeCW
+	 vHv04gvjgtKOrCK28k+f3ta9/RGzsm/052YJTm0QmKexawMltG5S0xu7//LTtg4rHc
+	 NJljhoyRpP5Ag==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F47C369AB;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F373C369C9;
 	Fri, 18 Apr 2025 19:29:08 +0000 (UTC)
 From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Subject: [PATCH 0/4] powerpc: Rename wdt@ notes to watchdog@
-Date: Fri, 18 Apr 2025 21:28:50 +0200
-Message-Id: <20250418-watchdog-v1-0-987ff2046272@posteo.net>
+Date: Fri, 18 Apr 2025 21:28:53 +0200
+Subject: [PATCH 3/4] powerpc: 86xx: Rename wdt@ nodes to watchdog@
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,10 +40,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAPKnAmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDE0ML3fLEkuSMlPx03ZRkY1MDw6Q0S8OUFCWg8oKi1LTMCrBR0bG1tQA
- 7nU6yWgAAAA==
-X-Change-ID: 20250418-watchdog-dc3501bf91dd
+Message-Id: <20250418-watchdog-v1-3-987ff2046272@posteo.net>
+References: <20250418-watchdog-v1-0-987ff2046272@posteo.net>
+In-Reply-To: <20250418-watchdog-v1-0-987ff2046272@posteo.net>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
  Madhavan Srinivasan <maddy@linux.ibm.com>, 
@@ -54,11 +53,11 @@ Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
  linux-kernel@vger.kernel.org, 
  =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745004545; l=1502;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745004545; l=2682;
  i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=HKi4/pkN8/8Z6aYIPs2g1TUo9vd+kfLsVo0FqhGriIg=;
- b=NDbbrgw8AjbiooyxPiw4H0nG7A6qJKUbMqvcm1w/C9ntxHUrx41SqIjUsaFelMOBtmYb/HuVY
- W8vmyo8ZfS8B6VwXTkaz7HltxUvh2B3spCh1SMMkvA7YJrbwKDqRg8u
+ bh=rZMd++6lrdOvQcrT6pf6xOYPM6SAtU5WeGJhAq64EIk=;
+ b=tf93aCaOdy1EsZyU9FYVRQHK9ZP9v8Ml4xUXSUXJ5nNXpjBRmV+1T7Wmr5lcS0c2kGNGLJL9f
+ sEDGXlRy+WHAh+988Co+paUGx0tza3RDe8ZISXSuTmWBhgH7dOd7pUa
 X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
  pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
 X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
@@ -66,41 +65,85 @@ X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
 X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
 Reply-To: j.ne@posteo.net
 
+From: "J. Neuschäfer" <j.ne@posteo.net>
+
 The watchdog.yaml schema prescribes a node name of "timer" or "watchdog"
-rather than the abbreviation "wdt". This series fixes the node name
-across arch/powerpc/boot/dts.
+rather than the abbreviation "wdt".
 
 Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
 ---
-J. Neuschäfer (4):
-      powerpc: 512x: Rename wdt@ node to watchdog@
-      powerpc: 83xx: Rename wdt@ nodes to watchdog@
-      powerpc: 86xx: Rename wdt@ nodes to watchdog@
-      powerpc: p2020: Rename wdt@ nodes to watchdog@
+ arch/powerpc/boot/dts/fsl/gef_ppc9a.dts  | 4 ++--
+ arch/powerpc/boot/dts/fsl/gef_sbc310.dts | 4 ++--
+ arch/powerpc/boot/dts/fsl/gef_sbc610.dts | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
- arch/powerpc/boot/dts/asp834x-redboot.dts | 2 +-
- arch/powerpc/boot/dts/fsl/ge_imp3a.dts    | 4 ++--
- arch/powerpc/boot/dts/fsl/gef_ppc9a.dts   | 4 ++--
- arch/powerpc/boot/dts/fsl/gef_sbc310.dts  | 4 ++--
- arch/powerpc/boot/dts/fsl/gef_sbc610.dts  | 4 ++--
- arch/powerpc/boot/dts/mpc5121.dtsi        | 2 +-
- arch/powerpc/boot/dts/mpc8313erdb.dts     | 2 +-
- arch/powerpc/boot/dts/mpc8315erdb.dts     | 2 +-
- arch/powerpc/boot/dts/mpc832x_rdb.dts     | 2 +-
- arch/powerpc/boot/dts/mpc8349emitx.dts    | 2 +-
- arch/powerpc/boot/dts/mpc8349emitxgp.dts  | 2 +-
- arch/powerpc/boot/dts/mpc836x_rdk.dts     | 2 +-
- arch/powerpc/boot/dts/mpc8377_rdb.dts     | 2 +-
- arch/powerpc/boot/dts/mpc8377_wlan.dts    | 2 +-
- arch/powerpc/boot/dts/mpc8378_rdb.dts     | 2 +-
- arch/powerpc/boot/dts/mpc8379_rdb.dts     | 2 +-
- 16 files changed, 20 insertions(+), 20 deletions(-)
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250418-watchdog-dc3501bf91dd
+diff --git a/arch/powerpc/boot/dts/fsl/gef_ppc9a.dts b/arch/powerpc/boot/dts/fsl/gef_ppc9a.dts
+index fc92bb032c517a543d6e1e498ab903f1937414f8..48a81430a8a31fc29b53fba03986b2fb984b66c1 100644
+--- a/arch/powerpc/boot/dts/fsl/gef_ppc9a.dts
++++ b/arch/powerpc/boot/dts/fsl/gef_ppc9a.dts
+@@ -82,7 +82,7 @@ fpga@4,0 {
+ 			reg = <0x4 0x0 0x40>;
+ 		};
+ 
+-		wdt@4,2000 {
++		watchdog@4,2000 {
+ 			compatible = "gef,ppc9a-fpga-wdt", "gef,fpga-wdt-1.00",
+ 				"gef,fpga-wdt";
+ 			reg = <0x4 0x2000 0x8>;
+@@ -90,7 +90,7 @@ wdt@4,2000 {
+ 			interrupt-parent = <&gef_pic>;
+ 		};
+ 		/* Second watchdog available, driver currently supports one.
+-		wdt@4,2010 {
++		watchdog@4,2010 {
+ 			compatible = "gef,ppc9a-fpga-wdt", "gef,fpga-wdt-1.00",
+ 				"gef,fpga-wdt";
+ 			reg = <0x4 0x2010 0x8>;
+diff --git a/arch/powerpc/boot/dts/fsl/gef_sbc310.dts b/arch/powerpc/boot/dts/fsl/gef_sbc310.dts
+index 47ae85c34635bb0165004e52d15df92542406b15..8eb254b1738dde7327d5e3fc07b4bbba137b4d9c 100644
+--- a/arch/powerpc/boot/dts/fsl/gef_sbc310.dts
++++ b/arch/powerpc/boot/dts/fsl/gef_sbc310.dts
+@@ -79,7 +79,7 @@ fpga@4,0 {
+ 			reg = <0x4 0x0 0x40>;
+ 		};
+ 
+-		wdt@4,2000 {
++		watchdog@4,2000 {
+ 			compatible = "gef,sbc310-fpga-wdt", "gef,fpga-wdt-1.00",
+ 				"gef,fpga-wdt";
+ 			reg = <0x4 0x2000 0x8>;
+@@ -87,7 +87,7 @@ wdt@4,2000 {
+ 			interrupt-parent = <&gef_pic>;
+ 		};
+ /*
+-		wdt@4,2010 {
++		watchdog@4,2010 {
+ 			compatible = "gef,sbc310-fpga-wdt", "gef,fpga-wdt-1.00",
+ 				"gef,fpga-wdt";
+ 			reg = <0x4 0x2010 0x8>;
+diff --git a/arch/powerpc/boot/dts/fsl/gef_sbc610.dts b/arch/powerpc/boot/dts/fsl/gef_sbc610.dts
+index 5322be44b62e78bebac0fa92c0de05094b186dde..02edbb262b8f00279dea024700eebf874501f6d5 100644
+--- a/arch/powerpc/boot/dts/fsl/gef_sbc610.dts
++++ b/arch/powerpc/boot/dts/fsl/gef_sbc610.dts
+@@ -82,14 +82,14 @@ fpga@4,0 {
+ 			reg = <0x4 0x0 0x40>;
+ 		};
+ 
+-		wdt@4,2000 {
++		watchdog@4,2000 {
+ 			compatible = "gef,fpga-wdt";
+ 			reg = <0x4 0x2000 0x8>;
+ 			interrupts = <0x1a 0x4>;
+ 			interrupt-parent = <&gef_pic>;
+ 		};
+ 		/* Second watchdog available, driver currently supports one.
+-		wdt@4,2010 {
++		watchdog@4,2010 {
+ 			compatible = "gef,fpga-wdt";
+ 			reg = <0x4 0x2010 0x8>;
+ 			interrupts = <0x1b 0x4>;
 
-Best regards,
 -- 
-J. Neuschäfer <j.ne@posteo.net>
+2.48.0.rc1.219.gb6b6757d772
 
 
