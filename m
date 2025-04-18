@@ -1,58 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F6C1CD15
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 04:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C911CD15
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 04:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744950242; cv=none; b=stHG2DRX4xmXErgoWREcmm4MVRJQSfdOXxmiEMixbdsrmKhep/qRb7Hjha6OLGi5s7anVv/zT9YFlRlaPxv57IsJmqc4x2oqKOC3qb0LzGZKhTJ1CiPdQLLasUPOl1SHxiDcE1drc8fC/GxiSnV6anj94AKtFpSP4AGAnd9ca8o=
+	t=1744950429; cv=none; b=YSXECdg8dqVBLHF4uyq/lYJXcq8/TfNzSpjjleJMTLE0IieUJu7hg8pQM7TqTUVTnQQo4OWLREppNTPQ6DMbG7/4Mc9MGGuFM5v6NnI8x2PavLn7j47FBW9mXKu88SUQg1QsAfM4V1eUXqVEEI+mlY4Ok4a8DPTzWJk187HaEAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744950242; c=relaxed/simple;
-	bh=V3popx7/6rBf/GHHCr3OfKcazwpLFU4qB38TjY3jMwo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=sPCJ3SJTUfS/u2gPSL7C6xUWd/D4XpCBeKBmyWaJxOxTnSy8/sZ3Pazw+JhvoOoK3uBLCRQolA/P4Any9pKSBdqt+YFITSHG7DP/q5K1SMVhXM4l+VZg4MyQIQk+GTuRbUsHBoRXjqM//DwBV+My094AQpD6aLyc86U41ij00jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GrblLx2Z; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744950429; c=relaxed/simple;
+	bh=A3gIrCwXbdqFwLupEPmJBpxZvsWs4ItMt0mkkux4Wm0=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gYtzSX6scf+BAkq9ZaFPtf8Zo51vPEg394sA01ilXdLKmnduh/RKNj1llk/nea7WdxBeXy07CdP4+iPCJRT1Ni0Qvm5j15/ilN3L6eY9TDXcRfN9QuqWZ7UHisnDRsGZ5McgoYfP16VcUF4rr1GQNyci/Wa1IhAfCZ02VQjyv4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QQ27p7QU; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GrblLx2Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744950241; x=1776486241;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=V3popx7/6rBf/GHHCr3OfKcazwpLFU4qB38TjY3jMwo=;
-  b=GrblLx2ZaSBPN4F/uMtwxLku0OoEVTuGtHcSnMgPjcXrN2nzjHywI9hr
-   zIlQ+f0p24tZdJk2lBG4QGkRgtRATVrngrlxjcQDe7TeiAg1amCe+6Izk
-   bPfmEHJdbt/doTTYgmOIlozsIDAdZH+X//Uz6/PYSUCQnagkSQSQKBCx8
-   LJ2RhG/o9nPPYAQEhDc2WgpoDMMK3vy5JHM/9vsuUStKgMPH6vs1NYTmb
-   D6wIQ2sO3Kxpu5IUcjUM3jecGVhrsRelqtjWNsNvqyUXMTPd4r9SJ4t0u
-   Bm2V+LZjAw6g7kqo4k+nJly1vyyCunGIMPZzjD42RkFD7d+CfOSmoYKEa
-   Q==;
-X-CSE-ConnectionGUID: y3x+dYfzSq2dSLs/eqfS5A==
-X-CSE-MsgGUID: gUlUOeZmQsKGcxdffZaS1g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="46580561"
-X-IronPort-AV: E=Sophos;i="6.15,221,1739865600"; 
-   d="scan'208";a="46580561"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 21:24:01 -0700
-X-CSE-ConnectionGUID: Db1Kc4KjRqOzeeYvVzMGxA==
-X-CSE-MsgGUID: PnpB9c8WQQy/lCZyEPPgGQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,221,1739865600"; 
-   d="scan'208";a="130878819"
-Received: from lkp-server01.sh.intel.com (HELO 61e10e65ea0f) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 17 Apr 2025 21:23:58 -0700
-Received: from kbuild by 61e10e65ea0f with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u5dGe-0002V5-2L;
-	Fri, 18 Apr 2025 04:23:56 +0000
-Date: Fri, 18 Apr 2025 12:23:44 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hans Holmberg <Hans.Holmberg@wdc.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Carlos Maiolino <cem@kernel.org>, Christoph Hellwig <hch@lst.de>
-Subject: fs/xfs/xfs_zone_gc.c:186: undefined reference to `__divmoddi4'
-Message-ID: <202504181233.F7D9Atra-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QQ27p7QU"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-30828fc17adso1446063a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 21:27:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744950426; x=1745555226; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uvh6EcREOhk+tZ2ig1dYWFCZtbIMCQishByXGMuTreU=;
+        b=QQ27p7QUxb28zt9EA7jzmI9hIBkIE3Uix8MSB6FK3x8DnHl1+//gFNaa/4U/bp8q/x
+         VvuSAEoSXJv4MPDpvX3n1vYtOO42WilDke5pqiwULfDuXj3Emmr1XkqSHYo66KDA85GH
+         AZbARcFkmrd7tVy1/UewcbjlAyM4D/1YHgiMvL5lyfF17h8qU0B5ACuvhzvbANhj3f2u
+         R/5NR8kzRY1c8Q4+cT6ZP0jNhW6MBwt8a61BEtDQ0aWt0uDrtDmFOyhLTYaIzXXo2Zk4
+         cjE67mNlp9nk2gcY1X3nv0U+B+NSQfyncz9607Mex9TexZiu5oAwJeH6y3Ttaz+tkkAp
+         mECQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744950426; x=1745555226;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Uvh6EcREOhk+tZ2ig1dYWFCZtbIMCQishByXGMuTreU=;
+        b=fnt2pnRzIlwS+6BiL7zD1FELVXJbrdFjy9G/mDYLFn8cw6JzWdi5VzoQIXu6jKHt+n
+         Q7knZkXv4K726HreFc5fij1WqAe/qSzaKEOfIOB1tLZ/yg7YXrt8Qj3kqZxKElRzyBnx
+         lxpu8+WkCTQVCpGvArD7pTp+E6X6tNWNoW8IDuuwErmaExqhif82h0aNM1cboiyJP01P
+         nQs8szheBuLXzmQqIT1UcOJt3o51rz0TmRGzRnf26IiXBqHhbeBaS79LkbIWIkIyG6EK
+         mywy5hVtzIUjZrjDqY3+eK/9E16pWqaPwVVBh+Ry1wnm9wlfhcPMAsgQONc13JRKHD7Z
+         dgSA==
+X-Forwarded-Encrypted: i=1; AJvYcCUW3+c2M1Ps4idpexQ6D/eWUPd+wbtNbQz4UOq/iTRtJEoXva40vOWKc1ULkhNS/DH189QxYb0k4tC7Jqk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmKOzrTAjhZNyjCoXIlhs8joaM9/+gyWD0ZgV7HhAKqfIPQ9V+
+	L0CtwwtMZgC83EXSyCQ1NmqX4P3pnI4c6DTGcb7990ILgeW/gcqz
+X-Gm-Gg: ASbGncuHyh6N+92SvocOnkBAqzXFCt6QuLdb6bBZ3OX3uiM4zPvoFppZQnoXuCbxCMH
+	r8e5D3wgYD9pL9R7DUibfqW8zLFJV8lhldmyr6n0hFty4N4yFc5G8q4pXWHkuiu1suW80WWp+uX
+	osnC2UisHes6/w/2w4H8dLL9ekMx8q+5rit2XXZjXWt7ZBzS9qSUd8sVx65qg58NdjYP404jtyB
+	ZvTv7DkKpsShGJZm1cU+ORSBVZPdg/E0D/zhJ64sOVU86ODgbhwQ+s/Ty3yh0i3eYp//F2Nk6m7
+	b4BpYlFu+vniQGVpavgRtOlz0No9/9KCb8D2
+X-Google-Smtp-Source: AGHT+IHybhoKjrnyjI0qsqHHAfqJ2XX5sQZ/pqutbNqjnlq3XP2Yul9Y74lQ4sRNFJxBkF0PBeRasQ==
+X-Received: by 2002:a17:90b:57e6:b0:301:1bce:c252 with SMTP id 98e67ed59e1d1-3087bbbccb6mr1831862a91.27.1744950425684;
+        Thu, 17 Apr 2025 21:27:05 -0700 (PDT)
+Received: from debian ([2601:646:8f03:9fee:5e33:e006:dcd5:852d])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087df05153sm325549a91.11.2025.04.17.21.27.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 21:27:05 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Thu, 17 Apr 2025 21:27:02 -0700
+To: Muchun Song <muchun.song@linux.dev>
+Cc: Fan Ni <nifan.cxl@gmail.com>,
+	Sidhartha Kumar <sidhartha.kumar@oracle.com>, willy@infradead.org,
+	mcgrof@kernel.org, a.manzanares@samsung.com, dave@stgolabs.net,
+	akpm@linux-foundation.org, david@redhat.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] mm/hugetlb: Refactor __unmap_hugepage_range() to
+ take folio instead of page
+Message-ID: <aAHUluy7T32ZlYg7@debian>
+References: <20250417155530.124073-1-nifan.cxl@gmail.com>
+ <20250417155530.124073-3-nifan.cxl@gmail.com>
+ <daaeffe6-f9b8-4923-a273-0dab573aa749@oracle.com>
+ <aAEteJh4Gb8R7gPm@debian>
+ <363E4489-76E8-4FD2-AD17-2E0B46160CAB@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,60 +81,84 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <363E4489-76E8-4FD2-AD17-2E0B46160CAB@linux.dev>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2
-commit: 845abeb1f06a8a44e21314460eeb14cddfca52cc xfs: add tunable threshold parameter for triggering zone GC
-date:   4 days ago
-config: i386-buildonly-randconfig-004-20250418 (https://download.01.org/0day-ci/archive/20250418/202504181233.F7D9Atra-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250418/202504181233.F7D9Atra-lkp@intel.com/reproduce)
+On Fri, Apr 18, 2025 at 11:03:59AM +0800, Muchun Song wrote:
+> 
+> 
+> > On Apr 18, 2025, at 00:34, Fan Ni <nifan.cxl@gmail.com> wrote:
+> > 
+> > On Thu, Apr 17, 2025 at 12:21:55PM -0400, Sidhartha Kumar wrote:
+> >> On 4/17/25 11:43 AM, nifan.cxl@gmail.com wrote:
+> >>> From: Fan Ni <fan.ni@samsung.com>
+> >>> 
+> >>> The function __unmap_hugepage_range() has two kinds of users:
+> >>> 1) unmap_hugepage_range(), which passes in the head page of a folio.
+> >>>    Since unmap_hugepage_range() already takes folio and there are no other
+> >>>    uses of the folio struct in the function, it is natural for
+> >>>    __unmap_hugepage_range() to take folio also.
+> >>> 2) All other uses, which pass in NULL pointer.
+> >>> 
+> >>> In both cases, we can pass in folio. Refactor __unmap_hugepage_range() to
+> >>> take folio.
+> >>> 
+> >>> Signed-off-by: Fan Ni <fan.ni@samsung.com>
+> >>> ---
+> >>> 
+> >>> Question: If the change in the patch makes sense, should we try to convert all
+> >>> "page" uses in __unmap_hugepage_range() to folio?
+> >>> 
+> >> 
+> >> For this to be correct, we have to ensure that the pte in:
+> >> 
+> >> 	page = pte_page(pte);
+> >> 
+> >> only refers to the pte of a head page. pte comes from:
+> >> 
+> >> 	pte = huge_ptep_get(mm, address, ptep);
+> >> 
+> >> and in the for loop above:
+> >> 
+> >> 	for (; address < end; address += sz)
+> >> 
+> >> address is incremented by the huge page size so I think address here only
+> >> points to head pages of hugetlb folios and it would make sense to convert
+> >> page to folio here.
+> >> 
+> > 
+> > Thanks Sidhartha for reviewing the series. I have similar understanding and
+> > wanted to get confirmation from experts in this area.
+> 
+> I think your understanding is right. BTW, you forgot to update definition of
+> __unmap_hugepage_range() under !CONFIG_HUGETLB_PAGE case.
+> 
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504181233.F7D9Atra-lkp@intel.com/
+Thanks Muchun. You are right, we need to update that.
 
-All errors (new ones prefixed by >>):
+Hi Andrew,
 
-   ld: fs/xfs/xfs_zone_gc.o: in function `xfs_zoned_need_gc':
->> fs/xfs/xfs_zone_gc.c:186: undefined reference to `__divmoddi4'
->> ld: fs/xfs/xfs_zone_gc.c:186: undefined reference to `__divdi3'
+I see you picked this patch up, should I send a v2 for the series to fix the
+issue mentioned above?
+The fix is simple as below.
+
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index d6c503dd2f7d..ebaf95231934 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -452,7 +452,7 @@ static inline long hugetlb_change_protection(
+ 
+ static inline void __unmap_hugepage_range(struct mmu_gather *tlb,
+                        struct vm_area_struct *vma, unsigned long start,
+-                       unsigned long end, struct page *ref_page,
++                       unsigned long end, struct folio *ref_folio,
+                        zap_flags_t zap_flags)
+ {
+        BUG();
 
 
-vim +186 fs/xfs/xfs_zone_gc.c
 
-   162	
-   163	/*
-   164	 * We aim to keep enough zones free in stock to fully use the open zone limit
-   165	 * for data placement purposes. Additionally, the m_zonegc_low_space tunable
-   166	 * can be set to make sure a fraction of the unused blocks are available for
-   167	 * writing.
-   168	 */
-   169	bool
-   170	xfs_zoned_need_gc(
-   171		struct xfs_mount	*mp)
-   172	{
-   173		s64			available, free;
-   174	
-   175		if (!xfs_group_marked(mp, XG_TYPE_RTG, XFS_RTG_RECLAIMABLE))
-   176			return false;
-   177	
-   178		available = xfs_estimate_freecounter(mp, XC_FREE_RTAVAILABLE);
-   179	
-   180		if (available <
-   181		    mp->m_groups[XG_TYPE_RTG].blocks *
-   182		    (mp->m_max_open_zones - XFS_OPEN_GC_ZONES))
-   183			return true;
-   184	
-   185		free = xfs_estimate_freecounter(mp, XC_FREE_RTEXTENTS);
- > 186		if (available < mult_frac(free, mp->m_zonegc_low_space, 100))
-   187			return true;
-   188	
-   189		return false;
-   190	}
-   191	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Fan
+> > 
+> > Thanks.
+> > Fan
+> 
