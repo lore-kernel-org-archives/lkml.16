@@ -1,79 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A35A267F72;
-	Fri, 18 Apr 2025 02:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3FB1D79BE
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 02:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744944624; cv=none; b=VwoW01tr0D+fisWTOHKY+Aop3xF2cDroKnLdm6ujwjmAXPUr1flsJZHyY8juGmm3JeZpGwLRCeDSOVO3KjcbgvsPbt/3+Qewg1bvbSTh+WNvnDiD6HlnLp+qcW1P2RuBGzPjOVhxU0c53atQ9eV4EIdBfU55sKvMDugaNluZtZA=
+	t=1744944729; cv=none; b=YIetJKh4p+0o7olYyCLDAYUKJxNXuBPLdW19UGlrOfZi4AXxNNWBrnJRlW5Gi8wdC2EXSD4/fp5y1L5xOJ0ZdH6xnT91D4JIRCBmhwXR68GsRoGmlelFB3obPu+v/p4WqWK3f39IS0qRQhH9ekorgD53rryw3uMg5VknpC0+g+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744944624; c=relaxed/simple;
-	bh=Fubtw2LiX2h/GPykQvwD3PKeaygyJWRoQRtP0y3Cyys=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=iBy6LqD1b2IG+qbmfB/F5eCnRhnQ5aPnzyf0s9cdoKT+HO1tH/sk3SXjcayK1z78VAGuvPqC6xZV0gJJ2IodTI5Z6SCFRzZOKXuevQ2sXnomi3ciA88EBUcSoX6h7f0i1bDt4ttfCDMqOjx8o0VlShYSqypIpyJ+t27dWkaXxkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LrLrmicd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744944729; c=relaxed/simple;
+	bh=SKfMd+634BuGsz7zz9NMuTghd0KBzLyIMLZAFsATDRI=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=K/OmM1MhQbx1haC+PCMDj8gEap2INtNDgIlwRFhdmv8IeUL6JclFhgaAiWB/U8EfGiZqBYxdLRjbgKgWZ6Igo8JzfsTH+TT0lRv4bvKHaOODQY+Xq00KRTqhZwI607sagK/9iT6MQsDhHfwd4EAQb8iTeNyqTqS8fLFRm9cokNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YE/Acinh; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LrLrmicd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D709AC4CEEB;
-	Fri, 18 Apr 2025 02:50:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744944623;
-	bh=Fubtw2LiX2h/GPykQvwD3PKeaygyJWRoQRtP0y3Cyys=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=LrLrmicdbk6MVe40iOt2KjI6qz+qKZ/v8+Wtul4PQO1f5RQ468hL2LgpBVpGZ2Ab5
-	 kLLLYyKoUNFoPW0YO/k+fc1ekoBITcLEzWT6DTBcDs7wmHGwgOn7WemXvKXLLLBqXm
-	 CUC3G+Zcx9X+48NZP2VdNwMtxSr8Y23BvueAAqP63WW2kBZ/7wCfcP9a+v/lCe0fjw
-	 vPL7sWvp4zz/NsT1oQ72oEt2dv7JKVIdiSXCiLYi+ApvmtHk9Uu7uVO8LZOeYh1amL
-	 CT6G/SSPM+RfZ5LkjbWkgsz1ozA8OoTLqE8/2SrkPvsTkVxkcG/iycoEMQI6an4O4R
-	 ZJDM9OjWq1+wg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33BD9380AAEB;
-	Fri, 18 Apr 2025 02:51:03 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YE/Acinh"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744944724;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L54MQQ1f5aq5yLN/fVD/w5qzYfx+/RZYsJtesZDDoWs=;
+	b=YE/AcinhHhwcGbtga6Ln21jTnUpQDy4FH6Bqcr/hDVYcXqlWxMyuYIlKlNANybY+vvtrK4
+	0JXcqFBWAoVR9H7yxqmFqC7IKsqlF5vhDOElVC/k/DcuSzP0vK5ElwDsrkRgMbjSgVWqs4
+	ftQZNu2odpH+UDywuI4EB0MeGc0FGCc=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] net: Delete the outer () duplicated of macro
- SOCK_SKB_CB_OFFSET definition
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174494466188.88264.18380333809771483443.git-patchwork-notify@kernel.org>
-Date: Fri, 18 Apr 2025 02:51:01 +0000
-References: <20250416-fix_net-v1-1-d544c9f3f169@quicinc.com>
-In-Reply-To: <20250416-fix_net-v1-1-d544c9f3f169@quicinc.com>
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: edumazet@google.com, kuniyu@amazon.com, pabeni@redhat.com,
- willemb@google.com, davem@davemloft.net, kuba@kernel.org, horms@kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, quic_zijuhu@quicinc.com
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH 1/3] mm/hugetlb: Refactor unmap_ref_private() to take
+ folio instead of page
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <20250417155530.124073-1-nifan.cxl@gmail.com>
+Date: Fri, 18 Apr 2025 10:51:26 +0800
+Cc: willy@infradead.org,
+ mcgrof@kernel.org,
+ a.manzanares@samsung.com,
+ dave@stgolabs.net,
+ akpm@linux-foundation.org,
+ david@redhat.com,
+ linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org,
+ Fan Ni <fan.ni@samsung.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <2E7B3A48-D631-464F-8940-EDFDEB07AB51@linux.dev>
+References: <20250417155530.124073-1-nifan.cxl@gmail.com>
+To: nifan.cxl@gmail.com
+X-Migadu-Flow: FLOW_OUT
 
-Hello:
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
 
-On Wed, 16 Apr 2025 19:56:23 +0800 you wrote:
-> From: Zijun Hu <quic_zijuhu@quicinc.com>
+> On Apr 17, 2025, at 23:43, nifan.cxl@gmail.com wrote:
 > 
-> For macro SOCK_SKB_CB_OFFSET definition, Delete the outer () duplicated.
+> From: Fan Ni <fan.ni@samsung.com>
 > 
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
-> ---
->  include/net/sock.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> The function unmap_ref_private() has only user, which passes in
+> &folio->page. Let it take folio directly.
 > 
-> [...]
+> Signed-off-by: Fan Ni <fan.ni@samsung.com>
 
-Here is the summary with links:
-  - [net-next] net: Delete the outer () duplicated of macro SOCK_SKB_CB_OFFSET definition
-    https://git.kernel.org/netdev/net-next/c/2b905deb43ea
+Reviewed-by: Muchun Song <muchun.song@linux.dev>
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Thanks.
 
