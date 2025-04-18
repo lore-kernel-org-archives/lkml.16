@@ -1,149 +1,203 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D72155C82
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4234720B1FC
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744973615; cv=none; b=fIwyydQpbVRNRAq262jjhj6HRf8p+lrv8ySOUoSpo4g0FE8J7MWG2L6KWoSDsjs4SOig/NQkoMLNHRuSIWxP4Ugij8paY0b8z2OHGPZdAm6fsK0QJVLOoMc6bntuis9X6/GKwpnSrv6/Bz0N3HvYwXm45H1Ss4hJXapih6nB0uY=
+	t=1744973669; cv=none; b=M2I2wmUspa83tyFCALy9yowdXmPMr2FdPnLR0koxpmk2myvYSdtrOWqnmZGtPqyIDOX6M4CpGYM9KLCyuHPKgOgON+7a7RRoKgHojsfKoXUiMppT9Eyk5CIhBJS2HE1bwFtH40pOmtvapiymlMbCbWHBsGCsfczUIXn896L5hMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744973615; c=relaxed/simple;
-	bh=pc7P7aEUc/bEUEzvnStf8mWmTcv2+pCo+9uB41BUszI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PpuuX5SQSrXXSy1vd8RefTvafvk2rcmurCBFQITZRT9U/ubWQXmUDcXqMAt1Fk2KE+CgQ51hynKLeZDvQodrux95/tBiuapdLPOviQZBaA+DGhWbnZ1ZAISP+YVvS2uLgI3d1XfFKJcUMRXjUbka+CzGC/W8qFFVgAxiRy6hRXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at; spf=pass smtp.mailfrom=sigma-star.at; dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b=jBtcNLs3; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sigma-star.at
+	s=arc-20240116; t=1744973669; c=relaxed/simple;
+	bh=1/8UG517LA2DgnY4VMkVPhPvNHydcaS9/NaQ2b/Q90M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rdFmhB6taYvz4zANnmWSAv8T0HhYZ9xmaKjZDFMj7SiSAGdc6gY3B6yFBunYeDln62xm/etcjxP13OZTHK2c9+kON4GXNykCgSuTkq6Y6oB5m2cjs9ixwC6ywM5Dv4B6TxkRZxTRXdqCnkbTMDA/laK5nmD2PWgr3G9IA0oYfH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nyHS+5cN; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b="jBtcNLs3"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cfe574976so12458055e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 03:53:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nyHS+5cN"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3913958ebf2so1637217f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 03:54:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sigma-star.at; s=google; t=1744973611; x=1745578411; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=chicRdpt/RHl6Og52i4WwN8FqyTqPtr7pyE/vQ8o7sU=;
-        b=jBtcNLs3FpGiHS1VVieb2b4BnhxaRCHOzvNXzvjz2OznuI2m1aqQqVQibhZ1xFeiY3
-         0uhRMuh/5jWkbCpzfd3q3mJb/ebVYbGsbArsyi49UM/xMnuScFN3pI0iHQZHeF9adVGQ
-         9ifA1uUqXJz3AQqgt/XaCNq6QbpO4nFVviQ/q+d0ADreWSbXYScUcKuzjXDuEZPQBaQq
-         ZmMuWEU85IZNlraZhLZ0VLkK6YedNn9KzugGC1R4CtyfIuRD+z2gpz8wbKIV5Cj7YwWW
-         zZ17NdGHGlobnW+wWn8mvgV0bo71vuOSaWTeJVHvXS1yFa72+M6jxZgi8XMS/ezEdYED
-         HTug==
+        d=linaro.org; s=google; t=1744973665; x=1745578465; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=au9euEFgTYdZixK5I9CPSxaI0WV2CLlMT4SQ96By6cs=;
+        b=nyHS+5cNr6eWds5AqONKF1uROf4lcdCEM54KUMdsTKX4uahJ5hQvMDixs2JMIXHm/X
+         P4h4f+H7yKEAw5sdtOc/FIZnI37lZxIBKlvny11mhsE8BoJIhzl9c+miTrHj6ORGFjWy
+         LsNCmmE5E8SG9MsZ38qsmlzxsO6ichgjj98sCE8HeS+ui6KGut4sPi982HyysnHZLClz
+         EfcelFSQ/5gx+yqRNGlbt9GQCE5nkfEeXxHnf3HoRsMqmlg2tjD7hi13vMmBRAxBJW9J
+         SaFXOmMVxMot7/svdsieVlbOai3jIQ3VdYPfQuvGy/k6hJxE7R0Yd3GK4TTnnh9o9a9b
+         cxIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744973611; x=1745578411;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=chicRdpt/RHl6Og52i4WwN8FqyTqPtr7pyE/vQ8o7sU=;
-        b=dG77ixM/9WxFAhzDQtfos9F2e8IOvxav7rnLY6yqbwCf9IRcp6HzFY9HEMJp3du0Rc
-         6r6ZbM7ztRD6PWJL/vWYRrRiSNkmM8zNCXGkq56WNdCqW2KgJn9eq+bArzc0tZ0ue5hn
-         zRMEZkuTCeHkKoIUoxIx13QVtg959/n3dhH0SGOhNky+6WmBeDnmLyVDrxWjulQFN/Gv
-         EmqF5jeEGuQHOwpSWs1sozb3bekPQI6xmQ9G/n10TyAzDed4gIr3IiAB0qQJTrygclU3
-         30hH2FpJu+pIIk6wdbNBRWTn4w+U12PFiNuGK6A3AK8ZCTf8utNRvz3ymqhuvr/BULa9
-         EAdg==
-X-Forwarded-Encrypted: i=1; AJvYcCWw45+T0biMtDSbDZ8OKmG9B2uKWEKLbX8gxJwqkLDjLZN2xU4etGDV7NdbVDzYNEP/feC6Wkxe4jEZ0fc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWeRJE/5a+384YGF3ejYImof7AIqNGVedlU0TdVHIuqvBQ2IJf
-	LoGmsMOu4Z7bqW/TymOk8vDD7eu/mncP8cuUuJetIMasoelRvE2d10MLeuuMp+w=
-X-Gm-Gg: ASbGnctgwV3Hj/VDi/5U1zEhhWr5FGAlimctQLa8Ky+zeWPZQu4DosOM9a+Duq4m3ZE
-	8Kaok8b755eZmK+mCc9q1D4FcEWb3nS7D6eieFEbp2POy7rG/pabzuZSXaZqSRMs0PDX0TRKa7i
-	HM5mi4DBr89thMmRWFK14CrVIBpLX0L2llh2QDGoR/HF+3GN9fQdClmEWLrKpkopg870NHof6Y4
-	J4TjjytrhJdgr/U8lU6dFOANkDxg9QvpivqQzIIPXm7jbgotO/Cu6UVCyhexaMxJjrTR98WoNQv
-	rciqS+G0uPySMBn2HL//gq/8v7d3NH20M+esVVYEEt3Uq1yVpOFEQyqTN4n4aGWsvNBXWeMMgeR
-	Azlae1Uly
-X-Google-Smtp-Source: AGHT+IFRGae/w+LSe2Wb9xwhXf4HEpT8dkNYJ3tTEo4SBBzlp0BYf8M0aTZt7D6qMJek4Sctywyk2g==
-X-Received: by 2002:a05:600c:1c81:b0:43d:2313:7b49 with SMTP id 5b1f17b1804b1-4406ab970bfmr16426115e9.12.1744973611145;
-        Fri, 18 Apr 2025 03:53:31 -0700 (PDT)
-Received: from somecomputer (84-115-238-41.cable.dynamic.surfer.at. [84.115.238.41])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5d712esm17389405e9.36.2025.04.18.03.53.30
+        d=1e100.net; s=20230601; t=1744973665; x=1745578465;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=au9euEFgTYdZixK5I9CPSxaI0WV2CLlMT4SQ96By6cs=;
+        b=P4hVGVnCTjzUDI9K45/tc4vrl3/63rVKHlX0QHgprjLcY8Rf1UNyzy6SuQpGOUvhuh
+         jLn27R55g/6yljQb0186h9z3nA/MELH8PhJvbx+NG4PojNbipSxFpdUJM9ei7/y/REgZ
+         3DR653MA5byzw3Y7cmdLI311T8Xb4EPlX+wdJ/y1XfJxpYLsxvVTXSklqwDJL1TKBGlf
+         Y+lR+1CumLsCBwMAIBtEgtiRVUh+gpd6/3fBY0prxPjeJfumqRdaFxfLA8k/fxBco/It
+         nuMWXT6+7mJoau8ec35OWQyTP0WqHJqgrCyjGHsftAckGMcj6ShsgJN/+sFK3bF1bcQ/
+         0LXg==
+X-Forwarded-Encrypted: i=1; AJvYcCXEFWW0KnzWErCSaWwYe6JXGw112Ii+c2b/qtin30TulwUjP6DcV4B+iHDS4qpLumUy6kDCKI2lmt1CywY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/x3lixhHKzdEi6ET+y0p536TXq8bSRpD56n6Sl5yL8AvkUk3j
+	wT9Pf4xenod0eWmiTiM3Q1t7ZhzW68mLdwRjPgOLO9y3SIsnTln9HZMMTiEN0TY=
+X-Gm-Gg: ASbGncvOksSZooxAQCYRmMVteGFOzsr+k6cR/nQUACcIlMUrAO2Xf5Wpfi8vlIjIhiO
+	A9srDjRYpIoh3wPW34fk+uQSDCNkce7MgOcuIJ5hF5CRcybFnQFLgFI4EYyJStpMBmYHgAw/Qg6
+	GdxWpcE9hn83B4OzfKSTzPYHH3fIa4ta8nRE/vs0lpTFQpSiOZSL521wzawP3zhIVN1nGC1W+9d
+	vzR8JDAuWqu7056h5FnolXP2dEQccnQjDzteGPpDakiWGf5k7iQMTyOZDrqj8c1lQap9tDcxBLE
+	1dppcwsj6xn0GABVaH3flYO1+IpmDt9MoMB7qSwAuh42ty/Go1nhCHr+qV5YegmiNAx5UL08M95
+	WEzIikMsYeZHd9A==
+X-Google-Smtp-Source: AGHT+IGFn7+MSrW5VzenZnnJ9w528Q6bQtEiGXih7aQhRS/wsl6XbxhTNW3ERnJTPiWNnQMdxNNYxQ==
+X-Received: by 2002:a5d:598b:0:b0:39c:cc7:3c97 with SMTP id ffacd0b85a97d-39efbaf133dmr1825540f8f.50.1744973665370;
+        Fri, 18 Apr 2025 03:54:25 -0700 (PDT)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5acca9sm17735885e9.12.2025.04.18.03.54.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 03:53:30 -0700 (PDT)
-From: Richard Weinberger <richard@sigma-star.at>
-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
- Damien Le Moal <dlemoal@kernel.org>
-Cc: Richard Weinberger <richard@nod.at>, kch@nvidia.com, sagi@grimberg.me,
- hch@lst.de, upstream+nvme@sigma-star.at
-Subject: Re: [RFC PATCH] nvmet: Make blksize_shift configurable
-Date: Fri, 18 Apr 2025 12:53:28 +0200
-Message-ID: <6281253.5x4bddO4Km@anvil>
-In-Reply-To: <9f8fdcc0-53ae-4255-b221-b4e787320c44@kernel.org>
-References:
- <20250418090834.2755289-1-richard@nod.at> <8418057.aG60p0z9Xu@anvil>
- <9f8fdcc0-53ae-4255-b221-b4e787320c44@kernel.org>
+        Fri, 18 Apr 2025 03:54:24 -0700 (PDT)
+Date: Fri, 18 Apr 2025 12:54:22 +0200
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
+Cc: amitk@kernel.org, thara.gopinath@gmail.com, rafael@kernel.org,
+	rui.zhang@intel.com, lukasz.luba@arm.com,
+	david.collins@oss.qualcomm.com, srinivas.kandagatla@linaro.org,
+	stefan.schmidt@linaro.org, quic_tsoni@quicinc.com,
+	linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dmitry.baryshkov@linaro.org
+Subject: Re: [PATCH v3 1/5 RESEND] thermal: qcom-spmi-temp-alarm: enable
+ stage 2 shutdown when required
+Message-ID: <aAIvXnAmlPKbcV45@mai.linaro.org>
+References: <20250320202408.3940777-1-anjelique.melendez@oss.qualcomm.com>
+ <20250320202408.3940777-2-anjelique.melendez@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250320202408.3940777-2-anjelique.melendez@oss.qualcomm.com>
 
-On Freitag, 18. April 2025 12:23 Damien Le Moal wrote:
-> On 4/18/25 18:56, Richard Weinberger wrote:
-> > On Freitag, 18. April 2025 11:37 'Damien Le Moal' via upstream wrote:
-> >>> +	if (!ns->blksize_shift)
-> >>> +		ns->blksize_shift =3D blksize_bits(bdev_logical_block_size(ns->bde=
-v));
-> >>
-> >> If the user set logical block size is smaller than the block dev logic=
-al block
-> >> size, this is not going to work... No ? Am I missing something ?
-> >=20
-> > Likely, yes.
-> > TBH, I'm not sure whether it makes actually sense for the bdev case to =
-make
-> > blksize_shift configurable.
->=20
-> Probably not... I do understand the value for the file case though.
+On Thu, Mar 20, 2025 at 01:24:04PM -0700, Anjelique Melendez wrote:
+> From: David Collins <david.collins@oss.qualcomm.com>
+> 
+> Certain TEMP_ALARM GEN2 PMIC peripherals need over-temperature
+> stage 2 automatic PMIC partial shutdown to be enabled in order to
+> avoid repeated faults in the event of reaching over-temperature
+> stage 3.  Modify the stage 2 shutdown control logic to ensure that
+> stage 2 shutdown is enabled on all affected PMICs.  Read the
+> digital major and minor revision registers to identify these
+> PMICs.
+> 
+> Signed-off-by: David Collins <david.collins@oss.qualcomm.com>
+> Signed-off-by: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
+> ---
+>  drivers/thermal/qcom/qcom-spmi-temp-alarm.c | 32 +++++++++++++++++++--
+>  1 file changed, 30 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
+> index c2d59cbfaea9..b2077ff9fe73 100644
+> --- a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
+> +++ b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /*
+>   * Copyright (c) 2011-2015, 2017, 2020, The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
+>   */
+>  
+>  #include <linux/bitops.h>
+> @@ -16,6 +17,7 @@
+>  
+>  #include "../thermal_hwmon.h"
+>  
+> +#define QPNP_TM_REG_DIG_MINOR		0x00
+>  #define QPNP_TM_REG_DIG_MAJOR		0x01
+>  #define QPNP_TM_REG_TYPE		0x04
+>  #define QPNP_TM_REG_SUBTYPE		0x05
+> @@ -71,6 +73,7 @@ struct qpnp_tm_chip {
+>  	struct device			*dev;
+>  	struct thermal_zone_device	*tz_dev;
+>  	unsigned int			subtype;
+> +	unsigned int			dig_revision;
+>  	long				temp;
+>  	unsigned int			thresh;
+>  	unsigned int			stage;
+> @@ -78,6 +81,7 @@ struct qpnp_tm_chip {
+>  	/* protects .thresh, .stage and chip registers */
+>  	struct mutex			lock;
+>  	bool				initialized;
+> +	bool				require_s2_shutdown;
+>  
+>  	struct iio_channel		*adc;
+>  	const long			(*temp_map)[THRESH_COUNT][STAGE_COUNT];
+> @@ -255,7 +259,7 @@ static int qpnp_tm_update_critical_trip_temp(struct qpnp_tm_chip *chip,
+>  
+>  skip:
+>  	reg |= chip->thresh;
+> -	if (disable_s2_shutdown)
+> +	if (disable_s2_shutdown && !chip->require_s2_shutdown)
+>  		reg |= SHUTDOWN_CTRL1_OVERRIDE_S2;
+>  
+>  	return qpnp_tm_write(chip, QPNP_TM_REG_SHUTDOWN_CTRL1, reg);
+> @@ -350,7 +354,7 @@ static int qpnp_tm_probe(struct platform_device *pdev)
+>  {
+>  	struct qpnp_tm_chip *chip;
+>  	struct device_node *node;
+> -	u8 type, subtype, dig_major;
+> +	u8 type, subtype, dig_major, dig_minor;
+>  	u32 res;
+>  	int ret, irq;
+>  
+> @@ -403,6 +407,30 @@ static int qpnp_tm_probe(struct platform_device *pdev)
+>  		return dev_err_probe(&pdev->dev, ret,
+>  				     "could not read dig_major\n");
+>  
+> +	ret = qpnp_tm_read(chip, QPNP_TM_REG_DIG_MINOR, &dig_minor);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "could not read dig_minor\n");
+> +		return ret;
+> +	}
+> +
+> +	chip->dig_revision = (dig_major << 8) | dig_minor;
 
-The use case is exposing ready-to-use cloud images like:
-https://cloud.debian.org/images/cloud/bookworm/20250416-2084/debian-12-gene=
-ric-amd64-20250416-2084.raw
+I would move this inside the block below.
 
-via NVme-of TCP.
-Yesterday I did so and figured that no GPT partitions got detected because =
-of different block sizes.
-Setting the block size in nvmet to 512 made it work.
+> +	if (chip->subtype == QPNP_TM_SUBTYPE_GEN2) {
+> +		/*
+> +		 * Check if stage 2 automatic partial shutdown must remain
+> +		 * enabled to avoid potential repeated faults upon reaching
+> +		 * over-temperature stage 3.
+> +		 */
+> +		switch (chip->dig_revision) {
+> +		case 0x0001:
+> +		case 0x0002:
+> +		case 0x0100:
+> +		case 0x0101:
+> +			chip->require_s2_shutdown = true;
+> +			break;
+> +		}
+> +	}
 
-If there are better ways to achieve the same, I'm open for suggestions.
+And move this block after the test below
 
->=20
-> > The case I see most benefit is the backing file case.
-> >=20
-> >>> +	if (!ns->blksize_shift) {
-> >>> +		/*
-> >>> +		 * i_blkbits can be greater than the universally accepted
-> >>> +		 * upper bound, so make sure we export a sane namespace
-> >>> +		 * lba_shift.
-> >>> +		 */
-> >>> +		ns->blksize_shift =3D min_t(u8,
-> >>> +				file_inode(ns->file)->i_blkbits, 12);
-> >>
-> >> This will work for any block size, regardless of the FS block size, bu=
-t only if
-> >> ns->buffered_io is true. Doesn't this require some more checks with re=
-gards to
-> >> O_DIRECT (!ns->buffered_io case) ?
-> >=20
-> > Good catch. I'll add a check.
->=20
-> And by the way, you need to check for STATX_DIOALIGN since some FS (e.g. =
-xfs)
-> can handle direct IOs that are not aligned to the FS block size. See the =
-recent
-> changes in drivers/block/loop.c to improve direct IO handling, specifical=
-ly, the
-> function loop_query_min_dio_size().
+> +
+>  	if (type != QPNP_TM_TYPE || (subtype != QPNP_TM_SUBTYPE_GEN1
+>  				     && subtype != QPNP_TM_SUBTYPE_GEN2)) {
+>  		dev_err(&pdev->dev, "invalid type 0x%02x or subtype 0x%02x\n",
+> -- 
+> 2.34.1
+> 
 
-Ok!
+-- 
 
-Thanks,
-//richard
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-=2D-=20
-=E2=80=8B=E2=80=8B=E2=80=8B=E2=80=8B=E2=80=8Bsigma star gmbh | Eduard-Bodem=
-=2DGasse 6, 6020 Innsbruck, AUT UID/VAT Nr:
-ATU 66964118 | FN: 374287y
-
-
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
