@@ -1,34 +1,34 @@
 Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0792D171D2
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 00:21:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF5D1C683
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 00:21:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744935690; cv=none; b=htDsjda8TDTV6sVBW1RdJte3surwzS2vBwPGDt6wkyn7g5J78nE92vEBdAhYRXsl8f9fKxNE0DVq2eR4jxuUpp+i7jz7MBy9X8to4sfChNWyL2ok8R7Wvo1+Ky6P9dAVMBpmfL0N1UTl3yuDkDEnvUqNyz4A5uufTO+PGLu0BzQ=
+	t=1744935690; cv=none; b=NhBbjXj55wB7kJJ18PDBrr/zy+biNbs5I9JBUPJG+NCNoM4scq71DQy8GGNgb8lbWu2XOQH9Ed2yT+CjPa3ncMIUgWDTFUpub1rNc1kfE7SECpM+zdC4aNARXyJBj1x3KVCX1EibmuxG8qb6K4OfW7OKr77vbES0mkyoAeLN1/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744935690; c=relaxed/simple;
-	bh=0Wpx4d2+yZiKkA9tDn0IJZm1Vft/zF3+F2AVmsrW4rk=;
+	bh=gnnIfdiwHlkKcaUwXxH/tTmPzWY6vMempO+KOJemrpo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UQ+0/gyBE4sRXX46OFnXptctF4ZgK00reQ/bcvgTuCoMaORUdAQHw6QbKoMbhwyxa9fk63JfItwfFKmo6ZUa7BjJl6tDvmJKBZqAh09LUB8z0/7NRyNPAS5OmEqcCUpTcOwZSnVmT8aVschGB5o7fzfh0kBHlrq0YIy+oH4JUz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=ogchH08G; arc=none smtp.client-ip=46.235.229.95
+	 MIME-Version; b=DBmm74g8Xv6HlerLaHjVHMn2XdEcicsCOOmDl7IUVquO01wwSYnMps7yZw6mCJnJA/zk/jR5+MxfIjB2cMVeXwYo7cn2lsoo+z0zrunWaQlrTN9wC9jtOaRqIcTE5hq4jh2sG4+G7vrEGl2P8g9YxB6hFu/H/TE920dqdB6JOEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=V+mlFev/; arc=none smtp.client-ip=46.235.229.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="ogchH08G"
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="V+mlFev/"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
 	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=n5RAqA3OL5SQ+Vv2m3AsajeMYO7tR1OhXLpj2nJvWfQ=; b=ogchH08GG7S6jGFs
-	zZSPUt012HvnLilKm0IUmbyVAHlKlq/QbrIj6J+RV9iTovW/Ujkz6xkgbt3RsZzY7JzPzbVKw1LLZ
-	zBGOxVZRuYfRok0OMg6qe7BysWO1K1JuY+hAdrHCyyiQfYcUOUMOVOnG6Mdq4C0jW0GYpQ84Ovbgj
-	i3MoWUM+/vcGu/l09CiGMf2D3pN1I1zOHNxdaZoXCjZoroOIQA1UpCw/DLKM0yfpt8NYcSEAQ98hj
-	cb9hoAJ7MdDlqfB41n14xDEwmwgdsW/Hy9HRyYjOZ5hkAjnQ1vrrBO0g/UIHZlwf8acaeoC6E+Gpg
-	ucVqeS6KKdO4QgM/dQ==;
+	:Subject; bh=JWaJuUILM6oT7h2bYPl+DblVz8tBnX1vWlKCjgjjAiI=; b=V+mlFev/tQR08iOt
+	l4CHM4vKVEMrkXqOh2LgHoGlWXhrsa9FG8dwd8w50J8XFH+v8EecLBppSTSdX3UNf8Cp0tEK6yf0e
+	1j/3UsGTJQ1A04qYIHloInUmqAP2npzINkVUf815D+dTxtf5coLSoo1FnmBNBeR+LjUbnLzYh/3l5
+	Ls51VlQ/FHZh/7hUApoiXS9pnbekLxXzuaRMkKbSbqavvtC4DJ1906AWpN/pJgsTOnCB8sYNPWWJu
+	leSkJsX6a/dxNn9yszezGavztYO6LfLwY7Mp2ZhLtzI2NMp0SUQ0uKZwskcCOzTHrvBg1ZS+STVxS
+	T+1Kk2T381FUQM68tA==;
 Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
 	by mx.treblig.org with esmtp (Exim 4.96)
 	(envelope-from <linux@treblig.org>)
-	id 1u5ZTr-00CPl8-02;
-	Fri, 18 Apr 2025 00:21:19 +0000
+	id 1u5ZTs-00CPl8-20;
+	Fri, 18 Apr 2025 00:21:20 +0000
 From: linux@treblig.org
 To: alexander.deucher@amd.com,
 	harry.wentland@amd.com,
@@ -41,9 +41,9 @@ Cc: airlied@gmail.com,
 	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH 1/4] drm/radeon/radeon_audio: Remove unused r600_hdmi_audio_workaround
-Date: Fri, 18 Apr 2025 01:21:14 +0100
-Message-ID: <20250418002117.130612-2-linux@treblig.org>
+Subject: [PATCH 4/4] drm/amd/display: Remove unused *vbios_smu_set_dprefclk
+Date: Fri, 18 Apr 2025 01:21:17 +0100
+Message-ID: <20250418002117.130612-5-linux@treblig.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250418002117.130612-1-linux@treblig.org>
 References: <20250418002117.130612-1-linux@treblig.org>
@@ -57,63 +57,93 @@ Content-Transfer-Encoding: 8bit
 
 From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-The last use of r600_hdmi_audio_workaround() was removed by 2014's
-commit 6e72376dcc66 ("radeon/audio: consolidate audio_mode_set()
-functions")
+rn_vbios_smu_set_dprefclk() was added in 2019 by
+commit 4edb6fc91878 ("drm/amd/display: Add Renoir clock manager")
+rv1_vbios_smu_set_dprefclk() was also added in 2019 by
+commit dc88b4a684d2 ("drm/amd/display: make clk mgr soc specific")
 
-Remove it.
+neither have been used.
+
+Remove them.
 
 Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 ---
- drivers/gpu/drm/radeon/r600_hdmi.c   | 22 ----------------------
- drivers/gpu/drm/radeon/radeon_asic.h |  1 -
- 2 files changed, 23 deletions(-)
+ .../dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.c       | 14 --------------
+ .../dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.h       |  1 -
+ .../dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.c        | 14 --------------
+ .../dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.h        |  1 -
+ 4 files changed, 30 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/r600_hdmi.c b/drivers/gpu/drm/radeon/r600_hdmi.c
-index 661f374f5f27..9758f3a9df75 100644
---- a/drivers/gpu/drm/radeon/r600_hdmi.c
-+++ b/drivers/gpu/drm/radeon/r600_hdmi.c
-@@ -290,28 +290,6 @@ int r600_hdmi_buffer_status_changed(struct drm_encoder *encoder)
- 	return result;
+diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.c
+index 19897fa52e7e..d82a52319088 100644
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.c
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.c
+@@ -142,17 +142,3 @@ int rv1_vbios_smu_set_dispclk(struct clk_mgr_internal *clk_mgr, int requested_di
+ 
+ 	return actual_dispclk_set_mhz * 1000;
+ }
+-
+-int rv1_vbios_smu_set_dprefclk(struct clk_mgr_internal *clk_mgr)
+-{
+-	int actual_dprefclk_set_mhz = -1;
+-
+-	actual_dprefclk_set_mhz = rv1_vbios_smu_send_msg_with_param(
+-			clk_mgr,
+-			VBIOSSMC_MSG_SetDprefclkFreq,
+-			khz_to_mhz_ceil(clk_mgr->base.dprefclk_khz));
+-
+-	/* TODO: add code for programing DP DTO, currently this is down by command table */
+-
+-	return actual_dprefclk_set_mhz * 1000;
+-}
+diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.h b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.h
+index 083cb3158859..81d7c912549c 100644
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.h
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.h
+@@ -27,6 +27,5 @@
+ #define DAL_DC_DCN10_RV1_CLK_MGR_VBIOS_SMU_H_
+ 
+ int rv1_vbios_smu_set_dispclk(struct clk_mgr_internal *clk_mgr, int requested_dispclk_khz);
+-int rv1_vbios_smu_set_dprefclk(struct clk_mgr_internal *clk_mgr);
+ 
+ #endif /* DAL_DC_DCN10_RV1_CLK_MGR_VBIOS_SMU_H_ */
+diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.c
+index 23b390245b5d..5a633333dbb5 100644
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.c
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.c
+@@ -164,20 +164,6 @@ int rn_vbios_smu_set_dispclk(struct clk_mgr_internal *clk_mgr, int requested_dis
+ 	return actual_dispclk_set_mhz * 1000;
  }
  
--/*
-- * write the audio workaround status to the hardware
-- */
--void r600_hdmi_audio_workaround(struct drm_encoder *encoder)
+-int rn_vbios_smu_set_dprefclk(struct clk_mgr_internal *clk_mgr)
 -{
--	struct drm_device *dev = encoder->dev;
--	struct radeon_device *rdev = dev->dev_private;
--	struct radeon_encoder *radeon_encoder = to_radeon_encoder(encoder);
--	struct radeon_encoder_atom_dig *dig = radeon_encoder->enc_priv;
--	uint32_t offset = dig->afmt->offset;
--	bool hdmi_audio_workaround = false; /* FIXME */
--	u32 value;
+-	int actual_dprefclk_set_mhz = -1;
 -
--	if (!hdmi_audio_workaround ||
--	    r600_hdmi_is_audio_buffer_filled(encoder))
--		value = 0; /* disable workaround */
--	else
--		value = HDMI0_AUDIO_TEST_EN; /* enable workaround */
--	WREG32_P(HDMI0_AUDIO_PACKET_CONTROL + offset,
--		 value, ~HDMI0_AUDIO_TEST_EN);
+-	actual_dprefclk_set_mhz = rn_vbios_smu_send_msg_with_param(
+-			clk_mgr,
+-			VBIOSSMC_MSG_SetDprefclkFreq,
+-			khz_to_mhz_ceil(clk_mgr->base.dprefclk_khz));
+-
+-	/* TODO: add code for programing DP DTO, currently this is down by command table */
+-
+-	return actual_dprefclk_set_mhz * 1000;
 -}
 -
- void r600_hdmi_audio_set_dto(struct radeon_device *rdev,
- 			     struct radeon_crtc *crtc, unsigned int clock)
+ int rn_vbios_smu_set_hard_min_dcfclk(struct clk_mgr_internal *clk_mgr, int requested_dcfclk_khz)
  {
-diff --git a/drivers/gpu/drm/radeon/radeon_asic.h b/drivers/gpu/drm/radeon/radeon_asic.h
-index 8f5e07834fcc..9e697f10f9ca 100644
---- a/drivers/gpu/drm/radeon/radeon_asic.h
-+++ b/drivers/gpu/drm/radeon/radeon_asic.h
-@@ -401,7 +401,6 @@ void r600_audio_set_dto(struct drm_encoder *encoder, u32 clock);
- void r600_hdmi_update_avi_infoframe(struct drm_encoder *encoder, void *buffer,
- 				    size_t size);
- void r600_hdmi_update_ACR(struct drm_encoder *encoder, uint32_t clock);
--void r600_hdmi_audio_workaround(struct drm_encoder *encoder);
- int r600_hdmi_buffer_status_changed(struct drm_encoder *encoder);
- void r600_hdmi_update_audio_settings(struct drm_encoder *encoder);
- u32 r600_get_xclk(struct radeon_device *rdev);
+ 	int actual_dcfclk_set_mhz = -1;
+diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.h b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.h
+index 1ce19d875358..f76fad87f0e1 100644
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.h
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.h
+@@ -30,7 +30,6 @@ enum dcn_pwr_state;
+ 
+ int rn_vbios_smu_get_smu_version(struct clk_mgr_internal *clk_mgr);
+ int rn_vbios_smu_set_dispclk(struct clk_mgr_internal *clk_mgr, int requested_dispclk_khz);
+-int rn_vbios_smu_set_dprefclk(struct clk_mgr_internal *clk_mgr);
+ int rn_vbios_smu_set_hard_min_dcfclk(struct clk_mgr_internal *clk_mgr, int requested_dcfclk_khz);
+ int rn_vbios_smu_set_min_deep_sleep_dcfclk(struct clk_mgr_internal *clk_mgr, int requested_min_ds_dcfclk_khz);
+ void rn_vbios_smu_set_phyclk(struct clk_mgr_internal *clk_mgr, int requested_phyclk_khz);
 -- 
 2.49.0
 
