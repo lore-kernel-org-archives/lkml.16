@@ -1,122 +1,94 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54ECB221721
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 18:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3424284A3E;
+	Fri, 18 Apr 2025 18:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744999401; cv=none; b=ZS/T8kYBkt4NtmNGP/DtuIMFVWavYllmI9enpqmtJLDNSe6vifsf7FFxzGMHcyPaKHwM5OyR305UmydRqa1CWhsaVrYj580Dfh3n9Rzag2LGzfUKnpKRHJfRCLk0dCJeXHFXXSG6l3a1pGOz0y6LE4BBv95yvsYyxlv7VnSukjo=
+	t=1744999442; cv=none; b=tSaHjBthR6b8G+5+8YLHKRGnQGXjrrP2QJ1JE04dxeEkTN5y2h2RGDBgKBYsCV4mLcXqr85ZI0UaOWWHMUg45YSiUKICptpFiNixFKu1e1zF2C76a67QhXVM5ajRjBvH57WX/tP5CZlehlWIJmTgXXuY+qaNH1F48nrbWxLdt2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744999401; c=relaxed/simple;
-	bh=1YG7DuypvUO2eH+ZtNma3tnBVmRMdQt3rkXfWDkxfvY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JBfj/MVKpRUoaiyz3ER4BVXT/IHUwujdxM9zDR+pJyGvp1MHr14Pk60qtie7Mt/YIUf55qQPWs8caFmoOtCxH36Cx3bVRdr50VLsa3GxZZHAr3S2PbJqIyeG3B8RXTrnPfOUUkjokN8n6oWhkL15qJUYR2V9n0mr0KnjmLeSFO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RNkVP7Ow; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1744999442; c=relaxed/simple;
+	bh=NaeCcSP6DCirfqAipsADTtNWV3q2qdvhgZOsW/GhJXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jl1aPI4OQtSO+Px4F6ScMTAUnGESvhAmTEoAmx0myChJ9CAGhPwB2EYqkeDSUOwe63ImZu3DVHFsda58sl8HCNbYAZqWAsnO0A/0snJSzV4JXltQdXNwWg52gVzHDwcrutTdiOw+lvjHJvjNOlxH/cYM3G5WUxl9spfGQY6xAkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jc0EhWrY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RNkVP7Ow"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff8a2c7912so1711663a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 11:03:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744999399; x=1745604199; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rqJHg5UYMXwn+mNlrL5oxyZCVbhJU0UNvh0766Pzt3w=;
-        b=RNkVP7Ow+ZXf59m9XKNn8w8xsZoToQ9upST6cMiOeg357tp+4V3UgTNM7DDO/zqvbM
-         QpGArvz31DMfOloWu8Hwslnxblsy0pioclQHvuI+jyaO5mzJ3pmHSPDN9uxai/PpHFhK
-         2Mw/0XjFQv5PRqwNmkei0Fc5hhwZG5T9wIifLN1zNPA2TfwaHVAV+WalVh/BQQKaU/73
-         YZ2aX89oYvRHlDfCTnMhqXLOQoSpiCojl8T+JDCt3PmSGWDGBZXDRzMMLIovnyx8WFl5
-         W3Wvy7YhGQr5MaKJDH820TqExF8HEmobAu5g8MYoR59tqA4V3U9+faOfcqG7hAlTSdt/
-         IDQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744999399; x=1745604199;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rqJHg5UYMXwn+mNlrL5oxyZCVbhJU0UNvh0766Pzt3w=;
-        b=XcBZS3caXf8rEHSqGlo1vCtG46GigirI/71L6peeeqlEvvakQ9iHiRN/MpYQhHT1b/
-         CAQsmEQrHlFcTvsYl7lJO8gOyTvNtwiu3k2sAlkzaw7Bt8hG+1BRBX+yaN/S6+JknBSa
-         44ST6NW4TdMc9uNC4jVzRorknghYRZfJ9lmnouqcVshpPjDKtBUw+wAT1yV/OnlcDdyg
-         wRgFbuxDaHBV6gg+BF2ofMUkUDbkI5mPy04oizdvJDWB7+3AQnwOi1PZxWOQse82kypw
-         /33K+xfhF1RKj3NNz941ImolED3CdItlib7LWL8SoiSN4dyHDDQGxAiCsakotxzAUTgV
-         wABA==
-X-Gm-Message-State: AOJu0YwFKXu2OLxPwsrSQJLMHznXd15IiZGzWBmCgWVs2iCPA7hmtoKj
-	ifQPlJCDPbXs5HRzlv7SxQTD1XqXFDvE26aAdnCRIjrXYnpbzVDwgGN0Y4japgU4uwzQAYZlbEN
-	xIA==
-X-Google-Smtp-Source: AGHT+IFCmvZ0T+9eNap/pJTWsl4JOWWblp3uZelMKEtnIjAjt7ekoYrCZmpLXyNDhFs3e4WXHrwgxFD2ZsI=
-X-Received: from pjbsn15.prod.google.com ([2002:a17:90b:2e8f:b0:2fa:b84:b308])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:e18f:b0:2ee:c30f:33c9
- with SMTP id 98e67ed59e1d1-3087c36106amr5592365a91.14.1744999399596; Fri, 18
- Apr 2025 11:03:19 -0700 (PDT)
-Date: Fri, 18 Apr 2025 11:03:18 -0700
-In-Reply-To: <20250418171609.231588-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jc0EhWrY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95038C4CEE2;
+	Fri, 18 Apr 2025 18:04:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744999441;
+	bh=NaeCcSP6DCirfqAipsADTtNWV3q2qdvhgZOsW/GhJXU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=jc0EhWrYPnnoA3Xv2hluLsIQHobLE/zY9vGf2gm0uO1k0F1cTtRbnxd3/bT827+x2
+	 5AShxhJfeyhhW60PV59GyeQwYbeovHdZaCQ9YgFpfLPOm8aRbqXGKX4MjeQr6KQh7z
+	 KgA/K1qdrCgsfXqc9sfm/6fh+PKnoc3x9XXlemTLZghpbAlgIOc7YDwuIUld0Owkrq
+	 wRlErLhuR9Prz/g603vkneK3keus+cXbz93vFacsQ2GKxTh4IskfSEruponcJma6xx
+	 JIzbJrV0c/BRupX/bQLc0vzXNBk5LOoPxXSJF4xCAsJ/mL0vteL/STt1mlTRfpCXpD
+	 yv0IrEfdloT4w==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 4240DCE077B; Fri, 18 Apr 2025 11:04:01 -0700 (PDT)
+Date: Fri, 18 Apr 2025 11:04:01 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Joel Fernandes <joelagnelf@nvidia.com>, linux-kernel@vger.kernel.org,
+	Josh Triplett <josh@joshtriplett.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Shuah Khan <shuah@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, rcu@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH 12/14] torture: Add testing of RCU's Rust bindings to
+ torture.sh
+Message-ID: <42da7c8e-08ff-4b04-ab58-6c0c2e287eb3@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250418161005.2425391-1-joelagnelf@nvidia.com>
+ <20250418161005.2425391-13-joelagnelf@nvidia.com>
+ <CANiq72nCfBdsfKzP72DWxLBh+Eueack9sS-E97wtsr0UtkAnUA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250418171609.231588-1-pbonzini@redhat.com>
-Message-ID: <aAKT5mLHVV7rz830@google.com>
-Subject: Re: [PATCH] KVM: arm64, x86: make kvm_arch_has_irq_bypass() inline
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, kvmarm@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72nCfBdsfKzP72DWxLBh+Eueack9sS-E97wtsr0UtkAnUA@mail.gmail.com>
 
-On Fri, Apr 18, 2025, Paolo Bonzini wrote:
-> kvm_arch_has_irq_bypass() is a small function and even though it does
-> not appear in any *really* hot paths, it's also not entirely rare.
-> Make it inline---it also works out nicely in preparation for using it in
-> kvm-intel.ko and kvm-amd.ko, since the function is not currently exported.
+On Fri, Apr 18, 2025 at 07:31:53PM +0200, Miguel Ojeda wrote:
+> On Fri, Apr 18, 2025 at 6:10 PM Joel Fernandes <joelagnelf@nvidia.com> wrote:
+> >
+> > a rust_doctests_kernel kunit run.  Note that kunit wants a clean source
+> > tree, so this runs "make mrproper", which might come as a surprise to
+> > some users.  Should there be a --mrproper parameter to torture.sh to make
+> > the user explicitly ask for it?
 > 
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/arm64/include/asm/kvm_host.h   | 5 +++++
->  arch/arm64/kvm/arm.c                | 5 -----
->  arch/powerpc/include/asm/kvm_host.h | 2 ++
->  arch/x86/include/asm/kvm_host.h     | 6 ++++++
->  arch/x86/kvm/x86.c                  | 5 -----
->  include/linux/kvm_host.h            | 1 -
->  6 files changed, 13 insertions(+), 11 deletions(-)
+> One may run KUnit without using `kunit.py`, i.e. by enabling the
+> Kconfigs and booting the kernel. Would that help?
 
-...
+Potentially?
 
-> diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
-> index 2d139c807577..6f761b77b813 100644
-> --- a/arch/powerpc/include/asm/kvm_host.h
-> +++ b/arch/powerpc/include/asm/kvm_host.h
-> @@ -907,4 +907,6 @@ static inline void kvm_arch_flush_shadow_all(struct kvm *kvm) {}
->  static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu) {}
->  static inline void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu) {}
->  
-> +bool kvm_arch_has_irq_bypass(void);
+Suppose we fired up a guest OS and captured the console output.  Is there
+a way to make that guest OS shut down automatically at the end of the
+test and to extract the test results?
 
-...
+In the short term, I am good with this the current state of this being
+default-disabled and those of us wishing to run it regularly adjusting
+our scripts accordingly.
 
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 291d49b9bf05..82f044e4b3f5 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -2383,7 +2383,6 @@ struct kvm_vcpu *kvm_get_running_vcpu(void);
->  struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void);
->  
->  #if IS_ENABLED(CONFIG_HAVE_KVM_IRQ_BYPASS)
-> -bool kvm_arch_has_irq_bypass(void);
+But, longer term, if there is a better way...
 
-Moving the declaration to PPC is unnecessary, and IMO undesirable.  It's perfectly
-legal to have a non-static declaration follow a "static inline", and asm/kvm_host.h
-is included by linux/kvm_host.h, i.e. the per-arch "static inline" is guaranteed
-to be processed first.
-
-And KVM already have multiple instances of this, e.g. kvm_arch_vcpu_blocking().
-If only for consistency, I vote to keep the common declaration.
-
->  int kvm_arch_irq_bypass_add_producer(struct irq_bypass_consumer *,
->  			   struct irq_bypass_producer *);
->  void kvm_arch_irq_bypass_del_producer(struct irq_bypass_consumer *,
-> -- 
-> 2.43.5
-> 
+							Thanx, Paul
