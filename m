@@ -1,159 +1,68 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACBD276030;
-	Fri, 18 Apr 2025 13:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DFC2276030;
+	Fri, 18 Apr 2025 13:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744981851; cv=none; b=b6Uv1GSP5MmUDWjJhhRzKtZWnZs0cAIqKUbMQ170dp9+NXV2WUGKxCw8sY8Bg+CYqFoXN9Jqux2DGFeTaiXyKb3oeU7grdhTu41RDVtpuBBFG1hrJshpeVUzY3cSyzdHT+n/YgVh6DwPGiTDqJk8SdglB3+vzXEVGA4epwpRyjI=
+	t=1744981867; cv=none; b=L5azEW296QEDsqqZLcdpaPSFTxSxZ/oO6Ir+U38hbipN+Sp9S83C+TFC1t8aD6iMDyGP4iv1cDZwZYPNSCZPMch4Da3CX5APD9wZV/OQtd+M1QTBr1nB6t6WmEkHsMo+n3oVzmftcSVyUaCTtsv8pwhHorQTkIGWrTmv3G6ZVlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744981851; c=relaxed/simple;
-	bh=JTTWxqBrwEtLKx6O5TyIr4GBL3p0TLD2eTF5sLveJGw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FdsiXrtRyUQQPSzyFJiq1Rm21XbGyvv+XZNmnmEqNZ78MXXgaiAeALVT5I7uvwvCeADM7RxGBHM4pYegPoJpckOJGZSgyGuFVtlFa6ToInxBQnaYMYma440KbkuPfCgUYeTyDdSDsrWDeiFgiv0XffaKymPz6JquPlrViAMiox0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=B5t3bSZd; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744981867; c=relaxed/simple;
+	bh=b/qjTHYUlPuXTBOX0HOYHg04CUK/04jjhZcMnxxjqZA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UbLkSaC1xX0CMaSYEgqFsjcH2lrdTd7S7vAiyiwu/EkZQngM/eO9vbo/brHF9Ldf1Iy8S+52rLDnfvKamijZ0F9RSFd847vGK1o/4AXW0/gQ+lGmhY/XjCYrZZdBdfobPD9zH5VvJUAblcCfItsfmwwUCEGfx+MhntmO4R7l0f4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CO5GmuOX; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="B5t3bSZd"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8AC884333F;
-	Fri, 18 Apr 2025 13:10:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744981840;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=flWAz2w14wq7W+OFxNQQycVZnw0/ZbM/Zjd3vHnpprk=;
-	b=B5t3bSZdX2Pd3XrVzuwEHF2KinZWkp5ZqrcvrtLQLoDFV4L/lSO9PtQI1lRmvm9jWuqbwg
-	r6TLbHTP1PwPFSC+jXorCpZF3Ey3loGgGda6H2O4yjQzjdJrNVWOlk0bwSHzI5JplKUDsg
-	GwOCyZfyyLFd7K4ig98jOczKvpBZcOjJaQ2wZMWuqYq9TlMMEaK7yr5oHZsdAh1j+ED3Ew
-	NEJeHaRcd/8pveKH3k29fv3niVN9Fm86fCMZFHKVFMT+lcZCWAZhrU+JCRI+QBtNICDKDo
-	CDMMC5zWgNSQx0LxfBAU5w44jp7ZAJvMkRZOCEU1GAW4B7VvnDvY4s/SH1hhUQ==
-Date: Fri, 18 Apr 2025 15:10:36 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
- Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
- Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Daniel Scally
- <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 11/16] of: property: Allow fw_devlink device-tree
- support for x86
-Message-ID: <20250418151036.719f982b@bootlin.com>
-In-Reply-To: <Z_U0DkSemHK0lrJW@smile.fi.intel.com>
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
-	<20250407145546.270683-12-herve.codina@bootlin.com>
-	<Z_Pw_MoPpVNwiEhc@smile.fi.intel.com>
-	<20250408154925.5653d506@bootlin.com>
-	<Z_U0DkSemHK0lrJW@smile.fi.intel.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CO5GmuOX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=b/qjTHYUlPuXTBOX0HOYHg04CUK/04jjhZcMnxxjqZA=; b=CO5GmuOXzwJylTDYCZcbR87yN5
+	b9Mz1mCKtOEcwSLCk7YHkLBl4MK7z6HhLpwkjWolGi34EkaRa4rWXfBoPcg+W8FEbN8zcgHCAlaAX
+	71n9HV4QMRIVaeWxHRCtLW7XCG7ju6FMr4i1wwJn2rJu2mY5W3AIEMp2jB8Z/TlZTtUg91ejfiHS7
+	BiTz2PxcR9gvMiNZv03GvYHPaVGJMDQ0KwMfYDPjKzUW1qELybtk8r45r8oGuHXlUt9RQxEIbBali
+	8ddzcWBdSlqnnnhXAdefB7jjus225yNqSiwI9BMbg6IfedIj22Db7Yoj1Yylt4gvr3VQC/RChkoHP
+	Q9PqTZaQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u5lUf-0000000AW5B-0q95;
+	Fri, 18 Apr 2025 13:10:57 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id AC098300619; Fri, 18 Apr 2025 15:10:56 +0200 (CEST)
+Date: Fri, 18 Apr 2025 15:10:56 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Qing Wang <wangqing7171@gmail.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com, irogers@google.com,
+	jolsa@kernel.org, kan.liang@linux.intel.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org
+Subject: Re: [PATCH 2/2] perf/core: Fix broken throttling when
+ max_samples_per_tick=1
+Message-ID: <20250418131056.GF17910@noisy.programming.kicks-ass.net>
+References: <20250405141635.243786-1-wangqing7171@gmail.com>
+ <20250405141635.243786-3-wangqing7171@gmail.com>
+ <20250418090302.GO38216@noisy.programming.kicks-ass.net>
+ <ca94f413-4e35-41fd-9554-c80d6e2707ac@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfedvvdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffekjeehffeihfefueehveegvdeiieeludekhffhjeeuffdvudevgeevtdeiueefnecuffhomhgrihhnpegrnhgrnhguthgvtghhrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegtddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhto
- hepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepfhgvshhtvghvrghmsehgmhgrihhlrdgtohhm
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ca94f413-4e35-41fd-9554-c80d6e2707ac@gmail.com>
 
-Hi Andy,
+On Fri, Apr 18, 2025 at 09:08:30PM +0800, Qing Wang wrote:
+> Thank you very much for your review. Do you need me to reorganize the patch
+> and send it out? Because if only the second patch is accepted, its context
+> won't match the current mainline code.
 
-On Tue, 8 Apr 2025 17:34:54 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+I've stomped on it a bit and pushed out to queue/perf/core.
 
-> On Tue, Apr 08, 2025 at 03:49:25PM +0200, Herve Codina wrote:
-> > On Mon, 7 Apr 2025 18:36:28 +0300
-> > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:  
-> > > On Mon, Apr 07, 2025 at 04:55:40PM +0200, Herve Codina wrote:  
-> 
-> ...
-> 
-> > > This is incorrect, they never had ACPI to begin with. Also there is third
-> > > platform that are using DT on x86 core — SpreadTrum based phones.  
-> > 
-> > I will rework the commit log to avoid 'mixing ACPI and device-tree'
-> > 
-> > For "SpreadTrum based phones", do you have an idea about the Kconfig symbol
-> > I could use to filter our this x86 systems?  
-> 
-> Hmm... good question. I don't think it was anything. The Airmont core just
-> works and doesn't require anything special to be set. And platform is x86 with
-> the devices that are established on ARM, so nothing special in device tree
-> either, I suppose. Basically any x86 platform with OF should be excluded,
-> rather think of what should be included. But I see that as opposite
-> requirements to the same function. I have no idea how to solve this. Perhaps
-> find that SpreadTrum Intel Atom-based device? Would be really hard, I believe.
-> Especially if we want to install a custom kernel there...
-> 
-> > Anything I find upstream related to SpreadTrum seems base on ARM cpus.
-> > I probably miss something.  
-> 
-> There were two SoCs that were Intel Atom based [1]. And some patches [2] to x86
-> DT code were made to support those cases.
-> 
-> > > And not sure about AMD stuff (Geode?).  
-> > 
-> > Same here, if some AMD devices need to be filtered out, is there a specific
-> > Kconfig symbol I can use ?  
-> 
-> This is question to AMD people. I have no clue.
-> 
-> [1]: https://www.anandtech.com/show/11196/mwc-2017-spreadtrum-launches-8core-intel-airmontbased-soc-with-cat-7-lte-for-smartphones
-> 
-> [2]: 4e07db9c8db8 ("x86/devicetree: Use CPU description from Device Tree")
-> and co. `git log --no-merges 4e07db9c8db8 -- arch/x86/kernel/devicetree.c
-> 
-
-I have tried to find a solution for this topic.
-
-Indeed, this patch enables fw_devlink based on device-tree on all x86
-platform except OLPC and CE4100.
-
-You have mentioned some other x86 based system that could have issues with
-fw_devlink and it seems to be hard to have a complete list of systems for
-which we should not enable fw_devlink (potential issues and so regression
-against current kernel behavior).
-
-As you also proposed, we can thing on the opposite direction and enable
-fw_devlink on x86 systems that need it.
-
-We need it because we need the device-tree description over PCI device feature
-(CONFIG_PCI_DYNAMIC_OF_NODES) on x86 in order to support the LAN966x use case.
-
-What do you think about the following condition?
-
-	if (IS_ENABLED(CONFIG_X86) && !IS_ENABLED(CONFIG_PCI_DYNAMIC_OF_NODES))
- 		return 0; /* Not enabled */
-
-CONFIG_PCI_DYNAMIC_OF_NODES has already to set explicitly by the user.
-
-
-Do you think it makes sense and could be a good alternative instead of
-filtering out a list of x86 systems ?
-
-Best regards,
-Hervé
+If all looks well, and the robots don't have a fit because I failed to
+compile test the thing, it should eventually make its way into tip.
