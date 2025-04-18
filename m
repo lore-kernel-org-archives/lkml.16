@@ -1,217 +1,242 @@
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010035.outbound.protection.outlook.com [52.101.69.35])
+Received: from mailrelay6-3.pub.mailoutpod3-cph3.one.com (mailrelay6-3.pub.mailoutpod3-cph3.one.com [46.30.212.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2B820FAB1;
-	Fri, 18 Apr 2025 07:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.35
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744962251; cv=fail; b=Dy50ghyRUYc9Pf+2cGNuTeS/c/o3Xu31M4rQt7bWR/39aAziZlMl+CLJyvur+Mo2lzyj6Z5Ka9QhOanvqO3uRBKlA9zYswLW8ESToHrPG/EA/yqLw0Qzh4aX50eYFJ8UruRAQ0o6SHTUGY2LkoUP1sGQMtb1CjdN0+7XyAF0I3I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744962251; c=relaxed/simple;
-	bh=OsZ7G4J8ePjBAWoghkgZPkUONGqIRq1hhHMWTeIWWT0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=lR/bIt3MXqwAxJ4vkFFhW9PSEmGsf+Fkwi0Kibe7/oSw/e0ijgI9BT+qp2+GIt9s8RX465Ou+J3qAtB1DtZnB+wjDq79vIYBCYEGNh//imxKocDD/RyCQKU26cB/6FOkW/S6y3Dl1+NbDK2gDg085zu4H9WrljadFjit2uL3JMo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=LWcFb1/d; arc=fail smtp.client-ip=52.101.69.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C740B2586E2
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 07:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.212.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744962297; cv=none; b=gcFWNsJQHMO1bDVd1Kep6n4t+599pLteu89pVXUf8BBGRMFk68QZ2s+UnbmYgEiDg72skxDKJlt73JxyH20NtMILhi/s+69qhVlrFNgATxY5g/Nm0ih7YhJDZbH0SW1ZXApei8xfgXifUbV8qtQSCQw3jZ4MiGfIrCj4orjHwOw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744962297; c=relaxed/simple;
+	bh=8lxoWw9UQYOpkhhkceLfuseVPwo3ooXzBMIcimgB49Y=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=WQM24t/FJ2Fq5Z3ztccjmGyG8t8pjcexTph1IM25bA+IM51ysxBOL/eelUt2X2ulgTk/mqtkK8kBH1T+BKjsNScdv/7k3+QQfgYIFSdB3tpNuV6nVfW5duJLdbDFrMbr5Z9rnpGn01zilZW/0euez3hP/zM4NRAz/JqZIOgl58c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=BMFmGMHh; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=N3+o/VLq; arc=none smtp.client-ip=46.30.212.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="LWcFb1/d"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uwurhV/YkMYYlGEuXqWFjFdNn0r2JRNFQ7MnGZU+w5jyT2Y/aPwb/nyo37+sElUffuf1si3vNXYYhyCx+m+Oo4A3Z6f/HGmB2i9UZ6YJh3GP30iDqCsXdpXzO4ESWxWbbJ1Wvdlu7scBBnGg7mazpXf4XAmFuAYGum1UVluWRSpOUbYd6Pem5z4vDpbS6r1rrC1JuOQA7cAX2lmU3bH1WO8StB47iOGPGy1i05U8ChLdSvYl6f88WQA+L6fLBl9hTIc6VlhjFvbloCsaM2hrEum6QRT/2xpYakmyNySQjul1n3F8aGaS8T65OAWjHRK/PuFJ4/rX2V3Vos2H/hPXYQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Hi9o27P1iFNNHU5NoeIXFv/+c6nz5uRdcA/uu00yOTg=;
- b=vPJrWqyGWj6RymdDXkFvrU8RlxocaCjVePDm9kpJ93ozKQQzOVyphpyhfBB6i3jEJUZPcl6oEaMI3ptNK6UzyJDWxuMsWCJHV58l9netB+BjZHQCbAMfSrrw+z6Fwj/j7YBQHlPzxwIxHcjlKBGAFnl7r9ZMgqji65iLe24JFwE5p3e2czk3Yl4qAab0WnZ6HQIbXfpkVfYEfWQZsSEUFrw5cviBjaUe6KxluMdMNDlTbPRdDvKihe1ISCV6L3gJruYV/iJ/q3TD4OJVZP5G0+iBJCUfECkntT3gFJPw52BCgWrV8O5qV7H5npIsumqqybFNWpyABvArNcw/MmR0Cg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hi9o27P1iFNNHU5NoeIXFv/+c6nz5uRdcA/uu00yOTg=;
- b=LWcFb1/d6DLaSFCbqwt3pOhJv+aI1JPMZJUI2D1ydjl0ANro4IJKnBOk97TJNqGFc0uywRpWFxIyNXbX74PNULEUPLjZOq4hrxmYR6WBzgx5bBUJw20G1X/k7l0wC/HS3BTQHDs7qdCATYhpFu1vJvhjqrFOQ+c7IzinnZZYA2ZieRqk0CJ1/q9D0bOLY42uqo9ozESu5Hr2Tbhf0WOOl73DzOGkqg4zOv30zDUS92D+Y77UK8HT7kXw6LmQeVIgG2BnMVmquL+REiC3mCAJJjtcEPp9nD5fyQ6fG7pJrksMGy5YOeXSN+x7BgbPq4b4lKMlZOxBUsrXFA+5zCnlAw==
-Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
- by AS8PR04MB7558.eurprd04.prod.outlook.com (2603:10a6:20b:23c::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Fri, 18 Apr
- 2025 07:44:06 +0000
-Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
- ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
- ([fe80::a7c2:e2fa:8e04:40db%4]) with mapi id 15.20.8632.030; Fri, 18 Apr 2025
- 07:44:06 +0000
-From: Wei Fang <wei.fang@nxp.com>
-To: Vladimir Oltean <vladimir.oltean@nxp.com>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>
-CC: Claudiu Manoil <claudiu.manoil@nxp.com>, Clark Wang
-	<xiaoning.wang@nxp.com>, Vlatko Markovikj <vlatko.markovikj@etas.com>, Andrew
- Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
-	<daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, John
- Fastabend <john.fastabend@gmail.com>, Lorenzo Bianconi <lorenzo@kernel.org>,
-	Toke Hoiland-Jorgensen <toke@redhat.com>, Alexander Lobakin
-	<aleksander.lobakin@intel.com>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: RE: [PATCH net 2/3] net: enetc: refactor bulk flipping of RX buffers
- to separate function
-Thread-Topic: [PATCH net 2/3] net: enetc: refactor bulk flipping of RX buffers
- to separate function
-Thread-Index: AQHbr5BYx5jxLafhXEiFtCloQu2KLbOpDB2Q
-Date: Fri, 18 Apr 2025 07:44:06 +0000
-Message-ID:
- <PAXPR04MB851079583B566E942D4206EB88BF2@PAXPR04MB8510.eurprd04.prod.outlook.com>
-References: <20250417120005.3288549-1-vladimir.oltean@nxp.com>
- <20250417120005.3288549-3-vladimir.oltean@nxp.com>
-In-Reply-To: <20250417120005.3288549-3-vladimir.oltean@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PAXPR04MB8510:EE_|AS8PR04MB7558:EE_
-x-ms-office365-filtering-correlation-id: 48af127d-7863-4540-1bfb-08dd7e4ccc58
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|7416014|376014|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?7uf2p0VbgrlkgZ3rXVWZm1A3vI5+EtiSIGlLZtSZNEl2Ac6IJ+FLqexFIBHQ?=
- =?us-ascii?Q?Iu/P8OcMg9p3XzhR2OS2thDjqgJjhs2rzxX93xQyBzPT+odEOOTY6Zcwbprh?=
- =?us-ascii?Q?mEQo/enUBY7sU77VMsobIxJsDds5g4QPRVLuWVUYeh9Nsq/Ywh5gIHFZRL8F?=
- =?us-ascii?Q?t8A497bRJRmXq3pB21dIwPctKjQ2/3TAupl2Z42Lsx2KmWCnIuu+J/tuVUtQ?=
- =?us-ascii?Q?aJHFnX7ky3TZrMVHpSbUPri2IbYTyhGLSHiw5bwABGijlxzYG/TuoM2wFZlo?=
- =?us-ascii?Q?/p28JFGq+o9XtlYWGyLzzh6fMzKlq8j4mKsj7oZwuijjs7rsVzO4rrkCI0Px?=
- =?us-ascii?Q?fxyQwlw6jEvMtf+Xfp2VXUTZmet3yPO+PvMtkgZZifV1ivWCT1lxzaj1Xvpl?=
- =?us-ascii?Q?WIBtyjj9RcGMOHP+ckE0hkIOfxggFyKKk4KuzK9/JV3QmRegXxzk328ayvch?=
- =?us-ascii?Q?cIwEgqSQWzLrU4iJE/mgWN3VOpJtlMzpjKkLr4dK2YYNtv6Eo6VaMqTi7/mL?=
- =?us-ascii?Q?VPEX9Ai2Rfdz5/ZslcA1Xrlq5ueQrZTcKAtNp0APArkecns05gKZb4nbz070?=
- =?us-ascii?Q?YOGzabztKm2acCaETAxeE5xcNyyuv2DGN39e7h5gQK2UAkLCYpfcD2GyQP8O?=
- =?us-ascii?Q?bFxPX2HIW1mlJEXspOCo49GyXa3NyFcaUxORITMQ+DZdkPNcO6e5asLyslAE?=
- =?us-ascii?Q?kC40r5u4p7vOewMUVhvPU5xhju55/LXNlCSsyZwvCAbvLM2ei5DKkcZEPvOC?=
- =?us-ascii?Q?KlUvwhzd2r9Y9Zfrh6luucGqoKn5cZ+kpHysGg8xw92L8O8k0wQvV7W3HOlw?=
- =?us-ascii?Q?5RPS/zUMwPlUhgI0bU/idV3C5MWd1+XEuZHktE2n5RgGPAE04sTBxzyxyyj4?=
- =?us-ascii?Q?rALBvXf5s+baQSl+sTWOYUCZwrEQRkfCNT5+AN/GUF+Tn7H8SOt7x3yoKEPw?=
- =?us-ascii?Q?7v1c5WN3y/H+QNNmxPn8cJZgrv+P1Tnkimsbm3mc4URJtfXU0nTC6fWLr7fC?=
- =?us-ascii?Q?9QXheoSTD78udqcKN+Bx3qTTX/+wmp914cPL0yiIc/fCeDN3RGTCFRcFG08c?=
- =?us-ascii?Q?SrM4PKtI2AZhchU5O1uP4dYINbADhrF7y8aiEOff/GObT2+dUCFlG+x922TZ?=
- =?us-ascii?Q?H0RywYLYDO9dS5FY2+L0smxU3iMu+1aBWFvROcMJw0mUAGqDvyNjj3xCtTzv?=
- =?us-ascii?Q?h+3WEUnqYyDn7Nubsqt+8mRTwzTnLukj7J0duAAK1kjgwg02hK5LqqgIH8un?=
- =?us-ascii?Q?UG6VlaQpKmv7ohFnQSvhr9mUULDIBmQ574XnM5Fw1fmQbD5IfWgu0SwT/Nsv?=
- =?us-ascii?Q?AV8mAKPoTwwblrP42cRAg9UetT5r8/rkaO12ihdEfHodMDDHxdxjQfekRlEE?=
- =?us-ascii?Q?CXpCbrc2UqJ/2wKFFaOCUJp/IUh6cxDlPBQXZUYM7k6UrO4DYfjNwwJz62co?=
- =?us-ascii?Q?0qjc6C91rVZS83HdKmKskBiw0uN/RwHOGQiyM4fHwLdUU1RZxE15Fw=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?RzqbboXdfI1JxtJyFJkkPjclyDbeQPkU2N0Cs2jo1DwMwi1p9baHzuvVjcsc?=
- =?us-ascii?Q?cEKGoWi9D7IFaEk4BTioO4Ey9797LAm9QQ7W62m5UsCom3pqerRfQuTGrNjp?=
- =?us-ascii?Q?kAtGDnrWq0po4V96spuFIoJp/eOXJk+uFb5tBH2ec06qjuq6EpEAa4+4YDbu?=
- =?us-ascii?Q?4q4pHo1b8uMQnuOSDQuz7Si6zGbSmi2eg76d5hZSMI1T8lNibI1iIIA/E0q9?=
- =?us-ascii?Q?yPxs12NR59qDdPHVGjwdtcX0JI6xfShpc/zFg+8wKFFo9EkJEX/s3WSK/Ap+?=
- =?us-ascii?Q?I0Va2rwAlSWxzhY0x3FIMw+hCYgvoco/2iZ/kORFY3mur2X87vMOPS6Jn/jI?=
- =?us-ascii?Q?Eby0liY4EinnEM4AOO8IosZgI+ybyrLa3gTSa4TzrfgN+S0sXFW6S0FkyO2o?=
- =?us-ascii?Q?DQcCxvE9ismrmOGXtstO4OOS4GuWFPR1xGg5Hhow6c9XgRX6hi9DeBhQiydz?=
- =?us-ascii?Q?gTYBFn+8b6ZB6xsST6RDvs+8EE+eFB9vKs58dc2kTM585SW5HrDPkqPQuNzm?=
- =?us-ascii?Q?a6Db+kKRb05gldpQcVEse7vIJYI+oUQ7C2W/OCXDyfpjRRc50SXWpOTDRf/e?=
- =?us-ascii?Q?6GV4nTvklr5rRr1WtK5MR8ksBIcPgzaMPYenCUQqYLEu0bH1lqMOTFvhTI9H?=
- =?us-ascii?Q?F9MLWQC2UeQYvwyd6chO1qB3/0hLVYwAC0rexdDclZZWBBT90Gl//bRxspMt?=
- =?us-ascii?Q?FhbjXWILWnFPd5JPfj/VNidI7Nm9v9XYHx3erOZH75084obNht+1X0rqeUoT?=
- =?us-ascii?Q?kLzXY3TmngqlfAdz8QQriuq4RY4aLxIm0gRmnkBR0gPbUTtHx0F+Mt4IXwR/?=
- =?us-ascii?Q?/z5pknNoh7EY+4qsldNSLXBnjM/UlLZ197p2Tzs0uOO9u6Z7cjRcZSpFXQ5h?=
- =?us-ascii?Q?kO3Mu7RXmnBzhcYNt9iVK2xX4Y1AWIYs5tothp/PQZK6xhX3MXz8+e8+yLhH?=
- =?us-ascii?Q?FfyRhcb5JaAt1sH4JJNvpAYlzuizndux17gRkdUwM2P/3XAReDt/kRayTcR4?=
- =?us-ascii?Q?agaaxSHWihuPY6QTOFfm04NELlItNrJB2uRSiWvFJRhzdMHB1QBHjI0N2A2C?=
- =?us-ascii?Q?2z19KeQYDiJFt9PA7JvZJdTy9c5Ak+V0MaJ5MeYwHB6NZG1x8YQXXBB5UBWS?=
- =?us-ascii?Q?5WkTFMSqyqegnUn97JrwEppiBIq6euTR677AAfQ8Q2MVKl+WvFO7wSOaWeAk?=
- =?us-ascii?Q?nxlQtiklrHemfEjdL/PJHfuTzd6t+/pVDenV9TbXCI/ZqNw4lcAF/OI7ZMrX?=
- =?us-ascii?Q?AhA3ElBhah46okbNblUD9c2NH2ZiCbxo9HUc0z8dIrO+eW0a9H1QVDRwziva?=
- =?us-ascii?Q?DH9FhiFvSVDFPeAbuLeqpZuAfsdclMvwN6c9Lh9P+TF+alkL/+WU+w5GMdfx?=
- =?us-ascii?Q?7/cC0ibfJWyPrNCCiWGkdZ1ZgHM5jhbfClAqYqVgFhgvSDWuL1M8ElVUM1mL?=
- =?us-ascii?Q?QSQ1Vi13t0O52Bmw9pERHOVpNBkYfol0RFNToV45O2D/wY+85P0TBKgFc8KA?=
- =?us-ascii?Q?qFDYym9vhYkbplQ5FT/m1w1w5AwPkjjp9S3iuCj7JUOy/GBvH25yIqn3+WvG?=
- =?us-ascii?Q?8XmeXLXNgs47pEbGMcg=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="BMFmGMHh";
+	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="N3+o/VLq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1744962219; x=1745567019;
+	d=konsulko.se; s=rsa1;
+	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
+	 subject:mime-version:content-type:from;
+	bh=8lxoWw9UQYOpkhhkceLfuseVPwo3ooXzBMIcimgB49Y=;
+	b=BMFmGMHhvJMaVlx5BSP0wrqKH3iM8IhdycjnxOYgkJSPmN9skNomhnrYEY73QYt2wVUzKLRswSn2N
+	 a+TcoaDo24Xx+VVIk4AqRYVUufCPvZFvYbK2irfJLTqjNnUumrHSGPZ1pY0t/t0WKOTDbLucwXlNZu
+	 wQN5GjbHdMCryfCOmtaj/QALwXg4uOgdZcAs3FIohZMm6iOoNWiXeDKiR7ivN9FNRKHw0k9GAF8cVQ
+	 K5Cr9BvPqbNL/cEG64ai4O65dtNHG9ZIcoHD/SDX+FXb47DJEbgygrOijQJ9Fxfie6bWemV1L2MVWy
+	 umhuPDBKMHVqbGXruYtW8jWoALf460Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1744962219; x=1745567019;
+	d=konsulko.se; s=ed1;
+	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
+	 subject:mime-version:content-type:from;
+	bh=8lxoWw9UQYOpkhhkceLfuseVPwo3ooXzBMIcimgB49Y=;
+	b=N3+o/VLqQKXJ2LvQMMuErMNEAYdBekID9qsf9YUdXNBzAUJgnHCqZNzDR2kbBGqZR7/lIbTz9mhvw
+	 omNMeNuCQ==
+X-HalOne-ID: d55280a5-1c28-11f0-8f47-417246ffdc90
+Received: from smtpclient.apple (unknown [82.118.29.98])
+	by mailrelay6.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
+	id d55280a5-1c28-11f0-8f47-417246ffdc90;
+	Fri, 18 Apr 2025 07:43:39 +0000 (UTC)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48af127d-7863-4540-1bfb-08dd7e4ccc58
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2025 07:44:06.6861
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Wdz7ExuwA5PEb29hPrTob2n2LbrzymFkDxVsyhWVktTdgew+omw+SDZKZ8X9nTvy1DUIwWdMTSTL0vDg84A0+w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7558
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.200.121\))
+Subject: Re: [PATCH v4] mm: add zblock allocator
+From: Vitaly Wool <vitaly.wool@konsulko.se>
+In-Reply-To: <20250417141656.GC780688@cmpxchg.org>
+Date: Fri, 18 Apr 2025 09:43:26 +0200
+Cc: linux-mm@kvack.org,
+ akpm@linux-foundation.org,
+ linux-kernel@vger.kernel.org,
+ Nhat Pham <nphamcs@gmail.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>,
+ Igor Belousov <igor.b@beldev.am>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9A7AB7E7-4369-456D-80E9-A6B35227C373@konsulko.se>
+References: <20250416120912.GC741145@cmpxchg.org>
+ <1744834223790.7.2308@webmail-backend-production-58ff969799-kbd7f>
+ <20250417141656.GC780688@cmpxchg.org>
+To: Johannes Weiner <hannes@cmpxchg.org>
+X-Mailer: Apple Mail (2.3826.200.121)
 
-> This small snippet of code ensures that we do something with the array
-> of RX software buffer descriptor elements after passing the skb to the
-> stack. In this case, we see if the other half of the page is reusable,
-> and if so, we "turn around" the buffers, making them directly usable by
-> enetc_refill_rx_ring() without going to enetc_new_page().
->=20
-> We will need to perform this kind of buffer flipping from a new code
-> path, i.e. from XDP_PASS. Currently, enetc_build_skb() does it there
-> buffer by buffer, but in a subsequent change we will stop using
-> enetc_build_skb() for XDP_PASS.
->=20
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> ---
->  drivers/net/ethernet/freescale/enetc/enetc.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c
-> b/drivers/net/ethernet/freescale/enetc/enetc.c
-> index 9b333254c73e..74721995cb1f 100644
-> --- a/drivers/net/ethernet/freescale/enetc/enetc.c
-> +++ b/drivers/net/ethernet/freescale/enetc/enetc.c
-> @@ -1850,6 +1850,16 @@ static void enetc_xdp_drop(struct enetc_bdr *rx_ri=
-ng,
-> int rx_ring_first,
->  	}
->  }
->=20
-> +static void enetc_bulk_flip_buff(struct enetc_bdr *rx_ring, int rx_ring_=
-first,
-> +				 int rx_ring_last)
-> +{
-> +	while (rx_ring_first !=3D rx_ring_last) {
-> +		enetc_flip_rx_buff(rx_ring,
-> +				   &rx_ring->rx_swbd[rx_ring_first]);
-> +		enetc_bdr_idx_inc(rx_ring, &rx_ring_first);
-> +	}
-> +}
-> +
->  static int enetc_clean_rx_ring_xdp(struct enetc_bdr *rx_ring,
->  				   struct napi_struct *napi, int work_limit,
->  				   struct bpf_prog *prog)
-> @@ -1965,11 +1975,7 @@ static int enetc_clean_rx_ring_xdp(struct enetc_bd=
-r
-> *rx_ring,
->  				enetc_xdp_drop(rx_ring, orig_i, i);
->  				rx_ring->stats.xdp_redirect_failures++;
->  			} else {
-> -				while (orig_i !=3D i) {
-> -					enetc_flip_rx_buff(rx_ring,
-> -							   &rx_ring->rx_swbd[orig_i]);
-> -					enetc_bdr_idx_inc(rx_ring, &orig_i);
-> -				}
-> +				enetc_bulk_flip_buff(rx_ring, orig_i, i);
->  				xdp_redirect_frm_cnt++;
->  				rx_ring->stats.xdp_redirect++;
->  			}
-> --
-> 2.34.1
 
-Reviewed-by: Wei Fang <wei.fang@nxp.com>
+
+> On Apr 17, 2025, at 4:16=E2=80=AFPM, Johannes Weiner =
+<hannes@cmpxchg.org> wrote:
+>=20
+> On Wed, Apr 16, 2025 at 10:10:23PM +0200, Vitaly wrote:
+>>=20
+>> On Wednesday, April 16, 2025 at 2:09:12 pm +02:00, Johannes Weiner =
+<hannes@cmpxchg.org> wrote:
+>>=20
+>>>> zblock is also in most cases superior to zsmalloc with regard to
+>>>> average performance and worst execution times, thus allowing for =
+better
+>>>> response time and real-time characteristics of the whole system.
+>>=20
+>>>> Is there a reason not to use this allocation scheme in zsmalloc =
+then?
+>>=20
+>> Introducing such a scheme in zsmalloc is theoretically possible but
+>> it appears to be more complicated than implementing it from scratch,
+>> which is exactly what was done.
+>=20
+> Sure, but having two options adds sizable complexity as well.
+>=20
+>>> I'm curious what others think, but I'm still not convinced a second
+>>> allocator makes sense. It's maintenance overhead, a permanent =
+struggle
+>>> to match feature parity, and it fragments development and testing =
+base.
+>>=20
+>>> Not long ago several slab allocators were removed for those
+>>> reasons. Likewise, we just deleted zbud and z3fold because they =
+didn't
+>>> get any attention and bitrotted, but not before years of inflicting
+>>> pain through the zpool interface, users accidentally making very
+>>> suboptimal choices, reporting the same bugs over and over again etc.
+>>=20
+>> I'm not sure what pain you are talking about.
+>=20
+> I list them in the paragraph you're replying to, and I've previously
+> outlined the burden on developers, maintainers, and admins to support
+> multiple implementations of the same functionality.
+>=20
+> There is a real cost to doing this that you seem to dismiss.
+
+I don=E2=80=99t dismiss the cost of maintenance, I just don=E2=80=99t =
+buy this =E2=80=9Cyears of pain=E2=80=9D point because it=E2=80=99s very =
+subjective. There are many people who still think that using Linux is a =
+pain. OTOH back in 2016-2017 mobile devices using z3fold had better =
+response metrics than those using zsmalloc.
+>=20
+>> There were reasons why z3fold and zbud existed. z3fold and zbud were
+>> the ones that supported page reclaim, zsmalloc wasn't quite usable
+>> with zswap until recently. When we did z3fold it was outperforming
+>> zsmalloc.
+>=20
+> We see a higher compression ratio than 3 on a wide variety of
+> workloads, so I'm a little doubtful z3fold ever outperformed zsmalloc
+> in general-purpose environments.
+
+z3fold never outperformed zsmalloc in terms of allocation density but =
+before zsmalloc got a *working* compaction implementation it was on par.
+Besides, compression ratios higher than 3 had been pretty rare before =
+zstd was introduced, and if you ever tried zstd on msm8009 which was the =
+SoC for many mobile devices back then you=E2=80=99d have probably =
+understood how pointless it was back then for most of the embedded =
+world.
+
+And at that time z3fold was indeed faster than zsmalloc on multi-core =
+systems, and especially on big.LITTLE.
+
+>=20
+> When Meta started using zswap, certainly zsmalloc was the only real
+> contender. zbud's storage density was almost not worth the cost of
+> compression. z3fold was also not dense enough, and we ran into
+> stability issues and crashes. The page reclaim/writeback
+> implementation was not very useful either - take a look at the history
+> of changes from Nhat and Domenico. These weren't just issues specific
+> to our usecases, but much more blatant "how was this ever supposed to
+> work?" problems.
+>=20
+> There is nothing wrong with the evolution from zbud to more
+> sophisticated allocators. But there is a pretty mature and
+> feature-rich allocator now, and that sets a floor on what new
+> allocators need to support to be considered general-purpose.
+>=20
+>> With that said, I didn't object to removing z3fold because I did
+>> understand that it made no sense to keep it at that point.
+>=20
+> But you're proposing to do the same thing again, when multiple people
+> just got done phasing out and cleaning up your previous experiments.
+
+Oh well, the conversation is taking a twist. Do you mean that any new =
+submission is =E2=80=9Cthe same thing again=E2=80=9D? Or what exactly do =
+you mean here?
+=20
+>=20
+>>> I also don't buy the fragmentation argument. Even if you are better =
+at
+>>> packing during allocation time (although, citation needed), the
+>>> workload can unmap swap pages such that they leave partial blocks
+>>> behind indefinitely if you don't have block compaction.
+>>=20
+>> We published Zswap/Zswapped values for zblock/zsmalloc after stress
+>> loads and those were on par, basically.
+>=20
+> Those are accounted in zswap, so unfortunately don't capture backend
+> fragmentation. You'd need to implement some of the debugging features
+> and memory counters that zsmalloc has in order to compare them.
+
+zblock reports total_pages in an honest way, i. e. the amount of pages =
+it allocated, no matter how full or empty these are, and the numbers =
+clearly show there=E2=80=99s no substantial internal fragmentation for =
+any real life workloads we could come up with. You can of course =
+allocate a bunch of slots and then free every second one and not do =
+anything else at all and then the fragmentation will be large, but this =
+is not how zswap operates.=20
+
+FWIW it is possible to make zsmalloc constantly alternate between =
+compaction and fragmentation but this will not mimic either zram or =
+zswap operation too.
+
+
+>>> Then there is the migration support, which you said is planned, but
+>>> which would presumably require the same indirection between handle =
+and
+>>> the backing pages that zsmalloc has. How much will this eat into the
+>>> performance advantage?
+>>=20
+>> I don't think that will be necessary. We're working on supporting
+>> GFP_MOVABLE and minimising high order allocations
+>=20
+>>> I'd much rather you'd focus on making zsmalloc better. Improve the
+>>> packing scheme, make expensive features optional/configurable etc.
+>>> That would be easier on developers and users alike.
+>>=20
+>> zblock's source code is almost 5x smaller in size than zsmalloc's
+>=20
+> It's an apple-to-oranges comparison.
+>=20
+> zsmalloc has memory pressure handling and a rich debugging
+> infrastructure that was added over time based on what people thought
+> necessary and useful from production experience.
+>=20
+> Implement the same functionality in zblock and we can compare lines
+> and performance.
+
+You assume that e.g. memory pressure handing implemented in zsmalloc is =
+necessary for zblock, which I don=E2=80=99t think is the case.=20
+Debug facilitating additions are good but I _really_ _doubt_ these will =
+bloat zblock code by 5x.
+>=20
+>> and yet zblock works better in many cases with just a few
+>> bottlenecks. Why would you mind that we'd focus on making zblock
+>> better instead and possibly retire zsmalloc when that mission is
+>> accomplished, just like we retired z3fold a while ago?
+>=20
+> You're proposing a significant, open-ended maintenance burden for
+> everybody else. I'm just asking for some justification stronger than
+> "the small subset of the backend allocator that we implemented is
+> slightly faster in a limited number of benchmarks."
+
+Obviously we will be maintaining and extending the code, we have already =
+discussed that.
+
+>=20
+> The fact that zstd - a very commonly used compressor - immediately
+> surfaced bugs that made it *much slower* is not reassuring.
+
+I would expect that someone stating that first would first ask what the =
+problem actually was. :)
+
+~Vitaly
+
 
