@@ -1,49 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBD819EED3;
-	Fri, 18 Apr 2025 08:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A17C26B2AF
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744964086; cv=none; b=i2H8IejtXZsyOKgpiPAeq2UVY/qj2GCiQhi1BUEYdIwmpHCorw4uvo5asowZLTkcFfoS3p8g8hjHGG55ywAtQogKCJv+GC5HO3UZn0qsWtfccwdx2fKEg/xgsXywR8AnoGMP0rLYkmBnhOemYBD3zhMhsoosWXEhGEOnS52Ph/0=
+	t=1744964111; cv=none; b=R9TGTFKM4SYGWrbUqRwZp8UDDPWEv8Mx9pDNUdtKJVYTyVr4Q5uOFOf7Xde+S6wE7G3z9qsQaXwQqBaQvYaV5VdG5UtWoiFeVkAK207rastUKCSIl9j7OqR0Cvt8h0y10JOTxA9eLY2B1k8sCNvH2xW4O2LNBG76XWlGks3uPic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744964086; c=relaxed/simple;
-	bh=XJ02iB/sNPlL8ll61gG2pHZztBaYAqsqo3tsPVveWxg=;
+	s=arc-20240116; t=1744964111; c=relaxed/simple;
+	bh=rX7D5fJ6dxuaIJHo2NjKN2s6bX97dO1N9qsbOAQFqWc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GUVbNy2i/zPvSZEjfwd26HshUO6NaW0wwM8XHG5WshfGdu7wGijyWEj+6iAZnt6eTVqPnP0Ibp2V+y4EhimzjUXUP3A0uvgqjv0IoOcaGPj+Cz/s/ospCMeCaFbJHqXHz3Xvm9DNCJj9XFsr+sRWt4t4j/VP3EBatcdUxv9wim8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UlhhEMlU; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HZXPMKq3SwmXBw/UzaLqVmzSvLI0rZbk5Rre95QSfn1c3Lc2uIab0mFgpz9CtOep/k3scP4uSyGvJaElUNDkVDg7jWiLezCO6ytJgYX/zNDGA+rlkh+IXh2+qlss+zqFam6IkTmfQfAFbNOVm6gELijHQeMdsKHliu9X2MuMgwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FIhlV2Zb; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UlhhEMlU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6057C4CEE2;
-	Fri, 18 Apr 2025 08:14:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744964084;
-	bh=XJ02iB/sNPlL8ll61gG2pHZztBaYAqsqo3tsPVveWxg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UlhhEMlUiTHC8/PmN5qOJIW33RSW9/04eF9ACjS36P2xd0Q1GXZCJNADK0LLtG1DR
-	 VzeAI5vhqwaFoonpb4QmvtBUVaul/trJLChtJ6EIgB6xgwmdDCQeXZ0f2pqmvx7eB1
-	 zPSFjmZmPFDz3BGifc2aAO6xa+QunFnoxp6qht6c3F/Ctf3Mxpvk+KW2fwWXZYKnlo
-	 JHlnXgoPTB3y08Cp8Pk5I3mJC7zz1hObun0DDcShf8a6VwBmfC13+6C6jCVXzHS0nI
-	 +Pk3NSF666DOeuAHocAlAfjOT40inrYcvSaOBM4doPAdrHIsOoxrvGlnY5iKVrieeY
-	 fRAj5NKyux3vA==
-Date: Fri, 18 Apr 2025 10:14:40 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-efi@vger.kernel.org, x86@kernel.org
-Subject: Re: [tip: x86/boot] x86/boot/sev: Avoid shared GHCB page for early
- memory acceptance
-Message-ID: <aAIJ8C5Ho97geYMj@gmail.com>
-References: <20250410132850.3708703-2-ardb+git@google.com>
- <174448976513.31282.4012948519562214371.tip-bot2@tip-bot2>
- <CAMj1kXFEXZ8cGMwz6N_ToYp0Wf5Vr9UBFRueWx_MtrwbDLq+LQ@mail.gmail.com>
- <Z_rQ4eu4LYh6jGzY@gmail.com>
- <CAMj1kXGTP31w7vM+jWqpbJPmoyPU9vqOrmvXsueoPnBin0y_hQ@mail.gmail.com>
- <aAICRcfkBV3tHP-G@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FIhlV2Zb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744964108;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oGpLEGpFPjLHr2TI5L2WF5TxWp0RKlr+m9WjaH1iqOo=;
+	b=FIhlV2ZbWANAYSpvFAfkH+Olh/8PS0/DQz8XfYFWlc5bDh3x+J+j1iU51tVNb0911KmJHU
+	PZoYXCwIjHN1USe1umFPpT3OoZqmIpsJy1x48QGW4dOU/hWB1T4VsinkW9HTgECBNEVqlw
+	mTJmSh6H4xKSke+wKLQAYdOYdAsgnVI=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-586-SJ0K13ASMYa3gF71ua8eWQ-1; Fri,
+ 18 Apr 2025 04:15:04 -0400
+X-MC-Unique: SJ0K13ASMYa3gF71ua8eWQ-1
+X-Mimecast-MFC-AGG-ID: SJ0K13ASMYa3gF71ua8eWQ_1744964102
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4C8E819560AB;
+	Fri, 18 Apr 2025 08:15:01 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.33])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EB5B519560A3;
+	Fri, 18 Apr 2025 08:14:58 +0000 (UTC)
+Date: Fri, 18 Apr 2025 16:14:54 +0800
+From: Baoquan He <bhe@redhat.com>
+To: steven chen <chenste@linux.microsoft.com>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com, ebiederm@xmission.com,
+	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
+	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
+	dyoung@redhat.com
+Subject: Re: [PATCH v12 8/9] ima: make the kexec extra memory configurable
+Message-ID: <aAIJ/vpJD7GpBwKe@MiWiFi-R3L-srv>
+References: <20250416021028.1403-1-chenste@linux.microsoft.com>
+ <20250416021028.1403-9-chenste@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,58 +65,97 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aAICRcfkBV3tHP-G@gmail.com>
+In-Reply-To: <20250416021028.1403-9-chenste@linux.microsoft.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
+On 04/15/25 at 07:10pm, steven chen wrote:
+> From: Steven Chen <chenste@linux.microsoft.com>
+> 
+> The extra memory allocated for carrying the IMA measurement list across
+> kexec is hard-coded as half a PAGE.  Make it configurable.
+> 
+> Define a Kconfig option, IMA_KEXEC_EXTRA_MEMORY_KB, to configure the
+> extra memory (in kb) to be allocated for IMA measurements added during
+> kexec soft reboot.  Ensure the default value of the option is set such
+> that extra half a page of memory for additional measurements is allocated
+> for the additional measurements.
+> 
+> Update ima_add_kexec_buffer() function to allocate memory based on the
+> Kconfig option value, rather than the currently hard-coded one.
+> 
+> Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+   ^^^^^^^^^^^^^^^^
+> Signed-off-by: Steven Chen <chenste@linux.microsoft.com>
+> ---
+>  security/integrity/ima/Kconfig     | 11 +++++++++++
+>  security/integrity/ima/ima_kexec.c | 16 +++++++++++-----
+>  2 files changed, 22 insertions(+), 5 deletions(-)
 
-* Ingo Molnar <mingo@kernel.org> wrote:
+The contributor's tag need be updated too, otherwise,
+
+Acked-by: Baoquan He <bhe@redhat.com>
 
 > 
-> * Ard Biesheuvel <ardb@kernel.org> wrote:
+> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+> index 475c32615006..976e75f9b9ba 100644
+> --- a/security/integrity/ima/Kconfig
+> +++ b/security/integrity/ima/Kconfig
+> @@ -321,4 +321,15 @@ config IMA_DISABLE_HTABLE
+>  	help
+>  	   This option disables htable to allow measurement of duplicate records.
+>  
+> +config IMA_KEXEC_EXTRA_MEMORY_KB
+> +	int "Extra memory for IMA measurements added during kexec soft reboot"
+> +	range 0 40
+> +	depends on IMA_KEXEC
+> +	default 0
+> +	help
+> +	  IMA_KEXEC_EXTRA_MEMORY_KB determines the extra memory to be
+> +	  allocated (in kb) for IMA measurements added during kexec soft reboot.
+> +	  If set to the default value of 0, an extra half page of memory for those
+> +	  additional measurements will be allocated.
+> +
+>  endif
+> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+> index ed867734ee70..d1c9d369ba08 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -118,6 +118,7 @@ void ima_add_kexec_buffer(struct kimage *image)
+>  				  .buf_min = 0, .buf_max = ULONG_MAX,
+>  				  .top_down = true };
+>  	unsigned long binary_runtime_size;
+> +	unsigned long extra_memory;
+>  
+>  	/* use more understandable variable names than defined in kbuf */
+>  	size_t kexec_buffer_size = 0;
+> @@ -125,15 +126,20 @@ void ima_add_kexec_buffer(struct kimage *image)
+>  	int ret;
+>  
+>  	/*
+> -	 * Reserve an extra half page of memory for additional measurements
+> -	 * added during the kexec load.
+> +	 * Reserve extra memory for measurements added during kexec.
+>  	 */
+> -	binary_runtime_size = ima_get_binary_runtime_size();
+> +	if (CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB <= 0)
+> +		extra_memory = PAGE_SIZE / 2;
+> +	else
+> +		extra_memory = CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB * 1024;
+> +
+> +	binary_runtime_size = ima_get_binary_runtime_size() + extra_memory;
+> +
+>  	if (binary_runtime_size >= ULONG_MAX - PAGE_SIZE)
+>  		kexec_segment_size = ULONG_MAX;
+>  	else
+> -		kexec_segment_size = ALIGN(ima_get_binary_runtime_size() +
+> -					   PAGE_SIZE / 2, PAGE_SIZE);
+> +		kexec_segment_size = ALIGN(binary_runtime_size, PAGE_SIZE);
+> +
+>  	if ((kexec_segment_size == ULONG_MAX) ||
+>  	    ((kexec_segment_size >> PAGE_SHIFT) > totalram_pages() / 2)) {
+>  		pr_err("Binary measurement list too large.\n");
+> -- 
+> 2.43.0
 > 
-> > On Sat, 12 Apr 2025 at 22:45, Ingo Molnar <mingo@kernel.org> wrote:
-> > >
-> > >
-> > > * Ard Biesheuvel <ardb@kernel.org> wrote:
-> > >
-> > > > On Sat, 12 Apr 2025 at 22:29, tip-bot2 for Ard Biesheuvel
-> > > > <tip-bot2@linutronix.de> wrote:
-> > > > >
-> > > > > The following commit has been merged into the x86/boot branch of tip:
-> > > > >
-> > > >
-> > > > This may be slightly premature. I took some of Tom's code, hence the
-> > > > co-developed-by, but the should really confirm that what I did is
-> > > > correct before we queue this up.
-> > >
-> > > OK, I've zapped it again, especially as the rest of the series wasn't
-> > > ready either, please include the latest version of this patch as part
-> > > of the boot/setup/ series, which hard-relies upon it.
-> > >
-> > 
-> > I have sent out a v4 here [0].
-> > 
-> > I am not including it in the next rev of the startup/ refactor series,
-> > given that this change is a fix that also needs to go to stable.
-> > Please apply it as a fix and merge back the branch into tip/x86/boot -
-> > I will rebase the startup/ refactor series on top of that.
-> > 
-> > Thanks,
-> > 
-> > [0] https://lore.kernel.org/linux-efi/20250417202120.1002102-2-ardb+git@google.com/T/#u
-> 
-> Noted, thanks for the heads up!
 
-So there's this new merge commit in tip:x86/boot:
-
-   54f71aa90c84 Merge branch 'x86/urgent' into x86/boot, to merge dependent commit and fixes
-
-which brings this fix into x86/boot:
-
-   a718833cb456 ("x86/boot/sev: Avoid shared GHCB page for early memory acceptance")
-
-thus 54f71aa90c84 should be a proper base the rest of the startup/ 
-series, right?
-
-Thanks,
-
-	Ingo
