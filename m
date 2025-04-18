@@ -1,129 +1,219 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07EDF223714
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 18:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333DF224240
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 18:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745001651; cv=none; b=KAboX7vrOEeQ7qQZUkZ2Jj+nG+GsdNmBGtfRqL1nOsfg/5hjedl7orV8gRIQeVFTXXwmU71cr3L1/D5mtzh8pG4E4CRQ85z6sLVLhvQhonl6HOQqDpB4ZXPopGJkOB8d8S+pKd749JMqanectdLtJvXt0V5E1Pd4Im9cXUMaa0o=
+	t=1745001878; cv=none; b=JA63E680U2n9Wbbuiq5T1RsHTJU1ukifFB6JQ8DUIz3bGXPHyPoLH8spoQLEHJuPtedUipx3ap4OXTj+2agUIoVhZznz8l2NT0iepFX9HnmrBn8DfwPgE3s3RnUXMtaYi9D+yew/rKlOiuddKc4D4Weqi2LNQ5ZixjrY+e8OgZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745001651; c=relaxed/simple;
-	bh=cqw05yzHdahroJKLOI/H3fvXy55QPQV2NEI62iCX4pI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c03emtE0TdnkpH+Q2k+0MJ7PL8YMP9W9LmM3ez3s7ZRcTG2kbYVN2zHPCp+w7J6/8ZrLpaOMWuc7oOJ2Sg3s38dhWcPc3NCtHp6vyIBAAVvFW/diAJgXW+1PuEgnNifNyISiRKdXfN2RgCOsR4KFPcY6Alzrct2Klfv6YJhqeT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Jm7Mc944; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745001878; c=relaxed/simple;
+	bh=A37SRNBh1snDmbZr+v/J41GcTBJOHQzqEBViK5exvn8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=pBMXjiZ8gSYmABU88Jdi/me7RRan/8mkoouKyw7V0G8i/lgDaEPtudmdEGcn2E5hSaqmO4eZl55RUHHuFqOhISygnYbEMUQM4j1zi66Y3Dv37RiDzlU++MzsshmZyRp3bEx942izs7xlPqc/s7k3jNglmvpZAm73xCt2E6A6LkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qBPLsCr5; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jm7Mc944"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5498d2a8b89so2138191e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 11:40:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745001648; x=1745606448; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JmJRxZYKBul0NPpO5GbE0uoXdY8UOk5hBegV76Q7fvc=;
-        b=Jm7Mc944UYFh7EKr/mZXZf1buMlsmvQwBqkU5xR6U/56q+PvkymTmpodsAomjuzqOi
-         TFDghhdPZbwTidr8j0jxSskJDi2fd7z3fj6aRUhs5Q7Ta9coUYRTFep+JiCgpzfgWqU9
-         0MtT9zgUJnIAusixkRYbtGoRiZY3vqcX9JynJJJ7DGibIenPrejRpZz3MVqfmbnlx+lf
-         JOVnZh/vuHfcjRUDK+SvQjZ506csIqEJ2gboWarMERUckKf4KIe/pgUly6f1g83gnbB+
-         0dJP18GgT2WNOKtyTus+wMYZiI/BILU9K9hSJd8m/FVWlfQP3ChgcUZ0/Dk9u4688ejW
-         UJ7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745001648; x=1745606448;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JmJRxZYKBul0NPpO5GbE0uoXdY8UOk5hBegV76Q7fvc=;
-        b=XVC82J1lvxNRrIqpl9GHFL0eE5xD5+ZqKk/UP9/7tVEiyLtxW508X2LdQ4l8QAie3k
-         e/0QbHb6mVT2uETA+KC/hmITW3lBzuPdWjHXP13UU06ESyirZbgMYdGMBWmXgyvLFmzU
-         UR9pDZKUek72+NHJIWZNk39MlpIrLglWIbUaIX666KcSgtvXFtqdxwVmXofFb8IphEki
-         EQ5tsdlfVegA9JKRgafb5x8gzJvEABZltHPunwGexJ+BZKmHm74KA0wpw4nE/Vu6vZlC
-         yOqi5XXZ0WMH6fzTComTv3+ImjQSD+Krk18LX/nz/RgthddEGbs6frgUKl01gc6Rx52+
-         nKdw==
-X-Forwarded-Encrypted: i=1; AJvYcCWDYm7pk912khYClEgaH0hfuEZTC/WbuUfcCV/lySHSocPFRfE1MpMlJc3VJ3K1NwSPADZxtyDpHMKBlc8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZwZsBEWWFojo8yw4idzJws8J7Ogpe5jKxVEgvAnaEsQJ/2gfo
-	wkZM9ykJZNlcsnDigNU89Zmi7L1Qg8ovQewIYBcKKfXRYOM62lxQx88H0b9dmIiizfIax/utG4c
-	hE0Nclx0sj5dptBMcqvXGIcRuifFCifkGSUw=
-X-Gm-Gg: ASbGncuu73xWgsOiCqVK0eSzoRzQXirH1UxYsRlkwF+m2rgGY0q9SDc9076GUrL0XXg
-	uD+zYL4CMZTAcUObrwR07YaJMy7CDh4mmXcrrxPZ1/XGNMnthscDmVkaf2TM2Z/XoeoUH1dRgYV
-	mh/UyLLWcQVml9JmESU3evjzUOEsMIaJC7EwYpfKz46r6WsBd7Bb8=
-X-Google-Smtp-Source: AGHT+IHwauR7oICVDPTufhPDofzFlYVO2KmfnqSJasO3/jpSYaW0ewuRj6/e23srPSp/mjovhyFhKvvdFvxaFMAMeWc=
-X-Received: by 2002:a05:6512:2315:b0:54a:cbfb:b62e with SMTP id
- 2adb3069b0e04-54d6e657553mr1402614e87.35.1745001647864; Fri, 18 Apr 2025
- 11:40:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qBPLsCr5"
+Message-ID: <78ff9e8a-5deb-428d-83ed-ffc7c7e4166f@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745001870;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3xonVTSIdvXEEvVrxgU3pVjhN9jiUTT/4w0LBQhg7kw=;
+	b=qBPLsCr59vK0sdAztx/MrfGUXpi0LqSVuMUnEl9C3zEJe7S1PtypMv998G5H1/8M3cKlLl
+	YvFac77v+aD6ClqQdOdXi4Z25b4qPyUmOXldA/u0dRHCTwChB/ry3t+cy+ABWT7X+V+gmb
+	DrcvSOUTVjTukEmKGJYeq+UGBezGAIo=
+Date: Fri, 18 Apr 2025 20:43:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320200306.1712599-1-jstultz@google.com> <Z-KURRE_Gr72Xv_n@localhost>
- <874izezv3c.ffs@tglx> <Z-Vx8kV4M3khPknC@localhost> <Z-qsg6iDGlcIJulJ@localhost>
- <87o6xgwftc.ffs@tglx> <Z-vL3cVZuQ8XQXhG@localhost> <87iknnwxa4.ffs@tglx>
- <Z-5HlSUEh1xgCi4f@localhost> <877c41wkis.ffs@tglx> <87h632wals.ffs@tglx>
- <CANDhNCrUhZktW=_h9YTZndmyHwe9YbUMG6uVYaEuQyuKsG4AEg@mail.gmail.com> <87tt6mq8jz.ffs@tglx>
-In-Reply-To: <87tt6mq8jz.ffs@tglx>
-From: John Stultz <jstultz@google.com>
-Date: Fri, 18 Apr 2025 11:40:35 -0700
-X-Gm-Features: ATxdqUEVFnbxOsO7kS3fCud4zm8XAeBb8rxR4hR9fCFdWvV-CzY8t1AtIxHhH0U
-Message-ID: <CANDhNCrNYuxP7xqNLKWGnhMOBEHGhD9-FceNAj7n=fQUsLwvMA@mail.gmail.com>
-Subject: Re: [PATCH] timekeeping: Prevent coarse clocks going backwards
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Miroslav Lichvar <mlichvar@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-	Stephen Boyd <sboyd@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org, 
-	kernel-team@android.com, Lei Chen <lei.chen@smartx.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [syzbot] [rdma?] INFO: trying to register non-static key in
+ rxe_qp_do_cleanup
+To: syzbot <syzbot+4edb496c3cad6e953a31@syzkaller.appspotmail.com>,
+ jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+ zyjzyj2000@gmail.com
+References: <680240b5.050a0220.297747.0007.GAE@google.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <680240b5.050a0220.297747.0007.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Apr 17, 2025 at 11:37=E2=80=AFPM Thomas Gleixner <tglx@linutronix.d=
-e> wrote:
-> On Thu, Apr 17 2025 at 17:46, John Stultz wrote:
-> > On Sat, Apr 5, 2025 at 2:40=E2=80=AFPM Thomas Gleixner <tglx@linutronix=
-.de> wrote:
-> >> +static inline void tk_update_coarse_nsecs(struct timekeeper *tk, u64 =
-offset)
-> >> +{
-> >> +       offset *=3D tk->tkr_mono.mult;
-> >> +       tk->coarse_nsec =3D (tk->tkr_mono.xtime_nsec + offset) >> tk->=
-tkr_mono.shift;
-> >> +}
-> >
-> > Thinking more on this, I get that you're providing the offset to save
-> > the "at the point" time into the coarse value, but I think this ends
-> > up complicating things.
-> >
-> > Instead it seems like we should just do:
-> >   tk->coarse_nsec =3D tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
->
-> You end up with the same problem again because xtime_nsec can move
-> backwards when the multiplier is updated, no?
+在 2025/4/18 14:08, syzbot 写道:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    8ffd015db85f Linux 6.15-rc2
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16bc20cc580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=51ecb841db3b3687
+> dashboard link: https://syzkaller.appspot.com/bug?extid=4edb496c3cad6e953a31
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> 
+> Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/7aa92e6fb2e5/disk-8ffd015d.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/1458d069253c/vmlinux-8ffd015d.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/fe6dd8111695/bzImage-8ffd015d.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+4edb496c3cad6e953a31@syzkaller.appspotmail.com
+> 
+> INFO: trying to register non-static key.
+> The code is fine but needs lockdep annotation, or maybe
+> you didn't initialize this object before use?
+> turning off the locking correctness validator.
+> CPU: 1 UID: 0 PID: 1151 Comm: kworker/u8:8 Not tainted 6.15.0-rc2-syzkaller #0 PREEMPT(full)
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+> Workqueue: rdma_cm cma_work_handler
+> Call Trace:
+>   <TASK>
+>   __dump_stack lib/dump_stack.c:94 [inline]
+>   dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+>   assign_lock_key kernel/locking/lockdep.c:986 [inline]
+>   register_lock_class+0x4a3/0x4c0 kernel/locking/lockdep.c:1300
+>   __lock_acquire+0x99/0x1ba0 kernel/locking/lockdep.c:5110
+>   lock_acquire kernel/locking/lockdep.c:5866 [inline]
+>   lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
+>   __timer_delete_sync+0x152/0x1b0 kernel/time/timer.c:1644
+>   rxe_qp_do_cleanup+0x5c3/0x7e0 drivers/infiniband/sw/rxe/rxe_qp.c:815>   execute_in_process_context+0x3a/0x160 kernel/workqueue.c:4596
+>   __rxe_cleanup+0x267/0x3c0 drivers/infiniband/sw/rxe/rxe_pool.c:232
+>   rxe_create_qp+0x3f7/0x5f0 drivers/infiniband/sw/rxe/rxe_verbs.c:604
 
-That's assuming you update coarse_nsec on every call to do_adjtimex,
-which I don't think is necessary (or wanted - as it would sort of be a
-behavior change to the COARSE clockids).
+In the function rxe_create_qp, the function rxe_qp_from_init is called 
+to create qp, if this function rxe_qp_from_init fails, rxe_cleanup will 
+be called to handle all the allocated resources, including the timers: 
+retrans_timer and rnr_nak_timer.
 
-The root issue here has been that there was a mistaken assumption that
-the small negative adjustment done to the xtime_nsec base to match the
-mult adjustment would only happen after a larger accumulation, but the
-timekeeping_advance() call from do_adjtimex() doesn't actually intend
-to advance the clock (just change the frequency), so those small
-negative adjustments made via do_adjtimex() between accumulations
-become visible to the coarse clockids.
+The function rxe_qp_from_init calls the function rxe_qp_init_req to 
+initialize the timers: retrans_timer and rnr_nak_timer.
 
-Since the coarse clockids are expected to provide ~tick-granular time,
-if we are keeping separate state, we should only be
-incrementing/setting that state when we accumulate (with each
-cycle_interval). We don't need to be making updates to the coarse
-clock between ticks on every do_adjtime call. So saving off the
-tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift value after we actually
-accumulated something should be fine. Any inter-tick frequency
-adjustments to xtime_nsec can be ignored by the coarse clockid state.
+But these timers are initialized in the end of rxe_qp_init_req. If some 
+errors occur before the initialization of these timers, this problem 
+will occur.
 
-I'll test with your updated patch here, as I suspect it will avoid the
-problem I'm seeing, but I do think things can be further simplified.
+235 static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
+236                            struct ib_qp_init_attr *init, struct 
+ib_udata *udata,
+237                            struct rxe_create_qp_resp __user *uresp)
+238 {
+..
+244         err = sock_create_kern(&init_net, AF_INET, SOCK_DGRAM, 0, 
+&qp->sk);
+245         if (err < 0)
+246                 return err;   < --- this will cause this problem
+..
+258         err = rxe_init_sq(qp, init, udata, uresp);
+259         if (err)
+260                 return err; < --- this will cause this problem
+261
+...
+271         if (init->qp_type == IB_QPT_RC) {
+272                 timer_setup(&qp->rnr_nak_timer, rnr_nak_timer, 0);
+273                 timer_setup(&qp->retrans_timer, retransmit_timer, 0);
+274         }
+275         return 0;
+276 }
 
-thanks
--john
+Please comment on the above.
+
+Zhu Yanjun
+
+
+>   create_qp+0x62d/0xa80 drivers/infiniband/core/verbs.c:1250
+>   ib_create_qp_kernel+0x9f/0x310 drivers/infiniband/core/verbs.c:1361
+>   ib_create_qp include/rdma/ib_verbs.h:3803 [inline]
+>   rdma_create_qp+0x10c/0x340 drivers/infiniband/core/cma.c:1144
+>   rds_ib_setup_qp+0xc86/0x19a0 net/rds/ib_cm.c:600
+>   rds_ib_cm_initiate_connect+0x1e8/0x3d0 net/rds/ib_cm.c:944
+>   rds_rdma_cm_event_handler_cmn+0x61f/0x8c0 net/rds/rdma_transport.c:109
+>   cma_cm_event_handler+0x94/0x300 drivers/infiniband/core/cma.c:2184
+>   cma_work_handler+0x15b/0x230 drivers/infiniband/core/cma.c:3042
+>   process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
+>   process_scheduled_works kernel/workqueue.c:3319 [inline]
+>   worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+>   kthread+0x3c2/0x780 kernel/kthread.c:464
+>   ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
+>   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+>   </TASK>
+> ------------[ cut here ]------------
+> ODEBUG: assert_init not available (active state 0) object: ffff8880541d8a58 object type: timer_list hint: 0x0
+> WARNING: CPU: 1 PID: 1151 at lib/debugobjects.c:612 debug_print_object+0x1a2/0x2b0 lib/debugobjects.c:612
+> Modules linked in:
+> CPU: 1 UID: 0 PID: 1151 Comm: kworker/u8:8 Not tainted 6.15.0-rc2-syzkaller #0 PREEMPT(full)
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+> Workqueue: rdma_cm cma_work_handler
+> RIP: 0010:debug_print_object+0x1a2/0x2b0 lib/debugobjects.c:612
+> Code: fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 54 41 56 48 8b 14 dd e0 73 f4 8b 4c 89 e6 48 c7 c7 60 68 f4 8b e8 1f db a5 fc 90 <0f> 0b 90 90 58 83 05 76 9b b1 0b 01 48 83 c4 18 5b 5d 41 5c 41 5d
+> RSP: 0018:ffffc90003eb73e8 EFLAGS: 00010282
+> RAX: 0000000000000000 RBX: 0000000000000005 RCX: ffffffff817acff8
+> RDX: ffff888027be8000 RSI: ffffffff817ad005 RDI: 0000000000000001
+> RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000000
+> R10: 0000000000000001 R11: 0000000000000001 R12: ffffffff8bf46f40
+> R13: ffffffff8b8fc880 R14: 0000000000000000 R15: ffffc90003eb74a8
+> FS:  0000000000000000(0000) GS:ffff888124ab2000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 000000110c32628d CR3: 000000000e182000 CR4: 00000000003526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>   <TASK>
+>   debug_object_assert_init+0x1ec/0x2f0 lib/debugobjects.c:1020
+>   debug_timer_assert_init kernel/time/timer.c:845 [inline]
+>   debug_assert_init kernel/time/timer.c:890 [inline]
+>   __try_to_del_timer_sync+0x7f/0x170 kernel/time/timer.c:1499
+>   __timer_delete_sync+0xf4/0x1b0 kernel/time/timer.c:1662
+>   rxe_qp_do_cleanup+0x5c3/0x7e0 drivers/infiniband/sw/rxe/rxe_qp.c:815
+>   execute_in_process_context+0x3a/0x160 kernel/workqueue.c:4596
+>   __rxe_cleanup+0x267/0x3c0 drivers/infiniband/sw/rxe/rxe_pool.c:232
+>   rxe_create_qp+0x3f7/0x5f0 drivers/infiniband/sw/rxe/rxe_verbs.c:604
+>   create_qp+0x62d/0xa80 drivers/infiniband/core/verbs.c:1250
+>   ib_create_qp_kernel+0x9f/0x310 drivers/infiniband/core/verbs.c:1361
+>   ib_create_qp include/rdma/ib_verbs.h:3803 [inline]
+>   rdma_create_qp+0x10c/0x340 drivers/infiniband/core/cma.c:1144
+>   rds_ib_setup_qp+0xc86/0x19a0 net/rds/ib_cm.c:600
+>   rds_ib_cm_initiate_connect+0x1e8/0x3d0 net/rds/ib_cm.c:944
+>   rds_rdma_cm_event_handler_cmn+0x61f/0x8c0 net/rds/rdma_transport.c:109
+>   cma_cm_event_handler+0x94/0x300 drivers/infiniband/core/cma.c:2184
+>   cma_work_handler+0x15b/0x230 drivers/infiniband/core/cma.c:3042
+>   process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
+>   process_scheduled_works kernel/workqueue.c:3319 [inline]
+>   worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+>   kthread+0x3c2/0x780 kernel/kthread.c:464
+>   ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
+>   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+>   </TASK>
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+> 
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+> 
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+> 
+> If you want to undo deduplication, reply with:
+> #syz undup
+
