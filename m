@@ -1,105 +1,90 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD6178F29
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 20:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF4878F29;
+	Fri, 18 Apr 2025 20:21:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745007698; cv=none; b=LvHSK3DaDYu51aSZXbeR5O9UsZhnySrqlkZHrP0Hh+W14PKfg84pjtntypytDvAp1WxVQm5x/VKSD2R3jbvbv7+ZhVP1ND4JIKRgywHMzYw5pxYruZfgJbJyZ9JKrpLZAUt7z8mlLcLxkxPlKXOO/KUhS9b8ZtZGrLavKNJWeks=
+	t=1745007702; cv=none; b=Rp1jNJbtgzTtzRuj4JQoICZncPefNiqR0yc8QZQZ5x0rZf6/vh1DwsAmYwjBItXV8tLCxj/Mq9bvjx0+LlWmG1BWC5X/9geHiUZKnA2mxeE/5COAwGIzMhgof6UsFmoTC+5eVAgGcr5ND16SL98GMo1zJUrYsLLHIQX4yI6OLcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745007698; c=relaxed/simple;
-	bh=D3PUiE9zpAc8bF1f1WO73iKG2KuW+VUei01eF2k33m0=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=mahqS4SZuuq45QTtK5zcXpy9JZL/XUNr7Appxa7cfKbhIuCbFIHMyEdA0GEQy1Ub1jqvssnjvQXtUZT5lO8Kj0Mln63COK3A7Mzk/RJqeixSTktFDxnCUX+6AydPielQ9a9lg02z8k10fVdBbzK1emPDXWoFrJPrnWytNKFSKSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=V6ISHiJp; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745007702; c=relaxed/simple;
+	bh=ejGqMxBwLKw1sJ1i/ZxUZ+LGirhTccZnFytelkYVwuI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dnXC2pu+IsPiO7l4nReI0RuMJ/3t7sqUFbm6GO9YMVF6AyVlL3KOrGVYyOxh37FkDi+r68RURPcQ4MdmZ7n4f7GPL6vTUZL9wuT+UBRV1lrH5KIfrd1EhNdkhWcdX4Ysju5s8MQgs3ypYFusxcx/K8HH718NDzGA1tTyTU2CeMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hr8afw54; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="V6ISHiJp"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745007694;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dKABehEl2Yycd6WzdhDxum9Eatkoecmd1RfJKEeKvno=;
-	b=V6ISHiJpxSZH+DZNh7juf2F/isvBOeyE89LzA3k3PVOGf9zg8qUDP+hR4DDQz1TWwObdp/
-	St9+fJJ1bBOne2XEjG7cnH5pTmFHR28CkAuXmVIU/4bUeCdRNxPkB/M+xFEF8NLFmTp6YG
-	WIYX+MVnMU1VXx3/BjUOwLjMGDtRudE=
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hr8afw54"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3355AC4CEE2;
+	Fri, 18 Apr 2025 20:21:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745007702;
+	bh=ejGqMxBwLKw1sJ1i/ZxUZ+LGirhTccZnFytelkYVwuI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Hr8afw54ncK1nddacm/HaH2IvzmGtQ5de4Y5qp/hEL+zRmNWuh/LfCQ8plPxkLNoE
+	 pSL4Fudc2BdNNtyuJCVv5VY5o1g5zyu5XKSxXSzF4P//LujEgf94L4hG9x71PHu453
+	 ijQWTfRXk1TrTGHzpuUOtsc62SCbowj3vfdq93GF6T88W7OPVOd6KIg6i7bcQ9L0Ld
+	 8KPHO5ISTv4NyLSgwYbjOzovGnFE+5wC8tNIaQUw87F5C4GlR6Z6ouCPpN9FhxPoxl
+	 ZEa6+U/0lovUNfe/rAPivjy3InWKFLTN2ib4OgIkVvkqTwfFrsitolUV3bRS4n/cVF
+	 CQTyqCVwnTLgQ==
+From: Kees Cook <kees@kernel.org>
+To: Coly Li <colyli@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	linux-bcache@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] md/bcache: Mark __nonstring look-up table
+Date: Fri, 18 Apr 2025 13:21:36 -0700
+Message-Id: <20250418202130.it.887-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.2\))
-Subject: Re: [PATCH v2] MIPS: Fix MAX_REG_OFFSET and remove zero-length struct
- member
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <9F6CA7CB-B36A-4F79-B78C-7ED63E39260D@linux.dev>
-Date: Fri, 18 Apr 2025 22:21:22 +0200
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Oleg Nesterov <oleg@redhat.com>,
- linux-mips@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A08BC566-5F6D-4FA5-B315-34D2FCA55A6E@linux.dev>
-References: <20250417174712.69292-2-thorsten.blum@linux.dev>
- <aAIF_kEFlOOVNDaE@alpha.franken.de>
- <DAD22E95-6D33-43D5-B5E5-3A7B45A63944@linux.dev>
- <alpine.DEB.2.21.2504181108170.18253@angie.orcam.me.uk>
- <EC98BAE8-8269-4169-B3A2-5F426E77C223@linux.dev>
- <alpine.DEB.2.21.2504181337350.18253@angie.orcam.me.uk>
- <B71034AC-B0FC-4C5F-8562-661D6AD11056@linux.dev>
- <alpine.DEB.2.21.2504181608420.18253@angie.orcam.me.uk>
- <9F6CA7CB-B36A-4F79-B78C-7ED63E39260D@linux.dev>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1729; i=kees@kernel.org; h=from:subject:message-id; bh=ejGqMxBwLKw1sJ1i/ZxUZ+LGirhTccZnFytelkYVwuI=; b=owGbwMvMwCVmps19z/KJym7G02pJDBlMWwLKdu898ifiXN2Kdv+XT474Nf2vmMQ8YbH3tye3F wqocl2X6yhlYRDjYpAVU2QJsnOPc/F42x7uPlcRZg4rE8gQBi5OAZhIz2VGhu4Dylu4VB3jajO3 8jPOTfgpyvhh1f3Fjjv3bb4Vaq7L+4jhf1SKYETSp58Jy05ej3vJXDrj++6i9l9dIRzXTr122S6 6lAMA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On 18. Apr 2025, at 22:18, Thorsten Blum wrote:
-> On 18. Apr 2025, at 17:14, Maciej W. Rozycki wrote:
->> On Fri, 18 Apr 2025, Thorsten Blum wrote:
->>>>> Does regs_get_register() even work for CPU_CAVIUM_OCTEON when =
-accessing
->>>>> the last two registers because they're both ULL, not UL? =
-(independent of
->>>>> my patch)
->>>>=20
->>>> Or rather two arrays of registers.  With 32-bit configurations =
-their=20
->>>> contents have to be retrieved by pieces.  I don't know if it's =
-handled by=20
->>>> the caller(s) though as I'm not familiar with this interface.
->>>=20
->>> Ah, CPU_CAVIUM_OCTEON seems to be 64-bit only, so there's no =
-difference
->>> between UL and ULL. Then both my patch and your suggestion:
->>=20
->> So it seems odd to use `long long int' here, but I can't be bothered =
-to=20
->> check history.  There could be a valid reason or it could be just =
-sloppy=20
->> coding.
->>=20
->>> I still prefer my approach without '__last[0]' because it also =
-silences
->>> the following false-positive Coccinelle warning, which is how I =
-stumbled
->>> upon this in the first place:
->>>=20
->>> ./ptrace.h:51:15-21: WARNING use flexible-array member instead
->>=20
->> So make `__last' a flexible array instead?  With a separate patch.
->=20
-> No, '__last[0]' is a fake flexible array and the Coccinelle warning is
-> wrong. We should either ignore the warning or silence it by removing =
-the
-> marker, but turning it into a real flexible array doesn't make sense.
-> I'd prefer to just remove it from the struct.
->=20
-> Stefan or Oleg, do you have any preference?
+GCC 15's new -Wunterminated-string-initialization notices that the 16
+character lookup table "zero_uuid" (which is not used as a C-String)
+needs to be marked as "nonstring":
 
-Sorry, I meant Thomas, not Stefan.
+drivers/md/bcache/super.c: In function 'uuid_find_empty':
+drivers/md/bcache/super.c:549:43: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (17 chars into 16 available) [-Wunterminated-string-initialization]
+  549 |         static const char zero_uuid[16] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Add the annotation (since it is not used as a C-String), and switch the
+initializer to an array of bytes.
+
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ v2: use byte array initializer (colyli)
+ v1: https://lore.kernel.org/all/20250416220135.work.394-kees@kernel.org/
+Cc: Coly Li <colyli@kernel.org>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-bcache@vger.kernel.org
+---
+ drivers/md/bcache/super.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index e42f1400cea9..a76ce92502ed 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -546,7 +546,8 @@ static struct uuid_entry *uuid_find(struct cache_set *c, const char *uuid)
+ 
+ static struct uuid_entry *uuid_find_empty(struct cache_set *c)
+ {
+-	static const char zero_uuid[16] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
++	static const char zero_uuid[] __nonstring =
++		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+ 
+ 	return uuid_find(c, zero_uuid);
+ }
+-- 
+2.34.1
 
