@@ -1,156 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A2B2153FE;
-	Fri, 18 Apr 2025 16:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD6B21A43B
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 16:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744992819; cv=none; b=Qyu+d8Ctn1hWurj56H1mRoez471tSXK5j25GOrRgZVU9iBMHOi2cS/6iIcut6yLVUv2vEc1bpDuFTQkh8YByVFZ9Kop3cpnMZPhD+Q4j1ybVmRtElhF5ocyikG0LBbhoBI9BVRiBpqKSFjcN7F79Sjn834fyH2bRzb4OXvpPQ/Y=
+	t=1744992824; cv=none; b=Bra2Ao2UINrk0x+3DK7GByWdYsl5gXFvmAL9ih6bRcd5HXJfXsFwuC0MFqvL82mpH2c52qrYjSJXznsdqIsX2VAYav6oaXdA2N48mwq0jZ1zhLorYpZnBymApqgUemCskfm+6Q3Dmo9Nkh92gV2HGXdwVpl58lYeAwLyswuS174=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744992819; c=relaxed/simple;
-	bh=uQ/6b7sB1ONhc9820LzU2mrK9lP7Kt5df9XQ5yEtODU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k4ONJB44kmxkxDCovALs3+f6Jz5AApcitt+1P96/EoOMpyITFOlbzz2Sds2/gFToec/p11Yg+Vxhc1OWpnc67Xw4OfwHkYfDCe/0VNUSVihr9ccjfutGeK323kw8TmxY6O37/G0n/KCcGKjF2TWy2NxVzC6kHu0j+sOdumNUBck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GlQqSyCA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744992824; c=relaxed/simple;
+	bh=PFsVeDzfjNXpckvVtRZ9aDuOFct7fDdGwwko3GzCdks=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tbaO4o70jY38a8IKGJUa8gZHYqegW40MRsipWBA9rXe9WPStY2XdTuBfkJ65+AQDC4ElufPE8uJb4onpcbuRH4LNT5DO88xx9GnujP/JOYCfRPA34jcU5z9e3T9clltPmM4ljyd+s5RO0f6fYOQdit37eSfOjEITOXj+rKhS23g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=OFoSb3o4; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GlQqSyCA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B43D1C4CEE2;
-	Fri, 18 Apr 2025 16:13:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744992818;
-	bh=uQ/6b7sB1ONhc9820LzU2mrK9lP7Kt5df9XQ5yEtODU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GlQqSyCATnqMw0cNI9TJ0C2iLce8Tfu9P002qys+LGSJ4rdxtFcBPqMWgp5GDRd7z
-	 7MEcVadUpLronX7vYhnPM8Whd/l0dtHUkYDDabKvVYe6DeRL4GgMHX6juzeVvuWUFI
-	 WAplctHJ9NOtgxdfbt/L7u3xtKhFpdVfJaZabKJiN5MrBx4/n2aK0mCwo+9uzaQsjd
-	 +hK/shuaqcsKtOjFux1ndgQCiEy0S1MMvcf639FmuqIpH28pq+vrUe6wXfwVCMzR2n
-	 9NLhNLf7/+xbKyXlyAhqz0wamWDMivo7yZBUMIK7OchEHb+FxU42B65mud/wWKWeRF
-	 XkKrhtfVpvIXg==
-Date: Fri, 18 Apr 2025 17:13:26 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Eason Yang <j2anfernee@gmail.com>
-Cc: lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
- javier.carrasco.cruz@gmail.com, gstols@baylibre.com,
- alisadariana@gmail.com, tgamblin@baylibre.com, olivier.moysan@foss.st.com,
- antoniu.miclaus@analog.com, eblanc@baylibre.com,
- andriy.shevchenko@linux.intel.com, joao.goncalves@toradex.com,
- tobias.sperling@softing.com, marcelo.schmitt@analog.com,
- angelogioacchino.delregno@collabora.com, thomas.bonnefille@bootlin.com,
- herve.codina@bootlin.com, chanh@os.amperecomputing.com, KWLIU@nuvoton.com,
- yhyang2@nuvoton.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] iio: adc: add support for Nuvoton NCT7201
-Message-ID: <20250418171326.07634113@jic23-huawei>
-In-Reply-To: <20250416081734.563111-3-j2anfernee@gmail.com>
-References: <20250416081734.563111-1-j2anfernee@gmail.com>
-	<20250416081734.563111-3-j2anfernee@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="OFoSb3o4"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2c663a3daso371287066b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 09:13:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1744992820; x=1745597620; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=DjKOuF0LawJr9MXck81w1cjBR7uD0wLAWY1r0WgV90U=;
+        b=OFoSb3o4Ve0ofXZ7S8YE2AZpJaQzcYrhAZyVdzdPunXhobOO/QGZcNsRV1vzAMHW/0
+         wHkqnyZ8so13DRb9B/zOkLszMhomswobeEY/v6lc0AHaL9pUZojoq+EQ56t+mfvcuF0i
+         zKy+wfIgAor/exJSWeSlhz0Wqfs/OgFIKSp2A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744992820; x=1745597620;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DjKOuF0LawJr9MXck81w1cjBR7uD0wLAWY1r0WgV90U=;
+        b=ZtjhiuY878RJrYf0vMF80L1R+w7V/01U3WlN6zGqblNd59vwJsevxsirx1nZkEswOR
+         yE0GLtIKOQuTGLuGsIrRQhk1Lw5ugCnoTcZTOmPhp+07JccwmOQ6v2ASNxgHY6dlahgB
+         g97J/0cSVFy4LCtcIF8l+AT8V0O/DH1qcMCAKGxH/DnQJTp7wx5JzEEimV3riS6fZ98d
+         Z0a7yzNJdbfTgoHnAGZU5cQ4o/vssxQj4fai3ZufXyOZKQlj+E/QvqRXhl9pqPf3cnAp
+         DpW2Wzxz8ZbOVkW8Dt+uJPk9xlesjEoAX4NDHJzPhYYvgNia3gh08+2/psW7sXBWRSug
+         Njxw==
+X-Gm-Message-State: AOJu0YzzC2cd3a+SYbI4nrlAUPydVX3DG5RRtf49zMISBlDvTrDCrqoZ
+	NBi1lVbhtoTnk47EEGr28ziDOHnnro7liMDXf7Q63YSzNnHRduAtP+jaGN3JL6jA6cYlDGbwyKI
+	DiGQ=
+X-Gm-Gg: ASbGnctSwzSXe4VacyIfHAgaeclyN8O1iow9Br9J29k4D/96UUxezL+jup2h223aVNA
+	O7Y4XsVyRXw7Sp8uknIz932ARdPlXJMauC0JWRkSLlnSehdJAIgOVA32wpEl09ssl+pKUkERcLn
+	xL7ii92dyw/H+ZV3nnXUfasELGgq7sxYyMb/9Ues5ieHefvBZSnfNGVwXgv09L1soICqNeqXDUN
+	QSmF80Tics1GPxKnCIuVQvZrJVu2i8S3t0nYaKkCZzNzh0YM7Zmhk7YTht2KruZqZAd/RenAJWW
+	Rp/bO8QBG/hgUe4t/6QX+lbVawXhyFNDYyEps5tAlnXpIE/IwT4GF8Ib/Hp8j7c0Bi3d49nSIiB
+	hFclnHnG/aJFGhuk=
+X-Google-Smtp-Source: AGHT+IHiqY/QJxZSJa78b18i0D+4/YX3033gqG5M1zsA8H3ISo4m6LikBUWv1GMlEQZhPHrlTyEceA==
+X-Received: by 2002:a17:907:9404:b0:aca:95c1:876 with SMTP id a640c23a62f3a-acb74b364admr314861366b.20.1744992820230;
+        Fri, 18 Apr 2025 09:13:40 -0700 (PDT)
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com. [209.85.218.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef4799bsm138461566b.149.2025.04.18.09.13.39
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 09:13:39 -0700 (PDT)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac3b12e8518so376322466b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 09:13:39 -0700 (PDT)
+X-Received: by 2002:a17:906:c10b:b0:acb:6081:14ec with SMTP id
+ a640c23a62f3a-acb74e8da8amr303015066b.61.1744992819058; Fri, 18 Apr 2025
+ 09:13:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250418130644.227320-1-pbonzini@redhat.com>
+In-Reply-To: <20250418130644.227320-1-pbonzini@redhat.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 18 Apr 2025 09:13:22 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg8VBjy=yrDUmFnvBKdo6eKNab6C=+FNjNZhX=z25QBpw@mail.gmail.com>
+X-Gm-Features: ATxdqUERjeqMmefrjujlpH9FygUlViVaOKvtbBM9Be9kRonBwkP0R52Gxhjg25A
+Message-ID: <CAHk-=wg8VBjy=yrDUmFnvBKdo6eKNab6C=+FNjNZhX=z25QBpw@mail.gmail.com>
+Subject: Re: [GIT PULL] KVM changes for Linux 6.15-rc3
+To: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 16 Apr 2025 16:17:34 +0800
-Eason Yang <j2anfernee@gmail.com> wrote:
+On Fri, 18 Apr 2025 at 06:06, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+>   https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
 
-> Add Nuvoton NCT7201/NCT7202 system voltage monitor 12-bit ADC driver
-> 
-> NCT7201/NCT7202 supports up to 12 analog voltage monitor inputs and up
-> to 4 SMBus addresses by ADDR pin. Meanwhile, ALERT# hardware event pins
-> for independent alarm signals, and all the threshold values could be set
-> for system protection without any timing delay. It also supports reset
-> input RSTIN# to recover system from a fault condition.
-> 
-> Currently, only single-edge mode conversion and threshold events are
-> supported.
-> 
-> Signed-off-by: Eason Yang <j2anfernee@gmail.com>
-Hi Eason,
+I pulled this, but then I unpulled it, because this doesn't work for
+me AT ALL. I get
 
-A few trivial things from another glance through.
+   ERROR: modpost: "kvm_arch_has_irq_bypass" [arch/x86/kvm/kvm-amd.ko]
+undefined!
 
-Thanks,
+when building it. I assume it's due to the change in commit
+73e0c567c24a ("KVM: SVM: Don't update IRTEs if APICv/AVIC is
+disabled") but didn't check any closer.
 
-Jonathan
+I think it's literally just because that symbol isn't exported, but I
+also suspect that the *right* fix is to make that function be an
+inline function that doesn't *need* to be exported.
 
+So I'm not going to add the trivial EXPORT_SYMBOL_GPL() line, since I
+suspect the real fix is different.
 
-> +
-> +static const struct nct7201_adc_model_data nct7201_model_data = {
-> +	.model_name = "nct7201",
-> +	.channels = nct7201_channels,
-> +	.num_channels = ARRAY_SIZE(nct7201_channels),
-> +	.num_vin_channels = 8,
-> +};
-> +
-> +static const struct nct7201_adc_model_data nct7202_model_data = {
-> +	.model_name = "nct7202",
-> +	.channels = nct7202_channels,
-> +	.num_channels = ARRAY_SIZE(nct7202_channels),
-> +	.num_vin_channels = 12,
-> +};
-> +
-> +static int nct7201_init_chip(struct nct7201_chip_info *chip)
-> +{
-> +	struct device *dev = chip->dev;
-> +	__le16 data = cpu_to_le16(NCT7201_REG_CHANNEL_ENABLE_MASK);
-
-Assign this value down near where it is used. That will generally help
-readability.
-
-> +	unsigned int value;
-> +	int err;
-> +
-> +	err = regmap_write(chip->regmap, NCT7201_REG_CONFIGURATION,
-> +			   NCT7201_BIT_CONFIGURATION_RESET);
-> +	if (err)
-> +		return dev_err_probe(dev, err, "Failed to reset chip\n");
-> +
-> +	/*
-> +	 * After about 25 msecs, the device should be ready and then the Power
-> +	 * Up bit will be set to 1. If not, wait for it.
-I'd hyphenate power-up perhaps.
-
-> +	 */
-> +	fsleep(25000);
-> +	err = regmap_read(chip->regmap, NCT7201_REG_BUSY_STATUS, &value);
-> +	if (err)
-> +		return dev_err_probe(dev, err, "Failed to read busy status\n");
-> +	if (!(value & NCT7201_BIT_PWR_UP))
-> +		return dev_err_probe(dev, -EIO, "Failed to power up after reset\n");
-> +
-> +	/* Enable Channel */
-> +	if (chip->num_vin_channels <= 8)
-> +		err = regmap_write(chip->regmap, NCT7201_REG_CHANNEL_ENABLE_1,
-> +				   NCT7201_REG_CHANNEL_ENABLE_MASK);
-
-This is a little odd as I think you are writing an 8 bit register with a 12 bit mask.
-Sure it works, but confusing thing to see.  If some future 6 channel device comes
-along this <= 8 will seem odd too. Maybe generate the mask from teh number
-of channels?
-
-> +	else
-> +		err = regmap_bulk_write(chip->regmap, NCT7201_REG_CHANNEL_ENABLE_1,
-> +					&data, sizeof(data));
-> +	if (err)
-> +		return dev_err_probe(dev, err, "Failed to enable channel\n");
-> +
-> +	err = regmap_bulk_read(chip->regmap, NCT7201_REG_CHANNEL_ENABLE_1,
-> +			       &chip->vin_mask, sizeof(chip->vin_mask));
-> +	if (err)
-> +		return dev_err_probe(dev, err,
-> +				     "Failed to read channel enable register\n");
-> +
-> +	/* Start monitoring if needed */
-> +	err = regmap_set_bits(chip->regmap, NCT7201_REG_CONFIGURATION,
-> +			      NCT7201_BIT_CONFIGURATION_START);
-> +	if (err)
-> +		return dev_err_probe(dev, err, "Failed to start monitoring\n");
-> +
-> +	return 0;
-> +}
-
+               Linus
