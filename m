@@ -1,69 +1,55 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EC0268FDA
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 06:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E208252904
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 06:16:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744956924; cv=none; b=MOH62B7IhK8zJPCPJyvP3zD2b++D7DG4jKKx3xnAJxTcj9H8fd1xxAX1vmK26N+L3OqrdvbWZpaJYpH1VORaJ0faKKh6kO7kqKOfYDAVII9Z6HXKnUb9lvaRdat/ZnKpU1+o/b7ywG8NpGabkunWs6MHgAGFJN9UKEuKHxYI94Q=
+	t=1744956970; cv=none; b=g5bBB8lRH1Chl5R8LTx+PUs8RRrNUdiT7Bh7JTX16rtAWGmbXCr7a/DboOJpYrOAORq1C0GxE2WLpCO+hN+/JHyhHSnLG7aSO5jw74T0/hXn9bbfiPEw26VmwAYmJ/OKER/PsonXbh54q+Wdsqk2Wkliht+VZKRhh21DYyqs1ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744956924; c=relaxed/simple;
-	bh=cwnLe2mq5+OXES0FW/bDBHXRCMTUeur7l11Kj/h4KeQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=dElRAGD1YnYxphRxWi0sFRSjYwsHCkqZbf8Rcw/YsUs2TPvqy9BG9Sefh/5cKsJL0cZP67Gc4YkSjjshxJtOmb0iTPNv1x+OkKR+qeV2RI1mtQkPxYPlwCn4TMd8ihnGV6aen0JRaH6q+QEl2Q4dE0MJALbO4aekvJUGrHEuEDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=l96kI/HA; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1744956970; c=relaxed/simple;
+	bh=oTwsiV50aqxRCRvypZebKsZXO/RWTl9KrgYy02Nk0Ts=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tIgJ0QLGNtUQTUcrnApKUCBsU5zeZ7qKUgpi9+xEMH8TUsPasXhQYZZkzZedByhxX2SC/2C6MQ/u7lBeQwO8cfr6PtK6caGKgI3wOVZZo9Rs6BBvrhvq85suQPUHs5RS3vaetst70c1/KLVptZyfpaJlme06sxNt+RkAXnPzEug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EGOxgoU+; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="l96kI/HA"
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250418061517epoutp0465a436824e6a655236d9e075b822e89b~3VRI1fLx_1895818958epoutp04R
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 06:15:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250418061517epoutp0465a436824e6a655236d9e075b822e89b~3VRI1fLx_1895818958epoutp04R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1744956917;
-	bh=aprxRbYtZUgT14V1ldVJXfUniZKweln6d8PJOcyQRPI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=l96kI/HA+/nGMwQgnhxnCS7ssD5dQcb8Mw7wNakMgGjrCVNkRo6B5fXbBjmz5/BnI
-	 oN8wHDSt0+8g7qoOjtdXmYA8qBP+BHncD2Ld/9zlefUPvR7xRTJ6qQV43eW7LOxTHe
-	 oKSJTqcrbgEhUJvvtAqVJ8hXkfLxdGBl35UBN1/A=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250418061516epcas2p28e6360f3275261b0a94b81b5b23e5b6c~3VRIGdylb2985129851epcas2p2v;
-	Fri, 18 Apr 2025 06:15:16 +0000 (GMT)
-Received: from epcas2p2.samsung.com (unknown [182.195.36.69]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4Zf4Hm15wzz3hhTQ; Fri, 18 Apr
-	2025 06:15:16 +0000 (GMT)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250418061515epcas2p4b57102967b07d665051a6297ab451a3c~3VRHC5SAh1705317053epcas2p4G;
-	Fri, 18 Apr 2025 06:15:15 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250418061515epsmtrp2c0ae88fd3cdaf7ba493614b214ef55be~3VRHCAeOk0714207142epsmtrp24;
-	Fri, 18 Apr 2025 06:15:15 +0000 (GMT)
-X-AuditID: b6c32a52-40bff70000004c16-2a-6801edf39277
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	03.69.19478.3FDE1086; Fri, 18 Apr 2025 15:15:15 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.229.9.60]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250418061515epsmtip1f43ce5fffd017095a3771ce1c5ea011c~3VRGwVB420416704167epsmtip1w;
-	Fri, 18 Apr 2025 06:15:15 +0000 (GMT)
-From: Shin Son <shin.son@samsung.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki
-	<s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar
-	<alim.akhtar@samsung.com>, Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Sunyeal Hong <sunyeal.hong@samsung.com>
-Cc: Shin Son <shin.son@samsung.com>, linux-samsung-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] arm64: dts: exynosautov920: add cpucl0 clock DT nodes
-Date: Fri, 18 Apr 2025 15:15:00 +0900
-Message-ID: <20250418061500.1629200-4-shin.son@samsung.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250418061500.1629200-1-shin.son@samsung.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EGOxgoU+"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53I206FW028984;
+	Fri, 18 Apr 2025 06:15:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=0J320wFNfNkPp3yz7HmB6N
+	MOcySii5t5WpCME6PMgXU=; b=EGOxgoU+ZiS94d3dVbZCqnor6MStiuR2+XwVwb
+	dX4JQifQhbc0ysscZ+8cdGdqjKobdJ5XYietmCdZkqkjGDG9LEtrfJ79FUZLamZ5
+	xCSqL93jcunLhY/qQZIr9ey9+4D9rngNRot3Cm8CU1cPJYZJ1CLEBoAqVSsw016k
+	eyljTcpfl5bBsT1W+tXraSfdBOwL+Bcn6wiyYasVlZMVsVNSRMDDoT5msKwJU6+E
+	G/ZhYME/tfQy1LEDrKWhNp1aqkCYnzege1wvft3WguemonXmCFYxZzVZ/edg6cDV
+	vjHBm7eWpiaZoT2RehMkOMmpyps5m+Yx7iHdmEJHQ7kNmjcg==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygj9h4k2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Apr 2025 06:15:48 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53I6FVoU013022
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Apr 2025 06:15:31 GMT
+Received: from ap-kernel-sh01-lnx.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 17 Apr 2025 23:15:27 -0700
+From: Zhenhua Huang <quic_zhenhuah@quicinc.com>
+To: <cl@linux.com>, <rientjes@google.com>, <vbabka@suse.cz>,
+        <roman.gushchin@linux.dev>, <harry.yoo@oracle.com>,
+        <surenb@google.com>, <pasha.tatashin@soleen.com>,
+        <akpm@linux-foundation.org>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <quic_tingweiz@quicinc.com>, Zhenhua Huang <quic_zhenhuah@quicinc.com>
+Subject: [PATCH] mm, slab: clean up slab->obj_exts always
+Date: Fri, 18 Apr 2025 14:14:59 +0800
+Message-ID: <20250418061459.3898802-1-quic_zhenhuah@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,64 +57,67 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGLMWRmVeSWpSXmKPExsWy7bCSnO7nt4wZBhcnCFg8mLeNzWLN3nNM
-	Fte/PGe1mH/kHKvF+fMb2C02Pb7GavGx5x6rxeVdc9gsZpzfx2Rx8ZSrxf89O9gtDr9pZ7X4
-	d20ji8Xk42tZLZqWrWdy4Pd4f6OV3WPTqk42j81L6j36tqxi9Pi8SS6ANYrLJiU1J7MstUjf
-	LoEro312F3PBEY6KafcvsjUwfmPrYuTkkBAwkXh7dzt7FyMXh5DAdkaJ93fvsEAkJCQOz5jA
-	CGELS9xvOcIKUfSeUaLt3wqgIg4ONgFViU2/5UHiIgJvmSSW/z/ABNLALHCaUWLnGRmQGmEB
-	L4m3K0RAwixA5dvfXWMGsXkFrCVWHNnKBFIiISAv0d8hARLmFLCRWLpvFhtIWAioZOGLOohq
-	QYmTM5+wQAyXl2jeOpt5AqPALCSpWUhSCxiZVjGKphYU56bnJhcY6hUn5haX5qXrJefnbmIE
-	R4VW0A7GZev/6h1iZOJgPMQowcGsJMJ7zvxfuhBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe5ZzO
-	FCGB9MSS1OzU1ILUIpgsEwenVAPTumTp1X+CLvr18N/Uul3Xp/n4z/8vWvKN8ck+Z06K68/Y
-	t527au8v9n7LwnNtin8Mt7Z31acxNpid+zh5zQOn2xOfXmMR2ZV0jPXI9/6/z658vSQl+urS
-	pxV2Sptj0kRqPBgT1CbO2d8d9biwfvvT4zP4NZNNOScFXVu+7TqL/k6ZlTUust7m2V9WXEgM
-	PqF59sLrZd8O1vHd5Y24cm2PKUty94rjXk2F/YcuXxG/byd7efFxBtPNFoenZ9h0f7v/PNBn
-	yt6S8rS89vNKmfbNfY2r0z+Y/PkW/eZFpe2nOamnr3xZHJP5ck/F4469f1wfht1eLJclZvi/
-	/P+SjQXzD/K6uLZ91V6y5kaAd+VDQyWW4oxEQy3mouJEAL/9fE/5AgAA
-X-CMS-MailID: 20250418061515epcas2p4b57102967b07d665051a6297ab451a3c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-cpgsPolicy: CPGSC10-234,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250418061515epcas2p4b57102967b07d665051a6297ab451a3c
-References: <20250418061500.1629200-1-shin.son@samsung.com>
-	<CGME20250418061515epcas2p4b57102967b07d665051a6297ab451a3c@epcas2p4.samsung.com>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: zS1fMGwwXk2SBij4yoRV86rGmFfhIAvl
+X-Authority-Analysis: v=2.4 cv=PruTbxM3 c=1 sm=1 tr=0 ts=6801ee14 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=TuTZUksUTkBGaCY47_EA:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: zS1fMGwwXk2SBij4yoRV86rGmFfhIAvl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-18_02,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ priorityscore=1501 malwarescore=0 adultscore=0 lowpriorityscore=0
+ impostorscore=0 clxscore=1011 spamscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504180045
 
-Add cmu_cpucl0 clocks for switch, cluster, and dbg domains respectively.
+When memory allocation profiling is disabled at runtime or due to an
+error, shutdown_mem_profiling() is called: slab->obj_exts which
+previously allocated remains.
+It won't be cleared by unaccount_slab() because of
+mem_alloc_profiling_enabled() not true. It's incorrect, slab->obj_exts
+should always be cleaned up in unaccount_slab() to avoid following error:
 
-Signed-off-by: Shin Son <shin.son@samsung.com>
+[...]BUG: Bad page state in process...
+..
+[...]page dumped because: page still charged to cgroup
+
+Fixes: 21c690a349baa ("mm: introduce slabobj_ext to support slab object extensions")
+Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
 ---
- arch/arm64/boot/dts/exynos/exynosautov920.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ mm/slub.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
-index fc6ac531d597..d1528633adfe 100644
---- a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
-@@ -582,6 +582,21 @@ pinctrl_aud: pinctrl@1a460000 {
- 			compatible = "samsung,exynosautov920-pinctrl";
- 			reg = <0x1a460000 0x10000>;
- 		};
-+
-+		cmu_cpucl0: clock-controller@1ec00000 {
-+			compatible = "samsung,exynosautov920-cmu-cpucl0";
-+			reg = <0x1EC00000 0x8000>;
-+			#clock-cells = <1>;
-+
-+			clocks = <&xtcxo>,
-+				<&cmu_top DOUT_CLKCMU_CPUCL0_SWITCH>,
-+				<&cmu_top DOUT_CLKCMU_CPUCL0_CLUSTER>,
-+				<&cmu_top DOUT_CLKCMU_CPUCL0_DBG>;
-+			clock-names = "oscclk",
-+				      "switch",
-+				      "cluster",
-+				      "dbg";
-+		};
- 	};
+diff --git a/mm/slub.c b/mm/slub.c
+index dac149df1be1..b42ce3a88806 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -2023,7 +2023,7 @@ int alloc_slab_obj_exts(struct slab *slab, struct kmem_cache *s,
+ 	return 0;
+ }
  
- 	timer {
+-/* Should be called only if mem_alloc_profiling_enabled() */
++/* Should be called if slab_obj_exts(slab) */
+ static noinline void free_slab_obj_exts(struct slab *slab)
+ {
+ 	struct slabobj_ext *obj_exts;
+@@ -2592,7 +2592,11 @@ static __always_inline void account_slab(struct slab *slab, int order,
+ static __always_inline void unaccount_slab(struct slab *slab, int order,
+ 					   struct kmem_cache *s)
+ {
+-	if (memcg_kmem_online() || need_slab_obj_ext())
++	/*
++	 * The slab object extensions should now be freed regardless of
++	 * whether mem_alloc_profiling_enabled() or not now.
++	 */
++	if (memcg_kmem_online() || slab_obj_exts(slab))
+ 		free_slab_obj_exts(slab);
+ 
+ 	mod_node_page_state(slab_pgdat(slab), cache_vmstat_idx(s),
 -- 
-2.49.0
+2.25.1
 
