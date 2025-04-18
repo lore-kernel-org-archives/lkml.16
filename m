@@ -1,117 +1,147 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B53220C023
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E98220C023;
+	Fri, 18 Apr 2025 15:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744989353; cv=none; b=IEg90Ko+phLZ1hmFjQqukjToeMCxHpCsSO+UMvSLeDjql9LBL476lr2ISLLfmtiuDr6odDhdH9R5a/5rLpLolgmJkkOkytSVrbCTubeaGYByzBcrc4Cr7PhFFbPJpJjQhipU5oH3uOx3wwT7qlLdvtLaTBEmtn8eNBt5X0ELN7c=
+	t=1744989369; cv=none; b=dM903AjtAuafql3RWWdNt5oqgiQ9AqWDWdDTFWMNdyXKOftah+fyx8/zQ2i+4qQatXOo1nlJFYrauAaLF7DsHWKon58yL5DqOvMy+Oe8C+kw3QDjziStJbpdQhjMrcq7PYuDBcGNoImTaloROgn5qIj+0L6IiyWlZtM/1vv8y00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744989353; c=relaxed/simple;
-	bh=KMMnOkwQVuDdX52tnm6wptnXExZOwL/CGPn4GnxI0X0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z/GqYsSQllNvoUPZ07Y5thGSWpMCumYoz5uwIjYoAAg6MDAUzn1brHfZMcayB5DOkE9My/1qhlz5XLV8qAftoFNvcU1UORJ3GMWVGoULG07rOz+3oEvkDAysaX3yaEbW5gu66xxo5xBeTbMTkN2DLOrAFixw6kQYkanHzsuoeWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T2YyVS0+; arc=none smtp.client-ip=209.85.214.181
+	s=arc-20240116; t=1744989369; c=relaxed/simple;
+	bh=XBdQwhHSS5Z6yVsPCdwDT0uzpGax7CTlgyETPqZUKFU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ea+CgVHMdosyN1UiXtfdtKh/rSTGx18mN+G6vk5qXDTfahlVwC4GP79IlJYFruKGPPX2TkkSZbSUS4eoObgD8anxNoBNV620yJEdldDVVd55z50bxtPWnVY6byC5TEMQr6aqNUGj8R2ur4ptj3zQYsz9qZ2wS/yxWnhU7Qk064U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AKsHw/XS; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T2YyVS0+"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22622ddcc35so30572425ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:15:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AKsHw/XS"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43d0c18e84eso9963665e9.3;
+        Fri, 18 Apr 2025 08:16:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744989351; x=1745594151; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=y7d429vs3u0Qa+Gq2VNqRuv23PSOaLSv/cnB0hDELhM=;
-        b=T2YyVS0+rISSs8hiJzqzKc3XUY4LY4kskFZomtfz1fq6LWC5xXyAZaalkSheBMz+al
-         zlR/42nSZSs8S53Ce3eVFcMU1qP6c0KIIyc+nD/PSMcs1o/HN+oVPpYi6bvwdD9KrhAs
-         Y1wnOR6eGrqgCZO67Z6lcKko3ndZPdm7fEPD/gekwk89nT/AQ96grKmE9NsrSVHflXOX
-         K/7o+TWkK3WcJtcTGNqCBX3BlpjZMQIoap0s4EF5u7L6+XNzuObSqdKlw+LFw3Ed/Nkc
-         06BEO282eSMBHcSUYkl91ivCAcRNvsgqDzHlBbtS80IfIxKXXIe3aFDrYdDEsqzQQ/Gl
-         QH3A==
+        d=gmail.com; s=20230601; t=1744989366; x=1745594166; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NDQCZN7XtccKekE6ix7EFyl/aNyMmVJtvGUO/HQEWB4=;
+        b=AKsHw/XSwu6oQGVRnyYQ+5fLcN0VxEMeqKximLu5mWWt69pdtsLo0xp/HqZ5nB2DL4
+         aEVqhnf5kdvv/j5obdpa1b/x+ZVpZf6i7ic140NDIR4RBOFNrZczEkzFVl1m6bUm7owg
+         OhKzcxSz03uO7TR7mS6VvrJHhSZs10dmyQNyhdqx/k/LX1hH3AMDhBT8wFkhdZRmKcIZ
+         F4tP+CGkUd7VDRWZsQ5rvbUl5GcrwfgSyfVcQUb8aORTl5WThN7VE68chKPZfsAanSKf
+         W4iof2fLT4bqQ9UrrsV9lfKzDfLE+GLlJmSZMbdp5UgR3Mpgp8wbuLgTXI7+FyvL93q5
+         V8Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744989351; x=1745594151;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=y7d429vs3u0Qa+Gq2VNqRuv23PSOaLSv/cnB0hDELhM=;
-        b=bBZzRhTwyvZWvc5pXlYy/WOPRsry2j8yiEOZT0DXbojRFzyEWThICnc4PPbnqefrNg
-         Z7p1AWgjCd/51NminKaRo16OVf7j1icuZeUYMnAzKJON4TKag3IM8x2qDCSSL2DzeRfg
-         krh89j15pmm84fj4baD2H2DQz4ggdtikofzyPV8WHsDeD2KvwyTcxsLPfrK42IqCZA2m
-         w4gnBU8W36hjpHs4RJv7CUVNWtvL5s0dG86iet6VVjwQjaMuxBJWcebrkPnyajIPc3uc
-         89QHzKuu2vBAXPf6+kJLth/xjyIHE2klMrOYSmVJ45G71gB4KBMT5e4rhFaCDyCvcEHR
-         Wc5w==
-X-Forwarded-Encrypted: i=1; AJvYcCWk0W10vE783NA5+I5dghnD7IgMhzwEclIqpmd5+F18lYtQmgVOTcvwC8cCe1I/iX6BZHOOBPotQvl6jG0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4a/RqsNZDPwxiZTeXdrpKD+yuVGb8CpczTuSUKrg0dWaTdhq7
-	fd2CWR1UNRi+jg+KEg0vodQS4TYHUv5Nw7IC8AWw1oHZ/rmN3vT4
-X-Gm-Gg: ASbGncuL1jKgpRqx8OUKxI1OGk6MlQ/1N5g+rIUMPT1i8sDJ1tjHesAJQwGCmQoXsv1
-	ZZTqXPEcy4WhYj0b5n0BInoSDzz6yr/hPYrOpdAfjfo9cTZ7T/QzgAjtlWhFZ/mWFIo3Oyh45Oa
-	u7o4lbnEMPV8SocvYL9wYZkS0qang283fMnqeJ0j65lbXs86GbYD95RVf1GldrnFj3EZmlVRSOx
-	hbeSbHzDjRI1FsC+l18Mo8WWl7AcQ/Y9Mk/CPb1+Ts3XjDRAwD5EvsFYsTCvgQvFmFrnZJMukf4
-	gTAVu+v7jWN833eBu9hOu8pBOR2b5VWH25mwQABf15uqDm+Pvw==
-X-Google-Smtp-Source: AGHT+IGEscJcgtAIszZfwRLpspqoP3lhJKDr0lTbKFdf5IfgHXsSLhT8pfuCbUq5Yiu/dAxQNQxevA==
-X-Received: by 2002:a17:902:ea07:b0:224:7a4:b2a with SMTP id d9443c01a7336-22c5357a664mr41632685ad.11.1744989350792;
-        Fri, 18 Apr 2025 08:15:50 -0700 (PDT)
-Received: from localhost.localdomain ([43.129.202.66])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb48f7sm17920105ad.138.2025.04.18.08.15.48
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 18 Apr 2025 08:15:50 -0700 (PDT)
-From: Lance Yang <ioworker0@gmail.com>
-X-Google-Original-From: Lance Yang <lance.yang@linux.dev>
-To: akpm@linux-foundation.org
-Cc: mingzhe.yang@ly.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Lance Yang <ioworker0@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Lance Yang <lance.yang@linux.dev>
-Subject: [PATCH v2 1/1] mm/rmap: add CONFIG_MM_ID guard for folio_test_large_maybe_mapped_shared()
-Date: Fri, 18 Apr 2025 23:15:00 +0800
-Message-ID: <20250418151500.14967-1-lance.yang@linux.dev>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1744989366; x=1745594166;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NDQCZN7XtccKekE6ix7EFyl/aNyMmVJtvGUO/HQEWB4=;
+        b=iHV93pkn6pslpz/4gOllKDNItTWZKXTy4KqKQlAyhMJQ9EmRbR6tMcFLklVGtR79S0
+         GoRXx7EZnbt3yeI7PdOXE40Oe7PQb7SUecktbxaXC/udjzCKoe20v37bTOpnf/0eL2Uu
+         B/U9LNR2mv9EU7DPBVaLZ4J2eJOgD5am0V19XBCAodKDCm82S5yeTbJc56PbS1Yjx+1W
+         o07Hrak4T1r7y7Dc65kOa6iKMwkGGjkmnQ8pI2UL+/bAXtnJ0YYgR3x3dk/9MoBN6jRl
+         aVZGvuql4LjyNEM/8Snvx9WF5Kq+jC03hacCejyr2YzhwtDr2fz2WZXiZFkwkTVGwDtt
+         HvNw==
+X-Forwarded-Encrypted: i=1; AJvYcCVhfr0+us1WJdanDX96f+jo1cm/hgadcSn9DXMqXI1Yea6LcJvZurTuwPm2Mapf6/xrx2kc5gbRRGEO@vger.kernel.org, AJvYcCVmk+jTjnOSmIiiJOy/hQ7q4v62PZWe1sd7o+3tJNfjIa7DfMVySmUYhPK8f/9tPLDDXRWlBPmxq1xexTpDFlou+bY=@vger.kernel.org, AJvYcCWJIo5UtXsubxdVrhVwA8W926pwR7diicJdWfyB7DqmHu0xhCYYtwRBjbqrMeYLjxZoNG2IqtqU9ME9@vger.kernel.org, AJvYcCX6uKG5yJHVMcDDkekAPMPMegPob2eIy508AN2wSxCKmHNz7zsYANve6WI/wxm5jPyncwBQZR/u5fI96x75@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNFmp9sHyqC4Gedz6Wcei0h+LefV/kgsVlLZOhRPrSaJ+Sojc+
+	mTnTG3vQD7GrHuUNEEjO1G/twKUb6cXlsTVyqEqAXjeNoIgq2TchnqG0nNN5sLyg4RypLJJGCip
+	+EByjrynfUSnGlHxl268CP/e2aEA=
+X-Gm-Gg: ASbGncvzf+A4T9cUcgJphpTX/+2eyQ71nDowkUeyrWd+SbYYuhqLEswU3yh1BjF6bFg
+	4s8wzylI9CJWPbxmgbGb/fn5CS4BustGzB/0Tvl03ao0fmmWUU6U9ynI5I+b20g5gaIz27aZzJx
+	pLs6Bf035Er7b700HoLdbLRY6JjG4pf4uy3oQDpGdKsBtiUYhlerRV20g=
+X-Google-Smtp-Source: AGHT+IFmXeJc3YDRQKSCZof7kxPeLkVbKbIzjnIGX2JOiqECYlzFhqayvmJDanc/5uMaQBQmGnlreIjKMnRprAPvMCA=
+X-Received: by 2002:a05:600c:54c2:b0:43d:77c5:9c1a with SMTP id
+ 5b1f17b1804b1-4406b928b57mr19545275e9.4.1744989365491; Fri, 18 Apr 2025
+ 08:16:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250408200916.93793-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250408200916.93793-16-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVbcOvfW6YqW6S77J7htaJqWkeoGEhjkAWXvG5Fo1FMhA@mail.gmail.com>
+In-Reply-To: <CAMuHMdVbcOvfW6YqW6S77J7htaJqWkeoGEhjkAWXvG5Fo1FMhA@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Fri, 18 Apr 2025 16:15:39 +0100
+X-Gm-Features: ATxdqUFKG7b-9fi5GPMwEzMprDzBzoNhSBw2axhPGgXuBYZm8tjPIyPxCGRg-3w
+Message-ID: <CA+V-a8uyj0myd=At83X+=MnQqTdkpo3tyADgOPuTL_FjzPZD8g@mail.gmail.com>
+Subject: Re: [PATCH v2 15/15] drm: renesas: rz-du: mipi_dsi: Add support for
+ RZ/V2H(P) SoC
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Lance Yang <ioworker0@gmail.com>
+Hi Geert,
 
-From: Lance Yang <lance.yang@linux.dev>
+Thank you for the review.
 
-To prevent folio_test_large_maybe_mapped_shared() from being used without
-CONFIG_MM_ID, we add a compile-time check rather than wrapping it in
-'#ifdef', avoiding even more #ifdef in callers that already use
-IS_ENABLED(CONFIG_MM_ID).
+On Wed, Apr 16, 2025 at 10:35=E2=80=AFAM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar, Fabrizio,
+>
+> On Tue, 8 Apr 2025 at 22:09, Prabhakar <prabhakar.csengg@gmail.com> wrote=
+:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Add DSI support for Renesas RZ/V2H(P) SoC.
+> >
+> > Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> > --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > @@ -70,6 +80,18 @@ struct rzg2l_mipi_dsi {
+> >         unsigned int num_data_lanes;
+> >         unsigned int lanes;
+> >         unsigned long mode_flags;
+> > +
+> > +       struct rzv2h_dsi_mode_calc mode_calc;
+> > +       struct rzv2h_plldsi_parameters dsi_parameters;
+> > +};
+> > +
+> > +static const struct rzv2h_plldsi_div_limits rzv2h_plldsi_div_limits =
+=3D {
+> > +       .m =3D { .min =3D 64, .max =3D 1023 },
+>
+> .max =3D 533?
+>
+> > +       .p =3D { .min =3D 1, .max =3D 4 },
+> > +       .s =3D { .min =3D 0, .max =3D 5 },
+>
+> .max =3D 6?
+>
+> > +       .k =3D { .min =3D -32768, .max =3D 32767 },
+> > +       .csdiv =3D { .min =3D 1, .max =3D 1 },
+> > +       .fvco =3D { .min =3D 1050 * MEGA, .max =3D 2100 * MEGA }
+> >  };
+>
+> Summarized: why do these values differ from the ones in the declaration
+> macro RZV2H_CPG_PLL_DSI_LIMITS(), i.e. why can't you use the latter?
+>
+There is a divider inside the DSI IP which is almost similar to PLL in
+the CPG. The divider limits for the DSI IP vary as compared to one in
+the CPG IP.
 
-Also, we used plenty of IS_ENABLED() on purpose to keep the code free of
-'#ifdef' mess.
-
-Suggested-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Lance Yang <lance.yang@linux.dev>
-Acked-by: David Hildenbrand <david@redhat.com>
----
-v1 -> v2:
- * Update the changelog, suggested by Andrew and David
- * https://lore.kernel.org/linux-mm/20250417124908.58543-1-ioworker0@gmail.com
-
- include/linux/page-flags.h | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index d3909cb1e576..6bd9b9043976 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -1232,6 +1232,8 @@ static inline int folio_has_private(const struct folio *folio)
- 
- static inline bool folio_test_large_maybe_mapped_shared(const struct folio *folio)
- {
-+	/* This function should never be called without CONFIG_MM_ID enabled. */
-+	BUILD_BUG_ON(!IS_ENABLED(CONFIG_MM_ID));
- 	return test_bit(FOLIO_MM_IDS_SHARED_BITNUM, &folio->_mm_ids);
- }
- #undef PF_ANY
--- 
-2.49.0
-
+Cheers,
+Prabhakar
