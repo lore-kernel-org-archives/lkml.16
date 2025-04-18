@@ -1,105 +1,120 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F56886328
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E53613C9B3;
+	Fri, 18 Apr 2025 17:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744996020; cv=none; b=NSLEgwyDggk/JvIOT4JZ8V2Yi+0+Lbx2JONSF8zSuwlDnUSTk5MUXOffvileJ4c1nnzMoM6/YR+i/jHqX1GmMomw04GRsLc308KbwdRwFzrux3qL8tcPz3O+1X6mNT8DQ6ff+NVaR6kAUBppnVU4u1TX2zGLJDizcM92rLn2juY=
+	t=1744996040; cv=none; b=Wixn5F6SMFI8GVAAJQmonMUekZTMAN3xDAqa1ePuYKNdEyaTjBDBuXRfzkwZT0cGoL+f+dmKhKpy/LvJ62f/JbMdoEGhXEnSAKe6BPuDTg22rdVGxVclClwKYhdvxtYT725FTFRlW2YkU2ygxQeTT/Qj0TW1tmG6l9n/wXEON5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744996020; c=relaxed/simple;
-	bh=dY93s5xlNPJis5maikqoc3nvWotI3/prHpevh2OqyGA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CuCbfRGrZQAXn6NthCcn7OEYAS5f48TEn1+dIfVJlPYGtbXr8CwDNmPwoAjIUIVS5IaLO0eZMPpkl8U9h4BNj8JDOEt/ort89eeKRH9nOKHeIw6HNX5L+slEIm0JZc2NPitZxVu8gZW0lXhVLf9+mepdhjuDhpa74P1br2izIV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ADlXCjlI; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744996040; c=relaxed/simple;
+	bh=nFFn7I+g/tnnYz6luw61kYvkvMc5y4MmqUN2RfOy298=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jPfpRsdP+vl2W6GH7Pxr4KFVLRPaWAd6OV/igI4MjS4rNz1eOQeocLV1oBbX2WalsbpQTlBMfbnkD3b3p0lI8GxwjUw5zdjOWeX5t2blZy8k1vsHuXCyYByov4GfpWEmjjvzJm4BtAYMPOfvALk2tUleVlUyW0HMON20RI+njgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=D/5dyZLX; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ADlXCjlI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744996018;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JCApZ9bDM0mTQF/sV1g+0OzRggEcnamk2IjV7dXhr3g=;
-	b=ADlXCjlIhwJJNfPu5Pf6fOGO9IcOQz+K66760d+cqXFd1lnvgKwXMgUWLE0mmMgrm1fcfe
-	XpIgVZjWuyBLPzCrAyL+H9I8bcc0HVEn15sRKLGXFLOiQfA22AAXPX/9wmn2XmYIWa55NI
-	Xygplhj+u47YnijzeqrcA7d8wkwSdRo=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-595-59p-TotMMMqVEJSWT01VYg-1; Fri, 18 Apr 2025 13:06:55 -0400
-X-MC-Unique: 59p-TotMMMqVEJSWT01VYg-1
-X-Mimecast-MFC-AGG-ID: 59p-TotMMMqVEJSWT01VYg_1744996015
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-440667e7f92so8726335e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:06:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744996013; x=1745600813;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JCApZ9bDM0mTQF/sV1g+0OzRggEcnamk2IjV7dXhr3g=;
-        b=bpXHBPp/PY32bzwvrGGt/JUDAhrMhB9t/UVjsgMPLBNWf+3E5SARv7G7peL8E0qOXj
-         W49kgGsRSmEeIFcofxzUc4VhBR/tZH/Xf9N8Ky+DCH+yBgh8FdBy/N3fQNP5w+Jzyjqb
-         iczQTop5oIrYOEBUVkk/Ylg4nveyThTOnQcepvPhPEiP/bdRhnF0ed77R9ggczrNT8fs
-         t04CyFM5xMd4nIjSDNheP2gxnl1Rjgo3NAN4uPSGrK8dqt/vKNKNGaAxO8z02lFOMJ4F
-         5sVFXZzSbwdM7piar6TrnyIYDfR9X5yV67vHg3BFyywYdOX3QbfepQSC3Yl2HUm9N9SS
-         yDsg==
-X-Forwarded-Encrypted: i=1; AJvYcCURKXun8x18lqRRjz/CLjhv3HJm4RmUiWmvlv3+hl785E41KSxepjgcmfr6H8Jc86WRA6aHrKajSla6+8Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIDkDaUaUEbz5R6SNj1DWUdzqsJB0hYYsK7dzqMHh+XYNw7gA7
-	Elde3++/E0PIVE/kcOGDnXNkojBq/pDoiaR9cKAIAivmNsy1qoIpje10Rs86Xx8cl9tjWPKQN/w
-	TJI0RyghtqpvMNrU4e1mMVq9BFvzAuJjSTaApGrFSqK6rsI/6EGgEv07KHg+tV1oiRSGOc9uO5l
-	W4tDVmP79EMVq+0WZagge4Q8rXUFCgGjLOKsWKebz9jrEo
-X-Gm-Gg: ASbGncviarAPdmotaImDRZZSL6JiAM0NaIiqhaPp/PdwwDceuOhGkPmhNR9b+H3fSPg
-	N+x6NrX07E62VW0bzEtW8O9bxcMcnb1YmLZwC0+Zvk3AYDE34g34kreXfImLk5lx8SwtG8g==
-X-Received: by 2002:a05:6000:40ce:b0:39a:ca05:54a9 with SMTP id ffacd0b85a97d-39efba5ee50mr2302150f8f.29.1744996013542;
-        Fri, 18 Apr 2025 10:06:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGz7x52atyEeVRvyvfCStT64ya5TFPH2PFvDYUxHSgzy1LeCF8OUTI2yLx0txV76x4MJr2Vvi2ZGwH65zGFr4E=
-X-Received: by 2002:a05:6000:40ce:b0:39a:ca05:54a9 with SMTP id
- ffacd0b85a97d-39efba5ee50mr2302126f8f.29.1744996013217; Fri, 18 Apr 2025
- 10:06:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="D/5dyZLX"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 69D3610273DBF;
+	Fri, 18 Apr 2025 19:07:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1744996036; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=CY3ybeEvZswn7mTzJEo870uU1YtFroIwRrSUBzp5+v0=;
+	b=D/5dyZLXHPrXzHpWT4ABFOWkh6sluYURfX7f2u8rkqFUrONd5tplGzJ+DMlLx+3LbBctVT
+	BHu5lKRc+CEFJ345J9lnXrregcz5YxGZlqh1p2FyVhyCKSDPV3HsWUlqzn3xNf7YFAhbxo
+	YEhu8w2fVyeazJmWW+F/GK+AKA/BhPGNYj/A9rIE/K8LcCAHS1qxD4zDmdTDs3uzU6iOFW
+	8/YPNQD93G1kSUzwmSkl0UWJX7mnDS5PQDGot/iqnjYO1dDmRC31Rg/Jz2P0YM+XUTySgZ
+	FJyhU0C8ql8OHN4VsI3KE4oT4bZlZySOCUbaom+Ult6gxc4N8z4P90ozoUF2Vg==
+Date: Fri, 18 Apr 2025 19:07:10 +0200
+From: Pavel Machek <pavel@denx.de>
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Leonid Arapov <arapovl839@gmail.com>, Helge Deller <deller@gmx.de>,
+	krzysztof.kozlowski@linaro.org, u.kleine-koenig@baylibre.com,
+	linux@treblig.org, linux-omap@vger.kernel.org,
+	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH AUTOSEL 5.10 8/8] fbdev: omapfb: Add 'plane' value check
+Message-ID: <aAKGvh0fdMZPT9Jd@duo.ucw.cz>
+References: <20250403192031.2682315-1-sashal@kernel.org>
+ <20250403192031.2682315-8-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418130644.227320-1-pbonzini@redhat.com> <CAHk-=wg8VBjy=yrDUmFnvBKdo6eKNab6C=+FNjNZhX=z25QBpw@mail.gmail.com>
-In-Reply-To: <CAHk-=wg8VBjy=yrDUmFnvBKdo6eKNab6C=+FNjNZhX=z25QBpw@mail.gmail.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Fri, 18 Apr 2025 19:06:41 +0200
-X-Gm-Features: ATxdqUE9eY3BP55w8JgLHlUqGeE4CFznuzmzKqca_g7BChXFjnTJn76AcUaASFY
-Message-ID: <CABgObfYzbWspmaEsvSZYkBr1UQ7C5rD0NQ+=UsnSU3OG5tkcDQ@mail.gmail.com>
-Subject: Re: [GIT PULL] KVM changes for Linux 6.15-rc3
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Sean Christopherson <seanjc@google.com>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ZBo/N4CwvGP6QfRI"
+Content-Disposition: inline
+In-Reply-To: <20250403192031.2682315-8-sashal@kernel.org>
+X-Last-TLS-Session-Version: TLSv1.3
+
+
+--ZBo/N4CwvGP6QfRI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 18, 2025 at 6:13=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Fri, 18 Apr 2025 at 06:06, Paolo Bonzini <pbonzini@redhat.com> wrote:
-> >   https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
->
-> I pulled this, but then I unpulled it, because this doesn't work for
-> me AT ALL. I get
->
->    ERROR: modpost: "kvm_arch_has_irq_bypass" [arch/x86/kvm/kvm-amd.ko]
-> undefined!
->
-> when building it. I assume it's due to the change in commit
-> 73e0c567c24a ("KVM: SVM: Don't update IRTEs if APICv/AVIC is
-> disabled") but didn't check any closer.
+Hi!
 
-Yep.
+> Function dispc_ovl_setup is not intended to work with the value OMAP_DSS_=
+WB
+> of the enum parameter plane.
+>=20
+> The value of this parameter is initialized in dss_init_overlays and in the
+> current state of the code it cannot take this value so it's not a real
+> problem.
+>=20
+> For the purposes of defensive coding it wouldn't be superfluous to check
+> the parameter value, because some functions down the call stack process
+> this value correctly and some not.
+>=20
+> For example, in dispc_ovl_setup_global_alpha it may lead to buffer
+> overflow.
+>=20
+> Add check for this value.
+>=20
+> Found by Linux Verification Center (linuxtesting.org) with SVACE static
+> analysis tool.
 
-> I think it's literally just because that symbol isn't exported, but I
-> also suspect that the *right* fix is to make that function be an
-> inline function that doesn't *need* to be exported.
+As changelog explains, this is robustness, not really a bug fix. We
+should not need it in -stable. (Or maybe rules file should be updated,
+because noone seems to be following this rule).
 
-Yes, that's possible since enable_apicv is already exported. Sorry for
-the screwup.
+Best regards,
+								Pavel
+							=09
+> +++ b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
+> @@ -2751,9 +2751,13 @@ int dispc_ovl_setup(enum omap_plane plane, const s=
+truct omap_overlay_info *oi,
+>  		bool mem_to_mem)
+>  {
+>  	int r;
+> -	enum omap_overlay_caps caps =3D dss_feat_get_overlay_caps(plane);
+> +	enum omap_overlay_caps caps;
+>  	enum omap_channel channel;
+> =20
+> +	if (plane =3D=3D OMAP_DSS_WB)
+> +		return -EINVAL;
+> +
+> +	caps =3D dss_feat_get_overlay_caps(plane);
+>  	channel =3D dispc_ovl_get_channel_out(plane);
+> =20
+>  	DSSDBG("dispc_ovl_setup %d, pa %pad, pa_uv %pad, sw %d, %d,%d, %dx%d ->"
 
-Paolo
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 
+--ZBo/N4CwvGP6QfRI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaAKGvgAKCRAw5/Bqldv6
+8k5AAKCQX8B0UtiYfqSSUIgj9Cciyl+X/ACgtg4ARUVHHH5jlNdHfPqoc3tE+/Y=
+=SFK+
+-----END PGP SIGNATURE-----
+
+--ZBo/N4CwvGP6QfRI--
