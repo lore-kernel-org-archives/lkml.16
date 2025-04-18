@@ -1,112 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935E11D618E;
-	Fri, 18 Apr 2025 14:55:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370901DE2A4
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 14:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744988139; cv=none; b=tS9H/ysWhQA97WdacEO6FLlSjqEgZvvAQClZ52CpGf0fNt1XmKfY9EWDfa8uajv1L9n9QtKXf8Hr9KBtFxYN2uwdK6qPiwq3qijJ5q+1jdWJBn2WVNlpG0/V/1se0FvsDQJWAuxlLoqyjHWfwt9x8/m2S2TBPKH0NilWNP+6/ds=
+	t=1744988150; cv=none; b=PNEgSRhPee2zbdOXBA6AvGEUKSmvmEGe6jSVCij7+Wof55e6iLNum2XtrutLTe27M4oiexgV/CW9+v9fZPPVgnp7SwRihcoFHthyHr53ZZkULtP0EIKD7jT0R6Bb2UQI1vWefBMcS6oufPFHtU7WbX6sI/JtlwAXhL2eCGs5TnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744988139; c=relaxed/simple;
-	bh=xxlkDC+ptsSipdaVzvxKfGZrXkHdinbpI+m0wsLD/9E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sd0TPbOGcyZK9e6SeICdDXAwCHiIpNU/HGn9iTQKjTk6vpf33ByNB1ZRCAJzEormMkRgylQ24BOoDUWrmdHCi5bNIPXVSC1XWNBLsPtL2DUOob9b/qszCSZEoX1RFs4i43naUOpnkL/wGjOj4P5vc6NXu7Vta6J9Cs3qA6Hhgt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iq3bCdwZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744988150; c=relaxed/simple;
+	bh=v5jeM6IdRu5kwslLRf/1pwaSpnFjQBP54ymXQRkSwpw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=EiDyhVnan7S5IDd+50RprOPb0ja1eFiM9pYGe4Ty0LkaDKQA0wBntVI2kow1NKc11/2Ob9q8d73RROtk54jJiLY7gdktvJ5SF41rmNpA5+EuYq3I5eS3SXVZefC0SaCkpAj4cbQNbup0HJkHRXtjtpzdetl0JemOSAidaX/k0yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ocG5Sf41; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iq3bCdwZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 365D2C4CEE2;
-	Fri, 18 Apr 2025 14:55:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744988139;
-	bh=xxlkDC+ptsSipdaVzvxKfGZrXkHdinbpI+m0wsLD/9E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Iq3bCdwZz4DOlIjIszgQ8EVTtbNWOo5QHdeE4MppyoHFRYIXug+s6DZYQCbpHl7Xz
-	 feszW9ykNafiBxRYRF/pLBwq24IzeUpwmhX3mpYrOorJaiEAJElQsonF29adeRMK7K
-	 ZkgonCBfr/VPoxN8h4hYwwZyptv545Vris7VYhO8y1Eb+4bK9zokjPWhA623y2880b
-	 dMbiQ6WBGgFRRcJEc58TYsmioxDQ/UzY/YiyDG+oWv2NoQMt6y3zN8Moe7K0tkbVSP
-	 qkYo37OR0fyH7S67mHM052BKI20ZoFRcLPcm8DYZX/eNXrhygUYOg2EvY9882WxRTN
-	 7K7XcC0ThDZYQ==
-Date: Fri, 18 Apr 2025 15:55:30 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Andy Shevchenko
- <andy@kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Matthias
- Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Cosmin
- Tanislav <cosmin.tanislav@analog.com>, Tomasz Duszynski
- <tduszyns@gmail.com>, Jean-Baptiste Maneyrol
- <jean-baptiste.maneyrol@tdk.com>, Andreas Klinger <ak@it-klinger.de>, Petre
- Rodan <petre.rodan@subdimension.ro>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 6/8] iio: imu: adis16550: align buffers for timestamp
-Message-ID: <20250418155530.088e398d@jic23-huawei>
-In-Reply-To: <651b1f91-fd5e-4d59-b78b-fdd7f89247e4@baylibre.com>
-References: <20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
-	<20250417-iio-more-timestamp-alignment-v1-6-eafac1e22318@baylibre.com>
-	<aAEzeY_p6a8Pr-zn@smile.fi.intel.com>
-	<f4db1a95-106f-4fa4-9318-3ee172e29cdb@baylibre.com>
-	<20250417184429.00002403@huawei.com>
-	<651b1f91-fd5e-4d59-b78b-fdd7f89247e4@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ocG5Sf41"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-73c09e99069so2258219b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 07:55:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744988148; x=1745592948; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ly7clhQPsm7lTpvVytdc3NPdGM80PwA051TLRXYT/cY=;
+        b=ocG5Sf41eGPgS3AK8gOmcdyRI7rLiJ8lmppJOHau1T99Xoxo9n2K/6bWV/sw0GALI4
+         JSPxKBOuhNtRy0Pp2KoViM6hLLb8tuEcByFd0qIZRSvJQUi1y/kYW5MY3ohtngNmeeg7
+         OsndDyhDCM/DygQuPsxMWIpjWXpgJ8h7CqSz6eLNEo7f8WCxdrv6Qt7AoZVFr1qipTjf
+         2sFd/ZdYoDlrX0rb56g9FW6uKv73yn1tsGf3qPHM38uqh0e8N0R6aoMsoQCgWlXieLa/
+         QIIJAtCPjpaUPdkiIx0lg+1Z28ngdZ/Qdffz/7y3hJ15fNM7ugLLbviLLJHtd80l3Wyt
+         c8yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744988148; x=1745592948;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ly7clhQPsm7lTpvVytdc3NPdGM80PwA051TLRXYT/cY=;
+        b=WBuqH2SpAjF4YYmAHYCikcmqmiQjvpKDxJXyhV6XIlvt5ZUZFjBwKihiMXeFo5K7e+
+         cs5OWx41m3KV1hc9ZZWsS4kHludE9LocT2aPqWkqw2ut4lfiXyomqqcFadfJMvcKcbn2
+         QaDUboYAItM0Om7tXLtfSOup7+EwWEpligdyml7WxyL4FV76dS6gO6bYdPtr9903pEbF
+         NbN1lbWJdo/tu3jNqKeG/A3T2CHhgZ0B+q98dJb6oSE6ZZKtzLmWINF5vRi0K2IzZLiW
+         dN9t5B4l8wD/KGKT4OPOAm/Z0r4yfYqops/KVD14MiIMOlFa13MhesDQluFzrmVWUBx/
+         WTYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVypzUamID9bvPVGe7fsX2rn8ozDnm+p/aYjpjpXdmIOyUkZGjg77+sgaugiG4KFsDg5ilEmmr9jXf63f8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzPYZ8YXNu/cQZwEUJZO9zWcS/CJY0iXRC+fbqD4BgZ8mCQQL6
+	qzNhDLsQBXBEP5/lgTPprnsGktkHs+FJoGvKmqpYy/FbaTq8N7dUj6e2favPdQM7rSovfrOh7i/
+	L0A==
+X-Google-Smtp-Source: AGHT+IEVtSnImt1uf60rTKZKdHb8P2zBptukIMnlrusgZprIRtXC6rcwSPuw7Yi56KLFkRT360oLGEeGGXE=
+X-Received: from pfbhm15.prod.google.com ([2002:a05:6a00:670f:b0:730:8e17:ed13])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1811:b0:736:692e:129
+ with SMTP id d2e1a72fcca58-73dc15d0c0fmr4386968b3a.24.1744988148457; Fri, 18
+ Apr 2025 07:55:48 -0700 (PDT)
+Date: Fri, 18 Apr 2025 07:55:46 -0700
+In-Reply-To: <20250415115213.291449-3-elena.reshetova@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250415115213.291449-1-elena.reshetova@intel.com> <20250415115213.291449-3-elena.reshetova@intel.com>
+Message-ID: <aAJn8tgubjT5t7DB@google.com>
+Subject: Re: [PATCH v3 2/2] x86/sgx: Implement EUPDATESVN and
+ opportunistically call it during first EPC page alloc
+From: Sean Christopherson <seanjc@google.com>
+To: Elena Reshetova <elena.reshetova@intel.com>
+Cc: dave.hansen@intel.com, jarkko@kernel.org, linux-sgx@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, asit.k.mallick@intel.com, 
+	vincent.r.scarlata@intel.com, chongc@google.com, erdemaktas@google.com, 
+	vannapurve@google.com, dionnaglaze@google.com, bondarn@google.com, 
+	scott.raynor@intel.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, 17 Apr 2025 15:48:44 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+On Tue, Apr 15, 2025, Elena Reshetova wrote:
+> +/* This lock is held to prevent new EPC pages from being created
+> + * during the execution of ENCLS[EUPDATESVN].
+> + */
+> +static DEFINE_SPINLOCK(sgx_epc_eupdatesvn_lock);
+> +
+>  static atomic_long_t sgx_nr_used_pages = ATOMIC_LONG_INIT(0);
+>  static unsigned long sgx_nr_total_pages;
+>  
+> @@ -444,6 +449,7 @@ static struct sgx_epc_page *__sgx_alloc_epc_page_from_node(int nid)
+>  {
+>  	struct sgx_numa_node *node = &sgx_numa_nodes[nid];
+>  	struct sgx_epc_page *page = NULL;
+> +	bool ret;
+>  
+>  	spin_lock(&node->lock);
+>  
+> @@ -452,12 +458,33 @@ static struct sgx_epc_page *__sgx_alloc_epc_page_from_node(int nid)
+>  		return NULL;
+>  	}
+>  
+> +	if (!atomic_long_inc_not_zero(&sgx_nr_used_pages)) {
 
-> On 4/17/25 12:44 PM, Jonathan Cameron wrote:
-> > On Thu, 17 Apr 2025 12:07:37 -0500
-> > David Lechner <dlechner@baylibre.com> wrote:
-> >   
-> >> On 4/17/25 11:59 AM, Andy Shevchenko wrote:  
-> >>> On Thu, Apr 17, 2025 at 11:52:38AM -0500, David Lechner wrote:    
-> >>>> Align the buffers used with iio_push_to_buffers_with_timestamp() to
-> >>>> ensure the s64 timestamp is aligned to 8 bytes.
-> >>>>
-> >>>>  drivers/iio/accel/bmc150-accel.h | 2 +-
-> >>>>  drivers/iio/imu/adis16550.c      | 2 +-    
-> >>>
-> >>> Looks like a stray squash of the two independent commits.    
-> >>
-> >> Oops, sure enough.
-> >>  
-> >>>
-> >>> ...
-> >>>     
-> >>>>  	struct bmc150_accel_trigger triggers[BMC150_ACCEL_TRIGGERS];
-> >>>>  	struct mutex mutex;
-> >>>>  	u8 fifo_mode, watermark;
-> >>>> -	s16 buffer[8];
-> >>>> +	s16 buffer[8] __aligned(8);    
-> >>>
-> >>> As for the code, would it be possible to convert to actually use a sturcture
-> >>> rather than an array?    
-> >>
-> >> I do personally prefer the struct pattern, but there are very many other drivers
-> >> using this buffer pattern that I was not tempted to try to start converting them.  
-> > 
-> > For drivers like this one where there is no room for the timestamp
-> > to sit earlier for minimal channels I think it is worth that conversion
-> > if we are touching them anyway. 
-> > 
-> > Jonathan
-> >   
-> There is actually a lot more wrong in this driver, so will save that for a
-> separate series.
-> 
-ok.  That is probably fair enough.
-I'll not pick this up though given the smashing of 2 patches.
+FWIW, the entire automatic scheme has terrible behavior when KVM is running SGX
+capable guests.  KVM will allocate EPC when the virtual EPC is first touched by
+the guest, and won't free the EPC pages until the VM is terminated.  And IIRC,
+userspace (QEMU) typically preallocates the virtual EPC to ensure the VM doesn't
+need to be killed later on due to lack of EPC.
 
-So this one will need a v2.
+I.e. running an SGX capable VM, even if there are no active enclaves in said VM,
+will prevent SVN updates.
 
-Jonathan
+Unfortunately, I can't think of a sane way around that, because while it would
+be easy enough to force interception of ECREATE, there's no definitive ENCLS leaf
+that KVM can intercept to detect when an enclave is destroyed (interception
+EREMOVE would have terrible performance implications).
 
+That said, handling this deep in the bowels of EPC page allocation seems
+unnecessary.  The only way for there to be no active EPC pages is if there are
+no enclaves.  As above, virtual EPC usage is already all but guaranteed to hit
+false positives, so I don't think there's anything gained by trying to update
+the SVN based on EPC allocations.
 
+So rather than react to EPC allocations, why not hook sgx_open() and sgx_vepc_open()?
+Then you're hooking a relative slow path (I assume EUPDATESVN is not fast), error
+codes can be returned to userspace (if you really want the kernel to freak out if
+EUPDATESVN unexpected fails), and you don't _have_ to use a spinlock, e.g. if
+EUPDATESVN takes a long time, using a mutex might be desirable.
+
+> +bool sgx_updatesvn(void)
+> +{
+> +	int retry = 10;
+> +	int ret;
+> +
+> +	lockdep_assert_held(&sgx_epc_eupdatesvn_lock);
+> +
+> +	if (!(cpuid_eax(SGX_CPUID) & SGX_CPUID_EUPDATESVN))
+> +		return true;
+
+Checking CPUID features inside the spinlock is asinine.  They can't change, barring
+a misbehaving hypervisor.  This should be a "cache once during boot" sorta thing.
+
+> +
+> +	/*
+> +	 * Do not execute ENCLS[EUPDATESVN] if running in a VM since
+> +	 * microcode updates are only meaningful to be applied on the host.
+
+I don't think the kernel should check HYPERVISOR.  The SDM doesn't actually
+say anything about EUPDATESVN, but unless it's explicitly special cased, I doubt
+XuCode cares whether ENCLS was executed in Root vs. Non-Root.
+
+It's the hypervisor's responsibility to enumerate SGX_CPUID_EUPDATESVN or not.
+E.g. if the kernel is running in a "passthrough" type setup, it would be perfectly
+fine to do EUPDATESVN from a guest kernel.  EUPDATESVN could even be proxied,
+e.g. by intercepting ECREATE to track EPC usage
