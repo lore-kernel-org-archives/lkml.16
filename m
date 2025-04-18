@@ -1,138 +1,179 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2046.outbound.protection.outlook.com [40.107.105.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D4A252900;
-	Fri, 18 Apr 2025 07:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744960069; cv=none; b=oYAYd50kdWaS79famc1i0ZE0aLCG9DQr4ZyigZV4Sy9jhch2FDKKWg+pJg3MkjedBfYUTKgNDA+PgE+MUXq+4GQQpFiJFujbdbWBE8o+jDRFAnBPzW5lUMoP+FbNMkvuWXPvxDCV1LqkT+K++H1OuRs1eR+WAqkUYi8BoqyG2HQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744960069; c=relaxed/simple;
-	bh=cto9DbEuEGyqEZmtGwIiTP7CgzV3QxgjQjozuyiK460=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=kwkkoWVqPU5ZIRxlqqn2ALTkqfehbHxuL1l/P2Aay2/ePKrHTGD1KHzdp81yEYP0MIRUcJIbXRyXCBPY6n3u5vdzQ6vK0/8O9Bhkwf1+0ZpMMUEYKw7IgeJbw6Lp7YQY2LPa6C3ZlWU1yInUia15tBb6PCzN9QGJJn6GcsFZ5QM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dC2qsBGk; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A40A211460;
+	Fri, 18 Apr 2025 07:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744960160; cv=fail; b=XEGJv+qCkqP9ife/ZiksiQXaUZOwRVrzzVFASaD2xg60M8aTm1QxLf5Fa1oRBgMmpBmaQMIENrQbZaqwZesfMpSS+7iCWGkeKnyE1Ve5MMBvwOakgyYXV7ercdfpaZyiHh8JXJxQhDqDM+ogltOM6DntgaN7LGr8rpQTDb/wJAM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744960160; c=relaxed/simple;
+	bh=k2H5slb8RqIZLoOxU2qzDJWy6eGYlRpQqOK3N3vxops=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=lN4lhQP9xfhpdQ04dkwIvDnE5YwDsciprmzjXsj+q5qlca/GyvxArRfzPav3wuFu1Vg5EXP8DHVbYSQYnICl35yqS8Rn/xHZLxsJsLkFLHpoTt/zd/UhatgThMK4PVlCATQwby+E8l8VUeVzT5KiJVu4QZP1P65P4ozV1Ul+qrw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=tI+tCBCA; arc=fail smtp.client-ip=40.107.105.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dC2qsBGk"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39ee682e0ddso923152f8f.1;
-        Fri, 18 Apr 2025 00:07:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744960066; x=1745564866; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bPJExcUU4HBEusxIHavNs8We88ebopcHgFYpLqHEIIM=;
-        b=dC2qsBGkgtgJEUDAzQIaSANSXXBYtYTAzQAbBK55UY9aLo5Dl/6iV1qx2EJMcXTo6b
-         d9xZG7yQy0w2Pm+au6aPeoUgjuEF+BUukFYWwE5PTffW8jW67I7tHaEGaaMprezfIUaE
-         dz+YomY2HajBvlaEgxlhSlNaGaMgQUByPpHSAdF7c+IdX4ONPvooV8SE4KcJkZJBVZsm
-         UxTSP6Ag114GUfkeCRY67APA30ycXUOu1qcBvsHLT7qjiC1A44L/CCVHQ8KMWY4AQFLW
-         cbdf2vAGzlvSuCfKmwtXUHpS3BkfiI7BC+PZ1a2tHrNbcKoC2SCi7RUwT8/rK58jAEk3
-         MWcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744960066; x=1745564866;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bPJExcUU4HBEusxIHavNs8We88ebopcHgFYpLqHEIIM=;
-        b=xTg1afMTWn2jKoJm8A36wto2yJD4RrjRD0qrqRqZMAVSEe+MnyCZUJ/Hu+oZ4kG1rd
-         eEOz7hwN+MtKNbbeuh5JyQgLzSYLjLmt6XgAmqaBY71uPvu/VZeo1rIJDBt45k1Tx6yR
-         WGj8zO2ToKTxtAK1ArSwb+AIkXP02nGiVneF0oLGTuyw9Qop/oxV8dt9Ouhf6+ceu3HS
-         jCaqkWhb9F2dCnvIQ9DvmBOsIvtt0M4FErzJnbEekHyz1RqAQnLXEYrnQfJr6zCUy/nj
-         bANGD15LTxeyCinJjPJdJUQoeDRdpvlxJy9Rs3jDcCk3K0ZGdcVVzQTp0Rx/MpKHB/Gx
-         HbCg==
-X-Forwarded-Encrypted: i=1; AJvYcCXY0Q+ulpU8EoFVLXIvYgKHV+l2QKT44JkpDSafFuMnO5P/mP6LDV6moHnkStPIYC/m+RmFRrzbKmIdn9V5ovaUX5haAQ==@vger.kernel.org, AJvYcCXymWT8j8f7fIgglW4igH9+uThqvBYwb0CBV9xYb8Ihj1c9PEu6RnKLY0IY23HeIJ8zjv7oSqO/IrG1mNU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxA7S6qJxKKpO97xGlYhRpouEjjwZcHM041w5FJCMLOGp7l/suv
-	eJZ9/6Nc4NNQ1K8vjHVj9j6gyNag1NqUDXVw9DheFFMyKNepOgcy
-X-Gm-Gg: ASbGncv6gUSUGgU6jc4YGRgcOTVuIehmmnA1Us3OBUF8Qv5Z05rl5fYco4ka3+2MrJ7
-	qnN9NpZbxbOQWGDBHjTqTX7oQkFcusYLMnnVJ+Dh036OEn1SfE9H213sFQ+ml/io0lQMGqpcBdA
-	Oc+Z3ew7OAVsoVrNEdMhJZwdNlhnPH7+AUp1LIsuqN2CXQc+0+rYc7i3XF48rZxENigSYRZbTmv
-	3JDJt/CTTjCQbH0nNfKKSGBWH+KH2xrGjQ8xHADgwcBoaDVBDQ7y+n1eiVa9oSvb9I4UCmO1cDc
-	i2rINUQnnjWTYDmZCo6rx0GPAVsD3GWP55JCCvSbMKjpoAlYFRWiTbKqA5V0Yk0=
-X-Google-Smtp-Source: AGHT+IGDq4sZuN8N7f1md7Q3cfJ2tfosrjrd2INgNCTnVnZEBHzWNRKx1iKPfpn3pc6GDQ8nOIDC1g==
-X-Received: by 2002:a5d:47cb:0:b0:39a:d336:16 with SMTP id ffacd0b85a97d-39efba6d8fbmr1046133f8f.34.1744960066107;
-        Fri, 18 Apr 2025 00:07:46 -0700 (PDT)
-Received: from pop-os.fri1.uni-lj.si ([2001:1470:fffd:32ff:cf9b:b36d:7c92:ffea])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5aa100sm11131855e9.7.2025.04.18.00.07.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 00:07:45 -0700 (PDT)
-From: =?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
-To: ikepanhc@gmail.com
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="tI+tCBCA"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CQWNo7waJFTgAVFH4EQfEEfNJUj8+wQRsXHNZV3vKZvMpkja8bLCWKiXQHBaxUJsC+tCcw5TcaTyPsYTnzsG0xjfvbNAAy/SvAO/drjYUzHt3dnBoVKILcFJCvF7VyCnlFw/TsyPF5rsBODKSrUsnNqy2WOrWX7ojCViZj3lBLUh/7BcZOBBmLCw/8ZrUcxsFGC/+AMqPhK0tOmkQKuZjujNkXJSyRT89c1PYlmK7VqwliaB2PG9AfilcyOyfJRHUfomVZebaM+sz5jDGSoDNRqIYz74kw3JHZy9B4J8OkX4xKmz1a9UtBtcMjA8vJr+RVApgS/2fw0n6mU2UsczQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YRuDdJbBSA7XsrTX3P/XP68CgJnl1AGmmrbB9ZwT+Ak=;
+ b=Xd9DZnzZI1cLv3XWwJe86UD3EOpBL15/FQvueSiaKnQqZMcs2LcfTOoTOtaHA0pmWbSNBJE5Zp7X3hwpzeQTYlDwFz7gmVd6OWplOJH7DhbPr/Qe1/+fzS1a5vtwICeYNPcGAOIKLK9AW7tH5tRGEzytcdLq3uzrogrmJT1boxP7DrkAu/7aztd8XA0IC86eg6QVJEprqP/aB8NwqF6xBTi+2dYVRbURUgCh+mxHwkydk/MQ0rVslezUi4ccR6YJmjzlAILVZ+PfsISc+HDAvXqUVa/zgVTXZ7wFIYxZ9xelF2gJyj2aHi8qZZhHqTtv2GhMonjconOSdfdKsCpXaQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YRuDdJbBSA7XsrTX3P/XP68CgJnl1AGmmrbB9ZwT+Ak=;
+ b=tI+tCBCAe69KKsQ/B14UTOhN3D2/cOflWj5RlzwI+nowQ5z99rBwcpw0+PnJm1/DTWQcYgt2eR+qBX+kZAN8JRQ3Rnt3TZDzYZoi01DkgeKcJVy/lEto0aTTsE4D7Oi0DMuAnPiF+OAst1L8IaxMqILCxkmAWxLTPugGvVVwymYN/xfBYhdYKxIcLxNpfwjqcC7qSMN5injRiL/h6vgXoeG+OCk92vmI6Pp/4+LHqpZveYeovuojXI8Kb1s8krpBNR8N+87IHVj6nvZs5nwYlmIMtB3j4wUAdDbx76YW1pP5apCDm0p3ayIDCTeqruRpojDNatV26UiKkw86e0eHqA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8254.eurprd04.prod.outlook.com (2603:10a6:102:1cd::24)
+ by PA2PR04MB10160.eurprd04.prod.outlook.com (2603:10a6:102:407::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Fri, 18 Apr
+ 2025 07:09:15 +0000
+Received: from PAXPR04MB8254.eurprd04.prod.outlook.com
+ ([fe80::2755:55ac:5d6f:4f87]) by PAXPR04MB8254.eurprd04.prod.outlook.com
+ ([fe80::2755:55ac:5d6f:4f87%4]) with mapi id 15.20.8655.022; Fri, 18 Apr 2025
+ 07:09:15 +0000
+From: ming.qian@oss.nxp.com
+To: mchehab@kernel.org,
+	hverkuil-cisco@xs4all.nl,
+	mirela.rabulea@oss.nxp.com
+Cc: shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	xiahong.bao@nxp.com,
+	eagle.zhou@nxp.com,
+	linux-imx@nxp.com,
+	imx@lists.linux.dev,
+	linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	=?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
-Subject: [PATCHv6] platform/x86: ideapad-laptop: added support for some new buttons
-Date: Fri, 18 Apr 2025 09:07:38 +0200
-Message-Id: <20250418070738.7171-1-gasper.nemgar@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v5 0/5] media: imx-jpeg: Fix some motion-jpeg decoding
+Date: Fri, 18 Apr 2025 15:08:16 +0800
+Message-ID: <20250418070826.141-1-ming.qian@oss.nxp.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR01CA0174.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:28::30) To PAXPR04MB8254.eurprd04.prod.outlook.com
+ (2603:10a6:102:1cd::24)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8254:EE_|PA2PR04MB10160:EE_
+X-MS-Office365-Filtering-Correlation-Id: 29b4063e-5a0b-4915-d682-08dd7e47ed50
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|52116014|7416014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?qMIJdb6jmzSjaYzn+o38tVi+mFp5RrHeCLvmLeU3M0IRIaTujg6TNdAPV114?=
+ =?us-ascii?Q?lQOzrLUamqvZrY+EL+hkEfVB2tGEkhr2956ZAKdYM2NyAzEOyKFvbAjS3Mz7?=
+ =?us-ascii?Q?F5fomYiLKB3g9Svt8Mea2D7OQcA2+Fw3idCnXQdD4f9mHyaQV5oe3IUiS+sq?=
+ =?us-ascii?Q?c32mqUISad6lfkohv/B6D+koei4qYpdEqIP6W7rjvc0xtip2DvcWwy61ablZ?=
+ =?us-ascii?Q?iPPzbQZ2NPKXSM+6XWAUW95WET+v8udd4lD9pcTV4k5ksz0HevtWihsdkGa8?=
+ =?us-ascii?Q?bRTyPbQj3N/M9J2IDLZWRJO+0beQvZwAwLAEkpDxBvQF1gKPc8KMs2anjiXe?=
+ =?us-ascii?Q?37DGLXC9hvL+906F95V04gE71m8lBIdTJlI4LgWzbzWkNarZApI8/2Lsd6KU?=
+ =?us-ascii?Q?alB0juHY2i2X3+tFYZzeIF+MWSjgzxyaeDupMxIYYmjxFPdLFHTU0AQPyEiK?=
+ =?us-ascii?Q?0dJc3YZfigWnloOHY5iLWQf2KNFRvE2W886nvjb8y5jx5T3E+cetaKYZHM+a?=
+ =?us-ascii?Q?cqZ33Ay3wI3cQKbL/sVISXcgKjmNcG5BFIcQE1wc2zeGXhoOJ6keNYMuQQWb?=
+ =?us-ascii?Q?SX6qlP5pgz/tulTxVEDF6ZSJHja5nH+N8ZPKsvmt6ClhOBJTfU2h5qW5SyBt?=
+ =?us-ascii?Q?XIAo7AsVUOHhJr5mLGgjHHp/E8F7797nlz4sYdtIufCgCN0YK2WIOxQ06pFt?=
+ =?us-ascii?Q?nc1rzkvYFRzDpqAB7BLAI7anWDzcQElX82wFIuW+eOSpGNH3ifF79uvzDmfq?=
+ =?us-ascii?Q?zYC1MY9riEshRuogRuPtKA0dY9CdzMFYL7oRZIIw2jzrTzar1wz5ZzlXBBSM?=
+ =?us-ascii?Q?FEq6wBXhr7A4yPHxba6qvSqBx/nncsXupTo1Gyd/sbcqZ80kQg7gc8DnqUN/?=
+ =?us-ascii?Q?AaEhocAV1uJdX73jB7Cerrebt2inSJnzHw/YS6ix+ckhNyz9aaaGFvBWBiXz?=
+ =?us-ascii?Q?J/2VMF33w3MXiTgKdM/7LMbMx8T+KoLxMszozMoajku8fMOMcl5XsbZFHe2E?=
+ =?us-ascii?Q?HJzG5sKIdgzHauYfteuaK4KqN+DvNa6viO14nCTx7NnwObHpc8uHov8vJ9vY?=
+ =?us-ascii?Q?lqPxKvsg3muK4ImPT5INxn8ka8mZ+5Vvdv7ydlrPJ4yWQ/LgkN7ph2/nqZV1?=
+ =?us-ascii?Q?dnViEmcLz4Zm1zEXgmTBBy1fpGYrTzY5lxI83cRXg9iSsmXwCKghIIfw8wN3?=
+ =?us-ascii?Q?7Ou4K4QKlXPFDxvHisJQMQoxXQnUnedH7GcrVBZZ14Q6h2Qmi8yczNPU4PHZ?=
+ =?us-ascii?Q?CnXxzDWh8Ffg5HV7kgK6Qk0/U3hcYlN2B89rFk+/cr5A/VQGzOui2REUgQ/8?=
+ =?us-ascii?Q?4Ao8WvK1QbckLY+RZFUItWtPZzs+ALTJWy8zXG1yDSecP87I6Z+7zi+Mjyx+?=
+ =?us-ascii?Q?zqVmRgLiWFracWArII6V5Fg5IUJsQuFH2M6h94mpa5sVHVcqWmQMZLMvuCq/?=
+ =?us-ascii?Q?eWByHVYPzA75uqw6LYctcQQQ/yLnG24pxZDX3UJIVQVLiTI9JbgThVWaL+OD?=
+ =?us-ascii?Q?nC1EqOMlVXldkto=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8254.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(52116014)(7416014)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?dyUp66SKCVT15PKWvUm3hFRxq8zoGU7ESS/0YN+8nynOGADhEpEXLoNJ7k0e?=
+ =?us-ascii?Q?14SK2miqFuekbMBuOF4qxUGAgJWJVWq4T2CaSTR7JageNr8rbrkSfwiFOt1y?=
+ =?us-ascii?Q?HMAwVKyxB3XqDXso6mFaho2ITJ0cBHOBzB3y/GuKgx4K1kNctBstadzB9uFe?=
+ =?us-ascii?Q?33n+trnXBQ/LSusYy02dPtSCev96Pl4+Wl/pDXR78eWnP5IRmoSAArBOYi2B?=
+ =?us-ascii?Q?ZXxtL1QQY/s4TVCy/oSndF5/Bfh7odSK1YuAvoLJPiYXV2SXHAUm8X9ISpOZ?=
+ =?us-ascii?Q?FJ7yUZyPI+vZYXDNOBfDy6h19vpbF3tFFj8dV54LNFXNpjZfQstWe1z0wOme?=
+ =?us-ascii?Q?dmYSo7mGNsfS8HqOi/Le40s4wbSoKBrt7XAHAaIaPJSlT5CKF4x0wlbXEaGL?=
+ =?us-ascii?Q?yPp4GIsNJVUcz76+8roa+eMMhhXzqc0Wgo9eSAuakmid4K1vFqpA06f61eJb?=
+ =?us-ascii?Q?IlyWScSt7P4ORqdSlZCVEdTvKAYUIT5X7whQDhtsQjNv3Su/E+ni6BY6vw5l?=
+ =?us-ascii?Q?al3We1ZA5WlzhkCivowqChoy4TJLVZSfrxmzbiIdoouos098ku9Z/G9NiYlr?=
+ =?us-ascii?Q?AWTYSIdAHq8qnFtOiCmXCER5IIpbT2jlS4lAh3w5phl1pRQXFbxuIsmNP638?=
+ =?us-ascii?Q?ciu2sumXxpJMQSxAO3m3U2clIHRqNdvORe9DWv0zLUf/ceQcW/KDFntAxmCy?=
+ =?us-ascii?Q?vhVcDyPxlAxae7Y3kifd+NbwciNAac5i3hed/XSly3lL/qDQEtbNXvR1UAs3?=
+ =?us-ascii?Q?WWx46cI93bQpHM2ApV1uTFnEwWOxUyysaRAZn07eBZPYqnGOBOfAFUGyIf19?=
+ =?us-ascii?Q?qhpHCnXnhUSZt1oKmvWhBdQR6qkhyH/5yq0SXtwbqdFWyooK1boGHiUS9N4T?=
+ =?us-ascii?Q?jDTGWq868Okz2SlfFNU86ApuHx6PCwFr9QQXvGggeJhIkQLGFrsz48l0ojxg?=
+ =?us-ascii?Q?jtH4aNmF5OigjwsLQ9imgVnkvsXAPJu73dp0A7SbeZRN3VUTGtuK/oHOdVre?=
+ =?us-ascii?Q?G8C+DubrTZMGE/9qHnkw8wimUlTWlPggnA3Zl2Yp6Z1kbvvKkK3Lbcknd2Kz?=
+ =?us-ascii?Q?n30qqTTMX8Im4F2bJGVYXJjdEOx6Sf7JYRY8gKRKHXNfpDiBDa9J6Qoenjzx?=
+ =?us-ascii?Q?ZQt15/XERMctBxnlc4bemYdr+odWBeDa3lfhFcGcQkVg8AMw/jk1/C0/UDDM?=
+ =?us-ascii?Q?kZhg7KzoVLnYsyP2bfjQ45bbRvHWfE7KR8VgNmMcrWjB7fV5GNFH59YugS1z?=
+ =?us-ascii?Q?u0nu4engc+gTxqyjQMu55jJOvvhEfplbSjHSpT+NkyT8JL4nX3cT3AD/DD+H?=
+ =?us-ascii?Q?vkkGKw5ZMLSta5ntbOe+mQatj435m8ziYVIYWQt2QVqb+zr1yzWSKj3V1ZPq?=
+ =?us-ascii?Q?DipsPs2niH9SJvGk85B885C8SC8V9SRugo2EE0xmzfC0OfZUh9yGaLgDDLo6?=
+ =?us-ascii?Q?vt14r5awO+17wZ3SQuK89nzxufnOK4vWYMvGUSzm3B8vOZOtPM6/c/MvMsSQ?=
+ =?us-ascii?Q?RFNmcgcw01fhG8vd2eM2UIDjcnjqVy4coxOCmwmA/wCpvQPwXE4HGdr/KKb4?=
+ =?us-ascii?Q?Tf+w4BSpRtSUtjshbRmlCgJlQUwJ5YCrU+8D0ESL?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29b4063e-5a0b-4915-d682-08dd7e47ed50
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8254.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2025 07:09:15.4077
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Qw/a9SHUSZU3pmloJHpUB1tm1pH1kkk+9HpVqodeVxufspV7ykbcVmbNbdy2LNEgTpRLHy1WlL76Zv2dFDvP9g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA2PR04MB10160
 
-Added entries to unsupported wmi codes in ideapad_keymap[]
-and one check in wmi_nofify in order to get wmi code 0x13d to trigger platform_profile_cycle
+From: Ming Qian <ming.qian@oss.nxp.com>
 
-Signed-off-by: Gašper Nemgar <gasper.nemgar@gmail.com>"
----
-Changes in v6:
- - Minor changes like typos
-Changes in v5:
- - Changed performance button to KE_KEY 
-Changes in v4:
- - Changed performace button to KE_IGNORE
-Changes in v3:
- - Minor changes
-Changes in v2:
- - Added more codes that trigger with key combos (Fn+N, Fn+M, ...)
- - Added performence toggle in wmi_notify()
-Changes in v1:
- - Added codes for buttons on laptop(performance, star, ...)
----
- drivers/platform/x86/ideapad-laptop.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+To support decoding motion-jpeg without DHT, driver will try to decode a
+pattern jpeg before actual jpeg frame by use of linked descriptors
+(This is called "repeat mode"), then the DHT in the pattern jpeg can be
+used for decoding the motion-jpeg.
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 17a09b778..532efb9d1 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -1294,6 +1294,16 @@ static const struct key_entry ideapad_keymap[] = {
- 	/* Specific to some newer models */
- 	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
- 	{ KE_KEY,	0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
-+	/* Star- (User Assignable Key) */
-+	{ KE_KEY,	0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
-+	/* Eye */
-+	{ KE_KEY,	0x45 | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
-+	/* Performance toggle also Fn+Q, handled inside ideapad_wmi_notify() */
-+	{ KE_KEY,	0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
-+	/* shift + prtsc */
-+	{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
-+	{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
-+	{ KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
- 
- 	{ KE_END },
- };
-@@ -2080,6 +2090,14 @@ static void ideapad_wmi_notify(struct wmi_device *wdev, union acpi_object *data)
- 		dev_dbg(&wdev->dev, "WMI fn-key event: 0x%llx\n",
- 			data->integer.value);
- 
-+		/* performance button triggered by 0x3d */
-+		if (data->integer.value == 0x3d) {
-+			if (priv->dytc) {
-+				platform_profile_cycle();
-+				break;
-+			}
-+		}
-+
- 		/* 0x02 FnLock, 0x03 Esc */
- 		if (data->integer.value == 0x02 || data->integer.value == 0x03)
- 			ideapad_fn_lock_led_notify(priv, data->integer.value == 0x02);
+But there is some hardware limitation in the repeat mode, that may cause
+corruption or decoding timeout.
+
+Try to make workaround for these limitation in this patchset.
+
+Ming Qian (5):
+  media: imx-jpeg: Move mxc_jpeg_free_slot_data() ahead
+  media: imx-jpeg: Reset slot data pointers when free data
+  media: imx-jpeg: Cleanup after an allocation error
+  media: imx-jpeg: Change the pattern size to 128x64
+  media: imx-jpeg: Check decoding is ongoing for motion-jpeg
+
+ .../media/platform/nxp/imx-jpeg/mxc-jpeg-hw.h |   1 +
+ .../media/platform/nxp/imx-jpeg/mxc-jpeg.c    | 120 +++++++++++++-----
+ .../media/platform/nxp/imx-jpeg/mxc-jpeg.h    |   5 +
+ 3 files changed, 97 insertions(+), 29 deletions(-)
+
 -- 
-2.34.1
+2.43.0-rc1
 
