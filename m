@@ -1,55 +1,51 @@
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A71B21CC57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E91F21B9CD
 	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 19:34:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745004875; cv=none; b=XSJxQhqPRCwP8Fohb/fzvD9qnFC7fFk1R61kP8mHgHUak3Fro9EpdDWPfiDOC3L5HGAr1UyQCYmEbnKgzifvVWzbi+XZ1jlb116R7aYt2Uw8zY5aAIeqH+zuWjrHUJqty4zfa4gT+j1JYqGEoEzwjsGpJnMYWKAVEidE9VuBz1Y=
+	t=1745004875; cv=none; b=ctTCqi7h9LApvyIwY0gA0WEF35fZWwtIWlWnIztu+H1A3287lVaRPWf59r2rdNIwm/+tM4M5jA1XvpQhKG14nhqzDVgPNsG6BitHwxErnqm5/I6f4owZijVHgfQ0VXEez2N9+dkIhjeXzpTWsUIzfyDbs8GbgbEIsqh3cz8fF+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745004875; c=relaxed/simple;
-	bh=22oLt7wjjXG/wt9SSLtEPvA78v4lBAwefirjuD+2DwA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TQJVfl6VcnjMasAWXGTImQtbCc87jTbN9CwLTNddY4Z9tdju5U3dj6YYUkRzlFJM5Ow8NtNSvc4B5cDqeYQZM8fNhFTSIfvW8eQSs7LlhpeMhgcH95N5pR0wJrceMQLnqYP3dyWug3pXBDQoXc7saEyHPNjW1yMWDmqtrBB0nnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=e/AAeHw5; arc=none smtp.client-ip=205.220.177.32
+	bh=CAJl30qWQRiw0E843IMYmaAAAcUjarppCOQ/dr49iPM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bTjaJCjHNW0O7eL2zLrNXWf/4O3Pzg6Jx+atCouSuZ+igSf0TPgydAGLs3SNV7M7Nr5mREMW2FdL5/DThr4zshC4qZCv6e5dMTNv68wCLyZtK7g0VcRF99RsjLVUSipmfvV3kMDNqi3NhqxWu0tepZ95KrTuzQ5VzmQdVOLm4xY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=i86p1Qf2; arc=none smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="e/AAeHw5"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i86p1Qf2"
 Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53IJCgEB024797;
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53IJCW2C024634;
 	Fri, 18 Apr 2025 19:34:15 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2023-11-20; bh=0vCER
-	sIP2yb4xbsffCFA2kR/asq0VuYMViUZ7Uq4vYY=; b=e/AAeHw54UYIm+BYP01Kj
-	IgWHD2sovDQFK8mUMwYrurk79+52in4/lD/9DXOezJGkSBYLST/T1vM5rhgKeva/
-	ZqNuUDX14unVhAqvK3/Mgi00szmTVMCUQb7SjUfBXrlvAJiR6PiQCHuMpbFE3c+U
-	snM3yB+YUhIffOJRiq1eHO+f0gkMZsl6PikI3/E38pRemczbwrd1xuzhhUlSyRuN
-	jYUBLQO2zOieFC+/a23ElpRGOHrEOIMld5tNXBoG4riuigNRQgIICNL2AX5qDTXn
-	C663+SWo0dk5EcyKe/p2QmWGEGS0mh9L0u8RgybN9xjYQ/volQqK6zTLQ3JtY9PG
-	Q==
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2023-11-20; bh=dhBcYOkR+DgSc4JhpXvYt6GrlZqKs
+	aeMM14zzfXBC5E=; b=i86p1Qf2DYXdH7ZXNoVa3uNugLbkTGCqEJpiQKHljWXuu
+	rsF4D52u1EOms4wgaFySudHlh1gkvQkx0iKCs9cZgjEy9ld91DlSAgZcj/+ylOQH
+	ERwRmCp59iiqk8qSrJn3W8XMtc5beKVS5g3V4BiQVzmcXd3ZAAPklQVjEWhBj7DA
+	GY8r2bjnLCjC915leSMA1j/uSKOkVoM97tAhrfPczB1fsqj8qvG+Ppc+ugt4POhR
+	AaqtIMFyCMNhRg7w2wa1Ab8zKB4RP+jm5zd1/i4x/yX1wY/WZazLiGTkgTaUKjOq
+	O8XbtXlyU4fY/DM6VbAK1D1Ixqtvsjl1TE2cQNo9A==
 Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46180wgxpj-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46180wgxph-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 18 Apr 2025 19:34:15 +0000 (GMT)
+	Fri, 18 Apr 2025 19:34:14 +0000 (GMT)
 Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53IIn28k038828;
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53IIn28i038828;
 	Fri, 18 Apr 2025 19:34:14 GMT
 Received: from psang-work.osdevelopmeniad.oraclevcn.com (psang-work.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.253.35])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 460d4w8qqy-3
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 460d4w8qqy-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
 	Fri, 18 Apr 2025 19:34:14 +0000
 From: Prakash Sangappa <prakash.sangappa@oracle.com>
 To: linux-kernel@vger.kernel.org
 Cc: peterz@infradead.org, rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
         tglx@linutronix.de, bigeasy@linutronix.de
-Subject: [PATCH V2 2/3] Sched: Tunable to specify duration of time slice extension
-Date: Fri, 18 Apr 2025 19:34:09 +0000
-Message-ID: <20250418193410.2010058-3-prakash.sangappa@oracle.com>
+Subject: [PATCH V2 0/3] Scheduler time slice extension
+Date: Fri, 18 Apr 2025 19:34:07 +0000
+Message-ID: <20250418193410.2010058-1-prakash.sangappa@oracle.com>
 X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250418193410.2010058-1-prakash.sangappa@oracle.com>
-References: <20250418193410.2010058-1-prakash.sangappa@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,97 +60,77 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 susp
  bulkscore=0 mlxscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
  definitions=main-2504180148
-X-Proofpoint-ORIG-GUID: I2oMFrMUHe-jZ3Czi1BTYl3P3EXSUd8r
-X-Proofpoint-GUID: I2oMFrMUHe-jZ3Czi1BTYl3P3EXSUd8r
+X-Proofpoint-ORIG-GUID: 0HYHuf0QhRe-WXuj4D3xE_rsciVWv0Tp
+X-Proofpoint-GUID: 0HYHuf0QhRe-WXuj4D3xE_rsciVWv0Tp
 
-Add a tunable to specify duration of scheduler time slice extension.
-The default will be set to 50us and the max value that can be specified
-is 100us. Setting it to 0, disables scheduler time slice extension.
+A user thread can get preempted in the middle of executing a critical
+section in user space while holding locks, which can have undesirable affect
+on performance. Having a way for the thread to request additional execution
+time on cpu, so that it can complete the critical section will be useful in
+such scenario. The request can be made by setting a bit in mapped memory,
+such that the kernel can also access to check and grant extra execution time
+on the cpu. 
 
-Signed-off-by: Prakash Sangappa <prakash.sangappa@oracle.com>
----
- include/linux/sched.h |  3 +++
- kernel/rseq.c         | 10 ++++++----
- kernel/sched/core.c   | 16 ++++++++++++++++
- 3 files changed, 25 insertions(+), 4 deletions(-)
+There have been couple of proposals[1][2] for such a feature, which attempt
+to address the above scenario by granting one extra tick of execution time.
+In patch thread [1] posted by Steven Rostedt, there is ample discussion about
+need for this feature.
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 75abe260de72..c91856f908d6 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -385,6 +385,9 @@ extern struct root_domain def_root_domain;
- extern struct mutex sched_domains_mutex;
- #endif
- 
-+/* Scheduler time slice extension */
-+extern unsigned int sysctl_sched_preempt_delay_us;
-+
- struct sched_param {
- 	int sched_priority;
- };
-diff --git a/kernel/rseq.c b/kernel/rseq.c
-index 9f83d47253ce..7022729d02ee 100644
---- a/kernel/rseq.c
-+++ b/kernel/rseq.c
-@@ -434,6 +434,8 @@ bool rseq_delay_resched(void)
- 	if (!IS_ENABLED(CONFIG_SCHED_HRTICK))
- 		return false;
- 
-+	if (!sysctl_sched_preempt_delay_us)
-+		return false;
- 	if (!t->rseq)
- 		return false;
- 
-@@ -464,11 +466,11 @@ void rseq_delay_resched_fini(void)
- 	 * IRQs off, guaranteed to return to userspace, start timer on this CPU
- 	 * to limit the resched-overdraft.
- 	 *
--	 * If your critical section is longer than 50 us you get to keep the
--	 * pieces.
-+	 * If your critical section is longer than sysctl_sched_preempt_delay_us
-+	 * you get to keep the pieces.
- 	 */
--	if (t->rseq_sched_delay)
--		hrtick_local_start(50 * NSEC_PER_USEC);
-+	if (sysctl_sched_preempt_delay_us && t->rseq_sched_delay)
-+		hrtick_local_start(sysctl_sched_preempt_delay_us * NSEC_PER_USEC);
- #endif
- }
- 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index cee50e139723..59b381cef472 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -151,6 +151,13 @@ __read_mostly int sysctl_resched_latency_warn_once = 1;
-  */
- const_debug unsigned int sysctl_sched_nr_migrate = SCHED_NR_MIGRATE_BREAK;
- 
-+/*
-+ * Scheduler time slice extension, duration in microsecs.
-+ * Max value allowed 100us, default 50us
-+ * If set to 0, scheduler time slice extension is disabled.
-+ */
-+__read_mostly unsigned int sysctl_sched_preempt_delay_us = 50;
-+
- __read_mostly int scheduler_running;
- 
- #ifdef CONFIG_SCHED_CORE
-@@ -4713,6 +4720,15 @@ static const struct ctl_table sched_core_sysctls[] = {
- 		.extra2		= SYSCTL_FOUR,
- 	},
- #endif /* CONFIG_NUMA_BALANCING */
-+	{
-+		.procname	= "sched_preempt_delay_us",
-+		.data		= &sysctl_sched_preempt_delay_us,
-+		.maxlen		= sizeof(unsigned int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ONE_HUNDRED,
-+	},
- };
- static int __init sched_core_sysctl_init(void)
- {
+However, the concern has been that this can lead to abuse. One extra tick can
+be a long time(about a millisec or more). Peter Zijlstra in response posted a 
+prototype solution[3], which grants 50us execution time extension only.
+This is achieved with the help of a timer started on that cpu at the time of
+granting extra execution time. When the timer fires the thread will be
+preempted, if still running. 
+
+This patchset implements above solution as suggested, with use of restartable
+sequences(rseq) structure for API. Refer to [3][4] for further discussions.
+
+
+v1: 
+https://lore.kernel.org/all/20250215005414.224409-1-prakash.sangappa@oracle.com/
+
+v2:
+- Based on dicussions in [3], expecting user application to call sched_yield()
+  to yield the cpu at the end of the critical section may not be advisable as
+  pointed out by Linus.  
+
+  So added a check in return path from a system call to reschedule if time
+  slice extension was granted to the thread. The check could as well be in
+  syscall enter path from user mode.
+  This would allow application thread to call any system call to yield the cpu. 
+  Which system call should be suggested? getppid(2) works.
+
+  Do we still need the change in sched_yield() to reschedule when the thread
+  has current->rseq_sched_delay set?
+
+- Added patch to introduce a sysctl tunable parameter to specify duration of
+  the time slice extension in micro seconds(us), called 'sched_preempt_delay_us'.
+  Can take a value in the range 0 to 100. Default is set to 50us.
+  Setting this tunable to 0 disables the scheduler time slice extension feature.
+
+[1] https://lore.kernel.org/lkml/20231025054219.1acaa3dd@gandalf.local.home/
+[2] https://lore.kernel.org/lkml/1395767870-28053-1-git-send-email-khalid.aziz@oracle.com/
+[3] https://lore.kernel.org/all/20250131225837.972218232@goodmis.org/
+[4] https://lore.kernel.org/all/20241113000126.967713-1-prakash.sangappa@oracle.com/
+[5] https://lore.kernel.org/lkml/20231030132949.GA38123@noisy.programming.kicks-ass.net/
+[6] https://lore.kernel.org/all/1631147036-13597-1-git-send-email-prakash.sangappa@oracle.com/
+
+Prakash Sangappa (3):
+  Sched: Scheduler time slice extension
+  Sched: Tunable to specify duration of time slice extension
+  Sched: Add scheduler stat for cpu time slice extension
+
+ include/linux/entry-common.h | 11 +++++--
+ include/linux/sched.h        | 23 ++++++++++++++
+ include/uapi/linux/rseq.h    |  5 +++
+ kernel/entry/common.c        | 21 ++++++++++---
+ kernel/rseq.c                | 59 ++++++++++++++++++++++++++++++++++++
+ kernel/sched/core.c          | 37 ++++++++++++++++++++++
+ kernel/sched/debug.c         |  1 +
+ kernel/sched/syscalls.c      |  7 +++++
+ 8 files changed, 156 insertions(+), 8 deletions(-)
+
 -- 
 2.43.5
 
