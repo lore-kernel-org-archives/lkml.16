@@ -1,244 +1,142 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA1B021C195;
-	Fri, 18 Apr 2025 15:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C6C2139D8;
+	Fri, 18 Apr 2025 15:37:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744990660; cv=none; b=souBQkGBCcC/g9klOEPVUKxb/Etlt3R9UGSic5V5gzh2JRiXcrWDuCq5g9Oeya+gm0XMUdpEFIuPbqDRrkDM24LF21iS/UYIBQAq9LhZMNhssy5ja/RjWDq+yViDkqiUCfw4e95u+3AIXlVjIn0uZLOEf3Ijda65sfs8MqlSSzI=
+	t=1744990669; cv=none; b=dXKCaI5hj7FYeKLS180U+nEUm2rdxXbL3KRG48VVe7HjGizxTaERz+qmteQQitdxAahldDKnP6tEGJl4qGQ+fwaAbX97JV1ensijsuJ2/Uzf5f/5vmGmICUdAoLX5Qtj4gh3csMJE1dU6DTs+GXov2Z8GnJfVpdnneDpsMpl0bI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744990660; c=relaxed/simple;
-	bh=eIURL2AYb8L+wdwnY5KekUFI1cWHm1PC7DhcpJHkmYA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tMcrL8FEb3HmWPbDEewinnBkoAr5e5P7CRqI1dphTQ5XXp413Yk3jxd+uoDxWdvSPkzcl0kjyiKwrxWozMCZXLfAiS1aBc41FpJgf3lbEnE6dgf7gzPlfSEhE8vCWTmwGSKQLXI7GyoCixGa0MMFO4G9fSaeMeqY2DOo3DdrJRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CmuGMUuF; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744990669; c=relaxed/simple;
+	bh=ePj9XBwxI8VhpbU1F8JnRfKVKSF8Vwg5qYMWDW9j5Vo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dw+RoG9eRYeinUzUg+nTnBCRmyIFw9jP7egyMQcakXKBIx7QDpBElqiBcTQ03+0hgXsshScgFNUqMmOMy2ICYNNAO6fLL9tZzWJfklEPxXWVLKheOX2VhV9mXvyJE1xCgcyaZX5Eff9jJIkJBkaBk5gS59drnp/ILklrvxjRQrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FVMCpFmF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CmuGMUuF"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6f2b05f87bcso19284746d6.3;
-        Fri, 18 Apr 2025 08:37:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744990657; x=1745595457; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=d5hiiUh/P67/GQqlTcZ6AkOFOmj5iMZ3jMe2SBwJf9k=;
-        b=CmuGMUuFXeSsXp97bwDOZfWIGsiPAmoAi4RJzECzDVt2xCZnCFlbioLa/xYIqog9ZX
-         2EImODolW80MDUUx5F83KI5qeZpgN0DkKyuQ8XRyRhSh7PH7GH2tqfASTzwz7QesLlr1
-         ykesOIE/xE+I9J3Wy/wt3XM7dfudB5CnRlUBDkBRBIovNhJgk+/vg4M9NzmNEnh26m/+
-         V4pBgVbgqZ6tUBlLjyUJh5nkcq2yggIqYtfGBhdtieIaVanuqjR1RUlAj5KgTXMMHJMr
-         0g5Z1RQtUh4IyI6VCZutXTL0O+BtZmhQRHzR9TTB6nI8f9w0R1D54epSDWnMiFYVukPu
-         +LjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744990657; x=1745595457;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d5hiiUh/P67/GQqlTcZ6AkOFOmj5iMZ3jMe2SBwJf9k=;
-        b=iTEcEpsoZAQr/4zQVBviloDNfUqHStcXDz1ym0PI28v59kTNfjcv+F7PcgrfeGKNzF
-         ULULnVrDMmjoOoQxYrP9gBRNF1Jhxpq7RCJlg/+Tbph9gxfJMvCLv54QPrlRVrqFgfJ4
-         1iEXXnzVvNih0lt30Wv/K0kOP79P4j5rwhlYRyJK257+MNQ+HvCDuwqPnrtcUSuWy+Bc
-         WTFig1TfdMf9xXS8RyrJUQHMf9p4+BeAgvBq8CYuFeKoghZQfBbj9VFnEf+H01+NjYki
-         OxP1FmHViH16jZU+xniDJzdB6aHIoKoqawlsIcG+7ObAWwB+6ztUKtzrneeiUBq3H517
-         JGsw==
-X-Forwarded-Encrypted: i=1; AJvYcCU0860C6482POdFvsbWhqCaic8tL8sZ4G++SUqDk/nIX+MU8cFVktHAGpNrSmgfzyuI+ATJI/bPvujURm4l@vger.kernel.org, AJvYcCU0Wzr9byEQ9Tw8xjbWOx0MK8euywx2wMpRAvM+gLzrQpuwYt548smIyMc173f7N2zKTb4KQD7FH5oo4+GIX+io@vger.kernel.org, AJvYcCUFi7Phvf+DFWWUGjx2G1WArjpFjAfNnWC4MpKaQVCsIHiE1ybjAZzhuk7baLT29QKT65In0QUz0nmp@vger.kernel.org, AJvYcCVOQ4yCrsqrMfHRSoQ1wv0XxlvY8nVc9KvmsuddpVfnyh+t1h8Y7eIhS1kgF/jiOSOP/vH1fA6c2coVnAQ=@vger.kernel.org, AJvYcCVY2UeVET7nxJlf3kR7af6LtqnQw8wj1720lDIm15vBy33ex3bSz+bose4gNPxVShNCknHKIaX//EcI@vger.kernel.org, AJvYcCVqJBc8F5AlikBaQHZTLBUUAH9s7iXyTEcsLOLMRvBmEKUWwHqqyzIUZF+yTrjJZxpdaLGzPIE43u+IpLMstiU=@vger.kernel.org, AJvYcCWzGWFUFEetWW5PvzqJX0t/qxxkLsjy45tf6VhTP5vKdSYKUj6SmI9rU6zBwadvdtYzGkjUxfSe@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWFZnEPMijKcUvGd3zBQiS7FyM5XUcQXb9xnr0ifHfKY6YwITS
-	XIxU1jRoMJfGDuixuboVT5nSPQ07MwmbSu+ZMBvLaJ1bJH2yMMUO5Vyd1tRC
-X-Gm-Gg: ASbGnctN5ozcMF+ImXugEbzit2iNkuiglrJClwB+m6na9XzxpUd7K6vlluhG0IOgF12
-	QM1ESwbJBS7G7lgl5fHngfspNFgWuHprUZwIjzRoKGckyRwKizNDYXIYE0lKtWodfBXinNdzXPt
-	ur/hQmrjo0Lnk+GrDN1ONWtpVDtLTbXgEXXO7LiX2yPx54EIKnaF/8KQX6e3JgUo5EFfdA1UFqr
-	qx2U3WKzMYf9S8q/5QLl0jEmYD2QLU8mTevKqMJgYQMJnYSQBsFjC7sSsv1GSl/JX/XyMw21p3I
-	iPBE06nHdEthQnY+0ha2L2AFHbjKYWaymxMs5uI4GWKmaDpmWbfA50AQYRCr859fAxVMpn5z8yV
-	HHpZO
-X-Google-Smtp-Source: AGHT+IE6q7vZay+OEaNaFKC2yY4Mgb23CsaphyC2no0B8NXz2XdFGwpfQ02v9LdUIlLAeT+YHdFGgQ==
-X-Received: by 2002:a05:6214:1d0c:b0:6e8:86d3:be78 with SMTP id 6a1803df08f44-6f2c46b88b4mr48009246d6.37.1744990656672;
-        Fri, 18 Apr 2025 08:37:36 -0700 (PDT)
-Received: from tamird-mac.local ([2600:4041:5be7:7c00:7988:e5e5:1f4c:be78])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2c21d9bsm11623096d6.96.2025.04.18.08.37.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 08:37:36 -0700 (PDT)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 18 Apr 2025 11:37:22 -0400
-Subject: [PATCH v10 6/6] rust: enable `clippy::ref_as_ptr` lint
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FVMCpFmF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 777BEC4CEEA;
+	Fri, 18 Apr 2025 15:37:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744990668;
+	bh=ePj9XBwxI8VhpbU1F8JnRfKVKSF8Vwg5qYMWDW9j5Vo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FVMCpFmFMik0JEZHNat+EuYp7TRjpOOTj/QGc/Rb1gug+Bpr18pAyMZtPYuuor5Ty
+	 rOTmP3u1zBJbPiz4XT5/Msn/5wNIcwn6LVJIlgaXSYo7bpXFWg9Nc04IhpUpxBtqmq
+	 s/Kp5+sF4aro9LhIwMrHA+6sIbLvZSn9qp5aZhX/H1BYvfgmA7k0AZ7x4mKEv0nYF2
+	 yD1E1tTkcIP8KkOE8VudODicBK61vW84Tfmi9ta0V7VJvshMHfhWDPdxj/NOMC56f9
+	 qwrLoZVHKO4beHJhLcH/dngcCs2S+QowoTutOborJqgjLBdFZMPSm+rAE9JBpdWyBT
+	 9PFej9Kj6z6Sg==
+Date: Fri, 18 Apr 2025 16:37:43 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+ Michael.Hennerich@analog.com, skhan@linuxfoundation.org,
+ kernelmentees@lists.linuxfoundation.org, stable@vger.kernel.org
+Subject: Re: [PATCH] iio: ad5933: Correct settling cycles encoding per
+ datasheet
+Message-ID: <20250418163743.4f9379a1@jic23-huawei>
+In-Reply-To: <20250416142219.554938-1-gshahrouzi@gmail.com>
+References: <20250416142219.554938-1-gshahrouzi@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250418-ptr-as-ptr-v10-6-3d63d27907aa@gmail.com>
-References: <20250418-ptr-as-ptr-v10-0-3d63d27907aa@gmail.com>
-In-Reply-To: <20250418-ptr-as-ptr-v10-0-3d63d27907aa@gmail.com>
-To: Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Brendan Higgins <brendan.higgins@linux.dev>, 
- David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
- Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
- Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
- Saravana Kannan <saravanak@google.com>, 
- Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- Robin Murphy <robin.murphy@arm.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- FUJITA Tomonori <fujita.tomonori@gmail.com>, 
- Nicolas Schier <nicolas.schier@linux.dev>, 
- Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
- Thomas Gleixner <tglx@linutronix.de>, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>, 
- Nicolas Schier <nicolas.schier@linux.dev>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
- rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
- linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
- Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
 
-In Rust 1.78.0, Clippy introduced the `ref_as_ptr` lint [1]:
+On Wed, 16 Apr 2025 10:22:19 -0400
+Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
 
-> Using `as` casts may result in silently changing mutability or type.
+> Implement the settling cycles encoding as specified in the AD5933
+> datasheet, Table 13 ("Number of Settling Times Cycles Register"). The
+> previous logic did not correctly translate the user-requested effective
+> cycle count into the required 9-bit base + 2-bit multiplier format
+> (D10..D0) for values exceeding 511.
+> 
+> Clamp the user input for out_altvoltage0_settling_cycles to the
+> maximum effective value of 2044 cycles (511 * 4x multiplier).
+> 
+> Fixes: f94aa354d676 ("iio: impedance-analyzer: New driver for AD5933/4 Impedance Converter, Network Analyzer")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> ---
+>  .../staging/iio/impedance-analyzer/ad5933.c   | 21 ++++++++++++-------
+>  1 file changed, 14 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/staging/iio/impedance-analyzer/ad5933.c b/drivers/staging/iio/impedance-analyzer/ad5933.c
+> index d5544fc2fe989..5a8c5039bb159 100644
+> --- a/drivers/staging/iio/impedance-analyzer/ad5933.c
+> +++ b/drivers/staging/iio/impedance-analyzer/ad5933.c
+> @@ -28,7 +28,7 @@
+>  #define AD5933_REG_FREQ_START		0x82	/* R/W, 3 bytes */
+>  #define AD5933_REG_FREQ_INC		0x85	/* R/W, 3 bytes */
+>  #define AD5933_REG_INC_NUM		0x88	/* R/W, 2 bytes, 9 bit */
+> -#define AD5933_REG_SETTLING_CYCLES	0x8A	/* R/W, 2 bytes */
+> +#define AD5933_REG_SETTLING_CYCLES	0x8A	/* R/W, 2 bytes, 11+2 bit */
 
-While this doesn't eliminate unchecked `as` conversions, it makes such
-conversions easier to scrutinize.  It also has the slight benefit of
-removing a degree of freedom on which to bikeshed. Thus apply the
-changes and enable the lint -- no functional change intended.
+Probably spaces around the +  It's not code, but lets keep to consistent code style.
 
-Link: https://rust-lang.github.io/rust-clippy/master/index.html#ref_as_ptr [1]
-Suggested-by: Benno Lossin <benno.lossin@proton.me>
-Link: https://lore.kernel.org/all/D8PGG7NTWB6U.3SS3A5LN4XWMN@proton.me/
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- Makefile                 | 1 +
- rust/bindings/lib.rs     | 1 +
- rust/kernel/device_id.rs | 2 +-
- rust/kernel/fs/file.rs   | 2 +-
- rust/kernel/str.rs       | 4 ++--
- rust/kernel/uaccess.rs   | 4 ++--
- rust/uapi/lib.rs         | 1 +
- 7 files changed, 9 insertions(+), 6 deletions(-)
+>  #define AD5933_REG_STATUS		0x8F	/* R, 1 byte */
+>  #define AD5933_REG_TEMP_DATA		0x92	/* R, 2 bytes*/
+>  #define AD5933_REG_REAL_DATA		0x94	/* R, 2 bytes*/
+> @@ -71,6 +71,8 @@
+>  #define AD5933_INT_OSC_FREQ_Hz		16776000
+>  #define AD5933_MAX_OUTPUT_FREQ_Hz	100000
+>  #define AD5933_MAX_RETRIES		100
+> +#define AD5933_MAX_FREQ_POINTS		511
+> +#define AD5933_MAX_SETTLING_CYCLES	2044 /* 511 * 4 */
 
-diff --git a/Makefile b/Makefile
-index eb5a942241a2..2a16e02f26db 100644
---- a/Makefile
-+++ b/Makefile
-@@ -485,6 +485,7 @@ export rust_common_flags := --edition=2021 \
- 			    -Wclippy::no_mangle_with_rust_abi \
- 			    -Wclippy::ptr_as_ptr \
- 			    -Wclippy::ptr_cast_constness \
-+			    -Wclippy::ref_as_ptr \
- 			    -Wclippy::undocumented_unsafe_blocks \
- 			    -Wclippy::unnecessary_safety_comment \
- 			    -Wclippy::unnecessary_safety_doc \
-diff --git a/rust/bindings/lib.rs b/rust/bindings/lib.rs
-index b105a0d899cc..2b69016070c6 100644
---- a/rust/bindings/lib.rs
-+++ b/rust/bindings/lib.rs
-@@ -27,6 +27,7 @@
- #[allow(dead_code)]
- #[allow(clippy::cast_lossless)]
- #[allow(clippy::ptr_as_ptr)]
-+#[allow(clippy::ref_as_ptr)]
- #[allow(clippy::undocumented_unsafe_blocks)]
- mod bindings_raw {
-     // Manual definition for blocklisted types.
-diff --git a/rust/kernel/device_id.rs b/rust/kernel/device_id.rs
-index 4063f09d76d9..74b5db81231f 100644
---- a/rust/kernel/device_id.rs
-+++ b/rust/kernel/device_id.rs
-@@ -136,7 +136,7 @@ impl<T: RawDeviceId, U, const N: usize> IdTable<T, U> for IdArray<T, U, N> {
-     fn as_ptr(&self) -> *const T::RawType {
-         // This cannot be `self.ids.as_ptr()`, as the return pointer must have correct provenance
-         // to access the sentinel.
--        (self as *const Self).cast()
-+        core::ptr::from_ref(self).cast()
-     }
- 
-     fn id(&self, index: usize) -> &T::RawType {
-diff --git a/rust/kernel/fs/file.rs b/rust/kernel/fs/file.rs
-index 791f493ada10..c9a86beacb65 100644
---- a/rust/kernel/fs/file.rs
-+++ b/rust/kernel/fs/file.rs
-@@ -364,7 +364,7 @@ fn deref(&self) -> &LocalFile {
-         //
-         // By the type invariants, there are no `fdget_pos` calls that did not take the
-         // `f_pos_lock` mutex.
--        unsafe { LocalFile::from_raw_file((self as *const Self).cast()) }
-+        unsafe { LocalFile::from_raw_file(core::ptr::from_ref(self).cast()) }
-     }
- }
- 
-diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index 40034f77fc2f..ca173ae3282d 100644
---- a/rust/kernel/str.rs
-+++ b/rust/kernel/str.rs
-@@ -29,7 +29,7 @@ pub const fn is_empty(&self) -> bool {
-     #[inline]
-     pub const fn from_bytes(bytes: &[u8]) -> &Self {
-         // SAFETY: `BStr` is transparent to `[u8]`.
--        unsafe { &*(bytes as *const [u8] as *const BStr) }
-+        unsafe { &*(core::ptr::from_ref(bytes) as *const BStr) }
-     }
- 
-     /// Strip a prefix from `self`. Delegates to [`slice::strip_prefix`].
-@@ -290,7 +290,7 @@ pub const fn from_bytes_with_nul(bytes: &[u8]) -> Result<&Self, CStrConvertError
-     #[inline]
-     pub unsafe fn from_bytes_with_nul_unchecked_mut(bytes: &mut [u8]) -> &mut CStr {
-         // SAFETY: Properties of `bytes` guaranteed by the safety precondition.
--        unsafe { &mut *(bytes as *mut [u8] as *mut CStr) }
-+        unsafe { &mut *(core::ptr::from_mut(bytes) as *mut CStr) }
-     }
- 
-     /// Returns a C pointer to the string.
-diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-index 80a9782b1c6e..5f8e1e7babb3 100644
---- a/rust/kernel/uaccess.rs
-+++ b/rust/kernel/uaccess.rs
-@@ -242,7 +242,7 @@ pub fn read_raw(&mut self, out: &mut [MaybeUninit<u8>]) -> Result {
-     pub fn read_slice(&mut self, out: &mut [u8]) -> Result {
-         // SAFETY: The types are compatible and `read_raw` doesn't write uninitialized bytes to
-         // `out`.
--        let out = unsafe { &mut *(out as *mut [u8] as *mut [MaybeUninit<u8>]) };
-+        let out = unsafe { &mut *(core::ptr::from_mut(out) as *mut [MaybeUninit<u8>]) };
-         self.read_raw(out)
-     }
- 
-@@ -357,7 +357,7 @@ pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
-         let res = unsafe {
-             bindings::_copy_to_user(
-                 self.ptr as *mut c_void,
--                (value as *const T).cast::<c_void>(),
-+                core::ptr::from_ref(value).cast::<c_void>(),
-                 len,
-             )
-         };
-diff --git a/rust/uapi/lib.rs b/rust/uapi/lib.rs
-index d5dab4dfabec..6230ba48201d 100644
---- a/rust/uapi/lib.rs
-+++ b/rust/uapi/lib.rs
-@@ -16,6 +16,7 @@
-     clippy::all,
-     clippy::cast_lossless,
-     clippy::ptr_as_ptr,
-+    clippy::ref_as_ptr,
-     clippy::undocumented_unsafe_blocks,
-     dead_code,
-     missing_docs,
+>  
+>  #define AD5933_OUT_RANGE		1
+>  #define AD5933_OUT_RANGE_AVAIL		2
+> @@ -82,6 +84,10 @@
+>  #define AD5933_POLL_TIME_ms		10
+>  #define AD5933_INIT_EXCITATION_TIME_ms	100
+>  
+> +/* Settling cycles multiplier bits D10, D9 */
+> +#define AD5933_SETTLE_MUL_2X		BIT(9)
+> +#define AD5933_SETTLE_MUL_4X		(BIT(9) | BIT(10))
 
--- 
-2.49.0
+That looks like  a number, not a pair of separate bits. 
+I would expect a mask for this field then some defines for teh
+values it can take.
+
+> +
+>  struct ad5933_state {
+>  	struct i2c_client		*client;
+>  	struct clk			*mclk;
+> @@ -411,14 +417,15 @@ static ssize_t ad5933_store(struct device *dev,
+>  		ret = ad5933_cmd(st, 0);
+>  		break;
+>  	case AD5933_OUT_SETTLING_CYCLES:
+> -		val = clamp(val, (u16)0, (u16)0x7FF);
+> +		val = clamp(val, (u16)0, (u16)AD5933_MAX_SETTLING_CYCLES);
+>  		st->settling_cycles = val;
+>  
+> -		/* 2x, 4x handling, see datasheet */
+> +		/* Encode value for register: D10..D0 */
+> +		/* Datasheet Table 13: If cycles > 1022 -> val/4, set bits D10=1, D9=1 */
+>  		if (val > 1022)
+> -			val = (val >> 2) | (3 << 9);
+> -		else if (val > 511)
+> -			val = (val >> 1) | BIT(9);
+> +			val = (val >> 2) | AD5933_SETTLE_MUL_4X;
+> +		else if (val > 511) /* Datasheet: If cycles > 511 -> val/2, set bit D9=1 */
+> +			val = (val >> 1) | AD5933_SETTLE_MUL_2X;
+>  
+>  		dat = cpu_to_be16(val);
+>  		ret = ad5933_i2c_write(st->client,
+> @@ -426,7 +433,7 @@ static ssize_t ad5933_store(struct device *dev,
+>  				       2, (u8 *)&dat);
+>  		break;
+>  	case AD5933_FREQ_POINTS:
+> -		val = clamp(val, (u16)0, (u16)511);
+> +		val = clamp(val, (u16)0, (u16)AD5933_MAX_FREQ_POINTS);
+>  		st->freq_points = val;
+>  
+>  		dat = cpu_to_be16(val);
 
