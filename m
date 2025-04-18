@@ -1,125 +1,129 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA242528EA
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:19:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6864F26FDB0
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744971546; cv=none; b=V2BJVnIy16igNRVLtbBFAwCfzNhoArKD7t4Xp5pnm2WdCosLQNZdYPw1vwxOT++qAMSJoX13fvLH6jOFMPsBRvg3DjCSKkep9W2yZClJ97ViWLYlvIYMEqA3r3eUOg4C7hTbpQZMaIB+KG0iQkJJpsyHHxtk6P8rmDdA5vPd74Q=
+	t=1744971777; cv=none; b=HAZvkiwT8beANz97ciJlJ0bhrsWrpiNR/+jsD8SRaIFqI8yhzQ+fTXRzbno0lIpadOlcSisOjyWeAp0443e4W/8+CGmrvrnG0J8YsgUWKLYZgY8DMHypwEFBFYOP24b3VTxSmZkgdsjLNLhuMTFrusAy9X9aDx5fIbvpnThVVS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744971546; c=relaxed/simple;
-	bh=95SfZOeYAeBnbtPj+ch2OlRTzEjL07zzmSFe0I3ojWY=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=OUDAIVeVjDN+63s+AIpTFKgP2gBW6xwiLeJxm/p1lxYX3mK2cBkfs5lYaGTzal/NGLG2+G1IE+A2MTps0hTJbbOcVZ9Kw8rSmC22ihi6xdMQMMn0P9TRjzXMZJpaPMMXS33Emj4c7YQxFusRemhvnNyhRQ8wtRQhHviUmJDta40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d44dc8a9b4so17956135ab.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 03:19:04 -0700 (PDT)
+	s=arc-20240116; t=1744971777; c=relaxed/simple;
+	bh=kdcZo7k40rdzUo4iOEDODFuxSFIAmXugWOJxYj68wOQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H+ARt3QQtzLfSThhWRxIRQ8zuNj1rdW+7RuMN6hqe3OKtRRWDM2ZKsz7DeXXjVilH6wglUN8V7rvQ6QKfpBWPZN7U0pnwaZRScLBYKPs+S2ZnfIl0zNMSwsmY9Xftjiuey9QTtvBURM4fOZv8nJ2JbEENU0gx0zhS3EGtaJwxUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zkmtQaSk; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zkmtQaSk"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso11425725e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 03:22:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744971774; x=1745576574; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/k0Y0aoMA2GBez0xVc7/5fQuBfWbJDDhwqoAabodniI=;
+        b=zkmtQaSkONnWKoe3Lk3IQcZtBDYyiiVoOV0AACyTUGAL5BMnfEbe0ybHqE/XHBPVH9
+         OWqPC+xC1oHeDEw4UzLkG1Ziulenj9Udyyp34ps0/cAJDZSXpHt20Mmco3R1Dz9la1Hy
+         rr7XabZEvJ76dXvifA7Vx1nm1ePcYXRmRVjRG1uNve/K2cGWsL8xXSIg18uypEIWmKsJ
+         QPtzfKv3PYdAwkPleWUnUfyU5cU+z+ezaWTQWfC3r0O84RF+xRRFdolK9DzQISRCWvXa
+         FNIJ2bucZA0fSFP1m04CBwKOZGbin/pIRSsxAGTz9KXuVAvFV2GamJm8rz59P48F6wGj
+         WhgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744971543; x=1745576343;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
+        d=1e100.net; s=20230601; t=1744971774; x=1745576574;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JGvdcpQTR+H9ML+IgvScLBjHWYqaU7DIkR0hwufUa/Y=;
-        b=Dxcdr/FN6i+jV1CUGMdKMTMzABFW42ufb4jDTIroegjpU3vGGD4IwQSDHtkvVcARWC
-         2ytRc9cwELkwjQusxOpV+WWO6SeIodGPrnsX3p1e1weRGIaV8kQvK4fHDopSB2P1GQed
-         Ynn1suWXFu9pCURsGw4PN8KWEzyPLOrzcp61FFlVz5UYJgEHGtuad9sJsmyHx2AkhK9G
-         rIgjzBQ2wLirEyMbErdvbSpkCh0w8qhYUiq8YXkKUNYXXKJVrzb8VDV32nv5Fhkx4cwB
-         bDwVEwUwQ41tld60yVVKcZCvR7coRIP3subs8prA4NEAr8OQGVaXp/q+PkoBfQ/DIOk0
-         6OZQ==
-X-Gm-Message-State: AOJu0YwkZuHbt1EVYszdmqxHg/jErgSGZkVS1WshzauFjxelZ5RCQz4Q
-	lX7/sBRypF1Ay6KEFAjOKdFoJ6m5kyaaOUY1mcuEB70ucr4mzS3RV1PXi7uW893acnY/Dl9Mz8z
-	puyKklsT0vN2OxxMT5+nz6C0qyBHvUuvTHZrxcDqb6ZUxd98gBdc47eE=
-X-Google-Smtp-Source: AGHT+IE9+6p8L1mqljpbtdwLxsCJw3my16mbcphwfS44q8D33yrZHM2qOuWbPxn9sS3qCOIwSHgNgIfHgqtOaR7rITIDJv5yZGSM
+        bh=/k0Y0aoMA2GBez0xVc7/5fQuBfWbJDDhwqoAabodniI=;
+        b=VD3rsOixx1fYCNNQnfuVL/Mq2R4cksLD1ao3udPo/6d4bOERQ0Z25PxsKxUPD1/4/I
+         d+CKLkzrwl5cGWgpNmqWQhrKkhL+hV7muGYGEE+F+8wbFLUGcKzJmD7B9VBGkMKAXwAI
+         RYkyvF82Iff0ehuopusJC2qMSpeQOGrbXOPhRcQba+7grEsJRoEXkrtNj/UyqG5Z6SN9
+         PslmSfepselmG6RbTeDypNh34zhZ1R6llBFKAHalc2ueawMy9f55HkQGe+v9nPnhTdjO
+         /VMqItD1q1V41Cuo7bWXpMG+z9RLAs3lFZDuUllPrwMr2N3pQSS41CMSjN7M/Q0iwYT/
+         4HuA==
+X-Forwarded-Encrypted: i=1; AJvYcCUC7w1BmqJf1/oQ/2WUx22V4qJ0U0+I1ahLlYvOs9/u33gO8cukuaYe66nEt/Tyszpx13N3V2DeUkLOE8Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztlaFltDxobg16onr8e6GA08/A51o41UtEyiUhG/GTEqiFrkv1
+	g1ABnFbg3ORwA+lIraR4N2LWyzuipd6r0q5b1Z/dX+4J4WCEHVm20XUP/9EmMLk=
+X-Gm-Gg: ASbGnculX2cmrlFLAqdROnhJ/koSGac0IPbfIeTp+Mkt/xeji5pT8wm9XcI91OtAbwQ
+	bjtksZzp8MQ8xGo8aHobfsX/0QOyM8h/i65d27VvXbGzVu4SSwq+k0fpOQ4xgj0MimuklBdFv6/
+	sQ9wXH6bHQaokbr8ZQtDDvDoytaitE7mftQY5g4curYQOBxd7hhJPZ+U0txPOjWOt313gy+lcfz
+	TXjwlnpkg2YI0dhXRFww9SG9J1RkedlNd4z+V/XHRHFGVWNcLcGGfrCyourv92FQafx0D7KVZXa
+	20h32ucH9Hn+63VkV/LnRKBiHw7ZO5nTQgdLDIwFamdR7AqTk+g2xVowJUOCnVX6J9aVy+N3oZB
+	Lnl6imA==
+X-Google-Smtp-Source: AGHT+IEV+ngZedvb1G9GddVsd006y6aowAa3golTbSy0UL6/dPU7ikOlFtQiwJbx/8C4Y2tbwGajLA==
+X-Received: by 2002:a05:600c:43d4:b0:440:67d4:ec70 with SMTP id 5b1f17b1804b1-44069732095mr22695595e9.8.1744971773715;
+        Fri, 18 Apr 2025 03:22:53 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4a4c8fsm2264681f8f.89.2025.04.18.03.22.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 03:22:53 -0700 (PDT)
+Message-ID: <a6689177-0f82-4b1e-b1c5-c50751d0f0bf@linaro.org>
+Date: Fri, 18 Apr 2025 11:22:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1987:b0:3cf:c7d3:e4b with SMTP id
- e9e14a558f8ab-3d894286fa1mr22023255ab.21.1744971543744; Fri, 18 Apr 2025
- 03:19:03 -0700 (PDT)
-Date: Fri, 18 Apr 2025 03:19:03 -0700
-In-Reply-To: <20250418094635.237960-1-richard120310@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68022717.050a0220.243d89.001a.GAE@google.com>
-Subject: Re: [syzbot] [jfs?] [bcachefs?] KASAN: null-ptr-deref Read in
- drop_buffers (3)
-From: syzbot <syzbot+de1498ff3a934ac5e8b4@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, richard120310@gmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] dt-bindings: media: qcom,sm8550-iris: document
+ QCS8300 IRIS accelerator
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250418-qcs8300_iris-v2-0-1e01385b90e9@quicinc.com>
+ <20250418-qcs8300_iris-v2-1-1e01385b90e9@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250418-qcs8300_iris-v2-1-1e01385b90e9@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 18/04/2025 07:28, Vikash Garodia wrote:
+> Document the IRIS video decoder and encoder accelerator found in the
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-kernel BUG in z3fold_page_migrate
-
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3319
- worker_thread+0x870/0xd30 kernel/workqueue.c:3400
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-------------[ cut here ]------------
-kernel BUG at mm/z3fold.c:1293!
-Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI
-CPU: 0 UID: 0 PID: 30 Comm: kcompactd1 Not tainted 6.14.0-rc6-syzkaller-00253-gcb82ca153949-dirty #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:z3fold_page_migrate+0xc22/0x1170 mm/z3fold.c:1293
-Code: ff 48 89 ef 48 c7 c6 a0 3e 38 8c e8 f8 1a d8 ff 90 0f 0b e8 60 85 8d ff 48 8b 7c 24 10 48 c7 c6 00 3f 38 8c e8 df 1a d8 ff 90 <0f> 0b 48 85 db 0f 85 83 00 00 00 0f 1f 44 00 00 e8 39 85 8d ff e9
-RSP: 0018:ffffc90000516eb8 EFLAGS: 00010246
-RAX: 760a2d6b4e715d00 RBX: 0000000000000000 RCX: 0000000000000001
-RDX: dffffc0000000000 RSI: ffffffff8c2ab220 RDI: 0000000000000001
-RBP: ffffea00014d6180 R08: ffffffff903cfd77 R09: 1ffffffff2079fae
-R10: dffffc0000000000 R11: fffffbfff2079faf R12: dffffc0000000000
-R13: ffffffff8c383d08 R14: 04fff00000010001 R15: 1ffffd400029ac30
-FS:  0000000000000000(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000c00018b600 CR3: 0000000053580000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- move_to_new_folio+0x9a5/0xc20 mm/migrate.c:1071
- migrate_folio_move mm/migrate.c:1360 [inline]
- migrate_folios_move mm/migrate.c:1712 [inline]
- migrate_pages_batch+0x1e84/0x30b0 mm/migrate.c:1959
- migrate_pages_sync mm/migrate.c:2016 [inline]
- migrate_pages+0x2701/0x3680 mm/migrate.c:2098
- compact_zone+0x33d5/0x4ae0 mm/compaction.c:2663
- kcompactd_do_work mm/compaction.c:3111 [inline]
- kcompactd+0x9a5/0x1540 mm/compaction.c:3205
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:z3fold_page_migrate+0xc22/0x1170 mm/z3fold.c:1293
-Code: ff 48 89 ef 48 c7 c6 a0 3e 38 8c e8 f8 1a d8 ff 90 0f 0b e8 60 85 8d ff 48 8b 7c 24 10 48 c7 c6 00 3f 38 8c e8 df 1a d8 ff 90 <0f> 0b 48 85 db 0f 85 83 00 00 00 0f 1f 44 00 00 e8 39 85 8d ff e9
-RSP: 0018:ffffc90000516eb8 EFLAGS: 00010246
-RAX: 760a2d6b4e715d00 RBX: 0000000000000000 RCX: 0000000000000001
-RDX: dffffc0000000000 RSI: ffffffff8c2ab220 RDI: 0000000000000001
-RBP: ffffea00014d6180 R08: ffffffff903cfd77 R09: 1ffffffff2079fae
-R10: dffffc0000000000 R11: fffffbfff2079faf R12: dffffc0000000000
-R13: ffffffff8c383d08 R14: 04fff00000010001 R15: 1ffffd400029ac30
-FS:  0000000000000000(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fd22cd0bfd8 CR3: 00000000534f0000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Document the IRIS video "encoder/decoder" or "transcoder"
 
 
-Tested on:
+> QCS8300 platform. QCS8300 is a downscaled version of SM8550, thereby
 
-commit:         cb82ca15 Merge tag 'usb-6.14-rc7' of git://git.kernel...
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=108a24cc580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=522f1f3e5f61442b
-dashboard link: https://syzkaller.appspot.com/bug?extid=de1498ff3a934ac5e8b4
-compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=17949fe4580000
+is a down-scaled version of the SM8550.
 
+QCS8300 has a fewer capabilities compared to SM8550.
+
+Note: It might be nice to give a brief overview of what the differences 
+are since you mention them or instead of making it a diff of 8550 just 
+to state what the QCS8300 can do.
+
+> have different(lower) capabilities when compared to SM8550.
+> 
+> This patch depends on patch 20250225-topic-sm8x50-iris-v10-a219b8a8b477
+> 
+> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> ---
+>   Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+> index f567f84bd60d439b151bb1407855ba73582c3b83..3dee25e99204169c6c80f7db4bad62775aaa59b5 100644
+> --- a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+> +++ b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+> @@ -24,6 +24,7 @@ properties:
+>         - enum:
+>             - qcom,sm8550-iris
+>             - qcom,sm8650-iris
+> +          - qcom,qcs8300-iris
+>   
+>     power-domains:
+>       maxItems: 4
+> 
+Otherwise looks good an applies, please update your commit long and add:
+
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
