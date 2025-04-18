@@ -1,142 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C6C2139D8;
-	Fri, 18 Apr 2025 15:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBA815624B;
+	Fri, 18 Apr 2025 15:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744990669; cv=none; b=dXKCaI5hj7FYeKLS180U+nEUm2rdxXbL3KRG48VVe7HjGizxTaERz+qmteQQitdxAahldDKnP6tEGJl4qGQ+fwaAbX97JV1ensijsuJ2/Uzf5f/5vmGmICUdAoLX5Qtj4gh3csMJE1dU6DTs+GXov2Z8GnJfVpdnneDpsMpl0bI=
+	t=1744990751; cv=none; b=oOePUWeXToOnCVrYMVN6zj/hWq3gDzXvejYzXyD2755JZTKTPIMyJokfibgbzfOSAZ/AkAQXx++y8h1Ufldow9u9SeIYRDvojYn8De5cvlexbYGtjHHhgzxUChfnIj1hINcvBeOomAhnKTD5Qx4COQ7sB/dmY3J9EcDeZ8lj+Qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744990669; c=relaxed/simple;
-	bh=ePj9XBwxI8VhpbU1F8JnRfKVKSF8Vwg5qYMWDW9j5Vo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dw+RoG9eRYeinUzUg+nTnBCRmyIFw9jP7egyMQcakXKBIx7QDpBElqiBcTQ03+0hgXsshScgFNUqMmOMy2ICYNNAO6fLL9tZzWJfklEPxXWVLKheOX2VhV9mXvyJE1xCgcyaZX5Eff9jJIkJBkaBk5gS59drnp/ILklrvxjRQrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FVMCpFmF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744990751; c=relaxed/simple;
+	bh=SXD+Sr5Bu1sa1IrehS27JU8VV+GaNuxKJ5Tcu8UwzI8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=beuo9lcnPPYDL8MPp+vSAg5rAtEquEOeLKEUS+kArqr7FwaNwIDT8Dxxz1Tl4r4wA3mSNgZmicLFLB2jLx64AWv0BRF4PrdfoAIlcuRvdYwGJpc1NCfq8MpnGSz+7ZJLKdeDaAv+WQxf/HAX4nblUO8yh2Jrum5DjhwzbKkzM8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VpNYh+gP; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FVMCpFmF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 777BEC4CEEA;
-	Fri, 18 Apr 2025 15:37:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744990668;
-	bh=ePj9XBwxI8VhpbU1F8JnRfKVKSF8Vwg5qYMWDW9j5Vo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=FVMCpFmFMik0JEZHNat+EuYp7TRjpOOTj/QGc/Rb1gug+Bpr18pAyMZtPYuuor5Ty
-	 rOTmP3u1zBJbPiz4XT5/Msn/5wNIcwn6LVJIlgaXSYo7bpXFWg9Nc04IhpUpxBtqmq
-	 s/Kp5+sF4aro9LhIwMrHA+6sIbLvZSn9qp5aZhX/H1BYvfgmA7k0AZ7x4mKEv0nYF2
-	 yD1E1tTkcIP8KkOE8VudODicBK61vW84Tfmi9ta0V7VJvshMHfhWDPdxj/NOMC56f9
-	 qwrLoZVHKO4beHJhLcH/dngcCs2S+QowoTutOborJqgjLBdFZMPSm+rAE9JBpdWyBT
-	 9PFej9Kj6z6Sg==
-Date: Fri, 18 Apr 2025 16:37:43 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
- Michael.Hennerich@analog.com, skhan@linuxfoundation.org,
- kernelmentees@lists.linuxfoundation.org, stable@vger.kernel.org
-Subject: Re: [PATCH] iio: ad5933: Correct settling cycles encoding per
- datasheet
-Message-ID: <20250418163743.4f9379a1@jic23-huawei>
-In-Reply-To: <20250416142219.554938-1-gshahrouzi@gmail.com>
-References: <20250416142219.554938-1-gshahrouzi@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VpNYh+gP"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8B928431EB;
+	Fri, 18 Apr 2025 15:39:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744990741;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nDQXvSIoUGCjM9r7U7iSfQKR2tkJ7iP64qIbMviAOxQ=;
+	b=VpNYh+gPTnPo2FYviHN36KxuvmlaMiu0VeP16M2W+tluTM/JQVWasuQhyp+fFQ509yYz7o
+	hcQ7PgwVO0uUHCYwNfja875oXKK8RsaH3KWy7sO74ezq9u5IGtLWqx/VhhjO2u44GZg02Y
+	gmsKJQx9vSFQAV3skGcumId28e66dOcIAFw4QNRcjmXmiIZWwnut8CDIW9PhrIDJiwGlW3
+	VM82vVzYTeogvsjQ7ScKOFXIEjOp8tlmI9oWpung5BZI5m2vpSsuS/TxpwII42vT7ghfXn
+	XnZ07INMfFmo8NNYS7d75Nzkkp54GC8R1yz88uF+DfnpoWnvgeuGtywLNdC/pA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 18 Apr 2025 17:39:00 +0200
+Message-Id: <D99VLB8X9Y6T.3RO76KOQDUKZY@bootlin.com>
+Subject: Re: [PATCH v6 02/12] mfd: Add max7360 support
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
+ <20250409-mdb-max7360-support-v6-2-7a2535876e39@bootlin.com>
+ <aAFFh8dvgQDJMyOh@smile.fi.intel.com>
+In-Reply-To: <aAFFh8dvgQDJMyOh@smile.fi.intel.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfedvheefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlr
+ dhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Wed, 16 Apr 2025 10:22:19 -0400
-Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
+On Thu Apr 17, 2025 at 8:16 PM CEST, Andy Shevchenko wrote:
+> On Wed, Apr 09, 2025 at 04:55:49PM +0200, mathieu.dubois-briand@bootlin.c=
+om wrote:
+>> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+>>=20
+>> Add core driver to support MAX7360 i2c chip, multi function device
+>> with keypad, GPIO, PWM, GPO and rotary encoder submodules.
+>
+> ...
+>
+>> +static int max7360_probe(struct i2c_client *client)
+>> +{
+>> +	struct device *dev =3D &client->dev;
+>> +	struct regmap *regmap;
+>> +	int ret;
+>> +
+>> +	regmap =3D devm_regmap_init_i2c(client, &max7360_regmap_config);
+>> +	if (IS_ERR(regmap))
+>> +		return dev_err_probe(dev, PTR_ERR(regmap), "Failed to initialise regm=
+ap\n");
+>
+>> +	i2c_set_clientdata(client, regmap);
+>
+> Is it used somehow? In children?
+>
 
-> Implement the settling cycles encoding as specified in the AD5933
-> datasheet, Table 13 ("Number of Settling Times Cycles Register"). The
-> previous logic did not correctly translate the user-requested effective
-> cycle count into the required 9-bit base + 2-bit multiplier format
-> (D10..D0) for values exceeding 511.
-> 
-> Clamp the user input for out_altvoltage0_settling_cycles to the
-> maximum effective value of 2044 cycles (511 * 4x multiplier).
-> 
-> Fixes: f94aa354d676 ("iio: impedance-analyzer: New driver for AD5933/4 Impedance Converter, Network Analyzer")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> ---
->  .../staging/iio/impedance-analyzer/ad5933.c   | 21 ++++++++++++-------
->  1 file changed, 14 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/staging/iio/impedance-analyzer/ad5933.c b/drivers/staging/iio/impedance-analyzer/ad5933.c
-> index d5544fc2fe989..5a8c5039bb159 100644
-> --- a/drivers/staging/iio/impedance-analyzer/ad5933.c
-> +++ b/drivers/staging/iio/impedance-analyzer/ad5933.c
-> @@ -28,7 +28,7 @@
->  #define AD5933_REG_FREQ_START		0x82	/* R/W, 3 bytes */
->  #define AD5933_REG_FREQ_INC		0x85	/* R/W, 3 bytes */
->  #define AD5933_REG_INC_NUM		0x88	/* R/W, 2 bytes, 9 bit */
-> -#define AD5933_REG_SETTLING_CYCLES	0x8A	/* R/W, 2 bytes */
-> +#define AD5933_REG_SETTLING_CYCLES	0x8A	/* R/W, 2 bytes, 11+2 bit */
+I cannot see where it would be used in the code, and removing it has no
+effect. I will remove it.
 
-Probably spaces around the +  It's not code, but lets keep to consistent code style.
+Thanks for your review.
+Mathieu
 
->  #define AD5933_REG_STATUS		0x8F	/* R, 1 byte */
->  #define AD5933_REG_TEMP_DATA		0x92	/* R, 2 bytes*/
->  #define AD5933_REG_REAL_DATA		0x94	/* R, 2 bytes*/
-> @@ -71,6 +71,8 @@
->  #define AD5933_INT_OSC_FREQ_Hz		16776000
->  #define AD5933_MAX_OUTPUT_FREQ_Hz	100000
->  #define AD5933_MAX_RETRIES		100
-> +#define AD5933_MAX_FREQ_POINTS		511
-> +#define AD5933_MAX_SETTLING_CYCLES	2044 /* 511 * 4 */
-
->  
->  #define AD5933_OUT_RANGE		1
->  #define AD5933_OUT_RANGE_AVAIL		2
-> @@ -82,6 +84,10 @@
->  #define AD5933_POLL_TIME_ms		10
->  #define AD5933_INIT_EXCITATION_TIME_ms	100
->  
-> +/* Settling cycles multiplier bits D10, D9 */
-> +#define AD5933_SETTLE_MUL_2X		BIT(9)
-> +#define AD5933_SETTLE_MUL_4X		(BIT(9) | BIT(10))
-
-That looks like  a number, not a pair of separate bits. 
-I would expect a mask for this field then some defines for teh
-values it can take.
-
-> +
->  struct ad5933_state {
->  	struct i2c_client		*client;
->  	struct clk			*mclk;
-> @@ -411,14 +417,15 @@ static ssize_t ad5933_store(struct device *dev,
->  		ret = ad5933_cmd(st, 0);
->  		break;
->  	case AD5933_OUT_SETTLING_CYCLES:
-> -		val = clamp(val, (u16)0, (u16)0x7FF);
-> +		val = clamp(val, (u16)0, (u16)AD5933_MAX_SETTLING_CYCLES);
->  		st->settling_cycles = val;
->  
-> -		/* 2x, 4x handling, see datasheet */
-> +		/* Encode value for register: D10..D0 */
-> +		/* Datasheet Table 13: If cycles > 1022 -> val/4, set bits D10=1, D9=1 */
->  		if (val > 1022)
-> -			val = (val >> 2) | (3 << 9);
-> -		else if (val > 511)
-> -			val = (val >> 1) | BIT(9);
-> +			val = (val >> 2) | AD5933_SETTLE_MUL_4X;
-> +		else if (val > 511) /* Datasheet: If cycles > 511 -> val/2, set bit D9=1 */
-> +			val = (val >> 1) | AD5933_SETTLE_MUL_2X;
->  
->  		dat = cpu_to_be16(val);
->  		ret = ad5933_i2c_write(st->client,
-> @@ -426,7 +433,7 @@ static ssize_t ad5933_store(struct device *dev,
->  				       2, (u8 *)&dat);
->  		break;
->  	case AD5933_FREQ_POINTS:
-> -		val = clamp(val, (u16)0, (u16)511);
-> +		val = clamp(val, (u16)0, (u16)AD5933_MAX_FREQ_POINTS);
->  		st->freq_points = val;
->  
->  		dat = cpu_to_be16(val);
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
