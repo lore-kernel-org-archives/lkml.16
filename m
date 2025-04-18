@@ -1,201 +1,145 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mta-65-225.siemens.flowmailer.net (mta-65-225.siemens.flowmailer.net [185.136.65.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9078926A08C
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 07:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8094269CF4
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 07:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744962057; cv=none; b=fd6Mn77KJ/sWWPLNfRwn6YTTHfbvnvLqRMoKnzrnxNnkIsqNaV2prCIcc4d4ewlFiuiCPgS6aOJ6IKm0yM1A1wMGZlNPG8yrCI/tQ5v+ss0CsPsIbaxAHVQI3gb0VT4qeAdl16Y19RYgDcLlSfO+O7TTgyvF3mGtDloPn1pgYkk=
+	t=1744962067; cv=none; b=UEW5Xte4zbaIb0tr8gO99EBJPijxLOKjr5hKKWbv1oE4jpm4KIRkBvNbW0OyCiiye5S9mX1xWQV5DBBM3LuSRQlJJNU2IM7XY1i9N1LLpgQ01xhwN4QhYzA2PeO3pATOyNkiHxkCVnxU0R01vOztXEBlz0tOU7YB66F4wV1W4zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744962057; c=relaxed/simple;
-	bh=DCbZzSSzK5J5K8EjuW/T/It7HcLzCrosViqmRrAxcDg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pdt6EdWpVqgi09w19SdoWAn0X2mifK21hGcRH7Y98lqbjl+tUHIuX/QtQOGaHxpM0y5Nz02t6+/LLFn1UrENmurUn7lOfPtiJ5qqWoNrL+LdKQT6YpIOUlkxbrQpSVJ3PgNIJT5nzTUF2MOaNKy4zqYHAFVOPC4Qu2D1RGvDw2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fHt+zKUH; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744962067; c=relaxed/simple;
+	bh=iJEcfFsiWJ1V9+dLXeuoWVpKyPfbNwN8bvVTcoioenc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GOOHXKVO+88sSI8FGyRMV/h0uzrOMuhLZC9Po+ZcoWEftq8PlD/1f6s+04R8DNlrBdDhLlawuMxLrAcrxTTXhlttHN1AeDlxoiBOHhZwoPFE+s9JK/uZ4ylgT2zMrbLDTgAeVuVJ4yr+YU6WRlH7niu4SWN/McVRa2AHrG79SgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b=MhmmKpvo; arc=none smtp.client-ip=185.136.65.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fHt+zKUH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744962053;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5U3XpV/CK06BzDowrEdMCxWwiNqlbcO+Z4oINkEbeuE=;
-	b=fHt+zKUHJukXA/YGuh7kQPuAzZGcCfu/KNJKKa6AEuyyuRiBBnq4clqL/fsm6miXHwo+DP
-	5l1dV0STI6sxNOmVgRwuhzmiQeggTEGnUta3OH5J7lFQcex5lUFSqZ820HzRjHxDhcNR9Q
-	PvGcSZ5GNOHiXm9tnHrqjrizXpLqwK0=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-5-nLuEatHzOmSecP1Tc5jYuw-1; Fri,
- 18 Apr 2025 03:40:48 -0400
-X-MC-Unique: nLuEatHzOmSecP1Tc5jYuw-1
-X-Mimecast-MFC-AGG-ID: nLuEatHzOmSecP1Tc5jYuw_1744962045
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B2C3619560BC;
-	Fri, 18 Apr 2025 07:40:44 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.33])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C2A2918001EA;
-	Fri, 18 Apr 2025 07:40:42 +0000 (UTC)
-Date: Fri, 18 Apr 2025 15:40:38 +0800
-From: Baoquan He <bhe@redhat.com>
-To: steven chen <chenste@linux.microsoft.com>
-Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com, ebiederm@xmission.com,
-	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: Re: [PATCH v12 5/9] ima: kexec: define functions to copy IMA log at
- soft boot
-Message-ID: <aAIB9ga3wPWb5sC8@MiWiFi-R3L-srv>
-References: <20250416021028.1403-1-chenste@linux.microsoft.com>
- <20250416021028.1403-6-chenste@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b="MhmmKpvo"
+Received: by mta-65-225.siemens.flowmailer.net with ESMTPSA id 2025041807305421ce0c7b4baf023998
+        for <linux-kernel@vger.kernel.org>;
+        Fri, 18 Apr 2025 09:30:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=huaqian.li@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=oH4biYNRIXbUPcZJxbqF385p1W7crfHf3KjlM5z89+Q=;
+ b=MhmmKpvoP1mPw44HiJ3RiLjiBHPih8+nD719nw0Vzna9NCuV7EelAKVqIMbH+lNlFxORhA
+ F8FQfuwx+0RLYO37/Ra8wUhhDiIMx9mpNeiLFlD2vc7MVpXCF5+yGYoV0AsRQE7C2Aaq1ZPN
+ mFNr9UvXSxBBfUqWvVTewLklwni0K0z7WnnU+y+MrEdkcJcH0SkOl3+P0B2Vi3gw0Xn+qUv/
+ lqc3kS2IG/87OK3rO10HxXHWSPzR4xOkofnUjJLYHECLoJbgVA9UBeKkfthk24spiSKPYYWB
+ Qv/Cujl+Dj93idJ186UvK4IxIYV0ChXQzfpKjybyPzU8dyDmy1i+vS3Q==;
+From: huaqian.li@siemens.com
+To: helgaas@kernel.org,
+	m.szyprowski@samsung.com,
+	robin.murphy@arm.com
+Cc: baocheng.su@siemens.com,
+	bhelgaas@google.com,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	diogo.ivo@siemens.com,
+	huaqian.li@siemens.com,
+	jan.kiszka@siemens.com,
+	kristo@kernel.org,
+	krzk+dt@kernel.org,
+	kw@linux.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	lpieralisi@kernel.org,
+	nm@ti.com,
+	robh@kernel.org,
+	s-vadapalli@ti.com,
+	ssantosh@kernel.org,
+	vigneshr@ti.com,
+	iommu@lists.linux.dev,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v7 1/8] dt-bindings: soc: ti: Add AM65 peripheral virtualization unit
+Date: Fri, 18 Apr 2025 15:30:19 +0800
+Message-Id: <20250418073026.2418728-2-huaqian.li@siemens.com>
+In-Reply-To: <20250418073026.2418728-1-huaqian.li@siemens.com>
+References: <20241030205703.GA1219329@bhelgaas>
+ <20250418073026.2418728-1-huaqian.li@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416021028.1403-6-chenste@linux.microsoft.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Transfer-Encoding: 8bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-959203:519-21489:flowmailer
 
-On 04/15/25 at 07:10pm, steven chen wrote:
-> From: Steven Chen <chenste@linux.microsoft.com>
-> 
-> The IMA log is currently copied to the new kernel during kexec 'load' 
-> using ima_dump_measurement_list(). However, the log copied at kexec 
-> 'load' may result in loss of IMA measurements that only occurred after
-> kexec "load'. Setup the needed infrastructure to move the IMA log copy 
-> from kexec 'load' to 'execute'.
-> 
-> Define a new IMA hook ima_update_kexec_buffer() as a stub function.
-> It will be used to call ima_dump_measurement_list() during kexec 'execute'.
-> 
-> Implement ima_kexec_post_load() function to be invoked after the new 
-> Kernel image has been loaded for kexec. ima_kexec_post_load() maps the 
-> IMA buffer to a segment in the newly loaded Kernel.  It also registers 
-> the reboot notifier_block to trigger ima_update_kexec_buffer() at 
-> kexec 'execute'.
-> 
-> Set the priority of register_reboot_notifier to INT_MIN to ensure that the
-> IMA log copy operation will happen at the end of the operation chain, so 
-> that all the IMA measurement records extended into the TPM are copied
-> 
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-  ^^^
+From: Jan Kiszka <jan.kiszka@siemens.com>
 
- The tag
+The PVU allows to define a limited set of mappings for incoming DMA
+requests to the system memory. It is not a real IOMMU, thus hooked up
+under the TI SoC bindings.
 
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Baoquan He <bhe@redhat.com> 
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Signed-off-by: Steven Chen <chenste@linux.microsoft.com>
-> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> ---
->  include/linux/ima.h                |  3 ++
->  security/integrity/ima/ima_kexec.c | 47 ++++++++++++++++++++++++++++++
->  2 files changed, 50 insertions(+)
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Li Hua Qian <huaqian.li@siemens.com>
+---
+ .../bindings/soc/ti/ti,am654-pvu.yaml         | 51 +++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,am654-pvu.yaml
 
-Other than the tag, this looks good to me:
-
-Acked-by: Baoquan He <bhe@redhat.com>
-
-> 
-> diff --git a/include/linux/ima.h b/include/linux/ima.h
-> index 0bae61a15b60..8e29cb4e6a01 100644
-> --- a/include/linux/ima.h
-> +++ b/include/linux/ima.h
-> @@ -32,6 +32,9 @@ static inline void ima_appraise_parse_cmdline(void) {}
->  
->  #ifdef CONFIG_IMA_KEXEC
->  extern void ima_add_kexec_buffer(struct kimage *image);
-> +extern void ima_kexec_post_load(struct kimage *image);
-> +#else
-> +static inline void ima_kexec_post_load(struct kimage *image) {}
->  #endif
->  
->  #else
-> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> index 7e0a19c3483f..e79f6caf895b 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -12,10 +12,14 @@
->  #include <linux/kexec.h>
->  #include <linux/of.h>
->  #include <linux/ima.h>
-> +#include <linux/reboot.h>
-> +#include <asm/page.h>
->  #include "ima.h"
->  
->  #ifdef CONFIG_IMA_KEXEC
-> +static bool ima_kexec_update_registered;
->  static struct seq_file ima_kexec_file;
-> +static void *ima_kexec_buffer;
->  
->  static void ima_free_kexec_file_buf(struct seq_file *sf)
->  {
-> @@ -162,6 +166,49 @@ void ima_add_kexec_buffer(struct kimage *image)
->  	kexec_dprintk("kexec measurement buffer for the loaded kernel at 0x%lx.\n",
->  		      kbuf.mem);
->  }
-> +
-> +/*
-> + * Called during kexec execute so that IMA can update the measurement list.
-> + */
-> +static int ima_update_kexec_buffer(struct notifier_block *self,
-> +				   unsigned long action, void *data)
-> +{
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static struct notifier_block update_buffer_nb = {
-> +	.notifier_call = ima_update_kexec_buffer,
-> +	.priority = INT_MIN
-> +};
-> +
-> +/*
-> + * Create a mapping for the source pages that contain the IMA buffer
-> + * so we can update it later.
-> + */
-> +void ima_kexec_post_load(struct kimage *image)
-> +{
-> +	if (ima_kexec_buffer) {
-> +		kimage_unmap_segment(ima_kexec_buffer);
-> +		ima_kexec_buffer = NULL;
-> +	}
-> +
-> +	if (!image->ima_buffer_addr)
-> +		return;
-> +
-> +	ima_kexec_buffer = kimage_map_segment(image,
-> +					      image->ima_buffer_addr,
-> +					      image->ima_buffer_size);
-> +	if (!ima_kexec_buffer) {
-> +		pr_err("Could not map measurements buffer.\n");
-> +		return;
-> +	}
-> +
-> +	if (!ima_kexec_update_registered) {
-> +		register_reboot_notifier(&update_buffer_nb);
-> +		ima_kexec_update_registered = true;
-> +	}
-> +}
-> +
->  #endif /* IMA_KEXEC */
->  
->  /*
-> -- 
-> 2.43.0
-> 
+diff --git a/Documentation/devicetree/bindings/soc/ti/ti,am654-pvu.yaml b/Documentation/devicetree/bindings/soc/ti/ti,am654-pvu.yaml
+new file mode 100644
+index 000000000000..e4a5fc47d674
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/ti/ti,am654-pvu.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (c) Siemens AG, 2024
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/ti/ti,am654-pvu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TI AM654 Peripheral Virtualization Unit
++
++maintainers:
++  - Jan Kiszka <jan.kiszka@siemens.com>
++
++properties:
++  compatible:
++    enum:
++      - ti,am654-pvu
++
++  reg:
++    maxItems: 2
++
++  reg-names:
++    items:
++      - const: cfg
++      - const: tlbif
++
++  interrupts:
++    items:
++      - description: fault interrupt
++
++  interrupt-names:
++    items:
++      - const: pvu
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-names
++
++additionalProperties: false
++
++examples:
++  - |
++    iommu@30f80000 {
++        compatible = "ti,am654-pvu";
++        reg = <0x30f80000 0x1000>,
++              <0x36000000 0x100000>;
++        reg-names = "cfg", "tlbif";
++        interrupts-extended = <&intr_main_navss 390>;
++        interrupt-names = "pvu";
++    };
+-- 
+2.34.1
 
