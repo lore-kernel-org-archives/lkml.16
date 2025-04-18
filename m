@@ -1,104 +1,97 @@
-Received: from smtp-bc0a.mail.infomaniak.ch (smtp-bc0a.mail.infomaniak.ch [45.157.188.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D325D1519BF
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 14:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F1B14BF89;
+	Fri, 18 Apr 2025 14:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744985329; cv=none; b=u6zv5Pv+mq5oaJYH5EVVsoLxduZucRQzbKER41rD/Y2QyLHprkeb2k9M/K+rd03T5hpXRWOmIZ2re2VKVzJ1poCh8ieTf72m7R+o+BsaDmcm1429QQMF8cfKNYULCNIv4yIjt/DsV1bPnZBfs7g920ywOzT1BtseK95H/cvcs40=
+	t=1744985429; cv=none; b=JnlUVfIvuSOJmrmYy503/QJX78PqnLx+b/aMEtZm1S1DkxrogWPAWP0Y8tJjLVFfmV06ysjdHfXOljiGwTTtyU5eixjuL/kZeBkpQzWqPQEigCVY7RDHSGfU+Xq9L2X5JU7wIFiboPVbFPlJg2zwRBVkkRbN58wNvensvnhJQ2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744985329; c=relaxed/simple;
-	bh=lu1thmBnmj6RCUgXCdD4m/vjaN2AsZlWOYwTDC0zvCU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Ls/0cy39QywBZXqncjomkdKghR9kxQiN2i2stO24RVEtXL7a9t+8AA3r6yX6BvbG304c8pTIZZwi/UWWe+A55cQX9h0dv47MAyHA9TIATeIihXsWoykoQ0nNs95GR3fpZtvqfFnsu8lUsTwB41Tz4ROvAshOiddQbTE5sdSc54U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=45.157.188.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZfGny40gGzjJm;
-	Fri, 18 Apr 2025 16:08:38 +0200 (CEST)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZfGnx2HJKzrrT;
-	Fri, 18 Apr 2025 16:08:37 +0200 (CEST)
-From: Quentin Schulz <foss+kernel@0leil.net>
-Date: Fri, 18 Apr 2025 16:08:20 +0200
-Subject: [PATCH v2] dt-bindings: usb: usb-device: relax compatible pattern
- to a contains
+	s=arc-20240116; t=1744985429; c=relaxed/simple;
+	bh=CKMzXx+F3E9vv2gepTCO1uz+atgs62bkZ8bLdGreiWA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Xug/U0QD2GcUIwf73sjOWB9GkGIGsrJuwAvexmOaBWMtXT7I34Mh/ped7TR/L1XXHAzII9AOUZ23Gsyo8ROlCon3P2szGBetkyz1do9ZwndZXGEVt+V8NAx+Ae6ycU7QqBiFvUC6rtU5zW+bLniD44LE4g3qaKO+O9Ag5fdVyCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 008D6C4CEE2;
+	Fri, 18 Apr 2025 14:10:27 +0000 (UTC)
+Date: Fri, 18 Apr 2025 10:12:08 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>,
+ linux-kselftest@vger.kernel.org
+Subject: [PATCH v2] tracing: selftests: Add testing a user string to filters
+Message-ID: <20250418101208.38dc81f5@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250418-dt-binding-usb-device-compatibles-v2-1-b3029f14e800@cherry.de>
-X-B4-Tracking: v=1; b=H4sIANNcAmgC/5WNTQ6CMBBGr0Jm7Zi2QERX3sOw6M8UJtFCWiQS0
- rtbuYHL9yXfezskikwJbtUOkVZOPIUC6lSBHXUYCNkVBiVUKxrZolvQcHAcBnwng658LKGdXrN
- e2Dwpoew6fzFCd9I0UDxzJM+fo/HoC4+cliluR3KVv/Uf+ypR4lX42npfK63F3Y4U43Z2BH3O+
- Qv5Ahiv0gAAAA==
-X-Change-ID: 20250415-dt-binding-usb-device-compatibles-188f7b0a81b4
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: =?utf-8?q?=C5=81ukasz_Czechowski?= <lukasz.czechowski@thaumatec.com>, 
- linux-usb@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@cherry.de>
-X-Mailer: b4 0.14.2
-X-Infomaniak-Routing: alpha
 
-From: Quentin Schulz <quentin.schulz@cherry.de>
+From: Steven Rostedt <rostedt@goodmis.org>
 
-The dt-core typically allows multiple compatibles[1] but usb-device
-currently forces a single compatible.
+Running the following commands was broken:
 
-This is an issue when multiple devices with slightly different productID
-all behave the same. This would require the driver to keep updating its
-compatible matching table to include this new productID instead of doing
-what is usually done: have two compatibles, the leftmost which matches
-exactly the HW device definition, and the rightmost one as a fallback
-which is assumed to be 100% compatible with the device at hand. If this
-assumption turns out to be wrong, it is easy to work around this without
-having to modify the device tree by handling the leftmost compatible in the driver.
+  # cd /sys/kernel/tracing
+  # echo "filename.ustring ~ \"/proc*\"" > events/syscalls/sys_enter_openat/filter
+  # echo 1 > events/syscalls/sys_enter_openat/enable
+  # ls /proc/$$/maps
+  # cat trace
 
-[1] https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/dt-core.yaml#L21-L25
+And would produce nothing when it should have produced something like:
 
-Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+      ls-1192    [007] .....  8169.828333: sys_openat(dfd: ffffffffffffff9c, filename: 7efc18359904, flags: 80000, mode: 0)
+
+Add a test to check this case so that it will be caught if it breaks
+again.
+
+Link: https://lore.kernel.org/linux-trace-kernel/20250417183003.505835fb@gandalf.local.home/
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-This came up while working on fixing USB on an RK3399 Puma which has an
-onboard USB hub whose productID isn't in any driver compatible list
-but which can be supported by a driver with a slightly different
-productID matching another variant of the same IC, from the same
-datasheet.
+Changes since v1: https://lore.kernel.org/20250417223323.3edb4f6c@batman.local.home
 
-See https://lore.kernel.org/linux-rockchip/20250326-onboard_usb_dev-v1-0-a4b0a5d1b32c@thaumatec.com/
----
-Changes in v2:
-- use contains: instead of pattern: to relax the check, similarly to
-  what's done for PCI (suggested by Rob),
-- Link to v1: https://lore.kernel.org/r/20250415-dt-binding-usb-device-compatibles-v1-1-90f3cff32aa0@cherry.de
----
- Documentation/devicetree/bindings/usb/usb-device.yaml | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+- Use $TMPDIR instead of $TESTDIR as test file (Masami Hiramatsu)
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-device.yaml b/Documentation/devicetree/bindings/usb/usb-device.yaml
-index c676956810331b81f11f3624340fc3e612c98315..09fceb469f10525e9dcdb91435b142b0d21964b8 100644
---- a/Documentation/devicetree/bindings/usb/usb-device.yaml
-+++ b/Documentation/devicetree/bindings/usb/usb-device.yaml
-@@ -28,7 +28,8 @@ description: |
+ .../test.d/filter/event-filter-function.tc    | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
+index 118247b8dd84..c62165fabd0c 100644
+--- a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
++++ b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
+@@ -80,6 +80,26 @@ if [ $misscnt -gt 0 ]; then
+ 	exit_fail
+ fi
  
- properties:
-   compatible:
--    pattern: "^usb[0-9a-f]{1,4},[0-9a-f]{1,4}$"
-+    contains:
-+      pattern: "^usb[0-9a-f]{1,4},[0-9a-f]{1,4}$"
-     description: Device nodes or combined nodes.
-       "usbVID,PID", where VID is the vendor id and PID the product id.
-       The textual representation of VID and PID shall be in lower case
-
----
-base-commit: 834a4a689699090a406d1662b03affa8b155d025
-change-id: 20250415-dt-binding-usb-device-compatibles-188f7b0a81b4
-
-Best regards,
++# Check strings too
++if [ -f events/syscalls/sys_enter_openat/filter ]; then
++	DIRNAME=`basename $TMPDIR`
++	echo "filename.ustring ~ \"*$DIRNAME*\"" > events/syscalls/sys_enter_openat/filter
++	echo 1 > events/syscalls/sys_enter_openat/enable
++	echo 1 > tracing_on
++	ls /bin/sh
++	nocnt=`grep openat trace | wc -l`
++	ls $TMPDIR
++	echo 0 > tracing_on
++	hitcnt=`grep openat trace | wc -l`;
++	echo 0 > events/syscalls/sys_enter_openat/enable
++	if [ $nocnt -gt 0 ]; then
++		exit_fail
++	fi
++	if [ $hitcnt -eq 0 ]; then
++		exit_fail
++	fi
++fi
++
+ reset_events_filter
+ 
+ exit 0
 -- 
-Quentin Schulz <quentin.schulz@cherry.de>
+2.47.2
 
