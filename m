@@ -1,257 +1,142 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0672218AD4;
-	Fri, 18 Apr 2025 17:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7AE8F77
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744997918; cv=none; b=GlkhnxY+LA7h8QkYFPHnRGWuOo0pXPuh0/7wgWgjXWsT2Ky+1eCptMTdPfnsJ8NESZTnzCJNeeAEHXOyYkgZOpG6g7oaH++1cCgTS4/sPtp2fJ7NGOB0rw+3unNQCjVbuuUT0xmNeIXzgqxQKc8TPIyYWU98ixOVMJ3zT69Vue8=
+	t=1744998282; cv=none; b=pUU9Z5CNuTgwyl0esysKeJOsQ69B0G0S3YQt3hgc9iILn2dfWh+owpdweA7WgQpWk/l7piG3xu1yjC996AhmkoK7dEkG7I0KpQZhn27BZjLnWisX0kYlfk9TbkcEQHxwdYAF/6oZniBeYf8FBr+twrFA/LOaunLjzDzR610AhFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744997918; c=relaxed/simple;
-	bh=xb2G2VO1M1xfUb0LCy2IJ1UrQitw5bZu9jE/Qrd9Xu8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YpOr+iINdIeqKQM1kVoThj4aX5Xl05QGAzKiuRSw2V7maldbSe+Yhc9BySFdSqX9nNLIt3lalOUFujCyRVACmfDDmwIh+YyxOybLALuQEt3Gdx3N3D2EQKav6fq53x7M6D6EV9VIICtTDLByFYM1soOMY8QzCNXF9G/oey9QQAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=euNER91e; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744998282; c=relaxed/simple;
+	bh=lUe2Im3hgmPvqNU0ZhoHWSMbiSlthlEw0jzE7+pNyxM=;
+	h=Date:Subject:CC:From:To:Message-ID; b=g6n1uZt9ykqAjLzt545/H2IRW/f6mv9cNSVAFB77pIkfPJyLBSh4+d+r0Q+LAlqOmi8ZMgA0ItaOxEynvmzozI2Yet8XGVgc2GeS4BMnLAKLKgHss48OpqGyuih5gkjAewcU8C5Zh4npO+6yuQGxh3xgxqZ1e/AhursoSZNY0Bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=CclAPrMV; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="euNER91e"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4774d68c670so13387341cf.0;
-        Fri, 18 Apr 2025 10:38:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="CclAPrMV"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22c3407a87aso32513025ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:44:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744997915; x=1745602715; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1744998279; x=1745603079; darn=vger.kernel.org;
+        h=message-id:to:from:cc:subject:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ki8ACZJISOIbjJS/GasgcMmF3ePfgYfym/hjjZ80/W0=;
-        b=euNER91e1Gg5lpm90aj9e/SMgl/p2a/tWx89sFA1JpmV5CubAH2mzPH7vNSL6XqPBH
-         wZxiierLHUlX6LHHHr72c2NKvhW1a9IPGA5f58WBa6LA0T/g7IRfNI7zpko4Bbg7bylq
-         LCs31syiCvT1FxawECgTgRbZgtQ9+Sj4DAAkMpsDDiAdt4zmlj/wEi6cGYPx3pkLME/h
-         GMBiMabrz/t5kOdCSUteINd+bTt+Z8yIeufFPJt04L2Vjenikeds+a03CUZa3vEV9NtG
-         Bu22qsL8Mda9pjx1oj+ujZgGdV7cJPHAKoQQL7Nwzc2YABMcBC8SCd/mz5zs4BmxWtEE
-         nTug==
+        bh=Y2sScoLYMaDn6o5OZxST51MbutXhshEvaoFDk5vxulw=;
+        b=CclAPrMVODX890ndaoSL4HZ8Vm2RG7IqPCCNe7NPzJbgvtk1QIot65nZHwrvvU8NsE
+         kUfMmKiPkvG7Ki5ea0URHOc5CJiGMDfKyKtCpYvSPTCHDUFEPIweGUFRS2vVIp8TIauN
+         NqgB098ht3xZ4hYNzp5Fw432zMg7LPQsy4G7r5MSB91TAggONsvRvMfLr6T6Ry+8i8gu
+         m+EjXiLEnTrzSiBQiv+hx3D5uzVDPIZcm2qDW4tOP91gQbY17+aipEQHI3jJNhUM0rga
+         0JdzIljCW6wGhqOWfhXcXLj5MvLTtA0LTOS7yomTikZvDaXedPBQ99PeDkt7Pnf7guLB
+         rPJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744997915; x=1745602715;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744998279; x=1745603079;
+        h=message-id:to:from:cc:subject:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ki8ACZJISOIbjJS/GasgcMmF3ePfgYfym/hjjZ80/W0=;
-        b=NsFxpfGoy4JlgLqX6sgPo/laxfFZ0VrdLcAiu5nLMiQ+w4fiQYnvvRiC/Ly7K8+maD
-         /WhPttiQSHxJTUfLNZKhpIAaaxQ0di1KDN5KMXQ56ul0pVXplJKq4fdJ66ISrxnlMnLB
-         UXQJgtCt6tMBzHvlYEDVif/KphRVW3P4v23AexyoH7+M8/j9TKfR0M7itwv4WK/J48Hp
-         MvC17z4o5F60SEk7Qikhz0WVvGZqGJHSQX5ugU+uxXKlN0wbNYKM2h6pqaq2RwirrqNV
-         NowpX3IJQ8LIPRoUwTrSYOc2LUG7oKO0jqb6BKxihp7JtMd743FQput80IcAkdO/vVtB
-         rfEw==
-X-Forwarded-Encrypted: i=1; AJvYcCWVQ0/cgXm4G0r3zpVF+MPqg13GkkEiel1zCuWCHbaJCTEWwivdG/IkEoet5S6JxJvSt6gPWzbBp2fbDjin@vger.kernel.org, AJvYcCXe+9SZTc+d/rTwkgMkgT3UGt4e8FOmX7hPG3r93KxKxp6ZZ6dGO//9DrVKv8JL3xTx/f14cQQ4IV8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqLHhwl4uTeuvcTjnfsOte4zOa6ExbKS56qShL6Iw5Qhow6ejC
-	bMXEK98ASR/zXohGa4yN57SJUpNybjT+qt3RpQZW/A/w4B9aEu3fLrZ+DuvB7wR4daIf4meAAb3
-	F7+mRgJ8D9NBssfjVrF5krwSFRCo=
-X-Gm-Gg: ASbGnctdWdZ0w3oPqJD9SNsZb0W0IJaOIA9KTSunhUYNU5qJ2Lzs0UFtWzXLiSRk2JV
-	2Q2JhdVTUd5QQJG7y414eXtdj//c/ZQKuoXocIZuK6KXBFWxjfMJ/40ID7bXlCfW2YOIhRqBg6a
-	kw1elwRfmbnhLfArrQEV4m+MDraqagWf665JTVygGi/ON94xZa1/KE
-X-Google-Smtp-Source: AGHT+IGGjHKCjDEZMmSyR53rv7oRObionPa3GQZ+n0O87mJ/ObRuEobUJbchFdd8U7yEiltYlhwfH36qnsflWc3KJdc=
-X-Received: by 2002:a05:622a:1a12:b0:476:a967:b247 with SMTP id
- d75a77b69052e-47aec4ccc58mr55176681cf.47.1744997915428; Fri, 18 Apr 2025
- 10:38:35 -0700 (PDT)
+        bh=Y2sScoLYMaDn6o5OZxST51MbutXhshEvaoFDk5vxulw=;
+        b=me05lOys3YOidR8F1eOzmrnpZNIeW1mGkQU5gUjzmyuR2rtCohOMQcV4iwaDOSsSii
+         MJ4oNepLS6fyFdX54igsRpAqtD7bRKstrUaRJKIwujKffphuMdrYkD6fMu6y87KjduJy
+         YgTzL613gLP47m9fU6vO64PseF4KlMej3c1gjExcwe1OHOUWijotVqknE+SLZqkJVw29
+         USLxZRnvLK1cQBUFBczwsTT72lDqLiim+jCgIX8RsPVHCv587vp82HGOL2P7k0NTYuud
+         QS8WtlYjfoZdnrjzehR1+PFZ0xy5YVAyrKi1afbEVlfIWCUNOygDRNt12Wh1xNUbJSfR
+         DZcw==
+X-Forwarded-Encrypted: i=1; AJvYcCWPYpFCbPiK+D2raXozF50t29dbBEzg3hWiNxSXVA++t94Nm+gEJAR3BL5M5yu9KeZqhCrnU1tpCRl+T+c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkwRityLsXlrnzqfA3qT0P4S/tQZIyeh7r3xa6/pIcZ74c/ugo
+	GB5mlBp0C7+iAgAiNnjQCLL72MKyYc2zTULVNGpTwiMtDDz4/COS4E9NYhKtQnMjq4mX8fR4D2f
+	K
+X-Gm-Gg: ASbGnctqMc2rXRRgkQfYJP0hVjFzEWx87awzOZj1LpIIhtaCpt9BxiTOcoZlzjIUu+i
+	A8XFELqegbXaVzUFK8oifFbETzimZ451sVIRkaR/In9TrvUtWKfu7M7Cxl7h0iRjQhtUyNFugz1
+	XA3fD8PezHxHscFO4evl07IyPWlmFBJDvCwRZs5Jqeu8M3H64alEiALfelMu/gJWlhhxRfSA9yX
+	0eGR9WcCnTqK/u3fdTe+HDmxgAX5QBSH94X7gCWxGit3Zu5rRftu1uHs1nME7FY0yDeDNFveqOS
+	94UAHsePhBW5mC3kh6GTN95evSaUiKTP1Ok=
+X-Google-Smtp-Source: AGHT+IEmnUz2ElBuRHEXkqy+dL2GRgVQy/otpmUsX+CAcGHoJWiC25Bm0HyRcKLFwhTOA5Qyz0xf0A==
+X-Received: by 2002:a17:902:e808:b0:223:8256:533d with SMTP id d9443c01a7336-22c536207d3mr51359195ad.46.1744998278702;
+        Fri, 18 Apr 2025 10:44:38 -0700 (PDT)
+Received: from localhost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaeb59dsm1933880b3a.177.2025.04.18.10.44.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 10:44:38 -0700 (PDT)
+Date: Fri, 18 Apr 2025 10:44:38 -0700 (PDT)
+X-Google-Original-Date: Fri, 18 Apr 2025 10:44:34 PDT (-0700)
+Subject: [GIT PULL] RISC-V Fixes for 6.15-rc3
+CC:         linux-riscv@lists.infradead.org,        linux-kernel@vger.kernel.org
+From: Palmer Dabbelt <palmer@rivosinc.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Message-ID: <mhng-b22e94a2-6d25-4597-b1d2-c527bbd0f64f@palmer-ri-x1c9a>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250415222652.545026-1-gshahrouzi@gmail.com> <20250418165012.53c9bb85@jic23-huawei>
-In-Reply-To: <20250418165012.53c9bb85@jic23-huawei>
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Date: Fri, 18 Apr 2025 13:38:24 -0400
-X-Gm-Features: ATxdqUEoSHSECR3LAgcFScpgkJmwDfqANFifuTo82ewMJWl8EgbXtME3-PccdqU
-Message-ID: <CAKUZ0zJ5ZCmkJOESYpbp=a6odgLyt4Qxt_0cucsHk7FCYqoumw@mail.gmail.com>
-Subject: Re: [PATCH] iio: accel: adis16203: Fix single-axis representation and
- CALIBBIAS handling
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev, 
-	Michael.Hennerich@analog.com, skhan@linuxfoundation.org, 
-	kernelmentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 18, 2025 at 11:50=E2=80=AFAM Jonathan Cameron <jic23@kernel.org=
-> wrote:
->
-> On Tue, 15 Apr 2025 18:26:52 -0400
-> Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
->
-> > The ADIS16203 is a single-axis 360 degree inclinometer. The previous
-> > driver code incorrectly represented this by defining separate X and Y
-> > inclination channels based on the two different output format registers
-> > (0x0C for 0-360 deg, 0x0E for +/-180 deg). This violated IIO convention=
-s
-> > and misrepresented the hardware's single angle output. The 'Fixme'
-> > comment on the original Y channel definition indicated this known issue=
-.
-> >
-> > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> > ---
-> > Not sure to put a fixes tag here or not because the driver used to be
-> > spread out across multiple files until it was whittled down to one file
-> > using a common interface for similar devices.
->
-> No fixes tag for this one is the right choice. It is a complex bit of
-> ABI abuse.
-Got it.
->
-> > ---
-> >  drivers/staging/iio/accel/adis16203.c | 52 ++++++++++++++++-----------
-> >  1 file changed, 31 insertions(+), 21 deletions(-)
-> >
-> > diff --git a/drivers/staging/iio/accel/adis16203.c b/drivers/staging/ii=
-o/accel/adis16203.c
-> > index c1c73308800c5..73288121bf0bd 100644
-> > --- a/drivers/staging/iio/accel/adis16203.c
-> > +++ b/drivers/staging/iio/accel/adis16203.c
-> > @@ -28,11 +28,11 @@
-> >  /* Output, temperature */
-> >  #define ADIS16203_TEMP_OUT       0x0A
-> >
-> > -/* Output, x-axis inclination */
-> > -#define ADIS16203_XINCL_OUT      0x0C
-> > +/* Output, 360 deg format */
-> > +#define ADIS16203_INCL_OUT       0x0C
-> >
-> > -/* Output, y-axis inclination */
-> > -#define ADIS16203_YINCL_OUT      0x0E
-> > +/* Output, +/-180 deg format */
-> > +#define ADIS16203_INCL_180_OUT   0x0E
-> >
-> >  /* Incline null calibration */
-> >  #define ADIS16203_INCL_NULL      0x18
-> > @@ -128,8 +128,7 @@
-> >  #define ADIS16203_ERROR_ACTIVE          BIT(14)
-> >
-> >  enum adis16203_scan {
-> > -      ADIS16203_SCAN_INCLI_X,
-> > -      ADIS16203_SCAN_INCLI_Y,
-> > +      ADIS16203_SCAN_INCLI,
-> >        ADIS16203_SCAN_SUPPLY,
-> >        ADIS16203_SCAN_AUX_ADC,
-> >        ADIS16203_SCAN_TEMP,
-> > @@ -137,10 +136,6 @@ enum adis16203_scan {
-> >
-> >  #define DRIVER_NAME          "adis16203"
-> >
-> > -static const u8 adis16203_addresses[] =3D {
-> > -     [ADIS16203_SCAN_INCLI_X] =3D ADIS16203_INCL_NULL,
-> > -};
-> > -
-> >  static int adis16203_write_raw(struct iio_dev *indio_dev,
-> >                              struct iio_chan_spec const *chan,
-> >                              int val,
-> > @@ -148,10 +143,15 @@ static int adis16203_write_raw(struct iio_dev *in=
-dio_dev,
-> >                              long mask)
-> >  {
-> >       struct adis *st =3D iio_priv(indio_dev);
-> > -     /* currently only one writable parameter which keeps this simple =
-*/
-> > -     u8 addr =3D adis16203_addresses[chan->scan_index];
-> >
-> > -     return adis_write_reg_16(st, addr, val & 0x3FFF);
-> > +     switch (mask) {
-> > +     case IIO_CHAN_INFO_CALIBBIAS:
-> > +             if (chan->scan_index !=3D ADIS16203_SCAN_INCLI)
-> > +                     return -EINVAL;
-> > +             return adis_write_reg_16(st, ADIS16203_INCL_NULL, val & 0=
-x3FFF);
->
-> I would check for out of range before you get here rather than masking.
-> Clearly the old code just masked, but we can do better given you are refa=
-ctoring
-> it.  If an invalid setting is requested best thing is normally to just re=
-turn
-> an error so userspace can see it was ignored.
-Got it. Added these changes to V2.
->
->
-> > +     default:
-> > +             return -EINVAL;
-> > +     }
-> >  }
-> >
-> >  static int adis16203_read_raw(struct iio_dev *indio_dev,
-> > @@ -161,7 +161,6 @@ static int adis16203_read_raw(struct iio_dev *indio=
-_dev,
-> >  {
-> >       struct adis *st =3D iio_priv(indio_dev);
-> >       int ret;
-> > -     u8 addr;
-> >       s16 val16;
-> >
-> >       switch (mask) {
-> > @@ -194,8 +193,9 @@ static int adis16203_read_raw(struct iio_dev *indio=
-_dev,
-> >               *val =3D 25000 / -470 - 1278; /* 25 C =3D 1278 */
-> >               return IIO_VAL_INT;
-> >       case IIO_CHAN_INFO_CALIBBIAS:
-> > -             addr =3D adis16203_addresses[chan->scan_index];
-> > -             ret =3D adis_read_reg_16(st, addr, &val16);
-> > +             if (chan->scan_index !=3D ADIS16203_SCAN_INCLI)
-> > +                     return -EINVAL;
-> > +             ret =3D adis_read_reg_16(st, ADIS16203_INCL_NULL, &val16)=
-;
-> >               if (ret)
-> >                       return ret;
-> >               *val =3D sign_extend32(val16, 13);
-> > @@ -206,13 +206,23 @@ static int adis16203_read_raw(struct iio_dev *ind=
-io_dev,
-> >  }
-> >
-> >  static const struct iio_chan_spec adis16203_channels[] =3D {
-> > +     {
-> > +             .type =3D IIO_INCLI,
-> > +             .info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) |
-> > +                                     BIT(IIO_CHAN_INFO_SCALE) |
-> > +                                     BIT(IIO_CHAN_INFO_CALIBBIAS),
-> > +             .address =3D ADIS16203_INCL_180_OUT,
-> > +             .scan_index =3D ADIS16203_SCAN_INCLI,
-> > +             .scan_type =3D {
-> > +                     .sign =3D 's',
-> > +                     .realbits =3D 14,
-> > +                     .storagebits =3D 16,
-> > +                     .shift =3D 0,
->
-> No need for setting shift to 0 explicitly.  It will happen anyway and
-> a shift of 0 is a fairly natural default.
-Got it. Added to V2.
->
-> > +                     .endianness =3D IIO_CPU,
-> > +             },
-> > +     },
-> >       ADIS_SUPPLY_CHAN(ADIS16203_SUPPLY_OUT, ADIS16203_SCAN_SUPPLY, 0, =
-12),
-> >       ADIS_AUX_ADC_CHAN(ADIS16203_AUX_ADC, ADIS16203_SCAN_AUX_ADC, 0, 1=
-2),
-> > -     ADIS_INCLI_CHAN(X, ADIS16203_XINCL_OUT, ADIS16203_SCAN_INCLI_X,
-> > -                     BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
-> > -     /* Fixme: Not what it appears to be - see data sheet */
-> > -     ADIS_INCLI_CHAN(Y, ADIS16203_YINCL_OUT, ADIS16203_SCAN_INCLI_Y,
-> > -                     0, 0, 14),
-> Why the ordering change?  I don't think it matters in practice, but easie=
-r to
-> review of we keep that ordering the same as then no need to think about i=
-t at
-> all!
-You're right, maintaining the original order simplifies reviewing this
-specific functional change. I have restored the original relative
-order of the channels in v2.
-My initial thought process for moving the inclinometer channel was to
-place the device's primary function first in the list, but I agree
-that separating functional changes (like this patch) from
-organizational changes (like reordering) is better practice. Any
-reordering can be proposed separately.
->
-> Jonathan
->
-> >       ADIS_TEMP_CHAN(ADIS16203_TEMP_OUT, ADIS16203_SCAN_TEMP, 0, 12),
-> >       IIO_CHAN_SOFT_TIMESTAMP(5),
-> >  };
->
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.15-rc3
+Primary key fingerprint: 00CE 76D1 8349 60DF CE88  6DF8 EF4C A150 2CCB AB41
+     Subkey fingerprint: 2B3C 3747 4468 43B2 4A94  3A7A 2E13 19F3 5FBB 1889
+merged tag 'riscv-fixes-6.15-rc3'
+
+for you to fetch changes up to 615e705fc8c7bdb6816faf09b5b16a0441f050e7:
+
+  Merge tag 'riscv-fixes-6.15-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/alexghiti/linux into fixes (2025-04-16 11:10:25 -0700)
+
+----------------------------------------------------------------
+RISC-V Fixes for 6.15-rc3
+
+* A fix for an issue where C instructions ended up in non-C builds, do
+  to some broken inline assembly in the KGDB breakpoint insertion code.
+* A fix to avoid spurious printk messages about misaligned access
+  performance probing.
+* A fix for a handful of issues with /proc/iomem's reserved region
+  handling.
+* A pair of fixes for module relocation processing.
+* A few build-time fixes.
+
+----------------------------------------------------------------
+This got hung up last week on the plugin ICE, which I thought was a RISC-V
+problem but actually looks to be something pretty generic.
+
+----------------------------------------------------------------
+Andrew Jones (2):
+      riscv: Fix unaligned access info messages
+      riscv: Provide all alternative macros all the time
+
+Björn Töpel (1):
+      riscv: Properly export reserved regions in /proc/iomem
+
+Nam Cao (1):
+      Documentation: riscv: Fix typo MIMPLID -> MIMPID
+
+Nathan Chancellor (2):
+      riscv: Avoid fortify warning in syscall_get_arguments()
+      riscv: Avoid fortify warning in syscall_get_arguments()
+
+Palmer Dabbelt (3):
+      Merge tag 'riscv-fixes-6.15-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/alexghiti/linux into fixes
+      Merge patch series "riscv: Rework the arch_kgdb_breakpoint() implementation"
+      Merge tag 'riscv-fixes-6.15-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/alexghiti/linux into fixes
+
+Samuel Holland (2):
+      riscv: module: Fix out-of-bounds relocation access
+      riscv: module: Allocate PLT entries for R_RISCV_PLT32
+
+WangYuli (2):
+      riscv: KGDB: Do not inline arch_kgdb_breakpoint()
+      riscv: KGDB: Remove ".option norvc/.option rvc" for kgdb_compiled_break
+
+Will Pierce (1):
+      riscv: Use kvmalloc_array on relocation_hashtable
+
+ Documentation/arch/riscv/hwprobe.rst        |  2 +-
+ arch/riscv/include/asm/alternative-macros.h | 19 ++++++---------
+ arch/riscv/include/asm/kgdb.h               |  9 +-------
+ arch/riscv/include/asm/syscall.h            |  7 ++++--
+ arch/riscv/kernel/kgdb.c                    |  6 +++++
+ arch/riscv/kernel/module-sections.c         | 13 ++++++-----
+ arch/riscv/kernel/module.c                  | 11 +++++----
+ arch/riscv/kernel/setup.c                   | 36 ++++++++++++++++++++++++++++-
+ arch/riscv/kernel/unaligned_access_speed.c  | 35 +++++++++++++++++-----------
+ 9 files changed, 89 insertions(+), 49 deletions(-)
