@@ -1,193 +1,108 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D7926FDA2;
-	Fri, 18 Apr 2025 10:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7B52741BA;
+	Fri, 18 Apr 2025 10:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744971058; cv=none; b=FxfqpKkigI6Ws7F23cSGbeKDukJtQScvlE4b7+oGt3T9G68UT4lHGcf7qeM1m72KO37i4kPaJHkrXyjl8JGYlax+kgsG21PJ3pnLrXPv5ySrjmcuwx2bOFnXTEVDvTLf+qTOMlYpfOYGU7g/OCJtFWpDHamOEdQYgM8416fgTC4=
+	t=1744971063; cv=none; b=moPEjlCVh1aDrHhigOtonlVCxxV2J6yRLxUnNvEb0GMuRCObo7Om5aACfkidyLg2Ojx1YuFXV+3Q1zULNND9/nKxITry4NkQc9uasmRfxMd/UG104oqtI1UyHTb1Wq45ss6e8esbDaUThcboBJTyqV0ZkQhVEo9wbcZpQG5N+FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744971058; c=relaxed/simple;
-	bh=sJfyCjFuD5rdCK58wVT7A41229uTZVPw55aqKf8HWZQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=FSNXnu9HS8OXpzRiK0QCv3et8IZh64NjzVrrXFPNN8MRWQcYoZ7MXjIIYMfu4mswz44v3jkfjOj0Ph4EsXt9uMTYZpqpqIWT3keColqAMO9G/Z2n/zLj8Q8Wjfqymg2fFSr+qrLrfyX15p2bLGGIxLMcuL8h0Yi9Ep0SEMPb0js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SOdNMRLv; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744971063; c=relaxed/simple;
+	bh=n17hHD71fjfeCryWjsaHFoLT9UFwBym7iAQ/KR8Xlv0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gh22JZ5e16/Xs76ilFKuz4o1mqwCPJ2EPc467e0Oj/LxEB1Om5JftERtnSeSMHmMrh2R6RdRbeTEH3CW+Ng3fQwpdtgxJxF1W2C4hC8d4TbC9W6knLf2bOfiTJWM6Pgy8/IXbbwA/0elCXGFihpy5B+KZH6QkZAxW+m77ODCWaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=afCMAfsx; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SOdNMRLv"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53I2EfpX014600;
-	Fri, 18 Apr 2025 10:10:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	UXl8L1D4teXBND961LY+1K6YRvHteSg3tVUoK0jz20I=; b=SOdNMRLvBOsRBrNr
-	7J3Ls+7mtDI7tL6iELDJQRgu0nhICfppoTI/tsS0NKu/rhiXECBmgJymxca5YoqZ
-	ZpICl0NQ2RltMzZZer5zXx1AWx/Dot3ER+1vXj//Mmi9AoVX6av6FLWqJ/DhMuNS
-	EODbzOZ2z+jf2jRb+rEQ9Swd2XbuliHvehqP2g0pZD/c6TV6HLoKiuyTJgCf2DA8
-	OWei6wRmRjXxR0HtCRnb1xpNDLhHJvPoL0l0NhM2Ftaqk0jQneVXmZQlw1fUq3N0
-	XBAbPa7AGaZdrOF+WzamoHTwqYA/Pzl7e4zWqxg+9LuAE24ZngypcT/C/1qFoMew
-	WtVFSA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yfs1hh89-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 18 Apr 2025 10:10:54 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53IAArJf020417
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 18 Apr 2025 10:10:53 GMT
-Received: from [10.218.37.132] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 18 Apr
- 2025 03:10:51 -0700
-Message-ID: <09ec85db-cc02-4b35-9939-aea3426d0e0b@quicinc.com>
-Date: Fri, 18 Apr 2025 15:40:48 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="afCMAfsx"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac2ab99e16eso344381866b.0;
+        Fri, 18 Apr 2025 03:11:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744971060; x=1745575860; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=QMDDZSKx+HwZEHjuUq4iy5QAOO2sg5Fgy5qC6TXwyqw=;
+        b=afCMAfsxkfM2/OCwqBwYDzsm6txlge2JSTavkwsV7EscSPRtYZDxdvMsB+JoCV17Fm
+         LT3GHc64xjSoH1l8tmHb1Q+ypPe5fTEg/92D1boT9pFhkTRUUjcBT3LNV8Li3p4bQUde
+         1piOWa8hcrI8TTbDBoOkojQGUjLuUU0WCtZ67Q3fx38IO1HgevCVKowNrlNIlLD/CsSQ
+         HswDG/IhRC9wWKZwFSIjCY3G8Nh+aNl4zUX9uHG6ZikvT9DcmCbt+4bjTD6wGdqwnQqL
+         I8Y+uMN+liZk8eapaIF7Wkeii68TgvRq+uymAUsdFHH/fKNG0nAjbULKp3m/FGlYhFqI
+         1c3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744971060; x=1745575860;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QMDDZSKx+HwZEHjuUq4iy5QAOO2sg5Fgy5qC6TXwyqw=;
+        b=PfZWuJBEEdyLPCDI8LSGIGlds1opgae2Jte3oMmNAyf65dh4Z0aAjgW3+qaaM2qFSO
+         XyvvmGpAHxUO0NHdJaMm+RlN7jZRcuhT7ikYEPNIRBoHpCEgc5PHH6O2MQNrQXAxG7QB
+         dGnyDLNyJqpBaIT/rKIBW7B6YqS64YSwJMMrA/q+xLSL+TbQdZ5nUXxu3RwqBwsTM+rp
+         wrONbtxRYIMpmDIUm2cvKnRFXB0PMaDToWbnYbyJmLvnK6oWCxdBFc5hJebWGz3FeL9L
+         9fiwWer5c/eJtIqt64knEpKExROCF6cZmQqVdogMg9vGBN0//dzXZiK+kjETM2Tne6Jb
+         uaOg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2kJEIUW+khTkl2O0YM7zGRet4itP3Vg9AZDeIeZcXIwFAbayb05IsghY8avFuvMJqFPjR9b0MFe4/oRE=@vger.kernel.org, AJvYcCXx7I3JkaXaJOR7kPG1Bw4HoZXH3Xjw44r2ie7ynCs7IkoDmoH6ww7J/CCMBmVHFtgWRQB/SND8@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDj62g3pY2VssnMdD5P9UCYg3HuZdom4iOjYMoMBAaU5m0IXeH
+	Tav/lj+TJSaO8Oeq5HVcXv2G7bCaOqbp5tBxwQsqAkt0jy/+FTntsguV7XE2Ms3PtdQlQS/FkKO
+	zdGZWtHbRzbl/y5jZEI8yMf5ZjOw=
+X-Gm-Gg: ASbGncvKz1jMO3tEHIiLbrKLCnGMwE7OOPtTJKutxIP8tmvC3SAHGJyXw6BHdWIGu/b
+	OB1JbDEycA0R9GgLmXys+CK4w4mlde9xxSeVgMktnUWSWpa5/3jzkghWWQztHgyHuuQAG+sOOrA
+	WmW69TZMNJm/ohqbxcTta2GxtqnlBsvD/H
+X-Google-Smtp-Source: AGHT+IF3BRJBFKZjrvyGuLznFO6Arg9RBKnUGBXM/JtZX+cpufwbmsR98eLJ59m6j06coIrrVpxtGH6iPeV3EHJAtis=
+X-Received: by 2002:a17:907:9488:b0:ac2:baab:681c with SMTP id
+ a640c23a62f3a-acb74b7faedmr223636366b.28.1744971059552; Fri, 18 Apr 2025
+ 03:10:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] bus: mhi: host: pci: Disable runtime PM for QDU100
-From: Vivek Pernamitta <quic_vpernami@quicinc.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: Veerabhadrarao Badiganti <quic_vbadigan@quicinc.com>,
-        <mhi@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250414-vdev_next-20250411_pm_disable-v1-1-e963677636ca@quicinc.com>
- <ec99379e-fd54-42b0-a383-8ed212072396@quicinc.com>
- <o7rv3xgg3btaoqjlzfenbfkrp3fuw54cx6zqojclcfslfg3ha4@c3sqaqqdjdjv>
- <c8699f79-54cc-4adb-8047-b37a69e69d96@quicinc.com>
- <qrb4ozkj3zxfpo733mf6xf35tetfyekytkty6sq7civhycbahm@c6s3wfvmdycs>
- <2ab9a8f9-b051-4213-a9df-4b2c2fa8c6be@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <2ab9a8f9-b051-4213-a9df-4b2c2fa8c6be@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=P9I6hjAu c=1 sm=1 tr=0 ts=6802252e cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=LYZg7-1g-tm8IrMnXwYA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: xzRAGJBbIFYfyPMXl-i0YLja7xJoPUjO
-X-Proofpoint-ORIG-GUID: xzRAGJBbIFYfyPMXl-i0YLja7xJoPUjO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-18_03,2025-04-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 bulkscore=0 impostorscore=0 phishscore=0 suspectscore=0
- mlxscore=0 spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501
- mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504180075
+References: <20250325121745.8061-1-danny@orbstack.dev>
+In-Reply-To: <20250325121745.8061-1-danny@orbstack.dev>
+From: Matteo Croce <technoboy85@gmail.com>
+Date: Fri, 18 Apr 2025 12:10:23 +0200
+X-Gm-Features: ATxdqUGvaUeq8HzGS8oLadD-F1TQFMu7yoW5hnxkRkO8pw_-UJwEquanfAYYgfk
+Message-ID: <CAFnufp14ap0UfJcn2uwU4-3cstr313J86HvRCcKULZLRU=nZ6Q@mail.gmail.com>
+Subject: Re: [PATCH v4] net: fully namespace net.core.{r,w}mem_{default,max} sysctls
+To: Danny Lin <danny@orbstack.dev>, netdev@vger.kernel.org
+Cc: Matteo Croce <teknoraver@meta.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>, linux-kernel@vger.kernel.org, 
+	Shakeel Butt <shakeel.butt@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
+Il giorno ven 18 apr 2025 alle ore 12:06 Danny Lin
+<danny@orbstack.dev> ha scritto:
+>
+> This builds on commit 19249c0724f2 ("net: make net.core.{r,w}mem_{default,max} namespaced")
+> by adding support for writing the sysctls from within net namespaces,
+> rather than only reading the values that were set in init_net. These are
+> relatively commonly-used sysctls, so programs may try to set them without
+> knowing that they're in a container. It can be surprising for such attempts
+> to fail with EACCES.
+>
+> Unlike other net sysctls that were converted to namespaced ones, many
+> systems have a sysctl.conf (or other configs) that globally write to
+> net.core.rmem_default on boot and expect the value to propagate to
+> containers, and programs running in containers may depend on the increased
+> buffer sizes in order to work properly. This means that namespacing the
+> sysctls and using the kernel default values in each new netns would break
+> existing workloads.
+>
+> As a compromise, inherit the initial net.core.*mem_* values from the
+> current process' netns when creating a new netns. This is not standard
+> behavior for most netns sysctls, but it avoids breaking existing workloads.
+>
+> Signed-off-by: Danny Lin <danny@orbstack.dev>
 
+Hi,
 
-On 4/18/2025 3:04 PM, Vivek Pernamitta wrote:
-> 
-> 
-> On 4/18/2025 2:06 PM, Manivannan Sadhasivam wrote:
->> On Fri, Apr 18, 2025 at 11:55:24AM +0530, Vivek Pernamitta wrote:
->>>
->>>
->>> On 4/17/2025 11:37 AM, Manivannan Sadhasivam wrote:
->>>> On Thu, Apr 17, 2025 at 10:00:38AM +0530, Veerabhadrarao Badiganti 
->>>> wrote:
->>>>>
->>>>> On 4/14/2025 1:17 PM, Vivek Pernamitta wrote:
->>>>>> The QDU100 device does not support the MHI M3 state, necessitating 
->>>>>> the
->>>>>> disabling of runtime PM for this device. Since the PCIe core 
->>>>>> framework
->>>>>> enables runtime PM by default for all clients, it is essential to 
->>>>>> disable
->>>>>> runtime PM if the device does not support Low Power Mode (LPM).
->>>>>>
->>
->> Not true... See below.
->>
->>>>>> Signed-off-by: Vivek Pernamitta<quic_vpernami@quicinc.com>
->>>>>> ---
->>>>>>     drivers/bus/mhi/host/pci_generic.c | 10 ++++++++++
->>>>>>     1 file changed, 10 insertions(+)
->>>>>>
->>>>>> diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/ 
->>>>>> host/pci_generic.c
->>>>>> index 
->>>>>> 03aa887952098661a488650053a357f883d1559b..a011fd2d48c57cf9d1aec74040153267a206d797 100644
->>>>>> --- a/drivers/bus/mhi/host/pci_generic.c
->>>>>> +++ b/drivers/bus/mhi/host/pci_generic.c
->>>>>> @@ -43,6 +43,7 @@
->>>>>>      * @mru_default: default MRU size for MBIM network packets
->>>>>>      * @sideband_wake: Devices using dedicated sideband GPIO for 
->>>>>> wakeup instead
->>>>>>      *           of inband wake support (such as sdx24)
->>>>>> + * @pm_disable: disables runtime PM (optional)
->>>>>>      */
->>>>>>     struct mhi_pci_dev_info {
->>>>>>         const struct mhi_controller_config *config;
->>>>>> @@ -54,6 +55,7 @@ struct mhi_pci_dev_info {
->>>>>>         unsigned int dma_data_width;
->>>>>>         unsigned int mru_default;
->>>>>>         bool sideband_wake;
->>>>>> +    bool pm_disable;
->>>>>>     };
->>>>>>     #define MHI_CHANNEL_CONFIG_UL(ch_num, ch_name, el_count, 
->>>>>> ev_ring) \
->>>>>> @@ -295,6 +297,7 @@ static const struct mhi_pci_dev_info 
->>>>>> mhi_qcom_qdu100_info = {
->>>>>>         .bar_num = MHI_PCI_DEFAULT_BAR_NUM,
->>>>>>         .dma_data_width = 32,
->>>>>>         .sideband_wake = false,
->>>>>> +    .pm_disable = true,
->>>>>
->>>>> |no_m3|orno_|m3_support|would be more suitable than|pm_disable|
->>>>
->>>> Yes!
->>>>
-We named variable pm_disable because the M3 state is implicitly set 
-during runtime PM suspend. Both are not needed and not fully supported 
-for the QDU100 accelerator card, so we want to disable runtime suspend 
-for it.
->>>> But does the device not supporting M3 only or D3Hot also? If the 
->>>> former, then we
->>>> should prevent MHI host to enter/exit M3 state in mhi_pm_suspend/ 
->>>> mhi_pm_resume.
->>>> There is an incentive in allowing D3Hot if the device supports it.
->>>>
->>>> Also, is there a way we could probe M3 support in the device so that 
->>>> we can
->>>> check it during runtime?
->>>>
->>>> - Mani
->>>>
->>> In QDU100 device does not support M3 state, D3_hot will be supported. As
->>> QDU100 is an accelerator card which needs high-throughout, LPM needs to
->>> disabled here. So we are trying to disable runtime PM here, without M3 ,
->>> D3_hot will not have effect in QDU100.
->>> Also in MHI we don't have provision to check device M3 capability, so 
->>> we are
->>> trying to disable runtime PM here.
->>>
->>
->> Even though PCI core is enabling runtime PM for devices, it also 
->> prevents the
->> devices from getting suspended unless the drivers explicitly asks for 
->> it. So
->> this driver is using autosuspend feature to allow the devices to be 
->> suspended
->> if PME is supported from D3Hot.
->>
->> If you want to prevent the device from getting runtime suspended, you 
->> should
->> just skip autosuspend.
->>
->> - Mani
->>
-> Thank you, I will upload new patchset accordingly.
-> 
-> 
+does this allow to set, in a namespace, a larger buffer than the one
+in the init namespace?
 
+Regards,
+-- 
+Matteo Croce
+
+perl -e 'for($t=0;;$t++){print chr($t*($t>>8|$t>>13)&255)}' |aplay
