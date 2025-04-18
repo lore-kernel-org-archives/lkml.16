@@ -1,112 +1,104 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C0C1A0730
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 05:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEB02E40B
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 06:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744955938; cv=none; b=Gjmwhl4rK8LvC61ZmBOJeB/MhcNe6pP0ubWgc16gR65xgYgEk3rjjyW1350+BluYz5y8p8Zvfru9s8rUgxty1IWRQnqhwIwMOeOXUFq7PKgSGGbrIVE4BMn6D0acNarMtPPL5bfruoFQixhLZBELYQmrSTL+pg67oWYj2YofXYA=
+	t=1744956044; cv=none; b=KfQUZhVQHUNGk9kwuQXyszCBzonEGK7X8cZIZ7n5KoguwX+5bslWzE+H2pm7rjCpKjvdYiNCkDSdk1fDBkG/6o+yDxiTqS5Nd4vKxJqMJsJO2Sf1scLwLtJTatrOX/z0oNT+51EC8OCGLQs0suSsTmhK8XNJvxPc4nSNmAEDpl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744955938; c=relaxed/simple;
-	bh=9vzQM3t5vp/0pOozAYzw8sT/kUPRS92tdRYnfzsM3ts=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MxsP5pgp46mj5GUbABVir8ISfUI5Ovd1UcRjno+aSCCdrBwu3RUIqfsn5jOcW2rF1xlMfKQBOHFCj+55GkKw0gR3KiD9mf5MI2agcbehEZyvMb6vsux65nvJRKFaPMEcAlKx6PvoaEGvdCJWoHMjDJEo9FTLTlnP/8Rtq9V4LM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QWdxi/HI; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QWdxi/HI"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so2646642a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 22:58:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744955933; x=1745560733; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rFhmOeXgIAlpgdzXmkuAFZPhvLmDKS09kQhKDPs7SSw=;
-        b=QWdxi/HISx2YFfJGrAMKYH2CIctgux9CvDakPaZRtqMYIvIC+haank58pLqduZPA8D
-         bbQZnDbNnJFEav/GmeMgvoTbVF81KIOD6dIYIYvwIv6vsAzBHqjfKwLc3k9p4qZTiuCZ
-         /3n/q1NGU4duTRAJ40RII2D6TIdwaDSK9qXLFE7f2mf7lfgG2iLNoU8BKwieQE7j+dLV
-         wlsbkixrRwvPos1/BwslU15lx/x2MgsCtVZgz1inUGHbo76G3RbLWsr6jzMwINElxtZp
-         Q3npsuK4QR/wZyHNWG1XiWePPWUtJnxyVHGmuiUEEzCmw4dtdcV08g4nKWqcXhQskx0Y
-         Xuqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744955933; x=1745560733;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rFhmOeXgIAlpgdzXmkuAFZPhvLmDKS09kQhKDPs7SSw=;
-        b=RiGY4N/xGw/o6JHVHqvRhtRsCCm3LoeULStr3MBU6ofUBc7ZMDJSxlL/Gj5dnvH+Lk
-         EWmBtfGmkJtnM2+o4fyrze7o7GdxDiPHjIYUydnJnmKqF2AIHhlHPtefBCoPw+DSnYwA
-         TPfKOil5gFpg8C66dl1p0WH0OBClgUKUkTHt0keC8fCRBc9dIvAL4AHDs9bVFuR14oZM
-         JCMKbKqO/EI1o0Rmyw0PqwnCt6hB9SigcXLUd+YeEPsijQYCgvgC8u9yR5Ot0ztiD9aL
-         iIglt99d9keACZOKdQbv+NAJhojFCZgvdCOx6Ygz5FboXabjafVMP1FT/1WpJ/dGM/mR
-         hxlA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUnO5rOIqaw7OVIuXphjOAX/j+aJNmce1W0RNExIN2rgcWtWdr6NFSBhn0DdJ2NFo0VAWcJ0+8z4AdxII=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyP0GbydMlBdAh/C3zvDleE4y+rF6jigeoVNnGXFYJdHry+Vwd9
-	Klgr3UgsOct2I+p3uYhKh+4zhX+WMXu1fPxW54Y1FFOpBECbzZS+X1ZvfdO8ZAk6CAzJs0woIfE
-	RSmvczFa39OEtjWtE0FDLvyh8rYG+Jf7S/tTrcQ==
-X-Gm-Gg: ASbGncuxw5g1jPU8xpv657xKNxeWj8RShlOtSPEjBtT6T+0Dg9herUoCb3laUGHKbNf
-	SQclNZOWALd3Wr9PecRIbHqfsPNQAtVxBU02xOyHAtzLbkOzB1hgCKEfriQgCxu1fyPup1N0aPT
-	xqupktqxhxhwQkNbXoo2fvMkdvFPWemjui
-X-Google-Smtp-Source: AGHT+IHh85joDb2VeapV3maVEqgQe9L9tm8FqA2mZKy01E0HnbaGNJfQUJ+nqSYGMzINt6uLO0DslAKNblccoGq618A=
-X-Received: by 2002:a17:907:9712:b0:ac7:16ef:e994 with SMTP id
- a640c23a62f3a-acb74e19569mr100020766b.56.1744955933480; Thu, 17 Apr 2025
- 22:58:53 -0700 (PDT)
+	s=arc-20240116; t=1744956044; c=relaxed/simple;
+	bh=AQEGS95z85YKcGLQ75OsvUWy4lTSopmYDFcTt2h/ujc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ld146A1RAQxWEdFa2FF0VSivdkJB2+Lh2SRXTWs2KkrStQpOq2Gb8t7+AJpoDGlHiM6c6v2OtL+Fz08Yd5RiDNq75l4vswsAgcakevJbt7ZJfCJ7vTKLUEdUszWo7XHt+uY53uw3bpHgJF0+FQhJ4x5f0X8l6Tw90kHHrfYGqNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 69f96d841c1a11f0a216b1d71e6e1362-20250418
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:4624039c-d6ef-4ecf-8c0a-aaaa1beb80d0,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:b712aa31f8a859ac46bd1d6ff95763ca,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:nil,UR
+	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
+	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 69f96d841c1a11f0a216b1d71e6e1362-20250418
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <liujiajia@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 982102950; Fri, 18 Apr 2025 14:00:22 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id DA2A4E028EA0;
+	Fri, 18 Apr 2025 14:00:21 +0800 (CST)
+X-ns-mid: postfix-6801EA75-73491675
+Received: from kylin.lan (unknown [172.25.120.81])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 52697E028EA0;
+	Fri, 18 Apr 2025 14:00:19 +0800 (CST)
+From: Jiajia Liu <liujiajia@kylinos.cn>
+To: Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Nemesa Garg <nemesa.garg@intel.com>,
+	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
+	Nitin Gote <nitin.r.gote@intel.com>,
+	Matt Roper <matthew.d.roper@intel.com>,
+	intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: Jiajia Liu <liujiajia@kylinos.cn>
+Subject: [PATCH] drm/i915/pch: fix warning for coffeelake on SunrisePoint PCH
+Date: Fri, 18 Apr 2025 14:00:06 +0800
+Message-Id: <20250418060006.807216-1-liujiajia@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2c788c2ca0cab09a8ef4e384f272af928a880b0e.1744781329.git.viresh.kumar@linaro.org>
- <20250417015424.36487-1-nic.c3.14@gmail.com> <20250417050226.c6kdp2s5du3y3a3j@vireshk-i7>
- <20250417050911.xycjkalehqsg3i6x@vireshk-i7> <CAJZ5v0iO4=nHcATzPyiKiWumdETFRR32C97K_RH=yhD--Tai=g@mail.gmail.com>
- <CAJZ5v0gcf07YykOS9VsQgHwM0DnphBX4yc9dt5cKjNR8G_4mAQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gcf07YykOS9VsQgHwM0DnphBX4yc9dt5cKjNR8G_4mAQ@mail.gmail.com>
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Date: Fri, 18 Apr 2025 11:28:49 +0530
-X-Gm-Features: ATxdqUEgPyyaV3xmQOk0XfmWdfy0ew_P7jRJpbFnpMXANh3GgdaCIR7Xj1vkn-o
-Message-ID: <CAKohpomN1PYn1NPSsxCxqpMfg-9nYgCRQD6dFGQ30B+76vneQw@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: acpi: Don't enable boost on policy exit
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Nicholas Chin <nic.c3.14@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, rafael.j.wysocki@intel.com, 
-	vincent.guittot@linaro.org, zhenglifeng1@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 17 Apr 2025 at 21:23, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> But the changelog isn't because the patch really doesn't address the
-> issue at hand, which is most likely related to the platform firmware
-> clearing the "boost disable" bit.
+i915/pch reports a warning on a mini PC which has a CoffeeLake-S GT2
+[UHD Graphics 630] [8086:3e92] and an ISA bridge - H110 LPC Controller
+[8086:a143].
 
-I think the patch and changelog were still correct as the driver was also
-enabling the boost at exit(). So it fixes the problem, but not fully.
+[3.490423] i915 0000:00:02.0: [drm] Found coffeelake (device ID 3e92) int=
+egrated display version 9.00 stepping N/A
+[3.507160] ------------[ cut here ]------------
+[3.523341] i915 0000:00:02.0: [drm] drm_WARN_ON(!IS_PLATFORM(dev_priv, IN=
+TEL_SKYLAKE) && !IS_PLATFORM(dev_priv, INTEL_KABYLAKE))
+[3.523356] WARNING: CPU: 5 PID: 199 at drivers/gpu/drm/i915/soc/intel_pch=
+.c:92 intel_pch_type+0x1c3/0xe10 [i915]
+[3.709685] CPU: 5 UID: 0 PID: 199 Comm: systemd-udevd Not tainted 6.15.0-=
+rc2-up-fc96b232f8e7 #1 PREEMPT(voluntary)
 
-> Frankly, I'd rather get back to the state from before commit
-> 2b16c631832d ("cpufreq: ACPI: Remove set_boost in
-> acpi_cpufreq_cpu_init()") and start over with the knowledge that the
-> platform firmware may scribble on the MSR before the kernel gets
-> control back.
->
-> On a way back from system suspend the MSR needs to be put back in sync
-> with the boost settings in the kernel.
+Signed-off-by: Jiajia Liu <liujiajia@kylinos.cn>
+---
+ drivers/gpu/drm/i915/soc/intel_pch.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-What about something like this instead ? Nicholas, can you give this a try
-along with the $Subject patch (both patches should be applied) ?
+diff --git a/drivers/gpu/drm/i915/soc/intel_pch.c b/drivers/gpu/drm/i915/=
+soc/intel_pch.c
+index 82dc7fbd1a3e..011bc9757e9b 100644
+--- a/drivers/gpu/drm/i915/soc/intel_pch.c
++++ b/drivers/gpu/drm/i915/soc/intel_pch.c
+@@ -90,7 +90,8 @@ intel_pch_type(const struct drm_i915_private *dev_priv,=
+ unsigned short id)
+ 	case INTEL_PCH_SPT_DEVICE_ID_TYPE:
+ 		drm_dbg_kms(&dev_priv->drm, "Found SunrisePoint PCH\n");
+ 		drm_WARN_ON(&dev_priv->drm,
+-			    !IS_SKYLAKE(dev_priv) && !IS_KABYLAKE(dev_priv));
++			    !IS_SKYLAKE(dev_priv) && !IS_KABYLAKE(dev_priv) &&
++			    !IS_COFFEELAKE(dev_priv));
+ 		return PCH_SPT;
+ 	case INTEL_PCH_SPT_LP_DEVICE_ID_TYPE:
+ 		drm_dbg_kms(&dev_priv->drm, "Found SunrisePoint LP PCH\n");
+--=20
+2.25.1
 
-diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
-index 924314cdeebc..71557f2ac22a 100644
---- a/drivers/cpufreq/acpi-cpufreq.c
-+++ b/drivers/cpufreq/acpi-cpufreq.c
-@@ -909,8 +909,10 @@ static int acpi_cpufreq_cpu_init(struct
-cpufreq_policy *policy)
-        if (perf->states[0].core_frequency * 1000 != freq_table[0].frequency)
-                pr_warn(FW_WARN "P-state 0 is not max freq\n");
-
--       if (acpi_cpufreq_driver.set_boost)
-+       if (acpi_cpufreq_driver.set_boost) {
-                policy->boost_supported = true;
-+               policy->boost_enabled = boost_state(cpu);
-+       }
-
-        return result;
