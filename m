@@ -1,149 +1,181 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA95270EB0
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 11:20:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16BF3270ED0
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 11:23:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744975219; cv=none; b=Psaif6M9iUz/Dkt0kgbR/xjIWqvUhNy0nWN6UuWH2sQV7ntY/WztqYmA+KC8KlTlwQUyx7qJSTUutgSH1VMnlYTmlY3sJlfmTYF3oZMPYslHhZalopT/xL5cUX93LA9DXCS5qIUIkO1fKf0hsSv3fMWJSLjkMkhbbBxZvVxg1hM=
+	t=1744975383; cv=none; b=CUYgPmWN9amtFO42mIvQrIcfsu8rwNGmbk+Cch3LvMVeaSAl9oP7HmpM/TW+O4VMPozkclBxPY/sJFL3XWyvz2veyfYH81bPK7yhCQPzmJmvh2IxsFqTppsqNZr8hlL+93dIMY2XhrgJ7aGjbRQvbaxsSzINcPDi9uKNYim2TTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744975219; c=relaxed/simple;
-	bh=Sj8X2Lm6wKekaBjcx9Vsfq4exmy8nxBLBwcn+T7xo+U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z1zN6IN1HjUViJsiJZrLg2+0yQlrNYlqWWnLDgsAy1AQPbboZzOg4LnhCafRldE86DUx/tvOIskn7pqBA/RATq9pqpFJnmpAJI8tj4f154Yo8K0HhFhT6nw6kxdF9as+DT7qkcnYDjgIXKC87NKrOlOHlNJVRGDoQyC4Yi6XiV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=j8UA000Q; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1744975383; c=relaxed/simple;
+	bh=pHEFsooV5rBns7mZj4los8jHrPhPRhvke1rDrFVgp2U=;
+	h=From:Subject:Date:Message-Id:MIME-Version:To:Cc:Content-Type:
+	 References; b=s6UsZ0x8+N/UuN1JvOSvxbbxcUOPN3v4wtaxIM1NQLID8D/c4pF9oQ8VgcYarWz0/rrBlQENLo9aRrK1BM0Fw+rnXmh8vQJfKk5mIHEheZzIpJ5BPyj3DiZWt28UfqP8ltcbOjcNYlJhBsFNBIf1cr9MPaeqEhSCvGTct6mK+pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Agx7h2pJ; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="j8UA000Q"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso1118896f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 04:20:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1744975215; x=1745580015; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZJj8Rfgi9EbV15zm3T8GaXom1YrGzd0C3xNCTSZPHuE=;
-        b=j8UA000QIQkKpdWrRa/axOMJaoNjF3ix6zOsUjvMc+/cg97871DIOvaq4qcthpUoIL
-         dr2bihlN7/wbIWb/Xl5figifHjowTitSWCkFs7G7f0Pb7qP0blE2hQqCbuYbSSrO0r23
-         7q+9wR1hxYkJmh3CjVnuaB3ad1jJMyZhOx5AQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744975215; x=1745580015;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZJj8Rfgi9EbV15zm3T8GaXom1YrGzd0C3xNCTSZPHuE=;
-        b=O+J1NwihN/qS2WRkwclCNMRcYxMRlHc/FYKsz/gU/tk26ZKOM5hoJoZBGsKO1KoCk3
-         LtJHJ9QaDihlvhXaDrYqiy0Sa/f0p4IceDRLsbHCdqeddThdK0Vlb0GDaSD3JCHNfGz1
-         D69B5K9EdTosyLA3AoZdW6HY7dfKwGVQvBthJE614Wm3VsFVBg9Z10mBzZPDsRXYnQQv
-         y8vhQse9Zoai+1hbKKhvrpL5NQnlEVR4tRA2cAjkHXnQyulg3JM+eK5r0URVaA0htML9
-         iOmVgN5L+R5g4J62XiPwiET+1TQtyz3O/OQB3BJ4VDshaof7oQ8yEex7IkEyAIhYKpVz
-         eS6A==
-X-Forwarded-Encrypted: i=1; AJvYcCXR39cBpXS4547r0cicnvx41HM32gTMiULJE/DyYNCejJU5oZd5s5qn3cMG8xABEwfeZkqIxFvxcw3nymk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yymp/bVJp2z7v/7HobZgrT/ZVNsAPfzG0KjKLJ+6kT4qh6dRBED
-	jBAc6nZo77ruffVN4XGN9qYGsdFtvwwn5ekgQqJFUYPzDCOiRfN4WnPBtNK0OfE=
-X-Gm-Gg: ASbGncsqwd/RfI+mCS7PhXvvyGkdoGiOThU0wXo38By21oAnE6garORXmqm9ImwSi1n
-	kQxKrd6yaLlBB+NURyq6iNEwKXGxIgrkRFiaH0EL56HK2aspaXfflAvOYpokkBMArgWsGEbuwe4
-	u2v1e6CGVmJF66d96MT18+EVXmzh/dwGTOsCo739EPR/uHKXIm1cXagL03T3rC7WgnczlPzGf2S
-	dQjaP2e3VpA9/N62h8emKxsQf7cB1D3I4FEAtjIqVS9zVLEOulSawx1pp/ArDEr9fZSvOzHXOxm
-	peSwGVweCdioIZ1G+cXHQVQJJTG9VhHpR1zyDcQi0Pg9UExhWWlbu4TP+FMk79qlxSYNck37VAr
-	8w7m5aQ==
-X-Google-Smtp-Source: AGHT+IEH86lkzDB8iD2jcwBv9xObYazBn81tO8e62htfmOl2I85kmXIxDh76Itbbny1GahYRs6qSCQ==
-X-Received: by 2002:a05:6000:184f:b0:39b:f44b:e176 with SMTP id ffacd0b85a97d-39ef9466f36mr2679870f8f.24.1744975215276;
-        Fri, 18 Apr 2025 04:20:15 -0700 (PDT)
-Received: from [192.168.1.183] (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5cf2easm18698005e9.31.2025.04.18.04.20.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Apr 2025 04:20:14 -0700 (PDT)
-Message-ID: <4fb6d880-3d5f-4d42-8419-dcc697949a10@citrix.com>
-Date: Fri, 18 Apr 2025 12:20:13 +0100
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Agx7h2pJ"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250418112259euoutp0255acd70c62266ecb464b083d15b5f8ba~3Zdy2Thru0702707027euoutp02i
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 11:22:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250418112259euoutp0255acd70c62266ecb464b083d15b5f8ba~3Zdy2Thru0702707027euoutp02i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744975379;
+	bh=yzaBvKzzEWWyLTE1pyTYFM8f6ViBLwOiNdNueDjhZzg=;
+	h=From:Subject:Date:To:Cc:References:From;
+	b=Agx7h2pJRQjZPeRRRAb5stJUq58TRl+E6MIK+pVqgQZpqZ0xstoDmn7OiV5wpjac0
+	 HDWaCN3g3E57aKJan17328BYFgcAe09HbXT0W4DLN03TDxsUBiDg/W6asWn3E8G07N
+	 tBYD7PUU2GWBxcR52lU401cT72wQtjcyRD9gLKDI=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20250418112258eucas1p22468c70dfc2f1313fb1427ee76939b89~3ZdycMMLE1933319333eucas1p2D;
+	Fri, 18 Apr 2025 11:22:58 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id 9E.AE.20821.21632086; Fri, 18
+	Apr 2025 12:22:58 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250418112258eucas1p28186b27890dbed4cbc05b2ddd8f94327~3ZdxtNRXh0304303043eucas1p2g;
+	Fri, 18 Apr 2025 11:22:58 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250418112257eusmtrp1343528e483703d9339388d0e6e724f8a~3Zdxde5Rp2607526075eusmtrp1m;
+	Fri, 18 Apr 2025 11:22:57 +0000 (GMT)
+X-AuditID: cbfec7f2-b11c470000005155-d7-6802361210da
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 41.98.19654.11632086; Fri, 18
+	Apr 2025 12:22:57 +0100 (BST)
+Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
+	[106.210.136.40]) by eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250418112256eusmtip237aa76492b51754773f723e760e428c2~3ZdwrNQwu3259732597eusmtip2V;
+	Fri, 18 Apr 2025 11:22:56 +0000 (GMT)
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+Subject: [PATCH v6 0/2] Add optional reset for the drm/imagination driver
+Date: Fri, 18 Apr 2025 13:22:47 +0200
+Message-Id: <20250418-apr_18_reset_img-v6-0-85a06757b698@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -tip v2 1/2] x86/boot: Remove semicolon from "rep"
- prefixes
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: x86@kernel.org, linux-video@atrey.karlin.mff.cuni.cz,
- xen-devel@lists.xenproject.org, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Martin Mares <mj@ucw.cz>
-References: <20250418071437.4144391-1-ubizjak@gmail.com>
- <50bf962c-2c9e-46a2-bbac-cba9cf229e79@citrix.com>
- <CAFULd4ZNiRdARn8O98zROQRWoL1ASQ+iPPTTmLRxjo9SGRHyRg@mail.gmail.com>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <CAFULd4ZNiRdARn8O98zROQRWoL1ASQ+iPPTTmLRxjo9SGRHyRg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAc2AmgC/x3MTQqAIBBA4avIrBNUMqyrREg/k82ikjEikO6et
+	PwW72VIyIQJOpGB8aZE51HQVALmbTwCSlqKwShjVa2dHCN77TxjwsvTHuSklWmdU9YsCCWLjCs
+	9/7If3vcDMSsFS2IAAAA=
+X-Change-ID: 20250418-apr_18_reset_img-b102988052de
+To: Frank Binns <frank.binns@imgtec.com>,  Matt Coster
+	<matt.coster@imgtec.com>, David Airlie <airlied@gmail.com>,  Simona Vetter
+	<simona@ffwll.ch>,  Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,  Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>,  Michal Wilczynski
+	<m.wilczynski@samsung.com>
+X-Mailer: b4 0.15-dev
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHKsWRmVeSWpSXmKPExsWy7djPc7pCZkwZBp8valicuL6IyWLN3nNM
+	FvOPnGO1uPL1PZvFuqcX2C1ezrrHZrH39VZ2i8u75rBZrD1yl91i/df5TBYLP25lsViyYxej
+	RVvnMlaLu/dOsFj837OD3WL2u/3sFlveTGR1EPTY+20Bi8fOWXfZPXp2nmH02LSqk83jzrU9
+	bB7zTgZ63O8+zuTR/9fAo2/LKkaPzaerPT5vkgvgjuKySUnNySxLLdK3S+DK+P/TsmCacMXW
+	r23MDYx3+bsYOTkkBEwk1j39ytTFyMUhJLCCUeL++bOsEM4XRonZMx6yglQJCXxmlLjxVRqm
+	4+LnTSwQRcsZJV5uuQjltDFJ3Dk/jRmkik3ASOLB8vlg3cICnhKH1u8Bsjk4WARUJea/0gUJ
+	8wq4SuydfZ0RwhaUODnzCQuIzSwgL7H97RxmkJkSAhsYJZbemMQOsdlYYkfjU7DzRAReMktc
+	WLeEEcRhFjjJKLGw6zAjRJWoxO/Ju1gg2g9zSnxYcIsZIuEiseLxJ6hRwhKvjm+BsmUkTk/u
+	YYGw8yUebP0EVV8jsbPnOJRtLXHn3C82kBeYBTQl1u/Shwg7Suz5voUFJCwhwCdx460gxAd8
+	EpO2TWeGCPNKdLQJQVSrSUzt6YVbem7FNqYJjEqzkPw/C8n/sxB2LWBkXsUonlpanJueWmyY
+	l1quV5yYW1yal66XnJ+7iRGYBE//O/5pB+PcVx/1DjEycTAeYpTgYFYS4Z2uw5QhxJuSWFmV
+	WpQfX1Sak1p8iFGag0VJnHfR/tZ0IYH0xJLU7NTUgtQimCwTB6dUA5Or4mI1RQ8dwaWF/Qvz
+	dxvZtr79uGTui+6TWU/DpyRN3xEfX5kZffYk041bO3fd//VnwXvBp6uWeiwODVz0psPkzjr3
+	E79ST8dI/LM5d6Qv8pTu2/y5WVvM5uq8fHZD/Lrew56tnKG/F7s/kn7DGHNgTx+n6zw3vcPB
+	ywTW7VnU6ZKW6K4w19fDpWSi1qKWlJUCV2sszCbueadtnbDreM2yYI0EBrWW4657udi2bZ7P
+	4fBTVLFk747Hk6SlnfO4qt6eUbk6a/7fpp+ZkTYcVn/f3Jdn9zqVeH/BsmtNf5ULUhl+v84L
+	ez7DeId0HttU7xvheeW/K5f6B03xOnTy3hzt17o10yaGv9uY/vzzvKAwJZbijERDLeai4kQA
+	wR8/zfEDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMIsWRmVeSWpSXmKPExsVy+t/xe7qCZkwZBgtna1qcuL6IyWLN3nNM
+	FvOPnGO1uPL1PZvFuqcX2C1ezrrHZrH39VZ2i8u75rBZrD1yl91i/df5TBYLP25lsViyYxej
+	RVvnMlaLu/dOsFj837OD3WL2u/3sFlveTGR1EPTY+20Bi8fOWXfZPXp2nmH02LSqk83jzrU9
+	bB7zTgZ63O8+zuTR/9fAo2/LKkaPzaerPT5vkgvgjtKzKcovLUlVyMgvLrFVija0MNIztLTQ
+	MzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DL+P/TsmCacMXWr23MDYx3+bsYOTkkBEwkLn7e
+	xNLFyMUhJLCUUWJ/z3oWiISMxLXul1C2sMSfa11sILaQQAuTRP85bxCbTcBI4sHy+awgtrCA
+	p8Sh9XuAbA4OFgFVifmvdEHCvAKuEntnX2eEsAUlTs58wgJSwiygKbF+lz5ImFlAXmL72znM
+	ICdICGxglNiy/h4zxFpjiR2NT1lBEiICb5glVj74xgjiMAucYpSYMPUqO0SVqMTvybtYJjAK
+	zkKyZBbCkllIlixgZF7FKJJaWpybnltspFecmFtcmpeul5yfu4kRGNvbjv3csoNx5auPeocY
+	mTgYDzFKcDArifBO12HKEOJNSaysSi3Kjy8qzUktPsRoCvTnRGYp0eR8YHLJK4k3NDMwNTQx
+	szQwtTQzVhLnZbtyPk1IID2xJDU7NbUgtQimj4mDU6qBqeNc3oHF33R0N+hYczO5WYRUGDEo
+	3nr2b4m0o3XDot+cLQ6H2A6v33eJ+2ud8/fwiKYdjB8WdymJuLlf01KJ2/LhXK5VUPHp37zv
+	rFmufW1hnNa14MwE5guTn05oOH7BrOy1/oafC0rUb6gdO2635Nfzh58rHNmeCT+2V3PUdSi5
+	F66ZdNTc+XD8uvdnwic9lCloCdeJa/ZJNChYsS6x79Ntk4k9dhb9WUXB6rY+0llzLOz39kSV
+	cljtKpWZ9UevMKL3E+eRDScal2ZZK5Srn7NIj2tWtRG73NDzfNr1yEUHFx3IZJx1/ljpWyep
+	y9M/C9v4s79puxn8jLHdU3BvzBXRGY7XJ/xZlXiwdTa/EktxRqKhFnNRcSIAMWuHpXYDAAA=
+X-CMS-MailID: 20250418112258eucas1p28186b27890dbed4cbc05b2ddd8f94327
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250418112258eucas1p28186b27890dbed4cbc05b2ddd8f94327
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250418112258eucas1p28186b27890dbed4cbc05b2ddd8f94327
+References: <CGME20250418112258eucas1p28186b27890dbed4cbc05b2ddd8f94327@eucas1p2.samsung.com>
 
-On 18/04/2025 12:15 pm, Uros Bizjak wrote:
-> On Fri, Apr 18, 2025 at 12:24 PM Andrew Cooper
-> <andrew.cooper3@citrix.com> wrote:
->> On 18/04/2025 8:13 am, Uros Bizjak wrote:
->>> diff --git a/arch/x86/boot/video.c b/arch/x86/boot/video.c
->>> index f2e96905b3fe..0641c8c46aee 100644
->>> --- a/arch/x86/boot/video.c
->>> +++ b/arch/x86/boot/video.c
->>> @@ -292,7 +292,7 @@ static void restore_screen(void)
->>>                            "shrw %%cx ; "
->>>                            "jnc 1f ; "
->>>                            "stosw \n\t"
->>> -                          "1: rep;stosl ; "
->>> +                          "1: rep stosl ; "
->>>                            "popw %%es"
->> Doesn't this one still need a separator between STOSL and POPW ?
-> ";" is a separator as well.
+This patch series introduces and documents optional reset support for
+the drm/imagination driver. While developed as part of a larger effort
+to enable the Imagination BXM-4-64 GPU upstream, these patches can merge
+independently.
 
-Yes, it is.  I've clearly not had enough coffee yet.  Sorry for the noise.
+During the upstreaming process, we discovered that the T-HEAD TH1520 SoC
+requires custom code to manage resets and clocks from the power-domain
+driver [1]. Nevertheless, adding this reset capability is necessary, as
+the GPU Device Tree node would own the reset control and would manage it
+for boards like BPI-F3 that don't have custom requirements for handling
+clocks and resets during their startup sequence.
 
-~Andrew
+For more context, please see the cover letter for the larger series [2].
+
+[1] - https://lore.kernel.org/all/20250414-apr_14_for_sending-v2-0-70c5af2af96c@samsung.com/
+[2] - https://lore.kernel.org/all/20250219140239.1378758-1-m.wilczynski@samsung.com/
+
+This series is versioned to maintain continuity with the bigger patchset
+it is a subseries of. Please find below changelog for the
+drm/imagination reset part:
+
+v6:
+ - no changes, just a re-send, bumping version to avoid confusion
+
+v5:
+ - moved the recommended 1 microsecond delay after de-asserting GPU
+   reset to the Imagination driver itself 
+
+v4:
+ - reverted reset-cells configuration to single cell as in v2
+ - addressed minor implementation issues in the DRM/Imagination reset driver
+
+v3:
+ - refactored reset driver to use zero cells
+
+v2:
+ - updated the drm/imagination driver to act as a reset controller
+   consumer. While this patchset is focused on the LPI4A board, the
+   reset controller is designed to be useful for other boards, such as the
+   BPI-3F, which also require a reset sequence after power-up.
+
+---
+Michal Wilczynski (2):
+      dt-bindings: gpu: Add 'resets' property for GPU initialization
+      drm/imagination: Add reset controller support for GPU initialization
+
+ .../devicetree/bindings/gpu/img,powervr-rogue.yaml |  3 +++
+ drivers/gpu/drm/imagination/pvr_device.c           | 21 +++++++++++++++++++++
+ drivers/gpu/drm/imagination/pvr_device.h           |  9 +++++++++
+ drivers/gpu/drm/imagination/pvr_power.c            | 22 +++++++++++++++++++++-
+ 4 files changed, 54 insertions(+), 1 deletion(-)
+---
+base-commit: fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2
+change-id: 20250418-apr_18_reset_img-b102988052de
+
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
+
