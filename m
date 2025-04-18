@@ -1,193 +1,135 @@
-Received: from out203-205-221-221.mail.qq.com (out203-205-221-221.mail.qq.com [203.205.221.221])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D54184E;
-	Fri, 18 Apr 2025 01:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E56E1C3BE0
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 01:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744939927; cv=none; b=Zx55SmIbyOGvV04kWQuJXB+jQd7YA1HIO2M3EgFA/20xNpIGV7v/aqK2yVI0pQ67sEw/TvJwZMc0ZUvmJuX6wHVu23qxQwHtsKC6hImbv3owzjRkuv+GeEDA36gvJvfFLOaqGP8ayZxw/MAHnG5mW9qqbgKM5KijQ/zPd6vJXvo=
+	t=1744940168; cv=none; b=hmDye5j7Gf0JeW5Q2dq3/HeWOGQJ12/qXIwQF7gw5hY/b6fVJLOQxfSKI7jod6qbcX313txGjY6V/++3l4cSjVEONccOXynjFip+bJXO7ZDvsZXweR7zGuib8oz3Dkk0Jac4Vlb89n7nPNWpVveovNVJnxa/PbJsXvCGov4B87o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744939927; c=relaxed/simple;
-	bh=jekfTa9V30p9Z0YsCtA2/HSKfXwCMg4Wx7EMinWsgk0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ny2dCSdCKPoEOlVYB0JG2ctQs/UEQQsNX74q6h47vTU2hucU3AwtOMJFx5tWcBqd9+/7fFosFkvAvjODdgIStLIScv5APLwokF/Z6KSMMw4Tql83gQgHcLzl8+bi8Hsrdml8xGRFeoDP7Nh7uQVJNDFOY35mEVmSX2bQo2qOyqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Ken9vZV/; arc=none smtp.client-ip=203.205.221.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1744940168; c=relaxed/simple;
+	bh=k8J7hG9/vrA9FNCiw18EaeVhil9DtKEoGVnqQ893A4M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J6fzb9pxpHdUqmEQn0u6P3VRVMmnjHJ4kcqsdmKPCVlsT2k6GoimbMt5476kpbhrYFAxntBkw/nFhvq7Llx/DLG7v1RMkWYP9ACRXF2/rxR327ubNIY0fEqgX9Gsxs6sHG2DOgylot/KYRA4xrIg5/1CdzrsxaAsKWScxWSjMRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XW13BAId; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Ken9vZV/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1744939610; bh=HevGOi1X0mZXbeVlJrmCyia/jNHwBFQD50J/snF8XCI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Ken9vZV/f7kgs80KtLY4T0e/bKgVLOWSi+qRp8iHuTUMD9rlD3SN/JDNYlDuPWrAZ
-	 7jv2Ks04YX8ICZCVriZgYzgOw0SRaBVBAZ++ESYLjP22xIcQXwJUGXNzvKCxnuLXSh
-	 +nEnNpx7ZiBrSCnTfq+Z9pEjGYc6f0DQUNv2Nd5U=
-Received: from [10.42.13.21] ([116.128.244.169])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id 6B139465; Fri, 18 Apr 2025 09:26:49 +0800
-X-QQ-mid: xmsmtpt1744939609t8f0vwbn3
-Message-ID: <tencent_F59412B7B14221D391FE1C1ADBAF4EBD5F07@qq.com>
-X-QQ-XMAILINFO: NQR8mRxMnur9Dov2d0lKs+xY+CV9nImtN7dQtaXynqINr664JPoEpVGYDL9Djk
-	 5bRkyPq1dnVF98I+nOQYVPeEAZ8U1u/6t2qvJhpXkwmwYs89hFVUnmpVEV7C1hyi6DJuuqERpZ9h
-	 3QQltE3NyBS6M/zc923xe/7JOT1Vyc5N/L5PjR3lEkAR3h0cDS5Q6kedrvwEz7ppq2y5ekEkfiWH
-	 pP4pTUIR+OCd4VBycL0efTntBK+Y+Lcmih27xM3VqB8Enh4mzKMSdde+pU7S2zDl8LbtIGWB4pEX
-	 ufNwdTmcGVXcF+P6UdBORRme6McCA0NTloz1kq3RgJhwQAlOtOv5k8eqKurLjuWlfKyeJxTPRq9/
-	 BO59fCTzttJg95Czv0GHuRXdoG5KirkuIrcU/mbH0WbUtqoN/+1mUBC5fFoX60HnzP7Rhjgu7pQP
-	 opcz1nTIQIVpk3yno/ZtdU31xqfUUMkZfv7/Kj5yxvOGL6C+RAI+2gk46j6T5+PFlWt1ajeAs4v6
-	 qF4GPUGa9lhhwHg9jT7PqDGgQUimGT5Cl85t9/IbM6qs9vNJ6S8dtFWPkSF21i22YY7Pm8ET7z1l
-	 Fh2oynRdVvFqe52cMU31odQHQ9aQfSk6JzJKzYNOpD+jDo9EHb8zVte7iG2h3cbE691UukpAOveN
-	 jLWn6R5PqPqWhdXluJstZWgz0lERWHvz7cYoFp5qGQXpAR7LzmBmQGZMTFJKBIymxZCu2Kcu8uiX
-	 ipsmWV1MOKKPWeKvVbO1Mza9bxWpA+1x251jHMb7KyKXbj2H/xMi6hoTeDFx1buGWYj1eRbvoe9V
-	 OMT49eIsQo3Qk/BVmqQ4KSFHMdTheJDsvsl/IJUhT6SrAfj43xdO5tQbG9CwzdrghvpMCpxTBH06
-	 RNrvPO+5SOy0NUxh8ZhpeFnwNzjUNLCtOehxfATHf/VL5qxQsRJEfgNI4xNr5+eV4+2k0mFTUlzA
-	 8xSUxzD/mc61Rg+SmR7MvLKoedSMh+cZ0Gjzg4gNcK3xrUH9gktFMYocVpr+Mm
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-OQ-MSGID: <75d26d83-aa3a-4acc-9341-e901b1793f1e@qq.com>
-Date: Fri, 18 Apr 2025 09:26:49 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XW13BAId"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744940165;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=StCEkDFSO5ad1eauSPUv5vvsP4duU0OTrS4bvTblyrI=;
+	b=XW13BAId1guUQeOmDyKgJrO89k/AmUgdxRWK3MUhS7bVzg0BnsRDGO5i29nCC+Cim1Giud
+	rIgDChzjEJcxJ1ilIfpdiIy0nKEswwujD5UqLfVe6PdWqq0RfUlkZ0e0/jhZomROzaJsAA
+	xnVXf+tZPofFicWFXkD70oIwUy2ywp0=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-331-srSt5sSRMIWVBoaQR0bU1w-1; Thu,
+ 17 Apr 2025 21:35:59 -0400
+X-MC-Unique: srSt5sSRMIWVBoaQR0bU1w-1
+X-Mimecast-MFC-AGG-ID: srSt5sSRMIWVBoaQR0bU1w_1744940158
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2FB511955DAF;
+	Fri, 18 Apr 2025 01:35:58 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.88])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C936319560A3;
+	Fri, 18 Apr 2025 01:35:53 +0000 (UTC)
+Date: Fri, 18 Apr 2025 09:35:48 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>,
+	Caleb Sander Mateos <csander@purestorage.com>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/4] ublk: mark ublk_queue as const for
+ ublk_commit_and_fetch
+Message-ID: <aAGsdAdnkAwTRWg0@fedora>
+References: <20250416-ublk_task_per_io-v5-0-9261ad7bff20@purestorage.com>
+ <20250416-ublk_task_per_io-v5-2-9261ad7bff20@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] PM: EM: Fix potential division-by-zero error in
- em_compute_costs()
-To: Lukasz Luba <lukasz.luba@arm.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Yaxiong Tian <tianyaxiong@kylinos.cn>, rafael@kernel.org
-References: <tencent_EE27C7D1D6BDB3EE57A2C467CC59A866C405@qq.com>
- <tencent_2256A7C02F7849F1D89390E488704E826D06@qq.com>
- <1ca192e6-3a45-45c6-b4f0-be6a89eaf192@arm.com>
- <tencent_91D93A837FF94A06C7FE8492461472B86D09@qq.com>
- <1a7f6279-c21c-4d6f-a5ee-48766b1ca34e@arm.com>
-Content-Language: en-US
-From: Yaxiong Tian <iambestgod@qq.com>
-In-Reply-To: <1a7f6279-c21c-4d6f-a5ee-48766b1ca34e@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416-ublk_task_per_io-v5-2-9261ad7bff20@purestorage.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+
+On Wed, Apr 16, 2025 at 01:46:06PM -0600, Uday Shankar wrote:
+> We now allow multiple tasks to operate on I/Os belonging to the same
+> queue concurrently. This means that any writes to ublk_queue in the I/O
+> path are potential sources of data races. Try to prevent these by
+> marking ublk_queue pointers as const when handling COMMIT_AND_FETCH.
+> Move the logic for this command into its own function
+> ublk_commit_and_fetch. Also open code ublk_commit_completion in
+> ublk_commit_and_fetch to reduce the number of parameters/avoid a
+> redundant lookup.
+> 
+> Suggested-by: Ming Lei <ming.lei@redhat.com>
+> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+> Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
+> ---
+>  drivers/block/ublk_drv.c | 91 +++++++++++++++++++++++-------------------------
+>  1 file changed, 43 insertions(+), 48 deletions(-)
+> 
+> diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+> index 4e4863d873e6593ad94c72cbf971f792df5795ae..b44cbcbcc9d1735c398dc9ac7e93f4c8736b9201 100644
+> --- a/drivers/block/ublk_drv.c
+> +++ b/drivers/block/ublk_drv.c
+> @@ -1518,30 +1518,6 @@ static int ublk_ch_mmap(struct file *filp, struct vm_area_struct *vma)
+>  	return remap_pfn_range(vma, vma->vm_start, pfn, sz, vma->vm_page_prot);
+>  }
+>  
+> -static void ublk_commit_completion(struct ublk_device *ub,
+> -		const struct ublksrv_io_cmd *ub_cmd)
+> -{
+> -	u32 qid = ub_cmd->q_id, tag = ub_cmd->tag;
+> -	struct ublk_queue *ubq = ublk_get_queue(ub, qid);
+> -	struct ublk_io *io = &ubq->ios[tag];
+> -	struct request *req;
+> -
+> -	/* now this cmd slot is owned by nbd driver */
+> -	io->flags &= ~UBLK_IO_FLAG_OWNED_BY_SRV;
+> -	io->res = ub_cmd->result;
+> -
+> -	/* find the io request and complete */
+> -	req = blk_mq_tag_to_rq(ub->tag_set.tags[qid], tag);
+> -	if (WARN_ON_ONCE(unlikely(!req)))
+> -		return;
+> -
+> -	if (req_op(req) == REQ_OP_ZONE_APPEND)
+> -		req->__sector = ub_cmd->zone_append_lba;
+> -
+> -	if (likely(!blk_should_fake_timeout(req->q)))
+> -		ublk_put_req_ref(ubq, req);
+> -}
+> -
+>  /*
+>   * Called from io task context via cancel fn, meantime quiesce ublk
+>   * blk-mq queue, so we are called exclusively with blk-mq and io task
+> @@ -1918,6 +1894,45 @@ static int ublk_unregister_io_buf(struct io_uring_cmd *cmd,
+>  	return io_buffer_unregister_bvec(cmd, index, issue_flags);
+>  }
+>  
+> +static int ublk_commit_and_fetch(const struct ublk_queue *ubq,
+> +				 struct ublk_io *io, struct io_uring_cmd *cmd,
+> +				 const struct ublksrv_io_cmd *ub_cmd,
+> +				 struct request *req)
+
+request argument can be removed by getting it inside this function directly,
+and it is helpful to switch to retrieve & store it from 'ublk_io' later.
+
+Otherwise, looks nice cleanup.
 
 
-
-在 2025/4/17 21:27, Lukasz Luba 写道:
-> 
-> 
-> On 4/17/25 08:43, Yaxiong Tian wrote:
->>
->>
->> 在 2025/4/17 13:57, Lukasz Luba 写道:
->>>
->>>
->>> On 4/17/25 02:07, Yaxiong Tian wrote:
->>>> From: Yaxiong Tian <tianyaxiong@kylinos.cn>
->>>>
->>>> When the device is of a non-CPU type, table[i].performance won't be
->>>> initialized in the previous em_init_performance(), resulting in 
->>>> division
->>>> by zero when calculating costs in em_compute_costs().
->>>>
->>>> Since the 'cost' algorithm is only used for EAS energy efficiency
->>>> calculations and is currently not utilized by other device drivers, we
->>>> should add the _is_cpu_device(dev) check to prevent this 
->>>> division-by-zero
->>>> issue.
->>>>
->>>> Fixes: 1b600da51073 ("PM: EM: Optimize em_cpu_energy() and remove 
->>>> division")
->>>> Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
->>>> ---
->>>>   kernel/power/energy_model.c | 4 ++++
->>>>   1 file changed, 4 insertions(+)
->>>>
->>>> diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
->>>> index d9b7e2b38c7a..41606247c277 100644
->>>> --- a/kernel/power/energy_model.c
->>>> +++ b/kernel/power/energy_model.c
->>>> @@ -233,6 +233,10 @@ static int em_compute_costs(struct device *dev, 
->>>> struct em_perf_state *table,
->>>>       unsigned long prev_cost = ULONG_MAX;
->>>>       int i, ret;
->>>> +    /* This is needed only for CPUs and EAS skip other devices */
->>>> +    if (!_is_cpu_device(dev))
->>>> +        return 0;
->>>> +
->>>>       /* Compute the cost of each performance state. */
->>>>       for (i = nr_states - 1; i >= 0; i--) {
->>>>           unsigned long power_res, cost;
->>>
->>>
->>> Please stop for a while. I have to check what happened that you
->>> faced the issue in the first place. I have been testing the GPU
->>> EMs and there was no issues...
->>>
->>> Let me debug that today.
->>
->> Of course. Since I don't have actual hardware, I can only logically
->> deduce that this issue might exist.
->>
->>
-> 
-> I have run with the GPU EM registered in the boot:
-> 
-> -------------------------------------------------------
-> [    2.753333] panfrost ff9a0000.gpu: EM: created perf domain
-> [    2.759863] panfrost ff9a0000.gpu: mali-t860 id 0x860 major 0x2 minor 
-> 0x0 status 0x0
-> [    2.768530] panfrost ff9a0000.gpu: features: 00000000,00000407, 
-> issues: 00000000,24040400
-> [    2.777678] panfrost ff9a0000.gpu: Features: L2:0x07120206 
-> Shader:0x00000000 Tiler:0x00000809 Mem:0x1 MMU:0x00002830 AS:0xff JS:0x7
-> [    2.780746] mmc_host mmc2: Bus speed (slot 0) = 148500000Hz (slot req 
-> 150000000Hz, actual 148500000HZ div = 0)
-> [    2.790905] panfrost ff9a0000.gpu: shader_present=0xf l2_present=0x1
-> 
-> root@arm:~# cat /sys/kernel/debug/energy_model/ff9a0000.gpu/flags
-> 0x1
-> root@arm:~# grep . /sys/kernel/debug/energy_model/ff9a0000.gpu/ps*/*
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:200000/cost:0
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:200000/frequency:200000
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:200000/inefficient:1
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:200000/performance:0
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:200000/power:404250
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:300000/cost:0
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:300000/frequency:300000
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:300000/inefficient:1
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:300000/performance:0
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:300000/power:606375
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:400000/cost:0
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:400000/frequency:400000
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:400000/inefficient:1
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:400000/performance:0
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:400000/power:808500
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:600000/cost:0
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:600000/frequency:600000
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:600000/inefficient:0
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:600000/performance:0
-> /sys/kernel/debug/energy_model/ff9a0000.gpu/ps:600000/power:1505790
-> 
-> --------------------------------------------------------
-> 
-> The EM for the GPU is not modified during the boot like the CPUs'
-> EM are, thus this code is not triggered. Although, the API is
-> open and in theory the GPU EM can be modified at runtime
-> as well and it will reach that em_compute_costs() issue
-> with 'performance' field having value 0.
-> 
-> So this v4 patch would be needed in this case.
-> 
-> Please re-send this v4 patch as a completely new message.
-> 
-> Thanks for looking at that code path and the fix for potential
-> issue.
-> 
-> You can also add my:
-> 
-> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-> 
-> Regrds,
-> Lukasz
-
-Got it - patch resent with Reviewed-by.
-
-https://lore.kernel.org/all/tencent_7F99ED4767C1AF7889D0D8AD50F34859CE06@qq.com/
+thanks,
+Ming
 
