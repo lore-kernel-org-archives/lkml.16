@@ -1,184 +1,120 @@
-Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CCCE1CD15;
-	Fri, 18 Apr 2025 04:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F6C1CD15
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 04:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744949798; cv=none; b=YzF0s1aFXNb1lbJl5Rs4ZfMmURdd5pyhpLOW+VXOqEsZpAlueiL06Uk+SBxdEtHOInaHuccFJH3K3wvTtGn6N3iUZLQwbj2V+aaNeWeC8M53HWCqR6QgCgNZOj8Bdv+ZYzzMWooKN7wUQtTpbKsGtwoonLwLVf3DYZq+8fOeOgw=
+	t=1744950242; cv=none; b=stHG2DRX4xmXErgoWREcmm4MVRJQSfdOXxmiEMixbdsrmKhep/qRb7Hjha6OLGi5s7anVv/zT9YFlRlaPxv57IsJmqc4x2oqKOC3qb0LzGZKhTJ1CiPdQLLasUPOl1SHxiDcE1drc8fC/GxiSnV6anj94AKtFpSP4AGAnd9ca8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744949798; c=relaxed/simple;
-	bh=HTVYu5YZ2UlRDgI4DhnXcUjUecU98qvOKuPpLwHFjH4=;
-	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
-	 Content-Type:Date:Message-ID; b=Z00f+SkESorJTyCcDtQPX77AorPRz3wpMPy8I0wRrPnM6WivVzf6jtEQlQXG5uOT7MG4NEkVaMFXKDF7jO3oDo85srZVWNQ7eCf2w7GmbMqqoBOqSarDJ2yZ9euzg+PqkPDbqDaIRqcGxfcbQJY0ABqBGz0wARghZxr41yb+70Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jvosburgh.net; spf=pass smtp.mailfrom=jvosburgh.net; dkim=pass (2048-bit key) header.d=jvosburgh.net header.i=@jvosburgh.net header.b=GWjpOOLl; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gByvhMxz; arc=none smtp.client-ip=202.12.124.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jvosburgh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jvosburgh.net
+	s=arc-20240116; t=1744950242; c=relaxed/simple;
+	bh=V3popx7/6rBf/GHHCr3OfKcazwpLFU4qB38TjY3jMwo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=sPCJ3SJTUfS/u2gPSL7C6xUWd/D4XpCBeKBmyWaJxOxTnSy8/sZ3Pazw+JhvoOoK3uBLCRQolA/P4Any9pKSBdqt+YFITSHG7DP/q5K1SMVhXM4l+VZg4MyQIQk+GTuRbUsHBoRXjqM//DwBV+My094AQpD6aLyc86U41ij00jU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GrblLx2Z; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jvosburgh.net header.i=@jvosburgh.net header.b="GWjpOOLl";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gByvhMxz"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id BD446254017D;
-	Fri, 18 Apr 2025 00:16:34 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-07.internal (MEProxy); Fri, 18 Apr 2025 00:16:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jvosburgh.net;
-	 h=cc:cc:content-id:content-transfer-encoding:content-type
-	:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to; s=fm1; t=1744949794; x=1745036194; bh=AtjvMy942rp3hJyuKVGEc
-	B4Dnhb47VVFNtGVTXF0hBw=; b=GWjpOOLl8LhQViF9tRH/2ZeieN8UFtJU6MdJh
-	Ne7KbESBBin2fIilQRl9NjeH1hXaVH6gU55ykFOZjz6NsZZCudllekf7mY/YM94o
-	GyXF6l4fXe1z+/nERdhQ7LY6jsj3fIKVDKR2IXReUcAyyn5WGN40+q7fQl6I+TqB
-	hrjihkjXNINlNwTcMj1UTKROjbclZOCmvuyLL7biN/ysqxx82FONzCwv4Im9p1GT
-	+j/wNiB028WksuLHsq25ww7nwlyXqcXYAQhBzr59npmgxaw7zqhGxKjoFBGnkSOS
-	LcS+7vpjnuOd/tSpVz6NHOFGVb2xAtj7kL3zXVrZlYsCxa72g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-id
-	:content-transfer-encoding:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1744949794; x=1745036194; bh=AtjvMy942rp3hJyuKVGEcB4Dnhb47VVFNtG
-	VTXF0hBw=; b=gByvhMxzQd4s7DeCJVY/RlE0huYoKEPBzHdpeKhr2MsUAqfKg+i
-	mn+0p9q9LP034AntaPC09XJ3WbqWlwkJcvYacEBzSFI/4zyZ1mHqZ0zfV3pNIAfA
-	83f/6uUiC1sYYbGtjT6UsLhWAiB7NYIZSkQ0KdKpdSK0d4MrZNAxENO8LZUrBaVZ
-	u+cc/AhskHYfDwV5fg90uriqzncnk8M/foAVe50MGOJ0yGyl1P4LVbbQiEauOFA2
-	6NOlkbqW47tDoUnpLNWhlhE5zbSdmEKCpLhoW53emOF6xaHkIoyDwpwAV2sWAG+d
-	liiWL1O9rPiOAoiqvFsmW3MRbk+OiT/pZfw==
-X-ME-Sender: <xms:ItIBaDosh1SLXVcltLD_8gRJDSfID2k5CqeZdpG9qAtjPtoKYVV7xQ>
-    <xme:ItIBaNoMuMgfvM1JvindWoYVnReF754JRJb2jUSOYd39xLx7Ka1n_Gv-uDkXf46ms
-    9o0vcAJu6PjS3BwlfY>
-X-ME-Received: <xmr:ItIBaAOtQa7fDZo7lNgzUJUVjkZtIF_3SPuXbbBcDb4d0QZbHWCGLX_blwDyEshM2iX_ag>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfeduudehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhephffvvefujghfofggtgfgfffksehtqhertder
-    tddvnecuhfhrohhmpeflrgihucggohhssghurhhghhcuoehjvhesjhhvohhssghurhhghh
-    drnhgvtheqnecuggftrfgrthhtvghrnhepieefvdelfeeljeevtefhfeeiudeuiedvfeei
-    veelffduvdevfedtheffffetfeffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepjhhvsehjvhhoshgsuhhrghhhrdhnvghtpdhnsggprhgtphht
-    thhopeduuddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhgriihorhessghlrg
-    gtkhifrghllhdrohhrghdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhn
-    vghtpdhrtghpthhtoheplhhiuhhhrghnghgsihhnsehgmhgrihhlrdgtohhmpdhrtghpth
-    htohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehhohhrmhhs
-    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthho
-    pegtrhgrthhiuhesnhhvihguihgrrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvg
-    guhhgrthdrtghomh
-X-ME-Proxy: <xmx:ItIBaG7IDpHgspr7kZCbcP-YgvRqHFQh_pn3X1P5yDQe9AgAvgUsGg>
-    <xmx:ItIBaC7vCXHkK4iBbKS9EyUES9nIa5yExCjP2v0L7dzTWVyPu6f9Hw>
-    <xmx:ItIBaOjGbPFYtEXk05wQmVRumf0rPa9UoBQ11QqEN-bzYIgIgFiQqg>
-    <xmx:ItIBaE6ygoZ-FwWjwZwlFBRYa8cpLTyz557Mv5IiUwp_pWMo5HpElQ>
-    <xmx:ItIBaIW16v3G8gJufpwJVey452nggftuZ0TrUuJoD8OI_Ut2X3gWn5mQ>
-Feedback-ID: i53714940:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 18 Apr 2025 00:16:33 -0400 (EDT)
-Received: by famine.localdomain (Postfix, from userid 1000)
-	id 2126E9FD3F; Thu, 17 Apr 2025 21:16:33 -0700 (PDT)
-Received: from famine (localhost [127.0.0.1])
-	by famine.localdomain (Postfix) with ESMTP id 1D94C9FC4C;
-	Thu, 17 Apr 2025 21:16:33 -0700 (PDT)
-From: Jay Vosburgh <jv@jvosburgh.net>
-To: Hangbin Liu <liuhangbin@gmail.com>
-cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-    "David S. Miller" <davem@davemloft.net>,
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-    Paolo Abeni <pabeni@redhat.com>,
-    Nikolay Aleksandrov <razor@blackwall.org>,
-    Simon Horman <horms@kernel.org>, Cosmin Ratiu <cratiu@nvidia.com>,
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 net] bonding: use permanent address for MAC swapping if
- device address is same
-In-reply-to: <Z_8bfpQb_3fqYEcn@fedora>
-References: <20250401090631.8103-1-liuhangbin@gmail.com>
- <3383533.1743802599@famine> <Z_OcP36h_XOhAfjv@fedora>
- <Z_yl7tQne6YTcU6S@fedora> <4177946.1744766112@famine>
- <Z_8bfpQb_3fqYEcn@fedora>
-Comments: In-reply-to Hangbin Liu <liuhangbin@gmail.com>
-   message dated "Wed, 16 Apr 2025 02:52:46 -0000."
-X-Mailer: MH-E 8.6+git; nmh 1.8+dev; Emacs 29.3
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GrblLx2Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744950241; x=1776486241;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=V3popx7/6rBf/GHHCr3OfKcazwpLFU4qB38TjY3jMwo=;
+  b=GrblLx2ZaSBPN4F/uMtwxLku0OoEVTuGtHcSnMgPjcXrN2nzjHywI9hr
+   zIlQ+f0p24tZdJk2lBG4QGkRgtRATVrngrlxjcQDe7TeiAg1amCe+6Izk
+   bPfmEHJdbt/doTTYgmOIlozsIDAdZH+X//Uz6/PYSUCQnagkSQSQKBCx8
+   LJ2RhG/o9nPPYAQEhDc2WgpoDMMK3vy5JHM/9vsuUStKgMPH6vs1NYTmb
+   D6wIQ2sO3Kxpu5IUcjUM3jecGVhrsRelqtjWNsNvqyUXMTPd4r9SJ4t0u
+   Bm2V+LZjAw6g7kqo4k+nJly1vyyCunGIMPZzjD42RkFD7d+CfOSmoYKEa
+   Q==;
+X-CSE-ConnectionGUID: y3x+dYfzSq2dSLs/eqfS5A==
+X-CSE-MsgGUID: gUlUOeZmQsKGcxdffZaS1g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="46580561"
+X-IronPort-AV: E=Sophos;i="6.15,221,1739865600"; 
+   d="scan'208";a="46580561"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 21:24:01 -0700
+X-CSE-ConnectionGUID: Db1Kc4KjRqOzeeYvVzMGxA==
+X-CSE-MsgGUID: PnpB9c8WQQy/lCZyEPPgGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,221,1739865600"; 
+   d="scan'208";a="130878819"
+Received: from lkp-server01.sh.intel.com (HELO 61e10e65ea0f) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 17 Apr 2025 21:23:58 -0700
+Received: from kbuild by 61e10e65ea0f with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u5dGe-0002V5-2L;
+	Fri, 18 Apr 2025 04:23:56 +0000
+Date: Fri, 18 Apr 2025 12:23:44 +0800
+From: kernel test robot <lkp@intel.com>
+To: Hans Holmberg <Hans.Holmberg@wdc.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Carlos Maiolino <cem@kernel.org>, Christoph Hellwig <hch@lst.de>
+Subject: fs/xfs/xfs_zone_gc.c:186: undefined reference to `__divmoddi4'
+Message-ID: <202504181233.F7D9Atra-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <155384.1744949793.1@famine>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 17 Apr 2025 21:16:33 -0700
-Message-ID: <155385.1744949793@famine>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hangbin Liu <liuhangbin@gmail.com> wrote:
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2
+commit: 845abeb1f06a8a44e21314460eeb14cddfca52cc xfs: add tunable threshold parameter for triggering zone GC
+date:   4 days ago
+config: i386-buildonly-randconfig-004-20250418 (https://download.01.org/0day-ci/archive/20250418/202504181233.F7D9Atra-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250418/202504181233.F7D9Atra-lkp@intel.com/reproduce)
 
->On Tue, Apr 15, 2025 at 06:15:12PM -0700, Jay Vosburgh wrote:
->> >> =
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504181233.F7D9Atra-lkp@intel.com/
 
->> >> diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/b=
-ond_main.c
->> >> index 950d8e4d86f8..0d4e1ddd900d 100644
->> >> --- a/drivers/net/bonding/bond_main.c
->> >> +++ b/drivers/net/bonding/bond_main.c
->> >> @@ -2120,6 +2120,24 @@ int bond_enslave(struct net_device *bond_dev,=
- struct net_device *slave_dev,
->> >>  			slave_err(bond_dev, slave_dev, "Error %d calling set_mac_address=
-\n", res);
->> >>  			goto err_restore_mtu;
->> >>  		}
->> >> +	} else if (bond->params.fail_over_mac =3D=3D BOND_FOM_FOLLOW &&
->> >> +		   BOND_MODE(bond) =3D=3D BOND_MODE_ACTIVEBACKUP &&
->> >> +		   memcmp(slave_dev->dev_addr, bond_dev->dev_addr, bond_dev->addr=
-_len) =3D=3D 0) {
->> >> +		/* Set slave to current active slave's permanent mac address to
->> >> +		 * avoid duplicate mac address.
->> >> +		 */
->> >> +		curr_active_slave =3D rcu_dereference(bond->curr_active_slave);
->> >> +		if (curr_active_slave) {
->> >> +			memcpy(ss.__data, curr_active_slave->perm_hwaddr,
->> >> +			       curr_active_slave->dev->addr_len);
->> >> +			ss.ss_family =3D slave_dev->type;
->> >> +			res =3D dev_set_mac_address(slave_dev, (struct sockaddr *)&ss,
->> >> +					extack);
->> >> +			if (res) {
->> >> +				slave_err(bond_dev, slave_dev, "Error %d calling set_mac_addres=
-s\n", res);
->> >> +				goto err_restore_mtu;
->> >> +			}
->> >> +		}
->> =
+All errors (new ones prefixed by >>):
 
->> 	Is this in replacement of the prior patch (that does stuff
->> during failover), or in addition to?
->> =
+   ld: fs/xfs/xfs_zone_gc.o: in function `xfs_zoned_need_gc':
+>> fs/xfs/xfs_zone_gc.c:186: undefined reference to `__divmoddi4'
+>> ld: fs/xfs/xfs_zone_gc.c:186: undefined reference to `__divdi3'
 
->> 	I'm asking because in the above, if there is no
->> curr_active_slave, e.g., all interfaces in the bond are down, the above
->> would permit MAC conflict in the absence of logic in failover to resolv=
-e
->> things.
->
->Hmm, then how about use bond_for_each_slave() and find out the link
->that has same MAC address with bond/new_slave?
 
-	But even if we find it, aren't we stuck at that point?  The
-situation would be that the bond and one backup interface have MAC#1.
-MAC#1 may or may not be that backup interface's permanent MAC address,
-and we're adding another interface, also with MAC#1, which might be the
-newly added interface's permanent MAC.  The MAC swap gyrations to
-guarantee this would work correctly in all cases seem to be rather
-involved.
+vim +186 fs/xfs/xfs_zone_gc.c
 
-	Wouldn't it be equally effective to, when the conflicting
-interface is added, give it a random MAC to avoid the conflict?  That
-random MAC shouldn't end up as the bond's MAC, so it would exist only as
-a placeholder of sorts.
+   162	
+   163	/*
+   164	 * We aim to keep enough zones free in stock to fully use the open zone limit
+   165	 * for data placement purposes. Additionally, the m_zonegc_low_space tunable
+   166	 * can be set to make sure a fraction of the unused blocks are available for
+   167	 * writing.
+   168	 */
+   169	bool
+   170	xfs_zoned_need_gc(
+   171		struct xfs_mount	*mp)
+   172	{
+   173		s64			available, free;
+   174	
+   175		if (!xfs_group_marked(mp, XG_TYPE_RTG, XFS_RTG_RECLAIMABLE))
+   176			return false;
+   177	
+   178		available = xfs_estimate_freecounter(mp, XC_FREE_RTAVAILABLE);
+   179	
+   180		if (available <
+   181		    mp->m_groups[XG_TYPE_RTG].blocks *
+   182		    (mp->m_max_open_zones - XFS_OPEN_GC_ZONES))
+   183			return true;
+   184	
+   185		free = xfs_estimate_freecounter(mp, XC_FREE_RTEXTENTS);
+ > 186		if (available < mult_frac(free, mp->m_zonegc_low_space, 100))
+   187			return true;
+   188	
+   189		return false;
+   190	}
+   191	
 
-	I'm unsure if there are many (any?) devices in common use today
-that actually have issues with multiple ports using the same MAC, so I
-don't think we need an overly complicated solution.
-
-	-J
-
----
-	-Jay Vosburgh, jv@jvosburgh.net
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
