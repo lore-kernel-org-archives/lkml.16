@@ -1,55 +1,75 @@
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.241.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E822749E7;
-	Fri, 18 Apr 2025 11:23:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.241.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960131FC0ED;
+	Fri, 18 Apr 2025 11:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744975387; cv=none; b=L9VzZpTg1msrEeS1K+R4clwe6z+E+ZRd/77bTqrH35eRapnyNSGrYUkKavGy+oIU7/yT/TMlUXp4rOKK9L/6GIX/f8IpfbyjPXk5kas9eXJ3xB26nCsbWzJY/deOHfDIrVylna+GdJ3y6akxORZFRcJ7aDAkba4uffNvRVbOAKw=
+	t=1744975497; cv=none; b=kEHuebHiu/fNVXIHAlkyMQf4ues7J3tx92ZNKq/LI/jI6OhglfXYDXrenHzA7KUZ/SPBwuTAgN53ALmynM4r2lpGROee7sb8GnfIC4JUGwsPmyEezy6lTycGZzcKY3ATyPvywUHggnQKzazdadkBbBolbRwEQpbA3C7Onr65YR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744975387; c=relaxed/simple;
-	bh=XugppIIAJO9PkEAXCDE1zf/7oX/SgdA4rqZh/Cbb2oE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rj4ix7iSbEi8IuG1L0eoZDLAXtevkNTFPT2IfjC8n0ZB2Mqzpddjp1ixe1OIyhIgJD6sxwSDCG6mZIECnL354oBjL1dWrwHwkIZ/SrDQF43PkVz5SNKYwtznCv7lzBTTg4IoQNXniS95ZPMRK9UKPksNDqD8KUpe5PVft9gbCSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=ysCg+gDi; arc=none smtp.client-ip=159.100.241.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	s=arc-20240116; t=1744975497; c=relaxed/simple;
+	bh=QdJJGvEiz5pjNXqTtarXbU7YwPu1LSLqeT8h32rut74=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OSqUHsVgMDYcv6L6HC95IQiinoJ2YZnKxy3EbZEQVW4U9cHEUW8ACPA7CnxaGC5mYlohHz7fABX0FzB5xgemc4odyESfuZiT9UkKZ5MDV534WS/el6R8I9rUadsZOO25kRaAPN4xPJwHPDwJLZJRrf9QmSoS8uPUJT+tTvac9oM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TPM05IST; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="ysCg+gDi"
-Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.80.155])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id 5022E20076;
-	Fri, 18 Apr 2025 11:22:57 +0000 (UTC)
-Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
-	by relay4.mymailcheap.com (Postfix) with ESMTPS id 470FD2012A;
-	Fri, 18 Apr 2025 11:22:49 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf2.mymailcheap.com (Postfix) with ESMTPSA id BB8BB400F2;
-	Fri, 18 Apr 2025 11:22:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1744975366; bh=XugppIIAJO9PkEAXCDE1zf/7oX/SgdA4rqZh/Cbb2oE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ysCg+gDi0HY22e+jhMxa5iReSpbDDeR/QPiEz3mmOctnS67uNcSf6IohFYCM8uvBr
-	 LfBF0YaBVEsTxaL0G4Vz41pSy/S15+sp3J4jOtjIV2bCtyb3me6xuyLL97Eckw3HGl
-	 it50ZczlJLCDXoD/Bnud391KyjyFjaHTU9uSJ/D0=
-Received: from hrh-ofice.wok.cipunited.com (unknown [60.247.127.212])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id CD13C406FC;
-	Fri, 18 Apr 2025 11:22:41 +0000 (UTC)
-From: Runhua He <hua@aosc.io>
-To: linux-kernel@vger.kernel.org
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
-	Runhua He <hua@aosc.io>,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Yemu Lu <prcups@krgm.moe>,
-	Xinhui Yang <cyan@cyano.uk>,
-	Rong Zhang <i@rong.moe>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	linux-acpi@vger.kernel.org
-Subject: [RFC PATCH] ACPI: EC: Set ec_no_wakeup for MECHREVO Wujie 14XA (GX4HRXL)
-Date: Fri, 18 Apr 2025 19:22:27 +0800
-Message-ID: <20250418112229.93075-1-hua@aosc.io>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TPM05IST"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so17079575e9.3;
+        Fri, 18 Apr 2025 04:24:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744975494; x=1745580294; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=W//o/Ys/rBW7MLdSpGEG/ep49Nq5wGldQX5Bh4Q01DA=;
+        b=TPM05IST9GkwrNSB4SWmZZUru0S3vd4JyrfJr4sRO6IxX22sHmlu4Xn1KQRD3gM7BT
+         PCeq5+jfDRG4zszpX/a8s3g+a7CwkBA/HFUBroYTcoNOa6Qz8MI5NJiR/cw2hu4BALTA
+         6rqIxdIlbsYhkwIlmicHgiagrkqetZSVNf84LTipNTKXuIf6R4taEc9OCByV3Ul+Bocu
+         tPSgNtnFpOBAEmoaxv2vCTm+MwDbLtqcGY0RjlsIOqiHIVauPMy+GhWtLRaho37l0uhV
+         I4dqL0k0KB4Q80rSBakoscleBH7SF0Yx0mATySUPMTAwR3D0i8kxqt97K+z76pqhxKpU
+         7W0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744975494; x=1745580294;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=W//o/Ys/rBW7MLdSpGEG/ep49Nq5wGldQX5Bh4Q01DA=;
+        b=Og+GX70drqsdUoDk4iqg0ReGkSGRqYe/j9FYFNR2hhcue/xNu2d1y01EMz0zBnZlkE
+         JcXN0ahCxlGuDZZfYtBWT1R8WSJ5gIzs6kBvS9M3ibaMeuVsU0F0JtRsoxTuZNLOAn8m
+         f+Qh9HM73ZSwWtQU7vL7ZLnryADKKJvA2tHGUO9UZS315FLY07wMK1l3aEjArrecVf2P
+         xyqsDldx5qSiyyT46xT6vONWMg3IYNZJ+yq2eciOiriZSSKiOq9jHzp8W2rCRQ4vMylY
+         G2N/MKBCx5f83rvSXZuj26eKuLI+OAlyWfGq7geyXJbZUkE6aDp0QuTgZ+2reuF4N+Oq
+         V0FA==
+X-Forwarded-Encrypted: i=1; AJvYcCVd9E99TJS3XXmnCwyNw8U0d4h9/vJ/02FT39CGtBLViGmZAufYOBeDBrnFjFg5SpcF8nVUKdSfyQl/zgY=@vger.kernel.org, AJvYcCXDC0I9sgUR0yY2WcHHKYPLyyBpOv1AhSaoV4XHuYSDQ7Z/vHfoxyt4RQbmKOmcgMhR81tQ8MgR@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywz+qjidytCW4eBsxTgVFIvxV9R444ntPzYHDNByaxhsilQ719s
+	mBAWNolpkEeUJD+lLZsuf4dZPiRgNQdpPED4kzZYiCbuF/tro8AtSx4swRwl1Ed1uQ==
+X-Gm-Gg: ASbGncuYYT9KI3prqzOVzRBkFICtMsHWay8XPQAUYYh1gUFd0EA3f3S6ecRArhZCWDZ
+	Qh/aRn2vI+HsNOa3LkGUCSj7SMXeHjr9I/KftGmcR5yH7EQvaJjQh9sJo++pmvXTIS6Yn5cAV5w
+	tZ6cEHj/nAHSbPH2JrT+bwndRkwLJgFL4ytxKfx4d/+r24WQGRDG8nfNAZxIZLNTAFLyU+g/iOE
+	y203kf2voWg31csFshKDRJg+/vUzX/uT/1pyesm/3bWLqbtgUKM2EVEknn5qHzie4bYbwZ/toGV
+	RPIq3gkRY214wWEZ/nuAXsrUbYxYy6VnrtrCxsRVQg==
+X-Google-Smtp-Source: AGHT+IG30iTqc/o70q9K2Hbdi1h5RZUfJobP4PRf5VUTOWgsiua+PVOrKWb3LlV6dsQiTSdoLK3P/g==
+X-Received: by 2002:a05:600c:c0f:b0:43d:7588:6688 with SMTP id 5b1f17b1804b1-4406ab93badmr21238555e9.12.1744975493673;
+        Fri, 18 Apr 2025 04:24:53 -0700 (PDT)
+Received: from localhost ([194.120.133.58])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4406d5a9e0esm19272115e9.5.2025.04.18.04.24.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 04:24:53 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Michal Simek <michal.simek@amd.com>,
+	netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] net: axienet: Fix spelling mistake "archecture" -> "architecture"
+Date: Fri, 18 Apr 2025 12:24:47 +0100
+Message-ID: <20250418112447.533746-1-colin.i.king@gmail.com>
 X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -57,161 +77,29 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: BB8BB400F2
-X-Rspamd-Server: nf2.mymailcheap.com
-X-Spamd-Result: default: False [1.40 / 10.00];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_ONE(0.00)[1];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	SPFBL_URIBL_EMAIL_FAIL(0.00)[jeffbai.aosc.io:server fail,hua.aosc.io:server fail,cyan.cyano.uk:server fail,i.rong.moe:server fail,prcups.krgm.moe:server fail];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[]
-X-Rspamd-Action: no action
 
-MECHREVO Wujie 14XA (GX4HRXL) wakes up immediately after s2idle entry.
-This happens regardless of whether the laptop is plugged into AC power, or
-whether any peripheral is plugged into the laptop.
+There is a spelling mistake in a dev_error message. Fix it.
 
-Using `amd_s2idle.py --debug-ec', we found that the laptop has a wakeup
-event triggered by IRQ 1 (PS/2 Controller) and IRQ 9 (ACPI SCI), and was
-eventually woken up by IRQ 9. Taking a look at `dmesg', we found that the
-EC was quite chatty after s2idle entry:
-
-[ 1842.317151] PM: suspend-to-idle
-[ 1842.317178] ACPI: EC: ACPI EC GPE status set
-[ 1842.317184] ACPI: EC: IRQ (5)
-[ 1842.317190] ACPI: EC: EC_SC(R) = 0x28 SCI_EVT=1 BURST=0 CMD=1 IBF=0 OBF=0
-[ 1842.317196] ACPI: EC: Polling enabled
-[ 1842.317198] ACPI: EC: Command(QR_EC) submitted/blocked
-[ 1842.317202] ACPI: EC: ACPI EC GPE dispatched
-[ 1842.317248] ACPI: EC: Event started
-[ 1842.317259] ACPI: EC: 2: Increase command
-[ 1842.317264] ACPI: EC: Command(QR_EC) started
-[ 1842.317271] ACPI: EC: TASK (14)
-[ 1842.317288] ACPI: EC: EC_SC(R) = 0x28 SCI_EVT=1 BURST=0 CMD=1 IBF=0 OBF=0
-[ 1842.317294] ACPI: EC: EC_SC(W) = 0x84
-[ 1842.317303] ACPI: EC: TASK (14)
-[ 1842.317324] ACPI: EC: EC_SC(R) = 0x2a SCI_EVT=1 BURST=0 CMD=1 IBF=1 OBF=0
-[ 1842.317329] ACPI: EC: TASK (14)
-[ 1842.317336] ACPI: EC: EC_SC(R) = 0x2a SCI_EVT=1 BURST=0 CMD=1 IBF=1 OBF=0
-
-[...]
-
-[ 1842.317399] ACPI: EC: EC_SC(R) = 0x28 SCI_EVT=1 BURST=0 CMD=1 IBF=0 OBF=0
-[ 1842.317405] ACPI: EC: TASK (14)
-[ 1842.317412] ACPI: EC: EC_SC(R) = 0x28 SCI_EVT=1 BURST=0 CMD=1 IBF=0 OBF=0
-[ 1842.317418] ACPI: EC: TASK (14)
-[ 1842.317425] ACPI: EC: EC_SC(R) = 0x29 SCI_EVT=1 BURST=0 CMD=1 IBF=0 OBF=1
-[ 1842.317432] ACPI: EC: EC_DATA(R) = 0x7b
-[ 1842.317436] ACPI: EC: Command(QR_EC) unblocked
-[ 1842.317445] ACPI: EC: Polling quirk
-[ 1842.317448] ACPI: EC: TASK (14)
-[ 1842.317455] ACPI: EC: EC_SC(R) = 0x28 SCI_EVT=1 BURST=0 CMD=1 IBF=0 OBF=0
-[ 1842.317463] ACPI: EC: Polling enabled
-[ 1842.317466] ACPI: EC: Command(QR_EC) submitted/blocked
-[ 1842.317469] ACPI: EC: Polling disabled
-[ 1842.317472] ACPI: EC: Command(QR_EC) completed by hardware
-[ 1842.317476] ACPI: EC: Command(QR_EC) stopped
-[ 1842.317480] ACPI: EC: 1: Decrease command
-[ 1842.317484] ACPI: EC: Query(0x7b) scheduled
-[ 1842.317495] ACPI: EC: 2: Increase command
-[ 1842.317499] ACPI: EC: Command(QR_EC) started
-[ 1842.317504] ACPI: EC: TASK (14)
-[ 1842.317516] ACPI: EC: EC_SC(R) = 0x08 SCI_EVT=0 BURST=0 CMD=1 IBF=0 OBF=0
-[ 1842.317521] ACPI: EC: EC_SC(W) = 0x84
-[ 1842.317529] ACPI: EC: TASK (14)
-[ 1842.317537] ACPI: EC: EC_SC(R) = 0x0a SCI_EVT=0 BURST=0 CMD=1 IBF=1 OBF=0
-[ 1842.317543] ACPI: EC: TASK (14)
-[ 1842.317550] ACPI: EC: EC_SC(R) = 0x0a SCI_EVT=0 BURST=0 CMD=1 IBF=1 OBF=0
-[ 1842.317555] ACPI: EC: TASK (14)
-
-[...]
-
-[ 1842.317638] ACPI: EC: EC_SC(R) = 0x08 SCI_EVT=0 BURST=0 CMD=1 IBF=0 OBF=0
-[ 1842.317643] ACPI: EC: TASK (14)
-[ 1842.317650] ACPI: EC: EC_SC(R) = 0x08 SCI_EVT=0 BURST=0 CMD=1 IBF=0 OBF=0
-[ 1842.317656] ACPI: EC: TASK (14)
-[ 1842.317663] ACPI: EC: EC_SC(R) = 0x09 SCI_EVT=0 BURST=0 CMD=1 IBF=0 OBF=1
-[ 1842.317670] ACPI: EC: EC_DATA(R) = 0x00
-[ 1842.317674] ACPI: EC: Command(QR_EC) unblocked
-[ 1842.317682] ACPI: EC: Polling quirk
-[ 1842.317685] ACPI: EC: TASK (14)
-[ 1842.317692] ACPI: EC: EC_SC(R) = 0x08 SCI_EVT=0 BURST=0 CMD=1 IBF=0 OBF=0
-[ 1842.317697] ACPI: EC: Polling disabled
-[ 1842.317700] ACPI: EC: Command(QR_EC) completed by hardware
-[ 1842.317704] ACPI: EC: Command(QR_EC) stopped
-[ 1842.317707] ACPI: EC: 1: Decrease command
-[ 1842.317711] ACPI: EC: Event stopped
-[ 1842.317723] ACPI: EC: Query(0x7b) started
-[ 1842.318142] ACPI: EC: Query(0x7b) stopped
-[ 1842.318150] ACPI: EC: ACPI EC work flushed
-[ 1842.318158] ACPI: PM: Rearming ACPI SCI for wakeup
-[ 1842.318169] amd_pmc: SMU idlemask s0i3: 0x1ffb3ebd
-[ 1842.318193] PM: Triggering wakeup from IRQ 9
-[ 1842.318244] ACPI: EC: ACPI EC GPE status set
-[ 1842.318249] ACPI: EC: IRQ (5)
-[ 1842.318254] ACPI: EC: EC_SC(R) = 0x08 SCI_EVT=0 BURST=0 CMD=1 IBF=0 OBF=0
-[ 1842.318263] ACPI: PM: Rearming ACPI SCI for wakeup
-
-I'm not quite sure what the EC was during this time. As
-`acpi.ec_no_wakeup=1' works around this issue, I believe that the EC had
-for some reason caused the system to wake up.
-
-Browsing the source code, I found that in `drivers/acpi/ec.c',
-`struct dmi_system_id acpi_ec_no_wakeup[]' records a few machines with
-incorrect suspend behaviors caused by EC wakeup.
-
-As this struct corresponds to a series of machines that needs
-`acpi.ec_no_wakeup' enabled by default, add GX4HRXL to this struct. Note
-that I have only matched the motherboard model, as MECHREVO is a "white
-label" manufacturer using commonly used chassis and motherboards - GX4HRXL
-may be found in a variety of laptops sold under different brands and model
-names.
-
-Since the reason behind this EC wakeup is not yet clear to me, I'm sending
-this patch in hope of getting more comments and guidance on how to further
-debug this issue.
-
-Suggested-by: Mingcong Bai <jeffbai@aosc.io>
-Link: https://zhuanlan.zhihu.com/p/730538041
-Tested-by: Yemu Lu <prcups@krgm.moe>
-Co-developed-by: Xinhui Yang <cyan@cyano.uk>
-Signed-off-by: Xinhui Yang <cyan@cyano.uk>
-Co-developed-by: Rong Zhang <i@rong.moe>
-Signed-off-by: Rong Zhang <i@rong.moe>
-Signed-off-by: Runhua He <hua@aosc.io>
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 ---
- drivers/acpi/ec.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
-index 3c5f34892..19f1d36a5 100644
---- a/drivers/acpi/ec.c
-+++ b/drivers/acpi/ec.c
-@@ -2329,6 +2329,12 @@ static const struct dmi_system_id acpi_ec_no_wakeup[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "83Q3"),
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index 054abf283ab3..1b7a653c1f4e 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -2980,7 +2980,7 @@ static int axienet_probe(struct platform_device *pdev)
+ 			}
  		}
- 	},
-+	{
-+		/* MECHREVO Wujie 14 Series (GX4HRXL) */
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GX4HRXL"),
-+		}
-+	},
- 	{ },
- };
- 
+ 		if (!IS_ENABLED(CONFIG_64BIT) && lp->features & XAE_FEATURE_DMA_64BIT) {
+-			dev_err(&pdev->dev, "64-bit addressable DMA is not compatible with 32-bit archecture\n");
++			dev_err(&pdev->dev, "64-bit addressable DMA is not compatible with 32-bit architecture\n");
+ 			ret = -EINVAL;
+ 			goto cleanup_clk;
+ 		}
 -- 
 2.49.0
 
