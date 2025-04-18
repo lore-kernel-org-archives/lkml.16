@@ -1,264 +1,161 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B5A274FCA
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 12:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBC72550A8
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 12:45:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744980329; cv=none; b=GFLyRxcnjKh7NADRzWMSXZiRAoWT9A94CKWumYh1zPC97DiQQXTOofRafE7rtSD4hJUAOTtDFLhn5xXvaDs+x+2ti0oGqvhcruK/PzNwhotwFZlcpHbD7IfnJRTLdqhVsDr+p89Xf6ygS/6/Yf0pm+Gv7XqsdIaVSI91+X1AH40=
+	t=1744980352; cv=none; b=NcFCUhLrNbCdn2STkrgukDb+ki6T8VwUVW5Mpf6uuE9ToV6O2GDPc0Jbaciu73TfTmX+0da+JQDjOqtMeyMV3gLClO9fC+SPTgejh+qs+zamnxSjzeaE8bNGPlpfYqxoCFF9SUJHRX/VHmdvF3/8vHYOqoWcU/cT4EdHNRZjUso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744980329; c=relaxed/simple;
-	bh=ySaDkmAZLcWXKeerdT0+7BpoPFagSkw4YMtZbNCe4BM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=nfuzn71NJH8QWlLtzpy7RfpgRGiR/NrJ+XL4QqoePRRkZAhwetn2jGgpXEYr+a9LoYu9eQEgVz+rURxy2YXiTrazv8HEBXyaPQlpo+FxiRVi3EQg/2cAvKJVMkRu5IFyI0ORYfRmB/kLAbL4Xb5EZURpKx/9E5Mjb94nxvWSG88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IwYugg4L; arc=none smtp.client-ip=209.85.128.52
+	s=arc-20240116; t=1744980352; c=relaxed/simple;
+	bh=eJmcdcasqheQsUfjBkiQdMc04fHQ0iTzJ96GM9qZpd4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qsi/Win3iBtxYtNm/Gh84l1hTaw2HM5BChp2gcYuQOe6EPas2LEKL6JoTA7LZy4W/BhGHXxjoRaAKb9eqN1TKS71cwtnd0jkHG7NT1nF7we4yLxfDHgIu7dX+D3EYhQ2U8K3dm5ijTSZfm/YN+TncZDKMNMhF2rtQzhs2F0lWWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q9a/F9Jg; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IwYugg4L"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso21608565e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 05:45:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q9a/F9Jg"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22928d629faso19691985ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 05:45:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744980325; x=1745585125; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PzF4QvjdSMS9bXofNemSyEoZVZlzopDIhUwrac2fwoU=;
-        b=IwYugg4Lopj579wkO7iilZpdJCUUx/O/xnKp/bA0LJ99xF6api7ygkBHzrKHSYvqEF
-         ITkyfI5E1LxtXDUKpW6maAOqGpP1E6axpATcnCEMmKyKnA/U+771ERgyskajFuMjEN7a
-         sCRWF1p278Z3RCVbHUHnShT7V7m84jY/32w1yKQ5XTX+7BVPZ6peo3KURMAjU3MUkyz8
-         lBpkcD6ZANDNKhwzrRMOVsi54nDrsxmF8n2iaJ0d8tMxd1czxRhQPPK98elk56IEXuFt
-         GfT5Fk7m2UXHyw7v28fPn6SY6KqGEG4eOt4vgbVON+a3DQ79qY2IymYD6bwQ0KKkiy8v
-         FqXA==
+        d=linaro.org; s=google; t=1744980350; x=1745585150; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=MY1YeGNd6w1Dnai1dYNXkVTuw65HW6WJZU6tne3NRRk=;
+        b=q9a/F9JgYYFDNoan2z7TEa9sIGTCCDchRvvOlVWN8NdRXhPXihm1g5HswvsVVQ0Fzc
+         FRFxz+xybnj+U/Lmw8PMMI9zs3EUrtMDZA4Z4izGCJV1Ou1xyHFzUb6alOpRrkSoh8Sz
+         AkWV8tgMR4e8lo9KrV5kXT5eVTpqUNwzCKjYiP4Edpwh/ahBdlEvLfI5FYrMHOwMtAz7
+         kJHhPH6CJtMKKinkTTOGTYJU/Sh/HpyL1c8Wnq1Y9NjHTz1eJ8aoKoUMvKox1GE2vo4l
+         9DyeXqfIoO2rqz+6p3016prKWTIgt1h6Sett9zQ9qN0iPMw9YRQ7+0o8JvwKmWx+Q1oJ
+         AdIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744980325; x=1745585125;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PzF4QvjdSMS9bXofNemSyEoZVZlzopDIhUwrac2fwoU=;
-        b=EqfLi6HgTnRAGOuzNMJ9luk8yWDiUlod/NcnnUqePYQyiMmqHV9ePP3haT+r40WJ/L
-         mIDjYOkmHa9bA90+gbdS/RLPSsAuoA2WSSvds/6tbsP03HzpouNVzZx8XDBUf1yU+9uh
-         glttsHRLTtJF2rCSDFBMG6j1JZBJPJ18ljrY7DsyEEzgGATV9BX19uH4v0/u+5oq4/EW
-         LKMiS3QVoRa/ZczSw6rzhK0T7lXJL5mHd6qx1MbgkE5fgVYifStFmqiY2huvhZZsk5ZR
-         Vs3z/y8gfWfuoFPUgpx84m4m/Mvh6h2RRsVgb1Wyq/OR/ZZx5iS5p2hO+loU4BiC1Clb
-         qufA==
-X-Forwarded-Encrypted: i=1; AJvYcCXelBviS4tWTG0FLV5SsHFkJJJjKfEpdjOxGGzouW04RMauXEklonvv5DWns5LoK15+qq9xOYScrGsYcGI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPemorwPxzU+fJElFa6Trtchuw0+tIyS/6Ic3IALvo8BVe251k
-	ifv59MtPNgmvCQeroCknlnIdnvPE57wfTtpQvRF8ztN9IMRbF4viq9uogrX1BDY=
-X-Gm-Gg: ASbGncvMUTeSKCJuBogF4dcs7Z0Prk1YYdhokKM5cSmB1ILOtYDA9sQtSpFX/ft2ZCa
-	N+xSxL6PM+/S6+j9MAN7I83t9KjpbC5EXm1bZaCa5RqhmYuT0UQBGbtzZAkIrLFsmpdyBlucr7M
-	a8QRevk+RWkDkwKnz7xB0c0ybEjBP1KLMgzFAvxMc3UaSrLVh+5BC6GaVB8CaTs2Fi20LZxludV
-	OTQ+OH+XSXLg58cQZ5gUerz+PukrcXF5r6dPQwvnTuhAB0UzDGKvXcAQe1JhAVDYVEowjE54tnJ
-	RGSjDNouedWMPaVYSubwMW46+QXHai2GQp7FsBnQ9bIr/UoZCR8bxRCzwJs5aw==
-X-Google-Smtp-Source: AGHT+IHgpHdFF5FAGO5pXbDNVi8cBzrcCACrOsiB2WSI6yfHEVf4hpfwpZG+0s+lDQZqK27HlvQiyQ==
-X-Received: by 2002:a05:600c:1c12:b0:43e:ee80:c233 with SMTP id 5b1f17b1804b1-4406ac20146mr19035325e9.32.1744980324644;
-        Fri, 18 Apr 2025 05:45:24 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5d6cd2sm20748285e9.33.2025.04.18.05.45.23
+        d=1e100.net; s=20230601; t=1744980350; x=1745585150;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MY1YeGNd6w1Dnai1dYNXkVTuw65HW6WJZU6tne3NRRk=;
+        b=mRSUGnsibACKBHmXMO6aR+C0H82BmV53NjSU/KVCcFY0vnMZSU2uTcWYnOarHaVN0l
+         BEwNItw3huKkwACKg3xcWydIawW8f3816ScLQdgHC43lr2eEbFYu/07M5PhWs1KKNlpM
+         OPgbJ0xziRM8uFDJxjCDMCLbEYhP5RiqajpjLay7BgS0GhPXkxSeusYIBwM1ZWcYB3xp
+         raJvsqS2/0IqUgXHUgwYFcTxlGFKmC6HQcq/Nei/Hva+v1BM53t7KZgZUJwpGVGwKcU6
+         g3xPCYzltbi8XLPkKo/DkeJhXEcycEv1uP/rxXUWQay5wATDh03lY/HywNeHhyL0vKvy
+         DM7w==
+X-Forwarded-Encrypted: i=1; AJvYcCWJMGN9+4Yca0Rya+TmuBSUUrXAVA4SATl5L3MHL931M2kV5vjh75WvlbMXgiIX3PXdmLn5sJygQ9/U91U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpyWuVu+eWR0MgkjY8T28bJWf1PRmYFPFA8oSeE/iYm8oaGsmT
+	MZSFkkTw/KvAm+fu1OQQ5ptV1fIhYU0TCG4bWUW7Ex6Ie6+F19iknzvB8Y2Hqg==
+X-Gm-Gg: ASbGncvPk4EGXPwcAib2+GRHctd2T7kql0gLVd2Qfske/vmL8CC9VTfQG4e0+T8+cb2
+	XlKVknq9Y7K2SBFH8Z9dWH3zL/u4iigZfI1XfttIkRnHP2XenrKWq3vNTxe8iSeQ7DSAcapf+JF
+	EKvu4NDO1RDkBJ/lTyxc/iviv5HCI0JYy72vvGAMWns+7/z+Kdfx/L1YsNi1vOsFeKPgbvPCC7o
+	jmyl5NEfJgJXfv/yYC4QqW93ERHeU28emjcfTwsugW2+tzIQAcjjivkApoqaP4jFK1FJnNIrrPw
+	2VoMkStDf82bH/MIWOU3BiGF+wm36REeg935WzZEfHTs+88YFngcOLL33cqwVDf6
+X-Google-Smtp-Source: AGHT+IHeaaTGjZPgOQ9SxEkyin52xIGApRW/zhdV9OBxFloBKDs8lYnW8IxD27iYpLOVTohhHonpig==
+X-Received: by 2002:a17:902:d506:b0:220:d439:2485 with SMTP id d9443c01a7336-22c535acc7amr38422685ad.29.1744980349832;
+        Fri, 18 Apr 2025 05:45:49 -0700 (PDT)
+Received: from thinkpad ([220.158.156.126])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50ed1301sm15807295ad.184.2025.04.18.05.45.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 05:45:24 -0700 (PDT)
-From: neil.armstrong@linaro.org
-Date: Fri, 18 Apr 2025 14:45:22 +0200
-Subject: [PATCH v2] arm64: dts: qcom: sm8550: add iris DT node
+        Fri, 18 Apr 2025 05:45:49 -0700 (PDT)
+Date: Fri, 18 Apr 2025 18:15:45 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Vivek Pernamitta <quic_vpernami@quicinc.com>
+Cc: Veerabhadrarao Badiganti <quic_vbadigan@quicinc.com>, 
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bus: mhi: host: pci: Disable runtime PM for QDU100
+Message-ID: <tbktzaxkgsc6d4ma4o6vkkcpnqiwghxkvwryrm36znepgqjotl@5n3di2ew3s6f>
+References: <20250414-vdev_next-20250411_pm_disable-v1-1-e963677636ca@quicinc.com>
+ <ec99379e-fd54-42b0-a383-8ed212072396@quicinc.com>
+ <o7rv3xgg3btaoqjlzfenbfkrp3fuw54cx6zqojclcfslfg3ha4@c3sqaqqdjdjv>
+ <c8699f79-54cc-4adb-8047-b37a69e69d96@quicinc.com>
+ <qrb4ozkj3zxfpo733mf6xf35tetfyekytkty6sq7civhycbahm@c6s3wfvmdycs>
+ <2ab9a8f9-b051-4213-a9df-4b2c2fa8c6be@quicinc.com>
+ <09ec85db-cc02-4b35-9939-aea3426d0e0b@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250418-topic-sm8x50-upstream-iris-8550-dt-v2-1-9218636acbdd@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAGFJAmgC/5WNQQ6CMBBFr2K6dkwpLRRX3sOwKDDAJELJtBIM4
- e5WbmD+6v3Fe7sIyIRB3C+7YFwpkJ8TqOtFtKObBwTqEgsllZFalhD9Qi2EyW5GwnsJkdFNQEw
- BrElXF0FZXTS6yrEwSiTRwtjTdkaedeKRQvT8OZtr9nv/0q8ZpPWla3Jp815XjxfNjv3N8yDq4
- zi+J1h9/9UAAAA=
-X-Change-ID: 20250407-topic-sm8x50-upstream-iris-8550-dt-2846b493e652
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Dikshita Agarwal <quic_dikshita@quicinc.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4981;
- i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=33kMnRk8KY4MfqsVoLkT68Na/QT/GIo51XhjktRXhGY=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBoAkljUYVrX5BMJy8VeB7b28GsHyDEVd694FTLliq+
- fjCIsdeJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCaAJJYwAKCRB33NvayMhJ0cdzEA
- CLc5rrcOPFm5bFxQNNWxXMjwAPY5MTpdfDh01tNAro70vLg+sXvhMGVWOVmCZAGJCFMkwtYhVVorW4
- sz0hxzwxiJYncwf3W6i0uOoi2BytU4m+Nn99DcNQXJMBsh3MKIuYT7BAyIM+efOkbKnA+3/+bf9b3Y
- EcvtpJLACTAlabjzikyK6d13g6EmWgSAoh9BLmNgll/4hOqbQzXsAJm0kvRV+ZHvcOMnWhmJd35f8v
- gNB8kmoD2vLD24ibEPRDtTtSne2OdSnbs03Wbmv8193xop7ZFlu6JKh3bxX61S5jRZGd/u9cP8h3kB
- xM5AGaA6SbapgpQ2cuF1lIVcKs/mT19Nm6Ry5HVg+hkfQhhRhxsXveJKoSs7qtwn4mDpXfvA5T6kXP
- MW/EuuNGErXRX64ghxUJakaQFB0L+I6B9hDzEwAVgPwxpB5dYHlH5+W2SaRNb92LEb6vjZfQ/qLaLA
- ug8nJF5qy0FMT2EH0fGrZ2uIcSEvHlD2KTmJUI0OFmh1wPTlKHdpPEHIOGhK2830FoOnlj2fPvQKX/
- 57qRKEo2pv9ElWmIN4Y/oRKhcgJILyospz4FlEEFjxhg5IBAAD8KfIqNtG50rptiWMbxvmjYhFyJPu
- YqqLZGukFScItVPFV3kwnKZUw4pa5q+kw2feqOFK/fanGqoHfFsAQYVcuhjA==
-X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
- fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <09ec85db-cc02-4b35-9939-aea3426d0e0b@quicinc.com>
 
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+On Fri, Apr 18, 2025 at 03:40:48PM +0530, Vivek Pernamitta wrote:
+> 
+> 
+> On 4/18/2025 3:04 PM, Vivek Pernamitta wrote:
+> > 
+> > 
+> > On 4/18/2025 2:06 PM, Manivannan Sadhasivam wrote:
+> > > On Fri, Apr 18, 2025 at 11:55:24AM +0530, Vivek Pernamitta wrote:
+> > > > 
+> > > > 
+> > > > On 4/17/2025 11:37 AM, Manivannan Sadhasivam wrote:
+> > > > > On Thu, Apr 17, 2025 at 10:00:38AM +0530, Veerabhadrarao
+> > > > > Badiganti wrote:
+> > > > > > 
+> > > > > > On 4/14/2025 1:17 PM, Vivek Pernamitta wrote:
+> > > > > > > The QDU100 device does not support the MHI M3 state,
+> > > > > > > necessitating the
+> > > > > > > disabling of runtime PM for this device. Since the
+> > > > > > > PCIe core framework
+> > > > > > > enables runtime PM by default for all clients, it is
+> > > > > > > essential to disable
+> > > > > > > runtime PM if the device does not support Low Power Mode (LPM).
+> > > > > > > 
+> > > 
+> > > Not true... See below.
+> > > 
+> > > > > > > Signed-off-by: Vivek Pernamitta<quic_vpernami@quicinc.com>
+> > > > > > > ---
+> > > > > > >     drivers/bus/mhi/host/pci_generic.c | 10 ++++++++++
+> > > > > > >     1 file changed, 10 insertions(+)
+> > > > > > > 
+> > > > > > > diff --git a/drivers/bus/mhi/host/pci_generic.c
+> > > > > > > b/drivers/bus/mhi/ host/pci_generic.c
+> > > > > > > index 03aa887952098661a488650053a357f883d1559b..a011fd2d48c57cf9d1aec74040153267a206d797
+> > > > > > > 100644
+> > > > > > > --- a/drivers/bus/mhi/host/pci_generic.c
+> > > > > > > +++ b/drivers/bus/mhi/host/pci_generic.c
+> > > > > > > @@ -43,6 +43,7 @@
+> > > > > > >      * @mru_default: default MRU size for MBIM network packets
+> > > > > > >      * @sideband_wake: Devices using dedicated
+> > > > > > > sideband GPIO for wakeup instead
+> > > > > > >      *           of inband wake support (such as sdx24)
+> > > > > > > + * @pm_disable: disables runtime PM (optional)
+> > > > > > >      */
+> > > > > > >     struct mhi_pci_dev_info {
+> > > > > > >         const struct mhi_controller_config *config;
+> > > > > > > @@ -54,6 +55,7 @@ struct mhi_pci_dev_info {
+> > > > > > >         unsigned int dma_data_width;
+> > > > > > >         unsigned int mru_default;
+> > > > > > >         bool sideband_wake;
+> > > > > > > +    bool pm_disable;
+> > > > > > >     };
+> > > > > > >     #define MHI_CHANNEL_CONFIG_UL(ch_num, ch_name,
+> > > > > > > el_count, ev_ring) \
+> > > > > > > @@ -295,6 +297,7 @@ static const struct
+> > > > > > > mhi_pci_dev_info mhi_qcom_qdu100_info = {
+> > > > > > >         .bar_num = MHI_PCI_DEFAULT_BAR_NUM,
+> > > > > > >         .dma_data_width = 32,
+> > > > > > >         .sideband_wake = false,
+> > > > > > > +    .pm_disable = true,
+> > > > > > 
+> > > > > > |no_m3|orno_|m3_support|would be more suitable than|pm_disable|
+> > > > > 
+> > > > > Yes!
+> > > > > 
+> We named variable pm_disable because the M3 state is implicitly set during
+> runtime PM suspend. Both are not needed and not fully supported for the
+> QDU100 accelerator card, so we want to disable runtime suspend for it.
 
-Add DT entries for the sm8550 iris decoder.
+You are mixing terms here. Only M3 is not supported by the device. The fact that
+you do not want to enable runtime PM for the device to avoid latency is a side
+effect of that. So you need to name the variable as 'no_m3'.
 
-Since the firmware is required to be signed, only enable
-on Qualcomm development boards where the firmware is
-publicly distributed.
+- Mani
 
-Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
----
-Changes in v2:
-- Only enable on qcom dev boards
-- Link to v1: https://lore.kernel.org/r/20250407-topic-sm8x50-upstream-iris-8550-dt-v1-1-1f7ab3083f49@linaro.org
----
- arch/arm64/boot/dts/qcom/sm8550-hdk.dts |  5 +++
- arch/arm64/boot/dts/qcom/sm8550-mtp.dts |  5 +++
- arch/arm64/boot/dts/qcom/sm8550-qrd.dts |  5 +++
- arch/arm64/boot/dts/qcom/sm8550.dtsi    | 76 +++++++++++++++++++++++++++++++++
- 4 files changed, 91 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-index 29bc1ddfc7b25f203c9f3b530610e45c44ae4fb2..866f4235ddb58a5e0776e34b9bb0277ef73236e5 100644
---- a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-@@ -945,6 +945,11 @@ &ipa {
- 	status = "okay";
- };
- 
-+&iris {
-+	firmware-name = "qcom/vpu/vpu30_p4.mbn";
-+	status = "okay";
-+};
-+
- &gpi_dma1 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
-index 5648ab60ba4c4bfaf5baa289969898277ee57cef..2362937729e8c5340d565b6199f6a6f9e29d2120 100644
---- a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
-@@ -672,6 +672,11 @@ fsa4480_sbu_mux: endpoint {
- 	};
- };
- 
-+&iris {
-+	firmware-name = "qcom/vpu/vpu30_p4.mbn";
-+	status = "okay";
-+};
-+
- &lpass_tlmm {
- 	spkr_1_sd_n_active: spkr-1-sd-n-active-state {
- 		pins = "gpio17";
-diff --git a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
-index 3a6cb279130489168f8d20a6e27808647debdb41..4f713127310be54361e29ddb97e7f209493109be 100644
---- a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
-@@ -779,6 +779,11 @@ &ipa {
- 	status = "okay";
- };
- 
-+&iris {
-+	firmware-name = "qcom/vpu/vpu30_p4.mbn";
-+	status = "okay";
-+};
-+
- &gpi_dma1 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-index f78d5292c5dd5ec88c8deb0ca6e5078511ac52b7..dbe01392b436d03ef58733a59f60c3021bac3e6b 100644
---- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-@@ -3220,6 +3220,82 @@ opp-202000000 {
- 			};
- 		};
- 
-+		iris: video-codec@aa00000 {
-+			compatible = "qcom,sm8550-iris";
-+
-+			reg = <0 0x0aa00000 0 0xf0000>;
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			power-domains = <&videocc VIDEO_CC_MVS0C_GDSC>,
-+					<&videocc VIDEO_CC_MVS0_GDSC>,
-+					<&rpmhpd RPMHPD_MXC>,
-+					<&rpmhpd RPMHPD_MMCX>;
-+			power-domain-names = "venus", "vcodec0", "mxc", "mmcx";
-+			operating-points-v2 = <&iris_opp_table>;
-+
-+			clocks = <&gcc GCC_VIDEO_AXI0_CLK>,
-+				 <&videocc VIDEO_CC_MVS0C_CLK>,
-+				 <&videocc VIDEO_CC_MVS0_CLK>;
-+			clock-names = "iface", "core", "vcodec0_core";
-+
-+			interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
-+					 &config_noc SLAVE_VENUS_CFG QCOM_ICC_TAG_ACTIVE_ONLY>,
-+					<&mmss_noc MASTER_VIDEO QCOM_ICC_TAG_ALWAYS
-+					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
-+			interconnect-names = "cpu-cfg", "video-mem";
-+
-+			/* FW load region */
-+			memory-region = <&video_mem>;
-+
-+			resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>;
-+			reset-names = "bus";
-+
-+			iommus = <&apps_smmu 0x1940 0x0000>,
-+				 <&apps_smmu 0x1947 0x0000>;
-+			dma-coherent;
-+
-+			/*
-+			 * IRIS firmware is signed by vendors, only
-+			 * enable in boards where the proper signed firmware
-+			 * is available.
-+			 */
-+			status = "disabled";
-+
-+			iris_opp_table: opp-table {
-+				compatible = "operating-points-v2";
-+
-+				opp-240000000 {
-+					opp-hz = /bits/ 64 <240000000>;
-+					required-opps = <&rpmhpd_opp_svs>,
-+							<&rpmhpd_opp_low_svs>;
-+				};
-+
-+				opp-338000000 {
-+					opp-hz = /bits/ 64 <338000000>;
-+					required-opps = <&rpmhpd_opp_svs>,
-+							<&rpmhpd_opp_svs>;
-+				};
-+
-+				opp-366000000 {
-+					opp-hz = /bits/ 64 <366000000>;
-+					required-opps = <&rpmhpd_opp_svs_l1>,
-+							<&rpmhpd_opp_svs_l1>;
-+				};
-+
-+				opp-444000000 {
-+					opp-hz = /bits/ 64 <444000000>;
-+					required-opps = <&rpmhpd_opp_turbo>,
-+							<&rpmhpd_opp_turbo>;
-+				};
-+
-+				opp-533333334 {
-+					opp-hz = /bits/ 64 <533333334>;
-+					required-opps = <&rpmhpd_opp_turbo_l1>,
-+							<&rpmhpd_opp_turbo_l1>;
-+				};
-+			};
-+		};
-+
- 		videocc: clock-controller@aaf0000 {
- 			compatible = "qcom,sm8550-videocc";
- 			reg = <0 0x0aaf0000 0 0x10000>;
-
----
-base-commit: 2bdde620f7f2bff2ff1cb7dc166859eaa0c78a7c
-change-id: 20250407-topic-sm8x50-upstream-iris-8550-dt-2846b493e652
-
-Best regards,
 -- 
-Neil Armstrong <neil.armstrong@linaro.org>
-
+மணிவண்ணன் சதாசிவம்
