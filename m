@@ -1,82 +1,75 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC4C3204F6F
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 09:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD02B1C695
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 09:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744969956; cv=none; b=pgvc9Qd0xSpJMlbUDfj/7vpPo/j0SeDSvByseoSCFfvVzGeqMb0rkNbYKEzRnmZ9iV57DAQ908bxirhrT2TVdDK66K4iGgsC11UXNb40c1bXM2ThEWW2KczlgrHo9krxaqtuDhb8zN2eCx1LCD/TW/I4jKS357t54m85zP1B/Ew=
+	t=1744970174; cv=none; b=IXIlfoEHvbQ/TPZfn9ZNOXcyslvuoC2FWEF4qyXCVa5BZRqD6yI7emE6SbnSITcv0XhMEnHcE1rSgy9vYKwZoxOuXIzwvVfCNiId62LHYbtqOF8zfSf/AFpV0DV0yClFaYmCXdXNanCqWxn4lijMdfWtH52ngYpshLZbiNId7lI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744969956; c=relaxed/simple;
-	bh=/othrA++ZqQt3O9bGvixisrtGcHr5UiV2VOX048mnVM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=cTcDym1v1ccN5yev4/qoQ9DE7DZV9aBrz3+ZDPDCPyupqmVvnpCOHfHJiUU9aP/pPvjt9aX+iHozrs+eDQwNRy4V2UWhpGUSqGD09ruEa8lb4XDHU0cHgelnCpHVv3jfyC+dxOJm2wUhpOxRbHJdDnVVUre0Gl5zZpLnK9Mdnr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=A8865jdi reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744970174; c=relaxed/simple;
+	bh=j0Ff3+nMG3xyG1dLVdUjYisJ+FhsvcYQPgJC4zoQ/Gk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=OiK2dwhUL6YxmMwcvXDCI9Cf1e7wY0U5PTRFc9BTSeJC49TGLqvmKAmJQ38vMuAQc+8pMlXBHS6vPZ2agXqRs+lK+l7SvzzG2hmi4tTpHzLqmgjk3T/h4LgcDPhUNgrIqGYiYdPgax93jJv/K1tZmm3JHP99BzGv/jRDiuyGDm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=filfOH1q; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="A8865jdi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=/lz4kzDd+Ofx/tYRxsAmzeEQiMcP0P6DAZ6wk+IAMqs=; b=A
-	8865jdie+Au4JHglYjTkQ0ldqnWZIR0oMh3m5Aq/jB2eTyOPM8AyGa1VWuNqhcUD
-	B7FesdBs1MfaNnT9h2TYICN4dqOb0tOTn9Cg9v1bBk91R7PgLB64tSazJSStNfou
-	663VV4GGjYsCwW1VpVVnNniDfMaUqKkXTBnrn3+3lI=
-Received: from andyshrk$163.com ( [58.22.7.114] ) by
- ajax-webmail-wmsvr-40-120 (Coremail) ; Fri, 18 Apr 2025 17:50:55 +0800
- (CST)
-Date: Fri, 18 Apr 2025 17:50:55 +0800 (CST)
-From: "Andy Yan" <andyshrk@163.com>
-To: "Daniel Stone" <daniel@fooishbar.org>
-Cc: "Konstantin Shabanov" <mail@etehtsea.me>,
-	"Sandy Huang" <hjc@rock-chips.com>,
-	=?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-	"Andy Yan" <andy.yan@rock-chips.com>,
-	"Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
-	"Maxime Ripard" <mripard@kernel.org>,
-	"Thomas Zimmermann" <tzimmermann@suse.de>,
-	"David Airlie" <airlied@gmail.com>,
-	"Simona Vetter" <simona@ffwll.ch>, "Dan Callaghan" <djc@djc.id.au>,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re:Re: [PATCH v4] drm/rockchip: Disable AFBC for res >2560 on
- rk3399
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <CAPj87rNDsyBfy=P=0SzTm7u6Na6BpeZSpEt1mRPhLCd6rHXzTA@mail.gmail.com>
-References: <20250414095332.9674-1-mail@etehtsea.me>
- <20250417065759.5948-1-mail@etehtsea.me>
- <17402f2e.360.1964640c3d3.Coremail.andyshrk@163.com>
- <CAPj87rNDsyBfy=P=0SzTm7u6Na6BpeZSpEt1mRPhLCd6rHXzTA@mail.gmail.com>
-X-NTES-SC: AL_Qu2fBvWdtkAu4yadYOkfmkcVgOw9UcO5v/Qk3oZXOJF8jDLp/j0HdmVSAWfk9OO0GyOzmgmGQhZw7+16UYtfUYcQTnngy+GPTIlCzbjsNbhLSQ==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="filfOH1q"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744970167;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=A/De1OCAsyjl8yekjNW7c9Xe8ONiFOK3f0kjYQPDMHk=;
+	b=filfOH1qSY7rJ3TWA6yJFkQD5oVFl0idjMZorABhWeI1oRcxmt0idvd1CnqtQTt03zOero
+	C51xNVNfbWzGtItz4wJCi7qU24aNU3Sa5DhspVyQeyig1eAf+ExQIejy4GW9tRIzUDzrAo
+	mzj7V5aC69F6UBPLpXMg/NlR/cN95aA=
+From: Ye Liu <ye.liu@linux.dev>
+To: akpm@linux-foundation.org,
+	nao.horiguchi@gmail.com,
+	linmiaohe@huawei.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	david@redhat.com,
+	harry.yoo@oracle.com,
+	riel@surriel.com,
+	vbabka@suse.cz,
+	liuye@kylinos.cn,
+	ye.liu@linux.dev
+Subject: [PATCH v2 0/2] mm: minor cleanups in rmap
+Date: Fri, 18 Apr 2025 17:55:58 +0800
+Message-Id: <20250418095600.721989-1-ye.liu@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <a893834.9206.196484ef2ab.Coremail.andyshrk@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:eCgvCgD3P7Z_IAJowZyaAA--.49852W
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0hkzXmgCGhqq-gACsa
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-CkhpIApBdCAyMDI1LTA0LTE4IDE3OjQzOjE5LCAiRGFuaWVsIFN0b25lIiA8ZGFuaWVsQGZvb2lz
-aGJhci5vcmc+IHdyb3RlOgo+SGkgQW5keSwKPgo+T24gRnJpLCAxOCBBcHIgMjAyNSBhdCAwMTox
-NiwgQW5keSBZYW4gPGFuZHlzaHJrQDE2My5jb20+IHdyb3RlOgo+PiBJIHByZWZlciB0aGUgVjEg
-dmVyc2lvbiBQQVRDSFswXS4gVGhpcyBpcyBiZWNhdXNlIHdlIGRvIG5vdCBkZWFsIHdpdGggaGFy
-ZHdhcmUtcmVsYXRlZAo+PiBkaWZmZXJlbmNlcyBhdCB0aGlzIGxldmVsLiAgSXQgaW52b2x2ZXMg
-YSBWT1AtcmVsYXRlZCByZXN0cmljdGlvbiBhbmQgd2UgYWx3YXlzICBoYW5kbGUKPj4gbGltaXRp
-YXRpb24gbGlrZSB0aGlzICB3aXRoaW4gdGhlIFZPUCBkcml2ZXIgLgo+Cj5BcyBzYWlkIGluIHRo
-ZSByZXZpZXcgZm9yIHYxLCB0aGlzIGlzIG5vdCBlbm91Z2ggZm9yIGdlbmVyaWMgdXNlcnNwYWNl
-Lgo+Cj5JZiBkcm1Nb2RlQWRkRkIyV2l0aE1vZGlmaWVycygpIGZhaWxzLCB1c2Vyc3BhY2Uga25v
-d3MgdGhhdCB0aGUgYnVmZmVyCj5jYW4gbmV2ZXIgd29yayBpbiB0aGF0IGNvbmZpZ3VyYXRpb24s
-IGFuZCBpdCBzaG91bGQgZmFsbCBiYWNrLiBJZgo+ZHJtTW9kZUF0b21pY0NvbW1pdChEUk1fTU9E
-RV9BVE9NSUNfVEVTVF9PTkxZKSBmYWlscywgdXNlcnNwYWNlIGRvZXMKPm5vdCBrbm93IHRoYXQg
-dGhlIGJ1ZmZlciBjYW4gX25ldmVyXyB3b3JrLCBiZWNhdXNlIHRoZSBmYWlsdXJlIG1heSBiZQo+
-dHJhbnNpZW50IG9yIGR1ZSB0byBhIGNvbWJpbmF0aW9uIG9mIHRoaW5ncy4KPgo+UmV0dXJuaW5n
-IHRoZSBtb3JlIGxvY2FsaXNlZCBlcnJvciBzYXZlcyB1c2Vyc3BhY2UgYSBsb3Qgb2Ygd29yayBh
-bmQKPmVuYWJsZXMgYSBtb3JlIG9wdGltYWwgc3lzdGVtLgoKT2theSwgIGZpbmUsIEFDSy4KCj4K
-PkNoZWVycywKPkRhbmllbAo=
+Minor cleanups in mm/rmap.c:
+
+- Rename a local variable for consistency
+- Fix a typo in a comment
+
+No functional changes.
+
+Changes in v2:
+- Dropped the "mm/memory-failure" patch.
+- Kept only the uncontroversial rmap cleanups.
+
+Ye Liu (2):
+  mm/rmap: rename page__anon_vma to page_anon_vma for consistency
+  mm/rmap: fix typo in comment in page_address_in_vma
+
+ mm/rmap.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+-- 
+2.25.1
+
