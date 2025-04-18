@@ -1,150 +1,242 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84A3171A1
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 00:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9939C8C0E
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 00:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744934606; cv=none; b=KRsvxrd5tLEyWlUvGEx4HMI25dipgt90FunK9XwaXgksxnPzfUvhmKXaj9duGuSl1fZ7H/9kA4u2/iMRNVXUfOlx0/qv0HsniMz66wCK6vdIBUj2TQ6otBgG4MBR42lrZPTCGAFAnq7alGPvdFAhtfqaa5DsR8kag0u6He31kyA=
+	t=1744934925; cv=none; b=JBiXA/XP5c5kIWmQyvEgJ4qtP430bylA2nGHFAjw4rBjWHowBon2YHjNwKxOPvdmJ+HSZTwWf3lpkXNDFqSy0q+dsNcMRrB9sX7VOJv3G6QDcGOxXoZgwoYK6PVuOiKOpICIKudrzvrjODEF2dyfRDcUR+uhd1M96dr9gjE4YcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744934606; c=relaxed/simple;
-	bh=xkDQfit0Ny3iyzLvzjqr923cX1Xhwn74NDE/lifPT18=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PMmr09BMFXcec6oPNLFu5EMMUXDPau/AkPvyCqqxdjgOdnn9f1oIYnPP2zJo3QZFBaO1+fSEKZnoMvsCqsEiLNWjLFdFHVGSxItzTJF3aX/iTHnGASw6G5Zm0fVPAJYbVbI99Je84iCMyZ9PTXUFjGznolMyirSQWKw6rUJQZRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bWHSHncb; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744934925; c=relaxed/simple;
+	bh=d3zUhAt6ZxhNWHUaQxYASbqcpVSU8kmMhoZu6xLa01g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uh6oUx3UslLfuIoclTy8qmV1Xu6sXPUJErEQhqEgFBlr2x7DBbIU10isAt81HpKbyaz8A/tZkp/OSt2GEK+wdYMWVoIxUXI+6tYv23pNptkdx9AYEKTjQOaKf8vRTUixiM1AYqua91lZ+SU/aYaMtq+eynYJzX3FQ3PCGdqzU5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d12JgMEb; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bWHSHncb"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53HClOrl008153
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 00:03:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=jJkocawK74IHVR8GG2dYux9L
-	W2UbP5wOCkAP2RU5Rpw=; b=bWHSHncbmPt6gikdLZmn1hyrWc0tm9hKLyenD2UF
-	lshwKyh6ufPC+1ezDuhAOcXZGnfhOwo4CLMtQYAgU2kV4ShVqCSvCfYXW7A/2LyW
-	BYWops45xStt4Yaps3vvBnmr6ciPF/LhixIctgQt5yuQuk3fSp/tkzzUkh/Nuiiv
-	65w0RYSnkd+axqZpjNY6fdNgixFPYnOwjuU7HIzkix8V6U1ovIMvW/StzfNPbS9+
-	g8YHOu/E5M3qFYlin/30kFNT5G3S2adUtLQeeqF9P8Opx/lGo5Z+PUCg+/Oj0YKP
-	lYF+icWgyV/SFO73vVd1dawj1d3l095re5/ow88nxFm4qA==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygxk8cmj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 00:03:23 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-306b51e30ffso1098941a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 17:03:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744934603; x=1745539403;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jJkocawK74IHVR8GG2dYux9LW2UbP5wOCkAP2RU5Rpw=;
-        b=OLM5V0mcOFcgqnahK+nw2I8GGp4od7QTF26PKxnujUwpQmQJPhoUlgAlD8Wr8mbOpb
-         af38cCZ/V91/4vS1b4pxaiYc7eGIsR/RgLZdGwaj1f013LcWoqNXRrR2fhqWVOWxCYKl
-         rmby9VXE47JAGIKaK+MPm12R7KOEzdUaenZy/JN6w2haUETogCXk1PGJzTRjokxzXKkI
-         JQ2BnrMeBrrTB5TsozYHKzlbGLVtBZBYf6+MtsnJlSmwl7wMngmhtcPLkgMZMOuEcUjN
-         yx6bi7xPgzSNMxvSWgd/L98Omd/G7gUdVR7johV4I6o6x46/mCmyPeG615cUay9xnNm9
-         K+3A==
-X-Forwarded-Encrypted: i=1; AJvYcCW2MxICbA5S2DjY+Psvc+418zIMmQ05QZ8Ha5rBUUPaPTfJydxPUvkZtFOASJRSJVwdLRfnuKB93Tc+2mc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwMkYK/+4jTCblL/bKITf10e0hXROsZG73uACREMttaBaTU3mg
-	AFU2Vqy1RDe62w5MSRLIN1Sfy5ak5j8cpeLzkKO5S7Eob2xP6a5zfJI8xK6fDh48P0syjU0ob+V
-	FqUJ+YtH6JZ7iPaA6FByt5iuhXtAbjyIxSXhrGiXgy5sURFYGWmwIlNoeqbnR5aTq7aTOePU0Zh
-	Yxngx+8nkdbiDfKk/oh5YGujicRvV+W/D+o/0P3A==
-X-Gm-Gg: ASbGncvZzmCdFUo+PrZnMnzCMK3zZa57vGjNXDUyMeOvDafiT6IQL1sQVHuiGsKSjjo
-	JbIpM3SyvUFDYBh433g7O7v4DJRPlm2xWdtmYtwB4Srh4k1j8V8HeqhwotITmZnVMb8E47ezwWs
-	rtp+kqvwrHyADqkJdP5fNBd1CBMQ==
-X-Received: by 2002:a17:90b:2807:b0:2ee:ee5e:42fb with SMTP id 98e67ed59e1d1-3087bb4d0bbmr1348826a91.13.1744934603055;
-        Thu, 17 Apr 2025 17:03:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHt3zEHzT/caZi4wnZ175L8zlXV3e1qMB/QyXjcrkOHqa4wh1gNr+1LZYEHvAQ/csu/mkfLj9QPTnPMCwx+vTk=
-X-Received: by 2002:a17:90b:2807:b0:2ee:ee5e:42fb with SMTP id
- 98e67ed59e1d1-3087bb4d0bbmr1348781a91.13.1744934602616; Thu, 17 Apr 2025
- 17:03:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d12JgMEb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744934922;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oLP/T1BBLrBIBaDPOF+hXYj8/NW65np6KEHHWIeq7uY=;
+	b=d12JgMEbpt+HwMkc009pOr0S54iHaFgQsvtDuH2ZZO+NupXj3uSWNw1uvziiZzkUjI71SS
+	sy/debVrpuKYn6sfAYzzXDgJZyYfp3YLdEq9V6UZraJgXdivpJ4nqI+GM3DF1GWDcs91Lx
+	NM8s2vBNLlUrq7FLVnYZs1gQ2PViq1E=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-580-Qe2XVx0rOg6VXe7iVNV7kQ-1; Thu,
+ 17 Apr 2025 20:08:39 -0400
+X-MC-Unique: Qe2XVx0rOg6VXe7iVNV7kQ-1
+X-Mimecast-MFC-AGG-ID: Qe2XVx0rOg6VXe7iVNV7kQ_1744934917
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3BC4E1800360;
+	Fri, 18 Apr 2025 00:08:37 +0000 (UTC)
+Received: from redhat.com (unknown [10.96.134.19])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C836B19560A3;
+	Fri, 18 Apr 2025 00:08:35 +0000 (UTC)
+From: "Herton R. Krzesinski" <herton@redhat.com>
+To: linux-modules@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	mcgrof@kernel.org,
+	petr.pavlu@suse.com,
+	samitolvanen@google.com,
+	da.gomez@samsung.com,
+	herton@redhat.com
+Subject: [PATCH] lib/test_kmod: do not hardcode/depend on any filesystem
+Date: Thu, 17 Apr 2025 21:08:34 -0300
+Message-ID: <20250418000834.672343-1-herton@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417-sar2130p-display-v4-0-b91dd8a21b1a@oss.qualcomm.com>
- <20250417-sar2130p-display-v4-1-b91dd8a21b1a@oss.qualcomm.com>
- <20250417-arboreal-turkey-of-acumen-e1e3da@shite> <7b559f03-f131-435e-95de-b5faee37b4d5@oss.qualcomm.com>
- <a8f7f571-e81a-49d6-a40d-895960165039@linaro.org>
-In-Reply-To: <a8f7f571-e81a-49d6-a40d-895960165039@linaro.org>
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Fri, 18 Apr 2025 03:03:11 +0300
-X-Gm-Features: ATxdqUHUTgGLYvTODPooo91SkskG-gwTNA2jG92kWlujJbztIUTMTuUwe0XuE_s
-Message-ID: <CAO9ioeWgtsTtMmqm4w4KTYYSVOWpj1Sgb6D4oy+54wBHU_DZ8g@mail.gmail.com>
-Subject: Re: [PATCH v4 01/10] dt-bindings: display/msm: dp-controller:
- describe SAR2130P
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Kuogee Hsieh <quic_khsieh@quicinc.com>,
-        Krishna Manikandan <quic_mkrishn@quicinc.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>, Konrad Dybcio <konradybcio@kernel.org>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-X-Authority-Analysis: v=2.4 cv=WecMa1hX c=1 sm=1 tr=0 ts=680196cb cx=c_pps a=vVfyC5vLCtgYJKYeQD43oA==:117 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=VwQbUJbxAAAA:8 a=hD80L64hAAAA:8 a=ni2JVXtQXpgTILOyzusA:9 a=QEXdDO2ut3YA:10
- a=rl5im9kqc5Lf4LNbBjHf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: lu8zYn-F6-3dD4hqRn8FND0_KlDhu6y7
-X-Proofpoint-ORIG-GUID: lu8zYn-F6-3dD4hqRn8FND0_KlDhu6y7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-17_07,2025-04-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- adultscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0 mlxscore=0
- impostorscore=0 mlxlogscore=588 spamscore=0 malwarescore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504170177
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Thu, 17 Apr 2025 at 15:04, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 17/04/2025 13:12, Konrad Dybcio wrote:
-> > On 4/17/25 8:03 AM, Krzysztof Kozlowski wrote:
-> >> On Thu, Apr 17, 2025 at 02:16:31AM GMT, Dmitry Baryshkov wrote:
-> >>> From: Dmitry Baryshkov <lumag@kernel.org>
-> >>>
-> >>> Describe DisplayPort controller present on Qualcomm SAR2130P platform.
-> >>>
-> >>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> >>
-> >> Addresses do not match. You re-authored the commit, so now everywhere is
-> >> mess.
-> >
-> > It's git's fault with replacing the linaro address based on .mailmap
-> No. You can easily see:
-> $ git show 51a6256b00008a3c520f6f31bcd62cd15cb05960
-> top author is like you say - mailmapped, but Sob is my @samsung.com
->
-> $ git format-patch 51a6256b00008a3c520f6f31bcd62cd15cb05960 -1
-> What is in "From" field? Samsung, not mailmapped.
->
-> I believe that's a known problem in b4, already reported. I don't
-> remember if this was fixed, but till it is - you need to use some sort
-> of workaround.
+Right now test_kmod has hardcoded dependencies on btrfs/xfs. That
+is not optimal since you end up needing to select/build them, but it
+is not really required since other fs could be selected for the testing.
+Also, we can't change the default/driver module used for testing on
+initialization.
 
-No worries, I will resend.
+Thus make it more generic: introduce two module parameters (start_driver
+and start_test_fs), which allow to select which modules/fs to use for
+the testing on test_kmod initialization. Then it's up to the user to
+select which modules/fs to use for testing based on his config. However,
+keep test_module as required default.
 
+This way, config/modules becomes selectable as when the testing is done
+from selftests (userspace).
 
+While at it, also change trigger_config_run_type, since at module
+initialization we already set the defaults at __kmod_config_init and
+should not need to do it again in test_kmod_init(), thus we can
+avoid to again set test_driver/test_fs.
+
+Signed-off-by: Herton R. Krzesinski <herton@redhat.com>
+---
+ lib/Kconfig.debug |  6 -----
+ lib/test_kmod.c   | 64 +++++++++++++++++++++++++----------------------
+ 2 files changed, 34 insertions(+), 36 deletions(-)
+
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 9fe4d8dfe578..1e0f8cbf0365 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2983,13 +2983,7 @@ config TEST_DYNAMIC_DEBUG
+ config TEST_KMOD
+ 	tristate "kmod stress tester"
+ 	depends on m
+-	depends on NETDEVICES && NET_CORE && INET # for TUN
+-	depends on BLOCK
+-	depends on PAGE_SIZE_LESS_THAN_256KB # for BTRFS
+ 	select TEST_LKM
+-	select XFS_FS
+-	select TUN
+-	select BTRFS_FS
+ 	help
+ 	  Test the kernel's module loading mechanism: kmod. kmod implements
+ 	  support to load modules using the Linux kernel's usermode helper.
+diff --git a/lib/test_kmod.c b/lib/test_kmod.c
+index 064ed0fce75a..f0dd092860ea 100644
+--- a/lib/test_kmod.c
++++ b/lib/test_kmod.c
+@@ -28,14 +28,20 @@
+ 
+ #define TEST_START_NUM_THREADS	50
+ #define TEST_START_DRIVER	"test_module"
+-#define TEST_START_TEST_FS	"xfs"
+ #define TEST_START_TEST_CASE	TEST_KMOD_DRIVER
+ 
+-
+ static bool force_init_test = false;
+-module_param(force_init_test, bool_enable_only, 0644);
++module_param(force_init_test, bool_enable_only, 0444);
+ MODULE_PARM_DESC(force_init_test,
+ 		 "Force kicking a test immediately after driver loads");
++static char *start_driver;
++module_param(start_driver, charp, 0444);
++MODULE_PARM_DESC(start_driver,
++		 "Module/driver to use for the testing after driver loads");
++static char *start_test_fs;
++module_param(start_test_fs, charp, 0444);
++MODULE_PARM_DESC(start_test_fs,
++		 "File system to use for the testing after driver loads");
+ 
+ /*
+  * For device allocation / registration
+@@ -508,6 +514,11 @@ static int __trigger_config_run(struct kmod_test_device *test_dev)
+ 	case TEST_KMOD_DRIVER:
+ 		return run_test_driver(test_dev);
+ 	case TEST_KMOD_FS_TYPE:
++		if (!config->test_fs) {
++			dev_warn(test_dev->dev,
++				 "No fs type specified, can't run the test\n");
++			return -EINVAL;
++		}
+ 		return run_test_fs_type(test_dev);
+ 	default:
+ 		dev_warn(test_dev->dev,
+@@ -721,26 +732,20 @@ static ssize_t config_test_fs_show(struct device *dev,
+ static DEVICE_ATTR_RW(config_test_fs);
+ 
+ static int trigger_config_run_type(struct kmod_test_device *test_dev,
+-				   enum kmod_test_case test_case,
+-				   const char *test_str)
++				   enum kmod_test_case test_case)
+ {
+-	int copied = 0;
+ 	struct test_config *config = &test_dev->config;
+ 
+ 	mutex_lock(&test_dev->config_mutex);
+ 
+ 	switch (test_case) {
+ 	case TEST_KMOD_DRIVER:
+-		kfree_const(config->test_driver);
+-		config->test_driver = NULL;
+-		copied = config_copy_test_driver_name(config, test_str,
+-						      strlen(test_str));
+ 		break;
+ 	case TEST_KMOD_FS_TYPE:
+-		kfree_const(config->test_fs);
+-		config->test_fs = NULL;
+-		copied = config_copy_test_fs(config, test_str,
+-					     strlen(test_str));
++		if (!config->test_fs) {
++			mutex_unlock(&test_dev->config_mutex);
++			return 0;
++		}
+ 		break;
+ 	default:
+ 		mutex_unlock(&test_dev->config_mutex);
+@@ -751,11 +756,6 @@ static int trigger_config_run_type(struct kmod_test_device *test_dev,
+ 
+ 	mutex_unlock(&test_dev->config_mutex);
+ 
+-	if (copied <= 0 || copied != strlen(test_str)) {
+-		test_dev->test_is_oom = true;
+-		return -ENOMEM;
+-	}
+-
+ 	test_dev->test_is_oom = false;
+ 
+ 	return trigger_config_run(test_dev);
+@@ -800,19 +800,24 @@ static unsigned int kmod_init_test_thread_limit(void)
+ static int __kmod_config_init(struct kmod_test_device *test_dev)
+ {
+ 	struct test_config *config = &test_dev->config;
++	const char *test_start_driver = start_driver ? start_driver :
++						       TEST_START_DRIVER;
+ 	int ret = -ENOMEM, copied;
+ 
+ 	__kmod_config_free(config);
+ 
+-	copied = config_copy_test_driver_name(config, TEST_START_DRIVER,
+-					      strlen(TEST_START_DRIVER));
+-	if (copied != strlen(TEST_START_DRIVER))
++	copied = config_copy_test_driver_name(config, test_start_driver,
++					      strlen(test_start_driver));
++	if (copied != strlen(test_start_driver))
+ 		goto err_out;
+ 
+-	copied = config_copy_test_fs(config, TEST_START_TEST_FS,
+-				     strlen(TEST_START_TEST_FS));
+-	if (copied != strlen(TEST_START_TEST_FS))
+-		goto err_out;
++
++	if (start_test_fs) {
++		copied = config_copy_test_fs(config, start_test_fs,
++					     strlen(start_test_fs));
++		if (copied != strlen(start_test_fs))
++			goto err_out;
++	}
+ 
+ 	config->num_threads = kmod_init_test_thread_limit();
+ 	config->test_result = 0;
+@@ -1178,12 +1183,11 @@ static int __init test_kmod_init(void)
+ 	 * lowering the init level for more fun.
+ 	 */
+ 	if (force_init_test) {
+-		ret = trigger_config_run_type(test_dev,
+-					      TEST_KMOD_DRIVER, "tun");
++		ret = trigger_config_run_type(test_dev, TEST_KMOD_DRIVER);
+ 		if (WARN_ON(ret))
+ 			return ret;
+-		ret = trigger_config_run_type(test_dev,
+-					      TEST_KMOD_FS_TYPE, "btrfs");
++
++		ret = trigger_config_run_type(test_dev, TEST_KMOD_FS_TYPE);
+ 		if (WARN_ON(ret))
+ 			return ret;
+ 	}
 -- 
-With best wishes
-Dmitry
+2.47.1
+
