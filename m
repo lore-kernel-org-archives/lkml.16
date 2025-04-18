@@ -1,129 +1,125 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F048C208A7;
-	Fri, 18 Apr 2025 19:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25242F43;
+	Fri, 18 Apr 2025 19:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745003578; cv=none; b=Uh6I0tB0AKzBZm4rNuTvXEUF1+G5k14Y/6rCh9EwA4R0PW4J4QObDOqrJFI4lYz/AuCp9BafGpRkgU+42XXajB6HKZI/3tFwo/ruX3LBf2DngU6Ar9kPfAfWAOckWr0owg7O0uNjRQu+cCOgbPutjQz4qPjH7/Ov8qgNnSpCWRc=
+	t=1745004323; cv=none; b=UrnRBIi3n87H3zz6GOL2zPqUZGDene3XPK4RrJOktA6SD7B/MX+Eif6MltaLZ7vzSjLA5Ex9q4T44ty58NfLFwZUYX6ambkpORQpyltDzhkgiqq5CK5smhJMzd/tDzZbz4HPr/6EVN6mGi+bjZPcEganvvUIXbzy0dYV+Y7XDdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745003578; c=relaxed/simple;
-	bh=heWZB3ttpotaCwOLggR7a3xPYSXNHPSD4GYh+irvlio=;
+	s=arc-20240116; t=1745004323; c=relaxed/simple;
+	bh=55dXAFxLMVHRfoFsJTMy3eIBe0r/r/yTP10VrK09pxs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J/qNyuLNBb3bjYzM7sd7Wfw2aDu6kZHlPNYh0hAeomD2aJia2F86Oezy8MkqRQYTFpYZbDsVtooLqUL62kRlVQc2ZMqeZEjfULPTzIHqNQuu2s9xn8zcBik876/kdioRkPHin3HX5/x5z3i3fIqufA1wI0PzSHOd6O4qZFYWXCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DxKsGxaU; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=YRB9bn4oPn2U8/U645jnn+tCrMKWIccv1B++FjtYEYTBQhmizEahI93r5+ylzn8sWySfFzLj8m5RnomrI5x+XlIvQQr8Fem2JVM/mOSdBB207i2H5Er8sx6Kp8j+Nfz2J08SR4UdwS7INcOuwLEQwGqT+bHTLWZ+nw2B2yyG3BA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uND/UnMm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DxKsGxaU"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4A7D840E0242;
-	Fri, 18 Apr 2025 19:12:52 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id fyg-1JqDRXFt; Fri, 18 Apr 2025 19:12:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1745003568; bh=vqs5bEYDx2rK7w9nakwEETZdrDS+pQNjh6rv5r2rEOs=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uND/UnMm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 361B1C4CEE2;
+	Fri, 18 Apr 2025 19:25:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745004323;
+	bh=55dXAFxLMVHRfoFsJTMy3eIBe0r/r/yTP10VrK09pxs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DxKsGxaUFmC38C2fmAjgpvedGBqaRRaOPChVhL5ECbdU0lKZmfwTNGKdnFJGLMkvH
-	 DvSlEXOTSyXwLD/f/7iAQpV8tZ+jMjOwy+xcB2G0ZUkB91t+Kd2uWafQlaVSSvNGzR
-	 c9TlQJc1z2mFLcCFNI+a5k+L+PFnXmn5y7Y1CabrxhyNroBxc/+mlDpl2wHDfZ+W4N
-	 Qxf03CLJMYvfuSTkDOd/iotXQqSF9gVU+PQef9Smt4/1TAnzqyU+3FHHO7gt4byCpu
-	 xQfAYwvG7F+I2pyqmn7Md5ADkCi33APLaPQ8cqJuujOrUfjk1dg606kMxSRYZIgFBb
-	 RySOZfosXsGWYjeG5U/PFTH45A6jFPb37qVD6vKKv9aMGs4ILTW3ZtOtdEHg2aksFJ
-	 sJRWrbnPycJaBMtgHJ/cQtu1SrQrMpx7p9XmzYYNyqdr6OlGSLh8xsCUHSuoN3Ffxs
-	 RhQS3OoKIgfmYuZrephXiThTJlr0+PzCi3VF7zkXmE6anbvbkGFogHbTGcKI6cSJmV
-	 hlTovOqEQcDnOgwc03UUBu3/nJ/c9X2h322xTu54c86ffwGb4mU+VRtf16fDs0Zfjq
-	 uXIFxxS9gZOlNeDdA9NIVdeGAUwJ0UA252GhwbioYBCoEjA/rBsOM2yd7HQnyDcHwF
-	 eM8Ba45dgzbSK0eWn3ICaprs=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 15EB340E0200;
-	Fri, 18 Apr 2025 19:12:31 +0000 (UTC)
-Date: Fri, 18 Apr 2025 21:12:24 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Max Grobecker <max@grobecker.info>, Ingo Molnar <mingo@kernel.org>,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, thomas.lendacky@amd.com, perry.yuan@amd.com,
-	mario.limonciello@amd.com, riel@surriel.com, mjguzik@gmail.com,
-	darwi@linutronix.de
-Subject: Re: [PATCH AUTOSEL 5.10 2/6] x86/cpu: Don't clear
- X86_FEATURE_LAHF_LM flag in init_amd_k8() on AMD when running in a virtual
- machine
-Message-ID: <20250418191224.GFaAKkGBnb01tGUVhW@fat_crate.local>
-References: <20250331143710.1686600-1-sashal@kernel.org>
- <20250331143710.1686600-2-sashal@kernel.org>
- <aAKDyGpzNOCdGmN2@duo.ucw.cz>
- <aAKJkrQxp5on46nC@google.com>
- <20250418173643.GEaAKNq_1Nq9PAYf4_@fat_crate.local>
- <aAKaf1liTsIA81r_@google.com>
+	b=uND/UnMm2Oybk3m0NxC2Yr/019abG7xwm06yBfAWBqCk+7ew5mkXEJQ6cjxoyaKxW
+	 JOpM+0wKBLAQiYsHQNI87QLYtidXyhwOUyGE5m5gvy7yZ3noNLzzAe46Wc9xJcQebW
+	 DtMK9Op8AjXkybICppceZ7JA0hHh1RaQSv69d3KzKFKF5jBV7KaQyJeIC1FNLba6PU
+	 aGDKvhMqIRnx12Yce8KzGIXNCbrDK3oS25ka+HikkLsJJPAQdkKCz9u+SqzK30vsBN
+	 gA31K73I1T/JeWx65VqDaB/DbvgzSSNYcnj+DfmDIZvqJBsuL12vdv1zV/MX+vJRKt
+	 aT4xiu5eBdhqw==
+Date: Fri, 18 Apr 2025 22:25:13 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Arnd Bergmann <arnd@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Davide Ciminaghi <ciminaghi@gnudd.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] x86/e820: discard high memory that can't be addressed by
+ 32-bit systems
+Message-ID: <aAKnGbajVRKanGem@kernel.org>
+References: <Z_rDdnlSs0rts3b9@gmail.com>
+ <20250413080858.743221-1-rppt@kernel.org>
+ <20250417162206.GA104424@ax162>
+ <aAHyHuwbmhjWmDqc@gmail.com>
+ <aAIU9LHAr_BGb5Jl@kernel.org>
+ <aAJMmQKTglGc7N-K@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aAKaf1liTsIA81r_@google.com>
+In-Reply-To: <aAJMmQKTglGc7N-K@gmail.com>
 
-On Fri, Apr 18, 2025 at 11:31:27AM -0700, Sean Christopherson wrote:
-> IMO, this is blatantly a QEMU bug (I verified the behavior when using "kvm64" on AMD).
-> As per QEMU commit d1cd4bf419 ("introduce kvm64 CPU"), the vendor + FMS enumerates
-> an Intel P4:
+On Fri, Apr 18, 2025 at 02:59:05PM +0200, Ingo Molnar wrote:
 > 
->         .name = "kvm64",
->         .level = 0xd,
->         .vendor = CPUID_VENDOR_INTEL,
->         .family = 15,
->         .model = 6,
+> * Mike Rapoport <rppt@kernel.org> wrote:
 > 
-> Per x86_cpu_load_model(), QEMU overrides the vendor when using KVM (at a glance,
-> I can't find the code that actually overrides the vendor, gotta love QEMU's object
-> model):
+> > On Fri, Apr 18, 2025 at 08:33:02AM +0200, Ingo Molnar wrote:
+> > > 
+> > > * Nathan Chancellor <nathan@kernel.org> wrote:
+> > > 
+> > > > Hi Mike,
+> > > > 
+> > > > On Sun, Apr 13, 2025 at 11:08:58AM +0300, Mike Rapoport wrote:
+> > > > ...
+> > > > >  arch/x86/kernel/e820.c | 8 ++++++++
+> > > > >  1 file changed, 8 insertions(+)
+> > > > > 
+> > > > > diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+> > > > > index 57120f0749cc..5f673bd6c7d7 100644
+> > > > > --- a/arch/x86/kernel/e820.c
+> > > > > +++ b/arch/x86/kernel/e820.c
+> > > > > @@ -1300,6 +1300,14 @@ void __init e820__memblock_setup(void)
+> > > > >  		memblock_add(entry->addr, entry->size);
+> > > > >  	}
+> > > > >  
+> > > > > +	/*
+> > > > > +	 * 32-bit systems are limited to 4BG of memory even with HIGHMEM and
+> > > > > +	 * to even less without it.
+> > > > > +	 * Discard memory after max_pfn - the actual limit detected at runtime.
+> > > > > +	 */
+> > > > > +	if (IS_ENABLED(CONFIG_X86_32))
+> > > > > +		memblock_remove(PFN_PHYS(max_pfn), -1);
+> > > > > +
+> > > > >  	/* Throw away partial pages: */
+> > > > >  	memblock_trim_memory(PAGE_SIZE);
+> > > > 
+> > > > Our CI noticed a boot failure after this change as commit 1e07b9fad022
+> > > > ("x86/e820: Discard high memory that can't be addressed by 32-bit
+> > > > systems") in -tip when booting i386_defconfig with a simple buildroot
+> > > > initrd.
+> > > 
+> > > I've zapped this commit from tip:x86/urgent for the time being:
+> > > 
+> > >   1e07b9fad022 ("x86/e820: Discard high memory that can't be addressed by 32-bit systems")
+> > > 
+> > > until these bugs are better understood.
+> > 
+> > With X86_PAE disabled phys_addr_t is 32 bit, PFN_PHYS(MAX_NONPAE_PFN)
+> > overflows and we get memblock_remove(0, -1) :(
+> > 
+> > Using max_pfn instead of MAX_NONPAE_PFN would work because there's a hole
+> > under 4G and max_pfn should never overflow.
+> 
+> So why don't we use max_pfn like your -v1 fix did IIRC?
 
-LOL, I thought I was the only one who thought this is madness. :-P
-
-> 
->     /*
->      * vendor property is set here but then overloaded with the
->      * host cpu vendor for KVM and HVF.
->      */
->     object_property_set_str(OBJECT(cpu), "vendor", def->vendor, &error_abort);
-> 
-> Overriding the vendor but using Intel's P4 FMS is flat out wrong.  IMO, QEMU
-> should use the same FMS as qemu64 for kvm64 when running on AMD.
-> 
->         .name = "qemu64",
->         .level = 0xd,
->         .vendor = CPUID_VENDOR_AMD,
->         .family = 15,
->         .model = 107,
->         .stepping = 1,
-> 
-> Yeah, scraping FMS information is a bad idea, but what QEMU is doing is arguably
-> far worse.
-
-Ok, let's fix qemu. I don't have a clue, though, how to go about that so I'd
-rely on your guidance here.
-
-Because I really hate wagging the dog and "fixing" the kernel because something
-else can't be bothered. I didn't object stronger to that fix because it is
-meh, more of those "if I'm a guest" gunk which we sprinkle nowadays and that's
-apparently not that awful-ish...
-
-Thx.
+Dave didn't like max_pfn. I don't feel strongly about using max_pfn or
+skipping e820 ranges above 4G and not adding them to memblock.
+ 
+> 	Ingo
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Sincerely yours,
+Mike.
