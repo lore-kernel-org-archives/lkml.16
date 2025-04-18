@@ -1,188 +1,213 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1C1277807
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 13:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00F72741C8;
+	Fri, 18 Apr 2025 13:28:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744982847; cv=none; b=QyiPaAmjekDckOZ01N1XkL7eA+H1K5CXmwEhA1J8nNH1uBsKdVPfwqAYN84CmXgwJAY6rXS8bI46aiy5fx+Deoe19/SJU1IKzdXWoPpTJis6IrB/SN45/NXKJmVKGJZrONOF+f08lv3Gj5XOM5BNA36xuSDicFXktWWrdOEUa+I=
+	t=1744982909; cv=none; b=IiFy1hHTMvDITIN9NOrB5wVrkqVHMdflrNRjj1Vrinm4rEHhWFHKHy477ts08wBcbpikOtRSyf+8lrU5AoalP4XpvV4Z7WlNm3Z+wEsVP6sEgta5WQ22fMAwMnLqCgL/fLKATIOsnOUJhe5chKIhhYODoaIOLHClHbWGpZljfdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744982847; c=relaxed/simple;
-	bh=ZfQD3/+RCCp6w2X5pFl73K13VoUBihGR1tLCPPFL6bs=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=LYUVSXo/QHhQYu4/ksbPSNKlriEMKlYW6so3V7pcQf9vHnP3Bmr+I48C/XOJJ3XFD+PbJJOVvfLG9479C46JcJTd+TPtIlunz6Ikxq1BYIZ5/rRSUYlCMxs7Pl/4WZy3jlCyzK3AaVt6X1fFb/p1wZQkTxEe9mLE2AIhA9cY/uY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=jXgqJ3X8; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1744982909; c=relaxed/simple;
+	bh=py3qpxPQ4hvohMsFadRBuBilUYS8IpwzxRxK3/vIQIk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ew1R+xJBXBcgLwiXHErBXf4jI5BphvgwQAo4FciKXaLDIdLUTFvooiVFtyR0PX/G0g+ouaH5tE1OUHzf8TPrXJZQLpTH5lN5MDa0N4LbPvuR/LnwizZqz/pz0kif5tAF34X3hFnjHms3mjYdliiMy685EYdI00nTqZBp8FY6nv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kKyKlJ1R; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="jXgqJ3X8"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so281015666b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 06:27:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKyKlJ1R"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-476ab588f32so25170081cf.2;
+        Fri, 18 Apr 2025 06:28:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1744982844; x=1745587644; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1744982907; x=1745587707; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uxgFXjvo+MA6Q5OOS8hwkxxF0ljFWJI+c946KCUiiiw=;
-        b=jXgqJ3X8/5NVJl2RhmCLQjS7E3JUA6AiBSWizYSR+H4JAkuCKdxEfMe8qp5cqWNAC/
-         0MXao4deM+fegnNiCrBB5qRriM7dTE6TsC459xX+SlFe+mTrhQVJcH5JKSLgqY3Zk9qs
-         /yLCJiV0Bg2a/XUH3MywNBQKSfZaaVh4XoNoHkoeg64kd0UI3ZvL8ooLcmRj0V9+rlD9
-         6H4gB2SC1aL1lGeWNK5uv/oHEz3aPmUhtcA8yQtddagczy4W6EUkL7ym0fqsCgDNfIhz
-         LcoKVBA57qc5zC2d9u3zIecATIGoEXbRvQXR4x0yfbfp/PCJP4BBP05ksMQUHf9tjCzJ
-         wzQw==
+        bh=H2uvF1gnZo1hDkMDMb6IsHjvK5NSRplkTI6q5lCw7lg=;
+        b=kKyKlJ1R/PglJ9mVlPAwkiU4I2pP148q458319+/oRuM2ysy1roHfOlz65RAnyPRN2
+         TCZ+dS0W0o4winIwQYiypBJ38XyerG49ZzjcAjtm9rwoL6Yie4AScvExcTPVOMyf4Afg
+         YD33ELpQXW2Ea/zkrfknqP2KqC8QpgW/Xgm1MX/B5ZpR5urTxp3NyY2A+tR4T+7llBkP
+         xc3VYiDOwpWVFGBn4hM8vXcaGvEMuau2Z7tByrtsvAqn8bSKP2iLVKdyz9CRar3FddvE
+         pHCedN2MajR4vYS5VX+RVitw76H1pIUega6W9PkQHUc209/DPFN8nARECC0jfuJJNonA
+         Wzyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744982844; x=1745587644;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=uxgFXjvo+MA6Q5OOS8hwkxxF0ljFWJI+c946KCUiiiw=;
-        b=c7LEgGTeI1XZr2XFMjjn57hbXJOn2jTFGJvC2ntXXwcdx9f+IkK9IUmIMY7RBC9Tkk
-         thtVmlmNAFSfIuQZ03bCTvLxLf1baSie2cRWMHNYau1yxtWW2QtFBpMzewxFUCcc0jHr
-         cVxoBgzROAVkxGV5mHmc7K88p9eqcRLYZBAfI9qsFjH/I95gvqyp0Z0qjfij4VANnGvT
-         H+OL31POQXuyqtp6l9EwUlI3Fn+SvqPJxmwXpgLEp+b6xtE78NeLWM57ZC4yJc/hyKgj
-         uiibEHE16F9RT/chlMETHNSVfQPyJXi0eLItwkExeQ2g52OPxEFCPB/YP+M+7qIOsCZI
-         IhOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV3IPRKpRoiF9U9/6jFvnuuGY8FGsAbqnefs5NX8aBFI8YZDLf9UvvkV22oHt+Z5vusfrilhkhvdJ/0cdk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPykGB0AttiLcvd2DTg+TOQeDQQkO3z1N/M0aBKZTR+2jpGzw9
-	T6XokXfO84JMPAgwKel1t0Q+UGexjQgL4X/A3mSOcqxdNb19UoPTOkz/eQG+Xsg=
-X-Gm-Gg: ASbGncvEKFPuWiUK+VORzA9NsysILR+y/ASGXv8JGag5wy8OlafeyxtQhdBt2+mxKSz
-	Myw8rt+p138dSjYgdhAAuotQBo9teKMbVAXuw+x27gC6Yodd0THYrEL0Jk7xAlp8jUU7bURLRAL
-	53wCL+ZA21VsZnQgGBHjIg9iDIRJGYWctOvLL4L+XTHkg1rx3RDHqAn1ke4fiGXCvA7yKFcHp/N
-	dptkU9kRMU1uIcaQNbMaK8uMEwsvq++eOpPqJ0oqkeXE+CqFZZiNXC209hMFDPVKF/XTiUStphu
-	/Pyh0ddWD+V9gXsgsHU4KWl1phyaFB60mhuu89XZQ1x/MEvtiSuKICOtCYdnPxhnFrHFEY4AIOU
-	oJ4hiJSzujw==
-X-Google-Smtp-Source: AGHT+IG5MqN3XHhnQCGQht4kZrrXV6XlNR9m/tX+qwXV2gswzunEL45vEdv1W+p+F4CE0N6b52FGXw==
-X-Received: by 2002:a17:907:d716:b0:acb:39c6:3974 with SMTP id a640c23a62f3a-acb74aa9634mr240183966b.5.1744982843560;
-        Fri, 18 Apr 2025 06:27:23 -0700 (PDT)
-Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6eefcf5bsm120065366b.117.2025.04.18.06.27.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Apr 2025 06:27:23 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744982907; x=1745587707;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H2uvF1gnZo1hDkMDMb6IsHjvK5NSRplkTI6q5lCw7lg=;
+        b=wJT1OOy5hN9Xrp6Qzynz78VGFc3g56u+IW+lHgDl8C7r98kBkn7tIb1p0M1j/JhH/t
+         Zv6H9YBapmgyYeWqoIWJAj5KKzr1+W2mtIdila5cyb6zKZG36Kl8b4un5wtpIcyUkbE0
+         a2c0rmzZnbF+PYReP+349EvS03WwsxWf0YdIT/NO9fypU/XBE55/F5mSc6L6md8eL7YH
+         GvxtJospUuINgGczHPA0jz90a6Z1kDUoVjFWSXZ4XN7OV3DD1b7vFWFuw7xlL12/cbQt
+         UdlN84IJ6TIVPf0BJL+/bJlC8Op+XNxHVJ3wK5IZ6ze10NuOeiAnTp7viK0EE3zvzJiq
+         5Vjw==
+X-Forwarded-Encrypted: i=1; AJvYcCVd0ZyNzbuc+7/YJSqaTkRxEjMS0MnG7/QWWEmO2gTNxd3J92MKKCTfMgk9Bs2rOGKBZTOl94ldAdk=@vger.kernel.org, AJvYcCWP1yGiXiMDj6DjKkMrh7scbFGMRA6PPH0qtPI/6C7MYQJ73MU9Y7sCR/mT4s51ukJ7ULMyLoIN@vger.kernel.org, AJvYcCXYP21iQZN7ESLt4o+8PSfmz5Kf3adqW03tAS5kdqoYVXWXSEwEGFOXre/HLsen4NmU1juBqUFcw2Jof5c0@vger.kernel.org
+X-Gm-Message-State: AOJu0YxL2rePaQA8AvUFQ0atsR4Ml2wJzhd2gKDmcSokJNVLWRl8iPR7
+	mfOCd1C1Q3aEEHwM9W6XW8+3xoNR7X87lIK66i5lfoUOmmSm2nWLLMMFv2Y9L9UvLf4Dud76t31
+	vUvE4G2FF7januXSEGmZ4EYZlL80=
+X-Gm-Gg: ASbGncvMAm/8NDim+f5y7xyk/8D64Fm/XUGiTnWTAaFYuHkvZ6a3ugSQ2eyJ9bD9eH+
+	hAkGc9x0RSmjiGKVPv1s4cEiobX4jcRmhoE6hFSwrOTsYU27HniFktzvZN43z4hdNRfYhTMqmFW
+	Iz9TIzab8+eGgwA7SrY3s69oZikBjubCQFYiUhSJqen2NBrt8G+wxr27sFDygcIDY=
+X-Google-Smtp-Source: AGHT+IEmOwXK2LuFYh7mE9FoPBp/KZqYGGb32Mvs7/fzuBy/q27GbvhH+PteT6hbPJHJRDNP83snG0RBgbKpuhxHmk4=
+X-Received: by 2002:ac8:5916:0:b0:477:1ee1:23d9 with SMTP id
+ d75a77b69052e-47aec3a7331mr45873521cf.20.1744982906523; Fri, 18 Apr 2025
+ 06:28:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250415182038.523186-1-gshahrouzi@gmail.com> <fb712c034eda0d5d711a90a00b6382315fb5f929.camel@gmail.com>
+ <CAKUZ0zL88AyuRxzhoAv2iZO7N7qOMy1G3yKscqG3rQiiOS0gog@mail.gmail.com>
+ <e8b24cf22c87e5b5ce0cc8919eca79f6e60ab6e3.camel@gmail.com>
+ <CAKUZ0z+FKxHcYTYiGvrZ3RLiMKT1P4gtTdq8d7=+ZFC0RMQzqA@mail.gmail.com> <a32503d98ffe162f48de019fab1a37f86af1666e.camel@gmail.com>
+In-Reply-To: <a32503d98ffe162f48de019fab1a37f86af1666e.camel@gmail.com>
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Date: Fri, 18 Apr 2025 09:28:15 -0400
+X-Gm-Features: ATxdqUFv8S2auULHx0FcuBh0UZ0zXdklaGc3PXDOV667MRhIxOk_A11J2oTI0ic
+Message-ID: <CAKUZ0zJK0MtMBMWaUCsF62vxc87XoN0xhJLfCcUZ84XNX-kKVg@mail.gmail.com>
+Subject: Re: [PATCH] iio: adc: Revoke valid channel for error path
+To: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
+Cc: gregkh@linuxfoundation.org, jic23@kernel.org, lars@metafoo.de, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-staging@lists.linux.dev, Michael.Hennerich@analog.com, 
+	sonic.zhang@analog.com, vapier@gentoo.org, skhan@linuxfoundation.org, 
+	kernelmentees@lists.linuxfoundation.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 18 Apr 2025 15:27:22 +0200
-Message-Id: <D99SSJAOJE3V.ENIEJ9IWFZLF@fairphone.com>
-Cc: "Bjorn Andersson" <andersson@kernel.org>, "Konrad Dybcio"
- <konradybcio@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
- <cros-qcom-dts-watchers@chromium.org>,
- <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
- <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, "Konrad Dybcio"
- <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v2 0/3] Fairphone 5 DisplayPort over USB-C support
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Luca Weiss" <luca.weiss@fairphone.com>, "Dmitry Baryshkov"
- <lumag@kernel.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250312-fp5-pmic-glink-dp-v2-0-a55927749d77@fairphone.com>
- <y7dfv4mmtzkv2umvverkn6qvjt3tg7cz4jj4zsb4t6vu4heh4d@64zpkjihjc23>
- <D8V75HO8O4CO.33RMUJLKQ7UG5@fairphone.com>
-In-Reply-To: <D8V75HO8O4CO.33RMUJLKQ7UG5@fairphone.com>
 
-Hi Krzysztof, hi Dmitry,
-
-Any feedback on the below proposed patch?
-
-I can also send out a v3 with this patch included soon if that makes it
-easier to review.
-
-Regards
-Luca
-
-On Tue Apr 1, 2025 at 11:32 AM CEST, Luca Weiss wrote:
-> Hi Dmitry,
+On Fri, Apr 18, 2025 at 5:46=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@gmail.com=
+> wrote:
 >
-> On Wed Mar 12, 2025 at 8:06 PM CET, Dmitry Baryshkov wrote:
->> On Wed, Mar 12, 2025 at 01:05:07PM +0100, Luca Weiss wrote:
->>> This series adds all the necessary bits to enable DisplayPort-out over
->>> USB-C on Fairphone 5.
->>>=20
->>> There's currently a dt validation error with this, not quite sure how t=
-o
->>> resolve this:
->>>=20
->>>   arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dtb: typec-mux@42: por=
-t:endpoint: Unevaluated properties are not allowed ('data-lanes' was unexpe=
-cted)
->>>           from schema $id: http://devicetree.org/schemas/usb/fcs,fsa448=
-0.yaml#
->>
->> This comes from usb-switch.yaml, it requires that 'port' adheres to the
->> /schemas/graph.yaml#/properties/port (which forbids extra properties).
->> The usb-switch.yaml needs to be fixed to use port-base for that node.
+> On Thu, 2025-04-17 at 13:08 -0400, Gabriel Shahrouzi wrote:
+> > On Thu, Apr 17, 2025 at 10:02=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@gmai=
+l.com> wrote:
+> > >
+> > > On Thu, 2025-04-17 at 08:53 -0400, Gabriel Shahrouzi wrote:
+> > > > On Thu, Apr 17, 2025 at 6:06=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@g=
+mail.com> wrote:
+> > > > >
+> > > > > On Tue, 2025-04-15 at 14:20 -0400, Gabriel Shahrouzi wrote:
+> > > > > > According to the datasheet on page 9 under the channel selectio=
+n table,
+> > > > > > all devices (AD7816/7/8) are able to use the channel marked as =
+7. This
+> > > > > > channel is used for diagnostic purposes by routing the internal=
+ 1.23V
+> > > > > > bandgap source through the MUX to the input of the ADC.
+> > > > > >
+> > > > > > Replace checking for string equality with checking for the same=
+ chip ID
+> > > > > > to reduce time complexity.
+> > > > > >
+> > > > > > Group invalid channels for all devices together because they ar=
+e
+> > > > > > processed the same way.
+> > > > > >
+> > > > > > Fixes: 7924425db04a ("staging: iio: adc: new driver for AD7816 =
+devices")
+> > > > > > Cc: stable@vger.kernel.org
+> > > > > > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> > > > > > ---
+> > > > > >  drivers/staging/iio/adc/ad7816.c | 15 +++++----------
+> > > > > >  1 file changed, 5 insertions(+), 10 deletions(-)
+> > > > > >
+> > > > > > diff --git a/drivers/staging/iio/adc/ad7816.c
+> > > > > > b/drivers/staging/iio/adc/ad7816.c
+> > > > > > index 6c14d7bcdd675..d880fe0257697 100644
+> > > > > > --- a/drivers/staging/iio/adc/ad7816.c
+> > > > > > +++ b/drivers/staging/iio/adc/ad7816.c
+> > > > > > @@ -186,17 +186,12 @@ static ssize_t ad7816_store_channel(struc=
+t device
+> > > > > > *dev,
+> > > > > >       if (ret)
+> > > > > >               return ret;
+> > > > > >
+> > > > > > -     if (data > AD7816_CS_MAX && data !=3D AD7816_CS_MASK) {
+> > > > > > -             dev_err(&chip->spi_dev->dev, "Invalid channel id =
+%lu for
+> > > > > > %s.\n",
+> > > > > > -                     data, indio_dev->name);
+> > > > > > -             return -EINVAL;
+> > > > > > -     } else if (strcmp(indio_dev->name, "ad7818") =3D=3D 0 && =
+data > 1) {
+> > > > > > -             dev_err(&chip->spi_dev->dev,
+> > > > > > -                     "Invalid channel id %lu for ad7818.\n", d=
+ata);
+> > > > > > -             return -EINVAL;
+> > > > > > -     } else if (strcmp(indio_dev->name, "ad7816") =3D=3D 0 && =
+data > 0) {
+> > > > > > +     if (data !=3D AD7816_CS_MASK &&
+> > > > > > +         (data > AD7816_CS_MAX ||
+> > > > > > +         (chip->id =3D=3D ID_AD7818 && data > 1) ||
+> > > > > > +         (chip->id =3D=3D ID_AD7816 && data > 0))) {
+> > > > > >               dev_err(&chip->spi_dev->dev,
+> > > > > > -                     "Invalid channel id %lu for ad7816.\n", d=
+ata);
+> > > > > > +                     "Invalid channel id %lu for %s.\n", data,=
+ indio_dev-
+> > > > > > > name);
+> > > > > >               return -EINVAL;
+> > > > > >       }
+> > > > >
+> > > > > Hmm, maybe I'm missing something but the code just looks the same=
+ as before
+> > > > > (from a functionality point of view)? I'm really not seeing any f=
+ix...
+> > > > I might have to change it for readability. From my understanding, i=
+f
+> > > > channel 7 is selected (AD7816_CS_MASK), it never enters the error p=
+ath
+> > > > whereas in the old code, if the chip were either ad7816 or ad7818, =
+it would
+> > > > end up returning an error because it skips all channels above eithe=
+r 0
+> > > > or 1.
+> > >
+> > > Ahh, right!
+> > >
+> > > One good refactor is to add a chip_info struct (renaming the existing=
+ one) with
+> > > let's say a name and max_channels. Then, the condition could be reduc=
+ed to:
+> > >
+> > > if (data > st->chip->max_channel && data !=3D AD7816_CS_MASK {
+> > >         dev_err(...);
+> > >         return -EINVAL;
+> > > }
+> > Makes sense. I sent a V2 with the updates. Also included enum
+> > ad7816_type as a member for chip_info but not sure if it is necessary.
+> > Renamed the existing one to ad7816_state.
+> > >
+> > > Being this in staging, I guess we don't care much about having the fi=
+x as the
+> > > first patch to make it easier to backport.
+> > In other words, combining the refactoring and fix into one patch is
+> > fine but normally they would be split?
 >
-> Thanks, do you think the attached patch would be suitable? It does fix
-> the warning for me, but not sure if it's too lax or doing the wrong
-> thing.
+> Yes, in theory we want to have the fixes first before any refactor becaus=
+e we might
+> want to backport the fix and we do not want to backport more code than ne=
+eded. Not
+> totally sure but being this on staging we might not care that much about =
+this.
+Got it.
 >
-> diff --git a/Documentation/devicetree/bindings/usb/usb-switch.yaml b/Docu=
-mentation/devicetree/bindings/usb/usb-switch.yaml
-> index da76118e73a5..9598c1748d35 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-switch.yaml
-> +++ b/Documentation/devicetree/bindings/usb/usb-switch.yaml
-> @@ -26,11 +26,15 @@ properties:
->      type: boolean
-> =20
->    port:
-> -    $ref: /schemas/graph.yaml#/properties/port
-> +    $ref: /schemas/graph.yaml#/$defs/port-base
->      description:
->        A port node to link the device to a TypeC controller for the purpo=
-se of
->        handling altmode muxing and orientation switching.
-> =20
-> +    patternProperties:
-> +      "^endpoint(@[0-9a-f]+)?$":
-> +        $ref: /schemas/graph.yaml#/$defs/endpoint-base
-> +
->    ports:
->      $ref: /schemas/graph.yaml#/properties/ports
->      properties:
+> - Nuno S=C3=A1
+> >
+> > >
+> > > - Nuno S=C3=A1
+> > >
+> > > >
+> > > > >
+> > > > > Having said the above, not sure if grouping helps with readabilit=
+y. But I do
+> > > > > agree with moving from string comparison to use chip->id. And we =
+also have
+> > > > > redundants 'else'
+> > > > >
+> > > > > - Nuno S=C3=A1
+> > > > >
 >
->
-> Regards
-> Luca
->
->>
->>>=20
->>> See also this mail plus replies:
->>> * https://lore.kernel.org/linux-arm-msm/D0H3VE6RLM2I.MK2NT1P9N02O@fairp=
-hone.com/
->>>=20
->>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
->>> ---
->>> Changes in v2:
->>> - Move adding "*-switch;" properties already in earlier patches
->>> - Move wiring up SS USB & DP to SoC instead of being done in device
->>> - Pick up tags
->>> - Link to v1: https://lore.kernel.org/r/20250226-fp5-pmic-glink-dp-v1-0=
--e6661d38652c@fairphone.com
->>>=20
->>> ---
->>> Luca Weiss (3):
->>>       arm64: dts: qcom: qcm6490-fairphone-fp5: Add PTN36502 redriver
->>>       arm64: dts: qcom: qcm6490-fairphone-fp5: Add OCP96011 audio switc=
-h
->>>       arm64: dts: qcom: qcm6490-fairphone-fp5: Hook up DisplayPort over=
- USB-C
->>>=20
->>>  arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts | 103 +++++++++++++=
-++++++--
->>>  arch/arm64/boot/dts/qcom/sc7280.dtsi               |   9 +-
->>>  2 files changed, 104 insertions(+), 8 deletions(-)
->>> ---
->>> base-commit: dcb11dc4740372cd4cce0b763a4a8ec4e9f347a6
->>> change-id: 20231208-fp5-pmic-glink-dp-216b76084bee
->>>=20
->>> Best regards,
->>> --=20
->>> Luca Weiss <luca.weiss@fairphone.com>
->>>=20
-
