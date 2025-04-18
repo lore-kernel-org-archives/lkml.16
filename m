@@ -1,274 +1,243 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19D013B2A4;
-	Fri, 18 Apr 2025 18:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745000582; cv=none; b=gR8GtQ5n+YTYOpSkERfnUshGBAkyMEVW6fbz7S8rLWqe7wGI5OB52fZSpsD5Azs7DjuGUJDiGveVWLQxdnMGvBbPR2V3csEQvjvBS5wm69DzRYh8mdGPNZ9sjZNRkI2QbMjxxcorUVCA0i/ioqrIu0OPkPPohr0vBtBnwhhf96M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745000582; c=relaxed/simple;
-	bh=fp00QMplQNxd/bJnjPrrcq2TIqGFB8msq4zfzRnEjIo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A+qx4hir0NrG2vfWBzLtgSR6co25vXJURGzD1MJhMviq3cy4BxHo+zlLt2N5jWkYkDr+3EwIga4iN82CNMfcLMdRQlnFLpNCH5DNfnFRnfl7hRdaNUwuCv1xm/INAYt61fPGA+EXfOl62o4xh6IsnnQhMmPe2mhmekuy7rJZRbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VRtjQvdA; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F691A5B9C;
+	Fri, 18 Apr 2025 18:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745001028; cv=fail; b=MqScKHwzpgZP4ekp3fpJz2j5g5pWPSSTyzBjBjiOgE7o5GFFfM0jLr8Qpea0jGWOtjXyOz3HkEqvLDdEA+9s0lezhTRw/Sn7aXKFn6Qwc3jptCO3tZtqMaV6sBrGXrtbKKJnorSe0+AvdU/TExdqc0HWWFzANVd3vu3h7jrkL54=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745001028; c=relaxed/simple;
+	bh=zhKkurJ8bRbJUUPrk2xw+3+SEsEltTAkuK11+zGva10=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=YlpPVVth2eRXBPNkkUhlZVFP82kTyhzvgLP3zyB4Wjw+yzGTUsIyB5zq9XVz4S+rCJjqo6+51l4iN6EEVdrLldmv8KDEym/mDjiXmmPFuCWwEHomLx0kPZZjzFqeBFzdN2Tgi5nGNw2GyrVa1nK57TIPJNnfHY0lljWuB95YSEg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=R7BIUxu5; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=R751f31s; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VRtjQvdA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 994DEC4CEEA;
-	Fri, 18 Apr 2025 18:22:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745000582;
-	bh=fp00QMplQNxd/bJnjPrrcq2TIqGFB8msq4zfzRnEjIo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=VRtjQvdACeVO8YZwfZMsjPsbFZKR5NDcjjVA0KOXsmZhgfEP2xmAvDWxli/PKRrYn
-	 gQn+wMAI7sTidsoL6xVq4RNTel2XPyabzS+hdFXAOin0d4Y2/mGgWMiHokw6JgSrlz
-	 rrQFNwb27Q0VyVZyf7PTNra5VdWZ6OSFFKotTSSZ5Fhlpu5yq9cEzybaxUgZXVCFHy
-	 CEVLLLYqAMJQXRCUg2reMJ0TlIWOWos+iLVLQdvjGQVGdwjeKQhYDTLLijVGZQF4x0
-	 zbg+ncFRh0U12Aj54Fwainp12j974SgQNzjb2e112tfN2fndST0kGxe7TiMar4UzDT
-	 v4HLlJiEFAcjQ==
-Date: Fri, 18 Apr 2025 19:22:54 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- eraretuya@gmail.com
-Subject: Re: [PATCH v6 05/11] iio: accel: adxl345: add freefall feature
-Message-ID: <20250418192254.0becd27d@jic23-huawei>
-In-Reply-To: <20250414184245.100280-6-l.rubusch@gmail.com>
-References: <20250414184245.100280-1-l.rubusch@gmail.com>
-	<20250414184245.100280-6-l.rubusch@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R7BIUxu5";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="R751f31s"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53IHBhKE030953;
+	Fri, 18 Apr 2025 18:29:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=qrLRdyW615uyYDbW0AeHS4zaeYEFvG8G83JY0s1KzNE=; b=
+	R7BIUxu5uCgBs5K0QYbsQ7Ifi6nB2ZQhkZuK38x82lNxFUZlEARHqiKk6IsVVVX2
+	9dSj6rAhzFwkSC+V8DU6c2SpCxt7+4H8MGiuY06EM20+vGUPLuMOfIvx4T+fl+4G
+	PunBTCOOmVwGr3hbsqMSFHHpCLpbVjocruhz30JWrx1Z4IyAmkaOfFqeBipPKLJg
+	QjUxl0g0MRZwB326wD67+OBR2Btwz1y9pD91RZGPJfVyRAd6khXPeO4eEaiT8WJB
+	WLpLn/XtnRkQzb3jSSaxcA7fqloDYQ2PAGwR+0Dk4Y/lzGBfpIQpIV2ixU3Fh/hO
+	Jiwi06VOiLPtsbG/Di7tAw==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46187y0q2y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 18 Apr 2025 18:29:27 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53IIA6jA038888;
+	Fri, 18 Apr 2025 18:29:26 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2042.outbound.protection.outlook.com [104.47.58.42])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 460d4w6vgm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 18 Apr 2025 18:29:26 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eOXAs0SZ8z+WDz5HW0YosOdYuX2BMrbI3CFnh+YuKJBmUqz1wQ7lBzV82eXE3vcA2U1nZSsRdVsYOSDC1tGQg3RIbQv6BTy2bRAS2IuattQukEVd6Ss8ixBKsAiQCmf+q1tjjMxfK0CuPW2YGlMNobdDQ8Ex2ZcPkrccKDVLGKz5Z4cwci0OVo+a/vVyJWXUGm8770Jx7DdtBcX2E9AungTMmYIZ1ymQKwRwlj/oiYoqn92CcbOKhj+8JXqbVKdnpexZtrAk0Qy6oKhgdDHcIdAODVY5SW7LGfihRqaGKvQFZB0zXFIfgQZZqc3wMjgkDCDkcjauPuXz3rBpe+hmyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qrLRdyW615uyYDbW0AeHS4zaeYEFvG8G83JY0s1KzNE=;
+ b=oP3BAiaIr1tbfWvLoSxCD3FHOC0AqoGQJhGbchFvXyaWlaGxfOTFqbPauhJlDmFnXmi1pPTGbkv18iSejzerRyTaWEpjpMhZtzlEI3TuSU4QvcKxdUE68RC66zSdBsTHezNYlJn2bopk6ua+qfIjviWb6vbce1RAlUfLJTMGLq6jpF9SG2Q2CvnqKq6CdnzGwS7JIVkDtquChVSqyOoIudUWsv3AYgPzmkuY78WmT/vNh+f7A+IXkfi9UAGQV4Gk0feBLV5BgHF1oLRImrh7Zfv3NeZyVd/5PuHO44LB5XBY2c8ljfiblhhMA0WEzjN+7wSjkcQEN9FrIa5PSZZZ7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qrLRdyW615uyYDbW0AeHS4zaeYEFvG8G83JY0s1KzNE=;
+ b=R751f31so9zmY0bqzRdIcp9Eb21W/dX8+Sr5IvtAmin6WusIn+DK+CyKIqZW2zK0T1ka094B81xUvNsE1C9AqerSU9Nt6FK6v2cMAGK+eZjDtgpHurSWhO/AE/FZoNpRcNnWA1W68buF6+Coe9R3Igt87FwvBXrD+FM7ipb8uVs=
+Received: from DS7PR10MB5328.namprd10.prod.outlook.com (2603:10b6:5:3a6::12)
+ by BLAPR10MB4835.namprd10.prod.outlook.com (2603:10b6:208:331::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.31; Fri, 18 Apr
+ 2025 18:29:24 +0000
+Received: from DS7PR10MB5328.namprd10.prod.outlook.com
+ ([fe80::ea13:c6c1:9956:b29c]) by DS7PR10MB5328.namprd10.prod.outlook.com
+ ([fe80::ea13:c6c1:9956:b29c%2]) with mapi id 15.20.8655.022; Fri, 18 Apr 2025
+ 18:29:24 +0000
+Message-ID: <6bdbb334-5849-4099-9284-ffe293aac144@oracle.com>
+Date: Fri, 18 Apr 2025 23:59:09 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 23/24] nvme-pci: convert to blk_rq_dma_map
+To: Leon Romanovsky <leon@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Keith Busch <kbusch@kernel.org>
+Cc: Jake Edge <jake@lwn.net>, Jonathan Corbet <corbet@lwn.net>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Zhu Yanjun <zyjzyj2000@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-mm@kvack.org,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dan Williams
+ <dan.j.williams@intel.com>,
+        Kanchan Joshi <joshi.k@samsung.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Leon Romanovsky <leonro@nvidia.com>
+References: <cover.1744825142.git.leon@kernel.org>
+ <f06a04098cb14e1051bddec8a7bdebe1c384d983.1744825142.git.leon@kernel.org>
+Content-Language: en-US
+From: ALOK TIWARI <alok.a.tiwari@oracle.com>
+In-Reply-To: <f06a04098cb14e1051bddec8a7bdebe1c384d983.1744825142.git.leon@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: KU0P306CA0034.MYSP306.PROD.OUTLOOK.COM
+ (2603:1096:d10:29::10) To DS7PR10MB5328.namprd10.prod.outlook.com
+ (2603:10b6:5:3a6::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR10MB5328:EE_|BLAPR10MB4835:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5de48a61-ec5b-4d56-44c3-08dd7ea6f165
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?b2pidmZrVERPS2luTTUyODlRREVYNDk0a29hUk1jd3JDa0JBRnZWajJDc3gw?=
+ =?utf-8?B?ZzFwN3pvM0RhSVR1enAya1UrZFl2TC9xTk1JM2hQRTZvaHRYdm8zWkw0SXJU?=
+ =?utf-8?B?cDJTd3huS0UzZ0V1a1hlWk90d296UHJlcWxSM2taVWp1c0Z1RjJFNENzVXlO?=
+ =?utf-8?B?aFpxcEZOSTY0RXVPYU1IMWZ5K1BFeHJjN3BaTlF1WHFXb2xsRTJjT05nRk43?=
+ =?utf-8?B?ZUxUZDluSG1XRnhnSVJ2a0hNR1hXcms3WXJOWHhDK0Y2L1B0Q0k1M2RZeUJC?=
+ =?utf-8?B?bkdqclhmbzhEcEY5T1VuSUkyMnF0VnRTV25jcDZkdE93T3VnSEVHcGlvbkZ0?=
+ =?utf-8?B?VXVUaUt0QkN6bTEvSGU3ZGZBSlI5am5JTWc2MXBCVmIrdU1YYzVIZEMvcG9Z?=
+ =?utf-8?B?SlZyVGxIWUJ1SHhkNnFBUlEvVkZiTjZZbXoyUlo4ZmozOHhQTUVqWDZTTTVR?=
+ =?utf-8?B?TEIydE4vZXE1eWExNDVhaklHaGkvN1g5NDlYVUt3OFJVdkU1N0dDS0xPRXBt?=
+ =?utf-8?B?cUxNZ0trTFdhVWZidzJmaTh4cytmZDNqWDg2dGh4RjU0M0pZbzhaa0lJbTFX?=
+ =?utf-8?B?NnRqaXgvbHdGcE0xQlNuTFQrczlFeGtHNVB2dWJKcm01b2pOV3BkSm1MT0N5?=
+ =?utf-8?B?Ly9rSU5zK2M3eGpPT0xvdjNmNjBGQ1lDUWtPZ1hha1NXUU40Um1vbzJSNVhR?=
+ =?utf-8?B?bG0zRmFIQWtOcG5EWlVWZG91QjU0RHNGTEx3ckJxTkN5L2xRQTIrNGZ3US8r?=
+ =?utf-8?B?cGNOZnR6NU5EK2pWZy9WOGc1Mml0aTc1T1ZHTkxOOWZWRVNNNUVtRWgxbHNa?=
+ =?utf-8?B?VncxLytpZlZCUDg2T2l5Si84aUxHUjJ0dk01VjdxU3N3TldRMnhJVytjdEl2?=
+ =?utf-8?B?U3I4OGhCZzJlZUdhbzRpVDRXaE5BTHgrUVdoMVdITG5hMTZCVkZjV1V0Tzlm?=
+ =?utf-8?B?WCtmMTUzU3FneXNkYWhYZnArRTRjaEVuVko0V2w0L08xQm1tUCttVSt5ZEN0?=
+ =?utf-8?B?ZStEVFhQTGpLUWdKQVBlMVJKVkFVblI1aFE0TGFIbG53czV3YVRBMGluMkYw?=
+ =?utf-8?B?eU9sQ1VyNW13em5IdEZwbFZZTEpnVmtOdTRqdDQyKzFnRnNKTkFZY3kxckpm?=
+ =?utf-8?B?c3lSaEpiVzZNNEpYa2g4UEpVU2pKNlExTmtEdDRtV0E4UU5IUXFSMWYrWC9n?=
+ =?utf-8?B?SzJseEVodlhJNWE1dUdvK25RcEZzQk1lTGJhK21Eb3o2OGhZbGttT3JORHlt?=
+ =?utf-8?B?V0dNa0lKQmFKdkNnU1FUeTBrVzZ2R0FSMlNDRHlDUlIwNUpmZ2kvYUF0ejBZ?=
+ =?utf-8?B?UWVzbHdCQW1uUVQ1dmJMMlpwUzUvMHFIb2I4QXYrdE94akt0SmNkUThlbG9q?=
+ =?utf-8?B?Vjh1RExhc21oZ21pYmJkUG5wRkxnVkJaWDdMZGZNSUhpUFNncXpySWwvc1BU?=
+ =?utf-8?B?TWRJZ1RqazNER1Y1YlhNUENFNklmSDZVdmVuVkJabitnSmFGdGc1Z1grS3I1?=
+ =?utf-8?B?cTN0VzBHWXRGTWJrQUNRMzJUS3lORGNKSDFHaGlIMXNGbWpKWVA2R2NTQjBI?=
+ =?utf-8?B?dlhBUmg1T3hSTVRvQzE5YTdPc05BSlEvQ0FqK3FkWXhnQ05OczNTdDEvUTYx?=
+ =?utf-8?B?OVlPeHc2TlViZ01VQmpzTk13bTQ5dVgyckE2UVpITXVEYWEzNmNCQytIZVh4?=
+ =?utf-8?B?TDZDbzNZdGxHekxveERzdm00Q3RuQ3VhS0U0dmRSNWRwdmMybjdOU0V2alB1?=
+ =?utf-8?B?eFM2UEppU3Y0a0gxRXBOR3ZJVXJQRTZpWHRQdHZza3UrYnhNMm1zWEEyUWFE?=
+ =?utf-8?B?K1VGN0pCMjBnbkRzNFVPRUlIaXVBb1BOdnBDcitIUERTWjNQcExOeEo3VUlJ?=
+ =?utf-8?B?Z2xka3VNdjJTRSs0cWd2a0cwaG9kcWNVamVFSU52Q3RtS1BFRmdSWHR3SU9T?=
+ =?utf-8?Q?bLm7As/MzYI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5328.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZkEvY2tOM2huK1dmRTJGanY1a0xNZWdVRTExWmxObC9Ob3NTcytEenJodklt?=
+ =?utf-8?B?bmNWRm9xRGRBOStLNlZPdElIQUlLYUs1UUMvSy9xUU8wamsrUUZ0bm1pb2s3?=
+ =?utf-8?B?VW5xVENkRFJtUnB1ancvbllyRFgraUNRVU1SZ3pFQ01iY3lhbm5CNFdhbUJq?=
+ =?utf-8?B?cGw5NHdtQzlPcCswQnVYNFd6Y0VTbTNiVDZFSXpRWjZWWkZMVTMyejhaRkJV?=
+ =?utf-8?B?KzJUNTdLTmtRVU9yNTJGNm5Ub3hlSUVOWXFqemQrdjJ3eVdXSlZxK0cxcDUv?=
+ =?utf-8?B?VGdZNjE3RnBaZ1ZCZ3BnWUlrZHZwRjZ0Zk5TUlBtRlAyaDljdWRJZUlQSzhw?=
+ =?utf-8?B?OXVOcVNwaklOVFdyU2dmQVZCRlZjc2R4NTdPVkd5Q0VUSlJ6dEhpQzFOVDJj?=
+ =?utf-8?B?TWlzZzVxeXo5dU14eU1pTnZJOVRUWEFXRjJyWnRIWlZnL0kzRFdSN0JOVjN2?=
+ =?utf-8?B?VUEzRGx1TXBtdHk1QXNSQW1MRmpyMUE1cXNHWEQzZkpvQ0EzUkpRQW1idU9v?=
+ =?utf-8?B?c0xJeGdqRDFEUlU4ejA3YW9HR2IwYWw1TkJyQlZKK2M2MDJyVUttK0RkVlBG?=
+ =?utf-8?B?bXZiVW16aGR3T1g5U3JRTDJZaS9YSit5NlJiTmVQcjVFbnRTQ3lnUlZ1cnlw?=
+ =?utf-8?B?QzBJVkJTeHhhd3FwUHhPT1FGYVd6RmNCQ1dyTGo1Kzg1NEhoWVJGbnduY0dt?=
+ =?utf-8?B?U1ZYVnhTaTBhWUhubnM3ZUJoL0MrNi8rY1hGb2x2WTUvSTc5eVQ3MFJ2eW9U?=
+ =?utf-8?B?bS9jeVdLMFp0VldvV25uL2s4TVVYLzlBeENCTURDc2VHeXE3SEw3a1B6Wnhk?=
+ =?utf-8?B?b0RqZEhFUUtRWng0eFU0K0FQWDQyZXRjYjhDRkhCNGEyekl6QjdReit3UThi?=
+ =?utf-8?B?MXFNSGMwc1J6cUxBV3BMZlFrS1pMT2c1M21zSFc2Y3VSLzlHVU45SXowc3ZN?=
+ =?utf-8?B?S2QzbHQ4Ry9JMGgvL3BMZjFMUEVOMDRXZzNMUnpjclFaVzJiSkRRQmNucHN1?=
+ =?utf-8?B?dllFajdLajJxODRPQ2tjUUwwUWZVWGQ2WG9pOFdJdnFNNlozMDdUa2RjTU1X?=
+ =?utf-8?B?cDZKbDNqSW1abis0eG93enlKamErZlViMFJwT0NvTEF6cU9FU0phMlpvTFMx?=
+ =?utf-8?B?TDlLa3Nydzd1TjhhZThJWmh0WjJPdUhFK2grOE43SGJvU0d0Szg1bFViNWk3?=
+ =?utf-8?B?VTZ1aU44elFrWDdLRnpwQVpvMzc0SFUyVXlOanlMQUxTSE5CMVY3cVJ0Wm9O?=
+ =?utf-8?B?Y2ppc2ZMczU5UHhhcVNsZ0xhZTc2MWFmRGs3akh5cDFhT011SktZNmlWMlVr?=
+ =?utf-8?B?cmNzYk0wQUpWSUFsaS9hVjEzbEo2VVdremJ6dUtEdWY5aXZiN2tnK2ZLZXhK?=
+ =?utf-8?B?STlyU3BIV2Y3MGMzTXpGU1Q3MnZ5MmV3d3ZMVE9BbEJLOEFzZGhZV3lBa2pZ?=
+ =?utf-8?B?VzJpNExTeUd4bVFMdm5WbWM4TEhTdUZWcGRUU1AvTTlHUzJ0NGlNS3l6WU5q?=
+ =?utf-8?B?aGY2RXcyazV6M2QrVTVHaGxDb3E3cFZnWkVOMDFjbXZvbHl6T2dhTStYV2E3?=
+ =?utf-8?B?cHlxMU9mcmdxRWUrQUpuTWVWbEFmRXBOQS9RdzNDZElZZVJ1T0NKVS9rYWRt?=
+ =?utf-8?B?aFdGaitmVWtUay8wNFZ0ZVVTUjc5TXZBUGF1bFBRNlJLTjBmTVQyclUwNmlF?=
+ =?utf-8?B?S0QwR2dNdzBWRElGRFlpcWlHbXF6Y1BrWlBCS1JPczI5STBOZWVXUWpIS1dl?=
+ =?utf-8?B?dTRlc3lvTFZJUVNFR29YaWNXczgzYzgrU0YyMlJEdXBxTXRzeW5nZG8xb3lI?=
+ =?utf-8?B?SVMyWHVyd0x1RG9UYm9SaDNadU5GcFZ4TWVrSEVFeW5scW1HS0llUTZ2ZDFi?=
+ =?utf-8?B?SVphWjd3V1ZiK3JZN0xhZ2FrY3VoUldkd0x2dnRRYjhMbGg1aW8zTmpDTE1C?=
+ =?utf-8?B?dG1Jamo5eGdqNXdxVDRtMDBnYnpuR0ZzT0xQR2xYMU5FeDQ2WFhvRzMwSURO?=
+ =?utf-8?B?NHpPbGhTaDk0ZmxEWVRXdU1lZ2hocTAvSFN2dnI2bjd0SkMrQ01FWDJiOVl4?=
+ =?utf-8?B?SHdXRVdNdE04WlBaMXJBRXJsYXdDVmliQnhDRVF1THp6TUsxaWNCTVVkenpC?=
+ =?utf-8?B?ZVJNRnBCeHNORFJhL09UdTQ1R1A3ZGZQZFhsSW5JdXdzc0hCTDdKOXpDYlpV?=
+ =?utf-8?B?TUE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	Ar5OvEyPtj8uOyViQu9JxFydvxKsl0V6HyAIrCeRT4b+zV1tXrp66q9nRpIde7IyBORt4073lViOZ0jQtt8Cuv4OCdLPAmSRamr2G/g7Ts+I5Z18klc8wxs02LvAg16FkumI5wPqjdTLxTYoXL8tY5jRrsd+S1aZCrsyeAKMYm/VRK0alV/gcCRQAfCX6AL6nh1K8ynsdrGdgxhtU1GzfIE4YpTprnGS+Yw0QtWHmrjt2ReT5hr6rCN+8/5MdUcSfBMnkibQ+6XG2jdUXzrlEB1df6lb131Lt/MovxRoZQGG3cDyHp2xVp4YJuxAUR7mqDwuvyZfoieW7Kj+Menz6qwNiSW7ASjhbf+IxrsDvK7LI+oWq4UFnUpxiN8NM0FnoxZLy2eKSDhf2rOtKl8UNsw4XgFY5atLwi2jfx7sTmtHAp3l4PiPvy8YKVRPYvq21Fe+GjWqSWy5+d4GcWccNLDHw69FTq8Iz3hTmKVLUoFQ38eLxTKTR0uTNH37ZZvT/N5hT0KgBHXnZCz4aookfAouWFOM3I+yqE4JDGjQDHzx3+iwULige9sUnpxSHrzZEltXfZQuf/AD8GnY7fYgj8DaOnETt6kU9Oh9EZbY3UA=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5de48a61-ec5b-4d56-44c3-08dd7ea6f165
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5328.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2025 18:29:24.0251
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PMKaRf+Oi3+0WVWsJaPp9ZxxZPZ0k+kmSFuPJ4wtTWxtv9ctPo9/9u3g2iCjvxHzggL/wneRsIyvyaEyc7tUSrf0d4Blql8UNU56sYNABfU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB4835
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-18_07,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
+ bulkscore=0 mlxscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
+ definitions=main-2504180139
+X-Proofpoint-GUID: lrY6Twb4YRL1TqIzmeU-GQVNKOG57ilC
+X-Proofpoint-ORIG-GUID: lrY6Twb4YRL1TqIzmeU-GQVNKOG57ilC
 
-On Mon, 14 Apr 2025 18:42:39 +0000
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-> Add the freefall detection of the sensor together with a threshold and
-> time parameter. A freefall event is detected if the measuring signal
-> falls below the threshold.
-> 
-> Introduce a freefall threshold stored in regmap cache, and a freefall
-> time, having the scaled time value stored as a member variable in the
-> state instance.
-> 
-Reading this I wondered whether we had the event code consistent for
-freefall detectors... Or indeed inactivity ones (which are kind of similarish)
 
-:( We don't it seems.  The issue is that
-freefall is actually that all channels are simultaneously under the the magnitude
-threshold, not one of them.  So it should I think be
-X_AND_Y_AND_Z not X_OR_Y_OR_Z
+On 18-04-2025 12:17, Leon Romanovsky wrote:
+> +	prp_list = iod->descriptors[desc];
+> +	do {
+> +		/*
+> +		 * We are in this mode as IOVA path wasn't taken and DMA length
+> +		 * is morethan two sectors. In such case, mapping was perfoormed
+> +		 * per-NVME_CTRL_PAGE_SIZE, so unmap accordingly.
+> +		 */
 
-This is as opposed to activity detectors which tend to be any axis shows
-activity and X_OR_Y_OR_Z applies.
+typo perfoormed -> performed , morethan  -> more than
 
-Anyhow upshot is I think I lead you astray on this and we should make this
-one IIO_MOD_X_AND_Y_AND_Z 
-
-A few other things inline.
-
-Unfortunately we don't deal with these events that often so I forget
-what we did before :(
-
-> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> ---
->  drivers/iio/accel/adxl345_core.c | 125 +++++++++++++++++++++++++++++++
->  1 file changed, 125 insertions(+)
-> 
-> diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
-> index c464c87033fb..ae02826e552b 100644
-> --- a/drivers/iio/accel/adxl345_core.c
-> +++ b/drivers/iio/accel/adxl345_core.c
-> @@ -75,6 +75,7 @@ struct adxl345_state {
->  	u32 tap_duration_us;
->  	u32 tap_latent_us;
->  	u32 tap_window_us;
-> +	u32 ff_time_ms;
->  
->  	__le16 fifo_buf[ADXL345_DIRS * ADXL345_FIFO_SIZE + 1] __aligned(IIO_DMA_MINALIGN);
->  };
-> @@ -96,6 +97,14 @@ static struct iio_event_spec adxl345_events[] = {
->  			BIT(IIO_EV_INFO_RESET_TIMEOUT) |
->  			BIT(IIO_EV_INFO_TAP2_MIN_DELAY),
->  	},
-> +	{
-> +		/* free fall */
-> +		.type = IIO_EV_TYPE_MAG,
-> +		.dir = IIO_EV_DIR_FALLING,
-> +		.mask_shared_by_type = BIT(IIO_EV_INFO_ENABLE) |
-> +			BIT(IIO_EV_INFO_VALUE) |
-> +			BIT(IIO_EV_INFO_PERIOD),
-> +	},
-This is creating separate per axis enables, values and period. Does that make
-sense?  If not you need to spin a kind of virtual channel (with mod X_AND_Y_AND_Z)
-and add the events to it.
-
-See how the sca3000 does it for example.
->  };
->  
->  #define ADXL345_CHANNEL(index, reg, axis) {					\
-> @@ -383,6 +392,63 @@ static int adxl345_set_tap_latent(struct adxl345_state *st, u32 val_int,
->  	return _adxl345_set_tap_time(st, ADXL345_TAP_TIME_LATENT, val_fract_us);
->  }
->  
-> +/* freefall */
-> +
-> +static int adxl345_is_ff_en(struct adxl345_state *st, bool *en)
-> +{
-> +	int ret;
-> +	unsigned int regval;
-> +
-> +	ret = regmap_read(st->regmap, ADXL345_REG_INT_ENABLE, &regval);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*en = FIELD_GET(ADXL345_INT_FREE_FALL, regval) > 0;
-> +
-> +	return 0;
-> +}
-> +
-> +static int adxl345_set_ff_en(struct adxl345_state *st, bool cmd_en)
-> +{
-> +	unsigned int regval, ff_threshold;
-> +	bool en;
-> +	int ret;
-> +
-> +	ret = regmap_read(st->regmap, ADXL345_REG_THRESH_FF, &ff_threshold);
-> +	if (ret)
-> +		return ret;
-> +
-> +	en = cmd_en && ff_threshold > 0 && st->ff_time_ms > 0;
-> +
-> +	regval = en ? ADXL345_INT_FREE_FALL : 0x00;
-> +
-> +	return regmap_update_bits(st->regmap, ADXL345_REG_INT_ENABLE,
-> +				  ADXL345_INT_FREE_FALL, regval);
-> +}
-> +
-> +static int adxl345_set_ff_time(struct adxl345_state *st, u32 val_int,
-> +			       u32 val_fract_us)
-> +{
-> +	unsigned int regval;
-> +	int val_ms;
-> +
-> +	/*
-> +	 * max value is 255 * 5000 us = 1.275000 seconds
-> +	 *
-> +	 * Note: the scaling is similar to the scaling in the ADXL380
-> +	 */
-> +	if (1000000 * val_int + val_fract_us > 1275000)
-> +		return -EINVAL;
-> +
-> +	val_ms = val_int * 1000 + DIV_ROUND_UP(val_fract_us, 1000);
-> +	st->ff_time_ms = val_ms;
-> +
-> +	regval = DIV_ROUND_CLOSEST(val_ms, 5);
-> +
-> +	/* Values between 100ms and 350ms (0x14 to 0x46) are recommended. */
-> +	return regmap_write(st->regmap, ADXL345_REG_TIME_FF, min(regval, 0xff));
-> +}
-> +
->  static int adxl345_read_raw(struct iio_dev *indio_dev,
->  			    struct iio_chan_spec const *chan,
->  			    int *val, int *val2, long mask)
-> @@ -495,6 +561,11 @@ static int adxl345_read_event_config(struct iio_dev *indio_dev,
->  		default:
->  			return -EINVAL;
->  		}
-> +	case IIO_EV_TYPE_MAG:
-> +		ret = adxl345_is_ff_en(st, &int_en);
-> +		if (ret)
-> +			return ret;
-> +		return int_en;
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -518,6 +589,8 @@ static int adxl345_write_event_config(struct iio_dev *indio_dev,
->  		default:
->  			return -EINVAL;
->  		}
-> +	case IIO_EV_TYPE_MAG:
-> +		return adxl345_set_ff_en(st, state);
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -532,6 +605,7 @@ static int adxl345_read_event_value(struct iio_dev *indio_dev,
->  {
->  	struct adxl345_state *st = iio_priv(indio_dev);
->  	unsigned int tap_threshold;
-> +	unsigned int ff_threshold;
->  	int ret;
->  
->  	switch (type) {
-> @@ -565,6 +639,22 @@ static int adxl345_read_event_value(struct iio_dev *indio_dev,
->  		default:
->  			return -EINVAL;
->  		}
-> +	case IIO_EV_TYPE_MAG:
-> +		switch (info) {
-> +		case IIO_EV_INFO_VALUE:
-> +			ret = regmap_read(st->regmap, ADXL345_REG_THRESH_FF,
-> +					  &ff_threshold);
-> +			if (ret)
-> +				return ret;
-> +			*val = ff_threshold;
-> +			return IIO_VAL_INT;
-> +		case IIO_EV_INFO_PERIOD:
-> +			*val = st->ff_time_ms;
-> +			*val2 = 1000;
-> +			return IIO_VAL_FRACTIONAL;
-> +		default:
-> +			return -EINVAL;
+> +		dma_unmap_page(dev->dev, dma_addr, dma_len, dir);
+> +		if (i == NVME_CTRL_PAGE_SIZE >> 3) {
+> +			prp_list = iod->descriptors[++desc];
+> +			i = 0;
 > +		}
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -612,6 +702,22 @@ static int adxl345_write_event_value(struct iio_dev *indio_dev,
->  			return -EINVAL;
->  		}
->  		break;
-> +	case IIO_EV_TYPE_MAG:
-> +		switch (info) {
-> +		case IIO_EV_INFO_VALUE:
-> +			ret = regmap_write(st->regmap, ADXL345_REG_THRESH_FF, val);
-> +			if (ret)
-> +				return ret;
-> +			break;
-> +		case IIO_EV_INFO_PERIOD:
-> +			ret = adxl345_set_ff_time(st, val, val2);
-> +			if (ret)
-> +				return ret;
-> +			break;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +		break;
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -865,6 +971,17 @@ static int adxl345_push_event(struct iio_dev *indio_dev, int int_stat,
->  			return ret;
->  	}
->  
-> +	if (FIELD_GET(ADXL345_INT_FREE_FALL, int_stat)) {
-> +		ret = iio_push_event(indio_dev,
-> +				     IIO_MOD_EVENT_CODE(IIO_ACCEL, 0,
-> +							IIO_MOD_X_OR_Y_OR_Z,
 
-This is the event that got me thinking about whether we were doing this right..
 
-> +							IIO_EV_TYPE_MAG,
-> +							IIO_EV_DIR_FALLING),
-> +				     ts);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-
+Thanks,
+Alok
