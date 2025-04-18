@@ -1,94 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FA824B26;
-	Fri, 18 Apr 2025 02:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B2D1C84A0
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 02:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744943606; cv=none; b=qlMl/uUiXV/hgTuNl0S0lquVblonJC6yvITKZSKSBVQCOj2LwL/d0C29AKDbrJvgSQaUYbqBqhsZB9ffPa9BKw/wqSRx3lhA+hJ8glo6UUPW0mbbWG66M87YKAcvsG0rw5+GvgkBJqdyLKOuUU+40ihdfEL5fkt6lPu85mRWJTw=
+	t=1744943790; cv=none; b=VRbl6UBdGVc3UcGVT6jrL6la/gbTCpPtvJtvBoqT0ipzqdGCJF9wVZXj378AW96QE8qU3+rQS7CLBVDTQkRrLwbV9EZ2J0XpylSblqj26vVsClL9lWCPnQoi0GuShl0QadyTAFKug9xKo4WHIWmK7JLGf45OgHlspZtsDPH38zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744943606; c=relaxed/simple;
-	bh=vdoD8mAekMk2DLn46rTvueCQQJNuDdSYh73OMRSjfTU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=thINpu4TgCHp+SGUoV0dCE7u5sWIHTA6vIdjjRaMk495A6N23rHcHKnfvhd5DM9/P/UVYrnCJGIurrzKgyUQiepgK5EXgHHm7smI2duWJgBigY5OBeu/fbRGKHJBBLyKuVlDYwIJl54Xg6T4NmMzKGRrYSyCT9G19MZumDkrYhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73717C4CEE4;
-	Fri, 18 Apr 2025 02:33:24 +0000 (UTC)
-Date: Thu, 17 Apr 2025 22:33:23 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>,
- linux-kselftest@vger.kernel.org
-Subject: [PATCH] tracing: selftests: Add testing a user string to filters
-Message-ID: <20250417223323.3edb4f6c@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744943790; c=relaxed/simple;
+	bh=FTl7Q5XRnGG/z7yA2jnIcdaCMVMzFKXY7SOCzfxworo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X//YFC/LKIOaXF/CpnJPGtBJvEXViLTbTXB4rmpms8rlFJfV0PeH9ViL2R7Hhg2CkNY7x+TQ+HgAwrchnRS0WcDaiTcVeg9+kyF8QGee1IIsuoFyPwM4DNKpuUoDNAClx4IjN+5bzN4LxoSNllaGIoyVEg7q7FfhQM/t/ZOrwJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aaTqAWJ4; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aaTqAWJ4"
+Message-ID: <cf8e2dba-83dd-4ad3-b98d-2e463ea569d9@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744943775;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pbE8PCxj37IlfzeB23r98u0SEU9TacNSUq2UwVU1+Ag=;
+	b=aaTqAWJ4vWMSW3JKJLdxB+V6toZe5COJtDrFrTe3YygJoTCx+cj8cFUMAZxFSQa0VdkWaG
+	mOGyXLvF1+F/KnTGW10tDstqV04gRCIoK76cl2pcDZmw6SOQkrAKqbchj65/FIr6YdDkMN
+	gZl4IdXmdFc2lbgbELuxvI/JHf414V0=
+Date: Fri, 18 Apr 2025 10:36:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Subject: Re: [PATCH RFC 21/28] mm: zswap: prevent lruvec release in
+ zswap_folio_swapin()
+To: Muchun Song <songmuchun@bytedance.com>, hannes@cmpxchg.org,
+ mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
+ muchun.song@linux.dev, akpm@linux-foundation.org, david@fromorbit.com,
+ zhengqi.arch@bytedance.com, yosry.ahmed@linux.dev, nphamcs@gmail.com
+Cc: linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+ linux-mm@kvack.org, hamzamahfooz@linux.microsoft.com,
+ apais@linux.microsoft.com
+References: <20250415024532.26632-1-songmuchun@bytedance.com>
+ <20250415024532.26632-22-songmuchun@bytedance.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <20250415024532.26632-22-songmuchun@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On 2025/4/15 10:45, Muchun Song wrote:
+> In the near future, a folio will no longer pin its corresponding
+> memory cgroup. So an lruvec returned by folio_lruvec() could be
+> released without the rcu read lock or a reference to its memory
+> cgroup.
+> 
+> In the current patch, the rcu read lock is employed to safeguard
+> against the release of the lruvec in zswap_folio_swapin().
+> 
+> This serves as a preparatory measure for the reparenting of the
+> LRU pages.
+> 
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 
-Running the following commands was broken:
+It should be rare to race with folio reparenting process, so
+it seems ok not to "reparent" this counter "nr_disk_swapins".
 
-  # cd /sys/kernel/tracing
-  # echo "filename.ustring ~ \"/proc*\"" > events/syscalls/sys_enter_openat/filter
-  # echo 1 > events/syscalls/sys_enter_openat/enable
-  # ls /proc/$$/maps
-  # cat trace
+Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
 
-And would produce nothing when it should have produced something like:
+Thanks.
 
-      ls-1192    [007] .....  8169.828333: sys_openat(dfd: ffffffffffffff9c, filename: 7efc18359904, flags: 80000, mode: 0)
-
-Add a test to check this case so that it will be caught if it breaks
-again.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Shuah, I'm Cc'ing you on this for your information, but I'll take it
-through my tree as it will be attached with the fix, as it will fail
-without it.
-
- .../test.d/filter/event-filter-function.tc    | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-index 118247b8dd84..ab449a2cea8c 100644
---- a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-+++ b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-@@ -80,6 +80,25 @@ if [ $misscnt -gt 0 ]; then
- 	exit_fail
- fi
- 
-+# Check strings too
-+if [ -f events/syscalls/sys_enter_openat/filter ]; then
-+	echo "filename.ustring ~ \"*test.d*\"" > events/syscalls/sys_enter_openat/filter
-+	echo 1 > events/syscalls/sys_enter_openat/enable
-+	echo 1 > tracing_on
-+	ls /bin/sh
-+	nocnt=`grep openat trace | wc -l`
-+	ls $TEST_DIR
-+	echo 0 > tracing_on
-+	hitcnt=`grep openat trace | wc -l`;
-+	echo 0 > events/syscalls/sys_enter_openat/enable
-+	if [ $nocnt -gt 0 ]; then
-+		exit_fail
-+	fi
-+	if [ $hitcnt -eq 0 ]; then
-+		exit_fail
-+	fi
-+fi
-+
- reset_events_filter
- 
- exit 0
--- 
-2.47.2
-
+> ---
+>   mm/zswap.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/mm/zswap.c b/mm/zswap.c
+> index 204fb59da33c..4a41c2371f3d 100644
+> --- a/mm/zswap.c
+> +++ b/mm/zswap.c
+> @@ -752,8 +752,10 @@ void zswap_folio_swapin(struct folio *folio)
+>   	struct lruvec *lruvec;
+>   
+>   	if (folio) {
+> +		rcu_read_lock();
+>   		lruvec = folio_lruvec(folio);
+>   		atomic_long_inc(&lruvec->zswap_lruvec_state.nr_disk_swapins);
+> +		rcu_read_unlock();
+>   	}
+>   }
+>   
