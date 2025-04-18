@@ -1,304 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7C56DCE1;
-	Fri, 18 Apr 2025 19:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE72E21B9CA
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 19:59:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745006370; cv=none; b=BDhu5/130bzOnpYVOgrZI0aU1cYL64rNojs+gh08gR/0KzpcLGXUIiCX0RQbhLe6dOsPBb7eqohGCJuHetBvODoPyxC2gFl0GgfHAeuM13JSypwwckFPcLkQhH88rUg7TQnNOj61Ujq6RGdIp0vgf/kneHGvhxB6Fz4NqQTZhBI=
+	t=1745006386; cv=none; b=HE3NktQxWtoC2WErqWiCxY6y7F40+4d0cEzQQoE2NBG2XiXwul9Twtp7uQYZLiYnycCtpOpBs0WrMKa82ivCJmW9bbYAl91B+te9UkshMdhnos+1pYw/Hm6BqIxCxe/SkbYrjiBrYDIZCgjMtLiMovTYiLt5SaJf1kSBRDnqBZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745006370; c=relaxed/simple;
-	bh=gyBw2DM+jIc/hhY3YexqUJogoosVscXTFjVJLt9Ef30=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=llo5ICodRuAHoaw9eEbqc59DfGRY7VTzZVf7ZUh6rJsb1kT8RgqLu1BjDXWxtTmLFXcHXsJ7eo2NwOuAUeiLzcsThCypboa7I03erUJH8zw9Qep6DR/AGfnhplQ8MMYroGQfahR8uGyecWkkWGrtNdX2MjVB61hqXIkmgDAqePE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iytmxcsy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745006386; c=relaxed/simple;
+	bh=UBqn5bW8JlebHL48mzy3xeZcYGQz9C2ibThs3AwnfeA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=WKsOtZs4JVj/caFI46GwCNWHIr5eQ33Rd8GhdVdEgalhxVuKZHz4TezmzEiKWoCXdUs/7LoC08696WobKdmzrp3L1jRhedKNVR859VVUwxLCXZXi2JmGI7mmmEyPp03lDchIE2cwf+5aVXdOIKK0FeSbqMOGjzeBoL6isATIEmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=VXqTyQvB; arc=none smtp.client-ip=209.85.160.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iytmxcsy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51051C4CEE2;
-	Fri, 18 Apr 2025 19:59:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745006369;
-	bh=gyBw2DM+jIc/hhY3YexqUJogoosVscXTFjVJLt9Ef30=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iytmxcsyDe4jUx0gkedpiUtXOUpHB9SO/UiRwbo0c+v78CKAIazj89BlCMaO0X0Df
-	 CJ7koj2bke+s/btBuPmO3gdkLNZ/OsvcKXcZJVxpYSqPPxkOwuS/mfRvaZ4u/PG3jZ
-	 MPo7Xi71Q0eR4rKzLPqe2I7hUjusCSQW0oQWdmuEB6LQCGuYduG1Uavj3e+aYMquae
-	 g6o0HJTOugTN1kODHkuS0dayczZJfrdxtlxXyQofAvYPW63tzbOpxvyn5nrqn7mg3G
-	 6j2kPTlaIAmUlGs/2SZdIUXfxX2oaTq4e/n09Rht9Sf+lxVn1tabvgE+mwOuiS7FN5
-	 xAV2AW88lSnrw==
-Date: Fri, 18 Apr 2025 21:59:23 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Ian Kent <raven@themaw.net>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Mark Brown <broonie@kernel.org>, Eric Chanudet <echanude@redhat.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Clark Williams <clrkwllms@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ian Kent <ikent@redhat.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
-	Alexander Larsson <alexl@redhat.com>, Lucas Karpinski <lkarpins@redhat.com>, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
-Message-ID: <20250418-armselig-kabel-4710dc466170@brauner>
-References: <20250417-wolfsrudel-zubewegt-10514f07d837@brauner>
- <fb566638-a739-41dc-bafc-aa8c74496fa4@themaw.net>
- <20250417-abartig-abfuhr-40e558b85f97@brauner>
- <20250417-outen-dreihundert-7a772f78f685@brauner>
- <20250417-zappeln-angesagt-f172a71839d3@brauner>
- <20250417153126.QrVXSjt-@linutronix.de>
- <20250417-pyrotechnik-neigung-f4a727a5c76b@brauner>
- <39c36187-615e-4f83-b05e-419015d885e6@themaw.net>
- <125df195-5cac-4a65-b8bb-8b1146132667@themaw.net>
- <20250418-razzia-fixkosten-0569cf9f7b9d@brauner>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="VXqTyQvB"
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2d540239367so105908fac.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 12:59:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745006384; x=1745611184; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YmmSWVD/KnfQRR0lXdQfI2NY4p1aeZqi5eQuD3R6P3s=;
+        b=VXqTyQvB7RWNqJ+ZgIsJ7k3M2sXMorydmGtmIBUGKPNit0gqsNFuqeGPhrTCSKeisb
+         iW6X/ZPtC2ht1oIbcu2XSR213Hyx5UKLb5aoHOm3Cz4tCfSTGKc9BB1PPHFt87P8tgbU
+         JQd67bN0XtctU2UzBuoIVXMmldtOEJcfK+uw3LU/elVeXNLHHLbrDHs5B4XiAhnh7g+8
+         26SLs2g5NtaN06y+/B/m/rmE4/f3zJWiyvqfq6xVRywIxy14F3MX/ukmNmvCe7D2xXCC
+         MmCR3mTieNlS5epb5c11/WCreSOjs0rXs/QfoAB8893PkT7aISOF97MLKyfQXOaDmZY9
+         5fcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745006384; x=1745611184;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YmmSWVD/KnfQRR0lXdQfI2NY4p1aeZqi5eQuD3R6P3s=;
+        b=xA0lB0iSSaU6UsuRCp4n6plCsQbmDgBvL2T2nvFoL6IV4zMQL8UA1xv+Cv/zGB1dcw
+         zKVVLIs0HR6d3nhxsyEXQ4GnJjH2bKaFfb5muqTWpHLOnRuQkcmxnSvibu528u0zpCqx
+         lJewJtMacMRl3uIpvH57iuRcWDiH8EtbjiggSBVPN6Qf4jWdE7FqJMqtOro1f/SBsv+Q
+         58ZaTesfyXZS7YZdwI/IJ2F5i9qGoFu5PLpH+no0gFwEoeRAL9TIzPNh247ZEH66NOda
+         OhN9Y/7LC8BIsAnXqS/yUJlPW+an4UYoTgz6DyjIUaAdiHlr2R6XIQ9X0yNkujcElphC
+         N8Bw==
+X-Forwarded-Encrypted: i=1; AJvYcCVlTxe1esqKIF8Yv4ssSjhI9pxoCmFBk449ewnasziG+0P94GF7SucNzH3Av3fbFWhHUuj+HUtbM9+/Nxw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUwCWCB9FUHB9+HEFZEs0YmI64uV+sY1EPn0fni/4Zof/2slQv
+	EgiI0V19oWDwv+CdmLwad9MRfGTcjWnTZeYRRMifRkDqS8Gy1SFHdK48TBfNbsI=
+X-Gm-Gg: ASbGncuG+qZC9LMcAxuFDTkBkbCedPorVshRQggt69PYRgl5xqF4h4kGgUc40qv+J2O
+	7Fem8QiiUdX+FfaVjWcDsmInU8ChM6m7TkiKyKaEJYmVyurdKmScbW1P/WaeMiMr+xCoqagF1FY
+	isrUHLuFFZeZReKKVCvrqG+g26M1DhJbmUyKtnkOp2VcqGKDxI/3cjCL2Lygl1ncKsZG7KAvNBX
+	4uWJ/vZYKMrxIU7Dfegl39l4e/tYA/ZUjLUpxhJrjUoHloJjw9JgATuYjXKyjKtc+T1yHYywou9
+	0fnzW8Cm/0lErdbjdcPaovyREFrBvH7ASJil1KHKqHaTtykkZw3FcQa15g==
+X-Google-Smtp-Source: AGHT+IE1JV++hrIuNq9D0jBDQ/Srd/Ed37K3O3K1ORXsYIsyBfKxhQg+AMkCv8MVywxJHp/QiJCrhA==
+X-Received: by 2002:a05:6871:d80a:b0:29f:97af:a1a0 with SMTP id 586e51a60fabf-2d526e52d74mr2078884fac.24.1745006383679;
+        Fri, 18 Apr 2025 12:59:43 -0700 (PDT)
+Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:dcdf:46e0:18e5:c279])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d5213f8e4asm606941fac.23.2025.04.18.12.59.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 12:59:42 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Subject: [PATCH 00/10] iio: prefer aligned_s64 timestamp (round 1)
+Date: Fri, 18 Apr 2025 14:58:19 -0500
+Message-Id: <20250418-iio-prefer-aligned_s64-timestamp-v1-0-4c6080710516@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="wlvjtn7bxagetzkl"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250418-razzia-fixkosten-0569cf9f7b9d@brauner>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANyuAmgC/x2NUQqDMBAFryL73YUoiUivUkoJ+tQHNUpWpCDev
+ Wk/B4aZUwyZMLlXp2QcNK6pQH2rpJ9jmqAcCkvjmuB83Sm56pYxImt8c0oYXtZ63bnA9rhsOgK
+ tRx+Cd0FK5ifz8188ntf1BWOJoylyAAAA
+X-Change-ID: 20250418-iio-prefer-aligned_s64-timestamp-fee64ec55405
+To: Jonathan Cameron <jic23@kernel.org>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>, Eugen Hristev <eugen.hristev@linaro.org>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Andreas Klinger <ak@it-klinger.de>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
+ linux-stm32@st-md-mailman.stormreply.com, 
+ David Lechner <dlechner@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2604; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=UBqn5bW8JlebHL48mzy3xeZcYGQz9C2ibThs3AwnfeA=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoAq7iX3vVh6HbKghORnQaUNUs3qmv+Z7Wgd/GA
+ jKkcJhJyz+JATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaAKu4gAKCRDCzCAB/wGP
+ wNK7B/oD9hYWgmMum8g2S3GqXecVvn47S0oXLC6LbK6795AZQkuclOHHYnzART6dICtWW+OsbU/
+ 53u8n5rr4nLwY1M0qnPWJjrh/SQnett1Z58YOW+zbajkwDAVxnnkb+PA6KC1QdLPRHlwr78+tFY
+ RiBokIVauO+51eK8ktGUgxF75cdFs9iIPKi3d46uRh7RrpMzgC+vpVOH32B6m6UUY0L3S+EU9tj
+ FIpn2YwXXei8wmFT15vzNiZ8YB3xvPCwILzuirKOJ0aY7WZTBA2hx3G/2FixxUc9vWOrcquoKy6
+ IEo4Q3X5jLyvWmhxPiUfP7nxQqNqrrTNO4DD+B+TRc3Lv7Fp
+X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
+ fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
+While reviewing the recent conversion to iio_push_to_buffers_with_ts(),
+I found it very time-consuming to check the correctness of the buffers
+passed to that function when they used an array with extra room at the
+end for a timestamp. And we still managed find a few that were wrongly
+sized or not properly aligned despite several efforts in the past to
+audit these for correctness already.
 
---wlvjtn7bxagetzkl
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Even though these ones look to be correct, it will still be easier for
+future readers of the code if we follow the pattern of using a struct
+with the array and timestamp instead.
 
-On Fri, Apr 18, 2025 at 10:47:10AM +0200, Christian Brauner wrote:
-> On Fri, Apr 18, 2025 at 09:20:52AM +0800, Ian Kent wrote:
-> > On 18/4/25 09:13, Ian Kent wrote:
-> > > 
-> > > On 18/4/25 00:28, Christian Brauner wrote:
-> > > > On Thu, Apr 17, 2025 at 05:31:26PM +0200, Sebastian Andrzej Siewior
-> > > > wrote:
-> > > > > On 2025-04-17 17:28:20 [+0200], Christian Brauner wrote:
-> > > > > > >      So if there's some userspace process with a broken
-> > > > > > > NFS server and it
-> > > > > > >      does umount(MNT_DETACH) it will end up hanging every other
-> > > > > > >      umount(MNT_DETACH) on the system because the dealyed_mntput_work
-> > > > > > >      workqueue (to my understanding) cannot make progress.
-> > > > > > Ok, "to my understanding" has been updated after going back
-> > > > > > and reading
-> > > > > > the delayed work code. Luckily it's not as bad as I thought it is
-> > > > > > because it's queued on system_wq which is multi-threaded so it's at
-> > > > > > least not causing everyone with MNT_DETACH to get stuck. I'm still
-> > > > > > skeptical how safe this all is.
-> > > > > I would (again) throw system_unbound_wq into the game because
-> > > > > the former
-> > > > > will remain on the CPU on which has been enqueued (if speaking about
-> > > > > multi threading).
-> > > > Yes, good point.
-> > > > 
-> > > > However, what about using polled grace periods?
-> > > > 
-> > > > A first simple-minded thing to do would be to record the grace period
-> > > > after umount_tree() has finished and the check it in namespace_unlock():
-> > > > 
-> > > > diff --git a/fs/namespace.c b/fs/namespace.c
-> > > > index d9ca80dcc544..1e7ebcdd1ebc 100644
-> > > > --- a/fs/namespace.c
-> > > > +++ b/fs/namespace.c
-> > > > @@ -77,6 +77,7 @@ static struct hlist_head *mount_hashtable
-> > > > __ro_after_init;
-> > > >   static struct hlist_head *mountpoint_hashtable __ro_after_init;
-> > > >   static struct kmem_cache *mnt_cache __ro_after_init;
-> > > >   static DECLARE_RWSEM(namespace_sem);
-> > > > +static unsigned long rcu_unmount_seq; /* protected by namespace_sem */
-> > > >   static HLIST_HEAD(unmounted);  /* protected by namespace_sem */
-> > > >   static LIST_HEAD(ex_mountpoints); /* protected by namespace_sem */
-> > > >   static DEFINE_SEQLOCK(mnt_ns_tree_lock);
-> > > > @@ -1794,6 +1795,7 @@ static void namespace_unlock(void)
-> > > >          struct hlist_head head;
-> > > >          struct hlist_node *p;
-> > > >          struct mount *m;
-> > > > +       unsigned long unmount_seq = rcu_unmount_seq;
-> > > >          LIST_HEAD(list);
-> > > > 
-> > > >          hlist_move_list(&unmounted, &head);
-> > > > @@ -1817,7 +1819,7 @@ static void namespace_unlock(void)
-> > > >          if (likely(hlist_empty(&head)))
-> > > >                  return;
-> > > > 
-> > > > -       synchronize_rcu_expedited();
-> > > > +       cond_synchronize_rcu_expedited(unmount_seq);
-> > > > 
-> > > >          hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
-> > > >                  hlist_del(&m->mnt_umount);
-> > > > @@ -1939,6 +1941,8 @@ static void umount_tree(struct mount *mnt,
-> > > > enum umount_tree_flags how)
-> > > >                   */
-> > > >                  mnt_notify_add(p);
-> > > >          }
-> > > > +
-> > > > +       rcu_unmount_seq = get_state_synchronize_rcu();
-> > > >   }
-> > > > 
-> > > >   static void shrink_submounts(struct mount *mnt);
-> > > > 
-> > > > 
-> > > > I'm not sure how much that would buy us. If it doesn't then it should be
-> > > > possible to play with the following possibly strange idea:
-> > > > 
-> > > > diff --git a/fs/mount.h b/fs/mount.h
-> > > > index 7aecf2a60472..51b86300dc50 100644
-> > > > --- a/fs/mount.h
-> > > > +++ b/fs/mount.h
-> > > > @@ -61,6 +61,7 @@ struct mount {
-> > > >                  struct rb_node mnt_node; /* node in the ns->mounts
-> > > > rbtree */
-> > > >                  struct rcu_head mnt_rcu;
-> > > >                  struct llist_node mnt_llist;
-> > > > +               unsigned long mnt_rcu_unmount_seq;
-> > > >          };
-> > > >   #ifdef CONFIG_SMP
-> > > >          struct mnt_pcp __percpu *mnt_pcp;
-> > > > diff --git a/fs/namespace.c b/fs/namespace.c
-> > > > index d9ca80dcc544..aae9df75beed 100644
-> > > > --- a/fs/namespace.c
-> > > > +++ b/fs/namespace.c
-> > > > @@ -1794,6 +1794,7 @@ static void namespace_unlock(void)
-> > > >          struct hlist_head head;
-> > > >          struct hlist_node *p;
-> > > >          struct mount *m;
-> > > > +       bool needs_synchronize_rcu = false;
-> > > >          LIST_HEAD(list);
-> > > > 
-> > > >          hlist_move_list(&unmounted, &head);
-> > > > @@ -1817,7 +1818,16 @@ static void namespace_unlock(void)
-> > > >          if (likely(hlist_empty(&head)))
-> > > >                  return;
-> > > > 
-> > > > -       synchronize_rcu_expedited();
-> > > > +       hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
-> > > > +               if (!poll_state_synchronize_rcu(m->mnt_rcu_unmount_seq))
-> > > > +                       continue;
-> 
-> This has a bug. This needs to be:
-> 
-> 	/* A grace period has already elapsed. */
-> 	if (poll_state_synchronize_rcu(m->mnt_rcu_unmount_seq))
-> 		continue;
-> 
-> 	/* Oh oh, we have to pay up. */
-> 	needs_synchronize_rcu = true;
-> 	break;
-> 
-> which I'm pretty sure will eradicate most of the performance gain you've
-> seen because fundamentally the two version shouldn't be different (Note,
-> I drafted this while on my way out the door. r.
-> 
-> I would test the following version where we pay the cost of the
-> smb_mb() from poll_state_synchronize_rcu() exactly one time:
-> 
-> diff --git a/fs/mount.h b/fs/mount.h
-> index 7aecf2a60472..51b86300dc50 100644
-> --- a/fs/mount.h
-> +++ b/fs/mount.h
-> @@ -61,6 +61,7 @@ struct mount {
->                 struct rb_node mnt_node; /* node in the ns->mounts rbtree */
->                 struct rcu_head mnt_rcu;
->                 struct llist_node mnt_llist;
-> +               unsigned long mnt_rcu_unmount_seq;
->         };
->  #ifdef CONFIG_SMP
->         struct mnt_pcp __percpu *mnt_pcp;
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index d9ca80dcc544..dd367c54bc29 100644
-> --- a/fs/namespace.c
-> +++ b/fs/namespace.c
-> @@ -1794,6 +1794,7 @@ static void namespace_unlock(void)
->         struct hlist_head head;
->         struct hlist_node *p;
->         struct mount *m;
-> +       unsigned long mnt_rcu_unmount_seq = 0;
->         LIST_HEAD(list);
-> 
->         hlist_move_list(&unmounted, &head);
-> @@ -1817,7 +1818,10 @@ static void namespace_unlock(void)
->         if (likely(hlist_empty(&head)))
->                 return;
-> 
-> -       synchronize_rcu_expedited();
-> +       hlist_for_each_entry_safe(m, p, &head, mnt_umount)
-> +               mnt_rcu_unmount_seq = max(m->mnt_rcu_unmount_seq, mnt_rcu_unmount_seq);
-> +
-> +       cond_synchronize_rcu_expedited(mnt_rcu_unmount_seq);
-> 
->         hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
->                 hlist_del(&m->mnt_umount);
-> @@ -1923,8 +1927,10 @@ static void umount_tree(struct mount *mnt, enum umount_tree_flags how)
->                         }
->                 }
->                 change_mnt_propagation(p, MS_PRIVATE);
-> -               if (disconnect)
-> +               if (disconnect) {
-> +                       p->mnt_rcu_unmount_seq = get_state_synchronize_rcu();
->                         hlist_add_head(&p->mnt_umount, &unmounted);
-> +               }
-> 
->                 /*
->                  * At this point p->mnt_ns is NULL, notification will be queued
+For example, it is much easier to see that:
 
-I'm appending a patch that improves on the first version of this patch.
-Instead of simply sampling the current rcu state and hoping that the rcu
-grace period has elapsed by the time we get to put the mounts we sample
-the rcu state and kick off a new grace period at the end of
-umount_tree(). That could even get us some performance improvement by on
-non-RT kernels. I have no clue how well this will fare on RT though.
+struct {
+	__be32 data[3];
+	aligned_s64 timestamp;
+} buffer;
 
---wlvjtn7bxagetzkl
-Content-Type: text/x-diff; charset=utf-8
-Content-Disposition: attachment;
-	filename="0001-UNTESTED-mount-sample-and-kick-of-grace-period-durin.patch"
+Is an array of 3 32-bit, big-endian raw values plus an aligned 64-bit
+timestamp than:
 
-From 660bddec1241c46a7722f5c9b66a2450b5f85751 Mon Sep 17 00:00:00 2001
-From: Christian Brauner <brauner@kernel.org>
-Date: Fri, 18 Apr 2025 13:33:43 +0200
-Subject: [PATCH] [UNTESTED]: mount: sample and kick of grace period during
- umount
+/*
+ * 3 words for actual data, 1 word for padding for correct alignment
+ * of timestamp and 2 words for actual timestamp.
+ */
+__be32 buffer[6] __aligned(8);
 
-Sample the current rcu state and kick off a new grace period after we're
-done with umount_tree() and make namespace_unlock() take the previous
-state into account before invoking synchronize_rcu_expedited().
+There are plenty more drivers where we could make similar changes, but
+this is enough for one week of reviews.
 
-Signed-off-by: Christian Brauner <brauner@kernel.org>
 ---
- fs/namespace.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+David Lechner (10):
+      iio: accel: sca3300: use struct with aligned_s64 timestamp
+      iio: adc: at91-sama5d2_adc: use struct with aligned_s64 timestamp
+      iio: adc: hx711: use struct with aligned_s64 timestamp
+      iio: adc: mxs-lradc-adc: use struct with aligned_s64 timestamp
+      iio: adc: stm32-adc: use struct with aligned_s64 timestamp
+      iio: adc: ti-adc0832: use struct with aligned_s64 timestamp
+      iio: adc: ti-adc12138: use struct with aligned_s64 timestamp
+      iio: adc: ti-ads124s08: use struct with aligned_s64 timestamp
+      iio: adc: ti-ads8688: use struct with aligned_s64 timestamp
+      iio: chemical: atlas-sensor: use struct with aligned_s64 timestamp
 
-diff --git a/fs/namespace.c b/fs/namespace.c
-index d9ca80dcc544..287189e85af5 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -77,6 +77,7 @@ static struct hlist_head *mount_hashtable __ro_after_init;
- static struct hlist_head *mountpoint_hashtable __ro_after_init;
- static struct kmem_cache *mnt_cache __ro_after_init;
- static DECLARE_RWSEM(namespace_sem);
-+static struct rcu_gp_oldstate rcu_unmount_gp;
- static HLIST_HEAD(unmounted);	/* protected by namespace_sem */
- static LIST_HEAD(ex_mountpoints); /* protected by namespace_sem */
- static DEFINE_SEQLOCK(mnt_ns_tree_lock);
-@@ -1817,7 +1818,7 @@ static void namespace_unlock(void)
- 	if (likely(hlist_empty(&head)))
- 		return;
- 
--	synchronize_rcu_expedited();
-+	cond_synchronize_rcu_expedited_full(&rcu_unmount_gp);
- 
- 	hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
- 		hlist_del(&m->mnt_umount);
-@@ -1939,6 +1940,9 @@ static void umount_tree(struct mount *mnt, enum umount_tree_flags how)
- 		 */
- 		mnt_notify_add(p);
- 	}
-+
-+	/* Record current grace period state and kick of new grace period. */
-+	start_poll_synchronize_rcu_expedited_full(&rcu_unmount_gp);
- }
- 
- static void shrink_submounts(struct mount *mnt);
+ drivers/iio/accel/sca3300.c         | 18 ++++++------------
+ drivers/iio/adc/at91-sama5d2_adc.c  | 25 ++++++++++---------------
+ drivers/iio/adc/hx711.c             | 11 +++++++----
+ drivers/iio/adc/mxs-lradc-adc.c     | 13 ++++++++-----
+ drivers/iio/adc/stm32-adc.c         | 12 ++++++++----
+ drivers/iio/adc/ti-adc0832.c        | 15 +++++++--------
+ drivers/iio/adc/ti-adc12138.c       | 12 ++++++++----
+ drivers/iio/adc/ti-ads124s08.c      | 18 +++++++-----------
+ drivers/iio/adc/ti-ads8688.c        | 12 ++++++++----
+ drivers/iio/chemical/atlas-sensor.c | 11 +++++++----
+ 10 files changed, 76 insertions(+), 71 deletions(-)
+---
+base-commit: aff301f37e220970c2f301b5c65a8bfedf52058e
+change-id: 20250418-iio-prefer-aligned_s64-timestamp-fee64ec55405
+
+Best regards,
 -- 
-2.47.2
+David Lechner <dlechner@baylibre.com>
 
-
---wlvjtn7bxagetzkl--
