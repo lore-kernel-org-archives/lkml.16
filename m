@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9B413C9B3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA1E21A449
 	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:14:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744996443; cv=none; b=ngonoPFPM9AY15py5lqPiZ5ksT+GRT2PIiL0FsEO3HQpIQvf7X6OkV4616Nlr+eqgP5nz6rKmJevJ2Fq7Mq9Q/a6kBAeESQ3HmG2axSMQvSyjVA/8c4LCjKLmDPbdjRLuocLw/zQznDIzqnSxWu5bcgY2TKQPlE+Zdqi2xRIMBA=
+	t=1744996443; cv=none; b=Bu5mAcbu2jK+NeP4dCLBfJo3DM3dgHAkI8DqQrqeMqjsw559pNQw8hznWrETB1W8VJGyVq/Zbxhfi3q75tSLCsQte33ta7b6F42DiGYGweEnC7bRoJgTzesPHyOrOgcvcscse3Jih/6/NsuFNq/kYOkXg7omOBU2KQRgLSVnkmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744996443; c=relaxed/simple;
-	bh=jd1ecwHmwX3hXRj3osnvOTAoWV78DHR0Q0S6/Pu/47c=;
+	bh=DG3QZay+IMZyRtI+nhohiglWCJq9NNdhPnvRE19TqNE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OC2PHHVkstr+O66FSP/xCX2NRSHD/hH9SInZzt5Gp1/fGbO/G5pD3+dF6aG2hArHFbck17TCjDCK/SDGRG7BdTfLxZpxpIrFYRcpaVE08YYZHw4mckGZredRsHwpEnxByJixvE0F/C1JI//cw1Bacrx1gNttvDZrBdGQ6isaf5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D7wbL9gs; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WUx3JgQeSYSG1tQUzyFujkO2huMORNpwPaOI1y0wc01l5fk0MvYcLstKV6POUp9byOunHIrtMZsEf28N/6SQlavioq9L4YvkBIaxMz7nT9It9cm5bD0icisC39sq5lKtvQpJqDj4WTq13lkh6toHxY88rhoNDGJU9jsjuCoo5jI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YPH/qIC+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D7wbL9gs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B728AC4CEEF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YPH/qIC+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA657C4CEF0;
 	Fri, 18 Apr 2025 17:14:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744996442;
-	bh=jd1ecwHmwX3hXRj3osnvOTAoWV78DHR0Q0S6/Pu/47c=;
+	bh=DG3QZay+IMZyRtI+nhohiglWCJq9NNdhPnvRE19TqNE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D7wbL9gslBrISR3VcgHEe9xQkYw3Ws/9JZ42ZQO3O+XQQHB/LQYXGkjLTCOAJa350
-	 JMQLMPDCvH0sW2qG/IYnGVuWvPRf7DiXxklZ4oAGChr5LqlOB/q57bFge4AP+n/kBc
-	 6SiJ78rDcPKgv5fJ4Hzzs4mUZ6NrYPT/Q2y/NHW6QST6DYXBqGtnfnvOxWNG64mc9a
-	 QKFWNLQ7BVFST/vRTbZ14uApbi6Hn7ZxYRKlDKOUlplaXZ6/GE/rrq4PU5wriLU3uZ
-	 PG2u2LSm+35e6gp6JQgrX8pa7SiknxqJgSZiYK5JRnTmwoyeFzBUs7wdUXB+6RgohF
-	 lYY+WJspIdOJA==
+	b=YPH/qIC+6ei+yRywUWxXxoI7IETm3OxqzGoBMkujLg7AYdBkxald71AETvVTz2HhL
+	 gElj1P1pYT2QEzheXmRlWRI5zMah5wTQB7ieozvIeCsy0Xc5rFSs3cPFKEm6GIxT5R
+	 K800ujaltD9KVrJ11z/a1FsgJ1WsiZi6uFozif4RYvGNLlx1c1BIHunfy1MbWKNy9f
+	 zvcHooAq/s0mF7k2Zzzk7S3LQ3y7VgKnNusXvLnHlHssnF2rLAnZVd/92v2knIX71i
+	 IQgaYJNOQ4IggtV49E9dIjPHbYQsWg4cKsEMJ1kd+GRgetfAXreyOnwrrNtW+wqEHb
+	 pJezPW1EzPGAQ==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id F158CCE176A; Fri, 18 Apr 2025 10:14:01 -0700 (PDT)
+	id 00076CE1773; Fri, 18 Apr 2025 10:14:01 -0700 (PDT)
 From: "Paul E. McKenney" <paulmck@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: kernel-team@meta.com,
@@ -42,9 +42,9 @@ Cc: kernel-team@meta.com,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Karolina Stolarek <karolina.stolarek@oracle.com>,
 	"Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH v2 ratelimit 10/14] ratelimit: Allow zero ->burst to disable ratelimiting
-Date: Fri, 18 Apr 2025 10:13:55 -0700
-Message-Id: <20250418171359.1187719-10-paulmck@kernel.org>
+Subject: [PATCH v2 ratelimit 11/14] ratelimit: Force re-initialization when rate-limiting re-enabled
+Date: Fri, 18 Apr 2025 10:13:56 -0700
+Message-Id: <20250418171359.1187719-11-paulmck@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <4edcefb0-cdbd-4422-8a08-ffc091de158e@paulmck-laptop>
 References: <4edcefb0-cdbd-4422-8a08-ffc091de158e@paulmck-laptop>
@@ -56,8 +56,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If ->burst is zero, rate-limiting will be applied unconditionally.
-Therefore, make it low overhead.
+Currently, rate limiting being disabled results in an immediate early
+return with no state changes.  This can result in false-positive drops
+when re-enabling rate limiting.  Therefore, mark the ratelimit_state
+structure "uninitialized" when rate limiting is disabled.
+
+Additionally, interpret non-positive ->burst to unconditionally force
+rate limiting.  When ->burst is positive, interpret non-positive interval
+to unconditionally disable rate limiting.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -68,22 +74,36 @@ Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: John Ogness <john.ogness@linutronix.de>
 Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
 ---
- lib/ratelimit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/ratelimit.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
 diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-index 90c9fe57eb422..04f16b8e24575 100644
+index 04f16b8e24575..6c639ab6489d5 100644
 --- a/lib/ratelimit.c
 +++ b/lib/ratelimit.c
-@@ -35,7 +35,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
+@@ -35,8 +35,20 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
  	unsigned long flags;
  	int ret;
  
--	if (!interval)
-+	if (!interval || !burst)
- 		return 1;
+-	if (!interval || !burst)
+-		return 1;
++	/*
++	 * Non-positive burst says always limit, otherwise, non-positive
++	 * interval says never limit.
++	 */
++	if (interval <= 0 || burst <= 0) {
++		ret = burst > 0;
++		if (!(READ_ONCE(rs->flags) & RATELIMIT_INITIALIZED) ||
++		    !raw_spin_trylock_irqsave(&rs->lock, flags))
++			return ret;
++		
++		/* Force re-initialization once re-enabled. */
++		rs->flags &= ~RATELIMIT_INITIALIZED;
++		goto unlock_ret;
++	}
  
  	/*
+ 	 * If we contend on this state's lock then just check if
 -- 
 2.40.1
 
