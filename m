@@ -1,461 +1,294 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCE41DFFD
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC48F26B2D8
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:41:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744965596; cv=none; b=OW7iFyicFztY1AtzlmRQsY4NJmH1+NNG1pThm60qoG8Ab7w3ZqsEkQHZ6WntFfvYcazzDTCtSySx9SXElt0OFSgRGEBSzNmwnR1kg2mzNo5qsNMoBI5CQnUDZcXrLxmyQ/6zqpfqgH4CmEwIKEuNlYGfGXYKCCZMfv5/HVSlOsw=
+	t=1744965700; cv=none; b=hSHVcswcdPNmcsvfshEK3KaxUAO2ydeckFHgE7cI30H6wcDknznAS/txyesEinBylNusW38ntl4acsIs9KMWbXZ/kUVVcq5Z8qDRrvZ3WfLK3I1MqZDfFu6aB9ymgTZu6XZWr1ODVqjgQnsaz3v06+O3eO96cAavgJ8f7FVJTco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744965596; c=relaxed/simple;
-	bh=OiqGqWs8AWCn10UPsWCFhUhdnJ/S0hvbeYVsdLUaHDI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t/JxmRdVcusOxQgvon6gqfERK53jjpgJCRYK5xQFgABRCzsyrY5p4nJN9GpY5kFfuYqSpZoFyC4wFNzzyvMDRM4fVKndSe85fndDhWE6dGjRe/aBxvnkSiPnffQc5bvK43IYFf+NdDGMmlcTyK+KgiAQ9bgYMeAz4VWQXJ2uiCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IqRffUjz; arc=none smtp.client-ip=209.85.221.179
+	s=arc-20240116; t=1744965700; c=relaxed/simple;
+	bh=z/VMqLLc0c9P7A6tQMr61cXUcQtOdWT3vG5LQcEmd2s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GrALfZ9pWhCLRq+hbe3+PgdWmryIGQnNpBHkFe2SRx4SEVTsC9UkdqlnJu00I1rFCkUYhnMNj4GJUQb0G5qGasNclMOiiF9YA+ka6xgeRBtCDn5XPyCW11jb0ZSQyVww9SJdqj7WXeut28tv/tQa7QgJbs6/8DciuacNQ1NdMDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P6UG7Uae; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IqRffUjz"
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-525b44b7720so633555e0c.0
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 01:39:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P6UG7Uae"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39ee5a5bb66so1017403f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 01:41:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744965593; x=1745570393; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QRvLcMNQNVWkd/6OrEU0UG9uuRp/Fmw1u7Ys7OYOt+M=;
-        b=IqRffUjzBUl5zcPW3BWZFKaPawqW4MNPxwFTHai5wZSkKFcBi9tJaSbzfmX/wh04Vt
-         2tdTwWw7Ble2nC1lk7vSfLT9clkV3QrXEKch820jpzIiXqLdVgy+Vmoc02T3YAe2ix1K
-         xaeZgWMzIm7U0Tq+4+8uDpLbYhpsTJrFWCFgXmYcMuOTeiTDyB4kzPpVVonAEeK3VINZ
-         ZkLsyvD3kmAQyx+7TRyOiP7eMV6wpIvTCSVQ1HwldpD8ydJK7hF31D6NWGLM/pLOYJFU
-         d3PWRggc4ySKmEb4YIADv3+fhoAQgOiGIdtU2BsIh+ADz9LAJ3YaBUN/qcIELOzJkdEI
-         9QhA==
+        d=linaro.org; s=google; t=1744965697; x=1745570497; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=gaYe4zy0Ou27FvsmHa5NmILaWl1zdTnktRLAnBaEUHo=;
+        b=P6UG7UaeEs6W+GQ493c9xnAeFeDNFsel8ZCC1+Taz3/+tV2N19KXZYyN4aFDP2lH1E
+         Af1AQ5xN1JV3rMnZ7batli0r5p63ct+9K8ww9M5gWr0lQXuplP47TpQLUv5cRqfdvIME
+         +igzQa4h0Z3LhsqeOTZiC5dgr5yrkGNiujQsEXOyuTHFbKVC3Gjpd2OLZdFPDxlesz39
+         Qwr786Pgxr0baWLF+vinKjVgF9uwiHS68v3oc5Zske9F11n0Tz5llLhAjCPIMIjIq8li
+         E62QnKwOxDCiZligaMhyHlJ/DAzRjRgb96vWZCo6ZjFBfzygbgHSdLbwgvpESxG5KQEj
+         7GWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744965593; x=1745570393;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QRvLcMNQNVWkd/6OrEU0UG9uuRp/Fmw1u7Ys7OYOt+M=;
-        b=FvX77TIFaQVXGbvX1bhEtQHis6XOtWF83Mjp66JKaRR6d/SQDhBoWEKggalYtoPASe
-         ghP+Aq7ictB7TEOoEpd5PvUNJ0M9DdcXBlHCfLYIu9L2YQ0arO3ln45vbKf4ifZIHCJH
-         FPl9mDEapQ8kzdvX86I5H2R+GvJB2wiZcbhnzHog6jPZYdWqoYhOVctjsIJNU8OoecpF
-         p7ef9tlgYfDRtu+K4P31/Q4x+w5zEh2YBlbbJo+bNa/7nNzTFHjB9qGr5c5z+1HYRdDv
-         nh7BQnUgxd/OBxJsKQiB0c/qIo5RXn2Mrp//5tsbCwCbzMVuYom2NvQNRhPs8L3MUCWf
-         FOJA==
-X-Forwarded-Encrypted: i=1; AJvYcCVSzgYppAwwDkCiJz0zmzHOCnlWDT3nDEJfhXhteGQe7mlUZXVXgVHAIeO+/8Vr6LjnWbWAvrJjgtgYYmw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIR2JJ+mWTrIWE0gO9GtzGixnCCQ5n4JE+1nUnRy3Ql7/V5Gmj
-	W1q/uySMYL3kRSTwBl+NlJe/gIe2OgrnE4Om2NxL0UObl+MagIQF5ZGMFYyfl6uG4oU+FD+0xcN
-	nzxe+Qj6uC+0EZW1LtNwZEyLZkp8KmGN98KwsUw==
-X-Gm-Gg: ASbGncvEjjlqlUSgYD8HHLYxD+rlokSwWBeGLwGRvRosROhkrBJqLthBk/i2teHOjOJ
-	FuBdFDQ9rIhAyfqj3PyYnsKHCiBD9pgcIHitztH5TOwZ3EX9BnRFoMGTiGjddPcwNO/tMQ6T8wI
-	ARBrKUoyRmsDSvhcn2zyePJ1ROgIum/tBeh4wUC6232gnTRhreuqg2zQ==
-X-Google-Smtp-Source: AGHT+IGFuPrltiP+2ziH4fTISJwFEPeAggDjJNjT/ozZziWj5TtqF1X0j1T7ygWisxLEQpOE/Mg4gByq4GRwpm1BpVc=
-X-Received: by 2002:a05:6122:1791:b0:526:483:95fd with SMTP id
- 71dfb90a1353d-529255099femr1352158e0c.10.1744965593284; Fri, 18 Apr 2025
- 01:39:53 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744965697; x=1745570497;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gaYe4zy0Ou27FvsmHa5NmILaWl1zdTnktRLAnBaEUHo=;
+        b=RVxc15v/uIVfdhuxah99yNTSz5p81eulBpDLwCHyvbJmZNMHeyt4d3Y/Ipa+lCy2C6
+         MuzDn/mtGZHONpXGd5aSwPhteu2pj2tjpALNCY3UsiRpw3Lou3ec9cFnTAIYIwY1f8dH
+         iSDWtP/Gmz/VwxBlORq3wSqi7puAI44qouupvgxsm4KiDRss+0ndMhgPIDqVLhJOvlFJ
+         1oFaUm8NWOdflc0OhaU3vKhu1iCATYdZSLNplqkCHyVoeF0kwqVK1lVGks/xAj/6/dzJ
+         bpQHSt9mzbqnBBEkoxVuygj/WELcCkgN/Dpc1sCvThBQDnaO7nfgC+Du6MrzgJ+tB8ky
+         bl+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWppAq/qw7JW56h+fYS5vJdORsQZr5aEL3QTUfWOeTG8OiUmPHtMGaIeS57ODBuOqR2MsRUOUYF+efIXY0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzISsCTPdoEpScFgHIsS7DBQgZTKgN3JRvT5Q40drNiGg5cpmDf
+	q4Ql/hy2kucUfLeUHIfAHfRgF7VrPI4MlUGFZ3KtvaKWZlWMQNlQofQAMI2O5pQ=
+X-Gm-Gg: ASbGnctjK75WXQgIuEU7GTQt/6NnYTAy6dIe1u4//C+YuN3kfipmbipHr2dW1ePkL4+
+	ijZPowul2CO/imafR+uTJw5z5jeP/fMvYU7d8gIvvdrJLh7qW7wBT0xXqJdSc/otkwNxfQdQXc/
+	1aE6hVK+Kt8ofSjCsfJBfo/o5BVZQ93ElnR8EYf4iTP/X8tyNw+WiXH1khwB2BUyOS8Bs0nkowW
+	CWDqSlFrPiAHN/JOgG+asrg9flrPT3t2LBTs2PwoZlUNbU8WzhpgRLveFHHqb8ya1dIOAOROelI
+	ED8kW9WtO/85AmRFYuIaY5VjIudQjmZNYn9LYawE1F3F9Nogmk90sQ9Fvi8JVF0684UUvX2+Ojl
+	LUvg=
+X-Google-Smtp-Source: AGHT+IE3GyLzZUyelI40gS2vTuDQpSNMhcJ1TL+LpOT3j005P7cUJ4VklepZjvjFsXXu1LyMWnIBEQ==
+X-Received: by 2002:a05:6000:18a2:b0:39a:c9ac:cd58 with SMTP id ffacd0b85a97d-39efba5af80mr1425563f8f.29.1744965696999;
+        Fri, 18 Apr 2025 01:41:36 -0700 (PDT)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4a5150sm2039295f8f.82.2025.04.18.01.41.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 01:41:36 -0700 (PDT)
+Date: Fri, 18 Apr 2025 10:41:34 +0200
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: iuncuim <iuncuim@gmail.com>
+Cc: Vasily Khoruzhick <anarsoul@gmail.com>,
+	Yangtao Li <tiny.windzz@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Andre Przywara <andre.przywara@arm.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+Subject: Re: [PATCH 3/6] thermal/drivers/sun8i: Add support for A523 THS0/1
+ controllers
+Message-ID: <aAIQPtxCDuT2e7vE@mai.linaro.org>
+References: <20250411003827.782544-1-iuncuim@gmail.com>
+ <20250411003827.782544-4-iuncuim@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417175111.386381660@linuxfoundation.org>
-In-Reply-To: <20250417175111.386381660@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 18 Apr 2025 14:09:41 +0530
-X-Gm-Features: ATxdqUEDoqR8p1zJdruYCSbIfSEgIUwYLVEiH-a9YbJJCV6oX9DxN1sbjVENomg
-Message-ID: <CA+G9fYstVDU_e27mkqEJC0O742zUb0A=wny59n2SiiH7Z_ouJg@mail.gmail.com>
-Subject: Re: [PATCH 6.13 000/414] 6.13.12-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org, Arnd Bergmann <arnd@arndb.de>, Christian Eggers <ceggers@arri.de>, 
-	Tudor Ambarus <tudor.ambarus@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250411003827.782544-4-iuncuim@gmail.com>
 
-On Thu, 17 Apr 2025 at 23:47, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.13.12 release.
-> There are 414 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 19 Apr 2025 17:49:48 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.13.12-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.13.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Fri, Apr 11, 2025 at 08:38:23AM +0800, Mikhail Kalashnikov wrote:
+> From: Mikhail Kalashnikov <iuncuim@gmail.com>
+> 
+> The A523 processor has two temperature controllers, THS0 and THS1.
+> THS0 has only one temperature sensor, which is located in the DRAM.
+> 
+> THS1 does have 3 sensors:
+> ths1_0 - "big" cores
+> ths1_1 - "little" cores
+> ths1_2 - gpu
+> 
+> The datasheet mentions a fourth sensor in the NPU, but lacks any registers
+> for operation other than calibration registers. The vendor code reads the
+> value from ths1_2, but uses separate calibration data, so we get two
+> different values from real one.
+> 
+> Signed-off-by: Mikhail Kalashnikov <iuncuim@gmail.com>
+> ---
+>  drivers/thermal/sun8i_thermal.c | 134 ++++++++++++++++++++++++++++++++
+>  1 file changed, 134 insertions(+)
+> 
+> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+> index dc4055c9c..919b05a96 100644
+> --- a/drivers/thermal/sun8i_thermal.c
+> +++ b/drivers/thermal/sun8i_thermal.c
+> @@ -116,6 +116,15 @@ static int sun50i_h5_calc_temp(struct ths_device *tmdev,
+>  		return -1590 * reg / 10 + 276000;
+>  }
+>  
+> +static int sun55i_a523_calc_temp(struct ths_device *tmdev,
+> +					int id, int reg)
+> +{
+> +	if (reg >= 0x7c8)
+> +		return tmdev->chip->scale * (tmdev->chip->offset - reg);
+> +	else
+> +		return 65 * (2825 - reg);
+> +}
 
+Please use macro instead of litterals
 
-The following two regressions found on stable-rc 6.13.12-rc1 review,
+> +
+>  static int sun8i_ths_get_temp(struct thermal_zone_device *tz, int *temp)
+>  {
+>  	struct tsensor *s = thermal_zone_device_priv(tz);
+> @@ -208,6 +217,100 @@ static irqreturn_t sun8i_irq_thread(int irq, void *data)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +
+> +/*
+> + * The A523 nvmem calibration values. The ths1_3 is not used as it
+> + * doesn't have its own sensor and doesn't have any internal switch.
+> + * Instead, the value from the ths1_2 sensor is used, which gives the
+> + * illusion of an independent sensor for NPU and GPU when using
+> + * different calibration values.
+> + *
+> + * efuse layout 0x38-0x3F (caldata[0..3]):
+> + *     caldata[0]      caldata[1]      caldata[2]      caldata[3]
+> + * 0               16      24      32  36          48          60 64
+> + * +---------------+---------------+---------------+---------------+
+> + * |               |       |   temp    |  ths1_0   |  ths1_1   |   +
+> + * +---------------+---------------+---------------+---------------+
+> + *
+> + * efuse layout 0x40-0x43 (caldata[4..5]) - not in use
+> + *
+> + * efuse layout 0x44-0x4B (caldata[6..9]):
+> + *     caldata[6]      caldata[7]      caldata[8]      caldata[9]
+> + * 0           12  16      24      32  36          48             64
+> + * +---------------+---------------+---------------+---------------+
+> + * |  ths1_2   |  ths1_3   |  ths0_0   |           |               +
+> + * +---------------+---------------+---------------+---------------+
+> + */
+> +static int sun55i_a523_ths_calibrate(struct ths_device *tmdev,
+> +				   u16 *caldata, int callen)
+> +{
+> +	struct device *dev = tmdev->dev;
+> +	int i, ft_temp;
+> +
+> +	if (!caldata[0])
+> +		return -EINVAL;
+> +
+> +	ft_temp = (((caldata[2] << 8) | (caldata[1] >> 8)) & FT_TEMP_MASK) * 100;
+> +
+> +	for (i = 0; i < tmdev->chip->sensor_num; i++) {
+> +		int sensor_reg, sensor_temp, cdata, offset;
+> +		/*
+> +		 * Chips ths0 and ths1 have common parameters for value
+> +		 * calibration. To separate them we can use the number of
+> +		 * temperature sensors on each chip.
+> +		 * For ths0 this value is 1.
+> +		 */
+> +		if (tmdev->chip->sensor_num == 1) {
+> +			sensor_reg = ((caldata[7] >> 8) | (caldata[8] << 8)) & TEMP_CALIB_MASK;
+> +		} else {
+> +			switch (i) {
+> +			case 0:
+> +				sensor_reg = (caldata[2] >> 4) & TEMP_CALIB_MASK;
+> +				break;
+> +			case 1:
+> +				sensor_reg = caldata[3] & TEMP_CALIB_MASK;
+> +				break;
+> +			case 2:
+> +				sensor_reg = caldata[6] & TEMP_CALIB_MASK;
+> +				break;
+> +			default:
+> +				sensor_reg = 0;
+> +				break;
+> +			}
+> +		}
+> +
+> +		sensor_temp = tmdev->chip->calc_temp(tmdev, i, sensor_reg);
+> +
+> +		/*
+> +		 * Calibration data is CALIBRATE_DEFAULT - (calculated
+> +		 * temperature from sensor reading at factory temperature
+> +		 * minus actual factory temperature) * X (scale from
+> +		 * temperature to register values)
+> +		 */
+> +		cdata = CALIBRATE_DEFAULT -
+> +			((sensor_temp - ft_temp) / tmdev->chip->scale);
+> +
+> +		if (cdata & ~TEMP_CALIB_MASK) {
+> +			/*
+> +			 * Calibration value more than 12-bit, but calibration
+> +			 * register is 12-bit. In this case, ths hardware can
+> +			 * still work without calibration, although the data
+> +			 * won't be so accurate.
+> +			 */
+> +			dev_warn(dev, "sensor%d is not calibrated.\n", i);
+> +			continue;
+> +		}
+> +
+> +		offset = (i % 2) * 16;
+> +		regmap_update_bits(tmdev->regmap,
+> +				   SUN50I_H6_THS_TEMP_CALIB + (i / 2 * 4),
+> +				   TEMP_CALIB_MASK << offset,
+> +				   cdata << offset);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int sun8i_h3_ths_calibrate(struct ths_device *tmdev,
+>  				  u16 *caldata, int callen)
+>  {
+> @@ -721,6 +824,35 @@ static const struct ths_thermal_chip sun50i_h616_ths = {
+>  	.calc_temp = sun8i_ths_calc_temp,
+>  };
+>  
+> +/* The A523 has a shared reset line for both chips */
+> +static const struct ths_thermal_chip sun55i_a523_ths0 = {
+> +	.sensor_num = 1,
+> +	.has_bus_clk_reset = true,
+> +	.has_gpadc_clk = true,
+> +	.ft_deviation = 5000,
+> +	.offset = 2736,
+> +	.scale = 74,
+> +	.temp_data_base = SUN50I_H6_THS_TEMP_DATA,
+> +	.calibrate = sun55i_a523_ths_calibrate,
+> +	.init = sun50i_h6_thermal_init,
+> +	.irq_ack = sun50i_h6_irq_ack,
+> +	.calc_temp = sun55i_a523_calc_temp,
+> +};
+> +
+> +static const struct ths_thermal_chip sun55i_a523_ths1 = {
+> +	.sensor_num = 3,
+> +	.has_bus_clk_reset = true,
+> +	.has_gpadc_clk = true,
+> +	.ft_deviation = 5000,
+> +	.offset = 2736,
+> +	.scale = 74,
+> +	.temp_data_base = SUN50I_H6_THS_TEMP_DATA,
+> +	.calibrate = sun55i_a523_ths_calibrate,
+> +	.init = sun50i_h6_thermal_init,
+> +	.irq_ack = sun50i_h6_irq_ack,
+> +	.calc_temp = sun55i_a523_calc_temp,
+> +};
+> +
+>  static const struct of_device_id of_ths_match[] = {
+>  	{ .compatible = "allwinner,sun8i-a83t-ths", .data = &sun8i_a83t_ths },
+>  	{ .compatible = "allwinner,sun8i-h3-ths", .data = &sun8i_h3_ths },
+> @@ -731,6 +863,8 @@ static const struct of_device_id of_ths_match[] = {
+>  	{ .compatible = "allwinner,sun50i-h6-ths", .data = &sun50i_h6_ths },
+>  	{ .compatible = "allwinner,sun20i-d1-ths", .data = &sun20i_d1_ths },
+>  	{ .compatible = "allwinner,sun50i-h616-ths", .data = &sun50i_h616_ths },
+> +	{ .compatible = "allwinner,sun55i-a523-ths0", .data = &sun55i_a523_ths0 },
+> +	{ .compatible = "allwinner,sun55i-a523-ths1", .data = &sun55i_a523_ths1 },
+>  	{ /* sentinel */ },
+>  };
+>  MODULE_DEVICE_TABLE(of, of_ths_match);
+> -- 
+> 2.49.0
+> 
 
-1)
-Regressions on arm64 allmodconfig and allyesconfig builds failed
-on the stable rc 6.13.12-rc1.
+-- 
 
-2)
-Regressions on arm64 dragonboard 410c boot failed with lkftconfig
-on the stable rc 6.13.12-rc1.
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-First seen on the 6.13.12-rc1
-Good: v6.13.11
-Bad:  v6.13.11-415-gd973e9e70c8f
-
-Regressions found on arm64:
-- build/gcc-13-allmodconfig
-- build/gcc-13-allyesconfig
-- build/clang-20-allmodconfig
-- build/clang-20-allyesconfig
-
-Regressions found on arm64 dragonboard-410c:
-- boot/clang-20-lkftconfig
-
-Regression Analysis:
-- New regression? Yes
-- Reproducibility? Yes
-
-Build regression: arm64 ufs-qcom.c implicit declaration 'devm_of_qcom_ice_g=
-et'
-
-Boot regression: arm64 dragonboard 410c WARNING regulator core.c regulator_=
-put
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build log arm64
-drivers/ufs/host/ufs-qcom.c: In function 'ufs_qcom_ice_init':
-drivers/ufs/host/ufs-qcom.c:121:15: error: implicit declaration of
-function 'devm_of_qcom_ice_get'; did you mean 'of_qcom_ice_get'?
-[-Werror=3Dimplicit-function-declaration]
-121 |         ice =3D devm_of_qcom_ice_get(dev);
-|               ^~~~~~~~~~~~~~~~~~~~
-|               of_qcom_ice_get
-drivers/ufs/host/ufs-qcom.c:121:13: error: assignment to 'struct
-qcom_ice *' from 'int' makes pointer from integer without a cast
-[-Werror=3Dint-conversion]
-121 |         ice =3D devm_of_qcom_ice_get(dev);
-|             ^
-cc1: all warnings being treated as errors
-
-
-## Boot log arm64 dragonboard 410c:
-[    3.863371]  remoteproc:smd-edge: failed to parse smd edge
-[    3.989304] msm_hsusb 78d9000.usb: Failed to create device link
-(0x180) with supplier remoteproc for /soc@0/usb@78d9000/ulpi/phy
-[    3.993079] qcom-clk-smd-rpm
-remoteproc:smd-edge:rpm-requests:clock-controller: Error registering
-SMD clock driver (-1431655766)
-[    4.000071] qcom-clk-smd-rpm
-remoteproc:smd-edge:rpm-requests:clock-controller: probe with driver
-qcom-clk-smd-rpm failed with error -1431655766
-[    4.028243] sdhci_msm 7864900.mmc: Got CD GPIO
-[    4.039730] s3: Bringing 0uV into 1250000-1250000uV
-[    4.039886] s3: failed to enable: (____ptrval____)
-[    4.043538] ------------[ cut here ]------------
-[    4.048299] WARNING: CPU: 0 PID: 46 at
-drivers/regulator/core.c:2396 regulator_put
-(drivers/regulator/core.c:2419 drivers/regulator/core.c:2417)
-[    4.053085] Modules linked in:
-[    4.053087] input: gpio-keys as /devices/platform/gpio-keys/input/input0
-[    4.060581] sdhci_msm 7864900.mmc: Got CD GPIO
-[    4.061476]
-[    4.061484] CPU: 0 UID: 0 PID: 46 Comm: kworker/u16:2 Not tainted
-6.13.12-rc1 #1
-[    4.061495] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[    4.061501] Workqueue: async async_run_entry_fn
-[    4.069821] clk: Disabling unused clocks
-[    4.071199]
-[    4.071204] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=
-=3D--)
-[    4.076270] PM: genpd: Disabling unused power domains
-[    4.077108] pc : regulator_put (drivers/regulator/core.c:2419
-drivers/regulator/core.c:2417)
-[    4.084640] qcom-rpmpd
-remoteproc:smd-edge:rpm-requests:power-controller: failed to sync cx:
--1431655766
-[    4.091163] lr : regulator_put (drivers/regulator/core.c:2390
-drivers/regulator/core.c:2417)
-[    4.091174] sp : ffff8000832eba50
-[    4.091178] x29: ffff8000832eba50
-[    4.095545] qcom-rpmpd
-remoteproc:smd-edge:rpm-requests:power-controller: failed to sync
-cx_ao: -1431655766
-[    4.099579]  x28: 0000000000000000 x27: ffff800081b54020
-[    4.099592] x26: ffff800081b53fe0 x25: 0000000000000001
-[    4.101088] qcom-rpmpd
-remoteproc:smd-edge:rpm-requests:power-controller: failed to sync
-cx_vfc: -1431655766
-[    4.107745]  x24: 00000000aaaaaaaa
-[    4.107752] x23: ffff000004362a80 x22: ffff0000045fa800
-[    4.112988] qcom-rpmpd
-remoteproc:smd-edge:rpm-requests:power-controller: failed to sync mx:
--1431655766
-[    4.116953]  x21: ffff0000045fa800
-[    4.116961] x20: ffff0000038dfcc0 x19: ffff000003885d80 x18: 00000000000=
-00068
-[    4.126432] qcom-rpmpd
-remoteproc:smd-edge:rpm-requests:power-controller: failed to sync
-mx_ao: -1431655766
-[    4.130312]
-[    4.130315] x17: 0000000000000000 x16: 0000000000000001 x15: 00000000000=
-00003
-[    4.133541] ALSA device list:
-[    4.136833]
-[    4.136836] x14: ffff80008284e1f0 x13: 0000000000000003 x12: 00000000000=
-00003
-[    4.146411]   No soundcards found.
-[    4.151929]
-[    4.151933] x11: 0000000000000000 x10: 0000000000000000 x9 : 00000000000=
-00000
-[    4.230459] x8 : 0000000000000001 x7 : 0720072007200720 x6 : 07200720072=
-00720
-[    4.230478] x5 : ffff000003201f00 x4 : 0000000000000000 x3 : 00000000000=
-00000
-[    4.230491] x2 : 0000000000000000 x1 : ffff8000801fe6e4 x0 : ffff0000038=
-85d80
-[    4.230506] Call trace:
-[    4.230512] regulator_put (drivers/regulator/core.c:2419
-drivers/regulator/core.c:2417) (P)
-[    4.230529] regulator_register (drivers/regulator/core.c:5823)
-[    4.230543] devm_regulator_register (drivers/regulator/devres.c:477)
-[    4.230554] rpm_reg_probe
-(drivers/regulator/qcom_smd-regulator.c:1425
-drivers/regulator/qcom_smd-regulator.c:1462)
-[    4.230569] platform_probe (drivers/base/platform.c:1405)
-[    4.230583] really_probe (drivers/base/dd.c:581 drivers/base/dd.c:658)
-[    4.280941] __driver_probe_device (drivers/base/dd.c:0)
-[    4.284581] driver_probe_device (drivers/base/dd.c:830)
-[    4.288919] __device_attach_driver (drivers/base/dd.c:959)
-[    4.292911] bus_for_each_drv (drivers/base/bus.c:459)
-[    4.297426] __device_attach_async_helper
-(arch/arm64/include/asm/jump_label.h:36 drivers/base/dd.c:988)
-[    4.301593] async_run_entry_fn
-(arch/arm64/include/asm/jump_label.h:36 kernel/async.c:131)
-[    4.306626] process_scheduled_works (kernel/workqueue.c:3241
-kernel/workqueue.c:3317)
-[    4.310533] worker_thread (include/linux/list.h:373
-kernel/workqueue.c:946 kernel/workqueue.c:3399)
-[    4.315305] kthread (kernel/kthread.c:391)
-[    4.318863] ret_from_fork (arch/arm64/kernel/entry.S:863)
-[    4.322250] ---[ end trace 0000000000000=C3=AF=C2=BF=C2=BD[    4.330596]=
- s4:
-failed to enable: (____ptrval____)
-[    4.330739] ------------[ cut here ]------------
-[    4.334298] WARNING: CPU: 3 PID: 46 at
-drivers/regulator/core.c:2396 regulator_put
-(drivers/regulator/core.c:2419 drivers/regulator/core.c:2417)
-[    4.339086] Modules linked in:
-[    4.347491] CPU: 3 UID: 0 PID: 46 Comm: kworker/u16:2 Tainted: G
-    W          6.13.12-rc1 #1
-[    4.350372] Tainted: [W]=3DWARN
-[    4.359293] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[    4.360333] sdhci_msm 7864900.mmc: Got CD GPIO
-[    4.362242] Workqueue: async async_run_entry_fn
-[    4.373272] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=
-=3D--)
-[    4.377705] pc : regulator_put (drivers/regulator/core.c:2419
-drivers/regulator/core.c:2417)
-[    4.384641] lr : regulator_put (drivers/regulator/core.c:2390
-drivers/regulator/core.c:2417)
-[    4.388807] sp : ffff8000832eba50
-[    4.392711] x29: ffff8000832eba50 x28: 0000000000000000 x27: ffff800081b=
-54040
-[    4.395934] x26: ffff800081b53fe0 x25: 0000000000000001 x24: 00000000aaa=
-aaaaa
-[    4.403052] x23: ffff000009d10c80 x22: ffff000009c48800 x21: ffff000009c=
-48800
-[    4.410170] x20: ffff0000044e2900 x19: ffff000003f90840 x18: ffff8000817=
-025c0
-[    4.417287] x17: 0000000000000000 x16: 0000000000000001 x15: 00000000000=
-00003
-[    4.424405] x14: ffff80008284e1f0 x13: 0000000000000003 x12: 00000000000=
-00003
-[    4.431524] x11: 0000000000000000 x10: 0000000000000000 x9 : 00000000000=
-00000
-[    4.438642] x8 : 0000000000000001 x7 : 0720072007200720 x6 : 07200720072=
-00720
-[    4.445760] x5 : ffff000003201f00 x4 : 0000000000000000 x3 : 00000000000=
-00000
-[    4.452878] x2 : 0000000000000000 x1 : ffff8000801fe6e4 x0 : ffff000003f=
-90840
-[    4.459997] Call trace:
-[    4.467103] regulator_put (drivers/regulator/core.c:2419
-drivers/regulator/core.c:2417) (P)
-[    4.469364] regulator_register (drivers/regulator/core.c:5823)
-[    4.473530] devm_regulator_register (drivers/regulator/devres.c:477)
-[    4.477437] rpm_reg_probe
-(drivers/regulator/qcom_smd-regulator.c:1425
-drivers/regulator/qcom_smd-regulator.c:1462)
-[    4.481948] platform_probe (drivers/base/platform.c:1405)
-[    4.485681] really_probe (drivers/base/dd.c:581 drivers/base/dd.c:658)
-[    4.489415] __driver_probe_device (drivers/base/dd.c:0)
-[    4.493062] driver_probe_device (drivers/base/dd.c:830)
-[    4.497401] __device_attach_driver (drivers/base/dd.c:959)
-[    4.501396] bus_for_each_drv (drivers/base/bus.c:459)
-[    4.505908] __device_attach_async_helper
-(arch/arm64/include/asm/jump_label.h:36 drivers/base/dd.c:988)
-[    4.510078] async_run_entry_fn
-(arch/arm64/include/asm/jump_label.h:36 kernel/async.c:131)
-[    4.515109] process_scheduled_works (kernel/workqueue.c:3241
-kernel/workqueue.c:3317)
-[    4.519017] worker_thread (include/linux/list.h:373
-kernel/workqueue.c:946 kernel/workqueue.c:3399)
-[    4.523790] kthread (kernel/kthread.c:391)
-[    4.527347] ret_from_fork (arch/arm64/kernel/entry.S:863)
-[    4.530735] ---[ end trace 0000000000000000 ]---
-[    4.535440] l2: Bringing 0uV into 1200000-1200000uV
-[    4.539050] qcom_rpm_smd_regulator
-remoteproc:smd-edge:rpm-requests:regulators: l2:
-devm_regulator_register() failed, ret=3D-517
-[    4.544075] Unable to handle kernel paging request at virtual
-address ffffffffaaaaae6a
-[    4.554991] Mem abort info:
-[    4.562869]   ESR =3D 0x0000000096000005
-[    4.565560]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
-[    4.569384]   SET =3D 0, FnV =3D 0
-[    4.574846]   EA =3D 0, S1PTW =3D 0
-[    4.577710]   FSC =3D 0x05: level 1 translation fault
-[    4.580755] Data abort info:
-[    4.585612]   ISV =3D 0, ISS =3D 0x00000005, ISS2 =3D 0x00000000
-[    4.588742]   CM =3D 0, WnR =3D 0, TnD =3D 0, TagAccess =3D 0
-[    4.594036]   GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
-[    4.599158] swapper pgtable: 4k pages, 48-bit VAs, pgdp=3D00000000824a40=
-00
-[    4.604544] [ffffffffaaaaae6a] pgd=3D0000000000000000,
-p4d=3D0000000082e7d403, pud=3D0000000000000000
-[    4.611238] Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
-[    4.619631] Modules linked in:
-[    4.625875] CPU: 3 UID: 0 PID: 46 Comm: kworker/u16:2 Tainted: G
-    W          6.13.12-rc1 #1
-[    4.629015] Tainted: [W]=3DWARN
-[    4.637936] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[    4.640900] Workqueue: async async_run_entry_fn
-[    4.647664] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=
-=3D--)
-[    4.651924] pc : regulator_unregister (drivers/regulator/core.c:5850)
-[    4.658861] lr : devm_rdev_release (drivers/regulator/devres.c:453)
-[    4.663721] sp : ffff8000832ebaf0
-[    4.667974] x29: ffff8000832ebb10 x28: ffff000004520000 x27: 00000000000=
-001c8
-[    4.671195] x26: ffff0000042c6040 x25: ffff000009d10c00 x24: ffff0000045=
-20000
-[    4.678311] x23: ffff80008280ed00 x22: ffff8000823b07cd x21: ffff000003f=
-90780
-[    4.685431] x20: ffff000009c7b810 x19: ffff8000832ebbb8 x18: 00000000000=
-00068
-[    4.692548] x17: 6f74616c75676572 x16: 3a73747365757165 x15: 00000ff0000=
-3fd3a
-[    4.699666] x14: 000000000000ffff x13: 0000000000000020 x12: 00000000000=
-00003
-[    4.706784] x11: 0000000000000000 x10: 0000000000000000 x9 : ffff800080b=
-52bb0
-[    4.713901] x8 : 50dfedbf8d5fec00 x7 : 3d4e5f454c424954 x6 : 000000004e5=
-14553
-[    4.721021] x5 : 0000000000000008 x4 : ffff80008222c178 x3 : 00000000000=
-00010
-[    4.728139] x2 : ffff8000832eba70 x1 : ffff000003f90800 x0 : ffffffffaaa=
-aaaaa
-[    4.735257] Call trace:
-[    4.742362] regulator_unregister (drivers/regulator/core.c:5850) (P)
-[    4.744625] devm_rdev_release (drivers/regulator/devres.c:453)
-[    4.749484] release_nodes (drivers/base/devres.c:506)
-[    4.753388] devres_release_all (drivers/base/devres.c:0)
-[    4.756950] really_probe (drivers/base/dd.c:551 drivers/base/dd.c:724)
-[    4.760941] __driver_probe_device (drivers/base/dd.c:0)
-[    4.764588] driver_probe_device (drivers/base/dd.c:830)
-[    4.768842] __device_attach_driver (drivers/base/dd.c:959)
-[    4.772836] bus_for_each_drv (drivers/base/bus.c:459)
-[    4.777348] __device_attach_async_helper
-(arch/arm64/include/asm/jump_label.h:36 drivers/base/dd.c:988)
-[    4.781518] async_run_entry_fn
-(arch/arm64/include/asm/jump_label.h:36 kernel/async.c:131)
-[    4.786552] process_scheduled_works (kernel/workqueue.c:3241
-kernel/workqueue.c:3317)
-[    4.790458] worker_thread (include/linux/list.h:373
-kernel/workqueue.c:946 kernel/workqueue.c:3399)
-[    4.795229] kthread (kernel/kthread.c:391)
-[    4.798788] ret_from_fork (arch/arm64/kernel/entry.S:863)
-[ 4.802179] Code: d5384108 f9430508 f81f83a8 b4000bc0 (f941e014)
-All code
-=3D=3D=3D=3D=3D=3D=3D=3D
-
-Code starting with the faulting instruction
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[    4.805745] ---[ end trace 0000000000000000 ]---
-[   14.254255] platform ci_hdrc.0: deferred probe pending: (reason unknown)
-
-## Source
-* Kernel version: 6.13.12-rc1
-* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-st=
-able-rc.git
-* Git sha: d973e9e70c8f0ad1a53a96ce48db9f3f882db4a8
-* Git describe: v6.13.11-415-gd973e9e70c8f
-* Project details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.13=
-.11-415-gd973e9e70c8f/
-* Architectures: arm64
-* Toolchains: clang-20, gcc-13
-* Kconfigs: allmodconfig, allyesconfig
-
-## Build arm64
-* Build log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.13.=
-y/build/v6.13.11-415-gd973e9e70c8f/testrun/28151211/suite/build/test/gcc-13=
--allmodconfig/log
-* Build history:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.13.y/build/v6.13=
-.11-415-gd973e9e70c8f/testrun/28151211/suite/build/test/gcc-13-allmodconfig=
-/history/
-* Build details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.13.y/build/v6.13=
-.11-415-gd973e9e70c8f/testrun/28151211/suite/build/test/gcc-13-allmodconfig=
-/details/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2vrtUC=
-0M5hDCMYsjZId4uKICXy7/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2vrtUC0M5hDCMYsjZId4=
-uKICXy7/config
-
-## Steps to reproduce on arm64
-- tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
---kconfig allmodconfig
-
-
-## Boot arm64 dragonboard-410c
-* Boot log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.13.y=
-/build/v6.13.11-415-gd973e9e70c8f/testrun/28155237/suite/boot/test/clang-20=
--lkftconfig/log
-* Boot history:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.13.y/build/v6.13=
-.11-415-gd973e9e70c8f/testrun/28149517/suite/boot/test/clang-20-lkftconfig/=
-history/
-* Boot details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.13.y/build/v6.13=
-.11-415-gd973e9e70c8f/testrun/28151170/suite/boot/test/clang-20-lkftconfig/=
-details/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2vrtSg=
-9ngthHYlLhDI9xR3a2T5K/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2vrtSg9ngthHYlLhDI9x=
-R3a2T5K/config
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
