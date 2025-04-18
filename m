@@ -1,50 +1,44 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49DD71A8F68;
-	Fri, 18 Apr 2025 16:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5AED1A8F68;
+	Fri, 18 Apr 2025 16:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744995442; cv=none; b=TneKCFjROgLZe9LGs/OpOBbNo529lU3fR0rEDoYfQMmFrrOExj4Bc2zs2zDliRJ6lBVkLcQhs4+v3oyv6PZXPvclHc+Iihjtu7W2BebedR0N7vTyWwx3pwK4jRxcjgLHkdvc1Tjimde2G0AMFqowtUowgVsDb8S55WUftlRtWlM=
+	t=1744995460; cv=none; b=ueQUV6z3+av6EqYl3iSYS1LrooE7AR+uR46csU3qsng4Z7qsVCPzwAfz+hj6j4EWrLWa2G7FBAgv+NUlF7TwwqKWeATPLcz0d5bhxkRaS4XYImADFHFQhq8nPTpt88b1ezSMX0sNJaOez3H+LtSFeDFmaNTQfWnNvdlH8cQ3tzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744995442; c=relaxed/simple;
-	bh=TDuKAiO/Ql1pcO7Mfl5k5VKkVM7MYI46i4hq6UPJUVM=;
+	s=arc-20240116; t=1744995460; c=relaxed/simple;
+	bh=oMUnQpA3i8Z6l1WvnRE2YkrR/PCt4Rv+k/8Npl7LEHI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uq4HrjlqKQ7RFpY40b1aYZx6YzJChGJgJG1WpIbfdRlszsqKN9lAgYtz022ZZk/EKe3To9MNHY32uz1X+2GQd9X4NvKSoRHw0356jJrsZv25KzCiDtjzxPJFertvqx2wqn9TMh1kpNF1L3J8Bq0lQGMuCs5H0YDwXLGtfcRGa6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=dHGfvd+a; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=Soys9FCxodHoYuAOeYXe7BhRMqnOP20bQY3TwPPoDQFNcBRmyuzHW4sTCuEcqOd84duLKaq6FhU/VlvQshVZN+LbNqZ6pLSBUzewBB0pqHW2ZIuTCvbmj/uL7jWAkl3ekbDsIgTDooUcBQVJNeKdAscIOkRhOHpvglXNTeZWHZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=cIVL3/qM; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="dHGfvd+a"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E0ABF102E6336;
-	Fri, 18 Apr 2025 18:57:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1744995437; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=pNwV8wF/f0cfEaYXtGKzXaf9WE3h64XoNFuFJfyDHNU=;
-	b=dHGfvd+aI3PWFI4S72fOF2+mh7dLV8lxtdiaWzoc0nyeJOqFGAocnEvxxyWK/lgoI+SVWj
-	/b9IK8t2OmLL6MsuVouhqpTUaGt7orcHTaMwXQnHKUUskStuE10gXl5WntPmVxvACYhkRS
-	p2UQqMHePKhQqI3ND0sARlRUSedeN1Vs87lmaqOYdFiZuIFARFkYv2ajX8xFx+dtwkNPyH
-	LeoiAMyRhNFV9Hg/MaGd3tVf56YY5gDjOk7sofsXLk9e6Ft+CtyXKPH+YXPia3/uDXXypS
-	meVJ38ej6R8uZbOqA4DEodK1NqDVNtOUGIRblvAJm6XU9SCYSznr9+ay6uwVkA==
-Date: Fri, 18 Apr 2025 18:57:11 +0200
-From: Pavel Machek <pavel@denx.de>
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="cIVL3/qM"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id A40091C00B2; Fri, 18 Apr 2025 18:51:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1744995098;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PSbe1n/k0ulYtGbIXI96CO1VrCv/UaM1rOskyi49O2s=;
+	b=cIVL3/qMttdCGnkI3NL7gUW1Aii+xIXKQlu+Jek5MvBLY6ydcrFrlqT4Ue5CCsoac2cCnB
+	iHtXGV20tgwSl5izXQJp+I4Ti6t+1MlUjbiBbAd5F+pfSwQ9osFGUkhwKEjmxk/imNvPg4
+	Xel9S8KHEQU4/S5N/eYEo/2ihftbRpQ=
+Date: Fri, 18 Apr 2025 18:51:38 +0200
+From: Pavel Machek <pavel@ucw.cz>
 To: Sasha Levin <sashal@kernel.org>
 Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Tomasz =?utf-8?Q?Paku=C5=82a?= <forest10pl@gmail.com>,
-	Nolan Nicholson <nolananicholson@gmail.com>,
-	Tomasz =?utf-8?Q?Paku=C5=82a?= <tomasz.pakula.oficjalny@gmail.com>,
-	=?utf-8?B?TWljaGHFgiBLb3BlxIc=?= <michal@nozomi.space>,
-	Paul Dino Jones <paul@spacefreak18.xyz>,
-	=?iso-8859-1?Q?Crist=F3ferson?= Bueno <cbueno81@gmail.com>,
-	Pablo Cisneros <patchkez@protonmail.com>,
-	Jiri Kosina <jkosina@suse.com>, jikos@kernel.org,
-	bentiss@kernel.org, linux-usb@vger.kernel.org,
-	linux-input@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.10 3/5] HID: pidff: Fix null pointer
- dereference in pidff_find_fields
-Message-ID: <aAKEZwyixI01sJmk@duo.ucw.cz>
-References: <20250331145716.1706253-1-sashal@kernel.org>
- <20250331145716.1706253-3-sashal@kernel.org>
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Christian Brauner <brauner@kernel.org>, viro@zeniv.linux.org.uk,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.10] umount: Allow superblock owners to force
+ umount
+Message-ID: <aAKDGmxq/snqaYhQ@duo.ucw.cz>
+References: <20250331143234.1667913-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,74 +46,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="z0qow5r4EomdxsV3"
+	protocol="application/pgp-signature"; boundary="hXfHA1BSXmrE6BXK"
 Content-Disposition: inline
-In-Reply-To: <20250331145716.1706253-3-sashal@kernel.org>
-X-Last-TLS-Session-Version: TLSv1.3
+In-Reply-To: <20250331143234.1667913-1-sashal@kernel.org>
 
 
---z0qow5r4EomdxsV3
-Content-Type: text/plain; charset=utf-8
+--hXfHA1BSXmrE6BXK
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi!
 
-> From: Tomasz Paku=C5=82a <forest10pl@gmail.com>
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
 >=20
-> [ Upstream commit 22a05462c3d0eee15154faf8d13c49e6295270a5 ]
+> [ Upstream commit e1ff7aa34dec7e650159fd7ca8ec6af7cc428d9f ]
 >=20
-> This function triggered a null pointer dereference if used to search for
-> a report that isn't implemented on the device. This happened both for
-> optional and required reports alike.
+> Loosen the permission check on forced umount to allow users holding
+> CAP_SYS_ADMIN privileges in namespaces that are privileged with respect
+> to the userns that originally mounted the filesystem.
 
-Ok.
-
-> +++ b/drivers/hid/usbhid/hid-pidff.c
-> @@ -770,6 +770,11 @@ static void pidff_set_autocenter(struct input_dev *d=
-ev, u16 magnitude)
->  static int pidff_find_fields(struct pidff_usage *usage, const u8 *table,
->  			     struct hid_report *report, int count, int strict)
->  {
-> +	if (!report) {
-> +		pr_debug("pidff_find_fields, null report\n");
-> +		return -1;
-> +	}
-> +
->  	int i, j, k, found;
-> =20
->  	for (k =3D 0; k < count; k++) {
-> @@ -883,6 +888,11 @@ static int pidff_reports_ok(struct pidff_device *pid=
-ff)
->  static struct hid_field *pidff_find_special_field(struct hid_report *rep=
-ort,
->  						  int usage, int enforce_min)
->  {
-> +	if (!report) {
-> +		pr_debug("pidff_find_special_field, null report\n");
-> +		return NULL;
-> +	}
-> +
->  	int i;
-
-
-But this is quite strange. Normally declarations go first. Not sure if
-old compilers can handle this?
+Should we be tweaking permissions in -stable?
 
 Best regards,
 								Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 
---z0qow5r4EomdxsV3
+--=20
+I don't work for Nazis and criminals, and neither should you.
+Boycott Putin, Trump, and Musk!
+
+--hXfHA1BSXmrE6BXK
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaAKEZwAKCRAw5/Bqldv6
-8tJBAKCBurItwDdwVzRZ7HmySaIoV8YiWACghrPsYdQt5Vdys1Al1ITKXM7SOrs=
-=nFy1
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaAKDGgAKCRAw5/Bqldv6
+8hXYAJ0VzMdgdBf7hf3v5zp6JfimQyBy2QCdGT8OJNHhSAJADySZcsjEl500YVc=
+=DNza
 -----END PGP SIGNATURE-----
 
---z0qow5r4EomdxsV3--
+--hXfHA1BSXmrE6BXK--
