@@ -1,186 +1,154 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377388C0E
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 07:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E72D8C0E;
+	Fri, 18 Apr 2025 07:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744961233; cv=none; b=ggPbIYFQTsGsHDv0FwDekS9CKsZmmIFI9BwqRRJmaIdllFq1HMNHZzVYYGxE9uKgaOmdp9slKZam93Ux8O7fV9QIQrg6onlliArn3TW6j3YLwecV3HUs5j9hdVe9V0bg5EgrQrJ52a/i01q3I8YJsjcG4APAj+f8d81U7cu3KJQ=
+	t=1744961362; cv=none; b=p8vqzjZRHpM/CIKLKZSmO45OBCD2acQfdKFtt/jwrjVyVOUKSWjk5Ekd092DpKIH5C5p5hZQn27XqcoJysQMcbYR2T1tnUAQNe+s9iElxTSyvgb6L+UDBWk1wEtbIwb+Kd8pyH+EpUxBFKCfz1NsO9JwJTbroy0ESxdn9hfKp94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744961233; c=relaxed/simple;
-	bh=z5iyiv40X8PeWYFHYVA/ERYJYqfeZUoKd/FliDuVOf0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pr0AcKVSysI6JaquYkbEdd3Q+zBkbPYBQmXrpTwACOqm2GILxBNoEQ2jkggsYyuDkB//z2U2X/K6N7vW7ZOIFPXCPHbYIn2ybhYa53Umfvannpy8wS2BrBVQfx25bSPcCK0Wah3nD07g08oR9UC8iNZKAd9c1PnEc+0BHoP7uWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IoE4YAhZ; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744961362; c=relaxed/simple;
+	bh=49VNuVmkw9o4pRlMwp2CRvW5yS2aKlA6AGaF1i69I+0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=CWwUtIZJ38TeDBYIvNM8PDea/5p6Lhty1epv2cEfTRvUYonnpdOpqVF0a1ii44CDUxyU/zO77iHKx43FSO17oY7hW9RQ6GeMMge31yYPrc9VSi5LgTcSnuS11NO3uXAj9MLaVYz5kdFm/crOjP2wgRoirpsXAXuDChK8gQ5nPEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nmF1F4xI; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IoE4YAhZ"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9eb1eso2727008a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 00:27:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744961229; x=1745566029; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ur1I8SSe3sqk/ILCSVotezrbGQVvGr3AU3XeIQQrGcA=;
-        b=IoE4YAhZz2yf2FzUoBSQfvXv/MByn4jPfZ9sgjnG9afm3vXcH3647ssV8FnUOC4IBm
-         xt1skunXua5erAouQ2ts9AObJQVB7KRbUtgGbuOBjiNTuH2xExMaXpZ4yfwrqY53eTf7
-         kAcjFhGb7L5MF01REj5CmI2Wzv8ULPFZ8zi47C1l4NHvLmQbPVOpiiHHZ4IMEJJV8JWP
-         SeqUrnb2JULgTZlO157wsUeVpJmJQG2k9DEn2KXHYKHAj5nd3bu19YXcklei68BjUPOl
-         4ssO26y4sbMWTcQrzD1YS4y8XSUNkvZ0UJolaPNxGrDGt1cmWy6RtG0RSBdcGu/HOKSL
-         S6OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744961229; x=1745566029;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ur1I8SSe3sqk/ILCSVotezrbGQVvGr3AU3XeIQQrGcA=;
-        b=kgOCoj3mtVyqrhYqI+8wugDJ8xO01BR1Tjl8qt//gKtQRieQL+UQGQ18C7Wpj+Vi57
-         6sqrp5xeo+0JQc5oORfNqxB0GjvDwoxU/9bZXhYKTrelnEs/brzU3dq9IjemMFrh60bg
-         GafeWqVE3s0StxQAwIGPdlRTOSAC9dEfIqz5NG5lsSEBhfZYHdeP5QiNkOTBeExvGt3z
-         mNk31orkHgEtCvbKgWmnJfgzDruK2IiRmDO1kWdFMx6bNZu9MAQTvRs8BJpMKKnJkhxH
-         CBv8ugoULiPB50A5Y5Ezkip0MetjU3Ic70Z5JmhFNK3zAwgjEti5M24jk8lYmVzuPclX
-         oD/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVHhuH8teYBb8UKjL2W0onOl0bh2u48RYYJc+eKdlN8XazRA6YYbDwqx3t0JKQW4XItWgN3dieF5suEGHg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNHXDvZRps/+VOqmgfgHxFI2u431G3s3PcTS8AopirX65fcS9z
-	96np8S9NqOEIO8VHdJh07bjR9eCIl3Vtyk1zk5CmF/NaLcnti8RTr2G1hj/Z7mHvbkSXSU6vFMr
-	F3t+s7Zi1YszrTBI53txQxT7DoBU=
-X-Gm-Gg: ASbGnctb7/hZTkdZX457ZazpJPFql3QjGTTm1iT4Rz70YnCDq3VqMy6Izdh7ilJMF2O
-	2L6BimbW5hpb2nYdj1Ue+q0bvnCFsgoWA52xr5XdJ6Wf3kMLznOJHwQfL5NXXosgf0YLCd3a9Yu
-	70+au+pP85pa7zWQj0s8PFGgz9
-X-Google-Smtp-Source: AGHT+IFypqS8ZLgIGdco7GWLrZEhryDxXpYox3JOsmUe5Fj2OMmtvGFHZPrtTGgWs7KGsalOPjaVbfsiaX1POHbpzQQ=
-X-Received: by 2002:a05:6402:1ed1:b0:5ec:6feb:5742 with SMTP id
- 4fb4d7f45d1cf-5f628593f03mr1230917a12.16.1744961229221; Fri, 18 Apr 2025
- 00:27:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nmF1F4xI"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53I1f3mY001224;
+	Fri, 18 Apr 2025 07:29:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	E6kfTTUe2SJkB4ocesJpwtBEmUKPSMD3W1XeWivw2/I=; b=nmF1F4xIxhQm0hyJ
+	XbY1M3Sad6aol6BszePs/4QkBJCG9tNCfMhZcpEK8ffckihH00Vtb9Oz11HiWCm7
+	YQSMP149nsPcu/6VMvQIXqz/a03PASFoVwIw6S4uHnfEBWNnDBBOwrvbhla7Ivca
+	OFwpLbWJzhyn3hcXLD6cg9dRNqCzwl+PMFKvHEReioOsGq3nSY1RXJFj8ZFlcNwy
+	Jm9T6XfaoEekrO6zP4m7d+m8pxT94037+Tk7kyp6DEm8lDW/j0YoNjNm8rtpkRBv
+	e102n4bghR289babDy+ndzt/6nIjowoQDzW0tfx5eeYtUQfgZhUXnxBqlHAtePfC
+	/LllWA==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ydvjhjth-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Apr 2025 07:29:05 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53I7T4e7024662
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Apr 2025 07:29:04 GMT
+Received: from [10.216.47.89] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 18 Apr
+ 2025 00:28:57 -0700
+Message-ID: <7fd92093-3efc-4f24-967d-7e267162b26d@quicinc.com>
+Date: Fri, 18 Apr 2025 12:58:53 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417124908.58543-1-ioworker0@gmail.com> <20250417150237.ba3bbb3f55f992c692932841@linux-foundation.org>
-In-Reply-To: <20250417150237.ba3bbb3f55f992c692932841@linux-foundation.org>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Fri, 18 Apr 2025 15:26:32 +0800
-X-Gm-Features: ATxdqUGK3j6TDCMeHYmQT5Dh8-Y6ClSXGCwhqTJFo19RKCQSHL4h3SrivClMaNQ
-Message-ID: <CAK1f24nCWXgOonOpiJ0mEk+-rvGt4WN20yri+wi6-eMf3rf=4w@mail.gmail.com>
-Subject: Re: [PATCH 1/1] mm/rmap: add CONFIG_MM_ID guard for folio_test_large_maybe_mapped_shared()
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: david@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Mingzhe Yang <mingzhe.yang@ly.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] arm64: dts: qcom: sa8775p: Add support for camss
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <rfoss@kernel.org>,
+        <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
+        <mchehab@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <hverkuil-cisco@xs4all.nl>,
+        <cros-qcom-dts-watchers@chromium.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-media@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Suresh Vankadara <quic_svankada@quicinc.com>
+References: <20250210155605.575367-1-quic_vikramsa@quicinc.com>
+ <20250210155605.575367-3-quic_vikramsa@quicinc.com>
+ <65663927-cc11-4810-8714-7600786f299b@oss.qualcomm.com>
+Content-Language: en-US
+From: Vikram Sharma <quic_vikramsa@quicinc.com>
+In-Reply-To: <65663927-cc11-4810-8714-7600786f299b@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=ZIrXmW7b c=1 sm=1 tr=0 ts=6801ff41 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=7gLDDzRWUVhiidtGMTcA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: NFa8SKs0Fzf1ME-yH9sPgRCfNjok_44g
+X-Proofpoint-ORIG-GUID: NFa8SKs0Fzf1ME-yH9sPgRCfNjok_44g
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-18_02,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
+ clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0 mlxlogscore=936
+ spamscore=0 impostorscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504180053
 
-Hi Andrew,
 
-Thanks for taking the time to review!
+On 4/14/2025 7:18 PM, Konrad Dybcio wrote:
+> On 2/10/25 4:56 PM, Vikram Sharma wrote:
+>> Add changes to support the camera subsystem on the SA8775P.
+>>
+>> Co-developed-by: Suresh Vankadara <quic_svankada@quicinc.com>
+>> Signed-off-by: Suresh Vankadara <quic_svankada@quicinc.com>
+>> Signed-off-by: Vikram Sharma <quic_vikramsa@quicinc.com>
+>> ---
+> [...]
+>
+>> +			interrupts = <GIC_SPI 565 IRQ_TYPE_EDGE_RISING>,
+>> +				     <GIC_SPI 564 IRQ_TYPE_EDGE_RISING>,
+>> +				     <GIC_SPI 468 IRQ_TYPE_EDGE_RISING>,
+>> +				     <GIC_SPI 359 IRQ_TYPE_EDGE_RISING>,
+>> +				     <GIC_SPI 759 IRQ_TYPE_EDGE_RISING>,
+> 760> +				     <GIC_SPI 758 IRQ_TYPE_EDGE_RISING>,
 
-On Fri, Apr 18, 2025 at 6:02=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
-n.org> wrote:
->
-> On Thu, 17 Apr 2025 20:49:08 +0800 Lance Yang <ioworker0@gmail.com> wrote=
-:
->
-> > Add a compile-time check to make sure folio_test_large_maybe_mapped_sha=
-red()
-> > is only used with CONFIG_MM_ID enabled, as it directly accesses the _mm=
-_ids
-> > field that only works under CONFIG_MM_ID.
-> >
-> > ...
-> >
-> > --- a/include/linux/page-flags.h
-> > +++ b/include/linux/page-flags.h
-> > @@ -1232,6 +1232,8 @@ static inline int folio_has_private(const struct =
-folio *folio)
-> >
-> >  static inline bool folio_test_large_maybe_mapped_shared(const struct f=
-olio *folio)
-> >  {
-> > +     /* This function should never be called without CONFIG_MM_ID enab=
-led. */
-> > +     BUILD_BUG_ON(!IS_ENABLED(CONFIG_MM_ID));
-> >       return test_bit(FOLIO_MM_IDS_SHARED_BITNUM, &folio->_mm_ids);
-> >  }
-> >  #undef PF_ANY
->
-> I don't get it.  Sounds like we're adding a compile-time check to check
-> for a compilation error which would have happened anyway.
->
-> If folio_test_large_maybe_mapped_shared() is only used with
-> CONFIG_MM_ID enabled, then do
->
-> #ifdef CONFIG_MM_ID
-> static inline bool folio_test_large_maybe_mapped_shared(...)
-> {
-> }
-> #endif
->
-> ?
+Hi Konrad,
 
-Hmm... we considered using '#ifdef CONFIG_MM_ID' for
-folio_test_large_maybe_mapped_shared(),
-but since this function should never be called without CONFIG_MM_ID
-enabled, compile-time errors might be the way to go -- and a compile-time
-check here does the trick ;)
+We cross checked internal documents to confirm IRQ number for 
+csid_lite2/3 and vfe_lite2/3
+Calculation for IRQ number is done with respect to vector number as
+irq_num = (vector - 32).
+csid_lite2 vector -> 791
+csid_lite3 vector -> 790
+vfe_lite2  vector -> 793
+vfe_lite3  vector -> 792
+
+thus irqs are as
+csid_lite2 -> 759
+csid_lite3 -> 758
+vfe_lite2  -> 761
+vfe_lite3  -> 760
+
+Please let me know if this looks fine to you?
 
 >
-> Or, as "_mm_ids field only works under CONFIG_MM_ID", make it
-> not-even-present when !CONFIG_MM_ID?
+> 759
 >
-> --- a/include/linux/mm_types.h~a
-> +++ a/include/linux/mm_types.h
-> @@ -438,7 +438,9 @@ struct folio {
->                                         mm_id_mapcount_t _mm_id_mapcount[=
-2];
->                                         union {
->                                                 mm_id_t _mm_id[2];
-> +#ifdef CONFIG_MM_ID
->                                                 unsigned long _mm_ids;
-> +#endif
->                                         };
->         /* private: the union with struct page is transitional */
->                                 };
-> _
+>> +				     <GIC_SPI 604 IRQ_TYPE_EDGE_RISING>,
+>> +				     <GIC_SPI 477 IRQ_TYPE_EDGE_RISING>,
+>> +				     <GIC_SPI 478 IRQ_TYPE_EDGE_RISING>,
+>> +				     <GIC_SPI 479 IRQ_TYPE_EDGE_RISING>,
+>> +				     <GIC_SPI 448 IRQ_TYPE_EDGE_RISING>,
+>> +				     <GIC_SPI 545 IRQ_TYPE_EDGE_RISING>,
+>> +				     <GIC_SPI 546 IRQ_TYPE_EDGE_RISING>,
+>> +				     <GIC_SPI 547 IRQ_TYPE_EDGE_RISING>,
+>> +				     <GIC_SPI 465 IRQ_TYPE_EDGE_RISING>,
+>> +				     <GIC_SPI 467 IRQ_TYPE_EDGE_RISING>,
+>> +				     <GIC_SPI 469 IRQ_TYPE_EDGE_RISING>,
+>> +				     <GIC_SPI 360 IRQ_TYPE_EDGE_RISING>,
+>> +				     <GIC_SPI 761 IRQ_TYPE_EDGE_RISING>,
+> 762
 >
-> or
+>> +				     <GIC_SPI 760 IRQ_TYPE_EDGE_RISING>,
+> 761
 >
-> --- a/include/linux/mm_types.h~a
-> +++ a/include/linux/mm_types.h
-> @@ -436,10 +436,12 @@ struct folio {
->                                         atomic_t _pincount;
->  #endif /* CONFIG_64BIT */
->                                         mm_id_mapcount_t _mm_id_mapcount[=
-2];
-> +#ifdef CONFIG_MM_ID
->                                         union {
->                                                 mm_id_t _mm_id[2];
->                                                 unsigned long _mm_ids;
->                                         };
-> +#endif
->         /* private: the union with struct page is transitional */
->                                 };
->                                 unsigned long _usable_1[4];
-> _
->
->
->
-> I dunno, it sounds like something hasn't been fully thought through
-> here.  It's hard to say because the changelog is unclear.  Perhaps
-> start out by fully describing what problem the patch is addressing?
->
+> Konrad
 
-In patch #14[1], we rely on IS_ENABLED(CONFIG_MM_ID), so we need:
-1) Some dummy functions
-2) The _mm_ids field to remain present even when !CONFIG_MM_ID
+Best Regards,
 
-This patch is intended to ensure that incorrect calls to
-folio_test_large_maybe_mapped_shared()
-are caught at compile-time.
+Vikram
 
-[1] https://lore.kernel.org/linux-mm/20250303163014.1128035-15-david@redhat=
-.com/
-
-Thanks,
-Lance
