@@ -1,72 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91494262A6;
-	Fri, 18 Apr 2025 04:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CCCE1CD15;
+	Fri, 18 Apr 2025 04:16:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744949375; cv=none; b=q5iMu7Og8Wp0KlwvEPs8EarGrIejTvvwXLXEmRVRboQfa5ELWCl+UbkrcVtBizAlDft/jFVdhMqcwhxnFOCmQKY6/R3G8tlOp1RTE7wYTvHdVv+KEgECIvj7s+nQx2/SK8mO6Ar8uPTC4uxdU13Ib0BN7YOj4cmPHYv/OPFxrb8=
+	t=1744949798; cv=none; b=YzF0s1aFXNb1lbJl5Rs4ZfMmURdd5pyhpLOW+VXOqEsZpAlueiL06Uk+SBxdEtHOInaHuccFJH3K3wvTtGn6N3iUZLQwbj2V+aaNeWeC8M53HWCqR6QgCgNZOj8Bdv+ZYzzMWooKN7wUQtTpbKsGtwoonLwLVf3DYZq+8fOeOgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744949375; c=relaxed/simple;
-	bh=X9HWpDJKGelzlCUQTDiF/+gV2vBAm2QsT8zUpHUuxwE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MsMJNYaPFNxHb7DxClu0ztHYKNM2JUKqm0mAAgGZR+8LzVvQrz0gF/2eHUHwY3aMNttTxSLNnyBWJZ4C1UyJAvAgCeC2lurndG6I4M5WGZr42F99JJ4SXaNSJEbSdeGxkpJ7vohvIxjlaut18odHL6n4PPjsRWjlpnfughPgaow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qvEGyPSl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744949798; c=relaxed/simple;
+	bh=HTVYu5YZ2UlRDgI4DhnXcUjUecU98qvOKuPpLwHFjH4=;
+	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
+	 Content-Type:Date:Message-ID; b=Z00f+SkESorJTyCcDtQPX77AorPRz3wpMPy8I0wRrPnM6WivVzf6jtEQlQXG5uOT7MG4NEkVaMFXKDF7jO3oDo85srZVWNQ7eCf2w7GmbMqqoBOqSarDJ2yZ9euzg+PqkPDbqDaIRqcGxfcbQJY0ABqBGz0wARghZxr41yb+70Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jvosburgh.net; spf=pass smtp.mailfrom=jvosburgh.net; dkim=pass (2048-bit key) header.d=jvosburgh.net header.i=@jvosburgh.net header.b=GWjpOOLl; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gByvhMxz; arc=none smtp.client-ip=202.12.124.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jvosburgh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jvosburgh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qvEGyPSl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4682C4CEE2;
-	Fri, 18 Apr 2025 04:09:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744949375;
-	bh=X9HWpDJKGelzlCUQTDiF/+gV2vBAm2QsT8zUpHUuxwE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qvEGyPSlADMpXrpDb39mtYQWbsr4vDvXWgXhOxwVcm+1/ZyO98L2tTR17xtXq7F5/
-	 3Qnp7bu0pCI8eUyKzpE8NMQIi8gQ7qzp2jVxGCRMaZi9PCDQfEcJUTXYSl6qD5k3Iw
-	 EW8ujRSii79rvabBW6nRoZ47tshuQ22cty32TIYzGvaDdlUR0EKwklKONC+9qeq+Mr
-	 xCahi/xTQTtPwJOoE1tuLuQ5EqHwUPXxKn09ORAOZJk0Tt9BgDXFTBTWPPu9KfOry+
-	 P8NwdCgERlt1WKwblR+V1KrFCxMo1RXDgXojcv40y0KcrjrcWMgsjFNPaCTnlktyKU
-	 TMqgU5iBTFq8w==
-Date: Thu, 17 Apr 2025 21:09:31 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: linux-crypto@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-	x86@kernel.org, Jason@zx2c4.com, ardb@kernel.org
-Subject: Re: [PATCH 01/15] crypto: arm - remove CRYPTO dependency of library
- functions
-Message-ID: <20250418040931.GD38960@quark.localdomain>
-References: <20250417182623.67808-2-ebiggers@kernel.org>
- <aAHDIRlSNLsYYZmW@gondor.apana.org.au>
- <20250418033236.GB38960@quark.localdomain>
- <aAHJRszwcQ4UyQ2e@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=jvosburgh.net header.i=@jvosburgh.net header.b="GWjpOOLl";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gByvhMxz"
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id BD446254017D;
+	Fri, 18 Apr 2025 00:16:34 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-07.internal (MEProxy); Fri, 18 Apr 2025 00:16:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jvosburgh.net;
+	 h=cc:cc:content-id:content-transfer-encoding:content-type
+	:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to; s=fm1; t=1744949794; x=1745036194; bh=AtjvMy942rp3hJyuKVGEc
+	B4Dnhb47VVFNtGVTXF0hBw=; b=GWjpOOLl8LhQViF9tRH/2ZeieN8UFtJU6MdJh
+	Ne7KbESBBin2fIilQRl9NjeH1hXaVH6gU55ykFOZjz6NsZZCudllekf7mY/YM94o
+	GyXF6l4fXe1z+/nERdhQ7LY6jsj3fIKVDKR2IXReUcAyyn5WGN40+q7fQl6I+TqB
+	hrjihkjXNINlNwTcMj1UTKROjbclZOCmvuyLL7biN/ysqxx82FONzCwv4Im9p1GT
+	+j/wNiB028WksuLHsq25ww7nwlyXqcXYAQhBzr59npmgxaw7zqhGxKjoFBGnkSOS
+	LcS+7vpjnuOd/tSpVz6NHOFGVb2xAtj7kL3zXVrZlYsCxa72g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-id
+	:content-transfer-encoding:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1744949794; x=1745036194; bh=AtjvMy942rp3hJyuKVGEcB4Dnhb47VVFNtG
+	VTXF0hBw=; b=gByvhMxzQd4s7DeCJVY/RlE0huYoKEPBzHdpeKhr2MsUAqfKg+i
+	mn+0p9q9LP034AntaPC09XJ3WbqWlwkJcvYacEBzSFI/4zyZ1mHqZ0zfV3pNIAfA
+	83f/6uUiC1sYYbGtjT6UsLhWAiB7NYIZSkQ0KdKpdSK0d4MrZNAxENO8LZUrBaVZ
+	u+cc/AhskHYfDwV5fg90uriqzncnk8M/foAVe50MGOJ0yGyl1P4LVbbQiEauOFA2
+	6NOlkbqW47tDoUnpLNWhlhE5zbSdmEKCpLhoW53emOF6xaHkIoyDwpwAV2sWAG+d
+	liiWL1O9rPiOAoiqvFsmW3MRbk+OiT/pZfw==
+X-ME-Sender: <xms:ItIBaDosh1SLXVcltLD_8gRJDSfID2k5CqeZdpG9qAtjPtoKYVV7xQ>
+    <xme:ItIBaNoMuMgfvM1JvindWoYVnReF754JRJb2jUSOYd39xLx7Ka1n_Gv-uDkXf46ms
+    9o0vcAJu6PjS3BwlfY>
+X-ME-Received: <xmr:ItIBaAOtQa7fDZo7lNgzUJUVjkZtIF_3SPuXbbBcDb4d0QZbHWCGLX_blwDyEshM2iX_ag>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfeduudehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhephffvvefujghfofggtgfgfffksehtqhertder
+    tddvnecuhfhrohhmpeflrgihucggohhssghurhhghhcuoehjvhesjhhvohhssghurhhghh
+    drnhgvtheqnecuggftrfgrthhtvghrnhepieefvdelfeeljeevtefhfeeiudeuiedvfeei
+    veelffduvdevfedtheffffetfeffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepjhhvsehjvhhoshgsuhhrghhhrdhnvghtpdhnsggprhgtphht
+    thhopeduuddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhgriihorhessghlrg
+    gtkhifrghllhdrohhrghdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhn
+    vghtpdhrtghpthhtoheplhhiuhhhrghnghgsihhnsehgmhgrihhlrdgtohhmpdhrtghpth
+    htohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehhohhrmhhs
+    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthho
+    pegtrhgrthhiuhesnhhvihguihgrrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvg
+    guhhgrthdrtghomh
+X-ME-Proxy: <xmx:ItIBaG7IDpHgspr7kZCbcP-YgvRqHFQh_pn3X1P5yDQe9AgAvgUsGg>
+    <xmx:ItIBaC7vCXHkK4iBbKS9EyUES9nIa5yExCjP2v0L7dzTWVyPu6f9Hw>
+    <xmx:ItIBaOjGbPFYtEXk05wQmVRumf0rPa9UoBQ11QqEN-bzYIgIgFiQqg>
+    <xmx:ItIBaE6ygoZ-FwWjwZwlFBRYa8cpLTyz557Mv5IiUwp_pWMo5HpElQ>
+    <xmx:ItIBaIW16v3G8gJufpwJVey452nggftuZ0TrUuJoD8OI_Ut2X3gWn5mQ>
+Feedback-ID: i53714940:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 18 Apr 2025 00:16:33 -0400 (EDT)
+Received: by famine.localdomain (Postfix, from userid 1000)
+	id 2126E9FD3F; Thu, 17 Apr 2025 21:16:33 -0700 (PDT)
+Received: from famine (localhost [127.0.0.1])
+	by famine.localdomain (Postfix) with ESMTP id 1D94C9FC4C;
+	Thu, 17 Apr 2025 21:16:33 -0700 (PDT)
+From: Jay Vosburgh <jv@jvosburgh.net>
+To: Hangbin Liu <liuhangbin@gmail.com>
+cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+    "David S. Miller" <davem@davemloft.net>,
+    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+    Paolo Abeni <pabeni@redhat.com>,
+    Nikolay Aleksandrov <razor@blackwall.org>,
+    Simon Horman <horms@kernel.org>, Cosmin Ratiu <cratiu@nvidia.com>,
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 net] bonding: use permanent address for MAC swapping if
+ device address is same
+In-reply-to: <Z_8bfpQb_3fqYEcn@fedora>
+References: <20250401090631.8103-1-liuhangbin@gmail.com>
+ <3383533.1743802599@famine> <Z_OcP36h_XOhAfjv@fedora>
+ <Z_yl7tQne6YTcU6S@fedora> <4177946.1744766112@famine>
+ <Z_8bfpQb_3fqYEcn@fedora>
+Comments: In-reply-to Hangbin Liu <liuhangbin@gmail.com>
+   message dated "Wed, 16 Apr 2025 02:52:46 -0000."
+X-Mailer: MH-E 8.6+git; nmh 1.8+dev; Emacs 29.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAHJRszwcQ4UyQ2e@gondor.apana.org.au>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <155384.1744949793.1@famine>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 17 Apr 2025 21:16:33 -0700
+Message-ID: <155385.1744949793@famine>
 
-On Fri, Apr 18, 2025 at 11:38:46AM +0800, Herbert Xu wrote:
-> On Thu, Apr 17, 2025 at 08:32:36PM -0700, Eric Biggers wrote:
-> >
-> > I don't think that would be better.  The 'if' would be up to 400 lines long, and
-> > it would be easy for people to miss the context when editing the file.
-> 
-> We should separate the symbols for Crypto API options and the library
-> options.  If you're worried about people missing the if statement,
-> how about splitting the file into two? One for Crypto API symbols
-> and one for the library symbols.
-> 
-> In fact we could move the library files into a different directory,
-> e.g., arch/x86/crypto/lib or arch/x86/lib/crypto.
+Hangbin Liu <liuhangbin@gmail.com> wrote:
 
-arch/$ARCH/lib/crypto/ is the "right" way to do it, mirroring lib/crypto/.  I
-was just hoping to avoid a 4-deep directory.  But we can do it.
+>On Tue, Apr 15, 2025 at 06:15:12PM -0700, Jay Vosburgh wrote:
+>> >> =
 
-- Eric
+>> >> diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/b=
+ond_main.c
+>> >> index 950d8e4d86f8..0d4e1ddd900d 100644
+>> >> --- a/drivers/net/bonding/bond_main.c
+>> >> +++ b/drivers/net/bonding/bond_main.c
+>> >> @@ -2120,6 +2120,24 @@ int bond_enslave(struct net_device *bond_dev,=
+ struct net_device *slave_dev,
+>> >>  			slave_err(bond_dev, slave_dev, "Error %d calling set_mac_address=
+\n", res);
+>> >>  			goto err_restore_mtu;
+>> >>  		}
+>> >> +	} else if (bond->params.fail_over_mac =3D=3D BOND_FOM_FOLLOW &&
+>> >> +		   BOND_MODE(bond) =3D=3D BOND_MODE_ACTIVEBACKUP &&
+>> >> +		   memcmp(slave_dev->dev_addr, bond_dev->dev_addr, bond_dev->addr=
+_len) =3D=3D 0) {
+>> >> +		/* Set slave to current active slave's permanent mac address to
+>> >> +		 * avoid duplicate mac address.
+>> >> +		 */
+>> >> +		curr_active_slave =3D rcu_dereference(bond->curr_active_slave);
+>> >> +		if (curr_active_slave) {
+>> >> +			memcpy(ss.__data, curr_active_slave->perm_hwaddr,
+>> >> +			       curr_active_slave->dev->addr_len);
+>> >> +			ss.ss_family =3D slave_dev->type;
+>> >> +			res =3D dev_set_mac_address(slave_dev, (struct sockaddr *)&ss,
+>> >> +					extack);
+>> >> +			if (res) {
+>> >> +				slave_err(bond_dev, slave_dev, "Error %d calling set_mac_addres=
+s\n", res);
+>> >> +				goto err_restore_mtu;
+>> >> +			}
+>> >> +		}
+>> =
+
+>> 	Is this in replacement of the prior patch (that does stuff
+>> during failover), or in addition to?
+>> =
+
+>> 	I'm asking because in the above, if there is no
+>> curr_active_slave, e.g., all interfaces in the bond are down, the above
+>> would permit MAC conflict in the absence of logic in failover to resolv=
+e
+>> things.
+>
+>Hmm, then how about use bond_for_each_slave() and find out the link
+>that has same MAC address with bond/new_slave?
+
+	But even if we find it, aren't we stuck at that point?  The
+situation would be that the bond and one backup interface have MAC#1.
+MAC#1 may or may not be that backup interface's permanent MAC address,
+and we're adding another interface, also with MAC#1, which might be the
+newly added interface's permanent MAC.  The MAC swap gyrations to
+guarantee this would work correctly in all cases seem to be rather
+involved.
+
+	Wouldn't it be equally effective to, when the conflicting
+interface is added, give it a random MAC to avoid the conflict?  That
+random MAC shouldn't end up as the bond's MAC, so it would exist only as
+a placeholder of sorts.
+
+	I'm unsure if there are many (any?) devices in common use today
+that actually have issues with multiple ports using the same MAC, so I
+don't think we need an overly complicated solution.
+
+	-J
+
+---
+	-Jay Vosburgh, jv@jvosburgh.net
