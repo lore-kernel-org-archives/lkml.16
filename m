@@ -1,90 +1,86 @@
-Received: from pku.edu.cn (mx17.pku.edu.cn [162.105.129.180])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D575433C4
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 16:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.105.129.180
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E6E433C4;
+	Fri, 18 Apr 2025 16:34:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744993951; cv=none; b=scPmCakBi5VhZrSFNKwSqYentyvss0CrSFGQEnQ8/xlmdio7633piAy6NSiWMk6tMfDs2voRjtHQXmn9CNvuQmtv+i6h/aBhw7vBDI+w4DXCv63HxfR60M1mQBz0zAN6RHO63znHP6reVFpgAHXvUb4/OBExet/MKOkLmkT0Rrc=
+	t=1744994044; cv=none; b=gcX2UCTghwg7tRQZFi8zzoOtTrRps9fUEYvGD8KA8XsIvu7Vq7i3PhNxU16M3EULnvb80nL8NuO0U/h/DaOYv9EPGvTZnBt+bX42DHpa1Gat+JrKQXjIbR58YrRhVSsATxDccjd6eXrvCm4CmAjINCreAfMP7S2duJYFBRk81Vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744993951; c=relaxed/simple;
-	bh=jtJlER8Kh77wvIs7Efci+IP/JTJP7Oidp+gy0wCLX5U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nPWKc6oMZmPRydA8yWD1cmwMbMORInR8rUNtjbwwSJRcBPcwM9snl3DZ5vfDWdBCjYnei2i43NHa4H3ElS6qydzXbPfGIyN6Onhc8zfy1twzeMUWP53LgrdWOygrtEZbfNelESiK2kQhnFNdQXrNPqQ9vXenDANVdrJFuW7NNFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pku.edu.cn; spf=pass smtp.mailfrom=pku.edu.cn; dkim=pass (1024-bit key) header.d=pku.edu.cn header.i=@pku.edu.cn header.b=Pb6AFGXq; arc=none smtp.client-ip=162.105.129.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pku.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pku.edu.cn
+	s=arc-20240116; t=1744994044; c=relaxed/simple;
+	bh=ed3FOAzpZAREOk5SHpU5+5vpIY0q3AAD2Ue6wKBsD4w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=AAxiJK0qlHlp2ICQnGcYduetg4zv/W642frOFcMkRwxzD11R4TzlDikUzGyP0XT/MAEcwt4r5Ziuln9cVfp2YDHkxj9YoSj2zBrAQXvBYHV6wpSoizlODifAH2oBY7q7h2NWhMyoDoH5OFM9J1OuFaC330CtcNO33i8D7WfuTek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ui/c38Nb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pku.edu.cn header.i=@pku.edu.cn header.b="Pb6AFGXq"
-Received: from pku.edu.cn (unknown [10.4.225.203])
-	by mtasvr (Coremail) with SMTP id _____7DwygmBfQJoTxNLAA--.9685S3;
-	Sat, 19 Apr 2025 00:27:46 +0800 (CST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=pku.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-	Message-ID:MIME-Version:Content-Transfer-Encoding; bh=MjC1UiVgx6
-	t8vymYAgIB/8OCTv6MNdGah24Cp6lJ0PM=; b=Pb6AFGXqbY9rf/a2nyq/kl7xR2
-	LYNkgRRdKzIPcy8r8+weWLAVDhKG4g/10Dsq7fzCpsR657KJcznblEAeDo93Lo5p
-	9oYTqcOKxw1JR5G0IpWSgHuVDbfIlDzUErbhlnklSyOyY3yW0PPCzz1tzZv6N0l9
-	o1LRaJtuxaYSBDn0s=
-Received: from localhost.localdomain (unknown [10.4.225.203])
-	by front01 (Coremail) with SMTP id 5oFpogCXbcd9fQJo4ZwQAA--.9688S2;
-	Sat, 19 Apr 2025 00:27:45 +0800 (CST)
-From: Ruihan Li <lrh2000@pku.edu.cn>
-To: Mike Rapoport <rppt@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org,
-	Ruihan Li <lrh2000@pku.edu.cn>
-Subject: [PATCH] mm/mm_init: Don't iterate pages below ARCH_PFN_OFFSET
-Date: Sat, 19 Apr 2025 00:27:27 +0800
-Message-ID: <20250418162727.1535335-1-lrh2000@pku.edu.cn>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ui/c38Nb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21E0BC4CEE2;
+	Fri, 18 Apr 2025 16:34:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744994043;
+	bh=ed3FOAzpZAREOk5SHpU5+5vpIY0q3AAD2Ue6wKBsD4w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ui/c38NbH9ruZHxr8vvOvTLlkpoR0fAjRPRj/AoBYuFSyPo6Bdg4oK2pwjR9+lDbV
+	 97EHazWSbHuoTN7bNvnbWYCV2MiXK4ccaJ11/MLxaAnYjCg3AqZCxjduTZzZoG+Z3m
+	 wrH0kqYAkGSn0p4oIT+ICPA6wHS+iQ4gJ1EdSgjpmLC+Sx6L8fLJ7B1EJmj8bfwSwZ
+	 L5VJcVcEZQ88MjuWWjeMpLoZ+7uciEZPY/a8W97aDd8Sq8k7/5afqK0f06OVrtvVyq
+	 bOJvNJw6ZerlcwDQufJKpCEiA6PpXmEBOa9JjbI9zH+NxjhelDieZrRhDoBgF/9eks
+	 PJdzC2yUBwupg==
+Date: Fri, 18 Apr 2025 11:34:01 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Nishanth Menon <nm@ti.com>
+Cc: huaqian.li@siemens.com, m.szyprowski@samsung.com, robin.murphy@arm.com,
+	baocheng.su@siemens.com, bhelgaas@google.com, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, diogo.ivo@siemens.com,
+	jan.kiszka@siemens.com, kristo@kernel.org, krzk+dt@kernel.org,
+	kw@linux.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	lpieralisi@kernel.org, robh@kernel.org, s-vadapalli@ti.com,
+	ssantosh@kernel.org, vigneshr@ti.com, iommu@lists.linux.dev
+Subject: Re: [PATCH v7 0/8] soc: ti: Add and use PVU on K3-AM65 for DMA
+ isolation
+Message-ID: <20250418163401.GA159541@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:5oFpogCXbcd9fQJo4ZwQAA--.9688S2
-X-CM-SenderInfo: yssqiiarrvmko6sn3hxhgxhubq/1tbiAgEIBWf35XUDOwALs9
-X-CM-DELIVERINFO: =?B?FMI+P6aAH6dYjNjDbLdWX9VB7ttaQFyXTaecYZzOeDisy/krtsX5TsLkpeAzENeCPc
-	0+BDdXjm5Mlm64oODP/CxX7CfVLni9Tfp1zfQxCWN8VB6Q31UtKCC16PIt30HY+/E8pUc7
-	d+yaDfFdCcwUIsdrIXjB/DMJ8BbkAvMOkWIiFx0Mg+INz0+BGBeWEvME05QNHA==
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250418134324.ewsfnze2btnx2r2w@country>
 
-Currently, memmap_init initializes pfn_hole with 0 instead of
-ARCH_PFN_OFFSET. Then init_unavailable_range will start iterating each
-page from the page at address zero to the first available page, but it
-won't do anything for pages below ARCH_PFN_OFFSET because pfn_valid
-won't pass.
+On Fri, Apr 18, 2025 at 08:43:24AM -0500, Nishanth Menon wrote:
+> On 15:30-20250418, huaqian.li@siemens.com wrote:
+> > 
+> > Jan Kiszka (7):
+> >   dt-bindings: soc: ti: Add AM65 peripheral virtualization unit
+> >   dt-bindings: PCI: ti,am65: Extend for use with PVU
+> >   soc: ti: Add IOMMU-like PVU driver
+> >   PCI: keystone: Add support for PVU-based DMA isolation on AM654
+> >   arm64: dts: ti: k3-am65-main: Add PVU nodes
+> >   arm64: dts: ti: k3-am65-main: Add VMAP registers to PCI root complexes
+> >   arm64: dts: ti: iot2050: Add overlay for DMA isolation for devices
+> >     behind PCI RC
+> > 
+> > Li Hua Qian (1):
+> >   swiotlb: Make IO_TLB_SEGSIZE configurable
+> 
+> I see at least 3 or 4 maintainers needing to co-ordinate, gets
+> complicated as I am not sure which maintainer needs to pick up what
+> patches in what dependency order. This looks like a mixed bag. Can
+> we split this patch into independent series for each maintainer with
+> clear indication of dependencies that is spread around a couple of
+> kernel windows (maybe dts comes in last?)
 
-If ARCH_PFN_OFFSET is very large (e.g., something like 2^64-2GiB if the
-kernel is used as a library and loaded at a very high address), the
-pointless iteration for pages below ARCH_PFN_OFFSET will take a very
-long time, and the kernel will look stuck at boot time.
+The keystone patch ("[4/8] PCI: keystone: Add support for PVU-based
+DMA isolation on AM654") depends on interfaces added by "[3/8] soc:
+ti: Add IOMMU-like PVU driver", so I can't really take 4/8 by itself.
 
-This commit sets the initial value of pfn_hole to ARCH_PFN_OFFSET, which
-avoids the problematic and useless iteration mentioned above.
+But I've acked 4/8, so it can be merged along with the rest of the
+series.  I assumed the easiest would be via the drivers/soc/ti/
+maintainer, i.e., you, Nisanth :)
 
-Fixes: 907ec5fca3dc ("mm: zero remaining unavailable struct pages")
-Signed-off-by: Ruihan Li <lrh2000@pku.edu.cn>
----
- mm/mm_init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Let me know if I can do anything.
 
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index 84f14fa12..b3ae9f797 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -966,7 +966,7 @@ static void __init memmap_init_zone_range(struct zone *zone,
- static void __init memmap_init(void)
- {
- 	unsigned long start_pfn, end_pfn;
--	unsigned long hole_pfn = 0;
-+	unsigned long hole_pfn = ARCH_PFN_OFFSET;
- 	int i, j, zone_id = 0, nid;
- 
- 	for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
--- 
-2.49.0
-
+Bjorn
