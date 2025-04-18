@@ -1,116 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0607274FFD;
-	Fri, 18 Apr 2025 12:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE46276032
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 13:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744981152; cv=none; b=uZ9JYLRPjeqia0nLS5o9Da84ZI2zILFkMys8IkBnwsm23i+qlqlso8W6NjjXjYY2qcsMP6tKvheHQ5Lu5noLng195+oi92EI2GY43M+I/yhwXQm97bXUJAlVGkd8175VzPrhnqKjOJqLPpF+3Ot48gYYncZO7Oa/4KB3irEKzkU=
+	t=1744981208; cv=none; b=KW0LOFCprY8EQ01/OVSDTJQCji6XzPJiSDthSk1oQ0gt7lAYL0E+N7H2osvIaP1z9vQs2rANocA4EAzDz2u3jIrrmaeZ8HNhljBvgAuffeSoN1CTh3JR1idGbZclHWMYBjSAbA1zctQiMlkoKUvosQOEswO6kxZVKYCgXZ90cxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744981152; c=relaxed/simple;
-	bh=do6/KBzZAyspAbFJ5VurXRB1jqU3G/xqMfVut3BMCuY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=paivMzkXPSKOXiEpI7JxtMc7p+0O0eVBnQhgFaIzx9v/ihY770y5l+DYYzRP8zqs3+MFe25KgBxSX2GUoVaG+WCMYN65rwd2IMx2WMkVKi+2xWhkPH0q6/bRzaA4gamapol6wEP2IDMO6fPgP+zrGQE68s8Qt2+XFGj5c91tVD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lsHtkRXk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744981208; c=relaxed/simple;
+	bh=y67QBwOdrRwlxW9MbXSoDjLMBwT9BYwqj6nFoXGWGJs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sKh6dD7Fa8SdkG1wJaqeHpoBBt6mFw15+P+FQIvgGkdZSclaSJwJS8pC6hAD5n6QuHqMsfz8y25fhY4r0Z7gWpaBaRqcQ7aKlZf9OBj0UD6E2slSKSAEYMoUYHBrY7X7XNUYQrqxBW84S9p45WeoMBJkdNAIGOMru0eQkrhAkmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kn1g2eN8; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lsHtkRXk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03C9DC4CEE2;
-	Fri, 18 Apr 2025 12:59:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744981151;
-	bh=do6/KBzZAyspAbFJ5VurXRB1jqU3G/xqMfVut3BMCuY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lsHtkRXkjvjmrsKmkVbhLzwe6FfMvqBWvGVWXswr0y8mLgclfQDnjhDjFoPiugtf6
-	 9lpQVsJUk1yGjSpB1vQuQOo4BbD1a/+2XF9Gnk/k5qiFb9mexxdZ7GOQ43rDdmwaud
-	 VfXH6MTE7jk49NrGkQOCeiQAClm98IEs0x/ICZVyYrHzx/7ISXk38GYJeWIYdGFLTb
-	 vB44jiMM0qS6upMHg2zS0sVcrUelUFFgCRXilgk/AMGyZTYK5nGNmS4VEAusUmvtSQ
-	 WxH7FSpTV4wUhZUtFSYAqJ30/9m55LMAhrLDqy+uwv96Z+QaeX4pA6Dn7v4/ON5oNn
-	 HqJ3cvtPzv6vQ==
-Date: Fri, 18 Apr 2025 14:59:05 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Arnd Bergmann <arnd@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Davide Ciminaghi <ciminaghi@gnudd.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH] x86/e820: discard high memory that can't be addressed by
- 32-bit systems
-Message-ID: <aAJMmQKTglGc7N-K@gmail.com>
-References: <Z_rDdnlSs0rts3b9@gmail.com>
- <20250413080858.743221-1-rppt@kernel.org>
- <20250417162206.GA104424@ax162>
- <aAHyHuwbmhjWmDqc@gmail.com>
- <aAIU9LHAr_BGb5Jl@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kn1g2eN8"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2240b4de10eso3845905ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 06:00:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744981206; x=1745586006; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l8JNtE4WoAq9/1lxNRUODtbBYrROtMNzFv6IeY4kWjg=;
+        b=Kn1g2eN8olY6hsY1lDzWMkPnERtgHOeY+Vy56hI+i7o7psZs19KqmqjDFXPtLO5JCZ
+         /R0Aoy3AL9NeivQ2i8R1Gh+sW3OPvFKlJpNB6AF1z9l7x8kY1vCSWbnmVl+BCY3wlcUf
+         eXjh5J7Al4dejIzsjGL3EKfqJ2CTOjNzhsKr1iwOXI3StT8QYdwOMUPNx4ufRnAXj2Wz
+         6ptk0aN8IF7n1WBqmVD7A/NeDC/I+mXcovTRYb0rl2k6b/RJkHd6ot/04jxBVdD2E6u3
+         DvTWmA3WOmuE6d6ZX/0J6na8TchlaHr2RKeOBsyLpwAdEVsHwjZhmilgxByOIsblNywS
+         h1vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744981206; x=1745586006;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l8JNtE4WoAq9/1lxNRUODtbBYrROtMNzFv6IeY4kWjg=;
+        b=sofmNNau7tajdYywIDgZRe5zPLfGCtiFKlx+iy9AYYv+D5cPMydRXywz2JjQlM8mez
+         n40Md+gWDtRQtlMwJ84qeupisrBIr4X3VRMBx8AYM0lWQnuHufkrfJeOX52etG7Hi/tQ
+         I/Sr5dcyAn9izGqHx3aS7XyF3d3UZRYWsm4BtV5ARY6wJvteyjAnbjhZeXsaBx5zHmEA
+         rExyWjGC7twI7Xcje2gMLpyELcCJ0wimmnFf8rqqivKv04rjIE9K+p4ggyi9wAQZ4FmO
+         X+huLXXQJk4FWNjd8EDAKuL5s8XjY2JGK9ifM+bxnnkPTCCDFvltGv5p4MRtCYIy54BO
+         OwMw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDwtMZPrF5xuVJtjCWKnfyDEFM8/nhABDD/C1AkjMmG1T5cFGwkUtCjSYSyoVhZVjKNS0rNdTva+y7D3c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzT6i0bPHdKphapFHO416SGKMkXEjn9O3TxMphO9v2XMgpOmDCI
+	hQaLccMmjYXt06p348iozTBoBCxu/zyU/St2D2CeS4otBI8pqve+3J6R7vyrqIscQT4PRrewSui
+	g7nnVoeQBS8faigqDT2OSPVzYYtk=
+X-Gm-Gg: ASbGncsQJ0jRJsHbomOr15kpkVk3yXInJipi21fVl3ZAf+xeYkwLt0nAu18TO3/1nyu
+	r+iUzep9+oip97ncuJyN9oeva/P0ZIv7dNTnGzj3Rn5PNt4vEJ90ODtporSqqdEvikZAfy4orL9
+	ewpcPpeLOfeJvCP73L3tYwXA==
+X-Google-Smtp-Source: AGHT+IGXaicF/YetTuwq7s8eBQVZCstjIo+yxIkShv38GuaKB72IC1mUOGVgw6U2wfXMrWNvIRt5K3Celpi0igA/0l4=
+X-Received: by 2002:a17:902:cecf:b0:21d:cdb7:876c with SMTP id
+ d9443c01a7336-22c5356dcdemr15485185ad.3.1744981205862; Fri, 18 Apr 2025
+ 06:00:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAIU9LHAr_BGb5Jl@kernel.org>
+References: <20250418002117.130612-1-linux@treblig.org> <20250418002117.130612-3-linux@treblig.org>
+ <ab85b3c9-46cc-4148-9de5-dcaabea130ea@wanadoo.fr>
+In-Reply-To: <ab85b3c9-46cc-4148-9de5-dcaabea130ea@wanadoo.fr>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Fri, 18 Apr 2025 08:59:54 -0400
+X-Gm-Features: ATxdqUEolXit984ANdGjgXNbP2P1Sp8M7f-qILNT6MUa_IQPkkR459ABsXKExIs
+Message-ID: <CADnq5_MrEQ2XGbNho6xd9Um0R6kEEpZBeu0e-97o6-D=juD0gw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] drm/radeon: Remove unused radeon_doorbell_free
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: linux@treblig.org, alexander.deucher@amd.com, harry.wentland@amd.com, 
+	sunpeng.li@amd.com, siqueira@igalia.com, christian.koenig@amd.com, 
+	airlied@gmail.com, simona@ffwll.ch, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Apr 18, 2025 at 2:18=E2=80=AFAM Christophe JAILLET
+<christophe.jaillet@wanadoo.fr> wrote:
+>
+> Le 18/04/2025 =C3=A0 02:21, linux@treblig.org a =C3=A9crit :
+> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> >
+> > radeon_doorbell_free() was added in 2013 by
+> > commit 75efdee11b5d ("drm/radeon: implement simple doorbell page
+> > allocator")
+> > but never used.
+>
+> Hi,
+>
+> I think than instead of being removed, it should be used in the error
+> handling path of cik_init() and in cik_fini().
 
-* Mike Rapoport <rppt@kernel.org> wrote:
+Yes, ideally.  Care to make a patch to fix that?
 
-> On Fri, Apr 18, 2025 at 08:33:02AM +0200, Ingo Molnar wrote:
-> > 
-> > * Nathan Chancellor <nathan@kernel.org> wrote:
-> > 
-> > > Hi Mike,
-> > > 
-> > > On Sun, Apr 13, 2025 at 11:08:58AM +0300, Mike Rapoport wrote:
-> > > ...
-> > > >  arch/x86/kernel/e820.c | 8 ++++++++
-> > > >  1 file changed, 8 insertions(+)
-> > > > 
-> > > > diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-> > > > index 57120f0749cc..5f673bd6c7d7 100644
-> > > > --- a/arch/x86/kernel/e820.c
-> > > > +++ b/arch/x86/kernel/e820.c
-> > > > @@ -1300,6 +1300,14 @@ void __init e820__memblock_setup(void)
-> > > >  		memblock_add(entry->addr, entry->size);
-> > > >  	}
-> > > >  
-> > > > +	/*
-> > > > +	 * 32-bit systems are limited to 4BG of memory even with HIGHMEM and
-> > > > +	 * to even less without it.
-> > > > +	 * Discard memory after max_pfn - the actual limit detected at runtime.
-> > > > +	 */
-> > > > +	if (IS_ENABLED(CONFIG_X86_32))
-> > > > +		memblock_remove(PFN_PHYS(max_pfn), -1);
-> > > > +
-> > > >  	/* Throw away partial pages: */
-> > > >  	memblock_trim_memory(PAGE_SIZE);
-> > > 
-> > > Our CI noticed a boot failure after this change as commit 1e07b9fad022
-> > > ("x86/e820: Discard high memory that can't be addressed by 32-bit
-> > > systems") in -tip when booting i386_defconfig with a simple buildroot
-> > > initrd.
-> > 
-> > I've zapped this commit from tip:x86/urgent for the time being:
-> > 
-> >   1e07b9fad022 ("x86/e820: Discard high memory that can't be addressed by 32-bit systems")
-> > 
-> > until these bugs are better understood.
-> 
-> With X86_PAE disabled phys_addr_t is 32 bit, PFN_PHYS(MAX_NONPAE_PFN)
-> overflows and we get memblock_remove(0, -1) :(
-> 
-> Using max_pfn instead of MAX_NONPAE_PFN would work because there's a hole
-> under 4G and max_pfn should never overflow.
+Thanks,
 
-So why don't we use max_pfn like your -v1 fix did IIRC?
+Alex
 
-	Ingo
+>
+> CJ
+>
+> >
+> > Remove it.
+> >
+> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> > ---
+> >   drivers/gpu/drm/radeon/radeon.h        |  1 -
+> >   drivers/gpu/drm/radeon/radeon_device.c | 14 --------------
+> >   2 files changed, 15 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/radeon/radeon.h b/drivers/gpu/drm/radeon/r=
+adeon.h
+> > index 8605c074d9f7..58111fdf520d 100644
+> > --- a/drivers/gpu/drm/radeon/radeon.h
+> > +++ b/drivers/gpu/drm/radeon/radeon.h
+> > @@ -686,7 +686,6 @@ struct radeon_doorbell {
+> >   };
+> >
+> >   int radeon_doorbell_get(struct radeon_device *rdev, u32 *page);
+> > -void radeon_doorbell_free(struct radeon_device *rdev, u32 doorbell);
+> >
+> >   /*
+> >    * IRQS.
+> > diff --git a/drivers/gpu/drm/radeon/radeon_device.c b/drivers/gpu/drm/r=
+adeon/radeon_device.c
+> > index bbd39348a7ab..4127ffb4bb6f 100644
+> > --- a/drivers/gpu/drm/radeon/radeon_device.c
+> > +++ b/drivers/gpu/drm/radeon/radeon_device.c
+> > @@ -392,20 +392,6 @@ int radeon_doorbell_get(struct radeon_device *rdev=
+, u32 *doorbell)
+> >       }
+> >   }
+> >
+> > -/**
+> > - * radeon_doorbell_free - Free a doorbell entry
+> > - *
+> > - * @rdev: radeon_device pointer
+> > - * @doorbell: doorbell index
+> > - *
+> > - * Free a doorbell allocated for use by the driver (all asics)
+> > - */
+> > -void radeon_doorbell_free(struct radeon_device *rdev, u32 doorbell)
+> > -{
+> > -     if (doorbell < rdev->doorbell.num_doorbells)
+> > -             __clear_bit(doorbell, rdev->doorbell.used);
+> > -}
+> > -
+> >   /*
+> >    * radeon_wb_*()
+> >    * Writeback is the method by which the GPU updates special pages
+>
