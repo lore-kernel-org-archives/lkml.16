@@ -1,107 +1,129 @@
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E792121D3EF
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 19:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F048C208A7;
+	Fri, 18 Apr 2025 19:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745003349; cv=none; b=RQtCT9lFshi851idHhk41AWBs24bP34FNAGb9KCSusQzQjgc4VQjm78jQ9ZKCglE/Ic5riIJr2j9qpuicIH6PpcNiwa7A7KSOnNbfAEtLpXuUt4mLJl7VMoObps6MkHXsn7D2/AjvrChrHI65RITyC3E8QdeGW+eWR6q6VWr1aw=
+	t=1745003578; cv=none; b=Uh6I0tB0AKzBZm4rNuTvXEUF1+G5k14Y/6rCh9EwA4R0PW4J4QObDOqrJFI4lYz/AuCp9BafGpRkgU+42XXajB6HKZI/3tFwo/ruX3LBf2DngU6Ar9kPfAfWAOckWr0owg7O0uNjRQu+cCOgbPutjQz4qPjH7/Ov8qgNnSpCWRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745003349; c=relaxed/simple;
-	bh=N3mqmqfcODct2AexTU3blKtP+e5GHWSpg1sAN4RdBIU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lMzBvmMDWyImg5GG5aZCzABUWB6nrwfFxwkkNoevHrvHNLv5Z4+G3gI5JobxBYDgmWcR51JA7YZRVfdY0yIS52Rvt3ETpi3Q3ewddYMXk8Csl5Xc7S3sCiDscsJL9NOPY7/EkNRYycNWenobq9etSgCUNz03GL3A5a4VWmqARbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=UGPpn5Tq; arc=none smtp.client-ip=209.85.161.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1745003578; c=relaxed/simple;
+	bh=heWZB3ttpotaCwOLggR7a3xPYSXNHPSD4GYh+irvlio=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J/qNyuLNBb3bjYzM7sd7Wfw2aDu6kZHlPNYh0hAeomD2aJia2F86Oezy8MkqRQYTFpYZbDsVtooLqUL62kRlVQc2ZMqeZEjfULPTzIHqNQuu2s9xn8zcBik876/kdioRkPHin3HX5/x5z3i3fIqufA1wI0PzSHOd6O4qZFYWXCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DxKsGxaU; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="UGPpn5Tq"
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-603ff8e90acso431468eaf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 12:09:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745003347; x=1745608147; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pG1Bxch6x3OgorYiiEYLNmcSoJ8xuGTKE7oUjof+wN4=;
-        b=UGPpn5TqJRVZw95WO1yjvenBFuG8ug1tPfIjdf7WuDI4zD7zgob8LcYE6Btd5ylANd
-         Mb3E1+Mem4b8dFDfymkHRoXaAqOANnZfbEX8a46r/7v5OYI5XGsj6F1TsKvob5EVLJ5k
-         c+dci0ygUboCV2Hnt0+c8RGoocIAmgyMU9RzFZwAkU6pc2kDeiVl5ccHz39F5szAcNqh
-         Rois1EWtiSRa1ywLhe4FFbtcUhvuzsw3pqaj8trSpGGSEFXIXkSOeBEs6vODDh/xX9gC
-         WE8eF3BD1HOihVDMC8DdfnAR+8vw73QByksz1UTCuyydrHQJpIPOWGTt8vqqpzhZUXcV
-         fSVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745003347; x=1745608147;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pG1Bxch6x3OgorYiiEYLNmcSoJ8xuGTKE7oUjof+wN4=;
-        b=O8kaoNAG3pJyHUlBHTrkRPrqoBdf5OnY1OZQdy5aWQcyTq7YuwNtKsghXl52xed8l2
-         E+9HQVp7J/8sn2EyiHqYYHBPqJzTU6ZY8+K+733O0iHusl2xrmKITgdqL2ibLKFA88H5
-         vuQU9BmbFBjRMupoMp5/vU9AhKFyfay5mE+t71IJHSBkKSuFvxzZ9E0b9jVf0iDggX67
-         vuywQhDPOJvP0wOJxI0+FhME7MnaMUVgSXk+0s0lBRDTtsUu8EBQdOddMT4IQMNFUsiO
-         iVdoKGzLv9N+Q8oK5er/pTrcPM03V6YUumm3gkaPlTihzO8gJjSvz2sFh0rPqjSOz+CN
-         JQCA==
-X-Forwarded-Encrypted: i=1; AJvYcCXKSdMvtL0WNj44XiVETAUcfS+X95nHft2ZcBTHMGRoRymHfZXdT9KyDhXyk1Uu52AS98uHY7p+0DtpGU8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAnXMo84VaOJ9i3Lor16gGctYEVqF9iGcmzg7ob79Tq9LLbMx+
-	nZJfplqKZIjHkWjr1acEKLQlx3nfrx+yxZKHpJO1jZY6NdU8vAQlzYwfdWYOJNY=
-X-Gm-Gg: ASbGnctIgp3BwvFGyT1N21N2pK0NHKy1InmesKK26JcXLOBYUweO+k2VKJ2elCskXD6
-	ra9wPLwGxz+KumM7jjEmjOlzKYgpS9qBTY77eUaixIORsLqkDPMsKmB4Vq7AznlSArIXNvq3vPT
-	1o7AmdTW1RevHbGiUO+1d5xKvFXNZf+eUeJEK/KUqcsOJAiQZzbo1Sy0bJ/5PKSkx4ssuMKnBcA
-	K5Fbi++LISyVht//yDevINfmuTieZgTZmFcDrTgwbRDeMrITvS3nAl8h8bEZ7KeQ7BU0oOzSNRO
-	EEMHW9nQqc4EsqTX3fqnDepefqrEuDgZoLICiZ1DAexydG2WXozDkYe2Gl5aDxRlyMPJrOnlaXU
-	CBk4kwzPxUMJJcad6zg==
-X-Google-Smtp-Source: AGHT+IFx+Ev5S1uBDcn7BVitaXEYapaEjznsEh35Pj5xuyFGfgsakDxrFpZPL1Vb+Snxu1p+KuguuA==
-X-Received: by 2002:a05:6808:6905:b0:3fa:25c8:a037 with SMTP id 5614622812f47-401c0c143e0mr1988465b6e.29.1745003346958;
-        Fri, 18 Apr 2025 12:09:06 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:dcdf:46e0:18e5:c279? ([2600:8803:e7e4:1d00:dcdf:46e0:18e5:c279])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-605ff5ee212sm474001eaf.13.2025.04.18.12.09.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Apr 2025 12:09:05 -0700 (PDT)
-Message-ID: <ed5c4b46-0b3f-4278-ba8e-6f6977f18429@baylibre.com>
-Date: Fri, 18 Apr 2025 14:09:04 -0500
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DxKsGxaU"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4A7D840E0242;
+	Fri, 18 Apr 2025 19:12:52 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id fyg-1JqDRXFt; Fri, 18 Apr 2025 19:12:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1745003568; bh=vqs5bEYDx2rK7w9nakwEETZdrDS+pQNjh6rv5r2rEOs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DxKsGxaUFmC38C2fmAjgpvedGBqaRRaOPChVhL5ECbdU0lKZmfwTNGKdnFJGLMkvH
+	 DvSlEXOTSyXwLD/f/7iAQpV8tZ+jMjOwy+xcB2G0ZUkB91t+Kd2uWafQlaVSSvNGzR
+	 c9TlQJc1z2mFLcCFNI+a5k+L+PFnXmn5y7Y1CabrxhyNroBxc/+mlDpl2wHDfZ+W4N
+	 Qxf03CLJMYvfuSTkDOd/iotXQqSF9gVU+PQef9Smt4/1TAnzqyU+3FHHO7gt4byCpu
+	 xQfAYwvG7F+I2pyqmn7Md5ADkCi33APLaPQ8cqJuujOrUfjk1dg606kMxSRYZIgFBb
+	 RySOZfosXsGWYjeG5U/PFTH45A6jFPb37qVD6vKKv9aMGs4ILTW3ZtOtdEHg2aksFJ
+	 sJRWrbnPycJaBMtgHJ/cQtu1SrQrMpx7p9XmzYYNyqdr6OlGSLh8xsCUHSuoN3Ffxs
+	 RhQS3OoKIgfmYuZrephXiThTJlr0+PzCi3VF7zkXmE6anbvbkGFogHbTGcKI6cSJmV
+	 hlTovOqEQcDnOgwc03UUBu3/nJ/c9X2h322xTu54c86ffwGb4mU+VRtf16fDs0Zfjq
+	 uXIFxxS9gZOlNeDdA9NIVdeGAUwJ0UA252GhwbioYBCoEjA/rBsOM2yd7HQnyDcHwF
+	 eM8Ba45dgzbSK0eWn3ICaprs=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 15EB340E0200;
+	Fri, 18 Apr 2025 19:12:31 +0000 (UTC)
+Date: Fri, 18 Apr 2025 21:12:24 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Max Grobecker <max@grobecker.info>, Ingo Molnar <mingo@kernel.org>,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, thomas.lendacky@amd.com, perry.yuan@amd.com,
+	mario.limonciello@amd.com, riel@surriel.com, mjguzik@gmail.com,
+	darwi@linutronix.de
+Subject: Re: [PATCH AUTOSEL 5.10 2/6] x86/cpu: Don't clear
+ X86_FEATURE_LAHF_LM flag in init_amd_k8() on AMD when running in a virtual
+ machine
+Message-ID: <20250418191224.GFaAKkGBnb01tGUVhW@fat_crate.local>
+References: <20250331143710.1686600-1-sashal@kernel.org>
+ <20250331143710.1686600-2-sashal@kernel.org>
+ <aAKDyGpzNOCdGmN2@duo.ucw.cz>
+ <aAKJkrQxp5on46nC@google.com>
+ <20250418173643.GEaAKNq_1Nq9PAYf4_@fat_crate.local>
+ <aAKaf1liTsIA81r_@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: amplifiers: ada4250: use DMA-safe memory for
- regmap_bulk_read()
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Antoniu Miclaus <antoniu.miclaus@analog.com>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250418-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v1-1-7e7bd6dad423@baylibre.com>
- <CAHp75Vdxdbqu6qkbuo5y4jADOH_h9Re6m8icSj3Je4hnVsha0g@mail.gmail.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <CAHp75Vdxdbqu6qkbuo5y4jADOH_h9Re6m8icSj3Je4hnVsha0g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aAKaf1liTsIA81r_@google.com>
 
-On 4/18/25 1:58 PM, Andy Shevchenko wrote:
+On Fri, Apr 18, 2025 at 11:31:27AM -0700, Sean Christopherson wrote:
+> IMO, this is blatantly a QEMU bug (I verified the behavior when using "kvm64" on AMD).
+> As per QEMU commit d1cd4bf419 ("introduce kvm64 CPU"), the vendor + FMS enumerates
+> an Intel P4:
 > 
+>         .name = "kvm64",
+>         .level = 0xd,
+>         .vendor = CPUID_VENDOR_INTEL,
+>         .family = 15,
+>         .model = 6,
 > 
-> пʼятниця, 18 квітня 2025 р. David Lechner <dlechner@baylibre.com <mailto:dlechner@baylibre.com>> пише:
-> 
->     Use DMA-safe memory instead of stack-allocated memory for the call to
->     regmap_bulk_read() in the ada4250_init() function as this could be used
->     directly by a SPI controller.
-> 
-> 
-> Sorry, but can you elaborate more on this? If driver doesn’t override the callbacks the regmap SPI uses spi_write_then_read() which is supposed to be dma safe. 
->  
-> 
+> Per x86_cpu_load_model(), QEMU overrides the vendor when using KVM (at a glance,
+> I can't find the code that actually overrides the vendor, gotta love QEMU's object
+> model):
 
-Ah, I didn't dig that far down. Will send a new patch that just cleans up the
-unnecessary alignment and unaligned call.
+LOL, I thought I was the only one who thought this is madness. :-P
 
-(Also can't believe you sent HTML mail!)
+> 
+>     /*
+>      * vendor property is set here but then overloaded with the
+>      * host cpu vendor for KVM and HVF.
+>      */
+>     object_property_set_str(OBJECT(cpu), "vendor", def->vendor, &error_abort);
+> 
+> Overriding the vendor but using Intel's P4 FMS is flat out wrong.  IMO, QEMU
+> should use the same FMS as qemu64 for kvm64 when running on AMD.
+> 
+>         .name = "qemu64",
+>         .level = 0xd,
+>         .vendor = CPUID_VENDOR_AMD,
+>         .family = 15,
+>         .model = 107,
+>         .stepping = 1,
+> 
+> Yeah, scraping FMS information is a bad idea, but what QEMU is doing is arguably
+> far worse.
 
+Ok, let's fix qemu. I don't have a clue, though, how to go about that so I'd
+rely on your guidance here.
+
+Because I really hate wagging the dog and "fixing" the kernel because something
+else can't be bothered. I didn't object stronger to that fix because it is
+meh, more of those "if I'm a guest" gunk which we sprinkle nowadays and that's
+apparently not that awful-ish...
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
