@@ -1,76 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94BDD770E2;
-	Fri, 18 Apr 2025 02:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744943149; cv=none; b=cVXjyaEaRBovJQ8cMaojnnjJrlWQNMX8RuPJa5ote3IXMl6yeMKMYBFWlgVYm/FEctuJtI875hNwHJHK2h3prK28UaLdAwr6LbU27/c5C/kJOtP0UVeUdJ7eUKth3/oT07XfKvsVmhJttnBaTsgJ5pSGZ1rrD+zNH6Cqqris7vM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744943149; c=relaxed/simple;
-	bh=1mXDAI/S5vr5p1X81NHt2LdADcBB2pqbWg9JJmWE/es=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EuOjUIfMTQ218oAJJG6PBCyeapO8xlEGXMBk4uBJme3mWiXR6Kj6cAmlbiJ+AbHCDj2hbsjBHoSftJniautttTWvgcZBcOctFljOwxDCnx+bQpk/v7Gdia+bj9qgLzPSQgeHFTZMRu+lMHj2yVVyujSzP8lZQT5kYxC6EYtDbsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pp3ts+0Y; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1904487A5
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 02:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744943267; cv=pass; b=TEKNQagU4duGoj8Gs5AWTqBrrHN7oRmIpqPTJsIagcfbH+JuzDHEGqiKnUoLqUsOJ15uMxnxqq6tv0LOKfa2PCn44tn438CFwBrFEHD5OyxcXj1g5YKJdlgXPC9xt8gyuEgk47boFxrVqHAvdqNU4T8+gs0fHG12SKrNsAfzylw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744943267; c=relaxed/simple;
+	bh=0SePULu+5dTrBqECfVHdH+40vwuVTVMCifdfzTZejHc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ahzCb/kIWKcToWgUO4w9X2xe9z+B0fjF+5wgOUNKrhhpejtjxYB8mtBraiLl8MoFmkrE/yQKSlBWk5YonQAblCWSoOsVjYPubkLME21Z0Im8ZCgzjrgOMNfRFJmPbdtz32gcUfh0oyKkudn6lg/I1eKR9U4frTHnYMU/JGJHcps=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=kbILgY+M; arc=pass smtp.client-ip=136.143.184.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pp3ts+0Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CB72C4CEE4;
-	Fri, 18 Apr 2025 02:25:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744943149;
-	bh=1mXDAI/S5vr5p1X81NHt2LdADcBB2pqbWg9JJmWE/es=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Pp3ts+0YHwbbyHdi6Ek0l9DSU7OyxOaHH2/b8ft6hMtPXeJZRn2yKt7h+gIr4OjpX
-	 Gq21S61jaWKTCEtGnBm+ZiQz1iCq31EQtFYDhrZb2FbtUtnNCbUCUmJvbWkhF4jx4r
-	 nARVCbnAuiWia6OZ/29fF4O1V1eXekXnHn/5b0GX1XVQYBulQMinDYg1GCiQk8+dIw
-	 gMvKdYTsgBOOnrrBEg7lcUkUPaYdRKnjkIZsmXlBgmpf0etlfqQ5LGv9o24PY7ZxsC
-	 fh3UtElZkrsesWYI2o25TbsqIDCGevkzA2bF5eeOpcZ2bSwwiBJEXpIrVzqqfOjVBq
-	 i2axsLj+k9QWA==
-Date: Thu, 17 Apr 2025 19:25:47 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jacob Keller <jacob.e.keller@intel.com>
-Cc: Sathesh B Edara <sedara@marvell.com>, <netdev@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <hgani@marvell.com>,
- <vimleshk@marvell.com>, Veerasenareddy Burru <vburru@marvell.com>, Shinas
- Rasheed <srasheed@marvell.com>, Satananda Burla <sburla@marvell.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>
-Subject: Re: [PATCH net v3] octeon_ep_vf: Resolve netdevice usage count
- issue
-Message-ID: <20250417192547.36a7503e@kernel.org>
-In-Reply-To: <07549649-3712-47b9-917b-c5001f9761cb@intel.com>
-References: <20250416102533.9959-1-sedara@marvell.com>
-	<07549649-3712-47b9-917b-c5001f9761cb@intel.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="kbILgY+M"
+ARC-Seal: i=1; a=rsa-sha256; t=1744943244; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=khle9Ogawcy5ada/SwZnZxBze4+S52dBtlWsHkDYZv2gz6WUGM5rBm/9N4Qo6VglyTHb4gSK+8LLWOQqW0qfj+VEbsiqympc3RbyUL8krZZm49MvFnio58c3imUosEFApbj9nlfiXxFrOSaSRVKSVXX45BNevgbp6akirWUJG/c=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744943244; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=TQPTgMoUAR+BoJNeRF06tjYDRUpnz5ufGvKzA/xFyhg=; 
+	b=MStWYdP/kwzFPS7hij5D0hFlY2jF3iSS4Eg7/+mQ2DcgNeIRYQiqr4BTbEOFIANZUKgmdESGNQc+gp4R1xywIDCdoIlySxApubrVLcZhs1DmvjwWUvX6l6ajolDwqfsMACf55ppbjYp3EXCWMws9mlaOPYDex5bDnlCNl8pXc1A=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
+	dmarc=pass header.from=<adrian.larumbe@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744943244;
+	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=TQPTgMoUAR+BoJNeRF06tjYDRUpnz5ufGvKzA/xFyhg=;
+	b=kbILgY+M5HgP30sHXD8gcXdQCqjmulcvnv/ATEWKD+GmZKKb4GuJ76hGVU1dL8Sj
+	SEmYkn6FLqkUNOuyET/frX88eWsFCuf0rX4JvcFSP+K723z8jF8SA7UrLc9frT1z7YF
+	i8WRuSRqwWPba9AbL4TZcF4qhaPKW2zGQCkpVr6o=
+Received: by mx.zohomail.com with SMTPS id 1744943241859385.99319994207747;
+	Thu, 17 Apr 2025 19:27:21 -0700 (PDT)
+From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
+To: linux-kernel@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	kernel@collabora.com,
+	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
+Subject: [PATCH v9 0/4] Panthor BO tagging and GEMS debug display
+Date: Fri, 18 Apr 2025 03:27:03 +0100
+Message-ID: <20250418022710.74749-1-adrian.larumbe@collabora.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 16 Apr 2025 13:26:43 -0700 Jacob Keller wrote:
-> > @@ -834,7 +833,6 @@ static void octep_vf_tx_timeout(struct net_device *netdev, unsigned int txqueue)
-> >  {
-> >  	struct octep_vf_device *oct = netdev_priv(netdev);
-> >  
-> > -	netdev_hold(netdev, NULL, GFP_ATOMIC);
-> >  	schedule_work(&oct->tx_timeout_task);
-> >  }  
-> I guess the thought was that we need to hold because we scheduled a work
-> item?
+This patch series is aimed at providing UM with detailed memory profiling
+information in debug builds. It is achieved through a device-wide list of
+DRM GEM objects, and also implementing the ability to label BO's from UM
+through a new IOCTL.
 
-Looks like something I would have asked them to do :)
-But it was probably merged before I could review next version ?
+The new debugfs file shows a list of driver DRM GEM objects in tabular mode.
+To visualise it, cat sudo cat /sys/kernel/debug/dri/*.gpu/gems.
+To test this functionality from UM, please refer to this Mesa patch series:
+https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/34224
 
-I mean, passing NULL for the tracker is... quite something.
+Discussion of previous revision of this patch series can be found at:
+https://lore.kernel.org/dri-devel/20250415191539.55258-5-adrian.larumbe@collabora.com/
 
-> Presumably the driver would simply cancel_work_sync() on this timeout
-> task before it attempts to release its own reference on the netdev, so
-> this really doesn't protect anything.
+Changelog:
+v9:
+ - Added padding field to uAPI BO label ioctl struct
+ - Simplified copying and bounds checking of label in ioctl function
 
-It does, but before unregistering :/
+v8:
+ - Renamed NULL to NUL in comments describing NUL-terminated strings
+ - Removed 'size' parameter from labelling ioctl() as max length can be
+   handled by the kernel itself
+ - Made sure to use kfree_const() everywhere labels are freed
+ - Replaced maximum label size with numerical constant rather than page size
+ - Added some warnings and checks in kernel BO labelling function
 
-Sathesh, schedule_work() returns a value. You should use it.
+v7:
+ - Improved formating of DebugFS GEM's status and usage flags
+ - Deleted some spurious white spaces
+ - Renamed usage flags setting function
+
+v6:
+ - Replaced some mutex calls with scoped guards
+ - Documented data size limits in the label ioctl
+ - Simplified GEMS status flags treatment (Panthor doesn't use madvise)
+ - Fixed some array size and string bugs
+ - Improved the naming of GEM status and usage flags to reflect their meaning
+ - Improved the formatting of the output table
+
+v5:
+ - Kept case and naming of kernel BO's consistent
+ - Increased the driver minor after new ioctl
+ - Now adds BO to debugfs GEMs list at GEM object creation time
+ - No longer try to hide BO creator's name when it's a workqueue or modprobe
+ - Reworked the procedure for printing GEM state and kernel BO flags
+ - Turned kernel BO flags and GEM state flags into bit enums
+ - Wait until BO state is marked as initialied for debugfs display
+
+v4:
+ - Labelled all kernel BO's, not just heap chunks.
+ - Refactored DebugGFs GEMs list handling functions
+ - Added debugfs GEMS node mask to tell different kinds of BO's
+
+Adrián Larumbe (4):
+  drm/panthor: Introduce BO labeling
+  drm/panthor: Add driver IOCTL for setting BO labels
+  drm/panthor: Label all kernel BO's
+  drm/panthor: show device-wide list of DRM GEM objects over DebugFS
+
+ drivers/gpu/drm/panthor/panthor_device.c |   5 +
+ drivers/gpu/drm/panthor/panthor_device.h |  11 ++
+ drivers/gpu/drm/panthor/panthor_drv.c    |  90 ++++++++-
+ drivers/gpu/drm/panthor/panthor_fw.c     |   8 +-
+ drivers/gpu/drm/panthor/panthor_gem.c    | 233 ++++++++++++++++++++++-
+ drivers/gpu/drm/panthor/panthor_gem.h    |  80 +++++++-
+ drivers/gpu/drm/panthor/panthor_heap.c   |   6 +-
+ drivers/gpu/drm/panthor/panthor_sched.c  |   9 +-
+ include/uapi/drm/panthor_drm.h           |  20 ++
+ 9 files changed, 451 insertions(+), 11 deletions(-)
+
+--
+2.48.1
