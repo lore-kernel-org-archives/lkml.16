@@ -1,242 +1,205 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2051.outbound.protection.outlook.com [40.107.93.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9939C8C0E
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 00:08:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744934925; cv=none; b=JBiXA/XP5c5kIWmQyvEgJ4qtP430bylA2nGHFAjw4rBjWHowBon2YHjNwKxOPvdmJ+HSZTwWf3lpkXNDFqSy0q+dsNcMRrB9sX7VOJv3G6QDcGOxXoZgwoYK6PVuOiKOpICIKudrzvrjODEF2dyfRDcUR+uhd1M96dr9gjE4YcU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744934925; c=relaxed/simple;
-	bh=d3zUhAt6ZxhNWHUaQxYASbqcpVSU8kmMhoZu6xLa01g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uh6oUx3UslLfuIoclTy8qmV1Xu6sXPUJErEQhqEgFBlr2x7DBbIU10isAt81HpKbyaz8A/tZkp/OSt2GEK+wdYMWVoIxUXI+6tYv23pNptkdx9AYEKTjQOaKf8vRTUixiM1AYqua91lZ+SU/aYaMtq+eynYJzX3FQ3PCGdqzU5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d12JgMEb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639441C32
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 00:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744934944; cv=fail; b=PhVKkKY3WCPm0S4aa2eUyWkOmHdaJbC21fkbvuTOEXQaqrvkZ8gnqeL5DEKpBDD02mBS6MdQCO2mclydXnutswTIciaI6ukwdbGyLbydDaWrjTYCELeWmJ6rT4m3VUS7NzSp7nTn8pwAYI+X6zG0MLewwKJtcYGfW1Zovu+aY1c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744934944; c=relaxed/simple;
+	bh=m0ZuGBy+kGb56H588qt8HyvHviyRZNl7FEF+J1l817I=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HQdZ4rLx7NVjj80LrJJSkxw1Umd370CNeopxW2EgKQcQtoizmGdLe6Hca6AW434Q8STe5acLcgOI4ZpNgiNDh2hnXtjs+j/kYX8Q6d/gAlYmSzNpvMPe41CVbV3GCYHNr1qFjH48SFHEFtBo9UADy9RZE9/TNIG+LK5jfhy7pas=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LYe1HK3T; arc=fail smtp.client-ip=40.107.93.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d12JgMEb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744934922;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=oLP/T1BBLrBIBaDPOF+hXYj8/NW65np6KEHHWIeq7uY=;
-	b=d12JgMEbpt+HwMkc009pOr0S54iHaFgQsvtDuH2ZZO+NupXj3uSWNw1uvziiZzkUjI71SS
-	sy/debVrpuKYn6sfAYzzXDgJZyYfp3YLdEq9V6UZraJgXdivpJ4nqI+GM3DF1GWDcs91Lx
-	NM8s2vBNLlUrq7FLVnYZs1gQ2PViq1E=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-580-Qe2XVx0rOg6VXe7iVNV7kQ-1; Thu,
- 17 Apr 2025 20:08:39 -0400
-X-MC-Unique: Qe2XVx0rOg6VXe7iVNV7kQ-1
-X-Mimecast-MFC-AGG-ID: Qe2XVx0rOg6VXe7iVNV7kQ_1744934917
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3BC4E1800360;
-	Fri, 18 Apr 2025 00:08:37 +0000 (UTC)
-Received: from redhat.com (unknown [10.96.134.19])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C836B19560A3;
-	Fri, 18 Apr 2025 00:08:35 +0000 (UTC)
-From: "Herton R. Krzesinski" <herton@redhat.com>
-To: linux-modules@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	mcgrof@kernel.org,
-	petr.pavlu@suse.com,
-	samitolvanen@google.com,
-	da.gomez@samsung.com,
-	herton@redhat.com
-Subject: [PATCH] lib/test_kmod: do not hardcode/depend on any filesystem
-Date: Thu, 17 Apr 2025 21:08:34 -0300
-Message-ID: <20250418000834.672343-1-herton@redhat.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LYe1HK3T"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LuLarq7NQosgEKHUxZ2gRbT/BGbl9znMCSdQtoD+32rcqF8hrAVBLS5FWqjjYkJmfPe+ozGGALygnv7Ns4V0Sa44j/7TgFO1+zWdGvVfcG9jNNLJ11d0wZyuNdty87mSxnSuV+ggdw0ThzEsHXVuS7YIAnwtYOtR1jKOVYg+bI9hM1IZvrbZR72vD1n8Q8g4+sx5ws3XhmA+m/jYioe8j2orwQlDTF9kEdMD2Ul2oPhC69iLZuABpOB9TcpCuD5BoK6HFs8/2R9rHAP8mh8gDUkAdRuR54PFqWNs8Q7OyHgeAyqvaC8mL58fJB1IgFAefEJ+zS9AtGlwn7Gm2wwYDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GePijTlAFsACsW1VDuL48agVas6sn5c0JVhp2HXSx3o=;
+ b=DGQffjEka8aitIUi78ItPMEJm9gHeAM58/ZHEYSiZMSlmGZgp7yxf++DHdMCXgGcOCJBJFryd+rmpdMy2OJaw1voVd0sc0iMuZJajNiNKhfp6n5NrIorU8XlmNmLrWD5s29TQ93OWVqi6mOSKqw7WekYNy//c8LRZ0z6uUrHjzmSDOKCSXo1G2cat7EvuPEZ9E3TJbKaI+pnn4Lw6NcDsQ7McN2JDxSHiOYNI4awxngtT6PZ+LHs9DTomApr2YwyVOr/Ge6h1s0jKVK0i2V7F6lnyyrDTOggYoJVvHmbsiRA/KNk7GFIDtz8PmPC4QL/58fmvNzAeplqFAZQ1x3oXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GePijTlAFsACsW1VDuL48agVas6sn5c0JVhp2HXSx3o=;
+ b=LYe1HK3TvsyTNwvzbYNrq7BdB7gWHrsddUuHWZfMlmM5wEZ3xeH3j56/aQl53KFBylwjvzDzL6lav3FWMi7IQZiiN4b57t+HcafQd07hwQMooewkS5ZvE2H5fuZsJBrLlrwqIY7nZ4lWoTwhVrOxjWorP4zNlbPFfhHp8kpZhAk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
+ by CH3PR12MB7498.namprd12.prod.outlook.com (2603:10b6:610:143::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Fri, 18 Apr
+ 2025 00:08:59 +0000
+Received: from MW3PR12MB4553.namprd12.prod.outlook.com
+ ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
+ ([fe80::b0ef:2936:fec1:3a87%7]) with mapi id 15.20.8655.022; Fri, 18 Apr 2025
+ 00:08:59 +0000
+Message-ID: <d968a33f-c61c-45fe-b4f8-58b2eb134477@amd.com>
+Date: Thu, 17 Apr 2025 19:08:54 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 00/21] x86/resctrl: Move the resctrl filesystem code to
+ /fs/resctrl
+To: Reinette Chatre <reinette.chatre@intel.com>,
+ "Shaopeng Tan (Fujitsu)" <tan.shaopeng@fujitsu.com>,
+ 'James Morse' <james.morse@arm.com>, "x86@kernel.org" <x86@kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Babu Moger <Babu.Moger@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ "shameerali.kolothum.thodi@huawei.com"
+ <shameerali.kolothum.thodi@huawei.com>,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ "carl@os.amperecomputing.com" <carl@os.amperecomputing.com>,
+ "lcherian@marvell.com" <lcherian@marvell.com>,
+ "bobo.shaobowang@huawei.com" <bobo.shaobowang@huawei.com>,
+ "baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>,
+ Jamie Iles <quic_jiles@quicinc.com>, Xin Hao <xhao@linux.alibaba.com>,
+ "peternewman@google.com" <peternewman@google.com>,
+ "dfustini@baylibre.com" <dfustini@baylibre.com>,
+ "amitsinght@marvell.com" <amitsinght@marvell.com>,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>,
+ "fenghuay@nvidia.com" <fenghuay@nvidia.com>
+References: <20250411164229.23413-1-james.morse@arm.com>
+ <TYCPR01MB88043F4EBA7A338ADBDC23D48BBC2@TYCPR01MB8804.jpnprd01.prod.outlook.com>
+ <4cfd5753-976f-49ac-82fc-e925c8d31be2@intel.com>
+Content-Language: en-US
+From: "Moger, Babu" <bmoger@amd.com>
+In-Reply-To: <4cfd5753-976f-49ac-82fc-e925c8d31be2@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH2PR16CA0020.namprd16.prod.outlook.com
+ (2603:10b6:610:50::30) To MW3PR12MB4553.namprd12.prod.outlook.com
+ (2603:10b6:303:2c::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|CH3PR12MB7498:EE_
+X-MS-Office365-Filtering-Correlation-Id: 72fdc971-a21a-432d-8968-08dd7e0d37df
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TmVuZXZVRmhZWWtIS2YwdzdLeDhSRWowSHAyRUR1MHhMdnlTTkt4YTUvRXcy?=
+ =?utf-8?B?Vi9UVVdKSEhxbHhrc0tyb1dqSStjV2laM2RXY1FQTkhMS1J2elFQcE1KdW1q?=
+ =?utf-8?B?a0NsVzVna1c2c3lTaERvdEV1cDhsRTg5RnZYNjU2WHV2bEkwcDhBbW9XaStT?=
+ =?utf-8?B?cFpPUEh5c1E0dHZTR3E4ODA1aW5xVkJnV2xER1V1eWFtL2ZUYXYva3hhTHNT?=
+ =?utf-8?B?clVXU3d5TFRFSlZTUU92SXdrVUlWVWJlZ0JQbm9Vb21ISTMrWjJsWlJtWVRi?=
+ =?utf-8?B?RHJCZ2pacmRBTTg3ZXhscXlBWmJCRlZadG9SOFFFaEszRjY2aGFXeGxQbTcw?=
+ =?utf-8?B?ZTVnNTBUV1l5ck9EeGxLZE5YVGVqZnFocUd3cS9Bc2tsY1dRandxUjFBbHNr?=
+ =?utf-8?B?UUlweXhJdFdoNEsrOEV2WERxU3pobVVnSXpuYS8rd1B1enpGK21jWHRhaHJu?=
+ =?utf-8?B?MEtuektXL29vb3lnNUYvbmV1a0VjdEFWVXMyaFI4STZiRWdrditJWXRJVzdZ?=
+ =?utf-8?B?cGFvZjJGYWEvdEVxVlovWWt4cmxwV0JOMm1pdElXNDIyUEhZMjdsWGgyMUg0?=
+ =?utf-8?B?QisvY3RkTkRTbVE5S2tHYjI3UTJ4TXpCK2FVSlhoM2RLREVCbEF1KzBHOVNX?=
+ =?utf-8?B?YlpMTjRwVDZSWW01clhVMS9MVGZUTFJhdGJjeHgvZHNQcW5jVU5lcGVsbCtJ?=
+ =?utf-8?B?ZEVpN0FpeEtvNUZ6UkNzMUVDY2RMeHQvdzJpLzY3WUNiUkRMSTRuZmZxa09s?=
+ =?utf-8?B?WUF4bm5adlREdUZoRVBxa1Fqb0EwQklNdGpLNUZPTkJpU25MWXRsZlNFNWJw?=
+ =?utf-8?B?SVBqS2wzK0g0Z2VGVkw5Qlc5bXlJL1pNUWxYVTIwQitWSTA5OWpWT2FJc3Nw?=
+ =?utf-8?B?YzAzbmV6R2UwTC93Rk12c3ZTMVB0eTVYb1lQdmM3YWIvVG4rTTdrOWMyL3Rs?=
+ =?utf-8?B?SFN4d0lZUWZCdWE3YllqaFVZOGtQeDFIQmJaRHdEOFRISjR6ME1LR2Jobk56?=
+ =?utf-8?B?YVNFaUN3TG1ZQWpvK0Y5R1hZenNxdm81U0g3ZzNJVTFZaHRHcVVhOUxWQkVn?=
+ =?utf-8?B?UXRKR0ZLWVFhbjVDOWNCWTVGbnBmMXB1NlBwUy9raDZtSE45bmhSMjNlTVRi?=
+ =?utf-8?B?RHQxa1dWR3c5ZHEvaVgweGhsRis0cHNLNW05eUZxVU5UNEVEaDZyeU8zSzhS?=
+ =?utf-8?B?elRyRDhVaE51NUJKTm5lOUlWN3djTDVCL1BUS2llNzIrUnR0Yk1Kc05tQTdO?=
+ =?utf-8?B?S1cybnVrMGJPVWg2ZmIvc1JjVCtDUDU1YmM2VmxGZVVLUWQ4VE5Vbm9yUTBZ?=
+ =?utf-8?B?NTJzd29ibTlNTFgzQlMzbE1XakNFOWszSHRpeWlBeFU1bllKWWJ4SkJhbE56?=
+ =?utf-8?B?YWFaNXRVQzNHQkpsYWFZWnVZazN5NHR5S1lnZys3N0phakR5S2lvREdPRE0w?=
+ =?utf-8?B?ZkNaRHpYNjg3WjhjTVQrMTZMdjErbjFVd0Q3MFhVblRqNW44Z0tlZ1UyS1ZO?=
+ =?utf-8?B?NGFmclhseFBXbnBzd0tMOFI0VSt6NmcyK1pYL0FKaDRNY1BrWlhVT29uKzdQ?=
+ =?utf-8?B?VWE0b2h6Z3FzcytmUXo2MDc5RVYzTkJWRDZ3dkVSUmxRbk81b2wzdVhYeHRs?=
+ =?utf-8?B?amF5T0piVHN2S1plOXRubGczVlpkNjkyU2NvZVRUUGw5SEdGTkdUK1RmWFA4?=
+ =?utf-8?B?TWJ5Vkc2RFl5Y3hlTTI0M25NTCtjczFUQzJWSHNQdUhTVnpvVFBIVW52ajA0?=
+ =?utf-8?B?djdkaXpia3JTbVl5ZkFlQTV4UnlpdnFGamNiM2ZyMjQ4M3FNMlRkOW1kOWVC?=
+ =?utf-8?B?ZEFEbGVZODdsYU5BdG9ieVhZRmZaY241anVGQUcyTDk4enJjMEdBQ3VWdTUv?=
+ =?utf-8?Q?Bv2Cl9m2eiWdD?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UkhrVk1ucjFrY3RpQU9LRERLTnVGV1pQWi9BTkh1UVgxc1M4NUZmZjdMZ0RY?=
+ =?utf-8?B?b2NtelppY1V3VGU2VXlZN2ZsK0JCZm9nVnVTNVhuSVZXV3BGcGlTQ2hVYUVi?=
+ =?utf-8?B?aTlTZDMrS1c5R1dRMjVib09EZHR1VzdMVDQyMDc5RHIrUU1tNzZicUk0QXBm?=
+ =?utf-8?B?Q2tROXZoNnJjdTdkOFZ4S2p4VVI3RjJwbE1tZUovQVJDVFYzcVJieWZSRGY5?=
+ =?utf-8?B?SWpTVlFlZkpCQU5pWVJhSjNORmo0UWZwejVocythUFJXczRKelVkOTIybmRZ?=
+ =?utf-8?B?MFJpdXF4c2xUUy9kejltcUdPSnlnOHB0WW1ONkRXUUZVbGhqYk5GMGd0c0wy?=
+ =?utf-8?B?S2t1cysvTUJHS1F2MGdpNFVVT242M2sxT3BoNVlaWVpTVnlMSGZ1SlBUaWx0?=
+ =?utf-8?B?SlJkZTAwU1hQS0NhSlF0QjZxRTJ5WE5rU0Y4M1dsOFRlcGlpbEhNTWtNanRY?=
+ =?utf-8?B?bThrZ0N2KzVzNnh6OG14a1FDenpRVGJsUkVSMFYxb3RSQzRZSVBSbVQ3NzUr?=
+ =?utf-8?B?MjBmV0UrRmJpdU0xc2ZqZjBndnhlVTlna1R0R1U2WDZLZzhCaEdkSW9VWWxj?=
+ =?utf-8?B?RC9GNGYyKzhCU1JNeFl1QWtvclFrR2lhaGNsMGRIUlNOR2h6eFpGbHRaWkww?=
+ =?utf-8?B?UmpnL0x2WDFvTUhUSDRiVVR2YWptTHEvUVh4MjVXdEpCckpzdElRcDJqRkZP?=
+ =?utf-8?B?OWFIU2ZOL3ZqSXZUbUxlY3RVVkNnbHp1NFc4Uk9JZTFuU3ByaGM1YldoaVlS?=
+ =?utf-8?B?WHpDOW1xWGVVKzhFckNROElaOVZra2ZmNFlKd0lMbmZmcHozTVZ2OXk0NGQx?=
+ =?utf-8?B?cnR3WjQzVW9uTGp4dVh5dXhGQmM4RnRXMHZlSDlnT0V3bGExdGJoZ085Qksw?=
+ =?utf-8?B?ZGU2bW12WUpGU09tMXAvNVlUUnBRc1V0U3g5T1lrMmYrR094V1FpbVNVcnBW?=
+ =?utf-8?B?VWxlaGpzY0svUk55Nm1IWkZUOWdnWmpDOEs5dUp1RGRPR1hWNyswTzAvYzcv?=
+ =?utf-8?B?ZGxDVFkwNTFQYXBZSHUxMFdxNlJINENkSWlZTUpDUWRWUERzSlZVRXpJZDNZ?=
+ =?utf-8?B?WHdETGpBV2FTeEM1TkhHN0pObnNOZGFRaEhPSktncmVOdGp1WnFGNnJGNVI4?=
+ =?utf-8?B?MkpVUFBLcVBvV1NCSy9xenJFaFNBbnJGUFJaN2ZqQktFRHFLeHFOYXpLK2ta?=
+ =?utf-8?B?eTBiVW5ReU5CbHlpVHFHYmpZVldITG1TbWFGL0xJUFRVWGh0OWM2eWNaS3I4?=
+ =?utf-8?B?MmVuV0cxeTcrWmRabERMVkNBVTdzbmFBczcwS0E1K1VtSXEwWFlFRFNYaFFh?=
+ =?utf-8?B?U1RRL3RldzQwaW9DY0VOWkZkcTBUQ3hLTGV0UDA0OUV5UXIvSzV1Z0ZpSUZm?=
+ =?utf-8?B?elVvRUJPczBOZGRpNzBHQTZTOU9PV05ibWRjNTlxTWlxUFRzKzJaS3RkRXAz?=
+ =?utf-8?B?bWkwbm5INElYWmx6TE0zZmlSbXkydU5acnkzY0M0bUYvMlpCaGxkK1JZOG9a?=
+ =?utf-8?B?cUpVaDI4clMyOVI0UG1WY3ZmQXhMTnoraG9ESStoang2dzltbGlqOFpaQk9Z?=
+ =?utf-8?B?QzBaTFY3VWpmalRhNkxSTjhYU3lYd2NuRHd6ZlNzSDF3bDZMVWdJTEdTTGVZ?=
+ =?utf-8?B?d2IzblNEYkovdWEyWWJyb1dZWHVVNHBFOHo2clp6ZUxSL1YrdWdidTkwcHpw?=
+ =?utf-8?B?SStLRVViTkRXUmt4QVlUZE5aVXViU0ZMc2hRdmR4U2xSMGk3UEJEU2RiT1Vk?=
+ =?utf-8?B?Rjh0emkwQU1UcThKSCtwVityKzdRSHJLelZWOFpmWkxvblY0L0UyM01rMnIx?=
+ =?utf-8?B?SEZiTTVpMUlLSHRrd0g2R3hTUFNMcENnd0NRamVnU0FHcjB4cWJxZFFLajll?=
+ =?utf-8?B?c2plS0FJR1pRZFlkblFZbis4QmJpREFraHZENjFDYjhJUnJPZndxMjNZY2Qr?=
+ =?utf-8?B?NjIrVHRKVDcrblQvRjNhNzd4cnBtalFLSGw4VkJmVlgxK3RISXp4WDI3NDFr?=
+ =?utf-8?B?TU81eUZNWFRaSks4Ry9ZMUFIemlsbS9ISkhoNlVWTzkwdktaWHhDcllsNDg1?=
+ =?utf-8?B?MkNyUnp2SkNnUXEvWFZhRnAwT3MxMWx1QkNpVVV1aTR5azVELzNZQ3ppeERl?=
+ =?utf-8?Q?adHRskX/mZpj3x0L6KXswZLxt?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72fdc971-a21a-432d-8968-08dd7e0d37df
+X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2025 00:08:59.6768
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Cvqz7uLOMgcEpxUzaR9SaQ66qKs44DBNzolhyBJWZ8Ce6IUJXObPAkUhG3jSj/Nb
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7498
 
-Right now test_kmod has hardcoded dependencies on btrfs/xfs. That
-is not optimal since you end up needing to select/build them, but it
-is not really required since other fs could be selected for the testing.
-Also, we can't change the default/driver module used for testing on
-initialization.
+Hi Reinette,
 
-Thus make it more generic: introduce two module parameters (start_driver
-and start_test_fs), which allow to select which modules/fs to use for
-the testing on test_kmod initialization. Then it's up to the user to
-select which modules/fs to use for testing based on his config. However,
-keep test_module as required default.
+On 4/17/2025 9:47 AM, Reinette Chatre wrote:
+> Hi Shaopeng and Babu,
+> 
+> On 4/17/25 5:18 AM, Shaopeng Tan (Fujitsu) wrote:
+>> Hello,
+>>
+>> I ran tools/tests/selftests/resctrl with the following patches on AMD EPYC 9454P 48-Core Processor, it looks good.
+> 
+> Thank you!
+> 
+>>
+>> https://lore.kernel.org/lkml/96d276c11e69cfb1e29d50a12c8043555c06b404.1718144237.git.babu.moger@amd.com/#r
+> 
+> It is strange that you needed to add this since it can be found in v6.10 and up.
+> 
+>> https://lore.kernel.org/lkml/cover.1717626661.git.babu.moger@amd.com/#r
+> 
+> Babu, is this still something that you want to see upstream?
+> 
 
-This way, config/modules becomes selectable as when the testing is done
-from selftests (userspace).
+Yes. I need to address few comments in there. Didn't get chance to work 
+on it due to other priorities. I will pick it up later.
 
-While at it, also change trigger_config_run_type, since at module
-initialization we already set the defaults at __kmod_config_init and
-should not need to do it again in test_kmod_init(), thus we can
-avoid to again set test_driver/test_fs.
-
-Signed-off-by: Herton R. Krzesinski <herton@redhat.com>
----
- lib/Kconfig.debug |  6 -----
- lib/test_kmod.c   | 64 +++++++++++++++++++++++++----------------------
- 2 files changed, 34 insertions(+), 36 deletions(-)
-
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 9fe4d8dfe578..1e0f8cbf0365 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2983,13 +2983,7 @@ config TEST_DYNAMIC_DEBUG
- config TEST_KMOD
- 	tristate "kmod stress tester"
- 	depends on m
--	depends on NETDEVICES && NET_CORE && INET # for TUN
--	depends on BLOCK
--	depends on PAGE_SIZE_LESS_THAN_256KB # for BTRFS
- 	select TEST_LKM
--	select XFS_FS
--	select TUN
--	select BTRFS_FS
- 	help
- 	  Test the kernel's module loading mechanism: kmod. kmod implements
- 	  support to load modules using the Linux kernel's usermode helper.
-diff --git a/lib/test_kmod.c b/lib/test_kmod.c
-index 064ed0fce75a..f0dd092860ea 100644
---- a/lib/test_kmod.c
-+++ b/lib/test_kmod.c
-@@ -28,14 +28,20 @@
- 
- #define TEST_START_NUM_THREADS	50
- #define TEST_START_DRIVER	"test_module"
--#define TEST_START_TEST_FS	"xfs"
- #define TEST_START_TEST_CASE	TEST_KMOD_DRIVER
- 
--
- static bool force_init_test = false;
--module_param(force_init_test, bool_enable_only, 0644);
-+module_param(force_init_test, bool_enable_only, 0444);
- MODULE_PARM_DESC(force_init_test,
- 		 "Force kicking a test immediately after driver loads");
-+static char *start_driver;
-+module_param(start_driver, charp, 0444);
-+MODULE_PARM_DESC(start_driver,
-+		 "Module/driver to use for the testing after driver loads");
-+static char *start_test_fs;
-+module_param(start_test_fs, charp, 0444);
-+MODULE_PARM_DESC(start_test_fs,
-+		 "File system to use for the testing after driver loads");
- 
- /*
-  * For device allocation / registration
-@@ -508,6 +514,11 @@ static int __trigger_config_run(struct kmod_test_device *test_dev)
- 	case TEST_KMOD_DRIVER:
- 		return run_test_driver(test_dev);
- 	case TEST_KMOD_FS_TYPE:
-+		if (!config->test_fs) {
-+			dev_warn(test_dev->dev,
-+				 "No fs type specified, can't run the test\n");
-+			return -EINVAL;
-+		}
- 		return run_test_fs_type(test_dev);
- 	default:
- 		dev_warn(test_dev->dev,
-@@ -721,26 +732,20 @@ static ssize_t config_test_fs_show(struct device *dev,
- static DEVICE_ATTR_RW(config_test_fs);
- 
- static int trigger_config_run_type(struct kmod_test_device *test_dev,
--				   enum kmod_test_case test_case,
--				   const char *test_str)
-+				   enum kmod_test_case test_case)
- {
--	int copied = 0;
- 	struct test_config *config = &test_dev->config;
- 
- 	mutex_lock(&test_dev->config_mutex);
- 
- 	switch (test_case) {
- 	case TEST_KMOD_DRIVER:
--		kfree_const(config->test_driver);
--		config->test_driver = NULL;
--		copied = config_copy_test_driver_name(config, test_str,
--						      strlen(test_str));
- 		break;
- 	case TEST_KMOD_FS_TYPE:
--		kfree_const(config->test_fs);
--		config->test_fs = NULL;
--		copied = config_copy_test_fs(config, test_str,
--					     strlen(test_str));
-+		if (!config->test_fs) {
-+			mutex_unlock(&test_dev->config_mutex);
-+			return 0;
-+		}
- 		break;
- 	default:
- 		mutex_unlock(&test_dev->config_mutex);
-@@ -751,11 +756,6 @@ static int trigger_config_run_type(struct kmod_test_device *test_dev,
- 
- 	mutex_unlock(&test_dev->config_mutex);
- 
--	if (copied <= 0 || copied != strlen(test_str)) {
--		test_dev->test_is_oom = true;
--		return -ENOMEM;
--	}
--
- 	test_dev->test_is_oom = false;
- 
- 	return trigger_config_run(test_dev);
-@@ -800,19 +800,24 @@ static unsigned int kmod_init_test_thread_limit(void)
- static int __kmod_config_init(struct kmod_test_device *test_dev)
- {
- 	struct test_config *config = &test_dev->config;
-+	const char *test_start_driver = start_driver ? start_driver :
-+						       TEST_START_DRIVER;
- 	int ret = -ENOMEM, copied;
- 
- 	__kmod_config_free(config);
- 
--	copied = config_copy_test_driver_name(config, TEST_START_DRIVER,
--					      strlen(TEST_START_DRIVER));
--	if (copied != strlen(TEST_START_DRIVER))
-+	copied = config_copy_test_driver_name(config, test_start_driver,
-+					      strlen(test_start_driver));
-+	if (copied != strlen(test_start_driver))
- 		goto err_out;
- 
--	copied = config_copy_test_fs(config, TEST_START_TEST_FS,
--				     strlen(TEST_START_TEST_FS));
--	if (copied != strlen(TEST_START_TEST_FS))
--		goto err_out;
-+
-+	if (start_test_fs) {
-+		copied = config_copy_test_fs(config, start_test_fs,
-+					     strlen(start_test_fs));
-+		if (copied != strlen(start_test_fs))
-+			goto err_out;
-+	}
- 
- 	config->num_threads = kmod_init_test_thread_limit();
- 	config->test_result = 0;
-@@ -1178,12 +1183,11 @@ static int __init test_kmod_init(void)
- 	 * lowering the init level for more fun.
- 	 */
- 	if (force_init_test) {
--		ret = trigger_config_run_type(test_dev,
--					      TEST_KMOD_DRIVER, "tun");
-+		ret = trigger_config_run_type(test_dev, TEST_KMOD_DRIVER);
- 		if (WARN_ON(ret))
- 			return ret;
--		ret = trigger_config_run_type(test_dev,
--					      TEST_KMOD_FS_TYPE, "btrfs");
-+
-+		ret = trigger_config_run_type(test_dev, TEST_KMOD_FS_TYPE);
- 		if (WARN_ON(ret))
- 			return ret;
- 	}
--- 
-2.47.1
-
+Thanks for the reminder.
+-Babu
