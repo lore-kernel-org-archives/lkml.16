@@ -1,36 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 512C8226CFC;
-	Fri, 18 Apr 2025 18:33:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6698E226D0C
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 18:33:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745001227; cv=none; b=QwR5KN/abgqQpnxdFjEhAVuUgWPk8lTJWiK5LlC7Nxy/ZF2pLTrH6h2I475VNQUUd9Vlth1r8X8+S3DmBEg77kGBxc4blvm5tTfnDy7O9HTEZnueWr9m/zzZdzpXZdjaRVNH8u9h7VRrWAvb/DwO7+sDhMfeajzd2J6CU1spiQ4=
+	t=1745001227; cv=none; b=t0Qfc+g2tSqfNSUXg5mrE60RXy7cfG4DsMEhiI4cShW+AXmpvoyno9tuOtk75WyVCXCBGWM9evnKly09jC6TiF7CgNzrgIMJKDD2iy9EkztB9yanqgJbpLf9ni6QnpG6nwr/Ai8RN5Vxrir5LE3YxiEVQixhl9vatYOcGz4nZGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745001227; c=relaxed/simple;
-	bh=mAHbmri/ydJCCCNyZ8TtbhRs/REQDtNLw4Sz7n+2K7k=;
+	bh=OKDiqgB2pHuTCBxmEQy3/PZJ7f0jyGYq49naXeGmkh4=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Ju3kEU0UkIHv9mcx3leeUdcltyiceYPdPkjrRQW1rIBSWS0F4D/zGSRjiG55Ga55ob2FypQBPu5wqleJXnY9xilfXixAYpzYI3L08WXoWv7/m4hnrc9IOV+NBV4jwL5Yray0TKyJTGarpNTAFpKxzWKmKEoyEzOKQps/GvLQKmI=
+	 Content-Type; b=eDq2Ru5m+37M/78N3uTLM/eaRGs+qPZEjdfClU7EablJK1+6soOtVrCbjFnhxuRIYOQoMNitfu7V0Fn9RMhW2EvC8dKArc/wwhczFE5vgayOpZoLZTQLEY6EyasWrd0C5vu0xUzykjKU1T7OLnY8PJaGCbwmpLTWOD/kyeLwTqU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11BFCC4CEEF;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DFF7C4CEEC;
 	Fri, 18 Apr 2025 18:33:47 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u5qYj-0000000Db9e-0agq;
+	id 1u5qYj-0000000DbA9-1Jes;
 	Fri, 18 Apr 2025 14:35:29 -0400
-Message-ID: <20250418183528.990167813@goodmis.org>
+Message-ID: <20250418183529.162957172@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 18 Apr 2025 14:34:52 -0400
+Date: Fri, 18 Apr 2025 14:34:53 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- stable@vger.kernel.org,
- Andrii Nakryiko <andrii.nakryiko@gmail.com>,
- Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>
-Subject: [for-linus][PATCH 6/7] tracing: Fix filter string testing
+ Shuah Khan <skhan@linuxfoundation.org>
+Subject: [for-linus][PATCH 7/7] tracing: selftests: Add testing a user string to filters
 References: <20250418183446.383784216@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -42,12 +40,7 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The filter string testing uses strncpy_from_kernel/user_nofault() to
-retrieve the string to test the filter against. The if() statement was
-incorrect as it considered 0 as a fault, when it is only negative that it
-faulted.
-
-Running the following commands:
+Running the following commands was broken:
 
   # cd /sys/kernel/tracing
   # echo "filename.ustring ~ \"/proc*\"" > events/syscalls/sys_enter_openat/filter
@@ -55,47 +48,56 @@ Running the following commands:
   # ls /proc/$$/maps
   # cat trace
 
-Would produce nothing, but with the fix it will produce something like:
+And would produce nothing when it should have produced something like:
 
       ls-1192    [007] .....  8169.828333: sys_openat(dfd: ffffffffffffff9c, filename: 7efc18359904, flags: 80000, mode: 0)
 
-Link: https://lore.kernel.org/all/CAEf4BzbVPQ=BjWztmEwBPRKHUwNfKBkS3kce-Rzka6zvbQeVpg@mail.gmail.com/
+Add a test to check this case so that it will be caught if it breaks
+again.
 
-Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/linux-trace-kernel/20250417183003.505835fb@gandalf.local.home/
+
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Link: https://lore.kernel.org/20250417183003.505835fb@gandalf.local.home
-Fixes: 77360f9bbc7e5 ("tracing: Add test for user space strings when filtering on string pointers")
-Reported-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Reported-by: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Link: https://lore.kernel.org/20250418101208.38dc81f5@gandalf.local.home
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_events_filter.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../test.d/filter/event-filter-function.tc    | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 0993dfc1c5c1..2048560264bb 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -808,7 +808,7 @@ static __always_inline char *test_string(char *str)
- 	kstr = ubuf->buffer;
+diff --git a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
+index 118247b8dd84..c62165fabd0c 100644
+--- a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
++++ b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
+@@ -80,6 +80,26 @@ if [ $misscnt -gt 0 ]; then
+ 	exit_fail
+ fi
  
- 	/* For safety, do not trust the string pointer */
--	if (!strncpy_from_kernel_nofault(kstr, str, USTRING_BUF_SIZE))
-+	if (strncpy_from_kernel_nofault(kstr, str, USTRING_BUF_SIZE) < 0)
- 		return NULL;
- 	return kstr;
- }
-@@ -827,7 +827,7 @@ static __always_inline char *test_ustring(char *str)
++# Check strings too
++if [ -f events/syscalls/sys_enter_openat/filter ]; then
++	DIRNAME=`basename $TMPDIR`
++	echo "filename.ustring ~ \"*$DIRNAME*\"" > events/syscalls/sys_enter_openat/filter
++	echo 1 > events/syscalls/sys_enter_openat/enable
++	echo 1 > tracing_on
++	ls /bin/sh
++	nocnt=`grep openat trace | wc -l`
++	ls $TMPDIR
++	echo 0 > tracing_on
++	hitcnt=`grep openat trace | wc -l`;
++	echo 0 > events/syscalls/sys_enter_openat/enable
++	if [ $nocnt -gt 0 ]; then
++		exit_fail
++	fi
++	if [ $hitcnt -eq 0 ]; then
++		exit_fail
++	fi
++fi
++
+ reset_events_filter
  
- 	/* user space address? */
- 	ustr = (char __user *)str;
--	if (!strncpy_from_user_nofault(kstr, ustr, USTRING_BUF_SIZE))
-+	if (strncpy_from_user_nofault(kstr, ustr, USTRING_BUF_SIZE) < 0)
- 		return NULL;
- 
- 	return kstr;
+ exit 0
 -- 
 2.47.2
 
