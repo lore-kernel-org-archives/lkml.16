@@ -1,145 +1,92 @@
-Received: from mta-65-225.siemens.flowmailer.net (mta-65-225.siemens.flowmailer.net [185.136.65.225])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8094269CF4
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 07:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5821620FAB1;
+	Fri, 18 Apr 2025 07:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744962067; cv=none; b=UEW5Xte4zbaIb0tr8gO99EBJPijxLOKjr5hKKWbv1oE4jpm4KIRkBvNbW0OyCiiye5S9mX1xWQV5DBBM3LuSRQlJJNU2IM7XY1i9N1LLpgQ01xhwN4QhYzA2PeO3pATOyNkiHxkCVnxU0R01vOztXEBlz0tOU7YB66F4wV1W4zs=
+	t=1744962122; cv=none; b=CCBTU5xWYQSAloxRP/xIFgaveks9PoQgs+x4FYIT8iV1K1sSe+1x2Hyv+cn7UGJgWZtMzJSMOs6do94OLlPeadegSftFfbd+xkyquuELZT10mXhD+FlWupv2DmRunrWR5TNaRZ6TNJnEBkp6WRmCYUHJVEDWWNwN3tFV6ezerIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744962067; c=relaxed/simple;
-	bh=iJEcfFsiWJ1V9+dLXeuoWVpKyPfbNwN8bvVTcoioenc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GOOHXKVO+88sSI8FGyRMV/h0uzrOMuhLZC9Po+ZcoWEftq8PlD/1f6s+04R8DNlrBdDhLlawuMxLrAcrxTTXhlttHN1AeDlxoiBOHhZwoPFE+s9JK/uZ4ylgT2zMrbLDTgAeVuVJ4yr+YU6WRlH7niu4SWN/McVRa2AHrG79SgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b=MhmmKpvo; arc=none smtp.client-ip=185.136.65.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+	s=arc-20240116; t=1744962122; c=relaxed/simple;
+	bh=oUqXKlSytv6v62jVSSHh1Ufa7g4F58Km2gOwS/yxsOE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j0oUAu0i5RwsyI9TdIgyPMHve+IreflpG2bFT8pF6mmWPWvR2tyWLGg1IINZGoc4buj54Kro0FT6l40dMaHeE/B0PRjp3ea4zttsVL3HRloC04Me1j4DFhr9E/icrScWlCdax9TuVPl3nc1fIlTn23IHKkL7221H7JR+Fz6D3Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jwZiS97f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b="MhmmKpvo"
-Received: by mta-65-225.siemens.flowmailer.net with ESMTPSA id 2025041807305421ce0c7b4baf023998
-        for <linux-kernel@vger.kernel.org>;
-        Fri, 18 Apr 2025 09:30:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
- d=siemens.com; i=huaqian.li@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=oH4biYNRIXbUPcZJxbqF385p1W7crfHf3KjlM5z89+Q=;
- b=MhmmKpvoP1mPw44HiJ3RiLjiBHPih8+nD719nw0Vzna9NCuV7EelAKVqIMbH+lNlFxORhA
- F8FQfuwx+0RLYO37/Ra8wUhhDiIMx9mpNeiLFlD2vc7MVpXCF5+yGYoV0AsRQE7C2Aaq1ZPN
- mFNr9UvXSxBBfUqWvVTewLklwni0K0z7WnnU+y+MrEdkcJcH0SkOl3+P0B2Vi3gw0Xn+qUv/
- lqc3kS2IG/87OK3rO10HxXHWSPzR4xOkofnUjJLYHECLoJbgVA9UBeKkfthk24spiSKPYYWB
- Qv/Cujl+Dj93idJ186UvK4IxIYV0ChXQzfpKjybyPzU8dyDmy1i+vS3Q==;
-From: huaqian.li@siemens.com
-To: helgaas@kernel.org,
-	m.szyprowski@samsung.com,
-	robin.murphy@arm.com
-Cc: baocheng.su@siemens.com,
-	bhelgaas@google.com,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	diogo.ivo@siemens.com,
-	huaqian.li@siemens.com,
-	jan.kiszka@siemens.com,
-	kristo@kernel.org,
-	krzk+dt@kernel.org,
-	kw@linux.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org,
-	nm@ti.com,
-	robh@kernel.org,
-	s-vadapalli@ti.com,
-	ssantosh@kernel.org,
-	vigneshr@ti.com,
-	iommu@lists.linux.dev,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v7 1/8] dt-bindings: soc: ti: Add AM65 peripheral virtualization unit
-Date: Fri, 18 Apr 2025 15:30:19 +0800
-Message-Id: <20250418073026.2418728-2-huaqian.li@siemens.com>
-In-Reply-To: <20250418073026.2418728-1-huaqian.li@siemens.com>
-References: <20241030205703.GA1219329@bhelgaas>
- <20250418073026.2418728-1-huaqian.li@siemens.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jwZiS97f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F4BFC4CEE2;
+	Fri, 18 Apr 2025 07:42:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744962121;
+	bh=oUqXKlSytv6v62jVSSHh1Ufa7g4F58Km2gOwS/yxsOE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jwZiS97fCQyL2Em6BDKP5hHBpuNlufQyA/G4Sl6ZZQlpoo9lLrDxdI8PdEIhfnDh3
+	 mfTRJZzp8wVEGmXVdPNb2Nwhi0fabFFVk1NZyx+izZymjgKh/zs+6/J4oLg4bVNgNJ
+	 ituCiz0tIcT+BzoW+TLQKPMlX/5Ablpb0De2ma8Yr+Yy2Reohg7DXK2GYGG48KBmnP
+	 lZMl0zZvAjiJBp9BszuxwDw6BumnjCfRkgLq+ZM+o2ANacrXdcjgTAeuxJIUFHBszl
+	 zfyiFBl5oILo2IdDXAgTYmUjRlr+AF2mTo9rLbF8hB5YBpS3LoH74nBr5ksCs7o9IV
+	 mQeTI8lEAQ0Uw==
+Date: Fri, 18 Apr 2025 09:41:57 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Dionna Amalie Glaze <dionnaglaze@google.com>,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	linux-efi@vger.kernel.org, x86@kernel.org
+Subject: Re: [tip: x86/boot] x86/boot/sev: Avoid shared GHCB page for early
+ memory acceptance
+Message-ID: <aAICRcfkBV3tHP-G@gmail.com>
+References: <20250410132850.3708703-2-ardb+git@google.com>
+ <174448976513.31282.4012948519562214371.tip-bot2@tip-bot2>
+ <CAMj1kXFEXZ8cGMwz6N_ToYp0Wf5Vr9UBFRueWx_MtrwbDLq+LQ@mail.gmail.com>
+ <Z_rQ4eu4LYh6jGzY@gmail.com>
+ <CAMj1kXGTP31w7vM+jWqpbJPmoyPU9vqOrmvXsueoPnBin0y_hQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-959203:519-21489:flowmailer
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGTP31w7vM+jWqpbJPmoyPU9vqOrmvXsueoPnBin0y_hQ@mail.gmail.com>
 
-From: Jan Kiszka <jan.kiszka@siemens.com>
 
-The PVU allows to define a limited set of mappings for incoming DMA
-requests to the system memory. It is not a real IOMMU, thus hooked up
-under the TI SoC bindings.
+* Ard Biesheuvel <ardb@kernel.org> wrote:
 
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Li Hua Qian <huaqian.li@siemens.com>
----
- .../bindings/soc/ti/ti,am654-pvu.yaml         | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,am654-pvu.yaml
+> On Sat, 12 Apr 2025 at 22:45, Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> >
+> > * Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > > On Sat, 12 Apr 2025 at 22:29, tip-bot2 for Ard Biesheuvel
+> > > <tip-bot2@linutronix.de> wrote:
+> > > >
+> > > > The following commit has been merged into the x86/boot branch of tip:
+> > > >
+> > >
+> > > This may be slightly premature. I took some of Tom's code, hence the
+> > > co-developed-by, but the should really confirm that what I did is
+> > > correct before we queue this up.
+> >
+> > OK, I've zapped it again, especially as the rest of the series wasn't
+> > ready either, please include the latest version of this patch as part
+> > of the boot/setup/ series, which hard-relies upon it.
+> >
+> 
+> I have sent out a v4 here [0].
+> 
+> I am not including it in the next rev of the startup/ refactor series,
+> given that this change is a fix that also needs to go to stable.
+> Please apply it as a fix and merge back the branch into tip/x86/boot -
+> I will rebase the startup/ refactor series on top of that.
+> 
+> Thanks,
+> 
+> [0] https://lore.kernel.org/linux-efi/20250417202120.1002102-2-ardb+git@google.com/T/#u
 
-diff --git a/Documentation/devicetree/bindings/soc/ti/ti,am654-pvu.yaml b/Documentation/devicetree/bindings/soc/ti/ti,am654-pvu.yaml
-new file mode 100644
-index 000000000000..e4a5fc47d674
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/ti/ti,am654-pvu.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (c) Siemens AG, 2024
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/ti/ti,am654-pvu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: TI AM654 Peripheral Virtualization Unit
-+
-+maintainers:
-+  - Jan Kiszka <jan.kiszka@siemens.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,am654-pvu
-+
-+  reg:
-+    maxItems: 2
-+
-+  reg-names:
-+    items:
-+      - const: cfg
-+      - const: tlbif
-+
-+  interrupts:
-+    items:
-+      - description: fault interrupt
-+
-+  interrupt-names:
-+    items:
-+      - const: pvu
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    iommu@30f80000 {
-+        compatible = "ti,am654-pvu";
-+        reg = <0x30f80000 0x1000>,
-+              <0x36000000 0x100000>;
-+        reg-names = "cfg", "tlbif";
-+        interrupts-extended = <&intr_main_navss 390>;
-+        interrupt-names = "pvu";
-+    };
--- 
-2.34.1
+Noted, thanks for the heads up!
 
+	Ingo
