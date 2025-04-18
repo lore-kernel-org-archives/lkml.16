@@ -1,124 +1,107 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2BF19ADA4;
-	Fri, 18 Apr 2025 14:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62EF19ADA4
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 14:30:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744986605; cv=none; b=eFy4+FyZV1Je7gxE8sIpjR3JtbBKs0YZjsJM4kQFyS9UR0znfKaKqqSJSR8LRHTzS42RvFyC811VAMFy0eEb+8BN9peU1gQe0xjK3nuhOgwDktrS3QJzXf8758H2ECu/jiUQ0ApnHsWXRg/aMKs9AjyyMEYOCfuT4NPlX0pYBkk=
+	t=1744986620; cv=none; b=BpDhuVUipp4KbYJl2NqG8JxuW3HWHRWs9p0t9p7Gc5KLY4seNUjzNlvwQ6GPbtgVPmzqbbBthlKcKzu65m1/P9r/9ZYzkFKbgEgHX0UX6XnuEhnwUM6z5pK0P+qh+3L+BL2mC18q2CQPoiZaMSS2YHfYbOXBBr5d9+kkP1WMn+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744986605; c=relaxed/simple;
-	bh=wUzmH4xqUNFx6Lqx2Itt/tpaeGYM05BZoZ1guKnRXn4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DKm70yev4s8pBrMd80zeEzGlrEpUY5wy2wph177IH71Vqi0LaAWz//k8k+AkJxaOkzYJS4fQGKFPlCgjWNq9w4YlVkumMYAFW5OtcdoYovv4/h0DAV48Fa3cvzblzH36u114JiVdKNmOngTncRsK80GIqpzF6lUGpYpLit7pclY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hYflkgTx; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744986620; c=relaxed/simple;
+	bh=y52Pjz1ACjSiMzj5j6qOs9QaWh8OcxZGdCpc07HXUtE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Jqu4YfbIXFU0dTBFOz7wOGUwgRgTYqR1nMayWCGtDSMZhNYpFkQWMCKqFsrI+wmVlVDkrj40O/vGy9rPd5nrr2/I271lFFPUovrJNYcx50zgpknFqIJTagqVlAqibIoH/uXFylTtmuQqgwcjlHDjixY6SkV19ADYisDQWWSpifs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bKvBv8Ro; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hYflkgTx"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5f37f45e819so317816a12.3;
-        Fri, 18 Apr 2025 07:30:03 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bKvBv8Ro"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3d8020ba858so17836775ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 07:30:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744986602; x=1745591402; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=jEb+3qqZQ6y0qknhmyqZMe7sYP4AQ+xYtScn/gz9NwM=;
-        b=hYflkgTx6BEiK0mbALMwmYMJvprDRft4ylwPl6KN++Pq0ZG9lMv/z23w6bPVW5l9WK
-         KNhcxWWAHUeZrNALRzJZc8vt8LH257AMg9nhN9wCLeUgRtL3QaSKgQwqATYW/775Rleg
-         AHHtsKJwiRNpHmbVEruly2LQEJ9206cCCcSfj4avsr8Gw5uwZnj/agmHdBhFrgHfgDSI
-         +6wViNH5u7+jIo4NLuJKleXQxNQZD9EoJuPIfsELNVlUfGVQ0WqE/L6AlefYu9Fl2toN
-         8fVvgeFPZjbKA7vuHhpXCbKlFQnFANKgxpRo6sy1MI9ph0AkwfXG9F6THlwA70zj8Q54
-         ccLQ==
+        d=linuxfoundation.org; s=google; t=1744986615; x=1745591415; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=h+DrJFQCA6EQjbNVUXpVraYRT/z+CCrEaV+7erS4l+0=;
+        b=bKvBv8RoDxsg7PjmYQz/TMw7P/bQyasg9UMYWVqAmxnx2MhP5570brtU0IDfwNzC/8
+         PAc4RkbNus82EBvxEp4PbJL2FZEtH7ZUaeK/TX0U4DJeDETfJAiduXoYUNHV+2GOVP/m
+         g98BdNvw12Q5nFZ5eAt95+FxLv5BpzNUP8D+I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744986602; x=1745591402;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1744986615; x=1745591415;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jEb+3qqZQ6y0qknhmyqZMe7sYP4AQ+xYtScn/gz9NwM=;
-        b=Z+vIO/5LWae8jjL6h1OdR4OrJG0hxZQ4u0opLwlj0S6eSPKnGORP78iu688s/S8r1x
-         XRaZLEbwFyLU1l9rL0qJnhA7ozgjXXdnPOqA4C4ZYV1978aAFRwEhW8ietZ4pvFVnM0Z
-         c2y/srgZOikZ6UIBdrOkqOfZYj1zBSRT9jrorCZd5jRYtoaouRoW7IVmfvZqUi6JRDoe
-         J04ZMuNq72HAerqcM6j9uhHHGea9KgYAHU+AJXJ90U/g16D8mTAR114FCjgtCDefk3u3
-         ghQdRrRL0fOWu2GchCbaMkHVg/vB8b8DxK7MBfwlCQ5veWpAQiFvOxn/0dSz7oNLbCC7
-         kgAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDlS1bYqh/jLNg7Qm6mC7IENS/hPhiRMRrNNreHxjaWffZDTRkSwIHLLbVX7l6fr1dks1RAEC1esJJi5o=@vger.kernel.org, AJvYcCUr+OtCLFPK09tdMvFtWmRS5f47noHa3/YX7o0APHEAch4G36tagNoBf8uZN79Ndgau3SHnRrqC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1co47s5GJS4ohFpzzu/LNzsKQ6Sx/1rrXinqdkYkq8myEIRIq
-	ILTesK+rfIBhs43D63zhIKJrEzonYwbGagG/x+Vb6dGrGrLFpoRH
-X-Gm-Gg: ASbGnctjgL1svjQQREtXiwRBwCyynf6i3EuTG7ghuPlt9fWhHeZ/vPGaB6IRB/ZjyaO
-	jwMWlOW2MJqiofuh6A+do9n5kLC3l0boxVpyCkIA/1gUCOdAHXgzuVVif3TwO/5ElmCoTKnXNdO
-	jZWSgqLd3L6EEU0cHF8WYkGdIwdSWIFLesGwPeF5vQIz7QlVt1Bx2Wpn8awLLzfxGGj/hX8DkWb
-	5TIURacNsNVFvF6yciJyDkzqcO8lihHFJdncqSaZRSxqAV7H0tl2uQ+qpbQ58PlYOAr0axnLOgm
-	THjSrhgWbc3x8Eru/+w/E8BMuoff
-X-Google-Smtp-Source: AGHT+IGdnYDFhquPDANBW/t8s+v17pRTpxTdgVNlSSlgqLevLyFnxfpZxlTzVSiFWuujrFYTqz760Q==
-X-Received: by 2002:a17:907:6e8d:b0:ac7:2aa7:5ba6 with SMTP id a640c23a62f3a-acb74b2d23emr92002066b.5.1744986601569;
-        Fri, 18 Apr 2025 07:30:01 -0700 (PDT)
-Received: from skbuf ([188.25.50.178])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef41605sm123261366b.124.2025.04.18.07.30.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 07:30:00 -0700 (PDT)
-Date: Fri, 18 Apr 2025 17:29:58 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Wei Fang <wei.fang@nxp.com>
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Clark Wang <xiaoning.wang@nxp.com>,
-	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v5 net-next 04/14] net: enetc: add MAC filtering for
- i.MX95 ENETC PF
-Message-ID: <20250418142958.6ews5uuoqayc7lof@skbuf>
-References: <20250411095752.3072696-1-wei.fang@nxp.com>
- <20250411095752.3072696-5-wei.fang@nxp.com>
- <20250415204238.4e0634f8@kernel.org>
- <PAXPR04MB85100BB81C6B25BFC69B32B588BD2@PAXPR04MB8510.eurprd04.prod.outlook.com>
+        bh=h+DrJFQCA6EQjbNVUXpVraYRT/z+CCrEaV+7erS4l+0=;
+        b=AipCgbkZcnN139AhangDiivODl1U8h+FVcMns64BkpjxY1BGeiNX80Dv6hcgVjqNgn
+         DXla4zXqMSjSdSsMsda6CGaXTeTMJDBN7BRpqhuFrNOWKu9lqjnUMlswQTMtl6Wqpx8X
+         RyGypRlr+bqJGEDge+T1VL2WCbmCxROasvZafrxuAaGBJxO/S7rg3wsxk8+Q0mQCqZty
+         KHviFNzEFWghZRewUbW/1a+zMW6H/7JNzNdB17BxOnMilaugh9d8GCPxJf+gpC6SUjsU
+         U7sE+g6vsKSKZuxSVPAC2eM+1ZHcR2Yp3tOJAWfKHWEdlWv4ZdZG8+7GT24ng+MxSCt6
+         J67w==
+X-Forwarded-Encrypted: i=1; AJvYcCUBWnzSqDRFCpyrG4b2vjSYkh5QIAR8M8kIBmhyjPyHCd7J+WQETcNPjGzYABWXUrAOQ2rESmDaljFDEXY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLPet51z4O835L+ZCHFZxnl9jaI3M5R/sScKi6Cmmy78ktqSQ1
+	c+kYyDqU9DCyG6zvzNq/HosLVAhFVJGHT77kPT1rf64v3KK2qovg+tVjz7bqBxg=
+X-Gm-Gg: ASbGncvhwOKCGURrSREp2KhX7N6fPRjP9mJxvd6PQxA9Zbmt7zAHCs4sZs/+s8CNwHW
+	k2rw5Roh9wNC2OE3fXfxo62sOilWL06/6i88yhWhJZuhmLT2S0HXJcoWkztBPvmZi7L26Tmt+1i
+	emUUHe6yWFgtqRhCR3JXzasq6q34hgqEzSbv6EVdDGSoDszUcGCqksi69VaykPiX0SPTjfH6D5N
+	9TIYW8OBbamKUM7zne0OzoQW1Y3cqvsHeja6jDHKwHqjIOo3qHaw7m7uQMjgW9AF+5p/5VLUw8t
+	qcY6tA56TALgm1gPn9hcTCv/9ttBqNjUPa11q7bY7FMNqkTE+4Q=
+X-Google-Smtp-Source: AGHT+IFA83L5hUxqqmTbet129g/fiwMMso0nEIQL+ThEQwkZJZTSp9HJ7jI3SU4GxtqStPvfy/7M+A==
+X-Received: by 2002:a05:6e02:308d:b0:3d8:1bd0:9a79 with SMTP id e9e14a558f8ab-3d88ee75ff8mr39030005ab.21.1744986614675;
+        Fri, 18 Apr 2025 07:30:14 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f6a39335efsm469087173.79.2025.04.18.07.30.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 07:30:14 -0700 (PDT)
+Message-ID: <634ce469-983d-4153-ac62-0dd7c3876d45@linuxfoundation.org>
+Date: Fri, 18 Apr 2025 08:30:13 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <PAXPR04MB85100BB81C6B25BFC69B32B588BD2@PAXPR04MB8510.eurprd04.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.14 000/449] 6.14.3-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250417175117.964400335@linuxfoundation.org>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250417175117.964400335@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 16, 2025 at 05:16:15AM +0000, Wei Fang wrote:
-> > -----Original Message-----
-> > From: Jakub Kicinski <kuba@kernel.org>
-> > Sent: 2025年4月16日 11:43
-> > To: Wei Fang <wei.fang@nxp.com>
-> > Cc: Claudiu Manoil <claudiu.manoil@nxp.com>; Vladimir Oltean
-> > <vladimir.oltean@nxp.com>; Clark Wang <xiaoning.wang@nxp.com>;
-> > andrew+netdev@lunn.ch; davem@davemloft.net; edumazet@google.com;
-> > pabeni@redhat.com; christophe.leroy@csgroup.eu; netdev@vger.kernel.org;
-> > linux-kernel@vger.kernel.org; imx@lists.linux.dev; linuxppc-dev@lists.ozlabs.org;
-> > linux-arm-kernel@lists.infradead.org
-> > Subject: Re: [PATCH v5 net-next 04/14] net: enetc: add MAC filtering for i.MX95
-> > ENETC PF
-> > 
-> > On Fri, 11 Apr 2025 17:57:42 +0800 Wei Fang wrote:
-> > >  	enetc4_pf_netdev_destroy(si);
-> > >  	enetc4_pf_free(pf);
-> > > +	destroy_workqueue(si->workqueue);
-> > 
-> > I think that you need to flush or cancel the work after unregistering
-> > the netdev but before freeing it? The work may access netdev after its
-> > freed.
+On 4/17/25 11:44, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.14.3 release.
+> There are 449 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Yes, you are right, I will improve it. thanks.
+> Responses should be made by Sat, 19 Apr 2025 17:49:48 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.3-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-I think the workqueue creation needs to be handled in
-enetc4_pf_netdev_create() somewhere in between alloc_etherdev_mqs() and
-register_netdev(), so that the workqueue is available as soon as the
-interface is registered, but also so that the workqueue teardown takes
-places naturally where Jakub indicated.
+Compiled and booted on my test system. No dmesg regressions.
+
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+
+thanks,
+-- Shuah
