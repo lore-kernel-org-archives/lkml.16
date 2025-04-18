@@ -1,74 +1,84 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C7B26B0BF
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E9026B2C7
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744965392; cv=none; b=sG+AJ98NhsX/g6ReburNEZt34VtQPFkD7TqVnRQrI5IsDEV0D7czwKnJV/Hm5fqWGtSlIWEKM0zKDVyVU/EYlb5/GhHCvJtt5RM7BTdwnt2akIOj/hDm3+IQNbaKvMicJ9eNg2dtw2mb82bTJDdqzHnEJA2SXcuEe9CmLYQanyY=
+	t=1744965464; cv=none; b=t6HcxBGEkPUxs6O2BEeWU3wBg23BnZV6HwwJRDG2DP0OJPeJkuTkKIeqC9mAaS1UZQa8P4HBq+JbQfkHT/YcHEw3CB3Hb7iA7srKOF5qNdicuJ0F5Wp7aTXDAWEKhYVbrYgypJa0s/Bkx7zKe+5DPaMwscDDUNScpyqDKhV1iTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744965392; c=relaxed/simple;
-	bh=LUkyc/BgQX9YR/2tc5k3KKNPguD1blkucYPDKasBHFs=;
+	s=arc-20240116; t=1744965464; c=relaxed/simple;
+	bh=9wFd+LWaeWbb8ByS2WTwvKaa9Aazj1pXPEB3WNZjVzk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M03x/BdlEtSTh1gUa8Yx5/5qsh96nZYg2TaPdBKAUvVTjg0zzYJ26bHDnAA5pZzbBj1755msLV5Q02pEN3/FRM4s74uaTjSIKEPUh7hg1FcGwhjxJ40rTocDPbORf4bbRYSynhJgJC3Xap4meQeeE0Db0v0oOmxBaXX4vxMrIJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LGm6spvE; arc=none smtp.client-ip=209.85.214.178
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZKQLkCH0lFEoDd89i1t41RLEPyryeSgG2hKuYJ/25X+ZSRjgNQpCI2wCGJIegZYu4psgZlgIZauSAMTODSugeE42aOBIWhc8EMWI1C+GTlGB0Gysrdnq0xZc6e9cNJNKXlpSful+Cbbab6L5FZun+9MJkgJF98na1VA2orn2RsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f7MMKEc5; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LGm6spvE"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-227a8cdd241so21040955ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 01:36:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f7MMKEc5"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so12642005e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 01:37:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744965388; x=1745570188; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744965461; x=1745570261; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=tsPJ7r05GCU8U5IpYvKGSTH/BPi5kWm5knrn6+oWvqM=;
-        b=LGm6spvEjriy1udH5Mg/CIBE7fuNlLHG7fNFugdxOIl1fKCnp624YUjUE70ReJnJ55
-         f/cHezvRgOYRsm5dGU6feno5s/J1HkhV+UTu0x0VVQuap1tRTEuiRLmQ7rAGrQCoqOdU
-         nExQsjp2KrBC2pLoEA/mW7pL7J3bCogXsqVJKeBpMBSeVhqUGQS8t1utTQJpsLAnQTOB
-         4C743CU9D53M5/0huLUZ3oTU/XSFRtXnyr0iUoo2rSz7r++U5qbvtEKdXFCPJLbGPhTO
-         501f/NA3BtmjZqChnZIx2qOVjpswfR0ZPJQSNpxySk8Nr97wZiKh9bFkTboroaMAowqU
-         hUFg==
+        bh=H338YpIXIN0Gvnxx0CNTxMSFWd6J6lOzxWOZLc2fN3E=;
+        b=f7MMKEc5en/GP/4ZgRucQJmQw7hfysdCimw6S47n/pSgl8NmgFJD0dsdnrWmODgljN
+         R3CXNOJse2S8Wr7M+U8XwDKwjRf7BVmLdEU4ZhROYDp4M4/e2/ijgKNUIBka4yZItvah
+         ZZgxNkS7iHNM7RQ0w+qvneroMC76cvdg9zKEDarpdeWuE22yhEx6+YTQ49+GnuE4jzho
+         jNOLnlAM5KyOPtjFnZIoTxjNfB0/DuZlNwOGd6iJgcvPY70EDnn5sE5Ktwr+4SVg3hgh
+         bBuiMs8yPsUSUCCUJUBTyp5l+aex5CCimmWU+QAl5Q9Vp2BAyK6cDOtZjdPqTQc/wE01
+         1zlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744965388; x=1745570188;
+        d=1e100.net; s=20230601; t=1744965461; x=1745570261;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tsPJ7r05GCU8U5IpYvKGSTH/BPi5kWm5knrn6+oWvqM=;
-        b=bXnrSE0IseW+l8u0bLRU9AzM068YVkVtIIi+3C3jns++uVFuVl02uYpxuprwYxSEq9
-         NqDbI7aAPrzy/G+ORiD5Irm6MddLGB+lkExcWo/jECcfNjTivtR/D6ETheeKFfXGFI+D
-         M0XoeUqykvV5fM7muPFbjXDtqDqTXqnqPvEjnBd+5VNjAognSJlchmXiFz2W8Ert7fmj
-         ibaDFMd5tc/SppC9pe8NjZvwEgMHR47Q5P/Dtd5v0qwSQykNjBqnPFIkCfmCqth61OaH
-         CSBORGr+VbiDpkFt/dR09CC+0BDURFIi6y0NYX2aZHEAuoKSLH2k9oVooBU/0PzJpQ6h
-         Np1g==
-X-Forwarded-Encrypted: i=1; AJvYcCVsHJonqdavspY80JAneLNqF/hjrS9FY5KvFk4frPkCbeglI6Tds66GJANNnRs+3Oubj+ahJONuDljFojU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybWJGCgNzjNnnh6S0M4ewwqnXDzfgnlytMm8INznV2sFD/7pgU
-	qiAbebg+UvGy7w1OvGwBSZg0Ge25IXfdKjaYdiltzRewyf+yxVYhNQLydvr21kaarpEEjW35q3U
-	=
-X-Gm-Gg: ASbGnct0Qs81RLarm8ppLOmfV2d1G1hJ7FBiuhVwA55fMfWbkHml9+YJqLI/+rhY0s+
-	tDxm8+V2T7LeEwAtsWxYTdR42XC5qtzu/4lGApWkiJeJyZAWyt+sLzHA+qHTJrenQtqQwNHH+Kq
-	C4uUzD/y6uZJkNXcIUiGaMlvR33rxRKN/Njrt84oIGPUeOE+tWtXHaiDPPg1qdF3z6kcsXSb3k6
-	UAIzSANtZWfIQpJEJ8THp2dGy5gU40La8inurKqTer8+QNbLDHwOurjBMJNUkfgH/yVzEdwfDHn
-	2lRd6JXAzt1xk4r2D94eQxMGtluGnPXHggwQPv5S18aELtRasQ==
-X-Google-Smtp-Source: AGHT+IFLyewdVLNunGSr5XLsO/KxZg8Iz7L/FhZpjjgmaKyjexZSMUlGGQgBTl9NsTgGtdYk/Ywm+Q==
-X-Received: by 2002:a17:903:24c:b0:224:1074:63a0 with SMTP id d9443c01a7336-22c53619da7mr24538145ad.34.1744965388315;
-        Fri, 18 Apr 2025 01:36:28 -0700 (PDT)
-Received: from thinkpad ([36.255.17.72])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb4622sm12135005ad.108.2025.04.18.01.36.25
+        bh=H338YpIXIN0Gvnxx0CNTxMSFWd6J6lOzxWOZLc2fN3E=;
+        b=SzqQAU+cIqu1pWHSgqPYzO2Glb5CqDlQrLWHb+2bUB0hxAD/S5QnsAnISn+HfnFkac
+         TkPGAbajmQAYRIser+gEqtF19GHvoMsESOWMrXwO3XrGs0lFde3iWsruhZZQHuZG1+5t
+         caT/zjtIdnV5QdaY291hygBcc5anBhOa1tzA6bhZZ8IU8ilYWd+IBWD6M0DncYPO2BYn
+         ucD8P9JuBpq0s8vILPPFjwYmQe1VdgOs9jouAu6yiEtSDIA9N632X/4m3ysNM4m5qmL7
+         ORVwYTw5oGHjgtJXOpj51uYMy3nSUthb6xbXwzcIeVXQOlpZJoY1X12WFWGDAsJWLZmW
+         1GAA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZ+dkbJUmWfl1hZ6NRGUh7UERYATxrGvjXAyoEqRHhgDBqPHb5+HIvmhqu7DcXBvxEr3qQ663NM4A8s1I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdbqSkCVyVagMQEbHJszmmhtDqaZBM35z+CbpzL0HzVrebJqps
+	TKaZxeR8KwJ+f9fXJTORqUZ74L0Ld9e6Iv0x7f8Q5pFq5u4gTzXkbFn23ackoBA=
+X-Gm-Gg: ASbGnctCT8DQ8XfYJvtvptV0yFoDNzueg37RPsTO9YfLZGXkOs1LvPMqWAQBvg8jDd3
+	XpGW11D/eRSg1nLRgG95yASQ+QgjqI9rS3vvRyWwy31a9GfAAojbK2nY9yy2aYTj6UsW5supDes
+	c2QUCN8HpgqM10h+bViMKBEaNtya2gVSGoASI56Lzu2RyBtQzisqhUzkGFa0m4matzNQ/0JHteR
+	mMBERgcvXK6lGJuyR3PGH6+/z1+30JqvWlqp4pXz2x+X1Oix6P70vBWwJy84am9uiU219Pt7zDJ
+	ylA3w0ImYrHWGYBbwmCFXUFEkPK8371k0Wu1LiIZzlutoypIBokNvX7X5Qf2OgZlQWjMBFRSFRe
+	p/xk=
+X-Google-Smtp-Source: AGHT+IHiLpagTJs2SbpQ7T/yPM+PTl/lUYMdfib3CeXF6j4CoViiiMG4uhTpPH8XNuL/o5PBHm8qrg==
+X-Received: by 2002:a05:600c:54c7:b0:43d:683:8caa with SMTP id 5b1f17b1804b1-4407076031dmr2922635e9.15.1744965460792;
+        Fri, 18 Apr 2025 01:37:40 -0700 (PDT)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5acec8sm13487175e9.16.2025.04.18.01.37.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 01:36:27 -0700 (PDT)
-Date: Fri, 18 Apr 2025 14:06:23 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Vivek Pernamitta <quic_vpernami@quicinc.com>
-Cc: Veerabhadrarao Badiganti <quic_vbadigan@quicinc.com>, 
-	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bus: mhi: host: pci: Disable runtime PM for QDU100
-Message-ID: <qrb4ozkj3zxfpo733mf6xf35tetfyekytkty6sq7civhycbahm@c6s3wfvmdycs>
-References: <20250414-vdev_next-20250411_pm_disable-v1-1-e963677636ca@quicinc.com>
- <ec99379e-fd54-42b0-a383-8ed212072396@quicinc.com>
- <o7rv3xgg3btaoqjlzfenbfkrp3fuw54cx6zqojclcfslfg3ha4@c3sqaqqdjdjv>
- <c8699f79-54cc-4adb-8047-b37a69e69d96@quicinc.com>
+        Fri, 18 Apr 2025 01:37:40 -0700 (PDT)
+Date: Fri, 18 Apr 2025 10:37:37 +0200
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: iuncuim <iuncuim@gmail.com>
+Cc: Vasily Khoruzhick <anarsoul@gmail.com>,
+	Yangtao Li <tiny.windzz@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Andre Przywara <andre.przywara@arm.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+Subject: Re: [PATCH 1/6] thermal/drivers/sun8i: add gpadc clock
+Message-ID: <aAIPUcS_cNRHoxwq@mai.linaro.org>
+References: <20250411003827.782544-1-iuncuim@gmail.com>
+ <20250411003827.782544-2-iuncuim@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,83 +88,76 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c8699f79-54cc-4adb-8047-b37a69e69d96@quicinc.com>
+In-Reply-To: <20250411003827.782544-2-iuncuim@gmail.com>
 
-On Fri, Apr 18, 2025 at 11:55:24AM +0530, Vivek Pernamitta wrote:
+On Fri, Apr 11, 2025 at 08:38:21AM +0800, Mikhail Kalashnikov wrote:
+> From: Mikhail Kalashnikov <iuncuim@gmail.com>
 > 
+> Some processors (e.g. Allwinner A523) require GPADC clocking activation for
+> temperature sensors to work. So let's add support for enabling it.
 > 
-> On 4/17/2025 11:37 AM, Manivannan Sadhasivam wrote:
-> > On Thu, Apr 17, 2025 at 10:00:38AM +0530, Veerabhadrarao Badiganti wrote:
-> > > 
-> > > On 4/14/2025 1:17 PM, Vivek Pernamitta wrote:
-> > > > The QDU100 device does not support the MHI M3 state, necessitating the
-> > > > disabling of runtime PM for this device. Since the PCIe core framework
-> > > > enables runtime PM by default for all clients, it is essential to disable
-> > > > runtime PM if the device does not support Low Power Mode (LPM).
-> > > > 
-
-Not true... See below.
-
-> > > > Signed-off-by: Vivek Pernamitta<quic_vpernami@quicinc.com>
-> > > > ---
-> > > >    drivers/bus/mhi/host/pci_generic.c | 10 ++++++++++
-> > > >    1 file changed, 10 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
-> > > > index 03aa887952098661a488650053a357f883d1559b..a011fd2d48c57cf9d1aec74040153267a206d797 100644
-> > > > --- a/drivers/bus/mhi/host/pci_generic.c
-> > > > +++ b/drivers/bus/mhi/host/pci_generic.c
-> > > > @@ -43,6 +43,7 @@
-> > > >     * @mru_default: default MRU size for MBIM network packets
-> > > >     * @sideband_wake: Devices using dedicated sideband GPIO for wakeup instead
-> > > >     *		   of inband wake support (such as sdx24)
-> > > > + * @pm_disable: disables runtime PM (optional)
-> > > >     */
-> > > >    struct mhi_pci_dev_info {
-> > > >    	const struct mhi_controller_config *config;
-> > > > @@ -54,6 +55,7 @@ struct mhi_pci_dev_info {
-> > > >    	unsigned int dma_data_width;
-> > > >    	unsigned int mru_default;
-> > > >    	bool sideband_wake;
-> > > > +	bool pm_disable;
-> > > >    };
-> > > >    #define MHI_CHANNEL_CONFIG_UL(ch_num, ch_name, el_count, ev_ring) \
-> > > > @@ -295,6 +297,7 @@ static const struct mhi_pci_dev_info mhi_qcom_qdu100_info = {
-> > > >    	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
-> > > >    	.dma_data_width = 32,
-> > > >    	.sideband_wake = false,
-> > > > +	.pm_disable = true,
-> > > 
-> > > |no_m3|orno_|m3_support|would be more suitable than|pm_disable|
-> > 
-> > Yes!
-> > 
-> > But does the device not supporting M3 only or D3Hot also? If the former, then we
-> > should prevent MHI host to enter/exit M3 state in mhi_pm_suspend/ mhi_pm_resume.
-> > There is an incentive in allowing D3Hot if the device supports it.
-> > 
-> > Also, is there a way we could probe M3 support in the device so that we can
-> > check it during runtime?
-> > 
-> > - Mani
-> > 
-> In QDU100 device does not support M3 state, D3_hot will be supported. As
-> QDU100 is an accelerator card which needs high-throughout, LPM needs to
-> disabled here. So we are trying to disable runtime PM here, without M3 ,
-> D3_hot will not have effect in QDU100.
-> Also in MHI we don't have provision to check device M3 capability, so we are
-> trying to disable runtime PM here.
+> Signed-off-by: Mikhail Kalashnikov <iuncuim@gmail.com>
+> ---
+>  drivers/thermal/sun8i_thermal.c | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
 > 
+> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+> index 226747906..1f3908a60 100644
+> --- a/drivers/thermal/sun8i_thermal.c
+> +++ b/drivers/thermal/sun8i_thermal.c
+> @@ -66,8 +66,9 @@ struct tsensor {
+>  };
+>  
+>  struct ths_thermal_chip {
+> -	bool            has_mod_clk;
+> -	bool            has_bus_clk_reset;
+> +	bool		has_gpadc_clk;
+> +	bool		has_mod_clk;
+> +	bool		has_bus_clk_reset;
+>  	bool		needs_sram;
+>  	int		sensor_num;
+>  	int		offset;
+> @@ -89,7 +90,8 @@ struct ths_device {
+>  	struct regmap_field			*sram_regmap_field;
+>  	struct reset_control			*reset;
+>  	struct clk				*bus_clk;
+> -	struct clk                              *mod_clk;
+> +	struct clk				*mod_clk;
+> +	struct clk				*gpadc_clk;
+>  	struct tsensor				sensor[MAX_SENSOR_NUM];
+>  };
+>  
+> @@ -417,6 +419,16 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	if (tmdev->chip->has_gpadc_clk) {
+> +		tmdev->gpadc_clk = devm_clk_get_enabled(&pdev->dev, "gpadc");
+> +		if (IS_ERR(tmdev->gpadc_clk))
+> +			return PTR_ERR(tmdev->gpadc_clk);
 
-Even though PCI core is enabling runtime PM for devices, it also prevents the
-devices from getting suspended unless the drivers explicitly asks for it. So
-this driver is using autosuspend feature to allow the devices to be suspended
-if PME is supported from D3Hot.
+			return dev_err_probe();
 
-If you want to prevent the device from getting runtime suspended, you should
-just skip autosuspend.
+> +	}
+> +
+> +	ret = clk_prepare_enable(tmdev->gpadc_clk);
+> +	if (ret)
+> +		return ret;
+> +
 
-- Mani
+Why calling clk_prepare_enable() ? devm_clk_get_enabled() did the job no ?
+
+>  	if (tmdev->chip->needs_sram) {
+>  		struct regmap *regmap;
+>  
+> -- 
+> 2.49.0
+> 
 
 -- 
-மணிவண்ணன் சதாசிவம்
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
