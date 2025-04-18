@@ -1,197 +1,253 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7BA31AAA1C
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 04:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6987B1CF8B
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 04:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744951024; cv=none; b=gqdlyLkBDmVCm41pJZlMA6rDmuHKSUEvHyAXNSplIWMTiJOyJeBoNiwWBtTSnYHqHTntBjoQyONxmIFE8aigOmpinThhZho8CaT2DIEqjhtpOLMWgzKKLdeBMbfgbbw3B6xs9oJHJ2gf7bgVpYgJl+XfHl/LUZn6SFaNNXzBe8c=
+	t=1744951102; cv=none; b=gHMLNDdETFm3jUfUlGgttlHNHXsSKT7hLA1qQ56G3P5KbLmq3c2FLKAVyfryWVZXZczyqFTPdDe0dWl70fKKcH4Z26tXotU+VDCUhCj5ZMXJ070jCm0nX9Wfz45LRawDhuzk9zuik0jNhfIN7tow/7DzO5P8tC95ObVU94xY97o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744951024; c=relaxed/simple;
-	bh=hWlkTaA4ioMW1UIH7YWVCFR0z6HkDhnLtYuqDWJKnSk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TOSWchdidvNqIHjtscXXZWSQL3cuVajIOly6QQKc7frUFOGsNxEQl40VkEfhadYI7qIATyR3Rhw9BeoF37s06ijc5TBlg9dWQVQ2PoL87o0BP7r6h686T1jXxIl/1KMpra0FX0NE3HsJ3GleT1hZPS4Tyv0WXgB2BkBTTYhdBBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P6Eri/KA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744951102; c=relaxed/simple;
+	bh=vfu58btUgceDW5CcoAg4ZjLX+XL7N+MOmIt4/J/6gt8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ghSlINO3U5W8D/B/pTJFfsBEjS29FxDzpObiTEg6JqzWhLnRmi40g7kM9fFQjNknRuRzEH6/hY0k3vZTcKQ224CeUjTcz/AN2yA0KrccxztQOg0+9BWH8axDpxeuMxNrZAORzp1Fuw3mFkyCVGw7Z5Fom1fys3OTWQDirHlL97Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AkGJv7rV; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P6Eri/KA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744951021;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r4z2rRRUuOwywXorABV6PjT0ToaPZLx/d2Fez8DE9Oc=;
-	b=P6Eri/KAWKUVgTm+4UuluTaaT8qOhEebUjheHkIWNhP8O/wkPbAlfy8sXLkQPGEf9AUvL7
-	2MYOjb/Xb6ZesUDTX8dyrNOhBpVvGmjCQRQqZ1L4v4PMizZJwLHh3IsCDTiNCkMmr7mGIO
-	leUFwl8jdXmVaxjjn/rORaLXfhkhAN4=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-359-BAv6iW8rOyy94eXYbPoNlw-1; Fri,
- 18 Apr 2025 00:36:58 -0400
-X-MC-Unique: BAv6iW8rOyy94eXYbPoNlw-1
-X-Mimecast-MFC-AGG-ID: BAv6iW8rOyy94eXYbPoNlw_1744951016
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4CDFA1956048;
-	Fri, 18 Apr 2025 04:36:55 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.106])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D250119560A3;
-	Fri, 18 Apr 2025 04:36:52 +0000 (UTC)
-Date: Fri, 18 Apr 2025 12:36:48 +0800
-From: Baoquan He <bhe@redhat.com>
-To: steven chen <chenste@linux.microsoft.com>
-Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com, ebiederm@xmission.com,
-	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: Re: [PATCH v12 3/9] kexec: define functions to map and unmap segments
-Message-ID: <aAHW4O9qAKzaoa+O@MiWiFi-R3L-srv>
-References: <20250416021028.1403-1-chenste@linux.microsoft.com>
- <20250416021028.1403-4-chenste@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AkGJv7rV"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4774611d40bso187521cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 21:38:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744951098; x=1745555898; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=alu2R4F3B7RUJL8sloJCdr8FVEoYU8rWGzhQ01p1ka8=;
+        b=AkGJv7rV1dbqGgsTA4UQs44O93ySE8y7t7G2Vf7DNE+Oyx6lF24VCcOOr3LptTnuVd
+         /wQAcFAFCmMR9SQpB3LcZwkA2kVX+G3PE/ypCvI9UkgKwI/Ak/89Eps2djtwyL+FotID
+         AI/02KuYUYdmEcoAb859PHawmWaWc4p9pbdhztFuQwYrt8KuNzqtQfXa1HQy1qf+7icZ
+         ZgwXKWiflQCr1JQqe1ULernpNdmYGGQMXqgcf97l2BS2R7HkvAEZS96JxK/cZryMTHU8
+         poHbE5VucddBPlz15AjQnZTSEs9Qp72ciuW0V/4lJl6VEWaZcGnCWKRu8pJZ2Fvc8utC
+         FB9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744951098; x=1745555898;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=alu2R4F3B7RUJL8sloJCdr8FVEoYU8rWGzhQ01p1ka8=;
+        b=GZbo2WBH7FdIPGP9V7aWjqTzoZ8Ze/xCE2LmApvoxEM9x6i6wDolK3piVyj/qqNgu0
+         SivQTNgrnKRCkjNs7Kbt46Z0hFv+sFU+h2Pl25PDB/g12ABxDN6Ybu5arhqhcZ6zKN5p
+         Dm4K03SlHyd5TmGrA6B7XPccaNKOBQw5yqEwxCWufyTIgrppuyInmPSzfqw1ZI/vpVuB
+         zGdGixLwThJfAOrz0mL1KvvWVA10KsAGrgwcSUaupw6/7ilFW0A9925eiTDqPCxvbe1y
+         WCKqg11ILc8WDtOTnRJVeMNNticGJTow+N3NjBJFsKA9y2Mem2JwgaqzLm2N3rRk4SQK
+         xU9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWhUQJk6fWKs9LRpzdkJDGf29Wkw5VrV/Xu4bpXJOdfgMsrn6Dvx/TYgIPZlB6RpkwMG//rzFGIxsvBTqk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyY6Sp+LTqn2SyPhsdlCJIJa5STicrUJNQPnSS7Y3pm7yqYA9UI
+	3FufDLjUSuT3WKyiAItzug9qBynp1Vk5EoP6gjLe9ebJbm9XvszNrpaM3ZQJJR0pxK5NA5V4FxT
+	KQKE4MyNJYd8mw6k7/0LL+N9Mn2Y8kP6nXBU2
+X-Gm-Gg: ASbGncshcY0gYOY+jEQVfdKikNfBHv1apkGD4Bsyew2kNB8eqs0QRnwNtwUu6EnSXhx
+	FLjenojYyVfXZ/LOCqCV8UM1Ztv12MJeW0t+shZDc5D39ZoGl+VYEW7TJIwma5OIZaELPkfBIx3
+	VPwow3u/gbllLM06ODGUKDdb6anAzJld2wugoAbVXpitAKH7PupaTCfPg=
+X-Google-Smtp-Source: AGHT+IEQwdCoq6ssid8K1M7dKnqK1w8BnxQuH4nU8TPJG+w0y8sO/BUglZoz0UfWFnGOaEnnZC+3anrdokcAlx3LzeE=
+X-Received: by 2002:a05:622a:491:b0:476:f4e9:314e with SMTP id
+ d75a77b69052e-47aecc92a27mr1623031cf.25.1744951098055; Thu, 17 Apr 2025
+ 21:38:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416021028.1403-4-chenste@linux.microsoft.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+References: <cover.1744906694.git.sandipan.das@amd.com> <8ecf5fe20452da1cd19cf3ff4954d3e7c5137468.1744906694.git.sandipan.das@amd.com>
+In-Reply-To: <8ecf5fe20452da1cd19cf3ff4954d3e7c5137468.1744906694.git.sandipan.das@amd.com>
+From: Stephane Eranian <eranian@google.com>
+Date: Thu, 17 Apr 2025 21:38:05 -0700
+X-Gm-Features: ATxdqUEwPg2OmVNqmUmBlYhcX7bAmP2fEDLfnUqgavDPvjEmBbvMRWdI1M5qi94
+Message-ID: <CABPqkBS+k4Om3-sQWGBFN-imhiU8fXYsiDR1XAyp0Ro3uknCHw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] perf/x86/amd/uncore: Use hrtimer for handling overflows
+To: Sandipan Das <sandipan.das@amd.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, songliubraving@meta.com, ravi.bangoria@amd.com, 
+	ananth.narayan@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 04/15/25 at 07:10pm, steven chen wrote:
-> From: Steven Chen <chenste@linux.microsoft.com>
- ^^^^^^
-> 
-> Implement kimage_map_segment() to enable IMA to map the measurement log 
-> list to the kimage structure during the kexec 'load' stage. This function
-> gathers the source pages within the specified address range, and maps them
-> to a contiguous virtual address range.
-> 
-> This is a preparation for later usage.
-> 
-> Implement kimage_unmap_segment() for unmapping segments using vunmap().
-> 
-> From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-  ^^^^^^
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-  ^^^^^^^
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Baoquan He <bhe@redhat.com> 
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Signed-off-by: steven chen <chenste@linux.microsoft.com>
-  ^^^^^
+On Thu, Apr 17, 2025 at 8:44=E2=80=AFPM Sandipan Das <sandipan.das@amd.com>=
+ wrote:
+>
+> Uncore counters do not provide mechanisms like interrupts to report
+> overflows and the accumulated user-visible count is incorrect if there
+> is more than one overflow between two successive read requests for the
+> same event because the value of prev_count goes out-of-date for
+> calculating the correct delta.
+>
+> To avoid this, start a hrtimer to periodically initiate a pmu->read() of
+> the active counters for keeping prev_count up-to-date. It should be
+> noted that the hrtimer duration should be lesser than the shortest time
+> it takes for a counter to overflow for this approach to be effective.
+>
+The problem I see is that the number of uncore PMU varies a lot based
+on the CPU model, in particular due to the L3 PMU.
+Is there a timer armed per CCX or only a global one that will generate
+IPI to all other CPUs?
 
-The signing on this patch is a little confusing. I can't see who is the
-real author, who is the co-author, between you and Tushar. You may need
-to refer to Documentation/process/5.Posting.rst to make that clear.
-
-> Acked-by: Baoquan He <bhe@redhat.com>
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
 > ---
->  include/linux/kexec.h |  6 +++++
->  kernel/kexec_core.c   | 54 +++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 60 insertions(+)
-> 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index f0e9f8eda7a3..7d6b12f8b8d0 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -467,13 +467,19 @@ extern bool kexec_file_dbg_print;
->  #define kexec_dprintk(fmt, arg...) \
->          do { if (kexec_file_dbg_print) pr_info(fmt, ##arg); } while (0)
->  
-> +extern void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size);
-> +extern void kimage_unmap_segment(void *buffer);
->  #else /* !CONFIG_KEXEC_CORE */
->  struct pt_regs;
->  struct task_struct;
-> +struct kimage;
->  static inline void __crash_kexec(struct pt_regs *regs) { }
->  static inline void crash_kexec(struct pt_regs *regs) { }
->  static inline int kexec_should_crash(struct task_struct *p) { return 0; }
->  static inline int kexec_crash_loaded(void) { return 0; }
-> +static inline void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size)
-> +{ return NULL; }
-> +static inline void kimage_unmap_segment(void *buffer) { }
->  #define kexec_in_progress false
->  #endif /* CONFIG_KEXEC_CORE */
->  
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index c0bdc1686154..a5e378e1dc7f 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -867,6 +867,60 @@ int kimage_load_segment(struct kimage *image,
->  	return result;
+>  arch/x86/events/amd/uncore.c | 63 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>
+> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+> index 010024f09f2c..e09bfbb4a4cd 100644
+> --- a/arch/x86/events/amd/uncore.c
+> +++ b/arch/x86/events/amd/uncore.c
+> @@ -21,6 +21,7 @@
+>  #define NUM_COUNTERS_NB                4
+>  #define NUM_COUNTERS_L2                4
+>  #define NUM_COUNTERS_L3                6
+> +#define NUM_COUNTERS_MAX       64
+>
+>  #define RDPMC_BASE_NB          6
+>  #define RDPMC_BASE_LLC         10
+> @@ -38,6 +39,10 @@ struct amd_uncore_ctx {
+>         int refcnt;
+>         int cpu;
+>         struct perf_event **events;
+> +       unsigned long active_mask[BITS_TO_LONGS(NUM_COUNTERS_MAX)];
+> +       int nr_active;
+> +       struct hrtimer hrtimer;
+> +       u64 hrtimer_duration;
+>  };
+>
+>  struct amd_uncore_pmu {
+> @@ -87,6 +92,42 @@ static struct amd_uncore_pmu *event_to_amd_uncore_pmu(=
+struct perf_event *event)
+>         return container_of(event->pmu, struct amd_uncore_pmu, pmu);
 >  }
->  
-> +void *kimage_map_segment(struct kimage *image,
-> +			 unsigned long addr, unsigned long size)
+>
+> +static enum hrtimer_restart amd_uncore_hrtimer(struct hrtimer *hrtimer)
 > +{
-> +	unsigned long src_page_addr, dest_page_addr = 0;
-> +	unsigned long eaddr = addr + size;
-> +	kimage_entry_t *ptr, entry;
-> +	struct page **src_pages;
-> +	unsigned int npages;
-> +	void *vaddr = NULL;
-> +	int i;
+> +       struct amd_uncore_ctx *ctx;
+> +       struct perf_event *event;
+> +       int bit;
 > +
-> +	/*
-> +	 * Collect the source pages and map them in a contiguous VA range.
-> +	 */
-> +	npages = PFN_UP(eaddr) - PFN_DOWN(addr);
-> +	src_pages = kmalloc_array(npages, sizeof(*src_pages), GFP_KERNEL);
-> +	if (!src_pages) {
-> +		pr_err("Could not allocate ima pages array.\n");
-> +		return NULL;
-> +	}
+> +       ctx =3D container_of(hrtimer, struct amd_uncore_ctx, hrtimer);
 > +
-> +	i = 0;
-> +	for_each_kimage_entry(image, ptr, entry) {
-> +		if (entry & IND_DESTINATION) {
-> +			dest_page_addr = entry & PAGE_MASK;
-> +		} else if (entry & IND_SOURCE) {
-> +			if (dest_page_addr >= addr && dest_page_addr < eaddr) {
-> +				src_page_addr = entry & PAGE_MASK;
-> +				src_pages[i++] =
-> +					virt_to_page(__va(src_page_addr));
-> +				if (i == npages)
-> +					break;
-> +				dest_page_addr += PAGE_SIZE;
-> +			}
-> +		}
-> +	}
+> +       if (!ctx->nr_active || ctx->cpu !=3D smp_processor_id())
+> +               return HRTIMER_NORESTART;
 > +
-> +	/* Sanity check. */
-> +	WARN_ON(i < npages);
+> +       for_each_set_bit(bit, ctx->active_mask, NUM_COUNTERS_MAX) {
+> +               event =3D ctx->events[bit];
+> +               event->pmu->read(event);
+> +       }
 > +
-> +	vaddr = vmap(src_pages, npages, VM_MAP, PAGE_KERNEL);
-> +	kfree(src_pages);
-> +
-> +	if (!vaddr)
-> +		pr_err("Could not map ima buffer.\n");
-> +
-> +	return vaddr;
+> +       hrtimer_forward_now(hrtimer, ns_to_ktime(ctx->hrtimer_duration));
+> +       return HRTIMER_RESTART;
 > +}
 > +
-> +void kimage_unmap_segment(void *segment_buffer)
+> +static void amd_uncore_start_hrtimer(struct amd_uncore_ctx *ctx)
 > +{
-> +	vunmap(segment_buffer);
+> +       hrtimer_start(&ctx->hrtimer, ns_to_ktime(ctx->hrtimer_duration),
+> +                     HRTIMER_MODE_REL_PINNED_HARD);
 > +}
 > +
->  struct kexec_load_limit {
->  	/* Mutex protects the limit count. */
->  	struct mutex mutex;
-> -- 
+> +static void amd_uncore_cancel_hrtimer(struct amd_uncore_ctx *ctx)
+> +{
+> +       hrtimer_cancel(&ctx->hrtimer);
+> +}
+> +
+> +static void amd_uncore_init_hrtimer(struct amd_uncore_ctx *ctx)
+> +{
+> +       hrtimer_setup(&ctx->hrtimer, amd_uncore_hrtimer, CLOCK_MONOTONIC,=
+ HRTIMER_MODE_REL_HARD);
+> +}
+> +
+>  static void amd_uncore_read(struct perf_event *event)
+>  {
+>         struct hw_perf_event *hwc =3D &event->hw;
+> @@ -117,18 +158,26 @@ static void amd_uncore_read(struct perf_event *even=
+t)
+>
+>  static void amd_uncore_start(struct perf_event *event, int flags)
+>  {
+> +       struct amd_uncore_pmu *pmu =3D event_to_amd_uncore_pmu(event);
+> +       struct amd_uncore_ctx *ctx =3D *per_cpu_ptr(pmu->ctx, event->cpu)=
+;
+>         struct hw_perf_event *hwc =3D &event->hw;
+>
+> +       if (!ctx->nr_active++)
+> +               amd_uncore_start_hrtimer(ctx);
+> +
+>         if (flags & PERF_EF_RELOAD)
+>                 wrmsrl(hwc->event_base, (u64)local64_read(&hwc->prev_coun=
+t));
+>
+>         hwc->state =3D 0;
+> +       __set_bit(hwc->idx, ctx->active_mask);
+>         wrmsrl(hwc->config_base, (hwc->config | ARCH_PERFMON_EVENTSEL_ENA=
+BLE));
+>         perf_event_update_userpage(event);
+>  }
+>
+>  static void amd_uncore_stop(struct perf_event *event, int flags)
+>  {
+> +       struct amd_uncore_pmu *pmu =3D event_to_amd_uncore_pmu(event);
+> +       struct amd_uncore_ctx *ctx =3D *per_cpu_ptr(pmu->ctx, event->cpu)=
+;
+>         struct hw_perf_event *hwc =3D &event->hw;
+>
+>         wrmsrl(hwc->config_base, hwc->config);
+> @@ -138,6 +187,11 @@ static void amd_uncore_stop(struct perf_event *event=
+, int flags)
+>                 event->pmu->read(event);
+>                 hwc->state |=3D PERF_HES_UPTODATE;
+>         }
+> +
+> +       if (!--ctx->nr_active)
+> +               amd_uncore_cancel_hrtimer(ctx);
+> +
+> +       __clear_bit(hwc->idx, ctx->active_mask);
+>  }
+>
+>  static int amd_uncore_add(struct perf_event *event, int flags)
+> @@ -490,6 +544,9 @@ static int amd_uncore_ctx_init(struct amd_uncore *unc=
+ore, unsigned int cpu)
+>                                 goto fail;
+>                         }
+>
+> +                       amd_uncore_init_hrtimer(curr);
+> +                       curr->hrtimer_duration =3D 60LL * NSEC_PER_SEC;
+> +
+>                         cpumask_set_cpu(cpu, &pmu->active_mask);
+>                 }
+>
+> @@ -879,12 +936,18 @@ static int amd_uncore_umc_event_init(struct perf_ev=
+ent *event)
+>
+>  static void amd_uncore_umc_start(struct perf_event *event, int flags)
+>  {
+> +       struct amd_uncore_pmu *pmu =3D event_to_amd_uncore_pmu(event);
+> +       struct amd_uncore_ctx *ctx =3D *per_cpu_ptr(pmu->ctx, event->cpu)=
+;
+>         struct hw_perf_event *hwc =3D &event->hw;
+>
+> +       if (!ctx->nr_active++)
+> +               amd_uncore_start_hrtimer(ctx);
+> +
+>         if (flags & PERF_EF_RELOAD)
+>                 wrmsrl(hwc->event_base, (u64)local64_read(&hwc->prev_coun=
+t));
+>
+>         hwc->state =3D 0;
+> +       __set_bit(hwc->idx, ctx->active_mask);
+>         wrmsrl(hwc->config_base, (hwc->config | AMD64_PERFMON_V2_ENABLE_U=
+MC));
+>         perf_event_update_userpage(event);
+>  }
+> --
 > 2.43.0
-> 
-
+>
