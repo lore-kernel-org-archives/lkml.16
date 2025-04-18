@@ -1,84 +1,128 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from mail-m1973174.qiye.163.com (mail-m1973174.qiye.163.com [220.197.31.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57170270EAF
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 09:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B962026FA5A;
+	Fri, 18 Apr 2025 09:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744970179; cv=none; b=bfzUQVEDJsL061EsIXtB3z6OsnPn8r1P465nUVYa8RnDCi9Wx4/puXMR6fyTW8JyQg+pVPJOHkZyVpiNsiVql1nDqHadgqks/C56S6AIOwTPAp23TV2UUhehCVaB1ohrKz5g7wFNPenfmymaKNiuDpDw/ej6xbY0WhpIDmmDeLA=
+	t=1744970195; cv=none; b=daYpd9CrEx9eE/HstpZcYjCDQSsToemF5S92NPTERA2JrO9LZ1uPa7VWptdqeRFbxvatJCwMB07nA2B56oV5LZap+3Ll30QOkd7466ItT14RSe2P783uYeiWUFA6juJYT9bw22DfOdVASvSMtx///SGUaXB+6s6vEpqeYQToW2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744970179; c=relaxed/simple;
-	bh=iIlIRJaJ8Nk9baLTAldhAKHTfIUQ0a8HFvaz7lfJOqM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ubLJalwgw/VF9kGF209UuBniVEs4GmGp1QNMCC/4BrKoDAyEJAzuEgL/lu1sf9WMzSuWt61qVoV67vlYuVn25UHeeh4bsYCVBkX45s9xsbdsBNOkQI3BkTSpjGUCJsklbDM4cm1h7eEmMdvJGnAZuXpEoecrX0xCIG9crklsGyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nV2Dgi2j; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744970195; c=relaxed/simple;
+	bh=D4pUJoAC83w3hP6IO7jcxTh2sIPQedcy5b/8ool7+og=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j0M/FP0V6oX4AS+FRGbVhJZNtO/wyunBaFERC9U1IcHv4Pt0WxfoKJENkbtSBJEpG3Sh/gRzcQzJ3NdzfLlNHBeWoGWO1M2j7K8bxg4721yKQ+b3ffzDy+UuSQ46yT0A3Vioqp1qS81HJNFLSq4Ea/KEE6E7OTNrH9OCG3gcfx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=QWT88Hbv; arc=none smtp.client-ip=220.197.31.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nV2Dgi2j"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744970175;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oGO08xLxOYFwCfCougkQzxDVIQkhT4UpNDlADOdXRwg=;
-	b=nV2Dgi2jGfZeEa/GVr3gLRUCxK0hfFB3KQB52i0/xewU0X2qg90lCUqafrPQ1jdjDA/q/a
-	IXA6abaerCkiLduWWL09cymItVyH2TSF1JMDiEVOBU79YjSuQrM0mAjAAIwxNNaWRwfFut
-	5vSsZWlsbnYoUItGRJiDPmaD5b+OUL8=
-From: Ye Liu <ye.liu@linux.dev>
-To: akpm@linux-foundation.org,
-	nao.horiguchi@gmail.com,
-	linmiaohe@huawei.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	david@redhat.com,
-	harry.yoo@oracle.com,
-	riel@surriel.com,
-	vbabka@suse.cz,
-	liuye@kylinos.cn,
-	ye.liu@linux.dev
-Subject: [PATCH v2 2/2] mm/rmap: fix typo in comment in page_address_in_vma
-Date: Fri, 18 Apr 2025 17:56:00 +0800
-Message-Id: <20250418095600.721989-3-ye.liu@linux.dev>
-In-Reply-To: <20250418095600.721989-1-ye.liu@linux.dev>
-References: <20250418095600.721989-1-ye.liu@linux.dev>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="QWT88Hbv"
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 125a9718a;
+	Fri, 18 Apr 2025 17:51:16 +0800 (GMT+08:00)
+From: Kever Yang <kever.yang@rock-chips.com>
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	devicetree@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+	Rob Herring <robh@kernel.org>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	David Wu <david.wu@rock-chips.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 1/3] dt-bindings: net: Add support for rk3562 dwmac
+Date: Fri, 18 Apr 2025 17:51:12 +0800
+Message-Id: <20250418095114.271562-1-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGRpKSVZDT00ZSUsfTBpDQkxWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a96484f455003afkunm125a9718a
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MRQ6GTo4DDIMAgouIk4UI0lO
+	PzcwCjNVSlVKTE9PQk1CQ0xDTUhOVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFISUNLNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=QWT88HbvamFv90XR9yBLMFnQCm6eCs3/nVDkf5NLLpqNUvkbt1AIkBqXuAaCQDsRrcdrxFk3ooh0W8cI/yLSCihrnL+6gPNC59XfMc8GygwNI6zOfG+hNkmYwnUuKyXDaKEnBAqMGyIAsvvyANtXWZ2Pe0Bis8nHGBiLrzj+wPA=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=+3Zq6GxI1QoLvi6Yw419evhTpUoxkex9H7YRQ3ne+wo=;
+	h=date:mime-version:subject:message-id:from;
 
-From: Ye Liu <liuye@kylinos.cn>
+Add a rockchip,rk3562-gmac compatible for supporting the 2 gmac
+devices on the rk3562.
+rk3562 only has 4 clocks available for gmac module.
 
-Fixes a minor typo in the comment above page_address_in_vma():
-"responsibililty" → "responsibility"
-
-Signed-off-by: Ye Liu <liuye@kylinos.cn>
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- mm/rmap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/rmap.c b/mm/rmap.c
-index b509c226e50d..a9eed8981e18 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -774,7 +774,7 @@ static bool should_defer_flush(struct mm_struct *mm, enum ttu_flags flags)
-  * @vma: The VMA we need to know the address in.
-  *
-  * Calculates the user virtual address of this page in the specified VMA.
-- * It is the caller's responsibililty to check the page is actually
-+ * It is the caller's responsibility to check the page is actually
-  * within the VMA.  There may not currently be a PTE pointing at this
-  * page, but if a page fault occurs at this address, this is the page
-  * which will be accessed.
+Changes in v3:
+- Collect ack tag
+- rebase to v6.15-rc1
+
+Changes in v2:
+- Fix schema entry and add clocks minItem change
+
+ Documentation/devicetree/bindings/net/rockchip-dwmac.yaml | 3 +++
+ Documentation/devicetree/bindings/net/snps,dwmac.yaml     | 1 +
+ 2 files changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/net/rockchip-dwmac.yaml b/Documentation/devicetree/bindings/net/rockchip-dwmac.yaml
+index 0ac7c4b47d6b..a0814e807bd5 100644
+--- a/Documentation/devicetree/bindings/net/rockchip-dwmac.yaml
++++ b/Documentation/devicetree/bindings/net/rockchip-dwmac.yaml
+@@ -25,6 +25,7 @@ select:
+           - rockchip,rk3368-gmac
+           - rockchip,rk3399-gmac
+           - rockchip,rk3528-gmac
++          - rockchip,rk3562-gmac
+           - rockchip,rk3568-gmac
+           - rockchip,rk3576-gmac
+           - rockchip,rk3588-gmac
+@@ -51,6 +52,7 @@ properties:
+       - items:
+           - enum:
+               - rockchip,rk3528-gmac
++              - rockchip,rk3562-gmac
+               - rockchip,rk3568-gmac
+               - rockchip,rk3576-gmac
+               - rockchip,rk3588-gmac
+@@ -149,6 +151,7 @@ allOf:
+             contains:
+               enum:
+                 - rockchip,rk3528-gmac
++                - rockchip,rk3562-gmac
+     then:
+       properties:
+         clocks:
+diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+index 78b3030dc56d..7498bcad895a 100644
+--- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
++++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+@@ -83,6 +83,7 @@ properties:
+         - rockchip,rk3328-gmac
+         - rockchip,rk3366-gmac
+         - rockchip,rk3368-gmac
++        - rockchip,rk3562-gmac
+         - rockchip,rk3576-gmac
+         - rockchip,rk3588-gmac
+         - rockchip,rk3399-gmac
 -- 
 2.25.1
 
