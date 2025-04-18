@@ -1,283 +1,127 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6B21E008B;
-	Fri, 18 Apr 2025 20:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5961E008B
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 20:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745009740; cv=none; b=EGhlc3KOOkTLO2gbTPifR1r4Lo8u6Xza28mFo/896KqP3FUjpEeU1ChzwbIDFNmFsoqb6ODmX8T2LhSnOoRD7lbdH0m5C4qMTMHTUtVf45tnZ6zlBmvXZx9BXIujUhHuUed145jqikF3+WUCLk1lkhN/9/JSBzh4FMdoRSo3sUA=
+	t=1745009953; cv=none; b=pw30K7or9mq7XpdQd7DDdQUUMosuChLzWrkIyGON3zqntMd54V2/xQwquoz2A/WSCIWXwi1LaGBBL0+EpZmNYTHjA898JcRq+gYSGRMczirbIKZaYgKWFXFIQeoXZNAsm/gw7Y6++uS3wxnKJnRt1hW9+1iIUkTSYX0UTCjAVx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745009740; c=relaxed/simple;
-	bh=u1c4oly1d3giAEd0nRsMu1dRpXLWf4GBOZL/G2Ux31s=;
+	s=arc-20240116; t=1745009953; c=relaxed/simple;
+	bh=lApZN5z9p0s54CynvRVxK9ennA5ELn9eA4SaRMP6RvA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XCjerR3RWhElo5Ip9JZTjbq0IPIPXt4zxxACPU0smloWPZLA12em4XRPHc2vh1hfDDW1sturRLnXo50GRGOeBMD5Cqug8Hbpp+h0sUpEtIaXUIkONeKskaEbPTmNM0y/T9c3ecL9kPg6biNszwBzhlgi7EPNuhtUE1P1o+/TGDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NH0uAhx7; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=pJ1y/2F568NdTn8G4IT9Ut2Eg75Usda9vA63L1F9jJgHKij8e75g9mZdJqJwpkKY2vEQ19y/S5zvtQuNKPduMRKZnfjDHkyscCR94vexF0yMXHPX4R1XBevoNQjYHb41fxaxwUmQdQtKbzzRKn4/atIujL3lpgz5xID95H2H6SA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kayVaHJL; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NH0uAhx7"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-47688ae873fso22153321cf.0;
-        Fri, 18 Apr 2025 13:55:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kayVaHJL"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-acb415dd8faso357256666b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 13:59:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745009737; x=1745614537; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FEEgsRqHe/u+tK75rWHl+wuw12N/z37aZu/9b7/5Djo=;
-        b=NH0uAhx7ClqNofJ18qbybQctQ7xVMuahOmyytgA+gE3J8bf1WLnji8znlUzmx5CiFE
-         Lvjxtn04HejkpC71Cpxt98+h1IDY+qvvPoLHAAYovFjz/xMQYwLB+Usfy71Q95MsMgv3
-         NH4PAjjDln5NLyN3RhcpmZvHxllq75nxNdtOsBNOjOuHLWRz17mGIMm3Y2GMvR/zkafR
-         9WuwoMNMqPGD05w9lSKio6O5xT+P202F2mro2R5xVMWOoQHowoYghsXpphjF0mR/cnHg
-         PMY5K8wkH1Q70d6wb2XvH5zT6n0YEG8StMoXvq3uqpQz5PwBZNwusWFY30THFEG2Npnd
-         BY7g==
+        d=google.com; s=20230601; t=1745009950; x=1745614750; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lApZN5z9p0s54CynvRVxK9ennA5ELn9eA4SaRMP6RvA=;
+        b=kayVaHJLHvQEWG8+3kD4Ccd6DFkx809e+LSqqpDlqOJyBvf/8AvUEwABboFcIooMq8
+         GXsYL2CmwlZr1XwFjZv7BML+x6boVhlgtyQv2KeKK03GXBMUfwqov6qP24uPSuJ7cbH0
+         VXu3TG9OkYf6ET+ERYBHkphofpREzPF+DH7vgXy+ZnU9cIH8nOJtjs9+dAUN9pV0jO06
+         Io8UI0dmTl0mktI8TsQm28PfkMRUSPlqe1oBX4V+pUI2KewFqzgFYLDqjXsltGQ0BUmo
+         NxkqLqdEx1s6WvMiCMm/J32Sxs1QXlDNfQ7KB1yUWG2R4Pi9Glsp1avq025HSIVVhWv3
+         xwtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745009737; x=1745614537;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FEEgsRqHe/u+tK75rWHl+wuw12N/z37aZu/9b7/5Djo=;
-        b=UMxQvrZyZycngOH+YgwXIpsa7N7Ww9P8bfeHFV56YTLq/s7sFCd4oODr89g+xriwB4
-         QhWNaEPqr3m4WWc+7UBUoFOFmgM61sjShlLO1b0XzraGxaT1wg32eHHMjLFk4dYsSbtK
-         H9YbZVHsO8B2M+cg+KGBfJeQpI0MjnemdpCUmcy8GQIotNa68q68zE2AYn7yZnGFKJhn
-         sDlfaVGqp5umNm8VQP1wUbTIzN0OVgjtCBPUKJCaXr51r6m4Agx9iJLWrNxLV2xRDrP3
-         r5sJm9qEeolxVDcfzLcJV8k9aDS7ZtCPpX7vsHO+pLThvZUkIgsmC95LeKeAnT0rTkHi
-         p7uw==
-X-Forwarded-Encrypted: i=1; AJvYcCWEPHIJjDKiAWIhwOIad/ObKVlLCwdQPqD2Om0El8cKTrjqKgjPaRRF04uFmQ2lXzzuwRg+HH7FrL2j4uTZ@vger.kernel.org, AJvYcCWYsTABd+2w4K1jwyH3G+2EuhJVNFgCJUamauYoPZpHwVUpvLPRq4vLSoYs7+eKnKNuuC087ILd@vger.kernel.org, AJvYcCXm4oLRu1PBb5tVgE1MiSupbZoGZ0PM/YQx3neiIRIWZ5FpSt8FgoZnyKdEBGcrHOkII4BO5YSF9N4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmM8m3hufhlIdXwL2PehAdy1y3Mo7Z3D9ndApyZVTVgwSgfL1x
-	uUccLrUtiqu8/vC7apAuod/d9AkYy4Z6/i/XOgfebVMqcfUbD2z2thmrqDCyI5sD7YO0e0T/QIB
-	lExdA1I0CFVVkJTTr5CZ1SJLtgPM=
-X-Gm-Gg: ASbGnctfVw9d/URsuqohzrBq6H9mRbgfba7ofxaTO6YtuAObD/eyj7OkKZpHLE3YBjz
-	VIV/MCgs5kBP1zIGnkrZdarFzsWw/uSFUs+gBK4GT3U5XrpdqPmP4TEqOlKVDpLx5wW3BHpB+Sr
-	IeEXe1dcU7tm9SJJ4bmNIbDmE7bHEny+6z3cxNA1fyqnDFvglJ0aV4
-X-Google-Smtp-Source: AGHT+IHK4EAX7kdbM8TwCw5yxGjPXtJ08ON48RHwi7jtNEDKZsZNKnjMRziIy1RGcYu7fYTp4vkbaCRzs7FpjS/ib4M=
-X-Received: by 2002:a05:622a:155:b0:476:8595:fa09 with SMTP id
- d75a77b69052e-47aec4a52c2mr56884551cf.40.1745009736980; Fri, 18 Apr 2025
- 13:55:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745009950; x=1745614750;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lApZN5z9p0s54CynvRVxK9ennA5ELn9eA4SaRMP6RvA=;
+        b=wLeFoK2t0mDye22RNQlkyPw4NjE+WkemG9ps7v4ThSWLASPifdfk4pT5YWC4rwFqhW
+         aKV/c3vRnIUdgvl4KhWhAVB6JxwSjPmaBG/s8mkh5V3DIn8JpnNiT6h711vYbjdsp/+z
+         UqkDGFPcGtX7YtyWfk27eXMNbTj3o3We9gMH8VeBuxIyqfwTHUbIQW73EG53pEVWRnl3
+         ot4FCLpk+q9rOFjBPl0piWOqwRHYw9XBmDwtSWXxP+iXPRVAiAmLoDZW1c9nYmozaq1i
+         NxdtdP2wev81xts+YBiT/8ELQBNZJ8cDKHrGrBpsgqc5YO+YiE2Xb24s7z/fG28/mjlw
+         ymbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXSPJTm/GsBt5aNsDvjzH9/1N5Y8h5J3EPxyCoNS+zgm+vFXefKYTWbw80BZiINQcFUL1b4OrkHnNvA5TI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWgmCrews0+2wE6uwZKxPCDRX8dmPnn3MstuzXUXMWMRWZLCBR
+	y/yrzYvkjPY1NAotbcX4HimBHGM8sA08UGsSpf0PRM3rnriQAJjHlYmWsLRwbYhrqKKKZZ7iEbN
+	Gr/ISk94z835t7Mz5H1urTA5ScrZ1WTx0yMIe
+X-Gm-Gg: ASbGncuDaFu2xsBCllYAO4dEOPK4VY+balslXDlx7lBcSqefqGDyn3SC3f7UxgB0jOT
+	4JbCODSMi1hKpV8en7SSsfVr4Lz+4ob3IeDBa/Mr+E0qmjL3AbcGrdY8aT8K+ctc+mGZ+7zEke3
+	bMuUGJU9nZ6eacIe6Y+5BbdBHy8N9YPUnhlw4oGSLgqFZqj/NnlruuGoIhpM3OIQ==
+X-Google-Smtp-Source: AGHT+IGM9HVisrkPvo6yjNR1VPrJS62wb1eSKPM8h5GjjkwKRX0V6HlORbk+zzka1e13yuuQD0n31dapGIhq/Zmiw6I=
+X-Received: by 2002:a17:906:c10f:b0:ac6:f6e2:7703 with SMTP id
+ a640c23a62f3a-acb74ad2854mr336671866b.8.1745009950398; Fri, 18 Apr 2025
+ 13:59:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417170109.602659-1-gshahrouzi@gmail.com> <20250418163510.5dac416e@jic23-huawei>
-In-Reply-To: <20250418163510.5dac416e@jic23-huawei>
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Date: Fri, 18 Apr 2025 16:55:26 -0400
-X-Gm-Features: ATxdqUHI1tlmOMKRWreLdx4IBcPrgnWpNl_LHcBR7ElvQeXr3g63qJk7CYRq9kY
-Message-ID: <CAKUZ0zKVrm8egyZ+3G7=JgcKwbgPe30UVT18j35RvR0OCr3V+g@mail.gmail.com>
-Subject: Re: [PATCH v2] iio: adc: Include valid channel for channel selection
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev, 
-	Michael.Hennerich@analog.com, sonic.zhang@analog.com, vapier@gentoo.org, 
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev, 
-	stable@vger.kernel.org
+References: <20250402212904.8866-1-zecheng@google.com> <dad0822a-5e0b-4518-a246-a3820787ed87@linux.ibm.com>
+In-Reply-To: <dad0822a-5e0b-4518-a246-a3820787ed87@linux.ibm.com>
+From: ZECHENG LI <zecheng@google.com>
+Date: Fri, 18 Apr 2025 16:58:59 -0400
+X-Gm-Features: ATxdqUFEUWs-xC9dnUTuErgsn9pCUB32fjwzolFznMRicHSRccISOX5B_fyG8t8
+Message-ID: <CAJUgMyLDwyK-WgNFOr7bGmXPG9eAEnG7mNtjfPSTeJnJT8bAVg@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] sched/fair: Reorder scheduling related structs to
+ reduce cache misses
+To: 20250402212904.8866-1-zecheng@google.com
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Xu Liu <xliuprof@google.com>, 
+	Blake Jones <blakejones@google.com>, Josh Don <joshdon@google.com>, linux-kernel@vger.kernel.org, 
+	Madadi Vineeth Reddy <vineethr@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 18, 2025 at 11:35=E2=80=AFAM Jonathan Cameron <jic23@kernel.org=
-> wrote:
+Hi Madadi Vineeth Reddy,
+
+> This patch is based on optimizations by reordering for 64 byte systems.
+> In case of 128 byte L1 D-cache systems like Power10, this might or might
+> not be beneficial. Moreover lot of space(almost half) would be wasted
+> on the cache line due to APIs like `__cacheline_group_begin_aligned`
+> and `__cacheline_group_end_aligned` that may restrict size to 64 bytes.
 >
-> On Thu, 17 Apr 2025 13:01:09 -0400
-> Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
->
-> > According to the datasheet on page 9 under the channel selection table,
-> > all devices (AD7816/7/8) are able to use the channel marked as 7. This
-> > channel is used for diagnostic purposes by routing the internal 1.23V
-> > bandgap source through the MUX to the input of the ADC.
-> >
-> > Replace checking for string equality with checking for the same chip ID
-> > to reduce time complexity.
-> >
-> > Group invalid channels for all devices together because they are
-> > processed the same way.
-> >
-> > Fixes: 7924425db04a ("staging: iio: adc: new driver for AD7816 devices"=
-)
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
->
-> This is doing too many things for one patch.  The fix wants be
-> on it's own. Ideally before everything else but if that is tricky to do
-> then I don't mind that much.
-Got it - will split them up into modular changes.
->
-> > ---
-> > Changes since v2:
-> >       - Refactor by adding chip_info struct which simplifies
-> >         condtional logic.
-> > ---
-> >  drivers/staging/iio/adc/ad7816.c | 68 ++++++++++++++++++--------------
-> >  1 file changed, 38 insertions(+), 30 deletions(-)
-> >
-> > diff --git a/drivers/staging/iio/adc/ad7816.c b/drivers/staging/iio/adc=
-/ad7816.c
-> > index 6c14d7bcdd675..ec955cbf06c17 100644
-> > --- a/drivers/staging/iio/adc/ad7816.c
-> > +++ b/drivers/staging/iio/adc/ad7816.c
-> > @@ -41,8 +41,20 @@
-> >   * struct ad7816_chip_info - chip specific information
-> >   */
-> >
-> > +enum ad7816_type {
-> > +     ID_AD7816,
-> > +     ID_AD7817,
-> > +     ID_AD7818,
-> > +};
-> The aim of moving to a chip_info structure is typically
-> to get rid of this sort of enum in favour of specific data
-> in the chip_info structures.  Anyhow see below for more on that.
->
-> > +
-> >  struct ad7816_chip_info {
-> > -     kernel_ulong_t id;
-> > +     const char *name;
-> > +     enum ad7816_type type;
-> > +     u8 max_channels;
-> > +};
-> > +
-> > +struct ad7816_state {
->
-> This effective rename needs to be a patch on it's own before
-> you introduce the new struct ad7816_chip_info.  That lets
-> us clearly see that all instances are renamed and is
-> an easy patch to review as it's just a rename.
-Got it.
->
-> > +     const struct ad7816_chip_info *chip_info;
-> >       struct spi_device *spi_dev;
-> >       struct gpio_desc *rdwr_pin;
-> >       struct gpio_desc *convert_pin;
-> > @@ -52,16 +64,11 @@ struct ad7816_chip_info {
-> >       u8  mode;
-> >  };
-> >
-> > -enum ad7816_type {
-> > -     ID_AD7816,
-> > -     ID_AD7817,
-> > -     ID_AD7818,
-> > -};
-> >
-> > @@ -215,7 +215,7 @@ static ssize_t ad7816_show_value(struct device *dev=
-,
-> >                                char *buf)
-> >  {
-> >       struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
-> > -     struct ad7816_chip_info *chip =3D iio_priv(indio_dev);
-> > +     struct ad7816_state *chip =3D iio_priv(indio_dev);
-> >       u16 data;
-> >       s8 value;
-> >       int ret;
-> > @@ -271,7 +271,7 @@ static ssize_t ad7816_show_oti(struct device *dev,
-> >                              char *buf)
-> >  {
-> >       struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
-> > -     struct ad7816_chip_info *chip =3D iio_priv(indio_dev);
-> > +     struct ad7816_state *chip =3D iio_priv(indio_dev);
-> >       int value;
-> >
-> >       if (chip->channel_id > AD7816_CS_MAX) {
-> > @@ -292,7 +292,7 @@ static inline ssize_t ad7816_set_oti(struct device =
-*dev,
-> >                                    size_t len)
-> >  {
-> >       struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
-> > -     struct ad7816_chip_info *chip =3D iio_priv(indio_dev);
-> > +     struct ad7816_state *chip =3D iio_priv(indio_dev);
-> >       long value;
-> >       u8 data;
-> >       int ret;
-> > @@ -345,14 +345,22 @@ static const struct iio_info ad7816_info =3D {
-> >       .event_attrs =3D &ad7816_event_attribute_group,
-> >  };
-> >
-> > +static const struct ad7816_chip_info ad7816_chip_infos[] =3D {
-> > +     [ID_AD7816] =3D { .name =3D "ad7816", .max_channels =3D 0, .type =
-=3D ID_AD7816 },
-> Use separate named structures.
->
-> This approach with an enum and an array is something we used to do but it
-> actually obscures what is going on when compared with separate names stru=
-cture
-> instances.
->
-> static const struct ad7816_chip_info ad7816_chip_info =3D {..};
->
-> static const struct ad7816_chip_info ad7817_chip_info =3D {..};
->
-> etc.
-Got it.
-> > +     [ID_AD7817] =3D { .name =3D "ad7817", .max_channels =3D 3, .type =
-=3D ID_AD7817 },
-> > +     [ID_AD7818] =3D { .name =3D "ad7818", .max_channels =3D 1, .type =
-=3D ID_AD7818 },
-> > +};
-> > +
-> >  /*
-> >   * device probe and remove
-> >   */
-> >
-> >  static int ad7816_probe(struct spi_device *spi_dev)
-> >  {
-> > -     struct ad7816_chip_info *chip;
-> > +     struct ad7816_state *chip;
-> >       struct iio_dev *indio_dev;
-> > +     const struct spi_device_id *id =3D spi_get_device_id(spi_dev);
-> > +     enum ad7816_type chip_type =3D (enum ad7816_type)id->driver_data;
->
-> Don't go via an enum.  Put pointers directly in the driver_data field.
-> + if the driver has on in the of_match_id table as well.
->
-> Then use spi_get_device_match_data() to retrieve it in a firmware type
-> independent way.
->
-> Ideally by the end of the series you should no such enum
-Sent the changes in v2 where no enum was used.
->
-> >       int i, ret;
-> >
-> >       indio_dev =3D devm_iio_device_alloc(&spi_dev->dev, sizeof(*chip))=
-;
-> > @@ -361,12 +369,12 @@ static int ad7816_probe(struct spi_device *spi_de=
-v)
-> >       chip =3D iio_priv(indio_dev);
-> >       /* this is only used for device removal purposes */
-> >       dev_set_drvdata(&spi_dev->dev, indio_dev);
-> > +     chip->chip_info =3D &ad7816_chip_infos[chip_type];
-> >
-> >       chip->spi_dev =3D spi_dev;
-> >       for (i =3D 0; i <=3D AD7816_CS_MAX; i++)
-> >               chip->oti_data[i] =3D 203;
-> >
-> > -     chip->id =3D spi_get_device_id(spi_dev)->driver_data;
-> >       chip->rdwr_pin =3D devm_gpiod_get(&spi_dev->dev, "rdwr", GPIOD_OU=
-T_HIGH);
-> >       if (IS_ERR(chip->rdwr_pin)) {
-> >               ret =3D PTR_ERR(chip->rdwr_pin);
-> > @@ -382,7 +390,7 @@ static int ad7816_probe(struct spi_device *spi_dev)
-> >                       ret);
-> >               return ret;
-> >       }
-> > -     if (chip->id =3D=3D ID_AD7816 || chip->id =3D=3D ID_AD7817) {
-> > +     if (chip->chip_info->type =3D=3D ID_AD7816 || chip->chip_info->ty=
-pe =3D=3D ID_AD7817) {
->
-> Given you now have a chip_info structure make this data rather than code.=
-  That is
-> it should be something ilke
->
->         if (chip->chip_info->has_busy_pin)
->
-> >               chip->busy_pin =3D devm_gpiod_get(&spi_dev->dev, "busy",
-> >                                               GPIOD_IN);
-> >               if (IS_ERR(chip->busy_pin)) {
-> > @@ -393,7 +401,7 @@ static int ad7816_probe(struct spi_device *spi_dev)
-> >               }
-> >       }
-> >
-> > -     indio_dev->name =3D spi_get_device_id(spi_dev)->name;
-> > +     indio_dev->name =3D chip->chip_info->name;
-> >       indio_dev->info =3D &ad7816_info;
-> >       indio_dev->modes =3D INDIO_DIRECT_MODE;
-> >
->
+> Since this is in generic code, any ideas on how to make sure that
+> other architectures with different cache size don't suffer?
+
+We propose to conditionally align to the cacheline boundary only when
+the cacheline size is 64 bytes, since this is the most common size.
+
+For architectures with 128-byte cachelines (like PowerPC), this
+approach will still collocate the hot fields, providing some
+performance benefit from improved locality, but it will not enforce
+alignment to the larger 128-byte boundary. This avoids wasting cache
+space on those architectures due to padding introduced by the
+alignment, while still gaining benefits from collocating frequently
+accessed fields.
+
+> Due to the reordering of the fields, there might be some workloads
+> that could take a hit. May be try running workloads of different
+> kinds(latency and throughput oriented) and make sure that regression
+> is not high.
+
+For workloads running without a cgroup hierarchy, we expect a small
+performance impact. This is because there is only one cfs_rq per CPU
+in this scenario, which is likely in cache due to frequent access.
+
+For workloads with the cgroup hierarchy, I have tested sysbench threads
+and hackbench --thread, there are no obvious regression.
+
+Heavy load on 1024 instances of sysbench:
+Latency (ms), after-patch, origial
+avg avg: 2133.51, 2150.97
+avg min: 21.9629, 20.9413
+avg max: 5955.8, 5966.78
+
+Avg runtime for 1024 instances of ./hackbench --thread -g 2 -l 1000
+in a cgroup hierarchy:
+After-patch: 34.9458s, Original: 36.8647s
+
+We plan to include more benchmark results in the v2 patch. Do you have
+suggestions for other benchmarks you would like us to test?
+
+Regards,
+Zecheng
