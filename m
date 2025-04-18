@@ -1,106 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9DF21ABCD;
-	Fri, 18 Apr 2025 11:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA95270EB0
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 11:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744975194; cv=none; b=IztiSLjtRc0wn/APQmZWN9B0GnoefTe8qxKYlHrFfkwdHhcQGE2JPBdZ4kpVADNcAc/FLO0DL6HvqynE3rlBKqcVjLtYwMDVXJ/ufqnmx9NKFTSeSxeJSa+O8XGrGP4N7ZTlSgLtMkvc2F7ZFxGSxWFH+ZDvWZwL4HqNO8M20us=
+	t=1744975219; cv=none; b=Psaif6M9iUz/Dkt0kgbR/xjIWqvUhNy0nWN6UuWH2sQV7ntY/WztqYmA+KC8KlTlwQUyx7qJSTUutgSH1VMnlYTmlY3sJlfmTYF3oZMPYslHhZalopT/xL5cUX93LA9DXCS5qIUIkO1fKf0hsSv3fMWJSLjkMkhbbBxZvVxg1hM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744975194; c=relaxed/simple;
-	bh=A7wvqwnqYa5lljVCih9QNkNHMM3IhtbdB0k5O3y2uik=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=djqoGW4snnrFHThfuV7Db7gvZo0gGCZrPJNtGrH2/exH7Zc0nkY69vBuiaIwtGeStfgP3rpxaOhf9Oi9/rQHBTHfCrkhj0e1BwBVXImlsI3bi9/pN/E77v5p7eOl4gSWy9lAm4vDP+4sJ6e6f+ZVp9vxmxgjsRBdUEjX2vHbgJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WdeyXvfa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744975219; c=relaxed/simple;
+	bh=Sj8X2Lm6wKekaBjcx9Vsfq4exmy8nxBLBwcn+T7xo+U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z1zN6IN1HjUViJsiJZrLg2+0yQlrNYlqWWnLDgsAy1AQPbboZzOg4LnhCafRldE86DUx/tvOIskn7pqBA/RATq9pqpFJnmpAJI8tj4f154Yo8K0HhFhT6nw6kxdF9as+DT7qkcnYDjgIXKC87NKrOlOHlNJVRGDoQyC4Yi6XiV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=j8UA000Q; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WdeyXvfa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98E2DC4CEE2;
-	Fri, 18 Apr 2025 11:19:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744975193;
-	bh=A7wvqwnqYa5lljVCih9QNkNHMM3IhtbdB0k5O3y2uik=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WdeyXvfarIVDZXIlsrZR6q+ZWN3+pN643rg0mOwmYV5A6pKmeRqB/JWY/8ObUAnJi
-	 Y1EqzpJAMsZxftxRUhP7InpbxA68zM7a6DddpAF30J+LhDbBYnrB+4R7SOQ7Z46AGH
-	 mSi5EInuDvbHAH3PcbwmhGvxSQxVx4wSnWHM7vjrcR9bDC4KkeIuhcfdENyorCWU9U
-	 438m+H5AQfvv/rBCcHLE3C4f92y96s5caeLMC+3sz+c/1NNlmdYlYVYpkbEWVlcolR
-	 bcqe1xg8mMIU5XVaCBr+Sxo15YaqwuuASTpzG37swqcijwKEEM/LYAGrbVM4ttt8Qo
-	 U7pz/uTfDL03g==
-Date: Fri, 18 Apr 2025 14:19:49 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>,
-	Kanchan Joshi <joshi.k@samsung.com>, Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Nitesh Shetty <nj.shetty@samsung.com>
-Subject: Re: [PATCH v8 24/24] nvme-pci: optimize single-segment handling
-Message-ID: <20250418111949.GC199604@unreal>
-References: <cover.1744825142.git.leon@kernel.org>
- <670389227a033bd5b7c5aa55191aac9943244028.1744825142.git.leon@kernel.org>
- <1284adf3-7e93-4530-9921-408c5eaeb337@kernel.org>
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="j8UA000Q"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso1118896f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 04:20:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1744975215; x=1745580015; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZJj8Rfgi9EbV15zm3T8GaXom1YrGzd0C3xNCTSZPHuE=;
+        b=j8UA000QIQkKpdWrRa/axOMJaoNjF3ix6zOsUjvMc+/cg97871DIOvaq4qcthpUoIL
+         dr2bihlN7/wbIWb/Xl5figifHjowTitSWCkFs7G7f0Pb7qP0blE2hQqCbuYbSSrO0r23
+         7q+9wR1hxYkJmh3CjVnuaB3ad1jJMyZhOx5AQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744975215; x=1745580015;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZJj8Rfgi9EbV15zm3T8GaXom1YrGzd0C3xNCTSZPHuE=;
+        b=O+J1NwihN/qS2WRkwclCNMRcYxMRlHc/FYKsz/gU/tk26ZKOM5hoJoZBGsKO1KoCk3
+         LtJHJ9QaDihlvhXaDrYqiy0Sa/f0p4IceDRLsbHCdqeddThdK0Vlb0GDaSD3JCHNfGz1
+         D69B5K9EdTosyLA3AoZdW6HY7dfKwGVQvBthJE614Wm3VsFVBg9Z10mBzZPDsRXYnQQv
+         y8vhQse9Zoai+1hbKKhvrpL5NQnlEVR4tRA2cAjkHXnQyulg3JM+eK5r0URVaA0htML9
+         iOmVgN5L+R5g4J62XiPwiET+1TQtyz3O/OQB3BJ4VDshaof7oQ8yEex7IkEyAIhYKpVz
+         eS6A==
+X-Forwarded-Encrypted: i=1; AJvYcCXR39cBpXS4547r0cicnvx41HM32gTMiULJE/DyYNCejJU5oZd5s5qn3cMG8xABEwfeZkqIxFvxcw3nymk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yymp/bVJp2z7v/7HobZgrT/ZVNsAPfzG0KjKLJ+6kT4qh6dRBED
+	jBAc6nZo77ruffVN4XGN9qYGsdFtvwwn5ekgQqJFUYPzDCOiRfN4WnPBtNK0OfE=
+X-Gm-Gg: ASbGncsqwd/RfI+mCS7PhXvvyGkdoGiOThU0wXo38By21oAnE6garORXmqm9ImwSi1n
+	kQxKrd6yaLlBB+NURyq6iNEwKXGxIgrkRFiaH0EL56HK2aspaXfflAvOYpokkBMArgWsGEbuwe4
+	u2v1e6CGVmJF66d96MT18+EVXmzh/dwGTOsCo739EPR/uHKXIm1cXagL03T3rC7WgnczlPzGf2S
+	dQjaP2e3VpA9/N62h8emKxsQf7cB1D3I4FEAtjIqVS9zVLEOulSawx1pp/ArDEr9fZSvOzHXOxm
+	peSwGVweCdioIZ1G+cXHQVQJJTG9VhHpR1zyDcQi0Pg9UExhWWlbu4TP+FMk79qlxSYNck37VAr
+	8w7m5aQ==
+X-Google-Smtp-Source: AGHT+IEH86lkzDB8iD2jcwBv9xObYazBn81tO8e62htfmOl2I85kmXIxDh76Itbbny1GahYRs6qSCQ==
+X-Received: by 2002:a05:6000:184f:b0:39b:f44b:e176 with SMTP id ffacd0b85a97d-39ef9466f36mr2679870f8f.24.1744975215276;
+        Fri, 18 Apr 2025 04:20:15 -0700 (PDT)
+Received: from [192.168.1.183] (host-92-26-98-202.as13285.net. [92.26.98.202])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5cf2easm18698005e9.31.2025.04.18.04.20.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 04:20:14 -0700 (PDT)
+Message-ID: <4fb6d880-3d5f-4d42-8419-dcc697949a10@citrix.com>
+Date: Fri, 18 Apr 2025 12:20:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1284adf3-7e93-4530-9921-408c5eaeb337@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -tip v2 1/2] x86/boot: Remove semicolon from "rep"
+ prefixes
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: x86@kernel.org, linux-video@atrey.karlin.mff.cuni.cz,
+ xen-devel@lists.xenproject.org, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Martin Mares <mj@ucw.cz>
+References: <20250418071437.4144391-1-ubizjak@gmail.com>
+ <50bf962c-2c9e-46a2-bbac-cba9cf229e79@citrix.com>
+ <CAFULd4ZNiRdARn8O98zROQRWoL1ASQ+iPPTTmLRxjo9SGRHyRg@mail.gmail.com>
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <CAFULd4ZNiRdARn8O98zROQRWoL1ASQ+iPPTTmLRxjo9SGRHyRg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 18, 2025 at 05:02:38PM +0900, Damien Le Moal wrote:
-> On 4/18/25 15:47, Leon Romanovsky wrote:
-> > From: Kanchan Joshi <joshi.k@samsung.com>
-> > 
-> > blk_rq_dma_map API is costly for single-segment requests.
-> > Avoid using it and map the bio_vec directly.
-> > 
-> > Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
-> > Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
-> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> > ---
-> >  drivers/nvme/host/pci.c | 65 +++++++++++++++++++++++++++++++++++++----
-> >  1 file changed, 60 insertions(+), 5 deletions(-)
+On 18/04/2025 12:15 pm, Uros Bizjak wrote:
+> On Fri, Apr 18, 2025 at 12:24 PM Andrew Cooper
+> <andrew.cooper3@citrix.com> wrote:
+>> On 18/04/2025 8:13 am, Uros Bizjak wrote:
+>>> diff --git a/arch/x86/boot/video.c b/arch/x86/boot/video.c
+>>> index f2e96905b3fe..0641c8c46aee 100644
+>>> --- a/arch/x86/boot/video.c
+>>> +++ b/arch/x86/boot/video.c
+>>> @@ -292,7 +292,7 @@ static void restore_screen(void)
+>>>                            "shrw %%cx ; "
+>>>                            "jnc 1f ; "
+>>>                            "stosw \n\t"
+>>> -                          "1: rep;stosl ; "
+>>> +                          "1: rep stosl ; "
+>>>                            "popw %%es"
+>> Doesn't this one still need a separator between STOSL and POPW ?
+> ";" is a separator as well.
 
-<...>
+Yes, it is.  I've clearly not had enough coffee yet.  Sorry for the noise.
 
-> >  static void nvme_unmap_data(struct nvme_dev *dev, struct request *req)
-> >  {
-> >  	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
-> > +	unsigned int nr_segments = blk_rq_nr_phys_segments(req);
-> > +	dma_addr_t dma_addr;
-> > +
-> > +	if (nr_segments == 1 && (iod->flags & IOD_SINGLE_SEGMENT)) {
-> 
-> nvme_pci_setup_prps() calls nvme_try_setup_prp_simple() which sets
-> IOD_SINGLE_SEGMENT if and only if the req has a single phys segment. So why do
-> you need to count the segments again here ? Looking at the flag only should be
-> enough, no ?
-
-Yes, you are right. There is no need in extra check of nr_segments and
-it is enough to rely on IOD_SINGLE_SEGMENT.
-
-Thanks
+~Andrew
