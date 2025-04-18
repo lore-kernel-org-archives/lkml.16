@@ -1,131 +1,152 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181D0270EAF
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 09:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64632FBF6;
+	Fri, 18 Apr 2025 09:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744968687; cv=none; b=Ue/nfrxElrNcJxh96dwcHHtHXTq8mIV1BkK0MO6Ae90JdBSf8nLZxjd1IyJdFyeYy+l3W4EIHBj9pm9m0h/AI0OfdrGX0CSw4DekYBsL7dcJYFwlTx21WPWRK2M8EkduXk7LCioaLPbWshnbuBsKBbDi0JfpnhBu5+IGjYjcP34=
+	t=1744968721; cv=none; b=BAZowIlbQxocV49u9IMMuzL55IETmitwV02fXuxqDCvhrGg1fw8z9KnD+E2IKhi7UogNrBVLIyq7fTMcipSWOA5TbWgNCuLPpAs7cjd66a6y2coMJr0o+/lzq+42o+i6HbyE7DatifxGiNgdEb05+km4odBS05aunHW2DWFV2FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744968687; c=relaxed/simple;
-	bh=bf1QPLQ982jUYGjff53G/vojBk6fxXpw9Om2goquwfI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B49PbNpyQpgGgQser+tJv7MJfsgnhP9C+1waUsSoQsgC51iXMFlVgLKS+UMfBRf7wG4tPyIjsJLRaFVOoDA7ejqGbNln49P3RZ/+eNKhHp38KsAzCxDEfL6W5Bo9X+9v1nhN89PqPp35Fzz8hRMJeDHpoNX+A2Nh1rwbf61FUPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WAbk5uRG; arc=none smtp.client-ip=209.85.221.54
+	s=arc-20240116; t=1744968721; c=relaxed/simple;
+	bh=64Fe7g5Lb1lqDSIJPW0LMmlwJ3M/2Mx2+lOtR94MfF8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NeFQuY4FDl7FxTGUCmP7yjQHS7Zoo9XbjlGPVa2H7lvLahOWXRWnRtVttdbfJn01abnBd/7M2EXL/+k9qQxdHXHyDnHHvaPrWb+Q/JR7nt5HKE2H/RB0C1U7GRWlL0gF6FDLHXMQjv/GROum5+NhKTwZcylI95b35esqVVWWvO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T/p2O0dp; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WAbk5uRG"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c266c2dd5so1826255f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 02:31:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/p2O0dp"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-30155bbbed9so1261997a91.1;
+        Fri, 18 Apr 2025 02:32:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744968684; x=1745573484; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ziEWnqr68bl6EYzUSY5rbxDyqDTwrndaf3K3nBdL2T8=;
-        b=WAbk5uRGYT491nzJbvjONoPPwYdOxJNm4/LkED+0WHHg7rrzdJ3CJDAiLPOpUljC9R
-         AMjZyVkDPe+SWVRX8SvEHtzeju3ilXHR3VR6DTV14LMoLjQRvEWy/5ZStPNjfAwmIvoy
-         kT5LnD0jl2O+F6sZo5VqZlYUG8Q1uW0RVPaLaEa3XYqf5IdOrusHOQ6GCd8p4e7Ujlpj
-         HHBfikQmTZ6HSf0goyefzKmKAeVj/Xw1LXh8+D12mVY9CnasSqWB9DKwoZCupvehuBGv
-         CzcsqFXcs4qdn9tMKItDt2fLooTnJGJkzuplEHquOUlX0g4rAFlUcJeV7EB2yQhCTq/t
-         Gnzg==
+        d=gmail.com; s=20230601; t=1744968719; x=1745573519; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3FYg/pyhreZGWbxJFZYjejOIWe1QYc0OG2U9BkbWp5o=;
+        b=T/p2O0dp4dv4IxLIUFvNe++Is2IB0v7/teF4oHgfThBse95k1GMdWYBFRQDcDQYQja
+         Dr1SlyAw+t29miFGZtTpXsEPb0dHkaykJg8yTxMUu4VJ8n+sX4BgE47YZcIR9Uf2m14t
+         LnInRkvr+mOjUEztj78Xm5/1sqKLABVcj3sBMGQZ9mQUtS6JRMS3TSQtjCz1VYzEfCGW
+         9ti6xVSj0merVTGKQFi9eLieBOiV3ZC9DrRZ0ZYB5PjrZbPrFmUEMEv/b11wiRlp0z2r
+         OP02DBF/k0fd3aqcx/vIv1ZQsD1JusGIuAdDwDzGwCjZ54ttqnTCmJk/zZpa+zbE7s2z
+         B4NA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744968684; x=1745573484;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ziEWnqr68bl6EYzUSY5rbxDyqDTwrndaf3K3nBdL2T8=;
-        b=hvqc1ydTJwHy/hYIVNXv6CkPA79pbnuQrshSZ3aEkd7kh+3CjxDqxOZ3dxYXyFwCie
-         qnJJEaabprUEPb/7NwiMRaYq9WiWsuOy5XOzDg/waYdPQ1v6yciIS1qV9tF7j77pchIB
-         rdZvL0zLZHdNFF+IdCl7T1PF4Xbnzv7meL53ZkxVt73unGiTQzhLDNUS0OxGtiyGi9fZ
-         WGv3s/Z+r+DFSteDZcAC+OFWTXtb2TBrbdeS7YrAf5HV6XxAsA9Tr40IClc1WC8ct+dt
-         4g/1zTbqEqtkfN73cdYM/HkYcBjv1HwG86m/xbugZ1H+advBXeed55kndywmMdkHesz4
-         GkdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWNvaqtCMGNJcPQMpudvAGmgzQsu1gnFtsVu3K0ScvMy7wA2XEpg5dmMyLjTZUOJ4mCZLPICVCwo9heSyc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVP5NI66FTPm2Mfij9K6vqU3Algl8LY8FCOXjMOMu1wtFPDZuS
-	kxqd4NtbzuQ/6cUJBPHW1Jyk2SUgSre1rzWJc5TjDJDw9o0y5FuV
-X-Gm-Gg: ASbGncvXo5PIcuo+okDRQKH24kkYFUck/bevo9b5XHvGCncFmZBZOANAmC4dwC2BMDU
-	Vl12oU7YS3HnMudHubDn5pupbBnOpc3GHaw9TzlFntyAeg71nhTwbRUwidK+FGGfWtk2u4hNjJn
-	b6JfEW/ssYacbZ99hvCi0lZS/QjVtrqm0PCvMgAED+F4XUnPAtlfiDhbf0/xjTsxDP4z7sZMTit
-	BEymkw2KlzzwIMMr135MNSItavmZXjlxO2CnbVAsReQb/KXqYGUHMdQQLcFo17MfSc6czUZ+9fd
-	m/ELVg76AMvtR9vHLvtZesxKmi1Ft5tte9qki2b2fCADhzjMx58r2FEFX5NoLKdimyR0MajmvFC
-	o
-X-Google-Smtp-Source: AGHT+IEkgWk/w496CaaXwuS7ubgZL54PSfX59h5yXTZtwL7fxskSCMm62/oqb2JCKljM/a15kDDOmQ==
-X-Received: by 2002:a5d:588b:0:b0:398:fd9b:b935 with SMTP id ffacd0b85a97d-39efbaf6f36mr1633392f8f.53.1744968684326;
-        Fri, 18 Apr 2025 02:31:24 -0700 (PDT)
-Received: from localhost.localdomain (82-64-73-52.subs.proxad.net. [82.64.73.52])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5a9df6sm15599595e9.1.2025.04.18.02.31.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 02:31:23 -0700 (PDT)
-From: Dave Penkler <dpenkler@gmail.com>
-To: gregkh@linuxfoundation.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Dave Penkler <dpenkler@gmail.com>
-Subject: [PATCH 2/2] staging: gpib: Rename common include file
-Date: Fri, 18 Apr 2025 11:31:11 +0200
-Message-ID: <20250418093111.8820-3-dpenkler@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250418093111.8820-1-dpenkler@gmail.com>
-References: <20250418093111.8820-1-dpenkler@gmail.com>
+        d=1e100.net; s=20230601; t=1744968719; x=1745573519;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3FYg/pyhreZGWbxJFZYjejOIWe1QYc0OG2U9BkbWp5o=;
+        b=FKALw4aIQgF+iZ65NNLHOSmMJGL11XVPcpkZDnitcdzvdRBVeBomwoePDi4GNahu4w
+         P5FcF3aBs/MN/7p1hVbv4SKUiNyan7SzxT7i765Ao/zmAWnupjGURYB31Yncy2qBOzAa
+         29TJQosyX+vVVo1PPi3bEqslZvZJtCzxNLIwDvG6fUBApwY4JSRzUGOEOZ2ZiFJh2YZh
+         4tZZMDhJ3FF2IW0oxmfBb8/g3jJHgIkk+7NPeVJL+VgUKCnIKCB2aN8ENtQbOQmF0oDp
+         wiMi0MkHQJ4JDpuBfM40A9WIG+7v03j+TidrUh67HhhrNpb11Fkt1hzPRkfNjnI44mtQ
+         crZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW6JpyOBar8SrxX2BzE5Q0CO16JpLKsKUclnjiudjV+tKgXYcr97UJDXl+8ybtroGkuxsgwaweU@vger.kernel.org, AJvYcCXTWOp312FRgHy8jCG1bYcsGb22s8WKMJFpC+exqEpp3w3H2kj3FysLkglGe1c7dTIDcwfxlDRnrhfM9Qw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPnwFTD+qU3rSqIqN9RlwHvj/KzrR9AtCR8VPMM7n9P65Itq7f
+	nA7RixjmYXD4aBOoyaJtdgsBVHWLP/v14/90a1MKQ7YhPZq4vcU2
+X-Gm-Gg: ASbGncvxTUQqGFYvwKP/oafVzIrOaMLaq5jTFeyGXp0X6MqBqqDX3F/PMD+gN6UcUYj
+	WpDW2fwZYf8BfdGv45JFNcbL0MBXn28tK7ui2bcJrGkQMILlj1ZJ6eh2/mFX5lwuObn2laZDqcy
+	cK1OLLTxDpAaLTg+wZ4JLXAwZuZuaIlClBF5BFS2DOSAE8edQnpvpUBOxYhegyaryoYwWYwbLBW
+	OIEKFnqn7qZRy5otQewPZOwijYCzYRsGc0PN4YsNew21RgN5NgnZMt3YK6ti2mm8b4dEz2c0HpK
+	Zti9KBG7u4jc2V76vCwZEx1TLQ+dIH9C5myghnozR5KRSIo2sVnVGw8HzHIdJrq7YHYgxzBaI+A
+	PfKK0K2hotgl7
+X-Google-Smtp-Source: AGHT+IG01YpaHiGlIhPUDJA3SSqBHIutpbt8OgQ4nJiOEg2thJrJIEgGlxsFPPp9aG4+bqaHeeJ9kA==
+X-Received: by 2002:a17:90b:5690:b0:2f9:c139:b61f with SMTP id 98e67ed59e1d1-3087bb48e25mr3652993a91.14.1744968719508;
+        Fri, 18 Apr 2025 02:31:59 -0700 (PDT)
+Received: from ?IPV6:2409:4080:218:8190:3fb8:76d:5206:c8c? ([2409:4080:218:8190:3fb8:76d:5206:c8c])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087df097aasm812800a91.11.2025.04.18.02.31.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 02:31:58 -0700 (PDT)
+Message-ID: <43d2438f-2fea-45d9-a49e-e03a5cdc6800@gmail.com>
+Date: Fri, 18 Apr 2025 15:01:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: ipv4: Fix uninitialized pointer warning in
+ fnhe_remove_oldest
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
+ horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, pabeni@redhat.com
+References: <20250417094126.34352-1-purvayeshi550@gmail.com>
+ <20250417220022.23265-1-kuniyu@amazon.com>
+Content-Language: en-US
+From: Purva Yeshi <purvayeshi550@gmail.com>
+In-Reply-To: <20250417220022.23265-1-kuniyu@amazon.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-User code includes gpib_user.h. Since this include has diverged
-from the original by
-  - removing unused functions and defines
-  - changing camel-case identifiers
-  - removing typedefs
-we need to change the name of the kernel include. This include
-will be included in the userland gpib_user.h ensuring backward
-compatibility for application programmes.
+On 18/04/25 03:30, Kuniyuki Iwashima wrote:
+> From: Purva Yeshi <purvayeshi550@gmail.com>
+> Date: Thu, 17 Apr 2025 15:11:26 +0530
+>> Fix Smatch-detected issue:
+>> net/ipv4/route.c:605 fnhe_remove_oldest() error:
+>> uninitialized symbol 'oldest_p'.
+>>
+>> Initialize oldest_p to NULL to avoid uninitialized pointer warning in
+>> fnhe_remove_oldest.
+> 
+> How does it remain uninitialised ?
+> 
+> update_or_create_fnhe() ensures the bucket is not empty before
+> calling fnhe_remove_oldest().
 
-Rename the file and change the references to it.
+Hi Kuniyuki,
 
-Signed-off-by: Dave Penkler <dpenkler@gmail.com>
----
- drivers/staging/gpib/include/gpibP.h              | 2 +-
- drivers/staging/gpib/include/gpib_types.h         | 2 +-
- drivers/staging/gpib/uapi/{gpib_user.h => gpib.h} | 0
- 3 files changed, 2 insertions(+), 2 deletions(-)
- rename drivers/staging/gpib/uapi/{gpib_user.h => gpib.h} (100%)
+Thanks for the feedback.
 
-diff --git a/drivers/staging/gpib/include/gpibP.h b/drivers/staging/gpib/include/gpibP.h
-index 6461b330a3c3..0af72934ce24 100644
---- a/drivers/staging/gpib/include/gpibP.h
-+++ b/drivers/staging/gpib/include/gpibP.h
-@@ -11,7 +11,7 @@
- 
- #include "gpib_types.h"
- #include "gpib_proto.h"
--#include "gpib_user.h"
-+#include "gpib.h"
- #include "gpib_ioctl.h"
- 
- #include <linux/fs.h>
-diff --git a/drivers/staging/gpib/include/gpib_types.h b/drivers/staging/gpib/include/gpib_types.h
-index 9e0dfdb9904d..2af4574d400c 100644
---- a/drivers/staging/gpib/include/gpib_types.h
-+++ b/drivers/staging/gpib/include/gpib_types.h
-@@ -8,7 +8,7 @@
- #define _GPIB_TYPES_H
- 
- #ifdef __KERNEL__
--#include "gpib_user.h"
-+#include "gpib.h"
- #include <linux/atomic.h>
- #include <linux/device.h>
- #include <linux/mutex.h>
-diff --git a/drivers/staging/gpib/uapi/gpib_user.h b/drivers/staging/gpib/uapi/gpib.h
-similarity index 100%
-rename from drivers/staging/gpib/uapi/gpib_user.h
-rename to drivers/staging/gpib/uapi/gpib.h
--- 
-2.49.0
+Smatch reports this because oldest_p is conditionally assigned inside 
+the loop, and it doesn't reason about the guarantees made by 
+update_or_create_fnhe() (i.e., that the list is non-empty). So it flags 
+oldest_p as potentially uninitialized when dereferenced.
+
+I understand your point, logically, the code is safe, and the warning is 
+a false positive.
+
+> 
+> 
+>>
+>> Check that oldest_p is not NULL after the loop to ensure no dereferencing
+>> of uninitialized pointers.
+>>
+>> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+>> ---
+>>   net/ipv4/route.c | 11 +++++++----
+>>   1 file changed, 7 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/net/ipv4/route.c b/net/ipv4/route.c
+>> index 753704f75b2c..2e5159127cb9 100644
+>> --- a/net/ipv4/route.c
+>> +++ b/net/ipv4/route.c
+>> @@ -587,7 +587,7 @@ static void fnhe_flush_routes(struct fib_nh_exception *fnhe)
+>>   
+>>   static void fnhe_remove_oldest(struct fnhe_hash_bucket *hash)
+>>   {
+>> -	struct fib_nh_exception __rcu **fnhe_p, **oldest_p;
+>> +	struct fib_nh_exception __rcu **fnhe_p, **oldest_p = NULL;
+>>   	struct fib_nh_exception *fnhe, *oldest = NULL;
+>>   
+>>   	for (fnhe_p = &hash->chain; ; fnhe_p = &fnhe->fnhe_next) {
+>> @@ -601,9 +601,12 @@ static void fnhe_remove_oldest(struct fnhe_hash_bucket *hash)
+>>   			oldest_p = fnhe_p;
+>>   		}
+>>   	}
+>> -	fnhe_flush_routes(oldest);
+>> -	*oldest_p = oldest->fnhe_next;
+>> -	kfree_rcu(oldest, rcu);
+>> +
+>> +	if (oldest_p) {  /* Ensure to have valid oldest_p element */
+>> +		fnhe_flush_routes(oldest);
+>> +		*oldest_p = oldest->fnhe_next;
+>> +		kfree_rcu(oldest, rcu);
+>> +	}
+>>   }
+>>   
+>>   static u32 fnhe_hashfun(__be32 daddr)
+>> -- 
 
