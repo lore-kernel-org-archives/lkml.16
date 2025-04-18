@@ -1,269 +1,141 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739298C0E;
-	Fri, 18 Apr 2025 08:46:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67DD726B953;
+	Fri, 18 Apr 2025 08:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744965970; cv=none; b=vBM/twfmyvHYZIb+rj01XZ6lh8HCmbLNx/JLIhxl9B9FBof8Zr/61ZRfAnwxVStr7EEL6irFa3UJ55uSoaLklPUP4UYn4ZCg9h34EGgwGwY4iTEWKkKlZz3ILEFHf9kt9iRPpYk3wr9F7eg+Nj9LxEhaoH6Gwv0RxhkP/Pojbo0=
+	t=1744965988; cv=none; b=q2SMonbeNipzjwlsKGvRF4ZAe2fp919Y+r7nDRW7kR0tcA97HOfullxibcFn+duRoa9YdLgdhGlhlMDzt5aLc67kQf2v4QWWS8B6odi25UbXS4YTupw1GBzLer24KYUkUB6//EZxsRiI1U6tPSrEMPo/9QMcSF6fB5xYOD/fs5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744965970; c=relaxed/simple;
-	bh=aqxMG4/JA2Z+i6M+nP6bzeu5WIfc9MJoiZMXZvhcrYo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ZkJ1lbpCgl3AxWTksodccjctPi89fX71Q/J5i7ipkbzheCzHZz1QO9LIta/Yebn9iTzEboBDO4pyetBG/PtxSS0pylEOlzmJXRisMc0ilHrvcvt9hO5hR7TylJOtyfjOdPuQbVp322/is4rvsrsa67dVKKsPgEecCtq97N87mTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.com.cn; spf=pass smtp.mailfrom=kylinos.com.cn; arc=none smtp.client-ip=54.243.244.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.com.cn
-X-QQ-mid: izesmtp80t1744965890t9204e489
-X-QQ-Originating-IP: 31CrV/i1OFzeGasVyv8kGAlXUtdwKt0NQc8Jyms2X3Y=
-Received: from localhost.localdomain ( [175.9.43.233])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 18 Apr 2025 16:44:45 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 12938606768469692406
-EX-QQ-RecipientCnt: 5
-From: Zhou Jifeng <zhoujifeng@kylinos.com.cn>
-To: colyli@kernel.org,
-	kent.overstreet@linux.dev
-Cc: linux-bcache@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zhou Jifeng <zhoujifeng@kylinos.com.cn>
-Subject: [PATCH] bcache: optimize dsync performance in writeback mode with deferred flush
-Date: Fri, 18 Apr 2025 16:44:43 +0800
-Message-Id: <20250418084443.7443-1-zhoujifeng@kylinos.com.cn>
-X-Mailer: git-send-email 2.18.1
+	s=arc-20240116; t=1744965988; c=relaxed/simple;
+	bh=+Cc25vvKy+5mvNPyRyTVbOhsN/ihcuZDTwoJBOaM+4s=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=jUmp57YiJ0j09LZYBXJVJbKtlqPpbYr+jBeExUdbxT7VdTG4RSi3Pc9wOdB/fcJRKdkWsiFitcryBlBtfMYSJncc3m5Oxka+Lgrwq84qhyDXzBRrUlmwkag9oSeHQKeCl3LMcuhDKjPc3f0nvct5j8LD69RnuQpioU+pUwO6llQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eZT46yAr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Pmp51lon; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eZT46yAr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Pmp51lon"
+Date: Fri, 18 Apr 2025 08:46:23 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744965984;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9dO084SNAiu318Zmp1NSoQBV6HFjNGRBAP7yjcnBm9E=;
+	b=eZT46yArxyGCALFERkZQWZa+brY90986N+TKK244p9gcnkKQYVv4xPKLYftkdJaE+vN7Aq
+	es0xcFm3NXr+WuSQCBnjony5o4fXIEai9cPV1a6hGhKIwUIi1FbNeGcmXYAHlOwcrYPaDp
+	XT70ZBUWhjgGZ9tdnLVA4Hus35JCBnTawJuHRsf7+rRqQStiIGt//K10UkogElzs0zFQXO
+	y+gDRfPlNGoYnGGbmng77hxtWYW9ddzuJG2qV2cwb1OG8QDqZwa9Y43W7MbE2hGo5ZfMm7
+	07R/e5QQdCmHH8+4t9ffXOhsqaxa3Kn9ZTNXRApWAoI6DZJ7ZJYihHvAd2O7TA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744965984;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9dO084SNAiu318Zmp1NSoQBV6HFjNGRBAP7yjcnBm9E=;
+	b=Pmp51lonOg7EFK1Jy318Jc3dnckDkwPay9Cr7IV+7/awmwko+oQL4bmp6uJZlU732UYONZ
+	eqEmo0sw5lOjhSDg==
+From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/asm] x86/asm: Rename rep_nop() to native_pause()
+Cc: David Laight <david.laight.linux@gmail.com>,
+ Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250418080805.83679-1-ubizjak@gmail.com>
+References: <20250418080805.83679-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: izesmtp:kylinos.com.cn:qybglogicsvrsz:qybglogicsvrsz4a-0
-X-QQ-XMAILINFO: NAeO0+xU6W76455AAktdBdDuC8ApTqwCySKe6PxucSLqBU8o+tfxNC7u
-	Ok3KZZTn8hajQxsHTrJRRuw+gBU+jOwguUTCi0Ar/zXSYycSNHai3+ryyF52lX7CQLI4sBt
-	ltJSaodAtX13IOE+9osX5fGhxT59s/ikPAa7rRbmy+38NkULq19pTZR8iltv8QZF8nlHANg
-	tpJlCIWDoGBwTbKj11KO32Yib5/++NY1eLRe+5R0jRMXXheWWZJn90XT4h6GMpaKJR+WKaM
-	VLNGopWYDUU9rInMIVaopLcMF5S9uKWVy8jvRydFbYH2bgYV7irfwh/exdtn9IVbnmAbAtb
-	IJcpSEAc5bXzBULCn+Uvp3h6AwFz0nQae0J0MiMrn+sJtc1j8SR/OITZ9vWVfL3g2Umm1Pz
-	J8CPIueG9Q2qn6kDNM2ZAWU92WWF0r90MAwrYcRvM8dju37qk2Zi4x7abMowb7dEhCtf+nj
-	0F/lkF31jZKR9ce7Yu8ud8PFDJ7noOKenQ2wfqALU25VWrTcU9AHN/6v/HpUspo2Z4AWM+t
-	deyxeQ2WND25BmakM5TlA2bTsrj1zuTT0Gd9HHerhzxwGh0tXELVEZqc02u8QFg0dwmMe9y
-	7hqBoLBf2Ek6n5HjITPAZXphG5nLaI78X5oXRzSJa82hO4AqoboxeF/psnlk/AatSU0+Tcb
-	WdqXnDugsgcGIzZPY0yUEDm+coOcgK0/tpZQPo3NqN3J7hBRecXG5pdMyMlgqurMQk8tLF0
-	K2oC4Wtjp0olKL9YtmhZVtNiriegKHEpJFY2+Xvd/7pFyWM0fOZXWYYOYdh+8cHduiBUJRx
-	u4z8x7gvc/9kbLiJ5e4cnIxQY8f+m6afqLj+z44xQIs2yT4EpioIQ+H1SOa4qee3p2VHMCA
-	TgbIN3JkmdNwVYhioSCihUKlNjjwtszG4lqDgKz3+K0td0ucySlXHfZumJRskd3I/gqum10
-	p/DxBABYmPOR6GHXwryvzFEagOs5nSkqPpzYWZXYKUSNFAGw9sIBg5n9zSPhRgJokGHv2dI
-	Fy7TY9dg==
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-X-QQ-RECHKSPAM: 0
+Message-ID: <174496598375.31282.2315987383086713800.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Currently in writeback mode, bcache unconditionally propagates PREFLUSH
-requests from upper layers to the backend storage devices. This causes
-suboptimal performance for dsync operations due to excessive flush
-operations on the backing device.
+The following commit has been merged into the x86/asm branch of tip:
 
-This patch introduces a deferred flush handling mechanism to improve
-dsync efficiency while maintaining data integrity:
-1. Delay passing the PREFLUSH request to the backend storage as much as
-   possible
-2. Keep data cached in the cache device
-3. Utilize FUA writes during dirty data writeback to ensure persistence
+Commit-ID:     3ce4b1f1f24bbd9f1c349ecb6641dfa038bd0b5a
+Gitweb:        https://git.kernel.org/tip/3ce4b1f1f24bbd9f1c349ecb6641dfa038bd0b5a
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Fri, 18 Apr 2025 10:07:43 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 18 Apr 2025 10:19:26 +02:00
 
-Applicable scenarios:
-- Workloads demanding low-latency dsync operations
-- Systems with frequent small synchronous writes
+x86/asm: Rename rep_nop() to native_pause()
 
-Test case:
-  dd if=/dev/zero of=/dev/bcache0 bs=32k count=200000 oflag=dsync
+Rename rep_nop() function to what it really does.
 
-Hardware setup:
-  Cache device: Intel Optane SSD 900P
-  Backing device: ST4000NM000B HDD
+No functional change intended.
 
-Comparison:
-  - deferred FLUSH enabled
-  - deferred FLUSH disabled with sequential_cutoff=0
-
-Result:
-  Enabling deferred FLUSH achieved 5× the performance of the second
-  scenario.
-
-Signed-off-by: Zhou Jifeng <zhoujifeng@kylinos.com.cn>
+Suggested-by: David Laight <david.laight.linux@gmail.com>
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Link: https://lore.kernel.org/r/20250418080805.83679-1-ubizjak@gmail.com
 ---
- drivers/md/bcache/bcache_ondisk.h |  1 +
- drivers/md/bcache/request.c       | 19 +++++++++++++++++--
- drivers/md/bcache/sysfs.c         | 29 +++++++++++++++++++++++++++++
- drivers/md/bcache/writeback.c     |  7 +++++++
- drivers/md/bcache/writeback.h     |  3 +++
- 5 files changed, 57 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/vdso/processor.h | 4 ++--
+ arch/x86/kernel/apic/io_apic.c        | 2 +-
+ arch/x86/lib/delay.c                  | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/md/bcache/bcache_ondisk.h b/drivers/md/bcache/bcache_ondisk.h
-index 6620a7f8fffc..4895217a7fa6 100644
---- a/drivers/md/bcache/bcache_ondisk.h
-+++ b/drivers/md/bcache/bcache_ondisk.h
-@@ -294,6 +294,7 @@ BITMASK(BDEV_CACHE_MODE,		struct cache_sb, flags, 0, 4);
- #define CACHE_MODE_WRITEBACK		1U
- #define CACHE_MODE_WRITEAROUND		2U
- #define CACHE_MODE_NONE			3U
-+BITMASK(BDEV_DEFERRED_FLUSH,		struct cache_sb, flags, 4, 1);
- BITMASK(BDEV_STATE,			struct cache_sb, flags, 61, 2);
- #define BDEV_STATE_NONE			0U
- #define BDEV_STATE_CLEAN		1U
-diff --git a/drivers/md/bcache/request.c b/drivers/md/bcache/request.c
-index af345dc6fde1..7fd76bd49237 100644
---- a/drivers/md/bcache/request.c
-+++ b/drivers/md/bcache/request.c
-@@ -1030,7 +1030,11 @@ static void cached_dev_write(struct cached_dev *dc, struct search *s)
- 		bch_writeback_add(dc);
- 		s->iop.bio = bio;
+diff --git a/arch/x86/include/asm/vdso/processor.h b/arch/x86/include/asm/vdso/processor.h
+index 240d761..7000aeb 100644
+--- a/arch/x86/include/asm/vdso/processor.h
++++ b/arch/x86/include/asm/vdso/processor.h
+@@ -8,14 +8,14 @@
+ #ifndef __ASSEMBLER__
  
--		if (bio->bi_opf & REQ_PREFLUSH) {
-+		/* When DEFERRED_FLUSH is enabled, REQ_PREFLUSH is not sent
-+		 * to the backend disk. Data security is ensured during the
-+		 * writeback phase.
-+		 */
-+		if ((bio->bi_opf & REQ_PREFLUSH) && !BDEV_DEFERRED_FLUSH(&dc->sb)) {
- 			/*
- 			 * Also need to send a flush to the backing
- 			 * device.
-@@ -1066,14 +1070,25 @@ static CLOSURE_CALLBACK(cached_dev_nodata)
+ /* PAUSE is a good thing to insert into busy-wait loops. */
+-static __always_inline void rep_nop(void)
++static __always_inline void native_pause(void)
  {
- 	closure_type(s, struct search, cl);
- 	struct bio *bio = &s->bio.bio;
-+	struct cached_dev *dc = container_of(s->d, struct cached_dev, disk);
- 
--	if (s->iop.flush_journal)
-+	if (s->iop.flush_journal) {
- 		bch_journal_meta(s->iop.c, cl);
- 
-+		/* When DEFERRED_FLUSH is turned on, the request is not sent
-+		 * to the backend disk.
-+		 */
-+		if (BDEV_DEFERRED_FLUSH(&dc->sb)) {
-+			s->iop.status = BLK_STS_OK;
-+			goto end;
-+		}
-+	}
-+
- 	/* If it's a flush, we send the flush to the backing device too */
- 	bio->bi_end_io = backing_request_endio;
- 	closure_bio_submit(s->iop.c, bio, cl);
- 
-+end:
- 	continue_at(cl, cached_dev_bio_complete, NULL);
+ 	asm volatile("pause" ::: "memory");
  }
  
-diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
-index e8f696cb58c0..dff84f5bb184 100644
---- a/drivers/md/bcache/sysfs.c
-+++ b/drivers/md/bcache/sysfs.c
-@@ -151,6 +151,7 @@ rw_attribute(copy_gc_enabled);
- rw_attribute(idle_max_writeback_rate);
- rw_attribute(gc_after_writeback);
- rw_attribute(size);
-+rw_attribute(deferred_flush);
- 
- static ssize_t bch_snprint_string_list(char *buf,
- 				       size_t size,
-@@ -283,6 +284,8 @@ SHOW(__bch_cached_dev)
- 		return strlen(buf);
- 	}
- 
-+	sysfs_print(deferred_flush,	BDEV_DEFERRED_FLUSH(&dc->sb));
-+
- #undef var
- 	return 0;
- }
-@@ -295,6 +298,7 @@ STORE(__cached_dev)
- 	ssize_t v;
- 	struct cache_set *c;
- 	struct kobj_uevent_env *env;
-+	struct bio flush;
- 
- 	/* no user space access if system is rebooting */
- 	if (bcache_is_reboot)
-@@ -383,6 +387,12 @@ STORE(__cached_dev)
- 			SET_BDEV_CACHE_MODE(&dc->sb, v);
- 			bch_write_bdev_super(dc, NULL);
- 		}
-+
-+		/* It's not the writeback mode that can't enable deferred_flush */
-+		if (BDEV_DEFERRED_FLUSH(&dc->sb) && ((unsigned int) v != CACHE_MODE_WRITEBACK)) {
-+			SET_BDEV_DEFERRED_FLUSH(&dc->sb, 0);
-+			bch_write_bdev_super(dc, NULL);
-+		}
- 	}
- 
- 	if (attr == &sysfs_readahead_cache_policy) {
-@@ -451,6 +461,24 @@ STORE(__cached_dev)
- 	if (attr == &sysfs_stop)
- 		bcache_device_stop(&dc->disk);
- 
-+	if (attr == &sysfs_deferred_flush) {
-+		bool deferred_flush = strtoul_or_return(buf);
-+
-+		if (deferred_flush != BDEV_DEFERRED_FLUSH(&dc->sb)) {
-+			if (deferred_flush && (BDEV_CACHE_MODE(&dc->sb) != CACHE_MODE_WRITEBACK)) {
-+				pr_err("It's not the writeback mode that can't enable deferred_flush.\n");
-+				return size;
-+			}
-+			SET_BDEV_DEFERRED_FLUSH(&dc->sb, deferred_flush);
-+			bch_write_bdev_super(dc, NULL);
-+			if (deferred_flush) {
-+				bio_init(&flush, dc->bdev, NULL, 0, REQ_OP_WRITE | REQ_PREFLUSH);
-+				/* I/O request sent to backing device */
-+				submit_bio_wait(&flush);
-+			}
-+		}
-+	}
-+
- 	return size;
+ static __always_inline void cpu_relax(void)
+ {
+-	rep_nop();
++	native_pause();
  }
  
-@@ -541,6 +569,7 @@ static struct attribute *bch_cached_dev_attrs[] = {
- #endif
- 	&sysfs_backing_dev_name,
- 	&sysfs_backing_dev_uuid,
-+	&sysfs_deferred_flush,
- 	NULL
- };
- ATTRIBUTE_GROUPS(bch_cached_dev);
-diff --git a/drivers/md/bcache/writeback.c b/drivers/md/bcache/writeback.c
-index 453efbbdc8ee..68bf655f3b96 100644
---- a/drivers/md/bcache/writeback.c
-+++ b/drivers/md/bcache/writeback.c
-@@ -435,6 +435,13 @@ static CLOSURE_CALLBACK(write_dirty)
- 	if (KEY_DIRTY(&w->key)) {
- 		dirty_init(w);
- 		io->bio.bi_opf = REQ_OP_WRITE;
-+
-+		/* When DEFERRED_FLUSH is enabled, you need to ensure that
-+		 * data is flushed to disk.
-+		 */
-+		if (BDEV_DEFERRED_FLUSH(&dc->sb))
-+			io->bio.bi_opf |= REQ_FUA | REQ_SYNC | REQ_PREFLUSH;
-+
- 		io->bio.bi_iter.bi_sector = KEY_START(&w->key);
- 		bio_set_dev(&io->bio, io->dc->bdev);
- 		io->bio.bi_end_io	= dirty_endio;
-diff --git a/drivers/md/bcache/writeback.h b/drivers/md/bcache/writeback.h
-index 31df716951f6..1dbecf89fdd3 100644
---- a/drivers/md/bcache/writeback.h
-+++ b/drivers/md/bcache/writeback.h
-@@ -117,6 +117,9 @@ static inline bool should_writeback(struct cached_dev *dc, struct bio *bio,
- 				    bio_sectors(bio)))
- 		return true;
+ struct getcpu_cache;
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index eebc360..ba5a4cc 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -1486,7 +1486,7 @@ static void __init delay_with_tsc(void)
+ 	 * 1 GHz == 40 jiffies
+ 	 */
+ 	do {
+-		rep_nop();
++		native_pause();
+ 		now = rdtsc();
+ 	} while ((now - start) < 40000000000ULL / HZ &&	time_before_eq(jiffies, end));
+ }
+diff --git a/arch/x86/lib/delay.c b/arch/x86/lib/delay.c
+index e86eda2..eb2d2e1 100644
+--- a/arch/x86/lib/delay.c
++++ b/arch/x86/lib/delay.c
+@@ -75,7 +75,7 @@ static void delay_tsc(u64 cycles)
  
-+	if (BDEV_DEFERRED_FLUSH(&dc->sb))
-+		return true;
-+
- 	if (would_skip)
- 		return false;
+ 		/* Allow RT tasks to run */
+ 		preempt_enable();
+-		rep_nop();
++		native_pause();
+ 		preempt_disable();
  
--- 
-2.18.1
-
+ 		/*
