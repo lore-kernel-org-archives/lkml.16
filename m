@@ -1,120 +1,169 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5B313B590;
-	Fri, 18 Apr 2025 17:01:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20CBC215191
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744995676; cv=none; b=GKiC5UilisDLOo5rPAVlHJov/tdDqcDEKHryY+llVoAbIjGYyAukTEgGwJIv7B0PFQTJ1Phd59JYyw8Ks45xhADncGQsi7GqH5U+K6qb42eenLd4E7bJZpjKHswLaYNBeKyt7NlrZGmJLDTXtRWZouIH+VsYJdQpggQqK0bVRPc=
+	t=1744995688; cv=none; b=UGuuhskA5SYEvbE6T5+BvN9Cxfw5dLJNWHtUUOCXsPn7VYSogUaUzaYtUcFaRIp7VpvNcvESiVxgLMAUibJpnCeya3G0HmQqv+9CIuLiOrIKysI6UGkN++92XjBxGYgLTMxqGTnD9Zn40R8rHi38GznEWTUjaW94XW8b8GUx+M0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744995676; c=relaxed/simple;
-	bh=8w1HZbYIpGw2lsE8fxuZH0Z+2IIZJk+H61XsQgcKQao=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=INaPPOw7GP2FMCHTGukqxZp+AQb/Rx1rwVjm92JARbcmyiCBh6j2vLEdZNBFqs1PXornPsz6sBGnMwAr6r7t7SM8uDwhqWaMu/HabWMSrsEpYwPTqGEvrS//DrxOIP3krX5KLuGXVEhPcv9iu4TPk+Nf5SbP8yWrJi9woVFEJDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HnESSXM+; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744995688; c=relaxed/simple;
+	bh=gO8UuUnEL0GdMWSU7mYBXHTLEBePuhrA4Yw2uBuWr2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mmfEvAKHf3EwTxK683R3znXHbTp+8X06b2zatHlaVpjFTsnt101pNLxzLGyK2wAU4g8NWQkuP/T9CFzkqTCYWTvAGpLz9gWWU0Aeruec7gyyiyecqovXacZeEcx9ZYxGxnApxdIE1+aMohj5blxcy5Pn4/qVDErqklEWGmWENVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CUxoVppg; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HnESSXM+"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-47686580529so22448571cf.2;
-        Fri, 18 Apr 2025 10:01:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CUxoVppg"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22622ddcc35so31826465ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:01:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744995673; x=1745600473; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K4jOaTYIRWPNV5975r6TtN5MoRcAB00ZTyeDTKmI1wU=;
-        b=HnESSXM+aCJ0XeEsmXKiZ/SzPoGnuXlp0GpuJNyfv8oNS4HzeT0fN0caBxenhQcRi8
-         KZeXyT6DsfT7CtouMGi9htK5Az059tArWoGmY5LVsOpVUTmPXGYErmK6zYHY0ZWQxrjs
-         T5Fq67hYo6GxIfT/JatOFPFTd7JbJwA33vnglPm0+L1K/2YABNur4dgdGWS7cr35zXDe
-         YwGEcuMzFpI7PjwY7BSWSZUBWyfjz5Or/09FbcRRrf7kUMQmCHUnY087ZAiPWPEjjgYK
-         vED0tC12SYdz6aBw/kWRH7fmm9gGdY8E3654DbbdEtu0RgfJteog3rLAkmUYPVQmZ799
-         +OtQ==
+        d=linaro.org; s=google; t=1744995686; x=1745600486; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fs+FbSr25h62ESmDLvM+DIV5SDJW0JK2umLWA74NAL4=;
+        b=CUxoVppgsjWzbqu5DK7X36o10BpcIOEQ9CefD+xSqrL1mmFplHOTNIoRGIKn0edttL
+         563JYG5LMoMYQDOpf7HhhkMzQmBGs1kQDS6X8X3q2QhYj8ROaZlklKEJ4LnjPkzTd3Ht
+         nBUSgV0v9MdeId3Rz8s3RgIQR3q1AudPUSOrT7ldZjnNB3Hb+baB3se11MJlO4K/lIHm
+         Pr5HT8CEu7ROUS9xDkoYpL7SJ5/NS/9n8cKtgYnP9lj632IveqSGlxFDp5zoKxRSr6sN
+         BwxkH2qJ6aFrOSstSSS1svkNYkkZZh0G3tPp9Qc5d9xBAOKE0WL+W7BQ/dlrnzc7dEGP
+         ev1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744995673; x=1745600473;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K4jOaTYIRWPNV5975r6TtN5MoRcAB00ZTyeDTKmI1wU=;
-        b=NLLvaqUo7ZNrMC8Q9Oh5E1gnEHrm/9UVTE3a98udeXyczNpkkJNc+8QSQFtnYjzn9l
-         Dj841+Cst5N894BubHNQvTD059narfmz1tt49usZeUihGF6Nrho54XdHbHrnWGp9nYtp
-         V1wnHq+VEFAUJPJb0aG7indu32yGIGAh1SUtW05gS2AwMcV2t/5qWtdFZVHNW1O+w+2K
-         jLFvxK8QhV9fvjaZ/gL71w8CfTo6ssanbsrr0VtL+kXOT4gP2ktTDvHTvXSuMzuE3Gq+
-         9MDaE2J1vXFyEDtljLhRSEJ+ZgfZ7yXT91BgX3r3t6fR62X5G/Z5lcvK8XKoQJmiNKp6
-         4K5A==
-X-Forwarded-Encrypted: i=1; AJvYcCVh3RHjttrc/Zn5Oz9RvLHIxpUP3DCl6QwopD9GdtrmolL/UWSzA1SbOiCZn81/CFNMp5NvTC7f@vger.kernel.org, AJvYcCWrDpqmY9gNSMgGEYT81kiq/fk7m0Zfeu6SEY5bF1KuLCGWWyjZXOEKRlQuGTJgzMyDB5DZW1upZMYKRTz/@vger.kernel.org, AJvYcCXrXGWSVX0P4vYjqTAPCLSQDrczOqZZW2A7qVM5/frNkOXI/McbmstpeBpjiqyKt7Rp2aCrzgUsRyw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfIqabFKEgsPyU6BMMbH2FUQvf5PmhKVtMh69sJUP4zFus7Cx3
-	BfLj3fuN3X0FmorPcCPkcOUwzC56gO3eyCKxs+q3aOBbV/mGlpVuOJvlMusNCG16+1uOYbERk+y
-	Uxcozok2W7dAIxTeXhXI8Tf5TjSanNHKwE7w=
-X-Gm-Gg: ASbGncsn6ee9EJjEg8iB2VoEhxAzwPhFPHGKJ8JzROCegnK/9Ohlkp4SW0eadNEGgYm
-	csuC+1TWuSWDM0uL7O5d//jYHNGsSPIFN8qILrJdtBqDZdzyw8zYPvkryHZ3CGjuo6T9HAd0MUK
-	CQerKvm+d45oupABqTZmHE80y1ah1X+5kH4BP2kLlfOQ2U6588Q3U1zYO2V+63e/A=
-X-Google-Smtp-Source: AGHT+IGfRaxUib4vxMeg5ZHVwz3sTnnqydjjr+BZWaabAYNvr6HBK0qxHxLDmk+tzoqUGiqm3k5sVAVmzeMakuDT4ZI=
-X-Received: by 2002:ac8:584f:0:b0:476:af62:8532 with SMTP id
- d75a77b69052e-47aec4ba327mr49626361cf.45.1744995673373; Fri, 18 Apr 2025
- 10:01:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744995686; x=1745600486;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fs+FbSr25h62ESmDLvM+DIV5SDJW0JK2umLWA74NAL4=;
+        b=E2f6ERX3TA2AuCqJY4MguAL0mL0x+bKb0cQ8m6ADMn3ZQLXq9Qn+xaZce7hj8XW5lM
+         gvIU/z4MOGXwy1CndVq1KFNpYh2OIrQTDJiOs2zuN4I/GpIlKrw748FRMCMcf41aeEpm
+         IpkR8yGegKRVyaakeRNQQygxYDvh4SfpOw2PtXCTJME0mArT71oQEHJirM76JvyWxrug
+         XOtJ5PMUy0bKYetMDJMdQeTQk5ttHYlpOfUF50+LAm2AhOarlwjrEuwGimDvnEIj9fnY
+         PH0ZzbC4lbuU9x78/k7/svZOLQPFJBKVSgZdMZbMEBf2XLedIeT8fWhklnEv4g+2cKpO
+         Sqcg==
+X-Forwarded-Encrypted: i=1; AJvYcCU8I+L+lll8SaYa1hF0fG3EvDzwN2yenQdggzx2i2jlCrs3uRrIHUGQheQR4MvkaDp06ypvom0WQAmYO9E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx//g7GFfWkRt3zuLay8TLBt/GIZ8/iqyUkOhpXlhwkjJ1WkVya
+	IeZ+HxnLCy6XzM4L9CIY+dC0TUaXv7MTbEr4FEOWObjwvUDpL2FwZhCHsVjkfg==
+X-Gm-Gg: ASbGnctOevzd9Z2PaQmvAQ48Ht/hgZnrYjZ5LAZ5GlO1CKD6Mbs8bifwo/9ZOVhe2j/
+	HKMFCmzc8Lz8I8IjJdyYDOAkq6FuIy1sK5/FGLS1dgm8kh0XjuaERwTwHpQx5WEuySCa5X1Mnfh
+	w2vSl39TliQVeUUKXnZNljsMMQU4A2Pqypcy8cn5hA1Bc2SdtQxiipafymvXJmmWXm2qY9YGDc9
+	6Zn+s5ZjKiLaQbc029Ae62DQtaHMJxgdI0GKsPh+kW1BkNdQcmToDFhKgxT6UMlNCGiWc0hDpzR
+	b4whjXnmKdgcgAc8Kmiqryj/LXZv99kOoMm+b7hO9tgG2R9+ULE=
+X-Google-Smtp-Source: AGHT+IEnFAQ5ZdAVrVFVrdvYt5L9ZjZCuO9Da8Y6K9EjBgw5KyuHMkIHZ0L6Nkwt9mqFlQeiQfcWzQ==
+X-Received: by 2002:a17:903:990:b0:223:f408:c3dc with SMTP id d9443c01a7336-22c5357a703mr52536975ad.9.1744995686287;
+        Fri, 18 Apr 2025 10:01:26 -0700 (PDT)
+Received: from thinkpad ([36.255.17.199])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb64fbsm19040645ad.158.2025.04.18.10.01.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 10:01:25 -0700 (PDT)
+Date: Fri, 18 Apr 2025 22:31:19 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Qiang Yu <quic_qianyu@quicinc.com>
+Cc: "Wenbin Yao (Consultant)" <quic_wenbyao@quicinc.com>, 
+	jingoohan1@gmail.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
+	bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	quic_cang@quicinc.com, mrana@quicinc.com
+Subject: Re: [PATCH] PCI: dwc: Set PORT_LOGIC_LINK_WIDTH to one lane
+Message-ID: <gnpoekmyk4elg53xabcsvj6sqacttby6dpryxcdepws3fpt2xj@y7efnnszvpem>
+References: <1524e971-8433-1e2d-b39e-65bad0d6c6ce@quicinc.com>
+ <t7urbtpoy26muvqnvebdctm7545pllly44bymimy7wtazcd7gj@mofvna4v5sd3>
+ <72e7ec4e-6a14-4a09-8498-42c2772da4fb@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417135434.568007-1-gshahrouzi@gmail.com> <20250418164040.0f103380@jic23-huawei>
-In-Reply-To: <20250418164040.0f103380@jic23-huawei>
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Date: Fri, 18 Apr 2025 13:01:02 -0400
-X-Gm-Features: ATxdqUHYpoK_uf-3FQX72Xc5r4NMTYfDz6xHt0YdITsiYSrcp9t89ZozAiI7UVo
-Message-ID: <CAKUZ0z+kr1ToeOJaRihbfQyKoJ+vgOF7YjK811TbEcyd-43a-Q@mail.gmail.com>
-Subject: Re: [PATCH] iio: frequency: Use SLEEP bit instead of RESET to disable output
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev, 
-	Michael.Hennerich@analog.com, skhan@linuxfoundation.org, 
-	linux-kernel-mentees@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <72e7ec4e-6a14-4a09-8498-42c2772da4fb@quicinc.com>
 
-On Fri, Apr 18, 2025 at 11:40=E2=80=AFAM Jonathan Cameron <jic23@kernel.org=
-> wrote:
->
-> On Thu, 17 Apr 2025 09:54:34 -0400
-> Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
->
-> > According to the AD9832 datasheet (Table 10, D12 description), setting
-> > the RESET bit forces the phase accumulator to zero, which corresponds t=
-o
-> > a full-scale DC output, rather than disabling the output signal.
-> >
-> > The correct way to disable the output and enter a low-power state is to
-> > set the AD9832_SLEEP bit (Table 10, D13 description), which powers down
-> > the internal DAC current sources and disables internal clocks.
-> >
-> > Fixes: ea707584bac1 ("Staging: IIO: DDS: AD9832 / AD9835 driver")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> > ---
-> Seems reasonable but I'd like some more review of this before picking it =
-up.
-> So feel free to poke me if nothing happens in say 2 weeks from now.
-Sounds good.
->
-> >  drivers/staging/iio/frequency/ad9832.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/i=
-io/frequency/ad9832.c
-> > index db42810c7664b..0872ff4ec4896 100644
-> > --- a/drivers/staging/iio/frequency/ad9832.c
-> > +++ b/drivers/staging/iio/frequency/ad9832.c
-> > @@ -232,7 +232,7 @@ static ssize_t ad9832_write(struct device *dev, str=
-uct device_attribute *attr,
-> >                       st->ctrl_src &=3D ~(AD9832_RESET | AD9832_SLEEP |
-> >                                       AD9832_CLR);
-> >               else
-> > -                     st->ctrl_src |=3D AD9832_RESET;
-> > +                     st->ctrl_src |=3D AD9832_SLEEP;
-> >
-> >               st->data =3D cpu_to_be16((AD9832_CMD_SLEEPRESCLR << CMD_S=
-HIFT) |
-> >                                       st->ctrl_src);
->
+On Mon, Apr 14, 2025 at 04:45:26PM +0800, Qiang Yu wrote:
+> 
+> On 4/8/2025 1:51 AM, Manivannan Sadhasivam wrote:
+> > On Thu, Dec 12, 2024 at 04:19:12PM +0800, Wenbin Yao (Consultant) wrote:
+> > > PORT_LOGIC_LINK_WIDTH field of the PCIE_LINK_WIDTH_SPEED_CONTROL register
+> > > indicates the number of lanes to check for exit from Electrical Idle in
+> > > Polling.Active and L2.Idle. It is used to limit the effective link width to
+> > > ignore broken or unused lanes that detect a receiver to prevent one or more
+> > > bad Receivers or Transmitters from holding up a valid Link from being
+> > > configured.
+> > > 
+> > > In a PCIe link that support muiltiple lanes, setting PORT_LOGIC_LINK_WIDTH
+> > > to 1 will not affect the link width that is actually intended to be used.
+> > Where in the spec it is defined?
+> As per DWC registers data book, NUM_OF_LANES is referred to as the
+> "Predetermined Number of Lanes" in section 4.2.6.2.1 of the PCI Express Base
+> 3.0 Specification, revision 1.0.
+> Section 4.2.6.2.1 explains the condtions need be satisfied for enter
+> Poll.Configuration from Polling.Active.
+> The original statement is
+> 
+> "Next state is Polling.Configuration after at least 1024 TS1 Ordered Sets
+> were transmitted, and all Lanes that detected a Receiver during Detect
+> receive eight consecutive training sequences (or
+> their complement) satisfying any of the following conditions:
+> ...
+> Otherwise, after a 24 ms timeout the next state is:
+> Polling.Configuration if
+> ...
+> (ii) At least a predetermined set of Lanes that detected a Receiver during
+> Detect have detected an exit from Electrical Idle at least once since
+> entering Polling.Active.
+>     Note: _*This may prevent one or more bad Receivers or Transmitters from
+> holding up a valid Link from being configured*_, and allow for additional
+> training in Polling.Configuration. *_The exact set of predetermined Lanes is
+> implementation specific_*. Note that up to the 1.1 specification this
+> predetermined set was equal to the total set of Lanes that detected a
+> Receiver.
+
+Ok, this is the most relevant part of the spec. It says that atleast the
+predetermined set of lanes that detected a receiver during Detect.Active state
+should detect an exit from Electrical Idle at least once. So this condition can
+only be false if one or more lanes are faulty (not unused or broken). If the
+lanes are unused or broken, then they should not have detected the Receivers in
+the Detect.Active state itself.
+
+So this was the source of confusion.
+
+>     Note: Any Lane that receives eight consecutive TS1 or TS2 Ordered Sets
+> should have detected an exit from Electrical Idle at least once since
+> entering Polling.Active."
+> > 
+> > > But setting it to a value other than 1 will lead to link training fail if
+> > > one or more lanes are broken.
+> > > 
+> > Which means the link partner is not able to downsize the link during LTSSM?
+> Yes, According to the theory metioned above, let's say in a 8 lanes PCIe
+> link, if we set NUM_OF_LANES to 8, then all lanes that detect a Receiver
+> during Detect need to receive eight consecutive training sequences,
+> otherwise the LTSSM can not enter Poll.Configuration and linktraing will
+> fail.
+
+Correct. This information should be part of the patch description.
+
+> > 
+> > > Hence, always set PORT_LOGIC_LINK_WIDTH to 1 no matter how many lanes the
+> > > port actually supports to make linking up more robust. Link can still be
+> > > established with one lane at least if other lanes are broken.
+> > > 
+> > This looks like a specific endpoint/controller issue to me. Where exactly did
+> > you see the issue?
+> Althouh we met this issue on some Modem platforms where PCIe port works in
+> EP mode. But this is not a specific endpoint/controller issue. This register
+> will be set to 1 by default after reset in new QCOM platform. But upstream
+> kernel will still program it to other value here.
+
+Yeah, now it makes sense to me and I agree that there is no need to set it to
+MLW lanes.
+
+Please reword the patch description to change 'broken or unused lanes' to
+'faulty lanes', add reference to relevant sections of the PCIe and DWC specs
+and also add above mentioned paragraph.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
