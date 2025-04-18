@@ -1,90 +1,104 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6AF021ADC3
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 21:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D3F1B6CE0;
+	Fri, 18 Apr 2025 21:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745012717; cv=none; b=LZjOlJVexIORzp3j83Yg4/1ixU10+xWPm9kQexFJLa5pn7722oBSoOU1glx//soJcL3PyLGlcoLcFtndogLiPgnehr6tlMpg17mJv7q9g4+F4DiViJZYl7T+aWufjtKCS0JDXmtG0/7zjDZOsu/0m5ygEz2PNOt7Ir9+tY8HheQ=
+	t=1745012783; cv=none; b=AO1BVAwFv2nAdyIwB3iB2o1tIo3q7WFpoISSdzHymR0PHv5PRXrJf1u3fzH2MIR4ET+7BjU9Ws8wjfIJVfMPKzXFTy/UameA+0lvbosoVY+kVlJHB2WK1senrB2Ys3ytvd7bSsmgrc59GmfPaTJvk0fxvx93ro9ZH03U3m8zKVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745012717; c=relaxed/simple;
-	bh=RFett+rj2+GwUjiMuPa73WpuK2fBTfvQJBWMLXtCkzA=;
+	s=arc-20240116; t=1745012783; c=relaxed/simple;
+	bh=fmCsXk7y5szHT5yJ0Lq50pQ9D6XaiVEY7elkb68QLWg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UvID/prGy5/5t9my7uu2OMaIz6yTXEf+ViaSL1QF6nKSh0JtUMyzDTX4z7aT2EPWci8ItsklCrdoa1XyeDZsNKsLLzCoHx8/ryY1HadQHD97k+eTlXourydlPdX7cI9CFtn5fs0qAvXNpAbACpaT3bFASaeGvK2+QPjSKoGTaLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=PolOudso; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=HS9ZU7QOEWhO/vn2gXyYZMiCCXPSRxFIXk28fgCvs1a+kz3SDLt+yVcupiccSTg0LFImIzxkDBSS3qUN1tNdvMNS/QrHZrSjXCFf49E7eL00f9egmpr771KgazN34m+mjSHgWmOlpR/TG/OicsAg/PknYO8gTSK6LiXS0IyvdYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dIyb2tme; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="PolOudso"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=RFet
-	t+rj2+GwUjiMuPa73WpuK2fBTfvQJBWMLXtCkzA=; b=PolOudsoZdT0021b/j7A
-	ZxyppsAKutApOxjcLa317mdifY1xK+Uk1cr4+PpD9JebL3/ZFabtyFlp7W2dv4Th
-	HOBXoxmduvInAWs4y/0wTrTEs+ZGJbSLlDINyxUD2hyNijeF0AyOsyo95AZD2FgG
-	eqG1jql0sb+jkbaNVOnNiRgLLZmm3TCNLuqtHmexqjyUaoYLtqbXc232OnVfbZ7c
-	hcHl94P0UX9EwGYYguSQqjbGlVwVsjKeNihLhnzUjQ+Ci00INfz6T8A56rNCvQ0q
-	x2GbD3AYvOt7idwwHfCuAyTmpRHcd8Be+VjPb4DRhaMIrZVvELi5JLAi7fh5UTh2
-	2Q==
-Received: (qmail 1539840 invoked from network); 18 Apr 2025 23:45:12 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 18 Apr 2025 23:45:12 +0200
-X-UD-Smtp-Session: l3s3148p1@S0vVbhQz6MMujnsE
-Date: Fri, 18 Apr 2025 23:45:12 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: linux-i2c <linux-i2c@vger.kernel.org>,
-	lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] i2c-host-fixes for v6.15-rc3
-Message-ID: <aALH6J33cYfaBH4a@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	linux-i2c <linux-i2c@vger.kernel.org>,
-	lkml <linux-kernel@vger.kernel.org>
-References: <mtqiyp7mtyuivs7snzfp3dcinr2u5jw63afxqto4s2rnqe6nyc@ozaxoxvtvdxt>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dIyb2tme"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745012782; x=1776548782;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fmCsXk7y5szHT5yJ0Lq50pQ9D6XaiVEY7elkb68QLWg=;
+  b=dIyb2tmeUuwulNrF+GUiE9aNWlqa3rmMIb3nqdWs9aHUWhUYMvG8WGPZ
+   wsD51XIAm5JWvCIjkJa+dyjXn2KU3x2T6Uk0Mm1/NHyA6sssy5i7HUJvJ
+   CqmD0jPgwqOpS2wHbTB89MuXCJ11VrtBbWsQryYQkVSCy+fbYFpkOEmmB
+   O+QuvhsDPCtzR/t0HsbhMIvjxJelu2qWJouvGMTlEqZiWK4vs8yA+R7oM
+   fJMbji3tXHBqdePygrl2cqwEFyrsbI6Lci2L19QWlGmi1jq5+mlcdL7X4
+   54dWvU3emQNJsNK4aAdUVqeDFXmGexUhv9JTqcV2hJCJNZa+Xl/Tk1B3C
+   Q==;
+X-CSE-ConnectionGUID: WR0ynxH1SeSbtuh5ma2eGg==
+X-CSE-MsgGUID: 2ibZsJV7QSqT88ozQGlNQw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="50477564"
+X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
+   d="scan'208";a="50477564"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 14:46:21 -0700
+X-CSE-ConnectionGUID: MU8ipCgFTsqKOVeJ4kZHmQ==
+X-CSE-MsgGUID: vr2uNh9RTCmn0ig2BB4qfA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
+   d="scan'208";a="131162518"
+Received: from lkp-server01.sh.intel.com (HELO 61e10e65ea0f) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 18 Apr 2025 14:46:17 -0700
+Received: from kbuild by 61e10e65ea0f with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u5tXL-0003M9-0Y;
+	Fri, 18 Apr 2025 21:46:15 +0000
+Date: Sat, 19 Apr 2025 05:45:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Thomas Richard <thomas.richard@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw,
+	Thomas Richard <thomas.richard@bootlin.com>
+Subject: Re: [PATCH v3 10/10] pinctrl: Add pin controller driver for AAEON UP
+ boards
+Message-ID: <202504190519.GwvdasH8-lkp@intel.com>
+References: <20250416-aaeon-up-board-pinctrl-support-v3-10-f40776bd06ee@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="tr/5Wl1R3qWoWBxT"
-Content-Disposition: inline
-In-Reply-To: <mtqiyp7mtyuivs7snzfp3dcinr2u5jw63afxqto4s2rnqe6nyc@ozaxoxvtvdxt>
-
-
---tr/5Wl1R3qWoWBxT
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250416-aaeon-up-board-pinctrl-support-v3-10-f40776bd06ee@bootlin.com>
 
-On Fri, Apr 18, 2025 at 02:18:43PM +0200, Andi Shyti wrote:
-> Hi Wolfram,
->=20
-> one fix for this week which prevents a potential NULL pointer
-> dereference by adding an extra check in probe.
+Hi Thomas,
 
-Thanks, pulled. Happy Easter!
+kernel test robot noticed the following build warnings:
 
+[auto build test WARNING on 8a834b0ac9ceb354a6e0b8cf5b363edca8221bdd]
 
---tr/5Wl1R3qWoWBxT
-Content-Type: application/pgp-signature; name="signature.asc"
+url:    https://github.com/intel-lab-lkp/linux/commits/Thomas-Richard/gpiolib-add-support-to-register-sparse-pin-range/20250416-221852
+base:   8a834b0ac9ceb354a6e0b8cf5b363edca8221bdd
+patch link:    https://lore.kernel.org/r/20250416-aaeon-up-board-pinctrl-support-v3-10-f40776bd06ee%40bootlin.com
+patch subject: [PATCH v3 10/10] pinctrl: Add pin controller driver for AAEON UP boards
+config: x86_64-kismet-CONFIG_GPIO_AGGREGATOR-CONFIG_PINCTRL_UPBOARD-0-0 (https://download.01.org/0day-ci/archive/20250419/202504190519.GwvdasH8-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20250419/202504190519.GwvdasH8-lkp@intel.com/reproduce)
 
------BEGIN PGP SIGNATURE-----
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504190519.GwvdasH8-lkp@intel.com/
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgCx+cACgkQFA3kzBSg
-KbbGvRAAr2ujssUc3RXlrhmW5x0nqESGavg39d6HhOhf9xxkkY9HTqvAE8eg1LtO
-n4ZjsEuIWRwALhYUfsdBvHnzRe/HhmCF1kubQCxOvaM1m7VJkZMuYXMtC+IjUpkE
-bSFW+IgphyBaozJp69njkg7SE5awRa7c0mX7mZetjcIyePj158neyIZGAXS6QaC0
-GRbTTR/edwHQj/NHre/q5NclengJvDPe3Gma7jDuF38+nJQKGnH4SNugx/lNHx0t
-oP/0IV6aFHw+Aq8mhWJwNOu9e9tOtNfKesLVGU40O1fosYEhkVbhPiaqmnHRVNsq
-aQj7c9gojjPtKYFcQJsQ/P0xPTopCzolqjT+G2TPhKFSJqkm2OVj3jHyF4lpbmk6
-qANaPW6jYEoaFSW+z3r4RUfc0Tmw0g4XzorJEyDoYCYHTk5HHy25v+Ijn0tfrgSs
-kfOdaVrN2yl3hahYjlWMgFp5g1HzKS9wH4+q1C69GgIE4ypmA0BFHp86pO1azPqz
-iX/rAMJD3PhLjwTpqriY/kumVPGyZe4eE+WygNSFBTBfwa2ypBcpBAnUjWklqQ5k
-TCGz0je9G0Ae2oukl/s+lzV3/NHsyXi7LZb4I7vj8UFG7DPex2GPP2tim0iAGa9j
-luvdrJBKjdkC8nLtVMa0fB0jzMJOg8yCg+7zVoICGxUUYC6tt/Q=
-=hlIN
------END PGP SIGNATURE-----
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for GPIO_AGGREGATOR when selected by PINCTRL_UPBOARD
+   WARNING: unmet direct dependencies detected for GPIO_AGGREGATOR
+     Depends on [n]: GPIOLIB [=n]
+     Selected by [y]:
+     - PINCTRL_UPBOARD [=y] && PINCTRL [=y] && MFD_UPBOARD_FPGA [=y]
 
---tr/5Wl1R3qWoWBxT--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
