@@ -1,74 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320772741B9;
-	Fri, 18 Apr 2025 12:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC68C188A0E
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 12:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744978308; cv=none; b=MuDSsU4srqsC9nrOrjdTUy9pBJujspPL7ArDca1gfMiouTh2mjuWTOwoaXpZROD4+Y3sn5EuDDvqLmpDidw4mEWMRALL6HgQKs0QnqPgFxHOaNMgzHtgn0cBOP0GC2nsRqzebsdhy93wxWUo0+h29FsWQfv5F9PEOhnjj+IP6yA=
+	t=1744978349; cv=none; b=PBjamVVceL/MzHpxg9OsUQT2CDjVqBJDP+cIdY1T3Cl1BSHAbxiKNidXnM8ttyzZMj5AkQ46x8wdQ8H5QGd9VlVXa9ul4lXWT5DGNES2xkFQnwKckknaTNraeoIEEJPxrK8W1IMpItUFS/+Cm8T/U/UnlQouVe+vh1OiP5jpKcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744978308; c=relaxed/simple;
-	bh=i1GAHaPRubCG+Ok7kknHanKt2FeoM7pX/uRadDM54Ik=;
+	s=arc-20240116; t=1744978349; c=relaxed/simple;
+	bh=EHAI/Ze5Z77RHaJUoTI6HIcTKdQvN2jeRtZzR0KE7yQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fQy7I56xH3yeAyJOv7Mhs7+9gsg4kyeE5992/l7tQgra3WsQdv3Of+elcOBYz16cShF4d14VH8taESxWskpHbx3ypqnPXmltKUVju7q4f8hbAcTbojjqmOanOKkf5AkEDRqx4L3VqUzkCgxx7z0WfHuBG0uEnrnKywuK5qUL1bI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nl6XTcIC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=V3sBXzDyEyeb0dF0TsVti0b7SmjxR2DZhUJOScMc+dUvVmeLVMQo0aF3CV0kMGUsx4L9nPrisy6bd481HwdNN9d1iOPp7x0KVwVyWq32qPLNlVnhZ0lWtdDZfxMQlk/JRXTHB1tTGur1wZ2TOUlKKBcS+d6htgw1b2geVdzU4og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=I2cyK2zL; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nl6XTcIC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82647C4CEE2;
-	Fri, 18 Apr 2025 12:11:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744978307;
-	bh=i1GAHaPRubCG+Ok7kknHanKt2FeoM7pX/uRadDM54Ik=;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="I2cyK2zL"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5BFEC40E0214;
+	Fri, 18 Apr 2025 12:12:24 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id EePCHwC0qnNz; Fri, 18 Apr 2025 12:12:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744978337; bh=UEreqpSTPvb3Nr08mwYWPFS4C5O8jWczuLv1/fTwZzA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nl6XTcICYGhT6VhVHA+Yn+C+X9+gT+2Jv4FxrWuA/NW7mrkhQmEoMblCOy9tHKR1L
-	 YVhOXXm+zJOunbrfyObtpbkiT9Xc2EolZrkYGNSg+gzeqoFhBStwcw4KxHnLSYDfkw
-	 I4RYO6ZeOy3ZisYtMejKZ2EJY68gbb/4fqH6zXf9LYP+RqL0rgzdwJb4fOKV7b+b2g
-	 SIVDPEign+sgyySIIM7I90qhgLz4tfJKdVTHKT485TePajyW/xaYOWQQiOhwyBmmbz
-	 T4GPRiXrqWN0O8xlSCV763yTjP34byu2/P55+q6+wH4y/GfoPss9LlUs8B5JpCnR8d
-	 d8DUI121wa33Q==
-Date: Fri, 18 Apr 2025 14:11:44 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	Sandipan Das <sandipan.das@amd.com>, x86@kernel.org
-Subject: Re: [tip: x86/urgent] x86/cpu/amd: Fix workaround for erratum 1054
-Message-ID: <aAJBgCjGpvyI43E3@gmail.com>
-References: <174495817953.31282.5641497960291856424.tip-bot2@tip-bot2>
- <20250418104013.GAaAIsDW2skB12L-nm@renoirsky.local>
+	b=I2cyK2zLeNNi9+FrsB+tBaF8lgZtUdw7UecafSdFtDJa1mrgHg1fCkyqzmACtABXI
+	 KAqcPHmuclfOpa0NlVZ3vay56loQ99TMPYY1aW9hPfOj42Wndk5TSe7+zWnSxiU434
+	 AVMbYk9KscFErfXWfRdJPJqFfXLxSB07bS1EmVJdaI81oFrzBIMl44il27EbgaBEuC
+	 hxLE9193Jw1usfc92alKCdt+lNTgLA8m+c3+XsDcZ/3RramHq03oeiisBt6E+jopXz
+	 qj1lvtxaKHLIwnmUrHSQTJpNVkjdS/NYlWuKyYJ21yCQalOG6tkZiAHbrEOePaQnwv
+	 BkxPBfbta/20o4WEJV3bhoUn1TBcv5ujsU6ISAtinwKiuJ7s3gFhHvAc5GffLLZrlK
+	 aJP+FOwbIXVQOjPNSZdU9fWRpfZfLi56ZiIvQ1UTR1RxaDLU3eEc06PM0NEjWWAiSr
+	 Wr1DclQIPxX5BXJkjXxUjZx8hXGNwavhoACcJLVD2hYD7oa/9Wbtkowq+GJOUXpPUL
+	 wZeYY4Zzi18jl9x077e67zW4Q8wr+6iposs1hgPy140JTfdALOGx5BHQf0hTff0UN4
+	 u7PTq8CQLW+VbVhHfGy4t6IOYwmIKZVCP0CtpyGFyv60HkpsBB1lBOwRICnUBlU+Q8
+	 ruzY2PPuF37oxY7cTQ/LlSQo=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 908B440E0247;
+	Fri, 18 Apr 2025 12:12:09 +0000 (UTC)
+Date: Fri, 18 Apr 2025 14:12:03 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Dmytro Maluka <dmaluka@chromium.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Yue Haibing <yuehaibing@huawei.com>,
+	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/extable: include asm/processor.h for cpu_relax()
+Message-ID: <20250418121203.GBaAJBk9bOo7ad1d4L@fat_crate.local>
+References: <20250418115710.4154311-1-dmaluka@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250418104013.GAaAIsDW2skB12L-nm@renoirsky.local>
+In-Reply-To: <20250418115710.4154311-1-dmaluka@chromium.org>
 
+On Fri, Apr 18, 2025 at 11:57:00AM +0000, Dmytro Maluka wrote:
+> Include asm/processor.h to prevents compilation failures due to implicit
+> declaration of cpu_relax() in ex_handler_msr_mce() when compiling with
+> CONFIG_X86_MCE disabled.
 
-* Borislav Petkov <bp@alien8.de> wrote:
+Builds fine here:
 
-> > Fixes: 232afb557835 ("x86/CPU/AMD: Add X86_FEATURE_ZEN1")
-> > Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> > Link: https://lore.kernel.org/r/caa057a9d6f8ad579e2f1abaa71efbd5bd4eaf6d.1744956467.git.sandipan.das@amd.com
-> 
-> This needs
-> 
-> Cc: <stable@kernel.org>
+$ grep X86_MCE .config
+# CONFIG_X86_MCE is not set
 
-No, it doesn't really 'need' a stable tag, it has a Fixes tag already, 
-which gets processed by the -stable team.
+$ make -j...
+...
 
-Also, the bug is old, 1.5 years old:
+  OBJCOPY arch/x86/boot/setup.bin
+  BUILD   arch/x86/boot/bzImage
+Kernel: arch/x86/boot/bzImage is ready  (#1)
+$
 
-  Date: Sat, 2 Dec 2023 12:50:23 +0100
+-- 
+Regards/Gruss,
+    Boris.
 
-plus the erratum is a perf-counters information quality bug affecting 
-what appears to be a limited number of models, with the workaround 
-likely incorporated in BIOS updates as well. Leave it up to the -stable 
-team whether they think it's severe enough to backport it?
-
-Thanks,
-
-	Ingo
+https://people.kernel.org/tglx/notes-about-netiquette
