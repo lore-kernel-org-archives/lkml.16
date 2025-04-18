@@ -1,144 +1,132 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0358F20E310
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:14:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3D513A265;
+	Fri, 18 Apr 2025 15:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744989293; cv=none; b=h3krHPRW5BXwKe+u0sPfUeuEX+bAQzfOWATpmXtwcuNX37N2KoGsC3lRLp1fcl3JTs1FEV/0Jc9rQdre5kREF/lhpzuKTvhn8W8A8bQSMwHhqzDFnkoWiqpVAfwngVg8dNrZp8D3xRDwA88QKnTQJxjYTm2Hfysof/jc4MJMZpQ=
+	t=1744989341; cv=none; b=PVnSeuS5HWFTmG2PoWwtjzQfpX2MTsc0amtuwk/+qXpORrnbzFJ6zKEwFDmnLg348d9dGkH41NJnCIZnYA+DAsz2iWZ6Zh/4F8q+hApiLxZ+QRAnPUgf3ZNfmbl+kgoW6ij3iqZulrlz1pOHpM5ItuCJW1nrd9F+RreSyMHqAZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744989293; c=relaxed/simple;
-	bh=I8AmJAfFB1Br3VQWNtM8JST0BsY+1YK7YX16yQJsJTo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hrFiso7kTtMar8WTa5x11c1sV6AXTO4vGzh1w2ZneE4aubjRd+MQPwU71W4liEcYeyJGURZPj0dTBbQKhZiiA5WkLYBks3OwaNLkUMnWj8xFmQFX2Gw3czB9U0QCMEemWyB+ZzICnugeOZX16etjk2KklT7gaeKDSzw788D6qZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i+pfFv3d; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744989341; c=relaxed/simple;
+	bh=zDBDOU+6Hp5zW2pHFlOudW97qd8nblMkmeHFllhXDYM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=mjnXPtywl6Cgy2u9Jiwl6k3VZ8cwu/M3v6XZ76LFVRQJigAC1dmpVZH489SYSy+cpY/+MhvK3Y2R6vgBjJERcHdSJ36+RG0o9e5tWHrhmiyZtzlVSP235Zly1elWnoHdEVjkZc7o6Cc/LZjnWlN8vsmuMiYc4x9wtWdmmJ8FWfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ODOQuVDN; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i+pfFv3d"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-227914acd20so25108325ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:14:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744989291; x=1745594091; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8tlr+U+ggvV9b6qUUYsEDpFnGs799KYouZS0u/xqDZw=;
-        b=i+pfFv3dYiq/r/jmHge7o+I10NWya1G3bggXhn7OaIAHDKdfDMn0ILF9wgJ00fQrEB
-         MYlXBDhNqQF9752hSK3xm4UACBHfn8NWAaQ1d3HYWoFiV/E1Kx8NcpYn8FAAGrGQdUS8
-         XY71sCK5aWDEMlvtMQjSkxxJKo3z+KOLPsLc87G2u7FXGRvhkJ5PCynd5muK9GAT88Fq
-         RzTmZ0fqUAjm1wAo0YmFPwHKU8FpYGE8z138fUi0eFOnrCqwtP/dFk7y2QSDICxxBup8
-         2Lw3tzt32ts5KiTxjwe4EINmZ1WV1Eu4Mne6XOrIO/iCafxYd9L/sIzyhcOkmIqT3wGR
-         FKXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744989291; x=1745594091;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8tlr+U+ggvV9b6qUUYsEDpFnGs799KYouZS0u/xqDZw=;
-        b=vAZB+ygQHbMyOEYw5l77WStSbiUdrWyJuO6UXpeXt6jymLlx7rf22hcfCNA7Qp7Ulx
-         TIz3uziJJRvqbxbyzyPHqPfQKI7uKN6VtiXZcR7RCaAnOFj/4N8uxHVl7R4ahS1wlY28
-         X5/t0aAF8hCZus9GykpnUehxuvcx8adsA62UoQyE8qGZwVt9o6WDCFOgI1/7a/2ioDP5
-         zWjAqoXC4gMpivIZEyRPH6HUDUESfJIleM5in90v3fZuRDr+8j2z//Y6sXLbVHT4zZ5Q
-         TvrG27L3F6ttxtkvBl6oi6WKYkKRWUPQuBVKuw98Xof1niFFFEcXm05F3yccohKKfnFf
-         VceQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX3a0D63ZZk9u3G1E2nsGoMdff6kaYF4H2n6/inE9SE7TCpN76QuI83FYCj+9XhdWDjqTFgawZw2ZBDZpk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyab1CCEVIP3R4laFHWBanR94FUc0B0H57HbfPMs0dy1WcIRtYx
-	HFSO/qT6zBirLMGeLvt6Wwv0MOopUHIehAXEppDvxGtNHPdrhjuz
-X-Gm-Gg: ASbGncvmWCJTkssviUL/MpgJcfjiQt7WShPRoTdP2zjGdEKJAThzLR2W3H7comSgGlL
-	zC298YHT/MfGnBkXeQJvkxruXgOBlXF60/fOjukAgV6PsFJTyDb2ROGXz3/05N6cEn14myQ1Mqx
-	xjN3FewUm7TTpEA+plFjKF4O6hvAFNr3v+TALOYf/yOb8iHGIMA9IpOhFS/hncHTO3OvKf51ccV
-	ouTRnI9WQUKOsypX6Wy5CJgvMnojyNyyPS3DSFkcWQOenQYvLvBVZs6SxkZS3P2cKk7HxRkwLUd
-	CWD8k8wLcZp94QS8dHnpTkmW5NhVuG02h3mM4eg0
-X-Google-Smtp-Source: AGHT+IFgH6kH8q8Ukkj38k3Ycwx8mgsM0+PlhclwOyMownQr5Lp6Z8YsDqQFALXwipkdJoGcEZeG3A==
-X-Received: by 2002:a17:902:fc4d:b0:225:abd2:5e5a with SMTP id d9443c01a7336-22c50bd610fmr55082235ad.4.1744989291024;
-        Fri, 18 Apr 2025 08:14:51 -0700 (PDT)
-Received: from localhost ([216.228.127.131])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb64fbsm17891505ad.158.2025.04.18.08.14.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 08:14:50 -0700 (PDT)
-Date: Fri, 18 Apr 2025 11:14:48 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Luo Jie <quic_luoj@quicinc.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>, linux-kernel@vger.kernel.org,
-	cocci@inria.fr, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, andrew@lunn.ch, quic_kkumarcs@quicinc.com,
-	quic_linchen@quicinc.com, quic_leiwei@quicinc.com,
-	quic_suruchia@quicinc.com, quic_pavir@quicinc.com
-Subject: Re: [PATCH v3 4/6] arm64: nvhe: Convert the opencoded field modify
-Message-ID: <aAJsaNdznnz-1qap@yury>
-References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
- <20250417-field_modify-v3-4-6f7992aafcb7@quicinc.com>
- <86r01rjald.wl-maz@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ODOQuVDN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744989339; x=1776525339;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=zDBDOU+6Hp5zW2pHFlOudW97qd8nblMkmeHFllhXDYM=;
+  b=ODOQuVDNKgOKtwMTVlxMZ6Vlmpr82P8E//VdzUxzxUgHrQMrjhg8rqzd
+   Lc9pYKxociUc1hldnbgRkKjNF9rLIb5BxGTVS6sfwbnc8OUTYTij+WW4I
+   1zjBMUrtCnE0U2u2/2NTSB3VD+udPizONl/02HS4uPuoF6Rzdut2f2hq+
+   nwAFiYfttwXqRjcePrQ9UlIVXA23CJSISMYq+Eto30j/VA3Z7ngWYUrdL
+   +khi4NryFpQ3PRUYZ0MfMrEKxBPs47rYHfzEpUVUcTZHEYAzhSjCmhAX3
+   mLaUTvGmSNmtZZi7taSnxMoRcAum5U+TX7ea/iqXbsSnR/XBwYjtxZpb6
+   Q==;
+X-CSE-ConnectionGUID: caY/D+cjTzugtlGLLirw8Q==
+X-CSE-MsgGUID: K5gj2cd6R46kxoW2TLvETg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="45849851"
+X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
+   d="scan'208";a="45849851"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 08:15:38 -0700
+X-CSE-ConnectionGUID: Akw1pynlSEGh2bUJxdPI7w==
+X-CSE-MsgGUID: XVVgHKXYQIqD2uzf7hj6yg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
+   d="scan'208";a="135990325"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.4])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 08:15:34 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 18 Apr 2025 18:15:30 +0300 (EEST)
+To: Ingo Molnar <mingo@kernel.org>
+cc: Andy Shevchenko <andy@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+    Len Brown <lenb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+    Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+    Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+    "H. Peter Anvin" <hpa@zytor.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+    linux-acpi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/1] x86: Use resource_set_{range,size}() helpers
+In-Reply-To: <aAIB7Om9n_tXDnvk@gmail.com>
+Message-ID: <db829a60-c524-73bc-e7c3-fed60e980d99@linux.intel.com>
+References: <20250416101318.7313-1-ilpo.jarvinen@linux.intel.com> <Z_-E3W8i4EfxdBh3@smile.fi.intel.com> <a046f6bb-0b6e-a431-eaa5-ecd279459f86@linux.intel.com> <aAIB7Om9n_tXDnvk@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86r01rjald.wl-maz@kernel.org>
+Content-Type: multipart/mixed; BOUNDARY="8323328-1296546784-1744988942=:948"
+Content-ID: <fe026d98-6232-bcd6-efa3-99ed79a78586@linux.intel.com>
 
-On Thu, Apr 17, 2025 at 12:23:10PM +0100, Marc Zyngier wrote:
-> On Thu, 17 Apr 2025 11:47:11 +0100,
-> Luo Jie <quic_luoj@quicinc.com> wrote:
-> > 
-> > Replaced below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
-> > - reg &= ~MASK;
-> > - reg |= FIELD_PREP(MASK, val);
-> > The semantic patch that makes this change is available
-> > in scripts/coccinelle/misc/field_modify.cocci.
-> > 
-> > More information about semantic patching is available at
-> > https://coccinelle.gitlabpages.inria.fr/website
-> > 
-> > Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
-> > ---
-> >  arch/arm64/kvm/hyp/include/nvhe/memory.h | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/arm64/kvm/hyp/include/nvhe/memory.h b/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> > index 34233d586060..b2af748964d0 100644
-> > --- a/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> > +++ b/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> > @@ -30,8 +30,7 @@ enum pkvm_page_state {
-> >  static inline enum kvm_pgtable_prot pkvm_mkstate(enum kvm_pgtable_prot prot,
-> >  						 enum pkvm_page_state state)
-> >  {
-> > -	prot &= ~PKVM_PAGE_STATE_PROT_MASK;
-> > -	prot |= FIELD_PREP(PKVM_PAGE_STATE_PROT_MASK, state);
-> > +	FIELD_MODIFY(PKVM_PAGE_STATE_PROT_MASK, &prot, state);
-> >  	return prot;
-> >  }
-> 
-> Following up on my suggestion to *not* add anything new, this patch
-> could be written as:
-> 
-> diff --git a/arch/arm64/kvm/hyp/include/nvhe/memory.h b/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> index 34233d5860607..08cb6ba0e0716 100644
-> --- a/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> +++ b/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> @@ -30,9 +30,8 @@ enum pkvm_page_state {
->  static inline enum kvm_pgtable_prot pkvm_mkstate(enum kvm_pgtable_prot prot,
->  						 enum pkvm_page_state state)
->  {
-> -	prot &= ~PKVM_PAGE_STATE_PROT_MASK;
-> -	prot |= FIELD_PREP(PKVM_PAGE_STATE_PROT_MASK, state);
-> -	return prot;
-> +	u64 p = prot;
-> +	return u64_replace_bits(p, state, PKVM_PAGE_STATE_PROT_MASK);
->  }
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-This is a great example where u64_replace_bit() should NOT be used. 
+--8323328-1296546784-1744988942=:948
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <40bafa21-795a-e848-290b-cf4269f62d67@linux.intel.com>
 
-Thanks,
-Yury
+On Fri, 18 Apr 2025, Ingo Molnar wrote:
+
+>=20
+> * Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
+>=20
+> > On Wed, 16 Apr 2025, Andy Shevchenko wrote:
+> >=20
+> > > On Wed, Apr 16, 2025 at 01:13:18PM +0300, Ilpo J=E4rvinen wrote:
+> > > > Convert open coded resource size calculations to use
+> > > > resource_set_{range,size}() helpers.
+> > > >=20
+> > > > While at it, use SZ_* for size parameter which makes the intent of =
+code
+> > > > more obvious.
+> > >=20
+> > > ...
+> > >=20
+> > > > +=09resource_set_range(res, base, 1ULL << (segn_busn_bits + 20));
+> > >=20
+> > > Then probably
+> > >=20
+> > > =09resource_set_range(res, base, BIT_ULL(segn_busn_bits) * SZ_1M);
+> > >=20
+> > > to follow the same "While at it"?
+> >=20
+> > I'll change that now since you brought it up. It did cross my mind to=
+=20
+> > convert that to * SZ_1M but it seemed to go farther than I wanted with =
+a=20
+> > simple conversion patch.
+> >=20
+> > I've never liked the abuse of BIT*() for size related shifts though,=20
+> > I recall I saw somewhere a helper that was better named for size=20
+> > related operations but I just cannot recall its name and seem to not=20
+> > find that anymore :-(. But until I come across it once again, I guess=
+=20
+> > I'll have to settle to BIT*().
+>=20
+> BITS_TO_LONGS()?
+
+Hi Ingo,
+
+I'm not entiry sure if you're referring to my BIT*() matching unrelated
+macros such as BITS_TO_LONGS() (I only meant BIT() and BIT_ULL() which I=20
+thought was clear from the context), or that BITS_TO_LONGS() would be the=
+=20
+solution what I'm looking for.
+
+In case you meant the latter, BITS_TO_LONGS() is not what I'm after.=20
+BIT(n) sets nth bit and what I'm looking for is converting n to power of=20
+two size. Obviously, both are mathematically doing 2^n (or 1 << n) but=20
+they feel conceptually very different things.
+
+--=20
+ i.
+--8323328-1296546784-1744988942=:948--
