@@ -1,95 +1,86 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C3DEEB3;
-	Fri, 18 Apr 2025 10:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B325FEEB3;
+	Fri, 18 Apr 2025 10:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744972780; cv=none; b=A/pJk8BeJezhS8K1zip2b9OE8KE+sr40QDGM6BDBGflmB/v9Px1/Ud+P+DAhx77V4x0FiEb7BrQuXBlm5y/rJ/TXvssxCfWxwuTpY0fAKQYrKXiXZ/h8xA4EsMZ9BKOdmac6EXh7z7VxRPRonepy8bFUwInpBjikaudDBZO3W3Q=
+	t=1744972784; cv=none; b=Jnz/86IOUOzg+uHahVET10RH2rsfVEbDcArnnufMxazyJvGhTwCPRdTP9S7Oo/gF6621kJDmT3MshmQU1Ot6ziBuDDJwMT9EyhIkI+9KoQflmyvUJl9lpzThLhPvBqPGe0c2o51dqmWj9PJwGCHSJhQ68GH75qYLBIjEyTNvMUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744972780; c=relaxed/simple;
-	bh=ttVLovfr4SKmH6ICrzvUiDZ6r/EcmzRNBp6rmO90bhk=;
+	s=arc-20240116; t=1744972784; c=relaxed/simple;
+	bh=Es2kj5rWfsRwuqdJ3HO6rHVetddtnH4dUWYDSUnEDKI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hK/EuP2OmGkKYBFged67f5vyI+mWXBHRrnaLScasIDLVG1PHaw+TOS0rIhqjmeohLoZjkM+2mcOk5JzYjUO+X1K6d5o6TFb7kZ67P+cmR4ds9cxPLDSR5CVnI+7OymEdfg4kUJ6Xx6wRGN9op62PBTMamhrY0cgtHKoU7iHZkpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=E+baY4h9; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=gbzKO8NLf0eaizcbidxFa9z28J7cH8qcXsPd8TZUd/O1cSgUZD6K6d5fkZHmUGw/UUe4CzXRsc4teuIx8URNSbFceXRhSKKh5P7sJ8i3TCzr/UdcaaYBbxZfH0U/ZxOISiJBkyf8rovn1PLuvMNaOZ6zwSlllStwdk50ScqZ1RM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=MuTS1vVJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="E+baY4h9"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id AAA5E40E0246;
-	Fri, 18 Apr 2025 10:39:28 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id RtsIpmjYvNdv; Fri, 18 Apr 2025 10:39:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1744972762; bh=B62Z83vt9Rb2CGpw59P5RzMmycfbByVvl9Una/LIoL0=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="MuTS1vVJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8F8BC4CEEA;
+	Fri, 18 Apr 2025 10:39:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744972784;
+	bh=Es2kj5rWfsRwuqdJ3HO6rHVetddtnH4dUWYDSUnEDKI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E+baY4h9rYsKaHR+2Z40v12O0JbhEJmKT3Y7HB3NSRqAdIbV0Sl24nHRVHkj2SCJ3
-	 DuitlTltmyJmoqUGM93CgqdaanCCdODjbncJD5b7RUSBBDiCSMs5GyDcoDL4l0aP5X
-	 eHCufa8zLw0Wk/QnTT48R2ZNcWcRJVrcfmb+A1eZ38uwH7ARqz4dnm2/k7F+MB5hEU
-	 DkdWqFpZ5DMgi6NnZTuaraUldox5c0+73Iv3Y4+YzHepwCflnwGXTNVBqq4Za/VNfP
-	 jWX+43VrvtrgWJZxAOEOAOy3tszRF1Il3YyM0EMeEh3vsoTgK9qhFaaHX8gfCkEEcb
-	 SyGcWDFDlEMG3Ykej1yEdMjCXUsemV7N2pg7GThER5eK9ktKBF3SI42o+Q1HyJ9ADN
-	 oLyv9ZuMEf5mmbM5YUe+3lx5oPsGs9RX3jXwDDisxE5iQr7d1MckH0gkLSBJNXlzZM
-	 vdUNekIO7trksWjoK04+3sx9Dv3v9Ptp6wh6nZ2GK/IONwzKTUfWEzUMGpuBeu8hU5
-	 vYjsSpxIsmVju2bix0vXPI5tdvwexSmdYCToVSYkGHySaqVZFp7q/KYwAFBuc89lkG
-	 M6JgcJeLifbKRSIOW8ws+xZNyrSCkR4wQxT6cT8q3V6Eh+RhSfNEjZqDc811UYiSMz
-	 FT2NiCxbTVk7FsFjw8cZZYi8=
-Received: from rn.tnic (p200300ea972aa8895b9802a589316de9.dip0.t-ipconnect.de [IPv6:2003:ea:972a:a889:5b98:2a5:8931:6de9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 43D6040E0214;
-	Fri, 18 Apr 2025 10:39:17 +0000 (UTC)
-Date: Fri, 18 Apr 2025 12:40:13 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: linux-kernel@vger.kernel.org
-Cc: linux-tip-commits@vger.kernel.org, Sandipan Das <sandipan.das@amd.com>,
-	Ingo Molnar <mingo@kernel.org>, x86@kernel.org
-Subject: Re: [tip: x86/urgent] x86/cpu/amd: Fix workaround for erratum 1054
-Message-ID: <20250418104013.GAaAIsDW2skB12L-nm@renoirsky.local>
-References: <174495817953.31282.5641497960291856424.tip-bot2@tip-bot2>
+	b=MuTS1vVJOrWO1tgoRVvQyutsbHBkU4EJvq499/WdEML7nqdDHlXi891tVZFpb7T/3
+	 uB72O76sDIL2/YkFw01OEADsmG1trwUuiG7wA1LE0i52TTXoZc/GtaF+SAhw+v2bmn
+	 ik4ZuYcUO8nfOpbabrq6cu+zCHb/apDgjrm/TDDg=
+Date: Fri, 18 Apr 2025 12:39:41 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Eric Florin <ericflorin.kernel@gmail.com>
+Cc: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
+	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: sm750fb: clean-up `else`-blocks
+Message-ID: <2025041805-ammonium-scouting-dad6@gregkh>
+References: <20250418035023.27067-1-ericflorin.kernel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <174495817953.31282.5641497960291856424.tip-bot2@tip-bot2>
+In-Reply-To: <20250418035023.27067-1-ericflorin.kernel@gmail.com>
 
-On Fri, Apr 18, 2025 at 06:36:19AM -0000, tip-bot2 for Sandipan Das wrote:
-> The following commit has been merged into the x86/urgent branch of tip:
+On Thu, Apr 17, 2025 at 08:50:23PM -0700, Eric Florin wrote:
+> Clean-up `else`-blocks in `hw_sm750_map` that occur after `if`-blocks that
+> terminate function execution.
 > 
-> Commit-ID:     f4efdb357680bef4584faedbd44b90cd53d3245f
-> Gitweb:        https://git.kernel.org/tip/f4efdb357680bef4584faedbd44b90cd53d3245f
-> Author:        Sandipan Das <sandipan.das@amd.com>
-> AuthorDate:    Fri, 18 Apr 2025 11:49:40 +05:30
-> Committer:     Ingo Molnar <mingo@kernel.org>
-> CommitterDate: Fri, 18 Apr 2025 08:31:07 +02:00
+> Signed-off-by: Eric Florin <ericflorin.kernel@gmail.com>
+> ---
+>  drivers/staging/sm750fb/sm750_hw.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> x86/cpu/amd: Fix workaround for erratum 1054
-> 
-> Erratum 1054 affects AMD Zen processors that are a part of Family 17h
-> Models 00-2Fh and the workaround is to not set HWCR[IRPerfEn]. However,
-> when X86_FEATURE_ZEN1 was introduced, the condition to detect unaffected
-> processors was incorrectly changed in a way that the IRPerfEn bit gets
-> set only for unaffected Zen 1 processors.
+> diff --git a/drivers/staging/sm750fb/sm750_hw.c b/drivers/staging/sm750fb/sm750_hw.c
+> index 4bc89218c11c..64b199061d14 100644
+> --- a/drivers/staging/sm750fb/sm750_hw.c
+> +++ b/drivers/staging/sm750fb/sm750_hw.c
+> @@ -55,9 +55,8 @@ int hw_sm750_map(struct sm750_dev *sm750_dev, struct pci_dev *pdev)
+>  		pr_err("mmio failed\n");
+>  		ret = -EFAULT;
+>  		goto exit;
+> -	} else {
+> -		pr_info("mmio virtual addr = %p\n", sm750_dev->pvReg);
+>  	}
+> +	pr_info("mmio virtual addr = %p\n", sm750_dev->pvReg);
 
-Whoops, sorry about that.
+When drivers work properly, they are "quiet".  This driver is not quiet
+at all.  So this really should be a call to dev_dbg(), right?
 
-> Fixes: 232afb557835 ("x86/CPU/AMD: Add X86_FEATURE_ZEN1")
-> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> Link: https://lore.kernel.org/r/caa057a9d6f8ad579e2f1abaa71efbd5bd4eaf6d.1744956467.git.sandipan.das@amd.com
+>  
+>  	sm750_dev->accel.dprBase = sm750_dev->pvReg + DE_BASE_ADDR_TYPE1;
+>  	sm750_dev->accel.dpPortBase = sm750_dev->pvReg + DE_PORT_ADDR_TYPE1;
+> @@ -84,9 +83,8 @@ int hw_sm750_map(struct sm750_dev *sm750_dev, struct pci_dev *pdev)
+>  		pr_err("Map video memory failed\n");
+>  		ret = -EFAULT;
+>  		goto exit;
+> -	} else {
+> -		pr_info("video memory vaddr = %p\n", sm750_dev->pvMem);
+>  	}
+> +	pr_info("video memory vaddr = %p\n", sm750_dev->pvMem);
 
-This needs
+Same here.
 
-Cc: <stable@kernel.org>
+thanks,
 
-Thx.
+greg k-h
