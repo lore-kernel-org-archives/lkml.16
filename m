@@ -1,93 +1,166 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C78E2204F78;
-	Fri, 18 Apr 2025 09:34:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CAE5205ACF;
+	Fri, 18 Apr 2025 09:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744968862; cv=none; b=uMlYRNHy4dnk+hdBO/t25eWvwH9+K63PVBjZkk3mev0mcCF1oHqSmVogCq65mTY7FjS4BB2TUwKuCoiTr3oPDGmqGb8iPNijDGM8/HVv3gkvH8Sy8Ce1qlCeMxkpcnq2scOQVtv1qveHf8VwRbzw/UayicqmKAEV1BlCAXdRyUQ=
+	t=1744968888; cv=none; b=rzcxBfSC8DOLFgYeHQ+MJeA5rqQL68AbvhMP3ed3Jr93Zm0ehhi58+R6Jitz0QLxZ1bvxaRLynEPeui51XWLL/01/lEsh9nYi8eNCjjlt9EgZd67wH+kYs3EYm+84XOQETcRo9wlrHDfCJ9S9xRVhkHQAlG+udlVfUbxUpdrJF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744968862; c=relaxed/simple;
-	bh=hrpcTytiLAurxxX1yrL4qNQ146cijwzFSzKIOnUFEqM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t1J5CZH6fb3rmxmafGuSfYkgKfg3btuZlt/MbHrV32rER4NclT5KBIGU20YBfJwhMx6yxzsm5iRnygBam2iYO5qCKwZ/9Kc3y7oN9uF7zUJXzRjIrrDoepX1KOmPQ/OgCrEv3ZqTCdUpnb6HI058PmqjE6onMIpHdbw9dtCdgLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.40.54.180])
-	by gateway (Coremail) with SMTP id _____8CxieCZHAJo2KLBAA--.14626S3;
-	Fri, 18 Apr 2025 17:34:17 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.54.180])
-	by front1 (Coremail) with SMTP id qMiowMDxPcWUHAJoyUKJAA--.11173S2;
-	Fri, 18 Apr 2025 17:34:14 +0800 (CST)
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-To: herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	peterhuewe@gmx.de,
-	jarkko@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-crypto@vger.kernel.org,
-	jgg@ziepe.ca,
-	linux-integrity@vger.kernel.org,
-	pmenzel@molgen.mpg.de,
-	Qunqin Zhao <zhaoqunqin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH v8 5/5] MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
-Date: Fri, 18 Apr 2025 17:36:00 +0800
-Message-ID: <20250418093600.1363-1-zhaoqunqin@loongson.cn>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1744968888; c=relaxed/simple;
+	bh=+q8KhlDxuSaaDnzDN2QF0Qr9fEZY1wMn2vvENU6RQLs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=tVu7cBhCusjM3/eZpDXxmfzbIRFm2PwBOiJn1gkK4ZAnEe8ILBNqTxr9ow8ULJkO5QS0FmgVCT2mSVvS/Rs/ntkN0ho1Izy7R6fnU8ADXktEh+fmPDbS0s57ZB0gxF8kxwlc917B8Q7CDj5+I3FHCd8IPwfFlhAYCI7EmPX0/18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PEO3dc7i; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PEO3dc7i"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53I1UZPr012331;
+	Fri, 18 Apr 2025 09:34:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Znw86IU4kiozP/U1IaOS5mXXh2XWycOUjRToJHHs0Wg=; b=PEO3dc7i/jT81MFr
+	qi4+Tn7jM13JTOCg1YBKp6YNkWFa38hE0PZuM7v/OjtR25vXJiTxIEEYgxStkYO+
+	2IX3+1oR3ncFfejVkTs5Xvwcc+0szU3mpJplrzJ74W0V9gqTjsj0OB59atrZWPOf
+	5CQARtQ7njK08nQc/IP/qS/OwNHRlFa+IkMgC0smxriFKs9WswQ49Opn0IUHJhbQ
+	lKld2Wq9qg/DtOBPJnOdcVHstoMfWoNLNhKPtylEoZVnn6mDWyZ56MsXHzjBt1J7
+	FwqXkOtZpFfw3m4xMnvw7phpjiWXosP5niNNuzkBFXL2dIgeTkF3a2ftZzHo2Rq4
+	hB+/mQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4vsqjc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Apr 2025 09:34:44 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53I9YhNJ023614
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Apr 2025 09:34:43 GMT
+Received: from [10.218.37.132] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 18 Apr
+ 2025 02:34:41 -0700
+Message-ID: <2ab9a8f9-b051-4213-a9df-4b2c2fa8c6be@quicinc.com>
+Date: Fri, 18 Apr 2025 15:04:38 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxPcWUHAJoyUKJAA--.11173S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7GFyftFyrAF48Jr1rCw1xJFc_yoW3ZFc_Ca
-	y2g397Xr1kGr1I9asYvFZ3Zw4YvFWrJ3Wfu3Wqqw1fX34jyr9IyrnrAF4vk3W3urW5CFZx
-	ua97GFs5Cr13ZosvyTuYvTs0mTUanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbSxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26rWY6Fy7
-	McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26c
-	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUI0eHUUUUU
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] bus: mhi: host: pci: Disable runtime PM for QDU100
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: Veerabhadrarao Badiganti <quic_vbadigan@quicinc.com>,
+        <mhi@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250414-vdev_next-20250411_pm_disable-v1-1-e963677636ca@quicinc.com>
+ <ec99379e-fd54-42b0-a383-8ed212072396@quicinc.com>
+ <o7rv3xgg3btaoqjlzfenbfkrp3fuw54cx6zqojclcfslfg3ha4@c3sqaqqdjdjv>
+ <c8699f79-54cc-4adb-8047-b37a69e69d96@quicinc.com>
+ <qrb4ozkj3zxfpo733mf6xf35tetfyekytkty6sq7civhycbahm@c6s3wfvmdycs>
+Content-Language: en-US
+From: Vivek Pernamitta <quic_vpernami@quicinc.com>
+In-Reply-To: <qrb4ozkj3zxfpo733mf6xf35tetfyekytkty6sq7civhycbahm@c6s3wfvmdycs>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: cv5Snk7ZWDVtJkCi8usbIV00ro57yIom
+X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=68021cb4 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=W7FBjEr1nMv6UFPOgwQA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: cv5Snk7ZWDVtJkCi8usbIV00ro57yIom
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-18_02,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504180069
 
-Changes to Loongson TPM driver would be best reviewed by the Loongson
-crypto driver maintainers.
 
-Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
----
-v8: None
-v7: Added tag from Jarkko and Huacai
-v6: "tpm_lsse.c" -> "tpm_loongson"
-v4-v5: None
 
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a4726df8f..eb99b7a66 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13916,6 +13916,7 @@ LOONGSON CRYPTO DRIVER
- M:	Qunqin Zhao <zhaoqunqin@loongson.cn>
- L:	linux-crypto@vger.kernel.org
- S:	Maintained
-+F:	drivers/char/tpm/tpm_loongson.c
- F:	drivers/crypto/loongson/
- 
- LOONGSON-2 SOC SERIES CLOCK DRIVER
--- 
-2.45.2
+On 4/18/2025 2:06 PM, Manivannan Sadhasivam wrote:
+> On Fri, Apr 18, 2025 at 11:55:24AM +0530, Vivek Pernamitta wrote:
+>>
+>>
+>> On 4/17/2025 11:37 AM, Manivannan Sadhasivam wrote:
+>>> On Thu, Apr 17, 2025 at 10:00:38AM +0530, Veerabhadrarao Badiganti wrote:
+>>>>
+>>>> On 4/14/2025 1:17 PM, Vivek Pernamitta wrote:
+>>>>> The QDU100 device does not support the MHI M3 state, necessitating the
+>>>>> disabling of runtime PM for this device. Since the PCIe core framework
+>>>>> enables runtime PM by default for all clients, it is essential to disable
+>>>>> runtime PM if the device does not support Low Power Mode (LPM).
+>>>>>
+> 
+> Not true... See below.
+> 
+>>>>> Signed-off-by: Vivek Pernamitta<quic_vpernami@quicinc.com>
+>>>>> ---
+>>>>>     drivers/bus/mhi/host/pci_generic.c | 10 ++++++++++
+>>>>>     1 file changed, 10 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
+>>>>> index 03aa887952098661a488650053a357f883d1559b..a011fd2d48c57cf9d1aec74040153267a206d797 100644
+>>>>> --- a/drivers/bus/mhi/host/pci_generic.c
+>>>>> +++ b/drivers/bus/mhi/host/pci_generic.c
+>>>>> @@ -43,6 +43,7 @@
+>>>>>      * @mru_default: default MRU size for MBIM network packets
+>>>>>      * @sideband_wake: Devices using dedicated sideband GPIO for wakeup instead
+>>>>>      *		   of inband wake support (such as sdx24)
+>>>>> + * @pm_disable: disables runtime PM (optional)
+>>>>>      */
+>>>>>     struct mhi_pci_dev_info {
+>>>>>     	const struct mhi_controller_config *config;
+>>>>> @@ -54,6 +55,7 @@ struct mhi_pci_dev_info {
+>>>>>     	unsigned int dma_data_width;
+>>>>>     	unsigned int mru_default;
+>>>>>     	bool sideband_wake;
+>>>>> +	bool pm_disable;
+>>>>>     };
+>>>>>     #define MHI_CHANNEL_CONFIG_UL(ch_num, ch_name, el_count, ev_ring) \
+>>>>> @@ -295,6 +297,7 @@ static const struct mhi_pci_dev_info mhi_qcom_qdu100_info = {
+>>>>>     	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
+>>>>>     	.dma_data_width = 32,
+>>>>>     	.sideband_wake = false,
+>>>>> +	.pm_disable = true,
+>>>>
+>>>> |no_m3|orno_|m3_support|would be more suitable than|pm_disable|
+>>>
+>>> Yes!
+>>>
+>>> But does the device not supporting M3 only or D3Hot also? If the former, then we
+>>> should prevent MHI host to enter/exit M3 state in mhi_pm_suspend/ mhi_pm_resume.
+>>> There is an incentive in allowing D3Hot if the device supports it.
+>>>
+>>> Also, is there a way we could probe M3 support in the device so that we can
+>>> check it during runtime?
+>>>
+>>> - Mani
+>>>
+>> In QDU100 device does not support M3 state, D3_hot will be supported. As
+>> QDU100 is an accelerator card which needs high-throughout, LPM needs to
+>> disabled here. So we are trying to disable runtime PM here, without M3 ,
+>> D3_hot will not have effect in QDU100.
+>> Also in MHI we don't have provision to check device M3 capability, so we are
+>> trying to disable runtime PM here.
+>>
+> 
+> Even though PCI core is enabling runtime PM for devices, it also prevents the
+> devices from getting suspended unless the drivers explicitly asks for it. So
+> this driver is using autosuspend feature to allow the devices to be suspended
+> if PME is supported from D3Hot.
+> 
+> If you want to prevent the device from getting runtime suspended, you should
+> just skip autosuspend.
+> 
+> - Mani
+> 
+Thank you, I will upload new patchset accordingly.
 
