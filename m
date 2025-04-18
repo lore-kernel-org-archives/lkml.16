@@ -1,96 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D4F2222D9;
-	Fri, 18 Apr 2025 12:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EE61FBCAD;
+	Fri, 18 Apr 2025 12:10:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744978174; cv=none; b=G91cK3KaU5WBJotOjEkKLoclfeY6UZ+asUdXOBBaHe+/KwQOFRgAAmmblKOtF/5v54Bf9pISvFDI0xEy2fBbAf44Hp85XLpqxWlEm7jfGnRQTM1+ByOuJMkgIlHicpN8sn5Klt7QY/9NcY6iu7kaZfgW4fDy4eKAmuxAdDcM2Dc=
+	t=1744978211; cv=none; b=RN3J6UJ5dyyw8FeBIzvbcaeEJMfbKGRdpv7JtFW6reNLkwRe+x/VIW1Cm+g4R4n/XahRz4UDWG7ndzp+E7MFsMpbh/WtVbchG07paTwKA37CHU6REWAOJihOp/Fr/6NvDCfILEwrEgaNgMMpIhLhRUsR8+FQzoQ2y0QI3U4zrI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744978174; c=relaxed/simple;
-	bh=UrZtd00JOI1ZqzOWgiF1K2vX5+1n0VOFfrtStcupqxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aWRQtauXDnB35sKk+x4ePPwNLD2vKPretEJz8UZ6Thp2qGqQ/cY7tdeOK3Vwakz2bYC47nxgNn7+LS+Zk5zP/QwSR6uhydX77z0UoOeFfevc5xkFcw7d8e8SSChrZ/tELni6c+mZTeI25E6XvnvVrsIu6lTNMiBbcbQP9344KeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=reI93Lih; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744978211; c=relaxed/simple;
+	bh=F1O+ktmEQGaR10oYBzWQiURZWwHIyY9Y95PtZPB1t6k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=JjP9+KANpAGtC3kDfneBdyIEolGU3oWd57OdDW/mTngpM74LZ0MzrywOBNoV5sWVsGwr6Psz0u2jU+PqtV7DOERw4Em6D9XAjI8HvezN7lKh7m13aW0ob2E3q0iddVEGWT8Pu5hcYqbyQNSkK5cXvHC7bUEIKb+y8VwXTxSECXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ocElkma4; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="reI93Lih"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FA0DC4CEE2;
-	Fri, 18 Apr 2025 12:09:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744978173;
-	bh=UrZtd00JOI1ZqzOWgiF1K2vX5+1n0VOFfrtStcupqxs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=reI93LihKsTQTtHII8ebpccBTnuBcvSleL9DSWAaD2wFPgWGPrm+nLPpFzNGqEhId
-	 Ypl8spBNnUYbCfFsGXzQc8unbf14FcerQgqvRKKsfhwmlXVvULY2+H3mJ4KHZICrRd
-	 APSJbDKWR1SV1JdaWA6ku4KMgOrj7iVX13XEhuXA=
-Date: Fri, 18 Apr 2025 14:09:30 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Ruben Wauters <rubenru09@aol.com>
-Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-	Teddy Wang <teddy.wang@siliconmotion.com>,
-	Sudip Mukherjee <sudip.mukherjee@codethink.co.uk>,
-	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/8] staging: sm750fb: rename gDviCtrlChipName
-Message-ID: <2025041801-reassign-wager-ea18@gregkh>
-References: <20250417190302.13811-1-rubenru09@aol.com>
- <20250417190302.13811-3-rubenru09@aol.com>
- <2025041803-clutter-harmonica-7047@gregkh>
- <6a47dc48a803b6a07a7fcd33eec8df9e60e86144.camel@aol.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ocElkma4"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53HMvALq013110;
+	Fri, 18 Apr 2025 12:09:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Gnj9zyq/0nt1uavrCh/EJH373gTM2j2MUhc1HuK/Cmw=; b=ocElkma4te0ayMG7
+	U9HswTJUg1vZlzL7zpEdKfUgUfxrWGbQ2kOKMeyHSJ6UWmh2lacWZO3woZXHIu+i
+	5mfMzTL8JJe8VramdbHkxvrr05Vg1tne5sLL5WmYZMEYe5WVFf7KQ+GWhgGzEJhr
+	Sk2PRpBaOHRveet7CH2wWGmWTYBNcpEX1mCd2mJxjQPdbnSbKJBM/AMuxpiDggkv
+	M2HwlpAEsixsKmXucrqyzsA9tNHXOp80R5dad7PALmB8Iq6eZzHHdV/HXdepYfu/
+	7DMNcurea2N4rECTLlyPN/C8bBX0pLkBooLJRCp4Ck2OGyTWXUf6QV5fB2dMrVJM
+	Ko5+dg==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ydhqj2rv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Apr 2025 12:09:57 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53IC9uM3019677
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Apr 2025 12:09:56 GMT
+Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 18 Apr
+ 2025 05:09:53 -0700
+Message-ID: <72f49447-5c99-4028-90cf-3f5cc11e8b53@quicinc.com>
+Date: Fri, 18 Apr 2025 17:39:50 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6a47dc48a803b6a07a7fcd33eec8df9e60e86144.camel@aol.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] spi: stm32-ospi: Fix an error handling path in
+ stm32_ospi_probe()
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Mark Brown
+	<broonie@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre
+ Torgue <alexandre.torgue@foss.st.com>,
+        Patrice Chotard
+	<patrice.chotard@foss.st.com>
+CC: <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <2674c8df1d05ab312826b69bfe9559f81d125a0b.1744975624.git.christophe.jaillet@wanadoo.fr>
+Content-Language: en-US
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+In-Reply-To: <2674c8df1d05ab312826b69bfe9559f81d125a0b.1744975624.git.christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: ALN6EHSkm0hBo3TgySFp18EK9VHox7fV
+X-Authority-Analysis: v=2.4 cv=C7DpyRP+ c=1 sm=1 tr=0 ts=68024115 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=O8aqTkAXavC4eiQugfUA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: ALN6EHSkm0hBo3TgySFp18EK9VHox7fV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-18_04,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ priorityscore=1501 suspectscore=0 clxscore=1011 spamscore=0 bulkscore=0
+ impostorscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504180089
 
-On Fri, Apr 18, 2025 at 12:45:28PM +0100, Ruben Wauters wrote:
-> On Fri, 2025-04-18 at 12:36 +0200, Greg Kroah-Hartman wrote:
-> > On Thu, Apr 17, 2025 at 08:02:50PM +0100, Ruben Wauters wrote:
-> > > Renames gDviCtrlChipName to dvi_controller_chip_name
-> > > This fixes checkpatch.pl's camel case check.
-> > > 
-> > > Signed-off-by: Ruben Wauters <rubenru09@aol.com>
-> > > 
-> > > ---
-> > > 
-> > > I changed the name to dvi_controller_chip_name as I
-> > > believe it is somewhat more descriptive than
-> > > g_dvi_ctrl_chip_name. If the second one is wanted instead
-> > > please let me know and I will change it
-> > > ---
-> > >  drivers/staging/sm750fb/ddk750_sii164.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/staging/sm750fb/ddk750_sii164.c
-> > > b/drivers/staging/sm750fb/ddk750_sii164.c
-> > > index dd7811b18bf6..d4309e0d807f 100644
-> > > --- a/drivers/staging/sm750fb/ddk750_sii164.c
-> > > +++ b/drivers/staging/sm750fb/ddk750_sii164.c
-> > > @@ -14,7 +14,7 @@
-> > >  
-> > >  #ifdef SII164_FULL_FUNCTIONS
-> > 
-> > This is never defined, so instead of papering over variable names
-> > that
-> > are crazy, why not just remove all of the code in the blocks for this
-> > define entirely?
-> 
-> Given the amount of code that is never used and the time went into
-> writing this, it does make me wonder whether this code *should* be used
-> instead of being removed. I don't know exactly how it would be
-> integrated however, removal as of now might be the easiest option, but
-> I'm not entirely sure whether it would be the best option in terms of
-> functionality.
 
-Just remove it, odds are it was written a long time ago for other
-hardware.  If someone needs it in the future, the git history has it
-there for their use.
 
-thanks,
+On 4/18/2025 4:57 PM, Christophe JAILLET wrote:
+[...]
+> diff --git a/drivers/spi/spi-stm32-ospi.c b/drivers/spi/spi-stm32-ospi.c
+> index 668022098b1e..9ec9823409cc 100644
+> --- a/drivers/spi/spi-stm32-ospi.c
+> +++ b/drivers/spi/spi-stm32-ospi.c
+> @@ -960,6 +960,10 @@ static int stm32_ospi_probe(struct platform_device *pdev)
+>   err_pm_enable:
+>   	pm_runtime_force_suspend(ospi->dev);
+>   	mutex_destroy(&ospi->lock);
+> +	if (ospi->dma_chtx)
+> +		dma_release_channel(ospi->dma_chtx);
+why can't you move to devm_dma_request_chan ? No need to cleanup.
+> +	if (ospi->dma_chrx)
+> +		dma_release_channel(ospi->dma_chrx);
+>   
+>   	return ret;
+>   }
 
-greg k-h
