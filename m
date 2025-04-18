@@ -1,218 +1,146 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173A019EED3
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC6719EED3
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:08:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744963623; cv=none; b=boI5SjgCfIs3AImtUmPZAjQVRwE6gWnwdy7fJPqFg1OryNSZ+A7BSZ5/hPljyhLlhJN63ijHRPgH5RdsZAi0gYtIaKKuLqwVPAqE/C4B4GXyX6zqe4fn4n8Qyg1G7WYmD8yVAGMeYjxNgS55hS/9+xkpHMFd/joYX8Ifig7tB2w=
+	t=1744963698; cv=none; b=kbsBgOrg4u878eF0alQYqxJ0+wgnr1ypo2O7r78c1bR8NZnfUaDmqEmlxxsv3yKtrtP5THu7Hq8tqCGFbNgROWXCTHIcV14gybRXruS73KeoTZVFEbPFpTy8Ux7tP3r5C1fDeDffmVYDJ9lRgqiC50xVCdmh0cvQCZe+JTEKCCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744963623; c=relaxed/simple;
-	bh=4SeNgi1wLdy5CHoMa+2nCAoVEtUaMl4h182JOclLDMc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hcubf07rPYMGWB5FYR2zbIB2dBCVhQoaWsjRePvcZC2XNpWxwVmjk/D/tQXhZcBeFulJG7Opoo2rFIuhnXBISPgsSwLpKB7ht6rweFC0Bb/YSqenEwXCswmIlm/ISKYbVuOJoCNsFyoh6qXRBaGksbuBhBDG7UeER6awVHoQR1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yAAwBdLl; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744963698; c=relaxed/simple;
+	bh=KFc7NxazWbecdf/pQ8MPoSpDthgZbbErE5r5870t1K4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TDLo84yw10tK435wuLaZo9QePbsvC7BIAlq7PXtXxCnHovhXAUTrZuKjzt5Kjn2gVeDWp55hEEJP6uJVfYg24Ug1xYRscj5DXxn/kW7jYOueY6XVuxWvvKEaNElgMOjmjXQmRhgoi0Ld/sXctA+5U/zuMiicqZEGthnkVrIpSBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W3rKu0fW; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yAAwBdLl"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so18719815e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 01:06:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W3rKu0fW"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso305889066b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 01:08:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744963618; x=1745568418; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=8R7Qp36puqcIKgf+lMIiPQAk3WNF5lMseB0RPPm+UOE=;
-        b=yAAwBdLlQpm4RtZYUBRx5AO8726RCP5kRUBLAltRPcYahuwrK1XTDveqrwzDMWByMM
-         12UY8xPHXnPbAJIQoOIiWCz6MD52aJMVIxqxU9jVb/ihLfIzGuX6CDVjn6YGeHOgNxvM
-         OTt/V0IE/Sikub3PbOVfgEix9FVmHBeQCliVRDhXWvPpgDZInwtcOwwAYOPfqU2TI3bz
-         /mDr3IJ+JrJnGdCU/KhjRiltWJ7uwCQBO6aFAkjrvSqZ+OIKTAJ16QdzkOzL1S67OH1y
-         JrFYZ27a6v0Kw53I0UhFb0kjz3yGQy53BnYXqRtGm9EmEVsTgyQk5rkJrgnqC4+S+zjG
-         YQMA==
+        d=gmail.com; s=20230601; t=1744963694; x=1745568494; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=d0L8YvnzE0pi2bEGvACdQZtJxO8WbkqI0hMXvgVv5oE=;
+        b=W3rKu0fW3QgZGd1SPYNtfKK6ck4QKO7wQCU5bDWL0/LsxrB6FzF907HeVmL8yh21Ws
+         hXhte/tsMM3z9Y1Lpp+QjvWGE73Un8uGV/rNSSbsU5Os8aBt8wnNGd+4tZNUSka9nQzx
+         WwMgr2m6UU1y8Dw3l1jKYveTSnIjRXl25yZ4IfmbgcjKWRq6nMCgC8sBbCp8KD3sQRpv
+         K5dS7zBH0gKBsjI7S7Z+qzRf1AYiC/LR+l+YWcm5hWt1gj5flwhu/nv1ov8gpfVyNcBA
+         U4MZyA7vFhd9SF0ordpkxmE94kaxf9qkNKr9TJABf+7228HJSfkxL6OrCixowMIiQbjk
+         p0Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744963618; x=1745568418;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8R7Qp36puqcIKgf+lMIiPQAk3WNF5lMseB0RPPm+UOE=;
-        b=lxZih0su9JW9S1QpZi/ULsR2TOgGQDnbQiSbMqFETwkoGLBZp19vu30/yRgXI6tCAp
-         eXji4RxurlcgVGzABDJCDqm/zIQP4tIz4LRsZbgpnlVQmIundShgPzZODPQ0CT8SKGdg
-         CrBuxArNhthcYpKYRdOlWowGR34w3kBbYKAcJVoF0ECTwLN0Ewz72FHL2Y0iH+la/EUQ
-         xIRhcOb7NG7EP4l+a83WihLBBt+A/7xnB6yqc7ur9rKKMjY3PQQ+fJoFzPVpGpKzVa87
-         Os+SaZ0M6HQ8Qiny7wdBbdPCxFFDM+bIO9n3118AAv9PsgtdhrHN/nd68DzXinrr7lwq
-         6LuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWTjnJrgDnKHTn9Wi3KzCscEmf2ClA/ugdlkxHGh3AuDtef1nMz4yFfNsgsq0FtQeCJM9oB6BL0nJSMteo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUxAv8m+kkQ+E/XC1VmMTipEvXQGxvld9gjDB8oe2gZVnFwg4d
-	Mn6yOL4+ZmRHyaQvfGv2NV8nn5LUkBLD2dEkTcWvMV0bzVyLzKkX1CBun0SEsQA=
-X-Gm-Gg: ASbGncv5DMnvhCAB8MjD0Vvh3SBKpOR1onvfJQKEUhUKCIBQvc7ubyLIrGRXMDZVDiK
-	JX3apAmAIxMjFNvKM1ohOMtz5y2bxVRscdicAtcLpLijK64Ll8/p2VGOmC9LGU7aGBj6nw1oxXQ
-	vGabsQmsa3M5J6jyBSbFalxVRMGZzlrx8qnE3FwJReHp6hiGfZjMcZ/eQJaOjvBDaoeWw8sgjG0
-	weg1ZPaWu7pfyLZVA2XJ7xMa8nA6EIW+UJoX5WUBKkwKmovOMkfcc5P+fnR2+/HiNwUNc4uHfZ3
-	bHl/bE6PMYVNSUPM55wTrVWZSpCK7KF+iAC81Ij9wDFSmKjffJ9IoYl1WLrt4MLvQtL1NHabsvH
-	twUo=
-X-Google-Smtp-Source: AGHT+IGroX56fUpTWu8kdLamlS3WqtQ3AvZMCdPeD85f7x29lyEmfTuKBJbY/GKTp63EX5l2l7D2JQ==
-X-Received: by 2002:a05:6000:458f:b0:399:7f43:b3a4 with SMTP id ffacd0b85a97d-39efba46366mr1072505f8f.24.1744963618329;
-        Fri, 18 Apr 2025 01:06:58 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406e0056c0sm7725435e9.0.2025.04.18.01.06.56
+        d=1e100.net; s=20230601; t=1744963694; x=1745568494;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d0L8YvnzE0pi2bEGvACdQZtJxO8WbkqI0hMXvgVv5oE=;
+        b=wLTxu2eSBxmfJ+x6FznupPOHQIQNkDBt9hYWKAmOQLQi/5nG7ag/s0lkuIkB78di2w
+         HeYzjh/shI0dmcHCvwWD2qKMihMPtHRXDM/N34ccjuo+zmOz9TVL+SD4RNmRyU6T8Oc3
+         WyqoM/N47Gp7y+tyTVZ4pofArhawmhdUR2wuAIq5TeMWLCygFUhXp4oz6oPvzGCRhKdR
+         nCT/zdaroQK8yeO46Y876ef8jUiXXRgXEFICHjg9z4E3xbRY8FwUPxIuY7OUNHCzLEJL
+         ptEl5CtoNkfNiAd5kH+omm9NvyPRX/9Zoqd19BZ8xFLgGop77ETY46APBIjgvNVA8Wdu
+         2y9g==
+X-Forwarded-Encrypted: i=1; AJvYcCWgVL8u2p/yfApJVu/mcOrmt9Gp9LCxRCmKhT5yAFxF7abdGgQ+PghDJeK8PxhG4QbnuOU59ytZL+vcSJs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwehpXp4pRgIz5vOq7RCWwFyZAuuw8R9CvJU3955FAuRf8db3v
+	GwNuXi4KIGmf0dpeIw3L1PNpvvKEUPmlTuoJBRWleaDgsDkBNABZu6sb0hoA
+X-Gm-Gg: ASbGncvsym1Qq1+czB+7vzgokFHwccNMLnBYQjgHmUjav7sTnaEzKTEyRrvoXuZVEqQ
+	FTLKQ2RN9QIIeBNnkcBxraCLUrsNqpmS5LfpJjwS8Oe/vUEk4rW1JJwN1mvPmxDzlO236nJNlh0
+	SK3sGOnwZ4H0bmrGjZLlHMtXI8iBfp4JyE3Sdtcy3ORFnjou4uf1wsLrVEuojwl9q6QDrZ2LAtI
+	cGF4QFy5wuV7KuUmUMpGcmwIm4j1dn0fDKJmx/a+cbF6eN5fnkbugjzCxc4dkCoskdBCgADsYTC
+	Q2+9IL+3zJ/7uyIgOJRGFIwhJA463KmYpCmxaTmfzjM=
+X-Google-Smtp-Source: AGHT+IHzQWd3ZDnvlz3re6FuiGWL4ndTHggjRJghLHawbxSsLHlHYZYMoc6FXtEkAQ3MIZkTXztSpg==
+X-Received: by 2002:a17:907:d1b:b0:ac3:4487:6a99 with SMTP id a640c23a62f3a-acb74db7e5emr161244366b.47.1744963694141;
+        Fri, 18 Apr 2025 01:08:14 -0700 (PDT)
+Received: from fedora.. ([193.77.86.199])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef49ff9sm90053366b.158.2025.04.18.01.08.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 01:06:57 -0700 (PDT)
-Date: Fri, 18 Apr 2025 10:06:55 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	"open list:SAMSUNG THERMAL DRIVER" <linux-pm@vger.kernel.org>,
-	"open list:SAMSUNG THERMAL DRIVER" <linux-samsung-soc@vger.kernel.org>,
-	"moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:CLANG/LLVM BUILD SUPPORT:Keyword:b(?i:clang|llvm)b" <llvm@lists.linux.dev>
-Subject: Re: [PATCH v5 1/3] drivers/thermal/exynos: Refactor clk_sec
- initialization inside SOC-specific case
-Message-ID: <aAIIH7H1oQH8cf-6@mai.linaro.org>
-References: <20250410063754.5483-1-linux.amoon@gmail.com>
- <20250410063754.5483-2-linux.amoon@gmail.com>
+        Fri, 18 Apr 2025 01:08:13 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH -tip v2 1/2] x86/asm: Rename rep_nop() to native_pause()
+Date: Fri, 18 Apr 2025 10:07:43 +0200
+Message-ID: <20250418080805.83679-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250410063754.5483-2-linux.amoon@gmail.com>
 
-On Thu, Apr 10, 2025 at 12:07:48PM +0530, Anand Moon wrote:
-> Refactor the initialization of the clk_sec clock to be inside the
-> SOC_ARCH_EXYNOS5420_TRIMINFO case. It ensures that the clk_sec clock
-> is only initialized for the specified SOC and not for other SOCs,
-> thereby simplifying the code. The clk_sec clock is used by the TMU
-> for GPU on the Exynos 542x platform.
-> 
-> Removed redundant IS_ERR() checks for the clk_sec clock since error
-> handling is already managed internally by clk_unprepare() functions.
-> 
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> v5: None
-> v4: Fix the aligment of code clk for clk_prepare in proper if/else block.
->     update the commit for clk_sec used.
->     checked to goto clean up all the clks are proper.
->     drop IS_ERR() check for clk_sec.
-> v3: improve the commit message.
-> ---
->  drivers/thermal/samsung/exynos_tmu.c | 37 ++++++++++++++--------------
->  1 file changed, 18 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-> index 47a99b3c5395..3657920de000 100644
-> --- a/drivers/thermal/samsung/exynos_tmu.c
-> +++ b/drivers/thermal/samsung/exynos_tmu.c
-> @@ -1037,29 +1037,30 @@ static int exynos_tmu_probe(struct platform_device *pdev)
->  		return ret;
->  
->  	data->clk = devm_clk_get(dev, "tmu_apbif");
-> -	if (IS_ERR(data->clk))
-> +	if (IS_ERR(data->clk)) {
->  		return dev_err_probe(dev, PTR_ERR(data->clk), "Failed to get clock\n");
+Rename rep_nop() function to what it really does.
 
-As this branch returns, the else block can be removed.
+No functional change intended.
 
-	if (IS_ERR(data->clk))
-		return dev_err_probe(dev, PTR_ERR(data->clk), "Failed to get clock\n");
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+---
+v2: Rename rep_nop() to native_pause() first.
+---
+ arch/x86/include/asm/vdso/processor.h | 4 ++--
+ arch/x86/kernel/apic/io_apic.c        | 2 +-
+ arch/x86/lib/delay.c                  | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-	ret = clk_prepare(data->clk);
-	if (ret) {
-		...
-	}
-
-May be worth to group both calls with devm_clk_get_enabled()
-
-> -
-> -	data->clk_sec = devm_clk_get(dev, "tmu_triminfo_apbif");
-> -	if (IS_ERR(data->clk_sec)) {
-> -		if (data->soc == SOC_ARCH_EXYNOS5420_TRIMINFO)
-> -			return dev_err_probe(dev, PTR_ERR(data->clk_sec),
-> -					     "Failed to get triminfo clock\n");
->  	} else {
-> -		ret = clk_prepare(data->clk_sec);
-> +		ret = clk_prepare(data->clk);
->  		if (ret) {
->  			dev_err(dev, "Failed to get clock\n");
->  			return ret;
->  		}
->  	}
->  
-> -	ret = clk_prepare(data->clk);
-> -	if (ret) {
-> -		dev_err(dev, "Failed to get clock\n");
-> -		goto err_clk_sec;
-> -	}
-> -
->  	switch (data->soc) {
-> +	case SOC_ARCH_EXYNOS5420_TRIMINFO:
-> +		data->clk_sec = devm_clk_get(dev, "tmu_triminfo_apbif");
-> +		if (IS_ERR(data->clk_sec)) {
-> +			ret = dev_err_probe(dev, PTR_ERR(data->clk_sec),
-> +					    "Failed to get clk_sec clock\n");
-> +			goto err_clk;
-> +		}
-> +		ret = clk_prepare(data->clk_sec);
-
-Same comment, devm_clk_get_enabled()
-
-> +		if (ret) {
-> +			dev_err(dev, "Failed to prepare clk_sec clock\n");
-> +			goto err_clk_sec;
-> +		}
-> +		break;
->  	case SOC_ARCH_EXYNOS5433:
->  	case SOC_ARCH_EXYNOS7:
->  		data->sclk = devm_clk_get(dev, "tmu_sclk");
-> @@ -1112,11 +1113,10 @@ static int exynos_tmu_probe(struct platform_device *pdev)
->  
->  err_sclk:
->  	clk_disable_unprepare(data->sclk);
-> +err_clk_sec:
-> +	clk_unprepare(data->clk_sec);
->  err_clk:
->  	clk_unprepare(data->clk);
-> -err_clk_sec:
-> -	if (!IS_ERR(data->clk_sec))
-> -		clk_unprepare(data->clk_sec);
-
-With devm_ variant those labels should go away
-
->  	return ret;
->  }
->  
-> @@ -1128,8 +1128,7 @@ static void exynos_tmu_remove(struct platform_device *pdev)
->  
->  	clk_disable_unprepare(data->sclk);
->  	clk_unprepare(data->clk);
-> -	if (!IS_ERR(data->clk_sec))
-> -		clk_unprepare(data->clk_sec);
-> +	clk_unprepare(data->clk_sec);
->  }
->  
->  #ifdef CONFIG_PM_SLEEP
-> -- 
-> 2.49.0
-> 
-
+diff --git a/arch/x86/include/asm/vdso/processor.h b/arch/x86/include/asm/vdso/processor.h
+index c9b2ba7a9ec4..895333b52cb3 100644
+--- a/arch/x86/include/asm/vdso/processor.h
++++ b/arch/x86/include/asm/vdso/processor.h
+@@ -8,14 +8,14 @@
+ #ifndef __ASSEMBLER__
+ 
+ /* REP NOP (PAUSE) is a good thing to insert into busy-wait loops. */
+-static __always_inline void rep_nop(void)
++static __always_inline void native_pause(void)
+ {
+ 	asm volatile("rep; nop" ::: "memory");
+ }
+ 
+ static __always_inline void cpu_relax(void)
+ {
+-	rep_nop();
++	native_pause();
+ }
+ 
+ struct getcpu_cache;
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index eebc360ed1bb..ba5a4ccda37a 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -1486,7 +1486,7 @@ static void __init delay_with_tsc(void)
+ 	 * 1 GHz == 40 jiffies
+ 	 */
+ 	do {
+-		rep_nop();
++		native_pause();
+ 		now = rdtsc();
+ 	} while ((now - start) < 40000000000ULL / HZ &&	time_before_eq(jiffies, end));
+ }
+diff --git a/arch/x86/lib/delay.c b/arch/x86/lib/delay.c
+index e86eda2c0b04..eb2d2e1cbddd 100644
+--- a/arch/x86/lib/delay.c
++++ b/arch/x86/lib/delay.c
+@@ -75,7 +75,7 @@ static void delay_tsc(u64 cycles)
+ 
+ 		/* Allow RT tasks to run */
+ 		preempt_enable();
+-		rep_nop();
++		native_pause();
+ 		preempt_disable();
+ 
+ 		/*
 -- 
+2.49.0
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
