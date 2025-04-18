@@ -1,97 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B8BA1C5485;
-	Fri, 18 Apr 2025 07:39:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800F624EA8F;
+	Fri, 18 Apr 2025 07:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744961962; cv=none; b=LzkUu/VuA+PbxAaBGu4BobDoLVoqHl40vJ15Lp22eNGO1uXvJ23KMp+ivczBtej+6BQVvKkBE1tVGZTZnDAEE4V8o0ui690mV209XZlBCEL9UZC+eL4GT21L4di5es/V/bfMQJ+zGvXEAkH53Kh0kfM5rgX+u7ywOzZf+oFLe7E=
+	t=1744961973; cv=none; b=TM4PYRxpQCz5HWTL7lvECgnZ2adgnO9o9fy3YQB7Ko2j+NZbmVx0HiLvdeXBf7b+cp/g51isT11kSaIZRtPHWkeIL+dAAGpe3WXmitxcl2+2TEeG94qvpltiXddZ0TiqosDfDnKFvcdv24OSrj1T9whe76pkNesbi0IAnpu7nGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744961962; c=relaxed/simple;
-	bh=nW/2UbnuU/ZrZcQJ5gWpxSbrhdu0j3UXBbQ2JLjzdcI=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=BuCvS1iR33Ce7WSxpO8fvE79ONQPgYaq7PrrEyTTTWfhVpSzHaPE5SMnQJ30E43sYZnVcAdUYNlHauY9M8EVuFCmSP9je46yBql8dTgWNG4P+A7XhGfKcLzLy29hz3YS/pDHUh8LFm79z5Aq9n+MqKbeHhTecZ4FXBYxxvGfhIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oyq49u/Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744961973; c=relaxed/simple;
+	bh=/1VuCG6jM87M8/EyQ9lV8hDOl1vR+F4qeQgogQnONP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y5EFRjEBmTkSOBvfMVy0GPwSiLRWXizDJiFeKcCFSrYz3gUdydVMeoNSN9mWVYSftROaq0onyhCn/2KqRrVVQxR0TvgIdGUNw/LMCIQOUuetRAR102WUtY1WsSGzHFqmTa/W4oe3XY0u20GzHEHLL+6OFRqXvbR8cP3pu/YocTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P5Onv61T; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oyq49u/Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2214AC4CEE7;
-	Fri, 18 Apr 2025 07:39:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744961959;
-	bh=nW/2UbnuU/ZrZcQJ5gWpxSbrhdu0j3UXBbQ2JLjzdcI=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=Oyq49u/Zr/I3oRzKhik23iGdj3MKBNIqItWmuYbSmH+isq8vnowvruaFrj9n6NbtU
-	 ekWxvme8gDsWhnIkot0CWXRa85s7oMRRY5sPyySbVqfZq/tHwhckJhzl2ar9mwMwkW
-	 kwZoa33725NMjwFlMd2fjnKG39JH2UnrPwiNn/GWhtsFAJDTrSdLilgBhFPuS41ccU
-	 lI4PlNklkzjmcWMMz/7hCLEzaeXVfmvSmyN8CivFn5huU9ika+ff64EpQ3vrLgPoQx
-	 U8WUM075wXTxSQ8bXMqnMtDZsM6C7ophuRPwf8rvux1OzIPegm3rW362frLJI4antX
-	 A9usx43I9/RCQ==
-Date: Fri, 18 Apr 2025 02:39:17 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P5Onv61T"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-226185948ffso18124725ad.0;
+        Fri, 18 Apr 2025 00:39:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744961972; x=1745566772; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HROl9wmdgf5B5YanpO2ZDSQM3+H0ccOnWXPFfSab2O4=;
+        b=P5Onv61Te0LlPkH9Lm1sVv7gdCpkmIXLi+eHet6N4exnM2QLaRFzPwghWOK0tcGjQ6
+         /JEmdmR8SMopaeEmN1zIBXjMGu5Evt1MnT3CFG9CeddJek+moKHEuMkOV+4TNgPevuPR
+         tlFPtNn37yZpI3ymXdYokQMXMbpQFGxTCEWUzj2j8c9Fo0tIYY7hzz/qO3X/okevdvJh
+         sKgBTSstNtCfOn38WRhiR5sRClnvkg4t5nVYTDajtynl20YAsmGVBvNo0cEHxutuZRTn
+         iipUDhqsVggI4X9EyTt930m6f+hwRB5oJmNZcMGNmjy9sTPs9c8cY0JFUPmIKLxyiGzU
+         iDpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744961972; x=1745566772;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HROl9wmdgf5B5YanpO2ZDSQM3+H0ccOnWXPFfSab2O4=;
+        b=vm7pz4uhZVjVWUxh6EHJLYXz2jprs2QuliZ20sIgqnM4uy4W9aJIZRcx1oeAmWSkKr
+         sWrgbfIrPoJy9jOluQ0oy4RKZHh0f6v/YN1Dp7xf8Ko90tvDAS27xIA4n7KAKnjQLJKk
+         kPfqgLn/7y+co8V7xWQXfMQ52A6fFMj1DblnUsvnGg7Tgj60ZsRlWoZyWrCbMOynIinN
+         eIdENJVMl3pJZRTXeyeWeqSu6uUlt0ZBkw9vTZQpCPewptEscu/2DwNyjhpRVo4f3quL
+         Pr9St/a9AqwChoovloENl01mGe29li7GszvqiA0JQgAYWjc5i2Vo7CZVggn5SBdVj6ua
+         +r4g==
+X-Forwarded-Encrypted: i=1; AJvYcCVn+GQX1ujU4xzcGPqUP8AuefUhStSC4kIEy78beyxW61HWLYXsWE7Eg7c3QrPUG1/DQRHJ7fOQjOrrpq4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIT2oa4qdMJDdIrS/SkVGPgFT4NK2sDa4iN2/BI7Z/ThX++ctJ
+	F6PH5hIlg4hfSjGptn8VK9nExJlwbumFb8cunrG4Qkjyosu9Hf9JrgCbkKjyGyc=
+X-Gm-Gg: ASbGncvuVa9N8IyVy+PhvBMibzzHiQEJiUnDMZXJnD2Wum6DhkBaf517ZhDSPzO8TR+
+	+SABtXdo5o/GmoojKlCUQJ3wO/zJFXFWRO3t9iGdxxsK3O7ElBm1NbyK7SZSIMKD6AYXNJb82L5
+	3XPIyzvxKY9/3fAvr1LJsny6wubXi85SQShJK/xxa3EZWCGP6aEt5IoJAZ2EFma65SB5BGbZt7P
+	hp4l9CiKErMMISy2HKyHdYKpVuhrI1ueQnHPFuCGALFsVDlqCUV/0+AV7A5x0tRRBbvFAdMSbXW
+	1rgiccoFnR2hmYkXH8WdQi7QB8nAG0y4JLWyJpmsNSmaYQ==
+X-Google-Smtp-Source: AGHT+IHyZMidMmNlgGttYDo4UR6LkO0j1A87Po469K62oxAGa4H/lp14QfNk0SSwNcYq8vSOCL45/w==
+X-Received: by 2002:a17:903:19ed:b0:223:62f5:fd44 with SMTP id d9443c01a7336-22c53607f99mr33798015ad.40.1744961971605;
+        Fri, 18 Apr 2025 00:39:31 -0700 (PDT)
+Received: from fedora ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eced75sm11327355ad.173.2025.04.18.00.39.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 00:39:30 -0700 (PDT)
+Date: Fri, 18 Apr 2025 07:39:24 +0000
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: Jay Vosburgh <jv@jvosburgh.net>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Simon Horman <horms@kernel.org>, Cosmin Ratiu <cratiu@nvidia.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 net] bonding: use permanent address for MAC swapping if
+ device address is same
+Message-ID: <aAIBrKIWltiXw_av@fedora>
+References: <20250401090631.8103-1-liuhangbin@gmail.com>
+ <3383533.1743802599@famine>
+ <Z_OcP36h_XOhAfjv@fedora>
+ <Z_yl7tQne6YTcU6S@fedora>
+ <4177946.1744766112@famine>
+ <Z_8bfpQb_3fqYEcn@fedora>
+ <155385.1744949793@famine>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Konrad Dybcio <konradybcio@kernel.org>, devicetree@vger.kernel.org, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
- Bjorn Andersson <andersson@kernel.org>, linux-kernel@vger.kernel.org, 
- linux-media@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Dikshita Agarwal <quic_dikshita@quicinc.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <20250418-qcs8300_iris-v2-1-1e01385b90e9@quicinc.com>
-References: <20250418-qcs8300_iris-v2-0-1e01385b90e9@quicinc.com>
- <20250418-qcs8300_iris-v2-1-1e01385b90e9@quicinc.com>
-Message-Id: <174496195764.2395149.13107137878496953642.robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: media: qcom,sm8550-iris: document
- QCS8300 IRIS accelerator
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155385.1744949793@famine>
 
+On Thu, Apr 17, 2025 at 09:16:33PM -0700, Jay Vosburgh wrote:
+> >Hmm, then how about use bond_for_each_slave() and find out the link
+> >that has same MAC address with bond/new_slave?
+> 
+> 	But even if we find it, aren't we stuck at that point?  The
+> situation would be that the bond and one backup interface have MAC#1.
+> MAC#1 may or may not be that backup interface's permanent MAC address,
+> and we're adding another interface, also with MAC#1, which might be the
+> newly added interface's permanent MAC.  The MAC swap gyrations to
+> guarantee this would work correctly in all cases seem to be rather
+> involved.
+> 
+> 	Wouldn't it be equally effective to, when the conflicting
+> interface is added, give it a random MAC to avoid the conflict?  That
+> random MAC shouldn't end up as the bond's MAC, so it would exist only as
+> a placeholder of sorts.
 
-On Fri, 18 Apr 2025 11:58:39 +0530, Vikash Garodia wrote:
-> Document the IRIS video decoder and encoder accelerator found in the
-> QCS8300 platform. QCS8300 is a downscaled version of SM8550, thereby
-> have different(lower) capabilities when compared to SM8550.
+This looks good to me. Thanks for your suggestion.
+
+Regards
+Hangbin
 > 
-> This patch depends on patch 20250225-topic-sm8x50-iris-v10-a219b8a8b477
+> 	I'm unsure if there are many (any?) devices in common use today
+> that actually have issues with multiple ports using the same MAC, so I
+> don't think we need an overly complicated solution.
 > 
-> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> 	-J
+> 
 > ---
->  Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/fsl/fsl,ls1028a-reset.yaml: maintainers:0: 'Frank Li' does not match '@'
-	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
-
-doc reference errors (make refcheckdocs):
-Documentation/userspace-api/netlink/netlink-raw.rst: :doc:`rt_link<../../networking/netlink_spec/rt_link>`
-Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/leds/backlight/ti,lp8864.yaml
-Documentation/userspace-api/netlink/netlink-raw.rst: :doc:`rt_link<../../networking/netlink_spec/rt_link>`
-MAINTAINERS: Documentation/devicetree/bindings/leds/backlight/ti,lp8864.yaml
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250418-qcs8300_iris-v2-1-1e01385b90e9@quicinc.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+> 	-Jay Vosburgh, jv@jvosburgh.net
