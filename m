@@ -1,122 +1,81 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE14269CF1;
-	Fri, 18 Apr 2025 09:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6206E26989D;
+	Fri, 18 Apr 2025 09:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744970266; cv=none; b=GgGoeJSuOA4wtmieg2vVH5Kf7kzIK5EcYaghxlYHWmbC3uzJNGgtD2EgnsbE0k7F3G6NOGACAIXJnHTsnpIOa/E+KyoyU5KKxsTh/UvDd0JuRYEyeRhdPiUMbZGh7CYaRpNJwSe8wROKTRamah9sbE6nXL5ralXy8odkdUrGZpY=
+	t=1744970277; cv=none; b=slYnyuHExWy49HQ4uRzxApsRRxfkD8l+Ka3xhXh09sqSkhnuWccAha2/gxIDceHjvLWaRLATMWYp728UpcjnCxKBqF6jsXqfRHx89h6kpp/DY6HEqUijF9kX9/JfPZR1w0SJ3f/9yHdgrdnKpGeHwj4150ysrl3WOE9VRns3Huk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744970266; c=relaxed/simple;
-	bh=DPXCXDdzGRDaJBA7PVkaoaMrxHBF6CLQ3KTY//OOtRs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QDXncTZj6Ip0EPY1K5t9Qiddg1H8KeOPVUMFDLai2QmxyIQ8ZfiWbIT4stfgn89rZOKGoUSYVAviY2ZTz3Qs2IYiDAessxByPjhfxJjGjBebjO/7M6BstXz2EqglTaoTvj2ZpfTP2kIPERbMiYqzJNDeMeCpT/KSVcz9shnPBlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kvNas3wH; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744970277; c=relaxed/simple;
+	bh=p6b/J69kfFLUTq+QOgF6Rld0J2Pgf1L3YSf+igHN4mI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uj05TERyeXi8MCg3LvDV/YYcHjfD+IHVBYmcWOnNQilGi2+5vSpz6aX/pnpa5svm8WKqGXYLOwtW4vRo1SMLF3iP3618SuK/IIpqciEaODQBJEISIDFf1ykmDGjgD5uE1350DTgDJSizVcbVcrSHKs0EkB7uCBTg3VmBI5YM7Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GlChjmoS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kvNas3wH"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39c31e4c3e5so1143696f8f.0;
-        Fri, 18 Apr 2025 02:57:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744970263; x=1745575063; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=vyt8vlbCUmrgxaje/SGVdwJgpors68AcKgtfPJppRuw=;
-        b=kvNas3wH9KjdkD6kYAI7jCIGb/zEsCLCwNATt993BLHD8qzpb0FmsYghQjWGDo3Av/
-         VWnSexhjZJLD49361Sl8LNQ3CjmWnz9Q5KHXGzcp1McwP6W9EDRcm7Il1P80XTgUFaI1
-         sovKG5mV8iG6DHzOfHuWK7B4q1fToUn3ObovixtZAacnaqhWkpa0JKgjT3CfKknzdt5V
-         87stbE36w96UBNY16hCa2ZzaAJoW1iMTpqbaUED8j/XksR9PLguvt1wz7D3iBQTfm4A7
-         sHPKJcou3DW77upJLINvqJmyaf1NMWoqsyi3MXgL4b+IqhAPGNhsoQxDmjsjfXSpUlpN
-         SiKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744970263; x=1745575063;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vyt8vlbCUmrgxaje/SGVdwJgpors68AcKgtfPJppRuw=;
-        b=IJBYVLb0eVJL9W90Iaim6zxa7ML9VIs/hdnaooV/MtA7XENseZqCymahgW/Z5p3P2V
-         Z6Kr9adg6SwPn3hgj9aTHvgpjFksFBwKiQU9VzQDfy9B2XCbTQmDW4CveCC2SoQaZ1PE
-         tIb9Hw/nmSWgeHMpFKTXiIngiWr2XNUYCWOPa7ors7m4mDpEtH3uSz55byIIOsD4iXcQ
-         QIlPrHrgmxmsJ+ON+4vpebmNCNbZWi48F55UFxRZyHIMAJcF38NUryo8Tfi3//U0b9ra
-         Ssxw+Ip7oro7iKM08BVSsntvzpOr1yd7suyYD8dgDwwCZG/st32OwEqnXJ9PHSB0X3ls
-         huJg==
-X-Forwarded-Encrypted: i=1; AJvYcCX/Fs7ldur5k0N2yruQ2sMouMW+bqsJg5wJEL5ozWn2/tEJ+WgUnJ+vfw63+s+oKX37C2xgJIQDQjxGtJk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3rWOHgmCGYmPhRW48LFM9fquqMBSPKFRroP8qsMUocxoJirIg
-	idEGmZuQJ59eLg24E+4ceTIyZu48s/DwetG5EvOKXmCETfGDL4Ja
-X-Gm-Gg: ASbGncs1D9ze/7qIZeqCIM4sYk0fT0E9PbkKNjoEAaF2d65yMJhcRG6dUstdS9gfdh6
-	FfRDjMs5gdEbie849rMO8WEeSx6MiPW3cqVLYISSjsdSBsxF9UETSMlBbH73xICJbg5NDfZXfYE
-	LgXThA3gSHQcP8W7fo9QW6pr5IotwRTDQDNq3ON304JZULctIUyCnCpvStVE8lNzQpWUNu0W3G+
-	EqhdqbeWKXHhDNeznKFxEF/7ITJYIvkQT/6i0/9Xc/MKOGptEu8eQOTzYyb750cHdbbam44q8Kv
-	QCBbsgZNxhtPhuyrCd/rNO507Og0yjn9o7p1Z4MCTa32uzQE8RLhC8gg/4dMeZsB0wsRWo/ru5S
-	sV4TR1lXWn0q0los=
-X-Google-Smtp-Source: AGHT+IFJu/NfcqWAjNuPs+r5w0auetjnU6mwnE3w1maeyZRnlV35H6XNIlmASm/PfX9aMr3HbzbBqw==
-X-Received: by 2002:a5d:47c9:0:b0:39e:e588:6746 with SMTP id ffacd0b85a97d-39efbb240e7mr1584070f8f.57.1744970263248;
-        Fri, 18 Apr 2025 02:57:43 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4a4b68sm2247940f8f.87.2025.04.18.02.57.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 02:57:42 -0700 (PDT)
-Message-ID: <494ee0cc5be01cb6a4db29d7f1a11dcee22850d6.camel@gmail.com>
-Subject: Re: [PATCH 1/8] iio: adc: dln2-adc: use aligned_s64 for timestamp
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
- <jic23@kernel.org>,  Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Andy
- Shevchenko <andy@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Lars-Peter Clausen <lars@metafoo.de>,  Michael Hennerich
- <Michael.Hennerich@analog.com>, Cosmin Tanislav
- <cosmin.tanislav@analog.com>, Tomasz Duszynski <tduszyns@gmail.com>,
- Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>,  Andreas Klinger
- <ak@it-klinger.de>, Petre Rodan <petre.rodan@subdimension.ro>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Date: Fri, 18 Apr 2025 09:58:04 +0100
-In-Reply-To: <20250417-iio-more-timestamp-alignment-v1-1-eafac1e22318@baylibre.com>
-References: 
-	<20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
-	 <20250417-iio-more-timestamp-alignment-v1-1-eafac1e22318@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GlChjmoS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAED8C4CEE2;
+	Fri, 18 Apr 2025 09:57:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744970276;
+	bh=p6b/J69kfFLUTq+QOgF6Rld0J2Pgf1L3YSf+igHN4mI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GlChjmoScEr38nS5joVdOx23M6ct7g6/LappZMSOJiX4qHa8iRI/uH5nY3jjl7lL5
+	 YRfd2VdRZ6rYq7eFehtFIcQtNNUYkB0V9jvXCj9FIXVfDsqQeFV9Z96D3ixRc0Omtn
+	 QdlDPJf5SKCNR7Q302y6eAjyozMjQi+zPb0ePmByVn/b0TAZjyG4pXKrTLmK8hcYB3
+	 QxM2MXfCqD0ZMtiuMy+xBiWmj2VCi8B6Sz7tE/JdbVlnDmcSYVNA5PgeRWLfpoaIE1
+	 +dvNw0/tKUq7HlchgHhkmnqcOYOCCYO1IbMa8zbc4xTapy/VcvLDnTBjQy8nOyAyoL
+	 l93MeZ9ObhIww==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u5iTt-0000000014D-0AfD;
+	Fri, 18 Apr 2025 11:57:57 +0200
+Date: Fri, 18 Apr 2025 11:57:57 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>, Vignesh R <vigneshr@ti.com>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Jayesh Choudhary <j-choudhary@ti.com>
+Subject: Re: [PATCH] i2c: omap: fix deprecated of_property_read_bool() use
+Message-ID: <aAIiJQVAUdWJFVy7@hovoldconsulting.com>
+References: <20250415075230.16235-1-johan+linaro@kernel.org>
+ <vcwjwrjgzwoil5ydds4findhcgl2ujoxwia7eh7yrbdc45yx26@kmpmvataffzr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <vcwjwrjgzwoil5ydds4findhcgl2ujoxwia7eh7yrbdc45yx26@kmpmvataffzr>
 
-On Thu, 2025-04-17 at 11:52 -0500, David Lechner wrote:
-> Follow the pattern of other drivers and use aligned_s64 for the
-> timestamp. This will ensure the struct itself it also 8-byte aligned.
->=20
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
+On Thu, Apr 17, 2025 at 11:41:51PM +0200, Andi Shyti wrote:
+> On Tue, Apr 15, 2025 at 09:52:30AM +0200, Johan Hovold wrote:
+> > Using of_property_read_bool() for non-boolean properties is deprecated
+> > and results in a warning during runtime since commit c141ecc3cecd ("of:
+> > Warn when of_property_read_bool() is used on non-boolean properties").
+> > 
+> > Fixes: b6ef830c60b6 ("i2c: omap: Add support for setting mux")
+> > Cc: Jayesh Choudhary <j-choudhary@ti.com>
+> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> 
+> Thanks for your patch! I'm going to drop the Fixes tag, as this
+> isn't really a bug fix but rather a warning suppression during
+> boot time.
 
-With the fixes tag:
+Thanks, but I think you should have kept the Fixes tag and merged this
+for 6.15 (i2c-host-fixes) since this is a new warning in 6.15-rc1 (and
+that does warrant a Fixes tag). Perhaps I should have highlighted that
+better.
 
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+If the offending patch had been posted or merged before such uses
+started generating warnings in 6.14-rc1 then that would have been a
+different matter.
 
-> =C2=A0drivers/iio/adc/dln2-adc.c | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/iio/adc/dln2-adc.c b/drivers/iio/adc/dln2-adc.c
-> index
-> a1e48a756a7b519105393f77c4aebde1f2f85d50..359e26e3f5bcfe16d723f621bdfc01d=
-f2dfcf6a9
-> 100644
-> --- a/drivers/iio/adc/dln2-adc.c
-> +++ b/drivers/iio/adc/dln2-adc.c
-> @@ -466,7 +466,7 @@ static irqreturn_t dln2_adc_trigger_h(int irq, void *=
-p)
-> =C2=A0	struct iio_dev *indio_dev =3D pf->indio_dev;
-> =C2=A0	struct {
-> =C2=A0		__le16 values[DLN2_ADC_MAX_CHANNELS];
-> -		int64_t timestamp_space;
-> +		aligned_s64 timestamp_space;
-> =C2=A0	} data;
-> =C2=A0	struct dln2_adc_get_all_vals dev_data;
-> =C2=A0	struct dln2_adc *dln2 =3D iio_priv(indio_dev);
->=20
-
+Johan
