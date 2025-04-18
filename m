@@ -1,213 +1,358 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA5B2C1A2;
-	Fri, 18 Apr 2025 14:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B00E2C1A2;
+	Fri, 18 Apr 2025 14:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744986826; cv=none; b=jxd/XmEf+y57YoTpRAHB6a45+DvKx9T26+c9TZ5+PgBRy2cEfntL1rLrXGc5gREHjbQ8wVd4sSKDh7iiJOgi6ch+MGvTFTQ4XPfzGs3JmiHxB0wLMj/JZc/jbTEMPmzp4vm4IgvMH8TDSULF97hz9iDEoUM0IuokGIrSKngqAmc=
+	t=1744986835; cv=none; b=bMMvepHyJk+eZJCRbAzc6lzG7bZPoK+7s4fYcoAWXy7jiUmw57CXQB5dQrePpnR4uf0x/EMjBBLamMH3UHp5sFWQtsSQgwQvGbIPIhJvLAJSNesKTIMiUVpeRgcWUCfiu9nAztSM6dczIEmGFqbplR0imTL7HGV/vTBX6yOQcmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744986826; c=relaxed/simple;
-	bh=8hvzQpevJpd8opdibOVe4+Ri5sQRV3J/5rabA+wMngg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uaiNDQiW0wY+psavmpmBJhS04cGaWM0v3i8AywDqfz0Ktj6dnJsPfCp6V9B2ozNR//7S7zmX19cZM+ohRKQySeUosj4hh6CME6jir7M8rQxFZknpt1khW/O/81wD8t7ItMYR4ApfDcQ+3diShA/atQjD7cp8OclpMMppnwCWmOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jgzvwuV9; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744986835; c=relaxed/simple;
+	bh=mQU/bc/X+pNjzJ/RfCqTbBynXEAB7s5q08NpNlQL9FQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eNZ8eyYUm665JSFzIcyf3H+ISI6Vt+U8xRCORjAMq7mIWEupWL5axWb6PqrUGD+MRj2PPMopUWfQPdXxWn5Nxk7NlEUZvo27OOZIVKqSnNcO4zYR7a6o2uPGcC6OStvmHHoFqB4C9Ae6Rl4bn9LKI/54JP5rf3N1OGSwdYYd4/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ePsMLfMC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jgzvwuV9"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-acb5ec407b1so288898466b.1;
-        Fri, 18 Apr 2025 07:33:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744986823; x=1745591623; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7xWBrhMoZbugc1pyBrVITkVru2bavizkyHIBfAy50sk=;
-        b=jgzvwuV9jGE+3rRRzeaERsfeVvJSkSB8q1NPjpb7ku/bDuc3tCAIpv61/OI348q20Y
-         fpH8CpJv8M7iLxXywvfa2zWDq0TTYuaN3WeWGdES8lBdUX+kFVFkzZHC7z64S0F3OnnS
-         Xi0HvBaXXIe7cJc0v5vareUoyxwDLd3f9rx+oCtLlMpL905YFVGM+6gmCrDvLNewV6zU
-         cFpd2wvoIEW14F8qPE8WUTR65Vjf9QKzs+8oDvQZIt2UAxmtkIxwk1Ld65DsW6bH3q3I
-         wPPo1IT+te8mojAiAjrBPNSiE5Y0qc91puM9znElU31uQnuHHIL6Mmhbt98+muViPHjU
-         g4NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744986823; x=1745591623;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7xWBrhMoZbugc1pyBrVITkVru2bavizkyHIBfAy50sk=;
-        b=A641pigHiCCrsHE9/eevNCwB0cMZ5lx3A/IojQxDSpBxpYV/Wqrv8SZsqg0k0ZtAOj
-         UqVJxcJD8JFqdMxLhQkEiTk0m49G9vdSFKuxDe+JTjFnSkqtetK7bmOVnTUb007SYBu3
-         eawSrXqYlcd+tMsQnUCByqfx8JXG2lGkdZUYnhpcTaJaCdYVe7jDWtfq0Jn6j6MmrIjS
-         mzm0L2Lo0Q2/4O5t7yYm/+qC2Nb24Ib3e0Kb7DCHr+v7WxlRJ1SY1fWE5j7Ot6nWm9T3
-         ysh8okBRTeZkIrYG5lTnJ6aYmBbyXeTqXDTP1YUBm9eYRYxiNqAnGe2+kntsn/hQlfM9
-         kgBw==
-X-Forwarded-Encrypted: i=1; AJvYcCXkxwVaPDPgjgNEPcK+ltHL5M9THDVPWe5ELVWnP6kmNkGyMTd76eRQ9HpTM0XFqbda4LmLPR5pE1AZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yze86IfTUSkzvC6Gc16A13fN1FBlpO6Z7O4GBHOrs2fzMe2tx9V
-	VKN02jzvuuEhF4VW7g7W8dvF0HErL2biQEB3fjaDo0fv0uSNRnxVWomF/+UIUDU=
-X-Gm-Gg: ASbGncsLzxjzS+gZ2o4rt0JwEKZdsCrvUSmDap6QBL26+e7g34DZiaYpvFq0PD3O/Ei
-	5n5RerqYqGLc66ccLI7EgWno9v2BoqPSo6sQhWOjzpnpHKrOrh5STirDcCoN9Z6Ojsf2BuDFu8+
-	PoWlaY/qCLGVZZsQaGgH2rYNng0J8p0Bia6Y8dYcJXDMHb3wztwZMdb9DtZ1ScE9q4Oj6pK0dpm
-	YPaKguTfnuxhznTB3QIowEHRDYn9LvMjE5OnpKNu13n1NoCv6q6V1xO739BqbKzi1W7Cc++lbYI
-	D4G2Kmr0zCVKGc00khnYpCmfV7R1c3qqB+HC2xqifZ/vQVjOuJKn
-X-Google-Smtp-Source: AGHT+IEcnxUHY3/54G2wHOQst0KE+WrBA6XR3tiAQlrpS/18wB0AktIZqdCpGIWVrwq8J9kwLSsU2A==
-X-Received: by 2002:a17:907:2da4:b0:aca:cad6:458e with SMTP id a640c23a62f3a-acb74dd6021mr281005866b.43.1744986822447;
-        Fri, 18 Apr 2025 07:33:42 -0700 (PDT)
-Received: from NB-GIGA003.letovo.school ([5.194.95.139])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec0b1e4sm127453666b.34.2025.04.18.07.33.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 07:33:42 -0700 (PDT)
-From: Alexey Charkov <alchark@gmail.com>
-Date: Fri, 18 Apr 2025 18:33:45 +0400
-Subject: [PATCH v2] dt-bindings: timer: via,vt8500-timer: Convert to YAML
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ePsMLfMC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0BFCC4CEE2;
+	Fri, 18 Apr 2025 14:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744986833;
+	bh=mQU/bc/X+pNjzJ/RfCqTbBynXEAB7s5q08NpNlQL9FQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ePsMLfMCZBP0U5N07VFNAqwwTHKiVKxQ3m3MfFgEq50y4+7tbqNvI2lAwIJWsAkzn
+	 HZOQwIs3BYrAGYkceYFcgmLZMl9nkGqujc9WPXTfZgqxgcqAY+5s+JUS18COtdXRvj
+	 vxN+IZz24z3y9R9ehMHkOwYlI/MTTY/Eq4f9L6Y/hL9Gu81OgPXOP58DLViU5fnbuA
+	 iUlUYodQVGxSwO8kzIA6gqALMVf4ZsBHSVb31Gn16LXqkSG4cL0yRd6UnprPAZ1hXo
+	 83s6kvo7bN1iNHxNgWm1QffjgMI4cMPu0gSwij1Rwg9pGOWa1mtXV0ZWPY56L++7bA
+	 LfeN+4AaoUVlg==
+Date: Fri, 18 Apr 2025 15:33:47 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
+Cc: Antoniu Miclaus <antoniu.miclaus@analog.com>, robh@kernel.org,
+ conor+dt@kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 13/13] iio: adc: ad4080: add driver support
+Message-ID: <20250418153347.6d8e8057@jic23-huawei>
+In-Reply-To: <4e7100b945e542f675c6a506bc6431ad46cf6d84.camel@gmail.com>
+References: <20250411123627.6114-1-antoniu.miclaus@analog.com>
+	<20250411123627.6114-14-antoniu.miclaus@analog.com>
+	<4e7100b945e542f675c6a506bc6431ad46cf6d84.camel@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250418-via_vt8500_timer_binding-v2-1-3c125568f028@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAMhiAmgC/02O0YrCMBBFf6XMs4VkbNNpf0WkZJKpOw+NmmbLg
- vjvBoXFx3Ph3nsesElW2WBqHpBl102vqQIeGgg/Pl2k1VgZ0GBvOkvtrn7eC/XGzEVXyTNripo
- u7WjQchyoFzJQ67csi/69p0/nD2e5/9aH8gmB/SZtuK6rlqkxfsHFsVjukOyRenaWApPzceycR
- ImGRh8Ivs2q6LeXphL+fQYZmZEcdoOddoTz8/kCohaAFO4AAAA=
-X-Change-ID: 20250418-via_vt8500_timer_binding-9021bd785e80
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, Alexey Charkov <alchark@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744986827; l=4470;
- i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
- bh=8hvzQpevJpd8opdibOVe4+Ri5sQRV3J/5rabA+wMngg=;
- b=WUeT1BUiZFwvLtY9348IfWL78Tc2LE+rMnaK205tuNUhTEf/IqweRGtmSetty1wwIDgqp9Nbc
- 7AdZc/B/wnbAHr9/QUM2L6JrLq8215rVwD6vRpJu6XMuYG+ckRyVsge
-X-Developer-Key: i=alchark@gmail.com; a=ed25519;
- pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Rewrite the textual description for the VIA/WonderMedia timer
-as YAML schema.
+			=C2=A0=C2=A0 AD4080_SPI_LVDS_LANES_MSK);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret =3D iio_backend_data_alignment_enable(st->back);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	do {
+> > +		ret =3D iio_backend_sync_status_get(st->back, &sync_en);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		if (!sync_en)
+> > +			dev_dbg(&st->spi->dev, "Not Locked: Running Bit
+> > Slip\n");
+> > +	} while (--timeout && !sync_en);
+> > +
+> > +	if (timeout) {
+> > +		dev_info(&st->spi->dev, "Success: Pattern correct and
+> > Locked!\n");
+> > +		if (st->num_lanes =3D=3D 1)
+> > +			return regmap_write(st->regmap,
+> > AD4080_REG_ADC_DATA_INTF_CONFIG_A,
+> > +					=C2=A0=C2=A0=C2=A0 AD4080_RESERVED_CONFIG_A_MSK);
+> > +		else
+> > +			return regmap_write(st->regmap,
+> > AD4080_REG_ADC_DATA_INTF_CONFIG_A,
+> > +					=C2=A0=C2=A0=C2=A0 AD4080_RESERVED_CONFIG_A_MSK |
+> > +					=C2=A0=C2=A0=C2=A0 AD4080_SPI_LVDS_LANES_MSK);
+> > +	} else {
+> > +		dev_info(&st->spi->dev, "LVDS Sync Timeout.\n");
+> > +		if (st->num_lanes =3D=3D 1) {
+> > +			ret =3D regmap_write(st->regmap,
+> > AD4080_REG_ADC_DATA_INTF_CONFIG_A,
+> > +					=C2=A0=C2=A0 AD4080_RESERVED_CONFIG_A_MSK);
+> > +			if (ret)
+> > +				return ret;
+> > +		} else {
+> > +			ret =3D regmap_write(st->regmap,
+> > AD4080_REG_ADC_DATA_INTF_CONFIG_A,
+> > +					=C2=A0=C2=A0 AD4080_RESERVED_CONFIG_A_MSK |
+> > +					=C2=A0=C2=A0 AD4080_SPI_LVDS_LANES_MSK);
+> > +			if (ret)
+> > +				return ret;
+> > +		}
+> > +
+> > +		return -ETIMEDOUT; =20
+>=20
+> So, first the things that I don't really get (also the hdl docs need to be
+> improved FWIW):
+>=20
+> * It seems that we can have data alignment or data capture synchronization
+> through an internal AMD FPGA technique called bit-slip or an external sig=
+nal,
+> right? In here, it seems that we only use bit-slip and never disable it. =
+Is that
+> really the goal?
+>=20
+> * This whole process seems to be some kind of calibration at the interface
+> level, right?
+>=20
+> * What's the point of the conv clock? Is it only used to get the sample r=
+ate? If
+> so, the hdl docs are misleading as it seems that it can be used instead o=
+f bit-
+> slip for data capture alignment?
+>=20
+> Now, speaking about the backend API's, it looks like that
+> iio_backend_self_sync_enable() and iio_backend_data_alignment_enable() co=
+uld be
+> merged into one API. From what I can tell, iio_backend_data_alignment_ena=
+ble()
+> just enables the bit-slip process but that likely does nothing unless the
+> SELF_SYNC bit is also set to bit-slip, right? In fact, we could think abo=
+ut a
+> more generic (less flexible though) API like:
+>=20
+> * iio_backend_intf_data_align(back, timeout_us), or
+> * iio_backend_intf_calib(back, timeout_us), or
+> * iio_backend_intf_data_capture_sync(back, timeout_us)
+>=20
+> On the backend side, you could then enable bit-slip and do the status rea=
+d (with
+> timeout) and return success or an error code.
+>=20
+> The above seems to be pretty much what you're doing but in just one API t=
+hat
+> makes sense to me.
+>=20
+> Of course that the following questions still come to mind:
+>=20
+> * Do we need to disable bit-slip after we're done (still fits into the on=
+e API
+> model)?
+> * Do we need a meaningful API to change between the syncing/alignment met=
+hods?
+> External signal vs bit-slip?
+>=20
+> The above is key to better think of an API. Right now it feels that you'r=
+e just
+> adding an API for every bit you want to control in this process...
+>=20
+> If we end up needing more flexibility for this, we can also consider the
+> existing iio_backend_data_sample_trigger() API. I know is abusing a bit a=
+nd a
+> stretch but in the end of the day the whole thing is related with alignin=
+g,
+> syncing, calibrating the interface for properly sampling data. Even bit-s=
+lip
+> (while not a traditional external trigger) looks like some kind of self-
+> adjusting, data-driven trigger mechanism to establish the correct startin=
+g point
+> for capturing data. So having two new enums like:
+>=20
+> IIO_BACKEND_SAMPLE_TRIGGER_EXT_SIGNAL,
+> IIO_BACKEND_SAMPLE_TRIGGER_BIT_SLIP // or maybe a more generic name like
+> s/BIT_SLIP/INTERNAL
+>=20
+> I do not think the above is that horrible :P... But I would really like t=
+o get
+> more opinions about this.
 
-The IP can generate up to four interrupts from four respective match
-registers, so reflect that in the schema.
+Seems reasonable to me to combine the two as long as we have good documenta=
+tion.
+Agreed it is kind of deriving a trigger from the signal so turning it on wi=
+th
+a trigger type selection doesn't seem unreasonable.
 
-Signed-off-by: Alexey Charkov <alchark@gmail.com>
----
-Split the series from v1 into separate bindings patches so as not to
-spam all the subsystems with unrelated changes, per Rob's suggestion
+Name tricky though.
 
-Changes in v2:
-- added description for the four possible interrupts (thanks Rob)
-- added overall description of the IC block
+Jonathan
 
-Link to v1: https://lore.kernel.org/all/20250416-wmt-updates-v1-6-f9af689cdfc2@gmail.com/
----
- .../devicetree/bindings/timer/via,vt8500-timer.txt | 15 -------
- .../bindings/timer/via,vt8500-timer.yaml           | 51 ++++++++++++++++++++++
- MAINTAINERS                                        |  2 +
- 3 files changed, 53 insertions(+), 15 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/timer/via,vt8500-timer.txt b/Documentation/devicetree/bindings/timer/via,vt8500-timer.txt
-deleted file mode 100644
-index 901c73f0d8ef05fb54d517b807d04f80eef2e736..0000000000000000000000000000000000000000
---- a/Documentation/devicetree/bindings/timer/via,vt8500-timer.txt
-+++ /dev/null
-@@ -1,15 +0,0 @@
--VIA/Wondermedia VT8500 Timer
-------------------------------------------------------
--
--Required properties:
--- compatible : "via,vt8500-timer"
--- reg : Should contain 1 register ranges(address and length)
--- interrupts : interrupt for the timer
--
--Example:
--
--	timer@d8130100 {
--		compatible = "via,vt8500-timer";
--		reg = <0xd8130100 0x28>;
--		interrupts = <36>;
--	};
-diff --git a/Documentation/devicetree/bindings/timer/via,vt8500-timer.yaml b/Documentation/devicetree/bindings/timer/via,vt8500-timer.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..e748149948f3140d4a158f800b91e70bf9c4f042
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/via,vt8500-timer.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/via,vt8500-timer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: VIA/Wondermedia VT8500 Timer
-+
-+description:
-+  This is the timer block that is a standalone part of the system power
-+  management controller on VIA/WonderMedia SoCs (VIA VT8500 and alike).
-+  The hardware has a single 32-bit counter running at 3 MHz and four match
-+  registers, each of which is associated with a dedicated match interrupt,
-+  and the first of which can also serve as the system watchdog (if the
-+  watchdog function is enabled, it will reset the system upon match instead
-+  of triggering its respective interrupt)
-+
-+maintainers:
-+  - Alexey Charkov <alchark@gmail.com>
-+
-+properties:
-+  compatible:
-+    const: via,vt8500-timer
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 1
-+    items:
-+      - description: Channel 0 match. Note that if the watchdog function
-+          is enabled, this interrupt will not fire and the system will
-+          reboot instead once the counter reaches match register 0 value
-+      - description: Channel 1 match
-+      - description: Channel 2 match
-+      - description: Channel 3 match
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    timer@d8130100 {
-+        compatible = "via,vt8500-timer";
-+        reg = <0xd8130100 0x28>;
-+        interrupts = <36>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 96b82704950184bd71623ff41fc4df31e4c7fe87..ed5d6ea34959d11624732ea7601e4d51ad19eac2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3428,6 +3428,8 @@ M:	Krzysztof Kozlowski <krzk@kernel.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Odd Fixes
- F:	Documentation/devicetree/bindings/i2c/i2c-wmt.txt
-+F:	Documentation/devicetree/bindings/interrupt-controller/via,vt8500-intc.yaml
-+F:	Documentation/devicetree/bindings/timer/via,vt8500-timer.yaml
- F:	arch/arm/boot/dts/vt8500/
- F:	arch/arm/mach-vt8500/
- F:	drivers/clocksource/timer-vt8500.c
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250418-via_vt8500_timer_binding-9021bd785e80
-prerequisite-change-id: 20250418-via_intc_binding-7e9bb2862471:v2
-prerequisite-patch-id: c53a4f3be5edb497bb9ff8fcad6cdba382d07fc6
-
-Best regards,
--- 
-Alexey Charkov <alchark@gmail.com>
+>=20
+> > +	}
+> > +} =20
+>=20
+> ...
+>=20
+> >=20
+> > +static const struct ad4080_chip_info ad4080_chip_info =3D {
+> > +	.name =3D "AD4080",
+> > +	.product_id =3D AD4080_CHIP_ID,
+> > +	.scale_table =3D ad4080_scale_table,
+> > +	.num_scales =3D ARRAY_SIZE(ad4080_scale_table),
+> > +	.num_channels =3D 1,
+> > +	.channels =3D ad4080_channels,
+> > +};
+> > +
+> > +static int ad4080_setup(struct iio_dev *indio_dev)
+> > +{
+> > +	struct ad4080_state *st =3D iio_priv(indio_dev);
+> > +	unsigned int id;
+> > +	int ret;
+> > +
+> > +	ret =3D regmap_write(st->regmap, AD4080_REG_INTERFACE_CONFIG_A,
+> > +			=C2=A0=C2=A0 AD4080_SW_RESET);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret =3D regmap_write(st->regmap, AD4080_REG_INTERFACE_CONFIG_A,
+> > +			=C2=A0=C2=A0 AD4080_SDO_ENABLE_MSK);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret =3D regmap_read(st->regmap, AD4080_REG_CHIP_TYPE, &id);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (id !=3D AD4080_CHIP_ID)
+> > +		return dev_err_probe(&st->spi->dev, -EINVAL,
+> > +				=C2=A0=C2=A0=C2=A0=C2=A0 "Unrecognized CHIP_ID 0x%X\n", id);
+> > +
+> > +	ret =3D regmap_set_bits(st->regmap, AD4080_REG_GPIO_CONFIG_A,
+> > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 AD4080_GPO_1_EN);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret =3D regmap_write(st->regmap, AD4080_REG_GPIO_CONFIG_B,
+> > +			=C2=A0=C2=A0 FIELD_PREP(AD4080_GPIO_1_SEL, 3));
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret =3D iio_backend_num_lanes_set(st->back, st->num_lanes);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret =3D iio_backend_self_sync_enable(st->back);
+> > +	if (ret)
+> > +		return ret;
+> > + =20
+>=20
+> AFAIU, the above is enabling bit-slip?
+> =20
+> > +	if (st->lvds_cnv_en) {
+> > +		if (st->num_lanes) {
+> > +			ret =3D regmap_update_bits(st->regmap,
+> > +					=09
+> > AD4080_REG_ADC_DATA_INTF_CONFIG_B,
+> > +						 AD4080_LVDS_CNV_CLK_CNT_MSK,
+> > +					=09
+> > FIELD_PREP(AD4080_LVDS_CNV_CLK_CNT_MSK, 7));
+> > +			if (ret)
+> > +				return ret;
+> > +		}
+> > +
+> > +		ret =3D regmap_set_bits(st->regmap,
+> > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 AD4080_REG_ADC_DATA_INTF_CONFIG_B,
+> > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 AD4080_LVDS_CNV_EN_MSK);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		return ad4080_lvds_sync_write(st);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void ad4080_properties_parse(struct ad4080_state *st)
+> > +{
+> > +	unsigned int val;
+> > +	int ret;
+> > +
+> > +	st->lvds_cnv_en =3D device_property_read_bool(&st->spi->dev,
+> > +						=C2=A0=C2=A0=C2=A0 "adi,lvds-cnv-enable");
+> > + =20
+>=20
+> nit: I would probably drop the enable part. The property is about stating=
+ that
+> the signal is LVDS instead of CMOS. And IIUC, this should also depend on =
+the
+> existence of `st->clk`
+> =20
+> > +	st->num_lanes =3D 1;
+> > +	ret =3D device_property_read_u32(&st->spi->dev, "adi,num_lanes", &val=
+);
+> > +	if (!ret)
+> > +		st->num_lanes =3D val;
+> > +}
+> > +
+> > +static int ad4080_probe(struct spi_device *spi)
+> > +{
+> > +	struct iio_dev *indio_dev;
+> > +	struct device *dev =3D &spi->dev;
+> > +	struct ad4080_state *st;
+> > +	int ret;
+> > +
+> > +	indio_dev =3D devm_iio_device_alloc(&spi->dev, sizeof(*st));
+> > +	if (!indio_dev)
+> > +		return -ENOMEM;
+> > +
+> > +	st =3D iio_priv(indio_dev);
+> > +	st->spi =3D spi;
+> > +
+> > +	ret =3D devm_regulator_bulk_get_enable(dev,
+> > +					=C2=A0=C2=A0=C2=A0=C2=A0
+> > ARRAY_SIZE(ad4080_power_supplies),
+> > +					=C2=A0=C2=A0=C2=A0=C2=A0 ad4080_power_supplies);
+> > +	if (ret)
+> > +		return dev_err_probe(dev, ret,
+> > +				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to get and enable supplies\n");
+> > +
+> > +	st->regmap =3D devm_regmap_init_spi(spi, &ad4080_regmap_config);
+> > +	if (IS_ERR(st->regmap))
+> > +		return PTR_ERR(st->regmap);
+> > +
+> > +	st->info =3D spi_get_device_match_data(spi);
+> > +	if (!st->info)
+> > +		return -ENODEV;
+> > +
+> > +	ret =3D devm_mutex_init(dev, &st->lock);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	st->info =3D spi_get_device_match_data(spi);
+> > +	if (!st->info)
+> > +		return -ENODEV;
+> > + =20
+>=20
+> The above is duplicated...
+>=20
+> > +	indio_dev->name =3D st->info->name;
+> > +	indio_dev->channels =3D st->info->channels;
+> > +	indio_dev->num_channels =3D st->info->num_channels;
+> > +	indio_dev->info =3D &ad4080_iio_info;
+> > +	indio_dev->modes =3D INDIO_DIRECT_MODE;
+> > +
+> > +	ad4080_properties_parse(st);
+> > +
+> > +	st->clk =3D devm_clk_get_enabled(&spi->dev, "cnv");
+> > +	if (IS_ERR(st->clk))
+> > +		return PTR_ERR(st->clk);
+> > + =20
+>=20
+> From the datasheet it looks like this clock is optional? Moreover in the =
+IP docs
+> we have the following:
+>=20
+>=20
+> "SELF_SYNC: Controls if the data capture synchronization is done through =
+CNV
+> signal or bit-slip."
+>=20
+> So I wonder, is the cnv clock meaning that we want to have capture
+> sync/alignment through that external signal instead of bit-slip?
+>=20
+> - Nuno S=C3=A1
 
