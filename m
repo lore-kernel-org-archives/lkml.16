@@ -1,144 +1,154 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3BEFBF6;
-	Fri, 18 Apr 2025 08:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D1E8C0E;
+	Fri, 18 Apr 2025 08:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744965870; cv=none; b=W9x/dN01bYeKXvsIJeqnO81p9qk3n9EVXxlHL21ZVvU7XA1tu4ZdIf2MPjFcZbBEXtEDUPcKkZ+zGWXEpDNPsNeKZulmIG9qmZWBNQbXBZ91WUmLoOOnJSujNfFS6RDMwJFp03OqsCT1/Wy72BkhfekcYIiAoz0OGgdJmN9136w=
+	t=1744965922; cv=none; b=Dsbz9/sKl8Nk03nqlTRI+UqlFbiNP6RUDHl6S8xY1SHxdtZ7TaG9WQFapoaBt8HfmLcU5oWEAMpVFu8Qn2fgDw2wxgF+QFNNrRmYK/ICncf/smDqn/5s7tuOJ4lVDDZWfw5j4b2JNFtnn2pVT5arRNC0fkgLi2o8c52WyLGefX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744965870; c=relaxed/simple;
-	bh=8zXkVO/L/HV+fnApmnOg4jqoQW+6ALcgNwo09wyCcY8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HP2IG8jpoei+CAqPhNgHYjMLLFtgrjatEz/qjVaOEdFa8cfsDShX+tzR2mpmXmbtI4y7NSSkezAVyOCA8SGQ4WbSakf4nuytjFaUGWDRT7b/GXWhlAIrCqS1X8Ba4mAKnbEi4oi3TqRnsr2OCLI4TncbXYOzQVLt2Nh83BwnrjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=UNW2tfwC; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1744965922; c=relaxed/simple;
+	bh=FWUhiALVE7CEc3cIfcL5ovVCpqjUtarZj4j1Pq4AwRI=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=e7taZo1fauLe0PlHE0xkEg99Xk89w4OMISB/KedUpl+H5EYQuS99ZeJyIPf84o2XmQd9zFhVYjdEZX60asmRw4Yv3TK1u8LLExnqIcxae2npurf9i48vOpKUa2NQwg0IxKVfya2a78DRyD2W25vMcIzrbST4Eps07sLz3Ypf31E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=txD7MC4z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TZiJW5Qj; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="UNW2tfwC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1744965855; x=1745570655; i=wahrenst@gmx.net;
-	bh=8zXkVO/L/HV+fnApmnOg4jqoQW+6ALcgNwo09wyCcY8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=UNW2tfwCXPBYNAbHzwcDzF4BQAPUpaxJ+a/RpTdrKNJGGP4BDGmtZPR9maqTdn3u
-	 BNkI4JpXgVvYCHfwzhDYYcvTTE9QLFvtrZBwbMdddgJr3Wso2ngvqo1d3lyYnHWaA
-	 nf+MTdqaB6KQbCs9UPxxmFp2DOxfczQoGYDacV84DhxN5kfyGgRWIxPG+UEJlFGjs
-	 X7GxU4FPLk0geMibU3PAMlHtalAWwKxgKaWCmBnIgSJmXQ9GocnWS3X8z8PMPfNuz
-	 +mZXBcsYd7vcZwnXhE4XO61riOMCDJN2yhjQ7MhA4ng5/LGceWwu7XuKH8a7HlYw5
-	 Nk2B3jf6LEfjH7PUQA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.107] ([37.4.251.153]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MUowV-1uWTWh3AYL-00Oj6t; Fri, 18
- Apr 2025 10:44:14 +0200
-Message-ID: <38f36d00-e461-4fc5-a98b-9b2d94d93c69@gmx.net>
-Date: Fri, 18 Apr 2025 10:44:13 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="txD7MC4z";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TZiJW5Qj"
+Date: Fri, 18 Apr 2025 08:45:13 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744965919;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EFo6X9dFJGOXVcZbtCX2G68w5mPOAd5r4zBcld39eUQ=;
+	b=txD7MC4zzUnRUWK/228OrEul221HYzXd6Isldz5gr9a+bTKZQGFA6HnFDt5v0KptkQbZYP
+	hx/4SIn+Br4IYhcXPUP+yrsjuQVRaOBvpKBaNrNo/hpQPgUAkLjSqYnos7XEjq3VVzG2cU
+	VGVadxXJ45sRgfiDC8z6Re74jR58hkUCUKu9jLD7W1X9L+c0yaCOaVwiN7S7+QoO5Nl0Dh
+	kITj/JaHvNgFsVWpU0HQd9jpN6Q8GOK5NfZnFLfcW1CNb2d3d3kqX6pQw4O+h1LBGIiqXp
+	QQnhubXqPN8MoF7HPh7KK5rOuRO9bpkG2xdwvs45um6w0qwcfEfX3VwprmXKaw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744965919;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EFo6X9dFJGOXVcZbtCX2G68w5mPOAd5r4zBcld39eUQ=;
+	b=TZiJW5QjC7iWHo/m/FgLcOS9EI1Qc1ywL9uzSyw5gWdf1AOzVWSBIsnOldzoqYPLkhsaPX
+	pN8Lv3Q5/nXoWvAg==
+From: "tip-bot2 for Sandipan Das" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: perf/core] perf/x86/amd/uncore: Prevent UMC counters from saturating
+Cc: Sandipan Das <sandipan.das@amd.com>, Ingo Molnar <mingo@kernel.org>,
+ Song Liu <song@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: =?utf-8?q?=3Cdee9c8af2c6d66814cf4c6224529c144c620cf2c=2E17449?=
+ =?utf-8?q?06694=2Egit=2Esandipan=2Edas=40amd=2Ecom=3E?=
+References: =?utf-8?q?=3Cdee9c8af2c6d66814cf4c6224529c144c620cf2c=2E174490?=
+ =?utf-8?q?6694=2Egit=2Esandipan=2Edas=40amd=2Ecom=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [net-next v6 4/7] net: mtip: The L2 switch driver for imx287
-To: Lukasz Majewski <lukma@denx.de>, Andrew Lunn <andrew+netdev@lunn.ch>,
- davem@davemloft.net, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- Simon Horman <horms@kernel.org>
-References: <20250418060716.3498031-1-lukma@denx.de>
- <20250418060716.3498031-5-lukma@denx.de>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-Autocrypt: addr=wahrenst@gmx.net; keydata=
- xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
- IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
- NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
- JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
- TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
- f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
- V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
- aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
-In-Reply-To: <20250418060716.3498031-5-lukma@denx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Message-ID: <174496591397.31282.705789021676536158.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:k39CviP8heJ+cbDTMlGNDWVxe30Oaz+7P6chPR/R4ICdRZqNw+z
- w/zCZFcy4g1D1pCDNzXJ05yHw2NoXY3FmqmnVJS+ZIpegbzfb/8aj+oTJlX9MoiQUrPqIAT
- md+AvrcLreCrD0JB1ijeWbeTtc5pRxBGmSYlS/nhAYIC+1aCK7jEUKnHh9RWOuz/3NHDFfg
- srlKEG0AK00xezPEj0mZg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:8h78fwPHcSI=;S13FLM+D4E+XSp5tNWT+4GFFIAZ
- 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
- bLmAa+pF0qfXl7xORUobqIvNwRxCK8k=
 
-Am 18.04.25 um 08:07 schrieb Lukasz Majewski:
-> This patch series provides support for More Than IP L2 switch embedded
-> in the imx287 SoC.
->
-> This is a two port switch (placed between uDMA[01] and MAC-NET[01]),
-> which can be used for offloading the network traffic.
->
-> It can be used interchangeably with current FEC driver - to be more
-> specific: one can use either of it, depending on the requirements.
->
-> The biggest difference is the usage of DMA - when FEC is used, separate
-> DMAs are available for each ENET-MAC block.
-> However, with switch enabled - only the DMA0 is used to send/receive data
-> to/form switch (and then switch sends them to respecitive ports).
->
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-After changing the IRQ name part mention in patch 1, you can add
+The following commit has been merged into the perf/core branch of tip:
 
-Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
+Commit-ID:     2492e5aba2be064d0604ae23ae0770ecc0168192
+Gitweb:        https://git.kernel.org/tip/2492e5aba2be064d0604ae23ae0770ecc0168192
+Author:        Sandipan Das <sandipan.das@amd.com>
+AuthorDate:    Fri, 18 Apr 2025 09:13:03 +05:30
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 18 Apr 2025 10:35:34 +02:00
 
-Thanks
+perf/x86/amd/uncore: Prevent UMC counters from saturating
+
+Unlike L3 and DF counters, UMC counters (PERF_CTRs) set the Overflow bit
+(bit 48) and saturate on overflow. A subsequent pmu->read() of the event
+reports an incorrect accumulated count as there is no difference between
+the previous and the current values of the counter.
+
+To avoid this, inspect the current counter value and proactively reset
+the corresponding PERF_CTR register on every pmu->read(). Combined with
+the periodic reads initiated by the hrtimer, the counters never get a
+chance saturate but the resolution reduces to 47 bits.
+
+Fixes: 25e56847821f ("perf/x86/amd/uncore: Add memory controller support")
+Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Song Liu <song@kernel.org>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/dee9c8af2c6d66814cf4c6224529c144c620cf2c.1744906694.git.sandipan.das@amd.com
+---
+ arch/x86/events/amd/uncore.c | 35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index 70e0af3..d328de1 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -956,6 +956,39 @@ static void amd_uncore_umc_start(struct perf_event *event, int flags)
+ 	perf_event_update_userpage(event);
+ }
+ 
++static void amd_uncore_umc_read(struct perf_event *event)
++{
++	struct hw_perf_event *hwc = &event->hw;
++	u64 prev, new, shift;
++	s64 delta;
++
++	shift = COUNTER_SHIFT + 1;
++	prev = local64_read(&hwc->prev_count);
++
++	/*
++	 * UMC counters do not have RDPMC assignments. Read counts directly
++	 * from the corresponding PERF_CTR.
++	 */
++	rdmsrl(hwc->event_base, new);
++
++	/*
++	 * Unlike the other uncore counters, UMC counters saturate and set the
++	 * Overflow bit (bit 48) on overflow. Since they do not roll over,
++	 * proactively reset the corresponding PERF_CTR when bit 47 is set so
++	 * that the counter never gets a chance to saturate.
++	 */
++	if (new & BIT_ULL(63 - COUNTER_SHIFT)) {
++		wrmsrl(hwc->event_base, 0);
++		local64_set(&hwc->prev_count, 0);
++	} else {
++		local64_set(&hwc->prev_count, new);
++	}
++
++	delta = (new << shift) - (prev << shift);
++	delta >>= shift;
++	local64_add(delta, &event->count);
++}
++
+ static
+ void amd_uncore_umc_ctx_scan(struct amd_uncore *uncore, unsigned int cpu)
+ {
+@@ -1034,7 +1067,7 @@ int amd_uncore_umc_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+ 				.del		= amd_uncore_del,
+ 				.start		= amd_uncore_umc_start,
+ 				.stop		= amd_uncore_stop,
+-				.read		= amd_uncore_read,
++				.read		= amd_uncore_umc_read,
+ 				.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
+ 				.module		= THIS_MODULE,
+ 			};
