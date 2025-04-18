@@ -1,139 +1,256 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC08326FD8C
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F9725A2C8;
+	Fri, 18 Apr 2025 08:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744965991; cv=none; b=GwCPUtRegg8jbCS/h2PNQ6LGY3Tw8hNAv52HFV7LsSu4xOYdYvN/TSIoleeE1aIc/TOSfwm97f4Tt05XEFZvT0EfhSmXjQmi7999LopNIMVZWc0jd6/Z2aGWhhfqvd4/97HL1YMUh0CTPlzRjsoKmag0o5ueqMfp2U1sXgNXCgE=
+	t=1744966037; cv=none; b=TY00PAUmyTmz7Dg6nOOtLh/p3xOq4ExvULr2P9Uf0YSQPVojJabfuM4jGZfMY9lqBZpPamBvxuAmef+/T0SYeCV2R5Cdt7X91Sh98n1NpZDoBkD2C8Q6BtFl95X8AI5ag3Pjkg7JVsvbsqzjLBMA05gP/Psggz4C88z7uOodmaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744965991; c=relaxed/simple;
-	bh=UXAui8PSoN+tcCQIAgw467tqrz581u6GiUivBzLJ0U8=;
+	s=arc-20240116; t=1744966037; c=relaxed/simple;
+	bh=W2tEL1iRqKZDZdoiAfbT8zNHiW9SPhUffLkWsQ3asFw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=boZF9RqgHbGzWE/BbMdeb95KOPr8MC23WW6voS5l64RbMNv4O7pUkZ3k2eQ94++xrTzijip+NLuU4Th8rd3v4X3qx1tdhCABMPg5DhrlmRD9cNURQn5d+/e9uWB+1uQS4ZHrotBbHehvOZnwzpDihoS50mbcPGuXnsYw+jQbHuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=T3FYYYiJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gX4axkBs; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=T3FYYYiJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gX4axkBs; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=apYL1RDJJV9aMiOf7oRltwDqLsBtZew4fSHaKIsmQ4xcpbOJaQSlQ6b0+QJ4zGDutNtlJ0PS8Ow7Os8ccPaf24mkMSyE4CUjZKY1ANPIHIw1raG9X2SpHKZvTNZWcaoxLP5OqYKV+nIzmOaPp9znemrqsc+JtTCrm3cp/ZGvsa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M2oyB14X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="T3FYYYiJ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gX4axkBs";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="T3FYYYiJ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gX4axkBs"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 528D71F74A;
-	Fri, 18 Apr 2025 08:46:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744965981; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5wdUlcaGLNsNghYvAL7kfmJ/bZlynjprr5aMzitHMc8=;
-	b=T3FYYYiJl0NGNNWzgoO5mvwYVfutq+m9Pse/zfQD1ndce/ixsHQ51ALzN17Mtg4qS7Hoio
-	oTUdacBKtyzLfzERRmvKB+3y+r+nlkkCLzoofdKi2fKzkF8JRuTDE8JJtCxw9/1SW5NoqZ
-	iao0aOYyleT+NnBfU8mNsC/C/aaxpUU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744965981;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5wdUlcaGLNsNghYvAL7kfmJ/bZlynjprr5aMzitHMc8=;
-	b=gX4axkBsC2WW5RVYIdyOVlYvXKWEXi2/SpH7vaiZdoRUyKMcGs3cP1kzaLz7y+tRtkThPz
-	Rz6L9LgAGhPtCDCA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=T3FYYYiJ;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=gX4axkBs
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744965981; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5wdUlcaGLNsNghYvAL7kfmJ/bZlynjprr5aMzitHMc8=;
-	b=T3FYYYiJl0NGNNWzgoO5mvwYVfutq+m9Pse/zfQD1ndce/ixsHQ51ALzN17Mtg4qS7Hoio
-	oTUdacBKtyzLfzERRmvKB+3y+r+nlkkCLzoofdKi2fKzkF8JRuTDE8JJtCxw9/1SW5NoqZ
-	iao0aOYyleT+NnBfU8mNsC/C/aaxpUU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744965981;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5wdUlcaGLNsNghYvAL7kfmJ/bZlynjprr5aMzitHMc8=;
-	b=gX4axkBsC2WW5RVYIdyOVlYvXKWEXi2/SpH7vaiZdoRUyKMcGs3cP1kzaLz7y+tRtkThPz
-	Rz6L9LgAGhPtCDCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D2F3313942;
-	Fri, 18 Apr 2025 08:46:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 5F9ZMFwRAmh7EgAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Fri, 18 Apr 2025 08:46:20 +0000
-Date: Fri, 18 Apr 2025 10:46:03 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Wupeng Ma <mawupeng1@huawei.com>, mike.kravetz@oracle.com,
-	david@redhat.com, joshua.hahnjy@gmail.com, muchun.song@linux.dev,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: hugetlb: Fix incorrect fallback for subpool
-Message-ID: <aAIRSzTThAETw9BT@localhost.localdomain>
-References: <20250410062633.3102457-1-mawupeng1@huawei.com>
- <20250417200327.ef9d1aed59e198aa2c8b046e@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M2oyB14X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45997C4CEE2;
+	Fri, 18 Apr 2025 08:47:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744966036;
+	bh=W2tEL1iRqKZDZdoiAfbT8zNHiW9SPhUffLkWsQ3asFw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M2oyB14XIoQ2A7cJ1BV+dQLW2dPeV3HUffI1RrCXLH4tKd4qBbzvvr6uFulxv+yrj
+	 hZDiYKL8BXqG9OaFMFI+NwkDUTN98/D+RmpJHDMp4rwSb5QfhRlumE7/tiwPewc7bq
+	 mSBPWb+8sl1zsQmSrYrjHvbMdB5KeCf5I9ZCjupcZsbD2QawsuLmNHg2VShMtIzCHS
+	 HMa4Y+dIRvm9NeyRbrbWk0VfGXk/Bu9nf0tx1ZiwKzOKh4YvyMU6qFzL9T7GsAmnDQ
+	 qGbFcAVsiLVSZk3ntzS2N59ht/r2epcjFjFamHz1gv49ktfsjiVmQpAEESLrefTe3z
+	 xICf7LMwhF0Iw==
+Date: Fri, 18 Apr 2025 10:47:10 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Ian Kent <raven@themaw.net>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Mark Brown <broonie@kernel.org>, Eric Chanudet <echanude@redhat.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Clark Williams <clrkwllms@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ian Kent <ikent@redhat.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
+	Alexander Larsson <alexl@redhat.com>, Lucas Karpinski <lkarpins@redhat.com>, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
+Message-ID: <20250418-razzia-fixkosten-0569cf9f7b9d@brauner>
+References: <fbbafa84-f86c-4ea4-8f41-e5ebb51173ed@sirena.org.uk>
+ <20250417-wolfsrudel-zubewegt-10514f07d837@brauner>
+ <fb566638-a739-41dc-bafc-aa8c74496fa4@themaw.net>
+ <20250417-abartig-abfuhr-40e558b85f97@brauner>
+ <20250417-outen-dreihundert-7a772f78f685@brauner>
+ <20250417-zappeln-angesagt-f172a71839d3@brauner>
+ <20250417153126.QrVXSjt-@linutronix.de>
+ <20250417-pyrotechnik-neigung-f4a727a5c76b@brauner>
+ <39c36187-615e-4f83-b05e-419015d885e6@themaw.net>
+ <125df195-5cac-4a65-b8bb-8b1146132667@themaw.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250417200327.ef9d1aed59e198aa2c8b046e@linux-foundation.org>
-X-Rspamd-Queue-Id: 528D71F74A
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[huawei.com,oracle.com,redhat.com,gmail.com,linux.dev,kvack.org,vger.kernel.org];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <125df195-5cac-4a65-b8bb-8b1146132667@themaw.net>
 
-On Thu, Apr 17, 2025 at 08:03:27PM -0700, Andrew Morton wrote:
-> This has been in mm-hotfixes since April 1.  Do we have any reviwers?
+On Fri, Apr 18, 2025 at 09:20:52AM +0800, Ian Kent wrote:
+> On 18/4/25 09:13, Ian Kent wrote:
+> > 
+> > On 18/4/25 00:28, Christian Brauner wrote:
+> > > On Thu, Apr 17, 2025 at 05:31:26PM +0200, Sebastian Andrzej Siewior
+> > > wrote:
+> > > > On 2025-04-17 17:28:20 [+0200], Christian Brauner wrote:
+> > > > > >      So if there's some userspace process with a broken
+> > > > > > NFS server and it
+> > > > > >      does umount(MNT_DETACH) it will end up hanging every other
+> > > > > >      umount(MNT_DETACH) on the system because the dealyed_mntput_work
+> > > > > >      workqueue (to my understanding) cannot make progress.
+> > > > > Ok, "to my understanding" has been updated after going back
+> > > > > and reading
+> > > > > the delayed work code. Luckily it's not as bad as I thought it is
+> > > > > because it's queued on system_wq which is multi-threaded so it's at
+> > > > > least not causing everyone with MNT_DETACH to get stuck. I'm still
+> > > > > skeptical how safe this all is.
+> > > > I would (again) throw system_unbound_wq into the game because
+> > > > the former
+> > > > will remain on the CPU on which has been enqueued (if speaking about
+> > > > multi threading).
+> > > Yes, good point.
+> > > 
+> > > However, what about using polled grace periods?
+> > > 
+> > > A first simple-minded thing to do would be to record the grace period
+> > > after umount_tree() has finished and the check it in namespace_unlock():
+> > > 
+> > > diff --git a/fs/namespace.c b/fs/namespace.c
+> > > index d9ca80dcc544..1e7ebcdd1ebc 100644
+> > > --- a/fs/namespace.c
+> > > +++ b/fs/namespace.c
+> > > @@ -77,6 +77,7 @@ static struct hlist_head *mount_hashtable
+> > > __ro_after_init;
+> > >   static struct hlist_head *mountpoint_hashtable __ro_after_init;
+> > >   static struct kmem_cache *mnt_cache __ro_after_init;
+> > >   static DECLARE_RWSEM(namespace_sem);
+> > > +static unsigned long rcu_unmount_seq; /* protected by namespace_sem */
+> > >   static HLIST_HEAD(unmounted);  /* protected by namespace_sem */
+> > >   static LIST_HEAD(ex_mountpoints); /* protected by namespace_sem */
+> > >   static DEFINE_SEQLOCK(mnt_ns_tree_lock);
+> > > @@ -1794,6 +1795,7 @@ static void namespace_unlock(void)
+> > >          struct hlist_head head;
+> > >          struct hlist_node *p;
+> > >          struct mount *m;
+> > > +       unsigned long unmount_seq = rcu_unmount_seq;
+> > >          LIST_HEAD(list);
+> > > 
+> > >          hlist_move_list(&unmounted, &head);
+> > > @@ -1817,7 +1819,7 @@ static void namespace_unlock(void)
+> > >          if (likely(hlist_empty(&head)))
+> > >                  return;
+> > > 
+> > > -       synchronize_rcu_expedited();
+> > > +       cond_synchronize_rcu_expedited(unmount_seq);
+> > > 
+> > >          hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
+> > >                  hlist_del(&m->mnt_umount);
+> > > @@ -1939,6 +1941,8 @@ static void umount_tree(struct mount *mnt,
+> > > enum umount_tree_flags how)
+> > >                   */
+> > >                  mnt_notify_add(p);
+> > >          }
+> > > +
+> > > +       rcu_unmount_seq = get_state_synchronize_rcu();
+> > >   }
+> > > 
+> > >   static void shrink_submounts(struct mount *mnt);
+> > > 
+> > > 
+> > > I'm not sure how much that would buy us. If it doesn't then it should be
+> > > possible to play with the following possibly strange idea:
+> > > 
+> > > diff --git a/fs/mount.h b/fs/mount.h
+> > > index 7aecf2a60472..51b86300dc50 100644
+> > > --- a/fs/mount.h
+> > > +++ b/fs/mount.h
+> > > @@ -61,6 +61,7 @@ struct mount {
+> > >                  struct rb_node mnt_node; /* node in the ns->mounts
+> > > rbtree */
+> > >                  struct rcu_head mnt_rcu;
+> > >                  struct llist_node mnt_llist;
+> > > +               unsigned long mnt_rcu_unmount_seq;
+> > >          };
+> > >   #ifdef CONFIG_SMP
+> > >          struct mnt_pcp __percpu *mnt_pcp;
+> > > diff --git a/fs/namespace.c b/fs/namespace.c
+> > > index d9ca80dcc544..aae9df75beed 100644
+> > > --- a/fs/namespace.c
+> > > +++ b/fs/namespace.c
+> > > @@ -1794,6 +1794,7 @@ static void namespace_unlock(void)
+> > >          struct hlist_head head;
+> > >          struct hlist_node *p;
+> > >          struct mount *m;
+> > > +       bool needs_synchronize_rcu = false;
+> > >          LIST_HEAD(list);
+> > > 
+> > >          hlist_move_list(&unmounted, &head);
+> > > @@ -1817,7 +1818,16 @@ static void namespace_unlock(void)
+> > >          if (likely(hlist_empty(&head)))
+> > >                  return;
+> > > 
+> > > -       synchronize_rcu_expedited();
+> > > +       hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
+> > > +               if (!poll_state_synchronize_rcu(m->mnt_rcu_unmount_seq))
+> > > +                       continue;
 
-Sorry, this slipped through the cracks.
-I plan to review this but I will not ne able to do so until middle of
-the next week.
+This has a bug. This needs to be:
 
- 
+	/* A grace period has already elapsed. */
+	if (poll_state_synchronize_rcu(m->mnt_rcu_unmount_seq))
+		continue;
 
--- 
-Oscar Salvador
-SUSE Labs
+	/* Oh oh, we have to pay up. */
+	needs_synchronize_rcu = true;
+	break;
+
+which I'm pretty sure will eradicate most of the performance gain you've
+seen because fundamentally the two version shouldn't be different (Note,
+I drafted this while on my way out the door. r.
+
+I would test the following version where we pay the cost of the
+smb_mb() from poll_state_synchronize_rcu() exactly one time:
+
+diff --git a/fs/mount.h b/fs/mount.h
+index 7aecf2a60472..51b86300dc50 100644
+--- a/fs/mount.h
++++ b/fs/mount.h
+@@ -61,6 +61,7 @@ struct mount {
+                struct rb_node mnt_node; /* node in the ns->mounts rbtree */
+                struct rcu_head mnt_rcu;
+                struct llist_node mnt_llist;
++               unsigned long mnt_rcu_unmount_seq;
+        };
+ #ifdef CONFIG_SMP
+        struct mnt_pcp __percpu *mnt_pcp;
+diff --git a/fs/namespace.c b/fs/namespace.c
+index d9ca80dcc544..dd367c54bc29 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -1794,6 +1794,7 @@ static void namespace_unlock(void)
+        struct hlist_head head;
+        struct hlist_node *p;
+        struct mount *m;
++       unsigned long mnt_rcu_unmount_seq = 0;
+        LIST_HEAD(list);
+
+        hlist_move_list(&unmounted, &head);
+@@ -1817,7 +1818,10 @@ static void namespace_unlock(void)
+        if (likely(hlist_empty(&head)))
+                return;
+
+-       synchronize_rcu_expedited();
++       hlist_for_each_entry_safe(m, p, &head, mnt_umount)
++               mnt_rcu_unmount_seq = max(m->mnt_rcu_unmount_seq, mnt_rcu_unmount_seq);
++
++       cond_synchronize_rcu_expedited(mnt_rcu_unmount_seq);
+
+        hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
+                hlist_del(&m->mnt_umount);
+@@ -1923,8 +1927,10 @@ static void umount_tree(struct mount *mnt, enum umount_tree_flags how)
+                        }
+                }
+                change_mnt_propagation(p, MS_PRIVATE);
+-               if (disconnect)
++               if (disconnect) {
++                       p->mnt_rcu_unmount_seq = get_state_synchronize_rcu();
+                        hlist_add_head(&p->mnt_umount, &unmounted);
++               }
+
+                /*
+                 * At this point p->mnt_ns is NULL, notification will be queued
+
+If this doesn't help I had considered recording the rcu sequence number
+during __legitimize_mnt() in the mounts. But we likely can't do that
+because get_state_synchronize_rcu() is expensive because it inserts a
+smb_mb() and that would likely be noticable during path lookup. This
+would also hinge on the notion that the last store of the rcu sequence
+number is guaranteed to be seen when we check them in namespace_unlock().
+
+Another possibly insane idea (haven't fully thought it out but throwing
+it out there to test): allocate a percpu counter for each mount and
+increment it each time we enter __legitimize_mnt() and decrement it when
+we leave __legitimize_mnt(). During umount_tree() check the percpu sum
+for each mount after it's been added to the @unmounted list.
+
+If we see any mount that has a non-zero count we set a global
+@needs_synchronize_rcu to true and stop counting for the other mounts
+(saving percpu summing cycles). Then call or elide
+synchronize_rcu_expedited() based on the @needs_synchronize_rcu boolean
+in namespace_unlock().
+
+The percpu might make this cheap enough for __legitimize_mnt() to be
+workable (ignoring any other pitfalls I've currently not had time to
+warp my head around).
