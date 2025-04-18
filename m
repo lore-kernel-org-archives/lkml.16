@@ -1,131 +1,178 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7796E2116EE
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 12:34:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39A8D212D8A;
+	Fri, 18 Apr 2025 12:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744979688; cv=none; b=hGf5U7rlXCVj0F6Z0f1Ger9R2XVi4foTd9caQ6NEXMv535rzFUW0iBlcR/7GuTycrhKR/6QFc1hG9FgaKW0HtEDDnHxrGpx3jZ3xEURmsHzpFaglUwbffZ3sPBrK1XQBY8FLCKkOhMSdVOlRe7wanedTxelMonjXq/iu5wm1Bdw=
+	t=1744979720; cv=none; b=Qdl8ILjuO+IOv4CdBS5WQsCOBVny6Z3Jskdt2wOzeCzTWtBeryOECLzAUdMa+zshnm0rdyn03ewb23fGbrYErbo/bzxYB5yAr5mpsGw0S5FAg1B3JHE00lHQ8z9qO5A59E87ACy8qNgRpnxte4WwTZrtUrZIYnOLjUUZuBEMwB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744979688; c=relaxed/simple;
-	bh=43hHFRCwrwfsE5PGa6AoyXcX6jfLuJQDkXOgCch4+f4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dTf6yzvEg2SvdTpaaiDRl2J58WytXbXkMcYYaHesG1CKWDiq1Fb4pHRWFLSKvwi1YqHrNnucZLhzV6oPBZtbWIcWdtgoClJsiIpENsvoeqyLMf0t89hVRwFSL/K3PUgmtrY/9747KzKYs9yVi0icFfsIoULiRwma2muytyd0S7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=orbstack.dev; spf=pass smtp.mailfrom=orbstack.dev; dkim=pass (2048-bit key) header.d=orbstack.dev header.i=@orbstack.dev header.b=lFzcgBr2; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=orbstack.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orbstack.dev
+	s=arc-20240116; t=1744979720; c=relaxed/simple;
+	bh=6CrdNbp/demKpRChXxKiOZWkDp7cZPXxIcoSLVsut78=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rNTfhH2F4W8xrCtYLHZX+eqTYfzh4jSba8VGpduVdcNTJjZfJMZxF9ryJynS636zav1oIlMQzTFbXhqIMD3FQF+KKbwQNvEOJe9zGoyYigfdmx58SlACjdr88mjUwuLNw1iOduHl2VMcNYCPuMq342pFku/37eay3wKQF6XqcuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=H34aLp19; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=orbstack.dev header.i=@orbstack.dev header.b="lFzcgBr2"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-ae727e87c26so1207358a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 05:34:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=orbstack.dev; s=google; t=1744979687; x=1745584487; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=43hHFRCwrwfsE5PGa6AoyXcX6jfLuJQDkXOgCch4+f4=;
-        b=lFzcgBr2a6tbyJ3q7TWhNXxd2ok5oySM2t0HdSkPholovtgTP7LwzPpOOzxlb4AP8F
-         LTiS0xTnmRSualSki2EM01N+cPcE7XT99zyJknyApjl97ufDbuHbURArb0k0wOmbkRti
-         EmWovSoeYSIWpYnQH7TIKTES+YHNCDyIpdhWZ+9Zc8MCj3G+XE+UXqLyalWAUkjJQfZS
-         cYNX9FYOjZlHm7QBS3TVfTf2yfkNh8TalEYODimEJSVyIdfScL+2kaNXrM+h2Nd3dgMU
-         ApvDEWiEy9gloFvZ5zxDyrksDc+oexU99V9XZ193DNr3yBzAFPjRAEOhAxk9kFSfBuFS
-         tbkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744979687; x=1745584487;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=43hHFRCwrwfsE5PGa6AoyXcX6jfLuJQDkXOgCch4+f4=;
-        b=heOFgidHlVA0UhqgDY18BCNi3YWM7ny0uVN48aT/kLTuWqIqDc1fmVwfYmbImBzC+1
-         sIYjdiYQKXxe9kP82OkfBm8I/RfSGbRU2ZLGbPf3fMzT3c2m6uTfyhtp4Uxn1yWaszqT
-         0oQrwAUQdpfp5Uj3HYsZtFqJLDO9ihiE1unAlJHs6j2sst7vzKaNpRJDI0wWHkrx1cpx
-         rUOTOFtpBvOwMKPZYFO47NiZpEackxUWG7Bptdiu0AMuejdc/YiseNHIvMv3imLXXJiE
-         afDzc0cfu9e/wbujibRJu4sp9ZhcBmwRXJ71YYdGPtObUsTyceprziqZRsawBlcrwhh+
-         R8rA==
-X-Forwarded-Encrypted: i=1; AJvYcCUqUq/LCbAr9coc3LDBzDGt7lHjv5Dib7m4m4GJqbW0OBwqYWVZAP9Mr76LUxYvlGhe1GAIRWkIQvcm+RM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJo9VgX7EypGD8LRb1RKjPEFZym1vTKTDhUoXw13vlL0wzqOet
-	8M3VYXOjhM5gHQFtwX0uUzIbCLXwAD0QLqagS6lMMCBAGuFcLMDxLGTOTHPlwfIl96YRg9H/Q+2
-	vgvMpvwvtrwHr9kSarzFnsokcUsebJV6PJbwKpQ==
-X-Gm-Gg: ASbGncs6v+wxXB1PL4eZLGFS8ebTklyevXDfLLO7LzTp1b1zeK1banZ6p2qXkfyswnQ
-	n7O4O663rj4GJMQ+ybKsWi30G7UCV/PUEynRhz49vChcllg8C84xz/ycN+bCQHyp01nCrn8Vxco
-	GMEb22UTbomotuq1T9M2gwwGgkkSJGy93MqXDLxIlK0lXy8s2x/Lw2QkDH
-X-Google-Smtp-Source: AGHT+IG5hnVsBWjkUmDaGddd3kNxM76BE02aaGQ6/6mkeMa3Whu0GdcJvbuW86cKDIht0D9pPl2GmX8ETJhwFoXXPkE=
-X-Received: by 2002:a17:90a:d64f:b0:2fe:d766:ad95 with SMTP id
- 98e67ed59e1d1-3087bb47646mr4283842a91.9.1744979686618; Fri, 18 Apr 2025
- 05:34:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="H34aLp19"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1744979708; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=ET48gmghr/S6KXKpbHbaUOhbwdjcr6/9oYUul7jTD2Y=;
+	b=H34aLp19BoMIW+cp1y5Vo/s4xNLEoZxunukpcExeRIkfjHKzh/kLNOlYCj8KhL3aNaUa2qMPY1V09ht/Dvqw4uZRgIT1ucubKsUsENxHS1GQlzmEUWzi63bFnlsA9l7tUuWBYY5eXO/4EKXqHuDz6x0Sp/5zmQlREyMjTRphEWg=
+Received: from 30.246.162.65(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WXJZ5.I_1744979704 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 18 Apr 2025 20:35:06 +0800
+Message-ID: <653abdd4-46d2-4956-b49c-8f9c309af34d@linux.alibaba.com>
+Date: Fri, 18 Apr 2025 20:35:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325121745.8061-1-danny@orbstack.dev> <CAFnufp14ap0UfJcn2uwU4-3cstr313J86HvRCcKULZLRU=nZ6Q@mail.gmail.com>
-In-Reply-To: <CAFnufp14ap0UfJcn2uwU4-3cstr313J86HvRCcKULZLRU=nZ6Q@mail.gmail.com>
-From: Danny Lin <danny@orbstack.dev>
-Date: Fri, 18 Apr 2025 05:34:35 -0700
-X-Gm-Features: ATxdqUEj80hmbgdtqMeJNMf-q7-FLAiu7bNMA3xCWWCR3yFNOjqZUWqbn0J4ixs
-Message-ID: <CAEFvpLe=wtaRGx0QyzCFgwhr+gWXHjWgcQLJrppb0EdsCFw7UQ@mail.gmail.com>
-Subject: Re: [PATCH v4] net: fully namespace net.core.{r,w}mem_{default,max} sysctls
-To: Matteo Croce <technoboy85@gmail.com>
-Cc: netdev@vger.kernel.org, Matteo Croce <teknoraver@meta.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	David Ahern <dsahern@kernel.org>, linux-kernel@vger.kernel.org, 
-	Shakeel Butt <shakeel.butt@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH v18 1/2] ACPI: APEI: send SIGBUS to current task if
+ synchronous memory error not recovered
+To: Hanjun Guo <guohanjun@huawei.com>, "Luck, Tony" <tony.luck@intel.com>,
+ rafael@kernel.org, Catalin Marinas <catalin.marinas@arm.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ akpm@linux-foundation.org, linux-edac@vger.kernel.org, x86@kernel.org,
+ justin.he@arm.com, ardb@kernel.org, ying.huang@linux.alibaba.com,
+ ashish.kalra@amd.com, baolin.wang@linux.alibaba.com, tglx@linutronix.de,
+ dave.hansen@linux.intel.com, lenb@kernel.org, hpa@zytor.com,
+ robert.moore@intel.com, lvying6@huawei.com, xiexiuqi@huawei.com,
+ zhuo.song@linux.alibaba.com, Hanjun Guo <guohanjun@huawei.com>,
+ catalin.marinas@arm.com, sudeep.holla@arm.com, lpieralisi@kernel.org,
+ linux-acpi@vger.kernel.org, yazen.ghannam@amd.com, mark.rutland@arm.com,
+ mingo@redhat.com, robin.murphy@arm.com, Jonathan.Cameron@Huawei.com,
+ bp@alien8.de, rafael@kernel.org, linux-arm-kernel@lists.infradead.org,
+ wangkefeng.wang@huawei.com, tanxiaofei@huawei.com, mawupeng1@huawei.com,
+ tony.luck@intel.com, linmiaohe@huawei.com, naoya.horiguchi@nec.com,
+ james.morse@arm.com, tongtiangen@huawei.com, gregkh@linuxfoundation.org,
+ will@kernel.org, jarkko@kernel.org
+References: <20250404112050.42040-1-xueshuai@linux.alibaba.com>
+ <20250404112050.42040-2-xueshuai@linux.alibaba.com>
+ <0c0bc332-0323-4e43-a96b-dd5f5957ecc9@huawei.com>
+ <709ee8d2-8969-424c-b32b-101c6a8220fb@linux.alibaba.com>
+ <353809e7-5373-0d54-6ddb-767bc5af9e5f@huawei.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <353809e7-5373-0d54-6ddb-767bc5af9e5f@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 18, 2025 at 3:11=E2=80=AFAM Matteo Croce <technoboy85@gmail.com=
-> wrote:
->
-> Il giorno ven 18 apr 2025 alle ore 12:06 Danny Lin
-> <danny@orbstack.dev> ha scritto:
-> >
-> > This builds on commit 19249c0724f2 ("net: make net.core.{r,w}mem_{defau=
-lt,max} namespaced")
-> > by adding support for writing the sysctls from within net namespaces,
-> > rather than only reading the values that were set in init_net. These ar=
-e
-> > relatively commonly-used sysctls, so programs may try to set them witho=
-ut
-> > knowing that they're in a container. It can be surprising for such atte=
-mpts
-> > to fail with EACCES.
-> >
-> > Unlike other net sysctls that were converted to namespaced ones, many
-> > systems have a sysctl.conf (or other configs) that globally write to
-> > net.core.rmem_default on boot and expect the value to propagate to
-> > containers, and programs running in containers may depend on the increa=
-sed
-> > buffer sizes in order to work properly. This means that namespacing the
-> > sysctls and using the kernel default values in each new netns would bre=
-ak
-> > existing workloads.
-> >
-> > As a compromise, inherit the initial net.core.*mem_* values from the
-> > current process' netns when creating a new netns. This is not standard
-> > behavior for most netns sysctls, but it avoids breaking existing worklo=
-ads.
-> >
-> > Signed-off-by: Danny Lin <danny@orbstack.dev>
->
-> Hi,
->
-> does this allow to set, in a namespace, a larger buffer than the one
-> in the init namespace?
 
-Yes, the idea is that each net namespace is controlled independently.
-Privileges are still required to write to the sysctl for whichever
-namespace you're in, so unprivileged containers wouldn't be able to
-exceed host limits.
 
-Best,
-Danny
-Founder @ OrbStack
+在 2025/4/18 15:48, Hanjun Guo 写道:
+> On 2025/4/14 23:02, Shuai Xue wrote:
+>>
+>>
+>> 在 2025/4/14 22:37, Hanjun Guo 写道:
+>>> On 2025/4/4 19:20, Shuai Xue wrote:
+>>>> Synchronous error was detected as a result of user-space process accessing
+>>>> a 2-bit uncorrected error. The CPU will take a synchronous error exception
+>>>> such as Synchronous External Abort (SEA) on Arm64. The kernel will queue a
+>>>> memory_failure() work which poisons the related page, unmaps the page, and
+>>>> then sends a SIGBUS to the process, so that a system wide panic can be
+>>>> avoided.
+>>>>
+>>>> However, no memory_failure() work will be queued when abnormal synchronous
+>>>> errors occur. These errors can include situations such as invalid PA,
+>>>> unexpected severity, no memory failure config support, invalid GUID
+>>>> section, etc. In such case, the user-space process will trigger SEA again.
+>>>> This loop can potentially exceed the platform firmware threshold or even
+>>>> trigger a kernel hard lockup, leading to a system reboot.
+>>>>
+>>>> Fix it by performing a force kill if no memory_failure() work is queued
+>>>> for synchronous errors.
+>>>>
+>>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>>>> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+>>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>>> Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
+>>>> Reviewed-by: Jane Chu <jane.chu@oracle.com>
+>>>> ---
+>>>>   drivers/acpi/apei/ghes.c | 11 +++++++++++
+>>>>   1 file changed, 11 insertions(+)
+>>>>
+>>>> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+>>>> index b72772494655..50e4d924aa8b 100644
+>>>> --- a/drivers/acpi/apei/ghes.c
+>>>> +++ b/drivers/acpi/apei/ghes.c
+>>>> @@ -799,6 +799,17 @@ static bool ghes_do_proc(struct ghes *ghes,
+>>>>           }
+>>>>       }
+>>>> +    /*
+>>>> +     * If no memory failure work is queued for abnormal synchronous
+>>>> +     * errors, do a force kill.
+>>>> +     */
+>>>> +    if (sync && !queued) {
+>>>> +        dev_err(ghes->dev,
+>>>> +            HW_ERR GHES_PFX "%s:%d: synchronous unrecoverable error (SIGBUS)\n",
+>>>> +            current->comm, task_pid_nr(current));
+>>>> +        force_sig(SIGBUS);
+>>>> +    }
+>>>
+>>> I think it's reasonable to send a force kill to the task when the
+>>> synchronous memory error is not recovered.
+>>>
+>>> But I hope this code will not trigger some legacy firmware issues,
+>>> let's be careful for this, so can we just introduce arch specific
+>>> callbacks for this?
+>>
+>> Sorry, can you give more details? I am not sure I got your point.
+>>
+>> For x86, Tony confirmed that ghes will not dispatch x86 synchronous errors
+>> (a.k.a machine check exception), in previous vesion.
+>> Sync is only used in arm64 platform, see is_hest_sync_notify().
+> 
+> Sorry for the late reply, from the code I can see that x86 will reuse
+> ghes_do_proc(), if Tony confirmed that x86 is OK, it's OK to me as well.
 
->
-> Regards,
-> --
-> Matteo Croce
->
-> perl -e 'for($t=3D0;;$t++){print chr($t*($t>>8|$t>>13)&255)}' |aplay
+Hi, Hanjun,
+
+Glad to hear that.
+
+I copy and paste in the original disscusion with @Tony from mailist.[1]
+
+> On x86 the "action required" cases are signaled by a synchronous machine check
+> that is delivered before the instruction that is attempting to consume the uncorrected
+> data retires. I.e., it is guaranteed that the uncorrected error has not been propagated
+> because it is not visible in any architectural state.
+
+> APEI signaled errors don't fall into that category on x86 ... the uncorrected data
+> could have been consumed and propagated long before the signaling used for
+> APEI can alert the OS.
+
+I also add comments in the code.
+
+/*
+  * A platform may describe one error source for the handling of synchronous
+  * errors (e.g. MCE or SEA), or for handling asynchronous errors (e.g. SCI
+  * or External Interrupt). On x86, the HEST notifications are always
+  * asynchronous, so only SEA on ARM is delivered as a synchronous
+  * notification.
+  */
+static inline bool is_hest_sync_notify(struct ghes *ghes)
+{
+	u8 notify_type = ghes->generic->notify.type;
+
+	return notify_type == ACPI_HEST_NOTIFY_SEA;
+}
+
+
+If you are happy with code, please explictly give me your reviewed-by tags :)
+
+
+> 
+> Thanks
+> Hanjun
+
+Thanks.
+
+Best Regards,
+Shuai
+
+[1] https://lore.kernel.org/lkml/CAJZ5v0hdgxsDiXqOmeqBQoZUQJ1RssM=3jpYpWt3qzy0n2eyaA@mail.gmail.com/t/#u
+
