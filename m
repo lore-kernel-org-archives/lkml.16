@@ -1,63 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DFF92CCC0;
-	Fri, 18 Apr 2025 16:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAB4214A81;
+	Fri, 18 Apr 2025 16:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744994726; cv=none; b=ApbIa2r+/MKYQMSjZnTFLO1+DsEW3vtRBVUm0Cwu1veUAYcZgGjS60HXTgphJVXJYwG2inuqHkUbi4vsyxHXFXn5K23PF6KOz17qpaSZLaIcZDhKaIts4Hxgr8TR45z5zMpwlMvQuUGnFn2h+3IUvYnWDlvdGxu137epOLBsQZI=
+	t=1744994773; cv=none; b=XcDZD88jWgzYMTkPtH/QZh1Y16WHd4PXDpadBI/DznEDLpTBB6t35NHsvICnjuWy//udS+x31UeHO2vCgSDV0IeXBczHlfm8TMDsN407co3GfQZrZPaSe6IRnxcdiboamGqBclggTtYX+Pm3gA1S2y5bfIoyziLBVyiOdjax7ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744994726; c=relaxed/simple;
-	bh=Gq53KdbK5QpUUjwnIObXO8DYV2SS4C2L6HTozxC34zo=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=taT6ZgjmHSDEvfdaPsg7UPs76OimpPKoFUqgGUMnvfVQXowUlKTHhRxjUPXdPpiONkD0oedc7UAneNyvGZP27hKOhXfw3D38r29GRpn3DcvVUQgFkfFN4AJaRt3h5lkZLWP7xJJHvvuappCroJtaBFiV0inCpJE3T6UHp3zfUDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SXDUeidW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744994773; c=relaxed/simple;
+	bh=fH24bE4dwfXOPFlUf+/olVRNCkzpuNpmBABGQPIvUdc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iQTDymcoSAsfiWwpy26/OWd33HxasrVrmgHDSgi+Bg0EP7bMn/y41TlcpBdlHPDm5k91GzV9RVLHvaju4WRwMwpQ4dqiOH56TConFHUnB7zwCtkTgQIQqE14N8aOs/9WpgPlyfCjVN2mfQ8uzUsNxYUNSg15BF9L8ccYiLScZek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=SWy0NpBd; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SXDUeidW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81451C4CEE2;
-	Fri, 18 Apr 2025 16:45:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744994725;
-	bh=Gq53KdbK5QpUUjwnIObXO8DYV2SS4C2L6HTozxC34zo=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=SXDUeidWV/MsD7ZTc98o4YbblluNjVMqYFWWnyWjyeOPcX7H0mAy+4wtNv9jeHQok
-	 NX5+UFhQ9O4sT4I+5nNCQiyAoM1mtxd7I16vSTEJ5OIRl8zMWNVSLPoz/UE+MGEn1s
-	 rqQewHqwhgB7KonurxSgOZDzb9o3rpeSQGw7/row5mu9xiqOOyTI4CnQ+0AZNr+oI/
-	 UnBZFuxl+CgETbGkqMjqy5oOdosKzFOwW43794iXRHy9BbBjwKqdzzc0oHiQxkFzpS
-	 uZY4QsNdY2cTxoeJMJenxJ7vh+1mvnmqEq+ima2uiKaTB+lo66kbxVSaQiINcRqjAq
-	 seHk3yUfDskBg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAECE3822E07;
-	Fri, 18 Apr 2025 16:46:04 +0000 (UTC)
-Subject: Re: [GIT PULL] ksmbd server fixes
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <CAH2r5msB5K8EdzYK3JXe5Rzo-yGpOk_y6qJghBOO770SpjHrDA@mail.gmail.com>
-References: <CAH2r5msB5K8EdzYK3JXe5Rzo-yGpOk_y6qJghBOO770SpjHrDA@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-cifs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAH2r5msB5K8EdzYK3JXe5Rzo-yGpOk_y6qJghBOO770SpjHrDA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.samba.org/ksmbd.git tags/v6.15-rc2-ksmbd-server-fixes
-X-PR-Tracked-Commit-Id: a93ff742820f75bf8bb3fcf21d9f25ca6eb3d4c6
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7e74f756f5f643148ca5537bf2fee6767e4b0ed9
-Message-Id: <174499476346.267730.154504230046472430.pr-tracker-bot@kernel.org>
-Date: Fri, 18 Apr 2025 16:46:03 +0000
-To: Steve French <smfrench@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>, Namjae Jeon <linkinjeon@kernel.org>
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="SWy0NpBd"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4252E102E6336;
+	Fri, 18 Apr 2025 18:46:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1744994768; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=tUP8AY3kaYPIAoLu0xw+IYDW6ceng/eKtdbV9czoT1M=;
+	b=SWy0NpBdIgK2+4pIaJiE1CtrBlvf/WGXxAKquwIU8zudlWNfZIywM3zeiU3hmGdL2AQKMS
+	JcvdCu+t6IZpHtk5Fs/vR7NodnMGqj1AMF3T3OfeRgyNaQE8MdRQgAgAofeYv+Qy8IgSSA
+	Ll+aR1H/nonmL8vwHcswqt3sUTbfb9huqsOx4H/juV2fuEAJGlSE+PyBeaWQa+ssZ5nWS5
+	NItKxmuN2doSIYLNxzPXjobEGZRy+FpUamMTmxGS7YEj0ZSzAh1r1tN7TzTlwNkYPnLbJ3
+	CQNzQlAROup4h/5JH0nRn70E9sc7Bz7nMyQtNkctB0oxXyVfqHjucGeUagXZ8A==
+Date: Fri, 18 Apr 2025 18:46:00 +0200
+From: Pavel Machek <pavel@denx.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.14 000/447] 6.14.3-rc2 review
+Message-ID: <aAKByDU2Ow28fuN8@duo.ucw.cz>
+References: <20250418110423.925580973@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="AdVqRUXHox3P+QDa"
+Content-Disposition: inline
+In-Reply-To: <20250418110423.925580973@linuxfoundation.org>
+X-Last-TLS-Session-Version: TLSv1.3
 
-The pull request you sent on Fri, 18 Apr 2025 11:24:24 -0500:
 
-> git://git.samba.org/ksmbd.git tags/v6.15-rc2-ksmbd-server-fixes
+--AdVqRUXHox3P+QDa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7e74f756f5f643148ca5537bf2fee6767e4b0ed9
+Hi!
 
-Thank you!
+> This is the start of the stable review cycle for the 6.14.3 release.
+> There are 447 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+
+CIP testing did not find any problems here:
+
+https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
+6.14.y
+
+6.12 and 6.13 pass our testing, too:
+
+https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
+6.12.y
+https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
+6.13.y
+
+Tested-by: Pavel Machek (CIP) <pavel@denx.de>
+
+Best regards,
+                                                                Pavel
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--AdVqRUXHox3P+QDa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaAKByAAKCRAw5/Bqldv6
+8iBsAJ9Byb+KM0+bz+3i8J7CHhm8Tf3D6wCgmH2DT3yM0mw/2OhR8XWd9EzFrB8=
+=JsDX
+-----END PGP SIGNATURE-----
+
+--AdVqRUXHox3P+QDa--
