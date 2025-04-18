@@ -1,123 +1,149 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8E98F6B;
-	Fri, 18 Apr 2025 09:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B0E155C82;
+	Fri, 18 Apr 2025 10:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744970388; cv=none; b=C+p56wUMf92nqnVtP/m60abARtlbzIw63/1j+5dG4VYQ/bkY1gIH+H71cZ7PFlQFcCR1bxyS8U4MysPzZzYiwFhd6nkh6mumr0pT0yrAiJyaMth549NccRJek8u+hbbysQA++mh08W5zUMTg7arsabKvdwO38KIp1yCKNf7ztPA=
+	t=1744970435; cv=none; b=LCQucW1E6uZl4Gw3k5MbtNG+E0stCbOnDqKPjWH4MNQ2giTbc37ypSYjFxJmRyFZT+pn8R4eKyBLh+/rLMB+Io24qiV1G5ZGebVVlN9BNjZ4pre0kD+Pi3ReIq9UBLr8ize5T9AvPdbcfFr3fSfAs12Fktjbr8FITrKZJYVPZzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744970388; c=relaxed/simple;
-	bh=AeKf/W9dGT8sW1ZvTP601LFb5+rNATWEhQWKe6IQb1M=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BdbCQLTMuWAqUZOO2vqggSOauP+5C1+cLBnFQyXNmtj/qs9F2eOSKHA+Yk9j/i/NbmuJp+Xt5QCdfgI8iohQmbjz/MC5/dGzwKURzeo9xFtgdlrJ5mvUHtIxacc9jhP5cAVhTD0a8mRaa9GBVxTBs6/mWEbNH1zALguu/L7GxKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iiEtuVdd; arc=none smtp.client-ip=209.85.128.46
+	s=arc-20240116; t=1744970435; c=relaxed/simple;
+	bh=irvX3Kf4X756JsU0YCDL86boKYBb6LyTE8yrOMOi7Jg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N1et5oqjn0dnbfByy31Bp92TXaw9ZviICFaohFdP11GHl1V8F2nvcqZfSAsun0m5dMs5Ma9zzRA9b8yPMgQNcmSaDG5Nx76vfIGTOPqGfQynzngDUZ4h4NulUNyChL3vRGLU71wJ5oBg+6UF+oiIU+DKEzHHYatEig/3u6EQEmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XLMkvjJr; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iiEtuVdd"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf848528aso13093835e9.2;
-        Fri, 18 Apr 2025 02:59:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XLMkvjJr"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c30d9085aso1242103f8f.1;
+        Fri, 18 Apr 2025 03:00:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744970385; x=1745575185; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=4gwDHlLSyfOGZDhUdR7viQRsWnq+WUz3dBSvyyL/oTI=;
-        b=iiEtuVddi7lBWyz3FjcDORCr8XKz2eaVmO9yfTQ+QRRykbBNlE+VQ7eBDxiSqJE8NB
-         /F77aDbdjuzOmom+foulpVpZbtfcaYkTXrWXvH599OBzo3p6V+BIV6ve8ZNjKrqGRKkG
-         eHJ6t3Ld02C+btdJWVaLToB2C83C7e695toXL9LMZgYyFiIzcaZPLuPNHFpORMNH/+CG
-         o/TGoA178GeGKUzZxLGrFEsaEp6lo6TAq0xRrOcQyeSCZluAwBIUbYZxnl0DSPP3X7Iu
-         rQQB6pW/856ukE0pC8nbb8memxg4kXH2KSPAbJ+yvFrvP5ykEZix68LaOrqVK3xPKhin
-         QkMw==
+        d=gmail.com; s=20230601; t=1744970431; x=1745575231; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lmdzOyBKySkqBAKKcD6PgWQb4+yfqKbUqL+8us9T71s=;
+        b=XLMkvjJrn5CRZ3aLliHTz2oXqY4lbrdXiHucvCnZQTJsMvxW5/gQMeI5HjLK45evu4
+         CoByG0jcPkE8k4T0eA1hUB5vJw875P6zNrVN/ERxFWKNOUFt9icO/yu+DWjWvNELWInX
+         WONJptKfo3VGBgwhh/rrhqzIe9V5DW75icG+ll/vbxGkq8Pe2kY9bYrVASxy+1tBmIe3
+         KsFI/hS+mto3sso5xNv1rP14Dd3axgxQ9ddvu2k64nGXMspyNnKEQm9uYm+WhKWIFLVO
+         RmjcqDcvdU4B1AcTrV8htDbQgVnk+Uw3KdXNsXHi5eswn/3rIdqiCf1M0l1MCp4ywiSE
+         k+fA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744970385; x=1745575185;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4gwDHlLSyfOGZDhUdR7viQRsWnq+WUz3dBSvyyL/oTI=;
-        b=Q9IiTJzFZOXVRb0iXtx2mCIFbEUUzVRoTrO2OBQYT+kcEwUoZMIQ5jztZqSto3zXQ3
-         29ytc7ve1vlPCqwN8mjZyhFEnh6VNgNC9vIqqzYX/NwCWZkTNxdTaNSj2ExNvFUSkx9v
-         l9kxS2PocqN/65daJ3bkHL8fgk5G9wHgCbqcOGHMNVXbqmzX8vWZY3zHXTbgUD9gAj1L
-         eL9V8XuUxq+voZafMlpNfRh7G0oigDHH4s0Q5HQAyYJse59HiC5r78YMG00P+Vo8CXxV
-         RrFU1ye++gsapZa+HUUjWWJGEl3DTgHCp7N9jXqyg1nOEWg7uOWQD463VJgyF4/SzXhg
-         kiBg==
-X-Forwarded-Encrypted: i=1; AJvYcCUHGrxqf7V7oLJuF/ePldgCz0eUADSC6fxgp66tbrDhZwsNN5T0o6kP7nZmBRxBfue0ypWJQK95ejfA2sA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBPj8vLStbKKbcvL/5/iW/ImnBNyYGzZYcIh/hB8yg0iMOuefd
-	RMmWt+d8fwrg26TY6s2Wb5P9hguoalu0bwWr2Rt3iuDKAax3aXBg
-X-Gm-Gg: ASbGncu9uiyk1tTRmaGg6dRMRdxOKORgaD31XhW4uh6Bwa+tCa9OMCCXkcDclVdUvrB
-	oGjLC0CrL9v+XfPviCwqju7ix/bvcjlcqTXcKFfPiR3ao0duicXvMPo8YUEZOkgw5cdgMpPwshs
-	dqQoe2USRvKV1AjWEkKagUM1S18N5+ryFWLoxCe6XsldDeRhUWB8uHyXWMf67jcHAppkcM+6UWm
-	n2gC8bCWrwV2P4P41xWDSYUxpgk17XsqXRkybGnpOVH1kfsQxkVaQRSKcKRmRX8Wj0KTRJxrYom
-	QxS+ZlrBBNTkwN1DPMkVNEqBlvGikwuDGek0YgQS+cHwmnS/Yk8Jj9QVsRVH09rC0BgRc8tBHBb
-	/wtCiC1Wca0gScAk=
-X-Google-Smtp-Source: AGHT+IHzSil2G3YGnRzD5cowRm+z9RfTcSJoozpe7ba6NO1ln0LD3onqnxF8VbnwQ0vVLMFjQbwCSw==
-X-Received: by 2002:a05:600c:b98:b0:43b:c0fa:f9cd with SMTP id 5b1f17b1804b1-4406ab7ff23mr17936375e9.7.1744970385090;
-        Fri, 18 Apr 2025 02:59:45 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43bef1sm2245637f8f.49.2025.04.18.02.59.43
+        d=1e100.net; s=20230601; t=1744970431; x=1745575231;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lmdzOyBKySkqBAKKcD6PgWQb4+yfqKbUqL+8us9T71s=;
+        b=wbo4rzRRC/Hc/yRP7oLMW7lA7XElJDI5MzWJvmuphGhlU4/4kcP0V4ctSCgql53SgZ
+         XXvgZ4rrLmr7mv38Zwy1b2u1AHOtQ2q36oW1/zKDxVsPAfuNNx49aHeiKdIe4d6QwSuh
+         z8FlMZeum63C8lxeuZ5YSNmnxnex0LSUO/kduGLI+Hnb5wEOszjCubf4ZuMDu81e4Phq
+         y7QIOaYxfRXLx0urvXOSO90QXMEGQ5n9xP06lCEfl0L+nXgCbxTiuomDZYImeAJqFac5
+         1fZviR8TEw5yz/yJ/Jkh+q+/ioGtqmr7okIleO6xiUHpP1AqISQY3hKezp7t2r/KN3Qs
+         eHvg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNpjxu98PojO9Q+vpcSKNPb5cWuvghxhuZBYzuh5i6maPPwqITRMEDqouAHh7q56sxt5x0hRMpBqymDHY=@vger.kernel.org, AJvYcCXdYjsnYRqkgqwMWZxCbllh9v6pcXbQH4FRWegYnAlywFzmadfjR51cogkA6LmI04mwcd/PW5zHeZlpgbBiia8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0rzm2Q4ubBxeN/AcFC/0H1jLMwoI6OIAp5o9t74xLxywOiJW4
+	JNQqCx4omtbJqmkWaWtlYzUxrBBscLoHVA4qN4+gd9UadKGeVFFT
+X-Gm-Gg: ASbGncvpI9hizMhj1EX/6ZxDU9MwLqYo1zA51GCf2BtoBKHo9aFJOiQkEcGaseIPXqM
+	pYCKmv3DqHfqMo9iBwIoRKGAWK9HnJlGvuGvwwiTNArFINlZBSZz17VD+oXoDk7Zn8FhUTDgkwr
+	hCRD5PIATJ+iymAicLEs5XaHZ/nDso9QbdzaL6/iydvCQz/qdDdNN9QVm7GrFWFJx7EfWs7VPic
+	BrVTkfSciFtaFkNhsbX0fURdnbCAX9M47KwYd/SXQVPtkoYu6QSBMUvHFkvzlSP2gMOknQ8TfcE
+	FdJ2fb3lm1ibdh+/VyO35QIPrrwCoh/OCdRfXwjyWVSbdyYRQnj22M3bE7oAsG/wQKmITQokV8L
+	B1tDDhiNp7vjJYD8=
+X-Google-Smtp-Source: AGHT+IGI5khHQIWwIC8A0ujecRvJNh/8dd2rdMdf6ZZWOg9tPpvImGZXGtcFwEzmElLefwyL9zx9yg==
+X-Received: by 2002:a05:6000:2d12:b0:39e:cbe0:4cd0 with SMTP id ffacd0b85a97d-39efba399a4mr1021492f8f.7.1744970430670;
+        Fri, 18 Apr 2025 03:00:30 -0700 (PDT)
+Received: from localhost (cpc1-brnt4-2-0-cust862.4-2.cable.virginm.net. [86.9.131.95])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa493124sm2279882f8f.68.2025.04.18.03.00.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 02:59:44 -0700 (PDT)
-Message-ID: <c3399884bcd18ff730855103897f39081f409296.camel@gmail.com>
-Subject: Re: [PATCH 8/8] iio: pressure: mprls0025pa: use aligned_s64 for
- timestamp
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
- <jic23@kernel.org>,  Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Andy
- Shevchenko <andy@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Lars-Peter Clausen <lars@metafoo.de>,  Michael Hennerich
- <Michael.Hennerich@analog.com>, Cosmin Tanislav
- <cosmin.tanislav@analog.com>, Tomasz Duszynski <tduszyns@gmail.com>,
- Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>,  Andreas Klinger
- <ak@it-klinger.de>, Petre Rodan <petre.rodan@subdimension.ro>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Date: Fri, 18 Apr 2025 10:00:05 +0100
-In-Reply-To: <20250417-iio-more-timestamp-alignment-v1-8-eafac1e22318@baylibre.com>
-References: 
-	<20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
-	 <20250417-iio-more-timestamp-alignment-v1-8-eafac1e22318@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+        Fri, 18 Apr 2025 03:00:29 -0700 (PDT)
+Date: Fri, 18 Apr 2025 11:00:28 +0100
+From: Stafford Horne <shorne@gmail.com>
+To: Sahil Siddiq <icegambit91@gmail.com>
+Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
+	sahilcdq@proton.me, linux-openrisc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] openrisc: Fix build warning in cache.c
+Message-ID: <aAIivK7NDG-6_aIU@antec>
+References: <20250401200129.287769-1-sahilcdq@proton.me>
+ <Z-6VyRhGdInVidsw@antec>
+ <af85b465-13e5-44e5-a0af-c7c68af7d43e@gmail.com>
+ <aAIDfcZ4XD5f6mA4@antec>
+ <f6f4f410-4a0a-4ce3-bf41-413af39fd50e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f6f4f410-4a0a-4ce3-bf41-413af39fd50e@gmail.com>
 
-On Thu, 2025-04-17 at 11:52 -0500, David Lechner wrote:
-> Follow the pattern of other drivers and use aligned_s64 for the
-> timestamp. This will ensure the struct itself it also 8-byte aligned.
->=20
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
+On Fri, Apr 18, 2025 at 02:42:20PM +0530, Sahil Siddiq wrote:
+> Hi Stafford,
+> 
+> On 4/18/25 1:17 PM, Stafford Horne wrote:
+> > On Fri, Apr 04, 2025 at 10:39:22AM +0530, Sahil Siddiq wrote:
+> > [...]
+> > Hi Sahil,
+> > 
+> > Sorry for delay in getting back on this.
+> 
+> No worries :)
+> 
+> > I was working on getting this patches ready for upstreaming and noticed one
+> > thing:
+> > 
+> >      ---------------------------------------------------------------------------------------
+> >      ./patches/or1k-20250418/0001-openrisc-Refactor-struct-cpuinfo_or1k-to-reduce-dupl.patch
+> >      ---------------------------------------------------------------------------------------
+> >      WARNING: From:/Signed-off-by: email address mismatch: 'From: Sahil Siddiq <icegambit91@gmail.com>' != 'Signed-off-by: Sahil Siddiq <sahilcdq@proton.me>'
+> > 
+> >      total: 0 errors, 1 warnings, 102 lines checked
+> > 
+> > As you can see above the scripts/checkpatch.pl is failing with the warning
+> > about your email and signed-off-by not matching.  You can see more about it
+> > in the FROM_SIGN_OFF_MISMATCH section of the checkpatch[0] docs.
+> 
+> Ok, this makes sense. I configured git-send-email to use gmail because
+> protonmail does not work with git-send-email without a paid account.
+> 
+> > How would you like to resolve this?
+> 
+> Is this a warning that cannot be ignored? I can:
+> 
+> 1. submit the patch series with another email address that won't have issues
+>    with git-send-email, or
+> 2. submit the patch series using protonmail's web client (which might not be
+>    the best option).
+> 
+> I would prefer not to use "icegambit91" in the signed-off-by tag.
+> 
+> What are your thoughts on this?
 
-ditto
+I could rewrite the from header to match sahilcdq@proton.me.
 
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+But if I do that you should find a way to get proton.me to work with
+gi-send-email [0] for future commits.  It seems this can work using the
+Protonmail Bridge[1], though this site also says proton.me is not so good for
+using with git send email.
 
-> =C2=A0drivers/iio/pressure/mprls0025pa.h | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/iio/pressure/mprls0025pa.h
-> b/drivers/iio/pressure/mprls0025pa.h
-> index
-> 9d5c30afa9d69a6a606662aa7906a76347329cef..9fe9eb35e79d992b2a576e5d0af7111=
-3c6c47400
-> 100644
-> --- a/drivers/iio/pressure/mprls0025pa.h
-> +++ b/drivers/iio/pressure/mprls0025pa.h
-> @@ -41,7 +41,7 @@ struct mpr_ops;
-> =C2=A0 */
-> =C2=A0struct mpr_chan {
-> =C2=A0	s32 pres;
-> -	s64 ts;
-> +	aligned_s64 ts;
-> =C2=A0};
-> =C2=A0
-> =C2=A0enum mpr_func_id {
->=20
+Maybe using another email in signed-off-by would be better.  The current
+patches are on linux-next[2] where we can see the From/Signed-off-by mismatch.
+For example:
 
+    author	Sahil Siddiq <icegambit91@gmail.com>	2025-03-29 15:16:22 +0530
+    committer	Stafford Horne <shorne@gmail.com>	2025-03-29 10:22:21 +0000
+    commit	af83ece87a1ef5097434b7c3c1fc0e9e7b83b192 (patch)
+
+    ...
+
+    Signed-off-by: Sahil Siddiq <sahilcdq@proton.me>
+    Signed-off-by: Stafford Horne <shorne@gmail.com>
+
+-Stafford
+
+[0] https://git-send-email.io/#step-2
+[1] https://proton.me/mail/bridge
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/arch/openrisc
