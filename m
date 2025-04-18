@@ -1,96 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768252A1C9;
-	Fri, 18 Apr 2025 20:28:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D1923F40C;
+	Fri, 18 Apr 2025 20:28:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745008122; cv=none; b=aJZLixeGeMaKiLYtQec5YHvI4s494gj+2s+dlNBjnB6p8mPBNELUvZOFq8O4zLEphFiAVwnolV1OGRDbZQFFYgynBHGD2Mo5oxXTAB4JI2XT/K05HuIJJaeC8OTc1UUJusP8sYmrs7fnhDbwP+tDV18dUTH+dXPR6KlvwE0NjS4=
+	t=1745008129; cv=none; b=e750Gz4Tm8AqMN4ZK1Lg/+miVM1NzNsJqyp4/MvE4vzMc0NbSs+bEIt+VCp7Uk15DCpCjQWZvWDtwSHeWB7Cg0TcciFO7qnNdvd323LHi2Z6aXCpnsi7pOufFE2rS+xkNu0aXy6zezSLOaTZr6syxTl7UrgjSQ1z5gUtjvuT+tE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745008122; c=relaxed/simple;
-	bh=RuioFoYnoKWbVRePkkXFNsFVrOmVWmnElk3I3DxzO8Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tKsp3JdvRGE7mYLJdQy2i0AwMwqTk2fXzRM8BiqNhpdI+p8BK23a2xwvPKwaw92CdbRCLEj3xfG3mwpNpLrbyVnTr78p2CeGxkeUZeTecmddJR2PsBK8tiv0IrQE3uQv5sqBf3ErWCWllFp8HTu0p4kWAvAx2W79IlhUTym9Clw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oawa8Hfn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745008129; c=relaxed/simple;
+	bh=e4VxNsvSZ16THA298RXtulbkphYJ1Y/POENNBgWIozU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cRcTN00vWXpHf7wG0rVBRHsWA1931piEf8QDdiwXkCCxP/eqha+JMDs1zz+TxjNLUCKiUbCsyqRbVkNOVVoluFnlUdIecKLaYH1+o2804cqF/GEnV/YYYpIAnuzzTgaLD2Bn9T0nQaqF4K90tDqs7UnaHZjBZKByMrBILA7gY4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=emkHc8Bf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oawa8Hfn"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 51D59C4CEE7;
-	Fri, 18 Apr 2025 20:28:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="emkHc8Bf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 066D8C4CEE2;
+	Fri, 18 Apr 2025 20:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745008122;
-	bh=RuioFoYnoKWbVRePkkXFNsFVrOmVWmnElk3I3DxzO8Y=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=oawa8HfnYofsd2nLXgjSpZShip+TlWRE+b+RYt7dlSygCsxVlYuuoXzHBIG5Uj1+E
-	 sOHixzhjybWwLiklj9AHOfyU+mp9o8TP+YhxtL2Vu6ikf0TvuwdCIRWbV2IIIaEFW2
-	 4rrNs7uzAeLKReQEbz/u1ECXHsR+7sUPZhjUClGniWrFhwzA8wshc1988sRJrYRAxq
-	 5DUqvoOwjlswRYS4r4SB/zLr+1qjnWhxpiU+Be85Q9oQ5bNS1oo2vxxxLesdhFZGNa
-	 3xyMxjaLciqV30gVibj5GsD8ep2E861CS0iOghlwVpbWlAnnRuZiqQgyED79GWETmS
-	 EdnGeJe8lHQDA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A98CC369AB;
-	Fri, 18 Apr 2025 20:28:42 +0000 (UTC)
-From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
-Date: Fri, 18 Apr 2025 22:22:04 +0200
-Subject: [PATCH] ASoC: wm8998: Add Kconfig prompt
+	s=k20201202; t=1745008129;
+	bh=e4VxNsvSZ16THA298RXtulbkphYJ1Y/POENNBgWIozU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=emkHc8BfxSLCXF7voFL0ws4qpZ5RaMIB7Y2p6QCZC6+Qt6Q0g/yEa/GLATp6+1gJI
+	 bDanaG08pREZTWWHWXf/TbJI5fRbq5q+o0v2asunefHJk8nRb3lpCei2IGWMsuq3sn
+	 T/zCLO9bXDqksvAe8VsffE85y+mhvY/39NhN4ye9RyfemdsVwqZoKQ3P4iQReUHAOn
+	 nbfdbHWed0uaDUwd5BTJjaKr7GSEHwFp38qSRzeULFhE/9lDWj0Lj5e7jx7Xwv9ysP
+	 z3HlsvSH3VRjcvnKh97h2JvJKktviwQ+ph58kJHIyR+OQP1Y54rPDOu+ZkUeTWH+IY
+	 BoqYkFVQ3OvSA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 9849CCE077B; Fri, 18 Apr 2025 13:28:43 -0700 (PDT)
+Date: Fri, 18 Apr 2025 13:28:43 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Joel Fernandes <joelagnelf@nvidia.com>, linux-kernel@vger.kernel.org,
+	Josh Triplett <josh@joshtriplett.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Shuah Khan <shuah@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, rcu@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH 12/14] torture: Add testing of RCU's Rust bindings to
+ torture.sh
+Message-ID: <cbf1a147-0a24-4146-98a0-a9666bb60433@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250418161005.2425391-1-joelagnelf@nvidia.com>
+ <20250418161005.2425391-13-joelagnelf@nvidia.com>
+ <CANiq72nCfBdsfKzP72DWxLBh+Eueack9sS-E97wtsr0UtkAnUA@mail.gmail.com>
+ <42da7c8e-08ff-4b04-ab58-6c0c2e287eb3@paulmck-laptop>
+ <CANiq72nE2cH93W2qZrzAxfbz3hjsw4Xy0YYNwOUQ74SeGiirgw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250418-wm8998-v1-1-21c4bead9cd8@apitzsch.eu>
-X-B4-Tracking: v=1; b=H4sIAGu0AmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDE0ML3fJcC0tLC92U1LTEVHPjJGNjIwMloOKCotS0zAqwQdGxtbUA6EN
- tIlgAAAA=
-X-Change-ID: 20250418-wm8998-defae73b3320
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745008121; l=825;
- i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
- bh=XALZ1vwO3j84k8/8tKGcIPipHuf/haqg80zA+h6cAEU=;
- b=m8KI2nZB1kokmZ/pFqGBnA6F17BLosVjzj+zt8/Fxvr5ikwtcS6hhTZ9VNWofL/DBsr+Z9pn9
- AKqhs4dg9EUB/RRqdR4kFtSE1UMbEZ61MK8g3lgZcSkBX0Mu5cw9Dnh
-X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
- pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
-X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
- auth_id=142
-X-Original-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-Reply-To: git@apitzsch.eu
+In-Reply-To: <CANiq72nE2cH93W2qZrzAxfbz3hjsw4Xy0YYNwOUQ74SeGiirgw@mail.gmail.com>
 
-From: André Apitzsch <git@apitzsch.eu>
+On Fri, Apr 18, 2025 at 08:32:46PM +0200, Miguel Ojeda wrote:
+> On Fri, Apr 18, 2025 at 8:04 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > Suppose we fired up a guest OS and captured the console output.  Is there
+> > a way to make that guest OS shut down automatically at the end of the
+> > test and to extract the test results?
+> 
+> Ah, sorry, I thought you were already doing something like that, i.e.
+> that perhaps you could reuse some kernel build you already had and
+> avoiding a full rebuild/`mrproper`. The KUnit Python script uses QEMU
+> and parses the results; e.g. you could look for the results lines
+> like:
+> 
+>     # Totals: pass:133 fail:0 skip:0 total:133
+>     ok 2 rust_doctests_kernel
 
-Add tristate prompt to allow codec selection.
+Alternatively, I could clone a copy of the current archive into a
+temporary directory, "make mrproper" there, run kunit normally, then
+clean up the temporary directory.  Extra storage, but quite a bit
+more robust and user-friendly.
 
-Signed-off-by: André Apitzsch <git@apitzsch.eu>
----
- sound/soc/codecs/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Other thoughts?
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 40bb7a1d44bcfa4c386f2eba0f475efeeedf1bdb..9ecc4bb7f75ff9fce87970d2e46ace72444e55b4 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -2479,7 +2479,7 @@ config SND_SOC_WM8997
- 	depends on MFD_WM8997 && MFD_ARIZONA
- 
- config SND_SOC_WM8998
--	tristate
-+	tristate "Wolfson Microelectronics WM8998 codec driver"
- 	depends on MFD_WM8998 && MFD_ARIZONA
- 
- config SND_SOC_WM9081
-
----
-base-commit: 7e74f756f5f643148ca5537bf2fee6767e4b0ed9
-change-id: 20250418-wm8998-defae73b3320
-
-Best regards,
--- 
-André Apitzsch <git@apitzsch.eu>
-
-
+							Thanx, Paul
