@@ -1,164 +1,99 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B108C254B05
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 22:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8EA1A2658;
+	Fri, 18 Apr 2025 23:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745017163; cv=none; b=px4GcB4Cn8S1r57+JdHLGQSITubFD46JMTICD67ej32VURFcA+7I8BGmomDAKww5LNWzB6vljCaKEeZ2zYZfyfPjUzul0dsy1fwHeY10UnNMio+Z1RpMrREzkTR7hpj6hyRfdcw6P3kHSs7fY3QjPHgIzZ68QrCqd/f9ETpZxBQ=
+	t=1745017281; cv=none; b=n8zqJxLbxb4W4UhWFNBXSLHQ4kbxXOQyZto8oo6QzGW4Rv4ZrjAyqDUy10BHe6cHeEVOfws+6vkQ3zwORiWPBz9lOoWIv9XCGNioZDD/LC91DIJSbn/AXrLukkh7dwiJcWzhx+h+4p9D2Czxsfgcyd3sGP86XZGyiqlFO/Ch7DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745017163; c=relaxed/simple;
-	bh=dE+Bh2dLzHZaDfFfGvJCuONf8Z/4uctHMsmHaIg81Wo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=te0k7EwKbLJ2p9h6IBIb4Zx+PtRTHgChGR4IyNpV0e4K5fpzNbI0d5gG43Ld9JxYxVGeIaqFuObPiprSjgzdawURRLXtOwLdpurqZ2EmmEBRXLU5yZ5Qndvi82bApitySWMF2qRjXGJnADGqJeqAOEyLz/RQmpvcKd4Uh0vFC1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=UL/t0b9X; arc=none smtp.client-ip=209.85.210.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1745017281; c=relaxed/simple;
+	bh=VQy0mOHcY16VbiuCnUNEHdfMlg4Hjotj7KFV8oi5pL4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dPNL1OCqkoSQbtG4CYOYQd8ap4Mbnnlib9WXxH6dBzukAYw5ydZXyIPwWRtsFw/e6P5Kk27VskKYtD/A+0k617FwDY8RCfaIHFBJ61mD2fgzjugA8Z+pwhXW8NEOwaNkaO1GdIe/dSf/PaDssi42vEjTjLvqC6s2zt3P7mrY0O8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IE5w0CiF; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="UL/t0b9X"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-72c1818c394so1373299a34.2
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:59:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IE5w0CiF"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30bf1d48843so20123711fa.2;
+        Fri, 18 Apr 2025 16:01:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745017161; x=1745621961; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uYflLc6ZtTC/uqwD8kHGOb9ooOEq6qvp2MOFP8DwFKQ=;
-        b=UL/t0b9XNp4dht2NpEfbCUGcJDQfBf+baHZ90TzTQE6P9O7Zey3PDa/f/IvAEj1rMh
-         9khCcHJnKPMo4gfbpuIxUE0d/dO3dDPIdomrU9GOyDNIhFZ52lZyBVsfoqKGeW/g+F/3
-         aRGgR+mBPwq0lC89ZxGULUP6iRhRJQ6XWoatmxcYR8ezaRpooMHeqooR6/4iAPRy4yt7
-         wjisIyXTKUGLZ4/HPBHv6zBoCU9gPYDFtyOw9JZ6EHhxs8OKqAB0qPXEid75bBp86MGz
-         itzgWUu09/hvJbCo4juE7gFgDKyTAyYa5t0srHwm2DBe8EXBl8zdGT4sEwHZp2s0e6Ph
-         4keg==
+        d=gmail.com; s=20230601; t=1745017277; x=1745622077; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VQy0mOHcY16VbiuCnUNEHdfMlg4Hjotj7KFV8oi5pL4=;
+        b=IE5w0CiF58pQbpPTuhMRSWmf1dEK8w+gFf7VQkf3C/FuVY7MwZ8tLq6jjPGUiqlYPS
+         gYE4lBvB2cpVHCAcL0fpaFwMOAN73dzf4GBKA1GqbBwrTcw0MKLaRi+VuQyajBSNcvSY
+         6hg1DyF63NBmOeQWfkZT/KDDnwuCfnKt3eMFmIOJYyKToxQErDin0M2yLOF2BmGEathM
+         fQkCzf+mlvpGze4NosIPMeGWMhd/lVcUpCw8ebLDuExDboFvLpyfFijIVQ/O9cJawjQg
+         5rBMn6GtzU0EZ3sujCF/cD5+G+Ypo9GqQyuiGd7r5EOu8GOghMQdZItNiEV6gah14/rW
+         bliA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745017161; x=1745621961;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1745017277; x=1745622077;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uYflLc6ZtTC/uqwD8kHGOb9ooOEq6qvp2MOFP8DwFKQ=;
-        b=LR0IONPif9cEkxsfi8vVTwPv9OczuWs5yHEwdaunJXuG4X2GFL/RwDDzTeBtHrx+9i
-         2R6zMBMHEgl4bmV0eXTwaUg5JQBOBYMf83hqqmLX/exU7ER4/i7aAsPO0mGkJE+FSWCB
-         0AnNnfqhH1RAOtvkkJsYbzJ6ssDXol8UQlwd9nstfCDYhZTG8ktPczhOK+2rxFtOvBRX
-         jaRIrzvEViBy8SD/rJKZPP1c5V0jO2WyVIrZ123IfUBdOOOoQ/KFaSJSTimCXM+XbvFQ
-         OFM6lJGAALfXDuYI3G34l5GlRXzV5VWbSul64sZ/P2ELSC2aIMOe9KERGwcVbznvKcLm
-         baXg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7N49iGwT2qjINcPWoelMnO/yUvaP4GFPTx4apsoYipMg0OXfQaBAZ2x0blAEExD67J7xCgA3u1erBbD8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqSXn9IOTOEgS2gf03yfwiOqmPI7+xSUQTaqWyQNThNoNZEoId
-	KGv9/0XSKqoN5k42dvL+mbS41mMBYuhQZX2H2ON9XwqcqhVp/IEcLp3EAVjnW9zjRLieUr4ona1
-	7+o8=
-X-Gm-Gg: ASbGncvKqeAfHdQw2rXs1pCRayRITqbZ1I+I+8goyIK/S00fQfmYFLDlv0rVNtYhPIz
-	4n/3dU9iti2l70zQKZ/Exq8PyeuUT8KMbvLmafFTuhPBuUJMVWptnxzPFjDSIcpjDicn+1Ss3v4
-	MXT6aHMP/foPAefv7CzErp29X5JJsyY7xpj6P4cIG68xYK9G9tgvK9s14rSZqQdb8DlrM3oXEUU
-	qRvz675vC45cAPPCnLzItch4ec7RdK3CkBtv91XYQq4bO2ZomrrC8i8Rnmd15E/tPzjlwryCC0u
-	8v/XBqxCMCJac8bDVoO4aRLXHZFhBIb90RmvW/3Ej8yZr/g=
-X-Google-Smtp-Source: AGHT+IFyr8tL3f7/Gclxxm0qCx+apQWNKvST6w//YiaITYAopkMwLe+KpXjHV8bVZ+S3OC2Ex+Rp6w==
-X-Received: by 2002:a05:6830:658b:b0:72a:10ec:3637 with SMTP id 46e09a7af769-7300622918cmr2588254a34.15.1745017160817;
-        Fri, 18 Apr 2025 15:59:20 -0700 (PDT)
-Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:dcdf:46e0:18e5:c279])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-730047ca051sm500187a34.36.2025.04.18.15.59.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 15:59:20 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Date: Fri, 18 Apr 2025 17:58:35 -0500
-Subject: [PATCH 4/4] iio: pressure: bmp280: use IIO_DECLARE_BUFFER_WITH_TS
+        bh=VQy0mOHcY16VbiuCnUNEHdfMlg4Hjotj7KFV8oi5pL4=;
+        b=oLvgzUZvzgtQJNT0ku5fllDHE3j1EgTIsLE51tPOYkzGdioSJhkXDPK7B5cGIIXYZZ
+         aRxCP6cymOHPxj6ekOHJcElOGNf2KdeKs05j6vBsR+rc7AAst1Y42KOSzflz8o5rel1d
+         al2tQYChN/JohCKFo/LImtu4FVIt0Dhh25cFPyT8p9hqy2G8tJfxWvosHgiUkxUOB6Lq
+         z+kJ4GSMuJsUWpVg7OyjuGDQ1CVYCzPVf18vCMPN9WXlsfJlTg4hf23FzanaBEwq9JUK
+         3oIe2Mh4fRAL7kU2bDuOXO+PWq7ZKzfPs8TjBYgnva+clP69G6jWnZ28bl6vVdGensN0
+         c75A==
+X-Forwarded-Encrypted: i=1; AJvYcCUD4Lw36BeLlJLYjqNqTDSXXSKSGMktVbJW9pQniYQ3a0qECX9vLWxIpm0nCQU758q7TlGDd4aEgXYut3Y2@vger.kernel.org, AJvYcCUrNTP6oTcqJdGOjZ8i00edOwaJg+wJbg/6vwislt5PUxatzS3HH7GPbzUsU6LJfvX5RFYq0/DS1yilb0tvyWrO@vger.kernel.org, AJvYcCVvRvyg5UYmE1yqYtPmKcGE143OJ+b8md3b3FjaTA5dpsDxBsjpP/tZ3CVYNC8qwWbVWcT8DP9IY9g6jg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1cZ4s2/iwhHtVcfrhPmt3Ww0OeX7fahHb1iLWUF1yzuS9QAiU
+	c4GxK12IC8l4CiRYue9Z+qS0ffJkh0uYxR+rfjOaTVuNb+APJYHzLfY0h6DogeCnGitYHTJcupn
+	bfzoVnf4Jd1b44DjvnMO68nCHobuWJw==
+X-Gm-Gg: ASbGnctxAq+UttX9WAdXoAsyDKr1rCEdoRLjnwkrCoOI5P1YCtioVW05vQ5l0I6jXDl
+	wk0LUl3p2S/BMlUNgm2dFOVRf+NLWYrrip6HfcDpUa5PRbDBLWrqlJhLla32FtEp/faPy+ohq/I
+	+NnQkk2ErYpUy9Q7yIaJXCd2z2JfAtLYTDNh4=
+X-Google-Smtp-Source: AGHT+IFFJTxHPf+5+iXd4c3XocplOZE+gYZTmqAwnMiWmgDb0xL1UfWTnq5s+7K4B1jUk0E4pd13T5jtylfmkSUIvVE=
+X-Received: by 2002:a05:651c:19ac:b0:30b:f775:bae0 with SMTP id
+ 38308e7fff4ca-31090559978mr14231121fa.36.1745017276927; Fri, 18 Apr 2025
+ 16:01:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-4-ee0c62a33a0f@baylibre.com>
-References: <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-0-ee0c62a33a0f@baylibre.com>
-In-Reply-To: <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-0-ee0c62a33a0f@baylibre.com>
-To: Jonathan Cameron <jic23@kernel.org>, 
- David Lechner <dlechner@baylibre.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2758; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=dE+Bh2dLzHZaDfFfGvJCuONf8Z/4uctHMsmHaIg81Wo=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoAtk7JE5s2L1ct8bmryT0sZgPM26LmpBqyZcvV
- sJfFqw7IoyJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaALZOwAKCRDCzCAB/wGP
- wP+MB/911j/8pWylCV/OBlqSeXb8qXnXesTzGfthr0UOUhdXRaPH4alE6i0zLQxCV9juG5aEeQ+
- HIwQ/YYY4vz2o9fdKwdeeI28nPOnDaZoL/S5U+aMwQXkWQ9XNtpHKe6FGI+PMWD2KfXcWxJYddW
- XakmXPOQBMwiSha6+k0c0dX44Nqo3xADjw6thtb38cBoiLIMdIHGQzojL6XbOD5d4mlup+pzp0y
- h07zm+u/2MobSqFDb/ag7+5vJvy08cffFWILTsSFhf+SnhZVrJ0EuQci17F87JY1+b+9s7EJEOe
- 667j+A32xQ7dnjFQoJo/Ibb4mjTUfVJQY5gISdYggw5ZYigB
-X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
- fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
+References: <20250417192054.69663-2-thorsten.blum@linux.dev>
+ <202504181322.5D3B93E93@keescook> <ABD8884A-36DF-457C-83D4-49F4F63C339F@linux.dev>
+In-Reply-To: <ABD8884A-36DF-457C-83D4-49F4F63C339F@linux.dev>
+From: Matt Turner <mattst88@gmail.com>
+Date: Fri, 18 Apr 2025 19:01:03 -0400
+X-Gm-Features: ATxdqUFOZ5fvGt_IXXw9Q6D-_eoT7DrRF9bpv9M2IsYXr8gmnLcbrV2Ee9atLLM
+Message-ID: <CAEdQ38E4Hks+m=srZsuuu7g8N2z_hJT7oxyF_Nz3MYsm8wx9YQ@mail.gmail.com>
+Subject: Re: [PATCH] smp: Replace deprecated strcpy() with strscpy()
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Kees Cook <kees@kernel.org>, Richard Henderson <richard.henderson@linaro.org>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Arnd Bergmann <arnd@arndb.de>, linux-hardening@vger.kernel.org, 
+	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use IIO_DECLARE_BUFFER_WITH_TS to declare the buffer that gets used with
-iio_push_to_buffers_with_ts(). This makes the code a bit easier to read
-and understand.
+On Fri, Apr 18, 2025 at 5:11=E2=80=AFPM Thorsten Blum <thorsten.blum@linux.=
+dev> wrote:
+>
+> On 18. Apr 2025, at 22:23, Kees Cook wrote:
+> > On Thu, Apr 17, 2025 at 09:20:52PM +0200, Thorsten Blum wrote:
+> >> strcpy() is deprecated; use strscpy() instead.
+> >
+> > Are there more strcpy() uses in arch/alpha? Maybe do all of them and
+> > give the Subject prefix as "alpha:". If not, the "smp:" prefix is likel=
+y
+> > to non-specific. Maybe "alpha: smp:".
+>
+> There are a handful left, but they're not as straightforward as this
+> one - so I'd prefer to keep them separate.
+>
+> Could the committer change the subject to "alpha: smp:" or should I
+> submit a v2 just for the title?
 
-The data type is changed so that we can drop the casts when the buffer
-is used.
+I'll fix it up when I add it to my tree.
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
- drivers/iio/pressure/bmp280-core.c | 8 ++++----
- drivers/iio/pressure/bmp280.h      | 3 +--
- 2 files changed, 5 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
-index c20cc4a98c9c494a9c8843518ba2f17b41be18a9..847340e38fd069643c3d38037dab1bab727dcc8f 100644
---- a/drivers/iio/pressure/bmp280-core.c
-+++ b/drivers/iio/pressure/bmp280-core.c
-@@ -1107,7 +1107,7 @@ static irqreturn_t bmp280_trigger_handler(int irq, void *p)
- 	struct bmp280_data *data = iio_priv(indio_dev);
- 	u32 adc_temp, adc_press, comp_press;
- 	s32 t_fine, comp_temp;
--	s32 *chans = (s32 *)data->sensor_data;
-+	s32 *chans = data->sensor_data;
- 	int ret;
- 
- 	guard(mutex)(&data->lock);
-@@ -1228,7 +1228,7 @@ static irqreturn_t bme280_trigger_handler(int irq, void *p)
- 	struct bmp280_data *data = iio_priv(indio_dev);
- 	u32 adc_temp, adc_press, adc_humidity, comp_press, comp_humidity;
- 	s32 t_fine, comp_temp;
--	s32 *chans = (s32 *)data->sensor_data;
-+	s32 *chans = data->sensor_data;
- 	int ret;
- 
- 	guard(mutex)(&data->lock);
-@@ -1903,7 +1903,7 @@ static irqreturn_t bmp380_trigger_handler(int irq, void *p)
- 	struct bmp280_data *data = iio_priv(indio_dev);
- 	u32 adc_temp, adc_press, comp_press;
- 	s32 t_fine, comp_temp;
--	s32 *chans = (s32 *)data->sensor_data;
-+	s32 *chans = data->sensor_data;
- 	int ret;
- 
- 	guard(mutex)(&data->lock);
-@@ -2957,7 +2957,7 @@ static irqreturn_t bmp180_trigger_handler(int irq, void *p)
- 	struct iio_dev *indio_dev = pf->indio_dev;
- 	struct bmp280_data *data = iio_priv(indio_dev);
- 	int ret, comp_temp, comp_press;
--	s32 *chans = (s32 *)data->sensor_data;
-+	s32 *chans = data->sensor_data;
- 
- 	guard(mutex)(&data->lock);
- 
-diff --git a/drivers/iio/pressure/bmp280.h b/drivers/iio/pressure/bmp280.h
-index 5b2ee1d0ee464797d1d9993a014d8f84c37d5596..86ec525ae40d92cc562e998dbe992f091343d88a 100644
---- a/drivers/iio/pressure/bmp280.h
-+++ b/drivers/iio/pressure/bmp280.h
-@@ -456,8 +456,7 @@ struct bmp280_data {
- 	 * Data to push to userspace triggered buffer. Up to 3 channels and
- 	 * s64 timestamp, aligned.
- 	 */
--	u8 sensor_data[ALIGN(sizeof(s32) * BME280_NUM_MAX_CHANNELS, sizeof(s64))
--		       + sizeof(s64)] __aligned(sizeof(s64));
-+	IIO_DECLARE_BUFFER_WITH_TS(s32, sensor_data, BME280_NUM_MAX_CHANNELS);
- 
- 	/* Value to hold the current operation mode of the device */
- 	enum bmp280_op_mode op_mode;
-
--- 
-2.43.0
-
+Thanks!
+Matt
