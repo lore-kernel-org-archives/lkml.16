@@ -1,151 +1,200 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF1F2528EA;
-	Fri, 18 Apr 2025 10:17:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705362528EA;
+	Fri, 18 Apr 2025 10:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744971449; cv=none; b=VwbNhrxegvec/saza9LDnsm7fp/xSEaPzrO+nWUydiuYrf/weauoqHfcvS0EZEyH8LhdcE89E7gsE41QMpyhSKuUmixVCsamY0bC5d+rVyYInxGvZ7fhQ/zh6QNhyewVSWZVDB8Zv0LbIe5LAdtXDfYUAWyJUBiWZgAR0xakQYQ=
+	t=1744971503; cv=none; b=ooyNJkog19saXSMPGfPaTDsv1rriiJqvah9MCSYcWyB+QRx/M4atq3zkEyFe2Wi77eFnRE+5xWbSb6BkbF3PZDA7F2xKH9KNJDq/NjaGprqbHQgT6z9e23eZBQtCeTsdvmewEHngEsRJxRk+C/0Xwbomxf1U/uUSAQF+hFtl4QQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744971449; c=relaxed/simple;
-	bh=4KJ3pqPNZl0W1Qclx3i8pKb/2af0vd6bFKDYm18M7wI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RLF8AebzWJUNUr+6xDZUgWMvOyC6RxuisbyukqwEHGRTsRvxrG1R00QGBmsCVcVsBuwKuEdO4Nk80eWI6iAcdxwsqvoAcwkWl4h4ZikPdcgaVJtTqPqAa5+l6MoYKDotW6IFKwVRYuwfcG1+f2a/HW3ZgX3Ert4iwFltD9bziNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gwqgol5G; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1744971503; c=relaxed/simple;
+	bh=CmVPON/iatRsPZzG29/bxbUZ8IXBQNJaac+12CrXTFo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZZfc8DKxXE2JwAi7nJ2yZT62vSEOhNRr3y+Awy256arX57HtzZ+EZ9NIAgxYy2ILDNSqkrqzIupos0MeMCgOUHVbI6m6a0JDFnDGyP1GGQjLxKoyzmaQPJtq1BBhjufnbio6es/h0TymYfI1103MHZ0GT9qqSdKHrtnJbs4TNQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kerneltoast.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kerneltoast.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gwqgol5G"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39c30d9085aso1250683f8f.1;
-        Fri, 18 Apr 2025 03:17:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744971446; x=1745576246; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=eOmMWBXTx1M9wulu1amjVALQyNz4yRMvByQadLNPKSQ=;
-        b=Gwqgol5Gwv5F5aZ8mdkLu62muk1YjBdyxaWkXsLw44SMDQBZfoCkaDl22PEYhCLs/p
-         I1Pgzu/4BOiUh/jCR9+0MN7Eb/3x/ZqZNwlY1JpvRoo8RLHiHVkrM7HLVIX6jNprveX+
-         efEzp32y9fkwfX30iARznfYk5sXj11T3jnN6G+zqY6IuDRp3IfDOfiX0KhBhuBLO+fOw
-         rQu9Nd8ZE5loWLJuCZpS8PMDaADD83gnx1T51JcF4CLeyO3he20hXN2S/jJfKWV/buW7
-         hZgfqGCWHcUIQUQbxe2Z1XVqOLw5AGqcYpFwYmuCzX7wdgNw7ek5r3+oFJl4MsOayuQO
-         /sbw==
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-224100e9a5cso21056305ad.2;
+        Fri, 18 Apr 2025 03:18:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744971446; x=1745576246;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eOmMWBXTx1M9wulu1amjVALQyNz4yRMvByQadLNPKSQ=;
-        b=m1/7+8pV53LiE8kPH9TV0wFCsUzPow8pa9UnPX86jtWL6rFk5wTf2CMZgZE2Oituqt
-         dQmzVuvpiT44Mff0UCo23o0iETOH+k7GkVPETKatOuHPQ5utPUBlMRvNijSQp6UI2uNT
-         0Ryg9dYL6g5i5VMcs4iPkjyqo1PDErgRlUMHCzDTF4fKd4drn026SHZ/Fr/y1Guc7pmu
-         vXExdErZvHNwUJQT4Yp+19I1sfK2nE2t443Lt8vi2jECSML3QoMFeVJzSXYmM8rKPmmc
-         bl7WvxFIeQfJZczsVzfxUOf6nxTDd36I2C/7USq2JAwSNpqf6YXUpv/dNQsCz0nECwVF
-         Jg/w==
-X-Forwarded-Encrypted: i=1; AJvYcCX2Oi22q66g3ygBPd2BF7sPzyrRobZ1JQ0QyiDRJmNyjsEVeYRY+TEbsWRIgTi8GHrgzQB9F97CGF4Co26K@vger.kernel.org, AJvYcCXymtKl5LUPI0U7aXNotd7oM6oLNlQxkX0UXR795F+5VoGBKYNwwyDwKZvj6kniKcKdUiU4MMClyAk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+qp6pyQhEvZ0dEsB8M9cDa6bxHzWBQlFSVxyEuDN8GGMjhEci
-	VHNYfZZZ0+yLa/uFbr954YyLbbE/aCuKjDRQhBgdC16N6EuTiXBW
-X-Gm-Gg: ASbGncuy9/8p6XH+k/P/Q8t2FpddB5j6ZljJ66/WGGF8psjZSeeE1QGYCQtvD0JCixx
-	vWENgr2C1m6hAv9nyHPFp+AqlJIle9yCDTBxCxi2Gz1gW20xyTcBULzSSNuMnxVz8H3PjuMXgkp
-	QtWEhx8m3xl5vFOuKpVeANRXS7zUC0BKO+OL2LKHXeCFReBc9FkdYZU8+FOgk8a05GJjptJNl8l
-	5ZkbmpmLDePQeOlZtmjy3hmpkpXuxNFDO2xcu1pDBbypjoEPvzduwWUk5XuUm70zg7iJsouuuTq
-	ilS9OMjNB9R9czzAw49CKI4cYWtvGAEq6IajfG0aSwurW6BceqOHynh+F4NO/IyiqZJ0GZUcoOA
-	gjst46U7YXTjp13o=
-X-Google-Smtp-Source: AGHT+IEkbQ7voM8ncroqlk8dFE4Yp2MJiM8ArCnC7OxTSaJtSz0Be/gNlrys4JDijwJkyzTmUEnkmA==
-X-Received: by 2002:a05:6000:4027:b0:39e:cbef:95ab with SMTP id ffacd0b85a97d-39efba397eamr1549484f8f.12.1744971445796;
-        Fri, 18 Apr 2025 03:17:25 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d6db10csm16368235e9.27.2025.04.18.03.17.24
+        d=1e100.net; s=20230601; t=1744971501; x=1745576301;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BWu+8ChlXVy38S6xmpYuUF0tvb7WzX0hMNuvI4KykjE=;
+        b=u4jlLO6doqu34b28eg0esbEiMMRltf/tUhMj+xVDSsEyOSvzyQbF5MO5Y2gkhSh57b
+         nZ+yf/xTg+oz5QrXWXFWMiD4EVP8AmODBegnjXpW6sRQbB3YlkybJ0mdfAfQUzXd3sYc
+         ddhTw1l69ntQK8jXAm6ny6Ug/5cW5ds5roaLISIAnylpDiRNDZznzSJqzESQTG/2TSi1
+         VNzCRcSnMHq7lktfioOZnSoA3ONyGdzTHre/FCxnYLRF5zy8OMqrZVsc0yZiL+3HB0Kf
+         CW4/jTfEIn5z8QLHzGE5fjoJtB6ToukQN7USScJH/dxd/Z9RCWrLbrfA3HRUydGGweKB
+         taaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWIyuXN1vQA/k0lN3fDqYc5lg+rzm+R94R5dAdoXPWNrI+m/4xJQekYr0vGdXPsEnvqBKKOtyRS7FHhDic=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXNBbyAbPYTBthMD0J7iYdWnUv5JvCQorXyxDdweku+/2tRDCB
+	e7AXkwndUat2fZBK7PGwOfQOTCn24AMLRg9DBBCARinSnM8NUjzYurLtb3Fk
+X-Gm-Gg: ASbGncsFP4J7mTzn1e2fnBvFDTApXzWTrE2QEwdSIrLqD4eEW3emHmDeNdmItkJT3Ur
+	l0vBIJxCf4+ElBJzGes6SmULGBne9jKZVFX78F6tUWrVXlxEZYaXQZhhzNVpWB7OZgk4N1ETga9
+	gn+bJtBRP7GQCDr/dsALNkVkDGo3xZ5PbkqGVxv5+SZMRenFd58TGIPwLQLgYAVqy63ebTmYa1P
+	T2ldMqrqNQ41A1ncpswqGVrzLbGeRQ/wvklYZel9yZRqqOMbeUJGDFrlGCqYFqubqShqV6vkKz5
+	SsAUmrwpom6E+f5I1p0SMQWYBIeLK+z0mVyhpPixD6wjG4+9YvRkMRadouCZOkHJ3aHRJsjkOIr
+	Bv+C01kMOIJItRIoSqRNj9AT93aJc
+X-Google-Smtp-Source: AGHT+IEsjgW/1z/jDp+j/0gbGgsoTmvWeHA8/861Tm7YHQ56kuNSS6q7YrFe9pB+7RJFBiq1SfqSRQ==
+X-Received: by 2002:a17:902:e747:b0:225:b718:4dff with SMTP id d9443c01a7336-22c5361b4cfmr32304705ad.53.1744971500576;
+        Fri, 18 Apr 2025 03:18:20 -0700 (PDT)
+Received: from sultan-box.localdomain (n122-107-215-46.sbr1.nsw.optusnet.com.au. [122.107.215.46])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaee68bsm1305632b3a.175.2025.04.18.03.18.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 03:17:25 -0700 (PDT)
-Message-ID: <5ba8def4eb147e0224bb82795aa8b01abb11c086.camel@gmail.com>
-Subject: Re: [PATCH 6/8] iio: imu: adis16550: align buffers for timestamp
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
-	 <Jonathan.Cameron@huawei.com>
-Cc: Andy Shevchenko <andy@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
- Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Matthias Brugger
- <matthias.bgg@gmail.com>,  AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Cosmin
- Tanislav <cosmin.tanislav@analog.com>,  Tomasz Duszynski
- <tduszyns@gmail.com>, Jean-Baptiste Maneyrol
- <jean-baptiste.maneyrol@tdk.com>, Andreas Klinger <ak@it-klinger.de>, Petre
- Rodan <petre.rodan@subdimension.ro>,  linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Date: Fri, 18 Apr 2025 10:17:46 +0100
-In-Reply-To: <651b1f91-fd5e-4d59-b78b-fdd7f89247e4@baylibre.com>
-References: 
-	<20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
-	 <20250417-iio-more-timestamp-alignment-v1-6-eafac1e22318@baylibre.com>
-	 <aAEzeY_p6a8Pr-zn@smile.fi.intel.com>
-	 <f4db1a95-106f-4fa4-9318-3ee172e29cdb@baylibre.com>
-	 <20250417184429.00002403@huawei.com>
-	 <651b1f91-fd5e-4d59-b78b-fdd7f89247e4@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+        Fri, 18 Apr 2025 03:18:20 -0700 (PDT)
+Date: Fri, 18 Apr 2025 20:18:11 +1000
+From: Sultan Alsawaf <sultan@kerneltoast.com>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Christian Loehle <christian.loehle@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH v2 5/6] cpufreq: Avoid using inconsistent policy->min and
+ policy->max
+Message-ID: <aAIm48RPmm1d_Y6u@sultan-box.localdomain>
+References: <6171293.lOV4Wx5bFT@rjwysocki.net>
+ <9458818.CDJkKcVGEf@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9458818.CDJkKcVGEf@rjwysocki.net>
 
-On Thu, 2025-04-17 at 15:48 -0500, David Lechner wrote:
-> On 4/17/25 12:44 PM, Jonathan Cameron wrote:
-> > On Thu, 17 Apr 2025 12:07:37 -0500
-> > David Lechner <dlechner@baylibre.com> wrote:
-> >=20
-> > > On 4/17/25 11:59 AM, Andy Shevchenko wrote:
-> > > > On Thu, Apr 17, 2025 at 11:52:38AM -0500, David Lechner wrote:=C2=
-=A0=20
-> > > > > Align the buffers used with iio_push_to_buffers_with_timestamp() =
-to
-> > > > > ensure the s64 timestamp is aligned to 8 bytes.
-> > > > >=20
-> > > > > =C2=A0drivers/iio/accel/bmc150-accel.h | 2 +-
-> > > > > =C2=A0drivers/iio/imu/adis16550.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
- 2 +-=C2=A0=20
-> > > >=20
-> > > > Looks like a stray squash of the two independent commits.=C2=A0=20
-> > >=20
-> > > Oops, sure enough.
-> > >=20
-> > > >=20
-> > > > ...
-> > > > =C2=A0=20
-> > > > > =C2=A0	struct bmc150_accel_trigger triggers[BMC150_ACCEL_TRIGGERS=
-];
-> > > > > =C2=A0	struct mutex mutex;
-> > > > > =C2=A0	u8 fifo_mode, watermark;
-> > > > > -	s16 buffer[8];
-> > > > > +	s16 buffer[8] __aligned(8);=C2=A0=20
-> > > >=20
-> > > > As for the code, would it be possible to convert to actually use a =
-sturcture
-> > > > rather than an array?=C2=A0=20
-> > >=20
-> > > I do personally prefer the struct pattern, but there are very many ot=
-her
-> > > drivers
-> > > using this buffer pattern that I was not tempted to try to start conv=
-erting
-> > > them.
-> >=20
-> > For drivers like this one where there is no room for the timestamp
-> > to sit earlier for minimal channels I think it is worth that conversion
-> > if we are touching them anyway.=20
-> >=20
-> > Jonathan
-> >=20
-> There is actually a lot more wrong in this driver, so will save that for =
-a
-> separate series.
->=20
+On Tue, Apr 15, 2025 at 12:04:21PM +0200, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Since cpufreq_driver_resolve_freq() can run in parallel with
+> cpufreq_set_policy() and there is no synchronization between them,
+> the former may access policy->min and policy->max while the latter
+> is updating them and it may see intermediate values of them due
+> to the way the update is carried out.  Also the compiler is free
+> to apply any optimizations it wants both to the stores in
+> cpufreq_set_policy() and to the loads in cpufreq_driver_resolve_freq()
+> which may result in additional inconsistencies.
+> 
+> To address this, use WRITE_ONCE() when updating policy->min and
+> policy->max in cpufreq_set_policy() and use READ_ONCE() for reading
+> them in cpufreq_driver_resolve_freq().  Moreover, rearrange the update
+> in cpufreq_set_policy() to avoid storing intermediate values in
+> policy->min and policy->max with the help of the observation that
+> their new values are expected to be properly ordered upfront.
+> 
+> Also modify cpufreq_driver_resolve_freq() to take the possible reverse
+> ordering of policy->min and policy->max, which may happen depending on
+> the ordering of operations when this function and cpufreq_set_policy()
+> run concurrently, into account by always honoring the max when it
+> turns out to be less than the min (in case it comes from thermal
+> throttling or similar).
+> 
+> Fixes: 151717690694 ("cpufreq: Make policy min/max hard requirements")
+> Cc: 5.16+ <stable@vger.kernel.org> # 5.16+
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> 
+> v1 -> v2: Minor edit in the subject
+> 
+> ---
+>  drivers/cpufreq/cpufreq.c |   46 ++++++++++++++++++++++++++++++++++++----------
+>  1 file changed, 36 insertions(+), 10 deletions(-)
+> 
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -490,14 +490,12 @@
+>  }
+>  EXPORT_SYMBOL_GPL(cpufreq_disable_fast_switch);
+>  
+> -static unsigned int clamp_and_resolve_freq(struct cpufreq_policy *policy,
+> -					   unsigned int target_freq,
+> -					   unsigned int relation)
+> +static unsigned int __resolve_freq(struct cpufreq_policy *policy,
+> +				   unsigned int target_freq,
+> +				   unsigned int relation)
+>  {
+>  	unsigned int idx;
+>  
+> -	target_freq = clamp_val(target_freq, policy->min, policy->max);
+> -
+>  	if (!policy->freq_table)
+>  		return target_freq;
+>  
+> @@ -507,6 +505,15 @@
+>  	return policy->freq_table[idx].frequency;
+>  }
+>  
+> +static unsigned int clamp_and_resolve_freq(struct cpufreq_policy *policy,
+> +					   unsigned int target_freq,
+> +					   unsigned int relation)
+> +{
+> +	target_freq = clamp_val(target_freq, policy->min, policy->max);
+> +
+> +	return __resolve_freq(policy, target_freq, relation);
+> +}
+> +
+>  /**
+>   * cpufreq_driver_resolve_freq - Map a target frequency to a driver-supported
+>   * one.
+> @@ -521,7 +528,22 @@
+>  unsigned int cpufreq_driver_resolve_freq(struct cpufreq_policy *policy,
+>  					 unsigned int target_freq)
+>  {
+> -	return clamp_and_resolve_freq(policy, target_freq, CPUFREQ_RELATION_LE);
+> +	unsigned int min = READ_ONCE(policy->min);
+> +	unsigned int max = READ_ONCE(policy->max);
+> +
+> +	/*
+> +	 * If this function runs in parallel with cpufreq_set_policy(), it may
+> +	 * read policy->min before the update and policy->max after the update
+> +	 * or the other way around, so there is no ordering guarantee.
+> +	 *
+> +	 * Resolve this by always honoring the max (in case it comes from
+> +	 * thermal throttling or similar).
+> +	 */
+> +	if (unlikely(min > max))
+> +		min = max;
+> +
+> +	return __resolve_freq(policy, clamp_val(target_freq, min, max),
+> +			      CPUFREQ_RELATION_LE);
+>  }
+>  EXPORT_SYMBOL_GPL(cpufreq_driver_resolve_freq);
+>  
+> @@ -2632,11 +2654,15 @@
+>  	 * Resolve policy min/max to available frequencies. It ensures
+>  	 * no frequency resolution will neither overshoot the requested maximum
+>  	 * nor undershoot the requested minimum.
+> +	 *
+> +	 * Avoid storing intermediate values in policy->max or policy->min and
+> +	 * compiler optimizations around them because them may be accessed
+> +	 * concurrently by cpufreq_driver_resolve_freq() during the update.
+>  	 */
+> -	policy->min = new_data.min;
+> -	policy->max = new_data.max;
+> -	policy->min = clamp_and_resolve_freq(policy, policy->min, CPUFREQ_RELATION_L);
+> -	policy->max = clamp_and_resolve_freq(policy, policy->max, CPUFREQ_RELATION_H);
+> +	WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max, CPUFREQ_RELATION_H));
+> +	new_data.min = __resolve_freq(policy, new_data.min, CPUFREQ_RELATION_L);
+> +	WRITE_ONCE(policy->min, new_data.min > policy->max ? policy->max : new_data.min);
 
-I think one of them is actually leaking some memory into userspace...
+I don't think this is sufficient, because this still permits an incoherent
+policy->min and policy->max combination, which makes it possible for schedutil
+to honor the incoherent limits; i.e., schedutil may observe old policy->min and
+new policy->max or vice-versa.
 
-- Nuno S=C3=A1
+We also can't permit a wrong freq to be propagated to the driver and then send
+the _right_ freq afterwards; IOW, we can't let a bogus freq slip through and
+just correct it later.
 
+How about using a seqlock?
+
+Sultan
