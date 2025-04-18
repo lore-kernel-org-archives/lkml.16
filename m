@@ -1,82 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA8B1C3306;
-	Fri, 18 Apr 2025 17:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5B313B590;
+	Fri, 18 Apr 2025 17:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744995649; cv=none; b=m9h0ilNXyDWi4xaa1WM/Al6tpUTrNvxeu78AEX8H6gdny0TcYT+QoeqCFQT3SoDlIILTIwjyyOuz/ovMMaPjlhGG/evmG0hSgO/fysYV6I2zYPw0IPebaPhXlKNRjlvxoldfwpIXaJksWangj35MSygECyEJQSKt2kh5I4CZiY8=
+	t=1744995676; cv=none; b=GKiC5UilisDLOo5rPAVlHJov/tdDqcDEKHryY+llVoAbIjGYyAukTEgGwJIv7B0PFQTJ1Phd59JYyw8Ks45xhADncGQsi7GqH5U+K6qb42eenLd4E7bJZpjKHswLaYNBeKyt7NlrZGmJLDTXtRWZouIH+VsYJdQpggQqK0bVRPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744995649; c=relaxed/simple;
-	bh=KN5qU6sNgXb/lB3tOKNCKsgEQKT9PjlafHKBd6uAs1Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ABacL+nnkE0Ha23CSF0p3XPMFqnq9EIhTcYtUg+TtzFvEuTxTLZUqzhN9Z9Np4bYrt74yoAIy4Jo33mkgS+NFJgEl8cfN/jeyZrfrtRQJrSEHl+N4bpOR3+uW6nLY87X7NuczI+WKrUJFLPPiq4iR1PXpnfgB0WBljT12oLfoOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oyRmt8ta; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744995676; c=relaxed/simple;
+	bh=8w1HZbYIpGw2lsE8fxuZH0Z+2IIZJk+H61XsQgcKQao=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=INaPPOw7GP2FMCHTGukqxZp+AQb/Rx1rwVjm92JARbcmyiCBh6j2vLEdZNBFqs1PXornPsz6sBGnMwAr6r7t7SM8uDwhqWaMu/HabWMSrsEpYwPTqGEvrS//DrxOIP3krX5KLuGXVEhPcv9iu4TPk+Nf5SbP8yWrJi9woVFEJDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HnESSXM+; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oyRmt8ta"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C740C4CEE2;
-	Fri, 18 Apr 2025 17:00:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744995648;
-	bh=KN5qU6sNgXb/lB3tOKNCKsgEQKT9PjlafHKBd6uAs1Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oyRmt8ta0EKg/VIkuao40EQIX29eTgTxTMHT47FwGRw6sK6rjLOi0yFgnahdMHnac
-	 t75NYzMpEKgXmLTEcH6w/nQWeq6k9RlDuqIs+VX54Pcd+gsgo7eRC2UIpzPUOHtCUv
-	 Yoz8uUigK67i0brdGb8AgogwQkGEi9QdVefE58LK4iIDVXU+zmrOmzd3CCRNlFPxZy
-	 D43WFaaRe1aIWBNGOhwcXEDbSFFAVcao8R58IJ0rFno3oseIqaxU3m3LqIe5XeuqIB
-	 +ba6bR7WYGKDL1Y4oObnIpOk2RkClsABc5WwRHQPf8HUTqLsOsEMO7lSL5mDgbTAGw
-	 4puU/kpivKT/A==
-Date: Fri, 18 Apr 2025 18:00:44 +0100
-From: Simon Horman <horms@kernel.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-afs@lists.infradead.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH net-next] rxrpc: rxgk: Set error code in
- rxgk_yfs_decode_ticket()
-Message-ID: <20250418170044.GB2676982@horms.kernel.org>
-References: <Z_-P_1iLDWksH1ik@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HnESSXM+"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-47686580529so22448571cf.2;
+        Fri, 18 Apr 2025 10:01:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744995673; x=1745600473; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K4jOaTYIRWPNV5975r6TtN5MoRcAB00ZTyeDTKmI1wU=;
+        b=HnESSXM+aCJ0XeEsmXKiZ/SzPoGnuXlp0GpuJNyfv8oNS4HzeT0fN0caBxenhQcRi8
+         KZeXyT6DsfT7CtouMGi9htK5Az059tArWoGmY5LVsOpVUTmPXGYErmK6zYHY0ZWQxrjs
+         T5Fq67hYo6GxIfT/JatOFPFTd7JbJwA33vnglPm0+L1K/2YABNur4dgdGWS7cr35zXDe
+         YwGEcuMzFpI7PjwY7BSWSZUBWyfjz5Or/09FbcRRrf7kUMQmCHUnY087ZAiPWPEjjgYK
+         vED0tC12SYdz6aBw/kWRH7fmm9gGdY8E3654DbbdEtu0RgfJteog3rLAkmUYPVQmZ799
+         +OtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744995673; x=1745600473;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K4jOaTYIRWPNV5975r6TtN5MoRcAB00ZTyeDTKmI1wU=;
+        b=NLLvaqUo7ZNrMC8Q9Oh5E1gnEHrm/9UVTE3a98udeXyczNpkkJNc+8QSQFtnYjzn9l
+         Dj841+Cst5N894BubHNQvTD059narfmz1tt49usZeUihGF6Nrho54XdHbHrnWGp9nYtp
+         V1wnHq+VEFAUJPJb0aG7indu32yGIGAh1SUtW05gS2AwMcV2t/5qWtdFZVHNW1O+w+2K
+         jLFvxK8QhV9fvjaZ/gL71w8CfTo6ssanbsrr0VtL+kXOT4gP2ktTDvHTvXSuMzuE3Gq+
+         9MDaE2J1vXFyEDtljLhRSEJ+ZgfZ7yXT91BgX3r3t6fR62X5G/Z5lcvK8XKoQJmiNKp6
+         4K5A==
+X-Forwarded-Encrypted: i=1; AJvYcCVh3RHjttrc/Zn5Oz9RvLHIxpUP3DCl6QwopD9GdtrmolL/UWSzA1SbOiCZn81/CFNMp5NvTC7f@vger.kernel.org, AJvYcCWrDpqmY9gNSMgGEYT81kiq/fk7m0Zfeu6SEY5bF1KuLCGWWyjZXOEKRlQuGTJgzMyDB5DZW1upZMYKRTz/@vger.kernel.org, AJvYcCXrXGWSVX0P4vYjqTAPCLSQDrczOqZZW2A7qVM5/frNkOXI/McbmstpeBpjiqyKt7Rp2aCrzgUsRyw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfIqabFKEgsPyU6BMMbH2FUQvf5PmhKVtMh69sJUP4zFus7Cx3
+	BfLj3fuN3X0FmorPcCPkcOUwzC56gO3eyCKxs+q3aOBbV/mGlpVuOJvlMusNCG16+1uOYbERk+y
+	Uxcozok2W7dAIxTeXhXI8Tf5TjSanNHKwE7w=
+X-Gm-Gg: ASbGncsn6ee9EJjEg8iB2VoEhxAzwPhFPHGKJ8JzROCegnK/9Ohlkp4SW0eadNEGgYm
+	csuC+1TWuSWDM0uL7O5d//jYHNGsSPIFN8qILrJdtBqDZdzyw8zYPvkryHZ3CGjuo6T9HAd0MUK
+	CQerKvm+d45oupABqTZmHE80y1ah1X+5kH4BP2kLlfOQ2U6588Q3U1zYO2V+63e/A=
+X-Google-Smtp-Source: AGHT+IGfRaxUib4vxMeg5ZHVwz3sTnnqydjjr+BZWaabAYNvr6HBK0qxHxLDmk+tzoqUGiqm3k5sVAVmzeMakuDT4ZI=
+X-Received: by 2002:ac8:584f:0:b0:476:af62:8532 with SMTP id
+ d75a77b69052e-47aec4ba327mr49626361cf.45.1744995673373; Fri, 18 Apr 2025
+ 10:01:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_-P_1iLDWksH1ik@stanley.mountain>
+References: <20250417135434.568007-1-gshahrouzi@gmail.com> <20250418164040.0f103380@jic23-huawei>
+In-Reply-To: <20250418164040.0f103380@jic23-huawei>
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Date: Fri, 18 Apr 2025 13:01:02 -0400
+X-Gm-Features: ATxdqUHYpoK_uf-3FQX72Xc5r4NMTYfDz6xHt0YdITsiYSrcp9t89ZozAiI7UVo
+Message-ID: <CAKUZ0z+kr1ToeOJaRihbfQyKoJ+vgOF7YjK811TbEcyd-43a-Q@mail.gmail.com>
+Subject: Re: [PATCH] iio: frequency: Use SLEEP bit instead of RESET to disable output
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev, 
+	Michael.Hennerich@analog.com, skhan@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linux.dev, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 16, 2025 at 02:09:51PM +0300, Dan Carpenter wrote:
-> Propagate the error code if key_alloc() fails.  Don't return
-> success.
-> 
-> Fixes: 9d1d2b59341f ("rxrpc: rxgk: Implement the yfs-rxgk security class (GSSAPI)")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-
-Reviewed-by: Simon Horman <horms@kernel.org>
-
-...
-
-> diff --git a/net/rxrpc/rxgk_app.c b/net/rxrpc/rxgk_app.c
-> index 6206a84395b8..b94b77a1c317 100644
-> --- a/net/rxrpc/rxgk_app.c
-> +++ b/net/rxrpc/rxgk_app.c
-> @@ -141,6 +141,7 @@ int rxgk_yfs_decode_ticket(struct rxrpc_connection *conn, struct sk_buff *skb,
->  			KEY_ALLOC_NOT_IN_QUOTA, NULL);
->  	if (IS_ERR(key)) {
->  		_leave(" = -ENOMEM [alloc %ld]", PTR_ERR(key));
-
-Not a bug, but it doesn't seem ideal that _leave(), which logs a debug
-message, is called here and with a more general format in the error label.
-
-> +		ret = PTR_ERR(key);
->  		goto error;
->  	}
->  
-> -- 
-> 2.47.2
-> 
+On Fri, Apr 18, 2025 at 11:40=E2=80=AFAM Jonathan Cameron <jic23@kernel.org=
+> wrote:
+>
+> On Thu, 17 Apr 2025 09:54:34 -0400
+> Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
+>
+> > According to the AD9832 datasheet (Table 10, D12 description), setting
+> > the RESET bit forces the phase accumulator to zero, which corresponds t=
+o
+> > a full-scale DC output, rather than disabling the output signal.
+> >
+> > The correct way to disable the output and enter a low-power state is to
+> > set the AD9832_SLEEP bit (Table 10, D13 description), which powers down
+> > the internal DAC current sources and disables internal clocks.
+> >
+> > Fixes: ea707584bac1 ("Staging: IIO: DDS: AD9832 / AD9835 driver")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> > ---
+> Seems reasonable but I'd like some more review of this before picking it =
+up.
+> So feel free to poke me if nothing happens in say 2 weeks from now.
+Sounds good.
+>
+> >  drivers/staging/iio/frequency/ad9832.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/i=
+io/frequency/ad9832.c
+> > index db42810c7664b..0872ff4ec4896 100644
+> > --- a/drivers/staging/iio/frequency/ad9832.c
+> > +++ b/drivers/staging/iio/frequency/ad9832.c
+> > @@ -232,7 +232,7 @@ static ssize_t ad9832_write(struct device *dev, str=
+uct device_attribute *attr,
+> >                       st->ctrl_src &=3D ~(AD9832_RESET | AD9832_SLEEP |
+> >                                       AD9832_CLR);
+> >               else
+> > -                     st->ctrl_src |=3D AD9832_RESET;
+> > +                     st->ctrl_src |=3D AD9832_SLEEP;
+> >
+> >               st->data =3D cpu_to_be16((AD9832_CMD_SLEEPRESCLR << CMD_S=
+HIFT) |
+> >                                       st->ctrl_src);
+>
