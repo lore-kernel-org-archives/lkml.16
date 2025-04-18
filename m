@@ -1,57 +1,49 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3D71D89F0
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:01:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEBB1D89F0;
+	Fri, 18 Apr 2025 15:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744988508; cv=none; b=POe3aHpYErRXob08Vnq33nxRqbzEQsvUJNSBPD8wMU3C9Jfc+Rdx65avoiXGL2uv0hbNoD6+ED15RVV0EXQjeh9cF8dv1nKAluaQFnQoHNxzcQ7MTc9aIyYca9QEK5W5zRW4vxZIH7RT4dSXkIonbrpdPyrfNSf2wLEHFV0D0B8=
+	t=1744988512; cv=none; b=C4jkfcDks5VGZce+l6wRhn1eyua+UZzdhl5jPuBsgwY1/EQ3Sj4zgsi5imhxZT27Lk59JO9UfF23/51oJJfW13EIQ9Py+MwtWZYv2L2DOla2cnKKNgLgOvJ98qWYFKzOqbQvM+fRPIUG2Gv8BshiNg8gJeoSMsycZGrJ+k0NFpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744988508; c=relaxed/simple;
-	bh=FWbrSVy6V4doqA4dC7Rao1yMTsc7/2keSqw/TY5ZDAw=;
+	s=arc-20240116; t=1744988512; c=relaxed/simple;
+	bh=8A/sIYJ5SKbc782T5XhHrLEMq+A/QJdgAYupGNodiY4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gAlF/xlbkR4X5+R2bBsGJlF5SAP/Zvrq6fHss1jYS0+6OU82aonCO5++04Mb/SWnP3zxJKZ4BajIw05M/gYrt2PzcZ+feKdc6asqXM6lLIWyKGNSLkKHSekjAcjbz0xmbzphsRanTd7aPviL5b6E0jdCGlvNgISVf646wbQj4xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=guR1pIke; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=JFinf8Q9MKcP87AFpn0ocogJDFAdJ8pEwR3TWoWlrFneXR0BSz6ABzEtUr4Jp0FPOClThuLKIc8M/hQvTbnxN33nqT3sOQw3Doh+nmYEx2KIyPodrcAGk6dkGMCPkH6HA1azwF3fPgwQJGfSMdRBAjDxhtGQSpMwsdUxpmpN3Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/hWodxC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="guR1pIke"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744988505;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qfNiTVzEmfUj36NeR+W+IszVzxKnk6l6G/dt+7ak0N0=;
-	b=guR1pIkevpS6c/mbdGRJFVWPOWjxqGogdDtuGvOFgXX9+qrO2fpcCnG045SaVpX2hLl9Oo
-	RGmUF6B7XKnh8e/5gU0ZoaTMkpen4Nr/PceEpAbgMOtYFtKleLlAWxV22hqanYePPeD3cD
-	TqvvpPsg1FAIbIb84yFgr2IhZPNhZKk=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-365-rV9BBcsJPNqvIFj7JRMPkQ-1; Fri,
- 18 Apr 2025 11:01:42 -0400
-X-MC-Unique: rV9BBcsJPNqvIFj7JRMPkQ-1
-X-Mimecast-MFC-AGG-ID: rV9BBcsJPNqvIFj7JRMPkQ_1744988501
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B715319560AE;
-	Fri, 18 Apr 2025 15:01:40 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.18])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 87B841801942;
-	Fri, 18 Apr 2025 15:01:39 +0000 (UTC)
-Date: Fri, 18 Apr 2025 23:01:35 +0800
-From: Baoquan He <bhe@redhat.com>
-To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
-Subject: Re: [PATCH 3/4] MAINTAINERS: Add test_vmalloc.c to VMALLOC section
-Message-ID: <aAJpTwSTphlbAW0I@MiWiFi-R3L-srv>
-References: <20250417161216.88318-1-urezki@gmail.com>
- <20250417161216.88318-3-urezki@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/hWodxC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2F22C4CEED;
+	Fri, 18 Apr 2025 15:01:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744988511;
+	bh=8A/sIYJ5SKbc782T5XhHrLEMq+A/QJdgAYupGNodiY4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A/hWodxCNPsy1G6IUlmfsUKPqnT1Ujt4MbzqWbcblOUnrPeC6mUHiaQLG39y8aCpX
+	 CqM4lGrfOvsbTyqM0ArrrdiSchD0Xw68g1637tLVyX/a9miA1OW2TXJvaaJKssdA15
+	 inuGhv2ZpxgFYHibi/I/56uplFouJCiprgLowDFdyI+DlKXeBDXjv5/ilK8nceskID
+	 33KmL/slPYF0SJaOQKKaeK1Y5oGNFE2aC5lj8BAeoOh/smuVOSxzQ777mGw5dvt2gU
+	 JYALSfe1bQeiyShNesrRus2B56KAIV2A8kPS//gNu0iYoXVZZSAu0XoWTuho1RFTd7
+	 UcpVyOsFppB7Q==
+Date: Fri, 18 Apr 2025 08:01:49 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: linux-crypto@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+	x86@kernel.org, Jason@zx2c4.com, ardb@kernel.org
+Subject: Re: [PATCH 01/15] crypto: arm - remove CRYPTO dependency of library
+ functions
+Message-ID: <20250418150149.GB1890@quark.localdomain>
+References: <20250417182623.67808-2-ebiggers@kernel.org>
+ <aAHDIRlSNLsYYZmW@gondor.apana.org.au>
+ <20250418033236.GB38960@quark.localdomain>
+ <aAHJRszwcQ4UyQ2e@gondor.apana.org.au>
+ <20250418040931.GD38960@quark.localdomain>
+ <aAIMhLD3UMM41JkT@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,35 +52,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250417161216.88318-3-urezki@gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+In-Reply-To: <aAIMhLD3UMM41JkT@gondor.apana.org.au>
 
-On 04/17/25 at 06:12pm, Uladzislau Rezki (Sony) wrote:
-> A vmalloc subsystem includes "lib/test_vmalloc.c" test suite.
-> Add an "F:" entry under VMALLOC section to track this file as
-> part of the subsystem.
+On Fri, Apr 18, 2025 at 04:25:40PM +0800, Herbert Xu wrote:
+> On Thu, Apr 17, 2025 at 09:09:31PM -0700, Eric Biggers wrote:
+> >
+> > arch/$ARCH/lib/crypto/ is the "right" way to do it, mirroring lib/crypto/.  I
+> > was just hoping to avoid a 4-deep directory.  But we can do it.
 > 
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 17ed0b5ffdd20..8e62b09e4c9e4 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -25874,6 +25874,7 @@ W:	http://www.linux-mm.org
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
->  F:	include/linux/vmalloc.h
->  F:	mm/vmalloc.c
-> +F:	lib/test_vmalloc.c
+> You can do that in a follow-up, assuming nothing else pops for this
+> series.
 
-Reviewed-by: Baoquan He <bhe@redhat.com>
+Doing it as a follow-up when this series hasn't been merged yet would be kind of
+silly, since it would undo a lot of this series.  I'll just send out a v2 of
+this series.
 
->  
->  VME SUBSYSTEM
->  L:	linux-kernel@vger.kernel.org
-> -- 
-> 2.39.5
-> 
-
+- Eric
