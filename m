@@ -1,59 +1,61 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A685F1DE88C
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A84214201
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744990949; cv=none; b=pbqWg1DNzE+LJUc0Cax0nWrljpaW/b9/noTsiuT81nmijJN7sxP8Isa7ErEuy9TErzQeD1q0BOt5KPDQkbRNIoyGFUhrzYoU0PDMLeYNqdk+4vwKJRQFI9mDDlXWjqpsJQDzNvgZmVs3VSZxfVk/ISod0jmHwK1yW2Szid8YPZ8=
+	t=1744990952; cv=none; b=iBacnTOmJod59N7owLWWgpDpo6GtToOQVzf4QXb6QPVnVk4LQ+ioOHps7umeIrqhGpfnGo7CrIznkAetTDCdRVRiTA0TkTz5fEQsp81cnbzbJmb3btxU7++Vx/N38fG+Vtm/d5t5ZVNQ+g0wiI2FzPL5oNtsgTQb9sohGOvHv3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744990949; c=relaxed/simple;
-	bh=8e7pbQ2bTA4lrV+RYiGKF2Y3SlI9gzWDTtVmcFDC2Bc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s0eAklmxAsgND2iMNDX/JGPOHCtWZhY4Hqv8yV/uE32LL/yce2W9Y2mQjIVHv1O4q4WcmOcJiQalnvAtm6bglwYBEJFsQgQoYGzCUbd28sd+DMZmS5O3h9gQr/ny7WNEaswXA2qBM1Lbb+hcWzzZycbGiqiX4Ieny5BMpYCKBlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aYhbNDMb; arc=none smtp.client-ip=209.85.128.52
+	s=arc-20240116; t=1744990952; c=relaxed/simple;
+	bh=chPzjK0Y6d/4/rESwcFrsvyNA2pkcRF2YGDzqvtbNg8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ltlKy1SirDPO0y0q5HqMfdvj35v/1kZOSVTw4FxRNjfbUdL3twekOXV4RcrfBZAffYcW8EkiupYV9VYO4lk1zROpdmhxA8DUoKnG7aowJIXG1OjzldCHp3TXVzDdTd/vTxcRDcwSZ8Sx+Qs3/u+d323jgUjYXUTlEsN77XgQsvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HSZ34c/p; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aYhbNDMb"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso12948555e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:42:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HSZ34c/p"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39ac56756f6so2035780f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:42:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744990946; x=1745595746; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=swXOeOrGvU16YEKC9rgfXZITAmlWOeSfggI4AmHPyYs=;
-        b=aYhbNDMbfrMp844SXkpnyz8NAa0+cYTtpH8GQv9B9UWZFdeMAlp8dc8uUMysbBq7gz
-         7UDkPZJdUUHXrxYz1mkCPUpFEZDJyy+ZP8ARYFT905oBZrREhZgjxjSZDnY9QO2Kb0cA
-         jdTmATOSX7uTpvzyVSzT09+I1YR9DLLh5G5xIiQX5n5tVggnXpp2IQ/+j8xTeKySnlJ5
-         0fhe7n1w+zi/i+mqaOf9Oao2j3KHxxkOVdjEHCMrW9P7i5SdIFHRZFq4aIzMfoIjAhxi
-         oX30ERu4zohc8i0pTJ77oGxHUiZxlsJyMc+d5op6ihTFElKuQkbGkj8QIOOnkHvCIJvH
-         Rabg==
+        d=gmail.com; s=20230601; t=1744990949; x=1745595749; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0b90C4lr8yP65JgT3uHcE27HOgYLSSWJG01aMf2J+lA=;
+        b=HSZ34c/p4u+kaLY/8FkiRxJU+8geOXd43bNnfLfwId1DKZsKanuKsTzqbOYhniBXTI
+         6P/LIXXdXyNZktgO0VdhFRBsKZJ20ygvDNJ2nXn2fvg352lfTjEHTcjGmlUv2kbKnH8m
+         jV+ITTaFhz1GgoiLnz+bOdngoFrLo0U/wfSwvNuWL/Me3e9YYVjoqVvsKJgKhMh9uhDR
+         erWaYliSoidgsDIo7msT2TnQgPBCM5PxRYMh//iBoReHFvlXozTUI/fwnKgk4GSu7UI1
+         FDoqUm25M4DsrjkW3o1oa1SNbeC8yO6PST18NDF1N+xwGTuf0wc3jkCD0AZZHq+ANPnR
+         OjgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744990946; x=1745595746;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=swXOeOrGvU16YEKC9rgfXZITAmlWOeSfggI4AmHPyYs=;
-        b=tFL55ney9Bj/+fdLz7CdPFqg8RK9AtF7h7JuDRbP0KqvuuUk9phdWeMHzVbWUVF4Fg
-         IzY37xOiBzzvOORK+bZWBiWrSMutThEUcVI8QUIe5dAM72JZCftIumwZuCac0+Si/81h
-         RES8noWv2p/wRWxNTmoopnGCSaOoBNBHckZV+xiqEWlaDnif8XNk66rS04Sy9b4TuMhU
-         D/vMmAWeNe6cA/ca/PHYX/aQ/7R+CWcg+qwU9HX/QYStByyuLiv5qswyTFUQxUimQmSc
-         537LLY6l69JYZ4YdRtLM+kyiTAiAmNfMuY3hxZ72i/6LXSYxfxXUFV4RiMYBmDyzocEi
-         BRtw==
-X-Gm-Message-State: AOJu0YyVXCtuwoUDhjdkZKjsOoytDdHcmZNe6mKvgZQSCzLNGVxZSW1u
-	gzQOmfcPEEpG39d4uUtDokwpBwI0SZ9sY7ZW0rS96i9N4HEOKWj3
-X-Gm-Gg: ASbGncvoR0sqmyhhsYSqbWh6dea/EfG/iA8HOS4eQyv8xndDk06XP5Wnazee9MM68d9
-	BJVirAQWFxzsUeKFKgZLoejLj3KTBYi0EUWDhW+35Zc7BN1de7Zr03akV1dQRxG1FG8xyOs+aD/
-	BwLtB52VwM5MfHgVyjgTMMfD1uF9/Hc+qK+6TkOiVakqVQz+a10SW072pmgPZdif9FkyAhj1mKk
-	60wV4c5jABT7VI36bK+hck7qjrnxEVA04Ds5/0vJ9MHB3EQX1C9pJxGsj/4ka2Uo9v4Ldz7hqwJ
-	EednAQlCXyXNA7uz/ZS8Xt2T91T6t7sO+v/XwQ==
-X-Google-Smtp-Source: AGHT+IHP1H8hH4FlWxzL+NEYXKcVuQYxizbv7WQN229jr3mrOiH4KUMIeR+Cmibpy0NJ8czxaCRnNw==
-X-Received: by 2002:a05:600c:4e8d:b0:43d:1824:aadc with SMTP id 5b1f17b1804b1-4406ac616d8mr28402565e9.29.1744990945681;
-        Fri, 18 Apr 2025 08:42:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744990949; x=1745595749;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0b90C4lr8yP65JgT3uHcE27HOgYLSSWJG01aMf2J+lA=;
+        b=bZQcqbEiKm7NsksGYsaupl+S7Xu1vtS2orY1CIBnhbEGRaaqfq9oF16uV0z75TGKZ6
+         Lyi0cXNXCSKEc0KE9FxOpoCa+DykSbGqONII2gA+PyDRaP07K3afxBu6J0vcf524fajm
+         aUxuvIpzu0EddrPLFXWhUCV6cPcNGRBWGyY4Uu5ZtAQpD7IaGGl5y1n4YAjEKyC+BbP+
+         pItlruRD1HHfHwTy5EJesNzor9sOBF/H9XHqxs+WP/r6rrmcBXVh3HQ9EACzMeZ50r+d
+         gq8eAqbqtyVFb296C79MdHKLvlL1x3tTW1EkdQ026XQfmrQ5D/zhC2wAh6dZh6vEtBJT
+         xoKw==
+X-Gm-Message-State: AOJu0YxC7YQaneZwAcOH91YpkEbq9AsjlO5Pi9vfSqtoARIYSjJvE9Ja
+	nwBapkU4mjI+fvfTev5FfpjFEFDuJgGNUNwho8CkX3ivEN3gwrT9YIrpE/gYwS8=
+X-Gm-Gg: ASbGncuvopHff51a9DwZ4AcIp/MQTvB41Nfe/wKQOuajkOPa91drMaqE3l8chkb+KQu
+	SqOxQAhuCmgZ/xbb0EiFjSljCgJ4CNd8JgLhcGoLiwTWRXEjT5gDmY7ndNtpcf9VYtLhKkU7Ib9
+	pF8Nl/Eh4RPLH5fI8NmTHv7zt5UP5dzFNcdvC/egEY3sy/Xx9x9zhZgGDEKjsGLLC85aMc4Rq49
+	Oyxges1HgpKgcPFAOqBuFpovP7/8r0ZrrxVpydF+y1BxKzT0AU7VCJuugRLEW1XFz1c7LlGOJ71
+	UkgI6R3BpXV9Akpz5vkHtWTwETnfKqpyY7Qjaw==
+X-Google-Smtp-Source: AGHT+IFz7MKBqADDjiLz0R8iijddpAAhVZVxCPRJR9FSy4ojOMYYkYvkqtBkxw511//nnxrOkwkIuA==
+X-Received: by 2002:a05:6000:4a1b:b0:39a:cb5b:78fe with SMTP id ffacd0b85a97d-39efba8a4f4mr2270637f8f.34.1744990948698;
+        Fri, 18 Apr 2025 08:42:28 -0700 (PDT)
 Received: from ubuntu ([102.88.77.14])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43d03csm3160549f8f.59.2025.04.18.08.42.24
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4207basm3059496f8f.5.2025.04.18.08.42.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 08:42:25 -0700 (PDT)
+        Fri, 18 Apr 2025 08:42:28 -0700 (PDT)
 From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
 To: julia.lawall@inria.fr,
 	gregkh@linuxfoundation.org
@@ -62,10 +64,12 @@ Cc: linux-kernel@vger.kernel.org,
 	dan.carpenter@linaro.org,
 	andy@kernel.org,
 	Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-Subject: [PATCH v6 0/2] Cleanup duplicate NULL tests on a value
-Date: Fri, 18 Apr 2025 15:41:55 +0000
-Message-Id: <cover.1744990405.git.abrahamadekunle50@gmail.com>
+Subject: [PATCH v6 1/2] staging: rtl8723bs: Remove duplicate NULL tests on pstat
+Date: Fri, 18 Apr 2025 15:41:56 +0000
+Message-Id: <016d5429e5db0596a4fc8bb25b1c23ff94ff88b4.1744990405.git.abrahamadekunle50@gmail.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1744990405.git.abrahamadekunle50@gmail.com>
+References: <cover.1744990405.git.abrahamadekunle50@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,42 +78,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Changes in v5:
-	- Splitted patch v4 into a patchset with two patches so as to
-	 proper explanation of each change due to different code patterns
-	 in the change as suggested by Julia Lawall.
-	 - Modified commit messages in each patch to properly explain the changes
-	 show the initial NULL tests on the value.
-	 - Added Subject title to each patch to be specific to the value being NULL tested.
-Changed in v4:
-	- Separated initially integrated suggested change
-	 "use modulo % 4096 over & 0xfff" to a different patch.
-Changes in v3:
-	- Changed other cases to use modulo (% 4096) over (& 0xofff).
-	- Modified commit message to reflect these changes.
-Changes in v2:
-	- Dropped patch files for media drivers from patchset as it is
-	  not meant for outreachy applicants.
-	- Added full-stop aign to text in commit message.
-	- Made code more readable by adding a line break.
-	- Changed cases to use modulo (% 4096) over (& 0xfff).
-Changes in v1
-	- Patch for drivers/staging/media/av7110/sp8870.c and
-	- drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-	  is split into two different patches in the patchset for use by the different
-	  driver maintainers.
-	- Added subject title for each of the separated patches.
-	- Patch 1: Removed unnecessary curly braces {} initially inserted.
-	- Patch 2: Unnecessary {} was also removed for v1.
+The pstat pointer has been previously tested for NULL after being
+initialized as seen from line 970-973 of the file.
+The first NULL test is shown below:
 
-Abraham Samuel Adekunle (2):
-  staging: rtl8723bs: Remove duplicate NULL tests on pstat
-  staging: rtl8723bs: Prevent duplicate NULL tests on psta pointer
+		pstat = rtw_get_stainfo(pstapriv, GetAddr2Ptr(pframe));
+		 if (!pstat) {
+			 status = WLAN_REASON_CLASS2_FRAME_FROM_NONAUTH_STA;
+			goto asoc_class2_error;
+		}
 
- drivers/staging/rtl8723bs/core/rtw_mlme_ext.c |  2 +-
- drivers/staging/rtl8723bs/core/rtw_xmit.c     | 62 +++++++++----------
- 2 files changed, 31 insertions(+), 33 deletions(-)
+Remove the second NULL test to avoid redundancy in code.
 
+Found by Coccinelle
+
+Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+index e74fb7d5dc37..863c188a3cfb 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
++++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+@@ -1323,7 +1323,7 @@ unsigned int OnAssocReq(struct adapter *padapter, union recv_frame *precv_frame)
+ 	spin_unlock_bh(&pstapriv->asoc_list_lock);
+ 
+ 	/*  now the station is qualified to join our BSS... */
+-	if (pstat && (pstat->state & WIFI_FW_ASSOC_SUCCESS) && (status == WLAN_STATUS_SUCCESS)) {
++	if ((pstat->state & WIFI_FW_ASSOC_SUCCESS) && (status == WLAN_STATUS_SUCCESS)) {
+ 		/* 1 bss_cap_update & sta_info_update */
+ 		bss_cap_update_on_sta_join(padapter, pstat);
+ 		sta_info_update(padapter, pstat);
 -- 
 2.34.1
 
