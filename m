@@ -1,129 +1,156 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2051.outbound.protection.outlook.com [40.107.96.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8E5218AAF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B289B218EA8
 	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 16:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744993063; cv=none; b=SpRZ4xALpjZ3CfLm1U6HPMVHdOp+naaTiXQ3gTRWOWYRLUT1wik9Bbrf0rnry2ovS0WF/SbwT/4ijjcsNWSgDk/BV9r9gAk9IVG+qN2FQdD+m/t7O/7NG97VMJbICfc7C/fT2pMtdhIFpdeDfgda/W0IaIY/KH3LHcd4sjElU8w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744993063; cv=fail; b=edbkrf1gUDpGzVbjyIxL41BUpzguv/XhTUlFB5DNKkL4X7vkO1QqwUJAwj1BHTZxldjpbTxeet/hI0xkl4EM6SCoiSV57DOUSbu3WOo7YT5h9C6w9fBkM6QiQF8FL8q1ZY16HSQa8EwFk69ev2ko7v9JHo4J/qvLB8ZbWrCSS6g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744993063; c=relaxed/simple;
-	bh=nxNqUrDg4UWZQ5+BGHqH2KfM4OFOiPfHtFNtEyojU1U=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SPTWx1Z8oUoP8Vt3/O06Qs533+U4ZM9dSFvbhLXQioQ14MMJ96NdNMiVpMbXfNNOn9DCMX8Zudw6rHkmpZcr2Ro1F6BKOsavyag50Bet4kqdKmPyDI368BgcNo0JCNPB36Nz5HAMmMuAvMGQJxZsUeTnnd0/jJPizoyYL/5f7sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=RTN2QPgd; arc=none smtp.client-ip=209.85.210.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	bh=TMpdYE1micTL6Pq+Z4DNEJvgE9lJtxsZPAxruBzc2DA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=k7Wh4/+23tbY/iAZ9hy+SZ10yPKJKRUauyQ2sOG+Egnw6y78MNyMJ1oy1S7dKs0U9/1lJ74wkU7nEjAM1Zwn4x+SjMI+1hCdgbKk9fbdEC26ESKJ9PAd7ro2Jwy/k43ta4VhbEcpGpdcNXfE47QlXmFgWuBl8yeUrgd92570Q0g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=VW+qosrE; arc=fail smtp.client-ip=40.107.96.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="RTN2QPgd"
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-72c27166ab3so1292490a34.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 09:17:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744993060; x=1745597860; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tHLMtLRk80jcoGLe8M8rmpL7eQ+RCL/Z2079hkSgYFo=;
-        b=RTN2QPgdMrbUQutTJGc6Uji2/zXpaOuWh7sI5pHNITyTHvl0mMFzWOkya1cRjwAr4J
-         hAFEdESmiT6FL6ktrGZbCnnXgky7Mevmwb9s838JX32iAhVhXu0ey1Wh9adTXqFJDvci
-         ouPlbvQUKjAxPX3HMKoO5jincgb86MRhpZjwYURUVpL3QGaelY2g5G6vblu4UnMrJ18y
-         E+fnO7Wfa6zi62FvUfjn2Lpwm/wsqYgkg0aiPggw3W/oVUYZlfUXqbJ2H0pGDXRhQIK7
-         kx2KWKFSq4o9Ke5QB683FK9v9NMQxpUcI3QFrqAhNMOJMnoSJqBXg0ukv0Rbqy0GPhY+
-         7WOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744993060; x=1745597860;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tHLMtLRk80jcoGLe8M8rmpL7eQ+RCL/Z2079hkSgYFo=;
-        b=BsWd1GDJWL2Be3KBkvJpkUtOf5BdSTmgRFT4QZO1UVxQ/P69KsG6b+yLng35fsC04c
-         KWaxeMxmdyuGAydaaxlf2G959EUZI5aWbK0OnytO123akjSPk929Y9QF8ugxa37AbZZD
-         fG3XfpyA3x45rjYVB3b+5NucZgVLwMpEoL8dUi9P2yIVCEpwWxzhRw/xP0Ff5BLqw1Xq
-         FPcDJKsRV62SOzZHqqKo+Lr2tYyL6zXoKdiUBTJzrktZW6wjuilRtsaQV/fGh/kcvYKt
-         SnL2GtebOIJs4nWLYZjy/U+hOZrf/PpezL53ZX9tvfiZocIK4SabwmIJj4F4wF4bX+5/
-         Pa0g==
-X-Forwarded-Encrypted: i=1; AJvYcCW2sux3geZtMmIRZANa4jkXddPFFFXBZe4Kbx46gPX7LAazQlDDHLtwJwO+5jojniNW6ykhrRQFeMiZU9w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFlS6LQIpgMJ+O7KpazRvdpAVCfl4O7CA/zY3rYoG+vwd/quTo
-	0mM9hdMqNs5sdvq105LPab2Yf8JFfJn0wC9gledj9JqviUwWfIjLWiF4r4pgVXY=
-X-Gm-Gg: ASbGncsyZ4CsILx2p9/B/4F/He0ArrY/e+fJODznI9fB+Ijcrw3rxZFOraDc+NdtV19
-	Nk1U6LiK1RXrsL5yYQZ6lwt18o4rO4fXp2pikFz92GS/X0c0BaMdb9sZSanyLl5df786MuVcODn
-	fX4tbSMk2gJtiPG4Mg4GNnjA5+3oGJtE2doXfkVmQ72mZIgSSDzcBtIKIPi68v9rRFrV/pYkZ9t
-	GNIiJEKynCpxW1wQbYlykeyv4eBXTtqUSR8aNpKS7iVxIVqxuKiL+mCVd8iBCiddqX5Jqnsefiy
-	W8P0PYFJRhc3nnkxTMR4vReunGZh2LEOIE1uza0EwaNs1Rg=
-X-Google-Smtp-Source: AGHT+IGra3+0PzJgVGPEIu8oILAKsARii7I0u0JdLmcqpvH8+Eow3EuSHB5zQYXLZdfVi9mv2PRHFw==
-X-Received: by 2002:a05:6808:4a84:b0:400:b304:2f79 with SMTP id 5614622812f47-401c0c4b2c3mr1680776b6e.31.1744993060519;
-        Fri, 18 Apr 2025 09:17:40 -0700 (PDT)
-Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:dcdf:46e0:18e5:c279])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-401beeffe05sm384929b6e.30.2025.04.18.09.17.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 09:17:39 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Subject: [PATCH v2 0/2] iio: more timestamp alignment
-Date: Fri, 18 Apr 2025 11:17:12 -0500
-Message-Id: <20250418-iio-more-timestamp-alignment-v2-0-d6a5d2b1c9fe@baylibre.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="VW+qosrE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JalDH8Cpo18GpeYRYn2h9aEs1LFunWfvSReAswAUElza/Mf50uIYgKEoZXxto0MQ+UaxcGSd37y1Etm7KMcwfe9PxUXtaduIag6oEM77hsz7B0WZ9CUZmqQpYNMSzuE1mlNsY68aPov5cvAzOTnjAniAZb1kChLksRPFsfDZHS6j8EncNw9jYf29ZobY6Xme3XhrcIC1y8D/ivm0PrSxlvj61aBg1XCeqtpnrpLqdrM1vvDNoMSfLcOHnOP/yhWnTFIVftfB8wd1Fq9ZZcYlF5EE0RyaapjuvJhHX9U8Ey18g9wC/n/wzMTk763wtaEc+05ahmXO+svxQa8SDMv61A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rwRYwGUXedta4IkjBDOMVIiXPAigpEHtfDrgRBsqV6w=;
+ b=vIC/NbXFpoBDiKuzcJbcQneYftd6dhvdzk2VayKsmHWJSXPqrndtUF0+lhk7cwkCh4qX5iRpSNBEVWqhrF6hXEKg24/4S4KDH/d3J1STEj6lzWggcL3Vu2LHZH2A73wgCyIB7FgMLHzSIjPce9xIGR6BsQeHp17r5I/tgUXqMBKRl79IulfLCnHUZenyq9zpClTrtJOlG5Hv85UKnteg39snrxgkr49RO7VUu5PnAP1zeMfbVGVlWAhZq4SpmTOxRQJIp8BEwFBYpLuFT0IRppMq3LIYDstsZDOViE9emBAdzc+5Z/6vdc7JtBXPKwrerAKkzRs5pkiWVztlf3XS0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rwRYwGUXedta4IkjBDOMVIiXPAigpEHtfDrgRBsqV6w=;
+ b=VW+qosrEvCwfx67YbOfhl8P9xmrt+dZ+XwD9TY6oSiL5of+krMdhx765hMtXpNbsKDtNGBGjBS2JS3gUI/UlD7AMVwbuh4VFb8hxUewY5EzZzN4Kt0k+EANtJY5GVLXfguAdoWBCHzxNqaR7E5hgCl84vDXONCdlu+tWEzHESxE=
+Received: from CH0P220CA0024.NAMP220.PROD.OUTLOOK.COM (2603:10b6:610:ef::16)
+ by MN2PR12MB4141.namprd12.prod.outlook.com (2603:10b6:208:1d5::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.21; Fri, 18 Apr
+ 2025 16:17:39 +0000
+Received: from DS2PEPF0000343E.namprd02.prod.outlook.com
+ (2603:10b6:610:ef:cafe::a) by CH0P220CA0024.outlook.office365.com
+ (2603:10b6:610:ef::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.25 via Frontend Transport; Fri,
+ 18 Apr 2025 16:17:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS2PEPF0000343E.mail.protection.outlook.com (10.167.18.41) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8655.12 via Frontend Transport; Fri, 18 Apr 2025 16:17:38 +0000
+Received: from tiny.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 18 Apr
+ 2025 11:17:36 -0500
+From: David Kaplan <david.kaplan@amd.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+	Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Ingo Molnar
+	<mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>
+CC: <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5 09/16] x86/bugs: Allow retbleed=stuff only on Intel
+Date: Fri, 18 Apr 2025 11:17:14 -0500
+Message-ID: <20250418161721.1855190-10-david.kaplan@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250418161721.1855190-1-david.kaplan@amd.com>
+References: <20250418161721.1855190-1-david.kaplan@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAh7AmgC/33NwQ6CMAzG8VcxPVvDpgLx5HsYDmUUaMI2si1EQ
- nh3J4lX09O/h9+3QeQgHOFx2iDwIlG8y6HPJzAjuYFRutygC30vbqpEEY/WB8YklmMiOyNNMjj
- LLmFp8lFdcdsRZGIO3Mv74F9N7lFi8mE91hb1/f7g6j+8KCyQqSejWOurqp8trZO0gS/GW2j2f
- f8A1JGU18sAAAA=
-X-Change-ID: 20250416-iio-more-timestamp-alignment-6c6c6a87ebda
-To: Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>, 
- Antoniu Miclaus <antoniu.miclaus@analog.com>, 
- Ramona Gradinariu <ramona.gradinariu@analog.com>, 
- Robert Budai <robert.budai@analog.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andreas Klinger <ak@it-klinger.de>, 
- Petre Rodan <petre.rodan@subdimension.ro>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- David Lechner <dlechner@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1080; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=nxNqUrDg4UWZQ5+BGHqH2KfM4OFOiPfHtFNtEyojU1U=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoAnsNvlGKnXm3JC006GDqi0zucti7YyDflp6Ee
- 4GlX7gshFiJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaAJ7DQAKCRDCzCAB/wGP
- wN7tCACYL74ptMcqaC1NKJZGril/Q10xPafBj5E2HVXUTvCkBEvNIJmSETwDydhiIfKHNR91314
- an63oX4lPnPmNBZYZB8c5yhmgro7xoX7LZMk9NaKbCys4INKHl659iuapVVtbNL9HwCHclP0wah
- /Z3DX0d6895KN2B/kQWlzt/N4608sNf7f5mcOXtCmNYXKzt22boJzjQhN2pE5IX+N5w9NDfBRZo
- ZJG37sB/zs7S/C4U3jd2Hxa20tgTuXs3Kz10JMwugUsKUhp4i0SahYN+bfm6XyVcZEMIjGh6K2R
- JFFYbmq6GRyL7yf7Vq/r6N3zAtXKf7MIk/9OuM1GzL73/lHK
-X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
- fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS2PEPF0000343E:EE_|MN2PR12MB4141:EE_
+X-MS-Office365-Filtering-Correlation-Id: 26dadfc2-54fe-46b6-7ff5-08dd7e9489bb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|82310400026|1800799024|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?pk4UmSCVKDSDvlCZtH6OPRPal8vh7XQhbxgKnhG9mzJN6AzWqvFLJ5URNyrN?=
+ =?us-ascii?Q?IkhExFhPZBpChDRIq173s08iFTj8N9a9VsP4cCap3jqtfdMovl2BiXAdvIyz?=
+ =?us-ascii?Q?elIlPpY/MyFb6USAmXI8b7XKbUQGU2+V9LHsVqjOZvjUUdxOe3Nk1oFlr009?=
+ =?us-ascii?Q?4grPuRiMY2qkGlaSAgkZJJvGHJlE9VIztqeH0PxMuEfJ99+R+ocK69/Ok4oL?=
+ =?us-ascii?Q?KhcShg/rfCrQPzy2U8VuI4Pz5EztzNpYVLKq0yQWRnaiFN6wAOomaQVBNOvG?=
+ =?us-ascii?Q?7SHEYwt95ylBRsuWNLQ/U0+z5i72y7NJOdxsJ64437lQtbegr/1Kk2e7sVw3?=
+ =?us-ascii?Q?m/DOgp7mee05lzDDLaI+cyyCyHpoh+9X+zfbq0F1iZzPQURXxlMd1/TEb+Ti?=
+ =?us-ascii?Q?ZQVQL1jpoSaTHsYi0+tXjJtFIAYExAFQUpc5OVYSlyTpCeTCqT8JVWSq0ocD?=
+ =?us-ascii?Q?IcZzRCjqdXFI38j/6G2h1Njl0ZTRGbvo808p1DaxUG20z0MoU/9FWkXVFMXK?=
+ =?us-ascii?Q?2bGb9C4OwjbNhENOSwXOpkzZQjiR42hjVMNUAcNrod8WQxepzqIzOlefQtYO?=
+ =?us-ascii?Q?iJq7ec6EmY8tgZV5Ao/AfndhIccjTC4L96lwPGA1nuMGQehx+nTFt3nFOoKZ?=
+ =?us-ascii?Q?uUjcp7SNPaOx/KX2PCSbOIptdOnNkZYfNffmIafO1jpeHuQsBOvp4fnlzeF6?=
+ =?us-ascii?Q?5ygUDqwuUib6bQyLU5jfkyBId5XiBLrYGBS4595SOs6+MmJcgkZ/ioH7+r21?=
+ =?us-ascii?Q?lPz3D4etjzVLBHiHlDlu9qd98lHv5HL+MGx8NWANfPZ46RwN5mcjxB5LFyDI?=
+ =?us-ascii?Q?Bxw5pomipCed6WUM0yB0YtK33XqdiYt4uawGPKk2jGvTYO7nVE81uWgfHNf9?=
+ =?us-ascii?Q?AKeqwib8QEsniM/+jfU27Q6fw46gW/VJplK45ksx3V2BCubcii3ukDhzpXwe?=
+ =?us-ascii?Q?zEJQx//452R23IF6Bt5A33LtQieSp8CwMELI6+EYZGyRaILvBcQrCAVRs2+3?=
+ =?us-ascii?Q?bQcKprUJLBRUsADJ8rSeMkN45hO8oIAduSDbEbBMMbN7uf29oLWcrYeT99LF?=
+ =?us-ascii?Q?DaevsLTONAPGp0Q1KRhI60sZqNzK4iDqqHNnS1uekI9iTZfgivUZra0eWbVU?=
+ =?us-ascii?Q?w4gDmRc70gYiTJlTHcxQoLMW45fE7Sdkp3MgvZKRCCHRyu6htXb4jsDkEKO8?=
+ =?us-ascii?Q?+/Gl1wvj0I8DnfsNK+mCWZYrj8qHrshx3PAzSaa2aq9QfxrgetYGaijTsb78?=
+ =?us-ascii?Q?2CHTyWmGUdHFut45vzkooXE3J4iCC3KI6/CebcJgb1pMIol6WmBfrgMMmfre?=
+ =?us-ascii?Q?vl9qOmlxcEyRJh/rsS7k9NwumpFgdkhoAZvqxhyHBWg4pyMLb0/+5vXtWvyZ?=
+ =?us-ascii?Q?trvc9u7u8vQDBGRsGqdh21x4IwMqV6GA7BhyxJy16I4DG1STNBMxRT+HsQr+?=
+ =?us-ascii?Q?jjTTpXSbJCxKLY0fnQDZ8aSprjLUA1hcFG4LrFo9mEIYVhl4WsM3lFvtdQCI?=
+ =?us-ascii?Q?LLFnrdeDoSQyXrXYjIM+tElQavrFBbhhP8N0?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2025 16:17:38.6662
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26dadfc2-54fe-46b6-7ff5-08dd7e9489bb
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS2PEPF0000343E.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4141
 
-Wile reviewing [1], I noticed a few more cases where we can use
-aligned_s64 or need __aligned(8) on data structures used with
-iio_push_to_buffers_with_timestamp().
+The retbleed=stuff mitigation is only applicable for Intel CPUs affected
+by retbleed.  If this option is selected for another vendor, print a
+warning and fall back to the AUTO option.
 
-[1]: https://lore.kernel.org/linux-iio/20250413103443.2420727-1-jic23@kernel.org/
-
+Signed-off-by: David Kaplan <david.kaplan@amd.com>
 ---
-Changes in v2:
-- Dropped patches that were already applied.
-- Added Fixes tags.
-- Dropped the (insufficient) bmc150-accel fix that snuck in the adis16550 patch.
-- Expand mprls0025pa patch to remove struct mpr_chan.
-- Link to v1: https://lore.kernel.org/r/20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com
+ arch/x86/kernel/cpu/bugs.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
----
-David Lechner (2):
-      iio: imu: adis16550: align buffers for timestamp
-      iio: pressure: mprls0025pa: use aligned_s64 for timestamp
-
- drivers/iio/imu/adis16550.c        |  2 +-
- drivers/iio/pressure/mprls0025pa.h | 17 ++++++-----------
- 2 files changed, 7 insertions(+), 12 deletions(-)
----
-base-commit: 52d349884738c346961e153f195f4c7fe186fcf4
-change-id: 20250416-iio-more-timestamp-alignment-6c6c6a87ebda
-
-Best regards,
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 72e04938fdcb..84d3f6b3d1eb 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1187,6 +1187,10 @@ static void __init retbleed_select_mitigation(void)
+ 	case RETBLEED_CMD_STUFF:
+ 		if (IS_ENABLED(CONFIG_MITIGATION_CALL_DEPTH_TRACKING) &&
+ 		    spectre_v2_enabled == SPECTRE_V2_RETPOLINE) {
++			if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL) {
++				pr_err("WARNING: retbleed=stuff only supported for Intel CPUs.\n");
++				goto do_cmd_auto;
++			}
+ 			retbleed_mitigation = RETBLEED_MITIGATION_STUFF;
+ 
+ 		} else {
 -- 
-David Lechner <dlechner@baylibre.com>
+2.34.1
 
