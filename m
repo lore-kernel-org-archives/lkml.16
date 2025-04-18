@@ -1,72 +1,54 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.smtpout.orange.fr (smtp-77.smtpout.orange.fr [80.12.242.77])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0208462
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 11:57:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E9120968E;
+	Fri, 18 Apr 2025 11:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744977456; cv=none; b=XSfBt0agIf53lhFS49HW8jMz22aTWOOicDoE3VypkGB31XhdmBJ99ohkIwlWijGmoEe2P5cOPnQFIoTr2Xq4Kab0untwAoAcD6ChEmRyYnn/eYrkfJcnlC/iXK6+xaffu/Z0i0gb7BQmNPUxIrR/FKhOAKG1uyR3J5Y0n4E37zw=
+	t=1744977549; cv=none; b=i2iq3Div7G+IBPIgU89k/B07IMXCxrdSKjJy+2h06qhnZ/imF00b4gI8tur2TFSeeJfN9DIHCZT9zG3Khy4e+JkPp2HpmHOunZaNunqiPSmeXOFkPo+7ol6EUkbhN+fhp3/7OPHcwngCK8He2aYaXZeUK0QxTQsXwLdfDC/TUEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744977456; c=relaxed/simple;
-	bh=sJP8Us5CzGWYOTYL74RlLZab/s5HE4dKwWjZOTJQMRU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GRwKCgtNtb7HA2raEF6E18RoI3Fl9ucjswPqNW7KOKrBsNyHV/fFxFES3CSrRc7U0MuDTFtACCvzAgbs1I/7RzcX/FTy8TsbNSALox/u7GQMYqmPKUeUH730riM2LbMQF0ybsQuyHEvgFHjKK9EbnMVMzFND3IBhcjfPqimDWmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JHz+lV3u; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1744977549; c=relaxed/simple;
+	bh=mSrMqZMkoww9zIQR63Kt0ZNfCRFtVwKj2WuVPvC1Scg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rLsZfk0jjEed6XhLUhWlHjLrMfimorjzlrOcZdrz4uABtAr72WNQfEypEIsthvjIs8fFH35vtL5AfQZXaoz24IGSDCw4yAMiOPHUqKs2xCq41/7YJ/AH/3ioEmEMzH2mhVMQrifd1uEWX9htCvxv7YaeXtLvk1W0AUliLSX2OeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=IINTY5fD; arc=none smtp.client-ip=80.12.242.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JHz+lV3u"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf58eea0fso8321785e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 04:57:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1744977453; x=1745582253; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9qWA+Zes13+SS6MsGo5ooM2vzszD3qD9soPuMxb4Uoo=;
-        b=JHz+lV3umONgflGiUfP1P2v98YLeLs9pR96gqW9vvzYZyGqCVEdnRWUStZe2gQ4n8l
-         Eudo21M1JiXM0kD/NHWc425AwNt7/OrJ/G6YC1M921vQEhemdPTsnOYz1WNT3GNbRweM
-         NL4GhJLMB7iN/5Klgqoc0YXYVSs70cw4a++H4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744977453; x=1745582253;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9qWA+Zes13+SS6MsGo5ooM2vzszD3qD9soPuMxb4Uoo=;
-        b=hoa0slKBWWTKcmQJjCpD2kSHgcNHtxh+OvZnNV7H+ZCOTFoG/TU1AAW9ez8h6ihBJt
-         ylNpUhMD67mKb1teMOJiIEyB1667UXPgPUmnr88I+BkO9EILZpABcyWinqy9WK9nlXmQ
-         I7+SceLWYhgRz6IYMfqBoRjZTla0GS6FsHL03sW1fGbcYQVCp3kFfijG0xQZmpVSTN3O
-         1DR28b5/vM2O0kDL1qW9uqSsX73dXouWM/4zaZ0HcIvCsTQcHgDT5y+jBX7/uC065nUa
-         QM8Zmu6Z0JC38+L0pMdJnQQWradtprwJHZsT7tMC7dY230CTakC3TOTPjSRDMtwQBYlm
-         qIUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXF0myBXif0NmKEQ0QHx1EvLT5idJSEHefh5DvBo+Q5C5bZW673bwo49W5GQJKqOHfJ6gLbcF4CvibWRzY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUyMGCfnwmHGbfarYR8myy2lyF/HSa5wIrjlFs+xNYzAD6gtT7
-	yO/q3+nOHr0s93cd+7dpeOE0A6lo7wj4wS4/wbGGnbnvH4FlcpPwHZYEurn2kw==
-X-Gm-Gg: ASbGncui6I16GchlOdevoyhSsmceEHHdwaZFHTm/7pt/ia7pauT7alW5qL8arwMjYRa
-	oa9PxuLAeMJdJiVngSoN9cuPhWBUHAoyUW87HS/KpbqJC1oeaZcrMUb6hS//lDtBATLwkm5K98F
-	BBKnzFiba+fvJXyMBC2zoov9wNY56EMxkVjNSQzQ8ydKlfWj17vseV50Y38P2v+DlG7lLiVHGV1
-	EBubeDfQooPKUnxP6znpBEFxIddi87DVisqAMlaoTojhAhDAccGKA52baTr/9gm9RGOqNssG0lt
-	FiRU20PD/VXoSAIIpPxtsUU8ZWBTO1+MMjF6kWGSHRH1VSafCr15OrIj/s2cJXr4p9TsDbduKaR
-	BHXpdyblhqZk1mWev6f29SUMZt6+UfCmF4oKd
-X-Google-Smtp-Source: AGHT+IEtzKO6e4gR1e98cXozIzDzG9qGFo4R+n1x2mAYncHYFYpNpOjAioT5ZlPd5x7Fxeb2Rhbe8Q==
-X-Received: by 2002:a05:600c:4f0d:b0:43c:f1b8:16ad with SMTP id 5b1f17b1804b1-4406ac2194cmr17478775e9.30.1744977453186;
-        Fri, 18 Apr 2025 04:57:33 -0700 (PDT)
-Received: from dmaluka.c.googlers.com.com (187.5.148.146.bc.googleusercontent.com. [146.148.5.187])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4a4856sm2497723f8f.81.2025.04.18.04.57.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 04:57:32 -0700 (PDT)
-From: Dmytro Maluka <dmaluka@chromium.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Dmytro Maluka <dmaluka@chromium.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Yue Haibing <yuehaibing@huawei.com>,
-	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-Subject: [PATCH] x86/extable: include asm/processor.h for cpu_relax()
-Date: Fri, 18 Apr 2025 11:57:00 +0000
-Message-ID: <20250418115710.4154311-1-dmaluka@chromium.org>
-X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="IINTY5fD"
+Received: from localhost.localdomain ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id 5kLrukPOCwRVI5kLvuhwOq; Fri, 18 Apr 2025 13:57:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1744977474;
+	bh=/yv0q0yAiYrK7cZmfj6mkT6aQadrznpZkBjcoHK2bCU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=IINTY5fD5eE9X34gkUqcTpIp5tMMKToJugigViLAGf4AtTGY3QZOXd2wI9uhTvGD+
+	 TpoeTrogvIVoGn5k00oxWtPAyYL5o0CitNncozgvTPip+N2K6g9RNsKQuHPioUGUC2
+	 88SB/FjhYtEUg5qD9OaUJ95QSiWaToBOfFqC9gw50drFEBB3BV79yQbdxxqsl2JhD4
+	 iLDPcWoshlYskqjEH/J+z9WkDunNg09uIL+ypQXL1DlRTr4OSaTjsrwar7Q/4aH+KP
+	 L7xpMIjhJbJK7D6ZKUdN1qZ9w1HZ9cCP1ps6nEm2mJ0S0CBXec4uMfbafBza5I22EK
+	 YVu+8pjf7hzag==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 18 Apr 2025 13:57:54 +0200
+X-ME-IP: 90.11.132.44
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	netdev@vger.kernel.org
+Subject: [PATCH] net: airoha: Fix an error handling path in airoha_probe()
+Date: Fri, 18 Apr 2025 13:57:34 +0200
+Message-ID: <f4a420f3a8b4a6fe72798f9774ec9aff2291522d.1744977434.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,27 +57,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Include asm/processor.h to prevents compilation failures due to implicit
-declaration of cpu_relax() in ex_handler_msr_mce() when compiling with
-CONFIG_X86_MCE disabled.
+If an error occurs after a successful airoha_hw_init() call,
+airoha_ppe_deinit() needs to be called as already done in the remove
+function.
 
-Signed-off-by: Dmytro Maluka <dmaluka@chromium.org>
+Fixes: 00a7678310fe ("net: airoha: Introduce flowtable offload support")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- arch/x86/include/asm/extable.h | 1 +
- 1 file changed, 1 insertion(+)
+Compile tested-only
+---
+ drivers/net/ethernet/airoha/airoha_eth.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/include/asm/extable.h b/arch/x86/include/asm/extable.h
-index a0e0c6b50155..c22e524276a5 100644
---- a/arch/x86/include/asm/extable.h
-+++ b/arch/x86/include/asm/extable.h
-@@ -3,6 +3,7 @@
- #define _ASM_X86_EXTABLE_H
+diff --git a/drivers/net/ethernet/airoha/airoha_eth.c b/drivers/net/ethernet/airoha/airoha_eth.c
+index 69e523dd4186..252b32ceb064 100644
+--- a/drivers/net/ethernet/airoha/airoha_eth.c
++++ b/drivers/net/ethernet/airoha/airoha_eth.c
+@@ -2631,6 +2631,8 @@ static int airoha_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 	free_netdev(eth->napi_dev);
++
++	airoha_ppe_deinit(eth);
+ 	platform_set_drvdata(pdev, NULL);
  
- #include <asm/extable_fixup_types.h>
-+#include <asm/processor.h>	/* for cpu_relax() */
- 
- /*
-  * The exception table consists of two addresses relative to the
+ 	return err;
 -- 
-2.49.0.805.g082f7c87e0-goog
+2.49.0
 
