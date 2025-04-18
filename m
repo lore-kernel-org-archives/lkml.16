@@ -1,123 +1,115 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5652139D1;
-	Fri, 18 Apr 2025 15:41:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A685F1DE88C
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744990884; cv=none; b=WHACYdXlLczAARehzrMn5MIDp+kYNSUNbWd0VXJOxu7wrJRv7oZGWY5nTFOwLCMkT/kYxucPVXHfWCBPPAZnBj1M+bzy79phC1KhNySFdpim8YEl5cg8xzpSZjHm6i7MjvydmtfNxOl6f0OqjZ3ECKKUFgCy3q1/nGtTilMfxKU=
+	t=1744990949; cv=none; b=pbqWg1DNzE+LJUc0Cax0nWrljpaW/b9/noTsiuT81nmijJN7sxP8Isa7ErEuy9TErzQeD1q0BOt5KPDQkbRNIoyGFUhrzYoU0PDMLeYNqdk+4vwKJRQFI9mDDlXWjqpsJQDzNvgZmVs3VSZxfVk/ISod0jmHwK1yW2Szid8YPZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744990884; c=relaxed/simple;
-	bh=Ei4hL6/iq+Fcex69xWAqM/CXlKvWLYHQG9EDDXMJvik=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XpNnYExIL24TkuhWfZ1TtINiyAHWQExZDGzEjeRWViIhpYnc3QQ1aBE/YV7fpmUC3veOYruRFBzXUx4r4HMQFaySwqLQhy6mJzd/aUyd97oUvR0KmhkZ92o16VqXyUGqGgs0zfr6OjvSUkNAfkAj4N5yL5M7/obNyGGz0AnnlYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ITF4l0rc; arc=none smtp.client-ip=209.85.208.49
+	s=arc-20240116; t=1744990949; c=relaxed/simple;
+	bh=8e7pbQ2bTA4lrV+RYiGKF2Y3SlI9gzWDTtVmcFDC2Bc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s0eAklmxAsgND2iMNDX/JGPOHCtWZhY4Hqv8yV/uE32LL/yce2W9Y2mQjIVHv1O4q4WcmOcJiQalnvAtm6bglwYBEJFsQgQoYGzCUbd28sd+DMZmS5O3h9gQr/ny7WNEaswXA2qBM1Lbb+hcWzzZycbGiqiX4Ieny5BMpYCKBlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aYhbNDMb; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ITF4l0rc"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e8484bb895so559196a12.0;
-        Fri, 18 Apr 2025 08:41:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aYhbNDMb"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso12948555e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:42:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744990881; x=1745595681; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4/cWTo90FQUpqjGK8y/mmDlFDVu6Jy0NFCw7BclObhA=;
-        b=ITF4l0rcaAdOPj/9WXMVx1rnceAg6Hv4CPCoJTTXgpEmheubPkeSf7A0vWYLimnMFf
-         Ax/vBG3rneEm5Kkk3aC+njRxilRIxtf0oGw6yqfQ4ckqBeDX1kcnw2+i41dTAUpe1C0E
-         4fiit87CmU6WL6b3BVCbJtXnx8cgf+CReYKD37vbN/n9MZCWAj6/0vHwFlwk0+R4mTOX
-         YfVFoTivsQK3SZiqmsErQAjhcbBwiMXd+YENfk+vmNGw6NiXEAYQ46Cf79ErtkukKiaX
-         8ZReaREZS39bUjp2K4ErJg+Ww9or2KwhsEQMNqUROK+MqGCPrHBbOYt1Ays6pIYhuTC1
-         dQ2g==
+        d=gmail.com; s=20230601; t=1744990946; x=1745595746; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=swXOeOrGvU16YEKC9rgfXZITAmlWOeSfggI4AmHPyYs=;
+        b=aYhbNDMbfrMp844SXkpnyz8NAa0+cYTtpH8GQv9B9UWZFdeMAlp8dc8uUMysbBq7gz
+         7UDkPZJdUUHXrxYz1mkCPUpFEZDJyy+ZP8ARYFT905oBZrREhZgjxjSZDnY9QO2Kb0cA
+         jdTmATOSX7uTpvzyVSzT09+I1YR9DLLh5G5xIiQX5n5tVggnXpp2IQ/+j8xTeKySnlJ5
+         0fhe7n1w+zi/i+mqaOf9Oao2j3KHxxkOVdjEHCMrW9P7i5SdIFHRZFq4aIzMfoIjAhxi
+         oX30ERu4zohc8i0pTJ77oGxHUiZxlsJyMc+d5op6ihTFElKuQkbGkj8QIOOnkHvCIJvH
+         Rabg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744990881; x=1745595681;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4/cWTo90FQUpqjGK8y/mmDlFDVu6Jy0NFCw7BclObhA=;
-        b=SJoE6jtAVjc2/kKrq4NSwYzk/0t+eWGPPNPyLzaicCiUtdQrj2v/MzMvBgTzRJB2xR
-         nOP3xBRaTc4/2Tw8oBn5A3e9MmX/Y3kzVebAOKUoo3AxS8+JEmNsZshuEmDGtPiF2Sy/
-         +TwHKitH6WV+nJubVE52gSEn77GUeLruCK1OFjRP6wi/nnciTfpb5VhqPHTeoygEHn7+
-         Fk6Je+7Zecy/IjVTmnPymZZojVlX+vEONI3/1lsvW4z4/s5VpLaV/i14BFDrTK/XZWmj
-         XBXjA6cIFg1+7Krk4m27KAud34p8wbTwyrQfrbI9t98UlEXR7UJXMu9wzhVk+j9i0Nrp
-         7zog==
-X-Forwarded-Encrypted: i=1; AJvYcCXQCqb73xP6f6J6GPb2auXzQTGaBAydK34jhDV4cKdIJ+Ux+xAsDAxZswPE1gPqjKVfaXbiGubzUCfxh0I=@vger.kernel.org, AJvYcCXzfZjfl8bAfcqgCBhnbLyD/EVlza+UrvfmIWUGaGTi7AF4yxJr46p/DvN74nqR1c4Y5mXSC86K@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIok1OA0aBs26tpFll/+houXlCkIIkKzsxpa3WL1Z7M3J0cD/G
-	LPbQFqP757E4cwQWZMd7Tp1AYwwFQ5Pk4f/mD6E1lw5UTgxj98oJ
-X-Gm-Gg: ASbGncvGSasEQ4pYK0YBhGz8t6Aifk5xi/oez07QbsEyrumDtQnrKh59RdpIEOtBitS
-	g7oc4fbe+nP3FJ5EgWnvWxlU5ydb63Z7qni5MhOnPCEF129ghdz4wmcncNcbkaXQD6V7wHeT1aK
-	tCLaBMNXDVAEGeI7zh/7j6TqlZnBAHuG7KyUPNRTb1GRIv6wQfHmp1Ij5G9uDDonL7HvKAV+oIN
-	hO2pTeVCWDLIFOjURTKtzO1EBYOqQxpk27exkFZN8CnvAFG6Y6yM2o6UnAOEQlrEqd7XthYBqAP
-	2IcT6J6oP2JNHgwtcgtmY6q4k4WB
-X-Google-Smtp-Source: AGHT+IEkRAOdwHdMRa6d2QlCY5Yrw6uQ9t0434Mw1NfnH0yIfWXjkcyamqR6CUsapH+iG9W1uhu/lw==
-X-Received: by 2002:a05:6402:4301:b0:5f4:ca86:916c with SMTP id 4fb4d7f45d1cf-5f628524a18mr946596a12.3.1744990880873;
-        Fri, 18 Apr 2025 08:41:20 -0700 (PDT)
-Received: from skbuf ([188.25.50.178])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f625595590sm1128785a12.41.2025.04.18.08.41.18
+        d=1e100.net; s=20230601; t=1744990946; x=1745595746;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=swXOeOrGvU16YEKC9rgfXZITAmlWOeSfggI4AmHPyYs=;
+        b=tFL55ney9Bj/+fdLz7CdPFqg8RK9AtF7h7JuDRbP0KqvuuUk9phdWeMHzVbWUVF4Fg
+         IzY37xOiBzzvOORK+bZWBiWrSMutThEUcVI8QUIe5dAM72JZCftIumwZuCac0+Si/81h
+         RES8noWv2p/wRWxNTmoopnGCSaOoBNBHckZV+xiqEWlaDnif8XNk66rS04Sy9b4TuMhU
+         D/vMmAWeNe6cA/ca/PHYX/aQ/7R+CWcg+qwU9HX/QYStByyuLiv5qswyTFUQxUimQmSc
+         537LLY6l69JYZ4YdRtLM+kyiTAiAmNfMuY3hxZ72i/6LXSYxfxXUFV4RiMYBmDyzocEi
+         BRtw==
+X-Gm-Message-State: AOJu0YyVXCtuwoUDhjdkZKjsOoytDdHcmZNe6mKvgZQSCzLNGVxZSW1u
+	gzQOmfcPEEpG39d4uUtDokwpBwI0SZ9sY7ZW0rS96i9N4HEOKWj3
+X-Gm-Gg: ASbGncvoR0sqmyhhsYSqbWh6dea/EfG/iA8HOS4eQyv8xndDk06XP5Wnazee9MM68d9
+	BJVirAQWFxzsUeKFKgZLoejLj3KTBYi0EUWDhW+35Zc7BN1de7Zr03akV1dQRxG1FG8xyOs+aD/
+	BwLtB52VwM5MfHgVyjgTMMfD1uF9/Hc+qK+6TkOiVakqVQz+a10SW072pmgPZdif9FkyAhj1mKk
+	60wV4c5jABT7VI36bK+hck7qjrnxEVA04Ds5/0vJ9MHB3EQX1C9pJxGsj/4ka2Uo9v4Ldz7hqwJ
+	EednAQlCXyXNA7uz/ZS8Xt2T91T6t7sO+v/XwQ==
+X-Google-Smtp-Source: AGHT+IHP1H8hH4FlWxzL+NEYXKcVuQYxizbv7WQN229jr3mrOiH4KUMIeR+Cmibpy0NJ8czxaCRnNw==
+X-Received: by 2002:a05:600c:4e8d:b0:43d:1824:aadc with SMTP id 5b1f17b1804b1-4406ac616d8mr28402565e9.29.1744990945681;
+        Fri, 18 Apr 2025 08:42:25 -0700 (PDT)
+Received: from ubuntu ([102.88.77.14])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43d03csm3160549f8f.59.2025.04.18.08.42.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 08:41:19 -0700 (PDT)
-Date: Fri, 18 Apr 2025 18:41:17 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Wei Fang <wei.fang@nxp.com>
-Cc: claudiu.manoil@nxp.com, vladimir.oltean@nxp.com, xiaoning.wang@nxp.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, christophe.leroy@csgroup.eu,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 net-next 04/14] net: enetc: add MAC filtering for
- i.MX95 ENETC PF
-Message-ID: <20250418154117.jcd6xxnwot4nmhek@skbuf>
-References: <20250411095752.3072696-1-wei.fang@nxp.com>
- <20250411095752.3072696-5-wei.fang@nxp.com>
+        Fri, 18 Apr 2025 08:42:25 -0700 (PDT)
+From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+To: julia.lawall@inria.fr,
+	gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	dan.carpenter@linaro.org,
+	andy@kernel.org,
+	Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+Subject: [PATCH v6 0/2] Cleanup duplicate NULL tests on a value
+Date: Fri, 18 Apr 2025 15:41:55 +0000
+Message-Id: <cover.1744990405.git.abrahamadekunle50@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250411095752.3072696-5-wei.fang@nxp.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 11, 2025 at 05:57:42PM +0800, Wei Fang wrote:
->  static const struct enetc_pf_ops enetc4_pf_ops = {
->  	.set_si_primary_mac = enetc4_pf_set_si_primary_mac,
->  	.get_si_primary_mac = enetc4_pf_get_si_primary_mac,
-> @@ -303,12 +489,55 @@ static void enetc4_pf_free(struct enetc_pf *pf)
->  	enetc4_free_ntmp_user(pf->si);
->  }
->  
-> +static void enetc4_psi_do_set_rx_mode(struct work_struct *work)
-> +{
-> +	struct enetc_si *si = container_of(work, struct enetc_si, rx_mode_task);
-> +	struct enetc_pf *pf = enetc_si_priv(si);
-> +	struct net_device *ndev = si->ndev;
-> +	struct enetc_hw *hw = &si->hw;
-> +	bool uc_promisc = false;
-> +	bool mc_promisc = false;
-> +	int type = 0;
-> +
-> +	if (ndev->flags & IFF_PROMISC) {
-> +		uc_promisc = true;
-> +		mc_promisc = true;
-> +	} else if (ndev->flags & IFF_ALLMULTI) {
+Changes in v5:
+	- Splitted patch v4 into a patchset with two patches so as to
+	 proper explanation of each change due to different code patterns
+	 in the change as suggested by Julia Lawall.
+	 - Modified commit messages in each patch to properly explain the changes
+	 show the initial NULL tests on the value.
+	 - Added Subject title to each patch to be specific to the value being NULL tested.
+Changed in v4:
+	- Separated initially integrated suggested change
+	 "use modulo % 4096 over & 0xfff" to a different patch.
+Changes in v3:
+	- Changed other cases to use modulo (% 4096) over (& 0xofff).
+	- Modified commit message to reflect these changes.
+Changes in v2:
+	- Dropped patch files for media drivers from patchset as it is
+	  not meant for outreachy applicants.
+	- Added full-stop aign to text in commit message.
+	- Made code more readable by adding a line break.
+	- Changed cases to use modulo (% 4096) over (& 0xfff).
+Changes in v1
+	- Patch for drivers/staging/media/av7110/sp8870.c and
+	- drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+	  is split into two different patches in the patchset for use by the different
+	  driver maintainers.
+	- Added subject title for each of the separated patches.
+	- Patch 1: Removed unnecessary curly braces {} initially inserted.
+	- Patch 2: Unnecessary {} was also removed for v1.
 
-enetc4_psi_do_set_rx_mode() runs unlocked relative to changes made
-to ndev->flags, so could you at least read it just once to avoid
-inconsistencies?
+Abraham Samuel Adekunle (2):
+  staging: rtl8723bs: Remove duplicate NULL tests on pstat
+  staging: rtl8723bs: Prevent duplicate NULL tests on psta pointer
 
-Speaking of running unlocked: if I'm not mistaken, this code design
-might lose consecutive updates to ndev->flags, as well as to the address
-lists, if queue_work() is executed while si->rx_mode_task is still
-running. There is a difference between statically allocating and
-continuously queuing the same work item, vs allocating one work item
-per each ndo_set_rx_mode() call.
+ drivers/staging/rtl8723bs/core/rtw_mlme_ext.c |  2 +-
+ drivers/staging/rtl8723bs/core/rtw_xmit.c     | 62 +++++++++----------
+ 2 files changed, 31 insertions(+), 33 deletions(-)
 
-In practice it might be hard to trigger an actual issue, because the
-call sites serialize under rtnl_lock() which is so bulky that
-si->rx_mode_task should have time to finish by the time ndo_set_rx_mode()
-has a chance to be called again.
+-- 
+2.34.1
 
-I can't tell you exactly how, but my gut feeling is that the combination
-of these 2 things is going to be problematic.
