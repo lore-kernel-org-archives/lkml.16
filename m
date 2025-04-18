@@ -1,360 +1,246 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055E02B2DA
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 23:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F5D1E008B;
+	Fri, 18 Apr 2025 23:49:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745020154; cv=none; b=bDY0pygAeV1RmM0Jxxh3MDjiX5Jk2DPF899PjtANis7FVI3GWv9A1/mUboCMZXHwFwYVM9RIVc+TAC3Y/z0z9gGEe+aIjiM1Pp/8EidiIQj5zvT39LhCTz8DjHiX8zsRqA2fJRTYrgjkQy6TKQC4OnzgleNuZESJXaPa2MYtqRA=
+	t=1745020186; cv=none; b=VjxCLMF3OgI89bBUvhDYSOJpTJd8YfPEoQ4efl6wbib1HpMeb8qSR9bLMjPfCpY0bFZTnTCoRRdXL+hX4Nt0B9LTsDh/6Tdh3SMItyQlMmMcQTQcwMOwM1kLUWyMrJ/JIN5Qqz1xlhNQTOEwMSsmd5mF2jpXzy72qL4op6kpjnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745020154; c=relaxed/simple;
-	bh=vyjmsM+aW7aVkT2LcVBlUtWAhcR7RmqKBB7SolROCGE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E05bRKDrIhJ9v4hD2e05NH80HZsNAbEbGS07y8yS3MCqWwn9hz7tnIqbzpg/U6bCht474pmi8TeBo8+Stez4rmRPkl6hMRW2k1wHQJr1jx3Ilc4Rjt+d8WeAyd8cGdnzeQ9uZLU0I8TFX9MsbnWnL2+fgQ0YrABOC9HKsqre090=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=osandov.com; spf=none smtp.mailfrom=osandov.com; dkim=pass (2048-bit key) header.d=osandov-com.20230601.gappssmtp.com header.i=@osandov-com.20230601.gappssmtp.com header.b=2x0yjLEp; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=osandov.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=osandov.com
+	s=arc-20240116; t=1745020186; c=relaxed/simple;
+	bh=l7Vw8IY5SK8AwWCL5EJodsR4To20LDEuOF2/seyqNoI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oSgwIe1ujJT/q4gU+elAPbSSrIU3Y1qmxrAsHHwody7D2ry3gyX+3SyzlaVi4bbqPrCNoaxeYoLroAinDZgRHjJLlKjhnbWmmVoBZ8gE8K9e7UUVSQnaUPhL3PsskwuFdw9o9bOxR/ULMga8idS9iMyQkd8N3TjpDtyqsX/gftE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=GmVXjj20; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=osandov-com.20230601.gappssmtp.com header.i=@osandov-com.20230601.gappssmtp.com header.b="2x0yjLEp"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-af9a6958a08so239379a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 16:49:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=osandov-com.20230601.gappssmtp.com; s=20230601; t=1745020152; x=1745624952; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GdqN97xUgBh8g0GuFn3ELm+T4RLBmW8omURwaoa0VgI=;
-        b=2x0yjLEpnZ/B3Yf+5cGoiM6GINuSDTIN37sCBheM0JbuFDBWV2MoYBbukg2caZmYiN
-         OG57ycIUp+w+vkIe2QNWtyE83r+YA7x5yamfBCy9o5MMHDAtqH6cZYMAyIb32P8iGmz1
-         MEnoQn56QtRz69ox3wSc/PVtuz7WN2KP3UWPjvQRY6dzTBznRArHlX/PcGsjUWi18PLt
-         Na2+wtYBR3z5v7C4/h/bLrsumyJbkemYpqqGqGLRIC0q3ihsIRJVteQtNMqvwhsCaoxM
-         A8GCWo5P3uCLp8yLy3KDFz7y2c+R/PTA2cWheqy2Miy3Xf3DE6uU/k+wNt4LgtK/CbdV
-         N3QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745020152; x=1745624952;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GdqN97xUgBh8g0GuFn3ELm+T4RLBmW8omURwaoa0VgI=;
-        b=drruK+PdZbp1eV7KUBAqsjeygRd5+Gx5bel7VN+DA3KoAsLYb3wWzUUgUyqGQPbrmN
-         BWQF/SLgQS9yBuaeBaau8Vpl+D1bv9qCv0TUgJprPFbVm41s+1BRXkIiAz+JWTJ8cbT9
-         CoLNkENVUEGbwolQicxbnurzXwormR46qi6hfJ4g4Xscl0o0OIdoNYcIRWJI+yjPYnhj
-         V+CV5UJwVDfR2rJCvJwpsDd/GhIMp5ZmbEOE1e4/9geCs0Y98GTWYiVlWue0Fl5I3vAX
-         Y2Zw7LSzMPZ0M5XDBXdbaOFbXBmm87TvMD7AKGZitISmDbCC7H0hki16jLiL8+lbWPvI
-         966A==
-X-Forwarded-Encrypted: i=1; AJvYcCVO084wIVq68jzzUEnAXwMsUE3LNEwwppo+rAK+wUaFOjHj9UXn8531dg1fxzi/TReAU7+LRlX7zRY31dc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxjeoVHMN/3XOtwgKOn1nD6yejpUX3RV7zAw9hG5005qLiqjKe
-	8IZCI5raFpIKK0EX6pmHUnvDJ/Ki6rM9zFcwuJYLQPeC+BwL0B3NVcA7knzyia0=
-X-Gm-Gg: ASbGncslSzNmdjNUmIyxmk9y7HCWs2/MQg/On/az2lRrDjREiewXehF0RBGZ/JbkNpR
-	u9nX2dACqufEh7L6aXWvxby9jJBiOQ2jIvCrFo9Pt3vDaH+hKO0jlop9X7cCi54t73DDuErcdJu
-	p6qSn35tq+2Fv0WO4IinPDwGStW61FtIDYZJihB7ovLD2aeSJkRkHlq8W3a1BuluvFq0DDiwpCw
-	jqzVbsCcJrxGiRsRzm9vfEB2caXfE3lCLSjvxtWDjcv0niFTss3x/OTw5OEsRWbwQShrXxECCT9
-	j9onMFzyXg3DGaLK9iYdFnTH
-X-Google-Smtp-Source: AGHT+IGlRcpoKxmnktfi1TxMLHSk4WFMeByxP3JatUrK7v+PASF7Wn1Uc8cnJzvipZRkDvI0bD7qYg==
-X-Received: by 2002:a05:6a00:3916:b0:72a:a7a4:99ca with SMTP id d2e1a72fcca58-73dc144da08mr2433867b3a.2.1745020152048;
-        Fri, 18 Apr 2025 16:49:12 -0700 (PDT)
-Received: from telecaster ([2620:10d:c090:500::5:4426])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf90d6c3sm2172565b3a.77.2025.04.18.16.49.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 16:49:11 -0700 (PDT)
-Date: Fri, 18 Apr 2025 16:49:08 -0700
-From: Omar Sandoval <osandov@osandov.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>, Chris Mason <clm@meta.com>,
-	Pat Cody <pat@patcody.io>, mingo@redhat.com, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, linux-kernel@vger.kernel.org, patcody@meta.com,
-	kernel-team@meta.com, Breno Leitao <leitao@debian.org>
-Subject: Re: [PATCH] sched/fair: Add null pointer check to pick_next_entity()
-Message-ID: <aALk9DVfjTTHGdvA@telecaster>
-References: <20250320205310.779888-1-pat@patcody.io>
- <20250324115613.GD14944@noisy.programming.kicks-ass.net>
- <7B2CFC16-1ADE-4565-B555-7525A50494C2@surriel.com>
- <20250402082221.GT5880@noisy.programming.kicks-ass.net>
- <b378f48593ca7449257a1bb55e78b186d88cd9f1.camel@surriel.com>
- <20250415080235.GK5600@noisy.programming.kicks-ass.net>
- <20250416124442.GC6580@noisy.programming.kicks-ass.net>
- <abffc286b637060f631925f9b373fad114d667d6.camel@surriel.com>
- <20250418154438.GH17910@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="GmVXjj20"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=6i3MoJrERpDqKEXT9PREMFRJ3KjvcwCBdAl6gwCPpUc=; b=GmVXjj20F/uXgU1L
+	heyzBdkPUTvDx2KjpBGjmBL0b2eI9zUfnCk/UNz/eW/IkV7wmmZAmqM5gKPPH+vX42rh+RUGPgB0a
+	zBIJtOJ+8Y0bsNaBrnInd1mBWXLYi/FxLLAU+wFvgEtsX6EiS0pgWa2uZOYG0ThU+VqNxsUHwWlcR
+	HEcFeq60gPhmYtUl9cCm+xFaOCrLZ2CurPru3NQSkmiBet4s1Q84HdB65TdSgqPwZVkL4UHfQx7k1
+	8APjVzTVu+TXZKXut6luykZVUoXj0dt4t5ez2iB8p1VS7w+veaesZ6tQkkAwnXGht0P5cv48zrb4O
+	7myu99p7TjgL73fH+Q==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1u5vSf-00CbXO-20;
+	Fri, 18 Apr 2025 23:49:33 +0000
+From: linux@treblig.org
+To: akpm@linux-foundation.org,
+	andriy.shevchenko@linux.intel.com,
+	viro@zeniv.linux.org.uk,
+	corbet@lwn.net
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] relay: Remove unused relay_late_setup_files
+Date: Sat, 19 Apr 2025 00:49:32 +0100
+Message-ID: <20250418234932.490863-1-linux@treblig.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418154438.GH17910@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 18, 2025 at 05:44:38PM +0200, Peter Zijlstra wrote:
-> On Wed, Apr 16, 2025 at 10:19:42AM -0400, Rik van Riel wrote:
-> 
-> > The most common warning by far, hitting
-> > about 90% of the time we hit anything
-> > in avg_vruntime_validate is the
-> > WARN_ON_ONCE(cfs_rq->avg_vruntime != vruntime)
-> > 
-> > The most common code path to getting there,
-> > covering about 85% of the cases:
-> > 
-> > avg_vruntime_validate
-> > avg_vruntime_sub
-> > __dequeue_entity
-> > set_next_entity
-> > pick_task_fair
-> > pick_next_task_fair
-> > __pick_next_task
-> > pick_next_task
-> > __schedule
-> > schedule
-> 
-> (I'm assuming zero_vruntime patch here, the stock kernel has more
-> problems vs min_vruntime getting stuck in the future etc..)
-> 
-> So I have a theory about this. Key is that you're running a PREEMPT-NONE
-> kernel.
-> 
-> There is one important site the overflow patch does not cover:
-> avg_vruntime_update().
-> 
-> However, due to PREEMPT_NONE, it is possible (Chris mentioned direct
-> reclaim and OOM) to have very long (in-kernel) runtimes without
-> scheduling.
-> 
-> (I suppose this should be visible by tracing sched_switch)
-> 
-> Were this to happen, then avg_vruntime_add() gets to deal with 'key *
-> weight' for a relatively large key. But per the overflow checks there,
-> this isn't hitting (much).
-> 
-> But then we try and update zero_vruntime, and that is doing 'delta *
-> cfs_rq->avg_load', and avg_load is a larger number and might just cause
-> overflow. We don't have a check there.
-> 
-> If that overflows then avg_vruntime is buggered, but none of the
-> individual tree entities hit overflow, exactly as you observe.
-> 
-> I've modified the zero_vruntime patch a little (new one below) to update
-> zero_vruntime in update_curr(). Additionally, I have every tick re-align
-> it with the tree avg (the update and the tree can drift due to numerical
-> funnies).
-> 
-> This should ensure these very long in-kernel runtimes are broken up in
-> at most tick sized chunks, and by keeping zero_vruntime more or less
-> around the actual 0-lag point, the key values are minimized.
-> 
-> I should probably go play with a kernel module that spins for a few
-> seconds with preemption disabled, see if I can make it go BOOM :-) But
-> I've not yet done so.
-> 
-> FWIW, you can add something like:
-> 
-> Index: linux-2.6/kernel/sched/fair.c
-> ===================================================================
-> --- linux-2.6.orig/kernel/sched/fair.c
-> +++ linux-2.6/kernel/sched/fair.c
-> @@ -652,6 +652,9 @@ avg_vruntime_sub(struct cfs_rq *cfs_rq,
->  static inline
->  void avg_vruntime_update(struct cfs_rq *cfs_rq, s64 delta)
->  {
-> +	s64 tmp;
-> +	WARN_ON_ONCE(__builtin_mul_overflow(cfs_rq->avg_load, delta, &tmp);
-> +
->  	/*
->  	 * v' = v + d ==> avg_vruntime' = avg_runtime - d*avg_load
->  	 */
-> 
-> 
-> To the overflow patch, to see if this mult goes splat.
-> 
-> 
-> New zero_vruntime patch here:
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Hey, Peter, thanks for your help with this. I have a question/potential
-bug below.
+The last use of relay_late_setup_files() was removed in 2018
+by commit 2b47733045aa ("drm/i915/guc: Merge log relay file and channel
+creation")
 
-> ---
->  kernel/sched/debug.c |    8 ++--
->  kernel/sched/fair.c  |   92 +++++++--------------------------------------------
->  kernel/sched/sched.h |    2 -
->  3 files changed, 19 insertions(+), 83 deletions(-)
-> 
-> Index: linux-2.6/kernel/sched/debug.c
-> ===================================================================
-> --- linux-2.6.orig/kernel/sched/debug.c
-> +++ linux-2.6/kernel/sched/debug.c
-> @@ -807,7 +807,7 @@ static void print_rq(struct seq_file *m,
->  
->  void print_cfs_rq(struct seq_file *m, int cpu, struct cfs_rq *cfs_rq)
->  {
-> -	s64 left_vruntime = -1, min_vruntime, right_vruntime = -1, left_deadline = -1, spread;
-> +	s64 left_vruntime = -1, zero_vruntime, right_vruntime = -1, left_deadline = -1, spread;
->  	struct sched_entity *last, *first, *root;
->  	struct rq *rq = cpu_rq(cpu);
->  	unsigned long flags;
-> @@ -830,15 +830,15 @@ void print_cfs_rq(struct seq_file *m, in
->  	last = __pick_last_entity(cfs_rq);
->  	if (last)
->  		right_vruntime = last->vruntime;
-> -	min_vruntime = cfs_rq->min_vruntime;
-> +	zero_vruntime = cfs_rq->zero_vruntime;
->  	raw_spin_rq_unlock_irqrestore(rq, flags);
->  
->  	SEQ_printf(m, "  .%-30s: %Ld.%06ld\n", "left_deadline",
->  			SPLIT_NS(left_deadline));
->  	SEQ_printf(m, "  .%-30s: %Ld.%06ld\n", "left_vruntime",
->  			SPLIT_NS(left_vruntime));
-> -	SEQ_printf(m, "  .%-30s: %Ld.%06ld\n", "min_vruntime",
-> -			SPLIT_NS(min_vruntime));
-> +	SEQ_printf(m, "  .%-30s: %Ld.%06ld\n", "zero_vruntime",
-> +			SPLIT_NS(zero_vruntime));
->  	SEQ_printf(m, "  .%-30s: %Ld.%06ld\n", "avg_vruntime",
->  			SPLIT_NS(avg_vruntime(cfs_rq)));
->  	SEQ_printf(m, "  .%-30s: %Ld.%06ld\n", "right_vruntime",
-> Index: linux-2.6/kernel/sched/fair.c
-> ===================================================================
-> --- linux-2.6.orig/kernel/sched/fair.c
-> +++ linux-2.6/kernel/sched/fair.c
-> @@ -526,24 +526,6 @@ void account_cfs_rq_runtime(struct cfs_r
->   * Scheduling class tree data structure manipulation methods:
->   */
->  
-> -static inline __maybe_unused u64 max_vruntime(u64 max_vruntime, u64 vruntime)
-> -{
-> -	s64 delta = (s64)(vruntime - max_vruntime);
-> -	if (delta > 0)
-> -		max_vruntime = vruntime;
-> -
-> -	return max_vruntime;
-> -}
-> -
-> -static inline __maybe_unused u64 min_vruntime(u64 min_vruntime, u64 vruntime)
-> -{
-> -	s64 delta = (s64)(vruntime - min_vruntime);
-> -	if (delta < 0)
-> -		min_vruntime = vruntime;
-> -
-> -	return min_vruntime;
-> -}
-> -
->  static inline bool entity_before(const struct sched_entity *a,
->  				 const struct sched_entity *b)
->  {
-> @@ -556,7 +538,7 @@ static inline bool entity_before(const s
->  
->  static inline s64 entity_key(struct cfs_rq *cfs_rq, struct sched_entity *se)
->  {
-> -	return (s64)(se->vruntime - cfs_rq->min_vruntime);
-> +	return (s64)(se->vruntime - cfs_rq->zero_vruntime);
->  }
->  
->  #define __node_2_se(node) \
-> @@ -608,13 +590,13 @@ static inline s64 entity_key(struct cfs_
->   *
->   * Which we track using:
->   *
-> - *                    v0 := cfs_rq->min_vruntime
-> + *                    v0 := cfs_rq->zero_vruntime
->   * \Sum (v_i - v0) * w_i := cfs_rq->avg_vruntime
->   *              \Sum w_i := cfs_rq->avg_load
->   *
-> - * Since min_vruntime is a monotonic increasing variable that closely tracks
-> - * the per-task service, these deltas: (v_i - v), will be in the order of the
-> - * maximal (virtual) lag induced in the system due to quantisation.
-> + * Since zero_vruntime closely tracks the per-task service, these
-> + * deltas: (v_i - v), will be in the order of the maximal (virtual) lag
-> + * induced in the system due to quantisation.
->   *
->   * Also, we use scale_load_down() to reduce the size.
->   *
-> @@ -673,7 +655,7 @@ u64 avg_vruntime(struct cfs_rq *cfs_rq)
->  		avg = div_s64(avg, load);
->  	}
->  
-> -	return cfs_rq->min_vruntime + avg;
-> +	return cfs_rq->zero_vruntime + avg;
->  }
->  
->  /*
-> @@ -734,7 +716,7 @@ static int vruntime_eligible(struct cfs_
->  		load += weight;
->  	}
->  
-> -	return avg >= (s64)(vruntime - cfs_rq->min_vruntime) * load;
-> +	return avg >= (s64)(vruntime - cfs_rq->zero_vruntime) * load;
->  }
->  
->  int entity_eligible(struct cfs_rq *cfs_rq, struct sched_entity *se)
-> @@ -742,42 +724,21 @@ int entity_eligible(struct cfs_rq *cfs_r
->  	return vruntime_eligible(cfs_rq, se->vruntime);
->  }
->  
-> -static u64 __update_min_vruntime(struct cfs_rq *cfs_rq, u64 vruntime)
-> +static void __update_zero_vruntime(struct cfs_rq *cfs_rq, s64 delta)
->  {
-> -	u64 min_vruntime = cfs_rq->min_vruntime;
-> -	/*
-> -	 * open coded max_vruntime() to allow updating avg_vruntime
-> -	 */
-> -	s64 delta = (s64)(vruntime - min_vruntime);
-> -	if (delta > 0) {
-> -		avg_vruntime_update(cfs_rq, delta);
-> -		min_vruntime = vruntime;
-> -	}
-> -	return min_vruntime;
-> +	if (!delta)
-> +		return;
-> +
-> +	avg_vruntime_update(cfs_rq, delta);
-> +	cfs_rq->zero_vruntime += delta;
->  }
->  
-> -static void update_min_vruntime(struct cfs_rq *cfs_rq)
-> +static void update_zero_vruntime(struct cfs_rq *cfs_rq)
->  {
-> -	struct sched_entity *se = __pick_root_entity(cfs_rq);
-> -	struct sched_entity *curr = cfs_rq->curr;
-> -	u64 vruntime = cfs_rq->min_vruntime;
-> +	u64 vruntime = avg_vruntime(cfs_rq);
-> +	s64 delta = (s64)(vruntime - cfs_rq->zero_vruntime);
->  
-> -	if (curr) {
-> -		if (curr->on_rq)
-> -			vruntime = curr->vruntime;
-> -		else
-> -			curr = NULL;
-> -	}
-> -
-> -	if (se) {
-> -		if (!curr)
-> -			vruntime = se->min_vruntime;
-> -		else
-> -			vruntime = min_vruntime(vruntime, se->min_vruntime);
-> -	}
-> -
-> -	/* ensure we never gain time by being placed backwards. */
-> -	cfs_rq->min_vruntime = __update_min_vruntime(cfs_rq, vruntime);
-> +	__update_zero_vruntime(cfs_rq, delta);
->  }
->  
->  static inline u64 cfs_rq_min_slice(struct cfs_rq *cfs_rq)
-> @@ -850,6 +811,7 @@ RB_DECLARE_CALLBACKS(static, min_vruntim
->  static void __enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se)
->  {
->  	avg_vruntime_add(cfs_rq, se);
-> +	update_zero_vruntime(cfs_rq);
+Remove it and the helper it used.
 
-Won't this double-count cfs_rq->curr in the avg_vruntime() calculation
-in update_zero_vruntime()? When cfs_rq->curr->on_rq, put_prev_entity()
-calls this with se == cfs_rq->curr _before_ setting cfs_rq->curr to
-NULL. So the avg_vruntime_add() call will add entity_key(cfs_rq->curr)
-to cfs_rq->avg_vruntime and se_weight(cfs_rq->curr) to cfs_rq->avg_load.
-Then update_zero_vruntime() calls avg_vruntime(), which still sees
-curr->on_rq and will add curr's key and weight again. This throws
-zero_vruntime off, maybe by enough to bust zero_vruntime and/or
-avg_vruntime?
+relay_late_setup_files() was used for eventually registering
+'buffer only' channels.  With it gone, delete the docs that
+explain how to do that.   Which suggests it should be possible
+to lose the 'has_base_filename' flags.
 
-Should the call to update_zero_vruntime() go before avg_vruntime_add()?
+(Are there any other uses??)
 
-Thanks,
-Omar
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ Documentation/filesystems/relay.rst |  10 ---
+ include/linux/relay.h               |   3 -
+ kernel/relay.c                      | 111 +---------------------------
+ 3 files changed, 1 insertion(+), 123 deletions(-)
+
+diff --git a/Documentation/filesystems/relay.rst b/Documentation/filesystems/relay.rst
+index 04ad083cfe62..292ba8492aeb 100644
+--- a/Documentation/filesystems/relay.rst
++++ b/Documentation/filesystems/relay.rst
+@@ -301,16 +301,6 @@ user-defined data with a channel, and is immediately available
+ (including in create_buf_file()) via chan->private_data or
+ buf->chan->private_data.
+ 
+-Buffer-only channels
+---------------------
+-
+-These channels have no files associated and can be created with
+-relay_open(NULL, NULL, ...). Such channels are useful in scenarios such
+-as when doing early tracing in the kernel, before the VFS is up. In these
+-cases, one may open a buffer-only channel and then call
+-relay_late_setup_files() when the kernel is ready to handle files,
+-to expose the buffered data to the userspace.
+-
+ Channel 'modes'
+ ---------------
+ 
+diff --git a/include/linux/relay.h b/include/linux/relay.h
+index 72b876dd5cb8..b3224111d074 100644
+--- a/include/linux/relay.h
++++ b/include/linux/relay.h
+@@ -159,9 +159,6 @@ struct rchan *relay_open(const char *base_filename,
+ 			 size_t n_subbufs,
+ 			 const struct rchan_callbacks *cb,
+ 			 void *private_data);
+-extern int relay_late_setup_files(struct rchan *chan,
+-				  const char *base_filename,
+-				  struct dentry *parent);
+ extern void relay_close(struct rchan *chan);
+ extern void relay_flush(struct rchan *chan);
+ extern void relay_subbufs_consumed(struct rchan *chan,
+diff --git a/kernel/relay.c b/kernel/relay.c
+index 5ac7e711e4b6..c0c93a04d4ce 100644
+--- a/kernel/relay.c
++++ b/kernel/relay.c
+@@ -452,7 +452,7 @@ int relay_prepare_cpu(unsigned int cpu)
+ 
+ /**
+  *	relay_open - create a new relay channel
+- *	@base_filename: base name of files to create, %NULL for buffering only
++ *	@base_filename: base name of files to create
+  *	@parent: dentry of parent directory, %NULL for root directory or buffer
+  *	@subbuf_size: size of sub-buffers
+  *	@n_subbufs: number of sub-buffers
+@@ -465,10 +465,6 @@ int relay_prepare_cpu(unsigned int cpu)
+  *	attributes specified.  The created channel buffer files
+  *	will be named base_filename0...base_filenameN-1.  File
+  *	permissions will be %S_IRUSR.
+- *
+- *	If opening a buffer (@parent = NULL) that you later wish to register
+- *	in a filesystem, call relay_late_setup_files() once the @parent dentry
+- *	is available.
+  */
+ struct rchan *relay_open(const char *base_filename,
+ 			 struct dentry *parent,
+@@ -540,111 +536,6 @@ struct rchan_percpu_buf_dispatcher {
+ 	struct dentry *dentry;
+ };
+ 
+-/* Called in atomic context. */
+-static void __relay_set_buf_dentry(void *info)
+-{
+-	struct rchan_percpu_buf_dispatcher *p = info;
+-
+-	relay_set_buf_dentry(p->buf, p->dentry);
+-}
+-
+-/**
+- *	relay_late_setup_files - triggers file creation
+- *	@chan: channel to operate on
+- *	@base_filename: base name of files to create
+- *	@parent: dentry of parent directory, %NULL for root directory
+- *
+- *	Returns 0 if successful, non-zero otherwise.
+- *
+- *	Use to setup files for a previously buffer-only channel created
+- *	by relay_open() with a NULL parent dentry.
+- *
+- *	For example, this is useful for perfomring early tracing in kernel,
+- *	before VFS is up and then exposing the early results once the dentry
+- *	is available.
+- */
+-int relay_late_setup_files(struct rchan *chan,
+-			   const char *base_filename,
+-			   struct dentry *parent)
+-{
+-	int err = 0;
+-	unsigned int i, curr_cpu;
+-	unsigned long flags;
+-	struct dentry *dentry;
+-	struct rchan_buf *buf;
+-	struct rchan_percpu_buf_dispatcher disp;
+-
+-	if (!chan || !base_filename)
+-		return -EINVAL;
+-
+-	strscpy(chan->base_filename, base_filename, NAME_MAX);
+-
+-	mutex_lock(&relay_channels_mutex);
+-	/* Is chan already set up? */
+-	if (unlikely(chan->has_base_filename)) {
+-		mutex_unlock(&relay_channels_mutex);
+-		return -EEXIST;
+-	}
+-	chan->has_base_filename = 1;
+-	chan->parent = parent;
+-
+-	if (chan->is_global) {
+-		err = -EINVAL;
+-		buf = *per_cpu_ptr(chan->buf, 0);
+-		if (!WARN_ON_ONCE(!buf)) {
+-			dentry = relay_create_buf_file(chan, buf, 0);
+-			if (dentry && !WARN_ON_ONCE(!chan->is_global)) {
+-				relay_set_buf_dentry(buf, dentry);
+-				err = 0;
+-			}
+-		}
+-		mutex_unlock(&relay_channels_mutex);
+-		return err;
+-	}
+-
+-	curr_cpu = get_cpu();
+-	/*
+-	 * The CPU hotplug notifier ran before us and created buffers with
+-	 * no files associated. So it's safe to call relay_setup_buf_file()
+-	 * on all currently online CPUs.
+-	 */
+-	for_each_online_cpu(i) {
+-		buf = *per_cpu_ptr(chan->buf, i);
+-		if (unlikely(!buf)) {
+-			WARN_ONCE(1, KERN_ERR "CPU has no buffer!\n");
+-			err = -EINVAL;
+-			break;
+-		}
+-
+-		dentry = relay_create_buf_file(chan, buf, i);
+-		if (unlikely(!dentry)) {
+-			err = -EINVAL;
+-			break;
+-		}
+-
+-		if (curr_cpu == i) {
+-			local_irq_save(flags);
+-			relay_set_buf_dentry(buf, dentry);
+-			local_irq_restore(flags);
+-		} else {
+-			disp.buf = buf;
+-			disp.dentry = dentry;
+-			smp_mb();
+-			/* relay_channels_mutex must be held, so wait. */
+-			err = smp_call_function_single(i,
+-						       __relay_set_buf_dentry,
+-						       &disp, 1);
+-		}
+-		if (unlikely(err))
+-			break;
+-	}
+-	put_cpu();
+-	mutex_unlock(&relay_channels_mutex);
+-
+-	return err;
+-}
+-EXPORT_SYMBOL_GPL(relay_late_setup_files);
+-
+ /**
+  *	relay_switch_subbuf - switch to a new sub-buffer
+  *	@buf: channel buffer
+-- 
+2.49.0
+
