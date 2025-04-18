@@ -1,99 +1,206 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8EA1A2658;
-	Fri, 18 Apr 2025 23:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0621A2DFA4B
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 23:02:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745017281; cv=none; b=n8zqJxLbxb4W4UhWFNBXSLHQ4kbxXOQyZto8oo6QzGW4Rv4ZrjAyqDUy10BHe6cHeEVOfws+6vkQ3zwORiWPBz9lOoWIv9XCGNioZDD/LC91DIJSbn/AXrLukkh7dwiJcWzhx+h+4p9D2Czxsfgcyd3sGP86XZGyiqlFO/Ch7DQ=
+	t=1745017338; cv=none; b=RgPxjl7/u2JMufgyEtE8GOpCZYoZFXsY70QDtaHkSXT7cocyGBmCs+IVaMu/NHaq00FIQ6/Cmw4HM47Olkj7QkWvqfMj1XQxdf5RR8ffvCCHLRzl0iSlEwBhCbZJf8fwohsFACSvM6oxsQrBuSKj71+cP7T/bR8oA9jTAM8Kw28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745017281; c=relaxed/simple;
-	bh=VQy0mOHcY16VbiuCnUNEHdfMlg4Hjotj7KFV8oi5pL4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dPNL1OCqkoSQbtG4CYOYQd8ap4Mbnnlib9WXxH6dBzukAYw5ydZXyIPwWRtsFw/e6P5Kk27VskKYtD/A+0k617FwDY8RCfaIHFBJ61mD2fgzjugA8Z+pwhXW8NEOwaNkaO1GdIe/dSf/PaDssi42vEjTjLvqC6s2zt3P7mrY0O8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IE5w0CiF; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745017338; c=relaxed/simple;
+	bh=Cqy9wXz4Md2dDfVYMq63yQ8yoiIG7qVCmGKjhWNBpRg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p96l2OnIeHkOdLCmJOcqyhiY5K3LJ+cddFaVWWtPkcq1X0zVQ2Lnl73WXmamRVVqbyulCPum8lybWxAlnqJPXqyCHnkWzLSueVP10DjZYAvEoqTqsmzHuZ/27efIAAghwpuWgbQ1HVnLj5sc6clV3KNko8u5BBmdbRR6hzYh6yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=b9qyvpnG; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IE5w0CiF"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30bf1d48843so20123711fa.2;
-        Fri, 18 Apr 2025 16:01:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745017277; x=1745622077; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VQy0mOHcY16VbiuCnUNEHdfMlg4Hjotj7KFV8oi5pL4=;
-        b=IE5w0CiF58pQbpPTuhMRSWmf1dEK8w+gFf7VQkf3C/FuVY7MwZ8tLq6jjPGUiqlYPS
-         gYE4lBvB2cpVHCAcL0fpaFwMOAN73dzf4GBKA1GqbBwrTcw0MKLaRi+VuQyajBSNcvSY
-         6hg1DyF63NBmOeQWfkZT/KDDnwuCfnKt3eMFmIOJYyKToxQErDin0M2yLOF2BmGEathM
-         fQkCzf+mlvpGze4NosIPMeGWMhd/lVcUpCw8ebLDuExDboFvLpyfFijIVQ/O9cJawjQg
-         5rBMn6GtzU0EZ3sujCF/cD5+G+Ypo9GqQyuiGd7r5EOu8GOghMQdZItNiEV6gah14/rW
-         bliA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="b9qyvpnG"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53IFcZlp015286
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 23:02:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=A/rCdii3k99QNyH4v5GZVV/R
+	W4IUX5b1L2951avVf88=; b=b9qyvpnGQUYzs2i7Mvx3EouHvPtEV06WOmwA/7FQ
+	Pr5fPVwJ+mNV6x9NS/Sy7Wdz8ur5/zJ4uVxdYLTnCEIJY/J1kIfNZqgNTkdrJ07v
+	3eiN+0Nkc3qAV+G6puOnH6538Ns3hMTLp62ddy0ffTkrKOQwj4S9ns+IgQ3rgOcs
+	dVTBxatJdDzh6kEDZL/npaMw/3zHQ3UKbYSz5/GN+o+jwjVvr2ai4HepTDcTMg6a
+	ImRpewDN+O19KA9PCHF3MibhHh4Xh+iqhmYeKdNqm/+DpMzIKXlwDlrlbR/+LVgT
+	0mgQkQada8idVQsx0h0tAC03cvX9xcuoYYERsS85BNKEWw==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygd6u67j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 23:02:14 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c7c30d8986so687134685a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 16:02:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745017277; x=1745622077;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VQy0mOHcY16VbiuCnUNEHdfMlg4Hjotj7KFV8oi5pL4=;
-        b=oLvgzUZvzgtQJNT0ku5fllDHE3j1EgTIsLE51tPOYkzGdioSJhkXDPK7B5cGIIXYZZ
-         aRxCP6cymOHPxj6ekOHJcElOGNf2KdeKs05j6vBsR+rc7AAst1Y42KOSzflz8o5rel1d
-         al2tQYChN/JohCKFo/LImtu4FVIt0Dhh25cFPyT8p9hqy2G8tJfxWvosHgiUkxUOB6Lq
-         z+kJ4GSMuJsUWpVg7OyjuGDQ1CVYCzPVf18vCMPN9WXlsfJlTg4hf23FzanaBEwq9JUK
-         3oIe2Mh4fRAL7kU2bDuOXO+PWq7ZKzfPs8TjBYgnva+clP69G6jWnZ28bl6vVdGensN0
-         c75A==
-X-Forwarded-Encrypted: i=1; AJvYcCUD4Lw36BeLlJLYjqNqTDSXXSKSGMktVbJW9pQniYQ3a0qECX9vLWxIpm0nCQU758q7TlGDd4aEgXYut3Y2@vger.kernel.org, AJvYcCUrNTP6oTcqJdGOjZ8i00edOwaJg+wJbg/6vwislt5PUxatzS3HH7GPbzUsU6LJfvX5RFYq0/DS1yilb0tvyWrO@vger.kernel.org, AJvYcCVvRvyg5UYmE1yqYtPmKcGE143OJ+b8md3b3FjaTA5dpsDxBsjpP/tZ3CVYNC8qwWbVWcT8DP9IY9g6jg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1cZ4s2/iwhHtVcfrhPmt3Ww0OeX7fahHb1iLWUF1yzuS9QAiU
-	c4GxK12IC8l4CiRYue9Z+qS0ffJkh0uYxR+rfjOaTVuNb+APJYHzLfY0h6DogeCnGitYHTJcupn
-	bfzoVnf4Jd1b44DjvnMO68nCHobuWJw==
-X-Gm-Gg: ASbGnctxAq+UttX9WAdXoAsyDKr1rCEdoRLjnwkrCoOI5P1YCtioVW05vQ5l0I6jXDl
-	wk0LUl3p2S/BMlUNgm2dFOVRf+NLWYrrip6HfcDpUa5PRbDBLWrqlJhLla32FtEp/faPy+ohq/I
-	+NnQkk2ErYpUy9Q7yIaJXCd2z2JfAtLYTDNh4=
-X-Google-Smtp-Source: AGHT+IFFJTxHPf+5+iXd4c3XocplOZE+gYZTmqAwnMiWmgDb0xL1UfWTnq5s+7K4B1jUk0E4pd13T5jtylfmkSUIvVE=
-X-Received: by 2002:a05:651c:19ac:b0:30b:f775:bae0 with SMTP id
- 38308e7fff4ca-31090559978mr14231121fa.36.1745017276927; Fri, 18 Apr 2025
- 16:01:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745017333; x=1745622133;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A/rCdii3k99QNyH4v5GZVV/RW4IUX5b1L2951avVf88=;
+        b=t6YXIFTIv1zWxMZAYxT8GXyiEWrV61xdqRQtIJcMUsSZmGK0PCT3WXxZge+zakIfdI
+         QnIuz1rOhXFanmeBtsgnwdI1l5WStkZDYyqzlZizlfP3tCSmoblUr3t4iTtkAKC4CL0C
+         xeSnjYoMzX0WvojRXoXaVpKv1sc8f4AY55tyz1Smxku/wS8CKqjJ/ZHjy1ylNbSKwYHJ
+         aDA/+XT88eHlhWf2Z3PYik0jLmDN5PqZPehlJEgpMbXZR/POuH1OKJ5G2Jx3jLz23Epe
+         bB+HBDF+05Sse09N3lzwNHYHVsjaq8Fp3ggmYgC3fFkeDBJGm2SOK1C1YmTeb92cad3u
+         zOYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVs1j5JoQX8ajaDvVaIrWigBM8gFGu4NarLxaAIDlVIeV/CvncOFsH3O/QTuHHz1nA9AtDFKiWKUB4YJTQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/EVESC+3vl0yHT0n1DYbtDp4atsUg7gQJbI2dIG/Iy0OFuVuN
+	pJUKFxbK8EwGvigZjm+yybZh+ebJJzQGXlNrWXNcDARaWw/VOMAtfan81vn8Vb1jWT8rllNgdGx
+	2MsNOUki1Xeh5KeGKrV/sN+2BdA2Zx5Azq+YK3b9eXphS050Qq2tBnITYTj4Jrgk=
+X-Gm-Gg: ASbGncsEQK4bg9gXxlji0r9FTrt9R7M5+KAX9ugnjiSoAzUbN5iRhyGujvx5FCJ6dIU
+	YShUjkG6f7EzQH5A5QTIBjPElsgV/kzBJhd8DiH/rFEBTFu+BAyP1kvDds45kjLb+WQIExwD7ee
+	hBiu6h75MhE3CsIfsHeMTUtmIwv9e9ebQxEmFRlSxx66KgQ27lZ88QPJd3/AKJ8pQO6ccEcNBO/
+	kSART6iGrV63V0IbH8m0vS4X2dxVWmvqI9QZTXPgi+alky2V3vclVRsoYOuUbSbayQ5Hf4An+a+
+	yAEnER/RzeNYkcy9cWCIMQzQA+saj8Zqs5hHPwNEBuPAPl6pe0ziPpOKI1beyjy0+UuLul+S5Kg
+	=
+X-Received: by 2002:a05:620a:170d:b0:7c5:5e69:4450 with SMTP id af79cd13be357-7c927f80556mr697466685a.17.1745017333606;
+        Fri, 18 Apr 2025 16:02:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEOvHKeAZS5vASogCzZeo+qEyJxQ15QLGhBMc3CRYTpJqeXQEMRI79G+EUi5azW028Wqu1vaA==
+X-Received: by 2002:a05:620a:170d:b0:7c5:5e69:4450 with SMTP id af79cd13be357-7c927f80556mr697461685a.17.1745017333209;
+        Fri, 18 Apr 2025 16:02:13 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e5e5163sm290371e87.184.2025.04.18.16.02.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 16:02:12 -0700 (PDT)
+Date: Sat, 19 Apr 2025 02:02:10 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: Dmitry Baryshkov <lumag@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org,
+        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v2 0/3] Fairphone 5 DisplayPort over USB-C support
+Message-ID: <j3xylbgcvamtiumndssy73h646vwwdfyxju3t6wtpfhcd4f6fw@qgmbrcz6njgk>
+References: <20250312-fp5-pmic-glink-dp-v2-0-a55927749d77@fairphone.com>
+ <y7dfv4mmtzkv2umvverkn6qvjt3tg7cz4jj4zsb4t6vu4heh4d@64zpkjihjc23>
+ <D8V75HO8O4CO.33RMUJLKQ7UG5@fairphone.com>
+ <D99SSJAOJE3V.ENIEJ9IWFZLF@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417192054.69663-2-thorsten.blum@linux.dev>
- <202504181322.5D3B93E93@keescook> <ABD8884A-36DF-457C-83D4-49F4F63C339F@linux.dev>
-In-Reply-To: <ABD8884A-36DF-457C-83D4-49F4F63C339F@linux.dev>
-From: Matt Turner <mattst88@gmail.com>
-Date: Fri, 18 Apr 2025 19:01:03 -0400
-X-Gm-Features: ATxdqUFOZ5fvGt_IXXw9Q6D-_eoT7DrRF9bpv9M2IsYXr8gmnLcbrV2Ee9atLLM
-Message-ID: <CAEdQ38E4Hks+m=srZsuuu7g8N2z_hJT7oxyF_Nz3MYsm8wx9YQ@mail.gmail.com>
-Subject: Re: [PATCH] smp: Replace deprecated strcpy() with strscpy()
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Kees Cook <kees@kernel.org>, Richard Henderson <richard.henderson@linaro.org>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Arnd Bergmann <arnd@arndb.de>, linux-hardening@vger.kernel.org, 
-	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D99SSJAOJE3V.ENIEJ9IWFZLF@fairphone.com>
+X-Proofpoint-ORIG-GUID: YQg7OBhkOHIPmIGVX_M710sqpqdI6fwj
+X-Proofpoint-GUID: YQg7OBhkOHIPmIGVX_M710sqpqdI6fwj
+X-Authority-Analysis: v=2.4 cv=ANaQCy7k c=1 sm=1 tr=0 ts=6802d9f7 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=gEfo2CItAAAA:8 a=VwQbUJbxAAAA:8 a=6H0WHjuAAAAA:8 a=eUQzuGhTgxr9iOTw7QAA:9 a=CjuIK1q_8ugA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22 a=sptkURWiP4Gy88Gu7hUp:22 a=Soq9LBFxuPC4vsCAQt-j:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-18_09,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ mlxlogscore=981 suspectscore=0 clxscore=1015 lowpriorityscore=0
+ phishscore=0 impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504180176
 
-On Fri, Apr 18, 2025 at 5:11=E2=80=AFPM Thorsten Blum <thorsten.blum@linux.=
-dev> wrote:
->
-> On 18. Apr 2025, at 22:23, Kees Cook wrote:
-> > On Thu, Apr 17, 2025 at 09:20:52PM +0200, Thorsten Blum wrote:
-> >> strcpy() is deprecated; use strscpy() instead.
+On Fri, Apr 18, 2025 at 03:27:22PM +0200, Luca Weiss wrote:
+> Hi Krzysztof, hi Dmitry,
+> 
+> Any feedback on the below proposed patch?
+> 
+> I can also send out a v3 with this patch included soon if that makes it
+> easier to review.
+> 
+> Regards
+> Luca
+> 
+> On Tue Apr 1, 2025 at 11:32 AM CEST, Luca Weiss wrote:
+> > Hi Dmitry,
 > >
-> > Are there more strcpy() uses in arch/alpha? Maybe do all of them and
-> > give the Subject prefix as "alpha:". If not, the "smp:" prefix is likel=
-y
-> > to non-specific. Maybe "alpha: smp:".
->
-> There are a handful left, but they're not as straightforward as this
-> one - so I'd prefer to keep them separate.
->
-> Could the committer change the subject to "alpha: smp:" or should I
-> submit a v2 just for the title?
+> > On Wed Mar 12, 2025 at 8:06 PM CET, Dmitry Baryshkov wrote:
+> >> On Wed, Mar 12, 2025 at 01:05:07PM +0100, Luca Weiss wrote:
+> >>> This series adds all the necessary bits to enable DisplayPort-out over
+> >>> USB-C on Fairphone 5.
+> >>> 
+> >>> There's currently a dt validation error with this, not quite sure how to
+> >>> resolve this:
+> >>> 
+> >>>   arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dtb: typec-mux@42: port:endpoint: Unevaluated properties are not allowed ('data-lanes' was unexpected)
+> >>>           from schema $id: http://devicetree.org/schemas/usb/fcs,fsa4480.yaml#
+> >>
+> >> This comes from usb-switch.yaml, it requires that 'port' adheres to the
+> >> /schemas/graph.yaml#/properties/port (which forbids extra properties).
+> >> The usb-switch.yaml needs to be fixed to use port-base for that node.
+> >
+> > Thanks, do you think the attached patch would be suitable? It does fix
+> > the warning for me, but not sure if it's too lax or doing the wrong
+> > thing.
+> >
+> > diff --git a/Documentation/devicetree/bindings/usb/usb-switch.yaml b/Documentation/devicetree/bindings/usb/usb-switch.yaml
+> > index da76118e73a5..9598c1748d35 100644
+> > --- a/Documentation/devicetree/bindings/usb/usb-switch.yaml
+> > +++ b/Documentation/devicetree/bindings/usb/usb-switch.yaml
+> > @@ -26,11 +26,15 @@ properties:
+> >      type: boolean
+> >  
+> >    port:
+> > -    $ref: /schemas/graph.yaml#/properties/port
+> > +    $ref: /schemas/graph.yaml#/$defs/port-base
+> >      description:
+> >        A port node to link the device to a TypeC controller for the purpose of
+> >        handling altmode muxing and orientation switching.
+> >  
+> > +    patternProperties:
+> > +      "^endpoint(@[0-9a-f]+)?$":
+> > +        $ref: /schemas/graph.yaml#/$defs/endpoint-base
 
-I'll fix it up when I add it to my tree.
+Please document that the only permitted property here is data-lanes.
 
-Thanks!
-Matt
+> > +
+> >    ports:
+> >      $ref: /schemas/graph.yaml#/properties/ports
+> >      properties:
+> >
+> >
+> > Regards
+> > Luca
+> >
+> >>
+> >>> 
+> >>> See also this mail plus replies:
+> >>> * https://lore.kernel.org/linux-arm-msm/D0H3VE6RLM2I.MK2NT1P9N02O@fairphone.com/
+> >>> 
+> >>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> >>> ---
+> >>> Changes in v2:
+> >>> - Move adding "*-switch;" properties already in earlier patches
+> >>> - Move wiring up SS USB & DP to SoC instead of being done in device
+> >>> - Pick up tags
+> >>> - Link to v1: https://lore.kernel.org/r/20250226-fp5-pmic-glink-dp-v1-0-e6661d38652c@fairphone.com
+> >>> 
+> >>> ---
+> >>> Luca Weiss (3):
+> >>>       arm64: dts: qcom: qcm6490-fairphone-fp5: Add PTN36502 redriver
+> >>>       arm64: dts: qcom: qcm6490-fairphone-fp5: Add OCP96011 audio switch
+> >>>       arm64: dts: qcom: qcm6490-fairphone-fp5: Hook up DisplayPort over USB-C
+> >>> 
+> >>>  arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts | 103 +++++++++++++++++++--
+> >>>  arch/arm64/boot/dts/qcom/sc7280.dtsi               |   9 +-
+> >>>  2 files changed, 104 insertions(+), 8 deletions(-)
+> >>> ---
+> >>> base-commit: dcb11dc4740372cd4cce0b763a4a8ec4e9f347a6
+> >>> change-id: 20231208-fp5-pmic-glink-dp-216b76084bee
+> >>> 
+> >>> Best regards,
+> >>> -- 
+> >>> Luca Weiss <luca.weiss@fairphone.com>
+> >>> 
+> 
+
+-- 
+With best wishes
+Dmitry
