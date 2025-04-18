@@ -1,261 +1,290 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5E2217654
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 20:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745006627; cv=none; b=sQj8ccQ8TDRTNJjAh031BVLaJWKgUcCvFqmYaxtq6DDXkrC14BhGMv/zwaBFh/UzjWJGn+ak5riEaiekZI+sinxi3eOGwV7YWd3uaUbDd7nXXOshm73cwIIXbO8o3KgAybzWVmJgtZvPAWtC2ZqvhXv5sb1EWK/WYEl0o8x7b7A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745006627; c=relaxed/simple;
-	bh=WnwjcR+NbDgggX8XLQ1x4hgavKpbU7ZSEn3bAGipbyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ES9cnSaeXDhMFSHGRZaxma+gXQ/nuAfwRTeAP9Ezf1B2MpCKdmr2epv79n7ZJJG9QwfmpIoOpSa4RhY+uPwUWJr7pvBZ6yDSarC/eeJyUbGD9O+yPmmvTGkVQObYNjs601lU8D9bQzl7ZrYAH42omoXQSqev7Gmg459RVRWgJ5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Po0CPx4u; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD756DCE1;
+	Fri, 18 Apr 2025 20:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745006652; cv=fail; b=I0Kr/4lzcHxSUQMjUvHOHOGq42ytSID2uI0R9wGbfzbMYeS6zrJgSnTxpnOBIpJhKY1btC7L/ok0r85NO92/N+h8iMf8giSdzQk/F88+Vt0vIgz8d9ir0nyc1FFv9PqzFB0JxroJBIhHxL53YDQgki/NnTC1yh0Gca/VGOaY5a8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745006652; c=relaxed/simple;
+	bh=bwz8ICph4ex3cZQvGr2JMbKiaBGDGLrHvEjpZKHBcM0=;
+	h=Subject:From:To:CC:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=EcOzspT3GhPYKFo6Vekoo8q0adVr1jMoCogrGiw4IwAIS+BcCpEyL2+oU75kKxGBdft0ZZCu+AdBCaOS+1h8lwjCNPUmRWSRNFIzeC0wuXvVyV7VspJXVawdTDs23bxxkNhxiJc3Zo5+MM65R+fAoeBeVktjjOX/uXSaZFGQmVU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XoU9Ba/y; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Po0CPx4u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9104C4CEE2;
-	Fri, 18 Apr 2025 20:03:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745006626;
-	bh=WnwjcR+NbDgggX8XLQ1x4hgavKpbU7ZSEn3bAGipbyI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Po0CPx4uwTf1TjK5R+ESkW2oE3ewE/rJu6k/FLEDfLk1jZDZxbYdgZ+0f52higJPA
-	 6/WTMAJZFqoXEgrJOEC4FJnIZmawUgx7bUklqBDUKFTIY5GvOSUkds9UQiiMjLkmz9
-	 u4hnnvb2Z4xs+VAWV6KpetnbPsu9GtPmskP9BcCevB5sqQDo1BLvvs5t9isGuMg0UJ
-	 Ni5VQJalNJY2400kc/1l0yOd4S7ayZ6LGVYYbXb3BKJ50hdsJiupimuJZLmUPfMz64
-	 /uapyeIKguemLQAqZBqVTwHyAPqCcnp0/PW35fLDFoNL/vEVVnrFZNaKowd/eK77w9
-	 EicQOZcLHSgxQ==
-Date: Fri, 18 Apr 2025 22:03:42 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: David Kaplan <david.kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 00/16] Attack vector controls (part 1)
-Message-ID: <aAKwHvLTDfyM2UfS@gmail.com>
-References: <20250418161721.1855190-1-david.kaplan@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XoU9Ba/y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745006650; x=1776542650;
+  h=subject:from:to:cc:date:message-id:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=bwz8ICph4ex3cZQvGr2JMbKiaBGDGLrHvEjpZKHBcM0=;
+  b=XoU9Ba/yQbOnPNDY80db9O37/huvzpjZ32Npi0wamOOgoxvZu4VUdnpd
+   Wm/hXTGKOr7hN6zHFILtCvSvwltEnvjDYeZoi7kyQmw4z8Q5NU0HnwjjN
+   WL3nqHpLak7C8eKB1glCBifrTGNCd6Hk8Hmr60hNaEZFXOfgQErhXlBOf
+   6tILuoXDB4bHFP9JadIUa1o2FYoTKHdqqq7J4yBeOtgyM6hbj7clCEX1u
+   ak1bkpiVABEtI6wMJQFQYzgQgtZRbygTyKMRggnXnqw0kTY8zSMpns6nv
+   VGX4XeHaS2wSvnHf6CQ+BDW9YybZUss4EHHSx4Hf2kzgrLIBeUUomEN+t
+   w==;
+X-CSE-ConnectionGUID: fibTN798TUaL7bkQW3yY1Q==
+X-CSE-MsgGUID: 2RoUu1p3TmKGCNbYquSxkA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="46518775"
+X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
+   d="scan'208";a="46518775"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 13:04:10 -0700
+X-CSE-ConnectionGUID: /Iv99exEReGRMKOKwu3tSQ==
+X-CSE-MsgGUID: t1x2YrLnS3K5Vus7A82ZXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
+   d="scan'208";a="168393038"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 13:04:10 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Fri, 18 Apr 2025 13:04:09 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Fri, 18 Apr 2025 13:04:09 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Fri, 18 Apr 2025 13:04:09 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sGgYdfVvVia92GgJ+MkqutBaznC9E89aqXYEWYVtEVonDTZdmfWUEwR+Cf6TGziW4BCNeZfAjl3jZ/wUfpJmxhKt/c7PgguevZoEbFc0PqWMypWPSrI2ImaB4lN/utTPiYxlshiJYSELPHP2Yf07b9+00ezu+pOI4D8+HDNGGtsWr6koY6iV1HvrtaQn+KpO8utvt6eHg07g+8nylB0Ih2hLy6igl6Qqu8hLCdwQGZ4Z2bDLfOMAhF9siyks3ZwJcYs29wmi9OXMOoiBMLPJTCCYwsd+0O4hHEdDzlS3afc/m/fsJtUQ9vT11PhlINncxNjvPzFJERG4W53QyijIow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9ecBC1K8A3XG8UfIAIPLhPh+CMtD+CoXSl5LReGhVJY=;
+ b=sU87TwrsdgQT8DH9JcqBe+RTQS2vf33BqbyHfSQPnFtL2s49y/JgVzgy7bIL7cJNZwvBjyTj9oTOork9BapvlCIF9LzV59hmqcjPl9fzUr+MBawIs7tKm9QBhKBLDEBbuNN0lfGc3U944PvpyrfzB3RP+1z7X2JiGfW7JFchDTZkRy7ACFyQ2sLeVYmi0qoAoNe25mObc3sH1BHTK6wXbAYX2xXIsejY13kQ/5wMhJTCUEnxDeI9djg1z6gBrgrS/MIGXj3HO6FTaeIOYCt0SAayuSYASHKlg6eQkQSceu9sH/wOmzXASRmYia/rjcw/3qLUGTxDiGdh7JirJL0y/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by MN2PR11MB4582.namprd11.prod.outlook.com (2603:10b6:208:265::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Fri, 18 Apr
+ 2025 20:04:05 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8655.022; Fri, 18 Apr 2025
+ 20:04:05 +0000
+Subject: [PATCH v4 2/2] x86/devmem: Drop /dev/mem access for confidential
+ guests
+From: Dan Williams <dan.j.williams@intel.com>
+To: <dave.hansen@linux.intel.com>
+CC: <x86@kernel.org>, Kees Cook <kees@kernel.org>, Ingo Molnar
+	<mingo@kernel.org>, Naveen N Rao <naveen@kernel.org>, Vishal Annapurve
+	<vannapurve@google.com>, Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>, <stable@vger.kernel.org>,
+	<linux-coco@lists.linux.dev>, <linux-kernel@vger.kernel.org>
+Date: Fri, 18 Apr 2025 13:04:02 -0700
+Message-ID: <174500659632.1583227.11220240508166521765.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <174491712829.1395340.5054725417641299524.stgit@dwillia2-xfh.jf.intel.com>
+References: <174491712829.1395340.5054725417641299524.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW2PR16CA0052.namprd16.prod.outlook.com
+ (2603:10b6:907:1::29) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418161721.1855190-1-david.kaplan@amd.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MN2PR11MB4582:EE_
+X-MS-Office365-Filtering-Correlation-Id: 08862406-c964-445a-8b1f-08dd7eb42bc3
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?dStYT0JsUTZSM0JXbXRYVkRGTlhzRXY5NmVPOXdjdk5sOEJ3ZWZNM0pVcCt1?=
+ =?utf-8?B?U1ZaaFlRQzc1SWh4UjlkRDE4QUZjcVoyLzBXcW1ic0V2NmtUUVJISDFHT2Q0?=
+ =?utf-8?B?T2wvYzlhVnBRZFl1aFUzNlg0NGxMWlNmcFVUQXM4NGVoZVRuMUJndWNZZjdX?=
+ =?utf-8?B?dU9kMjk2L3FMaGtObVoxWGpOZ0lzR3RhaWZBRWNEczNtVkRxekRzd0tRRnBW?=
+ =?utf-8?B?b1hUZXB4NmRhcEhKYm9kcU0rdHN4TmlZa0VLczJmeWpLTUFGM2lHNVJoWjRk?=
+ =?utf-8?B?MW1CNjVqV1prU21iczFZYUhEbmVOcGhNaXVabUk0aXdSbEszUTFtaURzNUd5?=
+ =?utf-8?B?b0ZyVVpocUhiNzZFRnJCZzJPUzVHMENSYy9DaTg1aFlyTys5VThJM2NOY0I2?=
+ =?utf-8?B?ZWw5bmFnS05QazlPRG4zY2p2WXJVOEVmeEFjcDlZTmpRY2dtOURXVGFDd1d1?=
+ =?utf-8?B?L09rZlM3bzNIZVh5TmR6V2UrZkplVXZORUNwL0xFZTh0QmtnMGw4NDhuZFNM?=
+ =?utf-8?B?cnNDVlRmU1l3eVN3dW1CbDJNYmMzVWtnVVBWQm5jVGdvbmpPN2FuYWFvMUVE?=
+ =?utf-8?B?L3RFeHNIK0ZTTFF5MG1vWGFpcXVTMkRxN0NyRU1yK1QrNFdRNGlJY1BhN0d0?=
+ =?utf-8?B?TEFUTmRtWldrVzZ3Zkh6SzErbU9tSnl5ZGh3SlcxL2hoSlFuNnVESWQ0aGFG?=
+ =?utf-8?B?TUNBbVpxMTRFQktyYXRLRnpueDk2VmxrMUZmcENzYUNHV3B2UDdPNkhEcUhz?=
+ =?utf-8?B?cUwxamYvQzh6QXgwTUQ5bUxXK3orbW01RWhuODYycGNDQi9peFNwRWw0MDdh?=
+ =?utf-8?B?L2R4KzFFK2xTR0RmbEhuRzNpa1NrSllTdzNsYnFMa2ovNGJQemtBUGVINmI2?=
+ =?utf-8?B?KzhHMHN4SEhqL1JlTm9XbHFNWVJIRkRkMUFCa2d4TTlnUXo0VnRodjFvWldL?=
+ =?utf-8?B?Z2tZRHpLWWcvcmxCeUVXTWt0eVNJWDlEUm5QVXNXUG1QdlVzYXhOQ29vcm5Q?=
+ =?utf-8?B?N0RSUmFUTTZiYkJoWU55RTdNcGErSWU5K2dTWWE3Tk5EL1lXNVMrbE5tZlBB?=
+ =?utf-8?B?QkJOWm1lYlRTb0dST2hudWRlQ05oY2xrS05YN1YveE9Hb2pyMTdBaVJHL0Zp?=
+ =?utf-8?B?M0YzV3V5cGFTYk4xczQ2WktacGVtZmZhMnc1aHBidG93VlNKZXBHZlRBNUY0?=
+ =?utf-8?B?ZytDN2R4MGgwalpxb2Mvb1BSU1FuSmY5Q2xaRXh6R1kzTnNjdEsySkkzSjRJ?=
+ =?utf-8?B?TmZucGpkdklxK1FHSktldDl4Z1NvbmJMRHBNM3lsWmtWTVFUdE1NbVEvZFpj?=
+ =?utf-8?B?ODhOS0lyZk8wdEVXS0RjWGtIb29qb2FhWG5KeStPQ0ZhQjMwNUFuYUE0TUxH?=
+ =?utf-8?B?T0xFYmpGN2ZVdXZFRUNvZjRBU1pxNU40Mis1Y1h4RGw0Y05RRWFZV0JYS3V1?=
+ =?utf-8?B?MitVcW9FWjZQVVBnSk1FUW1HM3B3dGFpc281ekNmcG5YeGRuMlM5WWFiVE1n?=
+ =?utf-8?B?MTQ1WTRpbTV0aHhNWTA3MHRoTk1DS3NRaHk1OGhsbVdZTXI5enF3Z1NuNzFQ?=
+ =?utf-8?B?a0kzeHVMenFCV0ZWWVRFZmZRKzk1dW9oRHBlbEtyS2d0aWpBRCtUR05KQ3Rl?=
+ =?utf-8?B?Nk8wcU5SRkxtZXV4aEptY0pBR0JxaTA5eWVsanh3aDVhNlhoVjUrSlhiVnNK?=
+ =?utf-8?B?U1JnWkRCZnhkUGNBa25RY2RnNzR1SE1LK3U5dG5STVJQZ1VXTlkyYk9aTmli?=
+ =?utf-8?B?allWMHN0SVJwZitZTmJzaGVVMG9xR1kvUzdOd0hVVzBWR1RVdkVJQjZCdEZT?=
+ =?utf-8?B?NzAzem1VcFVxOFFybERuOExzTzRLZTZRTDhGZERoYXNOc1d1YnY1ZXhxZjN5?=
+ =?utf-8?Q?VOGEueP2+W2kI?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VVhybmVibUNtOG9CNGp2WllRcFJLeXYrTVMrUnRLSVRiZXlpMnJGdFpySFEx?=
+ =?utf-8?B?VHpPRi9wMC9XajQ2NjR3ZUFsWHFXNytRa1Y4MEtMRnNVUEgvNFVwUkNSRmVU?=
+ =?utf-8?B?TUY0MTU2T2llRUFJN2pSeXJ1TEEvVlpCeS81SjQ1ZVJrVElHNEYzemRzUFFT?=
+ =?utf-8?B?Zm80dGJhWW8zNkRKZzRiT1pldEpicVBVL1FETjhsT0l6MVF0ZklRZjJlSTdD?=
+ =?utf-8?B?L2xUYi9yQWQyYm9rUWV2SFY3WGFvNWdzdUVHMTFqelV4VU00QnhRMENJWWdJ?=
+ =?utf-8?B?RHhFZ1lOMWRlbHpiOTNPQ0JkcWswbTd6VlRMME10eG5obGlHamR6aFhTSkVU?=
+ =?utf-8?B?TUNLb3BFVmJtZnpIUDcrVThGcFRnYlU5OHJMQUhRTzBJWWRzT2JTMnppTWtv?=
+ =?utf-8?B?QWhQM3hXZWtCQk93UklhNkZNY20rU0xaaGN6MXBTaGE2TWlHdHkvVm9qS2hM?=
+ =?utf-8?B?VVIzTXhyZDZ4NEN2cUpCVFFFV1A1MDhrMDBkNDBUM3RaWXFYeFZyZlRoa3JM?=
+ =?utf-8?B?bzBhREIyOUJjSUQzUXZyZlJoRFVuMEZpdlhpTWRPNVJnOHQ3OUhDeDhiem5G?=
+ =?utf-8?B?NjJxSzhmUkkvVldpZ3VxMmtHODc4aU5BMDJUNWxFQnpmSExXMVVNWVQ0WWRI?=
+ =?utf-8?B?NEUzSXpPeENiaU1nU1dSMmMwdmQ4Y3E3V05jWFJ2MHRvVzJWa0cvSllubnh5?=
+ =?utf-8?B?SmlLNCtrSUJ1aEk3bXBLMTZUSU9OZzRKMXMvRWJ0WTByclAxdTJKWXc3Y3ps?=
+ =?utf-8?B?emUycXhlU0RkZFd4T01YNzFPTm9hcGdCNWZuSlZzOFFJeG9BMU9EWm9NazU1?=
+ =?utf-8?B?Tm0remlSSGZQNDVYZEg0ZkdOYXZHcnk3OTdoYmFGUEV4RCs0VWlwSzc4Zi93?=
+ =?utf-8?B?YkxtbU9qWm0wenNzRWJRUUtIMVp4RFdYQ2E3amQ4S0FNWFQ1YXZXblZGTnFt?=
+ =?utf-8?B?MHRFeFYwdGRTaGZuTmI1UklHZGd5VURpOGkrQ1ZRa1FlcmQxOEZvbWc0MWlX?=
+ =?utf-8?B?ZFlibm0vejNQcmNna0lhcXhrUUh4SzBYNi9MaXlKYk4vL24xSXVnWklCbnlV?=
+ =?utf-8?B?OGFGcHBVUk9iQ1YwcTRvcTRvSUllMWJOMWRTYXhRMk9RNFF4aVJxdzdqNHBz?=
+ =?utf-8?B?QW5RRVBTY21qWWoxOWlKcXFDNHJKVjc0TjB0NUVVMUFCMUdOZU81VU9CN2JW?=
+ =?utf-8?B?QmI0bW9PUnV1MEF6MlY4aC9maDBsL0xoNW5rNUNCTjZzT2lZVWRmcldHeVVt?=
+ =?utf-8?B?WmUzdXM0SCtaV3pTQ0oxKzcxcmJsN2VNSjdzcVp5V3ZXTTV2R0luemZzVXVo?=
+ =?utf-8?B?R1ZwcTdySGtmZmlKczRTcGdyekQ0YjBVRWtvZWZ0SHROYTZmWnpvSzYvKzY5?=
+ =?utf-8?B?cExzNExLbHlJTUl4YmJpeTBHNG9yRzYxbDdQTVFqcnVmUnZ5eXE1VU9lQjZi?=
+ =?utf-8?B?bm9jT0xEaCt5VitUR3pZU2VLay9odFAySzVjd0MwaWVSeU5ZUW8wVEZHU1pQ?=
+ =?utf-8?B?bUFodUdUNzF0NnNEUUxWeDFZMG9XdUUxelRhWktEc0s3VENVTWI1VERjUEUw?=
+ =?utf-8?B?SzJMYTljbDFzV25Kb1Y2djBKRlgwTzZ2MmFrV3htVGZWaGt0TGZBcXdtbitr?=
+ =?utf-8?B?QmpqZlJDRFJwNUZMUW14SmhhNmYzRGdaNmlnbW1SdW1WWXRxR1piMUpUMXRW?=
+ =?utf-8?B?aFFsMnZJbnQ5a3NTWFlEUzIwUlMyWWVDbWt4MkFqdUZiTExWTnpuU011YXFE?=
+ =?utf-8?B?L1AzKzFoSVZvU1lRRnYxVS9SR1EzeDBUU3lYN1YyOGlxeURmdnpnWnRSd2Ft?=
+ =?utf-8?B?a3lZdXBpWU1UMjgvNEpxTFBMZ0s2YUZhNE1GM1dlalZPa1VicE9qNkNYWEMv?=
+ =?utf-8?B?UkRKWjE3T1hydjdXM0pUMUpyTVRlREFPb3lPbFAzSVp4Wk5FZEFlblc1THlK?=
+ =?utf-8?B?RUo5anVRRUZQRkhnOEdsMDQxUzZONllNamg4N3dFN3RHZE1WMmlWUXIyUyth?=
+ =?utf-8?B?dXdaUGFlVlFJV3dkMklFTWJac2RZMkV2clkrK3pXL0g2TmlTaWQ1NEhiREtI?=
+ =?utf-8?B?U1FBV1JkWDNyRXErUFEwWkhLWWRxOGJVb2FiaUlhcWV5d2taemd5cVJ1OWdu?=
+ =?utf-8?B?VkNjL0dpd2V3OXMxdUdKSDBLMkpTTDRpcjBWdG4xOE5BR0tyWDBMMEhiM1I0?=
+ =?utf-8?B?QWc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 08862406-c964-445a-8b1f-08dd7eb42bc3
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2025 20:04:05.2019
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: poRe8I5gS9rh8yzM3T7n0ru/PNmn19IlpVatjUu2yIP57flMsSSZR72M25ky371rhSd3Bbkg+lltgavZIEqzgKMxgyW0Mo9iO2P+8P/UFr8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4582
+X-OriginatorOrg: intel.com
 
+Nikolay reports [1] that accessing BIOS data (first 1MB of the physical
+address space) via /dev/mem results in an SEPT violation.
 
-* David Kaplan <david.kaplan@amd.com> wrote:
+The cause is ioremap() (via xlate_dev_mem_ptr()) establishes an
+unencrypted mapping where the kernel had established an encrypted
+mapping previously.
 
-> This is an updated version of the first half of the attack vector series
-> which focuses on restructuring arch/x86/kernel/cpu/bugs.c.
-> 
-> For more info the attack vector series, please see v4 at
-> https://lore.kernel.org/all/20250310164023.779191-1-david.kaplan@amd.com/.
-> 
-> These patches restructure the existing mitigation selection logic to use a
-> uniform set of functions.  First, the "select" function is called for each
-> mitigation to select an appropriate mitigation.  Unless a mitigation is
-> explicitly selected or disabled with a command line option, the default
-> mitigation is AUTO and the "select" function will then choose the best
-> mitigation.  After the "select" function is called for each mitigation,
-> some mitigations define an "update" function which can be used to update
-> the selection, based on the choices made by other mitigations.  Finally,
-> the "apply" function is called which enables the chosen mitigation.
-> 
-> This structure simplifies the mitigation control logic, especially when
-> there are dependencies between multiple vulnerabilities.
-> 
-> This is mostly code restructuring without functional changes, except where
-> noted.
-> 
-> Compared to v4 this only includes bug fixes/cleanup. 
-> 
-> David Kaplan (16):
->   x86/bugs: Restructure MDS mitigation
->   x86/bugs: Restructure TAA mitigation
->   x86/bugs: Restructure MMIO mitigation
->   x86/bugs: Restructure RFDS mitigation
->   x86/bugs: Remove md_clear_*_mitigation()
->   x86/bugs: Restructure SRBDS mitigation
->   x86/bugs: Restructure GDS mitigation
->   x86/bugs: Restructure spectre_v1 mitigation
->   x86/bugs: Allow retbleed=stuff only on Intel
->   x86/bugs: Restructure retbleed mitigation
->   x86/bugs: Restructure spectre_v2_user mitigation
->   x86/bugs: Restructure BHI mitigation
->   x86/bugs: Restructure spectre_v2 mitigation
->   x86/bugs: Restructure SSB mitigation
->   x86/bugs: Restructure L1TF mitigation
->   x86/bugs: Restructure SRSO mitigation
-> 
->  arch/x86/include/asm/processor.h |    1 +
->  arch/x86/kernel/cpu/bugs.c       | 1112 +++++++++++++++++-------------
->  arch/x86/kvm/vmx/vmx.c           |    2 +
->  3 files changed, 644 insertions(+), 471 deletions(-)
+Linux traps read(2) access to the BIOS data area, and returns zero.
+However, it turns out the kernel fails to enforce the same via mmap(2).
+This is a hole, and unfortunately userspace has learned to exploit it
+[2].
 
-So I really like this cleanup & restructuring.
+This means the kernel either needs a mechanism to ensure consistent
+"encrypted" mappings of this /dev/mem mmap() hole, close the hole by
+mapping the zero page in the mmap(2) path, block only BIOS data access
+and let typical STRICT_DEVMEM protect the rest, or disable /dev/mem
+altogether.
 
-A namespace suggestion.
+The simplest option for now is arrange for /dev/mem to always behave as
+if lockdown is enabled for confidential guests. Require confidential
+guest userspace to jettison legacy dependencies on /dev/mem similar to
+how other legacy mechanisms are jettisoned for confidential operation.
+Recall that modern methods for BIOS data access are available like
+/sys/firmware/dmi/tables.
 
-Instead of _op_mitigation postfixes:
+Cc: <x86@kernel.org>
+Cc: Kees Cook <kees@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: "Naveen N Rao" <naveen@kernel.org>
+Cc: Vishal Annapurve <vannapurve@google.com>
+Cc: Kirill Shutemov <kirill.shutemov@linux.intel.com>
+Link: https://sources.debian.org/src/libdebian-installer/0.125/src/system/subarch-x86-linux.c/?hl=113#L93 [2]
+Reported-by: Nikolay Borisov <nik.borisov@suse.com>
+Closes: http://lore.kernel.org/20250318113604.297726-1-nik.borisov@suse.com [1]
+Fixes: 9aa6ea69852c ("x86/tdx: Make pages shared in ioremap()")
+Cc: <stable@vger.kernel.org>
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+Changes since v3
+* Fix a 0day kbuild robot report about missing cc_platform.h include.
 
- static void __init spectre_v1_select_mitigation(void);
- static void __init spectre_v1_apply_mitigation(void);
- static void __init spectre_v2_select_mitigation(void);
- static void __init retbleed_select_mitigation(void);
- static void __init retbleed_update_mitigation(void);
- static void __init retbleed_apply_mitigation(void);
- static void __init spectre_v2_user_select_mitigation(void);
- static void __init spectre_v2_user_update_mitigation(void);
- static void __init spectre_v2_user_apply_mitigation(void);
- static void __init ssb_select_mitigation(void);
- static void __init ssb_apply_mitigation(void);
- static void __init l1tf_select_mitigation(void);
- static void __init l1tf_apply_mitigation(void);
- static void __init mds_select_mitigation(void);
- static void __init mds_update_mitigation(void);
- static void __init mds_apply_mitigation(void);
- static void __init taa_select_mitigation(void);
- static void __init taa_update_mitigation(void);
- static void __init taa_apply_mitigation(void);
- static void __init mmio_select_mitigation(void);
- static void __init mmio_update_mitigation(void);
- static void __init mmio_apply_mitigation(void);
- static void __init rfds_select_mitigation(void);
- static void __init rfds_update_mitigation(void);
- static void __init rfds_apply_mitigation(void);
- static void __init srbds_select_mitigation(void);
- static void __init srbds_apply_mitigation(void);
- static void __init l1d_flush_select_mitigation(void);
- static void __init srso_select_mitigation(void);
- static void __init srso_update_mitigation(void);
- static void __init srso_apply_mitigation(void);
- static void __init gds_select_mitigation(void);
- static void __init gds_apply_mitigation(void);
- static void __init bhi_select_mitigation(void);
- static void __init bhi_update_mitigation(void);
- static void __init bhi_apply_mitigation(void);
+ arch/x86/Kconfig   |    4 ++++
+ drivers/char/mem.c |   10 ++++++++++
+ 2 files changed, 14 insertions(+)
 
-Wouldn't it be nicer to have mitigation_op_ prefixes, like most kernel 
-subsystems use for their function names:
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 4b9f378e05f6..bf4528d9fd0a 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -891,6 +891,8 @@ config INTEL_TDX_GUEST
+ 	depends on X86_X2APIC
+ 	depends on EFI_STUB
+ 	depends on PARAVIRT
++	depends on STRICT_DEVMEM
++	depends on IO_STRICT_DEVMEM
+ 	select ARCH_HAS_CC_PLATFORM
+ 	select X86_MEM_ENCRYPT
+ 	select X86_MCE
+@@ -1510,6 +1512,8 @@ config AMD_MEM_ENCRYPT
+ 	bool "AMD Secure Memory Encryption (SME) support"
+ 	depends on X86_64 && CPU_SUP_AMD
+ 	depends on EFI_STUB
++	depends on STRICT_DEVMEM
++	depends on IO_STRICT_DEVMEM
+ 	select DMA_COHERENT_POOL
+ 	select ARCH_USE_MEMREMAP_PROT
+ 	select INSTRUCTION_DECODER
+diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+index 48839958b0b1..47729606b817 100644
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -30,6 +30,7 @@
+ #include <linux/uio.h>
+ #include <linux/uaccess.h>
+ #include <linux/security.h>
++#include <linux/cc_platform.h>
+ 
+ #define DEVMEM_MINOR	1
+ #define DEVPORT_MINOR	4
+@@ -595,6 +596,15 @@ static int open_port(struct inode *inode, struct file *filp)
+ 	if (rc)
+ 		return rc;
+ 
++	/*
++	 * Enforce encrypted mapping consistency and avoid unaccepted
++	 * memory conflicts, "lockdown" /dev/mem for confidential
++	 * guests.
++	 */
++	if (IS_ENABLED(CONFIG_STRICT_DEVMEM) &&
++	    cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
++		return -EPERM;
++
+ 	if (iminor(inode) != DEVMEM_MINOR)
+ 		return 0;
+ 
 
- static void __init mitigation_select_spectre_v1(void);
- static void __init mitigation_enable_spectre_v1(void);
- static void __init mitigation_select_spectre_v2(void);
- static void __init mitigation_select_retbleed(void);
- static void __init mitigation_update_retbleed(void);
- static void __init mitigation_enable_retbleed(void);
- static void __init mitigation_select_spectre_v2_user(void);
- static void __init mitigation_update_spectre_v2_user(void);
- static void __init mitigation_enable_spectre_v2_user(void);
- static void __init mitigation_select_ssb(void);
- static void __init mitigation_enable_ssb(void);
- static void __init mitigation_select_l1tf(void);
- static void __init mitigation_enable_l1tf(void);
- static void __init mitigation_select_mds(void);
- static void __init mitigation_update_mds(void);
- static void __init mitigation_enable_mds(void);
- static void __init mitigation_select_taa(void);
- static void __init mitigation_update_taa(void);
- static void __init mitigation_enable_taa(void);
- static void __init mitigation_select_mmio(void);
- static void __init mitigation_update_mmio(void);
- static void __init mitigation_enable_mmio(void);
- static void __init mitigation_select_rfds(void);
- static void __init mitigation_update_rfds(void);
- static void __init mitigation_enable_rfds(void);
- static void __init mitigation_select_srbds(void);
- static void __init mitigation_enable_srbds(void);
- static void __init mitigation_select_l1d_flush(void);
- static void __init mitigation_select_srso(void);
- static void __init mitigation_update_srso(void);
- static void __init mitigation_enable_srso(void);
- static void __init mitigation_select_gds(void);
- static void __init mitigation_enable_gds(void);
- static void __init mitigation_select_bhi(void);
- static void __init mitigation_update_bhi(void);
- static void __init mitigation_enable_bhi(void);
-
-(Note that I changed '_apply' to '_enable', to get three 6-letter verbs. ;-)
-
-We already do this for the Kconfig knobs:
-
- CONFIG_MITIGATION_PAGE_TABLE_ISOLATION=y
- CONFIG_MITIGATION_RETPOLINE=y
- CONFIG_MITIGATION_RETHUNK=y
- CONFIG_MITIGATION_UNRET_ENTRY=y
- CONFIG_MITIGATION_CALL_DEPTH_TRACKING=y
- CONFIG_MITIGATION_IBPB_ENTRY=y
- CONFIG_MITIGATION_IBRS_ENTRY=y
- CONFIG_MITIGATION_SRSO=y
- CONFIG_MITIGATION_SLS=y
- CONFIG_MITIGATION_GDS=y
- CONFIG_MITIGATION_RFDS=y
- CONFIG_MITIGATION_SPECTRE_BHI=y
- CONFIG_MITIGATION_MDS=y
- CONFIG_MITIGATION_TAA=y
- CONFIG_MITIGATION_MMIO_STALE_DATA=y
- CONFIG_MITIGATION_L1TF=y
- CONFIG_MITIGATION_RETBLEED=y
- CONFIG_MITIGATION_SPECTRE_V1=y
- CONFIG_MITIGATION_SPECTRE_V2=y
- CONFIG_MITIGATION_SRBDS=y
- CONFIG_MITIGATION_SSB=y
-
-and in particular when these functions are used in blocks (as they 
-often are), it looks much cleaner and more organized:
-
-# Before:
-
-        /* Select the proper CPU mitigations before patching alternatives: */
-        spectre_v1_select_mitigation();
-        spectre_v2_select_mitigation();
-        retbleed_select_mitigation();
-        spectre_v2_user_select_mitigation();
-        ssb_select_mitigation();
-        l1tf_select_mitigation();
-        mds_select_mitigation();
-        taa_update_mitigation();
-        taa_select_mitigation();
-        mmio_select_mitigation();
-        rfds_select_mitigation();
-        srbds_select_mitigation();
-        l1d_flush_select_mitigation();
-        srso_select_mitigation();
-        gds_select_mitigation();
-        bhi_select_mitigation();
-
-# After:
-
-	/* Select the proper CPU mitigations before patching alternatives: */
-	mitigation_select_spectre_v1();
-	mitigation_select_spectre_v2();
-	mitigation_select_retbleed();
-	mitigation_select_spectre_v2_user();
-	mitigation_select_ssb();
-	mitigation_select_l1tf();
-	mitigation_select_mds();
-	mitigation_update_taa();
-	mitigation_select_taa();
-	mitigation_select_mmio();
-	mitigation_select_rfds();
-	mitigation_select_srbds();
-	mitigation_select_l1d_flush();
-	mitigation_select_srso();
-	mitigation_select_gds();
-	mitigation_select_bhi();
-
-Right?
-
-Bonus quiz: I've snuck a subtle bug into the code sequence above. In 
-which block is it easier to find visually? :-)
-
-Thanks,
-
-	Ingo
