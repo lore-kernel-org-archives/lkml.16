@@ -1,166 +1,127 @@
-Received: from mta-65-226.siemens.flowmailer.net (mta-65-226.siemens.flowmailer.net [185.136.65.226])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E4771DF728
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 07:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E894A26A0B9
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 07:31:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744961468; cv=none; b=sXYUbDz+R1yGg0epTIW+znqRbtu/KKKUr2GUs8bW1jyQ25+Te5ibh3RbrjVKnXMxYCa3xxAe0jxu37AuxIYQNnCUq8N/Yj7Zke5xMN/yHmhOgFQa7sewBICgggzfG0fNwjzC+eMUoRZKapv3W7+80o7c6+bDcJ285aK3mOQ47dM=
+	t=1744961482; cv=none; b=gO8RpvrMi6U35bVxcrfgYfWCo7YqcvZEMhOdPeVQgnArLcfEHVAnFkec1TDqr1JUajzKnXXm2/unqyeHDS8akCWDwjfdr6PRN2BxSMFGYpPm0pY1pcjZgK3snUqsZv0UTo0hs8wdjD5ifOiLHqBg0f3eNx/tMd+BCXZAV0+s6RU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744961468; c=relaxed/simple;
-	bh=CZ9uiotzsIB9HL2IAZsQZTVmDMklLp6QxZpVCMH+R5w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PM/H5yLKjweZX7CgTHKaOPnmuk/C2tI0kyesSJz34zLwSZNkW7w1ysJXIE6UFLItOt3yKROjjqt3AkNVXpzFiAWeFXni8yKZNglBEwUjlhCoqM9JWmvCEQn51sb4PhXIlggHzTDvSfIucqhY2INNDANnqFq60VlDviYoeF3M4aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b=IsWipH/w; arc=none smtp.client-ip=185.136.65.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+	s=arc-20240116; t=1744961482; c=relaxed/simple;
+	bh=d4UBkY2la6/3RAILDwAbbTryW5C4vVzM3FviVjTGwqU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cHhRY3xeHsd+tFH1Nw6Dygi2pjwSwEb9MQj/gBpEk0GCzipnOKUZzxXqynoAGt6Nv4E1IBBo+cSMc5Fbl6s6SPakpW8I2z8323/xzP6EatcdXaP39ZH/Tx9L9B4UDYB5ppIGWxEYesQL8yip0ZdTWQQF6qsDlomiP6hDWivN2Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YSTvotwP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b="IsWipH/w"
-Received: by mta-65-226.siemens.flowmailer.net with ESMTPSA id 202504180731034712fb06b9078096e4
-        for <linux-kernel@vger.kernel.org>;
-        Fri, 18 Apr 2025 09:31:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
- d=siemens.com; i=huaqian.li@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=81MJsMNbogkYe+Rx2MtdDb/7nc44T96h+II7KVTEBl0=;
- b=IsWipH/wzFhscWMIqwaXxolbV74wP/+NY7hss/R3C8wsYGt41Hiphe3S7tzd1EJ/pwe9jG
- GsTEZz5Mtv5Iv9mtDwJoxrj3OXcHZK7qq8eLaBaD0rXMOxS3PyberjS4K1ag2nG5uwkL3JhG
- 1VJGW/XUT3L/K+PFrZYvYxWbVMrGJypFBwO8z2Q3TIXm6c4y0vXxDGybeiqAlbmFBY3Yi4b2
- ChcqgcTmdNbqqyWVOhoq7uG/ajQr95j8kHJzxg6q43ePGEp1Ndhk4I3vsdg1KdsfPOYe6PF2
- DVzbZo0lapcKtHfs/OMQ5yQa8hpqz+fgrm/D9SDJPpGttz+6+c7yNLug==;
-From: huaqian.li@siemens.com
-To: helgaas@kernel.org,
-	m.szyprowski@samsung.com,
-	robin.murphy@arm.com
-Cc: baocheng.su@siemens.com,
-	bhelgaas@google.com,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	diogo.ivo@siemens.com,
-	huaqian.li@siemens.com,
-	jan.kiszka@siemens.com,
-	kristo@kernel.org,
-	krzk+dt@kernel.org,
-	kw@linux.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org,
-	nm@ti.com,
-	robh@kernel.org,
-	s-vadapalli@ti.com,
-	ssantosh@kernel.org,
-	vigneshr@ti.com,
-	iommu@lists.linux.dev,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v7 2/8] dt-bindings: PCI: ti,am65: Extend for use with PVU
-Date: Fri, 18 Apr 2025 15:30:20 +0800
-Message-Id: <20250418073026.2418728-3-huaqian.li@siemens.com>
-In-Reply-To: <20250418073026.2418728-1-huaqian.li@siemens.com>
-References: <20241030205703.GA1219329@bhelgaas>
- <20250418073026.2418728-1-huaqian.li@siemens.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YSTvotwP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6018C4CEE7;
+	Fri, 18 Apr 2025 07:31:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744961480;
+	bh=d4UBkY2la6/3RAILDwAbbTryW5C4vVzM3FviVjTGwqU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YSTvotwP+bQHy6Aiy0jIkKgw976YfNL9JnYtYAkp1LSZVZ+0O0UUCii9BmBW0Tc6C
+	 bIw0ouQXC1yvWcKjcWBaKm3gsp3nnt5P4DnY0kVHkOjt9J2E6QbMErlveCojPExySL
+	 3KV4wqqodwo+T5qDYSDPKEs8zcOK9JVLon+c6giIEm7I4q8EDywBx2OEoDYRWEAf0V
+	 80HgjZkY9qICV+MuCn2sWcx0vaGBDpmfJlVEDgxLaqRhCU8wEoyMEgXaayMY6Woz1g
+	 Ksy3tjlOoPmMUgvgyUW+tN3ehALF5LA/LEc1C2eEWWfJ9RAar8wqh5IkWa1+2c9hbX
+	 jkJBUK605j5Mg==
+Date: Fri, 18 Apr 2025 09:31:16 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH -v2 00/10] timers: Simple cleanup of the timer API
+ namespace
+Message-ID: <aAH_xCECRV75M6ON@gmail.com>
+References: <20250416090544.3311613-1-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-959203:519-21489:flowmailer
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416090544.3311613-1-mingo@kernel.org>
 
-From: Jan Kiszka <jan.kiszka@siemens.com>
 
-The PVU on the AM65 SoC is capable of restricting DMA from PCIe devices
-to specific regions of host memory. Add the optional property
-"memory-regions" to point to such regions of memory when PVU is used.
+* Ingo Molnar <mingo@kernel.org> wrote:
 
-Since the PVU deals with system physical addresses, utilizing the PVU
-with PCIe devices also requires setting up the VMAP registers to map the
-Requester ID of the PCIe device to the CBA Virtual ID, which in turn is
-mapped to the system physical address. Hence, describe the VMAP
-registers which are optional unless the PVU shall be used for PCIe.
+> [ Changes since -v1:
+>    - Exclude the 6 APIs that need further work, keep 9 APIs/symbols
+>    - timer_init_on_stack_key() -> timer_init_key_on_stack()
+>    - Fixes
+>    - Rebase to -rc2
+> ]
 
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Li Hua Qian <huaqian.li@siemens.com>
----
- .../bindings/pci/ti,am65-pci-host.yaml        | 34 +++++++++++++++++--
- 1 file changed, 31 insertions(+), 3 deletions(-)
+> Ingo Molnar (10):
+>   rust: Rename timer_container_of() to hrtimer_container_of()
+>   treewide, timers: Rename from_timer() => timer_container_of()
+>   treewide, timers: Rename try_to_del_timer_sync() => timer_delete_sync_try()
+>   treewide, timers: Rename destroy_timer_on_stack() => timer_destroy_on_stack()
+>   treewide, timers: Rename init_timer_key() => timer_init_key()
+>   treewide, timers: Rename init_timer_on_stack_key() => timer_init_key_on_stack()
+>   treewide, timers: Rename __init_timer() => __timer_init()
+>   treewide, timers: Rename __init_timer_on_stack() => __timer_init_on_stack()
+>   treewide, timers: Rename NEXT_TIMER_MAX_DELTA => TIMER_NEXT_MAX_DELTA
+>   treewide, timers: Rename init_timers() => timers_init()
 
-diff --git a/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
-index 0a9d10532cc8..7916325e0b39 100644
---- a/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
-@@ -20,14 +20,18 @@ properties:
-       - ti,keystone-pcie
- 
-   reg:
--    maxItems: 4
-+    minItems: 4
-+    maxItems: 6
- 
-   reg-names:
-+    minItems: 4
-     items:
-       - const: app
-       - const: dbics
-       - const: config
-       - const: atu
-+      - const: vmap_lp
-+      - const: vmap_hp
- 
-   interrupts:
-     maxItems: 1
-@@ -69,6 +73,15 @@ properties:
-     items:
-       pattern: '^pcie-phy[0-1]$'
- 
-+  memory-region:
-+    maxItems: 1
-+    description: |
-+      phandle to a restricted DMA pool to be used for all devices behind
-+      this controller. The regions should be defined according to
-+      reserved-memory/shared-dma-pool.yaml.
-+      Note that enforcement via the PVU will only be available to
-+      ti,am654-pcie-rc devices.
-+
- required:
-   - compatible
-   - reg
-@@ -89,6 +102,19 @@ then:
-     - power-domains
-     - msi-map
-     - num-viewport
-+    - memory-region
-+  properties:
-+    reg:
-+      minItems: 6
-+    reg-names:
-+      minItems: 6
-+else:
-+  properties:
-+    reg:
-+      maxItems: 4
-+
-+    reg-names:
-+      maxItems: 4
- 
- unevaluatedProperties: false
- 
-@@ -104,8 +130,10 @@ examples:
-         reg =  <0x5500000 0x1000>,
-                <0x5501000 0x1000>,
-                <0x10000000 0x2000>,
--               <0x5506000 0x1000>;
--        reg-names = "app", "dbics", "config", "atu";
-+               <0x5506000 0x1000>,
-+               <0x2900000 0x1000>,
-+               <0x2908000 0x1000>;
-+        reg-names = "app", "dbics", "config", "atu", "vmap_lp", "vmap_hp";
-         power-domains = <&k3_pds 120 TI_SCI_PD_EXCLUSIVE>;
-         #address-cells = <3>;
-         #size-cells = <2>;
--- 
-2.34.1
+>  708 files changed, 997 insertions(+), 997 deletions(-)
 
+Thomas, if these changes are broadly acceptable to you as a first step, 
+I'd like to propose the following merge order:
+
+These 7 patches with a low -next cross section could go into 
+tip:timer/core the regular way, if they pass review & testing:
+
+  rust: Rename timer_container_of() to hrtimer_container_of()
+     5 files changed, 6 insertions(+), 6 deletions(-)
+
+  timers: Rename init_timer_key() => timer_init_key()
+     2 files changed, 8 insertions(+), 8 deletions(-)
+
+  timers: Rename init_timer_on_stack_key() => timer_init_key_on_stack()
+     2 files changed, 6 insertions(+), 6 deletions(-)
+
+  timers: Rename __init_timer() => __timer_init()
+     2 files changed, 4 insertions(+), 4 deletions(-)
+
+  timers: Rename __init_timer_on_stack() => __timer_init_on_stack()
+     2 files changed, 4 insertions(+), 4 deletions(-)
+
+  timers: Rename NEXT_TIMER_MAX_DELTA => TIMER_NEXT_MAX_DELTA
+     3 files changed, 11 insertions(+), 11 deletions(-)
+
+  timers: Rename init_timers() => timers_init()
+     3 files changed, 3 insertions(+), 3 deletions(-)
+
+( Note that I've removed the 'treewide' prefix for these patches, as 
+  these really are mostly timer subsystem internal changes. )
+
+The three largest changes, which patches I've already ordered to be at 
+the tail of the series in the latest mingo/tip.git/WIP.timers/core 
+tree, would go to Linus separately, two days before -rc1 or so, 
+assuming everything passes review & testing:
+
+  treewide, timers: Rename try_to_del_timer_sync() => timer_delete_sync_try()
+     7 files changed, 17 insertions(+), 17 deletions(-)
+
+  treewide, timers: Rename destroy_timer_on_stack() => timer_destroy_on_stack()
+     26 files changed, 35 insertions(+), 35 deletions(-)
+
+  treewide, timers: Rename from_timer() => timer_container_of()
+     697 files changed, 923 insertions(+), 923 deletions(-)
+
+In addition to this I'll also work on the timer_start_*() API cleanup & 
+restructuring you suggested. Please send me the prelimary cocci script 
+you had for this that you mentioned in the previous mail and I'll try 
+dusting it all off. (Or I'll write new scripts if you cannot find 
+them.)
+
+Thanks,
+
+	Ingo
