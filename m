@@ -1,121 +1,204 @@
-Received: from sonic304-24.consmr.mail.gq1.yahoo.com (sonic304-24.consmr.mail.gq1.yahoo.com [98.137.68.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01C819DF52
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 11:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.137.68.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38471ADC83
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 11:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744976736; cv=none; b=mEFI+L5c4zzDZt51PTggtC3HLnfMmjPNwyFdpG3bthz5dq38FiDUqFSa+lUmrB50VePXEyLXVbsP/6OyXaWi8kou7RtIMIvawbukb1zXtjZZxYHy7gp7auhXOavQPed/qmlJiNuk2FxwypGilUghjTA7IDnLsilqcFgjlx3VzN8=
+	t=1744976748; cv=none; b=gV3t93Frpc633oFcmGb7cqnRCtgxW5/Mn1Qmjr1/Mfj1qgZYnfHwkm/1IkI6efj+f48A02MfVAg9fq8DBWNevYj2i9GzMBLjWprTnmTyDdiPkShJ7QdO+D2o+pgUItA8uiHTY+0cUm9pxTotMLPFJcddq5yB3di0VA9LyLv7E5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744976736; c=relaxed/simple;
-	bh=gBq+R+8N1IjVS76IW5YuqbbBWzqT0h4z0pp5Trbn3xM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oLygxxw3ncTgnmlDc0jVYwHGR8fKAtbBNUR3Mudm83HH+5GxIW9s/VWHavSlQTZd7LLxsMch1OneB//FG92ZYQLR1SktzpLccw5oYDfGqWZnvH9/nJRrSu9Fa4lIsAznPIi0M68HGGzhmKPTl9Pt1NGvGCEHq2+uB+WUMzTzxKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com; spf=pass smtp.mailfrom=aol.com; dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b=Sh4Ly1P8; arc=none smtp.client-ip=98.137.68.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aol.com
+	s=arc-20240116; t=1744976748; c=relaxed/simple;
+	bh=Ry1h7m16FdgxZUCsG/YEor+XDuZU0CwFby5eFpHVpyc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=Yf0ebVsHAd5LAhWIPHuhFtNjmQqYDITCQjhTJYoIpLFTLzkSKHNYrVoyd47Q/BKWPLubrvEIxTFrotcOV4FSdBQo0CoDMZv3D+++1ByYEs1z1TBKoQYnH6h60+Qx63OYv/CmIz7dlJg9/yu8+Ihl9APDqMflzVA+Hq/wcrW1AEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=xEoGYTdT; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="Sh4Ly1P8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1744976734; bh=gBq+R+8N1IjVS76IW5YuqbbBWzqT0h4z0pp5Trbn3xM=; h=Subject:From:To:Cc:Date:In-Reply-To:References:From:Subject:Reply-To; b=Sh4Ly1P8tYST5h793F4eW9gDl7FXPkCX5KSSIQaBfwUQi/GC3uMU9+V1Q2sigpaMlriUCT7puJjxpbFrkg6iNE8CoGzTDjHy1ZiXfz7HpmhGXn7gjG+jA8z1XLI3kWm7ugmb7jwniVSuOHZNAjF6n/z/PqYY68oWD+rUR5c7RHmyWttj4xsE4/WL35lWaeoAY9cu1gD21nu9/QxFwtCm4yomrSFsiR3vhDdZXxMqDuF1WGf8bp2juYiRG7gtZElsNFZl9M6MiddcB/CM1QPz2zG457EUSBiaVP0zN4iwh6PQHAdrOp34GS3uy0/cJm75r7IHdaDgdBljQOsOhY3Epg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1744976734; bh=NSnGKm2N3rBo4I7vB9OYxBiosPs1BoUQxegxjazh/9f=; h=X-Sonic-MF:Subject:From:To:Date:From:Subject; b=b+skrwTl9dZt5U10tvEX1tEzmJMYXUCenc8PPcRkUdXZwvCXfn5hY9pEW1OAusD1qqekJvlCjXUlS7lyJu9Mol7a0MNb8Upcn817vRK1Qb3wH/vPzRqugkQFfEdmD8/zMre4Q3pf1PiU415SR8snlRUYmOrJEAjseF8SkU96+yg4KxEScESpNP3y+XlYfZQF73Iouv1pJPNrodPkMxQrOmvEAHWlSMqF9HuMzpsRKJ1Mn9sR2G8zEUvhTzFWED9SKbodgowYbehWB+gctXaEVuCFiviJMPN5fJFYLYQD2TUQFgzhdr25hmS2GJ7TP3vYahwzMqO+SiimRyxBWVkmkQ==
-X-YMail-OSG: OUOvC4gVM1kTrEw9sF2KZUIarwjsbPEiaYz1SkXVTi7kkdo03gjVvUfzZuHTCBj
- 5fOVXjsjKA8oYQChBoV2IvC5LCANNhF6L9AtF4CVrCoGttiR83wb6zjBzpY9CIfFXK6CkOEwNXpy
- SCtVMg6AWOpg3QIQtBuvflaGse3mQ88IXR0LVdFmAoBuuzyHUG3mWHLplEpnDkBVBs1R4poiRsFL
- ZEwoU086DpixY4FJO0j9FTJ4Izx15nY2jOwIYEKOKZSby318z9WsRGxYF.Gknhhi.N_paojIGd81
- nmL04auYiXYgiO01anrF3z1TgiJh10NJtevcqZZQjgYhTtWCfXKu0mF8QdyJFatrfHJ6QAkB1ceM
- T11Mozg5DSjTomXdddrL2xRV4iZwT2MX3CmDOE8wKzS4KCTP6.DyBIqyFtsZfj0SF_vUwnrj4PWS
- PtG9x2WobBGdlRZP5cXY963g8KoYpus1Zey8r0nQDcEpJzl79P0g8VOHAMC_3uYIfXk5Yp5z1QUr
- nrRi45umfN6PtZfrGLwdJ1FQzMUpeka.h5d5YABkXvlKiM1IR_QzBZg43FlnBbNFe3pck55bNgah
- mxz5rnbjub4amEquNYyg9JZIjxhaME7ntg6ANmEKyGdbJFcltIPejOwn_9FII4os9RpcK_JgQ5gS
- OhK.UoDCCJGdWJ5kyacZFo7GfgdOFk9MtHzety.NJ8JzSkZ2byV0nvASpWbU.vRMunhGLFrm8YDk
- bmDnExPu5hISLLtzHUGBRKgIiCGBLNgz8PlqGY9cK2LefINEIf0rD8If9Zc_YM62fuPgXOoAJ0n9
- QT67NafQxqe8dDCiP2HZdRjwYJslxS.Frq_wxaQmlx.7wka5obYzKCt3.W9UUaosOL1_OED9A7bt
- ysAL1mGzb2eLZ_C1HQKAmmToo_jmGwdfTBVB.uAgobZ4e9TN3Y4cjjf_JoaAjAAjiWbLF9BHrTuO
- o7Fx0ITrx8IhaNvAox3xe1ytEVN7zOn7GVWQ4ElBAIFa9LuvLDJjR0VZeuQFfW2KZ9FQ4lSt2kVx
- hrgDIHk0tQcMSTm_H9GKKqLRn7hYlpPVzrqOTgHILMFKMI5E84AQIS1VDlY3tLTbta28hEszl.QH
- W4TBvW82laqsll6YiTREA6B7Zfwpdh0ATa4w83r3ItVIeQFMUhqAGGUKJKuxYkpg7KcfG2NtUxBf
- r8kU.IMSVPMwOGNtF70W0WmfsG6017Tuq5kzr3RbWZe0HAnvFQthilaPg1Bl4mpG7Qn6wpOz_ROi
- LuUprxPh09v2zMql_RsJaWTYxmLvCL9gYWKTBNKAt2JdDzvRd0J0s0nBE7BwT909VkMuMi6wqPRm
- bPcWIIv.xFlDbq9JoV2O7n_e5cgxrFeMdsqZnAb6JPQDnJGUzU0cEydkMoqPmJ3TJ_hAsK8LRIaw
- ezSWkuc3Q9ynFBxdmC6aAJ0nWs0VLUpxucrtgNJch3vVHKYKxxBwb0qWiN0wF5qz5upwgNjjYFQM
- a2npcR.1cKgXJQWqIc8OOfLyHxzBVGc0akJvodf1ukzvmOGcH1VBeRrgCz3KJvieFoRHTpuGVcl0
- MbS603O66NLs6_PYYAjmS3HK6QKWiNr.l7gpBSAKkXHQXrMQLOr7n.eTKagtSiDQozXzzxk7xcSn
- caT5AlXYwQWC5P3W35cwdKh6y8anCE8muIgqe.SdWTOcj7iNBnYKFA1XWlCFzevMQOleLDRLrgT4
- J2x0_Un4ubk2MvzHl3QzGCzVcGJyBQBp8xahp41J8DmFnHjMotaVApZqRQXISpwd_zK9dyO6cWKE
- X48kE8GiNu9f9Uu1JKwvezfESEwN.PP4sl5Kz8hP.BP.YHGL8cr149JlkxlXfYdQxqyVAanfnPlp
- AdVYQFFkqAxBmZWOPgSnOkN04KTKxmCiNlq7NyzDIK5sKz0HEutHT41MkjUQKDb0Og12uNkj3Ugf
- 8RKpsyV4bdvG16FC9odvzg253pZ_Lv1SHEutoySv4W7wUb6Rav0fR9XFXFf3gP8kTYZ11CQzsTxM
- eMRMbiGfKV9d4eMPG3RHwn7Ot9Kv7ybhBkvhYu75PcW.HegKFsCp5Hn1gqAqWn6Ze14Ipg0q5VJf
- FUM92rAY6MWQoShXXL.DVTRfzBkGu7FgSp7MgmI5dsb1RK5slsKAtX0XMmphO3uY7i7cIKpqXfWO
- CLzdfFX3nbNbMJLEVRfWzKG.TtfDnYcZTvRrCr0_EtdsiZiJvvosDrrNSffoHltGn_sFDIrbk7sx
- Xhk23g9ksxELSYhoMLxoa1_vUYLgMoUSH6c1dupOoUsxXqJ9Vgmwzx1NDAG2x.w--
-X-Sonic-MF: <rubenru09@aol.com>
-X-Sonic-ID: e775a7aa-df62-4f26-9cda-67aa9cae9525
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.gq1.yahoo.com with HTTP; Fri, 18 Apr 2025 11:45:34 +0000
-Received: by hermes--production-ir2-858bd4ff7b-86wkp (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 2f95b63d88c313d13b5f62c399ed8ff3;
-          Fri, 18 Apr 2025 11:45:30 +0000 (UTC)
-Message-ID: <6a47dc48a803b6a07a7fcd33eec8df9e60e86144.camel@aol.com>
-Subject: Re: [PATCH 2/8] staging: sm750fb: rename gDviCtrlChipName
-From: Ruben Wauters <rubenru09@aol.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>, Teddy Wang
-	 <teddy.wang@siliconmotion.com>, Sudip Mukherjee
-	 <sudip.mukherjee@codethink.co.uk>, linux-fbdev@vger.kernel.org, 
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Date: Fri, 18 Apr 2025 12:45:28 +0100
-In-Reply-To: <2025041803-clutter-harmonica-7047@gregkh>
-References: <20250417190302.13811-1-rubenru09@aol.com>
-	 <20250417190302.13811-3-rubenru09@aol.com>
-	 <2025041803-clutter-harmonica-7047@gregkh>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0-1 
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="xEoGYTdT"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Mailer: WebService/1.1.23665 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1744976732;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+pKArFsMcV1twEuEApjeMF+AmY+/ECoXgfNbrjnGlo0=;
+	b=xEoGYTdTck1JVn6h6n60BfedloWuXHkfsKcqtmq73RjbFo4SQb+z9FvN8gByieubUonmFn
+	h0RFTJQUlY4kC3yshPS9zUr4DwfixrBYwoC+ZD1X1DudPEd/B69asbjW95JUnU47mjFqLy
+	DaVkWaYfjuY6uufxZva6Bq27aliOPjh8HmHIYxaZsxcIwHPuK35FLn3jV8ZnMOSFfHnGhr
+	uw7eqToGt2hXbjqc1jyhBZUj8vJ7In/Zjmr0cCVFXZMwceu87OLh9xQkLC8v6A5m/B6coR
+	FAAMLmfa7cIi3iIpyxwhJzl8jce6rvzyl4QuE26+V3kPuk/ozmNs3G7eBm/F3Q==
+Content-Type: multipart/signed;
+ boundary=1b697cfb805afad669590ac602a8a82f42215c1070e50bde362d177e9cb2;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Fri, 18 Apr 2025 13:45:23 +0200
+Message-Id: <D99QMGBHHYJO.1D7D0ZXJLBG9Y@cknow.org>
+Cc: <davem@davemloft.net>, <thierry.reding@gmail.com>,
+ <jonathanh@nvidia.com>, <linux-crypto@vger.kernel.org>,
+ <linux-tegra@vger.kernel.org>, "Dragan Simic" <dsimic@manjaro.org>,
+ "Corentin Labbe" <clabbe@baylibre.com>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 00/10] Tegra Security Engine driver improvements
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Akhil R" <akhilrajeev@nvidia.com>, <herbert@gondor.apana.org.au>
+References: <20250224091610.49683-1-akhilrajeev@nvidia.com>
+In-Reply-To: <20250224091610.49683-1-akhilrajeev@nvidia.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 2025-04-18 at 12:36 +0200, Greg Kroah-Hartman wrote:
-> On Thu, Apr 17, 2025 at 08:02:50PM +0100, Ruben Wauters wrote:
-> > Renames gDviCtrlChipName to dvi_controller_chip_name
-> > This fixes checkpatch.pl's camel case check.
-> >=20
-> > Signed-off-by: Ruben Wauters <rubenru09@aol.com>
-> >=20
-> > ---
-> >=20
-> > I changed the name to dvi_controller_chip_name as I
-> > believe it is somewhat more descriptive than
-> > g_dvi_ctrl_chip_name. If the second one is wanted instead
-> > please let me know and I will change it
-> > ---
-> > =C2=A0drivers/staging/sm750fb/ddk750_sii164.c | 4 ++--
-> > =C2=A01 file changed, 2 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/drivers/staging/sm750fb/ddk750_sii164.c
-> > b/drivers/staging/sm750fb/ddk750_sii164.c
-> > index dd7811b18bf6..d4309e0d807f 100644
-> > --- a/drivers/staging/sm750fb/ddk750_sii164.c
-> > +++ b/drivers/staging/sm750fb/ddk750_sii164.c
-> > @@ -14,7 +14,7 @@
-> > =C2=A0
-> > =C2=A0#ifdef SII164_FULL_FUNCTIONS
->=20
-> This is never defined, so instead of papering over variable names
-> that
-> are crazy, why not just remove all of the code in the blocks for this
-> define entirely?
+--1b697cfb805afad669590ac602a8a82f42215c1070e50bde362d177e9cb2
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Given the amount of code that is never used and the time went into
-writing this, it does make me wonder whether this code *should* be used
-instead of being removed. I don't know exactly how it would be
-integrated however, removal as of now might be the easiest option, but
-I'm not entirely sure whether it would be the best option in terms of
-functionality.
 
-> thanks,
->=20
-> greg k-h
+Hi,
+
+Earlier today I tried to boot my 6.15-rc1 kernel on my RockPro64
+(rk3399) and that didn't go too well:
+
+```
+[   13.946999] Unable to handle kernel paging request at virtual address fe=
+fefefefefeff46
+[   13.947010] Mem abort info:
+[   13.947012]   ESR =3D 0x0000000096000044
+[   13.947014]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+[   13.947018]   SET =3D 0, FnV =3D 0
+[   13.947020]   EA =3D 0, S1PTW =3D 0
+[   13.947022]   FSC =3D 0x04: level 0 translation fault
+[   13.947024] Data abort info:
+[   13.947026]   ISV =3D 0, ISS =3D 0x00000044, ISS2 =3D 0x00000000
+[   13.947029]   CM =3D 0, WnR =3D 1, TnD =3D 0, TagAccess =3D 0
+[   13.947031]   GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
+[   13.947034] [fefefefefefeff46] address between user and kernel address r=
+anges
+[   13.947039] Internal error: Oops: 0000000096000044 [#1]  SMP
+[   13.947044] Modules linked in: snd_soc_core(+) dw_hdmi_cec(+) des_generi=
+c rockchip_rga gpio_ir_recv leds_gpio(+) panfrost(+) v4l2_vp9 v4l2_h264 ecd=
+h_generic snd_compress rk_crypto gpu_sched videobuf2_dma_contig spi_nor(+) =
+rfkill snd_pcm_dmaengine videobuf2_dma_sg v4l2_mem2mem drm_shmem_helper vid=
+eobuf2_memops snd_pcm crypto_engine rockchip_saradc snd_timer libdes videob=
+uf2_v4l2 snd pwrseq_core mtd soundcore videodev industrialio_triggered_buff=
+er videobuf2_common kfifo_buf mc coresight_cpu_debug rockchip_thermal cores=
+ight_etm4x industrialio coresight cpufreq_dt binfmt_misc pkcs8_key_parser e=
+fi_pstore configfs nfnetlink ip_tables x_tables autofs4 ext4 crc16 mbcache =
+jbd2 phy_rockchip_samsung_hdptx phy_rockchip_naneng_combphy panel_boe_th101=
+mb31ig002_28a xhci_plat_hcd realtek xhci_hcd rockchipdrm dw_hdmi_qp dwmac_r=
+k stmmac_platform dw_hdmi rk808_regulator stmmac dwc3 cec fusb302 udc_core =
+rc_core ulpi tcpm pcs_xpcs dw_mipi_dsi fan53555 typec analogix_dp phylink p=
+hy_rockchip_emmc mdio_devres pwm_regulator dwc3_of_simple
+[   13.947183]  drm_display_helper sdhci_of_arasan of_mdio gpio_rockchip sd=
+hci_pltfm fixed_phy drm_client_lib ehci_platform ohci_platform fixed drm_dm=
+a_helper gpio_keys phy_rockchip_pcie phy_rockchip_inno_usb2 ohci_hcd sdhci =
+ehci_hcd drm_kms_helper fwnode_mdio usbcore nvmem_rockchip_efuse phy_rockch=
+ip_typec dw_wdt drm pl330 rockchip_dfi io_domain libphy i2c_rk3x cqhci dw_m=
+mc_rockchip spi_rockchip pwm_rockchip usb_common dw_mmc_pltfm dw_mmc
+[   13.947244] CPU: 5 UID: 0 PID: 617 Comm: cryptomgr_test Tainted: G      =
+   C          6.15-rc1+unreleased-arm64-cknow #1 NONE  Debian 6.15~rc1-1~ex=
+p1
+[   13.947252] Tainted: [C]=3DCRAP
+[   13.947254] Hardware name: Pine64 RockPro64 v2.1 (DT)
+[   13.947257] pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=
+=3D--)
+[   13.947262] pc : crypto_ahash_init+0x68/0xf0
+[   13.947273] lr : crypto_ahash_init+0x50/0xf0
+[   13.947277] sp : ffff80008097b950
+[   13.947278] x29: ffff80008097b950 x28: 0000000000000000 x27: ffff5e7f8d1=
+10200
+[   13.947285] x26: 0000000000000014 x25: ffff80008097bb48 x24: ffff5e7f817=
+d0400
+[   13.947292] x23: ffffd5ef022c5008 x22: 0000000000000000 x21: ffff5e7f8d1=
+10610
+[   13.947298] x20: ffff5e7f817d0450 x19: fefefefefefefefe x18: 00000000fff=
+fffff
+[   13.947304] x17: 0000000000000001 x16: ffffd5ef1ee6c8a8 x15: ffff8000809=
+7bc78
+[   13.947310] x14: ffff80008097baa0 x13: 0000000000000000 x12: 00000000000=
+00000
+[   13.947316] x11: ffff5e80777cd470 x10: ffff5e80777cd450 x9 : ffffd5ef022=
+c50ac
+[   13.947322] x8 : ffff80008097ba08 x7 : 0000000000000000 x6 : ffffff79be1=
+40702
+[   13.947327] x5 : 1032547698badcfe x4 : efcdab8967452301 x3 : 00000000c3d=
+2e1f0
+[   13.947333] x2 : 0000000000000000 x1 : ffff5e7f8d110400 x0 : 00000000000=
+00000
+[   13.947339] Call trace:
+[   13.947342]  crypto_ahash_init+0x68/0xf0 (P)
+[   13.947348]  rk_ahash_init+0x3c/0x58 [rk_crypto]
+[   13.947358]  ahash_do_req_chain+0x13c/0x278
+[   13.947363]  crypto_ahash_init+0xc4/0xf0
+[   13.947367]  test_ahash_vec_cfg+0x340/0x748
+[   13.947372]  __alg_test_hash.isra.0+0x1e0/0x3b8
+[   13.947375]  alg_test_hash+0xe8/0x130
+[   13.947379]  alg_test+0x180/0x710
+[   13.947383]  cryptomgr_test+0x2c/0x58
+[   13.947389]  kthread+0x120/0x220
+[   13.947397]  ret_from_fork+0x10/0x20
+[   13.947406] Code: b9002e96 eb13029f 540001c0 f94012a1 (f9002661)=20
+[   13.947410] ---[ end trace 0000000000000000 ]---
+```
+
+Much more, including full dmesg output can be found at
+https://paste.sr.ht/~diederik/f440d669e7f94983b70acebda18a0b9d716f230e
+
+When I mentioned this to Dragan Simic, he noted there were similarities
+between Rockchip's crypto engine and Tegra's.
+Trying to find a good commit to (shorttrack) a ``git bisect`` operation,
+I stumbled upon this patch set. And that just seemed like too much of a
+coincidence :-)
+
+I don't have the skills/knowledge to fix this myself, but I was
+wondering/hoping you could maybe directly see/point to where things are
+going (so) wrong in the Rockchip code?
+
+Thanks in advance,
+  Diederik
+
+On Mon Feb 24, 2025 at 10:16 AM CET, Akhil R wrote:
+> With the CRYPTO_TEST now being run asynchronously unveiled some
+> concurrency issues in the Security Engine driver. These were not
+> caught during functional or fuzz testing as all the tests were run
+> synchronously.
+>
+> This patchset contains the fixes for the concurrency issues and few
+> other improvements identified during the stress-ng and cryptsetup tests.
+>
+> ---
+>
+> Akhil R (10):
+>   crypto: tegra: Use separate buffer for setkey
+>   crypto: tegra: Do not use fixed size buffers
+>   crypto: tegra: finalize crypto req on error
+>   crypto: tegra: check return value for hash do_one_req
+>   crypto: tegra: Transfer HASH init function to crypto engine
+>   crypto: tegra: Fix HASH intermediate result handling
+>   crypto: tegra: Fix CMAC intermediate result handling
+>   crypto: tegra: Set IV to NULL explicitly for AES ECB
+>   crypto: tegra: Reserve keyslots to allocate dynamically
+>   crypto: tegra: Use HMAC fallback when keyslots are full
+>
+>  drivers/crypto/tegra/tegra-se-aes.c  | 401 ++++++++++++++++++---------
+>  drivers/crypto/tegra/tegra-se-hash.c | 287 ++++++++++++-------
+>  drivers/crypto/tegra/tegra-se-key.c  |  27 +-
+>  drivers/crypto/tegra/tegra-se-main.c |  16 +-
+>  drivers/crypto/tegra/tegra-se.h      |  39 ++-
+>  5 files changed, 523 insertions(+), 247 deletions(-)
+
+
+--1b697cfb805afad669590ac602a8a82f42215c1070e50bde362d177e9cb2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaAI7VgAKCRDXblvOeH7b
+bnlmAQCZE3ooULP3BkjzEPOsJBp2ZB5l3ncqiOxI1MXlJtoZcAD+Km+imkb91I0p
+lDUO5FnFCynorpXbTC9a0sjrgQD06wk=
+=atQd
+-----END PGP SIGNATURE-----
+
+--1b697cfb805afad669590ac602a8a82f42215c1070e50bde362d177e9cb2--
