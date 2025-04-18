@@ -1,112 +1,152 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2912E1DFFD;
-	Fri, 18 Apr 2025 09:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C2F26FDAD;
+	Fri, 18 Apr 2025 09:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744967008; cv=none; b=kJ9DSXrRD5DchCvkGQiemd+WMhsteMvqwahces1k+fKjC1RXZ2LcbVekO97vli/l/BKUKCCW870rwc46Vi3OF9l30A7fHjUOLg4ESjjAZ9UFnV5JMwvNW4GusnzoXxC+T3UVIDjpVTimFa+Fqqeh+2UZcCZPILiSa/Jcr7E61tk=
+	t=1744967013; cv=none; b=pwFyS1yj1UuVI+7ZoewvvaMow/rAXjFvWBLpZyd2WxB7oiYw3OFZPFGoXLs2E/X4aljOvP2WvhatJfnrc/JDSfWF36qdDnMKyd9JngBUDOEb7cXSJI8dcbRwJULrzF0ethtgt4Y1WNNs4Ntn5EzAtJ4J72KIt68ilumG7pVszZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744967008; c=relaxed/simple;
-	bh=AgJPAS9MsnLGt5FsKWWaLN2F2nwB4XC3KF9DCC0oN2U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nh3WQ51LNqhYDnW6I9F5CXmvyqfWNzjNLtPnMnnB0zPTlrOj8xEp1VYeOXGP2oOICUN+RqfH0NWB69zL00ILXEYlYOMlvQD/KIWVSF06tndrJaY5J5mkQKJTYUfqryig307M48FprTvGJOIvX1w2aogMC6+9dJgqaKgVTy94qCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TVzVGcMa; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744967013; c=relaxed/simple;
+	bh=ux85UaKGHmWgF6HhVM8OOvobqVgJwNDXi1I9R0gjp8o=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=dKLYu3Ngo+bwlWaswMPtY0s82DUuQk4E5UsK1aML/r27rJQ+G8LXdh8y3VFKI2AO0BkKJTLuAVGfx5xSRGwPn8zpvOKqkqiY6tgXk7aOuUystxa2UHYPMhg3Wv1YK2uxaveuKfRIGAtJQjfx77QMHYhMxI0qoxtbTFXC/WaEt/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=OaH6t4Em; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TVzVGcMa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=L1yZdH4nNTnw8blnrBkBJgEu/+WnJUkKaga0ecRrWYI=; b=TVzVGcMaz2HvQJiROFC2RZQ7mo
-	09QZ7uiHLMKgahwjIc/WJwW2yV/mTc1uUkjqBYrMpEGkrGLTTKu/tU8+m9ID0ljImEN+PNszPmopf
-	IvgZFTLx86LURSHJSijjY7/ADgTPe3IvlVj45gN3fNQgDKQJl56DIwjozVXbITvlECBni18MTbs9w
-	0Dz0XJ1AC3fsuL/3Hy5V6AZp8DABn81bSOd/CKtmwVLCxfdNp2MBX0TJEA2Q70WCpl5+X4WaP5edS
-	udEDRaDvFxVl7bVUiWMylcpvC/imiCxohs4slO0z5mFfV6gItf2D3sdNskSfKoDNb0L+1C9caffCj
-	iJgFIYTg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u5hck-0000000CaPi-0AbI;
-	Fri, 18 Apr 2025 09:03:02 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 45C15300619; Fri, 18 Apr 2025 11:03:02 +0200 (CEST)
-Date: Fri, 18 Apr 2025 11:03:02 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Qing Wong <wangqing7171@gmail.com>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf/core: Fix broken throttling when
- max_samples_per_tick=1
-Message-ID: <20250418090302.GO38216@noisy.programming.kicks-ass.net>
-References: <20250405141635.243786-1-wangqing7171@gmail.com>
- <20250405141635.243786-3-wangqing7171@gmail.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="OaH6t4Em"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
+	Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=/TUgmXRIt862ZvkLN+SJfvXp8pRPa3ExVWG6heV/r3c=; b=OaH6t4EmRnkaOCLDxBbVCkP9bZ
+	r0Nae3ODBz1Bym6pu799K8rcBPxqn1Y29idZLKhw5eCeZn+pSTjbdmdr6gZ+QVApzEjGcJWA0jEzl
+	4AE+wkHEn0WcMeN4Kqjlf+wth7LVvp+b+RwIYtilGDIwhk9qfCaKWt+9b7DiKs1YBDHh+wJFPc9VD
+	0TN0yz+TmMdAa02YBXKaVi8t/tZlodlb++fqvdz/q5Isg9pLu8VtoD8SSWEavvWOXF0QhpG3vB2bx
+	sZzabt9Q0i9JO5uQQgWBShk3OAl4nz0a88Nks/wpQaV11tJ+VnBe7WqINPam5jkBbMY7xh7G2BA2F
+	vrobwNEQ==;
+Received: from 39-14-33-89.adsl.fetnet.net ([39.14.33.89] helo=[192.168.220.43])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1u5hd0-001AZP-2j; Fri, 18 Apr 2025 11:03:18 +0200
+Message-ID: <983ba47e-ab95-4a43-bca2-97b75c3c90d0@igalia.com>
+Date: Fri, 18 Apr 2025 17:03:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250405141635.243786-3-wangqing7171@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mm/huge_memory: fix dereferencing invalid pmd
+ migration entry
+From: Gavin Guo <gavinguo@igalia.com>
+To: ziy@nvidia.com
+Cc: david@redhat.com, willy@infradead.org, linmiaohe@huawei.com,
+ hughd@google.com, revest@google.com, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, linux-mm@kvack.org,
+ akpm@linux-foundation.org
+References: <20250418085802.2973519-1-gavinguo@igalia.com>
+Content-Language: en-US
+In-Reply-To: <20250418085802.2973519-1-gavinguo@igalia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Apr 05, 2025 at 10:16:35PM +0800, Qing Wong wrote:
-> From: Qing Wang <wangqing7171@gmail.com>
+On 4/18/25 16:58, Gavin Guo wrote:
+> When migrating a THP, concurrent access to the PMD migration entry
+> during a deferred split scan can lead to a invalid address access, as
+> illustrated below. To prevent this page fault, it is necessary to check
+> the PMD migration entry and return early. In this context, there is no
+> need to use pmd_to_swp_entry and pfn_swap_entry_to_page to verify the
+> equality of the target folio. Since the PMD migration entry is locked,
+> it cannot be served as the target.
 > 
-> According to the throttling mechanism, the pmu interrupts number can not
-> exceed the max_samples_per_tick in one tick. But this mechanism is
-> ineffective when max_samples_per_tick=1, because the throttling check is
-> skipped during the first interrupt and only performed when the second
-> interrupt arrives.
+> Mailing list discussion and explanation from Hugh Dickins:
+> "An anon_vma lookup points to a location which may contain the folio of
+> interest, but might instead contain another folio: and weeding out those
+> other folios is precisely what the "folio != pmd_folio((*pmd)" check
+> (and the "risk of replacing the wrong folio" comment a few lines above
+> it) is for."
 > 
-> Perhaps this bug may cause little influence in one tick, but if in a
-> larger time scale, the problem can not be underestimated.
+> BUG: unable to handle page fault for address: ffffea60001db008
+> CPU: 0 UID: 0 PID: 2199114 Comm: tee Not tainted 6.14.0+ #4 NONE
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> RIP: 0010:split_huge_pmd_locked+0x3b5/0x2b60
+> Call Trace:
+> <TASK>
+> try_to_migrate_one+0x28c/0x3730
+> rmap_walk_anon+0x4f6/0x770
+> unmap_folio+0x196/0x1f0
+> split_huge_page_to_list_to_order+0x9f6/0x1560
+> deferred_split_scan+0xac5/0x12a0
+> shrinker_debugfs_scan_write+0x376/0x470
+> full_proxy_write+0x15c/0x220
+> vfs_write+0x2fc/0xcb0
+> ksys_write+0x146/0x250
+> do_syscall_64+0x6a/0x120
+> entry_SYSCALL_64_after_hwframe+0x76/0x7e
 > 
-> When max_samples_per_tick = 1:
-> Allowed-interrupts-per-second max-samples-per-second  default-HZ  ARCH
-> 200                           100                     100         X86
-> 500                           250                     250         ARM64
-> ...
-> Obviously, the pmu interrupt number far exceed the user's expect.
+> The bug is found by syzkaller on an internal kernel, then confirmed on
+> upstream.
 > 
-> Fixes: e050e3f0a71b ("perf: Fix broken interrupt rate throttling")
-> Signed-off-by: Qing Wang <wangqing7171@gmail.com>
+> Fixes: 84c3fc4e9c56 ("mm: thp: check pmd migration entry in common path")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gavin Guo <gavinguo@igalia.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Acked-by: Hugh Dickins <hughd@google.com>
+> Acked-by: Zi Yan <ziy@nvidia.com>
+> Link: https://lore.kernel.org/all/20250414072737.1698513-1-gavinguo@igalia.com/
 > ---
->  kernel/events/core.c | 17 ++++++++---------
->  1 file changed, 8 insertions(+), 9 deletions(-)
+> V1 -> V2: Add explanation from Hugh and correct the wording from page
+> fault to invalid address access.
 > 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 29cdb240e104..4ac2ac988ddc 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -10047,16 +10047,15 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
->  	if (seq != hwc->interrupts_seq) {
->  		hwc->interrupts_seq = seq;
->  		hwc->interrupts = 1;
-> -	} else {
-> +	} else
->  		hwc->interrupts++;
-> -		if (unlikely(throttle
-> -			     && hwc->interrupts >= max_samples_per_tick)) {
-> -			__this_cpu_inc(perf_throttled_count);
-> -			tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
-> -			hwc->interrupts = MAX_INTERRUPTS;
-> -			perf_log_throttle(event, 0);
-> -			ret = 1;
-> -		}
+>   mm/huge_memory.c | 18 ++++++++++++++----
+>   1 file changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 2a47682d1ab7..0cb9547dcff2 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -3075,6 +3075,8 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
+>   void split_huge_pmd_locked(struct vm_area_struct *vma, unsigned long address,
+>   			   pmd_t *pmd, bool freeze, struct folio *folio)
+>   {
+> +	bool pmd_migration = is_pmd_migration_entry(*pmd);
 > +
-> +	if (unlikely(throttle && hwc->interrupts >= max_samples_per_tick)) {
-> +		__this_cpu_inc(perf_throttled_count);
-> +		tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
-> +		hwc->interrupts = MAX_INTERRUPTS;
-> +		perf_log_throttle(event, 0);
-> +		ret = 1;
->  	}
+>   	VM_WARN_ON_ONCE(folio && !folio_test_pmd_mappable(folio));
+>   	VM_WARN_ON_ONCE(!IS_ALIGNED(address, HPAGE_PMD_SIZE));
+>   	VM_WARN_ON_ONCE(folio && !folio_test_locked(folio));
+> @@ -3085,10 +3087,18 @@ void split_huge_pmd_locked(struct vm_area_struct *vma, unsigned long address,
+>   	 * require a folio to check the PMD against. Otherwise, there
+>   	 * is a risk of replacing the wrong folio.
+>   	 */
+> -	if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) ||
+> -	    is_pmd_migration_entry(*pmd)) {
+> -		if (folio && folio != pmd_folio(*pmd))
+> -			return;
+> +	if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) || pmd_migration) {
+> +		if (folio) {
+> +			/*
+> +			 * Do not apply pmd_folio() to a migration entry; and
+> +			 * folio lock guarantees that it must be of the wrong
+> +			 * folio anyway.
+> +			 */
+> +			if (pmd_migration)
+> +				return;
+> +			if (folio != pmd_folio(*pmd))
+> +				return;
+> +		}
+>   		__split_huge_pmd_locked(vma, pmd, address, freeze);
+>   	}
+>   }
+> 
+> base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
 
-Fair enough I suppose. I'll make this apply without that revert -- it
-seems pointless to have that in between.
+Hi Zi, I've carefully reviewed the mailing list and observed that the 
+indentation is not a strong concern from the reviews. And the cleanup 
+suggestion from David will override the modification in this patch. I 
+have decided to keep the original version (the unindented one). Let me 
+know if you have any feedback with the v2 patch. Thank you!
