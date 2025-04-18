@@ -1,160 +1,220 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C636BA2D
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 00:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7A9F8C0E;
+	Fri, 18 Apr 2025 01:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744937657; cv=none; b=bkxjRvF20jFzMOYml71ygQq37YBE+LeE4cfnx3LeTmdyDzPWnASJIUKb0cUhO5yTXVYYuPVnXxbgoa8E0Hs8/wFl2RQ7TYO1Z3iLbhnkegiuLrjhPPxjsznq/8+Iy8ep+pK7TppgCmh/ynrAcJF89EF0X+l/yW/ffQHcS0bAQ/w=
+	t=1744938165; cv=none; b=Bzc2xFbTx7UBzyFAQHSjTx4WBoNrmQyHQIyjUMN1R6wuy2OOShdjoiXqU0H0FvZxVsDNcYaBNdhGBLNmxUTy4em69MUjttBgJOXSd6YFfhjqhqLCHb+vamWRFrJe7UNHK/KBaRqY0ldiZ4eZXs6TNRrcE5/EoYf5hgnVDB3CJfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744937657; c=relaxed/simple;
-	bh=kYw96PJDZxr1gtwXp/xI+3EWhFmokKT4Hr/AtyA3lAg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EJIk/abf+Q64Fbx5FB3Hk1GckivatJXDsQwzHT4aSdykPrKkUSXy/0c9mD0e5dNofl/HGKlPZF+nSYVk4QMiEYSKKcDPDg56AcCAzwGfmItCFQukbHf/0Fxo97qvvsBxcfpVaR85uAga4ZkSiDi9hKt5LohXGgJv9ZQ2N1WOpqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EsmQukaM; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744938165; c=relaxed/simple;
+	bh=l4e/uYzgG6Tdwe8y7t0wmGDfbKXLpFehIIub+FZvEv8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mVOAKC/bZpV2+S1v33lgpLvvg4oUHoqB7FRpcreMZkcDzti+Rk0Tg9cSFJqJUKj4c2SvP3Gwu/Nuozo2wNObcfJHFdjSDt8RifiZQtlhvDMFj+k0DNJEx2CTquNws+QHhCeeNAsOkHc5sSpDil8zkeBJNrRYQ/tdR/RZ0SKCZZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e/e8Zv8g; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EsmQukaM"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54b10594812so1487078e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 17:54:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e/e8Zv8g"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22c33e5013aso18077795ad.0;
+        Thu, 17 Apr 2025 18:02:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744937653; x=1745542453; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c7v6a64FwreaJA0pCAKVOqC5CViB7StYRn/BcrMkSKM=;
-        b=EsmQukaM/yx+SlqeXxgDNAaNfMRfKcG1hh/W4CEAdUGfwRIMqnLA4Y7/czczNqHoaV
-         q6BvLDjY9S9p0m0wWpcqyC1exuQ4gSIB/2aqnt4adrt5OQrbnTZBNvAlFLbxlwMj0DBj
-         z4lUgcBxthS2Rs6XfHOD7QAScm62ynGsHB3Vw4fYAGVRjq1VrENtajhDGl/dwLMqnfiB
-         ZZUuSHoUcm5ya7tlcMx1CTtOlTIcjlg+TtC78getfOh7UgXD4XOo/lbd2xZmraj6CiY+
-         5pnYKcKz1eOka4ePN4u440D2t5LQQstRCKVTAJL54AjFJN++H/3JX/SY8GuZvvefRclA
-         +g5A==
+        d=gmail.com; s=20230601; t=1744938163; x=1745542963; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6NXDfDK3aSml2E+saDauRdMH/9W2bC9OP7905GHXeqg=;
+        b=e/e8Zv8gBxIWR9YdN7uvZ1wbzUSG3gVGPlJCUoKUF4hQSxSCqPQictjhecmL2LpUiX
+         EIHvtwppU2Xq+s8JTHl5NhQ3myFwRsAzElxLx8PIDpTlaGDTOifF3dJW4LRpbQbWRD0r
+         EMW0UZ5ckTnvgG1Ds/vYSvSOX7O8EFl9rpfQD+aodyfBomnRZemULO9cN16RyYF3/nj8
+         3UAcFH/GlnmdFumtKqer8hasnNu+VZVs4ywDu+tK47zKovsTebDRD4ukYxuJGwqsspqL
+         dJ8i0OrFwZjNy4j8z3Cs0kW2YGbib9EnNa+cP5Z1tP6IsG2ZZKk4wTTOjolfrmfQuyzB
+         hSqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744937653; x=1745542453;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=c7v6a64FwreaJA0pCAKVOqC5CViB7StYRn/BcrMkSKM=;
-        b=sR3MiubL7JkynrB0X+a6hHa9/aB6xnyNt05aQGP3JV9n8+Ad0rU4q+QxuAKH4D7ZhN
-         aDyZGiv4OoS9pp6WdlaW7kVmavdosNN8lx78xB8nUzuF4k/n+6Mu0Gpv6iy8lWoDAXXy
-         V1DiERuNS7SRanbe1KjebzgOFtuJcvyJ8ugjXtji5E3kbLBKJG0ub+grAFxO1dLxLqmH
-         FhnHXRR2B1Qbx03xUlKOn0qkKIN9nh4u0wb3bGptd0HvGh4SNwPEhvw2MzDR9H3F5M3D
-         IgdK7I03tzfo9wuMhiV4IbcH8gbJaRt80kpm2aczLdVbjpq1hM407zqSot8sE3JbRbnr
-         e2wg==
-X-Forwarded-Encrypted: i=1; AJvYcCWhp7riCqnVhzrVSIESS3C39KV/YAA6zekv7mz1W2bhPCy2DjmYI7m3HFnRtj723ApoZVBScpAgRJctX0Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNgaPd+DQTiZbemWCA5a8Xagu5tGTgTqWSJ/70Ge9a7X777sOH
-	Z5/exuSayjJQ0ljZHiU0XLx59wo0z/4kpe83ltwfwntwQwdq9Q/BKAHUrXdMwI75TTPPO5hsSfP
-	09Fwm/oSLn3SCDKz6Enl8XDi+QcZ+pSeCQ5yT
-X-Gm-Gg: ASbGnctCVmYO63p5tQ3vKxkuo7sm0F8tiGgn3rsfvMFCJ9HOhoSxA8KZnfuGYe04y0N
-	Yuub6oz21rLp8Rvx03d4fp+tylC9F0G4pUJ6dXN9NTjCfEtgzeT0q5AQ/v4tSx1u275RL0s3upI
-	7ivj0AxFH8CUAbyATA6P0x58boOnOSkjfVcgpBXxpU/8NVjjY=
-X-Google-Smtp-Source: AGHT+IHUdZc5HDjrZYA8LWyh9msnR6W71lP04fz39bJlOI9JeLCz/9ra+wyxcFCuEbg77rntJwlmJg7XBKEi694wwtw=
-X-Received: by 2002:a05:6512:1045:b0:545:2d4d:36de with SMTP id
- 2adb3069b0e04-54d6e6352a2mr234675e87.31.1744937653242; Thu, 17 Apr 2025
- 17:54:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744938163; x=1745542963;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6NXDfDK3aSml2E+saDauRdMH/9W2bC9OP7905GHXeqg=;
+        b=IemXEEu5COhV5tAv9qZcIgqdxp0alD6YxVlxtL3Q2T4SKNIbnYiiL2r7gGkWwNy4uC
+         PeYTmAtu6PncfMn58KQbvQGlftzbs40rb2hAnA00x+3EMaJgEIBYNZRI/3SvePZQVgOX
+         JMyyIOced5wAbQCXX3I0y+lvaEWjG5YhR+RHz02VKS0s7IINOBrfdjAFaQOoLaaJ47GR
+         IFOOW5LNgA1ZwtdZa0uC6xDnGmUtEfeDyAI8mdsNrV5Xf7vrto9NQzFyqmPX9SQO8jJQ
+         ZSmYo/7yutRB48ZPHe3p2HfhbnV/BFFs1MVCAVCyHdtsQFxvgwJfILsk35bNjoG95w0t
+         OPtg==
+X-Forwarded-Encrypted: i=1; AJvYcCU1FF4DOLns1y2XhApOyv4Nic35R3BeZGjfgHnjpS7I6h/fss9o45hjyw3qcBWri23LZLhpfNLYDM8=@vger.kernel.org, AJvYcCUjD7MNuzUJEgw+B8o4UQfUp74QZ+7yumWe5BCiPEXu1UoYIxxjn0LbB2WLkGsHS5sa3vCDhex8ZvX6HqCm@vger.kernel.org, AJvYcCV1aPz0htTK3LNKxONKG7mArFskDCT7MbMfuvTYje+2AIydo96pS4lE819npgp7akZf9H8Qw6eOPK08qSp+3eMF@vger.kernel.org
+X-Gm-Message-State: AOJu0YwblCWRBy5ot4ClcPPBeuEeO3nJrGIX179vT1+FWEZuyZ7P2vpr
+	78ptE0C22rd/K0S2WMhQKvW+DG/kpdQyKRbw1GQ2qjgezWUPvO8I
+X-Gm-Gg: ASbGncttxtPusCoTOjn77B/hki7uSFt5v4+G0FQwphJTl7rMNO+YadQnsqI7IxJq48G
+	/MthP6peri3KzeUk2ps4lH+mx/16ZW/QlzBNV8Qe6kFu7MKqUpHk1/COdYQbNrhYnguN6WD19wr
+	mEooUlmPockWHqmW4Pf75OURjqZQn0/tyFvZ6l9LnzKzR/EtrDqj6+4AClbo38O2ObY81lDQCxm
+	qoFth+8Z9Ia/8VdsexduK6LwkT+QBcqt5Fbhtt61YmECU9h6JtWiASo0aSjoZ2slaJK5vnEda1G
+	z0kQTqQq+iHDcYq3gxrcv5xQj1miYRj3ld6VAeb/
+X-Google-Smtp-Source: AGHT+IHDm2/uiDHbeptzLGovtbbE44rhzmmK5eRP8BwU9MWedsOqamPglnynKile7HYwKCMMQ1kxTA==
+X-Received: by 2002:a17:902:d589:b0:224:1157:6d26 with SMTP id d9443c01a7336-22c53573b4amr15702485ad.4.1744938163034;
+        Thu, 17 Apr 2025 18:02:43 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8e4912sm550714b3a.60.2025.04.17.18.02.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 18:02:41 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 3238A4209E46; Fri, 18 Apr 2025 08:02:39 +0700 (WIB)
+Date: Fri, 18 Apr 2025 08:02:39 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	david@redhat.com, baohua@kernel.org, baolin.wang@linux.alibaba.com,
+	ryan.roberts@arm.com, willy@infradead.org, peterx@redhat.com,
+	shuah@kernel.org, ziy@nvidia.com, wangkefeng.wang@huawei.com,
+	usamaarif642@gmail.com, sunnanyong@huawei.com,
+	vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
+	yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
+	aarcange@redhat.com, raquini@redhat.com, dev.jain@arm.com,
+	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
+	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
+	cl@gentwo.org, jglisse@google.com, surenb@google.com,
+	zokeefe@google.com, hannes@cmpxchg.org, rientjes@google.com,
+	mhocko@suse.com, rdunlap@infradead.org
+Subject: Re: [PATCH v4 2/4] mm: document (m)THP defer usage
+Message-ID: <aAGkrw5O5OcVFDFQ@archie.me>
+References: <20250417001846.81480-1-npache@redhat.com>
+ <20250417001846.81480-3-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417142513.312939-1-ulf.hansson@linaro.org>
-In-Reply-To: <20250417142513.312939-1-ulf.hansson@linaro.org>
-From: Saravana Kannan <saravanak@google.com>
-Date: Thu, 17 Apr 2025 17:53:36 -0700
-X-Gm-Features: ATxdqUHzOUVh8E2tR73MoZ4FAVpBQN57AXnmN-9HADX6gA9CnvHoa6p8qDTye_I
-Message-ID: <CAGETcx_=hEuOs09=gRe58+34PFa0bfsYoAK9kYOn90FP5nDjmw@mail.gmail.com>
-Subject: Re: [PATCH 00/11] pmdomain: Add generic ->sync_state() support to genpd
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Michael Grzeschik <m.grzeschik@pengutronix.de>, Bjorn Andersson <andersson@kernel.org>, 
-	Abel Vesa <abel.vesa@linaro.org>, Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>, 
-	Peng Fan <peng.fan@oss.nxp.com>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
-	Johan Hovold <johan@kernel.org>, Maulik Shah <maulik.shah@oss.qualcomm.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="KNDrqzrcH5sLMMxx"
+Content-Disposition: inline
+In-Reply-To: <20250417001846.81480-3-npache@redhat.com>
+
+
+--KNDrqzrcH5sLMMxx
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 17, 2025 at 7:25=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.org=
-> wrote:
->
-> If a PM domain (genpd) is powered-on during boot, there is probably a goo=
-d
-> reason for it. Therefore it's known to be a bad idea to allow such genpd =
-to be
-> powered-off before all of its consumer devices have been probed. This ser=
-ies
-> intends to fix this problem.
->
-> We have been discussing these issues at LKML and at various Linux-confere=
-nces
-> in the past. I have therefore tried to include the people I can recall be=
-ing
-> involved, but I may have forgotten some (my apologies), feel free to loop=
- them
-> in.
->
-> A few notes:
-> *)
-> Even if this looks good, the last patch can't go in without some addition=
-al
-> changes to a couple of existing genpd provider drivers. Typically genpd p=
-rovider
-> drivers that implements ->sync_state() need to call of_genpd_sync_state()=
-, but I
-> will fix this asap, if we think the series makes sense.
->
-> *)
-> Patch 1 -> 3 are just preparatory cleanups.
->
-> *)
-> I have tested this with QEMU with a bunch of local test-drivers and DT no=
-des.
-> Let me know if you want me to share this code too.
->
->
-> Please help review and test!
-> Finally, a big thanks to Saravana for all the support!
+On Wed, Apr 16, 2025 at 06:18:44PM -0600, Nico Pache wrote:
+> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/a=
+dmin-guide/mm/transhuge.rst
+> index 06814e05e1d5..38e1778d9eaa 100644
+> --- a/Documentation/admin-guide/mm/transhuge.rst
+> +++ b/Documentation/admin-guide/mm/transhuge.rst
+> @@ -88,8 +88,9 @@ In certain cases when hugepages are enabled system wide=
+, application
+>  may end up allocating more memory resources. An application may mmap a
+>  large region but only touch 1 byte of it, in that case a 2M page might
+>  be allocated instead of a 4k page for no good. This is why it's
+> -possible to disable hugepages system-wide and to only have them inside
+> -MADV_HUGEPAGE madvise regions.
+> +possible to disable hugepages system-wide, only have them inside
+> +MADV_HUGEPAGE madvise regions, or defer them away from the page fault
+> +handler to khugepaged.
+> =20
+>  Embedded systems should enable hugepages only inside madvise regions
+>  to eliminate any risk of wasting any precious byte of memory and to
+> @@ -99,6 +100,15 @@ Applications that gets a lot of benefit from hugepage=
+s and that don't
+>  risk to lose memory by using hugepages, should use
+>  madvise(MADV_HUGEPAGE) on their critical mmapped regions.
+> =20
+> +Applications that would like to benefit from THPs but would still like a
+> +more memory conservative approach can choose 'defer'. This avoids
+> +inserting THPs at the page fault handler unless they are MADV_HUGEPAGE.
+> +Khugepaged will then scan the mappings for potential collapses into (m)T=
+HP
+> +pages. Admins using this the 'defer' setting should consider
+> +tweaking khugepaged/max_ptes_none. The current default of 511 may
+> +aggressively collapse your PTEs into PMDs. Lower this value to conserve
+> +more memory (i.e., max_ptes_none=3D64).
+> +
+>  .. _thp_sysfs:
+> =20
+>  sysfs
+> @@ -109,11 +119,14 @@ Global THP controls
+> =20
+>  Transparent Hugepage Support for anonymous memory can be entirely disabl=
+ed
+>  (mostly for debugging purposes) or only enabled inside MADV_HUGEPAGE
+> -regions (to avoid the risk of consuming more memory resources) or enabled
+> -system wide. This can be achieved per-supported-THP-size with one of::
+> +regions (to avoid the risk of consuming more memory resources), deferred=
+ to
+> +khugepaged, or enabled system wide.
+> +
+> +This can be achieved per-supported-THP-size with one of::
+> =20
+>  	echo always >/sys/kernel/mm/transparent_hugepage/hugepages-<size>kB/ena=
+bled
+>  	echo madvise >/sys/kernel/mm/transparent_hugepage/hugepages-<size>kB/en=
+abled
+> +	echo defer >/sys/kernel/mm/transparent_hugepage/hugepages-<size>kB/enab=
+led
+>  	echo never >/sys/kernel/mm/transparent_hugepage/hugepages-<size>kB/enab=
+led
+> =20
+>  where <size> is the hugepage size being addressed, the available sizes
+> @@ -136,6 +149,7 @@ The top-level setting (for use with "inherit") can be=
+ set by issuing
+>  one of the following commands::
+> =20
+>  	echo always >/sys/kernel/mm/transparent_hugepage/enabled
+> +	echo defer >/sys/kernel/mm/transparent_hugepage/enabled
+>  	echo madvise >/sys/kernel/mm/transparent_hugepage/enabled
+>  	echo never >/sys/kernel/mm/transparent_hugepage/enabled
+> =20
+> @@ -282,7 +296,8 @@ of small pages into one large page::
+>  A higher value leads to use additional memory for programs.
+>  A lower value leads to gain less thp performance. Value of
+>  max_ptes_none can waste cpu time very little, you can
+> -ignore it.
+> +ignore it. Consider lowering this value when using
+> +``transparent_hugepage=3Ddefer``
+> =20
+>  ``max_ptes_swap`` specifies how many pages can be brought in from
+>  swap when collapsing a group of pages into a transparent huge page::
+> @@ -307,14 +322,14 @@ Boot parameters
+> =20
+>  You can change the sysfs boot time default for the top-level "enabled"
+>  control by passing the parameter ``transparent_hugepage=3Dalways`` or
+> -``transparent_hugepage=3Dmadvise`` or ``transparent_hugepage=3Dnever`` t=
+o the
+> -kernel command line.
+> +``transparent_hugepage=3Dmadvise`` or ``transparent_hugepage=3Ddefer`` or
+> +``transparent_hugepage=3Dnever`` to the kernel command line.
+> =20
+>  Alternatively, each supported anonymous THP size can be controlled by
+>  passing ``thp_anon=3D<size>[KMG],<size>[KMG]:<state>;<size>[KMG]-<size>[=
+KMG]:<state>``,
+>  where ``<size>`` is the THP size (must be a power of 2 of PAGE_SIZE and
+>  supported anonymous THP)  and ``<state>`` is one of ``always``, ``madvis=
+e``,
+> -``never`` or ``inherit``.
+> +``defer``, ``never`` or ``inherit``.
+> =20
+>  For example, the following will set 16K, 32K, 64K THP to ``always``,
+>  set 128K, 512K to ``inherit``, set 256K to ``madvise`` and 1M, 2M
 
-You are welcome! Thank you for getting this series done! Happy to see
-sync_state() support being added to another framework.
+Looks good, thanks!
 
-I skimmed the series and at a high level it looks right. Not too
-familiar with power domain code, so I didn't go deep. Just reviewed
-the fw_devlink and driver core parts of it.
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
--Saravana
+--=20
+An old man doll... just what I always wanted! - Clara
 
->
-> Kind regards
-> Ulf Hansson
->
->
-> Saravana Kannan (1):
->   driver core: Add dev_set_drv_sync_state()
->
-> Ulf Hansson (10):
->   pmdomain: core: Convert genpd_power_off() to void
->   pmdomain: core: Simplify return statement in genpd_power_off()
->   pmdomain: core: Use genpd->opp_table to simplify error/remove path
->   pmdomain: core: Add a bus and a driver for genpd providers
->   pmdomain: core: Use device_set_node() to assign the fwnode too
->   pmdomain: core: Add the genpd->dev to the genpd provider bus
->   pmdomain: core: Export a common ->sync_state() helper for genpd
->     providers
->   pmdomain: core: Add internal ->sync_state() support for genpd
->     providers
->   pmdomain: core: Default to use of_genpd_sync_state() for genpd
->     providers
->   pmdomain: core: Leave powered-on genpds on until ->sync_state()
->
->  drivers/pmdomain/core.c   | 273 +++++++++++++++++++++++++++++++-------
->  include/linux/device.h    |  12 ++
->  include/linux/pm_domain.h |  11 ++
->  3 files changed, 249 insertions(+), 47 deletions(-)
->
-> --
-> 2.43.0
->
+--KNDrqzrcH5sLMMxx
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaAGkqwAKCRD2uYlJVVFO
+o76GAP4gVe3Gv1BdLnJiW4rDIJQ6VD6/W+Sr//civHKYU9VsUQEAuc1azxqwsSEj
+K00HI9k41AAjpL6TTipYDczBL0F01w4=
+=KYIn
+-----END PGP SIGNATURE-----
+
+--KNDrqzrcH5sLMMxx--
