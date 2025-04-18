@@ -1,235 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F1C222594;
-	Fri, 18 Apr 2025 19:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A399F22D4E3;
+	Fri, 18 Apr 2025 19:29:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745004548; cv=none; b=umbSyZPZa9pjhMhr9LwvA3Zq4sgNL4sb3+mC4LR25hKGICHK+LVn/MGUKI+LUaLJJGqBXcGEsDoodeId1AolAniArfVubupOW5twaKK3BNUqPga+qlHinK5jo8kqLf1Xb2biHMaAmMBPGKx9TVy7tJs1YjWt8khrMf6EUs7FXmI=
+	t=1745004561; cv=none; b=cs0XwFVpUPbwouqob3WrqhWEw76TjZmVTXqwTKzM39K24CMC+va3rB6rRPLywODjOHtXyX8XUeXXGoQFDhHGJMvdjp+P/L29TUYAtkTffwyLs89RHpvWFSvf1RPj53QRH7z3ezC42TooE+/4scIwFuZEnOoQUmgf/XGQs2yyQ3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745004548; c=relaxed/simple;
-	bh=ZnZAZwfeohX4vsPn2M4XWG7XINcO5hBYR5CoxMYmo5Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EhNqA0RKy7LoZMIY5GK1Pcl2rLdqn9hBrQ5/snoLLQyODEH2+szJXnMFyNKl/STqIZJLJIHrI+Pzca6Rvgzk5fxyUpE2dMZTR2ZUzdOxnER0sE77jRxPHhVJt2COGDxsNNEc9k/ixtEKPk1AeGBhX7OuA2NazkWulqOITryEdsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ih1k5E6z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745004561; c=relaxed/simple;
+	bh=Nx9OX89Wix3/BCwh3JldwKYEVMBFrfz3JKJuiO/Jm0E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kgkgZ0pM5rhvCnfHjvB0wM5LufGr4N3nTV/8u2wbQsDuDK+knfxTVuW+tUtjkFZN7VT4jAu+D6jI/zsO1KUErIfPGnwSv85gpldPNDCQhnaTb1EdoUTiHfM5JUVlryjEYrXKRqMh/h8f9qgb2CtC4n/VVYqj9Fktg0gZOgjwBDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B96aa184; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ih1k5E6z"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 926DEC4CEED;
-	Fri, 18 Apr 2025 19:29:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745004548;
-	bh=ZnZAZwfeohX4vsPn2M4XWG7XINcO5hBYR5CoxMYmo5Q=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ih1k5E6zp2leJG5YJG44SjF+l8nAQuQNuHVh7L+bQtJPApJa16OAN97KGqmC9R458
-	 QSUQg3wfM9IweIE2fzHMjE3qEnfJQGj+SW+l8mP+KD70uJP9cAhKkRPsfpoVk4DWBa
-	 KKVSmDhbhnTl/LY1wYqwBRNhl5BbfaZrCbr92OtGHlf0aEqSDkzIUZLMk6aVvIX5L8
-	 DDnf5lvCyW/rRIu57qZFrp84DBUSGbVC2jufsIsJQSYKTWBwSJRiG2NdpxlhwEupQ3
-	 7M4E7Id+zq/OzaHCrVTtUwxpS5vRvE4qzVKQ9jMGW+Q+BtP8KzXeUF/X3es2p9SIPE
-	 AlfPpS0Yymauw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81962C369D1;
-	Fri, 18 Apr 2025 19:29:08 +0000 (UTC)
-From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Date: Fri, 18 Apr 2025 21:28:52 +0200
-Subject: [PATCH 2/4] powerpc: 83xx: Rename wdt@ nodes to watchdog@
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B96aa184"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745004560; x=1776540560;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Nx9OX89Wix3/BCwh3JldwKYEVMBFrfz3JKJuiO/Jm0E=;
+  b=B96aa184oFBp+1YrnSMTVY7u/cUneGTttVoONvOFusQMXG0tcHORhBCv
+   EayMMvM9mR1tYlY1JC0K0GwQMJhky2Z9iifad8vctKI4IiVcbu965yau+
+   2KCckzR6ocD1JkhYAtJMiqOSFMRmwpY4JK8zKYEA6zKRYcgb3TYXLv42H
+   gzg8pDUtFWOf+2QIFXYP2x4adjYXkOnIs4+qyWHwkZpnxBYWcJLx1q5NN
+   RQalCo2Dy8PZh2Mke5Wl3F+ID0kSiA530UcIDwYYHXEub0G9yeAzbRm8N
+   FPy4IxIcgkzsyxNvWvffRKmb4fNA48xySMVCay3pfFYRIPEDq9ZML3eYb
+   g==;
+X-CSE-ConnectionGUID: qYfsIgGCRCq5sWKciLaZNA==
+X-CSE-MsgGUID: AnZXjN57QvS9u+f8JP7PAQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="58003804"
+X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
+   d="scan'208";a="58003804"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 12:29:19 -0700
+X-CSE-ConnectionGUID: 8Lr0eRpTTfKHX3882E5GXQ==
+X-CSE-MsgGUID: 8ZNPSjG7Ti2BExo1h14ARw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
+   d="scan'208";a="132170758"
+Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.220.20]) ([10.124.220.20])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 12:29:18 -0700
+Message-ID: <7e214b98-bdb9-407b-af92-5c9b20525e90@intel.com>
+Date: Fri, 18 Apr 2025 12:29:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250418-watchdog-v1-2-987ff2046272@posteo.net>
-References: <20250418-watchdog-v1-0-987ff2046272@posteo.net>
-In-Reply-To: <20250418-watchdog-v1-0-987ff2046272@posteo.net>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Naveen N Rao <naveen@kernel.org>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745004545; l=6414;
- i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=Yw+PaYsdSJcOkNk7dfmQFHMcmT5+YjBUrfIw+nshi9Y=;
- b=NxbUQG3EdBM7Z3W+Ww69xe2/rI7AysK8WNTRo6T8XV/4FfzOJ0S5Mm5IMFGrfdxV82CUgpCvn
- 7umJsOM9UAZDDOfxreMe8mU26tAsEU0+EYt6yeVYRMlZ9Y1N/a8TnzJ
-X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
- pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
-X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
- auth_id=156
-X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-Reply-To: j.ne@posteo.net
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/e820: discard high memory that can't be addressed by
+ 32-bit systems
+To: Mike Rapoport <rppt@kernel.org>, Ingo Molnar <mingo@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Davide Ciminaghi <ciminaghi@gnudd.com>, Ingo Molnar <mingo@redhat.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+ <seanjc@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
+References: <Z_rDdnlSs0rts3b9@gmail.com>
+ <20250413080858.743221-1-rppt@kernel.org> <20250417162206.GA104424@ax162>
+ <aAHyHuwbmhjWmDqc@gmail.com> <aAIU9LHAr_BGb5Jl@kernel.org>
+ <aAJMmQKTglGc7N-K@gmail.com> <aAKnGbajVRKanGem@kernel.org>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <aAKnGbajVRKanGem@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: "J. Neuschäfer" <j.ne@posteo.net>
+On 4/18/25 12:25, Mike Rapoport wrote:
+>> So why don't we use max_pfn like your -v1 fix did IIRC?
+> Dave didn't like max_pfn. I don't feel strongly about using max_pfn or
+> skipping e820 ranges above 4G and not adding them to memblock.
 
-The watchdog.yaml schema prescribes a node name of "timer" or "watchdog"
-rather than the abbreviation "wdt".
+I feel more strongly about fixing the bug than avoiding max_pfn. ;)
 
-Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
----
- arch/powerpc/boot/dts/asp834x-redboot.dts | 2 +-
- arch/powerpc/boot/dts/mpc8313erdb.dts     | 2 +-
- arch/powerpc/boot/dts/mpc8315erdb.dts     | 2 +-
- arch/powerpc/boot/dts/mpc832x_rdb.dts     | 2 +-
- arch/powerpc/boot/dts/mpc8349emitx.dts    | 2 +-
- arch/powerpc/boot/dts/mpc8349emitxgp.dts  | 2 +-
- arch/powerpc/boot/dts/mpc836x_rdk.dts     | 2 +-
- arch/powerpc/boot/dts/mpc8377_rdb.dts     | 2 +-
- arch/powerpc/boot/dts/mpc8377_wlan.dts    | 2 +-
- arch/powerpc/boot/dts/mpc8378_rdb.dts     | 2 +-
- arch/powerpc/boot/dts/mpc8379_rdb.dts     | 2 +-
- 11 files changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/arch/powerpc/boot/dts/asp834x-redboot.dts b/arch/powerpc/boot/dts/asp834x-redboot.dts
-index 52a84561c4f076ac0c4fc7af3db12f2fda06521c..33ddb17d18760df24ac8f068dce38ac60c353f32 100644
---- a/arch/powerpc/boot/dts/asp834x-redboot.dts
-+++ b/arch/powerpc/boot/dts/asp834x-redboot.dts
-@@ -72,7 +72,7 @@ soc8349@ff000000 {
- 		reg = <0xff000000 0x00000200>;
- 		bus-frequency = <0>;
- 
--		wdt@200 {
-+		watchdog@200 {
- 			device_type = "watchdog";
- 			compatible = "mpc83xx_wdt";
- 			reg = <0x200 0x100>;
-diff --git a/arch/powerpc/boot/dts/mpc8313erdb.dts b/arch/powerpc/boot/dts/mpc8313erdb.dts
-index a8315795b2c951c5914953be0b4a5162dd471505..09508b4c8c73095bf4699e383e7841100d6d7c8f 100644
---- a/arch/powerpc/boot/dts/mpc8313erdb.dts
-+++ b/arch/powerpc/boot/dts/mpc8313erdb.dts
-@@ -99,7 +99,7 @@ soc8313@e0000000 {
- 		reg = <0xe0000000 0x00000200>;
- 		bus-frequency = <0>;
- 
--		wdt@200 {
-+		watchdog@200 {
- 			device_type = "watchdog";
- 			compatible = "mpc83xx_wdt";
- 			reg = <0x200 0x100>;
-diff --git a/arch/powerpc/boot/dts/mpc8315erdb.dts b/arch/powerpc/boot/dts/mpc8315erdb.dts
-index e09b37d7489d01bfd16a26e9786868f630fa0262..56cf6d12c730de52d85623dc34c5987bee635f0f 100644
---- a/arch/powerpc/boot/dts/mpc8315erdb.dts
-+++ b/arch/powerpc/boot/dts/mpc8315erdb.dts
-@@ -99,7 +99,7 @@ immr@e0000000 {
- 		reg = <0xe0000000 0x00000200>;
- 		bus-frequency = <0>;
- 
--		wdt@200 {
-+		watchdog@200 {
- 			device_type = "watchdog";
- 			compatible = "mpc83xx_wdt";
- 			reg = <0x200 0x100>;
-diff --git a/arch/powerpc/boot/dts/mpc832x_rdb.dts b/arch/powerpc/boot/dts/mpc832x_rdb.dts
-index ecebc27a289871a896121fbaf6bc878422d25101..ba7caaf98fd58f9a2b56c0aa566673c70eff2013 100644
---- a/arch/powerpc/boot/dts/mpc832x_rdb.dts
-+++ b/arch/powerpc/boot/dts/mpc832x_rdb.dts
-@@ -52,7 +52,7 @@ soc8323@e0000000 {
- 		reg = <0xe0000000 0x00000200>;
- 		bus-frequency = <0>;
- 
--		wdt@200 {
-+		watchdog@200 {
- 			device_type = "watchdog";
- 			compatible = "mpc83xx_wdt";
- 			reg = <0x200 0x100>;
-diff --git a/arch/powerpc/boot/dts/mpc8349emitx.dts b/arch/powerpc/boot/dts/mpc8349emitx.dts
-index d4ebbb93de0b325a3bb0f5d17464f516a0e12133..13f17232ba83d50498f19e6758063cf905fbc326 100644
---- a/arch/powerpc/boot/dts/mpc8349emitx.dts
-+++ b/arch/powerpc/boot/dts/mpc8349emitx.dts
-@@ -53,7 +53,7 @@ soc8349@e0000000 {
- 		reg = <0xe0000000 0x00000200>;
- 		bus-frequency = <0>;                    // from bootloader
- 
--		wdt@200 {
-+		watchdog@200 {
- 			device_type = "watchdog";
- 			compatible = "mpc83xx_wdt";
- 			reg = <0x200 0x100>;
-diff --git a/arch/powerpc/boot/dts/mpc8349emitxgp.dts b/arch/powerpc/boot/dts/mpc8349emitxgp.dts
-index bcf68a0a7b557e49b48563f586b1fe8441ab3c6d..eae0afd5abbc39852b8e34b2247223168ab863ca 100644
---- a/arch/powerpc/boot/dts/mpc8349emitxgp.dts
-+++ b/arch/powerpc/boot/dts/mpc8349emitxgp.dts
-@@ -51,7 +51,7 @@ soc8349@e0000000 {
- 		reg = <0xe0000000 0x00000200>;
- 		bus-frequency = <0>;                    // from bootloader
- 
--		wdt@200 {
-+		watchdog@200 {
- 			device_type = "watchdog";
- 			compatible = "mpc83xx_wdt";
- 			reg = <0x200 0x100>;
-diff --git a/arch/powerpc/boot/dts/mpc836x_rdk.dts b/arch/powerpc/boot/dts/mpc836x_rdk.dts
-index a0cc1953484d70410f9592bdb84ffaf779ee08b4..4ff38e1a2185f85618b603e703e54c973cb97cc0 100644
---- a/arch/powerpc/boot/dts/mpc836x_rdk.dts
-+++ b/arch/powerpc/boot/dts/mpc836x_rdk.dts
-@@ -62,7 +62,7 @@ soc@e0000000 {
- 		/* filled by u-boot */
- 		bus-frequency = <0>;
- 
--		wdt@200 {
-+		watchdog@200 {
- 			compatible = "mpc83xx_wdt";
- 			reg = <0x200 0x100>;
- 		};
-diff --git a/arch/powerpc/boot/dts/mpc8377_rdb.dts b/arch/powerpc/boot/dts/mpc8377_rdb.dts
-index 7df452efa9579a649195d2266d42bbc4b6b8de1c..f137ccb8cfdedfed98a3cf6899f5508f069834dc 100644
---- a/arch/powerpc/boot/dts/mpc8377_rdb.dts
-+++ b/arch/powerpc/boot/dts/mpc8377_rdb.dts
-@@ -99,7 +99,7 @@ immr@e0000000 {
- 		reg = <0xe0000000 0x00000200>;
- 		bus-frequency = <0>;
- 
--		wdt@200 {
-+		watchdog@200 {
- 			device_type = "watchdog";
- 			compatible = "mpc83xx_wdt";
- 			reg = <0x200 0x100>;
-diff --git a/arch/powerpc/boot/dts/mpc8377_wlan.dts b/arch/powerpc/boot/dts/mpc8377_wlan.dts
-index d8e7d40aeae449e33ea1640a53ee4dfec7d746a4..ce254dd74dd06b19bc8e15e13f2fa9e959dd25f2 100644
---- a/arch/powerpc/boot/dts/mpc8377_wlan.dts
-+++ b/arch/powerpc/boot/dts/mpc8377_wlan.dts
-@@ -89,7 +89,7 @@ immr@e0000000 {
- 		reg = <0xe0000000 0x00000200>;
- 		bus-frequency = <0>;
- 
--		wdt@200 {
-+		watchdog@200 {
- 			device_type = "watchdog";
- 			compatible = "mpc83xx_wdt";
- 			reg = <0x200 0x100>;
-diff --git a/arch/powerpc/boot/dts/mpc8378_rdb.dts b/arch/powerpc/boot/dts/mpc8378_rdb.dts
-index bdcfe83a561e121ed82972406e0302d84d8d0ef6..19e5473d4161b5d6be6ab84ae0ba78875fc377f8 100644
---- a/arch/powerpc/boot/dts/mpc8378_rdb.dts
-+++ b/arch/powerpc/boot/dts/mpc8378_rdb.dts
-@@ -99,7 +99,7 @@ immr@e0000000 {
- 		reg = <0xe0000000 0x00000200>;
- 		bus-frequency = <0>;
- 
--		wdt@200 {
-+		watchdog@200 {
- 			device_type = "watchdog";
- 			compatible = "mpc83xx_wdt";
- 			reg = <0x200 0x100>;
-diff --git a/arch/powerpc/boot/dts/mpc8379_rdb.dts b/arch/powerpc/boot/dts/mpc8379_rdb.dts
-index a5f702304a353c61d6ab804765b817ec34a9582e..61519acca2280427d7237d8d9bbb8485f0c65369 100644
---- a/arch/powerpc/boot/dts/mpc8379_rdb.dts
-+++ b/arch/powerpc/boot/dts/mpc8379_rdb.dts
-@@ -97,7 +97,7 @@ immr@e0000000 {
- 		reg = <0xe0000000 0x00000200>;
- 		bus-frequency = <0>;
- 
--		wdt@200 {
-+		watchdog@200 {
- 			device_type = "watchdog";
- 			compatible = "mpc83xx_wdt";
- 			reg = <0x200 0x100>;
-
--- 
-2.48.0.rc1.219.gb6b6757d772
-
-
+Going back to v1 is fine with me.
