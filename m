@@ -1,107 +1,85 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBA815624B;
-	Fri, 18 Apr 2025 15:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB38521325D;
+	Fri, 18 Apr 2025 15:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744990751; cv=none; b=oOePUWeXToOnCVrYMVN6zj/hWq3gDzXvejYzXyD2755JZTKTPIMyJokfibgbzfOSAZ/AkAQXx++y8h1Ufldow9u9SeIYRDvojYn8De5cvlexbYGtjHHhgzxUChfnIj1hINcvBeOomAhnKTD5Qx4COQ7sB/dmY3J9EcDeZ8lj+Qg=
+	t=1744990848; cv=none; b=uMEwdxn5rq3reeKMo+rgKZp5/5I2z3yRcRg/nh0wnHWVTMBcFLFQZy8fZd/t+PYW8hvGrg9/pHyn30zVP20XpZHljRFTica9uIOb0vEFatWak4tspfl2KrLbep4gu3eB+ivwzQ6+1rLlqykEGp1dL3nhe/tXa95uvKri0utdsPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744990751; c=relaxed/simple;
-	bh=SXD+Sr5Bu1sa1IrehS27JU8VV+GaNuxKJ5Tcu8UwzI8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=beuo9lcnPPYDL8MPp+vSAg5rAtEquEOeLKEUS+kArqr7FwaNwIDT8Dxxz1Tl4r4wA3mSNgZmicLFLB2jLx64AWv0BRF4PrdfoAIlcuRvdYwGJpc1NCfq8MpnGSz+7ZJLKdeDaAv+WQxf/HAX4nblUO8yh2Jrum5DjhwzbKkzM8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VpNYh+gP; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744990848; c=relaxed/simple;
+	bh=rPXKeb649bya67Hj2amG1rEuNmF4UK0HVq6E3shvdXs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m2Ss+0qdxBeqsrOUxYEYtspEd0e5ZpgI6Os4bpHOQwn6rk101KiBSK/GTBTNebhx8kCuNd4tMrFaPpIiIYUKkW8BmV4QQ2Ufj8D9vx5BQeXByHtr3hhgNBJsZoHaYl4T+qlHr4hKx2Ou++aiC50SsOFaAwC1FseDKWIRGPK1PLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R66XEF5o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VpNYh+gP"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8B928431EB;
-	Fri, 18 Apr 2025 15:39:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744990741;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nDQXvSIoUGCjM9r7U7iSfQKR2tkJ7iP64qIbMviAOxQ=;
-	b=VpNYh+gPTnPo2FYviHN36KxuvmlaMiu0VeP16M2W+tluTM/JQVWasuQhyp+fFQ509yYz7o
-	hcQ7PgwVO0uUHCYwNfja875oXKK8RsaH3KWy7sO74ezq9u5IGtLWqx/VhhjO2u44GZg02Y
-	gmsKJQx9vSFQAV3skGcumId28e66dOcIAFw4QNRcjmXmiIZWwnut8CDIW9PhrIDJiwGlW3
-	VM82vVzYTeogvsjQ7ScKOFXIEjOp8tlmI9oWpung5BZI5m2vpSsuS/TxpwII42vT7ghfXn
-	XnZ07INMfFmo8NNYS7d75Nzkkp54GC8R1yz88uF+DfnpoWnvgeuGtywLNdC/pA==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R66XEF5o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC0C0C4CEE2;
+	Fri, 18 Apr 2025 15:40:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744990848;
+	bh=rPXKeb649bya67Hj2amG1rEuNmF4UK0HVq6E3shvdXs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=R66XEF5owpz2ItMA+GVvWVvtlwaHBtrPL9CgOuefaYEsKVD+G9RhMV4lhFQNzzLz7
+	 6qlvMzRZS/JvDjxKUD/BSXbOIjQVjSvnaarD3sJ+LAu8HbIYbp+9sCeke0XNepPll/
+	 aST73jlpbkU+KtK4dFXEvUK52VPE/4w4cz6Zl3+/Uksk0D6A2Hy90+da3R0cPl0Jou
+	 ivb4cE+uyV95rYMf5bXPSwiHFshGG59l3YMF28rdaJrdgaLff8dzJ/w5dGFeBEMsP+
+	 9svFfgAZK2JjH+0roQjh2VqwlNPBKxFsCMm5JEpY2/IGk361x8Pr8+f/afepwca8pn
+	 jtNJ9S8zswQZQ==
+Date: Fri, 18 Apr 2025 16:40:40 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+ Michael.Hennerich@analog.com, skhan@linuxfoundation.org,
+ linux-kernel-mentees@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [PATCH] iio: frequency: Use SLEEP bit instead of RESET to
+ disable output
+Message-ID: <20250418164040.0f103380@jic23-huawei>
+In-Reply-To: <20250417135434.568007-1-gshahrouzi@gmail.com>
+References: <20250417135434.568007-1-gshahrouzi@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 18 Apr 2025 17:39:00 +0200
-Message-Id: <D99VLB8X9Y6T.3RO76KOQDUKZY@bootlin.com>
-Subject: Re: [PATCH v6 02/12] mfd: Add max7360 support
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
- <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
- <20250409-mdb-max7360-support-v6-2-7a2535876e39@bootlin.com>
- <aAFFh8dvgQDJMyOh@smile.fi.intel.com>
-In-Reply-To: <aAFFh8dvgQDJMyOh@smile.fi.intel.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfedvheefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlr
- dhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu Apr 17, 2025 at 8:16 PM CEST, Andy Shevchenko wrote:
-> On Wed, Apr 09, 2025 at 04:55:49PM +0200, mathieu.dubois-briand@bootlin.c=
-om wrote:
->> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
->>=20
->> Add core driver to support MAX7360 i2c chip, multi function device
->> with keypad, GPIO, PWM, GPO and rotary encoder submodules.
->
-> ...
->
->> +static int max7360_probe(struct i2c_client *client)
->> +{
->> +	struct device *dev =3D &client->dev;
->> +	struct regmap *regmap;
->> +	int ret;
->> +
->> +	regmap =3D devm_regmap_init_i2c(client, &max7360_regmap_config);
->> +	if (IS_ERR(regmap))
->> +		return dev_err_probe(dev, PTR_ERR(regmap), "Failed to initialise regm=
-ap\n");
->
->> +	i2c_set_clientdata(client, regmap);
->
-> Is it used somehow? In children?
->
+On Thu, 17 Apr 2025 09:54:34 -0400
+Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
 
-I cannot see where it would be used in the code, and removing it has no
-effect. I will remove it.
+> According to the AD9832 datasheet (Table 10, D12 description), setting
+> the RESET bit forces the phase accumulator to zero, which corresponds to
+> a full-scale DC output, rather than disabling the output signal.
+> 
+> The correct way to disable the output and enter a low-power state is to
+> set the AD9832_SLEEP bit (Table 10, D13 description), which powers down
+> the internal DAC current sources and disables internal clocks.
+> 
+> Fixes: ea707584bac1 ("Staging: IIO: DDS: AD9832 / AD9835 driver")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> ---
+Seems reasonable but I'd like some more review of this before picking it up.
+So feel free to poke me if nothing happens in say 2 weeks from now.
 
-Thanks for your review.
-Mathieu
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+>  drivers/staging/iio/frequency/ad9832.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
+> index db42810c7664b..0872ff4ec4896 100644
+> --- a/drivers/staging/iio/frequency/ad9832.c
+> +++ b/drivers/staging/iio/frequency/ad9832.c
+> @@ -232,7 +232,7 @@ static ssize_t ad9832_write(struct device *dev, struct device_attribute *attr,
+>  			st->ctrl_src &= ~(AD9832_RESET | AD9832_SLEEP |
+>  					AD9832_CLR);
+>  		else
+> -			st->ctrl_src |= AD9832_RESET;
+> +			st->ctrl_src |= AD9832_SLEEP;
+>  
+>  		st->data = cpu_to_be16((AD9832_CMD_SLEEPRESCLR << CMD_SHIFT) |
+>  					st->ctrl_src);
 
