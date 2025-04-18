@@ -1,99 +1,118 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827661DED51;
-	Fri, 18 Apr 2025 16:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE391DED51;
+	Fri, 18 Apr 2025 16:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744995540; cv=none; b=KyQnKL3vDyiF5qv3fmkuccOxpKbq/GXg2Hnv1roNWEJIMh1D/VW+i21nH/yd9ZyMbf8PQtSaO9oUuqzyVxtadU8CjjFeAkJ6L2xoK0hlYD9+pPH535GpQ3IBZcqH8nVEunKQG2LGDdr8OJfU5AdWepdWfEfeo1I25g5ckxYiL5E=
+	t=1744995564; cv=none; b=HcOqOdqeEoYojaxckLwl0dh4CHkqBt+TwS6+JTR4qyg2aT0vbY7UoDqTYikP0YhygN/ImW4z8r/lnbhWtx5JiivXM19A1yZrY1C42uzMLuC+rKAqOKsUsKJ64lhTKcnK+LGMvYp9xc2Q80a+Z8s3P8YhfckU7Hsrn2sy8gaHjCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744995540; c=relaxed/simple;
-	bh=YuieveFQEJfb2rcfvgxQOFP+2Ifx7N0h6QGFaucg3y0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G/eAtoeMywB1m2dFspw8Myxl8t0OWOAYp62R0C4aIyGb3TyUhtEeRSDAZTmHxfJpZN8Eyi+mSFJ58Nc1lYBIvzPYeW57IJ4O1yIGqjpzZaF6meh4gB9ZEUCP/C226BPVZXLfLIxP4wRCf60mdusyJ1MjGW63juKLUzTDnt5iaJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=TQuw6YfR; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1744995564; c=relaxed/simple;
+	bh=RKNC8LuEadBrzXxwi5W2L+472XmL48vNI/jIDqdaCQA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IhVRK6E5YNXXB+5TR5BBANtVQfkRGEpns/jGdQ06fL8rMfoTHSz/aXUsgzTiID5jOOcXI65QlMZD+E4IAkr+C0aZNt+6DGxNiJbKA4Tbm3WtmRKQC/KZh6EmjUWk06lF6S2Z/B647f1P05TZQs3c8mpsqc9BHTR85BSnnjfiYoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=P1RFJC1C; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="TQuw6YfR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=/OgtTc412tjBo6QhgpjDnYCLoiKFP5p333DRr7idVO8=; b=TQuw6YfRDeyhwnlP
-	sTYM8Y34XBM+UbZGH5QCxUvG/Ahhls1WvC7iOb2PdzwPTNDe5G3xKj5LuWSdFspRfpkhzzaTaAKxw
-	3GadZFz2xQEA24M/+zknCmpvQoq0/FjpU0nTTFHAQEy1l5Ntm8iB5gJF8wXrHIpIjxumHiSqwGAg/
-	JMeCTEx8T/pFt5VNMhMMhrWUGfsJNgPd9u+kB30q0Tyovc2hY6nkiBQF/Un1MigDJywnPPyGL2mhX
-	074CX/637VcoUwCKR91AzhDobixDKHdcPggqIA61MPPYDs2vTkShpO0sJOzZLR1FiDn1y0SfqKYzn
-	Oq+pcyZFRI0aLDrQTQ==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1u5p3A-00CYD3-23;
-	Fri, 18 Apr 2025 16:58:48 +0000
-From: linux@treblig.org
-To: jgg@ziepe.ca,
-	leon@kernel.org
-Cc: linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] RDMA/cma: Remove unused rdma_res_to_id
-Date: Fri, 18 Apr 2025 17:58:48 +0100
-Message-ID: <20250418165848.241305-1-linux@treblig.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="P1RFJC1C"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id EF6C2102E6336;
+	Fri, 18 Apr 2025 18:59:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1744995560; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=aSYTOYrhvq3xoKuHguEK0iR48SX9BrWOGc8iTYg7DdE=;
+	b=P1RFJC1CKiZdbWyNLxS8wmpRGBCJfNwPaHTfS+UrXLAwjv7kF1KBCtu622uQPthc7zgDls
+	z5bZbf0j+s/sZVuPU42o8fULO+bCG4o+0HC6h9fFkZFL4qqgThZ8qN/jL8nOc5o/KMVKM7
+	IYfaMwIzwY6Kwl0f+5Z+Qb/cn8d/0FO9N2IEUEA6fQ7DRGLq3wILIFM/OaFh29cFsgeoWx
+	auwEz43jwimW9cYfZzWY/Hw7zr2CNIJ9mGc7sghjf1lks0XxUQWcrQwSCBzl0lo0KcU+e5
+	kmLBIqZtB8cIv9Uy4jVwpgXglL1In3PkNBUxhSr9ZWaf10IC8OvOIR+LQrNNvQ==
+Date: Fri, 18 Apr 2025 18:59:14 +0200
+From: Pavel Machek <pavel@denx.de>
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Shengjiu Wang <shengjiu.wang@nxp.com>,
+	Mark Brown <broonie@kernel.org>, shengjiu.wang@gmail.com,
+	Xiubo.Lee@gmail.com, lgirdwood@gmail.com, perex@perex.cz,
+	tiwai@suse.com, linux-sound@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH AUTOSEL 6.1 6/9] ASoC: fsl_audmix: register card device
+ depends on 'dais' property
+Message-ID: <aAKE4kb6gImSpK5L@duo.ucw.cz>
+References: <20250331145642.1706037-1-sashal@kernel.org>
+ <20250331145642.1706037-6-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/Tn6/BGpnTOBLo3b"
+Content-Disposition: inline
+In-Reply-To: <20250331145642.1706037-6-sashal@kernel.org>
+X-Last-TLS-Session-Version: TLSv1.3
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-The last use of rdma_res_to_id() was removed in 2020 by
-commi t211cd9459fda ("RDMA: Add dedicated CM_ID resource tracker function")
+--/Tn6/BGpnTOBLo3b
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Remove it.
+Hi!
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- drivers/infiniband/core/cma.c | 13 -------------
- include/rdma/rdma_cm.h        |  1 -
- 2 files changed, 14 deletions(-)
+> [ Upstream commit 294a60e5e9830045c161181286d44ce669f88833 ]
+>=20
+> In order to make the audmix device linked by audio graph card, make
+> 'dais' property to be optional.
+>=20
+> If 'dais' property exists, then register the imx-audmix card driver.
+> otherwise, it should be linked by audio graph card.
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index ab31eefa916b..e6cc289fd859 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -146,19 +146,6 @@ struct iw_cm_id *rdma_iw_cm_id(struct rdma_cm_id *id)
- }
- EXPORT_SYMBOL(rdma_iw_cm_id);
- 
--/**
-- * rdma_res_to_id() - return the rdma_cm_id pointer for this restrack.
-- * @res: rdma resource tracking entry pointer
-- */
--struct rdma_cm_id *rdma_res_to_id(struct rdma_restrack_entry *res)
--{
--	struct rdma_id_private *id_priv =
--		container_of(res, struct rdma_id_private, res);
--
--	return &id_priv->id;
--}
--EXPORT_SYMBOL(rdma_res_to_id);
--
- static int cma_add_one(struct ib_device *device);
- static void cma_remove_one(struct ib_device *device, void *client_data);
- 
-diff --git a/include/rdma/rdma_cm.h b/include/rdma/rdma_cm.h
-index 8a8ab2f793ab..d1593ad47e28 100644
---- a/include/rdma/rdma_cm.h
-+++ b/include/rdma/rdma_cm.h
-@@ -388,6 +388,5 @@ void rdma_read_gids(struct rdma_cm_id *cm_id, union ib_gid *sgid,
- 		    union ib_gid *dgid);
- 
- struct iw_cm_id *rdma_iw_cm_id(struct rdma_cm_id *cm_id);
--struct rdma_cm_id *rdma_res_to_id(struct rdma_restrack_entry *res);
- 
- #endif /* RDMA_CM_H */
--- 
-2.49.0
+This is part of series, AFAICT; should we have it in -stable?
 
+Best regards,
+									Pavel
+
+> +++ b/sound/soc/fsl/fsl_audmix.c
+> @@ -492,11 +492,17 @@ static int fsl_audmix_probe(struct platform_device =
+*pdev)
+>  		goto err_disable_pm;
+>  	}
+> =20
+> -	priv->pdev =3D platform_device_register_data(dev, "imx-audmix", 0, NULL=
+, 0);
+> -	if (IS_ERR(priv->pdev)) {
+> -		ret =3D PTR_ERR(priv->pdev);
+> -		dev_err(dev, "failed to register platform: %d\n", ret);
+> -		goto err_disable_pm;
+> +	/*
+> +	 * If dais property exist, then register the imx-audmix card driver.
+> +	 * otherwise, it should be linked by audio graph card.
+> +	 */
+> +	if (of_find_property(pdev->dev.of_node, "dais", NULL)) {
+> +		priv->pdev =3D platform_device_register_data(dev, "imx-audmix", 0, NUL=
+L, 0);
+> +		if (IS_ERR(priv->pdev)) {
+> +			ret =3D PTR_ERR(priv->pdev);
+> +			dev_err(dev, "failed to register platform: %d\n", ret);
+> +			goto err_disable_pm;
+> +		}
+>  	}
+> =20
+>  	return 0;
+
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--/Tn6/BGpnTOBLo3b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaAKE4gAKCRAw5/Bqldv6
+8hsNAJ9H7kuYWcCsw1LeV5TOvp6rZ2J1rACghLqa+XYVc6jaUuETLw1RElPql14=
+=wIoA
+-----END PGP SIGNATURE-----
+
+--/Tn6/BGpnTOBLo3b--
