@@ -1,116 +1,108 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0311CF8B;
-	Fri, 18 Apr 2025 04:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98CE51CF8B;
+	Fri, 18 Apr 2025 04:44:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744951181; cv=none; b=ql6QWZBhTM7sDKcHje6LMIjbpSABUhEGIYfRHPPT2JUWAJbxyZ6Pild0VcsANKW0/VePox8O74WEXEPulNF7t0xAQU8QuDU5gxrMsfquqZRikcO/KYQrdE18UjmZXRDdH/sbb1/rnEVXPNQ/Dn1iepaluL4iNjkpSHed5opF0Jw=
+	t=1744951454; cv=none; b=rIn/2AqcJTMimkQ0r69M5MROSb/Jnc6RNf5nxIJdPL7B3w6iEzSZpLsNYJy97F/jE807JFjrjHZJBcr84HFQczKXkGk08MeeJ5qochtz+DWPwWHG4WPDOWyF6F9xR3yGZsGvH/EE5AUkx4N5Dzpt/7LO5UxvShpcck73hAIP1Ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744951181; c=relaxed/simple;
-	bh=FAoXh9ez3iZ85lXmddTCFxArAZx+ReJmPUU023Q3qTQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NwsiDtW5rDLhQiNYHB0K9RZ+goa7Nppt7pNsD4KzjKMh2L40khcPZI72PXxSviqtv5J3B2iltPIfECPVaDFrcpqYz4k8JpchBjUABAUFdH6BoHICCLAUhLEiOsReK8KbpO4vmKaKGpSSci/sGWG7sWAxx0aYaWv9vMrISKc9HCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=XCyPslxy; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744951454; c=relaxed/simple;
+	bh=+9Spme8zVgSLflYPzGjB2Vr5F5j5v2nc0TY+ZZ+UmOM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DSCWOFuDetrmUtSl6RnVdR+qT/f+PUR0I/1hM/Y/fi80gxCSC7PB7YIo8EKoANiWi2fYzeBEVQn5ps1FDB5AC3BHv/ADRcaKO1APuAI7g06eO2KGcNWDiElbRXWBdv03UK6iQpqC4S/ocg0DZIVLNsEuiogbHAjJcTIcpWOQ8Po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TaLQgiKI; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XCyPslxy"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53I2knvU008161;
-	Fri, 18 Apr 2025 04:39:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	6DD5+d6JuFdfyDvwuu37UUhvIuod+Xl8zRmRg7WbWEg=; b=XCyPslxyeHbctEw9
-	OUErl358aJ9di+R/u9h1yDFDUXtO5CHh5jLe8esyHJqNncQIIp9HdQsgvUKKtwkA
-	GJ7uJALTyNOppMKBdu7CmrAzaqcmJls7fDYQnss5IimEJOMXeqWN8Iw5Uii333ZX
-	F3H+fUdSyJa9dB3mMGkURSgxpXrzxues3GfhydNox+q6ULchnPexg3uEMcCzfSJV
-	NjqUsk7yq45/NtwZW2N33/4v12TQpHKvNxHkTLUWdUgeD2xymNnlmdHg2kxsaqcy
-	JjQcb6928vZCg5dBThOlo6pteN/x2GVAXMwiQpHgcDKRGStC5y1QjDC55qldHAJT
-	ySqelg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygxk8uka-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 18 Apr 2025 04:39:01 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53I4d1TS023281
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 18 Apr 2025 04:39:01 GMT
-Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 17 Apr
- 2025 21:38:47 -0700
-Message-ID: <9541b625-c2da-4e32-bc72-e8593a4e02de@quicinc.com>
-Date: Fri, 18 Apr 2025 10:08:44 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TaLQgiKI"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-223f4c06e9fso15419225ad.1;
+        Thu, 17 Apr 2025 21:44:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744951452; x=1745556252; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a3+m5i60Hgf5/hW91D5ggRX+ZoVsLTSbAzvkRpVKVQQ=;
+        b=TaLQgiKIpGnfbQ+spOJ7gMRrGFkrdizvw+Z7hcirMIyj98OGu7ZWbtMZFjmU7QDfHj
+         p3okWL6cdK8HIcUid6lp08raXDlHFslDzo7YVLbEeTyBpPGVM22GZhw03B0zMkdcNqEE
+         5Gilb/h65UvIwilTUNVj/yLMjkIR3H7C0E2vI2iWB8ZCYn+XjhS8JajS5pENpILVI8sC
+         gAU3al6A3LdrAVK1cTOr0y5su9Si96eDF1mBP+PjbHIfKFEqMjw9o8xmPvVFBEYvu0Cy
+         Is0q+uQ6fxs2EqKT8d+KpZWpw8NboAZBDRutArCgqsuS6OGIOiqBoeu2R0iZf5A8MlzM
+         uUCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744951452; x=1745556252;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a3+m5i60Hgf5/hW91D5ggRX+ZoVsLTSbAzvkRpVKVQQ=;
+        b=i8SehppKbptVWetoKyYSmDAYHbC4h6ogGWbOBxS3lzRwrBFi0+NVeXfEvH38iwIJZ/
+         0qOQgWw1udvKs0oFZpb4MMfySq9nIvGZHHcY8c5X1C65KnoLea/D7JmO07rCERfobEE1
+         qOZ4eB8yc4g/XrEyOCwRBSaWTa/AR+l/J1qRWEeIrun8C5kb6tu9+NSdS/qWLjdBItHR
+         vZkbz6FCpJHN6qGWzYkyPF7bthtU7eWXRmC1gxBOTSz972AVQOm55bPBDDLsEIpLt9p7
+         /9pNUANAy7oXiUCBVS9Vsc7L8CVB0hPYkpuZduerArUnnpbvzeCW0J7RovgzeXzvCOiU
+         8KLw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/4oA1mRSMqqZTTxOKt95az3HICLh+moZKHPMwRY1SSEuxLgbJSou7G+A4DLdHXWvysrmjPHqSeMnOjw==@vger.kernel.org, AJvYcCWpVUDoOMPZsyoKTl5tCzx1OMsorF13SEBjTFPb+zU4+uhMXU/xcZgipO1B5ZyWoyt0PRnN9fQHLnEw@vger.kernel.org, AJvYcCXRzE6aXJl+fO144b9UJJctUnrDKVJNxOxZyW7hpz8E0OufnERSwX8vxnsxnrxzZCtgQTqLVSBWqSiRmraA@vger.kernel.org
+X-Gm-Message-State: AOJu0YxA8TI6EyiNnZCpTwNX1LNjBMNZKwAbTgvZYXLR96Iy/L5qcm4x
+	7KXY/qwXQtjeNyI2eBDpRn4d892Lxc+/k/3ziUwnShxwKPF6+apJ
+X-Gm-Gg: ASbGnctA4Ri4pO3hCXQDDFLtQhCdH5qFdTzc/XZbFEzWWTBA3KKwAQO6bwXb/h3aX4/
+	A46pcHfl9Va2gak9b/ayqDiBIhguS3U5dHd20gBWGG/VgTha9eM2ejXBAXEM6GPcZhXz8NKXiXr
+	hrko1IBpM+eb4O8lZaG2ATthneKBL/HlcZHy4Sw9qXPLvpxQhhLjOBgle0rLyZBiZUtBG8oRsJG
+	0B2xYw+GlmN28DHCgTiNsccV1M52MUWT1piXnlKeYOwX75iaSkfYyYoVq+sLTFY9Y7eJvVc39Tl
+	RBJ4iNkAPpAl9e2dvkdZRKgdzv9t+bxqV8FnC9aFYU0yh1Hh8IYyABTQ72ekSpbz
+X-Google-Smtp-Source: AGHT+IGG27GNTEVXKZjMc24CwXKT0odiOZf7B9a79Q3vI0Ulw0HPJWYOFLJbAQV9/TFvD7E/bFW49A==
+X-Received: by 2002:a17:902:d04b:b0:21f:40de:ae4e with SMTP id d9443c01a7336-22c53e3b254mr14679875ad.9.1744951451647;
+        Thu, 17 Apr 2025 21:44:11 -0700 (PDT)
+Received: from localhost.localdomain ([123.16.133.44])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fe2411sm8652185ad.256.2025.04.17.21.44.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 21:44:11 -0700 (PDT)
+From: Nam Tran <trannamatk@gmail.com>
+To: krzk+dt@kernel.org
+Cc: pavel@kernel.org,
+	lee@kernel.org,
+	robh@kernel.org,
+	conor+dt@kernel.org,
+	corbet@lwn.net,
+	devicetree@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/5] leds: add new LED driver for TI LP5812
+Date: Fri, 18 Apr 2025 11:43:45 +0700
+Message-Id: <20250418044345.2491-1-trannamatk@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <af6893c1-e103-4744-bb6c-630371d56783@kernel.org>
+References: <af6893c1-e103-4744-bb6c-630371d56783@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: serial: cdsn,uart: Add optional reset
- property
-To: Manikanta Guntupalli <manikanta.guntupalli@amd.com>, <git@amd.com>,
-        <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <michal.simek@amd.com>, <p.zabel@pengutronix.de>,
-        <laurent.pinchart@ideasonboard.com>, <radhey.shyam.pandey@amd.com>,
-        <parth.gajjar@amd.com>, <u.kleine-koenig@pengutronix.de>,
-        <tglx@linutronix.de>, <julien.malik@unseenlabs.fr>,
-        <ruanjinjie@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC: <srinivas.goud@amd.com>, <shubhrajyoti.datta@amd.com>,
-        <manion05gk@gmail.com>
-References: <20240419120531.3775919-1-manikanta.guntupalli@amd.com>
- <20240419120531.3775919-2-manikanta.guntupalli@amd.com>
-Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <20240419120531.3775919-2-manikanta.guntupalli@amd.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=WecMa1hX c=1 sm=1 tr=0 ts=6801d765 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=zd2uoN0lAAAA:8 a=jT1n35VJyowIQWFnuysA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: i-I6zZAHVni2nzEZZRg7QJzT_8NUqaxB
-X-Proofpoint-ORIG-GUID: i-I6zZAHVni2nzEZZRg7QJzT_8NUqaxB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-18_01,2025-04-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- adultscore=0 clxscore=1011 lowpriorityscore=0 phishscore=0 mlxscore=0
- impostorscore=0 mlxlogscore=999 spamscore=0 malwarescore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504180032
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On Mon, 14 Apr 2025, Krzysztof Kozlowski wrote:
 
+>On 14/04/2025 16:57, Nam Tran wrote:
+>> This patch series adds support for the TI/National Semiconductor LP5812
+>> 4x3 matrix RGB LED driver. The driver supports features such as autonomous
+>> animation and time-cross-multiplexing (TCM) for dynamic LED effects.
+>> 
+>> Signed-off-by: Nam Tran <trannamatk@gmail.com>
+>> ---
+>> Changes in v5:
+>> - Rebase on v6.15-rc2
+>> - Removed unused functions (lp5812_dump_regs, lp5812_update_bit).
+>> - Address Krzysztof's review comments
+>Which ones? What changed?
 
-On 4/19/2024 5:35 PM, Manikanta Guntupalli wrote:
-> Add optional reset device-tree property to the uartps controller.
-what exactly is uartps ? i Couldn't get from google too.
-> 
-> Signed-off-by: Manikanta Guntupalli <manikanta.guntupalli@amd.com>
-> ---
->   Documentation/devicetree/bindings/serial/cdns,uart.yaml | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/cdns,uart.yaml b/Documentation/devicetree/bindings/serial/cdns,uart.yaml
-> index 2129247d7c81..d7f047b0bf24 100644
-> --- a/Documentation/devicetree/bindings/serial/cdns,uart.yaml
-> +++ b/Documentation/devicetree/bindings/serial/cdns,uart.yaml
-> @@ -46,6 +46,9 @@ properties:
->     power-domains:
->       maxItems: 1
->   
-> +  resets:
-> +    maxItems: 1
-> +
->   required:
->     - compatible
->     - reg
+Apologies for the delayed reply.
 
+I’ve updated the ABI document based on your previous comments.
+Regarding the binding, I’ve removed redundant descriptions and fixed the indentation as you pointed out.
+
+I’ll make sure to describe the changes more clearly in the next patch submission.
+
+Best regards,
+Nam Tran
