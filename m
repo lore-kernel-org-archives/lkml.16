@@ -1,139 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434591EE7BE;
-	Fri, 18 Apr 2025 09:47:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC47520897F
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 09:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744969661; cv=none; b=BTonbPF98QFwwlfpvMCtE7FGJwRh8Yf3BbmWrAZM5aIkezhEEXnb84HQQ5fRIsKjiFecpqh+tU21MFsnSCRSDKpukT5SA4A/NwlDXikXY7uTCeV3u1lp0FLSbHTUIZp3sWp8LfzVVqRHwHc4usijR64b7aBG4X/VGglShqF+a9o=
+	t=1744969684; cv=none; b=KVb+AkjWuP6ZuvRAmpu1w2ld7/9UbyDO/M9CPzExXBSXA/SV2yj2ylpHUXkOEQwyZbuIgSEY84QLbwT4U6LLz7QTGRjEZhLCxOv+tEeDRXmB7+l/cXjb67E0ytSZvZkQ5hhSDv0gpBAJDg/XeDRRxbAURxqrXgMSe/Nn1UkHg2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744969661; c=relaxed/simple;
-	bh=8jwykI53JCNbaSypwuG+RWUMk7PeGrgRcv18YEGTuFY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a/JCenbUYEkub8XdJKGoHgms66Tg4EuayP2kpZ4eUUSqmNeULcep/Ry/6coc2DCdSCJTkL6zMxI94fmf28SKnK3LAWDj5e08O1Upf3IJvT4rZiNY9/nYwYQmWk+JsEbnq6V+auk0amIg8T7cREJffuHZUU74M92sJSjcBOVXR3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XploiAhZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744969684; c=relaxed/simple;
+	bh=5C6U+RztPDFt82u2B4zH+4eGwNPp3uGP6xG8Y9gZWv0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QHBZbOOHXuDlzNdINmD7wishRV8j7eYocb63tdJ+UgJEt+lQyYojfDNdfb/p8mVy55rphNuEp9Nm7ndZTcwwroIBXT3TY7YgYx2/5ecJLXSXqfhqMhTm1iF6SwngD2UsW7O9Udt7JBCWw0jX28tADy9dA0czZCVlI8oWI9wtr8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HDdZnexN; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XploiAhZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07008C4CEE2;
-	Fri, 18 Apr 2025 09:47:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744969660;
-	bh=8jwykI53JCNbaSypwuG+RWUMk7PeGrgRcv18YEGTuFY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XploiAhZxHhhESDDOzs6niwDsMekhlSF0KLhLxU2wLsTxoVAeV58dtipiIl03XwBi
-	 pJwtAevjn8/bzF+azjXZhGxhvKuzNr1Ty1KpSfbgpIxK2ze8HwsrUHTltTbuIjiW6a
-	 TF0YAZnAiL+OWrOZv9wJvP5WDFT0Hj4hdcEbgQ9mGy2gMW0ige/oE/b/EoZLL562Mh
-	 Bn84R7NUJ95LnA3tdArAj/agRtmkw/0m3EaIsSF4o8Y1OEAglxES+nLywxxXi54cME
-	 YZQJfSaaTe3kAqnaVi0qUqngAEReZcwyFYxyBDM+Tg9k82vuV2E4pHMh9bUl1XCUz2
-	 4qz8CTkM+tw3g==
-Date: Fri, 18 Apr 2025 10:47:35 +0100
-From: Simon Horman <horms@kernel.org>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>, upstream@airoha.com,
-	Christian Marangi <ansuelsmth@gmail.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HDdZnexN"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e8f05acc13so20216446d6.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 02:48:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744969682; x=1745574482; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=swkuPDeDTp/AUquO1zBRQo9AsK4c6bS1Ez65fGcDod0=;
+        b=HDdZnexNLTNgsY9/ucD55jdM4fH+Xzo2Y7k0PWprdFPoIp7gFkoO5Aa5OShaE0uPXD
+         kcG4Da+nzeLqk9XAS08sZfC2SctEXLxgHrh/dtoo/lsUtFDaRbWRp8uddk3N3m2Z0zrZ
+         SxZ7wOGR11Kod37I49FUZjiIugkW6cHDtYM5MzPRhWnu262k32kF0x7d2pT6t4+gJCf9
+         71y2W0PkJrfd8Co42GPyghHgu+9gy+aWDwf9s0lxCMfFazB63eJhy+bEziqSRMbhB23V
+         o6EbaSfGtjg26VZZGoQ8V3KRioKF4ebXztZ2T7ghqVmq2yeqkOL2ONnHE6kjLgXn+9LC
+         0P4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744969682; x=1745574482;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=swkuPDeDTp/AUquO1zBRQo9AsK4c6bS1Ez65fGcDod0=;
+        b=TUb/fbeGFLHl4V7QGQhRRnc6XSpd1s4aJ+t1F5Hprtw2FQGOOAdd0iWnlLiQ7yvr4r
+         v1XpYg9J7G3ZI5/mvN1ygBk3zthBe8To18LmhwjDdfukRUxZC6sGCuFW2JHhnbp5NT4G
+         EwgE8L5lY0D4qT+YlBtuF9jQMQfByL+377uUOYIUP7C4/lzJIb24+rt5s40bfMbkvHfp
+         RNUHp7Ku+T8M3KLuOEWNqbnA+7MuEV6pDbN7gSpl6rEDmHwiNx0oaFtcvOk0xoAXJUc+
+         NRnXTWr+/NXPdBGcQDAYuu6zxcOdXB/tFSgMzw2wLiROi8zGgyyZercWRZYhQF2m8lYI
+         KyQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBbg6uGCLfvdWCJ5a4rq9raLkL//b94erPyCypvxdQuZ22IylcOOkV8FQEpm93zTgNDgLLpbFUpQbQNXM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCoUK3pRmLyqEC7Pzb3peMp9X2W2yuoNmpeoFo/n3koTGxvnBv
+	qk4WeHphwlAVAerjGQgeVlNTQkf/fNHoTzeE3HeZMcKRY6N+e43M
+X-Gm-Gg: ASbGnctPElGtyVeaI/pGkdrln8/P2N+QaPiV/R3bPeJYJzVWUytqXH7RxMu9Ck55hE7
+	qFj+VTQqsTKb8dWVDWTE+VTwuUoBrgrp21gN6KyocgBsX/kbF9RpxYNDyu9diy8B/tP8Qcd3Gw2
+	r7mhLeItp2BVzvRY5ETYqTcM/XB9lcM+p570SQGmNiuYGwhRrb8bRmfLl7oSOv+GZ72WWrQik4p
+	3E1oc/BsBUBtQMSXIZr/aW2bBJMZFO/atp0a4vbfs5ySee9qewGq1BXoWdIrwgwI1rhA5wlRX8J
+	6ULMDQzeaI1k7MyTdYI8fd65VJKoXH+b
+X-Google-Smtp-Source: AGHT+IHh4v9vR4HTkV+erKOLAWBX2lYlyK5ifIWO6l/UrrkhGpbwgh7Z0sYqkw+HngcmJDSS1B7b0Q==
+X-Received: by 2002:ad4:5f8e:0:b0:6e8:fa38:46aa with SMTP id 6a1803df08f44-6f2c46527b9mr36143106d6.33.1744969681622;
+        Fri, 18 Apr 2025 02:48:01 -0700 (PDT)
+Received: from ubuntu ([105.112.229.239])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2c21cccsm8808806d6.106.2025.04.18.02.48.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 02:48:01 -0700 (PDT)
+From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+To: julia.lawall@inria.fr,
+	gregkh@linuxfoundation.org
+Cc: linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: Re: [net-next PATCH v3 03/11] net: pcs: Add subsystem
-Message-ID: <20250418094735.GA2676982@horms.kernel.org>
-References: <20250415193323.2794214-1-sean.anderson@linux.dev>
- <20250415193323.2794214-4-sean.anderson@linux.dev>
- <20250417091936.GB2430521@horms.kernel.org>
- <0bd8a9c0-4824-4c1f-bf32-ac1e57e2bea0@linux.dev>
+	david.laight.linux@gmail.com,
+	dan.carpenter@linaro.org,
+	andy@kernel.org,
+	Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+Subject: [PATCH v11 0/2] staging: rtl8723bs: Improve readability and clarity of sequence number wrapping
+Date: Fri, 18 Apr 2025 09:47:53 +0000
+Message-Id: <cover.1744966511.git.abrahamadekunle50@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0bd8a9c0-4824-4c1f-bf32-ac1e57e2bea0@linux.dev>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 17, 2025 at 11:05:24AM -0400, Sean Anderson wrote:
-> On 4/17/25 05:19, Simon Horman wrote:
-> > On Tue, Apr 15, 2025 at 03:33:15PM -0400, Sean Anderson wrote:
-> >> This adds support for getting PCS devices from the device tree. PCS
-> >> drivers must first register with phylink_register_pcs. After that, MAC
-> >> drivers may look up their PCS using phylink_get_pcs.
-> >> 
-> >> We wrap registered PCSs in another PCS. This wrapper PCS is refcounted
-> >> and can outlive the wrapped PCS (such as if the wrapped PCS's driver is
-> >> unbound). The wrapper forwards all PCS callbacks to the wrapped PCS,
-> >> first checking to make sure the wrapped PCS still exists. This design
-> >> was inspired by Bartosz Golaszewski's talk at LPC [1].
-> >> 
-> >> pcs_get_by_fwnode_compat is a bit hairy, but it's necessary for
-> >> compatibility with existing drivers, which often attach to (devicetree)
-> >> nodes directly. We use the devicetree changeset system instead of
-> >> adding a (secondary) software node because mdio_bus_match calls
-> >> of_driver_match_device to match devices, and that function only works on
-> >> devicetree nodes.
-> >> 
-> >> [1] https://lpc.events/event/17/contributions/1627/
-> >> 
-> >> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-> > 
-> > Hi Sean,
-> > 
-> > I noticed a few build problems after sending my previous email.
-> > 
-> > I was able to exercise them using variants of the following to
-> > generate small configs. I include this here in case it is useful to you.
-> > 
-> > make tinyconfig
-> > 
-> > cat >> .config << __EOF__
-> > CONFIG_MODULES=y
-> > CONFIG_NET=y
-> > CONFIG_NETDEVICES=y
-> > CONFIG_PCS=y
-> > CONFIG_PHYLIB=m
-> > __EOF__
-> > 
-> > cat >> .config << __EOF__
-> > CONFIG_OF=y
-> > CONFIG_OF_UNITTEST=y
-> > CONFIG_OF_DYNAMIC=y
-> > __EOF__
-> > 
-> > yes "" | make oldconfig
-> > 
-> > ...
-> > 
-> >> diff --git a/drivers/net/pcs/core.c b/drivers/net/pcs/core.c
-> > 
-> > ...
-> 
-> Thanks, I was able to reproduce/fix these issues.
-> 
-> How did you find these? By inspection?
-> 
-> I often end up missing build issues like this because I mostly
-> test with everything enabled.
+The patchset adds spaces around binary operators, breaks long lines to enhance readability
+and provides clarity on sequence number wrapping by using a modulo operation % 4096u, in
+place of the bitwise AND(&) operation & 0xfff.
+The patches are required to be applied in sequence.
 
-Hi Sean,
+Changes in v10:
+- Sent v11 to mailing list after v10 was deleted due to versioning mistake.
 
-The issue regarding fwnode_mdio_find_device and PHYLIB as a module
-came up with an automated allmodconfig W=1 build.
+Changes in v9:
+* PATCH 1:
+	- Added more converted cases found in the driver to the patch.
+- The Coccinelle semantic patch used to find additional cases in the driver is:
 
-I came across the other issue, regarding CONFIG_OF_DYNAMIC, while
-investigating the PHYLIB issue.  Basically running allmodconfig takes ages
-on my development machine.  So I wanted to try coming up with a small
-config, based on tinyconfig, that would reproduce the PHYLIB issue. And on
-the way there - as you can see artifacts of in the configuration commands
-above - I hit the CONFIG_OF_DYNAMIC issue.
+@@
+expression e;
 
-My take on this is that it's good to test allmodconfig, although the build
-can take ages. Especially if there is any risk of link failures. And, as
-for other cases, perhaps there are standard ones that are worth exercising,
-like with/without IPv6 support (probably not relevant to this patchset).
-But otherwise I think we get down to waiting for the bots (or someone on
-the ML) to happen to come across a broken (random?) configuration.
+@@
+* e & 0xfff
 
-...
+- The bloat-o-meter tool was used to ensure the sizes of the binary
+files before and after the change were the same.
+
+- $ make drivers/staging/rtl8723bs/core/rtw_xmit.o
+  $ ./scripts/bloat-o-meter rtw_xmit_before.o rtw_xmit_after.o
+
+This showed identical 'Before' and 'After' size values with a 'chg' of +0.00%.
+Changes in v8:
+* PATCH 1:
+	- Added Reviewed-by tag to commit message.
+* PATCH 2:
+	- Added Reviewed-by tag to commit message.
+Changes in v7:
+* PATCH 1:
+	- Added blank line to enhance readability
+* PATCH 2:
+	- Changed `power of 2` to `power-of-2` in commit message.
+Changes in v6:
+	- Modified cover letter BLURB to reference newly added line breaks.
+* PATCH 1:
+	- Added line breaks to long lines to improve readability.
+	- Changed commit message to include the information about the broken
+	  lines added to the patch.
+	- Changed subject line title to also include the newly added line breaks.
+* PATCH 2:
+	- Changed instances of `& 0xfff` to `% 4096u` which were now in the broken lines
+	  after the broken lines have been done in PATCH 1.
+Changes in v5:
+	- Converted the patch with the subject "Use % 4096 instead of & 0xfff"
+	  patch to a patchset.
+	- Added a patch to add spaces around binary operator.
+Changes in v4:
+	- Corrected patch to use '%' instead of '&'.
+	- To ensure this change does not affect the functional
+	behaviour, I compared the generated object files before and
+	after the change using the `cmp` which compares the two
+	object files byte by byte as shown below:
+
+	$ make drivers/staging/rtl8723bs/core/rtw_xmit.o
+	$ cmp rtw_xmit_before.o rtw_xmit_after.o
+
+	No differences were found in the output, confirming that the
+	change does not alter the compiled output.
+Changes in v3:
+	- Added more description to the commit message.
+	- Removed blank line in the tag block.
+	- Added more patch recipients.
+Changes in v2:
+	- Changed the commit message t a more descriptive message which
+	makes it clear why the patch does the change.
+	- changed the subject title to include `4096u` to show that an
+	unsigned module is used.
+Changes in v1:
+	- Added more patch recipients.
+
+Abraham Samuel Adekunle (2):
+  staging: rtl8723bs: Add spaces and line breaks to improve readability
+  staging: rtl8723bs: Use % 4096 instead of & 0xfff
+
+ drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 2 +-
+ drivers/staging/rtl8723bs/core/rtw_recv.c     | 6 +++---
+ drivers/staging/rtl8723bs/core/rtw_xmit.c     | 9 ++++++---
+ 3 files changed, 10 insertions(+), 7 deletions(-)
+
+-- 
+2.34.1
+
