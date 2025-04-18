@@ -1,110 +1,136 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F552690C8
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 06:43:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0604E268C5D;
+	Fri, 18 Apr 2025 06:44:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744958614; cv=none; b=bBYQug95mbMigEK4TpTSAlCo0nIU2s6XeJKxsbRmdsA5FoUGXKr2kuoQlU9jGLdap1xZYQJYxIUYPR2YrPUVhDBluiLp3ZS6bipllosC/Vt1hO+Nlcagioq7qxTiscCJrA1VRcqd54B66dqNErEBVE+LElayEEjlBLx99Pcaw0Q=
+	t=1744958670; cv=none; b=X5r9hlpK4m8+8aXX8QOML0PL01/gSnAvXIzmp67/+ilMNaI+Au9pI/+pTrEAg+GaynANMYnE6cjLiO5IAWpvue3NNcb+pLtHZP9IM0/cD1A2khy0aRdMvDsoFbwqfDwmR8rL84KWqQ8D1xQ9KvJm+9jFPsWYyTHqGOSx4NI3ufs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744958614; c=relaxed/simple;
-	bh=l12G9/KABGBWRLrSnjVdfQ0Z2bSs/KbpUquxhRC9aSo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=udtLxkelFdvbO9vha/f/hJ3IHDJiaHXJZ0TJ0rXL0AeoCWPxxuXZavgyNnM0AwndA6/oqoude7WyhSLdC08emfbnIMdN52dieYTN6s9WTogUXMmBmzYvoE9NVbbPkcUHZUOM/8gvTYLChI6cOjgVpz3zCEJCjwNI3AbdLlX7f3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YHkU5/fh; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744958670; c=relaxed/simple;
+	bh=xFjwdh5zXJsl4jdplxYeKbRKXf0sjx7mjLgO9ma1Dbc=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=NFgoHCeMaHpLiPB3dTFbcPAa5oBWEkwzH09IZ8QpoPZrYJb5EWZJ0Ho+cjS+uhLWWpzZKAWzm2mvipW/f6Pc1i3rr14klBOEXr5bNGX1QTxb6rTEfh1VGab3eF4o6etTpYhoLwh9edcPxj0Pl/JLfH0g9S1e8oLEQQhueBLH36c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0IfBuvu4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mwp4jAzo; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YHkU5/fh"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43d04ea9d9aso7359555e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 23:43:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744958611; x=1745563411; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0eX8qj76kO14FK/DjeL3E1y5jYurP6zJ1Vl1XJVXa+E=;
-        b=YHkU5/fhGsvhddvp7bArMOJkKLi96Ack+TpRrXiq0Z6g36V4oKohDljaaIweKk12sD
-         3ZXmQVN0EFWjAAFCqb9kFA3D0R+LjRPzELtICO4if85cplch3G7/Hyv8qtSwAKdw3gxQ
-         1hKd/kM6at/tSJ6GHOIDpL1BmRvKaS8K5LOVKRztz/Y1VZv2gtUYsMRJgrYcJCwzWsf2
-         XYc3b/NRcmCGbUn7pUarnUvEewJVX5KR+df1r/iUzDthw0cpgnc7U8BoixxZRuzSGQKz
-         Trgh92vxi4O3XK9R+dPV9iLmfh0dBfoFIiJTFmldKo14kt/StMtDBy2Na26FkzP89IGZ
-         /wOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744958611; x=1745563411;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0eX8qj76kO14FK/DjeL3E1y5jYurP6zJ1Vl1XJVXa+E=;
-        b=nwWmf2omjezQ3kRmhk1Cl9QdkFr+FTMzhtMOh9Y7VhCt2ieD2sUw5+gv9wk4yWetf1
-         DDYhjWxPKgKmIE2RzQcygUlv2sRj6LW++GRhHRXfiw1CSD81H5C07bL1BT/StehAe0vT
-         Va9J4Dwa9RxRTXM4vYEZCCHAHVt6h86MI4dkOCVNucDY/KK9Ftq6Gsf4CqpF2VspLpjn
-         k0bQQWPky5DONlUr/BupgxijYMEilxzxDKazDmrsEBaMjscbAbBM5T81qZMSZvz5qkub
-         1zypVjk/DbgrwEKuyN9RXPEaxq5t4sM/5QxAsMBWHhsCy67e+Pc0Cx+Hh4R91B97wqFj
-         zd5Q==
-X-Gm-Message-State: AOJu0YzvwIlhMSP3t29GiFN8WrUo30G2ikEP+HZh5lF8VZLrMed3HBKb
-	Z/2hkiPyIejKRFBe6fU0jYcRB4ZCiaFSwnXYFQjDrkNw7o60mtkv
-X-Gm-Gg: ASbGnctl6yTwAfSeroxyoUgZPhRCsKBDeQxhYE+tCFBSj421WuIh1ClScNJe6oAssCw
-	gUM9rlx4IVzaMdviA4Lc7EW5mkFNAG8kNw7hmmaopzafLX/G0QMleUvffY1Qqy6reETrfXaFG6l
-	cLBrA7Lw5dROxn6bKYihN9W8inDLLRJrm8TNIaGop7bw4eufvAOdzrO08KPysoLAK9EXjFvOtir
-	YT0CCHL1FqOimI/2iRLxoKlc8qZ9fN1dzMEdE+hc9Phmnh3UweyXzZJC/dFFdy5rF1s4Sfytmgp
-	6mAfk3RZ1oUhfB71bVVa8UnQDDgvYi/5gaIU0YfxWfE=
-X-Google-Smtp-Source: AGHT+IElSs7WpG30PXcCOYLok608/TQYkm0oTnUFtMIlxhvmGvRCS45j7AuHs1Dz3kgju+dDdObtIA==
-X-Received: by 2002:a05:600c:4688:b0:43c:eea9:f45d with SMTP id 5b1f17b1804b1-4406abb2cd0mr12023375e9.18.1744958611068;
-        Thu, 17 Apr 2025 23:43:31 -0700 (PDT)
-Received: from localhost ([77.237.184.200])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5bbcb6sm10216245e9.18.2025.04.17.23.43.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 23:43:29 -0700 (PDT)
-Date: Fri, 18 Apr 2025 10:13:21 +0330
-From: Ali Nasrolahi <a.nasrolahi01@gmail.com>
-To: Linux Newbies <linux-newbies.vger.kernel.org@zephyr>
-Cc: Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Documentation for Regmap API?
-Message-ID: <l5l7jdkvrwkwo3dtfow55ot4jj4rp7z6nuz5ijlj52vgmqhwth@uvks72vz4lpd>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0IfBuvu4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mwp4jAzo"
+Date: Fri, 18 Apr 2025 06:36:19 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744958185;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BvUR9r0Nx9ybqwkRq9Dm8Rrk5uvOYBOtpGL96xkz9h0=;
+	b=0IfBuvu4Dr+cUnfFf3dFvdHx7BEyUprRF+1L7Q7BQv5GwIre5Cc4rB2ORY8G47FaFDqw1I
+	nmgTURFxwrUaA/kUZS40r/zGImF9UlPz6zY2gnNhC9FNn1VUR2Q/JBxh5f8tVaA69gLt8t
+	j2RZwlVIRuS81Dx0A0KeAdp3F081JKUeNurVo8xWon16+xHbtTPOwwAy9s5ZthtkoyG58g
+	JTLFPgf24UfxSyFL8lej2W05Zga+tgDxZMnjIhN03y6TM2jI7LAVHIEwKwNq4N7t7fcU2G
+	G1DCIEUswp/EZkUi7St9LK4nGDDVdx71qQXi25RUjkKbnZ+uJ786wLObb//9JQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744958185;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BvUR9r0Nx9ybqwkRq9Dm8Rrk5uvOYBOtpGL96xkz9h0=;
+	b=mwp4jAzobfHwc1Y4c7BP3rlZopVieA0j5oLUpWucun5ORBP0KLIDdTWYoLmBVG7919cVpz
+	9uzBnCkEzTLL3gDQ==
+From: "tip-bot2 for Sandipan Das" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/cpu/amd: Fix workaround for erratum 1054
+Cc: Sandipan Das <sandipan.das@amd.com>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: =?utf-8?q?=3Ccaa057a9d6f8ad579e2f1abaa71efbd5bd4eaf6d=2E17449?=
+ =?utf-8?q?56467=2Egit=2Esandipan=2Edas=40amd=2Ecom=3E?=
+References: =?utf-8?q?=3Ccaa057a9d6f8ad579e2f1abaa71efbd5bd4eaf6d=2E174495?=
+ =?utf-8?q?6467=2Egit=2Esandipan=2Edas=40amd=2Ecom=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Message-ID: <174495817953.31282.5641497960291856424.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi,
+The following commit has been merged into the x86/urgent branch of tip:
 
-I've been exploring the Regmap API and
-was wondering if there’s a dedicated documentation page
-that provides an overview or explanation of the API itself.
+Commit-ID:     f4efdb357680bef4584faedbd44b90cd53d3245f
+Gitweb:        https://git.kernel.org/tip/f4efdb357680bef4584faedbd44b90cd53d3245f
+Author:        Sandipan Das <sandipan.das@amd.com>
+AuthorDate:    Fri, 18 Apr 2025 11:49:40 +05:30
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 18 Apr 2025 08:31:07 +02:00
 
-So far, I’ve looked into the following:
+x86/cpu/amd: Fix workaround for erratum 1054
 
-1. https://docs.kernel.org/driver-api/index.html
-2. The Documentation/ directory in both the mainline and linux-next trees.
-3. The regmap tree mentioned in the MAINTAINERS file:
+Erratum 1054 affects AMD Zen processors that are a part of Family 17h
+Models 00-2Fh and the workaround is to not set HWCR[IRPerfEn]. However,
+when X86_FEATURE_ZEN1 was introduced, the condition to detect unaffected
+processors was incorrectly changed in a way that the IRPerfEn bit gets
+set only for unaffected Zen 1 processors.
+
+Ensure that HWCR[IRPerfEn] is set for all unaffected processors. This
+includes a subset of Zen 1 (Family 17h Models 30h and above) and all
+later processors. Also clear X86_FEATURE_IRPERF on affected processors
+so that the IRPerfCount register is not used by other entities like the
+MSR PMU driver.
+
+Fixes: 232afb557835 ("x86/CPU/AMD: Add X86_FEATURE_ZEN1")
+Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/caa057a9d6f8ad579e2f1abaa71efbd5bd4eaf6d.1744956467.git.sandipan.das@amd.com
 ---
-   REGISTER MAP ABSTRACTION
-   M:  Mark Brown <broonie@kernel.org>
-   L:  linux-kernel@vger.kernel.org
-   S:  Supported
-   T:  git git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git
-   F:  Documentation/devicetree/bindings/regmap/
-   F:  drivers/base/regmap/
-   F:  include/linux/regmap.h
----
+ arch/x86/kernel/cpu/amd.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-Despite checking these locations,
-I couldn’t find a dedicated document explaining the Regmap API in detail.
-
-1. Is there any such documentation available that I might have missed?
-
-2. If not, I’d be happy to contribute and help write one.
-Should I bring this up on the linux-doc mailing list for further guidance on how to proceed?
-
-Any pointers or suggestions would be greatly appreciated.
-
-Thanks a lot,
-Ali
-
-
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index a839ff5..2b36379 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -869,6 +869,16 @@ static void init_amd_zen1(struct cpuinfo_x86 *c)
+ 
+ 	pr_notice_once("AMD Zen1 DIV0 bug detected. Disable SMT for full protection.\n");
+ 	setup_force_cpu_bug(X86_BUG_DIV0);
++
++	/*
++	 * Turn off the Instructions Retired free counter on machines that are
++	 * susceptible to erratum #1054 "Instructions Retired Performance
++	 * Counter May Be Inaccurate".
++	 */
++	if (c->x86_model < 0x30) {
++		msr_clear_bit(MSR_K7_HWCR, MSR_K7_HWCR_IRPERF_EN_BIT);
++		clear_cpu_cap(c, X86_FEATURE_IRPERF);
++	}
+ }
+ 
+ static bool cpu_has_zenbleed_microcode(void)
+@@ -1052,13 +1062,8 @@ static void init_amd(struct cpuinfo_x86 *c)
+ 	if (!cpu_feature_enabled(X86_FEATURE_XENPV))
+ 		set_cpu_bug(c, X86_BUG_SYSRET_SS_ATTRS);
+ 
+-	/*
+-	 * Turn on the Instructions Retired free counter on machines not
+-	 * susceptible to erratum #1054 "Instructions Retired Performance
+-	 * Counter May Be Inaccurate".
+-	 */
+-	if (cpu_has(c, X86_FEATURE_IRPERF) &&
+-	    (boot_cpu_has(X86_FEATURE_ZEN1) && c->x86_model > 0x2f))
++	/* Enable the Instructions Retired free counter */
++	if (cpu_has(c, X86_FEATURE_IRPERF))
+ 		msr_set_bit(MSR_K7_HWCR, MSR_K7_HWCR_IRPERF_EN_BIT);
+ 
+ 	check_null_seg_clears_base(c);
