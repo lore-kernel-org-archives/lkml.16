@@ -1,131 +1,274 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BAA613B2A4;
-	Fri, 18 Apr 2025 18:21:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19D013B2A4;
+	Fri, 18 Apr 2025 18:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745000501; cv=none; b=PqA3CWfnUjhUxRuM63/dBrXSLqL/B3kJMVrdhyTm34pzz9JGVmiW38SVuWYJqVzH1lcoKIQEYw1FJjfPuRjRExLO4EjTx5YpcZtJMsFrkScMxeWPeV2j037aDZYi1VCYYiQv/BlkTLtIKUvLDmN8EHj/JjOz5QFsMv2s+cDuXsY=
+	t=1745000582; cv=none; b=gR8GtQ5n+YTYOpSkERfnUshGBAkyMEVW6fbz7S8rLWqe7wGI5OB52fZSpsD5Azs7DjuGUJDiGveVWLQxdnMGvBbPR2V3csEQvjvBS5wm69DzRYh8mdGPNZ9sjZNRkI2QbMjxxcorUVCA0i/ioqrIu0OPkPPohr0vBtBnwhhf96M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745000501; c=relaxed/simple;
-	bh=SLwvrl0gbz7th4Q1VFcfpLjOLB8MNndL48XA8sfo608=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mPe8NGGcL2TRSMF5OUerk6Ye+mpqgn4l6PjdSEPms4e4TgwD5P5vOCq/0JpwzUU+U51KMbt0Y/jf7mGjxV+feVPRA/6IAyVzMTh79yXSIOCdU43eee6AbBEzY/uGabbFkMykrcVGRxSBthCZCpkadSmvRlIThYav6JpJHqI+jvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OLfbLKrm; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745000582; c=relaxed/simple;
+	bh=fp00QMplQNxd/bJnjPrrcq2TIqGFB8msq4zfzRnEjIo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A+qx4hir0NrG2vfWBzLtgSR6co25vXJURGzD1MJhMviq3cy4BxHo+zlLt2N5jWkYkDr+3EwIga4iN82CNMfcLMdRQlnFLpNCH5DNfnFRnfl7hRdaNUwuCv1xm/INAYt61fPGA+EXfOl62o4xh6IsnnQhMmPe2mhmekuy7rJZRbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VRtjQvdA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OLfbLKrm"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736ad42dfd6so1853046b3a.3;
-        Fri, 18 Apr 2025 11:21:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745000499; x=1745605299; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8kS9LLNgYY9RzFfrzH68SeW5jhMvExMO5jq7yXv/Swg=;
-        b=OLfbLKrm4dqnCjSkkrpqFXnrFftrPptn3tW0dws+N/erRbdjPRLDGdGNwr7C620lFU
-         tkUVAekBm69m1qNKWlUSdshEVxi1e0oMButiBzV065seJQnReXmq0bOXNfkg/n8IKgrl
-         tN4F12V8GMe/bxsbHUOd184bm1H8PDmSx5+gSCH1I1OJOGuLsiNNGJaWIQcbErJKzoX/
-         TxBPNWq3iazEfpJyKpkAZoyi7OzIzGKp2S/OZ1vAru9RVDXEu0rqKMKW5awSBbmKv+PL
-         ivDiN4TGczfgG2aMJQoJsnPLXE2BDjH5mGrybFY6ZOP7T5yBNVhmfMhHgYqMLo+tGyeq
-         SRBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745000499; x=1745605299;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8kS9LLNgYY9RzFfrzH68SeW5jhMvExMO5jq7yXv/Swg=;
-        b=s02/0Qv8fvnnrKMl4Zg2fQoThfV3AlWRG2kzY4Ozjw0qg0ZEqD+ytkbLf9akmM3tdp
-         sLs+zeI8SWhK25Z0YplPlb5gPRYJbl0X+M4BGJlXOSrujbECn07dbaZUJbxaU92+MyV5
-         1FPohPktQuYp/vbL3G2VZVse4DJ2a7J+Y7HrLeZM6SSgcBzWrkCcqvNzZCWaRYd5aL9r
-         y0vL9e24U2txo9uApOkI1UINQe2XO0SYxdnJrORHiE/zeZXv0y6bXXMz6Jv6xAoiJRtj
-         ezyR/foCRF8fJKAoc1GE4ibNzJd8Vw4N7Kw5hpkBufMJvI3UlFt84txyFWao/MmPcMAG
-         6OEw==
-X-Forwarded-Encrypted: i=1; AJvYcCUrqpHsO6sC7bdRYbDd3ihinTRskl6+pgyITi+7n85DoFefNtHTTp7uxRjI6eXtLv29fG93x6XzhHvzkh0=@vger.kernel.org, AJvYcCVIZfGjst3zGQR2O7DF0WY2VmRxGDtFm4ezBUKSSvMslOsYUu4cbZFUBEhvAkruikNLI53o0ZnAQI3LYLTK@vger.kernel.org, AJvYcCVgoYLHLrXCJG8HnxoIx5KrkTrfDRe9BIzHeeQ0UO5Qae5jtjn36cgNWiGIdht9CLR/+WydMsERcIFc@vger.kernel.org, AJvYcCX3bIKyAGB9+0fbOx3X+Y93dmqKWqKQNYlMkpqXolyb71Lu0hC/8V9hNH3vUPi7Y8kuR6jTzo6H22iD9g==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+J+kvKS6PiYJSF++vsbRV1R38t35cvJjgBcMZ+Y2vEiLzKmDI
-	VQBX0COGKEvn6gAqXg5g7p6iBfI9l1glk5hWF5voB0B04VAZN95D
-X-Gm-Gg: ASbGncv5TlO5ShurZs1LvYVhOXy+Za4hKQO9XB0khg12Mf3616LygdZULFpIYJApIkX
-	63rKomndO3ud/70oNPPup++rcTdOXbGDHhTziAajlZrOZXGM7SuJVviDqnhjLVQ55DHVnl5lwKR
-	iSUcTViXGP8TFUdVu2Jd1ahpCzjHHcMmWTWLbCZ4qRLLHyGRNEg4ZMalvmCoPhaJ4oixebB8epP
-	aIhBxoGDDVLNT07yPk62Ll3iQlew5VytdztVlXItW0X/Dx1TfNCAskryHcwfgLHf8YkzY2a2PJ+
-	xrrRlPV1CCvnWRB1EKVn+jHqQwcFqO7BhlLhTz8=
-X-Google-Smtp-Source: AGHT+IFRC9j6wJeAYD2mwF+2keu5K1ZF/SaRY/zWPxP4EBLUKFqAOPsnj41Veel0R8nXbo7wP6uWWw==
-X-Received: by 2002:a05:6a20:158f:b0:1f0:e706:1370 with SMTP id adf61e73a8af0-203cbd59cb0mr6805648637.35.1745000499288;
-        Fri, 18 Apr 2025 11:21:39 -0700 (PDT)
-Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db13a3e63sm1684024a12.29.2025.04.18.11.21.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 11:21:38 -0700 (PDT)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: daniel@riscstar.com
-Cc: conor+dt@kernel.org,
-	danielt@kernel.org,
-	deller@gmx.de,
-	devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	jingoohan1@gmail.com,
-	krzk+dt@kernel.org,
-	lee@kernel.org,
-	linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	lujianhua000@gmail.com,
-	mitltlatltl@gmail.com,
-	pavel@kernel.org,
-	robh@kernel.org
-Subject: Re: [PATCH 2/4] backlight: ktz8866: add slave handler
-Date: Sat, 19 Apr 2025 02:19:09 +0800
-Message-ID: <20250418181927.208018-1-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <Z_P9AEGq2sBYShgv@aspen.lan>
-References: <Z_P9AEGq2sBYShgv@aspen.lan>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VRtjQvdA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 994DEC4CEEA;
+	Fri, 18 Apr 2025 18:22:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745000582;
+	bh=fp00QMplQNxd/bJnjPrrcq2TIqGFB8msq4zfzRnEjIo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=VRtjQvdACeVO8YZwfZMsjPsbFZKR5NDcjjVA0KOXsmZhgfEP2xmAvDWxli/PKRrYn
+	 gQn+wMAI7sTidsoL6xVq4RNTel2XPyabzS+hdFXAOin0d4Y2/mGgWMiHokw6JgSrlz
+	 rrQFNwb27Q0VyVZyf7PTNra5VdWZ6OSFFKotTSSZ5Fhlpu5yq9cEzybaxUgZXVCFHy
+	 CEVLLLYqAMJQXRCUg2reMJ0TlIWOWos+iLVLQdvjGQVGdwjeKQhYDTLLijVGZQF4x0
+	 zbg+ncFRh0U12Aj54Fwainp12j974SgQNzjb2e112tfN2fndST0kGxe7TiMar4UzDT
+	 v4HLlJiEFAcjQ==
+Date: Fri, 18 Apr 2025 19:22:54 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ eraretuya@gmail.com
+Subject: Re: [PATCH v6 05/11] iio: accel: adxl345: add freefall feature
+Message-ID: <20250418192254.0becd27d@jic23-huawei>
+In-Reply-To: <20250414184245.100280-6-l.rubusch@gmail.com>
+References: <20250414184245.100280-1-l.rubusch@gmail.com>
+	<20250414184245.100280-6-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 8, 2025 at 12:27 AM Daniel Thompson <daniel@riscstar.com> wrote:
-> On Mon, Apr 07, 2025 at 05:51:17PM +0800, Pengyu Luo wrote:
-> > Kinetic ktz8866, found in many android devices, nowadays, some oem use
-> > dual ktz8866 to support a larger panel and  higher brightness, original
-> > driver would only handle half backlight region on these devices,
-> > registering it twice is unreasonable, so adding the slave handler to
-> > support it.
+On Mon, 14 Apr 2025 18:42:39 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
+
+> Add the freefall detection of the sensor together with a threshold and
+> time parameter. A freefall event is detected if the measuring signal
+> falls below the threshold.
 > 
-> Is there anything unique about KTZ8866 that allows it to be used like
-> this? I think it would be better to add support for secondary backlight
-> controllers into the backlight framework, rather than having to
-> implement driver specific hacks for every backlight controller that
-> appears in a primary/secondary configuration.
+> Introduce a freefall threshold stored in regmap cache, and a freefall
+> time, having the scaled time value stored as a member variable in the
+> state instance.
 > 
+Reading this I wondered whether we had the event code consistent for
+freefall detectors... Or indeed inactivity ones (which are kind of similarish)
 
-According to my understanding, if I add the new api to backlight framework,
-with a minimal modification, then I either do A or do B(I doubt it is my
-fixed mindset)
+:( We don't it seems.  The issue is that
+freefall is actually that all channels are simultaneously under the the magnitude
+threshold, not one of them.  So it should I think be
+X_AND_Y_AND_Z not X_OR_Y_OR_Z
 
-A:
-Tied two devices, registering the primary and the secondary device during
-one probe, to do that, I access another KTZ8866 when probing. Those hack
-is still here, that doesn't seem to help.
+This is as opposed to activity detectors which tend to be any axis shows
+activity and X_OR_Y_OR_Z applies.
 
-B:
-Uncoupled, probing separately, the later one is registered as the
-secondary one. Brightness control is a little uncoupled, there are two
-sysfs, I doubt if userspace programs will write brightness to two
-devices. Then we need synchronization, write primary => write primary
-and write secondary, viceversa.
+Anyhow upshot is I think I lead you astray on this and we should make this
+one IIO_MOD_X_AND_Y_AND_Z 
 
-> Also, the kernel seeks to avoid adding new instances of master/slave
-> terminology. See the coding style doc for suggested alternatives:
-> https://www.kernel.org/doc/html/latest/process/coding-style.html#naming
+A few other things inline.
+
+Unfortunately we don't deal with these events that often so I forget
+what we did before :(
+
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> ---
+>  drivers/iio/accel/adxl345_core.c | 125 +++++++++++++++++++++++++++++++
+>  1 file changed, 125 insertions(+)
 > 
+> diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
+> index c464c87033fb..ae02826e552b 100644
+> --- a/drivers/iio/accel/adxl345_core.c
+> +++ b/drivers/iio/accel/adxl345_core.c
+> @@ -75,6 +75,7 @@ struct adxl345_state {
+>  	u32 tap_duration_us;
+>  	u32 tap_latent_us;
+>  	u32 tap_window_us;
+> +	u32 ff_time_ms;
+>  
+>  	__le16 fifo_buf[ADXL345_DIRS * ADXL345_FIFO_SIZE + 1] __aligned(IIO_DMA_MINALIGN);
+>  };
+> @@ -96,6 +97,14 @@ static struct iio_event_spec adxl345_events[] = {
+>  			BIT(IIO_EV_INFO_RESET_TIMEOUT) |
+>  			BIT(IIO_EV_INFO_TAP2_MIN_DELAY),
+>  	},
+> +	{
+> +		/* free fall */
+> +		.type = IIO_EV_TYPE_MAG,
+> +		.dir = IIO_EV_DIR_FALLING,
+> +		.mask_shared_by_type = BIT(IIO_EV_INFO_ENABLE) |
+> +			BIT(IIO_EV_INFO_VALUE) |
+> +			BIT(IIO_EV_INFO_PERIOD),
+> +	},
+This is creating separate per axis enables, values and period. Does that make
+sense?  If not you need to spin a kind of virtual channel (with mod X_AND_Y_AND_Z)
+and add the events to it.
 
-Agree.
+See how the sca3000 does it for example.
+>  };
+>  
+>  #define ADXL345_CHANNEL(index, reg, axis) {					\
+> @@ -383,6 +392,63 @@ static int adxl345_set_tap_latent(struct adxl345_state *st, u32 val_int,
+>  	return _adxl345_set_tap_time(st, ADXL345_TAP_TIME_LATENT, val_fract_us);
+>  }
+>  
+> +/* freefall */
+> +
+> +static int adxl345_is_ff_en(struct adxl345_state *st, bool *en)
+> +{
+> +	int ret;
+> +	unsigned int regval;
+> +
+> +	ret = regmap_read(st->regmap, ADXL345_REG_INT_ENABLE, &regval);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*en = FIELD_GET(ADXL345_INT_FREE_FALL, regval) > 0;
+> +
+> +	return 0;
+> +}
+> +
+> +static int adxl345_set_ff_en(struct adxl345_state *st, bool cmd_en)
+> +{
+> +	unsigned int regval, ff_threshold;
+> +	bool en;
+> +	int ret;
+> +
+> +	ret = regmap_read(st->regmap, ADXL345_REG_THRESH_FF, &ff_threshold);
+> +	if (ret)
+> +		return ret;
+> +
+> +	en = cmd_en && ff_threshold > 0 && st->ff_time_ms > 0;
+> +
+> +	regval = en ? ADXL345_INT_FREE_FALL : 0x00;
+> +
+> +	return regmap_update_bits(st->regmap, ADXL345_REG_INT_ENABLE,
+> +				  ADXL345_INT_FREE_FALL, regval);
+> +}
+> +
+> +static int adxl345_set_ff_time(struct adxl345_state *st, u32 val_int,
+> +			       u32 val_fract_us)
+> +{
+> +	unsigned int regval;
+> +	int val_ms;
+> +
+> +	/*
+> +	 * max value is 255 * 5000 us = 1.275000 seconds
+> +	 *
+> +	 * Note: the scaling is similar to the scaling in the ADXL380
+> +	 */
+> +	if (1000000 * val_int + val_fract_us > 1275000)
+> +		return -EINVAL;
+> +
+> +	val_ms = val_int * 1000 + DIV_ROUND_UP(val_fract_us, 1000);
+> +	st->ff_time_ms = val_ms;
+> +
+> +	regval = DIV_ROUND_CLOSEST(val_ms, 5);
+> +
+> +	/* Values between 100ms and 350ms (0x14 to 0x46) are recommended. */
+> +	return regmap_write(st->regmap, ADXL345_REG_TIME_FF, min(regval, 0xff));
+> +}
+> +
+>  static int adxl345_read_raw(struct iio_dev *indio_dev,
+>  			    struct iio_chan_spec const *chan,
+>  			    int *val, int *val2, long mask)
+> @@ -495,6 +561,11 @@ static int adxl345_read_event_config(struct iio_dev *indio_dev,
+>  		default:
+>  			return -EINVAL;
+>  		}
+> +	case IIO_EV_TYPE_MAG:
+> +		ret = adxl345_is_ff_en(st, &int_en);
+> +		if (ret)
+> +			return ret;
+> +		return int_en;
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -518,6 +589,8 @@ static int adxl345_write_event_config(struct iio_dev *indio_dev,
+>  		default:
+>  			return -EINVAL;
+>  		}
+> +	case IIO_EV_TYPE_MAG:
+> +		return adxl345_set_ff_en(st, state);
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -532,6 +605,7 @@ static int adxl345_read_event_value(struct iio_dev *indio_dev,
+>  {
+>  	struct adxl345_state *st = iio_priv(indio_dev);
+>  	unsigned int tap_threshold;
+> +	unsigned int ff_threshold;
+>  	int ret;
+>  
+>  	switch (type) {
+> @@ -565,6 +639,22 @@ static int adxl345_read_event_value(struct iio_dev *indio_dev,
+>  		default:
+>  			return -EINVAL;
+>  		}
+> +	case IIO_EV_TYPE_MAG:
+> +		switch (info) {
+> +		case IIO_EV_INFO_VALUE:
+> +			ret = regmap_read(st->regmap, ADXL345_REG_THRESH_FF,
+> +					  &ff_threshold);
+> +			if (ret)
+> +				return ret;
+> +			*val = ff_threshold;
+> +			return IIO_VAL_INT;
+> +		case IIO_EV_INFO_PERIOD:
+> +			*val = st->ff_time_ms;
+> +			*val2 = 1000;
+> +			return IIO_VAL_FRACTIONAL;
+> +		default:
+> +			return -EINVAL;
+> +		}
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -612,6 +702,22 @@ static int adxl345_write_event_value(struct iio_dev *indio_dev,
+>  			return -EINVAL;
+>  		}
+>  		break;
+> +	case IIO_EV_TYPE_MAG:
+> +		switch (info) {
+> +		case IIO_EV_INFO_VALUE:
+> +			ret = regmap_write(st->regmap, ADXL345_REG_THRESH_FF, val);
+> +			if (ret)
+> +				return ret;
+> +			break;
+> +		case IIO_EV_INFO_PERIOD:
+> +			ret = adxl345_set_ff_time(st, val, val2);
+> +			if (ret)
+> +				return ret;
+> +			break;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +		break;
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -865,6 +971,17 @@ static int adxl345_push_event(struct iio_dev *indio_dev, int int_stat,
+>  			return ret;
+>  	}
+>  
+> +	if (FIELD_GET(ADXL345_INT_FREE_FALL, int_stat)) {
+> +		ret = iio_push_event(indio_dev,
+> +				     IIO_MOD_EVENT_CODE(IIO_ACCEL, 0,
+> +							IIO_MOD_X_OR_Y_OR_Z,
 
-Best wishes,
-Pengyu
+This is the event that got me thinking about whether we were doing this right..
+
+> +							IIO_EV_TYPE_MAG,
+> +							IIO_EV_DIR_FALLING),
+> +				     ts);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+
