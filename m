@@ -1,132 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3D513A265;
-	Fri, 18 Apr 2025 15:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B53220C023
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744989341; cv=none; b=PVnSeuS5HWFTmG2PoWwtjzQfpX2MTsc0amtuwk/+qXpORrnbzFJ6zKEwFDmnLg348d9dGkH41NJnCIZnYA+DAsz2iWZ6Zh/4F8q+hApiLxZ+QRAnPUgf3ZNfmbl+kgoW6ij3iqZulrlz1pOHpM5ItuCJW1nrd9F+RreSyMHqAZw=
+	t=1744989353; cv=none; b=IEg90Ko+phLZ1hmFjQqukjToeMCxHpCsSO+UMvSLeDjql9LBL476lr2ISLLfmtiuDr6odDhdH9R5a/5rLpLolgmJkkOkytSVrbCTubeaGYByzBcrc4Cr7PhFFbPJpJjQhipU5oH3uOx3wwT7qlLdvtLaTBEmtn8eNBt5X0ELN7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744989341; c=relaxed/simple;
-	bh=zDBDOU+6Hp5zW2pHFlOudW97qd8nblMkmeHFllhXDYM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=mjnXPtywl6Cgy2u9Jiwl6k3VZ8cwu/M3v6XZ76LFVRQJigAC1dmpVZH489SYSy+cpY/+MhvK3Y2R6vgBjJERcHdSJ36+RG0o9e5tWHrhmiyZtzlVSP235Zly1elWnoHdEVjkZc7o6Cc/LZjnWlN8vsmuMiYc4x9wtWdmmJ8FWfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ODOQuVDN; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744989353; c=relaxed/simple;
+	bh=KMMnOkwQVuDdX52tnm6wptnXExZOwL/CGPn4GnxI0X0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z/GqYsSQllNvoUPZ07Y5thGSWpMCumYoz5uwIjYoAAg6MDAUzn1brHfZMcayB5DOkE9My/1qhlz5XLV8qAftoFNvcU1UORJ3GMWVGoULG07rOz+3oEvkDAysaX3yaEbW5gu66xxo5xBeTbMTkN2DLOrAFixw6kQYkanHzsuoeWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T2YyVS0+; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ODOQuVDN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744989339; x=1776525339;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=zDBDOU+6Hp5zW2pHFlOudW97qd8nblMkmeHFllhXDYM=;
-  b=ODOQuVDNKgOKtwMTVlxMZ6Vlmpr82P8E//VdzUxzxUgHrQMrjhg8rqzd
-   Lc9pYKxociUc1hldnbgRkKjNF9rLIb5BxGTVS6sfwbnc8OUTYTij+WW4I
-   1zjBMUrtCnE0U2u2/2NTSB3VD+udPizONl/02HS4uPuoF6Rzdut2f2hq+
-   nwAFiYfttwXqRjcePrQ9UlIVXA23CJSISMYq+Eto30j/VA3Z7ngWYUrdL
-   +khi4NryFpQ3PRUYZ0MfMrEKxBPs47rYHfzEpUVUcTZHEYAzhSjCmhAX3
-   mLaUTvGmSNmtZZi7taSnxMoRcAum5U+TX7ea/iqXbsSnR/XBwYjtxZpb6
-   Q==;
-X-CSE-ConnectionGUID: caY/D+cjTzugtlGLLirw8Q==
-X-CSE-MsgGUID: K5gj2cd6R46kxoW2TLvETg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="45849851"
-X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
-   d="scan'208";a="45849851"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 08:15:38 -0700
-X-CSE-ConnectionGUID: Akw1pynlSEGh2bUJxdPI7w==
-X-CSE-MsgGUID: XVVgHKXYQIqD2uzf7hj6yg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
-   d="scan'208";a="135990325"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.4])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 08:15:34 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 18 Apr 2025 18:15:30 +0300 (EEST)
-To: Ingo Molnar <mingo@kernel.org>
-cc: Andy Shevchenko <andy@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-    Len Brown <lenb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-    Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-    Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-    "H. Peter Anvin" <hpa@zytor.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-    linux-acpi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/1] x86: Use resource_set_{range,size}() helpers
-In-Reply-To: <aAIB7Om9n_tXDnvk@gmail.com>
-Message-ID: <db829a60-c524-73bc-e7c3-fed60e980d99@linux.intel.com>
-References: <20250416101318.7313-1-ilpo.jarvinen@linux.intel.com> <Z_-E3W8i4EfxdBh3@smile.fi.intel.com> <a046f6bb-0b6e-a431-eaa5-ecd279459f86@linux.intel.com> <aAIB7Om9n_tXDnvk@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T2YyVS0+"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22622ddcc35so30572425ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:15:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744989351; x=1745594151; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=y7d429vs3u0Qa+Gq2VNqRuv23PSOaLSv/cnB0hDELhM=;
+        b=T2YyVS0+rISSs8hiJzqzKc3XUY4LY4kskFZomtfz1fq6LWC5xXyAZaalkSheBMz+al
+         zlR/42nSZSs8S53Ce3eVFcMU1qP6c0KIIyc+nD/PSMcs1o/HN+oVPpYi6bvwdD9KrhAs
+         Y1wnOR6eGrqgCZO67Z6lcKko3ndZPdm7fEPD/gekwk89nT/AQ96grKmE9NsrSVHflXOX
+         K/7o+TWkK3WcJtcTGNqCBX3BlpjZMQIoap0s4EF5u7L6+XNzuObSqdKlw+LFw3Ed/Nkc
+         06BEO282eSMBHcSUYkl91ivCAcRNvsgqDzHlBbtS80IfIxKXXIe3aFDrYdDEsqzQQ/Gl
+         QH3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744989351; x=1745594151;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=y7d429vs3u0Qa+Gq2VNqRuv23PSOaLSv/cnB0hDELhM=;
+        b=bBZzRhTwyvZWvc5pXlYy/WOPRsry2j8yiEOZT0DXbojRFzyEWThICnc4PPbnqefrNg
+         Z7p1AWgjCd/51NminKaRo16OVf7j1icuZeUYMnAzKJON4TKag3IM8x2qDCSSL2DzeRfg
+         krh89j15pmm84fj4baD2H2DQz4ggdtikofzyPV8WHsDeD2KvwyTcxsLPfrK42IqCZA2m
+         w4gnBU8W36hjpHs4RJv7CUVNWtvL5s0dG86iet6VVjwQjaMuxBJWcebrkPnyajIPc3uc
+         89QHzKuu2vBAXPf6+kJLth/xjyIHE2klMrOYSmVJ45G71gB4KBMT5e4rhFaCDyCvcEHR
+         Wc5w==
+X-Forwarded-Encrypted: i=1; AJvYcCWk0W10vE783NA5+I5dghnD7IgMhzwEclIqpmd5+F18lYtQmgVOTcvwC8cCe1I/iX6BZHOOBPotQvl6jG0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4a/RqsNZDPwxiZTeXdrpKD+yuVGb8CpczTuSUKrg0dWaTdhq7
+	fd2CWR1UNRi+jg+KEg0vodQS4TYHUv5Nw7IC8AWw1oHZ/rmN3vT4
+X-Gm-Gg: ASbGncuL1jKgpRqx8OUKxI1OGk6MlQ/1N5g+rIUMPT1i8sDJ1tjHesAJQwGCmQoXsv1
+	ZZTqXPEcy4WhYj0b5n0BInoSDzz6yr/hPYrOpdAfjfo9cTZ7T/QzgAjtlWhFZ/mWFIo3Oyh45Oa
+	u7o4lbnEMPV8SocvYL9wYZkS0qang283fMnqeJ0j65lbXs86GbYD95RVf1GldrnFj3EZmlVRSOx
+	hbeSbHzDjRI1FsC+l18Mo8WWl7AcQ/Y9Mk/CPb1+Ts3XjDRAwD5EvsFYsTCvgQvFmFrnZJMukf4
+	gTAVu+v7jWN833eBu9hOu8pBOR2b5VWH25mwQABf15uqDm+Pvw==
+X-Google-Smtp-Source: AGHT+IGEscJcgtAIszZfwRLpspqoP3lhJKDr0lTbKFdf5IfgHXsSLhT8pfuCbUq5Yiu/dAxQNQxevA==
+X-Received: by 2002:a17:902:ea07:b0:224:7a4:b2a with SMTP id d9443c01a7336-22c5357a664mr41632685ad.11.1744989350792;
+        Fri, 18 Apr 2025 08:15:50 -0700 (PDT)
+Received: from localhost.localdomain ([43.129.202.66])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb48f7sm17920105ad.138.2025.04.18.08.15.48
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 18 Apr 2025 08:15:50 -0700 (PDT)
+From: Lance Yang <ioworker0@gmail.com>
+X-Google-Original-From: Lance Yang <lance.yang@linux.dev>
+To: akpm@linux-foundation.org
+Cc: mingzhe.yang@ly.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Lance Yang <ioworker0@gmail.com>,
+	David Hildenbrand <david@redhat.com>,
+	Lance Yang <lance.yang@linux.dev>
+Subject: [PATCH v2 1/1] mm/rmap: add CONFIG_MM_ID guard for folio_test_large_maybe_mapped_shared()
+Date: Fri, 18 Apr 2025 23:15:00 +0800
+Message-ID: <20250418151500.14967-1-lance.yang@linux.dev>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1296546784-1744988942=:948"
-Content-ID: <fe026d98-6232-bcd6-efa3-99ed79a78586@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: Lance Yang <ioworker0@gmail.com>
 
---8323328-1296546784-1744988942=:948
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <40bafa21-795a-e848-290b-cf4269f62d67@linux.intel.com>
+From: Lance Yang <lance.yang@linux.dev>
 
-On Fri, 18 Apr 2025, Ingo Molnar wrote:
+To prevent folio_test_large_maybe_mapped_shared() from being used without
+CONFIG_MM_ID, we add a compile-time check rather than wrapping it in
+'#ifdef', avoiding even more #ifdef in callers that already use
+IS_ENABLED(CONFIG_MM_ID).
 
->=20
-> * Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
->=20
-> > On Wed, 16 Apr 2025, Andy Shevchenko wrote:
-> >=20
-> > > On Wed, Apr 16, 2025 at 01:13:18PM +0300, Ilpo J=E4rvinen wrote:
-> > > > Convert open coded resource size calculations to use
-> > > > resource_set_{range,size}() helpers.
-> > > >=20
-> > > > While at it, use SZ_* for size parameter which makes the intent of =
-code
-> > > > more obvious.
-> > >=20
-> > > ...
-> > >=20
-> > > > +=09resource_set_range(res, base, 1ULL << (segn_busn_bits + 20));
-> > >=20
-> > > Then probably
-> > >=20
-> > > =09resource_set_range(res, base, BIT_ULL(segn_busn_bits) * SZ_1M);
-> > >=20
-> > > to follow the same "While at it"?
-> >=20
-> > I'll change that now since you brought it up. It did cross my mind to=
-=20
-> > convert that to * SZ_1M but it seemed to go farther than I wanted with =
-a=20
-> > simple conversion patch.
-> >=20
-> > I've never liked the abuse of BIT*() for size related shifts though,=20
-> > I recall I saw somewhere a helper that was better named for size=20
-> > related operations but I just cannot recall its name and seem to not=20
-> > find that anymore :-(. But until I come across it once again, I guess=
-=20
-> > I'll have to settle to BIT*().
->=20
-> BITS_TO_LONGS()?
+Also, we used plenty of IS_ENABLED() on purpose to keep the code free of
+'#ifdef' mess.
 
-Hi Ingo,
+Suggested-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Lance Yang <lance.yang@linux.dev>
+Acked-by: David Hildenbrand <david@redhat.com>
+---
+v1 -> v2:
+ * Update the changelog, suggested by Andrew and David
+ * https://lore.kernel.org/linux-mm/20250417124908.58543-1-ioworker0@gmail.com
 
-I'm not entiry sure if you're referring to my BIT*() matching unrelated
-macros such as BITS_TO_LONGS() (I only meant BIT() and BIT_ULL() which I=20
-thought was clear from the context), or that BITS_TO_LONGS() would be the=
-=20
-solution what I'm looking for.
+ include/linux/page-flags.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-In case you meant the latter, BITS_TO_LONGS() is not what I'm after.=20
-BIT(n) sets nth bit and what I'm looking for is converting n to power of=20
-two size. Obviously, both are mathematically doing 2^n (or 1 << n) but=20
-they feel conceptually very different things.
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index d3909cb1e576..6bd9b9043976 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -1232,6 +1232,8 @@ static inline int folio_has_private(const struct folio *folio)
+ 
+ static inline bool folio_test_large_maybe_mapped_shared(const struct folio *folio)
+ {
++	/* This function should never be called without CONFIG_MM_ID enabled. */
++	BUILD_BUG_ON(!IS_ENABLED(CONFIG_MM_ID));
+ 	return test_bit(FOLIO_MM_IDS_SHARED_BITNUM, &folio->_mm_ids);
+ }
+ #undef PF_ANY
+-- 
+2.49.0
 
---=20
- i.
---8323328-1296546784-1744988942=:948--
