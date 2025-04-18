@@ -1,145 +1,129 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9606E223714;
-	Fri, 18 Apr 2025 18:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07EDF223714
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 18:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745001591; cv=none; b=ok2b8ev7jat2Y1AeJpw96KTJq75mYq5gfwDKugqJg1rSVZSNhe9LwkHtZ6ZVlXcThDIFY8wxuJAPr8eaL01aEt3LFxt/NLIT76GxMYdc9lqr9w7k5/6eJkeISZmXLsFiLxkIC0NjucoOHo25i+tnvBVlldy5QXjlmoKjgZXjvzU=
+	t=1745001651; cv=none; b=KAboX7vrOEeQ7qQZUkZ2Jj+nG+GsdNmBGtfRqL1nOsfg/5hjedl7orV8gRIQeVFTXXwmU71cr3L1/D5mtzh8pG4E4CRQ85z6sLVLhvQhonl6HOQqDpB4ZXPopGJkOB8d8S+pKd749JMqanectdLtJvXt0V5E1Pd4Im9cXUMaa0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745001591; c=relaxed/simple;
-	bh=6juepKFv4RywNtwgcmI/f75Aklx8+K5bnw4Dj+/y12s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VXYf8vRhXAwkBw3PnFi8EvB7mKjTfHUXWCgyVmTaOL2vlAQHDvEopGIjt/Skvbt9vpbwHiMfhFsCUA+5MSJMf4Tyrf0afcg6KM+DQUKhh7zlPrckr/+Orj09LHbAzghdAU1WLoE5/EPy9Qeu7Is1wsiNvaEjUBWAV5bvyrzrcWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I4SpVdkR; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745001651; c=relaxed/simple;
+	bh=cqw05yzHdahroJKLOI/H3fvXy55QPQV2NEI62iCX4pI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c03emtE0TdnkpH+Q2k+0MJ7PL8YMP9W9LmM3ez3s7ZRcTG2kbYVN2zHPCp+w7J6/8ZrLpaOMWuc7oOJ2Sg3s38dhWcPc3NCtHp6vyIBAAVvFW/diAJgXW+1PuEgnNifNyISiRKdXfN2RgCOsR4KFPcY6Alzrct2Klfv6YJhqeT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Jm7Mc944; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I4SpVdkR"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22c33677183so25851985ad.2;
-        Fri, 18 Apr 2025 11:39:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jm7Mc944"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5498d2a8b89so2138191e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 11:40:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745001589; x=1745606389; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1745001648; x=1745606448; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BBweR4rTJ8xooFIdJ7YeYYJqxBwE2nrrXL4nmE835PA=;
-        b=I4SpVdkRiLd3zOd45eQYVFFSoiLm8SzSBvJL1OS80djGUiVAkn/l61IdiH9zJIs2G+
-         gMKxQgvUVuFa+E9k2+4Ra0vHhyqt1bN0psJ9/f/tXudKCsiAaykXi76of679WW+ffhZY
-         xslnGd9EILdOc6cquopJ1NhCg4nSxJ2t3OgB0vr3ewet7CEOOF6bgwWbZ1GObLQZGL6X
-         xnp30PEJcUYZkxRsi83kvZfuujEyyU3sJc/9hs95v6cqVLugi2L69SoY1ptB+JpP9P49
-         n+FrBhf9LuOUXrPpxC1DsROa2UuyQeVGD5WhCDgADsoBPvJ1dnejp48hQn8FBkgGvKyF
-         JJ+g==
+        bh=JmJRxZYKBul0NPpO5GbE0uoXdY8UOk5hBegV76Q7fvc=;
+        b=Jm7Mc944UYFh7EKr/mZXZf1buMlsmvQwBqkU5xR6U/56q+PvkymTmpodsAomjuzqOi
+         TFDghhdPZbwTidr8j0jxSskJDi2fd7z3fj6aRUhs5Q7Ta9coUYRTFep+JiCgpzfgWqU9
+         0MtT9zgUJnIAusixkRYbtGoRiZY3vqcX9JynJJJ7DGibIenPrejRpZz3MVqfmbnlx+lf
+         JOVnZh/vuHfcjRUDK+SvQjZ506csIqEJ2gboWarMERUckKf4KIe/pgUly6f1g83gnbB+
+         0dJP18GgT2WNOKtyTus+wMYZiI/BILU9K9hSJd8m/FVWlfQP3ChgcUZ0/Dk9u4688ejW
+         UJ7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745001589; x=1745606389;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1745001648; x=1745606448;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BBweR4rTJ8xooFIdJ7YeYYJqxBwE2nrrXL4nmE835PA=;
-        b=o0MSLMd6DdOMFp8dXwEqV1yHI6L0WCZjfeRedu+JGxizHk3fE0gbgP8HKgMKWaUIKD
-         QQjPyVJ1642iimDY53nQVpeKM4ClvG++nEMZhc2isoT6eGoeeL3SghLge/Er+aUB6Wxg
-         S6asDQ/5/dnyfJD4+f8Ed27HAk83IQZ3aJvaVIfEP3/4PFZ0D2hsxpyYNa6/4kjMA6Lo
-         qX+1jAHAxt0bOYfapqZdRqPMKo7x/kTjshTN77tcqv1x1q/Jc4pAzjYujG3jqaoBAJHP
-         06gjG/g2bZxja02tTxkVc/5te59HDNC+SIZblfU5B821rtez/kiwYt19FocnmLLeCCRn
-         vY/A==
-X-Forwarded-Encrypted: i=1; AJvYcCUmKzr9ICr7IUvB2+kMxLZhkcRFtq0aeZleFKLKQ9lZf1uNoMtk2O4pkmXJHukrqwJ4OkbwOMYx0WsFOTY=@vger.kernel.org, AJvYcCVy6dJrzwfZvVe8FeSZoh1LjJg4VcBz168bJJE4j8c6xh4C2VBBWEN40RPoBcckLKinXW/d+WloN0Zx6bOMMkQkifu1@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywa9Ro0M+Zs7WDp70Zson65EFxglvT2YXCsZC+x6RFHv9tganXe
-	pfyqvWMy1NLTSY08uNEMcX49Zi20uRh7STJlEyt0fHioq3uHe9xT
-X-Gm-Gg: ASbGncs8tQwAUvm7P7Du9A3/M6dHqSOtBzmlwxa+mi8u2AJwH3ukrOLEx+os2qCF2ex
-	pymPJM7O4bTB5VMX/r8GMg2k2lH6qZEL6roK2s7cR6EeD4IcZcZ8qR8wqoAmfwiR1bsCyhHo6QI
-	4D8GXDNn0rXSY0LkHDI9QKbzhS5j7QiXiPyiHWxHRmYk7QJS9umGAIZ/4dUFKMPnh3EGJJx9TqI
-	CUlrYnQ29pBL/e064j2Evt/dK3DbY6Cth+ZkMSSffaXoYCg9IkUVfMAAvvd4gzBX1f4cRVaMTPI
-	8A6Xi1URTrRE5GlHErKD09qY3nap+ngPqJUkkoyWsRQR/MTxwYnIvxZusw==
-X-Google-Smtp-Source: AGHT+IH0QQVSCe093WxypD9TiHYn5zBw641C72UPhrYsVbLtBpDzuseR11jm6ZCrap9yZUzE4ken2w==
-X-Received: by 2002:a17:902:da91:b0:21f:85d0:828 with SMTP id d9443c01a7336-22c5360df09mr55964225ad.41.1745001588878;
-        Fri, 18 Apr 2025 11:39:48 -0700 (PDT)
-Received: from localhost.localdomain ([2601:646:8f03:9fee:5e33:e006:dcd5:852d])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb463asm19865975ad.141.2025.04.18.11.39.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 11:39:48 -0700 (PDT)
-From: nifan.cxl@gmail.com
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	willy@infradead.org
-Cc: akpm@linux-foundation.org,
-	david@redhat.com,
-	fan.ni@samsung.com,
-	yang@os.amperecomputing.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	npache@redhat.com,
-	mcgrof@kernel.org,
-	a.manzanares@samsung.com,
-	dave@stgolabs.net,
-	nifan.cxl@gmail.com
-Subject: [PATCH v2 2/2] khugepaged: Refactor trace_mm_khugepaged_scan_pmd() to take folio instead of page
-Date: Fri, 18 Apr 2025 11:34:21 -0700
-Message-ID: <20250418183920.273154-2-nifan.cxl@gmail.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250418183920.273154-1-nifan.cxl@gmail.com>
-References: <20250418183920.273154-1-nifan.cxl@gmail.com>
+        bh=JmJRxZYKBul0NPpO5GbE0uoXdY8UOk5hBegV76Q7fvc=;
+        b=XVC82J1lvxNRrIqpl9GHFL0eE5xD5+ZqKk/UP9/7tVEiyLtxW508X2LdQ4l8QAie3k
+         e/0QbHb6mVT2uETA+KC/hmITW3lBzuPdWjHXP13UU06ESyirZbgMYdGMBWmXgyvLFmzU
+         UR9pDZKUek72+NHJIWZNk39MlpIrLglWIbUaIX666KcSgtvXFtqdxwVmXofFb8IphEki
+         EQ5tsdlfVegA9JKRgafb5x8gzJvEABZltHPunwGexJ+BZKmHm74KA0wpw4nE/Vu6vZlC
+         yOqi5XXZ0WMH6fzTComTv3+ImjQSD+Krk18LX/nz/RgthddEGbs6frgUKl01gc6Rx52+
+         nKdw==
+X-Forwarded-Encrypted: i=1; AJvYcCWDYm7pk912khYClEgaH0hfuEZTC/WbuUfcCV/lySHSocPFRfE1MpMlJc3VJ3K1NwSPADZxtyDpHMKBlc8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZwZsBEWWFojo8yw4idzJws8J7Ogpe5jKxVEgvAnaEsQJ/2gfo
+	wkZM9ykJZNlcsnDigNU89Zmi7L1Qg8ovQewIYBcKKfXRYOM62lxQx88H0b9dmIiizfIax/utG4c
+	hE0Nclx0sj5dptBMcqvXGIcRuifFCifkGSUw=
+X-Gm-Gg: ASbGncuu73xWgsOiCqVK0eSzoRzQXirH1UxYsRlkwF+m2rgGY0q9SDc9076GUrL0XXg
+	uD+zYL4CMZTAcUObrwR07YaJMy7CDh4mmXcrrxPZ1/XGNMnthscDmVkaf2TM2Z/XoeoUH1dRgYV
+	mh/UyLLWcQVml9JmESU3evjzUOEsMIaJC7EwYpfKz46r6WsBd7Bb8=
+X-Google-Smtp-Source: AGHT+IHwauR7oICVDPTufhPDofzFlYVO2KmfnqSJasO3/jpSYaW0ewuRj6/e23srPSp/mjovhyFhKvvdFvxaFMAMeWc=
+X-Received: by 2002:a05:6512:2315:b0:54a:cbfb:b62e with SMTP id
+ 2adb3069b0e04-54d6e657553mr1402614e87.35.1745001647864; Fri, 18 Apr 2025
+ 11:40:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250320200306.1712599-1-jstultz@google.com> <Z-KURRE_Gr72Xv_n@localhost>
+ <874izezv3c.ffs@tglx> <Z-Vx8kV4M3khPknC@localhost> <Z-qsg6iDGlcIJulJ@localhost>
+ <87o6xgwftc.ffs@tglx> <Z-vL3cVZuQ8XQXhG@localhost> <87iknnwxa4.ffs@tglx>
+ <Z-5HlSUEh1xgCi4f@localhost> <877c41wkis.ffs@tglx> <87h632wals.ffs@tglx>
+ <CANDhNCrUhZktW=_h9YTZndmyHwe9YbUMG6uVYaEuQyuKsG4AEg@mail.gmail.com> <87tt6mq8jz.ffs@tglx>
+In-Reply-To: <87tt6mq8jz.ffs@tglx>
+From: John Stultz <jstultz@google.com>
+Date: Fri, 18 Apr 2025 11:40:35 -0700
+X-Gm-Features: ATxdqUEVFnbxOsO7kS3fCud4zm8XAeBb8rxR4hR9fCFdWvV-CzY8t1AtIxHhH0U
+Message-ID: <CANDhNCrNYuxP7xqNLKWGnhMOBEHGhD9-FceNAj7n=fQUsLwvMA@mail.gmail.com>
+Subject: Re: [PATCH] timekeeping: Prevent coarse clocks going backwards
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Miroslav Lichvar <mlichvar@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+	Stephen Boyd <sboyd@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org, 
+	kernel-team@android.com, Lei Chen <lei.chen@smartx.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Fan Ni <fan.ni@samsung.com>
+On Thu, Apr 17, 2025 at 11:37=E2=80=AFPM Thomas Gleixner <tglx@linutronix.d=
+e> wrote:
+> On Thu, Apr 17 2025 at 17:46, John Stultz wrote:
+> > On Sat, Apr 5, 2025 at 2:40=E2=80=AFPM Thomas Gleixner <tglx@linutronix=
+.de> wrote:
+> >> +static inline void tk_update_coarse_nsecs(struct timekeeper *tk, u64 =
+offset)
+> >> +{
+> >> +       offset *=3D tk->tkr_mono.mult;
+> >> +       tk->coarse_nsec =3D (tk->tkr_mono.xtime_nsec + offset) >> tk->=
+tkr_mono.shift;
+> >> +}
+> >
+> > Thinking more on this, I get that you're providing the offset to save
+> > the "at the point" time into the coarse value, but I think this ends
+> > up complicating things.
+> >
+> > Instead it seems like we should just do:
+> >   tk->coarse_nsec =3D tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
+>
+> You end up with the same problem again because xtime_nsec can move
+> backwards when the multiplier is updated, no?
 
-trace_mm_khugepaged_scan_pmd() is only called in
-hpage_collapse_scan_pmd(), where the head page of a folio is passed in,
-so refactor it to take folio directly.
+That's assuming you update coarse_nsec on every call to do_adjtimex,
+which I don't think is necessary (or wanted - as it would sort of be a
+behavior change to the COARSE clockids).
 
-Signed-off-by: Fan Ni <fan.ni@samsung.com>
----
-This is a new patch added to the series.
----
- include/trace/events/huge_memory.h | 6 +++---
- mm/khugepaged.c                    | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+The root issue here has been that there was a mistaken assumption that
+the small negative adjustment done to the xtime_nsec base to match the
+mult adjustment would only happen after a larger accumulation, but the
+timekeeping_advance() call from do_adjtimex() doesn't actually intend
+to advance the clock (just change the frequency), so those small
+negative adjustments made via do_adjtimex() between accumulations
+become visible to the coarse clockids.
 
-diff --git a/include/trace/events/huge_memory.h b/include/trace/events/huge_memory.h
-index a73699f000de..2305df6cb485 100644
---- a/include/trace/events/huge_memory.h
-+++ b/include/trace/events/huge_memory.h
-@@ -55,10 +55,10 @@ SCAN_STATUS
- 
- TRACE_EVENT(mm_khugepaged_scan_pmd,
- 
--	TP_PROTO(struct mm_struct *mm, struct page *page, bool writable,
-+	TP_PROTO(struct mm_struct *mm, struct folio *folio, bool writable,
- 		 int referenced, int none_or_zero, int status, int unmapped),
- 
--	TP_ARGS(mm, page, writable, referenced, none_or_zero, status, unmapped),
-+	TP_ARGS(mm, folio, writable, referenced, none_or_zero, status, unmapped),
- 
- 	TP_STRUCT__entry(
- 		__field(struct mm_struct *, mm)
-@@ -72,7 +72,7 @@ TRACE_EVENT(mm_khugepaged_scan_pmd,
- 
- 	TP_fast_assign(
- 		__entry->mm = mm;
--		__entry->pfn = page ? page_to_pfn(page) : -1;
-+		__entry->pfn = folio ? folio_pfn(folio) : -1;
- 		__entry->writable = writable;
- 		__entry->referenced = referenced;
- 		__entry->none_or_zero = none_or_zero;
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 950d147cd95e..bf5583dca1cb 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1435,7 +1435,7 @@ static int hpage_collapse_scan_pmd(struct mm_struct *mm,
- 		*mmap_locked = false;
- 	}
- out:
--	trace_mm_khugepaged_scan_pmd(mm, &folio->page, writable, referenced,
-+	trace_mm_khugepaged_scan_pmd(mm, folio, writable, referenced,
- 				     none_or_zero, result, unmapped);
- 	return result;
- }
--- 
-2.47.2
+Since the coarse clockids are expected to provide ~tick-granular time,
+if we are keeping separate state, we should only be
+incrementing/setting that state when we accumulate (with each
+cycle_interval). We don't need to be making updates to the coarse
+clock between ticks on every do_adjtime call. So saving off the
+tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift value after we actually
+accumulated something should be fine. Any inter-tick frequency
+adjustments to xtime_nsec can be ignored by the coarse clockid state.
 
+I'll test with your updated patch here, as I suspect it will avoid the
+problem I'm seeing, but I do think things can be further simplified.
+
+thanks
+-john
