@@ -1,101 +1,131 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DC521127E;
-	Fri, 18 Apr 2025 20:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292752356B1;
+	Fri, 18 Apr 2025 20:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745009350; cv=none; b=l27D5PFhfPQoKc2WmZw76+1TJR8lrKZTMKB67k/wPtmytetQK/TuE0XqZBSo8qTSVm9AIg3O5vsqqJpJRy4a1yjRWioV3OklYBi0DOxVjz4JHsAdMRbDGoeDqbMGAPR3slOFlpgTO8tVC+hvbNQmyVi3FIDsEKdeMRzLdS4HjOk=
+	t=1745009426; cv=none; b=J0RZBiM0yjFSRA14syTyY+CAnxEc8RAW7FiHErERQqHvTxi23BrJqFy1K4turGNUPGbZjAgUdLQSvBfB8KU6j9655qwU1C2u/lZ2tqmzu0gHwtyC4tqnPFQ2uQz9V5jGocHiy7HavLr7FHePk0PLWqMVO6eOo5vUg3TxQP/WIJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745009350; c=relaxed/simple;
-	bh=IDXLCWhe3B9fOmtjZw3mD4GasXsPcTYWgh1iEMR39vk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bc2x/k5IOE2/ZhOnwp2xCFzq5G69SW0w1Cn3bConApSBm6GIjaoo+60piH0HqV3lVyYVWgH2jPLllpYUuyuaG4NUM1kYKdXlf5i5r5qlTBpiwOpVF+w3ZPBDfXF14J99hRaeLe/ep7GiluW+Z5sUh7gx+IQaLR/W3RiknGAhWeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=cJJTnzWb; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1745009426; c=relaxed/simple;
+	bh=W9segW3cJMe7VP3WKWL2Rpm9z+MOBA5Bz2bhSFPcUHc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hsbvRF+p6J5FkTIrKZPl/F6/jFDeMByu9/CvV6qnxGiA9SdMZpof/tFfE3W+jyOKMV9+dDiuvZ8cpe2LQfQawrt7tQyA48ZtkABC4xyOiY93K9DrfKsQsPQn3MOevfJVN3XeQWkCpvhEwHivfRlyhl74/rDo4uKH/bVOgojz+yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KTh0ni4X; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cJJTnzWb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=v26kdZJuDullQdaeIF02DAn4bkJ0oZUrA6h5X1L9724=; b=cJJTnzWbpGOGLdjntuuBlONbCO
-	PObxKf6qSECUeqVv9ArshIVoxarXkz2EDiFQMRWINZOh3Jkbp3lzE9y+EbZm06SEp+FCtd+Qpbr/C
-	O1IwwnSTyqRr7nBcCc2cbQSnF0Yf1d87e1ZuDO22/8GSrHtFWy0RuVCQtO6zAC20bdwA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u5sdr-009wIw-Ic; Fri, 18 Apr 2025 22:48:55 +0200
-Date: Fri, 18 Apr 2025 22:48:55 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andy Whitcroft <apw@canonical.com>,
-	Dwaipayan Ray <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Joe Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
-	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Roger Quadros <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
-Subject: Re: [PATCH net-next 2/4] dt-bindings: net: ti: k3-am654-cpsw-nuss:
- update phy-mode in example
-Message-ID: <2cf14499-6ce8-42e0-98bb-3669aa0ed1fe@lunn.ch>
-References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
- <4216050f7b33ce4e5ce54f32023ec6ce093bd83c.1744710099.git.matthias.schiffer@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTh0ni4X"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c55500d08cso218412485a.0;
+        Fri, 18 Apr 2025 13:50:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745009423; x=1745614223; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zBS+gMuCbxo0lQQXgb/9PCP46mLZ8s4XB03eoOWWGew=;
+        b=KTh0ni4XoZTckpz2941ZQBGdpxgBNKRnVM48cPUjcw3AXlXLLgqJVlpd/dEZjb/NTr
+         ovpMYt8i+NlRFzIISlGh35E9Ohb03muKpCUqVKD7reWY5BddLOC9n/uQMZYAiqsMOwue
+         H2Cxlbkmbb7GLd+qK3iA0YBbTqTNTZmDSHEzJ/pCoE7sra4moOEvwDP08w6hCaynTqHB
+         b7mimYoLhKRU7oqp6MKFClEY1gTnsqjtF1HQAuq1dqdNwoeIsU4gzYdvodJAXXghNOTH
+         o8SdmzFbyyAKLpW1XClyGpRZzBj1SlAm+VZZ2NCUgBwIicfq8ajm4vC/OM6TaEBhXdZg
+         xOcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745009423; x=1745614223;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zBS+gMuCbxo0lQQXgb/9PCP46mLZ8s4XB03eoOWWGew=;
+        b=QMqcmw6DcGcMENrQg987/AW0SNEwpI6eGiC1GXBSifvXXNTmimBczf+MJyPKbyz3GK
+         rAzPuiDIOxeFpdw5dXpLaGt3EaFKtWiMmYALs3P/TFvrQn0LpvncxEa3IBQcOfVd+r0r
+         7o2sH6eMvWh4YrAMMxfkI9ANoKqpkGbCHbkYfhkRXM9WS4uoEqn84i5g5ME6smppNdDC
+         ok3bWeBXrEh2DSIbB5FnePIKvMtAXTYX5PsZFNcORsYNn7bvu0UXB7nDjL54LIPm8LUo
+         seQlprXzU+HLC5373JuchDxTede1RMusR7VhnMJUV1wHRR/gCQxLZIFPhkdp+2nZND8O
+         oC7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUme1mQv02l/cNnLB451OVhRXbajOVHKj79+B0a1p+v12vMPm67YGvKqqmY+lsvK51UFYIwzj2rynADdyaX@vger.kernel.org, AJvYcCXjWt7GGMomBCVZSl8z6vkTuhVAyeP0pe+NKmuUIyDH3wyzZJDDCmQvp51qMGm0osYPdzAqaqcFUgs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzoq5Ltc4l7hVs2eeLuJU4G6dgmSlfN9sK0XH/QwKmi4pn+K56A
+	aRFAKx3WMx4/fhPjjRkaGyD/6hTbv+aI/ehnqjjL8qcavpzTk8dO
+X-Gm-Gg: ASbGncvGRaJVqBK2c9RWT6SGtfilrsxf1742AwkDc1RJPe8ytTmsmYqSWLob0z944df
+	6d3/3/myHWwtm4HNSusZe2Am11UdDfXpU3Hjemkg9CxF9HzyGPBrhjQHxs3rpwH2X1Ym5AK/4PJ
+	bTeA9DzBnm922td5gR3IdrmRCkJ/c+ryTNZ5jF8MUAuT5jQXqHlzRB83pCqnvWG7z4SInvaZkWF
+	p2JobfOgWUa7P6Bq37yEi2otZ2GNGtRCNS7d7l/dmEESUawPijPVIhP/nLewtqzav8pxpXcs9kT
+	d9ZhEAO//a073tEoEyJCSIVfRfv8BfdF8rV1fv7OBQim/GJdFGv4VERcFwhPgrMgk9x3q9huL4X
+	AN6Yn9lnco6+8BRBBVNhOXypEVKP0gw==
+X-Google-Smtp-Source: AGHT+IGfxKsSAmrL28HNu5yl4e6s2vMKqHnmp5LNwavPA9VlB2hFWprDYSQDcjsuRTkffTYQCc6V5w==
+X-Received: by 2002:a05:6214:20a7:b0:6d8:99cf:d2db with SMTP id 6a1803df08f44-6f2c4687fc9mr82895486d6.38.1745009422700;
+        Fri, 18 Apr 2025 13:50:22 -0700 (PDT)
+Received: from theriatric.mshome.net (c-73-123-232-110.hsd1.ma.comcast.net. [73.123.232.110])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2af11d7sm14355906d6.6.2025.04.18.13.50.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 13:50:22 -0700 (PDT)
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+To: gregkh@linuxfoundation.org,
+	jic23@kernel.org,
+	lars@metafoo.de,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	Michael.Hennerich@analog.com,
+	sonic.zhang@analog.com,
+	vapier@gentoo.org
+Cc: gshahrouzi@gmail.com,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: [PATCH v3 0/5] staging: iio: adc: ad7816: Fix channel handling
+Date: Fri, 18 Apr 2025 16:47:34 -0400
+Message-ID: <cover.1745007964.git.gshahrouzi@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4216050f7b33ce4e5ce54f32023ec6ce093bd83c.1744710099.git.matthias.schiffer@ew.tq-group.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 15, 2025 at 12:18:02PM +0200, Matthias Schiffer wrote:
-> k3-am65-cpsw-nuss controllers have a fixed internal TX delay, so RXID
-> mode is not actually possible and will result in a warning from the
-> driver going forward.
-> 
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> ---
->  .../devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml          | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
-> index b11894fbaec47..c8128b8ca74fb 100644
-> --- a/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
-> +++ b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
-> @@ -282,7 +282,7 @@ examples:
->                      ti,syscon-efuse = <&mcu_conf 0x200>;
->                      phys = <&phy_gmii_sel 1>;
->  
-> -                    phy-mode = "rgmii-rxid";
-> +                    phy-mode = "rgmii-id";
+The original patch combined a functional fix (allowing channel 7) with
+several refactoring steps (introducing chip_info, renaming structs,
+improving validation). As requested, these have now been separated.
 
-It would be good to enforce the phy-modes which are valid, which i
-think are:
+The series proceeds as follows:
+1. Fix: Allow diagnostic channel 7 for all device variants.
+2. Refactor: Rename the main state structure for clarity before introducing
+   the new chip_info struct.
+3. Refactor: Introduce struct ad7816_chip_info to hold static per-variant
+   data, update ID tables to store pointers, and switch to using
+   device_get_match_data() for firmware-independent identification.
+   This removes the old enum/id mechanism.
+4. Refactor: Add has_busy_pin to chip_info and use this flag to
+   determine BUSY pin handling, replacing pointer comparisons.
+5. Refactor: Simplify channel validation logic using 
+   chip_info->max_channels, removing strcmp() checks.
 
-        case PHY_INTERFACE_MODE_RGMII_ID:
-        case PHY_INTERFACE_MODE_RGMII_TXID:
-        case PHY_INTERFACE_MODE_RMII:
-        case PHY_INTERFACE_MODE_QSGMII:
-        case PHY_INTERFACE_MODE_SGMII:
-        case PHY_INTERFACE_MODE_USXGMII:
+Regarding the 'fixes' tag: I've applied it only to the first commit
+containing the core fix, primarily to make backporting easier. Is this
+the standard practice, or should the tag typically be applied to
+subsequent commits that build upon or are related to the fix as well?
 
-Anyway, this can be a follow up patch, it should not block this
-patchset.
+Chainges in v3:
+	- Split the patch into smaller patches. Make the fix first
+	  followed by clean up.
+	- Include missing channel for channel selection.
+	- Address specific feedback regarding enums vs. chip_info data.
+	- Use device_get_match_data() for device identification.
+	- Move BUSY pin capability check into chip_info data.
+	- Simplify channel validation using chip_info data.
+Changes in v2:
+        - Refactor by adding chip_info struct which simplifies
+          conditional logic.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Gabriel Shahrouzi (5):
+  staging: iio: adc: ad7816: Allow channel 7 for all devices
+  staging: iio: adc: ad7816: Rename state structure
+  staging: iio: adc: ad7816: Introduce chip_info and use pointer
+    matching
+  staging: iio: adc: ad7816: Use chip_info for device capabilities
+  staging: iio: adc: ad7816: Simplify channel validation using chip_info
 
-    Andrew
+ drivers/staging/iio/adc/ad7816.c | 94 ++++++++++++++++++--------------
+ 1 file changed, 54 insertions(+), 40 deletions(-)
+
+-- 
+2.43.0
+
