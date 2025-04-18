@@ -1,220 +1,114 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7A9F8C0E;
-	Fri, 18 Apr 2025 01:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B70C8C0E;
+	Fri, 18 Apr 2025 01:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744938165; cv=none; b=Bzc2xFbTx7UBzyFAQHSjTx4WBoNrmQyHQIyjUMN1R6wuy2OOShdjoiXqU0H0FvZxVsDNcYaBNdhGBLNmxUTy4em69MUjttBgJOXSd6YFfhjqhqLCHb+vamWRFrJe7UNHK/KBaRqY0ldiZ4eZXs6TNRrcE5/EoYf5hgnVDB3CJfU=
+	t=1744938553; cv=none; b=cOzJUEx4e1gXqJj6BGqWjS8U3qEoaPXERRGDjeK8kfjIL9wBu8qzA0iPtHxojSMYE+65MoHHCaqMfu9aAeVqrOdX6WNqux8cn6pvP2+C/WiG+rMdHJBIcj9hEtTweLi9kAGH1d8TZFd3KU9cRtxPB+Me4wnSkdI59R8hTonubbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744938165; c=relaxed/simple;
-	bh=l4e/uYzgG6Tdwe8y7t0wmGDfbKXLpFehIIub+FZvEv8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mVOAKC/bZpV2+S1v33lgpLvvg4oUHoqB7FRpcreMZkcDzti+Rk0Tg9cSFJqJUKj4c2SvP3Gwu/Nuozo2wNObcfJHFdjSDt8RifiZQtlhvDMFj+k0DNJEx2CTquNws+QHhCeeNAsOkHc5sSpDil8zkeBJNrRYQ/tdR/RZ0SKCZZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e/e8Zv8g; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744938553; c=relaxed/simple;
+	bh=q/sNUi3Id7+KfkudHCphuMBEouo8BCvkRk8JqMjb+n8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ALUEpguWDZkFwYQyRAPENZ923VAUr3SKaviOgd/wTTQq1onoreND6A9Y88Bciwr8OZ+hAteGaMy2RY7MZjpeFpYlqtBdUn9vPwnjA3YyKE48+MEht6z4eAjYug1qTeVKw35DDmpRahSyybaJy/KqYZbaE7BpQi9sv3aR4vZggmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=saJkvimI; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e/e8Zv8g"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22c33e5013aso18077795ad.0;
-        Thu, 17 Apr 2025 18:02:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744938163; x=1745542963; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6NXDfDK3aSml2E+saDauRdMH/9W2bC9OP7905GHXeqg=;
-        b=e/e8Zv8gBxIWR9YdN7uvZ1wbzUSG3gVGPlJCUoKUF4hQSxSCqPQictjhecmL2LpUiX
-         EIHvtwppU2Xq+s8JTHl5NhQ3myFwRsAzElxLx8PIDpTlaGDTOifF3dJW4LRpbQbWRD0r
-         EMW0UZ5ckTnvgG1Ds/vYSvSOX7O8EFl9rpfQD+aodyfBomnRZemULO9cN16RyYF3/nj8
-         3UAcFH/GlnmdFumtKqer8hasnNu+VZVs4ywDu+tK47zKovsTebDRD4ukYxuJGwqsspqL
-         dJ8i0OrFwZjNy4j8z3Cs0kW2YGbib9EnNa+cP5Z1tP6IsG2ZZKk4wTTOjolfrmfQuyzB
-         hSqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744938163; x=1745542963;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6NXDfDK3aSml2E+saDauRdMH/9W2bC9OP7905GHXeqg=;
-        b=IemXEEu5COhV5tAv9qZcIgqdxp0alD6YxVlxtL3Q2T4SKNIbnYiiL2r7gGkWwNy4uC
-         PeYTmAtu6PncfMn58KQbvQGlftzbs40rb2hAnA00x+3EMaJgEIBYNZRI/3SvePZQVgOX
-         JMyyIOced5wAbQCXX3I0y+lvaEWjG5YhR+RHz02VKS0s7IINOBrfdjAFaQOoLaaJ47GR
-         IFOOW5LNgA1ZwtdZa0uC6xDnGmUtEfeDyAI8mdsNrV5Xf7vrto9NQzFyqmPX9SQO8jJQ
-         ZSmYo/7yutRB48ZPHe3p2HfhbnV/BFFs1MVCAVCyHdtsQFxvgwJfILsk35bNjoG95w0t
-         OPtg==
-X-Forwarded-Encrypted: i=1; AJvYcCU1FF4DOLns1y2XhApOyv4Nic35R3BeZGjfgHnjpS7I6h/fss9o45hjyw3qcBWri23LZLhpfNLYDM8=@vger.kernel.org, AJvYcCUjD7MNuzUJEgw+B8o4UQfUp74QZ+7yumWe5BCiPEXu1UoYIxxjn0LbB2WLkGsHS5sa3vCDhex8ZvX6HqCm@vger.kernel.org, AJvYcCV1aPz0htTK3LNKxONKG7mArFskDCT7MbMfuvTYje+2AIydo96pS4lE819npgp7akZf9H8Qw6eOPK08qSp+3eMF@vger.kernel.org
-X-Gm-Message-State: AOJu0YwblCWRBy5ot4ClcPPBeuEeO3nJrGIX179vT1+FWEZuyZ7P2vpr
-	78ptE0C22rd/K0S2WMhQKvW+DG/kpdQyKRbw1GQ2qjgezWUPvO8I
-X-Gm-Gg: ASbGncttxtPusCoTOjn77B/hki7uSFt5v4+G0FQwphJTl7rMNO+YadQnsqI7IxJq48G
-	/MthP6peri3KzeUk2ps4lH+mx/16ZW/QlzBNV8Qe6kFu7MKqUpHk1/COdYQbNrhYnguN6WD19wr
-	mEooUlmPockWHqmW4Pf75OURjqZQn0/tyFvZ6l9LnzKzR/EtrDqj6+4AClbo38O2ObY81lDQCxm
-	qoFth+8Z9Ia/8VdsexduK6LwkT+QBcqt5Fbhtt61YmECU9h6JtWiASo0aSjoZ2slaJK5vnEda1G
-	z0kQTqQq+iHDcYq3gxrcv5xQj1miYRj3ld6VAeb/
-X-Google-Smtp-Source: AGHT+IHDm2/uiDHbeptzLGovtbbE44rhzmmK5eRP8BwU9MWedsOqamPglnynKile7HYwKCMMQ1kxTA==
-X-Received: by 2002:a17:902:d589:b0:224:1157:6d26 with SMTP id d9443c01a7336-22c53573b4amr15702485ad.4.1744938163034;
-        Thu, 17 Apr 2025 18:02:43 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8e4912sm550714b3a.60.2025.04.17.18.02.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 18:02:41 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 3238A4209E46; Fri, 18 Apr 2025 08:02:39 +0700 (WIB)
-Date: Fri, 18 Apr 2025 08:02:39 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Cc: akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	david@redhat.com, baohua@kernel.org, baolin.wang@linux.alibaba.com,
-	ryan.roberts@arm.com, willy@infradead.org, peterx@redhat.com,
-	shuah@kernel.org, ziy@nvidia.com, wangkefeng.wang@huawei.com,
-	usamaarif642@gmail.com, sunnanyong@huawei.com,
-	vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
-	yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
-	aarcange@redhat.com, raquini@redhat.com, dev.jain@arm.com,
-	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
-	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
-	cl@gentwo.org, jglisse@google.com, surenb@google.com,
-	zokeefe@google.com, hannes@cmpxchg.org, rientjes@google.com,
-	mhocko@suse.com, rdunlap@infradead.org
-Subject: Re: [PATCH v4 2/4] mm: document (m)THP defer usage
-Message-ID: <aAGkrw5O5OcVFDFQ@archie.me>
-References: <20250417001846.81480-1-npache@redhat.com>
- <20250417001846.81480-3-npache@redhat.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="saJkvimI"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1744938541; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=/zpmOaOeab+ITuItqENzqv6ySxnros0qeyQCTC95Sbo=;
+	b=saJkvimIjpgm396tUgpV8cRflR1RuMGHbro6q9SYITLWSq9edAS4ZaWivQsv4xFgTyIGE596Xu2AbsxXeOJitTPy3g7tDpCtGEODWnq7ixQcgmhc7Qxe2gMJab0CX327bDcgFwqIEC0fJci8An5j5MOVPL392x542P+X7Elp3Vo=
+Received: from 30.74.144.122(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WXH6Ihr_1744938538 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 18 Apr 2025 09:08:59 +0800
+Message-ID: <2b8d048a-7089-41b4-b256-e061af10216d@linux.alibaba.com>
+Date: Fri, 18 Apr 2025 09:08:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="KNDrqzrcH5sLMMxx"
-Content-Disposition: inline
-In-Reply-To: <20250417001846.81480-3-npache@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] khugepaged: Refactor
+ trace_mm_collapse_huge_page_isolate() to take folio instead of page
+To: nifan.cxl@gmail.com, rostedt@goodmis.org, mhiramat@kernel.org,
+ willy@infradead.org
+Cc: akpm@linux-foundation.org, david@redhat.com, fan.ni@samsung.com,
+ yang@os.amperecomputing.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, npache@redhat.com,
+ mcgrof@kernel.org, a.manzanares@samsung.com, dave@stgolabs.net
+References: <20250417171758.142745-1-nifan.cxl@gmail.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250417171758.142745-1-nifan.cxl@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
---KNDrqzrcH5sLMMxx
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 16, 2025 at 06:18:44PM -0600, Nico Pache wrote:
-> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/a=
-dmin-guide/mm/transhuge.rst
-> index 06814e05e1d5..38e1778d9eaa 100644
-> --- a/Documentation/admin-guide/mm/transhuge.rst
-> +++ b/Documentation/admin-guide/mm/transhuge.rst
-> @@ -88,8 +88,9 @@ In certain cases when hugepages are enabled system wide=
-, application
->  may end up allocating more memory resources. An application may mmap a
->  large region but only touch 1 byte of it, in that case a 2M page might
->  be allocated instead of a 4k page for no good. This is why it's
-> -possible to disable hugepages system-wide and to only have them inside
-> -MADV_HUGEPAGE madvise regions.
-> +possible to disable hugepages system-wide, only have them inside
-> +MADV_HUGEPAGE madvise regions, or defer them away from the page fault
-> +handler to khugepaged.
-> =20
->  Embedded systems should enable hugepages only inside madvise regions
->  to eliminate any risk of wasting any precious byte of memory and to
-> @@ -99,6 +100,15 @@ Applications that gets a lot of benefit from hugepage=
-s and that don't
->  risk to lose memory by using hugepages, should use
->  madvise(MADV_HUGEPAGE) on their critical mmapped regions.
-> =20
-> +Applications that would like to benefit from THPs but would still like a
-> +more memory conservative approach can choose 'defer'. This avoids
-> +inserting THPs at the page fault handler unless they are MADV_HUGEPAGE.
-> +Khugepaged will then scan the mappings for potential collapses into (m)T=
-HP
-> +pages. Admins using this the 'defer' setting should consider
-> +tweaking khugepaged/max_ptes_none. The current default of 511 may
-> +aggressively collapse your PTEs into PMDs. Lower this value to conserve
-> +more memory (i.e., max_ptes_none=3D64).
-> +
->  .. _thp_sysfs:
-> =20
->  sysfs
-> @@ -109,11 +119,14 @@ Global THP controls
-> =20
->  Transparent Hugepage Support for anonymous memory can be entirely disabl=
-ed
->  (mostly for debugging purposes) or only enabled inside MADV_HUGEPAGE
-> -regions (to avoid the risk of consuming more memory resources) or enabled
-> -system wide. This can be achieved per-supported-THP-size with one of::
-> +regions (to avoid the risk of consuming more memory resources), deferred=
- to
-> +khugepaged, or enabled system wide.
-> +
-> +This can be achieved per-supported-THP-size with one of::
-> =20
->  	echo always >/sys/kernel/mm/transparent_hugepage/hugepages-<size>kB/ena=
-bled
->  	echo madvise >/sys/kernel/mm/transparent_hugepage/hugepages-<size>kB/en=
-abled
-> +	echo defer >/sys/kernel/mm/transparent_hugepage/hugepages-<size>kB/enab=
-led
->  	echo never >/sys/kernel/mm/transparent_hugepage/hugepages-<size>kB/enab=
-led
-> =20
->  where <size> is the hugepage size being addressed, the available sizes
-> @@ -136,6 +149,7 @@ The top-level setting (for use with "inherit") can be=
- set by issuing
->  one of the following commands::
-> =20
->  	echo always >/sys/kernel/mm/transparent_hugepage/enabled
-> +	echo defer >/sys/kernel/mm/transparent_hugepage/enabled
->  	echo madvise >/sys/kernel/mm/transparent_hugepage/enabled
->  	echo never >/sys/kernel/mm/transparent_hugepage/enabled
-> =20
-> @@ -282,7 +296,8 @@ of small pages into one large page::
->  A higher value leads to use additional memory for programs.
->  A lower value leads to gain less thp performance. Value of
->  max_ptes_none can waste cpu time very little, you can
-> -ignore it.
-> +ignore it. Consider lowering this value when using
-> +``transparent_hugepage=3Ddefer``
-> =20
->  ``max_ptes_swap`` specifies how many pages can be brought in from
->  swap when collapsing a group of pages into a transparent huge page::
-> @@ -307,14 +322,14 @@ Boot parameters
-> =20
->  You can change the sysfs boot time default for the top-level "enabled"
->  control by passing the parameter ``transparent_hugepage=3Dalways`` or
-> -``transparent_hugepage=3Dmadvise`` or ``transparent_hugepage=3Dnever`` t=
-o the
-> -kernel command line.
-> +``transparent_hugepage=3Dmadvise`` or ``transparent_hugepage=3Ddefer`` or
-> +``transparent_hugepage=3Dnever`` to the kernel command line.
-> =20
->  Alternatively, each supported anonymous THP size can be controlled by
->  passing ``thp_anon=3D<size>[KMG],<size>[KMG]:<state>;<size>[KMG]-<size>[=
-KMG]:<state>``,
->  where ``<size>`` is the THP size (must be a power of 2 of PAGE_SIZE and
->  supported anonymous THP)  and ``<state>`` is one of ``always``, ``madvis=
-e``,
-> -``never`` or ``inherit``.
-> +``defer``, ``never`` or ``inherit``.
-> =20
->  For example, the following will set 16K, 32K, 64K THP to ``always``,
->  set 128K, 512K to ``inherit``, set 256K to ``madvise`` and 1M, 2M
+On 2025/4/18 01:17, nifan.cxl@gmail.com wrote:
+> From: Fan Ni <fan.ni@samsung.com>
+> 
+> trace_mm_collapse_huge_page_isolate() is only used in
+> __collapse_huge_page_isolate(), which passes in the head page of a
+> folio, so refactor it to take folio directly.
+> 
+> Signed-off-by: Fan Ni <fan.ni@samsung.com>
 
-Looks good, thanks!
+LGTM.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---KNDrqzrcH5sLMMxx
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaAGkqwAKCRD2uYlJVVFO
-o76GAP4gVe3Gv1BdLnJiW4rDIJQ6VD6/W+Sr//civHKYU9VsUQEAuc1azxqwsSEj
-K00HI9k41AAjpL6TTipYDczBL0F01w4=
-=KYIn
------END PGP SIGNATURE-----
-
---KNDrqzrcH5sLMMxx--
+> ---
+>   include/trace/events/huge_memory.h | 6 +++---
+>   mm/khugepaged.c                    | 4 ++--
+>   2 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/trace/events/huge_memory.h b/include/trace/events/huge_memory.h
+> index 9d5c00b0285c..a73699f000de 100644
+> --- a/include/trace/events/huge_memory.h
+> +++ b/include/trace/events/huge_memory.h
+> @@ -116,10 +116,10 @@ TRACE_EVENT(mm_collapse_huge_page,
+>   
+>   TRACE_EVENT(mm_collapse_huge_page_isolate,
+>   
+> -	TP_PROTO(struct page *page, int none_or_zero,
+> +	TP_PROTO(struct folio *folio, int none_or_zero,
+>   		 int referenced, bool  writable, int status),
+>   
+> -	TP_ARGS(page, none_or_zero, referenced, writable, status),
+> +	TP_ARGS(folio, none_or_zero, referenced, writable, status),
+>   
+>   	TP_STRUCT__entry(
+>   		__field(unsigned long, pfn)
+> @@ -130,7 +130,7 @@ TRACE_EVENT(mm_collapse_huge_page_isolate,
+>   	),
+>   
+>   	TP_fast_assign(
+> -		__entry->pfn = page ? page_to_pfn(page) : -1;
+> +		__entry->pfn = folio ? folio_pfn(folio) : -1;
+>   		__entry->none_or_zero = none_or_zero;
+>   		__entry->referenced = referenced;
+>   		__entry->writable = writable;
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index b8838ba8207a..950d147cd95e 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -696,13 +696,13 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>   		result = SCAN_LACK_REFERENCED_PAGE;
+>   	} else {
+>   		result = SCAN_SUCCEED;
+> -		trace_mm_collapse_huge_page_isolate(&folio->page, none_or_zero,
+> +		trace_mm_collapse_huge_page_isolate(folio, none_or_zero,
+>   						    referenced, writable, result);
+>   		return result;
+>   	}
+>   out:
+>   	release_pte_pages(pte, _pte, compound_pagelist);
+> -	trace_mm_collapse_huge_page_isolate(&folio->page, none_or_zero,
+> +	trace_mm_collapse_huge_page_isolate(folio, none_or_zero,
+>   					    referenced, writable, result);
+>   	return result;
+>   }
