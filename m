@@ -1,143 +1,123 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14E7275100;
-	Fri, 18 Apr 2025 12:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E28274FCF;
+	Fri, 18 Apr 2025 12:51:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744980614; cv=none; b=jUFIeTRNKzHqn+zow9hhHJhk5vu/I0ArqlwSk62R4ZXyt8S1JJ+AfJhLpkLdlGzNcCA1zrW8kKON5kU4w6T33NGePWgTd60VGwd9fovAl3Rbwg3Lt+iU6o+mAeB0YUb+AbWjfi8a88W9bgjM2xajTjAlSwlGsEitXybD5xIxgew=
+	t=1744980705; cv=none; b=V6hToU7JgWbqkN/iErGfRfMl970N/P8yAOg4wKZAtVHQzX9Celq3+v6u9+MVQwjYUrP9DJyHr+J4nGLrmBBVUMC2hTAWWp3wp/1iywf4KfpG+hrVs5XFghcMk1CkIPEqE4xwQX8GVINnOb/7oglE90sv6PS5UZFhp100v15IiZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744980614; c=relaxed/simple;
-	bh=qIe5VTYAgXMdVDSSpGXuaEDxmGWJGGpu3zQFFsXGwr0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q1qoYZyYyIp/cdMKTq+b+m2+R/a8V6p/K8MJxhBgzaG5uBHEP3v8BJN4WWtIMbuH+Yil6xqVxKbwLruxEV9AFi39FEUzMoOpSDMWRdfGL0om6oQ71MgqlZz/Je1FG/URQWzFjiujfKrbAs66SRKOPgT28h6qlUDKV2dP/Au+80I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KRu4tGgO; arc=none smtp.client-ip=209.85.208.49
+	s=arc-20240116; t=1744980705; c=relaxed/simple;
+	bh=Tx6xVN7cw+waCo9fc73br/PHvimvHBxuXDpSvbHxWCc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n4kCjYiP9MkM+4sv3gNdQY9B++KkuHG44SEXpPzONROACstlAlWsuy2Cpr2hNKIOtkHZq6/S1rj74T5iSoEvompZNbQkfyYGnWk/YLRNON3/8ijAOqsZOd7VWFD+j+o1kKwe9/8VXGHqMbqj1UoOsl5t4abck5DtuNk04VJD8mI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EWP8VhYc; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRu4tGgO"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e677f59438so2636117a12.2;
-        Fri, 18 Apr 2025 05:50:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWP8VhYc"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43d0618746bso13227055e9.2;
+        Fri, 18 Apr 2025 05:51:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744980611; x=1745585411; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744980702; x=1745585502; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uiG/jQBcPMUGDEIyEhmKoU4AoPV4dkKviFsyVE3TVcY=;
-        b=KRu4tGgOp116H29WD1xuybFQarb/VnwQh5rAEMTdxDiq612Jrqk4K5Rg0tPSb+tP+i
-         Za81x970IjZMDHDEtbvzGrO4hpwov7IHgGENHYNIG6IWu4ZHOLktglGV+7LYMQTNNiqA
-         1Cle9yE1YEZVFlinPooo2P6/d9NIscxJRCwpk6LnGc/nwJpxKJx//NSiIUM1QG03iQvi
-         9GUbVf7+f7cThrC/hg++zUuTOHO+tMdhV5qHBhzHNJI61PQpRLUtiLGw2HSPQUD5ubdn
-         7Lt+xLzogPdpf+CjmqaPCLt+o3mpLYMnPyq8hXkCKsjNB8Pw5CmPfAO8nT10FkHeXUz8
-         SD5w==
+        bh=fSI7eAOwKER7UtUiex4GHzeLYi9Hq3SA4vwSh7WcZHw=;
+        b=EWP8VhYccRqhGCM1wFXi0fkAv6OU4IYnDTWZRtEsyp1lZk0QNo9Qn9E43QSqiWRnI3
+         kICaMdbnlSiBzgRS1WK/5AKEOBd7OqH8PwDgopyP/fW1zP1pRH1zEI3WqgR0BSTTN5HJ
+         iktwv3uIZUe91gwYT9+9PVkq49t+GBZH6/7dEiRskqMOOmGRh/Gks3rgxrFUbOiPJgHp
+         L5iadlRrBVCRZixwrq+zEkhyae0tTSxw0HfEf+KkjjAMk3mK3oNAPh7JFFUV06SiB89t
+         z6YKOVTVn5tmhIN0Sd3JOzPh9ldUp6GlTpJXAikzQmOJc43lFCvlESUi+MFyvLl9Jmxa
+         qzdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744980611; x=1745585411;
+        d=1e100.net; s=20230601; t=1744980702; x=1745585502;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=uiG/jQBcPMUGDEIyEhmKoU4AoPV4dkKviFsyVE3TVcY=;
-        b=H3ZVhsgHUfj5ZPRfcsXqg8CVoshaBmiMxfIwwJaNqJHUJs3kbjbcZrM3oHrX69jvml
-         A3JQFC0iTnzW5Erl7OFqAETKOpdwE3FLJ76ZtMsdT35TZx8aQxkrNjfMUVejcaKAo7M5
-         u+LQO8w6M0pMSIG7CeDK62hJWNAJMxaCy/fgctW9NEil+6YrTiGlzYkQvlf+tkrQy5DA
-         C1vzVSgZopB0A8UQ/DbGM+og6wBZi/z3q9a+zeJgrSia/MqGMu/LSF7Mx1zkDfynT4Q1
-         +uKH/R8RQ0HWwpDwQiYh6ugqBeoU5IGaFkcwSPoBkWsYYvpxxtgbieJ2VjLJr4emvfoi
-         ckQA==
-X-Forwarded-Encrypted: i=1; AJvYcCUnbejxGt2d/i5BMkJ4IBlUA3Ntfu+6+OWW+a0vxs9LT/pwVEHTIe+JuXQuU1KC3/GzrUQdholIelwomgLH@vger.kernel.org, AJvYcCVolXa6Oe32so6DWM+gAkOQIcafHxz2+2/bKhsT321DVfKb+oPmB09ZRDjT/Kz6Ch6mUWRvqmN6it6qeTeh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8KcTweEXCcWbdteqy4+fJEUHLWAgho9bIgqi1UYm85xUthRO6
-	suANuTE9JxKCWjGGfwKwNH7YKiYCt+7BaiylNNUxIbP0+ZsRQNHb
-X-Gm-Gg: ASbGncsErwl0IwaIEPJ/7ONufafMPUZVJfpCo1E84BL2iMljSl23Y+q+mo2hx90oCgd
-	8utzxRihosCjJCJm4/FNeJs9PTB61C+VeKG7AkOYTMwKLuMBwyKsLDu8iGgOm9nChWtLPUiyb/3
-	NSe7rntA7CIlSDMH/8ToopHysxD+oJqsaPOExhF0Y0c+RXiYCw5ja/Gb3F/TYpbg/8ZhpU7KN9R
-	Y52BZxtZ045INuzVZGRBzmeFDUVJ3IAq6dxkpqe9AptU2vJvUKGvmE/yUyEuZeCIiLlbPOZhvTY
-	dGpy0R+7s2Losx5RLa3Qbitn6J8vh8B48kFOMv7Api7mHyFNQe6/hOK3bWQ=
-X-Google-Smtp-Source: AGHT+IEPL3Q5+UVSkZcl/fqItf8L7ROZ4xLCJwGtQWctIfqwZLJuQARHwtWzba4amfmd7oAvHVT1AA==
-X-Received: by 2002:a05:6402:13ca:b0:5e8:bf18:587 with SMTP id 4fb4d7f45d1cf-5f62855c745mr1824756a12.16.1744980610653;
-        Fri, 18 Apr 2025 05:50:10 -0700 (PDT)
-Received: from f.. (cst-prg-69-142.cust.vodafone.cz. [46.135.69.142])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f625549f34sm937589a12.4.2025.04.18.05.50.09
+        bh=fSI7eAOwKER7UtUiex4GHzeLYi9Hq3SA4vwSh7WcZHw=;
+        b=WTt5BdQpdu1MgYOknFLOH7kFLOHx7QYhx+TKsnHwuT8zVVsYPEGYd3MqAyAa/L6xgR
+         bRxBpzm5c/ea058Eikm5+Mv36jFbpKdOT/XIBz6gHh88vnK9hagxh+FEohijxyqDRwNU
+         MZwGXSoziJjv6AZ7yXj8z41JPK3sE6lgNJW2WsbpuJaTntwRQVz0e2hZeylEyBiNDieZ
+         WhB/3gD2YE7de+LRUYOhFtt8NgADfFru7mgAwHmSsE2TWPM79tm44hln8sIokqS9Hmfe
+         4PZEvEBf2wlLDnssJKX7MCBPI9zfojwINQ2ktiZQBK3SFohjB++RMio2dJvy4MfUBQ+9
+         WOwA==
+X-Forwarded-Encrypted: i=1; AJvYcCWrURFJzvKF66ULDAP1Nb3jAYWmnAWqEq3BkoCdusl4uG5BKLx079ivfU66cxha8T3wZGipDozc1nuLLQ==@vger.kernel.org, AJvYcCXqpPwp1D/V/467pyF7jcbnnBd/AHMHPMdJqn75ACgR860lX1OO24mEi+EmXFvxlekMqUfYai8GUJrpSilj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzz9dtWlToqOhFT8RpaMMPHmbFtIcaPRaFTP31U2L1+pFhyQNSH
+	EwSUIMxNimjltKqDP8W9LFonJIBvOWE6EjuBD+9y4OaNGepLNDo3MnBKMBdxtF7pEg==
+X-Gm-Gg: ASbGncsYFdkSYS7y1NfnJNQ8bxWjuAvlSkGJspMWeZsPfTQjtNkLCZZsGh0tuHqMwRs
+	KMyILHJXxcRfbQQ9/GDGc4mmA1Yxth/HXmjXX+SLJY+DNaoDsCickD01cStpwTYbM88+Aod3cC1
+	NLdDuWEr/w7u154g/UXFwbJxsHKWQKVS/sJECQKH2+oPWW/dm+BiJcTip8hnngdtafh8zFeuet5
+	PcoDXdc/yUSQrYUkcEVMzwgh15ff6TPSns4ovbAWZ/ACisvhSckUYJ08kIgxg0xAVJtYb715Nl2
+	TrgMcPq1o1h/ACOuLIEXWHY4owJR0on+HdDhyDPQ3g==
+X-Google-Smtp-Source: AGHT+IGRLN4xXyDof+aLmH9LIsvIdtLHzEudvt2mvZiXNlcTq7vBl8qMI8mV10llHh3CBdT7Fc0KOQ==
+X-Received: by 2002:a05:6000:2283:b0:390:d6ab:6c49 with SMTP id ffacd0b85a97d-39efba6ba65mr2283592f8f.35.1744980701688;
+        Fri, 18 Apr 2025 05:51:41 -0700 (PDT)
+Received: from localhost ([194.120.133.58])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39efa433133sm2656282f8f.28.2025.04.18.05.51.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 05:50:10 -0700 (PDT)
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: brauner@kernel.org
-Cc: viro@zeniv.linux.org.uk,
-	jack@suse.cz,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	kernel test robot <oliver.sang@intel.com>
-Subject: [PATCH] fs: fall back to file_ref_put() for non-last reference
-Date: Fri, 18 Apr 2025 14:50:02 +0200
-Message-ID: <20250418125002.59045-1-mjguzik@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Fri, 18 Apr 2025 05:51:41 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Helge Deller <deller@gmx.de>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] fbdev/carminefb: Fix spelling mistake of CARMINE_TOTAL_DIPLAY_MEM
+Date: Fri, 18 Apr 2025 13:51:35 +0100
+Message-ID: <20250418125135.539908-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-This reduces the slowdown in face of multiple callers issuing close on
-what turns out to not be the last reference.
+There is a spelling mistake in macro CARMINE_TOTAL_DIPLAY_MEM. Fix it.
 
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202504171513.6d6f8a16-lkp@intel.com
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 ---
- fs/file.c                |  2 +-
- include/linux/file_ref.h | 19 ++++++-------------
- 2 files changed, 7 insertions(+), 14 deletions(-)
+ drivers/video/fbdev/carminefb.c | 8 ++++----
+ drivers/video/fbdev/carminefb.h | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/fs/file.c b/fs/file.c
-index dc3f7e120e3e..3a3146664cf3 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -26,7 +26,7 @@
+diff --git a/drivers/video/fbdev/carminefb.c b/drivers/video/fbdev/carminefb.c
+index e56065cdba97..2bdd67595891 100644
+--- a/drivers/video/fbdev/carminefb.c
++++ b/drivers/video/fbdev/carminefb.c
+@@ -649,13 +649,13 @@ static int carminefb_probe(struct pci_dev *dev, const struct pci_device_id *ent)
+ 	 * is required for that largest resolution to avoid remaps at run
+ 	 * time
+ 	 */
+-	if (carminefb_fix.smem_len > CARMINE_TOTAL_DIPLAY_MEM)
+-		carminefb_fix.smem_len = CARMINE_TOTAL_DIPLAY_MEM;
++	if (carminefb_fix.smem_len > CARMINE_TOTAL_DISPLAY_MEM)
++		carminefb_fix.smem_len = CARMINE_TOTAL_DISPLAY_MEM;
  
- #include "internal.h"
+-	else if (carminefb_fix.smem_len < CARMINE_TOTAL_DIPLAY_MEM) {
++	else if (carminefb_fix.smem_len < CARMINE_TOTAL_DISPLAY_MEM) {
+ 		printk(KERN_ERR "carminefb: Memory bar is only %d bytes, %d "
+ 				"are required.", carminefb_fix.smem_len,
+-				CARMINE_TOTAL_DIPLAY_MEM);
++				CARMINE_TOTAL_DISPLAY_MEM);
+ 		goto err_unmap_vregs;
+ 	}
  
--bool __file_ref_put_badval(file_ref_t *ref, unsigned long cnt)
-+static noinline bool __file_ref_put_badval(file_ref_t *ref, unsigned long cnt)
- {
- 	/*
- 	 * If the reference count was already in the dead zone, then this
-diff --git a/include/linux/file_ref.h b/include/linux/file_ref.h
-index 7db62fbc0500..0f25ba769f48 100644
---- a/include/linux/file_ref.h
-+++ b/include/linux/file_ref.h
-@@ -61,7 +61,6 @@ static inline void file_ref_init(file_ref_t *ref, unsigned long cnt)
- 	atomic_long_set(&ref->refcnt, cnt - 1);
- }
+diff --git a/drivers/video/fbdev/carminefb.h b/drivers/video/fbdev/carminefb.h
+index 297688eba469..c9825481d96b 100644
+--- a/drivers/video/fbdev/carminefb.h
++++ b/drivers/video/fbdev/carminefb.h
+@@ -7,7 +7,7 @@
  
--bool __file_ref_put_badval(file_ref_t *ref, unsigned long cnt);
- bool __file_ref_put(file_ref_t *ref, unsigned long cnt);
+ #define MAX_DISPLAY	2
+ #define CARMINE_DISPLAY_MEM	(800 * 600 * 4)
+-#define CARMINE_TOTAL_DIPLAY_MEM	(CARMINE_DISPLAY_MEM * MAX_DISPLAY)
++#define CARMINE_TOTAL_DISPLAY_MEM	(CARMINE_DISPLAY_MEM * MAX_DISPLAY)
  
- /**
-@@ -178,20 +177,14 @@ static __always_inline __must_check bool file_ref_put(file_ref_t *ref)
-  */
- static __always_inline __must_check bool file_ref_put_close(file_ref_t *ref)
- {
--	long old, new;
-+	long old;
- 
- 	old = atomic_long_read(&ref->refcnt);
--	do {
--		if (unlikely(old < 0))
--			return __file_ref_put_badval(ref, old);
--
--		if (old == FILE_REF_ONEREF)
--			new = FILE_REF_DEAD;
--		else
--			new = old - 1;
--	} while (!atomic_long_try_cmpxchg(&ref->refcnt, &old, new));
--
--	return new == FILE_REF_DEAD;
-+	if (likely(old == FILE_REF_ONEREF)) {
-+		if (likely(!atomic_long_try_cmpxchg(&ref->refcnt, &old, FILE_REF_DEAD)))
-+			return true;
-+	}
-+	return file_ref_put(ref);
- }
- 
- /**
+ #define CARMINE_USE_DISPLAY0	(1 << 0)
+ #define CARMINE_USE_DISPLAY1	(1 << 1)
 -- 
-2.48.1
+2.49.0
 
