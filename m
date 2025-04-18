@@ -1,296 +1,282 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A5221C18A
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:55:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F90221C18A;
+	Fri, 18 Apr 2025 17:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744998941; cv=none; b=aatg5HvbXzjylTfStVy/JanyNyWsT4jv9aGlwQUsikLPDQBHnDR5ry4c2RTxwS6ZFQu5GZyPXCt1Ju8Ka38UNbuvGIBhpgE+NOgbvWmAQ0EC4jvi8/Fyd9/VFacpKqM+Dg+YgI1jTFvM+DY/f/kiNSSZZ4AmmV+y+VtB32D+PAc=
+	t=1744999085; cv=none; b=rimCCYvVNoK2VuWGI+r0hZAg366bKvuzeQgwMs2jVfaVPgX2tIaOluMuzxH5dIRUA4oxpbtJlJAg9zSOFlYaFutO+lU243s2uet+xcbWltMtHqQiB+QaNMyGblaulKBrdL/FS2P037xkjobaeRzynRjZZ8zcn+9Gd+Ur2ThNwD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744998941; c=relaxed/simple;
-	bh=Az61ZHcAwecu5GZZSEsrTNNYt6sl7xOgpx6OI4SLP2M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M2G5tEeXf3JlNzOriO3WZCRM8c6rsoFg1TgsyowWnj3YHg1VJ+PVFAFMOcXeM7LhSUwr6FgG1ADEPDX2VUFjX8why7mmwSavK6O46zBRfb+4hw5iGjDsYWO+c89Oz2ggj8utnmHPRapMCGm09WNAlYV3/2dyUiRxxv7KLV3eRlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jItW/q6g; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744999085; c=relaxed/simple;
+	bh=+iuicaO2ZLC9As16m3h2Zjp/ZCP3hJ0WL048subJKIQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PcTB6+8YbbQBZBACtJxhmzVc+QLZxz8RGbXHtC9pgSwsZyoiv4WUzZ2FNa4duk1tQa0LgP9BJpbQ0oNir/6ejW8hpVb/ILqodNbsCdxjzPX28guA5ueAQEuyBNTfx8FCb+fm9MelsJVCMnbd6uOI/bGBWbSDBiQjdjO6gJHxQww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AW8Puweb; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jItW/q6g"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53IAfUFh012886;
-	Fri, 18 Apr 2025 17:55:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=/lob/8
-	we70Ns3kqHcUBD6hmGaTTXYcT9VkQCaO5LOSU=; b=jItW/q6gzSRG+aSRYRZ6IK
-	YBfqPM/lDBYA4psKDngkfzpsawCgDG82uHzkNa8LbtVw1hB68NCG73omT0P7fluR
-	koCMFZTM4hwOWE5G18TZhPGnHQBAfqkwYw1DDKIrTWQTTKSLjiMa9hBTr9+q7nUV
-	MB0YvUoFh+Tl4w2wb/4kbVWl9KQTkM37C7NHz9McWRP6pMf68ok3AzpDThQKR9nr
-	ny6h7rzruA88STBum7HKHgtNyeGV9Ndd/sjAgL5XyInUaDFZXFuOryqBfcGhOXr6
-	WeQMIusjuntEnwQKWak8KSt6Sm8sKSwTaHFaHErdapNKcB4u80MzJOXP6yG9dXoQ
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 463n6sss3v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 18 Apr 2025 17:55:25 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53IGUS1V010424;
-	Fri, 18 Apr 2025 17:55:24 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4604qkks6t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 18 Apr 2025 17:55:24 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53IHtMIA46727474
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 18 Apr 2025 17:55:22 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C9C5A20040;
-	Fri, 18 Apr 2025 17:55:22 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 89A5220043;
-	Fri, 18 Apr 2025 17:55:20 +0000 (GMT)
-Received: from [9.39.29.55] (unknown [9.39.29.55])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 18 Apr 2025 17:55:20 +0000 (GMT)
-Message-ID: <a7dca9ec-9f7b-4d7f-aa3f-9a68cf6430a7@linux.ibm.com>
-Date: Fri, 18 Apr 2025 23:25:19 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AW8Puweb"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-736c062b1f5so1756664b3a.0;
+        Fri, 18 Apr 2025 10:58:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744999083; x=1745603883; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=SW+tjIRc0AX+aTZhnNtpBaCEsRQ7numGTe8SeYWYC6s=;
+        b=AW8Puweba+P0BsFHYdiG256ZSd5XjK3ojG9O/+sM75KXEkfq/zO9WRyeS0sSzCujiX
+         HIRx3NAalFwn9cKZJj/42fUW7BKmlX5C17K2IhiYcqXfMyNj7g9RPEvKcV1tEIkCm9GX
+         sLbvjAFMFJeOVSj2ZG76PnsGvFJt2Zd7Wc+8lRHXwT0qPBfkZXy6VqSJZOxMeyjB7HA3
+         BJZ1SmAeIErNikLVXnS1dkX0Q9qo+Fxkl5MtvRVnRtgtOOw8riO69fuX/PiUc7nRdynx
+         +3g3lvJfhUZtFXUEpu+W2kESPMHi+izyeCFooyKYFvZnNQg4AQn/huFqlMmHanHsDnzh
+         Ix/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744999083; x=1745603883;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SW+tjIRc0AX+aTZhnNtpBaCEsRQ7numGTe8SeYWYC6s=;
+        b=BnMROvqtXLa1P+eZanvELdDBWwZc2kecNy7YUlbQJqEyqKup9PpVLwxEFbx2D+DCP+
+         iuVng3v3vYFYIanMqV06oA62TPQ9ppkNY/tV9pFNWnMcooEJw4jfSw2WdpuwhtQcAUuP
+         hn8L1lfE6JNiK21XJx25hq/RTN9I1v4l+62hQow3IDVVCZDGC6/y89qgk0urQC7JfdPS
+         pZ28BuvO4um57ArPJA9cdTsOfUgcnTby+nBK9Ov0H/Bo5o1t0EOoi90MF/O1DygLjQZ/
+         77R1xX6AM6TpJXArssSjlKz2yWMZ4hE4BKzMnCgK/fsqgLa131brffgTETiemXNTDpTU
+         OKUg==
+X-Forwarded-Encrypted: i=1; AJvYcCVT/h+Mh2kmv4K3nHBNaDA4ZByqNdyxiEWji5wuUuRYilDjn4tn+2x7SV1XMfpkpFY5AYcMU0nS@vger.kernel.org, AJvYcCW6r+xszLW+D7mV0U/8bmc3J3ClJsCRWCXofDNhxHoigRsTuMeR1cbY2x+hbDkMdhzvYlj6MeLPVQ6q/kqx@vger.kernel.org, AJvYcCX2ZuRfvrUqavzTmT4QMIjZgXxctV4O/WsTnJrM0C9Tkp+Ss6uKkdjq5I0HoZmyzYZqvx5EvY4Rvu9Gu9mX@vger.kernel.org, AJvYcCXR4H/6DXWhLnuJldIikS+D4w/rFFjmO3U76RcWiIkcZSCyIEogOx8zSqZRY6VB9xoQLiQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtZrS/5rMrjHtfzNFD7dyVH+kRYdvxi/5ZGSvm4unq30qoICzG
+	Bj5bX0av8igWoF+24pbCP8Rg8jnbqfsfG6Xd0e1K6Qz81WslAq/v
+X-Gm-Gg: ASbGncuCLiezIHaGyNph6PdOUGOJi6WT51F0KE+XFuGnLj7EAS1Pxao0lEW0leIsQqR
+	knyj8AOWUkdHAqzm5tdDrDKDX52U7yLlrf/ci/nhBgyI2Ob/ai/SV3imZ/mpG27sGQJMZNAPUFK
+	uY1pGRxj9OZixba+8BlY7RICS9T/mhkUBaxuYHH6aanMVfJDOmyccRLiMQN2Fp6NmRNSMXOsl4X
+	ZXFwxPmKkWTMaqAUj4iMuRW624J0UyHTpn8/lleerM03flh0Ua2GOp+7owtsmVW7Pj2L1wt+1T/
+	mIf5Eprub3TZwAJ1eFjlHR/H1ydyb7GtKBVtBn/kXgMf1h3/3kbwqHq2seUlFFxLonSNT8NH
+X-Google-Smtp-Source: AGHT+IEbgq3jwmjK4u9tvaN1T1FGkQcruTs8eW7QiNt2zXcFuImLwX/xWrVRPy+awAKrid+LehwadA==
+X-Received: by 2002:a05:6a00:a91:b0:737:6d4b:f5f8 with SMTP id d2e1a72fcca58-73dc1568775mr4422634b3a.17.1744999082560;
+        Fri, 18 Apr 2025 10:58:02 -0700 (PDT)
+Received: from devvm6277.cco0.facebook.com ([2a03:2880:2ff:1::])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8e46e3sm1954817b3a.59.2025.04.18.10.58.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 10:58:01 -0700 (PDT)
+Date: Fri, 18 Apr 2025 10:57:52 -0700
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Daniel =?iso-8859-1?Q?P=2E_Berrang=E9?= <berrange@redhat.com>
+Cc: Stefano Garzarella <sgarzare@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] vsock: add namespace support to vhost-vsock
+Message-ID: <aAKSoHQuycz24J5l@devvm6277.cco0.facebook.com>
+References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+ <r6a6ihjw3etlb5chqsb65u7uhcav6q6pjxu65iqpp76423w2wd@kmctvoaywmbu>
+ <Z-w47H3qUXZe4seQ@redhat.com>
+ <Z+yDCKt7GpubbTKJ@devvm6277.cco0.facebook.com>
+ <CAGxU2F7=64HHaAD+mYKYLqQD8rHg1CiF1YMDUULgSFw0WSY-Aw@mail.gmail.com>
+ <Z-0BoF4vkC2IS1W4@redhat.com>
+ <Z+23pbK9t5ckSmLl@devvm6277.cco0.facebook.com>
+ <Z-_ZHIqDsCtQ1zf6@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched: Skip useless sched_balance_running acquisition if
- load balance is not due
-To: Vincent Guittot <vincent.guittot@linaro.org>,
-        K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: "Chen, Yu C" <yu.c.chen@intel.com>, Tim Chen
- <tim.c.chen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-        Doug Nelson <doug.nelson@intel.com>,
-        Mohini Narkhede <mohini.narkhede@intel.com>,
-        linux-kernel@vger.kernel.org
-References: <20250416035823.1846307-1-tim.c.chen@linux.intel.com>
- <fbe29b49-92af-4b8c-b7c8-3c15405e5f15@linux.ibm.com>
- <667f2076-fbcd-4da7-8e4b-a8190a673355@intel.com>
- <5e191de4-f580-462d-8f93-707addafb9a2@linux.ibm.com>
- <517b6aac-7fbb-4c28-a0c4-086797f5c2eb@linux.ibm.com>
- <CAKfTPtBF353mFXrqdm9_QbfhDJKsvOpjvER+p+X61XEeAd=URA@mail.gmail.com>
- <6fe46df2-2c80-4e2f-89a4-43f79e554f65@linux.ibm.com>
- <CAKfTPtDcFTGai=HsFUgrrUWZ-Dxq0D3RtCSSVsyXaXBXc2W=sw@mail.gmail.com>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <CAKfTPtDcFTGai=HsFUgrrUWZ-Dxq0D3RtCSSVsyXaXBXc2W=sw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=cd/SrmDM c=1 sm=1 tr=0 ts=6802920d cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=QyXUC8HyAAAA:8 a=J8b-sVnshJJiTtD9ZN8A:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: C84alTp7_3AoT5AJVsQ-qLBZFChD52Lg
-X-Proofpoint-GUID: C84alTp7_3AoT5AJVsQ-qLBZFChD52Lg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-18_06,2025-04-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- priorityscore=1501 mlxlogscore=999 phishscore=0 suspectscore=0
- clxscore=1015 adultscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504180131
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z-_ZHIqDsCtQ1zf6@redhat.com>
 
-
-
-On 4/18/25 20:32, Vincent Guittot wrote:
-> On Wed, 16 Apr 2025 at 16:14, Shrikanth Hegde <sshegde@linux.ibm.com> wrote:
->>
->>
->>
->> On 4/16/25 15:17, Vincent Guittot wrote:
->>> On Wed, 16 Apr 2025 at 11:29, Shrikanth Hegde <sshegde@linux.ibm.com> wrote:
->>>>
->>>>
->>>>
->>>> On 4/16/25 14:46, Shrikanth Hegde wrote:
->>>>>
->>>>>
->>>>> On 4/16/25 11:58, Chen, Yu C wrote:
->>>>>> Hi Shrikanth,
->>>>>>
->>>>>> On 4/16/2025 1:30 PM, Shrikanth Hegde wrote:
->>>>>>>
->>>>>>>
->>>>>>> On 4/16/25 09:28, Tim Chen wrote:
->>>>>>>> At load balance time, balance of last level cache domains and
->>>>>>>> above needs to be serialized. The scheduler checks the atomic var
->>>>>>>> sched_balance_running first and then see if time is due for a load
->>>>>>>> balance. This is an expensive operation as multiple CPUs can attempt
->>>>>>>> sched_balance_running acquisition at the same time.
->>>>>>>>
->>>>>>>> On a 2 socket Granite Rapid systems enabling sub-numa cluster and
->>>>>>>> running OLTP workloads, 7.6% of cpu cycles are spent on cmpxchg of
->>>>>>>> sched_balance_running.  Most of the time, a balance attempt is aborted
->>>>>>>> immediately after acquiring sched_balance_running as load balance time
->>>>>>>> is not due.
->>>>>>>>
->>>>>>>> Instead, check balance due time first before acquiring
->>>>>>>> sched_balance_running. This skips many useless acquisitions
->>>>>>>> of sched_balance_running and knocks the 7.6% CPU overhead on
->>>>>>>> sched_balance_domain() down to 0.05%.  Throughput of the OLTP workload
->>>>>>>> improved by 11%.
->>>>>>>>
->>>>>>>
->>>>>>> Hi Tim.
->>>>>>>
->>>>>>> Time check makes sense specially on large systems mainly due to
->>>>>>> NEWIDLE balance.
->>>>>
->>>>> scratch the NEWLY_IDLE part from that comment.
->>>>>
->>>>>>>
->>>>>>
->>>>>> Could you elaborate a little on this statement? There is no timeout
->>>>>> mechanism like periodic load balancer for the NEWLY_IDLE, right?
->>>>>
->>>>> Yes. NEWLY_IDLE is very opportunistic.
->>>>>
->>>>>>
->>>>>>> One more point to add, A lot of time, the CPU which acquired
->>>>>>> sched_balance_running,
->>>>>>> need not end up doing the load balance, since it not the CPU meant to
->>>>>>> do the load balance.
->>>>>>>
->>>>>>> This thread.
->>>>>>> https://lore.kernel.org/all/1e43e783-55e7-417f-
->>>>>>> a1a7-503229eb163a@linux.ibm.com/
->>>>>>>
->>>>>>>
->>>>>>> Best thing probably is to acquire it if this CPU has passed the time
->>>>>>> check and as well it is
->>>>>>> actually going to do load balance.
->>>>>>>
->>>>>>>
->>>>>>
->>>>>> This is a good point, and we might only want to deal with periodic load
->>>>>> balancer rather than NEWLY_IDLE balance. Because the latter is too
->>>>>> frequent and contention on the sched_balance_running might introduce
->>>>>> high cache contention.
->>>>>>
->>>>>
->>>>> But NEWLY_IDLE doesn't serialize using sched_balance_running and can
->>>>> endup consuming a lot of cycles. But if we serialize using
->>>>> sched_balance_running, it would definitely cause a lot contention as is.
->>>>>
->>>>>
->>>>> The point was, before acquiring it, it would be better if this CPU is
->>>>> definite to do the load balance. Else there are chances to miss the
->>>>> actual load balance.
->>>>>
->>>>>
->>>>
->>>> Sorry, forgot to add.
->>>>
->>>> Do we really need newidle running all the way till NUMA? or if it runs till PKG is it enough?
->>>> the regular (idle) can take care for NUMA by serializing it?
->>>>
->>>> -               if (sd->flags & SD_BALANCE_NEWIDLE) {
->>>> +               if (sd->flags & SD_BALANCE_NEWIDLE && !(sd->flags & SD_SERIALIZE)) {
->>>
->>> Why not just clearing SD_BALANCE_NEWIDLE in your sched domain when you
->>> set SD_SERIALIZE
->>
->> Hi Vincent.
->>
->> There is even kernel parameter "relax_domain_level" which one can make use of.
->> concern was newidle does this without acquiring the sched_balance_running,
->> while busy,idle try to acquire this for NUMA.
->>
->>
->>
->> Slightly different topic: It(kernel parameter) also resets SHCED_BALANCE_WAKE. But is it being used?
->> I couldn't find out how it is used.
+On Fri, Apr 04, 2025 at 02:05:32PM +0100, Daniel P. Berrangé wrote:
+> On Wed, Apr 02, 2025 at 03:18:13PM -0700, Bobby Eshleman wrote:
+> > On Wed, Apr 02, 2025 at 10:21:36AM +0100, Daniel P. Berrangé wrote:
+> > > It occured to me that the problem we face with the CID space usage is
+> > > somewhat similar to the UID/GID space usage for user namespaces.
+> > > 
+> > > In the latter case, userns has exposed /proc/$PID/uid_map & gid_map, to
+> > > allow IDs in the namespace to be arbitrarily mapped onto IDs in the host.
+> > > 
+> > > At the risk of being overkill, is it worth trying a similar kind of
+> > > approach for the vsock CID space ?
+> > > 
+> > > A simple variant would be a /proc/net/vsock_cid_outside specifying a set
+> > > of CIDs which are exclusively referencing /dev/vhost-vsock associations
+> > > created outside the namespace. Anything not listed would be exclusively
+> > > referencing associations created inside the namespace.
+> > > 
+> > > A more complex variant would be to allow a full remapping of CIDs as is
+> > > done with userns, via a /proc/net/vsock_cid_map, which the same three
+> > > parameters, so that CID=15 association outside the namespace could be
+> > > remapped to CID=9015 inside the namespace, allow the inside namespace
+> > > to define its out association for CID=15 without clashing.
+> > > 
+> > > IOW, mapped CIDs would be exclusively referencing /dev/vhost-vsock
+> > > associations created outside namespace, while unmapped CIDs would be
+> > > exclusively referencing /dev/vhost-vsock associations inside the
+> > > namespace. 
+> > > 
+> > > A likely benefit of relying on a kernel defined mapping/partition of
+> > > the CID space is that apps like QEMU don't need changing, as there's
+> > > no need to invent a new /dev/vhost-vsock-netns device node.
+> > > 
+> > > Both approaches give the desirable security protection whereby the
+> > > inside namespace can be prevented from accessing certain CIDs that
+> > > were associated outside the namespace.
+> > > 
+> > > Some rule would need to be defined for updating the /proc/net/vsock_cid_map
+> > > file as it is the security control mechanism. If it is write-once then
+> > > if the container mgmt app initializes it, nothing later could change
+> > > it.
+> > > 
+> > > A key question is do we need the "first come, first served" behaviour
+> > > for CIDs where a CID can be arbitrarily used by outside or inside namespace
+> > > according to whatever tries to associate a CID first ?
+> > 
+> > I think with /proc/net/vsock_cid_outside, instead of disallowing the CID
+> > from being used, this could be solved by disallowing remapping the CID
+> > while in use?
+> > 
+> > The thing I like about this is that users can check
+> > /proc/net/vsock_cid_outside to figure out what might be going on,
+> > instead of trying to check lsof or ps to figure out if the VMM processes
+> > have used /dev/vhost-vsock vs /dev/vhost-vsock-netns.
+> > 
+> > Just to check I am following... I suppose we would have a few typical
+> > configurations for /proc/net/vsock_cid_outside. Following uid_map file
+> > format of:
+> > 	"<local cid start>		<global cid start>		<range size>"
+> > 
+> > 	1. Identity mapping, current namespace CID is global CID (default
+> > 	setting for new namespaces):
+> > 
+> > 		# empty file
+> > 
+> > 				OR
+> > 
+> > 		0    0    4294967295
+> > 
+> > 	2. Complete isolation from global space (initialized, but no mappings):
+> > 
+> > 		0    0    0
+> > 
+> > 	3. Mapping in ranges of global CIDs
+> > 
+> > 	For example, global CID space starts at 7000, up to 32-bit max:
+> > 
+> > 		7000    0    4294960295
+> > 	
+> > 	Or for multiple mappings (0-100 map to 7000-7100, 1000-1100 map to
+> > 	8000-8100) :
+> > 
+> > 		7000    0       100
+> > 		8000    1000    100
+> > 
+> > 
+> > One thing I don't love is that option 3 seems to not be addressing a
+> > known use case. It doesn't necessarily hurt to have, but it will add
+> > complexity to CID handling that might never get used?
 > 
-> Hi Shrikanth,
+> Yeah, I have the same feeling that full remapping of CIDs is probably
+> adding complexity without clear benefit, unless it somehow helps us
+> with the nested-virt scenario to disambiguate L0/L1/L2 CID ranges ?
+> I've not thought the latter through to any great level of detail
+> though
 > 
-> The define below does the link
+> > Since options 1/2 could also be represented by a boolean (yes/no
+> > "current ns shares CID with global"), I wonder if we could either A)
+> > only support the first two options at first, or B) add just
+> > /proc/net/vsock_ns_mode at first, which supports only "global" and
+> > "local", and later add a "mapped" mode plus /proc/net/vsock_cid_outside
+> > or the full mapping if the need arises?
 > 
-> #define WF_TTWU 0x08 /* Wakeup;            maps to SD_BALANCE_WAKE */
+> Two options is sufficient if you want to control AF_VSOCK usage
+> and /dev/vhost-vsock usage as a pair. If you want to separately
+> control them though, it would push for three options - global,
+> local, and mixed. By mixed I mean AF_VSOCK in the NS can access
+> the global CID from the NS, but the NS can't associate the global
+> CID with a guest.
 > 
-> int try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
-> ..
->    wake_flags |= WF_TTWU;
-> ..
->    cpu = select_task_rq(p, p->wake_cpu, &wake_flags);
->          select_task_rq_fair()
->            int sd_flag = wake_flags & 0xF;
-> ..
->            for_each_domain(cpu, tmp) {
-> ..
->              if (tmp->flags & sd_flag)
+> IOW, this breaks down like:
+> 
+>  * CID=N local - aka fully private
+> 
+>      Outside NS: Can associate outside CID=N with a guest.
+>                  AF_VSOCK permitted to access outside CID=N
+> 
+>      Inside NS: Can NOT associate outside CID=N with a guest
+>                 Can associate inside CID=N with a guest
+>                 AF_VSOCK forbidden to access outside CID=N
+>                 AF_VSOCK permitted to access inside CID=N
+> 
+> 
+>  * CID=N mixed - aka partially shared
+> 
+>      Outside NS: Can associate outside CID=N with a guest.
+>                  AF_VSOCK permitted to access outside CID=N
+> 
+>      Inside NS: Can NOT associate outside CID=N with a guest
+>                 AF_VSOCK permitted to access outside CID=N
+>                 No inside CID=N concept
+> 
+> 
+>  * CID=N global - aka current historic behaviour
+> 
+>      Outside NS: Can associate outside CID=N with a guest.
+>                  AF_VSOCK permitted to access outside CID=N
+> 
+>      Inside NS: Can associate outside CID=N with a guest
+>                 AF_VSOCK permitted to access outside CID=N
+>                 No inside CID=N concept
+> 
+> 
+> I was thinking the 'mixed' mode might be useful if the outside NS wants
+> to retain control over setting up the association, but delegate to
+> processes in the inside NS for providing individual services to that
+> guest.  This means if the outside NS needs to restart the VM, there is
+> no race window in which the inside NS can grab the assocaition with the
+> CID
+> 
+> As for whether we need to control this per-CID, or a single setting
+> applying to all CID.
+> 
+> Consider that the host OS can be running one or more "service VMs" on
+> well known CIDs that can be leveraged from other NS, while those other
+> NS also run some  "end user VMs" that should be private to the NS.
+> 
+> IOW, the CIDs for the service VMs would need to be using "mixed"
+> policy, while the CIDs for the end user VMs would be "local".
 > 
 
-Thanks Vincent, Prateek.
+I think this sounds pretty flexible, and IMO adding the third mode
+doesn't add much more additional complexity.
 
->>
->>>
->>>>
->>>>                            pulled_task = sched_balance_rq(this_cpu, this_rq,
->>>>                                                       sd, CPU_NEWLY_IDLE,
->>>>
->>>>
->>>> Anyways, having a policy around this SD_SERIALIZE would be a good thing.
->>>>
->>>>>> thanks,
->>>>>> Chenyu
->>>>>>
->>>>>>>> Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
->>>>>>>> Reported-by: Mohini Narkhede <mohini.narkhede@intel.com>
->>>>>>>> Tested-by: Mohini Narkhede <mohini.narkhede@intel.com>
->>>>>>>> ---
->>>>>>>>     kernel/sched/fair.c | 16 ++++++++--------
->>>>>>>>     1 file changed, 8 insertions(+), 8 deletions(-)
->>>>>>>>
->>>>>>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->>>>>>>> index e43993a4e580..5e5f7a770b2f 100644
->>>>>>>> --- a/kernel/sched/fair.c
->>>>>>>> +++ b/kernel/sched/fair.c
->>>>>>>> @@ -12220,13 +12220,13 @@ static void sched_balance_domains(struct
->>>>>>>> rq *rq, enum cpu_idle_type idle)
->>>>>>>>             interval = get_sd_balance_interval(sd, busy);
->>>>>>>> -        need_serialize = sd->flags & SD_SERIALIZE;
->>>>>>>> -        if (need_serialize) {
->>>>>>>> -            if (atomic_cmpxchg_acquire(&sched_balance_running, 0, 1))
->>>>>>>> -                goto out;
->>>>>>>> -        }
->>>>>>>> -
->>>>>>>>             if (time_after_eq(jiffies, sd->last_balance + interval)) {
->>>>>>>> +            need_serialize = sd->flags & SD_SERIALIZE;
->>>>>>>> +            if (need_serialize) {
->>>>>>>> +                if (atomic_cmpxchg_acquire(&sched_balance_running,
->>>>>>>> 0, 1))
->>>>>>>> +                    goto out;
->>>>>>>> +            }
->>>>>>>> +
->>>>>>>>                 if (sched_balance_rq(cpu, rq, sd, idle,
->>>>>>>> &continue_balancing)) {
->>>>>>>>                     /*
->>>>>>>>                      * The LBF_DST_PINNED logic could have changed
->>>>>>>> @@ -12238,9 +12238,9 @@ static void sched_balance_domains(struct rq
->>>>>>>> *rq, enum cpu_idle_type idle)
->>>>>>>>                 }
->>>>>>>>                 sd->last_balance = jiffies;
->>>>>>>>                 interval = get_sd_balance_interval(sd, busy);
->>>>>>>> +            if (need_serialize)
->>>>>>>> +                atomic_set_release(&sched_balance_running, 0);
->>>>>>>>             }
->>>>>>>> -        if (need_serialize)
->>>>>>>> -            atomic_set_release(&sched_balance_running, 0);
->>>>>>>>     out:
->>>>>>>>             if (time_after(next_balance, sd->last_balance + interval)) {
->>>>>>>>                 next_balance = sd->last_balance + interval;
->>>>>>>
->>>>>
->>>>
->>
+Going this route, we have:
+- three modes: local, global, mixed
+- at first, no vsock_cid_map (local has no outside CIDs, global and mixed have no inside
+	CIDs, so no cross-mapping needed)
+- only later add a full mapped mode and vsock_cid_map if necessary.
 
+Stefano, any preferences on this vs starting with the restricted
+vsock_cid_map (only supporting "0 0 0" and "0 0 <size>")?
+
+I'm leaning towards the modes because it covers more use cases and seems
+like a clearer user interface?
+
+To clarify another aspect... child namespaces must inherit the parent's
+local. So if namespace P sets the mode to local, and then creates a
+child process that then creates namespace C... then C's global and mixed
+modes are implicitly restricted to P's local space?
+
+Thanks,
+Bobby
