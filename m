@@ -1,92 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFFE524EA8F;
-	Fri, 18 Apr 2025 07:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9078926A08C
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 07:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744962033; cv=none; b=WrOWbeP3HCaPk19fwulGxynlDNXyhqXatapi+gLPwAKKO9mR4VkVQvvkGN/mS9lXG8HC1n6gzdiVgPTtMDPEoTJ/Ztee2cQLvNqvnuwarwLgGAyr0T7Pg22k7o1GO9XvhGZuW95T04dMCxOfR0FN/LkXXXxW4bnHjfvJBdZ5pH4=
+	t=1744962057; cv=none; b=fd6Mn77KJ/sWWPLNfRwn6YTTHfbvnvLqRMoKnzrnxNnkIsqNaV2prCIcc4d4ewlFiuiCPgS6aOJ6IKm0yM1A1wMGZlNPG8yrCI/tQ5v+ss0CsPsIbaxAHVQI3gb0VT4qeAdl16Y19RYgDcLlSfO+O7TTgyvF3mGtDloPn1pgYkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744962033; c=relaxed/simple;
-	bh=HTu5azwnJcNp5fW88jU95M322z25Yas8NYb0ahvHXmA=;
+	s=arc-20240116; t=1744962057; c=relaxed/simple;
+	bh=DCbZzSSzK5J5K8EjuW/T/It7HcLzCrosViqmRrAxcDg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DOLPyo4GVAi8xl0YRcNX9OqAZV01D9/0WFAFcmWldHAAwGynERWIx819oTK7W7RmaK0/YA3BMrc2U7ld/JWr5/eWpZL3cWmeOtrHj4aZxRHxdoHqSxBVY/YlTD8YCii5VpeAUdkJv4q1PPuUtNzCFq5lepvQhQDpoWl3Yuhscqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uy26hlvH; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=pdt6EdWpVqgi09w19SdoWAn0X2mifK21hGcRH7Y98lqbjl+tUHIuX/QtQOGaHxpM0y5Nz02t6+/LLFn1UrENmurUn7lOfPtiJ5qqWoNrL+LdKQT6YpIOUlkxbrQpSVJ3PgNIJT5nzTUF2MOaNKy4zqYHAFVOPC4Qu2D1RGvDw2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fHt+zKUH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uy26hlvH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1658C4CEE2;
-	Fri, 18 Apr 2025 07:40:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744962033;
-	bh=HTu5azwnJcNp5fW88jU95M322z25Yas8NYb0ahvHXmA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uy26hlvHBK0d37FkJ++86AA+UhbvcEqgsDPhvOdXjPOeDGDLGxStqoJSlwmWDgiCh
-	 sAxA8OTaNZtSLY3TL2QNcd2iZlQRrJle6oNC9Zf5lnhh9b6/3iTxGp6oGpduPiF9GD
-	 ymFBYm8vbFrrKs5puTia+Pupxmp06KCUsJbSM6zkIiprqyDUObeJn/eNT+/X25hi3A
-	 xg/UvBpvPLZfTxbhZoGbqgu/a49CMKE5ZhRXIsYHLbxklhd+x8UIKa/qonuAwP/Ava
-	 ndKDAjt1DtNWvBczeXZVfdZB5bneo18d9yw/tJUnvfOHWwv1v6XlNbMYmqPb6ShfwG
-	 6M37zL1Q9XGow==
-Date: Fri, 18 Apr 2025 09:40:28 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Andy Shevchenko <andy@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/1] x86: Use resource_set_{range,size}() helpers
-Message-ID: <aAIB7Om9n_tXDnvk@gmail.com>
-References: <20250416101318.7313-1-ilpo.jarvinen@linux.intel.com>
- <Z_-E3W8i4EfxdBh3@smile.fi.intel.com>
- <a046f6bb-0b6e-a431-eaa5-ecd279459f86@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fHt+zKUH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744962053;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5U3XpV/CK06BzDowrEdMCxWwiNqlbcO+Z4oINkEbeuE=;
+	b=fHt+zKUHJukXA/YGuh7kQPuAzZGcCfu/KNJKKa6AEuyyuRiBBnq4clqL/fsm6miXHwo+DP
+	5l1dV0STI6sxNOmVgRwuhzmiQeggTEGnUta3OH5J7lFQcex5lUFSqZ820HzRjHxDhcNR9Q
+	PvGcSZ5GNOHiXm9tnHrqjrizXpLqwK0=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-5-nLuEatHzOmSecP1Tc5jYuw-1; Fri,
+ 18 Apr 2025 03:40:48 -0400
+X-MC-Unique: nLuEatHzOmSecP1Tc5jYuw-1
+X-Mimecast-MFC-AGG-ID: nLuEatHzOmSecP1Tc5jYuw_1744962045
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B2C3619560BC;
+	Fri, 18 Apr 2025 07:40:44 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.33])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C2A2918001EA;
+	Fri, 18 Apr 2025 07:40:42 +0000 (UTC)
+Date: Fri, 18 Apr 2025 15:40:38 +0800
+From: Baoquan He <bhe@redhat.com>
+To: steven chen <chenste@linux.microsoft.com>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com, ebiederm@xmission.com,
+	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
+	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
+	dyoung@redhat.com
+Subject: Re: [PATCH v12 5/9] ima: kexec: define functions to copy IMA log at
+ soft boot
+Message-ID: <aAIB9ga3wPWb5sC8@MiWiFi-R3L-srv>
+References: <20250416021028.1403-1-chenste@linux.microsoft.com>
+ <20250416021028.1403-6-chenste@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a046f6bb-0b6e-a431-eaa5-ecd279459f86@linux.intel.com>
+In-Reply-To: <20250416021028.1403-6-chenste@linux.microsoft.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-
-* Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
-
-> On Wed, 16 Apr 2025, Andy Shevchenko wrote:
+On 04/15/25 at 07:10pm, steven chen wrote:
+> From: Steven Chen <chenste@linux.microsoft.com>
 > 
-> > On Wed, Apr 16, 2025 at 01:13:18PM +0300, Ilpo Järvinen wrote:
-> > > Convert open coded resource size calculations to use
-> > > resource_set_{range,size}() helpers.
-> > > 
-> > > While at it, use SZ_* for size parameter which makes the intent of code
-> > > more obvious.
-> > 
-> > ...
-> > 
-> > > +	resource_set_range(res, base, 1ULL << (segn_busn_bits + 20));
-> > 
-> > Then probably
-> > 
-> > 	resource_set_range(res, base, BIT_ULL(segn_busn_bits) * SZ_1M);
-> > 
-> > to follow the same "While at it"?
+> The IMA log is currently copied to the new kernel during kexec 'load' 
+> using ima_dump_measurement_list(). However, the log copied at kexec 
+> 'load' may result in loss of IMA measurements that only occurred after
+> kexec "load'. Setup the needed infrastructure to move the IMA log copy 
+> from kexec 'load' to 'execute'.
 > 
-> I'll change that now since you brought it up. It did cross my mind to 
-> convert that to * SZ_1M but it seemed to go farther than I wanted with a 
-> simple conversion patch.
+> Define a new IMA hook ima_update_kexec_buffer() as a stub function.
+> It will be used to call ima_dump_measurement_list() during kexec 'execute'.
 > 
-> I've never liked the abuse of BIT*() for size related shifts though, 
-> I recall I saw somewhere a helper that was better named for size 
-> related operations but I just cannot recall its name and seem to not 
-> find that anymore :-(. But until I come across it once again, I guess 
-> I'll have to settle to BIT*().
+> Implement ima_kexec_post_load() function to be invoked after the new 
+> Kernel image has been loaded for kexec. ima_kexec_post_load() maps the 
+> IMA buffer to a segment in the newly loaded Kernel.  It also registers 
+> the reboot notifier_block to trigger ima_update_kexec_buffer() at 
+> kexec 'execute'.
+> 
+> Set the priority of register_reboot_notifier to INT_MIN to ensure that the
+> IMA log copy operation will happen at the end of the operation chain, so 
+> that all the IMA measurement records extended into the TPM are copied
+> 
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+  ^^^
 
-BITS_TO_LONGS()?
+ The tag
 
-Thanks,
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Baoquan He <bhe@redhat.com> 
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Signed-off-by: Steven Chen <chenste@linux.microsoft.com>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> ---
+>  include/linux/ima.h                |  3 ++
+>  security/integrity/ima/ima_kexec.c | 47 ++++++++++++++++++++++++++++++
+>  2 files changed, 50 insertions(+)
 
-	Ingo
+Other than the tag, this looks good to me:
+
+Acked-by: Baoquan He <bhe@redhat.com>
+
+> 
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index 0bae61a15b60..8e29cb4e6a01 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -32,6 +32,9 @@ static inline void ima_appraise_parse_cmdline(void) {}
+>  
+>  #ifdef CONFIG_IMA_KEXEC
+>  extern void ima_add_kexec_buffer(struct kimage *image);
+> +extern void ima_kexec_post_load(struct kimage *image);
+> +#else
+> +static inline void ima_kexec_post_load(struct kimage *image) {}
+>  #endif
+>  
+>  #else
+> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+> index 7e0a19c3483f..e79f6caf895b 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -12,10 +12,14 @@
+>  #include <linux/kexec.h>
+>  #include <linux/of.h>
+>  #include <linux/ima.h>
+> +#include <linux/reboot.h>
+> +#include <asm/page.h>
+>  #include "ima.h"
+>  
+>  #ifdef CONFIG_IMA_KEXEC
+> +static bool ima_kexec_update_registered;
+>  static struct seq_file ima_kexec_file;
+> +static void *ima_kexec_buffer;
+>  
+>  static void ima_free_kexec_file_buf(struct seq_file *sf)
+>  {
+> @@ -162,6 +166,49 @@ void ima_add_kexec_buffer(struct kimage *image)
+>  	kexec_dprintk("kexec measurement buffer for the loaded kernel at 0x%lx.\n",
+>  		      kbuf.mem);
+>  }
+> +
+> +/*
+> + * Called during kexec execute so that IMA can update the measurement list.
+> + */
+> +static int ima_update_kexec_buffer(struct notifier_block *self,
+> +				   unsigned long action, void *data)
+> +{
+> +	return NOTIFY_OK;
+> +}
+> +
+> +static struct notifier_block update_buffer_nb = {
+> +	.notifier_call = ima_update_kexec_buffer,
+> +	.priority = INT_MIN
+> +};
+> +
+> +/*
+> + * Create a mapping for the source pages that contain the IMA buffer
+> + * so we can update it later.
+> + */
+> +void ima_kexec_post_load(struct kimage *image)
+> +{
+> +	if (ima_kexec_buffer) {
+> +		kimage_unmap_segment(ima_kexec_buffer);
+> +		ima_kexec_buffer = NULL;
+> +	}
+> +
+> +	if (!image->ima_buffer_addr)
+> +		return;
+> +
+> +	ima_kexec_buffer = kimage_map_segment(image,
+> +					      image->ima_buffer_addr,
+> +					      image->ima_buffer_size);
+> +	if (!ima_kexec_buffer) {
+> +		pr_err("Could not map measurements buffer.\n");
+> +		return;
+> +	}
+> +
+> +	if (!ima_kexec_update_registered) {
+> +		register_reboot_notifier(&update_buffer_nb);
+> +		ima_kexec_update_registered = true;
+> +	}
+> +}
+> +
+>  #endif /* IMA_KEXEC */
+>  
+>  /*
+> -- 
+> 2.43.0
+> 
+
