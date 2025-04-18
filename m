@@ -1,75 +1,111 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15FF1268C55;
-	Fri, 18 Apr 2025 08:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33FF25744D;
+	Fri, 18 Apr 2025 08:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744964749; cv=none; b=gDuErHtBI1GdifPRE0MwB0sZPNbTFY1lPrG6C+gxA0LMogAuaGrGDZDzKSPdPYVNLY60bUnsVDiHtxd+DhZB29+BZaduOPpDX+HYoEfOFCxe/txEgREnN5ULtbSumFgfOMh9GPkidUBGAfIqnQj0nRguf89F6nDXInXrhWZRUXw=
+	t=1744964817; cv=none; b=R9GLlp9I83q923AJ1oAxK/T5xEFqPYE4zmn36RnzYS6bUlQN7Nr8Lri0X2w8T7VOkiWL1G/ZECvMVUMMxndcuHYmRzUDiogr/9IvByEqKJiQYd3d5mXjGf6jT6RCb2n1lyEM5x7IZP0hsXTS8pyu7sZ8oECL9Cj8LtdrOmPw6/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744964749; c=relaxed/simple;
-	bh=s2IhmVKxZhm64Wc2L/816Yw4hfryYZJNu4rC36wz9FY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BAqkYGXjTB/is/n5wNCYUAAJjdduomW6N0yHwgHIEqDlJJwpXgAcwLb+DHF/S1Ses1VjtLaGNbhXYv3PAWL+TCInlCtB/e0N0K6jGREAxgm3B4JnUYqEW2kHyZT+L4fyhnYcE/eCx0ndUvcNZPlA30r+yP7wqesal51qKO8LoCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=kpcJ1aZe; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1744964817; c=relaxed/simple;
+	bh=e3658IgZ8nOTRetGLbWCrC9hScdhNn7J2xOl2EFdMAk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bfGvVCON7m6STrREHWX5jOdfD/uhihJkPP6UJBInYLm2AiNxrCds5/35XI0//0cEiMetsfncwFES1yoiNGKXlRH2FDrt9H69NKSuZs3MCqkhL0gTSIMIOFyJ/CKv65m8EiIrLX8FwPRguxwuoJoSrO5HddUu6PlxXs9ile2kjzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=NR23A4/3; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="kpcJ1aZe"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=hlkg+5jDRBY5wNNnTe1hqoMZ0WqQC2CXlXJOinsVxyU=; b=kpcJ1aZefOCOmEslLOYgO5//QM
-	Ln6pMr5koiDKWOj7at3DmuXW/+yNTQNemE32nJCw0tUBk2lSSos3j+agdtU8LJ1QmGrITb33TVv2P
-	ax7x7ihD9o/9/iRWIG6o5huDo+sjBvBM8N/+4rmITe3RGNDZD3kJRIZDt9wM6vSrDQAsM8CtmlaSX
-	oieCkebA9MArb2/oiKMgpHGYdSRIx5EULaGWGCnkwKjcIqfjRnqi6KVnMh+uDMtW/pKGRh9+DYB8j
-	6L7OlrJk5uGTHv5eg8RoWUkRMy9N+wd4fu7ENI0N1H5rEEfkOX/zcPw1G7vGUetKFspJKMJxaHYWr
-	x44+Tchg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u5h2a-00GhP1-29;
-	Fri, 18 Apr 2025 16:25:41 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 18 Apr 2025 16:25:40 +0800
-Date: Fri, 18 Apr 2025 16:25:40 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-	x86@kernel.org, Jason@zx2c4.com, ardb@kernel.org
-Subject: Re: [PATCH 01/15] crypto: arm - remove CRYPTO dependency of library
- functions
-Message-ID: <aAIMhLD3UMM41JkT@gondor.apana.org.au>
-References: <20250417182623.67808-2-ebiggers@kernel.org>
- <aAHDIRlSNLsYYZmW@gondor.apana.org.au>
- <20250418033236.GB38960@quark.localdomain>
- <aAHJRszwcQ4UyQ2e@gondor.apana.org.au>
- <20250418040931.GD38960@quark.localdomain>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="NR23A4/3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744964813;
+	bh=e3658IgZ8nOTRetGLbWCrC9hScdhNn7J2xOl2EFdMAk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NR23A4/34J+WhMJ/VlGpByqJi03M1NBdFpU9qVyY+AhAynvsUF7jXUxmzIIc5e2pv
+	 gxYojrrZc29HcVQydeAEPdKO6nc0n6L2Sz66A/OimLAtcc3YlG9nK0Ob+JjovsJFQ8
+	 NFkxkMtRZgD3xMM4SUHfbZMFx3FQBXUK9ffj+fI3fcqD5QGNKKMEl/wds9Qj6ERF5a
+	 f2stTSn/cyZ8uR7VpMoX8ZIbX6hi58QiK/JODzmj7gz615J4tp+N+dzjt2/yfzVe7Y
+	 gjVs7fwfPgpYRffAgc32cxviYC3W2UyVxP3YV7bfi39Z+pTz24DTP1QTORG0c9OJaE
+	 NhKoGD8kAABKQ==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 074DB17E10F7;
+	Fri, 18 Apr 2025 10:26:52 +0200 (CEST)
+Date: Fri, 18 Apr 2025 10:26:49 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ kernel@collabora.com, Liviu Dudau <liviu.dudau@arm.com>, Steven Price
+ <steven.price@arm.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>,
+ Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH v9 4/4] drm/panthor: show device-wide list of DRM GEM
+ objects over DebugFS
+Message-ID: <20250418102649.41a609d6@collabora.com>
+In-Reply-To: <20250418101156.0241a000@collabora.com>
+References: <20250418022710.74749-1-adrian.larumbe@collabora.com>
+	<20250418022710.74749-5-adrian.larumbe@collabora.com>
+	<20250418101156.0241a000@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418040931.GD38960@quark.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 17, 2025 at 09:09:31PM -0700, Eric Biggers wrote:
->
-> arch/$ARCH/lib/crypto/ is the "right" way to do it, mirroring lib/crypto/.  I
-> was just hoping to avoid a 4-deep directory.  But we can do it.
+On Fri, 18 Apr 2025 10:11:56 +0200
+Boris Brezillon <boris.brezillon@collabora.com> wrote:
 
-You can do that in a follow-up, assuming nothing else pops for this
-series.
+> On Fri, 18 Apr 2025 03:27:07 +0100
+> Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
+>=20
+> > +	static const char * const gem_state_flags_names[] =3D {
+> > +		[PANTHOR_DEBUGFS_GEM_STATE_FLAG_IMPORTED] =3D "imported",
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+FYI, the compiler seems to be happy with:
+
+		[ffs(PANTHOR_DEBUGFS_GEM_STATE_FLAG_IMPORTED) - 1] =3D "imported",
+
+but I'm not sure we want to fix it this way. The other
+option would be to define bit pos in the enum and then
+define flags according to these bit pos:
+
+enum panthor_debugfs_gem_state_flags {
+	PANTHOR_DEBUGFS_GEM_STATE_IMPORTED_BIT =3D 0,
+	PANTHOR_DEBUGFS_GEM_STATE_EXPORTED_BIT =3D 1,
+
+	/** @PANTHOR_DEBUGFS_GEM_STATE_FLAG_IMPORTED: GEM BO is PRIME imported. */
+	PANTHOR_DEBUGFS_GEM_STATE_FLAG_IMPORTED =3D BIT(PANTHOR_DEBUGFS_GEM_STATE_=
+IMPORTED_BIT),
+
+	/** @PANTHOR_DEBUGFS_GEM_STATE_FLAG_EXPORTED: GEM BO is PRIME exported. */
+	PANTHOR_DEBUGFS_GEM_STATE_FLAG_EXPORTED =3D BIT(PANTHOR_DEBUGFS_GEM_STATE_=
+EXPORTED_BIT),
+};
+
+> > +		[PANTHOR_DEBUGFS_GEM_STATE_FLAG_EXPORTED] =3D "exported", =20
+>=20
+> Okay, I think I know where the flag indexing issue comes from:
+> PANTHOR_DEBUGFS_GEM_STATE_FLAG_xx are flags, not bit positions, so we
+> can't use them as indices here.
+>=20
+> > +	};
+> > +
+> > +	static const char * const gem_usage_flags_names[] =3D {
+> > +		[PANTHOR_DEBUGFS_GEM_USAGE_FLAG_KERNEL] =3D "kernel",
+> > +		[PANTHOR_DEBUGFS_GEM_USAGE_FLAG_FW_MAPPED] =3D "fw-mapped", =20
+>=20
+> Same problem here.
+>=20
+> > +	};
+> > + =20
+
