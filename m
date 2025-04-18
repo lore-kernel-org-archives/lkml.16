@@ -1,200 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DC62433C4;
-	Fri, 18 Apr 2025 15:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482E7213E71
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744991420; cv=none; b=kzh7Cmt+pkoxuVwHwCqAz2mBs4/fbTlE4U+sMWNPCcBFis2/dHPw1dMqxxKp1qVCZHILyMW7RYSgCpK6bievNp5YeT8/RSpOE77FqKEdBzMLnNQLB8jUzUzr4DBKvC8cY2vg7oRvTzunmHbJlGFcq08QDaw01AIItPNKNSbNhZE=
+	t=1744991482; cv=none; b=BeAF3oyRKL4H612Uu/Uo19h2PHnR/jC51piuzcCuFbjqdilDk7VbF5ZFgfM6gL7Vnyr8E6xTQFxi0MqfX1y6iftpazRk2lrhjPA1+f4gvml41ieIkoyqWckXFwZ0VT21lUPg4m9MK/X4OI24+9gAbHqB18EnDUhj3AoZ/6B2UyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744991420; c=relaxed/simple;
-	bh=lj4gGmxWHJ2C0K+iLE+xhlpcwP1XXgB3fNy5ud5B7Uk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ubhEIFkTTcVKYrMmDBJkDLlYyAymXdtSeQoXBvLKkCNRrc9SlGo4yBViKNg8QhtG1fgbsraz1f2uNxCxkpO0LVfn71lQAc3uR9AAiXXwvshSGgA5fN8ZoZznaIvIog4xHBNUbxB7iMF7nhqSBD8zhjCSdUz30ljomPUCqlZzlnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ujkTY7sM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744991482; c=relaxed/simple;
+	bh=EVzb8jB9TteCOIlCmiFjHJGeYZP+zYiJPSulg5XujJc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AnexXhZMYdQigt+65+LHHREn0xc8fPdpEJIOhKxTBWs0z1B2apOeW2HGi/nCUdxvh5yjLCtfBwpvx3TE7mEwvND83FauunwlvMC+FEQtPuAyGpJJMmePmenlfHyKxLRNVCwbA+tVXTb9PrhfmGehx0BmFvyBfVW4a/KFdzuir0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XVF/ILbG; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ujkTY7sM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB6D2C4CEE2;
-	Fri, 18 Apr 2025 15:50:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744991419;
-	bh=lj4gGmxWHJ2C0K+iLE+xhlpcwP1XXgB3fNy5ud5B7Uk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ujkTY7sMbk7kGWCzRtCYZGOh96kao3RWiGAeVDhXwWp0DAQsi2iyZ8NvEVp/Pl3qd
-	 f4ynJWRXs8BbPqwVUkmmYopktuC40XlXsKXrMfRgoKJg8vHV1ir75uZ0fmPf0Am0Ag
-	 Pa6DpB/luZCNNoU9MO2yPdjM2QG9QajUCjLn0sKz+dBGUh7A/+kxQqEpZzYz8vjjp4
-	 iYeFkjROP1kjm9VWnPlI02A6zODd4MVIvQNdHMfYsAaK9zx+clHReOtaf1qyFGlOfI
-	 g564Fl2G1+qPpvU4lFYRIaUUBBO4UrV0eGVCDEurGY78dD1zTxHF0biaAGwxWGgLqM
-	 J41/L5aMWy5WA==
-Date: Fri, 18 Apr 2025 16:50:12 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
- Michael.Hennerich@analog.com, skhan@linuxfoundation.org,
- kernelmentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] iio: accel: adis16203: Fix single-axis representation
- and CALIBBIAS handling
-Message-ID: <20250418165012.53c9bb85@jic23-huawei>
-In-Reply-To: <20250415222652.545026-1-gshahrouzi@gmail.com>
-References: <20250415222652.545026-1-gshahrouzi@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XVF/ILbG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=B0phUcaqtNF5MHgtYap7bmkzuH8Odt4HteEl9tfUtL4=; b=XVF/ILbGaTlkKW3pTh2K5st/DI
+	pTZ+sNiagKd90fl3SCPjZycldpery1+Fr4JCFdn9KVvCSl8FLlfEAKiHpPJqyp0IAFyDWubTHGbrF
+	FFRuD2lFuhzgXDUyRB4UhTsDZ0Sc+WZMLpr3s6F+BK3I+WBtIh2bgNvlk1q+zJwb3vb3VM6JPwr76
+	9I8JmnnrunIMRIP35mIXDVztVkSqymLaEFK7o9/9YCmB8Jw+RYzUfrAHPjjnB0qlIpPQG9drC6h0K
+	0Qx01VeKQX01gUkRCbiYAN8Zia/Oho9IcLJWJvyPVcnM1JsX6iUNeLx1dRZWZ4Rd2i+Ecb/XEcZBO
+	hER9qJbw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u5nzn-0000000AXGv-34nC;
+	Fri, 18 Apr 2025 15:51:15 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 533B1300619; Fri, 18 Apr 2025 17:51:15 +0200 (CEST)
+Date: Fri, 18 Apr 2025 17:51:15 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	vschneid@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/fair: Increase max lag clamping
+Message-ID: <20250418155115.GI17910@noisy.programming.kicks-ass.net>
+References: <20250418151225.3006867-1-vincent.guittot@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250418151225.3006867-1-vincent.guittot@linaro.org>
 
-On Tue, 15 Apr 2025 18:26:52 -0400
-Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
-
-> The ADIS16203 is a single-axis 360 degree inclinometer. The previous
-> driver code incorrectly represented this by defining separate X and Y
-> inclination channels based on the two different output format registers
-> (0x0C for 0-360 deg, 0x0E for +/-180 deg). This violated IIO conventions
-> and misrepresented the hardware's single angle output. The 'Fixme'
-> comment on the original Y channel definition indicated this known issue.
+On Fri, Apr 18, 2025 at 05:12:25PM +0200, Vincent Guittot wrote:
+> sched_entity lag is currently limited to the maximum between the tick and
+> twice the slice. This is too short compared to the maximum custom slice
+> that can be set and accumulated by other tasks.
+> Clamp the lag to the maximum slice that a task can set. A task A can
+> accumulate up to its slice of negative lag while running to parity and
+> the other runnable tasks can accumulate the same positive lag while
+> waiting to run. This positive lag could be lost during dequeue when
+> clamping it to twice task's slice if task A's slice is 100ms and others
+> use a smaller value like the default 2.8ms.
 > 
-> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 > ---
-> Not sure to put a fixes tag here or not because the driver used to be
-> spread out across multiple files until it was whittled down to one file
-> using a common interface for similar devices.
-
-No fixes tag for this one is the right choice. It is a complex bit of
-ABI abuse.
-
-> ---
->  drivers/staging/iio/accel/adis16203.c | 52 ++++++++++++++++-----------
->  1 file changed, 31 insertions(+), 21 deletions(-)
+>  kernel/sched/fair.c | 16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/staging/iio/accel/adis16203.c b/drivers/staging/iio/accel/adis16203.c
-> index c1c73308800c5..73288121bf0bd 100644
-> --- a/drivers/staging/iio/accel/adis16203.c
-> +++ b/drivers/staging/iio/accel/adis16203.c
-> @@ -28,11 +28,11 @@
->  /* Output, temperature */
->  #define ADIS16203_TEMP_OUT       0x0A
->  
-> -/* Output, x-axis inclination */
-> -#define ADIS16203_XINCL_OUT      0x0C
-> +/* Output, 360 deg format */
-> +#define ADIS16203_INCL_OUT       0x0C
->  
-> -/* Output, y-axis inclination */
-> -#define ADIS16203_YINCL_OUT      0x0E
-> +/* Output, +/-180 deg format */
-> +#define ADIS16203_INCL_180_OUT   0x0E
->  
->  /* Incline null calibration */
->  #define ADIS16203_INCL_NULL      0x18
-> @@ -128,8 +128,7 @@
->  #define ADIS16203_ERROR_ACTIVE          BIT(14)
->  
->  enum adis16203_scan {
-> -	 ADIS16203_SCAN_INCLI_X,
-> -	 ADIS16203_SCAN_INCLI_Y,
-> +	 ADIS16203_SCAN_INCLI,
->  	 ADIS16203_SCAN_SUPPLY,
->  	 ADIS16203_SCAN_AUX_ADC,
->  	 ADIS16203_SCAN_TEMP,
-> @@ -137,10 +136,6 @@ enum adis16203_scan {
->  
->  #define DRIVER_NAME		"adis16203"
->  
-> -static const u8 adis16203_addresses[] = {
-> -	[ADIS16203_SCAN_INCLI_X] = ADIS16203_INCL_NULL,
-> -};
-> -
->  static int adis16203_write_raw(struct iio_dev *indio_dev,
->  			       struct iio_chan_spec const *chan,
->  			       int val,
-> @@ -148,10 +143,15 @@ static int adis16203_write_raw(struct iio_dev *indio_dev,
->  			       long mask)
->  {
->  	struct adis *st = iio_priv(indio_dev);
-> -	/* currently only one writable parameter which keeps this simple */
-> -	u8 addr = adis16203_addresses[chan->scan_index];
->  
-> -	return adis_write_reg_16(st, addr, val & 0x3FFF);
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_CALIBBIAS:
-> +		if (chan->scan_index != ADIS16203_SCAN_INCLI)
-> +			return -EINVAL;
-> +		return adis_write_reg_16(st, ADIS16203_INCL_NULL, val & 0x3FFF);
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index a0c4cd26ee07..1c2c70decb20 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -683,15 +683,17 @@ u64 avg_vruntime(struct cfs_rq *cfs_rq)
+>   * is possible -- by addition/removal/reweight to the tree -- to move V around
+>   * and end up with a larger lag than we started with.
+>   *
+> - * Limit this to either double the slice length with a minimum of TICK_NSEC
+> - * since that is the timing granularity.
+> - *
+> - * EEVDF gives the following limit for a steady state system:
+> + * Limit this to the max allowed custom slice length which is higher than the
+> + * timing granularity (the tick) and EEVDF gives the following limit for
+> + * a steady state system:
+>   *
+>   *   -r_max < lag < max(r_max, q)
+>   *
+>   * XXX could add max_slice to the augmented data to track this.
+>   */
 
-I would check for out of range before you get here rather than masking.
-Clearly the old code just masked, but we can do better given you are refactoring
-it.  If an invalid setting is requested best thing is normally to just return
-an error so userspace can see it was ignored.
+Right, its that max_slice XXX there.
 
+I think I've actually done that patch at some point, but I'm not sure
+where I've placed it :-)
 
-> +	default:
-> +		return -EINVAL;
-> +	}
->  }
->  
->  static int adis16203_read_raw(struct iio_dev *indio_dev,
-> @@ -161,7 +161,6 @@ static int adis16203_read_raw(struct iio_dev *indio_dev,
->  {
->  	struct adis *st = iio_priv(indio_dev);
->  	int ret;
-> -	u8 addr;
->  	s16 val16;
->  
->  	switch (mask) {
-> @@ -194,8 +193,9 @@ static int adis16203_read_raw(struct iio_dev *indio_dev,
->  		*val = 25000 / -470 - 1278; /* 25 C = 1278 */
->  		return IIO_VAL_INT;
->  	case IIO_CHAN_INFO_CALIBBIAS:
-> -		addr = adis16203_addresses[chan->scan_index];
-> -		ret = adis_read_reg_16(st, addr, &val16);
-> +		if (chan->scan_index != ADIS16203_SCAN_INCLI)
-> +			return -EINVAL;
-> +		ret = adis_read_reg_16(st, ADIS16203_INCL_NULL, &val16);
->  		if (ret)
->  			return ret;
->  		*val = sign_extend32(val16, 13);
-> @@ -206,13 +206,23 @@ static int adis16203_read_raw(struct iio_dev *indio_dev,
->  }
->  
->  static const struct iio_chan_spec adis16203_channels[] = {
-> +	{
-> +		.type = IIO_INCLI,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-> +					BIT(IIO_CHAN_INFO_SCALE) |
-> +					BIT(IIO_CHAN_INFO_CALIBBIAS),
-> +		.address = ADIS16203_INCL_180_OUT,
-> +		.scan_index = ADIS16203_SCAN_INCLI,
-> +		.scan_type = {
-> +			.sign = 's',
-> +			.realbits = 14,
-> +			.storagebits = 16,
-> +			.shift = 0,
+Anyway, I did poke at that other issue you mentioned at OSPM, where
+PREEMPT_SHORT wasn't working quite right.
 
-No need for setting shift to 0 explicitly.  It will happen anyway and
-a shift of 0 is a fairly natural default.
-
-> +			.endianness = IIO_CPU,
-> +		},
-> +	},
->  	ADIS_SUPPLY_CHAN(ADIS16203_SUPPLY_OUT, ADIS16203_SCAN_SUPPLY, 0, 12),
->  	ADIS_AUX_ADC_CHAN(ADIS16203_AUX_ADC, ADIS16203_SCAN_AUX_ADC, 0, 12),
-> -	ADIS_INCLI_CHAN(X, ADIS16203_XINCL_OUT, ADIS16203_SCAN_INCLI_X,
-> -			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
-> -	/* Fixme: Not what it appears to be - see data sheet */
-> -	ADIS_INCLI_CHAN(Y, ADIS16203_YINCL_OUT, ADIS16203_SCAN_INCLI_Y,
-> -			0, 0, 14),
-Why the ordering change?  I don't think it matters in practice, but easier to
-review of we keep that ordering the same as then no need to think about it at
-all!
-
-Jonathan
-
->  	ADIS_TEMP_CHAN(ADIS16203_TEMP_OUT, ADIS16203_SCAN_TEMP, 0, 12),
->  	IIO_CHAN_SOFT_TIMESTAMP(5),
->  };
-
+I've pushed out the patches to queue/sched/exp -- I meant to go post all
+that, except I keep getting side-tracked and 0-day people are having
+trouble with the hrtick bits in there :-/
