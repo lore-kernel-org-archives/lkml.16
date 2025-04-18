@@ -1,112 +1,83 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0715D204C32
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F541204C26;
+	Fri, 18 Apr 2025 10:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744972142; cv=none; b=MCGvFJElxPoFgI12dLwV6vKFNBnq3sET7+vAOXKUuyYgcsYE69DMq688N3Q1mygcJs7+1t9tHr3bUsQoQBwWA5eTmS41nGqjaiA8Z4o+E6zBRJlEiMw6EGrI4KurFBaNhWK4JCMIx1EdA6IImWUeeLNPvElj6iSs1XyGfjKYlew=
+	t=1744972443; cv=none; b=B3sgyo8nxlhLirdqsHPbVV9gY1W40hwXy7F4TADJa5TxyfUZis7JUfeezTzLDpQmJSEYlG/ssFbqFI8ORSx18mrRnoJBWc1apCM57KV3GIza6pmoE8C3Sdiuwzm4iHSzCsEtWrwysLlwYgZhzqyvayzFvtQjGuIwTJNNlFt7SYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744972142; c=relaxed/simple;
-	bh=PXjUbokpUcI7LlH+tMOmZc96wIGbaznXSlWcnx3/Za4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IbRBQOrp8EzM3DzDcKTlkAz5nRD2woLq4YfVYfrbBXWtMeniEwCMclNceLTKhLYqp+c25iCRISq1QLepl1unyi5bXfIM1kbyWzuIVq81WJURlx52WlrXfDWMgHJ9UtfLw/5A6OjojLY44a4AV33Xyvp0l5gkFunrGI+xaEiEGXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BFWIAJvE; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744972443; c=relaxed/simple;
+	bh=vw8bJB61CiRtKIfQ9TiC017QXdCK0sfEXWxyk/l1gUU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FfMSC43d9HggXNeVXBmQuslCulkAxqIx4YHAaitiG40fHxgTGArMsU0M6tLx9YtCkZsv+WGU7s+xxTxdH++g7IRMw+TvfE03/nuf0mOnK8cD1m7hkfev0Gz3vc4QLVbZZzu0KoxVR2KPRQxi8H0oePXwvgHcyB0xaPmRgiAPCLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=h1cjH1dj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BFWIAJvE"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso20219645e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 03:29:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744972139; x=1745576939; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=O7HleWCohYPjMIRO73sV8qZDTMfJD2N23urCmVc53xI=;
-        b=BFWIAJvEgNkWTZJrQwsOWWqaSmPJBcRta2Ei8DZ2Anq+hBHFa79MXDdug6IIdxOeJ6
-         RVfbOfMRXvGxkHbvZ7LwOV7hupUsvf0ouOq62agRNUlMac1jPWJqDm/R52qy2N0nTBGi
-         fwczznx3yIQFYJBtMbl1ztcxQvez0HTntx1EueCe2P9Uk+0olXQWi9tLhjrteQh47qit
-         O5rD/yXhvObBnJ6xUZ0bNSCcTtAZMfHwOpHGafd+ME0rPcyAfCfRDR2i/TGSVTnqUV+f
-         KN2cBES9xDKsAFd7JqK4nycou3yPuI8L8Ut5HnCpZs4QLF8z23j3aZksKZJD+4YhH/6n
-         L/bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744972139; x=1745576939;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O7HleWCohYPjMIRO73sV8qZDTMfJD2N23urCmVc53xI=;
-        b=VN6ywA9lPJO7a7RIYlqiefXwBjH/lzL2N6Xiz+4mEgILIWsf9KWdkkMojyTX7DQSAa
-         5H5zsCcD3uo4GimJNyqdE7C3mxdirVAVJDHY65krjxgCNpMd+bxjD/3f14cd1sfrZSjK
-         gUcu0PMp7dwIlcsp98dp38VpcVi+S24WMJXzcH+Dshqr3JpYErcS0OrfuTDXWmamnsBu
-         89zTgAzhTXmY+1xcPMB4jt256gPNAJuXxIyEfJh18qSDfz3K03HyTQC+ff/HGWVmGEsv
-         orDaU0fuTADpt2x/c0r52VZIFZpBjYHjVgULA3gyf0cc49idtloG78bYg6VFhSLqXVPh
-         LiNg==
-X-Forwarded-Encrypted: i=1; AJvYcCWLP8j9W0BmyZmHCWx35M26I97v4J8ySy1YLzVPtCOeKrLQlV3vTqoGJy4zCPRjXnwdpVmcVYqzHpcTrhs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWahhN6jYLYn/+ULq4jQA4U3j9SbzGjg1VqpRnkUOLHLmyK0km
-	LEQ37p1xQMMQAjzoQAImor7GnH7gKSIROBEuoNV/cfO3HfgkMf99oz2wWrS0huo=
-X-Gm-Gg: ASbGncsZHjwyvfpk9ppUHfLCbKHomUAHOV19R8/ZUiBUN60Gk/tlbvEy0pbp+thecgl
-	q6KJynlN4Mrc9WLLI2tWXwvvBb5lzJHx5XdJ/7XzKnCBN+wiezrs1sRwTy0xnmtzV7DjJYE3q4U
-	tlt1pV8mumuLBVKpNrO++7jgEMC/WVGFRonj6xYrNVqkOA6Fk/HKiUdwkG4A4Z9t20hym3+0Y5C
-	haFEaFxJMIxMhf276fwRf6yq755Un1lb45BkGji6Uld5fCb5LUqAr1WeZbrJviillLiP0g1h10r
-	Ifu1F0u6YMOjVrOrSJfM0/Kh3q5KiEBBNJKnMAcbo2BNMqVtpn4oP19z/RDxB4+2Qo4WCD7U/dp
-	Mgzhykg==
-X-Google-Smtp-Source: AGHT+IHJxlKM+V9zjxNju1detD9GdxRElBAn2xumwvGV5gII8CVWfwTLrPeirgJsQNjdQc0gV17/RQ==
-X-Received: by 2002:a05:600c:8508:b0:43c:fe15:41c9 with SMTP id 5b1f17b1804b1-4406ab93c98mr22161755e9.9.1744972139340;
-        Fri, 18 Apr 2025 03:28:59 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa421c79sm2337770f8f.1.2025.04.18.03.28.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Apr 2025 03:28:58 -0700 (PDT)
-Message-ID: <ed3f537a-ac1f-44c8-952d-42a5d83c3a69@linaro.org>
-Date: Fri, 18 Apr 2025 11:28:57 +0100
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="h1cjH1dj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2246FC4CEE2;
+	Fri, 18 Apr 2025 10:34:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744972442;
+	bh=vw8bJB61CiRtKIfQ9TiC017QXdCK0sfEXWxyk/l1gUU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h1cjH1dj6ASU6TKCPMEOg9kqVr3SZrvVLCOAIFiht6pcIgGxyh11L8KGJz6sUsRtj
+	 ZlHXlJXZR4VpqtQQxaNBjnQ+wnsOAM8+hPsLbAeZhbp75Z60KEhtxxjH/RT9FPQuJc
+	 4goe7xrnsURfpbQq4UUZNh/pm4Ag7dVhvmPVppTs=
+Date: Fri, 18 Apr 2025 12:33:59 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Ruben Wauters <rubenru09@aol.com>
+Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+	Teddy Wang <teddy.wang@siliconmotion.com>,
+	Sudip Mukherjee <sudip.mukherjee@codethink.co.uk>,
+	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/8] staging: sm250fb: remove USE_HW_I2C check
+Message-ID: <2025041836-debug-unstopped-9a88@gregkh>
+References: <20250417190302.13811-1-rubenru09@aol.com>
+ <20250417190302.13811-2-rubenru09@aol.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] arm64: dts: qcom: qcs8300-ride: enable video
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250418-qcs8300_iris-v2-0-1e01385b90e9@quicinc.com>
- <20250418-qcs8300_iris-v2-3-1e01385b90e9@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250418-qcs8300_iris-v2-3-1e01385b90e9@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417190302.13811-2-rubenru09@aol.com>
 
-On 18/04/2025 07:28, Vikash Garodia wrote:
-> Enable video nodes on the qcs8300-ride board.
+On Thu, Apr 17, 2025 at 08:02:49PM +0100, Ruben Wauters wrote:
+> Removes the USE_HW_I2C check and function defines in
+> ddk750_sii164.c.
 > 
-> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> The software equivalents were never used due to
+> USE_HW_I2C being defined just before the ifdef, meaning
+> the hardware versions were always used.
+> 
+> The define names were also triggering checkpatch.pl's
+> camel case check.
+> 
+> Signed-off-by: Ruben Wauters <rubenru09@aol.com>
+> 
 > ---
->   arch/arm64/boot/dts/qcom/qcs8300-ride.dts | 4 ++++
->   1 file changed, 4 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts b/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-> index b5c9f89b34356bbf8387643e8702a2a5f50b332f..87114a349fedd80296abaf3d2f5f284b5adbbdfe 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-> +++ b/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-> @@ -285,6 +285,10 @@ queue3 {
->   	};
->   };
->   
-> +&iris {
-> +	status = "okay";
-> +};
-> +
->   &qupv3_id_0 {
->   	status = "okay";
->   };
-> 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> I am somewhat unsure whether this is the way to go or
+> the correct way would be to add an option/opportunity for
+> the software version to be used. Currently the hardware
+> version is always used, but I am unsure if there ever even
+> would be a case where you would want to use the software
+> version over the hardware version.
+
+Then the code can be added back, not an issue.
+
+But you forgot this same check in
+drivers/staging/sm750fb/ddk750_hwi2c.c, right?
+
+Also, what about removing the sm750_sw_i2c_write_reg() and other
+functions that are now never referenced?  Can you add that to this patch
+series?  A single series that just removes the use of USE_HW_I2C and the
+now unneeded functions would be best, as it's not really a "coding
+style" fix, but rather a code cleanup thing, right?
+
+thanks,
+
+greg k-h
