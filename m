@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5B021ABD5
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:14:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F1421ADD4
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:14:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744996443; cv=none; b=oZnk6Rlm8CZCwheJHKzYUKIYUP9sBqyno+iXZcC6awmI56LZyUrxOo+9xuPwDG0fFgS3i5Cejjvs5M5arsIpzMYFoIV1OlKPZnN/Uzmh1SEtL74Irn1FkE0SC9rmNtlDKDVB05AirIvo6pF4uidSgUfsmGdQxThTkOZ88TWAwbM=
+	t=1744996443; cv=none; b=kBwsFZ0KPGymbt1OmcNr5xfsyNX+HPITGmhPFpxFqWBm2slfEUQSSnEuNjyUHI9XHyHan2lhgRb7hoBAegeQQhLXN0AXREFaqMSEU3E08OuqoDRyZL/Lg2Od3uGDNTeJyO7GFncCxDG/e1uQ1oA4JOPKVv8j4J3tB78O+p1HZsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744996443; c=relaxed/simple;
-	bh=j3yOGdgZ8xMCRP8ceU9TeIiJqrWt+5iLiJJkl91b5wM=;
+	bh=QpNmSHZ6zOV2xliYb2s0bcKUdg+nsbgy4+hhnPQCF5Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Du+R53CwttvfgVFJzhVZk2T2icRmwbCM2AQdK302lmfgKki4H7p5me0DfkYHg/WDHQGV6Ol+G4kkXS1lpvsVsQOcGsg7Y4UZBAKTx54Tqjxf4JFsFAy4DcYqQ0sp8we8gDKwjUy/qiPbPnIYe0Cqo9Z74Hc/TZj2Z7/9cqV7Aog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T0H4QZbK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=f2PnzeIdYtVD8on9IQ9Ea+DlzkmB7UR3xbf0kbD6RK8fUcan1mN50XEgxOC3QrnY9TZ8+0KkIv+nqfilFm95ksZwbFNO5iPQMsg7ImF7Xk0VyHxsylzZlp+XzPUTQyS7FqGN8RBIePC37dMcRDO2+fOci/zOH2ysacX1efj10U8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bM5g9CtS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T0H4QZbK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A23FBC4CEF6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bM5g9CtS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB8ABC4CEFD;
 	Fri, 18 Apr 2025 17:14:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744996442;
-	bh=j3yOGdgZ8xMCRP8ceU9TeIiJqrWt+5iLiJJkl91b5wM=;
+	bh=QpNmSHZ6zOV2xliYb2s0bcKUdg+nsbgy4+hhnPQCF5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T0H4QZbKjj/gmEjetwEZ6xC9nh3RWCOG3hsnLpb7JYodxYMdIatFqUg4Fp5XY9Pmj
-	 ot4ca4uAEPFAh29wVdMxp5F+MAdP4/P25mzISbUXrPARuxuLmKxdLaLL3HtKkfRtvf
-	 p3WP7KqywW28PQN8Ebyxne8FdsUe58nQhQBYfLsT+2wGbfpYUYLroMZZuyGJ21SP+K
-	 etUwMpSBh1KN4u2hPhtHByHKB3NDeYjnX29OMbWhcnWp2hnP3FZbdQc/pzm9MGY22B
-	 ZCU+xDFepaV8dhfljfOFbmUqtBu7xZFd3BDOQUs5JZpR532x7MFLHdLcMizS4yabZj
-	 wxI6WKD7T8e+w==
+	b=bM5g9CtSMSqgD81sUPdDjdO705u+XTFj1OkxT3RUClOqWXP+siP7znER3q8ZXaUMp
+	 KQjmEkNmaV8JSUoY9TJ1Q4XDx87pHxSJzBVk83v4V8256JFv9qXjRHwUKQiTSa3/km
+	 wSbpRZCn1PuR3mrBekR0Z94+MTTnf6jF563iplJHpV9IuGZWnVpOxLovduDmNnPS75
+	 BcGCp1BDUHzMA39JbmVD2BqHgWKPLwMtX+19GoeZ2vrKdZ9qlr4z0XBpRaV8ynyxDm
+	 Z8OmivOTIxTg3k9FOoKAy+ij0DUdcUUQvy78RzAeTbhCZKl8MjWd0LVbdyke6ieGAE
+	 4a49K/4tZ8T/g==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id EB9FBCE1680; Fri, 18 Apr 2025 10:14:01 -0700 (PDT)
+	id 05A94CE18B1; Fri, 18 Apr 2025 10:14:02 -0700 (PDT)
 From: "Paul E. McKenney" <paulmck@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: kernel-team@meta.com,
@@ -42,9 +42,9 @@ Cc: kernel-team@meta.com,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Karolina Stolarek <karolina.stolarek@oracle.com>,
 	"Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH v2 ratelimit 08/14] ratelimit: Avoid jiffies=0 special case
-Date: Fri, 18 Apr 2025 10:13:53 -0700
-Message-Id: <20250418171359.1187719-8-paulmck@kernel.org>
+Subject: [PATCH v2 ratelimit 13/14] ratelimit: Avoid atomic decrement if already rate-limited
+Date: Fri, 18 Apr 2025 10:13:58 -0700
+Message-Id: <20250418171359.1187719-13-paulmck@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <4edcefb0-cdbd-4422-8a08-ffc091de158e@paulmck-laptop>
 References: <4edcefb0-cdbd-4422-8a08-ffc091de158e@paulmck-laptop>
@@ -56,18 +56,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The ___ratelimit() function special-cases the jiffies-counter value of zero
-as "uninitialized".  This works well on 64-bit systems, where the jiffies
-counter is not going to return to zero for more than half a billion years
-on systems with HZ=1000, but similar 32-bit systems take less than 50 days
-to wrap the jiffies counter.  And although the consequences of wrapping the
-jiffies counter seem to be limited to minor confusion on the duration of
-the rate-limiting interval that happens to end at time zero, it is almost
-no work to avoid this confusion.
+Currently, if the lock could not be acquired, the code unconditionally
+does an atomic decrement on ->rs_n_left, even if that atomic operation
+is guaranteed to return a limit-rate verdict.  This incurs needless
+overhead and also raises the spectre of counter wrap.
 
-Therefore, introduce a RATELIMIT_INITIALIZED bit to the ratelimit_state
-structure's ->flags field so that a ->begin value of zero is no longer
-special.
+Therefore, do the atomic decrement only if there is some chance that
+rates won't be limited.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -78,52 +73,25 @@ Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: John Ogness <john.ogness@linutronix.de>
 Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
 ---
- include/linux/ratelimit.h       | 2 +-
- include/linux/ratelimit_types.h | 1 +
- lib/ratelimit.c                 | 4 +++-
- 3 files changed, 5 insertions(+), 2 deletions(-)
+ lib/ratelimit.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/ratelimit.h b/include/linux/ratelimit.h
-index c78b92b3e5cd8..adfec24061d16 100644
---- a/include/linux/ratelimit.h
-+++ b/include/linux/ratelimit.h
-@@ -43,7 +43,7 @@ static inline void ratelimit_state_reset_interval(struct ratelimit_state *rs, in
- 
- 	raw_spin_lock_irqsave(&rs->lock, flags);
- 	rs->interval = interval_init;
--	rs->begin = 0;
-+	rs->flags &= ~RATELIMIT_INITIALIZED;
- 	rs->printed = 0;
- 	ratelimit_state_reset_miss(rs);
- 	raw_spin_unlock_irqrestore(&rs->lock, flags);
-diff --git a/include/linux/ratelimit_types.h b/include/linux/ratelimit_types.h
-index d21fe82b67f67..ef6711b6b229f 100644
---- a/include/linux/ratelimit_types.h
-+++ b/include/linux/ratelimit_types.h
-@@ -11,6 +11,7 @@
- 
- /* issue num suppressed message on exit */
- #define RATELIMIT_MSG_ON_RELEASE	BIT(0)
-+#define RATELIMIT_INITIALIZED		BIT(1)
- 
- struct ratelimit_state {
- 	raw_spinlock_t	lock;		/* protect the state */
 diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-index 19ad3cdbd1711..bd6e3b429e333 100644
+index b306e230c56bb..2048f20561f31 100644
 --- a/lib/ratelimit.c
 +++ b/lib/ratelimit.c
-@@ -49,8 +49,10 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
- 		return 0;
- 	}
+@@ -60,8 +60,10 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
+ 		unsigned int rs_flags = READ_ONCE(rs->flags);
  
--	if (!rs->begin)
-+	if (!(rs->flags & RATELIMIT_INITIALIZED)) {
- 		rs->begin = jiffies;
-+		rs->flags |= RATELIMIT_INITIALIZED;
-+	}
+ 		if (rs_flags & RATELIMIT_INITIALIZED && burst) {
+-			int n_left;
++			int n_left = atomic_read(&rs->rs_n_left);
  
- 	if (time_is_before_jiffies(rs->begin + interval)) {
- 		int m = ratelimit_state_reset_miss(rs);
++			if (n_left <= 0)
++				return 0;
+ 			n_left = atomic_dec_return(&rs->rs_n_left);
+ 			if (n_left >= 0)
+ 				return 1;
 -- 
 2.40.1
 
