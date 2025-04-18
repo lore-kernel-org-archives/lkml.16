@@ -1,57 +1,134 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85DD923817C
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 04:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B9E262A6;
+	Fri, 18 Apr 2025 04:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744948815; cv=none; b=rMKEZypKeGF6NZXnD7kRH7i/ZaQgJZ8p8MGSSDFZODCwoLwgap1aVRUpYT9ZRlsbwMwx0FZ29xuUW2OdAKCQh4/IyURBEtoAoykYfza/gV6CUp72o+81IUlybDQpe+1P8Li89C+sOGA4Zsigptvmufxm6/oQ/O7pSBk80LL0Hw4=
+	t=1744948846; cv=none; b=UdbKwfMIhx4mdNaET2BKizJX3ic7GoW92F3+/EAaLSo7sfkPyDe+hIhNY3tSJ6Uv+HzA5Jl4ALAAbsHgaXs9rIWg4oVDfgu3GDsi3I59VnytFWUYNUxn4r2bSwCSpx98MA7Y6jeyBgunNz2XbiKbpKxhfhC4LMHVra+zg7t9isE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744948815; c=relaxed/simple;
-	bh=fHKEKHdPjoZhYVJRZoCAKKckDq3mCm+7VXF61UEPMbE=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=V0GdInzA4BuMUd24OZykeTAX1mcercq5s/UMUzy07+LZfu7NnpUs39esGOH5FbuBj1zWdUn+K9SMjrdxy704uXTzpHb3GA2O9nlhi+L0fB4Wrsp/YVKNA7f4Z60enGW08fSsQK0044YMIcuiHZcL6hbWYrmKHJ4XqCGDt0Kv2Yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d80ac98803so15215285ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 21:00:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744948812; x=1745553612;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fHKEKHdPjoZhYVJRZoCAKKckDq3mCm+7VXF61UEPMbE=;
-        b=UKpC6TRSJr+5mxkpYxHnjC2Vlv13ePW6jq5zQOfoHIJ8TOivrZJojaYGj20/wxCbe7
-         zdhZZOHh9bP/TU0SGWSiH34FYLN9fynzVPwSlOHNdl8tWFmvqFufS0BavtMSOiVk/uDT
-         ik2cNW4Dt2TC7JabUrkRN8XSKHSTd9SOHdTMJibY2ZQdWvgIDk13RrZoseNMm4P4Xo4a
-         7/NNbm7M9M3juPiShtkwkB1/nLAT5Mhw9eaccjF+0UjwfFmPdpcSrzuHPbmWUz1d+uYP
-         b7pkEst2WT19u+ie9yHk7rmJ5cCDGcJmDr8r6ykrx4iNby+aDcc7tXK7w4FsvTMCcjRZ
-         xxyg==
-X-Forwarded-Encrypted: i=1; AJvYcCXPA7THS0QoeOoVtbqyNY18Xsf90mjx7P1Xqc0DmSZMZx4KDGcD0Zkoymcr3abnRL4U4+J0h0Qen4VTfv8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKnj49oloEDsO0uNMe0s2IerHJ7A/aL4agFvauNKFA8BY6HnEz
-	aQMHxSkD/FMPqcRAydKfySgjDHYBecKsfgv2E0nJ85Ejvjp0TV9nyYMwHqTO1u5Y/oi6GyYg19S
-	k1j+X23+4s6Imydr3NO9SxBJkP+0MsECcWm3ls1/InCyADkKLGXVFJWI=
-X-Google-Smtp-Source: AGHT+IEzUru6ibkgeGNXC8u7yW1ax0zndzgxv9QzoghfRsQZA4cfh1MH5s837125qe7BlITDquQbMeDZXaakdd4myRs206UoVCWu
+	s=arc-20240116; t=1744948846; c=relaxed/simple;
+	bh=zIJTN+v7hIwW8TsLc0qWWgZ4uUmcS1YX8FJEkkI0NHI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ahh9xkP6m0rJ+4dq9EQhwY5UZwGUY6E5Wd8+ZUkCJ+bGLhH00ibxbvYjCgDdk65HGsSCgQ8GFblIsfBtVTbJ2VMl2+pzgEHK1ReXWwvJzZXK3xbG/HeJd+0q+eNvO5Vl5OO/6cFdu8iubqEwRTdU4N8tMedmZ20zx41Z9HIHrT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FWW6LBrL; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FWW6LBrL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF041C4CEE2;
+	Fri, 18 Apr 2025 04:00:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744948846;
+	bh=zIJTN+v7hIwW8TsLc0qWWgZ4uUmcS1YX8FJEkkI0NHI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FWW6LBrLnKSDv4Iq9C5PpevthoaZ/Y0CU67yVlhn1nSqz9tC1m6pQOYl5J9Han6JA
+	 glHgHIVzCPun5ah9N0wwuJxk4bmnFR5/siwByT/RAUCvpXF6xI5GNJ8T+VtqVWn7mG
+	 otPvPWVFCML2Oo5jtur84zRXmCN/O/6vW3OSdYNwP0HrvcdndRpUHf8lD5dUpxDH8r
+	 1mEsSsQKydNu1wbRO6JULGLcX7GV28y0LyCoMIpZZVSAXliG9oCUxL0VF2+ZZm83im
+	 KgoU0CuIfk/acm3TLWnNn7WPqYolM/WEiolPfvZO7sNXtbAeTq+K70XMJfCx+lsSAU
+	 uOZ8kKNgzxw3Q==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: lib/poly1305 - restore ability to remove modules
+Date: Thu, 17 Apr 2025 21:00:17 -0700
+Message-ID: <20250418040017.65086-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1565:b0:3d1:97dc:2f93 with SMTP id
- e9e14a558f8ab-3d88ee51213mr15844865ab.20.1744948812603; Thu, 17 Apr 2025
- 21:00:12 -0700 (PDT)
-Date: Thu, 17 Apr 2025 21:00:12 -0700
-In-Reply-To: <676879e9.050a0220.226966.0031.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6801ce4c.050a0220.5cdb3.0016.GAE@google.com>
-Subject: Re: [moderation] KCSAN: data-race in io_sq_thread / io_sq_thread_stop
-From: syzbot <syzbot+5988142e8a69a67b1418@syzkaller.appspotmail.com>
-To: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, lizetao1@huawei.com, minhquangbui99@gmail.com, 
-	syzkaller-upstream-moderation@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Auto-closing this bug as obsolete.
-Crashes did not happen for a while, no reproducer and no activity.
+From: Eric Biggers <ebiggers@google.com>
+
+Though the module_exit functions are now no-ops, they should still be
+defined, since otherwise the modules become unremovable.
+
+Fixes: 1f81c58279c7 ("crypto: arm/poly1305 - remove redundant shash algorithm")
+Fixes: f4b1a73aec5c ("crypto: arm64/poly1305 - remove redundant shash algorithm")
+Fixes: 378a337ab40f ("crypto: powerpc/poly1305 - implement library instead of shash")
+Fixes: 21969da642a2 ("crypto: x86/poly1305 - remove redundant shash algorithm")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ arch/arm/crypto/poly1305-glue.c         | 5 +++++
+ arch/arm64/crypto/poly1305-glue.c       | 5 +++++
+ arch/powerpc/crypto/poly1305-p10-glue.c | 5 +++++
+ arch/x86/crypto/poly1305_glue.c         | 5 +++++
+ 4 files changed, 20 insertions(+)
+
+diff --git a/arch/arm/crypto/poly1305-glue.c b/arch/arm/crypto/poly1305-glue.c
+index 6d6998b3ec7e3..42d0ebde1ae15 100644
+--- a/arch/arm/crypto/poly1305-glue.c
++++ b/arch/arm/crypto/poly1305-glue.c
+@@ -114,7 +114,12 @@ static int __init arm_poly1305_mod_init(void)
+ 		static_branch_enable(&have_neon);
+ 	return 0;
+ }
+ arch_initcall(arm_poly1305_mod_init);
+ 
++static void __exit arm_poly1305_mod_exit(void)
++{
++}
++module_exit(arm_poly1305_mod_exit);
++
+ MODULE_DESCRIPTION("Accelerated Poly1305 transform for ARM");
+ MODULE_LICENSE("GPL v2");
+diff --git a/arch/arm64/crypto/poly1305-glue.c b/arch/arm64/crypto/poly1305-glue.c
+index cb152ceac14a1..906970dd53732 100644
+--- a/arch/arm64/crypto/poly1305-glue.c
++++ b/arch/arm64/crypto/poly1305-glue.c
+@@ -105,7 +105,12 @@ static int __init neon_poly1305_mod_init(void)
+ 		static_branch_enable(&have_neon);
+ 	return 0;
+ }
+ arch_initcall(neon_poly1305_mod_init);
+ 
++static void __exit neon_poly1305_mod_exit(void)
++{
++}
++module_exit(neon_poly1305_mod_exit);
++
+ MODULE_DESCRIPTION("Poly1305 authenticator (ARM64 optimized)");
+ MODULE_LICENSE("GPL v2");
+diff --git a/arch/powerpc/crypto/poly1305-p10-glue.c b/arch/powerpc/crypto/poly1305-p10-glue.c
+index 40d296d52c23e..00617f4c58e69 100644
+--- a/arch/powerpc/crypto/poly1305-p10-glue.c
++++ b/arch/powerpc/crypto/poly1305-p10-glue.c
+@@ -125,8 +125,13 @@ static int __init poly1305_p10_init(void)
+ 		static_branch_enable(&have_p10);
+ 	return 0;
+ }
+ arch_initcall(poly1305_p10_init);
+ 
++static void __exit poly1305_p10_exit(void)
++{
++}
++module_exit(poly1305_p10_exit);
++
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Danny Tsen <dtsen@linux.ibm.com>");
+ MODULE_DESCRIPTION("Optimized Poly1305 for P10");
+diff --git a/arch/x86/crypto/poly1305_glue.c b/arch/x86/crypto/poly1305_glue.c
+index a0fc543a0d688..cff35ca5822a8 100644
+--- a/arch/x86/crypto/poly1305_glue.c
++++ b/arch/x86/crypto/poly1305_glue.c
+@@ -206,8 +206,13 @@ static int __init poly1305_simd_mod_init(void)
+ 		static_branch_enable(&poly1305_use_avx512);
+ 	return 0;
+ }
+ arch_initcall(poly1305_simd_mod_init);
+ 
++static void __exit poly1305_simd_mod_exit(void)
++{
++}
++module_exit(poly1305_simd_mod_exit);
++
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Jason A. Donenfeld <Jason@zx2c4.com>");
+ MODULE_DESCRIPTION("Poly1305 authenticator");
+
+base-commit: da4cb617bc7d827946cbb368034940b379a1de90
+-- 
+2.49.0
+
