@@ -1,102 +1,145 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75962218EB1
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:19:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BE61BD01D
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:21:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744996758; cv=none; b=V1aknqthQq/bQurpMIIpkT7y4FnHUZuXqWU7wrC4zDW8/ORd3mA08vkmJi+6T4PuSpN1P2hQ/WbBieJ6wgxNsFtxu/zXD4eMOAw45c1m6+CKu4VgG5QdKoj+mJ/oddkftmiZYgLF37AHIbLHoEUZLjdfcbLpa5y+HUTFQynd/pk=
+	t=1744996888; cv=none; b=N6Oxg1bJjdMSeCEGPdPVfInL03NjS/YJtd/bILY8slDBXvTyfGagU3+hP52+XSdelWd/OwoK5KAtJx2SOo3Lkm4cPgwW81VgCOTAfZlOkUlRaB0uF+ge8xZEOtA+hZtu7s8d3JCa4tuPvTNv7NzuVO/NKhYPkMZ2X1DYiKabWiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744996758; c=relaxed/simple;
-	bh=umH6ywsc4drx9G9NcplmJ0TyaUjkmwExCrK7GVRNt5w=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MaCx4l8Q8rDhEB43sW3xZu0k7UGk4F6JeBt0gTjsnX1XDf69Qd9raSmVor6LHH3dWkYTrJl9ZAw3bbJ2/LcVgqbV55aLmXKBMzNhTeE0VBoTOvvN7E27xGgBB3NNVMHHU21AxeQKb48BWivSbrBzIAcS/GEDkWcVh4swBtGYvO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VT3MPZzZ; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1744996888; c=relaxed/simple;
+	bh=WFrpL2F8bMxmglS8XNEkfLX3pO8HAqRtehC5w7mS+zQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TvZLppACR55xZOzEVZVE8/+j/R9wC4st6w0QLbPpchniai5hETiCuZKXPc8dndg3GrcLQi6/uN1nKjn0EfRh/RXv4DdI0/DOa2VvJTJqhDaO9GhNQTw6FXmbVXfRSeIDEzGdYwOQmZkV0JbodweAMdrBzxwhP5H1Vhc3d3DTmfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vr2ZMnPX; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VT3MPZzZ"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3086107d023so2074475a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:19:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vr2ZMnPX"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-736c277331eso2944721b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:21:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744996756; x=1745601556; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JAMiTnJq5wGTimzHorBniJSJQObCz8zh4bLLKuMUOgs=;
-        b=VT3MPZzZ3msHT1dZ/LgMoKOu7PthXRi4XQgX2oplccXQv3iA/oYjAnqreKsJhXDPvW
-         NYgMmMwlg7bAI+OMZOSnJVnX6bYLt2cR6t5y9m2bYKaCAx1BdpBkB4P2lrQ9xCUu1YUp
-         jK3SSdxDxNpzXm2vq8fVYMdylRQiXpRe9iV+rniQLGTdVsOeuiVAd4DPXGOrJBQ6ICZV
-         mmkRP8hbixGpBm4htemOKsJOilwLR7qRNZNJ4GNVV2f7pU9HULWijOKsVgwy7/zUukkP
-         OE3PGk2FlzbCDVDIaIw/5Ke3P/mjpV9XiKIMu1xlTL24VQzZ3rGb+q4JTf62To2r29mo
-         PSag==
+        d=linaro.org; s=google; t=1744996885; x=1745601685; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=diDaW7dZMn7myQugjOx5Zl7LSJCwv2qr5u+uIuIApH8=;
+        b=vr2ZMnPXzOnZ9KgTCHSvYSzjH5EPYrMr/+ljy/t9KV6pIQfZGULzdiG8Jj2pAz2Gxu
+         BkNpf7mTwP2GWG5X6ryM7EAdg5UZ5awYJ4Xp+NgzIOO3+v+tm+QcMdN1Qbuwz6VzxRyo
+         r5rPl8iJUDLIweJe7Y4g62lDVxqHTJ+xN8cWqFdi9nF/J1Pw8DlXIxszti9+/xsfYL9Y
+         RbuXEkXNMuBhERAnsAIOHXmhsHzSBFDXADQroPb6zQGHxqnYSoRSTFMbLVWmQweC9lij
+         2DS0jta+aaTl9JYYGWN41I18UmiDThg/zOdFOV20T1aagvWeBR9yet4R1mZAyPfWlAEU
+         lT0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744996756; x=1745601556;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JAMiTnJq5wGTimzHorBniJSJQObCz8zh4bLLKuMUOgs=;
-        b=rTo19G1WmgiPrsNriZTKb3nqnJjaFMAg4NwKCle2HaoRnWKvQW6f+6OArqyGS1APyH
-         59EwoMkwMOoGCvyoECbDqCk9O4kMVPr12HzmwflhvpBR+A+aa10zTBzeOIvqXBYODt4/
-         GG6iLa2jh35CV1S62kCy4UM3233norFjnQXYtdWSH3K39XwqnDg9ta/CEARhytdKUJgw
-         a0Ys0GIP5J73BJfwOgozFqIQdwo7XJ0zZbhQdpWO/KF8MexTPbd1kbwp0b5p2x0YAqqY
-         ZPywl9uiCmNwF7k2tinIr+RAUDz4ixWHH+7I1EqcWjyoqrwLwRaitqN0hv6NeD6WrjS+
-         dwIg==
-X-Forwarded-Encrypted: i=1; AJvYcCXwByW+e8SR+kXZ0R3sU2Swtv1HdSSCITavkvpeeO+9rrpkYnUjxsZ+x4E2rBq/Pxv3ZmLlSwx9QAf4uOY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvFmFBC0c3kAO0DdmxJ+8kKe2ZcsyAahSuIiMu/y7zNNhMH+YL
-	2PJDIo0hb4dgqvM6ipWqE1zG69FOd57f5ah7cIrYEAmjS8ptEhLKn/iGIp8UQuEvE0FgQHQ3GMF
-	/bQ==
-X-Google-Smtp-Source: AGHT+IFYpkpjQzZ7Z5ctAJdgsF/swLP7xsl0a2d3B1YurqSDpfIGlQl4nOWEChP8tGh5x1hWI4qHIsV7y44=
-X-Received: from pjbee4.prod.google.com ([2002:a17:90a:fc44:b0:308:7499:3dfc])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:37c5:b0:2fe:8902:9ecd
- with SMTP id 98e67ed59e1d1-3087bb3e830mr4814615a91.1.1744996755737; Fri, 18
- Apr 2025 10:19:15 -0700 (PDT)
-Date: Fri, 18 Apr 2025 10:19:14 -0700
-In-Reply-To: <aAKDyGpzNOCdGmN2@duo.ucw.cz>
+        d=1e100.net; s=20230601; t=1744996886; x=1745601686;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=diDaW7dZMn7myQugjOx5Zl7LSJCwv2qr5u+uIuIApH8=;
+        b=BhhtlCPhNSY/8Tcf3bKjD0ngL/PBlV/PTu35UWw2YqKGxtzw72gckhx91mJD5jMCDi
+         CtW70uAnAqkY+DqeeQgfn+eTPGA4KhuMhz+MExvZLF40ZokTyUH/mg91D/h3acbCPjoa
+         1tyBYS/mBrxNEsUJvoVn9n4emZJnbwmvCdEpMD2HUg9vjjvladRP8Dj+RsT/t15F/Ykk
+         y7howL2CBs8wEh4v3ZpV8+E7zP0LIdSSpqXdFPX2h8aNhLevvRHYvkxo0ABnYzvEo6h6
+         yINiLKCtltN0K+eoo0QGhHOZ+w1zBTiUSTUNxINVas4lfND17wL18yf+rH703wGTS+QC
+         rVbw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUR2hShiB0of/tMt8rix8p92SgedkILH0xaZFnOeauL0TpB1yEV+ggHR4nvL7S50itwO77ZmaYX9AMmcA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyv+RiDcI9OagD8XqhkujJ3Ubz9fIzYA58tnYk5nbqWKpf1Klhp
+	lQO1L6c9jYVHjlV+soH4g3Ds7VxFKRpiy7m6qDwsheInZ1Y7fI00zJou6F6ojQ==
+X-Gm-Gg: ASbGncsFkqyIfzEsL/+OO80b+W5prp6qKzuoTTufo5fyzoDDcWvaaMgK4ZwB7+M3exp
+	dxc4M6mlH8pPFzZG8o90KURyurnyYqiTuAjOpl9Qjs1Vd7chRTgN3BgTcWyARinVO5tnIPI5dg/
+	pz1LxXmtkXLYAU3sFF6SndyBckxULYUh+cTyM+UAIBJ7lhEquK/jJI7ZQiGFU7CshoZHn7yJaJC
+	/7UdDHzk6z66sbjg9/V80Rhy0Jz1uFxr8XZaPMerfels8rwM1DIsCujBu8ikCIBfEjIbsQacb8d
+	Ons/CTvkvvTXFwh6bv4vNmbQDtZoLWhtYAnsjqWr/5EH4ldHyTzi
+X-Google-Smtp-Source: AGHT+IFUadNaSMrrwOrDcOej0XwrPKaauXBdUtJHJ3I1t9Dp5wnCQzoR0bQRXbgQzLUhtiuZ05wR5A==
+X-Received: by 2002:a05:6a00:2d0d:b0:737:cd8:2484 with SMTP id d2e1a72fcca58-73dbe5244cemr5947531b3a.6.1744996885641;
+        Fri, 18 Apr 2025 10:21:25 -0700 (PDT)
+Received: from thinkpad ([220.158.156.81])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8c020bsm1843171b3a.28.2025.04.18.10.21.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 10:21:25 -0700 (PDT)
+Date: Fri, 18 Apr 2025 22:51:19 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
+	bhelgaas@google.com, cassel@kernel.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, treding@nvidia.com, jonathanh@nvidia.com, kthota@nvidia.com, 
+	mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V3] PCI: dwc: tegra194: Broaden architecture dependency
+Message-ID: <vrqkwvwwjrirsrrionoqbdynha3pahabmkhzk5rs5vfb3wugh7@4zagyt7ycbbv>
+References: <20250417074607.2281010-1-vidyas@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250331143710.1686600-1-sashal@kernel.org> <20250331143710.1686600-2-sashal@kernel.org>
- <aAKDyGpzNOCdGmN2@duo.ucw.cz>
-Message-ID: <aAKJkrQxp5on46nC@google.com>
-Subject: Re: [PATCH AUTOSEL 5.10 2/6] x86/cpu: Don't clear X86_FEATURE_LAHF_LM
- flag in init_amd_k8() on AMD when running in a virtual machine
-From: Sean Christopherson <seanjc@google.com>
-To: Pavel Machek <pavel@denx.de>
-Cc: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Max Grobecker <max@grobecker.info>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com, 
-	x86@kernel.org, thomas.lendacky@amd.com, perry.yuan@amd.com, 
-	mario.limonciello@amd.com, riel@surriel.com, mjguzik@gmail.com, 
-	darwi@linutronix.de
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250417074607.2281010-1-vidyas@nvidia.com>
 
-On Fri, Apr 18, 2025, Pavel Machek wrote:
-> Hi!
+On Thu, Apr 17, 2025 at 01:16:07PM +0530, Vidya Sagar wrote:
+> Replace ARCH_TEGRA_194_SOC dependency with a more generic ARCH_TEGRA
+> check, allowing the PCIe controller to be built on Tegra platforms
+> beyond Tegra194. Additionally, ensure compatibility by requiring
+> ARM64 or COMPILE_TEST.
 > 
-> > From: Max Grobecker <max@grobecker.info>
-> > 
-> > [ Upstream commit a4248ee16f411ac1ea7dfab228a6659b111e3d65 ]
+> Link: https://patchwork.kernel.org/project/linux-pci/patch/20250128044244.2766334-1-vidyas@nvidia.com/
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
+> ---
+> v3:
+> * Addressed warning from kernel test robot
 > 
-> > This can prevent some docker containers from starting or build scripts to create
-> > unoptimized binaries.
-> > 
-> > Admittably, this is more a small inconvenience than a severe bug in the kernel
-> > and the shoddy scripts that rely on parsing /proc/cpuinfo
-> > should be fixed instead.
+> v2:
+> * Addressed review comments from Niklas Cassel and Manivannan Sadhasivam
+> 
+>  drivers/pci/controller/dwc/Kconfig | 4 ++--
+>  drivers/phy/tegra/Kconfig          | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index d9f0386396ed..815b6e0d6a0c 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -226,7 +226,7 @@ config PCIE_TEGRA194
+>  
+>  config PCIE_TEGRA194_HOST
+>  	tristate "NVIDIA Tegra194 (and later) PCIe controller (host mode)"
+> -	depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
+> +	depends on ARCH_TEGRA && (ARM64 || COMPILE_TEST)
+>  	depends on PCI_MSI
+>  	select PCIE_DW_HOST
+>  	select PHY_TEGRA194_P2U
+> @@ -241,7 +241,7 @@ config PCIE_TEGRA194_HOST
+>  
+>  config PCIE_TEGRA194_EP
+>  	tristate "NVIDIA Tegra194 (and later) PCIe controller (endpoint mode)"
+> -	depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
+> +	depends on ARCH_TEGRA && (ARM64 || COMPILE_TEST)
+>  	depends on PCI_ENDPOINT
+>  	select PCIE_DW_EP
+>  	select PHY_TEGRA194_P2U
+> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
+> index f30cfb42b210..342fb736da4b 100644
+> --- a/drivers/phy/tegra/Kconfig
+> +++ b/drivers/phy/tegra/Kconfig
+> @@ -13,7 +13,7 @@ config PHY_TEGRA_XUSB
+>  
+>  config PHY_TEGRA194_P2U
+>  	tristate "NVIDIA Tegra194 PIPE2UPHY PHY driver"
+> -	depends on ARCH_TEGRA_194_SOC || ARCH_TEGRA_234_SOC || COMPILE_TEST
+> +	depends on ARCH_TEGRA || COMPILE_TEST
+>  	select GENERIC_PHY
+>  	help
+>  	  Enable this to support the P2U (PIPE to UPHY) that is part of Tegra 19x
+> -- 
+> 2.25.1
+> 
 
-Uh, and the hypervisor too?  Why is the hypervisor enumerating an old K8 CPU for
-what appears to be a modern workload?
-
-> I'd say this is not good stable candidate.
-
-Eh, practically speaking, there's no chance of this causing problems.  The setup
-is all kinds of weird, but AIUI, K8 CPUs don't support virtualization so there's
-no chance that the underlying CPU is actually affected by the K8 bug, because the
-underlying CPU can't be K8.  And no bare metal CPU will ever set the HYPERVISOR
-bit, so there won't be false positives on that front.
-
-I personally object to the patch itself; it's not the kernel's responsibility to
-deal with a misconfigured VM.  But unless we revert the commit, I don't see any
-reason to withhold this from stable@.
+-- 
+மணிவண்ணன் சதாசிவம்
