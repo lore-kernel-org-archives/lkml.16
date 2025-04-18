@@ -1,105 +1,156 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.kmu-office.ch (mail.kmu-office.ch [178.209.48.109])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960131FC0ED;
-	Fri, 18 Apr 2025 11:24:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C277155C82;
+	Fri, 18 Apr 2025 11:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.209.48.109
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744975497; cv=none; b=kEHuebHiu/fNVXIHAlkyMQf4ues7J3tx92ZNKq/LI/jI6OhglfXYDXrenHzA7KUZ/SPBwuTAgN53ALmynM4r2lpGROee7sb8GnfIC4JUGwsPmyEezy6lTycGZzcKY3ATyPvywUHggnQKzazdadkBbBolbRwEQpbA3C7Onr65YR8=
+	t=1744975563; cv=none; b=oPIRy4434lTmpm6qAjz/LCg26k7G2RoB6k6HUX9oMvhcszDmeuKkMSBXHWuZDDCgsXLJBh4JMc9H8I54r8IC9QXdTym3bxyMZhgrPv5wPNGfuKfw/1Yw57z+Jiz0oQWC2Ihd7ndq7rZI0VvmVvHZSWFbg8rfbESqfBQxRBhV9vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744975497; c=relaxed/simple;
-	bh=QdJJGvEiz5pjNXqTtarXbU7YwPu1LSLqeT8h32rut74=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OSqUHsVgMDYcv6L6HC95IQiinoJ2YZnKxy3EbZEQVW4U9cHEUW8ACPA7CnxaGC5mYlohHz7fABX0FzB5xgemc4odyESfuZiT9UkKZ5MDV534WS/el6R8I9rUadsZOO25kRaAPN4xPJwHPDwJLZJRrf9QmSoS8uPUJT+tTvac9oM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TPM05IST; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744975563; c=relaxed/simple;
+	bh=g4ar/oQRB9pv41/qpH9FgBNHoDgOjC35e4LptL+x1eA=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=IaKV8VpyqwI/s0DrQj0UCoyBClF7FRic/YV1Kd7efYrbWCX19fM6QHZWr7BvNAsi4SMWk/n1OdQfaWER0+jvHqeHYWxZ3PPpt7lMUx1Z/yFe9cY+MkU78t4rry+Du0DdsSmm9KhWBWtc6Q5AoLDVgB8lFJIKkrlYqiQG+C3C4cM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=agner.ch; spf=pass smtp.mailfrom=agner.ch; dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b=dX8qWiKg; arc=none smtp.client-ip=178.209.48.109
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=agner.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=agner.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TPM05IST"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so17079575e9.3;
-        Fri, 18 Apr 2025 04:24:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744975494; x=1745580294; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=W//o/Ys/rBW7MLdSpGEG/ep49Nq5wGldQX5Bh4Q01DA=;
-        b=TPM05IST9GkwrNSB4SWmZZUru0S3vd4JyrfJr4sRO6IxX22sHmlu4Xn1KQRD3gM7BT
-         PCeq5+jfDRG4zszpX/a8s3g+a7CwkBA/HFUBroYTcoNOa6Qz8MI5NJiR/cw2hu4BALTA
-         6rqIxdIlbsYhkwIlmicHgiagrkqetZSVNf84LTipNTKXuIf6R4taEc9OCByV3Ul+Bocu
-         tPSgNtnFpOBAEmoaxv2vCTm+MwDbLtqcGY0RjlsIOqiHIVauPMy+GhWtLRaho37l0uhV
-         I4dqL0k0KB4Q80rSBakoscleBH7SF0Yx0mATySUPMTAwR3D0i8kxqt97K+z76pqhxKpU
-         7W0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744975494; x=1745580294;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=W//o/Ys/rBW7MLdSpGEG/ep49Nq5wGldQX5Bh4Q01DA=;
-        b=Og+GX70drqsdUoDk4iqg0ReGkSGRqYe/j9FYFNR2hhcue/xNu2d1y01EMz0zBnZlkE
-         JcXN0ahCxlGuDZZfYtBWT1R8WSJ5gIzs6kBvS9M3ibaMeuVsU0F0JtRsoxTuZNLOAn8m
-         f+Qh9HM73ZSwWtQU7vL7ZLnryADKKJvA2tHGUO9UZS315FLY07wMK1l3aEjArrecVf2P
-         xyqsDldx5qSiyyT46xT6vONWMg3IYNZJ+yq2eciOiriZSSKiOq9jHzp8W2rCRQ4vMylY
-         G2N/MKBCx5f83rvSXZuj26eKuLI+OAlyWfGq7geyXJbZUkE6aDp0QuTgZ+2reuF4N+Oq
-         V0FA==
-X-Forwarded-Encrypted: i=1; AJvYcCVd9E99TJS3XXmnCwyNw8U0d4h9/vJ/02FT39CGtBLViGmZAufYOBeDBrnFjFg5SpcF8nVUKdSfyQl/zgY=@vger.kernel.org, AJvYcCXDC0I9sgUR0yY2WcHHKYPLyyBpOv1AhSaoV4XHuYSDQ7Z/vHfoxyt4RQbmKOmcgMhR81tQ8MgR@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywz+qjidytCW4eBsxTgVFIvxV9R444ntPzYHDNByaxhsilQ719s
-	mBAWNolpkEeUJD+lLZsuf4dZPiRgNQdpPED4kzZYiCbuF/tro8AtSx4swRwl1Ed1uQ==
-X-Gm-Gg: ASbGncuYYT9KI3prqzOVzRBkFICtMsHWay8XPQAUYYh1gUFd0EA3f3S6ecRArhZCWDZ
-	Qh/aRn2vI+HsNOa3LkGUCSj7SMXeHjr9I/KftGmcR5yH7EQvaJjQh9sJo++pmvXTIS6Yn5cAV5w
-	tZ6cEHj/nAHSbPH2JrT+bwndRkwLJgFL4ytxKfx4d/+r24WQGRDG8nfNAZxIZLNTAFLyU+g/iOE
-	y203kf2voWg31csFshKDRJg+/vUzX/uT/1pyesm/3bWLqbtgUKM2EVEknn5qHzie4bYbwZ/toGV
-	RPIq3gkRY214wWEZ/nuAXsrUbYxYy6VnrtrCxsRVQg==
-X-Google-Smtp-Source: AGHT+IG30iTqc/o70q9K2Hbdi1h5RZUfJobP4PRf5VUTOWgsiua+PVOrKWb3LlV6dsQiTSdoLK3P/g==
-X-Received: by 2002:a05:600c:c0f:b0:43d:7588:6688 with SMTP id 5b1f17b1804b1-4406ab93badmr21238555e9.12.1744975493673;
-        Fri, 18 Apr 2025 04:24:53 -0700 (PDT)
-Received: from localhost ([194.120.133.58])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4406d5a9e0esm19272115e9.5.2025.04.18.04.24.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 04:24:53 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Michal Simek <michal.simek@amd.com>,
-	netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] net: axienet: Fix spelling mistake "archecture" -> "architecture"
-Date: Fri, 18 Apr 2025 12:24:47 +0100
-Message-ID: <20250418112447.533746-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="dX8qWiKg"
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+	by mail.kmu-office.ch (Postfix) with ESMTPSA id 561C85C7BA3;
+	Fri, 18 Apr 2025 13:25:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+	t=1744975558;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=krcPW3xQmI9oeveLweMBHhaeN0TqPUgvWS0+byQMh20=;
+	b=dX8qWiKgbtmrdAvh3d+dfLRQ/O3Zc4GB1g6GUNuSfDMJ9z4qQIgHSPQNvCYLCwswJmM7aW
+	OM5CXSJ2ZE5FZ3i9L7ZVuC3/+WNUGVlMFP2AIgGp5sZJ+PLAQ0Had5Uq87+v8WwIh1aTao
+	afuXiHkMZE/XFehz8bXiXiWKV1fbuz8=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Date: Fri, 18 Apr 2025 13:25:57 +0200
+From: Stefan Agner <stefan@agner.ch>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alison Wang <alison.wang@nxp.com>,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev
+Subject: Re: [PATCH 1/1] dt-bindings: display: imx: convert fsl,tcon.txt to
+ yaml format
+In-Reply-To: <20250417151134.3569837-1-Frank.Li@nxp.com>
+References: <20250417151134.3569837-1-Frank.Li@nxp.com>
+Message-ID: <31079c1f420febe688a84a292786d646@agner.ch>
+X-Sender: stefan@agner.ch
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-There is a spelling mistake in a dev_error message. Fix it.
+On 2025-04-17 17:11, Frank Li wrote:
+> Convert fsl,tcon.txt to yaml format.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Stefan Agner <stefan@agner.ch>
 
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index 054abf283ab3..1b7a653c1f4e 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -2980,7 +2980,7 @@ static int axienet_probe(struct platform_device *pdev)
- 			}
- 		}
- 		if (!IS_ENABLED(CONFIG_64BIT) && lp->features & XAE_FEATURE_DMA_64BIT) {
--			dev_err(&pdev->dev, "64-bit addressable DMA is not compatible with 32-bit archecture\n");
-+			dev_err(&pdev->dev, "64-bit addressable DMA is not compatible with 32-bit architecture\n");
- 			ret = -EINVAL;
- 			goto cleanup_clk;
- 		}
--- 
-2.49.0
-
+> ---
+>  .../devicetree/bindings/display/fsl,tcon.txt  | 17 --------
+>  .../bindings/display/fsl,vf610-tcon.yaml      | 43 +++++++++++++++++++
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 44 insertions(+), 18 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/fsl,tcon.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/fsl,vf610-tcon.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/fsl,tcon.txt b/Documentation/devicetree/bindings/display/fsl,tcon.txt
+> deleted file mode 100644
+> index 475008747801e..0000000000000
+> --- a/Documentation/devicetree/bindings/display/fsl,tcon.txt
+> +++ /dev/null
+> @@ -1,17 +0,0 @@
+> -Device Tree bindings for Freescale TCON Driver
+> -
+> -Required properties:
+> -- compatible:		Should be one of
+> -	* "fsl,vf610-tcon".
+> -
+> -- reg:			Address and length of the register set for tcon.
+> -- clocks:		From common clock binding: handle to tcon ipg clock.
+> -- clock-names:		From common clock binding: Shall be "ipg".
+> -
+> -Examples:
+> -timing-controller@4003d000 {
+> -	compatible = "fsl,vf610-tcon";
+> -	reg = <0x4003d000 0x1000>;
+> -	clocks = <&clks VF610_CLK_TCON0>;
+> -	clock-names = "ipg";
+> -};
+> diff --git a/Documentation/devicetree/bindings/display/fsl,vf610-tcon.yaml b/Documentation/devicetree/bindings/display/fsl,vf610-tcon.yaml
+> new file mode 100644
+> index 0000000000000..06bd680524a56
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/fsl,vf610-tcon.yaml
+> @@ -0,0 +1,43 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/fsl,vf610-tcon.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale TCON
+> +
+> +maintainers:
+> +  - Frank Li <Frank.Li@nxp.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: fsl,vf610-tcon
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ipg
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/vf610-clock.h>
+> +
+> +    timing-controller@4003d000 {
+> +        compatible = "fsl,vf610-tcon";
+> +        reg = <0x4003d000 0x1000>;
+> +        clocks = <&clks VF610_CLK_TCON0>;
+> +        clock-names = "ipg";
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 65e0716554203..a1e4c9a6038cb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7895,7 +7895,7 @@ L:	dri-devel@lists.freedesktop.org
+>  S:	Supported
+>  T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+>  F:	Documentation/devicetree/bindings/display/fsl,dcu.txt
+> -F:	Documentation/devicetree/bindings/display/fsl,tcon.txt
+> +F:	Documentation/devicetree/bindings/display/fsl,vf610-tcon.yaml
+>  F:	drivers/gpu/drm/fsl-dcu/
+>  
+>  DRM DRIVERS FOR FREESCALE IMX 5/6
