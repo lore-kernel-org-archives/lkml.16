@@ -1,109 +1,134 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5116F22259B
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:35:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7397219317
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744997712; cv=none; b=P+oCmzH+9ijhjWBvqFPeOdcNEXXaEQrvfC9293IeURmI6PQsb2JMvgpOAkNt8gL7+C2ghxD3pum5c59RHAapptfixxmWZyoe1jEo3axsKwvFHjAlg1j4y7SpJb07y81EwBagpRqQmp13WK3zamFE+O8GWGpL15DIGUpPqpcg7Jw=
+	t=1744997801; cv=none; b=qPpjcr/ggbvXBpM5s+zGcQshSymXEazz1H6pVuNqZzypFHZYR6tWKtdO4b5ZFusBWIxCMz3M+MdcYvjwMSW6ot4BVVnrKbvBw+p/FdZL5yA5vKBHFKlR9H11creuZ2L764gduDUf6o6mABMyXLH+qa9ZT+1N8qBCsWWLXOceJN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744997712; c=relaxed/simple;
-	bh=LDThIiFsWtW7LNFAZQNVxUPP1fREV6zlJNSL4JVrM5Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uH7aFH2Dgbmq8MuqcmPfIOVkXipm49CtddlpTvCTGd6JzNp0GXMhm83ZGyzlN/jEdj5NxkSoGN1T8u4ORck6bzrbf/Wykt2OG058c1y/kZjB3nJtwTq/XiOpTUbYcc0y0Z7ZOJyeXnCnIthr4O5dRubAZKFjE50m8gtpcdU76rM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GvTyJ/hW; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744997801; c=relaxed/simple;
+	bh=R34D2cd8U0Oo4XpxhyPYZ8p1YJ4Y/AcPqNPvxGDq+0c=;
+	h=Content-Type:Message-ID:Date:MIME-Version:To:Cc:From:Subject; b=DhKXKzvTU3EpGlQRxyxG0Ttufe46WANkoYhjEtdtT6rJWMsM6Wt2Wxy03wQ/Lqdkp0MuaVhJl4dKn7awqa2OtvOfkuERJ+pAjp7GyR+Ncu3hhtLnltNJM55mPUNHvVnTuWBwM1OvqdbJysMUHUIf7hMjoTv7JtQWzpg6EzOdXWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=IXNUPSCz; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GvTyJ/hW"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39c1efc457bso1241628f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:35:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IXNUPSCz"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-8616987c261so68754339f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:36:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744997706; x=1745602506; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=csArHKuBMKX8dfUeq28zUks4GtsX2v0W8y/LTpEF+/U=;
-        b=GvTyJ/hWzeBpp/eXoFUc0zro8z+66tsKXBQn87NoZnq2IgHYP8E0r9Xfn/hCdVyRz1
-         zW/m0ILmMDZcFLAYsAyLsiMF0tR1Ss3hxIogEuH13JyboXU0Dn7CFJYBdAUSjmbSdDqn
-         RHTLH+YIpZm0BC8xOj4rdWXDKyUNX3yEZYsimuVm9hQoBhCudaSY8FbShSQYjl4by8Pw
-         YqTLew41IpU+3xmmMTGAwOqP3Bd0S7OXA6hKg3IcSwGZk2v1X5SaGn312wfolFOJLJzC
-         EYgHb7TMRE++lADCS4V1MgQQNXb+FO72O3K2CtQw7HiJVXQavqKfD1mrRc6lX9ErCpIQ
-         wRVg==
+        d=linuxfoundation.org; s=google; t=1744997797; x=1745602597; darn=vger.kernel.org;
+        h=subject:from:cc:to:content-language:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=m8FuswRd+LkCbDl77a1I/+S6+77gUYhNyTsfPKu3Ik0=;
+        b=IXNUPSCzsngi0sbeFhMQK6W+DTk+tmWqcQCnVwoETdBM62Xk1VT2XIlBIEXjl7MhYv
+         YO/4JBj2oo613D6HPdMjviL+wvsti6/568LnCBT2rcayMV3npZ0aP+npekmv0OpmBYSI
+         6xRKIQjK0eIyM/Mevm0cY0H2PLTRsl5rDg07M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744997706; x=1745602506;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=csArHKuBMKX8dfUeq28zUks4GtsX2v0W8y/LTpEF+/U=;
-        b=rB0YABhf+h5D3KpIUjbXrUVgHTC8Ozth1nyjfXoyrlLOnTT6d49aEzYov2ZDYP6tTX
-         H7ToVhs+8RuLIYkh/hlD38NKu36ny2llDdqPLRbDS5EuXyk2xPr+LE9Obh3tAEFt8E0a
-         HEATT1ewZxoQnqPVdqZx/RMToc2/JGbRb80NCLKsueE9LOHULNjr+zEudTwVmdTQ30u8
-         jkjVcKnyO01ulLGJtJYsT/WotQB/Qp1fGN8XEzkY5+ZJh72okhJLczSuMCXp48p/mCW6
-         vcYnml5uzZ3IdXYCenqOwdp+SyFUQblljEEaKD2J9gR4ypDZtEtWYDVyyHaXi3NSGu/F
-         /HmA==
-X-Forwarded-Encrypted: i=1; AJvYcCUeF3gNeLfl6nnOIPgfC1NoMXtppEU/IT0VpoqpsB/5Pn4o1aiimucTap0oELVQXRPpKzCfgodEc5xorTI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlgdlLtXYBq/ZGhuw0aF2xzW3kYjWZnuljLGkSOe4gclmZEBFq
-	W3ZbuCKrgPkNfzwvZGPwUJIrjE3LIGDcJgR73yubn63y/7zwTDdP
-X-Gm-Gg: ASbGncuXBXGqhA4jJQ0VbpcQuRO6fX7QEgQ/R7+lbsuvd/hnStbGz39jEO3PT3ntdj+
-	pC2g97hOOQ78mfzz4LfhVO1asHQIvkPW56A9fYONL4KHK1vOz3fmfxvMJQLzG1RM7MP8ENNbbX/
-	CVrDUbl8+b/EtSlLgrJ1ZqQAg5JlYIuxqvjWnYGrcH6GJCeOf1BKmp2dLsw2qkOiyg/liaSWt5b
-	5CF+3SqZbxzOAK8rGJirsUwUzLMsaYtkDlWbRoA9ILir3Lw7rXGl8Rgl1F6JIwJlo1JZsUje7u1
-	BFDtLYn7cMxy0FORJCSkOOhD8ITtPzPJy+AUW6VOeiioYZoIT7wUvuQj4R1NtN4OPS3SKFBWfRQ
-	3
-X-Google-Smtp-Source: AGHT+IGthIenlsGwjtshWXOrozso53tzfubQVslTvO6z3gNHpw83s4dbK5+maUlUJ6SvkuAZFIAF4w==
-X-Received: by 2002:a05:6000:2913:b0:39e:f641:c43 with SMTP id ffacd0b85a97d-39efbaf689bmr2763752f8f.53.1744997705477;
-        Fri, 18 Apr 2025 10:35:05 -0700 (PDT)
-Received: from localhost.localdomain (82-64-73-52.subs.proxad.net. [82.64.73.52])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4332f8sm3287320f8f.40.2025.04.18.10.35.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 10:35:05 -0700 (PDT)
-From: Dave Penkler <dpenkler@gmail.com>
-To: gregkh@linuxfoundation.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: marcello.carla@gmx.com,
-	Dave Penkler <dpenkler@gmail.com>
-Subject: [PATCH 8/8] staging: gpib: Set control lines in attach
-Date: Fri, 18 Apr 2025 19:34:34 +0200
-Message-ID: <20250418173434.2892-9-dpenkler@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250418173434.2892-1-dpenkler@gmail.com>
-References: <20250418173434.2892-1-dpenkler@gmail.com>
+        d=1e100.net; s=20230601; t=1744997797; x=1745602597;
+        h=subject:from:cc:to:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m8FuswRd+LkCbDl77a1I/+S6+77gUYhNyTsfPKu3Ik0=;
+        b=WqE4HPAj/Du68NnbHPWSpaJARFBziDIZa/2fVtaL1wVytenL8Q3DgwaderolDKQ+Kf
+         Dhn6Oh9F9Kewm1G+ck2mbjbN38Sda8LROCnHt0r9dG4n0oT6so+2EuRQx3pdGbDOxKkk
+         Z3UBS2GDYMTMz+MSKPxznhJIEIMbvkZVz9sc62vP2YgEE7KOF7SBhI2wCSagZ438S7J3
+         PJf3JaJqwvHZi2knbg309721F2IJxyzVd7vOHHJZfvDdtSR7udu95zt5GvbOGWRIbgBQ
+         QT8h88w+vC5S9dTlIW0VRz+gECPpgdiKi2mnlErdNV2oSxW/ubOs8l2A66GqcFssWL+s
+         tPLA==
+X-Forwarded-Encrypted: i=1; AJvYcCWB1uV/PLO+C/1onkFk1e75vxl0wXN12feGmDf/E1mTNuG5nnsFd3H2O5d0MZNez/CPa3rb6dxACCHAkbk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmWdXOvvnRMBM9jXMzKFPPphAbfYlGj6M2+tg6lSBuVCS9kn1V
+	SLjMtYXusc+RpvSYV+3hn9sZWZ45Uc0uBAS+TFspBDev4QvNr4CIBV7ecCP8f0M=
+X-Gm-Gg: ASbGncs+ePA4sKckjBaejnIhR/0lhZqEo8auGdwpEfCRw9tWXRJcAiQOSOpogzeLrhv
+	j5sfx2n/ZhtVMFXWn0hLPFe0wlGUkF3obh0CVnLHSw8DLmjRVW86YRPrtWnvuefEMpdBcuJj6yE
+	aC28O2+ZilA4KU94ltyWxN5ABDPdW0tw1b02gs+0uoPS7QykDaNUBkNyd+imIqraMF4mijUNDGq
+	D6MVpfAqdEM9NbhA0kiLVzAuNaaLxzM4rEgUEsFPQk93ePlbT97iaS6N86lzua6pYQHtcHDlbQd
+	Y91bJOrXRQ1hJFk53D4R7bRLwjG75FDWoq5CTx6pWTeL/mq7A8Y=
+X-Google-Smtp-Source: AGHT+IFWSDYfz3DS8oUsN8fbmYzwhJqsntDPJnXrPwPX8tSDMwmhmze2oR2gntS2tenEf0+zCh2+GQ==
+X-Received: by 2002:a05:6602:4c0c:b0:85d:a235:e90e with SMTP id ca18e2360f4ac-861dbedd4aemr326836939f.13.1744997796801;
+        Fri, 18 Apr 2025 10:36:36 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-861d95f744fsm45413039f.12.2025.04.18.10.36.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 10:36:36 -0700 (PDT)
+Content-Type: multipart/mixed; boundary="------------s0hP850HvPRCKwCEgze0ZPF4"
+Message-ID: <f8deb2a8-9e3e-4ab4-b28f-d685896bb702@linuxfoundation.org>
+Date: Fri, 18 Apr 2025 11:36:35 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: shuah <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+ Brendan Higgins <brendan.higgins@linux.dev>, David Gow
+ <davidgow@google.com>, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+From: Shuah Khan <skhan@linuxfoundation.org>
+Subject: [GIT PULL] kunit fixes update for Linux 6.15-rc3
+
+This is a multi-part message in MIME format.
+--------------s0hP850HvPRCKwCEgze0ZPF4
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-When the driver is attached the state of the main control lines
-is not defined and can lead to hangs. Set the control lines to
-a known state (logic false).
+Hi Linus,
 
-Fixes: 4cd654f84769 ("staging: gpib: Add gpio bitbang GPIB driver")
-Tested-by: Dave Penkler <dpenkler@gmail.com>
-Signed-off-by: Dave Penkler <dpenkler@gmail.com>
----
- drivers/staging/gpib/gpio/gpib_bitbang.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Please pull the following kunit fixes update for Linux 6.15-rc3.
 
-diff --git a/drivers/staging/gpib/gpio/gpib_bitbang.c b/drivers/staging/gpib/gpio/gpib_bitbang.c
-index 5c134cfb6d61..625fef24a0bf 100644
---- a/drivers/staging/gpib/gpio/gpib_bitbang.c
-+++ b/drivers/staging/gpib/gpio/gpib_bitbang.c
-@@ -1262,6 +1262,10 @@ static int bb_attach(struct gpib_board *board, const struct gpib_board_config *c
- 		gpiod_direction_output(TE, 1);
- 		gpiod_direction_output(PE, 1);
- 	}
-+/* Set main control lines to a known state */
-+	gpiod_direction_output(IFC, 1);
-+	gpiod_direction_output(REN, 1);
-+	gpiod_direction_output(_ATN, 1);
- 
- 	if (strcmp(PINMAP_2, pin_map) == 0) { /* YOGA: enable level shifters */
- 		gpiod_direction_output(YOGA_ENABLE, 1);
--- 
-2.49.0
+Fixes arch sh kunit qemu_configs script sh.py to honor kunit cmdline.
 
+diff is attached.
+
+thanks,
+-- Shuah
+
+----------------------------------------------------------------
+The following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444:
+
+   Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
+
+are available in the Git repository at:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux_kselftest-kunit-fixes-6.15-rc3
+
+for you to fetch changes up to b26c1a85f3fc3cc749380ff94199377fc2d0c203:
+
+   kunit: qemu_configs: SH: Respect kunit cmdline (2025-04-14 10:08:01 -0600)
+
+----------------------------------------------------------------
+linux_kselftest-kunit-fixes-6.15-rc3
+
+Fixes arch sh kunit qemu_configs script sh.py to honor kunit cmdline.
+
+----------------------------------------------------------------
+Thomas Weißschuh (1):
+       kunit: qemu_configs: SH: Respect kunit cmdline
+
+  tools/testing/kunit/qemu_configs/sh.py | 4 +++-
+  1 file changed, 3 insertions(+), 1 deletion(-)
+----------------------------------------------------------------
+--------------s0hP850HvPRCKwCEgze0ZPF4
+Content-Type: text/x-patch; charset=UTF-8;
+ name="linux_kselftest-kunit-fixes-6.15-rc3.diff"
+Content-Disposition: attachment;
+ filename="linux_kselftest-kunit-fixes-6.15-rc3.diff"
+Content-Transfer-Encoding: base64
+
+ZGlmZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcva3VuaXQvcWVtdV9jb25maWdzL3NoLnB5IGIv
+dG9vbHMvdGVzdGluZy9rdW5pdC9xZW11X2NvbmZpZ3Mvc2gucHkKaW5kZXggNzhhNDc0YTVi
+OTVmLi5mMDBjYjg5ZmRlZjYgMTAwNjQ0Ci0tLSBhL3Rvb2xzL3Rlc3Rpbmcva3VuaXQvcWVt
+dV9jb25maWdzL3NoLnB5CisrKyBiL3Rvb2xzL3Rlc3Rpbmcva3VuaXQvcWVtdV9jb25maWdz
+L3NoLnB5CkBAIC03LDcgKzcsOSBAQCBDT05GSUdfQ1BVX1NVQlRZUEVfU0g3NzUxUj15CiBD
+T05GSUdfTUVNT1JZX1NUQVJUPTB4MGMwMDAwMDAKIENPTkZJR19TSF9SVFM3NzUxUjJEPXkK
+IENPTkZJR19SVFM3NzUxUjJEX1BMVVM9eQotQ09ORklHX1NFUklBTF9TSF9TQ0k9eScnJywK
+K0NPTkZJR19TRVJJQUxfU0hfU0NJPXkKK0NPTkZJR19DTURMSU5FX0VYVEVORD15CisnJycs
+CiAJCQkgICBxZW11X2FyY2g9J3NoNCcsCiAJCQkgICBrZXJuZWxfcGF0aD0nYXJjaC9zaC9i
+b290L3pJbWFnZScsCiAJCQkgICBrZXJuZWxfY29tbWFuZF9saW5lPSdjb25zb2xlPXR0eVND
+MScsCg==
+
+--------------s0hP850HvPRCKwCEgze0ZPF4--
