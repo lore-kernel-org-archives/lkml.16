@@ -1,176 +1,213 @@
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010033.outbound.protection.outlook.com [52.101.193.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174C41A7045;
-	Fri, 18 Apr 2025 14:31:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.33
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744986677; cv=fail; b=aCuLOvBE3McImQQm1FeRKSFD4eW2UUKt7/fmd7+Hs/HFnrJsqas3Uw1h5VaxnzJKGqP0T8R1EuBEnGzWWoVLHmUkU4ubqqzTiKH/oEvAcMXZ8640sT7E5pGR7aCReHp+aduwYgB8POVzLmRMenXuW3wmP9E+KrXcBd19sRSvrFc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744986677; c=relaxed/simple;
-	bh=hpNi6IAusLCuw7QSvzI5UUpOKNV0binGCRTmxL2Yn8Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=juh82VTGtL97GTCIHL0kzzI6BYdLiIBaQJo2L6TrahpBa2f/Q7TJJx6oJMDqtBpfn+K5efUnDgABf5OxwEAEuXHyeQctswITE8gjmXV2zOvxLRGB6rAZ0g4yaPkRg+kLRlgdLV6L1mNXWn7fbiczGx2tvFHQtRzrKu8yR4ACBcU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=asT7WIC3; arc=fail smtp.client-ip=52.101.193.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA5B2C1A2;
+	Fri, 18 Apr 2025 14:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744986826; cv=none; b=jxd/XmEf+y57YoTpRAHB6a45+DvKx9T26+c9TZ5+PgBRy2cEfntL1rLrXGc5gREHjbQ8wVd4sSKDh7iiJOgi6ch+MGvTFTQ4XPfzGs3JmiHxB0wLMj/JZc/jbTEMPmzp4vm4IgvMH8TDSULF97hz9iDEoUM0IuokGIrSKngqAmc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744986826; c=relaxed/simple;
+	bh=8hvzQpevJpd8opdibOVe4+Ri5sQRV3J/5rabA+wMngg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uaiNDQiW0wY+psavmpmBJhS04cGaWM0v3i8AywDqfz0Ktj6dnJsPfCp6V9B2ozNR//7S7zmX19cZM+ohRKQySeUosj4hh6CME6jir7M8rQxFZknpt1khW/O/81wD8t7ItMYR4ApfDcQ+3diShA/atQjD7cp8OclpMMppnwCWmOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jgzvwuV9; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="asT7WIC3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UkTFu8zN8xA7dDbLBQpOvh6IlYJKoDe7eblSM/EvsitsNtf9tDmiblQF/ynpgUxKspLiPvvrYUrQvCyfyFc58EqSNJhKIeLwcch6SswdMj767hbt5vJGu8WaTm53uI50M1j6w6zErKkcDdJfwoHsdpHtZoDrUJcvc44ZRbjOkJZ90q0diremzdlAO3uOv6cX5NCpp15v4zoejde8uO59QHfxztb9um9hheXJNCkb98v5rLfT0vUXVH+yMKIfyFwtbOk2N/mGPOaT9LLpI3T02iLsZJldhYG7zkz9zbbvQJLVMjdxN0VO3VaxJP4bEdHEM9aB+m8ALuHWRor4s9ACpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=13l7FWwrwXiCf4K/P2oMalPKe72HNXJNB4jM5iUXLH4=;
- b=W+KKvzBjvmf5ln62HiQdj4U1gkVco/klt046tD+AlptCr5xZqmBMv1bUmUWW/FM4beEnUjWMriH7WZU9M+3mWUV/XU0Botx2x0Ul/M67kh1+g63wVe3PqCERcQSobhSZXGMDkGGrDZfHYxNTV1q7YnNr9ztIY2DJJQlhLxSPVqtJc2k+ggzCaljlczA2m1jWgSsXNzUC3QPXqwaRd9JVkltKEHEy0FUoJS5NObNDN+8x4849EGQqvkzyUxa4M/plAbNEpew/4wGldrH+Z4HMESWdBWy55AUuEpQTtuxvjRwHNWG/ImjNV++kxcS9Dk52r7e4QVBu0y9bXcpYahzM6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
- dkim=pass header.d=altera.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=13l7FWwrwXiCf4K/P2oMalPKe72HNXJNB4jM5iUXLH4=;
- b=asT7WIC3v4eh5uN6aVn3K8Nch1mnO8HneB3kcbP7bwZ1OAuvBmOXcbBj5IjYPZ55ONPc379HTkxpkxbpomDCN05rEk0qnHISggiGddqxQVxI4wUjMk67ddvCMhEQXT3MJa5xQlC7mkOCXoDe2M9crHWnYb0nabXNLLkobA0vV06l/sjbzn2RP0egNE11LeqbZ0bB/xf9xmrnic+m83uTZQ4+yfwe9BnMKO/+1uXQyq4gqvys/khazDsiUeIlP5mzay51EoxQ1NjI7NwuEq1onNFpcMbUxf7RkDE5Aihu5Q4k7F5usIJeMUM6+UBghll7hSyqKztmWNyXp0z4ErKe4Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=altera.com;
-Received: from BYAPR03MB3461.namprd03.prod.outlook.com (2603:10b6:a02:b4::23)
- by SJ0PR03MB6674.namprd03.prod.outlook.com (2603:10b6:a03:396::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.27; Fri, 18 Apr
- 2025 14:31:07 +0000
-Received: from BYAPR03MB3461.namprd03.prod.outlook.com
- ([fe80::706b:dd15:bc81:313c]) by BYAPR03MB3461.namprd03.prod.outlook.com
- ([fe80::706b:dd15:bc81:313c%2]) with mapi id 15.20.8655.022; Fri, 18 Apr 2025
- 14:31:06 +0000
-From: Matthew Gerlach <matthew.gerlach@altera.com>
-To: dinguyen@kernel.org,
-	bp@alien8.de,
-	tony.luck@intel.com,
-	james.morse@arm.com,
-	mchehab@kernel.org,
-	rric@kernel.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Niravkumar L Rabara <niravkumar.l.rabara@altera.com>,
-	Matthew Gerlach <matthew.gerlach@altera.com>
-Subject: [PATCH 1/2] EDAC/altera: fix cut and paste error
-Date: Fri, 18 Apr 2025 07:30:51 -0700
-Message-Id: <20250418143052.38593-2-matthew.gerlach@altera.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20250418143052.38593-1-matthew.gerlach@altera.com>
-References: <20250418143052.38593-1-matthew.gerlach@altera.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BY3PR05CA0033.namprd05.prod.outlook.com
- (2603:10b6:a03:39b::8) To BYAPR03MB3461.namprd03.prod.outlook.com
- (2603:10b6:a02:b4::23)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jgzvwuV9"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-acb5ec407b1so288898466b.1;
+        Fri, 18 Apr 2025 07:33:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744986823; x=1745591623; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7xWBrhMoZbugc1pyBrVITkVru2bavizkyHIBfAy50sk=;
+        b=jgzvwuV9jGE+3rRRzeaERsfeVvJSkSB8q1NPjpb7ku/bDuc3tCAIpv61/OI348q20Y
+         fpH8CpJv8M7iLxXywvfa2zWDq0TTYuaN3WeWGdES8lBdUX+kFVFkzZHC7z64S0F3OnnS
+         Xi0HvBaXXIe7cJc0v5vareUoyxwDLd3f9rx+oCtLlMpL905YFVGM+6gmCrDvLNewV6zU
+         cFpd2wvoIEW14F8qPE8WUTR65Vjf9QKzs+8oDvQZIt2UAxmtkIxwk1Ld65DsW6bH3q3I
+         wPPo1IT+te8mojAiAjrBPNSiE5Y0qc91puM9znElU31uQnuHHIL6Mmhbt98+muViPHjU
+         g4NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744986823; x=1745591623;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7xWBrhMoZbugc1pyBrVITkVru2bavizkyHIBfAy50sk=;
+        b=A641pigHiCCrsHE9/eevNCwB0cMZ5lx3A/IojQxDSpBxpYV/Wqrv8SZsqg0k0ZtAOj
+         UqVJxcJD8JFqdMxLhQkEiTk0m49G9vdSFKuxDe+JTjFnSkqtetK7bmOVnTUb007SYBu3
+         eawSrXqYlcd+tMsQnUCByqfx8JXG2lGkdZUYnhpcTaJaCdYVe7jDWtfq0Jn6j6MmrIjS
+         mzm0L2Lo0Q2/4O5t7yYm/+qC2Nb24Ib3e0Kb7DCHr+v7WxlRJ1SY1fWE5j7Ot6nWm9T3
+         ysh8okBRTeZkIrYG5lTnJ6aYmBbyXeTqXDTP1YUBm9eYRYxiNqAnGe2+kntsn/hQlfM9
+         kgBw==
+X-Forwarded-Encrypted: i=1; AJvYcCXkxwVaPDPgjgNEPcK+ltHL5M9THDVPWe5ELVWnP6kmNkGyMTd76eRQ9HpTM0XFqbda4LmLPR5pE1AZ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yze86IfTUSkzvC6Gc16A13fN1FBlpO6Z7O4GBHOrs2fzMe2tx9V
+	VKN02jzvuuEhF4VW7g7W8dvF0HErL2biQEB3fjaDo0fv0uSNRnxVWomF/+UIUDU=
+X-Gm-Gg: ASbGncsLzxjzS+gZ2o4rt0JwEKZdsCrvUSmDap6QBL26+e7g34DZiaYpvFq0PD3O/Ei
+	5n5RerqYqGLc66ccLI7EgWno9v2BoqPSo6sQhWOjzpnpHKrOrh5STirDcCoN9Z6Ojsf2BuDFu8+
+	PoWlaY/qCLGVZZsQaGgH2rYNng0J8p0Bia6Y8dYcJXDMHb3wztwZMdb9DtZ1ScE9q4Oj6pK0dpm
+	YPaKguTfnuxhznTB3QIowEHRDYn9LvMjE5OnpKNu13n1NoCv6q6V1xO739BqbKzi1W7Cc++lbYI
+	D4G2Kmr0zCVKGc00khnYpCmfV7R1c3qqB+HC2xqifZ/vQVjOuJKn
+X-Google-Smtp-Source: AGHT+IEcnxUHY3/54G2wHOQst0KE+WrBA6XR3tiAQlrpS/18wB0AktIZqdCpGIWVrwq8J9kwLSsU2A==
+X-Received: by 2002:a17:907:2da4:b0:aca:cad6:458e with SMTP id a640c23a62f3a-acb74dd6021mr281005866b.43.1744986822447;
+        Fri, 18 Apr 2025 07:33:42 -0700 (PDT)
+Received: from NB-GIGA003.letovo.school ([5.194.95.139])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec0b1e4sm127453666b.34.2025.04.18.07.33.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 07:33:42 -0700 (PDT)
+From: Alexey Charkov <alchark@gmail.com>
+Date: Fri, 18 Apr 2025 18:33:45 +0400
+Subject: [PATCH v2] dt-bindings: timer: via,vt8500-timer: Convert to YAML
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR03MB3461:EE_|SJ0PR03MB6674:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2aca4868-4ee0-4b6f-2085-08dd7e85a6e3
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?CkBRqjfQkGoF5nsojvrTaTsoKuPrmmyQ7lcd0Z5vEZcYIUQ0ROKM23uIuCO4?=
- =?us-ascii?Q?r2kTYrZ/9QHAyEmTkkvfjXqhT4DmBHmpxPwW1nMddEsdnqvrg9yYcfCl1Qso?=
- =?us-ascii?Q?eMQnjnwYN8ctcFQ3fs+2m8c4V7gv2fje3IM+21D4CY0iV6oAadyaJmZNkA9J?=
- =?us-ascii?Q?dd2cFXZ5fSz69toZl0tGV/5Mvqbaj+d+7KYNdak6Jwm/zEt32R4iPH9fGlZz?=
- =?us-ascii?Q?VruJVFAc5Fc+uUG2btWy2f80eLFP8xLcZfq9eG8mfIm+fQc2kjKqEyGmjls1?=
- =?us-ascii?Q?sEz6SNpDQ8jJt+bNNcDAdNkgzQhJqUm+oI8xbDpZpgqkieolOtewBf4hcrCy?=
- =?us-ascii?Q?K/nn0JCHPPtJYUqZuGWN4lJijCt09g5P+GjnnnIStcpMFYDhOaBMH6QALcDy?=
- =?us-ascii?Q?IkUnmluNzL2da6Pm/HMQuQPof4whLxhCN/7nBel7QVP1F8dhS1Z0ynK3l7BV?=
- =?us-ascii?Q?J6jWmNilmDL/ehVNIuUOgiZombdKGRM+bccwqMsMmM4HHiqlhFbYnzcsKpBI?=
- =?us-ascii?Q?qrMYYpgIMgwtUaKyMJi/ulUdVQ8Xr7OfgunzYiCRhKS+2i1HlhswgXRXLnxm?=
- =?us-ascii?Q?2nRZVPdIcPqUyG2cM7vzxb6VS4F4IM9e3jjWF/cJ0MaUu8PfSRvm4bHrx5LQ?=
- =?us-ascii?Q?lj7PfqilCD/iUTN77chw9U01jgoPDTpfO4cwRYQyteLTb6Cz3QQmZVw0/pn0?=
- =?us-ascii?Q?LPRRqcL5N/Dp2fhvjjbU+uthMmokl+s1jBZkkUNWdh89T109fPFlWcHAF1f2?=
- =?us-ascii?Q?gA2QOTbQHzGKtRPmHqBDebY8hXltOeEBQyzzsYuFZ/NN5RmSJUpcY74ISwnw?=
- =?us-ascii?Q?DnWtOwIDN7VGEMeI9qWxw8FQjxhSk5xVOKYldbWDcVVrxK+0/+//+mkaL5uQ?=
- =?us-ascii?Q?QQ5KXipwPpxFJOvwVipJeMPi6EOjTaIRY5rXNDCot00JWv7+i6+IexNeWQXL?=
- =?us-ascii?Q?gNiNS2DsqS1v3nWUn7/clufe0i3v5tMzobloBNvzEbL4ebT1MtnrykEdMGDM?=
- =?us-ascii?Q?U8HnftCIKwwElyVMgLGC9c6zFKPn7DlDQXpFafy02aPh5S7DxETB122+vp7w?=
- =?us-ascii?Q?LlIdIktjjc6fybTCJLJpdyO2s7c6KoycVerrcc/NGbWkM6vO5bFGfyffqjYU?=
- =?us-ascii?Q?PStGG2T+7GwZJ0cfH3/d6SipByWbn1WERDXaFC33IRZJEGDDju9zIIRNXQfO?=
- =?us-ascii?Q?nBz2y4X0rTpJhHxoSQwXr3wBIkzBT3M9ngp3cSUacoWob0aAF1n3fSSfRXmM?=
- =?us-ascii?Q?x4N5g4+ebiAHENGozmTecyZpvfpQVaU/9nghcmu796T9Eglnj2x6Pd4DFmau?=
- =?us-ascii?Q?HNhkH1/jWayW0r0dCzlmiKOOf+UyBFgpTRNDmahUM+pC982H6HCrX8mBlyfu?=
- =?us-ascii?Q?rOUzU/jo73qC/xJwlSuVoogS20qrjE7nHLNV4gCkWRiw/XRrbwp82CpLWL7q?=
- =?us-ascii?Q?xArMdxNYP1I=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3461.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?RsqoDDtk6FhaM1SjTlpkHqkBTJYV603IYAp1QItcKh709qhluoPvVcskI0AR?=
- =?us-ascii?Q?oF1N81RhN0rxmETDeB0V48Dhsa8L0l8f2v7RAN7LKY3vBU1XSPwyx/JH9eJ1?=
- =?us-ascii?Q?gsP076PYBAShWPnLQNfcarFkfYnVttbikPSX4JkV8uEvjp7T5B5Ok3lL6cFm?=
- =?us-ascii?Q?xS+W7tygcpaC3T6MkD6/JCeb1B6Mjto0VEaqCBY5YVN1m/izU1NscHhO4JYc?=
- =?us-ascii?Q?hNd3gHtL2oSkJ3uZBX8LOpToVIbY2NJQUhQK4tccdiq038r2S+BViLh6zdBg?=
- =?us-ascii?Q?Mzk4yQGgZH3W26RvJ4Q695bbdJr4BorqHszVdeoWHyeI5Q7PSgSkrBTJm0+e?=
- =?us-ascii?Q?gALDfKZcpO1WAbjCLPSchOoUeVQFoeOH7rPjAveGfVTebC9+utGfnGIYR5it?=
- =?us-ascii?Q?7CB9opI4cGr7++6DeJBkf/2C9l+z7KCZjap37GOB9OUCk/KGR79RdrGPpMAO?=
- =?us-ascii?Q?VDJwhYfnarDJpDjCZZo/ffxtpt5U9+861h0zMS4bJf5KpsPr8oW8/IveKoGj?=
- =?us-ascii?Q?BiMuFyBUf1tEjjxrzrg1ZSZGJ0Jq+JZlCsCSjLHf5YAbzT+tYYd8yNg3sOYl?=
- =?us-ascii?Q?IzSgiZCDW1x8BUgibEUm803PzfRpT8xZFzWGqscImz3ijpAFsfrIy8Rnt+y8?=
- =?us-ascii?Q?eOhCy/G8tHClbbgimwB5FDOeAZxjVtRvYZ6Pah4Yw91rRcgik47uhwKaG/bS?=
- =?us-ascii?Q?r5QppX3nLxGMgZpQsuPlUYp6by+H/uS4MhqjDeGyrZ9ua92TVTVFeZAIibg3?=
- =?us-ascii?Q?JBe5PeV/sn4oLdTTaHEECjD9lXstC8MTs+qkj4hpwfxXWOJEyY6BfqRWjHdR?=
- =?us-ascii?Q?uKnliKKGgrzSaYOZv5vQtYfjnuSoCU69agtQ7K6R8NQcdpEzTVEh/iOvRKFl?=
- =?us-ascii?Q?iUcpaY66X15VB0T3rrFu6jmYxh71tGesD1ZPacfvioFf05aCNJ/5r8J+ncpI?=
- =?us-ascii?Q?OehF3DEZg7YSOOwwI/hEwtCujdNl3rpaYSydz2WWkYehJxpwEWJqF+SKTfUz?=
- =?us-ascii?Q?ahIMfO19kWWZMDLVYhBENvFIIz3v0Thbo5KS7eOkH/GGTzwoYycSnRomEkR0?=
- =?us-ascii?Q?kDOdlb0j2PphPeDYGEhCWdOaYPlHbNFtpzAbF6SK7hQjXkcc2n7oaEYuhhAD?=
- =?us-ascii?Q?QQUVHL/JKGocWCM4SsIDp4m8Ju8btYZNv2fw/fhchIlAv8QHxdEu9rOtasxN?=
- =?us-ascii?Q?M0elY0N9Cr099u4Fv0+IE7fHEZh0890hBu/vzmIty1yKnUfMY5KtnJg6Z8Nx?=
- =?us-ascii?Q?wway1il6KgnoKYqY9CSoE9GCEzPosDyPGwwNqTSeX5SDa2qvhpnksEUPUq9O?=
- =?us-ascii?Q?46G6oJ8faCSt3O4GVoC/1bDXz7VzFzevKhbL5yQbP4u8tcPqsBhfWC+20gNU?=
- =?us-ascii?Q?VK6QE4rfhWkZcoIkWMXambgIN6RCshchOAY/8iDrUKrAQqoXyU4epD2BZHVs?=
- =?us-ascii?Q?h0Byi/6tnRetipUEORkD81HPK0ackC0/Go737iYKAvNE7MC3ffz0sckABART?=
- =?us-ascii?Q?5oXGbJg0Qm3sdzFb1bTUSNtiYP/FF0u83AA98wNQjwhrpkLGVqTB9hV6XNJO?=
- =?us-ascii?Q?moXzoqdoSzHeRC3tN488ebZXCTfwN97QPXPhrBUEsF+OD40w2ua2iDKwJ8d0?=
- =?us-ascii?Q?rw=3D=3D?=
-X-OriginatorOrg: altera.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2aca4868-4ee0-4b6f-2085-08dd7e85a6e3
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3461.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2025 14:31:05.4291
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RG+gxouUuEVYe6807DJazu/BBOMFgi+nycsSUrBmSKzeTj5YkIwFLY3Tt4vRxqG05WnhjjgEdL17SxHsWk7UxWcaFP6Tbp1eSrjfnufZ0Q0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR03MB6674
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250418-via_vt8500_timer_binding-v2-1-3c125568f028@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAMhiAmgC/02O0YrCMBBFf6XMs4VkbNNpf0WkZJKpOw+NmmbLg
+ vjvBoXFx3Ph3nsesElW2WBqHpBl102vqQIeGgg/Pl2k1VgZ0GBvOkvtrn7eC/XGzEVXyTNripo
+ u7WjQchyoFzJQ67csi/69p0/nD2e5/9aH8gmB/SZtuK6rlqkxfsHFsVjukOyRenaWApPzceycR
+ ImGRh8Ivs2q6LeXphL+fQYZmZEcdoOddoTz8/kCohaAFO4AAAA=
+X-Change-ID: 20250418-via_vt8500_timer_binding-9021bd785e80
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, Alexey Charkov <alchark@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744986827; l=4470;
+ i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
+ bh=8hvzQpevJpd8opdibOVe4+Ri5sQRV3J/5rabA+wMngg=;
+ b=WUeT1BUiZFwvLtY9348IfWL78Tc2LE+rMnaK205tuNUhTEf/IqweRGtmSetty1wwIDgqp9Nbc
+ 7AdZc/B/wnbAHr9/QUM2L6JrLq8215rVwD6vRpJu6XMuYG+ckRyVsge
+X-Developer-Key: i=alchark@gmail.com; a=ed25519;
+ pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
 
-From: Niravkumar L Rabara <niravkumar.l.rabara@altera.com>
+Rewrite the textual description for the VIA/WonderMedia timer
+as YAML schema.
 
-Fix bug testing the wrong structure member, ecc_uecnt_offset, before using
-ecc_cecnt_offset.
+The IP can generate up to four interrupts from four respective match
+registers, so reflect that in the schema.
 
-Signed-off-by: Niravkumar L Rabara <niravkumar.l.rabara@altera.com>
-Signed-off-by: Matthew Gerlach <matthew.gerlach@altera.com>
+Signed-off-by: Alexey Charkov <alchark@gmail.com>
 ---
- drivers/edac/altera_edac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Split the series from v1 into separate bindings patches so as not to
+spam all the subsystems with unrelated changes, per Rob's suggestion
 
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index 3e971f902363..88d9d2f458ee 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -99,7 +99,7 @@ static irqreturn_t altr_sdram_mc_err_handler(int irq, void *dev_id)
- 	if (status & priv->ecc_stat_ce_mask) {
- 		regmap_read(drvdata->mc_vbase, priv->ecc_saddr_offset,
- 			    &err_addr);
--		if (priv->ecc_uecnt_offset)
-+		if (priv->ecc_cecnt_offset)
- 			regmap_read(drvdata->mc_vbase,  priv->ecc_cecnt_offset,
- 				    &err_count);
- 		edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci, err_count,
+Changes in v2:
+- added description for the four possible interrupts (thanks Rob)
+- added overall description of the IC block
+
+Link to v1: https://lore.kernel.org/all/20250416-wmt-updates-v1-6-f9af689cdfc2@gmail.com/
+---
+ .../devicetree/bindings/timer/via,vt8500-timer.txt | 15 -------
+ .../bindings/timer/via,vt8500-timer.yaml           | 51 ++++++++++++++++++++++
+ MAINTAINERS                                        |  2 +
+ 3 files changed, 53 insertions(+), 15 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/timer/via,vt8500-timer.txt b/Documentation/devicetree/bindings/timer/via,vt8500-timer.txt
+deleted file mode 100644
+index 901c73f0d8ef05fb54d517b807d04f80eef2e736..0000000000000000000000000000000000000000
+--- a/Documentation/devicetree/bindings/timer/via,vt8500-timer.txt
++++ /dev/null
+@@ -1,15 +0,0 @@
+-VIA/Wondermedia VT8500 Timer
+------------------------------------------------------
+-
+-Required properties:
+-- compatible : "via,vt8500-timer"
+-- reg : Should contain 1 register ranges(address and length)
+-- interrupts : interrupt for the timer
+-
+-Example:
+-
+-	timer@d8130100 {
+-		compatible = "via,vt8500-timer";
+-		reg = <0xd8130100 0x28>;
+-		interrupts = <36>;
+-	};
+diff --git a/Documentation/devicetree/bindings/timer/via,vt8500-timer.yaml b/Documentation/devicetree/bindings/timer/via,vt8500-timer.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..e748149948f3140d4a158f800b91e70bf9c4f042
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/via,vt8500-timer.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/timer/via,vt8500-timer.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: VIA/Wondermedia VT8500 Timer
++
++description:
++  This is the timer block that is a standalone part of the system power
++  management controller on VIA/WonderMedia SoCs (VIA VT8500 and alike).
++  The hardware has a single 32-bit counter running at 3 MHz and four match
++  registers, each of which is associated with a dedicated match interrupt,
++  and the first of which can also serve as the system watchdog (if the
++  watchdog function is enabled, it will reset the system upon match instead
++  of triggering its respective interrupt)
++
++maintainers:
++  - Alexey Charkov <alchark@gmail.com>
++
++properties:
++  compatible:
++    const: via,vt8500-timer
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 1
++    items:
++      - description: Channel 0 match. Note that if the watchdog function
++          is enabled, this interrupt will not fire and the system will
++          reboot instead once the counter reaches match register 0 value
++      - description: Channel 1 match
++      - description: Channel 2 match
++      - description: Channel 3 match
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    timer@d8130100 {
++        compatible = "via,vt8500-timer";
++        reg = <0xd8130100 0x28>;
++        interrupts = <36>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 96b82704950184bd71623ff41fc4df31e4c7fe87..ed5d6ea34959d11624732ea7601e4d51ad19eac2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3428,6 +3428,8 @@ M:	Krzysztof Kozlowski <krzk@kernel.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Odd Fixes
+ F:	Documentation/devicetree/bindings/i2c/i2c-wmt.txt
++F:	Documentation/devicetree/bindings/interrupt-controller/via,vt8500-intc.yaml
++F:	Documentation/devicetree/bindings/timer/via,vt8500-timer.yaml
+ F:	arch/arm/boot/dts/vt8500/
+ F:	arch/arm/mach-vt8500/
+ F:	drivers/clocksource/timer-vt8500.c
+
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250418-via_vt8500_timer_binding-9021bd785e80
+prerequisite-change-id: 20250418-via_intc_binding-7e9bb2862471:v2
+prerequisite-patch-id: c53a4f3be5edb497bb9ff8fcad6cdba382d07fc6
+
+Best regards,
 -- 
-2.35.3
+Alexey Charkov <alchark@gmail.com>
 
