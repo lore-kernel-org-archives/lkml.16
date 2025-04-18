@@ -1,292 +1,307 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503FD21421B
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 16:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110FD84A3E
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 16:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744992294; cv=none; b=BBLHtsepbGumjKrFrDl1KV0861kLxcaC5cwT952/XHI4ByUP+4i3iJFQzvy6cRYpkhZd7P+xodVzilTioMe/ZY0RVNVRIpQaqUQTFvgtLgbKRE3D4t7ukdkbccJ1ceG01rahPyqnCibIHwJ8YaBYG2+6U3+Avns8hHxyK4wKg+o=
+	t=1744992339; cv=none; b=RxgutW8351Ml/Zd5PtKD9LZ62H8uCpeaiQX9sxXmXcDbp37CWNDLaqkmb7eI65lJRD3zHW00B8I1kGdIlQiwacpmfE3yz40hQIHqXckectNksHhxn9MJxAnb/7fOmbgyZJX7OpYqCd2EsqbXKLuEqW5awlYTQ2bPwcUTBt6Ikb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744992294; c=relaxed/simple;
-	bh=znknHZUg2wWS971narMX34cZA5FXencxC2zUYr97sTk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m73uCdx7+wkakr/viQAiiBPiNZtgAqNmoDyANDNOBFjDa8dUabN1PBCnrJwG5dmKMyaMK0iSnqFcW3FAHynOqpOELb0/0jeVY1dJHkKVYo79NKoMmWqsgL1Hcg1GfogKdgO8WYI+1fH8sSCxysKlMHdwcH2x9sHURPG55xbNz+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OKmZAGps; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744992339; c=relaxed/simple;
+	bh=VoFXeUt+leKSEng+lR8gyHNC/rJv57xOZiXf+Iqnus8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lf+jg/SarfMNhCXNrMlGM8Jm62d0AkVobY2Z9t/jnWDN/L0ILsdHPlguXItEUhuU6MCOtREwe9iv2R/VYtSWMajnUO6hvZMje66uSLDb/6Zap3mCMgDxm17rcpMCJ94E3F0ZtcKsD5bonjDh7jJgr0gWDdUuB9rFIqlYMf/hmbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=UNYhY/dp; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OKmZAGps"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744992291;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bOPTQCdz+0Ot/RGoUAN1wHOg9+e7ndhF9yyERGKmMM4=;
-	b=OKmZAGpsDCiqLsyRAqLhwqm69KXkdk2Oy2FNQt8PqfdN/RK8qQyYBG73CWHbAPhXFMvEcW
-	2e6G9eaRy7aMdfDk22GlPyhvkG5MZvpDJaa5JbauX/C9cxNI6K0ybU/HlZNINCZU4uamjm
-	94c8ZW39RxeonkpquS3JoDJvW9S+d3M=
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
- [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-516-cxm-saEfMIWNUdUCL3mkmg-1; Fri, 18 Apr 2025 12:04:49 -0400
-X-MC-Unique: cxm-saEfMIWNUdUCL3mkmg-1
-X-Mimecast-MFC-AGG-ID: cxm-saEfMIWNUdUCL3mkmg_1744992289
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-85b46c0e605so35018939f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 09:04:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744992289; x=1745597089;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bOPTQCdz+0Ot/RGoUAN1wHOg9+e7ndhF9yyERGKmMM4=;
-        b=unVG/utP+9lScZjTS6utcBEbZljojGWsSBGx0Xk4qgYAERJ+lRgo0wcsQapQx7kJrX
-         sNb7y0gL2sxvbGA8eoGr+/g/IIEMnGHronuPfLGTB8o3oSJMy9WcZDQJquMPs8HhEV/2
-         mleq3x2gf9r4gckSrLcGu7jIOEsSc7+zB/o5Z6RkaHaMsFSWlSiYyBbctAKgLx6I3E+9
-         lkshj3lEAsH7BV9TxPGcnQS2l4ZT3z5O8zMsm5APg4r4As8EMGJc4UXMO3NDHSot5kGu
-         WAm00dLP1mvvUPkRkbphBmDALalXsXnh7o2BJJAx4Qv9ZRrl89o5krI6hWrrP5EAKpTp
-         53nw==
-X-Forwarded-Encrypted: i=1; AJvYcCWnNuHvUrIAqKmnWipyQhmOo4/3Wh4MJNdYkvc+0Pt0eu24OsqTQyVACYO23PgvlURdUQDL/1U91n1TVEw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4itXviVuvN8FIAch4GTWshbweBnXsuTEphlJQhcyNzCXFYfS0
-	tRVsn3b3RUT5oP+SeJ7247MNR4F8ytHU+LFhhBg2f2WBUK3MCjSivqtOqIgVvoItaMred/hMi36
-	gSN3Gr7k/G4OFFREwHzuGO/3IdZcajK2DbI8tp5EIBRQu9L+aRwIS1V5FDJyQXA==
-X-Gm-Gg: ASbGncs6A+Mt8JI8dNRCz4Tk3kPWePZA/iA6HAqT2B19OXdfKglipXcg9f4AcWPujQS
-	qNjvsNhMHN31W3HT3Wz0LyRJNZmOh5+ysO+RndyDTKi/jq8l6mF/pRY1TUDatiHu/7MUssDNKGI
-	WpylzNIVxVhyfIjEGnZiGVi3RvfVHZ2EnxHREe+LyLoIuELDU5tF7x0jR/+aAd64nPgk196lTRq
-	0pFVP+uZk0In9DugbDQas42X4Z1I5yv6JvffVkwiTmPcoC9wjhDPomv4GF5q8KaNBefAi1IUaWb
-	7vtWRQzgtT8ElK8=
-X-Received: by 2002:a05:6602:1682:b0:856:2a52:ea02 with SMTP id ca18e2360f4ac-861dbf38990mr74571539f.5.1744992288994;
-        Fri, 18 Apr 2025 09:04:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFVwG98aXTGGp6nNbl/8oNzAiJOAJxxI7bUrGvTeBGftahrw7upMK5LI32smBv35ZjW3Gszsg==
-X-Received: by 2002:a05:6602:1682:b0:856:2a52:ea02 with SMTP id ca18e2360f4ac-861dbf38990mr74568839f.5.1744992288485;
-        Fri, 18 Apr 2025 09:04:48 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f6a3933bd4sm507928173.99.2025.04.18.09.04.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 09:04:47 -0700 (PDT)
-Date: Fri, 18 Apr 2025 10:04:44 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Sairaj Kodilkar <sarunkod@amd.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, bhelgaas@google.com, will@kernel.org,
- joro@8bytes.org, robin.murphy@arm.com, iommu@lists.linux.dev,
- linux-pci@vger.kernel.org, vasant.hegde@amd.com,
- suravee.suthikulpanit@amd.com, Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [bug report] Potential DEADLOCK due to
- vfio_pci_mmap_huge_fault()
-Message-ID: <20250418100444.5bc9cd97.alex.williamson@redhat.com>
-In-Reply-To: <20250417162113.GA113267@bhelgaas>
-References: <20250417115200.31275-1-sarunkod@amd.com>
-	<20250417162113.GA113267@bhelgaas>
-Organization: Red Hat
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="UNYhY/dp"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 81C1640E0244;
+	Fri, 18 Apr 2025 16:05:32 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id Mydeu0Fa_b-m; Fri, 18 Apr 2025 16:05:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744992328; bh=rtcA14FJI7XVgnpgzzUhiR2Ab18gO0adqRUjz0JxiHo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UNYhY/dpCCdz1SCc2MENgHFNJ4N7jjPjfnQiPRiFLp8e7+MMTnfoBu/OwpH/ipGaD
+	 Kv2GDgRVpdKnESz5Hoj16FB+BdFmCEU9raoxT0ddSKsA8SljTKrpFwUuMmdoeGJiLX
+	 tFrtMVbcxvbykzJr4RTlBwl0+gNK5Lw9mfra6hdlCn1wuwtIfRiK/7ST+G0X//PjVE
+	 KLda/ZznERSmPpWUPyJbxFdWP8Ha1+sIrPFzqP/Lqt6UQA1LSzQcKPS0gGffrdzCnt
+	 /SgkCK/ePZVHqB/nPd+DXp16emdHkMQvmiO8oZzxpqG+1c6MV2BiTKzMNTo3e7ebE+
+	 un4zsBNIm+4RcQW3pKu0rhwzkSQRSIADQNV+lbCVyT2VNSiR1yFRdo/5myVlVlVzSJ
+	 KbdUAv+Ena4xH6C2honv1BemEn8A30vu3Vp04loL+3Xm7Ql5qpiNP5oXUSDGdfHqGy
+	 DDAPZ/BGNwxmBgifTytTAVcr7PwO40RwSAan6kqWUtdRwnq/DLr9G2h790Rwlb4ANg
+	 ZVu2N2PkXz1AZJVQcZY/OypWctVsvPzPeJp04G3+J0Obz7pgL8GUA9VaQtVLpUxCG5
+	 gagF/YYE6jbX+SSti5yE8itU9Wbe9qbDcBIfNnIt3gRq20c25OmMk9JEZusRQqD5Mh
+	 vSjkOWHYJnbiL05l9bTn4sSM=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CF70540E0200;
+	Fri, 18 Apr 2025 16:05:21 +0000 (UTC)
+Date: Fri, 18 Apr 2025 18:05:15 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Qu Wenruo <quwenruo.btrfs@gmx.com>
+Cc: Linux Memory Management List <linux-mm@kvack.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Dave Hansen <dave.hansen@intel.com>, x86-ml <x86@kernel.org>
+Subject: Re: Kernel 6.15-rc2 unable to boot on 32bit x86 with PAE
+Message-ID: <20250418160515.GAaAJ4O2HnktVgmZ1v@fat_crate.local>
+References: <4599013d-bc74-4f81-9db7-070806ea9162@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4599013d-bc74-4f81-9db7-070806ea9162@gmx.com>
 
-On Thu, 17 Apr 2025 11:21:13 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> [+cc Thomas since msi_setup_device_data() is in a call path]
+On Fri, Apr 18, 2025 at 08:31:23PM +0930, Qu Wenruo wrote:
+> Hi,
 > 
-> On Thu, Apr 17, 2025 at 05:22:00PM +0530, Sairaj Kodilkar wrote:
-> > Hi everyone,
-> > I am seeing following errors on the host when I run FIO tests inside the
-> > guest on the latest upstream kernel. This causes guest to hang. Can anyone help with this ? 
+> Recently I'm testing a situation where highmem is involved, thus I'm
+> building the latest 32bit x86 with HIGHMEM and PAE, and run it inside a qemu
+> VM.
 
-Can you please elaborate more on the configuration and failure?  The
-lockdep splat is identifying a potential deadlock, the chances of
-actually hitting it appear to be low and the detection of the deadlock
-sequence shouldn't affect the guest.  What device(s) are being assigned,
-what version of QEMU, how is FIO being used, is the lockdep issue only
-encountered when FIO is run in the guest?
+Does that fix it:
 
-I've not seen similar with lockdep enabled in my testing and I don't
-know why/how FIO in the guest would be unique it triggering this
-detection.
+https://git.kernel.org/tip/1e07b9fad022e0e02215150ca1e20912e78e8ec1
 
-> > I have done some cursory analysis of the trace and it seems the reason is
-> > `vfio_pci_mmap_huge_fault`. I think following scenario is causing the
-> > deadlock.
-> > 
-> >      CPU0                     CPU1                                    CPU2
-> > (Trying do                      (Trying to perform                  (Receives fault
-> > `vfio_pci_set_msi_trigger())     operation with sysfs               during vfio_pin_pages_remote())
-> >                                  /sys/bus/pci/devices/<devid>) 
-> >                             
-> > ===================================================================================================
-> > (A) vdev->memory_lock
-> >     (vfio_msi_enable())
-> >                                 (C) root->kernfs_rwsem
-> >                                     (kernfs_fop_readdir())
-> > (B) root->kernfs_rwsem
-> >     (kernfs_add_one())
-> >                                                                     (E) mm->mmap_lock
-> >                                                                         (do_user_addr_fault())
-> >                                 (D) mm->mmap_lock
-> >                                    (do_user_addr_fault())
-> >                                                                     (F) vdev->memory_lock
-> >                                                                         (vfio_pci_mmap_huge_fault())
+?
 
-Hmm, it's not evident to me how to resolve this either.  Thanks for the
-report, I'll continue to puzzle over it.  Thanks,
+Leaving in the rest for reference.
 
-Alex
-
-> > Here, there is circular dependency of A->B->C->D->E->F->A.
-> > Please let me know if anyone encountered this. I will be happy to help!
-> > ---------------------------------------------------------------------------------
-> > 
-> > [ 1457.982233] ======================================================
-> > [ 1457.989494] WARNING: possible circular locking dependency detected
-> > [ 1457.996764] 6.15.0-rc1-0af2f6be1b42-1744803490343 #1 Not tainted
-> > [ 1458.003842] ------------------------------------------------------
-> > [ 1458.011105] CPU 0/KVM/8259 is trying to acquire lock:
-> > [ 1458.017107] ff27171d80a8e960 (&root->kernfs_rwsem){++++}-{4:4}, at: kernfs_add_one+0x34/0x380
-> > [ 1458.027027]
-> > [ 1458.027027] but task is already holding lock:
-> > [ 1458.034273] ff27171e19663918 (&vdev->memory_lock){++++}-{4:4}, at: vfio_pci_memory_lock_and_enable+0x2c/0x90 [vfio_pci_core]
-> > [ 1458.047221]
-> > [ 1458.047221] which lock already depends on the new lock.
-> > [ 1458.047221]
-> > [ 1458.057506]
-> > [ 1458.057506] the existing dependency chain (in reverse order) is:
-> > [ 1458.066629]
-> > [ 1458.066629] -> #2 (&vdev->memory_lock){++++}-{4:4}:
-> > [ 1458.074509]        __lock_acquire+0x52e/0xbe0
-> > [ 1458.079778]        lock_acquire+0xc7/0x2e0
-> > [ 1458.084764]        down_read+0x35/0x270
-> > [ 1458.089437]        vfio_pci_mmap_huge_fault+0xac/0x1c0 [vfio_pci_core]
-> > [ 1458.097135]        __do_fault+0x30/0x180
-> > [ 1458.101918]        do_shared_fault+0x2d/0x1b0
-> > [ 1458.107189]        do_fault+0x41/0x390
-> > [ 1458.111779]        __handle_mm_fault+0x2f6/0x730
-> > [ 1458.117339]        handle_mm_fault+0xd8/0x2a0
-> > [ 1458.122606]        fixup_user_fault+0x7f/0x1d0
-> > [ 1458.127963]        vaddr_get_pfns+0x129/0x2b0 [vfio_iommu_type1]
-> > [ 1458.135073]        vfio_pin_pages_remote+0xd4/0x430 [vfio_iommu_type1]
-> > [ 1458.142771]        vfio_pin_map_dma+0xd4/0x350 [vfio_iommu_type1]
-> > [ 1458.149979]        vfio_dma_do_map+0x2dd/0x450 [vfio_iommu_type1]
-> > [ 1458.157183]        vfio_iommu_type1_ioctl+0x126/0x1c0 [vfio_iommu_type1]
-> > [ 1458.165076]        __x64_sys_ioctl+0x94/0xc0
-> > [ 1458.170250]        do_syscall_64+0x72/0x180
-> > [ 1458.175320]        entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> > [ 1458.181944]
-> > [ 1458.181944] -> #1 (&mm->mmap_lock){++++}-{4:4}:
-> > [ 1458.189446]        __lock_acquire+0x52e/0xbe0
-> > [ 1458.194703]        lock_acquire+0xc7/0x2e0
-> > [ 1458.199676]        down_read_killable+0x35/0x280
-> > [ 1458.205229]        lock_mm_and_find_vma+0x96/0x280
-> > [ 1458.210979]        do_user_addr_fault+0x1da/0x710
-> > [ 1458.216638]        exc_page_fault+0x6d/0x200
-> > [ 1458.221814]        asm_exc_page_fault+0x26/0x30
-> > [ 1458.227274]        filldir64+0xee/0x170
-> > [ 1458.231963]        kernfs_fop_readdir+0x102/0x2e0
-> > [ 1458.237620]        iterate_dir+0xb1/0x2a0
-> > [ 1458.242509]        __x64_sys_getdents64+0x88/0x130
-> > [ 1458.248282]        do_syscall_64+0x72/0x180
-> > [ 1458.253371]        entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> > [ 1458.260006]
-> > [ 1458.260006] -> #0 (&root->kernfs_rwsem){++++}-{4:4}:
-> > [ 1458.268012]        check_prev_add+0xf1/0xca0
-> > [ 1458.273187]        validate_chain+0x610/0x6f0
-> > [ 1458.278452]        __lock_acquire+0x52e/0xbe0
-> > [ 1458.283711]        lock_acquire+0xc7/0x2e0
-> > [ 1458.288678]        down_write+0x32/0x1d0
-> > [ 1458.293442]        kernfs_add_one+0x34/0x380
-> > [ 1458.298588]        kernfs_create_dir_ns+0x5a/0x90
-> > [ 1458.304214]        internal_create_group+0x11e/0x2f0
-> > [ 1458.310131]        devm_device_add_group+0x4a/0x90
-> > [ 1458.315860]        msi_setup_device_data+0x60/0x110
-> > [ 1458.321679]        pci_setup_msi_context+0x19/0x60
-> > [ 1458.327398]        __pci_enable_msix_range+0x19d/0x640
-> > [ 1458.333513]        pci_alloc_irq_vectors_affinity+0xab/0x110
-> > [ 1458.340211]        vfio_pci_set_msi_trigger+0x8c/0x230 [vfio_pci_core]
-> > [ 1458.347883]        vfio_pci_core_ioctl+0x2a6/0x420 [vfio_pci_core]
-> > [ 1458.355164]        vfio_device_fops_unl_ioctl+0x81/0x140 [vfio]
-> > [ 1458.362155]        __x64_sys_ioctl+0x93/0xc0
-> > [ 1458.367295]        do_syscall_64+0x72/0x180
-> > [ 1458.372336]        entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> > [ 1458.378932]
-> > [ 1458.378932] other info that might help us debug this:
-> > [ 1458.378932]
-> > [ 1458.388965] Chain exists of:
-> > [ 1458.388965]   &root->kernfs_rwsem --> &mm->mmap_lock --> &vdev->memory_lock
-> > [ 1458.388965]
-> > [ 1458.402717]  Possible unsafe locking scenario:
-> > [ 1458.402717]
-> > [ 1458.410064]        CPU0                    CPU1
-> > [ 1458.415495]        ----                    ----
-> > [ 1458.420939]   lock(&vdev->memory_lock);
-> > [ 1458.425597]                                lock(&mm->mmap_lock);
-> > [ 1458.432683]                                lock(&vdev->memory_lock);
-> > [ 1458.440153]   lock(&root->kernfs_rwsem);
-> > [ 1458.444905]
-> > [ 1458.444905]  *** DEADLOCK ***
-> > [ 1458.444905]
-> > [ 1458.452589] 2 locks held by CPU 0/KVM/8259:
-> > [ 1458.457627]  #0: ff27171e196636b8 (&vdev->igate){+.+.}-{4:4}, at: vfio_pci_core_ioctl+0x28a/0x420 [vfio_pci_core]
-> > [ 1458.469499]  #1: ff27171e19663918 (&vdev->memory_lock){++++}-{4:4}, at: vfio_pci_memory_lock_and_enable+0x2c/0x90 [vfio_pci_core]
-> > [ 1458.483306]
-> > [ 1458.483306] stack backtrace:
-> > [ 1458.488927] CPU: 169 UID: 0 PID: 8259 Comm: CPU 0/KVM Not tainted 6.15.0-rc1-0af2f6be1b42-1744803490343 #1 PREEMPT(voluntary)
-> > [ 1458.488933] Hardware name: AMD Corporation RUBY/RUBY, BIOS RRR100EB 12/05/2024
-> > [ 1458.488936] Call Trace:
-> > [ 1458.488940]  <TASK>
-> > [ 1458.488944]  dump_stack_lvl+0x78/0xe0
-> > [ 1458.488954]  print_circular_bug+0xd5/0xf0
-> > [ 1458.488965]  check_noncircular+0x14c/0x170
-> > [ 1458.488970]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [ 1458.488976]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [ 1458.488980]  ? find_held_lock+0x32/0x90
-> > [ 1458.488986]  ? local_clock_noinstr+0xd/0xc0
-> > [ 1458.489001]  check_prev_add+0xf1/0xca0
-> > [ 1458.489006]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [ 1458.489015]  validate_chain+0x610/0x6f0
-> > [ 1458.489027]  __lock_acquire+0x52e/0xbe0
-> > [ 1458.489032]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [ 1458.489035]  ? __lock_release+0x15d/0x2a0
-> > [ 1458.489046]  lock_acquire+0xc7/0x2e0
-> > [ 1458.489051]  ? kernfs_add_one+0x34/0x380
-> > [ 1458.489060]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [ 1458.489063]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [ 1458.489067]  ? __lock_release+0x15d/0x2a0
-> > [ 1458.489080]  down_write+0x32/0x1d0
-> > [ 1458.489085]  ? kernfs_add_one+0x34/0x380
-> > [ 1458.489090]  kernfs_add_one+0x34/0x380
-> > [ 1458.489100]  kernfs_create_dir_ns+0x5a/0x90
-> > [ 1458.489107]  internal_create_group+0x11e/0x2f0
-> > [ 1458.489118]  devm_device_add_group+0x4a/0x90
-> > [ 1458.489128]  msi_setup_device_data+0x60/0x110
-> > [ 1458.489136]  pci_setup_msi_context+0x19/0x60
-> > [ 1458.489144]  __pci_enable_msix_range+0x19d/0x640
-> > [ 1458.489150]  ? pci_conf1_read+0x4e/0xf0
-> > [ 1458.489154]  ? find_held_lock+0x32/0x90
-> > [ 1458.489162]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [ 1458.489165]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [ 1458.489172]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [ 1458.489176]  ? mark_held_locks+0x40/0x70
-> > [ 1458.489182]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [ 1458.489191]  pci_alloc_irq_vectors_affinity+0xab/0x110
-> > [ 1458.489206]  vfio_pci_set_msi_trigger+0x8c/0x230 [vfio_pci_core]
-> > [ 1458.489222]  vfio_pci_core_ioctl+0x2a6/0x420 [vfio_pci_core]
-> > [ 1458.489231]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [ 1458.489241]  vfio_device_fops_unl_ioctl+0x81/0x140 [vfio]
-> > [ 1458.489252]  __x64_sys_ioctl+0x94/0xc0
-> > [ 1458.489262]  do_syscall_64+0x72/0x180
-> > [ 1458.489269]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> > [ 1458.489273] RIP: 0033:0x7f0898724ded
-> > [ 1458.489279] Code: 04 25 28 00 00 00 48 89 45 c8 31 c0 48 8d 45 10 c7 45 b0 10 00 00 00 48 89 45 b8 48 8d 45 d0 48 89 45 c0 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1a 48 8b 45 c8 64 48 2b 04 25 28 00 00 00
-> > [ 1458.489282] RSP: 002b:00007f08965622a0 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> > [ 1458.489286] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f0898724ded
-> > [ 1458.489289] RDX: 00007f07800f6d00 RSI: 0000000000003b6e RDI: 000000000000001e
-> > [ 1458.489291] RBP: 00007f08965622f0 R08: 00007f07800008e0 R09: 0000000000000001
-> > [ 1458.489293] R10: 0000000000000007 R11: 0000000000000246 R12: 0000000000000000
-> > [ 1458.489295] R13: fffffffffffffb28 R14: 0000000000000007 R15: 00007ffd0ef83ae0
-> > [ 1458.489315]  </TASK>  
+> However the kernel just fails to boot with very early memory management
+> crash:
 > 
+> [    0.064551] Built 1 zonelists, mobility grouping on.  Total pages: 786297
+> [    0.065269] allocated 4198396 bytes of page_ext
+> [    0.065856] mem auto-init: stack:off, heap alloc:on, heap free:off
+> [    0.070213] BUG: Bad page state in process swapper  pfn:100001
+> [    0.070773] page: refcount:0 mapcount:1 mapping:(ptrval) index:0x0
+> pfn:0x100001
+> [    0.071451] aops:0x0 ino:850fc085 invalid dentry:2cc54702
+> [    0.071962] BUG: kernel NULL pointer dereference, address: 00000400
+> [    0.072609] #PF: supervisor read access in kernel mode
+> [    0.073135] #PF: error_code(0x0000) - not-present page
+> [    0.073621] *pdpt = 0000000000000000 *pde = f000ff53f000ff53
+> [    0.074269] Oops: Oops: 0000 [#1] SMP NOPTI
+> [    0.074666] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted
+> 6.15.0-rc2-custom+ #5 PREEMPT(undef)
+> a4004de2bdc11241c6afe44ab7f6bd7d8e98e3db
+> [    0.075828] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+> Arch Linux 1.16.3-1-1 04/01/2014
+> [    0.076706] EIP: get_pfnblock_flags_mask+0x40/0x50
+> [    0.077160] Code: 03 00 00 8b 8e 48 14 33 d7 8b 96 44 14 33 d7 81 e1 00
+> fe ff ff 29 c8 c1 e8 09 8d 0c 85 00 00 00 00 c1 e8 03 8d 04 82 83 e1 1f <8b>
+> 00 d3 e8 21 d8 5b 5e 5d 31 d2 31 c9 c3 66 90 e8 e3 bf d6 ff 55
+> [    0.078954] EAX: 00000400 EBX: 00000007 ECX: 00000000 EDX: 00000000
+> [    0.079567] ESI: 00000a80 EDI: d70ebce5 EBP: d71fdd80 ESP: d71fdd78
+> [    0.080156] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00210046
+> [    0.080796] CR0: 80050033 CR2: 00000400 CR3: 1749a000 CR4: 000000b0
+> [    0.081378] Call Trace:
+> [    0.081602]  __dump_page.cold+0x11d/0x23f
+> [    0.081977]  ? prb_read_valid+0x29/0x40
+> [    0.082334]  ? console_unlock+0x56/0x100
+> [    0.082701]  ? console_unlock+0x56/0x100
+> [    0.083070]  ? vprintk_emit+0x2d2/0x390
+> [    0.083458]  ? vprintk_default+0x15/0x20
+> [    0.083826]  dump_page+0x1b/0x30
+> [    0.084127]  ? dump_page+0x1b/0x30
+> [    0.084447]  bad_page.cold+0x62/0x84
+> [    0.084796]  free_tail_page_prepare+0x134/0x190
+> [    0.085232]  __free_pages_ok+0x318/0x3c0
+> [    0.085607]  __free_pages_core+0x4e/0x58
+> [    0.085982]  memblock_free_pages+0x11/0x34
+> [    0.086378]  memblock_free_all+0x149/0x1b4
+> [    0.086766]  mm_core_init+0x103/0x158
+> [    0.087121]  start_kernel+0x5d2/0x7f8
+> [    0.087462]  ? load_ucode_bsp+0x53/0xdc
+> [    0.087832]  i386_start_kernel+0x64/0x64
+> [    0.088195]  startup_32_smp+0x151/0x154
+> [    0.088561] Modules linked in:
+> [    0.088865] CR2: 0000000000000400
+> [    0.089185] ---[ end trace 0000000000000000 ]---
+> [    0.089624] EIP: get_pfnblock_flags_mask+0x40/0x50
+> [    0.090093] Code: 03 00 00 8b 8e 48 14 33 d7 8b 96 44 14 33 d7 81 e1 00
+> fe ff ff 29 c8 c1 e8 09 8d 0c 85 00 00 00 00 c1 e8 03 8d 04 82 83 e1 1f <8b>
+> 00 d3 e8 21 d8 5b 5e 5d 31 d2 31 c9 c3 66 90 e8 e3 bf d6 ff 55
+> [    0.091910] EAX: 00000400 EBX: 00000007 ECX: 00000000 EDX: 00000000
+> [    0.092505] ESI: 00000a80 EDI: d70ebce5 EBP: d71fdd80 ESP: d71fdd78
+> [    0.093111] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00210046
+> [    0.093788] CR0: 80050033 CR2: 00000400 CR3: 1749a000 CR4: 000000b0
+> [    0.094415] Kernel panic - not syncing: Attempted to kill the idle task!
+> [    0.095097] ---[ end Kernel panic - not syncing: Attempted to kill the
+> idle task! ]---
+> 
+> The full dmesg is attached (boot.txt).
+> 
+> The crash only happens with PAE enabled. If only HIGHMEM enabled but no PAE,
+> the kernel boots without any problem.
+> 
+> Thanks,
+> Qu
 
+> [    0.000000] Linux version 6.15.0-rc2-custom+ (adam@arch32) (gcc (GCC) 14.1.1 20240507, GNU ld (GNU Binutils) 2.43.1) #5 SMP PREEMPT_DYNAMIC Fri Apr 18 10:47:21 UTC 2025
+> [    0.000000] BIOS-provided physical RAM map:
+> [    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+> [    0.000000] BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+> [    0.000000] BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+> [    0.000000] BIOS-e820: [mem 0x0000000000100000-0x00000000bffdafff] usable
+> [    0.000000] BIOS-e820: [mem 0x00000000bffdb000-0x00000000bfffffff] reserved
+> [    0.000000] BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
+> [    0.000000] BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+> [    0.000000] BIOS-e820: [mem 0x0000000100000000-0x00000001bfffffff] usable
+> [    0.000000] BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff] reserved
+> [    0.000000] earlycon: uart0 at I/O port 0x3f8 (options '')
+> [    0.000000] printk: legacy bootconsole [uart0] enabled
+> [    0.000000] NX (Execute Disable) protection: active
+> [    0.000000] APIC: Static calls initialized
+> [    0.000000] SMBIOS 2.8 present.
+> [    0.000000] DMI: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Arch Linux 1.16.3-1-1 04/01/2014
+> [    0.000000] DMI: Memory slots populated: 1/1
+> [    0.000000] Hypervisor detected: KVM
+> [    0.000000] kvm-clock: Using msrs 4b564d01 and 4b564d00
+> [    0.000000] kvm-clock: using sched offset of 3090378331820 cycles
+> [    0.000562] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+> [    0.002391] tsc: Detected 3992.500 MHz processor
+> [    0.003311] last_pfn = 0x1c0000 max_arch_pfn = 0x1000000
+> [    0.003924] MTRR map: 4 entries (3 fixed + 1 variable; max 19), built from 8 variable MTRRs
+> [    0.004847] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT
+> [    0.005630] Warning: only 4GB will be used. Support for for CONFIG_HIGHMEM64G was removed!
+> [    0.008576] found SMP MP-table at [mem 0x000f6650-0x000f665f]
+> [    0.009239] RAMDISK: [mem 0x7f210000-0x7fffffff]
+> [    0.009755] Allocated new RAMDISK: [mem 0x3680e000-0x375fdd9e]
+> [    0.011541] Move RAMDISK from [mem 0x7f210000-0x7ffffd9e] to [mem 0x3680e000-0x375fdd9e]
+> [    0.012425] ACPI: Early table checksum verification disabled
+> [    0.013026] ACPI: RSDP 0x00000000000F6610 000014 (v00 BOCHS )
+> [    0.013656] ACPI: RSDT 0x00000000BFFE208E 000030 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+> [    0.014690] ACPI: FACP 0x00000000BFFE1F52 000074 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+> [    0.015604] ACPI: DSDT 0x00000000BFFDFD40 002212 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+> [    0.016517] ACPI: FACS 0x00000000BFFDFD00 000040
+> [    0.017021] ACPI: APIC 0x00000000BFFE1FC6 0000A0 (v03 BOCHS  BXPC     00000001 BXPC 00000001)
+> [    0.017951] ACPI: WAET 0x00000000BFFE2066 000028 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+> [    0.018874] ACPI: Reserving FACP table memory at [mem 0xbffe1f52-0xbffe1fc5]
+> [    0.019631] ACPI: Reserving DSDT table memory at [mem 0xbffdfd40-0xbffe1f51]
+> [    0.020391] ACPI: Reserving FACS table memory at [mem 0xbffdfd00-0xbffdfd3f]
+> [    0.021153] ACPI: Reserving APIC table memory at [mem 0xbffe1fc6-0xbffe2065]
+> [    0.021896] ACPI: Reserving WAET table memory at [mem 0xbffe2066-0xbffe208d]
+> [    0.022763] 3210MB HIGHMEM available.
+> [    0.023178] 885MB LOWMEM available.
+> [    0.023581]   mapped low ram: 0 - 375fe000
+> [    0.024073]   low ram: 0 - 375fe000
+> [    0.024504] Zone ranges:
+> [    0.024805]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+> [    0.025516]   Normal   [mem 0x0000000001000000-0x00000000375fdfff]
+> [    0.026224]   HighMem  [mem 0x00000000375fe000-0x00000000ffffffff]
+> [    0.026938] Movable zone start for each node
+> [    0.027433] Early memory node ranges
+> [    0.027852]   node   0: [mem 0x0000000000001000-0x000000000009efff]
+> [    0.028565]   node   0: [mem 0x0000000000100000-0x00000000bffdafff]
+> [    0.029279]   node   0: [mem 0x0000000100000000-0x00000001bfffffff]
+> [    0.029998] Initmem setup node 0 [mem 0x0000000000001000-0x00000001bfffffff]
+> [    0.030820] On node 0, zone DMA: 1 pages in unavailable ranges
+> [    0.031521] On node 0, zone DMA: 97 pages in unavailable ranges
+> [    0.039994] On node 0, zone HighMem: 262181 pages in unavailable ranges
+> [    0.041125] ACPI: PM-Timer IO Port: 0x608
+> [    0.041595] ACPI: LAPIC_NMI (acpi_id[0xff] dfl dfl lint[0x1])
+> [    0.042231] IOAPIC[0]: apic_id 0, version 17, address 0xfec00000, GSI 0-23
+> [    0.042865] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+> [    0.043435] ACPI: INT_SRC_OVR (bus 0 bus_irq 5 global_irq 5 high level)
+> [    0.044115] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+> [    0.044722] ACPI: INT_SRC_OVR (bus 0 bus_irq 10 global_irq 10 high level)
+> [    0.045350] ACPI: INT_SRC_OVR (bus 0 bus_irq 11 global_irq 11 high level)
+> [    0.046018] ACPI: Using ACPI (MADT) for SMP configuration information
+> [    0.046638] TSC deadline timer available
+> [    0.047004] CPU topo: Max. logical packages:   6
+> [    0.047442] CPU topo: Max. logical dies:       6
+> [    0.047867] CPU topo: Max. dies per package:   1
+> [    0.048286] CPU topo: Max. threads per core:   1
+> [    0.048706] CPU topo: Num. cores per package:     1
+> [    0.049162] CPU topo: Num. threads per package:   1
+> [    0.049599] CPU topo: Allowing 6 present CPUs plus 0 hotplug CPUs
+> [    0.050164] kvm-guest: APIC: eoi() replaced with kvm_guest_apic_eoi_write()
+> [    0.050813] kvm-guest: KVM setup pv remote TLB flush
+> [    0.051328] kvm-guest: setup PV sched yield
+> [    0.051739] PM: hibernation: Registered nosave memory: [mem 0x00000000-0x00000fff]
+> [    0.052441] PM: hibernation: Registered nosave memory: [mem 0x0009f000-0x000fffff]
+> [    0.053150] PM: hibernation: Registered nosave memory: [mem 0xbffdb000-0xffffffff]
+> [    0.053841] [mem 0xc0000000-0xfeffbfff] available for PCI devices
+> [    0.054398] Booting paravirtualized kernel on KVM
+> [    0.054843] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 6370452778343963 ns
+> [    0.055846] setup_percpu: NR_CPUS:8 nr_cpumask_bits:6 nr_cpu_ids:6 nr_node_ids:1
+> [    0.056628] percpu: Embedded 33 pages/cpu s102476 r0 d32692 u135168
+> [    0.057257] kvm-guest: PV spinlocks enabled
+> [    0.057646] PV qspinlock hash table entries: 512 (order: 0, 4096 bytes, linear)
+> [    0.058318] Kernel command line: root=/dev/sys/root rw console=ttyS0 loglevel=7 earlycon=uart,io,0x3f8
+> [    0.059439] random: crng init done
+> [    0.059750] printk: log buffer data + meta data: 131072 + 409600 = 540672 bytes
+> [    0.060446] Dentry cache hash table entries: 131072 (order: 7, 524288 bytes, linear)
+> [    0.061185] Inode-cache hash table entries: 65536 (order: 6, 262144 bytes, linear)
+> [    0.061972] software IO TLB: area num 8.
+> [    0.064551] Built 1 zonelists, mobility grouping on.  Total pages: 786297
+> [    0.065269] allocated 4198396 bytes of page_ext
+> [    0.065856] mem auto-init: stack:off, heap alloc:on, heap free:off
+> [    0.070213] BUG: Bad page state in process swapper  pfn:100001
+> [    0.070773] page: refcount:0 mapcount:1 mapping:(ptrval) index:0x0 pfn:0x100001
+> [    0.071451] aops:0x0 ino:850fc085 invalid dentry:2cc54702
+> [    0.071962] BUG: kernel NULL pointer dereference, address: 00000400
+> [    0.072609] #PF: supervisor read access in kernel mode
+> [    0.073135] #PF: error_code(0x0000) - not-present page
+> [    0.073621] *pdpt = 0000000000000000 *pde = f000ff53f000ff53
+> [    0.074269] Oops: Oops: 0000 [#1] SMP NOPTI
+> [    0.074666] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc2-custom+ #5 PREEMPT(undef)  a4004de2bdc11241c6afe44ab7f6bd7d8e98e3db
+> [    0.075828] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Arch Linux 1.16.3-1-1 04/01/2014
+> [    0.076706] EIP: get_pfnblock_flags_mask+0x40/0x50
+> [    0.077160] Code: 03 00 00 8b 8e 48 14 33 d7 8b 96 44 14 33 d7 81 e1 00 fe ff ff 29 c8 c1 e8 09 8d 0c 85 00 00 00 00 c1 e8 03 8d 04 82 83 e1 1f <8b> 00 d3 e8 21 d8 5b 5e 5d 31 d2 31 c9 c3 66 90 e8 e3 bf d6 ff 55
+> [    0.078954] EAX: 00000400 EBX: 00000007 ECX: 00000000 EDX: 00000000
+> [    0.079567] ESI: 00000a80 EDI: d70ebce5 EBP: d71fdd80 ESP: d71fdd78
+> [    0.080156] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00210046
+> [    0.080796] CR0: 80050033 CR2: 00000400 CR3: 1749a000 CR4: 000000b0
+> [    0.081378] Call Trace:
+> [    0.081602]  __dump_page.cold+0x11d/0x23f
+> [    0.081977]  ? prb_read_valid+0x29/0x40
+> [    0.082334]  ? console_unlock+0x56/0x100
+> [    0.082701]  ? console_unlock+0x56/0x100
+> [    0.083070]  ? vprintk_emit+0x2d2/0x390
+> [    0.083458]  ? vprintk_default+0x15/0x20
+> [    0.083826]  dump_page+0x1b/0x30
+> [    0.084127]  ? dump_page+0x1b/0x30
+> [    0.084447]  bad_page.cold+0x62/0x84
+> [    0.084796]  free_tail_page_prepare+0x134/0x190
+> [    0.085232]  __free_pages_ok+0x318/0x3c0
+> [    0.085607]  __free_pages_core+0x4e/0x58
+> [    0.085982]  memblock_free_pages+0x11/0x34
+> [    0.086378]  memblock_free_all+0x149/0x1b4
+> [    0.086766]  mm_core_init+0x103/0x158
+> [    0.087121]  start_kernel+0x5d2/0x7f8
+> [    0.087462]  ? load_ucode_bsp+0x53/0xdc
+> [    0.087832]  i386_start_kernel+0x64/0x64
+> [    0.088195]  startup_32_smp+0x151/0x154
+> [    0.088561] Modules linked in:
+> [    0.088865] CR2: 0000000000000400
+> [    0.089185] ---[ end trace 0000000000000000 ]---
+> [    0.089624] EIP: get_pfnblock_flags_mask+0x40/0x50
+> [    0.090093] Code: 03 00 00 8b 8e 48 14 33 d7 8b 96 44 14 33 d7 81 e1 00 fe ff ff 29 c8 c1 e8 09 8d 0c 85 00 00 00 00 c1 e8 03 8d 04 82 83 e1 1f <8b> 00 d3 e8 21 d8 5b 5e 5d 31 d2 31 c9 c3 66 90 e8 e3 bf d6 ff 55
+> [    0.091910] EAX: 00000400 EBX: 00000007 ECX: 00000000 EDX: 00000000
+> [    0.092505] ESI: 00000a80 EDI: d70ebce5 EBP: d71fdd80 ESP: d71fdd78
+> [    0.093111] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00210046
+> [    0.093788] CR0: 80050033 CR2: 00000400 CR3: 1749a000 CR4: 000000b0
+> [    0.094415] Kernel panic - not syncing: Attempted to kill the idle task!
+> [    0.095097] ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
+
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
