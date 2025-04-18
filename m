@@ -1,169 +1,151 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20CBC215191
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D112144D6;
+	Fri, 18 Apr 2025 17:01:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744995688; cv=none; b=UGuuhskA5SYEvbE6T5+BvN9Cxfw5dLJNWHtUUOCXsPn7VYSogUaUzaYtUcFaRIp7VpvNcvESiVxgLMAUibJpnCeya3G0HmQqv+9CIuLiOrIKysI6UGkN++92XjBxGYgLTMxqGTnD9Zn40R8rHi38GznEWTUjaW94XW8b8GUx+M0=
+	t=1744995697; cv=none; b=J7FcOQabwu6y/b/WAduNHz8JizEp+3kCLizclOMrV4koZZFJkgFtccBbQs2OFiXyY5pIwf4xAAFL7zq+7YfQenNTqjiB6CDIX6M5Gy44y+NRgFBN1OjcRyD+B1XWDWC9g214Rdidwzv2aRuzMCj469MC13DBI9DuvlKoXXCRGo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744995688; c=relaxed/simple;
-	bh=gO8UuUnEL0GdMWSU7mYBXHTLEBePuhrA4Yw2uBuWr2E=;
+	s=arc-20240116; t=1744995697; c=relaxed/simple;
+	bh=oI+EaJPKASRaj7ZktB84nugSnxLbHdpW/DC7Ynxq2b8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mmfEvAKHf3EwTxK683R3znXHbTp+8X06b2zatHlaVpjFTsnt101pNLxzLGyK2wAU4g8NWQkuP/T9CFzkqTCYWTvAGpLz9gWWU0Aeruec7gyyiyecqovXacZeEcx9ZYxGxnApxdIE1+aMohj5blxcy5Pn4/qVDErqklEWGmWENVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CUxoVppg; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=GqwkvH5J95h+nBQFpJL1FSLm+hHrT/tQo/5/O9VcrpSLk0vsYFn4faMjOsALNKGLGAxwAImZfDWGEiEn2LguL/nGUJ6yGq9leYIT67tLBSGmCG+WcrzRa9WJJRqHyoCYVXXUtCQ+K9hSvKCEt0FSZF/klGtqM9/TrZa9O1BKu+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=ZTta/6gI; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CUxoVppg"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22622ddcc35so31826465ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:01:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744995686; x=1745600486; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fs+FbSr25h62ESmDLvM+DIV5SDJW0JK2umLWA74NAL4=;
-        b=CUxoVppgsjWzbqu5DK7X36o10BpcIOEQ9CefD+xSqrL1mmFplHOTNIoRGIKn0edttL
-         563JYG5LMoMYQDOpf7HhhkMzQmBGs1kQDS6X8X3q2QhYj8ROaZlklKEJ4LnjPkzTd3Ht
-         nBUSgV0v9MdeId3Rz8s3RgIQR3q1AudPUSOrT7ldZjnNB3Hb+baB3se11MJlO4K/lIHm
-         Pr5HT8CEu7ROUS9xDkoYpL7SJ5/NS/9n8cKtgYnP9lj632IveqSGlxFDp5zoKxRSr6sN
-         BwxkH2qJ6aFrOSstSSS1svkNYkkZZh0G3tPp9Qc5d9xBAOKE0WL+W7BQ/dlrnzc7dEGP
-         ev1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744995686; x=1745600486;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fs+FbSr25h62ESmDLvM+DIV5SDJW0JK2umLWA74NAL4=;
-        b=E2f6ERX3TA2AuCqJY4MguAL0mL0x+bKb0cQ8m6ADMn3ZQLXq9Qn+xaZce7hj8XW5lM
-         gvIU/z4MOGXwy1CndVq1KFNpYh2OIrQTDJiOs2zuN4I/GpIlKrw748FRMCMcf41aeEpm
-         IpkR8yGegKRVyaakeRNQQygxYDvh4SfpOw2PtXCTJME0mArT71oQEHJirM76JvyWxrug
-         XOtJ5PMUy0bKYetMDJMdQeTQk5ttHYlpOfUF50+LAm2AhOarlwjrEuwGimDvnEIj9fnY
-         PH0ZzbC4lbuU9x78/k7/svZOLQPFJBKVSgZdMZbMEBf2XLedIeT8fWhklnEv4g+2cKpO
-         Sqcg==
-X-Forwarded-Encrypted: i=1; AJvYcCU8I+L+lll8SaYa1hF0fG3EvDzwN2yenQdggzx2i2jlCrs3uRrIHUGQheQR4MvkaDp06ypvom0WQAmYO9E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx//g7GFfWkRt3zuLay8TLBt/GIZ8/iqyUkOhpXlhwkjJ1WkVya
-	IeZ+HxnLCy6XzM4L9CIY+dC0TUaXv7MTbEr4FEOWObjwvUDpL2FwZhCHsVjkfg==
-X-Gm-Gg: ASbGnctOevzd9Z2PaQmvAQ48Ht/hgZnrYjZ5LAZ5GlO1CKD6Mbs8bifwo/9ZOVhe2j/
-	HKMFCmzc8Lz8I8IjJdyYDOAkq6FuIy1sK5/FGLS1dgm8kh0XjuaERwTwHpQx5WEuySCa5X1Mnfh
-	w2vSl39TliQVeUUKXnZNljsMMQU4A2Pqypcy8cn5hA1Bc2SdtQxiipafymvXJmmWXm2qY9YGDc9
-	6Zn+s5ZjKiLaQbc029Ae62DQtaHMJxgdI0GKsPh+kW1BkNdQcmToDFhKgxT6UMlNCGiWc0hDpzR
-	b4whjXnmKdgcgAc8Kmiqryj/LXZv99kOoMm+b7hO9tgG2R9+ULE=
-X-Google-Smtp-Source: AGHT+IEnFAQ5ZdAVrVFVrdvYt5L9ZjZCuO9Da8Y6K9EjBgw5KyuHMkIHZ0L6Nkwt9mqFlQeiQfcWzQ==
-X-Received: by 2002:a17:903:990:b0:223:f408:c3dc with SMTP id d9443c01a7336-22c5357a703mr52536975ad.9.1744995686287;
-        Fri, 18 Apr 2025 10:01:26 -0700 (PDT)
-Received: from thinkpad ([36.255.17.199])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb64fbsm19040645ad.158.2025.04.18.10.01.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 10:01:25 -0700 (PDT)
-Date: Fri, 18 Apr 2025 22:31:19 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Qiang Yu <quic_qianyu@quicinc.com>
-Cc: "Wenbin Yao (Consultant)" <quic_wenbyao@quicinc.com>, 
-	jingoohan1@gmail.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
-	bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	quic_cang@quicinc.com, mrana@quicinc.com
-Subject: Re: [PATCH] PCI: dwc: Set PORT_LOGIC_LINK_WIDTH to one lane
-Message-ID: <gnpoekmyk4elg53xabcsvj6sqacttby6dpryxcdepws3fpt2xj@y7efnnszvpem>
-References: <1524e971-8433-1e2d-b39e-65bad0d6c6ce@quicinc.com>
- <t7urbtpoy26muvqnvebdctm7545pllly44bymimy7wtazcd7gj@mofvna4v5sd3>
- <72e7ec4e-6a14-4a09-8498-42c2772da4fb@quicinc.com>
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="ZTta/6gI"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 91FAB101BF2CB;
+	Fri, 18 Apr 2025 19:01:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1744995692; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=tBWiIVtzQkFeHoj4T9tvDBw4U0JfIJ9IFgfClrd78xY=;
+	b=ZTta/6gIatx/2uKRev0Lo3JfA6NTfSrNlGjUkaEApTJ5CPR8pAmVVlJruzwF/8ERax+qyu
+	nwmQ1jXCPb5HUcudTgnZskN5oKszxyfOI0/tT0MA5sjOGV2a0OuI7tD/QXNU/jra9Cuz8F
+	/T6w6oeBtTZFGoOsv9E2QhBTtRA+WmAaYrdvIjw3qokrhv6T0ouxsnbomlHjDkWsZsViqs
+	R1UkQiGoFPI2cZT1QVhWXjCIFy+o6U7p3EK9w6cjghuSQdIlSdejnsSIRQLpjMlHhT5Z60
+	gY1jJGXv9CkRZzZvxdHB0Yx/dCJ7HaqotiKNSkdHaCS10eSDHevHSVFciD/pXQ==
+Date: Fri, 18 Apr 2025 19:01:25 +0200
+From: Pavel Machek <pavel@denx.de>
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	syzbot+b0c03d76056ef6cd12a6@syzkaller.appspotmail.com,
+	Simon Horman <horms@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	aleksander.lobakin@intel.com, kory.maincent@bootlin.com,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.10 13/15] net: vlan: don't propagate flags on
+ open
+Message-ID: <aAKFZT6sPCZX63y6@duo.ucw.cz>
+References: <20250403191002.2678588-1-sashal@kernel.org>
+ <20250403191002.2678588-13-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bC8Y275hHWkIX4eN"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <72e7ec4e-6a14-4a09-8498-42c2772da4fb@quicinc.com>
+In-Reply-To: <20250403191002.2678588-13-sashal@kernel.org>
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Mon, Apr 14, 2025 at 04:45:26PM +0800, Qiang Yu wrote:
-> 
-> On 4/8/2025 1:51 AM, Manivannan Sadhasivam wrote:
-> > On Thu, Dec 12, 2024 at 04:19:12PM +0800, Wenbin Yao (Consultant) wrote:
-> > > PORT_LOGIC_LINK_WIDTH field of the PCIE_LINK_WIDTH_SPEED_CONTROL register
-> > > indicates the number of lanes to check for exit from Electrical Idle in
-> > > Polling.Active and L2.Idle. It is used to limit the effective link width to
-> > > ignore broken or unused lanes that detect a receiver to prevent one or more
-> > > bad Receivers or Transmitters from holding up a valid Link from being
-> > > configured.
-> > > 
-> > > In a PCIe link that support muiltiple lanes, setting PORT_LOGIC_LINK_WIDTH
-> > > to 1 will not affect the link width that is actually intended to be used.
-> > Where in the spec it is defined?
-> As per DWC registers data book, NUM_OF_LANES is referred to as the
-> "Predetermined Number of Lanes" in section 4.2.6.2.1 of the PCI Express Base
-> 3.0 Specification, revision 1.0.
-> Section 4.2.6.2.1 explains the condtions need be satisfied for enter
-> Poll.Configuration from Polling.Active.
-> The original statement is
-> 
-> "Next state is Polling.Configuration after at least 1024 TS1 Ordered Sets
-> were transmitted, and all Lanes that detected a Receiver during Detect
-> receive eight consecutive training sequences (or
-> their complement) satisfying any of the following conditions:
-> ...
-> Otherwise, after a 24 ms timeout the next state is:
-> Polling.Configuration if
-> ...
-> (ii) At least a predetermined set of Lanes that detected a Receiver during
-> Detect have detected an exit from Electrical Idle at least once since
-> entering Polling.Active.
->     Note: _*This may prevent one or more bad Receivers or Transmitters from
-> holding up a valid Link from being configured*_, and allow for additional
-> training in Polling.Configuration. *_The exact set of predetermined Lanes is
-> implementation specific_*. Note that up to the 1.1 specification this
-> predetermined set was equal to the total set of Lanes that detected a
-> Receiver.
 
-Ok, this is the most relevant part of the spec. It says that atleast the
-predetermined set of lanes that detected a receiver during Detect.Active state
-should detect an exit from Electrical Idle at least once. So this condition can
-only be false if one or more lanes are faulty (not unused or broken). If the
-lanes are unused or broken, then they should not have detected the Receivers in
-the Detect.Active state itself.
+--bC8Y275hHWkIX4eN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So this was the source of confusion.
+On Thu 2025-04-03 15:10:00, Sasha Levin wrote:
+> From: Stanislav Fomichev <sdf@fomichev.me>
+>=20
+> [ Upstream commit 27b918007d96402aba10ed52a6af8015230f1793 ]
+>=20
+> With the device instance lock, there is now a possibility of a deadlock:
 
->     Note: Any Lane that receives eight consecutive TS1 or TS2 Ordered Sets
-> should have detected an exit from Electrical Idle at least once since
-> entering Polling.Active."
-> > 
-> > > But setting it to a value other than 1 will lead to link training fail if
-> > > one or more lanes are broken.
-> > > 
-> > Which means the link partner is not able to downsize the link during LTSSM?
-> Yes, According to the theory metioned above, let's say in a 8 lanes PCIe
-> link, if we set NUM_OF_LANES to 8, then all lanes that detect a Receiver
-> during Detect need to receive eight consecutive training sequences,
-> otherwise the LTSSM can not enter Poll.Configuration and linktraing will
-> fail.
+"now". Does the same problem exist in 5.10?
 
-Correct. This information should be part of the patch description.
+Best regards,
+								Pavel
 
-> > 
-> > > Hence, always set PORT_LOGIC_LINK_WIDTH to 1 no matter how many lanes the
-> > > port actually supports to make linking up more robust. Link can still be
-> > > established with one lane at least if other lanes are broken.
-> > > 
-> > This looks like a specific endpoint/controller issue to me. Where exactly did
-> > you see the issue?
-> Althouh we met this issue on some Modem platforms where PCIe port works in
-> EP mode. But this is not a specific endpoint/controller issue. This register
-> will be set to 1 by default after reset in new QCOM platform. But upstream
-> kernel will still program it to other value here.
+> --- a/net/8021q/vlan_dev.c
+> +++ b/net/8021q/vlan_dev.c
+> @@ -272,17 +272,6 @@ static int vlan_dev_open(struct net_device *dev)
+>  			goto out;
+>  	}
+> =20
+> -	if (dev->flags & IFF_ALLMULTI) {
+> -		err =3D dev_set_allmulti(real_dev, 1);
+> -		if (err < 0)
+> -			goto del_unicast;
+> -	}
+> -	if (dev->flags & IFF_PROMISC) {
+> -		err =3D dev_set_promiscuity(real_dev, 1);
+> -		if (err < 0)
+> -			goto clear_allmulti;
+> -	}
+> -
+>  	ether_addr_copy(vlan->real_dev_addr, real_dev->dev_addr);
+> =20
+>  	if (vlan->flags & VLAN_FLAG_GVRP)
+> @@ -296,12 +285,6 @@ static int vlan_dev_open(struct net_device *dev)
+>  		netif_carrier_on(dev);
+>  	return 0;
+> =20
+> -clear_allmulti:
+> -	if (dev->flags & IFF_ALLMULTI)
+> -		dev_set_allmulti(real_dev, -1);
+> -del_unicast:
+> -	if (!ether_addr_equal(dev->dev_addr, real_dev->dev_addr))
+> -		dev_uc_del(real_dev, dev->dev_addr);
+>  out:
+>  	netif_carrier_off(dev);
+>  	return err;
+> @@ -314,10 +297,6 @@ static int vlan_dev_stop(struct net_device *dev)
+> =20
+>  	dev_mc_unsync(real_dev, dev);
+>  	dev_uc_unsync(real_dev, dev);
+> -	if (dev->flags & IFF_ALLMULTI)
+> -		dev_set_allmulti(real_dev, -1);
+> -	if (dev->flags & IFF_PROMISC)
+> -		dev_set_promiscuity(real_dev, -1);
+> =20
+>  	if (!ether_addr_equal(dev->dev_addr, real_dev->dev_addr))
+>  		dev_uc_del(real_dev, dev->dev_addr);
+> @@ -474,12 +453,10 @@ static void vlan_dev_change_rx_flags(struct net_dev=
+ice *dev, int change)
+>  {
+>  	struct net_device *real_dev =3D vlan_dev_priv(dev)->real_dev;
+> =20
+> -	if (dev->flags & IFF_UP) {
+> -		if (change & IFF_ALLMULTI)
+> -			dev_set_allmulti(real_dev, dev->flags & IFF_ALLMULTI ? 1 : -1);
+> -		if (change & IFF_PROMISC)
+> -			dev_set_promiscuity(real_dev, dev->flags & IFF_PROMISC ? 1 : -1);
+> -	}
+> +	if (change & IFF_ALLMULTI)
+> +		dev_set_allmulti(real_dev, dev->flags & IFF_ALLMULTI ? 1 : -1);
+> +	if (change & IFF_PROMISC)
+> +		dev_set_promiscuity(real_dev, dev->flags & IFF_PROMISC ? 1 : -1);
+>  }
+> =20
+>  static void vlan_dev_set_rx_mode(struct net_device *vlan_dev)
 
-Yeah, now it makes sense to me and I agree that there is no need to set it to
-MLW lanes.
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 
-Please reword the patch description to change 'broken or unused lanes' to
-'faulty lanes', add reference to relevant sections of the PCIe and DWC specs
-and also add above mentioned paragraph.
+--bC8Y275hHWkIX4eN
+Content-Type: application/pgp-signature; name="signature.asc"
 
-- Mani
+-----BEGIN PGP SIGNATURE-----
 
--- 
-மணிவண்ணன் சதாசிவம்
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaAKFZQAKCRAw5/Bqldv6
+8kP0AKDB9qbJiZzzNyzkREcjPbqHR+RpRgCgmExl2z2MS8hgpfFzPz8xpNPeFPM=
+=S3W+
+-----END PGP SIGNATURE-----
+
+--bC8Y275hHWkIX4eN--
