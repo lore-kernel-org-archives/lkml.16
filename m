@@ -1,75 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-66.smtpout.orange.fr [80.12.242.66])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163202C256D;
-	Fri, 18 Apr 2025 06:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1325269CFA;
+	Fri, 18 Apr 2025 06:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744958972; cv=none; b=lnPXREzcGW4u8hlHO+hyiILmINRN8q1CjqV0BORc9pA/GpC25W3oyGeEfxyq6PE/zmxl6LYM4RH60QtfKK40mVr2ehg227Zk+prdM5IRPtrl+fPo/JVmuJCgRhwbsKJgjJGLA+nTDtcW7GdesT/zKl2+djqaoPyKctRDPIS2vCc=
+	t=1744958988; cv=none; b=Wrba6ZEJZ6Ev+HJwJvn0h2+WwnwU67aJSJfoA0FO7JQ9ZfXz9MsG/PI6LX7KfZfsttbg8zQRp8Suinm3wH5tiMWQ3VrBTJHtVHxuWQBNEpPnYZJikz0rx9ntkoM4b63NoFH6IozeizYuccQu0s1gPhbU507ixujry0VzXvHmSSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744958972; c=relaxed/simple;
-	bh=dzm3I2stn/rnoMY31OBCo5UJufKUUvzj9CfHJN76ddI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PM2Pu10zvuHNmEU9ZOlKkr2RNO+2BWyDh3zGx2GbCnEUCS1Sjgp2S5LGZk6eTuvahPpH91b3Klnphh9uW/j6vKskGfmffvyFKztKBLHSOfKM4i0gfnNN6HRPJKcoa0/Du705JcAvWGuPtwFKWT7PqHBkwvjuyZ9pN+xeJcnGWNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hryUJfy8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744958988; c=relaxed/simple;
+	bh=hInIkt61XHg1R+n8dOF5iCEGHj/EdNamGsRQfLOXhDo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KgBveI/vTClEAePlFRqJt5Y33XP4+O4RPDbs25qcmH+0edm008n49lvRfD71I435LDZGYy3AkunPKRO4R/mvkKcWxWEH726jhNn3d+FzbrfE8M9EPrNuV3lHfCJlslqJvoga7q0A+9fwbUbH/I/2CouPxqIPXdOSvgz8CpIM9/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=kVCqLO7J; arc=none smtp.client-ip=80.12.242.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hryUJfy8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E028BC4CEE2;
-	Fri, 18 Apr 2025 06:49:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744958971;
-	bh=dzm3I2stn/rnoMY31OBCo5UJufKUUvzj9CfHJN76ddI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hryUJfy8PA4RFjXgzkxnJwg2vE4zWyLHXnqwDiqEb0GBnbF2npwJkiAV3mMUcJbUu
-	 i0m1ct/DkymX5kO8+evnd0O/oTuSVkJpNlgts/2n7itaNfdrXdl4RSAugBdvtLS/gb
-	 ohUp/b4uOGss3mwN4TPTllyhfIQY6ZiGwffvcGxYxi+rKYsRDYp2olXHELMczizQ/E
-	 +3tJhg+YbmBAoB4aMNl+41kTY/W8IPuEkg6XU9Stn+9mSLT65WWX5Xy4KjvDFijJd5
-	 l0vOAWyvMk0fVhVvD3rXfMgXOJPNr2/4RdBe62llV3Ug5jqLlLSXBX/ebWDfhUZt9x
-	 4VIk5TQ7pBrrw==
-From: Leon Romanovsky <leon@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>
-Cc: Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>
-Subject: [PATCH v8 21/24] nvme-pci: remove struct nvme_descriptor
-Date: Fri, 18 Apr 2025 09:47:51 +0300
-Message-ID: <d7773053d9329a29e823a636c1aa2a3c0030aef3.1744825142.git.leon@kernel.org>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="kVCqLO7J"
+Received: from localhost.localdomain ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id 5fWXuGf243t2y5fWauMqHj; Fri, 18 Apr 2025 08:48:35 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1744958915;
+	bh=mUzUYESnOtbixZ8+Khj60v3lZVxQS/Ceo6x8BU3JvB8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=kVCqLO7Jh5F/y2eNTmtidrrI/CkZmZp13K/rFMd0m0VyIOL68hYqyRZoWRyhwdMOt
+	 WA0xOB5GVBqyGo7Uz+FyN8yHaN7b5svSZ/VbVdiRr6VN1uUFtKwoW8aNiN8txg63Ra
+	 Ufd2qDd/Vy8FzMm6MbRlTvxJ0nJmZpDCgikcpYIRG75cS3boa1uD4l7Hy+RBI5QR3N
+	 jXLfSbtDW4jIWu7j2E3mipGgu95d0rJDPpkTsoD3Yi14Nwux/YIXlUDm1bUTGhi8YO
+	 PndvrzZPbC9A977Crh37M3298rOKHVuQvPHqNT+YepWT6ZelmFKZhr9KRs6xQQN83Y
+	 G5Q7XulKH4lEA==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 18 Apr 2025 08:48:35 +0200
+X-ME-IP: 90.11.132.44
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Dmitry Baryshkov <lumag@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH v2] drm/bridge: lt9611uxc: Fix an error handling path in lt9611uxc_probe()
+Date: Fri, 18 Apr 2025 08:48:16 +0200
+Message-ID: <f167608e392c6b4d7d7f6e45e3c21878feb60cbd.1744958833.git.christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1744825142.git.leon@kernel.org>
-References: <cover.1744825142.git.leon@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,190 +63,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Christoph Hellwig <hch@lst.de>
+If lt9611uxc_audio_init() fails, some resources still need to be released
+before returning the error code.
 
-There is no real point in having a union of two pointer types here, just
-use a void pointer as we mix and match types between the arms of the
-union between the allocation and freeing side already.
+Use the existing error handling path.
 
-Also rename the nr_allocations field to nr_descriptors to better describe
-what it does.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Chaitanya Kulkarni <kch@nvidia.com>
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+Fixes: 0cbbd5b1a012 ("drm: bridge: add support for lontium LT9611UXC bridge")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/nvme/host/pci.c | 57 +++++++++++++++++------------------------
- 1 file changed, 24 insertions(+), 33 deletions(-)
+Compile tested only.
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index b178d52eac1b..638e759b29ad 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -43,7 +43,7 @@
- #define NVME_MAX_KB_SZ	8192
- #define NVME_MAX_SEGS	128
- #define NVME_MAX_META_SEGS 15
--#define NVME_MAX_NR_ALLOCATIONS	5
-+#define NVME_MAX_NR_DESCRIPTORS	5
- 
- static int use_threaded_interrupts;
- module_param(use_threaded_interrupts, int, 0444);
-@@ -219,30 +219,22 @@ struct nvme_queue {
- 	struct completion delete_done;
- };
- 
--union nvme_descriptor {
--	struct nvme_sgl_desc	*sg_list;
--	__le64			*prp_list;
--};
--
- /*
-  * The nvme_iod describes the data in an I/O.
-- *
-- * The sg pointer contains the list of PRP/SGL chunk allocations in addition
-- * to the actual struct scatterlist.
-  */
- struct nvme_iod {
- 	struct nvme_request req;
- 	struct nvme_command cmd;
- 	bool aborted;
--	s8 nr_allocations;	/* PRP list pool allocations. 0 means small
--				   pool in use */
-+	/* # of PRP/SGL descriptors: (0 for small pool) */
-+	s8 nr_descriptors;
- 	unsigned int dma_len;	/* length of single DMA segment mapping */
- 	dma_addr_t first_dma;
- 	dma_addr_t meta_dma;
- 	struct sg_table sgt;
- 	struct sg_table meta_sgt;
--	union nvme_descriptor meta_list;
--	union nvme_descriptor list[NVME_MAX_NR_ALLOCATIONS];
-+	void *meta_list;
-+	void *descriptors[NVME_MAX_NR_DESCRIPTORS];
- };
- 
- static inline unsigned int nvme_dbbuf_size(struct nvme_dev *dev)
-@@ -544,8 +536,8 @@ static void nvme_free_prps(struct nvme_dev *dev, struct request *req)
- 	dma_addr_t dma_addr = iod->first_dma;
- 	int i;
- 
--	for (i = 0; i < iod->nr_allocations; i++) {
--		__le64 *prp_list = iod->list[i].prp_list;
-+	for (i = 0; i < iod->nr_descriptors; i++) {
-+		__le64 *prp_list = iod->descriptors[i];
- 		dma_addr_t next_dma_addr = le64_to_cpu(prp_list[last_prp]);
- 
- 		dma_pool_free(dev->prp_page_pool, prp_list, dma_addr);
-@@ -567,11 +559,11 @@ static void nvme_unmap_data(struct nvme_dev *dev, struct request *req)
- 
- 	dma_unmap_sgtable(dev->dev, &iod->sgt, rq_dma_dir(req), 0);
- 
--	if (iod->nr_allocations == 0)
--		dma_pool_free(dev->prp_small_pool, iod->list[0].sg_list,
-+	if (iod->nr_descriptors == 0)
-+		dma_pool_free(dev->prp_small_pool, iod->descriptors[0],
- 			      iod->first_dma);
--	else if (iod->nr_allocations == 1)
--		dma_pool_free(dev->prp_page_pool, iod->list[0].sg_list,
-+	else if (iod->nr_descriptors == 1)
-+		dma_pool_free(dev->prp_page_pool, iod->descriptors[0],
- 			      iod->first_dma);
- 	else
- 		nvme_free_prps(dev, req);
-@@ -629,18 +621,18 @@ static blk_status_t nvme_pci_setup_prps(struct nvme_dev *dev,
- 	nprps = DIV_ROUND_UP(length, NVME_CTRL_PAGE_SIZE);
- 	if (nprps <= (256 / 8)) {
- 		pool = dev->prp_small_pool;
--		iod->nr_allocations = 0;
-+		iod->nr_descriptors = 0;
- 	} else {
- 		pool = dev->prp_page_pool;
--		iod->nr_allocations = 1;
-+		iod->nr_descriptors = 1;
+Changes in v2:
+  - Add R-b tag
+  - Sync with latest -next
+
+v1: https://lore.kernel.org/all/e09122722190d052cee792a9246c274510f3b928.1710618660.git.christophe.jaillet@wanadoo.fr/
+(this is ~1 year old, but was never applied)
+---
+ drivers/gpu/drm/bridge/lontium-lt9611uxc.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/bridge/lontium-lt9611uxc.c b/drivers/gpu/drm/bridge/lontium-lt9611uxc.c
+index f4c3ff1fdc69..f6e714feeea5 100644
+--- a/drivers/gpu/drm/bridge/lontium-lt9611uxc.c
++++ b/drivers/gpu/drm/bridge/lontium-lt9611uxc.c
+@@ -880,7 +880,11 @@ static int lt9611uxc_probe(struct i2c_client *client)
+ 		}
  	}
  
- 	prp_list = dma_pool_alloc(pool, GFP_ATOMIC, &prp_dma);
- 	if (!prp_list) {
--		iod->nr_allocations = -1;
-+		iod->nr_descriptors = -1;
- 		return BLK_STS_RESOURCE;
- 	}
--	iod->list[0].prp_list = prp_list;
-+	iod->descriptors[0] = prp_list;
- 	iod->first_dma = prp_dma;
- 	i = 0;
- 	for (;;) {
-@@ -649,7 +641,7 @@ static blk_status_t nvme_pci_setup_prps(struct nvme_dev *dev,
- 			prp_list = dma_pool_alloc(pool, GFP_ATOMIC, &prp_dma);
- 			if (!prp_list)
- 				goto free_prps;
--			iod->list[iod->nr_allocations++].prp_list = prp_list;
-+			iod->descriptors[iod->nr_descriptors++] = prp_list;
- 			prp_list[0] = old_prp_list[i - 1];
- 			old_prp_list[i - 1] = cpu_to_le64(prp_dma);
- 			i = 1;
-@@ -719,19 +711,19 @@ static blk_status_t nvme_pci_setup_sgls(struct nvme_dev *dev,
+-	return lt9611uxc_audio_init(dev, lt9611uxc);
++	ret = lt9611uxc_audio_init(dev, lt9611uxc);
++	if (ret)
++		goto err_remove_bridge;
++
++	return 0;
  
- 	if (entries <= (256 / sizeof(struct nvme_sgl_desc))) {
- 		pool = dev->prp_small_pool;
--		iod->nr_allocations = 0;
-+		iod->nr_descriptors = 0;
- 	} else {
- 		pool = dev->prp_page_pool;
--		iod->nr_allocations = 1;
-+		iod->nr_descriptors = 1;
- 	}
- 
- 	sg_list = dma_pool_alloc(pool, GFP_ATOMIC, &sgl_dma);
- 	if (!sg_list) {
--		iod->nr_allocations = -1;
-+		iod->nr_descriptors = -1;
- 		return BLK_STS_RESOURCE;
- 	}
- 
--	iod->list[0].sg_list = sg_list;
-+	iod->descriptors[0] = sg_list;
- 	iod->first_dma = sgl_dma;
- 
- 	nvme_pci_sgl_set_seg(&cmd->dptr.sgl, sgl_dma, entries);
-@@ -870,7 +862,7 @@ static blk_status_t nvme_pci_setup_meta_sgls(struct nvme_dev *dev,
- 		goto out_unmap_sg;
- 
- 	entries = iod->meta_sgt.nents;
--	iod->meta_list.sg_list = sg_list;
-+	iod->meta_list = sg_list;
- 	iod->meta_dma = sgl_dma;
- 
- 	cmnd->flags = NVME_CMD_SGL_METASEG;
-@@ -923,7 +915,7 @@ static blk_status_t nvme_prep_rq(struct nvme_dev *dev, struct request *req)
- 	blk_status_t ret;
- 
- 	iod->aborted = false;
--	iod->nr_allocations = -1;
-+	iod->nr_descriptors = -1;
- 	iod->sgt.nents = 0;
- 	iod->meta_sgt.nents = 0;
- 
-@@ -1048,8 +1040,7 @@ static __always_inline void nvme_unmap_metadata(struct nvme_dev *dev,
- 		return;
- 	}
- 
--	dma_pool_free(dev->prp_small_pool, iod->meta_list.sg_list,
--		      iod->meta_dma);
-+	dma_pool_free(dev->prp_small_pool, iod->meta_list, iod->meta_dma);
- 	dma_unmap_sgtable(dev->dev, &iod->meta_sgt, rq_dma_dir(req), 0);
- 	mempool_free(iod->meta_sgt.sgl, dev->iod_meta_mempool);
- }
-@@ -3801,7 +3792,7 @@ static int __init nvme_init(void)
- 	BUILD_BUG_ON(IRQ_AFFINITY_MAX_SETS < 2);
- 	BUILD_BUG_ON(NVME_MAX_SEGS > SGES_PER_PAGE);
- 	BUILD_BUG_ON(sizeof(struct scatterlist) * NVME_MAX_SEGS > PAGE_SIZE);
--	BUILD_BUG_ON(nvme_pci_npages_prp() > NVME_MAX_NR_ALLOCATIONS);
-+	BUILD_BUG_ON(nvme_pci_npages_prp() > NVME_MAX_NR_DESCRIPTORS);
- 
- 	return pci_register_driver(&nvme_driver);
- }
+ err_remove_bridge:
+ 	free_irq(client->irq, lt9611uxc);
 -- 
 2.49.0
 
