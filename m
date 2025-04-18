@@ -1,200 +1,99 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609D3254AE5
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 20:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7313B22DF9E;
+	Fri, 18 Apr 2025 20:00:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745006415; cv=none; b=h2oZRJKhWSDzI1ohwtrIppnHoURmuLdyui9ozHNXXXcLgmntzlZRFR9gzrFgzD7q7MXePYd7jbZhh4MLqRYq7UOqW1GPC0S8YCV11d7MbUbrBE9xK49yCuKColGMgxTppfFyX3vmOSC31QABgW1xzY/XOz+2S12tGVHPxhnjr20=
+	t=1745006458; cv=none; b=PWAa0jzJtY1qu32q6xWZPHVyigrNcs50kPbA6644OtpTOi7opX9SxNNrR4hMrA4Jvq8/RK/ZYsmkGCRWO0LqV5BTE5p3RhlVrHCGzsxFAzalfMwlM6NtHa3ZaUUmKDdcBYHRpIrjrBLIir78uTj4M+m11ET0/zn0XvkJsEmPShg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745006415; c=relaxed/simple;
-	bh=wLnzr4bOfzqYdCAyeTv4QjUsgHNv49qasvWWQj0nzCg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l6YHlbbZRet3Jl+tI4JJEkmCa1diDbZEQlJh2NCI+uHx2l1IrrU1u/9IrlrtSO97wWIKWXW9NpKW8fkemKKLPbgE5dUWmdbXFRV4xPQDBs4Miomt3RJbEGUkCrE+IkJASQhHfkb2qfS/skp5hMt0GSNan1/Usmo+ytz4D/b6Q7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AevEJF20; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745006458; c=relaxed/simple;
+	bh=3q9TKD2x5VDzKBJu2prJXFQuhkx3tP3jH8Ldntpil1g=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=joapVyyfi9H3qeDS9nPHnZ7ZBCb7KcJy+WVA4enPpPilj6QCHXhtr0Fr3t441yNgANBnkzyim8sT39QLotun9nZEdF3ZDhiU4PJeF+WuM+yFN+q6Arnjfxb3y86CsQEnhgRSxzKak0n6ImemfdbxcCM5GFCf/jy6QQr0BOjMHv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JyFX7Po8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AevEJF20"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745006410;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2Na1iVU527apBOW1sOmwLdGAvVcNB8dCTxjKe4PtoUU=;
-	b=AevEJF208O05qljzylM/N2TRNMcrG0DH9Q0fNNroc3ECn9M7ewD/MHGjwTLpa6ruLstY1g
-	s8K9HPCBGFZp6o+jfehX/o/lZGn9vrXlBEdUabsOm2yCcKRNILmod3n/lRcBS/evu4IWwa
-	EgBimydmDaG9WYOddbgpwjrcn20weo4=
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Tejun Heo <tj@kernel.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	linux-mm@kvack.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: [PATCH] memcg: introduce non-blocking limit setting interfaces
-Date: Fri, 18 Apr 2025 12:59:56 -0700
-Message-ID: <20250418195956.64824-1-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JyFX7Po8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE884C4CEE2;
+	Fri, 18 Apr 2025 20:00:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745006457;
+	bh=3q9TKD2x5VDzKBJu2prJXFQuhkx3tP3jH8Ldntpil1g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=JyFX7Po8qVu5weXZLE7NBquSFcMZtilTX3M24p7jANI9VyBdof2zXOazxu7/JlYV5
+	 rJCJa1f//Q8oE4hiLssGOfID+ZGmnago0/rYrdUZ6yc9awI725c5LL8inN9PZHQfTo
+	 0uiwsaOl4b48etwzw+rwkRSbgFeOmsMNBTDBBWBB1DBCwzhJBg13Y79SXZnNzpKI4g
+	 zJFcnklT3I068Be+mGzHSmIq6BdLz54bzpPj5wSZQmqe3B7S4v6jCAgzhrx0ydJA+L
+	 KmpSpsBoJbc/1310AupQLh0BnpY8Ck9YCHBb3y/HYS/DGnsikrnfaskFw4gZiI3DVU
+	 H7srMQnW55fgg==
+Date: Fri, 18 Apr 2025 15:00:56 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	chaitanya chundru <quic_krichai@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	cros-qcom-dts-watchers@chromium.org,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicnic.com,
+	amitk@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, jorge.ramirez@oss.qualcomm.com,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v5 0/9] PCI: Enable Power and configure the TC9563 PCIe
+ switch
+Message-ID: <20250418200056.GA82278@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412-qps615_v4_1-v5-0-5b6a06132fec@oss.qualcomm.com>
 
-Setting the max and high limits can trigger synchronous reclaim and/or
-oom-kill if the usage is higher than the given limit. This behavior is
-fine for newly created cgroups but it can cause issues for the node
-controller while setting limits for existing cgroups.
+On Sat, Apr 12, 2025 at 07:19:49AM +0530, Krishna Chaitanya Chundru wrote:
+> TC9563 is the PCIe switch which has one upstream and three downstream
+> ports. To one of the downstream ports ethernet MAC is connected as endpoint
+> device. Other two downstream ports are supposed to connect to external
+> device. One Host can connect to TC956x by upstream port.
 
-In our production multi-tenant and overcommitted environment, we are
-seeing priority inversion when the node controller dynamically adjusts
-the limits of running jobs of different priorities. Based on the system
-situation, the node controller may reduce the limits of lower priority
-jobs and increase the limits of higher priority jobs. However we are
-seeing node controller getting stuck for long period of time while
-reclaiming from lower priority jobs while setting their limits and also
-spends a lot of its own CPU.
+I guess this topology is for one specific platform that includes the
+TC9563?  Since it's a PCIe switch, I assume it could also be used in
+other platforms with other topologies?
 
-One of the workaround we are trying is to fork a new process which sets
-the limit of the lower priority job along with setting an alarm to get
-itself killed if it get stuck in the reclaim for lower priority job.
-However we are finding it very unreliable and costly. Either we need a
-good enough time buffer for the alarm to be delivered after setting
-limit and potentialy spend a lot of CPU in the reclaim or be unreliable
-in setting the limit for much shorter but cheaper (less reclaim) alarms.
+> TC9563 switch power is controlled by the GPIO's. After powering on
+> the switch will immediately participate in the link training. if the
+> host is also ready by that time PCIe link will established. 
+> 
+> The TC9563 needs to configured certain parameters like de-emphasis,
+> disable unused port etc before link is established.
+> 
+> As the controller starts link training before the probe of pwrctl driver,
+> the PCIe link may come up as soon as we power on the switch. Due to this
+> configuring the switch itself through i2c will not have any effect as
+> this configuration needs to done before link training. To avoid this
+> introduce two functions in pci_ops to start_link() & stop_link() which
+> will disable the link training if the PCIe link is not up yet.
+> 
+> This series depends on the https://lore.kernel.org/all/20250124101038.3871768-3-krishna.chundru@oss.qualcomm.com/
 
-Let's introduce new limit setting interfaces which does not trigger
-reclaim and/or oom-kill and let the processes in the target cgroup to
-trigger reclaim and/or throttling and/or oom-kill in their next charge
-request. This will make the node controller on multi-tenant
-overcommitted environment much more reliable.
+How so?
+https://lore.kernel.org/all/20250124101038.3871768-3-krishna.chundru@oss.qualcomm.com/
+adds a schema "n-fts" property, but this series doesn't mention
+"n-fts".  This series *does* add this:
 
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
----
- Documentation/admin-guide/cgroup-v2.rst | 16 +++++++++
- mm/memcontrol.c                         | 46 +++++++++++++++++++++++++
- 2 files changed, 62 insertions(+)
+  of_property_read_u8_array(node, "nfts", cfg->nfts, 2);
 
-diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-index 8fb14ffab7d1..7b459c821afa 100644
---- a/Documentation/admin-guide/cgroup-v2.rst
-+++ b/Documentation/admin-guide/cgroup-v2.rst
-@@ -1299,6 +1299,14 @@ PAGE_SIZE multiple when read back.
- 	monitors the limited cgroup to alleviate heavy reclaim
- 	pressure.
- 
-+  memory.high.nonblock
-+        This is the same limit as memory.high but have different
-+        behaviour for the writer of this interface. The program setting
-+        the limit will not trigger reclaim synchronously if the
-+        usage is higher than the limit and let the processes in the
-+        target cgroup to trigger reclaim and/or get throttled on
-+        hitting the high limit.
-+
-   memory.max
- 	A read-write single value file which exists on non-root
- 	cgroups.  The default is "max".
-@@ -1316,6 +1324,14 @@ PAGE_SIZE multiple when read back.
- 	Caller could retry them differently, return into userspace
- 	as -ENOMEM or silently ignore in cases like disk readahead.
- 
-+  memory.max.nonblock
-+        This is the same limit as memory.max but have different
-+        behaviour for the writer of this interface. The program setting
-+        the limit will not trigger reclaim synchronously and/or trigger
-+        the oom-kill if the usage is higher than the limit and let the
-+        processes in the target cgroup to trigger reclaim and/or get
-+        oom-killed on hitting their max limit.
-+
-   memory.reclaim
- 	A write-only nested-keyed file which exists for all cgroups.
- 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 5e2ea8b8a898..6ad1464b621a 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -4279,6 +4279,23 @@ static ssize_t memory_high_write(struct kernfs_open_file *of,
- 	return nbytes;
- }
- 
-+static ssize_t memory_high_nonblock_write(struct kernfs_open_file *of,
-+					  char *buf, size_t nbytes, loff_t off)
-+{
-+	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
-+	unsigned long high;
-+	int err;
-+
-+	buf = strstrip(buf);
-+	err = page_counter_memparse(buf, "max", &high);
-+	if (err)
-+		return err;
-+
-+	page_counter_set_high(&memcg->memory, high);
-+	memcg_wb_domain_size_changed(memcg);
-+	return nbytes;
-+}
-+
- static int memory_max_show(struct seq_file *m, void *v)
- {
- 	return seq_puts_memcg_tunable(m,
-@@ -4333,6 +4350,23 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
- 	return nbytes;
- }
- 
-+static ssize_t memory_max_nonblock_write(struct kernfs_open_file *of,
-+					 char *buf, size_t nbytes, loff_t off)
-+{
-+	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
-+	unsigned long max;
-+	int err;
-+
-+	buf = strstrip(buf);
-+	err = page_counter_memparse(buf, "max", &max);
-+	if (err)
-+		return err;
-+
-+	xchg(&memcg->memory.max, max);
-+	memcg_wb_domain_size_changed(memcg);
-+	return nbytes;
-+}
-+
- /*
-  * Note: don't forget to update the 'samples/cgroup/memcg_event_listener'
-  * if any new events become available.
-@@ -4557,12 +4591,24 @@ static struct cftype memory_files[] = {
- 		.seq_show = memory_high_show,
- 		.write = memory_high_write,
- 	},
-+	{
-+		.name = "high.nonblock",
-+		.flags = CFTYPE_NOT_ON_ROOT,
-+		.seq_show = memory_high_show,
-+		.write = memory_high_nonblock_write,
-+	},
- 	{
- 		.name = "max",
- 		.flags = CFTYPE_NOT_ON_ROOT,
- 		.seq_show = memory_max_show,
- 		.write = memory_max_write,
- 	},
-+	{
-+		.name = "max.nonblock",
-+		.flags = CFTYPE_NOT_ON_ROOT,
-+		.seq_show = memory_max_show,
-+		.write = memory_max_nonblock_write,
-+	},
- 	{
- 		.name = "events",
- 		.flags = CFTYPE_NOT_ON_ROOT,
--- 
-2.47.1
+Is that supposed to be the same thing, or does "nfts" magically match
+"n-fts"?
 
+Bjorn
