@@ -1,91 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7957F25487A;
-	Fri, 18 Apr 2025 07:04:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C66D8C0E;
+	Fri, 18 Apr 2025 07:05:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744959884; cv=none; b=Qercxyl2dND9XEynJ7glzP5KYYNBv71rczlz3Gue8vvJVZNEgxaS1bfUnH0BfFUKBg0v3fyBajafZ5jbAnO2ZgDZG6Y1r7oUK52vAgJ5W44p5J/CjgHeqQSDD94WujRCP6wmDyURFYhYabCH0fYDkJLfSMGpBNw57KsU068ZLRU=
+	t=1744959924; cv=none; b=o7aFkeAaufRPjjFsz2kxY+xgPuZsXDreG7VcHDvDgOejDhkwTW2VCPI+knjKfP53PEQZQHrfofa4XSpc8PRGYgo8x+6Y43EHrfd+O1FPQG/+a0U+mhzZUG2ZxE/QX1lqcmLJmsDvlNk9nGXhU98amVfGdaAzUGqdeD3ec7bXBmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744959884; c=relaxed/simple;
-	bh=+KIilC/KK10PFDQbziKDb23AVy0Bd3WaO5GJCqpwodc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PqkGwK3jmJON2DucK1seF/Nw/NbJA3BlGMCqpE41FKX46uTdmrIH5KZNLQ0rkxKA78ULbl1rYDL3C39NS8xUK3gUddnGcW0gdEZs1hNwzSU0S0TCViYLchEWPd7gwCAao2c1ipxiMVmyxF+dJ5A3Q3nOCl2tR7BIxEaonQA5r+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GD1MaHrQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744959924; c=relaxed/simple;
+	bh=KBWytEzvIXK4gEe9LdE7ZJpPSwTE8tFcqoRCCQHJUKc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AAyTk1QJ8OmbZvk4hO9mEgDxNhT1rEU8hBd+H240EIxdlPJQOHqr0QWfCD+s02IRIJo6huW0vU/33wkBcWmM9dwrrGHrXcLqoIQM7Jk4Qcll08rfYIPkG2XId2+sAw94PyL2c2PgSL95zQ36SX62uiiLY0mCTQwCKARQLA1ixZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KOb7fReI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GD1MaHrQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3221AC4CEE2;
-	Fri, 18 Apr 2025 07:04:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KOb7fReI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E79AC4CEE7;
+	Fri, 18 Apr 2025 07:05:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744959883;
-	bh=+KIilC/KK10PFDQbziKDb23AVy0Bd3WaO5GJCqpwodc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GD1MaHrQf7F4sFX62+d0KZnhJ+YiUfKB9JdvR7t5uihY6MeMLljCCGOKOsWkU1ncW
-	 yGI7Ce+N+9XvByDTP45l69juq3Mt6582wIiKgUGmYhiHR0NKl7eGTbiNTP34iwyIOU
-	 qZujrxatZ1SmU2ORTFHM3rYosNtbpRjjPIWxv5e8AGBP00tKCjxGkD83nyF+hy2wFy
-	 QncPStZS8OOpskiVwJZCC9CWbnNTwGi7wWmoNmodyZS7bVBiK1NP4k571Pyanrr7z0
-	 iF27zPXDTWJS3cViu41U9hSbT7e0JTzYYD8yb+i97ROc+dUTOHaau/ioy7SX7i7Pou
-	 VjroniTZSoUCA==
-Date: Fri, 18 Apr 2025 09:04:38 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>
-Subject: Re: [PATCHv3 perf/core 2/2] selftests/bpf: Add 5-byte nop uprobe
- trigger bench
-Message-ID: <aAH5hvMQ41FUlKPu@gmail.com>
-References: <20250414083647.1234007-1-jolsa@kernel.org>
- <20250414083647.1234007-2-jolsa@kernel.org>
- <CAEf4Bzadf-k7vcDWm40yjpq7P4dYEr5pKTKsgthvWs_GqvoRNA@mail.gmail.com>
+	s=k20201202; t=1744959923;
+	bh=KBWytEzvIXK4gEe9LdE7ZJpPSwTE8tFcqoRCCQHJUKc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KOb7fReIoOl+1kQirFw0QwxSDEGKez1RizxewAr1V63GXoaLrhQB9kni1Z1qT7Rub
+	 ti70+13q6ifHqheVX016ecTg09EtO3MsPy5tD78uI4hVWR0rj8S7MRbJYb7br/fWo3
+	 xrD//xOXW0OEGRDSubGKNZKR27onwKzMptgLrtsQNi6Br+BPv/DwMjczMsVz4cBa9Z
+	 f2p3y01lJPRhFQt3SitjjESDSWiynE2SblDWqy1zKc1qxaIeP/5EnDhW9G9brHOjjQ
+	 kzYDJngxcp4tdOXHwqLBw5dEOp9iaDkWLI5KQPaA1BVnHxMsaUSR7Wo0+BKnL8tI4l
+	 pgmaJb5PGMtog==
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5493b5bc6e8so2186890e87.2;
+        Fri, 18 Apr 2025 00:05:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW2qVtGcEk9P6TEnJ2vixn7XoGalagUPrnfo494TQIroakJDdoLoWb1qlMxazISxZpo4aEBsl5ySHDFQM0Xov7WrS4=@vger.kernel.org, AJvYcCWSCYWOauJ1IO5IqThWdENcVMSvqVpD9z0UgxYioW3SSc5mg/BqroHGh6noea4Xc5cAEBIop9hl+skwGXg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yya6ltM9b58uW0fpRGSZYop4fvfdwhMkN6w7tapqHHbk4Iohf3P
+	ZwuPart8FjkrIs6vmvrAUgmIeLQNBJvohB1N4ikgfjdbERC8Wp/n7Zj7uVwVwDvIMRGJfRWVKT0
+	+t6C1vYKQQI5hvPt5OkSmxj8SnP0=
+X-Google-Smtp-Source: AGHT+IF1vvWYSlieY57kroMtUhKs+syOnJM4QZdLDfSdU7K4Gqax0E2ezt34ZfxGcBDMosbhCdaM2T73K8LeYC9BbXo=
+X-Received: by 2002:a05:6512:b28:b0:549:792a:a382 with SMTP id
+ 2adb3069b0e04-54d6e635987mr478097e87.32.1744959922030; Fri, 18 Apr 2025
+ 00:05:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4Bzadf-k7vcDWm40yjpq7P4dYEr5pKTKsgthvWs_GqvoRNA@mail.gmail.com>
+References: <20250307164801.885261-2-ardb+git@google.com> <174138907883.14745.965399833848496586.tip-bot2@tip-bot2>
+ <364ad671-5e5c-47c1-af22-34a7c481f8e3@intel.com> <2fddc2e9-8c97-48de-bcc3-29645d58f0f1@intel.com>
+ <Z_oo3eBywzj6s8Eg@gmail.com>
+In-Reply-To: <Z_oo3eBywzj6s8Eg@gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 18 Apr 2025 09:05:10 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGzSK0YxdiGsK9b4ph8dqt08fXFQkWYBg9VFerSwowZUg@mail.gmail.com>
+X-Gm-Features: ATxdqUG0Cm9QjGkUxRV_oVu3d7YwLUoAlr8-PwK7dw88P7VsxPlkdUhIQz59-Tw
+Message-ID: <CAMj1kXGzSK0YxdiGsK9b4ph8dqt08fXFQkWYBg9VFerSwowZUg@mail.gmail.com>
+Subject: Re: [tip: x86/build] x86/boot: Drop CRC-32 checksum and the build
+ tool that generates it
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-tip-commits@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Ian Campbell <ijc@hellion.org.uk>, Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-
-* Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-
-> On Mon, Apr 14, 2025 at 1:37 AM Jiri Olsa <jolsa@kernel.org> wrote:
+On Sat, 12 Apr 2025 at 10:48, Ingo Molnar <mingo@kernel.org> wrote:
+>
+>
+> * Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> > On 4/11/25 12:33, Dave Hansen wrote:
+> > ...
+> > > The only weird thing I'm doing is booting the kernel with qemu's -kernel
+> > > argument.
 > >
-> > Add 5-byte nop uprobe trigger bench (x86_64 specific) to measure
-> > uprobes/uretprobes on top of nop5 instruction.
+> > I lied. I'm doing other weird things. I have a local script named
+> > "truncate" that's not the same thing as /usr/bin/truncate. Guess what
+> > this patch started doing:
 > >
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  tools/testing/selftests/bpf/bench.c           | 12 ++++++
-> >  .../selftests/bpf/benchs/bench_trigger.c      | 42 +++++++++++++++++++
-> >  .../selftests/bpf/benchs/run_bench_uprobes.sh |  2 +-
-> >  3 files changed, 55 insertions(+), 1 deletion(-)
+> > >  quiet_cmd_image = BUILD   $@
+> > > -silent_redirect_image = >/dev/null
+> > > -cmd_image = $(obj)/tools/build $(obj)/setup.bin $(obj)/vmlinux.bin \
+> > > -                          $(obj)/zoffset.h $@ $($(quiet)redirect_image)
+> > > +      cmd_image = cp $< $@; truncate -s %4K $@; cat $(obj)/vmlinux.bin >>$@
 > >
-> 
-> LGTM. Should we land this benchmark patch through the bpf-next tree?
-> It won't break anything, just will be slower until patch #1 gets into
-> bpf-next as well, which is fine.
-> 
-> Ingo or Peter, any objections to me routing this patch separately
-> through bpf-next?
-> 
-> But either way:
-> 
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> >                                ^ right there
+>
+> Oh that sucks ...
+>
+> > I'm an idiot. That was a poorly named script and it cost me a kernel
+> > bisect and poking at the patch for an hour. <sigh>
+> >
+> > Sorry for the noise.
+>
+> I feel your pain, I too once overlaid a well-known utility with my own
+> script in ~/bin/. After that incident I started adding the .sh postfix
+> to my own scripts, that way there's a much lower chance of namespace
+> collisions.
+>
 
-I've applied this to the perf tree with a few readability edits to the 
-changelogs and the new tags added in.
+There was another report about this, but in that case, the problem was
+that busybox's truncate clone does not understand the % notation (even
+though the very first original truncate version that I found from 2008
+already supported that)
 
-Thanks,
+In any case, we might change this to
 
-	Ingo
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -59,7 +59,7 @@
+ $(obj)/bzImage: asflags-y  := $(SVGA_MODE)
+
+ quiet_cmd_image = BUILD   $@
+-      cmd_image = cp $< $@; truncate -s %4K $@; cat $(obj)/vmlinux.bin >>$@
++      cmd_image = (dd if=$< bs=4096 conv=sync status=none; cat
+$(obj)/vmlinux.bin) >$@
+
+ $(obj)/bzImage: $(obj)/setup.bin $(obj)/vmlinux.bin FORCE
+        $(call if_changed,image)
+
+which is slightly cleaner - I'll send out a patch once I receive
+confirmation that busybox dd implements conv=sync (which takes care of
+the padding) correctly.
