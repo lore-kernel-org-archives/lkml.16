@@ -1,94 +1,104 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B2D1C84A0
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 02:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C49267B12;
+	Fri, 18 Apr 2025 02:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744943790; cv=none; b=VRbl6UBdGVc3UcGVT6jrL6la/gbTCpPtvJtvBoqT0ipzqdGCJF9wVZXj378AW96QE8qU3+rQS7CLBVDTQkRrLwbV9EZ2J0XpylSblqj26vVsClL9lWCPnQoi0GuShl0QadyTAFKug9xKo4WHIWmK7JLGf45OgHlspZtsDPH38zo=
+	t=1744943905; cv=none; b=V9NkP6HhFry1Myh/kHb5HwtF9pQdz868cB834bZRmk0+bc2Mi/Cu/vIdNcz0hmD3CLeAOQgu5/gdA7M9Hj2j8gm0Rt7LsvOUFwVMpmFZt4uMLLAkyupJMB40A2nshF/cg5WRaxJQmZ1alX8o67cIKv0zsoeF7C+j+izeY+X7ySY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744943790; c=relaxed/simple;
-	bh=FTl7Q5XRnGG/z7yA2jnIcdaCMVMzFKXY7SOCzfxworo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X//YFC/LKIOaXF/CpnJPGtBJvEXViLTbTXB4rmpms8rlFJfV0PeH9ViL2R7Hhg2CkNY7x+TQ+HgAwrchnRS0WcDaiTcVeg9+kyF8QGee1IIsuoFyPwM4DNKpuUoDNAClx4IjN+5bzN4LxoSNllaGIoyVEg7q7FfhQM/t/ZOrwJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aaTqAWJ4; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744943905; c=relaxed/simple;
+	bh=w5RzLksqRnl5QxaAsPgtygvTlr1+V8VM+ufHZCm77QA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Z7x7W6T4Q/GvldnbKOzZoiMTq8jyNs6ek1mO4hT+o1EZ5bD77uN+PXKsoGXtxZjzS2qQgd83i7N/CR5UYx+sCIgC0nJlsBgYpUVdu74NyvvjKsyQxTZ66ob/MEV0MHzpHoaB1+LhIQGeIjjl4tUAKKB65dxy+2BNVim9FdyeBtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OqJeIsTl; arc=none smtp.client-ip=209.85.215.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aaTqAWJ4"
-Message-ID: <cf8e2dba-83dd-4ad3-b98d-2e463ea569d9@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744943775;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pbE8PCxj37IlfzeB23r98u0SEU9TacNSUq2UwVU1+Ag=;
-	b=aaTqAWJ4vWMSW3JKJLdxB+V6toZe5COJtDrFrTe3YygJoTCx+cj8cFUMAZxFSQa0VdkWaG
-	mOGyXLvF1+F/KnTGW10tDstqV04gRCIoK76cl2pcDZmw6SOQkrAKqbchj65/FIr6YdDkMN
-	gZl4IdXmdFc2lbgbELuxvI/JHf414V0=
-Date: Fri, 18 Apr 2025 10:36:03 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OqJeIsTl"
+Received: by mail-pg1-f193.google.com with SMTP id 41be03b00d2f7-7fd581c2bf4so1254994a12.3;
+        Thu, 17 Apr 2025 19:38:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744943903; x=1745548703; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gc9ETUlXAwHL9WYHin7FZ0e7X2RQp7jZ6Z40mw+LncY=;
+        b=OqJeIsTlrAoRG+vOueS0DESJ7JUPRnkuAiXpyGI2j52gPuHBQIW04z7RBDoMx2IAWv
+         Hm9X3eia5Wq7wWJxOgy/xNd4KPdOAgXNG/QB7TIaCf/dkPucqq1ERNc1M4+mb+1xkeyY
+         2gTfUaUd76Ruqj9a/zMxgl239iRKEd9uAqW70A9Z0WPYwhWeyVdQLS6MJ+dDS+WZCUjV
+         8WaHqvHC8cFz0vpGLMHAoxhqeZSLXlQ4HPVI7UQIDv7/A7PFyRwQOwGAIEilmU+ZFgP7
+         9JUwl3CdeyUaxb54El0eHJda7SXxlX1K2eCGN6mZg94GjA9k7pEU3EzvNfTI62Tm1OEd
+         jM0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744943903; x=1745548703;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gc9ETUlXAwHL9WYHin7FZ0e7X2RQp7jZ6Z40mw+LncY=;
+        b=evmQdJG2CYRjMeYUeHUnCFCvRNpribwdHMjSPK41fbfJIzZ3JhQ0CZl3tzr6jAQ+Hf
+         Uv1N+bRUIl27uPulpIPTWASQC9F6qZUVyw3AOsZ9uFxZVIcKZW0PrT4M3rGYcUxzdm4y
+         hHfgosxo4fLhtx2+uwgkZkm0btfDGAgawAc6GXLFZyVAhfRPpyzH4yCNeUznlDW06DwN
+         gxsvBDnuO/5xKglcaXL9dz5P6IpsmaVN8OS/7H2kY0QhOasnVRuDzY5KVsowkytZGmrc
+         6QOicNC6IHF6ZaW+TEuHNSiXrvdXAUQowRHskxj77aU4bLUwi95lByWc/g0nLc7WhXlh
+         7MOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW7jwBMvHkElsrHOAPPLTtxe/sLqJMI4zDICH4p6lUMQBkXQzuQD0R0h26+gG6yP3ifGF8dCyx67Ca0k/A=@vger.kernel.org, AJvYcCXkCIII8Kll1oqbEA33tLdPJWEQPexWDj5RAJ7MAp8I6/5OtcBxt4mD85LEaVcPE8ZeqULYb+s03iiwWw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYueHeaZmvh5M1+jHRuo8U5JpQxbhntODUywCW6G6EVkbrI1Jy
+	5WKgUZoeTx8nkNxKtuasczXI6xgBq6SbihQiD2bMrLKSBpQqiyEx
+X-Gm-Gg: ASbGncuIT8AR3NXfQMg/sLX6uChabos9/zf1lMDvsBUVFhS9crt0bD9hUNxHrjDWSy7
+	84DS+7fh5jb4xqynfiEVZf++8Seg78usDYZ96OauapmAcYztvkIHaDSmLIy6WtAEGcqXDjXcZnB
+	Fm9hv8Ck2lVRg/b0KozpbAq3EwyHXOFP9ZfZCqPz7sG8+2a5b0XR9vtabfdpc2DdrkQMXb2iKkh
+	tBvvawTtRAPfOX3OXBUtrqQBV0AKh3iNTrLBDRkAhNNHRD/3jaCCEQFuPAa+rgmB3OVzQGUhgMq
+	GwfmZ7bNicm5V6sWsrjTmz6i8mY1kTAzHPrnrXWf4PIh3yAK/wzBJKOlytVo6G1cp9c+TF5bjO6
+	Z
+X-Google-Smtp-Source: AGHT+IGT2w3OgzSs5lpY0rNfwlOnWnwBmWNqnXJ+x8uQcXegX5dnLjsLQRV8pyAjoCRF8fdFNAnadA==
+X-Received: by 2002:a17:90b:3849:b0:308:637c:74f2 with SMTP id 98e67ed59e1d1-3087bb63144mr1860538a91.17.1744943903434;
+        Thu, 17 Apr 2025 19:38:23 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.49])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087df0be00sm189919a91.14.2025.04.17.19.38.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 19:38:22 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: saeedm@nvidia.com,
+	leon@kernel.org,
+	tariqt@nvidia.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	bsdhenrymartin@gmail.com,
+	mbloch@nvidia.com,
+	amirtz@nvidia.com
+Cc: netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v7 0/2] net/mlx5: Fix NULL dereference and memory leak in ttc_table creation
+Date: Fri, 18 Apr 2025 10:38:12 +0800
+Message-Id: <20250418023814.71789-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH RFC 21/28] mm: zswap: prevent lruvec release in
- zswap_folio_swapin()
-To: Muchun Song <songmuchun@bytedance.com>, hannes@cmpxchg.org,
- mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
- muchun.song@linux.dev, akpm@linux-foundation.org, david@fromorbit.com,
- zhengqi.arch@bytedance.com, yosry.ahmed@linux.dev, nphamcs@gmail.com
-Cc: linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
- linux-mm@kvack.org, hamzamahfooz@linux.microsoft.com,
- apais@linux.microsoft.com
-References: <20250415024532.26632-1-songmuchun@bytedance.com>
- <20250415024532.26632-22-songmuchun@bytedance.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <20250415024532.26632-22-songmuchun@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On 2025/4/15 10:45, Muchun Song wrote:
-> In the near future, a folio will no longer pin its corresponding
-> memory cgroup. So an lruvec returned by folio_lruvec() could be
-> released without the rcu read lock or a reference to its memory
-> cgroup.
-> 
-> In the current patch, the rcu read lock is employed to safeguard
-> against the release of the lruvec in zswap_folio_swapin().
-> 
-> This serves as a preparatory measure for the reparenting of the
-> LRU pages.
-> 
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+This patch series addresses two issues in the
+mlx5_create_inner_ttc_table() and mlx5_create_ttc_table() functions:
 
-It should be rare to race with folio reparenting process, so
-it seems ok not to "reparent" this counter "nr_disk_swapins".
+1. A potential NULL pointer dereference if mlx5_get_flow_namespace()
+returns NULL.
 
-Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
+2. A memory leak in the error path when ttc_type is invalid (default:
+switch case).
 
-Thanks.
+Henry Martin (2):
+  net/mlx5: Fix null-ptr-deref in mlx5_create_{inner_,}ttc_table()
+  net/mlx5: Move ttc allocation after switch case to prevent leaks
 
-> ---
->   mm/zswap.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index 204fb59da33c..4a41c2371f3d 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -752,8 +752,10 @@ void zswap_folio_swapin(struct folio *folio)
->   	struct lruvec *lruvec;
->   
->   	if (folio) {
-> +		rcu_read_lock();
->   		lruvec = folio_lruvec(folio);
->   		atomic_long_inc(&lruvec->zswap_lruvec_state.nr_disk_swapins);
-> +		rcu_read_unlock();
->   	}
->   }
->   
+ .../ethernet/mellanox/mlx5/core/lib/fs_ttc.c  | 26 +++++++++++++------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
+
+-- 
+2.34.1
+
