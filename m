@@ -1,374 +1,104 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46873268FE4
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 07:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DDA4268FF2
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 07:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744959657; cv=none; b=h2gPcKBdHV0vAtlRkYXnyLkYeSYM1Aj1rWjbNGcrFmpQr+/gWPLziGWQy6L+IzHl0eki/sGRGb+/CBE0dpsj8qT1L1t/pqJacSRu1NmFZxeEIIAXFV+ThpbpNAAbUwEqg96nXcohD449N0KQfSrWALrrdlcb4M+N8UR6oUVyrqY=
+	t=1744959714; cv=none; b=tEngmyOA7O3AWdY+iVQ4R2yLOHauV6wakkGlkFgMCUFNz41SWGgm3SsMi45as6nOcKsixmp85bcsEYuh2lsM53ilWLZaaM1yQf8R9imiDLjz0VwUHN1pKojPE4fuNrB713svXiLtytUjSroVANAu0HnpqEK8ZSXxQwdJK5BeXIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744959657; c=relaxed/simple;
-	bh=ybBxi4WQcURKoE4BxCGqK8VSt1MHM5Lsow1LinLQwcs=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=WXfLgAtx75SDvXWnuBelSJPmeZZm4tNtqTncblK8zlCAt2fpp9IekXOJmKs+CdjPWMKTbmi856XUYJDFXBFCIrKq1u9GOV/Ixadf+MoowNDYlEVbry4viecKkBMXBNpaGZB3Z9eb0v3/zl3FqoHmfRZmCBS91W6mCrG5MPf95PI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=orbstack.dev; spf=pass smtp.mailfrom=orbstack.dev; dkim=pass (2048-bit key) header.d=orbstack.dev header.i=@orbstack.dev header.b=bLIfLUnQ; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=orbstack.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orbstack.dev
+	s=arc-20240116; t=1744959714; c=relaxed/simple;
+	bh=SbxhvwW/dI2cwkKwqXns6VqYn5IUb1s1Pg95tBOSVRs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LpEm/reHjBVlMAcZzWAkyo20esUwhSGgrSZmt5+lKkMtA0amoSfvg8HfkUK26OOOTAONfaI0w/ce4LrIf9J8aIWH1ij6uO0SaQMO2ogrw3bCgfMtvE6Q5kVh9y3Kni4BXF1dMUWs3rIlT2Qs1VS6VjVfh9/FmWKjo0dTYKb8Tp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=faTowbcC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=orbstack.dev header.i=@orbstack.dev header.b="bLIfLUnQ"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b0da25f5216so864912a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 00:00:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=orbstack.dev; s=google; t=1744959654; x=1745564454; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ag0uHziDOMxcedxURrdSLZ+7TR1r0QSkH/f14RF03UI=;
-        b=bLIfLUnQGqOrz2mgc1onPobAt2MPv8mPRxxVFkKI6iseXFBttbQgASC24y+fSXC3Ok
-         ykVnyBxyLNWUu5YblHtM615ye/HvwPQ7bCGrnr4VLd6BA3ja0oOSGKxHLCKUvpXb9HtF
-         olFU4+JFFVYuxDQFmUKovjX95uacaQxZq1IEqLIrlsBPHXJZuLHazVMAnvKkY4xe4K+4
-         Y7LjDkFTiZM6kbtudzH5HnaLfe2ApVhPq/ZwS2xH5Ws0sUqocnzQmcs1H4Dukv0doBDA
-         g8iuTZyB/Y+65dMC1ZWc7REi6LN6/g2eCiS7cDqNAq7WknnSI9r56q+gOj385QkxVLr6
-         c4zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744959654; x=1745564454;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ag0uHziDOMxcedxURrdSLZ+7TR1r0QSkH/f14RF03UI=;
-        b=MHC9WZQPBh6H6wJpwbZDO0jLm3P/nA2R5UAMgUreAaG3B7AhYq71vwmIoctdQ5Cq6g
-         qETRNUhlriyq4EEawy/TKtiZpfQrzzJDM49mFBOqawjg47BgYzsAPIhwdW8P7O0Mj0cc
-         H1AU/j3n+RaJHKCVYeb/jcOiCO+z3XQhq70GrF7+tOPRpLNlzOkFXoHpUcWbDt4cyl0I
-         YZdXPNA35dnw4s/KVne3R/ZsZ+Bfpkh5aBRn0C8aDkzJ0Ukf9tkkA0G7L1e50+IK9vNZ
-         DibbtDdcxExe6RUcCFgkeNny1Sj6MP8Q0Bxc/jZtEeEuy2ObkVM3FYnBztHXBeyltHoT
-         m9/w==
-X-Forwarded-Encrypted: i=1; AJvYcCViAMl9sVf6Lj9jWCtjZd0BSaVflO8dEQsZ01uW7Qst9ijlixyM4QhBbdDew0hg8OGLzH5K4B53eKfe698=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOhW1i5KnXByRzZd+f4h7eRzzuRb4rOCvJ31oQJ4HAdut7jiFN
-	fNOtuIQ6vpJ1lC9IvOh39latLfGq/fmwhrbYf4VKTW6r5EPvRESVL2u5zKI/ofg=
-X-Gm-Gg: ASbGncvxtU02mw+mdlOCSrXxx5fDtcOladw5WbeK6+MCoWkwUlVVtYbhW21vogU7rqU
-	FcTDzgBzeL5lgzuYCOvdb2dVW0F05u81zR6m6nrcwslE6DfG/Xj+lhSnaPgWczJigJkH7fSUMCA
-	Khjh4os7nYurq+7BpgmT0XuzxScnysexI3K4WHBREK97kdl3bs7aGBfUTm7nruXE4+w72cesWUQ
-	QwFz3++X1atLeemDCB++6F6vJERqLd1koaIbJft33sfUCL4Yrnco0sunizNxw7swGuZjmAnGjHj
-	C7+IrqOfTtJ0xND6D1LuaN4dhn1e/fLe7cr04FewNW2RR/KJzSpL0P0=
-X-Google-Smtp-Source: AGHT+IHBYom+6rviMqXCW+6sdPcKwAXnTI933w/mVjbBQ303YyLG/DJJKVWOikqiNoclvemSFsRdng==
-X-Received: by 2002:a17:90a:c887:b0:2fa:15ab:4df5 with SMTP id 98e67ed59e1d1-3087bccb042mr2391934a91.34.1744959654237;
-        Fri, 18 Apr 2025 00:00:54 -0700 (PDT)
-Received: from debian.. ([136.24.187.18])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bde283sm11080245ad.6.2025.04.18.00.00.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 00:00:53 -0700 (PDT)
-From: Danny Lin <danny@orbstack.dev>
-To: Matteo Croce <teknoraver@meta.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	David Ahern <dsahern@kernel.org>,
-	Danny Lin <danny@orbstack.dev>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4] net: fully namespace net.core.{r,w}mem_{default,max} sysctls
-Date: Fri, 18 Apr 2025 00:00:34 -0700
-Message-ID: <20250418070037.33971-1-danny@orbstack.dev>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="faTowbcC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03E74C4CEE2
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 07:01:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744959714;
+	bh=SbxhvwW/dI2cwkKwqXns6VqYn5IUb1s1Pg95tBOSVRs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=faTowbcCXfekvtxTs5wDEv+FPToczT88KM1QepQ3DlFozwDJiz69/AT8bQircR1Am
+	 P4TBruU9R32eJPYNSKRPiIq+DlvvsslSaGNzBwEc6yY2Vzg/FxGuHZrkEgJBvUQ/q7
+	 LEapjdmD6u+I33rdbiE6KkWCePu3qLP0IxDxSHEm0Ag8AI/sYhafrzUwKcBq6CAqUM
+	 RF0Bw2mYHFLU7OoEa7fVPOkD7inCjOYl8Ghhq3ctPHslYmHmJJoGJrGvr2SIH4M2lO
+	 mvYdcF3z6k+YCH7reyHG2n2NaEVbM3sJSMxWrSV8g/brPfNTPW2i0PhJOOOns9MPs5
+	 FcYuDU8c9yalA==
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30dd5a93b49so15344831fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 00:01:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXGaITFqTJdJV6D37qs4zwR5jyaWY89r5LJaOkTjBQ5dopn4Ipet/GtXp8Rq4QaolJQWz33Oha4vah3zuA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzN8hm4HxBKkeH3nDD0tmmZS6JIkMh0i9NA1edaLdN7EaMMOZYp
+	oX0wuued7wa/OiH4WXWY0X28HBwK24GEWINiPORzunMg/zde9NmlOksoKYavozzonR2LDkuy5y7
+	k8z1BQhVvLqVUg2AdDdMdTL21Bh4=
+X-Google-Smtp-Source: AGHT+IGQK4ZLrqBwmxUgeBqAOhDO8nVJNTTnpza7A5c9ARC3B7hZoNQyqaunqOT+wxFz9n2VblnRB0s5lfrbFJxX5Vk=
+X-Received: by 2002:a05:651c:510:b0:30b:c96a:74c with SMTP id
+ 38308e7fff4ca-310904b8523mr5819201fa.1.1744959712354; Fri, 18 Apr 2025
+ 00:01:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250416035604.2717188-1-anshuman.khandual@arm.com>
+In-Reply-To: <20250416035604.2717188-1-anshuman.khandual@arm.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 18 Apr 2025 09:01:40 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGbJ4q1rchCbDp35rdWRyzuG-nZnQ2KgE46FtkPUg-+SQ@mail.gmail.com>
+X-Gm-Features: ATxdqUFTI04jZnPSrI5f53pfqrNAWo1abGiP_x_hkRRGXb35DQgpl2R0nSQWmIE
+Message-ID: <CAMj1kXGbJ4q1rchCbDp35rdWRyzuG-nZnQ2KgE46FtkPUg-+SQ@mail.gmail.com>
+Subject: Re: [PATCH V2] arm64/mm: Re-organise setting up FEAT_S1PIE registers
+ PIRE0_EL1 and PIR_EL1
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Ryan Roberts <ryan.roberts@arm.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-This builds on commit 19249c0724f2 ("net: make net.core.{r,w}mem_{default,max} namespaced")
-by adding support for writing the sysctls from within net namespaces,
-rather than only reading the values that were set in init_net. These are
-relatively commonly-used sysctls, so programs may try to set them without
-knowing that they're in a container. It can be surprising for such attempts
-to fail with EACCES.
+On Wed, 16 Apr 2025 at 05:56, Anshuman Khandual
+<anshuman.khandual@arm.com> wrote:
+>
+> mov_q cannot really move PIE_E[0|1] macros into a general purpose register
+> as expected if those macro constants contain some 128 bit layout elements,
+> that are required for D128 page tables. The primary issue is that for D128,
+> PIE_E[0|1] are defined in terms of 128-bit types with shifting and masking,
+> which the assembler can't accommodate.
+>
+> Instead pre-calculate these PIRE0_EL1/PIR_EL1 constants into asm-offsets.h
+> based PIE_E0_ASM/PIE_E1_ASM which can then be used in arch/arm64/mm/proc.S.
+>
+> While here also move PTE_MAYBE_NG/PTE_MAYBE_SHARED assembly overrides into
+> arch/arm64/kernel/asm-offsets.c to ensure PIRE0_EL1/PIR_EL1 are calculated
+> in assembly without arm64_use_ng_mappings and lpa2_is_enabled() symbols
+> being accessible. Also move the corresponding comment as well.
+>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Ryan Roberts <ryan.roberts@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> This patch applies on v6.15-rc2
+>
+> Changes in V2:
+>
+> - Added asm-offsets.c based PIE_E0_ASM and PIE_E1_ASM symbols as per Ard
+> - Moved PTE_MAYBE_NG and PTE_MAYBE_SHARED overrides inside asm-offsets.c
+>   along with the corresponding comment as per Ard
+>
+> Changes in V1:
+>
+> https://lore.kernel.org/linux-arm-kernel/20250410074024.1545768-1-anshuman.khandual@arm.com/
+>
+>  arch/arm64/kernel/asm-offsets.c | 16 ++++++++++++++++
+>  arch/arm64/mm/proc.S            | 19 ++-----------------
+>  2 files changed, 18 insertions(+), 17 deletions(-)
+>
 
-Unlike other net sysctls that were converted to namespaced ones, many
-systems have a sysctl.conf (or other configs) that globally write to
-net.core.rmem_default on boot and expect the value to propagate to
-containers, and programs running in containers may depend on the increased
-buffer sizes in order to work properly. This means that namespacing the
-sysctls and using the kernel default values in each new netns would break
-existing workloads.
-
-As a compromise, inherit the initial net.core.*mem_* values from the
-current process' netns when creating a new netns. This is not standard
-behavior for most netns sysctls, but it avoids breaking existing workloads.
-
-Signed-off-by: Danny Lin <danny@orbstack.dev>
----
- include/net/netns/core.h                    |  5 +++++
- include/net/sock.h                          |  6 ------
- net/core/net_namespace.c                    | 21 ++++++++++++++++++
- net/core/sock.c                             | 16 ++++----------
- net/core/sysctl_net_core.c                  | 16 ++++----------
- net/ipv4/ip_output.c                        |  2 +-
- net/ipv4/tcp_output.c                       |  2 +-
- net/netfilter/ipvs/ip_vs_sync.c             |  4 ++--
- tools/testing/selftests/net/netns-sysctl.sh | 24 +++++++++++++++------
- 9 files changed, 55 insertions(+), 41 deletions(-)
-
-diff --git a/include/net/netns/core.h b/include/net/netns/core.h
-index 9b36f0ff0c20..0459523602cb 100644
---- a/include/net/netns/core.h
-+++ b/include/net/netns/core.h
-@@ -17,6 +17,11 @@ struct netns_core {
- 	u8	sysctl_txrehash;
- 	u8	sysctl_tstamp_allow_data;
- 
-+	u32 sysctl_wmem_max;
-+	u32 sysctl_rmem_max;
-+	u32 sysctl_wmem_default;
-+	u32 sysctl_rmem_default;
-+
- #ifdef CONFIG_PROC_FS
- 	struct prot_inuse __percpu *prot_inuse;
- #endif
-diff --git a/include/net/sock.h b/include/net/sock.h
-index 8daf1b3b12c6..7aeddba44919 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -2849,12 +2849,6 @@ void sk_get_meminfo(const struct sock *sk, u32 *meminfo);
- #define SK_WMEM_MAX		(_SK_MEM_OVERHEAD * _SK_MEM_PACKETS)
- #define SK_RMEM_MAX		(_SK_MEM_OVERHEAD * _SK_MEM_PACKETS)
- 
--extern __u32 sysctl_wmem_max;
--extern __u32 sysctl_rmem_max;
--
--extern __u32 sysctl_wmem_default;
--extern __u32 sysctl_rmem_default;
--
- #define SKB_FRAG_PAGE_ORDER	get_order(32768)
- DECLARE_STATIC_KEY_FALSE(net_high_order_alloc_disable_key);
- 
-diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-index b0dfdf791ece..39fe16f1ab72 100644
---- a/net/core/net_namespace.c
-+++ b/net/core/net_namespace.c
-@@ -317,6 +317,27 @@ static __net_init void preinit_net_sysctl(struct net *net)
- 	net->core.sysctl_optmem_max = 128 * 1024;
- 	net->core.sysctl_txrehash = SOCK_TXREHASH_ENABLED;
- 	net->core.sysctl_tstamp_allow_data = 1;
-+
-+	/*
-+	 * net.core.{r,w}mem_{default,max} used to be non-namespaced.
-+	 * For backward compatibility, inherit values from the current netns
-+	 * when creating a new one, so that setting them in init_net
-+	 * affects new namespaces like it used to. This avoids causing
-+	 * surprising performance regressions for namespaced applications
-+	 * relying on tuned rmem/wmem.
-+	 */
-+	if (net == &init_net) {
-+		net->core.sysctl_wmem_max = SK_WMEM_MAX;
-+		net->core.sysctl_rmem_max = SK_RMEM_MAX;
-+		net->core.sysctl_wmem_default = SK_WMEM_MAX;
-+		net->core.sysctl_rmem_default = SK_RMEM_MAX;
-+	} else {
-+		struct net *current_net = current->nsproxy->net_ns;
-+		net->core.sysctl_wmem_max = current_net->core.sysctl_wmem_max;
-+		net->core.sysctl_rmem_max = current_net->core.sysctl_rmem_max;
-+		net->core.sysctl_wmem_default = current_net->core.sysctl_wmem_default;
-+		net->core.sysctl_rmem_default = current_net->core.sysctl_rmem_default;
-+	}
- }
- 
- /* init code that must occur even if setup_net() is not called. */
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 323892066def..88694cd59abd 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -278,14 +278,6 @@ static struct lock_class_key af_wlock_keys[AF_MAX];
- static struct lock_class_key af_elock_keys[AF_MAX];
- static struct lock_class_key af_kern_callback_keys[AF_MAX];
- 
--/* Run time adjustable parameters. */
--__u32 sysctl_wmem_max __read_mostly = SK_WMEM_MAX;
--EXPORT_SYMBOL(sysctl_wmem_max);
--__u32 sysctl_rmem_max __read_mostly = SK_RMEM_MAX;
--EXPORT_SYMBOL(sysctl_rmem_max);
--__u32 sysctl_wmem_default __read_mostly = SK_WMEM_MAX;
--__u32 sysctl_rmem_default __read_mostly = SK_RMEM_MAX;
--
- DEFINE_STATIC_KEY_FALSE(memalloc_socks_key);
- EXPORT_SYMBOL_GPL(memalloc_socks_key);
- 
-@@ -1333,7 +1325,7 @@ int sk_setsockopt(struct sock *sk, int level, int optname,
- 		 * play 'guess the biggest size' games. RCVBUF/SNDBUF
- 		 * are treated in BSD as hints
- 		 */
--		val = min_t(u32, val, READ_ONCE(sysctl_wmem_max));
-+		val = min_t(u32, val, READ_ONCE(sock_net(sk)->core.sysctl_wmem_max));
- set_sndbuf:
- 		/* Ensure val * 2 fits into an int, to prevent max_t()
- 		 * from treating it as a negative value.
-@@ -1365,7 +1357,7 @@ int sk_setsockopt(struct sock *sk, int level, int optname,
- 		 * play 'guess the biggest size' games. RCVBUF/SNDBUF
- 		 * are treated in BSD as hints
- 		 */
--		__sock_set_rcvbuf(sk, min_t(u32, val, READ_ONCE(sysctl_rmem_max)));
-+		__sock_set_rcvbuf(sk, min_t(u32, val, READ_ONCE(sock_net(sk)->core.sysctl_rmem_max)));
- 		break;
- 
- 	case SO_RCVBUFFORCE:
-@@ -3618,8 +3610,8 @@ void sock_init_data_uid(struct socket *sock, struct sock *sk, kuid_t uid)
- 	timer_setup(&sk->sk_timer, NULL, 0);
- 
- 	sk->sk_allocation	=	GFP_KERNEL;
--	sk->sk_rcvbuf		=	READ_ONCE(sysctl_rmem_default);
--	sk->sk_sndbuf		=	READ_ONCE(sysctl_wmem_default);
-+	sk->sk_rcvbuf		=	READ_ONCE(sock_net(sk)->core.sysctl_rmem_default);
-+	sk->sk_sndbuf		=	READ_ONCE(sock_net(sk)->core.sysctl_wmem_default);
- 	sk->sk_state		=	TCP_CLOSE;
- 	sk->sk_use_task_frag	=	true;
- 	sk_set_socket(sk, sock);
-diff --git a/net/core/sysctl_net_core.c b/net/core/sysctl_net_core.c
-index c7769ee0d9c5..980f96703264 100644
---- a/net/core/sysctl_net_core.c
-+++ b/net/core/sysctl_net_core.c
-@@ -685,12 +685,9 @@ static struct ctl_table netns_core_table[] = {
- 		.extra1		= SYSCTL_ZERO,
- 		.extra2		= SYSCTL_ONE
- 	},
--	/* sysctl_core_net_init() will set the values after this
--	 * to readonly in network namespaces
--	 */
- 	{
- 		.procname	= "wmem_max",
--		.data		= &sysctl_wmem_max,
-+		.data		= &init_net.core.sysctl_wmem_max,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
-@@ -698,7 +695,7 @@ static struct ctl_table netns_core_table[] = {
- 	},
- 	{
- 		.procname	= "rmem_max",
--		.data		= &sysctl_rmem_max,
-+		.data		= &init_net.core.sysctl_rmem_max,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
-@@ -706,7 +703,7 @@ static struct ctl_table netns_core_table[] = {
- 	},
- 	{
- 		.procname	= "wmem_default",
--		.data		= &sysctl_wmem_default,
-+		.data		= &init_net.core.sysctl_wmem_default,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
-@@ -714,7 +711,7 @@ static struct ctl_table netns_core_table[] = {
- 	},
- 	{
- 		.procname	= "rmem_default",
--		.data		= &sysctl_rmem_default,
-+		.data		= &init_net.core.sysctl_rmem_default,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
-@@ -748,13 +745,8 @@ static __net_init int sysctl_core_net_init(struct net *net)
- 			goto err_dup;
- 
- 		for (i = 0; i < table_size; ++i) {
--			if (tbl[i].data == &sysctl_wmem_max)
--				break;
--
- 			tbl[i].data += (char *)net - (char *)&init_net;
- 		}
--		for (; i < table_size; ++i)
--			tbl[i].mode &= ~0222;
- 	}
- 
- 	net->core.sysctl_hdr = register_net_sysctl_sz(net, "net/core", tbl, table_size);
-diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
-index 6e18d7ec5062..7b7c5e4ea5d8 100644
---- a/net/ipv4/ip_output.c
-+++ b/net/ipv4/ip_output.c
-@@ -1643,7 +1643,7 @@ void ip_send_unicast_reply(struct sock *sk, const struct sock *orig_sk,
- 
- 	sk->sk_protocol = ip_hdr(skb)->protocol;
- 	sk->sk_bound_dev_if = arg->bound_dev_if;
--	sk->sk_sndbuf = READ_ONCE(sysctl_wmem_default);
-+	sk->sk_sndbuf = READ_ONCE(net->core.sysctl_wmem_default);
- 	ipc.sockc.mark = fl4.flowi4_mark;
- 	err = ip_append_data(sk, &fl4, ip_reply_glue_bits, arg->iov->iov_base,
- 			     len, 0, &ipc, &rt, MSG_DONTWAIT);
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 9a6061017114..abc766b3936d 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -241,7 +241,7 @@ void tcp_select_initial_window(const struct sock *sk, int __space, __u32 mss,
- 	if (wscale_ok) {
- 		/* Set window scaling on max possible window */
- 		space = max_t(u32, space, READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_rmem[2]));
--		space = max_t(u32, space, READ_ONCE(sysctl_rmem_max));
-+		space = max_t(u32, space, READ_ONCE(sock_net(sk)->core.sysctl_rmem_max));
- 		space = min_t(u32, space, window_clamp);
- 		*rcv_wscale = clamp_t(int, ilog2(space) - 15,
- 				      0, TCP_MAX_WSCALE);
-diff --git a/net/netfilter/ipvs/ip_vs_sync.c b/net/netfilter/ipvs/ip_vs_sync.c
-index 3402675bf521..62f30d5c25c7 100644
---- a/net/netfilter/ipvs/ip_vs_sync.c
-+++ b/net/netfilter/ipvs/ip_vs_sync.c
-@@ -1280,12 +1280,12 @@ static void set_sock_size(struct sock *sk, int mode, int val)
- 	lock_sock(sk);
- 	if (mode) {
- 		val = clamp_t(int, val, (SOCK_MIN_SNDBUF + 1) / 2,
--			      READ_ONCE(sysctl_wmem_max));
-+			      READ_ONCE(sock_net(sk)->core.sysctl_wmem_max));
- 		sk->sk_sndbuf = val * 2;
- 		sk->sk_userlocks |= SOCK_SNDBUF_LOCK;
- 	} else {
- 		val = clamp_t(int, val, (SOCK_MIN_RCVBUF + 1) / 2,
--			      READ_ONCE(sysctl_rmem_max));
-+			      READ_ONCE(sock_net(sk)->core.sysctl_rmem_max));
- 		sk->sk_rcvbuf = val * 2;
- 		sk->sk_userlocks |= SOCK_RCVBUF_LOCK;
- 	}
-diff --git a/tools/testing/selftests/net/netns-sysctl.sh b/tools/testing/selftests/net/netns-sysctl.sh
-index 45c34a3b9aae..bb6f173a28e2 100755
---- a/tools/testing/selftests/net/netns-sysctl.sh
-+++ b/tools/testing/selftests/net/netns-sysctl.sh
-@@ -20,21 +20,31 @@ fail() {
- setup_ns test_ns
- 
- for sc in {r,w}mem_{default,max}; do
--	# check that this is writable in a netns
-+	initial_value="$(sysctl -n "net.core.$sc")"
-+
-+	# check that this is writable in the init netns
- 	[ -w "/proc/sys/net/core/$sc" ] ||
- 		fail "$sc isn't writable in the init netns!"
- 
--	# change the value in the host netns
-+	# change the value in the init netns
- 	sysctl -qw "net.core.$sc=300000" ||
- 		fail "Can't write $sc in init netns!"
- 
--	# check that the value is read from the init netns
--	[ "$(ip netns exec $test_ns sysctl -n "net.core.$sc")" -eq 300000 ] ||
-+	# check that the value did not change in the test netns
-+	[ "$(ip netns exec $test_ns sysctl -n "net.core.$sc")" -eq "$initial_value" ] ||
- 		fail "Value for $sc mismatch!"
- 
--	# check that this isn't writable in a netns
--	ip netns exec $test_ns [ -w "/proc/sys/net/core/$sc" ] &&
--		fail "$sc is writable in a netns!"
-+	# check that this is also writable in the test netns
-+	ip netns exec $test_ns [ -w "/proc/sys/net/core/$sc" ] ||
-+		fail "$sc isn't writable in the test netns!"
-+
-+	# change the value in the test netns
-+	ip netns exec $test_ns sysctl -qw "net.core.$sc=200000" ||
-+		fail "Can't write $sc in test netns!"
-+
-+	# check that the value is read from the test netns
-+	[ "$(ip netns exec $test_ns sysctl -n "net.core.$sc")" -eq 200000 ] ||
-+		fail "Value for $sc mismatch!"
- done
- 
- echo 'Test passed OK'
--- 
-2.47.2
-
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
