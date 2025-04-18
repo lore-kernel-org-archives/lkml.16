@@ -1,118 +1,103 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800F624EA8F;
-	Fri, 18 Apr 2025 07:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A432571CF
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 07:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744961973; cv=none; b=TM4PYRxpQCz5HWTL7lvECgnZ2adgnO9o9fy3YQB7Ko2j+NZbmVx0HiLvdeXBf7b+cp/g51isT11kSaIZRtPHWkeIL+dAAGpe3WXmitxcl2+2TEeG94qvpltiXddZ0TiqosDfDnKFvcdv24OSrj1T9whe76pkNesbi0IAnpu7nGg=
+	t=1744962007; cv=none; b=oe4zojaaNRKDbEOI8/foUK6y+Wy42C6zOIivwnY7pSAEAghzAtN7PFPgw2H/+5RGvAlKcwPbXi3jfH80n2dnn2JQbbZ3ATC4Lo8xG8WNswr2b/ufRUOmyeKTnATJbxIF3YF7tm5vj8FLeAPugDd8bz1gZ2ek95ZDpSNqZhwN2cA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744961973; c=relaxed/simple;
-	bh=/1VuCG6jM87M8/EyQ9lV8hDOl1vR+F4qeQgogQnONP4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y5EFRjEBmTkSOBvfMVy0GPwSiLRWXizDJiFeKcCFSrYz3gUdydVMeoNSN9mWVYSftROaq0onyhCn/2KqRrVVQxR0TvgIdGUNw/LMCIQOUuetRAR102WUtY1WsSGzHFqmTa/W4oe3XY0u20GzHEHLL+6OFRqXvbR8cP3pu/YocTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P5Onv61T; arc=none smtp.client-ip=209.85.214.175
+	s=arc-20240116; t=1744962007; c=relaxed/simple;
+	bh=tkmJ2/zUYp0Fc3KQImo7xdJUrkMqZsLuifpe7h36Wac=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YwP19bL7hddaMinLnMzB5qHAwfj7xPGZpteP2ndO/26fjKfajJsTM6V07eYLelu4YpXtjghIoz4Wp1JIaMdJdaJskVqaB/TnSHZlCopRqNhzc23lfpLcqvalTflV383poj+mJWjcd9Qd+78/3xcv5mQ7G+gnIn9yqXu7EQsXuTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kGzlt8xe; arc=none smtp.client-ip=209.85.166.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P5Onv61T"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-226185948ffso18124725ad.0;
-        Fri, 18 Apr 2025 00:39:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kGzlt8xe"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d8020ba858so15084915ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 00:40:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744961972; x=1745566772; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HROl9wmdgf5B5YanpO2ZDSQM3+H0ccOnWXPFfSab2O4=;
-        b=P5Onv61Te0LlPkH9Lm1sVv7gdCpkmIXLi+eHet6N4exnM2QLaRFzPwghWOK0tcGjQ6
-         /JEmdmR8SMopaeEmN1zIBXjMGu5Evt1MnT3CFG9CeddJek+moKHEuMkOV+4TNgPevuPR
-         tlFPtNn37yZpI3ymXdYokQMXMbpQFGxTCEWUzj2j8c9Fo0tIYY7hzz/qO3X/okevdvJh
-         sKgBTSstNtCfOn38WRhiR5sRClnvkg4t5nVYTDajtynl20YAsmGVBvNo0cEHxutuZRTn
-         iipUDhqsVggI4X9EyTt930m6f+hwRB5oJmNZcMGNmjy9sTPs9c8cY0JFUPmIKLxyiGzU
-         iDpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744961972; x=1745566772;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1744962005; x=1745566805; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HROl9wmdgf5B5YanpO2ZDSQM3+H0ccOnWXPFfSab2O4=;
-        b=vm7pz4uhZVjVWUxh6EHJLYXz2jprs2QuliZ20sIgqnM4uy4W9aJIZRcx1oeAmWSkKr
-         sWrgbfIrPoJy9jOluQ0oy4RKZHh0f6v/YN1Dp7xf8Ko90tvDAS27xIA4n7KAKnjQLJKk
-         kPfqgLn/7y+co8V7xWQXfMQ52A6fFMj1DblnUsvnGg7Tgj60ZsRlWoZyWrCbMOynIinN
-         eIdENJVMl3pJZRTXeyeWeqSu6uUlt0ZBkw9vTZQpCPewptEscu/2DwNyjhpRVo4f3quL
-         Pr9St/a9AqwChoovloENl01mGe29li7GszvqiA0JQgAYWjc5i2Vo7CZVggn5SBdVj6ua
-         +r4g==
-X-Forwarded-Encrypted: i=1; AJvYcCVn+GQX1ujU4xzcGPqUP8AuefUhStSC4kIEy78beyxW61HWLYXsWE7Eg7c3QrPUG1/DQRHJ7fOQjOrrpq4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIT2oa4qdMJDdIrS/SkVGPgFT4NK2sDa4iN2/BI7Z/ThX++ctJ
-	F6PH5hIlg4hfSjGptn8VK9nExJlwbumFb8cunrG4Qkjyosu9Hf9JrgCbkKjyGyc=
-X-Gm-Gg: ASbGncvuVa9N8IyVy+PhvBMibzzHiQEJiUnDMZXJnD2Wum6DhkBaf517ZhDSPzO8TR+
-	+SABtXdo5o/GmoojKlCUQJ3wO/zJFXFWRO3t9iGdxxsK3O7ElBm1NbyK7SZSIMKD6AYXNJb82L5
-	3XPIyzvxKY9/3fAvr1LJsny6wubXi85SQShJK/xxa3EZWCGP6aEt5IoJAZ2EFma65SB5BGbZt7P
-	hp4l9CiKErMMISy2HKyHdYKpVuhrI1ueQnHPFuCGALFsVDlqCUV/0+AV7A5x0tRRBbvFAdMSbXW
-	1rgiccoFnR2hmYkXH8WdQi7QB8nAG0y4JLWyJpmsNSmaYQ==
-X-Google-Smtp-Source: AGHT+IHyZMidMmNlgGttYDo4UR6LkO0j1A87Po469K62oxAGa4H/lp14QfNk0SSwNcYq8vSOCL45/w==
-X-Received: by 2002:a17:903:19ed:b0:223:62f5:fd44 with SMTP id d9443c01a7336-22c53607f99mr33798015ad.40.1744961971605;
-        Fri, 18 Apr 2025 00:39:31 -0700 (PDT)
-Received: from fedora ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eced75sm11327355ad.173.2025.04.18.00.39.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 00:39:30 -0700 (PDT)
-Date: Fri, 18 Apr 2025 07:39:24 +0000
-From: Hangbin Liu <liuhangbin@gmail.com>
-To: Jay Vosburgh <jv@jvosburgh.net>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Simon Horman <horms@kernel.org>, Cosmin Ratiu <cratiu@nvidia.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 net] bonding: use permanent address for MAC swapping if
- device address is same
-Message-ID: <aAIBrKIWltiXw_av@fedora>
-References: <20250401090631.8103-1-liuhangbin@gmail.com>
- <3383533.1743802599@famine>
- <Z_OcP36h_XOhAfjv@fedora>
- <Z_yl7tQne6YTcU6S@fedora>
- <4177946.1744766112@famine>
- <Z_8bfpQb_3fqYEcn@fedora>
- <155385.1744949793@famine>
+        bh=tkmJ2/zUYp0Fc3KQImo7xdJUrkMqZsLuifpe7h36Wac=;
+        b=kGzlt8xespOJrotCLjwY5FpDk+vIgzDFbhgHPRx8AoiuVreiAez6WRZg8XucQwPJ8b
+         mK6IQIccSEoyOhuGW9bYdK6j+iYBa6TQif7I+Hd7Cypk4dNUqRwFLCVgCApD8ffMXD6D
+         kAp3JZ0f5AZW8Imkv8zdllcFnWZw3mLFbTONpb/JbaNBJXf7mqNqnfFvdOBvqAXSBOJp
+         oYVp8YQuGjCCdS9E42EKkY+1d99BFxD4ZQa4ZEJ7ud4bvfbLDLqn4shCBk48lpwDs/9s
+         rx0zZtmZKUJOT52Im0E7l24xoV/F60AZGmRCAJAFvERUUqx8AqlH/LBRzRpE5ac+3Co7
+         3PKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744962005; x=1745566805;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tkmJ2/zUYp0Fc3KQImo7xdJUrkMqZsLuifpe7h36Wac=;
+        b=w6jnJblIODQSdGBa2g0Zcsr5BE5hCN2coKYtn8U8VaWiQpVdnNU4E/MZb3tlxE1Zfa
+         +Utix2/44L6tGMV2fzrOYeSvsdxKEMgMzpix+FTAHOkzkDOu/qNmdkv3E0oZBBf1GsRw
+         9JjQADzu1KZI3sZLjc1y7CS9Ij8V7zGmFhJGRTLsvk5AdWrN0ZnK8ZABqlqA15UZkP5z
+         Mjo8r7T+Tvyh1ndhSFPs+f7nKq9YZyyPBvunoiA9InG0gKneBeZ+2ij30LTbgxvzhZDf
+         lLcL2hTxevNFHE5MBe3o4HbuJ7uoh7UPegiRES+M9J1SX8RNsn5XayHvTeM0yf8ZVosr
+         x4SA==
+X-Forwarded-Encrypted: i=1; AJvYcCW9xmdS3/FlCBO9eLSoH7NOzFC64GpeIOfocr4w6xoA8ERwAQ3E+mpKzwfp6bXAGIcUJpl9X9o0Gdl1Ppc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5Yim1hvxo2cKwab2aIv1OfuKNom3rC+t+4eo+o857GNbfTxFL
+	AlpnOhjk5GHR551m5kDX6Rqm7DGQqjLNf6lOUUSoGfPHenACvCgPupNIwvKjOwY6zy4R4hmA0J7
+	c3WZ9ZeP4DpNvWVhWMLmYySQ2Eps=
+X-Gm-Gg: ASbGncuQXulzglbkgj5JIwP6k6pUqBuB6knaJK1mRVtNO8abg5m3DKybshOPo/r+SwP
+	sVP4m89ogdL/wNPk2wKQfMKev6vRnQIiE0u2sIF/7II9eiz0KkkUlTvc5JGS9zMTel5uMTIXWfk
+	zY0y3yO5dibOIpnIcBeeu8
+X-Google-Smtp-Source: AGHT+IErxKRVjGKLa98ewYSC6k/+9FJnAZxh+oixS1Arok3ASPW8saLU/nIW+BIPDJzHAih5cRtNP0OSREI5EHz24g4=
+X-Received: by 2002:a05:6e02:12e7:b0:3d8:1885:837d with SMTP id
+ e9e14a558f8ab-3d88fccc4e6mr16634145ab.22.1744962005298; Fri, 18 Apr 2025
+ 00:40:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155385.1744949793@famine>
+References: <20250415051808.88091-1-yschu@nuvoton.com> <87ikn5ygfd.fsf@bootlin.com>
+In-Reply-To: <87ikn5ygfd.fsf@bootlin.com>
+From: Stanley Chu <stanley.chuys@gmail.com>
+Date: Fri, 18 Apr 2025 15:39:54 +0800
+X-Gm-Features: ATxdqUEgID4JwE8npaubEOgK_7WVdVRuS4qC3ntc2D_hDo24wStrJHPuryG7fK4
+Message-ID: <CAPwEoQOuvwzf+VcXJpx0LB0v_ZdCoB=rJW_ekHYo6ATY57LYDA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/2] svc-i3c-master: Reduce IBI transaction time
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: frank.li@nxp.com, alexandre.belloni@bootlin.com, 
+	linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	tomer.maimon@nuvoton.com, kwliu@nuvoton.com, yschu@nuvoton.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 17, 2025 at 09:16:33PM -0700, Jay Vosburgh wrote:
-> >Hmm, then how about use bond_for_each_slave() and find out the link
-> >that has same MAC address with bond/new_slave?
-> 
-> 	But even if we find it, aren't we stuck at that point?  The
-> situation would be that the bond and one backup interface have MAC#1.
-> MAC#1 may or may not be that backup interface's permanent MAC address,
-> and we're adding another interface, also with MAC#1, which might be the
-> newly added interface's permanent MAC.  The MAC swap gyrations to
-> guarantee this would work correctly in all cases seem to be rather
-> involved.
-> 
-> 	Wouldn't it be equally effective to, when the conflicting
-> interface is added, give it a random MAC to avoid the conflict?  That
-> random MAC shouldn't end up as the bond's MAC, so it would exist only as
-> a placeholder of sorts.
+On Tue, Apr 15, 2025 at 4:31=E2=80=AFPM Miquel Raynal <miquel.raynal@bootli=
+n.com> wrote:
+>
+> On 15/04/2025 at 13:18:06 +08, Stanley Chu <stanley.chuys@gmail.com> wrot=
+e:
+>
+> > This patchset reduces the IBI transaction time by the following
+> > improvements.
+> > 1. Receive the request in interrupt context.
+>
+> I initially had a few concerns about that, especially since the wait
+> periods were bounded to 1s, but actually we are already in the irqsave
 
-This looks good to me. Thanks for your suggestion.
+Hi Miquel,
+The poll timeout is 1 ms. Normally, the IBI can be completed in a few us.
 
-Regards
-Hangbin
-> 
-> 	I'm unsure if there are many (any?) devices in common use today
-> that actually have issues with multiple ports using the same MAC, so I
-> don't think we need an overly complicated solution.
-> 
-> 	-J
-> 
-> ---
-> 	-Jay Vosburgh, jv@jvosburgh.net
+Thanks,
+Stanley
+
+> situation when running this code, so your series might not have
+> such a huge system-wide performance impact in the end.
+>
+> > 2. Emit the STOP as soon as possible.
+>
+> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+>
+> Thanks,
+> Miqu=C3=A8l
