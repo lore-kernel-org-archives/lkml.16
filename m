@@ -1,109 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0E61FBEA2;
-	Fri, 18 Apr 2025 15:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD98D202984;
+	Fri, 18 Apr 2025 15:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744988571; cv=none; b=kHhaNfLOPTly4S+PIRVV7D0pDVBKMZgKeEbYI1UoJCF4Y5GquAP35SQaGDC37IYIFZXIIZE0bRQBtbe8+TSNTvpNUPRC7tNqbou1pLqVg5aOnMa5XqK+3noeyvb/Q7NMf14X4iYWwlump4ov7CZPHEmX8Ow2Ui9B7KVmreiUClw=
+	t=1744988740; cv=none; b=kChLIxxJboytMCu+eA9pNDnPkacEdg/PPFlp6nmaDNIpSWzALMzXhU9PEZHd6xpaZi93B3qrE5S24u06BQ6OaJ95WX5GCIQ8AaOYJcTL2C2K+D6eNMFHAj8kA5rOw7xP1Y6x0gKtZnPoKMs9DXZdNtR1XL8oXyPwY/qfGBZWLA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744988571; c=relaxed/simple;
-	bh=w2SpzO0xz6fx5J/fpntEEf1UqwhZaVfP36baHvy0z+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T5b6D/6WywAw08RrPC4WrE3+MRFfl6Dgws2spNe+lEqATQzQjtQMXNaA9t+978mKB4UA1sIINE2GIrUA+poZCxKTRLa3ncYqJVaIdtbOuhFWZm202F4W/6eBqLrjOfe0EoeBlGV7HYP8jGNxHldzSNI9yFyfO9pbkzZfjO2hFSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mEwhf/fz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744988740; c=relaxed/simple;
+	bh=Ze2QBQ9MkdDO6ExFOzde1E2OwKdFLm6duNYJWzU3h/U=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YgpfxgR6LA+Bx1egGxveNmBSCkqPNbLvazlap41DY21mki/pTQQM6T0RmCpOV219K/zvNXalHJZXqyreILuVlKCnEOH7AfpKn+1KOOhcUjupNH117m7F56+2+Iw5fG4ccyUzP2Cok9yt86pjki+RkOT2GHsjYtAGQYq+a7SGhEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BbWy1GfD; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mEwhf/fz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0B5BC4CEE2;
-	Fri, 18 Apr 2025 15:02:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744988570;
-	bh=w2SpzO0xz6fx5J/fpntEEf1UqwhZaVfP36baHvy0z+4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mEwhf/fzByQdSLeT3Cu00zEzaaOGeQnOsE8nqnjaQioNNFWBeo4YURAhkgXffpi2W
-	 hnT9ZrvKsEpJaQs4Q5p1UIU0nK/DHdfHyQQMWSbcg09goV0uTlBLCoRKXLgRPT3P1R
-	 8+ik9tBNd8aSreN+sX9TOb445OFww7oWo3ICiCCA3JBvgzkcMq8m6M0DC6zMGXwDbA
-	 WDU6SQo647rlTslsurH7D7xF029OAGqfTgH/Xm3V70F13gFetzh1C56cHqS+JX9djB
-	 A+0Eedl8HHYigtnzfgDJAYilMm777v0sKsD5fqvIqgJCm9THRSQ0XKMkHVBXMqGPnl
-	 wFZi67jUe48Gg==
-Date: Fri, 18 Apr 2025 16:02:38 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Andy Shevchenko
- <andy@kernel.org>, David Lechner <dlechner@baylibre.com>, Nuno
- =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Matthias Brugger
- <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Cosmin
- Tanislav <cosmin.tanislav@analog.com>, Tomasz Duszynski
- <tduszyns@gmail.com>, Andreas Klinger <ak@it-klinger.de>, Petre Rodan
- <petre.rodan@subdimension.ro>, "linux-iio@vger.kernel.org"
- <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>
-Subject: Re: [PATCH 7/8] iio: imu: inv_mpu6050: align buffer for timestamp
-Message-ID: <20250418160238.204701e7@jic23-huawei>
-In-Reply-To: <FR3P281MB175712512B0A88FAC9DFA009CEBF2@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
-References: <20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
-	<20250417-iio-more-timestamp-alignment-v1-7-eafac1e22318@baylibre.com>
-	<aAEzlZoZTsQuWgZa@smile.fi.intel.com>
-	<20250417184620.00006ae6@huawei.com>
-	<FR3P281MB175712512B0A88FAC9DFA009CEBF2@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BbWy1GfD"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53IF5TH6326863
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 18 Apr 2025 10:05:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744988729;
+	bh=YvFJvGG4okhAh4ZzeiEtpd9T2TUuyeMrkIjC3ug+0NE=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=BbWy1GfDHWFrXxEugsYwPHi9Ko8HzFq40FtbD41WlPpl+yzMV8nKfiJz/33eQVFny
+	 mPlREOxVlTkMqPZ1yhiI9a3O9clrTl4sBUvbkaIP7K9r+PTNCTWLi9Ecb8m965dA+F
+	 LPZxkNth+BqtP6WLoM2+yWpvzZsXx8UTFZl+fTbI=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53IF5TXY095548
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 18 Apr 2025 10:05:29 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 18
+ Apr 2025 10:05:29 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 18 Apr 2025 10:05:28 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53IF5SmU009009;
+	Fri, 18 Apr 2025 10:05:28 -0500
+Date: Fri, 18 Apr 2025 10:05:28 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Chintan Vankar <c-vankar@ti.com>
+CC: Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Tero Kristo
+	<kristo@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <s-vadapalli@ti.com>, <srk@ti.com>
+Subject: Re: [PATCH v4 0/2] Add support for CPSW3G port 2 on AM62A7-SK
+Message-ID: <20250418150528.ukbbqf7vtoof5fhg@splashed>
+References: <20250211182134.1500867-1-c-vankar@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250211182134.1500867-1-c-vankar@ti.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Fri, 18 Apr 2025 11:26:39 +0000
-Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com> wrote:
-
-> On Thu, 17 Apr 2025 19:46:00, Jonathan Cameron wrote:
-> > On Thu, 17 Apr 2025 20:00:05 +0300
-> > Andy Shevchenko <andy@kernel.org> wrote:
-> >   
-> > > On Thu, Apr 17, 2025 at 11:52:39AM -0500, David Lechner wrote:  
-> > > > Align the buffer used with iio_push_to_buffers_with_timestamp() to
-> > > > ensure the s64 timestamp is aligned to 8 bytes.    
-> > > 
-> > > Same question as per previous patch.
-> > >   
-> > In this case I don't think we know the position of the timestamp
-> > so a structure would be misleading.
-> > 
-> > The comment above the define certainly suggests it is variable..  
+On 23:51-20250211, Chintan Vankar wrote:
+> This series adds support for CPSW3G MAC port 2 with the SK-Ethernet-DC01
+> Add-On daughtercard. Also, the missing alias for CPSW3G MAC Port 1 is
+> added to the am62a7-sk board file in order to allow kernel to fetch MAC
+> address populated by U-Boot for CPSW3G MAC Port 1.
 > 
-> I confirm timestamp position is changing depending on channels enabled. It
-> can be at address 8, 16 or 24.
+> This series is based on linux-next tagged next-20250210.
 > 
-> If there is only 1 sensor enabled (6 bytes of data), timestamp is at address
-> 8. 2 sensors (12 bytes of data), timestamp will be at address 16. 3 sensors
-> for MPU-9xxx (19 bytes of data), timestamp will be at address 24.
+> Link to v3:
+> https://lore.kernel.org/r/20240429101739.2770090-1-c-vankar@ti.com/
 > 
-> If the buffer is aligned on 8 bytes, it will always work without any problem.
+> Changes from v3 to v4:
+> - No changes, rebased the series on top of latest linux-next branch.
 > 
-> > 
-> > /*
-> >  * Maximum of 6 + 6 + 2 + 7 (for MPU9x50) = 21 round up to 24 and plus 8.
-> >  * May be less if fewer channels are enabled, as long as the timestamp
-> >  * remains 8 byte aligned
-> >  */
-> > #define INV_MPU6050_OUTPUT_DATA_SIZE         32  
+> Siddharth Vadapalli (2):
+>   arm64: dts: ti: k3-am62a7-sk: Add alias for CPSW3G MAC port 1
+>   arm64: dts: ti: k3-am62a7: Add overlay for second CPSW3G Port
 > 
-> Thanks,
-> JB
+>  arch/arm64/boot/dts/ti/Makefile               |  3 +
+>  .../dts/ti/k3-am62a7-sk-ethernet-dc01.dtso    | 62 +++++++++++++++++++
+>  arch/arm64/boot/dts/ti/k3-am62a7-sk.dts       |  1 +
+>  3 files changed, 66 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/ti/k3-am62a7-sk-ethernet-dc01.dtso
+> 
 
-I applied this one as it stands with fixes tag and +CC stable.
+please re-send this series, series no longer applies.
 
-Fixes: 0829edc43e0a ("iio: imu: inv_mpu6050: read the full fifo when processing data")
-
-I thought about seeing if all the cases that are fixes are separable enough
-to take through togreg-fixes whilst the with_ts() series goes through togreg
-in parallel.  I might see if that is doable easily.
-
-Jonathan
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
