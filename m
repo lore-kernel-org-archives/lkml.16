@@ -1,164 +1,202 @@
-Received: from CY4PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11020091.outbound.protection.outlook.com [40.93.198.91])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEEB208A7;
-	Fri, 18 Apr 2025 01:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.91
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744938796; cv=fail; b=CLv/CVu/bCCRJS3em+WngJgrip09C/HI3o3qhVB8sb5H0AYAq+kEbPzO7ldOd+odDZHWpSjNCXeqp4ufAKbVFMsJNrICwbmAQcWUPFsMCPLO3xKoCCEMYMvqTffBEg65lmtYRpA8I1G4LISj7pfx5kd0CMy28rh+j1Ek+53UlKQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744938796; c=relaxed/simple;
-	bh=qcBC4PAEBRqQBEqRcgCx9LoehRIDDFuHbDmTJ//+yQk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=g7rcjyumPKGlUGD7mxmpsYv/lFtbPeTgW/XzF0YEny9IkFNz/duieCZTjlGXANhGFJutPS7DNDdkwFZep7fC5gjvIKxhwGS7531whGtJYGY0WL6rpGczXCC9O/5OnfscTjwMph9UnbNhubp5L/jIdE5/pNgsI2aIgBDsZTVh7ck=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=Dx+aYuOz; arc=fail smtp.client-ip=40.93.198.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3383BBE49;
+	Fri, 18 Apr 2025 01:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744938931; cv=none; b=Zyx1lrrs1hdpRWH68nYUUjrsvvrFXPu4tFVhahYLDGgj6wJEeQRA8pfUKjJtWHPatTZQemNWVBHhs3Ii9Ayd6tAdwPV+jXsnFtEnOYj/kuSOc8DA4KfJQ+Dwk1Jazn1DbiORIKyZ2Zn70kQCO0Qj53aWAJ71jaTkv73fyLBn5Ac=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744938931; c=relaxed/simple;
+	bh=VHf8JfBG6AIoLMfm+JSl6V4eo0qP+ziJCJ0wLtn4u/o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XesswhwZG2nTfATEuakCsTVhLdXW32THPEjfXKKcUuQs9Y4yvDFrg+WchVK2V9aGXxF2fJLP5qddRzYELjunn9w4a7l5l9w/Klc5GF8ivPt0vluCKJj/NWyJ2L/EejeIiQGE79ZC4cDdH6B6VpIi5awKYvNUCiQUG6KRnlhqcaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=GEKxZxYJ; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Dx+aYuOz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xSq1fvgx2+WyW6uQgc965ZXYsVl8wzxiNVziziSJ91ECsarQgjv8OBHqlSZEtE2q7SzI1zXpBMc3CRkNy43EXPXy+R2VMJib+OoH7TK489CpwmiNWESCzRrySwds+RK5rc/bkZMUlquPJq2ZQGGKvowa6CiyiR30eSk2fb/XO470VKR2mmIshGbk0vaE2naut4JPbpHgDtij8im4NYcs8Cm3oGhgDzjq38s09NSc7f2dgbNnqGB8Oeoavm+eyLYwwVHSGSxTUZ5aL46ISJ2snQ82qhpwZgJLbBWhUjs/hzzM6ttJiZRhQYu+1bbtnG68WpuHHQlmaczFIA3oxnTqdA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qcBC4PAEBRqQBEqRcgCx9LoehRIDDFuHbDmTJ//+yQk=;
- b=ynmF/RbBNVkFiaSnmQKxmBOYiYlwpC5UQchzqRbPn+KmXmPDuGH6Hn/7d3iAc1/Po0Fl5EkqMgy7yoFMAo+2ry0Fhbc3x/N5VWYONZkBC37Lspnb+LmL8wTPmCnIzePZt4qeYJZOOFKrSUBILAz59Uu79pmqIEfP/H4rgMNR06tgroGMjx7Cp/b07qEXmQjeLkUd7/xmvEXefoWcF5l/deVYdOpLDZY242AHzpl1qTX0+WH0ERnV9YuDwGmQwwG6fue08+O2BaRlnnJLZXFSrJY5dX/vB0G9YwNoUKWnj0dJk54nZS5fSkYy1a1QQXuHR4ibbJY6f9MowsljS70dTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qcBC4PAEBRqQBEqRcgCx9LoehRIDDFuHbDmTJ//+yQk=;
- b=Dx+aYuOzu9dl0C3/tLdO7UjEuiy0BC2wzRHP3fRn0aX0jAXEZ9DMmlvrSiqeg7a/0n/So1UaL1+poZng47oAh5A81ywDS97e9eLdscSKxGQctf5tFHYCl3ym4eBw/Wq/AML884oAdamFqKlhBhoL/1rZQx2I1xZORDhVRj2g52A=
-Received: from BL4PR21MB4627.namprd21.prod.outlook.com (2603:10b6:208:585::7)
- by MN2PR21MB1438.namprd21.prod.outlook.com (2603:10b6:208:20c::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.10; Fri, 18 Apr
- 2025 01:13:12 +0000
-Received: from BL4PR21MB4627.namprd21.prod.outlook.com
- ([fe80::7cb1:a2d1:137b:34fb]) by BL4PR21MB4627.namprd21.prod.outlook.com
- ([fe80::7cb1:a2d1:137b:34fb%7]) with mapi id 15.20.8678.011; Fri, 18 Apr 2025
- 01:13:12 +0000
-From: Dexuan Cui <decui@microsoft.com>
-To: Naman Jain <namjain@linux.microsoft.com>, KY Srinivasan
-	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
-	<wei.liu@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Stephen Hemminger <stephen@networkplumber.org>
-CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@kernel.org" <stable@kernel.org>, Saurabh Sengar
-	<ssengar@linux.microsoft.com>, Michael Kelley <mhklinux@outlook.com>
-Subject: RE: [PATCH v5 2/2] Drivers: hv: Make the sysfs node size for the ring
- buffer dynamic
-Thread-Topic: [PATCH v5 2/2] Drivers: hv: Make the sysfs node size for the
- ring buffer dynamic
-Thread-Index: AQHbriXCp7c6RnUv7UaONdK+rUmJG7OooSaA
-Date: Fri, 18 Apr 2025 01:13:12 +0000
-Message-ID:
- <BL4PR21MB4627622A03EB8E5D68EC20E4BFBF2@BL4PR21MB4627.namprd21.prod.outlook.com>
-References: <20250415164452.170239-1-namjain@linux.microsoft.com>
- <20250415164452.170239-3-namjain@linux.microsoft.com>
-In-Reply-To: <20250415164452.170239-3-namjain@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a3ba185b-74c0-4b7a-a4d0-3a03a59ec9a0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-04-18T01:10:49Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL4PR21MB4627:EE_|MN2PR21MB1438:EE_
-x-ms-office365-filtering-correlation-id: 9e6c6465-8b50-4116-3a90-08dd7e16304d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?rvTkl3sgIW9yGmBI/X8/vbC3FOGxq/EelfxBTkAc7XJro8zbNuU5Pf/9oTcV?=
- =?us-ascii?Q?thog4N61GabOQ6kTRtD4HAJkuOKI3ZuziQ1e6AezXdM1jGX4npcqANw88n/n?=
- =?us-ascii?Q?h6PfS9bqarzdCkwBtw09G6IpE7NnNFD7Kbx/VmEJKx5UvxEpW13QYadlysiS?=
- =?us-ascii?Q?diqyu/hgzMbAozao8WqS76UaLCxQggHDWFQA+z+RPFmqcCn0tgpGLrlK0c7z?=
- =?us-ascii?Q?Z7kL1BUkKR8LWuASM71rhofT5H9nRMbLgNwrXcA26LSaQMDXdbKPr3T5nR9h?=
- =?us-ascii?Q?dbsQCSaXa+i2w/OGKT0LVEuEgY/ES6qOOcMSiTrbM6DU3PrpT62J5CNmXK7F?=
- =?us-ascii?Q?3xp1NRx5I9qH2wqrlkwOABvFuZZdyk3Z8a+8q+1B1oZz7JmVA330Vjc3UPYe?=
- =?us-ascii?Q?eVK/63WvllSJd62rUwq+TJzCStBK4oVDXuw/YnX4Z4f0pM70biYoTz4jEFwB?=
- =?us-ascii?Q?7VBkXnrx0IIByJ7GTj0DE8cwh9G8sX4Xend4ph0RVuRfNub+vcjE+MWgkYOu?=
- =?us-ascii?Q?ddO1mS7xlVf53BvR9d5Gjv7GNG2tAnIb57EJI7lRtCoUTcK+x6jtV8fzBiG4?=
- =?us-ascii?Q?wMLQf0YiNtaDIiMMEKqBlxsNVXrvhJj7raD6zehry8OSDf3R3Hv0J0YP5/EB?=
- =?us-ascii?Q?5nExwABjgoNtWDVVz44QjalOzh1KZkX6dCcV+1IWUfnfWNQU/y81HkyW2YU/?=
- =?us-ascii?Q?q+V7yugca/uqI7U88lQ4gfHHHvM24joqUnIx94kSp3BZqkKw+onPOrNTohmt?=
- =?us-ascii?Q?ixa8O6fZOKFhzNnvRY5mo4QSznurQCsgr28JTIF9K9PjVq4cmMjru/rH311M?=
- =?us-ascii?Q?KT/Mq8sSpHWaAi1tj0fMeUdBd1qNYyglZYUNHNh8cdcRYiT18VNeO5A+dfbM?=
- =?us-ascii?Q?MN8KZTuW5RwOkboQ5l8LFOj9Fkm/a+9iEqqgKZgUqz37jT/OZXXgES75CY79?=
- =?us-ascii?Q?F7gw6MxmNCAps2C5iUQBHYix5cqSq32eViQ2P8Bb638EVZh7zv877MoItjny?=
- =?us-ascii?Q?uz8baDvwLSjlN+4ltr5/3uPzZk1OBpwuHGgFC01pjUlYB7Vd4jhzX4zaRG+H?=
- =?us-ascii?Q?fN6TYWvNz8VUX/HiOsopdRiUkZAKyjtiiijcCjL1CyOTiN+/rS7uk7BdOtpz?=
- =?us-ascii?Q?CgpE8ibVAOXzTX4MCQuE2Wmi8qzVCXRugePS6hTBDvKlnOlOoHOqgs672iCM?=
- =?us-ascii?Q?BoNpPwZyNNeXAu61IpH7oGKiiA9DsKbBz973FLppcEq/djshtfiNHCNTTtCq?=
- =?us-ascii?Q?1Gu7Ealv8cREHrMyves0bxWPtGQT3W+cvDZSa63iAMdKW+eIr3Es/+AInWWB?=
- =?us-ascii?Q?kh6MiM0aKOE6PlnNUWcCBYzcY8GGXKMhgqItj08mdz/0Kvrg8fpi2v1VMw/O?=
- =?us-ascii?Q?3U7SRYJDrJm4AeOGBEO2nPxUilMPRdkmGbL2BhxJDku8Y6BQwXiy2ffCM/U4?=
- =?us-ascii?Q?7t7OZlKxEvnLX6B04230t9Cw5eUAf6UJwmBqAAsn9teBo34wfT7raF9qO6RB?=
- =?us-ascii?Q?lAGRbuINuLoFhHE=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL4PR21MB4627.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?NJenlh/8S0P6MctHR+hclBEvZ/wxCe2MmSrRKD1qoh9EjlsTkahxPi4L6Wal?=
- =?us-ascii?Q?mZsSTfbPSdU/FEnd/bnMgSfOeoKzIlhjI4C42uUXmdlpR1SdlMJ7yt4H2eWw?=
- =?us-ascii?Q?k+HJatgm/+ZjkWWaYGz3kw3VguvZl08dXiL/qXizcRe6NCUc2hQl3ocFtKR8?=
- =?us-ascii?Q?OMBFMtZ8X3IQNxrDyTCBacyevcN4HccTERGiiZatR958l0v7iFWj9VeJI1lx?=
- =?us-ascii?Q?ohHAP4mlRKbcs+t0vrwNP0FhwLPWFDHVHsGvY4UtJ4M91Z4EoAPhBTt6y8Vm?=
- =?us-ascii?Q?4aa9sbOC+FLH2RbnZUCQfK53RLwhjg4xv6flMoWlwMeNRTGU+Uyj/X5RMCHa?=
- =?us-ascii?Q?H1wwF7ULqxfI5a4YkL6m2m53YonWZZM+jty/bRyD+8YE26U1Sm+XnnSziN8S?=
- =?us-ascii?Q?j44VYbLt5URiF7E4kfhVUgyu93ef9+eq2j0crIuh1Yb7mITrMHHA5UDuklHM?=
- =?us-ascii?Q?qzSkjL6KKGs+zsfyKr5M7gSOTFMqVDl60MuLfIBrONvijGHdao1qM1YGpT08?=
- =?us-ascii?Q?0zeyWo229vgR5WmTQvJj++rOYMwacOAV7u7je72oLXxhp8bkJ5dV8GjDEJs2?=
- =?us-ascii?Q?HHYhlYVCK6/h8z4sNj/dqFdwjUXQS9jS5EqshddiBwhF9ndT30EVgjT3yQZb?=
- =?us-ascii?Q?4P3tUS4h7zXy9lb/kdaT+kJsF3Duja8hmNlD8+E+2kWSGXy3FRDuBxYEF2CT?=
- =?us-ascii?Q?jzY0sWX71bZEtMzbbtwU9iJu4ZrRuFvI75bMjOQoCYTgvd2LTpwnrFDbxzB9?=
- =?us-ascii?Q?rS7Uxp4b2Iefid5+wLc3uD3sU5qQfP3TuZONlE74zYzrxXa0MiFszaus0NB+?=
- =?us-ascii?Q?6cT7VK+QFKaiUKC1aH++PGrF/tvihLMvso5XvzYVpMJl9m5sj/2joKkJUTpk?=
- =?us-ascii?Q?ZZDqeJ0VVakNIibSyHMm3Bs2wbdcwwQWoeqC21ffYzbzhQxOYLLXII+gJfAY?=
- =?us-ascii?Q?HASfwzry5eAJFqiGyA5QsnUeG4H2C/Xe4TaKGMpZ8Ir08FqWVRVj+yXkKUbo?=
- =?us-ascii?Q?z7FU8dDog2CrovL4YzfzOe0IX+UEYF0FjmGbi9z2plTkrLmiK5RQQm0HZFZE?=
- =?us-ascii?Q?U4H28Ljsr2xLeA2EG5v9sNDsfEQH/s8D21vzPfOs0mLeY3a/G/aZ9xvkhZZ2?=
- =?us-ascii?Q?bvDBxfKLTq90hAIMjZKlIBblZfzK8FcmRAKQ2SbdePWtnJjXWB5rhVqcc0Ic?=
- =?us-ascii?Q?IsEgrT1UYFJQ17NxDEMliuzLCAG7Pryscx6rpjtDsPBZy39mP173EpyN3/g6?=
- =?us-ascii?Q?1rJGcTi5DjkeI2O6xWDnswVf22Sj08Hx50nemaS0bq+8LcBNzdqMCLQiLX2h?=
- =?us-ascii?Q?WGA3ZAdhNLV/25dqNaazLwOyg/gbL/TWqcLZc9wjRxNbZfGt2yQhkuZMAf5s?=
- =?us-ascii?Q?Z0JKB5KMWnqEuc5KqsGHLhjVnrGeLatEMtGR6hw+7brHV86S5ACFMbV4o4gF?=
- =?us-ascii?Q?G0Oan59tHej9puJqiFnttz0oHLkjVndHZMXcRle0P5qoAakPDqQOkbMwKyKB?=
- =?us-ascii?Q?r8T8Xt9WSacoW5NSBgLc3QTnMBgrq2NMgiLarS0g9GeTcJ4d7Ul7AiYoSIRT?=
- =?us-ascii?Q?Hw/VgFuFdi5Nk/0agOp/YgbMeVddpzD7ZIielsSs?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="GEKxZxYJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=Ji+yj+AT7eFH1RjLEA2qeCEdj1vp5fWP0T4sC6IhspM=; b=GEKxZxYJ95tenjTs
+	BTjgOaQ1XLlaOmFqRAaWhYuh3j9LK8pp73IfCRf6Y2y7y7MtukjdgN8Wb8623r0GmaFu337S1CdKo
+	o3LBBVE7pPbvA9Ile9f/X6K3ER1q9tck86S2W5PBdmpQsoI4aQbonwKeRscR0qby0CsxJAaB0NPqq
+	HtlIYsN8N+Vx440c0TaakWjrfCx9DqdgE9940rfw3QXID94h80XIFpepOuJOPFOdVWB2EevKH2khr
+	2RaxwFBLpwq/QcmmnF+ncdC2gitfXb9Wum01g7HJbjKA4ZBXYtVqER4yeA2xqrwZW+d0QgE7VYxwP
+	ziGR6z/6TC+ZmvkZ4g==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1u5aKA-00CQ62-13;
+	Fri, 18 Apr 2025 01:15:22 +0000
+From: linux@treblig.org
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH net-next] net: 802: Remove unused p8022 code
+Date: Fri, 18 Apr 2025 02:15:19 +0100
+Message-ID: <20250418011519.145320-1-linux@treblig.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL4PR21MB4627.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e6c6465-8b50-4116-3a90-08dd7e16304d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2025 01:13:12.1206
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0kQsenMKH8coTElUeVtst8slPcqAqBN+9ZbLqbqpjt54t5l0KvyYCBKnbI8+FgbXjY48tpEYFXjJOT2KtkjxhA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1438
+Content-Transfer-Encoding: 8bit
 
-> From: Naman Jain <namjain@linux.microsoft.com>
-> Sent: Tuesday, April 15, 2025 9:45 AM
-> [...]
-> actual ring buffer size for each channel. This will ensure that
-> fstat() on ring sysfs node always return the correct size of
-s/return/returns/
-> [...]
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
+p8022.c defines two external functions, register_8022_client()
+and unregister_8022_client(), the last use of which was removed in
+2018 by
+commit 7a2e838d28cf ("staging: ipx: delete it from the tree")
+
+Remove the p8022.c file, it's corresponding header, and glue
+surrounding it.  There was one place the header was included in vlan.c
+but it didn't use the functions it declared.
+
+There was a comment in net/802/Makefile about checking
+against net/core/Makefile, but that's at least 20 years old and
+there's no sign of net/core/Makefile mentioning it.
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ include/net/p8022.h | 16 ------------
+ net/802/Makefile    |  5 ++--
+ net/802/p8022.c     | 64 ---------------------------------------------
+ net/8021q/vlan.c    |  1 -
+ 4 files changed, 2 insertions(+), 84 deletions(-)
+ delete mode 100644 include/net/p8022.h
+ delete mode 100644 net/802/p8022.c
+
+diff --git a/include/net/p8022.h b/include/net/p8022.h
+deleted file mode 100644
+index a29e224ac498..000000000000
+--- a/include/net/p8022.h
++++ /dev/null
+@@ -1,16 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _NET_P8022_H
+-#define _NET_P8022_H
+-
+-struct net_device;
+-struct packet_type;
+-struct sk_buff;
+-
+-struct datalink_proto *
+-register_8022_client(unsigned char type,
+-		     int (*func)(struct sk_buff *skb,
+-				 struct net_device *dev,
+-				 struct packet_type *pt,
+-				 struct net_device *orig_dev));
+-void unregister_8022_client(struct datalink_proto *proto);
+-#endif
+diff --git a/net/802/Makefile b/net/802/Makefile
+index bfed80221b8b..99abc29d537c 100644
+--- a/net/802/Makefile
++++ b/net/802/Makefile
+@@ -3,12 +3,11 @@
+ # Makefile for the Linux 802.x protocol layers.
+ #
+ 
+-# Check the p8022 selections against net/core/Makefile.
+-obj-$(CONFIG_LLC)	+= p8022.o psnap.o
++obj-$(CONFIG_LLC)	+= psnap.o
+ obj-$(CONFIG_NET_FC)	+=                 fc.o
+ obj-$(CONFIG_FDDI)	+=                 fddi.o
+ obj-$(CONFIG_HIPPI)	+=                 hippi.o
+-obj-$(CONFIG_ATALK)	+= p8022.o psnap.o
++obj-$(CONFIG_ATALK)	+= psnap.o
+ obj-$(CONFIG_STP)	+= stp.o
+ obj-$(CONFIG_GARP)	+= garp.o
+ obj-$(CONFIG_MRP)	+= mrp.o
+diff --git a/net/802/p8022.c b/net/802/p8022.c
+deleted file mode 100644
+index 78c25168d7c9..000000000000
+--- a/net/802/p8022.c
++++ /dev/null
+@@ -1,64 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-or-later
+-/*
+- *	NET3:	Support for 802.2 demultiplexing off Ethernet
+- *
+- *		Demultiplex 802.2 encoded protocols. We match the entry by the
+- *		SSAP/DSAP pair and then deliver to the registered datalink that
+- *		matches. The control byte is ignored and handling of such items
+- *		is up to the routine passed the frame.
+- *
+- *		Unlike the 802.3 datalink we have a list of 802.2 entries as
+- *		there are multiple protocols to demux. The list is currently
+- *		short (3 or 4 entries at most). The current demux assumes this.
+- */
+-#include <linux/module.h>
+-#include <linux/netdevice.h>
+-#include <linux/skbuff.h>
+-#include <linux/slab.h>
+-#include <net/datalink.h>
+-#include <linux/mm.h>
+-#include <linux/in.h>
+-#include <linux/init.h>
+-#include <net/llc.h>
+-#include <net/p8022.h>
+-
+-static int p8022_request(struct datalink_proto *dl, struct sk_buff *skb,
+-			 const unsigned char *dest)
+-{
+-	llc_build_and_send_ui_pkt(dl->sap, skb, dest, dl->sap->laddr.lsap);
+-	return 0;
+-}
+-
+-struct datalink_proto *register_8022_client(unsigned char type,
+-					    int (*func)(struct sk_buff *skb,
+-							struct net_device *dev,
+-							struct packet_type *pt,
+-							struct net_device *orig_dev))
+-{
+-	struct datalink_proto *proto;
+-
+-	proto = kmalloc(sizeof(*proto), GFP_ATOMIC);
+-	if (proto) {
+-		proto->type[0]		= type;
+-		proto->header_length	= 3;
+-		proto->request		= p8022_request;
+-		proto->sap = llc_sap_open(type, func);
+-		if (!proto->sap) {
+-			kfree(proto);
+-			proto = NULL;
+-		}
+-	}
+-	return proto;
+-}
+-
+-void unregister_8022_client(struct datalink_proto *proto)
+-{
+-	llc_sap_put(proto->sap);
+-	kfree(proto);
+-}
+-
+-EXPORT_SYMBOL(register_8022_client);
+-EXPORT_SYMBOL(unregister_8022_client);
+-
+-MODULE_DESCRIPTION("Support for 802.2 demultiplexing off Ethernet");
+-MODULE_LICENSE("GPL");
+diff --git a/net/8021q/vlan.c b/net/8021q/vlan.c
+index 41be38264493..06908e37c3d9 100644
+--- a/net/8021q/vlan.c
++++ b/net/8021q/vlan.c
+@@ -23,7 +23,6 @@
+ #include <linux/slab.h>
+ #include <linux/init.h>
+ #include <linux/rculist.h>
+-#include <net/p8022.h>
+ #include <net/arp.h>
+ #include <linux/rtnetlink.h>
+ #include <linux/notifier.h>
+-- 
+2.49.0
+
