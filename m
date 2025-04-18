@@ -1,119 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C66D8C0E;
-	Fri, 18 Apr 2025 07:05:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D4A252900;
+	Fri, 18 Apr 2025 07:07:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744959924; cv=none; b=o7aFkeAaufRPjjFsz2kxY+xgPuZsXDreG7VcHDvDgOejDhkwTW2VCPI+knjKfP53PEQZQHrfofa4XSpc8PRGYgo8x+6Y43EHrfd+O1FPQG/+a0U+mhzZUG2ZxE/QX1lqcmLJmsDvlNk9nGXhU98amVfGdaAzUGqdeD3ec7bXBmU=
+	t=1744960069; cv=none; b=oYAYd50kdWaS79famc1i0ZE0aLCG9DQr4ZyigZV4Sy9jhch2FDKKWg+pJg3MkjedBfYUTKgNDA+PgE+MUXq+4GQQpFiJFujbdbWBE8o+jDRFAnBPzW5lUMoP+FbNMkvuWXPvxDCV1LqkT+K++H1OuRs1eR+WAqkUYi8BoqyG2HQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744959924; c=relaxed/simple;
-	bh=KBWytEzvIXK4gEe9LdE7ZJpPSwTE8tFcqoRCCQHJUKc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AAyTk1QJ8OmbZvk4hO9mEgDxNhT1rEU8hBd+H240EIxdlPJQOHqr0QWfCD+s02IRIJo6huW0vU/33wkBcWmM9dwrrGHrXcLqoIQM7Jk4Qcll08rfYIPkG2XId2+sAw94PyL2c2PgSL95zQ36SX62uiiLY0mCTQwCKARQLA1ixZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KOb7fReI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744960069; c=relaxed/simple;
+	bh=cto9DbEuEGyqEZmtGwIiTP7CgzV3QxgjQjozuyiK460=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=kwkkoWVqPU5ZIRxlqqn2ALTkqfehbHxuL1l/P2Aay2/ePKrHTGD1KHzdp81yEYP0MIRUcJIbXRyXCBPY6n3u5vdzQ6vK0/8O9Bhkwf1+0ZpMMUEYKw7IgeJbw6Lp7YQY2LPa6C3ZlWU1yInUia15tBb6PCzN9QGJJn6GcsFZ5QM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dC2qsBGk; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KOb7fReI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E79AC4CEE7;
-	Fri, 18 Apr 2025 07:05:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744959923;
-	bh=KBWytEzvIXK4gEe9LdE7ZJpPSwTE8tFcqoRCCQHJUKc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=KOb7fReIoOl+1kQirFw0QwxSDEGKez1RizxewAr1V63GXoaLrhQB9kni1Z1qT7Rub
-	 ti70+13q6ifHqheVX016ecTg09EtO3MsPy5tD78uI4hVWR0rj8S7MRbJYb7br/fWo3
-	 xrD//xOXW0OEGRDSubGKNZKR27onwKzMptgLrtsQNi6Br+BPv/DwMjczMsVz4cBa9Z
-	 f2p3y01lJPRhFQt3SitjjESDSWiynE2SblDWqy1zKc1qxaIeP/5EnDhW9G9brHOjjQ
-	 kzYDJngxcp4tdOXHwqLBw5dEOp9iaDkWLI5KQPaA1BVnHxMsaUSR7Wo0+BKnL8tI4l
-	 pgmaJb5PGMtog==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5493b5bc6e8so2186890e87.2;
-        Fri, 18 Apr 2025 00:05:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW2qVtGcEk9P6TEnJ2vixn7XoGalagUPrnfo494TQIroakJDdoLoWb1qlMxazISxZpo4aEBsl5ySHDFQM0Xov7WrS4=@vger.kernel.org, AJvYcCWSCYWOauJ1IO5IqThWdENcVMSvqVpD9z0UgxYioW3SSc5mg/BqroHGh6noea4Xc5cAEBIop9hl+skwGXg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yya6ltM9b58uW0fpRGSZYop4fvfdwhMkN6w7tapqHHbk4Iohf3P
-	ZwuPart8FjkrIs6vmvrAUgmIeLQNBJvohB1N4ikgfjdbERC8Wp/n7Zj7uVwVwDvIMRGJfRWVKT0
-	+t6C1vYKQQI5hvPt5OkSmxj8SnP0=
-X-Google-Smtp-Source: AGHT+IF1vvWYSlieY57kroMtUhKs+syOnJM4QZdLDfSdU7K4Gqax0E2ezt34ZfxGcBDMosbhCdaM2T73K8LeYC9BbXo=
-X-Received: by 2002:a05:6512:b28:b0:549:792a:a382 with SMTP id
- 2adb3069b0e04-54d6e635987mr478097e87.32.1744959922030; Fri, 18 Apr 2025
- 00:05:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dC2qsBGk"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39ee682e0ddso923152f8f.1;
+        Fri, 18 Apr 2025 00:07:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744960066; x=1745564866; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bPJExcUU4HBEusxIHavNs8We88ebopcHgFYpLqHEIIM=;
+        b=dC2qsBGkgtgJEUDAzQIaSANSXXBYtYTAzQAbBK55UY9aLo5Dl/6iV1qx2EJMcXTo6b
+         d9xZG7yQy0w2Pm+au6aPeoUgjuEF+BUukFYWwE5PTffW8jW67I7tHaEGaaMprezfIUaE
+         dz+YomY2HajBvlaEgxlhSlNaGaMgQUByPpHSAdF7c+IdX4ONPvooV8SE4KcJkZJBVZsm
+         UxTSP6Ag114GUfkeCRY67APA30ycXUOu1qcBvsHLT7qjiC1A44L/CCVHQ8KMWY4AQFLW
+         cbdf2vAGzlvSuCfKmwtXUHpS3BkfiI7BC+PZ1a2tHrNbcKoC2SCi7RUwT8/rK58jAEk3
+         MWcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744960066; x=1745564866;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bPJExcUU4HBEusxIHavNs8We88ebopcHgFYpLqHEIIM=;
+        b=xTg1afMTWn2jKoJm8A36wto2yJD4RrjRD0qrqRqZMAVSEe+MnyCZUJ/Hu+oZ4kG1rd
+         eEOz7hwN+MtKNbbeuh5JyQgLzSYLjLmt6XgAmqaBY71uPvu/VZeo1rIJDBt45k1Tx6yR
+         WGj8zO2ToKTxtAK1ArSwb+AIkXP02nGiVneF0oLGTuyw9Qop/oxV8dt9Ouhf6+ceu3HS
+         jCaqkWhb9F2dCnvIQ9DvmBOsIvtt0M4FErzJnbEekHyz1RqAQnLXEYrnQfJr6zCUy/nj
+         bANGD15LTxeyCinJjPJdJUQoeDRdpvlxJy9Rs3jDcCk3K0ZGdcVVzQTp0Rx/MpKHB/Gx
+         HbCg==
+X-Forwarded-Encrypted: i=1; AJvYcCXY0Q+ulpU8EoFVLXIvYgKHV+l2QKT44JkpDSafFuMnO5P/mP6LDV6moHnkStPIYC/m+RmFRrzbKmIdn9V5ovaUX5haAQ==@vger.kernel.org, AJvYcCXymWT8j8f7fIgglW4igH9+uThqvBYwb0CBV9xYb8Ihj1c9PEu6RnKLY0IY23HeIJ8zjv7oSqO/IrG1mNU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxA7S6qJxKKpO97xGlYhRpouEjjwZcHM041w5FJCMLOGp7l/suv
+	eJZ9/6Nc4NNQ1K8vjHVj9j6gyNag1NqUDXVw9DheFFMyKNepOgcy
+X-Gm-Gg: ASbGncv6gUSUGgU6jc4YGRgcOTVuIehmmnA1Us3OBUF8Qv5Z05rl5fYco4ka3+2MrJ7
+	qnN9NpZbxbOQWGDBHjTqTX7oQkFcusYLMnnVJ+Dh036OEn1SfE9H213sFQ+ml/io0lQMGqpcBdA
+	Oc+Z3ew7OAVsoVrNEdMhJZwdNlhnPH7+AUp1LIsuqN2CXQc+0+rYc7i3XF48rZxENigSYRZbTmv
+	3JDJt/CTTjCQbH0nNfKKSGBWH+KH2xrGjQ8xHADgwcBoaDVBDQ7y+n1eiVa9oSvb9I4UCmO1cDc
+	i2rINUQnnjWTYDmZCo6rx0GPAVsD3GWP55JCCvSbMKjpoAlYFRWiTbKqA5V0Yk0=
+X-Google-Smtp-Source: AGHT+IGDq4sZuN8N7f1md7Q3cfJ2tfosrjrd2INgNCTnVnZEBHzWNRKx1iKPfpn3pc6GDQ8nOIDC1g==
+X-Received: by 2002:a5d:47cb:0:b0:39a:d336:16 with SMTP id ffacd0b85a97d-39efba6d8fbmr1046133f8f.34.1744960066107;
+        Fri, 18 Apr 2025 00:07:46 -0700 (PDT)
+Received: from pop-os.fri1.uni-lj.si ([2001:1470:fffd:32ff:cf9b:b36d:7c92:ffea])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5aa100sm11131855e9.7.2025.04.18.00.07.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 00:07:45 -0700 (PDT)
+From: =?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
+To: ikepanhc@gmail.com
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	=?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
+Subject: [PATCHv6] platform/x86: ideapad-laptop: added support for some new buttons
+Date: Fri, 18 Apr 2025 09:07:38 +0200
+Message-Id: <20250418070738.7171-1-gasper.nemgar@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250307164801.885261-2-ardb+git@google.com> <174138907883.14745.965399833848496586.tip-bot2@tip-bot2>
- <364ad671-5e5c-47c1-af22-34a7c481f8e3@intel.com> <2fddc2e9-8c97-48de-bcc3-29645d58f0f1@intel.com>
- <Z_oo3eBywzj6s8Eg@gmail.com>
-In-Reply-To: <Z_oo3eBywzj6s8Eg@gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 18 Apr 2025 09:05:10 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGzSK0YxdiGsK9b4ph8dqt08fXFQkWYBg9VFerSwowZUg@mail.gmail.com>
-X-Gm-Features: ATxdqUG0Cm9QjGkUxRV_oVu3d7YwLUoAlr8-PwK7dw88P7VsxPlkdUhIQz59-Tw
-Message-ID: <CAMj1kXGzSK0YxdiGsK9b4ph8dqt08fXFQkWYBg9VFerSwowZUg@mail.gmail.com>
-Subject: Re: [tip: x86/build] x86/boot: Drop CRC-32 checksum and the build
- tool that generates it
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-tip-commits@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Ian Campbell <ijc@hellion.org.uk>, Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, 12 Apr 2025 at 10:48, Ingo Molnar <mingo@kernel.org> wrote:
->
->
-> * Dave Hansen <dave.hansen@intel.com> wrote:
->
-> > On 4/11/25 12:33, Dave Hansen wrote:
-> > ...
-> > > The only weird thing I'm doing is booting the kernel with qemu's -kernel
-> > > argument.
-> >
-> > I lied. I'm doing other weird things. I have a local script named
-> > "truncate" that's not the same thing as /usr/bin/truncate. Guess what
-> > this patch started doing:
-> >
-> > >  quiet_cmd_image = BUILD   $@
-> > > -silent_redirect_image = >/dev/null
-> > > -cmd_image = $(obj)/tools/build $(obj)/setup.bin $(obj)/vmlinux.bin \
-> > > -                          $(obj)/zoffset.h $@ $($(quiet)redirect_image)
-> > > +      cmd_image = cp $< $@; truncate -s %4K $@; cat $(obj)/vmlinux.bin >>$@
-> >
-> >                                ^ right there
->
-> Oh that sucks ...
->
-> > I'm an idiot. That was a poorly named script and it cost me a kernel
-> > bisect and poking at the patch for an hour. <sigh>
-> >
-> > Sorry for the noise.
->
-> I feel your pain, I too once overlaid a well-known utility with my own
-> script in ~/bin/. After that incident I started adding the .sh postfix
-> to my own scripts, that way there's a much lower chance of namespace
-> collisions.
->
+Added entries to unsupported wmi codes in ideapad_keymap[]
+and one check in wmi_nofify in order to get wmi code 0x13d to trigger platform_profile_cycle
 
-There was another report about this, but in that case, the problem was
-that busybox's truncate clone does not understand the % notation (even
-though the very first original truncate version that I found from 2008
-already supported that)
+Signed-off-by: Gašper Nemgar <gasper.nemgar@gmail.com>"
+---
+Changes in v6:
+ - Minor changes like typos
+Changes in v5:
+ - Changed performance button to KE_KEY 
+Changes in v4:
+ - Changed performace button to KE_IGNORE
+Changes in v3:
+ - Minor changes
+Changes in v2:
+ - Added more codes that trigger with key combos (Fn+N, Fn+M, ...)
+ - Added performence toggle in wmi_notify()
+Changes in v1:
+ - Added codes for buttons on laptop(performance, star, ...)
+---
+ drivers/platform/x86/ideapad-laptop.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-In any case, we might change this to
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 17a09b778..532efb9d1 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -1294,6 +1294,16 @@ static const struct key_entry ideapad_keymap[] = {
+ 	/* Specific to some newer models */
+ 	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
+ 	{ KE_KEY,	0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
++	/* Star- (User Assignable Key) */
++	{ KE_KEY,	0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
++	/* Eye */
++	{ KE_KEY,	0x45 | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
++	/* Performance toggle also Fn+Q, handled inside ideapad_wmi_notify() */
++	{ KE_KEY,	0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
++	/* shift + prtsc */
++	{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
++	{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
++	{ KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
+ 
+ 	{ KE_END },
+ };
+@@ -2080,6 +2090,14 @@ static void ideapad_wmi_notify(struct wmi_device *wdev, union acpi_object *data)
+ 		dev_dbg(&wdev->dev, "WMI fn-key event: 0x%llx\n",
+ 			data->integer.value);
+ 
++		/* performance button triggered by 0x3d */
++		if (data->integer.value == 0x3d) {
++			if (priv->dytc) {
++				platform_profile_cycle();
++				break;
++			}
++		}
++
+ 		/* 0x02 FnLock, 0x03 Esc */
+ 		if (data->integer.value == 0x02 || data->integer.value == 0x03)
+ 			ideapad_fn_lock_led_notify(priv, data->integer.value == 0x02);
+-- 
+2.34.1
 
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -59,7 +59,7 @@
- $(obj)/bzImage: asflags-y  := $(SVGA_MODE)
-
- quiet_cmd_image = BUILD   $@
--      cmd_image = cp $< $@; truncate -s %4K $@; cat $(obj)/vmlinux.bin >>$@
-+      cmd_image = (dd if=$< bs=4096 conv=sync status=none; cat
-$(obj)/vmlinux.bin) >$@
-
- $(obj)/bzImage: $(obj)/setup.bin $(obj)/vmlinux.bin FORCE
-        $(call if_changed,image)
-
-which is slightly cleaner - I'll send out a patch once I receive
-confirmation that busybox dd implements conv=sync (which takes care of
-the padding) correctly.
