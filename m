@@ -1,120 +1,103 @@
-Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90FD26F44D;
-	Fri, 18 Apr 2025 06:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4B6255E23;
+	Fri, 18 Apr 2025 06:33:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744957887; cv=none; b=eW1IkYuZFjRBnWqj0XdYGE9XPeqvEgNXy9zotZBVqnB+KJN0ULEh6rBu9NrDNhr8w/X6go1bAn0BI5jipBKRQRdQMsoVaTjyJgWb00yDYNfImXJ8kZ8c7WuTdn8gUiJyh0HUhh7JE7GUCt72dUMPdipbhfx/vIy9SJrGxugtEtA=
+	t=1744957989; cv=none; b=cAe+q1tMvg1GCWUWhWHPDVHEOb5ifFx9BeD25Uw9DIEu4H9qXNWL5W8Egjhknky5j9zHRWP7S3YjIQj88IoNq37eJ14lhIqu/OzzdCz0hlAo2kWJF5XkcLEbqlrygEY4kFXH2zJlnGOJRq8BvfJVve/ZQfUQTtLgUxxOrdwGnaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744957887; c=relaxed/simple;
-	bh=r/Ex6zbqfmmSqV6pPOofSWL8wLYsy0vJ40McfaddmnA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p0QZJKKeKkCpobwi0AqH4+7sccAjP4el1gAOQYQKNFXdl1tCZKAhua6guOOaob7rLWLGLip+qU4jP2cUVD5xKXa70IEWUDBiVFv5TmN5gETeiLUDfG6qi49MaVsVjHwZuqN6+mMAp/4xrjOPQ1a+hNHGfjSNs9Vk16NNymYqp70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=cKH8Jjz3; arc=none smtp.client-ip=46.19.9.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
+	s=arc-20240116; t=1744957989; c=relaxed/simple;
+	bh=/Hsg/wIAip3bXNiSNJ1fUrWPjc6vdLW/C5QDVAAVH/o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eVmamcO1K5+mZDtz1tBCwaG8NsYB/gJj48oU5stzf73XApCe9MrkVENC0OltgIKcKm1vJ7HTTm5JbK206NfWAdx2YNrZcObm/Kf31XIXxxB226oc0vAse8OA0A2kN2tyWj4zrPt+SaviOdyUTvF3PJ428hjlOUAW53IWq73SsWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fDB6cTas; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="cKH8Jjz3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
-	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=oTg5xlBMV3ZpioVnQMKMCNtn41a6TiUkCbtv/ticY0Q=; b=cKH8Jjz3UhDIikWoDUs9Pr6GlI
-	Mmz/6GL+pGzQYRY4NUFxkPQ1reeW+aRqBnalYDxz5Cs/EBek0U2vd9bYn3wnMVO9bcz7K6nvF8a8y
-	vZ03y5b1HiShBsMyWEt/U56nCsO4sNA2kIgj17dyWhsUnjVS0Lug+UUFVqVMkWM+vgi9oHHr1CpC3
-	u/PxqDkEA+4KxZd1OM8JjV0tL7PKohBHdlAp7guW4A9Dh4Ii6FkbCo1ybIlEqu9YT73lbykd/uyPq
-	6lgqy2uq2Pj9oAYd1IP0qumexjCyfEGGNJtKkWmG7S+eMaVoK9mq5Pp93074AtyBlQDRSkxrgG5fz
-	SV6z8cgw==;
-Received: from [89.212.21.243] (port=56446 helo=localhost.localdomain)
-	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <primoz.fiser@norik.com>)
-	id 1u5fG0-00AbM0-1a;
-	Fri, 18 Apr 2025 08:31:24 +0200
-From: Primoz Fiser <primoz.fiser@norik.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	upstream@lists.phytec.de
-Subject: [PATCH v3 15/15] arm64: dts: freescale: imx93-phyboard-segin: Order node alphabetically
-Date: Fri, 18 Apr 2025 08:31:04 +0200
-Message-Id: <20250418063104.2202085-16-primoz.fiser@norik.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250418063104.2202085-1-primoz.fiser@norik.com>
-References: <20250418063104.2202085-1-primoz.fiser@norik.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fDB6cTas"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79D54C4CEE7;
+	Fri, 18 Apr 2025 06:33:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744957988;
+	bh=/Hsg/wIAip3bXNiSNJ1fUrWPjc6vdLW/C5QDVAAVH/o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fDB6cTas7MpmIUNXLReHxeCEJW+YiHQTxAb5KF0YomPXB6llTHu3OYGfLNBwFtTO8
+	 VLM1Xw6sNHca2y8L6v0LacS1bElaZ9WIE9VDVnapTvj3jt77NUrdL8Vj4FlMFKmb9Y
+	 pZEHl49jmyV6sAQnGoRNTljnBydFEZoAND0ezMLGODN7VjCOB8sby0db6wnGbH8Q8A
+	 yiCJMaOhVCov3l4+uLPrKufVLGcyx4yoL2OlhdSSn3AIip5gpjYwFnLpn9gYPCq4aK
+	 +ao7+U39Gfozhoigyybw3yK/5IqeAw/TzeEV23bmkzx8Khis6QjxYRsa+VTfX7s8YG
+	 jwGYJYnVkbd0Q==
+Date: Fri, 18 Apr 2025 08:33:02 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Davide Ciminaghi <ciminaghi@gnudd.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] x86/e820: discard high memory that can't be addressed by
+ 32-bit systems
+Message-ID: <aAHyHuwbmhjWmDqc@gmail.com>
+References: <Z_rDdnlSs0rts3b9@gmail.com>
+ <20250413080858.743221-1-rppt@kernel.org>
+ <20250417162206.GA104424@ax162>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel.siel.si
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - norik.com
-X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: primoz.fiser@norik.com
-X-Authenticated-Sender: cpanel.siel.si: primoz.fiser@norik.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417162206.GA104424@ax162>
 
-Move pinctrl_uart1 to keep nodes in alphabetical order. No functional
-changes.
 
-Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
----
-Changes in v3:
-- add Reviewed-by tag
+* Nathan Chancellor <nathan@kernel.org> wrote:
 
- .../boot/dts/freescale/imx93-phyboard-segin.dts    | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+> Hi Mike,
+> 
+> On Sun, Apr 13, 2025 at 11:08:58AM +0300, Mike Rapoport wrote:
+> ...
+> >  arch/x86/kernel/e820.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+> > index 57120f0749cc..5f673bd6c7d7 100644
+> > --- a/arch/x86/kernel/e820.c
+> > +++ b/arch/x86/kernel/e820.c
+> > @@ -1300,6 +1300,14 @@ void __init e820__memblock_setup(void)
+> >  		memblock_add(entry->addr, entry->size);
+> >  	}
+> >  
+> > +	/*
+> > +	 * 32-bit systems are limited to 4BG of memory even with HIGHMEM and
+> > +	 * to even less without it.
+> > +	 * Discard memory after max_pfn - the actual limit detected at runtime.
+> > +	 */
+> > +	if (IS_ENABLED(CONFIG_X86_32))
+> > +		memblock_remove(PFN_PHYS(max_pfn), -1);
+> > +
+> >  	/* Throw away partial pages: */
+> >  	memblock_trim_memory(PAGE_SIZE);
+> 
+> Our CI noticed a boot failure after this change as commit 1e07b9fad022
+> ("x86/e820: Discard high memory that can't be addressed by 32-bit
+> systems") in -tip when booting i386_defconfig with a simple buildroot
+> initrd.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-index c62cc06fad4b..0c55b749c834 100644
---- a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-+++ b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-@@ -228,13 +228,6 @@ MX93_PAD_I2C2_SDA__LPI2C2_SDA		0x40000b9e
- 		>;
- 	};
- 
--	pinctrl_uart1: uart1grp {
--		fsl,pins = <
--			MX93_PAD_UART1_RXD__LPUART1_RX		0x31e
--			MX93_PAD_UART1_TXD__LPUART1_TX		0x30e
--		>;
--	};
--
- 	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmcgrp {
- 		fsl,pins = <
- 			MX93_PAD_SD2_RESET_B__GPIO3_IO07	0x31e
-@@ -257,6 +250,13 @@ MX93_PAD_SAI1_RXD0__SAI1_RX_DATA00	0x1402
- 		>;
- 	};
- 
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX93_PAD_UART1_RXD__LPUART1_RX		0x31e
-+			MX93_PAD_UART1_TXD__LPUART1_TX		0x30e
-+		>;
-+	};
-+
- 	pinctrl_usdhc2_cd: usdhc2cdgrp {
- 		fsl,pins = <
- 			MX93_PAD_SD2_CD_B__GPIO3_IO00		0x31e
--- 
-2.34.1
+I've zapped this commit from tip:x86/urgent for the time being:
 
+  1e07b9fad022 ("x86/e820: Discard high memory that can't be addressed by 32-bit systems")
+
+until these bugs are better understood.
+
+Thanks,
+
+	Ingo
