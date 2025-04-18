@@ -1,50 +1,39 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ixit.cz (ip-89-177-23-149.bb.vodafone.cz [89.177.23.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57D4199947
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 11:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFAF199947;
+	Fri, 18 Apr 2025 11:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.177.23.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744976971; cv=none; b=Xdl54yNixnPrXqBsE/X2/KnSilE7sD1X0CQRGSMdlBI2OC9kGTurc9fAPMdqEL22nfgrA8+odfgizTL6k5svqh+elK9hM9WEVLs1I3I+AeezZS1nbWoN/JuMGpvWxMU2rSXM9Eo6wyl6hyukLpIt5K+HX/+h6y+4kp/egg+FBXQ=
+	t=1744976989; cv=none; b=dG8+MGUUshnpmnOXV+M5NokGmVsbuL/EgfoxZS5daaCxNn+/vkWrF2nshNUI7cG6DAM9ZY7HJAxVD/CXE7CXFVuXFYdeUkXsXbbsz51VVfkkU47GRSfAxzzDaheAih5dS4Zx3R5Z1UiyuvvDJHOgIATggt4oUgL3O5OEASVFaK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744976971; c=relaxed/simple;
-	bh=1uzu1kv2ZLD67E6okRuI51JM7knTFomsz1LXCyXqN/w=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=PpRZkAW2npTA7WKq8FxszOeZqMKe1jtizRyFCsa++dlNfYQsPx610H663p/wktwTAbDFQ6R4K+J+rLGaNev8prBGlwS1JaTPh//PaMQ5FzuanfDcm4p7fKlGA8lawleH87C4zp+8AtAuW87wLwR30/NLGtaO92f0AQgunNqUJ1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so20651765e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 04:49:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744976968; x=1745581768;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EVAZkueF6TO3vmEWTnRcjkq4LoD47LWe63XR/UPIPzA=;
-        b=rSii8sNALiReKqaJtZTG+ZiL3jeN1F6Lo8d0rkqcO3nq4dZESjWMX0T2wYHly+z/3I
-         Sed6RyZGnuaL/VZ52m8EOkOY4kfEp0/zmSxHai7OBzlsCzB+NYXR3k9S6qh0wjNyBbwb
-         8m2sc615WctHzqynsohmGYjSQ1WPdDVJJg28rcPsiaVMIth+dzvUd4BZ2CIj2cq1dXe0
-         ZepEEZdVOi47XAOaboSvWNNMRjQBm7t5vNec4NjfZjIRlURsVzl/Gn0flX2EPLmvRojM
-         CY+ykOX+x39t1n45NUQMitpYBsQBl+if6Bwgtn+E2V/p1pikpkiLh+WGkU0ZvELgJs5J
-         3/vg==
-X-Forwarded-Encrypted: i=1; AJvYcCWfB0wus8yZmXfr5kMgQIdEy3Ks+nJUyCzT5kfvq9p6n4oAut//ktvhduQKfpxU/jRAv7dgBdfvAK6ufLw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyP7OCSlGtqRRLg0qzRWjwPJWvTe2iDFOrsIl6w5yeutdgGmtq7
-	VqZoJnktx8LoiLkOqOOErQj7P+7iRKelQEJ7CuHsbOninLNSL7S9
-X-Gm-Gg: ASbGncujwZxszJGyUfGIyi4aVTiiT8suSpaL7/eHSGOPA8vHaQqwVo7Foek+dUDkyFf
-	TcDHYmwY2+Dtji0n/GO4JsDac6EDq5T9JKTxOmeZk5agqA2ab5UmW7/vQ/YxPf+S6pr2CC42J3w
-	HIOFgEYYtQn444srn8dtnGdrKN8idE9QqFNSXX/JlX/cyG1/TCOts938pQRyoXXr3CfLz8+Eujq
-	eJLcUquREIgHi4al1R7zMmXmiZBSnJkQh/Hi4A7zb7Eyp+gOf4sSZ3iegPm8KduJtSComtPo+SV
-	aG1J7IC7ZJEiFKBIp/SKtUyYsRQsb7K4eXSoibe41vTGgX/CbOU=
-X-Google-Smtp-Source: AGHT+IHAD5tCrAKdlb+hKiBaU767bCq+juH84w7mFehf7472CiKBwwZN5Ga2ogjoWSPneMEPliij4w==
-X-Received: by 2002:a5d:5987:0:b0:39e:e438:8e4b with SMTP id ffacd0b85a97d-39efbaf6e96mr1812477f8f.50.1744976967991;
-        Fri, 18 Apr 2025 04:49:27 -0700 (PDT)
-Received: from [10.100.102.67] ([95.35.174.203])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d6db117sm19288545e9.26.2025.04.18.04.49.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Apr 2025 04:49:27 -0700 (PDT)
-Message-ID: <4683e355-166f-4b9a-a3ea-529f7b058a84@grimberg.me>
-Date: Fri, 18 Apr 2025 14:49:25 +0300
+	s=arc-20240116; t=1744976989; c=relaxed/simple;
+	bh=0xqfItQyN6ROhVXcQYA8qrLVNEC/rcSRqgoktrpt8MA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S0yqynB5rSCqZASe1bLdNkD48Cd4evivhEq5XHvqGVjx0XDREnRrbw0LLQi0HXNMeSVlInepCGzqgw1VNyBsu/GdhO0lnqbJoDzqdqfLTVnHpzP65of7CWfKcr1Tfr8rajBC+RQMNZYQ70xXgkNPG5UDdELmP2V4fS33CdB0nSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=GFiW2Fbm; arc=none smtp.client-ip=89.177.23.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="GFiW2Fbm"
+Received: from [10.0.0.185] (unknown [10.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ixit.cz (Postfix) with ESMTPSA id A5947166598;
+	Fri, 18 Apr 2025 13:42:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
+	t=1744976521;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5uRv3rAKMiUBBg+1+0mXz1mGMZQOP4uPKMKJVmKxbCQ=;
+	b=GFiW2FbmlbicCZXJfrIJG7I75y49Jdzrt0L4YwIxh8auJP7c/Out8+Yz9zT9rKQOp46Lr1
+	kcEAlTmznogxdB3SRadvHWJ0jMYLHBo0dSrRx68oUCVacjxfsIWQs44t35ye/Mxr6P6ucP
+	r8aNwRixDO65HkQAbcgR5Ly8XbBKnRc=
+Message-ID: <7ae72214-3f91-4bd7-b5f0-07391006f531@ixit.cz>
+Date: Fri, 18 Apr 2025 13:42:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,181 +41,232 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] nvme-tcp: wait socket wmem to drain in queue stop
-From: Sagi Grimberg <sagi@grimberg.me>
-To: Michael Liang <mliang@purestorage.com>, Keith Busch <kbusch@kernel.org>,
- Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>
-Cc: Mohamed Khalfella <mkhalfella@purestorage.com>,
- Randy Jennings <randyj@purestorage.com>, linux-nvme@lists.infradead.org,
+Subject: Re: [PATCH v3] media: dt-bindings: Convert Analog Devices ad5820 to
+ DT schema
+To: Rob Herring <robh@kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Pavel Machek <pavel@kernel.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Pavel Machek <pavel@ucw.cz>,
+ linux-media@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
-References: <20250417071359.iw3fangcfcuopjza@purestorage.com>
- <acc46429-6228-475e-8fd8-bc3d43c7f710@grimberg.me>
+References: <20250414-b4-ad5820-dt-yaml-v3-1-39bbb5db7b2b@ixit.cz>
+ <20250415223557.GA940473-robh@kernel.org>
 Content-Language: en-US
-In-Reply-To: <acc46429-6228-475e-8fd8-bc3d43c7f710@grimberg.me>
+From: David Heidelberg <david@ixit.cz>
+Autocrypt: addr=david@ixit.cz; keydata=
+ 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
+In-Reply-To: <20250415223557.GA940473-robh@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-
-
-On 4/18/25 14:30, Sagi Grimberg wrote:
->
->
-> On 4/17/25 10:13, Michael Liang wrote:
->> This patch addresses a data corruption issue observed in nvme-tcp during
->> testing.
+On 16/04/2025 00:35, Rob Herring wrote:
+> On Mon, Apr 14, 2025 at 06:04:01PM +0200, David Heidelberg wrote:
+>> Convert the Analog Devices ad5820 to DT schema format.
 >>
->> Issue description:
->> In an NVMe native multipath setup, when an I/O timeout occurs, all 
->> inflight
->> I/Os are canceled almost immediately after the kernel socket is shut 
->> down.
->> These canceled I/Os are reported as host path errors, triggering a 
->> failover
->> that succeeds on a different path.
+>> Added the io-channel-cells property, because it's already used by the
+> 
+> You mean #io-channel-cells?
+> 
+>> Nokia N900 device-tree and defines ad5820 as having only single output.
 >>
->> However, at this point, the original I/O may still be outstanding in the
->> host's network transmission path (e.g., the NIC’s TX queue). From the
->> user-space app's perspective, the buffer associated with the I/O is 
->> considered
->> completed since they're acked on the different path and may be reused 
->> for new
->> I/O requests.
->>
->> Because nvme-tcp enables zero-copy by default in the transmission path,
->> this can lead to corrupted data being sent to the original target, 
->> ultimately
->> causing data corruption.
->>
->> We can reproduce this data corruption by injecting delay on one path and
->> triggering i/o timeout.
->>
->> To prevent this issue, this change ensures that all inflight 
->> transmissions are
->> fully completed from host's perspective before returning from queue
->> stop. To handle concurrent I/O timeout from multiple namespaces under
->> the same controller, always wait in queue stop regardless of queue's 
->> state.
->>
->> This aligns with the behavior of queue stopping in other NVMe fabric 
->> transports.
->>
->> Reviewed-by: Mohamed Khalfella <mkhalfella@purestorage.com>
->> Reviewed-by: Randy Jennings <randyj@purestorage.com>
->> Signed-off-by: Michael Liang <mliang@purestorage.com>
+>> Acked-by: Pavel Machek <pavel@ucw.cz>
+>> Signed-off-by: David Heidelberg <david@ixit.cz>
 >> ---
->>   drivers/nvme/host/tcp.c | 16 ++++++++++++++++
->>   1 file changed, 16 insertions(+)
+>> Changes in v3:
+>> - Removed documentation of io-channel-cells property. Now it's 1:1 to
+>>    the original binding. The reference to it from the Nokia N900 dts
+>>    was removed in the -next.
+> 
+> Added or removed? I'm confused.
+> 
+>> - Link to v2: https://lore.kernel.org/r/20250314-b4-ad5820-dt-yaml-v2-1-287958c3c07c@ixit.cz
 >>
->> diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
->> index 26c459f0198d..62d73684e61e 100644
->> --- a/drivers/nvme/host/tcp.c
->> +++ b/drivers/nvme/host/tcp.c
->> @@ -1944,6 +1944,21 @@ static void __nvme_tcp_stop_queue(struct 
->> nvme_tcp_queue *queue)
->>       cancel_work_sync(&queue->io_work);
->>   }
->>   +static void nvme_tcp_stop_queue_wait(struct nvme_tcp_queue *queue)
->> +{
->> +    int timeout = 100;
+>> Changes in v2:
+>> - added MAINTAINERS entry for the binding
+>> - documented why io-channel-cells got added into the binding.
+>> - dropped io-channel-cells in required properties.
+>> - adjusted example indentation to 4 spaces.
+>> - Link to v1: https://lore.kernel.org/r/20250209203940.159088-1-david@ixit.cz
+>> ---
+>>   .../devicetree/bindings/media/i2c/ad5820.txt       | 28 ----------
+>>   .../devicetree/bindings/media/i2c/adi,ad5820.yaml  | 59 ++++++++++++++++++++++
+>>   MAINTAINERS                                        |  1 +
+>>   3 files changed, 60 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+>> deleted file mode 100644
+>> index 5764cbedf9b73387ad1bfa9acf99c643f959b84a..0000000000000000000000000000000000000000
+>> --- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+>> +++ /dev/null
+>> @@ -1,28 +0,0 @@
+>> -* Analog Devices AD5820 autofocus coil
+>> -
+>> -Required Properties:
+>> -
+>> -  - compatible: Must contain one of:
+>> -		- "adi,ad5820"
+>> -		- "adi,ad5821"
+>> -		- "adi,ad5823"
+>> -
+>> -  - reg: I2C slave address
+>> -
+>> -  - VANA-supply: supply of voltage for VANA pin
+>> -
+>> -Optional properties:
+>> -
+>> -   - enable-gpios : GPIO spec for the XSHUTDOWN pin. The XSHUTDOWN signal is
+>> -active low, a high level on the pin enables the device.
+>> -
+>> -Example:
+>> -
+>> -       ad5820: coil@c {
+>> -               compatible = "adi,ad5820";
+>> -               reg = <0x0c>;
+>> -
+>> -               VANA-supply = <&vaux4>;
+>> -               enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
+>> -       };
+>> -
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml b/Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000..93349e7daf262fc8939f984fbe93cf064a0cbaf8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml
+>> @@ -0,0 +1,59 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/media/i2c/adi,ad5820.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 >> +
->> +    while (timeout > 0) {
->> +        if (!sk_wmem_alloc_get(queue->sock->sk))
->> +            return;
->> +        msleep(2);
->> +        timeout -= 2;
->> +    }
->> +    dev_warn(queue->ctrl->ctrl.device,
->> +         "qid %d: wait draining sock wmem allocation timeout\n",
->> +         nvme_tcp_queue_id(queue));
->> +}
+>> +title: Analog Devices AD5820 autofocus coil
 >> +
->>   static void nvme_tcp_stop_queue(struct nvme_ctrl *nctrl, int qid)
->>   {
->>       struct nvme_tcp_ctrl *ctrl = to_tcp_ctrl(nctrl);
->> @@ -1961,6 +1976,7 @@ static void nvme_tcp_stop_queue(struct 
->> nvme_ctrl *nctrl, int qid)
->>       /* Stopping the queue will disable TLS */
->>       queue->tls_enabled = false;
->>       mutex_unlock(&queue->queue_lock);
->> +    nvme_tcp_stop_queue_wait(queue);
->>   }
->>     static void nvme_tcp_setup_sock_ops(struct nvme_tcp_queue *queue)
->
-> This makes sense. But I do not want to pay this price serially.
-> As the concern is just failover, lets do something like: diff --git 
-> a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c index 
-> 5041cbfd8272..d482a8fe2c4b 100644 --- a/drivers/nvme/host/tcp.c +++ 
-> b/drivers/nvme/host/tcp.c @@ -2031,6 +2031,8 @@ static void 
-> nvme_tcp_stop_io_queues(struct nvme_ctrl *ctrl) for (i = 1; i < 
-> ctrl->queue_count; i++) nvme_tcp_stop_queue(ctrl, i); + for (i = 1; i 
-> < ctrl->queue_count; i++) + 
-> nvme_tcp_stop_queue_wait(&ctrl->queues[i]); } static int 
-> nvme_tcp_start_io_queues(struct nvme_ctrl *ctrl, @@ -2628,8 +2630,10 
-> @@ static void nvme_tcp_complete_timed_out(struct request *rq) { 
-> struct nvme_tcp_request *req = blk_mq_rq_to_pdu(rq); struct nvme_ctrl 
-> *ctrl = &req->queue->ctrl->ctrl; + int idx = 
-> nvme_tcp_queue_id(req->queue); - nvme_tcp_stop_queue(ctrl, 
-> nvme_tcp_queue_id(req->queue)); + nvme_tcp_stop_queue(ctrl, idx); + 
-> nvme_tcp_stop_queue_wait(&ctrl->queues[idx]); 
-> nvmf_complete_timed_out_request(rq); }
+>> +maintainers:
+>> +  - Pavel Machek <pavel@ucw.cz>
+>> +
+>> +description:
+>> +  The AD5820 is a current sink driver designed for precise control of
+>> +  voice coil motors (VCMs) in camera autofocus systems.
+>> +
+>> +allOf:
+>> +  - $ref: /schemas/iio/iio.yaml#
+> 
+> You have the ref, so #io-channel-cells is allowed, but you need to say
+> what the value for it should be for *this* binding. IOW, you still need
+> to list it explicitly.
 
-Or perhaps something like:
---
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index 5041cbfd8272..3e206a2cbbf3 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -1944,7 +1944,7 @@ static void __nvme_tcp_stop_queue(struct 
-nvme_tcp_queue *queue)
-         cancel_work_sync(&queue->io_work);
-  }
+I considered to keep the previous and new binding 1:1 and drop 
+#io-channel-chells with the all references to it (missed this one).
 
--static void nvme_tcp_stop_queue(struct nvme_ctrl *nctrl, int qid)
-+static void nvme_tcp_stop_queue_nowait(struct nvme_ctrl *nctrl, int qid)
-  {
-         struct nvme_tcp_ctrl *ctrl = to_tcp_ctrl(nctrl);
-         struct nvme_tcp_queue *queue = &ctrl->queues[qid];
-@@ -1963,6 +1963,29 @@ static void nvme_tcp_stop_queue(struct nvme_ctrl 
-*nctrl, int qid)
-         mutex_unlock(&queue->queue_lock);
-  }
+Would that be ok for v4?
 
-+static void nvme_tcp_wait_queue(struct nvme_ctrl *nctrl, int qid)
-+{
-+       struct nvme_tcp_ctrl *ctrl = to_tcp_ctrl(nctrl);
-+       struct nvme_tcp_queue *queue = ctrl->queues[qid];
-+       int timeout = 100;
-+
-+       while (timeout > 0) {
-+               if (!sk_wmem_alloc_get(queue->sock->sk))
-+                       return;
-+               msleep(2);
-+               timeout -= 2;
-+       }
-+       dev_warn(queue->ctrl->ctrl.device,
-+                "qid %d: timeout draining sock wmem allocation expired\n",
-+                nvme_tcp_queue_id(queue));
-+}
-+
-+static void nvme_tcp_stop_queue(struct nvme_ctrl *nctrl, int qid)
-+{
-+       nvme_tcp_stop_queue_nowait(nctrl, qid);
-+       nvme_tcp_wait_queue(nctrl, qid);
-+}
-+
-  static void nvme_tcp_setup_sock_ops(struct nvme_tcp_queue *queue)
-  {
-write_lock_bh(&queue->sock->sk->sk_callback_lock);
-@@ -2030,7 +2053,9 @@ static void nvme_tcp_stop_io_queues(struct 
-nvme_ctrl *ctrl)
-         int i;
+> 
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - adi,ad5820
+>> +      - adi,ad5821
+>> +      - adi,ad5823
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  enable-gpios:
+>> +    maxItems: 1
+>> +    description:
+>> +      GPIO spec for the XSHUTDOWN pin. The XSHUTDOWN signal is active low,
+>> +      a high level on the pin enables the device.
+>> +
+>> +  VANA-supply:
+>> +    description: supply of voltage for VANA pin
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - VANA-supply
+>> +
+>> +unevaluatedProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/gpio/gpio.h>
+>> +
+>> +    i2c {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +        coil@c {
+>> +            compatible = "adi,ad5820";
+>> +            reg = <0x0c>;
+>> +
+>> +            enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
+>> +            VANA-supply = <&vaux4>;
+>> +        };
+>> +    };
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index af3537005de35dfd0ded11bdc2b9c63e10c70e93..366ed4905fc9b32862a4fd665cf5f4e09fafc989 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -17274,6 +17274,7 @@ M:	Pavel Machek <pavel@kernel.org>
+>>   M:	Sakari Ailus <sakari.ailus@iki.fi>
+>>   L:	linux-media@vger.kernel.org
+>>   S:	Maintained
+>> +F:	Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml
+>>   F:	drivers/media/i2c/ad5820.c
+>>   F:	drivers/media/i2c/et8ek8
+>>   
+>>
+>> ---
+>> base-commit: b425262c07a6a643ebeed91046e161e20b944164
+>> change-id: 20250314-b4-ad5820-dt-yaml-3220bf2f1e40
+>>
+>> Best regards,
+>> -- 
+>> David Heidelberg <david@ixit.cz>
+>>
 
-         for (i = 1; i < ctrl->queue_count; i++)
--               nvme_tcp_stop_queue(ctrl, i);
-+               nvme_tcp_stop_queue_nowait(ctrl, i);
-+       for (i = 1; i < ctrl->queue_count; i++)
-+               nvme_tcp_wait_queue(ctrl, i);
-  }
+-- 
+David Heidelberg
 
-  static int nvme_tcp_start_io_queues(struct nvme_ctrl *ctrl,
---
