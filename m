@@ -1,152 +1,130 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1774F28399
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 13:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8413327700C
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 13:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744981926; cv=none; b=QOtKBhSlPrtFlFne6tpPGVuCjWkmWeuPkByHTve/UileusoN1T524FefcaXvw3SgLHydWXjRJXSCYVHoCCQxIVJam9EafG7KoRuAFoqeEEF3WpmGvI55I0PoUCVcYgciNI+Q4DY9eNe4RMChDtFeUubzwOMOX45yfaq00O9EmSY=
+	t=1744982042; cv=none; b=ci+Xu3QAnLNduL1f4tbZcVtXjnkv8mokOZbLrOeLgoEeo3NJAZDtSY8x6PBKJmOLg5+GJAfC/7xDUJUZ4x4/+Rdo5MD+IJFld0LWEYUWCTYnxqNtEujZGXqRSAyppyndCUcerNgAgOd/lNLJ5wpneNSXBDQ2OmVNiob9W7cqjGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744981926; c=relaxed/simple;
-	bh=Fpyrr7Bk+jIkRZ6OSahA38xlx+xTco2EMP0Gwx5qCPs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hVVucZxD384pweHUtR1SZEo8z8DYdaISOcU0m7O/0Y0WRbI7ynGTZL4cXxdTsCEVuSuwY9oMzUS9evH/6zCW8zFHaOzQkTNZh9lR1PcUX6Ekg5jNeVu8wA71g1Yt37t+Sm91iGkXqyxyJVia5LjNtooOYe5ClojNHyTUosSa2k4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=BCwP7gHG; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1744982042; c=relaxed/simple;
+	bh=oG6I7vuTiOh+DBUVeavHMpkt72p29hj0RNzTc/V8MdM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=F53NvPO36vcLXiYWhAD5dD6cCcEZg0dJkorpWswmNUEVrk8uMz3SWXXi0IA2sOqRoVPKK68R0BC9DtknIphA2ZhfwoItW0T3M4G3nCnOQFJOChggl2B42MUy3ypOLcNGdvjuXb7rA/eYTwlmF/pxpMDO6klnmGS//WDNpljrKPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=XShPdjQx; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="BCwP7gHG"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c592764e54so217666085a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 06:12:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="XShPdjQx"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-acb415dd8faso297958866b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 06:13:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1744981923; x=1745586723; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=aMAgxXTmZLXXT9p3fPBY8vuGF8bkgr7l60OmevMYynw=;
-        b=BCwP7gHGskKa2yvM6JNu6BG4B8gT5gHHWnMBLBG0lXuYTWPpnXFkE3SapTtbzY4fYf
-         R+CgF94ZKN8tiANXjr6LoVV23SZHDyoIwQBhLIIa8cf/6Ts7NP4iEUAQdn00ZLfUe08Y
-         cZgRifqpKviyCSl2uYzzpzwgnPIyB9s+vxIJI6naQgjSp9nHUpZahNquh3n72hDwO+CG
-         mxmxQFtP1hc//dMNm5JuisL/Hz5puqy++FdDcv3USgWQFbhG5psenB+h1yJ2eVl84F+w
-         Npej5ZDO95Ftr5aF1cven1ZkbdnL+AGS+NLIRS+7w3HKv5G1vMUKkbdHRB0W6Q4LO3ns
-         SKRA==
+        d=fairphone.com; s=fair; t=1744982038; x=1745586838; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3X/gbMZWU54cMJwy26Gb2B5XgxbyYs+jksPX2/CEuik=;
+        b=XShPdjQxT9cBlynxEapVFLmhKDcZQtSYGgPmREbLBVPOMYs/XiDqlySHqoM66C6bYy
+         Oqrm35jkGrEWZr/qKteoUsrmWfI2VhUrGKrYjPglbpVojnvauFMhqHU2Kq8T+ULYg5bS
+         2WGmRdLjx+sussZB1w7cugBZvpfvLSom/pv78QfUgktp0Yc4q+hg0xyy6+IdJXuM1z5O
+         IjJe1lbyy74uEdapMxirOJ3f0ksTMwsdT2LJb/liGFwMlfh0DCXPsffmpdHxDnMj+0UX
+         JFxu//gupFjdVxuwj7Pv+r+tlX8J92G/6NU6UW320w9jIKE5p8dD403Xs72V25vpeJnt
+         YP1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744981923; x=1745586723;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aMAgxXTmZLXXT9p3fPBY8vuGF8bkgr7l60OmevMYynw=;
-        b=rQ7eNAsM6G6nw6HSjXmh091w/1IrrrP6rnQRPHEM6XOYWk6HMiiFXz7yK3n2Dabdut
-         Oq7vOptzXR/MJOK0cUW0Xk2rAgZJlXbcHXGJxUlxUpHDykkBosgtf0s4+1CGuvoXD1Vn
-         aC9amp6mbzY5aCU/ENy4gEQon8NSqpPjQK9UvAIP03YgspXOrUule5osHuUZhJC7K2cG
-         uERW141o7M6en9b7EQnDn31yyBgT1ei6D/7B3Ghhxjgs5Tf58NjkDqsQmd+/o46lI4td
-         +KYXfEzvm+9xtL0Nrg3XysPflVVs3Muf1FhD+hSlxgs0rhYFBQ9dZE8CvJEmV8/cXKpY
-         HGNw==
-X-Forwarded-Encrypted: i=1; AJvYcCUE74QCrvM7NjTvYAJMQ1A58+JJaEc8rZhmEcv06OFbisCmBh2D3YPqLJrsKEf7rjFr3OhacBiMmSM4yE4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCBT6AjQUNw0yBsEV+uIr5j9f54N2iRgGFrTt24ftsY3ElXhEi
-	VpTdZEe1qeS/AsaUnnvNoSZs9UM+wKg+mNRytGAoj7QK2ylCHGzTBCJNAKAWDFs=
-X-Gm-Gg: ASbGncudRf5rM5vCiYuOOE82hM0cIZ+FvfmgYyGFRHjhmGOqVVUdQNBpRnxVadbVppv
-	UWDIaTX/blvfBIpiVltgUbDVgJkZ0XmKcWCIOGbwh0YkEE+JY78MOPnLq2XXqmGu3Zprw3aW21o
-	O5TJQDVAcRPAxc8V5yImxWP4+izhtEvhVF96DTdNRUB7gGWSBnfsQKaI9KJUalluiABJMYuO3tL
-	JZz8MLFqE8WnL8l2LQR+XxB2hc7PVTYy0WKpTfJO7lGk0LK+mAs7h9MBZv48FybEwqxr2cQyt8o
-	HBpvQnXQynmb8OcMWYupnjuTB9sZhj+xXyyvFhm3IQIGcw==
-X-Google-Smtp-Source: AGHT+IH/XoxSUArL6cVz4iPViec3wwwSipsn5opstVs0fi+r5E8l1PRZpdXcrSGXm10//nNhqxZmPA==
-X-Received: by 2002:a05:620a:c4a:b0:7c5:af68:5019 with SMTP id af79cd13be357-7c927f97bbamr406396985a.13.1744981922969;
-        Fri, 18 Apr 2025 06:12:02 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:15:9913::c41? ([2606:6d00:15:9913::c41])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925a7147esm106040285a.14.2025.04.18.06.12.01
+        d=1e100.net; s=20230601; t=1744982038; x=1745586838;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3X/gbMZWU54cMJwy26Gb2B5XgxbyYs+jksPX2/CEuik=;
+        b=tOMwc4cA4hTMZVbrBqxPXz8jh/R7/+KBZb4FLg5GO2jAjetmiJZkz0S+S08LQsatMs
+         17LUZRcUdVy735JKWrPk1Y8s3DMdnRhcZn2vpMjEjalDw0mnQykDXcqsAuzXZCVcARJf
+         PaElpFrzntKtJ2oEw1cuThgydKLCF5j3nmQiqO9wZ4jdWIrb+E/B9w+yg6Kazh1dsfxS
+         p3YJT4rayxgtbHK1638W+wVZdG8Idrl554N0/0X52KHyCQOFJ/SulBMbwEpGZ2eNasZg
+         tYfoLmD5GxU8yqRdSGxedIbjQhrpd21MLtmB1ImHeFhAvoLrxu/lkUd3KPiiX03FpH2b
+         9HAg==
+X-Forwarded-Encrypted: i=1; AJvYcCWzHYd1non4dcoQIVYLy04Vc1XKqHiWzlzJx3chaJMa4j89E49QTCS6DJlLKjDQMrnBJ6tZOMiKwv9aqsU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4cyFFcJKV1rEdAqbAhRudedTGbb33wr4gxe0R3YOnVrlszSZ4
+	5RyU4NoApcaxu0HzzD8jVSRgDq7yHgEHl0DskOyydtwl1L9imcKOctssdd7B7qs=
+X-Gm-Gg: ASbGncvNb6QtQDALDD11/EsdSDyJpre9Ig/vQQDYe6iHRysi8K7+3wPbtRR4HoyfVQ4
+	OhzBK17a8Sg2zKoe7VaV08UXFfigkJCUQBGdDicPdrvjZB5jZsEv+tS59nfx0+D55mJlzOKtIs1
+	gKr2C9orgbxK2pn+lW3/kQDWioG0PeHvZywMlNAfnTSBiUXB+vZDBcZ68Jp1HpGDVjAR7kEFQVZ
+	QshFGkQ6xchVCXuly3KV5A9hrw5j07SpFaJmdkx5yOZoPaMy5Xx6PB07Qz7i/XsMyQb520kCtso
+	qUETfPg8jMYaqiqlFe69ztlacekI5aCaoRPcNEuyoW24T1VKyXrQoOTpI9TY93MDJ5/vAGvvDZo
+	4vhzBSR+dJiYo/A==
+X-Google-Smtp-Source: AGHT+IHwVVtosWsJoxBbmBCH8nalV1MQnRR/fXT4Se9eLne1pthBsyWXKcYt1cN17cYK/1WeVttuPw==
+X-Received: by 2002:a17:907:c807:b0:ac7:eece:17d6 with SMTP id a640c23a62f3a-acb74b2c9a7mr267090566b.17.1744982037837;
+        Fri, 18 Apr 2025 06:13:57 -0700 (PDT)
+Received: from [100.64.0.4] (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef41605sm115901966b.124.2025.04.18.06.13.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 06:12:02 -0700 (PDT)
-Message-ID: <4549d9abf5f93fb6f417d0fb8f73877272d7c495.camel@ndufresne.ca>
-Subject: Re: [PATCH] media: imx-jpeg: Drop the first error frames
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: ming.qian@oss.nxp.com, mchehab@kernel.org, hverkuil-cisco@xs4all.nl, 
-	mirela.rabulea@oss.nxp.com
-Cc: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
-	festevam@gmail.com, xiahong.bao@nxp.com, eagle.zhou@nxp.com,
- linux-imx@nxp.com, 	imx@lists.linux.dev, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	linux-arm-kernel@lists.infradead.org
-Date: Fri, 18 Apr 2025 09:12:01 -0400
-In-Reply-To: <20250305022513.2312731-1-ming.qian@oss.nxp.com>
-References: <20250305022513.2312731-1-ming.qian@oss.nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
+        Fri, 18 Apr 2025 06:13:57 -0700 (PDT)
+From: Luca Weiss <luca.weiss@fairphone.com>
+Subject: [PATCH v2 0/5] Add DisplayPort sound support for Fairphone 5
+ smartphone
+Date: Fri, 18 Apr 2025 15:13:41 +0200
+Message-Id: <20250418-fp5-dp-sound-v2-0-05d65f084b05@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAVQAmgC/3XMSw7CIBSF4a00d+w1QGtfI/dhOigvuQOBgBJN0
+ 72LnTv8T3K+DbJJZDLMzQbJFMoUfA1xakC51d8Nkq4NgomOjWxCGy+oI+bw8hplO/SjbRmfpIZ
+ 6iclYeh/cbantKD9D+hx64b/1D1Q4MtSDXIUSne3ldLUrpeiCN2cVHrDs+/4FIRKNx6wAAAA=
+X-Change-ID: 20240809-fp5-dp-sound-b3768f3019bd
+To: Srinivas Kandagatla <srini@kernel.org>, 
+ Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org, 
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Luca Weiss <luca.weiss@fairphone.com>
+X-Mailer: b4 0.14.2
 
-Le mercredi 05 mars 2025 =C3=A0 10:25 +0800, ming.qian@oss.nxp.com a =C3=A9=
-crit=C2=A0:
-> From: Ming Qian <ming.qian@oss.nxp.com>
->=20
-> When an output buffer contains error frame header,
-> v4l2_jpeg_parse_header() will return error, then driver will mark this
-> buffer and a capture buffer done with error flag in device_run().
->=20
-> But if the error occurs in the first frames, before setup the capture
-> queue, there is no chance to schedule device_run(), and there may be no
-> capture to mark error.
->=20
-> So we need to drop this buffer with error flag, and make the decoding
-> can continue.
->=20
-> Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
+Add the necessary sound card bits and some dts additions to enable sound
+over DisplayPort-over-USB-C, e.g. to a connected TV or monitor.
 
-This seems like a relatively important bug fix to be, perhaps you can
-offer "Fixes" tag to this commit ?
+The UCM files can be found here:
+https://gitlab.postmarketos.org/postmarketOS/pmaports/-/tree/master/device/testing/device-fairphone-fp5/ucm
 
-> ---
-> =C2=A0drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c | 9 +++++++++
-> =C2=A01 file changed, 9 insertions(+)
->=20
-> diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c b/drivers/med=
-ia/platform/nxp/imx-jpeg/mxc-jpeg.c
-> index 1221b309a916..0e6ee997284b 100644
-> --- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-> +++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-> @@ -1921,6 +1921,15 @@ static void mxc_jpeg_buf_queue(struct vb2_buffer *=
-vb)
-> =C2=A0	if (ret)
-> =C2=A0		jpeg_src_buf->jpeg_parse_error =3D true;
-> =C2=A0
-> +	/*
-> +	 * if the capture queue is not setup, the device_run() won't be schedul=
-ed,
-> +	 * need to drop the error buffer, so that the decoding can continue
-> +	 */
-> +	if (jpeg_src_buf->jpeg_parse_error &&
-> +	=C2=A0=C2=A0=C2=A0 !vb2_is_streaming(v4l2_m2m_get_dst_vq(ctx->fh.m2m_ct=
-x))) {
-> +		v4l2_m2m_buf_done(vbuf, VB2_BUF_STATE_ERROR);
-> +		return;
-> +	}
+This series - in spirit - depends on the series enabling DisplayPort in
+the first place, but can land pretty independently, especially the ASoC
+bits:
+https://lore.kernel.org/linux-arm-msm/20250312-fp5-pmic-glink-dp-v2-0-a55927749d77@fairphone.com/
 
-Looks good to me, an alternative implementation could have been to
-merged into the error branch above.
+Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+---
+Changes in v2:
+- Revamp series based on comments on v1, doesn't have much too much in
+  common anymore
+- Use sm8250 instead of sc8280xp sndcard file, so port other required
+  changes from sc8280xp.c to sm8250.c
+- This also changes the sound card compatible to from
+  qcom,qcm6490-sndcard to fairphone,fp5-sndcard
+- Link to v1: https://lore.kernel.org/r/20240809-fp5-dp-sound-v1-0-d7ba2c24f6b9@fairphone.com
 
- 	if (ret) {
- 		jpeg_src_buf->jpeg_parse_error =3D true;
-=20
-		/*
-	 	 * If the capture queue is not setup, the device_run() won't
-		 * be scheduled, drop the error buffer so that the decoding
-		 * can continue.
-	 	 */
-		if (!vb2_is_streaming(v4l2_m2m_get_dst_vq(ctx->fh.m2m_ctx))) {
-			v4l2_m2m_buf_done(vbuf, VB2_BUF_STATE_ERROR);
-			return;
-		}
-	}
+---
+Luca Weiss (5):
+      ASoC: dt-bindings: qcom,sm8250: Add Fairphone 5 sound card
+      ASoC: qcom: sm8250: set card driver name from match data
+      ASoC: qcom: sm8250: add DisplayPort Jack support
+      ASoC: qcom: sm8250: Add Fairphone 5 soundcard compatible
+      arm64: dts: qcom: qcm6490-fairphone-fp5: Add DisplayPort sound support
 
-With or without this suggestion, but with the Fixes tag, you can include in=
- your v2:
+ .../devicetree/bindings/sound/qcom,sm8250.yaml     |  1 +
+ arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts | 31 ++++++++++++++++++++++
+ sound/soc/qcom/sm8250.c                            | 28 +++++++++++--------
+ 3 files changed, 49 insertions(+), 11 deletions(-)
+---
+base-commit: 7f1dd4e6634d085f3c9652d4e0f1903659fb96f9
+change-id: 20240809-fp5-dp-sound-b3768f3019bd
 
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Best regards,
+-- 
+Luca Weiss <luca.weiss@fairphone.com>
 
-> =C2=A0end:
-> =C2=A0	v4l2_m2m_buf_queue(ctx->fh.m2m_ctx, vbuf);
-> =C2=A0}
