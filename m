@@ -1,38 +1,38 @@
 Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F5E2512FC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92EF11FF1A6;
 	Fri, 18 Apr 2025 06:31:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744957875; cv=none; b=nkt/gqw/sTom857fiRAAjSmLaZUmyJrp5oArkb0i3tsJkjWZfnV8FZmwi9VRWMGq6/6yiz6dQcPxOIpeGEgTEf8R5m7wNvE9l0hBGB/hDnXKyfujrHqYylKAZgYSBori7srovir+uXoYyGXswKmfc9epVEv0fTnkoVCo1h6a22o=
+	t=1744957876; cv=none; b=FwUZgD98ylUJR5C05zzefA4fRpPIrdqoTaA1nLNNARZ4CcRpZxdM0Nr8M4iTybjjXCJSakaac9onciBbkj18+9tmaeqPsohuLd675/DKl1Ufrw7yJfCMWKrf2pbAbc89calZDVQnNzW7YW/xQjSbzjwmHfomVpXTmS0jaD5lOFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744957875; c=relaxed/simple;
-	bh=VAo/Ca5+mJ33zeiK46eux7tglQLRdsuGWeqA920KCco=;
+	s=arc-20240116; t=1744957876; c=relaxed/simple;
+	bh=BF806nDt7Rbxny70SijRBFi5sg+adxWDqU225xT+InM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=u2HBuIjD9y4pZiUSbQNu0N4Dg1ApXyzR3vg82N3oIzQbv/j4JDeO+jHPMDglSBIzOOvH5Y/uu7Pkukmt16veaGT8N3cOizA5aXUIrxAvd97maarVl0p/Hw5rWluVvQESTYFkeWIIjn1sIwI2UVP3edjYHyyn0wtjtihYu29Yzp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=CuvAIVtt; arc=none smtp.client-ip=46.19.9.99
+	 MIME-Version; b=o8DF9AbmksuB7bOS7Fs8OhLOjcCcCWgMukIsWNzTdwFWi65NPvRGdpI0eUJRAJAlo8X5JCV+prPVj2Yz5XXhPV7m0jgTyVp4ruGnBJ9KgFQw9EuTtEKDodcPtGh++hr/Nbg1HLdChrc3KTnFlpKzE+fWOwzcPcenrT2hRPVwjNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=pVxd4hlW; arc=none smtp.client-ip=46.19.9.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="CuvAIVtt"
+	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="pVxd4hlW"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
 	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=mqRoswbCU2PmZaM2YpiQHIcOlqwDnelfkfYWs64Uy74=; b=CuvAIVttemxXUump81vBKO2aPJ
-	cf52lX0sY/Hz8Udd/aHmG9/68XlIg2cxw/rvh59dmlV9iyTlvqNpgV9q3d9aG97wvRn1LaaH/70dz
-	QpBLW/89VZqg52L416scwGQo8i+0blS0QyjK53Z02tooMmuKqW9K1xda+uivA3m6ibgwljzs6yrco
-	CjT/cgM5gvXjdbf0nY9GuaupYTbYRaPeBHB4zx0ypJufMBCywXIup9rNslncVbsM42ULNtzWOPIPQ
-	W48xnmSNUeV8tq0BRSaVy8XMt45j0wAxcfoTh5FdpDEJEzut/1Q7ByeRKGZ/R5AGsdVLDvfYstMY2
-	L+q8CC5g==;
+	bh=ZM1mvqa4ajyuKSIc1N4rndazopwUD8UEQrno8FzsF40=; b=pVxd4hlWwMroo6yUHzN9Zi6ZX4
+	NuzkRgqs6AQ8KL4J/vOgPYu1xjPwdN73nKySzyCDf1FhQY9jDM4l4iMPNytxxZ71pjOU/dGE7NxDw
+	3fjnNUIbGrm5fJOUlTsMQnJ6DuwMBFn10ZW0+m38+GxFcOy6rsGfSxrHA01mWg3JpM94W3Lj7SZDX
+	A+pwZ0UbacnKjii48CjXgl9/QKG65Md0qfbucAcHgxqDat3PZ5e9zEhoa8DpzNzL6kzIaiS1WaEcE
+	9baEXK7Gv1qRfPlSHk4WK+jO9aw51SEVnsGzZTicpMTOdZHqZdJvall2onY+z0Html5vZUsXw0Dss
+	xbgh+rdA==;
 Received: from [89.212.21.243] (port=56446 helo=localhost.localdomain)
 	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96.2)
 	(envelope-from <primoz.fiser@norik.com>)
-	id 1u5fFi-00AbM0-0T;
+	id 1u5fFi-00AbM0-0D;
 	Fri, 18 Apr 2025 08:31:05 +0200
 From: Primoz Fiser <primoz.fiser@norik.com>
 To: Rob Herring <robh@kernel.org>,
@@ -47,9 +47,9 @@ Cc: devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	upstream@lists.phytec.de
-Subject: [PATCH v3 03/15] arm64: dts: freescale: imx93-phycore-som: Disable LED pull-up
-Date: Fri, 18 Apr 2025 08:30:52 +0200
-Message-Id: <20250418063104.2202085-4-primoz.fiser@norik.com>
+Subject: [PATCH v3 02/15] arm64: dts: freescale: imx93-phycore-som: Add EEPROM support
+Date: Fri, 18 Apr 2025 08:30:51 +0200
+Message-Id: <20250418063104.2202085-3-primoz.fiser@norik.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250418063104.2202085-1-primoz.fiser@norik.com>
 References: <20250418063104.2202085-1-primoz.fiser@norik.com>
@@ -71,32 +71,37 @@ X-Source:
 X-Source-Args: 
 X-Source-Dir: 
 
-There is already an external pull-down resistor on the LED output line.
-It makes no sense to have both pull-down and pull-up resistors enabled
-at the same time. Thus disable the internal pull-down.
+Add support for the EEPROM chip available on I2C3 bus (address 0x50),
+used for the PHYTEC SOM detection.
 
 Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
 Reviewed-by: Frank Li <Frank.Li@nxp.com>
 ---
 Changes in v3:
-- no changes
+- add Reviewed-by tag
 
- arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-index 0528e293c03d..06a9e674e338 100644
+index 507a71f9294b..0528e293c03d 100644
 --- a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
 +++ b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-@@ -196,7 +196,7 @@ MX93_PAD_ENET2_TD2__ENET1_TX_CLK		0x4000050e
- 
- 	pinctrl_leds: ledsgrp {
- 		fsl,pins = <
--			MX93_PAD_I2C1_SDA__GPIO1_IO01		0x31e
-+			MX93_PAD_I2C1_SDA__GPIO1_IO01		0x11e
- 		>;
+@@ -154,6 +154,14 @@ ldo5: LDO5 {
+ 			};
+ 		};
  	};
++
++	/* EEPROM */
++	eeprom@50 {
++		compatible = "atmel,24c32";
++		reg = <0x50>;
++		pagesize = <32>;
++		vcc-supply = <&buck4>;
++	};
+ };
  
+ /* eMMC */
 -- 
 2.34.1
 
