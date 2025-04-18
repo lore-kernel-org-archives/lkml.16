@@ -1,118 +1,104 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20146213E9E;
-	Fri, 18 Apr 2025 01:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9959725E455;
+	Fri, 18 Apr 2025 01:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744940955; cv=none; b=Y+rYeyiy7rb5lKye57ksgqwdWGfRcePYuO0D7vZ74Rco4RlKR/o7lxv/rju9cvtUdt/2cFFZR+CA1osg4W8lUkAsJjY/57bnYSWSh1EQqfVIVlUubX7wpsww2ROMIDGrDPA4V2eaAlbc078pNqShJiAYTa+cr0lf+/J0FEcRqho=
+	t=1744940969; cv=none; b=gVz1qBulJ54aWYQhEKOU6RkgaFwFdd2aWwiFakIahyHOtxcGTS14qA3B/IDhCZgyacfx3x9ln0RlXrDXzcghHnZryc4xcgoYWZ4RZG2/7+VYRAIyLzd9BydBlsdcA90u3M6fWP7db5733SYcjTbZS+1GjQ+jb7Ku/Ypw6Rshhtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744940955; c=relaxed/simple;
-	bh=T5YSTaPq/cYz27PUavSqTEdEuOQrc6qcfRPknuXgv58=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H08ZA4/AUENrq3flSjBrxngDWfr5qFgyI3j8lAbEGkLjsQDJYr32cBonTf2ubPY5p6QrBxmDul7fAvUYIl3E+himQyJeLJk1HVsaqyK3GIfoAPz/aq5R4DVdV9y2aI6GJqFHdEBjzYTsMZSRVwVoiF666AZjddaFvXz17GgXb8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HjdYTi3H; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HjdYTi3H"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e6deb3eb7dbso1261202276.0;
-        Thu, 17 Apr 2025 18:49:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744940953; x=1745545753; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WmglLRoVsuPHltsr1TwX2csib2NZ7x5pIBHoukxn5Ak=;
-        b=HjdYTi3HddjFUolq+aYWh8A1m29QnvdRDFia3EQzOOyP6n8EsuS7JoRzNMqPBgZYg+
-         2ZE3KzSTOvcpZsGOSYRFd6NYwHo/LdQOwA6geC/PJmeCF3I4tLLXwbc0dSJ+mIHFcuDs
-         8OE/Fpr5Bkqh3un4c0LMoh9qGpHrM0+tswqJMTzfh4wlekd2I4A/RY/nWuyVC7Zwc7F8
-         Dbxw9TatTc1+UPycY7Xir2KNOdc1HEpfkz4wIawupvLP7mUOUM1XDQJoq4iyJk5ZYCnS
-         OUyYxzI1Fs3c0JnZDG4I0ly05olaIYq2vwfcwKQKuf9SRMmxujT970iLJj9NKsFXMWCi
-         0OOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744940953; x=1745545753;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WmglLRoVsuPHltsr1TwX2csib2NZ7x5pIBHoukxn5Ak=;
-        b=J//+1LFgfQ22UU9ZnPPf44fMZPVsLZz9lHCtpRnjZ/FZLRh5Nxhg5d5c68o5anLkMr
-         2AXgLQ0wlJcUasODctrMfsyhfW/5wL5vE8r+FVNLEBvtrUS7LPPMTHLCu76cVoxNWpHJ
-         zDaMVdSYR6BMS2w2t+gI3jZavrFv9dtgWMVkTCdMkqVhS+d8V7UOHCdRYLBBYz29u4cS
-         cbfc7U0ZSPXdoMbreB6kmX+NBlX0AvPUBuNvBmx1M5sQDO2MNzrV7AZMcR31sJ8bC/8k
-         5Tk1FojCt0tGUqTBjvlbtJDYEo2j/7EJqxckRs2vTf+VgFoeqXRj/bgjvbq7TF1fMfOi
-         U6pw==
-X-Forwarded-Encrypted: i=1; AJvYcCUnHde7F4zxnOHHPaIimqT1EgD5YzVnwrdpycWfxycOjo56hLk1cRGgCyUpf2aOG49OmEsYhX4vgrSbZsXc@vger.kernel.org, AJvYcCVdhjvxariMC/xQFNbzx8PaerxUodQzq8AoEC5ZuwnOIinEwZAqGrRiN74oGXG4LrHngKDkV9icV2ZnJ8M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvrBwQNPwsbMY2rIFi9aHL5pQItKikTsI+QRjR7U6Wmqxecigu
-	t6kZKPkwtisLUTv9g+p6zbF3zfYlm8bHCK+U5jwX8fq8y1K6rEF5vOEVir+q3O5ivjMk4gxfhns
-	yEniJ2ZaSbaguJHk971KI2wepE4s=
-X-Gm-Gg: ASbGnctInX4YSeXdW4gsVftzXeOhZJZfPEgh92riCgXW+4Hn6epcGwS3YB0W8qd/JAP
-	j71wDOwDqgzI71gQ00MjvoCbX/ivUDMs7oz1Kzpo3P5fqbYPU8mQBafTgcnefTFoTfJ0FnP/1Gu
-	EiBGo7vYGYYOJB21r5OA/s8753Z5zF7NX7zn5pCw==
-X-Google-Smtp-Source: AGHT+IGUJoDzahqgdqLndIsmYoX2akOdFbgKB06u7VmDFKJltr6uEQVcZZQMdCy9WoqoFlbvS6cd7gUnAw1TFwGFUck=
-X-Received: by 2002:a05:6902:2510:b0:e72:8658:5839 with SMTP id
- 3f1490d57ef6-e7297eae575mr1455987276.32.1744940952774; Thu, 17 Apr 2025
- 18:49:12 -0700 (PDT)
+	s=arc-20240116; t=1744940969; c=relaxed/simple;
+	bh=B/85nIAgaufDDrEWIOlC0tWiCnzSQtFEMAoQLqN8pwI=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=gbNQEIwNk5oRGT/sOCU6Hv7ePTO1tiFIDyxlkCiKD5q/czen1peFVmU1QxEzhDiamp8eEkwjRHEqxGX5juU4Nq7oKexdvki2dJTLxE9ACFTEKpBXg2CvZRaRZNiKGoZR2Z32OwiIlP4tulsq/1bCBHjytWQ/CrWWvWaMgre5XGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=airkyi.com; spf=none smtp.mailfrom=airkyi.com; arc=none smtp.client-ip=54.243.244.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=airkyi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=airkyi.com
+X-QQ-mid: izesmtp80t1744940890t33e52999
+X-QQ-Originating-IP: xxYq8I7Tn0LYbD/zhGkQUHqaOq+30P2WCr1qDmsQs4c=
+Received: from DESKTOP-8BT1A2O.localdomain ( [58.22.7.114])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 18 Apr 2025 09:48:08 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 12449981161467156277
+EX-QQ-RecipientCnt: 20
+From: Chaoyi Chen <kernel@airkyi.com>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Jianfeng Liu <liujianfeng1994@gmail.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Jimmy Hon <honyuenkwun@gmail.com>,
+	Quentin Schulz <quentin.schulz@cherry.de>,
+	FUKAUMI Naoki <naoki@radxa.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Alexey Charkov <alchark@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Chaoyi Chen <chaoyi.chen@rock-chips.com>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] Add support for RK3588 EVB2 board
+Date: Fri, 18 Apr 2025 09:47:55 +0800
+Message-Id: <20250418014757.336-1-kernel@airkyi.com>
+X-Mailer: git-send-email 2.17.1
+X-QQ-SENDSIZE: 520
+Feedback-ID: izesmtp:airkyi.com:qybglogicsvrsz:qybglogicsvrsz4a-0
+X-QQ-XMAILINFO: N7MSp95pYuqVdt5Ada0qswa5Q85vZDVGKwMX0tgjkJInZHvrW3t2kIpT
+	OabEc/IShIOWW3qSfCsOgAEefqUTTq/dAPi02SD1iVVe+rS2fdmg/5CYwuKVHzMCW4eCdsn
+	4036/i/hYgy9bNJHpSrFvj0mqUUtdn2YXPbxLrGzBhB+OMbORGxv+KL4vvlEPInj9Wolx4B
+	kFj7Tng+HkPScXFqjTmLtPpyv2i15aAGK/097QUG2k9sPQKStbu6mvmfDviP7/zSWpwYosy
+	ylzNndWfRELk8wFjC6833Yn8whG1OFYfz9Ty9GgAwihNFukwpQjOvLw5nhGMQ+2tYp59EhB
+	G/Zrm8AsxXs+t1NgKX9WATZH+GA0Qc+1kkcpHuV+BwIA25xTKpKEt65UNySiY4CEmp9vpmf
+	MjjzqvYAgDJuP0ZMQ3xlxd4cQSp+8uzZwBfSltgFhf3RxKh+7qRCbvBfIXQYyY1jz3nMLvL
+	Kb2b44Xlbt6l2KJ+4bmcI8YI7CkE0yZSRtez1D8j9/hv2qg5+vmu6asg1iNBSVwBR4y4JN+
+	a1i0XNvmYAM2luKuwzAPpPxQL8JA/JDBHQfukP6YG+mz6mb74XJLpWSHSH5+JsSGCIfhB8y
+	tLlNnpvpyVDdXDlrp5Tje6D6HItrtPV25zOpXWRnateo7J+oKXoPKKwGz5T9DElh7zSNBUJ
+	ZifqHDfVPZl0IdW1W/S/t/LnK6bo+vpWJUKYj7cx53Bu33VLYCPNfUSbspZx/nUE5nnN0xs
+	dVIhhoLwiK4YMiZYdsi+jlhq6HsaG9otNhlLJQBMt8lrVoIeWtJE0yGFR+9g05xytoWVi2y
+	aROrv2f/3c3qH9e9PBDCszgiU34dTtGEabd8Ln3rMTlJMBbaMgfrrlNUBJFm45raCY3zkl1
+	9u6mE0qLHjnKM+/N9YOPQsmuqO6hyQlamx+4J+N7OlDwlGT+oaN6YSvWfiWFjevg+4DzeTc
+	TOgdlpI37bx+B9ShpZV1LS6d9+Xc4u4o8B0bVlkHtczBoi9vrLSQ40AKrJ9MQwUp+wmm+Pc
+	ujswug52tnXc06RgCOnSTRM0ZM7L/xuWgMXUol7A==
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250417064940.68469-1-dqfext@gmail.com> <CAMj1kXFPAVXOtPoETKvHB49kjZUPYrsAqsJwdL7p5Cu4xk75Rg@mail.gmail.com>
- <CALW65jY=LnVBYoKPOQnSKgGSA0brKzmo0vqoRDcqF_=jofLAng@mail.gmail.com>
- <CAMj1kXH-u7hiKGQfgYHj_16V4ATN_aHmA_wkvMSyLh+E3+QaAA@mail.gmail.com>
- <CALW65jZVYUZoka7Gbjcoh43qbkD7rGpw8gTZjjOYpZD-BhLyBQ@mail.gmail.com> <20250417165856.GB800@quark.localdomain>
-In-Reply-To: <20250417165856.GB800@quark.localdomain>
-From: Qingfang Deng <dqfext@gmail.com>
-Date: Fri, 18 Apr 2025 09:48:56 +0800
-X-Gm-Features: ATxdqUHBrp0rUxHu64YX4mBWqOm5CVQgF2oCMN8KPRYqB9bzHHQfTOroaVo3v4I
-Message-ID: <CALW65jZGUQ9HsNi3QQQ-A9AAL31zcmqhVGLhKBQPfPM-CB67gg@mail.gmail.com>
-Subject: Re: [RFC PATCH] crypto: riscv: scalar accelerated GHASH
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	"David S. Miller" <davem@davemloft.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, linux-crypto@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	=?UTF-8?Q?Christoph_M=C3=BCllner?= <christoph.muellner@vrull.eu>, 
-	Qingfang Deng <qingfang.deng@siflower.com.cn>, Guo Ren <guoren@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Eric,
+From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
 
-On Fri, Apr 18, 2025 at 12:59=E2=80=AFAM Eric Biggers <ebiggers@kernel.org>=
- wrote:
->
-> On Thu, Apr 17, 2025 at 04:42:46PM +0800, Qingfang Deng wrote:
-> > > I see. But do you have a particular configuration in mind? Does it
-> > > have scalar AES too? I looked into that a while ago but I was told
-> > > that nobody actually incorporates that. So what about these
-> > > extensions? Are they commonly implemented?
-> >
-> > It's aes-generic.c (LUT-based) with accelerated GHASH.
->
-> That's an odd combination.  Normally accelerated AES and GHASH go togethe=
-r.
-> Presumably you're targeting some specific RISC-V CPU.  Is this going to b=
-e a
-> one-off thing for that specific CPU?  Or can we expect many RISC-V CPUs t=
-o have
-> GHASH acceleration without AES?  And if so, why?
+General features for rk3588 evb2 board:
+- Rockchip RK3588
+- LPDDR4/4X
+- eMMC5.1
+- RK806-2x2pcs + DiscretePower
+- 1x HDMI2.1 TX / HDMI2.0 RX
+- 1x full size DisplayPort
+- 3x USB3.0 Host
+- 1x USB2.0 Host
+- WIFI/BT
 
-There are a few RISC-V CPUs that support the B extensions
-(Zba+Zbb+Zbc+Zbs) but lack both scalar and vector crypto extensions.
-One such CPU already upstreamed in the kernel is the SpacemiT K1.
-Another example and the one I'm currently running this code on is the
-XuanTie C908, as found in the CanMV K230.
+v2:
+- Fix wrong indentation in dt bindings
 
-(+Cc Guo Ren)
-Guo, do you know if future XuanTie CPUs will support the RISC-V
-scalar/vector crypto extensions?
+Chaoyi Chen (2):
+  dt-bindings: arm: rockchip: Add rk3588 evb2 board
+  arm64: dts: rockchip: Add rk3588 evb2 board
 
-[1] https://www.xrvm.com/product/xuantie/C908
-[2] https://www.xrvm.com/product/xuantie/C907
-[3] https://docs.banana-pi.org/en/BPI-F3/SpacemiT_K1_datasheet
->
-> - Eric
+ .../devicetree/bindings/arm/rockchip.yaml     |   4 +-
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ .../boot/dts/rockchip/rk3588-evb2-v10.dts     | 931 ++++++++++++++++++
+ 3 files changed, 935 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3588-evb2-v10.dts
+
+--
+2.49.0
+
