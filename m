@@ -1,180 +1,213 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79B72222D9
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 12:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B5F2222D9;
+	Fri, 18 Apr 2025 12:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744978104; cv=none; b=VK123Ig6rI1OROvuIFMJeoKug95rpHMd3SV0rBUO3ofGR18abbij3G00zBExgfDwFlMAlVEe6LLaLScQd+UjoJoyejC1H9UJZqFEFyOhoQczI/YRary4Ow3mgWqFOokIh02zirYA2x6G3j/ZMX7EaOvSdyOxvJtM4Y+/3SpQGXg=
+	t=1744978122; cv=none; b=onxwc3PZQgrKmD97Ds3J42HhvrIdkfFgIDnr7RCghqn7u6jcVgRzD+pDCH6NOqSUNtJ0DIT326AU+FzzKZ9p4MmcTyvuVf0MJ7VJH6PVo9R/yrQEJlMmG3lbm3x8Kqtp0pc8EnsyjtaF7td3Ki6QMZToN1qCviaEq3Ib8vYOFnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744978104; c=relaxed/simple;
-	bh=8pK6dbXeXw9Tyu/wII90qV0dGtq0tr/qLdp/d2oTNzs=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=jXWhpe5D4N36pXlpcCVfQGKg38iadlqDvSSmxf4JFt8gmWYeP4ANlIJbL3vNgfEMnS9TNRQDJ5OHrxurdrAvYT12osTb5lcBK2VRGtCPZTpW7Hvh8SEDXRyLaRBmnNrV+g3IphyYIPOHz8HvkDkCIlz8h5ipWs+107+niVJgVF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d8fd3625d3so913675ab.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 05:08:22 -0700 (PDT)
+	s=arc-20240116; t=1744978122; c=relaxed/simple;
+	bh=QXeq9F4+RajzYztSsJzdtvy0tQ/+4StzIC1gvWiMpT8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FBrDig5XWdxMO++kq96uiUnBl0yOgjiOrlCogEcfZQFcVnGDV1Q8/5Gy7kyVoo44wXYaAqo+P2Y5ipzhXrkxknnmphXhBXoc8iQmpS1UVFGzW/lTwd34nK9URev3HU2sDbCifeS7LK5CVpWyF+wTsKnVC1nLgBB+e1mv7CEXniw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iMkjdkvE; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iMkjdkvE"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54ac9b3ddf6so1783784e87.1;
+        Fri, 18 Apr 2025 05:08:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744978119; x=1745582919; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1K31X9OFoOMTBOdzael8QB7KwUChqs1GlIHBZO6H7qI=;
+        b=iMkjdkvEd7UjAHMTGKg06Ohj0QHo78n84kbzfj9t+5Onf8fw2xUtTe8KJHGGtl8ilN
+         +BHsyKvdPKX1QAUXl8B+L9rMPhEP5eYW9rJr4fYhFHROu4cHTtNIfly6f+nlU6I8ZHFJ
+         hpcdatHbuwahvqKq0Lo04jmpkJFgCZJDSWjHakwSOhns9TcymN9/Fd7XMaDGL2h9Cxfi
+         fgDJBcKukeHsHj/GXzwEZEE9RIwdDFM46EIkrDSlMlYUbT8jNtmHZ91OcTU1pGiwlZ8N
+         OZBp0hdBg1iuBnZssjEVCLE3pCjbyV7k+DOEDl0z5Li4zEvWipjAHrXZ171rUjSMnhRz
+         om+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744978102; x=1745582902;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AzUzRjao+FxUJfZ6bBzW7/hvxHgDfmg7AtciXtp40m4=;
-        b=YicP4jLwZR4alVwX+wxRZPDYxNdpbtNXsa/bmYr8zVAh8z4raVajvT62gHS3KELYmx
-         KNlvTk9y63R7c4XBwwgEJ/whcnb73S2yLlwfLpSzYRvvmdTDW6JpwcYbIuoXtWqgjEo7
-         hKZx/5y9WI7gSMOUqjQnt5vwq5liVZbE7vhJP0YAz7CQOotD7CGjQJXxGqW+3NT+Q9N6
-         fGNRPXy7EF4/clg+8jIbGB5AgJ0kxnIh6Tu+b+w2Oy+McFn4MTNMe35WRBjZrwVqLew5
-         VDA1A2NSxxngCI0mSm5srLUkFC6xUMPEU9IorExorLYKr0xvviUXCoJIFHewprL0vN+2
-         /e/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWzC/EK+ri8QAbUpa+N1NOw9mCaLZkuWddkKqm7tJGrPPSUTp8+EU98w75Ovfy3Hd5gyOYSdrAhLobvWRg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/k3sT+CTwgKkY2iplia/FVe9yt1lyCjmibCq0gFEADynVkRwD
-	ORFDMAz8L4zDcDftDAXacgiC96PmbuyDCxPklWWyFHrChcxzdZY/Tifsw50SySV/xY03W+R0bfq
-	yW64TxuOcboosn+u8Rn+OFGzKzBv7fQaA5mNmGHL8XJyezQWL8xjHGYk=
-X-Google-Smtp-Source: AGHT+IFbx+v9AvwPwRG5r5l+UCCFypKNmbwwiW7Eh1a/sww4AnAEeR62RC4ucUFADbLKcyRLJ484OCRw0cFo6BNGLwlLEXWwJ+D8
+        d=1e100.net; s=20230601; t=1744978119; x=1745582919;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1K31X9OFoOMTBOdzael8QB7KwUChqs1GlIHBZO6H7qI=;
+        b=haAo0c5CAlyh8zUnHNHc39IkBdXT1t+9+IDCnY0JYFa+EANBDPfFbCyVAWpWSIIT18
+         BZ5Qxq78+y1vRGC5eiBq/QK0pj9JH5vZ9nqMFuLDLn7O3GUDbgRNMEZfzwkuGNT06qZz
+         ayXS7lKJMD36SatNWnCV5T1j5nlqIXEvo1ZrlUQYgrerJ5y2gj9hBWnups6ia41luPU1
+         2yOw+adrJth6BJAE6+u8p9C+3YnNO/R38MePg3d87CxQ7HmqKaGMs1uahfbF5S39mSzQ
+         bNC2V64cuOhrfK2SaGv/aNTpV59v3/NZyvNkfOHUbbSFQhZj1a5PCqk3FPhF2bO0Z0IJ
+         tyuw==
+X-Forwarded-Encrypted: i=1; AJvYcCU969sXTd1+zHLwXb+qq+6uC77YfvtbC09SNQXOJgYM9U0EuXs0JdsrPofPlcgJTNCgw3xGh6lhk9eqGATv@vger.kernel.org, AJvYcCVAlOyanZ5hw2SBKtB0KIzLBpkQghyAPUdfqP1yKcCamTlAuGLds4mb3saKJ2kV53eSlK9xUqZMAM7t87SF@vger.kernel.org, AJvYcCVS0BNgU/Di1Ase5w7OxlC3v59AbugNi1MzlsaUyTaagcmTYjvTMC8/pjPUUdLwYy7zhtCrnrdnv43MYI0GZeDz@vger.kernel.org, AJvYcCVXUHqHVtM+o8zflETIpWcrNGt/7YaxUgoAsuRdDcHVgsPco8S6kxucTi7A05GyD9TRkUCnFepkO0s9@vger.kernel.org, AJvYcCWp/0bdvMutelY744NPm5gi9Kw1RyFhxsoVMn7FGgkyCywbOHXg2qHjNmBwMnhdxkpwuUjUIj4yFVK76zo=@vger.kernel.org, AJvYcCX5WfS+h2mDzLLtTL7+POCxAIqQBnTqF+Ou/a6N0Ot3p6fdLtQ/8mdksZM7DGcHSDjI4Yuzv0ol+3HN@vger.kernel.org, AJvYcCXkwv9jH+zlf0KrCc5NeoygB8n9QqiLY7brBZ/QfV9tM2Ir9Kk5ausvkLEuCogjfqnOfbLqwfrZc+3VY+xTT2k=@vger.kernel.org, AJvYcCXu0FJBSYoBO32DDKBcW4MnsFPYatJJSCpeP0QqutWQzMhA4oV81wILyRGsTfT0CNsZ8qRgQGrp@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzbY5/GP6DseZf6U3KD43afZiebXMms8LlbIVdWEoJTff5Fyp5
+	CrOsBtn77oqD6HRmEnPxzh+7t0sJNfPjsDzjWGsgSAe6EXxad18K3m5YLObkaaleGfbI/imzlW/
+	+IAvpB4XXfUHjSxl4TYlzh7URSvo=
+X-Gm-Gg: ASbGncsqxPqpO8tWbbuX8vwP0RydoUZE6iHf9b/7N/SXWASslHOmjqnPRqzrGCZ7eo/
+	WjH1hpwBK5LWTPqfXPNvFHS9Bb3JI6hrcTRrXvlXjIswAUVdLBGbT5ezYuEceJE9826Wie+cuWR
+	cYIszxeNOTqA1UxdsTi6MG4xk9a0E+j1ZXK9RgQM2PNlTECaZwz2igGpmnVlglhIEPMw==
+X-Google-Smtp-Source: AGHT+IF8kKbV5UC52Ac9mSy0x9OfKQssvbteOWX4HNd6egKudSVM9JvkIrKNxIs0ohLhnyxnMsd3TXRcYhnO17vRS0A=
+X-Received: by 2002:a05:6512:401a:b0:549:8a44:493e with SMTP id
+ 2adb3069b0e04-54d6e61c6a5mr601106e87.5.1744978118388; Fri, 18 Apr 2025
+ 05:08:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1569:b0:3cf:bac5:d90c with SMTP id
- e9e14a558f8ab-3d89417d9bemr23198105ab.18.1744978101966; Fri, 18 Apr 2025
- 05:08:21 -0700 (PDT)
-Date: Fri, 18 Apr 2025 05:08:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <680240b5.050a0220.297747.0007.GAE@google.com>
-Subject: [syzbot] [rdma?] INFO: trying to register non-static key in rxe_qp_do_cleanup
-From: syzbot <syzbot+4edb496c3cad6e953a31@syzkaller.appspotmail.com>
-To: jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	zyjzyj2000@gmail.com
+References: <20250416-ptr-as-ptr-v9-0-18ec29b1b1f3@gmail.com>
+ <20250416-ptr-as-ptr-v9-4-18ec29b1b1f3@gmail.com> <68014084.0c0a0220.394e75.122c@mx.google.com>
+ <CAJ-ks9muaNU9v2LZ5=cmfXV6R5AO+joNOoPP=+hs-GJN=APfKQ@mail.gmail.com> <680160b8.050a0220.223d09.180f@mx.google.com>
+In-Reply-To: <680160b8.050a0220.223d09.180f@mx.google.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Fri, 18 Apr 2025 08:08:02 -0400
+X-Gm-Features: ATxdqUE65QceaCS4mRYzjRsd6XCyLrCNHhZ8_Q1GJ1KEma-RrDsEP9owSjJfvAc
+Message-ID: <CAJ-ks9=TXjk8W18ZMG4mx0JpYvXr4nwnUJqjCnqvW9zu2Y1xjA@mail.gmail.com>
+Subject: Re: [PATCH v9 4/6] rust: enable `clippy::as_underscore` lint
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
+	linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Thu, Apr 17, 2025 at 4:12=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
+rote:
+>
+> On Thu, Apr 17, 2025 at 03:26:14PM -0400, Tamir Duberstein wrote:
+> [...]
+> > >
+> > > >          Ok(())
+> > > >      }
+> > > > diff --git a/rust/kernel/device_id.rs b/rust/kernel/device_id.rs
+> > > > index e5859217a579..4063f09d76d9 100644
+> > > > --- a/rust/kernel/device_id.rs
+> > > > +++ b/rust/kernel/device_id.rs
+> > > > @@ -82,7 +82,7 @@ impl<T: RawDeviceId, U, const N: usize> IdArray<T=
+, U, N> {
+> > > >              unsafe {
+> > > >                  raw_ids[i]
+> > > >                      .as_mut_ptr()
+> > > > -                    .byte_offset(T::DRIVER_DATA_OFFSET as _)
+> > > > +                    .byte_add(T::DRIVER_DATA_OFFSET)
+> > > >                      .cast::<usize>()
+> > > >                      .write(i);
+> > > >              }
+> > > > diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+> > > > index f7e8f5f53622..70d12014e476 100644
+> > > > --- a/rust/kernel/devres.rs
+> > > > +++ b/rust/kernel/devres.rs
+> > > > @@ -45,7 +45,7 @@ struct DevresInner<T> {
+> > > >  /// # Example
+> > > >  ///
+> > > >  /// ```no_run
+> > > > -/// # use kernel::{bindings, c_str, device::Device, devres::Devres=
+, io::{Io, IoRaw}};
+> > > > +/// # use kernel::{bindings, c_str, device::Device, devres::Devres=
+, ffi::c_void, io::{Io, IoRaw}};
+> > > >  /// # use core::ops::Deref;
+> > > >  ///
+> > > >  /// // See also [`pci::Bar`] for a real example.
+> > > > @@ -59,19 +59,19 @@ struct DevresInner<T> {
+> > > >  ///     unsafe fn new(paddr: usize) -> Result<Self>{
+> > > >  ///         // SAFETY: By the safety requirements of this function=
+ [`paddr`, `paddr` + `SIZE`) is
+> > > >  ///         // valid for `ioremap`.
+> > > > -///         let addr =3D unsafe { bindings::ioremap(paddr as _, SI=
+ZE as _) };
+> > > > +///         let addr =3D unsafe { bindings::ioremap(paddr as bindi=
+ngs::phys_addr_t, SIZE) };
+> > >
+> > >
+> > > ///         let addr =3D unsafe { bindings::ioremap(bindings::phys_ad=
+dr_t::from(paddr), SIZE) };
+> > >
+> > > better? Or even with .into()
+> > >
+> > > ///         let addr =3D unsafe { bindings::ioremap(paddr.into(), SIZ=
+E) };
+> >
+> > This doesn't compile because `paddr` is usize, and
+> > `bindings::phys_addr_t` is u64 (on my machine, which is aarch64).
+> >
+>
+> Ok, looks like Rust yet doesn't provide From/Into between usize and u64
+> even if the pointer size is fixed. Latest discussion can be found at:
+>
+>         https://github.com/rust-lang/rust/issues/41619#issuecomment-20569=
+02943
+>
+> Lemme see if we can get an issue tracking this. Thanks for taking a
+> look.
+>
+> > > >  ///         if addr.is_null() {
+> > > >  ///             return Err(ENOMEM);
+> > > >  ///         }
+> > > >  ///
+> > > > -///         Ok(IoMem(IoRaw::new(addr as _, SIZE)?))
+> > > > +///         Ok(IoMem(IoRaw::new(addr as usize, SIZE)?))
+> > > >  ///     }
+> > > >  /// }
+> > > >  ///
+> > > >  /// impl<const SIZE: usize> Drop for IoMem<SIZE> {
+> > > >  ///     fn drop(&mut self) {
+> > > >  ///         // SAFETY: `self.0.addr()` is guaranteed to be properl=
+y mapped by `Self::new`.
+> > > > -///         unsafe { bindings::iounmap(self.0.addr() as _); };
+> > > > +///         unsafe { bindings::iounmap(self.0.addr() as *mut c_voi=
+d); };
+> > > >  ///     }
+> > > >  /// }
+> > > >  ///
+> > > [...]
+> > > > diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
+> > > > index 43ecf3c2e860..851a6339aa90 100644
+> > > > --- a/rust/kernel/dma.rs
+> > > > +++ b/rust/kernel/dma.rs
+> > > > @@ -38,7 +38,7 @@
+> > > >  impl Attrs {
+> > > >      /// Get the raw representation of this attribute.
+> > > >      pub(crate) fn as_raw(self) -> crate::ffi::c_ulong {
+> > > > -        self.0 as _
+> > > > +        self.0 as crate::ffi::c_ulong
+> > >
+> > >         crate::ffi::c_ulong::from(self.0)
+> > >
+> > > maybe, a C unsigned long should always be able to hold the whole `Att=
+r`
+> > > and a lossly casting is what this function does.
+> >
+> > This also doesn't compile: "the trait `core::convert::From<u32>` is
+> > not implemented for `usize`". Upstream has ambitions of running on
+> > 16-bit, I guess :)
+> >
+>
+> They do but they also have the target_pointer_width cfg, so they can
+> totally provide these functions. It's just they want to find a better
+> way (like the link I post above).
 
-syzbot found the following issue on:
-
-HEAD commit:    8ffd015db85f Linux 6.15-rc2
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16bc20cc580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=51ecb841db3b3687
-dashboard link: https://syzkaller.appspot.com/bug?extid=4edb496c3cad6e953a31
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/7aa92e6fb2e5/disk-8ffd015d.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/1458d069253c/vmlinux-8ffd015d.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/fe6dd8111695/bzImage-8ffd015d.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+4edb496c3cad6e953a31@syzkaller.appspotmail.com
-
-INFO: trying to register non-static key.
-The code is fine but needs lockdep annotation, or maybe
-you didn't initialize this object before use?
-turning off the locking correctness validator.
-CPU: 1 UID: 0 PID: 1151 Comm: kworker/u8:8 Not tainted 6.15.0-rc2-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Workqueue: rdma_cm cma_work_handler
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- assign_lock_key kernel/locking/lockdep.c:986 [inline]
- register_lock_class+0x4a3/0x4c0 kernel/locking/lockdep.c:1300
- __lock_acquire+0x99/0x1ba0 kernel/locking/lockdep.c:5110
- lock_acquire kernel/locking/lockdep.c:5866 [inline]
- lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
- __timer_delete_sync+0x152/0x1b0 kernel/time/timer.c:1644
- rxe_qp_do_cleanup+0x5c3/0x7e0 drivers/infiniband/sw/rxe/rxe_qp.c:815
- execute_in_process_context+0x3a/0x160 kernel/workqueue.c:4596
- __rxe_cleanup+0x267/0x3c0 drivers/infiniband/sw/rxe/rxe_pool.c:232
- rxe_create_qp+0x3f7/0x5f0 drivers/infiniband/sw/rxe/rxe_verbs.c:604
- create_qp+0x62d/0xa80 drivers/infiniband/core/verbs.c:1250
- ib_create_qp_kernel+0x9f/0x310 drivers/infiniband/core/verbs.c:1361
- ib_create_qp include/rdma/ib_verbs.h:3803 [inline]
- rdma_create_qp+0x10c/0x340 drivers/infiniband/core/cma.c:1144
- rds_ib_setup_qp+0xc86/0x19a0 net/rds/ib_cm.c:600
- rds_ib_cm_initiate_connect+0x1e8/0x3d0 net/rds/ib_cm.c:944
- rds_rdma_cm_event_handler_cmn+0x61f/0x8c0 net/rds/rdma_transport.c:109
- cma_cm_event_handler+0x94/0x300 drivers/infiniband/core/cma.c:2184
- cma_work_handler+0x15b/0x230 drivers/infiniband/core/cma.c:3042
- process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3319 [inline]
- worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
- kthread+0x3c2/0x780 kernel/kthread.c:464
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-------------[ cut here ]------------
-ODEBUG: assert_init not available (active state 0) object: ffff8880541d8a58 object type: timer_list hint: 0x0
-WARNING: CPU: 1 PID: 1151 at lib/debugobjects.c:612 debug_print_object+0x1a2/0x2b0 lib/debugobjects.c:612
-Modules linked in:
-CPU: 1 UID: 0 PID: 1151 Comm: kworker/u8:8 Not tainted 6.15.0-rc2-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Workqueue: rdma_cm cma_work_handler
-RIP: 0010:debug_print_object+0x1a2/0x2b0 lib/debugobjects.c:612
-Code: fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 54 41 56 48 8b 14 dd e0 73 f4 8b 4c 89 e6 48 c7 c7 60 68 f4 8b e8 1f db a5 fc 90 <0f> 0b 90 90 58 83 05 76 9b b1 0b 01 48 83 c4 18 5b 5d 41 5c 41 5d
-RSP: 0018:ffffc90003eb73e8 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000005 RCX: ffffffff817acff8
-RDX: ffff888027be8000 RSI: ffffffff817ad005 RDI: 0000000000000001
-RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000001 R12: ffffffff8bf46f40
-R13: ffffffff8b8fc880 R14: 0000000000000000 R15: ffffc90003eb74a8
-FS:  0000000000000000(0000) GS:ffff888124ab2000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000110c32628d CR3: 000000000e182000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- debug_object_assert_init+0x1ec/0x2f0 lib/debugobjects.c:1020
- debug_timer_assert_init kernel/time/timer.c:845 [inline]
- debug_assert_init kernel/time/timer.c:890 [inline]
- __try_to_del_timer_sync+0x7f/0x170 kernel/time/timer.c:1499
- __timer_delete_sync+0xf4/0x1b0 kernel/time/timer.c:1662
- rxe_qp_do_cleanup+0x5c3/0x7e0 drivers/infiniband/sw/rxe/rxe_qp.c:815
- execute_in_process_context+0x3a/0x160 kernel/workqueue.c:4596
- __rxe_cleanup+0x267/0x3c0 drivers/infiniband/sw/rxe/rxe_pool.c:232
- rxe_create_qp+0x3f7/0x5f0 drivers/infiniband/sw/rxe/rxe_verbs.c:604
- create_qp+0x62d/0xa80 drivers/infiniband/core/verbs.c:1250
- ib_create_qp_kernel+0x9f/0x310 drivers/infiniband/core/verbs.c:1361
- ib_create_qp include/rdma/ib_verbs.h:3803 [inline]
- rdma_create_qp+0x10c/0x340 drivers/infiniband/core/cma.c:1144
- rds_ib_setup_qp+0xc86/0x19a0 net/rds/ib_cm.c:600
- rds_ib_cm_initiate_connect+0x1e8/0x3d0 net/rds/ib_cm.c:944
- rds_rdma_cm_event_handler_cmn+0x61f/0x8c0 net/rds/rdma_transport.c:109
- cma_cm_event_handler+0x94/0x300 drivers/infiniband/core/cma.c:2184
- cma_work_handler+0x15b/0x230 drivers/infiniband/core/cma.c:3042
- process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3319 [inline]
- worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
- kthread+0x3c2/0x780 kernel/kthread.c:464
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Did you want me to hold off on the respin on this point, or shall I go ahea=
+d?
