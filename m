@@ -1,256 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F9725A2C8;
-	Fri, 18 Apr 2025 08:47:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6F88C0E
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744966037; cv=none; b=TY00PAUmyTmz7Dg6nOOtLh/p3xOq4ExvULr2P9Uf0YSQPVojJabfuM4jGZfMY9lqBZpPamBvxuAmef+/T0SYeCV2R5Cdt7X91Sh98n1NpZDoBkD2C8Q6BtFl95X8AI5ag3Pjkg7JVsvbsqzjLBMA05gP/Psggz4C88z7uOodmaU=
+	t=1744966382; cv=none; b=ahDPF4rMnJQeGp4ZVO0NAX9tKAKqyGKUe1rStT5EftUaYRKwDlSkIt7+uk9f949T55rMrpzNRXlEkJaxV5c/F/mCf6o3DrF9HvyPcua0hlchLPk0uiC/eBffRuOLHo+Ik27JyNlruD01DtgVYeOTblGqTrwO752pJ6+sCJ+AP0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744966037; c=relaxed/simple;
-	bh=W2tEL1iRqKZDZdoiAfbT8zNHiW9SPhUffLkWsQ3asFw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=apYL1RDJJV9aMiOf7oRltwDqLsBtZew4fSHaKIsmQ4xcpbOJaQSlQ6b0+QJ4zGDutNtlJ0PS8Ow7Os8ccPaf24mkMSyE4CUjZKY1ANPIHIw1raG9X2SpHKZvTNZWcaoxLP5OqYKV+nIzmOaPp9znemrqsc+JtTCrm3cp/ZGvsa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M2oyB14X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744966382; c=relaxed/simple;
+	bh=dGPAZCJAO9LH9k9+kARVr8e1BoPkjZVxOA21Pk3pjJY=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=h+ZX4E3YUBvS5CunlUJEHI0DL8NKqrbOJ/5aI4xxYHUjCt8fG9b1Qd5BLTrCPXQsbrGkg+o/D7oLyYnzlifIwNxgU+2eHaKyhj/UOBVmNTE0w1jd3yTSzsw6y2QDe524tyQQ8EMrXRKtcAG6wZUNBVw+rxlUJF90GDyQecPu4uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=cuGRZyjK; arc=none smtp.client-ip=162.62.57.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M2oyB14X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45997C4CEE2;
-	Fri, 18 Apr 2025 08:47:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744966036;
-	bh=W2tEL1iRqKZDZdoiAfbT8zNHiW9SPhUffLkWsQ3asFw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M2oyB14XIoQ2A7cJ1BV+dQLW2dPeV3HUffI1RrCXLH4tKd4qBbzvvr6uFulxv+yrj
-	 hZDiYKL8BXqG9OaFMFI+NwkDUTN98/D+RmpJHDMp4rwSb5QfhRlumE7/tiwPewc7bq
-	 mSBPWb+8sl1zsQmSrYrjHvbMdB5KeCf5I9ZCjupcZsbD2QawsuLmNHg2VShMtIzCHS
-	 HMa4Y+dIRvm9NeyRbrbWk0VfGXk/Bu9nf0tx1ZiwKzOKh4YvyMU6qFzL9T7GsAmnDQ
-	 qGbFcAVsiLVSZk3ntzS2N59ht/r2epcjFjFamHz1gv49ktfsjiVmQpAEESLrefTe3z
-	 xICf7LMwhF0Iw==
-Date: Fri, 18 Apr 2025 10:47:10 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Ian Kent <raven@themaw.net>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Mark Brown <broonie@kernel.org>, Eric Chanudet <echanude@redhat.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Clark Williams <clrkwllms@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ian Kent <ikent@redhat.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
-	Alexander Larsson <alexl@redhat.com>, Lucas Karpinski <lkarpins@redhat.com>, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
-Message-ID: <20250418-razzia-fixkosten-0569cf9f7b9d@brauner>
-References: <fbbafa84-f86c-4ea4-8f41-e5ebb51173ed@sirena.org.uk>
- <20250417-wolfsrudel-zubewegt-10514f07d837@brauner>
- <fb566638-a739-41dc-bafc-aa8c74496fa4@themaw.net>
- <20250417-abartig-abfuhr-40e558b85f97@brauner>
- <20250417-outen-dreihundert-7a772f78f685@brauner>
- <20250417-zappeln-angesagt-f172a71839d3@brauner>
- <20250417153126.QrVXSjt-@linutronix.de>
- <20250417-pyrotechnik-neigung-f4a727a5c76b@brauner>
- <39c36187-615e-4f83-b05e-419015d885e6@themaw.net>
- <125df195-5cac-4a65-b8bb-8b1146132667@themaw.net>
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="cuGRZyjK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1744966373;
+	bh=Shfyo13CoJP0LZK8BYiEvTiymcxKJVPkg/SIqQkMIZo=;
+	h=From:To:Cc:Subject:Date;
+	b=cuGRZyjKefEmY9JUPCf3NVCVd4QElD6JB6m0Rlid3Q2/nevfpPZvdebx2ZSufjBF9
+	 bmGUBECl17TWffntBk5X5QC2ABfvaNXf9Nroe7DNLQN/dRCblRltqyML+bWUK3hw1v
+	 twj0Fy1VIpsbig/XJ4J8ex9xe/IFF5+berJlrMcE=
+Received: from localhost.localdomain ([116.128.244.169])
+	by newxmesmtplogicsvrszgpua8-1.qq.com (NewEsmtp) with SMTP
+	id 8CC84448; Fri, 18 Apr 2025 16:35:12 +0800
+X-QQ-mid: xmsmtpt1744965312t10mud38m
+Message-ID: <tencent_A513B1B90557A0084DEE7DAA51C831AF9207@qq.com>
+X-QQ-XMAILINFO: McQ2ZMlMYdZ83/0a4mQtvhXIPjb2aFzV0s/wNz6UqnIx85A1D3UDVDmgk65wEo
+	 yHWGpSXDIJy6CCW0bkv++iV56yl5kxpYYyY8Ebh9NONwiQt/bjgBJXkxDni1+ekbFInlbvs2vnyu
+	 GvnWlM5TZajxlcga1CY7wSwy/anXIEeOmo3aMjby+J4IgMBK0qE1EJf3Bpi43nHZNatkNKzEgeab
+	 UmZWe7MfJ64U2Y1IPKc8V9+py792hAmfUXWZu4jYmvgDDewnLfEXHHVieQVo5kxb/OuSieeh+o1d
+	 SJFN53cnlPNTFnsVfubXAXWOzQLFKa8/yyOOigo9DW35Fker0nIxxhTbUmwFDbbrkJQJYobdLShW
+	 sroHXheDOnxvtIO2ZixiGDFmKIvulEMwNwu2+BrhUg/KGDW0qe8kkKOMYmWotydmMUxVAjvvzDqZ
+	 gzc+ifDhEx9iAV+uDSIrLGTLjcVaInr9s+3vJdIjTJ5A2N4MeTcZK7kuFIkW04CUShyO8fD8GipR
+	 JKsSVpamjb1v9wW+KYegla9GYWcfjybWCitvp7gYN8LrMro7oDp9xHOliRiMkdTUn6Xwf9Hkarss
+	 PgIbdbnVn7hPgx/5OqgqA0a+C4lFBFvS54JI81lyK+iz6FixTsgy90ovjgtlL+0FN/IGhPz8ts3r
+	 nSXenJFFkk+xX8t5BcAtDDJm9vVeFCvU6lD4qQWW8UgV/F5kCIgNfLXhxB9DiMEJMRTWJW/cvv6N
+	 8DbY1OEAgvLjGgnkMEfb8KzQkvaYS826kR22ww2oLqYojfH0l8ZhygT0S3xdm6lSrztQFinxRejh
+	 HmonQiRgxxip6XRpUnBHvoU4vqRucTcFTpG00kSWohlPr49FFayvBISshnf3t8z4GIYayZkZa/Fo
+	 ki3JlPJG0PRJBhKYCISMqN/m4CG0u9YuUoxb8HFStGHA2K/G+3+M2J+f7P6kiGs2UTbbVgCRFXFG
+	 dYResjft/SbkiEf1fmICdSoh73DPvKFsYLhRFVofBKEYT0+GYlo/8PczevbLeXrha2lTpgbUbemu
+	 NgeijRgmP64K4IWqTzkoCqJ2Qt0AqMCKP6rlk2pUpl6MqNDtkL
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: xiaopeitux@foxmail.com
+To: linux-kernel@vger.kernel.org,
+	f.fangjian@huawei.com,
+	robh@kernel.org,
+	john.g.garry@oracle.com,
+	andriy.shevchenko@linux.intel.com,
+	xuwei5@hisilicon.com
+Cc: Pei Xiao <xiaopei01@kylinos.cn>
+Subject: [PATCH 0/2] logic_pio: clean hisi_lpc and logic_pio
+Date: Fri, 18 Apr 2025 16:34:59 +0800
+X-OQ-MSGID: <cover.1744964101.git.xiaopei01@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <125df195-5cac-4a65-b8bb-8b1146132667@themaw.net>
 
-On Fri, Apr 18, 2025 at 09:20:52AM +0800, Ian Kent wrote:
-> On 18/4/25 09:13, Ian Kent wrote:
-> > 
-> > On 18/4/25 00:28, Christian Brauner wrote:
-> > > On Thu, Apr 17, 2025 at 05:31:26PM +0200, Sebastian Andrzej Siewior
-> > > wrote:
-> > > > On 2025-04-17 17:28:20 [+0200], Christian Brauner wrote:
-> > > > > >      So if there's some userspace process with a broken
-> > > > > > NFS server and it
-> > > > > >      does umount(MNT_DETACH) it will end up hanging every other
-> > > > > >      umount(MNT_DETACH) on the system because the dealyed_mntput_work
-> > > > > >      workqueue (to my understanding) cannot make progress.
-> > > > > Ok, "to my understanding" has been updated after going back
-> > > > > and reading
-> > > > > the delayed work code. Luckily it's not as bad as I thought it is
-> > > > > because it's queued on system_wq which is multi-threaded so it's at
-> > > > > least not causing everyone with MNT_DETACH to get stuck. I'm still
-> > > > > skeptical how safe this all is.
-> > > > I would (again) throw system_unbound_wq into the game because
-> > > > the former
-> > > > will remain on the CPU on which has been enqueued (if speaking about
-> > > > multi threading).
-> > > Yes, good point.
-> > > 
-> > > However, what about using polled grace periods?
-> > > 
-> > > A first simple-minded thing to do would be to record the grace period
-> > > after umount_tree() has finished and the check it in namespace_unlock():
-> > > 
-> > > diff --git a/fs/namespace.c b/fs/namespace.c
-> > > index d9ca80dcc544..1e7ebcdd1ebc 100644
-> > > --- a/fs/namespace.c
-> > > +++ b/fs/namespace.c
-> > > @@ -77,6 +77,7 @@ static struct hlist_head *mount_hashtable
-> > > __ro_after_init;
-> > >   static struct hlist_head *mountpoint_hashtable __ro_after_init;
-> > >   static struct kmem_cache *mnt_cache __ro_after_init;
-> > >   static DECLARE_RWSEM(namespace_sem);
-> > > +static unsigned long rcu_unmount_seq; /* protected by namespace_sem */
-> > >   static HLIST_HEAD(unmounted);  /* protected by namespace_sem */
-> > >   static LIST_HEAD(ex_mountpoints); /* protected by namespace_sem */
-> > >   static DEFINE_SEQLOCK(mnt_ns_tree_lock);
-> > > @@ -1794,6 +1795,7 @@ static void namespace_unlock(void)
-> > >          struct hlist_head head;
-> > >          struct hlist_node *p;
-> > >          struct mount *m;
-> > > +       unsigned long unmount_seq = rcu_unmount_seq;
-> > >          LIST_HEAD(list);
-> > > 
-> > >          hlist_move_list(&unmounted, &head);
-> > > @@ -1817,7 +1819,7 @@ static void namespace_unlock(void)
-> > >          if (likely(hlist_empty(&head)))
-> > >                  return;
-> > > 
-> > > -       synchronize_rcu_expedited();
-> > > +       cond_synchronize_rcu_expedited(unmount_seq);
-> > > 
-> > >          hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
-> > >                  hlist_del(&m->mnt_umount);
-> > > @@ -1939,6 +1941,8 @@ static void umount_tree(struct mount *mnt,
-> > > enum umount_tree_flags how)
-> > >                   */
-> > >                  mnt_notify_add(p);
-> > >          }
-> > > +
-> > > +       rcu_unmount_seq = get_state_synchronize_rcu();
-> > >   }
-> > > 
-> > >   static void shrink_submounts(struct mount *mnt);
-> > > 
-> > > 
-> > > I'm not sure how much that would buy us. If it doesn't then it should be
-> > > possible to play with the following possibly strange idea:
-> > > 
-> > > diff --git a/fs/mount.h b/fs/mount.h
-> > > index 7aecf2a60472..51b86300dc50 100644
-> > > --- a/fs/mount.h
-> > > +++ b/fs/mount.h
-> > > @@ -61,6 +61,7 @@ struct mount {
-> > >                  struct rb_node mnt_node; /* node in the ns->mounts
-> > > rbtree */
-> > >                  struct rcu_head mnt_rcu;
-> > >                  struct llist_node mnt_llist;
-> > > +               unsigned long mnt_rcu_unmount_seq;
-> > >          };
-> > >   #ifdef CONFIG_SMP
-> > >          struct mnt_pcp __percpu *mnt_pcp;
-> > > diff --git a/fs/namespace.c b/fs/namespace.c
-> > > index d9ca80dcc544..aae9df75beed 100644
-> > > --- a/fs/namespace.c
-> > > +++ b/fs/namespace.c
-> > > @@ -1794,6 +1794,7 @@ static void namespace_unlock(void)
-> > >          struct hlist_head head;
-> > >          struct hlist_node *p;
-> > >          struct mount *m;
-> > > +       bool needs_synchronize_rcu = false;
-> > >          LIST_HEAD(list);
-> > > 
-> > >          hlist_move_list(&unmounted, &head);
-> > > @@ -1817,7 +1818,16 @@ static void namespace_unlock(void)
-> > >          if (likely(hlist_empty(&head)))
-> > >                  return;
-> > > 
-> > > -       synchronize_rcu_expedited();
-> > > +       hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
-> > > +               if (!poll_state_synchronize_rcu(m->mnt_rcu_unmount_seq))
-> > > +                       continue;
+From: Pei Xiao <xiaopei01@kylinos.cn>
 
-This has a bug. This needs to be:
+This two patches for hisi_lpc and logic pio.
 
-	/* A grace period has already elapsed. */
-	if (poll_state_synchronize_rcu(m->mnt_rcu_unmount_seq))
-		continue;
+1.remove unused head file.
+2.add comments for logic_pio.
 
-	/* Oh oh, we have to pay up. */
-	needs_synchronize_rcu = true;
-	break;
+Pei Xiao (2):
+  bus: hisi_lpc: remove unused head file in hisi_lpc.c
+  logic_pio: Add detailed comments for find_io_range() and
+    logic_pio_trans_cpuaddr()
 
-which I'm pretty sure will eradicate most of the performance gain you've
-seen because fundamentally the two version shouldn't be different (Note,
-I drafted this while on my way out the door. r.
+ drivers/bus/hisi_lpc.c |  4 ----
+ lib/logic_pio.c        | 16 +++++++++++++++-
+ 2 files changed, 15 insertions(+), 5 deletions(-)
 
-I would test the following version where we pay the cost of the
-smb_mb() from poll_state_synchronize_rcu() exactly one time:
+-- 
+2.25.1
 
-diff --git a/fs/mount.h b/fs/mount.h
-index 7aecf2a60472..51b86300dc50 100644
---- a/fs/mount.h
-+++ b/fs/mount.h
-@@ -61,6 +61,7 @@ struct mount {
-                struct rb_node mnt_node; /* node in the ns->mounts rbtree */
-                struct rcu_head mnt_rcu;
-                struct llist_node mnt_llist;
-+               unsigned long mnt_rcu_unmount_seq;
-        };
- #ifdef CONFIG_SMP
-        struct mnt_pcp __percpu *mnt_pcp;
-diff --git a/fs/namespace.c b/fs/namespace.c
-index d9ca80dcc544..dd367c54bc29 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -1794,6 +1794,7 @@ static void namespace_unlock(void)
-        struct hlist_head head;
-        struct hlist_node *p;
-        struct mount *m;
-+       unsigned long mnt_rcu_unmount_seq = 0;
-        LIST_HEAD(list);
-
-        hlist_move_list(&unmounted, &head);
-@@ -1817,7 +1818,10 @@ static void namespace_unlock(void)
-        if (likely(hlist_empty(&head)))
-                return;
-
--       synchronize_rcu_expedited();
-+       hlist_for_each_entry_safe(m, p, &head, mnt_umount)
-+               mnt_rcu_unmount_seq = max(m->mnt_rcu_unmount_seq, mnt_rcu_unmount_seq);
-+
-+       cond_synchronize_rcu_expedited(mnt_rcu_unmount_seq);
-
-        hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
-                hlist_del(&m->mnt_umount);
-@@ -1923,8 +1927,10 @@ static void umount_tree(struct mount *mnt, enum umount_tree_flags how)
-                        }
-                }
-                change_mnt_propagation(p, MS_PRIVATE);
--               if (disconnect)
-+               if (disconnect) {
-+                       p->mnt_rcu_unmount_seq = get_state_synchronize_rcu();
-                        hlist_add_head(&p->mnt_umount, &unmounted);
-+               }
-
-                /*
-                 * At this point p->mnt_ns is NULL, notification will be queued
-
-If this doesn't help I had considered recording the rcu sequence number
-during __legitimize_mnt() in the mounts. But we likely can't do that
-because get_state_synchronize_rcu() is expensive because it inserts a
-smb_mb() and that would likely be noticable during path lookup. This
-would also hinge on the notion that the last store of the rcu sequence
-number is guaranteed to be seen when we check them in namespace_unlock().
-
-Another possibly insane idea (haven't fully thought it out but throwing
-it out there to test): allocate a percpu counter for each mount and
-increment it each time we enter __legitimize_mnt() and decrement it when
-we leave __legitimize_mnt(). During umount_tree() check the percpu sum
-for each mount after it's been added to the @unmounted list.
-
-If we see any mount that has a non-zero count we set a global
-@needs_synchronize_rcu to true and stop counting for the other mounts
-(saving percpu summing cycles). Then call or elide
-synchronize_rcu_expedited() based on the @needs_synchronize_rcu boolean
-in namespace_unlock().
-
-The percpu might make this cheap enough for __legitimize_mnt() to be
-workable (ignoring any other pitfalls I've currently not had time to
-warp my head around).
