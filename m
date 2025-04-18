@@ -1,213 +1,243 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00F72741C8;
-	Fri, 18 Apr 2025 13:28:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7038F20767E;
+	Fri, 18 Apr 2025 13:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744982909; cv=none; b=IiFy1hHTMvDITIN9NOrB5wVrkqVHMdflrNRjj1Vrinm4rEHhWFHKHy477ts08wBcbpikOtRSyf+8lrU5AoalP4XpvV4Z7WlNm3Z+wEsVP6sEgta5WQ22fMAwMnLqCgL/fLKATIOsnOUJhe5chKIhhYODoaIOLHClHbWGpZljfdA=
+	t=1744983110; cv=none; b=HCS0ZatgnszRnHu4zZif6kfpdVTth+fgtiNuMupozcxSA5p6KLpXB+vBGRc92G3Alwmu+J6MQqeZJQmgMKZCBCIlGG5fr4eXy2aQXLuaPTWrpu7DUrMgi0X8flIBwQhj5o5S1Yy3mpfbIJcLwiBW6hrQ6qJLwspnSZiQyue/AkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744982909; c=relaxed/simple;
-	bh=py3qpxPQ4hvohMsFadRBuBilUYS8IpwzxRxK3/vIQIk=;
+	s=arc-20240116; t=1744983110; c=relaxed/simple;
+	bh=+ipEq0DN1psmNTdr4XRWkkXLvcwAD4hbAap9lZ1Syy4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ew1R+xJBXBcgLwiXHErBXf4jI5BphvgwQAo4FciKXaLDIdLUTFvooiVFtyR0PX/G0g+ouaH5tE1OUHzf8TPrXJZQLpTH5lN5MDa0N4LbPvuR/LnwizZqz/pz0kif5tAF34X3hFnjHms3mjYdliiMy685EYdI00nTqZBp8FY6nv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kKyKlJ1R; arc=none smtp.client-ip=209.85.160.169
+	 To:Cc:Content-Type; b=NLCP4uzex/vcgGYPRos7HO7ySZ5zUpnVJhYhg22vgT/eroX+zkNrj+8c3pIF37HR1z1viHdU4E2H8MfIg9TVbr3VuBNr0spGIrkqO7xWVgLhM/p6Ez3SdumNdp+E+48KinwhJP2TlVZd1A3eM7uTmm8pnRuQ9DvRi+miNyBQ19Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gE4/Cx0d; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKyKlJ1R"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-476ab588f32so25170081cf.2;
-        Fri, 18 Apr 2025 06:28:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gE4/Cx0d"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9eb12so71279a12.1;
+        Fri, 18 Apr 2025 06:31:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744982907; x=1745587707; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744983107; x=1745587907; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=H2uvF1gnZo1hDkMDMb6IsHjvK5NSRplkTI6q5lCw7lg=;
-        b=kKyKlJ1R/PglJ9mVlPAwkiU4I2pP148q458319+/oRuM2ysy1roHfOlz65RAnyPRN2
-         TCZ+dS0W0o4winIwQYiypBJ38XyerG49ZzjcAjtm9rwoL6Yie4AScvExcTPVOMyf4Afg
-         YD33ELpQXW2Ea/zkrfknqP2KqC8QpgW/Xgm1MX/B5ZpR5urTxp3NyY2A+tR4T+7llBkP
-         xc3VYiDOwpWVFGBn4hM8vXcaGvEMuau2Z7tByrtsvAqn8bSKP2iLVKdyz9CRar3FddvE
-         pHCedN2MajR4vYS5VX+RVitw76H1pIUega6W9PkQHUc209/DPFN8nARECC0jfuJJNonA
-         Wzyg==
+        bh=VW/r+Xskypu97YYD6KF6jc5zwux2QZnn2gKuuTUWqVE=;
+        b=gE4/Cx0dYk9em6Y0NJOfavwg7aCSmA2Rk/X0hErzcjPsYchSnkXb444UVqpDnIfr/n
+         nyphkiRildA9GTrKlcPgYPzO7QzRABd7dciHPk1uz/6PD97IJbU6W2SO7KtFI9VrN3o3
+         Fff0spJnyQt2afzdgEu/gprbpaaN37t4aAu45Sh1UXKHI7TFCdjW6T7IgHV5y5Knb81l
+         5MkLl9ikM9ODWavwKTyCTt3EaCVjVRYilziOEyuGNYA08wHFFtF5UjgOHRFDs4mI/vsH
+         q6bG4CK2mZTouBJlc1UjSIgGk25eddzAxBsj1Cjovy+k9Dz6at/5cp2NXT8a0JA70WEu
+         Iiqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744982907; x=1745587707;
+        d=1e100.net; s=20230601; t=1744983107; x=1745587907;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=H2uvF1gnZo1hDkMDMb6IsHjvK5NSRplkTI6q5lCw7lg=;
-        b=wJT1OOy5hN9Xrp6Qzynz78VGFc3g56u+IW+lHgDl8C7r98kBkn7tIb1p0M1j/JhH/t
-         Zv6H9YBapmgyYeWqoIWJAj5KKzr1+W2mtIdila5cyb6zKZG36Kl8b4un5wtpIcyUkbE0
-         a2c0rmzZnbF+PYReP+349EvS03WwsxWf0YdIT/NO9fypU/XBE55/F5mSc6L6md8eL7YH
-         GvxtJospUuINgGczHPA0jz90a6Z1kDUoVjFWSXZ4XN7OV3DD1b7vFWFuw7xlL12/cbQt
-         UdlN84IJ6TIVPf0BJL+/bJlC8Op+XNxHVJ3wK5IZ6ze10NuOeiAnTp7viK0EE3zvzJiq
-         5Vjw==
-X-Forwarded-Encrypted: i=1; AJvYcCVd0ZyNzbuc+7/YJSqaTkRxEjMS0MnG7/QWWEmO2gTNxd3J92MKKCTfMgk9Bs2rOGKBZTOl94ldAdk=@vger.kernel.org, AJvYcCWP1yGiXiMDj6DjKkMrh7scbFGMRA6PPH0qtPI/6C7MYQJ73MU9Y7sCR/mT4s51ukJ7ULMyLoIN@vger.kernel.org, AJvYcCXYP21iQZN7ESLt4o+8PSfmz5Kf3adqW03tAS5kdqoYVXWXSEwEGFOXre/HLsen4NmU1juBqUFcw2Jof5c0@vger.kernel.org
-X-Gm-Message-State: AOJu0YxL2rePaQA8AvUFQ0atsR4Ml2wJzhd2gKDmcSokJNVLWRl8iPR7
-	mfOCd1C1Q3aEEHwM9W6XW8+3xoNR7X87lIK66i5lfoUOmmSm2nWLLMMFv2Y9L9UvLf4Dud76t31
-	vUvE4G2FF7januXSEGmZ4EYZlL80=
-X-Gm-Gg: ASbGncvMAm/8NDim+f5y7xyk/8D64Fm/XUGiTnWTAaFYuHkvZ6a3ugSQ2eyJ9bD9eH+
-	hAkGc9x0RSmjiGKVPv1s4cEiobX4jcRmhoE6hFSwrOTsYU27HniFktzvZN43z4hdNRfYhTMqmFW
-	Iz9TIzab8+eGgwA7SrY3s69oZikBjubCQFYiUhSJqen2NBrt8G+wxr27sFDygcIDY=
-X-Google-Smtp-Source: AGHT+IEmOwXK2LuFYh7mE9FoPBp/KZqYGGb32Mvs7/fzuBy/q27GbvhH+PteT6hbPJHJRDNP83snG0RBgbKpuhxHmk4=
-X-Received: by 2002:ac8:5916:0:b0:477:1ee1:23d9 with SMTP id
- d75a77b69052e-47aec3a7331mr45873521cf.20.1744982906523; Fri, 18 Apr 2025
- 06:28:26 -0700 (PDT)
+        bh=VW/r+Xskypu97YYD6KF6jc5zwux2QZnn2gKuuTUWqVE=;
+        b=VcfgX+TnAdHxTZ27GuqfHgnw7RSzjAnBng1cNzOwqORJew5nXx1n6eugF4RAJWkGML
+         /lLehEB+VEUun6iU/N68fim00+RYNWhrlOHUgKe69nqvR7HIDmSCiVXzbzuQrx7fXRql
+         sAufGyyXU8Zo9zvoOfB4+IUVc0xJ0EEhnm2Sl2ZK9BIDew8LDR059iA8t3/SlzAmdeR+
+         kbb1+yhGu+0/zovDyYvH1soiZM0UWT70q6X7IO86gdBtrd1mnt8hj7mW2/BAB39db5ds
+         jF3ZWwHsPnqeWLVwgl2Z44mNDn9KL9N2ubwX+PZEfZwkKf057AXXLamwrg2uAJfxfkVd
+         V1Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCVie4nK3AYGvW3LlTSTlQE75qk73IGHipe6J4dq2jZOYEamndGybY/LOEmApGxcP+VYCzg1yFayfNbqwrtXez2o8A8=@vger.kernel.org, AJvYcCWt4i/mhbEn3ySZCSw7gmRDY6SyV12/zQV7OOggWJbQP1fBAdjcbHd0rlJQDQfIPXsCTq2LBVaHu4g=@vger.kernel.org, AJvYcCXIS3jo1qjJ3zlliRveB7qTTh91yewW7opGp9YjCEZLVJ38l6oSRMIoFJ7WW2ARhcYULSOsPpjZZFhGgDU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYbf1UbPoNpE2bhcjeo2m6+BBfkl9fGIcUUfnOA36IgaklSbOH
+	9sIYTa8AP8jB0WYy6tTged5MyPxUx5fb/udCwD8aQu7VY+y2O49JAc49vqRcjSg7kOcPDVRMqd3
+	Op1pkTw5Pqkh4f0biwqUN40Wjr4rm3+5+
+X-Gm-Gg: ASbGncv97miwI7viGXgaSwX5Ee17bMea1GWzKk1J+XdTnQNYiAeLtF4gaP4CEOhc4fb
+	z6CdRuanuqqUGFROoBh3ng2GeKv5aNb+utiRcfGEGAuFCG1NJqa7eCcYdws5qboQilqEKdNRtbo
+	k5IcZK9XQwgvzRA47HxKDJ
+X-Google-Smtp-Source: AGHT+IE+R7I4dVbYwOWf8/dydNM3ras0vM8Hcd1dtJhxh5iLeMMP4/GOg7s0W+7aCQ1EW35HU9YjtmFodyE+MqjWPmY=
+X-Received: by 2002:a17:906:e208:b0:acb:85f2:f032 with SMTP id
+ a640c23a62f3a-acb85f31115mr5753166b.13.1744983106327; Fri, 18 Apr 2025
+ 06:31:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415182038.523186-1-gshahrouzi@gmail.com> <fb712c034eda0d5d711a90a00b6382315fb5f929.camel@gmail.com>
- <CAKUZ0zL88AyuRxzhoAv2iZO7N7qOMy1G3yKscqG3rQiiOS0gog@mail.gmail.com>
- <e8b24cf22c87e5b5ce0cc8919eca79f6e60ab6e3.camel@gmail.com>
- <CAKUZ0z+FKxHcYTYiGvrZ3RLiMKT1P4gtTdq8d7=+ZFC0RMQzqA@mail.gmail.com> <a32503d98ffe162f48de019fab1a37f86af1666e.camel@gmail.com>
-In-Reply-To: <a32503d98ffe162f48de019fab1a37f86af1666e.camel@gmail.com>
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Date: Fri, 18 Apr 2025 09:28:15 -0400
-X-Gm-Features: ATxdqUFv8S2auULHx0FcuBh0UZ0zXdklaGc3PXDOV667MRhIxOk_A11J2oTI0ic
-Message-ID: <CAKUZ0zJK0MtMBMWaUCsF62vxc87XoN0xhJLfCcUZ84XNX-kKVg@mail.gmail.com>
-Subject: Re: [PATCH] iio: adc: Revoke valid channel for error path
-To: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
-Cc: gregkh@linuxfoundation.org, jic23@kernel.org, lars@metafoo.de, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-staging@lists.linux.dev, Michael.Hennerich@analog.com, 
-	sonic.zhang@analog.com, vapier@gentoo.org, skhan@linuxfoundation.org, 
-	kernelmentees@lists.linuxfoundation.org, stable@vger.kernel.org
+References: <20250410063754.5483-1-linux.amoon@gmail.com> <20250410063754.5483-2-linux.amoon@gmail.com>
+ <aAIIH7H1oQH8cf-6@mai.linaro.org>
+In-Reply-To: <aAIIH7H1oQH8cf-6@mai.linaro.org>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Fri, 18 Apr 2025 19:01:29 +0530
+X-Gm-Features: ATxdqUEh1pZaqB8ipWBIif6O9726dyogwx9y_IR39XM-ncpaQF8skGDo78Oz4mw
+Message-ID: <CANAwSgS_OnEv=r7S4CetLkW4vo-QdFAKTbqRK9H-Q0dq5VDYLA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] drivers/thermal/exynos: Refactor clk_sec
+ initialization inside SOC-specific case
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	"open list:SAMSUNG THERMAL DRIVER" <linux-pm@vger.kernel.org>, 
+	"open list:SAMSUNG THERMAL DRIVER" <linux-samsung-soc@vger.kernel.org>, 
+	"moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:CLANG/LLVM BUILD SUPPORT:Keyword:b(?i:clang|llvm)b" <llvm@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 18, 2025 at 5:46=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@gmail.com=
-> wrote:
+Hi Daniel,
+
+On Fri, 18 Apr 2025 at 13:36, Daniel Lezcano <daniel.lezcano@linaro.org> wr=
+ote:
 >
-> On Thu, 2025-04-17 at 13:08 -0400, Gabriel Shahrouzi wrote:
-> > On Thu, Apr 17, 2025 at 10:02=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@gmai=
-l.com> wrote:
-> > >
-> > > On Thu, 2025-04-17 at 08:53 -0400, Gabriel Shahrouzi wrote:
-> > > > On Thu, Apr 17, 2025 at 6:06=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@g=
-mail.com> wrote:
-> > > > >
-> > > > > On Tue, 2025-04-15 at 14:20 -0400, Gabriel Shahrouzi wrote:
-> > > > > > According to the datasheet on page 9 under the channel selectio=
-n table,
-> > > > > > all devices (AD7816/7/8) are able to use the channel marked as =
-7. This
-> > > > > > channel is used for diagnostic purposes by routing the internal=
- 1.23V
-> > > > > > bandgap source through the MUX to the input of the ADC.
-> > > > > >
-> > > > > > Replace checking for string equality with checking for the same=
- chip ID
-> > > > > > to reduce time complexity.
-> > > > > >
-> > > > > > Group invalid channels for all devices together because they ar=
-e
-> > > > > > processed the same way.
-> > > > > >
-> > > > > > Fixes: 7924425db04a ("staging: iio: adc: new driver for AD7816 =
-devices")
-> > > > > > Cc: stable@vger.kernel.org
-> > > > > > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> > > > > > ---
-> > > > > >  drivers/staging/iio/adc/ad7816.c | 15 +++++----------
-> > > > > >  1 file changed, 5 insertions(+), 10 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/staging/iio/adc/ad7816.c
-> > > > > > b/drivers/staging/iio/adc/ad7816.c
-> > > > > > index 6c14d7bcdd675..d880fe0257697 100644
-> > > > > > --- a/drivers/staging/iio/adc/ad7816.c
-> > > > > > +++ b/drivers/staging/iio/adc/ad7816.c
-> > > > > > @@ -186,17 +186,12 @@ static ssize_t ad7816_store_channel(struc=
-t device
-> > > > > > *dev,
-> > > > > >       if (ret)
-> > > > > >               return ret;
-> > > > > >
-> > > > > > -     if (data > AD7816_CS_MAX && data !=3D AD7816_CS_MASK) {
-> > > > > > -             dev_err(&chip->spi_dev->dev, "Invalid channel id =
-%lu for
-> > > > > > %s.\n",
-> > > > > > -                     data, indio_dev->name);
-> > > > > > -             return -EINVAL;
-> > > > > > -     } else if (strcmp(indio_dev->name, "ad7818") =3D=3D 0 && =
-data > 1) {
-> > > > > > -             dev_err(&chip->spi_dev->dev,
-> > > > > > -                     "Invalid channel id %lu for ad7818.\n", d=
-ata);
-> > > > > > -             return -EINVAL;
-> > > > > > -     } else if (strcmp(indio_dev->name, "ad7816") =3D=3D 0 && =
-data > 0) {
-> > > > > > +     if (data !=3D AD7816_CS_MASK &&
-> > > > > > +         (data > AD7816_CS_MAX ||
-> > > > > > +         (chip->id =3D=3D ID_AD7818 && data > 1) ||
-> > > > > > +         (chip->id =3D=3D ID_AD7816 && data > 0))) {
-> > > > > >               dev_err(&chip->spi_dev->dev,
-> > > > > > -                     "Invalid channel id %lu for ad7816.\n", d=
-ata);
-> > > > > > +                     "Invalid channel id %lu for %s.\n", data,=
- indio_dev-
-> > > > > > > name);
-> > > > > >               return -EINVAL;
-> > > > > >       }
-> > > > >
-> > > > > Hmm, maybe I'm missing something but the code just looks the same=
- as before
-> > > > > (from a functionality point of view)? I'm really not seeing any f=
-ix...
-> > > > I might have to change it for readability. From my understanding, i=
-f
-> > > > channel 7 is selected (AD7816_CS_MASK), it never enters the error p=
-ath
-> > > > whereas in the old code, if the chip were either ad7816 or ad7818, =
-it would
-> > > > end up returning an error because it skips all channels above eithe=
-r 0
-> > > > or 1.
-> > >
-> > > Ahh, right!
-> > >
-> > > One good refactor is to add a chip_info struct (renaming the existing=
- one) with
-> > > let's say a name and max_channels. Then, the condition could be reduc=
-ed to:
-> > >
-> > > if (data > st->chip->max_channel && data !=3D AD7816_CS_MASK {
-> > >         dev_err(...);
-> > >         return -EINVAL;
-> > > }
-> > Makes sense. I sent a V2 with the updates. Also included enum
-> > ad7816_type as a member for chip_info but not sure if it is necessary.
-> > Renamed the existing one to ad7816_state.
-> > >
-> > > Being this in staging, I guess we don't care much about having the fi=
-x as the
-> > > first patch to make it easier to backport.
-> > In other words, combining the refactoring and fix into one patch is
-> > fine but normally they would be split?
->
-> Yes, in theory we want to have the fixes first before any refactor becaus=
-e we might
-> want to backport the fix and we do not want to backport more code than ne=
-eded. Not
-> totally sure but being this on staging we might not care that much about =
-this.
-Got it.
->
-> - Nuno S=C3=A1
+> On Thu, Apr 10, 2025 at 12:07:48PM +0530, Anand Moon wrote:
+> > Refactor the initialization of the clk_sec clock to be inside the
+> > SOC_ARCH_EXYNOS5420_TRIMINFO case. It ensures that the clk_sec clock
+> > is only initialized for the specified SOC and not for other SOCs,
+> > thereby simplifying the code. The clk_sec clock is used by the TMU
+> > for GPU on the Exynos 542x platform.
 > >
-> > >
-> > > - Nuno S=C3=A1
-> > >
-> > > >
-> > > > >
-> > > > > Having said the above, not sure if grouping helps with readabilit=
-y. But I do
-> > > > > agree with moving from string comparison to use chip->id. And we =
-also have
-> > > > > redundants 'else'
-> > > > >
-> > > > > - Nuno S=C3=A1
-> > > > >
+> > Removed redundant IS_ERR() checks for the clk_sec clock since error
+> > handling is already managed internally by clk_unprepare() functions.
+> >
+> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > ---
+> > v5: None
+> > v4: Fix the aligment of code clk for clk_prepare in proper if/else bloc=
+k.
+> >     update the commit for clk_sec used.
+> >     checked to goto clean up all the clks are proper.
+> >     drop IS_ERR() check for clk_sec.
+> > v3: improve the commit message.
+> > ---
+> >  drivers/thermal/samsung/exynos_tmu.c | 37 ++++++++++++++--------------
+> >  1 file changed, 18 insertions(+), 19 deletions(-)
+> >
+> > diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/sam=
+sung/exynos_tmu.c
+> > index 47a99b3c5395..3657920de000 100644
+> > --- a/drivers/thermal/samsung/exynos_tmu.c
+> > +++ b/drivers/thermal/samsung/exynos_tmu.c
+> > @@ -1037,29 +1037,30 @@ static int exynos_tmu_probe(struct platform_dev=
+ice *pdev)
+> >               return ret;
+> >
+> >       data->clk =3D devm_clk_get(dev, "tmu_apbif");
+> > -     if (IS_ERR(data->clk))
+> > +     if (IS_ERR(data->clk)) {
+> >               return dev_err_probe(dev, PTR_ERR(data->clk), "Failed to =
+get clock\n");
 >
+> As this branch returns, the else block can be removed.
+>
+>         if (IS_ERR(data->clk))
+>                 return dev_err_probe(dev, PTR_ERR(data->clk), "Failed to =
+get clock\n");
+>
+>         ret =3D clk_prepare(data->clk);
+>         if (ret) {
+>                 ...
+>         }
+>
+Earlier I got this review comment on this.
+[0] https://patchwork.kernel.org/project/linux-samsung-soc/patch/2025021619=
+5850.5352-2-linux.amoon@gmail.com/
+I will try to fix this in next vrsion.
+
+> May be worth to group both calls with devm_clk_get_enabled()
+
+Earlier, I attempted to change the clock ABI, but it didn't work.
+
+[1] https://lore.kernel.org/all/20220515064126.1424-2-linux.amoon@gmail.com=
+/
+If you're okay with changing this, I'll update it in the next version.
+
+> > -
+> > -     data->clk_sec =3D devm_clk_get(dev, "tmu_triminfo_apbif");
+> > -     if (IS_ERR(data->clk_sec)) {
+> > -             if (data->soc =3D=3D SOC_ARCH_EXYNOS5420_TRIMINFO)
+> > -                     return dev_err_probe(dev, PTR_ERR(data->clk_sec),
+> > -                                          "Failed to get triminfo cloc=
+k\n");
+> >       } else {
+> > -             ret =3D clk_prepare(data->clk_sec);
+> > +             ret =3D clk_prepare(data->clk);
+> >               if (ret) {
+> >                       dev_err(dev, "Failed to get clock\n");
+> >                       return ret;
+> >               }
+> >       }
+> >
+> > -     ret =3D clk_prepare(data->clk);
+> > -     if (ret) {
+> > -             dev_err(dev, "Failed to get clock\n");
+> > -             goto err_clk_sec;
+> > -     }
+> > -
+> >       switch (data->soc) {
+> > +     case SOC_ARCH_EXYNOS5420_TRIMINFO:
+> > +             data->clk_sec =3D devm_clk_get(dev, "tmu_triminfo_apbif")=
+;
+> > +             if (IS_ERR(data->clk_sec)) {
+> > +                     ret =3D dev_err_probe(dev, PTR_ERR(data->clk_sec)=
+,
+> > +                                         "Failed to get clk_sec clock\=
+n");
+> > +                     goto err_clk;
+> > +             }
+> > +             ret =3D clk_prepare(data->clk_sec);
+>
+> Same comment, devm_clk_get_enabled()
+If you're okay with changing this, I'll update it in the next version.
+>
+> > +             if (ret) {
+> > +                     dev_err(dev, "Failed to prepare clk_sec clock\n")=
+;
+> > +                     goto err_clk_sec;
+> > +             }
+> > +             break;
+> >       case SOC_ARCH_EXYNOS5433:
+> >       case SOC_ARCH_EXYNOS7:
+> >               data->sclk =3D devm_clk_get(dev, "tmu_sclk");
+> > @@ -1112,11 +1113,10 @@ static int exynos_tmu_probe(struct platform_dev=
+ice *pdev)
+> >
+> >  err_sclk:
+> >       clk_disable_unprepare(data->sclk);
+> > +err_clk_sec:
+> > +     clk_unprepare(data->clk_sec);
+> >  err_clk:
+> >       clk_unprepare(data->clk);
+> > -err_clk_sec:
+> > -     if (!IS_ERR(data->clk_sec))
+> > -             clk_unprepare(data->clk_sec);
+>
+> With devm_ variant those labels should go away
+Correct.
+
+Thanks
+-Anand
+>
+> >       return ret;
+> >  }
+> >
+> > @@ -1128,8 +1128,7 @@ static void exynos_tmu_remove(struct platform_dev=
+ice *pdev)
+> >
+> >       clk_disable_unprepare(data->sclk);
+> >       clk_unprepare(data->clk);
+> > -     if (!IS_ERR(data->clk_sec))
+> > -             clk_unprepare(data->clk_sec);
+> > +     clk_unprepare(data->clk_sec);
+> >  }
+> >
+> >  #ifdef CONFIG_PM_SLEEP
+> > --
+> > 2.49.0
+> >
+>
+> --
+>
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
+RM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
