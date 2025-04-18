@@ -1,63 +1,66 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33361E49F
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 22:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD57243958
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 22:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745014380; cv=none; b=PA7LRB1oxjZrbU/pfCrMDUP6bkmK0wA26MjgiC+AXb6ocHAZuEIQQk4kS5Ks1wNbQplRyN1tAmnZ0O6fyGDI6zNq19WQvj3j0rPabB+HC2ycOnwN+CUu0eXl3utWg1i9frrsloBFnURvXt/zUJMFR2d7OrjYtErCDOZYjvWgkIE=
+	t=1745014382; cv=none; b=GKbEw4U08nC1JD9VGQ/OqDCEs90oEuU31nhYhcKpBaAgfKq+Jk8li7Ex7I6XZdMdu1QS0xz/yGnxeJWaKzK2Esrv9Qfzy7U5hvQn313+16d0+53Z7uOEpj+KhKOMF/XU/rs1KYXU4tOjXUfJaiN+5XNM9+sCuGtIrUjuq5LOhHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745014380; c=relaxed/simple;
-	bh=OaB5clm2Fd55nvf9AoEoWbOeuMTD+ebuClMlN2bpD/4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=KL7Gm/QPyV+ft5J4RsYwLf8IOEmFMSYvswngdRK2Pc/jl/G6t8EHb2A1l+VymB8kCRWvndjLs03F7wJRCS6Ui0C8xxE9X1QxKFoXG+mNAEEpq7IovnI9c/Zip2mW0igAvLY5APdp/D++YhV+gaJqo2XN51RsWpHzSHy5VYmdE3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0C8iYHND; arc=none smtp.client-ip=209.85.210.202
+	s=arc-20240116; t=1745014382; c=relaxed/simple;
+	bh=ItWFSCVDbjxxVUZUdvpMtsCSDAT9b50ItavV7xjaUHQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=kYYpw+pTX4Bge3rajUw7W5hnqIDv0wJiOpHDyauEtKFUr6k1L5GTkTlJS05X300xbZsfu9DNwLPTQQXb/QQv0oyaL77j2grZCwDHxnSnnuWubxHd0FrFw3KaQXixxsq5oCg0l08Gmk3qL1eylnFBPmGt85q2Ks5jT8qFNuEchg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xIQ9O0Kj; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0C8iYHND"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736cb72efd5so1719394b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:12:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xIQ9O0Kj"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2242f3fd213so20611705ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:13:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745014378; x=1745619178; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=tzhfGtY+evoE9VxfviqLe5VC5CnC4BKePYDzdj0PjBk=;
-        b=0C8iYHND4avrxkgCWpcGohmatfBYtjYOmfXZDiD/zr2Jktum0FcIpVeV1qBP/Byg1h
-         7XYhH8RvPKnxiqwF088rxwoBxPoH3bpiG6Jk9gPHODkp/+9+lwzBWfFd5rx2YO1vUqQS
-         D00Owftx4oS1duH3cKEpDSxY6pCnOJxlH9vNNVqA7VM90NcPILS6zAqR4fkhFdGcezs4
-         sB/cDu9/XDyxivGAQjWxiG/uU8p+HOT44UiOTw18TRiOuwHSgMamgocxmRqrhaOl+t8B
-         HEU12zh5WJVntpQgbs3dVUwOeVxoOQBa2ROAieT3NiGrY07mHcvuzXpU1AhhHIIxhV9v
-         G+kw==
+        d=google.com; s=20230601; t=1745014379; x=1745619179; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8yrivYcHNx6L4G6taXJ33jFMolvklY6KDAaHH12BE9E=;
+        b=xIQ9O0Kj6TKfjgeNdo4lXLL8wNWMyUYP0AIumWibvd3CqDArRfXk28VKuV0bchZ/nI
+         mdOiDAFv7bpPwvk9tYopcmapDIFk/46d3u6vDg9VP82ht0rrJdwnhrmEL3jY95LUx1c9
+         Nx3/CyB2t3o61FBUUxO9Rvb6xQZnnrIE7aU7bH9nP2FXUNfbA+708QU08PIqpcztBaa9
+         Rir5JIDD7L8R/A6KCs+GX561CBArI5wdZ8EAUyHhpd9Mmlkx3Rsd+Fstqf4Zyrl4CoW9
+         upDWFUPokvCl2iXr5L6cjJw+iVm7RQoQjTYzkjAV4+Z7HK56Xc2MfNnP0/ZOBJjzhNu7
+         041A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745014378; x=1745619178;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tzhfGtY+evoE9VxfviqLe5VC5CnC4BKePYDzdj0PjBk=;
-        b=PZJwXV1etUc9N2DXjf/nwJCvLlHEh3VF9l2WjsWYrewWRwufByuPq0FzCiTGh29MyQ
-         d7vAt8E4XDgMZyjJNzNC018RjEthTjsHxArX3zkgxVhLdSIUKQgpxJgV23CND1oM92HR
-         DcUVOFkqYdU4ydNUZ4aVP3BxPLtd5MLcl55nmn7OBpPFCMwBC2U84Hhf+06NgkwdrrJK
-         E5egtsi0iAf1nCEk8SbMUNXprhAcdfOy9Ze04BT3Uza/QcI5VL4pf6Ft6PCI/361OkW2
-         exYdR5wD1LhS/wlC0wUIuQ4efu6hBjYSiFaG6v5VsAvVpVGsXu8CnvcZBrYOYn6kuJyR
-         92Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCWCEqr4Iq9XHQBVzHTHbsWKm1ZebD4rdqp7egBOLKGPiOb/YfhPKgmE2b7Z/m0CjLtc4URf27LtTxpKoDE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+xkGttqK7aC6Quba60WahcWI7AvAoEJIHMfC5APDNwsuuVATA
-	UVNau3lmaJ+ZY1uHp0AEoMwwZqKtoqS56wFdTLUo/wBg9s2zgxGMPxDr0vXYi2/sX2WK9/LbAkk
-	wej8cplqoj+JG/fWJtr+F7A==
-X-Google-Smtp-Source: AGHT+IFCgH6BBYC32pNbnQJa/WcTnXHZ2uCUfF0PiDlUPN0capH4EV5S2WQAQipAxHlB+1TR325seKlefI81vFED5Q==
-X-Received: from pfbcw17.prod.google.com ([2002:a05:6a00:4511:b0:732:20df:303c])
+        d=1e100.net; s=20230601; t=1745014379; x=1745619179;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8yrivYcHNx6L4G6taXJ33jFMolvklY6KDAaHH12BE9E=;
+        b=GfR6gPdyRtaBdwYnCCo+Y5jVk7MobzW9aN+6ldh63MkDf8Eivw0OZ8yMgHyU1pbsBL
+         LKMGOWrg84PQh3WqDUJxi4iKPU4FPk8X/1/swGriIjJfHcAjywF5+Q7zqzAOSH9whX4F
+         /lMUSoZuAL9wAyjEGez+D8OTCJ3Irx3ZjliPp1jPXT1s11EY2t4hxs70fNRT8yRDeJoZ
+         S466RXSCtkr8fKg65jtd4RSfvM57on8WV+eFL4RaW1BxO5WTPuEztQSLXOw/BiZm6TjL
+         JfdKPxVNfJk8RJA2x1nydIy15kIHN1WQ/zV2L57VXWU8/uX2A4G2bXr2dUphqxOQieFf
+         QQ+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWbJhrq8vZCZsQB0SWDppBesDYXJUqAjPbhSy2u+cNVzLECCAuSUtZmr32J3ToK4JZtPfi3uLMonz6ZnrE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeUqjdmHZvE5BfFuWD/xFA6G7omRZwLd6raMCDw4GuzqSE9pou
+	oXSTz73HipdIPxPt/4XeQPfXmHzsFTYWkRGmRbAot3MRSR20sstvDhFforrfNvz0oLspPypFkQa
+	TXKzbe23GgDUWoRCgeKhrhQ==
+X-Google-Smtp-Source: AGHT+IGgyWTDkf3U+r308vvbDy0CEDYuFNiZtlUp3pJH2R34QleHuKL3B+DestSlhl9Dm/fDOVTumOX7Nb2QaeZaWQ==
+X-Received: from pfbhq10.prod.google.com ([2002:a05:6a00:680a:b0:73c:257c:fd5f])
  (user=hramamurthy job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:e8f:b0:736:6ac4:d1ff with SMTP id d2e1a72fcca58-73dc14573f4mr6212653b3a.3.1745014377884;
- Fri, 18 Apr 2025 15:12:57 -0700 (PDT)
-Date: Fri, 18 Apr 2025 22:12:48 +0000
+ 2002:a17:903:287:b0:223:faf5:c82 with SMTP id d9443c01a7336-22c5337a067mr51930565ad.8.1745014379565;
+ Fri, 18 Apr 2025 15:12:59 -0700 (PDT)
+Date: Fri, 18 Apr 2025 22:12:49 +0000
+In-Reply-To: <20250418221254.112433-1-hramamurthy@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250418221254.112433-1-hramamurthy@google.com>
 X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
-Message-ID: <20250418221254.112433-1-hramamurthy@google.com>
-Subject: [PATCH net-next 0/6] gve: Add Rx HW timestamping support
+Message-ID: <20250418221254.112433-2-hramamurthy@google.com>
+Subject: [PATCH net-next 1/6] gve: Add device option for nic clock synchronization
 From: Harshitha Ramamurthy <hramamurthy@google.com>
 To: netdev@vger.kernel.org
 Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
@@ -65,37 +68,180 @@ Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
 	andrew+netdev@lunn.ch, willemb@google.com, ziweixiao@google.com, 
 	pkaligineedi@google.com, yyd@google.com, joshwash@google.com, 
 	shailend@google.com, linux@treblig.org, thostet@google.com, 
-	jfraker@google.com, horms@kernel.org, linux-kernel@vger.kernel.org
+	jfraker@google.com, horms@kernel.org, linux-kernel@vger.kernel.org, 
+	Jeff Rogers <jefrogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-From: Ziwei Xiao <ziweixiao@google.com>
+From: John Fraker <jfraker@google.com>
 
-This patch series add the support of Rx HW timestamping, which sends
-adminq commands periodically to the device for clock synchronization with
-the nic.
+This patch adds the device option and negotiation with the device for
+clock synchronization with the nic. This option is necessary before the
+driver will advertise support for hardware timestamping or other related
+features.
 
-John Fraker (5):
-  gve: Add device option for nic clock synchronization
-  gve: Add adminq command to report nic timestamp.
-  gve: Add rx hardware timestamp expansion
-  gve: Add support for SIOC[GS]HWTSTAMP IOCTLs
-  gve: Advertise support for rx hardware timestamping
+Co-developed-by: Jeff Rogers <jefrogers@google.com>
+Signed-off-by: Jeff Rogers <jefrogers@google.com>
+Co-developed-by: Ziwei Xiao <ziweixiao@google.com>
+Signed-off-by: Ziwei Xiao <ziweixiao@google.com>
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: John Fraker <jfraker@google.com>
+Signed-off-by: Harshitha Ramamurthy <hramamurthy@google.com>
+---
+ drivers/net/ethernet/google/gve/gve.h        |  3 ++
+ drivers/net/ethernet/google/gve/gve_adminq.c | 31 +++++++++++++++++++-
+ drivers/net/ethernet/google/gve/gve_adminq.h |  9 ++++++
+ 3 files changed, 42 insertions(+), 1 deletion(-)
 
-Kevin Yang (1):
-  gve: Add initial gve_clock
-
- drivers/net/ethernet/google/gve/Makefile      |   2 +-
- drivers/net/ethernet/google/gve/gve.h         |  14 +++
- drivers/net/ethernet/google/gve/gve_adminq.c  |  51 ++++++++-
- drivers/net/ethernet/google/gve/gve_adminq.h  |  26 +++++
- drivers/net/ethernet/google/gve/gve_clock.c   | 103 ++++++++++++++++++
- .../net/ethernet/google/gve/gve_desc_dqo.h    |   3 +-
- drivers/net/ethernet/google/gve/gve_ethtool.c |  23 +++-
- drivers/net/ethernet/google/gve/gve_main.c    |  47 ++++++++
- drivers/net/ethernet/google/gve/gve_rx_dqo.c  |  26 +++++
- 9 files changed, 290 insertions(+), 5 deletions(-)
- create mode 100644 drivers/net/ethernet/google/gve/gve_clock.c
-
+diff --git a/drivers/net/ethernet/google/gve/gve.h b/drivers/net/ethernet/google/gve/gve.h
+index 2fab38c8ee78..e9b2c1394b1f 100644
+--- a/drivers/net/ethernet/google/gve/gve.h
++++ b/drivers/net/ethernet/google/gve/gve.h
+@@ -870,6 +870,9 @@ struct gve_priv {
+ 	u16 rss_lut_size;
+ 	bool cache_rss_config;
+ 	struct gve_rss_config rss_config;
++
++	/* True if the device supports reading the nic clock */
++	bool nic_timestamp_supported;
+ };
+ 
+ enum gve_service_task_flags_bit {
+diff --git a/drivers/net/ethernet/google/gve/gve_adminq.c b/drivers/net/ethernet/google/gve/gve_adminq.c
+index 3e8fc33cc11f..ae20d2f7e6e1 100644
+--- a/drivers/net/ethernet/google/gve/gve_adminq.c
++++ b/drivers/net/ethernet/google/gve/gve_adminq.c
+@@ -46,6 +46,7 @@ void gve_parse_device_option(struct gve_priv *priv,
+ 			     struct gve_device_option_buffer_sizes **dev_op_buffer_sizes,
+ 			     struct gve_device_option_flow_steering **dev_op_flow_steering,
+ 			     struct gve_device_option_rss_config **dev_op_rss_config,
++			     struct gve_device_option_nic_timestamp **dev_op_nic_timestamp,
+ 			     struct gve_device_option_modify_ring **dev_op_modify_ring)
+ {
+ 	u32 req_feat_mask = be32_to_cpu(option->required_features_mask);
+@@ -225,6 +226,23 @@ void gve_parse_device_option(struct gve_priv *priv,
+ 				 "RSS config");
+ 		*dev_op_rss_config = (void *)(option + 1);
+ 		break;
++	case GVE_DEV_OPT_ID_NIC_TIMESTAMP:
++		if (option_length < sizeof(**dev_op_nic_timestamp) ||
++		    req_feat_mask != GVE_DEV_OPT_REQ_FEAT_MASK_NIC_TIMESTAMP) {
++			dev_warn(&priv->pdev->dev, GVE_DEVICE_OPTION_ERROR_FMT,
++				 "Nic Timestamp",
++				 (int)sizeof(**dev_op_nic_timestamp),
++				 GVE_DEV_OPT_REQ_FEAT_MASK_NIC_TIMESTAMP,
++				 option_length, req_feat_mask);
++			break;
++		}
++
++		if (option_length > sizeof(**dev_op_nic_timestamp))
++			dev_warn(&priv->pdev->dev,
++				 GVE_DEVICE_OPTION_TOO_BIG_FMT,
++				 "Nic Timestamp");
++		*dev_op_nic_timestamp = (void *)(option + 1);
++		break;
+ 	default:
+ 		/* If we don't recognize the option just continue
+ 		 * without doing anything.
+@@ -246,6 +264,7 @@ gve_process_device_options(struct gve_priv *priv,
+ 			   struct gve_device_option_buffer_sizes **dev_op_buffer_sizes,
+ 			   struct gve_device_option_flow_steering **dev_op_flow_steering,
+ 			   struct gve_device_option_rss_config **dev_op_rss_config,
++			   struct gve_device_option_nic_timestamp **dev_op_nic_timestamp,
+ 			   struct gve_device_option_modify_ring **dev_op_modify_ring)
+ {
+ 	const int num_options = be16_to_cpu(descriptor->num_device_options);
+@@ -269,6 +288,7 @@ gve_process_device_options(struct gve_priv *priv,
+ 					dev_op_dqo_rda, dev_op_jumbo_frames,
+ 					dev_op_dqo_qpl, dev_op_buffer_sizes,
+ 					dev_op_flow_steering, dev_op_rss_config,
++					dev_op_nic_timestamp,
+ 					dev_op_modify_ring);
+ 		dev_opt = next_opt;
+ 	}
+@@ -904,6 +924,8 @@ static void gve_enable_supported_features(struct gve_priv *priv,
+ 					  *dev_op_flow_steering,
+ 					  const struct gve_device_option_rss_config
+ 					  *dev_op_rss_config,
++					  const struct gve_device_option_nic_timestamp
++					  *dev_op_nic_timestamp,
+ 					  const struct gve_device_option_modify_ring
+ 					  *dev_op_modify_ring)
+ {
+@@ -980,10 +1002,15 @@ static void gve_enable_supported_features(struct gve_priv *priv,
+ 			"RSS device option enabled with key size of %u, lut size of %u.\n",
+ 			priv->rss_key_size, priv->rss_lut_size);
+ 	}
++
++	if (dev_op_nic_timestamp &&
++	    (supported_features_mask & GVE_SUP_NIC_TIMESTAMP_MASK))
++		priv->nic_timestamp_supported = true;
+ }
+ 
+ int gve_adminq_describe_device(struct gve_priv *priv)
+ {
++	struct gve_device_option_nic_timestamp *dev_op_nic_timestamp = NULL;
+ 	struct gve_device_option_flow_steering *dev_op_flow_steering = NULL;
+ 	struct gve_device_option_buffer_sizes *dev_op_buffer_sizes = NULL;
+ 	struct gve_device_option_jumbo_frames *dev_op_jumbo_frames = NULL;
+@@ -1024,6 +1051,7 @@ int gve_adminq_describe_device(struct gve_priv *priv)
+ 					 &dev_op_buffer_sizes,
+ 					 &dev_op_flow_steering,
+ 					 &dev_op_rss_config,
++					 &dev_op_nic_timestamp,
+ 					 &dev_op_modify_ring);
+ 	if (err)
+ 		goto free_device_descriptor;
+@@ -1088,7 +1116,8 @@ int gve_adminq_describe_device(struct gve_priv *priv)
+ 	gve_enable_supported_features(priv, supported_features_mask,
+ 				      dev_op_jumbo_frames, dev_op_dqo_qpl,
+ 				      dev_op_buffer_sizes, dev_op_flow_steering,
+-				      dev_op_rss_config, dev_op_modify_ring);
++				      dev_op_rss_config, dev_op_nic_timestamp,
++				      dev_op_modify_ring);
+ 
+ free_device_descriptor:
+ 	dma_pool_free(priv->adminq_pool, descriptor, descriptor_bus);
+diff --git a/drivers/net/ethernet/google/gve/gve_adminq.h b/drivers/net/ethernet/google/gve/gve_adminq.h
+index 228217458275..42466ee640f1 100644
+--- a/drivers/net/ethernet/google/gve/gve_adminq.h
++++ b/drivers/net/ethernet/google/gve/gve_adminq.h
+@@ -174,6 +174,12 @@ struct gve_device_option_rss_config {
+ 
+ static_assert(sizeof(struct gve_device_option_rss_config) == 8);
+ 
++struct gve_device_option_nic_timestamp {
++	__be32 supported_features_mask;
++};
++
++static_assert(sizeof(struct gve_device_option_nic_timestamp) == 4);
++
+ /* Terminology:
+  *
+  * RDA - Raw DMA Addressing - Buffers associated with SKBs are directly DMA
+@@ -192,6 +198,7 @@ enum gve_dev_opt_id {
+ 	GVE_DEV_OPT_ID_JUMBO_FRAMES		= 0x8,
+ 	GVE_DEV_OPT_ID_BUFFER_SIZES		= 0xa,
+ 	GVE_DEV_OPT_ID_FLOW_STEERING		= 0xb,
++	GVE_DEV_OPT_ID_NIC_TIMESTAMP		= 0xd,
+ 	GVE_DEV_OPT_ID_RSS_CONFIG		= 0xe,
+ };
+ 
+@@ -206,6 +213,7 @@ enum gve_dev_opt_req_feat_mask {
+ 	GVE_DEV_OPT_REQ_FEAT_MASK_MODIFY_RING		= 0x0,
+ 	GVE_DEV_OPT_REQ_FEAT_MASK_FLOW_STEERING		= 0x0,
+ 	GVE_DEV_OPT_REQ_FEAT_MASK_RSS_CONFIG		= 0x0,
++	GVE_DEV_OPT_REQ_FEAT_MASK_NIC_TIMESTAMP		= 0x0,
+ };
+ 
+ enum gve_sup_feature_mask {
+@@ -214,6 +222,7 @@ enum gve_sup_feature_mask {
+ 	GVE_SUP_BUFFER_SIZES_MASK	= 1 << 4,
+ 	GVE_SUP_FLOW_STEERING_MASK	= 1 << 5,
+ 	GVE_SUP_RSS_CONFIG_MASK		= 1 << 7,
++	GVE_SUP_NIC_TIMESTAMP_MASK	= 1 << 8,
+ };
+ 
+ #define GVE_DEV_OPT_LEN_GQI_RAW_ADDRESSING 0x0
 -- 
 2.49.0.805.g082f7c87e0-goog
 
