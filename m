@@ -1,105 +1,138 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF591C5F2C;
-	Fri, 18 Apr 2025 18:32:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19DF222592
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 18:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745001180; cv=none; b=boDnlNv+Yi5QbEuOVIes93DBzsLnInucxe/hF6QJ9a+ljmb3g6lM6uoWpOV9UmoGDgUNFZdOat3jD1u0QgHfmAmXvxzCa4I+HkoaDGLh24UUNPic1XVIt4sbiOp2tgJje0KFH76wp2i8N7vv69xHtyZTLMYDFXSgukmpiUp3Heg=
+	t=1745001195; cv=none; b=nm8po6LH3yuVAdl78leaQhcP3nLpVaJ2jOJZ8lBAvIZZCoNQ8/nZhw/WwGyC6Ibd18K5tvFb81OipT5jGl38ovyzu3YjG9r5p+0WDiLOHsAS6UU2lMs65UVs4DLtblTGAuxEA87hWMpHeLWZFNv406xbRSkTz7lMwsdCUq8YRKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745001180; c=relaxed/simple;
-	bh=ou5tcv9JxiL2u1j3f5J7z0CBvUbEeh6Xv6UWW41q/Ts=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PIKGvnzxPoBsNSjHGV7G/i5tIHPHR6XzM0SRVp8mU2ReJjuX74SQDJE/fVYLmQU8vUswxRfxZO9ekltSaDgzF4IhHnKpiLMnzD4ZzyAz7uGnmeBp4Ug8Oe5BFCzhmYcbptKDMBG5W3rQ089BBi5FVewIBDIO0qZ8nftemLsRoak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DTkfKw4e; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745001195; c=relaxed/simple;
+	bh=BFNfCAXgfDy1H6nRZLQIbFDRB827dsSp/614b/HrH88=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=oeYSGd7BVtml3FbIGo4oKRZhHh/KTv334e3KN4F/VHIXAdp4HJ/P/LZpCFFSRxKTmzMhynILehEB5xqcnz7rW7Wbt1FXsBQWmKwLCfPamUoIRAtGbxF4OcrZqHjxYVY7+dTtxWYCf5vVGYmiTKcZ7nigwZ3rhr4d77VbomQf448=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=L5O7QZ+e; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DTkfKw4e"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-227e29b6c55so3339165ad.1;
-        Fri, 18 Apr 2025 11:32:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="L5O7QZ+e"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so24598155e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 11:33:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745001179; x=1745605979; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HFANXjtKTfEx9kV/YD0moYxXkPIgDxsA41WYPtohNLk=;
-        b=DTkfKw4etkWpNh+RFUp8WY1PgivSEv9PZw17qp44dcaCOl3v7OYsw2IPxNSuD7N2k+
-         eWGOXbUuIfoYl9XNNNmKnxQrbqmTPXrOK7lnf0rj40wSQjandtGCbllalR1idb5xZbFR
-         YkwW5YQDYzdTcAcd/RaF++/VlPVZVtWmx78DZW2Cpp4DBCe6PTPDcY48KN3DDg6qmM12
-         4iayocZ2eJFMo0DOl78m97Mm8F1g6lv3qa73/Fp3cMVqUjWWUfSXaL1AkTp8avv8MJzM
-         2tpaWNbLwSx+RFg4K6446CdmdXcJVSMYYCfCYsUgI+fZRQNnEhH8ya0ui9R3uaX0rhL6
-         bg+w==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745001191; x=1745605991; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iRZ+jgVFwgume6BxLPo2873YNqsDxYM/0lRV47dPLIo=;
+        b=L5O7QZ+eyONOJo3fkO4oGPPllKpO31RSaxKnWXDX391kNnevMrmQoKPV5fdAshyEmb
+         sLNtGaSV/7P8MVeFLyWex8isy2SpVpmqGE/8HN8bdAIafrWa/W1lkKDZJLXr3aSZjITz
+         uSgLEfHYoIJmk18823Cq1GES5mCbkeKFh+a4cTOv8+91KSN3kWpr0pwjCgwraoOE+t7r
+         W+xrfuy+Ivh+9fnzZOQcwS4IKcML9EnRBMqkeEaDlxCr/ZTl12LHTWNxrgPL9GiXLGOP
+         plMonwmoCJnHsPz8gk11GjjG51KhDCGrCsMrMCLbCdJr2eWaas7awOhZbkN5Knjmcbv/
+         66sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745001179; x=1745605979;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HFANXjtKTfEx9kV/YD0moYxXkPIgDxsA41WYPtohNLk=;
-        b=DfD7NCvQCl4XBQzpuyMYsjh7WQgIPnik++OqFFv+dDbteWxE81kEZFWZ9Qf9KyPMlI
-         yw9R1WqxrPTgD9juQsx8fxdib6B+iyG3xT03HZzzo/+341U6KRxBDXQAV9ka/MfshVZk
-         mmu/HQN7OlBlt7oaaHrhKy9nkBNJ/E+T0SBx98aHocGTnWeHZfAy/ufjuu8wyuj2hrfW
-         +hTDkIMtVPyPM0Zbpf/yrarWDr5pRXHMrbYC4uuPKofr0zPOFjZHQAu/p9MiV7UUdbsQ
-         14ff+8oBgrFe4UQXuC4gOz/IzbN6ddrK8tG8Z2oIu1KRGNfUFoAve5QbGE1qPmPeAhFL
-         mdzg==
-X-Forwarded-Encrypted: i=1; AJvYcCVCv31lp3b3yhOT0tHEzABNB3MZh1FML4CtPe/9knpAOxzsVRzo5wuC4XIgjNRxF/2JPLT5W62OsfYQCe7oy0U=@vger.kernel.org, AJvYcCVFMqCYaN+nQe8rfjF8W3CSMV9C1t+parxQ6h4FccePISEDj4cR8pjng8zO7y4AcJqdVq5o@vger.kernel.org, AJvYcCVdg0h/ox9pTpMpVSs294Jrs/vkl7u8Lwz6+GE3dppBU7jis/r91GJoqFRs2XGdJTWx+ud1J9QEGlwpxu2wiLbh@vger.kernel.org, AJvYcCWdEP0lb1EiHWqMeam0t9glxtbC/KJGMZig4sc4SiwtdoMqs1eziVHT4KTBda6uw7qIeP/oqm8tFYZFNe8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLrgXMqFevOaeqoJg3hkL6mPY5eglY7jH/WqP18RE5tdpANI0q
-	Hwp7qDYTU/3DQELJYspcosEEPFHoCyJnpUc/RHvypz4y/8bFIyFqxITx6/SkVNUUov7b91IIMpp
-	Wkl7FOgZLtlE5Tb+6vUpIzZEPI/Q=
-X-Gm-Gg: ASbGncu1tjehtdweVcFwppYC6Qmkuyexnk5H135pjuJEUWDgHv+ImTcE1RqZcJ4NRgO
-	usb9xkRg6cM/2j6gAv9/l2vRek0RgX16G5mtNjA1Cpif4ypwb1B7R96QF6zW1KfH12JX+XWJpmY
-	8xhHbH4/rt7f1wPmDQmBKQSA==
-X-Google-Smtp-Source: AGHT+IFADhdep+T0QJPWyAyGB7omOjzqUUQUGaXKFwOncpJL98lO4epAjyTx4Uxd27a0AOpj/taau4IzgTr9RsgnsRg=
-X-Received: by 2002:a17:90b:1b44:b0:2fe:7f51:d2ec with SMTP id
- 98e67ed59e1d1-3087ba5cf08mr1856703a91.0.1745001178768; Fri, 18 Apr 2025
- 11:32:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745001191; x=1745605991;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iRZ+jgVFwgume6BxLPo2873YNqsDxYM/0lRV47dPLIo=;
+        b=WgsyRmH8OkHAvmLCFAaxjv4VwCFpHL8mQmiZ00H3GpND33/DufvNL4nxXB6/vtuwWM
+         mz1PVyQnuWW6BMNDvFs53TbxDPESYFaWY7xwq9hYM0imhpdNJB0W5nyHb7eSfMvksJtp
+         SS7QuU3dN4ldBLBKqlzG17bLEg0EM0rSGENZOSxHRNFnBToDppV2SrjQ/3uMP1OH2UOg
+         JXZjovxqvP9+xzZIIbLZ/dvDnn1Fq2Z7lMSbpZpxrgn4ZsSOQcIasQQHNjgUH3XPBq+s
+         ReGaSGKf7epjcQrL4a6RP7mhcbeRW+p8BGY+0O2UiU7U2qvnWFJXMiGLmxc63YhjYNdV
+         krFA==
+X-Forwarded-Encrypted: i=1; AJvYcCWfebbJq5ye37o83ciMIHIqG+Etp0p1JTlxdBBbcLcq1ytxhzCAcPE3sWyvnTzU2V7piYsnRilDAb9W2IU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6ftf0Hx12heydE5TI1ve85UNoKY6XoJNtB5GS7+Gf1aaGMds+
+	fwlqbMeqdwQSMfDNRaxuBlxBIMaDE7Y8AscqnYW5QjE1ReS87USu1l+/kBj/Ey7JprA9RWCZLvf
+	R
+X-Gm-Gg: ASbGncvPE7s+GuYQffTKTGF3yVFVUPPRB/cayKRJDDaHHLu+l75EhnRzdus9U7WcgBm
+	dAdGqVXM/GIDFRKaO/Mtr0J+ioXLT/NV+J3pBfCvTBAuNI36tA2qcR98ABTGBytwhx18hJIkCc7
+	xQ0mu4ba1I0JDGk4Nq7F5bldniGsAafH6E47iEY/cQNtLAiaGUFSqSNd/8D2CaByE2pSZ33OSqB
+	P3FwBVUHWYszC4XAfuqCr+hnUiQsI6qbveuUsQ36QaEnFR4OeqR/RcQhB5qYaf6pVrYjSmO4jNI
+	z9GT0tAfk83l3G8BJTgJOHTj2xg3ah/wimzXU5kJXfsqOh0s2yhzzy1B7wdLliDEITxbeV7XpH7
+	paixkinWsFL5ah5zRnQ==
+X-Google-Smtp-Source: AGHT+IGj9S4WRUKZtNodHl0GH1cTBRYlYX+0W8A4QD6dvdXuglhWcvb+rdy1DdVJlqow/SR2YziSIA==
+X-Received: by 2002:a05:600c:190d:b0:43c:ee3f:2c3 with SMTP id 5b1f17b1804b1-4406ab67e15mr30991265e9.7.1745001191034;
+        Fri, 18 Apr 2025 11:33:11 -0700 (PDT)
+Received: from [192.168.0.2] (host-87-15-70-119.retail.telecomitalia.it. [87.15.70.119])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa433429sm3472343f8f.37.2025.04.18.11.33.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 11:33:10 -0700 (PDT)
+From: Angelo Dureghello <adureghello@baylibre.com>
+X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
+Date: Fri, 18 Apr 2025 20:31:59 +0200
+Subject: [PATCH v2] iio: adc: ad7606: fix serial register access
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418161005.2425391-1-joelagnelf@nvidia.com>
- <20250418161005.2425391-13-joelagnelf@nvidia.com> <CANiq72nCfBdsfKzP72DWxLBh+Eueack9sS-E97wtsr0UtkAnUA@mail.gmail.com>
- <42da7c8e-08ff-4b04-ab58-6c0c2e287eb3@paulmck-laptop>
-In-Reply-To: <42da7c8e-08ff-4b04-ab58-6c0c2e287eb3@paulmck-laptop>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 18 Apr 2025 20:32:46 +0200
-X-Gm-Features: ATxdqUE11d5kf2E85BZuTAmKAI_UEsrp_SwqW-Oi0y3Ijarw0S_IvhRNYkCwLgs
-Message-ID: <CANiq72nE2cH93W2qZrzAxfbz3hjsw4Xy0YYNwOUQ74SeGiirgw@mail.gmail.com>
-Subject: Re: [PATCH 12/14] torture: Add testing of RCU's Rust bindings to torture.sh
-To: paulmck@kernel.org
-Cc: Joel Fernandes <joelagnelf@nvidia.com>, linux-kernel@vger.kernel.org, 
-	Josh Triplett <josh@joshtriplett.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Shuah Khan <shuah@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, rcu@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250418-wip-bl-ad7606-fix-reg-access-v2-1-8b1ade67e185@baylibre.com>
+X-B4-Tracking: v=1; b=H4sIAJ6aAmgC/42NQQ6CMBBFr0Jm7Zi2IFVW3sOwKMMUJkEgrUEJ4
+ e5WTuDyvfy8v0HkIByhyjYIvEiUaUxgThlQ78aOUdrEYJS5qEJbfMuMzYCutaUq0csHA3foiDh
+ GtOZGRhf22moPKTEHTosj/6gT9xJfU1iPt0X/7J/hRaNGRZwX2ufkKb83bh2kCXym6Qn1vu9fV
+ PkFAssAAAA=
+X-Change-ID: 20250417-wip-bl-ad7606-fix-reg-access-729c21478d1f
+To: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>, Beniamin Bia <beniamin.bia@analog.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Angelo Dureghello <adureghello@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1424;
+ i=adureghello@baylibre.com; h=from:subject:message-id;
+ bh=c/1c0SGQH8ay28jUfCcMDnmohaa6iaUAM5O7MoDjGZU=;
+ b=owGbwMvMwCXGf3bn1e/btlsznlZLYshgmjX/c7dNWIjfl3+tj1cnh6wsft6y9Pwj7nlqdmsOz
+ uh6eMtVqKOUhUGMi0FWTJGlLjHCJPR2qJTyAsbZMHNYmUCGMHBxCsBEuEUZ/kdczX5jdP38+7Dw
+ 18xCbPNl9COs2b7tXjJltbU9r0Vt+C6G/16HeHar6LxZYvIwz2PvEilzy1Wle66Hv+ldKNRit7m
+ Bnw8A
+X-Developer-Key: i=adureghello@baylibre.com; a=openpgp;
+ fpr=703CDFAD8B573EB00850E38366D1CB9419AF3953
 
-On Fri, Apr 18, 2025 at 8:04=E2=80=AFPM Paul E. McKenney <paulmck@kernel.or=
-g> wrote:
->
-> Suppose we fired up a guest OS and captured the console output.  Is there
-> a way to make that guest OS shut down automatically at the end of the
-> test and to extract the test results?
+From: Angelo Dureghello <adureghello@baylibre.com>
 
-Ah, sorry, I thought you were already doing something like that, i.e.
-that perhaps you could reuse some kernel build you already had and
-avoiding a full rebuild/`mrproper`. The KUnit Python script uses QEMU
-and parses the results; e.g. you could look for the results lines
-like:
+Fix register read/write routine as per datasheet.
 
-    # Totals: pass:133 fail:0 skip:0 total:133
-    ok 2 rust_doctests_kernel
+When reading multiple consecutive registers, only the first one is read
+properly. This is due to missing chip select deassert and assert again
+between first and second 16bit transferm as shown in the datasheet
+AD7606C-16, rev 0, figure 110.
 
-Cheers,
-Miguel
+Fixes: f2a22e1e172f ("iio: adc: ad7606: Add support for software mode for ad7616")
+Reviewed-by: David Lechner <dlechner@baylibre.com>
+Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+---
+Changes in v2:
+- improve bug description.
+- Link to v1: https://lore.kernel.org/r/20250417-wip-bl-ad7606-fix-reg-access-v1-1-0ce341f3cfc3@baylibre.com
+---
+ drivers/iio/adc/ad7606_spi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/iio/adc/ad7606_spi.c b/drivers/iio/adc/ad7606_spi.c
+index 997be483ebb93293481b922e13ece4edb47e940a..bd05357a542cf7234d5bb6b718829d6b720262cd 100644
+--- a/drivers/iio/adc/ad7606_spi.c
++++ b/drivers/iio/adc/ad7606_spi.c
+@@ -103,7 +103,7 @@ static int ad7606_spi_reg_read(struct ad7606_state *st, unsigned int addr)
+ 		{
+ 			.tx_buf = &st->d16[0],
+ 			.len = 2,
+-			.cs_change = 0,
++			.cs_change = 1,
+ 		}, {
+ 			.rx_buf = &st->d16[1],
+ 			.len = 2,
+
+---
+base-commit: 8dc6b228d746b1a900bed28568defb2266fa4c43
+change-id: 20250417-wip-bl-ad7606-fix-reg-access-729c21478d1f
+
+Best regards,
+-- 
+Angelo Dureghello <adureghello@baylibre.com>
+
