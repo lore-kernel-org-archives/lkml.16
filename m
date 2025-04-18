@@ -1,107 +1,156 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3ED420897F
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 09:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C42204F6F;
+	Fri, 18 Apr 2025 09:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744969771; cv=none; b=mhaiP3gW0b1Ukz+puKHeQVZ3QnrRhFTx+9W/SDwzXz1wsPFiaGjrpZBnPjU4Djyp2GSym2utFscRs1t5vGwQpoYg7KecGphUgRJs8qYzKnmxdedurlKtBNDL/uldjK6yDXqcjZ9Dyt1L5oGZkASt7yJJzE1o599UPOI/HRnkTKo=
+	t=1744969841; cv=none; b=QLQlYTYsr/GYk3VkCT/EnkRLhaZyYWKRYVhEUJZiZjS7H/qNZxySQJ4gqMjAiFTNGPfmlRKziFgDzOwliwJVJNGJueCvJaNw7b2LKWY+TO2ZxYIoXTNd7cg2d/jhTo0dbFICtdm5q9LjCYajW57rtD5mg6KKmsX7QdkXyKD1Pmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744969771; c=relaxed/simple;
-	bh=6Pq3Dbsaw91zeezOZl7rj7E4CkNxDlFOD8bMl2buu2Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CQOKfFFLutXI/k8shRDAZauXixExXD4Q5EML7eMkvn25WpDxofsKXtc3/dIDPzFDr4/XqRbjzRLHTX3cfLmKtRI3dBrSI5WDh5TYGdxHURN4wZ8QanJixjftwFLI57rkx08UwMvpVxWZuqgQ+P3x3oF/Zgng2QD21A6IZDEzEoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aHCsEGUc; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744969841; c=relaxed/simple;
+	bh=4oWpSTc9qKph3hl8y8YBVLf3NCdy8RejW7w5leGIgLg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U35QUXbGlTNbGy4FblpDCVkOUKC3apy5e3q1kWeGqSCzE/+R/c3YfEfje/xjNM+CPXlUjKw06NoWLKj+XK1RXl7NoheqDDQAQGkESSC5L2H64JKPRJF9D1Ypx0Br31iGmGZZChpSevCDgZwZgHcww+mpB+wzmU8/dC/dxxS6e1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PFI5dNLL; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aHCsEGUc"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736c277331eso2623918b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 02:49:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744969768; x=1745574568; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=94mjTCd5D19GYEOOOc42WJyjuO/cBvrP1r4UDcaiP4M=;
-        b=aHCsEGUc69XJMZVU6uYS4/HHXA4Lucy1s9aQwdMP1uSDsKlULA1IMnsg21Kvxr4UHM
-         xJZ+KGOZugeFXPUDrgx2LqRvz8sq5kniO9nfLy2gH7R8QyWt+uIMU6zaVPACkDZlHMNM
-         RNaN7arciUjpjbY+XB0iQP0oggFLlnvF/hNw2TWfOtxkX0E2mlRi5DGzPBpPb00fJabv
-         fpv92W4dLiR2tY7HwMbNg8Gzg12x6xuQzSNhG4pJLfiFrkHrmAcyiW3G7S0Oqj4yCQtk
-         fvAMBjAgmvlbawBSUHCtRQvUTajE2xkOwb5MxvsQ2UT9vVJur0UbeNOzqDG7ELS/MFYi
-         ayfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744969768; x=1745574568;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=94mjTCd5D19GYEOOOc42WJyjuO/cBvrP1r4UDcaiP4M=;
-        b=kvC09iMyOYAP7KcyPq8eSYPG/rEtlzkdw21DJqdWU5aVTRS4wLr+VMit6bA8pHa1yi
-         3Boo1XWSHj+NCnPElNBgCXApnO2LWnoGIKOo0LvTGw0KX6X9cInnix4XK8LH/kDnj+yo
-         Bav3JZZAnfoyLdECqtXqpDVdldoG2UY52pG4/oVk+Lz43m5IefUD06Nm6Hfe2Anf69dI
-         wSPL0HraxJ1fb7rlgSk9G40x68PB8HyfzX8/rU8qGhT4yZwj+MpCboUPBdR1rabaHTbo
-         /AWp/8meiVl3bfs/zEXJifZ2/mxSizQF1Zk2E79gvqvD+UpX4cdCk9XPCs8pqRWfhXOj
-         YLDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPoaIFcurqGhnqB/9PLICvciMO05+fjRlgzjJoXf/ao+QnwQ+rVU2UYKcaJ1HsGHdl1UsnNE82SvH2hQE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwOV4Jy8Ji8ztP6QCdnY5E0wWjF6PIloPvJHj/JoS6AU26HVZ1
-	NCP2rh6spWKP0YqsvSYPBD+CetPhO18KQITI8F4M4I/WwU49WlkpRvea1G8z1Q==
-X-Gm-Gg: ASbGncv2bNkWabTs2ReDRoWvsi19FZ878NBa2bqVa3iRKBUS2PaAAdFl+9v4dKjL1n4
-	8K+aiIZR9iWBeiMMB9j7trSkvkkTnDDYfg+21YbJyacne3fS0F3najM+hfYPUnC8RYslKywXv3u
-	6lv0LuqjfMw/Mdn5jC8VQk+4tIWuacwj+1Zh0Eap1x0mmquVS1EpMeVidyv/ZgFoJ9hQ+FT6whH
-	bTrgF7rlyiswYM29J09UFxovJ2XFf4UF1QGzCD7f9Tnu6uZmJlZdjxiVBqz+I4PvH/a0x8AYyk8
-	gnQ+4i3SE/We34tsLLP/WQ+E56DeIzyH/LJSqdnpYka2YjQLBKGa
-X-Google-Smtp-Source: AGHT+IEco0sKoFDRmf6mUfY5e0OyAEg6+5tFe/Gl6VeKc86avVTKr4g6pIZxHkWblne5PixuG6TsNA==
-X-Received: by 2002:a05:6a20:9c9a:b0:1f3:20be:c18a with SMTP id adf61e73a8af0-203cc60880bmr2607193637.10.1744969767905;
-        Fri, 18 Apr 2025 02:49:27 -0700 (PDT)
-Received: from thinkpad.. ([36.255.17.72])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db157c783sm1079830a12.77.2025.04.18.02.49.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 02:49:27 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: bhelgaas@google.com,
-	kw@linux.com,
-	lpieralisi@kernel.org
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH] MAINTAINERS: Move Manivannan Sadhasivam as PCI Native host bridge and endpoint maintainer
-Date: Fri, 18 Apr 2025 15:19:02 +0530
-Message-ID: <20250418094905.9983-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PFI5dNLL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=1wU3onK3VDy96ry8Q0RFciG/KE4gBkJHePhzzlypOjc=; b=PFI5dNLLmxjLVp2VSS44dkihKR
+	W7mbuieMs8WCh9IibqtmC5n33P5BBX94SUe4Pn+FVMAbh88qyVPx4eEw2oq5rsc1CirB1UMNRTQOw
+	KLwpOW6U8udoafNkoV4Y1cM5lBmORiLkVPLM6ODfgPY0H15jsafydG7FRNS/Y39WYZuwP3wEmvKnD
+	TNKZYpJqi6pYmpUw42GDTsbx8bwi8q1VJwNJOeaXOUVG/z5T98yAuVb9SabghWoeD3z8Br/HLIECn
+	IU4EcIDPDmZKWJS74DDe9xg7ri9HVqiayt76GYSuOnjVijKljXK4IAdB3SfPB+lqlFjTwHBGbiyWk
+	iQg2Y6Jw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u5iMk-0000000CeGU-2C7d;
+	Fri, 18 Apr 2025 09:50:35 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id BC37A300619; Fri, 18 Apr 2025 11:50:34 +0200 (CEST)
+Date: Fri, 18 Apr 2025 11:50:34 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+	Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Rik van Riel <riel@surriel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org
+Subject: Re: [tip: x86/alternatives] x86/efi: Make efi_enter/leave_mm() use
+ the use_/unuse_temporary_mm() machinery
+Message-ID: <20250418095034.GR38216@noisy.programming.kicks-ass.net>
+References: <20250402094540.3586683-7-mingo@kernel.org>
+ <174448360887.31282.4227052210506129936.tip-bot2@tip-bot2>
+ <20250417141751.GAaAENj1RsBOtp2Tvb@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417141751.GAaAENj1RsBOtp2Tvb@fat_crate.local>
 
-I'm currently maintaining the PCI endpoint subsystem and reviewing the
-native host bridge and endpoint drivers. However, this affects my endpoint
-maintainership role since I cannot merge endpoint patches that depend on
-the controller drivers (which is more common). Moreover, the controller
-driver patches would also benefit from a helping hand in maintaining them.
+On Thu, Apr 17, 2025 at 04:17:51PM +0200, Borislav Petkov wrote:
+> On Sat, Apr 12, 2025 at 06:46:48PM -0000, tip-bot2 for Andy Lutomirski wrote:
+> > The following commit has been merged into the x86/alternatives branch of tip:
+> > 
+> > Commit-ID:     e7021e2fe0b4335523d3f6e2221000bdfc633b62
+> > Gitweb:        https://git.kernel.org/tip/e7021e2fe0b4335523d3f6e2221000bdfc633b62
+> > Author:        Andy Lutomirski <luto@kernel.org>
+> > AuthorDate:    Wed, 02 Apr 2025 11:45:39 +02:00
+> > Committer:     Ingo Molnar <mingo@kernel.org>
+> > CommitterDate: Sat, 12 Apr 2025 10:06:04 +02:00
+> > 
+> > x86/efi: Make efi_enter/leave_mm() use the use_/unuse_temporary_mm() machinery
+> > 
+> > This should be considerably more robust.  It's also necessary for optimized
+> > for_each_possible_lazymm_cpu() on x86 -- without this patch, EFI calls in
+> > lazy context would remove the lazy mm from mm_cpumask().
+> > 
+> > [ mingo: Merged it on top of x86/alternatives ]
+> > 
+> > Signed-off-by: Andy Lutomirski <luto@kernel.org>
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> > Cc: Rik van Riel <riel@surriel.com>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Link: https://lore.kernel.org/r/20250402094540.3586683-7-mingo@kernel.org
+> > ---
+> >  arch/x86/platform/efi/efi_64.c | 7 ++-----
+> >  1 file changed, 2 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+> > index ac57259..a5d3496 100644
+> > --- a/arch/x86/platform/efi/efi_64.c
+> > +++ b/arch/x86/platform/efi/efi_64.c
+> > @@ -434,15 +434,12 @@ void __init efi_dump_pagetable(void)
+> >   */
+> >  static void efi_enter_mm(void)
+> >  {
+> > -	efi_prev_mm = current->active_mm;
+> > -	current->active_mm = &efi_mm;
+> > -	switch_mm(efi_prev_mm, &efi_mm, NULL);
+> > +	efi_prev_mm = use_temporary_mm(&efi_mm);
+> >  }
+> >  
+> >  static void efi_leave_mm(void)
+> >  {
+> > -	current->active_mm = efi_prev_mm;
+> > -	switch_mm(&efi_mm, efi_prev_mm, NULL);
+> > +	unuse_temporary_mm(efi_prev_mm);
+> >  }
+> >  
+> >  void arch_efi_call_virt_setup(void)
+> 
+> mingo thinks this one causes this:
+> 
+> [    0.119491] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+> [    0.119498] x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'compacted' format.
+> [    0.137368] Freeing SMP alternatives memory: 40K
+> [    0.137381] pid_max: default: 32768 minimum: 301
+> [    0.137496] ------------[ cut here ]------------
+> [    0.137502] WARNING: CPU: 0 PID: 0 at arch/x86/mm/tlb.c:795 switch_mm_irqs_off+0x3d3/0x460
+> [    0.137516] Modules linked in:
 
-So I'd like to step up to maintain the native host bridge and endpoint
-drivers together with the endpoint subsystem.
+Ah yes :-( Something like so perhaps..
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Subject: x86/mm: Fix {,un}use_temporary_mm() IRQ state
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ce2b64f4568d..ed035c9b3a61 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18631,7 +18631,7 @@ F:	drivers/pci/controller/pci-xgene-msi.c
- PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS
- M:	Lorenzo Pieralisi <lpieralisi@kernel.org>
- M:	Krzysztof Wilczyński <kw@linux.com>
--R:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
- R:	Rob Herring <robh@kernel.org>
- L:	linux-pci@vger.kernel.org
- S:	Supported
--- 
-2.43.0
+As the function switch_mm_irqs_off() implies, it ought to be called with
+IRQs *off*. Commit 58f8ffa91766 ("x86/mm: Allow temporary MMs when IRQs
+are on") caused this to not be the case for EFI.
 
+Ensure IRQs are off where it matters.
+
+Fixes: 58f8ffa91766 ("x86/mm: Allow temporary MMs when IRQs are on")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 92bde0d6205a..1451e022129a 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -991,6 +991,7 @@ struct mm_struct *use_temporary_mm(struct mm_struct *temp_mm)
+ 	struct mm_struct *prev_mm;
+ 
+ 	lockdep_assert_preemption_disabled();
++	guard(irqsave)();
+ 
+ 	/*
+ 	 * Make sure not to be in TLB lazy mode, as otherwise we'll end up
+@@ -1023,6 +1024,7 @@ struct mm_struct *use_temporary_mm(struct mm_struct *temp_mm)
+ void unuse_temporary_mm(struct mm_struct *prev_mm)
+ {
+ 	lockdep_assert_preemption_disabled();
++	guard(irqsave)();
+ 
+ 	/* Clear the cpumask, to indicate no TLB flushing is needed anywhere */
+ 	cpumask_clear_cpu(smp_processor_id(), mm_cpumask(this_cpu_read(cpu_tlbstate.loaded_mm)));
