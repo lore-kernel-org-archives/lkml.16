@@ -1,139 +1,192 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D65C2676C9;
-	Fri, 18 Apr 2025 06:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F151DE3C0
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 06:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744957789; cv=none; b=e1NhBPdJdAMzvc04AfoGrjn01w6wbjrajAuxVvkWzGaqEnOvlB+qBwA1AWt+Nnu2Yy3AH8ykw9qQcpQv4OnjHh+CN9ze+i+zU95kE3nutBUNuv4C5E37+PkaFwg6xI6AweQmCutNAhMjJKpzj9q0SCg6EYoRh8nUkCazCVmC54s=
+	t=1744957847; cv=none; b=QtToTGcUr+lM6gd8hYjTw69DCQ+OiAD8TjpsCCgQSGEJBp4EYMwvJ94+2SuLzn0vbk9LCP+0tEHQ4gk7k5shb7eQADVLKg0q/YK2nvU0ueVBQtjb3rtonwv63XOfGb/IoohPs/PvnaM4orEk6RkuppB/E906T3ixT9Yd8rAVqB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744957789; c=relaxed/simple;
-	bh=l3uICcf4YlI9AQIJ+j9ywpBOupoSEFmYOvYrcfvb494=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=junYHGjorL7I+0n4fYYJbhAA7+E/nRV0NkodNN6buaKd05joPt2PeUTwEXmUH8D4KcdYX8pg4G461DJIYBIQCX8nOrrC4DW8dfrbRXhykFoOu63D0EU+EBKFNlQ5aqp0FaOajYBQmRAGd1RundCQuQi1WOPOe/95nNTSVSiJ7Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q9Q+hy3f; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744957847; c=relaxed/simple;
+	bh=vblSzRg0143xPuN4XeD6Vs9S/c2LX8BGW2kzWp+TWVo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tGVZB2p3aS5yCg9DToDn2GQRaJxb299vhpQpAp/YzSQP4L63lYIIouUwHA0FigHB8c9/4tZrFsjylp8J12kPboDsd09V0TPFekQM9pGL2AM3th35l20cjzlcABX6Mi7qnAw5twIFK2LMY/sISEhACyGDezSkQ3ICcYyJPXco0Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OVbcsa+8; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q9Q+hy3f"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-227b828de00so17182165ad.1;
-        Thu, 17 Apr 2025 23:29:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OVbcsa+8"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86d75f4e9a1so608910241.3
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 23:30:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744957786; x=1745562586; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=i3lgEK+yHakx5+7OB0w9oKjp68pG7EX8aN/iZxjl35o=;
-        b=Q9Q+hy3fTPgPvvwNQuYO0/9vNBEkQtf/gK+uJuXQdNc8QmIFIdzQc51l+7Sqo3FTx0
-         P1WpJk6HO5wzgivnw+SCRWZl1rXSRcRL2bJnykhzkk5yMy8o4NKYnUxNSTIkK6zmmfNt
-         hX0qPrKe4EZEJGInXC4o3wWe2s/Y9u8T6fSIa3QlJzKvgLwPur/un6qnsJuhmx5DuXUG
-         PG6XgiGgPWWWPP7KAvngpQXOeiUg8UDQ5o/9Ng21WxBrvbXWAPUAPErmexsghfsR1DND
-         +ZgXC625qG0qdlwJoLpdne6FMDBb7+SoN6/Pj9/m2tyTNngEyujJSNoyRys2RPrlSGAt
-         Qw2w==
+        d=linaro.org; s=google; t=1744957845; x=1745562645; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=cO+LZPGdKwCP9kW9Fu9VT4HesIxpNlVbvo5GVB8YGbA=;
+        b=OVbcsa+8POgtr/7oU2pSp357AxFrO4aTLPwGJiXmaav1/sQpUEHY+vGH03jUNnuHiW
+         YiOFU7FDK+zx7lcUUCsyP4hADUq80SU/wfqnlXvYOd7AYd69+wOsj7OgkPfs1D9WUrOT
+         wJFqbJW8Vw1/vcSlL/YwvGxgGKC87ZjlPgOe2pdrmrN4Zvxc5S0F2r//9mQ6KxSrUjie
+         L2Lxag0xNFcod34ZHp7ZLN5y4mXet0x+rBaYUKiDB7SDyx3V3Hv17CaPXpjYT3/BHVsq
+         fGj2ORAZo0KVgvXocTtk14HjzIrXJwhdD21bH9Cm8drCCfsOVVtqE+z0fLArPkOEkGfD
+         KzSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744957786; x=1745562586;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1744957845; x=1745562645;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=i3lgEK+yHakx5+7OB0w9oKjp68pG7EX8aN/iZxjl35o=;
-        b=eEs2aXQ3iWtiVocYbSezd+tbcGMzx5kZqbF7EdH5vR6dg1VQ8L6BYR9jFspI3er7Gd
-         uwx/yWrN7Nj5/S1oi1bV0l3mD68547JOhF6yx4LF4Z5lwqazfqzt07FAU9wb/9PmMeRd
-         L21YaNstd6JmbdhvGY4VoQgzbLgLbihHzxg6jDPHWvklsNzVG2KX+gmW08B8uspuv2EU
-         LTBNxA635MRuu9IXMcjpxOQ11Y+/IzWfomMpDWdTZOxUVJ09djaotz1iiHX/yrZoVxQB
-         OtjGsm/oqaHy/i+Q58VOKzqClH1af0eVohD71CiAyRzjB/+74mWguuRKAxkAn+MBFAfg
-         gqyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU7xc6gDYoN4p6lAhCOJnxBlFtyb3PBrlpsjX18qgoQK4qWIa8tzXtA4vSiWkXU6c/CehLyq4Nl2WaiQeI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGb1qbHK5/ZvyJMZi7tw9mEgV0/SHBxfUMMOx0CVLH+BW1jbHg
-	widsNNZZCV1hf6UxmIFCUSc1oGizwFOxlsrQ5hTMLDqQl5cp0CxwV2z46Q==
-X-Gm-Gg: ASbGnctoIDecgtLzLpVPpOvCCz8CwoVBbHznrvcOmGEmhwP6rfBMc8d4ZHGEkTGi/u8
-	gIhFGTltXz5OYmGzm7KXnBJR9Y4561ca1djfUJ42LkXYjp4JgcK/7fgQbS4VwyTxYcr/a0ROMZ+
-	6qJm0csW2ZXbUyLHMLXt2IDORMqMusU81GTdVBGMd9msDBZSoi0HLcE2uytgTz/okIMnD8HTtkj
-	YnZa5vRwxU7C+lsV+9fwjpG25HHkjzqhtQ1moyNvbvBvZ0bNQ6lahq2mPp1vevV57JQPWBVmpEP
-	NG4LyzQ903ACjpU4ny1Evmd6myg41g+OGf9Ymyi6
-X-Google-Smtp-Source: AGHT+IEkGg0fjfvzhxs42Zb6yyWZJhSzRS76aRvKDk/4IvwkXqHM3idm3/54AaBd/4AWoEWp7UAANw==
-X-Received: by 2002:a17:903:22c9:b0:220:ff3f:6cc0 with SMTP id d9443c01a7336-22c536080bemr28824105ad.38.1744957786252;
-        Thu, 17 Apr 2025 23:29:46 -0700 (PDT)
-Received: from [192.168.1.26] ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fdb97esm10136155ad.219.2025.04.17.23.29.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 23:29:45 -0700 (PDT)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Fri, 18 Apr 2025 03:29:37 -0300
-Subject: [PATCH v2] wifi: iwlwifi: pcie: Fix match condition in
- iwl_pci_find_dev_info()
+        bh=cO+LZPGdKwCP9kW9Fu9VT4HesIxpNlVbvo5GVB8YGbA=;
+        b=r8FKM35N9HxRvt5X3kS0U5EFgzYL0u90wMustSkS63kDS5OsJBUhMSe7fiJFXSKHdM
+         ePujVgPVuCMbtYLB65LXoNE7Fw/lI6Yx5yGERU+11BSFiRlyvpVJp4KBAVKfJtAPAj8B
+         FPQ+iNC2YsdhB67lvp2ne4RcssjrJmY2Nks8rpCMwEikcegQ89HpSOx6E+70BUOoYA79
+         vMf1uzWWGeEJPL/BA8lTYo2zrWOeQwC3CHFRgq1VnNdv3vQxDUGRxru0GCUSUxTeH1Vm
+         FeaZGzbNYikpWWTHMEHu6ifxTziMiP0rRf2kISqty7UVmz1G4tD3ZAjbH0pFeQf6khZd
+         VMnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWXSD5j1qxL+XHzbn0ZHmXxrHvHObzKBLoZhHPEL/KCWkk90oWU9NxYFLX6AoOFDBjALi71MG1xFHAkgo8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyxt+D01LhlrLEEYe48S1MvBlAw4bavWQRoDRVgp+/IFNb+Sgn9
+	Beie1YXPzUYit9nepKVKBl12dpPJ34PBxUl2l+f/S4Qqyc1TcRI9IRwDTH1DkAQXQLqfVaCaSuj
+	VVM3A2Wvbcuv+95h5APT6vdaZ1OSRZ9rI0/pjAQ==
+X-Gm-Gg: ASbGncvAaC561Aa5vr4z4Vpk/5KF05FGxXnOLNTOfykVWZF8f/rXWFH9F292ZsgDz3w
+	w5SgXhmAduEm4cKCYEDGrNbuxGosU0G539Ga48oisYuqQVah7Ho0qOqXutoiScVLdDFejd41d04
+	QzYXgTexQQaSsL7sw2jvcbXrInEDc/6onlTJ39WgJ+8hwA24eccWKO1Lz+uAIKY6Gi
+X-Google-Smtp-Source: AGHT+IH6BG918r8UUA79PN7vIXS5dYZcYnUeACLfVZYjN9RIV6I6z90wfnR5o7Bxh+UkT+2opBqk+p0fP04vNBwseo8=
+X-Received: by 2002:a67:f085:0:b0:4cb:5d6e:e6c8 with SMTP id
+ ada2fe7eead31-4cb80128dcamr1118528137.9.1744957844659; Thu, 17 Apr 2025
+ 23:30:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250418-probe-fix-v2-1-ec1ef2d8a534@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAFDxAWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyjHQUlJIzE
- vPSU3UzU4B8JSMDI1MDE0ML3YKi/KRU3bTMCt00IwuDZAvDZCNzYyMloPqColSgMNis6NjaWgB
- Nk98JWwAAAA==
-X-Change-ID: 20250418-probe-fix-f280c81c2732
-To: Miri Korenblit <miriam.rachel.korenblit@intel.com>, 
- Johannes Berg <johannes.berg@intel.com>, 
- Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.14.2
+References: <20250417175117.964400335@linuxfoundation.org>
+In-Reply-To: <20250417175117.964400335@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 18 Apr 2025 12:00:33 +0530
+X-Gm-Features: ATxdqUEWtM1oKR-sQYc2k2BCDKdcFTg3l0NQ9YagooLEJvlaaYx37l9I6E6Bh2M
+Message-ID: <CA+G9fYvz0kujF4NjLwwTMcejDF-7k7_nhmroZNUJTBg4H4Kz8Q@mail.gmail.com>
+Subject: Re: [PATCH 6.14 000/449] 6.14.3-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org, PCI <linux-pci@vger.kernel.org>, linux-s390@vger.kernel.org, 
+	Tudor Ambarus <tudor.ambarus@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Niklas Schnelle <schnelle@linux.ibm.com>, Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Fix the following regression:
+On Thu, 17 Apr 2025 at 23:23, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.14.3 release.
+> There are 449 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 19 Apr 2025 17:49:48 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.3-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-iwlwifi: No config found for PCI dev 2725/1674, rev=0x420, rfid=0x10d000
-iwlwifi 0000:3b:00.0: probe with driver iwlwifi failed with error -22
+Regressions on arm64 and s390 allmodconfig and allyesconfig builds failed
+on the stable rc 6.14.3-rc1 with gcc-13 and clang-20.
 
-Which happens due to an extra `!` when matching `dev_info` while
-probing.
+There are two different types of build errors on arm64 and s390.
+These regressions on arm64 are also found on stable-rc 6.13 and 6.12.
 
-Fixes: 75a3313f52b7 ("wifi: iwlwifi: make no_160 more generic")
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
-Hi all,
+First seen on the 6.14.3-rc1
+ Good: v6.14.2
+ Bad:  v6.14.2-450-g0e7f2bba84c1
 
-After testing Linux v6.15-rc1 I found that my wifi card was failing to
-probe. This is a major regression which leaves me without wifi and is
-still present in Linux v6.15-rc2.
+Regressions found on arm64 s390:
+  - build/gcc-13-allmodconfig
+  - build/gcc-13-allyesconfig
+  - build/clang-20-allmodconfig
+  - build/clang-20-allyesconfig
 
-Bisecting led to:
+Regression Analysis:
+ - New regression? Yes
+ - Reproducibility? Yes
 
-first bad commit: [75a3313f52b7] wifi: iwlwifi: make no_160 more generic
+Build regression: arm64 s390 ufs-qcom.c implicit declaration
+'devm_of_qcom_ice_get'
 
-in which I found this this `!` typo.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-I already sent a fix for this (v1), but it probably ended up in spam due
-to a bad DKIM signature.
+## Build log arm64
+drivers/ufs/host/ufs-qcom.c: In function 'ufs_qcom_ice_init':
+drivers/ufs/host/ufs-qcom.c:128:15: error: implicit declaration of
+function 'devm_of_qcom_ice_get'; did you mean 'of_qcom_ice_get'?
+[-Werror=implicit-function-declaration]
+  128 |         ice = devm_of_qcom_ice_get(dev);
+      |               ^~~~~~~~~~~~~~~~~~~~
+      |               of_qcom_ice_get
+drivers/ufs/host/ufs-qcom.c:128:13: error: assignment to 'struct
+qcom_ice *' from 'int' makes pointer from integer without a cast
+[-Werror=int-conversion]
+  128 |         ice = devm_of_qcom_ice_get(dev);
+      |             ^
+cc1: all warnings being treated as errors
 
-This patch is based on the for-next branch of the wireless/wireless.git
-tree.
----
-Changes since v1:
-  - Heavily reword commit message to be more clear
-  - Link: https://lore.kernel.org/r/20250329-wifi-fix-v1-1-d6360e78f091@gmail.com/
----
- drivers/net/wireless/intel/iwlwifi/pcie/drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+## Build log s390
+arch/s390/pci/pci_fixup.c: In function 'zpci_ism_bar_no_mmap':
+arch/s390/pci/pci_fixup.c:19:13: error: 'struct pci_dev' has no member
+named 'non_mappable_bars'
+   19 |         pdev->non_mappable_bars = 1;
+      |             ^~
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-index 93446c37400814e2c27ddd2fe93136862fcf4eee..555323341e7d6d7b94e29b4b4530b056bf6433ec 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-@@ -1449,7 +1449,7 @@ iwl_pci_find_dev_info(u16 device, u16 subsystem_device,
- 		 * !bw_limit to have a match.
- 		 */
- 		if (dev_info->bw_limit != IWL_CFG_BW_ANY &&
--		    (dev_info->bw_limit == IWL_CFG_BW_NO_LIM) == !!bw_limit)
-+		    (dev_info->bw_limit == IWL_CFG_BW_NO_LIM) == !bw_limit)
- 			continue;
- 
- 		if (dev_info->cores != (u8)IWL_CFG_ANY &&
+## Source
+* Kernel version: 6.14.3-rc1
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+* Git sha: 0e7f2bba84c1f492e15812fade27cc0a697f3cb6
+* Git describe: v6.14.2-450-g0e7f2bba84c1
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.14.2-450-g0e7f2bba84c1/
+* Architectures: arm64, s390
+* Toolchains: clang-20, gcc-13
+* Kconfigs: allmodconfig, allyesconfig
 
----
-base-commit: 0937cb5f345c79d702b4d0d744e2a2529b551cb2
-change-id: 20250418-probe-fix-f280c81c2732
+## Build arm64
+* Build log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.14.2-450-g0e7f2bba84c1/testrun/28150920/suite/build/test/gcc-13-allmodconfig/log
+* Build history:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.14.2-450-g0e7f2bba84c1/testrun/28150920/suite/build/test/gcc-13-allmodconfig/history/
+* Build details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.14.2-450-g0e7f2bba84c1/testrun/28150920/suite/build/test/gcc-13-allmodconfig/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2vrqIAiN9QWCPEV6FWrOWIRos2j/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2vrqIAiN9QWCPEV6FWrOWIRos2j/config
 
-Best regards,
--- 
- ~ Kurt
+## Build s390
+* Build log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.14.2-450-g0e7f2bba84c1/testrun/28148516/suite/build/test/gcc-13-allmodconfig/log
+* Build history:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.14.2-450-g0e7f2bba84c1/testrun/28148516/suite/build/test/gcc-13-allmodconfig/history/
+* Build details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.14.2-450-g0e7f2bba84c1/testrun/28148516/suite/build/test/gcc-13-allmodconfig/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2vrqI5I7Rtlnhj4xhKXAwkGJ27o/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2vrqI5I7Rtlnhj4xhKXAwkGJ27o/config
 
+## Steps to reproduce on arm64
+ - tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
+--kconfig allmodconfig
+
+## Steps to reproduce on s390
+ - tuxmake --runtime podman --target-arch s390 --toolchain gcc-13
+--kconfig allmodconfig
+
+--
+Linaro LKFT
+https://lkft.linaro.org
