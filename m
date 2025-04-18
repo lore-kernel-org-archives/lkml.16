@@ -1,77 +1,100 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20CEB2F43
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 19:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A4121D3EF;
+	Fri, 18 Apr 2025 19:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745004521; cv=none; b=VU32DMWj62zF64v2rIFtfXFdrWxyBExXB2HTdqn3Fr0g+86nJyIZw2aZn59eNPx2AH6b347U9GDV0HuXP3XtlrXv4GTv9DI9OkQPpC4f5zmXRnQeu/IaJ7P3J75l3Jtnu/go+9zdSA539c0tvujGgphEWkyGuMJT+SVTrewNNg0=
+	t=1745004535; cv=none; b=WyeuqgZKmJiQAtGEYZTzGmlzBNxypU2m9tLD7X0u3/cN05qpjak0orkdzBj3DTVb8M4yxo0tsA7u7fIm5Rxa09vBP7QhK5RbFFqD+D22SoQ+HBaPgQlN0Hu/k2R1R7EuXQ7JYH2ZO1wSUICfAuB3hA/v0e7v3cyicJZpXhfIc8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745004521; c=relaxed/simple;
-	bh=pldKwZeWZ/TTY/3g7iYVb3KfoWWlepwU0moIQdJxB5Q=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZJCwoxp+ADcKsVU7Zk82f14Gt26cd3fWtE5nxykXsJ4QdYyx8VHI+vpY5ATm8bQS09YNTxxpzXe2AUyepO0RtaEDSKjvJSs2puRilDTAUvK8TuBRlbI+qJpkztOnKsNSb6eQadmj182YesdrSRCyMPirPCFC14fVZpNXoKQrhDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vfR37JR4; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745004535; c=relaxed/simple;
+	bh=+TbOaJ7dNqY0CeX/LfGFTz9EnPyPI3Sqdi/0xWcLcrU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EORSR+wR2TayZE4EepA/XtUZKNvycoO7a+iBIgmkRjE8LJ4zyT4FGOoJiUYZwEEXmtmcr3yhgRTKtDM8Z7cuL+Irm7AQP7HSWpGwyCUe0koV5IlW/wBmCg8B0QIXbW0WNu9TbAkSdxcpuf/O3VEciVbX0PyRthq8WKv+oPxFKPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z+FtPGFY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vfR37JR4"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53IJSXHU1006059
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 18 Apr 2025 14:28:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745004513;
-	bh=XLbyLsf9FX0KbpSXX6bUE1SzNZRH7YkQFATpdZmpDj8=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=vfR37JR4ziX3aKK7Sc5kZ1T6B8WdM2lLYwnxsKwAa5pL5DqJHZB6e+eIjVHK6Qwi+
-	 S7TA2pFd8Mh8y/4lGTNhRkq3zjss80sN5fllVkP4uY/0T0g5gvOiVejcfYBaNHTXYd
-	 csS0gWpo20a6BNwV3hDWCXodTacMi8V3YBLnuC9E=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53IJSX27001929
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 18 Apr 2025 14:28:33 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 18
- Apr 2025 14:28:32 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 18 Apr 2025 14:28:32 -0500
-Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53IJSWcR017086;
-	Fri, 18 Apr 2025 14:28:32 -0500
-Date: Fri, 18 Apr 2025 14:28:32 -0500
-From: Bryan Brattlof <bb@ti.com>
-To: Vignesh Raghavendra <vigneshr@ti.com>
-CC: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] soc: ti: k3-socinfo: Add JTAG ID for AM62LX
-Message-ID: <20250418192832.tw22jacridxoaw2q@bryanbrattlof.com>
-X-PGP-Fingerprint: D3D1 77E4 0A38 DF4D 1853 FEEF 41B9 0D5D 71D5 6CE0
-References: <20250417084904.2869369-1-vigneshr@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z+FtPGFY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE90FC4CEED;
+	Fri, 18 Apr 2025 19:28:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745004533;
+	bh=+TbOaJ7dNqY0CeX/LfGFTz9EnPyPI3Sqdi/0xWcLcrU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Z+FtPGFYPxElCaQNM++iHDNFZqYBN58/56/31qslxNyKHZ6+9bw9WIX57KZtFYPDY
+	 NGE+1fu+o1Iwwg+Pn5Txh73pK0d4RgTNw/nthfc94E/SCmu5db1sEKV2LblGwTWoeE
+	 fZni4Sk1mx4Z9t/7ASfc9C9vPw8fOTMcXcoJCqzA3WQ71Xk+8epvAFwsh5vENCOXPP
+	 E+6QFWWwpZQ5105lY07E5VjUYCA86H4om0FCJ12YsjKE1VSjdXOiBLRDtPQGVn2fAZ
+	 PPjDlRMJn2m5x1K+47TL10fi8MXKnSFj1we/pvHe6JLcQ9Lpnmjb5I8MKrCFZooOBa
+	 SO76PEQDVzPUQ==
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2c6f27599abso571547fac.2;
+        Fri, 18 Apr 2025 12:28:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV+/5o87CdprFhIAIOEO6av+3CxScJQ5rSLLVZJkm3BGGJDFlWybhAjxNN+Ks6seBI0eKy5QYB+Hew=@vger.kernel.org, AJvYcCVtUgYILkUdbOu/4mtkQJDgWZYEZzH6DpPVrkgbtYIWfjeB0my5410COCp7fuB5LLGBZpXx7gDSyfelvw8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7fTzxyAyj0oS00CiYW48UUHLZoiGxVTm2FwiroCAXwFMYsEOD
+	Z2NsZJacvdQVdcPoqOZNzJGCn8nQxqfnGH3Ydyk6xCrjoBCWZnRXBfVCWAk0YXo+kpHXitHgyzq
+	urlTn0Qpb1l4mDTmBB+EFclWMr0k=
+X-Google-Smtp-Source: AGHT+IGGCRL7igPjBrqktCEi13enWNNdUGzb0JAZ2xwmpzD25HADrBysg3O9yOFOkQTwaACvbdYoFPy82OF5AhAMg8g=
+X-Received: by 2002:a05:6871:613:b0:2c1:62ba:cd7c with SMTP id
+ 586e51a60fabf-2d5269d6991mr2033698fac.15.1745004533066; Fri, 18 Apr 2025
+ 12:28:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20250417084904.2869369-1-vigneshr@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <2c788c2ca0cab09a8ef4e384f272af928a880b0e.1744781329.git.viresh.kumar@linaro.org>
+ <20250417015424.36487-1-nic.c3.14@gmail.com> <20250417050226.c6kdp2s5du3y3a3j@vireshk-i7>
+ <20250417050911.xycjkalehqsg3i6x@vireshk-i7> <CAJZ5v0iO4=nHcATzPyiKiWumdETFRR32C97K_RH=yhD--Tai=g@mail.gmail.com>
+ <CAJZ5v0gcf07YykOS9VsQgHwM0DnphBX4yc9dt5cKjNR8G_4mAQ@mail.gmail.com>
+ <CAKohpomN1PYn1NPSsxCxqpMfg-9nYgCRQD6dFGQ30B+76vneQw@mail.gmail.com> <978bc0b7-4dfe-4ca1-9dd5-6c4a9c892be6@gmail.com>
+In-Reply-To: <978bc0b7-4dfe-4ca1-9dd5-6c4a9c892be6@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 18 Apr 2025 21:28:41 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iwAsVnvYKjKskLXuu5bDV_SMpgnTTy0zD=7fgnGzHQnA@mail.gmail.com>
+X-Gm-Features: ATxdqUHZf3vRhVwstEV-HPbDHWIsTs8CoNOzeZ2Mo3-FPjyj-w-6Pd3im33lTT0
+Message-ID: <CAJZ5v0iwAsVnvYKjKskLXuu5bDV_SMpgnTTy0zD=7fgnGzHQnA@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: acpi: Don't enable boost on policy exit
+To: Nicholas Chin <nic.c3.14@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, rafael.j.wysocki@intel.com, 
+	vincent.guittot@linaro.org, zhenglifeng1@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On April 17, 2025 thus sayeth Vignesh Raghavendra:
-> Add JTAG ID information for AM62Lx SoC so as to enable SoC detection in
-> kernel.
-> 
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> ---
->  drivers/soc/ti/k3-socinfo.c | 2 ++
->  1 file changed, 2 insertions(+)
+On Fri, Apr 18, 2025 at 7:06=E2=80=AFPM Nicholas Chin <nic.c3.14@gmail.com>=
+ wrote:
+>
+> On 2025-04-17 23:58, Viresh Kumar wrote:
+> > What about something like this instead ? Nicholas, can you give this a =
+try
+> > along with the $Subject patch (both patches should be applied) ?
+> >
+> > diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpuf=
+req.c
+> > index 924314cdeebc..71557f2ac22a 100644
+> > --- a/drivers/cpufreq/acpi-cpufreq.c
+> > +++ b/drivers/cpufreq/acpi-cpufreq.c
+> > @@ -909,8 +909,10 @@ static int acpi_cpufreq_cpu_init(struct
+> > cpufreq_policy *policy)
+> >         if (perf->states[0].core_frequency * 1000 !=3D freq_table[0].fr=
+equency)
+> >                 pr_warn(FW_WARN "P-state 0 is not max freq\n");
+> >
+> > -       if (acpi_cpufreq_driver.set_boost)
+> > +       if (acpi_cpufreq_driver.set_boost) {
+> >                 policy->boost_supported =3D true;
+> > +               policy->boost_enabled =3D boost_state(cpu);
 
-Reviewed-by: Bryan Brattlof <bb@ti.com>
+So it updates policy->boost_enabled in accordance with the current
+setting in the MSR.
 
-~Bryan
+IMO it would be better to update the MSR in accordance with
+policy->boost_enabled or users may get confused if their boost
+settings change after a suspend-resume cycle.  Or have I got lost
+completely?
 
+> > +       }
+> >
+> >         return result;
+>
+> Thanks, applying this patch along with the $Subject patch works.
