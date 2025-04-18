@@ -1,78 +1,133 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280D7211460;
-	Fri, 18 Apr 2025 07:13:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656BF268698;
+	Fri, 18 Apr 2025 07:14:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744960426; cv=none; b=Xm0LkjJC40R4Ldq4VBmgISN2N/YYBNM+xbZPZLpPEvklaNUmOPhCh+EwgniW3F0mLSK6TC8oi4AVWp9qajG/GbYKkOM3D0yQ4m892Ws6aY/zlIHjWoB+5BP84qwYKWUSZGaa0Y814rGTV0572y4X3Xs4gmFDY7xqY/jYqcbpqag=
+	t=1744960447; cv=none; b=h7Q89eFfbKNDXVl+JsjoZZmLXhb2xwE2ZnEVbzGp04Dz8zrhCpyX8aUjw2WNaaOGOAQ+91LYwcrrhqlGwEYjJtfjri3C40FLLTBw14uT6A8Zt3hysnyrI/kWl8wwhz53VFONly8XtBfOAbQYSXbU/DEy+wTP/FpicPNPF9qCj0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744960426; c=relaxed/simple;
-	bh=uJkWXSyuVjsPWx7cVZ2isYIFsLgnAz8EaRO6ThBlePU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iKMFXzmwsgzjXoeHWRYPU5YfdewOrN+kGY++eDS/jRDmm3tyD33ygNTaIcAEV2dYXvI+OljWxAMmbZuoA0eXc4X0O33uULHGmqjMZsFopj8jKVBhfs9SvX/AS92bgmddBNQ+GVAAnmLvSMP6roXt0W8r6mA22EOBfrKH5gC5ooU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YXRLb6Nv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744960447; c=relaxed/simple;
+	bh=OtbMZAQC1Yc9fSrGOF8eIeJqO6sSg/QCb7u+/K+8ask=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Wp3R812umGcC1fnZ/t2f2YcsCVKQMdBc6VF0i0k7tFIE8dF7n69QAvn8zOXELD1Dvbe4NEeIlq1THZrwyPfMLHTV/LYp0YMJwa5S99zZXTrN12KSgZYTgfUG1XZ0IiHs4qCK6IR3q50axvkHmsbV+nbP5gPNWWcueC0T2fJegEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NpVt9SZh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXRLb6Nv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28A61C4CEE2;
-	Fri, 18 Apr 2025 07:13:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NpVt9SZh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F81CC4CEE2;
+	Fri, 18 Apr 2025 07:14:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744960425;
-	bh=uJkWXSyuVjsPWx7cVZ2isYIFsLgnAz8EaRO6ThBlePU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YXRLb6NvB5Rx/SdmFnbnx+NXBmOxwpz+2mV2JJcypZ7bdQIZzZCxK2GDXTX7eVIqC
-	 rBxBhKURHceQZzz+JHUXpDzhqGsr3H1jHj6eHFCDaubsKWptUtBb+Pv9jTu3aJq+4v
-	 Sic6IskDMnmv7jRHtqY4M5dd63/27kf5J9ydodn8qqxFLEpDiVdpupNsDr0x2OYHp3
-	 dKUL7uLG25Yl1bu2g0faGNHiDUHpq+Ba9B4AjgeyI5MT7On+fVjqI8r26pTgUZyJmy
-	 HjNlVLH3VnyjNrw1vs2UQfFcRMbwpRy48tP0F3/Mh0TB3V1ioRjva9Hor6TxgQvpS3
-	 QJM4eVG2sNacA==
-Date: Fri, 18 Apr 2025 09:13:41 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Boqun Feng <boqun.feng@gmail.com>, Lyude Paul <lyude@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	rust-for-linux <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH 01/10] rust: Rename timer_container_of() to
- hrtimer_container_of()
-Message-ID: <aAH7pUGHgwi3NXv6@gmail.com>
-References: <20250416090544.3311613-1-mingo@kernel.org>
- <20250416090544.3311613-2-mingo@kernel.org>
- <CANiq72kW2xps1Am5HEe4+uPykFjm2Pf4kKoGWVNjVkG4HSmH0Q@mail.gmail.com>
+	s=k20201202; t=1744960446;
+	bh=OtbMZAQC1Yc9fSrGOF8eIeJqO6sSg/QCb7u+/K+8ask=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NpVt9SZhjnP2p6F4bm9bGFQSpD1XtBI0S+uqpw4ntj5He35B8ahfwrVs8hdxhFHJX
+	 6yRVSxiTwuaRwzip5fT6UXcfii87DUwJ2UM3qfdx3PTYnDJELR7/T7fcBBGqB0D9PT
+	 n7Cxslzb71HUy4BySYpltNvVwN91rFgxuSLd868viHlDtYZPK4sruNkPsMan6k/zHP
+	 Ha1FsiOtefrTKTvXt9GH1EhYIzc9Zh0Z59E6Mw4w0lXud+WZQpx9a0IPN3yQvGSlJU
+	 hYOHUn79a0eFhkBecVfvSKNZhfpPuK2g6/TF4uDV+tWTqjpRMC4X455YQkaVl5eIuD
+	 GUXlkTSnKbgMA==
+Date: Fri, 18 Apr 2025 16:14:04 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Shuah Khan
+ <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] tracing: selftests: Add testing a user string to
+ filters
+Message-Id: <20250418161404.04771abaeafec2dce3413247@kernel.org>
+In-Reply-To: <20250417223323.3edb4f6c@batman.local.home>
+References: <20250417223323.3edb4f6c@batman.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72kW2xps1Am5HEe4+uPykFjm2Pf4kKoGWVNjVkG4HSmH0Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Thu, 17 Apr 2025 22:33:23 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-* Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
-
-> On Wed, Apr 16, 2025 at 11:05 AM Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> > This primitive is dealing with 'struct hrtimer' objects, not
-> > 'struct timer_list' objects - so clarify the name.
-> >
-> > We want to introduce the timer_container_of() symbol in the kernel
-> > for timer_list, make sure there's no clash of namespaces, at least
-> > on the conceptual plane.
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> Andreas should Ack, but I quickly build-tested it and it looks OK:
+> Running the following commands was broken:
 > 
-> Acked-by: Miguel Ojeda <ojeda@kernel.org>
+>   # cd /sys/kernel/tracing
+>   # echo "filename.ustring ~ \"/proc*\"" > events/syscalls/sys_enter_openat/filter
+>   # echo 1 > events/syscalls/sys_enter_openat/enable
+>   # ls /proc/$$/maps
+>   # cat trace
+> 
+> And would produce nothing when it should have produced something like:
+> 
+>       ls-1192    [007] .....  8169.828333: sys_openat(dfd: ffffffffffffff9c, filename: 7efc18359904, flags: 80000, mode: 0)
+> 
+> Add a test to check this case so that it will be caught if it breaks
+> again.
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> Shuah, I'm Cc'ing you on this for your information, but I'll take it
+> through my tree as it will be attached with the fix, as it will fail
+> without it.
+> 
+>  .../test.d/filter/event-filter-function.tc    | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
+> index 118247b8dd84..ab449a2cea8c 100644
+> --- a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
+> @@ -80,6 +80,25 @@ if [ $misscnt -gt 0 ]; then
+>  	exit_fail
+>  fi
+>  
+> +# Check strings too
+> +if [ -f events/syscalls/sys_enter_openat/filter ]; then
+> +	echo "filename.ustring ~ \"*test.d*\"" > events/syscalls/sys_enter_openat/filter
 
-Thank you!
+I think it is better to use a $TMPDIR for the test script,
+instead of reusing the $TEST_DIR. Since $TMPDIR has been
+introduced to be used for this purpose.
 
-	Ingo
+DIRNAME=`basename $TMPDIR`
+
+echo "filename.ustring ~ \"\*$DIRNAME\*\"" > events/syscalls/sys_enter_openat/filter
+
+> +	echo 1 > events/syscalls/sys_enter_openat/enable
+> +	echo 1 > tracing_on
+> +	ls /bin/sh
+> +	nocnt=`grep openat trace | wc -l`
+> +	ls $TEST_DIR
+
+and `ls $TMPDIR` ?
+
+Does that work?
+
+Thank you,
+
+> +	echo 0 > tracing_on
+> +	hitcnt=`grep openat trace | wc -l`;
+> +	echo 0 > events/syscalls/sys_enter_openat/enable
+> +	if [ $nocnt -gt 0 ]; then
+> +		exit_fail
+> +	fi
+> +	if [ $hitcnt -eq 0 ]; then
+> +		exit_fail
+> +	fi
+> +fi
+> +
+>  reset_events_filter
+>  
+>  exit 0
+> -- 
+> 2.47.2
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
