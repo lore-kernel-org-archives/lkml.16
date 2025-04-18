@@ -1,125 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25242F43;
-	Fri, 18 Apr 2025 19:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92C2214A7F
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 19:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745004323; cv=none; b=UrnRBIi3n87H3zz6GOL2zPqUZGDene3XPK4RrJOktA6SD7B/MX+Eif6MltaLZ7vzSjLA5Ex9q4T44ty58NfLFwZUYX6ambkpORQpyltDzhkgiqq5CK5smhJMzd/tDzZbz4HPr/6EVN6mGi+bjZPcEganvvUIXbzy0dYV+Y7XDdA=
+	t=1745004459; cv=none; b=H1oGjlVD/XyQbHaunKehjVKEHf43nb0G7JeSYwoHmwNJcQPMwXRcntp5q6h4SoMYcAdTDELyNjyQP6yelv1nVL6Nc48e2/ftMV6M6qWp2pjT0KCktW2cvbw75fnn6LqabAD9sSTWdSQCOSL6Ao/7LROg0OpfLexPw5592TNy36M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745004323; c=relaxed/simple;
-	bh=55dXAFxLMVHRfoFsJTMy3eIBe0r/r/yTP10VrK09pxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YRB9bn4oPn2U8/U645jnn+tCrMKWIccv1B++FjtYEYTBQhmizEahI93r5+ylzn8sWySfFzLj8m5RnomrI5x+XlIvQQr8Fem2JVM/mOSdBB207i2H5Er8sx6Kp8j+Nfz2J08SR4UdwS7INcOuwLEQwGqT+bHTLWZ+nw2B2yyG3BA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uND/UnMm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745004459; c=relaxed/simple;
+	bh=PXliZB9xDy/vBKgpgY3nlv+6pXp7lLwAFFvpUkQS7Es=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eviMWAYJXHqGjML0MJeID33EFXHl50oCApfbLEkS9LMBLUCzBf7MI+gLbznaNNQG/CWs0K3wQQESZ/iX4+S4+YB3m/Kg0XH7fm6FUXrWcz22jaPIH7GfFYFRivNtJs8LTYtcrwZ2BrmRrEx3tCfJ2iMjh9qlJTrQGqRr9+ERSic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QdY/lNT7; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uND/UnMm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 361B1C4CEE2;
-	Fri, 18 Apr 2025 19:25:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745004323;
-	bh=55dXAFxLMVHRfoFsJTMy3eIBe0r/r/yTP10VrK09pxs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uND/UnMm2Oybk3m0NxC2Yr/019abG7xwm06yBfAWBqCk+7ew5mkXEJQ6cjxoyaKxW
-	 JOpM+0wKBLAQiYsHQNI87QLYtidXyhwOUyGE5m5gvy7yZ3noNLzzAe46Wc9xJcQebW
-	 DtMK9Op8AjXkybICppceZ7JA0hHh1RaQSv69d3KzKFKF5jBV7KaQyJeIC1FNLba6PU
-	 aGDKvhMqIRnx12Yce8KzGIXNCbrDK3oS25ka+HikkLsJJPAQdkKCz9u+SqzK30vsBN
-	 gA31K73I1T/JeWx65VqDaB/DbvgzSSNYcnj+DfmDIZvqJBsuL12vdv1zV/MX+vJRKt
-	 aT4xiu5eBdhqw==
-Date: Fri, 18 Apr 2025 22:25:13 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Arnd Bergmann <arnd@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Davide Ciminaghi <ciminaghi@gnudd.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH] x86/e820: discard high memory that can't be addressed by
- 32-bit systems
-Message-ID: <aAKnGbajVRKanGem@kernel.org>
-References: <Z_rDdnlSs0rts3b9@gmail.com>
- <20250413080858.743221-1-rppt@kernel.org>
- <20250417162206.GA104424@ax162>
- <aAHyHuwbmhjWmDqc@gmail.com>
- <aAIU9LHAr_BGb5Jl@kernel.org>
- <aAJMmQKTglGc7N-K@gmail.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QdY/lNT7"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-879d2e419b9so1886294a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 12:27:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1745004453; x=1745609253; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PXliZB9xDy/vBKgpgY3nlv+6pXp7lLwAFFvpUkQS7Es=;
+        b=QdY/lNT7zclZKdg/OeKALt+1UpSEbv4Ny4/0XdAX5gaN0mewPmy36NOeYKjNeZ92KM
+         BGygNAdpLH7RM32FQCKfAQZgAfoz0sjzOg+K02LpyuXNDmC/awTnrGdp2MJeE3vl5Gcm
+         Mp7M0I2DRIiIVxALmvxGOMug+hrJmzJGg/Z0o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745004453; x=1745609253;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PXliZB9xDy/vBKgpgY3nlv+6pXp7lLwAFFvpUkQS7Es=;
+        b=etL3vRSUJNzxHZOxabDkvM4OPJ5m7cIrQNuNwvdfITCkMDqfG/HtMrYZK782b+dldu
+         yabnv6Wg4u8tV3Ksl3BUKHxSoAn8whvjwo9TGEg2oom6KscRdQAyMeHcSP3sSHQpecyu
+         RPCyg83csGUH0awP0hO+zsCTyk58JVOyCKtYs1w/VOHieyxqN0mA724AnUxUKWIs54+i
+         Br/kRosJBaF/7miamjFupgavUsmAYS7n0EStCQcy/OBVp2JPQgdjorCdovoOMOnlqoRc
+         JEUxj2LtmChKP3jkWYl6Wyl2BaEO3eBnSlovZs2s7YnRtJayqJbj8w5MpDI1mE53BdGy
+         pn6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUGi2YZ+Oge6at1M4ohhUJwlv8O6ikKPc/e2ZDvAr1wIv98i8w8S4QwIfujjiXaKgwprr4iDNrUJbmiS+A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaZwHLCFYhKw/R9sNqO+Nl91hDgNQ8bYjMn1HKjxSUoXj8BbTK
+	ylX+5KJfsrbxYYvetW5zHWGrAboU1KmLYdqTR/Pr6Ymsh009U4qhAQvJhqb99m6ajfQ37j621JM
+	=
+X-Gm-Gg: ASbGnctMX8cKnoP+fRSKA4yb7dgJA7es2FG6C/ylKuDZZqZneNu3pFEgn3LTmp6s2yJ
+	8FMogm2HGlDztP2tTvl9zwdCQWZiIuk0GerpphvjtRFUwu3eQEqqe7jnBX2XyYAehfDKEPCb04Q
+	GUBZhYebXJG9xZjkbqAsT6sgpxxebg+In6A09OLclwNZz6iUWRNopplt01tTrm2KNLnAXgT6dsT
+	+yPstpZP3wA2kDFS30skdvhIHf0KZxEewiP/WtKATbS4Sk+ImOp3Q5lhtpKnGZV4B4klATSgGpo
+	kaHVpo0nSz0Ls+/cyL+XvENchkeYFW81fNTJOq7skR5DAguWoNedolm3aILyJJEZnD1qpZY9RKK
+	H6b1b
+X-Google-Smtp-Source: AGHT+IGSGN8tfTkAWGM+HvawBxa72+JkKlHRYREtB9XwiQyFRwggYl7+s0aLtkhHzxC9szgbNJjqcw==
+X-Received: by 2002:a17:90b:5748:b0:2ff:7ad4:77af with SMTP id 98e67ed59e1d1-3087bb6e9dbmr5529979a91.20.1745004453456;
+        Fri, 18 Apr 2025 12:27:33 -0700 (PDT)
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com. [209.85.216.54])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087df4fdcesm1631077a91.39.2025.04.18.12.27.31
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 12:27:31 -0700 (PDT)
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-303a66af07eso1697034a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 12:27:31 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWyzWo6dL1oN6jHDwlfYqXkVyLu6ckodeIsvGfy6Rgp8j+OF8IMfFk04nG+9xFbY9UUel3Xns8zE9dYSdk=@vger.kernel.org
+X-Received: by 2002:a17:90b:4ecf:b0:2ff:692b:b15 with SMTP id
+ 98e67ed59e1d1-3087bbca3b0mr6080668a91.33.1745004450746; Fri, 18 Apr 2025
+ 12:27:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAJMmQKTglGc7N-K@gmail.com>
+References: <20250331143710.1686600-1-sashal@kernel.org> <20250331143710.1686600-4-sashal@kernel.org>
+ <aAKD+zsLwx8pBSOE@duo.ucw.cz>
+In-Reply-To: <aAKD+zsLwx8pBSOE@duo.ucw.cz>
+From: Doug Anderson <dianders@chromium.org>
+Date: Fri, 18 Apr 2025 12:27:18 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WvoAxfipbsG1O-WXBfoPn2kEvgQk495AdMike7swgnpQ@mail.gmail.com>
+X-Gm-Features: ATxdqUE0FNJ4-KqG291tKKSsSflmlD7l8xzy9IRc-kV_X-qxA7cNZEuYYXsJ3pQ
+Message-ID: <CAD=FV=WvoAxfipbsG1O-WXBfoPn2kEvgQk495AdMike7swgnpQ@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.10 4/6] arm64: cputype: Add QCOM_CPU_PART_KRYO_3XX_GOLD
+To: Pavel Machek <pavel@denx.de>
+Cc: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Trilok Soni <quic_tsoni@quicinc.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org, mark.rutland@arm.com, 
+	oliver.upton@linux.dev, shameerali.kolothum.thodi@huawei.com, maz@kernel.org, 
+	bwicaksono@nvidia.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 18, 2025 at 02:59:05PM +0200, Ingo Molnar wrote:
-> 
-> * Mike Rapoport <rppt@kernel.org> wrote:
-> 
-> > On Fri, Apr 18, 2025 at 08:33:02AM +0200, Ingo Molnar wrote:
-> > > 
-> > > * Nathan Chancellor <nathan@kernel.org> wrote:
-> > > 
-> > > > Hi Mike,
-> > > > 
-> > > > On Sun, Apr 13, 2025 at 11:08:58AM +0300, Mike Rapoport wrote:
-> > > > ...
-> > > > >  arch/x86/kernel/e820.c | 8 ++++++++
-> > > > >  1 file changed, 8 insertions(+)
-> > > > > 
-> > > > > diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-> > > > > index 57120f0749cc..5f673bd6c7d7 100644
-> > > > > --- a/arch/x86/kernel/e820.c
-> > > > > +++ b/arch/x86/kernel/e820.c
-> > > > > @@ -1300,6 +1300,14 @@ void __init e820__memblock_setup(void)
-> > > > >  		memblock_add(entry->addr, entry->size);
-> > > > >  	}
-> > > > >  
-> > > > > +	/*
-> > > > > +	 * 32-bit systems are limited to 4BG of memory even with HIGHMEM and
-> > > > > +	 * to even less without it.
-> > > > > +	 * Discard memory after max_pfn - the actual limit detected at runtime.
-> > > > > +	 */
-> > > > > +	if (IS_ENABLED(CONFIG_X86_32))
-> > > > > +		memblock_remove(PFN_PHYS(max_pfn), -1);
-> > > > > +
-> > > > >  	/* Throw away partial pages: */
-> > > > >  	memblock_trim_memory(PAGE_SIZE);
-> > > > 
-> > > > Our CI noticed a boot failure after this change as commit 1e07b9fad022
-> > > > ("x86/e820: Discard high memory that can't be addressed by 32-bit
-> > > > systems") in -tip when booting i386_defconfig with a simple buildroot
-> > > > initrd.
-> > > 
-> > > I've zapped this commit from tip:x86/urgent for the time being:
-> > > 
-> > >   1e07b9fad022 ("x86/e820: Discard high memory that can't be addressed by 32-bit systems")
-> > > 
-> > > until these bugs are better understood.
-> > 
-> > With X86_PAE disabled phys_addr_t is 32 bit, PFN_PHYS(MAX_NONPAE_PFN)
-> > overflows and we get memblock_remove(0, -1) :(
-> > 
-> > Using max_pfn instead of MAX_NONPAE_PFN would work because there's a hole
-> > under 4G and max_pfn should never overflow.
-> 
-> So why don't we use max_pfn like your -v1 fix did IIRC?
+Hi,
 
-Dave didn't like max_pfn. I don't feel strongly about using max_pfn or
-skipping e820 ranges above 4G and not adding them to memblock.
- 
-> 	Ingo
+On Fri, Apr 18, 2025 at 9:55=E2=80=AFAM Pavel Machek <pavel@denx.de> wrote:
+>
+> Hi!
+>
+> > From: Douglas Anderson <dianders@chromium.org>
+> >
+> > [ Upstream commit 401c3333bb2396aa52e4121887a6f6a6e2f040bc ]
+> >
+> > Add a definition for the Qualcomm Kryo 300-series Gold cores.
+>
+> Why are we adding unused defines to stable?
 
--- 
-Sincerely yours,
-Mike.
+I don't really have a strong opinion, but I can see the logic at some
+level. This patch definitely doesn't _hurt_ and it seems plausible
+that a define like this could be used in a future errata. Having this
+already in stable would mean that the future errata would just pick
+cleanly without anyone having to track down the original patch.
+
+-Doug
