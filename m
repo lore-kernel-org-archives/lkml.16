@@ -1,129 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44F45475E;
-	Fri, 18 Apr 2025 19:33:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7A121CC64
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 19:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745004787; cv=none; b=NS8kInNNO0aGikyd6Be8FjJQrLjETQka+Tp8M3dCB96faeLvsmbouRWQhUw4Q4Av6vZtZ1eL/w/bPkFJk0NpWj90Qo7UZtO0LDjQHpLTNYe1xGfgdgoaET3Zi07Ua6oUWlGkGgIpx56zoSLyM8LfG2X5tSMocsXTKWBuvId/q0s=
+	t=1745004875; cv=none; b=R/KJe3CdJ//RjkmSA2czIBV/I9KEbpyoCTkMUhpmK1a7/8Lg5TwJXLNJxfIGzTVQsATS/IuGbItn6eoP7KaQLtqLUTpO9/aRQQFx4rzWTAN8qWrZoJrv3HHS4v4XMYPmYWZPhnDMkvULEWYO4NVpmg1x+gjbRnqCNCrjb5WG66w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745004787; c=relaxed/simple;
-	bh=Fyg0L7GBWCmPEo3XvR0XGgx8Nk9TP1d+4kIvHTxWxh4=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=aI4TnbhFofLloZN3LP6I9Q3mjIwuBdVYaDlFqZV6Sl0eZnjiDiXMQcR7yDoyTYNRi1lCzQjX/gmrY7IND0VsOUrJtIUXdfn1MmhzKNuU1BenbDu/fqSBNAW4mHDq70rWqCZVDhjM8UcZmIvyEK6POJfhYegS5UCKGo+iiD9nbGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uE5x9gM0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745004875; c=relaxed/simple;
+	bh=JRPNpxrZJesS5QZm+9qn4/l+3J4kbs3kiiEObTDlEew=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QcWLVuxkRHpjVBx16AQSaZQKNRpFoWIazQdt6OLcFBy5V7pQLBhF1D45o0Afs7Zv+zxJbbbwHfuBwVH5x3uO2ZSECNooLs2g+WcDVV2CMLBYGN/an+hreD7RkLwQw+5JDsgX3ZLh8kfRaa7hubhj+Avrn6V4XegBtaYZzqfe31I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=N8If/W8N; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uE5x9gM0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6523DC4AF09;
-	Fri, 18 Apr 2025 19:33:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745004786;
-	bh=Fyg0L7GBWCmPEo3XvR0XGgx8Nk9TP1d+4kIvHTxWxh4=;
-	h=From:Date:Subject:To:Cc:From;
-	b=uE5x9gM0fWqvpqF0e0V5OqTb+Q6cUcxU630bhDNs8w1FtsCtDjMVDq1QIhkV0fjDU
-	 O3pyDXrBrmj732H8miwq6CQvtGEA9jvng5A+XO0zvqUp9pBHrnoo9T06NvBB4BX1nX
-	 VIVXg9EyMvtLc1DZF99jQ6iZPKbbpjkavPazlnY9aNMhdaAOCvd24HNFsARD3JcfzP
-	 /MQqymNMzNXXEJAoxZtjtrLer6DIRHeIe6zCb+q2Xk/QzRx9POg9ACB4gEjEC2vmSQ
-	 LfCm47gV8JQVH6FXFaUnzQrIALmlBZ/P7zUiBbJyDkIVHeI7pmNQZcHfDMdGetpHW3
-	 ZnPenpOED5MFg==
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2d4f832069cso881293fac.0;
-        Fri, 18 Apr 2025 12:33:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW6Ye37M4Z45pdKdPe9n7kB61IcuKdmjBewelrjFQm2c+yLQnJ+qekmN06y58iPFhmlwY2xfnCtssJcLAM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yza3v4WtS4gesfxMFDYG++1k37TCE335rRvSJE0IGs/ULkTjrWT
-	rP0NQ4CIifLsMm8GRviyAsNY02qO/T2yAb6E0fh/NMZzjqaqxEfsnt4/4b0orVXkq1vPckdc7E+
-	NChQdl/9mipq2eTqPNHp4V2g0xeI=
-X-Google-Smtp-Source: AGHT+IHpHkeR1L5oHyMvHJK+fSmsdKbT6vOfHo4dyxGcKuIngkCqCxex/NZqT9eC7GovvpwWlqgehIW9zwei3aa20II=
-X-Received: by 2002:a05:6870:ef83:b0:29e:69a9:8311 with SMTP id
- 586e51a60fabf-2d526e0dff2mr2239611fac.36.1745004785648; Fri, 18 Apr 2025
- 12:33:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="N8If/W8N"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53IJCe40005929;
+	Fri, 18 Apr 2025 19:34:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=corp-2023-11-20; bh=HYM1W
+	FhUNRWnr9m7RbnDdHVWykeNIG5BuW9k+n6uhJQ=; b=N8If/W8N1LAyzip2kgPFA
+	2KVhC3S0C/eWh9IkrWxkm0LwlFQFgexCGApjpHrT/AZJntyCisalqFOncDMTUHCh
+	V1DEXKANLWgoOoba+oQdFGR3q3EyuYsNqHed+d6gkUEIHQY6M4tgBRqPuXfYcsQv
+	WPeVaOL57OMP8ljH/MoSZnFaaTm9JLM3BXMtTbmBzOB7dG7WiN8GwbGtIk6jEyhb
+	EsoMf70f0yHyOVZdQ+aQLQA61j3Rjg8Q88o6JjX8SAWSWGtrAiTF+il+shNGbjym
+	vsSmssJ8pMGIjlpDWYOZvMInNeuPxnKQ1bjDHGC4sks3h4xekLcouFES7vLchPnF
+	w==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46185n0nuf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 18 Apr 2025 19:34:15 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53IIn28l038828;
+	Fri, 18 Apr 2025 19:34:15 GMT
+Received: from psang-work.osdevelopmeniad.oraclevcn.com (psang-work.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.253.35])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 460d4w8qqy-4
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Fri, 18 Apr 2025 19:34:15 +0000
+From: Prakash Sangappa <prakash.sangappa@oracle.com>
+To: linux-kernel@vger.kernel.org
+Cc: peterz@infradead.org, rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        tglx@linutronix.de, bigeasy@linutronix.de
+Subject: [PATCH V2 3/3] Sched: Add scheduler stat for cpu time slice extension
+Date: Fri, 18 Apr 2025 19:34:10 +0000
+Message-ID: <20250418193410.2010058-4-prakash.sangappa@oracle.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250418193410.2010058-1-prakash.sangappa@oracle.com>
+References: <20250418193410.2010058-1-prakash.sangappa@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 18 Apr 2025 21:32:54 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gpDf9mBFGRjnrU8LaPzc0foCeGhzTkOu1FwooyGFzSzg@mail.gmail.com>
-X-Gm-Features: ATxdqUEHSC7CnX8PfTQUqH4k3euLoIqoS6HtH43Hegr-CbjmNYIJgnYsDY1zgUk
-Message-ID: <CAJZ5v0gpDf9mBFGRjnrU8LaPzc0foCeGhzTkOu1FwooyGFzSzg@mail.gmail.com>
-Subject: [GIT PULL] Power management fixes for v6.15-rc3
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux PM <linux-pm@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Mario Limonciello <mario.limonciello@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-18_07,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
+ bulkscore=0 mlxscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
+ definitions=main-2504180148
+X-Proofpoint-ORIG-GUID: 7JGZ84SkMdejhFq0dD7iB-kjSakjkkQB
+X-Proofpoint-GUID: 7JGZ84SkMdejhFq0dD7iB-kjSakjkkQB
 
-Hi Linus,
+Add scheduler stat to record number of times the thread was granted
+cpu time slice extension.
 
-Please pull from the tag
+Signed-off-by: Prakash Sangappa <prakash.sangappa@oracle.com>
+---
+ include/linux/sched.h | 2 ++
+ kernel/rseq.c         | 1 +
+ kernel/sched/core.c   | 5 +++++
+ kernel/sched/debug.c  | 1 +
+ 4 files changed, 9 insertions(+)
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-6.15-rc3
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index c91856f908d6..2c5c928f1128 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -327,6 +327,7 @@ extern void io_schedule_finish(int token);
+ extern long io_schedule_timeout(long timeout);
+ extern void io_schedule(void);
+ extern void hrtick_local_start(u64 delay);
++extern void update_stat_preempt_delayed(struct task_struct *t);
+ 
+ /**
+  * struct prev_cputime - snapshot of system and user cputime
+@@ -541,6 +542,7 @@ struct sched_statistics {
+ 	u64				nr_wakeups_affine_attempts;
+ 	u64				nr_wakeups_passive;
+ 	u64				nr_wakeups_idle;
++	u64				nr_preempt_delay_granted;
+ 
+ #ifdef CONFIG_SCHED_CORE
+ 	u64				core_forceidle_sum;
+diff --git a/kernel/rseq.c b/kernel/rseq.c
+index 7022729d02ee..d8e3bf126248 100644
+--- a/kernel/rseq.c
++++ b/kernel/rseq.c
+@@ -453,6 +453,7 @@ bool rseq_delay_resched(void)
+ 		return false;
+ 
+ 	t->rseq_sched_delay = 1;
++	update_stat_preempt_delayed(t);
+ 
+ 	return true;
+ }
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 59b381cef472..6a08e6ece98d 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -931,6 +931,11 @@ void hrtick_local_start(u64 delay)
+ 	rq_unlock(rq, &rf);
+ }
+ 
++void update_stat_preempt_delayed(struct task_struct *t)
++{
++	schedstat_inc(t->stats.nr_preempt_delay_granted);
++}
++
+ static void hrtick_rq_init(struct rq *rq)
+ {
+ #ifdef CONFIG_SMP
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index ef047add7f9e..e160e14b348f 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -1213,6 +1213,7 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+ 		P_SCHEDSTAT(nr_wakeups_affine_attempts);
+ 		P_SCHEDSTAT(nr_wakeups_passive);
+ 		P_SCHEDSTAT(nr_wakeups_idle);
++		P_SCHEDSTAT(nr_preempt_delay_granted);
+ 
+ 		avg_atom = p->se.sum_exec_runtime;
+ 		if (nr_switches)
+-- 
+2.43.5
 
-with top-most commit f3b25a1b48191048e2f190d878fc3175fc08ffaa
-
- Merge branch 'pm-docs'
-
-on top of commit 8ffd015db85fea3e15a77027fda6c02ced4d2444
-
- Linux 6.15-rc2
-
-to receive power management fixes for 6.15-rc3.
-
-These are mostly cpufreq fixes, some of which address recent regressions
-and some address older issues that have come to light during the last
-two weeks, and a runtime PM documentation correction:
-
- - Fix the performance-to-frequency scaling factor computation on
-   systems using HWP in the intel_pstate driver after a recent incorrect
-   update of it (Rafael Wysocki).
-
- - Fix the usage of the CPUFREQ_NEED_UPDATE_LIMITS cpufreq driver flag
-   in the schedutil cpufreq governor after a recent update of it that
-   has caused frequency limits changes to be missed sometimes (Rafael
-   Wysocki).
-
- - Address some recently discovered synchronization issues related to
-   frequency limits changes in the schedutil cpufreq governor and in
-   the cpufreq core (Rafael Wysocki).
-
- - Fix ITMT support in the amd-pstate cpufreq driver so that it is
-   enabled after asym priorities have been correctly initialized for
-   all CPUs (K Prateek Nayak).
-
- - Fix changing min/max limits in the amd-pstate cpufreq driver while
-   on the performance governor (Dhananjay Ugwekar).
-
- - Fix a function name in the runtime PM documentation that was
-   previously incorrectly updated by mistake (Sakari Ailus).
-
-Thanks!
-
-
----------------
-
-Dhananjay Ugwekar (1):
-      cpufreq/amd-pstate: Fix min_limit perf and freq updation for
-performance governor
-
-K Prateek Nayak (1):
-      cpufreq/amd-pstate: Enable ITMT support after initializing core rankings
-
-Rafael J. Wysocki (5):
-      cpufreq: intel_pstate: Fix hwp_get_cpu_scaling()
-      cpufreq/sched: Fix the usage of CPUFREQ_NEED_UPDATE_LIMITS
-      cpufreq/sched: Explicitly synchronize limits_changed flag handling
-      cpufreq/sched: Set need_freq_update in ignore_dl_rate_limit()
-      cpufreq: Avoid using inconsistent policy->min and policy->max
-
-Sakari Ailus (1):
-      Documentation: PM: runtime: Fix a reference to pm_runtime_autosuspend()
-
----------------
-
- Documentation/power/runtime_pm.rst |  2 +-
- drivers/cpufreq/amd-pstate.c       | 36 ++++++++++++----------------
- drivers/cpufreq/cpufreq.c          | 32 +++++++++++++++++++------
- drivers/cpufreq/intel_pstate.c     |  2 +-
- kernel/sched/cpufreq_schedutil.c   | 49 ++++++++++++++++++++++++++++++++------
- 5 files changed, 84 insertions(+), 37 deletions(-)
