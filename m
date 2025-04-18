@@ -1,119 +1,63 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D4B1C2324;
-	Fri, 18 Apr 2025 20:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C9C78F29;
+	Fri, 18 Apr 2025 20:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745008034; cv=none; b=UA13YIQ8+Jil3xWJA5FXnK/6cXpYEO//d1cWBQS6D+6kymY59rbbBX2MfZnojBZUpniVHqh03Ixr+62fbIKKWae27p/3G3I63nrHRrLcakCyPx+5Xmjdn1Xd1F0QhSeDH3KflYuABpMymuY4otbxXf5JlQGxjTtbi4kpuydkVqY=
+	t=1745008038; cv=none; b=Jzj0fd/hphlRPod4EynBDInYBZ9aqFxLj5j0qOj+J94gwayh/T+uBh/6NjEkS0o41EiTkWmmFYOZINpKpe+4J9ZNBn5N6RpSotAj0kN5v1G3KZozvCK8qWwhxOe5/fu0OycjgrIHiVM9BS9bDD2pcGtD0T0UrM+gifV+4zZuHgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745008034; c=relaxed/simple;
-	bh=CrhsFFq5IyqJkiDJlv+lg+3v62q3lDf7I+FQDCU5DC0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CmBIONihiZ6CnG1IwFE2SiVFirV5YITcr3KsN2TZHDmdV6IyP5EHcZrs1JvFagVcOqxt1ogQoU18aDx4R3TXIKTfym2AOkSASAul6ZIvKbXtgkpmaKaVl3hPwHeaFtPPIJiexO1vTfHf3xmAvibMuU3TDqTGlK6td6jywNPespA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=eXr9MTqd; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1745008038; c=relaxed/simple;
+	bh=8DwSSKPuQ0MU27bQND2C3BiwMrVGXG7tgzTttqJNoo8=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=uEG8xxMb/01HRGtttTMYe6xYmTQiSBLhv1Uun2VfpPHDhLWp3eQ4n4pQPxZLh/pXax2SksvBSGihsFXnYuSHclR44EtVi8En2cQlD280vxymH5BuCZ2CHXHLMYWCBkdmDCH8n3AvZhe6v4Qa8Va79qE+fGgDZh96gR89Z6TLMKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rUhkvDnW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="eXr9MTqd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=O79Q8up6Gy2hEMjnQITer5PbKSEwN1Pzj/8/BV+JwL4=; b=eXr9MTqdlq9ohs6A/9h4SUfc9g
-	URu7Pe6Rtniim9/50hbZjCEspUSIRrZO5c9vO9opoZKrVynLKH9QDhASi6zX8s/JuB2EXl8pSjeFd
-	4uRDz54ZFiqqTWqM6a9mWuCLl3uFlJ1Ac970YA9oSySo6C68axjiaA/PpkNPO9mijY90=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u5sIZ-009wCP-5d; Fri, 18 Apr 2025 22:26:55 +0200
-Date: Fri, 18 Apr 2025 22:26:55 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andy Whitcroft <apw@canonical.com>,
-	Dwaipayan Ray <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Joe Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
-	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Roger Quadros <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
-Subject: Re: [PATCH net-next 1/4] dt-bindings: net: ethernet-controller:
- update descriptions of RGMII modes
-Message-ID: <94075f0a-6e17-4106-879e-3aa5193f9ef2@lunn.ch>
-References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
- <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rUhkvDnW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA54DC4CEE2;
+	Fri, 18 Apr 2025 20:27:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745008037;
+	bh=8DwSSKPuQ0MU27bQND2C3BiwMrVGXG7tgzTttqJNoo8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=rUhkvDnWeVdefSCLQf1HV+SaWvVSz7qdAR+K9P8GNLFRA8AUEibT7+BP70Ku1E9WZ
+	 asBXErENgyFCXlGTsILzxPNv7gomKw2KUo45RQM/Od1VXU5rkpJLaEmkJEPuSvRLwp
+	 +1J6mLZx0RLmtTKRAXE5z48yaUpLReGxjTlOzmWSCJ4I7kVTBWV7QRbpte7a8mZu8F
+	 76gPVWr7Sw/8EUEzdZlsDdckivsWR8DdLDywN+U7y5Xr/A4R+BDlfYcd2vgR+LIth9
+	 QsNPX5py2CBh9H5Qp/q5U9/smhmgu1wvQcFjRftLcaAz5aBDAavRvRZ6Ewa2cJhszt
+	 lro91ojxfM10Q==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34F1B3822E09;
+	Fri, 18 Apr 2025 20:27:57 +0000 (UTC)
+Subject: Re: [GIT PULL] Kselftest fixes update for Linux 6.15-rc3
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <e8852bc2-6013-4486-997b-e001f3dc9909@linuxfoundation.org>
+References: <e8852bc2-6013-4486-997b-e001f3dc9909@linuxfoundation.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <e8852bc2-6013-4486-997b-e001f3dc9909@linuxfoundation.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux_kselftest-fixes-6.15-rc3
+X-PR-Tracked-Commit-Id: 07be53cfa81afe94b14fb4bfee8243f2e0125d5e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 338d40ceef38d9a36b48164e22768b40d6f89701
+Message-Id: <174500807582.316726.12946861351338489425.pr-tracker-bot@kernel.org>
+Date: Fri, 18 Apr 2025 20:27:55 +0000
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, shuah <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
 
-On Tue, Apr 15, 2025 at 12:18:01PM +0200, Matthias Schiffer wrote:
-> As discussed [1], the comments for the different rgmii(-*id) modes do not
-> accurately describe what these values mean.
-> 
-> As the Device Tree is primarily supposed to describe the hardware and not
-> its configuration, the different modes need to distinguish board designs
-> (if a delay is built into the PCB using different trace lengths); whether
-> a delay is added on the MAC or the PHY side when needed should not matter.
-> 
-> Unfortunately, implementation in MAC drivers is somewhat inconsistent
-> where a delay is fixed or configurable on the MAC side. As a first step
-> towards sorting this out, improve the documentation.
-> 
-> Link: https://lore.kernel.org/lkml/d25b1447-c28b-4998-b238-92672434dc28@lunn.ch/ [1]
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> ---
->  .../bindings/net/ethernet-controller.yaml        | 16 +++++++++-------
->  1 file changed, 9 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> index 45819b2358002..2ddc1ce2439a6 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> @@ -74,19 +74,21 @@ properties:
->        - rev-rmii
->        - moca
->  
-> -      # RX and TX delays are added by the MAC when required
-> +      # RX and TX delays are part of the board design (through PCB traces). MAC
-> +      # and PHY must not add delays.
->        - rgmii
->  
-> -      # RGMII with internal RX and TX delays provided by the PHY,
-> -      # the MAC should not add the RX or TX delays in this case
-> +      # RGMII with internal RX and TX delays provided by the MAC or PHY. No
-> +      # delays are included in the board design; this is the most common case
-> +      # in modern designs.
->        - rgmii-id
->  
-> -      # RGMII with internal RX delay provided by the PHY, the MAC
-> -      # should not add an RX delay in this case
-> +      # RGMII with internal RX delay provided by the MAC or PHY. TX delay is
-> +      # part of the board design.
->        - rgmii-rxid
->  
-> -      # RGMII with internal TX delay provided by the PHY, the MAC
-> -      # should not add an TX delay in this case
-> +      # RGMII with internal TX delay provided by the MAC or PHY. RX delay is
-> +      # part of the board design.
+The pull request you sent on Fri, 18 Apr 2025 11:23:27 -0600:
 
-This looks good to me. There is nothing here which is Linux specific.
+> git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux_kselftest-fixes-6.15-rc3
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/338d40ceef38d9a36b48164e22768b40d6f89701
 
-    Andrew
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
