@@ -1,101 +1,115 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482E7213E71
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165A021421B;
+	Fri, 18 Apr 2025 15:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744991482; cv=none; b=BeAF3oyRKL4H612Uu/Uo19h2PHnR/jC51piuzcCuFbjqdilDk7VbF5ZFgfM6gL7Vnyr8E6xTQFxi0MqfX1y6iftpazRk2lrhjPA1+f4gvml41ieIkoyqWckXFwZ0VT21lUPg4m9MK/X4OI24+9gAbHqB18EnDUhj3AoZ/6B2UyQ=
+	t=1744991509; cv=none; b=O6EpiEWbFSxxHoJkFnKqBomdAstKoaGWT7dq0GSwBv8h1Vuo/TXVF7sUKKA7oaYpsHfqhHAE19Aq/woUf4NBGinvZBDuPvCx/Ik41N7sx7Og9JVQPFXwKBSO0IiH7Ulgp5uZ//Q3NeCVE/7vRe9nqR9do1fR7FnFl4Kf0/cG+Jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744991482; c=relaxed/simple;
-	bh=EVzb8jB9TteCOIlCmiFjHJGeYZP+zYiJPSulg5XujJc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AnexXhZMYdQigt+65+LHHREn0xc8fPdpEJIOhKxTBWs0z1B2apOeW2HGi/nCUdxvh5yjLCtfBwpvx3TE7mEwvND83FauunwlvMC+FEQtPuAyGpJJMmePmenlfHyKxLRNVCwbA+tVXTb9PrhfmGehx0BmFvyBfVW4a/KFdzuir0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XVF/ILbG; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744991509; c=relaxed/simple;
+	bh=cqXeoXxdKHlzXm5KRH6bzyrFRQirim/fG3uP1zRbNJA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=omMvfNu0/DZDR49pb87f0jADxQ93qFaxHXhepwNSECifOw/oYVBXXq7YCwniPdkakUIm9m1Zmq86/+b0lpEPcVoSAXMOXLYnAS0vRc4cBhWt/MtQJ2Y+26vgu63LEccUgfS+46IT5dNWiZcjzF/ag41DhtIla6wln+Nm65bhYvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XkZvx5il; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XVF/ILbG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=B0phUcaqtNF5MHgtYap7bmkzuH8Odt4HteEl9tfUtL4=; b=XVF/ILbGaTlkKW3pTh2K5st/DI
-	pTZ+sNiagKd90fl3SCPjZycldpery1+Fr4JCFdn9KVvCSl8FLlfEAKiHpPJqyp0IAFyDWubTHGbrF
-	FFRuD2lFuhzgXDUyRB4UhTsDZ0Sc+WZMLpr3s6F+BK3I+WBtIh2bgNvlk1q+zJwb3vb3VM6JPwr76
-	9I8JmnnrunIMRIP35mIXDVztVkSqymLaEFK7o9/9YCmB8Jw+RYzUfrAHPjjnB0qlIpPQG9drC6h0K
-	0Qx01VeKQX01gUkRCbiYAN8Zia/Oho9IcLJWJvyPVcnM1JsX6iUNeLx1dRZWZ4Rd2i+Ecb/XEcZBO
-	hER9qJbw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u5nzn-0000000AXGv-34nC;
-	Fri, 18 Apr 2025 15:51:15 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 533B1300619; Fri, 18 Apr 2025 17:51:15 +0200 (CEST)
-Date: Fri, 18 Apr 2025 17:51:15 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/fair: Increase max lag clamping
-Message-ID: <20250418155115.GI17910@noisy.programming.kicks-ass.net>
-References: <20250418151225.3006867-1-vincent.guittot@linaro.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XkZvx5il"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43d0c18e84eso10110415e9.3;
+        Fri, 18 Apr 2025 08:51:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744991506; x=1745596306; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uby8dYEjftGQVrQ9N7xoW1qMDSsyeQ3m/Bq/ZJ47gsE=;
+        b=XkZvx5il+DZLiAUadKxNJDfBFJeran7/X7Z7LSo3P6Crlyba1vHCZfM4RKwxV9nt3G
+         V5UBOoObMB0ntv6gbrxAiqi3x21/mvnIw0t+u8snMMwdxjwsXfZBkdOj/2+ywPHumnji
+         qvh4ELWLaIOTi9RvKlDd465j05hIPxczXUqJDlrmUmdBwuHO002C4bLbbFxYUnLXgc/L
+         I3D/DSNUhyWKunblNmvZiuxpMcIkAqsVQ4zvEHCbikpZzFP0s2X1qpTrnnrt95OQTWxm
+         KCAaC3NuVQ8UfhkpVhOj+X8fF8/z2DQUEUNR8BDtQuUxNoo04BY9SW7sE4H3xp/adVD9
+         vAng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744991506; x=1745596306;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uby8dYEjftGQVrQ9N7xoW1qMDSsyeQ3m/Bq/ZJ47gsE=;
+        b=UCvf0ue4UzZXQl6OXrG/Ad030vonT2zFLMjsqVjb91WrzFlwY4E1ePVEw3TZUIWiFK
+         p6ipy/MeQvjnnosI8gVKlos/yal+FQMxVNCNQYthPdRXyH2bU43qLn3J/ZhKQZKS/VH4
+         FCgEfT+2F8g6SZKrrfr3Nq7B8qDPvGA+dR+kiEsQSJvPse9QBceNkI4DSz2JvQjeIpl8
+         ETYo7zGbYtFo9tiHYuwTge4Vh3emk/Xq6uy+RteQdSN/twuAyVkORdZ3VPkRDolY49IY
+         4RZC2j2tnd5/O0f69vATu6sLtWoDo6jc95zQI5N5fZ2C7hCzTAqB5IPYzZ0CLjc+dekM
+         PXYw==
+X-Forwarded-Encrypted: i=1; AJvYcCWNNdAzm1tItleTS+XAfrr4HxIkmNBoYBJQ1R41FlXTDV8nmv6oPyNe0ftm+RK1paHbMxlOjTUkrSCUhYI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy14ORjrcqrFHC0Up8nx+nes4j2U5/pnVDWKJEw4ciTROjbkrxh
+	jIx3NDATeO/jXi25MLxHIYide1U3OtSNqyZqr1pPuqweTMPPA8zQ
+X-Gm-Gg: ASbGncv8tjSE65t3r8sonSHz77sZ8rKxEgOImgSegefcyp6vNC0SeAu5hLZp940mldG
+	whvdsd69oyCqTxUQGUbzIeVB0LW+AvdmGTWgpbxOb6imp/1TMpDg+85IdlosFOD2onE+bV2+Vr6
+	0iosYdbFceA4yi7FOIiu5T+AiLi/M9iTXTxdvAigNrx3JQ+whIdhp6vZukp2BScPgqsXcrG6235
+	ObAEfjHuYnFtJkJ6yMNjHXEFkoWYj58h9gSNbLmW3zHAxpLLTv6CI24IFFrdiczZ0jgL+UomrJy
+	l7/b6EaDzhx1cydhXpuuIDNq5yoYagTRJGzzPOhAMQ==
+X-Google-Smtp-Source: AGHT+IGoQmAGgaUPCLXmLHrLdxEIZESIjULcu4j9tEwuSI+K0DDACtI2e0Qc2hagxcAoua4EodrFUg==
+X-Received: by 2002:a05:600c:1548:b0:43d:300f:fa3d with SMTP id 5b1f17b1804b1-4406ab7f661mr26426925e9.5.1744991506069;
+        Fri, 18 Apr 2025 08:51:46 -0700 (PDT)
+Received: from [192.168.1.100] ([46.248.82.114])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5acc5dsm27159695e9.9.2025.04.18.08.51.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 08:51:45 -0700 (PDT)
+Message-ID: <f465a1b3-c28b-7bfe-7c18-e3fad41842aa@gmail.com>
+Date: Fri, 18 Apr 2025 17:51:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418151225.3006867-1-vincent.guittot@linaro.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v5 6/6] x86/asm: Retire RIP_REL_REF()
+To: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org
+Cc: linux-efi@vger.kernel.org, x86@kernel.org, mingo@kernel.org,
+ Ard Biesheuvel <ardb@kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>,
+ Dionna Amalie Glaze <dionnaglaze@google.com>,
+ Kevin Loughlin <kevinloughlin@google.com>
+References: <20250418141253.2601348-8-ardb+git@google.com>
+ <20250418141253.2601348-14-ardb+git@google.com>
+Content-Language: en-US
+From: Uros Bizjak <ubizjak@gmail.com>
+In-Reply-To: <20250418141253.2601348-14-ardb+git@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 18, 2025 at 05:12:25PM +0200, Vincent Guittot wrote:
-> sched_entity lag is currently limited to the maximum between the tick and
-> twice the slice. This is too short compared to the maximum custom slice
-> that can be set and accumulated by other tasks.
-> Clamp the lag to the maximum slice that a task can set. A task A can
-> accumulate up to its slice of negative lag while running to parity and
-> the other runnable tasks can accumulate the same positive lag while
-> waiting to run. This positive lag could be lost during dequeue when
-> clamping it to twice task's slice if task A's slice is 100ms and others
-> use a smaller value like the default 2.8ms.
+
+
+On 18. 04. 25 16:13, Ard Biesheuvel wrote:
+> From: Ard Biesheuvel <ardb@kernel.org>
 > 
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> Now that all users have been moved into startup/ where PIC codegen is
+> used, RIP_REL_REF() is no longer needed. Remove it.
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 > ---
->  kernel/sched/fair.c | 16 +++++++++-------
->  1 file changed, 9 insertions(+), 7 deletions(-)
+>   arch/x86/include/asm/asm.h | 5 -----
+>   1 file changed, 5 deletions(-)
 > 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index a0c4cd26ee07..1c2c70decb20 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -683,15 +683,17 @@ u64 avg_vruntime(struct cfs_rq *cfs_rq)
->   * is possible -- by addition/removal/reweight to the tree -- to move V around
->   * and end up with a larger lag than we started with.
->   *
-> - * Limit this to either double the slice length with a minimum of TICK_NSEC
-> - * since that is the timing granularity.
-> - *
-> - * EEVDF gives the following limit for a steady state system:
-> + * Limit this to the max allowed custom slice length which is higher than the
-> + * timing granularity (the tick) and EEVDF gives the following limit for
-> + * a steady state system:
->   *
->   *   -r_max < lag < max(r_max, q)
->   *
->   * XXX could add max_slice to the augmented data to track this.
->   */
+> diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
+> index a9f07799e337..eef0771512de 100644
+> --- a/arch/x86/include/asm/asm.h
+> +++ b/arch/x86/include/asm/asm.h
+> @@ -120,11 +120,6 @@ static __always_inline __pure void *rip_rel_ptr(void *p)
+>   
+>   	return p;
+>   }
+> -#ifndef __pic__
+> -#define RIP_REL_REF(var)	(*(typeof(&(var)))rip_rel_ptr(&(var)))
+> -#else
+> -#define RIP_REL_REF(var)	(var)
+> -#endif
+>   #endif
 
-Right, its that max_slice XXX there.
+You can also remove rip_rel_ptr() with the whole "#ifndef __ASSEMBLER__" 
+part.
 
-I think I've actually done that patch at some point, but I'm not sure
-where I've placed it :-)
-
-Anyway, I did poke at that other issue you mentioned at OSPM, where
-PREEMPT_SHORT wasn't working quite right.
-
-I've pushed out the patches to queue/sched/exp -- I meant to go post all
-that, except I keep getting side-tracked and 0-day people are having
-trouble with the hrtick bits in there :-/
+Uros.
