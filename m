@@ -1,97 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F1421ADD4
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7C3219317
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744996443; cv=none; b=kBwsFZ0KPGymbt1OmcNr5xfsyNX+HPITGmhPFpxFqWBm2slfEUQSSnEuNjyUHI9XHyHan2lhgRb7hoBAegeQQhLXN0AXREFaqMSEU3E08OuqoDRyZL/Lg2Od3uGDNTeJyO7GFncCxDG/e1uQ1oA4JOPKVv8j4J3tB78O+p1HZsE=
+	t=1744996582; cv=none; b=Bbn/jHoYFHp4WMII1VzsDvkPHTgC++YYqcFLV/9ToEUSpayXa28WLfYq8Vg+FLG8TaG/PyPQUI/NDLSD7x1vqS4IKXs1+k0iwdqACivwXJvbknvHjGsO0PITFiG85FIEpVSB/P3V/pMk6GyqmSavfeosyK61DUwipQKLlsM/5ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744996443; c=relaxed/simple;
-	bh=QpNmSHZ6zOV2xliYb2s0bcKUdg+nsbgy4+hhnPQCF5Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=f2PnzeIdYtVD8on9IQ9Ea+DlzkmB7UR3xbf0kbD6RK8fUcan1mN50XEgxOC3QrnY9TZ8+0KkIv+nqfilFm95ksZwbFNO5iPQMsg7ImF7Xk0VyHxsylzZlp+XzPUTQyS7FqGN8RBIePC37dMcRDO2+fOci/zOH2ysacX1efj10U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bM5g9CtS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744996582; c=relaxed/simple;
+	bh=yvX4/0VvcBz/REbiKuc8IYjAOGSq/fCAEfgqHjMuwNE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YW73hCs5+0z7M+9ea3C8PAXWA9Y0pmBhN5CjzRwEaYj+tlp2Vp+afVaJ468jbd1cmNTgiJXsiq6apcbITp4HvyJ2auKt+sj5uFn0RW30y1KfuNjvZl4rgm+LXDtI0FpzPi8qnCO3m8r2Da3wQi+ER1SgYowZcOmGspeGKVTNQPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ahMbNeD0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bM5g9CtS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB8ABC4CEFD;
-	Fri, 18 Apr 2025 17:14:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744996442;
-	bh=QpNmSHZ6zOV2xliYb2s0bcKUdg+nsbgy4+hhnPQCF5Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bM5g9CtSMSqgD81sUPdDjdO705u+XTFj1OkxT3RUClOqWXP+siP7znER3q8ZXaUMp
-	 KQjmEkNmaV8JSUoY9TJ1Q4XDx87pHxSJzBVk83v4V8256JFv9qXjRHwUKQiTSa3/km
-	 wSbpRZCn1PuR3mrBekR0Z94+MTTnf6jF563iplJHpV9IuGZWnVpOxLovduDmNnPS75
-	 BcGCp1BDUHzMA39JbmVD2BqHgWKPLwMtX+19GoeZ2vrKdZ9qlr4z0XBpRaV8ynyxDm
-	 Z8OmivOTIxTg3k9FOoKAy+ij0DUdcUUQvy78RzAeTbhCZKl8MjWd0LVbdyke6ieGAE
-	 4a49K/4tZ8T/g==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 05A94CE18B1; Fri, 18 Apr 2025 10:14:02 -0700 (PDT)
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: kernel-team@meta.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jon Pan-Doh <pandoh@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH v2 ratelimit 13/14] ratelimit: Avoid atomic decrement if already rate-limited
-Date: Fri, 18 Apr 2025 10:13:58 -0700
-Message-Id: <20250418171359.1187719-13-paulmck@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <4edcefb0-cdbd-4422-8a08-ffc091de158e@paulmck-laptop>
-References: <4edcefb0-cdbd-4422-8a08-ffc091de158e@paulmck-laptop>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ahMbNeD0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744996577;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=sDbt2DYYkNyWT5oGemZdan3esNskCyLssS6aV6nsjxA=;
+	b=ahMbNeD0Fsba/aPc0HyBNPjxzR9Gc1/khHROb70suaAVzm2EF1sXBi+RXAn65BtZKDhpzM
+	HE8bEJkB4x6hl9oJ2TXU5dymnpPnxqNXvW+AXmcTApBtw6Lkk1XXf/aI+jLrpXFzOtr6jh
+	qDUjhHVzbBcH81/QuIapzxUprhcS+FM=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-345-nEOZX5jSMYG0rXM3YFpAlQ-1; Fri,
+ 18 Apr 2025 13:16:12 -0400
+X-MC-Unique: nEOZX5jSMYG0rXM3YFpAlQ-1
+X-Mimecast-MFC-AGG-ID: nEOZX5jSMYG0rXM3YFpAlQ_1744996571
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4E8CB19560AA;
+	Fri, 18 Apr 2025 17:16:11 +0000 (UTC)
+Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 049BD1800965;
+	Fri, 18 Apr 2025 17:16:09 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Cc: kvmarm@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH] KVM: arm64, x86: make kvm_arch_has_irq_bypass() inline
+Date: Fri, 18 Apr 2025 13:16:09 -0400
+Message-ID: <20250418171609.231588-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Currently, if the lock could not be acquired, the code unconditionally
-does an atomic decrement on ->rs_n_left, even if that atomic operation
-is guaranteed to return a limit-rate verdict.  This incurs needless
-overhead and also raises the spectre of counter wrap.
+kvm_arch_has_irq_bypass() is a small function and even though it does
+not appear in any *really* hot paths, it's also not entirely rare.
+Make it inline---it also works out nicely in preparation for using it in
+kvm-intel.ko and kvm-amd.ko, since the function is not currently exported.
 
-Therefore, do the atomic decrement only if there is some chance that
-rates won't be limited.
-
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- lib/ratelimit.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/kvm_host.h   | 5 +++++
+ arch/arm64/kvm/arm.c                | 5 -----
+ arch/powerpc/include/asm/kvm_host.h | 2 ++
+ arch/x86/include/asm/kvm_host.h     | 6 ++++++
+ arch/x86/kvm/x86.c                  | 5 -----
+ include/linux/kvm_host.h            | 1 -
+ 6 files changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-index b306e230c56bb..2048f20561f31 100644
---- a/lib/ratelimit.c
-+++ b/lib/ratelimit.c
-@@ -60,8 +60,10 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
- 		unsigned int rs_flags = READ_ONCE(rs->flags);
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index e98cfe7855a6..08ba91e6fb03 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -1588,4 +1588,9 @@ void kvm_set_vm_id_reg(struct kvm *kvm, u32 reg, u64 val);
+ #define kvm_has_s1poe(k)				\
+ 	(kvm_has_feat((k), ID_AA64MMFR3_EL1, S1POE, IMP))
  
- 		if (rs_flags & RATELIMIT_INITIALIZED && burst) {
--			int n_left;
-+			int n_left = atomic_read(&rs->rs_n_left);
++static inline bool kvm_arch_has_irq_bypass(void)
++{
++	return true;
++}
++
+ #endif /* __ARM64_KVM_HOST_H__ */
+diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+index 68fec8c95fee..19ca57def629 100644
+--- a/arch/arm64/kvm/arm.c
++++ b/arch/arm64/kvm/arm.c
+@@ -2743,11 +2743,6 @@ bool kvm_arch_irqchip_in_kernel(struct kvm *kvm)
+ 	return irqchip_in_kernel(kvm);
+ }
  
-+			if (n_left <= 0)
-+				return 0;
- 			n_left = atomic_dec_return(&rs->rs_n_left);
- 			if (n_left >= 0)
- 				return 1;
+-bool kvm_arch_has_irq_bypass(void)
+-{
+-	return true;
+-}
+-
+ int kvm_arch_irq_bypass_add_producer(struct irq_bypass_consumer *cons,
+ 				      struct irq_bypass_producer *prod)
+ {
+diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
+index 2d139c807577..6f761b77b813 100644
+--- a/arch/powerpc/include/asm/kvm_host.h
++++ b/arch/powerpc/include/asm/kvm_host.h
+@@ -907,4 +907,6 @@ static inline void kvm_arch_flush_shadow_all(struct kvm *kvm) {}
+ static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu) {}
+ static inline void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu) {}
+ 
++bool kvm_arch_has_irq_bypass(void);
++
+ #endif /* __POWERPC_KVM_HOST_H__ */
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 3bdae454a959..7bc174a1f1cb 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -35,6 +35,7 @@
+ #include <asm/mtrr.h>
+ #include <asm/msr-index.h>
+ #include <asm/asm.h>
++#include <asm/irq_remapping.h>
+ #include <asm/kvm_page_track.h>
+ #include <asm/kvm_vcpu_regs.h>
+ #include <asm/reboot.h>
+@@ -2423,4 +2424,9 @@ int memslot_rmap_alloc(struct kvm_memory_slot *slot, unsigned long npages);
+  */
+ #define KVM_EXIT_HYPERCALL_MBZ		GENMASK_ULL(31, 1)
+ 
++static inline bool kvm_arch_has_irq_bypass(void)
++{
++	return enable_apicv && irq_remapping_cap(IRQ_POSTING_CAP);
++}
++
+ #endif /* _ASM_X86_KVM_HOST_H */
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 3712dde0bf9d..c1fdd527044c 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -13556,11 +13556,6 @@ bool kvm_arch_has_noncoherent_dma(struct kvm *kvm)
+ }
+ EXPORT_SYMBOL_GPL(kvm_arch_has_noncoherent_dma);
+ 
+-bool kvm_arch_has_irq_bypass(void)
+-{
+-	return enable_apicv && irq_remapping_cap(IRQ_POSTING_CAP);
+-}
+-
+ int kvm_arch_irq_bypass_add_producer(struct irq_bypass_consumer *cons,
+ 				      struct irq_bypass_producer *prod)
+ {
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 291d49b9bf05..82f044e4b3f5 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -2383,7 +2383,6 @@ struct kvm_vcpu *kvm_get_running_vcpu(void);
+ struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void);
+ 
+ #if IS_ENABLED(CONFIG_HAVE_KVM_IRQ_BYPASS)
+-bool kvm_arch_has_irq_bypass(void);
+ int kvm_arch_irq_bypass_add_producer(struct irq_bypass_consumer *,
+ 			   struct irq_bypass_producer *);
+ void kvm_arch_irq_bypass_del_producer(struct irq_bypass_consumer *,
 -- 
-2.40.1
+2.43.5
 
