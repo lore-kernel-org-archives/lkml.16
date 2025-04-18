@@ -1,89 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0A921B9F6;
-	Fri, 18 Apr 2025 19:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290C921CC64;
+	Fri, 18 Apr 2025 19:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745004894; cv=none; b=pUPnIaphco8c7xfLGGHaiuaZNI+9lJG2VYyFAjcMUE2+eA8r5/e06eINEeYJG1dGhPJc2IFhepeGezrIMdrhPtILoAHQGC8c5+yCtY1LdY8odGctommr+ciJHePX3ATXaR05XFOAucVF5J7bypLq9L+tSj9/C4K/4dOGmYnR+eo=
+	t=1745005018; cv=none; b=u68Lhdz3KJcKoehWig7BV7Yl5YsNG4WMiLxnK4nIz7aPSedhBLqBLJPO+IKDkV/hRkmG625+jsiKsjevl1GamN8SP9xLU4zBxG9iYYb+2RGwBv0gmWZ4SAKwDybBdBCJYdfOzD0SNE0FZjYnvJ1mTTHkqFHDavUewmREyZyE2wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745004894; c=relaxed/simple;
-	bh=D8m5IPnuunszki8NJ2mw+YgYF9sNi9cD+xFlnwIoFPk=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=tdzSKe+uQQdfboIbkRpOKg04/GH+ZZxQHEhP7jJM8Xs8CwH6gLeEEhn6dG0Rejv6ZxbykLJqkEfvLW8qw3YwlcufHGuNIbMLoeZjHhrQfUieGJicYL9bgBvf+0z0aopBRIJOxM+dFnGbU8dEigrk5d/SYa97hQ+EuAuQEPdO2nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s5GOc5Uq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745005018; c=relaxed/simple;
+	bh=ddFq+XbaIYe+xxyTjGKCHf7Wx8DBGJPljaLE03Zd1lE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M1OyLTu9Foll2mLsTnuFy//FIcEaHbxLnOeV4Jec1gtRXvUET0dctqOOwx8Sn1S6ZgoyMOx+TH0ju/GO9GzPzrGavaly8x0hCH1oXUhmmRJiswWzhfYfC7T/yh4q4pdWVSnVZL2olMnbHhJUEsvrfw1b6oeoHpCsJPgPG9GfMno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LYWclzb/; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s5GOc5Uq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BE2CC4CEED;
-	Fri, 18 Apr 2025 19:34:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745004894;
-	bh=D8m5IPnuunszki8NJ2mw+YgYF9sNi9cD+xFlnwIoFPk=;
-	h=From:Date:Subject:To:Cc:From;
-	b=s5GOc5UqpbAZJ6yeoeLm2p5YBjwHZzDz3FWEValVns6Pq03bSGo8675YkItmnqSJu
-	 9EJ54yuXHDTUAz46wYeHHQMU628RoGEodMpuPfJbBTGFZgDrKSGyTe7Zj6zwI6KfNs
-	 chLa1hPe21Rj+fLIpdGQZ+f/fOC8vS95tQIyoSRWpvN8omQVwgm860DU5wxpruDczl
-	 g2uOUvs+/mLIYvikTC/JxjnnO0V6otQG33vSovcMGCHLrvj22q/HmSCwuRTs9VH/ML
-	 h7aFz5LVokqIbYTeV5Zp3sqPX6K+RH757alKlbQeP4P4PzUgc5Gdl88V8T1On0UHXQ
-	 jYAVf/MUjI1pQ==
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2d4cefac09dso1119378fac.1;
-        Fri, 18 Apr 2025 12:34:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUXhXHu6hO8a4Ku+C1+CmX9KIYdA/npky4IxHT4J/VVcmE803KmiGeiC2ygpxg5ge59BXBQeWP/Oo0Q/rU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2ytBeNYEJ3+meQeluV5pIcuvD8S09j8z0sZwBOAUu0uWizsll
-	KjTnFTT8VnhYjh5O5yEESLw0UatF4h8DH3xHQtopAfrWA8AiWOuU8VSAwMEENZlAG/uXlgztc/d
-	kLr2LwzQuvCpscxjkka7NOHP7Iww=
-X-Google-Smtp-Source: AGHT+IHW3iP4kJAr/pcDAM/ZZvmI/9RtNQMnecYdqqE4hxOh3pu1WQOqTPn9/BXCQJTBaSYjsKZc4Kngg+tuAuXyVYk=
-X-Received: by 2002:a05:6871:7a0c:b0:2bc:7d6f:fa86 with SMTP id
- 586e51a60fabf-2d526e0ffc6mr2325277fac.35.1745004893459; Fri, 18 Apr 2025
- 12:34:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LYWclzb/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745005016; x=1776541016;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ddFq+XbaIYe+xxyTjGKCHf7Wx8DBGJPljaLE03Zd1lE=;
+  b=LYWclzb/fmj4PYbN8t1TKMp797N0Lg34kok0QtE1zfWAdqgCM1jEh6f5
+   cTuvxpGQdWNnmUDUNjLaGPPSgO0fqUxgq8xL6htRt+s9xCiSL1Y9N/iX5
+   z7VkaCliKDnyoU7ySuUydt6N4Z766Qb3D2iv0vrYoqG9F93Vu8w7f7J+p
+   E2IpTLdPCTshpuSxsGB1Sf1S56ReUu0RFkbBj+cctnaQinv/jaJSeTBv9
+   2jpN+sEztFgT88GYmMIDbGC9VaDT1tNVkdDGD82i5KEOg5fn+3H62CGBo
+   3mji6bDJQ0KyOtoU8sPYxuiPr+eqkNrlDTIB6wNAT3WRffAPGu7PT15g9
+   w==;
+X-CSE-ConnectionGUID: frZANLRUSyalRc4Gt5dE+w==
+X-CSE-MsgGUID: gtI/HgeKQWqhTtIJKHYyDg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="50437145"
+X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
+   d="scan'208";a="50437145"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 12:36:56 -0700
+X-CSE-ConnectionGUID: 6mpy4zH9ToeoFUi+lkbaZw==
+X-CSE-MsgGUID: g1SIbYy2RQ2k80veywqGrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
+   d="scan'208";a="162236731"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 12:36:55 -0700
+Date: Fri, 18 Apr 2025 12:36:53 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Zaid Alali <zaidal@os.amperecomputing.com>
+Cc: rafael@kernel.org, lenb@kernel.org, james.morse@arm.com, bp@alien8.de,
+	robert.moore@intel.com, Jonathan.Cameron@huawei.com,
+	ira.weiny@intel.com, Benjamin.Cheatham@amd.com,
+	dan.j.williams@intel.com, arnd@arndb.de, Avadhut.Naik@amd.com,
+	u.kleine-koenig@pengutronix.de, john.allen@amd.com,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	acpica-devel@lists.linux.dev
+Subject: Re: [PATCH v6 5/9] ACPI: APEI: EINJ: Enable the discovery of EINJv2
+ capabilities
+Message-ID: <aAKp1c5oDUICkTkf@agluck-desk3>
+References: <20250417220019.27898-1-zaidal@os.amperecomputing.com>
+ <20250417220019.27898-6-zaidal@os.amperecomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 18 Apr 2025 21:34:42 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0imoR19gyH+DKR2CXtLeQEdbKYNWkur_7tjf4a4NQRLMg@mail.gmail.com>
-X-Gm-Features: ATxdqUGmbx4Zd3KgG-eOxX6uBlHak2_8hTfeIr265Mhr7I0Wz-uUusofoDF-qkc
-Message-ID: <CAJZ5v0imoR19gyH+DKR2CXtLeQEdbKYNWkur_7tjf4a4NQRLMg@mail.gmail.com>
-Subject: [GIT PULL] Thermal control fixes for v6.15-rc3
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux PM <linux-pm@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417220019.27898-6-zaidal@os.amperecomputing.com>
 
-Hi Linus,
+On Thu, Apr 17, 2025 at 03:00:15PM -0700, Zaid Alali wrote:
+> +static ssize_t error_type_set(struct file *file, const char __user *buf,
+> +				size_t count, loff_t *ppos)
+>  {
+>  	int rc;
+> +	u64 val;
+> +
+> +	memset(einj_buf, 0, sizeof(einj_buf));
+> +	if (copy_from_user(einj_buf, buf, count))
+> +		return -EFAULT;
+> +
+> +	if (strncmp(einj_buf, "V2_", 3) == 0) {
 
-Please pull from the tag
+It's twice as common in Linux kernel code to see string equality checked with:
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- thermal-6.15-rc3
+	if (!strncmp(einj_buf, "V2_", 3))
 
-with top-most commit 00c5ff5e9a55dca2e7ca29af4e5f8708731faf11
+> +		if (!sscanf(einj_buf, "V2_%llx", &val))
 
- thermal: intel: int340x: Fix Panther Lake DLVR support
+More comprehensive error checking with this:
 
-on top of commit 8ffd015db85fea3e15a77027fda6c02ced4d2444
+		ret = kstrtoull(einj_buf + 3, 16, &val);
+		if (!ret)
+			return -EINVAL;
 
- Linux 6.15-rc2
+> +			return -EINVAL;
+> +	} else {
+> +		if (!sscanf(einj_buf, "%llx", &val))
 
-to receive thermal control fixes for 6.15-rc3.
+Ditto kstrtoull() use.
 
-These add missing DVFS support flags for the Lunar Lake and Panther Lake
-platforms to the int340x Intel thermal driver and fix DLVR support for
-Panther Lake in it (Srinivas Pandruvada).
-
-Thanks!
-
-
----------------
-
-Srinivas Pandruvada (2):
-      thermal: intel: int340x: Add missing DVFS support flags
-      thermal: intel: int340x: Fix Panther Lake DLVR support
-
----------------
-
- .../int340x_thermal/processor_thermal_device_pci.c |  7 +++--
- .../intel/int340x_thermal/processor_thermal_rfim.c | 33 +++++++++++-----------
- 2 files changed, 21 insertions(+), 19 deletions(-)
+> +			return -EINVAL;
+> +	}
+>  
+>  	rc = einj_validate_error_type(val);
+>  	if (rc)
+> @@ -722,11 +767,13 @@ static int error_type_set(void *data, u64 val)
+>  
+>  	error_type = val;
+>  
+> -	return 0;
+> +	return count;
+>  }
