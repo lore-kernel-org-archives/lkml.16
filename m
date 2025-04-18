@@ -1,91 +1,83 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6191DA21;
-	Fri, 18 Apr 2025 08:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9231526B2D6
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:30:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744964974; cv=none; b=CMLfQMzCqEPXGNJ1DXivmW1Ejx67Z7eNI605G9OctHfyFR98DkyXQRiPMrH2WtbUa78gTAGMJNzS9iOEqUmcNPA41NXCpUrxeBgnvygbLE3GFtEFbpHLJafwaE4I0M3YqioWy+XEjKtMJAtJ1gLVEW2decO7yQ9oK/zGWh9Mmak=
+	t=1744965009; cv=none; b=aqeiBNHSCgys6XTkIxR8e4SMDY3KahdghB08iNu8BlWmr8WT3xHJj/fIqeBbrsKIcQzrsDRKGN8rolXoX/w4KVErAMdPtLTiqcInmU3Ko9fwbb5TG3fYHSfdf8uIM2/Bhh1oRfU9FFVT/6tFeJadnte6u9cMdddmpcN7pE62aWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744964974; c=relaxed/simple;
-	bh=s92j6pxzvlqV+3o2hee8gDhoG89WN1vgnuclnd0mk+Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ehyTs0wrUNzCXknN4X3zt9wNxjOMV28UrQUZDg3vCc54gn7uqSQLMCUaO6UY04AqB6Um8jlO2Ralp2noxN4bFgTB+t+XOq1GrRGRSGPKRtpQHIju4DAbG3b6xuUoiQkm0F7hwl65Rj1020TLSiHk4IskekYW6R+f9Pp5LB1K81E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G0Ixu8ln; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744965009; c=relaxed/simple;
+	bh=dGPAZCJAO9LH9k9+kARVr8e1BoPkjZVxOA21Pk3pjJY=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=iwnCBXvvP62HeJB4sH5gXQFbPTTVbuvy3/vjiVD9IVDgtceVQeCrY/ydbWyFqWM0b8KBT2U/l2BGgL95m9uXKnoHdMOoSynIgEQEzysZXRhmTbrx35MxPdKB5ibWjIPt9hzPTBI25q3omydE2fTNmi7JwI0xDG59UNb3MSoUbA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=QH7S/KAY; arc=none smtp.client-ip=162.62.57.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G0Ixu8ln"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-549b159c84cso2086811e87.3;
-        Fri, 18 Apr 2025 01:29:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744964971; x=1745569771; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
-         :from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=s92j6pxzvlqV+3o2hee8gDhoG89WN1vgnuclnd0mk+Q=;
-        b=G0Ixu8lnu1iqlOTLMwLa3u9p6orBujj2XUA9n25sGYBwXBhfQD+bYaMYeCD2JZE4Pt
-         eVXhgjLDo9LnKnq+RhDCxfc8OB0DtTj1HuPtGyEMG3zwh/y0P3OHco55qtRxPbuOFUtD
-         cD8V0BUoRqJkYGXOfON/0xz9YxyrXgsoVJecgbrRDOH7rCaZR5Cbs31nMXGlfLg0qi0z
-         yQ7hkcATA5/jSJ9brr4xstuK49UcRtJlW+t4qZqrkbjdLCiDCWs106PEogLHAK8DiEL+
-         ReNVqgyZVytFZMrJXORCFlnXY9xjh6w0QWNI9SdSdsS8GkBS1udYoq5bU8SfIogMLwmC
-         MoPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744964971; x=1745569771;
-        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
-         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=s92j6pxzvlqV+3o2hee8gDhoG89WN1vgnuclnd0mk+Q=;
-        b=SttvKVr3IFtvxzvUwv0t6DXn0+sppl6EE/d9/Z3Frt8A/Cy+K0Awe1IgsclitBIV8z
-         gxjD018XYYXMmS9/NDHgGuNBGoLN51YDeE7jwO00hZUA2MBcBkP1GjzgRg+fyi9TmcQE
-         QjdEq2c059itJYokKLppYbI1Pwy2hI+R2trcEGg3SY9ya6mb1BULfOfpYh7N/9cWVDdx
-         fd8xS5lPzg6I7dIDLydN/LmpaxgKu75Ei438B+tALOHrQu1eRE64oQ3r9dsJ48E3Lc95
-         bujp95kcP9zN0v0ZcIQrS3tUrbw65mn08hbG/e4stnPz4OpqkyC3rzWicHdIxaCTwlRu
-         7hcw==
-X-Gm-Message-State: AOJu0Yw/5PNcrrC4/ttAGKJ2nUY6NzK1lyY+RG97ZP4xcJrPxSZDIdN7
-	/4sB3kv8vMQ8070UVz29gNuLUgSJbOqsontkDYrsA2MGjeu1eV/bmPJ+Wg==
-X-Gm-Gg: ASbGncsPrfqzjNCNrmDsnQwkNeM5EPqkiYbDlAfdQ040qLob8TQkW/5pwTPgb/9v6sk
-	qrm85vwxmUdmTLpflOVnU/0+cc9arhFFCVM0qKLe+ID7dY6dvuwCy5O6dHxF5ABxt+pbLpGhlcQ
-	vPNwxCtWeoxWHxMmQ9fQk/gcQeFLqu2HvDqCSlNllTTBn9C2z2yelxbtByGK1wJlHmdpSU2rJgM
-	WyN70HeQWUvennFUIDLf4XzB6mvTBbRgyFX7535fTN7LsMoGDIVqcrI908fjIAC2zq0KlWD7Jyw
-	4wsEdyy9pIepNhyBe+uQmf/pCiaDRU4T4yOsQa2MY58hHmQrKu0DA64eBA==
-X-Google-Smtp-Source: AGHT+IFUTm0W49Qs/USupxCHL/NXGEOwE+ROyG8Iv52IIXe6ndsNi4djYlFd0wAdt3CQ7vpCPkN3hw==
-X-Received: by 2002:a05:6512:2346:b0:545:e19:ba1c with SMTP id 2adb3069b0e04-54d6e62cb0amr470052e87.19.1744964970781;
-        Fri, 18 Apr 2025 01:29:30 -0700 (PDT)
-Received: from foxbook (adtu187.neoplus.adsl.tpnet.pl. [79.185.232.187])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e5e524csm129527e87.182.2025.04.18.01.29.29
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Fri, 18 Apr 2025 01:29:30 -0700 (PDT)
-Date: Fri, 18 Apr 2025 10:29:26 +0200
-From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
-To: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: [REGRESSION 6.14] Some PCI device BARs inacessible
-Message-ID: <20250418102926.690ac42c@foxbook>
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="QH7S/KAY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1744964696;
+	bh=Shfyo13CoJP0LZK8BYiEvTiymcxKJVPkg/SIqQkMIZo=;
+	h=From:To:Cc:Subject:Date;
+	b=QH7S/KAY7jDyYdGIYukfEL8qjtIxICc+QsdFAM6Av0aWHB0qWWQBYPcxauOFHxHJt
+	 AM0lNXs/Vx+GdJnVNKT9ygaVfUIu3FK7gYrG/W/ECKjtqoE/fK0rl3ypGuRXQh4a/C
+	 50dpbQZKgcpQRTcMdTwa/hclRRgy6Gf0f5TVk5LY=
+Received: from localhost.localdomain ([116.128.244.169])
+	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
+	id 636900F3; Fri, 18 Apr 2025 16:24:54 +0800
+X-QQ-mid: xmsmtpt1744964694t3ala3z5g
+Message-ID: <tencent_A28A97D009EF5CA26B43840EF71F5510A406@qq.com>
+X-QQ-XMAILINFO: NT7uTz3cNku2sWPs5V+dNzzKrE23V7eDqXqj3ELcsMd/GU8I1Q2KdACXxwkISs
+	 N1xPVnJi09o+dTDSlbayJCKwFztYsZOEaGebeHXDjSFscLwce/8W5JOsg2jVXXfG/NzJ0QrtBjWx
+	 30WYer+BBiuEj986G1d4cznhLo05ENPuBfIDWq0JYs9GYerkSwjvlk3jOSifYuey4ob5AV2WPfDk
+	 XsLH48H2jDERzjaYVtBGwW/sUkq4s0TiHhXNLqZrojmvlN/Z1aUsVYpYzBlsFWxkJu+pfL8jqjmE
+	 qpC/978LYhWedDdFtCC9utgoLuuj3mE4VlUTM5E3unMkfMKY59JeywJkJt78Axl7GIZiH55NoiDW
+	 9OClejMgWPDvqYmPfNypVlKoIBl99d0Cg6nPtwCpfxEB0XLmSM47in2lloESfua9CcfJv487IM0d
+	 vww0eJTR8v/g6xzBj2lePRdthD3Sm+hwIVRZtm/LV32qRF6QUvSJmjn+1PgO2jXA+aBLcDLHZ/oX
+	 cS5BUyUhKXzQoKMSlbeYlrhU3uxj6vc6VYJiBY1tYlaV65nJz1lvJwyUwuJ+CyEKCrN5PU/fdSVc
+	 hMT+25ZjQrouCKvb0jpkPyru1ZnLPHG6TsAil7kzXbRIbGHafFIm6qqWu0Fpu7W2D0onqq1EBdV3
+	 wMvROj9R0aDoNm6P/zA2OdbGInWkWdN+5ALaabrnYFGcBvt5US2nDmNLnWPxlQOuOe1kdDPA50V2
+	 gZ5KCaiPSczTQgI9RoxKVLMSXDFUAqqvMnpAO6T34h2DoKAav++ubXnnAUqnaIKKra3eaghriR2t
+	 a9IGNzKgo4RGV4gRN4qYl9BbYKYThYjbqvnWU9aVZKNW2/Yw87LsU9q8KxzwqjW4gdVwJHZSK7QF
+	 tF2rVtpbPNhSkmFlHoxSzgGGAXenHihiJ4KhpUdSFAO/kZ1siwqk4a7nL4Xc56KRNoMqDCMJkaBU
+	 5QfLv38tBdpDQtPDloRQu/sq+Bgz2oVr3VOdIL++RuMT2jEWFDUA==
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+From: xiaopeitux@foxmail.com
+To: linux-kernel@vger.kernel.org,
+	f.fangjian@huawei.com,
+	robh@kernel.org,
+	john.g.garry@oracle.com,
+	andriy.shevchenko@linux.intel.com,
+	xuwei5@hisilicon.com
+Cc: Pei Xiao <xiaopei01@kylinos.cn>
+Subject: [PATCH 0/2] logic_pio: clean hisi_lpc and logic_pio
+Date: Fri, 18 Apr 2025 16:24:31 +0800
+X-OQ-MSGID: <cover.1744964101.git.xiaopei01@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Pei Xiao <xiaopei01@kylinos.cn>
 
-This is a heads up that an apparent PCI regression has been reported
-and mistakenly assigned to USB in the kernel bugzilla:
+This two patches for hisi_lpc and logic pio.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=220016
+1.remove unused head file.
+2.add comments for logic_pio.
 
-Visible symptom is missing USB devices, but the whole controller fails
-to probe, apparently due to devm_request_mem_region() returning NULL,
-see drivers/usb/core/hcd-pci.c and usb_hcd_pci_probe().
+Pei Xiao (2):
+  bus: hisi_lpc: remove unused head file in hisi_lpc.c
+  logic_pio: Add detailed comments for find_io_range() and
+    logic_pio_trans_cpuaddr()
 
-Same systems also show a similar failure with some AHCI controller.
-It seems specific to particular ASUS AMD motherboards.
+ drivers/bus/hisi_lpc.c |  4 ----
+ lib/logic_pio.c        | 16 +++++++++++++++-
+ 2 files changed, 15 insertions(+), 5 deletions(-)
 
-Somebody found that disabling CONFIG_PCI_REALLOC_ENABLE_AUTO helps.
+-- 
+2.25.1
 
-That's all I know, reporters can be reached via bugzilla.
-
-Regards,
-Michal
