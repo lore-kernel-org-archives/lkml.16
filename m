@@ -1,111 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659B384A3E;
-	Fri, 18 Apr 2025 18:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54ECB221721
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 18:03:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744999399; cv=none; b=tR/XJMVVS8BTu8leQLsrJLCthUir+LQ1gNi1S2Wzye3iMNEN2pr8KFdtbcqrtGEaB7bK6SwzUWkiuL1AtEt+G/ejahwI5uhcVShCpj7XudO1SSC8T4ki3zQaPuASzr/Q4l3yuguFI+XBqSq1hH6h7pOaqRcuHSufOJdE5NYoFso=
+	t=1744999401; cv=none; b=ZS/T8kYBkt4NtmNGP/DtuIMFVWavYllmI9enpqmtJLDNSe6vifsf7FFxzGMHcyPaKHwM5OyR305UmydRqa1CWhsaVrYj580Dfh3n9Rzag2LGzfUKnpKRHJfRCLk0dCJeXHFXXSG6l3a1pGOz0y6LE4BBv95yvsYyxlv7VnSukjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744999399; c=relaxed/simple;
-	bh=KL6aMW4rmGcMF1ZwvBhXzs+PsXE43Bt+JO2DW2EhFVs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TlN5aIYrprdy3NaqBGCpPez96HmbjN86Dzn8sy3nyUGMoNhCdiprLoXIihTPYL7I4YTCrL0U5sEN19vAEoXjeU1vCXPIjL+GAm1iTGOqvOvPGbCNEnGGU6WMQ9RIwUcAbf8IKju9wKyEr9z/IMxRskBDImjXWVWD2cHBhbMiYVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbEIiR6p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744999401; c=relaxed/simple;
+	bh=1YG7DuypvUO2eH+ZtNma3tnBVmRMdQt3rkXfWDkxfvY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=JBfj/MVKpRUoaiyz3ER4BVXT/IHUwujdxM9zDR+pJyGvp1MHr14Pk60qtie7Mt/YIUf55qQPWs8caFmoOtCxH36Cx3bVRdr50VLsa3GxZZHAr3S2PbJqIyeG3B8RXTrnPfOUUkjokN8n6oWhkL15qJUYR2V9n0mr0KnjmLeSFO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RNkVP7Ow; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbEIiR6p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABDB1C4CEE2;
-	Fri, 18 Apr 2025 18:03:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744999396;
-	bh=KL6aMW4rmGcMF1ZwvBhXzs+PsXE43Bt+JO2DW2EhFVs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fbEIiR6pyrqTIbZbffeVgKy4fGZKBOlzd4PD9ClLdfDYlzdOSL8k53PccpObR56+L
-	 z50/wnPNIk+ZEnyqzCUdduLcfh3to1wHQxxAQZOHtrkK6w9QERRMIhvQDSDiAlP3Ev
-	 mW8Lz79v8gkm6U1BJWya1EoqGu05/mHq1ROH8esjBfD6JjR0pKN7PCuVOHuwWZsqhK
-	 u71Bn/HUo2iFboKqhFIUdQamu9FevEL+Pgov4WpRjfo1j7lK1nc8HQAtiE3hZffDS4
-	 51esmnp+hnQ94Fihf4fjlXhU/t80gUe3GVEutANVaa3sE8cfFReTeBvlL0cmjwuvdT
-	 tOEIaqD8XJb7g==
-Received: by pali.im (Postfix)
-	id B5145721; Fri, 18 Apr 2025 20:03:13 +0200 (CEST)
-Date: Fri, 18 Apr 2025 20:03:13 +0200
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] nfs: Fix mounting NFS3 AUTH_NULL exports
-Message-ID: <20250418180313.h4jxi2rfxsmroumf@pali>
-References: <20240912130220.17032-1-pali@kernel.org>
- <20241222164018.id3ul7ucaxsrdkyq@pali>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RNkVP7Ow"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff8a2c7912so1711663a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 11:03:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744999399; x=1745604199; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rqJHg5UYMXwn+mNlrL5oxyZCVbhJU0UNvh0766Pzt3w=;
+        b=RNkVP7Ow+ZXf59m9XKNn8w8xsZoToQ9upST6cMiOeg357tp+4V3UgTNM7DDO/zqvbM
+         QpGArvz31DMfOloWu8Hwslnxblsy0pioclQHvuI+jyaO5mzJ3pmHSPDN9uxai/PpHFhK
+         2Mw/0XjFQv5PRqwNmkei0Fc5hhwZG5T9wIifLN1zNPA2TfwaHVAV+WalVh/BQQKaU/73
+         YZ2aX89oYvRHlDfCTnMhqXLOQoSpiCojl8T+JDCt3PmSGWDGBZXDRzMMLIovnyx8WFl5
+         W3Wvy7YhGQr5MaKJDH820TqExF8HEmobAu5g8MYoR59tqA4V3U9+faOfcqG7hAlTSdt/
+         IDQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744999399; x=1745604199;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rqJHg5UYMXwn+mNlrL5oxyZCVbhJU0UNvh0766Pzt3w=;
+        b=XcBZS3caXf8rEHSqGlo1vCtG46GigirI/71L6peeeqlEvvakQ9iHiRN/MpYQhHT1b/
+         CAQsmEQrHlFcTvsYl7lJO8gOyTvNtwiu3k2sAlkzaw7Bt8hG+1BRBX+yaN/S6+JknBSa
+         44ST6NW4TdMc9uNC4jVzRorknghYRZfJ9lmnouqcVshpPjDKtBUw+wAT1yV/OnlcDdyg
+         wRgFbuxDaHBV6gg+BF2ofMUkUDbkI5mPy04oizdvJDWB7+3AQnwOi1PZxWOQse82kypw
+         /33K+xfhF1RKj3NNz941ImolED3CdItlib7LWL8SoiSN4dyHDDQGxAiCsakotxzAUTgV
+         wABA==
+X-Gm-Message-State: AOJu0YwFKXu2OLxPwsrSQJLMHznXd15IiZGzWBmCgWVs2iCPA7hmtoKj
+	ifQPlJCDPbXs5HRzlv7SxQTD1XqXFDvE26aAdnCRIjrXYnpbzVDwgGN0Y4japgU4uwzQAYZlbEN
+	xIA==
+X-Google-Smtp-Source: AGHT+IFCmvZ0T+9eNap/pJTWsl4JOWWblp3uZelMKEtnIjAjt7ekoYrCZmpLXyNDhFs3e4WXHrwgxFD2ZsI=
+X-Received: from pjbsn15.prod.google.com ([2002:a17:90b:2e8f:b0:2fa:b84:b308])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:e18f:b0:2ee:c30f:33c9
+ with SMTP id 98e67ed59e1d1-3087c36106amr5592365a91.14.1744999399596; Fri, 18
+ Apr 2025 11:03:19 -0700 (PDT)
+Date: Fri, 18 Apr 2025 11:03:18 -0700
+In-Reply-To: <20250418171609.231588-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241222164018.id3ul7ucaxsrdkyq@pali>
-User-Agent: NeoMutt/20180716
+Mime-Version: 1.0
+References: <20250418171609.231588-1-pbonzini@redhat.com>
+Message-ID: <aAKT5mLHVV7rz830@google.com>
+Subject: Re: [PATCH] KVM: arm64, x86: make kvm_arch_has_irq_bypass() inline
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, kvmarm@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
 
-PING?
-
-On Sunday 22 December 2024 17:40:18 Pali Rohár wrote:
-> PING? If there is no objection, could you include series into -next?
+On Fri, Apr 18, 2025, Paolo Bonzini wrote:
+> kvm_arch_has_irq_bypass() is a small function and even though it does
+> not appear in any *really* hot paths, it's also not entirely rare.
+> Make it inline---it also works out nicely in preparation for using it in
+> kvm-intel.ko and kvm-amd.ko, since the function is not currently exported.
 > 
-> On Thursday 12 September 2024 15:02:15 Pali Rohár wrote:
-> > Linux NFS3 kernel client currently has broken support for NFS3
-> > AUTH_NULL-only exports and also broken mount option -o sec=none
-> > (which explicitly specifies that mount should use AUTH_NULL).
-> > 
-> > For AUTH_NULL-only server exports, Linux NFS3 kernel client mounts such
-> > export with AUTH_UNIX authentication which results in unusable mount
-> > point (any operation on it fails with error because server rejects
-> > AUTH_UNIX authentication).
-> > 
-> > Half of the problem is with MNTv3 servers, as some of them (e.g. Linux
-> > one) never announce AUTH_NULL authentication for any export. Linux MNTv3
-> > server does not announce it even when the export has the only AUTH_NULL
-> > auth method allowed, instead it announce AUTH_UNIX (even when AUTH_UNIX
-> > is disabled for that export in Linux NFS3 knfsd server). So MNTv3 server
-> > for AUTH_NONE-only exports instruct Linux NFS3 kernel client to use
-> > AUTH_UNIX and then NFS3 server refuse access to files with AUTH_UNIX.
-> > 
-> > Main problem on the client side is that mount option -o sec=none for
-> > NFS3 client is not processed and Linux NFS kernel client always skips
-> > AUTH_NULL (even when server announce it, and also even when user
-> > specifies -o sec=none on mount command line).
-> > 
-> > This patch series address these issues in NFS3 client code.
-> > 
-> > Add a workaround for buggy MNTv3 servers which do not announce AUTH_NULL,
-> > by trying AUTH_NULL authentication as an absolutely last chance when
-> > everything else fails. And honors user choice of AUTH_NULL if user
-> > explicitly specified -o sec=none as mount option.
-> > 
-> > AUTH_NULL authentication is useful for read-only exports, including
-> > public exports. As authentication for these types of exports do not have
-> > to be required.
-> > 
-> > Patch series was tested with AUTH_NULL-only, AUTH_UNIX-only and combined
-> > AUTH_NULL+AUTH_UNIX exports from Linux knfsd NFS3 server + default Linux
-> > MNTv3 userspace server. And also tested with exports from modified MNTv3
-> > server to properly return AUTH_NULL support in response list.
-> > 
-> > Patch series is based on the latest upstream tag v6.11-rc7.
-> > 
-> > Pali Rohár (5):
-> >   nfs: Fix support for NFS3 mount with -o sec=none from Linux MNTv3
-> >     server
-> >   nfs: Propagate AUTH_NULL/AUTH_UNIX PATHCONF NFS3ERR_ACCESS failures
-> >   nfs: Try to use AUTH_NULL for NFS3 mount when no -o sec was given
-> >   nfs: Fix -o sec=none output in /proc/mounts
-> >   nfs: Remove duplicate debug message 'using auth flavor'
-> > 
-> >  fs/nfs/client.c | 14 ++++++++++-
-> >  fs/nfs/super.c  | 64 +++++++++++++++++++++++++++++++++++++++----------
-> >  2 files changed, 65 insertions(+), 13 deletions(-)
-> > 
-> > -- 
-> > 2.20.1
-> > 
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/arm64/include/asm/kvm_host.h   | 5 +++++
+>  arch/arm64/kvm/arm.c                | 5 -----
+>  arch/powerpc/include/asm/kvm_host.h | 2 ++
+>  arch/x86/include/asm/kvm_host.h     | 6 ++++++
+>  arch/x86/kvm/x86.c                  | 5 -----
+>  include/linux/kvm_host.h            | 1 -
+>  6 files changed, 13 insertions(+), 11 deletions(-)
+
+...
+
+> diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
+> index 2d139c807577..6f761b77b813 100644
+> --- a/arch/powerpc/include/asm/kvm_host.h
+> +++ b/arch/powerpc/include/asm/kvm_host.h
+> @@ -907,4 +907,6 @@ static inline void kvm_arch_flush_shadow_all(struct kvm *kvm) {}
+>  static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu) {}
+>  static inline void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu) {}
+>  
+> +bool kvm_arch_has_irq_bypass(void);
+
+...
+
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 291d49b9bf05..82f044e4b3f5 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -2383,7 +2383,6 @@ struct kvm_vcpu *kvm_get_running_vcpu(void);
+>  struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void);
+>  
+>  #if IS_ENABLED(CONFIG_HAVE_KVM_IRQ_BYPASS)
+> -bool kvm_arch_has_irq_bypass(void);
+
+Moving the declaration to PPC is unnecessary, and IMO undesirable.  It's perfectly
+legal to have a non-static declaration follow a "static inline", and asm/kvm_host.h
+is included by linux/kvm_host.h, i.e. the per-arch "static inline" is guaranteed
+to be processed first.
+
+And KVM already have multiple instances of this, e.g. kvm_arch_vcpu_blocking().
+If only for consistency, I vote to keep the common declaration.
+
+>  int kvm_arch_irq_bypass_add_producer(struct irq_bypass_consumer *,
+>  			   struct irq_bypass_producer *);
+>  void kvm_arch_irq_bypass_del_producer(struct irq_bypass_consumer *,
+> -- 
+> 2.43.5
+> 
