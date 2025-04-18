@@ -1,30 +1,60 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1526184F;
-	Fri, 18 Apr 2025 17:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D21481A3
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744996963; cv=none; b=LBX1byK6VECTCMH3EpqZPlG1IXsN0eODtlLXwPufDlocsBl4b9slYylKqCwZS4eyraVo9pJRaY5dG2jdF+BZRY1W4bmyWcHwrfaMPVRPDGChfImAuWL1WAL7GtiSZOJQTJPyIS38wLxMu0Fk+/emThWSSg+5YacK7vaXbSWu0yY=
+	t=1744997011; cv=none; b=PPtnEKcwG66Htod8a4660xMtTbV2zRYsmGtNhNYym3QlRNvTswkUap3wjgsV6fg1PhgyeESLKf3EmF6axxKYbVibLHEWR6N6asFfqJkyouMAKpQ+2rLEX7qcvTyvDUJ3sv6LIC4HZg1BB9/t+dQD+T2fpOBhc2USjWdj/IqEbzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744996963; c=relaxed/simple;
-	bh=Tfu/fjEp11lnlyK3a9IV0VgCG9rncGnZLY0wPxc3V44=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cu741svfXnPPewIIU+jsqtfDkuL19WHxhwV+nr8HDEPjA88dGTto//nN36UfteVn5F5fDzw7JEweRBa+NWjdrJwR1yu8HNZ+JLmNdipYtVgs402b2rSa9xnsaYONXDpkAa8Zqau/2u10bkkdjdGd8Kt85tHQmpll0vx9VDJaUmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=NhI7IWfE; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744997011; c=relaxed/simple;
+	bh=n2ldmeXj1pt9OhP4eN76Q1VDZqHVEvRwrsozAmyirn0=;
+	h=Content-Type:Message-ID:Date:MIME-Version:From:Subject:To:Cc; b=FSnqEnIGCwAWvL81Exo8JyjTpfOrxratHm4iGVyFbpaliKNp5s/X4ntuMSZ5Y+oBIXhwMq3RfMf+cwquvAujQPZi5ABL5yfSlMq7o4Ij7PtfVImOjlrpng6bFDm1IbWf9S5Nk+A3QjFKQTcsUZrFw2U2/jto+zmHcGI5OVJ/wAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=PS+L4yTl; arc=none smtp.client-ip=209.85.166.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="NhI7IWfE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=JoiCvAoObANggbvCxlH2pC3tiGIdLdTH2E7i+CtOu60=;
-	b=NhI7IWfEufQdqZ9Fi8LAbN5Tm277ipnd/At1S8RBJWu98rFgfvXXYFegTA2jHp
-	3kS8NQq6jvS9nchsAhBGP9Derv4ViJBIF0I+DhJ1ms625shs/L5Q+E7ysqz9ymvV
-	M/eHYoIO9iFutl8OxXN5/poWMaDCMrF6K5wC0FynLMd6A=
-Received: from [192.168.71.89] (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wDnr+8yigJoVSsGBA--.55761S2;
-	Sat, 19 Apr 2025 01:21:55 +0800 (CST)
-Message-ID: <8af8a418-b808-4a14-9969-1c6d549e1633@163.com>
-Date: Sat, 19 Apr 2025 01:21:54 +0800
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PS+L4yTl"
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-85b3f92c8dfso65173539f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:23:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1744997008; x=1745601808; darn=vger.kernel.org;
+        h=cc:to:subject:from:content-language:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=a+N+3lsdw5hJgFDluXx537uN6IRA+NpDIajXfy7Sh7o=;
+        b=PS+L4yTldSeY5srmL75q21AT4aI309tlOqm7o8ValxBzmqrUTkdMxzfLGznYbfScMo
+         3GfxwZhyVhIbCr9RF4gK97qLiFQq+bldOE+hCzlRUiKBJuN3XLHzL7iyLfd4n2B10sRD
+         7aBWkK0d/xUqflKiBoH0h8e0w/fqgjeI7XjC4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744997008; x=1745601808;
+        h=cc:to:subject:from:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=a+N+3lsdw5hJgFDluXx537uN6IRA+NpDIajXfy7Sh7o=;
+        b=w4CoJn1QNsFoLUbrjRlz9zsxB/GnxZl1P1E7xAwI36PbOX3z/R+NDgtlTYlunu49vp
+         hOsrYkJG72FAGG/f0YoN2+MYu2vTvH3kisNMXPqqCUUvCzPFMwoyD2pu/hDoT2Lc0Ugr
+         v8d6usA6Z8mlaDX15RgDj7YiH0mXQyAMy4oZdyPEfvVhwagjc+GNkfDXr+bVbMg/xpEz
+         OI3b2RHeR3UgrKXMGXLzrC0OH2Kh6Nk8S8mmqIMEugy9bchVDUyahPAZ7OGNxXktKg5y
+         8Q3RBZ7ZfJ9kQFyJ3QAOO31hj+D44Oh/olJpUtmVtWF7TuR8u1mk0CKQXLoLK7GZSKt1
+         GNcA==
+X-Forwarded-Encrypted: i=1; AJvYcCUozSTSDoVbDgachoSqffzd77opViw0e2CXIFAG5zy1PlbbhCJNMo0L2VTFibnPqTu+IMLtEG43LdYRaDE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOK7iObB1XNpJnRdb+YnAk+NcN9r36y9Af7dWp+th0Af0cHaFx
+	9uzS/SK2ApfdGWYM8BHZaAJnZvQQia0b2C/U2WU/zHVmYZPeRZtSh0eEKSbLQkw=
+X-Gm-Gg: ASbGncsPC1m4L+8wjmKmQma/0WPGtlr1IH9OubhhF+++Js1cbMJ59HcShprJYX+8JNa
+	Wl9tfZVqiyUeKGyF9DdcHis4jB2cYmHPAKVXVHflKGOmBpv4SuA7xNPRp3v5CRHI6M3uzJLued4
+	hmCDlfdFgEsClKA+hRQbQXeH2RhXa3xle9Qx8fyFS55+U23COhvM6DXdObW5LOIjcj669FvYguW
+	QmxT4W0lBaAHpWvuon3YquUiatcibc1cxtGdlpqyHeCclEOC4H6NS/9yOrqBN/YXFkcF/+nhzNq
+	W3fUi6OzzcR3r2nRfrY46e+zOsaT0cLv/bJq5WJ1OSmTm1XAn+M=
+X-Google-Smtp-Source: AGHT+IHKErtBofMBPkKdVBXFdnABq54/jBmrTk0I3oM9V2qqA8HmhEhsAHIkz62xA4Y6AOCSNBSnbg==
+X-Received: by 2002:a05:6602:4a0a:b0:861:d71f:33e3 with SMTP id ca18e2360f4ac-861dbe0d25emr377632539f.5.1744997008523;
+        Fri, 18 Apr 2025 10:23:28 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f6a3833b1esm536214173.59.2025.04.18.10.23.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 10:23:28 -0700 (PDT)
+Content-Type: multipart/mixed; boundary="------------YKCSxzmDKGBuq6M5HqVObpp3"
+Message-ID: <e8852bc2-6013-4486-997b-e001f3dc9909@linuxfoundation.org>
+Date: Fri, 18 Apr 2025 11:23:27 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,114 +62,87 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
-To: Niklas Cassel <cassel@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, lpieralisi@kernel.org,
- kw@linux.com, bhelgaas@google.com, heiko@sntech.de,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
- thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org
-References: <20250417165219.GA115235@bhelgaas>
- <22720eef-f5a3-4e72-9c41-35335ec20f80@163.com>
- <225CC628-432C-4E88-AF2B-17C948B3790B@kernel.org>
 Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <225CC628-432C-4E88-AF2B-17C948B3790B@kernel.org>
+From: Shuah Khan <skhan@linuxfoundation.org>
+Subject: [GIT PULL] Kselftest fixes update for Linux 6.15-rc3
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: shuah <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+
+This is a multi-part message in MIME format.
+--------------YKCSxzmDKGBuq6M5HqVObpp3
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wDnr+8yigJoVSsGBA--.55761S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZr45tr4fGF1xGr4xJFW7CFg_yoW5Xr48pa
-	y7Kay8Ar18JFW3JF4kAF109F9Yy3ZayFWj9w47GrZ8Z3W5tryfCrZxtr45t3s7GrsF9Fy3
-	Z3s5JFyUJFnIvFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UuyIUUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwozo2gChB3CFgAAsy
 
+Hi Linus,
 
+Please pull the following kselftest fixes update for Linux 6.15-rc3.
 
-On 2025/4/18 22:55, Niklas Cassel wrote:
-> 
-> 
-> On 18 April 2025 14:33:08 CEST, Hans Zhang <18255117159@163.com> wrote:
->>
->> Dear Bjorn,
->>
->> Thanks your for reply. Niklas and I attempted to modify the relevant logic in drivers/pci/probe.c and found that there was a lot of code judging the global variable pcie_bus_config. At present, there is no good method. I will keep trying.
->>
->> I wonder if you have any good suggestions? It seems that the code logic regarding pcie_bus_config is a little complicated and cannot be modified for the time being?
-> 
-> 
-> Hans,
-> 
-> If:
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 364fa2a514f8..2e1c92fdd577 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2983,6 +2983,13 @@ void pcie_bus_configure_settings(struct pci_bus *bus)
->           if (!pci_is_pcie(bus->self))
->                   return;
->    +       /*
-> +        * Start off with DevCtl.MPS == DevCap.MPS, unless PCIE_BUS_TUNE_OFF.
-> +        * This might get overriden by a MPS strategy below.
-> +        */
-> +       if (pcie_bus_config != PCIE_BUS_TUNE_OFF)
-> +               smpss = pcie_get_mps(bus->self);
-> +
+Fixes dynevent_limitations.tc test failure on dash by detecting and
+handling bash and dash differences in evaluating \\.
 
-Dear Niklas,
+diff is attached.
 
-Thank you very much for your reply and thoughts.
+thanks,
+-- Shuah
 
-pcie_get_mps: Returns maximum payload size in bytes
+----------------------------------------------------------------
+The following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444:
 
-I guess you want to obtain the DevCap MPS. But the purpose of the smpss 
-variable is to save the DevCtl MPS.
+   Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
 
->           /*
->            * FIXME - Peer to peer DMA is possible, though the endpoint would need
->            * to be aware of the MPS of the destination.  To work around this,
-> 
-> 
-> 
-> does not work, can't you modify the code slightly so that it works?
-> 
-> I haven't tried myself, but considering that it works when walking the bus, it seems that it should be possible to get something working.
-> 
+are available in the Git repository at:
 
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux_kselftest-fixes-6.15-rc3
 
-After making the following modifications, my test shows that it is 
-normal. If the consideration is not comprehensive. Could Bjorn and 
-Niklas please review my revisions?
+for you to fetch changes up to 07be53cfa81afe94b14fb4bfee8243f2e0125d5e:
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 364fa2a514f8..5b54f1b0a91d 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2951,8 +2951,7 @@ static int pcie_bus_configure_set(struct pci_dev 
-*dev, void *data)
-         if (!pci_is_pcie(dev))
-                 return 0;
+   selftests/ftrace: Differentiate bash and dash in dynevent_limitations.tc (2025-04-16 12:47:41 -0600)
 
--       if (pcie_bus_config == PCIE_BUS_TUNE_OFF ||
--           pcie_bus_config == PCIE_BUS_DEFAULT)
-+       if (pcie_bus_config == PCIE_BUS_TUNE_OFF)
-                 return 0;
+----------------------------------------------------------------
+linux_kselftest-fixes-6.15-rc3
 
-         mps = 128 << *(u8 *)data;
-@@ -2991,7 +2990,8 @@ void pcie_bus_configure_settings(struct pci_bus *bus)
-         if (pcie_bus_config == PCIE_BUS_PEER2PEER)
-                 smpss = 0;
+Fixes dynevent_limitations.tc test failure on dash by detecting and
+handling bash and dash differences in evaluating \\.
 
--       if (pcie_bus_config == PCIE_BUS_SAFE) {
-+       if ((pcie_bus_config == PCIE_BUS_SAFE) ||
-+           (pcie_bus_config != PCIE_BUS_TUNE_OFF)) {
-                 smpss = bus->self->pcie_mpss;
+----------------------------------------------------------------
+Steven Rostedt (1):
+       selftests/ftrace: Differentiate bash and dash in dynevent_limitations.tc
 
-                 pcie_find_smpss(bus->self, &smpss);
+  .../ftrace/test.d/dynevent/dynevent_limitations.tc | 23 +++++++++++++++++++++-
+  1 file changed, 22 insertions(+), 1 deletion(-)
+----------------------------------------------------------------
+--------------YKCSxzmDKGBuq6M5HqVObpp3
+Content-Type: text/x-patch; charset=UTF-8;
+ name="linux_kselftest-fixes-6.15-rc3.diff"
+Content-Disposition: attachment;
+ filename="linux_kselftest-fixes-6.15-rc3.diff"
+Content-Transfer-Encoding: base64
 
+ZGlmZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2Z0cmFjZS90ZXN0LmQvZHlu
+ZXZlbnQvZHluZXZlbnRfbGltaXRhdGlvbnMudGMgYi90b29scy90ZXN0aW5nL3NlbGZ0ZXN0
+cy9mdHJhY2UvdGVzdC5kL2R5bmV2ZW50L2R5bmV2ZW50X2xpbWl0YXRpb25zLnRjCmluZGV4
+IDZiOTRiNjc4NzQxYS4uZjY1NmJjY2IxYTE0IDEwMDY0NAotLS0gYS90b29scy90ZXN0aW5n
+L3NlbGZ0ZXN0cy9mdHJhY2UvdGVzdC5kL2R5bmV2ZW50L2R5bmV2ZW50X2xpbWl0YXRpb25z
+LnRjCisrKyBiL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2Z0cmFjZS90ZXN0LmQvZHluZXZl
+bnQvZHluZXZlbnRfbGltaXRhdGlvbnMudGMKQEAgLTcsMTEgKzcsMzIgQEAKIE1BWF9BUkdT
+PTEyOAogRVhDRUVEX0FSR1M9JCgoTUFYX0FSR1MgKyAxKSkKIAorIyBiYXNoIGFuZCBkYXNo
+IGV2YWx1YXRlIHZhcmlhYmxlcyBkaWZmZXJlbnRseS4KKyMgZGFzaCB3aWxsIGV2YWx1YXRl
+ICdcXCcgZXZlcnkgdGltZSBpdCBpcyByZWFkIHdoZXJlYXMgYmFzaCBkb2VzIG5vdC4KKyMK
+KyMgICBURVNUX1NUUklORz0iJFRFU1RfU1RSSU5HIFxcJGkiCisjICAgZWNobyAkVEVTVF9T
+VFJJTkcKKyMKKyMgV2l0aCBpPTEyMworIyBPbiBiYXNoLCB0aGF0IHdpbGwgcHJpbnQgIlwx
+MjMiCisjIGJ1dCBvbiBkYXNoLCB0aGF0IHdpbGwgcHJpbnQgdGhlIGVzY2FwZSBzZXF1ZW5j
+ZSBvZiBcMTIzIGFzIHRoZSBcIHdpbGwKKyMgYmUgaW50ZXJwcmV0ZWQgYWdhaW4gaW4gdGhl
+IGVjaG8uCisjCisjIFNldCBhIHZhcmlhYmxlICJicyIgdG8gc2F2ZSBhIGRvdWJsZSBiYWNr
+c2xhc2gsIHRoZW4gZWNobyB0aGF0CisjIHRvICJ0cyIgdG8gc2VlIGlmICR0cyBjaGFuZ2Vk
+IG9yIG5vdC4gSWYgaXQgY2hhbmdlZCwgaXQncyBkYXNoLAorIyBpZiBub3QsIGl0J3MgYmFz
+aCwgYW5kIHRoZW4gYnMgY2FuIGVxdWFsIGEgc2luZ2xlIGJhY2tzbGFzaC4KK2JzPSdcXCcK
+K3RzPWBlY2hvICRic2AKK2lmIFsgIiR0cyIgPSAnXFwnIF07IHRoZW4KKyAgIyB0aGlzIGlz
+IGJhc2gKKyAgYnM9J1wnCitmaQorCiBjaGVja19tYXhfYXJncygpIHsgIyBldmVudF9oZWFk
+ZXIKICAgVEVTVF9TVFJJTkc9JDEKICAgIyBBY2NlcHRhYmxlCiAgIGZvciBpIGluIGBzZXEg
+MSAkTUFYX0FSR1NgOyBkbwotICAgIFRFU1RfU1RSSU5HPSIkVEVTVF9TVFJJTkcgXFwkaSIK
+KyAgICBURVNUX1NUUklORz0iJFRFU1RfU1RSSU5HICRicyRpIgogICBkb25lCiAgIGVjaG8g
+IiRURVNUX1NUUklORyIgPj4gZHluYW1pY19ldmVudHMKICAgZWNobyA+IGR5bmFtaWNfZXZl
+bnRzCg==
 
-Best regards,
-Hans
-
+--------------YKCSxzmDKGBuq6M5HqVObpp3--
