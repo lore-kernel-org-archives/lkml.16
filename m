@@ -1,122 +1,399 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00147275119;
-	Fri, 18 Apr 2025 12:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8546B2749ED;
+	Fri, 18 Apr 2025 12:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744980500; cv=none; b=UA0Bya0uO7u7Hxb5ldkOEM/Pk5hlJpaznOUTt7k+xYYeoq8AtrQelFC6VIMFdd/JFCAo/w24PLOTkjp3OBLqWTlbLpEiir9VrchpyByilwhqnHlXX1aDMy3scHFoebk1QFtWNu6jQEw2XeRVB3P4+nd81kxLwoNekt7/UWT/IA8=
+	t=1744980553; cv=none; b=eCwmNmcVRlt2S0SPY3JsDy52LCODIsumNrjVm8U48Wwy4Xig4S1oZdmjwvWss28nL96rhB9jXMw+k9kTWcTIdLJNYPnBvGpDF91wjHHas5HW0yMXh2fJis8hJemN/GV2viYDVY+Zm17B7gfPR8gxoqnuCMMfIRLjPPXKMsnuvOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744980500; c=relaxed/simple;
-	bh=5iP0/iUDHlPimuG6aFa0pmfO3lQC3a/ZyVK3ba58Dfc=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=QJ1gqWA1n/sgjl+NoBmj8d17QpbMO5Swn2Qn/I1zc4W3J8XcMjPi8TZWw5Dv42JizAz7VBPQOxkrgHXMa/i0QjdfTXu6rs34+MNRYlE2A8WouirTnQ3tryq/mhzUKTutM8OgkVaG/HT/jF3EmoLzSHo4vhe4E/uTKh4PXYZS8iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=c7ELrU68; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xb6WSsY4; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744980553; c=relaxed/simple;
+	bh=ifL5XGTurjtY3FVLjp8ndP1nKFqmI+UUOp50pgmxjmY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KziiKvCkPPrC6jX2FBPxbUD/X0pDy5f23TEqtoXEi0sOyXP8fuDaTtQQ2pkaBRZnZfDPKQ+O48BJe62Tx5fsYDE6y/7AoXQv5lfKrmCaAa8ZCkuttMfMWL8T9Et3JeoU1uBccjACPI+YPtsL+07tienQQgsXTPVI2rzfWdLBOzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rr6Ro8H/; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="c7ELrU68";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xb6WSsY4"
-Date: Fri, 18 Apr 2025 12:48:12 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744980494;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iacdnq+pgxmJl7zlTNUCTe0ghULjkxMNxJ5OdN3S12M=;
-	b=c7ELrU68UCywmri+LgYNIGufiFd9QYNc1+l6sqPeUEOuOzg1vOsyGjywrSFZDmxkxrltfU
-	z8jOZKjDs886++w09ISb4VUMG37/W3g5PNP8x6pNyJnXOmunAKamxzcjJ4L54xqzc8mxbT
-	/r7hknNzdZz5EOKYsPsFzHJyiIqB/+YWBbocauxfXZHDqTjxon1BekahCkHE+FkfsdE7Zv
-	N/p8TAJMapf86T529bEnUbkHqZGM2aeeFDtdZOt7SzPSkYmDssoqER7m6xMwes/oZB8PXc
-	zaLa3Vdrse0dADfhBJMndfukgwi5brPUOOSPA23fyGXNpJwDykA0kAViy7ZsiQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744980494;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iacdnq+pgxmJl7zlTNUCTe0ghULjkxMNxJ5OdN3S12M=;
-	b=xb6WSsY4c0VV8M6TTx8qgvb6xRt1FO6fefTNJkvLau1WhXDvcR267LR4oKCql3J+XEnW4g
-	ksp2Dlg6rLkML5Aw==
-From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/alternatives] x86/mm: Fix {,un}use_temporary_mm() IRQ state
-Cc: "Borislav Petkov (AMD)" <bp@alien8.de>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Rik van Riel <riel@surriel.com>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250418095034.GR38216@noisy.programming.kicks-ass.net>
-References: <20250418095034.GR38216@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rr6Ro8H/"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e8484bb895so525203a12.0;
+        Fri, 18 Apr 2025 05:49:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744980550; x=1745585350; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hGm94WkSvEKAT80t6SgDIndlW5MDyMlulTb0cPlczvI=;
+        b=Rr6Ro8H/V7bkLjG43nTL+vqyWc+IYEo88u1+WEGfynXCFW3Pwr/i7EJJc8vWjl6CfB
+         5zUdWB/GJ7k+GrJUURtCQ+CY07FQwg/Kwcpub9OCGxuOlI1Eg1/fP7jeED8sXW12F/d6
+         SD+/9JaGyzf+l+1vjl9Yp4eCtLXtWRnwxf+uBfFxJ9PHFnPduRBCG3vch8KebM47aQzG
+         v7UQyWYjPgtvGjCraXrdB3xu+snw8scaq7mHhzeegXBkUJrAGuDK9Rd4kBXAo/Qlf0fL
+         wZZKBK/Yh4rG7r2h7DsIZ92N9vloUgi88Wnc0KnFuUrQkgGl2JC7BlylL3hymXhf0tnk
+         mgwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744980550; x=1745585350;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hGm94WkSvEKAT80t6SgDIndlW5MDyMlulTb0cPlczvI=;
+        b=ACoR1TgKzVByHMkBs53ivBHG1+YrYkIh8Ya6PNnQx/JM6MS1IJs1Kg4kG07420UkaQ
+         SjQg2BPLF1PwNtJf+OPv+iiqMr/JAfwKNc9M+Ol7oaG8Url3XzJd+A7ky6jQuf4daaF3
+         l3TJHYFdbXmvjaQYMCOF31EiylE0yikYG4SYX7EMltccGXNaKoqoScr7vo2bHuly0l3a
+         1KTaKgfBqZamZpIPPvMAXRlMX1vXmIRhcoNI8Qfy48kHu+A19EIgnYaE2RweqRsWh46g
+         59YZ4VEtzp7KucAW1SCCqChxHjUknKpXvQLY3BUJlui9HWFjm4XZtCReTbu+B0wO3u4g
+         RGxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUK0uYv/m73dykNpPYlJAUh5m2XP4S9dP149YwE6Avr9XFLhY/ioO9vuGMDPCWujrolryZnTl5o@vger.kernel.org, AJvYcCWw/tYQx9p+EuC2Z+v7sEvRviC9CIoyNHvwqRMQqmUKrIxXDO2lDqLSGU3cRYHNPAYA65jWpMrG2sz5h7U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyW1J0/wG4T/MgWPPlZ06FnXFU0RcKttGJkOP2eC2v3XSwj6Qxp
+	pi20s0uRGZCoy6sQW/ukqTt9wadoF7zwEvna4/Ogmd64BigeGYPU
+X-Gm-Gg: ASbGncuKXwyhFjlpTrnCIwaqY8Nd9dvqLmJoOles3poxw6gEA6eh1+tJ/3NBSnwHT6m
+	XArfbHUz9rd+8a8IbavztaWFDFzCYRjxK48Bp8jd+E/mgyb9iVDcIdwHKcQX0sraumtwvED1YWz
+	kUkUZtxF0LXcdIEPDTXU+E3vIzp3pYL/qSQsEtFYTm8QLF3B0fgn6h6d3qWfq58XIGB6FA4tt7Q
+	K0h4ylwfo9EMYNg5H80mNGFahj0ihBpn69HcrGG3Wid9sRV9NpOviCELfFRr0HeNy1sRayYrPlW
+	i25MDI5yhv5Nq4LbGH26CVWrWbbk
+X-Google-Smtp-Source: AGHT+IGQJTO3hkOdi85KfZDP/WxTdVuBNdKLUzFgqgk61QYUOpAZhlXhZ2rXm1sjvZVBwnt5nJWcHg==
+X-Received: by 2002:a05:6402:3513:b0:5e0:803c:242a with SMTP id 4fb4d7f45d1cf-5f62860d4afmr803363a12.8.1744980549365;
+        Fri, 18 Apr 2025 05:49:09 -0700 (PDT)
+Received: from skbuf ([188.25.50.178])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6efadd0asm117605366b.175.2025.04.18.05.49.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 05:49:08 -0700 (PDT)
+Date: Fri, 18 Apr 2025 15:49:05 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Wei Fang <wei.fang@nxp.com>
+Cc: claudiu.manoil@nxp.com, vladimir.oltean@nxp.com, xiaoning.wang@nxp.com,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, christophe.leroy@csgroup.eu,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 net-next 01/14] net: enetc: add initial netc-lib
+ driver to support NTMP
+Message-ID: <20250418124905.2jve2cjzrojjwmyh@skbuf>
+References: <20250411095752.3072696-1-wei.fang@nxp.com>
+ <20250411095752.3072696-1-wei.fang@nxp.com>
+ <20250411095752.3072696-2-wei.fang@nxp.com>
+ <20250411095752.3072696-2-wei.fang@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174498049254.31282.3233990850246687101.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411095752.3072696-2-wei.fang@nxp.com>
+ <20250411095752.3072696-2-wei.fang@nxp.com>
 
-The following commit has been merged into the x86/alternatives branch of tip:
+I see this is "Changes requested", so here are some more nitpicks from me.
 
-Commit-ID:     aef1d0209ddf127a8069aca5fa3a062be4136b76
-Gitweb:        https://git.kernel.org/tip/aef1d0209ddf127a8069aca5fa3a062be4136b76
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Fri, 18 Apr 2025 11:50:34 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 18 Apr 2025 14:36:18 +02:00
+On Fri, Apr 11, 2025 at 05:57:39PM +0800, Wei Fang wrote:
+> Some NETC functionality is controlled using control messages sent to the
+> hardware using BD ring interface with 32B descriptor similar to transmit
+> BD ring used on ENETC. This BD ring interface is referred to as command
+> BD ring. It is used to configure functionality where the underlying
+> resources may be shared between different entities or being too large to
+> configure using direct registers. Therefore, a messaging protocol called
+> NETC Table Management Protocol (NTMP) is provided for exchanging
+> configuration and management information between the software and the
+> hardware using the command BD ring interface.
+> 
+> For i.MX95, NTMP has been upgraded to version 2.0, which is incompatible
+> with LS1028A, because the message formats have been changed.
 
-x86/mm: Fix {,un}use_temporary_mm() IRQ state
+Can you please add one more sentence clarifying that the LS1028A
+management protocol has been retroactively named NTMP 1.0 and its
+implementation is in enetc_cbdr.c and enetc_tsn.c? The driver, like new
+NETC documentation, refers to NTMP 2.0 as simply "NTMP".
 
-As the function switch_mm_irqs_off() implies, it ought to be called with
-IRQs *off*. Commit 58f8ffa91766 ("x86/mm: Allow temporary MMs when IRQs
-are on") caused this to not be the case for EFI.
+> Therefore, add the netc-lib driver to support NTMP 2.0 to operate various tables.
+> Note that, only MAC address filter table and RSS table are supported at
+> the moment. More tables will be supported in subsequent patches.
+> 
+> It is worth mentioning that the purpose of the netc-lib driver is to
+> provide some NTMP-based generic interfaces for ENETC and NETC Switch
+> drivers. Currently, it only supports the configurations of some tables.
+> Interfaces such as tc flower and debugfs will be added in the future.
+> 
+> Signed-off-by: Wei Fang <wei.fang@nxp.com>
+> ---
+> +static int netc_xmit_ntmp_cmd(struct ntmp_user *user, union netc_cbd *cbd)
+> +{
+> +	union netc_cbd *cur_cbd;
+> +	struct netc_cbdr *cbdr;
+> +	int i, err;
+> +	u16 status;
+> +	u32 val;
+> +
+> +	/* Currently only i.MX95 ENETC is supported, and it only has one
+> +	 * command BD ring
+> +	 */
+> +	cbdr = &user->ring[0];
+> +
+> +	spin_lock_bh(&cbdr->ring_lock);
+> +
+> +	if (unlikely(!netc_get_free_cbd_num(cbdr)))
+> +		netc_clean_cbdr(cbdr);
+> +
+> +	i = cbdr->next_to_use;
+> +	cur_cbd = netc_get_cbd(cbdr, i);
+> +	*cur_cbd = *cbd;
+> +	dma_wmb();
+> +
+> +	/* Update producer index of both software and hardware */
+> +	i = (i + 1) % cbdr->bd_num;
+> +	cbdr->next_to_use = i;
+> +	netc_write(cbdr->regs.pir, i);
+> +
+> +	err = read_poll_timeout_atomic(netc_read, val, val == i,
+> +				       10, NETC_CBDR_TIMEOUT, true,
 
-Ensure IRQs are off where it matters.
+Please create a #define for NETC_CBDR_SLEEP_US too.
 
-Fixes: 58f8ffa91766 ("x86/mm: Allow temporary MMs when IRQs are on")
-Reported-by: Borislav Petkov (AMD) <bp@alien8.de>
-Tested-by: Borislav Petkov (AMD) <bp@alien8.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Rik van Riel <riel@surriel.com>
-Link: https://lore.kernel.org/r/20250418095034.GR38216@noisy.programming.kicks-ass.net
----
- arch/x86/mm/tlb.c | 2 ++
- 1 file changed, 2 insertions(+)
+> +				       cbdr->regs.cir);
+> +	if (unlikely(err))
+> +		goto cbdr_unlock;
+> +
+> +	dma_rmb();
+> +	/* Get the writeback command BD, because the caller may need
+> +	 * to check some other fields of the response header.
+> +	 */
+> +	*cbd = *cur_cbd;
+> +
+> +	/* Check the writeback error status */
+> +	status = le16_to_cpu(cbd->resp_hdr.error_rr) & NTMP_RESP_ERROR;
+> +	if (unlikely(status)) {
+> +		err = -EIO;
+> +		dev_err(user->dev, "Command BD error: 0x%04x\n", status);
+> +	}
+> +
+> +	netc_clean_cbdr(cbdr);
+> +	dma_wmb();
+> +
+> +cbdr_unlock:
+> +	spin_unlock_bh(&cbdr->ring_lock);
+> +
+> +	return err;
+> +}
+> +
+> +static int ntmp_alloc_data_mem(struct ntmp_dma_buf *data, void **buf_align)
+> +{
+> +	void *buf;
+> +
+> +	buf = dma_alloc_coherent(data->dev, data->size + NTMP_DATA_ADDR_ALIGN,
+> +				 &data->dma, GFP_KERNEL);
+> +	if (!buf)
+> +		return -ENOMEM;
+> +
+> +	data->buf = buf;
+> +	*buf_align = PTR_ALIGN(buf, NTMP_DATA_ADDR_ALIGN);
+> +
+> +	return 0;
+> +}
+> +
+> +static void ntmp_free_data_mem(struct ntmp_dma_buf *data)
+> +{
+> +	dma_free_coherent(data->dev, data->size + NTMP_DATA_ADDR_ALIGN,
+> +			  data->buf, data->dma);
+> +}
+> +
+> +static void ntmp_fill_request_hdr(union netc_cbd *cbd, dma_addr_t dma,
+> +				  int len, int table_id, int cmd,
+> +				  int access_method)
+> +{
+> +	dma_addr_t dma_align;
+> +
+> +	memset(cbd, 0, sizeof(*cbd));
+> +	dma_align = ALIGN(dma, NTMP_DATA_ADDR_ALIGN);
+> +	cbd->req_hdr.addr = cpu_to_le64(dma_align);
+> +	cbd->req_hdr.len = cpu_to_le32(len);
+> +	cbd->req_hdr.cmd = cmd;
+> +	cbd->req_hdr.access_method = FIELD_PREP(NTMP_ACCESS_METHOD,
+> +						access_method);
+> +	cbd->req_hdr.table_id = table_id;
+> +	cbd->req_hdr.ver_cci_rr = FIELD_PREP(NTMP_HDR_VERSION,
+> +					     NTMP_HDR_VER2);
+> +	/* For NTMP version 2.0 or later version */
+> +	cbd->req_hdr.npf = cpu_to_le32(NTMP_NPF);
+> +}
+> +
+> +static void ntmp_fill_crd(struct ntmp_cmn_req_data *crd, u8 tblv,
+> +			  u8 qa, u16 ua)
+> +{
+> +	crd->update_act = cpu_to_le16(ua);
+> +	crd->tblv_qact = NTMP_TBLV_QACT(tblv, qa);
+> +}
+> +
+> +static void ntmp_fill_crd_eid(struct ntmp_req_by_eid *rbe, u8 tblv,
+> +			      u8 qa, u16 ua, u32 entry_id)
+> +{
+> +	ntmp_fill_crd(&rbe->crd, tblv, qa, ua);
+> +	rbe->entry_id = cpu_to_le32(entry_id);
+> +}
+> +
+> +static int ntmp_delete_entry_by_id(struct ntmp_user *user, int tbl_id,
+> +				   u8 tbl_ver, u32 entry_id, u32 req_len,
+> +				   u32 resp_len)
+> +{
+> +	struct ntmp_dma_buf data = {.dev = user->dev};
+> +	struct ntmp_req_by_eid *req;
+> +	union netc_cbd cbd;
+> +	u32 len;
+> +	int err;
+> +
+> +	data.size = req_len >= resp_len ? req_len : resp_len;
 
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 79c124f..39761c7 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -986,6 +986,7 @@ struct mm_struct *use_temporary_mm(struct mm_struct *temp_mm)
- 	struct mm_struct *prev_mm;
- 
- 	lockdep_assert_preemption_disabled();
-+	guard(irqsave)();
- 
- 	/*
- 	 * Make sure not to be in TLB lazy mode, as otherwise we'll end up
-@@ -1018,6 +1019,7 @@ struct mm_struct *use_temporary_mm(struct mm_struct *temp_mm)
- void unuse_temporary_mm(struct mm_struct *prev_mm)
- {
- 	lockdep_assert_preemption_disabled();
-+	guard(irqsave)();
- 
- 	/* Clear the cpumask, to indicate no TLB flushing is needed anywhere */
- 	cpumask_clear_cpu(smp_processor_id(), mm_cpumask(this_cpu_read(cpu_tlbstate.loaded_mm)));
+max(req_len, resp_len)
+
+It can also be placed as part of the "data" initializer:
+
+	struct ntmp_dma_buf data = {
+		.dev = user->dev,
+		.size = max(req_len, resp_len),
+	};
+
+> +	err = ntmp_alloc_data_mem(&data, (void **)&req);
+> +	if (err)
+> +		return err;
+> +
+> +	ntmp_fill_crd_eid(req, tbl_ver, 0, 0, entry_id);
+> +	len = NTMP_LEN(req_len, resp_len);
+> +	ntmp_fill_request_hdr(&cbd, data.dma, len, tbl_id,
+> +			      NTMP_CMD_DELETE, NTMP_AM_ENTRY_ID);
+> +
+> +	err = netc_xmit_ntmp_cmd(user, &cbd);
+> +	if (err)
+> +		dev_err(user->dev, "Delete table (id: %d) entry failed: %pe",
+> +			tbl_id, ERR_PTR(err));
+
+Could you also print the entry_id?
+
+> +
+> +	ntmp_free_data_mem(&data);
+> +
+> +	return err;
+> +}
+> +
+> +static int ntmp_query_entry_by_id(struct ntmp_user *user, int tbl_id,
+> +				  u32 len, struct ntmp_req_by_eid *req,
+> +				  dma_addr_t dma, bool compare_eid)
+> +{
+> +	struct device *dev = user->dev;
+> +	struct ntmp_cmn_resp_query *resp;
+> +	int cmd = NTMP_CMD_QUERY;
+> +	union netc_cbd cbd;
+> +	u32 entry_id;
+> +	int err;
+> +
+> +	entry_id = le32_to_cpu(req->entry_id);
+> +	if (le16_to_cpu(req->crd.update_act))
+> +		cmd = NTMP_CMD_QU;
+> +
+> +	/* Request header */
+> +	ntmp_fill_request_hdr(&cbd, dma, len, tbl_id, cmd, NTMP_AM_ENTRY_ID);
+> +	err = netc_xmit_ntmp_cmd(user, &cbd);
+> +	if (err) {
+> +		dev_err(dev, "Query table (id: %d) entry failed: %pe\n",
+> +			tbl_id, ERR_PTR(err));
+
+Could you print a string representation of the tbl_id instead? It should
+be more user-friendly if something fails.
+
+static const char *ntmp_table_name(enum ntmp_tbl_id tbl_id)
+{
+	switch (tbl_id) {
+	case NTMP_MAFT_ID:
+		return "MAC Address Filtering";
+	case NTMP_RSST_ID:
+		return "RSS";
+	default:
+		return "unknown";
+	}
+}
+
+Also, similar comment about entry_id being absent here.
+
+> +		return err;
+> +	}
+> +
+> +	/* For a few tables, the first field of their response data is not
+> +	 * entry_id, so directly return success.
+> +	 */
+> +	if (!compare_eid)
+> +		return 0;
+> +
+> +	resp = (struct ntmp_cmn_resp_query *)req;
+> +	if (unlikely(le32_to_cpu(resp->entry_id) != entry_id)) {
+> +		dev_err(dev, "Table (id: %d) query EID: 0x%x, response EID: 0x%x\n",
+> +			tbl_id, entry_id, le32_to_cpu(resp->entry_id));
+> +		return -EIO;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int ntmp_maft_add_entry(struct ntmp_user *user, u32 entry_id,
+> +			struct maft_entry_data *maft)
+> +{
+> +	struct ntmp_dma_buf data = {.dev = user->dev};
+> +	struct maft_req_add *req;
+> +	union netc_cbd cbd;
+> +	int err;
+> +
+> +	data.size = sizeof(*req);
+
+Same comment about wrapping this into the struct initializer.
+
+> +	err = ntmp_alloc_data_mem(&data, (void **)&req);
+> +	if (err)
+> +		return err;
+> +
+> +	/* Set mac address filter table request data buffer */
+> +	ntmp_fill_crd_eid(&req->rbe, user->tbl.maft_ver, 0, 0, entry_id);
+> +	req->keye = maft->keye;
+> +	req->cfge = maft->cfge;
+> +
+> +	ntmp_fill_request_hdr(&cbd, data.dma, NTMP_LEN(data.size, 0),
+> +			      NTMP_MAFT_ID, NTMP_CMD_ADD, NTMP_AM_ENTRY_ID);
+> +	err = netc_xmit_ntmp_cmd(user, &cbd);
+> +	if (err)
+> +		dev_err(user->dev, "Add MAFT entry failed (%pe)\n",
+> +			ERR_PTR(err));
+> +
+> +	ntmp_free_data_mem(&data);
+> +
+> +	return err;
+> +}
+> +EXPORT_SYMBOL_GPL(ntmp_maft_add_entry);
+> +
+> +int ntmp_maft_query_entry(struct ntmp_user *user, u32 entry_id,
+> +			  struct maft_entry_data *maft)
+> +{
+> +	struct ntmp_dma_buf data = {.dev = user->dev};
+> +	struct maft_resp_query *resp;
+> +	struct ntmp_req_by_eid *req;
+> +	int err;
+> +
+> +	data.size = sizeof(*resp);
+
+Same comment about struct initializer.
+
+> +	err = ntmp_alloc_data_mem(&data, (void **)&req);
+> +	if (err)
+> +		return err;
+> +
+> +	ntmp_fill_crd_eid(req, user->tbl.maft_ver, 0, 0, entry_id);
+> +	err = ntmp_query_entry_by_id(user, NTMP_MAFT_ID,
+> +				     NTMP_LEN(sizeof(*req), data.size),
+> +				     req, data.dma, true);
+> +	if (err)
+> +		goto end;
+> +
+> +	resp = (struct maft_resp_query *)req;
+> +	maft->keye = resp->keye;
+> +	maft->cfge = resp->cfge;
+> +
+> +end:
+> +	ntmp_free_data_mem(&data);
+> +
+> +	return err;
+> +}
+> +EXPORT_SYMBOL_GPL(ntmp_maft_query_entry);
