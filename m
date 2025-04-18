@@ -1,196 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A829D1A76D0;
-	Fri, 18 Apr 2025 11:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABEB1A00E7
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 11:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744975815; cv=none; b=SRFgwT+qzrFrfoQ20KOjiidq79tZ1p0Y8sf8d4Z4O8soTC5rIoPHa6JKxdxFprB1AV+Ld80DjelfjtVG59a5ygCcEzFqpHF2De/e7hu8l39OwkNWxERKIgLetJscwMkqNImbC5In/xaMKQD0RT80Phg1X0mZXgqg44rlYVlT7MU=
+	t=1744975854; cv=none; b=uSc7Td4tpjErfxepQnS6ixZmn9A70K2BcwiNBfqtNwIcwotMrzwlWwdL7IcEjWc8GsGzuOGZ/GKhVWi/oRTY8vezIrd0ZhcZfNpsQEphIN8R+SxsX1hafCi0JlPyl5UR0qZKdhjfMu5bjtLpqa9fYB+ejKHhHbZTbZ3/30Gijio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744975815; c=relaxed/simple;
-	bh=yNO/Vv11a/JNX5B7+Pdq/at6wgGWnlT9+n3hN8pOBzo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hrUYdlUuzXdIwFK2NkjPQzXpr4T08ZZnZVlh75pjqJSUDym+7owHffRfOlCl8Y48UUXy4aFBvbAb1GGx4PTgHGuqnojMWKjLh8h+5ukuiWoFTYhoCpnEicgxB8hca9AFflUFu4OpHdZfRj8Cy/ZWxP0FufBS0OEc0ceesrKNi3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BiByg55X; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BiByg55X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63B3DC4CEE2;
-	Fri, 18 Apr 2025 11:30:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744975815;
-	bh=yNO/Vv11a/JNX5B7+Pdq/at6wgGWnlT9+n3hN8pOBzo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BiByg55Xfnr4eelEkmxAH7NdKKRQ+cA8HY7+HclMeCvg7c7jkhguGTwVHzS+y++mN
-	 Ash4JUtwAqWDVUlc5IDef0bax1HCRFiHdeqsORE0LUnWFtNdD80VwqGBuoUm85o6G9
-	 MRsJ8QpXNlACPP1U0xaJ2bmCt9zzkxBJnLkArVgjcNdspWw3BPr4EKu2mwnBmQP+A0
-	 yVv4OcBb97VgmQptxtouEwwP24vjwNsP5MFAUd6IXzURc/YDTRJQtniSTuQemduv1A
-	 oGYJpzDJGH2BsXFF8m1h3Gd7ISbC/4UsF6BIbDzLyrTyQkjKqBpUwJ1epVKd1yc91T
-	 RPJx3aEzYhetQ==
-Date: Fri, 18 Apr 2025 17:00:10 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Bincai Liu <bincai.liu@mediatek.com>
-Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Chunfeng Yun <chunfeng.yun@mediatek.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Jitao shi <jitao.shi@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
-	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-phy@lists.infradead.org
-Subject: Re: [PATCH 5/5] drm/mediatek: Add eDP phy driver for mt8196
-Message-ID: <aAI3wkJmNH6ZcdfO@vaman>
-References: <20250418065313.8972-1-bincai.liu@mediatek.com>
- <20250418065313.8972-6-bincai.liu@mediatek.com>
+	s=arc-20240116; t=1744975854; c=relaxed/simple;
+	bh=mAQSbd2c6J2sWnEmggeIvDXSAGrSG1rkMB4M9PRBYsg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G0pqIrNgJtMIcryqEHmHs+a9OA3msSK4plR3yHDGMGCLR11RwI0UcZ7kapqAaySlc3zqkEX4WvbrnDPqbD+jwUmY2U4k7pobkn4aFCLyocDA8J6xdNqGQKdmez7YVfiASQps3by/M46a2fM+/7b01y6oDXdYDO/NhzOmitIjUK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43d0782d787so12606875e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 04:30:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744975850; x=1745580650;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ec/XzVcGOwKgl03ZmFZTdHXNDJONfrH6xIDSGmbmdKk=;
+        b=lzkwKMz/Z1xWo9OdY4+BOq6cWb5RN/kBwb/GtWqkSAk6WMXb/gvVx0nfiuSyOxoC8m
+         WmJS0LSlfRHr/WHbssEdV019UkNFbKW6LpW9/MmmSkJ5Z04KxRvGwc30LEseKU/ejfmU
+         HJ+Gk6Kek268hXcUx1jK5bp0mO/8E4j8blge6KsveIaTuJrUYbclEQwRs/VHPOr/F+JE
+         qAiPPS7RfdGtaXFMCJjO1pxt/O9W4eqDe6Zc6dDhZpxpLFzk43+xK/LiOm9fxiXEWD9k
+         4uw00l9UC4ZpNJt8kyLPeszxuNTze81+uis4EcrNhPnk1QSHyVcQoytFVLDnfjZ9x7mO
+         6+iw==
+X-Forwarded-Encrypted: i=1; AJvYcCXUxoioK7XnywOTTMK8Lh+RNIcXsVQZ9NriLV00LtWJIUJ3EBmvhVWnaeMDiekKECDHHuybmYMx0DqTHwI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2BjgBrnAYngmMx7Ju3TleZtEjFIdWPzJbiZC1vlCoXsfAGJXz
+	suJ7yrFxU6smrClZSAid4KxPsKSbBgggxvNR4rUh/9/KsoSmYRkc
+X-Gm-Gg: ASbGncuyTbMZkyFic/wL+AetyDLOL/UrRq2CY44V/qjuiqo32vP0ioqET+HMYx4xpkk
+	5bOI1m4mttpjjx1ypSpQ3WTDoLMsfsOKqO/JyJ+Hw4z+LLDiTxIvn4Mz59UcvtuCuEQKpKOzbLJ
+	+IkPrQMDTO8tBNqB9GA05SFqHbr6F0dmRsJtw49gujOyD89kR3CBIgMlx9m0ZLbQNscOLf8KS+5
+	dTmbW8WMh0KzJcMFMprgHWe8QUA2fC70rhe6wESz5GE5ZhAHC3/w2pFjEZUJsjnSpqcMWsLszfZ
+	NMQGxPR8XP/1RVrL57s6N1iZlhdeQH+IlsIsCy7T
+X-Google-Smtp-Source: AGHT+IHopOoTjCgVg0Mcg1+7QOl+DxqAuGkARymIBOfr2XaYZywOwRZjhRW0NML5Krd9zqG52QhLSg==
+X-Received: by 2002:a05:600c:348a:b0:43c:e8a5:87a with SMTP id 5b1f17b1804b1-4406aba5f97mr22060475e9.16.1744975850184;
+        Fri, 18 Apr 2025 04:30:50 -0700 (PDT)
+Received: from [10.100.102.67] ([95.35.174.203])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5cf2dfsm19346195e9.29.2025.04.18.04.30.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 04:30:49 -0700 (PDT)
+Message-ID: <acc46429-6228-475e-8fd8-bc3d43c7f710@grimberg.me>
+Date: Fri, 18 Apr 2025 14:30:47 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418065313.8972-6-bincai.liu@mediatek.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] nvme-tcp: wait socket wmem to drain in queue stop
+To: Michael Liang <mliang@purestorage.com>, Keith Busch <kbusch@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>
+Cc: Mohamed Khalfella <mkhalfella@purestorage.com>,
+ Randy Jennings <randyj@purestorage.com>, linux-nvme@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250417071359.iw3fangcfcuopjza@purestorage.com>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <20250417071359.iw3fangcfcuopjza@purestorage.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 18-04-25, 14:52, Bincai Liu wrote:
-> Add code to support eDP phy for mt8196.
 
-Why is the patch title not "phy: add eDP phy...." why is this tagged
-drm? 
 
-> 
-> Signed-off-by: Bincai Liu <bincai.liu@mediatek.com>
+On 4/17/25 10:13, Michael Liang wrote:
+> This patch addresses a data corruption issue observed in nvme-tcp during
+> testing.
+>
+> Issue description:
+> In an NVMe native multipath setup, when an I/O timeout occurs, all inflight
+> I/Os are canceled almost immediately after the kernel socket is shut down.
+> These canceled I/Os are reported as host path errors, triggering a failover
+> that succeeds on a different path.
+>
+> However, at this point, the original I/O may still be outstanding in the
+> host's network transmission path (e.g., the NIC’s TX queue). From the
+> user-space app's perspective, the buffer associated with the I/O is considered
+> completed since they're acked on the different path and may be reused for new
+> I/O requests.
+>
+> Because nvme-tcp enables zero-copy by default in the transmission path,
+> this can lead to corrupted data being sent to the original target, ultimately
+> causing data corruption.
+>
+> We can reproduce this data corruption by injecting delay on one path and
+> triggering i/o timeout.
+>
+> To prevent this issue, this change ensures that all inflight transmissions are
+> fully completed from host's perspective before returning from queue
+> stop. To handle concurrent I/O timeout from multiple namespaces under
+> the same controller, always wait in queue stop regardless of queue's state.
+>
+> This aligns with the behavior of queue stopping in other NVMe fabric transports.
+>
+> Reviewed-by: Mohamed Khalfella <mkhalfella@purestorage.com>
+> Reviewed-by: Randy Jennings <randyj@purestorage.com>
+> Signed-off-by: Michael Liang <mliang@purestorage.com>
 > ---
->  drivers/phy/mediatek/Makefile      |   1 +
->  drivers/phy/mediatek/phy-mtk-edp.c | 262 +++++++++++++++++++++++++++++
->  2 files changed, 263 insertions(+)
->  create mode 100644 drivers/phy/mediatek/phy-mtk-edp.c
-> 
-> diff --git a/drivers/phy/mediatek/Makefile b/drivers/phy/mediatek/Makefile
-> index 1b8088df71e8..49d9ea42497a 100644
-> --- a/drivers/phy/mediatek/Makefile
-> +++ b/drivers/phy/mediatek/Makefile
-> @@ -4,6 +4,7 @@
->  #
->  
->  obj-$(CONFIG_PHY_MTK_DP)		+= phy-mtk-dp.o
-> +obj-$(CONFIG_PHY_MTK_DP)		+= phy-mtk-edp.o
->  obj-$(CONFIG_PHY_MTK_PCIE)		+= phy-mtk-pcie.o
->  obj-$(CONFIG_PHY_MTK_TPHY)		+= phy-mtk-tphy.o
->  obj-$(CONFIG_PHY_MTK_UFS)		+= phy-mtk-ufs.o
-> diff --git a/drivers/phy/mediatek/phy-mtk-edp.c b/drivers/phy/mediatek/phy-mtk-edp.c
-> new file mode 100644
-> index 000000000000..fadcbda55b70
-> --- /dev/null
-> +++ b/drivers/phy/mediatek/phy-mtk-edp.c
-> @@ -0,0 +1,262 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019-2022 MediaTek Inc.
-> + * Copyright (c) 2022 BayLibre
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/of.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#define PHYD_OFFSET			0x0000
-> +#define PHYD_DIG_LAN0_OFFSET		0x1000
-> +#define PHYD_DIG_LAN1_OFFSET		0x1100
-> +#define PHYD_DIG_LAN2_OFFSET		0x1200
-> +#define PHYD_DIG_LAN3_OFFSET		0x1300
-> +#define PHYD_DIG_GLB_OFFSET		0x1400
-> +
-> +#define DP_PHY_DIG_PLL_CTL_0		(PHYD_DIG_GLB_OFFSET + 0x10)
-> +#define FORCE_PWORE_STATE_FLDMASK		GENMASK(2, 0)
-> +#define FORCE_PWORE_STATE_VALUE			0x7
-> +
-> +#define IPMUX_CONTROL			(PHYD_DIG_GLB_OFFSET + 0x98)
-> +#define EDPTX_DSI_PHYD_SEL_FLDMASK		0x1
-> +#define EDPTX_DSI_PHYD_SEL_FLDMASK_POS		0
-> +
-> +#define DP_PHY_DIG_TX_CTL_0		(PHYD_DIG_GLB_OFFSET + 0x74)
-> +#define TX_LN_EN_FLDMASK			0xf
-> +
-> +#define mtk_edp_PHY_DIG_PLL_CTL_1	(PHYD_DIG_GLB_OFFSET + 0x14)
-> +#define TPLL_SSC_EN				BIT(8)
-> +
-> +#define mtk_edp_PHY_DIG_BIT_RATE		(PHYD_DIG_GLB_OFFSET + 0x3C)
-> +#define BIT_RATE_RBR				0x1
-> +#define BIT_RATE_HBR				0x4
-> +#define BIT_RATE_HBR2				0x7
-> +#define BIT_RATE_HBR3				0x9
-> +
-> +#define mtk_edp_PHY_DIG_SW_RST		(PHYD_DIG_GLB_OFFSET + 0x38)
-> +#define DP_GLB_SW_RST_PHYD			BIT(0)
-> +#define DP_GLB_SW_RST_PHYD_MASK			BIT(0)
-> +
-> +#define DRIVING_FORCE			0x30
-> +#define EDP_TX_LN_VOLT_SWING_VAL_FLDMASK	0x6
-> +#define EDP_TX_LN_VOLT_SWING_VAL_FLDMASK_POS	1
-> +#define EDP_TX_LN_PRE_EMPH_VAL_FLDMASK		0x18
-> +#define EDP_TX_LN_PRE_EMPH_VAL_FLDMASK_POS	3
-> +
-> +struct mtk_edp_phy {
-> +	struct regmap *regs;
-> +};
-> +
-> +enum DPTX_LANE_NUM {
-> +	DPTX_LANE0 = 0x0,
-> +	DPTX_LANE1 = 0x1,
-> +	DPTX_LANE2 = 0x2,
-> +	DPTX_LANE3 = 0x3,
-> +	DPTX_LANE_MAX,
-> +};
-> +
-> +enum DPTX_LANE_COUNT {
-> +	DPTX_LANE_COUNT1 = 0x1,
-> +	DPTX_LANE_COUNT2 = 0x2,
-> +	DPTX_LANE_COUNT4 = 0x4,
-> +};
-> +
-> +static void mtk_edptx_phyd_reset_swing_pre(struct mtk_edp_phy *edp_phy)
+>   drivers/nvme/host/tcp.c | 16 ++++++++++++++++
+>   1 file changed, 16 insertions(+)
+>
+> diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+> index 26c459f0198d..62d73684e61e 100644
+> --- a/drivers/nvme/host/tcp.c
+> +++ b/drivers/nvme/host/tcp.c
+> @@ -1944,6 +1944,21 @@ static void __nvme_tcp_stop_queue(struct nvme_tcp_queue *queue)
+>   	cancel_work_sync(&queue->io_work);
+>   }
+>   
+> +static void nvme_tcp_stop_queue_wait(struct nvme_tcp_queue *queue)
 > +{
-> +	regmap_update_bits(edp_phy->regs, PHYD_DIG_LAN0_OFFSET + DRIVING_FORCE,
-> +			   EDP_TX_LN_VOLT_SWING_VAL_FLDMASK |
-> +			   EDP_TX_LN_PRE_EMPH_VAL_FLDMASK, 0x0);
-> +	regmap_update_bits(edp_phy->regs, PHYD_DIG_LAN1_OFFSET + DRIVING_FORCE,
-> +			   EDP_TX_LN_VOLT_SWING_VAL_FLDMASK |
-> +			   EDP_TX_LN_PRE_EMPH_VAL_FLDMASK, 0x0);
-> +	regmap_update_bits(edp_phy->regs, PHYD_DIG_LAN2_OFFSET + DRIVING_FORCE,
-> +			   EDP_TX_LN_VOLT_SWING_VAL_FLDMASK |
-> +			   EDP_TX_LN_PRE_EMPH_VAL_FLDMASK, 0x0);
-> +	regmap_update_bits(edp_phy->regs, PHYD_DIG_LAN3_OFFSET + DRIVING_FORCE,
-> +			   EDP_TX_LN_VOLT_SWING_VAL_FLDMASK |
-> +			   EDP_TX_LN_PRE_EMPH_VAL_FLDMASK, 0x0);
+> +	int timeout = 100;
+> +
+> +	while (timeout > 0) {
+> +		if (!sk_wmem_alloc_get(queue->sock->sk))
+> +			return;
+> +		msleep(2);
+> +		timeout -= 2;
+> +	}
+> +	dev_warn(queue->ctrl->ctrl.device,
+> +		 "qid %d: wait draining sock wmem allocation timeout\n",
+> +		 nvme_tcp_queue_id(queue));
 > +}
 > +
-> +static int mtk_edp_phy_init(struct phy *phy)
-> +{
-> +	struct mtk_edp_phy *edp_phy = phy_get_drvdata(phy);
-> +
-> +	regmap_update_bits(edp_phy->regs, IPMUX_CONTROL, 0,
-> +			   EDPTX_DSI_PHYD_SEL_FLDMASK);
-> +
-> +	regmap_update_bits(edp_phy->regs, DP_PHY_DIG_PLL_CTL_0,
-> +			   FORCE_PWORE_STATE_VALUE,
-> +			   FORCE_PWORE_STATE_FLDMASK);
-> +
-> +	return 0;
+>   static void nvme_tcp_stop_queue(struct nvme_ctrl *nctrl, int qid)
+>   {
+>   	struct nvme_tcp_ctrl *ctrl = to_tcp_ctrl(nctrl);
+> @@ -1961,6 +1976,7 @@ static void nvme_tcp_stop_queue(struct nvme_ctrl *nctrl, int qid)
+>   	/* Stopping the queue will disable TLS */
+>   	queue->tls_enabled = false;
+>   	mutex_unlock(&queue->queue_lock);
+> +	nvme_tcp_stop_queue_wait(queue);
+>   }
+>   
+>   static void nvme_tcp_setup_sock_ops(struct nvme_tcp_queue *queue)
 
-consider making this void return type
-
--- 
-~Vinod
+This makes sense. But I do not want to pay this price serially.
+As the concern is just failover, lets do something like: diff --git 
+a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c index 
+5041cbfd8272..d482a8fe2c4b 100644 --- a/drivers/nvme/host/tcp.c +++ 
+b/drivers/nvme/host/tcp.c @@ -2031,6 +2031,8 @@ static void 
+nvme_tcp_stop_io_queues(struct nvme_ctrl *ctrl) for (i = 1; i < 
+ctrl->queue_count; i++) nvme_tcp_stop_queue(ctrl, i); + for (i = 1; i < 
+ctrl->queue_count; i++) + nvme_tcp_stop_queue_wait(&ctrl->queues[i]); } 
+static int nvme_tcp_start_io_queues(struct nvme_ctrl *ctrl, @@ -2628,8 
++2630,10 @@ static void nvme_tcp_complete_timed_out(struct request *rq) 
+{ struct nvme_tcp_request *req = blk_mq_rq_to_pdu(rq); struct nvme_ctrl 
+*ctrl = &req->queue->ctrl->ctrl; + int idx = 
+nvme_tcp_queue_id(req->queue); - nvme_tcp_stop_queue(ctrl, 
+nvme_tcp_queue_id(req->queue)); + nvme_tcp_stop_queue(ctrl, idx); + 
+nvme_tcp_stop_queue_wait(&ctrl->queues[idx]); 
+nvmf_complete_timed_out_request(rq); }
