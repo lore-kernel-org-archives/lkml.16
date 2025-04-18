@@ -1,76 +1,59 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4B978F3B;
-	Fri, 18 Apr 2025 12:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F14578F3B;
+	Fri, 18 Apr 2025 12:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744980120; cv=none; b=XiGqBJDoj65FikcEDbASR/mOYRfAvOcbRfFaABIcx4oz+2OpK9enSJh9rjus9APSWQaXIK4ZSVqU/XakhPJXxjvUIiPAPfjfC+pAwNW7lKks7Zz3Eb5fEYPQd0XB3Uc3dOShTipwTUprJGhbCys9xghobkkJVFvMjbVBH91DN/Y=
+	t=1744980277; cv=none; b=ZtT7gWwivBbEtLoYCfd/F2O2ljlxyCAmfuDTfxdR8OYRzvtIgNhpp5LacRFBquE907jYx5Bna0h8IJOcXvq36NjXgkT91Ukv4BYxbfOzMP8XQz8SnLizR6rfJKtxF/lHknnn5ssBUNTYIwDy5ky1qFwBYCrEqu1LF7x8Rzpwyho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744980120; c=relaxed/simple;
-	bh=74lG1heVu8ZQPyZ+4RI7fAOwAeW+JzuGBLrWapfasMo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EsZGsvaXNiEgclfExaMzwyX33E6HcWes+6X4Vu7uEPN+T/alzaEBOt8T5AaFouCt9B/5rbsnUc9GiyRCwbBamAOOEIYJEh2pT+jqavutTQo4hZs2uFGumw90Fqx6TAcXvZ8TSZyE9sH3nxj+YX7upyUQp6bvXE4Qn54ivQ/NDdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FUMiwnUu; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FUMiwnUu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22A41C4CEE2;
-	Fri, 18 Apr 2025 12:41:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744980119;
-	bh=74lG1heVu8ZQPyZ+4RI7fAOwAeW+JzuGBLrWapfasMo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FUMiwnUuHH9MRj9WKAlVsN5wC0tDGqj3Ek7/D7BQDzBMGOJlVGAGeC+RZGaq7WRsd
-	 NBBowfX63J+WdAruAJOgQos73kbiU0XCyors6rhQb60jTA1YqwSSICe7BCUhVvL3TM
-	 ROrIYN9v+3lZtRxA/yl1ekXxF0Ne+P2TaUMeHB8dZa/ppfj+X9f38iVHqIANGCjF0Y
-	 5hSJgZ0tNL1WIDuSHz0A7J6ewoFKzOnTvb6xmfeDHRLYQpZwImShQky3BzJM2P4YYa
-	 olFVG+8L0ipHTbY6IPB4vMgg5MeKg8stNcEevk9kvqyNOxHOkqY9msBCnQI+JSFVvu
-	 uYK9ED7HKziqw==
-Date: Fri, 18 Apr 2025 14:41:25 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Greg KH <gregkh@linuxfoundation.org>, stable <stable@vger.kernel.org>,
-	linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	Sandipan Das <sandipan.das@amd.com>, x86@kernel.org
-Subject: Re: [tip: x86/urgent] x86/cpu/amd: Fix workaround for erratum 1054
-Message-ID: <aAJIdUAHfwo8d7WS@gmail.com>
-References: <174495817953.31282.5641497960291856424.tip-bot2@tip-bot2>
- <20250418104013.GAaAIsDW2skB12L-nm@renoirsky.local>
- <aAJBgCjGpvyI43E3@gmail.com>
- <20250418123713.GCaAJHedTC_JWN__Td@fat_crate.local>
+	s=arc-20240116; t=1744980277; c=relaxed/simple;
+	bh=Yx/Erk4kjCy5/yX09htdpPXarUGHqEbNGROVMZAD8AU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=sIzowKw4ss8YaWAoOtqV/8tHUUs45YJ3U1mQ13YE7frMdXiyIm8V+zNHQ+4I+G25vfPJYQwC0W+fhjtgJLXYa1Y9ndTTPoO4BzEK+9o36bTRycsNx2pUE832GccA8hqn6yTFcBML4MxlqSjQrQQj1iOEFXQYgD+F0XHJh4AYWtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 7D36C92009C; Fri, 18 Apr 2025 14:44:32 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 6E64492009B;
+	Fri, 18 Apr 2025 13:44:32 +0100 (BST)
+Date: Fri, 18 Apr 2025 13:44:32 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+    Oleg Nesterov <oleg@redhat.com>, linux-mips@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] MIPS: Fix MAX_REG_OFFSET and remove zero-length struct
+ member
+In-Reply-To: <EC98BAE8-8269-4169-B3A2-5F426E77C223@linux.dev>
+Message-ID: <alpine.DEB.2.21.2504181337350.18253@angie.orcam.me.uk>
+References: <20250417174712.69292-2-thorsten.blum@linux.dev> <aAIF_kEFlOOVNDaE@alpha.franken.de> <DAD22E95-6D33-43D5-B5E5-3A7B45A63944@linux.dev> <alpine.DEB.2.21.2504181108170.18253@angie.orcam.me.uk> <EC98BAE8-8269-4169-B3A2-5F426E77C223@linux.dev>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418123713.GCaAJHedTC_JWN__Td@fat_crate.local>
+Content-Type: text/plain; charset=US-ASCII
 
+On Fri, 18 Apr 2025, Thorsten Blum wrote:
 
-* Borislav Petkov <bp@alien8.de> wrote:
-
-> > plus the erratum is a perf-counters information quality bug 
-> > affecting what appears to be a limited number of models, with the 
-> > workaround
+> > Though the fix is incorrect for CPU_CAVIUM_OCTEON, because it doesn't 
+> > allow one to access the second half of the last register, and I find it 
+> > exceedingly complex anyway.  Just:
+> > 
+> > #define MAX_REG_OFFSET \
+> > (offsetof(struct pt_regs, __last) - sizeof(unsigned long))
+> > 
+> > will do (as `regs_get_register' operates on `unsigned long' quantities).
 > 
-> No, the fix is needed because Zen2 and newer won't set 
-> MSR_K7_HWCR_IRPERF_EN_BIT. It needs to go everywhere.
+> Does regs_get_register() even work for CPU_CAVIUM_OCTEON when accessing
+> the last two registers because they're both ULL, not UL? (independent of
+> my patch)
 
-Fair enough - the current version already has Cc: stable:
+ Or rather two arrays of registers.  With 32-bit configurations their 
+contents have to be retrieved by pieces.  I don't know if it's handled by 
+the caller(s) though as I'm not familiar with this interface.
 
-  263e55949d89 x86/cpu/amd: Fix workaround for erratum 1054
-
-  ...
-
-  Fixes: 232afb557835 ("x86/CPU/AMD: Add X86_FEATURE_ZEN1")
-  Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-  Signed-off-by: Ingo Molnar <mingo@kernel.org>
-  Acked-by: Borislav Petkov <bp@alien8.de>
-  Cc: stable@vger.kernel.org
-  Link: https://lore.kernel.org/r/caa057a9d6f8ad579e2f1abaa71efbd5bd4eaf6d.1744956467.git.sandipan.das@amd.com
-
-Thanks,
-
-	Ingo
+  Maciej
