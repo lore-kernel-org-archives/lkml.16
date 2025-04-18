@@ -1,155 +1,194 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BA726B95E;
-	Fri, 18 Apr 2025 13:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C579277009
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 13:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744982718; cv=none; b=pS4fmgGhcUergXWkaz93mE7RmVVv5ThC94vQEHDL8BOdZPin0Hmg2jW4VH9GqtaMgPBjd/TPJSrijmR5e5VPhPuBqrjOj45WE+jCDxF6tlNr9haeWBnVLgN4+4UC4IVt+oOjYOR4rcmwZRBmibTIbG7krneWnk0nk/E+RvSf8rA=
+	t=1744982745; cv=none; b=eGMHQvbiFKhyWuzmCxPFntzQSe7WCasdXbqE/mudQ/J4w3tRJbaq2vczQ/5PzslDEJmvNr9d2sfp5rr0/xqeBRZjXOCELDNqyulkMO/U3XnENTD1OJuOpyQBOBrZ9myryRNFADiS9kN5X/Usw0pyrcFF0aYH5sO5Ype6ImLanCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744982718; c=relaxed/simple;
-	bh=MuXimpFpwwqcTDObiqnJJmWYWHO19US5y6oXa8it9is=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ORuUoe0Lyxwqrhpov5+vDfURhniJhu1vqUsewrEw0LEmkFHUIZmGiEc3wy5M5v7p8j/lqAc/PLURDB8d4S9OGo4A/Brzhy2TmMxf6ZsOM633NgzWHEleiE5gljzJh4U1M128clHSm4QoPdW1AH+obmxCaSMfZmxgInlc6cdkqL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LWMxsFrp; arc=none smtp.client-ip=209.85.208.54
+	s=arc-20240116; t=1744982745; c=relaxed/simple;
+	bh=ywu4EspQXslvbOXpVXmbcqYTOvi+d1sDMqlvv+vgTU0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aI5W8mz2ZF3pogCfDqHkcUP/Ijb96DXSrj9af/12MODE0OH+gwlm2BfWpt0uYgwRaVcmdheRl5xA7tTjn+kSAVVMHiZCaddpszlr/0oFLQAuJrpcKQaBPF6XTdfZF0HKPIpQC0RDJ2eV9MqFA/Y5gTtnPYwLizVRqgT9XQgwfIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kl4bijeT; arc=none smtp.client-ip=209.85.215.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LWMxsFrp"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5ebf57360b6so242117a12.3;
-        Fri, 18 Apr 2025 06:25:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kl4bijeT"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b0459668101so230773a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 06:25:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744982715; x=1745587515; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pVpxnI/29mpkrDRARmH1s8IOVcoXlXa8dMGnnZK1EKQ=;
-        b=LWMxsFrpSiFxNMC11ku/TrjHL4fD4defmTrmrnAv6knoCbtzmCgZARneDIl8va5xFp
-         iC7ts1Tv9W7rPUk/61w6ftLsm1Oi0Gs6De12I8a4ovrvwhl3fRZElzswUpbKqhfNPfuu
-         zaAkc1GyVuYlr6ylrNspZLgpPSnis5uTV6E0pAakbWcufEBdTmQeOmgljfRbo6lTaqvj
-         3HU7BwYjPg5/fSZjEohayL3Iko3SfjJXsKlBLfQTv31IzZJsdzsj/DoIBMF2l5MiZQQP
-         pNgMAmbJSghiDXoRGqUnAIy+A99fNPCte9Eal67Xd9LYumur1vVzdLBBpQKtpLOa/zcp
-         22Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744982715; x=1745587515;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1744982743; x=1745587543; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pVpxnI/29mpkrDRARmH1s8IOVcoXlXa8dMGnnZK1EKQ=;
-        b=hbkKX6zp7fQCVNVjjEyyXJPR4OGOyQImi7gSBXycjd390sJFjByhWDvxKt72LFlh/J
-         gIHdZrPHU6M5bNtunAtSJFa0afHv6XbqupgrfeQdOzmHXsGeWucO+FzvIqA+qjfWHNfU
-         kTPJT6IUgQtQuNr1RYSqetZYVc/7SWWxXqwxiXwrk5jPORmS/YZxhqFZ3uxo41tnwbgG
-         WV2RXS1lDCZ1n5eLDZSeqYErXbythVgx6A+nwF8jfR8ukhGsJYV4raBuqmp6LROzlVFy
-         NfvZ7rv9F81GLL9cMC2TE9KLtwEdPtapXCxrciZYNy/VNNZSSJSxRhKb1NR5Y19U4hbl
-         42hA==
-X-Forwarded-Encrypted: i=1; AJvYcCVkC1KgF1uM0PzRiWkEHdXemCJnJHqjVtQCV7Js6U5l1OeZXsMlfASNMZNdBDiglY335JtsZd1Y@vger.kernel.org, AJvYcCXqsBK6RutFsP2AEzHtRXPIdOx+U199VgXk34Gl3ofb2rK0dHly3N2HEYLvtyWfK4PpbHvxFvJpN4PlsvY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZTfCuKtK9ss5PrB57jS71FxfECE9AXhcQFlrEXFmfL7yeenFx
-	O/oDYrrZpEFcfgwHii2exFXSciSEOCzNztNaZm3BjscRZSQPqcL9
-X-Gm-Gg: ASbGnctKq2YlELQdqYavLlMkePtw4Mmqbl4VVsM0OGsAkoIIkZKe6RVAtwmQO5plQet
-	VqXtsNpjZczheNxWPrBMqGg5oSHMtEamcBLNdca0hqftxdzmaiYn7JP+X715Ugdq9ujdd2tlHSA
-	OlY3uADCnvnDVZiulXSfdlai4TDBGriu72ZnWjkCmuNig2Ls31jAJN6NaiqEmdsgK/zrSV7qEsJ
-	wL/0FyhCNh2WuOqcssFkbjck+DEERramojXEj2588O6nJQxrDc+fDwIwbyvNBhUdM1xhe/OrUOk
-	4/r/wrb2O4Pap/mx7UrqvUx0dUnv
-X-Google-Smtp-Source: AGHT+IHY8YYl+gLe7z4XbImJlTJtfNKJ64WGJaDAJCdf8mISh7qKy9awk9jjoRAY+BWRqWp8cGMOBA==
-X-Received: by 2002:a05:6402:350f:b0:5f4:5dfa:992c with SMTP id 4fb4d7f45d1cf-5f628536df7mr802836a12.3.1744982714460;
-        Fri, 18 Apr 2025 06:25:14 -0700 (PDT)
-Received: from skbuf ([188.25.50.178])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef45779sm118202566b.127.2025.04.18.06.25.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 06:25:13 -0700 (PDT)
-Date: Fri, 18 Apr 2025 16:25:11 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Wei Fang <wei.fang@nxp.com>
-Cc: claudiu.manoil@nxp.com, vladimir.oltean@nxp.com, xiaoning.wang@nxp.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, christophe.leroy@csgroup.eu,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 net-next 02/14] net: enetc: add command BD ring
- support for i.MX95 ENETC
-Message-ID: <20250418132511.azibvntwzh6odqvx@skbuf>
-References: <20250411095752.3072696-1-wei.fang@nxp.com>
- <20250411095752.3072696-1-wei.fang@nxp.com>
- <20250411095752.3072696-3-wei.fang@nxp.com>
- <20250411095752.3072696-3-wei.fang@nxp.com>
+        bh=nyC6qiVT+u6rR7PgNOginiie1BVxcpXDs4+aZTBzC9Y=;
+        b=kl4bijeT/F8/qZvmpvJXK86cOeP5n7cIZXKXn+yqF8Qm3YAM91ryQhVkzTe7eyUk9t
+         3Hvk/8c2zIpd1leam5R0880LNy9vcbAVUayl73aMOHph+3iOvfVFgpwM8DOTLJgngFx+
+         F0xV6obgFQ2wO4K9xb/KuzvarZo+Y5dA3Yi2O65puHwSwGAXse3x2KB6EQRLWJCMaOP+
+         JStJOOK/2teSHpDIUj3az2kuoIMXI1rHgaSpZMjB/pjYWuNg52AooTcJ5PgdL07nfgYk
+         SZl2GCp7fU/QLsxkC+w/F621ZYLfRCU0y+7MN29K7ZcdSD1+7xPc8gau9aWmFLkiGHBR
+         ChZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744982743; x=1745587543;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nyC6qiVT+u6rR7PgNOginiie1BVxcpXDs4+aZTBzC9Y=;
+        b=EfFRyYIjnW+5w7N7zWKSYhm2WtIDj3w4wpH2HOTUqdrgGvOewOkuIwtiQpbLkAua8N
+         vr1yXpUNJ76b3TrjMBuR0D0VGP1PYSZ8TzNsfxzWIfQjK9Z3TmyDbkyTyg+hq2+vRyAS
+         uVXH28D5KsFPqObkWVJ+N/lRlR7ba7JJd7i8ne/FmCb1bUDHoMeDMKp+cF/sGv5h17HU
+         Il7fIqi5znqkYEbdhXS5jRaDNR/45xc0QPRTUosromlQYXaZMCq1dpPjW3fRf65v98wo
+         gcx16gEtiLw6sefSKjcP3TVaW4tbOJM4fi6xFNQ0qVF6DBN9TSXrlb97gwO80kCWapzZ
+         giMg==
+X-Forwarded-Encrypted: i=1; AJvYcCVUVswkQ8HdffjgmZ5wKWZ3hL9OkH8JhXuGRvMPfaG91N4hH+giweoiXJ/nfrHls5XIOwH7nEfeJUIiyTs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyM/dXDd54iKUQ+5z63hXJhIojIWSIE1bqRMRBjU5gI3ZbDH1IO
+	Popw66Mjx3wD04k9KZSNKVxyfmy5GPyOt3iAtkWvycdHC/ViZanDWstndGmIxl3n1Qclm5PIA5k
+	irjU5VmY693iZ4VjzPIGy1mDuNSY=
+X-Gm-Gg: ASbGncsrsjM4zPbYCNmLyZSuArPBjY7Ei6FN+Ran7640EnQkOR3RgQXrv7sviIxmytQ
+	WwQPt/cxzMbRSV1SItEoS9fPvOic4YOSx6k5L+fC0z6LrrF3D2RtdjI//xq5sDVC0YIChdZVWua
+	nbtLEYZHDqlgCyHRpCcuU8EA==
+X-Google-Smtp-Source: AGHT+IEkg5l32NGk3QoxdJcXn0CidWWNtFY5WaOURIUpxvd0XNAJikgTjGRg3HBLp/wS28RhXBbDrZYprx9XXbEdsWo=
+X-Received: by 2002:a17:902:fc46:b0:21f:3e2d:7d43 with SMTP id
+ d9443c01a7336-22c5361fd79mr16154295ad.13.1744982743399; Fri, 18 Apr 2025
+ 06:25:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250411095752.3072696-3-wei.fang@nxp.com>
- <20250411095752.3072696-3-wei.fang@nxp.com>
+References: <20250418002117.130612-1-linux@treblig.org> <20250418002117.130612-5-linux@treblig.org>
+In-Reply-To: <20250418002117.130612-5-linux@treblig.org>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Fri, 18 Apr 2025 09:25:31 -0400
+X-Gm-Features: ATxdqUFslTsaOCqwA3wvaxSTpSZ6IN0_tcLcXqKz9RibnGUgvP0nVR7xs914qb8
+Message-ID: <CADnq5_PWLjCAfPx_2K+r=tuwf=+dN4iP1-OnyfP8mgXsR1Ting@mail.gmail.com>
+Subject: Re: [PATCH 4/4] drm/amd/display: Remove unused *vbios_smu_set_dprefclk
+To: linux@treblig.org
+Cc: alexander.deucher@amd.com, harry.wentland@amd.com, sunpeng.li@amd.com, 
+	siqueira@igalia.com, christian.koenig@amd.com, airlied@gmail.com, 
+	simona@ffwll.ch, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 11, 2025 at 05:57:40PM +0800, Wei Fang wrote:
-> diff --git a/drivers/net/ethernet/freescale/enetc/enetc_cbdr.c b/drivers/net/ethernet/freescale/enetc/enetc_cbdr.c
-> index 20bfdf7fb4b4..ecb571e5ea50 100644
-> --- a/drivers/net/ethernet/freescale/enetc/enetc_cbdr.c
-> +++ b/drivers/net/ethernet/freescale/enetc/enetc_cbdr.c
-> @@ -60,6 +60,45 @@ void enetc_teardown_cbdr(struct enetc_cbdr *cbdr)
+Applied patches 1, 3, 4.  Thanks!
+
+On Thu, Apr 17, 2025 at 8:28=E2=80=AFPM <linux@treblig.org> wrote:
+>
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+>
+> rn_vbios_smu_set_dprefclk() was added in 2019 by
+> commit 4edb6fc91878 ("drm/amd/display: Add Renoir clock manager")
+> rv1_vbios_smu_set_dprefclk() was also added in 2019 by
+> commit dc88b4a684d2 ("drm/amd/display: make clk mgr soc specific")
+>
+> neither have been used.
+>
+> Remove them.
+>
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> ---
+>  .../dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.c       | 14 --------------
+>  .../dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.h       |  1 -
+>  .../dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.c        | 14 --------------
+>  .../dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.h        |  1 -
+>  4 files changed, 30 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbi=
+os_smu.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_s=
+mu.c
+> index 19897fa52e7e..d82a52319088 100644
+> --- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.=
+c
+> +++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.=
+c
+> @@ -142,17 +142,3 @@ int rv1_vbios_smu_set_dispclk(struct clk_mgr_interna=
+l *clk_mgr, int requested_di
+>
+>         return actual_dispclk_set_mhz * 1000;
 >  }
->  EXPORT_SYMBOL_GPL(enetc_teardown_cbdr);
->  
-> +int enetc4_setup_cbdr(struct enetc_si *si)
-> +{
-> +	struct ntmp_user *user = &si->ntmp_user;
-> +	struct device *dev = &si->pdev->dev;
-> +	struct enetc_hw *hw = &si->hw;
-> +	struct netc_cbdr_regs regs;
-> +
-> +	user->cbdr_num = 1;
-> +	user->cbdr_size = NETC_CBDR_BD_NUM;
-> +	user->dev = dev;
-> +	user->ring = devm_kcalloc(dev, user->cbdr_num,
-> +				  sizeof(struct netc_cbdr), GFP_KERNEL);
-> +	if (!user->ring)
-> +		return -ENOMEM;
-> +
-> +	/* set CBDR cache attributes */
-> +	enetc_wr(hw, ENETC_SICAR2,
-> +		 ENETC_SICAR_RD_COHERENT | ENETC_SICAR_WR_COHERENT);
-> +
-> +	regs.pir = hw->reg + ENETC_SICBDRPIR;
-> +	regs.cir = hw->reg + ENETC_SICBDRCIR;
-> +	regs.mr = hw->reg + ENETC_SICBDRMR;
-> +	regs.bar0 = hw->reg + ENETC_SICBDRBAR0;
-> +	regs.bar1 = hw->reg + ENETC_SICBDRBAR1;
-> +	regs.lenr = hw->reg + ENETC_SICBDRLENR;
-> +
-> +	return netc_setup_cbdr(dev, user->cbdr_size, &regs, user->ring);
-> +}
-> +EXPORT_SYMBOL_GPL(enetc4_setup_cbdr);
-> +
-> +void enetc4_teardown_cbdr(struct enetc_si *si)
-> +{
-> +	struct ntmp_user *user = &si->ntmp_user;
-> +
-> +	netc_teardown_cbdr(user->dev, user->ring);
-> +	user->dev = NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(enetc4_teardown_cbdr);
-
-I wanted to ask why isn't netc_setup_cbdr() merged into enetc4_setup_cbdr()
-(and likewise for teardown_cbdr), because they sound very similar, and
-they operate on the same data - one is literally a continuation of the
-other. Then I looked downstream where the netc_switch is another API
-user of netc_setup_cbdr() and netc_teardown_cbdr().
-
-Do you think you could rename netc_setup_cbdr() into something like below:
-
-struct ntmp_user *ntmp_user_create(struct device *dev, size_t num_cbdr,
-				   const struct netc_cbdr_regs *regs);
-void ntmp_user_destroy(struct ntmp_user *user);
-
-From a data encapsulation perspective, it would be great if the outside
-world only worked with an opaque struct ntmp_user * pointer.
-
-Hide NETC_CBDR_BD_NUM from include/linux/fsl/ntmp.h if API users don't
-need to customize it, and let ntmp_user_create() set it.
-
-Move even more initialization into ntmp_user_create(), like the
-allocation of "user->ring", and reduce the number of arguments.
-
-In my opinion this would be a more natural organization of the code.
+> -
+> -int rv1_vbios_smu_set_dprefclk(struct clk_mgr_internal *clk_mgr)
+> -{
+> -       int actual_dprefclk_set_mhz =3D -1;
+> -
+> -       actual_dprefclk_set_mhz =3D rv1_vbios_smu_send_msg_with_param(
+> -                       clk_mgr,
+> -                       VBIOSSMC_MSG_SetDprefclkFreq,
+> -                       khz_to_mhz_ceil(clk_mgr->base.dprefclk_khz));
+> -
+> -       /* TODO: add code for programing DP DTO, currently this is down b=
+y command table */
+> -
+> -       return actual_dprefclk_set_mhz * 1000;
+> -}
+> diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbi=
+os_smu.h b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_s=
+mu.h
+> index 083cb3158859..81d7c912549c 100644
+> --- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.=
+h
+> +++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.=
+h
+> @@ -27,6 +27,5 @@
+>  #define DAL_DC_DCN10_RV1_CLK_MGR_VBIOS_SMU_H_
+>
+>  int rv1_vbios_smu_set_dispclk(struct clk_mgr_internal *clk_mgr, int requ=
+ested_dispclk_khz);
+> -int rv1_vbios_smu_set_dprefclk(struct clk_mgr_internal *clk_mgr);
+>
+>  #endif /* DAL_DC_DCN10_RV1_CLK_MGR_VBIOS_SMU_H_ */
+> diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbio=
+s_smu.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu=
+.c
+> index 23b390245b5d..5a633333dbb5 100644
+> --- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.c
+> +++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.c
+> @@ -164,20 +164,6 @@ int rn_vbios_smu_set_dispclk(struct clk_mgr_internal=
+ *clk_mgr, int requested_dis
+>         return actual_dispclk_set_mhz * 1000;
+>  }
+>
+> -int rn_vbios_smu_set_dprefclk(struct clk_mgr_internal *clk_mgr)
+> -{
+> -       int actual_dprefclk_set_mhz =3D -1;
+> -
+> -       actual_dprefclk_set_mhz =3D rn_vbios_smu_send_msg_with_param(
+> -                       clk_mgr,
+> -                       VBIOSSMC_MSG_SetDprefclkFreq,
+> -                       khz_to_mhz_ceil(clk_mgr->base.dprefclk_khz));
+> -
+> -       /* TODO: add code for programing DP DTO, currently this is down b=
+y command table */
+> -
+> -       return actual_dprefclk_set_mhz * 1000;
+> -}
+> -
+>  int rn_vbios_smu_set_hard_min_dcfclk(struct clk_mgr_internal *clk_mgr, i=
+nt requested_dcfclk_khz)
+>  {
+>         int actual_dcfclk_set_mhz =3D -1;
+> diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbio=
+s_smu.h b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu=
+.h
+> index 1ce19d875358..f76fad87f0e1 100644
+> --- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.h
+> +++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.h
+> @@ -30,7 +30,6 @@ enum dcn_pwr_state;
+>
+>  int rn_vbios_smu_get_smu_version(struct clk_mgr_internal *clk_mgr);
+>  int rn_vbios_smu_set_dispclk(struct clk_mgr_internal *clk_mgr, int reque=
+sted_dispclk_khz);
+> -int rn_vbios_smu_set_dprefclk(struct clk_mgr_internal *clk_mgr);
+>  int rn_vbios_smu_set_hard_min_dcfclk(struct clk_mgr_internal *clk_mgr, i=
+nt requested_dcfclk_khz);
+>  int rn_vbios_smu_set_min_deep_sleep_dcfclk(struct clk_mgr_internal *clk_=
+mgr, int requested_min_ds_dcfclk_khz);
+>  void rn_vbios_smu_set_phyclk(struct clk_mgr_internal *clk_mgr, int reque=
+sted_phyclk_khz);
+> --
+> 2.49.0
+>
