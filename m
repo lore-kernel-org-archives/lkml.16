@@ -1,76 +1,163 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF4A1E4AB;
-	Fri, 18 Apr 2025 03:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51B34770E2;
+	Fri, 18 Apr 2025 03:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744947689; cv=none; b=b07z/2bkTgnE1nbxq4SEvrQ+o3qxxCP0r05awAzo0NzH0IRPgrIHxeNVTZLb9xdb3Fw8fN5He80nxKUsiZ2fm+giYSY5NA047NR2LD9ha3pEBrvBQ8ndBsqewrwYIGhxpqtN71VNXNRqPTHBIXzSh8lb1w3FzIqPkefUF3/nKuo=
+	t=1744947701; cv=none; b=uR7a6nN10Y/jjhreDwhd/nk8h5qIQKCnp93G32wQZO5JGL6w9qGXD0L53YFjOIUTscJqfKfXURKe5P2i7drIU8zoFbOAHASTSZMkmO/D06j8ckry20QHAn8x5ccPmvuOQ2DsjLzuwnAM1maGcCvMoMlEK1jEBkjxWN9Vb+Pc87s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744947689; c=relaxed/simple;
-	bh=ttUvWPDxm515yLqjg2yqyoobvQBv22N3uj4nNc/ZZ7Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UArYrrhO3RXQI9ktkzOGZOA+DTBFHxSDosnNaMUI3qbUPDcvgeHTxu1r1EgeDkVNg6B7CIov6jDAQCJlXxJxS4vqYHKxWXImI9Q6RynVYInOY9nR8MQtdwoC8WgTDAz99XIW3ghGWe8VtJFb9sY6fqy7KMBz4cuSnP+A0bUmtS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=VXq5/xSO; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1744947701; c=relaxed/simple;
+	bh=lBgE/VTwfPL/98uIqYAL2OGCRqK6PQxVZcPsVcJjVlo=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=ouTrZrEwTTyovL9LJGtS31bqAXXvbPnJfBZfKHHuv/af0jqoOpSLJXVFuHJ4qp1Dgmjic0ZtKTrJwW9oVLGTKuzWrq2gxBTGi5acAxXNzMb+hfzmwTeg1oubiW5Rv3FbYmaE7LJ7zx2DQawmOva4YHYxvsmd3zeL1qkUbNgxL/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=P5cKFKig; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="VXq5/xSO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=DeLdxRY2vHoEKdWJ6sFRDUQGcMLf7d+q/0pRxlVp8JU=; b=VXq5/xSOluY3RsxfcvuVGjWtZR
-	7jvkDa6bj3M1EaAcxKxQY1WDgoWtxg/rm+6XAbBrtL/22i8+WyfgIn92PWApVLEpoDfegP0QpPOHV
-	j49Y4XDyIw1sIIkoEwstoQy941i447cYR8qbCXF/sECr1WK62m3qCFnYJ70WAowk7ZhpqPurKZXYy
-	QmRJZLHzlF1wf0IN5hkkxnn1hHHtG0hLnxes0shefNdMuya+B9FXC2X7iO7mGssssJqcNQsVxqf5u
-	e6j7zakwSXnJ9DlD7H7sHRU6fBUhGHklvmSKWQIcNMVdPm4+5+iJiZ2Hqul+k2BQgzx4AOyJ+YYD8
-	8L9xBumA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u5cbR-00Gek0-2H;
-	Fri, 18 Apr 2025 11:41:22 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 18 Apr 2025 11:41:21 +0800
-Date: Fri, 18 Apr 2025 11:41:21 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, x86@kernel.org, ardb@kernel.org,
-	Jason@zx2c4.com, torvalds@linux-foundation.org
-Subject: Re: [PATCH 8/9] crypto: x86/chacha - remove the skcipher algorithms
-Message-ID: <aAHJ4X95vIujLPpu@gondor.apana.org.au>
-References: <20250405182609.404216-9-ebiggers@kernel.org>
- <aAHF0X2I5ydEJK1p@gondor.apana.org.au>
- <20250418033829.GC38960@quark.localdomain>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="P5cKFKig"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id; bh=Q1buKkeBBzshig53X4
+	Su1cjMDcBScgw+OeLMBh2Msks=; b=P5cKFKigmEICtLzPFpjFmLX7oCVSe5PpwZ
+	LhViNNa8ObsMph7IET805fCHhSxCcr2fnq+UM27qFfwGMK1/ynvP8P492C1moLz+
+	vdXoGuRkHOuEXmC4abIlXslW72BVJEV1xCo5nv0uQtFCXl7sPN5jEZ6Zet8MOHwM
+	iOEalOxUE=
+Received: from yang-Virtual-Machine.mshome.net (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wAHp3fKyQFo8gRoAg--.90S2;
+	Fri, 18 Apr 2025 11:40:58 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Feng Yang <yangfeng@kylinos.cn>
+Subject: [PATCH bpf-next] bpf: Remove bpf_get_smp_processor_id_proto
+Date: Fri, 18 Apr 2025 11:40:55 +0800
+Message-Id: <20250418034055.5757-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID:_____wAHp3fKyQFo8gRoAg--.90S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxCrWDWFW8Ww43GrWUWw1rWFg_yoWrurWUpF
+	n8Ary3Cr4kta1aq3srJrs2va45A34UZ3y8Ca48G34Y9r4qvr9rt3WUtF4a9FyrZry2k343
+	Aa1jqrWYkryIqa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UD739UUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiTg0zeGgBxEjF+AAAsQ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418033829.GC38960@quark.localdomain>
 
-On Thu, Apr 17, 2025 at 08:38:29PM -0700, Eric Biggers wrote:
->
-> Well, I forgot that an empty module_exit needs to be kept around for the module
-> to be removable.  I'll send a patch that adds these back in, though I'm doubtful
-> that anyone ever removes these modules in practice.
+From: Feng Yang <yangfeng@kylinos.cn>
 
-I just tried to remove chacha_x86_64 in order to make sure that I
-was actually using the arch-optimised version of chacha and that's
-how I noticed.
+All BPF programs either disable CPU preemption or CPU migration,
+so the bpf_get_smp_processor_id_proto can be safely removed,
+and the bpf_get_raw_smp_processor_id_proto in bpf_base_func_proto works perfectly.
 
-I remove the algorithm modules all the time because it's much easier
-to rebuild one module rather than the whole kernel.
+Suggested-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+---
+ include/linux/bpf.h      |  1 -
+ kernel/bpf/core.c        |  1 -
+ kernel/bpf/helpers.c     | 12 ------------
+ kernel/trace/bpf_trace.c |  2 --
+ net/core/filter.c        |  6 ------
+ 5 files changed, 22 deletions(-)
 
-Cheers,
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 3f0cc89c0622..36e525141556 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -3316,7 +3316,6 @@ extern const struct bpf_func_proto bpf_map_peek_elem_proto;
+ extern const struct bpf_func_proto bpf_map_lookup_percpu_elem_proto;
+ 
+ extern const struct bpf_func_proto bpf_get_prandom_u32_proto;
+-extern const struct bpf_func_proto bpf_get_smp_processor_id_proto;
+ extern const struct bpf_func_proto bpf_get_numa_node_id_proto;
+ extern const struct bpf_func_proto bpf_tail_call_proto;
+ extern const struct bpf_func_proto bpf_ktime_get_ns_proto;
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index ba6b6118cf50..1ad41a16b86e 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -2943,7 +2943,6 @@ const struct bpf_func_proto bpf_spin_unlock_proto __weak;
+ const struct bpf_func_proto bpf_jiffies64_proto __weak;
+ 
+ const struct bpf_func_proto bpf_get_prandom_u32_proto __weak;
+-const struct bpf_func_proto bpf_get_smp_processor_id_proto __weak;
+ const struct bpf_func_proto bpf_get_numa_node_id_proto __weak;
+ const struct bpf_func_proto bpf_ktime_get_ns_proto __weak;
+ const struct bpf_func_proto bpf_ktime_get_boot_ns_proto __weak;
+diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+index e3a2662f4e33..2d2bfb2911f8 100644
+--- a/kernel/bpf/helpers.c
++++ b/kernel/bpf/helpers.c
+@@ -149,18 +149,6 @@ const struct bpf_func_proto bpf_get_prandom_u32_proto = {
+ 	.ret_type	= RET_INTEGER,
+ };
+ 
+-BPF_CALL_0(bpf_get_smp_processor_id)
+-{
+-	return smp_processor_id();
+-}
+-
+-const struct bpf_func_proto bpf_get_smp_processor_id_proto = {
+-	.func		= bpf_get_smp_processor_id,
+-	.gpl_only	= false,
+-	.ret_type	= RET_INTEGER,
+-	.allow_fastcall	= true,
+-};
+-
+ BPF_CALL_0(bpf_get_numa_node_id)
+ {
+ 	return numa_node_id();
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 0f5906f43d7c..39360cd6baf1 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1462,8 +1462,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_get_current_comm_proto;
+ 	case BPF_FUNC_trace_printk:
+ 		return bpf_get_trace_printk_proto();
+-	case BPF_FUNC_get_smp_processor_id:
+-		return &bpf_get_smp_processor_id_proto;
+ 	case BPF_FUNC_get_numa_node_id:
+ 		return &bpf_get_numa_node_id_proto;
+ 	case BPF_FUNC_perf_event_read:
+diff --git a/net/core/filter.c b/net/core/filter.c
+index bc6828761a47..7f7ec913ddbc 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -8264,8 +8264,6 @@ tc_cls_act_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_set_hash_proto;
+ 	case BPF_FUNC_perf_event_output:
+ 		return &bpf_skb_event_output_proto;
+-	case BPF_FUNC_get_smp_processor_id:
+-		return &bpf_get_smp_processor_id_proto;
+ 	case BPF_FUNC_skb_under_cgroup:
+ 		return &bpf_skb_under_cgroup_proto;
+ 	case BPF_FUNC_get_socket_cookie:
+@@ -8343,8 +8341,6 @@ xdp_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 	switch (func_id) {
+ 	case BPF_FUNC_perf_event_output:
+ 		return &bpf_xdp_event_output_proto;
+-	case BPF_FUNC_get_smp_processor_id:
+-		return &bpf_get_smp_processor_id_proto;
+ 	case BPF_FUNC_csum_diff:
+ 		return &bpf_csum_diff_proto;
+ 	case BPF_FUNC_xdp_adjust_head:
+@@ -8570,8 +8566,6 @@ lwt_out_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_get_hash_recalc_proto;
+ 	case BPF_FUNC_perf_event_output:
+ 		return &bpf_skb_event_output_proto;
+-	case BPF_FUNC_get_smp_processor_id:
+-		return &bpf_get_smp_processor_id_proto;
+ 	case BPF_FUNC_skb_under_cgroup:
+ 		return &bpf_skb_under_cgroup_proto;
+ 	default:
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.39.0.windows.2
+
