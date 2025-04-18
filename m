@@ -1,57 +1,59 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD44C45009
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 18:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB82945009
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 18:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745002404; cv=none; b=UmkOtUeo4KzvQfDCI3iDkhVuDY1wRdw2GCcewd0LdiwvYWMl3H1SCESjN/xB51JijDbeVpqybkedZEUQi11puzFy2CwUMM2c/yVVpBcyKW9hW/iHLXau2CbALujmdHKg8RtuauzBC8LenweTcIzYzS+0mS0PPcpPbWpfbLKQtnk=
+	t=1745002453; cv=none; b=RO7FkWtZuZ57F2+T0kvDQOMysAl05iXGw+9FPtapRIPS7zvFDUAQ4kdVAczL0WuCQT04ZAoeRnZyJu+COAtoxbo/7GYtQxO2QvJugKXA1oHdDfM5PYl+WqBN2et1jqsnRUi0HWSG71fQKnTkGbSfkr6og5iZ3Jv/kLzAWR1u/IQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745002404; c=relaxed/simple;
-	bh=ALGjEukfgISeeaBYVl35SCoCQ31VNgUm3zq/pDyQy5A=;
+	s=arc-20240116; t=1745002453; c=relaxed/simple;
+	bh=eAHglsHFYKJWS7jdcO4pwyhNZ/voAud6ySzRianlqE4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VCBxbcdHr9SlMCVBTUZavPCGAhve4y3Qz3qk1gPimfQhaw90il2WL6ClTZTD75zLtLAlmM/rh3rt4tH1geFunqA8zH8wBZGDaZ+iUYAwunneP1VT4glccpPZvio4KXIlzTX+5kH0bjTo9IU6dpHcBa1QuPnS1km3PXH/81niN3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ACbPNMA4; arc=none smtp.client-ip=198.47.23.235
+	 MIME-Version:Content-Type; b=vGKJJeL5sq4nEJYAjxTnaeCr50RJxfCa34fMPV44DiqbOf4OQMoPnfDnH2XymVZe8fNxkQ+rDivFWHQZJq772UJx/gB0DUO3J9IEY52FUAh0q03PsL8NH5C/4ZALx353xbwRUdkX652Hggqb6KrPQ0Nox3BQfDqgEFT2Nl4FD8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=J3Eiw7ZG; arc=none smtp.client-ip=198.47.19.246
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ACbPNMA4"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53IIr1651060531
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J3Eiw7ZG"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53IIrxXn1000830
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 18 Apr 2025 13:53:01 -0500
+	Fri, 18 Apr 2025 13:53:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745002381;
-	bh=0WyfnAEXOEvOsCtJtz6vRRQH9lrvBDaAXYFoE+cz7FA=;
+	s=ti-com-17Q1; t=1745002439;
+	bh=XF5UFEiPpcoG4EPoQ5tbuqNRT1AiCobPXUiSYtdTDLo=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=ACbPNMA4RfYSExR5unctynl8PMgp+OvsVa1PcuQv+MuyiMvfUH8F4cL/qDohUHR2P
-	 sy0DAkQD/bNfUxMOYRCZ6C6t/SReb0AJL3CR6VMNQ+fDNLZ7xu10oeTUWG46KP7WcB
-	 2VgJcwp+UzSmZwFFJ1HecfDdHzoq9VUm4DC8Entk=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53IIr1o6106504
+	b=J3Eiw7ZGqetox3+539+LJ9Ptm8Fa+kitgTEhEX7da25TwqN35flJI2M/QNcCzSvT1
+	 vx6/n51iaEMRlkEifLeVadjT7o4QVFYtsE5fD0ZSuSY20sBXX8y0Xgp3+DEm7u07Fa
+	 jiepfgJKOcXHJm7PMtpU8Pf5zcpBbYwfBSAI6b5s=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53IIrxJf077947
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 18 Apr 2025 13:53:01 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+	Fri, 18 Apr 2025 13:53:59 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 18
- Apr 2025 13:53:01 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2025 13:53:59 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 18 Apr 2025 13:53:01 -0500
+ Frontend Transport; Fri, 18 Apr 2025 13:53:59 -0500
 Received: from localhost ([10.249.36.23])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53IIr1Ke113383;
-	Fri, 18 Apr 2025 13:53:01 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53IIrxDq114058;
+	Fri, 18 Apr 2025 13:53:59 -0500
 From: Nishanth Menon <nm@ti.com>
-To: <ssantosh@kernel.org>, Chen Ni <nichen@iscas.ac.cn>
-CC: Nishanth Menon <nm@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] soc: ti: knav_qmss_queue: Remove unnecessary NULL check before free_percpu()
-Date: Fri, 18 Apr 2025 13:52:59 -0500
-Message-ID: <174500231274.93973.9406743494287561760.b4-ty@ti.com>
+To: <shao.mingyin@zte.com.cn>
+CC: Nishanth Menon <nm@ti.com>, <yang.yang29@zte.com.cn>,
+        <xu.xin16@zte.com.cn>, <ye.xingchen@zte.com.cn>, <ssantosh@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <tang.dongxing@zte.com.cn>
+Subject: Re: [PATCH] soc: ti: k3-ringacc: Use device_match_of_node()
+Date: Fri, 18 Apr 2025 13:53:57 -0500
+Message-ID: <174500239091.94267.5561449667206494033.b4-ty@ti.com>
 X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250417084836.937452-1-nichen@iscas.ac.cn>
-References: <20250417084836.937452-1-nichen@iscas.ac.cn>
+In-Reply-To: <20250331201425296l4h98bZjxHzs08fdvHrGO@zte.com.cn>
+References: <20250331201425296l4h98bZjxHzs08fdvHrGO@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,19 +64,18 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Chen Ni,
+Hi shao.mingyin@zte.com.cn,
 
-On Thu, 17 Apr 2025 16:48:36 +0800, Chen Ni wrote:
-> free_percpu() checks for NULL pointers internally.
-> Remove unneeded NULL check here.
+On Mon, 31 Mar 2025 20:14:25 +0800, shao.mingyin@zte.com.cn wrote:
+> Replace the open-code with device_match_of_node().
 > 
 > 
 
 I have applied the following to branch ti-drivers-soc-next on [1].
 Thank you!
 
-[1/1] soc: ti: knav_qmss_queue: Remove unnecessary NULL check before free_percpu()
-      commit: 17bff220c6d69e4be38c9899a7515c3b02de60f0
+[1/1] soc: ti: k3-ringacc: Use device_match_of_node()
+      commit: ae9c0b68089d5412bb252c4adbeff122017557c3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent up the chain during
