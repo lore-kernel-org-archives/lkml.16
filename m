@@ -1,152 +1,125 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64632FBF6;
-	Fri, 18 Apr 2025 09:32:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09F121DA21;
+	Fri, 18 Apr 2025 09:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744968721; cv=none; b=BAZowIlbQxocV49u9IMMuzL55IETmitwV02fXuxqDCvhrGg1fw8z9KnD+E2IKhi7UogNrBVLIyq7fTMcipSWOA5TbWgNCuLPpAs7cjd66a6y2coMJr0o+/lzq+42o+i6HbyE7DatifxGiNgdEb05+km4odBS05aunHW2DWFV2FA=
+	t=1744968766; cv=none; b=i6xR9jJiem6TIUGaXknfHASQY7LuUJTDY281AzoQymtOs2QVQwrmH0EsBvwtLek0rfVRI/M+1NshM5g+UaBEFVkeJKp85FkudGEtN1uTmy7sNUu6fCLRsf+kIBlu7eow03gE9DYB+/0Y7nqLcmzdNP4URs5ERz0UYPuUFlHlclg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744968721; c=relaxed/simple;
-	bh=64Fe7g5Lb1lqDSIJPW0LMmlwJ3M/2Mx2+lOtR94MfF8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NeFQuY4FDl7FxTGUCmP7yjQHS7Zoo9XbjlGPVa2H7lvLahOWXRWnRtVttdbfJn01abnBd/7M2EXL/+k9qQxdHXHyDnHHvaPrWb+Q/JR7nt5HKE2H/RB0C1U7GRWlL0gF6FDLHXMQjv/GROum5+NhKTwZcylI95b35esqVVWWvO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T/p2O0dp; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/p2O0dp"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-30155bbbed9so1261997a91.1;
-        Fri, 18 Apr 2025 02:32:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744968719; x=1745573519; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3FYg/pyhreZGWbxJFZYjejOIWe1QYc0OG2U9BkbWp5o=;
-        b=T/p2O0dp4dv4IxLIUFvNe++Is2IB0v7/teF4oHgfThBse95k1GMdWYBFRQDcDQYQja
-         Dr1SlyAw+t29miFGZtTpXsEPb0dHkaykJg8yTxMUu4VJ8n+sX4BgE47YZcIR9Uf2m14t
-         LnInRkvr+mOjUEztj78Xm5/1sqKLABVcj3sBMGQZ9mQUtS6JRMS3TSQtjCz1VYzEfCGW
-         9ti6xVSj0merVTGKQFi9eLieBOiV3ZC9DrRZ0ZYB5PjrZbPrFmUEMEv/b11wiRlp0z2r
-         OP02DBF/k0fd3aqcx/vIv1ZQsD1JusGIuAdDwDzGwCjZ54ttqnTCmJk/zZpa+zbE7s2z
-         B4NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744968719; x=1745573519;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3FYg/pyhreZGWbxJFZYjejOIWe1QYc0OG2U9BkbWp5o=;
-        b=FKALw4aIQgF+iZ65NNLHOSmMJGL11XVPcpkZDnitcdzvdRBVeBomwoePDi4GNahu4w
-         P5FcF3aBs/MN/7p1hVbv4SKUiNyan7SzxT7i765Ao/zmAWnupjGURYB31Yncy2qBOzAa
-         29TJQosyX+vVVo1PPi3bEqslZvZJtCzxNLIwDvG6fUBApwY4JSRzUGOEOZ2ZiFJh2YZh
-         4tZZMDhJ3FF2IW0oxmfBb8/g3jJHgIkk+7NPeVJL+VgUKCnIKCB2aN8ENtQbOQmF0oDp
-         wiMi0MkHQJ4JDpuBfM40A9WIG+7v03j+TidrUh67HhhrNpb11Fkt1hzPRkfNjnI44mtQ
-         crZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW6JpyOBar8SrxX2BzE5Q0CO16JpLKsKUclnjiudjV+tKgXYcr97UJDXl+8ybtroGkuxsgwaweU@vger.kernel.org, AJvYcCXTWOp312FRgHy8jCG1bYcsGb22s8WKMJFpC+exqEpp3w3H2kj3FysLkglGe1c7dTIDcwfxlDRnrhfM9Qw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPnwFTD+qU3rSqIqN9RlwHvj/KzrR9AtCR8VPMM7n9P65Itq7f
-	nA7RixjmYXD4aBOoyaJtdgsBVHWLP/v14/90a1MKQ7YhPZq4vcU2
-X-Gm-Gg: ASbGncvxTUQqGFYvwKP/oafVzIrOaMLaq5jTFeyGXp0X6MqBqqDX3F/PMD+gN6UcUYj
-	WpDW2fwZYf8BfdGv45JFNcbL0MBXn28tK7ui2bcJrGkQMILlj1ZJ6eh2/mFX5lwuObn2laZDqcy
-	cK1OLLTxDpAaLTg+wZ4JLXAwZuZuaIlClBF5BFS2DOSAE8edQnpvpUBOxYhegyaryoYwWYwbLBW
-	OIEKFnqn7qZRy5otQewPZOwijYCzYRsGc0PN4YsNew21RgN5NgnZMt3YK6ti2mm8b4dEz2c0HpK
-	Zti9KBG7u4jc2V76vCwZEx1TLQ+dIH9C5myghnozR5KRSIo2sVnVGw8HzHIdJrq7YHYgxzBaI+A
-	PfKK0K2hotgl7
-X-Google-Smtp-Source: AGHT+IG01YpaHiGlIhPUDJA3SSqBHIutpbt8OgQ4nJiOEg2thJrJIEgGlxsFPPp9aG4+bqaHeeJ9kA==
-X-Received: by 2002:a17:90b:5690:b0:2f9:c139:b61f with SMTP id 98e67ed59e1d1-3087bb48e25mr3652993a91.14.1744968719508;
-        Fri, 18 Apr 2025 02:31:59 -0700 (PDT)
-Received: from ?IPV6:2409:4080:218:8190:3fb8:76d:5206:c8c? ([2409:4080:218:8190:3fb8:76d:5206:c8c])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087df097aasm812800a91.11.2025.04.18.02.31.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Apr 2025 02:31:58 -0700 (PDT)
-Message-ID: <43d2438f-2fea-45d9-a49e-e03a5cdc6800@gmail.com>
-Date: Fri, 18 Apr 2025 15:01:52 +0530
+	s=arc-20240116; t=1744968766; c=relaxed/simple;
+	bh=xlGgPVpqt2TPjugDY3fL3HsKO/7Xllow9Gh8xKfsZjo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F1XyjbavKqTX8h+TriJoCjbXDCGfqOCwdYOU+ujrQfhmODge+ETrQ1q2507dYhvfdfeVbBZIT6TpaCBQqJuIwneakQfFD8d07/jN6xNjQj2jnAJyxI/aNjQiENug04z+IEuqSE2/i0S01JguUxWVUWatNYjw2irJBrdJYp4/gAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.54.180])
+	by gateway (Coremail) with SMTP id _____8BxXWswHAJoJqLBAA--.58753S3;
+	Fri, 18 Apr 2025 17:32:32 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.54.180])
+	by front1 (Coremail) with SMTP id qMiowMCx_cYsHAJoGUKJAA--.15831S2;
+	Fri, 18 Apr 2025 17:32:28 +0800 (CST)
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+To: herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	peterhuewe@gmx.de,
+	jarkko@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-crypto@vger.kernel.org,
+	jgg@ziepe.ca,
+	linux-integrity@vger.kernel.org,
+	pmenzel@molgen.mpg.de,
+	Qunqin Zhao <zhaoqunqin@loongson.cn>
+Subject: [PATCH v8 0/5] Add Loongson Security Engine chip driver
+Date: Fri, 18 Apr 2025 17:34:02 +0800
+Message-ID: <20250418093407.1335-1-zhaoqunqin@loongson.cn>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: ipv4: Fix uninitialized pointer warning in
- fnhe_remove_oldest
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
- horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, pabeni@redhat.com
-References: <20250417094126.34352-1-purvayeshi550@gmail.com>
- <20250417220022.23265-1-kuniyu@amazon.com>
-Content-Language: en-US
-From: Purva Yeshi <purvayeshi550@gmail.com>
-In-Reply-To: <20250417220022.23265-1-kuniyu@amazon.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCx_cYsHAJoGUKJAA--.15831S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCr43XFy5WrW7trW7KFWxuFX_yoW5XryDpF
+	45C3yfCr4UJr47Gr93try8GFyfZas3Xr9IganrXw15Wr9xAa48XrW3CFyUCF47AF95Xry2
+	vFZYkF4UGF1UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j5o7tUUUUU=
 
-On 18/04/25 03:30, Kuniyuki Iwashima wrote:
-> From: Purva Yeshi <purvayeshi550@gmail.com>
-> Date: Thu, 17 Apr 2025 15:11:26 +0530
->> Fix Smatch-detected issue:
->> net/ipv4/route.c:605 fnhe_remove_oldest() error:
->> uninitialized symbol 'oldest_p'.
->>
->> Initialize oldest_p to NULL to avoid uninitialized pointer warning in
->> fnhe_remove_oldest.
-> 
-> How does it remain uninitialised ?
-> 
-> update_or_create_fnhe() ensures the bucket is not empty before
-> calling fnhe_remove_oldest().
+The Loongson Security Engine chip supports RNG, SM2, SM3 and SM4
+accelerator engines. Each engine have its own DMA buffer provided
+by the controller. The kernel cannot directly send commands to the
+engine and must first send them to the controller, which will
+forward them to the corresponding engine. Based on these engines,
+TPM2 have been implemented in the chip, then let's treat TPM2 itself
+as an engine.
 
-Hi Kuniyuki,
+v8: Like Lee said, the base driver goes beyond MFD scope. Since these
+    are all encryption related drivers and SM2, SM3, and SM4 drivers
+    will be added to the crypto subsystem in the future, the base driver
+    need to be changed when adding these drivers. Therefore, it may be
+    more appropriate to place the base driver within the crypto subsystem.
 
-Thanks for the feedback.
+    Removed complete callback in all drivers. Removed the concepts of
+    "channel", "msg" and "request" as they may be confusing. Used the
+    concepts of "egnine" and "command" may be better.
 
-Smatch reports this because oldest_p is conditionally assigned inside 
-the loop, and it doesn't reason about the guarantees made by 
-update_or_create_fnhe() (i.e., that the list is non-empty). So it flags 
-oldest_p as potentially uninitialized when dereferenced.
+v7: Addressed Huacai's comments.
 
-I understand your point, logically, the code is safe, and the warning is 
-a false positive.
+v6: mfd :MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
 
-> 
-> 
->>
->> Check that oldest_p is not NULL after the loop to ensure no dereferencing
->> of uninitialized pointers.
->>
->> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
->> ---
->>   net/ipv4/route.c | 11 +++++++----
->>   1 file changed, 7 insertions(+), 4 deletions(-)
->>
->> diff --git a/net/ipv4/route.c b/net/ipv4/route.c
->> index 753704f75b2c..2e5159127cb9 100644
->> --- a/net/ipv4/route.c
->> +++ b/net/ipv4/route.c
->> @@ -587,7 +587,7 @@ static void fnhe_flush_routes(struct fib_nh_exception *fnhe)
->>   
->>   static void fnhe_remove_oldest(struct fnhe_hash_bucket *hash)
->>   {
->> -	struct fib_nh_exception __rcu **fnhe_p, **oldest_p;
->> +	struct fib_nh_exception __rcu **fnhe_p, **oldest_p = NULL;
->>   	struct fib_nh_exception *fnhe, *oldest = NULL;
->>   
->>   	for (fnhe_p = &hash->chain; ; fnhe_p = &fnhe->fnhe_next) {
->> @@ -601,9 +601,12 @@ static void fnhe_remove_oldest(struct fnhe_hash_bucket *hash)
->>   			oldest_p = fnhe_p;
->>   		}
->>   	}
->> -	fnhe_flush_routes(oldest);
->> -	*oldest_p = oldest->fnhe_next;
->> -	kfree_rcu(oldest, rcu);
->> +
->> +	if (oldest_p) {  /* Ensure to have valid oldest_p element */
->> +		fnhe_flush_routes(oldest);
->> +		*oldest_p = oldest->fnhe_next;
->> +		kfree_rcu(oldest, rcu);
->> +	}
->>   }
->>   
->>   static u32 fnhe_hashfun(__be32 daddr)
->> -- 
+    crypto :CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG,
+    ls6000se-rng.c ->loongson-rng.c
+
+    tpm: TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c
+
+v5: Registered "ls6000se-rng" device in mfd driver.
+v4: Please look at changelog in tpm and MAINTAINERS. No changes to mfd
+    and crypto.
+v3: Put the updates to the MAINTAINERS in a separate patch.
+
+Qunqin Zhao (5):
+  crypto: loongson - Add Loongson Security Engine chip controller driver
+  crypto: loongson - add Loongson RNG driver support
+  MAINTAINERS: Add entry for Loongson crypto driver
+  tpm: Add a driver for Loongson TPM device
+  MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
+
+ MAINTAINERS                            |   7 +
+ drivers/char/tpm/Kconfig               |   9 +
+ drivers/char/tpm/Makefile              |   1 +
+ drivers/char/tpm/tpm_loongson.c        |  78 ++++++++
+ drivers/crypto/Kconfig                 |   1 +
+ drivers/crypto/Makefile                |   1 +
+ drivers/crypto/loongson/Kconfig        |  17 ++
+ drivers/crypto/loongson/Makefile       |   3 +
+ drivers/crypto/loongson/loongson-rng.c | 198 ++++++++++++++++++++
+ drivers/crypto/loongson/loongson-se.c  | 239 +++++++++++++++++++++++++
+ drivers/crypto/loongson/loongson-se.h  |  52 ++++++
+ 11 files changed, 606 insertions(+)
+ create mode 100644 drivers/char/tpm/tpm_loongson.c
+ create mode 100644 drivers/crypto/loongson/Kconfig
+ create mode 100644 drivers/crypto/loongson/Makefile
+ create mode 100644 drivers/crypto/loongson/loongson-rng.c
+ create mode 100644 drivers/crypto/loongson/loongson-se.c
+ create mode 100644 drivers/crypto/loongson/loongson-se.h
+
+
+base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
+-- 
+2.45.2
 
