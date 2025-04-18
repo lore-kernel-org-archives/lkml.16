@@ -1,181 +1,96 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E448205AC0
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8815C205AAB;
+	Fri, 18 Apr 2025 15:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744989130; cv=none; b=UQYvc8Tf2AyPerqMcEjH2yP6wiLdsw7BBMGfqctKT1cLWtjDktWbOIRFMVewDrA+Hsyb6c8spmtG8eDjhpu6Pl9hKPZoNoAwEGvlBfKh8gkgOe/kPuG8sAYSF9FCCO4kOkEaaxSR+Kwrho48PIjqrOfcU4n3n+ioA5H1Wscsy2M=
+	t=1744989135; cv=none; b=HzYLCGZMcR79hT/QLwBUsMtw9XAEHC4lAdbajbuqZZR+y6ZoRxReTxpIrUXrHJij3dZwtcsUbfVvwssYP990dVtIR1nQmhlZXSqabwsoCw3PL2SGsfoyDDZDIn9QDIWDd/8rcDbWFm33VyNosfstNM5HidyQVRmqjrhYai/9l3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744989130; c=relaxed/simple;
-	bh=mcPguKrpO7L/ms24ZzULya2onsD58fOJK8+l1yAIrRg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ot1KH+5KZD5UQxrvZDJOes5mW85T+e1h4m6Uqb4y1EffXTwwY4rw89JdcpDbgpeRUhy3JW0d5YEXX0on8c1Cm861N/pGdVRxlI2K/RwAACRlyIFjYo41+T8nCjCTRaGjjUJlGtnTIe6mwgsRk14/XQE2Sos4//Pm0R7P/xHPfpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=cKZSTjcg; arc=none smtp.client-ip=121.127.44.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1744989135; c=relaxed/simple;
+	bh=3zBMbevmftHKgtZjXChlH+4wGCH2oPPjVAd5sR/b+a8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LnwXD8GP2FCr1y+zfbl++u85Oq7FvCIeUnrsnvK1fQzSHySXFjn6Iu1FCdVEO+/wtseJnHpJOa0tdbw9QmIW+UX2rKteVjNVGKNOj0Vhd94b6UAZn/Qj2GUaVgSVbSAdecM3zO9m+t7YR92BgWgPDPjbQBqysjS7+o3nlCekCww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XmmkpSQg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="cKZSTjcg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1744989125;
- bh=gZ99nEDhjJPtKYQc2hoc52nGqWB8ytY2CleaomSYJWE=;
- b=cKZSTjcgJ4OrQac1gkQPq8uQXmYH0FQHGy4mFPUqt28HsZNtZIoLIfHbQD7OpnTMlEeHHmFFo
- 8ZLbhqaCwXOauXiy3x63OBllwCxHFa10eP4guNa4ktGB5Lof3NoMgYRJDsOFFdUzsorSWVJlNnB
- kyJEsMRQtlJO+mWgvm7HDyjV3Nsnx40RGMcQXJ3PlteXezDwtyhvsIxTeyzKAY8tSL5Gv4ikygc
- SGSvRTL3j5h9BJv8z7MHLSA6NhoZTCznXIfJiH35AB/zyWSA9BN5ubod+K9OtPdpKSoAQjbgRP4
- MKzxpTPMX/TcKA40XaW5GuXFBdGIMxQS3hTlYzYMFnDQ==
-X-Forward-Email-ID: 68026bbf750a8e94b92eccb3
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 121.127.44.73
-X-Forward-Email-Version: 1.0.2
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-Message-ID: <4161ab9e-3be5-4738-9bbe-0dba636b838a@kwiboo.se>
-Date: Fri, 18 Apr 2025 17:11:55 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XmmkpSQg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB1EDC4CEE2;
+	Fri, 18 Apr 2025 15:12:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744989135;
+	bh=3zBMbevmftHKgtZjXChlH+4wGCH2oPPjVAd5sR/b+a8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XmmkpSQg9Be6kXQaDSItIU+t/NedTQxFVGDKh2Xee68mDbgHJs7aoYzuE1Roej7NC
+	 zfUBEFqp60rjQ/HmJ/aVpERhug+/TBUtXBRwYDRpZXNaO2Xhfh8CD/MyJ6QAdrHMCn
+	 8JJBa8hD3/FFezgjrDkFV5M+PxVr0lMCLIYxx6uC6pcx7nXofbpO/zgzZWvzBozPTQ
+	 6ZxvJ1Hx+0vbnrvcTPYdiQxdWKw22zjbhDvss+lK6nw6OJc8xYy+dnhhgTj4xRrbQJ
+	 n5Nh+AUmzWbbnijWxaJ17cPGqyZQt1FHUPZjdjmRoGmt9iNRNUD8053yroEvDu9apJ
+	 oP2+caXkZk2SA==
+Date: Fri, 18 Apr 2025 16:12:05 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
+ <andy@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Cosmin Tanislav
+ <cosmin.tanislav@analog.com>, Tomasz Duszynski <tduszyns@gmail.com>,
+ Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>, Andreas Klinger
+ <ak@it-klinger.de>, Petre Rodan <petre.rodan@subdimension.ro>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 0/8] iio: more timestamp alignment
+Message-ID: <20250418161205.23a30da9@jic23-huawei>
+In-Reply-To: <20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
+References: <20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 3/4] media: rkvdec: Add get_image_fmt ops
-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
- linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250417-b4-rkvdec_h264_high10_and_422_support-v9-0-0e8738ccb46b@collabora.com>
- <20250417-b4-rkvdec_h264_high10_and_422_support-v9-3-0e8738ccb46b@collabora.com>
- <8d1c3c82-dbdc-4064-8188-bab586996302@kwiboo.se>
- <4be400281b3fe53b724025ffa837ceed777d7699.camel@collabora.com>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <4be400281b3fe53b724025ffa837ceed777d7699.camel@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Nicolas,
+On Thu, 17 Apr 2025 11:52:32 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-On 2025-04-18 14:28, Nicolas Dufresne wrote:
-> Le vendredi 18 avril 2025 à 08:22 +0200, Jonas Karlman a écrit :
->> Hi Nicolas,
->>
->> On 2025-04-17 23:58, Nicolas Dufresne wrote:
->>> From: Jonas Karlman <jonas@kwiboo.se>
->>>
->>> Add support for a get_image_fmt() ops that returns the required image
->>> format.
->>>
->>> The CAPTURE format is reset when the required image format changes and
->>> the buffer queue is not busy.
->>>
->>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
->>> Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
->>> Co-developed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
->>> Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
->>> ---
->>>  drivers/staging/media/rkvdec/rkvdec.c | 35 +++++++++++++++++++++++++++++++++++
->>>  drivers/staging/media/rkvdec/rkvdec.h |  2 ++
->>>  2 files changed, 37 insertions(+)
->>>
->>> diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
->>> index 7b780392bb6a63cc954655ef940e87146d2b852f..6c6fe411f48772419e1810d869ab40d168848e65 100644
->>> --- a/drivers/staging/media/rkvdec/rkvdec.c
->>> +++ b/drivers/staging/media/rkvdec/rkvdec.c
->>> @@ -72,6 +72,15 @@ static bool rkvdec_is_valid_fmt(struct rkvdec_ctx *ctx, u32 fourcc,
->>>  	return false;
->>>  }
->>>  
->>> +static bool rkvdec_fmt_changed(struct rkvdec_ctx *ctx,
->>> +			       enum rkvdec_image_fmt image_fmt)
->>
->> Just a small nitpick:
->>
->> Maybe this function should be called rkvdec_image_fmt_changed() and
->> could be moved closer to rkvdec_image_fmt_match() as those two are
->> related to image_fmt and not the pixfmt/fourcc.
+> Wile reviewing [1], I noticed a few more cases where we can use
+> aligned_s64 or need __aligned(8) on data structures used with
+> iio_push_to_buffers_with_timestamp().
 > 
-> Applied locally. With this change, may I have your Rb ?
+> [1]: https://lore.kernel.org/linux-iio/20250413103443.2420727-1-jic23@kernel.org/
+I picked up via one or other branch all but 1 (as that was already fixed), 6 and 8
 
-Sure, and thanks for helping getting this old series to land :-)
-
-Reviewed-by: Jonas Karlman <jonas@kwiboo.se>
-
-Regards,
-Jonas
+Jonathan
 
 > 
-> thanks,
-> Nicolas
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+> David Lechner (8):
+>       iio: adc: dln2-adc: use aligned_s64 for timestamp
+>       iio: adc: mt6360-adc: use aligned_s64 for timestamp
+>       iio: addac: ad74413r: use aligned_s64 for timestamp
+>       iio: chemical: pms7003: use aligned_s64 for timestamp
+>       iio: chemical: sps30: use aligned_s64 for timestamp
+>       iio: imu: adis16550: align buffers for timestamp
+>       iio: imu: inv_mpu6050: align buffer for timestamp
+>       iio: pressure: mprls0025pa: use aligned_s64 for timestamp
 > 
->>
->> Regards,
->> Jonas
->>
->>> +{
->>> +	if (image_fmt == RKVDEC_IMG_FMT_ANY)
->>> +		return false;
->>> +
->>> +	return ctx->image_fmt != image_fmt;
->>> +}
->>> +
->>>  static void rkvdec_fill_decoded_pixfmt(struct rkvdec_ctx *ctx,
->>>  				       struct v4l2_pix_format_mplane *pix_mp)
->>>  {
->>> @@ -118,8 +127,34 @@ static int rkvdec_try_ctrl(struct v4l2_ctrl *ctrl)
->>>  	return 0;
->>>  }
->>>  
->>> +static int rkvdec_s_ctrl(struct v4l2_ctrl *ctrl)
->>> +{
->>> +	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
->>> +	const struct rkvdec_coded_fmt_desc *desc = ctx->coded_fmt_desc;
->>> +	enum rkvdec_image_fmt image_fmt;
->>> +	struct vb2_queue *vq;
->>> +
->>> +	/* Check if this change requires a capture format reset */
->>> +	if (!desc->ops->get_image_fmt)
->>> +		return 0;
->>> +
->>> +	image_fmt = desc->ops->get_image_fmt(ctx, ctrl);
->>> +	if (rkvdec_fmt_changed(ctx, image_fmt)) {
->>> +		vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx,
->>> +				     V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
->>> +		if (vb2_is_busy(vq))
->>> +			return -EBUSY;
->>> +
->>> +		ctx->image_fmt = image_fmt;
->>> +		rkvdec_reset_decoded_fmt(ctx);
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>> +
->>>  static const struct v4l2_ctrl_ops rkvdec_ctrl_ops = {
->>>  	.try_ctrl = rkvdec_try_ctrl,
->>> +	.s_ctrl = rkvdec_s_ctrl,
->>>  };
->>>  
->>>  static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
->>> diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
->>> index 6f8cf50c5d99aad2f52e321f54f3ca17166ddf98..e466a2753ccfc13738e0a672bc578e521af2c3f2 100644
->>> --- a/drivers/staging/media/rkvdec/rkvdec.h
->>> +++ b/drivers/staging/media/rkvdec/rkvdec.h
->>> @@ -73,6 +73,8 @@ struct rkvdec_coded_fmt_ops {
->>>  		     struct vb2_v4l2_buffer *dst_buf,
->>>  		     enum vb2_buffer_state result);
->>>  	int (*try_ctrl)(struct rkvdec_ctx *ctx, struct v4l2_ctrl *ctrl);
->>> +	enum rkvdec_image_fmt (*get_image_fmt)(struct rkvdec_ctx *ctx,
->>> +					       struct v4l2_ctrl *ctrl);
->>>  };
->>>  
->>>  enum rkvdec_image_fmt {
->>>
->>
+>  drivers/iio/accel/bmc150-accel.h           | 2 +-
+>  drivers/iio/adc/dln2-adc.c                 | 2 +-
+>  drivers/iio/adc/mt6360-adc.c               | 4 ++--
+>  drivers/iio/addac/ad74413r.c               | 5 +++--
+>  drivers/iio/chemical/pms7003.c             | 5 +++--
+>  drivers/iio/chemical/sps30.c               | 2 +-
+>  drivers/iio/imu/adis16550.c                | 2 +-
+>  drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c | 2 +-
+>  drivers/iio/pressure/mprls0025pa.h         | 2 +-
+>  9 files changed, 14 insertions(+), 12 deletions(-)
+> ---
+> base-commit: 3159d40a2ca0ae14e69e1cae8b12f04c933d0445
+> change-id: 20250416-iio-more-timestamp-alignment-6c6c6a87ebda
+> 
+> Best regards,
 
