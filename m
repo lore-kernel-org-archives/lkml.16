@@ -1,65 +1,65 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F3D204C32
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:27:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0715D204C32
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744972078; cv=none; b=k4dxkCRXcNZhfOdcbeB3FZuAACahUhi/WHmCwQe4MFAyWBjzOYYnctn9lgP4Ahz/rEPNloW646mTc9uL2lqSzpwG74xGZQJyMwleOumFtgCL2be+eVDWp4hi+3h0RNMq6nYC0d3IpoDHs9VvPlmSROE3LAyRZAFBxIzsmwyzbZk=
+	t=1744972142; cv=none; b=MCGvFJElxPoFgI12dLwV6vKFNBnq3sET7+vAOXKUuyYgcsYE69DMq688N3Q1mygcJs7+1t9tHr3bUsQoQBwWA5eTmS41nGqjaiA8Z4o+E6zBRJlEiMw6EGrI4KurFBaNhWK4JCMIx1EdA6IImWUeeLNPvElj6iSs1XyGfjKYlew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744972078; c=relaxed/simple;
-	bh=+vnWalud2xUiup/XdBBrUW6ERK+wl4wDLxIJ6KQUR9w=;
+	s=arc-20240116; t=1744972142; c=relaxed/simple;
+	bh=PXjUbokpUcI7LlH+tMOmZc96wIGbaznXSlWcnx3/Za4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j4pw91nUb2Jc6PS1mo1h7rLzz6pincEXHk8qYqDL3WgJvRxlrGK00F8u7crWVTFsQPd1AHAwbs/kbJy3rVRTu2r3uG4pvXb/KKmg9dCxDkvhgg+CFmbPY5jEDytRnLBjtDVYZhRDsmrA81oJoAvzhQdEBQssrVTu+qNVAl2D4UU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=z8oahwX7; arc=none smtp.client-ip=209.85.221.49
+	 In-Reply-To:Content-Type; b=IbRBQOrp8EzM3DzDcKTlkAz5nRD2woLq4YfVYfrbBXWtMeniEwCMclNceLTKhLYqp+c25iCRISq1QLepl1unyi5bXfIM1kbyWzuIVq81WJURlx52WlrXfDWMgHJ9UtfLw/5A6OjojLY44a4AV33Xyvp0l5gkFunrGI+xaEiEGXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BFWIAJvE; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z8oahwX7"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c0dfba946so1079349f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 03:27:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BFWIAJvE"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso20219645e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 03:29:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744972074; x=1745576874; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744972139; x=1745576939; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=57k7pCek81nUSsl2ehblZZG77S+NE+N9+pi5LGTuadY=;
-        b=z8oahwX73y5LB7byXgw2pYYqBm0yixi1pFXzBV0QG9Pj49/fCFjUPju7qVIITT0YRi
-         9UghvWbmXKe5dWZOiVjwokUJoQhmNXk/XAp33GVfTE7ALu9uNUiwKi6PiyTqYG1MwXeJ
-         BIhM3n1DZY0pcKj3ZddEach3XZeN3+9CNC76QiwcU6vT/byLZwh9LHWCYA2j0Pd3pKXF
-         JGv4bmZhiw/XeGD9bN8gwlm5xXZaEIG07RqssJCW18Xspx5GkdFPvrj0CBzmceXFp9Mx
-         gyt1P7AVFMWkYNSJqoPnMOfxQmHKRcSS4Gj3GTu4l0DgFVVf43n0UTWUGsOytcnRyrUL
-         EfbA==
+        bh=O7HleWCohYPjMIRO73sV8qZDTMfJD2N23urCmVc53xI=;
+        b=BFWIAJvEgNkWTZJrQwsOWWqaSmPJBcRta2Ei8DZ2Anq+hBHFa79MXDdug6IIdxOeJ6
+         RVfbOfMRXvGxkHbvZ7LwOV7hupUsvf0ouOq62agRNUlMac1jPWJqDm/R52qy2N0nTBGi
+         fwczznx3yIQFYJBtMbl1ztcxQvez0HTntx1EueCe2P9Uk+0olXQWi9tLhjrteQh47qit
+         O5rD/yXhvObBnJ6xUZ0bNSCcTtAZMfHwOpHGafd+ME0rPcyAfCfRDR2i/TGSVTnqUV+f
+         KN2cBES9xDKsAFd7JqK4nycou3yPuI8L8Ut5HnCpZs4QLF8z23j3aZksKZJD+4YhH/6n
+         L/bA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744972074; x=1745576874;
+        d=1e100.net; s=20230601; t=1744972139; x=1745576939;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=57k7pCek81nUSsl2ehblZZG77S+NE+N9+pi5LGTuadY=;
-        b=IUPKGy1dfTIqXMGg1GyX15i/82ZYlH8lfjbjdcclQcGfQ4C7kbWupaTcqeLg/pnX1R
-         fCE0FjfQ9RcNenaiqyqSeYTZWx0H3PYlJDLnowHMNcQ6biaSZ6UkZlG6b7ZCiD1IxhSL
-         NadGtbExuoTkiBe8a3KPYXTLIbmlOBWVibUKsEBqL8pP89fNRen8HIuN0hA4BojNYBMA
-         6TKzdZXeWTPqsAK7RaCzhQmgcB/sxrymSul4Py44rr9LZQ9bEVXTxu6Pwga+mUk73eR9
-         apR22QQuH3qaU51+SDYkwHqoukd/GHwSyek7qDxnj7gtFAwVv4VUINROGr2BC6yO9hGp
-         fJ9w==
-X-Forwarded-Encrypted: i=1; AJvYcCUGQNBFT3bkgrMYeK7tPzVAYla+XM74qza06cvrFzKmnrFUb3Sl2FOUJMWdQc2ALd30y8FNTJcWlozActY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7sTQ2Ag6MPwmnW4n1wKtjmdK7JbfJmstY8PWa9fePFgQjNj8E
-	kUOsjy/l5RM1WJ9Ah4TbW+D0kfSH3ebP8UJQuOBQEsR5a2gl5DaJzEyYNjyHBmU=
-X-Gm-Gg: ASbGncsUjh4ubq6z6a6x/AAyinAJQ3Nli3diqiu5CZRMQD9IpvukTOpRDQ+EJzLeTBH
-	G7iK+EBUpD/WfI05dgpVDrjyCTGaMWdZX7vlHHqV41feHJ4t7htV/2M0CVasHhRaDYOwVqWR6oG
-	XanOvking/SZaL2k49rzIvyRJEBxCFHQvgE/HYCzo9SCRVeFMNXWsIEPOpBRdJ7iFuq1++ilHpE
-	QIHlScis/+EXGSyTiCa1BLeTHVeI4J0TpZjKRQP5yLgxfHJH5W2tbJZ53C1O/0+bnWRzG44O9l9
-	9KkQL+AllPUTDsnENeZpTZUilhxLo5gMdQf0tMTekwduy2Uljh4xrREXZ5gBnLI6x151h0vvPPw
-	fB3B9oQ==
-X-Google-Smtp-Source: AGHT+IFP8JgAPDCYIyJachPlekRb63SaHAvqzfZ89N17Lamqh8kJlt2t2X30gdARFYG6zJeqr7bpbQ==
-X-Received: by 2002:a05:6000:2203:b0:391:40bd:6222 with SMTP id ffacd0b85a97d-39efba470e8mr1559521f8f.22.1744972074393;
-        Fri, 18 Apr 2025 03:27:54 -0700 (PDT)
+        bh=O7HleWCohYPjMIRO73sV8qZDTMfJD2N23urCmVc53xI=;
+        b=VN6ywA9lPJO7a7RIYlqiefXwBjH/lzL2N6Xiz+4mEgILIWsf9KWdkkMojyTX7DQSAa
+         5H5zsCcD3uo4GimJNyqdE7C3mxdirVAVJDHY65krjxgCNpMd+bxjD/3f14cd1sfrZSjK
+         gUcu0PMp7dwIlcsp98dp38VpcVi+S24WMJXzcH+Dshqr3JpYErcS0OrfuTDXWmamnsBu
+         89zTgAzhTXmY+1xcPMB4jt256gPNAJuXxIyEfJh18qSDfz3K03HyTQC+ff/HGWVmGEsv
+         orDaU0fuTADpt2x/c0r52VZIFZpBjYHjVgULA3gyf0cc49idtloG78bYg6VFhSLqXVPh
+         LiNg==
+X-Forwarded-Encrypted: i=1; AJvYcCWLP8j9W0BmyZmHCWx35M26I97v4J8ySy1YLzVPtCOeKrLQlV3vTqoGJy4zCPRjXnwdpVmcVYqzHpcTrhs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWahhN6jYLYn/+ULq4jQA4U3j9SbzGjg1VqpRnkUOLHLmyK0km
+	LEQ37p1xQMMQAjzoQAImor7GnH7gKSIROBEuoNV/cfO3HfgkMf99oz2wWrS0huo=
+X-Gm-Gg: ASbGncsZHjwyvfpk9ppUHfLCbKHomUAHOV19R8/ZUiBUN60Gk/tlbvEy0pbp+thecgl
+	q6KJynlN4Mrc9WLLI2tWXwvvBb5lzJHx5XdJ/7XzKnCBN+wiezrs1sRwTy0xnmtzV7DjJYE3q4U
+	tlt1pV8mumuLBVKpNrO++7jgEMC/WVGFRonj6xYrNVqkOA6Fk/HKiUdwkG4A4Z9t20hym3+0Y5C
+	haFEaFxJMIxMhf276fwRf6yq755Un1lb45BkGji6Uld5fCb5LUqAr1WeZbrJviillLiP0g1h10r
+	Ifu1F0u6YMOjVrOrSJfM0/Kh3q5KiEBBNJKnMAcbo2BNMqVtpn4oP19z/RDxB4+2Qo4WCD7U/dp
+	Mgzhykg==
+X-Google-Smtp-Source: AGHT+IHJxlKM+V9zjxNju1detD9GdxRElBAn2xumwvGV5gII8CVWfwTLrPeirgJsQNjdQc0gV17/RQ==
+X-Received: by 2002:a05:600c:8508:b0:43c:fe15:41c9 with SMTP id 5b1f17b1804b1-4406ab93c98mr22161755e9.9.1744972139340;
+        Fri, 18 Apr 2025 03:28:59 -0700 (PDT)
 Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5d6cd2sm16577935e9.33.2025.04.18.03.27.52
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa421c79sm2337770f8f.1.2025.04.18.03.28.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Apr 2025 03:27:53 -0700 (PDT)
-Message-ID: <df97067e-a293-424d-aa19-24a99670a354@linaro.org>
-Date: Fri, 18 Apr 2025 11:27:51 +0100
+        Fri, 18 Apr 2025 03:28:58 -0700 (PDT)
+Message-ID: <ed3f537a-ac1f-44c8-952d-42a5d83c3a69@linaro.org>
+Date: Fri, 18 Apr 2025 11:28:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,8 +67,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] arm64: dts: qcom: qcs8300: add support for video
- node
+Subject: Re: [PATCH v2 3/4] arm64: dts: qcom: qcs8300-ride: enable video
 To: Vikash Garodia <quic_vgarodia@quicinc.com>,
  Dikshita Agarwal <quic_dikshita@quicinc.com>,
  Abhinav Kumar <quic_abhinavk@quicinc.com>,
@@ -79,104 +78,35 @@ To: Vikash Garodia <quic_vgarodia@quicinc.com>,
 Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20250418-qcs8300_iris-v2-0-1e01385b90e9@quicinc.com>
- <20250418-qcs8300_iris-v2-2-1e01385b90e9@quicinc.com>
+ <20250418-qcs8300_iris-v2-3-1e01385b90e9@quicinc.com>
 Content-Language: en-US
 From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250418-qcs8300_iris-v2-2-1e01385b90e9@quicinc.com>
+In-Reply-To: <20250418-qcs8300_iris-v2-3-1e01385b90e9@quicinc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 18/04/2025 07:28, Vikash Garodia wrote:
-> Video node enables video on Qualcomm QCS8300 platform.
-
-Add the IRIS video-codec node on QCS8300.
-
+> Enable video nodes on the qcs8300-ride board.
+> 
 > Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
 > ---
->   arch/arm64/boot/dts/qcom/qcs8300.dtsi | 71 +++++++++++++++++++++++++++++++++++
->   1 file changed, 71 insertions(+)
+>   arch/arm64/boot/dts/qcom/qcs8300-ride.dts | 4 ++++
+>   1 file changed, 4 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs8300.dtsi b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-> index 4a057f7c0d9fae0ebd1b3cf3468746b382bc886b..158779434f610b10ea82d2cdae08090a7a4402de 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-> @@ -2929,6 +2929,77 @@ usb_2_dwc3: usb@a400000 {
->   			};
->   		};
+> diff --git a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts b/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
+> index b5c9f89b34356bbf8387643e8702a2a5f50b332f..87114a349fedd80296abaf3d2f5f284b5adbbdfe 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
+> @@ -285,6 +285,10 @@ queue3 {
+>   	};
+>   };
 >   
-> +		iris: video-codec@aa00000 {
-> +			compatible = "qcom,qcs8300-iris";
+> +&iris {
+> +	status = "okay";
+> +};
 > +
-> +			reg = <0x0 0x0aa00000 0x0 0xf0000>;
-> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +			power-domains = <&videocc VIDEO_CC_MVS0C_GDSC>,
-> +					<&videocc VIDEO_CC_MVS0_GDSC>,
-> +					<&rpmhpd RPMHPD_MX>,
-> +					<&rpmhpd RPMHPD_MMCX>;
-> +			power-domain-names = "venus",
-> +					     "vcodec0",
-> +					     "mxc",
-> +					     "mmcx";
-> +
-> +			operating-points-v2 = <&iris_opp_table>;
-> +
-> +			clocks = <&gcc GCC_VIDEO_AXI0_CLK>,
-> +				 <&videocc VIDEO_CC_MVS0C_CLK>,
-> +				 <&videocc VIDEO_CC_MVS0_CLK>;
-> +			clock-names = "iface",
-> +				      "core",
-> +				      "vcodec0_core";
-> +
-> +			interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
-> +					 &config_noc SLAVE_VENUS_CFG QCOM_ICC_TAG_ACTIVE_ONLY>,
-> +					<&mmss_noc MASTER_VIDEO_P0 QCOM_ICC_TAG_ALWAYS
-> +					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
-> +			interconnect-names = "cpu-cfg",
-> +					     "video-mem";
-> +
-> +			memory-region = <&video_mem>;
-> +
-> +			resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>;
-> +			reset-names = "bus";
-> +
-> +			iommus = <&apps_smmu 0x0880 0x0400>,
-> +				 <&apps_smmu 0x0887 0x0400>;
-> +			dma-coherent;
-> +
-> +			status = "disabled";
-> +
-> +			iris_opp_table: opp-table {
-> +				compatible = "operating-points-v2";
-> +
-> +				opp-366000000 {
-> +					opp-hz = /bits/ 64 <366000000>;
-> +					required-opps = <&rpmhpd_opp_svs_l1>,
-> +							<&rpmhpd_opp_svs_l1>;
-> +				};
-> +
-> +				opp-444000000 {
-> +					opp-hz = /bits/ 64 <444000000>;
-> +					required-opps = <&rpmhpd_opp_nom>,
-> +							<&rpmhpd_opp_nom>;
-> +				};
-> +
-> +				opp-533333334 {
-> +					opp-hz = /bits/ 64 <533333334>;
-> +					required-opps = <&rpmhpd_opp_turbo>,
-> +							<&rpmhpd_opp_turbo>;
-> +				};
-> +
-> +				opp-560000000 {
-> +					opp-hz = /bits/ 64 <560000000>;
-> +					required-opps = <&rpmhpd_opp_turbo_l1>,
-> +							<&rpmhpd_opp_turbo_l1>;
-> +				};
-> +			};
-> +		};
-> +
->   		videocc: clock-controller@abf0000 {
->   			compatible = "qcom,qcs8300-videocc";
->   			reg = <0x0 0x0abf0000 0x0 0x10000>;
+>   &qupv3_id_0 {
+>   	status = "okay";
+>   };
 > 
 Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
