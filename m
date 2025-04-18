@@ -1,142 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82E510942;
-	Fri, 18 Apr 2025 09:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6238C26E162;
+	Fri, 18 Apr 2025 09:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744966910; cv=none; b=GXyUTAg3rNkThshSIgQHn4mlpPgNR/fG9qLSZXveNSUvPAAyg16U2ZkCsXwfwHJ87UgH5ykvwQ4HZ7XX4cpTwOjtZ/IoGLP/elwcYDqgnAvx+ZNcOJHk3McPcVNKNLXOF000b55xd0y0gLWe8vn0L7clkm9kEcTwBAiAQFSduGY=
+	t=1744966950; cv=none; b=WIrDzQo09m503tpPFGW8YR8ZflUaC4S4Q6SMu4Xt2ZbzZ+VaD/aZGM8RmlLrxakq+dJjXm9MiplocC5nWsRZQvssrQ9eDllZ697VE1DnLjZ+NLTTUYJo0MyuS6xq+GtK499XtjHQtr+T1wIMjJ7hrzskcKFT0+kEr7L0gq4PV3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744966910; c=relaxed/simple;
-	bh=aZKGynxr/IJhFrNTczmbjc2tIFX13hW2EFcghTmecUU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dKE3iAqnveBEcDOBP5juKdvqYAhQWgyQE0lGI33+EiiDX1gb1WfWSjmL0kV4SFDgDdsTpKbpF6ONU3qaPZLNn0mioyQmj40IuLyJpBdiFC68javD6LsDzWW9yzM5DzHIo5/0TP2liLJjSGV5McH3dqpnFiIvAaM7vGUmS+emSVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dVvgjuXU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744966950; c=relaxed/simple;
+	bh=JynCZgSX1XdUMyAxeKSpT+IEJlv5EBM+y7URuLCRBPU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UaogGdBmtTLwKr8yjLUnIIK4Id+4HkQz7nhcNB4gT5LqtEcUuQj4AMjeb+1xUvd7G8nEfFCjfui9wQ5xacMLZHWV8ise3iVXrKpmenSwJ7W6CSwC1CuqrMfZVHEtcZIncgClZmRm4D6TyKWPloPTGhPx9/o0yF2agNR2K2NtEoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=EpGng0De; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dVvgjuXU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43337C4CEE2;
-	Fri, 18 Apr 2025 09:01:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744966910;
-	bh=aZKGynxr/IJhFrNTczmbjc2tIFX13hW2EFcghTmecUU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dVvgjuXUBlGyMRL/SPU1UdG7X4VnBqnKGzl+TSta9EIJfOPK3kZf2YhUAOnlaZXzL
-	 /l9nKneKDRfsKv5Uy3tyDeiSn/Zf0BIMYvHGhuqS45x4kqDBGzk/l+Ggmt1qsFpJkS
-	 G357HSNi5mEt2NSIYcS+mr3NDAXNwY9mZGj9UNUaF/1ZFPITaNLZKfpfL0pGZyQnb/
-	 izMDaDa2b1A07V41oaa+laTZy0SPQfI9OefnMtTJUiumDpuBWVjsWdpHl66UKtxbxN
-	 hLET73Hde5IqZ2RSzfW2NwewFlCLnwJ+J1R6UvQmcbQDFZWOxm4yArWcuctOHw3eUE
-	 Ef1Oq5L+HVatw==
-Date: Fri, 18 Apr 2025 12:01:40 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Arnd Bergmann <arnd@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Davide Ciminaghi <ciminaghi@gnudd.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH] x86/e820: discard high memory that can't be addressed by
- 32-bit systems
-Message-ID: <aAIU9LHAr_BGb5Jl@kernel.org>
-References: <Z_rDdnlSs0rts3b9@gmail.com>
- <20250413080858.743221-1-rppt@kernel.org>
- <20250417162206.GA104424@ax162>
- <aAHyHuwbmhjWmDqc@gmail.com>
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="EpGng0De"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3953A102E6336;
+	Fri, 18 Apr 2025 11:02:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1744966946; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=Lyew1MxDu19C3OjjtiwDxB9nbZkc14Dt2w507Oz3TyY=;
+	b=EpGng0DelcMIUsNvKPpsZEFgb8UNtpCfv4Zb/FiQckyHVaIepb7eyl2o8OM8GAVJyiF+Qu
+	9fSCZkjBP2RC1PgEydrW6zJkarvFUtbUEHYMxhD/r3+KCUKfRCBNmUHD3GZOGyktFzwXUE
+	u6l2HDekPay9dh4glCNgAtKITh5tVazdlB3rNbJ9ZOl3BQeYF2dh2D0WzEp2aUM3omyxxC
+	nT92P13KW4i8+kHQt4XEN97GHuwUQmDnBuur1G/i+hbS0C9Fmi5g4lfYeAnfdfRmlmbbo8
+	NQjeiRDZw2+wBczT8RX2Yj1xSSF7g4bnadwLkU0KYEPloYv4DZkDOmYWTb57Hw==
+Date: Fri, 18 Apr 2025 11:02:23 +0200
+From: Lukasz Majewski <lukma@denx.de>
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, Simon Horman
+ <horms@kernel.org>
+Subject: Re: [net-next v6 4/7] net: mtip: The L2 switch driver for imx287
+Message-ID: <20250418110223.594f586f@wsk>
+In-Reply-To: <38f36d00-e461-4fc5-a98b-9b2d94d93c69@gmx.net>
+References: <20250418060716.3498031-1-lukma@denx.de>
+	<20250418060716.3498031-5-lukma@denx.de>
+	<38f36d00-e461-4fc5-a98b-9b2d94d93c69@gmx.net>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAHyHuwbmhjWmDqc@gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/iP=CeZYpD+_6T=lMjmJSf8s";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Fri, Apr 18, 2025 at 08:33:02AM +0200, Ingo Molnar wrote:
-> 
-> * Nathan Chancellor <nathan@kernel.org> wrote:
-> 
-> > Hi Mike,
-> > 
-> > On Sun, Apr 13, 2025 at 11:08:58AM +0300, Mike Rapoport wrote:
-> > ...
-> > >  arch/x86/kernel/e820.c | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > > 
-> > > diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-> > > index 57120f0749cc..5f673bd6c7d7 100644
-> > > --- a/arch/x86/kernel/e820.c
-> > > +++ b/arch/x86/kernel/e820.c
-> > > @@ -1300,6 +1300,14 @@ void __init e820__memblock_setup(void)
-> > >  		memblock_add(entry->addr, entry->size);
-> > >  	}
-> > >  
-> > > +	/*
-> > > +	 * 32-bit systems are limited to 4BG of memory even with HIGHMEM and
-> > > +	 * to even less without it.
-> > > +	 * Discard memory after max_pfn - the actual limit detected at runtime.
-> > > +	 */
-> > > +	if (IS_ENABLED(CONFIG_X86_32))
-> > > +		memblock_remove(PFN_PHYS(max_pfn), -1);
-> > > +
-> > >  	/* Throw away partial pages: */
-> > >  	memblock_trim_memory(PAGE_SIZE);
-> > 
-> > Our CI noticed a boot failure after this change as commit 1e07b9fad022
-> > ("x86/e820: Discard high memory that can't be addressed by 32-bit
-> > systems") in -tip when booting i386_defconfig with a simple buildroot
-> > initrd.
-> 
-> I've zapped this commit from tip:x86/urgent for the time being:
-> 
->   1e07b9fad022 ("x86/e820: Discard high memory that can't be addressed by 32-bit systems")
-> 
-> until these bugs are better understood.
+--Sig_/iP=CeZYpD+_6T=lMjmJSf8s
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-With X86_PAE disabled phys_addr_t is 32 bit, PFN_PHYS(MAX_NONPAE_PFN)
-overflows and we get memblock_remove(0, -1) :(
+Hi Stefan,
 
-Using max_pfn instead of MAX_NONPAE_PFN would work because there's a hole
-under 4G and max_pfn should never overflow.
+> Am 18.04.25 um 08:07 schrieb Lukasz Majewski:
+> > This patch series provides support for More Than IP L2 switch
+> > embedded in the imx287 SoC.
+> >
+> > This is a two port switch (placed between uDMA[01] and MAC-NET[01]),
+> > which can be used for offloading the network traffic.
+> >
+> > It can be used interchangeably with current FEC driver - to be more
+> > specific: one can use either of it, depending on the requirements.
+> >
+> > The biggest difference is the usage of DMA - when FEC is used,
+> > separate DMAs are available for each ENET-MAC block.
+> > However, with switch enabled - only the DMA0 is used to
+> > send/receive data to/form switch (and then switch sends them to
+> > respecitive ports).
+> >
+> > Signed-off-by: Lukasz Majewski <lukma@denx.de> =20
+> After changing the IRQ name part mention in patch 1, you can add
+>=20
+> Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
+>=20
 
-Another option is to skip e820 entries above 4G and not add them to
-memblock at the first place, e.g.
+Shall I add RoB tag to all patches?
 
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 57120f0749cc..2b617f36f11a 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -1297,6 +1297,17 @@ void __init e820__memblock_setup(void)
- 		if (entry->type != E820_TYPE_RAM)
- 			continue;
- 
-+#ifdef CONFIG_X86_32
-+		/*
-+		 * Discard memory above 4GB because 32-bit systems are limited
-+		 * to 4GB of memory even with HIGHMEM.
-+		 */
-+		if (entry->addr > SZ_4G)
-+			continue;
-+		if (entry->addr + entry->size > SZ_4G)
-+			entry->size = SZ_4G - entry->addr;
-+#endif
-+
- 		memblock_add(entry->addr, entry->size);
- 	}
- 
- 
-> Thanks,
-> 
-> 	Ingo
+I will wait for ACK from at least Andrew and then reset the v7 with all
+tags collected.
 
--- 
-Sincerely yours,
-Mike.
+> Thanks
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/iP=CeZYpD+_6T=lMjmJSf8s
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmgCFR8ACgkQAR8vZIA0
+zr0z6Qf+OLTAcpxhxBxIYWQNZrcVuoJouHXGObXilKYz0taH+/2NJPlEVldKdt79
+T+rTrMBKLCx6NFaUAujS63HHdli4yR7wfZsv5Ry2QTdN92nMuSnyeUOyITaBDwVA
+wrfxapywH5KswGvbq0ZdINFP3MN8RjmFx46R6vkDxThOKDmqaOLYmXKWkaQ0Hfl+
+V792yJjlhFn+LhNipqZ3c0k5aPEhX8qKnJaCuggj1A0BqZIsxrYKtwF0bXaNcmRm
+EbJVY4AKMQGEcFNTXBJkDb3Xx9ODt6OotMibszn1VIXfSMRtyzfTRzxYTiC6ey7I
+lntBmtTVZUzf2tBd8OqK9Yka8B27GA==
+=iHKp
+-----END PGP SIGNATURE-----
+
+--Sig_/iP=CeZYpD+_6T=lMjmJSf8s--
