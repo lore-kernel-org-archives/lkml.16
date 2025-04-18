@@ -1,158 +1,257 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6CDD2AE8C;
-	Fri, 18 Apr 2025 17:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0672218AD4;
+	Fri, 18 Apr 2025 17:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744997839; cv=none; b=czvCGOXrq/FNNJQB2igvTrnVjLbWiv8QQKdzFtUyODb8D3rh4n4qIkcpZznUQEoxhk6kBi2+85ZxlM3NazVdeupQ9/gW/W7htq8LSvGvzE2lMrl/4YEmKmGOfh+r4UsdZTDL8qmdj1iZ/b5pSWU9rxWrInJVqd7zNbcHQ4WzATo=
+	t=1744997918; cv=none; b=GlkhnxY+LA7h8QkYFPHnRGWuOo0pXPuh0/7wgWgjXWsT2Ky+1eCptMTdPfnsJ8NESZTnzCJNeeAEHXOyYkgZOpG6g7oaH++1cCgTS4/sPtp2fJ7NGOB0rw+3unNQCjVbuuUT0xmNeIXzgqxQKc8TPIyYWU98ixOVMJ3zT69Vue8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744997839; c=relaxed/simple;
-	bh=nBmCipnBYBtC93GcnvzRAKXGqP/Kr7xCEtJLO8u/CdY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M3EZL+Fz2PlJxtxkQmVKbT58Wx4OOtpAop0RmqFoAjKfR8a/zOccm98tEQgfHvtf8JwBN/MdYPydYuN/OApuscUsgHpkpLd4eu5IeOpVuSZq6oLTgx15hUbljWgZr4Kf6oI5TJ530nvLsIWVxyYSo5jVhgMSWAczMBvSFt+ED94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=e69irpG1; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1744997918; c=relaxed/simple;
+	bh=xb2G2VO1M1xfUb0LCy2IJ1UrQitw5bZu9jE/Qrd9Xu8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YpOr+iINdIeqKQM1kVoThj4aX5Xl05QGAzKiuRSw2V7maldbSe+Yhc9BySFdSqX9nNLIt3lalOUFujCyRVACmfDDmwIh+YyxOybLALuQEt3Gdx3N3D2EQKav6fq53x7M6D6EV9VIICtTDLByFYM1soOMY8QzCNXF9G/oey9QQAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=euNER91e; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="e69irpG1"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0729140E0214;
-	Fri, 18 Apr 2025 17:37:13 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id SVSRx4Ac5zuv; Fri, 18 Apr 2025 17:37:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1744997827; bh=/OsAeQQ1ATmyDMbNXu/5LHgwBNX2gfsJooSlRYXisVg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=e69irpG1iZQwHWn4p26oLIyI+h4WVBiQopLXmSMDU0NmfetwbytFs14ENX4/HMv66
-	 SXgVwinYeciMPHXG79i05l5+sa3+z2n5iX1PqU3Jh2HmvjULG6Eiu90/avthPH4GjH
-	 eivcWttYM+ziVTgBhyFucYApgX9GGorgtgWRDoJW9A6osEnBEjeY4jpjHW/3JK1KIF
-	 4yjLAx76INEFWQW3RxsHG3A2tgkBs3fCL+3whYFtiWz3zeekwuboq0V19hdvEFXOPC
-	 wDljKFBqOzehYm+W2SljsbTMhTh+SyoSMVuVoAJVx8VlMSoHO9+cZOJDj0NuAw3K1V
-	 dI2scwi/kr4eNY0B0Rf9huopUmnfQSRt5TleoJVbPXWaeAvTKloGs2mtNaigei/FBb
-	 jGz8tLFvacMnV30iqteKXCGIlSZbXTR+mDgxsNT/NA/GqWRYd79aM+F+640ZdSjub5
-	 pEKdyz2tU6mwcET2wNXSFx6tKh9axCrhP/J1+i41pMyoNKkqj8XPuNuJ9mvewa9gUD
-	 uRg0nyIJQW31PblpUA4PH2FRKcfUVRgRCMDKbjhSZmVrZYdp42w51knJg6M89cchgM
-	 F2KlkJjXKPPsEspseKtbq2D9BKUMrucc/t3iqWFuLQ2xMZFD64jIFVcRx3ljVNQWq9
-	 7yPtm/Z7q/Qcd9HRWkjtuICU=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8E05E40E0200;
-	Fri, 18 Apr 2025 17:36:50 +0000 (UTC)
-Date: Fri, 18 Apr 2025 19:36:43 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Max Grobecker <max@grobecker.info>, Ingo Molnar <mingo@kernel.org>,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, thomas.lendacky@amd.com, perry.yuan@amd.com,
-	mario.limonciello@amd.com, riel@surriel.com, mjguzik@gmail.com,
-	darwi@linutronix.de
-Subject: Re: [PATCH AUTOSEL 5.10 2/6] x86/cpu: Don't clear
- X86_FEATURE_LAHF_LM flag in init_amd_k8() on AMD when running in a virtual
- machine
-Message-ID: <20250418173643.GEaAKNq_1Nq9PAYf4_@fat_crate.local>
-References: <20250331143710.1686600-1-sashal@kernel.org>
- <20250331143710.1686600-2-sashal@kernel.org>
- <aAKDyGpzNOCdGmN2@duo.ucw.cz>
- <aAKJkrQxp5on46nC@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="euNER91e"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4774d68c670so13387341cf.0;
+        Fri, 18 Apr 2025 10:38:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744997915; x=1745602715; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ki8ACZJISOIbjJS/GasgcMmF3ePfgYfym/hjjZ80/W0=;
+        b=euNER91e1Gg5lpm90aj9e/SMgl/p2a/tWx89sFA1JpmV5CubAH2mzPH7vNSL6XqPBH
+         wZxiierLHUlX6LHHHr72c2NKvhW1a9IPGA5f58WBa6LA0T/g7IRfNI7zpko4Bbg7bylq
+         LCs31syiCvT1FxawECgTgRbZgtQ9+Sj4DAAkMpsDDiAdt4zmlj/wEi6cGYPx3pkLME/h
+         GMBiMabrz/t5kOdCSUteINd+bTt+Z8yIeufFPJt04L2Vjenikeds+a03CUZa3vEV9NtG
+         Bu22qsL8Mda9pjx1oj+ujZgGdV7cJPHAKoQQL7Nwzc2YABMcBC8SCd/mz5zs4BmxWtEE
+         nTug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744997915; x=1745602715;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ki8ACZJISOIbjJS/GasgcMmF3ePfgYfym/hjjZ80/W0=;
+        b=NsFxpfGoy4JlgLqX6sgPo/laxfFZ0VrdLcAiu5nLMiQ+w4fiQYnvvRiC/Ly7K8+maD
+         /WhPttiQSHxJTUfLNZKhpIAaaxQ0di1KDN5KMXQ56ul0pVXplJKq4fdJ66ISrxnlMnLB
+         UXQJgtCt6tMBzHvlYEDVif/KphRVW3P4v23AexyoH7+M8/j9TKfR0M7itwv4WK/J48Hp
+         MvC17z4o5F60SEk7Qikhz0WVvGZqGJHSQX5ugU+uxXKlN0wbNYKM2h6pqaq2RwirrqNV
+         NowpX3IJQ8LIPRoUwTrSYOc2LUG7oKO0jqb6BKxihp7JtMd743FQput80IcAkdO/vVtB
+         rfEw==
+X-Forwarded-Encrypted: i=1; AJvYcCWVQ0/cgXm4G0r3zpVF+MPqg13GkkEiel1zCuWCHbaJCTEWwivdG/IkEoet5S6JxJvSt6gPWzbBp2fbDjin@vger.kernel.org, AJvYcCXe+9SZTc+d/rTwkgMkgT3UGt4e8FOmX7hPG3r93KxKxp6ZZ6dGO//9DrVKv8JL3xTx/f14cQQ4IV8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqLHhwl4uTeuvcTjnfsOte4zOa6ExbKS56qShL6Iw5Qhow6ejC
+	bMXEK98ASR/zXohGa4yN57SJUpNybjT+qt3RpQZW/A/w4B9aEu3fLrZ+DuvB7wR4daIf4meAAb3
+	F7+mRgJ8D9NBssfjVrF5krwSFRCo=
+X-Gm-Gg: ASbGnctdWdZ0w3oPqJD9SNsZb0W0IJaOIA9KTSunhUYNU5qJ2Lzs0UFtWzXLiSRk2JV
+	2Q2JhdVTUd5QQJG7y414eXtdj//c/ZQKuoXocIZuK6KXBFWxjfMJ/40ID7bXlCfW2YOIhRqBg6a
+	kw1elwRfmbnhLfArrQEV4m+MDraqagWf665JTVygGi/ON94xZa1/KE
+X-Google-Smtp-Source: AGHT+IGGjHKCjDEZMmSyR53rv7oRObionPa3GQZ+n0O87mJ/ObRuEobUJbchFdd8U7yEiltYlhwfH36qnsflWc3KJdc=
+X-Received: by 2002:a05:622a:1a12:b0:476:a967:b247 with SMTP id
+ d75a77b69052e-47aec4ccc58mr55176681cf.47.1744997915428; Fri, 18 Apr 2025
+ 10:38:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aAKJkrQxp5on46nC@google.com>
+References: <20250415222652.545026-1-gshahrouzi@gmail.com> <20250418165012.53c9bb85@jic23-huawei>
+In-Reply-To: <20250418165012.53c9bb85@jic23-huawei>
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Date: Fri, 18 Apr 2025 13:38:24 -0400
+X-Gm-Features: ATxdqUEoSHSECR3LAgcFScpgkJmwDfqANFifuTo82ewMJWl8EgbXtME3-PccdqU
+Message-ID: <CAKUZ0zJ5ZCmkJOESYpbp=a6odgLyt4Qxt_0cucsHk7FCYqoumw@mail.gmail.com>
+Subject: Re: [PATCH] iio: accel: adis16203: Fix single-axis representation and
+ CALIBBIAS handling
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev, 
+	Michael.Hennerich@analog.com, skhan@linuxfoundation.org, 
+	kernelmentees@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 18, 2025 at 10:19:14AM -0700, Sean Christopherson wrote:
-> Uh, and the hypervisor too?  Why is the hypervisor enumerating an old K8 CPU for
-> what appears to be a modern workload?
-> 
-> > I'd say this is not good stable candidate.
-> 
-> Eh, practically speaking, there's no chance of this causing problems.  The setup
-> is all kinds of weird, but AIUI, K8 CPUs don't support virtualization so there's
-> no chance that the underlying CPU is actually affected by the K8 bug, because the
-> underlying CPU can't be K8.  And no bare metal CPU will ever set the HYPERVISOR
-> bit, so there won't be false positives on that front.
-> 
-> I personally object to the patch itself; it's not the kernel's responsibility to
-> deal with a misconfigured VM.  But unless we revert the commit, I don't see any
-> reason to withhold this from stable@.
-
-I objected back then but it is some obscure VM migration madness (pasting the
-whole reply here because it didn't land on any ML):
-
-Date: Tue,  17 Dec 2024 21:32:21 +0100
-From: Max Grobecker <max@grobecker.info>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Max Grobecker <max@grobecker.info>, x86@kernel.org
-Subject: Re: [PATCH v2] Don't clear X86_FEATURE_LAHF_LM flag in init_amd_k8()
- on AMD when running in a virtual machine
-Message-ID: <d77caeea-b922-4bf5-8349-4b5acab4d2eb>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
-
-Hi,
-
-sorry for my late response, was hit by a flu last days.
-
-On Tue, 10 Dec 2024 13:51:50 +0100, Borislav Petkov wrote:
-> Lemme get this straight: you - I don't know who "we" is - are running K8
-> models in guests? Why?
-
-Oh, I see, I missed to explain that, indeed.
-
-This error happens, when I start a virtual machine using libvirt/QEMU while 
-not passing through the host CPU. I do this, because I want to be 
-able to live-migrate the VM between hosts, that have slightly different CPUs.
-Migration works, but only if I choose the generic "kvm64" CPU preset to be
-used with QEMU using the "-cpu kvm64" parameter:
- 
-  qemu-system-x86_64 -cpu kvm64
- 
-I also explicitly enabled additional features like SSE4.1 or AXV2 to have as
-most features as I can but still being able to do live-migration between hosts.
-  
-By using this config, the CPU is identified as "Common KVM processor"
-inside the VM:
-
-  processor       : 0
-  vendor_id       : AuthenticAMD
-  cpu family      : 15
-  model           : 6
-  model name      : Common KVM processor
-
-Also, the model reads as 0x06, which is set by that kvm64 CPU preset,
-but usually does not pose a problem.
-
-The original vendor id of the host CPU is still visible to the guest, and in
-case the host uses an AMD CPU the combination of "AuthenticAMD" and model 0x06
-triggers the bug and the lahf_lm flag vanishes.
-If the guest is running with the same settings on an Intel CPU and therefore 
-reads "GenuineIntel" as the vendor string, the model is still 0x06, but also 
-the lahf_lm flag is still listed in /proc/cpuinfo.
-
-The CPU is mistakenly identified to be an AMD K8 model, while, in fact, nearly
-all features a modern Epyc or Xeon CPU is offering, are available.
-
-
-Greetings,
- Max
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+On Fri, Apr 18, 2025 at 11:50=E2=80=AFAM Jonathan Cameron <jic23@kernel.org=
+> wrote:
+>
+> On Tue, 15 Apr 2025 18:26:52 -0400
+> Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
+>
+> > The ADIS16203 is a single-axis 360 degree inclinometer. The previous
+> > driver code incorrectly represented this by defining separate X and Y
+> > inclination channels based on the two different output format registers
+> > (0x0C for 0-360 deg, 0x0E for +/-180 deg). This violated IIO convention=
+s
+> > and misrepresented the hardware's single angle output. The 'Fixme'
+> > comment on the original Y channel definition indicated this known issue=
+.
+> >
+> > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> > ---
+> > Not sure to put a fixes tag here or not because the driver used to be
+> > spread out across multiple files until it was whittled down to one file
+> > using a common interface for similar devices.
+>
+> No fixes tag for this one is the right choice. It is a complex bit of
+> ABI abuse.
+Got it.
+>
+> > ---
+> >  drivers/staging/iio/accel/adis16203.c | 52 ++++++++++++++++-----------
+> >  1 file changed, 31 insertions(+), 21 deletions(-)
+> >
+> > diff --git a/drivers/staging/iio/accel/adis16203.c b/drivers/staging/ii=
+o/accel/adis16203.c
+> > index c1c73308800c5..73288121bf0bd 100644
+> > --- a/drivers/staging/iio/accel/adis16203.c
+> > +++ b/drivers/staging/iio/accel/adis16203.c
+> > @@ -28,11 +28,11 @@
+> >  /* Output, temperature */
+> >  #define ADIS16203_TEMP_OUT       0x0A
+> >
+> > -/* Output, x-axis inclination */
+> > -#define ADIS16203_XINCL_OUT      0x0C
+> > +/* Output, 360 deg format */
+> > +#define ADIS16203_INCL_OUT       0x0C
+> >
+> > -/* Output, y-axis inclination */
+> > -#define ADIS16203_YINCL_OUT      0x0E
+> > +/* Output, +/-180 deg format */
+> > +#define ADIS16203_INCL_180_OUT   0x0E
+> >
+> >  /* Incline null calibration */
+> >  #define ADIS16203_INCL_NULL      0x18
+> > @@ -128,8 +128,7 @@
+> >  #define ADIS16203_ERROR_ACTIVE          BIT(14)
+> >
+> >  enum adis16203_scan {
+> > -      ADIS16203_SCAN_INCLI_X,
+> > -      ADIS16203_SCAN_INCLI_Y,
+> > +      ADIS16203_SCAN_INCLI,
+> >        ADIS16203_SCAN_SUPPLY,
+> >        ADIS16203_SCAN_AUX_ADC,
+> >        ADIS16203_SCAN_TEMP,
+> > @@ -137,10 +136,6 @@ enum adis16203_scan {
+> >
+> >  #define DRIVER_NAME          "adis16203"
+> >
+> > -static const u8 adis16203_addresses[] =3D {
+> > -     [ADIS16203_SCAN_INCLI_X] =3D ADIS16203_INCL_NULL,
+> > -};
+> > -
+> >  static int adis16203_write_raw(struct iio_dev *indio_dev,
+> >                              struct iio_chan_spec const *chan,
+> >                              int val,
+> > @@ -148,10 +143,15 @@ static int adis16203_write_raw(struct iio_dev *in=
+dio_dev,
+> >                              long mask)
+> >  {
+> >       struct adis *st =3D iio_priv(indio_dev);
+> > -     /* currently only one writable parameter which keeps this simple =
+*/
+> > -     u8 addr =3D adis16203_addresses[chan->scan_index];
+> >
+> > -     return adis_write_reg_16(st, addr, val & 0x3FFF);
+> > +     switch (mask) {
+> > +     case IIO_CHAN_INFO_CALIBBIAS:
+> > +             if (chan->scan_index !=3D ADIS16203_SCAN_INCLI)
+> > +                     return -EINVAL;
+> > +             return adis_write_reg_16(st, ADIS16203_INCL_NULL, val & 0=
+x3FFF);
+>
+> I would check for out of range before you get here rather than masking.
+> Clearly the old code just masked, but we can do better given you are refa=
+ctoring
+> it.  If an invalid setting is requested best thing is normally to just re=
+turn
+> an error so userspace can see it was ignored.
+Got it. Added these changes to V2.
+>
+>
+> > +     default:
+> > +             return -EINVAL;
+> > +     }
+> >  }
+> >
+> >  static int adis16203_read_raw(struct iio_dev *indio_dev,
+> > @@ -161,7 +161,6 @@ static int adis16203_read_raw(struct iio_dev *indio=
+_dev,
+> >  {
+> >       struct adis *st =3D iio_priv(indio_dev);
+> >       int ret;
+> > -     u8 addr;
+> >       s16 val16;
+> >
+> >       switch (mask) {
+> > @@ -194,8 +193,9 @@ static int adis16203_read_raw(struct iio_dev *indio=
+_dev,
+> >               *val =3D 25000 / -470 - 1278; /* 25 C =3D 1278 */
+> >               return IIO_VAL_INT;
+> >       case IIO_CHAN_INFO_CALIBBIAS:
+> > -             addr =3D adis16203_addresses[chan->scan_index];
+> > -             ret =3D adis_read_reg_16(st, addr, &val16);
+> > +             if (chan->scan_index !=3D ADIS16203_SCAN_INCLI)
+> > +                     return -EINVAL;
+> > +             ret =3D adis_read_reg_16(st, ADIS16203_INCL_NULL, &val16)=
+;
+> >               if (ret)
+> >                       return ret;
+> >               *val =3D sign_extend32(val16, 13);
+> > @@ -206,13 +206,23 @@ static int adis16203_read_raw(struct iio_dev *ind=
+io_dev,
+> >  }
+> >
+> >  static const struct iio_chan_spec adis16203_channels[] =3D {
+> > +     {
+> > +             .type =3D IIO_INCLI,
+> > +             .info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) |
+> > +                                     BIT(IIO_CHAN_INFO_SCALE) |
+> > +                                     BIT(IIO_CHAN_INFO_CALIBBIAS),
+> > +             .address =3D ADIS16203_INCL_180_OUT,
+> > +             .scan_index =3D ADIS16203_SCAN_INCLI,
+> > +             .scan_type =3D {
+> > +                     .sign =3D 's',
+> > +                     .realbits =3D 14,
+> > +                     .storagebits =3D 16,
+> > +                     .shift =3D 0,
+>
+> No need for setting shift to 0 explicitly.  It will happen anyway and
+> a shift of 0 is a fairly natural default.
+Got it. Added to V2.
+>
+> > +                     .endianness =3D IIO_CPU,
+> > +             },
+> > +     },
+> >       ADIS_SUPPLY_CHAN(ADIS16203_SUPPLY_OUT, ADIS16203_SCAN_SUPPLY, 0, =
+12),
+> >       ADIS_AUX_ADC_CHAN(ADIS16203_AUX_ADC, ADIS16203_SCAN_AUX_ADC, 0, 1=
+2),
+> > -     ADIS_INCLI_CHAN(X, ADIS16203_XINCL_OUT, ADIS16203_SCAN_INCLI_X,
+> > -                     BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
+> > -     /* Fixme: Not what it appears to be - see data sheet */
+> > -     ADIS_INCLI_CHAN(Y, ADIS16203_YINCL_OUT, ADIS16203_SCAN_INCLI_Y,
+> > -                     0, 0, 14),
+> Why the ordering change?  I don't think it matters in practice, but easie=
+r to
+> review of we keep that ordering the same as then no need to think about i=
+t at
+> all!
+You're right, maintaining the original order simplifies reviewing this
+specific functional change. I have restored the original relative
+order of the channels in v2.
+My initial thought process for moving the inclinometer channel was to
+place the device's primary function first in the list, but I agree
+that separating functional changes (like this patch) from
+organizational changes (like reordering) is better practice. Any
+reordering can be proposed separately.
+>
+> Jonathan
+>
+> >       ADIS_TEMP_CHAN(ADIS16203_TEMP_OUT, ADIS16203_SCAN_TEMP, 0, 12),
+> >       IIO_CHAN_SOFT_TIMESTAMP(5),
+> >  };
+>
