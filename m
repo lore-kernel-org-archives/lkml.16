@@ -1,109 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58C926B95E;
-	Fri, 18 Apr 2025 13:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BA726B95E;
+	Fri, 18 Apr 2025 13:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744982686; cv=none; b=EkgD2CpeWb3WS5s7gP/8piyxbL3/071ubwHNR7dlO5O7dPRPAO/Dw0COoVsMHWm5W+vZX+O1bsiCjxyqhlb507Y5JZ7JMrgvSupsyB6iM4eo/n+0YaaSagkqPL7+SFfisieP18AkP7GQI4eaTN/R7Ix/ES9ZsEk2ITW8C0vOI1M=
+	t=1744982718; cv=none; b=pS4fmgGhcUergXWkaz93mE7RmVVv5ThC94vQEHDL8BOdZPin0Hmg2jW4VH9GqtaMgPBjd/TPJSrijmR5e5VPhPuBqrjOj45WE+jCDxF6tlNr9haeWBnVLgN4+4UC4IVt+oOjYOR4rcmwZRBmibTIbG7krneWnk0nk/E+RvSf8rA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744982686; c=relaxed/simple;
-	bh=Zpq0zvnXdVEbaBwzWK6PMJI0n8R2FyiSy5j5Qz5uRSE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uQ8dtuittzN9wwy2FWDEjEF4JwhmSzDX4yAd21b3SCOy2odChZGmnotYFutzt3kSloVsLwVDovuBKvNuPN0qvSF+4Lpa1rhwK846Lhsh3umPKjbZayEu96eFoGwMkgvM0/QN7BWE7dWZAF44ju96R2xB6OewVv6ABGOE+N+yVU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cionJg7L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744982718; c=relaxed/simple;
+	bh=MuXimpFpwwqcTDObiqnJJmWYWHO19US5y6oXa8it9is=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ORuUoe0Lyxwqrhpov5+vDfURhniJhu1vqUsewrEw0LEmkFHUIZmGiEc3wy5M5v7p8j/lqAc/PLURDB8d4S9OGo4A/Brzhy2TmMxf6ZsOM633NgzWHEleiE5gljzJh4U1M128clHSm4QoPdW1AH+obmxCaSMfZmxgInlc6cdkqL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LWMxsFrp; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cionJg7L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AAA3C4AF09;
-	Fri, 18 Apr 2025 13:24:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744982686;
-	bh=Zpq0zvnXdVEbaBwzWK6PMJI0n8R2FyiSy5j5Qz5uRSE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=cionJg7L3TmwTFeVS5XuXObcMV/a/qYo6bkBGi7ZmSSxgsmsTHt4a1c0nRpCSi23a
-	 8zsy9Xff+wHznJXzWUzsHnGTSGng1tbF7tOfIrWaFOiitIV4LmH+WpnCKIevKApxd4
-	 oOmfepaqqrIkagMXTXRZn6rXqFLreXRPNYSeUAt1df9Tg4ZcoiouQ3DiWfc4mXTPwn
-	 DpiQM8RU/lNNO2ksMV1wu1expaMSjYlJDfSLEEcDIrNU6ugKC08TmO9DHQKCu0dP8o
-	 SgReWFMf7hidWL+yLXuXBWChsbmfkEIdEhholLRGVhH6mE7HOpVzgHffHhFqMY6bat
-	 4wKQxfFzabizQ==
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30db1bc464dso18401281fa.0;
-        Fri, 18 Apr 2025 06:24:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVGYt5swpCG8+/ADb+d4n2U1jr1sWxyevZGqNxe3sptElG43Pg+I+mbt4oPmxLgZfhBjsmWBLCM/EHSjEQ=@vger.kernel.org, AJvYcCWYdKrZH5tAZFauup3R/XubdsWqinRHvbhBm74VTCvA6hDz72hSYwCjANlzDPxBg/M7iEgS6xr5scwcAWsS@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyp4dxA9Elj03pjHvBfryg1TqdJJnHjJs4U1dMOLCykPLDB3tKX
-	B5cZZKooFW9yVvCmuf97Ikw9pTQRfjwefDW9HfCUcjVLKlad9MSAwJzphapAuUrtoczDMcLag5K
-	TtKeRPcZk6AyfOJeBej2+TnF9vfg=
-X-Google-Smtp-Source: AGHT+IErep3WGm4BtwQbtUM21QyEnX4Yv4tOQqENF1MhIsvxiD9bDt1+g2ar+vyD71wyvGU9V+mWf5jvr1lqOC2Tljk=
-X-Received: by 2002:a05:651c:881:b0:30b:b7c3:949a with SMTP id
- 38308e7fff4ca-310905008cfmr7971221fa.18.1744982684428; Fri, 18 Apr 2025
- 06:24:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LWMxsFrp"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5ebf57360b6so242117a12.3;
+        Fri, 18 Apr 2025 06:25:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744982715; x=1745587515; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pVpxnI/29mpkrDRARmH1s8IOVcoXlXa8dMGnnZK1EKQ=;
+        b=LWMxsFrpSiFxNMC11ku/TrjHL4fD4defmTrmrnAv6knoCbtzmCgZARneDIl8va5xFp
+         iC7ts1Tv9W7rPUk/61w6ftLsm1Oi0Gs6De12I8a4ovrvwhl3fRZElzswUpbKqhfNPfuu
+         zaAkc1GyVuYlr6ylrNspZLgpPSnis5uTV6E0pAakbWcufEBdTmQeOmgljfRbo6lTaqvj
+         3HU7BwYjPg5/fSZjEohayL3Iko3SfjJXsKlBLfQTv31IzZJsdzsj/DoIBMF2l5MiZQQP
+         pNgMAmbJSghiDXoRGqUnAIy+A99fNPCte9Eal67Xd9LYumur1vVzdLBBpQKtpLOa/zcp
+         22Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744982715; x=1745587515;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pVpxnI/29mpkrDRARmH1s8IOVcoXlXa8dMGnnZK1EKQ=;
+        b=hbkKX6zp7fQCVNVjjEyyXJPR4OGOyQImi7gSBXycjd390sJFjByhWDvxKt72LFlh/J
+         gIHdZrPHU6M5bNtunAtSJFa0afHv6XbqupgrfeQdOzmHXsGeWucO+FzvIqA+qjfWHNfU
+         kTPJT6IUgQtQuNr1RYSqetZYVc/7SWWxXqwxiXwrk5jPORmS/YZxhqFZ3uxo41tnwbgG
+         WV2RXS1lDCZ1n5eLDZSeqYErXbythVgx6A+nwF8jfR8ukhGsJYV4raBuqmp6LROzlVFy
+         NfvZ7rv9F81GLL9cMC2TE9KLtwEdPtapXCxrciZYNy/VNNZSSJSxRhKb1NR5Y19U4hbl
+         42hA==
+X-Forwarded-Encrypted: i=1; AJvYcCVkC1KgF1uM0PzRiWkEHdXemCJnJHqjVtQCV7Js6U5l1OeZXsMlfASNMZNdBDiglY335JtsZd1Y@vger.kernel.org, AJvYcCXqsBK6RutFsP2AEzHtRXPIdOx+U199VgXk34Gl3ofb2rK0dHly3N2HEYLvtyWfK4PpbHvxFvJpN4PlsvY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZTfCuKtK9ss5PrB57jS71FxfECE9AXhcQFlrEXFmfL7yeenFx
+	O/oDYrrZpEFcfgwHii2exFXSciSEOCzNztNaZm3BjscRZSQPqcL9
+X-Gm-Gg: ASbGnctKq2YlELQdqYavLlMkePtw4Mmqbl4VVsM0OGsAkoIIkZKe6RVAtwmQO5plQet
+	VqXtsNpjZczheNxWPrBMqGg5oSHMtEamcBLNdca0hqftxdzmaiYn7JP+X715Ugdq9ujdd2tlHSA
+	OlY3uADCnvnDVZiulXSfdlai4TDBGriu72ZnWjkCmuNig2Ls31jAJN6NaiqEmdsgK/zrSV7qEsJ
+	wL/0FyhCNh2WuOqcssFkbjck+DEERramojXEj2588O6nJQxrDc+fDwIwbyvNBhUdM1xhe/OrUOk
+	4/r/wrb2O4Pap/mx7UrqvUx0dUnv
+X-Google-Smtp-Source: AGHT+IHY8YYl+gLe7z4XbImJlTJtfNKJ64WGJaDAJCdf8mISh7qKy9awk9jjoRAY+BWRqWp8cGMOBA==
+X-Received: by 2002:a05:6402:350f:b0:5f4:5dfa:992c with SMTP id 4fb4d7f45d1cf-5f628536df7mr802836a12.3.1744982714460;
+        Fri, 18 Apr 2025 06:25:14 -0700 (PDT)
+Received: from skbuf ([188.25.50.178])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef45779sm118202566b.127.2025.04.18.06.25.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 06:25:13 -0700 (PDT)
+Date: Fri, 18 Apr 2025 16:25:11 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Wei Fang <wei.fang@nxp.com>
+Cc: claudiu.manoil@nxp.com, vladimir.oltean@nxp.com, xiaoning.wang@nxp.com,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, christophe.leroy@csgroup.eu,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 net-next 02/14] net: enetc: add command BD ring
+ support for i.MX95 ENETC
+Message-ID: <20250418132511.azibvntwzh6odqvx@skbuf>
+References: <20250411095752.3072696-1-wei.fang@nxp.com>
+ <20250411095752.3072696-1-wei.fang@nxp.com>
+ <20250411095752.3072696-3-wei.fang@nxp.com>
+ <20250411095752.3072696-3-wei.fang@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414174018.6359-1-ebiggers@kernel.org>
-In-Reply-To: <20250414174018.6359-1-ebiggers@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 18 Apr 2025 15:24:32 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGtQ=beo5Yvh38Sr-G3qyb7hYFpJsubUvkQuM4_451CGw@mail.gmail.com>
-X-Gm-Features: ATxdqUElMc5hlF675lGEFJTV3nML3Kc9OVzWiwsASn1paK0_oCsLyQuqTnCSjCw
-Message-ID: <CAMj1kXGtQ=beo5Yvh38Sr-G3qyb7hYFpJsubUvkQuM4_451CGw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: Kconfig: remove unnecessary selection of CRC32
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-crypto@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411095752.3072696-3-wei.fang@nxp.com>
+ <20250411095752.3072696-3-wei.fang@nxp.com>
 
-On Mon, 14 Apr 2025 at 19:41, Eric Biggers <ebiggers@kernel.org> wrote:
->
-> From: Eric Biggers <ebiggers@google.com>
->
-> The selection of CRC32 by ARM64 was added by commit 7481cddf29ed
-> ("arm64/lib: add accelerated crc32 routines") as a workaround for the
-> fact that, at the time, the CRC32 library functions used weak symbols to
-> allow architecture-specific overrides.  That only worked when CRC32 was
-> built-in, and thus ARM64 was made to just force CRC32 to built-in.
->
-> Now that the CRC32 library no longer uses weak symbols, that no longer
-> applies.  And the selection does not fulfill a user dependency either;
-> those all have their own selections from other options.  Therefore, the
-> selection of CRC32 by ARM64 is no longer necessary.  Remove it.
->
-> Note that this does not necessarily result in CRC32 no longer being set
-> to y, as it still tends to get selected by something else anyway.
->
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ---
->
-> Please consider taking this through the arm64 tree.  But if it doesn't
-> get picked up there, I'll take it through the crc tree.
->
->  arch/arm64/Kconfig | 1 -
->  1 file changed, 1 deletion(-)
->
+On Fri, Apr 11, 2025 at 05:57:40PM +0800, Wei Fang wrote:
+> diff --git a/drivers/net/ethernet/freescale/enetc/enetc_cbdr.c b/drivers/net/ethernet/freescale/enetc/enetc_cbdr.c
+> index 20bfdf7fb4b4..ecb571e5ea50 100644
+> --- a/drivers/net/ethernet/freescale/enetc/enetc_cbdr.c
+> +++ b/drivers/net/ethernet/freescale/enetc/enetc_cbdr.c
+> @@ -60,6 +60,45 @@ void enetc_teardown_cbdr(struct enetc_cbdr *cbdr)
+>  }
+>  EXPORT_SYMBOL_GPL(enetc_teardown_cbdr);
+>  
+> +int enetc4_setup_cbdr(struct enetc_si *si)
+> +{
+> +	struct ntmp_user *user = &si->ntmp_user;
+> +	struct device *dev = &si->pdev->dev;
+> +	struct enetc_hw *hw = &si->hw;
+> +	struct netc_cbdr_regs regs;
+> +
+> +	user->cbdr_num = 1;
+> +	user->cbdr_size = NETC_CBDR_BD_NUM;
+> +	user->dev = dev;
+> +	user->ring = devm_kcalloc(dev, user->cbdr_num,
+> +				  sizeof(struct netc_cbdr), GFP_KERNEL);
+> +	if (!user->ring)
+> +		return -ENOMEM;
+> +
+> +	/* set CBDR cache attributes */
+> +	enetc_wr(hw, ENETC_SICAR2,
+> +		 ENETC_SICAR_RD_COHERENT | ENETC_SICAR_WR_COHERENT);
+> +
+> +	regs.pir = hw->reg + ENETC_SICBDRPIR;
+> +	regs.cir = hw->reg + ENETC_SICBDRCIR;
+> +	regs.mr = hw->reg + ENETC_SICBDRMR;
+> +	regs.bar0 = hw->reg + ENETC_SICBDRBAR0;
+> +	regs.bar1 = hw->reg + ENETC_SICBDRBAR1;
+> +	regs.lenr = hw->reg + ENETC_SICBDRLENR;
+> +
+> +	return netc_setup_cbdr(dev, user->cbdr_size, &regs, user->ring);
+> +}
+> +EXPORT_SYMBOL_GPL(enetc4_setup_cbdr);
+> +
+> +void enetc4_teardown_cbdr(struct enetc_si *si)
+> +{
+> +	struct ntmp_user *user = &si->ntmp_user;
+> +
+> +	netc_teardown_cbdr(user->dev, user->ring);
+> +	user->dev = NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(enetc4_teardown_cbdr);
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+I wanted to ask why isn't netc_setup_cbdr() merged into enetc4_setup_cbdr()
+(and likewise for teardown_cbdr), because they sound very similar, and
+they operate on the same data - one is literally a continuation of the
+other. Then I looked downstream where the netc_switch is another API
+user of netc_setup_cbdr() and netc_teardown_cbdr().
 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index a182295e6f08..14073b0094c1 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -132,11 +132,10 @@ config ARM64
->         select BUILDTIME_TABLE_SORT
->         select CLONE_BACKWARDS
->         select COMMON_CLK
->         select CPU_PM if (SUSPEND || CPU_IDLE)
->         select CPUMASK_OFFSTACK if NR_CPUS > 256
-> -       select CRC32
->         select DCACHE_WORD_ACCESS
->         select DYNAMIC_FTRACE if FUNCTION_TRACER
->         select DMA_BOUNCE_UNALIGNED_KMALLOC
->         select DMA_DIRECT_REMAP
->         select EDAC_SUPPORT
->
-> base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
-> --
-> 2.49.0
->
+Do you think you could rename netc_setup_cbdr() into something like below:
+
+struct ntmp_user *ntmp_user_create(struct device *dev, size_t num_cbdr,
+				   const struct netc_cbdr_regs *regs);
+void ntmp_user_destroy(struct ntmp_user *user);
+
+From a data encapsulation perspective, it would be great if the outside
+world only worked with an opaque struct ntmp_user * pointer.
+
+Hide NETC_CBDR_BD_NUM from include/linux/fsl/ntmp.h if API users don't
+need to customize it, and let ntmp_user_create() set it.
+
+Move even more initialization into ntmp_user_create(), like the
+allocation of "user->ring", and reduce the number of arguments.
+
+In my opinion this would be a more natural organization of the code.
