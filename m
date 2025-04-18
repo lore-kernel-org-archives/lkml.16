@@ -1,258 +1,261 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp01.aussiebb.com.au (smtp01.aussiebb.com.au [121.200.0.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA39B4A2D;
-	Fri, 18 Apr 2025 01:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744939247; cv=fail; b=Z8RW3zeYPty2sqFTclvfam+5dWMp0/cbzCJWpAdrO25cF24lOaP/EisGj8GXq/K/D6NY9W032gKv4v5xYsxRKRfsp8aPD5AUO5fKFOh7not6IWKo/uaiDhJKii8XO4CRpmrhR/kbcYnpXTErVoEWJxTur9AGBO4pPzjsbSF+uzo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744939247; c=relaxed/simple;
-	bh=dQKtTF45SfbP5UCGJzWO1eJJO8gO0TpUlEfDEH6k1rI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=XgC3drDHQ6miq49QN1ohXWBjPYKv23JHrOnXgBQOYh16s5lURP4e6k7xIBgXdz58tE1eeR8lXmXMXzBXAkLITKn/efjtdIICyeD7ZfW1z5MrF9/OLlnR5YsID0q+/vHVVsPb8QP5+4HNQsWfJNseKB9nTts6AgyLKxNRvZ4LZWQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mwn5Sr0i; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mwn5Sr0i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744939245; x=1776475245;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=dQKtTF45SfbP5UCGJzWO1eJJO8gO0TpUlEfDEH6k1rI=;
-  b=Mwn5Sr0i6TNelvgGjK1xRB8/muQAIyOpSdIMfI6RTbWeOFZoBMDDFcQf
-   X4yBTfLHs6FSG2EKm9RWi6Hdxj0kKOvMxyuamsVAjY8Nh/2W/Des2qNGd
-   xw6aRtpu5gFXvIjcnidgui5MjVo3PFXkgGn1bUYKFxKs6/dZzN5wcP42H
-   tOZYg7EDE/xJQATn5WqITItYxHX2CuyG9I9P8SazZam4goQNZfhmCDxeJ
-   4FWsl7aFjavfoEOU8pBWYAEg3Qwu2G5WkMONqRKiF48bp4GF7rV3VGxyv
-   60megAG2fj/QP7KL4Xb+wt9zHX3wd86gdy2g/t6x9y6ir8ecWnnRIqTXP
-   A==;
-X-CSE-ConnectionGUID: cKGUWlzDSiGmchlY/N6dMw==
-X-CSE-MsgGUID: 8UnoLEjbQkewuTPAtg7pnw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="57228881"
-X-IronPort-AV: E=Sophos;i="6.15,220,1739865600"; 
-   d="scan'208";a="57228881"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 18:20:44 -0700
-X-CSE-ConnectionGUID: yKJn7UxmSjO8wYaAdjRrhw==
-X-CSE-MsgGUID: QnGns7S+Q6WSLXy3CUiRUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,220,1739865600"; 
-   d="scan'208";a="131534518"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 18:20:43 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 17 Apr 2025 18:20:42 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 17 Apr 2025 18:20:42 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.48) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 17 Apr 2025 18:20:42 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kqpKrH28Qk6FOUHO6pb8JIj5+Zctgxt3UJ5cRq/VTSbDKu5LHuRtCQ5cC9N9z9GxlcLAcH5TYM8AAzhTQQy8gsSlTHmvdODQZLSaQN9m4j6rj5acSfw6oY8pahZ7J4PNi4PLoeCUwm8FqWFZ9maRN/LZcLboa/sAKVy5hqQfGWYFQB5cfS4joqoxJUUyBZZbCEv6ExbpjsYb9/okPFEJdkikzfaiC8UokWvt68XU3C7aSILY11lVqUyGlm3n5XodLB21t5lqTiOIPG5OEMaZmRw3SDLfiDzhOaAF4eumAIFF6v42hauSezdvWU4gE3GMklzlwHHb60M/g5UlT5OE4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=s9jZ07VZUyiZ3rJJa9JKByz/s/uY96ut/66vE6foSA8=;
- b=LAFcX5d7cAYItdgLTXzwD38H4+IdylP+ZizzQqaE7/CQTUrc0AYdCs3iutYrybDvB49U+MErSAeKH25YhCkrTbOLzPt5Oxde73Uz9nE4goQcxez21WYbWUyKc1JorYee+c/n5mmbZo2W+/ItJ89wjho/tq7FVyPoI/y3ZP9w7Oo5zCeHRqMPVCOSI6hlcyDZrla761GP50vx1SphWpYp1f4JwSVioe+/ezGdKkb+c73X+4Vx1Cu0dTjEY2uvaWkBvT//bz3D97z6DLY6v18jsTCJ/U1Rwb9s9BCAW2Qb8k224EjPBfzLw5Uoo+Fpjpg4RWeKTSyphOnZQB9GsaU2QA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by MW3PR11MB4588.namprd11.prod.outlook.com (2603:10b6:303:54::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.26; Fri, 18 Apr
- 2025 01:20:39 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8655.022; Fri, 18 Apr 2025
- 01:20:39 +0000
-Date: Thu, 17 Apr 2025 18:20:35 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>, Marek Szyprowski
-	<m.szyprowski@samsung.com>
-CC: Leon Romanovsky <leon@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>, Joerg Roedel
-	<joro@8bytes.org>, Will Deacon <will@kernel.org>, Sagi Grimberg
-	<sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>, Yishai Hadas
-	<yishaih@nvidia.com>, Shameer Kolothum
-	<shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>, "=?iso-8859-1?B?Suly9G1l?=
- Glisse" <jglisse@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <iommu@lists.linux.dev>,
-	<linux-nvme@lists.infradead.org>, <linux-pci@vger.kernel.org>,
-	<kvm@vger.kernel.org>, <linux-mm@kvack.org>, Randy Dunlap
-	<rdunlap@infradead.org>
-Subject: Re: [PATCH v7 00/17] Provide a new two step DMA mapping API
-Message-ID: <6801a8e3968da_71fe29411@dwillia2-xfh.jf.intel.com.notmuch>
-References: <cover.1738765879.git.leonro@nvidia.com>
- <20250220124827.GR53094@unreal>
- <CGME20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648@eucas1p2.samsung.com>
- <1166a5f5-23cc-4cce-ba40-5e10ad2606de@arm.com>
- <d408b1c7-eabf-4a1e-861c-b2ddf8bf9f0e@samsung.com>
- <20250312193249.GI1322339@unreal>
- <adb63b87-d8f2-4ae6-90c4-125bde41dc29@samsung.com>
- <20250319175840.GG10600@ziepe.ca>
- <1034b694-2b25-4649-a004-19e601061b90@samsung.com>
- <20250322004130.GS126678@ziepe.ca>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250322004130.GS126678@ziepe.ca>
-X-ClientProxiedBy: MW4P220CA0003.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:303:115::8) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768F43FFD;
+	Fri, 18 Apr 2025 01:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.200.0.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744939344; cv=none; b=p+M//Z1Df/n+Qn/U5JXoa+21qVRDAWyPOq6HnvyWvOWYzlYUPGlYgLXhuep5ZNMMrtjmm4enmudbVM9xLme0YQ0MACgD9CqGdwdMIUJrdCsMNFi/h7+FSBtMUVXBpqWOBivmvwfJVZ7L4ua5amcFGS2w7LWrcA5Ov9QKpp5Dw9A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744939344; c=relaxed/simple;
+	bh=tqdjpujWh9eT1DPvIRtng0XSOuW2qpLpGXDKjSIuz8M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YCWxIk5Vh40CrHvmIqcT6s9T6YOOrTAXxj0M3B8JOhADt7HvjqJquBcZwAP7Pfjsws4vNY1bvpHDlgzGZIQsmaiND27GuhuieF2QqKOxJd5NpD/JMCgmDWxhvlj5Z/jpT4AayppFibELH+yESUzP4mwBIA0cksNIviUPWKZTEg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=themaw.net; spf=fail smtp.mailfrom=themaw.net; arc=none smtp.client-ip=121.200.0.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=themaw.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=themaw.net
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by smtp01.aussiebb.com.au (Postfix) with ESMTP id CFDA71012A3;
+	Fri, 18 Apr 2025 11:20:56 +1000 (AEST)
+X-Virus-Scanned: Debian amavisd-new at smtp01.aussiebb.com.au
+Received: from smtp01.aussiebb.com.au ([127.0.0.1])
+	by localhost (smtp01.aussiebb.com.au [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id FVhM7wj2tSqa; Fri, 18 Apr 2025 11:20:56 +1000 (AEST)
+Received: by smtp01.aussiebb.com.au (Postfix, from userid 116)
+	id C0A7910129B; Fri, 18 Apr 2025 11:20:56 +1000 (AEST)
+X-Spam-Level: 
+Received: from [192.168.0.229] (159-196-82-144.9fc452.per.static.aussiebb.net [159.196.82.144])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: ian146@aussiebb.com.au)
+	by smtp01.aussiebb.com.au (Postfix) with ESMTPSA id D167F101149;
+	Fri, 18 Apr 2025 11:20:53 +1000 (AEST)
+Message-ID: <125df195-5cac-4a65-b8bb-8b1146132667@themaw.net>
+Date: Fri, 18 Apr 2025 09:20:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MW3PR11MB4588:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5003390b-5f13-47a2-c44d-08dd7e173ad7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?B4pWIZ+5hJd2d9Z/0nSDy8ZhCmGR4rFTDJ5oM/gqr4mnFn/7EZhGUidPtOzH?=
- =?us-ascii?Q?VpIVgwz/jYS688V/rLkHZNB/IXUoGuhWCNL8cY4TnZhbUDMSmGknaMTDSkKa?=
- =?us-ascii?Q?IDwWVqbKEsgxQSX+s28k2CHf4te4ReRwt7liCs7YDW4eotbRpuJi9VWG6Pp6?=
- =?us-ascii?Q?8MnIi9KLOc7EmaFof2dav4lGws2IeHoH/9E1HtTlLOQX4ppQZpa6Q/X8piua?=
- =?us-ascii?Q?+BT+BgPbSLgnFF5++zftB433uYhszQN43iLsM5KAacMixllQf1G8lxr7cyeA?=
- =?us-ascii?Q?RUjIzwkT4ScNIdxmfJehXx7qZvvojISqY8f+Ti+J7UMd+M91foXR/xH7/yND?=
- =?us-ascii?Q?wdqunc9yK6qAS/mXBLFhfSNZMP/8Yj7oNili90i4yuLSzGB2fFZJNsMj6fqp?=
- =?us-ascii?Q?DHOR/NB3j8nNyU60PVIzLDhW3cMo+Ba3gCIT/tEPAME9HkRU6NXhRpoV94Bl?=
- =?us-ascii?Q?pF+idnCi0F5P3gZbsj0chIkoF1t2qhTj73ORhJsDOd1Zbs1Qe4FzN5/NpiSA?=
- =?us-ascii?Q?zvoU70cxr5ksi0F5p52xku+cIT1VYoy7G/3A13gk4WmZXSszx9O8xac/OMF0?=
- =?us-ascii?Q?sXa/uj//64rvvIPNKNTrxbDZfxC4kdZw4IuxKONWhs+qx37aVAOIKOmC+Ri0?=
- =?us-ascii?Q?QGqbfpoTI+7p91wFt+bMjSQ//x67mWwHP6pJHRO4sYP4M2o/YbZNmvKzWNdB?=
- =?us-ascii?Q?Ac/2a2ElkOpF6DvV2VA84/fyKWtwJTnxU/PpOWpW/ku9Ddb6DvUVDEtwn+Gh?=
- =?us-ascii?Q?w6esjx/XL+T9rL4Ku2IWCxyjSEuAT+c+6iWqgkjD35NHmnoqznXz0vjkdR8D?=
- =?us-ascii?Q?9O6AmBIqyWPH8o//2FofY21DwZveB9sPb4lkAxa45EWWL5t6wONpd7V/tFnN?=
- =?us-ascii?Q?O6BOgKIpC1EBvx9Z10ixHhpS56Y6qSaeiSQ2Pg9U5hTtRdGp8qgteZuLgbc+?=
- =?us-ascii?Q?J6C+sERmLmUH9ilWoK2DoZgJ7xi4hAvJaU4QgwTy6fyA+thUyrRm4nczcRfj?=
- =?us-ascii?Q?0pTheuznQIlKQayfKzCu9tJFzQzJfPTwbUwMi4P4xFqQFwCiH++a3uImtt65?=
- =?us-ascii?Q?Y7FZTUFhdsKQ/9+tPl6upV5OMxhQFKsnRlDfn/vyPwUGTRwJF7IRzs+kMuD4?=
- =?us-ascii?Q?INqvpLL1siVjmaLCh8oasz12YlIiQ6JCVOvA6JS8RaYa8W59INmqf/QJ0FYq?=
- =?us-ascii?Q?FiQ8F+6nLjPdLaHQhWd3guSBaF4kpQYni0Bt1asalWkom3F6R5qWAfoOfpeb?=
- =?us-ascii?Q?KoKQqhcyKgeBVWm0f3cQzSX2KbMNnJ8LgW54BahFVcm4of6YszjF5lv6SToX?=
- =?us-ascii?Q?N2ETANkr8eg8T+wqsRcqxxSmMjmBovqWc6hs+urGohElN/u1RrtKHNH+mkCk?=
- =?us-ascii?Q?/vOe/xz3d+F+nWgu0nCqc9ePDkVk?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?B9pmLmv9kFiXLFo39DFgQO52cR315cVMjFdI3VOdNAWW/gcSFg7sd4KbvXUv?=
- =?us-ascii?Q?WhnbJEPf0xxK8YGbCe5MfSO9+qC5NXIUPLk30UKMOa5Ego9+10K7cVW8E696?=
- =?us-ascii?Q?7xxs6myrkklEj9J9onDs9IlQNuVT6Qh7nfc+S+/jdTkarWGTVW4irOmanGSx?=
- =?us-ascii?Q?UunzwCAysvs3vEGlkP2ujFHXA12bLzreTlz5uZq/RoGGw0C9Qr1p+5R8c0/b?=
- =?us-ascii?Q?gnoIwsPe/ObqOAaQRuO3Op0sLr2Utsl3Z15ahbnFgMq7NT5dcuEVfVkY5JlV?=
- =?us-ascii?Q?m1p4nMMVZEMTcTGGsW2hcG/BOD17qRq3s9qPdoCXEDgnwsG9M3PkvXQTMHGw?=
- =?us-ascii?Q?u9cDwLPDSrWrKRAvG5/tSz0/XaAjtZMeJxNG3dmMwHmjljemMnlQoxZ3caI4?=
- =?us-ascii?Q?N/96L47b1m57ff09t2Q24dEPoBNRKZdxO0ABvvpQKCjlbBzo/Au3sRYex6eu?=
- =?us-ascii?Q?odm5dT7ubVpPRALdkhc/esAhnjjb0LRrbvpuHAc1c5InKzNZ76iwnVRI82AK?=
- =?us-ascii?Q?Hca8IBpvOByiiD1at4ggyp8y9pFZ5UonAyOQdztZOLbXSHsMeOS88dXQ/3eg?=
- =?us-ascii?Q?zNhc1Oe+LAsWD8LICfR9qI8N9Hx13k76S/XAxtxSIMNG77xt2k6ZpDO80nJh?=
- =?us-ascii?Q?eR0sqqyNMbzuzlcLjXyjlAF2fvch4S37RUHHEMILtFBqNzXImexOYVzhsCeI?=
- =?us-ascii?Q?0jHcYT2O6y0WPsURSnP0KoGX2oSsom1eGS2dyTGLRF4R2gqo8jYU446rRHOP?=
- =?us-ascii?Q?rNicvQ4LRcBaKc8NpnQH9agtP1FVdFaT37QYJmjmowtenn8Eh9QAnGITDWXa?=
- =?us-ascii?Q?pJfQ3sXYR871GvQFFJVTkRutqGnCzXKkTBAX2YTEZb7XHvMXwHSk08/sVrkm?=
- =?us-ascii?Q?Tx5rWxeVjvkCWlwvaDq1GiWipSopxDYhkgla5Qr+4+NSu7tBOWHamBrxtkYO?=
- =?us-ascii?Q?lQJscBjaEc8Jj8x2l/9jGRhy1bFm+oKRYxAUnRwwneLG4udJ9HfePViDJL1W?=
- =?us-ascii?Q?YWnKBhHJ8IyNFDv8RMPmo9KNeCv+kf+Kc3ZrmHuqP88jJ9zC4IKn68+o5J+9?=
- =?us-ascii?Q?i4y9hQ2JS9gUC+0CTk7KG0jKIK8cwt3WjVS+qCe2sP4rbbUP34GcLBUzbLvk?=
- =?us-ascii?Q?3LahotAANsdFcswBT/FuwEmoKp5WoRZ6p94cQ6iZ/LjGa+I2WxpcKzib4YOG?=
- =?us-ascii?Q?LYRPMEdbJnSYee3+DGrzd8AZ8rt4cFbYNXLFIxFBVQRY76Nx2+vo5XaMAu/w?=
- =?us-ascii?Q?zkzUsiEUjZbhDlOv17gvOwAJu2CuoKSR/1rac6yCGbNVX6gvSrexs9XsAJ0b?=
- =?us-ascii?Q?/C06xmtetp1sr5GRmDDw0l8wmd2uSrhlkgkkMt+KLUQTm2hLuxAThYUJl/r3?=
- =?us-ascii?Q?H5ueMdoQKFCVMZYz7sd6ZMvCplEgzCZAOlPTpTiDvTSX5oThzemX5MwfG9N9?=
- =?us-ascii?Q?Vh33xmU2FoLeAsZcuIJ6BL+Id9nun+EuBFnVlu6akUNVTJb66hqDGGieocr2?=
- =?us-ascii?Q?EgmGd+P7mOgyor3yMoOkpjdFD1Edv8n7wd5ySU0exddz0Vr8oos4TSoL7jyP?=
- =?us-ascii?Q?ylMDufkTom96slL0+OyGSvH6zG/B0K37Zz8TEVKJnGn5QY4dvaGFCa3FrgAN?=
- =?us-ascii?Q?HQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5003390b-5f13-47a2-c44d-08dd7e173ad7
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2025 01:20:39.4865
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SKNzGFSFOpw14PQOCwBhQNNJFb/sGsLfnKM9+5sU+eZtqjey5BdlLXPw5vp+/Q+c8nxUtfJ1d4o/7tMA7wiTAu+7QS6vF0V+rOcOchP4xY0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4588
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
+To: Christian Brauner <brauner@kernel.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Mark Brown <broonie@kernel.org>, Eric Chanudet <echanude@redhat.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+ Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Ian Kent <ikent@redhat.com>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+ Alexander Larsson <alexl@redhat.com>, Lucas Karpinski <lkarpins@redhat.com>,
+ Aishwarya.TCV@arm.com
+References: <20250408210350.749901-12-echanude@redhat.com>
+ <fbbafa84-f86c-4ea4-8f41-e5ebb51173ed@sirena.org.uk>
+ <20250417-wolfsrudel-zubewegt-10514f07d837@brauner>
+ <fb566638-a739-41dc-bafc-aa8c74496fa4@themaw.net>
+ <20250417-abartig-abfuhr-40e558b85f97@brauner>
+ <20250417-outen-dreihundert-7a772f78f685@brauner>
+ <20250417-zappeln-angesagt-f172a71839d3@brauner>
+ <20250417153126.QrVXSjt-@linutronix.de>
+ <20250417-pyrotechnik-neigung-f4a727a5c76b@brauner>
+ <39c36187-615e-4f83-b05e-419015d885e6@themaw.net>
+Content-Language: en-US
+From: Ian Kent <raven@themaw.net>
+Autocrypt: addr=raven@themaw.net; keydata=
+ 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
+In-Reply-To: <39c36187-615e-4f83-b05e-419015d885e6@themaw.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Jason Gunthorpe wrote:
-> On Fri, Mar 21, 2025 at 12:52:30AM +0100, Marek Szyprowski wrote:
-> > > Christoph's vision was to make a performance DMA API path that could
-> > > be used to implement any scatterlist-like data structure very
-> > > efficiently without having to teach the DMA API about all sorts of
-> > > scatterlist-like things.
-> > 
-> > Thanks for explaining one more motivation behind this patchset!
-> 
-> Sure, no problem.
-> 
-> To close the loop on the bigger picture here..
-> 
-> When you put the parts together:
-> 
->  1) dma_map_sg is the only API that is both performant and fully
->     functional
-> 
->  2) scatterlist is a horrible leaky design and badly misued all over
->     the place. When Logan added SG_DMA_BUS_ADDRESS it became quite
->     clear that any significant changes to scatterlist are infeasible,
->     or at least we'd break a huge number of untestable legacy drivers
->     in the process.
-> 
->  3) We really want to do full featured performance DMA *without* a
->     struct page. This requires changing scatterlist, inventing a new
->     scatterlist v2 and DMA map for it, or this idea here of a flexible
->     lower level DMA API entry point.
-> 
->     Matthew has been talking about struct-pageless for a long time now
->     from the block/mm direction using folio & memdesc and this is
->     meeting his work from the other end of the stack by starting to
->     build a way to do DMA on future struct pageless things. This is 
->     going to be huge multi-year project but small parts like this need
->     to be solved and agreed to make progress.
-> 
->  4) In the immediate moment we still have problems in VFIO, RDMA, and
->     DRM managing P2P transfers because dma_map_resource/page() don't
->     properly work, and we don't have struct pages to use
->     dma_map_sg(). Hacks around the DMA API have been in the kernel for
->     a long time now, we want to see a properly architected solution.
+On 18/4/25 09:13, Ian Kent wrote:
+>
+> On 18/4/25 00:28, Christian Brauner wrote:
+>> On Thu, Apr 17, 2025 at 05:31:26PM +0200, Sebastian Andrzej Siewior 
+>> wrote:
+>>> On 2025-04-17 17:28:20 [+0200], Christian Brauner wrote:
+>>>>>      So if there's some userspace process with a broken NFS server 
+>>>>> and it
+>>>>>      does umount(MNT_DETACH) it will end up hanging every other
+>>>>>      umount(MNT_DETACH) on the system because the dealyed_mntput_work
+>>>>>      workqueue (to my understanding) cannot make progress.
+>>>> Ok, "to my understanding" has been updated after going back and 
+>>>> reading
+>>>> the delayed work code. Luckily it's not as bad as I thought it is
+>>>> because it's queued on system_wq which is multi-threaded so it's at
+>>>> least not causing everyone with MNT_DETACH to get stuck. I'm still
+>>>> skeptical how safe this all is.
+>>> I would (again) throw system_unbound_wq into the game because the 
+>>> former
+>>> will remain on the CPU on which has been enqueued (if speaking about
+>>> multi threading).
+>> Yes, good point.
+>>
+>> However, what about using polled grace periods?
+>>
+>> A first simple-minded thing to do would be to record the grace period
+>> after umount_tree() has finished and the check it in namespace_unlock():
+>>
+>> diff --git a/fs/namespace.c b/fs/namespace.c
+>> index d9ca80dcc544..1e7ebcdd1ebc 100644
+>> --- a/fs/namespace.c
+>> +++ b/fs/namespace.c
+>> @@ -77,6 +77,7 @@ static struct hlist_head *mount_hashtable 
+>> __ro_after_init;
+>>   static struct hlist_head *mountpoint_hashtable __ro_after_init;
+>>   static struct kmem_cache *mnt_cache __ro_after_init;
+>>   static DECLARE_RWSEM(namespace_sem);
+>> +static unsigned long rcu_unmount_seq; /* protected by namespace_sem */
+>>   static HLIST_HEAD(unmounted);  /* protected by namespace_sem */
+>>   static LIST_HEAD(ex_mountpoints); /* protected by namespace_sem */
+>>   static DEFINE_SEQLOCK(mnt_ns_tree_lock);
+>> @@ -1794,6 +1795,7 @@ static void namespace_unlock(void)
+>>          struct hlist_head head;
+>>          struct hlist_node *p;
+>>          struct mount *m;
+>> +       unsigned long unmount_seq = rcu_unmount_seq;
+>>          LIST_HEAD(list);
+>>
+>>          hlist_move_list(&unmounted, &head);
+>> @@ -1817,7 +1819,7 @@ static void namespace_unlock(void)
+>>          if (likely(hlist_empty(&head)))
+>>                  return;
+>>
+>> -       synchronize_rcu_expedited();
+>> +       cond_synchronize_rcu_expedited(unmount_seq);
+>>
+>>          hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
+>>                  hlist_del(&m->mnt_umount);
+>> @@ -1939,6 +1941,8 @@ static void umount_tree(struct mount *mnt, enum 
+>> umount_tree_flags how)
+>>                   */
+>>                  mnt_notify_add(p);
+>>          }
+>> +
+>> +       rcu_unmount_seq = get_state_synchronize_rcu();
+>>   }
+>>
+>>   static void shrink_submounts(struct mount *mnt);
+>>
+>>
+>> I'm not sure how much that would buy us. If it doesn't then it should be
+>> possible to play with the following possibly strange idea:
+>>
+>> diff --git a/fs/mount.h b/fs/mount.h
+>> index 7aecf2a60472..51b86300dc50 100644
+>> --- a/fs/mount.h
+>> +++ b/fs/mount.h
+>> @@ -61,6 +61,7 @@ struct mount {
+>>                  struct rb_node mnt_node; /* node in the ns->mounts 
+>> rbtree */
+>>                  struct rcu_head mnt_rcu;
+>>                  struct llist_node mnt_llist;
+>> +               unsigned long mnt_rcu_unmount_seq;
+>>          };
+>>   #ifdef CONFIG_SMP
+>>          struct mnt_pcp __percpu *mnt_pcp;
+>> diff --git a/fs/namespace.c b/fs/namespace.c
+>> index d9ca80dcc544..aae9df75beed 100644
+>> --- a/fs/namespace.c
+>> +++ b/fs/namespace.c
+>> @@ -1794,6 +1794,7 @@ static void namespace_unlock(void)
+>>          struct hlist_head head;
+>>          struct hlist_node *p;
+>>          struct mount *m;
+>> +       bool needs_synchronize_rcu = false;
+>>          LIST_HEAD(list);
+>>
+>>          hlist_move_list(&unmounted, &head);
+>> @@ -1817,7 +1818,16 @@ static void namespace_unlock(void)
+>>          if (likely(hlist_empty(&head)))
+>>                  return;
+>>
+>> -       synchronize_rcu_expedited();
+>> +       hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
+>> +               if (!poll_state_synchronize_rcu(m->mnt_rcu_unmount_seq))
+>> +                       continue;
+>> +
+>> +               needs_synchronize_rcu = true;
+>> +               break;
+>> +       }
+>> +
+>> +       if (needs_synchronize_rcu)
+>> +               synchronize_rcu_expedited();
+>>
+>>          hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
+>>                  hlist_del(&m->mnt_umount);
+>> @@ -1923,8 +1933,10 @@ static void umount_tree(struct mount *mnt, 
+>> enum umount_tree_flags how)
+>>                          }
+>>                  }
+>>                  change_mnt_propagation(p, MS_PRIVATE);
+>> -               if (disconnect)
+>> +               if (disconnect) {
+>> +                       p->mnt_rcu_unmount_seq = 
+>> get_state_synchronize_rcu();
+>>                          hlist_add_head(&p->mnt_umount, &unmounted);
+>> +               }
+>>
+>>                  /*
+>>                   * At this point p->mnt_ns is NULL, notification 
+>> will be queued
+>>
+>> This would allow to elide synchronize rcu calls if they elapsed in the
+>> meantime since we moved that mount to the unmounted list.
+>
+> This last patch is a much better way to do this IMHO.
+>
+> The approach is so much more like many other places we have "rcu check 
+> before use" type code.
 
-So I am late to this party, but after watching a "modest" proposal of a
-DMABUF pfn exporter bounce off the DRM community due to long standing
-pain points with scatterlist abuse [1], it is clear to me that a new DMA
-mapping API is in the critical path for PCI Device Security
-(Confidential Computing: TEE I/O).
+If there are several thousand mounts in the discard list having two 
+loops could end up a bit slow.
 
-Specifically, the confidential computing problem of how to coordinate
-the conversion of assigned devices from shared-world to private-world
-(including private device MMIO and DMA), needs a "non-scatterlist"
-"struct-page-less" mapping contract to describe those resources.
+I wonder if we could combine the two loops into one ... I'll think about 
+that.
 
-I concede the point that there are gaps missing between this proposal
-and the end state needed for PCI Device Security. However, it seems to
-be a case of "violent agreement" that some of the benefits of this
-proposal only arrive with future work. So this is a necessary first
-step.
 
-For my part, I plan to pull this series into a cross-vendor staging tree
-for device-security topics [2] so that the PCI Device Security community
-can get started on everything that needs to build on top of this.
-
-[1]: http://lore.kernel.org/20250107142719.179636-1-yilun.xu@linux.intel.com
-[2]: https://web.git.kernel.org/pub/scm/linux/kernel/git/devsec/tsm.git/
+>
+> Ian
+>
+>
