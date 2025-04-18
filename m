@@ -1,105 +1,81 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200D02940F
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 14:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B20127470;
+	Fri, 18 Apr 2025 14:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744984810; cv=none; b=FAofB3D5hVZFQXJGLpmUrFv4Bt4ixo9Op/tG3edq7f+Kpyl9ZFbKY5kM9xtf7h99x1ABv3ZtZaL2B10dSg5MknzoHuQ0jNIrQQUlZVP6nHdXNgjE9o2jvx5fAgZ7cILBTiZ5twNnFWss9RRT8gQ6bucQuzOd3F9SkPkCVIbCiFA=
+	t=1744984819; cv=none; b=RjzELhYkQ1XEUQafhb/gRpNAtsUVqfyFZTngaSh0ZMJPXeeADeqwJBh9vi0ynpMPa/ZxcoLISUWGfCyqOgb0gbvQbO2vTF6OCXSDMcdP9PFdG3bOHEfxKQlPwKEGVJLMWbb51R3KGlHxGU2n9TuKbPROjh0UwBkAYT1NN+BQ0VA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744984810; c=relaxed/simple;
-	bh=OOxWQo5jkhsV+E6y69Cns2M7MbGoDA+RKgoQAcd0Mss=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u4vi0vU/S1a+SuqG4mQDFa2Pt6+FZkeHCCDLD79zN+XlNrCOkbElk0rfHicUTm0pPkj1Wm64hfnwK7Yyd3bj9t9xzJxoTz8WfL+17lLGqEStnjo0p/k09MhnG+XgGsXvNbtJzgTMYiSSgpPmVgYXZ6Ac1+EJckqo65x3aFjiAhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZR4ctOD/; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1744984819; c=relaxed/simple;
+	bh=mU6IHI3+QHPzVGRjkpFASNAQK92ao1ary1xz2qj3Q7M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=H4LD8Dhh5TnBqXulkkN+gGujgTMgkah2xvLaDpyn4xzlUgi9v/LphPQtac9eKeVBR5zRYb0m6bNH+ReMq5urpWVxotg0QJ3N6voPcul4jsLu3DUXuVO/rsxl2VNY459oUrlPXveHaPuGsIPOxcmu8VYOyXgT/ZCD9AsBixBVN88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gQ8yd3Bz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZR4ctOD/"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so22315365e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 07:00:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1744984806; x=1745589606; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kjpdmRo5fCT3HpvA0OrKjS2rSNs3R0rN1tJfkxoUUFw=;
-        b=ZR4ctOD/tGl0OtZSsxn5bh12rKPbc+skHtsu5wPDQYxKuukcyhc1LSO7CHf3gj1rdH
-         1aIfLm0zRJGu4GoE1Ty2+TW5YmV9Myc33/3555wWe1hdqqrRHeW64zNdk7lE4ALZ5Pht
-         43FbqacLscfcaXFtjqDBxsv7+faicEJBEcGzU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744984806; x=1745589606;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kjpdmRo5fCT3HpvA0OrKjS2rSNs3R0rN1tJfkxoUUFw=;
-        b=somy0MSv/PrIMYGavVTcHo0Gkd1yvJ3Cw5zZWh5HWrww2DKjS3l01KuoI+tCxN3KxF
-         Xb6zYnrmOLGaNfs1C2pI6yse9lFKmNVcBv8bGtGu0HCsCFGMoQ/HcvTZZVpZ3w9roIaD
-         IACPzsulHjXx85U0LQhnHrS4r4p7rp3nEfD0xSzMIK5ohshyJ3OppizGgh7UVpEy9O6R
-         v2shdBOmWAZNgScMxj8ZOTKPsWylDTkcxHrdlSxMyv9T+d69s7SDsoxr9KHGgNYYhN0f
-         rFtPy1r+UavBCPnPRTOX+AkoYULzOhe5Ip09pHDe56ezNJqQIDjtH1C7dImD2wfiO2KE
-         P7xw==
-X-Forwarded-Encrypted: i=1; AJvYcCWJoOJE3uSf8T35GHNWbGbAx6381pKwDPAiHVZvdmh+oGLAIFfZd3Uhrr5sn00N1KvoZ3NIAiSxZHm6jCU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMVS2cvXZolyzbLu8MJpbNS7U/RFW8R70Rwz5zbs2QWlumabmq
-	2DJfZIfT8g6zjHVAecLaOS6ZvZA/0CYR6TEBVKIRwrIiifJiwhjW9ZeRk2qkosgjJhIVaDhsfeq
-	97A==
-X-Gm-Gg: ASbGncsLFzAimsPc+tXZErBpbv/RaIxDtBTeFNt7S1SVST0zHs/dNcK2qAwmle9NSXp
-	EI2Glq+nkbfBTBokTw37dYP2GkQ1Bi87ue2O1//JzzipgmZYwF8E5W0VILVSLZcpuVXZgfd5M96
-	RWYiYwq8UYT/AzqW2fmU+gJW1FDvHYqECdiTfMKQtYzjqE0jFi37LHwxBplc/JkGUMvlEAYs93z
-	H86pizMZZ5xML76O2yAoV9a3zXUtCKIQeO6zX8dnHIyZFVihjxzu1TOHhrw9NMrPM0Mg/EFSJ6m
-	yDrIaalchqxdP2SvTOWappGu0t+9G8U2c8QqD6dAO+Wjvm6wE+SX0zsyXUcxvecr7NLn+I80hGS
-	sN3eiY8vNcXc4sOzDOjKz
-X-Google-Smtp-Source: AGHT+IF0JzUg6qmmcsFcjYsQz71JtbbAZ8V+JlcFdgY2MjqT4d/Zq0PZsMq4TMltz2kKNS3wEos+ng==
-X-Received: by 2002:a7b:cbd3:0:b0:43c:ed33:a500 with SMTP id 5b1f17b1804b1-4406979083fmr26115435e9.10.1744984806395;
-        Fri, 18 Apr 2025 07:00:06 -0700 (PDT)
-Received: from dmaluka.c.googlers.com.com (19.50.76.34.bc.googleusercontent.com. [34.76.50.19])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4404352a5f0sm80958005e9.1.2025.04.18.07.00.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 07:00:06 -0700 (PDT)
-From: Dmytro Maluka <dmaluka@chromium.org>
-To: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>,
-	Dmytro Maluka <dmaluka@chromium.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-kernel@vger.kernel.org (open list:X86 MM)
-Subject: [PATCH] x86/ioremap: Fix off-by-one in e820 check in memremap_should_map_decrypted()
-Date: Fri, 18 Apr 2025 13:59:55 +0000
-Message-ID: <20250418135955.58190-1-dmaluka@chromium.org>
-X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gQ8yd3Bz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 077F8C4CEE2;
+	Fri, 18 Apr 2025 14:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744984818;
+	bh=mU6IHI3+QHPzVGRjkpFASNAQK92ao1ary1xz2qj3Q7M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=gQ8yd3BzbaXZ+6b52VgwwK3xmWiAZ0bdj/TRPjg15bZal4YhlOPgF/01U1OzZFtmR
+	 9/Bxp8Bgx38kySYa4y8mkGXKiYFOTByBgT8AS2jVZvBuoUYC4OC86yYIR8T4Rw/FT6
+	 FlcLF4ol2yBuFl5eqIN1WOJDUB6uqCBLpn732HiRbk95U360M2lVDC7MRi99GR4ExJ
+	 VMhS/IyXQoWMTU0HVhW3SGDTqDnv4ESVpxhQIR+8Tm6GJ19oeWMJsMorVxCF4n2uP+
+	 urSRL3Tts/4MlRtDIbkIZbms1A8NsZXqdKR6IA9crjXJvM0e7mMTqkGsqXMBRFBLz2
+	 dkq7KxLMxTkrQ==
+From: cel@kernel.org
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: Re: [PATCH] sunrpc: allow SOMAXCONN backlogged TCP connections
+Date: Fri, 18 Apr 2025 10:00:13 -0400
+Message-ID: <174498478558.3618.5006356093533762788.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250417-svc-somaxconn-v1-1-ff5955cc9f45@kernel.org>
+References: <20250417-svc-somaxconn-v1-1-ff5955cc9f45@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-The end address in e820__get_entry_type() is exclusive, not inclusive.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Note: untested, bug found by code inspection.
+On Thu, 17 Apr 2025 14:54:36 -0400, Jeff Layton wrote:
+> The connection backlog passed to listen() denotes the number of
+> connections that are fully established, but that have not yet been
+> accept()ed. If the amount goes above that level, new connection requests
+> will be dropped on the floor until the value goes down. If all the knfsd
+> threads are bogged down in (e.g.) disk I/O, new connection attempts can
+> stall because of this.
+> 
+> [...]
 
-Signed-off-by: Dmytro Maluka <dmaluka@chromium.org>
----
- arch/x86/mm/ioremap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied to nfsd-testing, thanks!
 
-diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-index 331e101bf801..a44800a6196e 100644
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -578,7 +578,7 @@ static bool memremap_should_map_decrypted(resource_size_t phys_addr,
- 	}
- 
- 	/* Check if the address is outside kernel usable area */
--	switch (e820__get_entry_type(phys_addr, phys_addr + size - 1)) {
-+	switch (e820__get_entry_type(phys_addr, phys_addr + size)) {
- 	case E820_TYPE_RESERVED:
- 	case E820_TYPE_ACPI:
- 	case E820_TYPE_NVS:
--- 
-2.49.0.805.g082f7c87e0-goog
+[1/1] sunrpc: allow SOMAXCONN backlogged TCP connections
+      commit: 1fe4a78475a5203a9ee1d9ede1bc2043cb505382
+
+--
+Chuck Lever
 
