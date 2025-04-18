@@ -1,117 +1,160 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68EA721170D;
-	Fri, 18 Apr 2025 16:24:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A1986250;
+	Fri, 18 Apr 2025 16:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744993480; cv=none; b=IqVTt2MwumVLg4GtsUHuipNNi3FYwS34pR7dUZPLL1odHouVpejxv7qjN0T5Mug7ZEhywdh9vTwP7hP3mA+CXAT7rU4mVzWPARW6S6Q7weagki4A28C73LHcyVSXLtC7TxqYlc0N4e7dWK1yg7TrMZ6KjBXtHlS/Woh8fdDSuAk=
+	t=1744993730; cv=none; b=Kwr7GKS/VfZ13YGzaw1XbRjG0xzYyiuyPwM99kBZmn4XQAjE2ZYSM5wr5eviysVtbtgSrIIBonqCoMxrCNiNLFwrGWY2UrQatfbVSCt9ATMQgssrQ4hKxmYwv9qkKmTS/UGLwDaSFbkd7tGbDKzzXZBDdbL+cTiQqGEsa/gibgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744993480; c=relaxed/simple;
-	bh=nsaZPdmWgVvguNtZOwRGLuxY8iSRGpPgrmr3CDVcCC8=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=QYJNopbMNQx/eBYdUFBigtV7eTnw9cp8Jsn5GuSMeiIXUvnX1QQjkhO5ZnNF4f8R0jigQ5NM3fEFlxrN8upxjlgqmnsKVF84NeefL/Vpsc0ucBlJtJISlVoGV1BRMyhGxJ9XIxnACEhLae7dNIJ+Q+Vv4ePkqPEzDLOLitqFrm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iIvHfHJ6; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744993730; c=relaxed/simple;
+	bh=jM2jCqNrk/+awn4rQJCPLFiok9w2WoVJQHUX2vbK3do=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ibziMoVpWqZaCNozF9kI4LtPnD9oxK2/rgVPSClJ5LzpSwxSeVTZBc025VI6FSV7ZsH7PYIvrw/TJN9j7r7bq+PNK6bXyTuxG0d/Ml6cuiy8GE1vV0H80NmQG3p9lyhFREwt4jwLVpb5n4//ZakP3z0jyK1d9tJf8Vpl+5KkQgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cSotlHhr; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iIvHfHJ6"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54996d30bfbso1889521e87.2;
-        Fri, 18 Apr 2025 09:24:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744993476; x=1745598276; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=N3fjnglQ9I2MXOdr777pvs+iSblzgDUOB41zVUcYzEo=;
-        b=iIvHfHJ6x9HEpe9tg8oqjciWdWVwRpXmjP4i+H4c/UN+QDn71EL1H7rB7jdQDAatLa
-         XcxONj1IkWqPxLfjjgLadGRJsFEiy0n4Jn0vwxXEEZZfPmRHg3scpkFXUoI3wCZHqPli
-         wS2EArJUUerHwlBqMAfwavglJU6728JxP59jQWOV06W6hm/84geJgCPRZmUDdVIIm3U1
-         EWyabugEzvusjW6xQM8isXoSV9fKNdrmrKyZVVpcf3b6UEKnk6r4nXbMFc7uDE/HTV+g
-         87G4waPEVoTqtV7ILQZI+VNv2vkww/zrh91iwoN+U2F8XgFYL9WEAPDsPvLRLq30HEqo
-         DEnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744993476; x=1745598276;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=N3fjnglQ9I2MXOdr777pvs+iSblzgDUOB41zVUcYzEo=;
-        b=mKqtcQnslY2X6ex81P9pwcVmd27/5YuZdbN9xrDabuEGIdXhM/ht/+fSqBBCdCNnNf
-         l76kkdL4sY/U6tHQSW/28PmHNGkRhO4oAgEgkAwplNQHZfc8LxxIAL3YaffAnTVp6TRy
-         hopZVOrG8qB7VgfgOY0eaFf7TVUrd/4M0jB/1Bk/5dlS/lXSJZqOqrUe+CYeHgpcabU/
-         qg+3BkiKL3AAQimbk/T/3U0jF4kak9EOybTD7IoASUQqfrux1aX7zEnGRawT3F0EHuEQ
-         vFpOrEw79EJGIbya508PmC0vpBp9KijW0DeBAcTwkwScvYpC3rxRh1VFSrUv3V8VgBy+
-         o9Rw==
-X-Forwarded-Encrypted: i=1; AJvYcCURjhir8t7i9qkOoz/YCep+ZVxrAW1rlmYMTwXkSMLoK+vosT0a1rTs7hncuPLQIZ52C9/FUxxWcKN8@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiNTLvKQ5nIOJexKj9Bq6BnmJiHBRLlsM9ROU1CgDw1sDk7/3U
-	PBr64zZ/cwHt8SgCa9KBHVm1bSDWB37ryJYT+S4hdoKruPdV4a+AYjiLoQNN5xZVU/E4iax2J7N
-	0YsJ1U18KwdK+yFPdVf9tuci94L5utxqh
-X-Gm-Gg: ASbGnctZFVfaa09vOKfN+YceynegOCMUZEcD/JDZBRYvfqL/NoHZqov7GxkqYFaF1FE
-	Vu31PCrHpyOY/8p7giGkYa73ZwJapBTmVI+U4YMFfTOzSgzMitu2537ItnmFCJ8H1Lr+5JjHWnn
-	WengthBO99clCt/dy7GUxdIrbPQAM7E1uoVydtiZ+A9Gb5V3cwrEKJ8kslYogWYf80SxM=
-X-Google-Smtp-Source: AGHT+IHkGnG7OlU6mZ3tDDLadfjNlWj0uAaKRd4MgPgvgjI8bi0X2QM2g22TzadWaI84KtIU3taX6GXsDJIz+HRACN8=
-X-Received: by 2002:a05:6512:1104:b0:545:d27:e375 with SMTP id
- 2adb3069b0e04-54d6e65db34mr931032e87.42.1744993476082; Fri, 18 Apr 2025
- 09:24:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cSotlHhr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744993728; x=1776529728;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=jM2jCqNrk/+awn4rQJCPLFiok9w2WoVJQHUX2vbK3do=;
+  b=cSotlHhrS4RaBOaP2z2KrcmEjKd+pyJK6j0pIB7QlY9oeC7atcwFNxSC
+   bOS4GTHRlV+omtiPxsE+H4o7UfwF8R9qM09DoZCi45OXIPuq3n5HPktqK
+   mrzAP+xkG9PpK73QaL0Zv3EzvhQaIZ0O0qXT31kOo62TsZNPUr3bC60+N
+   9tOtnwHRmnWKTtotkp2edP4SG0i5chC3MZi9ZJIJ31CNP8MEWnVi3qdw+
+   vKFJLGpfO4p+RJUKlSvu6xRRFQQUYWc6IKvUoND4jHxVXTAwCZQ3GErQ6
+   w6FQy863vPBLFpSKG0JHv+pr536kif0m5NmTTSGtZtvqGl8DLF+T14e7v
+   A==;
+X-CSE-ConnectionGUID: wA0Vx0A7SxyzvvdmqKTFOw==
+X-CSE-MsgGUID: +SW2H5bdT+mAd7xxGFUd6A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="57286889"
+X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
+   d="asc'?scan'208";a="57286889"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 09:28:47 -0700
+X-CSE-ConnectionGUID: hg6qTNsRRBmoWzU31FojWA==
+X-CSE-MsgGUID: f4KMTDDURxiYJhW9LRwumw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
+   d="asc'?scan'208";a="131098439"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.252])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 09:28:44 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Robert Richter <rrichter@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Gregory Price <gourry@gourry.net>, Terry Bowman <terry.bowman@amd.com>,
+ Robert Richter <rrichter@amd.com>
+Subject: Re: [PATCH v4 02/14] cxl/pci: Moving code in cxl_hdm_decode_init()
+Date: Fri, 18 Apr 2025 18:28:40 +0200
+Message-ID: <5321893.0KrE1Onz32@fdefranc-mobl3>
+In-Reply-To: <20250306164448.3354845-3-rrichter@amd.com>
+References:
+ <20250306164448.3354845-1-rrichter@amd.com>
+ <20250306164448.3354845-3-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Steve French <smfrench@gmail.com>
-Date: Fri, 18 Apr 2025 11:24:24 -0500
-X-Gm-Features: ATxdqUF54QLIM7a09DJdqkvGI4NRXLLLa_K7hI1gBMLxcL3-gqLeJ7vOI4gycY0
-Message-ID: <CAH2r5msB5K8EdzYK3JXe5Rzo-yGpOk_y6qJghBOO770SpjHrDA@mail.gmail.com>
-Subject: [GIT PULL] ksmbd server fixes
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>, 
-	Namjae Jeon <linkinjeon@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="nextPart3307009.N2xkq1pzWS";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
-Please pull the following changes since commit
-8ffd015db85fea3e15a77027fda6c02ced4d2444:
+--nextPart3307009.N2xkq1pzWS
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Date: Fri, 18 Apr 2025 18:28:32 +0200
+Message-ID: <5321893.0KrE1Onz32@fdefranc-mobl3>
+In-Reply-To: <20250306164448.3354845-3-rrichter@amd.com>
+MIME-Version: 1.0
 
-  Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
+On Thursday, March 6, 2025 5:44:36=E2=80=AFPM Central European Summer Time =
+Robert Richter wrote:
+> Commit 3f9e07531778 ("cxl/pci: simplify the check of mem_enabled in
+> cxl_hdm_decode_init()") changed the code flow in this function. The
+> root port is determined before a check to leave the function. Since
+> the root port is not used by the check it can be moved to run the
+> check first. This improves code readability and avoids unnesessary
+> code execution.
+>=20
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+> Tested-by: Gregory Price <gourry@gourry.net>
+>
+Reviewed-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+>
+> ---
+>  drivers/cxl/core/pci.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 33c3bdd35b24..6386e84e51a4 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -419,14 +419,6 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds,=
+ struct cxl_hdm *cxlhdm,
+>  	if (!hdm)
+>  		return -ENODEV;
+> =20
+> -	root =3D to_cxl_port(port->dev.parent);
+> -	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
+> -		root =3D to_cxl_port(root->dev.parent);
+> -	if (!is_cxl_root(root)) {
+> -		dev_err(dev, "Failed to acquire root port for HDM enable\n");
+> -		return -ENODEV;
+> -	}
+> -
+>  	if (!info->mem_enabled) {
+>  		rc =3D devm_cxl_enable_hdm(&port->dev, cxlhdm);
+>  		if (rc)
+> @@ -435,6 +427,14 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds,=
+ struct cxl_hdm *cxlhdm,
+>  		return devm_cxl_enable_mem(&port->dev, cxlds);
+>  	}
+> =20
+> +	root =3D to_cxl_port(port->dev.parent);
+> +	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
+> +		root =3D to_cxl_port(root->dev.parent);
+> +	if (!is_cxl_root(root)) {
+> +		dev_err(dev, "Failed to acquire root port for HDM enable\n");
+> +		return -ENODEV;
+> +	}
+> +
+>  	for (i =3D 0, allowed =3D 0; i < info->ranges; i++) {
+>  		struct device *cxld_dev;
+> =20
+>=20
 
-are available in the Git repository at:
 
-  git://git.samba.org/ksmbd.git tags/v6.15-rc2-ksmbd-server-fixes
+--nextPart3307009.N2xkq1pzWS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-for you to fetch changes up to a93ff742820f75bf8bb3fcf21d9f25ca6eb3d4c6:
+-----BEGIN PGP SIGNATURE-----
 
-  ksmbd: Prevent integer overflow in calculation of deadtime
-(2025-04-14 22:21:26 -0500)
+iQEzBAABCAAdFiEEPKnol7Erd70tN+Lb50DaXiQpiWEFAmgCfbAACgkQ50DaXiQp
+iWHSngf/Yl+uC0WI+tOT/54ojH6pu6UvRd/tzd0NRl2/pw9LBmL/huF9Y/Tke+ev
+84/MvS6Muipa9mDq5RFSIs3rCpIMTCj9uW/hLm0gcih0FnUWAIbNOHjWn91WoZLF
+jvLluz2mbHhIceBlKh1C4T/FQJVoo3dWbuQ56DrpvQTO3R/djrf9eaEvAk+51Gbq
+i4csZwNlYfvefN4TmMUoQSMymmyxNVeWksOid2gFpv4PCDWBYLnFhTENxE9ZO2EK
+nWEoeeP+9Tenuwj7V4AdpMbyH1bCG1jDIicBbv5u9Ag4TY7SR1uwA9Cp+3csQlVW
+CfATgNN1oO08U9doGb+M7aGCQbBvkw==
+=Cj3P
+-----END PGP SIGNATURE-----
 
-----------------------------------------------------------------
-6 ksmbd SMB3 server fixes, most also for stable
-- FIx integer overflow in server disconnect deadtime calculation
-- Three fixes for potential use after frees: one for oplocks, and one for leases
-   and one for kerberos authentication
-- Fix to prevent attempted write to directory
-- Fix locking warning for durable scavenger thread
-----------------------------------------------------------------
-Denis Arefev (1):
-      ksmbd: Prevent integer overflow in calculation of deadtime
+--nextPart3307009.N2xkq1pzWS--
 
-Namjae Jeon (4):
-      ksmbd: fix WARNING "do not call blocking ops when !TASK_RUNNING"
-      ksmbd: fix use-after-free in __smb2_lease_break_noti()
-      ksmbd: fix use-after-free in smb_break_all_levII_oplock()
-      ksmbd: fix the warning from __kernel_write_iter
 
-Sean Heelan (1):
-      ksmbd: Fix dangling pointer in krb_authenticate
 
- fs/smb/server/connection.c    |  4 +++-
- fs/smb/server/oplock.c        | 29 +++++++++--------------------
- fs/smb/server/oplock.h        |  1 -
- fs/smb/server/smb2pdu.c       |  4 +++-
- fs/smb/server/transport_ipc.c |  7 ++++++-
- fs/smb/server/transport_tcp.c | 14 +++++++++-----
- fs/smb/server/transport_tcp.h |  1 +
- fs/smb/server/vfs.c           |  3 ++-
- fs/smb/server/vfs_cache.c     |  8 +-------
- 9 files changed, 34 insertions(+), 37 deletions(-)
-
--- 
-Thanks,
-
-Steve
