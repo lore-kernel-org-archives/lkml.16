@@ -1,59 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD8A1C84CB;
-	Fri, 18 Apr 2025 14:45:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FCEC8F49;
+	Fri, 18 Apr 2025 14:46:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744987524; cv=none; b=cpIn06ugJE8nMrSNVNeG/54LBipwd3h/src//vWBwHdxWrLs3Vl3me53p+uVSWrM5o0A0Bskp1iqUSsVX7w6dlYR7ot7J/bdyARZseIHUskBmzEP1G638am78RG4TKdDVo8DKlGZ5HYBlPbb8T28QKpIO571gtk3kb9120zVEPM=
+	t=1744987612; cv=none; b=RTQ4NrlY9Yl/GgBwoolfEtwUsXKPzZarRXwQmHisDoQwi+8CbBgxjbFYXo2qzLGk84loyWswlLrj9mXuVGpVijg7DjoZrkZKCLUhmT1e1WImk8q+TUDkKpAWHDK7sNwt1llM6yRDaWDschBBf2lBfEah38f7bfU+HNhAA9/sxUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744987524; c=relaxed/simple;
-	bh=FB/U/R7R6GT7G0H496FK8vYkq7dVTMAXpO4+ZqEwsVA=;
+	s=arc-20240116; t=1744987612; c=relaxed/simple;
+	bh=5a8es+dGqoWzvZRG72BP+Tii3vAYyV3WD+yVJH2N8VY=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E14XQuBoED+RwaepNzIiRWpsoVm46N/hEaqCDBA6B8ETWY1acxH8/9OMCV/8AOsLj1i+9eqLkBf6iBg3+o9UOF1sBMf6cPaC7XSLvX3B6xjmUbq2SDz7Be1i0VUIdJ4BGxFUPyrdkDhtbgK9YdLN6SaUSwBAZIjP4P/dxj/+S+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FA7BC4CEE2;
-	Fri, 18 Apr 2025 14:45:21 +0000 (UTC)
-Date: Fri, 18 Apr 2025 10:47:02 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: David Ahern <dsahern@kernel.org>
-Cc: Breno Leitao <leitao@debian.org>, Willem de Bruijn
- <willemdebruijn.kernel@gmail.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
- <horms@kernel.org>, kuniyu@amazon.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- yonghong.song@linux.dev, song@kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH net-next] udp: Add tracepoint for udp_sendmsg()
-Message-ID: <20250418104702.52f3afb3@gandalf.local.home>
-In-Reply-To: <20250418083351.20a60e64@gandalf.local.home>
-References: <20250416-udp_sendmsg-v1-1-1a886b8733c2@debian.org>
-	<4dd9504c-4bce-4acd-874c-8eed8c311a2f@kernel.org>
-	<aADpIftw30HBT8pq@gmail.com>
-	<8dc4d1a8-184b-4d0d-9b38-d5b65ce7e2a6@kernel.org>
-	<aAElmpUWd6D7UBZY@gmail.com>
-	<1b17ce33-015f-4a10-9a98-ebea586c3ce4@kernel.org>
-	<20250418083351.20a60e64@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	 MIME-Version:Content-Type; b=F5EfmwuHE8eE6LLQnsg0SewoztCCCMnn++wdZOyGyWFJUP5KdZb80f2jEa4bWGbf3A6s4iqWU+EnoA0asu3fObYnSHK83QC9/GymJsZ/NL3SfovgOMzQ2iziw0SFtjRl7SWlO7eYw2gd0La/gkdVxb8OVjdzSEGQVEwjqKcXwr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u0lo+pyc; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u0lo+pyc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BF95C4CEE2;
+	Fri, 18 Apr 2025 14:46:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744987611;
+	bh=5a8es+dGqoWzvZRG72BP+Tii3vAYyV3WD+yVJH2N8VY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=u0lo+pyc59zklEQ1VhjL78cRV7IzRREb/PqeQuX7c7lN1UI0U6opronFmJqw03IFH
+	 qhi8w8Su/KbAxKHSZSa0TpDLoOvOxJ+q+O903X156V/QOUV6EHHmknLm6gx9BdoxuS
+	 ji+0epLMGJXSShNJPDKLkl5C1xs8gaMvEzQ0T5XXmdtMu16L6id8bUerk/6I1F3FuE
+	 JiNdpRIth/fye2jEFhLedT419xj3EpRh6aLgzPLwemKjy4m0WNq9U8RPROR86x1hMu
+	 8lAQbXPKqNGautan0WAWHrXvdxsYUwAXsiWLj+BOOS2Q50XhhrX7UBBT6dEjMsiqeH
+	 puBa/EeMfdF/Q==
+Date: Fri, 18 Apr 2025 15:46:42 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Cosmin
+ Tanislav <cosmin.tanislav@analog.com>, Tomasz Duszynski
+ <tduszyns@gmail.com>, Jean-Baptiste Maneyrol
+ <jean-baptiste.maneyrol@tdk.com>, Andreas Klinger <ak@it-klinger.de>, Petre
+ Rodan <petre.rodan@subdimension.ro>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 3/8] iio: addac: ad74413r: use aligned_s64 for timestamp
+Message-ID: <20250418154642.41cb9d80@jic23-huawei>
+In-Reply-To: <057bec6375819c3a4cd227c20a60ec1dbb7405c3.camel@gmail.com>
+References: <20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
+	<20250417-iio-more-timestamp-alignment-v1-3-eafac1e22318@baylibre.com>
+	<057bec6375819c3a4cd227c20a60ec1dbb7405c3.camel@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 18 Apr 2025 08:33:51 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, 18 Apr 2025 09:57:38 +0100
+Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
 
-> In fact, if there is a clean up, it should be adding "_tp" to all
-> tracepoints that do not have a corresponding trace event attached to them.
-> As they are in kernel only, that change should not cause any ABI breakage.
+> On Thu, 2025-04-17 at 11:52 -0500, David Lechner wrote:
+> > Follow the pattern of other drivers and use aligned_s64 for the
+> > timestamp. Technically there was no issue here since
+> > AD74413R_FRAME_SIZE * AD74413R_CHANNEL_MAX =3D=3D 16 and IIO_DMA_MINALI=
+GN
+> > is always a multiple of 8. But best to conform in case someone copies
+> > this to new code and then tweaks something.
+> >=20
+> > Also move the unaligned.h header while touching this since it was the
+> > only one not in alphabetical order.
+> >=20
+> > Signed-off-by: David Lechner <dlechner@baylibre.com>
+> > --- =20
+>=20
+> Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+Applied.
+>=20
+> > =C2=A0drivers/iio/addac/ad74413r.c | 5 +++--
+> > =C2=A01 file changed, 3 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/iio/addac/ad74413r.c b/drivers/iio/addac/ad74413r.c
+> > index
+> > f0929616ab899cb374f00869787321eed4ccde16..a0bb1dbcb7ad9d02337d0990e5a3f=
+90be7eaa4ac
+> > 100644
+> > --- a/drivers/iio/addac/ad74413r.c
+> > +++ b/drivers/iio/addac/ad74413r.c
+> > @@ -4,7 +4,6 @@
+> > =C2=A0 * Author: Cosmin Tanislav <cosmin.tanislav@analog.com>
+> > =C2=A0 */
+> > =C2=A0
+> > -#include <linux/unaligned.h>
+> > =C2=A0#include <linux/bitfield.h>
+> > =C2=A0#include <linux/cleanup.h>
+> > =C2=A0#include <linux/crc8.h>
+> > @@ -24,6 +23,8 @@
+> > =C2=A0#include <linux/regmap.h>
+> > =C2=A0#include <linux/regulator/consumer.h>
+> > =C2=A0#include <linux/spi/spi.h>
+> > +#include <linux/types.h>
+> > +#include <linux/unaligned.h>
+> > =C2=A0
+> > =C2=A0#include <dt-bindings/iio/addac/adi,ad74413r.h>
+> > =C2=A0
+> > @@ -84,7 +85,7 @@ struct ad74413r_state {
+> > =C2=A0	 */
+> > =C2=A0	struct {
+> > =C2=A0		u8 rx_buf[AD74413R_FRAME_SIZE * AD74413R_CHANNEL_MAX];
+> > -		s64 timestamp;
+> > +		aligned_s64 timestamp;
+> > =C2=A0	} adc_samples_buf __aligned(IIO_DMA_MINALIGN);
+> > =C2=A0
+> > =C2=A0	u8	adc_samples_tx_buf[AD74413R_FRAME_SIZE * AD74413R_CHANNEL_MAX=
+];
+> >  =20
+>=20
 
-Actually, I think I'll make it where tracepoints created via
-DECLARE_TRACE() will automatically get the "_tp" ending. That would help
-enforce this API.
-
--- Steve
