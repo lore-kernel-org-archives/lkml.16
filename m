@@ -1,160 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A1986250;
-	Fri, 18 Apr 2025 16:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+Received: from pku.edu.cn (mx17.pku.edu.cn [162.105.129.180])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D575433C4
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 16:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.105.129.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744993730; cv=none; b=Kwr7GKS/VfZ13YGzaw1XbRjG0xzYyiuyPwM99kBZmn4XQAjE2ZYSM5wr5eviysVtbtgSrIIBonqCoMxrCNiNLFwrGWY2UrQatfbVSCt9ATMQgssrQ4hKxmYwv9qkKmTS/UGLwDaSFbkd7tGbDKzzXZBDdbL+cTiQqGEsa/gibgM=
+	t=1744993951; cv=none; b=scPmCakBi5VhZrSFNKwSqYentyvss0CrSFGQEnQ8/xlmdio7633piAy6NSiWMk6tMfDs2voRjtHQXmn9CNvuQmtv+i6h/aBhw7vBDI+w4DXCv63HxfR60M1mQBz0zAN6RHO63znHP6reVFpgAHXvUb4/OBExet/MKOkLmkT0Rrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744993730; c=relaxed/simple;
-	bh=jM2jCqNrk/+awn4rQJCPLFiok9w2WoVJQHUX2vbK3do=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ibziMoVpWqZaCNozF9kI4LtPnD9oxK2/rgVPSClJ5LzpSwxSeVTZBc025VI6FSV7ZsH7PYIvrw/TJN9j7r7bq+PNK6bXyTuxG0d/Ml6cuiy8GE1vV0H80NmQG3p9lyhFREwt4jwLVpb5n4//ZakP3z0jyK1d9tJf8Vpl+5KkQgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cSotlHhr; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744993951; c=relaxed/simple;
+	bh=jtJlER8Kh77wvIs7Efci+IP/JTJP7Oidp+gy0wCLX5U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nPWKc6oMZmPRydA8yWD1cmwMbMORInR8rUNtjbwwSJRcBPcwM9snl3DZ5vfDWdBCjYnei2i43NHa4H3ElS6qydzXbPfGIyN6Onhc8zfy1twzeMUWP53LgrdWOygrtEZbfNelESiK2kQhnFNdQXrNPqQ9vXenDANVdrJFuW7NNFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pku.edu.cn; spf=pass smtp.mailfrom=pku.edu.cn; dkim=pass (1024-bit key) header.d=pku.edu.cn header.i=@pku.edu.cn header.b=Pb6AFGXq; arc=none smtp.client-ip=162.105.129.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pku.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pku.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cSotlHhr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744993728; x=1776529728;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=jM2jCqNrk/+awn4rQJCPLFiok9w2WoVJQHUX2vbK3do=;
-  b=cSotlHhrS4RaBOaP2z2KrcmEjKd+pyJK6j0pIB7QlY9oeC7atcwFNxSC
-   bOS4GTHRlV+omtiPxsE+H4o7UfwF8R9qM09DoZCi45OXIPuq3n5HPktqK
-   mrzAP+xkG9PpK73QaL0Zv3EzvhQaIZ0O0qXT31kOo62TsZNPUr3bC60+N
-   9tOtnwHRmnWKTtotkp2edP4SG0i5chC3MZi9ZJIJ31CNP8MEWnVi3qdw+
-   vKFJLGpfO4p+RJUKlSvu6xRRFQQUYWc6IKvUoND4jHxVXTAwCZQ3GErQ6
-   w6FQy863vPBLFpSKG0JHv+pr536kif0m5NmTTSGtZtvqGl8DLF+T14e7v
-   A==;
-X-CSE-ConnectionGUID: wA0Vx0A7SxyzvvdmqKTFOw==
-X-CSE-MsgGUID: +SW2H5bdT+mAd7xxGFUd6A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="57286889"
-X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
-   d="asc'?scan'208";a="57286889"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 09:28:47 -0700
-X-CSE-ConnectionGUID: hg6qTNsRRBmoWzU31FojWA==
-X-CSE-MsgGUID: f4KMTDDURxiYJhW9LRwumw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
-   d="asc'?scan'208";a="131098439"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.252])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 09:28:44 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Robert Richter <rrichter@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- Gregory Price <gourry@gourry.net>, Terry Bowman <terry.bowman@amd.com>,
- Robert Richter <rrichter@amd.com>
-Subject: Re: [PATCH v4 02/14] cxl/pci: Moving code in cxl_hdm_decode_init()
-Date: Fri, 18 Apr 2025 18:28:40 +0200
-Message-ID: <5321893.0KrE1Onz32@fdefranc-mobl3>
-In-Reply-To: <20250306164448.3354845-3-rrichter@amd.com>
-References:
- <20250306164448.3354845-1-rrichter@amd.com>
- <20250306164448.3354845-3-rrichter@amd.com>
+	dkim=pass (1024-bit key) header.d=pku.edu.cn header.i=@pku.edu.cn header.b="Pb6AFGXq"
+Received: from pku.edu.cn (unknown [10.4.225.203])
+	by mtasvr (Coremail) with SMTP id _____7DwygmBfQJoTxNLAA--.9685S3;
+	Sat, 19 Apr 2025 00:27:46 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=pku.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+	Message-ID:MIME-Version:Content-Transfer-Encoding; bh=MjC1UiVgx6
+	t8vymYAgIB/8OCTv6MNdGah24Cp6lJ0PM=; b=Pb6AFGXqbY9rf/a2nyq/kl7xR2
+	LYNkgRRdKzIPcy8r8+weWLAVDhKG4g/10Dsq7fzCpsR657KJcznblEAeDo93Lo5p
+	9oYTqcOKxw1JR5G0IpWSgHuVDbfIlDzUErbhlnklSyOyY3yW0PPCzz1tzZv6N0l9
+	o1LRaJtuxaYSBDn0s=
+Received: from localhost.localdomain (unknown [10.4.225.203])
+	by front01 (Coremail) with SMTP id 5oFpogCXbcd9fQJo4ZwQAA--.9688S2;
+	Sat, 19 Apr 2025 00:27:45 +0800 (CST)
+From: Ruihan Li <lrh2000@pku.edu.cn>
+To: Mike Rapoport <rppt@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	Ruihan Li <lrh2000@pku.edu.cn>
+Subject: [PATCH] mm/mm_init: Don't iterate pages below ARCH_PFN_OFFSET
+Date: Sat, 19 Apr 2025 00:27:27 +0800
+Message-ID: <20250418162727.1535335-1-lrh2000@pku.edu.cn>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3307009.N2xkq1pzWS";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:5oFpogCXbcd9fQJo4ZwQAA--.9688S2
+X-CM-SenderInfo: yssqiiarrvmko6sn3hxhgxhubq/1tbiAgEIBWf35XUDOwALs9
+X-CM-DELIVERINFO: =?B?FMI+P6aAH6dYjNjDbLdWX9VB7ttaQFyXTaecYZzOeDisy/krtsX5TsLkpeAzENeCPc
+	0+BDdXjm5Mlm64oODP/CxX7CfVLni9Tfp1zfQxCWN8VB6Q31UtKCC16PIt30HY+/E8pUc7
+	d+yaDfFdCcwUIsdrIXjB/DMJ8BbkAvMOkWIiFx0Mg+INz0+BGBeWEvME05QNHA==
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
---nextPart3307009.N2xkq1pzWS
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Date: Fri, 18 Apr 2025 18:28:32 +0200
-Message-ID: <5321893.0KrE1Onz32@fdefranc-mobl3>
-In-Reply-To: <20250306164448.3354845-3-rrichter@amd.com>
-MIME-Version: 1.0
+Currently, memmap_init initializes pfn_hole with 0 instead of
+ARCH_PFN_OFFSET. Then init_unavailable_range will start iterating each
+page from the page at address zero to the first available page, but it
+won't do anything for pages below ARCH_PFN_OFFSET because pfn_valid
+won't pass.
 
-On Thursday, March 6, 2025 5:44:36=E2=80=AFPM Central European Summer Time =
-Robert Richter wrote:
-> Commit 3f9e07531778 ("cxl/pci: simplify the check of mem_enabled in
-> cxl_hdm_decode_init()") changed the code flow in this function. The
-> root port is determined before a check to leave the function. Since
-> the root port is not used by the check it can be moved to run the
-> check first. This improves code readability and avoids unnesessary
-> code execution.
->=20
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-> Tested-by: Gregory Price <gourry@gourry.net>
->
-Reviewed-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
->
-> ---
->  drivers/cxl/core/pci.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 33c3bdd35b24..6386e84e51a4 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -419,14 +419,6 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds,=
- struct cxl_hdm *cxlhdm,
->  	if (!hdm)
->  		return -ENODEV;
-> =20
-> -	root =3D to_cxl_port(port->dev.parent);
-> -	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
-> -		root =3D to_cxl_port(root->dev.parent);
-> -	if (!is_cxl_root(root)) {
-> -		dev_err(dev, "Failed to acquire root port for HDM enable\n");
-> -		return -ENODEV;
-> -	}
-> -
->  	if (!info->mem_enabled) {
->  		rc =3D devm_cxl_enable_hdm(&port->dev, cxlhdm);
->  		if (rc)
-> @@ -435,6 +427,14 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds,=
- struct cxl_hdm *cxlhdm,
->  		return devm_cxl_enable_mem(&port->dev, cxlds);
->  	}
-> =20
-> +	root =3D to_cxl_port(port->dev.parent);
-> +	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
-> +		root =3D to_cxl_port(root->dev.parent);
-> +	if (!is_cxl_root(root)) {
-> +		dev_err(dev, "Failed to acquire root port for HDM enable\n");
-> +		return -ENODEV;
-> +	}
-> +
->  	for (i =3D 0, allowed =3D 0; i < info->ranges; i++) {
->  		struct device *cxld_dev;
-> =20
->=20
+If ARCH_PFN_OFFSET is very large (e.g., something like 2^64-2GiB if the
+kernel is used as a library and loaded at a very high address), the
+pointless iteration for pages below ARCH_PFN_OFFSET will take a very
+long time, and the kernel will look stuck at boot time.
 
+This commit sets the initial value of pfn_hole to ARCH_PFN_OFFSET, which
+avoids the problematic and useless iteration mentioned above.
 
---nextPart3307009.N2xkq1pzWS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+Fixes: 907ec5fca3dc ("mm: zero remaining unavailable struct pages")
+Signed-off-by: Ruihan Li <lrh2000@pku.edu.cn>
+---
+ mm/mm_init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEPKnol7Erd70tN+Lb50DaXiQpiWEFAmgCfbAACgkQ50DaXiQp
-iWHSngf/Yl+uC0WI+tOT/54ojH6pu6UvRd/tzd0NRl2/pw9LBmL/huF9Y/Tke+ev
-84/MvS6Muipa9mDq5RFSIs3rCpIMTCj9uW/hLm0gcih0FnUWAIbNOHjWn91WoZLF
-jvLluz2mbHhIceBlKh1C4T/FQJVoo3dWbuQ56DrpvQTO3R/djrf9eaEvAk+51Gbq
-i4csZwNlYfvefN4TmMUoQSMymmyxNVeWksOid2gFpv4PCDWBYLnFhTENxE9ZO2EK
-nWEoeeP+9Tenuwj7V4AdpMbyH1bCG1jDIicBbv5u9Ag4TY7SR1uwA9Cp+3csQlVW
-CfATgNN1oO08U9doGb+M7aGCQbBvkw==
-=Cj3P
------END PGP SIGNATURE-----
-
---nextPart3307009.N2xkq1pzWS--
-
-
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 84f14fa12..b3ae9f797 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -966,7 +966,7 @@ static void __init memmap_init_zone_range(struct zone *zone,
+ static void __init memmap_init(void)
+ {
+ 	unsigned long start_pfn, end_pfn;
+-	unsigned long hole_pfn = 0;
++	unsigned long hole_pfn = ARCH_PFN_OFFSET;
+ 	int i, j, zone_id = 0, nid;
+ 
+ 	for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
+-- 
+2.49.0
 
