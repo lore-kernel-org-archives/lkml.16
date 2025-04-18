@@ -1,155 +1,154 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881D5204F6F;
-	Fri, 18 Apr 2025 09:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7044F26FDB5
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 09:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744969880; cv=none; b=COi0jqJw5jP7/kx9DxjgDPgdK4aFrXLn/plfGMSmXLqvKOI0eMJWoAOsyDNlSRZsEEBhBupMGYO7q0PWrah9CDjdMCglxeRAIiJMfBl/AJiXxEKpFq6Cn17k/y+yCiNmYKkrHKpCzs2aN+/baRGheRhEhnpoAe/ruve3VeBD3TM=
+	t=1744969885; cv=none; b=bXu0201SnDdPF2xIcsqmHGvflhQkmm/G4eFypWooO+SJ4ZiGgJ26nwU+pwKKns4JaWoyscN4OlRrTsAU8+lMT4BQk3LiTBlvK2xJiBhQj+ERQ8IEoeLij2iQoTsln8EfAFgfOIbC901sIBzGAzpdVFaMFsyjc1jtOgVp9sI11GY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744969880; c=relaxed/simple;
-	bh=Ezx/sOto0Rena9uEb8fLM6zOGB1zJXCrOxowi4762QA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UI5sAdReshhhL2C7vIbX0/NAa556gjeBiAl6NuXwiBGJ4KLJQiOKRLgdzHCpBwFSMTd+nbgFJRUCzMBgDQFizPJ2HS3RdsInRxJptXOnTnxbKWbT2y0vcLtqIc91FtCAszVDjwa5+2G7ablOWgVkwtXdFikKZSLMdGkgCHqxs7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VxeB7XFi; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744969885; c=relaxed/simple;
+	bh=LSv2LPESZn+oRo8x96FVTGHst4ynm5FV4i+s/CjsLEo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AnNlSwDJCuZ6Hxvdv98dMIObLfDhDOiRWle37X470F5Es5H3TF/NFsGzFTcOdqB+v5gJXn6C0jE6Vc5wljzWncuHWlCfhuhWs0rej4i2y/eaMOz2Hq6dxO9ya3TwhuYsOjI3mIho2J8/iS03TivvzLrY+QluFiWV6fRHPQKEBII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HwwhoVLE; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VxeB7XFi"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43d04ea9d9aso8002575e9.3;
-        Fri, 18 Apr 2025 02:51:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744969877; x=1745574677; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=CSvWnI3C5tegcykknlWng3qsayJZpjRB+0TI5j6d/zU=;
-        b=VxeB7XFihhn/uOkDqbBO+SW7fDeRRE0JUxokj+oKNwNUYRmvJlVGn4C2GxeAOKXhAK
-         2T3vHauNdXS+Vr0XTXjiSYS05i0eaEB9NdSnu6bIDSSjpX+PLYrlcXtkokwBmqwjx+cY
-         nttvZw/7EEZnRXszgDdGCMp3w9x6tWb5HJEKM3j7deOUXFxoyHG+wWjbO9WvBRXEjLt/
-         m9gg53hPeW/A2sDzHMPVu2siDX/LVVPk5ppbJe48+jBxAkB2K+iYxXtFj+H3Rk06MtIM
-         i2vtxjMceAObCAZYyX2fYMuiDjkfEGtICoaXveQYovkxAxYmzGFn6DHO241sM3d33DcG
-         Y1zw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HwwhoVLE"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53I2Yutx015282
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 09:51:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	rA3sdyVQ16H8kPttRg91Jt1G7uDSj/gcw6eTTAKQB5c=; b=HwwhoVLEu9m/84c/
+	izpixz+E1FYpZpSYEhwGskeFb8/7o9N2GWSo62T5C4Diwsr/dxEMUQzCUklx4rg3
+	jnksSTFHQQo+UPXubMSkt914vvoRX317E3k/+WTh1V469h5y3QBBQnAkdMi6GALQ
+	avc036Vf/bnYej3fUw8Wjkc2piUyI75EhILfq4XKjRJ1kvnJX4b2X3TSDsxj35Rh
+	Du8dvHU4r+6wdK37romVDqsSMpbgUDAXLo9jGTg8owSAaAR4vjF/uLGi5N/EcC6d
+	1wL6M8Vqyp6wKUJCN67m88CLdrSCHb+PDt7d163csMLgtI0ccEQy1OaV/d6cN6Bc
+	vIiapw==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygd6sqb5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 09:51:23 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5ad42d6bcso40790085a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 02:51:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744969877; x=1745574677;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CSvWnI3C5tegcykknlWng3qsayJZpjRB+0TI5j6d/zU=;
-        b=YqFfeNinpV0nucMca5PAz/RN87rhnRcfx0n1a8fK2JS3uPphA7FjHKEbImQXtfVIgX
-         x/LMIqto9X07EBNbO3jHZ6bHix0kng6oMrYvMFS9af+8JPfrVEoYDNst4NFZXxLXaZbu
-         xyVN9c3sz9A1r5884OWGcxFv8ZvfnW0xssuk7DzAPAnHKjdRU4FOEVEGwJ3t9BKyQmOV
-         X4atNfOGtdNjav6wnOQXQ66hmBvuvv20vP6DycL8B52KaT0KlmVVMfaRoMY5RgujtUk5
-         BVopPNcB08SDdjyWwP7DSeqlZqCHUzhTPyx5jGvPHU9jC0FAE+tibAe9WWmjQAUU7a7X
-         sqDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUWLkshW3DmsYaMGTuD3ZvOoyEPlUs41HHdyzHM3oTV/LBtGU1EXoup3lGWxGUtTjcT68OFBiqNsPLkE0sG@vger.kernel.org, AJvYcCXXDouGFUdK2Mc8Fmu1Xqib9mj7bm+7VWeH8ZjWzrTFEyGJabeAhkTR8U2pUr+gmyCmt3Ouw0X4I/8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwO2pgFYLJrpJqWDGfKRBvnleXSeJQwRJS+wslv1dt9hXJqZkA9
-	9Oi3d0lqsOVjizhQDHMXB/h0ngRadWbia3+OQH3a6LYUfCl0oAor
-X-Gm-Gg: ASbGncvU8yKTN8yw/DWdC966xHr3vzdtLkVbxiwHdflW1EE6Al9JN9tLQ6sSwT/GrEX
-	NhNG6JQqqUc+P8DId8bStZww+Hft5hveHLFAo9hd3LVlIapJw506POlecKwDeoYikTrFlB33sNN
-	LWQikq923eE2PsUTK0CDVHtIBszaN/f+7z1A/OnzXMmUvYNDA1KKr73ZRRMpuz7bW93Jf39oRMO
-	OJVz3yAYAfVANCvLmpw1lYzjNgiLGrcOSW14xdxH/DDOIf/cgKy3cv6CyDjfE8yShhB075bZXIy
-	Ku6OJEMCH2Lv0PqMWumN9tPSe1VWlrZ0bnQIRAtHNSELu0wvtvN83WGgdFY0pwQiCW+tAhkZbwd
-	vWU+pp80jN8O0mzoxC3PdTWGCsg==
-X-Google-Smtp-Source: AGHT+IHiAyPXvivjkrlHTACUGM/NMgQ1u+r/3U7mrpl/ZgbCVhByQU9psxpkQOHV5GsJ9WwVMnk2vw==
-X-Received: by 2002:a5d:648c:0:b0:39c:30c9:822 with SMTP id ffacd0b85a97d-39efba6ae03mr1476935f8f.30.1744969876650;
-        Fri, 18 Apr 2025 02:51:16 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5aa100sm16015785e9.7.2025.04.18.02.51.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 02:51:16 -0700 (PDT)
-Message-ID: <2ac349c8dd9b7fcc86e2caae1f74943c23289921.camel@gmail.com>
-Subject: Re: [PATCH 4/8] iio: chemical: pms7003: use aligned_s64 for
- timestamp
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, David Lechner
-	 <dlechner@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Nuno =?ISO-8859-1?Q?S=E1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Lars-Peter Clausen
- <lars@metafoo.de>,  Michael Hennerich <Michael.Hennerich@analog.com>,
- Cosmin Tanislav <cosmin.tanislav@analog.com>, Tomasz Duszynski
- <tduszyns@gmail.com>, Jean-Baptiste Maneyrol
- <jean-baptiste.maneyrol@tdk.com>,  Andreas Klinger <ak@it-klinger.de>,
- Petre Rodan <petre.rodan@subdimension.ro>,  linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Date: Fri, 18 Apr 2025 09:51:37 +0100
-In-Reply-To: <20250417183535.00004d87@huawei.com>
-References: 
-	<20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
-	 <20250417-iio-more-timestamp-alignment-v1-4-eafac1e22318@baylibre.com>
-	 <20250417183535.00004d87@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+        d=1e100.net; s=20230601; t=1744969882; x=1745574682;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rA3sdyVQ16H8kPttRg91Jt1G7uDSj/gcw6eTTAKQB5c=;
+        b=QUAdQt4o/v/s88nPFKrnDGT+6aakSf/5UOF2fJGP8foN/CDnTDBpxnM52FEtKDmmqy
+         MdqF4kh62kOSTUREdV9Zn9lwxj47d35gqh4rXmir8eyBQXr0KA9ELdaDObg1zSrbO0vv
+         8jAvatq1cOWxge6hEVnD9wmww6xafsDU/ZPczb66vcvhRtySqLYZaRQKsaS444PEBZZU
+         rQDe2+7REhLww1uCgctPbOZ/7lMTEzuDDNiDLltFpPO+wb0tdTkKNNM+SmRm542xLIvd
+         22bIb+3rUmtZkP73b/cubFQkJng1cZt5CNcof4iZ99/EvnskqMiZrwW7xhUafpYJAg8c
+         trKA==
+X-Forwarded-Encrypted: i=1; AJvYcCWN6NepvoeGhsABYwS1GIrYI45L+itT/B0DnjEvmw7gPdBnOEk8qccZidWtSmZgjpVjht+grPR73lBknP0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2RNL+SPqvcAKDBVhX6TCtGs5961PeXYZjCEm/oQ71gm8bCmVT
+	UAG9ZWFkIrg6v7sP463T3MBUeL1i/s3r8ob1BqRydAorjOYA5n8adbo1+tZONAxdTsCFfL/NPQm
+	vdJNB0mcbNQiEniBkR5qtgrUW4GVhtTTQ+Iksqm475Ozmqv+bTFSeCnOwMCuOGIY=
+X-Gm-Gg: ASbGncvwWSaUEpKzvPcjrFQ32quDq4JTPgR8Zuzh0E8Uwm3JkSnRIfwNMqiiI59rS/Y
+	HX9S4zpYhNYQ5dvdHdL1Hw09+3zjo1aBYCxONH/uWwOFq9GVUXyr1rlJ+MCC+MSVnir0OKylRRq
+	pJF6wvn9cN1luRM6NzTpRb7UJbyRY3sBKuPqmHwnL/e1yF6q2wLeR9p1ZLEmeGzSdResFJWbJyp
+	m5w6Xp39pEn64dUHU77wPKnQGG0Qw4uF13CfJ8rscF4ParPud6VwQ4V3byWV+Ee4qos5BpZVIOm
+	DLJ+tr+n9o+9MEIq10cMppMFtd5yHAMuyN2nSYgyiKhch93Ih9FiqsgUjaZVeNxkPg==
+X-Received: by 2002:a05:620a:2592:b0:7c5:8ece:8b56 with SMTP id af79cd13be357-7c927f9a9f9mr101650385a.4.1744969882288;
+        Fri, 18 Apr 2025 02:51:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGqDwroTCof2h7lnX1zVhtLN5ZBbsfi9HNceZCvlYWCbV0282LNM0+SsV1JAE41A/dMk5vamA==
+X-Received: by 2002:a05:620a:2592:b0:7c5:8ece:8b56 with SMTP id af79cd13be357-7c927f9a9f9mr101647585a.4.1744969881711;
+        Fri, 18 Apr 2025 02:51:21 -0700 (PDT)
+Received: from [192.168.65.58] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec0c64csm102377266b.13.2025.04.18.02.51.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 02:51:21 -0700 (PDT)
+Message-ID: <5e6a3c7e-4e58-4e42-ac31-3666f49d07f6@oss.qualcomm.com>
+Date: Fri, 18 Apr 2025 11:51:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] arm64: dts: qcom: sa8775p: Add support for camss
+To: Vikram Sharma <quic_vikramsa@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, rfoss@kernel.org,
+        todor.too@gmail.com, bryan.odonoghue@linaro.org, mchehab@kernel.org,
+        robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+        andersson@kernel.org, konradybcio@kernel.org, hverkuil-cisco@xs4all.nl,
+        cros-qcom-dts-watchers@chromium.org, catalin.marinas@arm.com,
+        will@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Suresh Vankadara <quic_svankada@quicinc.com>
+References: <20250210155605.575367-1-quic_vikramsa@quicinc.com>
+ <20250210155605.575367-3-quic_vikramsa@quicinc.com>
+ <65663927-cc11-4810-8714-7600786f299b@oss.qualcomm.com>
+ <7fd92093-3efc-4f24-967d-7e267162b26d@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <7fd92093-3efc-4f24-967d-7e267162b26d@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: 2iJsSs3ccx9cGQR8m0zr9OQwdCHLqkeu
+X-Proofpoint-GUID: 2iJsSs3ccx9cGQR8m0zr9OQwdCHLqkeu
+X-Authority-Analysis: v=2.4 cv=ANaQCy7k c=1 sm=1 tr=0 ts=6802209b cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=-5tugLDAGQjhnTpWTo4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=IoWCM6iH3mJn3m4BftBB:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-18_02,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ mlxlogscore=999 suspectscore=0 clxscore=1015 lowpriorityscore=0
+ phishscore=0 impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504180071
 
-On Thu, 2025-04-17 at 18:35 +0100, Jonathan Cameron wrote:
-> On Thu, 17 Apr 2025 11:52:36 -0500
-> David Lechner <dlechner@baylibre.com> wrote:
->=20
-> > Follow the pattern of other drivers and use aligned_s64 for the
-> > timestamp. This will ensure that the timestamp is correctly aligned on
-> > all architectures.
-> >=20
-> > Also move the unaligned.h header while touching this since it was the
-> > only one not in alphabetical order.
-> >=20
-> > Signed-off-by: David Lechner <dlechner@baylibre.com>
-> > ---
-> > =C2=A0drivers/iio/chemical/pms7003.c | 5 +++--
-> > =C2=A01 file changed, 3 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/drivers/iio/chemical/pms7003.c b/drivers/iio/chemical/pms7=
-003.c
-> > index
-> > d0bd94912e0a3492641acd955adbc2184f4a11b3..e05ce1f12065c65d14b66ab86e291=
-fab47805de
-> > c 100644
-> > --- a/drivers/iio/chemical/pms7003.c
-> > +++ b/drivers/iio/chemical/pms7003.c
-> > @@ -5,7 +5,6 @@
-> > =C2=A0 * Copyright (c) Tomasz Duszynski <tduszyns@gmail.com>
-> > =C2=A0 */
-> > =C2=A0
-> > -#include <linux/unaligned.h>
-> > =C2=A0#include <linux/completion.h>
-> > =C2=A0#include <linux/device.h>
-> > =C2=A0#include <linux/errno.h>
-> > @@ -19,6 +18,8 @@
-> > =C2=A0#include <linux/module.h>
-> > =C2=A0#include <linux/mutex.h>
-> > =C2=A0#include <linux/serdev.h>
-> > +#include <linux/types.h>
-> > +#include <linux/unaligned.h>
-> > =C2=A0
-> > =C2=A0#define PMS7003_DRIVER_NAME "pms7003"
-> > =C2=A0
-> > @@ -76,7 +77,7 @@ struct pms7003_state {
-> > =C2=A0	/* Used to construct scan to push to the IIO buffer */
-> > =C2=A0	struct {
-> > =C2=A0		u16 data[3]; /* PM1, PM2P5, PM10 */
-> > -		s64 ts;
-> > +		aligned_s64 ts;
->=20
-> Bug I think..=C2=A0 So another one that really needs a fixes tag.
-> For all these we might be lucky with padding on the allocations
-> but we shouldn't really rely on that.
+On 4/18/25 9:28 AM, Vikram Sharma wrote:
+> 
+> On 4/14/2025 7:18 PM, Konrad Dybcio wrote:
+>> On 2/10/25 4:56 PM, Vikram Sharma wrote:
+>>> Add changes to support the camera subsystem on the SA8775P.
+>>>
+>>> Co-developed-by: Suresh Vankadara <quic_svankada@quicinc.com>
+>>> Signed-off-by: Suresh Vankadara <quic_svankada@quicinc.com>
+>>> Signed-off-by: Vikram Sharma <quic_vikramsa@quicinc.com>
+>>> ---
+>> [...]
+>>
+>>> +            interrupts = <GIC_SPI 565 IRQ_TYPE_EDGE_RISING>,
+>>> +                     <GIC_SPI 564 IRQ_TYPE_EDGE_RISING>,
+>>> +                     <GIC_SPI 468 IRQ_TYPE_EDGE_RISING>,
+>>> +                     <GIC_SPI 359 IRQ_TYPE_EDGE_RISING>,
+>>> +                     <GIC_SPI 759 IRQ_TYPE_EDGE_RISING>,
+>> 760> +                     <GIC_SPI 758 IRQ_TYPE_EDGE_RISING>,
+> 
+> Hi Konrad,
+> 
+> We cross checked internal documents to confirm IRQ number for csid_lite2/3 and vfe_lite2/3
+> Calculation for IRQ number is done with respect to vector number as
+> irq_num = (vector - 32).
+> csid_lite2 vector -> 791
+> csid_lite3 vector -> 790
+> vfe_lite2  vector -> 793
+> vfe_lite3  vector -> 792
+> 
+> thus irqs are as
+> csid_lite2 -> 759
+> csid_lite3 -> 758
+> vfe_lite2  -> 761
+> vfe_lite3  -> 760
+> 
+> Please let me know if this looks fine to you?
 
-Agreed... We're likely not that lucky for x86-32
+We had a similar issue with qcs8300 - the reported vector id skipped a
+number at some point. In that case the SPI ports indices alongside
+them were advised to be used. Please check with the HW team, but I
+suppose this would be the case for this one too.
 
-- Nuno S=C3=A1
->=20
-> > =C2=A0	} scan;
-> > =C2=A0};
-> > =C2=A0
-> >=20
->=20
-
+Konrad
