@@ -1,111 +1,142 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE520270EB0
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9F724E01F
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744971821; cv=none; b=OMJIvlup4zNZZgbUlkYe5N7Np4oYV4PZzmogQz4v8Kxej69JVTiNjAttWOxwDEe1vD4NOv6H0N7yFnuq11rygAlcsOAaJeQr+jOIndPjOvgEAS/wlTf2D+V6MW0bNECylsw5ZlSakWT4rLjeAcseb9gmUXwiBZwW1ZQKOg4J79Y=
+	t=1744971850; cv=none; b=DRqiC3FuHt6yMNjkdSE2SvmtnccuKzs7tw2sMyTl9l2Nd/d+w3oJBTcMbB7JBcoiJS/zDCMJpL5SdJDVdZNXpWnwwPQ+XrnwZW+EiKiL/6WwImidC1FhEHRe4tnrVPgSRDEWTDEaolihRdGdlicJFiV7VmaVF/vyZ038l/FIIlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744971821; c=relaxed/simple;
-	bh=pLoJ/wWOxF4hATPeF+S4+nCAv8GTTfh4Rs7e8Jmkcbk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hdLI8CRqXMLer4ypuNcPMu7tLHciNrT2hE2vg0uN8wVARPfOZgQryfO43N0srPqMqVJ/iGn+6cCrPsHw4Y9SfE3DFI9D3lnU0gv/5CNrk5idZsv/PNVloN41hH85jd+v+rLcp0FKWoZXvKuiMNoseyglI3vEeqd8XuF2Dwv4Tt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=jd/zPRsI; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744971850; c=relaxed/simple;
+	bh=atJhdaYKS6mysof7bXhlzakrTennjV1rb/oDep2wowk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dc18RwzBBuHAuag9xe9W8AdPn4JYH6are6Pu9twadXmWttXbOFqFmANVhXavKJP68AovFg2vchbWITPv+/GwwxXq9oxtouhL2c1ywyjr6Qngo4TXiqLwDWkLgcdL2kkL8oInBlyWQF65+W0T9qgqMRoI7ey0IaTRtlqqGCHCXqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=G/1b13db; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="jd/zPRsI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=I2pfP
-	RHCfMx1686AqGSEqHuKYU80CCi4N80MO83xG7I=; b=jd/zPRsIE1TnNrVaNhTM3
-	kxcd/WDZo5qmtQApC/AuzVD8stjDK5bIc5qM73pEmuttirjVkRsB2l5B/FHaXf3f
-	1RfwQg+PvUXykIQDPNX0krnoA4YyKv2PWcw80fsxHCAv/0DrHKxyzdT9XnwiuoAp
-	stDuu4DnxfMpKe+tJXWgS4=
-Received: from node-1.domain.tld (unknown [])
-	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wDX34b+JwJoXuTCAw--.12581S3;
-	Fri, 18 Apr 2025 18:22:58 +0800 (CST)
-From: Jiayuan Liang <ljykernel@163.com>
-To: Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>
-Cc: Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Jiayuan Liang <ljykernel@163.com>
-Subject: [RFC PATCH 1/1]     KVM: arm: Optimize cache flush by only flushing on vcpu0
-Date: Fri, 18 Apr 2025 18:22:44 +0800
-Message-ID: <20250418102244.2182975-2-ljykernel@163.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250418102244.2182975-1-ljykernel@163.com>
-References: <20250418102244.2182975-1-ljykernel@163.com>
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="G/1b13db"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39c0e0bc733so1626929f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 03:24:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1744971846; x=1745576646; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=YJmTDwCr1kPva4b5vrqnHN2+KW5Z+MMvffJ+VbT6Gqg=;
+        b=G/1b13dbFPQ3pVu2wAmR7BitESN2ySJU05KmD8gl/wGhLMAhtHgi4KGdyv6zJx0JmW
+         67mZezflUT28zIgfZByxXwD5AfJF4w9A9maQIUKAa2Ml1kgozLHqicjpC2r+E51lEbUi
+         sJLgYciLUqydjlo/Q1A6HT5vbaLt0vYNeBhSE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744971846; x=1745576646;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YJmTDwCr1kPva4b5vrqnHN2+KW5Z+MMvffJ+VbT6Gqg=;
+        b=fa1uPsW4POF4pm96TM9fhmQxm10L3dj2RCg/mEJc7u7B9GHtwHo9+tO7+DbKfdRHFP
+         DwmBY9JiPo25zXFtqzE9XIcEfe9iQQvUIPMUDga9Z37oZUZFOGjsxax4puqO1f7O5RzO
+         tABt6pYhrkM6fWw7Egdmqs8lo8Pi+NkDHrrmsE6jxvKpHpHCdsML8SXQbElecOQZkoSX
+         HXsFjCH7HeJi0Y7ZLiqiXTdcoa9x103oD2UdTnAYFIlJ3WB+2VoE6MCRtwlbP+OHyhN3
+         xKt8KSo2aAJr5m5iJuFY2o9k5y4uvvIoTXG82EuJXoeuP5HgH8CRrLhI4uC8PG7Sz6sY
+         Z+Zg==
+X-Forwarded-Encrypted: i=1; AJvYcCWiSo+NgrbSScNReHYARcVFJiCUNGm8OMXYIgJTx3N/k+ais4FTMDwRMOq/2+ZkRb9Aakh+s7pa5NmgaOo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyO1BFI0I0bUi+3V4iO/jZbs8zuMRlOnHr+RYv9+p7tMjYuguPv
+	oWPbJ9nhg68qbwUzXzVPqfUn/DpUTYrVhHFCgTxIJrHrK5kPzKiWW+AtTd38HZwkeF1yTZhqOhe
+	psL8=
+X-Gm-Gg: ASbGnctkHtyEcKxE7+8MvGeGfcBHnysFHrG9OAsB0Ja2hzTDLtl8yXO8UhZZr+PHpYU
+	oIg5lbVQdwuvZSYnTRHuBP+gxDySlp74OtuMVOovwukoWkToLILWtFCbg+DKO+EWLPzZWq/4jY3
+	Iy06a9eElOOrKphYQgWExmtUscojhz7pVP6JJj+pF9xlv/QEqkakWF+EGTh5D0Idha7J62mxJdw
+	/c5ym/O+KrTfuMHlTVIRVlyTXRdXrZPoaAV4+e7TIiI56CyG9NLS0rnO6TSWkXIXHO586Bl+mz8
+	L9yTPispaDzYsZUnniSC6EVXV4bTLWiLGq+ITwFIyV5FSY1CSh9S2bpBJIRpiI3+1JOpKxeQ4dI
+	tJHP/fQ==
+X-Google-Smtp-Source: AGHT+IHVvlOW/PQKztqdeuYLzZIIyWPEnxfP7TS8Tghjk3gRsyw5XUF1KlSks6byhbOqrb7JpJRwGA==
+X-Received: by 2002:a05:6000:40de:b0:39e:e438:8e32 with SMTP id ffacd0b85a97d-39efbb09208mr1538497f8f.55.1744971845933;
+        Fri, 18 Apr 2025 03:24:05 -0700 (PDT)
+Received: from [192.168.1.183] (host-92-26-98-202.as13285.net. [92.26.98.202])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa420683sm2349158f8f.20.2025.04.18.03.24.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 03:24:05 -0700 (PDT)
+Message-ID: <50bf962c-2c9e-46a2-bbac-cba9cf229e79@citrix.com>
+Date: Fri, 18 Apr 2025 11:24:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDX34b+JwJoXuTCAw--.12581S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Zry8Aw4UWrWrtF1xZr47Jwb_yoW8Cw4UpF
-	Z3Cw1kKw4kW34xGay7J395ur1rW395JFs8tF98Gw10vwn8Z34q9r9Yk34UAFWDGryxtF4f
-	tFWavF1UZrs8ZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zic4S8UUUUU=
-X-CM-SenderInfo: 5om1yvhuqhzqqrwthudrp/1tbiYBAzbmgCJ0IXGAAAst
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -tip v2 1/2] x86/boot: Remove semicolon from "rep"
+ prefixes
+To: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org,
+ linux-video@atrey.karlin.mff.cuni.cz, xen-devel@lists.xenproject.org,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Martin Mares <mj@ucw.cz>
+References: <20250418071437.4144391-1-ubizjak@gmail.com>
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <20250418071437.4144391-1-ubizjak@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-    When toggling cache state in a multi-vCPU guest, we currently flush the VM's
-    stage2 page tables on every vCPU that transitions cache state. This leads to
-    redundant cache flushes during guest boot, as each vCPU performs the same
-    flush operation.
+On 18/04/2025 8:13 am, Uros Bizjak wrote:
+> diff --git a/arch/x86/boot/video.c b/arch/x86/boot/video.c
+> index f2e96905b3fe..0641c8c46aee 100644
+> --- a/arch/x86/boot/video.c
+> +++ b/arch/x86/boot/video.c
+> @@ -292,7 +292,7 @@ static void restore_screen(void)
+>  			     "shrw %%cx ; "
+>  			     "jnc 1f ; "
+>  			     "stosw \n\t"
+> -			     "1: rep;stosl ; "
+> +			     "1: rep stosl ; "
+>  			     "popw %%es"
 
-    In a typical guest boot sequence, vcpu0 is the first to enable caches, and
-    other vCPUs follow afterward. By the time secondary vCPUs enable their caches,
-    the flush performed by vcpu0 has already ensured cache coherency for the
-    entire VM.
+Doesn't this one still need a separator between STOSL and POPW ?
 
-    Optimize this by only performing the stage2_flush_vm() operation on vcpu0,
-    which is sufficient to maintain cache coherency while eliminating redundant
-    flushes on other vCPUs. This can improve performance during guest boot in
-    multi-vCPU configurations.
-
-    Testing with a 64-core VM with 128GB memory using hugepages shows dramatic
-    performance improvements, reducing busybox boot time from 33s to 5s.
-
-    Test command:
-    qemu-kvm \
-        -nographic \
-        -m 128G \
-        -mem-path /dev/hugepages \
-        -mem-prealloc \
-        -cpu host -M virt \
-        -smp 64 \
-        -kernel ./Image \
-        -append "root=/dev/ram earlycon=pl011,0x9000000 console=ttyAMA0 init=/linuxrc systemd.unified_cgroup_hierarchy=1 psi=1"
-
-    Signed-off-by: Jiayuan Liang <ljykernel@163.com>
----
- arch/arm64/kvm/mmu.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-index 754f2fe0cc67..fbc736657666 100644
---- a/arch/arm64/kvm/mmu.c
-+++ b/arch/arm64/kvm/mmu.c
-@@ -2300,8 +2300,10 @@ void kvm_toggle_cache(struct kvm_vcpu *vcpu, bool was_enabled)
- 	 * If switching it off, need to clean the caches.
- 	 * Clean + invalidate does the trick always.
- 	 */
--	if (now_enabled != was_enabled)
--		stage2_flush_vm(vcpu->kvm);
-+	if (now_enabled != was_enabled) {
-+		if (vcpu->vcpu_id == 0)
-+			stage2_flush_vm(vcpu->kvm);
-+	}
- 
- 	/* Caches are now on, stop trapping VM ops (until a S/W op) */
- 	if (now_enabled)
--- 
-2.43.0
-
+~Andrew
