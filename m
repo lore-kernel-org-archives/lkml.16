@@ -1,175 +1,168 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620FE21ABDA
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232B886328
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744996200; cv=none; b=S769NKvlU4EGfIkM0oR9ndbdMNI5rBrwqfWSxLUmnmSO8Cf7qDdvXkx6EqQkrrsMostba2afb8EigK7uzgbCRCMdKw5UH0GhCeBiqSYLTDBEPZtpgNeLCk7SsRKaG/8kATBVxe9mXLKA4l12vVwNW+5Q/8BDJpgM88bT0EkAChA=
+	t=1744996325; cv=none; b=Wqnbn3K75czmcQ7z4NpIjmmmVon3WlBaBgks5VFfDRGFTBoRE/g482SguZYrX3K1is7Ixxm0a7WKGfa5jlwFDVKqeeDF2W0F7sWfcihHygBZNIaepL3YFwfbh+fV/2nvDF/cqClEClOqTp89xPZixvntvT5t1Hg68byMifHyfTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744996200; c=relaxed/simple;
-	bh=XLpPdqycz3uc3rZaBxp8Jop/LZge5umKgM6hyqZYdP4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hZwVUKLqJHkAu0Q2wFvDOiv+DTL/SL0M4/ZXz2UdaEfHMK6d9p6+SmTQmecwleq/b+0hpzoHVYDajGWirx/OJ+UpQReKrp7oiEJOklOl00hbTmrod0L/+j1vY5rpeCRrEAbeCY9K3QJ/ujTgtgLNaivhLRWwotFx2YwjDvlXlWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T0wCdKw+; arc=none smtp.client-ip=209.85.210.180
+	s=arc-20240116; t=1744996325; c=relaxed/simple;
+	bh=Je40Jxt/K3+Rdd49VsOjYfKZKXbD8VrWEtBBXIFF9p4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kd53d/c9Iuy5MATd8SkhIBXpdhYHznGDdGxN720iAXpxJruVUtXM2TBSOFF/OmvWB9daq3OFxB0SQZwWdHj3FM2YCOU9ysg/jDQea3r9YPm/sWKlghePgNgdvpoIaFgpnkS2im0kHgC16YDUa5KJByOgbQmdSy1HrumF9xyyMAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jipJKEXC; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0wCdKw+"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7399838db7fso2101931b3a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:09:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jipJKEXC"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-223f4c06e9fso19899295ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:12:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744996199; x=1745600999; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KR9npWIv+rGQU+FX1QXLAADj2LmGc+OKrQyDb0uOm+4=;
-        b=T0wCdKw+BThzIVzvPYJjrTfukgYNcbfV7aB6Lf+opVJ4VXVwqK84SSCCzDg3GJNZ/x
-         8qDjpGVbJm7/CFL9BUROuOMyElYvOE+G13v3n/IWTmx2CKdhFW9imINNcBMXwYt/PAa2
-         gPmqS397URm46xTVuJ1O3Sr3c4CNV6pYzpzXPhGmyjMqkVI152gJljrVvmkqyLKHS9Ao
-         ZCtSH4YKFt/S6wmqYN7kwziv3Wu6G4X4sZriMt+IUBp+/xV8OfLygCmMkSK7Wr7hSCO1
-         QdC3+ZMgp9JIFEM3tlK8p4xOLG7NwwCa3MDpsAMc0ohWrpGCJdZcpEs7bK5DWwEdnUb0
-         FH/w==
+        d=gmail.com; s=20230601; t=1744996323; x=1745601123; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nNA/SBMGz5nzByA9wBccTGH5/3WLOHOzBct3Skuv3xA=;
+        b=jipJKEXCdPyPGoyM89z0XqRhByU/K8bUZ7u2HQQJMN+/iykYCCdrnw203TMTobzrNA
+         zx0JuM8cIHo1X8+d/FLdzHyn82z3aynFnlcKv911A9EmJdr8Te9R53Bk7XpOybrwPEvw
+         ZOKT+BD/Gsk8UPQ5/1qfbAan2ow06Qgj+x57X9WMv7OKLCBthel6TnxFQpKSNkCJNNZ+
+         EtUQCJ6ZIxKFH4HgNrQLRnUoLv7Bp6OlY26PgBeCLiapn14ae4jDccnponzRpRBhpE9X
+         iWPN5hY+sUv3aPJtW5hApQ1NpCvs4Ho65K77lXjQWVj7Qrle4Y3R7nIVaTwzr6SYqWtS
+         cfcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744996199; x=1745600999;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KR9npWIv+rGQU+FX1QXLAADj2LmGc+OKrQyDb0uOm+4=;
-        b=AjShg3wlDNODC+FZUl//II0+W4B64lmIgfd5LfNkXR48INt0y1b1kFvi1Hy1XxpS06
-         DSywvaNXyhgHxp4PrXLcGFUcwF5RbiZNBHBan8xbDfpDMrZgTe6VR3Eop5FVfERv6hLM
-         VuC9NR3FDN4wrCQMSo8thlJsusuzUbfD9EaW9Xt0sHYQHDeWYKbIPrXJEnjZ9P/dKtoH
-         RzNaMuk1qArbILFZG+3Q59lSsXQKCI5+iPshehJxsaBjRmhMi18b1IyRUTYF9+G5hkxE
-         G/U4TYAli4NLeY7ENGkrRcIawm60oxIzGAR/Z7GramByqLuWn8YwXYHGrQ1ZsQS8fsum
-         9f7A==
-X-Forwarded-Encrypted: i=1; AJvYcCXbZRsTWPCccyFWRdH59rYrxfAM/GnNB/lMSIb4rK/CC1WprGx/lKhuKxZXzmthXzM9gnP4JGhjT1XzyOE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZoDtuyBmQMAlSeMRgSBVCXs9QS4ZsjYa+CDkGuG4vKDs8+tef
-	B0YemRvw4l63h4CKHHHQk1W2h4RDC4B5xbp425IlbActvRid1QCr
-X-Gm-Gg: ASbGncud0ZwL12nbykaydllTred3iI79/Q582kbCCDEBnfZASP8oIMVH+RW3NAeBcXc
-	UHcPgNvh5omKxa2eLw4VO1yOcU1BkTy+QvWwYqGsEC2iXF2j+3zfx/4xgpHwzOmMw2PTEPFnuPt
-	7UKzpoYb/7AXBggd/t1OehzduLi56LOY7oWqSBh5DsU2P5sVsLyOboX2rd5lsYVnsHD/7zuBjfU
-	DrT7ObMsWB6O1EanuPhreV6lFdIJ59qZbmws/vyfYB/uD8OzEGav2P+F9ieLOusgZBVadGPrcBC
-	NFJEKDRjlkk0HcuCiJa4GrsWbkdApo6v43yk9RyCxNvOwNKkJWA5evwYYA==
-X-Google-Smtp-Source: AGHT+IFFtgchhKrrSgY8IwY+zNPrux+4lRWwT2ZJzGrWP0TbUDOOYlZ/d83wzJ8XRSE77fYFs+SJJQ==
-X-Received: by 2002:a05:6a00:a904:b0:736:bced:f4cf with SMTP id d2e1a72fcca58-73dc1653f45mr4296795b3a.0.1744996198648;
-        Fri, 18 Apr 2025 10:09:58 -0700 (PDT)
-Received: from localhost.localdomain ([2601:646:8f03:9fee:5e33:e006:dcd5:852d])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfa59176sm1834069b3a.113.2025.04.18.10.09.57
+        d=1e100.net; s=20230601; t=1744996323; x=1745601123;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nNA/SBMGz5nzByA9wBccTGH5/3WLOHOzBct3Skuv3xA=;
+        b=bi+f7VYiWzWgicJeWUw1iwBgmTrUUKxYHSAmCDKkEPIZC2KiGgUvSA/gSRMuqDq9zO
+         gPGnAq2Abz0sK4IovtB78jPYw/Wo1hHYWIDEfi8X96STsXRkbqdD6TxCaiDpxxz2OZb3
+         hY9hUYE+3z/ekk2J/bc2WsCzlmjEpS8bF1lhqajvX4BoVL1h2JnfRjm8hMg8wmbroZhg
+         cDWmMb9/cEK0XlCcmdcPTodsvHgqxhzUAUsSnIG3WANIcdXluxTXztpEIcyvrac1B1iQ
+         tOZAbGubA2RqSWRTJszpweasYnmESRUp2rEzCYWx346IWO4VGQvukUSM0K88e+TODruv
+         8Y7g==
+X-Forwarded-Encrypted: i=1; AJvYcCURW6JhqTwReDDOLY34IUJmELCY4BF6MonTtGZF4+D45NuRD11bBIuAdp1Z9SG7b+nFdtgueZuzu5FDZik=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXCP3EnNModZWtVHf0cDmznykfVJS1N6fIhrcRlG156qvyy6Nf
+	IqiZJgf7Mbia2GJi35thU6l7UlMp3wzJJpjBo4LaMcBFtLzShyb9
+X-Gm-Gg: ASbGnct2ojb9gMrs5XiVQOIrRW4H6MuvgR1ZHcZuV8UhYxMbTmP71t56bu4mgjb7pqy
+	VIMftZGbkM7kZVHhCAtyOOoX13aFi3iRVLeN8C1W8oML7BwtqbaU7eBtn2qFMIvEmyyYJbgOtLp
+	Mvd3Mz5avYEuKogzV5TLsA+yoN56RlWyMN5L0CDzi7DYy9A7HCzLt/ZQQWCpAMUAkwds8hg9DTX
+	pHtInkED4CEkdBFD4MZ4c1cqt4obL0rb7eBZzLBGzrlscRWLByNe8VWl5qOT4cpx3vBKVZQzYmv
+	JdYbMIKIo9Pwf+R+v/grQAhjdWn07gX+1cdJv52ABlZWGjXW5Jc=
+X-Google-Smtp-Source: AGHT+IHds0YrApaxned7HLyI6jwzPBZIRFd/Zv4gqZcmfhjoAsoH/dxR0Rpg18h6eruL1zhjn94uCQ==
+X-Received: by 2002:a17:902:f648:b0:223:5187:a886 with SMTP id d9443c01a7336-22c53f1056amr52473725ad.22.1744996323197;
+        Fri, 18 Apr 2025 10:12:03 -0700 (PDT)
+Received: from localhost ([216.228.127.131])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb4925sm19191665ad.117.2025.04.18.10.12.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 10:09:58 -0700 (PDT)
-From: nifan.cxl@gmail.com
-To: muchun.song@linux.dev,
-	willy@infradead.org
-Cc: mcgrof@kernel.org,
-	a.manzanares@samsung.com,
-	dave@stgolabs.net,
-	akpm@linux-foundation.org,
-	david@redhat.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Fan Ni <fan.ni@samsung.com>
-Subject: [PATCH v2 4/4] mm/hugetlb: Convert use of struct page to folio in __unmap_hugepage_range()
-Date: Fri, 18 Apr 2025 09:57:42 -0700
-Message-ID: <20250418170834.248318-5-nifan.cxl@gmail.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250418170834.248318-2-nifan.cxl@gmail.com>
-References: <20250418170834.248318-2-nifan.cxl@gmail.com>
+        Fri, 18 Apr 2025 10:12:02 -0700 (PDT)
+Date: Fri, 18 Apr 2025 13:11:59 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Luo Jie <quic_luoj@quicinc.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>, linux-kernel@vger.kernel.org,
+	cocci@inria.fr, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, andrew@lunn.ch, quic_kkumarcs@quicinc.com,
+	quic_linchen@quicinc.com, quic_leiwei@quicinc.com,
+	quic_suruchia@quicinc.com, quic_pavir@quicinc.com
+Subject: Re: [PATCH v3 1/6] bitfield: Add FIELD_MODIFY() helper
+Message-ID: <aAKH37xa1brIAXfs@yury>
+References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
+ <20250417-field_modify-v3-1-6f7992aafcb7@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417-field_modify-v3-1-6f7992aafcb7@quicinc.com>
 
-From: Fan Ni <fan.ni@samsung.com>
+On Thu, Apr 17, 2025 at 06:47:08PM +0800, Luo Jie wrote:
+> Add a helper for replacing the contents of bitfield in memory
+> with the specified value.
+> 
+> Even though a helper xxx_replace_bits() is available, it is not
+> well documented, and only reports errors at the run time, which
+> will not be helpful to catch possible overflow errors due to
+> incorrect parameter types used.
+> 
+> Add the helper FIELD_MODIFY() to the FIELD_XXX family of bitfield
+> macros. It is functionally similar as xxx_replace_bits(), and in
+> addition adds the compile time type checking.
 
-In __unmap_hugepage_range(), the "page" pointer always points to the
-first page of a huge page, which guarantees there is a folio associating
-with it.  Convert the "page" pointer to use folio.
+This paragraph duplicates the above. I'll drop it and take this
+patch to bitmap-for-next. Regarding the rest of the series - it's up
+to ARM64 and Cocci maintainers if they want them or not.
 
-Signed-off-by: Fan Ni <fan.ni@samsung.com>
----
-This is a new patch added to the series based on the discussion here:
-https://lore.kernel.org/linux-mm/aAHUluy7T32ZlYg7@debian/T/#m2b9cc1743e1907e52658815b297b9d249474f387
----
- mm/hugetlb.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+Thanks for the work!
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 7d280ab23784..8177a3fe47d7 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -5840,7 +5840,7 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 	pte_t *ptep;
- 	pte_t pte;
- 	spinlock_t *ptl;
--	struct page *page;
-+	struct folio *folio;
- 	struct hstate *h = hstate_vma(vma);
- 	unsigned long sz = huge_page_size(h);
- 	bool adjust_reservation = false;
-@@ -5904,14 +5904,14 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 			continue;
- 		}
+Thanks,
+Yury
  
--		page = pte_page(pte);
-+		folio = page_folio(pte_page(pte));
- 		/*
- 		 * If a reference page is supplied, it is because a specific
- 		 * page is being unmapped, not a range. Ensure the page we
- 		 * are about to unmap is the actual page of interest.
- 		 */
- 		if (ref_folio) {
--			if (page != folio_page(ref_folio, 0)) {
-+			if (folio != ref_folio) {
- 				spin_unlock(ptl);
- 				continue;
- 			}
-@@ -5926,7 +5926,7 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 		pte = huge_ptep_get_and_clear(mm, address, ptep, sz);
- 		tlb_remove_huge_tlb_entry(h, tlb, ptep, address);
- 		if (huge_pte_dirty(pte))
--			set_page_dirty(page);
-+			folio_mark_dirty(folio);
- 		/* Leave a uffd-wp pte marker if needed */
- 		if (huge_pte_uffd_wp(pte) &&
- 		    !(zap_flags & ZAP_FLAG_DROP_MARKER))
-@@ -5934,7 +5934,7 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 					make_pte_marker(PTE_MARKER_UFFD_WP),
- 					sz);
- 		hugetlb_count_sub(pages_per_huge_page(h), mm);
--		hugetlb_remove_rmap(page_folio(page));
-+		hugetlb_remove_rmap(folio);
- 
- 		/*
- 		 * Restore the reservation for anonymous page, otherwise the
-@@ -5943,8 +5943,8 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 		 * reservation bit.
- 		 */
- 		if (!h->surplus_huge_pages && __vma_private_lock(vma) &&
--		    folio_test_anon(page_folio(page))) {
--			folio_set_hugetlb_restore_reserve(page_folio(page));
-+		    folio_test_anon(folio)) {
-+			folio_set_hugetlb_restore_reserve(folio);
- 			/* Reservation to be adjusted after the spin lock */
- 			adjust_reservation = true;
- 		}
-@@ -5968,12 +5968,12 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 				 * count will not be incremented by free_huge_folio.
- 				 * Act as if we consumed the reservation.
- 				 */
--				folio_clear_hugetlb_restore_reserve(page_folio(page));
-+				folio_clear_hugetlb_restore_reserve(folio);
- 			else if (rc)
- 				vma_add_reservation(h, vma, address);
- 		}
- 
--		tlb_remove_page_size(tlb, page, huge_page_size(h));
-+		tlb_remove_page_size(tlb, folio_page(folio, 0), huge_page_size(h));
- 		/*
- 		 * Bail out after unmapping reference page if supplied
- 		 */
--- 
-2.47.2
-
+> FIELD_MODIFY(REG_FIELD_C, &reg, c) is the wrapper of the code below.
+> reg &= ~REG_FIELD_C;
+> reg |= FIELD_PREP(REG_FIELD_C, c);
+> 
+> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+> ---
+>  include/linux/bitfield.h | 21 +++++++++++++++++++--
+>  1 file changed, 19 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
+> index 63928f173223..2eaefa76f759 100644
+> --- a/include/linux/bitfield.h
+> +++ b/include/linux/bitfield.h
+> @@ -8,6 +8,7 @@
+>  #define _LINUX_BITFIELD_H
+>  
+>  #include <linux/build_bug.h>
+> +#include <linux/typecheck.h>
+>  #include <asm/byteorder.h>
+>  
+>  /*
+> @@ -38,8 +39,7 @@
+>   *	  FIELD_PREP(REG_FIELD_D, 0x40);
+>   *
+>   * Modify:
+> - *  reg &= ~REG_FIELD_C;
+> - *  reg |= FIELD_PREP(REG_FIELD_C, c);
+> + *  FIELD_MODIFY(REG_FIELD_C, &reg, c);
+>   */
+>  
+>  #define __bf_shf(x) (__builtin_ffsll(x) - 1)
+> @@ -156,6 +156,23 @@
+>  		(typeof(_mask))(((_reg) & (_mask)) >> __bf_shf(_mask));	\
+>  	})
+>  
+> +/**
+> + * FIELD_MODIFY() - modify a bitfield element
+> + * @_mask: shifted mask defining the field's length and position
+> + * @_reg_p: pointer to the memory that should be updated
+> + * @_val: value to store in the bitfield
+> + *
+> + * FIELD_MODIFY() modifies the set of bits in @_reg_p specified by @_mask,
+> + * by replacing them with the bitfield value passed in as @_val.
+> + */
+> +#define FIELD_MODIFY(_mask, _reg_p, _val)				\
+> +	({								\
+> +		typecheck_pointer(_reg_p);				\
+> +		__BF_FIELD_CHECK(_mask, *(_reg_p), _val, "FIELD_MODIFY: ");		\
+> +		*(_reg_p) &= ~(_mask);							\
+> +		*(_reg_p) |= (((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask));	\
+> +	})
+> +
+>  extern void __compiletime_error("value doesn't fit into mask")
+>  __field_overflow(void);
+>  extern void __compiletime_error("bad bitfield mask")
+> 
+> -- 
+> 2.34.1
