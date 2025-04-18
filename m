@@ -1,100 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF2A1B6CE0
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 20:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D542868B;
+	Fri, 18 Apr 2025 20:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745009078; cv=none; b=jgTlCSZRtv78QiwA+BY0h7LAPzV7JX/cBCnn9WFPHVrxZEMXnB67YKt41ySYEXzCDtyupK+Uo1w8MCGol7t/aiNUKnqZBgX10Gl6ptlGyZqD+KfrcXSfmQqE6rG5QkbyCC6b8kCUYeBHhQ6GUa8VlADNIARgnIINKg+PRrYdSJY=
+	t=1745009122; cv=none; b=LkAteoECgNh7vsILrf5pYmIp5xjJn+FK70v/WqhkqcE9tFNxrO+NL+D+nnLXC5FJzm6snS5fjnPWwNrf+yvpw51s5U66G9w0y7y90wHzlDKXj4KRQ1lcPS9IwB46plU7KdQ6r+b4kdHQTyZwY5TDWb/GZa8ZZZryI1HBLbpQBQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745009078; c=relaxed/simple;
-	bh=li/bcUhL1DnvyzoE2SU6HKoByto/9ksr45TAEfyfSh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Li3693Wa/4V1vT45guSvhc/wpLdG86B/y5oOOF84ZyxeXxUuubG9h20fp60/Obo/ZLeN7XGBQcCzES1J05i02CqEDfyjJXf2hJlFJGFBAoWAIuINLYrMU1RAj54mptNJW3vT4pmRsnsqzmdjadahsFRdxlr4FSJonDc8BM2kHdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A1T3f0vQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745009122; c=relaxed/simple;
+	bh=SWhMq7EEykkiSLh6AkXVMXflLkia3IhfyNr+kjedS54=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uoz68elrKdKmWxya32+U7Yu7G49OxsEx58H2v0lmEI7iMAvlGL1u4aeNA6MWxmU7FXjNecySmivwIDVZObK/TRAZyixK9F/IlVIoIfjdVkxnVjR//uTFdfuqQwkP09Tg/4uj8eUr3IkcXpECASLMfhY3IT3FS/QUm1pLDi8hIhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=c2aZCiO3; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A1T3f0vQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55580C4CEE2;
-	Fri, 18 Apr 2025 20:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745009077;
-	bh=li/bcUhL1DnvyzoE2SU6HKoByto/9ksr45TAEfyfSh0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=A1T3f0vQ+rv8dVAEs/fst0AbG6Oo1vFlkuShSBeSTl72otGL2qF5mbFJTb3GV+nGx
-	 LpIYKTv/DfO+4RIM/bojvzQl0XLfPBnauRDGJXHWj9j4z54YEXL5swnLe7MY3OGp9/
-	 9D1Y+fJ2Rjl8FEQOHH6kyTsAJfI4F+xQrLfZbU/lAPX0rkP680q9c3TFYbd4QS4aWi
-	 oqQ7sYcqZKbZNuX3HHLpcXh3TaZHy5qtYwhAIgNaUxTZNbMKHaGhnO3Pz+x03BMYFp
-	 5xb1FlZCKp1Z1W1qJ3g2GVYFRSvK+F4oxfGeMAGKDIoJgZv5aXg0FfkieaH4L+iX2z
-	 Vny3w8ROYP4YQ==
-Date: Fri, 18 Apr 2025 22:44:32 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Subject: [GIT PULL] x86 fixes
-Message-ID: <aAK5sDBMS8jYcsiz@gmail.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="c2aZCiO3"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D294F40E0200;
+	Fri, 18 Apr 2025 20:45:17 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id Z9dMenDm3W3E; Fri, 18 Apr 2025 20:45:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1745009113; bh=F6o7Xb9qIamzCoDoNgbWH9E8jO17VFIup3c2wRj3x/Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c2aZCiO3haWNBlhN4vQLIQRtHigrEytnFdFJgsRE/ChIinHzljvnUDKwLufdIK0Pk
+	 PVpyUCi1XHEvx1UKmHfd9X/aocWCVpRVetelBhgga0GVLOe3et6mGwkikNG71c9KUJ
+	 3iUO/D01my+P44PZj7ixDt52sYIsbwWTdqoozT2+iSG7iKeD287zIC0CNifUSQ7PzP
+	 0OClCxlnVSCCI9POuJkftE4PJx/b3A1b197QLuJRXdvCD6h5F8VRStdtr+0HRg2LnS
+	 Kj1namUha1cWGgVbOKObs9Eg2v/0vkf+G8NK6iC98uYKCCOJwQ1H47kDwRr01s3L1d
+	 FIKBX+lo6l7qdqO7beCNX04iJaEBN0eq7l1lVBoHw0WFig4a8uV0Lc28iBRho02CQb
+	 CXlVybkOvsmbA4iCNgybbxLrFnAuuNKZx6VjwG005zg4DBJiadgEF0GwyZ3GLUvO2R
+	 cHTPjc7RQ2etTLjD3/+UHkeEeOjyJSotDeKxqcuIYfAz9bHqOZ8XYVXDcyPgJoOOIf
+	 qa9YjHcCLtPHYFuz1twtOEpXIMEBakfPq7L4TDg2VAf09Nw+1pMuH854B4wLbt6YSl
+	 WWLkq3BY/TYZyu7x38+XT/CGiB3u+opLI5DLUJ9wTCjdp63OhVLlqb554lzIjCsrdr
+	 cYLYu8DX4QY12gfcKiAoTIe8=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F2D4F40E0214;
+	Fri, 18 Apr 2025 20:45:03 +0000 (UTC)
+Date: Fri, 18 Apr 2025 22:45:02 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Matthew Gerlach <matthew.gerlach@altera.com>
+Cc: dinguyen@kernel.org, tony.luck@intel.com, james.morse@arm.com,
+	mchehab@kernel.org, rric@kernel.org, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Niravkumar L Rabara <niravkumar.l.rabara@altera.com>
+Subject: Re: [PATCH 1/2] EDAC/altera: fix cut and paste error
+Message-ID: <20250418204502.GGaAK5zt0verzZOQAd@fat_crate.local>
+References: <20250418143052.38593-1-matthew.gerlach@altera.com>
+ <20250418143052.38593-2-matthew.gerlach@altera.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <20250418143052.38593-2-matthew.gerlach@altera.com>
 
-Linus,
+On Fri, Apr 18, 2025 at 07:30:51AM -0700, Matthew Gerlach wrote:
+> From: Niravkumar L Rabara <niravkumar.l.rabara@altera.com>
+> 
+> Fix bug testing the wrong structure member, ecc_uecnt_offset, before using
 
-Please pull the latest x86/urgent Git tree from:
+A lot of patches "fix bug". Just write "Test the correct structure member..."
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2025-04-18
+> ecc_cecnt_offset.
+> 
+> Signed-off-by: Niravkumar L Rabara <niravkumar.l.rabara@altera.com>
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@altera.com>
+> ---
+>  drivers/edac/altera_edac.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-   # HEAD: d54d610243a4508183978871e5faff5502786cd4 x86/boot/sev: Avoid shared GHCB page for early memory acceptance
+Any
 
-Miscellaneous x86 fixes:
+Fixes:
+Cc: <stable@kernel.org>
 
- - Fix hypercall detection on Xen guests
+tags for this one?
 
- - Extend the AMD microcode loader SHA check to Zen5,
-   to block loading of any unreleased standalone
-   Zen5 microcode patches
+You probably want this propagated to the affected trees no?
 
- - Add new Intel CPU model number for Bartlett Lake
+Thx.
 
- - Fix the workaround for AMD erratum 1054
+-- 
+Regards/Gruss,
+    Boris.
 
- - Fix buggy early memory acceptance between
-   SEV-SNP guests and the EFI stub
-
- Thanks,
-
-	Ingo
-
------------------->
-Ard Biesheuvel (1):
-      x86/boot/sev: Avoid shared GHCB page for early memory acceptance
-
-Borislav Petkov (AMD) (1):
-      x86/microcode/AMD: Extend the SHA check to Zen5, block loading of any unreleased standalone Zen5 microcode patches
-
-Jason Andryuk (1):
-      x86/xen: Fix __xen_hypercall_setfunc()
-
-Pi Xiange (1):
-      x86/cpu: Add CPU model number for Bartlett Lake CPUs with Raptor Cove cores
-
-Sandipan Das (1):
-      x86/cpu/amd: Fix workaround for erratum 1054
-
-
- arch/x86/boot/compressed/mem.c      |  5 ++-
- arch/x86/boot/compressed/sev.c      | 67 +++++++++----------------------------
- arch/x86/boot/compressed/sev.h      |  2 ++
- arch/x86/include/asm/intel-family.h |  2 ++
- arch/x86/kernel/cpu/amd.c           | 19 +++++++----
- arch/x86/kernel/cpu/microcode/amd.c |  9 +++--
- arch/x86/xen/enlighten.c            |  7 +---
- 7 files changed, 43 insertions(+), 68 deletions(-)
+https://people.kernel.org/tglx/notes-about-netiquette
