@@ -1,228 +1,93 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6FD209F42;
-	Fri, 18 Apr 2025 09:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B7A270EAE
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 09:46:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744969566; cv=none; b=ugr1w9EVIqEy0bfQqE1cn9TuugiTo3l2aCD1hMnbqt1qOdg+qR0XkbejPIh6kizPbO1GvMbd9RuWe7kUOUeHnewbxfSLikWAnDGplNCYzS18xOt+3QN6Bqkq6Qq9p2BKb1F+gTfyzX7YopJWCoEfo8rklR127rid2ztZ7ZqTgpo=
+	t=1744969604; cv=none; b=MJ4s2cSKNR3OUjWK5lkzngog6knAeswM01AFWYn/bcEsuWI94WVQE1BepmsbkO5F0tjcWrocrUxeJyFZgDd02VPLraLTGZlcjCuCnabm5UhqW9k6Lt8JWmh30stCexlefTaxuWHrHIzgx3HFS6yx7t/LWzS1PtaEXsUEIajbaQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744969566; c=relaxed/simple;
-	bh=kZYbgKw3ukUo4QCzVMR5VmYsOncMtGLSf1fdEUi9EUE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WwqzH9d/DJNk0IqAhp5qyFHRoe0bOln05AeA5hOgQ+Kwf7QVfIElSXprpdUjRn6tMcL+WcXVpQrqrgXXRGjqssjnsBkqSbI1M/yORxYnaUIL6HlCt7oZZU7Uykxzw3b/1BYkKGQwDnCoarTuo0PUdnCUQ5N0kK3blhw8nOL6Fyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zu54lqbG; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zu54lqbG"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso9422875e9.3;
-        Fri, 18 Apr 2025 02:46:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744969563; x=1745574363; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=kZYbgKw3ukUo4QCzVMR5VmYsOncMtGLSf1fdEUi9EUE=;
-        b=Zu54lqbG5NS8y4+1mHKVCKBpQXkL6+XjWr2q9VWM2rD6ZAj87I0P1EDfBghz4XehJl
-         WjoPuBmHYqjy5bAwGL5NQKeZmJxDXNDVNlXtQy7+Ll8hL5FS2/MQeUcHvLjUZfjwUwWz
-         DJVayrfhkSRpq3k8h9AI5UThBvNj+n9nI065agZ1lE++T14MetFL1a2bM7GJC7S9dvWf
-         C2IadtmRpcWpCn5fte6H76EZUJqEBBfGeH39rGnhi296h529i9pO08h3EehVL4RSSNYY
-         JDeEGX7KeIiiYW+ErCdAnfObPfErmbI5+ND6T36X8LmY/Xpr0sLSsHbaQFshokY8PlJq
-         Yn+Q==
+	s=arc-20240116; t=1744969604; c=relaxed/simple;
+	bh=iw2t7Tq55kSwufFT5aMDEe6x0nJERTHzjn7+26Eha94=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=NW4nwM0WH+uwAaFF/Ug84nueOURjApGmV4vdlT0ndm8Nu5u8ZGns5YwOypFn1/3sg/Efai6ScV0ctikxSVhihZRFeUGBBIBQDf/yei0ZrEv2QUH+GhbWflqMtNuBkC9vm9dKRHuUE9foySWx8n1qbajRhi9GpuNKjF7Mp2RAy8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d81d99e4e6so13205085ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 02:46:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744969563; x=1745574363;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kZYbgKw3ukUo4QCzVMR5VmYsOncMtGLSf1fdEUi9EUE=;
-        b=FCfxyoAzVblStrlwKuXVn9/S8vqxPmnKm0miHfvWWiu1YiM6yJp6/ACJJsjmIvkani
-         cXqpn0ls54t0LwXsQxJtIE7mWpFagAxaPZ+JDFFtHTfj+Eovho7/3915UPkYzuEITPNl
-         djQ+kV5KppZV9uByqiWGbx+pWLELl94baPK9k82KdYXCFZMyx9FRFoFbRhtGRWK4DtY3
-         I1RGadB6Tj6TLPknivcKDmACU3tHxMNeceoUHF7oFHWKM8lUYvQhVYWQKoOzT0jGUkJa
-         BHIPxdT228VOQ0SrT5431QpBlRdXPvF02q7SldqM7BU4qba/81kHcCpbG6+g4RoYn0v5
-         ea3A==
-X-Forwarded-Encrypted: i=1; AJvYcCV8RLC07j36kX+2xEQNiUerGG0RxvV1/7zWJEstWUOjekSXmtYJJ+Tx0/sBAW+AQSNdXrHWx8x+Oqg=@vger.kernel.org, AJvYcCVQyIlG0MHdVsJimeQ6VXgNfnbPM2+E/fNrpweJIZWhjSqeljUNW7GSi+3w4ZpqGyDG28RVm9ls/Evd9Inp@vger.kernel.org, AJvYcCVrT1en6Joyc0tlLsStp+wEWkx005HgI4xOdG5Ge36v/j+t170baniCvMRzNUOnEsSleGK0YzvV@vger.kernel.org
-X-Gm-Message-State: AOJu0YybayAeCNxPf7CaB6jbtRMannbdkzoghBEs6/YwXJB8rVc3KyZr
-	mUr04fVPq3aw2xgo63BbhjPRZ9T3pEFn0jd/GFFuh2/lcNOvEPPU
-X-Gm-Gg: ASbGncvcIfmBLf7Z+BEUkS9tBAZdExj6l5GIqohSixyRicEWVp6dpNDjngh2fovkLCb
-	fp+HoBe6V6SCD0vF0FOd/fxafIfOupvaMp/Ah8jl2u09clZAqefDjHdE0NaPWnaPlLjMZNC7XU2
-	IL5SOwK3DXvm6wP4yVYJgsqnpyrw+AQfMYIdAvG8FxFLEPZuc/QVjcFiw7Gi2XAY9CpP6j4w2Si
-	xYkqQOSFYi5sb4BDB1nTQirTvvkCiEA4jpSKlEAdqBmrhHigeNYb0dS7XlPEQi6cyqOdhOVaoHv
-	9Ee1m7imGUN7CNJ5N6F21pn8XPzC9yWNfZgcttzOrCk4NLxwWlbH6upkEQub67F4+kC+rIaTEW8
-	rVZL4I6hSI6u2M2IJ4kXy1cb23A==
-X-Google-Smtp-Source: AGHT+IGdwQHN41vKDt7TdqZdCPUhvA/CvukjpsYuLQYJQHGAPy/n5hOLeTb7Ch9Qr25KePDhjhw/MQ==
-X-Received: by 2002:a05:600c:4e4c:b0:43c:f470:7605 with SMTP id 5b1f17b1804b1-4406ab99615mr20004245e9.12.1744969562833;
-        Fri, 18 Apr 2025 02:46:02 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa3a1685sm2285627f8f.0.2025.04.18.02.46.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 02:46:02 -0700 (PDT)
-Message-ID: <a32503d98ffe162f48de019fab1a37f86af1666e.camel@gmail.com>
-Subject: Re: [PATCH] iio: adc: Revoke valid channel for error path
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: gregkh@linuxfoundation.org, jic23@kernel.org, lars@metafoo.de, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-staging@lists.linux.dev, Michael.Hennerich@analog.com, 
-	sonic.zhang@analog.com, vapier@gentoo.org, skhan@linuxfoundation.org, 
-	kernelmentees@lists.linuxfoundation.org, stable@vger.kernel.org
-Date: Fri, 18 Apr 2025 09:46:23 +0100
-In-Reply-To: <CAKUZ0z+FKxHcYTYiGvrZ3RLiMKT1P4gtTdq8d7=+ZFC0RMQzqA@mail.gmail.com>
-References: <20250415182038.523186-1-gshahrouzi@gmail.com>
-	 <fb712c034eda0d5d711a90a00b6382315fb5f929.camel@gmail.com>
-	 <CAKUZ0zL88AyuRxzhoAv2iZO7N7qOMy1G3yKscqG3rQiiOS0gog@mail.gmail.com>
-	 <e8b24cf22c87e5b5ce0cc8919eca79f6e60ab6e3.camel@gmail.com>
-	 <CAKUZ0z+FKxHcYTYiGvrZ3RLiMKT1P4gtTdq8d7=+ZFC0RMQzqA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+        d=1e100.net; s=20230601; t=1744969602; x=1745574402;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zf4umU7WzpRoYwgPJcm+Ni+S52FuzI/HtwRnU1/nUo8=;
+        b=tDo3LNXglsExW9Fn/OBils83H6dPd01y7SmLtL2LdSRrwhhtMZ+Ng+jwBH1O1gQeDx
+         7jtMrJ+RdEJliwsNlZO6InOoO79c8CSBRh6725IEsBH6nR2q0Cdzyg/w82i3cjhpoCb5
+         i/ucRypmM1/YxLuGC2FT6evXh0WJ5S3RAwLHpWklw5fPvgdKL6c7wjP574vhbYwx18PX
+         YGnfIKIRdSCRdip4fBmt87nL7iqT+9zZ5xj7UrOYvfp9lM3dzNftsNpeJLFkSB3E6r+h
+         vSgMRCJBqS90ih3ST/iSeGpJg850I/DLRTVChTiSuzVes69FmFjBjTs8U1Z/ukrucHDS
+         rZ5Q==
+X-Gm-Message-State: AOJu0Ywv89rjgdJ/bX7E2c5I5Ebi07JfjPtD+wgKPOwtfWW3s8A4G2Yw
+	OhvPxWL/UVJmMnUxKdU2i/1R7T8VPIZjTT8+unfCb9wpSD7snlBclcxq1Fgb1EtMVAq+YPQVEaH
+	M5pweOy1DlxW1wc8oEaNQet6hD183YeYphsS/6EVTR5ZYFqVonDvpugU=
+X-Google-Smtp-Source: AGHT+IE0lixCZSyjN8rrkXpAeTW3umlB2ifGp16elNAnIgS7QkveelycQnY0zlOv+Hb4i13g8R2f7zXSP/ynGiljXMXFlpMtB/7t
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1a8b:b0:3d6:d3f7:8813 with SMTP id
+ e9e14a558f8ab-3d89428c3efmr18088015ab.22.1744969602282; Fri, 18 Apr 2025
+ 02:46:42 -0700 (PDT)
+Date: Fri, 18 Apr 2025 02:46:42 -0700
+In-Reply-To: <66fcb7f9.050a0220.f28ec.04e8.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68021f82.050a0220.243d89.0019.GAE@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [jfs?] KASAN: null-ptr-deref Read in
+ drop_buffers (3)
+From: syzbot <syzbot+de1498ff3a934ac5e8b4@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 2025-04-17 at 13:08 -0400, Gabriel Shahrouzi wrote:
-> On Thu, Apr 17, 2025 at 10:02=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@gmail.=
-com> wrote:
-> >=20
-> > On Thu, 2025-04-17 at 08:53 -0400, Gabriel Shahrouzi wrote:
-> > > On Thu, Apr 17, 2025 at 6:06=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@gma=
-il.com> wrote:
-> > > >=20
-> > > > On Tue, 2025-04-15 at 14:20 -0400, Gabriel Shahrouzi wrote:
-> > > > > According to the datasheet on page 9 under the channel selection =
-table,
-> > > > > all devices (AD7816/7/8) are able to use the channel marked as 7.=
- This
-> > > > > channel is used for diagnostic purposes by routing the internal 1=
-.23V
-> > > > > bandgap source through the MUX to the input of the ADC.
-> > > > >=20
-> > > > > Replace checking for string equality with checking for the same c=
-hip ID
-> > > > > to reduce time complexity.
-> > > > >=20
-> > > > > Group invalid channels for all devices together because they are
-> > > > > processed the same way.
-> > > > >=20
-> > > > > Fixes: 7924425db04a ("staging: iio: adc: new driver for AD7816 de=
-vices")
-> > > > > Cc: stable@vger.kernel.org
-> > > > > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> > > > > ---
-> > > > > =C2=A0drivers/staging/iio/adc/ad7816.c | 15 +++++----------
-> > > > > =C2=A01 file changed, 5 insertions(+), 10 deletions(-)
-> > > > >=20
-> > > > > diff --git a/drivers/staging/iio/adc/ad7816.c
-> > > > > b/drivers/staging/iio/adc/ad7816.c
-> > > > > index 6c14d7bcdd675..d880fe0257697 100644
-> > > > > --- a/drivers/staging/iio/adc/ad7816.c
-> > > > > +++ b/drivers/staging/iio/adc/ad7816.c
-> > > > > @@ -186,17 +186,12 @@ static ssize_t ad7816_store_channel(struct =
-device
-> > > > > *dev,
-> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
-> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return ret;
-> > > > >=20
-> > > > > -=C2=A0=C2=A0=C2=A0=C2=A0 if (data > AD7816_CS_MAX && data !=3D A=
-D7816_CS_MASK) {
-> > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 dev_err(&chip->spi_dev->dev, "Invalid channel id %lu for
-> > > > > %s.\n",
-> > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data, indio_dev->=
-name);
-> > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 return -EINVAL;
-> > > > > -=C2=A0=C2=A0=C2=A0=C2=A0 } else if (strcmp(indio_dev->name, "ad7=
-818") =3D=3D 0 && data > 1) {
-> > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 dev_err(&chip->spi_dev->dev,
-> > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid channel =
-id %lu for ad7818.\n", data);
-> > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 return -EINVAL;
-> > > > > -=C2=A0=C2=A0=C2=A0=C2=A0 } else if (strcmp(indio_dev->name, "ad7=
-816") =3D=3D 0 && data > 0) {
-> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0 if (data !=3D AD7816_CS_MASK &&
-> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (data > AD7816_=
-CS_MAX ||
-> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (chip->id =3D=
-=3D ID_AD7818 && data > 1) ||
-> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (chip->id =3D=
-=3D ID_AD7816 && data > 0))) {
-> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 dev_err(&chip->spi_dev->dev,
-> > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid channel =
-id %lu for ad7816.\n", data);
-> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid channel =
-id %lu for %s.\n", data, indio_dev-
-> > > > > > name);
-> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return -EINVAL;
-> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> > > >=20
-> > > > Hmm, maybe I'm missing something but the code just looks the same a=
-s before
-> > > > (from a functionality point of view)? I'm really not seeing any fix=
-...
-> > > I might have to change it for readability. From my understanding, if
-> > > channel 7 is selected (AD7816_CS_MASK), it never enters the error pat=
-h
-> > > whereas in the old code, if the chip were either ad7816 or ad7818, it=
- would
-> > > end up returning an error because it skips all channels above either =
-0
-> > > or 1.
-> >=20
-> > Ahh, right!
-> >=20
-> > One good refactor is to add a chip_info struct (renaming the existing o=
-ne) with
-> > let's say a name and max_channels. Then, the condition could be reduced=
- to:
-> >=20
-> > if (data > st->chip->max_channel && data !=3D AD7816_CS_MASK {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(...);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
-> > }
-> Makes sense. I sent a V2 with the updates. Also included enum
-> ad7816_type as a member for chip_info but not sure if it is necessary.
-> Renamed the existing one to ad7816_state.
-> >=20
-> > Being this in staging, I guess we don't care much about having the fix =
-as the
-> > first patch to make it easier to backport.
-> In other words, combining the refactoring and fix into one patch is
-> fine but normally they would be split?
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-Yes, in theory we want to have the fixes first before any refactor because =
-we might
-want to backport the fix and we do not want to backport more code than need=
-ed. Not
-totally sure but being this on staging we might not care that much about th=
-is.
+***
 
-- Nuno S=C3=A1
->=20
-> >=20
-> > - Nuno S=C3=A1
-> >=20
-> > >=20
-> > > >=20
-> > > > Having said the above, not sure if grouping helps with readability.=
- But I do
-> > > > agree with moving from string comparison to use chip->id. And we al=
-so have
-> > > > redundants 'else'
-> > > >=20
-> > > > - Nuno S=C3=A1
-> > > >=20
+Subject: Re: [syzbot] [jfs?] KASAN: null-ptr-deref Read in drop_buffers (3)
+Author: richard120310@gmail.com
+
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git cb82ca153949
+
+Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+---
+ fs/buffer.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/fs/buffer.c b/fs/buffer.c
+index cc8452f60251..1e3a07c66c1a 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -2885,7 +2885,7 @@ drop_buffers(struct folio *folio, struct buffer_head **buffers_to_free)
+ 
+ 	bh = head;
+ 	do {
+-		if (buffer_busy(bh))
++		if (!bh || buffer_busy(bh))
+ 			goto failed;
+ 		bh = bh->b_this_page;
+ 	} while (bh != head);
+@@ -2896,6 +2896,8 @@ drop_buffers(struct folio *folio, struct buffer_head **buffers_to_free)
+ 		if (bh->b_assoc_map)
+ 			__remove_assoc_queue(bh);
+ 		bh = next;
++		if (!bh)
++			goto failed;
+ 	} while (bh != head);
+ 	*buffers_to_free = head;
+ 	folio_detach_private(folio);
+-- 
+2.43.0
 
