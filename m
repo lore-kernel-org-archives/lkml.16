@@ -1,90 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC96E270EAF
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76B79270EAF
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744971790; cv=none; b=L/thS70MxiAtMRpi930rOy4y4UA0ky7Hdmx6xj8KhzRQOP0H372xTEQhjQQd+H3vIXOjVr1alfuvZTSUpGOJww3QFHr9TeeknVP8I2rvEqyN9l1pi/yZcioxIzS/pIVrdg0jThU/a5BZW6mM7R5KzJdN4lE06RThuu5KPhZTs90=
+	t=1744971820; cv=none; b=BR9YE0MHBYCgeLThjAcvdJc2WZmbNmkJs13A0z2YWUWruT7vwmsVXXngnNjzXlXRHAPkZ/VrdOcpXCY8x1dOHIxorhVZodDTmgh45hqkttFD+9jQ1cJuj6/72jDUrhxIkImDXUe3k7r5H9TNeCCAW9F2gqZOICu7MgmiGODB9X8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744971790; c=relaxed/simple;
-	bh=qQmApRLfNFtMFt8N8RV6ge+DooDi7AWtQxPYr8Nsjo8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ibMcAEa/udBriaW4m9NXt+nTEjJwwxe63ef62BxHYollXiH9iZWnQMBiS9WZUPP7dq+HS8p+91XLSkJWr1934h7kvA4FpdxNtBk0RCagCE9RBUTwmY1bWPVPucekcTBD2nW1X08vzvbg9vkjBWJ9bh8S742mYg9vyrmgOvnwCX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AD6zzTbJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744971820; c=relaxed/simple;
+	bh=fmgRhL5vXUT7FBS7t9CJnezLjJZ3VCbnBZ4KpmUy6hQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I+rux/tAuWq2Y7Qgy6UpiRS6K778hjEvwDKj1PnJJ416YaKK0IyDxTJwuF3rEI21XiqsBuFs+13SQL1Ynbz7RlC4JAk86T79b7kHWxTSrSr25nHNI8cJ0IMmCIFFz982T4AmOvoEj1Rgmz6qEsJ9k/f8yOUhwK1PNG3aDI5wVXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=hQtio7i4; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AD6zzTbJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2BAEC4CEE2;
-	Fri, 18 Apr 2025 10:23:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744971789;
-	bh=qQmApRLfNFtMFt8N8RV6ge+DooDi7AWtQxPYr8Nsjo8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AD6zzTbJkwmGuA9TxCDNzuZMV5weZlpx5THuHECOGQ/BRqd3iBzCKFwJQt9KuCpkL
-	 3AMKj4AFOwH91rQoHgeHhI9N8Pp0nCb2LTOP0aoxxR6paDDSxVXDn1kgKjHwzpi/4d
-	 L7QBr1MoC13i0d7AN5rbiffEvpbVuJ19otYkzQlmtRG5yELxwiTEX6uQOMQmKftblu
-	 x3zen0J5BPGBwQ+2OIejCLcQ23YpQo91YE5ujZeUTxIm6HlQ1XGJHYLjqy0kDRCfQM
-	 h8Y1YYIVWjYkrME7EyHgw7enQ+/+L12npmnancAnTSy3n+1B3vKWO/mxyCpQEvfasN
-	 6mi1baq6BsR1Q==
-Message-ID: <9f8fdcc0-53ae-4255-b221-b4e787320c44@kernel.org>
-Date: Fri, 18 Apr 2025 19:23:07 +0900
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="hQtio7i4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=cC8Ld
+	NPkcT/2u1+ijE6L5FTUaxOiURX2AC0fC5IpUbw=; b=hQtio7i45XsBdvW0furfB
+	S0+QnlQmxaNRB/LCk5JO73Oocg/f0lT84+GA80l0WE3F1oCuou/OVB4/d7FIGkvR
+	LTsmZbJzVQrOGn4uOR61CIWAR7rae++EDhf3uquLh6HGyc+HfpJ5HyiHqnjJKgP6
+	zUV/8hUheMNSZu0MOq/ksI=
+Received: from node-1.domain.tld (unknown [])
+	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wDX34b+JwJoXuTCAw--.12581S2;
+	Fri, 18 Apr 2025 18:22:56 +0800 (CST)
+From: Jiayuan Liang <ljykernel@163.com>
+To: Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>
+Cc: Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Jiayuan Liang <ljykernel@163.com>
+Subject: [RFC PATCH 0/1] KVM-arm: Optimize cache flush by only flushing on vcpu0
+Date: Fri, 18 Apr 2025 18:22:43 +0800
+Message-ID: <20250418102244.2182975-1-ljykernel@163.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] nvmet: Make blksize_shift configurable
-To: Richard Weinberger <richard@sigma-star.at>,
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Richard Weinberger <richard@nod.at>, kch@nvidia.com, sagi@grimberg.me,
- hch@lst.de, upstream+nvme@sigma-star.at
-References: <20250418090834.2755289-1-richard@nod.at>
- <0e61c6e9-10bc-4272-b446-31e0d67547ce@kernel.org> <8418057.aG60p0z9Xu@anvil>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <8418057.aG60p0z9Xu@anvil>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDX34b+JwJoXuTCAw--.12581S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Cr15ZF4kXFy3CF48uF1kGrg_yoW8AF1fpF
+	WkA3sYgr4kW34fu3WUJ3yvgw1rGrZ5GFs8JFn8Aw40krs8A3Wvkr9ay3yUZFWUGF95tr47
+	GrWqqFyDZrn0yFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0p_YFCUUUUUU=
+X-CM-SenderInfo: 5om1yvhuqhzqqrwthudrp/1tbiSg0zbmgCIJDq2gAAsw
 
-On 4/18/25 18:56, Richard Weinberger wrote:
-> On Freitag, 18. April 2025 11:37 'Damien Le Moal' via upstream wrote:
->>> +	if (!ns->blksize_shift)
->>> +		ns->blksize_shift = blksize_bits(bdev_logical_block_size(ns->bdev));
->>
->> If the user set logical block size is smaller than the block dev logical block
->> size, this is not going to work... No ? Am I missing something ?
-> 
-> Likely, yes.
-> TBH, I'm not sure whether it makes actually sense for the bdev case to make
-> blksize_shift configurable.
+This is an RFC patch to optimize cache flushing behavior in KVM/arm64.
 
-Probably not... I do understand the value for the file case though.
+When toggling cache state in a multi-vCPU guest, we currently flush the VM's
+stage2 page tables on every vCPU that transitions cache state. This leads to
+redundant cache flushes during guest boot, as each vCPU performs the same
+flush operation.
 
-> The case I see most benefit is the backing file case.
-> 
->>> +	if (!ns->blksize_shift) {
->>> +		/*
->>> +		 * i_blkbits can be greater than the universally accepted
->>> +		 * upper bound, so make sure we export a sane namespace
->>> +		 * lba_shift.
->>> +		 */
->>> +		ns->blksize_shift = min_t(u8,
->>> +				file_inode(ns->file)->i_blkbits, 12);
->>
->> This will work for any block size, regardless of the FS block size, but only if
->> ns->buffered_io is true. Doesn't this require some more checks with regards to
->> O_DIRECT (!ns->buffered_io case) ?
-> 
-> Good catch. I'll add a check.
+In a typical guest boot sequence, vcpu0 is the first to enable caches, and
+other vCPUs follow afterward. By the time secondary vCPUs enable their caches,
+the flush performed by vcpu0 has already ensured cache coherency for the
+entire VM.
 
-And by the way, you need to check for STATX_DIOALIGN since some FS (e.g. xfs)
-can handle direct IOs that are not aligned to the FS block size. See the recent
-changes in drivers/block/loop.c to improve direct IO handling, specifically, the
-function loop_query_min_dio_size().
+I'm proposing to optimize this by only performing the stage2_flush_vm() operation 
+on vcpu0, which is sufficient to maintain cache coherency while eliminating redundant
+flushes on other vCPUs. This can improve performance during guest boot in
+multi-vCPU configurations.
 
--- 
-Damien Le Moal
-Western Digital Research
+I'm submitting this as RFC because:
+1. This is my first contribution to the KVM/arm64 subsystem
+2. I want to confirm if this approach is architecturally sound
+3. I'd like feedback on potential corner cases I may have missed:
+   - Could there be scenarios where secondary vCPUs need their own flushes?
+   - Is the assumption about vcpu0 always being first valid?
+
+Implementation details:
+- The patch identifies vcpu0 by checking if vcpu->vcpu_id == 0
+
+Testing with a 64-core VM with 128GB memory using hugepages shows dramatic
+performance improvements, reducing busybox boot time from 33s to 5s.
+
+I'd appreciate any feedback on the correctness and approach of this optimization.
+
+Jiayuan Liang (1):
+  KVM: arm: Optimize cache flush by only flushing on vcpu0
+
+ arch/arm64/kvm/mmu.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+
+base-commit: fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2
+--
+2.43.0
+
