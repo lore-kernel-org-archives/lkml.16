@@ -1,226 +1,265 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2056.outbound.protection.outlook.com [40.107.20.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A8D17CA1B;
-	Fri, 18 Apr 2025 15:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744988554; cv=fail; b=HJKbqaLKB6ULe26RFuIMqLxJnvMzBonS6PcO2zgpEmlO/owI5fLYyGDfFoMSV9QjTqFANyDpRVPhrMwwm/LPse+nJwJNt9160Agaf/PRWZOQgJRarDXsDflChJ/GVzk3uJ/wqHCloG1EA8i2KelojmJV9xWl62u6fQLAc4XSSfU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744988554; c=relaxed/simple;
-	bh=OEcoysmY3xqJMKQABVQLsEffFtTtcR23Z+zh08RBnn8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=IPE22svTMhLAgK/XGka1vjbCtZRpPoDE3YkVFY0LMLsam7EAOCg8HJb79Z0B/UC23/lP/Ef1yPXdh2GD+RvlPEI/GcXpLpg3Y8bJPdidXYGnOxnZzVEo7TNHKeDrw+3XVTeuk+ZQD6cKLKiAwMIr1c0tcV+ahCCF+608Sj+h0xE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=CgMibfXT; arc=fail smtp.client-ip=40.107.20.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88CB8201270
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744988555; cv=none; b=izgUlGROPg9aHd4phT5T8Pp+CONR52ISBKlrbkSY7HoQPEj8Dq3sLnfoxZEyS5lfAIZCNs7ap1KY9tKc/awVQdnc1i9K5qg7NS1QukRIRXYqPa14PvhJ2DxT9KnmFKOk//NZ7Ol/Br5vgVhoiWoJBU5VGcMCnj6w0hMjrQA6nuo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744988555; c=relaxed/simple;
+	bh=1D0CMx3RB5PP/TuxOlDPnB3079/Z4dAnHuBK+0kYVxk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ii3smS3DTQIuJmtMbXD+0YsjzXIWIKqJFvKxddnZdKZrejuUIZT5c7IypoWdQwKwQzcJh4cmCEx20Sz63CAH4xstudDMHGJU0jIQr5DqBJSuVFnSHphmXJtxPXcnEiZwFglZrpX8EX+wLY48mg6o6pV/lNfyGFiB9+kJM4KN4w4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rb8fxRy0; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="CgMibfXT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uXDH41ZfJ44xjp1uqHjLwHbyOsyVkLk5cNCV39zzs1rJlAzSk3TgrBU2dtY35BTzU+19BDKhKbEoFnlbHxFBi4CGDo+MhVIeJKr6Roq7/3BXXgQltB/uQqV3wwx2xH0eDTO3g79F7XydvOoxNBpFek35PPAxqxHjCqbj9GG0xQJURuAYEjgDGRQw7icPYMe/O8IhaDnQ9OSwqjHzI/PmN48u96t+ExC8j8+tDFMeKLY7Ed23rf/MIVMEKhgzamXAM6dyVOjx/gG3f0ixUUgoJdW+GLxCY32pw5Wz5CE9y6RtnMOqPyoJuiGUZgAREJTyWeKN2snrsSyw0XCi+HH4oQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/3A1dG9qq+brRv/Mfs8F9fDJbPtEDFYCq4GHdkSQ6VI=;
- b=iuBJW8P5un60+TReRbpJf06XU8bHeCoIJPl1AdkuCCGJl9p67RDp5yxnKB5HMFz+HZB3RiH6b8KzQKLwv8YmcdIzUPk63BuWs15hEVsmYprK/atvKTWylP5wgZsukdP0Kq/jizqVnIWYp+t/AiI6U8jPMUtCO6PORTxmQvjdG467UvDQ2KKtFkihZiIdPeHD838g+GggpCzRM78ZR64Y7nv3hrHj27WRRhBy2nFm9qv10yhB+EcP+szOPeKlvHNdQile4rL1x7mZN8de6MvMIaa3iOefMM6v61P3QSbwcBO+aM4e/yQLf6pd7miDGVe8Tt6ncvWwhKo/IntavSQdeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/3A1dG9qq+brRv/Mfs8F9fDJbPtEDFYCq4GHdkSQ6VI=;
- b=CgMibfXTwUU6/r12D1dKSi6UWAm37Wl9d6DwsPT2e4VuM98z+0OBQdlmoso+4hOEdBnGCVAhDvVBSkBCqMieXf8D2yvE6FhzxEp73NmIPjuqwZmteQ5row+T6wEXFb86P+vIpnSPw3mGVkJvIAe7iyIQn3HZYqr34p5W7PCZH+iczvoeg5SPedZlYUB0vXKCp0J1ga9t1//gtdT9j89ZDW0OF1tqrVbbqvoMvHTnJaY8ohfeQYzU2ZzOyrQ1d4KWbjtmMs+fC9gZFDAGoyt7MbbbGDL853GECBe60zWR7STXKbGD0rscU8Ozj5UfL9CgvvqAaiOW+S0mqRp66fkB/w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DU0PR04MB9226.eurprd04.prod.outlook.com (2603:10a6:10:351::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Fri, 18 Apr
- 2025 15:02:28 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8632.043; Fri, 18 Apr 2025
- 15:02:28 +0000
-Date: Fri, 18 Apr 2025 11:02:18 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: ming.qian@oss.nxp.com
-Cc: mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-	mirela.rabulea@oss.nxp.com, shawnguo@kernel.org,
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-	xiahong.bao@nxp.com, eagle.zhou@nxp.com, linux-imx@nxp.com,
-	imx@lists.linux.dev, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 1/5] media: imx-jpeg: Move mxc_jpeg_free_slot_data()
- ahead
-Message-ID: <aAJpeu0fMrpGS7Wq@lizhi-Precision-Tower-5810>
-References: <20250418070826.141-1-ming.qian@oss.nxp.com>
- <20250418070826.141-2-ming.qian@oss.nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418070826.141-2-ming.qian@oss.nxp.com>
-X-ClientProxiedBy: SJ0PR03CA0137.namprd03.prod.outlook.com
- (2603:10b6:a03:33c::22) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rb8fxRy0"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac29fd22163so303451766b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:02:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744988552; x=1745593352; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZplAbuCJ93+qljEScFSyxJVW4G0IymGWM3hz2fkUeK0=;
+        b=rb8fxRy05skrMSmg/ChSQJi8ws9XbkmXNU2zCNQJbUfkZk0w6KuGZug9gxEjTY9iSY
+         1TuvNUdo+GlVFEvLtnUJqiAhaQyV2xgfTI3R/pDGtonNzZ99O3b6/osaNvtVshwpEgjg
+         BQYfhVt9b4acUMLMQkWwoPK+lsll6oOgTfbh59+aEWqhy9VEYVAj0kmJgaiDgxu/lDeU
+         Y/u4kVNfttleDMARRpqACzqwm0udXgV4ihHpRvNtR+yE5LbFKkfUajWt1rb1EZOFWUZp
+         l4G6KgtB39XrZrGDMZr0toBjtBXY/e4GHxG8YitrcfxF99SaHUKEefOK6jJ1t0BKFefw
+         Fomw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744988552; x=1745593352;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZplAbuCJ93+qljEScFSyxJVW4G0IymGWM3hz2fkUeK0=;
+        b=Au1DUL70qywltQB+yaOD72KhM08jaX35pjFjBFg8UQXBDpCsbHlLmdpB+2HkQ65wNG
+         s8YshBG2SLG5VwoGQ8ABX+poowGw/xANYX4CSGqmOoc+3m5sK9LoTnYrClXCyFjZ3Zmn
+         GfgiOrl4qpPOiDnL7c2yqDL116MeOIVChxs9E1ZJztDT2ec9P5fIWzbvtd+mKYZb8meH
+         7BJB8tSJH/6hm17wYKJyQMAewHZWcTqhgpagA0PPezosBL7QnafKWNg82eB6DJp5y3PL
+         5QpH9PWLdrfMLdCkTBJTBR5BT2UL+pqxy0nKl8VR+xJWSiPahOtQZGny4EAN2aLKLHZ1
+         cz0A==
+X-Forwarded-Encrypted: i=1; AJvYcCVMfnSnZxzf52BiDHSwpfWxlhaWEX04KqGfttH5qCpMWqMjNScrGr8ur4jSgjp9BBQ0NF8JS3dIq+iTExc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yym2M7AbS+b0xAtjPRgPcyqYPMOvMoBwMrpVC1YRtV31h69UXb/
+	ngURUW8PaBSAKXRvJGIwwb5vC0eAcBS+H48RXO/emRHtfyZTPkjxA2xiuUv0+QYGjLcvsKmGnNl
+	Ogx/fKO9VJdruL2eUtUQTfJfxbfuw/Z8MjXIR3g==
+X-Gm-Gg: ASbGnctbZwo1dAg+xnnS7zm9dU38ECCH7bS2xlUuoZJJUxC4TRhSDHPbYl8VenlsViK
+	Hg+VpbfBC2IzaNYS0sQ2mQtmal9lSqtdCJpwLIfS0CJoJjOuDATbCQzdzrsHMZu++INQahDUzKc
+	K4tbOZjxOFfdpIcNjidTr/4TFiXksKU2BHDAn1gwiPvWB1rJSaju86LUbw66C2xQ==
+X-Google-Smtp-Source: AGHT+IGZqkKlBRi+5duZiiPxTdEZgVaXqi19EF+iCxqAUD4Gl6pyXMH9+JJokhmRdLI5k5+PS409YhAPBPaU2Wjp4wM=
+X-Received: by 2002:a17:907:9801:b0:ac6:cea2:6c7 with SMTP id
+ a640c23a62f3a-acb74d65b00mr246575066b.42.1744988551493; Fri, 18 Apr 2025
+ 08:02:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU0PR04MB9226:EE_
-X-MS-Office365-Filtering-Correlation-Id: 67aa68b7-2be2-4591-ef53-08dd7e8a092d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|52116014|1800799024|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?hiA6LQqvjM29NV7RP5+vTUfDAvDCC4aV6DP+mfgW0hkhpOSype8omKPYyqQS?=
- =?us-ascii?Q?kXHF6T+rSmB7egGem7cqRywAYOc7EKJ974Adaxye44SPc0V8xTW61Rn62j0t?=
- =?us-ascii?Q?hOL4CWYRTI7LTNP1K2mPxST7dArOkQhTY+Qq/xkL1UEX2dOdq1yDxHjnkQI+?=
- =?us-ascii?Q?A1vH0tS8WwGnVl5TFdzQRB25tGEouslZJch0zI80Z5djpX1kZx0lm70pAiA3?=
- =?us-ascii?Q?4nek58bpXZhFnOzaYTUSrUHWWRXbsHXX3VvBvIidGltTwp5XvXE48gECkTYe?=
- =?us-ascii?Q?anPu9ejW3aUuy4QR2p0C0jEg3CuRnTajv78msHa4N8iOQH+mnteO0jT8Rs3F?=
- =?us-ascii?Q?lIzXYD8m6h658LhqqKPPI5c3BkKQo8XQty97EgKS1IsXgW+hN+IXcKgyetxm?=
- =?us-ascii?Q?sltAGFUk/HjUXO2Lv9OhLO6KzyrlJGHmsnvVAqe+JHFKIAgPNBU6emd3rFHr?=
- =?us-ascii?Q?4SIc2z7CBuGF3DkJzvUaKl08Hp1+pVwOFXpliFo6qN+BN3tTSytdkJCVSqnF?=
- =?us-ascii?Q?mVjLV/xyCMK+hsl51RUGvTJ2d2Hzfdj0uwnkR/KporGsOLJRx/tJyqPg/+rZ?=
- =?us-ascii?Q?wa8NspjpfTlIZOmnTyFB0TFJNWWP1QeLY4+def1Xz1/TiwDosAEGNdE+07kp?=
- =?us-ascii?Q?/cPp2lfLMiG1Z9g7hXBPNFKrn83QuMTcmvHF5xqv50X8F8PPC8F+4Kioi08g?=
- =?us-ascii?Q?8oiXtoVEwttxs+q897Eg59SBB0eKLhf//xXl0xwMeI2EGkiXJZgQy3Cdnep6?=
- =?us-ascii?Q?fcecD24vx1bupoDmt55dsqoX8jP4KPgurg9iBXp0KrnQaNAAicfKYUn8BRD8?=
- =?us-ascii?Q?yiShnpldvPvS/+WTXznvVtpmo2CK0JmIPsV7wzUMeTv+tgJ9DgsG+WE7ipKL?=
- =?us-ascii?Q?pGC2it5de583ij0WkVcAXziaJHKL1MupBEPYdNU6BPdmAlr7i0WZMrY1uTkL?=
- =?us-ascii?Q?5/F/U4A5dXeQs8DtUwlJSLJlSjLtTZBYmkFAEtmJO2KwH0ziW2gdfZjXTIiK?=
- =?us-ascii?Q?425IMC/o8TYcL8GM42mUBepLGTrLwta5vbQrhofxL1V8euo0jFAeAijgTqu6?=
- =?us-ascii?Q?pOJ32EwabIlR8GGumjvoWdNCnfx+HKfyAyn3WfBpye1wt47qKgaqdiigfPd5?=
- =?us-ascii?Q?Ryyk3KtHg+EXtVTZsqdkYc4osMEAPU0evx/ak2n+lyWACdFSOck+D/IItapD?=
- =?us-ascii?Q?ObNf9Wmg3yv3Gk4Xu8LlxjU5WnR68rYtSXw1hgUo4LbKxh9UYwojKoy670v1?=
- =?us-ascii?Q?7fD5Lz7g8c7PVt6AbZXwl74o4aJcNbBwuoyjCSOVKZQ9ZPi9PkguyoDKDkuO?=
- =?us-ascii?Q?hNa+yatjQJboHyLKWJlkmb4esWph5ODPAK4JZKiVknPJwOhmTjD/tCNPMR1z?=
- =?us-ascii?Q?A6nA4Iem6lwGAyK7EeAnK7HrTvUXqMRT96wtnnPWuMgACSSjC5yGFQRC+wVu?=
- =?us-ascii?Q?+tAhrKWL95StsXm/ooAeCKc4O88un/ogP6pbxrqHY7yKd0f8uV22/SO/iW8O?=
- =?us-ascii?Q?0guZmx7k4E8OLOw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?fKWY/2Y9ixwTchODkZbDW8oBiMOFr5PVGpKGJ5uin9HWcja3/HplUhBf9pyG?=
- =?us-ascii?Q?O/qBwGdcVYaQUsfvSPodwDjO5ZmEv9LueFc87kPTW8FFWlXdNEtEEFEhHKgx?=
- =?us-ascii?Q?JbRhlGd+bjYy/+Puge8AumIBonO2Dxci8CEAiT7k9Mo/601IhglYyMuvy441?=
- =?us-ascii?Q?TVWIJnziiqRGbrk7xybcRzfLspNisRZfeNYhvOLTEbn0Nt5lJyupIiirvorE?=
- =?us-ascii?Q?UvTtlCcU+BsbTVNS60bb6HtWYJ5xI1UqkYEDQdQv4rTmmUOYyc03jBFOZEbh?=
- =?us-ascii?Q?BQDa/K9qAKdtB+naCp4K3Hhs/moaRrVHLSsa/11HxU08wlVMWYv0HMh+6oXs?=
- =?us-ascii?Q?/14rHKw1eNo1NyhQK0PnOLypGp3uLKWcJoibj+YuKmn3xSImEIWBeEaoBxI4?=
- =?us-ascii?Q?Yg1pwDF+CXX/Con6ytW80PmOowkZ2ABB9xdHUZjmLxiQ0HjJaSZ+rphZoxf8?=
- =?us-ascii?Q?RQj8nwE1pFk5lCDmOXeo+pqvUY9sKKJ+8Qy+1NQ8uuzb/54CWaryf9DU9hLa?=
- =?us-ascii?Q?7zpNrl4Bom37zvDVag9LKV5kOh+KWBTqBstyjWT03OvFAydP4vuL3OsiV2Ug?=
- =?us-ascii?Q?VmUnkbgEN5jNYgO/z4wpDuZrXV1Jo3x9Il62j5i7OqThYjuDk0Lxo7ld6QAw?=
- =?us-ascii?Q?HBkXrp22P4qzh4FeLJybisM8p5L0mQnEdW77y2FYZ3aRIsCz6Pns1E5LFoSm?=
- =?us-ascii?Q?EiAE0VVtprO8UtTKzTTuTYwMXRYLEgo1uddHWIJYeW2B/94heLcH+Zvfc0a8?=
- =?us-ascii?Q?o9NaJOr+LPfjq8dLCIpRmf6awaIWlIyHtofx1hLGpKAOG7aeis51lPNlXuoe?=
- =?us-ascii?Q?FjPrti6Kr9WWmDyp9h/AFzbAenRYYKyZ7Z7CiQA2YG7a5m4qLDoAVwl9NBnH?=
- =?us-ascii?Q?rdDl3MIRQtrv7+Dqp7++/trDgCbSfMhnH4yLxm+9sIxR4/p6S4d3oOfHc6p5?=
- =?us-ascii?Q?onYPfFl5kX/0ECGOYa4Nn30ycKCVI7AuRl6eYrUqmrq8chxjryNDBR5f6XRj?=
- =?us-ascii?Q?N6mveqy16gYxvV6u2VMys04fVTtMIwYRSxBxDd9OLM3jIFMBWSLoPcbFy2QM?=
- =?us-ascii?Q?CE+foutDwy26kH4vw50wP63S4aI3cb+JvhjartrHghdte2XsqXCvAVfZ26n2?=
- =?us-ascii?Q?mXiPkNdARYKSYim/KtPmWBVX0N31r5D/6XeD6Vbhx/59Y4ghE2EZiVw7VWWZ?=
- =?us-ascii?Q?xhzCWY4v4U8Lg00VjBc6v1RQq4FM+2Rlgr3ZEfP2fGlCil9nUr7ZvEzAaCXh?=
- =?us-ascii?Q?tP+vGmeJIFF4qS+8ILq9wtxuTBh5MmrqmFl5JFVrSkibAxF/eg/pV2m84f5N?=
- =?us-ascii?Q?v7RZZjl4ukS8W+FwHs0kKH8gQAj+T710kh0M4wzaOfn7LoYXaajrJmx9WIUv?=
- =?us-ascii?Q?aNQHDY6o6gUfOgh8ysQZPmW2ttLRhr7/WTvdwavJiTagHuzDsUZ2VhZMW8Nj?=
- =?us-ascii?Q?RkQxEmS6uJB2Lni9a/27nr31/V4bF0t4+xWgG18Ne4IgXl2mHhEw1frXp5Bk?=
- =?us-ascii?Q?sw0ScmzciMv7KUJKzU/ggRzFZIy09P3xGUTOghImEnzAhpC/+nf8C63eWyx/?=
- =?us-ascii?Q?ebx2IO+ZBExoOyfB/P5WPacTQczyRqK/lzdwfDvw?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67aa68b7-2be2-4591-ef53-08dd7e8a092d
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2025 15:02:28.5306
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +VyhfY8+NS/y+XMdZewuLH4tMl1nnnbXSR5ENPIxuLByL1Bhg1Ouh6uYxgJ+xOqHVis9wUx4CmxQ+1+Y0ZwCCw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR04MB9226
+References: <20250416035823.1846307-1-tim.c.chen@linux.intel.com>
+ <fbe29b49-92af-4b8c-b7c8-3c15405e5f15@linux.ibm.com> <667f2076-fbcd-4da7-8e4b-a8190a673355@intel.com>
+ <5e191de4-f580-462d-8f93-707addafb9a2@linux.ibm.com> <517b6aac-7fbb-4c28-a0c4-086797f5c2eb@linux.ibm.com>
+ <CAKfTPtBF353mFXrqdm9_QbfhDJKsvOpjvER+p+X61XEeAd=URA@mail.gmail.com> <6fe46df2-2c80-4e2f-89a4-43f79e554f65@linux.ibm.com>
+In-Reply-To: <6fe46df2-2c80-4e2f-89a4-43f79e554f65@linux.ibm.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Fri, 18 Apr 2025 17:02:19 +0200
+X-Gm-Features: ATxdqUEk-F-J3gRNxEfYslnzPYWvnD0i_CLwt3xKWwakFgq2Rbc-uiPpqJrs8iI
+Message-ID: <CAKfTPtDcFTGai=HsFUgrrUWZ-Dxq0D3RtCSSVsyXaXBXc2W=sw@mail.gmail.com>
+Subject: Re: [PATCH] sched: Skip useless sched_balance_running acquisition if
+ load balance is not due
+To: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: "Chen, Yu C" <yu.c.chen@intel.com>, Tim Chen <tim.c.chen@linux.intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	Doug Nelson <doug.nelson@intel.com>, Mohini Narkhede <mohini.narkhede@intel.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Apr 18, 2025 at 03:08:17PM +0800, ming.qian@oss.nxp.com wrote:
-> From: Ming Qian <ming.qian@oss.nxp.com>
+On Wed, 16 Apr 2025 at 16:14, Shrikanth Hegde <sshegde@linux.ibm.com> wrote:
 >
-> Move function mxc_jpeg_free_slot_data() above mxc_jpeg_alloc_slot_data()
-> allowing to call that function during allocation failures.
-> No functional changes are made.
 >
-> Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
-> Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+>
+> On 4/16/25 15:17, Vincent Guittot wrote:
+> > On Wed, 16 Apr 2025 at 11:29, Shrikanth Hegde <sshegde@linux.ibm.com> wrote:
+> >>
+> >>
+> >>
+> >> On 4/16/25 14:46, Shrikanth Hegde wrote:
+> >>>
+> >>>
+> >>> On 4/16/25 11:58, Chen, Yu C wrote:
+> >>>> Hi Shrikanth,
+> >>>>
+> >>>> On 4/16/2025 1:30 PM, Shrikanth Hegde wrote:
+> >>>>>
+> >>>>>
+> >>>>> On 4/16/25 09:28, Tim Chen wrote:
+> >>>>>> At load balance time, balance of last level cache domains and
+> >>>>>> above needs to be serialized. The scheduler checks the atomic var
+> >>>>>> sched_balance_running first and then see if time is due for a load
+> >>>>>> balance. This is an expensive operation as multiple CPUs can attempt
+> >>>>>> sched_balance_running acquisition at the same time.
+> >>>>>>
+> >>>>>> On a 2 socket Granite Rapid systems enabling sub-numa cluster and
+> >>>>>> running OLTP workloads, 7.6% of cpu cycles are spent on cmpxchg of
+> >>>>>> sched_balance_running.  Most of the time, a balance attempt is aborted
+> >>>>>> immediately after acquiring sched_balance_running as load balance time
+> >>>>>> is not due.
+> >>>>>>
+> >>>>>> Instead, check balance due time first before acquiring
+> >>>>>> sched_balance_running. This skips many useless acquisitions
+> >>>>>> of sched_balance_running and knocks the 7.6% CPU overhead on
+> >>>>>> sched_balance_domain() down to 0.05%.  Throughput of the OLTP workload
+> >>>>>> improved by 11%.
+> >>>>>>
+> >>>>>
+> >>>>> Hi Tim.
+> >>>>>
+> >>>>> Time check makes sense specially on large systems mainly due to
+> >>>>> NEWIDLE balance.
+> >>>
+> >>> scratch the NEWLY_IDLE part from that comment.
+> >>>
+> >>>>>
+> >>>>
+> >>>> Could you elaborate a little on this statement? There is no timeout
+> >>>> mechanism like periodic load balancer for the NEWLY_IDLE, right?
+> >>>
+> >>> Yes. NEWLY_IDLE is very opportunistic.
+> >>>
+> >>>>
+> >>>>> One more point to add, A lot of time, the CPU which acquired
+> >>>>> sched_balance_running,
+> >>>>> need not end up doing the load balance, since it not the CPU meant to
+> >>>>> do the load balance.
+> >>>>>
+> >>>>> This thread.
+> >>>>> https://lore.kernel.org/all/1e43e783-55e7-417f-
+> >>>>> a1a7-503229eb163a@linux.ibm.com/
+> >>>>>
+> >>>>>
+> >>>>> Best thing probably is to acquire it if this CPU has passed the time
+> >>>>> check and as well it is
+> >>>>> actually going to do load balance.
+> >>>>>
+> >>>>>
+> >>>>
+> >>>> This is a good point, and we might only want to deal with periodic load
+> >>>> balancer rather than NEWLY_IDLE balance. Because the latter is too
+> >>>> frequent and contention on the sched_balance_running might introduce
+> >>>> high cache contention.
+> >>>>
+> >>>
+> >>> But NEWLY_IDLE doesn't serialize using sched_balance_running and can
+> >>> endup consuming a lot of cycles. But if we serialize using
+> >>> sched_balance_running, it would definitely cause a lot contention as is.
+> >>>
+> >>>
+> >>> The point was, before acquiring it, it would be better if this CPU is
+> >>> definite to do the load balance. Else there are chances to miss the
+> >>> actual load balance.
+> >>>
+> >>>
+> >>
+> >> Sorry, forgot to add.
+> >>
+> >> Do we really need newidle running all the way till NUMA? or if it runs till PKG is it enough?
+> >> the regular (idle) can take care for NUMA by serializing it?
+> >>
+> >> -               if (sd->flags & SD_BALANCE_NEWIDLE) {
+> >> +               if (sd->flags & SD_BALANCE_NEWIDLE && !(sd->flags & SD_SERIALIZE)) {
+> >
+> > Why not just clearing SD_BALANCE_NEWIDLE in your sched domain when you
+> > set SD_SERIALIZE
+>
+> Hi Vincent.
+>
+> There is even kernel parameter "relax_domain_level" which one can make use of.
+> concern was newidle does this without acquiring the sched_balance_running,
+> while busy,idle try to acquire this for NUMA.
+>
+>
+>
+> Slightly different topic: It(kernel parameter) also resets SHCED_BALANCE_WAKE. But is it being used?
+> I couldn't find out how it is used.
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Hi Shrikanth,
 
-> ---
-> v5
-> - Split the resetting pointer in free to a separate patch
+The define below does the link
+
+#define WF_TTWU 0x08 /* Wakeup;            maps to SD_BALANCE_WAKE */
+
+int try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+..
+  wake_flags |= WF_TTWU;
+..
+  cpu = select_task_rq(p, p->wake_cpu, &wake_flags);
+        select_task_rq_fair()
+          int sd_flag = wake_flags & 0xF;
+..
+          for_each_domain(cpu, tmp) {
+..
+            if (tmp->flags & sd_flag)
+
 >
->  .../media/platform/nxp/imx-jpeg/mxc-jpeg.c    | 40 +++++++++----------
->  1 file changed, 20 insertions(+), 20 deletions(-)
->
-> diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-> index 0e6ee997284b..2f7ee5dfa93d 100644
-> --- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-> +++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-> @@ -752,6 +752,26 @@ static int mxc_get_free_slot(struct mxc_jpeg_slot_data *slot_data)
->  	return -1;
->  }
->
-> +static void mxc_jpeg_free_slot_data(struct mxc_jpeg_dev *jpeg)
-> +{
-> +	/* free descriptor for decoding/encoding phase */
-> +	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
-> +			  jpeg->slot_data.desc,
-> +			  jpeg->slot_data.desc_handle);
-> +
-> +	/* free descriptor for encoder configuration phase / decoder DHT */
-> +	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
-> +			  jpeg->slot_data.cfg_desc,
-> +			  jpeg->slot_data.cfg_desc_handle);
-> +
-> +	/* free configuration stream */
-> +	dma_free_coherent(jpeg->dev, MXC_JPEG_MAX_CFG_STREAM,
-> +			  jpeg->slot_data.cfg_stream_vaddr,
-> +			  jpeg->slot_data.cfg_stream_handle);
-> +
-> +	jpeg->slot_data.used = false;
-> +}
-> +
->  static bool mxc_jpeg_alloc_slot_data(struct mxc_jpeg_dev *jpeg)
->  {
->  	struct mxc_jpeg_desc *desc;
-> @@ -798,26 +818,6 @@ static bool mxc_jpeg_alloc_slot_data(struct mxc_jpeg_dev *jpeg)
->  	return false;
->  }
->
-> -static void mxc_jpeg_free_slot_data(struct mxc_jpeg_dev *jpeg)
-> -{
-> -	/* free descriptor for decoding/encoding phase */
-> -	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
-> -			  jpeg->slot_data.desc,
-> -			  jpeg->slot_data.desc_handle);
-> -
-> -	/* free descriptor for encoder configuration phase / decoder DHT */
-> -	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
-> -			  jpeg->slot_data.cfg_desc,
-> -			  jpeg->slot_data.cfg_desc_handle);
-> -
-> -	/* free configuration stream */
-> -	dma_free_coherent(jpeg->dev, MXC_JPEG_MAX_CFG_STREAM,
-> -			  jpeg->slot_data.cfg_stream_vaddr,
-> -			  jpeg->slot_data.cfg_stream_handle);
-> -
-> -	jpeg->slot_data.used = false;
-> -}
-> -
->  static void mxc_jpeg_check_and_set_last_buffer(struct mxc_jpeg_ctx *ctx,
->  					       struct vb2_v4l2_buffer *src_buf,
->  					       struct vb2_v4l2_buffer *dst_buf)
-> --
-> 2.43.0-rc1
+> >
+> >>
+> >>                           pulled_task = sched_balance_rq(this_cpu, this_rq,
+> >>                                                      sd, CPU_NEWLY_IDLE,
+> >>
+> >>
+> >> Anyways, having a policy around this SD_SERIALIZE would be a good thing.
+> >>
+> >>>> thanks,
+> >>>> Chenyu
+> >>>>
+> >>>>>> Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
+> >>>>>> Reported-by: Mohini Narkhede <mohini.narkhede@intel.com>
+> >>>>>> Tested-by: Mohini Narkhede <mohini.narkhede@intel.com>
+> >>>>>> ---
+> >>>>>>    kernel/sched/fair.c | 16 ++++++++--------
+> >>>>>>    1 file changed, 8 insertions(+), 8 deletions(-)
+> >>>>>>
+> >>>>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> >>>>>> index e43993a4e580..5e5f7a770b2f 100644
+> >>>>>> --- a/kernel/sched/fair.c
+> >>>>>> +++ b/kernel/sched/fair.c
+> >>>>>> @@ -12220,13 +12220,13 @@ static void sched_balance_domains(struct
+> >>>>>> rq *rq, enum cpu_idle_type idle)
+> >>>>>>            interval = get_sd_balance_interval(sd, busy);
+> >>>>>> -        need_serialize = sd->flags & SD_SERIALIZE;
+> >>>>>> -        if (need_serialize) {
+> >>>>>> -            if (atomic_cmpxchg_acquire(&sched_balance_running, 0, 1))
+> >>>>>> -                goto out;
+> >>>>>> -        }
+> >>>>>> -
+> >>>>>>            if (time_after_eq(jiffies, sd->last_balance + interval)) {
+> >>>>>> +            need_serialize = sd->flags & SD_SERIALIZE;
+> >>>>>> +            if (need_serialize) {
+> >>>>>> +                if (atomic_cmpxchg_acquire(&sched_balance_running,
+> >>>>>> 0, 1))
+> >>>>>> +                    goto out;
+> >>>>>> +            }
+> >>>>>> +
+> >>>>>>                if (sched_balance_rq(cpu, rq, sd, idle,
+> >>>>>> &continue_balancing)) {
+> >>>>>>                    /*
+> >>>>>>                     * The LBF_DST_PINNED logic could have changed
+> >>>>>> @@ -12238,9 +12238,9 @@ static void sched_balance_domains(struct rq
+> >>>>>> *rq, enum cpu_idle_type idle)
+> >>>>>>                }
+> >>>>>>                sd->last_balance = jiffies;
+> >>>>>>                interval = get_sd_balance_interval(sd, busy);
+> >>>>>> +            if (need_serialize)
+> >>>>>> +                atomic_set_release(&sched_balance_running, 0);
+> >>>>>>            }
+> >>>>>> -        if (need_serialize)
+> >>>>>> -            atomic_set_release(&sched_balance_running, 0);
+> >>>>>>    out:
+> >>>>>>            if (time_after(next_balance, sd->last_balance + interval)) {
+> >>>>>>                next_balance = sd->last_balance + interval;
+> >>>>>
+> >>>
+> >>
 >
