@@ -1,147 +1,123 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0D722D4FF
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 20:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2DE5475E
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 20:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745006893; cv=none; b=oeKYf+tvCTp8U1r+ewMzo6gmAG1/+WtbcMG+qRlrPVL2DGl8MOTLtcLUnq3An9eWIw4BjfT5grbKuyaEjp6xlFzxYNgsNIOdYL2dS0BqEDLP3R2d4FZXjzvpIn994IwaHejH+cZAqco2YPNlBXhSflWyCTE7ipq79OPzkuVLLWU=
+	t=1745006947; cv=none; b=A29253wcJx6Yhg7APA5TOuHHvDZUTfQUVNgc3bFslXovyfmQIf+UEwBEp7GJMbaRiPSwuuM5rR9uSLeMx3VnfLQqGh2JZvs+Sp4Y5sTQs5j0NpUaHWGOoxLC71lU5dWDLtNk1ovbu5dCz481/bBN25Uznv4M9tZIbuutYea2IEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745006893; c=relaxed/simple;
-	bh=IxWrOl6yraJgWsjjSbwOKMoqvM9S4o4ta0FZh23EHuQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KfYYJhpBuhbye7v26Kyix1SzS6M54QkU38dzx53IrOX+FPh1V/MV0j+vmRhCG6hCvZ+8l2wq8h+JmIuFQ+Vkhs49hN1lkyvm7QH8rT4xsd65rGFx7LqNNeCfmq2TZW4nY1lhtMGqnUqsoSw9OsCdbIq+iKnUccocKXd3oBIJF9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=VToQliux; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1745006947; c=relaxed/simple;
+	bh=L4F5EwbRA26z/docfQ6qlY8GnMuFyTQLMa5cGJ2Xe9A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=lRLF/jC2tEQthIzhwtoGoscCNkoxsDLHISq/NNlBXtPw+anX4ErIBtPJCDgMjnTBNDGG0X0XkXFd1OcZMmnsTr1Q/a22uADLmG++4T1BGw4VkfT2+GfBxoiJyTarqLtQnRwGV/4HuDCnBRN2vZ12tA2VVhecd5FQF2ojMqM1RlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NephII/j; arc=none smtp.client-ip=209.85.160.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="VToQliux"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=rBpKADHVY8zlIgAD1G/TvUFi0gFBT0bXo9zYp8kOjh8=; b=VToQliuxAgYUidpe
-	T36L785za5zHQ9AIbl1mIi7Ro0xNLu3vNDtqUKwSAlvQhxmekFC02TQnwDLILQHSe8K0JBrETLo5x
-	QFxzOuZXhnQvCQ92nGxryhsG3hN4M77nuEsOpiTiXygmz0AYtaWyj4Xahet+fpmRuB+QZqvD9O1sz
-	Knrv3iRmZMaxHZBlyUV4hYABPcXsiv/IJTN9UjtHm4yt84P0L4mm0GEITyyLnq1AIraZIN1G4QK8i
-	we7olQQezNIY6STYKmOKd95YxLLHA7F0m+mSqubZ5LIXq5O/kT9+QkP3s99KoDXlLjvLmtaCKsXM/
-	DYev7vyTQKgP6//sVw==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1u5s0J-00Ca8w-2V;
-	Fri, 18 Apr 2025 20:08:03 +0000
-From: linux@treblig.org
-To: anna-maria@linutronix.de,
-	frederic@kernel.org,
-	tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] timers: Remove unused __round_jiffies(_up)
-Date: Fri, 18 Apr 2025 21:08:03 +0100
-Message-ID: <20250418200803.427911-1-linux@treblig.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NephII/j"
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2c2ada8264aso1089667fac.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 13:09:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745006945; x=1745611745; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TImxXgS9r7ImtMsTaUIikrjTho3myWjY6Bz/r5nCEMQ=;
+        b=NephII/jaH5mXpo7q3Wys0MGogWhOUr6QVeU48X7H8U3UlfCmIjCXKoiGiL/J51MJD
+         r25L8uQul1+AXFso7M5VM9751AOzAQyy743Lu171XGgr9BVZv2KRtHanOxHMb8trjUlO
+         0qNI9pGx6UmmVMOvcTjFx8A8mOWEjyVX7B7uyGU6pxIBjMpnjEcxk+WxRyzRXcmk79pL
+         tnCCtUP/0T9xcdCgD5ORj81/5C0qyb+HcA6B96ZBLo8OIe1oZw+gOhBSHythIRIj6hAK
+         2qVt71losFPQ9cXGEXFvsAW/4DhlPTcQx/lYY6kka1mQy5oNTZSC4817p+LnAAZj9/8G
+         c1dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745006945; x=1745611745;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TImxXgS9r7ImtMsTaUIikrjTho3myWjY6Bz/r5nCEMQ=;
+        b=c5yPmqfA7oB3803NoKE23mwu3q7IG8usjyO10TFyFXED+pZQuOSKJLgg32He/kE7pP
+         K9mtBguoNJJ+Jhpd5etgaTQ+M3uwbmBj4lHWXO9P0S4kjwXXYkr855gYwW9DrLk21Q0P
+         ZkR2iTkGqa+iCyHaIv941AhNir5tZwdeyOnLovMKVd0qztRD058X9UzeK6RTmOPdVhcq
+         5/EyUR3Haii4QlsY0EZrYKMgdhXU+Y4Hp7W/NBLjrRy03REBxFBKs0AITJXSCRSWPrw5
+         TQyN+JeDJ4Hdq3dZZ4UcKj9ww1m0aSvigtkTUPHh8FVJd6cT7DBvwwe8CnaJDC0wTvKU
+         gf5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXFIcKh1JoFR2RjaTukudE2ovdo7H+TKkhYhkKYigxD++gRH7kVTTiyFu43J4KunQPGbvLe9udz4kpv5IY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9y36AkgVFgcQYs6Yx3lVU60dqqjgXMxp27tPviKnQyJghEH54
+	qxFHStohx5XTkEXRXrwusOZf/Ta77Fg6+H8U1i0Jg82Ddg2VxWS+3zpWygXYCpw=
+X-Gm-Gg: ASbGncsBTAlDWT/jktPmjCkNJL8P+A2M1SCsflfCdIbBT+wX4v2b+NS/5ivcZpV4Yqs
+	sY67cvExG8XywzD0iuqHlYzGDHTbNFn2eR5puB0fVHRmhxKgz58ni6PHyTY97L2H17LsmYyIvHf
+	9B62mssSn00BP+dwQX+NpU5gt2WVFflLFq6DHYrNKMket0BOvH2QeKS7btRa2wKqn6n+nKqdVe4
+	L39NzT8jM1b2XU4GFuCs2qVQiad7Mxka1MihJsgcDwhTnICsk0FAKn16JW02rQ/DR+JzmVvYAbT
+	uCvenWS+sXtv55hvvWV9Z7892I8T3U+qTQtYe2/9NQb483Q=
+X-Google-Smtp-Source: AGHT+IGELMZ7J/ePbqESlA6PYkY4CF3MBrFtLR8CHAfpqUNFo4ZD01t+Cxfx8+4R6IR0IR50Pk5inQ==
+X-Received: by 2002:a05:6871:ba0a:b0:2d5:4899:90c with SMTP id 586e51a60fabf-2d5489a2887mr597975fac.7.1745006944745;
+        Fri, 18 Apr 2025 13:09:04 -0700 (PDT)
+Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:dcdf:46e0:18e5:c279])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d521828250sm600235fac.42.2025.04.18.13.09.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 13:09:04 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Date: Fri, 18 Apr 2025 15:08:53 -0500
+Subject: [PATCH] iio: orientation: hid-sensor-rotation: remove unnecessary
+ alignment
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250418-iio-orientation-hid-sensor-rotation-remove-alignment-v1-1-6da68eae7ecf@baylibre.com>
+X-B4-Tracking: v=1; b=H4sIAFSxAmgC/y2NwQqDQAxEf0VybsBdLF36K6WHpRs1UJOSiAjiv
+ zeUMqcZ3swc4GRMDvfuAKONnVXCpEsHr7nKRMgtPOQ+X/shFWRW1KjIWtdgceaGTuJqaPrPjBb
+ dCOubJ1mCxNLKGEpDu2WI6Y/RyPvv9vE8zy9Ad4/ehgAAAA==
+X-Change-ID: 20250418-iio-orientation-hid-sensor-rotation-remove-alignment-8d8f8f814d72
+To: Jiri Kosina <jikos@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-input@vger.kernel.org, linux-iio@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, David Lechner <dlechner@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1107; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=L4F5EwbRA26z/docfQ6qlY8GnMuFyTQLMa5cGJ2Xe9A=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoArFXbMwDN9LdHChb/jSQJDCMVvugvhTCjL/E2
+ DHMzPRP116JATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaAKxVwAKCRDCzCAB/wGP
+ wFCTCACd9IyrNS8mNqd4CSFpfnZY0A++prwhteHofu7ywGaGyv9gvklYUdqOwV3MF2MX3pgRTLd
+ WCKuAhXbqoBx6MCWQGpPqvpyVWV/S1NOxG44YGoZwOIQhcwySt1JR51qNxwFcvNmIwSsaXbk45h
+ jF5nBwLfBjZe69qsOLD7xfuOzcF6hdFfkVYpq/5JqnqVs/4OVBJgKUM20w3uLmmbP5Z6Tqq/dd2
+ D/fUKBwjzBCRkcCbIFd4gqlISYjNXa525EYp+khY9mcALQ2IiuAYEzMpM8w1T921dyqWncU8r4N
+ I00cWLkrRvlaAag/1ehiX9AMhTcb4P52ut9Bj1YJsR6xa+lk
+X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
+ fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+Remove __aligned(16) in the scan data struct in the hid-sensor-rotation
+driver. There is nothing in the code that requires this alignment.
 
-Remove two trivial but long unused functions.
-
-__round_jiffies() has been unused since 2008's
-commit 9c133c469d38 ("Add round_jiffies_up and related routines")
-
-__round_jiffies_up() has been unused since 2019's
-commit 7ae3f6e130e8 ("powerpc/watchdog: Use hrtimers for per-CPU
-heartbeat")
-
-Remove them.
-
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
- include/linux/timer.h |  2 --
- kernel/time/timer.c   | 42 ------------------------------------------
- 2 files changed, 44 deletions(-)
+ drivers/iio/orientation/hid-sensor-rotation.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/timer.h b/include/linux/timer.h
-index 10596d7c3a34..e17aac74b5b3 100644
---- a/include/linux/timer.h
-+++ b/include/linux/timer.h
-@@ -172,12 +172,10 @@ extern void init_timers(void);
- struct hrtimer;
- extern enum hrtimer_restart it_real_fn(struct hrtimer *);
- 
--unsigned long __round_jiffies(unsigned long j, int cpu);
- unsigned long __round_jiffies_relative(unsigned long j, int cpu);
- unsigned long round_jiffies(unsigned long j);
- unsigned long round_jiffies_relative(unsigned long j);
- 
--unsigned long __round_jiffies_up(unsigned long j, int cpu);
- unsigned long __round_jiffies_up_relative(unsigned long j, int cpu);
- unsigned long round_jiffies_up(unsigned long j);
- unsigned long round_jiffies_up_relative(unsigned long j);
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 4d915c0a263c..1b2a884f66e8 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -385,32 +385,6 @@ static unsigned long round_jiffies_common(unsigned long j, int cpu,
- 	return time_is_after_jiffies(j) ? j : original;
- }
- 
--/**
-- * __round_jiffies - function to round jiffies to a full second
-- * @j: the time in (absolute) jiffies that should be rounded
-- * @cpu: the processor number on which the timeout will happen
-- *
-- * __round_jiffies() rounds an absolute time in the future (in jiffies)
-- * up or down to (approximately) full seconds. This is useful for timers
-- * for which the exact time they fire does not matter too much, as long as
-- * they fire approximately every X seconds.
-- *
-- * By rounding these timers to whole seconds, all such timers will fire
-- * at the same time, rather than at various times spread out. The goal
-- * of this is to have the CPU wake up less, which saves power.
-- *
-- * The exact rounding is skewed for each processor to avoid all
-- * processors firing at the exact same time, which could lead
-- * to lock contention or spurious cache line bouncing.
-- *
-- * The return value is the rounded version of the @j parameter.
-- */
--unsigned long __round_jiffies(unsigned long j, int cpu)
--{
--	return round_jiffies_common(j, cpu, false);
--}
--EXPORT_SYMBOL_GPL(__round_jiffies);
--
- /**
-  * __round_jiffies_relative - function to round jiffies to a full second
-  * @j: the time in (relative) jiffies that should be rounded
-@@ -482,22 +456,6 @@ unsigned long round_jiffies_relative(unsigned long j)
- }
- EXPORT_SYMBOL_GPL(round_jiffies_relative);
- 
--/**
-- * __round_jiffies_up - function to round jiffies up to a full second
-- * @j: the time in (absolute) jiffies that should be rounded
-- * @cpu: the processor number on which the timeout will happen
-- *
-- * This is the same as __round_jiffies() except that it will never
-- * round down.  This is useful for timeouts for which the exact time
-- * of firing does not matter too much, as long as they don't fire too
-- * early.
-- */
--unsigned long __round_jiffies_up(unsigned long j, int cpu)
--{
--	return round_jiffies_common(j, cpu, true);
--}
--EXPORT_SYMBOL_GPL(__round_jiffies_up);
--
- /**
-  * __round_jiffies_up_relative - function to round jiffies up to a full second
-  * @j: the time in (relative) jiffies that should be rounded
+diff --git a/drivers/iio/orientation/hid-sensor-rotation.c b/drivers/iio/orientation/hid-sensor-rotation.c
+index c4b18fd0fa76c17318b262ea9f44ea5c40170298..e759f91a710a2cdec8b708faab49c557e3418146 100644
+--- a/drivers/iio/orientation/hid-sensor-rotation.c
++++ b/drivers/iio/orientation/hid-sensor-rotation.c
+@@ -19,7 +19,7 @@ struct dev_rot_state {
+ 	struct hid_sensor_common common_attributes;
+ 	struct hid_sensor_hub_attribute_info quaternion;
+ 	struct {
+-		s32 sampled_vals[4] __aligned(16);
++		s32 sampled_vals[4];
+ 		aligned_s64 timestamp;
+ 	} scan;
+ 	int scale_pre_decml;
+
+---
+base-commit: aff301f37e220970c2f301b5c65a8bfedf52058e
+change-id: 20250418-iio-orientation-hid-sensor-rotation-remove-alignment-8d8f8f814d72
+
+Best regards,
 -- 
-2.49.0
+David Lechner <dlechner@baylibre.com>
 
