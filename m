@@ -1,63 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B71233128
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 20:27:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768252A1C9;
+	Fri, 18 Apr 2025 20:28:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745008050; cv=none; b=dtg0Yr9ubJ6mpT8cQSVdZu658nA/79glSHv5s308tkc44uCIveoT9fdTy7xqTDrvGLxulwqdSIOB8MFQeyNIrezOOHUknnHhxPGd7OgT4A/wn2Q+tqiy0nEuw3lNWySKn+1uMJ/Q++lW5ZzrlPUIz/Zp2umXdFuYlDyyZs2cTYE=
+	t=1745008122; cv=none; b=aJZLixeGeMaKiLYtQec5YHvI4s494gj+2s+dlNBjnB6p8mPBNELUvZOFq8O4zLEphFiAVwnolV1OGRDbZQFFYgynBHGD2Mo5oxXTAB4JI2XT/K05HuIJJaeC8OTc1UUJusP8sYmrs7fnhDbwP+tDV18dUTH+dXPR6KlvwE0NjS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745008050; c=relaxed/simple;
-	bh=UwICu4pD1DUPAL3W3TTTjj3fAPZ3z9yvP7OFHr44eJI=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=CBYsNl0ltdG+kWaolvzyVg4L3+pL2WFyiLIPfVK+RR+lAzW4bAp0vf3h9Jq9KnZxUwxTUkR2yNezwG0tOlJx4HWc+2z3/zu2TC1fGOO/Bw5ZhfXR+DK5GA3pHaHvNd4MKMaJnf4SmscbWrDAfJwUAbhts/BFfsekACKvmQoHKiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gl5RuDWU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745008122; c=relaxed/simple;
+	bh=RuioFoYnoKWbVRePkkXFNsFVrOmVWmnElk3I3DxzO8Y=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tKsp3JdvRGE7mYLJdQy2i0AwMwqTk2fXzRM8BiqNhpdI+p8BK23a2xwvPKwaw92CdbRCLEj3xfG3mwpNpLrbyVnTr78p2CeGxkeUZeTecmddJR2PsBK8tiv0IrQE3uQv5sqBf3ErWCWllFp8HTu0p4kWAvAx2W79IlhUTym9Clw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oawa8Hfn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gl5RuDWU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84255C4CEE2;
-	Fri, 18 Apr 2025 20:27:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oawa8Hfn"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 51D59C4CEE7;
+	Fri, 18 Apr 2025 20:28:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745008050;
-	bh=UwICu4pD1DUPAL3W3TTTjj3fAPZ3z9yvP7OFHr44eJI=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=gl5RuDWUojIKoLj5TdCYI2YaiMsJYMOJ8/R/QtwEt6SRCSe4gi4+uunSOmvd+yEiv
-	 s9+NQgeJLPbSzYr4sJLt4H0BND5mK/FNZVFml4hFggjYQJho8pYXiscZMj5B4eEqaP
-	 tH/a9HM2y+Ug1HOFOo3SqB2qjoRKkaV8TaPAL4uS7tAyoWSIj8vHYNjCC5us+zBuAm
-	 S4yLAlBXdvhjXemhnbARJEYXQDn141gq2zlagV8lOs05gynHKyqO5rwXffMKvUD1Q6
-	 SzLy7EoNtxAwd8K7AoiUJ711AcRh7ndxofhSxxbcCYb1yvb6qA6dAKLM4ODzcjV8DR
-	 G4SraPxLc8m3A==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAF843822E09;
-	Fri, 18 Apr 2025 20:28:09 +0000 (UTC)
-Subject: Re: [GIT PULL] core/urgent fixes
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <aAKzo5Bmkp3BSqsO@gmail.com>
-References: <aAKzo5Bmkp3BSqsO@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <aAKzo5Bmkp3BSqsO@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-urgent-2025-04-18
-X-PR-Tracked-Commit-Id: 1013f5636fd808569c1f4c40a58a4efc70713a28
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 84aca3ca6a42dade09d05a541c8aaab5ea228087
-Message-Id: <174500808846.316726.7937771514984300900.pr-tracker-bot@kernel.org>
-Date: Fri, 18 Apr 2025 20:28:08 +0000
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Borislav Petkov <bp@alien8.de>, Andrew Morton <akpm@linux-foundation.org>
+	s=k20201202; t=1745008122;
+	bh=RuioFoYnoKWbVRePkkXFNsFVrOmVWmnElk3I3DxzO8Y=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=oawa8HfnYofsd2nLXgjSpZShip+TlWRE+b+RYt7dlSygCsxVlYuuoXzHBIG5Uj1+E
+	 sOHixzhjybWwLiklj9AHOfyU+mp9o8TP+YhxtL2Vu6ikf0TvuwdCIRWbV2IIIaEFW2
+	 4rrNs7uzAeLKReQEbz/u1ECXHsR+7sUPZhjUClGniWrFhwzA8wshc1988sRJrYRAxq
+	 5DUqvoOwjlswRYS4r4SB/zLr+1qjnWhxpiU+Be85Q9oQ5bNS1oo2vxxxLesdhFZGNa
+	 3xyMxjaLciqV30gVibj5GsD8ep2E861CS0iOghlwVpbWlAnnRuZiqQgyED79GWETmS
+	 EdnGeJe8lHQDA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A98CC369AB;
+	Fri, 18 Apr 2025 20:28:42 +0000 (UTC)
+From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
+Date: Fri, 18 Apr 2025 22:22:04 +0200
+Subject: [PATCH] ASoC: wm8998: Add Kconfig prompt
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250418-wm8998-v1-1-21c4bead9cd8@apitzsch.eu>
+X-B4-Tracking: v=1; b=H4sIAGu0AmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDE0ML3fJcC0tLC92U1LTEVHPjJGNjIwMloOKCotS0zAqwQdGxtbUA6EN
+ tIlgAAAA=
+X-Change-ID: 20250418-wm8998-defae73b3320
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745008121; l=825;
+ i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
+ bh=XALZ1vwO3j84k8/8tKGcIPipHuf/haqg80zA+h6cAEU=;
+ b=m8KI2nZB1kokmZ/pFqGBnA6F17BLosVjzj+zt8/Fxvr5ikwtcS6hhTZ9VNWofL/DBsr+Z9pn9
+ AKqhs4dg9EUB/RRqdR4kFtSE1UMbEZ61MK8g3lgZcSkBX0Mu5cw9Dnh
+X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
+ pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
+X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
+ auth_id=142
+X-Original-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
+Reply-To: git@apitzsch.eu
 
-The pull request you sent on Fri, 18 Apr 2025 22:18:43 +0200:
+From: André Apitzsch <git@apitzsch.eu>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-urgent-2025-04-18
+Add tristate prompt to allow codec selection.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/84aca3ca6a42dade09d05a541c8aaab5ea228087
+Signed-off-by: André Apitzsch <git@apitzsch.eu>
+---
+ sound/soc/codecs/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thank you!
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index 40bb7a1d44bcfa4c386f2eba0f475efeeedf1bdb..9ecc4bb7f75ff9fce87970d2e46ace72444e55b4 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -2479,7 +2479,7 @@ config SND_SOC_WM8997
+ 	depends on MFD_WM8997 && MFD_ARIZONA
+ 
+ config SND_SOC_WM8998
+-	tristate
++	tristate "Wolfson Microelectronics WM8998 codec driver"
+ 	depends on MFD_WM8998 && MFD_ARIZONA
+ 
+ config SND_SOC_WM9081
 
+---
+base-commit: 7e74f756f5f643148ca5537bf2fee6767e4b0ed9
+change-id: 20250418-wm8998-defae73b3320
+
+Best regards,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+André Apitzsch <git@apitzsch.eu>
+
+
