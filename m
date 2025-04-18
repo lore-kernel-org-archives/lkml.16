@@ -1,92 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2101FDE12;
-	Fri, 18 Apr 2025 08:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC941DFFD;
+	Fri, 18 Apr 2025 08:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744965152; cv=none; b=mXLbimFQq5I6t8hL+klAiApBVJg2XKTVCdYx98bb9La4fRrGgR2l9gwZfMw/POOq4mkLp3yVYXCF6TRW68T2FOg6N/5UBc9Gg0Ovqab+YelbAukHXhF4oJpykwvsrLFNHboXYOwJTfMRGhWl6O/LX+Mx9Ns7Xp5GKZYx2o8j8r0=
+	t=1744965234; cv=none; b=UK+/I9lEEtDPe8YdR/ZFRtCbCvM8AduHTeQhmoWNYBaYC2Vgxr5CiS1MS5OmeCBbM/cpdeO9C51dSXMIGwbNZ4hDtllq/NqQfMQT784StXSRJQdSsv6vm4ifW5P3ytOH5ThD+AMz+x7Ep1FI2dqMFEpS8FMIhcCLCk6lWmwS84U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744965152; c=relaxed/simple;
-	bh=DBcmfGPlOYxSIWeCzpc6ORK7sl/z26lxe+TcEDYk5yw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GQj8ukfBIS5EeitCpXb9Hfmiat1JBa8yiDQvGBYdVDSeBpbdDpL77A7E1xDVfpRg9PHqLamLNd9BUOn6senrBxW9IVFsoJY9iR6uQB5X/IHY1EK7IaCs0fKkOFiO9cg4ZSx1fJCtX/vZ2xkkU9OBLFZkMIjBdP8mS+3MXZO/Fuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sgeUr496; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744965234; c=relaxed/simple;
+	bh=f2+P+2oYFNpasFLC2+w6M+Z5BZYBWwbumzXH0XUg1Bk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AwY6MijY1shNBcM5yRHdRVccKDbU+O6T9/DmkpvQOZF/2z4wxKi8i57fsZKkgm8GQWLCHy2KARGHqIeggm6/yefTpQ4pRKALXN4C2fYfX6isG91oZJTSLrXknFnyti6s6yJKlVObwlw+jhXjWluHRqcdLoLCe0VBlqGTjXbWNiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BirCfKSM; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sgeUr496"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52ED6C4CEE2;
-	Fri, 18 Apr 2025 08:32:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744965152;
-	bh=DBcmfGPlOYxSIWeCzpc6ORK7sl/z26lxe+TcEDYk5yw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sgeUr496kglvJLbnOlYeAz/PqG5sqrASiOT/uZLEncjZMahDKFFMsc4mcDtQJ+60I
-	 AGUiYwK8iE9nF0SWInIlLlewkojFTViQy5nfIvi1XbiFrknTVuX173i2zFEJfOHJqm
-	 1O58hiAjdlkE+6tt2+34AjEWCBEZPGfyiKDh8mpSf8MrGTSOT7RwvxUcZNDHpAMx0j
-	 kTgDCzNFn6YlU7WwrftOS3EJJCuTY8lifkCHa7MJYcDx59Jr2ujAxjUT9Z6LzJFjW0
-	 b8vijCniJEpxEJagDeACDtUExDU/pm+GpgBr1P3dz4ia5J11MdyUNaYvnT3ZJxjsTR
-	 1YUXWyJRRjppg==
-Date: Fri, 18 Apr 2025 10:32:26 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Sandipan Das <sandipan.das@amd.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	eranian@google.com, songliubraving@meta.com, ravi.bangoria@amd.com,
-	ananth.narayan@amd.com
-Subject: Re: [PATCH v2 0/5] perf/x86/uncore: Overflow handling enhancements
-Message-ID: <aAIOGkKWGOLbu6y-@gmail.com>
-References: <cover.1744906694.git.sandipan.das@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BirCfKSM"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-7fd35b301bdso1889529a12.2;
+        Fri, 18 Apr 2025 01:33:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744965233; x=1745570033; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dKKqmmtJJd7AktC6eqljZLIqTmiDg8YWDPTK1yrbBoc=;
+        b=BirCfKSMJ73jx5O3Cbe2+qQhMD/6vJXyBM9BmUM1W9qoVBUiF4CSCyd+xwMsle1YYX
+         pigyWvfmpMju5i+Q3lvOmBzLFoPTp3TN2lmrV9d3uF8ykf76bMIvqPyNtnwCPB2nIVDg
+         TwCcBTI/mWnFVLAO8ok/+Ge8DVhJ5dYAXeAmn19At98I6Q8dYGlTVjai8iAA1rI0+359
+         vdZWDSiQqP1mmGXYVpd/QrqLYuAOuDoY1LdGKxUljYA8Clh6CIGK5YuQQZeqvvkL58of
+         C6ZvJBWwDVsxxDON4zZrmlQ6pljmH0VCGPBT+h6cHBZOFPNeYg+gpbhR32EVqiUEeDwF
+         6aiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744965233; x=1745570033;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dKKqmmtJJd7AktC6eqljZLIqTmiDg8YWDPTK1yrbBoc=;
+        b=MAuedWYo+v8eWScdL0N4mJc+Hfk0bcGmktKzeM83/r7n2KhVdZHe2ir7ODC6b6d3lJ
+         9JtZM9dCaur4S4061MjWisGGzI24XF7wzG0RGMyjxb0s+CI9FELDRvDLwxY2+iu9mfjH
+         nW3BuFbQBz7g67yfMq3ZevEChfYzHdfvUpcVw6NsJIMLcx5KPqB8Z/jC8QlnR7vKbCuI
+         TyL8mXZU9gLqXVKRuziR3trnxToKNn0BSIVIbHfTU0yYlVc/I77ULsQXLC7/isQUe09j
+         VFb2D3RHFncrxK0Fa/IBBqNVWJon4ekc7yQF2AFmZRg19SEtl1zdLjqZZJqJFLTsfrIZ
+         tTcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWH1cXuVPJZXLXpubqaa/Y7M84bqQ2HJCOqzHvfnUxBayfHVIc3qUQ+Xe4B5GDUcAEq4N/64xPTNXJCe6o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzZACOXi+nUz9aPMgR6d8LAg7cVICemHdP/LFwpq/Di7pdLsfr
+	XVUeCZBK4Q6ER+g4NAarvYL3hVxhOANausri1y+pXR9ury1HMikB
+X-Gm-Gg: ASbGncvKEJatRGJ6qFmeJ5t3d1cYfWhw4wtLQwa9slul/qY6cR1kRk6Wf+XOEoRIuA4
+	odnzp4kgTnVILq5Qkd5INJD+8NBi9Y193fS9/gRaGmgeDe21dhjpajHbs7oA+fRPqunYID5ivRm
+	VrAneiiNEfc+bQEWk95jzjh7Efd7FmAf6pRnDMBM/r3vq9rxvr06koo3x6nuwqf0lqwAZHNtDZz
+	/Lyc8ivqUuyO2o82PyA1qTP1rgb2mpImu02WHoT8qwOxNEOwKuoyTZBGcOGytdN7A7k6O3dKvpX
+	IZD/ChH1TxqU8i1/8jCbR0YmKs7csdpqas6SKFd0aVwx1Kbx8h18w5QS7F603GoTdUH6N4UibmT
+	fAIPTViMfPcCrsD2Js7LpsdY=
+X-Google-Smtp-Source: AGHT+IHIw5qdDDP/+Wvs0WOY3BC9PXHZjSIeFiWqvduG04NnY6AADuV3TW8NPLxzBixR4Vs7y1lIOA==
+X-Received: by 2002:a17:90a:c2d0:b0:2ee:b8ac:73b0 with SMTP id 98e67ed59e1d1-3087bb3f2cemr3126847a91.2.1744965232603;
+        Fri, 18 Apr 2025 01:33:52 -0700 (PDT)
+Received: from ?IPV6:2409:4080:218:8190:3fb8:76d:5206:c8c? ([2409:4080:218:8190:3fb8:76d:5206:c8c])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087e0feb37sm725718a91.31.2025.04.18.01.33.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 01:33:52 -0700 (PDT)
+Message-ID: <2583756c-ff50-4ad6-a280-525cea073b47@gmail.com>
+Date: Fri, 18 Apr 2025 14:03:45 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1744906694.git.sandipan.das@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dma: idxd: cdev: Fix uninitialized use of sva in
+ idxd_cdev_open
+To: Vinod Koul <vkoul@kernel.org>, vinicius.gomes@intel.com,
+ dave.jiang@intel.com
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250410110216.21592-1-purvayeshi550@gmail.com>
+ <174490310744.238609.16595322952378683226.b4-ty@kernel.org>
+Content-Language: en-US
+From: Purva Yeshi <purvayeshi550@gmail.com>
+In-Reply-To: <174490310744.238609.16595322952378683226.b4-ty@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 17/04/25 20:48, Vinod Koul wrote:
+> 
+> On Thu, 10 Apr 2025 16:32:16 +0530, Purva Yeshi wrote:
+>> Fix Smatch-detected issue:
+>> drivers/dma/idxd/cdev.c:321 idxd_cdev_open() error:
+>> uninitialized symbol 'sva'.
+>>
+>> 'sva' pointer may be used uninitialized in error handling paths.
+>> Specifically, if PASID support is enabled and iommu_sva_bind_device()
+>> returns an error, the code jumps to the cleanup label and attempts to
+>> call iommu_sva_unbind_device(sva) without ensuring that sva was
+>> successfully assigned. This triggers a Smatch warning about an
+>> uninitialized symbol.
+>>
+>> [...]
+> 
+> Applied, thanks!
+> 
+> [1/1] dma: idxd: cdev: Fix uninitialized use of sva in idxd_cdev_open
+>        commit: 97994333de2b8062d2df4e6ce0dc65c2dc0f40dc
+> 
+> Best regards,
 
-* Sandipan Das <sandipan.das@amd.com> wrote:
+Hi Vinod,
 
-> Sandipan Das (5):
->   perf/x86/amd/uncore: Remove unused member from amd_uncore_ctx
->   perf/x86/intel/uncore: Use HRTIMER_MODE_HARD for detecting overflows
->   perf/x86/amd/uncore: Use hrtimer for handling overflows
->   perf/x86/amd/uncore: Add parameter to configure hrtimer
->   perf/x86/amd/uncore: Prevent UMC counters from saturating
+Thank you for applying the patch!
 
-Could you please fix your mailer to not mutiliate Cc: lines?
-
-Cc: linux-perf-users@vger.kernel.org
-Cc: peterz@infradead.org
-Cc: mingo@redhat.com
-Cc: acme@kernel.org
-Cc: namhyung@kernel.org
-Cc: mark.rutland@arm.com
-Cc: alexander.shishkin@linux.intel.com
-Cc: jolsa@kernel.org
-Cc: irogers@google.com
-Cc: adrian.hunter@intel.com
-Cc: kan.liang@linux.intel.com
-Cc: tglx@linutronix.de
-Cc: bp@alien8.de
-Cc: dave.hansen@linux.intel.com
-Cc: x86@kernel.org
-Cc: hpa@zytor.com
-Cc: eranian@google.com
-Cc: songliubraving@meta.com
-Cc: ravi.bangoria@amd.com
-Cc: ananth.narayan@amd.com
-
-All these email addresses have real names, I suppose they weren't just 
-written in in such a fashion?
-
-Thanks,
-
-	Ingo
+Best regards,
+Purva
