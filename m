@@ -1,151 +1,105 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D112144D6;
-	Fri, 18 Apr 2025 17:01:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744995697; cv=none; b=J7FcOQabwu6y/b/WAduNHz8JizEp+3kCLizclOMrV4koZZFJkgFtccBbQs2OFiXyY5pIwf4xAAFL7zq+7YfQenNTqjiB6CDIX6M5Gy44y+NRgFBN1OjcRyD+B1XWDWC9g214Rdidwzv2aRuzMCj469MC13DBI9DuvlKoXXCRGo8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744995697; c=relaxed/simple;
-	bh=oI+EaJPKASRaj7ZktB84nugSnxLbHdpW/DC7Ynxq2b8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GqwkvH5J95h+nBQFpJL1FSLm+hHrT/tQo/5/O9VcrpSLk0vsYFn4faMjOsALNKGLGAxwAImZfDWGEiEn2LguL/nGUJ6yGq9leYIT67tLBSGmCG+WcrzRa9WJJRqHyoCYVXXUtCQ+K9hSvKCEt0FSZF/klGtqM9/TrZa9O1BKu+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=ZTta/6gI; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35D221A43D;
+	Fri, 18 Apr 2025 17:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744995703; cv=pass; b=F+4l8IJjkKQSLIdW8v8ythAQbMORhVnYBUGqPQlMFdVRlxVj6wGUVBz/T8v7LG5SWptf2Ad8ism/830CoIiy38N8ZuOjaTEa0n5nET9gnGtKZJoARdNV1h+dSTWuTVXgZc/42XpZvq5GcHFyUCRoo0fQbkHN06ArhUTsBJESeeE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744995703; c=relaxed/simple;
+	bh=acKeuEYRQlP9fZhfZf7ovti3rK3Hpmy1lIjyi3a+Me0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R0ZIUjp5LMtZcDrYRYC+XgtGLB2kU3yDMnoyyeGoFP3eCBpaffnL8opek8HOVhR8xUF9Fsh7nmEVgmcsd3LpJwjqOD7bb9iGHRmgsVVk0lqSgJ9REAojetABJLY1dFmcVBGAYXykLFHvPZnG2Flc1qU4UZY6v7ao02lTubgg9KY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=AbRcBNBH; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="ZTta/6gI"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 91FAB101BF2CB;
-	Fri, 18 Apr 2025 19:01:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1744995692; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=tBWiIVtzQkFeHoj4T9tvDBw4U0JfIJ9IFgfClrd78xY=;
-	b=ZTta/6gIatx/2uKRev0Lo3JfA6NTfSrNlGjUkaEApTJ5CPR8pAmVVlJruzwF/8ERax+qyu
-	nwmQ1jXCPb5HUcudTgnZskN5oKszxyfOI0/tT0MA5sjOGV2a0OuI7tD/QXNU/jra9Cuz8F
-	/T6w6oeBtTZFGoOsv9E2QhBTtRA+WmAaYrdvIjw3qokrhv6T0ouxsnbomlHjDkWsZsViqs
-	R1UkQiGoFPI2cZT1QVhWXjCIFy+o6U7p3EK9w6cjghuSQdIlSdejnsSIRQLpjMlHhT5Z60
-	gY1jJGXv9CkRZzZvxdHB0Yx/dCJ7HaqotiKNSkdHaCS10eSDHevHSVFciD/pXQ==
-Date: Fri, 18 Apr 2025 19:01:25 +0200
-From: Pavel Machek <pavel@denx.de>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	syzbot+b0c03d76056ef6cd12a6@syzkaller.appspotmail.com,
-	Simon Horman <horms@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	aleksander.lobakin@intel.com, kory.maincent@bootlin.com,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.10 13/15] net: vlan: don't propagate flags on
- open
-Message-ID: <aAKFZT6sPCZX63y6@duo.ucw.cz>
-References: <20250403191002.2678588-1-sashal@kernel.org>
- <20250403191002.2678588-13-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="AbRcBNBH"
+ARC-Seal: i=1; a=rsa-sha256; t=1744995668; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=mNqvsJIV4jp04Jvj7dGEQOYwKXb+tbrByLE7Srh+r1yBHVZvPe/QjNFjHo9EZp3qvxxtJbWwA0sbDeryv5Kk6NSqWNf9c8Sut+nSftxwxNjtRGtVs07Kg9wdebga1s6a+c71e1WdR6tzMbmDLYjDOKwsIsp95ADaimi/F5KSmBg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744995668; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=w2aPdjKz5lGmhA4ac7WZyVYSfIQHzkE0P21tdEqps0s=; 
+	b=KhD1YjzYPiU+boHpdIoCAyfNqLHi7qz1zlBqqeW7u33u6ktsAz0XBfH/qaur4H3hML5VEKyNAG7GkqichLVRlNyqQgXtrMuLqN5Nu+IKbCYlnbzYDKqOeKkn0XMm3cY8ddvKdqtUl4xxqCywsOUxCQ80iBLTAlmpskswxrMuPZM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744995668;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=w2aPdjKz5lGmhA4ac7WZyVYSfIQHzkE0P21tdEqps0s=;
+	b=AbRcBNBHgS8GcEE4MC0tEkZYQJzIyCYPgz5yYFqNwz+jLs93meK9+q2COWCkU0RH
+	f/rx2tPVIP/HVzYg5uFcAaQDDZxP2WENTU0PD3PP4xv7g0y5qsVFrM7xjqOI+XA4iO8
+	uvOJ9Eue2SY3oA88lbppS/7GLrgoGM7fTgzUZLJE=
+Received: by mx.zohomail.com with SMTPS id 1744995665226730.3558457461216;
+	Fri, 18 Apr 2025 10:01:05 -0700 (PDT)
+Message-ID: <8204b57b-45c8-40e6-a936-915e8c45f3e4@collabora.com>
+Date: Fri, 18 Apr 2025 22:00:59 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="bC8Y275hHWkIX4eN"
-Content-Disposition: inline
-In-Reply-To: <20250403191002.2678588-13-sashal@kernel.org>
-X-Last-TLS-Session-Version: TLSv1.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/32] selftests: harness: Remove inline qualifier for
+ wrappers
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+ Willy Tarreau <w@1wt.eu>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?=
+ <linux@weissschuh.net>, Kees Cook <kees@kernel.org>
+Cc: Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20250411-nolibc-kselftest-harness-v3-0-4d9c0295893f@linutronix.de>
+ <20250411-nolibc-kselftest-harness-v3-5-4d9c0295893f@linutronix.de>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20250411-nolibc-kselftest-harness-v3-5-4d9c0295893f@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
+
+On 4/11/25 2:00 PM, Thomas Weißschuh wrote:
+> The pointers to the wrappers are stored in function pointers,
+> preventing them from actually being inlined.
+> Remove the inline qualifier, aligning these wrappers with the other
+> functions defined through macros.
+> 
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+
+> ---
+>  tools/testing/selftests/kselftest_harness.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+> index 5822bc0b86a3c623fd34830fb8b541b27672a00b..222a4f51a8d704c41597e09a241ad887ef787139 100644
+> --- a/tools/testing/selftests/kselftest_harness.h
+> +++ b/tools/testing/selftests/kselftest_harness.h
+> @@ -172,7 +172,7 @@
+>  
+>  #define __TEST_IMPL(test_name, _signal) \
+>  	static void test_name(struct __test_metadata *_metadata); \
+> -	static inline void wrapper_##test_name( \
+> +	static void wrapper_##test_name( \
+>  		struct __test_metadata *_metadata, \
+>  		struct __fixture_variant_metadata __attribute__((unused)) *variant) \
+>  	{ \
+> @@ -401,7 +401,7 @@
+>  		struct __test_metadata *_metadata, \
+>  		FIXTURE_DATA(fixture_name) *self, \
+>  		const FIXTURE_VARIANT(fixture_name) *variant); \
+> -	static inline void wrapper_##fixture_name##_##test_name( \
+> +	static void wrapper_##fixture_name##_##test_name( \
+>  		struct __test_metadata *_metadata, \
+>  		struct __fixture_variant_metadata *variant) \
+>  	{ \
+> 
 
 
---bC8Y275hHWkIX4eN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu 2025-04-03 15:10:00, Sasha Levin wrote:
-> From: Stanislav Fomichev <sdf@fomichev.me>
->=20
-> [ Upstream commit 27b918007d96402aba10ed52a6af8015230f1793 ]
->=20
-> With the device instance lock, there is now a possibility of a deadlock:
-
-"now". Does the same problem exist in 5.10?
-
-Best regards,
-								Pavel
-
-> --- a/net/8021q/vlan_dev.c
-> +++ b/net/8021q/vlan_dev.c
-> @@ -272,17 +272,6 @@ static int vlan_dev_open(struct net_device *dev)
->  			goto out;
->  	}
-> =20
-> -	if (dev->flags & IFF_ALLMULTI) {
-> -		err =3D dev_set_allmulti(real_dev, 1);
-> -		if (err < 0)
-> -			goto del_unicast;
-> -	}
-> -	if (dev->flags & IFF_PROMISC) {
-> -		err =3D dev_set_promiscuity(real_dev, 1);
-> -		if (err < 0)
-> -			goto clear_allmulti;
-> -	}
-> -
->  	ether_addr_copy(vlan->real_dev_addr, real_dev->dev_addr);
-> =20
->  	if (vlan->flags & VLAN_FLAG_GVRP)
-> @@ -296,12 +285,6 @@ static int vlan_dev_open(struct net_device *dev)
->  		netif_carrier_on(dev);
->  	return 0;
-> =20
-> -clear_allmulti:
-> -	if (dev->flags & IFF_ALLMULTI)
-> -		dev_set_allmulti(real_dev, -1);
-> -del_unicast:
-> -	if (!ether_addr_equal(dev->dev_addr, real_dev->dev_addr))
-> -		dev_uc_del(real_dev, dev->dev_addr);
->  out:
->  	netif_carrier_off(dev);
->  	return err;
-> @@ -314,10 +297,6 @@ static int vlan_dev_stop(struct net_device *dev)
-> =20
->  	dev_mc_unsync(real_dev, dev);
->  	dev_uc_unsync(real_dev, dev);
-> -	if (dev->flags & IFF_ALLMULTI)
-> -		dev_set_allmulti(real_dev, -1);
-> -	if (dev->flags & IFF_PROMISC)
-> -		dev_set_promiscuity(real_dev, -1);
-> =20
->  	if (!ether_addr_equal(dev->dev_addr, real_dev->dev_addr))
->  		dev_uc_del(real_dev, dev->dev_addr);
-> @@ -474,12 +453,10 @@ static void vlan_dev_change_rx_flags(struct net_dev=
-ice *dev, int change)
->  {
->  	struct net_device *real_dev =3D vlan_dev_priv(dev)->real_dev;
-> =20
-> -	if (dev->flags & IFF_UP) {
-> -		if (change & IFF_ALLMULTI)
-> -			dev_set_allmulti(real_dev, dev->flags & IFF_ALLMULTI ? 1 : -1);
-> -		if (change & IFF_PROMISC)
-> -			dev_set_promiscuity(real_dev, dev->flags & IFF_PROMISC ? 1 : -1);
-> -	}
-> +	if (change & IFF_ALLMULTI)
-> +		dev_set_allmulti(real_dev, dev->flags & IFF_ALLMULTI ? 1 : -1);
-> +	if (change & IFF_PROMISC)
-> +		dev_set_promiscuity(real_dev, dev->flags & IFF_PROMISC ? 1 : -1);
->  }
-> =20
->  static void vlan_dev_set_rx_mode(struct net_device *vlan_dev)
-
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---bC8Y275hHWkIX4eN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaAKFZQAKCRAw5/Bqldv6
-8kP0AKDB9qbJiZzzNyzkREcjPbqHR+RpRgCgmExl2z2MS8hgpfFzPz8xpNPeFPM=
-=S3W+
------END PGP SIGNATURE-----
-
---bC8Y275hHWkIX4eN--
+-- 
+Regards,
+Usama
