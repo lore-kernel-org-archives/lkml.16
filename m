@@ -1,214 +1,155 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11012063.outbound.protection.outlook.com [40.107.75.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073C514B08A
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 14:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744985298; cv=none; b=PaPqztt+4LMhZBtqV/OPlq3LIjPNLs07SMa1Ae1+FzmHTN0xznxGShdALM9luS/PG70Bek5Dc9THGlSE0Vutk9HUMEjWSfmtwORYM+gSCgFEOa3hbTglqePCE80ES3HWplnmU5kpUiWg6wt3ScfcwMwoJU1kt/CcVaHuWqP3IkA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744985298; c=relaxed/simple;
-	bh=IayX/lC6Ac5LLou9XvA+24J24Cy5CiIa+lsRgxv//FU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mFYbigWRTklPjwxHCXNCZWoMGJuBd69oN8H6iRkhOJvPDpqLnfoHZV2kYEE7i47XKynmHp02AZaSsx2zxlD6zZ3Z2jQGaPOix7hLkykz8QaBuH0zbGXYrYStGItfftBEMcVTYZjN1w+xOZlU9iJ5B3cFwvT3EdgH4ZtyWU2sApU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Htc+xI3a; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA8214A62B;
+	Fri, 18 Apr 2025 14:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744985315; cv=fail; b=lXqocS5qXW9XBSgJdC6GN7+n5Hsca2X4cX6JsosMa8JGLOcz95CraF+wog1uGibZn812m9sdh9xyWuPn1rKJQM+xe0b6MzMpc33flOshNWmKsczyZEqfUvQjBILHoMLIhq8SYjMH7XqwsxUHPQt2ROG6WHV2j3+SiX3UkcD6IeI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744985315; c=relaxed/simple;
+	bh=206BqdlajjLRZ6wJSnRmr2hOjgBS9A9c/YBmkhzZ5P0=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=KVH9vbGM/kRfxVxwxWMa1a4fkJm2Uv4xmAEGByzSZtO3dDxW9aYhFFoHI/HG37WalAndld0oQTfqQHvuUXF67H3NsU4ys3+MiuPYxDrEPQUwdg3Pc4ZOmybZ0SDF9/0TkQMg7n2NZ0ZvG/oheTTUq2DPXe1re3MJbRe+d3m1QvA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b=Z7WwMvWc; arc=fail smtp.client-ip=40.107.75.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Htc+xI3a"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53I1q6HF013325
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 14:08:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Q/vH+9Sfq6E3MaBIjp72hTZbUkDV0ZuaPmRDacgJ8I8=; b=Htc+xI3a+RIMOw+G
-	YTWHnb9WGYHf2kPEy+MOCEFV5bGRzhlEHFpazQdHh8RNMnvqcqa+ckgCdpKniKB7
-	usphUSb2Q2HoHtDJzTluHliuoLXrwzTPcyk4BSCDFvsl4v0qyjtUWHHGquproMRZ
-	DFMqNVmsowLqaZjAY2jfPKD/Yk87/0aUL7qaZ21x9GffpQgqx6l+g3BxutboGJlD
-	Ugf32k1HLWGBN8McrszsqW6e9+LAwvdxRbLH0124Ballsn7NFoYVJqM5g3Y8XRCH
-	jkw8c2unol3h+TSzx5HX5oyOgC2iyeF+MAa6ERJjQXBLln4v84/NH1GF1y30+6m+
-	BUQYOg==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4628rvfemr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 14:08:16 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2ff798e8c90so1792654a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 07:08:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744985295; x=1745590095;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q/vH+9Sfq6E3MaBIjp72hTZbUkDV0ZuaPmRDacgJ8I8=;
-        b=lEOZdDR1Lt63Hll/2g1C6SCKTTsCTObDZtl5pa2Kqg5FeYqtSZ6HOfxOa+Z9VnFeco
-         pchytY4hs+b6iCovVEObFIVugtBYkQF5kJi8iB9p17EgqXUGetKzzK2dI5Vw65EBzQgF
-         eSu5wFCeEu2hKzeTOiZot375le3L94apU1tKnLk+LqJrd4IOzrKN/qaEQMuFH6mgvFSm
-         u2hdShcS1TXQ56bHHNtkhvVy0qEY9TmDztjefC/e3naToUbkUu0v3zaUmLSxVtAm8+n0
-         LranoyHk0bFknHoElTbAhqQvsyJv5M/NVTXG68+KyN8RE4ZZ8IlZ5FFmx9WBn8AN90eY
-         h7Tw==
-X-Forwarded-Encrypted: i=1; AJvYcCV88Udu0JNmXOUq0lWnDhZIDoeA/4ttFYAGdD6daCE6U8XKUgDsL5gMBdS8bRu/vQw0iMjmIZrvzD75ZCU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxV40XR2LXbU7zUFz97i6m2uO3yHjSxO1Tur/gXVGdJsqeq360i
-	tVXOztHZuxJtac7hE0FnpOjM2TU9YA6mks2NTY1+HFzNyDvzir8nZqj3iQaxm1sQ8WaImt3+xKm
-	prlQhCCGYMgkMhNMJFbxg7RvzPU18CkR3PvhjHAQoNrOoZSlnesJeR7hp/jx0+FM=
-X-Gm-Gg: ASbGncsvO2eBiAMQY7+VINXjozxLuLAIMfEVxPZ0JQKyHlc1dqnNw8dMVv9w67c+wir
-	CeUVBNa90vHA+uykXPI7qPTW/0aL9+YRJEBCzs8nxSjF6k7l3f+YNfCHoQ0ADf5NirAnp0gPykd
-	1sEKfds4kjd3LCenNg9ueLUg/O+Ykjl931TgZC7tTn6gV1hITr540ytkCVabDGH4LchkLL8WQGL
-	fiFbNv53qqGuESwOUcj8hHVuusYalthc+KyOtCzWz1yf1XCLybOygvinN3hT8hakrEyXinowXns
-	dhKLgog9xB6dE79LYUEfL2tx1Kv36bSPF3aiMFDLNMU1queRt3izai8JOPNnmQ==
-X-Received: by 2002:a17:90a:d007:b0:2fa:1e3e:9be5 with SMTP id 98e67ed59e1d1-3087ba5c5d9mr5839807a91.0.1744985294974;
-        Fri, 18 Apr 2025 07:08:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF14QcScPUI1D6ZK2Za7KoGAsaU+ngiPt4WNGXk32CEHr4LdIhzYP9MJqRQIGZbWAhQyDWpGQ==
-X-Received: by 2002:a17:90a:d007:b0:2fa:1e3e:9be5 with SMTP id 98e67ed59e1d1-3087ba5c5d9mr5839750a91.0.1744985294581;
-        Fri, 18 Apr 2025 07:08:14 -0700 (PDT)
-Received: from [10.226.59.182] (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087e05db51sm1256470a91.43.2025.04.18.07.08.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Apr 2025 07:08:14 -0700 (PDT)
-Message-ID: <822543a0-d7e1-4aec-ae1b-018b32985d1f@oss.qualcomm.com>
-Date: Fri, 18 Apr 2025 08:08:11 -0600
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b="Z7WwMvWc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QeHWkXHyyFjc7cZ6UkAU+/MYTeRwdXdBAww+XKmYes9NqNMECCxM7UBbO99H/uYhd6J6vmIhnYGqOgWzLPpyA+NZGCtE0wnctAmio+d6HhKj+6SbK96/hA9/8DZccIaDBKEbdvsIFl3Uygaj6v0JIVf/Z95qciAhIaWD5OZQKZjKXWnvBgB10dIoMhuNtKFOCgp8xKlkRD/DUDuC/rm9KFYC3Bbinhh5lC9cqa1dshVxO8l2sKMrgJtWF5WBzJUMOhXy3MrrDe/Pq1WFNCCC9I9QuHuYZO8DWbp+aPtkfZWEbhImszNKj14mLfO2aOkyIiyLx/ZDnm3B3rGH86mYGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=206BqdlajjLRZ6wJSnRmr2hOjgBS9A9c/YBmkhzZ5P0=;
+ b=igrfIFkvZ4EEKRLnmfewfspdIepttRVJXD256CeunyYpHL9NmmHxdkiuuV+qWn8bK/4ZJpeWMJHkSNGNLLTwbBI8CJ82c4wIF5HAoeI5OOhiLUb4lbLDwr3sQhvpXs4APBz6ufDs88hTyPKXILPJqq0ZBRIZGugT3/Gw0vi5lL0PXdDYA/hVZ+k2TN8q5CAha9mDJLfH8Rt5w84mKtBnVC5QLo1B8Wml2U8GWhiuoqLVYBU9wKtXydV50W5JrTYdS6rRDAUfRZ7qrnBg5ecTXVAJJx/G3nhwz8XPAlugJsidAh20QeAX5dJDkPdOiEodLzoyDGp5RvVk2KMR17EQFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=206BqdlajjLRZ6wJSnRmr2hOjgBS9A9c/YBmkhzZ5P0=;
+ b=Z7WwMvWcyVJjGoQ/iOmhJnhf+ITP3/m0pwuQmBr19jvKgxiYTABGnBReE2Ed5+bHYz4t/L8Q25uU1EncfR0dyW4hBRZMnBiAVTmouGUep8P1N36xGDBf5hUI1RXOSVNkdkMzxrPDFcTLOoaQj9jegizrreP17PD46n/391Hu9SpMRznZKL9P0h8inyH7FdlpFUhNwb7+Jx9fP0LXaJociZog2CfKSQtPrr0my9x4sYwBcqzhy5TkAPPEfjlxy5ilN0SV6WnNXRy3eOKRQyE+EKU2Oah834WjjUdpK1V3jZot7E26cHpcKCaBbwjR8SFvxhfpOj3sm3QQXmyxwwLELA==
+Received: from JH0PR06MB7294.apcprd06.prod.outlook.com (2603:1096:990:a1::6)
+ by SEZPR06MB7023.apcprd06.prod.outlook.com (2603:1096:101:1f4::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Fri, 18 Apr
+ 2025 14:08:30 +0000
+Received: from JH0PR06MB7294.apcprd06.prod.outlook.com
+ ([fe80::6bd3:c327:c5c2:bbbe]) by JH0PR06MB7294.apcprd06.prod.outlook.com
+ ([fe80::6bd3:c327:c5c2:bbbe%6]) with mapi id 15.20.8655.022; Fri, 18 Apr 2025
+ 14:08:30 +0000
+From: "Chen, Jay" <jay.chen@siemens.com>
+To: Mathias Nyman <mathias.nyman@intel.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Shao, Tzi
+ Yang" <tziyang.shao@siemens.com>
+Subject: Recall: RE: [Bug 220033] xhci: Compliance Issue - avg_trb_len not set
+ for EP0 during Address Device Command
+Thread-Topic: RE: [Bug 220033] xhci: Compliance Issue - avg_trb_len not set
+ for EP0 during Address Device Command
+Thread-Index: AQHbsGtclQARBO8c00m2qxvCfCEeGg==
+X-CallingTelephoneNumber: IPM.Note
+X-VoiceMessageDuration: 1
+X-FaxNumberOfPages: 0
+Date: Fri, 18 Apr 2025 14:08:30 +0000
+Message-ID:
+ <JH0PR06MB7294C9054DB4408B46E7AC1483BF2@JH0PR06MB7294.apcprd06.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+x-ms-traffictypediagnostic:
+ JH0PR06MB7294:EE_|SEZPR06MB7023:EE_LegacyOutlookRecall
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: aff81819-6f0a-48e3-6798-08dd7e827f52
+x-ms-exchange-recallreportgenerated: true
+x-ms-exchange-recallreportcfmgenerated: true
+x-ms-exchange-atpmessageproperties: SA
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?03ra+Ttqlg02q9ivnjJVJyqj4U2L3j6WH5c5+zrf+EmuTYbONKKkCSqt/jbz?=
+ =?us-ascii?Q?LqtCYbKnHcK9HYNBZWYtD+mjDG0xvcreHeM36TCavZxdiCEbH7Gl7hl3LhBK?=
+ =?us-ascii?Q?0Lxj7xsnGjxZt5tOPJYSIEQhTMD6FuUzi26slDFtux/KXIWkGiY73VI5V6hg?=
+ =?us-ascii?Q?B6oUbvaZgGW6NBI1TKWLWZimWJf+upn8VG+Ecu7rzlnnp5MVAW1bzVsU4wWN?=
+ =?us-ascii?Q?Bc2mtToA5Zh0KhtkdXrjCvndIaMBb4kKV2NoQHnbolgjpEcxfnLz5BFst1eT?=
+ =?us-ascii?Q?VzWLIbDN2A2GcBOuRCEUFHPJhQN7svXYky7j0OIH7qPgNFvhcs15wTLMxkMb?=
+ =?us-ascii?Q?V16ESIrOiFWU4o/LEybWJo4xuIfSo2aDuKOAKx2NDfxhjOO2Bl9IA4w3HPpO?=
+ =?us-ascii?Q?8ehLiXgUVIAjeAWVGEARVZ3N2uk3XXHpIBmdre/NlEvejOe1vmllwH+ow99n?=
+ =?us-ascii?Q?mj7mMKOPNhzMMYjItJSc2YNuZ8iw6+SW3sDlCmtyA3gPvkxutNlTPR6VzEcb?=
+ =?us-ascii?Q?iA1mQaSm/oyUVqtY1BnAYCcyqk/d9neSo5he+OBX7NrMhYaCAA+k9TIid6yM?=
+ =?us-ascii?Q?1ezUbrHZam3m4Ve7rZPwhCtfEjj3BsZ84t/Af1E+l4MUZ/wTXkvmAa2ryvNM?=
+ =?us-ascii?Q?o7E/2k6r694OuK2pp8E3OQysr1BMx/bqk1Hq7/OwmOTcL0q+q4l645XIiBDF?=
+ =?us-ascii?Q?wOPXT3bIu4gW70m3afGn1/bO1T71vLOIy1PSQXDpzHBa6Us8sYbkRgVK5LTP?=
+ =?us-ascii?Q?7UX5LkGlnZli+kx8HDSc5D5tT3pTnrVWICgUfyqbU2rYJXFTE1NDXwJvDKJ+?=
+ =?us-ascii?Q?bQLru8vpeu5c/LBRYsd0c5qfYredJ8/jEd29FLmeiTYgkHK8L7KEs5y27wn8?=
+ =?us-ascii?Q?ssrb6x5klXd0L4uXqaIaMnjBJk+R5/RfWbHMlJt+Isgv6fH1mo4mR1gMPrwF?=
+ =?us-ascii?Q?o7iQH6+hijv69QFVwVQbdazHuWXKI6BAmBR5neLWlW+fFOyaNwCgIlSg6Kug?=
+ =?us-ascii?Q?jSmyO9vucm43cTJczFSsKesw828ME2jHn2KGTZ65V8giB03NIJIP8uehYZWm?=
+ =?us-ascii?Q?j3nTZuWY9IAKuu1cJIDrvwwcsWvWrstIuWBVOo2z28OGxZe8JsBigDIHHGOT?=
+ =?us-ascii?Q?3ml/GhQ7FSX2R/iGyPAvKWrcgWhqWY0/VVEPr1EJK06SPf7yWtmHbeexA9ot?=
+ =?us-ascii?Q?qzAtG5CSYOa98ZtCSX5jElzmnan16VBkE4Od54bZfThSeMIYV9XEbPQRv5bk?=
+ =?us-ascii?Q?AqdjHT3KO9+c4g9EUFlwkGNbgJkRsGKh3J2JK53QTfesKh/2hqzkpqUEA3PH?=
+ =?us-ascii?Q?4Nk3M2xVhy1NxoyOVQGiA9FrpkeFc+nZ2pSMijpM9PUb5JEoZjUsqx7Qt4ps?=
+ =?us-ascii?Q?Z5LTTK0QivEtROYAcCwp2WAiGduGb2Nx5jkL3we19rRDHOkdkZVspbSwZ2CH?=
+ =?us-ascii?Q?yWq+shnwcbO7tRJdNIL54iucqdfqvVURkexmIubYIDboi3+jFJfrKMIM0wOW?=
+ =?us-ascii?Q?TAn3qjaXDh3Wi9Q=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:JH0PR06MB7294.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?pmVQfEOZFVpEh+kPKihtG7htAFbugqkYwbht4NmqVrDqsgUMZEQAxK68pETi?=
+ =?us-ascii?Q?CL99pj3dU7dKuWDKBYS50l6B9qifeATSG6jP7oCKgFjGv4n45f1n26GQEo9L?=
+ =?us-ascii?Q?1n4jKPn81LiGOud8yMiN4wMV75AYfAPajIpyk3+6d98mbmU4wROv3p6yaIUG?=
+ =?us-ascii?Q?l023zNENgELA2rqyyEAwzpjLBkDDEwenv78zTfTaTw/9P31dcQhGJabxJe4M?=
+ =?us-ascii?Q?6Iw7kAuw+83kj2O4mCt6b7sWV5IJXsQD/9LYWXwuEWbV6/gBXP8OtpNhYCFd?=
+ =?us-ascii?Q?uND6smNTYw498pWB8e7eqQV+tua1zDK1NhygiPDibTIrMNI3TG+mIS4gpugy?=
+ =?us-ascii?Q?wh4Ovk4WcavwUnizZldZX1CPP3+6uEkSGhDPrOzCjlgGqBOUh8A4LkADS6fa?=
+ =?us-ascii?Q?0QY1Dy4gInzracQrejMe3BdtMIZTXmKjU3JoFmOnPrhZSQyafSDywoi3utKC?=
+ =?us-ascii?Q?cKxuXsVQhpHUnBFAjN+DmZgl8ShUm2ndJXCKA5EUO9unw5tQe6iC7U/LqVUy?=
+ =?us-ascii?Q?Px6ZBZwQzPm1tRwjX5dSyuwGdlH/w+gSbNLoGk0Brz+GjqQ5YR9oPEjCNUDy?=
+ =?us-ascii?Q?IN+iMoy+ZEM1kI9HxghK+0avHhaksppIREtXg2RjFg/fsdaJF62SfrPQ0pUT?=
+ =?us-ascii?Q?T6kROwrwQ5Oa2yM0JBZJTMyL8sOEBV0tyr9e+X5LDb4m5Rb1WFmXAGciQs3I?=
+ =?us-ascii?Q?1Lt5YyYsZMhBFBbtO7nI5WtDSaD+kMJm34/9AcLJVTLAGQO/QuKbOtrDdKD6?=
+ =?us-ascii?Q?0VTFM+dmykUkdYtrTIY98F4JSHyvvgNzHYmF5n8nL29H6bZF8r7dURzRbHA2?=
+ =?us-ascii?Q?/YS4WWeA3bn9UrWDqfwtrRyNvdd2O/y5N56mB8QRuRa9ln3+fL6M0OGYFk+7?=
+ =?us-ascii?Q?1YrDF9+AH24W0RqDCEd+LhIxpBIKRgVWTfudjt41QH6SjpQ9NLMaXZMPP/iW?=
+ =?us-ascii?Q?RZUSZyJm2UdF6hZtCm3nNoqCFz6BfY8WULlj6tcw57t1KY34ZS9nELO9T5bm?=
+ =?us-ascii?Q?IH8UlbqVrRMs0bFesBASrEaXvg6RM3LoqiNdShUuSB/2xfkpaxWkzjiEB00D?=
+ =?us-ascii?Q?bnBzpvpjALplvL4tO8iniyyShynJJdIBSmYs4OpwPnGN6l6XNFGDZ1STi15Z?=
+ =?us-ascii?Q?eimYyC8kY2wuA7M9QzDv4MNv5A3MsagedEiL1rqQANBXF2nOeiQF2khtNCT9?=
+ =?us-ascii?Q?o0jvAALTWkE6DbOxZ2HZTQ2uXsiBhEen52a5djLI5bB1AMRIDLVrHZ93lL+x?=
+ =?us-ascii?Q?KE8Fev++mXPzc7rwLNNZ+hl8bWUmbwVMPRdB+0/SBE1AfvJ+OPyFvIIKX5f5?=
+ =?us-ascii?Q?ozwMNo0oCM64ruGyHqhNLxnE2XxhcEmefWwiQ771OplCjZydGjwGFjNmmDam?=
+ =?us-ascii?Q?u10g2XJyibrT7JUF6YKoI3tR0Q+C+cY0qBlmd2UpS8E3kAZPCIHfHOczx3WK?=
+ =?us-ascii?Q?zccwSZ61GabsAhYT9ryPKmjowh7y63vel1hyYYrcD655I/xSBZ5m6K3FHhwX?=
+ =?us-ascii?Q?Nbw9mKv7An6EsGFBCjnB1SsFfTVVgdguUtb3gACAL+1FADyrsku2V/zwlDpz?=
+ =?us-ascii?Q?djcuSrGFeaYJaa3ogCGS19KxIx2C6+9zSpEHhmsf?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] bus: mhi: host: don't free bhie tables during
- suspend/hibernation
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-        Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jeff Johnson
- <jjohnson@kernel.org>,
-        Jeffrey Hugo <quic_jhugo@quicinc.com>, Yan Zhen <yanzhen@vivo.com>,
-        Youssef Samir <quic_yabdulra@quicinc.com>,
-        Qiang Yu <quic_qianyu@quicinc.com>, Alex Elder <elder@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kunwu Chan <chentao@kylinos.cn>
-Cc: kernel@collabora.com, mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ath11k@lists.infradead.org
-References: <20250410145704.207969-1-usama.anjum@collabora.com>
- <ba09ae0c-fe8d-8f4e-a1b8-9c7e5913c84e@quicinc.com>
- <fc9ca0da-9f6a-42b5-aa79-abcd43c97043@collabora.com>
- <e0159cb8-fe21-7f71-1ebe-744ed26bd698@quicinc.com>
- <85580a01-289a-461b-b0f1-38fa1b96717c@collabora.com>
- <1c0b2217-49d9-360c-ed60-db517eaf2ccc@quicinc.com>
- <7d6b074c-8499-4984-b235-d1285b006ab3@collabora.com>
- <ad5e99e8-3ff1-4727-aed6-528ac747f409@oss.qualcomm.com>
- <5dcf3ddf-6b0a-4b4c-b4a3-6e015a7e2f53@collabora.com>
-Content-Language: en-US
-From: Jeff Hugo <jeff.hugo@oss.qualcomm.com>
-In-Reply-To: <5dcf3ddf-6b0a-4b4c-b4a3-6e015a7e2f53@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: O_xujq9m6VI5M-SGyj6d2-6uehyN78xk
-X-Authority-Analysis: v=2.4 cv=RbSQC0tv c=1 sm=1 tr=0 ts=68025cd0 cx=c_pps a=vVfyC5vLCtgYJKYeQD43oA==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=UAfhXhcpWJM5KsTPzmsA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=rl5im9kqc5Lf4LNbBjHf:22
-X-Proofpoint-GUID: O_xujq9m6VI5M-SGyj6d2-6uehyN78xk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-18_05,2025-04-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 adultscore=0 impostorscore=0 clxscore=1015 bulkscore=0
- phishscore=0 priorityscore=1501 spamscore=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504180104
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: JH0PR06MB7294.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aff81819-6f0a-48e3-6798-08dd7e827f52
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2025 14:08:30.3085
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4ZHgObkhGqS0JWVeJvf+X5c43ZZZvffJC1NTpOAR0W6j+P21w6OCR8b5VimLkWDV4lJ268W8itK+L4M8IDEIAQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB7023
 
-On 4/18/2025 2:10 AM, Muhammad Usama Anjum wrote:
-> On 4/14/25 7:14 PM, Jeff Hugo wrote:
->> On 4/14/2025 1:32 AM, Muhammad Usama Anjum wrote:
->>> On 4/12/25 6:22 AM, Krishna Chaitanya Chundru wrote:
->>>>
->>>> On 4/12/2025 12:02 AM, Muhammad Usama Anjum wrote:
->>>>> On 4/11/25 1:39 PM, Krishna Chaitanya Chundru wrote:
->>>>>>
->>>>>>
->>>>>> On 4/11/2025 12:32 PM, Muhammad Usama Anjum wrote:
->>>>>>> On 4/11/25 8:37 AM, Krishna Chaitanya Chundru wrote:
->>>>>>>>
->>>>>>>>
->>>>>>>> On 4/10/2025 8:26 PM, Muhammad Usama Anjum wrote:
->>>>>>>>> Fix dma_direct_alloc() failure at resume time during bhie_table
->>>>>>>>> allocation. There is a crash report where at resume time, the
->>>>>>>>> memory
->>>>>>>>> from the dma doesn't get allocated and MHI fails to re-initialize.
->>>>>>>>> There may be fragmentation of some kind which fails the allocation
->>>>>>>>> call.
->>>>>>>>>
->>>>>>>>> To fix it, don't free the memory at power down during suspend /
->>>>>>>>> hibernation. Instead, use the same allocated memory again after
->>>>>>>>> every
->>>>>>>>> resume / hibernation. This patch has been tested with resume and
->>>>>>>>> hibernation both.
->>>>>>>>>
->>>>>>>>> The rddm is of constant size for a given hardware. While the
->>>>>>>>> fbc_image
->>>>>>>>> size depends on the firmware. If the firmware changes, we'll
->>>>>>>>> free and
->>>>>>>> If firmware image will change between suspend and resume ?
->>>>>>> Yes, correct.
->>>>>>>
->>>>>> why the firmware image size will change between suspend & resume?
->>>>>> who will update the firmware image after bootup?
->>>>>> It is not expected behaviour.
->>>>> I was trying to research if the firmware can change or not. I've not
->>>>> found any documentation on it.
->>>>>
->>>>> If the firmare is updated in filesystem before suspend/hibernate, would
->>>>> the new firwmare be loaded the next time kernel resumes as the older
->>>>> firmware is no where to be found?
->>>>>
->>>>> What do you think about this?
->>>>>
->>>> I don't think firmware can be updated before suspend/hibernate. I don't
->>>> see any reason why it can be updated. If you think it can be updated
->>>> please quote relevant doc.
->>> I've not found any documentation on it. Let's wait for others to review
->>> and it it cannot be updated, I'll remove this part.
->>>
->>
->> Wouldn't this be trivial to test?  Boot the device, go modify the
->> firmware on the filesystem, then go through a suspend cycle.
-> I just tested this. I've used an old firmware from last year vs the
-> latest one.
-> 
-> Firmware A: old firmware size: 5349376
-> Firmware B: new firmware size: 5165056
-> 
-> A here has bigger size.
-> 
-> 1. I loaded A at boot and then replaced the firmwares in filesystem with
-> B before syspend. At resume time, B was loaded fine by freeing the
-> bigger memory area and allocating the smaller one.
-> 
-> 2. I loaded B and then replaced A in its place before suspend. At resume
-> time, memory was freed and larger memory was allocated. But driver
-> wasn't able to initialize correctly:
-> 
-> [  184.051902] ath11k_pci 0000:03:00.0: timeout while waiting for
-> restart complete
-> [  184.051916] ath11k_pci 0000:03:00.0: failed to resume core: -110
-> [  184.051923] ath11k_pci 0000:03:00.0: PM: dpm_run_callback():
-> pci_pm_resume returns -110
-> [  184.051945] ath11k_pci 0000:03:00.0: PM: failed to resume async:
-> error -110
-> [  187.251911] ath11k_pci 0000:03:00.0: wmi command 16387 timeout
-> [  187.251924] ath11k_pci 0000:03:00.0: failed to send
-> WMI_PDEV_SET_PARAM cmd
-> [  187.251933] ath11k_pci 0000:03:00.0: failed to enable dynamic bw: -11
-> 
-> So should we generalize above that changing firmware at
-> suspend/hibernation time isn't supported. If firmware package is
-> updated, does user restarts every time?
-
-You may want to review how other devices handle this.  I can think of 
-these threads as potential reference
-
-https://lore.kernel.org/all/CAPM=9twyvq3EWkwUeoTdMMj76u_sRPmUDHWrzbzEZFQ8eL++BQ@mail.gmail.com/
-https://lore.kernel.org/all/20250207012531.621369-1-airlied@gmail.com/
-
--Jeff
+Chen, Jay (DI SW EDA DVT RD IN AVE US3) would like to recall the message, "=
+RE: [Bug 220033] xhci: Compliance Issue - avg_trb_len not set for EP0 durin=
+g Address Device Command".=
