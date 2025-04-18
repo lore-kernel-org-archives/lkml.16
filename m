@@ -1,189 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239D726FA54;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE2626FD82;
 	Fri, 18 Apr 2025 08:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744966760; cv=none; b=AFEzdQVe6YEcVhB9nGwWwi8xysO1Tkk7UVXuOhqaJG5HxJuhmMwADzzL4i+Sr90L9stKpdFKMDi+MmCVh9xWjA29c5AO4AFS8M52rvIhijXcqsY7rKdCd65/NhYLVrue8U9ddAJ7Zpdh25Htb5Lp0vhjT+V1aPy45k0OAHqvd+E=
+	t=1744966764; cv=none; b=RLfR5GgzVpFw9xz9q9rhk6fteV7yje5C4Cd0PXrCCtrZSsPRFNbiwLuW3Ht2lb6ip84bWvA9G5sP23jAY7c+p2T9s27JLkY2bQFe2N1BahQ3es2kyzCHFlh9VYJQwaN1x/7/6AWrPSj2kwNy9VY/i9kouLlS5KdMDZ0GmmrVNwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744966760; c=relaxed/simple;
-	bh=PGhLBQKQMeyXyuqv5cOedapStDNMfi9p9P2MX9PvVOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=POit+TTmgwBN+JqifRmGo6uUJwIG58QbUGKGxWBPtvu1XYHIM3vRnkGbn6bMDrOmU/pXTVOcUjNLKhOipr5SOUL1c8jMyXsj3yJBmEdPRR16dwQ+0vzPQJwhbikVLywQBnjOKJpQTTlPP/xHum91TWZIjbQ1wYRlhhfPm9Izmlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fXIIftVn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744966764; c=relaxed/simple;
+	bh=KlZox/FhfiDHrEDYrtGoIjJ878K+yX47TPz+ztcPYt0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XXlbUWiHb48WGZNsIjgSTkDJgWSwenVoMKLEFhlZArB1hVQuf5WUdX1ie3uPNRmH4WXrScXJm84GgQ6a4hXHk3WHKF3dftCXPxU1IECKuZeKo+MoEJKLrh3cUnV25T5JOy70XyaMr7HOrWj5BxhMF6xF9R4/RLmhscustmUlKQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=HnD7GPY/; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fXIIftVn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30CE0C4CEE2;
-	Fri, 18 Apr 2025 08:59:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744966759;
-	bh=PGhLBQKQMeyXyuqv5cOedapStDNMfi9p9P2MX9PvVOY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fXIIftVnIzJ/1DPPwmhlS7BkEdJoLr7Aex7uDbuW5jeh13fRazwb7ImOc8Ozd7ATI
-	 0Ek3vE91ZF9gdxHQ/yqRd50ErZb9sJxxOyjX/4cQEw8wdjqk1u7P2hcjfuhkksYhm0
-	 RChSJ6t9MdZx63xX1IBO1cUuZv+H8X4G8Y+f7FccMvHPLxVUEL03BW0eIjV1hsZc4N
-	 g1GEimZ7erlRfPHK8GhcPTRIBv1auN0tb4XlULqiTVRHYqqB+J5HXdy2c19j52G5tw
-	 tc9cxKfB9+bMZBfMMIuowFvJTSVqFKBlowgZcijBOIX0D3ZDP98IJVOzrgdJLkQFRN
-	 yjPG9LldOxLuw==
-Date: Fri, 18 Apr 2025 10:59:13 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Ian Kent <raven@themaw.net>
-Cc: Mark Brown <broonie@kernel.org>, Eric Chanudet <echanude@redhat.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ian Kent <ikent@redhat.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
-	Alexander Larsson <alexl@redhat.com>, Lucas Karpinski <lkarpins@redhat.com>, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
-Message-ID: <20250418-bekunden-virusinfektion-3ec992b21bfb@brauner>
-References: <20250408210350.749901-12-echanude@redhat.com>
- <fbbafa84-f86c-4ea4-8f41-e5ebb51173ed@sirena.org.uk>
- <20250417-wolfsrudel-zubewegt-10514f07d837@brauner>
- <fb566638-a739-41dc-bafc-aa8c74496fa4@themaw.net>
- <20250417-abartig-abfuhr-40e558b85f97@brauner>
- <20250417-outen-dreihundert-7a772f78f685@brauner>
- <7980515f-2c5f-4279-bb41-7a3b336a4e26@themaw.net>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="HnD7GPY/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=2cOFs7O7/L6f8JwExiEKzmQTdI10W4SPn5o+BQaDJHw=; b=HnD7GPY/+mHCutXBYnAlJE3wac
+	EeJ/7Og8qsfX9ScGMa/uxwMJ6ASHNNp28hbX0SLTMqL/GgTy/65C/M+hl0pteLaqkT7z9DdS/0lbu
+	S2X8UGDbfGd8JZi9+GQEKOCpk0tzcmwmo9RJUOS6lJPaG28cSZTIQioaYrDM3EJG3OTgQWuAqQttU
+	FLlyaHGKG3XBFEeDDtSFzKdWlTR5ATR2Gt/wCdNnZu7gqDSoMD5omRurzXix/Sj8sIkv1PSenuB8k
+	ba8d3denksSZfmcbp1GN+DcPxhV9j3axez0gDGbWPHH+w436h4Z3j3XsUI+slB/18Kse+maq4mnuT
+	482TkmZQ==;
+Received: from 114-44-248-24.dynamic-ip.hinet.net ([114.44.248.24] helo=gavin-HP-Z840-Workstation..)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1u5hYp-001AVr-3u; Fri, 18 Apr 2025 10:58:59 +0200
+From: Gavin Guo <gavinguo@igalia.com>
+To: linux-mm@kvack.org,
+	akpm@linux-foundation.org
+Cc: david@redhat.com,
+	willy@infradead.org,
+	ziy@nvidia.com,
+	linmiaohe@huawei.com,
+	hughd@google.com,
+	revest@google.com,
+	kernel-dev@igalia.com,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v2] mm/huge_memory: fix dereferencing invalid pmd migration entry
+Date: Fri, 18 Apr 2025 16:58:02 +0800
+Message-ID: <20250418085802.2973519-1-gavinguo@igalia.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <7980515f-2c5f-4279-bb41-7a3b336a4e26@themaw.net>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 18, 2025 at 08:31:03AM +0800, Ian Kent wrote:
-> On 17/4/25 23:12, Christian Brauner wrote:
-> > On Thu, Apr 17, 2025 at 01:31:40PM +0200, Christian Brauner wrote:
-> > > On Thu, Apr 17, 2025 at 06:17:01PM +0800, Ian Kent wrote:
-> > > > On 17/4/25 17:01, Christian Brauner wrote:
-> > > > > On Wed, Apr 16, 2025 at 11:11:51PM +0100, Mark Brown wrote:
-> > > > > > On Tue, Apr 08, 2025 at 04:58:34PM -0400, Eric Chanudet wrote:
-> > > > > > > Defer releasing the detached file-system when calling namespace_unlock()
-> > > > > > > during a lazy umount to return faster.
-> > > > > > > 
-> > > > > > > When requesting MNT_DETACH, the caller does not expect the file-system
-> > > > > > > to be shut down upon returning from the syscall. Calling
-> > > > > > > synchronize_rcu_expedited() has a significant cost on RT kernel that
-> > > > > > > defaults to rcupdate.rcu_normal_after_boot=1. Queue the detached struct
-> > > > > > > mount in a separate list and put it on a workqueue to run post RCU
-> > > > > > > grace-period.
-> > > > > > For the past couple of days we've been seeing failures in a bunch of LTP
-> > > > > > filesystem related tests on various arm64 systems.  The failures are
-> > > > > > mostly (I think all) in the form:
-> > > > > > 
-> > > > > > 20101 10:12:40.378045  tst_test.c:1833: TINFO: === Testing on vfat ===
-> > > > > > 20102 10:12:40.385091  tst_test.c:1170: TINFO: Formatting /dev/loop0 with vfat opts='' extra opts=''
-> > > > > > 20103 10:12:40.391032  mkfs.vfat: unable to open /dev/loop0: Device or resource busy
-> > > > > > 20104 10:12:40.395953  tst_test.c:1170: TBROK: mkfs.vfat failed with exit code 1
-> > > > > > 
-> > > > > > ie, a failure to stand up the test environment on the loopback device
-> > > > > > all happening immediately after some other filesystem related test which
-> > > > > > also used the loop device.  A bisect points to commit a6c7a78f1b6b97
-> > > > > > which is this, which does look rather relevant.  LTP is obviously being
-> > > > > > very much an edge case here.
-> > > > > Hah, here's something I didn't consider and that I should've caught.
-> > > > > 
-> > > > > Look, on current mainline no matter if MNT_DETACH/UMOUNT_SYNC or
-> > > > > non-MNT_DETACH/UMOUNT_SYNC. The mntput() calls after the
-> > > > > synchronize_rcu_expedited() calls will end up in task_work():
-> > > > > 
-> > > > >           if (likely(!(mnt->mnt.mnt_flags & MNT_INTERNAL))) {
-> > > > >                   struct task_struct *task = current;
-> > > > >                   if (likely(!(task->flags & PF_KTHREAD))) {
-> > > > >                           init_task_work(&mnt->mnt_rcu, __cleanup_mnt);
-> > > > >                           if (!task_work_add(task, &mnt->mnt_rcu, TWA_RESUME))
-> > > > >                                   return;
-> > > > >                   }
-> > > > >                   if (llist_add(&mnt->mnt_llist, &delayed_mntput_list))
-> > > > >                           schedule_delayed_work(&delayed_mntput_work, 1);
-> > > > >                   return;
-> > > > >           }
-> > > > > 
-> > > > > because all of those mntput()s are done from the task's contect.
-> > > > > 
-> > > > > IOW, if userspace does umount(MNT_DETACH) and the task has returned to
-> > > > > userspace it is guaranteed that all calls to cleanup_mnt() are done.
-> > > > > 
-> > > > > With your change that simply isn't true anymore. The call to
-> > > > > queue_rcu_work() will offload those mntput() to be done from a kthread.
-> > > > > That in turn means all those mntputs end up on the delayed_mntput_work()
-> > > > > queue. So the mounts aren't cleaned up by the time the task returns to
-> > > > > userspace.
-> > > > > 
-> > > > > And that's likely problematic even for the explicit MNT_DETACH use-case
-> > > > > because it means EBUSY errors are a lot more likely to be seen by
-> > > > > concurrent mounters especially for loop devices.
-> > > > > 
-> > > > > And fwiw, this is exactly what I pointed out in a prior posting to this
-> > > > > patch series.
-> > > > And I didn't understand what you said then but this problem is more
-> > > > 
-> > > > understandable to me now.
-> > I mean I'm saying it could be problematic for the MNT_DETACH case. I'm
-> > not sure how likely it is. If some process P1 does MNT_DETACH on a loop
-> > device and then another process P2 wants to use that loop device and
-> > sess EBUSY then we don't care. That can already happen. But even in this
-> > case I'm not sure if there aren't subtle ways where this will bite us.
-> > 
-> > But there's two other problems:
-> > 
-> > (1) The real issue is with the same process P1 doing stupid stuff that
-> >      just happened to work. For example if there's code out there that
-> >      does a MNT_DETACH on a filesystem that uses a loop device
-> >      immediately followed by the desire to reuse the loop device:
-> > 
-> >      It doesn't matter whether such code must in theory already be
-> >      prepared to handle the case of seeing EBUSY after the MNT_DETACH. If
-> >      this currently just happens to work because we guarantee that the
-> >      last mntput() and cleanup_mnt() will have been done when the caller
-> >      returns to userspace it's a uapi break plain and simple.
-> > 
-> >      This implicit guarantee isn't there anymore after your patch because
-> >      the final mntput() from is done from the system_unbound_wq which has
-> >      the consequence that the cleanup_mnt() is done from the
-> >      delayed_mntput_work workqeueue. And that leads to problem number
-> >      (2).
-> 
-> This is a bit puzzling to me.
-> 
-> 
-> All the mounts in the tree should be unhashed before any of these mntput()
-> 
-> calls so I didn't think it would be found. I'll need to look at the loop
-> 
-> device case to work out how it's finding (or holing onto) the stale mount
-> 
-> and concluding it's busy.
+When migrating a THP, concurrent access to the PMD migration entry
+during a deferred split scan can lead to a invalid address access, as
+illustrated below. To prevent this page fault, it is necessary to check
+the PMD migration entry and return early. In this context, there is no
+need to use pmd_to_swp_entry and pfn_swap_entry_to_page to verify the
+equality of the target folio. Since the PMD migration entry is locked,
+it cannot be served as the target.
 
-Say you do:
+Mailing list discussion and explanation from Hugh Dickins:
+"An anon_vma lookup points to a location which may contain the folio of
+interest, but might instead contain another folio: and weeding out those
+other folios is precisely what the "folio != pmd_folio((*pmd)" check
+(and the "risk of replacing the wrong folio" comment a few lines above
+it) is for."
 
-mount(/dev/loop0 /mnt);
+BUG: unable to handle page fault for address: ffffea60001db008
+CPU: 0 UID: 0 PID: 2199114 Comm: tee Not tainted 6.14.0+ #4 NONE
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:split_huge_pmd_locked+0x3b5/0x2b60
+Call Trace:
+<TASK>
+try_to_migrate_one+0x28c/0x3730
+rmap_walk_anon+0x4f6/0x770
+unmap_folio+0x196/0x1f0
+split_huge_page_to_list_to_order+0x9f6/0x1560
+deferred_split_scan+0xac5/0x12a0
+shrinker_debugfs_scan_write+0x376/0x470
+full_proxy_write+0x15c/0x220
+vfs_write+0x2fc/0xcb0
+ksys_write+0x146/0x250
+do_syscall_64+0x6a/0x120
+entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-Unmounting that thing with or without MNT_DETACH will have the following
-effect (if no path lookup happens and it isn't kept busy otherwise):
+The bug is found by syzkaller on an internal kernel, then confirmed on
+upstream.
 
-After the task returns the loop device will be free again because
-deactivate_super() will have been called and the loop device is
-release when the relevant filesystems release the claim on the block
-device.
+Fixes: 84c3fc4e9c56 ("mm: thp: check pmd migration entry in common path")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gavin Guo <gavinguo@igalia.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: Hugh Dickins <hughd@google.com>
+Acked-by: Zi Yan <ziy@nvidia.com>
+Link: https://lore.kernel.org/all/20250414072737.1698513-1-gavinguo@igalia.com/
+---
+V1 -> V2: Add explanation from Hugh and correct the wording from page
+fault to invalid address access.
 
-IOW, if the task that just returned wanted to reuse the same loop device
-right after the umount() returned for another image file it could. It
-would succeed with or without MNT_DETACH. Because the task_work means
-that cleanup_mnt() will have been called when the task returns to
-userspace.
+ mm/huge_memory.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-But when we start offloading this to a workqueue that "guarantee" isn't
-there anymore specifically for MNT_DETACH. If the system is mighty busy
-the system_unbound_wq that does the mntput() and the delayed_mntput_work
-workqueue that would ultimately do the cleanup_mnt() and thus
-deactivate_super() to release the loop device could be run way way after
-the task has returned to userspace. Thus, the task could prepare a new
-image file and whatever and then try to use the same loop device and it
-would fail because the workqueue hasn't gotten around to the item yet.
-And it would be pretty opaque to the caller. I have no idea how likely
-that is to become a problem. I'm just saying that is a not so subtle
-change in behavior that might be noticable.
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 2a47682d1ab7..0cb9547dcff2 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -3075,6 +3075,8 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
+ void split_huge_pmd_locked(struct vm_area_struct *vma, unsigned long address,
+ 			   pmd_t *pmd, bool freeze, struct folio *folio)
+ {
++	bool pmd_migration = is_pmd_migration_entry(*pmd);
++
+ 	VM_WARN_ON_ONCE(folio && !folio_test_pmd_mappable(folio));
+ 	VM_WARN_ON_ONCE(!IS_ALIGNED(address, HPAGE_PMD_SIZE));
+ 	VM_WARN_ON_ONCE(folio && !folio_test_locked(folio));
+@@ -3085,10 +3087,18 @@ void split_huge_pmd_locked(struct vm_area_struct *vma, unsigned long address,
+ 	 * require a folio to check the PMD against. Otherwise, there
+ 	 * is a risk of replacing the wrong folio.
+ 	 */
+-	if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) ||
+-	    is_pmd_migration_entry(*pmd)) {
+-		if (folio && folio != pmd_folio(*pmd))
+-			return;
++	if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) || pmd_migration) {
++		if (folio) {
++			/*
++			 * Do not apply pmd_folio() to a migration entry; and
++			 * folio lock guarantees that it must be of the wrong
++			 * folio anyway.
++			 */
++			if (pmd_migration)
++				return;
++			if (folio != pmd_folio(*pmd))
++				return;
++		}
+ 		__split_huge_pmd_locked(vma, pmd, address, freeze);
+ 	}
+ }
+
+base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
+-- 
+2.43.0
+
