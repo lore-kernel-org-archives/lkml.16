@@ -1,192 +1,109 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D2FE555;
-	Fri, 18 Apr 2025 19:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7E915F330
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 19:49:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745005750; cv=none; b=aqLP2O0NQvUraa7L0TjddOxbKn0HdrUg8c4nPncXKn7sFVXf8dyRAOLzry1QY22/XsT6t91rRDmsBnGKGro8OcHPwYJeaWzmHNE0rz8dYnuDz9m+wXADJgKsD15PnCv1ldiHYoV24GIGVz22kwNkPrMueIM+5HjXHLhpEDuHVaA=
+	t=1745005791; cv=none; b=MB12QTEIFH4rF6sMBwqLXYxGNsRBLUb3lbgPbm6SsdvI0aJf3O7GJD0zED7CDG5EvAKhvEp6ITYEeZury3gSZuasjSTdioK+/TUGBw63ZYL4pw76F/2zFPUpzed4NAShbWyVJt3Kqb1QCe76gTdCMQPy5vVACTUrIrZPPdQ8mjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745005750; c=relaxed/simple;
-	bh=8UVH/lHjMsF+dI2JW/nIoKO8Mv9Z2RQkwd7fDO5Umvs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OPUj/fdkoacYZAcTNMcElVjYU4gqq7s2CqqgfiZXHXTJZ+k+iWg1VN/dncxdaA4mfgc4oI15ODn80xVO1R6lj53GyA53SbNmHNVMSR7zJcfFCvmmtUD03FVGG+1GsP4IR4F12mHvazraT6HpDmJpBll7olscAv/IkLAmJ3QExiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=altnYPOM; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745005791; c=relaxed/simple;
+	bh=Y3uL99Kqb5E5URdOgn/HDsBLA/QVSVh7R87wvzeJQZk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cFpRBY1I0Xq5D1UvcED/8AotF3Yd2KB0ok8QtrhMxsDW3wIZPB2sFuXLCZWOn0G/F/I5qi6TNaTC/3kzIG2t0a49zXNzdNFWp0ycWp5I/qAOqPrEGJfIaG9C5yQ6VBThLylBWM4Z0Zg5bF7Gh1MKuhAfNYkh0SDqdRp6rcTu9r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=pI/aWJxC; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="altnYPOM"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af589091049so1593671a12.1;
-        Fri, 18 Apr 2025 12:49:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="pI/aWJxC"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39ac9aea656so2619223f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 12:49:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745005748; x=1745610548; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=H/DP2CmiwGVI+dol2y3cXMhgIWEKYb/rbMKps9cdVa4=;
-        b=altnYPOM5iu8BTaCVWIjp9G0gbHTQp3EAFUAXS/CBfvz15yptO2HeL6ZxKo/F3sfUb
-         JtG+7bjyC7uKwXyBkSSgWLgk6WYTTtQ4W/rIyvW0kRogBbyxDnWMdMTl8gXHYySJBfzQ
-         A9grL7uwMaDXBRX7uM/ZXT5E6lnvQ9v9/c5u6R4YI+Dtk2rP5u0FCFcVDkkPM1livMz/
-         vjLL4Y5k02XajCAoHTg6GTK7WMmddwVbaZPYSJp/uYSZDRsUmCu8Edj4ZYfwVzGCGdFh
-         vLEGmSeMAGAKd5NHwCHb/ECe/KuQ2AEnimmfnKJqTIsQ2CCwRMtaRMmsp5DBwkfylorW
-         FYWQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745005787; x=1745610587; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SWcOQWb/FzwxcsBkXjqRrzLFD5Nt+phtJhswCCZfnng=;
+        b=pI/aWJxCYYWAjFV+Udr0Z3ZlS3VhFm050iJ9NeQ1l7PcQ487LgmJPi9mJyr7YIZyGB
+         sJwfwBFeNX9RNj2H3mVP7GQUL2n11yPCEsorDtpBpXirneApbkSq6AvlZNULxDjppyMY
+         3NpuQ1qD0naRlf1GvI0HAi46wOVJgblfZvFoAi1r8Qb2WcdFqvw4ZPgOWl4hk5VlqugM
+         5pBhbTRgkgBPWkOOVeB+xy7HjZt9TZusyiLpiK8K+7zNzWgxyRFbQ1wYPjRt7okjl4Ho
+         0gy+tyqcSqsHV2dqySgCyibRpZTdlbTYGKcNlAexBTRvcu+DpQdVGszNEDKmAAm72R2A
+         1XZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745005748; x=1745610548;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H/DP2CmiwGVI+dol2y3cXMhgIWEKYb/rbMKps9cdVa4=;
-        b=q9oOX9FQ8PZC+DkiukNC0Q6IXB578ADnJQ/r4oVadV/ii9MAlIHAvuL99YM9Bsk4c3
-         H8M7ukz5MNDGa1k+Zhg+7GK9REYpsyQXUOJJZ+TwuyP0pFmMlhROBwidMtY2eDD5h6Yy
-         L3vt/k5q7GpIgztBd8MGh0/zTrEQS2DFz7iq6K7610AaQjooP60HqgcfLp6GGcsXFuFR
-         qEelucZ/3k6akK504YbkqI8WPv+TGWBITYR5fmpm9WtHir7s674P1QHcTQTLXMf+oLgm
-         WqB3lzW1v+BWjEEyK/ia07nlKYscaEXL4X6Ujv4/+X7dcxCXqLC0RcHgtGIciKQLAGfe
-         bOEA==
-X-Forwarded-Encrypted: i=1; AJvYcCUdaxgj66NiJNN0kQcvoFJMDE0WDnOVyoBKvSpyNi3Fwlg2EL+CIMPiGF5SjW6zFyR//Ls=@vger.kernel.org, AJvYcCXBJ/j2Bjjb2/HWXAt12HAKxtCmDEVHCzEkDoIf/dlp8/uPsnmaHSojuO2M0k6ebAEzWypUHEvG2w41Jrim@vger.kernel.org
-X-Gm-Message-State: AOJu0YzomRXV4AUE7b7bUyryXGV0V1cj5+wgz8a4ex4fIDcL789fYRji
-	fSF5iLiimQzlQcIQexr5tPDiW2GzkArzLhe9ffSzeGlcVGG8Glcy
-X-Gm-Gg: ASbGnctAdcL2BRD2rjnD04IjvRndP0u262eJsZdIY/sknMi5elEslmY00ehjwHWO8Dx
-	pHHsij4demo50jEdxdSStkzJw6x4Vgw0igsgL4Uj10fD9z3V6d80wh8sh+8X/ngxbB1ZF1WLqDW
-	l7696CPoFRE0WWuxN/IXEGI4x4y0WZHo/+oNNxI9SYNHuk0ieshh+fqaU8wM3TXezgJiuZ8NDDn
-	dI8c1DI0za/dGazjuiT3KP/3uiurfuO6pJi8UNipgV8P/L8TcuXaOV2Qiq7hDpgclzfIkB1mHTA
-	6nq9zE19lpJhjhf3SkNqeIdgNGzL/bQ5iTsm1k42EqLsqJmwWEoNjmvd22OsWh41
-X-Google-Smtp-Source: AGHT+IHA0GA+Al7VnclN+jkpAGrDhJ0RwYnWV0Z1lgR4ObuwxoGkI/svRRbYerRcNHMnNoXLeU4vEw==
-X-Received: by 2002:a17:90b:35cc:b0:2fe:a8b1:7d8 with SMTP id 98e67ed59e1d1-3087bba1699mr5931241a91.25.1745005747988;
-        Fri, 18 Apr 2025 12:49:07 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087e0feac1sm1636629a91.33.2025.04.18.12.49.07
+        d=1e100.net; s=20230601; t=1745005787; x=1745610587;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SWcOQWb/FzwxcsBkXjqRrzLFD5Nt+phtJhswCCZfnng=;
+        b=MB4CDuikfkW9bXh6De5rghEhCKAu011/8PkNtVPYJ9NHpClU8Xpixi8Yu2/2xz8I8Q
+         324ryxu8PIP76lPkObNmwh37A9KTr/k7a1MpIk3flr8Ko3QpQAOdhn5iKRsI86EOiAjl
+         AGQXpbwsnIJjtt4jjkulO2CRRS5F9T5ByOWrblllwCM9M1+QPtC/JwVfnWw8rrO+vfOM
+         JfYc1OBmsYu8chljDzdTIUNwicv+gMTJ8X3KiQhDflCVTTQlFv8G/MzJ0+gwM5EnNSUS
+         C9I5VhDKb9dUsfMV99FYRgapZtHItD2Tjipps6Ta6FpePVt1XhznutUHy15OUPn/uFPf
+         zc4w==
+X-Forwarded-Encrypted: i=1; AJvYcCVCpJI3YQrGV0QMqX7C5yboKTQAaQjEsBxUNmHn+UV5yHq9uh6gslO+bCoZ9Yz0prEehskOaR9HjTPOwyo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT+XV04W9jWtjXmZgyFC2uJuvscIwEksNRhLZ8aBiVyqfn3GYU
+	Cps3HFuFh+74GDEvsUeqDXu29zaXcnmiaLKXwFgbTGXLj+49DIefWFMuUkwYOk4=
+X-Gm-Gg: ASbGncs+iyBcpgfFfljhYjhRG5RA6BEPJvfpe120HDB9et93J4O4kw3Ur6W99TdlUwW
+	36i//ZdSfcqgNh7/n0UtZ1Tqg7Wx54ry/YEkYWtW8HzCcdAAIt192txFoKUpRVLauiGnXpluqv4
+	QQNglf5Gq2iyIMP1zlT5sxeMicextdlyii9wHThJgaAdab06rIP4UlzMYLWYrCm91JpBmZ7TxtL
+	V5iSYG5oCbc5lFKsXNGKyp+Q38K41gscZC5A1IG+AMcYQ3rWyC3fqM8Hwhy0LfwWg2U/70rRG/V
+	TDG776U1Gry8g6TWfmYE6CKmZzKPnNlDyPN+OsLJ
+X-Google-Smtp-Source: AGHT+IGfV2eBKHkjGdNUHgY7tqbduGqKcd0lyO45b1jqOpy/gF1E7xdvbOat2/h/MTv/N6tXoS1yrw==
+X-Received: by 2002:a05:6000:2907:b0:39e:f89b:85e2 with SMTP id ffacd0b85a97d-39efba5ae96mr3212423f8f.26.1745005786648;
+        Fri, 18 Apr 2025 12:49:46 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:2c35:5ff2:b98f:4e61])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43be53sm3559480f8f.41.2025.04.18.12.49.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 12:49:07 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Fri, 18 Apr 2025 12:49:06 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Andy Shevchenko <andy@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Davide Ciminaghi <ciminaghi@gnudd.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH] x86/e820: discard high memory that can't be addressed by
- 32-bit systems
-Message-ID: <ef60b9cf-1f0d-4fc1-91df-9f1c25dcd019@roeck-us.net>
-References: <Z_rDdnlSs0rts3b9@gmail.com>
- <20250413080858.743221-1-rppt@kernel.org>
+        Fri, 18 Apr 2025 12:49:46 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio fixes for v6.15-rc3
+Date: Fri, 18 Apr 2025 21:49:44 +0200
+Message-ID: <20250418194944.37742-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250413080858.743221-1-rppt@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-On Sun, Apr 13, 2025 at 11:08:58AM +0300, Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> 
-> Dave Hansen reports the following crash on a 32-bit system with
-> CONFIG_HIGHMEM=y and CONFIG_X86_PAE=y:
-> 
->   > 0xf75fe000 is the mem_map[] entry for the first page >4GB. It
->   > obviously wasn't allocated, thus the oops.
-> 
->   BUG: unable to handle page fault for address: f75fe000
->   #PF: supervisor write access in kernel mode
->   #PF: error_code(0x0002) - not-present page
->   *pdpt = 0000000002da2001 *pde = 000000000300c067 *pte = 0000000000000000
->   Oops: Oops: 0002 [#1] SMP NOPTI
->   CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc1-00288-ge618ee89561b-dirty #311 PREEMPT(undef)
->   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
->   EIP: __free_pages_core+0x3c/0x74
->   Code: c3 d3 e6 83 ec 10 89 44 24 08 89 74 24 04 c7 04 24 c6 32 3a c2 89 55 f4 e8 a9 11 45 fe 85 f6 8b 55 f4 74 19 89 d8 31 c9 66 90 <0f> ba 30 0d c7 40 1c 00 00 00 00 41 83 c0 28 39 ce 75 ed 8b
-> 
->   EAX: f75fe000 EBX: f75fe000 ECX: 00000000 EDX: 0000000a
->   ESI: 00000400 EDI: 00500000 EBP: c247becc ESP: c247beb4
->   DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00210046
->   CR0: 80050033 CR2: f75fe000 CR3: 02da6000 CR4: 000000b0
->   Call Trace:
->    memblock_free_pages+0x11/0x2c
->    memblock_free_all+0x2ce/0x3a0
->    mm_core_init+0xf5/0x320
->    start_kernel+0x296/0x79c
->    ? set_init_arg+0x70/0x70
->    ? load_ucode_bsp+0x13c/0x1a8
->    i386_start_kernel+0xad/0xb0
->    startup_32_smp+0x151/0x154
->   Modules linked in:
->   CR2: 00000000f75fe000
-> 
-> The mem_map[] is allocated up to the end of ZONE_HIGHMEM which is defined
-> by max_pfn.
-> 
-> Before 6faea3422e3b ("arch, mm: streamline HIGHMEM freeing") freeing of
-> high memory was also clamped to the end of ZONE_HIGHMEM but after
-> 6faea3422e3b memblock_free_all() tries to free memory above the of
-> ZONE_HIGHMEM as well and that causes access to mem_map[] entries beyond
-> the end of the memory map.
-> 
-> Discard the memory after max_pfn from memblock on 32-bit systems so that
-> core MM would be aware only of actually usable memory.
-> 
-> Reported-by: Dave Hansen <dave.hansen@intel.com>
-> Tested-by: Arnd Bergmann <arnd@kernel.org>
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Linus,
 
-With this patch in pending-fixes ( v6.15-rc2-434-g93ced5296772),
-all my i386 test runs crash.
+Please pull the following fix for GPIO core addressing an issue in
+the line value setter callback conversion.
 
-[    0.020893] Kernel panic - not syncing: ioapic_setup_resources: Failed to allocate 0x0000002b bytes
-[    0.021248] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc2-00434-g93ced5296772 #1 PREEMPT(undef)
-[    0.021373] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-[    0.021549] Call Trace:
-[    0.021711]  dump_stack_lvl+0x20/0x104
-[    0.022023]  dump_stack+0x12/0x18
-[    0.022064]  panic+0x2c1/0x2d8
-[    0.022116]  ? vprintk_default+0x29/0x30
-[    0.022163]  __memblock_alloc_or_panic+0x57/0x58
-[    0.022221]  io_apic_init_mappings+0x2e/0x1a8
-[    0.022284]  setup_arch+0x909/0xdac
-[    0.022338]  ? vprintk_default+0x29/0x30
-[    0.022410]  start_kernel+0x63/0x760
-[    0.022457]  ? load_ucode_bsp+0x12c/0x198
-[    0.022507]  i386_start_kernel+0x74/0x74
-[    0.022548]  startup_32_smp+0x151/0x154
-[    0.023089] ---[ end Kernel panic - not syncing: ioapic_setup_resources: Failed to allocate 0x0000002b bytes ]---
+Thanks,
+Bartosz
 
-Reverting this patch fixes the problem. Bisect log is attached for reference.
+The following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444:
 
-Guenter
+  Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
 
----
-# bad: [93ced5296772b7b704f48e4bad9fcfdf0633c780] Merge branch 'for-linux-next-fixes' of https://gitlab.freedesktop.org/drm/misc/kernel.git
-# good: [8ffd015db85fea3e15a77027fda6c02ced4d2444] Linux 6.15-rc2
-git bisect start 'HEAD' 'v6.15-rc2'
-# good: [5d6f363fc974e32dd9930fecaae63958b68a1df4] Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git
-git bisect good 5d6f363fc974e32dd9930fecaae63958b68a1df4
-# good: [1790b4a242fe119fead08fccc5bf923423c7449a] Merge branch 'dma-mapping-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/mszyprowski/linux.git
-git bisect good 1790b4a242fe119fead08fccc5bf923423c7449a
-# good: [5d37ee8a1d6455968ea3134d78223090d487c7f4] Merge branch 'fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git
-git bisect good 5d37ee8a1d6455968ea3134d78223090d487c7f4
-# good: [9d4de5ae5208548eb9c6a490ac454601f4fbf00b] Merge branch 'i2c/i2c-host-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
-git bisect good 9d4de5ae5208548eb9c6a490ac454601f4fbf00b
-# bad: [f737ab93945fb8f0213e1cccc39d028eb5d880e0] Merge branch into tip/master: 'x86/urgent'
-git bisect bad f737ab93945fb8f0213e1cccc39d028eb5d880e0
-# good: [2e7a2843d0de7677b7bb908ca006dc435e52c416] Merge branch into tip/master: 'irq/urgent'
-git bisect good 2e7a2843d0de7677b7bb908ca006dc435e52c416
-# good: [d466304c4322ad391797437cd84cca7ce1660de0] x86/cpu: Add CPU model number for Bartlett Lake CPUs with Raptor Cove cores
-git bisect good d466304c4322ad391797437cd84cca7ce1660de0
-# good: [39893b1e4ad7c4380abe4cfddaa58b34c4363bf4] Merge branch into tip/master: 'timers/urgent'
-git bisect good 39893b1e4ad7c4380abe4cfddaa58b34c4363bf4
-# bad: [1e07b9fad022e0e02215150ca1e20912e78e8ec1] x86/e820: Discard high memory that can't be addressed by 32-bit systems
-git bisect bad 1e07b9fad022e0e02215150ca1e20912e78e8ec1
-# first bad commit: [1e07b9fad022e0e02215150ca1e20912e78e8ec1] x86/e820: Discard high memory that can't be addressed by 32-bit systems
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.15-rc3
+
+for you to fetch changes up to b424bb88afb6719b30340f059bf50953424cdd9d:
+
+  gpiolib: Allow to use setters with return value for output-only gpios (2025-04-14 20:31:00 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v6.15-rc3
+
+- check for both the new AND old (deprecated) setter callback when
+  changing GPIO direction to output
+
+----------------------------------------------------------------
+Mathieu Dubois-Briand (1):
+      gpiolib: Allow to use setters with return value for output-only gpios
+
+ drivers/gpio/gpiolib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
