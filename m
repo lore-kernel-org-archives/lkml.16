@@ -1,136 +1,88 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0604E268C5D;
-	Fri, 18 Apr 2025 06:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBBA269AE3;
+	Fri, 18 Apr 2025 06:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744958670; cv=none; b=X5r9hlpK4m8+8aXX8QOML0PL01/gSnAvXIzmp67/+ilMNaI+Au9pI/+pTrEAg+GaynANMYnE6cjLiO5IAWpvue3NNcb+pLtHZP9IM0/cD1A2khy0aRdMvDsoFbwqfDwmR8rL84KWqQ8D1xQ9KvJm+9jFPsWYyTHqGOSx4NI3ufs=
+	t=1744958691; cv=none; b=tKs9KM0I1+VPrSn1y4XKN2eS3U953M4O9ttAHF7yjjNnf3t4yDIZakAgrEvezZDwcFntlV81fY/wfUh2neGkbL/v5sNN6bMxgv9WpvU1QgyjvOb4/1rR8GU+UtHvhEejlRXZsuFe+nJMvKQ+V9OuSG0t7AIPS0cqvw15YHILsDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744958670; c=relaxed/simple;
-	bh=xFjwdh5zXJsl4jdplxYeKbRKXf0sjx7mjLgO9ma1Dbc=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=NFgoHCeMaHpLiPB3dTFbcPAa5oBWEkwzH09IZ8QpoPZrYJb5EWZJ0Ho+cjS+uhLWWpzZKAWzm2mvipW/f6Pc1i3rr14klBOEXr5bNGX1QTxb6rTEfh1VGab3eF4o6etTpYhoLwh9edcPxj0Pl/JLfH0g9S1e8oLEQQhueBLH36c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0IfBuvu4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mwp4jAzo; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0IfBuvu4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mwp4jAzo"
-Date: Fri, 18 Apr 2025 06:36:19 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744958185;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BvUR9r0Nx9ybqwkRq9Dm8Rrk5uvOYBOtpGL96xkz9h0=;
-	b=0IfBuvu4Dr+cUnfFf3dFvdHx7BEyUprRF+1L7Q7BQv5GwIre5Cc4rB2ORY8G47FaFDqw1I
-	nmgTURFxwrUaA/kUZS40r/zGImF9UlPz6zY2gnNhC9FNn1VUR2Q/JBxh5f8tVaA69gLt8t
-	j2RZwlVIRuS81Dx0A0KeAdp3F081JKUeNurVo8xWon16+xHbtTPOwwAy9s5ZthtkoyG58g
-	JTLFPgf24UfxSyFL8lej2W05Zga+tgDxZMnjIhN03y6TM2jI7LAVHIEwKwNq4N7t7fcU2G
-	G1DCIEUswp/EZkUi7St9LK4nGDDVdx71qQXi25RUjkKbnZ+uJ786wLObb//9JQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744958185;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BvUR9r0Nx9ybqwkRq9Dm8Rrk5uvOYBOtpGL96xkz9h0=;
-	b=mwp4jAzobfHwc1Y4c7BP3rlZopVieA0j5oLUpWucun5ORBP0KLIDdTWYoLmBVG7919cVpz
-	9uzBnCkEzTLL3gDQ==
-From: "tip-bot2 for Sandipan Das" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/cpu/amd: Fix workaround for erratum 1054
-Cc: Sandipan Das <sandipan.das@amd.com>, Ingo Molnar <mingo@kernel.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3Ccaa057a9d6f8ad579e2f1abaa71efbd5bd4eaf6d=2E17449?=
- =?utf-8?q?56467=2Egit=2Esandipan=2Edas=40amd=2Ecom=3E?=
-References: =?utf-8?q?=3Ccaa057a9d6f8ad579e2f1abaa71efbd5bd4eaf6d=2E174495?=
- =?utf-8?q?6467=2Egit=2Esandipan=2Edas=40amd=2Ecom=3E?=
+	s=arc-20240116; t=1744958691; c=relaxed/simple;
+	bh=LrwLfBRZnZK9oZ7k+rNHR2IYtR1qCr/BvhI32qDcZrM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d32KqOywCLcE+57fygqvj1IewI00CKsHjifcTmcrJtcWiu/0ChM0wCKd+P8hlegcUx9KDHeszYgnVy+A5y/5IAd1ECVOCkL2aDv+m0N64SFQVDybHcSsEOyFvx1Bf357XtMjVtTRmwD9gRhSXVzDmz10FzCfKTWIUsZ7opawvgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Zf4xL0NVGz4f3jrg;
+	Fri, 18 Apr 2025 14:44:22 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id C56551A0359;
+	Fri, 18 Apr 2025 14:44:45 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP2 (Coremail) with SMTP id Syh0CgCnr2Lb9AFoaycGJw--.42714S3;
+	Fri, 18 Apr 2025 14:44:45 +0800 (CST)
+Message-ID: <75df71e2-5d0c-42bd-b80d-bdda5444eddb@huaweicloud.com>
+Date: Fri, 18 Apr 2025 14:44:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174495817953.31282.5641497960291856424.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH -next v3 07/10] fs: introduce FALLOC_FL_WRITE_ZEROES
+ to fallocate
+To: Christian Brauner <brauner@kernel.org>, Christoph Hellwig <hch@lst.de>
+Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
+ linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu,
+ djwong@kernel.org, john.g.garry@oracle.com, bmarzins@redhat.com,
+ chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com, yi.zhang@huawei.com,
+ chengzhihao1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
+References: <20250318073545.3518707-1-yi.zhang@huaweicloud.com>
+ <20250318073545.3518707-8-yi.zhang@huaweicloud.com>
+ <20250409103548.GC4950@lst.de>
+ <20250409-ausdauer-weingut-4025b274ee63@brauner>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <20250409-ausdauer-weingut-4025b274ee63@brauner>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:Syh0CgCnr2Lb9AFoaycGJw--.42714S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYV7kC6x804xWl14x267AKxVW5JVWrJwAF
+	c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII
+	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
+	wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
+	x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG
+	64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r
+	1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kI
+	c2xKxwCF04k20xvY0x0EwIxGrwCF54CYxVCY1x0262kKe7AKxVW8ZVWrXwCFx2IqxVCFs4
+	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
+	MI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
+	WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j
+	6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
+	BIdaVFxhVjvjDU0xZFpf9x07UZ18PUUUUU=
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-The following commit has been merged into the x86/urgent branch of tip:
+On 2025/4/9 18:50, Christian Brauner wrote:
+> On Wed, Apr 09, 2025 at 12:35:48PM +0200, Christoph Hellwig wrote:
+>> On Tue, Mar 18, 2025 at 03:35:42PM +0800, Zhang Yi wrote:
+>>> Users can check the disk support of unmap write zeroes command by
+>>> querying:
+>>>
+>>>     /sys/block/<disk>/queue/write_zeroes_unmap
+>>
+>> No, that is not in any way a good user interface.  Users need to be
+>> able to query this on a per-file basis.
+> 
+> Agreed. This should get a statx attribute most likely.
 
-Commit-ID:     f4efdb357680bef4584faedbd44b90cd53d3245f
-Gitweb:        https://git.kernel.org/tip/f4efdb357680bef4584faedbd44b90cd53d3245f
-Author:        Sandipan Das <sandipan.das@amd.com>
-AuthorDate:    Fri, 18 Apr 2025 11:49:40 +05:30
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 18 Apr 2025 08:31:07 +02:00
+Sorry for the late. Sure, I will add a statx attribute for both bdev and ext4.
 
-x86/cpu/amd: Fix workaround for erratum 1054
+Thanks,
+Yi.
 
-Erratum 1054 affects AMD Zen processors that are a part of Family 17h
-Models 00-2Fh and the workaround is to not set HWCR[IRPerfEn]. However,
-when X86_FEATURE_ZEN1 was introduced, the condition to detect unaffected
-processors was incorrectly changed in a way that the IRPerfEn bit gets
-set only for unaffected Zen 1 processors.
-
-Ensure that HWCR[IRPerfEn] is set for all unaffected processors. This
-includes a subset of Zen 1 (Family 17h Models 30h and above) and all
-later processors. Also clear X86_FEATURE_IRPERF on affected processors
-so that the IRPerfCount register is not used by other entities like the
-MSR PMU driver.
-
-Fixes: 232afb557835 ("x86/CPU/AMD: Add X86_FEATURE_ZEN1")
-Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/caa057a9d6f8ad579e2f1abaa71efbd5bd4eaf6d.1744956467.git.sandipan.das@amd.com
----
- arch/x86/kernel/cpu/amd.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index a839ff5..2b36379 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -869,6 +869,16 @@ static void init_amd_zen1(struct cpuinfo_x86 *c)
- 
- 	pr_notice_once("AMD Zen1 DIV0 bug detected. Disable SMT for full protection.\n");
- 	setup_force_cpu_bug(X86_BUG_DIV0);
-+
-+	/*
-+	 * Turn off the Instructions Retired free counter on machines that are
-+	 * susceptible to erratum #1054 "Instructions Retired Performance
-+	 * Counter May Be Inaccurate".
-+	 */
-+	if (c->x86_model < 0x30) {
-+		msr_clear_bit(MSR_K7_HWCR, MSR_K7_HWCR_IRPERF_EN_BIT);
-+		clear_cpu_cap(c, X86_FEATURE_IRPERF);
-+	}
- }
- 
- static bool cpu_has_zenbleed_microcode(void)
-@@ -1052,13 +1062,8 @@ static void init_amd(struct cpuinfo_x86 *c)
- 	if (!cpu_feature_enabled(X86_FEATURE_XENPV))
- 		set_cpu_bug(c, X86_BUG_SYSRET_SS_ATTRS);
- 
--	/*
--	 * Turn on the Instructions Retired free counter on machines not
--	 * susceptible to erratum #1054 "Instructions Retired Performance
--	 * Counter May Be Inaccurate".
--	 */
--	if (cpu_has(c, X86_FEATURE_IRPERF) &&
--	    (boot_cpu_has(X86_FEATURE_ZEN1) && c->x86_model > 0x2f))
-+	/* Enable the Instructions Retired free counter */
-+	if (cpu_has(c, X86_FEATURE_IRPERF))
- 		msr_set_bit(MSR_K7_HWCR, MSR_K7_HWCR_IRPERF_EN_BIT);
- 
- 	check_null_seg_clears_base(c);
