@@ -1,86 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E6E433C4;
-	Fri, 18 Apr 2025 16:34:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC9E1C57B2;
+	Fri, 18 Apr 2025 16:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744994044; cv=none; b=gcX2UCTghwg7tRQZFi8zzoOtTrRps9fUEYvGD8KA8XsIvu7Vq7i3PhNxU16M3EULnvb80nL8NuO0U/h/DaOYv9EPGvTZnBt+bX42DHpa1Gat+JrKQXjIbR58YrRhVSsATxDccjd6eXrvCm4CmAjINCreAfMP7S2duJYFBRk81Vk=
+	t=1744994059; cv=none; b=GHOSYPoDEVhB9QkMgKotYC83L+Xe40F3HyGDpZPEunUfrO852DZLajq4mCFwBaIa8wOKnpdRUsE+8Q8LlTw0oA3/1u73q94KmJiMukNwfIBkAsucLxaXpTJF7wPtv5wGvmjxmpn2/CgowpaHL24cgd2amuESpeEkptMGSVLaXq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744994044; c=relaxed/simple;
-	bh=ed3FOAzpZAREOk5SHpU5+5vpIY0q3AAD2Ue6wKBsD4w=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=AAxiJK0qlHlp2ICQnGcYduetg4zv/W642frOFcMkRwxzD11R4TzlDikUzGyP0XT/MAEcwt4r5Ziuln9cVfp2YDHkxj9YoSj2zBrAQXvBYHV6wpSoizlODifAH2oBY7q7h2NWhMyoDoH5OFM9J1OuFaC330CtcNO33i8D7WfuTek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ui/c38Nb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744994059; c=relaxed/simple;
+	bh=pjfHQJAcshL8dMOtbsmbjYJjoBDacDf3BLU0sbW01bQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RLEsTv+og4G/hWc1UshcpVS9yumI3K3dfbfBShRMtuV0DgfqHXakKJZKBykaWG+/eW6oHKC7ENW3S3JHMW451EVfTeLTmUNE6Lw2W/TqwjIFDW/a/HCyNyIbpQvXfvW8EJSn5Huz22XGCuaXrD6CIqepHMXNxiIaPcbPtI4ywj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PDuhtAZb; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ui/c38Nb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21E0BC4CEE2;
-	Fri, 18 Apr 2025 16:34:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744994043;
-	bh=ed3FOAzpZAREOk5SHpU5+5vpIY0q3AAD2Ue6wKBsD4w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ui/c38NbH9ruZHxr8vvOvTLlkpoR0fAjRPRj/AoBYuFSyPo6Bdg4oK2pwjR9+lDbV
-	 97EHazWSbHuoTN7bNvnbWYCV2MiXK4ccaJ11/MLxaAnYjCg3AqZCxjduTZzZoG+Z3m
-	 wrH0kqYAkGSn0p4oIT+ICPA6wHS+iQ4gJ1EdSgjpmLC+Sx6L8fLJ7B1EJmj8bfwSwZ
-	 L5VJcVcEZQ88MjuWWjeMpLoZ+7uciEZPY/a8W97aDd8Sq8k7/5afqK0f06OVrtvVyq
-	 bOJvNJw6ZerlcwDQufJKpCEiA6PpXmEBOa9JjbI9zH+NxjhelDieZrRhDoBgF/9eks
-	 PJdzC2yUBwupg==
-Date: Fri, 18 Apr 2025 11:34:01 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Nishanth Menon <nm@ti.com>
-Cc: huaqian.li@siemens.com, m.szyprowski@samsung.com, robin.murphy@arm.com,
-	baocheng.su@siemens.com, bhelgaas@google.com, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, diogo.ivo@siemens.com,
-	jan.kiszka@siemens.com, kristo@kernel.org, krzk+dt@kernel.org,
-	kw@linux.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org, robh@kernel.org, s-vadapalli@ti.com,
-	ssantosh@kernel.org, vigneshr@ti.com, iommu@lists.linux.dev
-Subject: Re: [PATCH v7 0/8] soc: ti: Add and use PVU on K3-AM65 for DMA
- isolation
-Message-ID: <20250418163401.GA159541@bhelgaas>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PDuhtAZb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744994058; x=1776530058;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=pjfHQJAcshL8dMOtbsmbjYJjoBDacDf3BLU0sbW01bQ=;
+  b=PDuhtAZbbuAzbjnCIXLbP+zjvjiMxZ2akJp0+Xb0nOjfQ4bU0aSXbv2i
+   QsW3Xheo2Z9lAshpwt8nSwJMNdnR1GnlDlhoqwpNr9T7XV7fuOVcPRoH+
+   UpwV5B31P9P6wKMKkOlJIXOIGghXf6w1qPV6FtLqCB7Rxob9gyfd0ipkf
+   b89WiF5pRykrZeof7ddLG7njfB9bXWn71HLY88g800zDI92ht1EqgMCoz
+   2Nw8AU9WVbjrWzFtxn49cs+2H/P2c1A1QUQBWYWainSjFy2ATPMS4FE4i
+   sVrSR+lWkh7HTpdgLY1OC1hLAsPAdlnrXHPrjT2Pu7GC03cCMMdKDSfO9
+   w==;
+X-CSE-ConnectionGUID: dqDcJainSS+VIeEtzGIWYQ==
+X-CSE-MsgGUID: estLbzrKT1uygnmyRSo3XQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="50287925"
+X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
+   d="scan'208";a="50287925"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 09:34:16 -0700
+X-CSE-ConnectionGUID: OkCttVwzSAiHYtle5PQoTA==
+X-CSE-MsgGUID: WlzfQ5qKRymFFIH2uSakRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
+   d="scan'208";a="154332391"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.252])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 09:34:13 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Robert Richter <rrichter@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Gregory Price <gourry@gourry.net>, Terry Bowman <terry.bowman@amd.com>,
+ Robert Richter <rrichter@amd.com>
+Subject: Re: [PATCH v4 03/14] cxl/pci: Add comments to cxl_hdm_decode_init()
+Date: Fri, 18 Apr 2025 18:34:09 +0200
+Message-ID: <4257228.aVYbkx8dNR@fdefranc-mobl3>
+In-Reply-To: <20250306164448.3354845-4-rrichter@amd.com>
+References:
+ <20250306164448.3354845-1-rrichter@amd.com>
+ <20250306164448.3354845-4-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418134324.ewsfnze2btnx2r2w@country>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, Apr 18, 2025 at 08:43:24AM -0500, Nishanth Menon wrote:
-> On 15:30-20250418, huaqian.li@siemens.com wrote:
-> > 
-> > Jan Kiszka (7):
-> >   dt-bindings: soc: ti: Add AM65 peripheral virtualization unit
-> >   dt-bindings: PCI: ti,am65: Extend for use with PVU
-> >   soc: ti: Add IOMMU-like PVU driver
-> >   PCI: keystone: Add support for PVU-based DMA isolation on AM654
-> >   arm64: dts: ti: k3-am65-main: Add PVU nodes
-> >   arm64: dts: ti: k3-am65-main: Add VMAP registers to PCI root complexes
-> >   arm64: dts: ti: iot2050: Add overlay for DMA isolation for devices
-> >     behind PCI RC
-> > 
-> > Li Hua Qian (1):
-> >   swiotlb: Make IO_TLB_SEGSIZE configurable
-> 
-> I see at least 3 or 4 maintainers needing to co-ordinate, gets
-> complicated as I am not sure which maintainer needs to pick up what
-> patches in what dependency order. This looks like a mixed bag. Can
-> we split this patch into independent series for each maintainer with
-> clear indication of dependencies that is spread around a couple of
-> kernel windows (maybe dts comes in last?)
+On Thursday, March 6, 2025 5:44:37=E2=80=AFPM Central European Summer Time =
+Robert Richter wrote:
+> There are various configuration cases of HDM decoder registers causing
+> different code paths. Add comments to cxl_hdm_decode_init() to better
+> explain them.
+>=20
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Tested-by: Gregory Price <gourry@gourry.net>
+>
+Reviewed-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+>
+> ---
+>  drivers/cxl/core/pci.c | 33 ++++++++++++++++++++++++---------
+>  1 file changed, 24 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 6386e84e51a4..ef4b08abe424 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -416,9 +416,21 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds,=
+ struct cxl_hdm *cxlhdm,
+>  	if (global_ctrl & CXL_HDM_DECODER_ENABLE || (!hdm && info->mem_enabled))
+>  		return devm_cxl_enable_mem(&port->dev, cxlds);
+> =20
+> +	/*
+> +	 * If the HDM Decoder Capability does not exist and DVSEC was
+> +	 * not setup, the DVSEC based emulation cannot be used.
+> +	 */
+>  	if (!hdm)
+>  		return -ENODEV;
+> =20
+> +	/*
+> +	 * The HDM Decoder Capability exists but is globally disabled.
+> +	 */
+> +
+> +	/*
+> +	 * If the DVSEC CXL Range registers are not enabled, just
+> +	 * enable and use the HDM Decoder Capability registers.
+> +	 */
+>  	if (!info->mem_enabled) {
+>  		rc =3D devm_cxl_enable_hdm(&port->dev, cxlhdm);
+>  		if (rc)
+> @@ -427,6 +439,18 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds,=
+ struct cxl_hdm *cxlhdm,
+>  		return devm_cxl_enable_mem(&port->dev, cxlds);
+>  	}
+> =20
+> +	/*
+> +	 * Per CXL 2.0 Section 8.1.3.8.3 and 8.1.3.8.4 DVSEC CXL Range 1 Base
+> +	 * [High,Low] when HDM operation is enabled the range register values
+> +	 * are ignored by the device, but the spec also recommends matching the
+> +	 * DVSEC Range 1,2 to HDM Decoder Range 0,1. So, non-zero info->ranges
+> +	 * are expected even though Linux does not require or maintain that
+> +	 * match. Check if at least one DVSEC range is enabled and allowed by
+> +	 * the platform. That is, the DVSEC range must be covered by a locked
+> +	 * platform window (CFMWS). Fail otherwise as the endpoint's decoders
+> +	 * cannot be used.
+> +	 */
+> +
+>  	root =3D to_cxl_port(port->dev.parent);
+>  	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
+>  		root =3D to_cxl_port(root->dev.parent);
+> @@ -454,15 +478,6 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds,=
+ struct cxl_hdm *cxlhdm,
+>  		return -ENXIO;
+>  	}
+> =20
+> -	/*
+> -	 * Per CXL 2.0 Section 8.1.3.8.3 and 8.1.3.8.4 DVSEC CXL Range 1 Base
+> -	 * [High,Low] when HDM operation is enabled the range register values
+> -	 * are ignored by the device, but the spec also recommends matching the
+> -	 * DVSEC Range 1,2 to HDM Decoder Range 0,1. So, non-zero info->ranges
+> -	 * are expected even though Linux does not require or maintain that
+> -	 * match. If at least one DVSEC range is enabled and allowed, skip HDM
+> -	 * Decoder Capability Enable.
+> -	 */
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_hdm_decode_init, "CXL");
+>=20
 
-The keystone patch ("[4/8] PCI: keystone: Add support for PVU-based
-DMA isolation on AM654") depends on interfaces added by "[3/8] soc:
-ti: Add IOMMU-like PVU driver", so I can't really take 4/8 by itself.
 
-But I've acked 4/8, so it can be merged along with the rest of the
-series.  I assumed the easiest would be via the drivers/soc/ti/
-maintainer, i.e., you, Nisanth :)
 
-Let me know if I can do anything.
 
-Bjorn
