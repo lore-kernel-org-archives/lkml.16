@@ -1,383 +1,821 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D351A433C4;
-	Fri, 18 Apr 2025 18:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744999515; cv=fail; b=gRgJOi8G2v0gmf7Ziyf+ABHxaQxxRn6tGdEfouALshzV+ur5ZEdJMWim9/Qq4bUGkbO8MsJAD+6BaqD8MYEOt3xulqrmOyXpUPsXpaZqDoS/eCm7WI9yVAC3RRL8ilJ/gESOxM7Rho8uQoGyQ+4loyGNUVMzJv963T7CE5fVOQg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744999515; c=relaxed/simple;
-	bh=6RM6htqKLqpuhdWskx5FmtUOiFDvAg2dpVY/vi9Gh/c=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=eQDpxHgifWiS3WHDDEEzdmwGHR2DM/pzethvBUA1g1wvWBfb9VGF+BXKHeowqzl5s/4Dp0Eizs+7BImNkcj3oEluHEKu0MA5MQUnglxIdjWtEbgkYaBfpaaa78Eg/nQYa5GtGF6VPx+aa5dHGwJvA7ZI1Cj85+rQrQ9KmL1mgyM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=DMUVmIj8; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=UXTV3e74; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEED6433C4;
+	Fri, 18 Apr 2025 18:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744999684; cv=none; b=i6pXyjtucIh2uaalBOT0shL/RQw5bfsEEyptfWYLsMHwcUFbGEsbOClCYJwg8kWa/zCLRPadmtMTe0+eydGigEcdp3s0i+oEUlUSczZOqEKYYpds9N8/KX0Xg/NN0BMhP/mGRMlgsbTpKa7POW5eZ7fqTvrUtkPCm3nyZZ9oUDo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744999684; c=relaxed/simple;
+	bh=gGQdP/eC/Wk8OVZFjpPkwv75nfXzG6OnkV1OYWkD0e8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rFuOxSA/3pz0cGC1LStoZASXRuk0dfazzC8wP5R4E+XRX+WVwvKNgq8fbs7cWNpdYK1g4nSYVrBSru/WcfmAiuV7+rjFXS/DTvKaN2yexvF/PELai/AUd6kvTqBf5AfPSdnEdr15SO6WqKicYJv025U6ZpMwzhiKP1/DzAfDKrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A0Xmkm6b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DMUVmIj8";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="UXTV3e74"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53IHBgQU010067;
-	Fri, 18 Apr 2025 18:03:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=xesOFUg0i5y/xFlaP0p0rD5YNiboKPJ7g9DEqvkeTiM=; b=
-	DMUVmIj8hfYBLeUQIMybzNX4IcaItui3TOlBxUYApf+xLh1Q+qvgZuSnL4uWcyq2
-	R8jGrfXPgp2zWFULosQ89KPr7N7INPZC6YvjrDUEJK04Sl3gEEBkm9DGosJkGWmP
-	r8fvM3EWQUSkltDlIQHHfjWioZ9JNhIdIGNqzKfI/5O3eddHows9ODUJrbk+5/2j
-	AqhC9vm6kZuMdkkM3kN0snASbJ/l9KInBy4f1KU+dJSkHfKa85mh5eiTeZIqV9DF
-	+Ctu2qQ+cIWGqzubElYz3yAykjBWCqLNlYL9EQer/ftTj61WeiQLl1VXSGPfdZ6s
-	+avhCzZ+95DUlgaaaZmvew==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4617jugqru-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 18 Apr 2025 18:03:28 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53IGBUpm038823;
-	Fri, 18 Apr 2025 18:03:27 GMT
-Received: from cy3pr05cu001.outbound.protection.outlook.com (mail-westcentralusazlp17013078.outbound.protection.outlook.com [40.93.6.78])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 460d4w66a2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 18 Apr 2025 18:03:27 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ip9ti8JeoO8nQWTBxnz6EV9NwqpyVXy3kDzE+NK7cyjRZ0801K6E2Cs8yrCoMpqVdBVfsu8kgMfQJHgMftxLAUE+KxEaUL//bFueuxJT8UN3lN6R3nNH/5u56zxlJw6QcsR3lr1fONcxmqoMxzH53cUEESIp4SEEtRHwDOtmoo1+EZ7kLaFuo5xYLcwM11cdRnJ5JQXDarwWEXjs9+9Zddf+ojsyeCYz+fjwgOq8g43djJN3LA1UDZKlLRpguLT3zdSJiduwILhEH2jgAWw2tXP9Qxb1SFYMXlSWZ2J8V04RhM2n1oqWMJ7DFMzdx67kieRiRC1DLhVTiuQf0w2Epg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xesOFUg0i5y/xFlaP0p0rD5YNiboKPJ7g9DEqvkeTiM=;
- b=i3bxYYp8HyWALi2kpbeC+HY5tIDgBmv5FiiuoKpUh1PyvH7bwyIYMvUuipyYk1a+OQfJ8wM6vXWDeEEHN3jX2CfvfNUatTrIohi3aKM0u2jmNT1vTLcrWID2mHNnh8xESYBsQVr4I5TWMrqrJeK78xx0koNyD/i3GvjXM0X4o8nWqBAv1pXGhs8R14Y5I8vWvQWi8oQjaxGX4lofiN8c5bU1+OHEXFy4XUbClxsLx7FnjDQCk2KhX/8Y9C3s/0ZEMX1M6Ut77Jnjb5jNeGeLxI3uy/whdR4+cwpjFEWJWPrqn7r/k+4Uaz118ofMCnS2CHFYp7ixRko9nlUqp+5EYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xesOFUg0i5y/xFlaP0p0rD5YNiboKPJ7g9DEqvkeTiM=;
- b=UXTV3e74B8jZyMqZI9AWroCOL59hUyFf5z1Bdia0vKPxaA8TgCon2f207aK+m6KOSLfcn8e3RVajKl+tG2dFeJGywoi+B6f6ugocn+wDgXoca4fubbkF+XX8dpjA3hkWi+lkY9C6tQ3QTLneU+nI+opuBa5pwn7XJ+oiX4WEZ/0=
-Received: from DS7PR10MB5328.namprd10.prod.outlook.com (2603:10b6:5:3a6::12)
- by PH0PR10MB4662.namprd10.prod.outlook.com (2603:10b6:510:38::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.45; Fri, 18 Apr
- 2025 18:03:22 +0000
-Received: from DS7PR10MB5328.namprd10.prod.outlook.com
- ([fe80::ea13:c6c1:9956:b29c]) by DS7PR10MB5328.namprd10.prod.outlook.com
- ([fe80::ea13:c6c1:9956:b29c%2]) with mapi id 15.20.8655.022; Fri, 18 Apr 2025
- 18:03:22 +0000
-Message-ID: <65b0070e-3386-4725-8e8a-15b0409b8368@oracle.com>
-Date: Fri, 18 Apr 2025 23:33:09 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 20/24] blk-mq: add scatterlist-less DMA mapping helpers
-To: Leon Romanovsky <leon@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>
-Cc: Jake Edge <jake@lwn.net>, Jonathan Corbet <corbet@lwn.net>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Zhu Yanjun <zyjzyj2000@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-mm@kvack.org,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dan Williams
- <dan.j.williams@intel.com>,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Leon Romanovsky <leonro@nvidia.com>
-References: <cover.1744825142.git.leon@kernel.org>
- <87b151a3791d71e58ec6f1b42bcf5fe06304cf80.1744825142.git.leon@kernel.org>
-Content-Language: en-US
-From: ALOK TIWARI <alok.a.tiwari@oracle.com>
-In-Reply-To: <87b151a3791d71e58ec6f1b42bcf5fe06304cf80.1744825142.git.leon@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2P153CA0036.APCP153.PROD.OUTLOOK.COM
- (2603:1096:4:190::11) To DS7PR10MB5328.namprd10.prod.outlook.com
- (2603:10b6:5:3a6::12)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A0Xmkm6b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6C02C4CEE2;
+	Fri, 18 Apr 2025 18:08:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744999683;
+	bh=gGQdP/eC/Wk8OVZFjpPkwv75nfXzG6OnkV1OYWkD0e8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=A0Xmkm6bGOilRyMOoxugxohlL3Vim20B5jsCIBJRSok4Ymm47wYdtatu2a5A3oRlG
+	 TEsqOLh7nP4FSnXesTCXjAD5cD7VZMmkShsDraidWI7Y+HfdhAnrPJjzd3Q5Tu3Ww1
+	 37tJDAFgYweNUxo04fqs+ohQCrr0RPhoEV8cwwrYgFc7xmNjwu+D4STQIpY0RjvB/L
+	 s53a26vr1Tkzxb6ZyPMBKDd+G9267uGuqjvqzeHIdbjbsulqCpGT/L+Noo/QcBCuOT
+	 Qekkw66CJz5BKMw3K3wrGfudcnG+q2N9pAtysxE35okGG3HKeFK4A1KHtEgradRrEW
+	 Xbun2d+OzAkWQ==
+Date: Fri, 18 Apr 2025 19:07:56 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: <victor.duicu@microchip.com>
+Cc: <andy@kernel.org>, <dlechner@baylibre.com>, <nuno.sa@analog.com>,
+ <marius.cristea@microchip.com>, <linux-iio@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 2/2] iio: temperature: add support for MCP998X
+Message-ID: <20250418190757.2b007737@jic23-huawei>
+In-Reply-To: <20250415132623.14913-3-victor.duicu@microchip.com>
+References: <20250415132623.14913-1-victor.duicu@microchip.com>
+	<20250415132623.14913-3-victor.duicu@microchip.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR10MB5328:EE_|PH0PR10MB4662:EE_
-X-MS-Office365-Filtering-Correlation-Id: ff9bab3d-e9ea-4191-165b-08dd7ea34ed6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UDR2YVQ4SlRKT2Zqb1J6SkR1VFc5VW5wd25oRU1BR3RLTk96SG1JcldDVVg5?=
- =?utf-8?B?c1kxT2pTT3hhVjhXMVFSM2tKaElobXRsRHlJNFh5MGJZY0xrUXEvakxYdUQw?=
- =?utf-8?B?djdnc1A4dE50aTZuMHZEMEQrQ0VDVmZuL0xNTm8rTHM3Q2NSalk1UlV6Y3Rx?=
- =?utf-8?B?V1dtaE1Da2UybGRuYzVKSnJ4c1ozOVJRUmNrbjFaTWFyME1TYThRV3M2azFz?=
- =?utf-8?B?S2ZHQ2dtSzZhU2xUWjNKMmZtbmdia1RVN0s1MmpVYWdiSWR2anFJVncrMk1X?=
- =?utf-8?B?dUJqNExHRkhUVnYrSytXL2wrRzNNVys1dDJRcnVpVWZyMSsvQ0JPYXAzSVQ3?=
- =?utf-8?B?eTk3RkNNeXBkQkdCbnZKVUN6ZlY2bXdUcDhqdUVZdDNqU0JXVEJOMEZNam9I?=
- =?utf-8?B?ZDljbGMyb0FOTGh1NjU0ZnlONktFSG1FZUxlVWdDVXVmaW5Pck42UUZndFBN?=
- =?utf-8?B?M1U2UEkrNDA3djd0ako1eElwZ0RnR2Nhd0t5T2hEUE12ODVYNFlJRFNSV3l6?=
- =?utf-8?B?OUpudTB1Z3VMRk1xTkcwT09mVVRqbnNxZ3VrZUc1anRSUTU4b2x2Y0ZmeEJQ?=
- =?utf-8?B?SUJrYklQTWZuMCtKbWtyT2dvR1NmaUMvc3NwRTNKZG02QU9HVDU0d2c3Q0lp?=
- =?utf-8?B?Qm9XZVlNRmhXc280bnRFeFlWZjlhL0NaazR5WG9SRUM4YWR5OFlzbkdsQUJx?=
- =?utf-8?B?VFVwMHZtNXNmcUNtMzl1ZEVONU1qOGt6eHRyUjNFK01mVUEzNGxjbFZ5N210?=
- =?utf-8?B?TTU0UmtMM3p6MFo5UWNNSXpsTk5lYS9tRnBsVEcyUTlNdmh6eWRRUEhad2VO?=
- =?utf-8?B?YUszUHRwai8xRFN0QnBxQ0dOdFZvMjNGdUpIeUhPKzltOE93VzBrajZhVHVR?=
- =?utf-8?B?ampqM0FSQTB4UFNCeGs2UnRnSTdmTzQ2bXRzMFRWTE5ibXVRaVkvcXRHTThG?=
- =?utf-8?B?WFRBUUIzRnRmeWFHRmg4WWR6K01wQ0hMYXpPZXluZXVudk5LMTQ2VDN6VjUv?=
- =?utf-8?B?THBZWXkxNVVWV0FOSXgvV1FnVjBwdXdUMXJQd0JkVHJzK2Q4OGM5ajJuV2Y1?=
- =?utf-8?B?eUp6UVFCOEl6aWpPNW9RZFJ1czl5aFFTK1J4Z0FKSTNMMkI2MytlbURITHlL?=
- =?utf-8?B?RkNvNnRxVDNsM1VsMXZLN1ZxNXpQZFBoZmFJYjBrSkNSMldNc3lUY21tTTFJ?=
- =?utf-8?B?WktHN01Cb1BHTHNPWnBqRmZ3WXBXZFBqZGlsNUhNWVRSc2JZS29nWkZWT0hL?=
- =?utf-8?B?RGJ1Z2IyWUtCSXlxdERvUEk5b25nSmZWMklYOHFwT0hJVVQ2akdEZ0R2Umpr?=
- =?utf-8?B?UnRHa3FZTjlUMVBBMHprUnNMazdBUGpsZmFOeTQwN0JDNVJ4MXcycTM0QXZU?=
- =?utf-8?B?SjJPTVdIalRMbzNiNDNPNkpZOVllMDJTUUZxck1CVkV2NUdpZE1SalRUQjAr?=
- =?utf-8?B?c0dWZ1piaW50b3plcE9lMFVLN3FsT2EzWVpiTTh3RlBvRWVldWthOWN0RmNK?=
- =?utf-8?B?WHZhMUgvYXFRRm8ranlUSmkrYXZBaGVXZlo5T2w4a0tSOVZlQ1hmTXNBV1lQ?=
- =?utf-8?B?ek5icnl2czNsQ1VYenZLdENlYlhPWWgwOVhOcXQ3dTRZbXQ1T0VReXFjZG9Y?=
- =?utf-8?B?YXJIZXRnSWN0OCsrYkMyUGgwVFJnemxOSU1nZm14Zk1sSjZCNVpoRkpmRW15?=
- =?utf-8?B?ZUwyRWEvU1luTExLWkdSVjh4YzR2WisyZlcrdFZ2QVRoMDBQQVNBMGRzbEpM?=
- =?utf-8?B?UEdTbzE5eWdXQjNDNXhXS1VLdkI5aUV1aWN1TEtSbFlJcEdUK2xGWjdtMlhX?=
- =?utf-8?B?Njg0MTB1YXlEdDRQVm9NTXBWYlA3MHRlMXFTZWVBZ0E0eVNDcEpFVmp2Y1ZM?=
- =?utf-8?B?MStmQ21SSmxQbHRGUGk2bzBreGxhVHd0UkZabGVmZENENEZCZjBWNlNseklZ?=
- =?utf-8?Q?giCkTJO6MsU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5328.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aUFhMWtlWU45aDNSUGdpNGh0bzFsdXdXRUlUQ1NhLytLOWhEU3hDTVNKNVdn?=
- =?utf-8?B?L2ZlcDNOZ3N6VlFOU3Y1ZmtjSll4RzhtT0syMlV1TW8vS2s2aW5hTFRVcWRK?=
- =?utf-8?B?eUU5dFJTV091azdkOHBNQzY2N3N3cHdDUzJDTXNRS1Q1VVFFeTA2bk82VTNw?=
- =?utf-8?B?Q2J6VXBTUXo2RmxqbFhWRDVMSFloeDllckc2VVNtbHkwWTFEVkVrZHYvU3Nt?=
- =?utf-8?B?cG9DZmVJT09GRlE5b3E1K3RWYlVTUUZlM1hSRnl4K3pjTFdTbUhJcWZNdEJl?=
- =?utf-8?B?V05adEhOZGMyVkNTRkhGV29oYXdBaC9wSmh4d1ZscGJaUUVmK0dWeWphVkVw?=
- =?utf-8?B?Y25GK1pzS0dGN09VMnlBYkR3MjRsSnRMa2FZUmNTQWRtRDg5WGJUdmJXVDRR?=
- =?utf-8?B?NURaVFRpMmQybzNDeXB5MEpqVDdic1VXZ0ZwOHM1d1R3U1JqeEtMT2txMUY2?=
- =?utf-8?B?T2duSnFLQjhxbnpWem9JdWFRYWRGNTMraUxMVjNPdElMcFJib3g4Mk14WEpL?=
- =?utf-8?B?UlAxamt1MjhaNWZCaTNBc0FRZXVPb0VhekhPeEQ5RXd4ZjRUVHkyZk4vSmVM?=
- =?utf-8?B?OXVZT3VkRkM2ZncvcWhoeEo3TTNESFVhM3Nuamx6ZEhlTHl0V0dmZjV2bE1w?=
- =?utf-8?B?WjZscGFFeEV1RExrS2MrNnFFbXlRcWQ3UmFISDg5dGlSWjNHaUZXdlRDckVU?=
- =?utf-8?B?aWFiWWU4NnprczQwc0gvQk1aZ1U0QWR3WjRVZStMMWVyVk8wZHZaVjZWYWk0?=
- =?utf-8?B?WlhhVkJ0bk43SU01c2IrbXBBalJjb1FORDFDQVZWRHNPRDRqdjcvZ0xQbGlE?=
- =?utf-8?B?OHllNTJCbjd4ajBJR2p0SHBUQTJKYUxXTFZNRTNXVk5BTjdUN253d3dHSTBE?=
- =?utf-8?B?Y3RZMWttMG5kaHB2aEoxQnh6dXF1Y1dNT2dJOHpQQU5YbkdjSm9LZXBEZm94?=
- =?utf-8?B?T3BKZkg5RVdPbmkwa3oxN3R3V1F6RmJqeWpLa0d0NkF2TEl1MHZtRGkxdmg2?=
- =?utf-8?B?bXpRbFIyWlpIQWp6dFMvZlJ1ZG1wNGhLVWhQTE1FUFBMank3K0pocG0rcUJF?=
- =?utf-8?B?Z3dVNWpsMitYckFqSzBLZ1NGRW8rdzBobnBmcHFWbmN3b1dmUXpONERUTm5y?=
- =?utf-8?B?UmNpY1V3cWxYQlJHR2Q4QkIyV2NSOFBTUHJrcGM5bjNxK1NhMHN3RVQvOWVk?=
- =?utf-8?B?bW15clZydzRUZmxUYldpQ3lzRkg2R2lrT1ROVjd2VTE4Smhva3NxeHVxOUpp?=
- =?utf-8?B?M0RVWTZDSG1ZdlQvOU9PdmhGVzMxZnhneFR3ODVMaHlBYUpKRm45TnVPQURO?=
- =?utf-8?B?YXZwUFJZWmhCQ3VFUDFuMzVpUm41MVlKRkw5SnBiQ2g5YUVFcWtIMUZUVncv?=
- =?utf-8?B?NE5GaUxKL2VrcVlmY0JNd2VvYmwxMGt4aXJTK2FIMkFwZkxvN0h6RTB0Mnd3?=
- =?utf-8?B?NEx3RUxzZ051Qnp4ZTh5UjBweTQ0SXFJOSt6NDFKS3hyWCs3WkZyK3prbjlQ?=
- =?utf-8?B?enZrTk1RVVYwOHJnYWkyS2xNVXJtVHJrTkwvYUxLRzlucjUzenM3MHZkTmRm?=
- =?utf-8?B?UkVLMUI5Z0ZtcXlFVUpvSnZISDBjQ3VSOS9OUkE2VDBFaStwWlNGKzVzcWxD?=
- =?utf-8?B?b3o4Q25JZ1A2Sk8wbm41RkhsQUhJNXkzRE9BVGdrTUdVWHdRYldzRzJKcEpR?=
- =?utf-8?B?eFl4Wlpvczd0cWhKR1JlVG1MT1g0d2lzekFmelVuYzRmalZBV3hxRnNTMStV?=
- =?utf-8?B?VzRNTmEvOXJxSWJWNzluVGR0WkJaZ0RBZU94cU5LRTF2OFp0c1EyRHg2NVlN?=
- =?utf-8?B?c3N0NEFKblpkTEpUODNUWFNPYktORmFwRjJGZXRLQlJ2ZmNwSXV4TlZTVGRQ?=
- =?utf-8?B?b0R1V3JDenVWNWk1eHlNUXFFZXMwMzUzQkhidEFSdlFLZlpTYzA3bHZDY2lP?=
- =?utf-8?B?YjJpZlEzaVdTVzNjSFpXQnlyc1N3SGd1QjlUZVZGUmxScy9ZTUppWTF5QXlU?=
- =?utf-8?B?V21aSWJGbC9sU1dIQmhIUlIyU0dEUVNHL1kxeWVOS3FhU2dLeUkrZ1BwcWtK?=
- =?utf-8?B?UklnU0duaUpiSTg2azZ0aHpOZXVNdlNwV1RFaHl0Z1NMdTUzZE45WDdvdWg3?=
- =?utf-8?B?WWhGTndhMUhyblZMSGRZbWRaN1NxclU2bUdFN2lWZnpsQ2t4SlJKYm1XU0h0?=
- =?utf-8?B?TXc9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	qyN5IQizv++LrOGPNbRJz/OcUDDaUFSB4EWgo8fFBpQeHeiy5jXFRlzVqNxaG43031C7V0fsbdjR3V12SdKmT18EFHdbs0nr8YGpeGw47Q3xBnVQRPUV19j1e2xFHeNhuzI1QPfAfmt8uHMOxCpcloe1807DzL3X3NEbn2XFwUb7JElX0XnGF/BOLYYCaGCxT53XkZLD0HKW2/5ofmF9GdLLN+bfoAgumRbiqcPLyb1OiTJexQwQhIbHtmYhjm7BwKonOQXP3AsVicM8hQwdv2YI3Vss54M70qRYf4xy3w4Nxo6TzCnvJabTew14S0klNv+yPFZJn/KeyRlry37FG1sSE5dsYLyJhN9gQqs0IDGgiqTDG8Zi1eW46Rn3ejhuglpX6Fs//LIuyf++1fuUUOkI/jn9PRyd8ygJTu1GREuNa+KOf+OSKZ0S4sqY7eS2mO4DXRVavg4P/g7JVRMbVgciW5eSEZpfxg+X+1OdA36KqjIBl1kNyaVVpQnEcWM2QSRThEHr6BcQoD6T8UNXB4VU6Apud/swJtwLXNIwS83PMlr70HpdXJj2ZDknHWBeqUtCjhVZ+TWudxeAIE1zWv/X819RdfMOpLfjO8ZKexs=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff9bab3d-e9ea-4191-165b-08dd7ea34ed6
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5328.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2025 18:03:22.7318
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nsC1bamzw06dm67ZcVuP84wPTwOzdyYnbKFOuuQHNYYD9qomcbrnDyyhuBHJFpncyHmce8oO/5YvaDQ+pVRLUI0zyN0PZyrJeOvohn6p+HM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4662
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-18_06,2025-04-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
- bulkscore=0 mlxscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2504180136
-X-Proofpoint-GUID: T-KUc3d4T_z3zO7cE37Cd6OPxQrsdQgM
-X-Proofpoint-ORIG-GUID: T-KUc3d4T_z3zO7cE37Cd6OPxQrsdQgM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Tue, 15 Apr 2025 16:26:23 +0300
+<victor.duicu@microchip.com> wrote:
 
+> From: Victor Duicu <victor.duicu@microchip.com>
+> 
+> This is the driver for Microchip MCP998X/33 and MCP998XD/33D
+> Multichannel Automotive Monitor Family.
+> 
+> Signed-off-by: Victor Duicu <victor.duicu@microchip.com>
+Hi Victor,
 
-> + * Start DMA mapping @req to @dma_dev.  @state and @iter are provided by the
-> + * caller and don't need to be initialized.  @state needs to be stored for use
-> + * at unmap time, @iter is only needed at map time.
-> + *
-> + * Returns %false if there is no segment to map, including due to an error, or
-> + * %true it it did map a segment.
-
-typo - it it -> if it
-
-> + *
-> + * If a segment was mapped, the DMA address for it is returned in @iter.addr and
-> + * the length in @iter.len.  If no segment was mapped the status code is
-> + * returned in @iter.status.
-> + *
-> + * The caller can call blk_rq_dma_map_coalesce() to check if further segments
-> + * need to be mapped after this, or go straight to blk_rq_dma_map_iter_next()
-> + * to try to map the following segments.
-> + */
-> +bool blk_rq_dma_map_iter_start(struct request *req, struct device *dma_dev,
-> +		struct dma_iova_state *state, struct blk_dma_iter *iter)
-> +{
-> +	unsigned int total_len = blk_rq_payload_bytes(req);
-> +	struct phys_vec vec;
-> +
-> +	iter->iter.bio = req->bio;
-> +	iter->iter.iter = req->bio->bi_iter;
-> +	memset(&iter->p2pdma, 0, sizeof(iter->p2pdma));
-> +	iter->status = BLK_STS_OK;
-> +
-> +	/*
-> +	 * Grab the first segment ASAP because we'll need it to check for P2P
-> +	 * transfers.
-> +	 */
-> +	if (!blk_map_iter_next(req, &iter->iter, &vec))
-> +		return false;
-> +
-> +	if (IS_ENABLED(CONFIG_PCI_P2PDMA) && (req->cmd_flags & REQ_P2PDMA)) {
-> +		switch (pci_p2pdma_state(&iter->p2pdma, dma_dev,
-> +				blk_phys_to_page(vec.paddr))) {
-> +		case PCI_P2PDMA_MAP_BUS_ADDR:
-> +			return blk_dma_map_bus(req, dma_dev, iter, &vec);
-> +		case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
-> +			/*
-> +			 * P2P transfers through the host bridge are treated the
-> +			 * same as non-P2P transfers below and during unmap.
-> +			 */
-> +			req->cmd_flags &= ~REQ_P2PDMA;
-> +			break;
-> +		default:
-> +			iter->status = BLK_STS_INVAL;
-> +			return false;
-> +		}
-> +	}
-> +
-> +	if (blk_can_dma_map_iova(req, dma_dev) &&
-> +	    dma_iova_try_alloc(dma_dev, state, vec.paddr, total_len))
-> +		return blk_rq_dma_map_iova(req, dma_dev, state, iter, &vec);
-> +	return blk_dma_map_direct(req, dma_dev, iter, &vec);
-> +}
-> +EXPORT_SYMBOL_GPL(blk_rq_dma_map_iter_start);
-> +
-> +/**
-> + * blk_rq_dma_map_iter_next - map the next DMA segment for a request
-> + * @req:	request to map
-> + * @dma_dev:	device to map to
-> + * @state:	DMA IOVA state
-> + * @iter:	block layer DMA iterator
-> + *
-> + * Iterate to the next mapping after a previous call to
-> + * blk_rq_dma_map_iter_start().  See there for a detailed description of the
-> + * arguments.
-> + *
-> + * Returns %false if there is no segment to map, including due to an error, or
-> + * %true it it did map a segment.
-
-typo - it it -> if it
-
-> + *
-> + * If a segment was mapped, the DMA address for it is returned in @iter.addr and
-> + * the length in @iter.len.  If no segment was mapped the status code is
-> + * returned in @iter.status.
-> + */
-> +bool blk_rq_dma_map_iter_next(struct request *req, struct device *dma_dev,
-> +		struct dma_iova_state *state, struct blk_dma_iter *iter)
-> +{
-> +	struct phys_vec vec;
-> +
-> +	if (!blk_map_iter_next(req, &iter->iter, &vec))
-> +		return false;
-> +
-> +	if (iter->p2pdma.map == PCI_P2PDMA_MAP_BUS_ADDR)
-> +		return blk_dma_map_bus(req, dma_dev, iter, &vec);
-> +	return blk_dma_map_direct(req, dma_dev, iter, &vec);
-> +}
-> +EXPORT_SYMBOL_GPL(blk_rq_dma_map_iter_next);
-> +
->   static inline struct scatterlist *blk_next_sg(struct scatterlist **sg,
->   		struct scatterlist *sglist)
->   {
-> diff --git a/include/linux/blk-mq-dma.h b/include/linux/blk-mq-dma.h
-> new file mode 100644
-> index 000000000000..588dc3c1ad1f
-> --- /dev/null
-> +++ b/include/linux/blk-mq-dma.h
-> @@ -0,0 +1,62 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef BLK_MQ_DMA_H
-> +#define BLK_MQ_DMA_H
-> +
-> +#include <linux/blk-mq.h>
-> +#include <linux/pci-p2pdma.h>
-> +
-> +struct blk_dma_iter {
-> +	/* Output address range for this iteration */
-> +	dma_addr_t			addr;
-> +	u32				len;
-> +
-> +	/* Status code. Only valid when blk_rq_dma_map_iter_* returned false */
-> +	blk_status_t			status;
-> +
-> +	/* Internal to blk_rq_dma_map_iter_* */
-> +	struct req_iterator		iter;
-> +	struct pci_p2pdma_map_state	p2pdma;
-> +};
-> +
-> +bool blk_rq_dma_map_iter_start(struct request *req, struct device *dma_dev,
-> +		struct dma_iova_state *state, struct blk_dma_iter *iter);
-> +bool blk_rq_dma_map_iter_next(struct request *req, struct device *dma_dev,
-> +		struct dma_iova_state *state, struct blk_dma_iter *iter);
-> +
-> +/**
-> + * blk_rq_dma_map_coalesce - were all segments coalesced?
-> + * @state: DMA state to check
-> + *
-> + * Returns true if blk_rq_dma_map_iter_start coalesced all segments into a
-> + * single DMA range.
-> + */
-> +static inline bool blk_rq_dma_map_coalesce(struct dma_iova_state *state)
-> +{
-> +	return dma_use_iova(state);
-> +}
-> +
-> +/**
-> + * blk_rq_dma_map_coalesce - try to DMA unmap a request
-> + * @req:	request to unmap
-> + * @dma_dev:	device to unmap from
-> + * @state:	DMA IOVA state
-> + * @mapped_len: number of bytes to unmap
-> + *
-> + * Returns %false if the callers needs to manually unmap every DMA segment
-
-typo needs -> need
-
-> + * mapped using @iter or %true if no work is left to be done.
-> + */
-
+Various comments inline,
 
 Thanks,
-Alok
+
+Jonathan
+
+> ---
+>  .../testing/sysfs-bus-iio-temperature-mcp9982 |  17 +
+>  MAINTAINERS                                   |   7 +
+>  drivers/iio/temperature/Kconfig               |  10 +
+>  drivers/iio/temperature/Makefile              |   1 +
+>  drivers/iio/temperature/mcp9982.c             | 794 ++++++++++++++++++
+>  5 files changed, 829 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-temperature-mcp9982
+>  create mode 100644 drivers/iio/temperature/mcp9982.c
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-temperature-mcp9982 b/Documentation/ABI/testing/sysfs-bus-iio-temperature-mcp9982
+> new file mode 100644
+> index 000000000000..de3360fb05be
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio-temperature-mcp9982
+> @@ -0,0 +1,17 @@
+> +What:		/sys/bus/iio/devices/iio:deviceX/running_average_window
+
+As later in review, I think we can control this via the low pass filter 3dB point
+and use standard ABI.
+
+> +KernelVersion:	6.14
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		This attribute controls the number of samples for the 
+> +		running average window applied to External Channel 1.
+> +		Using this method the temperature spikes are reduced.
+> +		X is the IIO index of the device.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/running_average_window_available
+> +KernelVersion:	6.14
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Reading returns a list with the possible number of samples used
+> +		in the running average window. The window can be composed of 1,
+> +		4 or 8 previous samples. X is the IIO index of the device.
+> +
+
+> diff --git a/drivers/iio/temperature/mcp9982.c b/drivers/iio/temperature/mcp9982.c
+> new file mode 100644
+> index 000000000000..f4edc7b6a437
+> --- /dev/null
+> +++ b/drivers/iio/temperature/mcp9982.c
+> @@ -0,0 +1,794 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * IIO driver for MCP998X/33 and MCP998XD/33D Multichannel Automotive Temperature Monitor Family
+> + *
+> + * Copyright (C) 2025 Microchip Technology Inc. and its subsidiaries
+> + *
+> + * Author: Victor Duicu <victor.duicu@microchip.com>
+> + *
+> + * Datasheet can be found here:
+> + * https://ww1.microchip.com/downloads/aemDocuments/documents/MSLD/ProductDocuments/DataSheets/MCP998X-Family-Data-Sheet-DS20006827.pdf
+> + *
+This line doesn't add anything.  (one of my more trivial common comments :)
+> + */
+
+> +
+> +/* Running average window can be set as:
+/*
+ * Running average window...
+for IIO multiline comments.
+
+> + * - 1 sample
+> + * - 4 samples
+> + * - 8 samples
+> + */
+> +#define MCP9982_RUNNING_AVERAGE_WINDOW_AVAILABLE	"1 4 8"
+> +
+> +/* The maximum number of channels a member of the family can have */
+> +#define MCP9982_MAX_NUM_CHANNELS		5
+> +
+> +#define MCP9982_CHAN(index, si, __address) ({ \
+> +	struct iio_chan_spec __chan = { \
+> +		.type = IIO_TEMP, \
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
+> +		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_SAMP_FREQ), \
+> +		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ), \
+> +		.channel = index, \
+> +		.address = __address, \
+> +		.scan_index = si, \
+> +		.scan_type = { \
+> +			.sign = 'u', \
+> +			.realbits = 8, \
+> +			.storagebits = 8, \
+> +			.endianness = IIO_CPU \
+Odd concept for 1 byte ;)  Anyhow it defaults to IIO_CPU anyway so I'd not set it
+explicitly.
+
+> +		}, \
+> +		.indexed = 1, \
+> +	}; \
+> +	__chan; \
+> +})
+> +
+> +enum mcp9982_ids {
+
+This should go away after changed suggested later.
+> +	MCP9933,
+> +	MCP9933D,
+> +	MCP9982,
+> +	MCP9982D,
+> +	MCP9983,
+> +	MCP9983D,
+> +	MCP9984,
+> +	MCP9984D,
+> +	MCP9985,
+> +	MCP9985D,
+> +};
+> +
+> +/*
+/** as it's kernel doc.
+
+> + * struct mcp9982_features - features of a mcp9982 instance
+> + * @phys_channels:	number of physical channels supported by the chip
+> + * @name:		chip's name
+> + */
+> +struct mcp9982_features {
+> +	u8		phys_channels;
+> +	const char	*name;
+> +};
+> +
+> +static const struct mcp9982_features mcp9982_chip_config[] = {
+As later, use separate structures for these.
+> +	[MCP9933] = {
+> +	    .name = "mcp9933",
+> +	    .phys_channels = 3,
+> +	},
+> +	[MCP9933D] = {
+> +	    .name = "mcp9933D",
+> +	    .phys_channels = 3,
+> +	},
+> +	[MCP9982] = {
+> +	    .name = "mcp9982",
+> +	    .phys_channels = 2,
+> +	},
+> +	[MCP9982D] = {
+> +	    .name = "mcp9982D",
+> +	    .phys_channels = 2,
+> +	},
+> +	[MCP9983] = {
+> +	    .name = "mcp9983",
+> +	    .phys_channels = 3,
+> +	},
+> +	[MCP9983D] = {
+> +	    .name = "mcp9983D",
+> +	    .phys_channels = 3,
+> +	},
+> +	[MCP9984] = {
+> +	    .name = "mcp9984",
+> +	    .phys_channels = 4,
+> +	},
+> +	[MCP9984D] = {
+> +	    .name = "mcp9984D",
+> +	    .phys_channels = 4,
+> +	},
+> +	[MCP9985] = {
+> +	    .name = "mcp9985",
+> +	    .phys_channels = 5,
+> +	},
+> +	[MCP9985D] = {
+> +	    .name = "mcp9985D",
+> +	    .phys_channels = 5,
+> +	},
+> +};
+> +
+> +static const int mcp9982_fractional_values[] = {
+> +	0,
+> +	125000,
+> +	250000,
+> +	375000,
+> +	500000,
+> +	625000,
+> +	750000,
+> +	875000,
+> +};
+> +
+> +static const int mcp9982_conv_rate[][2] = {
+> +	{0, 62500},
+> +	{0, 125000},
+> +	{0, 250000},
+> +	{0, 500000},
+> +	{1, 0},
+> +	{2, 0},
+> +	{4, 0},
+> +	{8, 0},
+> +	{16, 0},
+> +	{32, 0},
+> +	{64, 0},
+> +};
+	{ 64, 0 },
+etc
+
+
+> +
+> +/**
+> + * struct mcp9992_priv - information about chip parameters
+> + * @client:			the i2c-client attached to the device
+> + * @regmap:			device register map
+> + * @iio_info			iio_info
+> + * @iio_chan			specifications of channels
+> + * @num_channels		number of physical channels
+> + * @lock			synchronize access to driver's state members
+> + * @running_avg			number of samples in the running average window
+> + * @hysteresis			value of temperature hysteresis
+> + * @temp_range_code		coded value representing the set temperature range
+> + * @labels			labels of the channels
+> + * @chip_name			name of the chip present
+> + * @beta_user_value		value given by the user for beta on channel 1 and 2
+> + * @apdd			state of anti-parallel diode mode
+> + * @recd12			state of REC on channels 1 and 2
+> + * @recd34			state of REC on channels 3 and 4
+> + * @ideality_user_value		values given by user to ideality factor for all channels
+> + */
+> +
+
+No blank line here.
+
+> +struct mcp9982_priv {
+> +	struct i2c_client *client;
+Why do we need this after probe?  Either get the dev from regmap
+or store that directly rather than the i2c_client.
+
+> +	struct regmap *regmap;
+> +	struct iio_info iio_info;
+
+As below. I'm not sure why we need this.
+
+> +
+> +	struct iio_chan_spec *iio_chan;
+> +	u8 num_channels;
+> +
+> +	/*
+> +	 * Synchronize access to private members, and ensure
+> +	 * atomicity of consecutive regmap operations.
+> +	 */
+> +	struct mutex lock;
+> +
+> +	int running_avg;
+> +	int hysteresis;
+> +	int temp_range_code;
+> +	char *labels[MCP9982_MAX_NUM_CHANNELS];
+> +	char *chip_name;
+> +	int beta_user_value[2];
+> +	int apdd;
+> +	int recd12;
+> +	int recd34;
+> +	int ideality_user_value[4];
+> +};
+
+> +}
+> +
+> +static int mcp9982_read_raw(struct iio_dev *indio_dev, struct iio_chan_spec const *chan,
+> +			    int *val, int *val2, long mask)
+> +{
+> +	struct mcp9982_priv *priv = iio_priv(indio_dev);
+> +	int ret, val3, HIGH_BYTE, LOW_BYTE;
+
+Capitals not compliant with kernel coding style.
+
+> +
+> +	/* Write in ONESHOT register to take a new reading */
+
+Drop and comments that are fairly obvious.  Maybe that 1 needs a define
+though.
+
+> +	ret = regmap_write(priv->regmap, MCP9982_ONE_SHOT_ADDR, 1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	guard(mutex)(&priv->lock);
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		HIGH_BYTE = MCP9982_INT_HIGH_BYTE_ADDR(chan->channel);
+> +		LOW_BYTE = MCP9982_INT_LOW_BYTE_ADDR(chan->channel);
+Drop the local variables and put the macros inline.
+> +
+> +		ret = regmap_read(priv->regmap, HIGH_BYTE, val);
+> +		if (ret)
+> +			return ret;
+> +
+> +		if (priv->temp_range_code)
+> +			*val -= MCP9982_TEMP_OFFSET;
+> +
+> +		ret = regmap_read(priv->regmap, LOW_BYTE, val2);
+> +		if (ret)
+> +			return ret;
+> +
+> +		*val2 = mcp9982_fractional_values[*val2 >> 5];
+
+Why 5?  Maybe needs a define or at minimum a comment.
+
+> +
+> +		return IIO_VAL_INT_PLUS_MICRO;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		ret = regmap_read(priv->regmap, MCP9982_CONV_ADDR, &val3);
+
+why val3?
+
+> +		if (ret)
+> +			return ret;
+> +
+> +		*val = mcp9982_conv_rate[val3][0];
+> +		*val2 = mcp9982_conv_rate[val3][1];
+> +
+> +		return IIO_VAL_INT_PLUS_MICRO;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+
+> +
+> +static int mcp9982_write_raw(struct iio_dev *indio_dev, struct iio_chan_spec const *chan,
+> +			     int val, int val2, long mask)
+> +{
+> +	struct mcp9982_priv *priv = iio_priv(indio_dev);
+> +	struct device *dev = &priv->client->dev;
+> +	int i;
+> +	int status = 0;
+> +
+> +	guard(mutex)(&priv->lock);
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		for (i = 0; i < ARRAY_SIZE(mcp9982_conv_rate); i++) {
+> +			if (val == mcp9982_conv_rate[i][0] &&
+> +			    val2 == mcp9982_conv_rate[i][1]){
+> +				status = 1;
+> +				break;
+> +			}
+> +		}
+> +		if (!status)
+
+		if (i == ARRAY_SIZE(mcp9982_conv_rate);
+
+and get rid of status.  Simply breaking early is sufficient.
+
+> +			return dev_err_probe(dev, -EINVAL, "Sampling Frequency is invalid\n");
+> +
+> +		return regmap_write(priv->regmap, MCP9982_CONV_ADDR, i);
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static ssize_t mcp9982_running_average_window_show(struct device *dev,
+> +						   struct device_attribute *attr, char *buf)
+> +{
+> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> +	struct mcp9982_priv *priv = iio_priv(indio_dev);
+> +
+> +	return sprintf(buf, "%u sample(s)\n", priv->running_avg);
+
+Should read and write in same format. So no units - for that people have to go
+look at the ABI docs.
+
+> +}
+> +
+> +static ssize_t mcp9982_running_average_window_avail_show(struct device *dev,
+> +							 struct device_attribute *attr, char *buf)
+> +{
+> +	return sprintf(buf, "%s\n", MCP9982_RUNNING_AVERAGE_WINDOW_AVAILABLE);
+> +}
+> +
+> +static ssize_t mcp9982_running_average_window_store(struct device *dev,
+> +						    struct device_attribute *attr,
+> +						    const char *buf, size_t count)
+> +{
+> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> +	struct mcp9982_priv *priv = iio_priv(indio_dev);
+> +	int val, ret, reg_val;
+> +
+> +	if (kstrtouint(buf, 10, &val)) {
+> +		dev_err(dev, "Value is not a number\n");
+Just return -EINVAL.
+
+As a general rule - error message that can be triggered directly by userspace
+based on it's input are bad because they can be used to flush out a log in
+an attack on a system.  
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	switch (val) {
+> +	case 1:
+> +		reg_val = 0;
+> +		break;
+> +	case 4:
+> +		reg_val = 1;
+> +		break;
+> +	case 8:
+> +		reg_val = 3;
+> +		break;
+> +	default:
+> +		dev_err(dev, "Value is invalid\n");
+no need for an error message here. Returning -EINVAL should be enough
+> +		return -EINVAL;
+> +	}
+> +
+> +	guard(mutex)(&priv->lock);
+> +
+> +	ret = regmap_write(priv->regmap, MCP9982_RUNNING_AVG_ADDR, reg_val);
+> +	priv->running_avg = val;
+> +
+> +	return count;
+> +}
+> +
+> +static IIO_DEVICE_ATTR(running_average_window, 0644, mcp9982_running_average_window_show,
+> +		       mcp9982_running_average_window_store, 0);
+
+Hmm.  A running average is a low pass filter.  Can we control this instead via
+standard ABI and the 3dB point?  Take a look at the filter ABI in
+Documentation/ABI/testing/sysfs-bus-iio
+
+Custom ABI is rarely used in real cases because the tools tend not to know about it
+so we avoid it if we possibly can.
+
+> +
+> +static IIO_DEVICE_ATTR(running_average_window_available, 0444,
+> +		       mcp9982_running_average_window_avail_show, NULL, 1);
+> +
+> +static int mcp9982_prep_custom_attributes(struct mcp9982_priv *priv, struct iio_dev *indio_dev)
+> +{
+> +	struct attribute **mcp9982_custom_attr;
+> +	struct attribute_group *mcp9982_group;
+> +	struct device *dev = &priv->client->dev;
+> +
+> +	mcp9982_group = devm_kzalloc(dev, sizeof(*mcp9982_group), GFP_KERNEL);
+> +	if (!mcp9982_group)
+> +		return -ENOMEM;
+> +
+> +	mcp9982_custom_attr = devm_kzalloc(dev, MCP9982_NR_CUSTOM_ATTR *
+> +					   sizeof(*mcp9982_group) + 1, GFP_KERNEL);
+> +	if (!mcp9982_custom_attr)
+> +		return -ENOMEM;
+> +
+> +	mcp9982_custom_attr[0] = MCP9982_DEV_ATTR(running_average_window);
+> +	mcp9982_custom_attr[1] = MCP9982_DEV_ATTR(running_average_window_available);
+
+These seem fixed, why the allocation rather than a static const array etc?
+
+> +
+> +	mcp9982_group->attrs = mcp9982_custom_attr;
+> +	priv->iio_info.attrs = mcp9982_group;
+
+Isn't priv->iio_info pointing to something static const?
+You'll need to duplicate it if you want to modify like this.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct iio_info mcp9982_info = {
+> +	.read_raw = mcp9982_read_raw,
+> +	.read_label = mcp9982_read_label,
+> +	.read_avail = mcp9982_read_avail,
+> +	.write_raw_get_fmt = mcp9982_write_raw_get_fmt,
+> +	.write_raw = mcp9982_write_raw,
+> +};
+> +
+> +static int mcp9982_init(struct mcp9982_priv *priv)
+> +{
+> +	int ret, i;
+> +	u8 val;
+> +
+> +	val = FIELD_PREP(MCP9982_CFG_MSKAL, MCP9982_CFG_MSKAL_DEFAULT) |
+> +	      FIELD_PREP(MCP9982_CFG_RS, MCP9982_CFG_RS_DEFAULT) |
+> +	      FIELD_PREP(MCP9982_CFG_ATTHM, MCP9982_CFG_ATTHM_DEFAULT) |
+> +	      FIELD_PREP(MCP9982_CFG_RECD12, priv->recd12) |
+> +	      FIELD_PREP(MCP9982_CFG_RECD34, priv->recd34) |
+> +	      FIELD_PREP(MCP9982_CFG_RANGE, priv->temp_range_code) |
+> +	      FIELD_PREP(MCP9982_CFG_DA_ENA, MCP9982_CFG_DA_ENA_DEFAULT) |
+> +	      FIELD_PREP(MCP9982_CFG_APDD, priv->apdd);
+> +	ret = regmap_write(priv->regmap, MCP9982_CFG_ADDR, val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_write(priv->regmap, MCP9982_CONV_ADDR, MCP9982_SAMPLING_FREQ_CODE_DEFAULT);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_write(priv->regmap, MCP9982_HYS_ADDR, priv->hysteresis);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_write(priv->regmap, MCP9982_CONSEC_ALRT_ADDR, MCP9982_CONSEC_ALRT_DEFAULT);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* RUNNING AVG DEFAULT is 0 */
+I don't think the comment adds anything that isn't obvious from the code.
+> +	ret = regmap_write(priv->regmap, MCP9982_RUNNING_AVG_ADDR, 0);
+> +	if (ret)
+> +		return ret;
+> +	priv->running_avg = 1;
+> +
+> +	/* HOTTEST CFG DEFAULT is 0 */
+same here
+> +	ret = regmap_write(priv->regmap, MCP9982_HOTTEST_CFG_ADDR, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Set beta compensation for all channels */
+and here
+> +	for (i = 0; i < 2; i++) {
+Why 2? Can we get that from size of something?
+> +		ret = regmap_write(priv->regmap, MCP9982_EXT_BETA_CFG_ADDR(i),
+> +				   priv->beta_user_value[i]);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	/* Set ideality factor for all channels */
+> +	for (i = 0; i < 4; i++) {
+Why 4?  Can we get that from size of something?
+> +		ret = regmap_write(priv->regmap, MCP9982_EXT_IDEAL_ADDR(i),
+> +				   priv->ideality_user_value[i]);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int mcp9982_parse_of_fw(struct iio_dev *indio_dev)
+> +{
+> +	struct mcp9982_priv *priv = iio_priv(indio_dev);
+> +	struct device *dev = &priv->client->dev;
+> +	int ret, reg_nr, iio_idx, i;
+> +
+> +	if (device_property_present(dev, "microchip,temp-hysteresis")) {
+> +		ret = device_property_read_u32(dev, "microchip,temp-hysteresis", &priv->hysteresis);
+> +		if (ret)
+> +			return dev_err_probe(dev, ret, "Cannot read hysteresis property\n");
+> +
+> +		if (priv->hysteresis > MCP9982_HYSTERESIS_MAX_VALUE)
+> +			return dev_err_probe(dev, ret,
+> +					     "Hysteresis value is higher than maximum\n");
+> +	} else {
+> +		priv->hysteresis = MCP9982_HYSTERESIS_DEFAULT;
+> +	}
+Usual trick for these is to assume any error means fallback to default. Allowing
+simpler option of:
+	priv->hysteresis = MCP9...
+
+	device_property_read_u32(dev, "microchip,....);
+	//don't check error.
+
+	if (priv->hysteresis > MCP_...)
+		return dev_err_probe();
+Which is fine if pointless on the default value as well.
+
+The slight loss is this doesn't catch missformatted properties.  Advantage
+is simpler and shorter code.
+
+> +
+> +	if (device_property_present(dev, "microchip,extended-temp-range"))
+
+Bool rather than present check.
+
+> +		priv->temp_range_code = 1;
+> +	else
+> +		priv->temp_range_code = MCP9982_TEMP_RANGE_DEFAULT;
+> +
+> +	if (device_property_present(dev, "microchip,beta-channel1")) {
+> +		ret = device_property_read_u32(dev, "microchip,beta-channel1",
+> +					       &priv->beta_user_value[0]);
+> +		if (ret)
+> +			return ret;
+> +
+> +		if (priv->beta_user_value[0] > MCP9982_BETA_MAX_VALUE)
+> +			return dev_err_probe(dev, -EINVAL, "Beta 1 value is higher than max\n");
+> +	} else {
+> +		priv->beta_user_value[0] = MCP9982_BETA_AUTODETECT_ENABLE;
+
+As above - can set default and not check error on the property read to give
+simpler code.
+
+> +	}
+> +
+> +	if (device_property_present(dev, "microchip,beta-channel2")) {
+> +		ret = device_property_read_u32(dev, "microchip,beta-channel2",
+> +					       &priv->beta_user_value[1]);
+> +		if (ret)
+> +			return ret;
+> +
+> +		if (priv->beta_user_value[1] > MCP9982_BETA_MAX_VALUE)
+> +			return dev_err_probe(dev, -EINVAL, "Beta 2 value is higher than max\n");
+> +	} else {
+> +		priv->beta_user_value[1] = MCP9982_BETA_AUTODETECT_ENABLE;
+> +	}
+> +
+> +	if (device_property_present(dev, "microchip,apdd-state"))
+> +		priv->apdd = 0;
+> +	else
+> +		priv->apdd = MCP9982_APDD_DEFAULT;
+> +
+> +	if (device_property_present(dev, "microchip,recd12"))
+> +		priv->recd12 = 0;
+> +	else
+> +		priv->recd12 = MCP9982_RECD_DEFAULT;
+> +
+> +	if (device_property_present(dev, "microchip,recd34"))
+> +		priv->recd34 = 0;
+> +	else
+> +		priv->recd34 = MCP9982_RECD_DEFAULT;
+> +
+> +	ret = device_property_read_string(dev, "compatible", (const char **)&priv->chip_name);
+This is doing a bad patch to the stuff that we do by getting the match data directly
+from the tables provided i2c_get_match_data()
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Cannot read compatible property\n");
+> +
+> +	priv->chip_name = &priv->chip_name[10];
+Why 10?
+
+> +	priv->num_channels = device_get_child_node_count(dev) + 1;
+> +
+> +	for (i = 0; i < 10; i++)
+> +		if (strcmp(priv->chip_name, mcp9982_chip_config[i].name) == 0)
+
+Why the search, just get it directly from what the firmware provided?
+
+
+> +			break;
+> +	if (priv->num_channels > mcp9982_chip_config[i].phys_channels)
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "The number of channels does not match the chip\n");
+> +
+> +	priv->iio_chan = devm_kzalloc(dev, priv->num_channels * sizeof(*priv->iio_chan),
+> +				      GFP_KERNEL);
+> +	if (!priv->iio_chan)
+> +		return -ENOMEM;
+> +
+> +	/* first channel is internal and always present */
+> +	priv->iio_chan[0] = MCP9982_CHAN(MCP9982_CHAN_INT, MCP9982_CHAN_INT,
+> +					 MCP9982_INT_HIGH_BYTE_ADDR(0));
+> +	priv->labels[0] = "internal diode";
+> +	iio_idx++;
+> +	device_for_each_child_node_scoped(dev, child) {
+> +		ret = fwnode_property_read_u32(child, "reg", &reg_nr);
+> +		if (reg_nr >= mcp9982_chip_config[i].phys_channels)
+> +			return dev_err_probe(dev, -EINVAL,
+> +				     "The index of the channels does not match the chip\n");
+> +
+> +		if (fwnode_property_present(child, "microchip,ideality-factor")) {
+> +			ret = fwnode_property_read_u32(child, "microchip,ideality-factor",
+> +						       &priv->ideality_user_value[reg_nr - 1]);
+> +			if (priv->ideality_user_value[reg_nr - 1] > MCP9982_IDEALITY_MAX_VALUE)
+> +				return dev_err_probe(dev, -EINVAL,
+> +				     "The ideality value is higher than maximum\n");
+> +		} else {
+> +			priv->ideality_user_value[reg_nr - 1] = MCP9982_IDEALITY_FACTOR_DEFAULT;
+> +		}
+> +
+> +		ret = fwnode_property_read_string(child, "label",
+> +						  (const char **)&priv->labels[reg_nr]);
+> +
+> +		priv->iio_chan[iio_idx++] = MCP9982_CHAN(reg_nr, reg_nr,
+> +							 MCP9982_INT_HIGH_BYTE_ADDR(reg_nr));
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int mcp9982_probe(struct i2c_client *client)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct mcp9982_priv *priv;
+> +	struct iio_dev *indio_dev;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*priv));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	priv = iio_priv(indio_dev);
+> +	priv->client = client;
+> +	i2c_set_clientdata(client, indio_dev);
+
+Used?
+
+> +
+> +	priv->regmap = devm_regmap_init_i2c(client, &mcp9982_regmap_config);
+> +	if (IS_ERR(priv->regmap))
+> +		return dev_err_probe(dev, PTR_ERR(priv->regmap),
+> +				     "Cannot initialize register map\n");
+> +
+> +	ret = devm_mutex_init(dev, &priv->lock);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = mcp9982_parse_of_fw(indio_dev);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Parameter parsing error\n");
+> +
+> +	ret = mcp9982_init(priv);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Cannot initialize device\n");
+> +
+> +	priv->iio_info = mcp9982_info;
+Why do you need this copy?
+> +
+> +	indio_dev->name = priv->chip_name;
+> +	indio_dev->info = &priv->iio_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->channels = priv->iio_chan;
+> +	indio_dev->num_channels = priv->num_channels;
+> +
+> +	ret = mcp9982_prep_custom_attributes(priv, indio_dev);
+> +	if (ret < 0)
+> +		return dev_err_probe(&client->dev, ret,
+> +				     "Can't configure custom attributes for MCP9982 device\n");
+> +
+> +	ret = devm_iio_device_register(dev, indio_dev);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Cannot register IIO device\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct i2c_device_id mcp9982_id[] = {
+> +	{ .name = "mcp9933", .driver_data = (kernel_ulong_t)&mcp9982_chip_config[MCP9933] },
+> +	{ .name = "mcp9933D", .driver_data = (kernel_ulong_t)&mcp9982_chip_config[MCP9933D] },
+> +	{ .name = "mcp9982", .driver_data = (kernel_ulong_t)&mcp9982_chip_config[MCP9982] },
+> +	{ .name = "mcp9982D", .driver_data = (kernel_ulong_t)&mcp9982_chip_config[MCP9982D] },
+> +	{ .name = "mcp9983", .driver_data = (kernel_ulong_t)&mcp9982_chip_config[MCP9983] },
+> +	{ .name = "mcp9983D", .driver_data = (kernel_ulong_t)&mcp9982_chip_config[MCP9983D] },
+> +	{ .name = "mcp9984", .driver_data = (kernel_ulong_t)&mcp9982_chip_config[MCP9984] },
+> +	{ .name = "mcp9984D", .driver_data = (kernel_ulong_t)&mcp9982_chip_config[MCP9984D] },
+> +	{ .name = "mcp9985", .driver_data = (kernel_ulong_t)&mcp9982_chip_config[MCP9985] },
+> +	{ .name = "mcp9985D", .driver_data = (kernel_ulong_t)&mcp9982_chip_config[MCP9985D] },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, mcp9982_id);
+> +
+> +static const struct of_device_id mcp9982_of_match[] = {
+> +	{
+> +		.compatible = "microchip,mcp9933",
+> +		.data = &mcp9982_chip_config[MCP9933]
+For these, named structures now preferred over an array.  It tends to end up ever so slightly
+simpler and also gets rid of need for the enum.
+
+Also you set .data but I'm not spotting where you read it.
+
+> +	},
+> +	{
+
+kernel style still let you do
+	}, {
+and save a bunch of lines.
+
+Jonathan
 
