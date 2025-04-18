@@ -1,65 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6599670823;
-	Fri, 18 Apr 2025 15:22:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C10B1DED51
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744989734; cv=none; b=aPWHTonD7/mWu1JEm9ZL6VsQoohIWHaLYr4cLiQy3Z4yEH0/77IYfw2B7yUc09Im0o7XqfZmOvigFioB+IAm5ckHmZtGcnlOkpMXOPxyux0ig3ugLftIYa8AtmbUBtYhrrbBU5IfsO0jtuUXxL9xq8zJv8Xr1LZwHoCaNTNCwYU=
+	t=1744989763; cv=none; b=NYrjab7scaewd1QdA/bB8ercw6xLm+C/vka+fD5E3/1EuTN+bNjuZr142ZjxSpWAUkERZR009hAqDGhvBdfSjuqxQIgjF6wElTW72hs2W82prdqwQ1cTM52jj2nL9tEW8WeA96rhOTb6V6sVdiBZUphJ+Bjnaeu7y7/9XiMBk0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744989734; c=relaxed/simple;
-	bh=DM/eToi4fQsi4jJmxexxgjn3uiKzE9cRCKPbXFEP1KE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k2Xx3N2ILnXs5J2o3ysA3lnkbNU7bbLgLW5k4Z9Rro5UVLk6ozv2kff7n70UsXDc5RrwspJ4Q0KSdRw/f3d88gFtIowdYTmJwHNcfgL+DBhHNxCzrqxcFULqmpuMPakHLIDdJgM/Gp8WT+Aj5DE9pIh6+MECZN8UBiG2P6M5hKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MjX88RiC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744989763; c=relaxed/simple;
+	bh=4XaN4b6TYxor2VB6PN4UWKPPAFoVzkJsLeYA68iu9uM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t0dKCXbHs7V0TOIqySbNplHVM2R12wW8NKn2qPtEhGyqB1uSNsUVARk2JMw9sLLJSE6lmb5P5hzb5yKRyf8dmdTRm9EFGaSj5X0rqe9V1gDfCkTyrDttKq/dGeXTdq79qAm/1O2sSU6qaIbOOdXJYHimAanuUr//vqCPVJokNZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CnTFt+ur; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MjX88RiC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEE1FC4CEE2;
-	Fri, 18 Apr 2025 15:22:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744989733;
-	bh=DM/eToi4fQsi4jJmxexxgjn3uiKzE9cRCKPbXFEP1KE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MjX88RiCq1lmjN9igA4LAXgTOAmTSI6+n3mJXgDh7iSpq27lZ756si/BWLFYc6o4l
-	 bHJ+ZX59fydYad4MFSV1v6PakgH2+NmQOlVajkhfMEMCTbTJivPgqJeorMxxKG92Nr
-	 3zA9KL8X07V+n2X/JHjI/4ifOQWB+UVaw38o6sFs2hFYt+s1/eg322wnIAmkwmHyxv
-	 LQX/AaIqUkh0Y406ADK8iudNJhpw+b89fzu4gHDzr8p5atX++3yQrUzeyeBd189xhz
-	 iIh0RnmUg2sqHrN4A0nI4jgNNUsPC78NR9b22i0iQysOz6itJpErruj1zboOc0ZZcJ
-	 m31KYwgETtEPA==
-Date: Fri, 18 Apr 2025 16:22:08 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Siddharth Menon <simeddon@gmail.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-staging@lists.linux.dev, marcelo.schmitt1@gmail.com
-Subject: Re: [PATCH v8] iio: frequency: ad9832: Use FIELD_PREP macro to set
- bit fields
-Message-ID: <20250418162208.2be5f219@jic23-huawei>
-In-Reply-To: <CAGd6pzM6=A1=ioLm4C51Nc8TBai5sSELpWbLfShwScbxfs=HhA@mail.gmail.com>
-References: <20250416140259.13431-1-simeddon@gmail.com>
-	<CAGd6pzM6=A1=ioLm4C51Nc8TBai5sSELpWbLfShwScbxfs=HhA@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CnTFt+ur"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22c33677183so24139815ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:22:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744989760; x=1745594560; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZFIgyfykMWRR/7w+FeA+/qARrKEoNmHzLEi5u8RTHaE=;
+        b=CnTFt+urEGtFZeTAwA10VKm8BBJn9qNCaB6J6++Z+Xx+wc1Rvx/idYs71BZ1n3A/BP
+         41awb+1KfBrvyMpT7HXL0lxVoW5RZFc8LKnYYky9DzfHoIppAtFmYxNkBMADImms1TY0
+         +uzC2hxU6d0hMvEFGxcd6azOwAHT36P1GEEZZlv6CA1Uy+lvGN4lOYW3xxld9BcIS52j
+         boklGnIY5bePfSrn/0UwvUBVA2IODBk1wWq5cA1hm8jxC6aPAWwJE0WhwU4YgA75JJHe
+         VoedzGRO6ej4I/Y0Dc8nRkZ2zEydO9ObdGjKtDZEdSwFXP03hIsR3t8DlGeO+TKQ0xkq
+         8XCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744989760; x=1745594560;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZFIgyfykMWRR/7w+FeA+/qARrKEoNmHzLEi5u8RTHaE=;
+        b=GBeG4SGRzc2YGcjLPKnzIDeA1IDqymcpZfHzmTeuFFQYmsvUd5f415xt7KDsjuycIO
+         FbJ8F4ncWpYWokPOIn7TbQHyPVwmBk5X6SPNNFtPAy7SgDTVQCuE1PaCwvgBB0RY5uZp
+         n618LIzll26Rf+0hn9Z9oWeNhM4mAmkQq76xDc6EeLjx6nujGPtIhWxsczZZTuk7vxwt
+         qq089+AYW+Ounb3Qx3YBiKBImOgACoMrcno6JtveVq1zAgcVGhGagaj7+fCtmIBu/PRJ
+         /o+WPKCB9cwdHf/w5gIrYMQxh9j9AHGTSEov6wxnzGpbywKRB3evNY0Dh112NzPkuzEh
+         d9Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCWsvkPv+SrkpYvUjCBDKPpfwRMLB11nc7SRousWJaiGB0Jg+5f2HwmctG69wEXosQePSwXuENKEj3qPfsM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCtPrr7Ca9SsZzxPB7KBHKtIIrghe9Bt7aLpD5LKZ5bMmHCBOL
+	Zcz99iBPPvvtEIyDH/QG7Tgk7rEH27/Fadtxwphufg56dtO7SRLR
+X-Gm-Gg: ASbGncvQ3qzsTR0UE/yVMk9i37ll1sF/Vgl9wqb/4ldSkGixLrfJqx6AeWZaMTjNLsh
+	zrOPnXC7VVKLYSRAh0Aynh3Eo6lARSRV53MeQmm22vVS6vmNRNHWvZaoVNsn/eP7xdIrqpcpN2P
+	r6gGcWYP807Xzf+2nzm6eZaeQTV7vv/c/lyOnhULXlfbsN7N6HIA9xmZfwUpYUYL59UETSiFv9C
+	+ctq3/06xI95w0fkCL0eXBlJne3AR0wW074AZFWhHVbmzbYxt17POjKwL6uv0WGVTavikzkmbl+
+	xchnYoj4sYCU6Jc7SLZnBQaOyGDmes9Fp2pJifNvA4Jkerih4g==
+X-Google-Smtp-Source: AGHT+IHj5HSM54koysPBKGyp+aLPoWZ7WtDHkzYx6U4C4btAc09Z9zRJ5SbLA7UMM3cDDOc37Q88Ow==
+X-Received: by 2002:a17:902:fc4e:b0:224:1eab:97b2 with SMTP id d9443c01a7336-22c53664af3mr51274645ad.53.1744989760577;
+        Fri, 18 Apr 2025 08:22:40 -0700 (PDT)
+Received: from localhost.localdomain ([43.129.202.66])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fde883sm17791325ad.242.2025.04.18.08.22.38
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 18 Apr 2025 08:22:39 -0700 (PDT)
+From: Lance Yang <ioworker0@gmail.com>
+X-Google-Original-From: Lance Yang <lance.yang@linux.dev>
+To: akpm@linux-foundation.org
+Cc: mingzhe.yang@ly.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Lance Yang <lance.yang@linux.dev>
+Subject: [RESEND PATCH v2 1/1] mm/rmap: add CONFIG_MM_ID guard for folio_test_large_maybe_mapped_shared()
+Date: Fri, 18 Apr 2025 23:22:28 +0800
+Message-ID: <20250418152228.20545-1-lance.yang@linux.dev>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Wed, 16 Apr 2025 19:39:03 +0530
-Siddharth Menon <simeddon@gmail.com> wrote:
+From: Lance Yang <lance.yang@linux.dev>
 
-> On Wed, 16 Apr 2025 at 19:33, Siddharth Menon <simeddon@gmail.com> wrote:
-> >
-> > Use bitfield and bitmask macros to clearly specify AD9832 SPI
-> > command fields to make register write code more readable.
-> >
-> > Suggested-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> > Signed-off-by: Siddharth Menon <simeddon@gmail.com>  
-> 
-> I'm sorry... I forgot to add the reviewed by tag
-> Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To prevent folio_test_large_maybe_mapped_shared() from being used without
+CONFIG_MM_ID, we add a compile-time check rather than wrapping it in
+'#ifdef', avoiding even more #ifdef in callers that already use
+IS_ENABLED(CONFIG_MM_ID).
 
-Applied to the togreg branch of iio.git. I'll initially push that out as
-testing though to let 0-day poke at this and the rest of the stuff I queue today.
+Also, we used plenty of IS_ENABLED() on purpose to keep the code free of
+'#ifdef' mess.
+
+Suggested-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Lance Yang <lance.yang@linux.dev>
+Acked-by: David Hildenbrand <david@redhat.com>
+---
+v1 -> v2:
+ * Update the changelog, suggested by Andrew and David
+ * https://lore.kernel.org/linux-mm/20250417124908.58543-1-ioworker0@gmail.com
+
+ include/linux/page-flags.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index d3909cb1e576..6bd9b9043976 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -1232,6 +1232,8 @@ static inline int folio_has_private(const struct folio *folio)
+ 
+ static inline bool folio_test_large_maybe_mapped_shared(const struct folio *folio)
+ {
++	/* This function should never be called without CONFIG_MM_ID enabled. */
++	BUILD_BUG_ON(!IS_ENABLED(CONFIG_MM_ID));
+ 	return test_bit(FOLIO_MM_IDS_SHARED_BITNUM, &folio->_mm_ids);
+ }
+ #undef PF_ANY
+-- 
+2.49.0
+
