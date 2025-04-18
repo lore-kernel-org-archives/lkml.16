@@ -1,265 +1,121 @@
-Received: from sender4-pp-o92.zoho.com (sender4-pp-o92.zoho.com [136.143.188.92])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C4B148316;
-	Fri, 18 Apr 2025 14:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.92
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744986032; cv=pass; b=Cq6aUb/0M72RVPeIR/d/Oy7zuGSvrEpm2/okit5lcIoUwTf6jP0vj+z2u9tttm9jjQqdMqEBQVXN7k1zEE/nfzuAGhM8fOcRECGQByzCw88YK1AlPzTpO+HVVidRifUR/4hkcw/lPFAu0AvUq9SvKDnBFGns0GKjqVPtUwPpKqc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744986032; c=relaxed/simple;
-	bh=1V4cYrKt5Rb/SQIRggNYD2Z5Asx3L3cyi1Ax/5szR7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z3+9637U8pfQKiJpGwOWYpaPXhgFOezll36KnB8zNyKN4v0VSbf0sxYtsdYgOZtfF7zjYkQLFoqshMQocox2w+zM0+2WmGuWOe1kzBx/j3Mvn6RSsKivJsDNv4yVjDjQCsAygDyux/2apyBXKFQqGr6QSGZjimBoTzkLRWuscpw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=kingxukai@zohomail.com header.b=AGhv6Xv9; arc=pass smtp.client-ip=136.143.188.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CEA2C1A2;
+	Fri, 18 Apr 2025 14:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744986276; cv=none; b=XyPmsJAkra7LSXWwPokqHyrPa6MB03gaizkpGhtwP2JJaiqWVVSAP3Fo5TS2fV6BooVEB5D7RvmHdlT4m3VaW+3dLx6Xj4oqiYIBJHmyPLsmiwrl7SaBmPUAK+RjYcfCGS+fYsTwXF/eSwPcKnadDE37NrAAOxCFhWsOjd0qsoI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744986276; c=relaxed/simple;
+	bh=9nFO2uV/6R5my/yO8nRy9Gc5lPiZRpUZnZeySK77PSc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eqevWe5EqAa9tMeiwPCkFYjI4Nfuhv16SEarFD3D5PWO7hG2ZGZNgOEKqPsUNNuYgrVE/RZ0icFBrbgxSWstW/TAbD+nzphQKwYQZ1j3IVPuD/tJ32+b2B6+bYaLJibG4B097hISTaCphRXQHurczVGRS98eHWOf5Ceniz2HskU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gYuN4sSg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=kingxukai@zohomail.com header.b="AGhv6Xv9"
-ARC-Seal: i=1; a=rsa-sha256; t=1744986009; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=RtrXWpQpoMrsGyEMRcdbVykyTqFwYL3AGPnE6oGSiDewHzZgtWWIjxb8m1KgomzlyilISs2HH15X696nvGurICVNczPa6O/97pvKkAKHcKZXBvr0fXpQimI9I/79Y+3KWXDGXxPxGwmXSKI8oYi9fRITasPCz56upeWoq1Yo+eA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744986009; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=J9B+xErGQKJgJ0GqczarSJBeszmh3Cmzf0o0QIoMC5c=; 
-	b=cMHS14dvawEzQWons6Ph/HMGMR8/GKNDy5Rm3Bi21zW4QuoTHWlvmYMeuDdtNAIGFa/M4e/AkpjWNFUW4M9U+80NVAQCBcKoK/BylyO51etDS5XV62NwRDt5naIB1slxvsKYN02VzEpG1y2qnmOZ35uIJARceFVpyxWUGcsjB58=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=kingxukai@zohomail.com;
-	dmarc=pass header.from=<kingxukai@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744986009;
-	s=zm2022; d=zohomail.com; i=kingxukai@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=J9B+xErGQKJgJ0GqczarSJBeszmh3Cmzf0o0QIoMC5c=;
-	b=AGhv6Xv9iFtCipH5FMMwbP6HWrANv5caSURWUEGEv8nqyEe9G/Esxdm2FDnhwqPd
-	AmOobZS+h2aCX/C6xwzB7C3j3q234qgcCpF/lnIqQvCz5Oy9g0WKkWo4XMHSve8sjcE
-	B8wrb79Z9mxXIPkFpBZRCWIkZtJo11abq+EHhu/M=
-Received: by mx.zohomail.com with SMTPS id 1744986002357182.528426557427;
-	Fri, 18 Apr 2025 07:20:02 -0700 (PDT)
-Message-ID: <baae0cce-979d-4e4d-aacc-73387ed7d8a8@zohomail.com>
-Date: Fri, 18 Apr 2025 22:19:43 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gYuN4sSg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48327C4CEE2;
+	Fri, 18 Apr 2025 14:24:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744986276;
+	bh=9nFO2uV/6R5my/yO8nRy9Gc5lPiZRpUZnZeySK77PSc=;
+	h=From:Subject:Date:To:Cc:From;
+	b=gYuN4sSg7ZpCPmi416kdmbNcu3ww+zffYxlpdnoK7NgAgA5ZUXpnms3oOdaf+NjaB
+	 3cdB0aopw55+EMt2G4UIM5ZtQ/QBqkMy2ay55WUptf/XPdJClPBjeK3H5wCb6WEX18
+	 jEruut+qDkeDp704L/+OD3jx8BX8w7fDcNJMAOBZZz+2cDCIXwytgvOnB0ziKTioPZ
+	 9grxJC0C+BYkDX0FbR5My8UiM2qOPBqHGrMrUiBY5FJtuXdIovmiu2+vKh3ORLNuna
+	 EMN55dxBU2eBgyP6SQDSM2e+I7PLJ2lxHWIJ9r1+fQ8eh+L2PAQd/22Ccg59u4Air/
+	 RfgW3iLaYp8+g==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v4 0/7] ref_tracker: add ability to register a debugfs file
+ for a ref_tracker_dir
+Date: Fri, 18 Apr 2025 10:24:24 -0400
+Message-Id: <20250418-reftrack-dbgfs-v4-0-5ca5c7899544@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/3] clk: canaan: Add clock driver for Canaan K230
-To: Troy Mitchell <troymitchell988@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Conor Dooley <conor@kernel.org>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, Samuel Holland <samuel.holland@sifive.com>
-References: <20250415-b4-k230-clk-v6-0-7fd89f427250@zohomail.com>
- <20250415-b4-k230-clk-v6-2-7fd89f427250@zohomail.com>
- <aAJGCDmqNoSWrwXw@troy-wujie14-pro>
-From: Xukai Wang <kingxukai@zohomail.com>
-Content-Language: en-US
-In-Reply-To: <aAJGCDmqNoSWrwXw@troy-wujie14-pro>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Feedback-ID: rr08011227d656c8f955eef877984aa3c30000194a8cf4a0238f4acea727dff6676dd24307b9301560b74f2d:zu080112275d9e1c64a09c000aacb0f9bb0000330522e1da41d81750df9c78bd5cc5ffb241289e3acb6fae4b:rf0801122c2a500e82837e5d7e05e4ba23000054558afdc724201e871132d566febc33c48bb9ef3ba3aec389b91cc34077:ZohoMail
-X-ZohoMailClient: External
+X-B4-Tracking: v=1; b=H4sIAJhgAmgC/2XM0Q6CIBTG8VdxXEeDcyCpq96jdSEIymzawLGa8
+ 91DtzbLy++c/f4TiTZ4G8mlmEiwyUc/9HmIQ0FMW/WNpb7OmwADyQRHGqwbQ2U6WuvGRYrlqdT
+ I0IKrSEbP/PevNXi75936OA7hvfYTX67flPhPJU4ZdQylkgoBGF47G3r7OA6hIUsrwdbLnYfsN
+ VdGVLrmAG7ncevLncfsDXJ5FqCMcvrHz/P8AQBgcH0tAQAA
+X-Change-ID: 20250413-reftrack-dbgfs-3767b303e2fa
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>, 
+ Nathan Chancellor <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2095; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=9nFO2uV/6R5my/yO8nRy9Gc5lPiZRpUZnZeySK77PSc=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBoAmChvduo3yDD9PFjedE268IXAg7BNeU1w3gL1
+ vUNQq0Lo2SJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaAJgoQAKCRAADmhBGVaC
+ FRLcD/4g8wKYKiiarDRpC13+LZMKlU/x4Ohycx6e2qiMsWBMjCFtU3E/aYv2gx/bb86lou/+UQi
+ eNaCO6HHAW3u+iufA4+SGhJC3V2ZrrN8RayqqVwj6PGBoCpbon9OxzB65jo4zg8S1YuKcEm5++3
+ 3ceBgeKlj9dmhyEsJph8UxPuP/H/0c5bAk5lakNMKv4Rok0pOMvY383w902NJfzrDODlP4sc44+
+ d8hRMNT4pPjcQUoJrjMkW/PYTMcZAira/yQe+wrT8mM7DEN4tJ1ce8JqJc9wAiGouVrEXTunrLJ
+ dE6qy3ONlXu1DTdpeUDh1w7Dxb+u8+F3NaJwt8IejmqlRa5bobDTRtn8kqygPt3mFn3C9IFvNkH
+ Cd5XQRaFWaX/6HBH90vvZ8/CbuZ7ZvBCqYpLGrpSPM/wv5/FV9Hu23ntSEhvn0Yf6WrYFZhLNiN
+ oPrz0XWwJ2xAsEna7eiXB/j8oslc3YFmoYOrdBabJwIspOULWsN1Fro1U1m8WHGxsL639WcNgWz
+ N6lT23VWLwMiNbpf++c2lmjQFiCOTEpFils2zVKYQ8WN/Ur3Xb3BHQynG9PIF4/VWJIEQRMSA7f
+ +A+qEmgI1itlrmIy77BAfYtSPuthg/MXigWOE5OnGIM8mh+FzBR4bHEtuUCzdra0hZc7m9OwqoK
+ S6S7fLYUVR58yJA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
+This version should be pretty close to merge-ready. The only real
+difference is the use of NAME_MAX as the field width for on-stack
+sprintf buffers.
 
-On 2025/4/18 20:31, Troy Mitchell wrote:
-> On Tue, Apr 15, 2025 at 10:25:12PM +0800, Xukai Wang wrote:
->> +	switch (rate_cfg->method) {
->> +	/*
->> +	 * K230_MUL: div_mask+1/div_max...
->> +	 * K230_DIV: mul_max/div_mask+1
->> +	 * K230_MUL_DIV: mul_mask/div_mask...
->> +	 */
->> +	case K230_MUL:
->> +		div = rate_cfg->rate_div_max;
->> +		mul = (readl(rate_cfg->rate_reg) >> rate_cfg->rate_div_shift)
->> +			& rate_cfg->rate_div_mask;
->> +		mul++;
->> +		break;
->> +	case K230_DIV:
->> +		mul = rate_cfg->rate_mul_max;
->> +		div = (readl(rate_cfg->rate_reg) >> rate_cfg->rate_div_shift)
->> +			& rate_cfg->rate_div_mask;
->> +		div++;
->> +		break;
->> +	case K230_MUL_DIV:
->> +		if (!rate_cfg_c) {
->> +			mul = (readl(rate_cfg->rate_reg) >> rate_cfg->rate_mul_shift)
->> +				& rate_cfg->rate_mul_mask;
->> +			div = (readl(rate_cfg->rate_reg) >> rate_cfg->rate_div_shift)
->> +				& rate_cfg->rate_div_mask;
->> +		} else {
->> +			mul = (readl(rate_cfg_c->rate_reg_c) >> rate_cfg_c->rate_mul_shift_c)
->> +				& rate_cfg_c->rate_mul_mask_c;
->> +			div = (readl(rate_cfg->rate_reg) >> rate_cfg->rate_div_shift)
->> +				& rate_cfg->rate_div_mask;
->> +		}
->> +		break;
-> Should we report an error in other cases?
+I left the Reviewed-bys intact. Let me know if that's an issue and
+we can drop them.
 
-This is impossible. The compiler will warn if an enum case is missing.[1]
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v4:
+- Drop patch to widen ref_tracker_dir_.name, use NAME_MAX+1 (256) instead since this only affects dentry name
+- Link to v3: https://lore.kernel.org/r/20250417-reftrack-dbgfs-v3-0-c3159428c8fb@kernel.org
 
->> +	}
->> +
->> +	return mul_u64_u32_div(parent_rate, mul, div);
->> +}
->> +
->> +static int k230_clk_find_approximate(struct k230_clk *clk,
->> +				     u32 mul_min,
->> +				     u32 mul_max,
->> +				     u32 div_min,
->> +				     u32 div_max,
->> +				     enum k230_clk_div_type method,
->> +				     unsigned long rate,
->> +				     unsigned long parent_rate,
->> +				     u32 *div,
->> +				     u32 *mul)
->> +{
->> +	long abs_min;
->> +	long abs_current;
->> +	long perfect_divide;
->> +	struct k230_clk_cfg *cfg = k230_clk_cfgs[clk->id];
->> +	struct k230_clk_rate_cfg *rate_cfg = cfg->rate_cfg;
->> +
->> +	const u32 codec_clk[9] = {
->> +		2048000,
->> +		3072000,
->> +		4096000,
->> +		6144000,
->> +		8192000,
->> +		11289600,
->> +		12288000,
->> +		24576000,
->> +		49152000
->> +	};
->> +
->> +	const u32 codec_div[9][2] = {
->> +		{3125, 16},
->> +		{3125, 24},
->> +		{3125, 32},
->> +		{3125, 48},
->> +		{3125, 64},
->> +		{15625, 441},
->> +		{3125, 96},
->> +		{3125, 192},
->> +		{3125, 384}
->> +	};
->> +
->> +	const u32 pdm_clk[20] = {
->> +		128000,
->> +		192000,
->> +		256000,
->> +		384000,
->> +		512000,
->> +		768000,
->> +		1024000,
->> +		1411200,
->> +		1536000,
->> +		2048000,
->> +		2822400,
->> +		3072000,
->> +		4096000,
->> +		5644800,
->> +		6144000,
->> +		8192000,
->> +		11289600,
->> +		12288000,
->> +		24576000,
->> +		49152000
->> +	};
->> +
->> +	const u32 pdm_div[20][2] = {
->> +		{3125, 1},
->> +		{6250, 3},
->> +		{3125, 2},
->> +		{3125, 3},
->> +		{3125, 4},
->> +		{3125, 6},
->> +		{3125, 8},
->> +		{125000, 441},
->> +		{3125, 12},
->> +		{3125, 16},
->> +		{62500, 441},
->> +		{3125, 24},
->> +		{3125, 32},
->> +		{31250, 441},
->> +		{3125, 48},
->> +		{3125, 64},
->> +		{15625, 441},
->> +		{3125, 96},
->> +		{3125, 192},
->> +		{3125, 384}
->> +	};
->> +
->> +	switch (method) {
->> +	/* only mul can be changeable 1/12,2/12,3/12...*/
->> +	case K230_MUL:
->> +		perfect_divide = (long)((parent_rate * 1000) / rate);
->> +		abs_min = abs(perfect_divide -
->> +			     (long)(((long)div_max * 1000) / (long)mul_min));
->> +		*mul = mul_min;
->> +
->> +		for (u32 i = mul_min + 1; i <= mul_max; i++) {
->> +			abs_current = abs(perfect_divide -
->> +					(long)((long)((long)div_max * 1000) / (long)i));
->> +			if (abs_min > abs_current) {
->> +				abs_min = abs_current;
->> +				*mul = i;
->> +			}
->> +		}
->> +
->> +		*div = div_max;
->> +		break;
->> +	/* only div can be changeable, 1/1,1/2,1/3...*/
->> +	case K230_DIV:
->> +		perfect_divide = (long)((parent_rate * 1000) / rate);
->> +		abs_min = abs(perfect_divide -
->> +			     (long)(((long)div_min * 1000) / (long)mul_max));
->> +		*div = div_min;
->> +
->> +		for (u32 i = div_min + 1; i <= div_max; i++) {
->> +			abs_current = abs(perfect_divide -
->> +					 (long)((long)((long)i * 1000) / (long)mul_max));
->> +			if (abs_min > abs_current) {
->> +				abs_min = abs_current;
->> +				*div = i;
->> +			}
->> +		}
->> +
->> +		*mul = mul_max;
->> +		break;
->> +	/* mul and div can be changeable. */
->> +	case K230_MUL_DIV:
->> +		if (rate_cfg->rate_reg_off == K230_CLK_CODEC_ADC_MCLKDIV_OFFSET ||
->> +		    rate_cfg->rate_reg_off == K230_CLK_CODEC_DAC_MCLKDIV_OFFSET) {
->> +			for (u32 j = 0; j < 9; j++) {
->> +				if (0 == (rate - codec_clk[j])) {
->> +					*div = codec_div[j][0];
->> +					*mul = codec_div[j][1];
->> +				}
->> +			}
->> +		} else if (rate_cfg->rate_reg_off == K230_CLK_AUDIO_CLKDIV_OFFSET ||
->> +			   rate_cfg->rate_reg_off == K230_CLK_PDM_CLKDIV_OFFSET) {
->> +			for (u32 j = 0; j < 20; j++) {
->> +				if (0 == (rate - pdm_clk[j])) {
->>
->> +					*div = pdm_div[j][0];
->> +					*mul = pdm_div[j][1];
->> +				}
->> +			}
->> +		} else {
->> +			return -EINVAL;
->> +		}
->> +		break;
-> Should we report an error when other case?
+Changes in v3:
+- don't overwrite dir->name in ref_tracker_dir_debugfs
+- define REF_TRACKER_NAMESZ and use it when setting name
+- Link to v2: https://lore.kernel.org/r/20250415-reftrack-dbgfs-v2-0-b18c4abd122f@kernel.org
 
-The default case is impossible.
-The compiler will warn if an enum case is missing.
-And Stephen Boyd suggested to remove the default case[1].
-Link: https://lore.kernel.org/all/3fb73691f50e599c361dddaff08d3af5.sboyd@kernel.org/ [1]
+Changes in v2:
+- Add patch to do %pK -> %p conversion in ref_tracker.c
+- Pass in output function to pr_ostream() instead of if statement
+- Widen ref_tracker_dir.name to 64 bytes to accomodate unique names
+- Eliminate error handling with debugfs manipulation
+- Incorporate pointer value into netdev name
+- Link to v1: https://lore.kernel.org/r/20250414-reftrack-dbgfs-v1-0-f03585832203@kernel.org
+
+---
+Jeff Layton (7):
+      ref_tracker: don't use %pK in pr_ostream() output
+      ref_tracker: add a top level debugfs directory for ref_tracker
+      ref_tracker: have callers pass output function to pr_ostream()
+      ref_tracker: allow pr_ostream() to print directly to a seq_file
+      ref_tracker: add ability to register a file in debugfs for a ref_tracker_dir
+      net: add ref_tracker_dir_debugfs() calls for netns refcount tracking
+      net: register debugfs file for net_device refcnt tracker
+
+ include/linux/ref_tracker.h |  13 ++++
+ lib/ref_tracker.c           | 151 +++++++++++++++++++++++++++++++++++++++-----
+ net/core/dev.c              |   6 +-
+ net/core/net_namespace.c    |  34 +++++++++-
+ 4 files changed, 187 insertions(+), 17 deletions(-)
+---
+base-commit: 695caca9345a160ecd9645abab8e70cfe849e9ff
+change-id: 20250413-reftrack-dbgfs-3767b303e2fa
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
