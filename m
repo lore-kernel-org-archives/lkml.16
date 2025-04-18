@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336F1253351;
-	Fri, 18 Apr 2025 20:27:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DCC9253F08;
+	Fri, 18 Apr 2025 20:27:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745008045; cv=none; b=WI2L2qsygEEQnq/U4hw2B4xi9j2WyL249mhXeH2y+tbvlZIVrFriaR9qaJppAlCvbj6po989oRlhQhSsxT1i6qwu2dK3m/eGeTAPKaD+QCYdXPZxDUr1a1PmkXe3kKtJ1y9gA9sOTB6dK4OiU3HcCjJzp738JvH1MvEc8BUkztc=
+	t=1745008047; cv=none; b=SVcLtrILatikUFKCBltxRDqKgKJBKIOUBRYbllMUqZog+3jsPJ/ruPQ1t9DWsTGpQXLYjtttJyJXKI4dKTLEm9IKFoEFGv9jq8xvT+z2dNmbVEBwfE8Yu+6q+zXckZVT4VNSZWUKFtUVGhLLuhswOyqD5GvmKe7k/hCN0D1XlgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745008045; c=relaxed/simple;
-	bh=luQlpI4PLZdKoydu4//pLXFh6WzsyFeRDpngWlRqd4k=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=OCJZmOOj+DYumMaRNJHT8489lPlC5LJJweOFRYD5TAXR7pBcLr12E15if/tWpavegRIa7MMVkB3LHihM7zzJEbV9KNg6Xy+aMuIik/sY+gvBRbsr/hQjzAIXDalReTpSIiD8sxvlFe9MpUTiQdzIisiatv2UC7ei7PIsYaES5ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MZD5/sqN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745008047; c=relaxed/simple;
+	bh=jyS0BcLPqpE6SBQbHvdlVfnLiojwxwhB3YqR9F6wwwI=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=q96DDGOqpupOeO885b57s8oTOJJRvSXhTgkZgqx8VZl8cJeX+c8Aa3CsNMXT1g3z8FLncnS4LCv1USEVjU7qJZd6rWYiIPXoGpYN9voXStrMwdLAXN94S4eSJQzPIRxPADRaSnKmUgkyF3oqSBvFbZUCsKAJzYql1P/My5t6yRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=imXVnNbG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MZD5/sqN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1040EC4CEE7;
-	Fri, 18 Apr 2025 20:27:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="imXVnNbG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0492C4CEEC;
+	Fri, 18 Apr 2025 20:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745008045;
-	bh=luQlpI4PLZdKoydu4//pLXFh6WzsyFeRDpngWlRqd4k=;
+	s=k20201202; t=1745008046;
+	bh=jyS0BcLPqpE6SBQbHvdlVfnLiojwxwhB3YqR9F6wwwI=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=MZD5/sqNbTMiObaoNey8SJ3M2m4xDIPxrFjwCP7dao0dmw52nSHotgmpkhGJyTsfb
-	 TJCQ1AAq/zFnRjFenUrP/xfoEQ1ju72mmgfAwgaOPJPkntKViXgEE2ri04sodeDCob
-	 ZFa2puOt0IOqjbp/cOw4SKE6ANM5YuMbNN6wFEexbLR6rI9VJ0+I2yHglyz0T27gtN
-	 fBtosAUhUEOcHeXiFH9dvtgAS2hXCc9j4+6AXMWPH7Wk3UwtqZhtYKF7JIHmZL94K7
-	 6haF7z/2GhdjtjQXcANvT3g5R5DAiSn/b/H1DCtAfC4N1OUriHicaK6EiXSc5SjT+V
-	 uPBCggceSiM2Q==
+	b=imXVnNbG4Xdz4Q4l5qA+8D/3BNc3qQj4rvs8eXy1d4hq6tgUH00OwjqNsAawJtbB/
+	 nEYyDpP2IuXqitKgQ5hR8JNZ2uh7ym2FZz2Q04nt+WLT+Gf7FCC83Lq2LDvx7OBLAx
+	 MI1d/WcdmaYXtK2nXj6MQqbhBIZ72tSPtfdXTZKIdZdsgo2SRUTh3V763jAdCUaUFq
+	 wLtFQjqW3nFc2iLZeXBvmOvxc0DZ5LLSmVbY/nxSEv31AWgLbxlilBRynXoykjTaY4
+	 UKlgbw9OjvTD+iTfd3DGXdRs+UJaMvRwPlXZayd2a9FhWtXWwEz/+kZY3knwWC1D72
+	 zMYoRBLkarLCQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70E2C3822E09;
-	Fri, 18 Apr 2025 20:28:04 +0000 (UTC)
-Subject: Re: [GIT PULL] Thermal control fixes for v6.15-rc3
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34D0C3822E09;
+	Fri, 18 Apr 2025 20:28:06 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio fixes for v6.15-rc3
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0imoR19gyH+DKR2CXtLeQEdbKYNWkur_7tjf4a4NQRLMg@mail.gmail.com>
-References: <CAJZ5v0imoR19gyH+DKR2CXtLeQEdbKYNWkur_7tjf4a4NQRLMg@mail.gmail.com>
+In-Reply-To: <20250418194944.37742-1-brgl@bgdev.pl>
+References: <20250418194944.37742-1-brgl@bgdev.pl>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0imoR19gyH+DKR2CXtLeQEdbKYNWkur_7tjf4a4NQRLMg@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git thermal-6.15-rc3
-X-PR-Tracked-Commit-Id: 00c5ff5e9a55dca2e7ca29af4e5f8708731faf11
+X-PR-Tracked-Message-Id: <20250418194944.37742-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.15-rc3
+X-PR-Tracked-Commit-Id: b424bb88afb6719b30340f059bf50953424cdd9d
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fe65616bf8bc1041ead8cae9edc982f62d2c120a
-Message-Id: <174500808302.316726.5049161169303778036.pr-tracker-bot@kernel.org>
-Date: Fri, 18 Apr 2025 20:28:03 +0000
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux PM <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>
+X-PR-Merge-Commit-Id: 30d451e3734b827d4064f2a77af6de65382860a4
+Message-Id: <174500808491.316726.9338651095919676932.pr-tracker-bot@kernel.org>
+Date: Fri, 18 Apr 2025 20:28:04 +0000
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 18 Apr 2025 21:34:42 +0200:
+The pull request you sent on Fri, 18 Apr 2025 21:49:44 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git thermal-6.15-rc3
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.15-rc3
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fe65616bf8bc1041ead8cae9edc982f62d2c120a
+https://git.kernel.org/torvalds/c/30d451e3734b827d4064f2a77af6de65382860a4
 
 Thank you!
 
