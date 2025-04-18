@@ -1,201 +1,112 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0906E1DD525;
-	Fri, 18 Apr 2025 14:55:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935E11D618E;
+	Fri, 18 Apr 2025 14:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744988120; cv=none; b=QOC2NJwe2gQY9vUn7iBs5RS8LNj/dxC2+iKxgERzQuUYVJA5s4vqHf0vd24otIXL87pXeI9RW4pOQs2nPwze2U2KrUya+GlyXH726fDwAaId90m8Im+MQyv0IB4KSIsAETU+Wz4cbaRm0nHJgBJblcEKr+M7fJVsSGsAaR8BtXQ=
+	t=1744988139; cv=none; b=tS9H/ysWhQA97WdacEO6FLlSjqEgZvvAQClZ52CpGf0fNt1XmKfY9EWDfa8uajv1L9n9QtKXf8Hr9KBtFxYN2uwdK6qPiwq3qijJ5q+1jdWJBn2WVNlpG0/V/1se0FvsDQJWAuxlLoqyjHWfwt9x8/m2S2TBPKH0NilWNP+6/ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744988120; c=relaxed/simple;
-	bh=RoN3cLeK/9p9mwdRIwmQYy7Phi1BWqjDBzsnmtQBFGY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=I4zujKTMdbTDQEoHuKIv6zYel3cFOevuzQcPMm+i2PMzDSVKgsM2JzbABm0aRmwWWWRoAO+W5d9aAUMZyGDd5jFUSAEuWgqgL+mWKH6hqDrf/EYwgwKmbTegzFA5FYj5esCMtJ2uVkWkykOdzTJywmcxwL4iGfwUTmrVha4BgUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fk5F+5k0; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744988139; c=relaxed/simple;
+	bh=xxlkDC+ptsSipdaVzvxKfGZrXkHdinbpI+m0wsLD/9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sd0TPbOGcyZK9e6SeICdDXAwCHiIpNU/HGn9iTQKjTk6vpf33ByNB1ZRCAJzEormMkRgylQ24BOoDUWrmdHCi5bNIPXVSC1XWNBLsPtL2DUOob9b/qszCSZEoX1RFs4i43naUOpnkL/wGjOj4P5vc6NXu7Vta6J9Cs3qA6Hhgt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iq3bCdwZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fk5F+5k0"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-223fd89d036so24372575ad.1;
-        Fri, 18 Apr 2025 07:55:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744988118; x=1745592918; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7AL4unDmRg0o0GGoNE8HkFCc4SOWy+X7dzSvx+7jpEM=;
-        b=fk5F+5k0wYz3nKF9MJo+2UiJgrsQuQjjTPEKorMtg4KZmJYX3HvfuIc2jULGUs+CKm
-         M2QJKMvyiXnVI9dQtLzVEGpk5EZmXO0LdBQAP9KLwdzIgzCup3VvnUx9WuXKrt7KGx66
-         0GkypsOUcxGrJnX5wEoaQjGmNnK8Kfm6sA5X35kB9JQtQiGqrKUVWCNQIqUq9B05NTSr
-         KF8wvgZ8asVp4SUPCF5trlGzTRhXLPvAXKO5dVWPSWfpB2a6QsYYHW23b/zCMX+PQFwY
-         Wi64HG8j3NwXVD5MMeVUsdjfvPj0Z+pyfwx00KkP30k3TeJxbIBuq8IchOmrwusbHRud
-         MnoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744988118; x=1745592918;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7AL4unDmRg0o0GGoNE8HkFCc4SOWy+X7dzSvx+7jpEM=;
-        b=XbKW1iR4md0iQnwEMNHPhrbMUCinNkJhNbZezIZbAcsbF+0IKHJwa49otzkBcZDW/d
-         I1ZRpDAHEoXRjw9vKsgIF/hm7qIt/jrZnw7nV+H/ZHhcW3dQ/0Z/eW0LzRPvA9/+Vv+M
-         +KmWkQShR4NSIGBqTMwN3EJK/hWfRLWcWE9fCeWw2fFQftthdw5TujZLJtqEOiFBSRgK
-         EVPQ0dPt1c2oJPmxA55qfUh/uMvKK0GJaAuX6IebpecHKJLS6hzb9wMvEzTr830scTl9
-         01xc9VFZ5gKaIEYIlGCOVCCDp9aaQ8UiDWx+OQ6cV+g+4JT1381b46BKu5ZaTkLmO4rT
-         I4Ng==
-X-Forwarded-Encrypted: i=1; AJvYcCVsTcQCeVVxBL/NXGdQbIC6cNW/9dx1qLglqlNxiANypqTpXEj8Uqhux0HZp6YZtp+04j7caq30Ntqy0+sc@vger.kernel.org, AJvYcCWBeJyvZjsjXkkW5Lus2hYiZJ98laE4PqN/ItswDGJNtluPMIlbrLa1hHVbqkO47qnQsG0f1bTgLs+h@vger.kernel.org, AJvYcCWcJ/ya15plXMDDPOCeRYAlvk4IrcIx1eh2Q0oPQrkCnLlC2FrHSkdpejloHvXSE3GYeylWcX+++V4z@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQ1Gmo5EiU2Og2/HtNMUYd2PM45o53oMWmaQrbdwriarSYxHxV
-	cVo/e5C20bHSo15vmcWAOreo23ma3YNkpw3X9ceuOckc0ivytIrznapTlxTvFdk=
-X-Gm-Gg: ASbGncsNvHWXnR1g3T5oOoeg7fEo38kSiKyBC+717AjNvpWmxbzIcOqMLwRUn+wFZIH
-	E38kYn+6VD8aXOgmHJwapobQh0FBiERRsD/eRW/zZ93UK4GgtAtQ7Ua+KWyfiRjVCClC0sIEbSI
-	TQsttBbyj+xJbO+U0iemf5EkwwuvfVViGukuzeOFIaFrAV1DvMEhYy+tUWds+71rvSTH5+zSHGJ
-	K1HYQp5pGgfGCpzQgpXSe3rbc6RlHxzo03RPeL9O2fm8+nWyW6M/azFOZIYrjY9NhlE4TE6xrdc
-	yX0uxyjwEF2hdTwKlvMgsg/6PF4r1H9Yf3d9P/ObMB/33pMf5skD
-X-Google-Smtp-Source: AGHT+IGCn/S0qj9GuJ44fQmtWgz5m2TwXqJJpT6TiLeYnQy6Y2uJkuYa90jtpXsoVH052J0M2cNJCg==
-X-Received: by 2002:a17:903:3c6b:b0:227:eb61:34b8 with SMTP id d9443c01a7336-22c535a7eecmr49716645ad.25.1744988117862;
-        Fri, 18 Apr 2025 07:55:17 -0700 (PDT)
-Received: from NB-GIGA003.letovo.school ([5.194.95.139])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bf18e4sm17854525ad.62.2025.04.18.07.55.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 07:55:17 -0700 (PDT)
-From: Alexey Charkov <alchark@gmail.com>
-Date: Fri, 18 Apr 2025 18:55:07 +0400
-Subject: [PATCH v2] dt-bindings: pwm: vt8500-pwm: Convert to YAML
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iq3bCdwZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 365D2C4CEE2;
+	Fri, 18 Apr 2025 14:55:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744988139;
+	bh=xxlkDC+ptsSipdaVzvxKfGZrXkHdinbpI+m0wsLD/9E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Iq3bCdwZz4DOlIjIszgQ8EVTtbNWOo5QHdeE4MppyoHFRYIXug+s6DZYQCbpHl7Xz
+	 feszW9ykNafiBxRYRF/pLBwq24IzeUpwmhX3mpYrOorJaiEAJElQsonF29adeRMK7K
+	 ZkgonCBfr/VPoxN8h4hYwwZyptv545Vris7VYhO8y1Eb+4bK9zokjPWhA623y2880b
+	 dMbiQ6WBGgFRRcJEc58TYsmioxDQ/UzY/YiyDG+oWv2NoQMt6y3zN8Moe7K0tkbVSP
+	 qkYo37OR0fyH7S67mHM052BKI20ZoFRcLPcm8DYZX/eNXrhygUYOg2EvY9882WxRTN
+	 7K7XcC0ThDZYQ==
+Date: Fri, 18 Apr 2025 15:55:30 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Andy Shevchenko
+ <andy@kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Matthias
+ Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Cosmin
+ Tanislav <cosmin.tanislav@analog.com>, Tomasz Duszynski
+ <tduszyns@gmail.com>, Jean-Baptiste Maneyrol
+ <jean-baptiste.maneyrol@tdk.com>, Andreas Klinger <ak@it-klinger.de>, Petre
+ Rodan <petre.rodan@subdimension.ro>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 6/8] iio: imu: adis16550: align buffers for timestamp
+Message-ID: <20250418155530.088e398d@jic23-huawei>
+In-Reply-To: <651b1f91-fd5e-4d59-b78b-fdd7f89247e4@baylibre.com>
+References: <20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
+	<20250417-iio-more-timestamp-alignment-v1-6-eafac1e22318@baylibre.com>
+	<aAEzeY_p6a8Pr-zn@smile.fi.intel.com>
+	<f4db1a95-106f-4fa4-9318-3ee172e29cdb@baylibre.com>
+	<20250417184429.00002403@huawei.com>
+	<651b1f91-fd5e-4d59-b78b-fdd7f89247e4@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250418-via_pwm_binding-v2-1-17545f4d719e@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAMpnAmgC/y3M2wpAQBSF4VfRvjbFIPIqkjAL+8Jgxqnk3U24/
- Fat/yILw7CUexcZ7Gx50g7S96gdat1DsHImGcgkiMNM7FxX8zFWDWvFuheR7NI2RgKFkNxrNuj
- 4fItF+dlg2Vx4/cf7fgDFRsFZdgAAAA==
-X-Change-ID: 20250418-via_pwm_binding-32f7c4e5ede1
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Alexey Charkov <alchark@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744988119; l=3573;
- i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
- bh=RoN3cLeK/9p9mwdRIwmQYy7Phi1BWqjDBzsnmtQBFGY=;
- b=LEtfxtqx3xa3LOsxdPHifRaAXT5Bd6L98wJoxAe3kyGxMg3UKZQxWyxWkoyl3r+NjtusWljVE
- 3vyWnJT18z5A38kVLX7VFmV/ujaBPJffn9OXKAF7PHUjKEk7C29CeGp
-X-Developer-Key: i=alchark@gmail.com; a=ed25519;
- pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
 
-Rewrite the textual description for the WonderMedia PWM controller
-as YAML schema, and switch the filename to follow the compatible
-string.
+On Thu, 17 Apr 2025 15:48:44 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-Signed-off-by: Alexey Charkov <alchark@gmail.com>
----
-Split the series from v1 into separate bindings patches so as not to
-spam all the subsystems with unrelated changes, per Rob's suggestion
+> On 4/17/25 12:44 PM, Jonathan Cameron wrote:
+> > On Thu, 17 Apr 2025 12:07:37 -0500
+> > David Lechner <dlechner@baylibre.com> wrote:
+> >   
+> >> On 4/17/25 11:59 AM, Andy Shevchenko wrote:  
+> >>> On Thu, Apr 17, 2025 at 11:52:38AM -0500, David Lechner wrote:    
+> >>>> Align the buffers used with iio_push_to_buffers_with_timestamp() to
+> >>>> ensure the s64 timestamp is aligned to 8 bytes.
+> >>>>
+> >>>>  drivers/iio/accel/bmc150-accel.h | 2 +-
+> >>>>  drivers/iio/imu/adis16550.c      | 2 +-    
+> >>>
+> >>> Looks like a stray squash of the two independent commits.    
+> >>
+> >> Oops, sure enough.
+> >>  
+> >>>
+> >>> ...
+> >>>     
+> >>>>  	struct bmc150_accel_trigger triggers[BMC150_ACCEL_TRIGGERS];
+> >>>>  	struct mutex mutex;
+> >>>>  	u8 fifo_mode, watermark;
+> >>>> -	s16 buffer[8];
+> >>>> +	s16 buffer[8] __aligned(8);    
+> >>>
+> >>> As for the code, would it be possible to convert to actually use a sturcture
+> >>> rather than an array?    
+> >>
+> >> I do personally prefer the struct pattern, but there are very many other drivers
+> >> using this buffer pattern that I was not tempted to try to start converting them.  
+> > 
+> > For drivers like this one where there is no room for the timestamp
+> > to sit earlier for minimal channels I think it is worth that conversion
+> > if we are touching them anyway. 
+> > 
+> > Jonathan
+> >   
+> There is actually a lot more wrong in this driver, so will save that for a
+> separate series.
+> 
+ok.  That is probably fair enough.
+I'll not pick this up though given the smashing of 2 patches.
 
-Changes in v2:
-- reordered nodes in the example same as in properties (thanks Rob)
+So this one will need a v2.
 
-Link to v1: https://lore.kernel.org/all/20250416-wmt-updates-v1-5-f9af689cdfc2@gmail.com/
----
- .../devicetree/bindings/pwm/via,vt8500-pwm.yaml    | 43 ++++++++++++++++++++++
- .../devicetree/bindings/pwm/vt8500-pwm.txt         | 18 ---------
- MAINTAINERS                                        |  1 +
- 3 files changed, 44 insertions(+), 18 deletions(-)
+Jonathan
 
-diff --git a/Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml b/Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..d9146ad715ba74c1f5641c33703ab06577fe80dc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml
-@@ -0,0 +1,43 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/via,vt8500-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: VIA/Wondermedia VT8500/WM8xxx series SoC PWM controller
-+
-+maintainers:
-+  - Alexey Charkov <alchark@gmail.com>
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: via,vt8500-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  '#pwm-cells':
-+    const: 3
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pwm1: pwm@d8220000 {
-+        compatible = "via,vt8500-pwm";
-+        reg = <0xd8220000 0x1000>;
-+        #pwm-cells = <3>;
-+        clocks = <&clkpwm>;
-+    };
-diff --git a/Documentation/devicetree/bindings/pwm/vt8500-pwm.txt b/Documentation/devicetree/bindings/pwm/vt8500-pwm.txt
-deleted file mode 100644
-index 4fba93ce1985a1e4c5a361423725fafb10eaa339..0000000000000000000000000000000000000000
---- a/Documentation/devicetree/bindings/pwm/vt8500-pwm.txt
-+++ /dev/null
-@@ -1,18 +0,0 @@
--VIA/Wondermedia VT8500/WM8xxx series SoC PWM controller
--
--Required properties:
--- compatible: should be "via,vt8500-pwm"
--- reg: physical base address and length of the controller's registers
--- #pwm-cells: should be 3. See pwm.yaml in this directory for a description of
--  the cells format. The only third cell flag supported by this binding is
--  PWM_POLARITY_INVERTED.
--- clocks: phandle to the PWM source clock
--
--Example:
--
--pwm1: pwm@d8220000 {
--	#pwm-cells = <3>;
--	compatible = "via,vt8500-pwm";
--	reg = <0xd8220000 0x1000>;
--	clocks = <&clkpwm>;
--};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 96b82704950184bd71623ff41fc4df31e4c7fe87..b4a7e04e586bc0fa2913dc97b99ade0680510bf3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3428,6 +3428,7 @@ M:	Krzysztof Kozlowski <krzk@kernel.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Odd Fixes
- F:	Documentation/devicetree/bindings/i2c/i2c-wmt.txt
-+F:	Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml
- F:	arch/arm/boot/dts/vt8500/
- F:	arch/arm/mach-vt8500/
- F:	drivers/clocksource/timer-vt8500.c
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250418-via_pwm_binding-32f7c4e5ede1
-
-Best regards,
--- 
-Alexey Charkov <alchark@gmail.com>
 
