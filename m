@@ -1,133 +1,162 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFFA269B11;
-	Fri, 18 Apr 2025 10:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62DD120C037
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744970879; cv=none; b=kIFCTp+sij+y8ZiMEjI4ktLAvVhJqd5fBAuEfn01Bz86Jk1cv/UjEd5RIrgdSHwj+nN9b7G/zdARxIGD/gwmhov4AdxGWs5Po0vUZrkZW+rn4EnCkergcTn8bOpSy/+mqaKT38Lt5rzxf+PBuan4GZFwRu8TmJlhpW8jzTOt3y4=
+	t=1744970920; cv=none; b=d86Oejzan+CCKcKiiNCt9TBvqgOGLpz6Tebp93dcGatTCxAKEstJcHs+V8QsUvTmAcRi8edUPNxs+T3TL6FS2Wob/Sc9N7+cO1MIgucWXy8GjFl2Ki6Tj6qj50jm7LaufSPwmnBJ7CO9LG8rdFGv8acwR6n+Cmq1UZMMW/YNrvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744970879; c=relaxed/simple;
-	bh=wHvPTYFhf+RaQEZSmf0F3AS7UzZtoRRRZGA83VjMMgQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ujnCOcr33dLxo2wzJNxAFrqkznUaD+j0Gq6RYvOYlQ9Vh2Iq+KQH1OAJV3C5I8KWfsxTdTyg4pMbESvFw8TCqlhJV/E7FkbBkSlYnabrEdJCdxy8UmhMmjT+tnHeTcGa+0tTSijUJrXOsxnKBpgQTEBVOKRFaeSYvGpj4TFsi2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KX3vn1Ya; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744970920; c=relaxed/simple;
+	bh=+RdKaGSYUCfEJiJFPdvtZA8GDr+MXvsxZc3B1z2ldAc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F9U57MXa/PNHHoQ12YSrdqIPVtZawRII2eP3y8BgFwKSt5DERrb/H21OuGlN9xqlqTMR7g12UZFUFcx8UoOsgrzpBB8pUSOqq5WqG29M7Yc6fbRw5WdAZmn8Mybq8ARSFUeRNqagnfEr0grPJmRWSNhVHoA+C+IxSdj5QjKNUUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MHcTT8YH; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KX3vn1Ya"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4FC8442E80;
-	Fri, 18 Apr 2025 10:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744970874;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Tym+kWGInhfgVLk7EdwFIBJKHuBw7p9iE/ylbNK7DjA=;
-	b=KX3vn1YaHjXGeu6rxzOwBdSKAcaQe5/TcyeqTvKvYuoxbDVtvh17KI/H8U5Qu8Bf0yZzfe
-	sPGGKfblQ5b1qYKUcfRX2AhLS9oAbrzHI3JMjqAjoU0yLOYlTBxx9ppvItBxuZOhLwc7IO
-	xfGpUgDxeHn0RedpOxhFeWjCCGlgGG5Emp9Snm9hRhVUbPiARR881pcYCcJEYm9HWoJ5rT
-	2JlcQH5xAAyD0+/YGSDMuAXt0XCVzl0gdXmv7alIRFhOTWE8prbEw1rIcvb2sRJ2/vm/ud
-	BXqQsPcd30ufFuBLUARk7aALBCSfc/NM6rhItxMoJUedlpaTugMCEYZ7HJW/3g==
-Message-ID: <81cd8fd9-15ff-4cd5-b3fa-c2b9e4b64908@bootlin.com>
-Date: Fri, 18 Apr 2025 12:07:52 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MHcTT8YH"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39c1ef4acf2so1076644f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 03:08:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744970917; x=1745575717; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=S/qSOlMwG1tBEqwfJZ1I0Em2NJMBVmrSeT8vIpdwl2s=;
+        b=MHcTT8YHqz0sPIsVXD3PjHYlZOJYmOSryhjogdewJJh/JRO/PPQEfABxDHFbvXi2z/
+         TxSJ2GVuBkflbuZF7FZDkphpx7k0tlWQrr34twF3Bzt9HG497z2zFqaf/eOZGo/m2tS0
+         c0kj+c29EqVoTgAgOATw0xgb+uwucPZrO7NX7qmOq1CbsphQQvlu+UsV0RTWJjt4UHoR
+         dVaB5GbGhPT8xIBh5fe6PCHMaLVPW9MR6+hL+kLLib5xzbJVi0mISRG1w+/U/iri6xGI
+         sKM0NXpXqyIOmScvXHoeLpfYRwL11ocwK8AuYrp14HpLc3L2ek5zTly0vsym/qAQkYqi
+         jwLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744970917; x=1745575717;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=S/qSOlMwG1tBEqwfJZ1I0Em2NJMBVmrSeT8vIpdwl2s=;
+        b=IvlNVA2n6woD4mTPx7vL2py5ACNDFz/g3reorsrJYMYq6DUuCJxLkppTN5snus9Jcv
+         uCUH3sxA2v6W6Wdek9nImUyE5zBv3q4Mfu6ljXjJykG7SILQN0Yzvi7acHABHkxlBrKh
+         0oU9DO2kdn3QD5/wg/Fw5O/8KLaOronp8B+Z3fAKPP+9riiBFiOjp1O9DUalzPbN43DC
+         gDlct0R8kCHzzeB/YtYW3hTIVQzlV+SMbpOcsgh8tCI250EtjmXBUdzRR8W8Tvb85hzD
+         /j77275OCRsP+CixEXlzxdn/xSjU9RzxJeND8UjZ3pWY4q2bULhs4OprEJYFItJ/cS0M
+         enqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXGkh/atlfkw3UCLu5V7+OzX7RNBq+I1KkQu/9qvPuZE3BKSIOLDeAl4WfkqbAM5QQc0JJrzBQ70Gf6M/c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEsThgoWWCVpNfQ9uW6OupFELZvFppWrshF5ZI13lDKGx8YJpP
+	2zzmODdxAz3DJMDekQxn+vKHeKFt1u6bbXCXYc8+KyT/cTppQFl3wkCGQrVTuOI=
+X-Gm-Gg: ASbGncuQQC+X23NUlvMXutwV9eSaT9fQouMRDMa1x6w5SdMRWET2vFgu9KESb4TVYQy
+	gSMb3uairOd4c6807MMidB6Ora/BC/sHicrCzdYyD2y+dijmK6TOvab0qBMzUN+pBCl9GpNqjN/
+	CoK2ccNwKafcHL1RI6AYCEG8lG3R6ANXEgUEafp3/jWz8ieX4olVL7MnGjAteWivqJ3yO58xFXo
+	Kn1nV8cq4bFvbnY5pOyG0v7ugKJbX9t7FsfxmVBgFP0pCQPxcx1RaxgtK77UAw/3rmYMbfEw15C
+	VyLgI7/gosstgG0f7sVBBk1w8VAD8DT+YQmB+wrqNG/SHkGz/g50AFR7eeaTMcDCCSzdGesH9mr
+	0YIg=
+X-Google-Smtp-Source: AGHT+IG1L3VfWz9J+obAaFerB2Z59MsSd2dFbffUprl7yAb1d+1L7oSTlRW/aqUm+C4DsUsSsv8Z1w==
+X-Received: by 2002:a5d:6da1:0:b0:39e:e259:91fd with SMTP id ffacd0b85a97d-39efba3cbbbmr1721753f8f.17.1744970916627;
+        Fri, 18 Apr 2025 03:08:36 -0700 (PDT)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4207fcsm2342052f8f.19.2025.04.18.03.08.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 03:08:36 -0700 (PDT)
+Date: Fri, 18 Apr 2025 12:08:34 +0200
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Liu Ying <victor.liu@nxp.com>, linux-clk@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] vsprintf: remove redundant and unused %pCn format
+ specifier
+Message-ID: <aAIkouhM_ePdhgJY@mai.linaro.org>
+References: <20250311-vsprintf-pcn-v2-0-0af40fc7dee4@bootlin.com>
+ <20250311-vsprintf-pcn-v2-2-0af40fc7dee4@bootlin.com>
+ <Z9BKW_06nLAOzYfY@pathway.suse.cz>
+ <20250407184647.3b72de47@booty>
+ <Z_TRZSxwzfAZ9u6I@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 04/10] gpio: aggregator: refactor the code to add GPIO
- desc in the forwarder
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>,
- Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
- DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw
-References: <20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com>
- <20250416-aaeon-up-board-pinctrl-support-v3-4-f40776bd06ee@bootlin.com>
- <aAE3gRH08WuuIFai@smile.fi.intel.com>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <aAE3gRH08WuuIFai@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfedukeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegteekfeevudduvdduveehgeejuefgieeitdeuvdekgfdvgefhjedtffdufeegheenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvi
- hhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepghgvvghrthdorhgvnhgvshgrshesghhlihguvghrrdgsvgdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopeffrghnihgvlhgvvehlvghrihesrggrvghonhdrvghu
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z_TRZSxwzfAZ9u6I@pathway.suse.cz>
 
-Hi Andy,
-
-Thanks a lot for the review !!
-
-On 4/17/25 19:16, Andy Shevchenko wrote:
-> On Wed, Apr 16, 2025 at 04:08:12PM +0200, Thomas Richard wrote:
->> Create a dedicated function to add a GPIO desc in the forwarder. Instead of
->> passing an array of GPIO desc, now the GPIO desc are passed on by one to
->> the forwarder.
+On Tue, Apr 08, 2025 at 09:33:57AM +0200, Petr Mladek wrote:
+> On Mon 2025-04-07 18:46:47, Luca Ceresoli wrote:
+> > Hello Petr, Daniel,
+> > 
+> > On Tue, 11 Mar 2025 15:36:11 +0100
+> > Petr Mladek <pmladek@suse.com> wrote:
+> > 
+> > > On Tue 2025-03-11 10:21:23, Luca Ceresoli wrote:
+> > > > %pC and %pCn print the same string, and commit 900cca294425 ("lib/vsprintf:
+> > > > add %pC{,n,r} format specifiers for clocks") introducing them does not
+> > > > clarify any intended difference. It can be assumed %pC is a default for
+> > > > %pCn as some other specifiers do, but not all are consistent with this
+> > > > policy. Moreover there is now no other suffix other than 'n', which makes a
+> > > > default not really useful.
+> > > > 
+> > > > All users in the kernel were using %pC except for one which has been
+> > > > converted. So now remove %pCn and all the unnecessary extra code and
+> > > > documentation.
+> > > > 
+> > > > Acked-by: Stephen Boyd <sboyd@kernel.org>
+> > > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>  
+> > > 
+> > > Makes sense. Looks and works well, so:
+> > > 
+> > > Reviewed-by: Petr Mladek <pmladek@suse.com>
+> > > Tested-by: Petr Mladek <pmladek@suse.com>
+> > > 
+> > > Daniel, if I get it correctly, you have already taken the 1st patch.
+> > > Would you mind to take also this patch using the same tree, please?
+> > > Otherwise, we would need to coordinate pull requests in the upcoming
+> > > merge window ;-)
+> > 
+> > I see none of these two patches in linux-next.
 > 
-> ...
+> I see.
 > 
->> +static int gpiochip_fwd_add_gpio_desc(struct gpiochip_fwd *fwd,
->> +				      struct gpio_desc *desc,
->> +				      unsigned int offset)
->> +{
->> +	struct gpio_chip *parent = gpiod_to_chip(desc);
->> +	struct gpio_chip *chip = &fwd->chip;
->> +
->> +	if (offset > chip->ngpio)
+> > Anything I should do? Resend? Or just wait a bit more?
 > 
->> = ?
+> Daniel,	Rafael, Zhang, Lukasz,
 > 
->> +		return -EINVAL;
-> 
->> +	if (fwd->descs[offset])
->> +		return -EEXIST;
-> 
-> Not sure we need this. I would rather think that something inside struct
-> gpiochip_fwd should track this. OTOH, I understand that you want to have
-> sparse lists perhaps. I;m wondering why GPIO valid mask can't be used for
-> this purposes?
+> would you like to take both patches via the linux-pm.git thermal tree?
+> Or should I take both patches via the printk tree?
+> Both ways work for me.
 
-The valid_mask in the gpio_chip is allocated in
-gpiochip_add_data_with_key() which is too late for us.
+I'll take care of them now
 
-But as you suggested, something (a valid_mask like in gpio_chip) inside
-struct gpiochip_fwd should work.
+Thanks for the heads up
 
-> 
->> +	/*
->> +	 * If any of the GPIO lines are sleeping, then the entire forwarder
->> +	 * will be sleeping.
->> +	 * If any of the chips support .set_config(), then the forwarder will
->> +	 * support setting configs.
->> +	 */
->> +	if (gpiod_cansleep(desc))
->> +		chip->can_sleep = true;
->> +
->> +	if (parent && parent->set_config)
->> +		chip->set_config = gpio_fwd_set_config;
->> +
->> +	fwd->descs[offset] = desc;
->> +
->> +	dev_dbg(chip->parent, "%u => gpio %d irq %d\n", offset,
->> +		desc_to_gpio(desc), gpiod_to_irq(desc));
->> +
->> +	return 0;
->> +}
-> 
-> The bottom line is that I'm fine with this change without additional checks,
-> add them when function will be used not only in the original loop.
+  -- Daniel
 
-Ok so for this patch I do not add checks.
-Then I implement a valid_mask (in struct gpiochip_fwd) in patch 08/10
-"gpio: aggregator: handle runtime registration of gpio_desc in gpiochip_fwd"
+-- 
 
-Best Regards,
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Thomas
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
