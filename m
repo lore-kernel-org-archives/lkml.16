@@ -1,103 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1884B268C55;
-	Fri, 18 Apr 2025 08:24:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15FF1268C55;
+	Fri, 18 Apr 2025 08:25:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744964678; cv=none; b=oJAulFQb3ibNg1lC26mea1Pbt2mBmN+LBDb8DFasBzGJbPICrZ0RdDFjyh3o6rx2yb85Yerbsf7Ye+iBQmxWhyGb7mXykatamUG58+z+Vk4r80SV8ua1i33wclb/9itZpp8bMrsrk7n7mr5BIAuy1iM9ewiGuCmExCXjkDZ2uRc=
+	t=1744964749; cv=none; b=gDuErHtBI1GdifPRE0MwB0sZPNbTFY1lPrG6C+gxA0LMogAuaGrGDZDzKSPdPYVNLY60bUnsVDiHtxd+DhZB29+BZaduOPpDX+HYoEfOFCxe/txEgREnN5ULtbSumFgfOMh9GPkidUBGAfIqnQj0nRguf89F6nDXInXrhWZRUXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744964678; c=relaxed/simple;
-	bh=/9OfrWnCUxMfe0bzWWpOCEaGqaGAQjbwJjWfCuAqTJo=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=JOGb3BJogmtqYrBHoh67YdEvVEdMcTE7K94IuFjQe93wRVHl0ZsuGIiKPT7jFaZWBjsc8Vc+GjjKjtX8gTU4uwyzvj3H/ddI62p20HHPz8ID9X0OdVg0tksrJzP6v6aUxCU/8k89/lo6P7smGxTCpaPU+eYkpF02aSKuxasz6BM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jeu8QH+M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744964749; c=relaxed/simple;
+	bh=s2IhmVKxZhm64Wc2L/816Yw4hfryYZJNu4rC36wz9FY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BAqkYGXjTB/is/n5wNCYUAAJjdduomW6N0yHwgHIEqDlJJwpXgAcwLb+DHF/S1Ses1VjtLaGNbhXYv3PAWL+TCInlCtB/e0N0K6jGREAxgm3B4JnUYqEW2kHyZT+L4fyhnYcE/eCx0ndUvcNZPlA30r+yP7wqesal51qKO8LoCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=kpcJ1aZe; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jeu8QH+M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7E8CC4CEE2;
-	Fri, 18 Apr 2025 08:24:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744964677;
-	bh=/9OfrWnCUxMfe0bzWWpOCEaGqaGAQjbwJjWfCuAqTJo=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=Jeu8QH+M1Br42zGYHGcZhAAXWDmCsjRzAlZ5hrEVlRdeHLRNgShMGYULuWj2jXTUu
-	 Gz7qZ/eC1LrK3mZRFcZPWAT+IQyGAZenZFtPYjcTwJ1eHyVOd433z8hLR083M13UnG
-	 Yz/+BNG057GgyY5KPqpOgSbRjjTVgnHLeq1Ud0qZ2tGps68D/qD0WQ7yukthbeyyXl
-	 Paw/QUmFQnR9Kbj1T+Hv5MbVp9AdYXzzTInkm93qqgjZdJGkWNWWB3uLc4zoT3AMWE
-	 N6c8o0QTJOlGOc0MMWELCLcwB8D4a+uh/yHZFCLHNgGQafGvhfq5bL0WPin3TZ3DYa
-	 lL5fCH47k7yLw==
-Date: Fri, 18 Apr 2025 03:24:34 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="kpcJ1aZe"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=hlkg+5jDRBY5wNNnTe1hqoMZ0WqQC2CXlXJOinsVxyU=; b=kpcJ1aZefOCOmEslLOYgO5//QM
+	Ln6pMr5koiDKWOj7at3DmuXW/+yNTQNemE32nJCw0tUBk2lSSos3j+agdtU8LJ1QmGrITb33TVv2P
+	ax7x7ihD9o/9/iRWIG6o5huDo+sjBvBM8N/+4rmITe3RGNDZD3kJRIZDt9wM6vSrDQAsM8CtmlaSX
+	oieCkebA9MArb2/oiKMgpHGYdSRIx5EULaGWGCnkwKjcIqfjRnqi6KVnMh+uDMtW/pKGRh9+DYB8j
+	6L7OlrJk5uGTHv5eg8RoWUkRMy9N+wd4fu7ENI0N1H5rEEfkOX/zcPw1G7vGUetKFspJKMJxaHYWr
+	x44+Tchg==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u5h2a-00GhP1-29;
+	Fri, 18 Apr 2025 16:25:41 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 18 Apr 2025 16:25:40 +0800
+Date: Fri, 18 Apr 2025 16:25:40 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+	x86@kernel.org, Jason@zx2c4.com, ardb@kernel.org
+Subject: Re: [PATCH 01/15] crypto: arm - remove CRYPTO dependency of library
+ functions
+Message-ID: <aAIMhLD3UMM41JkT@gondor.apana.org.au>
+References: <20250417182623.67808-2-ebiggers@kernel.org>
+ <aAHDIRlSNLsYYZmW@gondor.apana.org.au>
+ <20250418033236.GB38960@quark.localdomain>
+ <aAHJRszwcQ4UyQ2e@gondor.apana.org.au>
+ <20250418040931.GD38960@quark.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: nm@ti.com, baocheng.su@siemens.com, linux-pci@vger.kernel.org, 
- diogo.ivo@siemens.com, krzk+dt@kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, kw@linux.com, 
- robin.murphy@arm.com, jan.kiszka@siemens.com, kristo@kernel.org, 
- s-vadapalli@ti.com, linux-arm-kernel@lists.infradead.org, 
- lpieralisi@kernel.org, vigneshr@ti.com, iommu@lists.linux.dev, 
- linux-kernel@vger.kernel.org, bhelgaas@google.com, helgaas@kernel.org, 
- m.szyprowski@samsung.com, devicetree@vger.kernel.org, conor+dt@kernel.org, 
- ssantosh@kernel.org
-To: huaqian.li@siemens.com
-In-Reply-To: <20250418073026.2418728-3-huaqian.li@siemens.com>
-References: <20241030205703.GA1219329@bhelgaas>
- <20250418073026.2418728-1-huaqian.li@siemens.com>
- <20250418073026.2418728-3-huaqian.li@siemens.com>
-Message-Id: <174496467399.2597920.14844354232532512833.robh@kernel.org>
-Subject: Re: [PATCH v7 2/8] dt-bindings: PCI: ti,am65: Extend for use with
- PVU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250418040931.GD38960@quark.localdomain>
 
+On Thu, Apr 17, 2025 at 09:09:31PM -0700, Eric Biggers wrote:
+>
+> arch/$ARCH/lib/crypto/ is the "right" way to do it, mirroring lib/crypto/.  I
+> was just hoping to avoid a 4-deep directory.  But we can do it.
 
-On Fri, 18 Apr 2025 15:30:20 +0800, huaqian.li@siemens.com wrote:
-> From: Jan Kiszka <jan.kiszka@siemens.com>
-> 
-> The PVU on the AM65 SoC is capable of restricting DMA from PCIe devices
-> to specific regions of host memory. Add the optional property
-> "memory-regions" to point to such regions of memory when PVU is used.
-> 
-> Since the PVU deals with system physical addresses, utilizing the PVU
-> with PCIe devices also requires setting up the VMAP registers to map the
-> Requester ID of the PCIe device to the CBA Virtual ID, which in turn is
-> mapped to the system physical address. Hence, describe the VMAP
-> registers which are optional unless the PVU shall be used for PCIe.
-> 
-> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Li Hua Qian <huaqian.li@siemens.com>
-> ---
->  .../bindings/pci/ti,am65-pci-host.yaml        | 34 +++++++++++++++++--
->  1 file changed, 31 insertions(+), 3 deletions(-)
-> 
+You can do that in a follow-up, assuming nothing else pops for this
+series.
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/ti,am65-pci-host.example.dtb: pcie@5500000 (ti,am654-pcie-rc): 'memory-region' is a required property
-	from schema $id: http://devicetree.org/schemas/pci/ti,am65-pci-host.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250418073026.2418728-3-huaqian.li@siemens.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
