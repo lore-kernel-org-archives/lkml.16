@@ -1,100 +1,145 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD98D202984;
-	Fri, 18 Apr 2025 15:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1DF1FAC29
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744988740; cv=none; b=kChLIxxJboytMCu+eA9pNDnPkacEdg/PPFlp6nmaDNIpSWzALMzXhU9PEZHd6xpaZi93B3qrE5S24u06BQ6OaJ95WX5GCIQ8AaOYJcTL2C2K+D6eNMFHAj8kA5rOw7xP1Y6x0gKtZnPoKMs9DXZdNtR1XL8oXyPwY/qfGBZWLA8=
+	t=1744988924; cv=none; b=ZSOMQnnNy8BYnbmlUO/drJqydu0gevx5ICBXKLNfU3Ha9avwTdPfUjtNDm4v4K+IKbnluoaHaWTHgzcZa/euQNeGBjeIp7in0GXoYUORnuFaY2T8Ce8LbXS9ycmaOXokAf6XUbIU3fJF6+coRlHcgVYh2A5WjtLFa7dMhSAlP4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744988740; c=relaxed/simple;
-	bh=Ze2QBQ9MkdDO6ExFOzde1E2OwKdFLm6duNYJWzU3h/U=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YgpfxgR6LA+Bx1egGxveNmBSCkqPNbLvazlap41DY21mki/pTQQM6T0RmCpOV219K/zvNXalHJZXqyreILuVlKCnEOH7AfpKn+1KOOhcUjupNH117m7F56+2+Iw5fG4ccyUzP2Cok9yt86pjki+RkOT2GHsjYtAGQYq+a7SGhEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BbWy1GfD; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744988924; c=relaxed/simple;
+	bh=833Lov5OrGShT2sPcmJuHqNCUoZcqgQRSOcAWmZvBtA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WjYmtNoF1Ubf6idbp5quuQPV88snCQQ7rixKSXYhmrEYTu+0JpGtmUz8DoosemCecHXmwGB32E2X4ptYgGHTapZmKN6u0O1WZFFcnKLKXnLKN8B6hHSzYdAr8O36HNmUcOmdr1c20+sNzy+ilgizkIqjvvskQTcFqdYBuVWpzDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZgWPjn7M; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BbWy1GfD"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53IF5TH6326863
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 18 Apr 2025 10:05:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744988729;
-	bh=YvFJvGG4okhAh4ZzeiEtpd9T2TUuyeMrkIjC3ug+0NE=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=BbWy1GfDHWFrXxEugsYwPHi9Ko8HzFq40FtbD41WlPpl+yzMV8nKfiJz/33eQVFny
-	 mPlREOxVlTkMqPZ1yhiI9a3O9clrTl4sBUvbkaIP7K9r+PTNCTWLi9Ecb8m965dA+F
-	 LPZxkNth+BqtP6WLoM2+yWpvzZsXx8UTFZl+fTbI=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53IF5TXY095548
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 18 Apr 2025 10:05:29 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 18
- Apr 2025 10:05:29 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 18 Apr 2025 10:05:28 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53IF5SmU009009;
-	Fri, 18 Apr 2025 10:05:28 -0500
-Date: Fri, 18 Apr 2025 10:05:28 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Chintan Vankar <c-vankar@ti.com>
-CC: Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>, Tero Kristo
-	<kristo@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <s-vadapalli@ti.com>, <srk@ti.com>
-Subject: Re: [PATCH v4 0/2] Add support for CPSW3G port 2 on AM62A7-SK
-Message-ID: <20250418150528.ukbbqf7vtoof5fhg@splashed>
-References: <20250211182134.1500867-1-c-vankar@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZgWPjn7M"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-223fb0f619dso23828515ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:08:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744988922; x=1745593722; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xXrHi2dDhsHjFRrFFlLx3951AzAuiByzthX8mF+kPRc=;
+        b=ZgWPjn7MVEd6SypU3tg9wBgYzntYzOzM0+LSAvCyGHLgP/RtsXtLG20zSFSEl+2yod
+         GolfzZPm+/tpE8XWysmNfbnlXhHq7c41DY0nlxpzwBYHtpopVsh204oQKtQ3flMFifJ0
+         J7P3x7QnG63uZQRWJ7HssJ2//1eIONKVcOR0frPakqkGMC8Oi+WfUc519r8aYnIDyQxK
+         MXWQcjG/bl8SuRGaLSOL18admFg735ghimT/HSsuord5e7eiUfo9Ye9yyAg3zDKedzxe
+         BotReLAHfifgfOzFp5MLnAwB44kS+5nHzuguKx3KykSZsAJXS9dXU2XCzNCmaP3TjfQ0
+         IIeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744988922; x=1745593722;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xXrHi2dDhsHjFRrFFlLx3951AzAuiByzthX8mF+kPRc=;
+        b=OOCaexBAIWLfg01MEiCZOuMQehS2Fb5VOGznDn+snZvLe7KZJo5RBKVFZHijFa+09p
+         HfVyBs1P+jJPabjie5GZXgvFqN0MB0vpXPWTPj422tSH+V03hVgKG0Jn19n35BuyZmTL
+         ezXwkL2AwHRpSeOUiy1XYWpW3/ZY1vKrLbKVQ+bcqB29HemqLwUB3Q3aeUV6O0yHdO2Y
+         utSyAyOyjNRMxarjgkTP4jZ5Po0RJROZkflepM+Vw+QqcC38LuR8+MW3ZuiZimkkxOfc
+         gZ+es3N7urQEQC12XQOdOh1wuF64CoKHijG8u19+vzMTLllnoyyLBU2iRF3Z26fKud58
+         Amvw==
+X-Forwarded-Encrypted: i=1; AJvYcCXHhRn6V+jf8MNS42VBe0A4e/10gCVxB/YVEZBAthhAdpMqalpVNmr8J60FdtUM4FsNWl7lUCjrR5wg2lU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCd4Y8NiTdkn3QENCW32mYUOMBWztqYhRfgd8OqKWFBQSougkx
+	UXqSG/NPMxnhrY8syq+Re9fg5FXSgrxsuyNlsodbXpW5IUaP1U6Z
+X-Gm-Gg: ASbGncvZwhJMPybv1guNKaY02qPVNefF7UD71DOqb8GdaTUUrCo9ELjQzL1svhii0nF
+	evW7/rvxFAYEcRenf+sFdy5DpfbVXuIK9gAqTVvvU2lAI+3wXHkTBBx9iAqGqt4z8ILiWntAtTb
+	K5L5XMQunq69xyP64X+OslC1Ofly01hUfX0k6NAy+pTMUPDn0dh64F4k5EBJdf4u0nPu8JrPx/g
+	ojTb4YgqJw/tSHL8qbFsLMpDqeTUIj43YaaoxazmZkF+nIIoyfYp+QUkl84QZo8+biEyidGRNgU
+	YebvZPj4lwLXWmR5Ecla2UXoIUI+AiSwx4eJOLx3
+X-Google-Smtp-Source: AGHT+IFgyjtFyh0D1cewNDh4KCf3omEopwXw/CgC9qM37WkDXknCiuMsdR9x6yE6lYdQVJp7loAorg==
+X-Received: by 2002:a17:903:3202:b0:224:c47:cbd with SMTP id d9443c01a7336-22c530bc965mr45650025ad.0.1744988921670;
+        Fri, 18 Apr 2025 08:08:41 -0700 (PDT)
+Received: from localhost ([216.228.127.131])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bf3fcbsm18016695ad.78.2025.04.18.08.08.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 08:08:40 -0700 (PDT)
+Date: Fri, 18 Apr 2025 11:08:38 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Luo Jie <quic_luoj@quicinc.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>, linux-kernel@vger.kernel.org,
+	cocci@inria.fr, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, quic_kkumarcs@quicinc.com,
+	quic_linchen@quicinc.com, quic_leiwei@quicinc.com,
+	quic_suruchia@quicinc.com, quic_pavir@quicinc.com
+Subject: Re: [PATCH v3 0/6] Add FIELD_MODIFY() helper
+Message-ID: <aAJq9mGswYsnAOS8@yury>
+References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
+ <86sem7jb5t.wl-maz@kernel.org>
+ <0c97c659-bd28-45e0-8537-d9be2637cb22@lunn.ch>
+ <86mscek7h3.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250211182134.1500867-1-c-vankar@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <86mscek7h3.wl-maz@kernel.org>
 
-On 23:51-20250211, Chintan Vankar wrote:
-> This series adds support for CPSW3G MAC port 2 with the SK-Ethernet-DC01
-> Add-On daughtercard. Also, the missing alias for CPSW3G MAC Port 1 is
-> added to the am62a7-sk board file in order to allow kernel to fetch MAC
-> address populated by U-Boot for CPSW3G MAC Port 1.
+On Thu, Apr 17, 2025 at 06:45:12PM +0100, Marc Zyngier wrote:
+> On Thu, 17 Apr 2025 18:22:29 +0100,
+> Andrew Lunn <andrew@lunn.ch> wrote:
+> > 
+> > On Thu, Apr 17, 2025 at 12:10:54PM +0100, Marc Zyngier wrote:
+> > > On Thu, 17 Apr 2025 11:47:07 +0100,
+> > > Luo Jie <quic_luoj@quicinc.com> wrote:
+> > > > 
+> > > > Add the helper FIELD_MODIFY() to the FIELD_XXX family of bitfield
+> > > > macros. It is functionally similar as xxx_replace_bits(), but adds
+> > > > the compile time checking to catch incorrect parameter type errors.
+> > > > 
+> > > > This series also converts the four instances of opencoded FIELD_MODIFY()
+> > > > that are found in the core kernel files, to instead use the new
+> > > > FIELD_MODIFY() macro. This is achieved with Coccinelle, by adding
+> > > > the script field_modify.cocci.
+> > > > 
+> > > > The changes are validated on IPQ9574 SoC which uses ARM64 architecture.
+> > > 
+> > > We already have the *_replace_bits() functions (see
+> > > include/linux/bitfield.h).
+> > > 
+> > > Why do we need extra helpers?
+> > 
+> > If you look at bitfield.h, the *_replace_bits() seem to be
+> > undocumented internal macro magic, not something you are expected to
+> > use. What you are expected to use in that file is however well
+> > documented. The macro magic also means that cross referencing tools
+> > don't find them.
 > 
-> This series is based on linux-next tagged next-20250210.
-> 
-> Link to v3:
-> https://lore.kernel.org/r/20240429101739.2770090-1-c-vankar@ti.com/
-> 
-> Changes from v3 to v4:
-> - No changes, rebased the series on top of latest linux-next branch.
-> 
-> Siddharth Vadapalli (2):
->   arm64: dts: ti: k3-am62a7-sk: Add alias for CPSW3G MAC port 1
->   arm64: dts: ti: k3-am62a7: Add overlay for second CPSW3G Port
-> 
->  arch/arm64/boot/dts/ti/Makefile               |  3 +
->  .../dts/ti/k3-am62a7-sk-ethernet-dc01.dtso    | 62 +++++++++++++++++++
->  arch/arm64/boot/dts/ti/k3-am62a7-sk.dts       |  1 +
->  3 files changed, 66 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/ti/k3-am62a7-sk-ethernet-dc01.dtso
-> 
+> $ git grep _replace_bits|  wc -l
+> 1514
 
-please re-send this series, series no longer applies.
+FIELD_PREP() only is used 10 times more.
+ 
+> I think a bunch of people have found them, tooling notwithstanding.
+> 
+> As for the documentation, the commit message in 00b0c9b82663ac would
+> be advantageously promoted to full-fledged kernel-doc.
 
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+The FIELD_MODIFY() and uxx_replace_bits() are simply different things.
+
+FIELD_MODIFY() employs __BF_FIELD_CHECK(), which allows strict
+parameters checking at compile time. And people like it. See
+recent fixed-size GENMASK() series:
+
+https://patchwork.kernel.org/comment/26283604/
+
+The _replace_bits() functions return fixed-width values, and intended
+for: "manipulating bitfields both in host- and fixed-endian", as the
+very first line in the commit message says.
+
+Those using _replace_bits() for something else abuse the API, and
+should switch to FIELD_MODIFY().
