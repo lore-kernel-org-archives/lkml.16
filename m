@@ -1,237 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D99EF9EC;
-	Fri, 18 Apr 2025 15:35:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF87F9EC
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744990518; cv=none; b=ex2+PErpj7mTG7r7tF2c6FZuM8KMJINyIWyqAk/fRQxyv6AnfcVdUoVALBDDsGabftCPvpJ9mvvIX5zOAWvOaKddgUy8vlv0ve/gDQctEAeK9g92W5bcCViJ5PRrsEaAhYP9q4eYLyt/81EIm8GSEW2BZ6oXlvgCWKygmOY8d48=
+	t=1744990610; cv=none; b=AtV/SL6EHQiGNUFM5uDmfafnWFST9HDL5hcIgXS9+pzcxzxh7tH91o+x0am1WlVhFPiSS8+rBCyRQMsTRaWNoFxvqF9HeViraKoYw6C/U+dw696fG7w3o5o5SJ0OqFi7kdRVD8ntbdqY14ixDzrFdaeSg821FQhz0OknveY8J8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744990518; c=relaxed/simple;
-	bh=P4t0RS1mi3GBrCyrkQOyER8mTaJlcoQB6fJm195efpQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dm5G9AJzkQjm2do+N4YmPdmzXefvFXb+qhXfmYNy45vhuSJsrB3Nsl1iB/37wHnujHxoUsLqA0a3ZlHem/78tGg80F2eVeNdGjbABXLNHDXVTCwFAhl+UqBpkHm/65lV3jhql4MnWv5t261hy1S0LtByMK7JXottHXbNkfdW/24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OjanPdXR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744990610; c=relaxed/simple;
+	bh=C5fq7l2Ahsb27LgEO4/lHCMuhJMXpnJ8WZoqeYkZ6ms=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JH4bCV69IwmWmqJQ9PNSx5hPLmTsECjZPz59tgb94ELWes3QD38qEqVj9Ba41DwjKTB5hLI3nDXKIV6cWUOcLGU0AIsyuakWvX5oDtFnKS8kJIWBeUr1uiA+k7qAa0f4jOgm/PA+A886+IkXHiioC6NwkNqhTFaeVumHMZ4tyC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xH+/z9Gs; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OjanPdXR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF802C4CEE2;
-	Fri, 18 Apr 2025 15:35:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744990516;
-	bh=P4t0RS1mi3GBrCyrkQOyER8mTaJlcoQB6fJm195efpQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OjanPdXRCCAM8w+d65aZF7IrMXpBdECIo7HnQXWK4zqvCQ0udXvwCGq6UOctPeX5D
-	 5MFs+3ecskaa9VMkvHgDn7X/fzOryH3fIiafVGaMVrjHAAjNYT0f/xsG3EXEMUdfki
-	 1qyGywlZDWDB4msCKvkbminkXxijgfYQaHj4Ao1TrmJuBLvo9zC1UB4mQu9RXipkEI
-	 T8vvFnZoJ4nqmLN56LWjkVGMr9F1qyGPLnkwULRS4GmqQkVgd2yF2oiHWbDsordm+g
-	 +oDj8wfZWYP8cy0H7FK+ERqndrBBw5St/PxsVvfrG5ypclrE15biQ/p8+dg5w1ovo1
-	 xtT3EWAQhGTuA==
-Date: Fri, 18 Apr 2025 16:35:10 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
- Michael.Hennerich@analog.com, sonic.zhang@analog.com, vapier@gentoo.org,
- skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev,
- stable@vger.kernel.org
-Subject: Re: [PATCH v2] iio: adc: Include valid channel for channel
- selection
-Message-ID: <20250418163510.5dac416e@jic23-huawei>
-In-Reply-To: <20250417170109.602659-1-gshahrouzi@gmail.com>
-References: <20250417170109.602659-1-gshahrouzi@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xH+/z9Gs"
+Date: Fri, 18 Apr 2025 21:05:53 +0530
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744990605;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6wrOfCKY3zK3SNy182P4/7XcrrLA8TgpWNc3DXhpeIc=;
+	b=xH+/z9GsJZEtYeFxQtwc/KttJRMlMezXrO8YZel9QR5V1rmv6P8jisb5twwnwlzBfl/zpY
+	iWYTbBg45EN7xMq5hfdxG1geMyRIcXyOc6wlAlw/N5iiM/6+/OMwoaXCf0k2Gdir5XB9Xs
+	nulXxfdQUhW4YM4oOpnv6HGHSJjSeds=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Jai Luthra <jai.luthra@linux.dev>
+To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, mripard@kernel.org, mchehab@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, devarsht@ti.com, vaishnav.a@ti.com, 
+	r-donadkar@ti.com, u-kumar1@ti.com
+Subject: Re: [PATCH v6 2/2] media: cadence: csi2rx: Enable csi2rx_err_irq
+ interrupt and add support for VIDIOC_LOG_STATUS
+Message-ID: <see7ve2j7hxqt7c4vqlowprsptjjl5dpfuaagqzj6uk73mhzcu@lhl7qvtwjd2q>
+X-PGP-Key: http://jailuthra.in/files/public-key.asc
+References: <20250416121938.346435-1-y-abhilashchandra@ti.com>
+ <20250416121938.346435-3-y-abhilashchandra@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vgb7ndcpx6r2z555"
+Content-Disposition: inline
+In-Reply-To: <20250416121938.346435-3-y-abhilashchandra@ti.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, 17 Apr 2025 13:01:09 -0400
-Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
 
-> According to the datasheet on page 9 under the channel selection table,
-> all devices (AD7816/7/8) are able to use the channel marked as 7. This
-> channel is used for diagnostic purposes by routing the internal 1.23V
-> bandgap source through the MUX to the input of the ADC.
-> 
-> Replace checking for string equality with checking for the same chip ID
-> to reduce time complexity.
-> 
-> Group invalid channels for all devices together because they are
-> processed the same way.
-> 
-> Fixes: 7924425db04a ("staging: iio: adc: new driver for AD7816 devices")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+--vgb7ndcpx6r2z555
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v6 2/2] media: cadence: csi2rx: Enable csi2rx_err_irq
+ interrupt and add support for VIDIOC_LOG_STATUS
+MIME-Version: 1.0
 
-This is doing too many things for one patch.  The fix wants be
-on it's own. Ideally before everything else but if that is tricky to do
-then I don't mind that much.
+Hi Abhilash,
+
+Thanks for the patch.
+
+On Wed, Apr 16, 2025 at 05:49:38PM +0530, Yemike Abhilash Chandra wrote:
+> Enable the csi2rx_err_irq interrupt to record any errors during streaming
+> and also add support for VIDIOC_LOG_STATUS ioctl. This allows users to
+> retrieve detailed error information during streaming, including FIFO
+> overflow, packet errors, and ECC errors.
+>=20
+> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+
+Tested-by: Jai Luthra <jai.luthra@linux.dev>
 
 > ---
-> Changes since v2:
-> 	- Refactor by adding chip_info struct which simplifies
-> 	  condtional logic.
-> ---
->  drivers/staging/iio/adc/ad7816.c | 68 ++++++++++++++++++--------------
->  1 file changed, 38 insertions(+), 30 deletions(-)
-> 
-> diff --git a/drivers/staging/iio/adc/ad7816.c b/drivers/staging/iio/adc/ad7816.c
-> index 6c14d7bcdd675..ec955cbf06c17 100644
-> --- a/drivers/staging/iio/adc/ad7816.c
-> +++ b/drivers/staging/iio/adc/ad7816.c
-> @@ -41,8 +41,20 @@
->   * struct ad7816_chip_info - chip specific information
->   */
->  
-> +enum ad7816_type {
-> +	ID_AD7816,
-> +	ID_AD7817,
-> +	ID_AD7818,
-> +};
-The aim of moving to a chip_info structure is typically
-to get rid of this sort of enum in favour of specific data
-in the chip_info structures.  Anyhow see below for more on that.
+>  drivers/media/platform/cadence/cdns-csi2rx.c | 131 +++++++++++++++++++
+>  1 file changed, 131 insertions(+)
+>=20
+[snip]
 
-> +
->  struct ad7816_chip_info {
-> -	kernel_ulong_t id;
-> +	const char *name;
-> +	enum ad7816_type type;
-> +	u8 max_channels;
-> +};
-> +
-> +struct ad7816_state {
+--
+Jai
 
-This effective rename needs to be a patch on it's own before
-you introduce the new struct ad7816_chip_info.  That lets
-us clearly see that all instances are renamed and is
-an easy patch to review as it's just a rename.
+--vgb7ndcpx6r2z555
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +	const struct ad7816_chip_info *chip_info;
->  	struct spi_device *spi_dev;
->  	struct gpio_desc *rdwr_pin;
->  	struct gpio_desc *convert_pin;
-> @@ -52,16 +64,11 @@ struct ad7816_chip_info {
->  	u8  mode;
->  };
->  
-> -enum ad7816_type {
-> -	ID_AD7816,
-> -	ID_AD7817,
-> -	ID_AD7818,
-> -};
->
-> @@ -215,7 +215,7 @@ static ssize_t ad7816_show_value(struct device *dev,
->  				 char *buf)
->  {
->  	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> -	struct ad7816_chip_info *chip = iio_priv(indio_dev);
-> +	struct ad7816_state *chip = iio_priv(indio_dev);
->  	u16 data;
->  	s8 value;
->  	int ret;
-> @@ -271,7 +271,7 @@ static ssize_t ad7816_show_oti(struct device *dev,
->  			       char *buf)
->  {
->  	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> -	struct ad7816_chip_info *chip = iio_priv(indio_dev);
-> +	struct ad7816_state *chip = iio_priv(indio_dev);
->  	int value;
->  
->  	if (chip->channel_id > AD7816_CS_MAX) {
-> @@ -292,7 +292,7 @@ static inline ssize_t ad7816_set_oti(struct device *dev,
->  				     size_t len)
->  {
->  	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> -	struct ad7816_chip_info *chip = iio_priv(indio_dev);
-> +	struct ad7816_state *chip = iio_priv(indio_dev);
->  	long value;
->  	u8 data;
->  	int ret;
-> @@ -345,14 +345,22 @@ static const struct iio_info ad7816_info = {
->  	.event_attrs = &ad7816_event_attribute_group,
->  };
->  
-> +static const struct ad7816_chip_info ad7816_chip_infos[] = {
-> +	[ID_AD7816] = { .name = "ad7816", .max_channels = 0, .type = ID_AD7816 },
-Use separate named structures.
+-----BEGIN PGP SIGNATURE-----
 
-This approach with an enum and an array is something we used to do but it
-actually obscures what is going on when compared with separate names structure
-instances.
+iQIzBAABCAAdFiEETeDYGOXVdejUWq/FQ96R+SSacUUFAmgCcVkACgkQQ96R+SSa
+cUWBsRAA0slrHvDhdrNsjQEhqpC5jjgl3FD2acCj5VLsgpp9wIq+AXSt8ZxFYdgb
+W+UhPJVoI+tVt2GgdBNhLFuFGdxZXIRv+crzPKh0t8wdgXm7Go7gEHmAA+pa313m
+Cxzx2vQtyoRUOrQU3fjvPVDuwjBEmxnfwyyAfxmCpxLpNOc0Khk2VzRTkWmkRy3b
+32o7TLq3rrokHbIzLT/wnRICkMAwaZ8QB/2IyTzBziA9TBOh7Md2A2OgZ7K4FzIs
+cBFmJskdEmw56TMwKndFjkp1AjkhxnJx3zNJ5H0rki3pVn8M54wNHKjWSz6aBUQ2
+EwvjoCD8RLBWz6XbLyAWVyEQmIOI00ZirgenkDonK5Gh4RhGjpBrHiAF7V4lswfr
+2sov+efU3n8+fyFW4lgskLvZkoSwUMRQYocGC4L/LtiuiEJUJw28gyAYpghN2CU2
+DXOnECSPBNEyvCuaAtGP00My9EVLQthL2fbeWcd3+rKrEVbi4gXthMQCJUJemL8n
+IhUvmeGk2hR/wMjzKPDI6K9XZSuH2gC6PQvvhebbYEn1ALETkL1e8Dd9a+9kcUX3
+uDEeef4R5ZS+OxgANGIyYiGndLdm5Ds0edsCIYOvV50LkAoCQyghIocWCz/kKZMt
+X4rhiMuAMSTTZ3GLLQqAii4Is74zUv4+DQYi9OBgLJu5b5YDx2k=
+=xyFP
+-----END PGP SIGNATURE-----
 
-static const struct ad7816_chip_info ad7816_chip_info = {..};
-
-static const struct ad7816_chip_info ad7817_chip_info = {..};
-
-etc.
-> +	[ID_AD7817] = { .name = "ad7817", .max_channels = 3, .type = ID_AD7817 },
-> +	[ID_AD7818] = { .name = "ad7818", .max_channels = 1, .type = ID_AD7818 },
-> +};
-> +
->  /*
->   * device probe and remove
->   */
->  
->  static int ad7816_probe(struct spi_device *spi_dev)
->  {
-> -	struct ad7816_chip_info *chip;
-> +	struct ad7816_state *chip;
->  	struct iio_dev *indio_dev;
-> +	const struct spi_device_id *id = spi_get_device_id(spi_dev);
-> +	enum ad7816_type chip_type = (enum ad7816_type)id->driver_data;
-
-Don't go via an enum.  Put pointers directly in the driver_data field.
-+ if the driver has on in the of_match_id table as well.
-
-Then use spi_get_device_match_data() to retrieve it in a firmware type
-independent way.
-
-Ideally by the end of the series you should no such enum
-
->  	int i, ret;
->  
->  	indio_dev = devm_iio_device_alloc(&spi_dev->dev, sizeof(*chip));
-> @@ -361,12 +369,12 @@ static int ad7816_probe(struct spi_device *spi_dev)
->  	chip = iio_priv(indio_dev);
->  	/* this is only used for device removal purposes */
->  	dev_set_drvdata(&spi_dev->dev, indio_dev);
-> +	chip->chip_info = &ad7816_chip_infos[chip_type];
->  
->  	chip->spi_dev = spi_dev;
->  	for (i = 0; i <= AD7816_CS_MAX; i++)
->  		chip->oti_data[i] = 203;
->  
-> -	chip->id = spi_get_device_id(spi_dev)->driver_data;
->  	chip->rdwr_pin = devm_gpiod_get(&spi_dev->dev, "rdwr", GPIOD_OUT_HIGH);
->  	if (IS_ERR(chip->rdwr_pin)) {
->  		ret = PTR_ERR(chip->rdwr_pin);
-> @@ -382,7 +390,7 @@ static int ad7816_probe(struct spi_device *spi_dev)
->  			ret);
->  		return ret;
->  	}
-> -	if (chip->id == ID_AD7816 || chip->id == ID_AD7817) {
-> +	if (chip->chip_info->type == ID_AD7816 || chip->chip_info->type == ID_AD7817) {
-
-Given you now have a chip_info structure make this data rather than code.  That is
-it should be something ilke
-
-	if (chip->chip_info->has_busy_pin)
-
->  		chip->busy_pin = devm_gpiod_get(&spi_dev->dev, "busy",
->  						GPIOD_IN);
->  		if (IS_ERR(chip->busy_pin)) {
-> @@ -393,7 +401,7 @@ static int ad7816_probe(struct spi_device *spi_dev)
->  		}
->  	}
->  
-> -	indio_dev->name = spi_get_device_id(spi_dev)->name;
-> +	indio_dev->name = chip->chip_info->name;
->  	indio_dev->info = &ad7816_info;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  
-
+--vgb7ndcpx6r2z555--
