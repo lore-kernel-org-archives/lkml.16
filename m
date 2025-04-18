@@ -1,156 +1,81 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF2B267B61
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 03:14:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D48B29D0D
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 03:16:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744946059; cv=none; b=NSZXduyekUS6OjVHPgNY5xRG22brUihiZ/OruSt2HMV121S5wC8EgaVHWHgmaLitYSduoeFkf+f+GMaburIc7I6F9Ne9tAez9+FKdKOyeqqGxRYA4KAtnp/+ESyD3f82ITy8G+/BtOnfNVn2eg+6qXkAQM3LuPhBJ0nnPZw45os=
+	t=1744946171; cv=none; b=u8tXxJxwzVAeEYv9dgAI+RibE7G27bMQMzuIxSoM6951eVmZDh6+xN6ia1S1nSg/a3/vmoVb4EvJMPlNbBzMft1d9VclbFcv/GbUNHb3lwQo7PxOl9Q6iJGoglaBe8hoIN2AqBRwjfNtHJ/1YLp8dRSCHfB5DeipJMN9T+uYjSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744946059; c=relaxed/simple;
-	bh=uDfQLr4ARvAlEOQ1dy/LniGonsGL72LeFkxn78P1KxU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=TgPP2HkGtvN/qpjsZ9UEfzvl9c2M2nlq7IMJgKCaYAhOpp4QihjjGDsdoLbn37NLgF5uRwbHf1YWmT5tbI9q+qQZ4JlR+u3rG5FetIBaGaHuetauyLrjWdRGgKRHMFqIvCgQHzZ7SGanDqHqv8m2KVVfDUyVqYLvZ+rlXQ3fs1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S7rzM1A+; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1744946171; c=relaxed/simple;
+	bh=uorGrXOER5uz0Fdk/6/uzEQLryQBUc55065VLpWEkNM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iO6gVUiKxkJGd9bRsqixSekzd9D3vytE6G5Ml1GEdnxUoXeZhGDDfSjAKom2rr6V54rReTdhjuuTXjwGVzOO+i18nBZLJxTf839owVqnwN83VcYQedcsfBqcb6WKSB50bsg+ftVX9YVj/XM1Gvs7e0bNme/fclr402JjQCMF1nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hUplm39h; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S7rzM1A+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hUplm39h"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744946058; x=1776482058;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=uDfQLr4ARvAlEOQ1dy/LniGonsGL72LeFkxn78P1KxU=;
-  b=S7rzM1A+2jPsXjpa3FwkqihXOw4WqdmhVztPH4XbaG+7yMGIm7I+UBbj
-   1VyXDNvg8qWxvvlVghwkYLwNdS9hZI2bXRExTq9aDE3cN0ii59q53Y0DF
-   KJDv9mUwSqfcGB0mQryED9jzpjtKdcBBSEhBj/MUu1dYkauy9snDNJ6hV
-   pHd3utqYfHp7F6SDz7O1eYZsNVvZxdYJPRr8I2tQ4gpoEOjU2UlQoFm2V
-   2TFjLpJYK0YFmR8GUHrNVHOHHSdvWGtAkfoQfi87ZJ+XJ/ZrtppHPD04O
-   4qUjEjBRF+6onr0T0iPgwI37ZmW3s/ViGU2cS9HzV9lg/MJgUX/cb6gZd
+  t=1744946170; x=1776482170;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=uorGrXOER5uz0Fdk/6/uzEQLryQBUc55065VLpWEkNM=;
+  b=hUplm39hXq/YmdIEZ2pQojsjpf2wJnW/i16zlXzawgkVAr6Wy2YjfIOI
+   FZOhkLkyaBRsQkdclJI9rYg6cP+rh3Idew7r1heRaDXXEdzipe9AbNMmM
+   X3N/A4R0Kt3udwQjv2oGpKoxibmh/9BFSD/VK5umi3mdR4PDU1Ll9HSRU
+   MyRS+fWlFpRIu/zJ5lBhLAzUSjJ80tWYrpjkVw3Ij0UNfzVyV/+fn+BqQ
+   4i+OCxbT3Frfy91+65bp1etPhOvbwESfLDXn30muDw0XtuSc2/KizuypY
+   94ajl5n0v19myTIVvYQI9Kmhgsu+KUFA7rdeJTFVhO2hanLdLzsUgJHO3
    g==;
-X-CSE-ConnectionGUID: dw1S/KQOQOWvVqHuG4j+hw==
-X-CSE-MsgGUID: YNXBrbeUTeuCzMbMx4k1Yw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="34188835"
+X-CSE-ConnectionGUID: rZRu6FjATzOP+TO48FVoLg==
+X-CSE-MsgGUID: 8OTNDfeMQVKP4GzLKQ0YRQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="34188972"
 X-IronPort-AV: E=Sophos;i="6.15,221,1739865600"; 
-   d="scan'208";a="34188835"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 20:14:17 -0700
-X-CSE-ConnectionGUID: H58/4Er8TIi83gnb7xE0ow==
-X-CSE-MsgGUID: 0GRdEfFzRzuQl+FBTCWEIg==
+   d="scan'208";a="34188972"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 20:16:10 -0700
+X-CSE-ConnectionGUID: h1DnVM9ZS1CWLDuBwDijeA==
+X-CSE-MsgGUID: WLQB05UASOyfK1YpLBysDQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,221,1739865600"; 
-   d="scan'208";a="136176956"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 20:14:15 -0700
-Message-ID: <80df27f5-19f1-48a1-9db5-c29a85d4bb11@linux.intel.com>
-Date: Fri, 18 Apr 2025 11:10:09 +0800
+   d="scan'208";a="130994563"
+Received: from allen-box.sh.intel.com ([10.239.159.52])
+  by orviesa006.jf.intel.com with ESMTP; 17 Apr 2025 20:16:08 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: Mingcong Bai <jeffbai@aosc.io>,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/1] [PULL REQUEST] iommu/vt-d: Fixes for v6.15-rc3
+Date: Fri, 18 Apr 2025 11:16:41 +0800
+Message-ID: <20250418031642.1810175-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH RESEND] iommu: intel: apply quirk_iommu_igfx for
- 8086:0044 (QM57/QS57)
-From: Baolu Lu <baolu.lu@linux.intel.com>
-To: Mingcong Bai <jeffbai@aosc.io>
-Cc: intel-gfx@lists.freedesktop.org, kexybiscuit@aosc.io,
- Wenhao Sun <weiguangtwk@outlook.com>, David Woodhouse <dwmw2@infradead.org>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20250120093540.512825-1-jeffbai@aosc.io>
- <9fce601e-b557-4454-8698-6c63303999a1@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <9fce601e-b557-4454-8698-6c63303999a1@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 4/18/25 11:07, Baolu Lu wrote:
-> On 1/20/25 17:35, Mingcong Bai wrote:
->> (I'm not very confident about the approach of this patch but I failed to
->> find a better way to address the issue I have on hand, so please consider
->> this patch as an RFC...)
->>
->> On the Lenovo ThinkPad X201, when Intel VT-d is enabled in the BIOS, the
->> kernel boots with errors related to DMAR, the graphical interface 
->> appeared
->> quite choppy, and the system resets erratically within a minute after it
->> booted:
->>
->> DMAR: DRHD: handling fault status reg 3
->> DMAR: [DMA Write NO_PASID] Request device [00:02.0] fault addr 0xb97ff000
->> [fault reason 0x05] PTE Write access is not set
->>
->> Upon comparing boot logs with VT-d on/off, I found that the Intel 
->> Calpella
->> quirk (`quirk_calpella_no_shadow_gtt()') correctly applied the igfx IOMMU
->> disable/quirk correctly:
->>
->> pci 0000:00:00.0: DMAR: BIOS has allocated no shadow GTT; disabling IOMMU
->> for graphics
->>
->> Whereas with VT-d on, it went into the "else" branch, which then
->> triggered the DMAR handling fault above:
->>
->> ... else if (!disable_igfx_iommu) {
->>     /* we have to ensure the gfx device is idle before we flush */
->>     pci_info(dev, "Disabling batched IOTLB flush on Ironlake\n");
->>     iommu_set_dma_strict();
->> }
->>
->> Now, this is not exactly scientific, but moving 0x0044 to 
->> quirk_iommu_igfx
->> seems to have fixed the aforementioned issue. Running a few `git blame'
->> runs on the function, I have found that the quirk was originally
->> introduced as a fix specific to ThinkPad X201:
->>
->> commit 9eecabcb9a92 ("intel-iommu: Abort IOMMU setup for igfx if BIOS 
->> gave
->> no shadow GTT space")
->>
->> Which was later revised twice to the "else" branch we saw above:
->>
->> - 2011: commit 6fbcfb3e467a ("intel-iommu: Workaround IOTLB hang on
->>    Ironlake GPU")
->> - 2024: commit ba00196ca41c ("iommu/vt-d: Decouple igfx_off from graphic
->>    identity mapping")
->>
->> I'm uncertain whether further testings on this particular laptops were
->> done in 2011 and (honestly I'm not sure) 2024, but I would be happy to do
->> some distro-specific testing if that's what would be required to verify
->> this patch.
->>
->> P.S., I also see IDs 0x0040, 0x0062, and 0x006a listed under the same
->> `quirk_calpella_no_shadow_gtt()' quirk, but I'm not sure how similar 
->> these
->> chipsets are (if they share the same issue with VT-d or even, indeed, if
->> this issue is specific to a bug in the Lenovo BIOS). With regards to
->> 0x0062, it seems to be a Centrino wireless card, but not a chipset?
->>
->> I have also listed a couple (distro and kernel) bug reports below as
->> references (some of them are from 7-8 years ago!), as they seem to be
->> similar issue found on different Westmere/Ironlake, Haswell, and 
->> Broadwell
->> hardware setups.
->>
->> Link:https://bugzilla.kernel.org/show_bug.cgi?id=197029
->> Link:https://groups.google.com/g/qubes-users/c/4NP4goUds2c?pli=1
->> Link:https://bugs.archlinux.org/task/65362
->> Link:https://bbs.archlinux.org/viewtopic.php?id=230323
->> Reported-by: Wenhao Sun<weiguangtwk@outlook.com>
->> Signed-off-by: Mingcong Bai<jeffbai@aosc.io>
->> ---
->>   drivers/iommu/intel/iommu.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> Queued for v6.15-rc. Thank you!
+Hi Joerg,
 
-Please ignore this. I picked the latest one instead.
+The following fix is queued for v6.15-rc3:
 
-https://lore.kernel.org/r/20250415133330.12528-1-jeffbai@aosc.io
+- Apply quirk_iommu_igfx for 8086:0044 (QM57/QS57)
 
-Sorry for the inconvenience.
+It has been reviewed and is ready for merge. Can you please take it?
+
+Best regards,
+baolu
+
+Mingcong Bai (1):
+  iommu/vt-d: Apply quirk_iommu_igfx for 8086:0044 (QM57/QS57)
+
+ drivers/iommu/intel/iommu.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+-- 
+2.43.0
 
