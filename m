@@ -1,116 +1,184 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406CE1D6AA;
-	Fri, 18 Apr 2025 14:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A302148316
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 14:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744985835; cv=none; b=U5SxbJpe5whzqDDKx0hRJOUQitBUvCVg0eoTJBHnTZQpzCxHx3l4uJWHprs5OHg/28Wp+pWVrU8P5AATGvhpDdnlPoBsmK1lph98+YKXmwEmqOmaWFSOr2YVP0NvTtYlCjRuRIzp3a5XZxRcTPoAiVxs25lnX9NrqdLagYaCEG8=
+	t=1744985931; cv=none; b=odpi5n61itEwFbLxuWVwkZxg5JSnZ8mH2O+dqVTLMX8I2IH8dnR+dohxb0A/3sh7ds0SQvHjcFShaS15Ws3S+fp7s/TofHj630L/YgXFpQHMXd63PEazV1ODOvpfMY0znaz7f7kv7YFKykU5Np8k4sNCPSXYzBDKI1eFzFpg4UU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744985835; c=relaxed/simple;
-	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JaBrBjOQ8zHGgdzJwLOhLx5BEANLyyEIR3mJXuDsqzf9dAR20jOSNpjn+p8TRmkrO0Y60ktww4HASKm8uJB1BRKiU01/SKhQNzvq/EcKZy74W7S97VdkoL1aNWf+vYm4dT4WIC0G/aIizn5+rnpcakZ2hcgjB42VZv0Y0VPXcC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=oiT4VktU; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1744985931; c=relaxed/simple;
+	bh=pUkjD1FghkHBdydJuYX2OPu84OoLeZjhEfD2QWq8NWM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=pRsH88b3iVOIk/o1D0vo+/z3aMI1EsDK2nj46vC0BSbCUNgMECvDJB61oxYoKHVyCGn4PYWfeUcgfwl0CMbTp6/EDhTXcvAlFO7WsrBYfK6MesDRCmvY5TP7sGV1eXWm2gYYGBdgnH4HxYNWdRXvnvkWT7lkrOOi6GEllHKCYCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aGJprITQ; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="oiT4VktU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1744985804; x=1745590604; i=rwarsow@gmx.de;
-	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=oiT4VktUKC7oWyadd4ac/FNF+7MAuJWP4NNqmJUnbTz2kOvPE8k7tynNEL0qXwOT
-	 CgEznyp7bjVYYamz5h6FkKhwGV3+TTWErX4uxAGF59elPdksUSlcyZtRlEQNX0gHw
-	 9hcxrSj+4QoliFdP+ouM177mERJvBBExLenvB2NYoPySrP0GYBw+YPH23IULCBU1E
-	 tD9xVEdiSVWKCKfXZs4iA7Z1w+6PGAxP1EO8POQ/lGyj1Jvvri5LriXMuU7TMtNb+
-	 W03Ytmy9w7cRxeYOu5yNL1JxNKsm7He3RbNP+Mzy+9c5KxTBQ/9+ZyK3so+fOuToq
-	 ME0L63a0wXAjEV3FSA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.200.20] ([46.142.34.195]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MzyuS-1v1ZXe143K-013Xbt; Fri, 18
- Apr 2025 16:16:44 +0200
-Message-ID: <a8cd4c41-806f-4fff-ab7e-7a2c85c0c869@gmx.de>
-Date: Fri, 18 Apr 2025 16:16:42 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aGJprITQ"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3032f4ea8cfso1912341a91.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 07:18:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744985929; x=1745590729; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VyKpHdHCd98xvNXzYgyo/Cil2h2Uc+7axnGj8AZOXY4=;
+        b=aGJprITQa2ufvXyvemQemmkUfiF1cSKvZhW7W6oezHhDN4M00c4vO2/Smy1Kcn5Oex
+         DCHBgor+5I/kBqpdCdkClhrDkwF6TSgK7e9/vwIjJU1DBnuQSi/lJq5bUQ/86mwxqK6W
+         ITNdKqIEyG0NIFwJIskhQEpUdVVVtYI3Ga0EDvMjcfK7JXHUrFq8Ct6BTTmnBamm5Bpj
+         hUS2lUD5pE7xKg454RLY5UT3pNkzZJBNyE2SGL7//BpyNnJOaQry1YHBZd4o8P9sPGgo
+         1V3wTJVjMVHLjiVq6SokPsDtSvC1vE0bg/jyAq+0tatx9dDQU6PslsDvvDdZX2cRJ3qJ
+         joJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744985929; x=1745590729;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VyKpHdHCd98xvNXzYgyo/Cil2h2Uc+7axnGj8AZOXY4=;
+        b=JSnSTUZeNSevRt7jwt68Fnyl+rgfdkHnJ+9XazvcOb7MYTP8dDY8q4BZbEW9Zluzoc
+         3mVAYfOBA+lRmiIbpSjUPUKalAnSj0SZ5qJSnJLLaqhhKptwpxY1VNB7W6iBkq92Goxn
+         +cQF0fVGc6m6hPKZt2WWJGcKS6qnFjnDFP4OH634DIkQQ0r2Cch9Q6jNRSkOeS2SX9sO
+         8jBsmBLo1+s5VSCbYcyAaEMJ5iVDnFGoLYUiCrHXNAPuQrCDA0GYkX4nrm1wPnkWtXUC
+         EEVqlaa/s7gwkxT6c08Cd5aoVSBnmd1qGZftZbnEjaSNhmt82YlQMRX83sdesja/0Zfr
+         +C6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUBwko1jizH1rfWu1lfVkbwyxGYnH/nPdaDmPyo9MNUqHqW6TcrUldtr2JMyf9VuoaILIMX8E/sJ5+DaoE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhPv1qDZVEAoenOGNe8vkVR1y/5a9SL8KdpkbMjN/fgvpDa85g
+	rjUd1KN2U0HZyy/J2S6H/pmeFG8+0ElhUMxA07ghD3PZm1vtKUXp8YSF1fI0HApUZOdMQQyI2An
+	7LQ==
+X-Google-Smtp-Source: AGHT+IEiGSslixzn2GvqhbUzQFd3uzt4D4erY5NFbgr7oLyfFseBn9Ti3SeLm9HiYvGrGLgi01kpDWgv72s=
+X-Received: from pjbsz11.prod.google.com ([2002:a17:90b:2d4b:b0:2f9:c349:2f84])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2703:b0:2ff:7b28:a51a
+ with SMTP id 98e67ed59e1d1-3087bb6960amr4998384a91.17.1744985929401; Fri, 18
+ Apr 2025 07:18:49 -0700 (PDT)
+Date: Fri, 18 Apr 2025 07:18:46 -0700
+In-Reply-To: <6bbfb38a0cd66af3d3562a82adac835316b1f4e5.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.14 000/447] 6.14.3-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250418110423.925580973@linuxfoundation.org>
-From: Ronald Warsow <rwarsow@gmx.de>
-Content-Language: de-DE, en-US
-In-Reply-To: <20250418110423.925580973@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:lRHOK4iF1zcl57vCz3gBhjRXD159mwQJ8f5PMqsuRhFsmA8mu5e
- eLLz4WNCBOXIbb4pAGI2pFr2xB5stL0yQaoFk2J0AgmjH/JZx7ROTr2ks7cumRPOgmyWoX1
- lGMib0KqVvzO9yZsLZ/cT9APa4AlsWZdRAVxNtry9EeCvlMV08LXYMAoF8fryqiGeUBVKBl
- nugYVG0jJk7Wowu41q8cg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:KZ9Xx9UhwTE=;bx5Hy7GXgzzIQig/aUvmZoxMfJ+
- 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
- +4+wTb2PEA==
+Mime-Version: 1.0
+References: <20250415115213.291449-1-elena.reshetova@intel.com>
+ <20250415115213.291449-3-elena.reshetova@intel.com> <11f7e006073d2a4fa8fd6c609024a69ed40af9d6.camel@intel.com>
+ <DM8PR11MB5750C80ED4AB80C696F581EFE7BD2@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <6bbfb38a0cd66af3d3562a82adac835316b1f4e5.camel@intel.com>
+Message-ID: <aAJfJ38wt2bnguhg@google.com>
+Subject: Re: [PATCH v3 2/2] x86/sgx: Implement EUPDATESVN and
+ opportunistically call it during first EPC page alloc
+From: Sean Christopherson <seanjc@google.com>
+To: Kai Huang <kai.huang@intel.com>
+Cc: Elena Reshetova <elena.reshetova@intel.com>, Dave Hansen <dave.hansen@intel.com>, 
+	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, Vincent Scarlata <vincent.r.scarlata@intel.com>, 
+	"x86@kernel.org" <x86@kernel.org>, "jarkko@kernel.org" <jarkko@kernel.org>, 
+	Vishal Annapurve <vannapurve@google.com>, Chong Cai <chongc@google.com>, 
+	Asit K Mallick <asit.k.mallick@intel.com>, Erdem Aktas <erdemaktas@google.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bondarn@google.com" <bondarn@google.com>, 
+	"dionnaglaze@google.com" <dionnaglaze@google.com>, Scott Raynor <scott.raynor@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Greg
+On Thu, Apr 17, 2025, Kai Huang wrote:
+> I think the sgx_updatesvn() should just return true when EUPDATESVN returns 0 or
+> SGX_NO_UPDATE, and return false for all other error codes.  And it should
+> ENCLS_WARN() for all other error codes, except SGX_INSUFFICIENT_ENTROPY because
+> it can still legally happen.
+> 
+> Something like:
+> 
+> 	do {
+> 		ret = __eupdatesvn();
+> 		if (ret != SGX_INSUFFICIENT_ENTROPY)
+> 			break;
+> 	} while (--retry);
 
-no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
+This can be:
 
-Thanks
+	do {
+		ret = __eupdatesvn();
+	} while (ret == SGX_INSUFFICIENT_ENTROPY && --retry)
 
-Tested-by: Ronald Warsow <rwarsow@gmx.de>
+To make it super obvious that retry is only relevant to lack of entropy.
 
+> 	if (!ret || ret == SGX_NO_UPDATE) {
+> 		/*
+> 		 * SVN successfully updated, or it was already up-to-date.
+> 		 * Let users know when the update was successful.
+> 		 */
+> 		if (!ret)
+> 			pr_info("SVN updated successfully\n");
+> 		return true;
+
+Returning true/false is confusing since the vast majority of the SGX code uses
+'0' for success.  A lot of cleverness went into splicing SGX's error codes into
+the kernel's -ernno; it would be a shame to ignore that :-)
+
+E.g. this looks wrong at first (and second glance)
+
+			ret = sgx_updatesvn();
+			if (!ret) {
+				/*
+				 * sgx_updatesvn() returned unknown error, smth
+				 * must be broken, do not allocate a page from EPC
+				 */
+				spin_unlock(&sgx_epc_eupdatesvn_lock);
+				spin_unlock(&node->lock);
+				return NULL;
+			}
+
+> 	}
+> 
+> 	/*
+> 	 * EUPDATESVN was called when EPC is empty, all other error
+> 	 * codes are unexcepted except running out of entropy.
+> 	 */
+> 	if (ret != SGX_INSUFFICIENT_ENTROPY)
+> 		ENCLS_WARN(ret, "EUPDATESVN");
+> 
+> 	return false;
+> 		
+> 
+> In __sgx_alloc_epc_page_from_node(), it should fail to allocate EPC page and
+> return -ENOMEM when sgx_updatesvn() returns false.  We should only allow EPC to
+
+No, it should return a meaningful error code, not -ENOMEM.  And if that's the
+behavior you want, then __sgx_alloc_epc_page() should be updated to bail immediately.
+The current code assuming -ENOMEM is the only failure scenario:
+
+	do {
+		page = __sgx_alloc_epc_page_from_node(nid);
+		if (page)
+			return page;
+
+		nid = next_node_in(nid, sgx_numa_mask);
+	} while (nid != nid_start);
+
+That should be something like:
+
+	do {
+		page = __sgx_alloc_epc_page_from_node(nid);
+		if (!IS_ERR(page) || PTR_ERR(page) != -ENOMEM)
+			return page;
+
+		nid = next_node_in(nid, sgx_numa_mask);
+	} while (nid != nid_start);
+
+> be allocated when we know the SVN is already up-to-date.
+> 
+> Any further call of EPC allocation will trigger sgx_updatesvn() again.  If it
+> was failed due to unexpected error, then it should continue to fail,
+> guaranteeing "sgx_alloc_epc_page() return consistently -ENOMEM, if the
+> unexpected happens".  If it was failed due to running out of entropy, it then
+> may fail again, or it will just succeed and then SGX can continue to work.
+
+
+Side topic, the function comment for __sgx_alloc_epc_page() is stale/wrong.  It
+returns ERR_PTR(-ENOMEM), not NULL, on failure.
+
+/**
+ * __sgx_alloc_epc_page() - Allocate an EPC page
+ *
+ * Iterate through NUMA nodes and reserve ia free EPC page to the caller. Start
+ * from the NUMA node, where the caller is executing.
+ *
+ * Return:
+ * - an EPC page:	A borrowed EPC pages were available.
+ * - NULL:		Out of EPC pages.
+ */
