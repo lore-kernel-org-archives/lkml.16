@@ -1,108 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B22B1DE4D5;
-	Fri, 18 Apr 2025 14:24:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE1F15A87C;
+	Fri, 18 Apr 2025 14:26:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744986285; cv=none; b=MENsZnT5gvKkqXt/FXTHux8X3aW+wvQFlB1aLxSrrss18SdoOs+SqE5i0IvzcWX8MLJqYd8UO5MA+AN7eWA2f4MJy4kCHcqXInQSAvbM0kVNN3scOSFRk7h1g5FiGwbgGAj9Y8W0DurwW4RYqywmJMwT57jRWETe0AcDmlHJS9c=
+	t=1744986389; cv=none; b=TzEz3EJjaKBnrDjF5ETz06+hwqaScJyqHqxAYxuGqABAwSeTxpXWGkhURX0GtzEpEncYLl9UKcSNlr0+MN8ncxkwdmBzLM23a6ed5BqjuazRjfoYxPcDHNMEylnaaPhdMUJNSsG3TV6uAspNhDn8ZwhJwzjYn8ceQv8k8S9ljSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744986285; c=relaxed/simple;
-	bh=VYc4cFX2kNa24+VMNVEjITkhtJG0EHEVrqimNoAqlQE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZIkBmrlNgeAA/RO/pvnVMEH0isDhDYEiiOtI68dXlsVWtls0SNYo3QPNDBGALOtgH4KFe4SCiz63JQvmuNf/Wz4cghLuFWoe78aVmnBpvRfBj7M/4XNoQ/C+6OsCIhRsslzz8MnSdfigQXcmwJwJmyDsgvOjX3w8CfNNDUOtCqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pvAQt92z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744986389; c=relaxed/simple;
+	bh=XI9iHwHqxWxBCu3gSyvbo+qrIDUyMLsG6fCN8jDhx24=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OB9NlQEFW/Q+EeNdF7ft5d4jyt9NtkwSz7kFnkmkzBoSEIgdGGzi+ISk5Dguqyuko+H2I0Z8KPX+g9PiQzLGsoXB2RxoX/bzL6Bk+9lE26bzKCSWKTAzyUTPYssXJFmjlW91hp0OPh1NgCIs5cPh8PqC1w/kkAg18lJLBZXuPwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SeZMtLCP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pvAQt92z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CC8CC4CEED;
-	Fri, 18 Apr 2025 14:24:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SeZMtLCP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E9DCC4CEEA;
+	Fri, 18 Apr 2025 14:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744986285;
-	bh=VYc4cFX2kNa24+VMNVEjITkhtJG0EHEVrqimNoAqlQE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=pvAQt92zkZx+onsQHNxzRQEupQHp8eFznCGYCeWGmlQfwPYcapTQrbevcMtB3YHQS
-	 uKHS8DnNfTAKAmBtG3h5tvbqE+M5xpACwq/C3Nl+Pk/Yg5QPYsO4szANR4t55XcSnG
-	 i+fSf/hVIyz8HtwFMmG6hqRHuHQoqwCdjR9i5+VIwjFe76xnAeBY4GJC/egbZ2xApF
-	 Ms5Fg2Nb10Cpa0yPn0v2pGYcdHLMVeOBOk0ehnAnziHGSa9MYGWOFgXw2I1X1enUxM
-	 /Ygrx2tB+WJH4jziuM68B6OUCwG5CFzFJ9Vh4C41TRtpUyx1w9ElyFPhBtS8Wnb3bM
-	 1fuVP38JVs4+A==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Fri, 18 Apr 2025 10:24:31 -0400
-Subject: [PATCH v4 7/7] net: register debugfs file for net_device refcnt
- tracker
+	s=k20201202; t=1744986388;
+	bh=XI9iHwHqxWxBCu3gSyvbo+qrIDUyMLsG6fCN8jDhx24=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=SeZMtLCPHp4jyi1cGZzmlFtMhnU3gDg0HVi78JjG0+iDLltOrGi21f/5UcwnJLf2S
+	 85ok25uc9wmwXii2ZDCmOAo1k8uwUHbp2FU9arxUPAtv95CNd58dX/HaK1986A+Cri
+	 9nFFsHtzCJTd61gi9zo2Dreopnv8C4AEW9Rus04PHciPNqxK8RfhHVBbYJmg+b3XL/
+	 I/0eF400gu5tH8umkmBoNfN5ITTJx9zE9LuaA8YvGMtyY52Rbf6A5ojrDIvq5eL5ab
+	 V/g1d588ZWnR1hv/v1ntQExbJbluuooabR8Was84CrNBSRxF8DGiMEV9RjuS3JghVX
+	 Ij3jYlbT+plAQ==
+Date: Fri, 18 Apr 2025 15:26:21 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Siddharth Menon <simeddon@gmail.com>, linux-iio@vger.kernel.org,
+ lars@metafoo.de, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+ marcelo.schmitt1@gmail.com
+Subject: Re: [PATCH v2] iio: frequency: ad9832: devicetree probing support
+Message-ID: <20250418152621.70c9511f@jic23-huawei>
+In-Reply-To: <20250416185846.GA3735440-robh@kernel.org>
+References: <20250322163211.253009-1-simeddon@gmail.com>
+	<20250416185846.GA3735440-robh@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250418-reftrack-dbgfs-v4-7-5ca5c7899544@kernel.org>
-References: <20250418-reftrack-dbgfs-v4-0-5ca5c7899544@kernel.org>
-In-Reply-To: <20250418-reftrack-dbgfs-v4-0-5ca5c7899544@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>, 
- Nathan Chancellor <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1306; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=VYc4cFX2kNa24+VMNVEjITkhtJG0EHEVrqimNoAqlQE=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBoAmCic1DxTa7/YRueIIGZpg4utucryKIFa0uLO
- Ib1Lc8GNpuJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaAJgogAKCRAADmhBGVaC
- FYnNEADTvOQjXbqGWzjGC1YCBBgnunz+49uokptG6ejAhHPYiIlqQw2Wy9NFNITxfoNu5BZvs1e
- 1HvUGL86LFtNSOqOfpPDG39kbdSnSnqKlHwUMA2wSqpiKnrkqjPr5E1Jk9USNXIRTXBdF9//uQ2
- 0qbKjyMPYBSAcrn0vwjuAqFv/J0l5FzCRuwSQUU0iMhQeppwTU7imIcVN70vxCc3/Nbc5HXAZH6
- BgFyp4fodJmGYQEBfFz8ruiC7F+Fq1FbGRP8dEOZRtSFHo87+RehHGg5mwNQ2SIRnTy8BBVGEXI
- XVNv1yrheGXJ5An8rxkQzhzT53uYstGCALLbmQQ54AW7eUOSln06ao73YNmu0LbQ4OjXuvDFXta
- O7z0xnX48yme7DuPhBtABT2wqhDKyV0CBN3l2pgf3PYQYDMuCwi+2qzCPFru0PgPvPlN+zKH9lY
- q0gF6UQspx7djjrAqYSYgrtqBk4/UVhH9xWh2PBhwc0JXcGtvzrQJ7w3k9ojuJIew+WHNmtgQ1j
- dPLXbWtbGdzS1ZogoNF9XmLLtNAxdguV/k6hhKmpTZlpGVCTxCBJTMndXfQO56/mwoMfRGQMSfJ
- 8mdZx3tDFqJkX7brojC/iLe+o19gXx1uMFvABFVZpZWldFg4kX9ZdNCVqDQH91wnwYEV23f3tpX
- AqUNLSluMusNfWw==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-As a nearly-final step in register_netdevice(), finalize the name in the
-refcount tracker, and register a debugfs file for it.
+On Wed, 16 Apr 2025 13:58:46 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- net/core/dev.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+> On Sat, Mar 22, 2025 at 09:58:11PM +0530, Siddharth Menon wrote:
+> > Introduce struct for device match of_device_id to avoid relying on fallback
+> > mechanisms, which could lead to false matches against other AD9832 variants
+> > in the future.
+> > 
+> > Suggested-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> > Signed-off-by: Siddharth Menon <simeddon@gmail.com>
+> > ---
+> >  v1->v2:
+> >  - updated commit message to be more informative
+> >  - minor changes to code formatting
+> >  drivers/staging/iio/frequency/ad9832.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
+> > index 140ee4f9c137..7d4f655f6df1 100644
+> > --- a/drivers/staging/iio/frequency/ad9832.c
+> > +++ b/drivers/staging/iio/frequency/ad9832.c
+> > @@ -431,6 +431,13 @@ static int ad9832_probe(struct spi_device *spi)
+> >  	return devm_iio_device_register(&spi->dev, indio_dev);
+> >  }
+> >  
+> > +static const struct of_device_id ad9832_of_match[] = {
+> > +	{ .compatible = "adi,ad9832" },
+> > +	{ .compatible = "adi,ad9835" },  
+> 
+> Is there some reason we can't add a binding for this?
+> 
+It might take some thought on how to actually describe some aspects
+of this device that aren't yet supported by the driver,
+but in principle we certainly should.  For drivers that have been
+in staging a long time I'm a little reluctant to do merge a binding
+until we are fairly sure the driver is going to move out of staging though.
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 2f7f5fd9ffec7c0fc219eb6ba57d57a55134186e..377a19240f2b774281088d91e7da3e4b6ec52e33 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -10834,8 +10834,9 @@ static void netdev_free_phy_link_topology(struct net_device *dev)
-  */
- int register_netdevice(struct net_device *dev)
- {
--	int ret;
- 	struct net *net = dev_net(dev);
-+	char name[NAME_MAX + 1];
-+	int ret;
- 
- 	BUILD_BUG_ON(sizeof(netdev_features_t) * BITS_PER_BYTE <
- 		     NETDEV_FEATURE_COUNT);
-@@ -10994,6 +10995,9 @@ int register_netdevice(struct net_device *dev)
- 	    dev->rtnl_link_state == RTNL_LINK_INITIALIZED)
- 		rtmsg_ifinfo(RTM_NEWLINK, dev, ~0U, GFP_KERNEL, 0, NULL);
- 
-+	/* Register debugfs file for the refcount tracker */
-+	if (snprintf(name, sizeof(name), "netdev-%s@%p", dev->name, dev) < sizeof(name))
-+		ref_tracker_dir_debugfs(&dev->refcnt_tracker, name);
- out:
- 	return ret;
- 
-
--- 
-2.49.0
+> 
 
