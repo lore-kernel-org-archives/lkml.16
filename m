@@ -1,67 +1,65 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A156420297F
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 01:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768CA211476
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 01:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744940548; cv=none; b=H1uVkGLoRXb9RqbMuWnaBc5aVIm+4qE6b98j5dDQlJa4tA8yEgbdKnYiDZiAGYV/ChM2Q1zwm8eqej0ha0Yc5A2I8xrENuyQstlFdHxVFh9PF0TiQF7jmjntPX6xagoh+VBfNhiEmsq07WS1SNS0ndmRQ26Kzl5RTitQrUSN0O8=
+	t=1744940552; cv=none; b=Q9OxzpnDo/RGLHz4VvqH8NHRWAGm7lD+rpN0TbYfsKqK7ciuB8Sf7+1o/rMI8NlKxXIEsi8j6Ft6E6xgXJLOTjxURrUl/CVOWnTt26E8TiA/vzXjaKNACqF2Ee6rLCvKc8iw8rCe5c/o99glEOe6H/Q1e5SHzIxDV+uHh/dbTBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744940548; c=relaxed/simple;
-	bh=OjAsY8Aeq5Ueru5ZAiLzHF/EyHc73z1XNs7APpOHEWY=;
+	s=arc-20240116; t=1744940552; c=relaxed/simple;
+	bh=rOW1RwC5UHmQ7UKODOM1ogomu8IEggHtksSWry6t9GU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u2hhaAH22neGvlOjXbBYNB+kZIuWiT3A28JNVyU1miCXS/yst2ssY7h0tw6sJOkznlqhks+eKdxynkqJhESEtUXvsaAavTsC3B0LPSaQJD/7Zl8VRfMXNEp3YyqDn5z1Hq4AXspUAAgVhz3cs51lEzeRGx59zoqje+NMiwxs2Kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=antoniohickey.com; spf=pass smtp.mailfrom=byte-forge.io; dkim=pass (2048-bit key) header.d=byte-forge-io.20230601.gappssmtp.com header.i=@byte-forge-io.20230601.gappssmtp.com header.b=lNSpkuJR; arc=none smtp.client-ip=209.85.128.179
+	 MIME-Version; b=LnZcp3xprQcjsYGentN6h+/8G6Y2PYMq/I/bJYPzXHBYTFE3BTa1OLGnk3Eux0OKFEp/g2qbsDWNKneLOjFSU4dhK+lp0v505NNnqg9fym8ldcrSaBCVD0FF98SA6MdLAkCsCfL7lq02u4bZZZQ0zEu2V/YYuPIDG8PCAaDxVTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=antoniohickey.com; spf=pass smtp.mailfrom=byte-forge.io; dkim=pass (2048-bit key) header.d=byte-forge-io.20230601.gappssmtp.com header.i=@byte-forge-io.20230601.gappssmtp.com header.b=FucNCc8f; arc=none smtp.client-ip=209.85.128.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=antoniohickey.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=byte-forge.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=byte-forge-io.20230601.gappssmtp.com header.i=@byte-forge-io.20230601.gappssmtp.com header.b="lNSpkuJR"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-7040ac93c29so14271687b3.3
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 18:42:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=byte-forge-io.20230601.gappssmtp.com header.i=@byte-forge-io.20230601.gappssmtp.com header.b="FucNCc8f"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6f6ca9a3425so16008947b3.2
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 18:42:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=byte-forge-io.20230601.gappssmtp.com; s=20230601; t=1744940545; x=1745545345; darn=vger.kernel.org;
+        d=byte-forge-io.20230601.gappssmtp.com; s=20230601; t=1744940549; x=1745545349; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ACdKqDtHD6BESg+aNrA5JEShMOuHrL3BKvU+zPowCQg=;
-        b=lNSpkuJRc6Z1epKiGSFMcxIF8xXhS/B+f7Dys0qh7GDvBwCQGsJjhZt4hEBWq8DM0a
-         sXMtpLSbG3mZOSk+MCA3kImFHJH1DFosBiqnY8F+T49Ba4gmTDRZKfmg2bk0FQy/rbYL
-         4NOjEdlPGklM0oANxSRewrDs1PyXlmC58ZPg2ypkDmFSIrxlhCNOF4a3Hf6K27tjqOIB
-         YqvHl+i3zvtNYbrMof3RGMRC9Wo1fIAY541CKWh3j1C6F2W8cMbaSaK7SWvdZpgOwi/E
-         s4jLvUmtNr2EuhIu+1raKQVZ1Pu5Y+e0sXdZAx/OQjGsFWYP7/nQVNlnWV7DzuU96iIR
-         IZzw==
+        bh=5iSJCb3uqQGBFBpo+xzudBn2hvy1gDWxYIfh6IK0HAI=;
+        b=FucNCc8fYETPkWOCB3I85YGn0njlaV7dEIhuUDIXOzcgBJhLKAcVSEWE3vJHcALbia
+         7Hok4SlfH9vHShnnjrtJz8BAbSFdpzeO1W2Wbbv7UYM8ycK05jDfLxES5jrwZMSxc8md
+         QouJ2g3DeO19ZWnvb/9UiLRi8RzrKB+ilmabBYqlPQWS53i6SAAKYTVAA70jX6Iw08yp
+         Ovv8wCMR/jDQvxvdQSMoNxHx5zH/+9GpBQijjuJiaqcpgOscZV7kWgy4onBY8VmuHHl6
+         niKyidMj3VDhsHzrUk/2lIzAaMrsBic2edk0fYOIlNRp/svxaYPrtVFbP7hwbRUpIb/O
+         Ub1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744940545; x=1745545345;
+        d=1e100.net; s=20230601; t=1744940549; x=1745545349;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ACdKqDtHD6BESg+aNrA5JEShMOuHrL3BKvU+zPowCQg=;
-        b=qT14qJ8gSsS4TC662rGKMF27u/VtVlvEPdtJTL0E25Ili5UQd+u9nXRY4JdwwsTQ25
-         gMR7FSZ+E889c3juCkei6LltaN8ZjMf3ma9W0QOioJgmHOSBHQUHa4enKw+ghnpjhLtf
-         Dj6PMmd66Nltji6uDNz1ZPbZmBSNQTrgWF5LSJBTSeTySDNCdUbj0yQV9VpsjrDXOQmV
-         ILHtV5twOYLSCZdseMnUn81NiXCkGKA1EL+d/udAoVsBS5vXMrDeXADPvJcfg9qt7P4S
-         tinb0ummdyxiJt8mZUSzKp5USl2PyFblQqnPmYPqmSRr2zkBPBkr3Y5YWKzN63UkcD8b
-         PENg==
-X-Forwarded-Encrypted: i=1; AJvYcCUoNs87d7+HMxjcG0Q5yCXhEPIQV89i1BZS7MlAtIaBu22r1lxBbEhoQVfhUeM8SpV3a4qhVTscrjEcUNg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9rwTmwVYybkwOEkQP3CZS0koxBSasZr0WMkwk45hGOnt6AYNn
-	SwBg4fdPUCL+YVMrIF5SbNmwumDwjpVzMwVEoFcJ7jccGs1Y3noV4ptkZSUiAiM=
-X-Gm-Gg: ASbGncua2sZmFpi/OOH0JobyqY/G6rKRGJZIBOUGhxNxTgSRFoxALFVsmNWLfGrq2h/
-	Ja/SZkILnjy7BEGAZddThihu9yPo6YLcbSuemcVZFryDY2cCFgjnxOuxxwivBtH7pZ+U5+XvfNv
-	bJGLy3QYVohvt9iCL97hlg+OvtiOHUHeC7Jyr+Dptu5R/wC90Ek6QoFglEPGXJv4laz3MWwWN1N
-	jpm6LN4G62LCKRsrmiLKnvsgN/HeizOT36He3Jbf/WhzwHPPTe3ZYCfAu3ebwh4SIdlD10xG+H2
-	dADOPlPVrYBAgbFvyFyHQJxvXsZM19PKK2I6i5W1GUkaxT0a65uDjHbUTURge/vC4XdVfhd55UN
-	6k6pbscHSYETGrJV2K6BZ6n+55LvDdQ1l0q05
-X-Google-Smtp-Source: AGHT+IFFnPj29gWWWt5rHJCynoVqA+g7Bu3K+6B674boBRW55BGIQRBULHvKIBq0w4As+NszEYgvdg==
-X-Received: by 2002:a05:690c:3609:b0:6fd:3ff9:ad96 with SMTP id 00721157ae682-706ce084512mr16517447b3.37.1744940545611;
-        Thu, 17 Apr 2025 18:42:25 -0700 (PDT)
+        bh=5iSJCb3uqQGBFBpo+xzudBn2hvy1gDWxYIfh6IK0HAI=;
+        b=MzLRCdhzq+2TsbI8SqvjkPPD5MSAMhh6zWPTpd7aFDra35Pv+QNKRTQ+GWL+Vr6RVV
+         D8awmuRQJYvahzXWdFjSf4zi4ZeJ6dQTo4XBZBGjcMhmahLeoT5UfzGNXXvtt+KZqzvQ
+         IBC3TVR3fWsFaUvnhMFbzgtKuEEnwS1w2o17EBl0MvpWeqsJJMZet4yqgOUf7ARfpoj0
+         LsWgeI43oCy/mpov2qHg99q1fIsZ5DzVaw0Fk5BpMzX45BRuNUAJ3i9/ydkddWtX0Fyk
+         zrOU4+DTL9H453Yt8RVXhS7sVrkf3K52zA3w3GJBL+RtSS+uaSsewesSiS+j1+Mv83SR
+         FhWg==
+X-Forwarded-Encrypted: i=1; AJvYcCXIO7NDKRekuumQNida3Q6eOT64E2T4Xtr4kr1C0sgQe4klp7j202x9PXve+hqiKLzfXNMnw1TAfzcyiow=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkaB9jbGI+9tihPJO/9rAlWa+nt4ub4DaPV0qxBE511rXj/KEp
+	KVIbuGA9e9efK2hTW3N8Rf0H+zcvmGprKENRdpND/tFtSzeUsDPPOhKyrYEpGwo=
+X-Gm-Gg: ASbGncsSRm4yEYwMcE4xU5A2vOHJWSoZHLKhZMRgaX42OVFDI0URwCmWY5qv9kaSkAY
+	p/R6pJzgLjhcM/eKSkY5JfndP9N4hAzzl9IAptgU2M18z9WDg063B7C8WTBSfyx4Dhga+V0VQrO
+	emmCWLkCIb1mb3iNg6klG6wYYoxVlQo4PzggkiXDgCq2L9Y+8w668sqY7HPXdAfpBbqAYiH9n3D
+	BdHdfFDQyx1RZb+EM8KXMGlATm0KwM0/vx+as87zmj8Ne8wLzAsmNu8DO5gz6mNN6eHEEVBHcWy
+	It7ogzQEcngfwwzr2OxhKBJOxKgE1XJDXuQTgWVIsUh2bUt7i9LEN3eQ48t8x4C2ZWILzceaW28
+	rl/KKjnbGwkPahOfFuGGFQg7UYMUx5CyeHCJ8
+X-Google-Smtp-Source: AGHT+IFmO8E0eAAldhUU8G3XlJp5JfFC/QaZWRxorj5hPt+AQzy684xlOEx47D7rkBQOVE84JmeuFQ==
+X-Received: by 2002:a05:690c:9a8a:b0:6fb:8461:e828 with SMTP id 00721157ae682-706ccddb140mr16306967b3.30.1744940549449;
+        Thu, 17 Apr 2025 18:42:29 -0700 (PDT)
 Received: from Machine.localdomain (107-219-75-226.lightspeed.wepbfl.sbcglobal.net. [107.219.75.226])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-706ca44fd13sm2804597b3.20.2025.04.17.18.42.24
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-706ca44fd13sm2804597b3.20.2025.04.17.18.42.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 18:42:25 -0700 (PDT)
+        Thu, 17 Apr 2025 18:42:29 -0700 (PDT)
 From: Antonio Hickey <contact@antoniohickey.com>
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Miguel Ojeda <ojeda@kernel.org>,
+To: Miguel Ojeda <ojeda@kernel.org>,
 	Alex Gaynor <alex.gaynor@gmail.com>,
 	Boqun Feng <boqun.feng@gmail.com>,
 	Gary Guo <gary@garyguo.net>,
@@ -69,14 +67,14 @@ To: FUJITA Tomonori <fujita.tomonori@gmail.com>,
 	Benno Lossin <benno.lossin@proton.me>,
 	Andreas Hindborg <a.hindborg@kernel.org>,
 	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
 	Danilo Krummrich <dakr@kernel.org>
 Cc: Antonio Hickey <contact@antoniohickey.com>,
-	netdev@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 09/18] rust: net: phy: refactor to use `&raw mut`
-Date: Thu, 17 Apr 2025 21:41:30 -0400
-Message-ID: <20250418014143.888022-10-contact@antoniohickey.com>
+Subject: [PATCH v6 10/18] rust: sync: arc: refactor to use `&raw const`
+Date: Thu, 17 Apr 2025 21:41:31 -0400
+Message-ID: <20250418014143.888022-11-contact@antoniohickey.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250418014143.888022-1-contact@antoniohickey.com>
 References: <20250418014143.888022-1-contact@antoniohickey.com>
@@ -88,42 +86,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replacing all occurrences of `addr_of_mut!(place)` with
-`&raw mut place`.
+Replacing all occurrences of `addr_of!(place)` with
+`&raw const place`.
 
 This will allow us to reduce macro complexity, and improve consistency
-with existing reference syntax as `&raw mut` is similar to `&mut`
-making it fit more naturally with other existing code.
+with existing reference syntax as `&raw const` is similar to `&` making
+it fit more naturally with other existing code.
 
 Suggested-by: Benno Lossin <benno.lossin@proton.me>
 Link: https://github.com/Rust-for-Linux/linux/issues/1148
 Signed-off-by: Antonio Hickey <contact@antoniohickey.com>
 ---
- rust/kernel/net/phy.rs | 4 ++--
+ rust/kernel/sync/arc.rs | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
-index a59469c785e3..757db052cc09 100644
---- a/rust/kernel/net/phy.rs
-+++ b/rust/kernel/net/phy.rs
-@@ -7,7 +7,7 @@
- //! C headers: [`include/linux/phy.h`](srctree/include/linux/phy.h).
- 
- use crate::{error::*, prelude::*, types::Opaque};
--use core::{marker::PhantomData, ptr::addr_of_mut};
-+use core::marker::PhantomData;
- 
- pub mod reg;
- 
-@@ -285,7 +285,7 @@ impl AsRef<kernel::device::Device> for Device {
-     fn as_ref(&self) -> &kernel::device::Device {
-         let phydev = self.0.get();
-         // SAFETY: The struct invariant ensures that `mdio.dev` is valid.
--        unsafe { kernel::device::Device::as_ref(addr_of_mut!((*phydev).mdio.dev)) }
-+        unsafe { kernel::device::Device::as_ref(&raw mut (*phydev).mdio.dev) }
+diff --git a/rust/kernel/sync/arc.rs b/rust/kernel/sync/arc.rs
+index 8484c814609a..fea85e5342a0 100644
+--- a/rust/kernel/sync/arc.rs
++++ b/rust/kernel/sync/arc.rs
+@@ -263,7 +263,7 @@ pub fn into_raw(self) -> *const T {
+         let ptr = self.ptr.as_ptr();
+         core::mem::forget(self);
+         // SAFETY: The pointer is valid.
+-        unsafe { core::ptr::addr_of!((*ptr).data) }
++        unsafe { &raw const (*ptr).data }
      }
- }
  
+     /// Return a raw pointer to the data in this arc.
+@@ -272,7 +272,7 @@ pub fn as_ptr(this: &Self) -> *const T {
+ 
+         // SAFETY: As `ptr` points to a valid allocation of type `ArcInner`,
+         // field projection to `data`is within bounds of the allocation.
+-        unsafe { core::ptr::addr_of!((*ptr).data) }
++        unsafe { &raw const (*ptr).data }
+     }
+ 
+     /// Recreates an [`Arc`] instance previously deconstructed via [`Arc::into_raw`].
 -- 
 2.48.1
 
