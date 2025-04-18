@@ -1,66 +1,66 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B5B253B7C
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 22:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B108C254B05
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 22:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745017161; cv=none; b=qp3E3sBQQa7rSAd7FuXsw8qWpG/kw5occt8RjKcW059VA+Yzjd1Pe7WsXoGxSajjUVJfcvXqnW8UaX8vc9MsyWHCzpUMoKRvWE1bR3Oabr9ExGgDC9zGzMTJ1cA11NcFG7HxRiMHTI/+0bBDdXPj4kX3W8S09DgokfEFK5/+yto=
+	t=1745017163; cv=none; b=px4GcB4Cn8S1r57+JdHLGQSITubFD46JMTICD67ej32VURFcA+7I8BGmomDAKww5LNWzB6vljCaKEeZ2zYZfyfPjUzul0dsy1fwHeY10UnNMio+Z1RpMrREzkTR7hpj6hyRfdcw6P3kHSs7fY3QjPHgIzZ68QrCqd/f9ETpZxBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745017161; c=relaxed/simple;
-	bh=riLMNi8cTRALK+z2tdzALBzLDS506Wq4e/lftZ4Qza0=;
+	s=arc-20240116; t=1745017163; c=relaxed/simple;
+	bh=dE+Bh2dLzHZaDfFfGvJCuONf8Z/4uctHMsmHaIg81Wo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=O1C0EYtL+0TB4Y7rQgY5E/x6Iu5cbbJbW/2WYrmDiT/99fGHVaVHEDCASKoqNTqlw17lqcyHfSeWDl3NA8MTmB90G+zsmlfXX4NS5xt+GjYbb3reCNOdavxGWfjapfwC3r3UxOmL3yBdP2Q5a8rC4FIzzGU2/1pUFh2/JxDgA7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=H1CTWtCn; arc=none smtp.client-ip=209.85.210.45
+	 In-Reply-To:To:Cc; b=te0k7EwKbLJ2p9h6IBIb4Zx+PtRTHgChGR4IyNpV0e4K5fpzNbI0d5gG43Ld9JxYxVGeIaqFuObPiprSjgzdawURRLXtOwLdpurqZ2EmmEBRXLU5yZ5Qndvi82bApitySWMF2qRjXGJnADGqJeqAOEyLz/RQmpvcKd4Uh0vFC1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=UL/t0b9X; arc=none smtp.client-ip=209.85.210.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="H1CTWtCn"
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-72c27166ab3so1470691a34.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:59:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="UL/t0b9X"
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-72c1818c394so1373299a34.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:59:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745017159; x=1745621959; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745017161; x=1745621961; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hKikOgoKDd6H5VVHjKZgNHtxeK29B8IxCF5UHWIsVRU=;
-        b=H1CTWtCnIsxSGloXteS0VxXMnL+TYx6mcDudDOJ6E4COVVDhRYx0NjEG5KdwMBDCVk
-         hWV8PFLpp6C26Hw0ymzkZ8jfeAYkXnSUDImeXB1b4allf+6iNQrhL09nRxniaXDNyJMi
-         b4R61orBrOo6SD5T60r6v5vdTku0cUZfn3p3tYPA7QbYfXecGO1DhbGLZlRX5AwPmr5K
-         Xxb2heCBgY/p3EUCyLUn6x9F3jtIFWp/pfypafPm5am2LxA4nzycM3rUN5Fpx5OKxxr0
-         edzVokUlTP43JqGBh/xdHmrLSjakfJx/9eDorDsFoD0ybmz2qmCWZqCuFCe4uGUqMdxD
-         T/Gg==
+        bh=uYflLc6ZtTC/uqwD8kHGOb9ooOEq6qvp2MOFP8DwFKQ=;
+        b=UL/t0b9XNp4dht2NpEfbCUGcJDQfBf+baHZ90TzTQE6P9O7Zey3PDa/f/IvAEj1rMh
+         9khCcHJnKPMo4gfbpuIxUE0d/dO3dDPIdomrU9GOyDNIhFZ52lZyBVsfoqKGeW/g+F/3
+         aRGgR+mBPwq0lC89ZxGULUP6iRhRJQ6XWoatmxcYR8ezaRpooMHeqooR6/4iAPRy4yt7
+         wjisIyXTKUGLZ4/HPBHv6zBoCU9gPYDFtyOw9JZ6EHhxs8OKqAB0qPXEid75bBp86MGz
+         itzgWUu09/hvJbCo4juE7gFgDKyTAyYa5t0srHwm2DBe8EXBl8zdGT4sEwHZp2s0e6Ph
+         4keg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745017159; x=1745621959;
+        d=1e100.net; s=20230601; t=1745017161; x=1745621961;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hKikOgoKDd6H5VVHjKZgNHtxeK29B8IxCF5UHWIsVRU=;
-        b=DdfODjX19UhB5TPhLW3RAQXrONGQ7+BO+EdvCIQofe1Be3lP8r76LfzqPqY6wxEx/M
-         JedLNtnTTMf+YMDKbM8kAvOeOEyvh/rhEf+XQd+JKMwxoO/+y+zYKoRmB0oZ+eMiCbEN
-         mhNIollCJ8WcSz8uMiLCHPwhbvRgfPh8cEmn5a3aiqstUF/pyDLLonVjP3E1aQirF5bE
-         TfQm49HtTFak79hT4lWCln7mbPuyLghxCxAfy5Fbo/EE49opExYFsOCsUYTq0IM7vYpl
-         hNXfAG3g5UwzQqL8MjGPcLhYbp0DGwpySmLIVcT3pMphLxi3buLYRocHcdYfKrBGL1py
-         H2cQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZKVPcCYlmukrC4Kn+OGsx3O6JILEBf5Ye+xZklP7yVqhnzUrcoriwOHrHw4CMX5iYKpVycTorOAd0BtU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZuiefPgb+BKOi6GqwGInADe+OasA0p9zeuSg1WdLIAOFgFJwY
-	uqFNBsGA/+JGx+CWWVwm4b7BWXQZhlFNBgK/aKfBREWeTyiThBgefnnRxHxahlkCJLq68mRCeGx
-	1NCg=
-X-Gm-Gg: ASbGnctXNS0jrOownttg6mzuDgIDRjmZbIpPXve+WeJw6Iola30cO/5oFBjVxfbVlrG
-	Ut15lNjKZAWypjznfgHPUM0RShmQtZboPmTh2TfYPZK7ddlpKKQFxu/s1p0zv1OfFq3eAM+ciS8
-	YU/k1HvXB5x3Xaw3lUDVZZy29zlB0ZnKVRmWUfnMmADQRBsyHtOL7MrtHeTjxKtDZV8OpkaZ+dr
-	g89HCcBRWAmz5ZyC8I0dMFllAqHdqGnMJteiTPEtuFilt6peyBlBygVeLvIltQ/9Hg5Dk9LRAiM
-	8DF3n6q4/WOPe9f0yQZerRZdS5Dv2w9zFkaLAIN7bRwFcNQ=
-X-Google-Smtp-Source: AGHT+IGPJokDaTAIKv/2DTkY0IrE751M1/ey6Bstj4RPUeiVBf+/tF6VXizJAmOZInWQ1epMeUepcg==
-X-Received: by 2002:a05:6830:6288:b0:72b:823c:8f66 with SMTP id 46e09a7af769-7300621472cmr2288047a34.9.1745017159150;
-        Fri, 18 Apr 2025 15:59:19 -0700 (PDT)
+        bh=uYflLc6ZtTC/uqwD8kHGOb9ooOEq6qvp2MOFP8DwFKQ=;
+        b=LR0IONPif9cEkxsfi8vVTwPv9OczuWs5yHEwdaunJXuG4X2GFL/RwDDzTeBtHrx+9i
+         2R6zMBMHEgl4bmV0eXTwaUg5JQBOBYMf83hqqmLX/exU7ER4/i7aAsPO0mGkJE+FSWCB
+         0AnNnfqhH1RAOtvkkJsYbzJ6ssDXol8UQlwd9nstfCDYhZTG8ktPczhOK+2rxFtOvBRX
+         jaRIrzvEViBy8SD/rJKZPP1c5V0jO2WyVIrZ123IfUBdOOOoQ/KFaSJSTimCXM+XbvFQ
+         OFM6lJGAALfXDuYI3G34l5GlRXzV5VWbSul64sZ/P2ELSC2aIMOe9KERGwcVbznvKcLm
+         baXg==
+X-Forwarded-Encrypted: i=1; AJvYcCX7N49iGwT2qjINcPWoelMnO/yUvaP4GFPTx4apsoYipMg0OXfQaBAZ2x0blAEExD67J7xCgA3u1erBbD8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqSXn9IOTOEgS2gf03yfwiOqmPI7+xSUQTaqWyQNThNoNZEoId
+	KGv9/0XSKqoN5k42dvL+mbS41mMBYuhQZX2H2ON9XwqcqhVp/IEcLp3EAVjnW9zjRLieUr4ona1
+	7+o8=
+X-Gm-Gg: ASbGncvKqeAfHdQw2rXs1pCRayRITqbZ1I+I+8goyIK/S00fQfmYFLDlv0rVNtYhPIz
+	4n/3dU9iti2l70zQKZ/Exq8PyeuUT8KMbvLmafFTuhPBuUJMVWptnxzPFjDSIcpjDicn+1Ss3v4
+	MXT6aHMP/foPAefv7CzErp29X5JJsyY7xpj6P4cIG68xYK9G9tgvK9s14rSZqQdb8DlrM3oXEUU
+	qRvz675vC45cAPPCnLzItch4ec7RdK3CkBtv91XYQq4bO2ZomrrC8i8Rnmd15E/tPzjlwryCC0u
+	8v/XBqxCMCJac8bDVoO4aRLXHZFhBIb90RmvW/3Ej8yZr/g=
+X-Google-Smtp-Source: AGHT+IFyr8tL3f7/Gclxxm0qCx+apQWNKvST6w//YiaITYAopkMwLe+KpXjHV8bVZ+S3OC2Ex+Rp6w==
+X-Received: by 2002:a05:6830:658b:b0:72a:10ec:3637 with SMTP id 46e09a7af769-7300622918cmr2588254a34.15.1745017160817;
+        Fri, 18 Apr 2025 15:59:20 -0700 (PDT)
 Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:dcdf:46e0:18e5:c279])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-730047ca051sm500187a34.36.2025.04.18.15.59.17
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-730047ca051sm500187a34.36.2025.04.18.15.59.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 15:59:18 -0700 (PDT)
+        Fri, 18 Apr 2025 15:59:20 -0700 (PDT)
 From: David Lechner <dlechner@baylibre.com>
-Date: Fri, 18 Apr 2025 17:58:34 -0500
-Subject: [PATCH 3/4] iio: adc: ad7380: use IIO_DECLARE_BUFFER_WITH_TS
+Date: Fri, 18 Apr 2025 17:58:35 -0500
+Subject: [PATCH 4/4] iio: pressure: bmp280: use IIO_DECLARE_BUFFER_WITH_TS
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-3-ee0c62a33a0f@baylibre.com>
+Message-Id: <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-4-ee0c62a33a0f@baylibre.com>
 References: <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-0-ee0c62a33a0f@baylibre.com>
 In-Reply-To: <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-0-ee0c62a33a0f@baylibre.com>
 To: Jonathan Cameron <jic23@kernel.org>, 
@@ -79,15 +79,15 @@ To: Jonathan Cameron <jic23@kernel.org>,
  Michael Hennerich <Michael.Hennerich@analog.com>
 Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1021; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=riLMNi8cTRALK+z2tdzALBzLDS506Wq4e/lftZ4Qza0=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoAtk2t7drGYkZBaTOujJackZlIDOkAakZwtlxz
- 7OJGnoF95eJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaALZNgAKCRDCzCAB/wGP
- wGcMB/9a4WWdbWax5eiemUVcfLr13sp47i1kakQLLayyBmRyEaMLfzx0oomjVAIf9nBSWOq991n
- 5EXQ2ULf0zWpWOTVcx87Ie0E1hJtkhB26kdM/H4nwFqxacPNsWcETx1LJbdq86uHMuFvW5Yvi3m
- mxpjVC8EkEKCV+DzOJ8Jg5N9MzDpxQ7S7oc3EBkpPTrGAIvyOW979gFe5bZOyPAI/qojBM/PJ0i
- hI3wlIaA3a2K/MlMTwjuqaRHwEA6MT6jjOo80ZGoj+WNT/D6XWGT4V7Y7osJUymCYHZk65cceng
- mi6yJ/53Usj68z70BNR31ZCpm1PMt88v8cYv/55t+gzTy4gp
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2758; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=dE+Bh2dLzHZaDfFfGvJCuONf8Z/4uctHMsmHaIg81Wo=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoAtk7JE5s2L1ct8bmryT0sZgPM26LmpBqyZcvV
+ sJfFqw7IoyJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaALZOwAKCRDCzCAB/wGP
+ wP+MB/911j/8pWylCV/OBlqSeXb8qXnXesTzGfthr0UOUhdXRaPH4alE6i0zLQxCV9juG5aEeQ+
+ HIwQ/YYY4vz2o9fdKwdeeI28nPOnDaZoL/S5U+aMwQXkWQ9XNtpHKe6FGI+PMWD2KfXcWxJYddW
+ XakmXPOQBMwiSha6+k0c0dX44Nqo3xADjw6thtb38cBoiLIMdIHGQzojL6XbOD5d4mlup+pzp0y
+ h07zm+u/2MobSqFDb/ag7+5vJvy08cffFWILTsSFhf+SnhZVrJ0EuQci17F87JY1+b+9s7EJEOe
+ 667j+A32xQ7dnjFQoJo/Ibb4mjTUfVJQY5gISdYggw5ZYigB
 X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
  fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
@@ -95,26 +95,69 @@ Use IIO_DECLARE_BUFFER_WITH_TS to declare the buffer that gets used with
 iio_push_to_buffers_with_ts(). This makes the code a bit easier to read
 and understand.
 
+The data type is changed so that we can drop the casts when the buffer
+is used.
+
 Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
- drivers/iio/adc/ad7380.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iio/pressure/bmp280-core.c | 8 ++++----
+ drivers/iio/pressure/bmp280.h      | 3 +--
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
-index f93e6c67766aa89b18c1a7dec02ae8912f65261c..f89b195c644024151c14977fd43e279a67439fb1 100644
---- a/drivers/iio/adc/ad7380.c
-+++ b/drivers/iio/adc/ad7380.c
-@@ -909,8 +909,8 @@ struct ad7380_state {
- 	 * Make the buffer large enough for MAX_NUM_CHANNELS 32-bit samples and
- 	 * one 64-bit aligned 64-bit timestamp.
+diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
+index c20cc4a98c9c494a9c8843518ba2f17b41be18a9..847340e38fd069643c3d38037dab1bab727dcc8f 100644
+--- a/drivers/iio/pressure/bmp280-core.c
++++ b/drivers/iio/pressure/bmp280-core.c
+@@ -1107,7 +1107,7 @@ static irqreturn_t bmp280_trigger_handler(int irq, void *p)
+ 	struct bmp280_data *data = iio_priv(indio_dev);
+ 	u32 adc_temp, adc_press, comp_press;
+ 	s32 t_fine, comp_temp;
+-	s32 *chans = (s32 *)data->sensor_data;
++	s32 *chans = data->sensor_data;
+ 	int ret;
+ 
+ 	guard(mutex)(&data->lock);
+@@ -1228,7 +1228,7 @@ static irqreturn_t bme280_trigger_handler(int irq, void *p)
+ 	struct bmp280_data *data = iio_priv(indio_dev);
+ 	u32 adc_temp, adc_press, adc_humidity, comp_press, comp_humidity;
+ 	s32 t_fine, comp_temp;
+-	s32 *chans = (s32 *)data->sensor_data;
++	s32 *chans = data->sensor_data;
+ 	int ret;
+ 
+ 	guard(mutex)(&data->lock);
+@@ -1903,7 +1903,7 @@ static irqreturn_t bmp380_trigger_handler(int irq, void *p)
+ 	struct bmp280_data *data = iio_priv(indio_dev);
+ 	u32 adc_temp, adc_press, comp_press;
+ 	s32 t_fine, comp_temp;
+-	s32 *chans = (s32 *)data->sensor_data;
++	s32 *chans = data->sensor_data;
+ 	int ret;
+ 
+ 	guard(mutex)(&data->lock);
+@@ -2957,7 +2957,7 @@ static irqreturn_t bmp180_trigger_handler(int irq, void *p)
+ 	struct iio_dev *indio_dev = pf->indio_dev;
+ 	struct bmp280_data *data = iio_priv(indio_dev);
+ 	int ret, comp_temp, comp_press;
+-	s32 *chans = (s32 *)data->sensor_data;
++	s32 *chans = data->sensor_data;
+ 
+ 	guard(mutex)(&data->lock);
+ 
+diff --git a/drivers/iio/pressure/bmp280.h b/drivers/iio/pressure/bmp280.h
+index 5b2ee1d0ee464797d1d9993a014d8f84c37d5596..86ec525ae40d92cc562e998dbe992f091343d88a 100644
+--- a/drivers/iio/pressure/bmp280.h
++++ b/drivers/iio/pressure/bmp280.h
+@@ -456,8 +456,7 @@ struct bmp280_data {
+ 	 * Data to push to userspace triggered buffer. Up to 3 channels and
+ 	 * s64 timestamp, aligned.
  	 */
--	u8 scan_data[ALIGN(MAX_NUM_CHANNELS * sizeof(u32), sizeof(s64))
--			   + sizeof(s64)] __aligned(IIO_DMA_MINALIGN);
-+	IIO_DECLARE_BUFFER_WITH_TS(u8, scan_data, MAX_NUM_CHANNELS * sizeof(u32))
-+		__aligned(IIO_DMA_MINALIGN);
- 	/* buffers for reading/writing registers */
- 	u16 tx;
- 	u16 rx;
+-	u8 sensor_data[ALIGN(sizeof(s32) * BME280_NUM_MAX_CHANNELS, sizeof(s64))
+-		       + sizeof(s64)] __aligned(sizeof(s64));
++	IIO_DECLARE_BUFFER_WITH_TS(s32, sensor_data, BME280_NUM_MAX_CHANNELS);
+ 
+ 	/* Value to hold the current operation mode of the device */
+ 	enum bmp280_op_mode op_mode;
 
 -- 
 2.43.0
