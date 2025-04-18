@@ -1,161 +1,271 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A17C26B2AF
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 08:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8038462;
+	Fri, 18 Apr 2025 08:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744964111; cv=none; b=R9TGTFKM4SYGWrbUqRwZp8UDDPWEv8Mx9pDNUdtKJVYTyVr4Q5uOFOf7Xde+S6wE7G3z9qsQaXwQqBaQvYaV5VdG5UtWoiFeVkAK207rastUKCSIl9j7OqR0Cvt8h0y10JOTxA9eLY2B1k8sCNvH2xW4O2LNBG76XWlGks3uPic=
+	t=1744964187; cv=none; b=OKnBTsbOrFUofMFsWgN0KfZJKJWBbg1HArgAfIKSWuOahmX0hAuLjmipB8SImgXzLgH+bHwxDo+TmxJ5BoTQj6wY5yqMf6te0qVA8fp0T7wDJPpel8fWQKskjmIfoUPr6O0ANS9HZ7med+Mbl6UM3z9NlPuzQHgTjxsgI08taC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744964111; c=relaxed/simple;
-	bh=rX7D5fJ6dxuaIJHo2NjKN2s6bX97dO1N9qsbOAQFqWc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HZXPMKq3SwmXBw/UzaLqVmzSvLI0rZbk5Rre95QSfn1c3Lc2uIab0mFgpz9CtOep/k3scP4uSyGvJaElUNDkVDg7jWiLezCO6ytJgYX/zNDGA+rlkh+IXh2+qlss+zqFam6IkTmfQfAFbNOVm6gELijHQeMdsKHliu9X2MuMgwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FIhlV2Zb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744964187; c=relaxed/simple;
+	bh=D0h0mUnhXNEPaFia5AGTzABQLfaAoHV0cI3sHPSHmMs=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Hhu5xYaWii3bEpNDJrZXzMHoMHnBDhv8ovHm4UaJUq5xh00Z1Rdq70Ye4uFN+9O9jL73sSf5tsdKPlx0d9lrSYK3JjyWpppnONCs/qhtiJJqPeuF21F9STVywDPOsXjBR7lEtDy/fyy9RTHrdkmwsa51DxRtg+wAngcEAH/R+SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RT53mXyj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5FEeD8AG; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FIhlV2Zb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744964108;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RT53mXyj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5FEeD8AG"
+Date: Fri, 18 Apr 2025 08:16:16 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744964183;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oGpLEGpFPjLHr2TI5L2WF5TxWp0RKlr+m9WjaH1iqOo=;
-	b=FIhlV2ZbWANAYSpvFAfkH+Olh/8PS0/DQz8XfYFWlc5bDh3x+J+j1iU51tVNb0911KmJHU
-	PZoYXCwIjHN1USe1umFPpT3OoZqmIpsJy1x48QGW4dOU/hWB1T4VsinkW9HTgECBNEVqlw
-	mTJmSh6H4xKSke+wKLQAYdOYdAsgnVI=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-586-SJ0K13ASMYa3gF71ua8eWQ-1; Fri,
- 18 Apr 2025 04:15:04 -0400
-X-MC-Unique: SJ0K13ASMYa3gF71ua8eWQ-1
-X-Mimecast-MFC-AGG-ID: SJ0K13ASMYa3gF71ua8eWQ_1744964102
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4C8E819560AB;
-	Fri, 18 Apr 2025 08:15:01 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.33])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EB5B519560A3;
-	Fri, 18 Apr 2025 08:14:58 +0000 (UTC)
-Date: Fri, 18 Apr 2025 16:14:54 +0800
-From: Baoquan He <bhe@redhat.com>
-To: steven chen <chenste@linux.microsoft.com>
-Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com, ebiederm@xmission.com,
-	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: Re: [PATCH v12 8/9] ima: make the kexec extra memory configurable
-Message-ID: <aAIJ/vpJD7GpBwKe@MiWiFi-R3L-srv>
-References: <20250416021028.1403-1-chenste@linux.microsoft.com>
- <20250416021028.1403-9-chenste@linux.microsoft.com>
+	bh=rQWv/nAPt4yRrWHW7MzrqnD+OpT5LGX/6JwpF6PC6cM=;
+	b=RT53mXyjZJbf8ckaZx+ou1Irnru6+YudYV8psOx1SuQdI7NS4q75IgMeli82uPFH94mE8O
+	yJcnxmesJQlgPnyy0a1kFcjVs7355AaHTxITwfkAyApJi1MnLTJMH4uM98WakGnPbZOQjq
+	IzpHvD2ugq1bKdMivC5ol850F/ZSOiCmzHPY9SuJLVJugltSCKkRaZ0IvxDwCGbBTE3QYD
+	AwMapt62C/vOWUHPaLDWv1yz8/w8Oq+kELp4r0deb6TbUyI5566Ken46HMD8vODEhUR+XO
+	wUfdQoWSLdgSe4TGOYC70aiUaw7gbdL4vESUVE8vu4exrW0IsbtDtGZBw/VssA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744964183;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rQWv/nAPt4yRrWHW7MzrqnD+OpT5LGX/6JwpF6PC6cM=;
+	b=5FEeD8AG5wgxuQ32oyDEyx6aRE5Jpe/b4czgt3kly21GSvIgIzvI6r11wss53rLHqE2rX1
+	Uqrl8usbWuYjtbBg==
+From: "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/boot/sev: Avoid shared GHCB page for early
+ memory acceptance
+Cc: Tom Lendacky <thomas.lendacky@amd.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Ingo Molnar <mingo@kernel.org>,  <stable@vger.kernel.org>,
+ Dionna Amalie Glaze <dionnaglaze@google.com>,
+ Kevin Loughlin <kevinloughlin@google.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, linux-efi@vger.kernel.org,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250417202120.1002102-2-ardb+git@google.com # final submission>
+References: <20250417202120.1002102-2-ardb+git@google.com # final submission>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416021028.1403-9-chenste@linux.microsoft.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Message-ID: <174496417635.31282.2634692329527053854.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On 04/15/25 at 07:10pm, steven chen wrote:
-> From: Steven Chen <chenste@linux.microsoft.com>
-> 
-> The extra memory allocated for carrying the IMA measurement list across
-> kexec is hard-coded as half a PAGE.  Make it configurable.
-> 
-> Define a Kconfig option, IMA_KEXEC_EXTRA_MEMORY_KB, to configure the
-> extra memory (in kb) to be allocated for IMA measurements added during
-> kexec soft reboot.  Ensure the default value of the option is set such
-> that extra half a page of memory for additional measurements is allocated
-> for the additional measurements.
-> 
-> Update ima_add_kexec_buffer() function to allocate memory based on the
-> Kconfig option value, rather than the currently hard-coded one.
-> 
-> Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-   ^^^^^^^^^^^^^^^^
-> Signed-off-by: Steven Chen <chenste@linux.microsoft.com>
-> ---
->  security/integrity/ima/Kconfig     | 11 +++++++++++
->  security/integrity/ima/ima_kexec.c | 16 +++++++++++-----
->  2 files changed, 22 insertions(+), 5 deletions(-)
+The following commit has been merged into the x86/urgent branch of tip:
 
-The contributor's tag need be updated too, otherwise,
+Commit-ID:     a718833cb4567fffec26bc62633081b27fa5f90a
+Gitweb:        https://git.kernel.org/tip/a718833cb4567fffec26bc62633081b27fa5f90a
+Author:        Ard Biesheuvel <ardb@kernel.org>
+AuthorDate:    Thu, 17 Apr 2025 22:21:21 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 18 Apr 2025 09:53:32 +02:00
 
-Acked-by: Baoquan He <bhe@redhat.com>
+x86/boot/sev: Avoid shared GHCB page for early memory acceptance
 
-> 
-> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-> index 475c32615006..976e75f9b9ba 100644
-> --- a/security/integrity/ima/Kconfig
-> +++ b/security/integrity/ima/Kconfig
-> @@ -321,4 +321,15 @@ config IMA_DISABLE_HTABLE
->  	help
->  	   This option disables htable to allow measurement of duplicate records.
->  
-> +config IMA_KEXEC_EXTRA_MEMORY_KB
-> +	int "Extra memory for IMA measurements added during kexec soft reboot"
-> +	range 0 40
-> +	depends on IMA_KEXEC
-> +	default 0
-> +	help
-> +	  IMA_KEXEC_EXTRA_MEMORY_KB determines the extra memory to be
-> +	  allocated (in kb) for IMA measurements added during kexec soft reboot.
-> +	  If set to the default value of 0, an extra half page of memory for those
-> +	  additional measurements will be allocated.
-> +
->  endif
-> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> index ed867734ee70..d1c9d369ba08 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -118,6 +118,7 @@ void ima_add_kexec_buffer(struct kimage *image)
->  				  .buf_min = 0, .buf_max = ULONG_MAX,
->  				  .top_down = true };
->  	unsigned long binary_runtime_size;
-> +	unsigned long extra_memory;
->  
->  	/* use more understandable variable names than defined in kbuf */
->  	size_t kexec_buffer_size = 0;
-> @@ -125,15 +126,20 @@ void ima_add_kexec_buffer(struct kimage *image)
->  	int ret;
->  
->  	/*
-> -	 * Reserve an extra half page of memory for additional measurements
-> -	 * added during the kexec load.
-> +	 * Reserve extra memory for measurements added during kexec.
->  	 */
-> -	binary_runtime_size = ima_get_binary_runtime_size();
-> +	if (CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB <= 0)
-> +		extra_memory = PAGE_SIZE / 2;
-> +	else
-> +		extra_memory = CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB * 1024;
-> +
-> +	binary_runtime_size = ima_get_binary_runtime_size() + extra_memory;
-> +
->  	if (binary_runtime_size >= ULONG_MAX - PAGE_SIZE)
->  		kexec_segment_size = ULONG_MAX;
->  	else
-> -		kexec_segment_size = ALIGN(ima_get_binary_runtime_size() +
-> -					   PAGE_SIZE / 2, PAGE_SIZE);
-> +		kexec_segment_size = ALIGN(binary_runtime_size, PAGE_SIZE);
-> +
->  	if ((kexec_segment_size == ULONG_MAX) ||
->  	    ((kexec_segment_size >> PAGE_SHIFT) > totalram_pages() / 2)) {
->  		pr_err("Binary measurement list too large.\n");
-> -- 
-> 2.43.0
-> 
+Communicating with the hypervisor using the shared GHCB page requires
+clearing the C bit in the mapping of that page. When executing in the
+context of the EFI boot services, the page tables are owned by the
+firmware, and this manipulation is not possible.
 
+So switch to a different API for accepting memory in SEV-SNP guests, one
+which is actually supported at the point during boot where the EFI stub
+may need to accept memory, but the SEV-SNP init code has not executed
+yet.
+
+For simplicity, also switch the memory acceptance carried out by the
+decompressor when not booting via EFI - this only involves the
+allocation for the decompressed kernel, and is generally only called
+after kexec, as normal boot will jump straight into the kernel from the
+EFI stub.
+
+Fixes: 6c3211796326 ("x86/sev: Add SNP-specific unaccepted memory support")
+Tested-by: Tom Lendacky <thomas.lendacky@amd.com>
+Co-developed-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: <stable@vger.kernel.org>
+Cc: Dionna Amalie Glaze <dionnaglaze@google.com>
+Cc: Kevin Loughlin <kevinloughlin@google.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-efi@vger.kernel.org
+Link: https://lore.kernel.org/r/20250404082921.2767593-8-ardb+git@google.com # discussion thread #1
+Link: https://lore.kernel.org/r/20250410132850.3708703-2-ardb+git@google.com # discussion thread #2
+Link: https://lore.kernel.org/r/20250417202120.1002102-2-ardb+git@google.com # final submission
+---
+ arch/x86/boot/compressed/mem.c |  5 +-
+ arch/x86/boot/compressed/sev.c | 67 +++++++--------------------------
+ arch/x86/boot/compressed/sev.h |  2 +-
+ 3 files changed, 21 insertions(+), 53 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/mem.c b/arch/x86/boot/compressed/mem.c
+index dbba332..f676156 100644
+--- a/arch/x86/boot/compressed/mem.c
++++ b/arch/x86/boot/compressed/mem.c
+@@ -34,11 +34,14 @@ static bool early_is_tdx_guest(void)
+ 
+ void arch_accept_memory(phys_addr_t start, phys_addr_t end)
+ {
++	static bool sevsnp;
++
+ 	/* Platform-specific memory-acceptance call goes here */
+ 	if (early_is_tdx_guest()) {
+ 		if (!tdx_accept_memory(start, end))
+ 			panic("TDX: Failed to accept memory\n");
+-	} else if (sev_snp_enabled()) {
++	} else if (sevsnp || (sev_get_status() & MSR_AMD64_SEV_SNP_ENABLED)) {
++		sevsnp = true;
+ 		snp_accept_memory(start, end);
+ 	} else {
+ 		error("Cannot accept memory: unknown platform\n");
+diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
+index bb55934..89ba168 100644
+--- a/arch/x86/boot/compressed/sev.c
++++ b/arch/x86/boot/compressed/sev.c
+@@ -164,10 +164,7 @@ bool sev_snp_enabled(void)
+ 
+ static void __page_state_change(unsigned long paddr, enum psc_op op)
+ {
+-	u64 val;
+-
+-	if (!sev_snp_enabled())
+-		return;
++	u64 val, msr;
+ 
+ 	/*
+ 	 * If private -> shared then invalidate the page before requesting the
+@@ -176,6 +173,9 @@ static void __page_state_change(unsigned long paddr, enum psc_op op)
+ 	if (op == SNP_PAGE_STATE_SHARED)
+ 		pvalidate_4k_page(paddr, paddr, false);
+ 
++	/* Save the current GHCB MSR value */
++	msr = sev_es_rd_ghcb_msr();
++
+ 	/* Issue VMGEXIT to change the page state in RMP table. */
+ 	sev_es_wr_ghcb_msr(GHCB_MSR_PSC_REQ_GFN(paddr >> PAGE_SHIFT, op));
+ 	VMGEXIT();
+@@ -185,6 +185,9 @@ static void __page_state_change(unsigned long paddr, enum psc_op op)
+ 	if ((GHCB_RESP_CODE(val) != GHCB_MSR_PSC_RESP) || GHCB_MSR_PSC_RESP_VAL(val))
+ 		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PSC);
+ 
++	/* Restore the GHCB MSR value */
++	sev_es_wr_ghcb_msr(msr);
++
+ 	/*
+ 	 * Now that page state is changed in the RMP table, validate it so that it is
+ 	 * consistent with the RMP entry.
+@@ -195,11 +198,17 @@ static void __page_state_change(unsigned long paddr, enum psc_op op)
+ 
+ void snp_set_page_private(unsigned long paddr)
+ {
++	if (!sev_snp_enabled())
++		return;
++
+ 	__page_state_change(paddr, SNP_PAGE_STATE_PRIVATE);
+ }
+ 
+ void snp_set_page_shared(unsigned long paddr)
+ {
++	if (!sev_snp_enabled())
++		return;
++
+ 	__page_state_change(paddr, SNP_PAGE_STATE_SHARED);
+ }
+ 
+@@ -223,56 +232,10 @@ static bool early_setup_ghcb(void)
+ 	return true;
+ }
+ 
+-static phys_addr_t __snp_accept_memory(struct snp_psc_desc *desc,
+-				       phys_addr_t pa, phys_addr_t pa_end)
+-{
+-	struct psc_hdr *hdr;
+-	struct psc_entry *e;
+-	unsigned int i;
+-
+-	hdr = &desc->hdr;
+-	memset(hdr, 0, sizeof(*hdr));
+-
+-	e = desc->entries;
+-
+-	i = 0;
+-	while (pa < pa_end && i < VMGEXIT_PSC_MAX_ENTRY) {
+-		hdr->end_entry = i;
+-
+-		e->gfn = pa >> PAGE_SHIFT;
+-		e->operation = SNP_PAGE_STATE_PRIVATE;
+-		if (IS_ALIGNED(pa, PMD_SIZE) && (pa_end - pa) >= PMD_SIZE) {
+-			e->pagesize = RMP_PG_SIZE_2M;
+-			pa += PMD_SIZE;
+-		} else {
+-			e->pagesize = RMP_PG_SIZE_4K;
+-			pa += PAGE_SIZE;
+-		}
+-
+-		e++;
+-		i++;
+-	}
+-
+-	if (vmgexit_psc(boot_ghcb, desc))
+-		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PSC);
+-
+-	pvalidate_pages(desc);
+-
+-	return pa;
+-}
+-
+ void snp_accept_memory(phys_addr_t start, phys_addr_t end)
+ {
+-	struct snp_psc_desc desc = {};
+-	unsigned int i;
+-	phys_addr_t pa;
+-
+-	if (!boot_ghcb && !early_setup_ghcb())
+-		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PSC);
+-
+-	pa = start;
+-	while (pa < end)
+-		pa = __snp_accept_memory(&desc, pa, end);
++	for (phys_addr_t pa = start; pa < end; pa += PAGE_SIZE)
++		__page_state_change(pa, SNP_PAGE_STATE_PRIVATE);
+ }
+ 
+ void sev_es_shutdown_ghcb(void)
+diff --git a/arch/x86/boot/compressed/sev.h b/arch/x86/boot/compressed/sev.h
+index fc725a9..4e463f3 100644
+--- a/arch/x86/boot/compressed/sev.h
++++ b/arch/x86/boot/compressed/sev.h
+@@ -12,11 +12,13 @@
+ 
+ bool sev_snp_enabled(void);
+ void snp_accept_memory(phys_addr_t start, phys_addr_t end);
++u64 sev_get_status(void);
+ 
+ #else
+ 
+ static inline bool sev_snp_enabled(void) { return false; }
+ static inline void snp_accept_memory(phys_addr_t start, phys_addr_t end) { }
++static inline u64 sev_get_status(void) { return 0; }
+ 
+ #endif
+ 
