@@ -1,102 +1,106 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23513274670
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 13:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF6A2749D7;
+	Fri, 18 Apr 2025 13:07:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744981612; cv=none; b=kH5ZfJah/bJVttsqrXBIauD/xo6NPm5ACf4dFB3DM73/s2vw0XHOewqDyi2StTyHMrhELDVfJfpczTU0qeDy81pCYDfcvVLryRc4LTKYIpMY2MpFpChlO92UYkldqeM1jUOoPeECmpVqZTnTNDC5k4VRIjiTEZ/HZJTm75dHjkc=
+	t=1744981630; cv=none; b=MA4/xqR19vAwDfdcYhH+1ZvmTCAgXlmOQofEa8mAdf/iEMkJ3uakgGhQDm1Niqo6AddlbpjsopRl4LlU3rvfZcVIbTeLEEYT4f8ew6Aj2eRyWxFFY4s+TBOLfXd/6Nec0A+0SozQhDADVZtK3r8INONhWOB4uSOBEc/nPIolnbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744981612; c=relaxed/simple;
-	bh=+I+KvP9uYO3YG2dVoUBmkm/rmZEZzRCvZpepQDHzSPM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BnjurgANcIaJ/ChTunVxp7b8A2pnL9/QVvCNb/26TTHI6H4TgjweRaoUnt9EALvBfWR4hEaadoUQo+tWZbzV2NU5fLOd88l/iOrvjTrQqULzrYnb3dSEWlBmPQiQB12b1uF2Hd2yFxodEh7313sTmJ+VKnz3Lb0ZwTEJGy8tZbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RVKf04GV; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744981630; c=relaxed/simple;
+	bh=wUE4dWHvSCik/3H0N3jXNmiIywoqHZpP04FIL16opA0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hAnwFxfc0qg8qHcLou3RPiy9SbtTylFbJZxipLMyYVwjcrP7e6COjLpTaO/8gM1xXft7gjF91H0tR7sMtSzylh4oGvD9uq7FpjyZT09wAzLy8wYJxFex0kCOeGuh9LDLq0tCPAucwe/Ap+u5AYAB7lwnO27W22wKGCzSvmPRhtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mRcd2+Z5; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RVKf04GV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744981609;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=hRMJdmwVlYpR7naNlMo6wQWCTeVTLcbjg4HWD0gsERY=;
-	b=RVKf04GVk1bY1XcV+mCQYI1eU4ZRUq492GtKK4zm4fIMw5I9hzoDmsYDllXgKA1vTIPV0c
-	9u5GyPh4xtVPPIynZmn4yJLG6ouUkSimx3mDFZ13rRWrL0nGNLDVaSMm7EP2MDQBQ1Id0Q
-	ZbFZEmAJF/kbEey6IS+Ha7Z8EBkCv08=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-563-RRtyu0J4P_iFsCSR9y5LrQ-1; Fri,
- 18 Apr 2025 09:06:47 -0400
-X-MC-Unique: RRtyu0J4P_iFsCSR9y5LrQ-1
-X-Mimecast-MFC-AGG-ID: RRtyu0J4P_iFsCSR9y5LrQ_1744981606
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B50FA195608C;
-	Fri, 18 Apr 2025 13:06:45 +0000 (UTC)
-Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 113FF19560A3;
-	Fri, 18 Apr 2025 13:06:44 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: torvalds@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: [GIT PULL] KVM changes for Linux 6.15-rc3
-Date: Fri, 18 Apr 2025 09:06:44 -0400
-Message-ID: <20250418130644.227320-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRcd2+Z5"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso17901905e9.2;
+        Fri, 18 Apr 2025 06:07:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744981627; x=1745586427; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fPmaDVcyCN8xn5x/2E/HujSFy+Zs3h3dzceOeOvtskU=;
+        b=mRcd2+Z5NFIGMiqm6QsNJPzVq1vbfK8eOWkRhvH3DHkfgND92pS8AEdZNGdwl6VMQd
+         7KmaVsDjYom57/qqNwF2E8R44QB5QkQLBQKbtXC69Nmt+1VmVOSUNAkHtGiN97vJBTMe
+         kqSvXZH3wiZ9TelT/Xt/CXQtA4OF1FldC4B19HKu8DEdiZRsXQKa/J8gdvK9j6lJmX2m
+         vCgZiTW8v2oZhu1eAlvczoAtC5fh9BGQq3hdtVqcelNQAc1XFkVk/EKTazf/ae74ID23
+         tQgKLogkvU/GG70awKCTJlVmnimZQWjgzfMDxQQd/ceFBId0fCUwtJDuCALCe/buCje3
+         y9rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744981627; x=1745586427;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fPmaDVcyCN8xn5x/2E/HujSFy+Zs3h3dzceOeOvtskU=;
+        b=oqklzvlGmDyfyUU9PRDH8NA5wkQAe5nYUB8Y0RiYiLX7TbV3w1aADZANxAQIZKkwSs
+         WWoReAVBbw6tmPzcFOYMouifUpumyj050wHYL3aRCtGcTaB6DwMNSrggZIe3swDxEcNe
+         qOwQ9lyrsAzu63FYbUqcYnD0y+u3T2lGIgTqGdmh5ncAk9FwqmRB/8HxNyTIU2Lvunrk
+         zHayvfiDbGEdO97XBcma8+WwKhCd+QHHERsmEMv1/dKEtoM8ImlwyT8/mSN+Lft7XJxA
+         4m9KS8xPFWdHs4XlYkw6zQXWsHZ24lkC+CpOJDzw6DRbFaAsKIjgNc+FFTcXe78gikir
+         dzfg==
+X-Forwarded-Encrypted: i=1; AJvYcCVCCy9OICNLQ5BkgMkEjpPrGAb89C+JU2nuI2/P0MadzBHvlmcmuqzhp9GpQ30YA13l+Hox0lVVS3DbDuQDmktft6k=@vger.kernel.org, AJvYcCWpkCETRi2yYIxDMYSdsSpGjFG3/WJqPOZlJolsJAaKZ7fIIeaeMJtbLbUTxI28TBsYtJNQH0qiebeSNyo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHoyENvxm6l78aC1BbVLQrPjXQX1CkAvECBQ2pfkIsAufW7QRy
+	viGTOvGpMgJAebAy1Swg4irM38LjQ0UkO4MmyBlvOSiqdDdH7oEv
+X-Gm-Gg: ASbGncuJLAAHo9M4aUxAJl6VlaguXMV2W4TX9YC2iox7ehtDViGRmJ6vSxArbGnWFNp
+	kVKn2XhOMMggwEILPl/s0qlSpxaDG7CRJ7LiERU2YPbihpioOQ1XzEWIJjvXtscpTkQ971OK5DR
+	yi10vQqbHtMmRpnLRNbqD+L4f377uXu/LKJwYi7ciwB/XsQePMVRkjA/GKVfkmws7BL+KHAT9Fb
+	SEJ7fY0qA+D2rQ3mVNYsNIzwjTRx+UA8CKJjdMaFT1/hD0phG+IfS7V9hfTmBcV4VCkoXg8k8r3
+	Hkthzc/UwTrFhHAX/YWwLZPDsAuu9/spdIa07EaBZg==
+X-Google-Smtp-Source: AGHT+IExMbsAQz7Mwc12HiLkpWeb7K2O1dS/WK/atDtpdKNgEq1aIQw+33yHgxXO3RSHnYFs46ICbA==
+X-Received: by 2002:a05:600c:1547:b0:43c:e481:3353 with SMTP id 5b1f17b1804b1-4406ababea3mr21349975e9.17.1744981626906;
+        Fri, 18 Apr 2025 06:07:06 -0700 (PDT)
+Received: from localhost ([194.120.133.58])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39efa4330d8sm2796501f8f.33.2025.04.18.06.07.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 06:07:06 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Inki Dae <inki.dae@samsung.com>,
+	Seung-Woo Kim <sw0312.kim@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/exynos: Fix spelling mistake "enqueu" -> "enqueue"
+Date: Fri, 18 Apr 2025 14:07:00 +0100
+Message-ID: <20250418130700.540590-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Linus,
+There is a spelling mistake in a DRM_DEV_DEBUG_KMS message. Fix it.
 
-The following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444:
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/gpu/drm/exynos/exynos_drm_fimc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-
-for you to fetch changes up to 9cf353943e2a1f2904062ea0e619402790289a9b:
-
-  KVM: x86: Do not use kvm_rip_read() unconditionally for KVM_PROFILING (2025-04-15 07:42:46 -0400)
-
-----------------------------------------------------------------
-x86:
-
-* Bugfixes from a planned posted interrupt rework
-
-* Do not use kvm_rip_read() unconditionally to cater for guests
-  with inaccessible register state.
-
-----------------------------------------------------------------
-Adrian Hunter (2):
-      KVM: x86: Do not use kvm_rip_read() unconditionally in KVM tracepoints
-      KVM: x86: Do not use kvm_rip_read() unconditionally for KVM_PROFILING
-
-Sean Christopherson (8):
-      KVM: SVM: Don't update IRTEs if APICv/AVIC is disabled
-      KVM: SVM: Allocate IR data using atomic allocation
-      KVM: x86: Reset IRTE to host control if *new* route isn't postable
-      KVM: x86: Explicitly treat routing entry type changes as changes
-      KVM: x86: Take irqfds.lock when adding/deleting IRQ bypass producer
-      iommu/amd: Return an error if vCPU affinity is set for non-vCPU IRTE
-      iommu/amd: WARN if KVM attempts to set vCPU affinity without posted intrrupts
-      KVM: SVM: WARN if an invalid posted interrupt IRTE entry is added
-
- arch/x86/kvm/svm/avic.c        | 68 +++++++++++++++++++++++-------------------
- arch/x86/kvm/trace.h           | 13 ++++++--
- arch/x86/kvm/vmx/posted_intr.c | 28 +++++++----------
- arch/x86/kvm/x86.c             | 23 +++++++++++---
- drivers/iommu/amd/iommu.c      | 15 +++-------
- 5 files changed, 80 insertions(+), 67 deletions(-)
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimc.c b/drivers/gpu/drm/exynos/exynos_drm_fimc.c
+index b150cfd92f6e..09e33a26caaf 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_fimc.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_fimc.c
+@@ -908,7 +908,7 @@ static void fimc_dst_set_buf_seq(struct fimc_context *ctx, u32 buf_id,
+ 	u32 buf_num;
+ 	u32 cfg;
+ 
+-	DRM_DEV_DEBUG_KMS(ctx->dev, "buf_id[%d]enqueu[%d]\n", buf_id, enqueue);
++	DRM_DEV_DEBUG_KMS(ctx->dev, "buf_id[%d]enqueue[%d]\n", buf_id, enqueue);
+ 
+ 	spin_lock_irqsave(&ctx->lock, flags);
+ 
+-- 
+2.49.0
 
