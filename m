@@ -1,155 +1,124 @@
-Received: from mail-pj1-f65.google.com (mail-pj1-f65.google.com [209.85.216.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AB52676FA;
-	Fri, 18 Apr 2025 02:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926F72673AF
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 02:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744943923; cv=none; b=ItI9e0r/ve9/fHDr0mDXmcPUU3rviyiBvW7+wLGKp+waInkcpnc/L0EFK0b/5KeHE7nzi4Obgt+4hHbYAcpBnGPW3DxYUGJceBrYX97KK+tpq/9hfvP2vwYavoW+sHO6iPilHtjM9UDj2x0e7h0Qcs0v6YYjuD7lSc/rYuP7Vy4=
+	t=1744943940; cv=none; b=U3LdIwwwOFWkgdxmJKMzN0uhWXio/0AsdWjAyGj68qg+coANNZcg2elbO5sTrGWSsnzZcMYLiZ18vQ6IHaLUh+LY+rJPEE35y702XWHRWnTd+6ObERe6CyR2h2ZUfuYYhuKtp4gllihQDnIepKyQknoyGRQ9HtPmbrABPD61+Dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744943923; c=relaxed/simple;
-	bh=+qpkfSLsv5o3zYqvrHC7bzYLa1Qkp1e98s0+6E/i0fc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QSkHS109iGNmgLMZ9DFcP86sisKKkt4fT4wo92BSI5kMjVNLZ2RxB/Q/dV3EpEAuW/ut5ZSoNkrCuckbTb3aQEWKnH8i1VJ70K+VTQPaH16F0rC4ekwrqmCyJJdig68CJ4MpA/sgRBsJXxAWrE7864ZIA+O9CylKU2tHk8Gij1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MdV1jAjW; arc=none smtp.client-ip=209.85.216.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744943940; c=relaxed/simple;
+	bh=qV1odNb6L0lGUDLMPzAp+dLpmFc6+O5QpFjH5I0hzos=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=bi8qKsAud1HvRKZsu9AhEfCVwdFFzWv4KQWK1lmIRdHGAXlfGoG0qpfbFN/zWLEF4qKDl/I0/d+d5SAiHFvqSS1Qd5Yw8FD76/OWpJsENwCXsawGek7whYoDhvso4sqzvtU22x3LwDF0Zv6C/vqXfkATbQvMLhqZr4QvVEOOsdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sze9aXEi; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MdV1jAjW"
-Received: by mail-pj1-f65.google.com with SMTP id 98e67ed59e1d1-3081fe5987eso1282828a91.3;
-        Thu, 17 Apr 2025 19:38:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744943919; x=1745548719; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cX4CJENyi/HF3M98A44zhSdeesMrPBIDcsQOF4PeS7A=;
-        b=MdV1jAjWASwfwvMuz37HpAEqVgON7J7c5IO5uAOlJLOLub7JPzSvmR0qOAplF92JLK
-         HUtjFHlL1qM8dDInHIJeAKJUJx8iO10fqtI4+L66XU9PoUIFR/IiwJPwsRQ5W5ALZmk0
-         Nv0sG9tMqbSfHWT126R1XjAODxOfST9lBn0tWQgNHt2LmoQTHyA0JJHsoTNYSXnDlJr1
-         WJCKWVCvP6iaYR48wniHFRPB+ZUik6Z5YxsdeNkHIbmePu+Pg7JtTNaAmD79JTUJWCYn
-         DcqYsR3/SsREHIUNov1CrtIxNnLgn0LhCrrg+PVXkCL9Fq+EsNzsu28R9yD99h/YXs87
-         q+hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744943919; x=1745548719;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cX4CJENyi/HF3M98A44zhSdeesMrPBIDcsQOF4PeS7A=;
-        b=OIPt9cr6MW8+Fq7qsifTRbVe5kjuyRkqgIzc8kGRapUFKnZz6/01X2NRmPlCfVdOtb
-         /xSTl5WnsXdwYvAEMwEZ5wJ/PUN4VNu/W5RceN15WUybLej9/5nl2FVdiwlsBeEsqbd+
-         mJG6S+0SYvG1mGpTel8PsKwpKSHLKxXATqMpTZ7u+DMsFLYLzcV8slBNwUxsOpmTAt51
-         BVPObEeUaR4DYFpcM+oTLiogiO/Pj7AlwtRELBWMSp+eKOwBn1IGfZmTxpz8TmaHeM04
-         dMsBuok480tTDbUZBIYkd3OjtWZBqi0b2MPTh3EMz/2EoowewePn2+hlA7r1QNWPVhIb
-         KxQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXVfC7HesqEHSCcn+uZYlxWSWnFwEuHamKhzhJ0q9gVrEXg+MNYcw1hbSzZBL1rCGk96rwBnRRAKSYGhUo=@vger.kernel.org, AJvYcCXZWi93eKdKrUsrakuRB+F3fDgBkBHhUkrIlgrJvXdn6f7HZp2GIYO7sgTtGe4AzLHuj4OhWd5xaAge3w==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWLYhqaP5k9P6GgYh8x24aWiTa8uATjJaXcT/xBqh8O9vc4UAG
-	BvQxA08Kuj5k5QdHQnhVnNCGWY5UGgCiIdWpTi9PJMlrE/NuST5e
-X-Gm-Gg: ASbGnctyiZ5J9N5auAevdTaDQIlT7nyXmOSEFKiIQrUqauyFDVbeHKGnH01RqQ3tojM
-	hRpV8PYfieQdqdYC2EGSx5pXtx3s6sc5+4qYNRGFjPebJw9bRZEqHB57Q+/kUiZdg3RfCS9wZYc
-	o5CDoUooqeCIteV/W4omd/DeEU6lbfMWwbW1ltDOwF3pCdFk9wrWZ/FBSvrg3ZwsTM8CqGSNiYG
-	Aj8OrgSOGLDLKgaaCVti5fkL5o8NCcVZ+Hq4XoSYxzSttpdIX7qXoMWbz9GDkDdBxuLzKNdFDLm
-	wGWCnnqou8QrkZldvCUTZIlA+ZJeEUmY76xcCr1GtdUKbFaua+hlrrWB+T+266dI+rvxljaun+9
-	9
-X-Google-Smtp-Source: AGHT+IEh7Nsy6KFiTaS8Qb69PHOZKEtRbEee/6IC82y8jsxUz1ljsFUVCHJxS4JMV1fW7qb8y64g3g==
-X-Received: by 2002:a17:90b:48c4:b0:305:2d27:7cb0 with SMTP id 98e67ed59e1d1-3087bb693b8mr1699789a91.21.1744943919204;
-        Thu, 17 Apr 2025 19:38:39 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.49])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087df0be00sm189919a91.14.2025.04.17.19.38.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 19:38:38 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: saeedm@nvidia.com,
-	leon@kernel.org,
-	tariqt@nvidia.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	bsdhenrymartin@gmail.com,
-	mbloch@nvidia.com,
-	amirtz@nvidia.com
-Cc: netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Subject: [PATCH v7 2/2] net/mlx5: Move ttc allocation after switch case to prevent leaks
-Date: Fri, 18 Apr 2025 10:38:14 +0800
-Message-Id: <20250418023814.71789-3-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250418023814.71789-1-bsdhenrymartin@gmail.com>
-References: <20250418023814.71789-1-bsdhenrymartin@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sze9aXEi"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744943935;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3T5feFtMm9osiqs4YoVP8jsIW7MLQcBFz0h+GbzCeOU=;
+	b=sze9aXEi7pXJRNYM0HR3oAbpsg50yYWuYiYEjWnQFJglSUh3bULKkNzrb6DIRlm1WdF8JT
+	P3BA5uj0f0oiW0FLFQl5Qkq+0GSOa0MSLfF6D6gffcOl1bYRz4Sy3QWuP4MNmi/ZJPrP6t
+	nW1+WXYjbeEqYSIKeFlEDUqE0jCkyxc=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH RFC 02/28] mm: memcontrol: use folio_memcg_charged() to
+ avoid potential rcu lock holding
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <20250417144835.GE780688@cmpxchg.org>
+Date: Fri, 18 Apr 2025 10:38:10 +0800
+Cc: Muchun Song <songmuchun@bytedance.com>,
+ mhocko@kernel.org,
+ roman.gushchin@linux.dev,
+ shakeel.butt@linux.dev,
+ akpm@linux-foundation.org,
+ david@fromorbit.com,
+ zhengqi.arch@bytedance.com,
+ yosry.ahmed@linux.dev,
+ nphamcs@gmail.com,
+ chengming.zhou@linux.dev,
+ linux-kernel@vger.kernel.org,
+ cgroups@vger.kernel.org,
+ linux-mm@kvack.org,
+ hamzamahfooz@linux.microsoft.com,
+ apais@linux.microsoft.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <CD857422-95FD-477D-809A-C7ED0780E188@linux.dev>
+References: <20250415024532.26632-1-songmuchun@bytedance.com>
+ <20250415024532.26632-3-songmuchun@bytedance.com>
+ <20250417144835.GE780688@cmpxchg.org>
+To: Johannes Weiner <hannes@cmpxchg.org>
+X-Migadu-Flow: FLOW_OUT
 
-Relocate the memory allocation for ttc table after the switch statement
-that validates params->ns_type in both mlx5_create_inner_ttc_table() and
-mlx5_create_ttc_table(). This ensures memory is only allocated after
-confirming valid input, eliminating potential memory leaks when invalid
-ns_type cases occur.
 
-Fixes: 137f3d50ad2a ("net/mlx5: Support matching on l4_type for ttc_table")
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Reviewed-by: Mark Bloch <mbloch@nvidia.com>
----
- .../net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
-index 066121fed718..513dafd5ebf2 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
-@@ -637,10 +637,6 @@ struct mlx5_ttc_table *mlx5_create_inner_ttc_table(struct mlx5_core_dev *dev,
- 	bool use_l4_type;
- 	int err;
- 
--	ttc = kvzalloc(sizeof(*ttc), GFP_KERNEL);
--	if (!ttc)
--		return ERR_PTR(-ENOMEM);
--
- 	switch (params->ns_type) {
- 	case MLX5_FLOW_NAMESPACE_PORT_SEL:
- 		use_l4_type = MLX5_CAP_GEN_2(dev, pcc_ifa2) &&
-@@ -654,6 +650,10 @@ struct mlx5_ttc_table *mlx5_create_inner_ttc_table(struct mlx5_core_dev *dev,
- 		return ERR_PTR(-EINVAL);
- 	}
- 
-+	ttc = kvzalloc(sizeof(*ttc), GFP_KERNEL);
-+	if (!ttc)
-+		return ERR_PTR(-ENOMEM);
-+
- 	ns = mlx5_get_flow_namespace(dev, params->ns_type);
- 	if (!ns) {
- 		kvfree(ttc);
-@@ -715,10 +715,6 @@ struct mlx5_ttc_table *mlx5_create_ttc_table(struct mlx5_core_dev *dev,
- 	bool use_l4_type;
- 	int err;
- 
--	ttc = kvzalloc(sizeof(*ttc), GFP_KERNEL);
--	if (!ttc)
--		return ERR_PTR(-ENOMEM);
--
- 	switch (params->ns_type) {
- 	case MLX5_FLOW_NAMESPACE_PORT_SEL:
- 		use_l4_type = MLX5_CAP_GEN_2(dev, pcc_ifa2) &&
-@@ -732,6 +728,10 @@ struct mlx5_ttc_table *mlx5_create_ttc_table(struct mlx5_core_dev *dev,
- 		return ERR_PTR(-EINVAL);
- 	}
- 
-+	ttc = kvzalloc(sizeof(*ttc), GFP_KERNEL);
-+	if (!ttc)
-+		return ERR_PTR(-ENOMEM);
-+
- 	ns = mlx5_get_flow_namespace(dev, params->ns_type);
- 	if (!ns) {
- 		kvfree(ttc);
--- 
-2.34.1
+> On Apr 17, 2025, at 22:48, Johannes Weiner <hannes@cmpxchg.org> wrote:
+>=20
+> On Tue, Apr 15, 2025 at 10:45:06AM +0800, Muchun Song wrote:
+>> If a folio isn't charged to the memory cgroup, holding an rcu read =
+lock
+>> is needless. Users only want to know its charge status, so use
+>> folio_memcg_charged() here.
+>>=20
+>> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+>> ---
+>> mm/memcontrol.c | 11 ++++-------
+>> 1 file changed, 4 insertions(+), 7 deletions(-)
+>>=20
+>> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+>> index 61488e45cab2..0fc76d50bc23 100644
+>> --- a/mm/memcontrol.c
+>> +++ b/mm/memcontrol.c
+>> @@ -797,20 +797,17 @@ void __mod_lruvec_state(struct lruvec *lruvec, =
+enum node_stat_item idx,
+>> void __lruvec_stat_mod_folio(struct folio *folio, enum node_stat_item =
+idx,
+>>      int val)
+>> {
+>> - 	struct mem_cgroup *memcg;
+>> 	pg_data_t *pgdat =3D folio_pgdat(folio);
+>> 	struct lruvec *lruvec;
+>>=20
+>> - 	rcu_read_lock();
+>> - 	memcg =3D folio_memcg(folio);
+>> - 	/* Untracked pages have no memcg, no lruvec. Update only the =
+node */
+>> - 	if (!memcg) {
+>> - 		rcu_read_unlock();
+>> + 	if (!folio_memcg_charged(folio)) {
+>> + 		/* Untracked pages have no memcg, no lruvec. Update only =
+the node */
+>> 		__mod_node_page_state(pgdat, idx, val);
+>> 		return;
+>> 	}
+>>=20
+>> - 	lruvec =3D mem_cgroup_lruvec(memcg, pgdat);
+>> + 	rcu_read_lock();
+>> + 	lruvec =3D mem_cgroup_lruvec(folio_memcg(folio), pgdat);
+>> 	__mod_lruvec_state(lruvec, idx, val);
+>> 	rcu_read_unlock();
+>=20
+> Hm, but untracked pages are the rare exception. It would seem better
+> for that case to take the rcu_read_lock() unnecessarily, than it is to
+> look up folio->memcg_data twice in the fast path?
+
+Yep, you are right. I'll drop this next version. Thanks.
+
+Muchun,
+Thanks.
+
+
 
