@@ -1,63 +1,26 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F9826B95E
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 13:20:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7572C1A2;
+	Fri, 18 Apr 2025 13:20:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744982440; cv=none; b=Wonh0NU4iB88fqVPBs756usqPvDxDV2+Fd+TuR7soB0GipJwzp8VKqE3tejO1USMo43FaE6QWOXCyCAEHLn6PTMU1Mu3DKFB91cPz5xq/Cpj78gunei7Ww/BQo9tOClcQGA4W1KN8IX97ySERHTlvLz6AR8YvGuLcSg8WdVP8Rk=
+	t=1744982462; cv=none; b=ugnECP7W9MsZoJ0/EMjxkwx36NMTYJQUUsVB8tkrV9+/nsTUEcK6oHAqFKyUEBWemF6Ef434REV3kQqSDEdkkgYwEMPMBeiFzZUBElyEesWlyVcgBfSMMxVbPFNb3Rj7+5r5USuTs/ify4WH+JsJrvX1sN5M2IvFlupqcM7RHPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744982440; c=relaxed/simple;
-	bh=2a5mZA5F083sDG7voTLLBarBLnmEOis9dWzoiN0JvYg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=QCDq++4sLV3rhOm2Ii3OAWwWehm5Ly9BKihYV+CgnIwqx0Hb7+8bpzjgAGFeJ0g/6wBhx3FF4z5gCGvQy2JAkJ2fypjxZtL7Xwl3ved+adTp60+VlUtg7gfitu9AsUO/YX6yMpbvmhp4Nj0xrGUhL6aZWHxtWgCLmtQS8DhUsO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EGKRrPx7; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EGKRrPx7"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39c0e0bc733so1744150f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 06:20:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744982437; x=1745587237; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LUZqPB3JWIFBkEpZBtu+Xgl3vTEZWV4zcKVyVrLimPE=;
-        b=EGKRrPx7m3b/pjVhhe3pr0Dt3B5t2xb8YxOr60fOPULBx8d3DmzUSB01U46BJlj/A4
-         DLtdrIGXeKD1KbSZIWlUU8WLv0YvWI3xn6Ap+mmbVyB/E6WyqrPigi7qdBAm9L8+aosm
-         oio2faR/5/XV5CdAIyTWsF+ae5Z64lqOVSK7pz5TF8dRdGxUz3hUfbtZd9AW7i1dEvjF
-         qgGlgaNQeDtcJMc/ghejySZeuSh5Z9WGtmhz8ghhaOOkKYyWiFhg8+3FgclyZDIrmsTK
-         MVMH7dC32bB4zlzmiWFDBPbvpYZRVlTUIL76/yf6pNjuXvdyK4E8NeEij00/1rhzxJ44
-         qBOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744982437; x=1745587237;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LUZqPB3JWIFBkEpZBtu+Xgl3vTEZWV4zcKVyVrLimPE=;
-        b=EJL4muXMuWMNAqIMwnQ23sUBJogIef1wHxfTHxaN0Zig0cOVX00pH2dYZDuhE4ofUj
-         yrAM46D6xP9UbC4c2Ch+L0WZmdqYPsKsamu8jw6oR5c0W2yBhBcz10XK0YI23BpARCyV
-         X7gM7PPSdkzdjsylgYXwEoaGA7jHmeyA39sWcLeYbqTd0N+qOt5a7VwqYHN96eGMICFu
-         9PB8IIVEU40G6wrgyDj4csMjVC8HNP4TkHNF0klEiyBVkvC0wqdp+vr/kaUyWm1zMAeQ
-         /K79k0du0+qyN699HHz7+vpyyHOdgi1Crdl+4LMsjojiFdME86cATXtxEqV/0bpy77Nu
-         X/LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWwXMcbuQqbMDtBnuazQRfyvTtjFxI6TQU91eVimZ5DPDQiEAvNf00+1Hrzjj5WzhagpdylCiSgY9OmmEY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTvrsk8751cyEcFgqUmYkcFpmaGzI/LzDEszVtmX1gtRg6IeIp
-	oR8cuEAxzzDzc0VbnhOe0l59pvk+MBxWBBk2QJiESoPjdMN4VtwtO/vIODTpwCk=
-X-Gm-Gg: ASbGncsfeWRhaqNT/bT2GFw1keHCeaUsArNjJnVJCcBsLFbl/TqiUo2Mid7YxvI+FzV
-	48gHIskoOSSK7WKCPVyqPJybzcn4V0LP75YKnKLwVRM4jrKQwIQu/DMcwILVtbkqmAJ5NRZG9P+
-	+QTVa767xAGNn0Er8Z0ibuEVNwuJahBB17covY9oOT49SvvucODzrtcatFK6x6qMKU0+umsIrjX
-	czYTxgnUNJkQVfIPrBRY77gIERv/7PUw6C6MjpPKercAwV8oXpZIKzXpeuifBMx5SHLNLq/jnjQ
-	8mZDGTxLiOfhvsUL97siHcm93CZEOoDPtC0eBpzCQRUChpLNwTRSknmYXKe8vg==
-X-Google-Smtp-Source: AGHT+IEzrDlbck2TDJSIOBdLiuYqPZoYmEC3K3oJ5x9QBNX72TIwXyNygbpV6/DLy0HD+J1B1mLulQ==
-X-Received: by 2002:a5d:64ae:0:b0:38f:3e1c:211d with SMTP id ffacd0b85a97d-39efba5081cmr2268340f8f.14.1744982436988;
-        Fri, 18 Apr 2025 06:20:36 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5acdd4sm22039775e9.14.2025.04.18.06.20.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 06:20:36 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Fri, 18 Apr 2025 15:20:35 +0200
-Subject: [PATCH] arm64: dts: qcom: sm8650: add iris DT node
+	s=arc-20240116; t=1744982462; c=relaxed/simple;
+	bh=Hb/aiNAu0w7LHL/2ZZsWq3IRTJh3NmFxda3Izyu8pb0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=miPqJxtmS9bJpX5u4eXKE3qIjcR0m4CB9lYmByNBkJvz1XZ4XWC7GvbxUALWbfE4oAOpX+KascrvdHxPuFhNK5er5PgDlPRFaSqV9fOn0mHQPsB9o1qbHr8T0M0m+ns9oUVYhIqMuU+XR63hMONF/+vRJOJJ4athoAp5/sEIZ84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=45.254.49.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
+Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-3-entmail-virt135.gy.ntes [27.18.99.221])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 125ec8780;
+	Fri, 18 Apr 2025 21:20:42 +0800 (GMT+08:00)
+From: Ze Huang <huangze@whut.edu.cn>
+Subject: [PATCH v2 0/4] Add USB2.0 PHY and USB3.0 PHY support for SpacemiT
+ K1
+Date: Fri, 18 Apr 2025 21:19:49 +0800
+Message-Id: <20250418-b4-k1-usb3-phy-v2-v2-0-b69e02da84eb@whut.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,208 +29,101 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250418-topic-sm8x50-upstream-iris-8650-dt-v1-1-80a6ae50bf10@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAKJRAmgC/x2NQQqDMBAAvyJ77kIMrqT9SukhJKvuQQ27qQji3
- xt6nDnMXGCswgav7gLlQ0z2rUH/6CAtcZsZJTcG7zy5oQ9Y9yIJbQ0nOfwWq8pxRVExDGNTuWL
- 2aRwiPcnRBC1UlCc5/5P3575/juESyXQAAAA=
-X-Change-ID: 20250418-topic-sm8x50-upstream-iris-8650-dt-d2c64a59505f
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+X-B4-Tracking: v=1; b=H4sIAHVRAmgC/3WO3Y6CQAyFX4XM9ZbQscNfjPE9Nl4MUGWyAtoiW
+ WJ8d0fd2738Tvqd07tRlsBq6uRuhJegYRoj2K/EtL0fTwyhi2xsZl1GWEBD8INw02YDl36FxcK
+ xQSYsqcqoMtG7CB/D77vz+/Bh4estVs+f0DReGdppGMJcJ0ueogNp8eUOrOrfo3Wy/dvMceMoi
+ 1e5LQkQel7PPPp1T51NJznt/hMJKyzQpdbmVLgyqnzuWPYStNXZSxpf2JnD4/EETSN5IwYBAAA
+ =
+X-Change-ID: 20250417-b4-k1-usb3-phy-v2-fb1e41849049
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>
+ Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, Ze Huang <huangze@whut.edu.cn>, 
+ Junzhong Pan <junzhong.pan@spacemit.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5070;
- i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=2a5mZA5F083sDG7voTLLBarBLnmEOis9dWzoiN0JvYg=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBoAlGjYvoQQWRPOtHWsHNXvWqPYIr0EzjyAfLeb4CB
- bYAUismJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCaAJRowAKCRB33NvayMhJ0e+VD/
- 9HMqkQ6TcKOWABPqwCyA+PayCG/cXpY9IS99z1U/IAYTVGjt0fSMp5dQ/iIRW/17cCksxnMhMJkeyG
- 64TqzdojYumZCFeGbYMYrHsfdM9fcnRo+AsrvOtYfwDp5nUuCLWvg8d4bRT249oOTki5imxHxJEulx
- 8j+mkoClJ5Y+SGeQellnr2YaVq7anuVjFRnQf+26W0hGNoOf92hChaSbznQSSRjO1tdngGQLiG0y+s
- KFZ26lEeW6Tg7zjcvDwYfE4S8KGxXPMwgSI7oRgsNO6LT2JKCMWZPSnHOvbeUIHHVBVHha0vkucXnF
- bVFMKPGgfv2KLPK6jB95brmDYNqCJJxg6D6+LRNKJXuAHQM3fXs1aQhMR4d8JeYHMwXDTdtohub3r5
- sCWEg0jK2vgXq2yC2zUHakjhcTB2y56StxfXKiZRdvSPuZcehoCE5frkjZ8CZ2rzY2b7+MKUQu0QVb
- frYoIetuMBpJt4utB4huMvUAnb+qMpUbTqNdrBV3+j+ElsZFNfJBK8YR+qUUpcElGUXgdHNcN3DJ2M
- hhMq4iiz55JHtC+I8XX2CmAb8vkvK7d3+Vc6R4aZ25R77OQMes9WPwH2sEwBSo15BbzrCrVjLCrP3c
- ljSMVDc3EtMTxH/G/6vLC9QWNJoSkj5mMFjx/KfCYSTcQ0dYNftGyMQw+txw==
-X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
- fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744982442; l=2916;
+ i=huangze@whut.edu.cn; s=20250325; h=from:subject:message-id;
+ bh=Hb/aiNAu0w7LHL/2ZZsWq3IRTJh3NmFxda3Izyu8pb0=;
+ b=NXT0rPNES/7G050TaJYJZTD9dEqbLiK6Za+goYuUk3ogIETwWyzTrxTFQcuPXVSP9jUluMk1Y
+ zStiKMijLIdD13FNm6XF1h7He1fOzVNo5MQGZbdgUJ/Tyd0nyYKb1Lc
+X-Developer-Key: i=huangze@whut.edu.cn; a=ed25519;
+ pk=C3zfn/kH6oMJickaXBa8dxTZO68EBiD93F+tAenboRA=
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZQklNVkhPGUkYGh8YHkIfS1YeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJTFVKQ1VCQlVJSUpZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0tVSktLVUtZBg
+	++
+X-HM-Tid: 0a96490f023e03a1kunm125ec8780
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pjo6Cyo4TTJPOAkQERQQEQE9
+	MzMwCghVSlVKTE9PQkNJT09MTk5DVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
+	TFVKQ1VCQlVJSUpZV1kIAVlBT05OSTcG
 
-Add DT entries for the sm8650 iris decoder.
+This patch series introduces support for the USB2.0 PHY and PCIe/USB3.0
+Combo PHY on the SpacemiT K1 SoC. The implementation has been tested on the
+Milk-V Jupiter and BananaPi-f3.
 
-Since the firmware is required to be signed, only enable
-on Qualcomm development boards where the firmware is
-available.
+K1 includes three USB ports as follows[1]:
+- A USB2.0 OTG Port
+- A USB2.0 Host Only Port
+- A USB3.0 Port with a USB2.0 DRD interface
 
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+USB3.0 PHY for USB3.0 Port is shared with PCIe port A, meaning that only one of
+these interfaces (PCIe or USB3.0) can be active at a given time.
+
+Link: https://developer.spacemit.com/documentation?token=AjHDwrW78igAAEkiHracBI9HnTb#part5 [1]
+
+Signed-off-by: Ze Huang <huangze@whut.edu.cn>
 ---
- arch/arm64/boot/dts/qcom/sm8650-hdk.dts |  5 ++
- arch/arm64/boot/dts/qcom/sm8650-mtp.dts |  5 ++
- arch/arm64/boot/dts/qcom/sm8650-qrd.dts |  5 ++
- arch/arm64/boot/dts/qcom/sm8650.dtsi    | 94 +++++++++++++++++++++++++++++++++
- 4 files changed, 109 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sm8650-hdk.dts b/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
-index d0912735b54e5090f9f213c2c9341e03effbbbff..69db971d9d2d32cdee7bb1c3093c7849b94798a0 100644
---- a/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
-@@ -894,6 +894,11 @@ &ipa {
- 	status = "okay";
- };
- 
-+&iris {
-+	firmware-name = "qcom/vpu/vpu33_p4.mbn";
-+	status = "okay";
-+};
-+
- &gpu {
- 	status = "okay";
- 
-diff --git a/arch/arm64/boot/dts/qcom/sm8650-mtp.dts b/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
-index 76ef43c10f77d8329ccf0a05c9d590a46372315f..04108235d9bc6f977e9cf1b887b0c89537723387 100644
---- a/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
-@@ -585,6 +585,11 @@ vreg_l7n_3p3: ldo7 {
- 	};
- };
- 
-+&iris {
-+	firmware-name = "qcom/vpu/vpu33_p4.mbn";
-+	status = "okay";
-+};
-+
- &lpass_tlmm {
- 	spkr_1_sd_n_active: spkr-1-sd-n-active-state {
- 		pins = "gpio21";
-diff --git a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
-index 71033fba21b56bc63620dca3e453c14191739675..58bdc6619ac55eda122f3fe6e680e0e61967d019 100644
---- a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
-@@ -824,6 +824,11 @@ &ipa {
- 	status = "okay";
- };
- 
-+&iris {
-+	firmware-name = "qcom/vpu/vpu33_p4.mbn";
-+	status = "okay";
-+};
-+
- &gpu {
- 	status = "okay";
- 
-diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-index c2937f7217943c4ca91a91eadc8259b2d6a01372..9afde0582ec9b8fef44c0af0324bfae9b20d1d60 100644
---- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-@@ -4955,6 +4955,100 @@ opp-202000000 {
- 			};
- 		};
- 
-+		iris: video-codec@aa00000 {
-+			compatible = "qcom,sm8650-iris";
-+			reg = <0 0x0aa00000 0 0xf0000>;
-+
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH 0>;
-+
-+			power-domains = <&videocc VIDEO_CC_MVS0C_GDSC>,
-+					<&videocc VIDEO_CC_MVS0_GDSC>,
-+					<&rpmhpd RPMHPD_MXC>,
-+					<&rpmhpd RPMHPD_MMCX>;
-+			power-domain-names = "venus",
-+					     "vcodec0",
-+					     "mxc",
-+					     "mmcx";
-+
-+			operating-points-v2 = <&iris_opp_table>;
-+
-+			clocks = <&gcc GCC_VIDEO_AXI0_CLK>,
-+				 <&videocc VIDEO_CC_MVS0C_CLK>,
-+				 <&videocc VIDEO_CC_MVS0_CLK>;
-+			clock-names = "iface",
-+				      "core",
-+				      "vcodec0_core";
-+
-+			interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
-+					 &config_noc SLAVE_VENUS_CFG QCOM_ICC_TAG_ACTIVE_ONLY>,
-+					<&mmss_noc MASTER_VIDEO QCOM_ICC_TAG_ALWAYS
-+					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
-+			interconnect-names = "cpu-cfg",
-+					     "video-mem";
-+
-+			/* FW load region */
-+			memory-region = <&video_mem>;
-+
-+			resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>,
-+				 <&videocc VIDEO_CC_XO_CLK_ARES>,
-+				 <&videocc VIDEO_CC_MVS0C_CLK_ARES>;
-+			reset-names = "bus",
-+				      "xo",
-+				      "core";
-+
-+			iommus = <&apps_smmu 0x1940 0>,
-+				 <&apps_smmu 0x1947 0>;
-+
-+			dma-coherent;
-+
-+			/*
-+			 * IRIS firmware is signed by vendors, only
-+			 * enable in boards where the proper signed firmware
-+			 * is available.
-+			 */
-+			status = "disabled";
-+
-+			iris_opp_table: opp-table {
-+				compatible = "operating-points-v2";
-+
-+				opp-196000000 {
-+					opp-hz = /bits/ 64 <196000000>;
-+					required-opps = <&rpmhpd_opp_low_svs_d1>,
-+							<&rpmhpd_opp_low_svs_d1>;
-+				};
-+
-+				opp-300000000 {
-+					opp-hz = /bits/ 64 <300000000>;
-+					required-opps = <&rpmhpd_opp_low_svs>,
-+							<&rpmhpd_opp_low_svs>;
-+				};
-+
-+				opp-380000000 {
-+					opp-hz = /bits/ 64 <380000000>;
-+					required-opps = <&rpmhpd_opp_svs>,
-+							<&rpmhpd_opp_svs>;
-+				};
-+
-+				opp-435000000 {
-+					opp-hz = /bits/ 64 <435000000>;
-+					required-opps = <&rpmhpd_opp_svs_l1>,
-+							<&rpmhpd_opp_svs_l1>;
-+				};
-+
-+				opp-480000000 {
-+					opp-hz = /bits/ 64 <480000000>;
-+					required-opps = <&rpmhpd_opp_turbo>,
-+							<&rpmhpd_opp_turbo>;
-+				};
-+
-+				opp-533333334 {
-+					opp-hz = /bits/ 64 <533333334>;
-+					required-opps = <&rpmhpd_opp_turbo_l1>,
-+							<&rpmhpd_opp_turbo_l1>;
-+				};
-+			};
-+		};
-+
- 		videocc: clock-controller@aaf0000 {
- 			compatible = "qcom,sm8650-videocc";
- 			reg = <0 0x0aaf0000 0 0x10000>;
+Changes in v2:
+- combphy dt-bindings:
+  - fix reg-names
+  - describe reg
+  - describe #phy-cells argument
+- drop stale ".owner" in driver struct
+- add support for usb lfps_thres in combphy
+- fix Kconfig depends on
+- Link to v1: https://lore.kernel.org/all/20250407-b4-k1-usb3-v3-2-v1-0-bf0bcc41c9ba@whut.edu.cn
 
 ---
-base-commit: a7dca088884312d607fff89f2666c670cb7073ac
-change-id: 20250418-topic-sm8x50-upstream-iris-8650-dt-d2c64a59505f
+Ze Huang (4):
+      dt-bindings: phy: spacemit: add K1 USB2 PHY
+      dt-bindings: phy: spacemit: add K1 PCIe/USB3 combo PHY
+      phy: spacemit: support K1 USB2.0 PHY controller
+      phy: spacemit: add USB3 support for K1 PCIe/USB3 combo PHY
+
+ .../bindings/phy/spacemit,k1-combphy.yaml          |  72 ++++++
+ .../devicetree/bindings/phy/spacemit,usb2-phy.yaml |  40 ++++
+ drivers/phy/Kconfig                                |   1 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/spacemit/Kconfig                       |  21 ++
+ drivers/phy/spacemit/Makefile                      |   3 +
+ drivers/phy/spacemit/phy-k1-combphy.c              | 251 +++++++++++++++++++++
+ drivers/phy/spacemit/phy-k1-usb2.c                 | 131 +++++++++++
+ 8 files changed, 520 insertions(+)
+---
+base-commit: 64e9fdfc89a76fed38d8ddeed72d42ec71957ed9
+change-id: 20250417-b4-k1-usb3-phy-v2-fb1e41849049
+prerequisite-message-id: <20250416135406.16284-1-heylenay@4d2.org>
+prerequisite-patch-id: 19b7f061557b184b9565e10ccfc0aab5754dfa73
+prerequisite-patch-id: a56183c8b71a141ca6f5d401b67a5456f40d4a9c
+prerequisite-patch-id: a4a3c44d4c3e44f5209bff2b2bd0b49cd5a9eebe
+prerequisite-patch-id: 471fe02daa5297e85e9cee8dfef873375a348e9f
+prerequisite-patch-id: 717bc3d50f0924f7697312cb78280b15a029ce2c
+prerequisite-patch-id: 585a2a9ce37a5e2a036f7351ff8ff4ed859bbe3e
+prerequisite-message-id: <20250414191715.2264758-1-elder@riscstar.com>
+prerequisite-patch-id: a7769b6451bfd80d5e5366013753c5fc870b2255
+prerequisite-patch-id: 8a8d0eefd0b4423d87f3c093b451a0fa60622ec4
+prerequisite-patch-id: 30f92f93e5b3577bde61424303f21c709a715ec5
+prerequisite-patch-id: d774b8281b5c6a822445365ee94925e1ab6c7a93
+prerequisite-patch-id: 54a4f5d065eb9f212fd99efec6e7e06abbb9bad8
+prerequisite-patch-id: db30b8a180a5f04f499d851384d4a7f95ccb00b3
+prerequisite-patch-id: 5f53f8bf16fb067628092daebc4831293261aa01
 
 Best regards,
 -- 
-Neil Armstrong <neil.armstrong@linaro.org>
+Ze Huang <huangze@whut.edu.cn>
 
