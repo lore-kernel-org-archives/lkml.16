@@ -1,97 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01976268698;
-	Fri, 18 Apr 2025 06:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F552690C8
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 06:43:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744958427; cv=none; b=bRhYROR9AeE0dh3iJaxB1L3gYVqA6R+GjKZo6SOTSiRoiCSl9JwhFK+YrQqAiLT85XS3g1OqF7hCC7Wf2b90l366I5yF6TJB5e08n+R1dHpIg/ciNqCT1XZXzkFbKo0jyA1WsR9FzY3M5OW2Y74XElHGr7SD6yk4gfutUT4M7+0=
+	t=1744958614; cv=none; b=bBYQug95mbMigEK4TpTSAlCo0nIU2s6XeJKxsbRmdsA5FoUGXKr2kuoQlU9jGLdap1xZYQJYxIUYPR2YrPUVhDBluiLp3ZS6bipllosC/Vt1hO+Nlcagioq7qxTiscCJrA1VRcqd54B66dqNErEBVE+LElayEEjlBLx99Pcaw0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744958427; c=relaxed/simple;
-	bh=LTQb0pZNs3sDMd31nLjQvHI10rlPCkCEpiwK4oiqXvw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V7s3Yqlnp51zz423JZhDOf1nDs1obTqrhnLwvMGAJfVXkhU9Z6R+4s9ABxzo3umYn8xbx5yeWRelwB75BWdlQ2RiTNg/8+ewinJjzeCpoViPeOY3iZOrCc6lYVf08PqgcMvyrUKw/7yP9n4ScakR4T7O//EkNBL3EidsNWkxJvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PrjU8H8s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744958614; c=relaxed/simple;
+	bh=l12G9/KABGBWRLrSnjVdfQ0Z2bSs/KbpUquxhRC9aSo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=udtLxkelFdvbO9vha/f/hJ3IHDJiaHXJZ0TJ0rXL0AeoCWPxxuXZavgyNnM0AwndA6/oqoude7WyhSLdC08emfbnIMdN52dieYTN6s9WTogUXMmBmzYvoE9NVbbPkcUHZUOM/8gvTYLChI6cOjgVpz3zCEJCjwNI3AbdLlX7f3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YHkU5/fh; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PrjU8H8s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AD7BC4CEE2;
-	Fri, 18 Apr 2025 06:40:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744958426;
-	bh=LTQb0pZNs3sDMd31nLjQvHI10rlPCkCEpiwK4oiqXvw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PrjU8H8sXGR698Ym2TENEAlpa5/5U4r21BGkg/b+txKybc7ThB3B48HnP610Bp4Qq
-	 eRbTz/cjABZUJUJ/BDTfi1NIM5/t2pYr+lEtgvr+xbbeXStDtQZUVafOS14bIEE1LR
-	 TeTpFLRVpQjbWEGqgEk92o3Oh/5QJDyUC5HCywNXNc2PuIjbJFJW6IrPvyR6E0PcL8
-	 8XRDL5Z+9XFwnnkmHf7C19cN2IfLKw8Qrym58GbCvX1I3kAd91r7uzQdqv6coUZhgz
-	 bp7xQEdC7J/4nVOichzIFGw4OH3Mz1U2ZI2cRlK2mMvav6y81jBNwBA2lKopv/gxgc
-	 wwhw7s1A+ba2g==
-Date: Fri, 18 Apr 2025 08:40:22 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "Luck, Tony" <tony.luck@intel.com>,
-	"andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
-	"Hansen, Dave" <dave.hansen@intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"patches@lists.linux.dev" <patches@lists.linux.dev>,
-	"x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH] x86/cpu: Add two Intel CPU model numbers
-Message-ID: <aAHz1tru8GT9ET9j@gmail.com>
-References: <20240923173750.16874-1-tony.luck@intel.com>
- <c8545ed5-b822-43a0-a347-d077bccf9d6f@citrix.com>
- <SJ1PR11MB6083F36D7C68AE8DF5AAA39DFCFC2@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <20250214130205.GK14028@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YHkU5/fh"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43d04ea9d9aso7359555e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 23:43:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744958611; x=1745563411; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0eX8qj76kO14FK/DjeL3E1y5jYurP6zJ1Vl1XJVXa+E=;
+        b=YHkU5/fhGsvhddvp7bArMOJkKLi96Ack+TpRrXiq0Z6g36V4oKohDljaaIweKk12sD
+         3ZXmQVN0EFWjAAFCqb9kFA3D0R+LjRPzELtICO4if85cplch3G7/Hyv8qtSwAKdw3gxQ
+         1hKd/kM6at/tSJ6GHOIDpL1BmRvKaS8K5LOVKRztz/Y1VZv2gtUYsMRJgrYcJCwzWsf2
+         XYc3b/NRcmCGbUn7pUarnUvEewJVX5KR+df1r/iUzDthw0cpgnc7U8BoixxZRuzSGQKz
+         Trgh92vxi4O3XK9R+dPV9iLmfh0dBfoFIiJTFmldKo14kt/StMtDBy2Na26FkzP89IGZ
+         /wOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744958611; x=1745563411;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0eX8qj76kO14FK/DjeL3E1y5jYurP6zJ1Vl1XJVXa+E=;
+        b=nwWmf2omjezQ3kRmhk1Cl9QdkFr+FTMzhtMOh9Y7VhCt2ieD2sUw5+gv9wk4yWetf1
+         DDYhjWxPKgKmIE2RzQcygUlv2sRj6LW++GRhHRXfiw1CSD81H5C07bL1BT/StehAe0vT
+         Va9J4Dwa9RxRTXM4vYEZCCHAHVt6h86MI4dkOCVNucDY/KK9Ftq6Gsf4CqpF2VspLpjn
+         k0bQQWPky5DONlUr/BupgxijYMEilxzxDKazDmrsEBaMjscbAbBM5T81qZMSZvz5qkub
+         1zypVjk/DbgrwEKuyN9RXPEaxq5t4sM/5QxAsMBWHhsCy67e+Pc0Cx+Hh4R91B97wqFj
+         zd5Q==
+X-Gm-Message-State: AOJu0YzvwIlhMSP3t29GiFN8WrUo30G2ikEP+HZh5lF8VZLrMed3HBKb
+	Z/2hkiPyIejKRFBe6fU0jYcRB4ZCiaFSwnXYFQjDrkNw7o60mtkv
+X-Gm-Gg: ASbGnctl6yTwAfSeroxyoUgZPhRCsKBDeQxhYE+tCFBSj421WuIh1ClScNJe6oAssCw
+	gUM9rlx4IVzaMdviA4Lc7EW5mkFNAG8kNw7hmmaopzafLX/G0QMleUvffY1Qqy6reETrfXaFG6l
+	cLBrA7Lw5dROxn6bKYihN9W8inDLLRJrm8TNIaGop7bw4eufvAOdzrO08KPysoLAK9EXjFvOtir
+	YT0CCHL1FqOimI/2iRLxoKlc8qZ9fN1dzMEdE+hc9Phmnh3UweyXzZJC/dFFdy5rF1s4Sfytmgp
+	6mAfk3RZ1oUhfB71bVVa8UnQDDgvYi/5gaIU0YfxWfE=
+X-Google-Smtp-Source: AGHT+IElSs7WpG30PXcCOYLok608/TQYkm0oTnUFtMIlxhvmGvRCS45j7AuHs1Dz3kgju+dDdObtIA==
+X-Received: by 2002:a05:600c:4688:b0:43c:eea9:f45d with SMTP id 5b1f17b1804b1-4406abb2cd0mr12023375e9.18.1744958611068;
+        Thu, 17 Apr 2025 23:43:31 -0700 (PDT)
+Received: from localhost ([77.237.184.200])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5bbcb6sm10216245e9.18.2025.04.17.23.43.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 23:43:29 -0700 (PDT)
+Date: Fri, 18 Apr 2025 10:13:21 +0330
+From: Ali Nasrolahi <a.nasrolahi01@gmail.com>
+To: Linux Newbies <linux-newbies.vger.kernel.org@zephyr>
+Cc: Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Documentation for Regmap API?
+Message-ID: <l5l7jdkvrwkwo3dtfow55ot4jj4rp7z6nuz5ijlj52vgmqhwth@uvks72vz4lpd>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250214130205.GK14028@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+
+Hi,
+
+I've been exploring the Regmap API and
+was wondering if there’s a dedicated documentation page
+that provides an overview or explanation of the API itself.
+
+So far, I’ve looked into the following:
+
+1. https://docs.kernel.org/driver-api/index.html
+2. The Documentation/ directory in both the mainline and linux-next trees.
+3. The regmap tree mentioned in the MAINTAINERS file:
+---
+   REGISTER MAP ABSTRACTION
+   M:  Mark Brown <broonie@kernel.org>
+   L:  linux-kernel@vger.kernel.org
+   S:  Supported
+   T:  git git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git
+   F:  Documentation/devicetree/bindings/regmap/
+   F:  drivers/base/regmap/
+   F:  include/linux/regmap.h
+---
+
+Despite checking these locations,
+I couldn’t find a dedicated document explaining the Regmap API in detail.
+
+1. Is there any such documentation available that I might have missed?
+
+2. If not, I’d be happy to contribute and help write one.
+Should I bring this up on the linux-doc mailing list for further guidance on how to proceed?
+
+Any pointers or suggestions would be greatly appreciated.
+
+Thanks a lot,
+Ali
 
 
-* Peter Zijlstra <peterz@infradead.org> wrote:
-
-> On Wed, Feb 12, 2025 at 04:09:11PM +0000, Luck, Tony wrote:
-> > >> +/* Family 19 */ +#define INTEL_PANTHERCOVE_X IFM(19, 0x01) /* Diamond
-> > >> Rapids */
-> > >
-> > > Is it intentional that this is not INTEL_DIAMONDRAPIDS_X like
-> > > Sapphire/Emerald/Granite ?
-> > 
-> > Andrew,
-> > 
-> > PeterZ wants to name based on core, not SoC (at least for mono-core CPUs ... this
-> > doesn't work for hybrid).  Argue with him.
-> 
-> Argh :-)
-> 
-> So yeah, its a trainwreck.
-> 
-> We used to use uarch, and that worked until skylake.
-> 
-> I'm not sure what exactly we continued as, but Kaby Lake was a Skylake
-> uarch.
-> 
-> The Atoms are uarch and still are, they weren't messed up.
-> 
-> But if you want to do DMR as PANTERCOVE then SPR should've been
-> GOLDENCOVE and we didn't do that either.
-> 
-> 
-> Also, since DMR is the direct continuation of GRANITERAPIDS, it should
-> also come below it.
-> 
-> Therefore, I'll concur with Andy that this is all highly irregular and
-> would propose we do the below.
-> 
-> Isn't the only reason we're doing a new Family because we can out of
-> module number space? It's not magically different from Fam6.
-
-Mind sending this with a changelog, or at least a SOB? :)
-
-Thanks,
-
-	Ingo
