@@ -1,82 +1,57 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69AA15624B;
-	Fri, 18 Apr 2025 15:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF792AE66
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 15:56:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744991763; cv=none; b=FbAokOQgqVxkQ+OPl0bmjI8ef49chdjFXX/O4vt7tiQGX+GX41mTT8Ho7H34mZXKDhhHEv2USekMXEi0Gj4NFFPMG2HfKWrABYuXsIKMwMH9rJv4FYNscWH6QFc2tBiedO97GKMcfLHVSb9NrSpztmYzr15oBK825nfa89zfHAg=
+	t=1744991775; cv=none; b=rImLagTLFWyQhPF4oAAfpY5yJc/AKqm0Kqhn84On5ASrcWqWUsnnkmazi6SIokzH82bpMEpYxRrdkkvewq6OOAvrhzmvNy0RPX2zdzNPVvAiH4jPXfGrfzlndRXzaI/8YS2EObF2ti2xc5TdgJPapoDgGfeZXQ30C7mDGBZDRvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744991763; c=relaxed/simple;
-	bh=Lcz6Vi38WInSCEbN55sKa5MN9XK1NMjZLwGK3L2ETks=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OwQqbdDYHvdHza4BC4M2IOotc5klsjqSwwCmzZs9XmTlxYWAqAUHuGrWP/5v+txkkLo8vcvwcUxRs4NMM4HnHHNelNzUa6K/j3wVqo4FB7drmbgnKRN9+Wt/0kwvTyRYMOCYV9KVQ/6Xq3pZ13i741lAOYZ7V6jxHxyYhEtIl9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mylidbcu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744991775; c=relaxed/simple;
+	bh=tsOAAAMLGSdezCn7sGG2WTFk10utsV3HqJVHA8RrSus=;
+	h=Subject:To:Cc:From:Date:Message-Id; b=LHcpZXw71Zw1KLSq+RKcatiQBj4HB1iqfjZ1sXvxkXBlmrfytx4+TZv3NYD0jrjVNoXTLL3UXfMmq/SrJu5+MXehceM/yN1EBGAoXZ8GDm8Vm2ah6o4E7uEgjDj+7idiJLmLtSBeyarMcRwDhLV1OeznkJZYbbsAaMhtZ5Tb8xU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SSW/ZguR; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mylidbcu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82303C4CEE2;
-	Fri, 18 Apr 2025 15:56:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744991762;
-	bh=Lcz6Vi38WInSCEbN55sKa5MN9XK1NMjZLwGK3L2ETks=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mylidbcu6xSrLAoaqsPHW8pjYjCWx+CKifQcOaNiKqLp8sFNAq8D4zY+Rnvrz6GcI
-	 h7oFZbFODf5zAOOqJMTdKv5EkuCu25DdrjqyFtSNURN/3IOtE8L2U6SiyTAi03NqK7
-	 ElQO64WR7MVDWubpbzRlmou9tHcocgT/2FeRD/JNqOXmnup4Nc6C+2gy4TDQArES+s
-	 8xkFEJIuLKdl1y913EJ5Ae22fEKSgEJZ6+eiN6JgBegwWNQUpqurGlGh1EeFFOle7Y
-	 C0niNsbw4Ri+OQkgp7qkYnwJjP9cdaponec79gNiPIhZf1FDHfyRF7bz/7D4/SW2v3
-	 xtpNwaEhZ+ShA==
-Date: Fri, 18 Apr 2025 16:55:58 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 6.13 000/413] 6.13.12-rc2 review
-Message-ID: <aAJ2DpBN10tq2dFG@finisterre.sirena.org.uk>
-References: <20250418110411.049004302@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SSW/ZguR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744991774; x=1776527774;
+  h=subject:to:cc:from:date:message-id;
+  bh=tsOAAAMLGSdezCn7sGG2WTFk10utsV3HqJVHA8RrSus=;
+  b=SSW/ZguRvVS3M4Jphem27mtT7E1EB7UkJ/ktBeyQcfdQBTRDujaaU+pc
+   kOe9CcamQzuGQRm4zQYObna3NlbxnuYuxEJm4Wmi/87tFOk6xaowVGXRy
+   GDvznMXN6sHH6uOTkIMU0pVgNtxGdqK1Rar6HhkREucs/F0JkpxQS/ep2
+   1FZgplT8oZwdwGTVtkxCBiq/51pwn9VrpTBk3PRmEDHYXBBF+7Gl4Tl7h
+   AsUtQgpS5MrX00d/5HYUvNzyJB5cw/TjeEckJXCaZ09yNj1C6bS4CU6L/
+   c9tNQ0omaDSYzrQHWrXCihdhXhG18gYuAO6Gb51d9OFGbmzJHbTNnIEn+
+   A==;
+X-CSE-ConnectionGUID: ECk4BEonQueaCyd0am5EsA==
+X-CSE-MsgGUID: BKz9W1ZIQIS67drWRx44Pw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="46742606"
+X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
+   d="scan'208";a="46742606"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 08:56:13 -0700
+X-CSE-ConnectionGUID: 4fDcj/suQCWsKiZMGmeIgA==
+X-CSE-MsgGUID: 2EMWQbtnTI6ovLfl9rhDxg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
+   d="scan'208";a="168347182"
+Received: from davehans-spike.ostc.intel.com (HELO localhost.localdomain) ([10.165.164.11])
+  by orviesa001.jf.intel.com with ESMTP; 18 Apr 2025 08:56:13 -0700
+Subject: [PATCH 0/2] Minor fixups for PAE simplification
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org,tglx@linutronix.de,bp@alien8.de,joro@8bytes.org,luto@kernel.org,peterz@infradead.org,kirill.shutemov@linux.intel.com,rick.p.edgecombe@intel.com,jgross@suse.com,Dave Hansen <dave.hansen@linux.intel.com>
+From: Dave Hansen <dave.hansen@linux.intel.com>
+Date: Fri, 18 Apr 2025 08:56:12 -0700
+Message-Id: <20250418155612.8F276BC7@davehans-spike.ostc.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="HL3UoVhViSFsVcbA"
-Content-Disposition: inline
-In-Reply-To: <20250418110411.049004302@linuxfoundation.org>
-X-Cookie: Well begun is half done.
 
-
---HL3UoVhViSFsVcbA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Apr 18, 2025 at 01:05:17PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.13.12 release.
-> There are 413 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-
-Tested-by: Mark Brown <broonie@kernel.org>
-
---HL3UoVhViSFsVcbA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgCdg4ACgkQJNaLcl1U
-h9D7ewf/fVBUJor52ChtTThtcqqi4UycfrvVThIY3JSeZCE0QBpjv2wjGHZgy47g
-IydLd1iSZKjVW2AuUBkTStuTqNpNEOp0NPkdhRmBrRqCe02u2wCVxaol7R5OotrK
-Of6ASHp6iOV1UlYCf5cIS5IcqmJm1M3jNv6sZzXAY9ke8inqk4H3J0DjNavMGU3e
-JDJpVmgnEYWpP1mEFMNrtTRMW8ZXEqUphZfdOAccmbfPb8rXiqcoDxYHk27xRGz0
-EkxxonLZMbYG6wQD+apvd35GXVFYYKwuSQ+6PtVk+TTMQvCTrRO19Rj0gvxk8ZSO
-hUoFETqKQn21H9ZwCe6BL+i2xXnWWQ==
-=AJsB
------END PGP SIGNATURE-----
-
---HL3UoVhViSFsVcbA--
+Kirill had some good comments on the PAE fixup series that I applied
+to x86/mm yesterday. This is to address those comments.
