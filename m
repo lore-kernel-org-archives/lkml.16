@@ -1,125 +1,124 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7887426FA7D
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 09:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A08269CF1;
+	Fri, 18 Apr 2025 09:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744970197; cv=none; b=PTF1IpvZ+IlSj+jN5+RCs2Uy2bzrVPUaUZDOdfgWpWkTNpszf7fUFbxs3efa02E21Gl5nEBzVtF1nD2KXeiXGoqiusShOp8Xk7mLOIZKyluXz8T8pLZ1gBdkcsQcIJ9xbeuCvI0mmHvZ+TArLRbAcetUry6vWaUbTK1aLOtMsDw=
+	t=1744970212; cv=none; b=ks8kXwfGbaMq/4kgBngGj3BfgS2dzjA9QH1vCpA55wBKT2E6GeUIfMp2w39kqb7zM/GQGdgmvlM269XDwRpM1wsP8daFcLFIzha/7vDXY/fPZ/FIe8DkMjvYJeEIF9pq0GKED8pPQdUuDMjBIot3dxo6W+EZWQPxgrF8cIBGM90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744970197; c=relaxed/simple;
-	bh=hM1nua8IMu7YUoSgs1TX0rQTKLFRsIjo49Zlk4QyWcM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JS1DoxQ/9zGjcdK4Zs2S4AWoFPsJy07fQdLslIj8Z4NiO8IgHzv3QJUZH+7fq0Q7rKLVZHSfsO9yQywwDvaxg0jGRlSdc+xR0/FAyHsGBEldLLQ/n9fcsykrVMfK0jyTzfikM5llDTnBbEPm3qWBRSoT21tohns3eaM1IUvzhUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at; spf=pass smtp.mailfrom=sigma-star.at; dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b=eQYHPr/f; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sigma-star.at
+	s=arc-20240116; t=1744970212; c=relaxed/simple;
+	bh=A/QQjRB4nQMCJn6/TufvAbEtoA9rAkgMzsLpUvfuF4s=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=frDYTwqE2wdfEaaJm/aWSQWwVCQzRpvpy9H9fEPPGUXkBu9gK5+DsTXCSQhkAd9qJx+6v1rOkiOSArAAv2FEotETVCKOWfcr4wUveFvgc4HkDg3SPYDogKgaevAxXtHGtuUCLXeWM1GXFTLJld1KtCFxf1jr80+kENgMmUav2Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gg5qu0tT; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b="eQYHPr/f"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43d0782d787so12047865e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 02:56:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gg5qu0tT"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39149bccb69so1723189f8f.2;
+        Fri, 18 Apr 2025 02:56:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sigma-star.at; s=google; t=1744970192; x=1745574992; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wKwnVUZzWyLWE8JyyGAoHutnjyrjVjeY7Q2Qvd5+NgI=;
-        b=eQYHPr/ftDkNpgn41kCCRqmwO7GpyO9TE1asGYnHyzOmIKzsv3i0Vp52o/2M/93yTn
-         NaCBp+9jLdgm7bn8xeXow7IJMxJbmoaLEwAaPtR0UNKDdQWRsEXOvBoKcwrAGguC7cKg
-         zHNnXxreTyDXmed0Lq+ULpZF9F6miRrPtlOn9tsRhRCwLjYGMfq6dPm28nAIYWq2VIXP
-         RWrO13RibQorbDa3wbDP+CcSs/IYF3HeoevPH4CP1jmc2g437epN4UvpqhtTb5OB041H
-         HHTP+XTdk9LyrTGgX7XBjpV6tB2U5/QDeWJYXfF0ZXu/zFmwDENe5xvyfPeabLYf96Sf
-         cPnQ==
+        d=gmail.com; s=20230601; t=1744970209; x=1745575009; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6JnbYNgpq8QEYxht1353W0il/coYdog3puA39+m94LY=;
+        b=gg5qu0tTWvYdlliOIGIiiasXRA4gDmAm/jYjARotM+/z/ZRbPKaoaB/Ch/CiyiGy6y
+         Ij8vEzbZHespuh76GwqS83OWT47XRHZ0v/ZyB7Sis8fCMC/DOr0D1KMwEMhYpXJCeQCc
+         hXRM19/RwSJca7Yb6pXHJFm6nzBm3lrM3rslpjX2QKTfpkU0+2NmdFkphq8kBXTszCU0
+         92l56y1S+88aL+2GSP3kbafjCOdiXlqazVd+tK+5ki7GSpRAUYA2oj3ERARlaX5FuOYj
+         GKGfFZBRqgLPW9vabdnk2ii8pXML4e9gFvL5gFRM0S6TXNeYtpLAtj6SS8fVCzFhU694
+         pZHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744970192; x=1745574992;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wKwnVUZzWyLWE8JyyGAoHutnjyrjVjeY7Q2Qvd5+NgI=;
-        b=SQWm++3VUTYqm8tfFNyYgpU7y+2LTZApCOFabO9dLGEz7fl+B530FRpPIGo1yb2qQm
-         VviCKJumsMpbubJZxk/CfWNZ5lrV0MJqkwrX/NcijJeoWqvaxQMfS2xWQ6roCzSlBKB9
-         TkWOisiKmzgrjORPBpObpe2m+n6SVVjatE+yNM9YYCzGeJRXRo/92FPC4AuVftelJegB
-         N5wUnjsFl0o1bDRkx8MEEf/xvfIyXJoFldL2H5xoA+mtcNSb/gpX+ZyvPvJLidr5ssQJ
-         4GAqskGA9A3HQY+v1bjJDUaSz8A6vCKiudwkJJnDYSOX64NdY8ZxIScERKoy1Z3tBBz6
-         1oDA==
-X-Forwarded-Encrypted: i=1; AJvYcCXvRjiJfpXDsyp91IIUmrpkfcMSId2FMEer84Qm621RBW7OB48PrUpwT0TkTP5OqZimBjiy7pTlzv8p8u0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuDUstcycAbFz5+HBanNqkR9oKycZpinuxIj/NdWbGygRevG2K
-	MrDlO7WBQn7/b+NtRdf96zr/OvPhRoSflYXTxAtinoO1NlItj3LTzXwathGYCv0=
-X-Gm-Gg: ASbGncvzjLVyxqVE2lD/bHq6F2OvAKOKRotea7m9fessWvV6PIUQ1WBW8Ryb7BEEUmD
-	ROTACF8M1wJhqEF163qLuJnYJZSnh+tKcSewzmohM1Z2CaWy/bKdmYZHo+H8YPgNFe9uHcFcx6X
-	HFyY1jkFyvtDx2f1CC7t2RBqpaEEN3irAfQq6PWN2rzxE6xJRojd92SKi2tuyKmi0x4kBptQLjI
-	5sNfI0O2WByyFluLVzGFKg5Zcww34TheHAQRiNEqgdzNR+8ORS0mmhUEE10hrwApKTnHGJTauR5
-	Fkztl4iSmW/vG+vnnl/Fk1JuDHPHkgeZwdOAUYG+Ro9QIp63rD5RjVkNoBTE6reHwdxZmCv2hgd
-	dbDuWHglwJ6pUHbz4aDw=
-X-Google-Smtp-Source: AGHT+IG9b1OB3VsBXUNUUdwj0UHGJGJRVzsWYf3XpNWMufy6eEpIMx2UZrm1XP7AbfDFr7UroQvA0A==
-X-Received: by 2002:a5d:6d88:0:b0:39c:2669:d7f4 with SMTP id ffacd0b85a97d-39efbad7d40mr1549867f8f.43.1744970192344;
-        Fri, 18 Apr 2025 02:56:32 -0700 (PDT)
-Received: from somecomputer (84-115-238-41.cable.dynamic.surfer.at. [84.115.238.41])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa493124sm2269912f8f.68.2025.04.18.02.56.31
+        d=1e100.net; s=20230601; t=1744970209; x=1745575009;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6JnbYNgpq8QEYxht1353W0il/coYdog3puA39+m94LY=;
+        b=ldVbxmIARMES0w4E8mb86G6UZ3TP6b58VovTRJ6aZu45IMMdTHpIs11aLcmYxBGTyU
+         5XEQXUmj8A1hsaPQJF9LFHxb/wiY4eOxjM9NTlinfx3o/Wokt5Okjf4JYvyOom4CUCI2
+         3Nigdg6H5W+jn2pu8rg3dtDI7AX07NccgwRB2DEnfAKcbSvFZnFUDUQbgvDuiaAjusUx
+         9Y6fZDtpQ1y7yanXfWB/LN3DSr3+nD01QS+ZDCAJQxOKsHvcMFUqluRX3LJJlcQM9wNt
+         UzSFgjwJTF959mvkt9slx4UvSycnE29J4cnuE31X2/T3H6lTYQ1uY2POcsfmOtKNDvby
+         /X7g==
+X-Forwarded-Encrypted: i=1; AJvYcCXq+36egy4C7wBeuYGVb0wMKobVJ7erF2LS7zAwnWPg0BH2nweb0fbsruJCxdJxKsG7yCmSb1b2m1/V4LI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUbM/51hYKDBN9rFGqiQsHL1qXtCEecBCnxZFnCUH+qC4a6Cop
+	BWZeIwuSos82ljV6UWO3nKboc7YqUSxe75xPNeZ3/CCzWrZTfa8S
+X-Gm-Gg: ASbGncvg6a+u6Iai5NnKuNCkwogua5IVkvPYwM4ZE6tOn2zELAhXfPRX97i2j8vW0cl
+	4SVwJ4QKsT0W4+xKSXJo/em7c0d47LySGcOfVE+vcOWnVhupCEtkRt95NytevpBd1ID5L5lSq8C
+	axizfVQ78utkw78caSl8KDuuSq2HaJKqLbL3y4jV4wwat/l2wbgip59vYkXbREE5a6oXZ23P5Ec
+	EWZH7DnlzI+Nlx3bdyhSP8SCLvf3tEOGzMbwYtEgWMsNuZxMHkrz6RuNSqI+DD9riAPI31kZJtA
+	uEXAUSat2PQoAbU1jGaMQy1Ujo5QiWG/NL1KXmAqDOWL3+IZja3C2xceEJOgJ7WG2+R7uhgvnSP
+	ThmNqYzXsq7BWooA=
+X-Google-Smtp-Source: AGHT+IG9XuTCmPLVk2umtFfxUnIxxKIA2Xaugc9G5OZzls8mvgzpV5pXnzR7Jt8N8XgwxqLl/robOg==
+X-Received: by 2002:a5d:648c:0:b0:390:e62e:f31f with SMTP id ffacd0b85a97d-39efba2638cmr1792786f8f.3.1744970208853;
+        Fri, 18 Apr 2025 02:56:48 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43d07csm2323159f8f.58.2025.04.18.02.56.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 02:56:32 -0700 (PDT)
-From: Richard Weinberger <richard@sigma-star.at>
-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Richard Weinberger <richard@nod.at>, kch@nvidia.com, sagi@grimberg.me,
- hch@lst.de, upstream+nvme@sigma-star.at, Damien Le Moal <dlemoal@kernel.org>
-Subject: Re: [RFC PATCH] nvmet: Make blksize_shift configurable
-Date: Fri, 18 Apr 2025 11:56:30 +0200
-Message-ID: <8418057.aG60p0z9Xu@anvil>
-In-Reply-To: <0e61c6e9-10bc-4272-b446-31e0d67547ce@kernel.org>
-References:
- <20250418090834.2755289-1-richard@nod.at>
- <0e61c6e9-10bc-4272-b446-31e0d67547ce@kernel.org>
+        Fri, 18 Apr 2025 02:56:48 -0700 (PDT)
+Message-ID: <d3800b1fc2430d897750541219e39fd43216b199.camel@gmail.com>
+Subject: Re: [PATCH 2/8] iio: adc: mt6360-adc: use aligned_s64 for timestamp
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
+ <jic23@kernel.org>,  Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Andy
+ Shevchenko <andy@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Lars-Peter Clausen <lars@metafoo.de>,  Michael Hennerich
+ <Michael.Hennerich@analog.com>, Cosmin Tanislav
+ <cosmin.tanislav@analog.com>, Tomasz Duszynski <tduszyns@gmail.com>,
+ Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>,  Andreas Klinger
+ <ak@it-klinger.de>, Petre Rodan <petre.rodan@subdimension.ro>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Date: Fri, 18 Apr 2025 09:57:09 +0100
+In-Reply-To: <20250417-iio-more-timestamp-alignment-v1-2-eafac1e22318@baylibre.com>
+References: 
+	<20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
+	 <20250417-iio-more-timestamp-alignment-v1-2-eafac1e22318@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
 
-On Freitag, 18. April 2025 11:37 'Damien Le Moal' via upstream wrote:
-> > +	if (!ns->blksize_shift)
-> > +		ns->blksize_shift =3D blksize_bits(bdev_logical_block_size(ns->bdev)=
-);
+On Thu, 2025-04-17 at 11:52 -0500, David Lechner wrote:
+> Follow the pattern of other drivers and use aligned_s64 for the
+> timestamp. This will ensure that the timestamp is correctly aligned on
+> all architectures. It also ensures that the struct itself it also 8-byte
+> aligned so we can drop the explicit __aligned(8) attribute.
 >=20
-> If the user set logical block size is smaller than the block dev logical =
-block
-> size, this is not going to work... No ? Am I missing something ?
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
 
-Likely, yes.
-TBH, I'm not sure whether it makes actually sense for the bdev case to make
-blksize_shift configurable.
-The case I see most benefit is the backing file case.
+Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
 
-> > +	if (!ns->blksize_shift) {
-> > +		/*
-> > +		 * i_blkbits can be greater than the universally accepted
-> > +		 * upper bound, so make sure we export a sane namespace
-> > +		 * lba_shift.
-> > +		 */
-> > +		ns->blksize_shift =3D min_t(u8,
-> > +				file_inode(ns->file)->i_blkbits, 12);
+> =C2=A0drivers/iio/adc/mt6360-adc.c | 4 ++--
+> =C2=A01 file changed, 2 insertions(+), 2 deletions(-)
 >=20
-> This will work for any block size, regardless of the FS block size, but o=
-nly if
-> ns->buffered_io is true. Doesn't this require some more checks with regar=
-ds to
-> O_DIRECT (!ns->buffered_io case) ?
-
-Good catch. I'll add a check.
-
-It's also worth discussing whether we should limit blksize_shift to a speci=
-fic
-range. Right now, any shift is accepted, and it is up to the user to
-use a sane value.
-
-Thanks,
-//richard
-
-=2D-=20
-=E2=80=8B=E2=80=8B=E2=80=8B=E2=80=8B=E2=80=8Bsigma star gmbh | Eduard-Bodem=
-=2DGasse 6, 6020 Innsbruck, AUT UID/VAT Nr:
-ATU 66964118 | FN: 374287y
-
+> diff --git a/drivers/iio/adc/mt6360-adc.c b/drivers/iio/adc/mt6360-adc.c
+> index
+> 4eb2455d6ffacb8f09a404df4490b5a11e49660d..f8e98b6fa7e923c6b73bedf9ca1c466=
+e7a9c3c47
+> 100644
+> --- a/drivers/iio/adc/mt6360-adc.c
+> +++ b/drivers/iio/adc/mt6360-adc.c
+> @@ -263,8 +263,8 @@ static irqreturn_t mt6360_adc_trigger_handler(int irq=
+, void *p)
+> =C2=A0	struct mt6360_adc_data *mad =3D iio_priv(indio_dev);
+> =C2=A0	struct {
+> =C2=A0		u16 values[MT6360_CHAN_MAX];
+> -		int64_t timestamp;
+> -	} data __aligned(8);
+> +		aligned_s64 timestamp;
+> +	} data;
+> =C2=A0	int i =3D 0, bit, val, ret;
+> =C2=A0
+> =C2=A0	memset(&data, 0, sizeof(data));
+>=20
 
