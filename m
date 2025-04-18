@@ -1,142 +1,153 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gmmr-2.centrum.cz (gmmr-2.centrum.cz [46.255.227.203])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7AE8F77
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277072192E0;
+	Fri, 18 Apr 2025 17:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.227.203
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744998282; cv=none; b=pUU9Z5CNuTgwyl0esysKeJOsQ69B0G0S3YQt3hgc9iILn2dfWh+owpdweA7WgQpWk/l7piG3xu1yjC996AhmkoK7dEkG7I0KpQZhn27BZjLnWisX0kYlfk9TbkcEQHxwdYAF/6oZniBeYf8FBr+twrFA/LOaunLjzDzR610AhFU=
+	t=1744998412; cv=none; b=lU7C6gzGAsw1CzB6zQ/eIPTcp/Su7Q5fS+J5uWSw2ie1MvHeNoyaK+EyboLvGpiGWSJr5YuweIYyqW2Y72xUrJGe3KLW8XQwHYtFu9WYLtcc2Ea9eF0SfzNDJNqvSyEm2TMCYnIQ9E0G/Jtj0gvqDga5Yb/XShs9WVJ8igljtpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744998282; c=relaxed/simple;
-	bh=lUe2Im3hgmPvqNU0ZhoHWSMbiSlthlEw0jzE7+pNyxM=;
-	h=Date:Subject:CC:From:To:Message-ID; b=g6n1uZt9ykqAjLzt545/H2IRW/f6mv9cNSVAFB77pIkfPJyLBSh4+d+r0Q+LAlqOmi8ZMgA0ItaOxEynvmzozI2Yet8XGVgc2GeS4BMnLAKLKgHss48OpqGyuih5gkjAewcU8C5Zh4npO+6yuQGxh3xgxqZ1e/AhursoSZNY0Bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=CclAPrMV; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1744998412; c=relaxed/simple;
+	bh=NTba5+T2jbj0mEB4THNhG57knCQYzKfkCkfqx+GHIpc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X/R+ZS7Giel8tlC/o4MGLkTRE/30Evp5b0ccEdP/GsHaBT7LDi1iC+2Lj6pLEbfOzQWGT4kickiIOf04lRHn3l2Q3x8dKHAKMb5EaDjfsw8F4nLJctzEeRA6pIXo3kfcrTKRDJ+nGdypGLNEztKilv928YcWn42tO1Hf2fh3yeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz; spf=pass smtp.mailfrom=atlas.cz; dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b=MzOuMP79; arc=none smtp.client-ip=46.255.227.203
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atlas.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="CclAPrMV"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22c3407a87aso32513025ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:44:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1744998279; x=1745603079; darn=vger.kernel.org;
-        h=message-id:to:from:cc:subject:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y2sScoLYMaDn6o5OZxST51MbutXhshEvaoFDk5vxulw=;
-        b=CclAPrMVODX890ndaoSL4HZ8Vm2RG7IqPCCNe7NPzJbgvtk1QIot65nZHwrvvU8NsE
-         kUfMmKiPkvG7Ki5ea0URHOc5CJiGMDfKyKtCpYvSPTCHDUFEPIweGUFRS2vVIp8TIauN
-         NqgB098ht3xZ4hYNzp5Fw432zMg7LPQsy4G7r5MSB91TAggONsvRvMfLr6T6Ry+8i8gu
-         m+EjXiLEnTrzSiBQiv+hx3D5uzVDPIZcm2qDW4tOP91gQbY17+aipEQHI3jJNhUM0rga
-         0JdzIljCW6wGhqOWfhXcXLj5MvLTtA0LTOS7yomTikZvDaXedPBQ99PeDkt7Pnf7guLB
-         rPJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744998279; x=1745603079;
-        h=message-id:to:from:cc:subject:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y2sScoLYMaDn6o5OZxST51MbutXhshEvaoFDk5vxulw=;
-        b=me05lOys3YOidR8F1eOzmrnpZNIeW1mGkQU5gUjzmyuR2rtCohOMQcV4iwaDOSsSii
-         MJ4oNepLS6fyFdX54igsRpAqtD7bRKstrUaRJKIwujKffphuMdrYkD6fMu6y87KjduJy
-         YgTzL613gLP47m9fU6vO64PseF4KlMej3c1gjExcwe1OHOUWijotVqknE+SLZqkJVw29
-         USLxZRnvLK1cQBUFBczwsTT72lDqLiim+jCgIX8RsPVHCv587vp82HGOL2P7k0NTYuud
-         QS8WtlYjfoZdnrjzehR1+PFZ0xy5YVAyrKi1afbEVlfIWCUNOygDRNt12Wh1xNUbJSfR
-         DZcw==
-X-Forwarded-Encrypted: i=1; AJvYcCWPYpFCbPiK+D2raXozF50t29dbBEzg3hWiNxSXVA++t94Nm+gEJAR3BL5M5yu9KeZqhCrnU1tpCRl+T+c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkwRityLsXlrnzqfA3qT0P4S/tQZIyeh7r3xa6/pIcZ74c/ugo
-	GB5mlBp0C7+iAgAiNnjQCLL72MKyYc2zTULVNGpTwiMtDDz4/COS4E9NYhKtQnMjq4mX8fR4D2f
-	K
-X-Gm-Gg: ASbGnctqMc2rXRRgkQfYJP0hVjFzEWx87awzOZj1LpIIhtaCpt9BxiTOcoZlzjIUu+i
-	A8XFELqegbXaVzUFK8oifFbETzimZ451sVIRkaR/In9TrvUtWKfu7M7Cxl7h0iRjQhtUyNFugz1
-	XA3fD8PezHxHscFO4evl07IyPWlmFBJDvCwRZs5Jqeu8M3H64alEiALfelMu/gJWlhhxRfSA9yX
-	0eGR9WcCnTqK/u3fdTe+HDmxgAX5QBSH94X7gCWxGit3Zu5rRftu1uHs1nME7FY0yDeDNFveqOS
-	94UAHsePhBW5mC3kh6GTN95evSaUiKTP1Ok=
-X-Google-Smtp-Source: AGHT+IEmnUz2ElBuRHEXkqy+dL2GRgVQy/otpmUsX+CAcGHoJWiC25Bm0HyRcKLFwhTOA5Qyz0xf0A==
-X-Received: by 2002:a17:902:e808:b0:223:8256:533d with SMTP id d9443c01a7336-22c536207d3mr51359195ad.46.1744998278702;
-        Fri, 18 Apr 2025 10:44:38 -0700 (PDT)
-Received: from localhost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaeb59dsm1933880b3a.177.2025.04.18.10.44.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 10:44:38 -0700 (PDT)
-Date: Fri, 18 Apr 2025 10:44:38 -0700 (PDT)
-X-Google-Original-Date: Fri, 18 Apr 2025 10:44:34 PDT (-0700)
-Subject: [GIT PULL] RISC-V Fixes for 6.15-rc3
-CC:         linux-riscv@lists.infradead.org,        linux-kernel@vger.kernel.org
-From: Palmer Dabbelt <palmer@rivosinc.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Message-ID: <mhng-b22e94a2-6d25-4597-b1d2-c527bbd0f64f@palmer-ri-x1c9a>
+	dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b="MzOuMP79"
+Received: from gmmr-2.centrum.cz (localhost [127.0.0.1])
+	by gmmr-2.centrum.cz (Postfix) with ESMTP id 8D8C620391ED;
+	Fri, 18 Apr 2025 19:46:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
+	t=1744998400; bh=Fams/ed1xNpzAsw/jGMqibP9F1wAGloYnaaO7rvT+cI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MzOuMP79q7ot+0fQO79l6couOBK6gUlSV1eYPsQ8iBp1Vhwl7Pu1aCr1JHQkOWiLu
+	 PCQ31ZMOHJ0YjoG5L53BcqEdXK5Vsaxia01eSqJrJ7F8Gi1aYCO66or4oRebDPjfoB
+	 ZXEcy/eed9yjEj3ckycpCFdmxs5ycjzP9UFD2KI8=
+Received: from antispam36.centrum.cz (antispam36.cent [10.30.208.36])
+	by gmmr-2.centrum.cz (Postfix) with ESMTP id 8B97C2018543;
+	Fri, 18 Apr 2025 19:46:40 +0200 (CEST)
+X-CSE-ConnectionGUID: 6MKn1wl6QE6NIr05uuVkyw==
+X-CSE-MsgGUID: 9DvAAV3uTVOa7LvWaPFbvg==
+X-ThreatScanner-Verdict: Negative
+X-IPAS-Result: =?us-ascii?q?A2FIAABDjwJo/0vj/y5aGQEBAQEBAQEBAQEBAQEBAQEBA?=
+ =?us-ascii?q?RIBAQEBAQEBAQEBAQFACYFKAoM/gWSEVZFxA4okiAWBIIxHDwEBAQEBAQEBA?=
+ =?us-ascii?q?Qk7CQQBAQMEOIRIAossJzgTAQIEAQEBAQMCAwEBAQEBAQEBAQ0BAQYBAQEBA?=
+ =?us-ascii?q?QEGBgECgR2FNUYNSQEQAYIHAYEkgSYBAQEBAQEBAQEBAQEdAg19AQEBAQIBI?=
+ =?us-ascii?q?w8BRgULCw0BCgICJgICVgYTgwIBgi8BAw4jFAaxJXqBMhoCZYNsQdhDAkkFV?=
+ =?us-ascii?q?WOBJAaBGy4BiE8BhWyEd0KCDYQ/PoJKFwSFOYJpBIItgReTYYJ0ixNSexwDW?=
+ =?us-ascii?q?SwBVRMXCwcFgSlDA4EPI04FMB2BeoNyhTaCEYFcAwMiAYMVdRyEb4RULU+DM?=
+ =?us-ascii?q?4IDPR1AAwttPTcUGwaZDIQQYAEHQRYCIIEtDZcxsAyDHIEJhE6HS5VKM5dwA?=
+ =?us-ascii?q?5JkLphQjA2BeZsvgX6BbAwHMyIwgyISAT8Zlz29cHYCATkCBwEKAQEDCYI7i?=
+ =?us-ascii?q?26Bc4FLAQE?=
+IronPort-PHdr: A9a23:FtRVwhwzQdPXS8fXCzKqzFBlVkEcU1XcAAcZ59Idhq5Udez7ptK+Z
+ xaZva0m1gSTAtqTwskHotSVmpioYXYH75eFvSJKW713fDhBpOMo2icNO4q7M3D9N+PgdCcgH
+ c5PBxdP9nC/NlVJSo6lPwWB6nK94iQPFRrhKAF7Ovr6GpLIj8Swyuu+54Dfbx9HiTezf79+N
+ gm6oRneusUIj4ZuNKQ8xxnUqXZUZupawn9lKl2Ukxvg/Mm74YRt8z5Xu/Iv9s5AVbv1cqElR
+ rFGDzooLn446tTzuRfMVQWA6WIQX3sZnBRVGwTK4w30UZn3sivhq+pywzKaMtHsTbA1Qjut8
+ aFmQwL1hSgdNj459GbXitFsjK9evRmsqQBzz5LSbYqIL/d1YL/Tcs0GSmpARsZRVjJOAoWgb
+ 4sUEuENOf9Uo5Thq1cSqBezAxSnCuHyxT9SnnL406003fo/HA/b3wIgEd0Bv2jJo9v6NqgfS
+ vy1warSwDnfc/9axTXw5Y7VeR4hu/GMWrdwfNLLx0YxCwPFlEibpoP/MDOTyOENsHWQ4u16W
+ uK1iG4osQRxrSK1xso3kIbJmoYVxUrf9Slj3Ik0JMS1RUhmatGrDJVerTuVN5dqQsw8WWFov
+ j43xLIJt5C0fyUG1pcqyh7bZvGDfYWE/BLuWuaVLDp4i3xpZa6yihWz/EauxeDxV8e53VlWo
+ yZYjtTBtHMA2hzN58WBV/Bz8ECh2TOV2ADS7OFJOUM0mrTBK54n3LEwkoAfsUPZHi/5nkj9k
+ ayYdl089+Wn6unreKvqq5+cOoNulA3yLKYjlta9DOk4KgQDUGmW9f6i2LDt50H1XbpHguAsn
+ qTYrZzXI9kQqLSjDA9PyIkj7g6yDzKh0NsFg3YKNElFeBebj4jxPFHOPez4Ae+/g1uylDdrw
+ OjLPrLkApnUNXjDlavhfa5g50JB0gY80c5Q55RICrEbPfLzX1X9u8DZDxMhMgy0xfjoCMll2
+ 44RWG+DGLGVPaPSvFOS+O4jPeuBaJUXtTv9M/Ql4uThjX49mV8TZ6mp2p4XZWiiEfR8IEWWe
+ 3/sjc0bEWoRpAU+UOjqh0eZUTJJe3mzXrow5isnB4K+EYfDWoetjaSa0yejBZBZfGRGClGSH
+ nfudIiIQeoDZzyKLs97jjMETaShS5Mm1Ry2rA/11aZnIfTO+iwZrp/j1d515+PJlR4o6DN7E
+ d6S3HyXQ2FzhGMISCc63Lpjrkxl1leDza94juRcFdxO+/NJVRw3NZ3CwOxgDdD9RAbBcs2OS
+ Fa8TdWqGSsxQc4pw98Sf0Z9HM2vjx/A0ierGLIVlKKEBIYy8q3C23j9PcF9y2zJ1KU5lVkpX
+ tNPNXG6hq547wXTG4HJk0GWlquxcaQc3SjN9HqfzWqUu0FYVg9wUKrfUX8CeETatc756V/aT
+ 7+yFbQnNRNMxtOYJatUdNLll1VGS+3lONTFfW2xnXy9BRKJxrOKcYrrdH8R3CTbCEgYjQ8T+
+ WyKOhQ5Bieku27eFiBhFUrzY0Pw9ulzsHa7Tk4yzwGFaE1szKC19QAIivycUfwTwqgItzsmq
+ zVxBFq9xc7ZC8Kcpwp9e6VRedE94Fhd1WLerAx9JYetL7t/hl4FbQt7pV/h1xJyCtYIrc9/j
+ m4n1gV/L+q3ylRabHvM35/qPabMAnLv5x3pYKnTjALwytGTr58C9O5wlVzlHwLhQkM48Hxi2
+ sN92meY746MBxhEAsG5aVo+6xUv/+KSWSI6/Y6BkCQ0acGJ
+IronPort-Data: A9a23:uHBYm6mC+svg57QI9pO2U1Lo5gwGJ0RdPkR7XQ2eYbSJt1+Wr1Gzt
+ xJJCGGEbvaJZjD2fNAnb460pkIOu8KHndQ2S1RqriBkFltH+JHPbTi7wuYcHM8wwunrFh8PA
+ xA2M4GYRCwMZiaB4Erra/658CQUOZigHtLUEPTDNj16WThqQSIgjQMLs+Mii+aEu/Dga++2k
+ Y20+pC31GONgWYubzpIsvLb9nuDgdyr0N8mlg1jDRx0lACG/5UlJMp3Db28KXL+Xr5VEoaSL
+ 87fzKu093/u5BwkDNWoiN7TKiXmlZaPVeQmoiM+t5mK2nCulARrukoIHKZ0hXNsttm8t4sZJ
+ ONl7sXsFFhzbsUgr8xGO/VQO3kW0aSrY9YrK1Dn2SCY5xWun3cBX5yCpaz5VGEV0r8fPI1Ay
+ RAXAG4oTRbamObo+Z/lbMh23pk+MffoLZxK7xmMzRmBZRonaZ/GBr7P+ccBhXE7i8ZSB+vbI
+ cELAdZtREieJUcSZxFNUs14w7rAanrXKlW0rHqcv6k+5mHJ5AVt1LH2dtHHEjCPbZwMwhnJ+
+ j+dpgwVBDlLGMK24ATe706SoeaQuT3EUbo8HqO3o6sCbFq7gzZ75ActfVGjifC9i0O4C5RTJ
+ iQ84icyoLIg3E2tQMP0UxCxrDiDpBF0c95ND+oS6wyXzKfQpQGDCQAsXm4fQN8rrsk7QXotz
+ FDht8/mASxHtLyTVG6H8bGVvXW+NEA9IWYcaGkERA0e7t/LpIA1kwKJT9B/HarzhdrwcRn1w
+ jaFqwAkirkThNJN3KK+lXjFjCirvYPhVRMu60PcWWfNxgd4YpO1Io+l817W6d5eI4uDCFqMp
+ n4Jn46Z9u9mJYqRnSaJTc0TE7yzofWIKjvRhRhoBZZJ3zS18laxbJxX+nd1I0IBDyofUWO3J
+ hWO5EULvsAVYybCgbJLXr9dwv8ClcDIfekJnNiOBjaSSvCdrDO6wRw=
+IronPort-HdrOrdr: A9a23:vivyGaHm3/W3gYP8pLqE5ceALOsnbusQ8zAXPo5KJiC9Vvbo8v
+ xG+85rsSMc6QxhOk3I9urrBEDtex7hHNtOkO4s1NSZLWrbUQmTTb2KhLGKq1bd8m/FltK1vp
+ 0PT0ERMrHNMWQ=
+X-Talos-CUID: 9a23:UuPkWmMDLtLTTu5DBgxE8hcLHp4cXyP77W2IflKlN2V4V+jA
+X-Talos-MUID: =?us-ascii?q?9a23=3Ah2T1ig9OGm67VDtB1LqFfomQf5ZE/Y2HNhsQras?=
+ =?us-ascii?q?hspagKxN5AxmXkjviFw=3D=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="6.15,222,1739833200"; 
+   d="scan'208";a="114794531"
+Received: from unknown (HELO gm-smtp11.centrum.cz) ([46.255.227.75])
+  by antispam36.centrum.cz with ESMTP; 18 Apr 2025 19:46:40 +0200
+Received: from arkam (46-23-141-61.static.podluzi.net [46.23.141.61])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by gm-smtp11.centrum.cz (Postfix) with ESMTPSA id E3CBD100AE11B;
+	Fri, 18 Apr 2025 19:46:39 +0200 (CEST)
+Date: Fri, 18 Apr 2025 19:46:38 +0200
+From: Petr =?utf-8?B?VmFuxJtr?= <arkamar@atlas.cz>
+To: Juergen Gross <jgross@suse.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org
+Subject: Re: [PATCH] x86/mm: fix _pgd_alloc() for Xen PV mode
+Message-ID: <2025418174638-aAKP_lnKYqenWy7u-arkamar@atlas.cz>
+References: <20250417144808.22589-1-jgross@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250417144808.22589-1-jgross@suse.com>
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+On Thu, Apr 17, 2025 at 04:48:08PM +0200, Juergen Gross wrote:
+> Recently _pgd_alloc() was switched from using __get_free_pages() to
+> pagetable_alloc_noprof(), which might return a compound page in case
+> the allocation order is larger than 0.
+> 
+> On x86 this will be the case if CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
+> is set, even if PTI has been disabled at runtime.
+> 
+> When running as a Xen PV guest (this will always disable PTI), using
+> a compound page for a PGD will result in VM_BUG_ON_PGFLAGS being
+> triggered when the Xen code tries to pin the PGD.
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+> Fix the Xen issue together with the not needed 8k allocation for a
+> PGD with PTI disabled by using a variable holding the PGD allocation
+> order in case CONFIG_MITIGATION_PAGE_TABLE_ISOLATION is set.
+> 
+> Reported-by: Petr Vaněk <arkamar@atlas.cz>
+> Fixes: a9b3c355c2e6 ("asm-generic: pgalloc: provide generic __pgd_{alloc,free}")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Juergen Gross <jgross@suse.com>
 
-are available in the Git repository at:
+I have runtime tested this patch, and it fixes the reported issue. The
+following trailers can be appended to the commit message (as per [1]):
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.15-rc3
-Primary key fingerprint: 00CE 76D1 8349 60DF CE88  6DF8 EF4C A150 2CCB AB41
-     Subkey fingerprint: 2B3C 3747 4468 43B2 4A94  3A7A 2E13 19F3 5FBB 1889
-merged tag 'riscv-fixes-6.15-rc3'
+Closes: https://lore.kernel.org/lkml/202541612720-Z_-deOZTOztMXHBh-arkamar@atlas.cz/
+Tested-by: Petr Vaněk <arkamar@atlas.cz>
 
-for you to fetch changes up to 615e705fc8c7bdb6816faf09b5b16a0441f050e7:
+Cheers,
+Petr
 
-  Merge tag 'riscv-fixes-6.15-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/alexghiti/linux into fixes (2025-04-16 11:10:25 -0700)
-
-----------------------------------------------------------------
-RISC-V Fixes for 6.15-rc3
-
-* A fix for an issue where C instructions ended up in non-C builds, do
-  to some broken inline assembly in the KGDB breakpoint insertion code.
-* A fix to avoid spurious printk messages about misaligned access
-  performance probing.
-* A fix for a handful of issues with /proc/iomem's reserved region
-  handling.
-* A pair of fixes for module relocation processing.
-* A few build-time fixes.
-
-----------------------------------------------------------------
-This got hung up last week on the plugin ICE, which I thought was a RISC-V
-problem but actually looks to be something pretty generic.
-
-----------------------------------------------------------------
-Andrew Jones (2):
-      riscv: Fix unaligned access info messages
-      riscv: Provide all alternative macros all the time
-
-Björn Töpel (1):
-      riscv: Properly export reserved regions in /proc/iomem
-
-Nam Cao (1):
-      Documentation: riscv: Fix typo MIMPLID -> MIMPID
-
-Nathan Chancellor (2):
-      riscv: Avoid fortify warning in syscall_get_arguments()
-      riscv: Avoid fortify warning in syscall_get_arguments()
-
-Palmer Dabbelt (3):
-      Merge tag 'riscv-fixes-6.15-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/alexghiti/linux into fixes
-      Merge patch series "riscv: Rework the arch_kgdb_breakpoint() implementation"
-      Merge tag 'riscv-fixes-6.15-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/alexghiti/linux into fixes
-
-Samuel Holland (2):
-      riscv: module: Fix out-of-bounds relocation access
-      riscv: module: Allocate PLT entries for R_RISCV_PLT32
-
-WangYuli (2):
-      riscv: KGDB: Do not inline arch_kgdb_breakpoint()
-      riscv: KGDB: Remove ".option norvc/.option rvc" for kgdb_compiled_break
-
-Will Pierce (1):
-      riscv: Use kvmalloc_array on relocation_hashtable
-
- Documentation/arch/riscv/hwprobe.rst        |  2 +-
- arch/riscv/include/asm/alternative-macros.h | 19 ++++++---------
- arch/riscv/include/asm/kgdb.h               |  9 +-------
- arch/riscv/include/asm/syscall.h            |  7 ++++--
- arch/riscv/kernel/kgdb.c                    |  6 +++++
- arch/riscv/kernel/module-sections.c         | 13 ++++++-----
- arch/riscv/kernel/module.c                  | 11 +++++----
- arch/riscv/kernel/setup.c                   | 36 ++++++++++++++++++++++++++++-
- arch/riscv/kernel/unaligned_access_speed.c  | 35 +++++++++++++++++-----------
- 9 files changed, 89 insertions(+), 49 deletions(-)
+[1] https://docs.kernel.org/process/5.Posting.html#patch-formatting-and-changelogs
