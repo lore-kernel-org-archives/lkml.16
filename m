@@ -1,91 +1,126 @@
-Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732F52749D7;
-	Fri, 18 Apr 2025 13:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C1B2749D7;
+	Fri, 18 Apr 2025 13:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744981723; cv=none; b=l/4BiNZO/XzVLbldQVcLG/2mTurPv0CN+F9HX+NdMERvcfXTGVzsPpvWRLinyaKjcYkPKvyxLyvFIPu70Qa4imbw85ilhnYDyCVeVKIWh3pScntulZGMr2VEfbmBf0ik+pT+z2w9hxFm6nfp5D9cWIAO/mrwbgU4HiXbXstR2g8=
+	t=1744981816; cv=none; b=RMpg7gABfFe3pEelFVIacxRI0Y6MC3hFdxjmJxpdm/CFGNziQ88K9CfyYMuRq1zCww3xfDoler+URg3f/N/Hw3FEo2JGCtMYuZq+vEmlgyqghIsFRAllKxYVNp0GyI9deTdAPDFqBXImQsUVoSqY/YB83SS4AIiPmuQ9xxcf7Jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744981723; c=relaxed/simple;
-	bh=ZD4cNlSOLZMquN8qyLb4pwWdMwFPd6qAnJFhtRCch5s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=CqElGsJRDtiF6Zebbgo7d7foXYgBDhUmvc9RUHvq+UGv2oGAU0weYuzPI7AkFayOedJJZYsD+wRuV41jd3pchs1/it9jwQAQmk10nZXz5R5rHa3bzf0dL0wFqFklLpA8vy/cStxWDaftpbUCSmnv3tGlswIg/xExMQ1HWOGvRhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B07ULLe8; arc=none smtp.client-ip=209.85.210.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744981816; c=relaxed/simple;
+	bh=LUwIz8oIu9xUE0rOVd4q9tz/WUXmYgPFjOKIDlZ74D8=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OIO1TyWJFnCk+XOPdQcnMepgcfP0UnimE1Pzpg0u6BC37dTJJnTAjNGNCyXlZn3HnZh+sizB37rR91Vbk+dO+pewhePLD640EiyQ5/2eM+WuoALl12L1Z/Xo3pkbhilJkZ9+Yykm1PTCYRlmkQ92evQXmBg5s3f5B3gLkJBjsak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WeBT0/vM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B07ULLe8"
-Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-7394945d37eso1516722b3a.3;
-        Fri, 18 Apr 2025 06:08:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744981720; x=1745586520; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:cc:from:references:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O16WL3SgxPZ8win8gZA+6xubYI6PuCGAan8u2mItuww=;
-        b=B07ULLe8ucI7gRWCmxuBWsbkSEhnmipsaXzf1yoB1RJyWHy6d8apUmqKp2fYKwLiqW
-         DO+lXdcqzb+STP1DRkauDif9wxxE6JeJhLih73Wouz9z6ScVLy3Ouj/P+EGSwp3GvebY
-         INpRC1DFYGiOR/r9MQwW1tWIKHbre4cdYZFYHLlPWWdYlApP7xLim9D5Wg9gTLsNV+hk
-         NrSxZ4U0tB+SnYpJ/PQF9CYtpRFJOQffwyHfNh/fLZS0hJAOTMVfr7y8j14QR332cOny
-         GVbHSSpahz/UzPY2VTsZaq8vAjQWvov7Nq8jfgKRdr5i8/1/ZMQjJpDvBYg0RzE9CvZs
-         PGRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744981720; x=1745586520;
-        h=content-transfer-encoding:in-reply-to:cc:from:references:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=O16WL3SgxPZ8win8gZA+6xubYI6PuCGAan8u2mItuww=;
-        b=bZG8FQxyW10Qb+R8blXLxFocykXLB2SrOXNMiQUTQD2bUWr5JMVUek7Ys65idNOWm9
-         /ImDA0I+RRXBtgYZAYHSmvMuKsjuzhSSQ44CuvZB4M0CpAQRRh7ItGKdJXRILqSbKm2d
-         dUZ2WagM3WMyPJOKlC2K6pizCUpxcOi5h46qOX4s5H4oFkCvMfgHANp6ePeXUXPryJst
-         EmCJjfxKTma+JSObxCWfVIsrkNdrdQOJ99vskP5XIFowNWXsXgmhjuy1HNx4okLa6V66
-         jrmrCM4wExl1a4IAH2qObleDf55w5e6YsbuPB2fQVIcx2z95bl9jgHt+JLE5RSfI5SGh
-         reJA==
-X-Forwarded-Encrypted: i=1; AJvYcCVHAVPZJ6hrqbX2FmFe4kmP/ybiOLD05SQWiR8avoXTO/v3yLbMciy7LXsu/7Y0aRQYzFO7s6Kwe7EAf4Q=@vger.kernel.org, AJvYcCXKgDpa/JonZ2wwmyNQTo6MypqWtNeUKmDZwQZCpg+hzVri9ZF3uCJ5GlY8urssykNMInCgm0y0Rq0XV33T/sBRWA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4FcDaPlMUP9Nb4Nvz4loH8h5GxCdu07LuKfQVtZNGKlCn6Xtc
-	XwlZFeZB0PnJoI0lBH7BC8zuqh4U//E1PwNYb5Qew1iigfldyvV7
-X-Gm-Gg: ASbGncv9bp3872hkhMphdpYkYoF6jF8R0YR9BHqNg1g0pmDBEKIqSIhx18eES2EeEMa
-	DYMwxD+gLbyGwr8KuUTsUKO+xdUVcG/x0/gBCaWLc9IbPizVTnb941HIQYMJ/xsDrATjkjodpbT
-	IeB/s/H+f539xqGUMHIqmHDmHz1jOq3FeklqZrtpXl3rrnlR5ZH3ViqdcLqlZdFoYZH9iClPAz7
-	3Cnln3nQSswDjtaaK1r6+nQVErN535Ih7QCXxMGB91M1+fSpivqhR2SuJiilys8q96H7jCyhEBG
-	HCo07FKD8F8HFQrdEKZ3RQqwEfh2USDCT7vhkXZKykG7++ypS+DahhjzDJQr
-X-Google-Smtp-Source: AGHT+IFizGLmDbLdaqHB2YwDJuhvCQ/AMS2mdEAnW8dELZz86oyPH1OXYPLMPTUGlLNKPwdZeoabvQ==
-X-Received: by 2002:a05:6a00:2985:b0:736:64b7:f104 with SMTP id d2e1a72fcca58-73dc1444626mr3452824b3a.5.1744981720523;
-        Fri, 18 Apr 2025 06:08:40 -0700 (PDT)
-Received: from [192.168.3.3] ([27.38.215.143])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8c0228sm1510925b3a.25.2025.04.18.06.08.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Apr 2025 06:08:40 -0700 (PDT)
-Message-ID: <ca94f413-4e35-41fd-9554-c80d6e2707ac@gmail.com>
-Date: Fri, 18 Apr 2025 21:08:30 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WeBT0/vM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5D56C4CEEB;
+	Fri, 18 Apr 2025 13:10:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744981815;
+	bh=LUwIz8oIu9xUE0rOVd4q9tz/WUXmYgPFjOKIDlZ74D8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WeBT0/vMVbNcRplOOST+5Ywo6QdaFrdxfVR2LSNE6s00ZuWarFlBLjsZiH3HAyYKB
+	 tjSOHdewvgYfgveW4QcOuOuVyF9hllgu7PfauZirBRfnBvBM+jiWwXlgOKVwMIKS+Q
+	 GmfbgPKsrMXhQSbCta9B4CyBJce1bsWE+my0t9XFK+9AHIIZ/J4Z6vLfdZttpoturQ
+	 oqnBm7nat4DH6icCkWPPaVXGNTyvZ41kbftOXXmNjEExJLAant5gV+vnBUtirN2bmh
+	 +zAVEg/Tpibq1xySirpgzczkJByenekH4Ql+nAKFVnqKokjXPdouWyli9VCW27Ntxw
+	 fcSq4GfHkKtzw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1u5lTx-006irK-6I;
+	Fri, 18 Apr 2025 14:10:13 +0100
+Date: Fri, 18 Apr 2025 14:10:19 +0100
+Message-ID: <87sem5y5s4.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Jiayuan Liang <ljykernel@163.com>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/1] KVM-arm: Optimize cache flush by only flushing on vcpu0
+In-Reply-To: <20250418102244.2182975-1-ljykernel@163.com>
+References: <20250418102244.2182975-1-ljykernel@163.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] perf/core: Fix broken throttling when
- max_samples_per_tick=1
-To: Peter Zijlstra <peterz@infradead.org>
-References: <20250405141635.243786-1-wangqing7171@gmail.com>
- <20250405141635.243786-3-wangqing7171@gmail.com>
- <20250418090302.GO38216@noisy.programming.kicks-ass.net>
-From: Qing Wang <wangqing7171@gmail.com>
-Cc: acme@kernel.org, adrian.hunter@intel.com,
- alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org,
- kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com,
- namhyung@kernel.org
-In-Reply-To: <20250418090302.GO38216@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: ljykernel@163.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Thank you very much for your review. Do you need me to reorganize the 
-patch and send it out? Because if only the second patch is accepted, its 
-context won't match the current mainline code.
+On Fri, 18 Apr 2025 11:22:43 +0100,
+Jiayuan Liang <ljykernel@163.com> wrote:
+> 
+> This is an RFC patch to optimize cache flushing behavior in KVM/arm64.
+> 
+> When toggling cache state in a multi-vCPU guest, we currently flush the VM's
+> stage2 page tables on every vCPU that transitions cache state. This leads to
+> redundant cache flushes during guest boot, as each vCPU performs the same
+> flush operation.
+> 
+> In a typical guest boot sequence, vcpu0 is the first to enable caches, and
+> other vCPUs follow afterward. By the time secondary vCPUs enable their caches,
+> the flush performed by vcpu0 has already ensured cache coherency for the
+> entire VM.
 
-On 4/18/2025 5:03 PM, Peter Zijlstra wrote:
-> Fair enough I suppose. I'll make this apply without that revert -- it
-> seems pointless to have that in between.
+The most immediate issue I can spot is that vcpu0 is not special.
+There is nothing that says vcpu0 will be the first switching its MMU
+on, nor that vcpu0 will ever be running. I guess what you would want
+instead is that the *first* vcpu that enables its MMU performs the
+CMOs, while the others may not have to.
+
+But even then, this changes a behaviour some guests *may* be relying
+on, which is that what they have written while their MMU was off is
+visible with the MMU on, without the guest doing any CMO of its own.
+
+A lot of this stuff comes from the days where we were mostly running
+32bit guests, some of which had (and still have) pretty bad
+assumptions (set/way operations being one of them).
+
+64bit guests *should* be much better behaved, and I wonder whether we
+could actually drop the whole thing altogether for those. Something
+like the hack below.
+
+But this requires testing and more thought than I'm prepared to on a
+day off... ;-)
+
+Thanks,
+
+	M.
+
+diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
+index bd020fc28aa9c..9d05e65433916 100644
+--- a/arch/arm64/include/asm/kvm_emulate.h
++++ b/arch/arm64/include/asm/kvm_emulate.h
+@@ -85,9 +85,11 @@ static inline void vcpu_reset_hcr(struct kvm_vcpu *vcpu)
+ 	 * For non-FWB CPUs, we trap VM ops (HCR_EL2.TVM) until M+C
+ 	 * get set in SCTLR_EL1 such that we can detect when the guest
+ 	 * MMU gets turned on and do the necessary cache maintenance
+-	 * then.
++	 * then. Limit this dance to 32bit guests, assuming that 64bit
++	 * guests are reasonably behaved.
+ 	 */
+-	if (!cpus_have_final_cap(ARM64_HAS_STAGE2_FWB))
++	if (!cpus_have_final_cap(ARM64_HAS_STAGE2_FWB) &&
++	    vcpu_el1_is_32bit(vcpu))
+ 		vcpu->arch.hcr_el2 |= HCR_TVM;
+ }
+ 
+
+-- 
+Jazz isn't dead. It just smells funny.
