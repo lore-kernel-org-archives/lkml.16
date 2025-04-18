@@ -1,74 +1,83 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D875F101E6;
-	Fri, 18 Apr 2025 03:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171C518871F
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 03:25:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744946650; cv=none; b=XtfGehiEAS80zjQ+1vfpY0TKS6uHExndW7jngC/AYHlJqEdp9VJ2dNrozY/huyjbELInF0wiFSQ+o2YYOEtoZZyp63PpzzVLMcBAC+IyBUVnaF1odMAXlfwM3a+Nfi4Qdk78AAN1h+du8I4Uddpsv7Fbh7A2+D5/K1tkbiYFtI8=
+	t=1744946759; cv=none; b=BXP+LTmcwsSmZ4gRz3N3RzOkrd7o770sqSlwHxaradjxYoBgtj4sfKLx2MetNy+VIkOTSEc39EkPr7Q8+9H5Y8G3Q3PjBBRYRWnR46uy9TiU/Nr/nmiPDxB07hFHuFNBw2tYHwh4PgTfg7pjUzzly/9sS0eAJgzIvG/DvsDNA5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744946650; c=relaxed/simple;
-	bh=mWuGbazfnR1UFMc9SC/03ndtQ8TMPbGHHSxlfU1xvD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Zwa0VTrShwXPoo8T8YTCjKLm7nyz9cjJecTJLJ3wn1c3euXHy0rZ3UeyNSFe8xMDXWKrE5YpoWulDYSE5MpQoCFXvCs/2NE/0/G49ZnwanGcTQOoxvdaGkc643QbuiSUn/R84ZOPlXF/EdrPBHkAKQ/M4T0CCfn2s9ohNdiaJEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=Ez6H9+ae; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="Ez6H9+ae"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
-	From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Knan138NdmDVR2CPp6B1Qzbr7MQKu8dC2FLjkzzbmvI=; b=Ez6H9+aeRufRaBW4KKs6TPV5rc
-	/oGb4UfCcPzduHjQnNyKHxy1droB9vh99WEubgJTKYlrwvLCjkkgjHxnJvGSHFEaDyNsclRpwc1Qs
-	Cff94MmADxhIheCuAX3VjYAbtcKNwLjxn8YHYFZmQthiylFdl7PKYwOcyZUqwFbEznpb/pqqHww24
-	acLyNI3vutChyZ5dcDugMElCr+iaDZqZGGzOMWF1E3KrL2c9R/ivnrdJPpi1EHCbMgucJtJiv4WjA
-	/lmyWUibeMw+8o8sNujxq/GZWsvpcObxg73E3FjEzh76LAPfRp9q6WsuheEUa8W3mPwpRoLiAxFLw
-	MiZJjYEQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u5cKf-00Gebr-1J;
-	Fri, 18 Apr 2025 11:24:02 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 18 Apr 2025 11:24:01 +0800
-Date: Fri, 18 Apr 2025 11:24:01 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, x86@kernel.org, ardb@kernel.org,
-	Jason@zx2c4.com, torvalds@linux-foundation.org
-Subject: Re: [PATCH 8/9] crypto: x86/chacha - remove the skcipher algorithms
-Message-ID: <aAHF0X2I5ydEJK1p@gondor.apana.org.au>
+	s=arc-20240116; t=1744946759; c=relaxed/simple;
+	bh=AHHp/HCy61pslcQgqrWXbioECU/vdxqQvjXfFTWw26Y=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=IrK8jE4cMIQVs/dzlya7l+4R+BvSJVZ8QQqOHKI5pFYdvmy+952NgSMKoVlcQRtautb4NrCvnAEmN70UdYMIwV9DICzYEpVaiZph+8N3ttLft3xgbCOJ+v02h7Xk4cOJlTfusNROg1Lqg85YQjxb99AeiF2QSkeGQUHPBPApjCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85e4f920dacso148202439f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 20:25:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744946757; x=1745551557;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=m9Du5hxt+SPzMYed8A4aZaHIu5PkRu+s4LbSnbJYYRY=;
+        b=oBVweqfd5RqrhC2d4H/p85Tnep5r9FNXJSkl0xhTEB2ofhYRnaHwXX36qjkZ/C9wXk
+         x4YC48tR0+Bh+axUIBRJSqakJC38g01nVnMHc6roogcQ9AgS3QHsO9l1rrfGs0LKcilw
+         IiiMCx09S+f8phs/mQZCkQDWJVncY8jFh/zsWBNvzRP4qbpPCNywnzblhZbFf2A69R/P
+         LCNOZkTQvkTa2vfsNSyOxChqvMj2+hzEYN46q1TLV6jZe3Oi3JRI4/YgP9DHD8qdBVTx
+         ZjlJjGcdDh19leeON+dV4tGCemjuBcpX50kGzd+X7WOUApoqVImcbzA5TRpPsDfTdr1p
+         TaGw==
+X-Gm-Message-State: AOJu0YwEuzgP0VIrqXqnoVd9XY4bQe33jtJbVIi/zYAbPeu3rzyj64Y+
+	H+FmCl5NwbSmBwyG/6Zt52TsglOpWHyZmSnXv8jHp+41t2MNRqgpEVX3QlSrf3W+PLIpLgOhlqZ
+	tFsSczYxGer8uFwDcjrO5AVP88TxXX7DHvz9zDjQBjhFJP6W12mZ32kw=
+X-Google-Smtp-Source: AGHT+IGqSc/dpQjQ40n+uA1wOcs3A8Pmvs2EdHIsYWJK+s9ntMOcrx75Xm65gTV5q7yqk+K2o59+oBb5oX6jOP6rIkDa4bd2wXyl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250405182609.404216-9-ebiggers@kernel.org>
-X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel
+X-Received: by 2002:a92:ca48:0:b0:3d5:8922:77a0 with SMTP id
+ e9e14a558f8ab-3d88ee5061fmr15931425ab.18.1744946757217; Thu, 17 Apr 2025
+ 20:25:57 -0700 (PDT)
+Date: Thu, 17 Apr 2025 20:25:57 -0700
+In-Reply-To: <67d9cf78.050a0220.3657bb.000f.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6801c645.050a0220.243d89.0016.GAE@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [jfs?] UBSAN: array-index-out-of-bounds in dtDelete
+From: syzbot <syzbot+4f9c823a6f63d87491ba@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Eric Biggers <ebiggers@kernel.org> wrote:
->
-> -static void __exit chacha_simd_mod_fini(void)
-> -{
-> -       if (IS_REACHABLE(CONFIG_CRYPTO_SKCIPHER) && boot_cpu_has(X86_FEATURE_SSSE3))
-> -               crypto_unregister_skciphers(algs, ARRAY_SIZE(algs));
-> -}
-> -
-> arch_initcall(chacha_simd_mod_init);
-> -module_exit(chacha_simd_mod_fini);
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-Why did you remove the ability to remove the module?
+***
 
-Cheers,
+Subject: Re: [syzbot] [jfs?] UBSAN: array-index-out-of-bounds in dtDelete
+Author: richard120310@gmail.com
+
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git e3a854b577cb
+
+Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+---
+ fs/jfs/jfs_dtree.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/jfs/jfs_dtree.c b/fs/jfs/jfs_dtree.c
+index 8f85177f284b..0a209b30686a 100644
+--- a/fs/jfs/jfs_dtree.c
++++ b/fs/jfs/jfs_dtree.c
+@@ -2130,7 +2130,7 @@ int dtDelete(tid_t tid,
+ 					stbl = DT_GETSTBL(np);
+ 					ldtentry =
+ 					    (struct ldtentry *) & np->
+-					    slot[stbl[0]];
++					    slot[stbl[0] % np->header.maxslot];
+ 					next_index =
+ 					    le32_to_cpu(ldtentry->index);
+ 					DT_PUTPAGE(nmp);
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.43.0
+
