@@ -1,37 +1,29 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B9E262A6;
-	Fri, 18 Apr 2025 04:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from invmail3.skhynix.com (exvmail3.hynix.com [166.125.252.90])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E18D0262A6
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 04:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744948846; cv=none; b=UdbKwfMIhx4mdNaET2BKizJX3ic7GoW92F3+/EAaLSo7sfkPyDe+hIhNY3tSJ6Uv+HzA5Jl4ALAAbsHgaXs9rIWg4oVDfgu3GDsi3I59VnytFWUYNUxn4r2bSwCSpx98MA7Y6jeyBgunNz2XbiKbpKxhfhC4LMHVra+zg7t9isE=
+	t=1744949309; cv=none; b=INNgwb1FXiF8k7lGeIyBWL4Fm+D9kz6JQ64hicN9LF7Qo89kl2/d8RxwZawxtHOk81yDMhhrZ1oAbNXbLjT7kBD1x+rWGdgnpIg2/mKK2qUIpsRD6vw+Q8OayZrNfeP6sukj6Yvo4jEXPI6llmh9yztLTsfi/d6zRVko3TMFKng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744948846; c=relaxed/simple;
-	bh=zIJTN+v7hIwW8TsLc0qWWgZ4uUmcS1YX8FJEkkI0NHI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ahh9xkP6m0rJ+4dq9EQhwY5UZwGUY6E5Wd8+ZUkCJ+bGLhH00ibxbvYjCgDdk65HGsSCgQ8GFblIsfBtVTbJ2VMl2+pzgEHK1ReXWwvJzZXK3xbG/HeJd+0q+eNvO5Vl5OO/6cFdu8iubqEwRTdU4N8tMedmZ20zx41Z9HIHrT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FWW6LBrL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FWW6LBrL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF041C4CEE2;
-	Fri, 18 Apr 2025 04:00:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744948846;
-	bh=zIJTN+v7hIwW8TsLc0qWWgZ4uUmcS1YX8FJEkkI0NHI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=FWW6LBrLnKSDv4Iq9C5PpevthoaZ/Y0CU67yVlhn1nSqz9tC1m6pQOYl5J9Han6JA
-	 glHgHIVzCPun5ah9N0wwuJxk4bmnFR5/siwByT/RAUCvpXF6xI5GNJ8T+VtqVWn7mG
-	 otPvPWVFCML2Oo5jtur84zRXmCN/O/6vW3OSdYNwP0HrvcdndRpUHf8lD5dUpxDH8r
-	 1mEsSsQKydNu1wbRO6JULGLcX7GV28y0LyCoMIpZZVSAXliG9oCUxL0VF2+ZZm83im
-	 KgoU0CuIfk/acm3TLWnNn7WPqYolM/WEiolPfvZO7sNXtbAeTq+K70XMJfCx+lsSAU
-	 uOZ8kKNgzxw3Q==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: lib/poly1305 - restore ability to remove modules
-Date: Thu, 17 Apr 2025 21:00:17 -0700
-Message-ID: <20250418040017.65086-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1744949309; c=relaxed/simple;
+	bh=qiv6nX2z8REXDYEULFlPPpxHg2ugSSlmAOfDb32Aipo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ogQgmMs0eb1d/FOaPZPhEwztXzIn8qWMO4Ynfd+g/D9m8UKwbXFh2BZG8sLIM5Lft93p3hmsStrzTbdoodukKqAfPTQhCwfVUGOsU4Kwz44QlXu7WTrgwh9hhlwuXew/WOj5zgaxNWar1b3QaoFxCCU080+tz8Qx4X6CmkxyL34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc59-057ff7000000aab6-c5-6801d0345c5e
+From: "yohan.joung" <yohan.joung@sk.com>
+To: jaegeuk@kernel.org,
+	chao@kernel.org,
+	daeho43@gmail.com
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	pilhyun.kim@sk.com,
+	"yohan.joung" <yohan.joung@sk.com>
+Subject: [PATCH] f2fs: Add a method for calculating the remaining blocks in the current segment in LFS mode.
+Date: Fri, 18 Apr 2025 13:08:02 +0900
+Message-ID: <20250418040803.2118-1-yohan.joung@sk.com>
+X-Mailer: git-send-email 2.49.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,96 +31,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBLMWRmVeSWpSXmKPExsXC9ZZnoa7JBcYMg7/tlhanp55lsnhz5AyL
+	xZP1s5gtLi1yt7i8aw6bA6vHzll32T02repk89i94DOTx+dNcgEsUVw2Kak5mWWpRfp2CVwZ
+	OxtWsBUc4q3oWnieqYGxkbuLkZNDQsBE4kzTHxYY+1PPDiYQm01AQ+JPby8ziC0iYCfR3fCN
+	FcRmFmhjlLj11xfEFhbIkfjXvoOti5GDg0VAVWLyP3EQk1fATOL2l0KIiZoSO76cB5vIKyAo
+	cXLmExaIKfISzVtnA03nAqp5ySrRf2MG1AmSEgdX3GCZwMg7C0nPLCQ9CxiZVjGKZOaV5SZm
+	5hjrFWdnVOZlVugl5+duYgSG17LaP5E7GL9dCD7EKMDBqMTD6/CWIUOINbGsuDL3EKMEB7OS
+	CO8583/pQrwpiZVVqUX58UWlOanFhxilOViUxHmNvpWnCAmkJ5akZqemFqQWwWSZODilGhiL
+	4uLMa3/mNNwPe1V3b5HxdI8nG7guv30jvUo0U2x++LcSgaSFAfc7L7z+e72GpfPnyhciH/Jn
+	f5/CuO1t4lJP/i+fclvOH/BMMZp0xi4w6NRLH1nO//NPzgv06Pt0a/5We50Ld1cZc8960tH5
+	9IDvPIHpB45dm8M4eULc8vnMP0+9VHO5fTS2XImlOCPRUIu5qDgRADlz5ikrAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpkluLIzCtJLcpLzFFi42LhmqEyR9fkAmOGwcKpBhanp55lsnhz5AyL
+	xZP1s5gtLi1yt7i8aw6bxYS5V5ks3m+9x+jA7rFz1l12j02rOtk8di/4zOTx7baHx+dNcgGs
+	UVw2Kak5mWWpRfp2CVwZOxtWsBUc4q3oWnieqYGxkbuLkZNDQsBE4lPPDiYQm01AQ+JPby8z
+	iC0iYCfR3fCNFcRmFmhjlLj11xfEFhbIkfjXvoOti5GDg0VAVWLyP3EQk1fATOL2l0KIiZoS
+	O76cB5vIKyAocXLmExaIKfISzVtnM09g5JqFJDULSWoBI9MqRpHMvLLcxMwcM73i7IzKvMwK
+	veT83E2MwIBZVvtn0g7Gb5fdDzEKcDAq8fA6vGXIEGJNLCuuzD3EKMHBrCTCe878X7oQb0pi
+	ZVVqUX58UWlOavEhRmkOFiVxXq/w1AQhgfTEktTs1NSC1CKYLBMHp1QDY9Yj3/4NrRb/GZf+
+	f//82T7fai6Ntsa6UtfV6z2up7UUME3aXrEiZMuFxxVP6iI6zjd9TFp4I3Bh6bHULr29JZtf
+	WIQyTDj7qWSiXWplvlpE0pnODVVdN/5rCX276TJB322C0IbPWRu6jh3bIx0reSa9YN72YD6O
+	pNZtU1snvly3OqbvY+ipq0osxRmJhlrMRcWJAPocAvQUAgAA
+X-CFilter-Loop: Reflected
 
-From: Eric Biggers <ebiggers@google.com>
+In LFS mode, the previous segment cannot use invalid blocks,
+so the remaining blocks from the next_blkoff of the current segment
+to the end of the section are calculated.
 
-Though the module_exit functions are now no-ops, they should still be
-defined, since otherwise the modules become unremovable.
-
-Fixes: 1f81c58279c7 ("crypto: arm/poly1305 - remove redundant shash algorithm")
-Fixes: f4b1a73aec5c ("crypto: arm64/poly1305 - remove redundant shash algorithm")
-Fixes: 378a337ab40f ("crypto: powerpc/poly1305 - implement library instead of shash")
-Fixes: 21969da642a2 ("crypto: x86/poly1305 - remove redundant shash algorithm")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: yohan.joung <yohan.joung@sk.com>
 ---
- arch/arm/crypto/poly1305-glue.c         | 5 +++++
- arch/arm64/crypto/poly1305-glue.c       | 5 +++++
- arch/powerpc/crypto/poly1305-p10-glue.c | 5 +++++
- arch/x86/crypto/poly1305_glue.c         | 5 +++++
- 4 files changed, 20 insertions(+)
+ fs/f2fs/segment.h | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/crypto/poly1305-glue.c b/arch/arm/crypto/poly1305-glue.c
-index 6d6998b3ec7e3..42d0ebde1ae15 100644
---- a/arch/arm/crypto/poly1305-glue.c
-+++ b/arch/arm/crypto/poly1305-glue.c
-@@ -114,7 +114,12 @@ static int __init arm_poly1305_mod_init(void)
- 		static_branch_enable(&have_neon);
- 	return 0;
- }
- arch_initcall(arm_poly1305_mod_init);
+diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+index 0465dc00b349..07c07b44e21e 100644
+--- a/fs/f2fs/segment.h
++++ b/fs/f2fs/segment.h
+@@ -569,8 +569,14 @@ static inline bool has_curseg_enough_space(struct f2fs_sb_info *sbi,
+ 		if (unlikely(segno == NULL_SEGNO))
+ 			return false;
  
-+static void __exit arm_poly1305_mod_exit(void)
-+{
-+}
-+module_exit(arm_poly1305_mod_exit);
-+
- MODULE_DESCRIPTION("Accelerated Poly1305 transform for ARM");
- MODULE_LICENSE("GPL v2");
-diff --git a/arch/arm64/crypto/poly1305-glue.c b/arch/arm64/crypto/poly1305-glue.c
-index cb152ceac14a1..906970dd53732 100644
---- a/arch/arm64/crypto/poly1305-glue.c
-+++ b/arch/arm64/crypto/poly1305-glue.c
-@@ -105,7 +105,12 @@ static int __init neon_poly1305_mod_init(void)
- 		static_branch_enable(&have_neon);
- 	return 0;
- }
- arch_initcall(neon_poly1305_mod_init);
+-		left_blocks = CAP_BLKS_PER_SEC(sbi) -
+-				get_ckpt_valid_blocks(sbi, segno, true);
++		if (f2fs_lfs_mode(sbi)) {
++			left_blocks = CAP_BLKS_PER_SEC(sbi) -
++				(segno - rounddown(segno, SEGS_PER_SEC(sbi))) * BLKS_PER_SEG(sbi) -
++				CURSEG_I(sbi, i)->next_blkoff;
++		} else {
++			left_blocks = CAP_BLKS_PER_SEC(sbi) -
++					get_ckpt_valid_blocks(sbi, segno, true);
++		}
  
-+static void __exit neon_poly1305_mod_exit(void)
-+{
-+}
-+module_exit(neon_poly1305_mod_exit);
-+
- MODULE_DESCRIPTION("Poly1305 authenticator (ARM64 optimized)");
- MODULE_LICENSE("GPL v2");
-diff --git a/arch/powerpc/crypto/poly1305-p10-glue.c b/arch/powerpc/crypto/poly1305-p10-glue.c
-index 40d296d52c23e..00617f4c58e69 100644
---- a/arch/powerpc/crypto/poly1305-p10-glue.c
-+++ b/arch/powerpc/crypto/poly1305-p10-glue.c
-@@ -125,8 +125,13 @@ static int __init poly1305_p10_init(void)
- 		static_branch_enable(&have_p10);
- 	return 0;
- }
- arch_initcall(poly1305_p10_init);
+ 		blocks = i <= CURSEG_COLD_DATA ? data_blocks : node_blocks;
+ 		if (blocks > left_blocks)
+@@ -583,8 +589,15 @@ static inline bool has_curseg_enough_space(struct f2fs_sb_info *sbi,
+ 	if (unlikely(segno == NULL_SEGNO))
+ 		return false;
  
-+static void __exit poly1305_p10_exit(void)
-+{
-+}
-+module_exit(poly1305_p10_exit);
+-	left_blocks = CAP_BLKS_PER_SEC(sbi) -
+-			get_ckpt_valid_blocks(sbi, segno, true);
++	if (f2fs_lfs_mode(sbi)) {
++		left_blocks = CAP_BLKS_PER_SEC(sbi) -
++				(segno - rounddown(segno, SEGS_PER_SEC(sbi))) * BLKS_PER_SEG(sbi) -
++				CURSEG_I(sbi, CURSEG_HOT_DATA)->next_blkoff;
++	} else {
++		left_blocks = CAP_BLKS_PER_SEC(sbi) -
++				get_ckpt_valid_blocks(sbi, segno, true);
++	}
 +
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Danny Tsen <dtsen@linux.ibm.com>");
- MODULE_DESCRIPTION("Optimized Poly1305 for P10");
-diff --git a/arch/x86/crypto/poly1305_glue.c b/arch/x86/crypto/poly1305_glue.c
-index a0fc543a0d688..cff35ca5822a8 100644
---- a/arch/x86/crypto/poly1305_glue.c
-+++ b/arch/x86/crypto/poly1305_glue.c
-@@ -206,8 +206,13 @@ static int __init poly1305_simd_mod_init(void)
- 		static_branch_enable(&poly1305_use_avx512);
- 	return 0;
- }
- arch_initcall(poly1305_simd_mod_init);
- 
-+static void __exit poly1305_simd_mod_exit(void)
-+{
-+}
-+module_exit(poly1305_simd_mod_exit);
-+
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Jason A. Donenfeld <Jason@zx2c4.com>");
- MODULE_DESCRIPTION("Poly1305 authenticator");
-
-base-commit: da4cb617bc7d827946cbb368034940b379a1de90
+ 	if (dent_blocks > left_blocks)
+ 		return false;
+ 	return true;
 -- 
-2.49.0
+2.33.0
 
