@@ -1,95 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8223279EA;
-	Fri, 18 Apr 2025 00:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0814A35
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 00:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744935293; cv=none; b=IEbMXUzL5LXyfSHf/agWB1W4LM2FTwGxiW0BLx3XLhExGQwHMippcHib5S8FBd4MWCqI573zHB8WFN1wYCfRYDnVh3iyi3NJ3GaWD9ED28Jg/vPCE91iL73/wfboVW2p1u/8xYTZh33H8QhE3avBsSjP4wG2IcBATTNB8XQflvc=
+	t=1744935382; cv=none; b=NbQOFhH4eFgFX5I38JOZpJsDMvZS20eCZsBINprItPWRoc/dFO5Jhv46NF903T2ShCQp3KXFWMNhfFwI+03T9sfJonPVgeLsxTDbKExbJUMeFrgPu1LbQnBrQHY9t0rzH6DNMKn0YHbVUaxyRRzU7HLJm4Vgixa0sqvZNL4Fz7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744935293; c=relaxed/simple;
-	bh=hE3gi+RaoNDxs30dIL2e2OznMaVZAykaUs9GDtNTaaU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XBd2JQzXTbsDP5S/MhRp1zVJvRZfvXcevCDzRmyZ6R3lx1RIXMjtAdhiM9q7/8EqjJW6FjLX/iShcIeso9Q/u/+f3aotk2yHz+xkrXjI+zpZEPNhxwnVS/CNTc9fqWGev6Id6NKW6lZKiBOjm0g4DnxFfNU436+ehisIYK0GEBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d52cTEIj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744935382; c=relaxed/simple;
+	bh=lOOBnsEVQ83vWj+4JVv3ct2xw51zRGxGxwuZHHRMJZE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tL0FzwpF2izsa44UxsR/fBtz9oABK98VDzMe11yVa5ZB92PHOSlxxRIDvTwMeN7uL8NhEk9e5XXrLRe/kpRCFoCaFa1dv7lJDmFqumigPoq3M88fPch6aAG30Y86BnHiQnOSLIqJDx/sB8lj5DXQi8ft8bihLH1p//jFtuTiJjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GzmpNpWh; arc=none smtp.client-ip=209.85.222.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d52cTEIj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5F50C4CEE4;
-	Fri, 18 Apr 2025 00:14:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744935292;
-	bh=hE3gi+RaoNDxs30dIL2e2OznMaVZAykaUs9GDtNTaaU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d52cTEIjeD1oQVkyEvbRncjn5YFqK10TocTOu2X+QfNo8sj0cURh3U3+8dwRFDggN
-	 SRNqR1tdvbousQnZPHtGbktrPgjmrfgjEPxIweyT3d+GWKBfpH/3Eej8lgxclFXIP/
-	 VwSaSRF4IftizWRzpskhgti+xGkkn1IDgAqchfRg+usEzsJG7eVg8XDmO1g3dGOkny
-	 02SJ+TcHc3lVJ6RMNL5MCdIOm3Fa90LxRA9Lj2eh5W8eibDRYuuH9uAwcrIP1+ljDM
-	 u58WVZe0d6kSQuzuwrhL9qmdNpY0Vxj6X7Ao4KpYnbjT0CgvD3OYQPb/N1C8nib31A
-	 qKh2FKxVJSf+Q==
-Date: Thu, 17 Apr 2025 17:14:51 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: "Herton R. Krzesinski" <herton@redhat.com>
-Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org, petr.pavlu@suse.com,
-	samitolvanen@google.com, da.gomez@samsung.com
-Subject: Re: [PATCH] lib/test_kmod: do not hardcode/depend on any filesystem
-Message-ID: <aAGZe_mDBZ7DcG2o@bombadil.infradead.org>
-References: <20250418000834.672343-1-herton@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GzmpNpWh"
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-86d2fba8647so989732241.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 17:16:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744935380; x=1745540180; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lOOBnsEVQ83vWj+4JVv3ct2xw51zRGxGxwuZHHRMJZE=;
+        b=GzmpNpWhPfjNYuyyGrs1jUiiqz/vPn6J5Amcdpj2VmxXxHmnAPdkTuQJmoWE3PIcZj
+         dyNNIOVImZ2gNGrWx9XMJofggbP8Avq67AjQkWpgZBbXMlNiz5DhdZtEryUc8GmPjrT7
+         n4on9VJQv71HlMxnxxM14RFE3BH2BDJS/31MxKIK2IGvIH/TsBPsMKu92kkGvUPJu9VL
+         VHwM8yTv68k74par0K7XF9I6kTyDdtDjsvpEQRSqT+NshvSBKBANwu+kIywdM9zikfB3
+         OrdHnK1xGs6922x+DwCO9BNVOtDte33RpsiSldyVDXV9UQGyQcnWtsvLPjmc4NkOgBeV
+         Bgww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744935380; x=1745540180;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lOOBnsEVQ83vWj+4JVv3ct2xw51zRGxGxwuZHHRMJZE=;
+        b=br8PqHK5LIIfBUQObaF8X6B27xrrDEnChER8dbMA1AMQI7NJKDzcK2Wp/fbLwQdFu8
+         fReSpnInsfcBs+uwQijZ3rPK2mIEsp+pTmAWXvu+XJ2IBzLYGIa4QAhnMkgC1Il0fis/
+         uWXe1y4W+nT9+s3RbDuwvAyBgAmfPriCkKcN0S8BCxxlEdz9uBP6tcGsMhxz2XNi/Cfs
+         pdCMZ0bKngBwKVrSnc1DIwpWnhEpngMMlxckWD38yGdHjMvU0QzPnVfWJqw+kWIdYLRL
+         uyAjFNfD6zoPl29060AbSZwxVrTX8l9opCvBJXwXgEsXlFS15VBabxUrQjJAEdbtNpWh
+         IH5A==
+X-Forwarded-Encrypted: i=1; AJvYcCU17SvNwMGxoeg2t92I00+07UYmN/RrKk4bq3QgHLQHce89bJoQ411JHaiw404ujJv3q2mSy01tLAbt2lQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb2iow8lHOrgy8RN0ySRFc5yevRJJJA5u0keHltSjJ89gKEW5i
+	V+m0Xg8CEjMvX08JtHXI0bzsM2dxMtGikCRyzjgb8T1fPBdZmfYi+VkyF3u6rnD9UxGMGQfpDqp
+	KGRciyeLYAaqgOiqQC9LXF/06smA=
+X-Gm-Gg: ASbGncvK2xD8MDDDNDo/rK1If37em0OL/jFpm81uYWZCsaOdGd2yT2GKlD8pJg25xTN
+	r1weYySbZpSZHJGrPfqIbqFPDfGuIQ3e4Evyyb8SbU7f9QUF2Q2RVyw6k5UAIkCyKiX63cUrKwx
+	UWMDcjigujt/mw1B4jZmo6l+if5gX8auDFkA==
+X-Google-Smtp-Source: AGHT+IFvCD8mslOTJ9nrFgy3RkDz5sNJuLB43+a7Aclh55XAXaKScsEyxJ6QN0L4x207LPlf5KFArIvS2b1KYaR1zkA=
+X-Received: by 2002:a05:6102:21a9:b0:4bb:e36f:6a35 with SMTP id
+ ada2fe7eead31-4cb80132831mr982715137.14.1744935379741; Thu, 17 Apr 2025
+ 17:16:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418000834.672343-1-herton@redhat.com>
+References: <CAGsJ_4yUUK8LoejaUrXWscpPSQevq8jB4eFwpd6+Gw3T5JxdNg@mail.gmail.com>
+ <6259cc1d-93a8-4293-9009-a6119166f023@redhat.com> <CAGsJ_4wnqyaZntmtOvtTZRq2XuKsKRTokwf1GeX91FpfqW_nzw@mail.gmail.com>
+ <d5cd2055-62ea-4534-b5e2-c6a5bfa9b1c4@redhat.com> <20250416141531.GD741145@cmpxchg.org>
+ <239cfe47-9826-402b-8008-de707faa160e@redhat.com> <20250416181835.GA779666@cmpxchg.org>
+ <CAGsJ_4zt2Yuornri1bO=3o7myey1Q2dmvtjn2baD0ahxOyoNjw@mail.gmail.com>
+ <20250416235849.GA780688@cmpxchg.org> <CAGsJ_4wfWLbDC5SruF5TtH-VXE08OWxan12qNYSV3vGzBfe5Bg@mail.gmail.com>
+ <20250417121755.GB780688@cmpxchg.org> <3b665ef9-d773-476c-826c-8729056c611c@redhat.com>
+In-Reply-To: <3b665ef9-d773-476c-826c-8729056c611c@redhat.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Fri, 18 Apr 2025 08:16:08 +0800
+X-Gm-Features: ATxdqUEjLptYY-bhBBBBLN84W2atkttrkwLoq4YeN6fayJWBYn3iMpxOwantGK4
+Message-ID: <CAGsJ_4yUCEG-QyVJiCBBr+LEz4wWDpqws+NhXw6pH5C5+kNUmA@mail.gmail.com>
+Subject: Re: [RFC PATCH] mm: don't promote exclusive file folios of dying processes
+To: David Hildenbrand <david@redhat.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, akpm@linux-foundation.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Matthew Wilcox <willy@infradead.org>, 
+	Oscar Salvador <osalvador@suse.de>, Ryan Roberts <ryan.roberts@arm.com>, Zi Yan <ziy@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 17, 2025 at 09:08:34PM -0300, Herton R. Krzesinski wrote:
-> Right now test_kmod has hardcoded dependencies on btrfs/xfs. That
-> is not optimal since you end up needing to select/build them, but it
-> is not really required since other fs could be selected for the testing.
-> Also, we can't change the default/driver module used for testing on
-> initialization.
-> 
-> Thus make it more generic: introduce two module parameters (start_driver
-> and start_test_fs), which allow to select which modules/fs to use for
-> the testing on test_kmod initialization. Then it's up to the user to
-> select which modules/fs to use for testing based on his config. However,
-> keep test_module as required default.
-> 
-> This way, config/modules becomes selectable as when the testing is done
-> from selftests (userspace).
-> 
-> While at it, also change trigger_config_run_type, since at module
-> initialization we already set the defaults at __kmod_config_init and
-> should not need to do it again in test_kmod_init(), thus we can
-> avoid to again set test_driver/test_fs.
-> 
-> Signed-off-by: Herton R. Krzesinski <herton@redhat.com>
-> ---
->  lib/Kconfig.debug |  6 -----
->  lib/test_kmod.c   | 64 +++++++++++++++++++++++++----------------------
->  2 files changed, 34 insertions(+), 36 deletions(-)
-> 
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 9fe4d8dfe578..1e0f8cbf0365 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -2983,13 +2983,7 @@ config TEST_DYNAMIC_DEBUG
->  config TEST_KMOD
->  	tristate "kmod stress tester"
->  	depends on m
-> -	depends on NETDEVICES && NET_CORE && INET # for TUN
-> -	depends on BLOCK
-> -	depends on PAGE_SIZE_LESS_THAN_256KB # for BTRFS
+On Thu, Apr 17, 2025 at 8:57=E2=80=AFPM David Hildenbrand <david@redhat.com=
+> wrote:
+>
+> >> We actually took a more aggressive approach by implementing a hook to =
+demote
+> >> exclusive folios of dying apps, which yielded good results=E2=80=94red=
+ucing kswapd
+> >> overhead, refaults, and thrashing. Of course, it is even much more con=
+troversial
+> >> than this patch.
+> >
+> > That doesn't sound wrong to me for Android apps.
+> >
+> > How about a prctl() to request the behavior for those specific app
+> > processes where you have clear usage signal?
+>
+> I was thinking about the same, so likely that might be a viable solution.
 
-Please read the commit log that added PAGE_SIZE_LESS_THAN_256KB, what
-do we want to do about those complaining about that? Maybe Cc the
-author of that patch.
+Many thanks to both Johannes and David for the suggestion. I=E2=80=99d be d=
+elighted to
+take a look at this.
 
-Other than that, it looks good to me. Did you run the selftest?
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
 
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-
-  Luis
+Thanks
+Barry
