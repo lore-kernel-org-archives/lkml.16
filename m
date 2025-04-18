@@ -1,61 +1,43 @@
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C18215047
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744995621; cv=none; b=d6J+eRM9TcmGKH3mWsuqoLfRrkXK4cejki2kIHyWpnj6ler8jPm25DRWKU5KUDdzRorShrZpuxJNxGyJG9TklQpxm7/AdWtSUG6OPZ+2N0b72fH6+NxIHjFi771j14T1nNXrQdJRTGNTJZxT/f93Pt6WHg62yc4iXGdw/ebQ7c8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744995621; c=relaxed/simple;
-	bh=Q+BDfiFW+VoaSQMQ8aLv84jJcRC/wcDH4vCfEdzdhsw=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 733CE2144D6;
+	Fri, 18 Apr 2025 17:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744995633; cv=pass; b=btAxbycRqp47k+8QecoMh+tbAvm219Wu56HHs3StwHgz+QGIh+s+9CK577hVxM1v7omqFup+pWc/YiFUowZg9frESuSGbmTrAj37YJoIveA2BAo+Mxv0xTesYVDay/2Qw1H5K4YyQkbC2UARXxEZQlx3WS1aWI41x8JgI5DjXGc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744995633; c=relaxed/simple;
+	bh=xktUs2v9KD5eUgHu2Ln2vol8RxOCZC31KIr4DrmFaxY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dAOtprB+UIH9SyMRi2cG6omB1Gv7VO8bjikcjJIeGyfi3zhUa6bJ6FxlB2zwYdiboXt7JGEy2eIOj4yHdPSi8Uik7/ijuSX+qQyXNJA+97+lk3DX56Jm8ek6v6T+4ubJtdlC2LsGLnK0aIUv7HrVf4ssm4BrYX5KTuHcE0Ywdms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=VYdjuPUv; arc=none smtp.client-ip=209.85.166.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 In-Reply-To:Content-Type; b=ZnS5mKnd5cTv6xm7BYBoJl/FPbBHDOyi59zdfBC3lOaczkJVbrhCKozCjFGwa5QiG6faEPgNg80uI6u55v9yZsyivFBu2AKvlXBNxyIyyf4ba7yGZGkqbem/gfpdgEPHrAVNtHMIK4avwngm/hlVvyIURw8p0TBhnRED3I/kzlw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=PVpSCnLC; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="VYdjuPUv"
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-85b41281b50so62216439f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:00:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1744995618; x=1745600418; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=61d/sKYxMGCNUNhoeDAO2XryMeoJdihIOmj+N3+Z7lM=;
-        b=VYdjuPUvOtnvpBflcaFGWJLfR0lQmatYeQ7Sido/SsNIevJXCoIPYErvAAa/EJObbj
-         uUKuQAZdMiy+5lnpUSu8ohaj7cJFNfzaH9inCrsfl7KUvVEHvEFsUzhyPzdLmsxQR+UK
-         ZoU5CT3aCq1dqvZQX28lSiDiLoovDLxZc2/gY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744995618; x=1745600418;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=61d/sKYxMGCNUNhoeDAO2XryMeoJdihIOmj+N3+Z7lM=;
-        b=M3vm40RUOydObjjCxOWdElGq2PY2h/eiYKmxrbB2QV1DMSaB9eQ3WOpq9XZ1k803th
-         u8dvoWOAHrPbzDOJS3km2CYnVHXx0olCud+2RAM+NstYaSfWQ78F/O/87yeXdp0e7pmV
-         NFEKPBhfsK/JMq/+b3doeRtIY3GUCHLCUjg7TsS54aXQele4QvHPLJ8oQK0qvmAipZ6J
-         GlfZRf7utwYuEAcHrurJxGivEP0EQ9D/Ko/f5IGcr9yFnfeylNTBgRWyuUvf+bJUrkI9
-         l9wlnZ1vA/50vZK9l5vuMTU0uYpya4cISeX8hEZAJRnEIOuVY1WAedS0nPKpCN6iUAhV
-         3BSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWofMZk9ANsHq7H3i0icr0YcfPIokZquFYsAvplzHmCa4UAGntC4OIM6Gr+zP2BNHUZLkURmup0uyLkEGo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLWCif2xAxhfkWd8HOGI3gNbih41bdNjDyTr4PM8eWwjRdomCs
-	Vn9M9iAsuS7Gq9ei60JVkqNVuM/iOR9+4t89zI3pUcH6l8dfY+O1TemNptMoOvs=
-X-Gm-Gg: ASbGncvQM0G4v4lyjeWM26r7Mfb7Vw9JDZrDfzdPBbcsT0I3u9ks8ADJ2pU4ogutrWJ
-	EXmo5AlpCBXj3fhpZKUqaBLDbO0yejPdZSsijpz1pubdjYBzDkHzG2R9JPDzWtJACYsO0OSZTFg
-	hySdJ0UCUW7+W6X7nvDSzE6FOsfDITUvHZzd/oY3icUPsycWjH91oJN3YJWdkMnh9tht2xD9PBv
-	tE1Oq/e1yHE1EHtGkkAx1lvII/8krHSKpPk6j+03x5BkdJN09XEKOjAVeIwZDftDSED2v9PADxj
-	fnbyiu2lTi2iFxOG/2qEandiXBmIfNXadnW8/yYJ+iwagnG/YZ7T6cJmaTtwoA==
-X-Google-Smtp-Source: AGHT+IEyIUcHLda0Oi5Dxfiv38uolw830VjeERY0b9n6LCLvY8kI6O/HApmGqXlxMWs/ME3XOMIDvQ==
-X-Received: by 2002:a05:6e02:216d:b0:3d4:3ab3:5574 with SMTP id e9e14a558f8ab-3d88ed654ddmr36402815ab.3.1744995618252;
-        Fri, 18 Apr 2025 10:00:18 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f6a37cb87fsm528003173.14.2025.04.18.10.00.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Apr 2025 10:00:17 -0700 (PDT)
-Message-ID: <d1a6d53a-21c7-4500-a060-26c15c4f32c3@linuxfoundation.org>
-Date: Fri, 18 Apr 2025 11:00:16 -0600
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="PVpSCnLC"
+ARC-Seal: i=1; a=rsa-sha256; t=1744995597; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=TABNMTXczUmypmLF5NI67Ehx4FufK3RoCt4eVfLNWK8KWcTIN3pUIbjMpZlhwi8Q+TZaJJXC6l6GbOW+BV5HNaFRclRV5xPCD6+/2TwTFU+k6MaJeVjddWtN3rItcPn2S7Fq1rb0kUtbeyYz7TjeRIBs0aVols0CSnStSROTlI8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744995597; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=nBJdsehFovjFuaNlwazdQn8NDRTSTC5soMPWxmppM74=; 
+	b=ZrFeDomAugSxCyeOh3buIy9rELiYe2//jiRWwXVCRIkFcLJeHvSNuVXVCiA6Yv3lsL7vTqLEtKuXYgMB+trgAtzpz9JhQjf82UIi8qezkK7edVrwHCFN6keMExVhfilbjjAWvTSts2NO4AhNzeD3Uq7n4vTDkQZmNsrQUYB2BfY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744995597;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=nBJdsehFovjFuaNlwazdQn8NDRTSTC5soMPWxmppM74=;
+	b=PVpSCnLCpGAYmE0cUUbclP9VIF8Hb+JwYQa6yoz+zaTho4g9WorRVqNUXCfiJJwu
+	0pYr0ObS+qMGwBXWW8GdZeh03O228fXcyI+nWS1JNkUr4q/Prj+uQ1LSPfWMgwxFKfD
+	OkQW6UFOQ508BCfdTop5Sn2aGYZZYNCCffrNL24w=
+Received: by mx.zohomail.com with SMTPS id 1744995594398563.499854046974;
+	Fri, 18 Apr 2025 09:59:54 -0700 (PDT)
+Message-ID: <941334a9-a438-4b0f-a439-bd8cc1e847b3@collabora.com>
+Date: Fri, 18 Apr 2025 21:59:46 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,45 +45,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.13 000/413] 6.13.12-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250418110411.049004302@linuxfoundation.org>
+Subject: Re: [PATCH v3 04/32] selftests: harness: Mark functions without
+ prototypes static
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+ Willy Tarreau <w@1wt.eu>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?=
+ <linux@weissschuh.net>, Kees Cook <kees@kernel.org>
+Cc: Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20250411-nolibc-kselftest-harness-v3-0-4d9c0295893f@linutronix.de>
+ <20250411-nolibc-kselftest-harness-v3-4-4d9c0295893f@linutronix.de>
 Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250418110411.049004302@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20250411-nolibc-kselftest-harness-v3-4-4d9c0295893f@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On 4/18/25 05:05, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.13.12 release.
-> There are 413 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 4/11/25 2:00 PM, Thomas Weißschuh wrote:
+> With -Wmissing-prototypes the compiler will warn about non-static
+> functions which don't have a prototype defined.
+> As they are not used from a different compilation unit they don't need to
+> be defined globally.
 > 
-> Responses should be made by Sun, 20 Apr 2025 11:02:49 +0000.
-> Anything received after that time might be too late.
+> Avoid the issue by marking the functions static.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.12-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
-> and the diffstat can be found below.
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+
+> ---
+>  tools/testing/selftests/kselftest_harness.h | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 > 
-> thanks,
-> 
-> greg k-h
+> diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+> index 2b350ed60b2bf1cbede8e3a9b4ac5fe716900144..5822bc0b86a3c623fd34830fb8b541b27672a00b 100644
+> --- a/tools/testing/selftests/kselftest_harness.h
+> +++ b/tools/testing/selftests/kselftest_harness.h
+> @@ -258,7 +258,7 @@
+>   * A bare "return;" statement may be used to return early.
+>   */
+>  #define FIXTURE_SETUP(fixture_name) \
+> -	void fixture_name##_setup( \
+> +	static void fixture_name##_setup( \
+>  		struct __test_metadata __attribute__((unused)) *_metadata, \
+>  		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self, \
+>  		const FIXTURE_VARIANT(fixture_name) \
+> @@ -307,7 +307,7 @@
+>  	__FIXTURE_TEARDOWN(fixture_name)
+>  
+>  #define __FIXTURE_TEARDOWN(fixture_name) \
+> -	void fixture_name##_teardown( \
+> +	static void fixture_name##_teardown( \
+>  		struct __test_metadata __attribute__((unused)) *_metadata, \
+>  		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self, \
+>  		const FIXTURE_VARIANT(fixture_name) \
+> @@ -987,7 +987,7 @@ static void __timeout_handler(int sig, siginfo_t *info, void *ucontext)
+>  	kill(-(t->pid), SIGKILL);
+>  }
+>  
+> -void __wait_for_test(struct __test_metadata *t)
+> +static void __wait_for_test(struct __test_metadata *t)
+>  {
+>  	struct sigaction action = {
+>  		.sa_sigaction = __timeout_handler,
+> @@ -1205,9 +1205,9 @@ static bool test_enabled(int argc, char **argv,
+>  	return !has_positive;
+>  }
+>  
+> -void __run_test(struct __fixture_metadata *f,
+> -		struct __fixture_variant_metadata *variant,
+> -		struct __test_metadata *t)
+> +static void __run_test(struct __fixture_metadata *f,
+> +		       struct __fixture_variant_metadata *variant,
+> +		       struct __test_metadata *t)
+>  {
+>  	struct __test_xfail *xfail;
+>  	char test_name[1024];
 > 
 
-Compiled and booted on my test system. No dmesg regressions.
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
-
-thanks,
--- Shuah
+-- 
+Regards,
+Usama
