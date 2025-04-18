@@ -1,707 +1,208 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2044.outbound.protection.outlook.com [40.107.212.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E6F2686AA;
-	Fri, 18 Apr 2025 09:25:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744968328; cv=none; b=HdQf8zcRDLt2D4TSR1F28+8TTzDR6kYpeXp3UP3lm2HPwU4tmwhPYuASbjcec5b/gewMKNbBUCACUoHgto1rymeFp1godkVWZNM6qJxwNs3yOslvZZX6K6fPefXjrBpoqIf48rgXkWZZcrw3WQTC5CghQSdhvZWLOaQZ5IXu/yM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744968328; c=relaxed/simple;
-	bh=jmq1PTLkbaZp9OoaxBT1z7OCtQFIKcQoousKc+5mt8Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NtnmtWR8CmsNFRs9hQjwEnflZtnxlvsO9M/Tu50NzPT6XvhQkGODYwWDGUQ4MOCO/6Zs9A4k4otmGTLioNOA3frnULlK9NyydQNbEQ3aTECwfPiESpN4rIckD1ru2mKFaGLNfhbvRLQ2799JpqeQezneXnyIF+GDM1Cq+N9Giko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jqoRuVxO; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F841EE7BE;
+	Fri, 18 Apr 2025 09:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744968489; cv=fail; b=NHFS/CE7bFd3eQdnffX1UV9sbjT8CBBwsM9pZ8A1qMzdvrT4oVMhOve2G86OCakdAH0jLHrVE0FjtNd8Nyep+8WdfRDSOs3pdzLYMFYtWqjJo2PKK0dc2A0Q7fYF5z52WzJGw1Q3edhXK4xZiM2mUmK0nWtUHSZ96n5PuFvENaI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744968489; c=relaxed/simple;
+	bh=77cwKeAyUwf3LPmpsI2L9H+SgLThA1UvrYb9k9g5COI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=g3sDqod48ndVHgpdL1xW5h78dsJxTdKyW7pWV88O+OUTXRqZvMdPjwV5EINCAt+Sd5x2RMTrd8YNBKZvPuvAJk9Ll6NMKp6PoID/R4UZQkZ+rCrpGTYPwO+1Qb/IBimT6cWZ/Vczfa1i14pHpxWyj25wQWr2vhVyoiZ9s7BXiKQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NSKHWUct; arc=fail smtp.client-ip=40.107.212.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jqoRuVxO"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso17393055e9.1;
-        Fri, 18 Apr 2025 02:25:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744968325; x=1745573125; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ru8onjs2vA9wbQ6U9ijtqxZCeRCXBcS/TEII6kWNB80=;
-        b=jqoRuVxO7SBxpaWH91lkT4LFeUPNXWliZv7mK2nM7c0Br2T8Nne84Jdaet8zBaj/Dn
-         p7dDvZT8HLTMsvXmdwASor0o0e8ER5Cx1PmEyBkB40jdpxHVT17c0tyok24z32p3nKrA
-         L7pS764fB459GQFAb+TDps2qg8EAFeerZI6VUckfalsBAPNV0ievc4bGGiC4984UY+T2
-         0ZxM68qnVrnRkJ2IfqE3X5LVdvvr+I9hKNQGG+Tmh1WYtkS3y0UdBqxP7nKbuSiGMJyw
-         5xf62m3WsifjG3Ds8QGk35LHKhOA8T4x1szvQgsY30zMBviAA77XVKDi0zpoR1t5GCi1
-         veFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744968325; x=1745573125;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ru8onjs2vA9wbQ6U9ijtqxZCeRCXBcS/TEII6kWNB80=;
-        b=oUohwc3Ivt185GBK8OMO2BzWiCdRbyE6H+pOAQONfmA+ItfENP22/JWI7J6wkJcAS8
-         b39iBwptPR4UQJKbxn5vD1Wh0UWuoQISzpwTzXfet8Sp7tJzjhFcpdZLWH3E2sQZlE2H
-         fohBNycosz0gxquhcw+ONJamWEmglYA3R885Sv5KpFevzWX2pmx1TUdRtJfYFh9XP5BG
-         UVe8Xqd5dSPYV0NBZtBjYsfUqYtUHvwfdIvzomFR2dKKNFnBebf/aBlh5ywHkC1si24e
-         7Lj5U5EAtIQNuexLoeb78To2AhmvfU/ivN2s3dzuSrYkLsvhi0qUaJRNnDWIrOsYHKmB
-         RTkg==
-X-Forwarded-Encrypted: i=1; AJvYcCWVF6hezFJSJpWiHRDVE90bGXBIES4EzpqlfgE54nmqtBow6j7Y0wqxvEUfy8EdbIxLYNSshRglNkCs@vger.kernel.org, AJvYcCX4A8tXOiKWa4qFOFGsdGlfnWmTg18/v7WdJ64AVSVCTK7I6mZnMvIQO6LX4aYkmKV0CbOE3t4ZG8D6@vger.kernel.org, AJvYcCXIGa40tQmUv6+TvR/0I9RvlC0hi6nObXiIcCp4cMUlGhiv9LVdGJ/JOohEX5QinA2lJbmN3Q3LzQ2o2ZNm@vger.kernel.org, AJvYcCXYFGWfHYQePZJacmMlNlzGmKWeCpE3CDdDXAmfCD1u19De7N7FqKZDqPzWwFz8iGtsozNtcjmgTpDCQrHVrMeLcAM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoL02+LSbVlD0rl8t4s6q3iuNaaI6cED1VPIfWEF/JtjqUgLqu
-	toGOALni9rMBciKt1v2SS4niSRAw33nL9ApN6yUzHR1CZ4eYTMN6H74dVX/MbgXVm7cnjZe3UXC
-	RExVM78JOx/AiYd0nJXLbkfjWUdc=
-X-Gm-Gg: ASbGnctzpuW57edekieFpZhluqrpW25Tf9rQc73hghbfowIfVlNjubFdmk+OSzQjBBg
-	Js71X2GCTe1lPAchR2XQi5pBD5Jo0RlocCVA5eaayZ31iQ9TrSVwulxSLXOSJn/2vS6ZwvG6pfK
-	1Osh6zwP+5b5d/fUc15D1Zky1T9Mdi8kxtExAdfJd18r4FYQMOv/jxHUw=
-X-Google-Smtp-Source: AGHT+IH0qSvrHScgR4lG75AuUAfHNpEPP8lgwlRNxIlqlQoo56MY4sC7wLg2Fx7Y+DZ78hkePrCQGl88RDeO2O1xHsw=
-X-Received: by 2002:a05:6000:184c:b0:391:212:459a with SMTP id
- ffacd0b85a97d-39efba51004mr1549587f8f.22.1744968324569; Fri, 18 Apr 2025
- 02:25:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NSKHWUct"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FjJgJg7mmnBkjNWu4cSirDwmaYE7n9UL84FvZF3vnpXdAbgO2BQYS786yFobzKZ4ZhlEr9XpkKSnY5IVAN0DUFEXptafPhUpUbPErLdtcPsbrgP2rbogcXml4E7QnZyEF+s7UfnxNfdQ1hEjrq4TsJUm0rYx4H/xxc/HOiFMatuYPBpZqovMrUFKx5sDGsQIAxsM9BpTNIXoqR44fv7CtIyagRhMfRrJL80ekLz1b2FFyxQ9pTP3RQCg4uu3ZVAX7CzBkGGXw0qsPNz2E1chr3vvb4CvV7LOm7BGSJ7qIwPj4DefscafzYRe0gvRb/9AkqKzUvcf7CZhZ2F03lSPtg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ozQ920JLnXxsoUXLPXOcdb/+M5vjOMYYr/soJpo9THw=;
+ b=w8OjhS5syZs5ZRjP1DM5/4HZQxAIJdP2yyUHaJyTRn6YXQqTRG3K3KlgYAQddP18n3oxXuD19ohCeTYgyQmrTO/0u6qlHZt8UK4mTapLEzyBSDFTgX3WVGWZujWoitnDpk9bHpv1GbZwNKoQmoNW4tN0k37jpppipDuaIOaJ00Ut5wy2X5Vx9v5Ig6vITNv3wTaQo2j6UVXeDHhDjE1y8WF80j6QT1v7Xuqi9FwTRO2AkDqUYJYcaqKwocN3uQd9FcwzXykxjY9k9Jt9YSz47S5zCXRG1GL1c70zVIwdgoa9JgQuphk9zeZ73s8KY10y93Qs7Djlu5MV4r2V0Vh9rQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ozQ920JLnXxsoUXLPXOcdb/+M5vjOMYYr/soJpo9THw=;
+ b=NSKHWUctEcHxD85DHMIUjt/Fbbd86uN/UDMwfosJ0ABVzQ1c6DPTvd3Ahvh9DT5kGZ8QJNDHa4sgxV8NTlNSElhZKQnoNlKg6LP2+SHzCctSeGUCU90GPGDhwvawxtKK+E1XXQxAolssj+qZZCD7Mjo5xMA6Ks1P+poYlUfkfrM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
+ by PH7PR12MB6934.namprd12.prod.outlook.com (2603:10b6:510:1b8::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Fri, 18 Apr
+ 2025 09:28:03 +0000
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::2efc:dc9f:3ba8:3291]) by PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::2efc:dc9f:3ba8:3291%6]) with mapi id 15.20.8655.021; Fri, 18 Apr 2025
+ 09:28:03 +0000
+Message-ID: <c8d5dac0-f933-49bc-9420-bd2d81910a99@amd.com>
+Date: Fri, 18 Apr 2025 14:57:52 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/5] perf/x86/uncore: Overflow handling enhancements
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, tglx@linutronix.de,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ eranian@google.com, songliubraving@meta.com, ravi.bangoria@amd.com,
+ ananth.narayan@amd.com
+References: <cover.1744906694.git.sandipan.das@amd.com>
+ <aAIOGkKWGOLbu6y-@gmail.com>
+Content-Language: en-US
+From: Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <aAIOGkKWGOLbu6y-@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0071.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:99::18) To PH7PR12MB5712.namprd12.prod.outlook.com
+ (2603:10b6:510:1e3::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408200916.93793-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250408200916.93793-16-prabhakar.mahadev-lad.rj@bp.renesas.com> <TY3PR01MB113462CC30072B670E23EC7F586B12@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY3PR01MB113462CC30072B670E23EC7F586B12@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Fri, 18 Apr 2025 10:24:57 +0100
-X-Gm-Features: ATxdqUG3yKSPnhy_5J46cUVHR0vKRn90G69VnbupY7p7sMlImgxmyKc6brWa1_M
-Message-ID: <CA+V-a8vsxe-ubtcEFfpXs4xR++DPnY8-NRxT-4sDvai9vkFHvA@mail.gmail.com>
-Subject: Re: [PATCH v2 15/15] drm: renesas: rz-du: mipi_dsi: Add support for
- RZ/V2H(P) SoC
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, "laurent.pinchart" <laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Magnus Damm <magnus.damm@gmail.com>, 
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|PH7PR12MB6934:EE_
+X-MS-Office365-Filtering-Correlation-Id: ed98afc1-e2f7-4945-a8dd-08dd7e5b51cb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aU9vU3pwcVdlR21BRUZUdmdaaVVNWmZrdTFrS1BRams5T3NvUVpac2trOUtJ?=
+ =?utf-8?B?M3hDOTJyQnhWTXR2VFpCOE1hNE56UzNBRElsOSt0SSt0Ulp4OWYxNHQzdnNW?=
+ =?utf-8?B?anNZQlUzUk1iQzBaMWNEaGhFS29RaG9qbDRkUld5YmdMU2s4QlAxaGg3WUpP?=
+ =?utf-8?B?N2JsbXVxTitvSzFqRFRZUUZLK0NXd0IzZ3BKdzVJeXRmWEIvS1lYYUNlUHIx?=
+ =?utf-8?B?WFdKZDJNcTRrWjdmKzg3cnVOVUZZNlRUM1pCRk9NR3RaQnFnWEg5ZmJ0NktJ?=
+ =?utf-8?B?QTlNMlJvRUpCSGthKzZKU3BJZUtId093c0pYMHFTRllhN1RCd0hneWhMWVp6?=
+ =?utf-8?B?ZEUwMTB3K3NnVEhBZFU2eGVKcjFkMnlPb05YaHhUdTI3ajR3MEh3Y1NVQWtV?=
+ =?utf-8?B?YnFiV1cxekNTRTF4VDBsRWZQeUFhY016VWZxNW8xQkNwNUxOK2ZZMkZsUTZ2?=
+ =?utf-8?B?SDk5aWwzcmlzZ29qRHIwMGtlRnRRZmpsOEY5dFowUnYrcnNPYXBhVTR4azU1?=
+ =?utf-8?B?Rjhvem02elNrZStDOVRjRytwTUxJQVJNdzc1d1A2WjRXSG40RFFWVEgwbnor?=
+ =?utf-8?B?cjl5am4xT1Z1Q1d3RS9LeHhTeExTdkMrUS9Eb09EcTdmc0lBU2g4TitUeEdQ?=
+ =?utf-8?B?Rnd0TGNuSkJMcVo0K2ZkRGY0NGFxckJQZmpFNCszR0JtZmpIV3JwNjZWc29t?=
+ =?utf-8?B?OXlIWnhqOERTbVdhZHB1THhHQSsrWVBHMUIyZ3lDd3BDeXJrbWNETVBCaitV?=
+ =?utf-8?B?OVl3SnF6NXJDbEZrWEdxU0I5UlF4SUtROHR2WDMvR1RRYXNWaEZ3RThHN1ht?=
+ =?utf-8?B?NDNEY3p5YlF0eUhCWFQ3WkV6TEtsdnJraWcyZXJNbVpYTFV0Q2pmQXRFVGx1?=
+ =?utf-8?B?T2ltYTRLY2VGaUVwbkNOMzcyM2EwczFZTXJiNXFzQjE4UDNvV1RkQzhGWWZl?=
+ =?utf-8?B?L21EcThzSGQ3bUlLS2JxWGZrNXRCMlBtQk5QSXdPMUJyblZYV0UzcFdFc3hG?=
+ =?utf-8?B?RHAxR1RFU3ZTTks3Q2J2UjBxN001V1BlWnA4NW9aZ1Vyc1RXR05panN6dXNM?=
+ =?utf-8?B?bTFCSVlPa0xoaUl2eVYwc3N0QmNFQW9DNXIvUTJQZjJKbmFod0M5MkZ4bXY4?=
+ =?utf-8?B?dXA4YWJtc1RkVHh1a2FTZlYyV3B3SEJqclpOK24vMEY1eUk2SE9uaWdvYlQr?=
+ =?utf-8?B?T1hvTHZNeGpJR2hUcjFhQjZzb0tuTWk4ME92bS8ydjVkOW4yeno0Rm83OHhY?=
+ =?utf-8?B?T1BXVDZhODNBZ0IyWWdIWTlCOFNPaHBzekh6TEdnRkFpV0dxelVpSEdZMnox?=
+ =?utf-8?B?V1hoVGlxcTVNSVliZGJkY3hkWG55ajlrRjZ3cTBSdk95V2U0bDJ4d2VFTGJ3?=
+ =?utf-8?B?R09PRGZrVlNXUFpOOUx2U3g4NERRTlVUdEJkeFhSWTdGSXhmSytxakhPR2d6?=
+ =?utf-8?B?YjBqeXBBVEtYOVlLTkRMUGowUnJIVXA1VHFrQU56TDFhZFAvL1RoZk0rbUNn?=
+ =?utf-8?B?SEJndnJyRTdzTlBsMkJFdUFxVXQrajk3SXp0MmdVVVhVS1I0d2dXUU56R1dn?=
+ =?utf-8?B?Mmk2K1ZaQXptNk1ZTUhMeWgzMG9kbUk1RHFXYXF5U2NhRGk2ZHQrNSs1b0xz?=
+ =?utf-8?B?TFhJaVVsZjJaOTI2ZSsweDh0cGc0Q2YvZ0t0ZTFVdGhCbHcwOENsZExucUdn?=
+ =?utf-8?B?Z3VGaW5ES2w0dGs0SVV1VmJsdmF2RUV6aUl0TndUREJFTzgyV1dFTkN3Sk1E?=
+ =?utf-8?B?SGI5NnE3dzM3cE41OHY2Sk9relgxSTEvYjhpOXJtTHh4R0U1M3lCbTVKWTUx?=
+ =?utf-8?B?cm55d2ZwOVYxeFZKOFFSbE5aT1R3aFpqcDdOZUVOZElxSjRDdkFpb09vTVhI?=
+ =?utf-8?B?Zlg2NFNvYml5T3I1U2RGei9RUHN3WWxma1JnbDY1eFgvb0Z4dFBjRGdiQSsx?=
+ =?utf-8?Q?sa3Z1lTEn38=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Ym5lQWQrcVhBV2tDQ1FsN1RQdUNHQURCeEpqRDdDbHV5VDZSM2lMUHRmV3hI?=
+ =?utf-8?B?SVZ2S1M5NXp1NG9XbVI0cVh2bCtxSE50bDZ5d2ptTHZ6N2lvWDZHeTZTbXdo?=
+ =?utf-8?B?QlJScXZBd01ZWlMvOFN1VWRPTlQ1YkZIRFZaNGV5eitFQTVTSlh0Q1Q5ZEQ1?=
+ =?utf-8?B?M21OTjJJRFNPMHdyTnlPam9aUHRSeFg4elF2T2VpNmozSHkvWmcwRXBkc094?=
+ =?utf-8?B?akxVS3BlQ3hoNm1BUkFuZldWQnlBZDFUL1R4VG8rSURmZ292eVNHQ2Y3MkJY?=
+ =?utf-8?B?TnRrd295R1lNd1BSU1BPOFV5UE01dW1adEp2a2JVVWJ0N3ZkdTA3Y091aHhP?=
+ =?utf-8?B?cEdFMmhseVE4WUZ3ZEovWmRtTTYzSHFwcVdFbzNVdkRxWTRWQk9DekJtMldo?=
+ =?utf-8?B?TGpORVdvbG52VXljcVVSaVdTK0pEaHB0SThGQjQya3lGbVY5MVlzTWt1bll2?=
+ =?utf-8?B?ODVhSlRhYXNaVnI2WE0yVkNXaTVYK3djRXdtSElvV1JWRVpkTUM2VHJBdEJW?=
+ =?utf-8?B?T09kTUcrZmNmTHhabFQwbDdNSmNPL0ZPaG1GUTRYandyNk5pNUxZcDFMT0dI?=
+ =?utf-8?B?czJudHJLMWdlTGE0TjFTLzhCc1kzQXU4TjhBZ2xHMGlnQjFGMHA4R3NYMG51?=
+ =?utf-8?B?RlNZZ0tua1k4UXQ3cDdDbXRaKy9KUlRTbWNnc1NMYk1jMnVlUWpZcG1TQXJX?=
+ =?utf-8?B?aVhBdzRSUml3enpQV1o4UjUyN2RISWlUMTFEUE5tUWlKbWN1NmdhUXF3YkE1?=
+ =?utf-8?B?M1RCNGhlNE5JNi9nb3RoWXRBWVoxUmZYVW5TUnNncnUyV3Q2OGc2UGVjM3Nz?=
+ =?utf-8?B?cDUrRTFPTUxhNUVuVnhMZUttaEdrUExVZk5FWGF3QWgzRi9CMHF2R1JzZS9r?=
+ =?utf-8?B?aXd2QzhyaGFPb2FXcllXdTJFNkhUMWFUM2lKWDcrVVIvdXcycEtlaTk0Q1FV?=
+ =?utf-8?B?d0dNTVpiSE16RFN1SE1INWp4RkpONGYwZXREeUJUdXRoU2NaWTlJUmdNUjBI?=
+ =?utf-8?B?Z2FWTWJIMjA4RTVvalZrdTBwUGhQTWVveWtrbndPQXFINGJSV3ZERWlnWGYr?=
+ =?utf-8?B?UEpTbGZXaElJdWpOUHY0MUV5dTBwUHJIYUZUVXZjUGExTGdHcFZhR3lhYTRu?=
+ =?utf-8?B?RlN5MzdxbE1Kc3g5ZW50NnY2TjE5clA2SzRuMjBFVVNOWnR4UWQvU3hpU0Vn?=
+ =?utf-8?B?TDNyeDhjQ2tYazFObnIyWFRIRW1wQ2hLU3JFYTVibzdEQVRxL1NoRGZFcGJa?=
+ =?utf-8?B?VnA1ZnRESHVHU1ZGNzZyWWI4Q21KTytaYThDMi90SzFWMG92Z3dyRHk0a2lJ?=
+ =?utf-8?B?WW5WeG5uTWsvM2x6ZlhyNk1XQjZpQ29IR1dQNGk4RkpvTDdLMXZuNWFhWWZI?=
+ =?utf-8?B?cEgzZjlobWdaRE5TeHVpODc1TWZWQmdMNkJTMXlJbElXN1l4QnlpUTdtbCt3?=
+ =?utf-8?B?dlFMN1JqQjdRQmxXaXptbWtzMnFkNVFvY3V0RDlyM0hYUDdHMUVmaXdUaFpI?=
+ =?utf-8?B?TCtKMmdGblhpZHRCNXFRT2ZaTE4zRnVSbWpWZFJIMGd1cXN5eUlqeHdVQ1ph?=
+ =?utf-8?B?NE9nTUc3ZHlRdFo0ait2WlAzMGVWM0VSd05FMEh5RHJpZ0xwYWZzYzdtNTRv?=
+ =?utf-8?B?WEpPQWozdHlLUC9KYUI1aElwZEhlQ1dyN204M0N3VXg4SHRYQWo3SDB2NmJs?=
+ =?utf-8?B?MjNIeFdtSXlaVGszbC9ha05xZjFrUTFLVUdxUzM4RUZ1NkVjN212dElvWXNS?=
+ =?utf-8?B?d1lTODJTVGZ4QzlxS2MwN1FrUWxIdFlOb0gvR3lDN0RyTjVWNmNPNFFmT090?=
+ =?utf-8?B?Nnd4ODFyMkt1VldUZkxIT29YbEFqNWxVWnhrcVN1aHdzRWhCVEUyS3ZtMkM0?=
+ =?utf-8?B?MHNkQnBkVDdIMUpNSXM3eTQ5TWV3RDNvOC9hNWk5Mks4K0hrQkM5eWZQVW1j?=
+ =?utf-8?B?MUdKR1o5UFRqNDQ3TGtuck95dmRaZy90cTBTam83OVBJZFpvZlNmL3dxenhY?=
+ =?utf-8?B?cFRKcXh6VTB2bjNvSzFweVhiS2c1SVZkTURZNWUzSjg1NVNBam12eXpMN01G?=
+ =?utf-8?B?TEpRWFViZjB4TGZ6cjFZQUE5SVdRaFJiTWF5bUludk1JRUhWTi80RThPcENJ?=
+ =?utf-8?Q?MCxItsbHLUKcxw8MwYcBtcPrc?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed98afc1-e2f7-4945-a8dd-08dd7e5b51cb
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2025 09:28:03.7431
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DiwUaqn9ettK+S5EIGR8w1s6FuTLKZbpKgd9nUGe7vj1rN6XI1TmpRAjeFFIT/kZaofy5Qdj7/AX3I9T1dek2g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6934
 
-Hi Biju,
 
-Thank you for the review.
 
-On Sat, Apr 12, 2025 at 9:01=E2=80=AFAM Biju Das <biju.das.jz@bp.renesas.co=
-m> wrote:
->
-> Hi Prabhakar,
->
-> Thanks for the patch.
->
-> > -----Original Message-----
-> > From: Prabhakar <prabhakar.csengg@gmail.com>
-> > Sent: 08 April 2025 21:09
-> > Subject: [PATCH v2 15/15] drm: renesas: rz-du: mipi_dsi: Add support fo=
-r RZ/V2H(P) SoC
-> >
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Add DSI support for Renesas RZ/V2H(P) SoC.
-> >
-> > Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> > v1->v2:
-> > - Dropped unused macros
-> > - Added missing LPCLK flag to rzvv2h info
-> > ---
-> >  .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 451 ++++++++++++++++++
-> >  .../drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h   |  34 ++
-> >  2 files changed, 485 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/g=
-pu/drm/renesas/rz-
-> > du/rzg2l_mipi_dsi.c
-> > index 6c6bc59eabbc..e260e2ed03c1 100644
-> > --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> > +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> > @@ -5,6 +5,7 @@
-> >   * Copyright (C) 2022 Renesas Electronics Corporation
-> >   */
-> >  #include <linux/clk.h>
-> > +#include <linux/clk/renesas-rzv2h-dsi.h>
->
-> This patch has hard dependency on clk driver.
->
-> >  #include <linux/delay.h>
-> >  #include <linux/io.h>
-> >  #include <linux/iopoll.h>
-> > @@ -32,6 +33,9 @@
-> >  #define RZ_MIPI_DSI_FEATURE_16BPP    BIT(1)
-> >  #define RZ_MIPI_DSI_FEATURE_LPCLK    BIT(2)
-> >
-> > +#define RZV2H_MIPI_DPHY_FOUT_MIN_IN_MEGA     (80 * MEGA)
-> > +#define RZV2H_MIPI_DPHY_FOUT_MAX_IN_MEGA     (1500 * MEGA)
-> > +
-> >  struct rzg2l_mipi_dsi;
-> >
-> >  struct rzg2l_mipi_dsi_hw_info {
-> > @@ -42,6 +46,7 @@ struct rzg2l_mipi_dsi_hw_info {
-> >                             unsigned long long *hsfreq_mhz);
-> >       unsigned int (*dphy_mode_clk_check)(struct rzg2l_mipi_dsi *dsi,
-> >                                           unsigned long mode_freq);
-> > +     const struct rzv2h_plldsi_div_limits *cpg_dsi_limits;
-> >       u32 phy_reg_offset;
-> >       u32 link_reg_offset;
-> >       unsigned long max_dclk;
-> > @@ -49,6 +54,11 @@ struct rzg2l_mipi_dsi_hw_info {
-> >       u8 features;
-> >  };
-> >
-> > +struct rzv2h_dsi_mode_calc {
-> > +     unsigned long mode_freq;
-> > +     unsigned long long mode_freq_hz;
-> > +};
-> > +
-> >  struct rzg2l_mipi_dsi {
-> >       struct device *dev;
-> >       void __iomem *mmio;
-> > @@ -70,6 +80,18 @@ struct rzg2l_mipi_dsi {
-> >       unsigned int num_data_lanes;
-> >       unsigned int lanes;
-> >       unsigned long mode_flags;
-> > +
-> > +     struct rzv2h_dsi_mode_calc mode_calc;
-> > +     struct rzv2h_plldsi_parameters dsi_parameters; };
-> > +
-> > +static const struct rzv2h_plldsi_div_limits rzv2h_plldsi_div_limits =
-=3D {
-> > +     .m =3D { .min =3D 64, .max =3D 1023 },
-> > +     .p =3D { .min =3D 1, .max =3D 4 },
-> > +     .s =3D { .min =3D 0, .max =3D 5 },
-> > +     .k =3D { .min =3D -32768, .max =3D 32767 },
-> > +     .csdiv =3D { .min =3D 1, .max =3D 1 },
-> > +     .fvco =3D { .min =3D 1050 * MEGA, .max =3D 2100 * MEGA }
-> >  };
-> >
-> >  static inline struct rzg2l_mipi_dsi *
-> > @@ -186,6 +208,249 @@ static const struct rzg2l_mipi_dsi_timings rzg2l_=
-mipi_dsi_global_timings[] =3D {
-> >       },
-> >  };
-> >
-> > +struct rzv2h_mipi_dsi_timings {
-> > +     unsigned long hsfreq;
-> > +     u16 value;
-> > +};
-> > +
-> > +static const struct rzv2h_mipi_dsi_timings TCLKPRPRCTL[] =3D {
-> > +     {150000000UL, 0},
-> > +     {260000000UL, 1},
-> > +     {370000000UL, 2},
-> > +     {470000000UL, 3},
-> > +     {580000000UL, 4},
-> > +     {690000000UL, 5},
-> > +     {790000000UL, 6},
-> > +     {900000000UL, 7},
-> > +     {1010000000UL, 8},
-> > +     {1110000000UL, 9},
-> > +     {1220000000UL, 10},
-> > +     {1330000000UL, 11},
-> > +     {1430000000UL, 12},
-> > +     {1500000000UL, 13},
-> > +};
->
-> Not sure, Is it right approach to optimize this table as the second entry=
- is sequential
-> with a fixed number for all tables except last one?
->
-Agreed, I'll simplify this.
+On 4/18/2025 2:02 PM, Ingo Molnar wrote:
+> 
+> * Sandipan Das <sandipan.das@amd.com> wrote:
+> 
+>> Sandipan Das (5):
+>>   perf/x86/amd/uncore: Remove unused member from amd_uncore_ctx
+>>   perf/x86/intel/uncore: Use HRTIMER_MODE_HARD for detecting overflows
+>>   perf/x86/amd/uncore: Use hrtimer for handling overflows
+>>   perf/x86/amd/uncore: Add parameter to configure hrtimer
+>>   perf/x86/amd/uncore: Prevent UMC counters from saturating
+> 
+> Could you please fix your mailer to not mutiliate Cc: lines?
+> 
 
-> 28 bytes can be saved, if we use a variable holding start_index.
->
-> > +
-> > +static const struct rzv2h_mipi_dsi_timings TCLKZEROCTL[] =3D {
-> > +     {90000000UL, 2},
-> > +     {110000000UL, 3},
-> > +     {130000000UL, 4},
-> > +     {150000000UL, 5},
-> > +     {180000000UL, 6},
-> > +     {210000000UL, 7},
-> > +     {230000000UL, 8},
-> > +     {240000000UL, 9},
-> > +     {250000000UL, 10},
-> > +     {270000000UL, 11},
-> > +     {290000000UL, 12},
-> > +     {310000000UL, 13},
-> > +     {340000000UL, 14},
-> > +     {360000000UL, 15},
-> > +     {380000000UL, 16},
-> > +     {410000000UL, 17},
-> > +     {430000000UL, 18},
-> > +     {450000000UL, 19},
-> > +     {470000000UL, 20},
-> > +     {500000000UL, 21},
-> > +     {520000000UL, 22},
-> > +     {540000000UL, 23},
-> > +     {570000000UL, 24},
-> > +     {590000000UL, 25},
-> > +     {610000000UL, 26},
-> > +     {630000000UL, 27},
-> > +     {660000000UL, 28},
-> > +     {680000000UL, 29},
-> > +     {700000000UL, 30},
-> > +     {730000000UL, 31},
-> > +     {750000000UL, 32},
-> > +     {770000000UL, 33},
-> > +     {790000000UL, 34},
-> > +     {820000000UL, 35},
-> > +     {840000000UL, 36},
-> > +     {860000000UL, 37},
-> > +     {890000000UL, 38},
-> > +     {910000000UL, 39},
-> > +     {930000000UL, 40},
-> > +     {950000000UL, 41},
-> > +     {980000000UL, 42},
-> > +     {1000000000UL, 43},
-> > +     {1020000000UL, 44},
-> > +     {1050000000UL, 45},
-> > +     {1070000000UL, 46},
-> > +     {1090000000UL, 47},
-> > +     {1110000000UL, 48},
-> > +     {1140000000UL, 49},
-> > +     {1160000000UL, 50},
-> > +     {1180000000UL, 51},
-> > +     {1210000000UL, 52},
-> > +     {1230000000UL, 53},
-> > +     {1250000000UL, 54},
-> > +     {1270000000UL, 55},
-> > +     {1300000000UL, 56},
-> > +     {1320000000UL, 57},
-> > +     {1340000000UL, 58},
-> > +     {1370000000UL, 59},
-> > +     {1390000000UL, 60},
-> > +     {1410000000UL, 61},
-> > +     {1430000000UL, 62},
-> > +     {1460000000UL, 63},
-> > +     {1480000000UL, 64},
-> > +     {1500000000UL, 65},
->
-> Same. Here 128 bytes
->
-> > +};
-> > +
-> > +static const struct rzv2h_mipi_dsi_timings TCLKPOSTCTL[] =3D {
-> > +     {80000000UL, 6},
-> > +     {210000000UL, 7},
-> > +     {340000000UL, 8},
-> > +     {480000000UL, 9},
-> > +     {610000000UL, 10},
-> > +     {740000000UL, 11},
-> > +     {880000000UL, 12},
-> > +     {1010000000UL, 13},
-> > +     {1140000000UL, 14},
-> > +     {1280000000UL, 15},
-> > +     {1410000000UL, 16},
-> > +     {1500000000UL, 17},
->
-> Same. Here 24 bytes
->
-> > +};
-> > +
-> > +static const struct rzv2h_mipi_dsi_timings TCLKTRAILCTL[] =3D {
-> > +     {140000000UL, 1},
-> > +     {250000000UL, 2},
-> > +     {370000000UL, 3},
-> > +     {480000000UL, 4},
-> > +     {590000000UL, 5},
-> > +     {710000000UL, 6},
-> > +     {820000000UL, 7},
-> > +     {940000000UL, 8},
-> > +     {1050000000UL, 9},
-> > +     {1170000000UL, 10},
-> > +     {1280000000UL, 11},
-> > +     {1390000000UL, 12},
-> > +     {1500000000UL, 13},
-> Same. Here 26 bytes
->
-> > +};
-> > +
-> > +static const struct rzv2h_mipi_dsi_timings THSPRPRCTL[] =3D {
-> > +     {110000000UL, 0},
-> > +     {190000000UL, 1},
-> > +     {290000000UL, 2},
-> > +     {400000000UL, 3},
-> > +     {500000000UL, 4},
-> > +     {610000000UL, 5},
-> > +     {720000000UL, 6},
-> > +     {820000000UL, 7},
-> > +     {930000000UL, 8},
-> > +     {1030000000UL, 9},
-> > +     {1140000000UL, 10},
-> > +     {1250000000UL, 11},
-> > +     {1350000000UL, 12},
-> > +     {1460000000UL, 13},
-> > +     {1500000000UL, 14},
->
-> Same. Here 30 bytes
->
-> > +};
-> > +
-> > +static const struct rzv2h_mipi_dsi_timings THSZEROCTL[] =3D {
-> > +     {180000000UL, 0},
-> > +     {240000000UL, 1},
-> > +     {290000000UL, 2},
-> > +     {350000000UL, 3},
-> > +     {400000000UL, 4},
-> > +     {460000000UL, 5},
-> > +     {510000000UL, 6},
-> > +     {570000000UL, 7},
-> > +     {620000000UL, 8},
-> > +     {680000000UL, 9},
-> > +     {730000000UL, 10},
-> > +     {790000000UL, 11},
-> > +     {840000000UL, 12},
-> > +     {900000000UL, 13},
-> > +     {950000000UL, 14},
-> > +     {1010000000UL, 15},
-> > +     {1060000000UL, 16},
-> > +     {1120000000UL, 17},
-> > +     {1170000000UL, 18},
-> > +     {1230000000UL, 19},
-> > +     {1280000000UL, 20},
-> > +     {1340000000UL, 21},
-> > +     {1390000000UL, 22},
-> > +     {1450000000UL, 23},
-> > +     {1500000000UL, 24},
->
-> Same. Here 50 bytes.
->
-> > +};
-> > +
-> > +static const struct rzv2h_mipi_dsi_timings THSTRAILCTL[] =3D {
-> > +     {100000000UL, 3},
-> > +     {210000000UL, 4},
-> > +     {320000000UL, 5},
-> > +     {420000000UL, 6},
-> > +     {530000000UL, 7},
-> > +     {640000000UL, 8},
-> > +     {750000000UL, 9},
-> > +     {850000000UL, 10},
-> > +     {960000000UL, 11},
-> > +     {1070000000UL, 12},
-> > +     {1180000000UL, 13},
-> > +     {1280000000UL, 14},
-> > +     {1390000000UL, 15},
-> > +     {1500000000UL, 16},
->
-> Same. Here 28 bytes?
->
-> > +};
-> > +
-> > +static const struct rzv2h_mipi_dsi_timings TLPXCTL[] =3D {
-> > +     {130000000UL, 0},
-> > +     {260000000UL, 1},
-> > +     {390000000UL, 2},
-> > +     {530000000UL, 3},
-> > +     {660000000UL, 4},
-> > +     {790000000UL, 5},
-> > +     {930000000UL, 6},
-> > +     {1060000000UL, 7},
-> > +     {1190000000UL, 8},
-> > +     {1330000000UL, 9},
-> > +     {1460000000UL, 10},
-> > +     {1500000000UL, 11},
->
-> Same. Here 24 bytes
->
-> > +};
-> > +
-> > +static const struct rzv2h_mipi_dsi_timings THSEXITCTL[] =3D {
-> > +     {150000000UL, 1},
-> > +     {230000000UL, 2},
-> > +     {310000000UL, 3},
-> > +     {390000000UL, 4},
-> > +     {470000000UL, 5},
-> > +     {550000000UL, 6},
-> > +     {630000000UL, 7},
-> > +     {710000000UL, 8},
-> > +     {790000000UL, 9},
-> > +     {870000000UL, 10},
-> > +     {950000000UL, 11},
-> > +     {1030000000UL, 12},
-> > +     {1110000000UL, 13},
-> > +     {1190000000UL, 14},
-> > +     {1270000000UL, 15},
-> > +     {1350000000UL, 16},
-> > +     {1430000000UL, 17},
-> > +     {1500000000UL, 18},
->
-> Same. Here 36 bytes.
->
-> > +};
-> > +
-> > +static const struct rzv2h_mipi_dsi_timings ULPSEXIT[] =3D {
-> > +     {1953125UL, 49},
-> > +     {3906250UL, 98},
-> > +     {7812500UL, 195},
-> > +     {15625000UL, 391},
->
-> Here we have problem as it is non-sequential and only has 4 entries?
->
-> Since it is ULPS EXIT Counter values compared to DPHY timings
-> This can have its own structure?
->
-Agreed as this will have a separate function of its own no need for a
-new struct, I'll have something like below:
+My bad. Will fix this.
 
-static u16 rzv2h_dphy_find_ulpsexit(unsigned long freq)
-{
-    const unsigned long hsfreq[] =3D {
-        1953125UL,
-        3906250UL,
-        7812500UL,
-        15625000UL,
-    };
-    const u16 ulpsexit[] =3D {49, 98, 195, 391};
-    unsigned int i;
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: peterz@infradead.org
+> Cc: mingo@redhat.com
+> Cc: acme@kernel.org
+> Cc: namhyung@kernel.org
+> Cc: mark.rutland@arm.com
+> Cc: alexander.shishkin@linux.intel.com
+> Cc: jolsa@kernel.org
+> Cc: irogers@google.com
+> Cc: adrian.hunter@intel.com
+> Cc: kan.liang@linux.intel.com
+> Cc: tglx@linutronix.de
+> Cc: bp@alien8.de
+> Cc: dave.hansen@linux.intel.com
+> Cc: x86@kernel.org
+> Cc: hpa@zytor.com
+> Cc: eranian@google.com
+> Cc: songliubraving@meta.com
+> Cc: ravi.bangoria@amd.com
+> Cc: ananth.narayan@amd.com
+> 
+> All these email addresses have real names, I suppose they weren't just 
+> written in in such a fashion?
+> 
 
-    for (i =3D 0; i < ARRAY_SIZE(hsfreq); i++) {
-        if (freq <=3D hsfreq[i])
-            break;
-    }
-
-    if (i =3D=3D ARRAY_SIZE(hsfreq))
-        i -=3D 1;
-
-    return ulpsexit[i];
-}
-
-> > +};
-> > +
-> > +static int rzv2h_dphy_find_timings_val(unsigned long freq,
-> > +                                    const struct rzv2h_mipi_dsi_timing=
-s timings[],
-> > +                                    unsigned int size)
-> > +{
-> > +     unsigned int i;
-> > +
-> > +     for (i =3D 0; i < size; i++) {
-> > +             if (freq <=3D timings[i].hsfreq)
-> > +                     break;
-> > +     }
-> > +
-> > +     if (i =3D=3D size)
-> > +             i -=3D 1;
-> > +
-> > +     return timings[i].value;
->
-> This will be then start_index + i for all DPHY timing parmeter table.
->
-Agreed.
-
-> And
->
-> Maybe use another function to find ULPS EXIT Counter values??
->
->
-> > +};
-> > +
-> >  static void rzg2l_mipi_dsi_phy_write(struct rzg2l_mipi_dsi *dsi, u32 r=
-eg, u32 data)  {
-> >       iowrite32(data, dsi->mmio + dsi->info->phy_reg_offset + reg); @@ =
--307,6 +572,168 @@ static int
-> > rzg2l_dphy_conf_clks(struct rzg2l_mipi_dsi *dsi, unsigned long mode_f
-> >       return 0;
-> >  }
-> >
-> > +static unsigned int rzv2h_dphy_mode_clk_check(struct rzg2l_mipi_dsi *d=
-si,
-> > +                                           unsigned long mode_freq)
-> > +{
-> > +     struct rzv2h_plldsi_parameters *dsi_parameters =3D &dsi->dsi_para=
-meters;
-> > +     unsigned long long hsfreq_mhz, mode_freq_hz, mode_freq_mhz;
-> > +     struct rzv2h_plldsi_parameters cpg_dsi_parameters;
-> > +     unsigned int bpp, i;
-> > +
-> > +     bpp =3D mipi_dsi_pixel_format_to_bpp(dsi->format);
-> > +
-> > +     for (i =3D 0; i < 10; i +=3D 1) {
-> > +             unsigned long hsfreq;
-> > +             bool parameters_found;
-> > +
-> > +             mode_freq_hz =3D mode_freq * KILO + i;
-> > +             mode_freq_mhz =3D mode_freq_hz * KILO * 1ULL;
-> > +             parameters_found =3D rzv2h_dsi_get_pll_parameters_values(=
-dsi->info->cpg_dsi_limits,
-> > +                                                                    &c=
-pg_dsi_parameters,
-> > +                                                                    mo=
-de_freq_mhz);
-> > +             if (!parameters_found)
-> > +                     continue;
-> > +
-> > +             hsfreq_mhz =3D DIV_ROUND_CLOSEST_ULL(cpg_dsi_parameters.f=
-req_mhz * bpp, dsi->lanes);
-> > +             parameters_found =3D rzv2h_dsi_get_pll_parameters_values(=
-&rzv2h_plldsi_div_limits,
-> > +                                                                    ds=
-i_parameters,
-> > +                                                                    hs=
-freq_mhz);
-> > +             if (!parameters_found)
-> > +                     continue;
-> > +
-> > +             if (abs(dsi_parameters->error_mhz) >=3D 500)
-> > +                     continue;
-> > +
-> > +             hsfreq =3D DIV_ROUND_CLOSEST_ULL(hsfreq_mhz, KILO);
-> > +             if (hsfreq >=3D RZV2H_MIPI_DPHY_FOUT_MIN_IN_MEGA &&
-> > +                 hsfreq <=3D RZV2H_MIPI_DPHY_FOUT_MAX_IN_MEGA) {
-> > +                     dsi->mode_calc.mode_freq_hz =3D mode_freq_hz;
-> > +                     dsi->mode_calc.mode_freq =3D mode_freq;
-> > +                     return MODE_OK;
-> > +             }
-> > +     }
-> > +
-> > +     return MODE_CLOCK_RANGE;
-> > +}
-> > +
-> > +static int rzv2h_dphy_conf_clks(struct rzg2l_mipi_dsi *dsi, unsigned l=
-ong mode_freq,
-> > +                             unsigned long long *hsfreq_mhz)
-> > +{
-> > +     struct rzv2h_plldsi_parameters *dsi_parameters =3D &dsi->dsi_para=
-meters;
-> > +     unsigned long status;
-> > +
-> > +     if (dsi->mode_calc.mode_freq !=3D mode_freq) {
-> > +             status =3D rzv2h_dphy_mode_clk_check(dsi, mode_freq);
-> > +             if (status !=3D MODE_OK) {
-> > +                     dev_err(dsi->dev, "No PLL parameters found for mo=
-de clk %lu\n",
-> > +                             mode_freq);
-> > +                     return -EINVAL;
-> > +             }
-> > +     }
-> > +
-> > +     clk_set_rate(dsi->vclk, dsi->mode_calc.mode_freq_hz);
-> > +     *hsfreq_mhz =3D dsi_parameters->freq_mhz;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int rzv2h_mipi_dsi_dphy_init(struct rzg2l_mipi_dsi *dsi,
-> > +                                 unsigned long long hsfreq_mhz)
-> > +{
-> > +     struct rzv2h_plldsi_parameters *dsi_parameters =3D &dsi->dsi_para=
-meters;
-> > +     unsigned long lpclk_rate =3D clk_get_rate(dsi->lpclk);
-> > +     u32 phytclksetr, phythssetr, phytlpxsetr, phycr;
-> > +     struct rzg2l_mipi_dsi_timings dphy_timings;
-> > +     unsigned long long hsfreq;
-> > +     u32 ulpsexit;
-> > +
-> > +     hsfreq =3D DIV_ROUND_CLOSEST_ULL(hsfreq_mhz, KILO);
-> > +
-> > +     if (dsi_parameters->freq_mhz =3D=3D hsfreq_mhz)
-> > +             goto parameters_found;
-> > +
-> > +     if (rzv2h_dsi_get_pll_parameters_values(&rzv2h_plldsi_div_limits,
-> > +                                             dsi_parameters, hsfreq_mh=
-z))
-> > +             goto parameters_found;
-> > +
-> > +     dev_err(dsi->dev, "No PLL parameters found for HSFREQ %lluHz\n", =
-hsfreq);
-> > +     return -EINVAL;
-> > +
-> > +parameters_found:
-> > +     dphy_timings.tclk_trail =3D
-> > +             rzv2h_dphy_find_timings_val(hsfreq, TCLKTRAILCTL,
-> > +                                         ARRAY_SIZE(TCLKTRAILCTL));
-> > +     dphy_timings.tclk_post =3D
-> > +             rzv2h_dphy_find_timings_val(hsfreq, TCLKPOSTCTL,
-> > +                                         ARRAY_SIZE(TCLKPOSTCTL));
-> > +     dphy_timings.tclk_zero =3D
-> > +             rzv2h_dphy_find_timings_val(hsfreq, TCLKZEROCTL,
-> > +                                         ARRAY_SIZE(TCLKZEROCTL));
-> > +     dphy_timings.tclk_prepare =3D
-> > +             rzv2h_dphy_find_timings_val(hsfreq, TCLKPRPRCTL,
-> > +                                         ARRAY_SIZE(TCLKPRPRCTL));
-> > +     dphy_timings.ths_exit =3D
-> > +             rzv2h_dphy_find_timings_val(hsfreq, THSEXITCTL,
-> > +                                         ARRAY_SIZE(THSEXITCTL));
-> > +     dphy_timings.ths_trail =3D
-> > +             rzv2h_dphy_find_timings_val(hsfreq, THSTRAILCTL,
-> > +                                         ARRAY_SIZE(THSTRAILCTL));
-> > +     dphy_timings.ths_zero =3D
-> > +             rzv2h_dphy_find_timings_val(hsfreq, THSZEROCTL,
-> > +                                         ARRAY_SIZE(THSZEROCTL));
-> > +     dphy_timings.ths_prepare =3D
-> > +             rzv2h_dphy_find_timings_val(hsfreq, THSPRPRCTL,
-> > +                                         ARRAY_SIZE(THSPRPRCTL));
-> > +     dphy_timings.tlpx =3D
-> > +             rzv2h_dphy_find_timings_val(hsfreq, TLPXCTL,
-> > +                                         ARRAY_SIZE(TLPXCTL));
-> > +     ulpsexit =3D
-> > +             rzv2h_dphy_find_timings_val(lpclk_rate, ULPSEXIT,
-> > +                                         ARRAY_SIZE(ULPSEXIT));
-> > +
-> > +     phytclksetr =3D PHYTCLKSETR_TCLKTRAILCTL(dphy_timings.tclk_trail)=
- |
-> > +                   PHYTCLKSETR_TCLKPOSTCTL(dphy_timings.tclk_post) |
-> > +                   PHYTCLKSETR_TCLKZEROCTL(dphy_timings.tclk_zero) |
-> > +                   PHYTCLKSETR_TCLKPRPRCTL(dphy_timings.tclk_prepare);
-> > +     phythssetr =3D PHYTHSSETR_THSEXITCTL(dphy_timings.ths_exit) |
-> > +                  PHYTHSSETR_THSTRAILCTL(dphy_timings.ths_trail) |
-> > +                  PHYTHSSETR_THSZEROCTL(dphy_timings.ths_zero) |
-> > +                  PHYTHSSETR_THSPRPRCTL(dphy_timings.ths_prepare);
-> > +     phytlpxsetr =3D rzg2l_mipi_dsi_phy_read(dsi, PHYTLPXSETR) & ~GENM=
-ASK(7, 0);
-> > +     phytlpxsetr |=3D PHYTLPXSETR_TLPXCTL(dphy_timings.tlpx);
-> > +     phycr =3D rzg2l_mipi_dsi_phy_read(dsi, PHYCR) & ~GENMASK(9, 0);
-> > +     phycr |=3D PHYCR_ULPSEXIT(ulpsexit);
-> > +
-> > +     /* Setting all D-PHY Timings Registers */
-> > +     rzg2l_mipi_dsi_phy_write(dsi, PHYTCLKSETR, phytclksetr);
-> > +     rzg2l_mipi_dsi_phy_write(dsi, PHYTHSSETR, phythssetr);
-> > +     rzg2l_mipi_dsi_phy_write(dsi, PHYTLPXSETR, phytlpxsetr);
-> > +     rzg2l_mipi_dsi_phy_write(dsi, PHYCR, phycr);
-> > +
-> > +     rzg2l_mipi_dsi_phy_write(dsi, PLLCLKSET0R,
-> > +                              PLLCLKSET0R_PLL_S(dsi_parameters->s) |
-> > +                              PLLCLKSET0R_PLL_P(dsi_parameters->p) |
-> > +                              PLLCLKSET0R_PLL_M(dsi_parameters->m));
-> > +     rzg2l_mipi_dsi_phy_write(dsi, PLLCLKSET1R, PLLCLKSET1R_PLL_K(dsi_=
-parameters->k));
-> > +     udelay(20);
-> > +
-> > +     rzg2l_mipi_dsi_phy_write(dsi, PLLENR, PLLENR_PLLEN);
-> > +     udelay(500);
->
-> Checkpatch warnings, maybe use fsleep()?
->
-> CHECK: usleep_range is preferred over udelay; see function description of=
- usleep_range() and udelay().
-> #475: FILE: drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c:718:
-> +       udelay(20);
-> CHECK: usleep_range is preferred over udelay; see function description of=
- usleep_range() and udelay().
-> #478: FILE: drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c:721:
-> +       udelay(500);
-> CHECK: usleep_range is preferred over udelay; see function description of=
- usleep_range() and udelay().
-> #485: FILE: drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c:728:
-> +       udelay(220);
->
-Ok, I will switch to fsleep().
-
-Cheers,
-Prabhakar
+And this too.
