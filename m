@@ -1,83 +1,152 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171C518871F
-	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 03:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B29C29D0D
+	for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 03:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744946759; cv=none; b=BXP+LTmcwsSmZ4gRz3N3RzOkrd7o770sqSlwHxaradjxYoBgtj4sfKLx2MetNy+VIkOTSEc39EkPr7Q8+9H5Y8G3Q3PjBBRYRWnR46uy9TiU/Nr/nmiPDxB07hFHuFNBw2tYHwh4PgTfg7pjUzzly/9sS0eAJgzIvG/DvsDNA5I=
+	t=1744946809; cv=none; b=URhCQGiWNlpYS1vW8TSQa3+R7MjcR7uxoiJ+tlvOP7b/q3mM9KOu5JeBrGFbSPebsOeoO54HCB4TOftJPU23sENKosJiDz8GIQCGjL8+v/lbrw9OF5H1cJxbOa3R9QzsxmGdTkHDtFPRf8Dw4HUPpzUeMWV5EAaNDhAuNwOUFcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744946759; c=relaxed/simple;
-	bh=AHHp/HCy61pslcQgqrWXbioECU/vdxqQvjXfFTWw26Y=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=IrK8jE4cMIQVs/dzlya7l+4R+BvSJVZ8QQqOHKI5pFYdvmy+952NgSMKoVlcQRtautb4NrCvnAEmN70UdYMIwV9DICzYEpVaiZph+8N3ttLft3xgbCOJ+v02h7Xk4cOJlTfusNROg1Lqg85YQjxb99AeiF2QSkeGQUHPBPApjCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85e4f920dacso148202439f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Apr 2025 20:25:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744946757; x=1745551557;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m9Du5hxt+SPzMYed8A4aZaHIu5PkRu+s4LbSnbJYYRY=;
-        b=oBVweqfd5RqrhC2d4H/p85Tnep5r9FNXJSkl0xhTEB2ofhYRnaHwXX36qjkZ/C9wXk
-         x4YC48tR0+Bh+axUIBRJSqakJC38g01nVnMHc6roogcQ9AgS3QHsO9l1rrfGs0LKcilw
-         IiiMCx09S+f8phs/mQZCkQDWJVncY8jFh/zsWBNvzRP4qbpPCNywnzblhZbFf2A69R/P
-         LCNOZkTQvkTa2vfsNSyOxChqvMj2+hzEYN46q1TLV6jZe3Oi3JRI4/YgP9DHD8qdBVTx
-         ZjlJjGcdDh19leeON+dV4tGCemjuBcpX50kGzd+X7WOUApoqVImcbzA5TRpPsDfTdr1p
-         TaGw==
-X-Gm-Message-State: AOJu0YwEuzgP0VIrqXqnoVd9XY4bQe33jtJbVIi/zYAbPeu3rzyj64Y+
-	H+FmCl5NwbSmBwyG/6Zt52TsglOpWHyZmSnXv8jHp+41t2MNRqgpEVX3QlSrf3W+PLIpLgOhlqZ
-	tFsSczYxGer8uFwDcjrO5AVP88TxXX7DHvz9zDjQBjhFJP6W12mZ32kw=
-X-Google-Smtp-Source: AGHT+IGqSc/dpQjQ40n+uA1wOcs3A8Pmvs2EdHIsYWJK+s9ntMOcrx75Xm65gTV5q7yqk+K2o59+oBb5oX6jOP6rIkDa4bd2wXyl
+	s=arc-20240116; t=1744946809; c=relaxed/simple;
+	bh=lI8K1BUHclic9B55IA+Vg0JEWzLrNCYEjU1aEINtaBc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ed+c7XuSKmI/V1eut3OGptmXjk7jOqMC9PlHHhvCmHWgmdTv8WXKvcMESVgIVSQa4hUrEtTiqTR3O+18pX5pUoRShfCJ4YzkNA8yzII6g6hzM9Z9REeYDvnWZPl7rVZcaw5mwyy8uQfNhb46hz1xTtBg/LvSMTjGvwutwBuZCj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=tCNXBx7a; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tCNXBx7a"
+X-UUID: f0ea600c1c0411f0aae1fd9735fae912-20250418
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=InrEQrVqp3K1hemQqa6thTPxGOdQwWfEnlDdHiKCcgk=;
+	b=tCNXBx7a67tEHKvYIOGq4zeCeeWKHsQ6bqfOhUiCSFeJfhIzDeuYggwiOwdFB11UJ8d/hxU3Xg3HSHve+qi8D4uWRCz2HyV0pzaRBIkQKnTkG4egdORkjF5LxorgGeFmbAwRMTzx99k/KVuU0LIoboa8RAzpKbBzPwJz2u6Jwig=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:85ebb040-edb3-4d8b-8b63-4d352ef96571,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:ec5bc08d-f5b8-47d5-8cf3-b68fe7530c9a,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: f0ea600c1c0411f0aae1fd9735fae912-20250418
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
+	(envelope-from <jianhua.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 665217415; Fri, 18 Apr 2025 11:26:39 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Fri, 18 Apr 2025 11:26:38 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Fri, 18 Apr 2025 11:26:37 +0800
+From: Jianhua Lin <jianhua.lin@mediatek.com>
+To: <mchehab@kernel.org>, <matthias.bgg@gmail.com>,
+	<angelogioacchino.delregno@collabora.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>, jianhua.lin
+	<jianhua.lin@mediatek.com>
+Subject: [PATCH 1/1] media: mediatek: jpeg: fix buffer alignment
+Date: Fri, 18 Apr 2025 11:25:59 +0800
+Message-ID: <20250418032559.31043-1-jianhua.lin@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:ca48:0:b0:3d5:8922:77a0 with SMTP id
- e9e14a558f8ab-3d88ee5061fmr15931425ab.18.1744946757217; Thu, 17 Apr 2025
- 20:25:57 -0700 (PDT)
-Date: Thu, 17 Apr 2025 20:25:57 -0700
-In-Reply-To: <67d9cf78.050a0220.3657bb.000f.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6801c645.050a0220.243d89.0016.GAE@google.com>
-Subject: Re: [syzbot] Re: [syzbot] [jfs?] UBSAN: array-index-out-of-bounds in dtDelete
-From: syzbot <syzbot+4f9c823a6f63d87491ba@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+From: "jianhua.lin" <jianhua.lin@mediatek.com>
 
-***
+The JPEG encoder image stride register must be MCU aligned.
+For YUV422, it's 32-byte aligned, and for YUV420, it's
+16-byte aligned.
 
-Subject: Re: [syzbot] [jfs?] UBSAN: array-index-out-of-bounds in dtDelete
-Author: richard120310@gmail.com
+The minimal DCT block size is 8x8, so the vertical buffer
+alignment for YUV422 is 8-byte aligned, and for YUV420,
+it's 16-byte aligned.
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git e3a854b577cb
-
-Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+Signed-off-by: jianhua.lin <jianhua.lin@mediatek.com>
 ---
- fs/jfs/jfs_dtree.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../platform/mediatek/jpeg/mtk_jpeg_core.c    | 24 +++++++++----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/fs/jfs/jfs_dtree.c b/fs/jfs/jfs_dtree.c
-index 8f85177f284b..0a209b30686a 100644
---- a/fs/jfs/jfs_dtree.c
-+++ b/fs/jfs/jfs_dtree.c
-@@ -2130,7 +2130,7 @@ int dtDelete(tid_t tid,
- 					stbl = DT_GETSTBL(np);
- 					ldtentry =
- 					    (struct ldtentry *) & np->
--					    slot[stbl[0]];
-+					    slot[stbl[0] % np->header.maxslot];
- 					next_index =
- 					    le32_to_cpu(ldtentry->index);
- 					DT_PUTPAGE(nmp);
+diff --git a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c
+index 834d2a354692..7dd652e5b6d4 100644
+--- a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c
++++ b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c
+@@ -40,8 +40,8 @@ static struct mtk_jpeg_fmt mtk_jpeg_enc_formats[] = {
+ 		.h_sample	= {4, 4},
+ 		.v_sample	= {4, 2},
+ 		.colplanes	= 2,
+-		.h_align	= 4,
+-		.v_align	= 4,
++		.h_align	= 16,
++		.v_align	= 16,
+ 		.flags		= MTK_JPEG_FMT_FLAG_OUTPUT,
+ 	},
+ 	{
+@@ -50,8 +50,8 @@ static struct mtk_jpeg_fmt mtk_jpeg_enc_formats[] = {
+ 		.h_sample	= {4, 4},
+ 		.v_sample	= {4, 2},
+ 		.colplanes	= 2,
+-		.h_align	= 4,
+-		.v_align	= 4,
++		.h_align	= 16,
++		.v_align	= 16,
+ 		.flags		= MTK_JPEG_FMT_FLAG_OUTPUT,
+ 	},
+ 	{
+@@ -60,8 +60,8 @@ static struct mtk_jpeg_fmt mtk_jpeg_enc_formats[] = {
+ 		.h_sample	= {8},
+ 		.v_sample	= {4},
+ 		.colplanes	= 1,
+-		.h_align	= 5,
+-		.v_align	= 3,
++		.h_align	= 32,
++		.v_align	= 8,
+ 		.flags		= MTK_JPEG_FMT_FLAG_OUTPUT,
+ 	},
+ 	{
+@@ -70,8 +70,8 @@ static struct mtk_jpeg_fmt mtk_jpeg_enc_formats[] = {
+ 		.h_sample	= {8},
+ 		.v_sample	= {4},
+ 		.colplanes	= 1,
+-		.h_align	= 5,
+-		.v_align	= 3,
++		.h_align	= 32,
++		.v_align	= 8,
+ 		.flags		= MTK_JPEG_FMT_FLAG_OUTPUT,
+ 	},
+ };
+@@ -87,8 +87,8 @@ static struct mtk_jpeg_fmt mtk_jpeg_dec_formats[] = {
+ 		.h_sample	= {4, 2, 2},
+ 		.v_sample	= {4, 2, 2},
+ 		.colplanes	= 3,
+-		.h_align	= 5,
+-		.v_align	= 4,
++		.h_align	= 16,
++		.v_align	= 16,
+ 		.flags		= MTK_JPEG_FMT_FLAG_CAPTURE,
+ 	},
+ 	{
+@@ -96,8 +96,8 @@ static struct mtk_jpeg_fmt mtk_jpeg_dec_formats[] = {
+ 		.h_sample	= {4, 2, 2},
+ 		.v_sample	= {4, 4, 4},
+ 		.colplanes	= 3,
+-		.h_align	= 5,
+-		.v_align	= 3,
++		.h_align	= 32,
++		.v_align	= 8,
+ 		.flags		= MTK_JPEG_FMT_FLAG_CAPTURE,
+ 	},
+ };
 -- 
-2.43.0
+2.46.0
 
