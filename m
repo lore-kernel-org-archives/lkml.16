@@ -1,118 +1,191 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FCEC8F49;
-	Fri, 18 Apr 2025 14:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7090C6BFC0;
+	Fri, 18 Apr 2025 14:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744987612; cv=none; b=RTQ4NrlY9Yl/GgBwoolfEtwUsXKPzZarRXwQmHisDoQwi+8CbBgxjbFYXo2qzLGk84loyWswlLrj9mXuVGpVijg7DjoZrkZKCLUhmT1e1WImk8q+TUDkKpAWHDK7sNwt1llM6yRDaWDschBBf2lBfEah38f7bfU+HNhAA9/sxUc=
+	t=1744987767; cv=none; b=m7qQDmOr0PcKLOZDfmSEXxPiHCRdiLu9izrwT/jDtZvcPed8RvxKjJ/n97fDzN0GvXUJ+qRRX5lqxiWHuHDqNqcQhO8eFmggzXMCtTeWhDva1hPOjNrWbsLd/7EaTRTqPU9lrJBAXfjrSposu+grGR71eMarZUhj8KIYl0/fP3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744987612; c=relaxed/simple;
-	bh=5a8es+dGqoWzvZRG72BP+Tii3vAYyV3WD+yVJH2N8VY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F5EfmwuHE8eE6LLQnsg0SewoztCCCMnn++wdZOyGyWFJUP5KdZb80f2jEa4bWGbf3A6s4iqWU+EnoA0asu3fObYnSHK83QC9/GymJsZ/NL3SfovgOMzQ2iziw0SFtjRl7SWlO7eYw2gd0La/gkdVxb8OVjdzSEGQVEwjqKcXwr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u0lo+pyc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744987767; c=relaxed/simple;
+	bh=FaOJcILnicKDAigLqSzi5DkUputjov+2ox6SQq2QzYs=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=fU1nYD7TyTZmgQrZf76aE9/Hokqnqyy7DCc+4gqNhQCDVPQ72DbNSA6mnE6/mh9AQcYy2bas2D9hPNPnN4y8nwD3UMLoF5WZXLZcEzsK0tGKnlHe5Lwrpo+Np4f9tgGw73zpI3HyEfkAePi/cc//PS0ELzFYKCWRZ+DkzhhGDp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eeVwTiUn; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u0lo+pyc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BF95C4CEE2;
-	Fri, 18 Apr 2025 14:46:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744987611;
-	bh=5a8es+dGqoWzvZRG72BP+Tii3vAYyV3WD+yVJH2N8VY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=u0lo+pyc59zklEQ1VhjL78cRV7IzRREb/PqeQuX7c7lN1UI0U6opronFmJqw03IFH
-	 qhi8w8Su/KbAxKHSZSa0TpDLoOvOxJ+q+O903X156V/QOUV6EHHmknLm6gx9BdoxuS
-	 ji+0epLMGJXSShNJPDKLkl5C1xs8gaMvEzQ0T5XXmdtMu16L6id8bUerk/6I1F3FuE
-	 JiNdpRIth/fye2jEFhLedT419xj3EpRh6aLgzPLwemKjy4m0WNq9U8RPROR86x1hMu
-	 8lAQbXPKqNGautan0WAWHrXvdxsYUwAXsiWLj+BOOS2Q50XhhrX7UBBT6dEjMsiqeH
-	 puBa/EeMfdF/Q==
-Date: Fri, 18 Apr 2025 15:46:42 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
-Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Cosmin
- Tanislav <cosmin.tanislav@analog.com>, Tomasz Duszynski
- <tduszyns@gmail.com>, Jean-Baptiste Maneyrol
- <jean-baptiste.maneyrol@tdk.com>, Andreas Klinger <ak@it-klinger.de>, Petre
- Rodan <petre.rodan@subdimension.ro>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 3/8] iio: addac: ad74413r: use aligned_s64 for timestamp
-Message-ID: <20250418154642.41cb9d80@jic23-huawei>
-In-Reply-To: <057bec6375819c3a4cd227c20a60ec1dbb7405c3.camel@gmail.com>
-References: <20250417-iio-more-timestamp-alignment-v1-0-eafac1e22318@baylibre.com>
-	<20250417-iio-more-timestamp-alignment-v1-3-eafac1e22318@baylibre.com>
-	<057bec6375819c3a4cd227c20a60ec1dbb7405c3.camel@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eeVwTiUn"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c5e39d1db2so100563585a.3;
+        Fri, 18 Apr 2025 07:49:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744987764; x=1745592564; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FaOJcILnicKDAigLqSzi5DkUputjov+2ox6SQq2QzYs=;
+        b=eeVwTiUnBZAAuEzCjjwOgWIWXAhTmlKt1/vLxZxBVNvr0+PFbhnIt2AGcAahSLoJFp
+         gNjQgxvivBzK4S8ls66dmZeV9Gicy58aQ6EaciEQRQ6TVekjMcmCjX34iqA+YD5QGAXM
+         V+DdAhWFtWZgP/du0b3oxTtTKmVmM/fpKscsQUDnbK6vRDMvIAXq3hrZhENXQW2aAukH
+         WanGba4EXgSzDGur1khbZlFF/0CAHY3eA+3zs8kGGXjT95E+GC7M9dhjV0F2nSMA+qdT
+         PUJ1VuESrmn4+ZMc37e6jqVtTHZhkLUELm2OdWG0JMcU01plh68rhoNmdL1i+vd3ZX87
+         c2jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744987764; x=1745592564;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=FaOJcILnicKDAigLqSzi5DkUputjov+2ox6SQq2QzYs=;
+        b=fq2Sd+pipDHfloe6Q5zMRWPGNwzSRPeirLSHP2zic/vDuW8LDyRwefD5kHtT27xddC
+         6yDmQ9tSqAGzopB3fw38dAEzoRA7iEFPM0CzZ08opVlsGRnORDKepIpt5c4szcSAd1Nu
+         t+9WCdcGFIbHNbSnpeadUl89qZ8fTW+pbY0QUoZ7UnXrwWH1goLFjpbDsuofaqshpZYK
+         DfnvSOooPg+WSXlKRpnycpysIPnyORLIT8R+duUA0B3zNy3kLNOBOTyEZE3qnvXSKkVH
+         72TuBXv2LmJ7f6KZLqZKSGlvOh5O284ggk9maT5p2jSi/du2j0rSV+i5dhwmTkNClZHa
+         vj9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUiLgZ4C2G6hpP91WFJzXXygiLJYqrrBuzvaHHX7WfWIhva/K2do3Jlg3Mdhkt/63pxX8nDjDqzIrMQWOXOkUXdRl/v@vger.kernel.org, AJvYcCW+xXwB+35zuNuERlfwVKMZBi0FW9XTGCmMcQgU9iwVY5qYZi5qG2TFDorKwB5KhKAFrRvcno+Fcz/baeY=@vger.kernel.org, AJvYcCX6LQMczCH0zyqF7EVR7guw89dmrRvjKU23Asivjr50agQ4xYLBNWDS1gL2ICV9m4WwSBU/Wd01@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3zjl2RR4YmCc2gQcH1eF4BQrwHq0WikQTmS+CoFVUgMg83P5z
+	1xyheLMZbKhWdtKxEQmyI4jcFFgMvpAkHaHZKqr80v2Syd8IG8Ub
+X-Gm-Gg: ASbGncsRoQ7L97yWYV4mMPoJ0nka2M0LRdcXpJvwBFLVFvrPh6OZWjXOEzYYEVPM7MP
+	Vbw6IhYFOfQ0zVnrx0qxjCRvK0LxrcrllpIQxMNq+lpqe5qGLCP7/r2aclAjK1L6clxsPopsvDM
+	/6O9HbpumpnyMWMViNH0I8vCKE8MtYvzZH3eDlE3/PJyakkmj+0cRbeDWLXTvxxEv/BeAmJqfyJ
+	tfomQSbQENCNQAKtdOfod6u1cLKLYex/M7ZKtp390koyBDp97BTR83zhFRaacM5A8eEVwGyV68Z
+	pM4fss58yg/63gW0Et21K3uxtLdNtAcsLQmsVN93JlI6n2YKdYRBmpNQtuPOFgRt2jT63TH0vBT
+	9BtuY6bdqyQJNjNveyxhp
+X-Google-Smtp-Source: AGHT+IFRfBoS8vUxvewHn24Q3Q4yyEdscCT2aX9aSNU+lRYRMOA1xeo2dlIoqR7EJg+gvH6TnNs4ng==
+X-Received: by 2002:a05:620a:1a08:b0:7c9:2612:32db with SMTP id af79cd13be357-7c928043431mr487499785a.49.1744987764205;
+        Fri, 18 Apr 2025 07:49:24 -0700 (PDT)
+Received: from localhost (141.139.145.34.bc.googleusercontent.com. [34.145.139.141])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c925a8d484sm114376285a.31.2025.04.18.07.49.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 07:49:23 -0700 (PDT)
+Date: Fri, 18 Apr 2025 10:49:22 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Song Liu <songliubraving@meta.com>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: Song Liu <songliubraving@meta.com>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ Breno Leitao <leitao@debian.org>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ David Ahern <dsahern@kernel.org>, 
+ Eric Dumazet <edumazet@google.com>, 
+ "kuba@kernel.org" <kuba@kernel.org>, 
+ Simon Horman <horms@kernel.org>, 
+ "kuniyu@amazon.com" <kuniyu@amazon.com>, 
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, 
+ "yonghong.song@linux.dev" <yonghong.song@linux.dev>, 
+ "song@kernel.org" <song@kernel.org>, 
+ Kernel Team <kernel-team@meta.com>
+Message-ID: <68026672df030_1d380329421@willemb.c.googlers.com.notmuch>
+In-Reply-To: <B5B46BE2-C4D8-4AB8-BEBC-E0887C9B175D@fb.com>
+References: <20250416-udp_sendmsg-v1-1-1a886b8733c2@debian.org>
+ <67a977bc-a4b9-4c8b-bf2f-9e9e6bb0811e@redhat.com>
+ <aADnW6G4X2GScQIF@gmail.com>
+ <0f67e414-d39a-4b71-9c9e-7dc027cc4ac3@redhat.com>
+ <4D934267-EE73-49DB-BEAF-7550945A38C9@fb.com>
+ <680122de92908_166f4f2942a@willemb.c.googlers.com.notmuch>
+ <B5B46BE2-C4D8-4AB8-BEBC-E0887C9B175D@fb.com>
+Subject: Re: [PATCH net-next] udp: Add tracepoint for udp_sendmsg()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 18 Apr 2025 09:57:38 +0100
-Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
+Song Liu wrote:
+> =
 
-> On Thu, 2025-04-17 at 11:52 -0500, David Lechner wrote:
-> > Follow the pattern of other drivers and use aligned_s64 for the
-> > timestamp. Technically there was no issue here since
-> > AD74413R_FRAME_SIZE * AD74413R_CHANNEL_MAX =3D=3D 16 and IIO_DMA_MINALI=
-GN
-> > is always a multiple of 8. But best to conform in case someone copies
-> > this to new code and then tweaks something.
-> >=20
-> > Also move the unaligned.h header while touching this since it was the
-> > only one not in alphabetical order.
-> >=20
-> > Signed-off-by: David Lechner <dlechner@baylibre.com>
-> > --- =20
->=20
-> Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-Applied.
->=20
-> > =C2=A0drivers/iio/addac/ad74413r.c | 5 +++--
-> > =C2=A01 file changed, 3 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/drivers/iio/addac/ad74413r.c b/drivers/iio/addac/ad74413r.c
-> > index
-> > f0929616ab899cb374f00869787321eed4ccde16..a0bb1dbcb7ad9d02337d0990e5a3f=
-90be7eaa4ac
-> > 100644
-> > --- a/drivers/iio/addac/ad74413r.c
-> > +++ b/drivers/iio/addac/ad74413r.c
-> > @@ -4,7 +4,6 @@
-> > =C2=A0 * Author: Cosmin Tanislav <cosmin.tanislav@analog.com>
-> > =C2=A0 */
-> > =C2=A0
-> > -#include <linux/unaligned.h>
-> > =C2=A0#include <linux/bitfield.h>
-> > =C2=A0#include <linux/cleanup.h>
-> > =C2=A0#include <linux/crc8.h>
-> > @@ -24,6 +23,8 @@
-> > =C2=A0#include <linux/regmap.h>
-> > =C2=A0#include <linux/regulator/consumer.h>
-> > =C2=A0#include <linux/spi/spi.h>
-> > +#include <linux/types.h>
-> > +#include <linux/unaligned.h>
-> > =C2=A0
-> > =C2=A0#include <dt-bindings/iio/addac/adi,ad74413r.h>
-> > =C2=A0
-> > @@ -84,7 +85,7 @@ struct ad74413r_state {
-> > =C2=A0	 */
-> > =C2=A0	struct {
-> > =C2=A0		u8 rx_buf[AD74413R_FRAME_SIZE * AD74413R_CHANNEL_MAX];
-> > -		s64 timestamp;
-> > +		aligned_s64 timestamp;
-> > =C2=A0	} adc_samples_buf __aligned(IIO_DMA_MINALIGN);
-> > =C2=A0
-> > =C2=A0	u8	adc_samples_tx_buf[AD74413R_FRAME_SIZE * AD74413R_CHANNEL_MAX=
-];
-> >  =20
->=20
+> =
 
+> > On Apr 17, 2025, at 8:48=E2=80=AFAM, Willem de Bruijn <willemdebruijn=
+.kernel@gmail.com> wrote:
+> > =
+
+> > Song Liu wrote:
+> >> Hi Paolo, =
+
+> >> =
+
+> >>> On Apr 17, 2025, at 6:17=E2=80=AFAM, Paolo Abeni <pabeni@redhat.com=
+> wrote:
+> >>> =
+
+> >>> On 4/17/25 1:34 PM, Breno Leitao wrote:
+> >>>> On Thu, Apr 17, 2025 at 08:57:24AM +0200, Paolo Abeni wrote:
+> >>>>> On 4/16/25 9:23 PM, Breno Leitao wrote:
+> >>>>>> Add a lightweight tracepoint to monitor UDP send message operati=
+ons,
+> >>>>>> similar to the recently introduced tcp_sendmsg_locked() trace ev=
+ent in
+> >>>>>> commit 0f08335ade712 ("trace: tcp: Add tracepoint for
+> >>>>>> tcp_sendmsg_locked()")
+> >>>>> =
+
+> >>>>> Why is it needed? what would add on top of a plain perf probe, wh=
+ich
+> >>>>> will be always available for such function with such argument, as=
+ the
+> >>>>> function can't be inlined?
+> >>>> =
+
+> >>>> Why this function can't be inlined?
+> >>> =
+
+> >>> Because the kernel need to be able find a pointer to it:
+> >>> =
+
+> >>> .sendmsg =3D udp_sendmsg,
+> >>> =
+
+> >>> I'll be really curious to learn how the compiler could inline that.=
+
+> >> =
+
+> >> It is true that functions that are only used via function pointers
+> >> will not be inlined by compilers (at least for those we have tested)=
+.
+> >> For this reason, we do not worry about functions in various
+> >> tcp_congestion_ops. However, udp_sendmsg is also called directly
+> >> by udpv6_sendmsg, so it can still get inlined by LTO. =
+
+> >> =
+
+> >> Thanks,
+> >> Song
+> >> =
+
+> > =
+
+> > I would think that hitting this tracepoint for ipv6_addr_v4mapped
+> > addresses is unintentional and surprising, as those would already
+> > hit udpv6_sendmsg.
+> =
+
+> It is up to the user to decide how these tracepoints should be =
+
+> used. For example, the user may only be interested in =
+
+> udpv6_sendmsg =3D> udp_sendmsg case. Without a tracepoint, the user
+> has to understand whether the compiler inlined this function. =
+
+> =
+
+> > =
+
+> > On which note, any IPv4 change to UDP needs an equivalent IPv6 one.
+> =
+
+> Do you mean we need to also add tracepoints for udpv6_sendmsg?
+
+If there is consensus that a tracepoint at this point is valuable,
+then it should be supported equally for IPv4 and IPv6.
+
+That holds true for all such hooks. No IPv4 only.=
