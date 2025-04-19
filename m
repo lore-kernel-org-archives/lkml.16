@@ -1,363 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED42249EB
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 01:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745027673; cv=fail; b=PsARz7XKWfUnUx75bIwtDPVw/PGLXZiunwX2h04+RyE2tHb4an3+1E6cIjfZ6QpWqemC883ABAgviNAAQmH0LkpiYFQm/VkY2Xkjq9rsHwNbHHLkQOkjXtSOJI11d+gsegHykWQ90L7sGrjxdmEltaECNMu6PQdTAWtQ9ElGOGQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745027673; c=relaxed/simple;
-	bh=GIXbsrN5uL24ds6OCAfVJy5ABnx6cJhT4pLFdHWPwaY=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=flAV657Sse9NkPPnmG3uA787mSNRfOvfevE/P4Xr/2sthfrDNUbgOAcdxdV0UVUTp6riDHMqa9VkHbv4V+9QvVewBVMLhuT6VzNw8yo9lC9FwOLdVqUM675apdvUpmU3QG1Mlqvy1WgAFpEet7yDVI5Uj3ToL30qO7QlbKwfLOU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i75fmws4; arc=fail smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DA32B9AA
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 01:59:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745027955; cv=none; b=senUqg3mMypfoyICLMyrVs9JZ0cLGGTd9SR99TivZzuJMVgDLRe+prBbiq8XekgBWU0BFhcoq9FDjN3rKI0rVEKAgk59XU8jDU1IOGQa2yER7f1tZRl04ZmvISKlYC6TAGLowAjxR66qBllfj+H/LHcQaLVLodlj1x58lKfR7oU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745027955; c=relaxed/simple;
+	bh=9n9HtjJv8+BJmPIFKBtxa5gCuPSM+N4P1U/vEDnhiSo=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=O882aEXmia1jiAj0hFU9bAYFAUnflKlVM5CKke4hKzHQnVnKgiZdp6CEbNsxDhtDw3qNmALdx7XhVAywk962yclHOlclmv1rfnbZV2PsQtHs0R3lUhd9ykyQ+HX8gEbdGS6jJGW41Ht04HVz7zkeCHGB1RsU7nMGn7hRwuj27ZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SkDAy9pc; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i75fmws4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745027671; x=1776563671;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=GIXbsrN5uL24ds6OCAfVJy5ABnx6cJhT4pLFdHWPwaY=;
-  b=i75fmws4n6l18FZU7s1jhufd7UY58UB/f2KCVIQbb/zf6fnMvxPQHFlA
-   oRd4Krj2lj5pA2pnuRyhq2aJBEg2a8eMU6m1HURYCEWstG4MVUzhZPzlC
-   hu/ectj33raTvChEM8jaHNggbTrLe2PMsCwJSuSJQFDT114nTYiLRFROg
-   6Ku8JwcUr3dHd8mlv4V+U8Mn7T0mC3buYQCKldzjdPhI8Cx6tsO1WCBB3
-   X/Pw67O+N67UxqqQ3TpnENLCVKZpezE5q5rZ+aBihFDnJB0jPoorfqHuq
-   ceS2zwifu7qvHGwo356zxwYnK7tdyS8ixJpJzMfSQLNgVT3jB3+3IfgFE
-   w==;
-X-CSE-ConnectionGUID: QC1sDIi6TbCISjRpaJgtrg==
-X-CSE-MsgGUID: Wge8xcu0REKiPFX4gLVzAA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="45891117"
-X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
-   d="scan'208";a="45891117"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 18:54:30 -0700
-X-CSE-ConnectionGUID: sAQIvKrhSU2OV/NDZyArLA==
-X-CSE-MsgGUID: NxExyIccTOalfLaPX87uwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
-   d="scan'208";a="136423802"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 18:54:31 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Fri, 18 Apr 2025 18:54:29 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Fri, 18 Apr 2025 18:54:29 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.43) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 18 Apr 2025 18:54:29 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DglbUTkBL1AFr4C6I+yQDD/7EmkJLryt9FEaPaxkIBaQ98zNoWhphI9b0f2C5n1UzizYhvaXh3rQV9cX3Htue+C0jPCV7BeHKbZWNwwbKEM0cj9bTRCm6dr1JJKiNUiQhTrJUtfgE8tHxuUQM7pfRmF4aECX8D1ImMGWmNjIbVIUgy+2PnNttEkvUY9AE/sd/C0IL5K8CigwVU+NgiObUAl1jaihJF15phksI6PafQC+Ew9oKhkYK1+Hm71idyfZMZShU6jr0ZCIzbQXOIRRsYoTFEW/9smfXkqiQNv5aUcpPZKi3hYDQuT6UXFcnzH5VE/oMg9vqe8wNiekZkFYIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sKZuNB7U5VVA9V1emRtpWI/BP0W2x7NksbxbQ7BlSUY=;
- b=ULDavnJwpOWIU9/ATPk2Dm5WDKKvcI9wHTzbjQH4a6lpAolqkH9QmDbi9Suj6zNyTkchHdz4m5rSvJDHfv0/e3Y+cwbfZHx8N0BOnuTxO6ergBEIHt7kaR9Fxo1pCavvCCBLuFwBBNeiCM7agfq2nr1h/zSEZZWi/fN1alZr7h4C/Yzj47e/1TbCAgjmRUSDD9SUrR1KBBDHd12Y4e87z1GHpvaK7feigfluOrLZdAYzrd3wbj8e0rdgY0Hqhgdk/3+6NjlYQw2iWUhV8grxbf3/0lo12nSH7m1QqxnDmwFG5FZl/AXkC1OOol7sUhwpoJJahLRuHI+v1o1AsQRFqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by LV8PR11MB8582.namprd11.prod.outlook.com (2603:10b6:408:1f7::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.30; Sat, 19 Apr
- 2025 01:53:41 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8632.030; Sat, 19 Apr 2025
- 01:53:41 +0000
-Message-ID: <e8314281-2778-4cbd-be01-0ac00b8775df@intel.com>
-Date: Fri, 18 Apr 2025 18:53:40 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 18/26] x86/resctrl: Add code to read core telemetry
- events
-To: Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghuay@nvidia.com>, "Maciej
- Wieczor-Retman" <maciej.wieczor-retman@intel.com>, Peter Newman
-	<peternewman@google.com>, James Morse <james.morse@arm.com>, Babu Moger
-	<babu.moger@amd.com>, Drew Fustini <dfustini@baylibre.com>, Dave Martin
-	<Dave.Martin@arm.com>, Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>
-CC: <linux-kernel@vger.kernel.org>, <patches@lists.linux.dev>
-References: <20250407234032.241215-1-tony.luck@intel.com>
- <20250407234032.241215-19-tony.luck@intel.com>
-From: Reinette Chatre <reinette.chatre@intel.com>
-Content-Language: en-US
-In-Reply-To: <20250407234032.241215-19-tony.luck@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR04CA0061.namprd04.prod.outlook.com
- (2603:10b6:303:6b::6) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SkDAy9pc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745027951;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MyE2GzEt6O7iPqkt2gvQatRQFTaplB3Bd3IRBQ3niCU=;
+	b=SkDAy9pcb3DKpkWxQoLBxIoOaADZSPFBPlEpq/S8oEBke174Y/fBqBxnaE7jzKauqiYRHi
+	I15Z+uEZMsqHCjIsNYpv5qN6eetV59Smx6eNGm1mrKxyx7vo+rsJlVaRvHp+ylw5uGevjT
+	z9KI70vMarlmr6QfGP1+M8+EaEZpx5M=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-235-uwovp6oePwyN5WX89hJv0A-1; Fri, 18 Apr 2025 21:59:07 -0400
+X-MC-Unique: uwovp6oePwyN5WX89hJv0A-1
+X-Mimecast-MFC-AGG-ID: uwovp6oePwyN5WX89hJv0A_1745027947
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5750ca8b2so331814585a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 18:59:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745027947; x=1745632747;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MyE2GzEt6O7iPqkt2gvQatRQFTaplB3Bd3IRBQ3niCU=;
+        b=f7d54y0dukdc/vLJ5Zfk/Ri54CpOW1BbX46UT6FW55bnV3QB2k6lUYBWJiReGEDtgE
+         IhAaKAobkcG3Nc2tYR+mkV6Xo3Cq2/2EHk8FnHDNaf3qyHcv9g1/bXx++wzOBIRTRb5m
+         PkS0qmaZgo70rPnPWvPfHssunM5ImVim8luWN2BBCxb65e4uWvLMSbiKoHmdXH6/O5ck
+         MXAhY0JB8xuIlWoEr4Rz66+gAg16OLSTYvwHyM1Ddsag+mnDR9GUPvGsPbYpp3ghOc7v
+         vN1mXhyQXHGDbCSMTIK7T03LT9n4Re44968lZ2TExaqYfqkwIPHlo+bQBT9qF7ryGUQr
+         Nvtg==
+X-Forwarded-Encrypted: i=1; AJvYcCVhxg8xEssCyiFy324i0MQnjUgX0u+KqZ2vISFGuY8Xv6wFvgTRsFwPAf7omVeAdK4X50RiH8Bum4Zs64A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzTAr2vhMym86IqK5tG8lbRHbXrkdYeUQzeSLrzUl8BbHO/6Sw
+	MN0Ad22jZQRQfgOGbnUF+Xiu0YJNwN8TX0HQioKaUI0nI3cX6MVem3PbAqBTRgFNzn6eSpofFLa
+	ldqg1yGzg4QxqbXf5FsQ4wy7hH3CWmSXymQEEga9qs4K6K3CIGJeTDgkC8dRanA==
+X-Gm-Gg: ASbGncvyUNN6Pf7tMLISaxipzbC3f4jc90OK+BY9PfOrfJqyjbPywDHyr2YnrNJsgAM
+	6aeBkkZdI5hyABYvBVUv2x1XCzxHSpw8XzjZDviabrernZeI2F+Owu0vcz1haFouLCk5QWRlsFn
+	BhC1mzT4/5EXZbo/eojlXIoG27o1lmf+gFKOxBR9PbVCG/cKPzZ5erisd08jZXId1t6KK2otE3p
+	4upISIRdVo58fS3MIw9uL5WKPGEdPmXbzVBIBca4uCo1ty6Fu4BPGzE41rEgukc3len3liMUg94
+	NvOhxJAR8nopMzpmKhEQHnAReFt5yq46cpzUU2bMUXwIVJWZww==
+X-Received: by 2002:a05:620a:2a12:b0:7c5:3b52:517d with SMTP id af79cd13be357-7c92804942dmr920493285a.54.1745027946867;
+        Fri, 18 Apr 2025 18:59:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHcXj4b/NM1OREe7QzWswzHIaHccrZVLgLJcaMbiSk/L6WwkHUEvx8kXDiJC2XmvPRO2v/pUg==
+X-Received: by 2002:a05:620a:2a12:b0:7c5:3b52:517d with SMTP id af79cd13be357-7c92804942dmr920491585a.54.1745027946562;
+        Fri, 18 Apr 2025 18:59:06 -0700 (PDT)
+Received: from [192.168.130.170] (67-212-218-66.static.pfnllc.net. [67.212.218.66])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925a6ea8dsm168807885a.9.2025.04.18.18.59.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 18:59:06 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <9bcb139c-451b-4ea5-b4ff-21916372d94e@redhat.com>
+Date: Fri, 18 Apr 2025 21:59:04 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|LV8PR11MB8582:EE_
-X-MS-Office365-Filtering-Correlation-Id: c4cab648-a5c0-4784-a029-08dd7ee502b9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?L2EwYk5XOVZ3cWRZUk5oOUlRNUE3N3lIN3dZSHUvWlZGSWV6K2gxTHUycllo?=
- =?utf-8?B?cUJsd2xuNW9laG1aR3RtQmdFeEc5bURrcFJxeGExTjJyVFgxRzV0QTl6T3l2?=
- =?utf-8?B?ejVEVlJTRys3a204c01qNUJoazFKQWpZMzEwUUJGdHNUNk16WnRBL3J6M3VP?=
- =?utf-8?B?OGRQREtzR2dHNlhYQXVCV09FdHJDVkwrUnNidXd4ZUJJUVViejZlcjhicy83?=
- =?utf-8?B?Zjdpb1NOeThGa1BuVmozU3pQZFRHMURodkI3YUNSSWUvbkN4cVNrdC8rNjQ3?=
- =?utf-8?B?M2h0QTU2aEJQMXhyTlk4MDllclFQK3RqRytCRTZWMDNHTEJCZDRUR202MjN5?=
- =?utf-8?B?VXNKRXBiMDd0VG05empaSk1FQTVuc2lsUDgyWWxzMzNUQ1lneHF4VEhqQTk5?=
- =?utf-8?B?N1FVQks2ZUtoRFVkRDlFeHpUandWek9yNFYyTlFkeWpjOXdMbjhEWnY2U29O?=
- =?utf-8?B?VnptZVV4Um1ZcmZDNEY2VDhvcXBmcklJOVYySjVaZVJpZUtjTlhDK2Z2SDdt?=
- =?utf-8?B?dHMvTjc0dW5XSWt5SkxGbE1wZFg1VlhwSVdrTlBvYkZjbkNjUEM5VDl1R2lz?=
- =?utf-8?B?RjlrYW52ZmgxYXEzUEFwSnE1T1BJdzB0T3dnN3hNNHVjaThpdFVrb1BQOUVI?=
- =?utf-8?B?aTdxbWNHQ1lqYlZkcUhoSjVyUmRpZHhxUjc5U21NdU4xQjZabjBhM1pWZ1Fv?=
- =?utf-8?B?RzBIelZIaUx3bGE3Y2R0NGN3SHRzZE9JQVJ3QmxJRFJiT0lDSU9yNWovMnZJ?=
- =?utf-8?B?TjlVT09GcGsrMlJXaXUwV2o1SHl0QTJBR2JrVFFUOGs1MC9uYTJxeUY3ZTNP?=
- =?utf-8?B?Y3lDWUhPakovSkpEWHQvZlQrZDV4UGJ6bkxFTjlKM0RhRkVLMjFIRkN6VXBn?=
- =?utf-8?B?YWZMQzdod0VQVnA3UXM2WHo1bTBJQTV4TGhTRkQyNjR0Nk51ZEJDUHhGRndY?=
- =?utf-8?B?WXRlQWlPQVVFWHUyN3drTm90MHd5OElkTERVWXpscStFcWI0Rm1YWUY2c2tl?=
- =?utf-8?B?V1laaExFQi91STN1ZDhHSVh1eXlHbEt6d1dyR3BDNXZpMDh2dHJ4QUpUcWZ6?=
- =?utf-8?B?UHBLN3k3bFZHWWkwWFhiZnJ1RE0wRk85U21vYmdlTEprbUxXM2RkVkJ3WHlT?=
- =?utf-8?B?WUhRR2VnVmdnTHZsZEYrOStqTkJVVFFxcmpVWUd0UGZETWEzeU9vQTRvTEpT?=
- =?utf-8?B?Rmd0Lzd0NXpqYnpuL1RseFQweEV2aU5JRjkxU0REQzVhSUxlTjlBcXhyTjVD?=
- =?utf-8?B?MEthSTY2T29WcDhLY1VFamltNTUvK0dnTUZUdUMyZ2NWZGlPZzg0bTkzM0Qw?=
- =?utf-8?B?LzhVdmVtT1Y1TXd2ZnNjeDBZWHJ5QlZJWTlBK2ZER1J6TU5aVzhUNk4vODVK?=
- =?utf-8?B?ZEFuNW1EWVhad0tFTlNrVld3RmRsOTJUanFYNHNzRlBoUzlKK2hTM1lITXlM?=
- =?utf-8?B?L2luVHpBZEhNOFg5TG9KSi9QMmR6SHZ1WU5kT3Rja1kzS1VESVRUL1V5YlRr?=
- =?utf-8?B?VzNtczVnNUZDSVE5ZkVzRWowRjJ4UmJqdE9qQ212Vkl6ZzJHck5KaG1xSFor?=
- =?utf-8?B?UjdwS3pxWnJiM2pGZklURzROWmJjNnZJNUZFaWo5dzVkdHpnblh2QUtxZWl2?=
- =?utf-8?B?V25rbFhrV0dOaW9GTzBEZGdqY0FwaUJYSGtCMXI2T3RDeFcranlwcGluZC9j?=
- =?utf-8?B?ZTZjT2FGN082NHlVenRTSi90cSsrVEdEQUdJZTNGcDQ3RUdvWWIwam1pYjN1?=
- =?utf-8?B?SHdnKzhuNVlpVjNBenZTYmRETnA4YUJ2OUJOeGlZT0tndk5LcDdnWTgwUitI?=
- =?utf-8?B?UU9LdFRCeHkvR2lTMk1DUFBOQ1VTTmpnL0lMLytSdjVwaVFsNGNxd3VZYVNm?=
- =?utf-8?B?eXZTc3Vld3FLNWthQkNpelo4aUV2NFdkcFgzR09Db09Oa2lFejBDS0NKUjBz?=
- =?utf-8?Q?DqJ25si7iIY=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YjRsQ0U1bW1mN1NpZ0tablFrY1VxM09GM1RqZzg3c3lnZC9xazVvVjRuUjhO?=
- =?utf-8?B?eE5xRUlDMDBEMjBMQXhlM1R4TnVKenJKMkdPOFdqTmR0MUVuNGxmaHd3ZTli?=
- =?utf-8?B?YS9rS3pvM0s4WjhDbHhUVVIvdEtLSHY4cDR2SkM2THBtSzAyL3FsQ0Mzb1Rj?=
- =?utf-8?B?dU9lNTRXTm5hUWNreWJ3c252QklvM1VsWUJSWmcvSXcxNnJRanJyT2pMUDlh?=
- =?utf-8?B?OUZXQTViL2Vhd29DRXA1VW4yVFNyZzM5ZS80WmJyTklCNENrcjVkM3d6b1Vj?=
- =?utf-8?B?bTlKeEZlb1l1cFY1STdIYVlCOWFmWnpmbmM4RTBWZ01Pc0VZNkxXT283ekZ3?=
- =?utf-8?B?SGN1dHQ1N04zZk1xUUU5bmcrdlhQZUpuKzgwU0dGcTJycEdEeU9LRi9pdHpS?=
- =?utf-8?B?NUNQb1Q3RFpveG1zTmlER1FrK0s4KzVYeERtNUxwVXI5UytZd3gvaGJobVVz?=
- =?utf-8?B?WTUzR2pGdmJ4SzhCMk5KMFBMSU5scmVuYnJsMENjeDVwY290TGU5RzVYdFlj?=
- =?utf-8?B?RytSaFdCYXkwakpwcnd5cEJqcXpmVDNpU056NTc5MzQwMEo2YWZ2SkltL2lk?=
- =?utf-8?B?MEI1REVIMHFYUitPRWVVdlJ0ZVQ0RHY4bVNnUUdNODFMTmZkZ0IxYjBtUkNl?=
- =?utf-8?B?R2lzKzVxdzBCSSs4OWNwdlBzQlpMZkpxaGhXVnMrZjJoTU9WUmJURnh6UzQ3?=
- =?utf-8?B?QUM1Vi9nK3pqSUJyazI5WnZrU0MzWmlTOXg0ZDc4cFd4bXFjSzlqZjRIdkNh?=
- =?utf-8?B?SU1pWm5WQ3dJeGtCbWJseFlEQldYdU5vZGdnRXozM1dxYmQ1VG5OTURIejhn?=
- =?utf-8?B?VFlmNWdrVFdtTWJtdm82djhVK2lnVzVRdjRJdVo2REw3bm5EV1Rnam5lNmxi?=
- =?utf-8?B?a1ZoRDUzN3MvclhuSmlKdjdUaU4xN1FVTklKc05paGlMWGk5QlVhZnZUcXUw?=
- =?utf-8?B?NWpEbEIxdGl2Q1FqZSthRTV3ZWIrQUliR1ZoaGQ1aWJtdUVSSnBCbU5MbnZs?=
- =?utf-8?B?RUZlUUNGYVRnNnlIKytFMGxyMkNWNFl5RUh3MXR6RGxvUDB2OTRRRUxVVjZX?=
- =?utf-8?B?NC9FOVYxOUkwVEdiODJ4NnlGQ29ESTA4dzlvZWc5aDNYSjBVb1hYTllVWEZl?=
- =?utf-8?B?OFcyVW1ZRWpaZjhibkhWcEdZNEpIaVFCWVk5UCs1cWJBMnJEdjdkZEk1Q29m?=
- =?utf-8?B?QkppSjh6YzF0cm9lVWNZRjQ5VHZ0dU1uYldlL0tTOGdyVVdXZGpHSUY3cnBw?=
- =?utf-8?B?Rmo4QUJNb3dFNlBaRmJTajJuZDBtK1huNjBWRUFpUHpjUStkRTV0aGt1MjNj?=
- =?utf-8?B?RlJFLzNIYVhMdmluM1JCbSs4Wlo1R1hCS3JvaGdTVUZFMVcvYVpiWW4vUjB4?=
- =?utf-8?B?NjFzWHMybHF5YVo5N3o5NnI3V2RsVTk2bmJCZk5heUFRMm54SXVnS053dlNx?=
- =?utf-8?B?VEx4NHNoSlFYdFpUcUVicElmc0FkSkovWFBVdGVhYnhsZk9SdUR6K2tFSmk0?=
- =?utf-8?B?NDU5c2phUUJ3bStEYmtwL09KK0MvMXl2d1dTSjVBM1pnV0FOTVAyVndoZ3c1?=
- =?utf-8?B?Ni9YRVd6VlUzMmEzWGI2blYzL2JmbVlBSEQzWWF4RVRod3F0TlZudzJ1U0ZH?=
- =?utf-8?B?bFdKaDBHbG41VTQ1UXBReHI0RmlTRllaUGNZVHM3UlJrTTZTVmR4bEltRTBF?=
- =?utf-8?B?ajBUeFFkeWlNNjZTdVA2UGNFM0NqRERNb2tXbWR4T2RhRXlTVWtwamV6NXhq?=
- =?utf-8?B?dUdqZk5BaStLV2ZobUlXV2NDaUpUWkFWamc0VWtXRVVsR05LZDNZNisrYjRo?=
- =?utf-8?B?akp1Mlk2RGhSZDVPS1R5b0M2Qm0xVkFZQU1HOEJlQUdlVlhaTU1haDZaak52?=
- =?utf-8?B?bWE3TWtaNkxYTXY4ZkplUkc0WEhBUmtNUDM3WHo2Vkp1bWZObDFxNWtKSFhm?=
- =?utf-8?B?NXFSOFBwNzdXMmhVemRWRGpPdlhsMHh5ajdoWHlaN2tEQ2grZVIrMXgwbG8x?=
- =?utf-8?B?K0xvTzB6VnpUVFE5OWtiYmV3UGRDOEd1OEF3ZWN6L1hDc3ZKdk4rd0FKUlZL?=
- =?utf-8?B?eE4rWVl5NTlWd1Bwd0tEeFYxYlBLS2hJL0lNUWp0Zm1rOEY5Smc1UTJwaUh2?=
- =?utf-8?B?bVZ0aGxkVWp4WDZCQU9nbk5XS29RRkhvZG9WT05xRlNocFlkWklEaXFteGhP?=
- =?utf-8?B?UUE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4cab648-a5c0-4784-a029-08dd7ee502b9
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2025 01:53:41.6280
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Uy1D95RGdNoLzQq/wW86d1Mn45jpdO0AOrRMqObkYQW4CksG8hWge0xXh+87sxMRwT+PSoB2CmUrH1z8fNKPLz7l+YS5A0gFoeMS8LOkO+s=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8582
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] cpuset: rename cpuset_node_allowed to
+ cpuset_current_node_allowed
+To: Gregory Price <gourry@gourry.net>, cgroups@vger.kernel.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
+ tj@kernel.org, hannes@cmpxchg.org, mkoutny@suse.com, mhocko@kernel.org,
+ roman.gushchin@linux.dev, shakeel.butt@linux.dev, muchun.song@linux.dev,
+ akpm@linux-foundation.org
+References: <20250418031352.1277966-1-gourry@gourry.net>
+Content-Language: en-US
+In-Reply-To: <20250418031352.1277966-1-gourry@gourry.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Tony,
-
-(deja vu ... "Add code to" can be dropped)
-
-On 4/7/25 4:40 PM, Tony Luck wrote:
-> The new telemetry events will be part of a new resctrl resource.
-> Add the RDT_RESOURCE_PERF_PKG to enum resctrl_res_level.
-
-Please follow tip changelog structure custom throughout this series.
-
-> 
-> Add hook resctrl_arch_rmid_read() to pass reads on this
-> resource to the telemetry code.
-> 
-> There may be multiple devices tracking each package, so scan all of them
-> and add up counters.
-> 
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
+On 4/17/25 11:13 PM, Gregory Price wrote:
+> Rename cpuset_node_allowed to reflect that the function checks the
+> current task's cpuset.mems.  This allows us to make a new
+> cpuset_node_allowed function that checks a target cgroup's cpuset.mems.
+>
+> Signed-off-by: Gregory Price <gourry@gourry.net>
 > ---
->  include/linux/resctrl_types.h           |  1 +
->  arch/x86/kernel/cpu/resctrl/internal.h  |  5 +++
->  arch/x86/kernel/cpu/resctrl/intel_aet.c | 58 +++++++++++++++++++++++++
->  arch/x86/kernel/cpu/resctrl/monitor.c   |  6 +++
->  4 files changed, 70 insertions(+)
-> 
-> diff --git a/include/linux/resctrl_types.h b/include/linux/resctrl_types.h
-> index fbd4b55c41aa..3354f21e82ad 100644
-> --- a/include/linux/resctrl_types.h
-> +++ b/include/linux/resctrl_types.h
-> @@ -39,6 +39,7 @@ enum resctrl_res_level {
->  	RDT_RESOURCE_L2,
->  	RDT_RESOURCE_MBA,
->  	RDT_RESOURCE_SMBA,
-> +	RDT_RESOURCE_PERF_PKG,
->  
->  	/* Must be the last */
->  	RDT_NUM_RESOURCES,
-> diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-> index 70b63bbc429d..1b1cbb948a9a 100644
-> --- a/arch/x86/kernel/cpu/resctrl/internal.h
-> +++ b/arch/x86/kernel/cpu/resctrl/internal.h
-> @@ -175,9 +175,14 @@ void rdt_domain_reconfigure_cdp(struct rdt_resource *r);
->  #ifdef CONFIG_INTEL_AET_RESCTRL
->  bool intel_aet_get_events(void);
->  void __exit intel_aet_exit(void);
-> +int intel_aet_read_event(int domid, int rmid, int evtid, u64 *val);
+>   include/linux/cpuset.h | 4 ++--
+>   kernel/cgroup/cpuset.c | 4 ++--
+>   mm/page_alloc.c        | 4 ++--
+>   3 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
+> index 835e7b793f6a..893a4c340d48 100644
+> --- a/include/linux/cpuset.h
+> +++ b/include/linux/cpuset.h
+> @@ -82,11 +82,11 @@ extern nodemask_t cpuset_mems_allowed(struct task_struct *p);
+>   void cpuset_init_current_mems_allowed(void);
+>   int cpuset_nodemask_valid_mems_allowed(nodemask_t *nodemask);
+>   
+> -extern bool cpuset_node_allowed(int node, gfp_t gfp_mask);
+> +extern bool cpuset_current_node_allowed(int node, gfp_t gfp_mask);
+>   
+>   static inline bool __cpuset_zone_allowed(struct zone *z, gfp_t gfp_mask)
+>   {
+> -	return cpuset_node_allowed(zone_to_nid(z), gfp_mask);
+> +	return cpuset_current_node_allowed(zone_to_nid(z), gfp_mask);
+>   }
+>   
+>   static inline bool cpuset_zone_allowed(struct zone *z, gfp_t gfp_mask)
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> index 0f910c828973..d6ed3f053e62 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -4090,7 +4090,7 @@ static struct cpuset *nearest_hardwall_ancestor(struct cpuset *cs)
+>   }
+>   
+>   /*
+> - * cpuset_node_allowed - Can we allocate on a memory node?
+> + * cpuset_current_node_allowed - Can current task allocate on a memory node?
+>    * @node: is this an allowed node?
+>    * @gfp_mask: memory allocation flags
+>    *
+> @@ -4129,7 +4129,7 @@ static struct cpuset *nearest_hardwall_ancestor(struct cpuset *cs)
+>    *	GFP_KERNEL   - any node in enclosing hardwalled cpuset ok
+>    *	GFP_USER     - only nodes in current tasks mems allowed ok.
+>    */
+> -bool cpuset_node_allowed(int node, gfp_t gfp_mask)
+> +bool cpuset_current_node_allowed(int node, gfp_t gfp_mask)
+>   {
+>   	struct cpuset *cs;		/* current cpuset ancestors */
+>   	bool allowed;			/* is allocation in zone z allowed? */
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 5079b1b04d49..233ce25f8f3d 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -3461,7 +3461,7 @@ get_page_from_freelist(gfp_t gfp_mask, unsigned int order, int alloc_flags,
+>   retry:
+>   	/*
+>   	 * Scan zonelist, looking for a zone with enough free.
+> -	 * See also cpuset_node_allowed() comment in kernel/cgroup/cpuset.c.
+> +	 * See also cpuset_current_node_allowed() comment in kernel/cgroup/cpuset.c.
+>   	 */
+>   	no_fallback = alloc_flags & ALLOC_NOFRAGMENT;
+>   	z = ac->preferred_zoneref;
+> @@ -4148,7 +4148,7 @@ gfp_to_alloc_flags(gfp_t gfp_mask, unsigned int order)
+>   		/*
+>   		 * Ignore cpuset mems for non-blocking __GFP_HIGH (probably
+>   		 * GFP_ATOMIC) rather than fail, see the comment for
+> -		 * cpuset_node_allowed().
+> +		 * cpuset_current_node_allowed().
+>   		 */
+>   		if (alloc_flags & ALLOC_MIN_RESERVE)
+>   			alloc_flags &= ~ALLOC_CPUSET;
+Acked-by: Waiman Long <longman@redhat.com>
 
-This can use enum resctrl_event_id for evtid?
-
->  #else
->  static inline bool intel_aet_get_events(void) { return false; }
->  static inline void intel_aet_exit(void) { };
-> +static inline int intel_aet_read_event(int domid, int rmid, int evtid, u64 *val)
-> +{
-> +	return -EINVAL;
-> +}
->  #endif
->  
->  #endif /* _ASM_X86_RESCTRL_INTERNAL_H */
-> diff --git a/arch/x86/kernel/cpu/resctrl/intel_aet.c b/arch/x86/kernel/cpu/resctrl/intel_aet.c
-> index 44d2fe747ed8..67a1245858dc 100644
-> --- a/arch/x86/kernel/cpu/resctrl/intel_aet.c
-> +++ b/arch/x86/kernel/cpu/resctrl/intel_aet.c
-> @@ -73,6 +73,12 @@ static struct evtinfo {
->  	struct pmt_event	*pmt_event;
->  } evtinfo[QOS_NUM_EVENTS];
->  
-> +#define EVT_NUM_RMIDS(evtid)	(evtinfo[evtid].telem_entry->num_rmids)
-> +#define EVT_NUM_EVENTS(evtid)	(evtinfo[evtid].telem_entry->num_events)
-> +#define EVT_GUID(evtid)		(evtinfo[evtid].telem_entry->guid)
-> +
-> +#define EVT_OFFSET(evtid)	(evtinfo[evtid].pmt_event->evt_offset)
-
-Please open code these or use functions if you need to.
-
-> +
->  /* All known telemetry event groups */
->  static struct telem_entry *telem_entry[] = {
->  	NULL
-> @@ -224,3 +230,55 @@ void __exit intel_aet_exit(void)
->  	}
->  	kfree(pkg_info);
->  }
-> +
-> +#define VALID_BIT	BIT_ULL(63)
-> +#define DATA_BITS	GENMASK_ULL(62, 0)
-> +
-> +/*
-> + * Walk the array of telemetry groups on a specific package.
-> + * Read and sum values for a specific counter (described by
-> + * guid and offset).
-> + * Return failure (~0x0ull) if any counter isn't valid.
-> + */
-> +static u64 scan_pmt_devs(int package, int guid, int offset)
-> +{
-> +	u64 rval, val;
-> +	int ndev = 0;
-> +
-> +	rval = 0;
-
-This can be done as part of definition.
-
-> +
-> +	for (int i = 0; i < pkg_info[package].count; i++) {
-> +		if (pkg_info[package].regions[i].guid != guid)
-> +			continue;
-> +		ndev++;
-> +		val = readq(pkg_info[package].regions[i].addr + offset);
-> +
-> +		if (!(val & VALID_BIT))
-> +			return ~0ull;
-> +		rval += val & DATA_BITS;
-> +	}
-> +
-> +	return ndev ? rval : ~0ull;
-> +}
-> +
-> +/*
-> + * Read counter for an event on a domain (summing all aggregators
-> + * on the domain).
-> + */
-> +int intel_aet_read_event(int domid, int rmid, int evtid, u64 *val)
-> +{
-> +	u64 evtcount;
-> +	int offset;
-> +
-> +	if (rmid >= EVT_NUM_RMIDS(evtid))
-> +		return -ENOENT;
-> +
-> +	offset = rmid * EVT_NUM_EVENTS(evtid) * sizeof(u64);
-> +	offset += EVT_OFFSET(evtid);
-> +	evtcount = scan_pmt_devs(domid, EVT_GUID(evtid), offset);
-> +
-> +	if (evtcount != ~0ull || *val == 0)
-> +		*val += evtcount;
-> +
-> +	return evtcount != ~0ull ? 0 : -EINVAL;
-> +}
-> diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-> index 06623d51d006..4fa297d463ba 100644
-> --- a/arch/x86/kernel/cpu/resctrl/monitor.c
-> +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-> @@ -236,6 +236,12 @@ int resctrl_arch_rmid_read(struct rdt_resource *r, struct rdt_mon_domain *d,
->  	u32 prmid;
->  	int ret;
->  
-> +	if (r->rid == RDT_RESOURCE_PERF_PKG) {
-> +		ret = intel_aet_read_event(d->hdr.id, rmid, eventid, val);
-> +
-> +		return ret ? ret : 0;
-> +	}
-
-Not sure if I am missing something at this stage but it looks like,
-since resctrl_arch_rmid_read() can now return ENOENT, and rmid_read::err
-obtain value of ENOENT, that there may be an
-issue when this error is returned since rdtgroup_mondata_show()'s "checkresult"
-does not have handling for ENOENT and will attempt to print data to user space.
-
-> +
->  	resctrl_arch_rmid_read_context_check();
-
-Please keep this context check at top of function.
-
->  
->  	prmid = logical_rmid_to_physical_rmid(cpu, rmid);
-
-
-Reinette
