@@ -1,283 +1,293 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9CF3647
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 13:23:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69A8647;
+	Sat, 19 Apr 2025 13:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745069014; cv=none; b=gP6kl+du1Vp49Wbp32FUFH+0IkPajfNpuwr3DJ0SUTvJOn+1unYLwPqa3VB55IT8WUzMR4jM9khhPFazzunD6YRWyh1+nQuXqqBFYIJJ6B4hQP7MFoHRoH0aB91h++EQ7Itt6ujiMqZBdnrJlaD2V+gwOBKgnUaugPaz7UZoGLg=
+	t=1745069202; cv=none; b=S+ahqFpQERX3Rn5s/90+XEblcqwduE4n/++Yz1+dICeFyOUsQB96zwAljJDnAAKto8JeuW6a4fl8drkJ7CLLZh4blP8m6/IMCbXUW80PZKrHnih7il+QkA2VTDElc/IF53gxKTzrN/sgNfVak7KGCOaGdIJCS3NjuOYm3BOSO5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745069014; c=relaxed/simple;
-	bh=7NNjKNTQRbiC02oid68Prowxt0E065UTtoBoU33XKFU=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=el32qHNc31oO2Ta7nbwXFOUAuwLt8uL0gbAAwliqaePdV/jE+NAh+oxl5l0NBr0aM9M3GGsSvRe8/9Wku1eEb2Z/2HahE4jHkYX498TsoovMPmUibqTWcvuKWLXA4fSxorZ+QmWeISBkR41ftkh+zz9UVbLxXjgHki0Cx11+PLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A3aXn3Kn; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745069202; c=relaxed/simple;
+	bh=ue1d4fMmfRR3owQCunDNf+9iBYOf5BIYwNCmQHL+aYc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JMpZ2uRGXyhNKmxBKaQatXFdT9psEDIj0JqPmQhIID3CQVZGYaeLocX2XN/sjgU8eKaD9AdOq70Ufkl+5nY2E66Oz6U9+Di3BahAr+9U3dfp9G/IUOsr+8xaSEj5E8ppt5Z6Q/XiiNZvmRxHrtH+n1CfLc7NFLGiqqzY28TiviI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhoXBSFi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A3aXn3Kn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745069013; x=1776605013;
-  h=date:from:to:cc:subject:message-id;
-  bh=7NNjKNTQRbiC02oid68Prowxt0E065UTtoBoU33XKFU=;
-  b=A3aXn3KnNeSVU4BAj8tRDUEurqkOjKY7yj6QPx50wTwu49c+xsuizbD+
-   LHGj0NsQvtguivA8tgLpAF0I1X/yEgkF6xZUAm6kXki/nrA4N4x8mBM+1
-   9MZhn3Avntm0sTO/xPguHrqk1XMl0btxA5HeQ543tZAe3Xj21Pdw5rjSO
-   mC94YKcEZuqXx7IZlQb4CjmGI6CyMZA9mZmPGvLoqtTlXSIOyOKgwEiZB
-   W6Gierh9lg6hZyGVGZq5zW2EjwyfTccAixxLRO5CSX9P5x/qWlUdiA2RL
-   YTQ2PK7D/6oH+e5NCzGaWTikhKQde/MDXWxKtzldQ7g3DySwtJNaL19rx
-   w==;
-X-CSE-ConnectionGUID: lhc+0DFqRw2SlLLX9eHp4Q==
-X-CSE-MsgGUID: M75d3FaJSK25dfS7Uikx8w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="46844539"
-X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
-   d="scan'208";a="46844539"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 06:23:32 -0700
-X-CSE-ConnectionGUID: Kai8aqLASF+mm9cYJWydOQ==
-X-CSE-MsgGUID: IZEavLd/TVu4y/EGNwRmLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
-   d="scan'208";a="132219581"
-Received: from lkp-server01.sh.intel.com (HELO 61e10e65ea0f) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 19 Apr 2025 06:23:31 -0700
-Received: from kbuild by 61e10e65ea0f with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u68AL-0003t7-08;
-	Sat, 19 Apr 2025 13:23:29 +0000
-Date: Sat, 19 Apr 2025 21:22:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/alternatives] BUILD SUCCESS
- aef1d0209ddf127a8069aca5fa3a062be4136b76
-Message-ID: <202504192122.KkmXmeHQ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhoXBSFi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0765C4CEE7;
+	Sat, 19 Apr 2025 13:26:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745069200;
+	bh=ue1d4fMmfRR3owQCunDNf+9iBYOf5BIYwNCmQHL+aYc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qhoXBSFilpHckYgEmtDqRBpfmjJmPts5lx8F6zCbXSo3nFJ0Cviv8rFrH0tes7cTP
+	 fUfiEMkbHh9Akht0wGrdo/rcRcSZGvLnczo+4l8y/0+OgqYcyzz5WhuiS14CW0CCcn
+	 +QfvORdsJTxf7Y0SWmrSHMewixAeMo2z3STcP+fXbSHJh+AHFkFdwQxy41Wm3n5MU4
+	 ByNwNwEpWRmqquWhKcO+ASCMIRxEidpr+DXyfLU0t8bmivO5+888Sm8scFOjG7RcPc
+	 AEP9659sXUy2yZwV7iugNILxttUuYX46sZMw4VCbGaTUH/BCXbDJyt+TnulneOoyLX
+	 hDEmj6NHAqHYQ==
+Date: Sat, 19 Apr 2025 15:26:33 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Ian Kent <raven@themaw.net>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Mark Brown <broonie@kernel.org>, Eric Chanudet <echanude@redhat.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Clark Williams <clrkwllms@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ian Kent <ikent@redhat.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
+	Alexander Larsson <alexl@redhat.com>, Lucas Karpinski <lkarpins@redhat.com>, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
+Message-ID: <20250419-floskel-aufmachen-26e327d7334e@brauner>
+References: <20250417-abartig-abfuhr-40e558b85f97@brauner>
+ <20250417-outen-dreihundert-7a772f78f685@brauner>
+ <20250417-zappeln-angesagt-f172a71839d3@brauner>
+ <20250417153126.QrVXSjt-@linutronix.de>
+ <20250417-pyrotechnik-neigung-f4a727a5c76b@brauner>
+ <39c36187-615e-4f83-b05e-419015d885e6@themaw.net>
+ <125df195-5cac-4a65-b8bb-8b1146132667@themaw.net>
+ <20250418-razzia-fixkosten-0569cf9f7b9d@brauner>
+ <834853f4-10ca-4585-84b2-425c4e9f7d2b@themaw.net>
+ <20250419-auftrag-knipsen-6e56b0ccd267@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250419-auftrag-knipsen-6e56b0ccd267@brauner>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/alternatives
-branch HEAD: aef1d0209ddf127a8069aca5fa3a062be4136b76  x86/mm: Fix {,un}use_temporary_mm() IRQ state
+On Sat, Apr 19, 2025 at 12:44:18PM +0200, Christian Brauner wrote:
+> On Sat, Apr 19, 2025 at 09:24:31AM +0800, Ian Kent wrote:
+> > 
+> > On 18/4/25 16:47, Christian Brauner wrote:
+> > > On Fri, Apr 18, 2025 at 09:20:52AM +0800, Ian Kent wrote:
+> > > > On 18/4/25 09:13, Ian Kent wrote:
+> > > > > On 18/4/25 00:28, Christian Brauner wrote:
+> > > > > > On Thu, Apr 17, 2025 at 05:31:26PM +0200, Sebastian Andrzej Siewior
+> > > > > > wrote:
+> > > > > > > On 2025-04-17 17:28:20 [+0200], Christian Brauner wrote:
+> > > > > > > > >       So if there's some userspace process with a broken
+> > > > > > > > > NFS server and it
+> > > > > > > > >       does umount(MNT_DETACH) it will end up hanging every other
+> > > > > > > > >       umount(MNT_DETACH) on the system because the dealyed_mntput_work
+> > > > > > > > >       workqueue (to my understanding) cannot make progress.
+> > > > > > > > Ok, "to my understanding" has been updated after going back
+> > > > > > > > and reading
+> > > > > > > > the delayed work code. Luckily it's not as bad as I thought it is
+> > > > > > > > because it's queued on system_wq which is multi-threaded so it's at
+> > > > > > > > least not causing everyone with MNT_DETACH to get stuck. I'm still
+> > > > > > > > skeptical how safe this all is.
+> > > > > > > I would (again) throw system_unbound_wq into the game because
+> > > > > > > the former
+> > > > > > > will remain on the CPU on which has been enqueued (if speaking about
+> > > > > > > multi threading).
+> > > > > > Yes, good point.
+> > > > > > 
+> > > > > > However, what about using polled grace periods?
+> > > > > > 
+> > > > > > A first simple-minded thing to do would be to record the grace period
+> > > > > > after umount_tree() has finished and the check it in namespace_unlock():
+> > > > > > 
+> > > > > > diff --git a/fs/namespace.c b/fs/namespace.c
+> > > > > > index d9ca80dcc544..1e7ebcdd1ebc 100644
+> > > > > > --- a/fs/namespace.c
+> > > > > > +++ b/fs/namespace.c
+> > > > > > @@ -77,6 +77,7 @@ static struct hlist_head *mount_hashtable
+> > > > > > __ro_after_init;
+> > > > > >    static struct hlist_head *mountpoint_hashtable __ro_after_init;
+> > > > > >    static struct kmem_cache *mnt_cache __ro_after_init;
+> > > > > >    static DECLARE_RWSEM(namespace_sem);
+> > > > > > +static unsigned long rcu_unmount_seq; /* protected by namespace_sem */
+> > > > > >    static HLIST_HEAD(unmounted);  /* protected by namespace_sem */
+> > > > > >    static LIST_HEAD(ex_mountpoints); /* protected by namespace_sem */
+> > > > > >    static DEFINE_SEQLOCK(mnt_ns_tree_lock);
+> > > > > > @@ -1794,6 +1795,7 @@ static void namespace_unlock(void)
+> > > > > >           struct hlist_head head;
+> > > > > >           struct hlist_node *p;
+> > > > > >           struct mount *m;
+> > > > > > +       unsigned long unmount_seq = rcu_unmount_seq;
+> > > > > >           LIST_HEAD(list);
+> > > > > > 
+> > > > > >           hlist_move_list(&unmounted, &head);
+> > > > > > @@ -1817,7 +1819,7 @@ static void namespace_unlock(void)
+> > > > > >           if (likely(hlist_empty(&head)))
+> > > > > >                   return;
+> > > > > > 
+> > > > > > -       synchronize_rcu_expedited();
+> > > > > > +       cond_synchronize_rcu_expedited(unmount_seq);
+> > > > > > 
+> > > > > >           hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
+> > > > > >                   hlist_del(&m->mnt_umount);
+> > > > > > @@ -1939,6 +1941,8 @@ static void umount_tree(struct mount *mnt,
+> > > > > > enum umount_tree_flags how)
+> > > > > >                    */
+> > > > > >                   mnt_notify_add(p);
+> > > > > >           }
+> > > > > > +
+> > > > > > +       rcu_unmount_seq = get_state_synchronize_rcu();
+> > > > > >    }
+> > > > > > 
+> > > > > >    static void shrink_submounts(struct mount *mnt);
+> > > > > > 
+> > > > > > 
+> > > > > > I'm not sure how much that would buy us. If it doesn't then it should be
+> > > > > > possible to play with the following possibly strange idea:
+> > > > > > 
+> > > > > > diff --git a/fs/mount.h b/fs/mount.h
+> > > > > > index 7aecf2a60472..51b86300dc50 100644
+> > > > > > --- a/fs/mount.h
+> > > > > > +++ b/fs/mount.h
+> > > > > > @@ -61,6 +61,7 @@ struct mount {
+> > > > > >                   struct rb_node mnt_node; /* node in the ns->mounts
+> > > > > > rbtree */
+> > > > > >                   struct rcu_head mnt_rcu;
+> > > > > >                   struct llist_node mnt_llist;
+> > > > > > +               unsigned long mnt_rcu_unmount_seq;
+> > > > > >           };
+> > > > > >    #ifdef CONFIG_SMP
+> > > > > >           struct mnt_pcp __percpu *mnt_pcp;
+> > > > > > diff --git a/fs/namespace.c b/fs/namespace.c
+> > > > > > index d9ca80dcc544..aae9df75beed 100644
+> > > > > > --- a/fs/namespace.c
+> > > > > > +++ b/fs/namespace.c
+> > > > > > @@ -1794,6 +1794,7 @@ static void namespace_unlock(void)
+> > > > > >           struct hlist_head head;
+> > > > > >           struct hlist_node *p;
+> > > > > >           struct mount *m;
+> > > > > > +       bool needs_synchronize_rcu = false;
+> > > > > >           LIST_HEAD(list);
+> > > > > > 
+> > > > > >           hlist_move_list(&unmounted, &head);
+> > > > > > @@ -1817,7 +1818,16 @@ static void namespace_unlock(void)
+> > > > > >           if (likely(hlist_empty(&head)))
+> > > > > >                   return;
+> > > > > > 
+> > > > > > -       synchronize_rcu_expedited();
+> > > > > > +       hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
+> > > > > > +               if (!poll_state_synchronize_rcu(m->mnt_rcu_unmount_seq))
+> > > > > > +                       continue;
+> > > This has a bug. This needs to be:
+> > > 
+> > > 	/* A grace period has already elapsed. */
+> > > 	if (poll_state_synchronize_rcu(m->mnt_rcu_unmount_seq))
+> > > 		continue;
+> > > 
+> > > 	/* Oh oh, we have to pay up. */
+> > > 	needs_synchronize_rcu = true;
+> > > 	break;
+> > > 
+> > > which I'm pretty sure will eradicate most of the performance gain you've
+> > > seen because fundamentally the two version shouldn't be different (Note,
+> > > I drafted this while on my way out the door. r.
+> > > 
+> > > I would test the following version where we pay the cost of the
+> > > smb_mb() from poll_state_synchronize_rcu() exactly one time:
+> > > 
+> > > diff --git a/fs/mount.h b/fs/mount.h
+> > > index 7aecf2a60472..51b86300dc50 100644
+> > > --- a/fs/mount.h
+> > > +++ b/fs/mount.h
+> > > @@ -61,6 +61,7 @@ struct mount {
+> > >                  struct rb_node mnt_node; /* node in the ns->mounts rbtree */
+> > >                  struct rcu_head mnt_rcu;
+> > >                  struct llist_node mnt_llist;
+> > > +               unsigned long mnt_rcu_unmount_seq;
+> > >          };
+> > >   #ifdef CONFIG_SMP
+> > >          struct mnt_pcp __percpu *mnt_pcp;
+> > > diff --git a/fs/namespace.c b/fs/namespace.c
+> > > index d9ca80dcc544..dd367c54bc29 100644
+> > > --- a/fs/namespace.c
+> > > +++ b/fs/namespace.c
+> > > @@ -1794,6 +1794,7 @@ static void namespace_unlock(void)
+> > >          struct hlist_head head;
+> > >          struct hlist_node *p;
+> > >          struct mount *m;
+> > > +       unsigned long mnt_rcu_unmount_seq = 0;
+> > >          LIST_HEAD(list);
+> > > 
+> > >          hlist_move_list(&unmounted, &head);
+> > > @@ -1817,7 +1818,10 @@ static void namespace_unlock(void)
+> > >          if (likely(hlist_empty(&head)))
+> > >                  return;
+> > > 
+> > > -       synchronize_rcu_expedited();
+> > > +       hlist_for_each_entry_safe(m, p, &head, mnt_umount)
+> > > +               mnt_rcu_unmount_seq = max(m->mnt_rcu_unmount_seq, mnt_rcu_unmount_seq);
+> > > +
+> > > +       cond_synchronize_rcu_expedited(mnt_rcu_unmount_seq);
+> > > 
+> > >          hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
+> > >                  hlist_del(&m->mnt_umount);
+> > > @@ -1923,8 +1927,10 @@ static void umount_tree(struct mount *mnt, enum umount_tree_flags how)
+> > >                          }
+> > >                  }
+> > >                  change_mnt_propagation(p, MS_PRIVATE);
+> > > -               if (disconnect)
+> > > +               if (disconnect) {
+> > > +                       p->mnt_rcu_unmount_seq = get_state_synchronize_rcu();
+> > >                          hlist_add_head(&p->mnt_umount, &unmounted);
+> > > +               }
+> > > 
+> > >                  /*
+> > >                   * At this point p->mnt_ns is NULL, notification will be queued
+> > > 
+> > > If this doesn't help I had considered recording the rcu sequence number
+> > > during __legitimize_mnt() in the mounts. But we likely can't do that
+> > > because get_state_synchronize_rcu() is expensive because it inserts a
+> > > smb_mb() and that would likely be noticable during path lookup. This
+> > > would also hinge on the notion that the last store of the rcu sequence
+> > > number is guaranteed to be seen when we check them in namespace_unlock().
+> > > 
+> > > Another possibly insane idea (haven't fully thought it out but throwing
+> > > it out there to test): allocate a percpu counter for each mount and
+> > > increment it each time we enter __legitimize_mnt() and decrement it when
+> > > we leave __legitimize_mnt(). During umount_tree() check the percpu sum
+> > > for each mount after it's been added to the @unmounted list.
+> > 
+> > I had been thinking that a completion in the mount with a counter (say
+> > 
+> > walker_cnt) could be used. Because the mounts are unhashed there won't
+> > 
+> > be new walks so if/once the count is 0 the walker could call complete()
+> > 
+> > and wait_for_completion() replaces the rcu sync completely. The catch is
+> > 
+> > managing walker_cnt correctly could be racy or expensive.
+> > 
+> > 
+> > I thought this would not be received to well dew to the additional fields
+> 
+> Path walking absolutely has to be as fast as possible, unmounting
+> doesn't. Anything that writes to a shared field from e.g.,
+> __legitimize_mnt() will cause cacheline pingpong and will very likely be
+> noticable. And people care about even slight decreases in performances
+> there. That's why we have the percpu counter and why I didn't even
+> consider something like the completion stuff.
 
-elapsed time: 1450m
+My wider problem with this whole patchset is that I didn't appreciate
+that we incur this complexity for the benefit of RT mostly which makes
+me somewhat resistant to this change. Especially anything that has
+noticable costs for path lookup.
 
-configs tested: 206
-configs skipped: 116
+I drafted my insane idea using percpu legitimize counts so we don't have
+to do that ugly queue_rcu_work() stuff. I did it and then I realized how
+terrible it is. It's going to be horrible managing the additional logic
+correctly because we add another synchronization mechanism to elide the
+rcu grace period via mnt->mnt_pcp->mnt_legitimizers.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+One issue is of course that we need to guarantee that someone will
+always put the last reference.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    clang-19
-arc                              allmodconfig    clang-19
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    clang-19
-arc                   randconfig-001-20250419    gcc-7.5.0
-arc                   randconfig-002-20250419    gcc-7.5.0
-arm                              allmodconfig    clang-19
-arm                               allnoconfig    gcc-14.2.0
-arm                              allyesconfig    clang-19
-arm                     davinci_all_defconfig    gcc-14.2.0
-arm                      jornada720_defconfig    clang-21
-arm                       multi_v4t_defconfig    clang-21
-arm                        mvebu_v7_defconfig    gcc-14.2.0
-arm                   randconfig-001-20250419    gcc-7.5.0
-arm                   randconfig-002-20250419    gcc-7.5.0
-arm                   randconfig-003-20250419    gcc-7.5.0
-arm                   randconfig-004-20250419    gcc-7.5.0
-arm                        shmobile_defconfig    clang-21
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250419    gcc-7.5.0
-arm64                 randconfig-002-20250419    gcc-7.5.0
-arm64                 randconfig-003-20250419    gcc-7.5.0
-arm64                 randconfig-004-20250419    gcc-7.5.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250419    gcc-14.2.0
-csky                  randconfig-002-20250419    gcc-14.2.0
-hexagon                          alldefconfig    clang-21
-hexagon                          allmodconfig    clang-19
-hexagon                           allnoconfig    gcc-14.2.0
-hexagon                          allyesconfig    clang-19
-hexagon               randconfig-001-20250419    gcc-14.2.0
-hexagon               randconfig-002-20250419    gcc-14.2.0
-i386                             allmodconfig    clang-20
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    clang-20
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    clang-20
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250418    clang-20
-i386        buildonly-randconfig-001-20250419    clang-20
-i386        buildonly-randconfig-002-20250418    gcc-12
-i386        buildonly-randconfig-002-20250419    clang-20
-i386        buildonly-randconfig-003-20250418    clang-20
-i386        buildonly-randconfig-003-20250419    clang-20
-i386        buildonly-randconfig-004-20250418    gcc-12
-i386        buildonly-randconfig-004-20250419    clang-20
-i386        buildonly-randconfig-005-20250418    gcc-11
-i386        buildonly-randconfig-005-20250419    clang-20
-i386        buildonly-randconfig-006-20250418    clang-20
-i386        buildonly-randconfig-006-20250419    clang-20
-i386                                defconfig    clang-20
-i386                  randconfig-001-20250419    clang-20
-i386                  randconfig-002-20250419    clang-20
-i386                  randconfig-003-20250419    clang-20
-i386                  randconfig-004-20250419    clang-20
-i386                  randconfig-005-20250419    clang-20
-i386                  randconfig-006-20250419    clang-20
-i386                  randconfig-007-20250419    clang-20
-i386                  randconfig-011-20250419    gcc-12
-i386                  randconfig-012-20250419    gcc-12
-i386                  randconfig-013-20250419    gcc-12
-i386                  randconfig-014-20250419    gcc-12
-i386                  randconfig-015-20250419    gcc-12
-i386                  randconfig-016-20250419    gcc-12
-i386                  randconfig-017-20250419    gcc-12
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250419    gcc-14.2.0
-loongarch             randconfig-002-20250419    gcc-14.2.0
-m68k                             alldefconfig    clang-21
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                            q40_defconfig    clang-21
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                      mmu_defconfig    clang-21
-mips                              allnoconfig    gcc-14.2.0
-mips                           gcw0_defconfig    clang-21
-mips                           ip32_defconfig    clang-21
-mips                           mtx1_defconfig    clang-21
-nios2                         3c120_defconfig    clang-21
-nios2                            allmodconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                            allyesconfig    gcc-14.2.0
-nios2                 randconfig-001-20250419    gcc-14.2.0
-nios2                 randconfig-002-20250419    gcc-14.2.0
-openrisc                         allmodconfig    gcc-14.2.0
-openrisc                          allnoconfig    clang-21
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-12
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    clang-21
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-12
-parisc                randconfig-001-20250419    gcc-14.2.0
-parisc                randconfig-002-20250419    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    clang-21
-powerpc                          allyesconfig    gcc-14.2.0
-powerpc                        fsp2_defconfig    gcc-14.2.0
-powerpc                      pasemi_defconfig    clang-21
-powerpc               randconfig-001-20250419    gcc-14.2.0
-powerpc               randconfig-002-20250419    gcc-14.2.0
-powerpc               randconfig-003-20250419    gcc-14.2.0
-powerpc                     tqm5200_defconfig    clang-21
-powerpc                     tqm8548_defconfig    clang-21
-powerpc                         wii_defconfig    gcc-14.2.0
-powerpc64             randconfig-001-20250419    gcc-14.2.0
-powerpc64             randconfig-002-20250419    gcc-14.2.0
-powerpc64             randconfig-003-20250419    gcc-14.2.0
-riscv                            allmodconfig    gcc-14.2.0
-riscv                             allnoconfig    clang-21
-riscv                            allyesconfig    gcc-14.2.0
-riscv                               defconfig    gcc-12
-riscv                    nommu_virt_defconfig    clang-21
-riscv                 randconfig-001-20250419    gcc-5.5.0
-riscv                 randconfig-002-20250419    gcc-5.5.0
-s390                             allmodconfig    gcc-14.2.0
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20250419    gcc-5.5.0
-s390                  randconfig-002-20250419    gcc-5.5.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                         ap325rxa_defconfig    clang-21
-sh                         apsh4a3a_defconfig    clang-21
-sh                                  defconfig    gcc-12
-sh                        edosk7705_defconfig    gcc-14.2.0
-sh                     magicpanelr2_defconfig    clang-21
-sh                    randconfig-001-20250419    gcc-5.5.0
-sh                    randconfig-002-20250419    gcc-5.5.0
-sh                           se7721_defconfig    clang-21
-sh                   sh7724_generic_defconfig    gcc-14.2.0
-sh                        sh7763rdp_defconfig    clang-21
-sh                            shmin_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                            allyesconfig    gcc-14.2.0
-sparc                 randconfig-001-20250419    gcc-5.5.0
-sparc                 randconfig-002-20250419    gcc-5.5.0
-sparc                       sparc64_defconfig    clang-21
-sparc64                          allmodconfig    gcc-14.2.0
-sparc64                          allyesconfig    gcc-14.2.0
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20250419    gcc-5.5.0
-sparc64               randconfig-002-20250419    gcc-5.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    clang-19
-um                               allyesconfig    gcc-12
-um                                  defconfig    gcc-12
-um                             i386_defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250418    clang-21
-um                    randconfig-001-20250419    gcc-5.5.0
-um                    randconfig-002-20250418    clang-21
-um                    randconfig-002-20250419    gcc-5.5.0
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250418    clang-20
-x86_64      buildonly-randconfig-001-20250419    clang-20
-x86_64      buildonly-randconfig-002-20250418    clang-20
-x86_64      buildonly-randconfig-002-20250419    clang-20
-x86_64      buildonly-randconfig-003-20250418    clang-20
-x86_64      buildonly-randconfig-003-20250419    clang-20
-x86_64      buildonly-randconfig-004-20250418    clang-20
-x86_64      buildonly-randconfig-004-20250419    clang-20
-x86_64      buildonly-randconfig-005-20250418    clang-20
-x86_64      buildonly-randconfig-005-20250419    clang-20
-x86_64      buildonly-randconfig-006-20250418    gcc-12
-x86_64      buildonly-randconfig-006-20250419    clang-20
-x86_64                              defconfig    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20250419    clang-20
-x86_64                randconfig-002-20250419    clang-20
-x86_64                randconfig-003-20250419    clang-20
-x86_64                randconfig-004-20250419    clang-20
-x86_64                randconfig-005-20250419    clang-20
-x86_64                randconfig-006-20250419    clang-20
-x86_64                randconfig-007-20250419    clang-20
-x86_64                randconfig-008-20250419    clang-20
-x86_64                randconfig-071-20250419    clang-20
-x86_64                randconfig-072-20250419    clang-20
-x86_64                randconfig-073-20250419    clang-20
-x86_64                randconfig-074-20250419    clang-20
-x86_64                randconfig-075-20250419    clang-20
-x86_64                randconfig-076-20250419    clang-20
-x86_64                randconfig-077-20250419    clang-20
-x86_64                randconfig-078-20250419    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    clang-18
-x86_64                         rhel-9.4-kunit    clang-18
-x86_64                           rhel-9.4-ltp    clang-18
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                           allyesconfig    gcc-14.2.0
-xtensa                randconfig-001-20250419    gcc-5.5.0
-xtensa                randconfig-002-20250419    gcc-5.5.0
+Another is that the any scheme that elides the grace period in
+namespace_unlock() will also mess up the fastpath in mntput_no_expire()
+such that we either have to take lock_mount_hash() on each
+mntput_no_expire() which is definitely a no-no or we have to come up
+with an elaborate scheme where we do a read_seqbegin() and
+read_seqcount_retry() dance based on mount_lock. Then we still need to
+fallback on lock_mount_hash() if the sequence count has changed. It's
+ugly and it will likely be noticable during RCU lookup.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+So queue_rcu_work() is still the ugly but likeliest option so far.
