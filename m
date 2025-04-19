@@ -1,86 +1,110 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C47518C06
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 09:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606711B4F0F
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 09:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745056141; cv=none; b=hqaxzvQsrkN5tLSwr2mQGOvr89EymJq+mvdpTh7Gxs7DAAVe+riL3F6RzP904YN4yBjlG2hpXhy7FMo9c+pbbdMpNl98ZmNb/2i1g5GcmR/QFjKNtnJdb5fCDSv0TI9pQfWPglWkTrWjPsvLxj/4IRqG6P+BIcZjYWQxKLrc/as=
+	t=1745056213; cv=none; b=LLAZeDJNl+YE36HOOGlTyy61PHGkr0kg5n9mVazzlAco/jKxvNqY+FqU+cZi/YwuWMwn87GFTn95yN42ZDhrxceI6/TwCCrU41LqKqTZujlgCDzydoiEnidFTaM0xPEyY+GBVMpmoaCGxtlbGgxYlhggvCZwWsGD7nyM4w1jaSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745056141; c=relaxed/simple;
-	bh=zklzViCR78rtGWWpSQ+SH1wiYY08pHKOOyED16FNUtY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=AabYb/ttzAyKdrALK/HgWEgar+4PGMtX69WRZcuSHCZ57Kkp3MU4Ls/rL/oxPwIQZbZrDvdwwfl0tHC2VGCQZurQBM/UWPeqmwV0L5JCSUdM2zYUhVw+iUJ5OoE0EK6EEWmvEvJ5cC7a1K40bWpl0jklCgMTqPRqLVtNBEG43yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=XKnDJwgw; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1745056213; c=relaxed/simple;
+	bh=OCJCK8IzVfDDMk/Wahm3g+Lsd3Yj6wZBzFZ29NKosLk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P2Nx112pGqCfZvraD8RwuUrx+/hZLd67viiyCrqj54pc7gUjXNxVzFARUVJIAufVV8k1e5+FiEL8e9ANwSm6FvFWpL9hAuQVzpGM0syfrM3snY60caYHuH9/yEB5MgbmspJD4Yoyz3Ck0RUR9jDDYeZkayGbRK1axuYQfQyYkEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rhgFJfQv; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="XKnDJwgw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rhgFJfQv"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-af908bb32fdso2219420a12.1
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 02:50:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745056211; x=1745661011; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s1smWoXBsF07yb0kdhSazKV5zZrD5jTCHEvASrG6ZXY=;
+        b=rhgFJfQvBEQ3MuHJ+9f1DqKoWJ7JoHseq00r8qNeghZbjNT4yhWHrZjrNzIzbOw3Su
+         ZJij+fgHUgEGx1NZyIGoUqMLK4962fE+WDmTigWX/p5VJnvF4cXR1//OwL6FHy7ONBzB
+         VxwdBsS4lEhxyPHIfVYtPaFvK9psAchv1n4CuF9NuGwSJCnt6MUSomT/o/6pYRvd+sEz
+         Fop8euFqObuwYiYzsoySXTEMTlJUprJXaKrFRHuYFoymLC8nE2YIQioF4h4i/YzcsS+F
+         ORsI4oYuc3MEOTgu9x6650ryUnWbg9qpd+0LD5iK2w5hFjQkPHbpjnqdBCeimsi5f+q1
+         Rwvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745056211; x=1745661011;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s1smWoXBsF07yb0kdhSazKV5zZrD5jTCHEvASrG6ZXY=;
+        b=c9ocO0HKvqc742v27jgurmvv4j3FpQ+v5i6ef2HuMc2GDud4LsXgEhw033Zpuv6dTl
+         dB58zvI5rnSJrCHUwjotQIce5gWt3Sz7JY3I6RqYcciCNDcqSdVavOA5RVKixpON/BFT
+         wJcsTiTFqRniR7SO/cG6a0RPCzjRKTetYSglZq2cztVKaUgQ+gViX+3Kmrol8vxeGJmy
+         jac8cNXOd07eNpNNBTn5FwWarW0RcbF7OyGNzv7pgCzN/MibvtSs8x8uMuNxkSm/iQSB
+         6aI1Yc5Y5xPGpEssKD0t/XDoaY7exgav8LFB20j1b4oR5Kxt2nslWRSsEmB/2FmElSbz
+         7b0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVfg/dUiE2OMozTTD+YKk3yQ6JHupGLgt1doaxaYhlEbjK6z9yujvpAk+T+YHYVsBJiFM6TY1Lg8Gilhkg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztWm4Lg2cqYoztXNYeObiwdtSkaIJ6PNHtunmTPP0kkkJiqbbW
+	MuRZA7b4ImiJkqYqffDScxzgxSK2GDhbFCoDqq27hM+MVZlE0MumaI7oD4CCig==
+X-Gm-Gg: ASbGncunNp9ArjaxVhy2ZRFHSHA7Kuz0HQIp9zPDDEgg9+xthbHHMoarzMLR4AI6LQs
+	xW7ekzQVQ7LOPpqXwizSSFgzDupGdECBo/ijTunAHNtPn3VmbxvjDAMQQfjZiMi5LEvKK1VZKLt
+	zJsH7Rz7VByFpK4jzm1pvIrQXki9MuPrBBfUi4ypuxWwcUXHuVpdox74lGrtL8hjuarfCBb1zq7
+	4At9kEJRhFxdd0CdT9eTqbuCtwyiOuEDaU7b5N9OnkauPtkgK2AvXKYWU8ELaja93u5BZKfomO0
+	Z5qLRMEMDlmylUUqz5eMhdHmLdfaSfXpC4pKYv3QCSJiLoPMOJ4s7Q==
+X-Google-Smtp-Source: AGHT+IEq9phG3rDT0nEB9hkvWvaXKiYNwe1s5RXKu8uLzKTD8MFTWep3kqRGNKf8OTR2vRkuBkxE6g==
+X-Received: by 2002:a17:90b:2705:b0:2ee:8cbb:de28 with SMTP id 98e67ed59e1d1-3087c2ca65fmr8403803a91.8.1745056211696;
+        Sat, 19 Apr 2025 02:50:11 -0700 (PDT)
+Received: from thinkpad.. ([36.255.17.167])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087df4e12asm2697981a91.37.2025.04.19.02.50.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Apr 2025 02:50:11 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: heiko@sntech.de,
+	Kever Yang <kever.yang@rock-chips.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	andersson@kernel.org,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Rob Herring <robh@kernel.org>,
+	Simon Xue <xxm@rock-chips.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v9 1/2] dt-bindings: PCI: dw: rockchip: Add rk3576 support
+Date: Sat, 19 Apr 2025 15:19:59 +0530
+Message-ID: <174505612709.29229.7221551173436866910.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250414145110.11275-2-kever.yang@rock-chips.com>
+References: <20250414145110.11275-1-kever.yang@rock-chips.com> <20250414145110.11275-2-kever.yang@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1745056135;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WYcIiX7im0SwEgUBjW9RpMKMf9b+aamLPfpMOC5NliI=;
-	b=XKnDJwgwVh+2AJkayQ0NeH2Kvg8qAbd1tnYvcMl+DKXHqiczpSpLHXSIzPBsxU/16t7iF4
-	hlYG9UTJWjXQNnUnkl64Qgc/oFfw/T8qtw6j0f9K6IvZmc7UEmQIKrmtpBHirzgLvOQPh0
-	J3ZWdIczd+6ufV4zdSA/E+qA1OtlNVgCdyNgn29IB8XuTI5EEc9vqkSezr7poIUqsoBwmV
-	MxMirsfelUlnq6h9recCZVOrPLxjseiwhEtSocWqQ96RR6A5TKgXHBsJoiTs3TwP6IiEf0
-	CejUseD8cefGgezfsiE2cTsZxrvlhitP1egzdsgPVf3AdOdTHVAn/I5JnviHXA==
-Content-Type: multipart/signed;
- boundary=787e13d5ada3b08197d931c1726e36235e1092534fb802965a37df9b17c0;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Sat, 19 Apr 2025 11:48:46 +0200
-Message-Id: <D9AIRPBIHXAO.3SDHEJW99DP4X@cknow.org>
-Subject: Re: [PATCH v3 00/10] Tegra Security Engine driver improvements
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-To: "Herbert Xu" <herbert@gondor.apana.org.au>
-Cc: "Akhil R" <akhilrajeev@nvidia.com>, <davem@davemloft.net>,
- <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
- <linux-crypto@vger.kernel.org>, <linux-tegra@vger.kernel.org>, "Dragan
- Simic" <dsimic@manjaro.org>, "Corentin Labbe" <clabbe@baylibre.com>,
- <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20250224091610.49683-1-akhilrajeev@nvidia.com>
- <D99QMGBHHYJO.1D7D0ZXJLBG9Y@cknow.org>
- <aAMhYaq0Ze-z6E8q@gondor.apana.org.au>
-In-Reply-To: <aAMhYaq0Ze-z6E8q@gondor.apana.org.au>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
---787e13d5ada3b08197d931c1726e36235e1092534fb802965a37df9b17c0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
 
-On Sat Apr 19, 2025 at 6:06 AM CEST, Herbert Xu wrote:
-> On Fri, Apr 18, 2025 at 01:45:23PM +0200, Diederik de Haas wrote:
->>=20
->> Earlier today I tried to boot my 6.15-rc1 kernel on my RockPro64
->> (rk3399) and that didn't go too well:
->
-> This should be fixed in the latest mainline kernel where hash
-> request chaining has been disabled.
+On Mon, 14 Apr 2025 22:51:09 +0800, Kever Yang wrote:
+> rk3576 is using DWC PCIe controller, with msi interrupt directly to GIC
+> instead of using GIC ITS, so
+> - no ITS support is required and the 'msi-map' is not required,
+> - a new 'msi' interrupt is needed.
+> 
+> 
 
-Excellent, thanks for letting me know.
-b2e689baf220 ("crypto: ahash - Disable request chaining")
+Applied to pci/dt-bindings, thanks!
 
-Cheers,
-  Diederik
+[1/2] dt-bindings: PCI: dw: rockchip: Add rk3576 support
+      commit: b5516efc1ec610e75f320385a3a2ecb5932a49d3
 
---787e13d5ada3b08197d931c1726e36235e1092534fb802965a37df9b17c0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaANxgAAKCRDXblvOeH7b
-blJ4AP4v0v8uHn92ZBD/ipPt+rGobZitRKp0xpoUesLYwz/VOQD+ObBSY+Fau99D
-uvbyarhPlqm3RUyDXRzJnNuy1XXOEwY=
-=82VX
------END PGP SIGNATURE-----
-
---787e13d5ada3b08197d931c1726e36235e1092534fb802965a37df9b17c0--
+Best regards,
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
