@@ -1,48 +1,49 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF5026AF3
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 16:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199445FDA7;
+	Sat, 19 Apr 2025 16:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745080630; cv=none; b=LItkozWf0QlYcaUtpvq9vXRlw20bB7J5s/NGJpPAP98NgIU05t8l+vgRsgVyzrmIiwdZB7UahOXGfx+NjVeX0SQfmSnqnvbqOug0VQ+Hr5WM5zJ6rNtcDubHphsLz6gSw4d/tE3/aqd0gbDnMiUriuDIvfYVvG8vOkqoc9AzZMY=
+	t=1745080692; cv=none; b=jztMmksdY3zgvfebZ2dsyAhkA9NgAymsQHAiFCxS6CPNZFsw5E7Rk0oBSURp18BrAURQ5BL3CwV6MoTZGRSWeDwMquUXXpx9KjXZT0SGuZ7pZjduOSQIf3LEKcQR0LLci/9FKEBUD6uNZdZ/s+Cx8+GbyUgJRziMUKgunyChXcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745080630; c=relaxed/simple;
-	bh=RNrAWejdpwpx31ojS2nsE1RAqW/UeizR6207ITFqL2U=;
+	s=arc-20240116; t=1745080692; c=relaxed/simple;
+	bh=uZShTIWKtHszqF1qKUftQsBG29lyj8rR9vgQVCWlIYQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hQRXrEM5pBPRWf+FTfdpqj8faYtVyv67ynVjeFku/LIjT6LVtlUmGPHNLW/kLCHS8GUUWQlIhfpswJLa6FnL7wp/ijmOqXE5svGjGk6oOwrYSg+hzvqJ90MycsUxcdcnedtHo9qBbm2fJxKTKL/JK+nCYqcSwmNqbeMbfH1q6z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JpKvX9rV; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JpKvX9rV"
-Date: Sat, 19 Apr 2025 09:36:46 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745080621;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3gAqc7ZMsVtcf6IciKTKwKTL0on26u+L0x1CBV9xTls=;
-	b=JpKvX9rVoPn321DOwtQil6lH+d2atYqiTTUjWcI+jNgRMLMNOmWuVi1nYJ83M3syXsYt3l
-	i/kS7Mi095iKRFj0AqYdtVPzHO7KH7DVrOuyyVoRSGJIvyvCnopOnxc7QJdMARZtXV6fOn
-	DbpM4l652S0lNHal3Uvcq2QIK6S6738=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Tejun Heo <tj@kernel.org>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>, 
-	Greg Thelen <gthelen@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Yosry Ahmed <yosry.ahmed@linux.dev>, 
-	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH] memcg: introduce non-blocking limit setting interfaces
-Message-ID: <rgze2xgrslssxoe7k3vcfg6fy2ywe4jowvwlbdsxrcrvhmklzv@jhyomycycs4n>
-References: <20250418195956.64824-1-shakeel.butt@linux.dev>
- <CAHH2K0as=b+EhxG=8yS9T9oP40U2dEtU0NA=wCJSb6ii9_DGaw@mail.gmail.com>
- <ohrgrdyy36us7q3ytjm3pewsnkh3xwrtz4xdixxxa6hbzsj2ki@sn275kch6zkh>
- <aALNIVa3zxl9HFK5@google.com>
- <nmdwfhfdboccgtymfhhcavjqe4pcvkxb3b2p2wfxbfqzybfpue@kgvwkjjagqho>
- <aAMVWsFbht3MdMEk@slm.duckdns.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=hDl+6M9NYLBWkfRtp/3yaaoevqTM2gfTc16xQlsONA2XNi4hrpLgveJQtgP5Eqk9usDmtumZLRGueAhDyUW2CxW9/oggY0le7M8ZBvwJ0Q85ahrDvMaml/dzLmwT7Cdrj4ITQGIpeTITCSPJS71C6ERs0Ow3vlYs3fOy6l6E/9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: P3PuIFteRb+z+e2DeHzfZw==
+X-CSE-MsgGUID: gpJd4fj9Qs2o02bMsvEb9w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="56857061"
+X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
+   d="scan'208";a="56857061"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 09:38:11 -0700
+X-CSE-ConnectionGUID: LYyXFtNmTtakeuq6ykzJkg==
+X-CSE-MsgGUID: u+cJX4vySN2jG9XVodTAuw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
+   d="scan'208";a="132240983"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 09:38:09 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u6BCg-0000000DrpO-0BLZ;
+	Sat, 19 Apr 2025 19:38:06 +0300
+Date: Sat, 19 Apr 2025 19:38:05 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] iio: adc: ad4695: use IIO_DECLARE_BUFFER_WITH_TS
+Message-ID: <aAPRbb93lJrnEE5l@smile.fi.intel.com>
+References: <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-0-ee0c62a33a0f@baylibre.com>
+ <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-2-ee0c62a33a0f@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,27 +52,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aAMVWsFbht3MdMEk@slm.duckdns.org>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-2-ee0c62a33a0f@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Apr 18, 2025 at 05:15:38PM -1000, Tejun Heo wrote:
-> On Fri, Apr 18, 2025 at 04:08:42PM -0700, Shakeel Butt wrote:
-> > Any reasons to prefer one over the other? To me having separate
-> > files/interfaces seem more clean and are more script friendly. Also
-> > let's see what others have to say or prefer.
+On Fri, Apr 18, 2025 at 05:58:33PM -0500, David Lechner wrote:
+> Use IIO_DECLARE_BUFFER_WITH_TS to declare the buffer that gets used with
+> iio_push_to_buffers_with_ts(). This makes the code a bit easier to read
+> and understand.
 > 
-> I kinda like O_NONBLOCK. The subtlety level of the interface seems to match
-> that of the implemented behavior.
+> AD4695_MAX_CHANNEL_SIZE macro is dropped since it was making the line
+> too long and didn't add that much value.
 > 
+> AD4695_MAX_CHANNELS + 2 is changed to AD4695_MAX_CHANNELS + 1 because
+> previously we were overallocating. AD4695_MAX_CHANNELS is the number of
+> of voltage channels and + 1 is for the temperature channel.
 
-Ok, it seems like more people prefer O_NONBLOCK, so be it. I will send
-v2 soon.
+...
 
-Also I would request to backport to stable kernels. Let me know if
-anyone have concerns.
+> -/* Max size of 1 raw sample in bytes. */
+> -#define AD4695_MAX_CHANNEL_SIZE		2
 
-I asked AI how to do the nonblock write in a script and got following:
+>  	/* Raw conversion data received. */
+> -	u8 buf[ALIGN((AD4695_MAX_CHANNELS + 2) * AD4695_MAX_CHANNEL_SIZE,
+> -		     sizeof(s64)) + sizeof(s64)] __aligned(IIO_DMA_MINALIGN);
+> +	IIO_DECLARE_BUFFER_WITH_TS(u8, buf, (AD4695_MAX_CHANNELS + 1) * 2)
+> +		__aligned(IIO_DMA_MINALIGN);
 
-$ echo 10G | dd of=memory.max oflag=nonblock
+I would rather expect this to be properly written as u16 / __le16 / __be16
+instead of playing tricks with u8.
 
-Shakeel
+With all comments given so far I would expect here something like:
+
+	IIO_DECLARE_BUFFER_WITH_TS(u16, buf, AD4695_MAX_CHANNELS + 1);
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
