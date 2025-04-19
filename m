@@ -1,127 +1,124 @@
-Received: from pku.edu.cn (mx17.pku.edu.cn [162.105.129.180])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EFDDEACE
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 12:08:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.105.129.180
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E0D259C;
+	Sat, 19 Apr 2025 12:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745064518; cv=none; b=kd5snZb9jWGf3k0Me4smP8SOR/3lU9sGqD6dXo3WIxH/DIrCX4yRpy5tU+AUH9GXNonrIR21a8CuPSWIT1o21qIf6WdHkbd3UtyzYwy7l88GF5TAviC6U+IL2sac4nSlZleV+AgfMHjuQ8odQuAdIVfZT9MJRx44yKczBvYB6G4=
+	t=1745064645; cv=none; b=DMWoqelOGGw4BCF1+yAcSABPJ+1A7g27vzCFKwUz6gDppbRF5QrfHZBhT8fM4jUNEfbNQyFzkvmGmcslt0e8DeViuKH+bNPf6GaWe7+1aUGEo63Y0hFzMkByDKYtrwAV3tUvS5fdms/fH1VjnCsX5+3HQdaA5LsFWrWVnbldveU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745064518; c=relaxed/simple;
-	bh=0vi9bSxOteNpYRBLQUKsaQ6T9Zp5ziaJXp50ZLSx+vI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RYeZlPgWe+PgNsaUQfpim9kkZApQqvfOoAxCGZGTkqAxOxfMnRlUdWp8+jRnMjUCqq+Aj8TxXRzXjlyVSWESPJi30o9MdzKFYjM6AV5yap2eFPF7y6t4A7UMWaA7VN0Gf/L6o3YKEDgQNoG5aSh5yae9Z1nChHwEhSeRC2oImOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pku.edu.cn; spf=pass smtp.mailfrom=pku.edu.cn; dkim=pass (1024-bit key) header.d=pku.edu.cn header.i=@pku.edu.cn header.b=RvoaSgHf; arc=none smtp.client-ip=162.105.129.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pku.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pku.edu.cn
+	s=arc-20240116; t=1745064645; c=relaxed/simple;
+	bh=gG/4R9vVgxIB+SpaZL4mesqyGcRxPvmepmQ5ibM9WKM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kx0gwcq0rfVx8AkiH7iNKXxs7pJ78OqCJlugIBqW/Od7JJzA7xPATNQQpOG8fNcH5ac6bOTQ5pn6LrA1Zcdf92q2suRiy8OgpwkNrlQgbvx1flLrrjExLq1Iz03y6S9EFrQ8iV5nX7smb4+sDwNQUyrvyaw3rKysdrOS1tLeaU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Iq6W9Jgc; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pku.edu.cn header.i=@pku.edu.cn header.b="RvoaSgHf"
-Received: from pku.edu.cn (unknown [10.4.225.203])
-	by mtasvr (Coremail) with SMTP id _____7Dw5kc8kgNoKm9QAA--.8882S3;
-	Sat, 19 Apr 2025 20:08:29 +0800 (CST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=pku.edu.cn; s=dkim; h=Received:Date:From:To:Cc:Subject:
-	Message-ID:References:MIME-Version:Content-Type:
-	Content-Disposition:In-Reply-To; bh=ShQJ6bdQ3naO3cGgvt+FpfUT7oKS
-	BjoS2qTqwnLQx1g=; b=RvoaSgHfnbW6HB90vYoyEhTwEA1HE2MGpr70p7MBRPb/
-	dW3y6NDSA1KBjHWq0L0IfMtz9vm77GXKd9tWw2sDZ3glZSfX6KAhaTwtMcSRHuC+
-	haFOrYFOTrtLET1jXglCz0Vd3NESf6LIJ6Mpt/IdNw36oH1TD9qFmBr8xgeqzuM=
-Received: from localhost (unknown [10.4.225.203])
-	by front02 (Coremail) with SMTP id 54FpogAXTIY2kgNoR68rAA--.15898S2;
-	Sat, 19 Apr 2025 20:08:28 +0800 (CST)
-Date: Sat, 19 Apr 2025 20:08:22 +0800
-From: Ruihan Li <lrh2000@pku.edu.cn>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Ruihan Li <lrh2000@pku.edu.cn>
-Subject: Re: [PATCH] mm/mm_init: Don't iterate pages below ARCH_PFN_OFFSET
-Message-ID: <6f2sjssx6f4lidlhucdio45s6p7d6xr4ibr3n3f73z53x5u62e@hvyh5socmfll>
-References: <20250418162727.1535335-1-lrh2000@pku.edu.cn>
- <aANN0rwxcajUtFXs@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Iq6W9Jgc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745064643; x=1776600643;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=gG/4R9vVgxIB+SpaZL4mesqyGcRxPvmepmQ5ibM9WKM=;
+  b=Iq6W9Jgc3FTpEfUg/kMJjCgWiA7B9QjCPTgkrcJHcFPdMTQZalmJQlZp
+   Yf2lD4QVovRwbw0ZpmFiHR/FdIPTSdUZNA0Nc01CmGrq4RX6C3WTdxnaW
+   m4sYqvUWnAt2Dn9wao1xhU3DXKQa3rGuHcWcaHh4ZmaztEtK4XisxohKz
+   1meHLhImHMrWgQrZRFuG8aRaO4tHdMS82VHgIsLb4kaU6NqRVdgzL2tRq
+   FWmGrVaqtCC9/pQVXTVeP48CRgG1EwJFwzPHGKdz6mFgJwnzvaA/7UewO
+   zkD/H+Qpyys/bHAk2lzt9J45reULoiJOtgLTlypRWj4Njw3JxWL3nN+hf
+   A==;
+X-CSE-ConnectionGUID: xjXX/yhLQciTWwODF/KhPA==
+X-CSE-MsgGUID: n2efEOEHTPSe4q5s86Zr3A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="46563603"
+X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
+   d="scan'208";a="46563603"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 05:10:43 -0700
+X-CSE-ConnectionGUID: X0sworbNSn+KiMNBIcpTtg==
+X-CSE-MsgGUID: uSa4u75VS9OiCUPzVzqAYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
+   d="scan'208";a="131298979"
+Received: from chenyu-dev.sh.intel.com ([10.239.62.107])
+  by orviesa006.jf.intel.com with ESMTP; 19 Apr 2025 05:10:41 -0700
+From: Chen Yu <yu.c.chen@intel.com>
+To: Kashyap Desai <kashyap.desai@broadcom.com>,
+	Sumit Saxena <sumit.saxena@broadcom.com>,
+	Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+	Chandrakanth patil <chandrakanth.patil@broadcom.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Yu <yu.chen.surf@foxmail.com>,
+	Chen Yu <yu.c.chen@intel.com>
+Subject: [PATCH 1/6] scsi: megaraid_sas: Fix invalid Node index
+Date: Sat, 19 Apr 2025 20:04:54 +0800
+Message-Id: <20250419120454.1840662-1-yu.c.chen@intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aANN0rwxcajUtFXs@kernel.org>
-X-CM-TRANSID:54FpogAXTIY2kgNoR68rAA--.15898S2
-X-CM-SenderInfo: yssqiiarrvmko6sn3hxhgxhubq/1tbiAgEIBWf35XUDOwARsn
-X-CM-DELIVERINFO: =?B?aH/fJ6aAH6dYjNjDbLdWX9VB7ttaQFyXTaecYZzOeDisy/krtsX5TsLkpeAzENeCPc
-	0+BDdXjm5Mlm64oODP/CxX7Cd2WUS6gvCXweNJGg4wTqVPON5pxajDNeWruRnFGC+vzwRc
-	v3bsqmnf43BmGcHw7dEE9dfsVAMjqNIpZo88038huZM7cFNpXzyutorufK+aBg==
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Transfer-Encoding: 8bit
 
-Hi Mike,
+On a system with DRAM interleave enabled, out-of-bound access
+is detected:
 
-Thanks a lot for your review!
+megaraid_sas 0000:3f:00.0: requested/available msix 128/128 poll_queue 0
+------------[ cut here ]------------
+UBSAN: array-index-out-of-bounds in ./arch/x86/include/asm/topology.h:72:28
+index -1 is out of range for type 'cpumask *[1024]'
+dump_stack_lvl+0x5d/0x80
+ubsan_epilogue+0x5/0x2b
+__ubsan_handle_out_of_bounds.cold+0x46/0x4b
+megasas_alloc_irq_vectors+0x149/0x190 [megaraid_sas]
+megasas_probe_one.cold+0xa4d/0x189c [megaraid_sas]
+local_pci_probe+0x42/0x90
+pci_device_probe+0xdc/0x290
+really_probe+0xdb/0x340
+__driver_probe_device+0x78/0x110
+driver_probe_device+0x1f/0xa0
+__driver_attach+0xba/0x1c0
+bus_for_each_dev+0x8b/0xe0
+bus_add_driver+0x142/0x220
+driver_register+0x72/0xd0
+megasas_init+0xdf/0xff0 [megaraid_sas]
+do_one_initcall+0x57/0x310
+do_init_module+0x90/0x250
+init_module_from_file+0x85/0xc0
+idempotent_init_module+0x114/0x310
+__x64_sys_finit_module+0x65/0xc0
+do_syscall_64+0x82/0x170
+entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-On Sat, Apr 19, 2025 at 10:16:34AM +0300, Mike Rapoport wrote:
-> On Sat, Apr 19, 2025 at 12:27:27AM +0800, Ruihan Li wrote:
-> > Currently, memmap_init initializes pfn_hole with 0 instead of
-> > ARCH_PFN_OFFSET. Then init_unavailable_range will start iterating each
-> > page from the page at address zero to the first available page, but it
-> > won't do anything for pages below ARCH_PFN_OFFSET because pfn_valid
-> > won't pass.
-> > 
-> > If ARCH_PFN_OFFSET is very large (e.g., something like 2^64-2GiB if the
-> > kernel is used as a library and loaded at a very high address), the
-> > pointless iteration for pages below ARCH_PFN_OFFSET will take a very
-> > long time, and the kernel will look stuck at boot time.
-> > 
-> > This commit sets the initial value of pfn_hole to ARCH_PFN_OFFSET, which
-> > avoids the problematic and useless iteration mentioned above.
-> > 
-> > Fixes: 907ec5fca3dc ("mm: zero remaining unavailable struct pages")
-> 
-> I don't think it should be backported, this does not fix a bug.
+Fix it accordingly.
 
-I thought the Fixes tag only indicated that the problem existed since
-the specific commit, not the need for a backport (since the backport
-should only happen when someone sends or CC's the patch to the
-linux-stable mailing list)?
+Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+---
+ drivers/scsi/megaraid/megaraid_sas_base.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-But anyway, I'm going to remove the Fixes tag when I send v2.
-
-> 
-> > Signed-off-by: Ruihan Li <lrh2000@pku.edu.cn>
-> > ---
-> >  mm/mm_init.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/mm/mm_init.c b/mm/mm_init.c
-> > index 84f14fa12..b3ae9f797 100644
-> > --- a/mm/mm_init.c
-> > +++ b/mm/mm_init.c
-> > @@ -966,7 +966,7 @@ static void __init memmap_init_zone_range(struct zone *zone,
-> >  static void __init memmap_init(void)
-> >  {
-> >  	unsigned long start_pfn, end_pfn;
-> > -	unsigned long hole_pfn = 0;
-> > +	unsigned long hole_pfn = ARCH_PFN_OFFSET;
-> 
-> ARCH_PFN_OFFSET is defined only for FLATMEM, this won't even build for
-> SPARSEMEM.
-
-Sorry for my ignorance. I'm not familiar with the code and I'm only
-testing the FLATMEM configuration. I'll send a v2 patch to fix this.
-Thanks for pointing out my stupid mistake.
-
-> 
-> >  	int i, j, zone_id = 0, nid;
-> >  
-> >  	for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
-> > -- 
-> > 2.49.0
-> > 
-> > 
-> 
-> -- 
-> Sincerely yours,
-> Mike.
-
-Thanks,
-Ruihan Li
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index 28c75865967a..7a2e35a35193 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -5905,7 +5905,11 @@ megasas_set_high_iops_queue_affinity_and_hint(struct megasas_instance *instance)
+ 	const struct cpumask *mask;
+ 
+ 	if (instance->perf_mode == MR_BALANCED_PERF_MODE) {
+-		mask = cpumask_of_node(dev_to_node(&instance->pdev->dev));
++		int nid = dev_to_node(&instance->pdev->dev);
++
++		if (nid == NUMA_NO_NODE)
++			nid = 0;
++		mask = cpumask_of_node(nid);
+ 
+ 		for (i = 0; i < instance->low_latency_index_start; i++) {
+ 			irq = pci_irq_vector(instance->pdev, i);
+-- 
+2.25.1
 
