@@ -1,326 +1,191 @@
-Received: from smtp01.aussiebb.com.au (smtp01.aussiebb.com.au [121.200.0.92])
+Received: from MA0PR01CU009.outbound.protection.outlook.com (mail-southindiaazolkn19010008.outbound.protection.outlook.com [52.103.67.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7E41448F2;
-	Sat, 19 Apr 2025 01:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.200.0.92
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745025882; cv=none; b=D3OggGmHx2o+EvpGaatJaROTNrvn/XLEYso54avbsgiKB696E1NnhMJQDC/T89A4SNzXNdDyp+6gZdJ/xRVUfKrmeJWeEFofwe47+akEf9bGU4J67H798h/D4YjJc11RQhTmfJAKIWlngUQeDm+QbWGgUXOLnFqfq/LATkQtPyo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745025882; c=relaxed/simple;
-	bh=v9SMrehymawYp0ubOq9iqBH0rzCv62uomeBcGhwrVQs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VhfHtBHq//CSGRbz6Q3uPdBo/tfMSEXngpYd+IvAm1tFtvj3mInG7HbuUKZs/UywlcsG/9HkPSjaaRcq8vin0SCqtyMwUDBbf7ri44u5kMWW+U3NP0dDNWq9Z1zDwXYl8f3TvRrJHsLA3TPqT8Vz3jsw3SmbaBJQAfD6qM2D7DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=themaw.net; spf=fail smtp.mailfrom=themaw.net; arc=none smtp.client-ip=121.200.0.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=themaw.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=themaw.net
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp01.aussiebb.com.au (Postfix) with ESMTP id 65687100767;
-	Sat, 19 Apr 2025 11:24:37 +1000 (AEST)
-X-Virus-Scanned: Debian amavisd-new at smtp01.aussiebb.com.au
-Received: from smtp01.aussiebb.com.au ([127.0.0.1])
-	by localhost (smtp01.aussiebb.com.au [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id sEONb8hvuJih; Sat, 19 Apr 2025 11:24:37 +1000 (AEST)
-Received: by smtp01.aussiebb.com.au (Postfix, from userid 116)
-	id 60CEE10070C; Sat, 19 Apr 2025 11:24:35 +1000 (AEST)
-X-Spam-Level: 
-Received: from [192.168.0.229] (159-196-82-144.9fc452.per.static.aussiebb.net [159.196.82.144])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: ian146@aussiebb.com.au)
-	by smtp01.aussiebb.com.au (Postfix) with ESMTPSA id B4B3B10070C;
-	Sat, 19 Apr 2025 11:24:32 +1000 (AEST)
-Message-ID: <834853f4-10ca-4585-84b2-425c4e9f7d2b@themaw.net>
-Date: Sat, 19 Apr 2025 09:24:31 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F511C6BE;
+	Sat, 19 Apr 2025 01:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745026040; cv=fail; b=nTlATNBu58Brdl1yGNaVAj9QU8mo8UGokZdlaXuvhqEjx9qWZtpEsxNPw88Y6LDvL1a2WTUXVNNrqA5DQq+TtucMYrVXNiUeu1OINFV23Xn8W2FOdQtUcdsY7T4v4xa/vGaJDeO5pG9gUFCfvy5QnmiJCwyje+xzG4VzidjaX4o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745026040; c=relaxed/simple;
+	bh=NkM4+3yaiLEQFNd8n5axqkPqg2MXpgHw/4Oo365T4gA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=UDiNay5y938BIW6wv9sy7DHhWuXfZJy1JRXrSjhOJ02n0yyNbXdhfbZeI5l0+GftpuQpuaFkjfXC1Jc7pVmGH7WqJ6OB2DgL+TzgSgogZ26/+aDQ9Bx9+vVEQvRB7HZqlyXmfxQKA8tBhsY5+uLQwZ74dFi60biEh3NZiLau2Fg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=DN4ydWfJ; arc=fail smtp.client-ip=52.103.67.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="DN4ydWfJ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dPX8dy0YCfk3SCbj/Otv+mm4TABKSw4lutDLSrXH7W+JTvk/PuQMu00N2lUBvwwYuWgIS7J80UYZt6NVYK/Ol0Y2kbo0yPkuUlhmD/1rFRkfFhYX650ZaV6nSHMkvzfwGVPyZty8QXW1PwvNhjrf90ohOvMhzu3K4V4DBXSVL+i9qo9fx4TBmdc4zbIHzV7DvkMo/TCNfGGY3YZd0uEzfC6drVWJq1Ow7+wg7rFyYbnfQqfYHlqFLWCgaAmeREogv154VPRWtarLD/u9pv2Z0k1zx2z+QqvS6GhZX+EOq+D1c0VttsPEt2PdnCkoLC2aZvxmw4hzUmzT9Em851+66A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RmBycWJSdyji6Hd3rcCoLyyd4DN3ZsqKl+LWeHR9c9o=;
+ b=LJvPEFMBO/KfYN+eFqwzLiUHSHuZTSRCXvi/iOy9lqK+Kj0OfO0wgo4eXEFcB+GsfAcZAURC7H+BHtfJqYLe/DfGMpuBYt6w9Qld8KDz99g1phRLcT+c3nF1gPTfoss1Gf/eQZUd+yq8gYV3vcwORhgcriVfxSRD26MQDo1mtErBbgYN1rINGRiPjAoIvQzxhREfdNGPO9FB7KvEXSXVy3hLEmwfsZl4ndJ26ypQXdgLLRF0+5QmpCv/7eb5rUVGX640a5jO1h9v4JKXK2/7M1NVP8QflrQAUigTJNXzlPmNmli++3h0Yqoe2pZmp/2ilYpDMpUcr/eF4MXIH6W9FQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RmBycWJSdyji6Hd3rcCoLyyd4DN3ZsqKl+LWeHR9c9o=;
+ b=DN4ydWfJSk9rIiYDihqSOqWryalKvKsa+cKaHKUcX2UcgX1bt3Nvd8tgLeyDlfu7Udja3uM8zEjwmEEs7ZIFYTHkSLSQ/lWldr8Bq2ol+84W/+1CTqfBWWgj47c+ApNLIaHWd3ugdna0Zu2rwHVK9u0+75qnylnyFKFTFrWoUQwWLl995zfooGwnYwB9OqdFwxGqllwFhXV1wbA/0A8xGkhB4shBJUJVzB4IbtlKtum6A6Dx7ovK1pykuLjlh9UudMpYSEJ2vF6yJWlUzZiLOf/14WWTHIqsxE2IchWjydfmwDjb6sAr4zhr2+/lkTeZRP7bdYvd+7O5AO1/9DCXmg==
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
+ by PN1P287MB3646.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:24e::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.27; Sat, 19 Apr
+ 2025 01:27:10 +0000
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4]) by MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4%5]) with mapi id 15.20.8655.025; Sat, 19 Apr 2025
+ 01:27:10 +0000
+Message-ID:
+ <MA0P287MB2262D35E7FD54F6D721DFF82FEBE2@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+Date: Sat, 19 Apr 2025 09:27:05 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] riscv: pwm: sophgo: add pwm support for SG2044
+To: Longbin Li <looong.bin@gmail.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Inochi Amaoto <inochiama@gmail.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ sophgo@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+References: <20250418022948.22853-1-looong.bin@gmail.com>
+From: Chen Wang <unicorn_wang@outlook.com>
+In-Reply-To: <20250418022948.22853-1-looong.bin@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TYWP286CA0006.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:178::16) To MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:100::6)
+X-Microsoft-Original-Message-ID:
+ <3e7f4d05-f7a0-444a-9b79-adbc944f7c3c@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
-To: Christian Brauner <brauner@kernel.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Mark Brown <broonie@kernel.org>, Eric Chanudet <echanude@redhat.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
- Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Ian Kent <ikent@redhat.com>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
- Alexander Larsson <alexl@redhat.com>, Lucas Karpinski <lkarpins@redhat.com>,
- Aishwarya.TCV@arm.com
-References: <fbbafa84-f86c-4ea4-8f41-e5ebb51173ed@sirena.org.uk>
- <20250417-wolfsrudel-zubewegt-10514f07d837@brauner>
- <fb566638-a739-41dc-bafc-aa8c74496fa4@themaw.net>
- <20250417-abartig-abfuhr-40e558b85f97@brauner>
- <20250417-outen-dreihundert-7a772f78f685@brauner>
- <20250417-zappeln-angesagt-f172a71839d3@brauner>
- <20250417153126.QrVXSjt-@linutronix.de>
- <20250417-pyrotechnik-neigung-f4a727a5c76b@brauner>
- <39c36187-615e-4f83-b05e-419015d885e6@themaw.net>
- <125df195-5cac-4a65-b8bb-8b1146132667@themaw.net>
- <20250418-razzia-fixkosten-0569cf9f7b9d@brauner>
-Content-Language: en-US
-From: Ian Kent <raven@themaw.net>
-Autocrypt: addr=raven@themaw.net; keydata=
- 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
-In-Reply-To: <20250418-razzia-fixkosten-0569cf9f7b9d@brauner>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MA0P287MB2262:EE_|PN1P287MB3646:EE_
+X-MS-Office365-Filtering-Correlation-Id: e6630974-de70-44d4-f81a-08dd7ee14e0e
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199028|15080799006|7092599003|19110799003|6090799003|5072599009|8060799006|1602099012|3412199025|10035399004|440099028|4302099013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RFZPc0pjdFplN0E2MWQ0d2tvdzZ1aTJzQUFmblRJZWRvbnNxeC9lZENWRkRh?=
+ =?utf-8?B?bGdtSVpoWFNvakpvQ2tUVnJxSk5pa2IrOWl3Y2R2eU5RZXRVMkx4MFE2SUpB?=
+ =?utf-8?B?RjZQanZxUmlrTkFNQytGNDNkeFMxNDY4OWtNL0pBVGM3SWlUQkdsTWlDZUJ1?=
+ =?utf-8?B?T0t0THB1UEdkS1VLaW5HL3RnS2xjbGczbzZQQy8yNURwS0lpNmpUUFJJaXZp?=
+ =?utf-8?B?ZUgrM0xUeTRNSzh1UTdYWXc2SDBza09wZ2RsWEgvOHZ2SExFWG1GTG5xcU1s?=
+ =?utf-8?B?NDR3eEVoRTQyN0lpM1VUOTBZMngra0JQS3p5eTBtZHVhQldBa2d3b0RMbDQ5?=
+ =?utf-8?B?ZE9jT3AvbDR1VEJkeEYwdzVPbkJCVHJWSWUzT3JWaklDNml0bDZ2ZGc4VGIy?=
+ =?utf-8?B?MUVNbUp3RktCdTNmT1Q5K3VVbHV3SE5ubnBuMzlxL2wxckJ4b2J3MnNjMCtN?=
+ =?utf-8?B?cm5oYkE0cEJOSDRDczZ3WVNDU3MxMEk0cG5XVmEwMmtYOHViVXl5WERPRlJq?=
+ =?utf-8?B?NGwxT1dNRG1DeWl6V1pXVmoyV0pENUExZnlEYUQ3RzJGZ25tU1NFQTRWNlFm?=
+ =?utf-8?B?S3pnbmx1MXdMRW1RVzNGamZoSE1kSnVzZ2dVZGRWVzFDVDFMOVlHd1U0ejZ3?=
+ =?utf-8?B?cVZMQm9RMkg2NzJnV3FsNUZDM0M1NWlkRU5HejZWZEV3V0c5Zzh2d3NoUXB1?=
+ =?utf-8?B?Zi9iTkNRNVNnd1VXY0Q2Z3h6N29lVXhmSDNtbHBlU1UrOWRMZTJKbk5wMm9q?=
+ =?utf-8?B?VDBiNWJFWDBWRUJPK3oxaEhqZGxvd1dNSzE5bWJiTEdwUW1kcmRHUDhJL1o0?=
+ =?utf-8?B?RXYyNFA4UG9ma0N4bVoxMkFIblVxQ2lYNTQ5N0U2dlBKSzdBZ3hIWlNRMzBj?=
+ =?utf-8?B?MzAwUTUrenU1a3o4TjZMSUV4T0xYLzFqdmJMRmRzWmJQeVFkYjNMSEdMTElH?=
+ =?utf-8?B?OHJkQnU4TFBOVG1XZ2Z4bUgwdDRkcmZTYUNHZGRVUUJVZVBWalNZaThqSXVs?=
+ =?utf-8?B?ajZCeFQ0UmdkYWZMMVFKM1pFT3k5SHZpaDdQd2Foa3JxZytkM0EveGJqNjhJ?=
+ =?utf-8?B?RHVtdlhiWGRuMmpISUJMQng5RzFiTTNRY3ROZzl5N1VJVDkxdm0vcVlzeFkw?=
+ =?utf-8?B?NmlidHRzMXhBT0RzbGFIM2pVOUhHVHRvclhnV1VuQjdvWGhLWENDcTBLTHBw?=
+ =?utf-8?B?TExadGc5U0kwbmxyZktMRXIyeHV5aHl5U0dBdytIWlorM2tEcU01Um9NN09J?=
+ =?utf-8?B?YVlBWk1VYjNTVjNiT2ZzOWZ0b1ZwdnlCUEF5T1VxV1U4UVk1YWdlT210Ly8r?=
+ =?utf-8?B?WmgrektkZFU4VzN3NFY5UjM3bnZob3ErdnR6cm9oVFdyWmkvY3FlWTYwdFdB?=
+ =?utf-8?B?UitnWGJRVy9WaHowcHdsVjVtQlJMYTFOZFN3UUVBVGJEK0RzcW95U3ZmNFBX?=
+ =?utf-8?B?ODl5UzRSdU9nVHpxSnAySjM3bkdNcENCbll0bVczbXVqWlA5OFJCVGR2YlM4?=
+ =?utf-8?B?TC9TQkFqM3JSb2xnZ25wT2pjSUdWWVRVZVRrc3BSejJsbmdmYzBTOGxGbVVn?=
+ =?utf-8?B?OFNyK0lJdVJHVHQ4S0RzaXBaTTdUZWpOYkxmdEVHVGp1MWlLS2FkTWVFeTIv?=
+ =?utf-8?B?cThOcHA1OWk2SlM3U1R6VzJhZzZwMTYrZzM0QXJIaWlPOHhRenJSdUtUbEk4?=
+ =?utf-8?B?eVVWTkFjbUtCMVdkNTJ2WVhRVkdPRkVQNWhiMjRtZ3o2NFp0bm1tQko3clVE?=
+ =?utf-8?Q?BrpqzsPla06BlJpL3ZZBcTyi0p5sK9gE4zxNvQC?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TGR5Q0FHTHVqbG5OV2ErQUhtQm1kSlVpdGR6K3dDRnVrcVZ4dDdZbFRyNFM5?=
+ =?utf-8?B?TStaeit0eXVsL1J2S3ZLWUFOc0s1Nm50dUJpY2RucFZhclpMMlF0WXBNTVcw?=
+ =?utf-8?B?QkNHTFJyZE1adXhnOTEwaFJTN0wyR2R1RFFBUElibVd5Nk4vMTMvcnNkRmZW?=
+ =?utf-8?B?RE92eC9xOUxlQWhOSnJ0ZlVrLy8wbVlOUE9kd0poNzZNNW5KbW1SeUM4VmNZ?=
+ =?utf-8?B?dDZLeW1qQXpUZzFDa1h0QUc1c0tmVWhUQW13NWFiQzVUL250d2JoUjlMZFJ6?=
+ =?utf-8?B?MVJyQ3V6Z01WK0IvbXIwV1I5TWdxc3lCNWxVYkh2Y2wrOXpaTVNIOVBQbExR?=
+ =?utf-8?B?azRJQXpjRHZibUdkODZqUGJTNHF0WXovRk11K0poUHR2TGJEelpWc1ZDd1JK?=
+ =?utf-8?B?bHNKeDdlYW5MamF4OTFaVDRFenU3bmplYXdiUm91UUdwZW9GU1ZGS0xGcEFp?=
+ =?utf-8?B?UWNpWTM5ZTdKT0FyQ2R6TEVPWC9CS1VXYzVVWVNON3hSekIrL2NsbVVGRDRh?=
+ =?utf-8?B?ajdIUjF4U2FtVllOMkpZd3k0UWxqZTlvclllckpnY1k2cXRCWWtUeU1sNGFK?=
+ =?utf-8?B?K1c0aXVQNUNKRTRnR2pCamkyV1hMRTZVRlV3K2MzZ2dZUTdib3V2RlRBUWpt?=
+ =?utf-8?B?TE94U2ZvOGRVdlhGRHNaRzY2VzBoa1pMKzRMR2lCcTVWWkF4Z1FzSVppMlVG?=
+ =?utf-8?B?UVFLNUJhaVJnVXpLQXNXS2Ric2ZYTXR6OEZXMXUrN0d4MGI0Y3NxY1RPejBP?=
+ =?utf-8?B?cGNrUmFPRXBxSTNCMGFkeE5pd3JrSUxVTjBGbHZvTUNNRzJWM1NXMWdqK2Z5?=
+ =?utf-8?B?RlJNblpjbkc3UlZtV1lWclpIQ1hxMW9RYjlCcEhjd01JdkFFZXNLaUljVk5n?=
+ =?utf-8?B?UmlURHRHbTBQQ045RG9NQktSS1UzQ3FZZmNTOS82bzJiR3BNTlh2eXZwUGc2?=
+ =?utf-8?B?RTl4Ylp0SFo1TU40VVhuU1hKbU9CNGtmbjBkSDZRZnBZZnByS0ZRMzBpcEpS?=
+ =?utf-8?B?RHAweFVKQ29kR1lxMVJXUTNtQXZDTXYySkY2Y3BmVS9mNUpsKzBFTHZJczJm?=
+ =?utf-8?B?ZHJ5aWRza0d4RnprOGZ1NzRtZFA3TVJzV3ByOGNEWnNLSmw1MEI5c0N0T0l6?=
+ =?utf-8?B?YUdsNS84VjkxSXdTd2lMeG01RUg4NDlnOFVCY0pEVkdLOXduWWhhSGdFSEk3?=
+ =?utf-8?B?QVltTHZqWW1oUW5ScnlhUnZiOE5VZkhOQ3kvMlF2Zi8reW5NMlYvd2dtcDRE?=
+ =?utf-8?B?SGY2RmI4d1BDcmpYSXFQN0xDSkhidXdYc01wVkt4WkxYVnAya2J1aGxOT1Rs?=
+ =?utf-8?B?c0RmQmVvdm5JOWlOK3M3VG1kcG1MeVA4Z3FUWXc5NysyOE1pL3RqK3RodWJh?=
+ =?utf-8?B?bXp5T0crTEt2d05tT2s2Vm9WdksvSUlGYm91WE1XS0NPUkkvL1cxQ05yUUtX?=
+ =?utf-8?B?dW02QzF5cTVSMWxBYnpibTlTQklpSjZsaTF4V3BmUVVCQ1Zka0dPVzUyMm1i?=
+ =?utf-8?B?YWFEblpnc1dvcnVtWDVRaVF5clVURGErQnRLeTFYZjJjWDZSZFZudy9LN1A2?=
+ =?utf-8?B?NjROaTMrVkt5dXY1Q0ZLRmhTSGorcldpa2FKTUUxZnRmdlM0R054bUtTeXNo?=
+ =?utf-8?B?YW1SZ0FpWmpINGdRNk9ZbmI2OTNNTlUxSDk1Z2owazNSUjMxR3krQnU3aVFh?=
+ =?utf-8?B?Qi9SME92bUd1VzFzU1F2N3g0bDQ4Q09LaDhqQnowd3VBRzJaZ1JvMlQ3QkdY?=
+ =?utf-8?Q?KQN5L5hNehjyzEuSTgxbeB8qw/1bRWPIvBv/2KY?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e6630974-de70-44d4-f81a-08dd7ee14e0e
+X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2025 01:27:10.1692
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN1P287MB3646
 
 
-On 18/4/25 16:47, Christian Brauner wrote:
-> On Fri, Apr 18, 2025 at 09:20:52AM +0800, Ian Kent wrote:
->> On 18/4/25 09:13, Ian Kent wrote:
->>> On 18/4/25 00:28, Christian Brauner wrote:
->>>> On Thu, Apr 17, 2025 at 05:31:26PM +0200, Sebastian Andrzej Siewior
->>>> wrote:
->>>>> On 2025-04-17 17:28:20 [+0200], Christian Brauner wrote:
->>>>>>>       So if there's some userspace process with a broken
->>>>>>> NFS server and it
->>>>>>>       does umount(MNT_DETACH) it will end up hanging every other
->>>>>>>       umount(MNT_DETACH) on the system because the dealyed_mntput_work
->>>>>>>       workqueue (to my understanding) cannot make progress.
->>>>>> Ok, "to my understanding" has been updated after going back
->>>>>> and reading
->>>>>> the delayed work code. Luckily it's not as bad as I thought it is
->>>>>> because it's queued on system_wq which is multi-threaded so it's at
->>>>>> least not causing everyone with MNT_DETACH to get stuck. I'm still
->>>>>> skeptical how safe this all is.
->>>>> I would (again) throw system_unbound_wq into the game because
->>>>> the former
->>>>> will remain on the CPU on which has been enqueued (if speaking about
->>>>> multi threading).
->>>> Yes, good point.
->>>>
->>>> However, what about using polled grace periods?
->>>>
->>>> A first simple-minded thing to do would be to record the grace period
->>>> after umount_tree() has finished and the check it in namespace_unlock():
->>>>
->>>> diff --git a/fs/namespace.c b/fs/namespace.c
->>>> index d9ca80dcc544..1e7ebcdd1ebc 100644
->>>> --- a/fs/namespace.c
->>>> +++ b/fs/namespace.c
->>>> @@ -77,6 +77,7 @@ static struct hlist_head *mount_hashtable
->>>> __ro_after_init;
->>>>    static struct hlist_head *mountpoint_hashtable __ro_after_init;
->>>>    static struct kmem_cache *mnt_cache __ro_after_init;
->>>>    static DECLARE_RWSEM(namespace_sem);
->>>> +static unsigned long rcu_unmount_seq; /* protected by namespace_sem */
->>>>    static HLIST_HEAD(unmounted);  /* protected by namespace_sem */
->>>>    static LIST_HEAD(ex_mountpoints); /* protected by namespace_sem */
->>>>    static DEFINE_SEQLOCK(mnt_ns_tree_lock);
->>>> @@ -1794,6 +1795,7 @@ static void namespace_unlock(void)
->>>>           struct hlist_head head;
->>>>           struct hlist_node *p;
->>>>           struct mount *m;
->>>> +       unsigned long unmount_seq = rcu_unmount_seq;
->>>>           LIST_HEAD(list);
->>>>
->>>>           hlist_move_list(&unmounted, &head);
->>>> @@ -1817,7 +1819,7 @@ static void namespace_unlock(void)
->>>>           if (likely(hlist_empty(&head)))
->>>>                   return;
->>>>
->>>> -       synchronize_rcu_expedited();
->>>> +       cond_synchronize_rcu_expedited(unmount_seq);
->>>>
->>>>           hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
->>>>                   hlist_del(&m->mnt_umount);
->>>> @@ -1939,6 +1941,8 @@ static void umount_tree(struct mount *mnt,
->>>> enum umount_tree_flags how)
->>>>                    */
->>>>                   mnt_notify_add(p);
->>>>           }
->>>> +
->>>> +       rcu_unmount_seq = get_state_synchronize_rcu();
->>>>    }
->>>>
->>>>    static void shrink_submounts(struct mount *mnt);
->>>>
->>>>
->>>> I'm not sure how much that would buy us. If it doesn't then it should be
->>>> possible to play with the following possibly strange idea:
->>>>
->>>> diff --git a/fs/mount.h b/fs/mount.h
->>>> index 7aecf2a60472..51b86300dc50 100644
->>>> --- a/fs/mount.h
->>>> +++ b/fs/mount.h
->>>> @@ -61,6 +61,7 @@ struct mount {
->>>>                   struct rb_node mnt_node; /* node in the ns->mounts
->>>> rbtree */
->>>>                   struct rcu_head mnt_rcu;
->>>>                   struct llist_node mnt_llist;
->>>> +               unsigned long mnt_rcu_unmount_seq;
->>>>           };
->>>>    #ifdef CONFIG_SMP
->>>>           struct mnt_pcp __percpu *mnt_pcp;
->>>> diff --git a/fs/namespace.c b/fs/namespace.c
->>>> index d9ca80dcc544..aae9df75beed 100644
->>>> --- a/fs/namespace.c
->>>> +++ b/fs/namespace.c
->>>> @@ -1794,6 +1794,7 @@ static void namespace_unlock(void)
->>>>           struct hlist_head head;
->>>>           struct hlist_node *p;
->>>>           struct mount *m;
->>>> +       bool needs_synchronize_rcu = false;
->>>>           LIST_HEAD(list);
->>>>
->>>>           hlist_move_list(&unmounted, &head);
->>>> @@ -1817,7 +1818,16 @@ static void namespace_unlock(void)
->>>>           if (likely(hlist_empty(&head)))
->>>>                   return;
->>>>
->>>> -       synchronize_rcu_expedited();
->>>> +       hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
->>>> +               if (!poll_state_synchronize_rcu(m->mnt_rcu_unmount_seq))
->>>> +                       continue;
-> This has a bug. This needs to be:
+On 2025/4/18 10:29, Longbin Li wrote:
+> This patch adds PWM controller support for four independent
+> PWM channel outputs.
 >
-> 	/* A grace period has already elapsed. */
-> 	if (poll_state_synchronize_rcu(m->mnt_rcu_unmount_seq))
-> 		continue;
+> ---
 >
-> 	/* Oh oh, we have to pay up. */
-> 	needs_synchronize_rcu = true;
-> 	break;
+> Changes in v2:
 >
-> which I'm pretty sure will eradicate most of the performance gain you've
-> seen because fundamentally the two version shouldn't be different (Note,
-> I drafted this while on my way out the door. r.
+>    - Modify variable naming and code logic.
+>    - update "MODULE_AUTHOR".
 >
-> I would test the following version where we pay the cost of the
-> smb_mb() from poll_state_synchronize_rcu() exactly one time:
+> Changes in v1:
+>    You can simply review or test the patches at the link [1].
 >
-> diff --git a/fs/mount.h b/fs/mount.h
-> index 7aecf2a60472..51b86300dc50 100644
-> --- a/fs/mount.h
-> +++ b/fs/mount.h
-> @@ -61,6 +61,7 @@ struct mount {
->                  struct rb_node mnt_node; /* node in the ns->mounts rbtree */
->                  struct rcu_head mnt_rcu;
->                  struct llist_node mnt_llist;
-> +               unsigned long mnt_rcu_unmount_seq;
->          };
->   #ifdef CONFIG_SMP
->          struct mnt_pcp __percpu *mnt_pcp;
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index d9ca80dcc544..dd367c54bc29 100644
-> --- a/fs/namespace.c
-> +++ b/fs/namespace.c
-> @@ -1794,6 +1794,7 @@ static void namespace_unlock(void)
->          struct hlist_head head;
->          struct hlist_node *p;
->          struct mount *m;
-> +       unsigned long mnt_rcu_unmount_seq = 0;
->          LIST_HEAD(list);
+> Link: https://lore.kernel.org/linux-riscv/20250407072056.8629-1-looong.bin@gmail.com/ [1]
+> ---
 >
->          hlist_move_list(&unmounted, &head);
-> @@ -1817,7 +1818,10 @@ static void namespace_unlock(void)
->          if (likely(hlist_empty(&head)))
->                  return;
+> Longbin Li (3):
+>    pwm: sophgo: reorganize the code structure
+>    pwm: sophgo: add driver for SG2044
+>    dt-bindings: pwm: sophgo: add pwm controller for SG2044
 >
-> -       synchronize_rcu_expedited();
-> +       hlist_for_each_entry_safe(m, p, &head, mnt_umount)
-> +               mnt_rcu_unmount_seq = max(m->mnt_rcu_unmount_seq, mnt_rcu_unmount_seq);
-> +
-> +       cond_synchronize_rcu_expedited(mnt_rcu_unmount_seq);
+>   .../bindings/pwm/sophgo,sg2042-pwm.yaml       |   4 +-
+>   drivers/pwm/pwm-sophgo-sg2042.c               | 151 ++++++++++++++----
+>   2 files changed, 125 insertions(+), 30 deletions(-)
 >
->          hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
->                  hlist_del(&m->mnt_umount);
-> @@ -1923,8 +1927,10 @@ static void umount_tree(struct mount *mnt, enum umount_tree_flags how)
->                          }
->                  }
->                  change_mnt_propagation(p, MS_PRIVATE);
-> -               if (disconnect)
-> +               if (disconnect) {
-> +                       p->mnt_rcu_unmount_seq = get_state_synchronize_rcu();
->                          hlist_add_head(&p->mnt_umount, &unmounted);
-> +               }
->
->                  /*
->                   * At this point p->mnt_ns is NULL, notification will be queued
->
-> If this doesn't help I had considered recording the rcu sequence number
-> during __legitimize_mnt() in the mounts. But we likely can't do that
-> because get_state_synchronize_rcu() is expensive because it inserts a
-> smb_mb() and that would likely be noticable during path lookup. This
-> would also hinge on the notion that the last store of the rcu sequence
-> number is guaranteed to be seen when we check them in namespace_unlock().
->
-> Another possibly insane idea (haven't fully thought it out but throwing
-> it out there to test): allocate a percpu counter for each mount and
-> increment it each time we enter __legitimize_mnt() and decrement it when
-> we leave __legitimize_mnt(). During umount_tree() check the percpu sum
-> for each mount after it's been added to the @unmounted list.
+> --
+> 2.49.0
 
-I had been thinking that a completion in the mount with a counter (say
+Tested-by: Chen Wang <unicorn_wang@outlook.com>
 
-walker_cnt) could be used. Because the mounts are unhashed there won't
+Only test with Pioneerbox/SG2042 and it works well, I don't have sg2044 
+board in hand.
 
-be new walks so if/once the count is 0 the walker could call complete()
-
-and wait_for_completion() replaces the rcu sync completely. The catch is
-
-managing walker_cnt correctly could be racy or expensive.
+Chen
 
 
-I thought this would not be received to well dew to the additional fields
-
-and it could be a little messy but the suggestion above is a bit similar.
-
-
-Ian
-
->
-> If we see any mount that has a non-zero count we set a global
-> @needs_synchronize_rcu to true and stop counting for the other mounts
-> (saving percpu summing cycles). Then call or elide
-> synchronize_rcu_expedited() based on the @needs_synchronize_rcu boolean
-> in namespace_unlock().
->
-> The percpu might make this cheap enough for __legitimize_mnt() to be
-> workable (ignoring any other pitfalls I've currently not had time to
-> warp my head around).
