@@ -1,381 +1,300 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A03718A6A7
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745041115; cv=none; b=S+JSITcCRcEEK0MrPOxmFEkFgobt6DIeoMq4gYwUgdytXR7eDSTkLg7qdXilXZCRlKKdUryrgIPsyaMxhpfMlNYjD/lRNz0V3vreE5HrLz1AeMVIT/ehB+07FMJK4lJahQE73gUnsYo7mkQafzhYrWM9H+JzIu23iKglkttxJKs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745041115; c=relaxed/simple;
-	bh=j5nyS1jQOepDC8tMs075jfTRcxAytHTavkThiK4YD+0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iDc+7BeQGqM2KP+IQRhBMzeE0hzEuOsnS7MZj51FUq+7Aani4gx40ZiS2BDM5wce4yuKUzYKcLf8L78IAO524QRjP9+1AwijJ0VYNgbpyaHdFONUBCQTPBv4zu+qD2sSYeYlsmH+LTuucIqdx3WzWltcvV6K+onHlIN07cxLb8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=J+nOK59V; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC647381A3
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745041256; cv=fail; b=jNxHXNx8B2z59Z893sMZCRwZiWzoiW0sgG0eFTRp0ozhtdzJdsKd95GKoUnKXVhVICpO7OHlUvS4IH0Zxyz+ys3VuZuMPTMR7oAot7Q1NTdRYqUMVwIUnwkchnrGgCtAB2dYvdJhJagL0IndG6nV+sU3vUpuoikE4MPRgNN+TLk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745041256; c=relaxed/simple;
+	bh=erQnZlnoIYMietx0sOH3jRTF0kss4FjIAj1alhY6WEU=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=P1ese5gNUWUn6VucizJm1eXM3kz8IBJHiyg26Sab4F4Huqx1m4tgvDX7g3Ax93f6dOGa0TPlVNiFuwMzipUuTdjJ+G9CIEom+DnBj+HRZQs+0UC+x82SFeBmbzx3d2X6mJSOvhkv5fbB0KHhdrJ+G3tWFkBjoUHfy4VLymxJwns=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M0rfBryH; arc=fail smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="J+nOK59V"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6eaf1b6ce9aso28058156d6.2
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 22:38:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1745041112; x=1745645912; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kphArVCSz0KLbAMkbfXsG72n7nuxXX/C7s3H9vWRSxo=;
-        b=J+nOK59VfNl9jJXcQ1RNA+1P39+yyKqdF2bKRZyimivzskqHa1MHUMDW/ABd4n/faW
-         75DVDlxvhcav/qGmg/IqfQf0uTkTfcuO+u3PYBCvgVT06zkguvoMBlP83C8W8/OGmh38
-         Xx79b921hgigSoiBAoG+Q3Vb36C5XgSPNlvOFjjzcv4bvBo4U9Xh9cv8gY+MLDDadGDl
-         IMiVznpFOd14xAnnBg2lqJ6ILQ2nJJwU0S/dGH0aXNYtXO5M7PXk8s1uf5lp0OkEw0cI
-         4TmHppl69EmmXZ/IF60So89f8VvwJ7ajZWSY4fJbyHVkq4ej+W0WvSqNKoMpdiF75aoy
-         28RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745041112; x=1745645912;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kphArVCSz0KLbAMkbfXsG72n7nuxXX/C7s3H9vWRSxo=;
-        b=vEzJxRODCfjmv7GcXQSepPGPeS9RL5Te41WLLYvf94Zrf62cvuaZzDK7Fv3amb1/Iu
-         X248/lt15NHd8/u0n6TE4NiD3Ne/rztNc+vAvu6J0zdQCoeIlWri1mn/nNVm6uwGHdUl
-         b70j+gB/r7aFzWC3b6e+YF+fj+XrqBwWqhmbc8cR/xbaFV9nb72qh64YqUTxFphh/6us
-         d+/HquzaAzx4nug1M3yo2u2QgkVPKNsxmFWpWB5/OD5EbNHe4bqpDQLwIPtdzuEASquf
-         XgXuKOr++ItfxtF48HbfKFXip/ujW5TpI1co3QB+iEIyxO6VUFO6xcT/Wn7dt9UeZWvn
-         febg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0qvcd9j/Ar4P+KlD/2SOU4mRYcXkebl1qSgWIedBU2Q8IU3t8ZupeysTGyEOJUb54L03NPaN5Do/yspA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkdmNTrOPPZqS4Z/kCTN/15XZce0R6A8UA/dxsruxx5ZEiWtTy
-	NVh3Nt4T0izbcZFgIPmiHvX9fwAFeYq4I42CGuyVzKAAqnByMIQegq1RyNVHXPE=
-X-Gm-Gg: ASbGncvgp0z0Mrzl0pBcbvTdyTp6BTSPUhnq2c+HJ/CTS+ptdoGAsrykk/9HHRcy6Ej
-	JAJCCAnt/tepagJ1Zo1jTu2gPWgDh0RGIgJHjqmSbUoUeZmcmOjf/0reRdibmAQJEMwiae76Lpb
-	kr++6pn6ydfJ8p/P8XKrcXMO36Pdu0U5NqwxJO70zJZiMG6pzDZ0tCbSRoUVRnGEKahUzCvd3hq
-	rwZFmp4fd3sr2m7sykK16p+ZJzE0vTJnMKT539gIczFBcSQGgzTkkZTeyr4fynQD7bz0NqLvOQQ
-	WfIQ9xuSK8+iCdnwDnKsEGWo1lJghQPXOlPTNnJAr8CwFujdDnteQGx/HHjUNbJaX8qZhv3W5R7
-	uh7VzhgRxOAvux0kJxCTAbksFML6f
-X-Google-Smtp-Source: AGHT+IGokloKomTVMayniE6Mf++d9cjUZKWpbDcg5f1ADpmX7RSw+BGIJ9I5WqbA/PGhMdrqH+rBOQ==
-X-Received: by 2002:ad4:5d43:0:b0:6e8:f940:50af with SMTP id 6a1803df08f44-6f2c4688419mr88612006d6.44.1745041112115;
-        Fri, 18 Apr 2025 22:38:32 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2b30c65sm18341956d6.51.2025.04.18.22.38.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 22:38:31 -0700 (PDT)
-From: Gregory Price <gourry@gourry.net>
-To: linux-mm@kvack.org
-Cc: cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	longman@redhat.com,
-	hannes@cmpxchg.org,
-	mhocko@kernel.org,
-	roman.gushchin@linux.dev,
-	shakeel.butt@linux.dev,
-	muchun.song@linux.dev,
-	tj@kernel.org,
-	mkoutny@suse.com,
-	akpm@linux-foundation.org
-Subject: [PATCH v3 2/2] vmscan,cgroup: apply mems_effective to reclaim
-Date: Sat, 19 Apr 2025 01:38:24 -0400
-Message-ID: <20250419053824.1601470-3-gourry@gourry.net>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250419053824.1601470-1-gourry@gourry.net>
-References: <20250419053824.1601470-1-gourry@gourry.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M0rfBryH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745041255; x=1776577255;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=erQnZlnoIYMietx0sOH3jRTF0kss4FjIAj1alhY6WEU=;
+  b=M0rfBryHghExFBwJFt9l5g/sHTSrbVCmlr3nDhUzymr25a2PGvqSNdUh
+   f39QMkrkTgzW96lVVesn2g8qbxr5yAtDBehoikrablCsF4oFBen1ksLv2
+   hDFhVfbBY8i9+DQrgvScPnVJCFxaQSd6njKc1XVwkils90pL6NfdIMcRP
+   CJDazJFZVE8kWtfc7Q6/GD47zEaaaPo1m5jokSzeQSdRUK93akU8D5Xne
+   gvaoIn80uU0dpsfdhoznt87P/7WhuoB7tF/LJqLBH5u8hTfM7cKfadxfC
+   gzrEfqVw5QIHzG4mg369jT0U+XRhyc0NYvhRg+qyGMenhnuEDdmZwnb1V
+   A==;
+X-CSE-ConnectionGUID: MNQ8wq5lTsyhwxEo09Fj0Q==
+X-CSE-MsgGUID: sS75c/IBToa+twZYvU5GdQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="50463689"
+X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
+   d="scan'208";a="50463689"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 22:40:54 -0700
+X-CSE-ConnectionGUID: uDA6Rl41TKOCaX7ld+LeEw==
+X-CSE-MsgGUID: m+MzDIxHTW6WKDqzzm8gNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
+   d="scan'208";a="136450840"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 22:40:55 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Fri, 18 Apr 2025 22:40:53 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Fri, 18 Apr 2025 22:40:53 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.174)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Fri, 18 Apr 2025 22:40:50 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EbrzmJbqR62zazzqPo5cD6dmMLUndnT+MCiLp9SYAEsAnvjqYxFczA8jb86yKBuOqnfX9pUFpVnqHG4dnEer+nVBGysvUtdW30hgsij9pxVU2f5L5ofn7Ybcb3d9InD2nQYu4N7JDJYH8++TyNm/vQ6QFfJVzBiB79FMRfc/GMDmpaj8gInoKgVHw3Bk9cmhE0oT1O6DIqcXBVFm9CVZKQP9ToSS6ZaiOJI4u3QKjaHVgZPoaxPos3fgSFdOTZafEa36m0i9AYgRHqjqaBt/1Ft1hZoHleuMLp7+fUN+NKul5ID2vnzRoO1UsMrgXSspUhiUr2iytcLDabHcvxmiNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TwmCLT8Yxh8BsWfyJITef5rClfIAeTUqJpg5GsZ1gsE=;
+ b=KK4bzoql8UVLHf3ebiW/StT4HW2PLYRmQa6d0S+3tmaskRkk1vz9BfKqbsDQWumzMH4g8iv9rx2F7HVbWEB/UFX9GKsDMvBjNj9s8pqdbr20LoVQo4U0C39ax8q3jxvAzmULA4QesXUpxJtaCHEl5pNxO5OivzMSM1ShEw5wODUYU5aXmr/T5iGCGVeNnxFfFDChgzvJbwPADGtVhCxsBdfrds77x5hLMk58jNKi+XJguVHuCtFdH3RgVI+deK2DNdwKoDEQGoVXW3r/iCwsXmqzRHn6ujHTmc+QudaCBnXdY1yIPOiF4uCy+2c1/KKhW/L6IrikMyMfx/JDJKWgXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by CY5PR11MB6257.namprd11.prod.outlook.com (2603:10b6:930:26::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Sat, 19 Apr
+ 2025 05:40:29 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8632.030; Sat, 19 Apr 2025
+ 05:40:29 +0000
+Message-ID: <8256d312-ba54-4fec-9a0a-db7d7f461a3f@intel.com>
+Date: Fri, 18 Apr 2025 22:40:27 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 26/26] x86/resctrl: Update Documentation for package
+ events
+To: Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghuay@nvidia.com>, "Maciej
+ Wieczor-Retman" <maciej.wieczor-retman@intel.com>, Peter Newman
+	<peternewman@google.com>, James Morse <james.morse@arm.com>, Babu Moger
+	<babu.moger@amd.com>, Drew Fustini <dfustini@baylibre.com>, Dave Martin
+	<Dave.Martin@arm.com>, Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>
+CC: <linux-kernel@vger.kernel.org>, <patches@lists.linux.dev>
+References: <20250407234032.241215-1-tony.luck@intel.com>
+ <20250407234032.241215-27-tony.luck@intel.com>
+From: Reinette Chatre <reinette.chatre@intel.com>
+Content-Language: en-US
+In-Reply-To: <20250407234032.241215-27-tony.luck@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4PR04CA0386.namprd04.prod.outlook.com
+ (2603:10b6:303:81::31) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|CY5PR11MB6257:EE_
+X-MS-Office365-Filtering-Correlation-Id: b1fb70d8-912a-4ffb-0900-08dd7f04b159
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?eVV5QXhzWGlEY2FzdXAxNnpkaVpiVjNWVExNSXFGZVYxQitEeG9MNXZqWEJk?=
+ =?utf-8?B?UTZrd3NzbFROT0lVV1BUaWtxK25ZNEUwVkxHd3NPTmRKS0tmN0FXbndjYmF6?=
+ =?utf-8?B?eW4yai9ZcXRjR1hncTRYRElhRkRiVVFad3J5Rk1WckY0Q2c3bDRGZTBuZnhG?=
+ =?utf-8?B?QUExalRiOGMzb2c5KzVCMmVzaGs2ZUw3Z0UyckJlSk5qOUUweXl1MVk1QXg4?=
+ =?utf-8?B?a1R3S2JZNHd0bkJ1S3lRK1BidzdJUS9SZzRGelgwemJJQ2sxZU1tanNrbktM?=
+ =?utf-8?B?TTZHQnZMbkNPZWpPQnRtdWdqSWRqd1dYdUxUSHNjYnA5c2w1NlpjNGlEa081?=
+ =?utf-8?B?T0RMb2JIR0VPZDVBOS9yTXFWZDhMQ1NOY0hoVXR3aHlyODcvN1o0TlFqdE5l?=
+ =?utf-8?B?dkxYdjN2dzBuNVpmWnhFbmcxeEdpUUVCY0RnYi9PcUlJbEZOaGVWU3dKV2o0?=
+ =?utf-8?B?aWUyYktqem9reEZ4S2RaWHczNGNnSU5xMVpvYVNmekx1REVCZ3F1UEltd0x0?=
+ =?utf-8?B?SDJYOURKZVVvWGNvZXd2SkRMN2sxSzV0MzZzNVFkRXpDbnNOYXo0YTQvY0Rq?=
+ =?utf-8?B?Zld3YURTc3h2TlVkVjQ3RWgzMzJnZ2pqaUtGcythNmVUOUdxbGhTTThnclBa?=
+ =?utf-8?B?SVlGUmcrQnpjcG4zK1czV0VWWWhYTVVBcXVGYWFuSkVreGYvcTZTVExDYXpq?=
+ =?utf-8?B?bEVVSWZkZUs3NSsxUXFPT0xXQ2FpY01DcjMzdVVhSlFuR2hIK0Mzc2dsbkN4?=
+ =?utf-8?B?b3U3TEtlcGFUdzh6Y3NRenpVS3ZQUlRiZk8yaFZIcUlpVmFIcHg2NXZnWHQx?=
+ =?utf-8?B?SHJrWmRkcSt0NVVnTEhaaGNYUk1TcFBFQ3c1bnVjZTlkRFBpVjNPbk15OWVP?=
+ =?utf-8?B?SmhvOHRid1A3Y0hubnVyaFQyTSszOGhLU2dwdVNDMktiWUZTdGx2UTFWYThT?=
+ =?utf-8?B?a3JiMytyTTB6L3VoVlJjUjJyK3QveFl1VCs2ZlJ2a1FKb3VFYlpHNy9xSldT?=
+ =?utf-8?B?VVdBWlN3VlU3b2Z1Ti9DUVFLRkNEd1pqbEYxNC9Sc1F1aEsvWEE2eGNUSHQ1?=
+ =?utf-8?B?dmJtb05GSE1DS3Jvb1h5TnYrTmZWaWtDcEQvdE1mUHJTbDdVMGZRcW1RaWNM?=
+ =?utf-8?B?RTZnQ0FCb09zNkRoUXZ1MnViZ2sxSU9uQVltb2VEdCtPZzRQRDJIQzdnVnp6?=
+ =?utf-8?B?MUNvNmhWODI0Y2VGanJtdVppNG14ZE41UE00V2JJaFg3L2gxdDEzQk5sL05S?=
+ =?utf-8?B?TkhNMGk2T1NIWDIrT0NCZ2xKbGZ1R1pNOVZPcCs5UW5vZ2FMYVNkRi8yZ2RS?=
+ =?utf-8?B?REdLUTA3dkxFSWFLYXVlZ3NFc05mT0haa3JMUEx3QXAxZGpHKzhJRkc1VUlS?=
+ =?utf-8?B?UGFVaEgvSnlYbkFaK1FiZ0VXcEljNXZhY3ZNMzBZRkp4ZU9oVTVubGFtZHZE?=
+ =?utf-8?B?VUFDNGtYMStmUVIzNmduYlFoa1lYVFlxUXJpS291cmIzNU5MbW1iaUZaL0Zh?=
+ =?utf-8?B?RFVaalIrTXIvKy92d1hxRFd5aHhvUlhuY0p2QkwwTGtmSTBTS1N6V0xxcHBa?=
+ =?utf-8?B?dGJCMStMMVVNamF0UWtNVzgzdURMWVd5cE1neENNMUVSa2QxdGNtQndRRTlC?=
+ =?utf-8?B?SWo3Z0NkTmxXSGJtRjY4SlFWVkxWU3BYZUozNmpuRGRHYTllZzg1M28rZElE?=
+ =?utf-8?B?YVhMU3l3OTVHRktjSnJmKzBma0kyS2g0N1l3V0RWREM2eTlnbWZjdlVQZHBH?=
+ =?utf-8?B?MjkwUkhlNlBsUCtkQ0JWUDJGK0F2aHBHcEJmNXdLQnlDWlM4ZVByZWxaQ29z?=
+ =?utf-8?B?UHVIZ1pMZW5Pcm5lbTFXdkJzZEZSZXNWQXU5a2RrNWNsZ3NBNEF1aFZEdHNK?=
+ =?utf-8?B?Z2Q3ZEo1eUpkcUc0RWZEbUlvYldDWm42aVptZ3BVbVRET1RxaUZjV3JRck5j?=
+ =?utf-8?Q?qMaPVCO/vNE=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?K1puSkhaTWpEaGlOVThkaXRtcUVNdlc5TjRnUjlobFk4NXZmOTVqQytYamYw?=
+ =?utf-8?B?QUZDSUF4cjdvOXBEcHRWdjBWUkVpQjdaN0ZtUHMxMVMvbG81T0J4VElSaTUr?=
+ =?utf-8?B?L2t4akNVenJVRDR1L291QTkzRHhwTjdzTTdXZEVSaUlnL0x0TlNUVGwzcHh5?=
+ =?utf-8?B?cmkwZmVrUWxtdlczSUtqbFNEOTd1UUpBZm92aVBYWnJ3cEN2VkRQU25WcGMx?=
+ =?utf-8?B?QTdBZVpINks5dU9JK1NQMHBUN3IxYmNIdnd4dXpQOUl1MC9uRGpxUTdEVTkz?=
+ =?utf-8?B?MmtyQUMvcGRVZkxhOVpUTEI1MlNrRk9nZyttbGU1L293aDVBTXBDRmUxRGIx?=
+ =?utf-8?B?V0xnQ1NRcENkMVg5elBpR201VGhuRXdxa0tGTjRXb3RrR01mMVgxNFhUV0U0?=
+ =?utf-8?B?K3d6VFE4Y09zeVBDQ3d0OWxKaUo3VEtoNWZmRmNVamIxWHBRRDlMa0Z6UGxZ?=
+ =?utf-8?B?MkptcmdabVgyN21rQ0xtTnhDRDJZQWlzUzFCVHA4cHRMVTd5OEpod2VWUHFO?=
+ =?utf-8?B?SENoeGZ0UmNya3U1ZC9ES2VCQlBCRVlwOFVkMU5XN0J1amNUZE9CQTZDWUsx?=
+ =?utf-8?B?TUE1MXNBZzNLMGJnblZLL3FMQ2dITFhuTEFDZlRQL2tHUHlPUHJTNTRjdkd2?=
+ =?utf-8?B?OGJmbGdUTjZyVE9GSVhXUmN5UzFOeVVHU2h3RFJSS3h5WWtWQXlVM3NZL1FB?=
+ =?utf-8?B?M01uOVNXa1lna0hTTHJLQnFuZ3FmeVRvQTNkU2lwbm9ONTJuN2o2VlFEZGpN?=
+ =?utf-8?B?NlJMNTdoUFAwVFdIY1RMQVgrZWsrNVVhM3luVTFnSVFveFhvMWN6VXNBUndz?=
+ =?utf-8?B?VGtSWlMrYld1Q1hNRjFLdC9IN1o3RkhZSm9qeWtlSWhibHc1clN2UWVJVWxW?=
+ =?utf-8?B?TWpPYkVid0I2cXZId29PdVpYMXZNeVdTb3JySzhtMlhYS25hWVVONXJwNXN5?=
+ =?utf-8?B?UXNtbEV2M0pFZG1rVU5lTzNOMnNZM0Vja3JlblVWQVlEZzk0QTg1SWpqeXFy?=
+ =?utf-8?B?Nk9sTStQK0UzeGZuVExVTEN2YXhUd0JrTG8xMUV3SjFuSG0vWTdiSlRRQ2Mv?=
+ =?utf-8?B?cWc0Y0hSMWdrQXdhQzZvNFcrbHExd1daVjNBK3lIUUNsNFVJSTRJQUFlTTVi?=
+ =?utf-8?B?c2libi9ITGtsUTg5S1BjNWxlaVU5eE9QaURRa04yZHpqbjdyWjBJc3NhUGQ3?=
+ =?utf-8?B?Q1krOVVibnRGSWdvcm80Z05VWFZDenNJenZlemtqKzFxZktWMllhc0FuelND?=
+ =?utf-8?B?Mmp4dFFQSWFpdEtoa0ZnbTlLNTBlMTV5WlZ3YzJZZ1ptbDV6VVdTc0ovYzhs?=
+ =?utf-8?B?SGpQazZ0Q1IzTmN5RUc2bWF1T0tBNUZaYWl2RWhIZSt0YVVtTFlGbGx5d1ZS?=
+ =?utf-8?B?WTUvNjRZejJmeXFpL2U1citUVmJwVzFTRmYySmE1Y1FJUGxCRkZJdlJQaUNO?=
+ =?utf-8?B?c2hIR0UzUlJxRFZxN1ZNbEV4dHRnZHR3SFdaSVlXZ3BWNlFFa1gzekZlNDdy?=
+ =?utf-8?B?OGVQbnlnYTBuOVFrZW9MRHRVQ3BhNVRydHZvUUlSRGpVL2tLcjVYNFdQUXZQ?=
+ =?utf-8?B?ZFpnU01Sb2FDaGhCaGtVOXBPWmJGSVd2QTBPSUlzcENLSUxRaW1JNzhvcVpa?=
+ =?utf-8?B?SWNnOFBqUFYyZ3k2M2laaEZrZGRKVlBlUE5HWnpjQWpSMWxsdmRzKy82dENt?=
+ =?utf-8?B?bHpjNHFDRjV5U2VneDAydkk2TUd1YTNQY1BibWdQNno5Zy9NZFl6U3hQQjAv?=
+ =?utf-8?B?Ni8yQndYcnhHeDc1VzJ2YXNYSHdIZzhSREZWL3JXalNvS0RNZ28xOWFFbU5C?=
+ =?utf-8?B?enZ4Tzd3aHlMMTArekFzVzdTWVJhRTYwNzBTUVFHNUdTQnIxV2RSaWVIeTcr?=
+ =?utf-8?B?KzlTZElOeTFlcjVxaUV6WEdwN2hZelNOL2g2RDYwUW9MbkhqajlOMVRCUzlM?=
+ =?utf-8?B?dnp4eklrV3FDZUM0RndEcDE4dmdDbSszYWUvZXVNcThQOTVuVS9GOUhCbU5F?=
+ =?utf-8?B?RjhJeTNZcXVuK05JZm9wNG5JSmE2SlVITFpHN2RhalU2b0M2aUo5cCtlUHVO?=
+ =?utf-8?B?aVRRQm43SitwWldCeVM5WFdKQkVjUllNL1RkSDliakozeFlVbGVXWEhFaGdh?=
+ =?utf-8?B?OHJWUnRaY2ZYZlhtMFdsek11ei81VjJPMmgzRWQwNkpjYzJLRHhXQkErUzFa?=
+ =?utf-8?B?NkE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1fb70d8-912a-4ffb-0900-08dd7f04b159
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2025 05:40:28.9853
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iO7LVn/wOLP+bK+NG3MUihm1C28Aq5ahGnbesFi1Q9klIkivODP+ZvCatBFbzoCz5jreMAlyzsoKnfiYFoJy/Y5W0Be0M8wa/s7cfMGxXoM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6257
+X-OriginatorOrg: intel.com
 
-It is possible for a reclaimer to cause demotions of an lruvec belonging
-to a cgroup with cpuset.mems set to exclude some nodes. Attempt to apply
-this limitation based on the lruvec's memcg and prevent demotion.
+Hi Tony,
 
-Notably, this may still allow demotion of shared libraries or any memory
-first instantiated in another cgroup. This means cpusets still cannot
-cannot guarantee complete isolation when demotion is enabled, and the
-docs have been updated to reflect this.
+On 4/7/25 4:40 PM, Tony Luck wrote:
+> Each "mon_data" directory is now divided between L3 events and package
+> events.
+> 
+> The "info/PERF_PKG_MON" directory contains parameters for perf events.
+> 
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> ---
+>  Documentation/filesystems/resctrl.rst | 38 ++++++++++++++++++++-------
+>  1 file changed, 28 insertions(+), 10 deletions(-)
+> 
+> diff --git a/Documentation/filesystems/resctrl.rst b/Documentation/filesystems/resctrl.rst
+> index 6768fc1fad16..b89a188b0321 100644
+> --- a/Documentation/filesystems/resctrl.rst
+> +++ b/Documentation/filesystems/resctrl.rst
+> @@ -167,7 +167,7 @@ with respect to allocation:
+>  			bandwidth percentages are directly applied to
+>  			the threads running on the core
+>  
+> -If RDT monitoring is available there will be an "L3_MON" directory
+> +If RDT L3 monitoring is available there will be an "L3_MON" directory
 
-This is useful for isolating workloads on a multi-tenant system from
-certain classes of memory more consistently - with the noted exceptions.
+I think "RDT" can just be dropped.
 
-Signed-off-by: Gregory Price <gourry@gourry.net>
----
- .../ABI/testing/sysfs-kernel-mm-numa          | 14 ++++---
- include/linux/cpuset.h                        |  5 +++
- include/linux/memcontrol.h                    |  6 +++
- kernel/cgroup/cpuset.c                        | 21 ++++++++++
- mm/memcontrol.c                               |  6 +++
- mm/vmscan.c                                   | 41 +++++++++++--------
- 6 files changed, 72 insertions(+), 21 deletions(-)
+>  with the following files:
+>  
+>  "num_rmids":
+> @@ -261,6 +261,17 @@ with the following files:
+>  		bytes) at which a previously used LLC_occupancy
+>  		counter can be considered for re-use.
+>  
+> +If RDT PERF monitoring is available there will be an "L3_PERF_PKG" directory
 
-diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-numa b/Documentation/ABI/testing/sysfs-kernel-mm-numa
-index 77e559d4ed80..27cdcab901f7 100644
---- a/Documentation/ABI/testing/sysfs-kernel-mm-numa
-+++ b/Documentation/ABI/testing/sysfs-kernel-mm-numa
-@@ -16,9 +16,13 @@ Description:	Enable/disable demoting pages during reclaim
- 		Allowing page migration during reclaim enables these
- 		systems to migrate pages from fast tiers to slow tiers
- 		when the fast tier is under pressure.  This migration
--		is performed before swap.  It may move data to a NUMA
--		node that does not fall into the cpuset of the
--		allocating process which might be construed to violate
--		the guarantees of cpusets.  This should not be enabled
--		on systems which need strict cpuset location
-+		is performed before swap if an eligible numa node is
-+		present in cpuset.mems for the cgroup. If cpusets.mems
-+		changes at runtime, it may move data to a NUMA node that
-+		does not fall into the cpuset of the new cpusets.mems,
-+		which might be construed to violate the guarantees of
-+		cpusets.  Shared memory, such as libraries, owned by
-+		another cgroup may still be demoted and result in memory
-+		use on a node not present in cpusets.mem. This should not
-+		be enabled on systems which need strict cpuset location
- 		guarantees.
-diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
-index 893a4c340d48..c64b4a174456 100644
---- a/include/linux/cpuset.h
-+++ b/include/linux/cpuset.h
-@@ -171,6 +171,7 @@ static inline void set_mems_allowed(nodemask_t nodemask)
- 	task_unlock(current);
- }
- 
-+extern bool cpuset_node_allowed(struct cgroup *cgroup, int nid);
- #else /* !CONFIG_CPUSETS */
- 
- static inline bool cpusets_enabled(void) { return false; }
-@@ -282,6 +283,10 @@ static inline bool read_mems_allowed_retry(unsigned int seq)
- 	return false;
- }
- 
-+static inline bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
-+{
-+	return false;
-+}
- #endif /* !CONFIG_CPUSETS */
- 
- #endif /* _LINUX_CPUSET_H */
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 53364526d877..a6c4e3faf721 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -1736,6 +1736,8 @@ static inline void count_objcg_events(struct obj_cgroup *objcg,
- 	rcu_read_unlock();
- }
- 
-+bool mem_cgroup_node_allowed(struct mem_cgroup *memcg, int nid);
-+
- #else
- static inline bool mem_cgroup_kmem_disabled(void)
- {
-@@ -1793,6 +1795,10 @@ static inline void count_objcg_events(struct obj_cgroup *objcg,
- {
- }
- 
-+static inline bool mem_cgroup_node_allowed(struct mem_cgroup *memcg, int nid)
-+{
-+	return true;
-+}
- #endif /* CONFIG_MEMCG */
- 
- #if defined(CONFIG_MEMCG) && defined(CONFIG_ZSWAP)
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index f8e6a9b642cb..8814ca8ec710 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -4163,6 +4163,27 @@ bool cpuset_current_node_allowed(int node, gfp_t gfp_mask)
- 	return allowed;
- }
- 
-+bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
-+{
-+	struct cgroup_subsys_state *css;
-+	unsigned long flags;
-+	struct cpuset *cs;
-+	bool allowed;
-+
-+	css = cgroup_get_e_css(cgroup, &cpuset_cgrp_subsys);
-+	if (!css)
-+		return true;
-+
-+	cs = container_of(css, struct cpuset, css);
-+	spin_lock_irqsave(&callback_lock, flags);
-+	/* On v1 effective_mems may be empty, simply allow */
-+	allowed = node_isset(nid, cs->effective_mems) ||
-+		  nodes_empty(cs->effective_mems);
-+	spin_unlock_irqrestore(&callback_lock, flags);
-+	css_put(css);
-+	return allowed;
-+}
-+
- /**
-  * cpuset_spread_node() - On which node to begin search for a page
-  * @rotor: round robin rotor
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 40c07b8699ae..2f61d0060fd1 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -29,6 +29,7 @@
- #include <linux/page_counter.h>
- #include <linux/memcontrol.h>
- #include <linux/cgroup.h>
-+#include <linux/cpuset.h>
- #include <linux/sched/mm.h>
- #include <linux/shmem_fs.h>
- #include <linux/hugetlb.h>
-@@ -5437,3 +5438,8 @@ static int __init mem_cgroup_swap_init(void)
- subsys_initcall(mem_cgroup_swap_init);
- 
- #endif /* CONFIG_SWAP */
-+
-+bool mem_cgroup_node_allowed(struct mem_cgroup *memcg, int nid)
-+{
-+	return memcg ? cpuset_node_allowed(memcg->css.cgroup, nid) : true;
-+}
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 2b2ab386cab5..32a7ce421e42 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -342,16 +342,22 @@ static void flush_reclaim_state(struct scan_control *sc)
- 	}
- }
- 
--static bool can_demote(int nid, struct scan_control *sc)
-+static bool can_demote(int nid, struct scan_control *sc,
-+		       struct mem_cgroup *memcg)
- {
-+	int demotion_nid;
-+
- 	if (!numa_demotion_enabled)
- 		return false;
- 	if (sc && sc->no_demotion)
- 		return false;
--	if (next_demotion_node(nid) == NUMA_NO_NODE)
-+
-+	demotion_nid = next_demotion_node(nid);
-+	if (demotion_nid == NUMA_NO_NODE)
- 		return false;
- 
--	return true;
-+	/* If demotion node isn't in the cgroup's mems_allowed, fall back */
-+	return mem_cgroup_node_allowed(memcg, demotion_nid);
- }
- 
- static inline bool can_reclaim_anon_pages(struct mem_cgroup *memcg,
-@@ -376,7 +382,7 @@ static inline bool can_reclaim_anon_pages(struct mem_cgroup *memcg,
- 	 *
- 	 * Can it be reclaimed from this node via demotion?
- 	 */
--	return can_demote(nid, sc);
-+	return can_demote(nid, sc, memcg);
- }
- 
- /*
-@@ -1096,7 +1102,8 @@ static bool may_enter_fs(struct folio *folio, gfp_t gfp_mask)
-  */
- static unsigned int shrink_folio_list(struct list_head *folio_list,
- 		struct pglist_data *pgdat, struct scan_control *sc,
--		struct reclaim_stat *stat, bool ignore_references)
-+		struct reclaim_stat *stat, bool ignore_references,
-+		struct mem_cgroup *memcg)
- {
- 	struct folio_batch free_folios;
- 	LIST_HEAD(ret_folios);
-@@ -1109,7 +1116,7 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
- 	folio_batch_init(&free_folios);
- 	memset(stat, 0, sizeof(*stat));
- 	cond_resched();
--	do_demote_pass = can_demote(pgdat->node_id, sc);
-+	do_demote_pass = can_demote(pgdat->node_id, sc, memcg);
- 
- retry:
- 	while (!list_empty(folio_list)) {
-@@ -1658,7 +1665,7 @@ unsigned int reclaim_clean_pages_from_list(struct zone *zone,
- 	 */
- 	noreclaim_flag = memalloc_noreclaim_save();
- 	nr_reclaimed = shrink_folio_list(&clean_folios, zone->zone_pgdat, &sc,
--					&stat, true);
-+					&stat, true, NULL);
- 	memalloc_noreclaim_restore(noreclaim_flag);
- 
- 	list_splice(&clean_folios, folio_list);
-@@ -2031,7 +2038,8 @@ static unsigned long shrink_inactive_list(unsigned long nr_to_scan,
- 	if (nr_taken == 0)
- 		return 0;
- 
--	nr_reclaimed = shrink_folio_list(&folio_list, pgdat, sc, &stat, false);
-+	nr_reclaimed = shrink_folio_list(&folio_list, pgdat, sc, &stat, false,
-+					 lruvec_memcg(lruvec));
- 
- 	spin_lock_irq(&lruvec->lru_lock);
- 	move_folios_to_lru(lruvec, &folio_list);
-@@ -2214,7 +2222,7 @@ static unsigned int reclaim_folio_list(struct list_head *folio_list,
- 		.no_demotion = 1,
- 	};
- 
--	nr_reclaimed = shrink_folio_list(folio_list, pgdat, &sc, &stat, true);
-+	nr_reclaimed = shrink_folio_list(folio_list, pgdat, &sc, &stat, true, NULL);
- 	while (!list_empty(folio_list)) {
- 		folio = lru_to_folio(folio_list);
- 		list_del(&folio->lru);
-@@ -2646,7 +2654,7 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
-  * Anonymous LRU management is a waste if there is
-  * ultimately no way to reclaim the memory.
-  */
--static bool can_age_anon_pages(struct pglist_data *pgdat,
-+static bool can_age_anon_pages(struct lruvec *lruvec,
- 			       struct scan_control *sc)
- {
- 	/* Aging the anon LRU is valuable if swap is present: */
-@@ -2654,7 +2662,8 @@ static bool can_age_anon_pages(struct pglist_data *pgdat,
- 		return true;
- 
- 	/* Also valuable if anon pages can be demoted: */
--	return can_demote(pgdat->node_id, sc);
-+	return can_demote(lruvec_pgdat(lruvec)->node_id, sc,
-+			  lruvec_memcg(lruvec));
- }
- 
- #ifdef CONFIG_LRU_GEN
-@@ -2732,7 +2741,7 @@ static int get_swappiness(struct lruvec *lruvec, struct scan_control *sc)
- 	if (!sc->may_swap)
- 		return 0;
- 
--	if (!can_demote(pgdat->node_id, sc) &&
-+	if (!can_demote(pgdat->node_id, sc, memcg) &&
- 	    mem_cgroup_get_nr_swap_pages(memcg) < MIN_LRU_BATCH)
- 		return 0;
- 
-@@ -4695,7 +4704,7 @@ static int evict_folios(struct lruvec *lruvec, struct scan_control *sc, int swap
- 	if (list_empty(&list))
- 		return scanned;
- retry:
--	reclaimed = shrink_folio_list(&list, pgdat, sc, &stat, false);
-+	reclaimed = shrink_folio_list(&list, pgdat, sc, &stat, false, memcg);
- 	sc->nr.unqueued_dirty += stat.nr_unqueued_dirty;
- 	sc->nr_reclaimed += reclaimed;
- 	trace_mm_vmscan_lru_shrink_inactive(pgdat->node_id,
-@@ -5850,7 +5859,7 @@ static void shrink_lruvec(struct lruvec *lruvec, struct scan_control *sc)
- 	 * Even if we did not try to evict anon pages at all, we want to
- 	 * rebalance the anon lru active/inactive ratio.
- 	 */
--	if (can_age_anon_pages(lruvec_pgdat(lruvec), sc) &&
-+	if (can_age_anon_pages(lruvec, sc) &&
- 	    inactive_is_low(lruvec, LRU_INACTIVE_ANON))
- 		shrink_active_list(SWAP_CLUSTER_MAX, lruvec,
- 				   sc, LRU_ACTIVE_ANON);
-@@ -6681,10 +6690,10 @@ static void kswapd_age_node(struct pglist_data *pgdat, struct scan_control *sc)
- 		return;
- 	}
- 
--	if (!can_age_anon_pages(pgdat, sc))
-+	lruvec = mem_cgroup_lruvec(NULL, pgdat);
-+	if (!can_age_anon_pages(lruvec, sc))
- 		return;
- 
--	lruvec = mem_cgroup_lruvec(NULL, pgdat);
- 	if (!inactive_is_low(lruvec, LRU_INACTIVE_ANON))
- 		return;
- 
--- 
-2.49.0
+"L3_PERF_PKG" -> "PERF_PKG_MON" ?
+
+I understand that the existing L3 documentation contains this term but I do not
+see a reason why the documentation should make this new monitoring Intel/RDT specific.
+
+Also, I do not think user can be expected to know what "perf monitoring" is.
+
+> +with the following files:
+> +
+> +"num_rmids":
+> +		The guaranteed number of hardware countes supporting RMIDs.
+
+countes -> counters?
+
+The use of "hardware counters" is a bit unexpected ... the series did not mention
+this or I must have missed this.
+
+> +		If more "CTRL_MON" + "MON" groups than this number are created,
+> +		the system may report that counters are "unavailable" when read.
+
+To be precise it is "Unavailable" ... but I do not think that is a good interface.
+
+> +
+> +"mon_features":
+> +		Lists the perf monitoring events that are enabled on this system.
+
+"PERF" (all caps) at top and "perf" lower case here?
+
+> +
+>  Finally, in the top level of the "info" directory there is a file
+>  named "last_cmd_status". This is reset with every "command" issued
+>  via the file system (making new directories or writing to any of the
+> @@ -366,15 +377,22 @@ When control is enabled all CTRL_MON groups will also contain:
+>  When monitoring is enabled all MON groups will also contain:
+>  
+>  "mon_data":
+> -	This contains a set of files organized by L3 domain and by
+> -	RDT event. E.g. on a system with two L3 domains there will
+> -	be subdirectories "mon_L3_00" and "mon_L3_01".	Each of these
+> -	directories have one file per event (e.g. "llc_occupancy",
+> -	"mbm_total_bytes", and "mbm_local_bytes"). In a MON group these
+> -	files provide a read out of the current value of the event for
+> -	all tasks in the group. In CTRL_MON groups these files provide
+> -	the sum for all tasks in the CTRL_MON group and all tasks in
+> -	MON groups. Please see example section for more details on usage.
+> +	This contains a set of directories, one for each instance
+> +	of an L3 cache, or of a processor package. The L3 cache
+> +	directories are named "mon_L3_00", "mon_L3_01" etc. The
+> +	package directories "mon_PERF_PKG_00", "mon_PERF_PKG_01" etc.
+> +
+> +	Within each directory there is one file per event. In
+> +	the L3 directories: "llc_occupancy", "mbm_total_bytes",
+> +	and "mbm_local_bytes".	In the PERF_PKG directories: "core_energy",
+
+stray tab here
+
+> +	"activity", etc.
+> +
+> +	In a MON group these files provide a read out of the current
+> +	value of the event for all tasks in the group. In CTRL_MON groups
+> +	these files provide the sum for all tasks in the CTRL_MON group
+> +	and all tasks in MON groups. Please see example section for more
+> +	details on usage.
+> +
+>  	On systems with Sub-NUMA Cluster (SNC) enabled there are extra
+>  	directories for each node (located within the "mon_L3_XX" directory
+>  	for the L3 cache they occupy). These are named "mon_sub_L3_YY"
+
+Reinette
 
