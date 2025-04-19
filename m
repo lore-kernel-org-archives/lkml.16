@@ -1,100 +1,139 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F247E107
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 16:47:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17691DEFDC
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 16:52:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745081273; cv=none; b=PMH0duyy5LqS5+GLctVaTY3/5rAelu29jbdHXphU4VV8W4L7DbOI1bepoH8hEe/RX6h487T6SIL2nWwbi9KNswDo8jRO9lp+eNnUWDbxS+BEA+cchMm4FJrfQJZUKniJLIxEpzzffK4kQSI86nchU+iRnOH61qbGgfXBEqtcX2I=
+	t=1745081524; cv=none; b=DXLrHRdxGQ7delubI49WNk3rLEGy8QyOUiMGaywJuUXGdgQTFVASKJCNA3PetlIUzajVGYs7fho04ynNHfH4lc+W3Y1uP9fMBj9qVivIpbiuZ0Vxfa4E5GWhVlnguVz6zq9VFzDVDefghO7O3/Qj2QnTvkJzXki9vt+TUlfP32A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745081273; c=relaxed/simple;
-	bh=hT/lMRuzLt1zOyLHVW8bU55TzCJt0dTyCRlvoPgoGFs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DFOPn1y//oLDv6q9kEVzs0p2aOIszcMGEXhWBQbaVNtVHYUww33UDYzcfXI03OOBiCtIqYXA9ROJAUw5MNXHib8bv7NsjZK30hEt9rch2c1xtVSMZRL+IF3EzW5+1VsJHjC7nj/3AH6pniDZ92lObitxj6bP+lHt9Uj1PDbwWv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QqFrfZZW; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745081524; c=relaxed/simple;
+	bh=0umZVab4MInIm6Hh9sW7E6pBic4UWXBleyLmUV0NDJ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XyziIuV9Ma9aS0kG9gORUv0A1PL0Xr7PVWflIw5e6kekLKz5HD64xs3Hn5lGrYV8ZNZ6C4AQmZK3CM7Ta32HtgayP+kPkmZS5DqCPbqxDLTS9hkWc+i5RrMls2BMbs89Sr8P9EIooIMti3xh3WeqDHr+RfCDe5dIcjv7N1f891Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v58tI5tf; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QqFrfZZW"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-73712952e1cso2631901b3a.1
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 09:47:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v58tI5tf"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-223fd89d036so33688505ad.1
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 09:52:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745081271; x=1745686071; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gc6CmYXidkzPLNB0SO00YEXOEa7ICBVRjIrdnfdrG0E=;
-        b=QqFrfZZWEuAXQnBY9oDHLPT0Cyk2t+uG4luK8jTMNWk9IXfR9YvJ1rhtubXd1FkT3r
-         /+8EStoKSARHJPGUjuMytEH9Q5PPNcwMtDtM7IMA8YgNkxmnZGvsiz4xDFAY5HBHX3og
-         rMp3/Wh/Kc3MnjlPI1H6pMtCd5YB7kXtHRilVnfWdhaYAom+QyjZJ3JBMbj+SnUF37Rx
-         ZzfBSEFr6m6JuqyPtSmsXUStGU5EexreN7YLRPPP+YjVtLF0acFSwAmklSMc9vlsFkUc
-         q8vOMW+z0WZ3o5AhQo2273AT5Lo78Glawo3Q7Lsmp806DFT8gn32ENIwKowZUux0iWzr
-         M+VA==
+        d=linaro.org; s=google; t=1745081521; x=1745686321; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=f+ZQg5iuK94qPLtJ84KAwd3BvA9WmtkRkwUWNrpfTPA=;
+        b=v58tI5tf286k4dhYLLj/7Tq4eqUckl+Xz/PppA2E7MsTB9pUXI/R0tUPok235vOwlQ
+         tQZBUe+hxbWFXaaf3B6Bm3RhOgXodPSJStPHR5G4JLXdctEpVV4PBJjt7ExRyGvNFH9E
+         uYYx0ZiNI7ANP3JCPV8j7Id9q9l9I15UDG+acrpgqMjunrA7ZRI/8s0F942YF0i2WLa6
+         oRyQSmHdg4cy9a9+CNSryj3S02kJkCTSORpwGRDt/e6dbJ+LJLqYBkbR/XdBWkHYkV7d
+         aYdFsJ8nDiwRmjjHWd96wRza34NyNL0sSTSfzF+ZCKejE6EKYtDmut2Yp2suM+5bkRmr
+         MvUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745081271; x=1745686071;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gc6CmYXidkzPLNB0SO00YEXOEa7ICBVRjIrdnfdrG0E=;
-        b=kJNJXw74JtONEorZ9iCFhXzDosp+bzBdbGxwt/jidTyBGgU/xnKbi6MU4XzeRa9Lx/
-         1iDcLKCXE/LPOU9A3JWcQ3zy2Qd4zYRvkSHBJZQTY5AF7cfFNZdqZ4E+X8JS1QKdeqKn
-         z2nuh5e9v47EM+wlQheHd3PXoVPrBE8pM6IDuPgKzxuz9nHvaQ1+FuNnPy77OEWvklI/
-         GZ5eMtL/Gr2kmx3e51odK0ACJrpI4jfwXtThm2sBVA20QD4EwteS+QvqMJOmC1txEUFU
-         rAkT0m5wFq/gBrH91XqjQrh2sYEgvJb3bwKmKi6SnOTo2DxbtSTzDBrdbMR4wA+mR8I9
-         q3pg==
-X-Forwarded-Encrypted: i=1; AJvYcCUJNKpeoyIecAd9MqtMmdRMYCgBmHtbsQGx5SFXxy3be3392A0awh8JxC5sOKTtfU8hmDfTg+gZzbjn+PI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx13WaoRuOSUHZyJpUBHwAKlnojElVl8qFy3lCmsOQUyHUZnSd3
-	J5pu5/yWJZ3VY0eRpkxAzF+WOsrJJGyLhssHtsdYHRY2euq4l46w
-X-Gm-Gg: ASbGncu2KbzHgOEebe5Qj8IBhGBjFTvlBZKSEeb2B7Pw16Sxm8aCZRh3Iw4CLOhcRKJ
-	OG3WDCXQ7f05TMnEfLKUkWRU1/kkAsxArQ/6RQa1zuNcxWptIsYTKTzHXu5kIpA14pFjBDrf7N+
-	CwrSYQLOc4scch69/HlYHyhu50PHZ+aeuM6vrIL9KRp05FYOSWvneK8wH5YnPFDbdcUZ5l4Kt4Z
-	CH/YGlRj2nNld7S6VcyZxkdOSJdhWHuWOUzBmlj8p/EHYd8eqFx+VIcbUvEkcfp5lgQDjoQo+Qr
-	tO8bGdCYmya7efbR39u5S3js3Qs3UQC8Erb7Kka6LoITUA6bjQ==
-X-Google-Smtp-Source: AGHT+IE196NOTtBedrqto5+VyN6Q2bVQflAXIVFzTCK7aHTA5hvuR7r83bs7gc5R54Ihg852juLtBQ==
-X-Received: by 2002:a05:6a00:4484:b0:736:5725:59b4 with SMTP id d2e1a72fcca58-73dc14439f4mr7604376b3a.3.1745081270817;
-        Sat, 19 Apr 2025 09:47:50 -0700 (PDT)
-Received: from 10.0.2.15 ([112.19.146.144])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaea91asm3497987b3a.167.2025.04.19.09.47.48
+        d=1e100.net; s=20230601; t=1745081521; x=1745686321;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f+ZQg5iuK94qPLtJ84KAwd3BvA9WmtkRkwUWNrpfTPA=;
+        b=FF7aYFI16zybua8M7LBCROuqu1qBHDC0CJbwmN1ADDO1YHokXLCNv7CZfSlKqSLpai
+         uQ8FJGHfAKY4O12Xg9B9BoMSRNf90WYReKpUXWYA77QCV2K3UrCMlWwS3M42jw19NIaK
+         SV1tGvD2DpSQvKXww96kwpkggHU1s5ZMK2nno+XO3QiUxmAyzmkwSf+Sn5ZPKQkx7esP
+         lQLCCzOnhc+zNhJPX4Z7K3Sjhr1i0UrmkeLAeb6R/nbVS04w0xbYuqJRJt9NUg2flAIX
+         VRGgOMR3V4qaoQua2rF9BVeYO/396wJZQIvpYoF1eIhUBTFJ4mhT6pNfiOrYrKVSNqma
+         NhaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWBzZ8/S100ispFZCdUDSrH8+pQvpIDHy5G/szvokPNKIjH7D7tXmpd8qlD6T0W/LeckH8gRJ0hOYbDuZo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPU7MmpTto6dbx3+8w8wosJ3k/xhQaNZf4+zbhjne5VEftjRsn
+	mNNbULpGmpOyeyV3CuESvXzq2llMKACNo7E19rULcIfkzunYyw8yAjuIo0sA5w==
+X-Gm-Gg: ASbGnct1SfZt4cxD/Yo1SdxqKHUeZ7qMzeumWClneizmbo0QlIgEc+x9Bu8ORqcqXdp
+	tA8pbxzRKRVzQMXFquFnleJaQm0sFD0inly4hiBxVR6LfS4DYhVMc1FXJGyR0kFftEsgk93dO0R
+	naIOUvMe7yIavd6FdpGLsdykWHjYUFd43GEmRBSKPrr8FeBdwvDLvN5RTZcMa0zu78343UG2nKf
+	yNJP7OLYJ4wV+vG0RzUJbHD1kGcVvkwFpOW/R8jNTWA3pqmksi92ZmgXiXNJsCTpjOqy1Ce7/qa
+	46r3VSMl/J7ocR5mPyuPA20Y4RnSVamE0MlrK1W4g9A5bkpJqZcYwZz/POWuNQ==
+X-Google-Smtp-Source: AGHT+IHOvuDRuhzgmIYZ0PseMo6wMw5ZW9e3ASq9UuPs4rj4cDesFYOxLb1JejQpj1NRcFCMCHE/VQ==
+X-Received: by 2002:a17:903:228a:b0:21f:5638:2d8 with SMTP id d9443c01a7336-22c53620bdfmr86912015ad.53.1745081520863;
+        Sat, 19 Apr 2025 09:52:00 -0700 (PDT)
+Received: from thinkpad ([36.255.17.167])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bde283sm36154275ad.6.2025.04.19.09.51.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 09:47:50 -0700 (PDT)
-From: Jiangyong Wang <wjy.scu@gmail.com>
-To: yaron.avizrat@intel.com
-Cc: obitton@habana.ai,
-	ogabbay@kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	trivial@kernel.org,
-	Jiangyong Wang <wjy.scu@gmail.com>
-Subject: [PATCH] accel/habanalabs:fix typos found in command_submission.c
-Date: Sun, 20 Apr 2025 00:44:31 +0800
-Message-Id: <20250419164431.2393-1-wjy.scu@gmail.com>
-X-Mailer: git-send-email 2.39.3
+        Sat, 19 Apr 2025 09:52:00 -0700 (PDT)
+Date: Sat, 19 Apr 2025 22:21:53 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
+	bhelgaas@google.com, s-vadapalli@ti.com, thomas.richard@bootlin.com, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rockswang7@gmail.com
+Subject: Re: [PATCH v2] PCI: cadence: Fix runtime atomic count underflow.
+Message-ID: <pjacxodfaywqxabqeftguqcrz2eoib5l5l32oevy5j5rrwl5s6@hhglbkyrmnzg>
+References: <20250419133058.162048-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250419133058.162048-1-18255117159@163.com>
 
-Fix typos found in drivers/accel/habanalabs/common/command_submission.c.
+On Sat, Apr 19, 2025 at 09:30:58PM +0800, Hans Zhang wrote:
+> If the call to pci_host_probe() in cdns_pcie_host_setup()
+> fails, PM runtime count is decremented in the error path using
+> pm_runtime_put_sync().But the runtime count is not incremented by this
+> driver, but only by the callers (cdns_plat_pcie_probe/j721e_pcie_probe).
+> And the callers also decrement theruntime PM count in their error path.
+> So this leads to the below warning from the PM core:
+> 
+> runtime PM usage count underflow!
+> 
+> So fix it by getting rid of pm_runtime_put_sync() in the error path and
+> directly return the errno.
+> 
+> Fixes: 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe controller")
+> 
 
-Signed-off-by: Jiangyong Wang <wjy.scu@gmail.com>
----
- drivers/accel/habanalabs/common/command_submission.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This is not the correct Fixes commit. In fact it took me a while to find the
+correct one. This exact same issue was already fixed by commit, 19abcd790b51
+("PCI: cadence: Fix cdns_pcie_{host|ep}_setup() error path").
 
-diff --git a/drivers/accel/habanalabs/common/command_submission.c b/drivers/accel/habanalabs/common/command_submission.c
-index 59823e3c3..c9c61687d 100644
---- a/drivers/accel/habanalabs/common/command_submission.c
-+++ b/drivers/accel/habanalabs/common/command_submission.c
-@@ -1786,7 +1786,7 @@ static int hl_cs_ctx_switch(struct hl_fpriv *hpriv, union hl_cs_args *args,
- }
- 
- /*
-- * hl_cs_signal_sob_wraparound_handler: handle SOB value wrapaound case.
-+ * hl_cs_signal_sob_wraparound_handler: handle SOB value wraparound case.
-  * if the SOB value reaches the max value move to the other SOB reserved
-  * to the queue.
-  * @hdev: pointer to device structure
+But then, this bug got reintroduced while fixing the merge conflict in:
+49e427e6bdd1 ("Merge branch 'pci/host-probe-refactor'")
+
+I will change the tag while applying.
+
+- Mani
+
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-host.c | 11 +----------
+>  1 file changed, 1 insertion(+), 10 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 8af95e9da7ce..741e10a575ec 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -570,14 +570,5 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	if (!bridge->ops)
+>  		bridge->ops = &cdns_pcie_host_ops;
+>  
+> -	ret = pci_host_probe(bridge);
+> -	if (ret < 0)
+> -		goto err_init;
+> -
+> -	return 0;
+> -
+> - err_init:
+> -	pm_runtime_put_sync(dev);
+> -
+> -	return ret;
+> +	return pci_host_probe(bridge);
+>  }
+> 
+> base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
+> -- 
+> 2.25.1
+> 
+
 -- 
-2.39.3
-
+மணிவண்ணன் சதாசிவம்
