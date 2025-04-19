@@ -1,65 +1,65 @@
 Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD20A1F03C9
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 22:36:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D711F09B3
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 22:36:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745102173; cv=none; b=CxRZ2AU1r3fg4eVJuGw5XLuJeNpZMfPkCVvx/RbGvxRNGvmd1riH8pt0+K1OBIkZf1N5dyJOUdA5CiT6zqIPs5Xclp25XGPEp60/6+oEk2v+Zj21C0eh+0WyBr3HK0hyLxzzRzZYA3uaoTqXkxRJ2frJZ863cRxi7H/Rb20Bz+I=
+	t=1745102175; cv=none; b=WwcUcZ1ofRAgvzq6a6jKdbCV4cYwUyps0rWHRhTMkqMzQB7eeKMQV59YlAFg661VERO+Cc4pS5R1OxpKk+zG3ZyN/MwShwgeJF/dzq4Ox0sWxRvGPEeGJXgjTVrpWfjsYUcM6+pq+uMX063IwhXh5V4bMjqR6keLs9bF4IgC44U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745102173; c=relaxed/simple;
-	bh=2OFGKWEMTrRTT5tjjZH4BJSkfjxSF6tWnNPFMBBZOXg=;
+	s=arc-20240116; t=1745102175; c=relaxed/simple;
+	bh=TP4Yh+9WJlDZaqz4bf4qUkZ08SlWdrw1wBwo43PLPwo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oZwrN7Y8SqtS/NUzJiI/xvV4qBPUxZkYPbdmwkc3YzN9xVN6Vc3GsW4GAzSEumi48ZvZ3VqD1lxedX+h1RH55np1MiF2NncD21SBeUqr4Egym9960//xsHmrLNdgfMicgit7ITdrSAc6wXUiQcs6QKluftuWWL5TMqR9ZnBcJMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FXRIVsoA; arc=none smtp.client-ip=209.85.167.48
+	 In-Reply-To:To:Cc; b=eYq4tnMG2HI83TrBHIX8rXjvqO/oDAYK75iM2+LcPTjRdV4qvDkxgK0JNxKKIrgime3fdhADT4OMDy7cZ6h9FOzq8/AtupDg4kdQhWO3mnfUpoL+SSREofzyRIXMpXvVOM8tyyMcXKjOet7FIeIjMWTK5Tnc5xNyKqFVKjknJjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qYeUhee+; arc=none smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FXRIVsoA"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54af20849adso2805458e87.1
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 15:36:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qYeUhee+"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54b10956398so3476814e87.0
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 15:36:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745102170; x=1745706970; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745102171; x=1745706971; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=xiM2m9ABoxfWOeD3G81zWg3PRWoAeqZTvFDZw3I7hGA=;
-        b=FXRIVsoA9ERexj9OyECweIpw4x5xycgbwx8bc2KNqTr0AieeDfFsX+J5FuOpk0fiYx
-         U5EhoLcPBHQx9CvW7UT1g2ZJo2DdYoQZ0D6BHhZSVT3TJ2eEuHKQaXJjcwrloGXkX7Da
-         fdfnqnwsSdZgzccB60QzhZ0mvYB4MEjW0+x8KArYSs4TPW9AE8Md4g2neId7mXViDIS3
-         ogn8gzvoGbg0ZQauzCUUf6wU1NMmlbjsWcy42ikTOpyXVIbECylK998BDtxMyTguwA9w
-         VwnGF1WE0R5WAoanhzGE6Hm8+ojQaqjGJgnlcwmxv1fOqCRjRLZOPmDn/WciomiIm8Rf
-         Yp/A==
+        bh=l98x3YSTQCmRpdwObE91jKVkzt4FjWNoTJCcOXRWYQo=;
+        b=qYeUhee+2AMKeypIRHznx4N3FZLrPFjYLcicZDnv36F0MNUX1SPh2qg58xiAbNN6TH
+         1jj1pKsi/aQ08Rw77pTewJIft8yypgS7+wJH0WTJI6Rl/sMcaQX6Qgqh/4pYEjsIhaXp
+         /oe4GU+W6sGD+Hy7mksFZGQlEDvqfollRUtxN3fmrLahbqBxFErlS5RnR0cShoeAPT0S
+         WVBspt0e5ojYd+3/xHqJFg2dmjhUX+G+QGHJ+QrNg02Ufx86xkANtFtDFiXTxlWdyDyT
+         mlGKbRCiDab5+RlO5SzfyLT1RtUGih4iF3E3vCOVGCScg45XshVKUNQCna6kZZQouxuu
+         cafA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745102170; x=1745706970;
+        d=1e100.net; s=20230601; t=1745102171; x=1745706971;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xiM2m9ABoxfWOeD3G81zWg3PRWoAeqZTvFDZw3I7hGA=;
-        b=NGzUqo6j/3JSuXhflAWMdaJPzZTelhLcvIdD+fi/gi46uoy8lZfbW0oBxjltYvAg8I
-         ww9ceKzD7cv9yHGdutkqYDStcdFr1bgtuzF+60yNKfBeyjq37hj/yFdTGj/REN9WNLGG
-         Vfz9yvHS642mgxzXScdt3lQCOjkOjNlhwUHdmdbhS4wl0uEfGMMuz0I3w6/gwRmJVB1U
-         UJ2PfeFiGdfqTomC3T70KzLSNzIiGFS9zWLplQInFaFCmjXxIDRb7RCw82a8lnJehpBR
-         s6d1hO6T2DGrqQ0bUUs+QMY3WBalOXTDaEuu0bnl9UJT7lhwMHiYdjB9/Vi15BX0RXv+
-         t+sg==
-X-Forwarded-Encrypted: i=1; AJvYcCXmoIarxh9LlgLIkPp6LUXGtWh7WzZYz1sJRcIk4LKYLtDu/rThXD9x5r3N26oAUEd5uRnscycFgpLdZEw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVcswZgW8ydOKIH6sOKayiFs2L3d0zE2UiHfL2TjcCPC++t8Bo
-	PVCSILljOxYlKWQvk6deIqWAz69Y/4pGFQKwRx5xH6x8onEQH5XgdE1cH0XQ1m0=
-X-Gm-Gg: ASbGnctGltKRWvXHHSikHn8Kuzy/ZKlEu+dS7bxJqzxKjDQc9I562nAzA/+B4kDgd8y
-	gMn/LaWedaIvAoKc4uoPmJlE1CgdI7pvii4vjw9FzuNdSwDZgi1dNhsAkk5msCc9Cnij76uMVuT
-	AUga+Pp83FjFg34ntbc9Z9VoeGaHT3Pr/g2hNKbmS2lCZOvWEPW7/VYmlG11RSF+e2FwCl8gQJE
-	LurRnZ6zElPSOsl1GqHXbaEKXjFOqElaV/kV6PEQ1VbWno9e/13Ckb068JFy5iLY2SdXtLrCjsh
-	NY7wf63hnSnnFBX/U02N+w0D6/sKcK0PN41W8RklxqcAVqLM9g+FebzwmyeGKQ==
-X-Google-Smtp-Source: AGHT+IFUHnCFl3rwYhxdXisPsoj8SpByV0bgu6OwD68TwJ1OsQbpjFjweq7RH2TQHdNEzdVERV/lRQ==
-X-Received: by 2002:a05:6512:1151:b0:54b:f99:776c with SMTP id 2adb3069b0e04-54d6dc055ebmr2313462e87.24.1745102169877;
-        Sat, 19 Apr 2025 15:36:09 -0700 (PDT)
+        bh=l98x3YSTQCmRpdwObE91jKVkzt4FjWNoTJCcOXRWYQo=;
+        b=E4T4bs1x4sY6YZ/FyCUj9+plbSHfTLpg0l2UYQqldxE02csEiLzmf1vr6y1BKicDFv
+         GQ0AdgDrr2/BOI9Jep2z2SUJPx3pTs5RoZxhvyO66Z3YKstPyNUI8VA/c3D8kIVo2em5
+         SBIGam5hGiUw7E2plQKTKnEksJHVnKzpKtatjQjegCupKpcatctO0i0cwA4ihIDvuZOG
+         OqsGKP+gOT7ZXadslOEOowzkbCics3+YsIZ9tEUDSt+Cb4JcXDf0l9OsKFk19B8NRmdl
+         B4k8p3pWzana+k6dFlQoqDEGzubD6gvT2wobw1JY3vjOBqsVLzTl+1WD37ZWcSfgzjne
+         lcMA==
+X-Forwarded-Encrypted: i=1; AJvYcCXV0uOrDOfe4wQ/8dNYPfj04wNTB0a5gUuVICrEbcRIhIfeEOnExE4RqFprDh+LnOxY19GX60evTMBe3oY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyy4ZuavorxL/JR6HovDYF5slEDl3yUuvwJVsQklwHIM9xNmKHn
+	XN+bhq0zHPWAM/s5b2BYYrOt8cjLZ0obREFjlcHgeByJF1400gcXBbeXM+Lr1WA=
+X-Gm-Gg: ASbGncvW6zI44J6HWEAOwc+XC6GsUsmt1tJILhXp01ZDId+BJrSqMDUsSu2/lGUMuPV
+	pPElRyQxpjdJ0qBQmpe3CZHRIZEade3ryecudPaPLPQxuvAW+B6TcTfI/WC+RmQaYDhFZgd6YTK
+	HCVxyUs9SytIiDOZWtmLm/4Ig6Ymqzwgn8edg8xjvtznFUelODALCH83sgwu7cOLpGl0Kh3IhhF
+	6K7fP+F4GjFbgVX0jN1yF273dHVqfVYB+4Do1TDUOydcWdy3j9rmMtx75kdNt33e9O97xLSQ8xV
+	NuvAkCy2/ZRLOcLEE6fuGzLqPAwR3tptwTcZ4fbDXVqmLq0N/zg=
+X-Google-Smtp-Source: AGHT+IHq/GECB8/PhsmzHvDnTv89Wx7raTEYHUi/0yF8Wzd8LfNYvvGMkk5FpZPXmnpYgbFS+fFHuw==
+X-Received: by 2002:a05:6512:3d29:b0:54d:6c14:3caf with SMTP id 2adb3069b0e04-54d6e780055mr1794566e87.11.1745102171471;
+        Sat, 19 Apr 2025 15:36:11 -0700 (PDT)
 Received: from [192.168.1.140] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e540daesm535322e87.79.2025.04.19.15.36.08
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e540daesm535322e87.79.2025.04.19.15.36.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 15:36:08 -0700 (PDT)
+        Sat, 19 Apr 2025 15:36:10 -0700 (PDT)
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sun, 20 Apr 2025 00:35:57 +0200
-Subject: [PATCH v6 10/31] ARM: entry: move all tracing invocation to C
+Date: Sun, 20 Apr 2025 00:35:58 +0200
+Subject: [PATCH v6 11/31] ARM: entry: Merge the common and trace entry code
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250420-arm-generic-entry-v6-10-95f1fcdfeeb2@linaro.org>
+Message-Id: <20250420-arm-generic-entry-v6-11-95f1fcdfeeb2@linaro.org>
 References: <20250420-arm-generic-entry-v6-0-95f1fcdfeeb2@linaro.org>
 In-Reply-To: <20250420-arm-generic-entry-v6-0-95f1fcdfeeb2@linaro.org>
 To: Dmitry Vyukov <dvyukov@google.com>, Oleg Nesterov <oleg@redhat.com>, 
@@ -83,168 +83,230 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
  Thomas Gleixner <tglx@linutronix.de>
 X-Mailer: b4 0.14.2
 
-The traced invocation of syscall is rewritten in C, moving
-over also the call to syscall_trace_exit() to C.
+The trace entry code now can handle recursive and complex
+calls in C using stack.
 
-To do this we cannot have invoke_syscall_trace_asm() be a
-leaf call, which is the mechanism we hithereto relied on
-to make sure the stack is pulled back to the state we were
-at before we called out to the code written in C.
+Move the common code over to using that approach.
 
-Push the registers potentially used by C on the stack, and
-make a copy of the two stack-pushed syscall arguments
-on the top of the stack before invoking the syscall and
-then drop these copied arguments and pop back the
-registers before returning from invoke_syscall_trace_asm().
-
-As we are now calling from and returning to C, we no
-longer need to pass the regs pointer around so drop it.
+We now use the ret_fast_syscall return path also when tracing,
+which appears to work just fine.
 
 Acked-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/include/asm/syscall.h |  2 +-
- arch/arm/kernel/entry-common.S | 32 +++++++++++++++-----------------
- arch/arm/kernel/ptrace.c       |  2 +-
- arch/arm/kernel/syscall.c      | 30 +++++++++++++++++++++---------
- 4 files changed, 38 insertions(+), 28 deletions(-)
+ arch/arm/include/asm/syscall.h |  3 +--
+ arch/arm/kernel/entry-common.S | 61 +++++++++---------------------------------
+ arch/arm/kernel/syscall.c      | 35 +++++++++++-------------
+ 3 files changed, 28 insertions(+), 71 deletions(-)
 
 diff --git a/arch/arm/include/asm/syscall.h b/arch/arm/include/asm/syscall.h
-index 66067d165ba3fbbe0f840a89ae396eb1a311bacc..cb0073c4151bf70a82d15e17a95b6b6f48b245d6 100644
+index cb0073c4151bf70a82d15e17a95b6b6f48b245d6..9c664d8c5718f58034f442c20a030b59faf65dd9 100644
 --- a/arch/arm/include/asm/syscall.h
 +++ b/arch/arm/include/asm/syscall.h
-@@ -20,7 +20,7 @@
+@@ -19,8 +19,7 @@
+ 
  extern const unsigned long sys_call_table[];
  
- int invoke_syscall(void *table, struct pt_regs *regs, int scno, void *retp);
--int invoke_syscall_trace(void *table, struct pt_regs *regs, void *retp);
-+void invoke_syscall_trace(void *table, struct pt_regs *regs);
+-int invoke_syscall(void *table, struct pt_regs *regs, int scno, void *retp);
+-void invoke_syscall_trace(void *table, struct pt_regs *regs);
++int invoke_syscall_trace(void *table, struct pt_regs *regs, int scno);
  
  static inline int syscall_get_nr(struct task_struct *task,
  				 struct pt_regs *regs)
 diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
-index 8baab7f97f59c434396f30b08ddd3029c5f9c0e5..dbc947d301ec11bb13007cb4bb161c035ede5c10 100644
+index dbc947d301ec11bb13007cb4bb161c035ede5c10..f0f1f8723965313b287158fb2a238908db72fcd2 100644
 --- a/arch/arm/kernel/entry-common.S
 +++ b/arch/arm/kernel/entry-common.S
-@@ -296,22 +296,11 @@ ENDPROC(vector_swi)
- __sys_trace:
- 	add	r1, sp, #S_R0 + S_OFF		@ pointer to regs
+@@ -39,7 +39,6 @@ saved_pc	.req	lr
+  * from those features make this path too inefficient.
+  */
+ ret_fast_syscall:
+-__ret_fast_syscall:
+  UNWIND(.fnstart	)
+  UNWIND(.cantunwind	)
+ 	disable_irq_notrace			@ disable interrupts
+@@ -47,13 +46,13 @@ __ret_fast_syscall:
+ 	movs	r1, r1, lsl #16
+ 	bne	fast_work_pending
+ 
+-	restore_user_regs fast = 1, offset = S_OFF
++	restore_user_regs fast = 0, offset = S_OFF
+  UNWIND(.fnend		)
+ ENDPROC(ret_fast_syscall)
+ 
+ 	/* Ok, we need to do extra processing, enter the slow path. */
+ fast_work_pending:
+-	str	r0, [sp, #S_R0+S_OFF]!		@ returned r0
++	add	sp, sp, #(S_R0 + S_OFF)
+ 	/* fall through to work_pending */
+ #else
+ /*
+@@ -63,10 +62,9 @@ fast_work_pending:
+  * call.
+  */
+ ret_fast_syscall:
+-__ret_fast_syscall:
+  UNWIND(.fnstart	)
+  UNWIND(.cantunwind	)
+-	str	r0, [sp, #S_R0 + S_OFF]!	@ save returned r0
++	add	sp, sp, #(S_R0 + S_OFF)
+ #if IS_ENABLED(CONFIG_DEBUG_RSEQ)
+ 	/* do_rseq_syscall needs interrupts enabled. */
+ 	mov	r0, sp				@ 'regs'
+@@ -83,7 +81,9 @@ ENDPROC(ret_fast_syscall)
+ #endif
+ 
+ 	tst	r1, #_TIF_SYSCALL_WORK
+-	bne	__sys_trace_return_nosave
++	beq	slow_work_pending
++	b	ret_to_user
++
+ slow_work_pending:
+ 	mov	r0, sp				@ 'regs'
+ 	bl	do_work_pending
+@@ -257,19 +257,15 @@ ENTRY(vector_swi)
+ 	str	scno, [tsk, #TI_ABI_SYSCALL]
+ #endif
+ 	mov	r1, sp				@ put regs into r1
+-	ldr	r10, [tsk, #TI_FLAGS]		@ check for syscall tracing
+ 	stmdb	sp!, {r4, r5}			@ push fifth and sixth args
+-
+-	tst	r10, #_TIF_SYSCALL_WORK		@ are we tracing syscalls?
+-	bne	__sys_trace
+-
  	mov	r0, tbl
--	badr	r2, __sys_trace_return
- 	bl	invoke_syscall_trace
--	cmp	r0, #-1
--	bne	__sys_trace_return
--	add	sp, sp, #S_OFF			@ restore stack
+-	/* r1 already contains regs */
+ 	mov	r2, scno			@ syscall number from r7
+-	/* We return here no matter what, also pass this as an argument */
+-	badr	lr, __ret_fast_syscall
+-	mov	r3, lr
+-	b 	invoke_syscall
++	bl	invoke_syscall_trace
++	cmp	r0, #0
++	beq	ret_fast_syscall
++	/* This path taken when tracing */
++	add	sp, sp, #(S_R0 + S_OFF)
++	b	ret_to_user
+ 
+ #if defined(CONFIG_OABI_COMPAT) || !defined(CONFIG_AEABI)
+ 	/*
+@@ -289,20 +285,6 @@ ENTRY(vector_swi)
+ ENDPROC(vector_swi)
+ 	.ltorg
+ 
+-	/*
+-	 * This is the really slow path.  We're going to be doing
+-	 * context switches, and waiting for our parent to respond.
+-	 */
+-__sys_trace:
+-	add	r1, sp, #S_R0 + S_OFF		@ pointer to regs
+-	mov	r0, tbl
+-	bl	invoke_syscall_trace
+-	add	sp, sp, #S_OFF			@ restore stack pointer
+-	b	ret_to_user
 -
 -__sys_trace_return_nosave:
--	enable_irq_notrace
--	mov	r0, sp
--	bl	syscall_trace_exit
-+	add	sp, sp, #S_OFF			@ restore stack pointer
- 	b	ret_to_user
- 
--__sys_trace_return:
--	str	r0, [sp, #S_R0 + S_OFF]!	@ save returned r0
--	mov	r0, sp
--	bl	syscall_trace_exit
-+__sys_trace_return_nosave:
- 	b	ret_to_user
- 
+-	b	ret_to_user
+-
  	.macro	syscall_table_start, sym
-@@ -437,18 +426,27 @@ SYM_FUNC_END(invoke_syscall_asm)
-  * r0: syscall table
-  * r1: regs
-  * r2: syscall number
+ 	.equ	__sys_nr, 0
+ 	.type	\sym, #object
+@@ -402,25 +384,6 @@ sys_mmap2:
+ 		b	sys_mmap_pgoff
+ ENDPROC(sys_mmap2)
+ 
+-/*
+- * This call wants:
+- * r0: syscall table
+- * r1: regs
+- * r2: syscall number
 - * r3: pointer to return function
-  */
- SYM_TYPED_FUNC_START(invoke_syscall_trace_asm)
- #ifdef CONFIG_CPU_SPECTRE
- 	csdb
- #endif
-+	/* Save registers because we are being called from C */
-+	push	{r4 - r10, lr}
- 	mov	tbl, r0
-+	/* Make space to copy the two syscall stack arguments */
-+	sub	sp, sp, #S_OFF
- 	mov	scno, r2
+- */
+-SYM_TYPED_FUNC_START(invoke_syscall_asm)
+-#ifdef CONFIG_CPU_SPECTRE
+-	csdb
+-#endif
+-	mov	tbl, r0
+-	mov	scno, r2
 -	mov	lr, r3				@ return address
--	ldmia	r1, {r0 - r6}			@ reload r0-r6
--	stmia	sp, {r4, r5}			@ update stack arguments
-+	badr	lr, __invoke_syscall_trace_ret	@ return right here
-+	ldmia	r1, {r0 - r6}			@ reload r0-r6 from regs
-+	stmia	sp, {r4, r5}			@ copy stack arguments
- 	ldr	pc, [tbl, scno, lsl #2]		@ call sys_* routine
-+__invoke_syscall_trace_ret:
-+	/* Drop the copied stack arguments */
-+	add	sp, sp, #S_OFF
-+	pop	{r4 - r10, lr}
-+ ARM(	mov	pc, lr		)
-+ THUMB(	bx	lr		)
- SYM_FUNC_END(invoke_syscall_trace_asm)
- 
- #ifdef CONFIG_OABI_COMPAT
-diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
-index 07b0daf47441f1f76a8af416acc74fa5ed770403..ac7b98ae47249b4a00fc1cb871bb2d309bfd8c88 100644
---- a/arch/arm/kernel/ptrace.c
-+++ b/arch/arm/kernel/ptrace.c
-@@ -888,7 +888,7 @@ asmlinkage int syscall_trace_enter(struct pt_regs *regs)
- 	return scno;
- }
- 
--asmlinkage void syscall_trace_exit(struct pt_regs *regs)
-+void syscall_trace_exit(struct pt_regs *regs)
- {
- 	/*
- 	 * Audit the syscall before anything else, as a debugger may
+-	ldmia 	r1, {r0 - r3}			@ reload r0-r3
+-	/* Arguments 5 and 6 are (hopefully) on the stack */
+-	ldr	pc, [tbl, scno, lsl #2]		@ call sys_* routine
+-SYM_FUNC_END(invoke_syscall_asm)
+-
+ /*
+  * This call wants:
+  * r0: syscall table
 diff --git a/arch/arm/kernel/syscall.c b/arch/arm/kernel/syscall.c
-index 377e16c8c53c8e809e3f8b157a889ef115d5c043..e90f04f35b3485968a1e9046cf0889f56cca92e5 100644
+index e90f04f35b3485968a1e9046cf0889f56cca92e5..36330023b5484399a4ca2fdb5727b410e2c74b6f 100644
 --- a/arch/arm/kernel/syscall.c
 +++ b/arch/arm/kernel/syscall.c
-@@ -18,23 +18,35 @@ __visible int invoke_syscall(void *table, struct pt_regs *regs, int scno, void *
- 	return sys_ni_syscall();
- }
+@@ -3,50 +3,45 @@
+ #include <linux/syscalls.h>
+ #include <asm/syscall.h>
  
--int invoke_syscall_trace_asm(void *table, struct pt_regs *regs, int scno, void *retp);
-+int invoke_syscall_trace_asm(void *table, struct pt_regs *regs, int scno);
- __ADDRESSABLE(invoke_syscall_trace_asm);
- 
--__visible int invoke_syscall_trace(void *table, struct pt_regs *regs, void *retp)
-+__visible void invoke_syscall_trace(void *table, struct pt_regs *regs)
+-int invoke_syscall_asm(void *table, struct pt_regs *regs, int scno, void *retp);
+-__ADDRESSABLE(invoke_syscall_asm);
+-
+-__visible int invoke_syscall(void *table, struct pt_regs *regs, int scno, void *retp)
++static inline bool has_syscall_work(unsigned long flags)
  {
- 	int scno;
-+	int ret;
- 
- 	scno = syscall_trace_enter(regs);
- 	if (scno == -1)
--		return -1;
-+		goto trace_exit_nosave;
- 
 -	if (scno < NR_syscalls)
 -		/* Doing this with return makes sure the stack gets pop:ed */
--		return invoke_syscall_trace_asm(table, regs, scno, retp);
-+	if (scno < NR_syscalls) {
-+		ret = invoke_syscall_trace_asm(table, regs, scno);
-+		goto trace_exit_save;
-+	}
- 
+-		return invoke_syscall_asm(table, regs, scno, retp);
+-
 -	if (scno >= __ARM_NR_BASE)
 -		return arm_syscall(scno, regs);
-+	if (scno >= __ARM_NR_BASE) {
-+		ret = arm_syscall(scno, regs);
-+		goto trace_exit_save;
+-
+-	return sys_ni_syscall();
++	return unlikely(flags & _TIF_SYSCALL_WORK);
+ }
+ 
+ int invoke_syscall_trace_asm(void *table, struct pt_regs *regs, int scno);
+ __ADDRESSABLE(invoke_syscall_trace_asm);
+ 
+-__visible void invoke_syscall_trace(void *table, struct pt_regs *regs)
++__visible int invoke_syscall_trace(void *table, struct pt_regs *regs, int scno)
+ {
+-	int scno;
++	unsigned long flags = read_thread_flags();
+ 	int ret;
+ 
+-	scno = syscall_trace_enter(regs);
+-	if (scno == -1)
+-		goto trace_exit_nosave;
++	if (has_syscall_work(flags)) {
++		scno = syscall_trace_enter(regs);
++		if (scno == -1)
++			goto trace_exit_nosave;
 +	}
  
--	return sys_ni_syscall();
-+	ret = sys_ni_syscall();
-+
-+trace_exit_save:
-+	/* Save return value from syscall */
-+	regs->ARM_r0 = ret;
-+
-+trace_exit_nosave:
-+	local_irq_enable();
-+	syscall_trace_exit(regs);
+ 	if (scno < NR_syscalls) {
+ 		ret = invoke_syscall_trace_asm(table, regs, scno);
+-		goto trace_exit_save;
++		goto exit_save;
+ 	}
+ 
+ 	if (scno >= __ARM_NR_BASE) {
+ 		ret = arm_syscall(scno, regs);
+-		goto trace_exit_save;
++		goto exit_save;
+ 	}
+ 
+ 	ret = sys_ni_syscall();
+ 
+-trace_exit_save:
++exit_save:
+ 	/* Save return value from syscall */
+ 	regs->ARM_r0 = ret;
++	if (!has_syscall_work(flags))
++		return 0;
+ 
+ trace_exit_nosave:
+ 	local_irq_enable();
+ 	syscall_trace_exit(regs);
++	return 1;
  }
 
 -- 
