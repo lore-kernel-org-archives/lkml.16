@@ -1,113 +1,122 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076821465B4
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 10:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08AAD40BF5
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 10:35:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745058730; cv=none; b=TH4nGxV+xfjfGwF1lqJtV/MLLPXHNeZXcEbJjkoXZjez1Ipnt/ZhSHoUrld+2433DfBykT7lzxAXpzjzs6yL921xu0wgSZsW+YXZEr1rH70Ky/04O3VyD642vG/jE07QZpqYPBuhKsUo8DO9m0xy0JMzjWa0MF6Rwzibcw2vYQo=
+	t=1745058957; cv=none; b=nEtXst0lYnTJjXGzxnasMgoboOXRuKbZ7uz9hkVlVLiGeIcXYRCFseKeo/KOB3WHr5zqnhN6o+o72B1j1lsjyrOYXcrKNWuLKesENFTq6CF3Ice5s0wOKt1YxVYIZVE+ePFsiiI0cXt42btDtkVkh13KrnrnCCwSkSDtCo44UfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745058730; c=relaxed/simple;
-	bh=swRKLfJWKD2mlW0keXQmekByo0tOmThkSgTyIeveh58=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jnqo37WyLxPxGeusejALJOeQPc6QGBzshPMtNPjyft4ICHrgYfIP7Wh0a54IvNxySVJ26H/UJmEDx/RKTLu3V3UKL1NUuNtEe8tsIpm1WKsmRX05o91avYXaCB2CnQLnDbnonTn38wMltCWOjyWq4WZuOuAClvqaj5jfqV4eXXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jqaxrAi0; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745058957; c=relaxed/simple;
+	bh=bVCR+fA30tF4GjVlZMJHRBKnbcj87eua+ehlMiAJLg0=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=O1E6D1mp+BQxU+cC61vGX0wmoxStGuTJPP+kgzP8erF2DDLcnZoJwe+xV5nmqGCh2RPBozx1hsaSqUfbWNCt1IzqZibHrLkn6IuKufANlrTdqFiqMuZ7roDme9AaJD+pMB2c+kA0YgGudBrv/yulOZUZCKcBxtWlvPmn2Wyr1vI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DRwGSjmZ; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jqaxrAi0"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-224100e9a5cso30912295ad.2
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 03:32:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745058728; x=1745663528; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=5Il2rU8Ei7/bRHYklnBb9fRrbnoPixb2FIIvOyMizU8=;
-        b=jqaxrAi0voXqiOjYRZYcvWRQAAU4BEPuR1F+h4PA5cFc4+oh+L95zLUzkLu6WvJuID
-         hXleUD8Lu7VuaKCB9FFw3GRk0EfC8mv0q1tGZsUGgZesiR3pCG+t4Rttr3PaRMRatZur
-         NVegfF9NH6vZsBK4sURioUUIIy6we0nNVrlKJNrGm0pd8F7UP63MpM9o3OjYnd1QPqaS
-         vpmWShnkHK9C+n+3Y9zSrApuIHzTJq6ZXDMPBBuiWgJb2pFSGe33nqphfsXc/K1M6syF
-         GvY4U5EHo4twtWxAb/zsVaoAQVAsjWu4D8mvZANfPKy6wFIlLjaqntEHAn0rWJfYiwQG
-         JjuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745058728; x=1745663528;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Il2rU8Ei7/bRHYklnBb9fRrbnoPixb2FIIvOyMizU8=;
-        b=arNZT6/6vNpG9cSNShmVuWyFPrytl+8nytlHU6u6T079u5Rf33qnSLmJUoLS1kELSJ
-         JwFxXk+KbVXDtf3pDmb3RZ1DQ9fw9VOqV3V2s8fQwEFWNptDZNJCZbSW02r9pIk3HZXh
-         svBpK4FcW/mmBQjZFXgZLlc5MUUxcmriLuA30aCQR76zDbWN8aHSkllX/5F38/RkIfMk
-         Zo9bQEt49avmiIZGUakKjX0FN2f3pJXhFQs/uhc5RlFvxSmL4ZBTtlSTZM62BFytSJbr
-         vxfuKjl0weeSal6Vplt5JAMrKxqbhHvFQgkSfIr8SS4rifknIVbe2HnLwzCwC811GKH8
-         8JZg==
-X-Forwarded-Encrypted: i=1; AJvYcCWA0CFWm7B0SzQkqB9bYYerB1cmWm9d/oS18kvXeuJvzL7XzF+eeGOw9cLGARUHY9iRU03T5n8JkJVyg1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9Ix+yTyQsouja/QQum9FgjlgJTOmaGRxEhFrObicFa3b3YLmq
-	2OFJNYCtP2z0Q+wb2fFGiyZRSeiMA8V+yNr8TGppEDuQv5AvlAU4aLECVmAgbw==
-X-Gm-Gg: ASbGncuU6VGlXEbv+sSIqt2x2gCRVL5Ba64dhxyiq933arpHSdzycc2L8PhH7qATPKU
-	epKy+LGRPygIaZJDgtjU6BJxeoH1oTvWCdrBGX2jE/2svtsKwPNNQxrzidpPRMLPkGMZcVGHlOE
-	PlskCTIUBpG2Xoyhe7Jh66lKDycJnyOzjakVrYws1Pu3o6Ibx7XHM1oeusJVG5XZ6gbSbGEq34K
-	8jJ+8vXdPjdHYeWckPFMeNRrACSNXB0fil/PSOhkPg7nFu6sht8a1kFVQqP8DqgwZy5mzz/RzGi
-	NfdvQEADnB+xVNH4rfRb9KL/DIkc0oDXnWe2AvaU96syb7+3uvQ=
-X-Google-Smtp-Source: AGHT+IFIs3URHzShG2kPpjK29B1REbfnUIRhTOlT5ei3CMFMXuj72gvndCjXDA59PyRefPuYycxkCg==
-X-Received: by 2002:a17:903:244a:b0:21f:988d:5758 with SMTP id d9443c01a7336-22c536011bemr96555915ad.35.1745058728233;
-        Sat, 19 Apr 2025 03:32:08 -0700 (PDT)
-Received: from thinkpad ([36.255.17.167])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb6807sm30636225ad.112.2025.04.19.03.32.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 03:32:07 -0700 (PDT)
-Date: Sat, 19 Apr 2025 16:02:02 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Daire McNamara <daire.mcnamara@microchip.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Kevin Xie <kevin.xie@starfivetech.com>, Conor Dooley <conor.dooley@microchip.com>, 
-	Minda Chen <minda.chen@starfivetech.com>, Mason Huo <mason.huo@starfivetech.com>, 
-	"open list:PCI DRIVER FOR PLDA PCIE IP" <linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] PCI: starfive: Simplify event doorbell bitmap
- initialization in pcie-starfive
-Message-ID: <ck6a66u3cn4uzwnz7z3xjoz5rorli7eww4lfzbjxmntbpbnzgt@dg2sfkhw4x4z>
-References: <20250316171250.5901-1-linux.amoon@gmail.com>
- <20250316171250.5901-2-linux.amoon@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DRwGSjmZ"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745058953;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E0cjA398QKtX5LZgMG38M1nQogQDA0zqD26aOnhTivM=;
+	b=DRwGSjmZk2oQXGeMn8E0tYGgzibZ/Vgc0lCTc7VGLaa8Ilv9RFP6NawIZGiKHGIHWWUqCK
+	efHZmMs3D9aWsPNEr9qsc1ua0ZFDYNFe1HRhdU0yrKcimQpLzn71kxtlxo23WlMJuoQmhg
+	8cV8dEIEy4U7yvGTexVh/BkgUXz7Q3A=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250316171250.5901-2-linux.amoon@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.2\))
+Subject: Re: [PATCH v2] MIPS: Fix MAX_REG_OFFSET and remove zero-length struct
+ member
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <CAAhV-H4x4oQEtvk4Ah0WNBWtaQysj00k_Pybs=+r37oriJxVPA@mail.gmail.com>
+Date: Sat, 19 Apr 2025 12:35:38 +0200
+Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Oleg Nesterov <oleg@redhat.com>,
+ linux-mips@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <505DF3CB-F7E2-4233-B39E-654FB5BEB811@linux.dev>
+References: <20250417174712.69292-2-thorsten.blum@linux.dev>
+ <aAIF_kEFlOOVNDaE@alpha.franken.de>
+ <DAD22E95-6D33-43D5-B5E5-3A7B45A63944@linux.dev>
+ <alpine.DEB.2.21.2504181108170.18253@angie.orcam.me.uk>
+ <EC98BAE8-8269-4169-B3A2-5F426E77C223@linux.dev>
+ <alpine.DEB.2.21.2504181337350.18253@angie.orcam.me.uk>
+ <B71034AC-B0FC-4C5F-8562-661D6AD11056@linux.dev>
+ <alpine.DEB.2.21.2504181608420.18253@angie.orcam.me.uk>
+ <9F6CA7CB-B36A-4F79-B78C-7ED63E39260D@linux.dev>
+ <A08BC566-5F6D-4FA5-B315-34D2FCA55A6E@linux.dev>
+ <CAAhV-H4x4oQEtvk4Ah0WNBWtaQysj00k_Pybs=+r37oriJxVPA@mail.gmail.com>
+To: Huacai Chen <chenhuacai@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Sun, Mar 16, 2025 at 10:42:46PM +0530, Anand Moon wrote:
-> The events_bitmap initialization in starfive_pcie_probe() previously
-> masked out the PLDA_AXI_DOORBELL and PLDA_PCIE_DOORBELL events.
-> 
-> These masking has been removed, allowing these events to be included
-> in the bitmap. With this change ensures that all interrupt events are
-> properly accounted for and may be necessary for handling doorbell
-> events in certain use cases.
-> 
-> PCIe Doorbell Events: These are typically used to notify a device about
-> an event or to trigger an action. For example, a host system can write
-> to a doorbell register on a PCIe device to signal that new data is
-> available or that an operation should start12.
-> 
-> AXI-PCIe Bridge: This bridge acts as a protocol converter between AXI
-> (Advanced eXtensible Interface) and PCIe (Peripheral Component Interconnect
-> Express) domains. It allows transactions to be converted and communicated
-> between these two different protocols3.
-> 
+Hi Huacai,
 
-Are these events used in the driver for any purpose? Others have mentioned a
-potential irq storm issue with these interrupts also. So unless you want to
-enable these events for a specific purpose/usecase, it is better to keep them
-masked out.
+On 19. Apr 2025, at 04:56, Huacai Chen wrote:
+> On Sat, Apr 19, 2025 at 4:22=E2=80=AFAM Thorsten Blum wrote:
+>> On 18. Apr 2025, at 22:18, Thorsten Blum wrote:
+>>> On 18. Apr 2025, at 17:14, Maciej W. Rozycki wrote:
+>>>> On Fri, 18 Apr 2025, Thorsten Blum wrote:
+>>>>>>> Does regs_get_register() even work for CPU_CAVIUM_OCTEON when =
+accessing
+>>>>>>> the last two registers because they're both ULL, not UL? =
+(independent of
+>>>>>>> my patch)
+>>>>>>=20
+>>>>>> Or rather two arrays of registers.  With 32-bit configurations =
+their
+>>>>>> contents have to be retrieved by pieces.  I don't know if it's =
+handled by
+>>>>>> the caller(s) though as I'm not familiar with this interface.
+>>>>>=20
+>>>>> Ah, CPU_CAVIUM_OCTEON seems to be 64-bit only, so there's no =
+difference
+>>>>> between UL and ULL. Then both my patch and your suggestion:
+>>>>=20
+>>>> So it seems odd to use `long long int' here, but I can't be =
+bothered to
+>>>> check history.  There could be a valid reason or it could be just =
+sloppy
+>>>> coding.
+>>>>=20
+>>>>> I still prefer my approach without '__last[0]' because it also =
+silences
+>>>>> the following false-positive Coccinelle warning, which is how I =
+stumbled
+>>>>> upon this in the first place:
+>>>>>=20
+>>>>> ./ptrace.h:51:15-21: WARNING use flexible-array member instead
+>>>>=20
+>>>> So make `__last' a flexible array instead?  With a separate patch.
+>>>=20
+>>> No, '__last[0]' is a fake flexible array and the Coccinelle warning =
+is
+>>> wrong. We should either ignore the warning or silence it by removing =
+the
+>>> marker, but turning it into a real flexible array doesn't make =
+sense.
+>>> I'd prefer to just remove it from the struct.
+>>>=20
+>>> Stefan or Oleg, do you have any preference?
+>>=20
+>> Sorry, I meant Thomas, not Stefan.
+> In my opinion just changing __last[0] to __last[] is OK, no other
+> actions needed.
 
-- Mani
+That doesn't fix the value of MAX_REG_OFFSET - you might be missing some
+of the context here.
 
--- 
-மணிவண்ணன் சதாசிவம்
+Thanks,
+Thorsten
+
