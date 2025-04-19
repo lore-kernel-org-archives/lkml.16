@@ -1,118 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135D513C3F2;
-	Sat, 19 Apr 2025 20:47:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2438A1A2860;
+	Sat, 19 Apr 2025 21:04:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745095662; cv=none; b=d7ymr+cE9zAzJfvMSyZebq97Si+oy8UTADiTEguxqoOIMIkPdbbTr4D1Huf4UvF3yNJLmAZnDaq42W9x6nDj+ic+VWAGZtrHbmv35eRCUbldLyGOgzVQXuux6A74jxiaCakSkIKLjCQ9sqWF5+PzKwfU30l598i4phtBcgBq6Fo=
+	t=1745096661; cv=none; b=nDyZII7GR4GOjNcjSZMEl/mWcOvn5Lym7ZuEpJD1Q8HNYhJi73d9wurQp9hgzhIfM9nPSECGB7ck7FONfUIpVcO1br5CG/9tLu7SHPqkO/AhzOJc6yZyIcjxGVvAjVZkXsjinFQEP0zARjc+poL1egfrKPCYRDWZlr7+fb6ruRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745095662; c=relaxed/simple;
-	bh=L7wbbmUudesySBzYWEN17MSY5fsw9GvTv1EHU1kWjyg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=g7pagJrsCyu71zAGDasWrKZV72Ld8oubiKUSa4bSmd9v12tiCu66xyWiRYeUpXFqQZa4erKznuEZFTvnl+Oe35pzTiKSjWmmzcfNQgVoHhc/qyw23huJGYdWmIi2RUk0GZfp1wcnyhorl4FB+z8h34OiJLjdhVoB7+O9bQ0vV50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k+SzztX3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745096661; c=relaxed/simple;
+	bh=SnW8ZvvztGN2rE+JhiTwhq8fakQpkcH3dL2/xVS0Phw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qemgf8klO/cBGBB2gGk6+49ArioWYW8ukVmQZT0atreUW+C/Awpv5nJ1Z0iuzHzCNT93e0v/lO4Bs6PTKsTiHSDHCGN2WlO620S1koZy/QdUGeDj16jrvFhf1HGrpNvIjBopfTsPxv173QqiRSGzxkott52mcBHPXxWdyridBYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CD9+tV+6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k+SzztX3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7E8DC4CEE7;
-	Sat, 19 Apr 2025 20:47:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CD9+tV+6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 547DCC4CEE7;
+	Sat, 19 Apr 2025 21:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745095661;
-	bh=L7wbbmUudesySBzYWEN17MSY5fsw9GvTv1EHU1kWjyg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=k+SzztX3YTfIkuIRFy1QeoRT/Xmib911FQwXiMJU31QpWqElpb4NypnVvzSEiBtOn
-	 PGMGu1Zq/19VQBnXhehfhMRLaFW1Gj8jScyC0H7a7d/a6EFSGNFPCHPF7iTp8r9kdI
-	 z+3V9zIoSQz/VNYqr3H8bG7ylJXrQRcdslEIm17xqpY34T4FTbyOap1zpgKiERlf7s
-	 Z81xy05s1AjUnu7mTm/ao533M+ch3RM3bjZGkOou/4yhjUVxnQ53E9EA/mizQMOgkb
-	 m+dE4G33dkvIEhPPsqYTyDQuaMfS2XbL73awC7K8ztZmFhiDAxSLHwOQaFLg347CY/
-	 04XfpKamyxBUw==
-Date: Sat, 19 Apr 2025 22:47:38 +0200
-From: Wolfram Sang <wsa@kernel.org>
+	s=k20201202; t=1745096660;
+	bh=SnW8ZvvztGN2rE+JhiTwhq8fakQpkcH3dL2/xVS0Phw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CD9+tV+63FLsS6cX0Cae/YYN9y5hJ5s0d8ptlLID5wDU9gyhhDpGbL7+JQUviq2AG
+	 xltonH5gBeP8+q9mzgO44HU3zqgv9At+mojx5wyZ+1NIrPez+VLuOGvU6OiPE05Psh
+	 +xWwis2uCVATtn7vQZteYMkpiHfc13NFXxeEo5Gz5N02IDE9F6rVzl6PQ+7dnun6Mh
+	 uQQLIkF+ol5LsBrwZBWqcZmI0NuJ1Q8VIO6M0acwvQ1oJ/H8ZHz7CCE49on2nbD8pn
+	 EhCfRFI138vpntLjgOHy62dH53+HhNUQGMfpECWCfuEvTxWL4FhLmw+e0L6vHDznb1
+	 jdSP4yM1hHuMw==
+From: Christian Brauner <brauner@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andi Shyti <andi.shyti@kernel.org>
-Subject: [PULL REQUEST] i2c-for-6.15-rc3
-Message-ID: <aAQL6l45c77VG4Vv@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andi Shyti <andi.shyti@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] vfs fixes
+Date: Sat, 19 Apr 2025 23:04:04 +0200
+Message-ID: <20250419-vfs-fixes-627259052c9a@brauner>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="YitJUgNAYnWmcv5l"
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3155; i=brauner@kernel.org; h=from:subject:message-id; bh=SnW8ZvvztGN2rE+JhiTwhq8fakQpkcH3dL2/xVS0Phw=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSw8J/xanHdPmm9osbbqtONFbsl8llmBcVtneUUvP2JY qZGyIP6jlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIlkZjD8lfe8YXT+8mYVq7iz K5b9/ve6o4pn3xdGK05NHrHTC37OVmX4H/DL8PyeOZ/uWAiu4F2wvTfbx3/akvZF09bJ7X7fKOz vywgA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
+Hey Linus,
 
---YitJUgNAYnWmcv5l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+/* Summary */
 
-The following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444:
+This contains various fixes for this cycle:
 
-  Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
+* Revert the hfs{plus} deprecation warning that's also included in this
+  pull request. The commit introducing the deprecation warning resides
+  rather early in this branch. So simply dropping it would've rebased
+  all other commits which I decided to avoid. Hence the revert in the
+  same branch.
+
+* Switch CONFIG_SYSFS_SYCALL default to n and decouple from CONFIG_EXPERT.
+
+* Fix an audit bug caused by changes to our kernel path lookup
+  helpers this cycle. Audit needs the parent path even if the dentry it
+  tried to look up is negative.
+
+* Ensure that the kernel path lookup helpers leave the passed in path
+  argument clean when they return an error. This is consistent with all
+  our other helpers.
+
+* Ensure that vfs_getattr_nosec() calls bdev_statx() so the relevant
+  information is available to kernel consumers as well.
+
+* Don't set a timer and call schedule() if the timer will expire
+  immediately in epoll.
+
+* Make netfs lookup tables with __nonstring.
+
+/* Testing */
+
+gcc (Debian 14.2.0-19) 14.2.0
+Debian clang version 19.1.7 (3)
+
+No build failures or warnings were observed.
+
+/* Conflicts */
+
+Merge conflicts with mainline
+=============================
+
+No known conflicts.
+
+Merge conflicts with other trees
+================================
+
+No known conflicts.
+
+The following changes since commit 834a4a689699090a406d1662b03affa8b155d025:
+
+  Merge tag 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma (2025-04-14 10:24:04 -0700)
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.15-rc3
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.15-rc3.fixes.2
 
-for you to fetch changes up to 24aaced72a686fb1dd8c3477987e1eaad76230a2:
+for you to fetch changes up to 408e4504f97c0aa510330f0a04b7ed028fdf3154:
 
-  Merge tag 'i2c-host-fixes-6.15-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux into i2c/for-current (2025-04-18 23:42:56 +0200)
+  Revert "hfs{plus}: add deprecation warning" (2025-04-19 22:48:59 +0200)
+
+Please consider pulling these changes from the signed vfs-6.15-rc3.fixes.2 tag.
+
+Thanks!
+Christian
 
 ----------------------------------------------------------------
-i2c-for-6.15-rc3
-
-- Address translator: fix wrong include
-- ChromeOS EC tunnel: fix potential NULL pointer dereference
+vfs-6.15-rc3.fixes.2
 
 ----------------------------------------------------------------
-Andy Shevchenko (1):
-      i2c: atr: Fix wrong include
+Christian Brauner (5):
+      Kconfig: switch CONFIG_SYSFS_SYCALL default to n
+      hfs{plus}: add deprecation warning
+      fs: add kern_path_locked_negative()
+      fs: ensure that *path_locked*() helpers leave passed path pristine
+      Revert "hfs{plus}: add deprecation warning"
 
-Thadeu Lima de Souza Cascardo (1):
-      i2c: cros-ec-tunnel: defer probe if parent EC is not present
+Christoph Hellwig (1):
+      fs: move the bdex_statx call to vfs_getattr_nosec
 
-Wolfram Sang (1):
-      Merge tag 'i2c-host-fixes-6.15-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux into i2c/for-current
+Joe Damato (1):
+      eventpoll: Set epoll timeout if it's in the future
 
+Kees Cook (1):
+      netfs: Mark __nonstring lookup tables
 
-with much appreciated quality assurance from
-----------------------------------------------------------------
-Luca Ceresoli (1):
-      (Rev.) i2c: atr: Fix wrong include
-
-Tomi Valkeinen (1):
-      (Rev.) i2c: atr: Fix wrong include
-
- drivers/i2c/busses/i2c-cros-ec-tunnel.c | 3 +++
- drivers/i2c/i2c-atr.c                   | 2 +-
- 2 files changed, 4 insertions(+), 1 deletion(-)
-
---YitJUgNAYnWmcv5l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgEC+oACgkQFA3kzBSg
-Kbamvw/8CLRirbxmvXw/k6YfBXPrrBo2VeUYB13aqf983Tm9iQlX9AcGPGFyMK7U
-nv2Uza7NE9JFpUw1r3bk0AnXOdoqHOCmrk6ay8GufL6EuwVYD7KPTI45fwQJWp9X
-wgzbLSp9MOLFueIeDzaeamr3T+I8wcRjw4n/4obhnEk4RlijYrCJwOIhXVgn8iFs
-iDd9Dyr+AvL705OTBuxMKJahy2beHvsPJlfwR657IJ4aQgS3CwvxnmQg71dBMMNd
-85WfQwzCcd6TVj/SMC09aTQCH21xHXPabYyKYYl5VKzYFjpBRo6mdrZptYJdmtEW
-vBxXbaEBRZZa+DmQOqYfuB1VQ8uDxHjMNhYn/t8kRJxJyQbwGzXvPewuHvts41ow
-CkeGC7LEB87oZyYTP2sSSpZyVZbckzsRjB23z4p5docBCQX2STnqypR93fvnzl4F
-wlE7nwUrqfvsSS++d6/tthSl6kdZrR8OHcIQszsfSpr17wKOwUucLldXtV9NkZ0f
-fHq4RpjJzmoq9yjfUKCm6E3z8APSgYUIcrK9/IRuWNMQUY/sYcZhTxWoR0w3uJ3T
-FcGtBRj+NuO0rl2EsEhPVhwEmVhh8t5K3OCqq+qweYAOk34keljTKXRMgceZf5F6
-WUKymUhTSIA61cqoPd/i6ZBajr8oZno3yyEldTUiVvewcXxAhyE=
-=Kkib
------END PGP SIGNATURE-----
-
---YitJUgNAYnWmcv5l--
+ block/bdev.c              |  3 +-
+ fs/eventpoll.c            | 10 +++++-
+ fs/namei.c                | 81 +++++++++++++++++++++++++++++++++--------------
+ fs/netfs/fscache_cache.c  |  2 +-
+ fs/netfs/fscache_cookie.c |  2 +-
+ fs/stat.c                 | 32 +++++++++++--------
+ include/linux/blkdev.h    |  6 ++--
+ include/linux/namei.h     |  1 +
+ init/Kconfig              | 20 ++++++------
+ kernel/audit_watch.c      | 16 ++++++----
+ 10 files changed, 112 insertions(+), 61 deletions(-)
