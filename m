@@ -1,300 +1,172 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC647381A3
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745041256; cv=fail; b=jNxHXNx8B2z59Z893sMZCRwZiWzoiW0sgG0eFTRp0ozhtdzJdsKd95GKoUnKXVhVICpO7OHlUvS4IH0Zxyz+ys3VuZuMPTMR7oAot7Q1NTdRYqUMVwIUnwkchnrGgCtAB2dYvdJhJagL0IndG6nV+sU3vUpuoikE4MPRgNN+TLk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745041256; c=relaxed/simple;
-	bh=erQnZlnoIYMietx0sOH3jRTF0kss4FjIAj1alhY6WEU=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=P1ese5gNUWUn6VucizJm1eXM3kz8IBJHiyg26Sab4F4Huqx1m4tgvDX7g3Ax93f6dOGa0TPlVNiFuwMzipUuTdjJ+G9CIEom+DnBj+HRZQs+0UC+x82SFeBmbzx3d2X6mJSOvhkv5fbB0KHhdrJ+G3tWFkBjoUHfy4VLymxJwns=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M0rfBryH; arc=fail smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26857944F
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745041407; cv=none; b=rYrEe4RRr4O9GVBBOLVsv7YYUhQeL6T3P+qvGhAVyL7OU3k7HKUX4XRyaZPWH8zVw2cM0dgH/ADNHPzPnCcDtmB57TU3hqd1uEUiSbSBE5vaCraWGShHjjiwBxMKVcD+uCUwaR84CTu2mZQ7fs2+gip5tLT5sSXIYOulZ76w4Vc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745041407; c=relaxed/simple;
+	bh=2POJjFRmmzjMYgY8hhtxuwW1PCP805TvsmSsbRyGfj0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ciSIgEAV1UrPZ7j+R67uusWeTK6szdI0JF8D0MhkH9wUN/CL7xUTkLoK03C5eUBOtJq7anDI2jebczYeXWB40nGtj2HMO4H8fOQ7oPE6cAwbT9y4m7gEdSGYnQeuDtiqjzxJT0ir4JMISKle/hnLtIDyYM6WoEJ4Vgz/CHzroEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jc4+sYcM; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M0rfBryH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745041255; x=1776577255;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=erQnZlnoIYMietx0sOH3jRTF0kss4FjIAj1alhY6WEU=;
-  b=M0rfBryHghExFBwJFt9l5g/sHTSrbVCmlr3nDhUzymr25a2PGvqSNdUh
-   f39QMkrkTgzW96lVVesn2g8qbxr5yAtDBehoikrablCsF4oFBen1ksLv2
-   hDFhVfbBY8i9+DQrgvScPnVJCFxaQSd6njKc1XVwkils90pL6NfdIMcRP
-   CJDazJFZVE8kWtfc7Q6/GD47zEaaaPo1m5jokSzeQSdRUK93akU8D5Xne
-   gvaoIn80uU0dpsfdhoznt87P/7WhuoB7tF/LJqLBH5u8hTfM7cKfadxfC
-   gzrEfqVw5QIHzG4mg369jT0U+XRhyc0NYvhRg+qyGMenhnuEDdmZwnb1V
-   A==;
-X-CSE-ConnectionGUID: MNQ8wq5lTsyhwxEo09Fj0Q==
-X-CSE-MsgGUID: sS75c/IBToa+twZYvU5GdQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="50463689"
-X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
-   d="scan'208";a="50463689"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 22:40:54 -0700
-X-CSE-ConnectionGUID: uDA6Rl41TKOCaX7ld+LeEw==
-X-CSE-MsgGUID: m+MzDIxHTW6WKDqzzm8gNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
-   d="scan'208";a="136450840"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 22:40:55 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Fri, 18 Apr 2025 22:40:53 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Fri, 18 Apr 2025 22:40:53 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.174)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 18 Apr 2025 22:40:50 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EbrzmJbqR62zazzqPo5cD6dmMLUndnT+MCiLp9SYAEsAnvjqYxFczA8jb86yKBuOqnfX9pUFpVnqHG4dnEer+nVBGysvUtdW30hgsij9pxVU2f5L5ofn7Ybcb3d9InD2nQYu4N7JDJYH8++TyNm/vQ6QFfJVzBiB79FMRfc/GMDmpaj8gInoKgVHw3Bk9cmhE0oT1O6DIqcXBVFm9CVZKQP9ToSS6ZaiOJI4u3QKjaHVgZPoaxPos3fgSFdOTZafEa36m0i9AYgRHqjqaBt/1Ft1hZoHleuMLp7+fUN+NKul5ID2vnzRoO1UsMrgXSspUhiUr2iytcLDabHcvxmiNA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TwmCLT8Yxh8BsWfyJITef5rClfIAeTUqJpg5GsZ1gsE=;
- b=KK4bzoql8UVLHf3ebiW/StT4HW2PLYRmQa6d0S+3tmaskRkk1vz9BfKqbsDQWumzMH4g8iv9rx2F7HVbWEB/UFX9GKsDMvBjNj9s8pqdbr20LoVQo4U0C39ax8q3jxvAzmULA4QesXUpxJtaCHEl5pNxO5OivzMSM1ShEw5wODUYU5aXmr/T5iGCGVeNnxFfFDChgzvJbwPADGtVhCxsBdfrds77x5hLMk58jNKi+XJguVHuCtFdH3RgVI+deK2DNdwKoDEQGoVXW3r/iCwsXmqzRHn6ujHTmc+QudaCBnXdY1yIPOiF4uCy+2c1/KKhW/L6IrikMyMfx/JDJKWgXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by CY5PR11MB6257.namprd11.prod.outlook.com (2603:10b6:930:26::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Sat, 19 Apr
- 2025 05:40:29 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8632.030; Sat, 19 Apr 2025
- 05:40:29 +0000
-Message-ID: <8256d312-ba54-4fec-9a0a-db7d7f461a3f@intel.com>
-Date: Fri, 18 Apr 2025 22:40:27 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 26/26] x86/resctrl: Update Documentation for package
- events
-To: Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghuay@nvidia.com>, "Maciej
- Wieczor-Retman" <maciej.wieczor-retman@intel.com>, Peter Newman
-	<peternewman@google.com>, James Morse <james.morse@arm.com>, Babu Moger
-	<babu.moger@amd.com>, Drew Fustini <dfustini@baylibre.com>, Dave Martin
-	<Dave.Martin@arm.com>, Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>
-CC: <linux-kernel@vger.kernel.org>, <patches@lists.linux.dev>
-References: <20250407234032.241215-1-tony.luck@intel.com>
- <20250407234032.241215-27-tony.luck@intel.com>
-From: Reinette Chatre <reinette.chatre@intel.com>
-Content-Language: en-US
-In-Reply-To: <20250407234032.241215-27-tony.luck@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR04CA0386.namprd04.prod.outlook.com
- (2603:10b6:303:81::31) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jc4+sYcM"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53J4idGI017131
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:43:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=xAo57+o8pDfXrW5MUMIzwa
+	Mvl399Fp9OfKtMXBUE0Tg=; b=jc4+sYcMoB4XCBN3OQEAetEuYY+URBX1X9HF39
+	LJKjhFymfSuAgcIEct5N9rmtquSugLaTYwYKP35nQk+k4LDIa0qr4zteJrJ0U+b3
+	ge1PasHe+ItJH7qmYsS4ulJ0UYfj3Eokruai/fGdgL/sWh7VR65r7hevo2oHOHXK
+	vItEm9QQtpNAfsZ+1nNj5TN0fBgUEWO+W8boIe51iRfpm6GDePO/62K0JjuoRfyV
+	Yhu9qM7P/ZwxBqtLJ0ANrGx+VWyjQUcyXn1qJ8YpEEeAge0OHrDniqqXuNRmVazR
+	M8+TiDas86c5NrsScg4SZAIo6zuLbEUemxMgopK1n6+AKgFQ==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46435j85rm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:43:24 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-223fd6e9408so22481995ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 22:43:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745041403; x=1745646203;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xAo57+o8pDfXrW5MUMIzwaMvl399Fp9OfKtMXBUE0Tg=;
+        b=jOAkBqePYrDDgHKw1g20J3RPn9ZdY5uMNh8p+AxENp+gYKDlyiY1u7kSyXHcQ7ZJ8P
+         YDoRD7VrgBwFWwlPULG/5J6cimrZTQ4YhaC9GT/Fv3Id5/PZRmigrk30S3JaYxj8qDg/
+         3na2uwF+cv08cIZkAu2/EeZqffsec8uo1shCgWprmiaVa280Vym6VXkanNPx1K/bGNDR
+         kstP8Ox0FMOeFcwXaqKEabNtZTcNx/Ekub5U5vW7Tp6QMyFD+HJgZFXs5oV64yowENY9
+         6haE1Si9PybJM3ExoC6sPzjPUUw4bzqdmXWwFgJPvVCd9PeTHT9A7BjYwv23koL4d1eE
+         OKdw==
+X-Forwarded-Encrypted: i=1; AJvYcCXtR0KulGGhaE+H6LAJQuRu4wIH65PI7JPrFSHVKA1pu2U8Ph0+4batYbYqn26Z/hiqy0TGCpXp0JdNpf0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXoKFKNFT+vJcJLZk6ZfitBIrN2OQBUuwFjhfZnIQDtRqJt95o
+	AmE/9U3oSpIYNdbrjQSfkprgW43IquVesjL1iY7iB3pUdrKRFku2Nf1fL80S0muRl+7GymEFmMx
+	r3dQ3/P4Wnj6iXknvVGVRKpFR6i+E2ID/XrFaAsw7TaRaQ04mnZL3O96zByQMKgw=
+X-Gm-Gg: ASbGncv3WS105hHKuVnxgehkdRGCIvwHGpYSGvn3SJtz/hig0CO+qKJH6GL+4qS4zhG
+	FMRxl0f8027ukkzKOt1h38qs0Qh+fvHrpCC0L1uff+w8MUBwmX2PAi4T1DrJljum4SMAWZUdbR0
+	DdlD/BAbOzPAn+F48Z/hkmsydqzkuAbFOY9wfArNIdvPQeZk2o67A+nKtXOASLEJsV1a5Z6HJ9r
+	lbtNdHF7DLlsCsmLzsGROGCshzaz7rDgJ696FA5wi2dI6SJsRIzRNL8GiW7mTeQMoRok2E/721v
+	aksbry0+avAS0yOrb2gBOAe2q+SbpOfteMVNy6apQqOCOnI=
+X-Received: by 2002:a17:902:f549:b0:21a:7e04:7021 with SMTP id d9443c01a7336-22c53f16c07mr52494815ad.24.1745041403342;
+        Fri, 18 Apr 2025 22:43:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHR5gO5hVoTc7I52I41VZVfQb+wf4o2Ce5YHha38GoWQNeDAu1/Xe5wStWpvruC0Enxy/bkQA==
+X-Received: by 2002:a17:902:f549:b0:21a:7e04:7021 with SMTP id d9443c01a7336-22c53f16c07mr52494615ad.24.1745041402953;
+        Fri, 18 Apr 2025 22:43:22 -0700 (PDT)
+Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eceb37sm26014945ad.179.2025.04.18.22.43.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 22:43:22 -0700 (PDT)
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Subject: [PATCH v2 0/2] PCI: Add support for PCIe wake interrupt
+Date: Sat, 19 Apr 2025 11:13:02 +0530
+Message-Id: <20250419-wake_irq_support-v2-0-06baed9a87a1@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|CY5PR11MB6257:EE_
-X-MS-Office365-Filtering-Correlation-Id: b1fb70d8-912a-4ffb-0900-08dd7f04b159
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?eVV5QXhzWGlEY2FzdXAxNnpkaVpiVjNWVExNSXFGZVYxQitEeG9MNXZqWEJk?=
- =?utf-8?B?UTZrd3NzbFROT0lVV1BUaWtxK25ZNEUwVkxHd3NPTmRKS0tmN0FXbndjYmF6?=
- =?utf-8?B?eW4yai9ZcXRjR1hncTRYRElhRkRiVVFad3J5Rk1WckY0Q2c3bDRGZTBuZnhG?=
- =?utf-8?B?QUExalRiOGMzb2c5KzVCMmVzaGs2ZUw3Z0UyckJlSk5qOUUweXl1MVk1QXg4?=
- =?utf-8?B?a1R3S2JZNHd0bkJ1S3lRK1BidzdJUS9SZzRGelgwemJJQ2sxZU1tanNrbktM?=
- =?utf-8?B?TTZHQnZMbkNPZWpPQnRtdWdqSWRqd1dYdUxUSHNjYnA5c2w1NlpjNGlEa081?=
- =?utf-8?B?T0RMb2JIR0VPZDVBOS9yTXFWZDhMQ1NOY0hoVXR3aHlyODcvN1o0TlFqdE5l?=
- =?utf-8?B?dkxYdjN2dzBuNVpmWnhFbmcxeEdpUUVCY0RnYi9PcUlJbEZOaGVWU3dKV2o0?=
- =?utf-8?B?aWUyYktqem9reEZ4S2RaWHczNGNnSU5xMVpvYVNmekx1REVCZ3F1UEltd0x0?=
- =?utf-8?B?SDJYOURKZVVvWGNvZXd2SkRMN2sxSzV0MzZzNVFkRXpDbnNOYXo0YTQvY0Rq?=
- =?utf-8?B?Zld3YURTc3h2TlVkVjQ3RWgzMzJnZ2pqaUtGcythNmVUOUdxbGhTTThnclBa?=
- =?utf-8?B?SVlGUmcrQnpjcG4zK1czV0VWWWhYTVVBcXVGYWFuSkVreGYvcTZTVExDYXpq?=
- =?utf-8?B?bEVVSWZkZUs3NSsxUXFPT0xXQ2FpY01DcjMzdVVhSlFuR2hIK0Mzc2dsbkN4?=
- =?utf-8?B?b3U3TEtlcGFUdzh6Y3NRenpVS3ZQUlRiZk8yaFZIcUlpVmFIcHg2NXZnWHQx?=
- =?utf-8?B?SHJrWmRkcSt0NVVnTEhaaGNYUk1TcFBFQ3c1bnVjZTlkRFBpVjNPbk15OWVP?=
- =?utf-8?B?SmhvOHRid1A3Y0hubnVyaFQyTSszOGhLU2dwdVNDMktiWUZTdGx2UTFWYThT?=
- =?utf-8?B?a3JiMytyTTB6L3VoVlJjUjJyK3QveFl1VCs2ZlJ2a1FKb3VFYlpHNy9xSldT?=
- =?utf-8?B?VVdBWlN3VlU3b2Z1Ti9DUVFLRkNEd1pqbEYxNC9Sc1F1aEsvWEE2eGNUSHQ1?=
- =?utf-8?B?dmJtb05GSE1DS3Jvb1h5TnYrTmZWaWtDcEQvdE1mUHJTbDdVMGZRcW1RaWNM?=
- =?utf-8?B?RTZnQ0FCb09zNkRoUXZ1MnViZ2sxSU9uQVltb2VEdCtPZzRQRDJIQzdnVnp6?=
- =?utf-8?B?MUNvNmhWODI0Y2VGanJtdVppNG14ZE41UE00V2JJaFg3L2gxdDEzQk5sL05S?=
- =?utf-8?B?TkhNMGk2T1NIWDIrT0NCZ2xKbGZ1R1pNOVZPcCs5UW5vZ2FMYVNkRi8yZ2RS?=
- =?utf-8?B?REdLUTA3dkxFSWFLYXVlZ3NFc05mT0haa3JMUEx3QXAxZGpHKzhJRkc1VUlS?=
- =?utf-8?B?UGFVaEgvSnlYbkFaK1FiZ0VXcEljNXZhY3ZNMzBZRkp4ZU9oVTVubGFtZHZE?=
- =?utf-8?B?VUFDNGtYMStmUVIzNmduYlFoa1lYVFlxUXJpS291cmIzNU5MbW1iaUZaL0Zh?=
- =?utf-8?B?RFVaalIrTXIvKy92d1hxRFd5aHhvUlhuY0p2QkwwTGtmSTBTS1N6V0xxcHBa?=
- =?utf-8?B?dGJCMStMMVVNamF0UWtNVzgzdURMWVd5cE1neENNMUVSa2QxdGNtQndRRTlC?=
- =?utf-8?B?SWo3Z0NkTmxXSGJtRjY4SlFWVkxWU3BYZUozNmpuRGRHYTllZzg1M28rZElE?=
- =?utf-8?B?YVhMU3l3OTVHRktjSnJmKzBma0kyS2g0N1l3V0RWREM2eTlnbWZjdlVQZHBH?=
- =?utf-8?B?MjkwUkhlNlBsUCtkQ0JWUDJGK0F2aHBHcEJmNXdLQnlDWlM4ZVByZWxaQ29z?=
- =?utf-8?B?UHVIZ1pMZW5Pcm5lbTFXdkJzZEZSZXNWQXU5a2RrNWNsZ3NBNEF1aFZEdHNK?=
- =?utf-8?B?Z2Q3ZEo1eUpkcUc0RWZEbUlvYldDWm42aVptZ3BVbVRET1RxaUZjV3JRck5j?=
- =?utf-8?Q?qMaPVCO/vNE=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?K1puSkhaTWpEaGlOVThkaXRtcUVNdlc5TjRnUjlobFk4NXZmOTVqQytYamYw?=
- =?utf-8?B?QUZDSUF4cjdvOXBEcHRWdjBWUkVpQjdaN0ZtUHMxMVMvbG81T0J4VElSaTUr?=
- =?utf-8?B?L2t4akNVenJVRDR1L291QTkzRHhwTjdzTTdXZEVSaUlnL0x0TlNUVGwzcHh5?=
- =?utf-8?B?cmkwZmVrUWxtdlczSUtqbFNEOTd1UUpBZm92aVBYWnJ3cEN2VkRQU25WcGMx?=
- =?utf-8?B?QTdBZVpINks5dU9JK1NQMHBUN3IxYmNIdnd4dXpQOUl1MC9uRGpxUTdEVTkz?=
- =?utf-8?B?MmtyQUMvcGRVZkxhOVpUTEI1MlNrRk9nZyttbGU1L293aDVBTXBDRmUxRGIx?=
- =?utf-8?B?V0xnQ1NRcENkMVg5elBpR201VGhuRXdxa0tGTjRXb3RrR01mMVgxNFhUV0U0?=
- =?utf-8?B?K3d6VFE4Y09zeVBDQ3d0OWxKaUo3VEtoNWZmRmNVamIxWHBRRDlMa0Z6UGxZ?=
- =?utf-8?B?MkptcmdabVgyN21rQ0xtTnhDRDJZQWlzUzFCVHA4cHRMVTd5OEpod2VWUHFO?=
- =?utf-8?B?SENoeGZ0UmNya3U1ZC9ES2VCQlBCRVlwOFVkMU5XN0J1amNUZE9CQTZDWUsx?=
- =?utf-8?B?TUE1MXNBZzNLMGJnblZLL3FMQ2dITFhuTEFDZlRQL2tHUHlPUHJTNTRjdkd2?=
- =?utf-8?B?OGJmbGdUTjZyVE9GSVhXUmN5UzFOeVVHU2h3RFJSS3h5WWtWQXlVM3NZL1FB?=
- =?utf-8?B?M01uOVNXa1lna0hTTHJLQnFuZ3FmeVRvQTNkU2lwbm9ONTJuN2o2VlFEZGpN?=
- =?utf-8?B?NlJMNTdoUFAwVFdIY1RMQVgrZWsrNVVhM3luVTFnSVFveFhvMWN6VXNBUndz?=
- =?utf-8?B?VGtSWlMrYld1Q1hNRjFLdC9IN1o3RkhZSm9qeWtlSWhibHc1clN2UWVJVWxW?=
- =?utf-8?B?TWpPYkVid0I2cXZId29PdVpYMXZNeVdTb3JySzhtMlhYS25hWVVONXJwNXN5?=
- =?utf-8?B?UXNtbEV2M0pFZG1rVU5lTzNOMnNZM0Vja3JlblVWQVlEZzk0QTg1SWpqeXFy?=
- =?utf-8?B?Nk9sTStQK0UzeGZuVExVTEN2YXhUd0JrTG8xMUV3SjFuSG0vWTdiSlRRQ2Mv?=
- =?utf-8?B?cWc0Y0hSMWdrQXdhQzZvNFcrbHExd1daVjNBK3lIUUNsNFVJSTRJQUFlTTVi?=
- =?utf-8?B?c2libi9ITGtsUTg5S1BjNWxlaVU5eE9QaURRa04yZHpqbjdyWjBJc3NhUGQ3?=
- =?utf-8?B?Q1krOVVibnRGSWdvcm80Z05VWFZDenNJenZlemtqKzFxZktWMllhc0FuelND?=
- =?utf-8?B?Mmp4dFFQSWFpdEtoa0ZnbTlLNTBlMTV5WlZ3YzJZZ1ptbDV6VVdTc0ovYzhs?=
- =?utf-8?B?SGpQazZ0Q1IzTmN5RUc2bWF1T0tBNUZaYWl2RWhIZSt0YVVtTFlGbGx5d1ZS?=
- =?utf-8?B?WTUvNjRZejJmeXFpL2U1citUVmJwVzFTRmYySmE1Y1FJUGxCRkZJdlJQaUNO?=
- =?utf-8?B?c2hIR0UzUlJxRFZxN1ZNbEV4dHRnZHR3SFdaSVlXZ3BWNlFFa1gzekZlNDdy?=
- =?utf-8?B?OGVQbnlnYTBuOVFrZW9MRHRVQ3BhNVRydHZvUUlSRGpVL2tLcjVYNFdQUXZQ?=
- =?utf-8?B?ZFpnU01Sb2FDaGhCaGtVOXBPWmJGSVd2QTBPSUlzcENLSUxRaW1JNzhvcVpa?=
- =?utf-8?B?SWNnOFBqUFYyZ3k2M2laaEZrZGRKVlBlUE5HWnpjQWpSMWxsdmRzKy82dENt?=
- =?utf-8?B?bHpjNHFDRjV5U2VneDAydkk2TUd1YTNQY1BibWdQNno5Zy9NZFl6U3hQQjAv?=
- =?utf-8?B?Ni8yQndYcnhHeDc1VzJ2YXNYSHdIZzhSREZWL3JXalNvS0RNZ28xOWFFbU5C?=
- =?utf-8?B?enZ4Tzd3aHlMMTArekFzVzdTWVJhRTYwNzBTUVFHNUdTQnIxV2RSaWVIeTcr?=
- =?utf-8?B?KzlTZElOeTFlcjVxaUV6WEdwN2hZelNOL2g2RDYwUW9MbkhqajlOMVRCUzlM?=
- =?utf-8?B?dnp4eklrV3FDZUM0RndEcDE4dmdDbSszYWUvZXVNcThQOTVuVS9GOUhCbU5F?=
- =?utf-8?B?RjhJeTNZcXVuK05JZm9wNG5JSmE2SlVITFpHN2RhalU2b0M2aUo5cCtlUHVO?=
- =?utf-8?B?aVRRQm43SitwWldCeVM5WFdKQkVjUllNL1RkSDliakozeFlVbGVXWEhFaGdh?=
- =?utf-8?B?OHJWUnRaY2ZYZlhtMFdsek11ei81VjJPMmgzRWQwNkpjYzJLRHhXQkErUzFa?=
- =?utf-8?B?NkE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: b1fb70d8-912a-4ffb-0900-08dd7f04b159
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2025 05:40:28.9853
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iO7LVn/wOLP+bK+NG3MUihm1C28Aq5ahGnbesFi1Q9klIkivODP+ZvCatBFbzoCz5jreMAlyzsoKnfiYFoJy/Y5W0Be0M8wa/s7cfMGxXoM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6257
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOY3A2gC/2WPy27DIBBFf8ViXSLAEMCr/kcVRTzGDWoTbMBOq
+ sj/XnAWXXQz0h3pnqP7RBlSgIyG7okSrCGHeKuBvXXIXcztE3DwNSNGmCA90/huvuAc0nzOyzT
+ FVLDUUrLRKec5R7U2JRjDY0d+nF45wbxUcnk9/8DV07CUUDxBygU7q5Swwhwp08NKG86aDNjF6
+ zWUoVPK94zDUYPRY2+AOqqJACOFl1Q6oqy3CqhATXwJucT0s0+rrGbedbzq/q1YKSbYM2Bs5Ib
+ A6N9jzod5Md/NfagHnbZt+wX+6SmmMAEAAA==
+X-Change-ID: 20250329-wake_irq_support-79772fc8cd44
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745041398; l=2631;
+ i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
+ bh=2POJjFRmmzjMYgY8hhtxuwW1PCP805TvsmSsbRyGfj0=;
+ b=T8h+eYm+ALVcmWH0/PXzcoNx4g9qn2eTxFkoLBodo0iBMM8I12I7HL4QST4/zjnw9DNElV+VP
+ +hUUGbd0EVvDyWSnnsV1lj0ZX+4HUNtPw4Xjrf7pps5cm3V3MurkxQC
+X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-Authority-Analysis: v=2.4 cv=EOYG00ZC c=1 sm=1 tr=0 ts=680337fc cx=c_pps a=JL+w9abYAAE89/QcEU+0QA==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=Ikd4Dj_1AAAA:8 a=s8YR1HE3AAAA:8
+ a=zkpMToBQJcapbifWyZsA:9 a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22 a=jGH_LyMDp9YhSvY-UuyI:22
+X-Proofpoint-GUID: 46Ib2A9cvbetr3uQxGZsofS8A4_XpaxT
+X-Proofpoint-ORIG-GUID: 46Ib2A9cvbetr3uQxGZsofS8A4_XpaxT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-19_02,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=561 mlxscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 phishscore=0 spamscore=0 adultscore=0 impostorscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504190043
 
-Hi Tony,
+PCIe wake interrupt is needed for bringing back PCIe device state from
+D3cold to D0.
 
-On 4/7/25 4:40 PM, Tony Luck wrote:
-> Each "mon_data" directory is now divided between L3 events and package
-> events.
-> 
-> The "info/PERF_PKG_MON" directory contains parameters for perf events.
-> 
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> ---
->  Documentation/filesystems/resctrl.rst | 38 ++++++++++++++++++++-------
->  1 file changed, 28 insertions(+), 10 deletions(-)
-> 
-> diff --git a/Documentation/filesystems/resctrl.rst b/Documentation/filesystems/resctrl.rst
-> index 6768fc1fad16..b89a188b0321 100644
-> --- a/Documentation/filesystems/resctrl.rst
-> +++ b/Documentation/filesystems/resctrl.rst
-> @@ -167,7 +167,7 @@ with respect to allocation:
->  			bandwidth percentages are directly applied to
->  			the threads running on the core
->  
-> -If RDT monitoring is available there will be an "L3_MON" directory
-> +If RDT L3 monitoring is available there will be an "L3_MON" directory
+This is pending from long time, there was two attempts done previously to
+add wake support[1], [2]. Those series tried to add support for legacy
+interrupts along with wake. Legacy interrupts are already available in
+the latest kernel and we can ignore them. For the wake IRQ the series is
+trying to use interrupts property define in the device tree.
 
-I think "RDT" can just be dropped.
+This series is using gpio property instead of interrupts, from
+gpio desc driver will allocate the dedicate IRQ and initiate the wake
+IRQ from the port bus driver instead of pcie framework as adding in the
+pcie framework will be applicable to the endpoint devices also. As the
+port bus driver is for bridges, portbus driver is correct place to invoke
+them.
 
->  with the following files:
->  
->  "num_rmids":
-> @@ -261,6 +261,17 @@ with the following files:
->  		bytes) at which a previously used LLC_occupancy
->  		counter can be considered for re-use.
->  
-> +If RDT PERF monitoring is available there will be an "L3_PERF_PKG" directory
+Add two new functions, of_pci_setup_wake_irq() and of_pci_teardown_wake_irq(),
+to manage wake interrupts for PCI devices using the Device Tree.
 
-"L3_PERF_PKG" -> "PERF_PKG_MON" ?
+The series depend on the following series:
+https://lore.kernel.org/linux-arm-msm/20250322-perst-v1-3-e5e4da74a204@oss.qualcomm.com/T/
 
-I understand that the existing L3 documentation contains this term but I do not
-see a reason why the documentation should make this new monitoring Intel/RDT specific.
+[1]: https://lore.kernel.org/all/b2b91240-95fe-145d-502c-d52225497a34@nvidia.com/T/
+[2]: https://lore.kernel.org/all/20171226023646.17722-1-jeffy.chen@rock-chips.com/
 
-Also, I do not think user can be expected to know what "perf monitoring" is.
+Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+---
+Changes in v2:
+- Move the wake irq teardown after pcie_port_device_remove
+  and move of_pci_setup_wake_irq before pcie_link_rcec (Lukas)
+- teardown wake irq in shutdown also.
+- Link to v1: https://lore.kernel.org/r/20250401-wake_irq_support-v1-0-d2e22f4a0efd@oss.qualcomm.com
 
-> +with the following files:
-> +
-> +"num_rmids":
-> +		The guaranteed number of hardware countes supporting RMIDs.
+---
+Krishna Chaitanya Chundru (2):
+      arm64: dts: qcom: sc7280: Add wake GPIO
+      PCI: Add support for PCIe wake interrupt
 
-countes -> counters?
+ arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts   |  1 +
+ arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi |  1 +
+ arch/arm64/boot/dts/qcom/sc7280-idp.dtsi       |  1 +
+ drivers/pci/of.c                               | 60 ++++++++++++++++++++++++++
+ drivers/pci/pci.h                              |  6 +++
+ drivers/pci/pcie/portdrv.c                     | 12 +++++-
+ 6 files changed, 80 insertions(+), 1 deletion(-)
+---
+base-commit: 88d324e69ea9f3ae1c1905ea75d717c08bdb8e15
+change-id: 20250329-wake_irq_support-79772fc8cd44
+prerequisite-change-id: 20250101-perst-cb885b5a6129:v1
+prerequisite-patch-id: 3cff2ef415ec12c8ddb7ce7193035ce546081243
+prerequisite-patch-id: 820dbf5dc092c32c8394fbc33f9fe6b8da6e6eab
+prerequisite-patch-id: 7f87f54386a87b39ca346b53d3c34ff0d0cb7911
 
-The use of "hardware counters" is a bit unexpected ... the series did not mention
-this or I must have missed this.
-
-> +		If more "CTRL_MON" + "MON" groups than this number are created,
-> +		the system may report that counters are "unavailable" when read.
-
-To be precise it is "Unavailable" ... but I do not think that is a good interface.
-
-> +
-> +"mon_features":
-> +		Lists the perf monitoring events that are enabled on this system.
-
-"PERF" (all caps) at top and "perf" lower case here?
-
-> +
->  Finally, in the top level of the "info" directory there is a file
->  named "last_cmd_status". This is reset with every "command" issued
->  via the file system (making new directories or writing to any of the
-> @@ -366,15 +377,22 @@ When control is enabled all CTRL_MON groups will also contain:
->  When monitoring is enabled all MON groups will also contain:
->  
->  "mon_data":
-> -	This contains a set of files organized by L3 domain and by
-> -	RDT event. E.g. on a system with two L3 domains there will
-> -	be subdirectories "mon_L3_00" and "mon_L3_01".	Each of these
-> -	directories have one file per event (e.g. "llc_occupancy",
-> -	"mbm_total_bytes", and "mbm_local_bytes"). In a MON group these
-> -	files provide a read out of the current value of the event for
-> -	all tasks in the group. In CTRL_MON groups these files provide
-> -	the sum for all tasks in the CTRL_MON group and all tasks in
-> -	MON groups. Please see example section for more details on usage.
-> +	This contains a set of directories, one for each instance
-> +	of an L3 cache, or of a processor package. The L3 cache
-> +	directories are named "mon_L3_00", "mon_L3_01" etc. The
-> +	package directories "mon_PERF_PKG_00", "mon_PERF_PKG_01" etc.
-> +
-> +	Within each directory there is one file per event. In
-> +	the L3 directories: "llc_occupancy", "mbm_total_bytes",
-> +	and "mbm_local_bytes".	In the PERF_PKG directories: "core_energy",
-
-stray tab here
-
-> +	"activity", etc.
-> +
-> +	In a MON group these files provide a read out of the current
-> +	value of the event for all tasks in the group. In CTRL_MON groups
-> +	these files provide the sum for all tasks in the CTRL_MON group
-> +	and all tasks in MON groups. Please see example section for more
-> +	details on usage.
-> +
->  	On systems with Sub-NUMA Cluster (SNC) enabled there are extra
->  	directories for each node (located within the "mon_L3_XX" directory
->  	for the L3 cache they occupy). These are named "mon_sub_L3_YY"
-
-Reinette
+Best regards,
+-- 
+Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 
