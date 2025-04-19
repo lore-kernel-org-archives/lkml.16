@@ -1,155 +1,109 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92761DF748;
-	Sat, 19 Apr 2025 14:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86196B644;
+	Sat, 19 Apr 2025 14:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745074400; cv=none; b=W0JGAnr/aN0oXJ3CScnwcH3r5mqHW1O4fSV9JN6OPXxmTUjDyG5RUmvPFsz+oHfB6QNMcrlJnp9FAaVcEahcx8KV6OZ6K48ZyZooMwRqTKgYHrxVf/KFYGOSurZZPO8Iek2lEMXT+mVP4wJ2MFH20AG3Et/MVuYuFjUuNmrTqks=
+	t=1745074630; cv=none; b=kBfC03WE+TOMYYHe3xUHveNTY+C85lZHKJ2gcW+0ppHpLLpjgJe5zfCkbGKL/wxLTPFzJUj9HOc6pNbQcQ8cmsmpXte7WzP/2hzzCInP/PZHb6rAIyXsI0yGPS0s9pQCcd4bb4s7XpBgucWp/9q90UZn15Djie3TAfjowVGe5a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745074400; c=relaxed/simple;
-	bh=4T/HC8WzUNag3b/TdI9h2sRpr8wstnE/YPlEJLgaE0k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=EtRuBwcHoHi/X3PhLzIonApM6WCyjpQm6/+9krK7Wtm9AN2mRGbt6s4GdgFApOOqAvMPXFv0gtX38DTyW7SgraynJxoXuxPKhQrLNrZvH/hMuETCHGPqwN9py0+JtLONGcHT5C0GaF38yTdQj4bcpiADKJXYa9RWeqn+xBy09xQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OQdnhnsM; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745074630; c=relaxed/simple;
+	bh=EfW8iyCiQTttenkzgxw9qmd4szYCqkNpB+Jv3fRbpSw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QBvoqx3oAYL6x1bSoDCALBBxLAORXin7vpm0C0ya58KZB0qYKTYqke5b00ac5hxXDwcCT89Cj32MnMC+c62pepuE0rH0t7sJ9ijJSCfj4rPkmYpA2FCaRi15kXEySzhwuhePpEo5K+/Pe/wGOUudwh/jbXFcHw3sQmM9EOw/DEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SYHDdB78; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OQdnhnsM"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53JCrWg7029716;
-	Sat, 19 Apr 2025 14:52:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Bwb4ARwyOqLXEZJuxL4XbgDNIeBe8WVK6SbMRHhkI0Q=; b=OQdnhnsMGmSEyhwS
-	Q0eYzAX29n8O1/I1uUQYq4e4bAKnsMRPKdTdkMaCqqDljvepA7Aw+8I7xqgaQwvy
-	LNdj+BE709VZZygvRw3SUFapv0Tp4R5M9QnZyH2NJX00GXBs7o3BNvQ7nl2DReyl
-	Claouvyjg/Wvt88Ab27Tj89OQjd4UcPohIzzW2Il4CLMM7Z/Nw4aEZH6gp0yinil
-	5pwrtNx8dGDUi88c63K+7wYpkDx92OuO7MhUCSsDaWEgTYUU+nqDXFq9/wMrAYuz
-	F7T4Iakj+ZVa8aQGi3ojhdh041o7AgP/EFRMNlbGEMsfqS1w2JR1jLEpoqVPU05c
-	090RnQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4644kj8kk8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 19 Apr 2025 14:52:54 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53JEqrmQ011225
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 19 Apr 2025 14:52:53 GMT
-Received: from [10.213.111.143] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 19 Apr
- 2025 07:52:47 -0700
-From: Akhil P Oommen <quic_akhilpo@quicinc.com>
-Date: Sat, 19 Apr 2025 20:21:36 +0530
-Subject: [PATCH v5 7/7] arm64: dts: qcom: x1e80100: Add OPPs up to Turbo L3
- for GPU
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SYHDdB78"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74F98C4CEE9;
+	Sat, 19 Apr 2025 14:57:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745074629;
+	bh=EfW8iyCiQTttenkzgxw9qmd4szYCqkNpB+Jv3fRbpSw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SYHDdB78nWNz3I/InPQwlyxSrRf687bqduX/zMtUVJ56tp3mmCYqQcJV+p8Dfv5Z3
+	 J9MQD6bXfWVqowuc6UO7zDaZxIySxKDVoVplPVWdPDRJ1VLdHaxGUQYvimNMpTe7O+
+	 FpsHoKAiritrGbSB+92fwhEq6ftvDMCBe3mlmXpq2Y+NrwUVYXheJw4l0+E9Lplgf5
+	 KtlZmHa5JPsdKodoP4dSZerIHBuF8q2JoSqWNmoQFN+K63ID0ZJUsoc0CLXe2HFPHO
+	 XAdw4eg0VT8cYa7rmF+qRACeWg+vrPq5/DYFwgwx65WT7pW8bWlkVBqtg+9eG5OJtm
+	 3d8W39//GoH9w==
+Date: Sat, 19 Apr 2025 16:57:05 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Andy Shevchenko <andy@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/1] x86: Use resource_set_{range,size}() helpers
+Message-ID: <aAO5weh0nks6nqBq@gmail.com>
+References: <20250416101318.7313-1-ilpo.jarvinen@linux.intel.com>
+ <Z_-E3W8i4EfxdBh3@smile.fi.intel.com>
+ <a046f6bb-0b6e-a431-eaa5-ecd279459f86@linux.intel.com>
+ <aAIB7Om9n_tXDnvk@gmail.com>
+ <db829a60-c524-73bc-e7c3-fed60e980d99@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250419-gpu-acd-v5-7-8dbab23569e0@quicinc.com>
-References: <20250419-gpu-acd-v5-0-8dbab23569e0@quicinc.com>
-In-Reply-To: <20250419-gpu-acd-v5-0-8dbab23569e0@quicinc.com>
-To: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        "Konrad
- Dybcio" <konradybcio@kernel.org>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Viresh Kumar
-	<vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd
-	<sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Akhil P Oommen
-	<quic_akhilpo@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        "Maya
- Matuszczyk" <maccraft123mc@gmail.com>,
-        Anthony Ruhier <aruhier@mailbox.org>,
-        Dmitry Baryshkov <lumag@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745074319; l=1555;
- i=quic_akhilpo@quicinc.com; s=20240726; h=from:subject:message-id;
- bh=4T/HC8WzUNag3b/TdI9h2sRpr8wstnE/YPlEJLgaE0k=;
- b=SPrpVMe6gPY8xO31yY4dNQtmho0P0E+RHd/Y7BByIm6m0qPQVD6u2uu9RubnEr3sFvvX1d9nB
- +Y/TMsFnIHrCF+O69rPsRWi68Adlh87NgxBrpBzl+WVk+znMAxwyZ3d
-X-Developer-Key: i=quic_akhilpo@quicinc.com; a=ed25519;
- pk=lmVtttSHmAUYFnJsQHX80IIRmYmXA4+CzpGcWOOsfKA=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: iiDqqIGQXDt2awhmICwderBpiQ22fTix
-X-Authority-Analysis: v=2.4 cv=f5pIBPyM c=1 sm=1 tr=0 ts=6803b8c6 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=pGLkceISAAAA:8
- a=b3CbU_ItAAAA:8 a=1Bjw1aJ-qlzXb4ygRX0A:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=Rv2g8BkzVjQTVhhssdqe:22
-X-Proofpoint-ORIG-GUID: iiDqqIGQXDt2awhmICwderBpiQ22fTix
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-19_06,2025-04-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- mlxlogscore=928 mlxscore=0 impostorscore=0 adultscore=0 priorityscore=1501
- clxscore=1015 suspectscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504190122
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <db829a60-c524-73bc-e7c3-fed60e980d99@linux.intel.com>
 
-Now that we have ACD support for GPU, add additional OPPs up to
-Turbo L3 which are supported across all existing SKUs.
 
-Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Tested-by: Maya Matuszczyk <maccraft123mc@gmail.com>
-Tested-by: Anthony Ruhier <aruhier@mailbox.org>
----
- arch/arm64/boot/dts/qcom/x1e80100.dtsi | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+* Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-index a9c8cca1c6356393962cef856b3dbd9420733999..8eddf0c9609871b8660587a22b008212a67604b3 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-@@ -3754,10 +3754,24 @@ zap-shader {
- 			gpu_opp_table: opp-table {
- 				compatible = "operating-points-v2-adreno", "operating-points-v2";
- 
-+				opp-1250000000 {
-+					opp-hz = /bits/ 64 <1250000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L3>;
-+					opp-peak-kBps = <16500000>;
-+					qcom,opp-acd-level = <0xa82a5ffd>;
-+				};
-+
-+				opp-1175000000 {
-+					opp-hz = /bits/ 64 <1175000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L2>;
-+					opp-peak-kBps = <14398438>;
-+					qcom,opp-acd-level = <0xa82a5ffd>;
-+				};
-+
- 				opp-1100000000 {
- 					opp-hz = /bits/ 64 <1100000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
--					opp-peak-kBps = <16500000>;
-+					opp-peak-kBps = <14398438>;
- 					qcom,opp-acd-level = <0xa82a5ffd>;
- 				};
- 
+> On Fri, 18 Apr 2025, Ingo Molnar wrote:
+> 
+> > 
+> > * Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
+> > 
+> > > On Wed, 16 Apr 2025, Andy Shevchenko wrote:
+> > > 
+> > > > On Wed, Apr 16, 2025 at 01:13:18PM +0300, Ilpo Järvinen wrote:
+> > > > > Convert open coded resource size calculations to use
+> > > > > resource_set_{range,size}() helpers.
+> > > > > 
+> > > > > While at it, use SZ_* for size parameter which makes the intent of code
+> > > > > more obvious.
+> > > > 
+> > > > ...
+> > > > 
+> > > > > +	resource_set_range(res, base, 1ULL << (segn_busn_bits + 20));
+> > > > 
+> > > > Then probably
+> > > > 
+> > > > 	resource_set_range(res, base, BIT_ULL(segn_busn_bits) * SZ_1M);
+> > > > 
+> > > > to follow the same "While at it"?
+> > > 
+> > > I'll change that now since you brought it up. It did cross my mind to 
+> > > convert that to * SZ_1M but it seemed to go farther than I wanted with a 
+> > > simple conversion patch.
+> > > 
+> > > I've never liked the abuse of BIT*() for size related shifts though, 
+> > > I recall I saw somewhere a helper that was better named for size 
+> > > related operations but I just cannot recall its name and seem to not 
+> > > find that anymore :-(. But until I come across it once again, I guess 
+> > > I'll have to settle to BIT*().
+> > 
+> > BITS_TO_LONGS()?
+> 
+> Hi Ingo,
+> 
+> I'm not entiry sure if you're referring to my BIT*() matching unrelated
+> macros such as BITS_TO_LONGS() (I only meant BIT() and BIT_ULL() which I 
+> thought was clear from the context), or that BITS_TO_LONGS() would be the 
+> solution what I'm looking for.
 
--- 
-2.48.1
+Indeed, I misremembered BITS_TO_LONGS() - now that I looked up its 
+definition it's definitely not what you wanted... :)
 
+Thanks,
+
+	Ingo
