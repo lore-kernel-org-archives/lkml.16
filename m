@@ -1,712 +1,267 @@
-Received: from sender4-pp-o92.zoho.com (sender4-pp-o92.zoho.com [136.143.188.92])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D071465B4;
-	Sat, 19 Apr 2025 10:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.92
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745059371; cv=pass; b=TWJT1AnzT0D7WwCjGTjRZUEG5/I5lb4aoX1EPyH/KE3R+H47EMe8np76XJo6+l3lRqZRiDzuM32e8s8kCMnJH7wcOmiBWS7PTxWvb83uLbfuxdPhY58UXREKNFuT0h3dQ2aUeNpd+4a8qROEgn01aQtm8XRQtp1ppuYS4vFKUaM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745059371; c=relaxed/simple;
-	bh=wqVkZ6ycmKk6/vhyBjk2Mzq/Qth/uF+VSBpWgteGoEo=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=pgCICYDMAKVfmCLtzYJxB6DrCeYJHzIh8kLnBLFOkJ+qRelHtldGrIaZ3FlJzv/cyRUTVO+6Vd1tsbgeu85Is+NDI6lPqsYkzCNahIbpBM3IgiYC4eUU2AuYbwu2+AhU9c0bPtN+Jw4ExwfBdTj/5rYPtSiuNls2WvwgL51G/Dg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=kingxukai@zohomail.com header.b=KU3NMCtF; arc=pass smtp.client-ip=136.143.188.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC721C5F25;
+	Sat, 19 Apr 2025 10:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745059464; cv=none; b=H2DgVrlKtNkmkJyQc5d4PP+WFhJm+rorf6gkw/lfddqyS4rI66Jf08ngZyRvwxI6Jc/L48e8zrNzPUjcA/+GWDSdkAArdWijMR3LeaE8RuLaRyv1PAGakh49tWrIzE/eDEmm+jO5GuvNJFfl4/haUZq1nl1juljW6ycHBm6xG5c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745059464; c=relaxed/simple;
+	bh=S9KlOH8rDp+j+/7xf8DAp2wHlmtCAhLwt2dJqV1Z6gU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JSINp5wNdkh31JqmSUN/wj+Owc+cQvhbih1XKEjARG2kCUKmc72if77OzWuWIZQACfeS3X8rYpDTaLyqAQ2EfJs021UVMSoGFvcO84WHEKq0LzKpEIvRga4I2udv801I6ReoREFlHWliVNpcOOxgKroyfheR/raGAsTU5cR6hMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l5KyJ3l+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=kingxukai@zohomail.com header.b="KU3NMCtF"
-ARC-Seal: i=1; a=rsa-sha256; t=1745059349; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=h9mrUJYrhVtw6E80ST+ApxGHKEOAvt/PU/P23CxjpsLBid/PIvF3pH0mKlWlAZ0NXmq2qkRPcf2EkPjHcnkIWWTFtup7rKI6ErK0n+FVmZ3/+Hxxto27OOViQklyxE7RQM1yxgz0siLzwNs3ss6DVE4ld/46H5y4u9HPRWZ3hQw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745059349; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ZW4Zx1rg58mj53Fyo/IoJowIgF4TvufpVxdMkh9W8ZI=; 
-	b=mr4eiO7e7BlbwvzdxbS+3+j82Crd28pUPrDvAN9m2FVWC4oGOdly145tQbHqxXAFnXFJh6ssyaOlUKlH3jv+HVwo2Ph4b2lAyEdl04mbPouHHlYd4QHFIb/qZhY5dWHK+Pkk3XQgaYl8qvxjUcL6ipyIg0primPfVU5qeTB3jtk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=kingxukai@zohomail.com;
-	dmarc=pass header.from=<kingxukai@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745059349;
-	s=zm2022; d=zohomail.com; i=kingxukai@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:From:From:Subject:Subject:To:To:Cc:Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=ZW4Zx1rg58mj53Fyo/IoJowIgF4TvufpVxdMkh9W8ZI=;
-	b=KU3NMCtFwXhwcOcUZxM2nOKTR7pVN6td7M0tHAzrjNJkxu/8b5ykxLeIprSi3C7K
-	xXAipQWDWg/VS43JolJ/Ne561OIRLGLtDRsN+7JiN67QZadtkFxbvmMb8dr20IQdg2/
-	w586MP8/74jLHj4AMM+I5i/a16IZ+vcI93YgItOo=
-Received: by mx.zohomail.com with SMTPS id 1745059341926458.9710550639943;
-	Sat, 19 Apr 2025 03:42:21 -0700 (PDT)
-Message-ID: <6dd81688-6f08-431a-af90-a1df2bc4d80f@zohomail.com>
-Date: Sat, 19 Apr 2025 18:42:07 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5KyJ3l+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCD09C4CEE7;
+	Sat, 19 Apr 2025 10:44:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745059464;
+	bh=S9KlOH8rDp+j+/7xf8DAp2wHlmtCAhLwt2dJqV1Z6gU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l5KyJ3l+I1euoYltIvSpZvWy7DdYaUkJWPUK6E5Pa1LYsiK2QAehSbDAZVJNUT7bS
+	 5w/SOkpwaRAaQNp6PQok6VHAWb71wFKsBac+PQY5t+xWaj/MA/PJCphhiTdrVAoAM2
+	 tEuKrO0xLJvtpVKuJnZ7MXRWp+pPoLJmHK0YnAeu52kbehq/ieI1jy136pWPSLPcta
+	 B9BUXgSEaoVYf+5A5sV/IoUA8CMTBLxn+/wAfRvU1n16dS9IbsbCXdV5+DnWNaZUJy
+	 jiuw43hGudJJY/YI+fdKVRO2H/5UOH0ufwUvbA+PvxAMhDdbCmdaS4MkXvzvfGpJ98
+	 u4zh07lcE4gVg==
+Date: Sat, 19 Apr 2025 12:44:18 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Ian Kent <raven@themaw.net>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Mark Brown <broonie@kernel.org>, Eric Chanudet <echanude@redhat.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Clark Williams <clrkwllms@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ian Kent <ikent@redhat.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
+	Alexander Larsson <alexl@redhat.com>, Lucas Karpinski <lkarpins@redhat.com>, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
+Message-ID: <20250419-auftrag-knipsen-6e56b0ccd267@brauner>
+References: <fb566638-a739-41dc-bafc-aa8c74496fa4@themaw.net>
+ <20250417-abartig-abfuhr-40e558b85f97@brauner>
+ <20250417-outen-dreihundert-7a772f78f685@brauner>
+ <20250417-zappeln-angesagt-f172a71839d3@brauner>
+ <20250417153126.QrVXSjt-@linutronix.de>
+ <20250417-pyrotechnik-neigung-f4a727a5c76b@brauner>
+ <39c36187-615e-4f83-b05e-419015d885e6@themaw.net>
+ <125df195-5cac-4a65-b8bb-8b1146132667@themaw.net>
+ <20250418-razzia-fixkosten-0569cf9f7b9d@brauner>
+ <834853f4-10ca-4585-84b2-425c4e9f7d2b@themaw.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Xukai Wang <kingxukai@zohomail.com>
-Subject: Re: [PATCH v6 2/3] clk: canaan: Add clock driver for Canaan K230
-To: Troy Mitchell <troymitchell988@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Conor Dooley <conor@kernel.org>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, Samuel Holland <samuel.holland@sifive.com>
-References: <20250415-b4-k230-clk-v6-0-7fd89f427250@zohomail.com>
- <20250415-b4-k230-clk-v6-2-7fd89f427250@zohomail.com>
- <aAJGCDmqNoSWrwXw@troy-wujie14-pro>
-Content-Language: en-US
-In-Reply-To: <aAJGCDmqNoSWrwXw@troy-wujie14-pro>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr0801122783e34f079b36205d1e49e5f300004b7a3787c294245c229f1e3f79e6134a9573226a7967fb6eb3:zu08011227c4aba18b305b1a1f9d9990550000fbfcf4f5c48ed9ccc257a0733feb2e759701299094fe1f7236:rf0801122cb562e7522647b241f3b510110000ebd95758f7f333b009798f079914a3ccfd85737a05bb2da6fedc9b0b1158:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <834853f4-10ca-4585-84b2-425c4e9f7d2b@themaw.net>
 
+On Sat, Apr 19, 2025 at 09:24:31AM +0800, Ian Kent wrote:
+> 
+> On 18/4/25 16:47, Christian Brauner wrote:
+> > On Fri, Apr 18, 2025 at 09:20:52AM +0800, Ian Kent wrote:
+> > > On 18/4/25 09:13, Ian Kent wrote:
+> > > > On 18/4/25 00:28, Christian Brauner wrote:
+> > > > > On Thu, Apr 17, 2025 at 05:31:26PM +0200, Sebastian Andrzej Siewior
+> > > > > wrote:
+> > > > > > On 2025-04-17 17:28:20 [+0200], Christian Brauner wrote:
+> > > > > > > >       So if there's some userspace process with a broken
+> > > > > > > > NFS server and it
+> > > > > > > >       does umount(MNT_DETACH) it will end up hanging every other
+> > > > > > > >       umount(MNT_DETACH) on the system because the dealyed_mntput_work
+> > > > > > > >       workqueue (to my understanding) cannot make progress.
+> > > > > > > Ok, "to my understanding" has been updated after going back
+> > > > > > > and reading
+> > > > > > > the delayed work code. Luckily it's not as bad as I thought it is
+> > > > > > > because it's queued on system_wq which is multi-threaded so it's at
+> > > > > > > least not causing everyone with MNT_DETACH to get stuck. I'm still
+> > > > > > > skeptical how safe this all is.
+> > > > > > I would (again) throw system_unbound_wq into the game because
+> > > > > > the former
+> > > > > > will remain on the CPU on which has been enqueued (if speaking about
+> > > > > > multi threading).
+> > > > > Yes, good point.
+> > > > > 
+> > > > > However, what about using polled grace periods?
+> > > > > 
+> > > > > A first simple-minded thing to do would be to record the grace period
+> > > > > after umount_tree() has finished and the check it in namespace_unlock():
+> > > > > 
+> > > > > diff --git a/fs/namespace.c b/fs/namespace.c
+> > > > > index d9ca80dcc544..1e7ebcdd1ebc 100644
+> > > > > --- a/fs/namespace.c
+> > > > > +++ b/fs/namespace.c
+> > > > > @@ -77,6 +77,7 @@ static struct hlist_head *mount_hashtable
+> > > > > __ro_after_init;
+> > > > >    static struct hlist_head *mountpoint_hashtable __ro_after_init;
+> > > > >    static struct kmem_cache *mnt_cache __ro_after_init;
+> > > > >    static DECLARE_RWSEM(namespace_sem);
+> > > > > +static unsigned long rcu_unmount_seq; /* protected by namespace_sem */
+> > > > >    static HLIST_HEAD(unmounted);  /* protected by namespace_sem */
+> > > > >    static LIST_HEAD(ex_mountpoints); /* protected by namespace_sem */
+> > > > >    static DEFINE_SEQLOCK(mnt_ns_tree_lock);
+> > > > > @@ -1794,6 +1795,7 @@ static void namespace_unlock(void)
+> > > > >           struct hlist_head head;
+> > > > >           struct hlist_node *p;
+> > > > >           struct mount *m;
+> > > > > +       unsigned long unmount_seq = rcu_unmount_seq;
+> > > > >           LIST_HEAD(list);
+> > > > > 
+> > > > >           hlist_move_list(&unmounted, &head);
+> > > > > @@ -1817,7 +1819,7 @@ static void namespace_unlock(void)
+> > > > >           if (likely(hlist_empty(&head)))
+> > > > >                   return;
+> > > > > 
+> > > > > -       synchronize_rcu_expedited();
+> > > > > +       cond_synchronize_rcu_expedited(unmount_seq);
+> > > > > 
+> > > > >           hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
+> > > > >                   hlist_del(&m->mnt_umount);
+> > > > > @@ -1939,6 +1941,8 @@ static void umount_tree(struct mount *mnt,
+> > > > > enum umount_tree_flags how)
+> > > > >                    */
+> > > > >                   mnt_notify_add(p);
+> > > > >           }
+> > > > > +
+> > > > > +       rcu_unmount_seq = get_state_synchronize_rcu();
+> > > > >    }
+> > > > > 
+> > > > >    static void shrink_submounts(struct mount *mnt);
+> > > > > 
+> > > > > 
+> > > > > I'm not sure how much that would buy us. If it doesn't then it should be
+> > > > > possible to play with the following possibly strange idea:
+> > > > > 
+> > > > > diff --git a/fs/mount.h b/fs/mount.h
+> > > > > index 7aecf2a60472..51b86300dc50 100644
+> > > > > --- a/fs/mount.h
+> > > > > +++ b/fs/mount.h
+> > > > > @@ -61,6 +61,7 @@ struct mount {
+> > > > >                   struct rb_node mnt_node; /* node in the ns->mounts
+> > > > > rbtree */
+> > > > >                   struct rcu_head mnt_rcu;
+> > > > >                   struct llist_node mnt_llist;
+> > > > > +               unsigned long mnt_rcu_unmount_seq;
+> > > > >           };
+> > > > >    #ifdef CONFIG_SMP
+> > > > >           struct mnt_pcp __percpu *mnt_pcp;
+> > > > > diff --git a/fs/namespace.c b/fs/namespace.c
+> > > > > index d9ca80dcc544..aae9df75beed 100644
+> > > > > --- a/fs/namespace.c
+> > > > > +++ b/fs/namespace.c
+> > > > > @@ -1794,6 +1794,7 @@ static void namespace_unlock(void)
+> > > > >           struct hlist_head head;
+> > > > >           struct hlist_node *p;
+> > > > >           struct mount *m;
+> > > > > +       bool needs_synchronize_rcu = false;
+> > > > >           LIST_HEAD(list);
+> > > > > 
+> > > > >           hlist_move_list(&unmounted, &head);
+> > > > > @@ -1817,7 +1818,16 @@ static void namespace_unlock(void)
+> > > > >           if (likely(hlist_empty(&head)))
+> > > > >                   return;
+> > > > > 
+> > > > > -       synchronize_rcu_expedited();
+> > > > > +       hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
+> > > > > +               if (!poll_state_synchronize_rcu(m->mnt_rcu_unmount_seq))
+> > > > > +                       continue;
+> > This has a bug. This needs to be:
+> > 
+> > 	/* A grace period has already elapsed. */
+> > 	if (poll_state_synchronize_rcu(m->mnt_rcu_unmount_seq))
+> > 		continue;
+> > 
+> > 	/* Oh oh, we have to pay up. */
+> > 	needs_synchronize_rcu = true;
+> > 	break;
+> > 
+> > which I'm pretty sure will eradicate most of the performance gain you've
+> > seen because fundamentally the two version shouldn't be different (Note,
+> > I drafted this while on my way out the door. r.
+> > 
+> > I would test the following version where we pay the cost of the
+> > smb_mb() from poll_state_synchronize_rcu() exactly one time:
+> > 
+> > diff --git a/fs/mount.h b/fs/mount.h
+> > index 7aecf2a60472..51b86300dc50 100644
+> > --- a/fs/mount.h
+> > +++ b/fs/mount.h
+> > @@ -61,6 +61,7 @@ struct mount {
+> >                  struct rb_node mnt_node; /* node in the ns->mounts rbtree */
+> >                  struct rcu_head mnt_rcu;
+> >                  struct llist_node mnt_llist;
+> > +               unsigned long mnt_rcu_unmount_seq;
+> >          };
+> >   #ifdef CONFIG_SMP
+> >          struct mnt_pcp __percpu *mnt_pcp;
+> > diff --git a/fs/namespace.c b/fs/namespace.c
+> > index d9ca80dcc544..dd367c54bc29 100644
+> > --- a/fs/namespace.c
+> > +++ b/fs/namespace.c
+> > @@ -1794,6 +1794,7 @@ static void namespace_unlock(void)
+> >          struct hlist_head head;
+> >          struct hlist_node *p;
+> >          struct mount *m;
+> > +       unsigned long mnt_rcu_unmount_seq = 0;
+> >          LIST_HEAD(list);
+> > 
+> >          hlist_move_list(&unmounted, &head);
+> > @@ -1817,7 +1818,10 @@ static void namespace_unlock(void)
+> >          if (likely(hlist_empty(&head)))
+> >                  return;
+> > 
+> > -       synchronize_rcu_expedited();
+> > +       hlist_for_each_entry_safe(m, p, &head, mnt_umount)
+> > +               mnt_rcu_unmount_seq = max(m->mnt_rcu_unmount_seq, mnt_rcu_unmount_seq);
+> > +
+> > +       cond_synchronize_rcu_expedited(mnt_rcu_unmount_seq);
+> > 
+> >          hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
+> >                  hlist_del(&m->mnt_umount);
+> > @@ -1923,8 +1927,10 @@ static void umount_tree(struct mount *mnt, enum umount_tree_flags how)
+> >                          }
+> >                  }
+> >                  change_mnt_propagation(p, MS_PRIVATE);
+> > -               if (disconnect)
+> > +               if (disconnect) {
+> > +                       p->mnt_rcu_unmount_seq = get_state_synchronize_rcu();
+> >                          hlist_add_head(&p->mnt_umount, &unmounted);
+> > +               }
+> > 
+> >                  /*
+> >                   * At this point p->mnt_ns is NULL, notification will be queued
+> > 
+> > If this doesn't help I had considered recording the rcu sequence number
+> > during __legitimize_mnt() in the mounts. But we likely can't do that
+> > because get_state_synchronize_rcu() is expensive because it inserts a
+> > smb_mb() and that would likely be noticable during path lookup. This
+> > would also hinge on the notion that the last store of the rcu sequence
+> > number is guaranteed to be seen when we check them in namespace_unlock().
+> > 
+> > Another possibly insane idea (haven't fully thought it out but throwing
+> > it out there to test): allocate a percpu counter for each mount and
+> > increment it each time we enter __legitimize_mnt() and decrement it when
+> > we leave __legitimize_mnt(). During umount_tree() check the percpu sum
+> > for each mount after it's been added to the @unmounted list.
+> 
+> I had been thinking that a completion in the mount with a counter (say
+> 
+> walker_cnt) could be used. Because the mounts are unhashed there won't
+> 
+> be new walks so if/once the count is 0 the walker could call complete()
+> 
+> and wait_for_completion() replaces the rcu sync completely. The catch is
+> 
+> managing walker_cnt correctly could be racy or expensive.
+> 
+> 
+> I thought this would not be received to well dew to the additional fields
 
-On 2025/4/18 20:31, Troy Mitchell wrote:
-> On Tue, Apr 15, 2025 at 10:25:12PM +0800, Xukai Wang wrote:
->> This patch provides basic support for the K230 clock, which does not
->> cover all clocks.
->>
->> The clock tree of the K230 SoC consists of OSC24M, PLLs and sysclk.
->>
->> Co-developed-by: Troy Mitchell <TroyMitchell988@gmail.com>
->> Signed-off-by: Troy Mitchell <TroyMitchell988@gmail.com>
->> Signed-off-by: Xukai Wang <kingxukai@zohomail.com>
->> ---
->>  drivers/clk/Kconfig    |    6 +
->>  drivers/clk/Makefile   |    1 +
->>  drivers/clk/clk-k230.c | 1710 ++++++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 1717 insertions(+)
->>
->> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
->> index 299bc678ed1b9fcd9110bb8c5937a1bd1ea60e23..1817b8883af9a3d00ac7af2cb88496274b591001 100644
->> --- a/drivers/clk/Kconfig
->> +++ b/drivers/clk/Kconfig
->> @@ -464,6 +464,12 @@ config COMMON_CLK_K210
->>  	help
->>  	  Support for the Canaan Kendryte K210 RISC-V SoC clocks.
->>  
->> +config COMMON_CLK_K230
->> +	bool "Clock driver for the Canaan Kendryte K230 SoC"
->> +	depends on ARCH_CANAAN || COMPILE_TEST
->> +        help
->> +          Support for the Canaan Kendryte K230 RISC-V SoC clocks.
->> +
->>  config COMMON_CLK_SP7021
->>  	tristate "Clock driver for Sunplus SP7021 SoC"
->>  	depends on SOC_SP7021 || COMPILE_TEST
->> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
->> index fb8878a5d7d93da6bec487460cdf63f1f764a431..5df50b1e14c701ed38397bfb257db26e8dd278b8 100644
->> --- a/drivers/clk/Makefile
->> +++ b/drivers/clk/Makefile
->> @@ -51,6 +51,7 @@ obj-$(CONFIG_MACH_ASPEED_G6)		+= clk-ast2600.o
->>  obj-$(CONFIG_ARCH_HIGHBANK)		+= clk-highbank.o
->>  obj-$(CONFIG_CLK_HSDK)			+= clk-hsdk-pll.o
->>  obj-$(CONFIG_COMMON_CLK_K210)		+= clk-k210.o
->> +obj-$(CONFIG_COMMON_CLK_K230)		+= clk-k230.o
->>  obj-$(CONFIG_LMK04832)			+= clk-lmk04832.o
->>  obj-$(CONFIG_COMMON_CLK_LAN966X)	+= clk-lan966x.o
->>  obj-$(CONFIG_COMMON_CLK_LOCHNAGAR)	+= clk-lochnagar.o
->> diff --git a/drivers/clk/clk-k230.c b/drivers/clk/clk-k230.c
->> new file mode 100644
->> index 0000000000000000000000000000000000000000..84a4a2a293e5f278d21510d73888aee4ff9351df
->> --- /dev/null
->> +++ b/drivers/clk/clk-k230.c
->> @@ -0,0 +1,1710 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Kendryte Canaan K230 Clock Drivers
->> + *
->> + * Author: Xukai Wang <kingxukai@zohomail.com>
->> + * Author: Troy Mitchell <troymitchell988@gmail.com>
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/clkdev.h>
->> +#include <linux/clk-provider.h>
->> +#include <linux/iopoll.h>
->> +#include <linux/mod_devicetable.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/spinlock.h>
->> +#include <dt-bindings/clock/canaan,k230-clk.h>
->> +
->> +/* PLL control register bits. */
->> +#define K230_PLL_BYPASS_ENABLE				BIT(19)
->> +#define K230_PLL_GATE_ENABLE				BIT(2)
->> +#define K230_PLL_GATE_WRITE_ENABLE			BIT(18)
->> +#define K230_PLL_OD_SHIFT				24
->> +#define K230_PLL_OD_MASK				0xF
->> +#define K230_PLL_R_SHIFT				16
->> +#define K230_PLL_R_MASK					0x3F
->> +#define K230_PLL_F_SHIFT				0
->> +#define K230_PLL_F_MASK					0x1FFFF
->> +#define K230_PLL0_OFFSET_BASE				0x00
->> +#define K230_PLL1_OFFSET_BASE				0x10
->> +#define K230_PLL2_OFFSET_BASE				0x20
->> +#define K230_PLL3_OFFSET_BASE				0x30
->> +#define K230_PLL_DIV_REG_OFFSET				0x00
->> +#define K230_PLL_BYPASS_REG_OFFSET			0x04
->> +#define K230_PLL_GATE_REG_OFFSET			0x08
->> +#define K230_PLL_LOCK_REG_OFFSET			0x0C
-> why we call it `K230_PLL_LOCK_REG_OFFSET`?
-> I noticed that the datasheet refers to it as PLL0_STAT,
-> with the description PLL0 status.
-> Would it be better to keep the original name for consistency?
->
-> Only bit 0 is the lock bit, and I'll talk more about that later.
-
-The reason I named the macro K230_PLL_LOCK_REG_OFFSET rather than
-PLL0_STAT from the datasheet is because in this particular clock driver,
-I only need to use the lock bit (bit 0) and not the other bits of the
-register.
-
-In Linux, there isn't a common header for K230 that defines macros for
-these specific bits yet, and since this register is only used within the
-context of this driver, I decided to name it K230_PLL0_LOCK_REG to be
-more specific to the functionality being used here.
-
-This way, the name reflects the exact purpose in this driver, and it
-avoids confusion with the other bits that are not relevant for this
-particular case.
-
->> +
->> +/* PLL lock register bits.  */
->> +#define K230_PLL_STATUS_MASK				BIT(0)
-> this bit is pll0_lock
-> ```
-> PLL 0 current lock status.
-> 0x0: PLL not in lock state;
-> 0x1: PLL in lock state.
-> ```
-> how about we call it `K230_PLL_LOCK_STATUS_MASK`
-Seems more appropriate.
->> +
->> +/* K230 CLK registers offset */
->> +#define K230_CLK_AUDIO_CLKDIV_OFFSET			0x34
->> +#define K230_CLK_PDM_CLKDIV_OFFSET			0x40
->> +#define K230_CLK_CODEC_ADC_MCLKDIV_OFFSET		0x38
->> +#define K230_CLK_CODEC_DAC_MCLKDIV_OFFSET		0x3c
->> +
->> +/* K230 CLK OPS. */
-> unuseful comment
-OK.
->> +#define K230_CLK_OPS_GATE				\
->> +	.enable		= k230_clk_enable,		\
->> +	.disable	= k230_clk_disable,		\
->> +	.is_enabled	= k230_clk_is_enabled
->> +
->> +#define K230_CLK_OPS_RATE				\
->> +	.set_rate	= k230_clk_set_rate,		\
->> +	.round_rate	= k230_clk_round_rate,		\
->> +	.recalc_rate	= k230_clk_get_rate
->> +
->> +#define K230_CLK_OPS_MUX				\
->> +	.set_parent	= k230_clk_set_parent,		\
->> +	.get_parent	= k230_clk_get_parent,		\
->> +	.determine_rate	= clk_hw_determine_rate_no_reparent
->> +
->> +#define K230_CLK_OPS_ID_NONE				0
->> +#define K230_CLK_OPS_ID_GATE_ONLY			1
->> +#define K230_CLK_OPS_ID_RATE_ONLY			2
->> +#define K230_CLK_OPS_ID_RATE_GATE			3
->> +#define K230_CLK_OPS_ID_MUX_ONLY			4
->> +#define K230_CLK_OPS_ID_MUX_GATE			5
->> +#define K230_CLK_OPS_ID_MUX_RATE			6
->> +#define K230_CLK_OPS_ID_ALL				7
->> +#define K230_CLK_OPS_ID_NUM				8
->> +
->> +/* K230 CLK MACROS */
-> unuseful comment
-OK.
->> +#define K230_CLK_MAX_PARENT_NUM				6
-> ...
->
->> +
->> +struct k230_clk_rate_cfg {
->> +	/* rate reg */
->> +	u32 rate_reg_off;
->> +	void __iomem *rate_reg;
->> +	/* rate info*/
->> +	u32 rate_write_enable_bit;
->> +	enum k230_clk_div_type method;
->> +	/* rate mul */
->> +	u32 rate_mul_min;
->> +	u32 rate_mul_max;
->> +	u32 rate_mul_shift;
->> +	u32 rate_mul_mask;
->> +	/* rate div */
->> +	u32 rate_div_min;
->> +	u32 rate_div_max;
->> +	u32 rate_div_shift;
->> +	u32 rate_div_mask;
->> +};
-> unuseful comments in this structure
->
->> +
->> +struct k230_clk_rate_cfg_c {
->> +	/* rate_c reg */
->> +	u32 rate_reg_off_c;
->> +	void __iomem *rate_reg_c;
->> +
->> +	/* rate_c info */
->> +	u32 rate_write_enable_bit_c;
->> +
->> +	/* rate mul-changable */
->> +	u32 rate_mul_min_c;
->> +	u32 rate_mul_max_c;
->> +	u32 rate_mul_shift_c;
->> +	u32 rate_mul_mask_c;
->> +};
-> unuseful comments in this structure
->
->> +
->> +struct k230_clk_gate_cfg {
->> +	/* gate reg */
->> +	u32 gate_reg_off;
->> +	void __iomem *gate_reg;
-> unuseful comment
->
->> +
->> +	/* gate info*/
->> +	u32 gate_bit_enable;
->> +	bool gate_bit_reverse;
->> +};
->> +
->> +struct k230_clk_mux_cfg {
->> +	/* mux reg */
->> +	u32 mux_reg_off;
-> unuseful comment
->
->> +	void __iomem *mux_reg;
->> +
->> +	/* mux info */
->> +	u32 mux_reg_shift;
->> +	u32 mux_reg_mask;
->> +};
->> +
->> +enum k230_clk_parent_type {
->> +	K230_OSC24M,
->> +	K230_PLL,
->> +	K230_PLL_DIV,
->> +	K230_CLK_COMPOSITE,
->> +};
->> +
->> +struct k230_clk_cfg;
->> +
->> +struct k230_clk_parent {
->> +	enum k230_clk_parent_type type;
->> +	union {
->> +		struct k230_pll_cfg	*pll_cfg;
->> +		struct k230_pll_div_cfg	*pll_div_cfg;
->> +		struct k230_clk_cfg	*clk_cfg;
->> +	};
->> +};
->> +
->> +struct k230_clk_cfg {
->> +	/* attr */
->> +	const char *name;
-> unuseful comment
->
->> +
->> +	/* 0-read & write; 1-read only */
->> +	bool read_only;
-> unuseful comment
->
->> +	int num_parent;
->> +	struct k230_clk_parent parent[K230_CLK_MAX_PARENT_NUM];
->> +	struct k230_clk *clk;
->> +	int flags;
->> +
->> +	/* cfgs */
-> unuseful comment
->
->> +	struct k230_clk_rate_cfg	*rate_cfg;
->> +	struct k230_clk_rate_cfg_c	*rate_cfg_c;
->> +	struct k230_clk_gate_cfg	*gate_cfg;
->> +	struct k230_clk_mux_cfg		*mux_cfg;
->> +};
->>
-> ...
->
->> +static struct k230_clk_cfg k230_shrm_pdma_axi = {
->> +		.name = "shrm_pdma_axi",
->> +		.read_only = false,
->> +		.flags = 0,
->> +		.num_parent = 1,
->> +		.parent[0] = {
->> +			.type = K230_CLK_COMPOSITE,
->> +			.clk_cfg = &k230_shrm_axi_src,
->> +		},
->> +		.rate_cfg = NULL,
->> +		.rate_cfg_c = NULL,
->> +		.gate_cfg = &k230_shrm_pdma_axi_gate,
->> +		.mux_cfg = NULL,
->> +};
-> Consider defining a macro to generate those structures?
-Yes, I'll define a macro to generate that next version.
-> ...
->
->> +static int k230_pll_prepare(struct clk_hw *hw)
->> +{
->> +	struct k230_pll *pll = to_k230_pll(hw);
->> +	u32 reg;
->> +
->> +	/* wait for PLL lock until it reaches lock status */
->> +	return readl_poll_timeout(pll->lock, reg,
->> +				  (reg & K230_PLL_STATUS_MASK) == K230_PLL_STATUS_MASK,
-> (reg & K230_PLL_STATUS_MASK),
-OK.
->> +				  400, 0);
->> +}
->> +
->> +static bool k230_pll_hw_is_enabled(struct k230_pll *pll)
->> +{
->> +	return (readl(pll->gate) & K230_PLL_GATE_ENABLE) == K230_PLL_GATE_ENABLE;
-> return !!(readl(pll->gate) & K230_PLL_GATE_ENABLE);
-OK.
->> +}
->> +
->> +static void k230_pll_enable_hw(void __iomem *regs, struct k230_pll *pll)
->> +{
->> +	u32 reg;
->> +
->> +	if (k230_pll_hw_is_enabled(pll))
->> +		return;
->> +
->> +	/* Set PLL factors */
->> +	reg = readl(pll->gate);
->> +	reg |= (K230_PLL_GATE_ENABLE | K230_PLL_GATE_WRITE_ENABLE);
-> reg |= K230_PLL_GATE_ENABLE | K230_PLL_GATE_WRITE_ENABLE;
-OK.
->
->> +	writel(reg, pll->gate);
->> +}
->> +
->> +static int k230_pll_enable(struct clk_hw *hw)
->> +{
->> +	struct k230_pll *pll = to_k230_pll(hw);
->> +	struct k230_sysclk *ksc = pll->ksc;
->> +
->> +	guard(spinlock)(&ksc->pll_lock);
->> +	k230_pll_enable_hw(ksc->regs, pll);
->> +
->> +	return 0;
->> +}
->> +
->> +static void k230_pll_disable(struct clk_hw *hw)
->> +{
->> +	struct k230_pll *pll = to_k230_pll(hw);
->> +	struct k230_sysclk *ksc = pll->ksc;
->> +	u32 reg;
->> +
->> +	guard(spinlock)(&ksc->pll_lock);
-> blank line here
-OK.
->
->> +	reg = readl(pll->gate);
->> +	reg &= ~(K230_PLL_GATE_ENABLE);
->> +	reg |= (K230_PLL_GATE_WRITE_ENABLE);
->> +	writel(reg, pll->gate);
->> +}
->> +
->> +static int k230_pll_is_enabled(struct clk_hw *hw)
-> inline here
-It's one of the implementation of callback function in clk_ops, which
-doesn't need the inline tag.
->> +{
->> +	return k230_pll_hw_is_enabled(to_k230_pll(hw));
->> +}
->> +
->> +static int k230_pll_init(struct clk_hw *hw)
->> +{
->> +	if (k230_pll_is_enabled(hw))
->> +		return clk_prepare_enable(hw->clk);
->> +
->> +	return 0;
->> +}
->> +
-> ...
->> +	if (gate_cfg->gate_bit_reverse)
->> +		reg |= BIT(gate_cfg->gate_bit_enable);
->> +	else
->> +		reg &= ~BIT(gate_cfg->gate_bit_enable);
->> +
-> drop blank line
-OK.
->> +	writel(reg, gate_cfg->gate_reg);
->> +}
->> +
->> +	/* Check gate bit condition based on configuration and then set ret */
->> +	if (gate_cfg->gate_bit_reverse)
->> +		return (BIT(gate_cfg->gate_bit_enable) & reg) ? 1 : 0;
->> +	else
-> drop else
-OK.
->> +	reg = (mux_cfg->mux_reg_mask & index) << mux_cfg->mux_reg_shift;
->> +	writeb(reg, mux_cfg->mux_reg);
->> +
->> +	return 0;
->> +}
->> +
->> +static u8 k230_clk_get_parent(struct clk_hw *hw)
->> +{
->> +	struct k230_clk *clk = to_k230_clk(hw);
->> +	struct k230_sysclk *ksc = clk->ksc;
->> +	struct k230_clk_cfg *cfg = k230_clk_cfgs[clk->id];
->> +	struct k230_clk_mux_cfg *mux_cfg = cfg->mux_cfg;
->> +	u8 reg;
->> +
->> +	guard(spinlock)(&ksc->clk_lock);
->> +	reg = readb(mux_cfg->mux_reg);
->> +
->> +	return reg;
-> return readb(mux_cfg->mux_reg);
-OK, it can be merged into one line.
->> +}
->> +
->> +static unsigned long k230_clk_get_rate(struct clk_hw *hw,
->> +				       unsigned long parent_rate)
->> +{
->> +	struct k230_clk *clk = to_k230_clk(hw);
->> +	struct k230_sysclk *ksc = clk->ksc;
->> +	struct k230_clk_cfg *cfg = k230_clk_cfgs[clk->id];
->> +	struct k230_clk_rate_cfg *rate_cfg = cfg->rate_cfg;
->> +	struct k230_clk_rate_cfg_c *rate_cfg_c = cfg->rate_cfg_c;
->> +	u32 mul, div;
->> +
->> +	if (!rate_cfg) /* no divider, return parents' clk */
-> wrong comment style
-Apologies for my fault to ignore this comment here.
->> +		return parent_rate;
->> +
->> +	guard(spinlock)(&ksc->clk_lock);
-> blank line here
-OK.
->> +	switch (rate_cfg->method) {
->>
->> +	/* mul and div can be changeable. */
->> +	case K230_MUL_DIV:
->> +		if (rate_cfg->rate_reg_off == K230_CLK_CODEC_ADC_MCLKDIV_OFFSET ||
->> +		    rate_cfg->rate_reg_off == K230_CLK_CODEC_DAC_MCLKDIV_OFFSET) {
->> +			for (u32 j = 0; j < 9; j++) {
->> +				if (0 == (rate - codec_clk[j])) {
-> if (rate - codec_clk[j] == 0)
->
->> +					*div = codec_div[j][0];
->> +					*mul = codec_div[j][1];
->> +				}
->> +			}
->> +		} else if (rate_cfg->rate_reg_off == K230_CLK_AUDIO_CLKDIV_OFFSET ||
->> +			   rate_cfg->rate_reg_off == K230_CLK_PDM_CLKDIV_OFFSET) {
->> +			for (u32 j = 0; j < 20; j++) {
->> +				if (0 == (rate - pdm_clk[j])) {
-> if (rate - pdm_clk[j] == 0)
-OK, I'll change the order.
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static long k230_clk_round_rate(struct clk_hw *hw, unsigned long rate, unsigned long *parent_rate)
->> +{
->> +	struct k230_clk *clk = to_k230_clk(hw);
->> +	struct k230_sysclk *ksc = clk->ksc;
->> +	struct k230_clk_cfg *cfg = k230_clk_cfgs[clk->id];
->> +	struct k230_clk_rate_cfg *rate_cfg = cfg->rate_cfg;
->> +	u32 div = 0, mul = 0;
->> +
->> +	if (k230_clk_find_approximate(clk,
->> +				      rate_cfg->rate_mul_min, rate_cfg->rate_mul_max,
->> +				      rate_cfg->rate_div_min, rate_cfg->rate_div_max,
->> +				      rate_cfg->method, rate, *parent_rate, &div, &mul)) {
->> +		return 0;
->> +	}
-> removing the curly braces
-OK.
->> +
->> +	return mul_u64_u32_div(*parent_rate, mul, div);
->> +}
->> +
->> +static int k230_clk_set_rate(struct clk_hw *hw, unsigned long rate,
->> +			     unsigned long parent_rate)
->> +{
->> +	struct k230_clk *clk = to_k230_clk(hw);
->> +	struct k230_sysclk *ksc = clk->ksc;
->> +	struct k230_clk_cfg *cfg = k230_clk_cfgs[clk->id];
->> +	struct k230_clk_rate_cfg *rate_cfg = cfg->rate_cfg;
->> +	struct k230_clk_rate_cfg_c *rate_cfg_c = cfg->rate_cfg_c;
->> +	u32 div = 0, mul = 0, reg = 0, reg_c;
->> +
->> +	if (rate > parent_rate || rate == 0 || parent_rate == 0) {
->> +		dev_err(&ksc->pdev->dev, "rate or parent_rate error\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	if (cfg->read_only) {
->> +		dev_err(&ksc->pdev->dev, "This clk rate is read only\n");
->> +		return -EPERM;
->> +	}
->> +
->> +	if (k230_clk_find_approximate(clk,
->> +				      rate_cfg->rate_mul_min, rate_cfg->rate_mul_max,
->> +				      rate_cfg->rate_div_min, rate_cfg->rate_div_max,
->> +				      rate_cfg->method, rate, parent_rate, &div, &mul)) {
->> +		return -EINVAL;
->> +	}
->> +
->> +	guard(spinlock)(&ksc->clk_lock);
-> blank line here
->
-> put `reg = readl(rate_cfg->rate_reg);` here
-Yes, it should be merged into one line.
->> +	if (!rate_cfg_c) {
->> +		reg = readl(rate_cfg->rate_reg);
->> +		reg &= ~((rate_cfg->rate_div_mask) << (rate_cfg->rate_div_shift));
->> +
->> +		if (rate_cfg->method == K230_DIV) {
->> +			reg &= ~((rate_cfg->rate_mul_mask) << (rate_cfg->rate_mul_shift));
->> +			reg |= ((div - 1) & rate_cfg->rate_div_mask) << (rate_cfg->rate_div_shift);
->> +		} else if (rate_cfg->method == K230_MUL) {
->> +			reg |= ((mul - 1) & rate_cfg->rate_div_mask) << (rate_cfg->rate_div_shift);
->> +		} else {
->> +			reg |= (mul & rate_cfg->rate_mul_mask) << (rate_cfg->rate_mul_shift);
->> +			reg |= (div & rate_cfg->rate_div_mask) << (rate_cfg->rate_div_shift);
->> +		}
->> +		reg |= BIT(rate_cfg->rate_write_enable_bit);
->> +	} else {
->> +		reg = readl(rate_cfg->rate_reg);
->> +		reg_c = readl(rate_cfg_c->rate_reg_c);
->> +		reg &= ~((rate_cfg->rate_div_mask) << (rate_cfg->rate_div_shift));
->> +		reg_c &= ~((rate_cfg_c->rate_mul_mask_c) << (rate_cfg_c->rate_mul_shift_c));
->> +		reg_c |= BIT(rate_cfg_c->rate_write_enable_bit_c);
->> +
->> +		reg_c |= (mul & rate_cfg_c->rate_mul_mask_c) << (rate_cfg_c->rate_mul_shift_c);
->> +		reg |= (div & rate_cfg->rate_div_mask) << (rate_cfg->rate_div_shift);
-> This is a bit confusing. Please read and operate one at a time.
-> It's better to read reg_c as the second one,
-> so it can be merged with the write operation to maintain the R/M/W principle.
-OK, I'll modify it.
->> +
->> +		writel(reg_c, rate_cfg_c->rate_reg_c);
->> +	}
->> +	writel(reg, rate_cfg->rate_reg);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct clk_ops k230_clk_ops_arr[K230_CLK_OPS_ID_NUM] = {
->> +	[K230_CLK_OPS_ID_NONE] = {
->> +		/* Sentinel */
->> +	},
->> +	[K230_CLK_OPS_ID_GATE_ONLY] = {
->> +		K230_CLK_OPS_GATE,
->> +	},
->> +	[K230_CLK_OPS_ID_RATE_ONLY] = {
->> +		K230_CLK_OPS_RATE,
->> +	},
->> +	[K230_CLK_OPS_ID_RATE_GATE] = {
->> +		K230_CLK_OPS_RATE,
->> +		K230_CLK_OPS_GATE,
->> +	},
->> +	[K230_CLK_OPS_ID_MUX_ONLY] = {
->> +		K230_CLK_OPS_MUX,
->> +	},
->> +	[K230_CLK_OPS_ID_MUX_GATE] = {
->> +		K230_CLK_OPS_MUX,
->> +		K230_CLK_OPS_GATE,
->> +	},
->> +	[K230_CLK_OPS_ID_MUX_RATE] = {
->> +		K230_CLK_OPS_MUX,
->> +		K230_CLK_OPS_RATE,
->> +	},
->> +	[K230_CLK_OPS_ID_ALL] = {
->> +		K230_CLK_OPS_MUX,
->> +		K230_CLK_OPS_RATE,
->> +		K230_CLK_OPS_GATE,
->> +	},
->> +};
->> +
->> +static int k230_register_clk(struct platform_device *pdev,
->> +			     struct k230_sysclk *ksc,
->> +			     int id,
->> +			     const struct clk_parent_data *parent_data,
->> +			     u8 num_parents,
->> +			     unsigned long flags)
->> +{
->> +	struct k230_clk *clk = &ksc->clks[id];
->> +	struct k230_clk_cfg *cfg = k230_clk_cfgs[id];
->> +	struct k230_clk_gate_cfg *gate_cfg = cfg->gate_cfg;
->> +	struct k230_clk_rate_cfg *rate_cfg = cfg->rate_cfg;
->> +	struct k230_clk_mux_cfg *mux_cfg = cfg->mux_cfg;
->> +	struct k230_clk_rate_cfg_c *rate_cfg_c = cfg->rate_cfg_c;
->> +	struct clk_init_data init = {};
->> +	int clk_id = 0;
->> +	int ret;
->> +
->> +	if (rate_cfg) {
->> +		rate_cfg->rate_reg = ksc->regs + rate_cfg->rate_reg_off;
->> +		clk_id += K230_CLK_OPS_ID_RATE_ONLY;
->> +	}
->> +
->> +	if (mux_cfg) {
->> +		mux_cfg->mux_reg = ksc->regs + mux_cfg->mux_reg_off;
->> +		clk_id += K230_CLK_OPS_ID_MUX_ONLY;
->> +
->> +		/* mux clock doesn't match the case that num_parents less than 2 */
->> +		if (num_parents < 2)
->> +			return -EINVAL;
->> +	}
->> +
->> +	if (gate_cfg) {
->> +		gate_cfg->gate_reg = ksc->regs + gate_cfg->gate_reg_off;
->> +		clk_id += K230_CLK_OPS_ID_GATE_ONLY;
->> +	}
->> +
->> +	if (rate_cfg_c)
->> +		rate_cfg_c->rate_reg_c = ksc->regs + rate_cfg_c->rate_reg_off_c;
->> +
->> +	init.name = k230_clk_cfgs[id]->name;
->> +	init.flags = flags;
->> +	init.parent_data = parent_data;
->> +	init.num_parents = num_parents;
->> +	init.ops = &k230_clk_ops_arr[clk_id];
->> +
->> +	clk->id = id;
->> +	clk->ksc = ksc;
->> +	clk->hw.init = &init;
->> +
->> +	ret = devm_clk_hw_register(&pdev->dev, &clk->hw);
->> +	if (ret)
->> +		return ret;
->> +
->> +	k230_clk_cfgs[id]->clk = clk;
->> +
->> +	return 0;
->> +}
->> +
->> +static int k230_register_mux_clk(struct platform_device *pdev,
-> consider adding inline here?
-Yeah, it's appropriate to add a inline here.
->> +	return k230_register_clk(pdev, ksc, id, &parent_data, 1, flags);
->> +}
->> +
->> +static int k230_register_clk_child(struct platform_device *pdev,
->> +				   struct k230_sysclk *ksc,
->> +				   int id,
->> +				   struct clk_hw *parent_hw)
->> +{
->> +	const struct clk_parent_data parent_data = {
->> +		.hw = parent_hw,
->> +	};
-> blank line here
->
->           - Troy
->
->> +	return k230_register_clk(pdev, ksc, id, &parent_data, 1, 0);
->> +}
-OK.
+Path walking absolutely has to be as fast as possible, unmounting
+doesn't. Anything that writes to a shared field from e.g.,
+__legitimize_mnt() will cause cacheline pingpong and will very likely be
+noticable. And people care about even slight decreases in performances
+there. That's why we have the percpu counter and why I didn't even
+consider something like the completion stuff.
