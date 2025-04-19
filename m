@@ -1,103 +1,113 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076BE184F;
-	Sat, 19 Apr 2025 05:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E6942AA3
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745041813; cv=none; b=ruMcni121dddRTGfvs5oZ5Ou8tZwE3e85lSJaDZOffK88H4oCjwXzpg1CxB2L6kF//pkYBJtMM4WJDf/qZ2PXE9H5AF5EvCKaQCGRx16XdkIctXxIYFENdS0EJDOsJvuSuX+QicKAysmkEVr5RY8yLAhzEVFrb2ij7eqHESEXwg=
+	t=1745042161; cv=none; b=tItg0KMuc/DIzxXZVs/WAIa+lQFwtWPq8HpViWXzy4cbgVg1mEfghIUF5sIXlm3DenwXu4V4txJz1D6tAeWP5Z/DL8mo/xphCW1klSUdxtjRwn1fouCbyArhsnkpMXWI76djWP7ATIlAbOzOnm45qt8US25FI7eaz6AcGK1qNiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745041813; c=relaxed/simple;
-	bh=LPli2z+7ZbrVnA9jRRA6A9C/NTHjoZymrzz2sqkkUSE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=F58vu/gorMNWoDzxBbU76/yog7ICQ+LWQuMNuhq+Biunldl3LwHVOjdDVq6QyqLAAAzpjRmlA3gBRfOgMt3WWtiak9qjXiESJsVV5NM1ZKfCwm7fn5hfLhAeZvYEdKdFaT9Ik8Zyp+iBJIELXq5miwET66yRJRUkwfbrPtTxb4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KLoSw71/; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745042161; c=relaxed/simple;
+	bh=Ow5OzIdQrw1DFiXgXxbjMJWQK3tqwXy5Fav+FGiBbw0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bV9PLfpeHcRftcrUG3hBBH8jQQzTCxK6oWbY6LQrcI1uiAMynF8vsUD0jJpWZWlsCab2Q4yWBusyPilnCcMX4RM9zmBjtz8uLTXzx7iKqFK7Oze/eiJcztc/FGNiz1Ak7MAGmpi5IwVFp2e1BsPAWno//BrVnsx4OpZe69dapvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O0M2k4EM; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KLoSw71/"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-224191d92e4so26746375ad.3;
-        Fri, 18 Apr 2025 22:50:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O0M2k4EM"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30bfc79ad97so37977781fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 22:55:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745041811; x=1745646611; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1745042158; x=1745646958; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LPli2z+7ZbrVnA9jRRA6A9C/NTHjoZymrzz2sqkkUSE=;
-        b=KLoSw71/BigBV1OgrZ6PmvyRbKTwRS/Wqo17QiknSaVHF8CkKUx9JJYpx8DwsxsSv8
-         as1Ymj5a6oa+ZQnz4Kz/Ax/nBu7ceFykMwQUiZzsEmNQzVOuJwjm8wcU6p4A6AeNCG2Q
-         YIaDtkXnTS9HKtVXLw6vQMtXKffCx9Q7+DF8GFw64nrl1XzN6obJopx/GWoHCvq/RFf5
-         Bcbe0469zNbV45dGTP6TAz7eaxsXP6D3lFiEENtjjIqoxMpSvUj+4hJS9TudveSzQhjk
-         7oF+rL1jvlT79XehB4RvCtf8fYT0XcPcxYzLw4zaIlfHuVoku/pRggEugOEU7gLqsnFC
-         Eiow==
+        bh=XdPIwZMbbH/v4IfyGs8wVOWQZOeGXcJa+MlXzZtV0wg=;
+        b=O0M2k4EMdNYKsB4wsF2xOYGGIev4+1sujkeVG6+tfZKZaQFTz6BKg7QbBwhCKrW8qv
+         JEN0E6jW/YDV90DpLYp5MccTWuD0+eA/SoQxNyL9MNPXiqnR41FSosKRTOiWwBgqMEVl
+         DW2hBqQfOxmQuFKQg4+WbJ3lRP3hrGOvrSrbll2FTMout70QdgLC2HefLM00QQ3isfSE
+         8ihm0YYoKs2dl1DJMixvBiuiQCMuu6xlu5P4qBaEhLoKgXB6C9mW2Y8VD3mFNe4eU4+Z
+         8Mf3faMGCSbidIyjb8nENdlYIgWyiwz+cahiKWrZ1fP9HLkf5VjIVT4vA4EAfzBFZba+
+         E6WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745041811; x=1745646611;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=LPli2z+7ZbrVnA9jRRA6A9C/NTHjoZymrzz2sqkkUSE=;
-        b=lIUn+WY0dtZBUJm1SXQrOrg/+9MOGNdAi8Oxrf4LHl62ph7ZD9hFQHlua200IEnrRX
-         xGfCO1JCpowqnG66YuTbAXSrOp0QgVgnvfObHNgH8GS8ezoCuJYeVV+xS0La5N0qS6c7
-         cVUGC2EaN1BTe377AM+jaDmz2+g3quBkqMPT1rtlPa/03ffAgBacHlIkPnbqEHtmAEIg
-         ek7pa1XzpNjmmHIAc7eE9LbbuqFlNIp467FM4ysoGXNDbs62qsHdAIjClfyH+L2Qavj1
-         E0vmAdaBSH7IfHUgzWYY/TTo+7lS59jEnwQkoTM+aHhH6uBzTG2NmJQ0LAX3dEb26hfW
-         g09A==
-X-Forwarded-Encrypted: i=1; AJvYcCVYhmsilelXZuVT6psFsS1LJ6wsUPHYcIdW6uyNepp7PA9rM2aC0R64LgG+VjNHE10NIup1cKeahn0Y+jM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4nDSvzczldp0uXBpgLVSBhaz7Z+sQgcYzP1MpYRkRM1btSZYB
-	RIyIfahTUKVZFgi7lKJhG05TCaECngAyu+IPKxXnwKdR6st3buKl+1A6qA==
-X-Gm-Gg: ASbGncsQgr8ZCRaS6nU46oKjXmfb0okvDfZRkyJmzD9KENgYCQqLV8Lq/Qnnf069n/A
-	Ahj2EczTa1ljE5ppAjy+nLv2337FnfDobuTRe8oVBR5l/U+K2eyCxCvF7p1j0ehBFcOUsf2jN1k
-	9yjDFTI1GvnrsiXain+NZR09h9zp8jJe5xVvmUR8r9zj09bCEwDAB0yBjmRU2tAD43ttoI5OIAD
-	63J5FUVf55W4qGScB/5hwNik0+xUQoN2FxpWKI/2xqRwNML409k+4Gc9heYIfbIEwQ6KxVrTgO3
-	mYLCTgpkrWaohH2+3YrXts9xd0EVsXxYEw==
-X-Google-Smtp-Source: AGHT+IGQZchKTdoSpm+MEW5tGCs7WYiTxb66sZhCT65AdH09WlgfjP7ijO48WNYCDTzZv7XgiDF0GA==
-X-Received: by 2002:a17:903:40cc:b0:216:6901:d588 with SMTP id d9443c01a7336-22c53580c88mr77144905ad.15.1745041811265;
-        Fri, 18 Apr 2025 22:50:11 -0700 (PDT)
-Received: from localhost ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bdafffsm26599525ad.49.2025.04.18.22.50.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Apr 2025 22:50:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745042158; x=1745646958;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XdPIwZMbbH/v4IfyGs8wVOWQZOeGXcJa+MlXzZtV0wg=;
+        b=E1pT/FD70kCuPs+W1e2IW+0a8+ipqSdQFpyhT8XwcwpdCKNPd9h3kMCuPJHo0XBN5n
+         O3PA/K+2PmXP1e/B6XGsXwdFZiB6+Q4YftqKINbjLjeUHcM7zV8l4gQIO31hGxEvvDO/
+         Ks/Nm2Ve0QtAyfmu+nL7xsoc+q4X8qzke8b2pYafjNEZlZVavXORkvA24opkRkJiexXL
+         y+zSfF+ZHMfLZfB6RH591ahMEWAZNf5HKSFZUGsZxyl6rs+FIZCYn7Scy69Os6c5WGXo
+         yjagxjLfe5+VYSHte5xlv0cvdAa0SfXuyRK83mB8v2XZbaNVOc5DXrGPTkjuAYNh/7J5
+         so1w==
+X-Forwarded-Encrypted: i=1; AJvYcCUsEmNFBNxF9jAGanrgVOJS8D+5TIVcLxJXYjYaDk8ZiVPAXj/S+Q7qSrrfBYkgC9JANGgaDTdmKxd+Bro=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz80n/UCOARKrf3LyoD1CiJONbUcsz73sItxHySkZgmjfrUxkI8
+	GBsIax5JyDVRVrjHa7QWS9w2p3ZTLIpzMwPuup2A+zEEDYveE6m3VrM2V/R2OsJtrtzHENC67Kl
+	LMKYLpR7SCuK5Cl8ESQ0fw4aLMs/G2Ou1b30=
+X-Gm-Gg: ASbGncsEbUQRWcy6asZ/rxhE6lNHafAslJK2jJS2YeJyq+4trK1WP5bdDFjDPYkJ+C2
+	Umvq0N78RjSAOzodxRWALkAo3GeSLzLkzCalYXmVCF5pnBxBS+FKxNhk61mzDd31FvCgGmAGpV/
+	k2snRRLuXMh0oE9u+iLsvKGY2VVwzTPvhpttT/8fcA8G5kZqO1EV+t1mTVBGwuzg==
+X-Google-Smtp-Source: AGHT+IEcHxjZqljPDfrwZ+WwyAACsxSZEdF+AnzuNtbkAxWcFAZWBScBT4hoQ7usLT55L4a5MJ5+ffD8mkHxy7acQLs=
+X-Received: by 2002:a05:6512:31cf:b0:54b:117f:686f with SMTP id
+ 2adb3069b0e04-54d6e7f4e06mr1275061e87.28.1745042157705; Fri, 18 Apr 2025
+ 22:55:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250320200306.1712599-1-jstultz@google.com> <Z-KURRE_Gr72Xv_n@localhost>
+ <874izezv3c.ffs@tglx> <Z-Vx8kV4M3khPknC@localhost> <Z-qsg6iDGlcIJulJ@localhost>
+ <87o6xgwftc.ffs@tglx> <Z-vL3cVZuQ8XQXhG@localhost> <87iknnwxa4.ffs@tglx>
+ <Z-5HlSUEh1xgCi4f@localhost> <877c41wkis.ffs@tglx> <87h632wals.ffs@tglx>
+ <CANDhNCrUhZktW=_h9YTZndmyHwe9YbUMG6uVYaEuQyuKsG4AEg@mail.gmail.com>
+ <87tt6mq8jz.ffs@tglx> <87r01qq7hp.ffs@tglx>
+In-Reply-To: <87r01qq7hp.ffs@tglx>
+From: John Stultz <jstultz@google.com>
+Date: Fri, 18 Apr 2025 22:55:45 -0700
+X-Gm-Features: ATxdqUHKCUss3Lu3EUOBiHOPQD5kXjTO7sufFV19DZLFsnOExQXyOVNeazDE9Mw
+Message-ID: <CANDhNCr21HXQOqfhcJFM6x7pNHCevSEKdg2_jz7KbLj=g8+0Sg@mail.gmail.com>
+Subject: Re: [PATCH] timekeeping: Prevent coarse clocks going backwards
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Miroslav Lichvar <mlichvar@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+	Stephen Boyd <sboyd@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org, 
+	kernel-team@android.com, Lei Chen <lei.chen@smartx.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 19 Apr 2025 02:50:08 -0300
-Message-Id: <D9ADOZOBNY7Q.1MNGEH9AG470H@gmail.com>
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Kurt Borja" <kuurtb@gmail.com>, "Miri Korenblit"
- <miriam.rachel.korenblit@intel.com>, "Johannes Berg"
- <johannes.berg@intel.com>, "Emmanuel Grumbach"
- <emmanuel.grumbach@intel.com>
-Cc: <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Todd
- Brandt" <todd.e.brandt@intel.com>
-Subject: Re: [PATCH v2] wifi: iwlwifi: pcie: Fix match condition in
- iwl_pci_find_dev_info()
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250418-probe-fix-v2-1-ec1ef2d8a534@gmail.com>
-In-Reply-To: <20250418-probe-fix-v2-1-ec1ef2d8a534@gmail.com>
 
-On Fri Apr 18, 2025 at 3:29 AM -03, Kurt Borja wrote:
-> Fix the following regression:
+On Fri, Apr 18, 2025 at 12:00=E2=80=AFAM Thomas Gleixner <tglx@linutronix.d=
+e> wrote:
+> On Fri, Apr 18 2025 at 08:37, Thomas Gleixner wrote:
+> > On Thu, Apr 17 2025 at 17:46, John Stultz wrote:
+> >> Instead it seems like we should just do:
+> >>   tk->coarse_nsec =3D tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
+> >
+> > You end up with the same problem again because xtime_nsec can move
+> > backwards when the multiplier is updated, no?
 >
-> iwlwifi: No config found for PCI dev 2725/1674, rev=3D0x420, rfid=3D0x10d=
-000
-> iwlwifi 0000:3b:00.0: probe with driver iwlwifi failed with error -22
->
-> Which happens due to an extra `!` when matching `dev_info` while
-> probing.
->
-> Fixes: 75a3313f52b7 ("wifi: iwlwifi: make no_160 more generic")
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> Something like the below should work.
 
-Tested in a recent bug report thread [1]:
+Hey Thomas,
+  So I did test this version (I'll call it v2) of the patch and it
+does avoid the problem I was seeing earlier with your first patch.
 
-Tested-by: Todd Brandt <todd.e.brandt@intel.com>
+Though I also just sent my own slight rework of your patch
+(https://lore.kernel.org/lkml/20250419054706.2319105-1-jstultz@google.com/)=
+.
+The main difference with my version is just the avoidance of mid-tick
+updates to the coarse clock by adjtime calls (and the slight benefit
+of avoiding the mult in the update path, but this is probably minor).
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=3D220029
+It's done ok in my testing so far, but obviously the effects of these
+changes can be subtle.
 
---=20
- ~ Kurt
+I'm ok with either approach, so let me know what you'd prefer.
+For your version:
+  Acked-by: John Stultz <jstultz@google.com>
+
+thanks
+-john
