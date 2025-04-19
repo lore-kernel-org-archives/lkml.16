@@ -1,278 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1BC29D0E
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 18:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074821F5F6
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 18:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745087220; cv=none; b=XhA2UkatTx2jGlYE01BHExizl869rEG63i24K5Czbd0ejejg0dUPYDfoY3LpDwzT3aHojkLwzCGh2LjuZeafHlJN25M7cuNn2f7j5shyahloM9uaWW+Mli3AYfTCfrzHbwbmw1lhCYQPJPyVYs3LMvmABrFdZaFTaCCYA7WSoPs=
+	t=1745087787; cv=none; b=IVLvBAg6zhb9M5Uu1Ybx1mTPXG2DpGU8wkqS8L/sd9omyJJEH3g9JL0dDaPB/+RKbu2KsphhAHLtATK1pO34qRsTjntVSqS6M/WL+DNrcRE8I9B4lAVXYA0k2SKJQxXPpbuvEM3BqiZFCGXpKNN20tIfvo0Nd/chKznhQLe5sVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745087220; c=relaxed/simple;
-	bh=qKgGq/TyqrDBqM4hBzCIRjp793J9RexgoB+12wpSNOk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=X7d9wiA6V9KC2gKAzvpqEPz80aXOS3kGB/K3/jMd33kZ7ERUb7Xcdo836X4oaPRNaQ4c2hvNOqiFNkwGLgMIcWI0Qy5rl9BfxBgSqYRx9Lttobf3TIlxtvIKdCAFd+fohd8592HrA7inAumKVe5ueLdl43oCCRQT9LsxBFasLi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F187CC4CEE7;
-	Sat, 19 Apr 2025 18:26:58 +0000 (UTC)
-Date: Sat, 19 Apr 2025 14:28:42 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Ilya Leoshkevich <iii@linux.ibm.com>, Menglong
- Dong <menglong8.dong@gmail.com>
-Subject: [GIT PULL] tracing: Fixes for v6.15
-Message-ID: <20250419142842.676b6bc6@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1745087787; c=relaxed/simple;
+	bh=bZkc/I7fe2xcKgWX+n5gpzXuMyOzLo3TRy+jHaAGpYA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GZDOhAdoGGqO93YfEpGM2WR5H/vxKaP6uq+6MtECGJsYnuu/QTm6uTO83/C7WjCnhQ6X9aXeeGWVfZ+slZyPhkuQfxEAs9oeIzS3pehs1p1954Jt9cInXqT/KY3YPdCR5goIj1OqF1dm17GF/O8/quNFjtRO+AvY4IHESBo09P4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=stT8Fsw3; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="stT8Fsw3"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745087781;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Ya7lL/93PZYOwN+LH6VIpy/eVtlPQUR8w4DByMzkNPg=;
+	b=stT8Fsw3OeLFsuvpIKoKrdDGNAmI/jiPzv3L2tRdrqxlCqUNJ5sh3W3ttGBF7VsIj2PAgw
+	QKXjn/X0AZfmFpnhmnVDgihx+fI79TjPeOVmQ+RqC8nLcpvHj8KRhi5RGbqd7RvS/mf6va
+	DnLs4mYHEy5Zkeh0cah3wGZJKQWfx0M=
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Yosry Ahmed <yosry.ahmed@linux.dev>,
+	Tejun Heo <tj@kernel.org>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+	Greg Thelen <gthelen@google.com>,
+	linux-mm@kvack.org,
+	cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: [PATCH v2] memcg: introduce non-blocking limit setting option
+Date: Sat, 19 Apr 2025 11:35:45 -0700
+Message-ID: <20250419183545.1982187-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+Setting the max and high limits can trigger synchronous reclaim and/or
+oom-kill if the usage is higher than the given limit. This behavior is
+fine for newly created cgroups but it can cause issues for the node
+controller while setting limits for existing cgroups.
 
-Linus,
+In our production multi-tenant and overcommitted environment, we are
+seeing priority inversion when the node controller dynamically adjusts
+the limits of running jobs of different priorities. Based on the system
+situation, the node controller may reduce the limits of lower priority
+jobs and increase the limits of higher priority jobs. However we are
+seeing node controller getting stuck for long period of time while
+reclaiming from lower priority jobs while setting their limits and also
+spends a lot of its own CPU.
 
-tracing fixes for v6.15
+One of the workaround we are trying is to fork a new process which sets
+the limit of the lower priority job along with setting an alarm to get
+itself killed if it get stuck in the reclaim for lower priority job.
+However we are finding it very unreliable and costly. Either we need a
+good enough time buffer for the alarm to be delivered after setting
+limit and potentialy spend a lot of CPU in the reclaim or be unreliable
+in setting the limit for much shorter but cheaper (less reclaim) alarms.
 
-- Initialize hash variables in ftrace subops logic
+Let's introduce new limit setting option which does not trigger
+reclaim and/or oom-kill and let the processes in the target cgroup to
+trigger reclaim and/or throttling and/or oom-kill in their next charge
+request. This will make the node controller on multi-tenant
+overcommitted environment much more reliable.
 
-  The fix that simplified the ftrace subops logic opened a path where some
-  variables could be used without being initialized, and done subtly where
-  the compiler did not catch it. Initialize those variables to the
-  EMPTY_HASH, which is the default hash.
+Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+---
+Changes since v1:
+- Instead of new interfaces use O_NONBLOCK flag (Greg, Roman & Tejun)
 
-- Reinitialize the hash pointers after they are freed
+ Documentation/admin-guide/cgroup-v2.rst | 14 ++++++++++++++
+ mm/memcontrol.c                         | 10 ++++++++--
+ 2 files changed, 22 insertions(+), 2 deletions(-)
 
-  Some of the hash pointers in the subop logic were freed but may still be
-  referenced later. To prevent use-after-free bugs, initialize them back to
-  the EMPTY_HASH.
-
-- Free the ftrace hashes when they are replaced
-
-  The fix that simplified the subops logic updated some hash pointers, but
-  left the original hash that they were pointing to where they are no longer
-  used. This caused a memory leak. Free the hashes that are pointed to by
-  the pointers when they are replaced.
-
-- Fix size initialization of ftrace direct function hash
-
-  The ftrace direct function hash used by BPF initialized the hash size
-  incorrectly. It checked the size of items to a hard coded 32, which made
-  the hash bit size of 5. The hash size is supposed to be limited by the bit
-  size of the hash, as the bitmask is allowed to be greater than 5. Rework
-  the size check to first pass the number of elements to fls() and then
-  compare that to FTRACE_HASH_MAX_BITS before allocating the hash.
-
-- Fix format output of ftrace_graph_ent_entry event
-
-  The field depth of the ftrace_graph_ent_entry event is of size 4 but the
-  output showed it as unsigned long and use "%lu". Change it to unsigned int
-  and use "%u" in the print format that is displayed to user space.
-
-- Fix the trace event filter on strings
-
-  Events can be filtered on numbers or string values. The return value
-  checked from strncpy_from_kernel_nofault() and strncpy_from_user_nofault()
-  was used to determine if reading the strings would fault or not. It would
-  return fault if the value was non zero, which basically meant that it
-  was always considering the read as a fault.
-
-- Add selftest to test trace event string filtering
-
-  In order to catch the breakage of the string filtering, add a self test to
-  make sure that it continues to work.
-
-
-Please pull the latest trace-v6.15-rc2 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-trace-v6.15-rc2
-
-Tag SHA1: d35e39873a50c9cae63eddfa79ab3e5d545de69a
-Head SHA1: d481ee35247d2a01764667a25f6f512c292ba42d
-
-
-Ilya Leoshkevich (1):
-      ftrace: Fix type of ftrace_graph_ent_entry.depth
-
-Menglong Dong (1):
-      ftrace: fix incorrect hash size in register_ftrace_direct()
-
-Steven Rostedt (5):
-      ftrace: Initialize variables for ftrace_startup/shutdown_subops()
-      ftrace: Reinitialize hash to EMPTY_HASH after freeing
-      ftrace: Free ftrace hashes after they are replaced in the subops code
-      tracing: Fix filter string testing
-      tracing: selftests: Add testing a user string to filters
-
-----
- kernel/trace/ftrace.c                              | 27 +++++++++++++++-------
- kernel/trace/trace_entries.h                       |  4 ++--
- kernel/trace/trace_events_filter.c                 |  4 ++--
- .../ftrace/test.d/filter/event-filter-function.tc  | 20 ++++++++++++++++
- 4 files changed, 43 insertions(+), 12 deletions(-)
----------------------------
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index a8a02868b435..61130bb34d6c 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -1297,6 +1297,8 @@ void ftrace_free_filter(struct ftrace_ops *ops)
- 		return;
- 	free_ftrace_hash(ops->func_hash->filter_hash);
- 	free_ftrace_hash(ops->func_hash->notrace_hash);
-+	ops->func_hash->filter_hash = EMPTY_HASH;
-+	ops->func_hash->notrace_hash = EMPTY_HASH;
- }
- EXPORT_SYMBOL_GPL(ftrace_free_filter);
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index 8fb14ffab7d1..c14514da4d9a 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -1299,6 +1299,13 @@ PAGE_SIZE multiple when read back.
+ 	monitors the limited cgroup to alleviate heavy reclaim
+ 	pressure.
  
-@@ -3443,6 +3445,7 @@ static int add_next_hash(struct ftrace_hash **filter_hash, struct ftrace_hash **
- 				  size_bits);
- 		if (ret < 0) {
- 			free_ftrace_hash(*filter_hash);
-+			*filter_hash = EMPTY_HASH;
- 			return ret;
- 		}
- 	}
-@@ -3472,6 +3475,7 @@ static int add_next_hash(struct ftrace_hash **filter_hash, struct ftrace_hash **
- 				     subops_hash->notrace_hash);
- 		if (ret < 0) {
- 			free_ftrace_hash(*notrace_hash);
-+			*notrace_hash = EMPTY_HASH;
- 			return ret;
- 		}
- 	}
-@@ -3490,8 +3494,8 @@ static int add_next_hash(struct ftrace_hash **filter_hash, struct ftrace_hash **
-  */
- int ftrace_startup_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command)
- {
--	struct ftrace_hash *filter_hash;
--	struct ftrace_hash *notrace_hash;
-+	struct ftrace_hash *filter_hash = EMPTY_HASH;
-+	struct ftrace_hash *notrace_hash = EMPTY_HASH;
- 	struct ftrace_hash *save_filter_hash;
- 	struct ftrace_hash *save_notrace_hash;
- 	int ret;
-@@ -3605,6 +3609,9 @@ static int rebuild_hashes(struct ftrace_hash **filter_hash, struct ftrace_hash *
- 			}
- 		}
- 
-+		free_ftrace_hash(temp_hash.filter_hash);
-+		free_ftrace_hash(temp_hash.notrace_hash);
++        If memory.high is opened with O_NONBLOCK then the synchronous
++        reclaim is bypassed. This is useful for admin processes that
++        need to dynamically adjust the job's memory limits without
++        expending their own CPU resources on memory reclamation. The
++        job will trigger the reclaim and/or get throttled on its
++        next charge request.
 +
- 		temp_hash.filter_hash = *filter_hash;
- 		temp_hash.notrace_hash = *notrace_hash;
- 	}
-@@ -3625,8 +3632,8 @@ static int rebuild_hashes(struct ftrace_hash **filter_hash, struct ftrace_hash *
-  */
- int ftrace_shutdown_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command)
- {
--	struct ftrace_hash *filter_hash;
--	struct ftrace_hash *notrace_hash;
-+	struct ftrace_hash *filter_hash = EMPTY_HASH;
-+	struct ftrace_hash *notrace_hash = EMPTY_HASH;
- 	int ret;
+   memory.max
+ 	A read-write single value file which exists on non-root
+ 	cgroups.  The default is "max".
+@@ -1316,6 +1323,13 @@ PAGE_SIZE multiple when read back.
+ 	Caller could retry them differently, return into userspace
+ 	as -ENOMEM or silently ignore in cases like disk readahead.
  
- 	if (unlikely(ftrace_disabled))
-@@ -3699,8 +3706,11 @@ static int ftrace_hash_move_and_update_subops(struct ftrace_ops *subops,
- 	}
- 
- 	ret = rebuild_hashes(&filter_hash, &notrace_hash, ops);
--	if (!ret)
-+	if (!ret) {
- 		ret = ftrace_update_ops(ops, filter_hash, notrace_hash);
-+		free_ftrace_hash(filter_hash);
-+		free_ftrace_hash(notrace_hash);
-+	}
- 
- 	if (ret) {
- 		/* Put back the original hash */
-@@ -5954,9 +5964,10 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
- 
- 	/* Make a copy hash to place the new and the old entries in */
- 	size = hash->count + direct_functions->count;
--	if (size > 32)
--		size = 32;
--	new_hash = alloc_ftrace_hash(fls(size));
-+	size = fls(size);
-+	if (size > FTRACE_HASH_MAX_BITS)
-+		size = FTRACE_HASH_MAX_BITS;
-+	new_hash = alloc_ftrace_hash(size);
- 	if (!new_hash)
- 		goto out_unlock;
- 
-diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
-index ee40d4e6ad1c..4ef4df6623a8 100644
---- a/kernel/trace/trace_entries.h
-+++ b/kernel/trace/trace_entries.h
-@@ -80,11 +80,11 @@ FTRACE_ENTRY(funcgraph_entry, ftrace_graph_ent_entry,
- 	F_STRUCT(
- 		__field_struct(	struct ftrace_graph_ent,	graph_ent	)
- 		__field_packed(	unsigned long,	graph_ent,	func		)
--		__field_packed(	unsigned long,	graph_ent,	depth		)
-+		__field_packed(	unsigned int,	graph_ent,	depth		)
- 		__dynamic_array(unsigned long,	args				)
- 	),
- 
--	F_printk("--> %ps (%lu)", (void *)__entry->func, __entry->depth)
-+	F_printk("--> %ps (%u)", (void *)__entry->func, __entry->depth)
- );
- 
- #ifdef CONFIG_FUNCTION_GRAPH_RETADDR
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 0993dfc1c5c1..2048560264bb 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -808,7 +808,7 @@ static __always_inline char *test_string(char *str)
- 	kstr = ubuf->buffer;
- 
- 	/* For safety, do not trust the string pointer */
--	if (!strncpy_from_kernel_nofault(kstr, str, USTRING_BUF_SIZE))
-+	if (strncpy_from_kernel_nofault(kstr, str, USTRING_BUF_SIZE) < 0)
- 		return NULL;
- 	return kstr;
- }
-@@ -827,7 +827,7 @@ static __always_inline char *test_ustring(char *str)
- 
- 	/* user space address? */
- 	ustr = (char __user *)str;
--	if (!strncpy_from_user_nofault(kstr, ustr, USTRING_BUF_SIZE))
-+	if (strncpy_from_user_nofault(kstr, ustr, USTRING_BUF_SIZE) < 0)
- 		return NULL;
- 
- 	return kstr;
-diff --git a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-index 118247b8dd84..c62165fabd0c 100644
---- a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-+++ b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-@@ -80,6 +80,26 @@ if [ $misscnt -gt 0 ]; then
- 	exit_fail
- fi
- 
-+# Check strings too
-+if [ -f events/syscalls/sys_enter_openat/filter ]; then
-+	DIRNAME=`basename $TMPDIR`
-+	echo "filename.ustring ~ \"*$DIRNAME*\"" > events/syscalls/sys_enter_openat/filter
-+	echo 1 > events/syscalls/sys_enter_openat/enable
-+	echo 1 > tracing_on
-+	ls /bin/sh
-+	nocnt=`grep openat trace | wc -l`
-+	ls $TMPDIR
-+	echo 0 > tracing_on
-+	hitcnt=`grep openat trace | wc -l`;
-+	echo 0 > events/syscalls/sys_enter_openat/enable
-+	if [ $nocnt -gt 0 ]; then
-+		exit_fail
-+	fi
-+	if [ $hitcnt -eq 0 ]; then
-+		exit_fail
-+	fi
-+fi
++        If memory.max is opened with O_NONBLOCK, then the synchronous
++        reclaim and oom-kill are bypassed. This is useful for admin
++        processes that need to dynamically adjust the job's memory limits
++        without expending their own CPU resources on memory reclamation.
++        The job will trigger the reclaim and/or oom-kill on its next
++        charge request.
 +
- reset_events_filter
+   memory.reclaim
+ 	A write-only nested-keyed file which exists for all cgroups.
  
- exit 0
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 5e2ea8b8a898..6f7362a7756a 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -4252,6 +4252,9 @@ static ssize_t memory_high_write(struct kernfs_open_file *of,
+ 
+ 	page_counter_set_high(&memcg->memory, high);
+ 
++	if (of->file->f_flags & O_NONBLOCK)
++		goto out;
++
+ 	for (;;) {
+ 		unsigned long nr_pages = page_counter_read(&memcg->memory);
+ 		unsigned long reclaimed;
+@@ -4274,7 +4277,7 @@ static ssize_t memory_high_write(struct kernfs_open_file *of,
+ 		if (!reclaimed && !nr_retries--)
+ 			break;
+ 	}
+-
++out:
+ 	memcg_wb_domain_size_changed(memcg);
+ 	return nbytes;
+ }
+@@ -4301,6 +4304,9 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
+ 
+ 	xchg(&memcg->memory.max, max);
+ 
++	if (of->file->f_flags & O_NONBLOCK)
++		goto out;
++
+ 	for (;;) {
+ 		unsigned long nr_pages = page_counter_read(&memcg->memory);
+ 
+@@ -4328,7 +4334,7 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
+ 			break;
+ 		cond_resched();
+ 	}
+-
++out:
+ 	memcg_wb_domain_size_changed(memcg);
+ 	return nbytes;
+ }
+-- 
+2.47.1
+
