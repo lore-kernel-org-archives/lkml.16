@@ -1,195 +1,75 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166BB5CB8;
-	Sat, 19 Apr 2025 02:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A2E5CB8;
+	Sat, 19 Apr 2025 02:41:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745030243; cv=none; b=rrZcpkHoAkWa56m13M+3J42xTVZTOJ0dtLIfScoOOUgMI62O3lbTNmA8Y56iH+0tPr4h7OBVXMtfIf81QxdR7MHhllf/19gNXx+upMjLVu3JQr6/gOuouLwGVLL7oV8hWwiE/3HCkrf0sb4GI0q2RZCHi5c2HE1I7uJtRhNJ/jM=
+	t=1745030466; cv=none; b=V8SSRkrIFrOCw7E0jmJc0cd9RVGGjzj7Icw5pEm3AB16B+N4ASncYWY0spz+wpiT7eUEEN24b8o+WNVqIRMnz1nqwCsSLXwL/5Rgnp+Jm3sMJKvsJTW7wGxEHEuPf/bR9Q5CdcPat3b2quGfP9WuLDC6QtC/xS7u/i6Ssb31/1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745030243; c=relaxed/simple;
-	bh=tfrXw1DjRTmeGExSbf1IaMbXWS34iw2WemWDqIBxo/Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ULQsM7ilL/IcA2apbpSROiMNFTJmPX1OYAVpD8dx0LACgOxP36AIZtGzW4LQyhg25lTbsN1pwfH4gKpu1dLKsjRJVaTyG7e19WHG0WwnriWT1UBllbTu5jI4UDWziVZTCYi2wXZe+5WSijcq6qHFqnqL+VcHNn5RCaH1DZ2l0Gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OIursNo6; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745030466; c=relaxed/simple;
+	bh=zJ1i0szTujFfqZn7VlvO1q7cBVSlvqSyecXXOuogdHk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s9wakLmMMijnCydMuQKD7MjIfhyZ2AdQ8XOYRv9AUvxf//h9K6caETYHA1MKpbfUzFlNH/ehMvxudd/rod4vaK2j++rA1tYhuZ73tzebft3PS0jClgqBFL+nc5cmI7XJB7hUocJPGZEvbsiPGUjniCOOslQooWwgltSc9bBqRH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=rmQd0n5F; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OIursNo6"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c55500cf80so184163485a.1;
-        Fri, 18 Apr 2025 19:37:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745030240; x=1745635040; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=z5xMW6JQzRFC3RypkMpl7HC+Ok1HS+DBoXUN4t3IzPg=;
-        b=OIursNo6woC3T10i6le0rDlL4FHMpPw/nNewS0g3w4VBgEUukQXDhMn8qhos8lpLgn
-         oUyUCEbljL68LaCrqb4yrUuy1+Ms9WbuNIhJVEy8n1wtRao6KZHMUnjn0KwH32fhBknV
-         cbRLGE6DP4UMdgoUROSydOBEPNSEV+4HwzFz5xA71EjItulHKcfVqBm49lYUS20WeBr7
-         rrETExrwR0eW2X7wLFy5fL1pPnmHpxBo0J+v82f74gIJk8/9h1NOSmwty9CaSXHCgMSe
-         Xl5kJMGXxMBXOr+140yP5WJ5g32auS0NPJAcwnOy/vCQsmQI8S9KP/ORZojTRXHSCJGN
-         pmxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745030240; x=1745635040;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z5xMW6JQzRFC3RypkMpl7HC+Ok1HS+DBoXUN4t3IzPg=;
-        b=ojqiWAz6uaXpFkDdhdOSmASurTL3yxoI4bKIfxLYNMB9FvRKh6RHEFe10eB7C8PKyZ
-         7EvqM1sscUiYUG0ERs68jKUtRi7YrjYL7EWVIEkLwF2VH0LbHuXYRqq297bguIHW1Ou7
-         +EK6uOAMuVmli/MMBJP7xyyHVi3dc1rdTh+/8cSWfKqeQjwV2KQaeMUfwgjV/If8JN99
-         YrxxKQnx+E3Bs7RX3kHlb1wrA/WkWdvZ7ql32l0CZeDm99HjgWgGcr+pUMmNpZcmaQlk
-         qWkn1CrrAGtMby+mgMMz2XE0Qk/ouPCGzbUGwiT7Nr2C58M3+EmEg/2ebhTqcpJi5Q8+
-         4NFg==
-X-Forwarded-Encrypted: i=1; AJvYcCXCZ4G54maYVKLl8ILa+0ZcyK/dEYu//eqkZXGbjk/SsUBcC9JuukXaDjVhwX3p7HzbyVs9z7UIHMIy7vs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0YmX0nCo0gIBEZ6fTzWCnq5XSBwCYobwId6ElGd3uPfWyfmxc
-	WzuH0g71vIP3tBiVV55/Olak6YJgY+82snjy6jdAgBee2y/LQVohKe7Y1TAK
-X-Gm-Gg: ASbGncsXZeN5SnZK3fWJ7661K8DciYS9AZMcp1fyD8F/UxKUTkr9hQCzAT80FoUXbhy
-	Y0XOdzQ20cc+V65uv4aHwdPa8LeK8ZWEY0aTn4UnJ9EqgjyAvatU2HUae8SO/sfwyAI/VlPmoib
-	fw63nvtIZIRDoHVjsQd40hfrPMrzDgl0I9Pybj7uN2CA4bXMSI9+X1z4VIOSS0DZYi9382BELbE
-	6itTEkS38IijF0/79Zh1jV05VtubBfosGLFblArhqg60jCaCJTj0ovMQxaF/fUBxkhjf9kZHNza
-	LGiW1fjGio/y2cFwBOclw99/0PHIkT1DDEGztIlTC+IlRSeuYF4T
-X-Google-Smtp-Source: AGHT+IHye/ATWWxQYKG94Z32CtV6NgziY9q4KsfM+OTqg+TdECswRmqN026PmdK91mfchx0mVjT56Q==
-X-Received: by 2002:a05:620a:4413:b0:7c5:5e9f:eb2d with SMTP id af79cd13be357-7c92803945fmr784446185a.44.1745030240096;
-        Fri, 18 Apr 2025 19:37:20 -0700 (PDT)
-Received: from localhost.localdomain ([216.237.233.165])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925b4ddb2sm169612985a.88.2025.04.18.19.37.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 19:37:19 -0700 (PDT)
-From: John Clark <inindev@gmail.com>
-To: devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Marcin Juszkiewicz <mjuszkiewicz@redhat.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	John Clark <inindev@gmail.com>
-Subject: [PATCH] arm64: dts: rockchip: rk3588-nanopc-t6: fix usb-c port functionality
-Date: Fri, 18 Apr 2025 22:37:15 -0400
-Message-Id: <20250419023715.16811-1-inindev@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="rmQd0n5F"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=N71ulJFC7EzRy4IJC7JSkf+9aBSGBV5BXmKIuPUJx7U=; b=rmQd0n5Ffd7wgXc5CRfMsYvfej
+	vy0M0uiUROHxK3PxU1ELCUZ55bqRS7IKOzdkIx2x/h3kf6i7ueq2uF2iXk+esRyER676Vn8nn6HPl
+	/EUIRrt1qKRpgU7dPHA+0/rAdhZq8SqQqgwdPs18fXqmj5Vc6DfqBTMqCH2VeKeOqjtpsk1uVQdTB
+	7C97E7AWZ+VRMuouNeTm66I/v/5mhb++Kjp8acKAz23ZX1T1sTBZddTZjuWyEHiOyEpxbSEZiqzYd
+	8FLG2KSwbrYBgiH88lXTv2vFiWUXkF2HqN7hW+YAXzbLMgU3rYK+eiYH+SBvpg8M1ru6r24TM8ix6
+	GC1QefCQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u5y8W-00Gtuw-1E;
+	Sat, 19 Apr 2025 10:40:57 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 19 Apr 2025 10:40:56 +0800
+Date: Sat, 19 Apr 2025 10:40:56 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+	x86@kernel.org, Jason@zx2c4.com, ardb@kernel.org
+Subject: Re: [PATCH 01/15] crypto: arm - remove CRYPTO dependency of library
+ functions
+Message-ID: <aAMNOJa-xcxLrmgX@gondor.apana.org.au>
+References: <20250417182623.67808-2-ebiggers@kernel.org>
+ <aAHDIRlSNLsYYZmW@gondor.apana.org.au>
+ <20250418033236.GB38960@quark.localdomain>
+ <aAHJRszwcQ4UyQ2e@gondor.apana.org.au>
+ <20250418040931.GD38960@quark.localdomain>
+ <aAIMhLD3UMM41JkT@gondor.apana.org.au>
+ <20250418150149.GB1890@quark.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250418150149.GB1890@quark.localdomain>
 
-The USB-C port on the NanoPC-T6 was not providing VBUS (vbus5v0_typec
-regulator disabled, gpio-58 out lo) due to misconfiguration. The
-original setup with regulator-always-on and regulator-boot-on forced
-the port on, masking the issue, but removing these properties revealed
-that the fusb302 driver was not enabling the regulator dynamically.
+On Fri, Apr 18, 2025 at 08:01:49AM -0700, Eric Biggers wrote:
+>
+> Doing it as a follow-up when this series hasn't been merged yet would be kind of
+> silly, since it would undo a lot of this series.  I'll just send out a v2 of
+> this series.
 
-Changes:
-- Removed regulator-always-on and regulator-boot-on from vbus5v0_typec
-  and vbus5v0_usb to allow driver control.
-- Changed power-role from "source" to "dual" in the usb-c-connector
-  to support OTG functionality.
-- Add pd-revision = /bits/ 8 <0x2 0x0 0x1 0x2>; to the FUSB302MPX node
-  to specify USB Power Delivery (PD) Revision 2.0, Version 1.2,
-  ensuring the driver correctly advertises PD capabilities and
-  negotiates power roles (source/sink) per the FUSB302MPX’s supported
-  PD protocol.
-- Added op-sink-microwatt and sink-pdos for proper sink mode
-  configuration (1w min, 15w max).
-- Add typec-power-opmode = "3.0A"; to enable 3.0A (15W) fallback for
-  non-PD USB-C devices with the FUSB302MPX.
-- Set try-power-role to "source" to prioritize VBUS enablement.
-- Adjusted usb_host0_xhci dr_mode from "host" to "otg" and added
-  usb-role-switch for dual-role support.
-
-Testing:
-- Verified VBUS (5V) delivery to a sink device (USB thumb drive).
-- Confirmed USB host mode with lsusb detecting connected devices.
-- Validated USB device mode with adb devices when connected to a PC.
-- Tested dual-role (OTG) functionality with try-power-role set to
-  "source" and "sink"; "source" prioritizes faster VBUS activation.
-- Validated functionality with a mobile device, including USB Power
-  Delivery, file transfer, USB tethering, MIDI, and image transfer.
-- Tested USB-C Ethernet adapter compatibility, ensuring proper
-  operation in host mode.
-- Tested USB-C hub compatibility, ensuring proper operation in host mode.
-
-Signed-off-by: John Clark <inindev@gmail.com>
----
- .../boot/dts/rockchip/rk3588-nanopc-t6.dtsi   | 21 ++++++++++---------
- 1 file changed, 11 insertions(+), 10 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dtsi
-index cecfb788bf9e..8f2bd30786d9 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dtsi
-@@ -174,8 +174,6 @@ vbus5v0_typec: regulator-vbus5v0-typec {
- 		gpio = <&gpio1 RK_PD2 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&typec5v_pwren>;
--		regulator-always-on;
--		regulator-boot-on;
- 		regulator-name = "vbus5v0_typec";
- 		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
-@@ -188,8 +186,6 @@ vbus5v0_usb: regulator-vbus5v0-usb {
- 		gpio = <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&usb5v_pwren>;
--		regulator-always-on;
--		regulator-boot-on;
- 		regulator-name = "vbus5v0_usb";
- 		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
-@@ -465,24 +461,30 @@ regulator-state-mem {
- };
- 
- &i2c6 {
--	clock-frequency = <200000>;
- 	status = "okay";
- 
--	fusb302: typec-portc@22 {
-+	usbc0: usb-typec@22 {
- 		compatible = "fcs,fusb302";
- 		reg = <0x22>;
- 		interrupt-parent = <&gpio0>;
- 		interrupts = <RK_PD3 IRQ_TYPE_LEVEL_LOW>;
--		pinctrl-0 = <&usbc0_int>;
- 		pinctrl-names = "default";
-+		pinctrl-0 = <&usbc0_int>;
- 		vbus-supply = <&vbus5v0_typec>;
-+		status = "okay";
- 
- 		connector {
- 			compatible = "usb-c-connector";
- 			data-role = "dual";
- 			label = "USB-C";
--			power-role = "source";
-+			/* fusb302 supports PD Rev 2.0 Ver 1.2 */
-+			pd-revision = /bits/ 8 <0x2 0x0 0x1 0x2>;
-+			power-role = "dual";
-+			op-sink-microwatt = <1000000>;
-+			sink-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
- 			source-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)>;
-+			try-power-role = "source";
-+			typec-power-opmode = "3.0A";
- 
- 			ports {
- 				#address-cells = <1>;
-@@ -1135,9 +1137,8 @@ &usb_host0_ohci {
- };
- 
- &usb_host0_xhci {
--	dr_mode = "host";
--	status = "okay";
- 	usb-role-switch;
-+	status = "okay";
- 
- 	port {
- 		usb_host0_xhci_drd_sw: endpoint {
+OK that's fine too of course.
 -- 
-2.39.5
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
