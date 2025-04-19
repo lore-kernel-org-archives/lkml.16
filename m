@@ -1,137 +1,199 @@
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48A317BEB6;
-	Sat, 19 Apr 2025 08:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.248.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58451A254C;
+	Sat, 19 Apr 2025 08:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745050405; cv=none; b=Jf03hxecVvKWvQZkuMVmp7kpZbLhB+OXUfTLtt4bgTN1iviFhYFtOFlNxVqsh86I3iYM7hts6AATh6wkigPRIYVmjp+Q5+NSTajFcM75lbUPApgO0RIcOPnnjUk+rAHPoGERGOWgwNhuz1Qqnu02RI6qX2cOqd6Y1vZBlt/LQ4U=
+	t=1745051330; cv=none; b=n2JCwcosUI2SIj/tuzDsMQNU1VKDt01j/V312XT2dKGrBYdyh2+CSF8pOEhxwcwBiHNfmFGyPxKhuLBbaNb/OCKxlnUcwWsSWa3+u1L79yolI+Wk1seZGYyHjx0Dk6D3Lp7UBEKfNJWTDw9Yg1BV9WsDgAt50bHarDS1v9UnxI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745050405; c=relaxed/simple;
-	bh=h20O5mtqoh2oXGg2M9J4OqV9FerlYNY6edRK0mT37k4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d7AqE5AnyleOMeQLpKWJfyj95W6mHmZOxMOKdOgzlwKoA+vjpxx4ZXluitY97u3jMxXJgKqm6NPUHDYLr/+BOQSSSLdG0KwyEbsuxMBWPQTAdoPqJFPRN99blUKsXwnj+7MNVeYGPLtga7RdqTcAg50gxyGVrxAbabaKhPfuW5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=n2r2y6cB; arc=none smtp.client-ip=159.100.248.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="n2r2y6cB"
-Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.66.161])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id CC4342618F;
-	Sat, 19 Apr 2025 08:13:14 +0000 (UTC)
-Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
-	by relay3.mymailcheap.com (Postfix) with ESMTPS id 99A6D3E8FD;
-	Sat, 19 Apr 2025 08:13:06 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf2.mymailcheap.com (Postfix) with ESMTPSA id 617CA400F8;
-	Sat, 19 Apr 2025 08:13:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1745050384; bh=h20O5mtqoh2oXGg2M9J4OqV9FerlYNY6edRK0mT37k4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=n2r2y6cBYz+v+L6R7fjjgB8DiomPxgD778zxyGcLKVevZdCCPOYkEJ0mjd8rMLE0l
-	 tWC/G9bHRmHcUjP74wK10fnwzdUL3OO/IePtlFxR0jCqOJ5yVHu/lYR+Z4HAlG4It9
-	 RBQsU3i/JMXSz5sy5OsStp4GVQ1q9fBWsrce/7AQ=
-Received: from JellyNote.localdomain (unknown [203.175.14.48])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id BA7E3406FC;
-	Sat, 19 Apr 2025 08:13:00 +0000 (UTC)
-From: Mingcong Bai <jeffbai@aosc.io>
-To: linux-kernel@vger.kernel.org
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Liangliang Zou <rawdiamondmc@outlook.com>,
-	Ping-Ke Shih <pkshih@realtek.com>,
-	"John W. Linville" <linville@tuxdriver.com>,
-	Larry Finger <Larry.Finger@lwfinger.net>,
-	linux-wireless@vger.kernel.org
-Subject: [RFC PATCH] wifi: rtlwifi: disable ASPM for RTL8723BE with subsystem ID 11ad:1723
-Date: Sat, 19 Apr 2025 16:12:50 +0800
-Message-ID: <20250419081251.285987-1-jeffbai@aosc.io>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1745051330; c=relaxed/simple;
+	bh=G9y+lG16rIgiZl8Rp3w1VzmoSlJOMaSlDc8bZM/MDIQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=JKqFXgCGq/O0YlKAzYBrWq+ri5j7ruShNt2kPaT93CokMrQ8V/GJOjV+EIvZOcHg+/vq/53TJhJz2UovH41FByZIyHSTA9ULyp9o2TAPt07djrpFpuTJanb91HdRJ8Wx+ZJU7owJomqPE5otjZSIAGDTAizELU32ZRqZhtHSQlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Zfl6s2fcfz5vMZ;
+	Sat, 19 Apr 2025 16:24:53 +0800 (CST)
+Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
+	by mail.maildlp.com (Postfix) with ESMTPS id E02A9180B49;
+	Sat, 19 Apr 2025 16:28:42 +0800 (CST)
+Received: from [10.174.179.155] (10.174.179.155) by
+ kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Sat, 19 Apr 2025 16:28:41 +0800
+Message-ID: <21817f2c-2971-4568-9ae4-1ccc25f7f1ef@huawei.com>
+Date: Sat, 19 Apr 2025 16:28:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
+Subject: Re: [PATCH] nfs: handle failure of nfs_get_lock_context in unlock
+ path
+To: Jeff Layton <jlayton@kernel.org>, <trondmy@kernel.org>, <anna@kernel.org>,
+	<bcodding@redhat.com>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
+	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>
+References: <20250417072508.3850532-1-lilingfeng3@huawei.com>
+ <1c7aa66639d9297dae186181aa3a03ff237be81f.camel@kernel.org>
+ <678aae33-3af0-4229-a2ce-d9cef1572f96@huawei.com>
+ <a53ddece5d8deb77f6e6a37e4358dd3eb93401ba.camel@kernel.org>
+From: Li Lingfeng <lilingfeng3@huawei.com>
+In-Reply-To: <a53ddece5d8deb77f6e6a37e4358dd3eb93401ba.camel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 617CA400F8
-X-Rspamd-Server: nf2.mymailcheap.com
-X-Spamd-Result: default: False [1.40 / 10.00];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	SPFBL_URIBL_EMAIL_FAIL(0.00)[rawdiamondmc.outlook.com:server fail,jeffbai.aosc.io:server fail];
-	FREEMAIL_CC(0.00)[aosc.io,outlook.com,realtek.com,tuxdriver.com,lwfinger.net,vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[outlook.com];
-	RCVD_TLS_ALL(0.00)[]
-X-Rspamd-Action: no action
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemg500017.china.huawei.com (7.202.181.81)
 
-RTL8723BE found on some ASUSTek laptops, such as F441U and X555UQ with
-subsystem ID 11ad:1723 are known to output large amounts of PCIe AER
-errors during and after boot up, causing heavy lags and at times lock-ups:
 
-  pcieport 0000:00:1c.5: AER: Correctable error message received from 0000:00:1c.5
-  pcieport 0000:00:1c.5: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)
-  pcieport 0000:00:1c.5:   device [8086:9d15] error status/mask=00000001/00002000
-  pcieport 0000:00:1c.5:    [ 0] RxErr
+在 2025/4/17 20:43, Jeff Layton 写道:
+> On Thu, 2025-04-17 at 20:24 +0800, Li Lingfeng wrote:
+>> 在 2025/4/17 18:29, Jeff Layton 写道:
+>>> On Thu, 2025-04-17 at 15:25 +0800, Li Lingfeng wrote:
+>>>> When memory is insufficient, the allocation of nfs_lock_context in
+>>>> nfs_get_lock_context() fails and returns -ENOMEM. If we mistakenly treat
+>>>> an nfs4_unlockdata structure (whose l_ctx member has been set to -ENOMEM)
+>>>> as valid and proceed to execute rpc_run_task(), this will trigger a NULL
+>>>> pointer dereference in nfs4_locku_prepare. For example:
+>>>>
+>>>> BUG: kernel NULL pointer dereference, address: 000000000000000c
+>>>> PGD 0 P4D 0
+>>>> Oops: Oops: 0000 [#1] SMP PTI
+>>>> CPU: 15 UID: 0 PID: 12 Comm: kworker/u64:0 Not tainted 6.15.0-rc2-dirty #60
+>>>> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-2.fc40
+>>>> Workqueue: rpciod rpc_async_schedule
+>>>> RIP: 0010:nfs4_locku_prepare+0x35/0xc2
+>>>> Code: 89 f2 48 89 fd 48 c7 c7 68 69 ef b5 53 48 8b 8e 90 00 00 00 48 89 f3
+>>>> RSP: 0018:ffffbbafc006bdb8 EFLAGS: 00010246
+>>>> RAX: 000000000000004b RBX: ffff9b964fc1fa00 RCX: 0000000000000000
+>>>> RDX: 0000000000000000 RSI: fffffffffffffff4 RDI: ffff9ba53fddbf40
+>>>> RBP: ffff9ba539934000 R08: 0000000000000000 R09: ffffbbafc006bc38
+>>>> R10: ffffffffb6b689c8 R11: 0000000000000003 R12: ffff9ba539934030
+>>>> R13: 0000000000000001 R14: 0000000004248060 R15: ffffffffb56d1c30
+>>>> FS: 0000000000000000(0000) GS:ffff9ba5881f0000(0000) knlGS:00000000
+>>>> CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>>> CR2: 000000000000000c CR3: 000000093f244000 CR4: 00000000000006f0
+>>>> Call Trace:
+>>>>    <TASK>
+>>>>    __rpc_execute+0xbc/0x480
+>>>>    rpc_async_schedule+0x2f/0x40
+>>>>    process_one_work+0x232/0x5d0
+>>>>    worker_thread+0x1da/0x3d0
+>>>>    ? __pfx_worker_thread+0x10/0x10
+>>>>    kthread+0x10d/0x240
+>>>>    ? __pfx_kthread+0x10/0x10
+>>>>    ret_from_fork+0x34/0x50
+>>>>    ? __pfx_kthread+0x10/0x10
+>>>>    ret_from_fork_asm+0x1a/0x30
+>>>>    </TASK>
+>>>> Modules linked in:
+>>>> CR2: 000000000000000c
+>>>> ---[ end trace 0000000000000000 ]---
+>>>>
+>>>> Free the allocated nfs4_unlockdata when nfs_get_lock_context() fails and
+>>>> return NULL to terminate subsequent rpc_run_task, preventing NULL pointer
+>>>> dereference.
+>>>>
+>>>> Fixes: f30cb757f680 ("NFS: Always wait for I/O completion before unlock")
+>>>> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+>>>> ---
+>>>>    fs/nfs/nfs4proc.c | 9 ++++++++-
+>>>>    1 file changed, 8 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+>>>> index 970f28dbf253..9f5689c43a50 100644
+>>>> --- a/fs/nfs/nfs4proc.c
+>>>> +++ b/fs/nfs/nfs4proc.c
+>>>> @@ -7074,10 +7074,18 @@ static struct nfs4_unlockdata *nfs4_alloc_unlockdata(struct file_lock *fl,
+>>>>    	struct nfs4_unlockdata *p;
+>>>>    	struct nfs4_state *state = lsp->ls_state;
+>>>>    	struct inode *inode = state->inode;
+>>>> +	struct nfs_lock_context *l_ctx;
+>>>>    
+>>>>    	p = kzalloc(sizeof(*p), GFP_KERNEL);
+>>>>    	if (p == NULL)
+>>>>    		return NULL;
+>>>> +	l_ctx = nfs_get_lock_context(ctx);
+>>>> +	if (!IS_ERR(l_ctx)) {
+>>>> +		p->l_ctx = l_ctx;
+>>>> +	} else {
+>>>> +		kfree(p);
+>>>> +		return NULL;
+>>>> +	}
+>>>>    	p->arg.fh = NFS_FH(inode);
+>>>>    	p->arg.fl = &p->fl;
+>>>>    	p->arg.seqid = seqid;
+>>>> @@ -7085,7 +7093,6 @@ static struct nfs4_unlockdata *nfs4_alloc_unlockdata(struct file_lock *fl,
+>>>>    	p->lsp = lsp;
+>>>>    	/* Ensure we don't close file until we're done freeing locks! */
+>>>>    	p->ctx = get_nfs_open_context(ctx);
+>>> Not exactly the same problem, but get_nfs_open_context() can fail too.
+>>> Does it need error handling for that as well?
+>> Hi,
+>>
+>> IIUC, nfs_open_context is allocated during file open and attached to
+>> filp->private_data. Upon successful file opening, the context remains valid.
+>> Post-lock acquisition, nfs_open_context can be retrieved via
+>> file_lock->file->nfs_open_context chain. Thus get_nfs_open_context() here
+>> should have non-failure guarantee in standard code paths.
+>
+> I'm not so sure. This function can get called from the rpc_release
+> callback for a LOCK request:
+>
+> ->rpc_release
+>      nfs4_lock_release
+> 	nfs4_do_unlck
+> 	    nfs4_alloc_unlockdata
+>
+> Can that happen after the open_ctx->lock_context.count goes to 0?
+>
+> Given that we have a safe failure path in this code, it seems like we
+> ought to check for that here, just to be safe. If it really shouldn't
+> happen like you say, then we could throw in a WARN_ON_ONCE() too.
+Thank you for raising this concern.
+During file open, the nfs_open_context is allocated, and
+open_ctx->lock_context.count is initialized to 1. Based on the current
+flow, I think it's unlikely for this counter to reach 0 during lock/unlock
+operations since its decrement is tied to file closure.
 
-Disable ASPM on this combo as a quirk.
+However, I agree with your suggestion to add checks when
+get_nfs_open_context fails. Furthermore, this check might also be
+necessary not only in the unlock path but potentially in the lock path if
+get_nfs_open_contextb fails there as well.
 
-This patch is a revision of a previous patch (linked below) which
-attempted to disable ASPM for RTL8723BE on all Intel Skylake and Kaby Lake
-PCIe bridges. I take a more conservative approach as all known reports
-point to ASUSTek laptops of these two generations with this particular
-wireless card.
+Additionally, I noticed that both the lock and unlock release callbacks
+dereference nfs_open_context. If get_nfs_open_context were to fail
+(assuming such a scenario is possible), this could lead to a NULL pointer
+dereference. Instead of relying solely on WARN_ON_ONCE(), it might be
+safer to halt the operation immediately upon detecting a failure in
+get_nfs_open_context.
 
-Please note, however, before the rtl8723be finishes probing, the AER
-errors remained. After the module finishes probing, all AER errors would
-indeed be eliminated, along with heavy lags, poor network throughput,
-and/or occasional lock-ups.
+// unlock
+nfs4_locku_release_calldata
+  put_nfs_open_context
+    __put_nfs_open_context
+     // dereference nfs_open_context
 
-Fixes: 0c8173385e54 ("rtl8192ce: Add new driver")
-Reported-by: Liangliang Zou <rawdiamondmc@outlook.com>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=218127
-Link: https://lore.kernel.org/lkml/05390e0b-27fd-4190-971e-e70a498c8221@lwfinger.net/T/
-Tested-by: Liangliang Zou <rawdiamondmc@outlook.com>
-Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
----
- drivers/net/wireless/realtek/rtlwifi/pci.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+// lock
+nfs4_lock_release
+  nfs4_do_unlck
+   // dereference nfs_open_context
+  put_nfs_open_context
+   // dereference nfs_open_context
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/pci.c b/drivers/net/wireless/realtek/rtlwifi/pci.c
-index 0eafc4d125f9..898f597f70a9 100644
---- a/drivers/net/wireless/realtek/rtlwifi/pci.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/pci.c
-@@ -155,6 +155,16 @@ static void _rtl_pci_update_default_setting(struct ieee80211_hw *hw)
- 	    ((u8)init_aspm) == (PCI_EXP_LNKCTL_ASPM_L0S |
- 				PCI_EXP_LNKCTL_ASPM_L1 | PCI_EXP_LNKCTL_CCC))
- 		ppsc->support_aspm = false;
-+
-+	/* RTL8723BE found on some ASUSTek laptops, such as F441U and
-+	 * X555UQ with subsystem ID 11ad:1723 are known to output large
-+	 * amounts of PCIe AER errors during and after boot up, causing
-+	 * heavy lags, poor network throughput, and occasional lock-ups.
-+	 */
-+	if (rtlpriv->rtlhal.hw_type == HARDWARE_TYPE_RTL8723BE &&
-+	    (rtlpci->pdev->subsystem_vendor == 0x11ad &&
-+	     rtlpci->pdev->subsystem_device == 0x1723))
-+		ppsc->support_aspm = false;
- }
- 
- static bool _rtl_pci_platform_switch_device_pci_aspm(
--- 
-2.49.0
-
+I'll incorporate your feedback and send a patchset soon.
+>
+>>>> -	p->l_ctx = nfs_get_lock_context(ctx);
+>>>>    	locks_init_lock(&p->fl);
+>>>>    	locks_copy_lock(&p->fl, fl);
+>>>>    	p->server = NFS_SERVER(inode);
+>>> Good catch:
+>>>
+>>> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+>>>
