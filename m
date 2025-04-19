@@ -1,148 +1,110 @@
-Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com [209.85.215.194])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4DE17A302;
-	Sat, 19 Apr 2025 14:40:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE091CA4B;
+	Sat, 19 Apr 2025 14:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745073645; cv=none; b=Tv5x67xdP/ylV2mBSKy7GjkaVPBza3SEK160w+M91s39AgguoC+6kdicZTtLxH84R6yfr8UyXeLcQrRlovlwFkwVIateHono3Y5REKejRld0B1UYAanF+uX1AJUs732LEx8+MTieICMTPPCPIsWoecvLR7fMYb3X7dXsuryErOw=
+	t=1745073927; cv=none; b=rgr1E0qSgNRMqVyaqMOe/GfXYXMzGrkGzOF/yNYLaIJwa/MJnLfjG8d5SI768PIbSOnHAni5LiirRh644wD1yvZf471IGrM3Ft74o/tzjiy8WecunjoGlpmvqiNjPy233TPdlz5mFXqch4MpIbUw1j8rBmVsl4wKRaP1M4Bxk8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745073645; c=relaxed/simple;
-	bh=mrXA5nymjJGg2oomVKmdxd6U7DblU0gA+8l+cHdxjZA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=lOG0YoQ4z/tKrha0mViI8nf2aiPc6xf6d2vE3JpWeQH+/dmxHgmj8VnUz+tyTMsYNqDKC861WyKgwsqvh4eer6Fzr5JLH/aRnijwtmWmxMfUwbQRXwZAAv1hlBSmxSwLvxUEFTn5ANKxhptietgxK8PNO7hdE+CGmA1nCigMbMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dVV0n4P0; arc=none smtp.client-ip=209.85.215.194
+	s=arc-20240116; t=1745073927; c=relaxed/simple;
+	bh=/iRpNdeJshI3L30q214V68a98a6RN866jsxqHPWRnZw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DofhnMq59AuLJg/DFP3HcUGLnTBPavxwa4Z76fp7PEidy+JwCn6Q+FsCqCXjvEtgfR6gTvKSD42maSVzhsL6x0XZXytPTQ8jdSbItR7DzQ+vQl8m4htb3nJr8NGQd1ggRDPJjOEXZfqdfA1wuxETD8v1Dc6iXeKUBaLu7AmMAeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eILa/oh1; arc=none smtp.client-ip=209.85.160.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dVV0n4P0"
-Received: by mail-pg1-f194.google.com with SMTP id 41be03b00d2f7-af9925bbeb7so1820752a12.3;
-        Sat, 19 Apr 2025 07:40:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eILa/oh1"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-477296dce76so22767771cf.3;
+        Sat, 19 Apr 2025 07:45:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745073643; x=1745678443; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pmd0prqSP1IKD2wQALW7REfquKEBSU4mDSAGi0S5v9M=;
-        b=dVV0n4P0Dj/bCzbsCtdVQZFnVwcb5zw/95PEIomw1aESTxAaawfAq43XAnOcjDTSzM
-         xlC4jorHX7UJqS1qytgOEHc9THKDPO5Qwq86Itsw+chWquwBofiLj3uDMm7/qoIkmngS
-         +xQjpcgiMXkmA4dgKobh/lji/GFpGC4f1WxQ23moK5HFDF9UuxdrfoVQP/EMY3JwZbMw
-         /dDsCGWPJ4qwzzgM4xlXmIpUYrB72L8oQBptV4NvdPKRo2QGak59eJBY7yyKE/i3ox+Y
-         BH0OxAhI4+eizfokEMJ2gpxhAOz0ancetZn9ZXlefIUSxdQ197FybsVpwrBb1iql0dPs
-         X8CQ==
+        d=gmail.com; s=20230601; t=1745073924; x=1745678724; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TZwskAex2BRKK/3gla3QPoANYGHWeVyAoradRHdAXwM=;
+        b=eILa/oh15CYd/dRrqtuceD8jJ1ZtpOIbI6yUFPwZ/xPLCYIDxEbaQpVtv8ZFq3o1xJ
+         U4JvdwtYRVneFgSAcF+yU52vDdrqFz1vEVyN8NbEaqI5HZGh1Shku6Vp2zAYrmuamNpw
+         vobyu2jN8u5vmkEmpm7T5a2oPIS++GGX9HrQ8oPO+Qer+EhVKnXUSDQe/CVYGJDYtlNj
+         oPtwdArXOCoyzReT65PDn785IVnuaiWTEWpfQPyQhpyX/iGilELogKrrkC2XZcmzNBOZ
+         EnhEfWFH9TVE6AfBZXWVABDR+RMlR71nNDazJKOhvQaN2uBDc9f/SVs3mRH9Fm4aXRQZ
+         STXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745073643; x=1745678443;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1745073924; x=1745678724;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pmd0prqSP1IKD2wQALW7REfquKEBSU4mDSAGi0S5v9M=;
-        b=Q0Io2SvB3SyeuvRXIFL0XHfcUgRVp/h2wWy8Czvw/jd8kSF1mhATDx6ak4Uv4ilanu
-         i2fygiOJ44pd2wVF/tEAnZIj1xURSS7t0xq4upqs/kwRp8h58SQnqy3rwOER6Zbe2+Oc
-         KIVDgBGWfItp/ocI16dIRZfnWYXs8uZR1L03P39Y1A0pkGsq+PxhV1yNghz4kp7y+/YU
-         mknnhMxMAXZ1bL26Mczige55Fwc7g/QWSzDnLvEs+qZxxYe+Yeh8qy9Xl/saigXcsNhU
-         CKfAuC/d08Qo0RIHhjODfI0s643odP0v7OA/ziP69dhfVyPQOx2ExSEM7Pfxd4GBhjBe
-         e9DA==
-X-Forwarded-Encrypted: i=1; AJvYcCUz1pWLjZEJR2KNMBlJA2t+zwjePxz1lXFpKpdWoTjDnnltcDn4po3Hlry6zsO7AGtX6cOTbAhFMI8WRgA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywqt2TlC+QjsM+Rbh90Az4rQPAYdqgIqFAn2dMWlB7JHEHIOJsz
-	o5vYV04LAK5OSBXbsuXs/W4BtEajlYsaBLQXnTDP/a/cI3T+RWSuXacaEm9Z8Z41K2sd
-X-Gm-Gg: ASbGncvqeBSzjy3x2A7ARonZZXPBssWU5sfCLu/aIqLVYtFQ36/C3voobSHBES2gOz6
-	LWUejQIbquKKiHymfiVJMmiSm16nromHyL/NQdmTegZHPE1Fr2vDVXTbOPSQIOp0FMl9o1G2Ene
-	8qKgbTxMCngGzB+bpl6FMPKhClIed6+F89o01X/TU/GJ96H923CXbAv9VYVQAAC24HrYgr4YRwV
-	CtXJZzWGK+mAqcSQw99qfajR8kExnuco4kM4+39WgowdV6rfTJvoDT5Gg7XB8m0BnYpglyKaiij
-	YrCeOzOOxOD7ThCNUrgEVkYLJkejfx+hdfHLwqL5JUA9NAtP
-X-Google-Smtp-Source: AGHT+IFDoZkZ33dQU074USKU5rq4bM3O6MvYLq76SchXoElcZ+8BDAACn6PocZ6euZR1hl3XWTa0Lw==
-X-Received: by 2002:a17:90b:2d0d:b0:2fe:a336:fe63 with SMTP id 98e67ed59e1d1-3087bbc22fcmr9760935a91.24.1745073642676;
-        Sat, 19 Apr 2025 07:40:42 -0700 (PDT)
-Received: from [127.0.1.1] ([240e:341:e5f:8f00:f9f7:ff5b:41aa:214a])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087dee872dsm3158428a91.10.2025.04.19.07.40.38
+        bh=TZwskAex2BRKK/3gla3QPoANYGHWeVyAoradRHdAXwM=;
+        b=KOI57os+1vd4pigLPneREVayCcr5ScXT3KzMvW9uOIBvcpjhapfxpWHWE7H4tAhcTj
+         FgeC3XPWDr2ye5PrcF8kL6RbEBM/URtM4VGaUEohe9bg0y1twsWw3IPKrtaN83HnW/ds
+         UgTQ7Y31rh0hhdMXAqXWri+5OQpgJtiOR7yqHA56QTpS8CWZfetrklXquucMuCQXqMfq
+         jE9ungXTHA4Ka8FU4TI9vNsrlKpKydEiHjjY9YA4L1yUa0tvCZk01wLprRapU1BVCoE/
+         skxi/doonjayUZqbq2ysIjGcVdpIVVePRo3iL0FaGzmvVIgaWQ4FzOH48zi6lld3UiJv
+         IWIg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+vdnffOnRLZ98WrFpG6OBrLGNbe2BhmKuUUGyRinzeRor5LB22TLPoBuzxCUfooG8J5QnUt647Ec=@vger.kernel.org, AJvYcCWPBQhtAqqviuz10kiPXb9S1fMsYxFfm5bxZ845Gv3EW+ePsjg9/3AW59px+bNlJNph6Sh55mZNT0+S45z+@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKq7TGekRt0sYVhx72rP1Nm8BWg8H+pi2+fO0eLnJeR5NQS+UR
+	O3dXH6nPNG9fB7/cS9jRPKlFZFbMBN7IzEWJ7xQS5833l1TAulUV
+X-Gm-Gg: ASbGncudY1R+0XJrV/xUbUTeQre32AC5giFqhiXDp3aSpXW0vE0KN91J9c0Y0jv8SRC
+	4o5GhXfnzr+SQNIHd66/pQqn/lX7doUDN4ZLLgwRJ6v4sNhO7rDOegk13kapptGlY/IH9rKEs84
+	fdqpk7k7wnPPbzks2WO75E1McC3eBontSV77LK56iww1P51NA0e1mCu1wAfYYgh0yKqpxtQBtBb
+	Ovd+LYvW/A1QuDgz6s/YCKlZ9eKgFhqi6Gk33m/cuUBcpmZ4aRTqbUPaqXHi0RG9Spw1Qp2z3nT
+	CMHa3Aoj78jZf5B19Q5HBGj+zNQQ8vW1SNOpqkD9MCoHpT10G6zXj84=
+X-Google-Smtp-Source: AGHT+IFknOo8FgIOBC/pX7zqREnS6alYIVbQbHq3b3MI+c5P0yy/6AQL2yR1JeK4EVgs7lffsPJP6A==
+X-Received: by 2002:a05:622a:1349:b0:476:8917:5efe with SMTP id d75a77b69052e-47aec4a117emr101307731cf.42.1745073924534;
+        Sat, 19 Apr 2025 07:45:24 -0700 (PDT)
+Received: from theriatric.mshome.net ([73.123.232.110])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47ae9cf9f29sm21856141cf.71.2025.04.19.07.45.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 07:40:42 -0700 (PDT)
-From: Troy Mitchell <troymitchell988@gmail.com>
-Date: Sat, 19 Apr 2025 22:37:10 +0800
-Subject: [PATCH] rtc: pcf8563: fix wrong alarm register
+        Sat, 19 Apr 2025 07:45:24 -0700 (PDT)
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+To: jic23@kernel.org,
+	lars@metafoo.de,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Michael.Hennerich@analog.com
+Cc: gshahrouzi@gmail.com,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: [PATCH] iio: adis16201: Correct inclinometer channel resolution
+Date: Sat, 19 Apr 2025 10:45:20 -0400
+Message-ID: <20250419144520.815198-1-gshahrouzi@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250419-pcf8563-fix-alarm-v1-1-b893a5de55b8@gmail.com>
-X-B4-Tracking: v=1; b=H4sIABW1A2gC/x2MQQqAIBAAvyJ7bkErU/tKdJBaa6EsFCKI/p50H
- IaZBzIlpgy9eCDRxZmPWEBVAqbVx4WQ58JQy1rLVjk8p2B112DgG/3m046ajDVBOm07BaU7ExX
- 5P4fxfT8r4VyhYwAAAA==
-X-Change-ID: 20250419-pcf8563-fix-alarm-5e787f095861
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Troy Mitchell <troymitchell988@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745073435; l=2187;
- i=troymitchell988@gmail.com; h=from:subject:message-id;
- bh=mrXA5nymjJGg2oomVKmdxd6U7DblU0gA+8l+cHdxjZA=;
- b=CgWYz/ijZ3G/15M6aJ9gfMR2yQt9Irzib3Rt+NiJP81/s0ICFOgn1rU4hL8ti5Vt5smgDMznX
- LCgWRlP6nV8B5k0vdiV55jTPee0Nhz2rc9+pVeCEQHAYVQY4tZ+EvBS
-X-Developer-Key: i=troymitchell988@gmail.com; a=ed25519;
- pk=2spEMGBd/Wkpd36N1aD9KFWOk0aHrhVxZQt+jxLXVC0=
+Content-Transfer-Encoding: 8bit
 
-Fix wrong register and align `pcf8563_get_alarm_mode`
-with the naming convention used in ops.
+The inclinometer channels were previously defined with 14 realbits.
+However, the ADIS16201 datasheet states the resolution for these output
+channels is 12 bits (Page 14, text description; Page 15, table 7).
 
-Signed-off-by: Troy Mitchell <troymitchell988@gmail.com>
+Correct the realbits value to 12 to accurately reflect the hardware.
+
+Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
 ---
-Since this patch[1], the set_alarm function has been setting
-an wrong register.
-
-Link:
-https://lore.kernel.org/all/20241010084949.3351182-3-iwamatsu@nigauri.org/ [1]
+Omit fixes tag because it targets driver before it moved out of staging.
 ---
- drivers/rtc/rtc-pcf8563.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/iio/accel/adis16201.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/rtc/rtc-pcf8563.c b/drivers/rtc/rtc-pcf8563.c
-index 5a084d426e58d09cfedf0809695a96a27627c420..61e2f9757de9f24407f9262657da0d1586ce124e 100644
---- a/drivers/rtc/rtc-pcf8563.c
-+++ b/drivers/rtc/rtc-pcf8563.c
-@@ -103,7 +103,7 @@ static int pcf8563_set_alarm_mode(struct pcf8563 *pcf8563, bool on)
- 	return regmap_write(pcf8563->regmap, PCF8563_REG_ST2, buf);
- }
+diff --git a/drivers/iio/accel/adis16201.c b/drivers/iio/accel/adis16201.c
+index 982b33f6eccac..dcc8d9f2ee0f1 100644
+--- a/drivers/iio/accel/adis16201.c
++++ b/drivers/iio/accel/adis16201.c
+@@ -211,9 +211,9 @@ static const struct iio_chan_spec adis16201_channels[] = {
+ 			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
+ 	ADIS_AUX_ADC_CHAN(ADIS16201_AUX_ADC_REG, ADIS16201_SCAN_AUX_ADC, 0, 12),
+ 	ADIS_INCLI_CHAN(X, ADIS16201_XINCL_OUT_REG, ADIS16201_SCAN_INCLI_X,
+-			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
++			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 12),
+ 	ADIS_INCLI_CHAN(Y, ADIS16201_YINCL_OUT_REG, ADIS16201_SCAN_INCLI_Y,
+-			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
++			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 12),
+ 	IIO_CHAN_SOFT_TIMESTAMP(7)
+ };
  
--static int pcf8563_get_alarm_mode(struct pcf8563 *pcf8563, unsigned char *en,
-+static int pcf8563_read_alarm_mode(struct pcf8563 *pcf8563, unsigned char *en,
- 				  unsigned char *pen)
- {
- 	u32 buf;
-@@ -127,7 +127,7 @@ static irqreturn_t pcf8563_irq(int irq, void *dev_id)
- 	char pending;
- 	int err;
- 
--	err = pcf8563_get_alarm_mode(pcf8563, NULL, &pending);
-+	err = pcf8563_read_alarm_mode(pcf8563, NULL, &pending);
- 	if (err)
- 		return IRQ_NONE;
- 
-@@ -262,7 +262,7 @@ static int pcf8563_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *tm)
- 	tm->time.tm_mday = bcd2bin(buf[2] & 0x3F);
- 	tm->time.tm_wday = bcd2bin(buf[3] & 0x7);
- 
--	err = pcf8563_get_alarm_mode(pcf8563, &tm->enabled, &tm->pending);
-+	err = pcf8563_read_alarm_mode(pcf8563, &tm->enabled, &tm->pending);
- 	if (err < 0)
- 		return err;
- 
-@@ -285,7 +285,7 @@ static int pcf8563_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *tm)
- 	buf[2] = bin2bcd(tm->time.tm_mday);
- 	buf[3] = tm->time.tm_wday & 0x07;
- 
--	err = regmap_bulk_write(pcf8563->regmap, PCF8563_REG_SC, buf,
-+	err = regmap_bulk_write(pcf8563->regmap, PCF8563_REG_AMN, buf,
- 				sizeof(buf));
- 	if (err)
- 		return err;
-
----
-base-commit: 8560697b23dc2f405cb463af2b17256a9888129d
-change-id: 20250419-pcf8563-fix-alarm-5e787f095861
-
-Best regards,
 -- 
-Troy Mitchell <troymitchell988@gmail.com>
+2.43.0
 
