@@ -1,70 +1,91 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C42B13B59B;
-	Sat, 19 Apr 2025 06:58:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43EE782C60
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 07:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745045917; cv=none; b=Jgc5NuoxPuw+iMytwsN7/7tIQ+kWqi1kW7jrfYFe32Fof82lhiwYzVB1JfzGYngT6I7kTTzeNQ8rJUdBA3/4wUJ2nFvzXkmaWGWKtnAx2rmY1R3oniY6F1Iu0iab7ovLIdqebqQ/kloPGzbDC7eijIxMWO5LAoHHgTMukaqcz5k=
+	t=1745046281; cv=none; b=iGHlpoeIxe3axG2JyIGQfjwWInwElmULg97OTXXohgnLjYpiMmo6RTXzkVPtUC5N562mbq/A7VmmVaQKjsZy5F0Kik9q+kyQGp/AZusXe8L9s9dVpE0kcHUC7QdqefW1cSr4Me1tWqi/kEjMbdpQMjhBQnxtUFxw3Q+8rzjkUlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745045917; c=relaxed/simple;
-	bh=qW86OOJgwQLZxCemaRyecuWwlflZx2hUXnF1dqy6eJ4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MYoXcSjcqjXh/gKJRuPil5z2s0Bs1klnIZ32Aj0zfUh0RRXtNDb8XJGFYs9vsKDN17t6QhYR5UMpiw1PWFbSCkfZ5D+VZdWqQ6Aah3ypLfnPl86Q2VtH6COD/pdnNRKFQHQQXdoT51Yg2PoVZ3rHsiJV6SUd1eyjLbXXBzJg8Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Zfj7F00SJzHrDg;
-	Sat, 19 Apr 2025 14:55:04 +0800 (CST)
-Received: from dggpemf500017.china.huawei.com (unknown [7.185.36.126])
-	by mail.maildlp.com (Postfix) with ESMTPS id C5D981402EC;
-	Sat, 19 Apr 2025 14:58:32 +0800 (CST)
-Received: from huawei.com (10.175.104.67) by dggpemf500017.china.huawei.com
- (7.185.36.126) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 19 Apr
- 2025 14:58:32 +0800
-From: Long Li <leo.lilong@huawei.com>
-To: <axboe@kernel.dk>, <asml.silence@gmail.com>
-CC: <io-uring@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yi.zhang@huawei.com>, <leo.lilong@huawei.com>, <yangerkun@huawei.com>,
-	<lonuxli.64@gmail.com>
-Subject: [PATCH] io_uring: update parameter name in io_pin_pages function declaration
-Date: Sat, 19 Apr 2025 14:47:36 +0800
-Message-ID: <20250419064736.1834012-1-leo.lilong@huawei.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1745046281; c=relaxed/simple;
+	bh=6nJRP5dGfMS/bA/MMLA00BdyVnpxROp+uQSPSKS5EPs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rTTkKnm3UGiv9XPiLxkr1hiMu/K71FgHo/ngGxXXDj9cpVczR1kORy0GXNE5+GpVDngPVwVrrcH8aHBCFWWe9yJaAghr6cIJFcIuXmBCMccYffT9PfRJxQkBGAc6pNvz1r4Ix2D0gpwoANViRyfqHdYaF82mIQ3l8UZhu23pbO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tDWsZxoB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tDWsZxoB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E642EC4CEE7;
+	Sat, 19 Apr 2025 07:04:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745046280;
+	bh=6nJRP5dGfMS/bA/MMLA00BdyVnpxROp+uQSPSKS5EPs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tDWsZxoBS7ca6U3nIhX18IAbq2/5Hh9njLLAseXAOWRi0Oa+VdpjIzPek/nvV34IQ
+	 aTtcDUJ7JdszDFCCczHQy3ANFaYSsi6+zkoxCoWg9kG8WnOh0E252jNjpQw7jxkKaW
+	 M6YrWSo7bxWV1gMpkHdRHFPsi3Shl6nf3Jysrvrm2Qmqpjud6Jj/yMgXwqxpAk/ehS
+	 RhonrsXe+D8vylx35w+0bDOpBNAPwFW1R8vqLk9moL3iMRBX1BdJWb67DXaMjXsz+a
+	 vEuf4umWbpa6HcMe0/SqCneGusokl7XlUiv81xP8z3hNx6W+AzvYPPwoemkikvwj/L
+	 T080eoZjTWN5w==
+Date: Sat, 19 Apr 2025 10:04:34 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Ross Stutterheim <ross.sweng@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Ross Stutterheim <ross.stutterheim@garmin.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Mike Rapoport <rppt@linux.ibm.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] arm/memremap: fix arch_memremap_can_ram_remap()
+Message-ID: <aANLAonc_0X0PnK9@kernel.org>
+References: <20250414133219.107455-1-ross.stutterheim@garmin.com>
+ <20250414142140.131756-1-ross.stutterheim@garmin.com>
+ <Z_-B5fAhZzShX34I@arm.com>
+ <c7db6fda-bf4e-4d6b-8cca-db82c40ce1b6@gmail.com>
+ <Z__RNhf5CJrbv5yb@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemf500017.china.huawei.com (7.185.36.126)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z__RNhf5CJrbv5yb@shell.armlinux.org.uk>
 
-Fix inconsistent first parameter name in io_pin_pages between declaration
-and implementation. Renamed `ubuf` to `uaddr` for better clarity.
+On Wed, Apr 16, 2025 at 04:48:06PM +0100, Russell King (Oracle) wrote:
+> On Wed, Apr 16, 2025 at 08:57:09AM -0500, Ross Stutterheim wrote:
+> > On 4/16/25 05:09, Catalin Marinas wrote:
+> > > > Fixes: 260364d112bc ("arm[64]/memremap: don't abuse pfn_valid() to ensure presence of linear map")
+> > > > Signed-off-by: Ross Stutterheim <ross.stutterheim@garmin.com>
+> > > 
+> > > I think you could also add:
+> > > 
+> > > Cc: <stable@vger.kernel.org>
+> > Done. I also added some other Cc: entries on V3 along with Reviewed-by:
+> > lines . I'm new here, so I'm not sure I've used those 100% properly.
+> > 
+> > > Not sure how Russell picks patches up these days (I used to send them to
+> > > the patch system -
+> > > https://www.arm.linux.org.uk/developer/patches/info.php).
+> > > 
+> > > It might be simpler with git send-email (that's the alias I had):
+> > > 
+> > >    git send-email --add-header="KernelVersion: $(git describe --abbrev=0)" --no-thread --suppress-cc=all --to="patches@armlinux.org.uk"
+> > > 
+> > Thanks. I created an account there and submitted V3 through the web
+> > interface (to avoid my SMTP server appending more stuff on the end).
+> 
+> Thanks, seems all good, applied and pushed out. I'll send it to Linus
+> tomorrow as it's certainly a serious regression.
+> 
+> I'm surprised Mike hasn't responded...
 
-Fixes: 1943f96b3816 ("io_uring: unify io_pin_pages()")
-Signed-off-by: Long Li <leo.lilong@huawei.com>
----
- io_uring/memmap.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/io_uring/memmap.h b/io_uring/memmap.h
-index dad0aa5b1b45..b9415a766c26 100644
---- a/io_uring/memmap.h
-+++ b/io_uring/memmap.h
-@@ -4,7 +4,7 @@
- #define IORING_MAP_OFF_PARAM_REGION		0x20000000ULL
- #define IORING_MAP_OFF_ZCRX_REGION		0x30000000ULL
+Passover vacation :)
  
--struct page **io_pin_pages(unsigned long ubuf, unsigned long len, int *npages);
-+struct page **io_pin_pages(unsigned long uaddr, unsigned long len, int *npages);
- 
- #ifndef CONFIG_MMU
- unsigned int io_uring_nommu_mmap_capabilities(struct file *file);
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+
 -- 
-2.39.2
-
+Sincerely yours,
+Mike.
