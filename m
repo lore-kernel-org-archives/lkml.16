@@ -1,107 +1,98 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6832986338
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 02:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DEB8442C;
+	Sat, 19 Apr 2025 02:51:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745031032; cv=none; b=Bb4en5PTzvpcxehfQ4D7vwruKDudUZWI70qpemsI/7N01WebTm3vhQpSiaAgDumFO1n+1+QXqWcYN3v2TyIX70FFCnKKmyL7ZoifkBDqewA+e/ZvQ6T9tWIdGrilMhkFG523iz3RF1R8pMLoJ1TEoWrpJvN41rTctvXM7sv5AY0=
+	t=1745031094; cv=none; b=Nhq0OWKlyjMs6mHXFq5jwk1zG5oHsEm5m+6XpWRDeLiy+gDWy7OoRFEnOmpUKu7QyrdvsFm+UZ99HIU0rqPa/LOlMDvMtZNHA0GTng2UFI7ELYH3+Cs4BKHpNpYimF02GlStlUSKhvXI2ASgvG1o8ObvG2GKpoPpVisGNtUGKKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745031032; c=relaxed/simple;
-	bh=QwCKBsyKbk7oiabFLpJZ6jzsLzhuP13gDicjNFIjbvs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e9GezJU2CE7FPVSbbBpbh7r0dd1rVNrVtHYnFvAGpkjZ88fvttSYLXtQgSadvnrb7OlfjaWOUc1ty2Me445E24ZQGNn8vB+Npn3pHS2WnKIcvNzlcliYf4L0Gn7J3Gyg/hwqhwmC40Ke9R/4aUx3lFNRiSeu9F6+ox3353vEGKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=lhoLAPsw; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1745031094; c=relaxed/simple;
+	bh=/X7RU3AFU8hE0bRnO6w/sDEdSaxxRFGjqvlwr/XgzLM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LYth9xydAGYB3R+DDTX1Llt4sWlmbL4TkkEGSEFvivD4U+a6Wh0J9Y/gkoVCx0bQjS+cawII+tl5NutYX55cWftMb5RcOEmxwB7YpdbRByJosmm6l/2eTrkAVZArYpw/J2iBE4ZOYTyPi/fWvPO7jizj15mLpKVxQZYz79Xmxb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fhjgxs7X; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="lhoLAPsw"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c58974ed57so219413485a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 19:50:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fhjgxs7X"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-30549dacd53so1900871a91.1;
+        Fri, 18 Apr 2025 19:51:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1745031029; x=1745635829; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qGln0a48jaf9DRVm8+XmoNEcb7k76T6oai1+Kf48TEY=;
-        b=lhoLAPswo6dA3lJtXj1ta/Xf1YaRQw3ckyZK0PDW6LOPtN60WtZVygbridkZCaL3n3
-         bsiCkCeWxLR2AV1FLi8g3JWcHmY2nZKVYJ2pgoHtxR7ez34tz7cVseiFi5BHBFBLxCXa
-         zAg1uyqjPZVZt8pc9OcEccOlPesBbxhdTd1LztUtSLSYVylCkc73bMy+//DNmxG/LPge
-         MNOG03FRHExnGTUHPhuZDm+briQMh5X63uL61pirW4a5P5Cc0R1rC6jmoOOjFNv+OenL
-         fwK+nXqosyQjpsGvybEgw3hTm7XNQGahKTYuEfwMvYHQJuNAKHfhxrVlxf0Jz5dl1leH
-         /odg==
+        d=gmail.com; s=20230601; t=1745031092; x=1745635892; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iagA+PnKQSbT+SyE/6B01NsGBcWUX/ZmWhl91APAaCg=;
+        b=fhjgxs7XX+UuXJnpBAKlJotCTDXUowBTrhSQlmRMkV+/yPUKAwSC7/tyoSH6FMxjm8
+         +uMKYJ+RIyFiGSZEvk3Ye0d1U5hrMwwL0zRw2cYg50jzQbzqbqTFnZNORoTPK51Ou0ry
+         qrZeHghaCVAGAa2b97Q6aFchTm/dLbJ2E3olYcwoIyYOiXhZSHCIdFEDI9z8knBnFb4B
+         xOr63Xvd6vZs+hGiKkSlNdbwcStYteAGNooHgzixuSO59y92kElz3tSL2hM9iQMu7wNf
+         noBcxx+vjQieN8mFL3ZH+/bfr9awptaCISby4HEnzXk49ajQsPyjW5uEtXjlVPGspTdQ
+         qJww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745031029; x=1745635829;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qGln0a48jaf9DRVm8+XmoNEcb7k76T6oai1+Kf48TEY=;
-        b=Mp+C5oLFenYkpu/VP/k1KAUDQGcIBUBfH/AWLaFAQO/TqeuK5i0ngxBNIlCuZW4C3z
-         q1Zw11o9GYEIu/o13cUiv6p6l5HjYSx1fh3dp7MRCiZYGJi9V4Hw3FjLlArtiwqwCwGW
-         rj9cflZXedexd2cAvk/kESXxEzN/6wtO/PIFwqAONEeedhHmv89J4mWLNicLVNxayL8a
-         wgvo+G23yA8ePL6p25wIDbfHvYUezt6NWK6sy2yLJx4JTmda0gD3NqR2GEAAvv+X1BGY
-         QhjitVeOe/ty3CRtY/1FCJY/XHluiSv15K+BZSlQMluveBCvuJ8KcshHtGV04aWz2PHF
-         a48w==
-X-Forwarded-Encrypted: i=1; AJvYcCX3JThLaWErmjjxKpbgZot5S1d4FU0eLJxuhdTcI9dzW8ZpJRoc4y0grYLz42qz2jpgNS0dzsCZVDMvjXQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz57hr+pkwoRHJ6ItbsCDG9eTgqkNWT5f8vFLNcqSgOxf/lUzsC
-	TQfhLqR0tMt/9BZ0VD/p+2NF5RWIzQyjv3ITkX+liZo9nd6C2GLCMa1l37gzwRU=
-X-Gm-Gg: ASbGncvydlVvyH6vM/iv00T/bdlE708QjTp5cUI9U6bgxL6VSEZq1+/DQDe6PToZvTE
-	vQPST59xt5ane3PFLaOoSaPEOyqpX8Anb+ooSCo+rYEPbdJ6lrkCWjQdXLWZWZiM01qpV2KrykD
-	Ak4TyRFna8H9ZeFwQllJ1Lj5erNzMhK4XcnQs5smDsIye9LRDDNvXMOeMx+TNi/6EqCt9xnt6t5
-	kUUjYIBFhXVdEQpcd4OtlDsx1aZeijBVAId91pyVEbqeSaQxybk3W923vH3lvzFCJQqHPptzcZk
-	1SUfxC6i19wj596zERzkvbeaAtrpAofbsTaqLKyon3ub4DV9oUcvzgctNRYnIuKsjsdqVxjGWfX
-	dBCPm5TUJexNFk6Z8eenlTIXj944V
-X-Google-Smtp-Source: AGHT+IH2lcoFJnmcKqHMHMuViyeQtAANiMR2GCkNYZS2Tc0UyGe6pfEvfe5k7CjqMK8sR0uQ3r12sw==
-X-Received: by 2002:a05:6214:2602:b0:6f2:a735:574f with SMTP id 6a1803df08f44-6f2c4675729mr64023376d6.40.1745031029301;
-        Fri, 18 Apr 2025 19:50:29 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2bfd86csm17008116d6.88.2025.04.18.19.50.28
+        d=1e100.net; s=20230601; t=1745031092; x=1745635892;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iagA+PnKQSbT+SyE/6B01NsGBcWUX/ZmWhl91APAaCg=;
+        b=mQY/gpa90GucWXKXIMzJ9sOIGnvHBFJef9QlS9rE9tXiH92+d+V83PgZ9/n2FBw9D5
+         3LwF2ZiJ/18P02FsqSa2WQUq4/L5jNf3FWHrJFqBH5CQ9tH1G7n+e+Za0M1QUfjJ/9i7
+         CzM+Zg0Ht8e7zImkgaeHPmhSCMSp177oVCjttP1vsSGUfAnmx+o5U1ZGKG5WYH0uM8CI
+         /xnL6TvtKUIMTC8clHcOreg9sLM3Bh81H+GscnU2VLbvWUiZbqjiqiVErPquJZA+oi8E
+         noXWvRbrYzqm2rCzrnXtWaTbVBvGa6QTMKWVlutbtIARrvYbDoO6Fe5YtFYev3wlF42j
+         35Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCW8ve1FADWKFp9UNEVQKdDZGUPvopq7GHpzFDbjjcDhFQ+ulBuBngFimv6b75OKZV6cJpvsUKDUe/O2sA==@vger.kernel.org, AJvYcCWg9enOuN7YEjrA3Mj/I3zURivlvp8NJkYXwog4wTveNhStpdOvaA+awzKgXXTM/14U2dst6dlvVvon2cyh@vger.kernel.org, AJvYcCXT9cb/foIqJCE6B1mTJON0IMk2gyVFw29/6gQlHTST2JoPROPDtWhu4k4CJu+Z/Gq7wSBd+A59@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyWW4zOXDXTbyqf3bEBS+zTuvdZDsWvl51T+MTEV5DTH+E242s
+	OZ4vi55T3qJ6lB5BOmnCzLeQ6aWsfg3bOs5Q4VtODQySmMQBcYd3
+X-Gm-Gg: ASbGnctQRLnsRaJRbdGMCZB69CS1PXMM+6Vl4g/r8Xi/LIu+x7F4O+wBIcxKzpIXLV8
+	UWTmDzZd14SEy0qEGMDPpjjwcp9P9QNeOSVbGFNklXuxutxPnL5YCAkKMZErkgCQVFl7E78jSC2
+	KOaVWsfWFFxfBx6dxf2A7W7WTDhHZ1q9ehcaMw+i+yr1hWVsXYxik8N5dEsb0Q6UphmZpOcOrgs
+	kLALdxwBWK5XZ0d5KeYXtqRE1Pn+0bw/sIyBwL04fYgK2dphcFzU0uq04eVri8A+14EbthpJ4/E
+	B3b6PxusD5Wn1eOMvjDUgC5kdud8W3a9UK4GwuOywQ==
+X-Google-Smtp-Source: AGHT+IEn7eNcyM6wiIBNgT/VnLfodZTbCikLVEfxcuEFwLHRroZF8Y8DU9r6jATaXU8r2YV8U0Ep8A==
+X-Received: by 2002:a17:90b:5824:b0:2ff:53d6:2b82 with SMTP id 98e67ed59e1d1-30879c02aa9mr8626213a91.11.1745031092244;
+        Fri, 18 Apr 2025 19:51:32 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:eaea:89f0:c84d:941a])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087e115f01sm2009276a91.43.2025.04.18.19.51.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 19:50:28 -0700 (PDT)
-From: Gregory Price <gourry@gourry.net>
-To: platform-driver-x86@vger.kernel.org
-Cc: naveenkrishna.chatradhi@amd.com,
-	carlos.bilbao@kernel.org,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	suma.hegde@amd.com,
-	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com
-Subject: [PATCH] platform/x86/amd/hsmp: change driver name from amd_hsmp to hsmp_acpi
-Date: Fri, 18 Apr 2025 22:50:26 -0400
-Message-ID: <20250419025026.1555230-1-gourry@gourry.net>
-X-Mailer: git-send-email 2.49.0
+        Fri, 18 Apr 2025 19:51:31 -0700 (PDT)
+Date: Fri, 18 Apr 2025 19:51:29 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Hugo Villeneuve <hugo@hugovil.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	=?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>, Maxime Ripard <mripard@kernel.org>, 
+	Alistair Francis <alistair@alistair23.me>, Hugo Villeneuve <hvilleneuve@dimonoff.com>, 
+	stable@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] Input: cyttsp5 - ensure minimum reset pulse width
+Message-ID: <vs3vrrsq26q33qyz5o5moer3eiv5lssnm5cmrx6o7wrdsedjrn@dhymxiigvydf>
+References: <20250410184633.1164837-1-hugo@hugovil.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410184633.1164837-1-hugo@hugovil.com>
 
-The amd_hsmp and hsmp_acpi drivers fail to load together (whichever
-is loaded second, fails) because they have the same DRIVER_NAME.
+On Thu, Apr 10, 2025 at 02:46:32PM -0400, Hugo Villeneuve wrote:
+> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> 
+> The current reset pulse width is measured to be 5us on a
+> Renesas RZ/G2L SOM. The manufacturer's minimum reset pulse width is
+> specified as 10us.
+> 
+> Extend reset pulse width to make sure it is long enough on all platforms.
+> 
+> Also reword confusing comments about reset pin assertion.
+> 
+> Fixes: 5b0c03e24a06 ("Input: Add driver for Cypress Generation 5 touchscreen")
+> Cc: <stable@vger.kernel.org>
+> Acked-by: Alistair Francis <alistair@alistair23.me>
+> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 
-Change hsmp_acpi DRIVER_NAME from amd_hsmp to hsmp_acpi.
+Applied, thank you.
 
-Link: https://lore.kernel.org/all/20241021111428.2676884-8-suma.hegde@amd.com/
-Fixes: 7d3135d16356f ("platform/x86/amd/hsmp: Create separate ACPI, plat and common drivers")
-Signed-off-by: Gregory Price <gourry@gourry.net>
----
- drivers/platform/x86/amd/hsmp/acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-index 444b43be35a2..a9c24502d3d2 100644
---- a/drivers/platform/x86/amd/hsmp/acpi.c
-+++ b/drivers/platform/x86/amd/hsmp/acpi.c
-@@ -26,7 +26,7 @@
- 
- #include "hsmp.h"
- 
--#define DRIVER_NAME		"amd_hsmp"
-+#define DRIVER_NAME		"hsmp_acpi"
- #define DRIVER_VERSION		"2.3"
- #define ACPI_HSMP_DEVICE_HID	"AMDI0097"
- 
 -- 
-2.49.0
-
+Dmitry
