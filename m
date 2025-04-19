@@ -1,62 +1,62 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA11E154BF5
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 04:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494CF156C6F
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 04:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745035966; cv=none; b=JfPY5sdLyNrsh12y186VPfwTxg6Mit23qajRiO3/KZ8QaKMXJaQuIhoKM/8NjKQfa2G0/MRQ8N++QSBsLO/FR8taDwg8FP3Ay6BC4NF+MIWcryU2u/dyuY7m3n0UW3gvyyZFiy9BxqzA+IcL0qhtCpa7bcQKoI4IXmyeZRDwVtg=
+	t=1745035969; cv=none; b=fRQc7Elg9iWmR/o+Jl36j+bUlb/HH27U/v/Ox8RXAPm9b8fzkWwlJlGyJUBNF2NymNTKEIXY0eh75lW4n/WKnyxg2HPr/mKRBzUk3UiSydZHNJ/KAcq6PVKMU/cRF/q7O7YCyLu33LOqAwxNpM+tH0JlYqY7xvrCC6C1qnR3xv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745035966; c=relaxed/simple;
-	bh=08I5j8Hm5O8WnBoWjTcHEyUtM/C/jXUM1rbXd2EDju0=;
+	s=arc-20240116; t=1745035969; c=relaxed/simple;
+	bh=r4P4faQo3K4Pk8DLJe0/hmSVY38h4RWkl3vibJhDgOs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Kq4QX9aPhAxeY6hqE22qSk29JddGH6vcIKUjvLRF9XYEx68j2cmxM1nIMNRgLgNuKZtrJDHRsetTU3QJEHByrt/SoMa51yOj+EE7i811tr5YRMhD18PnHF0n7qAJNaQP/XgQA2ivZ+lCF5mOggwp1xpvGmAPde/Kcw4nNE76lpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bIAaOZTR; arc=none smtp.client-ip=209.85.214.176
+	 MIME-Version; b=DXPGkJxQfiR5MkgPtVGqNYyA2qIbRwon0sKY8enizi90n8UOPCy2BiK4iS5gSPmC07X4P+JJ6mK3/MVoDj8GsWMX7az4IRWnn0qXPFmm4sJGARYIwljbUnrlUQTQG5j73HXon5U5iHnhXz8hsf1D2wtZ5RXkHEpUDimPmP6REKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hix307o7; arc=none smtp.client-ip=209.85.215.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bIAaOZTR"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22c3407a87aso37607515ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 21:12:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hix307o7"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-af9a6b3da82so1599203a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 21:12:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745035964; x=1745640764; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745035967; x=1745640767; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0tqOfb+8mO0V0cNAlNgnOyeQSPHVA6JlcJEWPbfL6rw=;
-        b=bIAaOZTRfQz4I4BPnsgyjxLW15jiZvEaq7iTXoDbmmwTu7MHjXanwSQZywjhP5Ech3
-         iIh+XKwkxwwZBg+e9J0Wk0ooXizFVrc6D+x4CIVF7jAX03MJfy+EDMGSgc88QOFRHhEO
-         vkRh3GzafQBi8W4fn+tzbU1wDdA3wo8fao3HBr8roEMpNfAp6Cjh7EXeB+GTEkQ2ySZQ
-         eAjNlqp3js3YyvGO0b/sx9UNCt/ewIJ1yY6Wh+WEw3CsKgQa+ZT0r4XxqK/uR5Jpcbwq
-         J7/a7x3IYvcnKOJZBXVBbAu0GNWhkEB+x79BzyF7G/fVKnn9h+Nf0amvLMSfSPaeBSGy
-         nm3w==
+        bh=f2EEU4lAECRnBASq+mrLLeIBt7peza+IbheB4UcrfQE=;
+        b=Hix307o7i/7tN3O62Umr5j+VQHSUCLaP6P6e208dF04QFCGYhzLkmgcQomVkmFhtuD
+         w+H6ubZlu1sAjZb08e2Pwn1P+Ij92VksfsmP+Dy7tHGFXoGtRog2GgpsW3nHNHbGxGRz
+         6/1RezSeBywei34RcHTQPQPtlEqZArel8gpIY3Vx4Jshbgm1tcMDRmM0QZFXmdo7VJLj
+         ToBHjPizNE4tpsWk96ydCctv6+imG5T/lhgwjorxHeZ8BsBKcbztTa1JsBn1NgzwLSpV
+         Hoh+3wEMMhXg+o++LKLAlbHapDpCdFqHVlRvUsaxgl9Ri8icUukvCQqDYd+D9PtMsS75
+         2Tcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745035964; x=1745640764;
+        d=1e100.net; s=20230601; t=1745035967; x=1745640767;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0tqOfb+8mO0V0cNAlNgnOyeQSPHVA6JlcJEWPbfL6rw=;
-        b=QLq4K64xfFrQoiRQzlGUiFiTy3cCkplLLqeR83S60+Xos6XMYtNepRvTE/cK+ELp1n
-         sNxHZBUM4w9zrTJEEHszJDrBuQHSgkeiBLWazspWCf1eG6FTLg8m6o4V7orrrbbAhgp1
-         zB2pdOyFeVebk0UZkv63UBa+z8knifl00CVjWa01dBjRV/yIybLu9Gauf2XeWklzuXV3
-         DqFoMBK1tetdqGmJqtEMsI3rA5iTr0oq+IecIQaoH06xEV6beKC2cjHMcKCHZ1uEOJdX
-         ZRsiv5hTQkKtijP2hxUtmK/o/eds6vgJuqDS4Y3FajSFLKXVnfHEwIBWXY0h2gA+hke7
-         J+nQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVpeoRTQbI1UPkbhaq5b9bWtDG0bksNz9+L0Az7aZxv80547rr4PbfJPxzxDsA5Eufd72wKH/5BAYeg6TY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5Lx+KZ4zKLC9uS7dvjpRvPliB2X4xbFWrmMwU63x7LJgWsccx
-	7u8y+cAwBKtMHkcQsRbnT3jTfGoX5fywM4SnMVF25ikEsCTUPbZL
-X-Gm-Gg: ASbGnct64Kmplburp8z3UN/7h0ewZF7GI/eSkzd31C4zvHDAOgKnPmiFy1ZOFTdFKlO
-	AsUvLgr58BhFB5as26C3cr47tsh8L6OVSdPcRPaRtjvMx+M7AeE9tcLeCfKEgQRMd3B/vXJnkqF
-	o7sgjYbmX+QqAfaox7me9b6FJQ65aXBW98daysiolEFeSIft/kL/YSLdkNaFTXMLhiS1J+YDQ7w
-	0x7AnwVVYNSKfRG3LfVQPo5uxTczJVcStLny3RuEykmkK+3OKtdnxRmDJlwNtuqehtRFoduSA2N
-	EKmoc140s/9jNduGI7BRYI5JvzLK2e7QalZJwseXMtb0hsLtKxtiEhMiZjM=
-X-Google-Smtp-Source: AGHT+IH06zoUn2Wpu1DAvBAzJLwDM1yMXb2JZbxWISTMcBXQTSv9rJ/poBbsUoc77IM/298QgBrLYg==
-X-Received: by 2002:a17:903:1103:b0:220:f87d:9d5b with SMTP id d9443c01a7336-22c535acc23mr79544505ad.24.1745035963921;
-        Fri, 18 Apr 2025 21:12:43 -0700 (PDT)
+        bh=f2EEU4lAECRnBASq+mrLLeIBt7peza+IbheB4UcrfQE=;
+        b=i612+es5yTG7UvedpYRgxB6zvPvtqKcokVVHksb1cv3uP0x3GyFDy1ISpBHhfDBx+V
+         tXD8JdqFyQ8g6MeEdxJqT/3F+HisIF/8RcN6vJQbwCBEzU7kj0Zv6l4WA4AHlU/1lqM3
+         KrLaBYEwOxyyQ/pmNqMlPkYfVkW0PXyFua3Oa4EfbmKmRxynX/XtLUIF/nzwBCqzrlp2
+         zN8MvGw4repw/6Yk5C7wNeBC3dqLysbdXtOjjMLAIzKSDi1eZbuy787vSN27PO87zhXs
+         9sOCzApI2Jk1GUcreglvsO9+BjmAqvFz6oXxhxVEIBNf33O1MauYKhHGkdEb9lIIhnQq
+         JOTw==
+X-Forwarded-Encrypted: i=1; AJvYcCXGP/MGZ6hZbiAkNtgzfmzKSfoI4dXk0e7hnMiOIAR2QX0uRWYP/4dAU0qT8ikaMUzr48FWolffXF80sV0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/HIgaBM5y2nG7VGbT5w33ljxjJL18PxoKs3YrwuqkwdvKoS3+
+	t3TTOHXF9it6kNPPZVw+NtgyXjWC5vNA8zSGUc/hp+Cvap/KpjrI
+X-Gm-Gg: ASbGncu4OwHeyeuFDS5GtBvJp6ZNkuYM48vrdo6402/a4SbguOJVsOR3HiI21KRir1+
+	h8yX/pEcCLSsyVcaXk1jMR9rS2VcccvzFes/xpIppuF4rLEXnMlyIFlM0L5G3l+OWKVBL4yVcla
+	7nZJSFiWsw+Q2MsfumeoRP0zTHFKcBPIGDAmsH1yU/k1geBjGWguezSjBwW7UoFHPyal9deUBoO
+	zK4it4weRehPrLX9IE5jOmguqz+0sj/YqMDx5P4qLkRvvhqBNrlnKkLA3CP2jTsF8GkjocJx9vG
+	xT1jUDLgi3f44RJsqiOvTgi+Riyxfxx1N4eI0/ZRSTvwF7OETjVRdAiuMls=
+X-Google-Smtp-Source: AGHT+IFueTZgV/3cVROXVf2/9ezTnpmIjBgGyIsCuJh58nnz8D7r00Dtgd3pGYWX5jwTrtUtU+MweQ==
+X-Received: by 2002:a17:90a:fc44:b0:2fe:861b:1ae3 with SMTP id 98e67ed59e1d1-3087bb53f21mr7425566a91.8.1745035967512;
+        Fri, 18 Apr 2025 21:12:47 -0700 (PDT)
 Received: from distilledx.SRMIST.EDU.IN ([59.152.80.69])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bde283sm25296545ad.6.2025.04.18.21.12.40
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bde283sm25296545ad.6.2025.04.18.21.12.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 21:12:43 -0700 (PDT)
+        Fri, 18 Apr 2025 21:12:47 -0700 (PDT)
 From: Tejas Vipin <tejasvipin76@gmail.com>
 To: neil.armstrong@linaro.org,
 	maarten.lankhorst@linux.intel.com,
@@ -70,9 +70,9 @@ Cc: quic_jesszhan@quicinc.com,
 	linux-kernel@vger.kernel.org,
 	asrivats@redhat.com,
 	Tejas Vipin <tejasvipin76@gmail.com>
-Subject: [PATCH 1/2] drm/panel: panel-samsung-sofef00: transition to mipi_dsi wrapped functions
-Date: Sat, 19 Apr 2025 09:42:09 +0530
-Message-ID: <20250419041210.515517-2-tejasvipin76@gmail.com>
+Subject: [PATCH 2/2] drm/mipi-dsi: Remove mipi_dsi_dcs_write_seq
+Date: Sat, 19 Apr 2025 09:42:10 +0530
+Message-ID: <20250419041210.515517-3-tejasvipin76@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250419041210.515517-1-tejasvipin76@gmail.com>
 References: <20250419041210.515517-1-tejasvipin76@gmail.com>
@@ -84,128 +84,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Changes the samsung-sofef00 panel to use multi style functions for
-improved error handling.
+There are no remaining users of mipi_dsi_dcs_write_seq and it can be
+removed in favor of mipi_dsi_dcs_write_seq_multi.
 
 Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
 ---
- drivers/gpu/drm/panel/panel-samsung-sofef00.c | 70 ++++++-------------
- 1 file changed, 21 insertions(+), 49 deletions(-)
+ include/drm/drm_mipi_dsi.h | 22 ----------------------
+ 1 file changed, 22 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-samsung-sofef00.c b/drivers/gpu/drm/panel/panel-samsung-sofef00.c
-index 04ce925b3d9d..e20c85d5d9e1 100644
---- a/drivers/gpu/drm/panel/panel-samsung-sofef00.c
-+++ b/drivers/gpu/drm/panel/panel-samsung-sofef00.c
-@@ -44,66 +44,44 @@ static void sofef00_panel_reset(struct sofef00_panel *ctx)
- static int sofef00_panel_on(struct sofef00_panel *ctx)
- {
- 	struct mipi_dsi_device *dsi = ctx->dsi;
--	struct device *dev = &dsi->dev;
--	int ret;
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
+diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
+index bd40a443385c..0d6e0d03d802 100644
+--- a/include/drm/drm_mipi_dsi.h
++++ b/include/drm/drm_mipi_dsi.h
+@@ -416,28 +416,6 @@ void mipi_dsi_dcs_set_tear_off_multi(struct mipi_dsi_multi_context *ctx);
+ 		mipi_dsi_generic_write_multi(ctx, d, ARRAY_SIZE(d)); \
+ 	} while (0)
  
- 	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
- 
--	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
--		return ret;
--	}
--	usleep_range(10000, 11000);
-+	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
-+	mipi_dsi_usleep_range(&dsi_ctx, 10000, 11000);
- 
--	mipi_dsi_dcs_write_seq(dsi, 0xf0, 0x5a, 0x5a);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf0, 0x5a, 0x5a);
- 
--	ret = mipi_dsi_dcs_set_tear_on(dsi, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
--	if (ret < 0) {
--		dev_err(dev, "Failed to set tear on: %d\n", ret);
--		return ret;
--	}
-+	mipi_dsi_dcs_set_tear_on_multi(&dsi_ctx, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
- 
--	mipi_dsi_dcs_write_seq(dsi, 0xf0, 0xa5, 0xa5);
--	mipi_dsi_dcs_write_seq(dsi, 0xf0, 0x5a, 0x5a);
--	mipi_dsi_dcs_write_seq(dsi, 0xb0, 0x07);
--	mipi_dsi_dcs_write_seq(dsi, 0xb6, 0x12);
--	mipi_dsi_dcs_write_seq(dsi, 0xf0, 0xa5, 0xa5);
--	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_CONTROL_DISPLAY, 0x20);
--	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_POWER_SAVE, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf0, 0xa5, 0xa5);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf0, 0x5a, 0x5a);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb0, 0x07);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb6, 0x12);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf0, 0xa5, 0xa5);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_WRITE_CONTROL_DISPLAY, 0x20);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_WRITE_POWER_SAVE, 0x00);
- 
--	ret = mipi_dsi_dcs_set_display_on(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to set display on: %d\n", ret);
--		return ret;
--	}
-+	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
- 
--	return 0;
-+	return dsi_ctx.accum_err;
- }
- 
- static int sofef00_panel_off(struct sofef00_panel *ctx)
- {
- 	struct mipi_dsi_device *dsi = ctx->dsi;
--	struct device *dev = &dsi->dev;
--	int ret;
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
- 
- 	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
- 
--	ret = mipi_dsi_dcs_set_display_off(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to set display off: %d\n", ret);
--		return ret;
--	}
--	msleep(40);
-+	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 40);
- 
--	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
--		return ret;
--	}
--	msleep(160);
-+	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 160);
- 
--	return 0;
-+	return dsi_ctx.accum_err;
- }
- 
- static int sofef00_panel_prepare(struct drm_panel *panel)
-@@ -122,7 +100,6 @@ static int sofef00_panel_prepare(struct drm_panel *panel)
- 
- 	ret = sofef00_panel_on(ctx);
- 	if (ret < 0) {
--		dev_err(dev, "Failed to initialize panel: %d\n", ret);
- 		gpiod_set_value_cansleep(ctx->reset_gpio, 1);
- 		return ret;
- 	}
-@@ -133,13 +110,8 @@ static int sofef00_panel_prepare(struct drm_panel *panel)
- static int sofef00_panel_unprepare(struct drm_panel *panel)
- {
- 	struct sofef00_panel *ctx = to_sofef00_panel(panel);
--	struct device *dev = &ctx->dsi->dev;
--	int ret;
+-/**
+- * mipi_dsi_dcs_write_seq - transmit a DCS command with payload
+- *
+- * This macro will print errors for you and will RETURN FROM THE CALLING
+- * FUNCTION (yes this is non-intuitive) upon error.
+- *
+- * Because of the non-intuitive return behavior, THIS MACRO IS DEPRECATED.
+- * Please replace calls of it with mipi_dsi_dcs_write_seq_multi().
+- *
+- * @dsi: DSI peripheral device
+- * @cmd: Command
+- * @seq: buffer containing data to be transmitted
+- */
+-#define mipi_dsi_dcs_write_seq(dsi, cmd, seq...)                               \
+-	do {                                                                   \
+-		static const u8 d[] = { cmd, seq };                            \
+-		int ret;                                                       \
+-		ret = mipi_dsi_dcs_write_buffer_chatty(dsi, d, ARRAY_SIZE(d)); \
+-		if (ret < 0)                                                   \
+-			return ret;                                            \
+-	} while (0)
 -
--	ret = sofef00_panel_off(ctx);
--	if (ret < 0)
--		dev_err(dev, "Failed to un-initialize panel: %d\n", ret);
- 
-+	sofef00_panel_off(ctx);
- 	regulator_disable(ctx->supply);
- 
- 	return 0;
+ /**
+  * mipi_dsi_dcs_write_seq_multi - transmit a DCS command with payload
+  *
 -- 
 2.49.0
 
