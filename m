@@ -1,260 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C6B3A1CD;
-	Sat, 19 Apr 2025 02:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6832986338
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 02:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745030992; cv=none; b=KBNgY+GxhHPYpBaOsVxhbDglHT+vvDSIUdmubqvdcClIByoaZ7DWlsp+Rr9sOnQyw6AvTaEfgr+vdojUJPP0RNk4DKxug9E7WWCQM2lcKGBhhUC9xDDEmi3VjcmXdPli065juJRTQKezhhUNIVaDgGl21/SPkp2FQZkdHfSEOkY=
+	t=1745031032; cv=none; b=Bb4en5PTzvpcxehfQ4D7vwruKDudUZWI70qpemsI/7N01WebTm3vhQpSiaAgDumFO1n+1+QXqWcYN3v2TyIX70FFCnKKmyL7ZoifkBDqewA+e/ZvQ6T9tWIdGrilMhkFG523iz3RF1R8pMLoJ1TEoWrpJvN41rTctvXM7sv5AY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745030992; c=relaxed/simple;
-	bh=eR+kUnG/TXslK7OUwK7QkTBJMv1nyJJmD22Aym8QCXQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=m94mhveGvNUpB/LLU8bg2+DUYfdctPyA0TnRfqKRjkbCnOAFSIpoWlhV4pYGhCQ58SExd1Rf7oVvBFMdHAHTFT64nYfKUHe1Z3asyTkWzxnUUPgQwRfg/G7igemXe7Cesssg69wd3XPwJpWrjKClQmGCGA/c1jTWdZNg1P6SMPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U4ORdicG; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745031032; c=relaxed/simple;
+	bh=QwCKBsyKbk7oiabFLpJZ6jzsLzhuP13gDicjNFIjbvs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e9GezJU2CE7FPVSbbBpbh7r0dd1rVNrVtHYnFvAGpkjZ88fvttSYLXtQgSadvnrb7OlfjaWOUc1ty2Me445E24ZQGNn8vB+Npn3pHS2WnKIcvNzlcliYf4L0Gn7J3Gyg/hwqhwmC40Ke9R/4aUx3lFNRiSeu9F6+ox3353vEGKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=lhoLAPsw; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U4ORdicG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745030991; x=1776566991;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=eR+kUnG/TXslK7OUwK7QkTBJMv1nyJJmD22Aym8QCXQ=;
-  b=U4ORdicGQmQEhvzCszT2ebHFuL/Covkcr1OAQcHwu9+dKx0/CLPBPvjp
-   m38DIZNlFT8W9cHA3OF6Y6RDpG5Ewh8KZSR65dZ6lB5i5XhR58AHk7FvM
-   hx/z6Rn/n+VtC/FT4PeqPUxJTYHlMidm6lWOtA7Z8XCVxDupjAYxNrPtG
-   RXUPOrr/Sjh+OrIOQVJPEyfiUXXr/skIevX4+6Wiexf1puK3ucP8oh4fe
-   NcTHQwsklQ3KJH4hkI0Brn18s1hq6BHEOc22qDGhUs5bnRzzEgOs+Gcea
-   WQiEtB2xpb1BRs7s/pC/yhixxX+isWVn9vvdxLTvNiHfyOjbq7Nnam+1U
-   Q==;
-X-CSE-ConnectionGUID: p6GA26juTXesbhzdVJaYgg==
-X-CSE-MsgGUID: UxjZGBD9Rqe5dGi8WDQ1PA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="50490436"
-X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
-   d="scan'208";a="50490436"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 19:49:48 -0700
-X-CSE-ConnectionGUID: HiYDBK0GRxWC12ioReK5ew==
-X-CSE-MsgGUID: kmiB1qAUS6Cjbpk9QtpOVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
-   d="scan'208";a="162308321"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by fmviesa001.fm.intel.com with ESMTP; 18 Apr 2025 19:49:47 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: Sudeep Holla <sudeep.holla@arm.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Len Brown <len.brown@intel.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	Ricardo Neri <ricardo.neri@intel.com>,
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Subject: [PATCH 1/2] arch_topology: Relocate cpu_scale to topology.[h|c]
-Date: Fri, 18 Apr 2025 19:55:03 -0700
-Message-Id: <20250419025504.9760-2-ricardo.neri-calderon@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250419025504.9760-1-ricardo.neri-calderon@linux.intel.com>
-References: <20250419025504.9760-1-ricardo.neri-calderon@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="lhoLAPsw"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c58974ed57so219413485a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 19:50:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1745031029; x=1745635829; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qGln0a48jaf9DRVm8+XmoNEcb7k76T6oai1+Kf48TEY=;
+        b=lhoLAPswo6dA3lJtXj1ta/Xf1YaRQw3ckyZK0PDW6LOPtN60WtZVygbridkZCaL3n3
+         bsiCkCeWxLR2AV1FLi8g3JWcHmY2nZKVYJ2pgoHtxR7ez34tz7cVseiFi5BHBFBLxCXa
+         zAg1uyqjPZVZt8pc9OcEccOlPesBbxhdTd1LztUtSLSYVylCkc73bMy+//DNmxG/LPge
+         MNOG03FRHExnGTUHPhuZDm+briQMh5X63uL61pirW4a5P5Cc0R1rC6jmoOOjFNv+OenL
+         fwK+nXqosyQjpsGvybEgw3hTm7XNQGahKTYuEfwMvYHQJuNAKHfhxrVlxf0Jz5dl1leH
+         /odg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745031029; x=1745635829;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qGln0a48jaf9DRVm8+XmoNEcb7k76T6oai1+Kf48TEY=;
+        b=Mp+C5oLFenYkpu/VP/k1KAUDQGcIBUBfH/AWLaFAQO/TqeuK5i0ngxBNIlCuZW4C3z
+         q1Zw11o9GYEIu/o13cUiv6p6l5HjYSx1fh3dp7MRCiZYGJi9V4Hw3FjLlArtiwqwCwGW
+         rj9cflZXedexd2cAvk/kESXxEzN/6wtO/PIFwqAONEeedhHmv89J4mWLNicLVNxayL8a
+         wgvo+G23yA8ePL6p25wIDbfHvYUezt6NWK6sy2yLJx4JTmda0gD3NqR2GEAAvv+X1BGY
+         QhjitVeOe/ty3CRtY/1FCJY/XHluiSv15K+BZSlQMluveBCvuJ8KcshHtGV04aWz2PHF
+         a48w==
+X-Forwarded-Encrypted: i=1; AJvYcCX3JThLaWErmjjxKpbgZot5S1d4FU0eLJxuhdTcI9dzW8ZpJRoc4y0grYLz42qz2jpgNS0dzsCZVDMvjXQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz57hr+pkwoRHJ6ItbsCDG9eTgqkNWT5f8vFLNcqSgOxf/lUzsC
+	TQfhLqR0tMt/9BZ0VD/p+2NF5RWIzQyjv3ITkX+liZo9nd6C2GLCMa1l37gzwRU=
+X-Gm-Gg: ASbGncvydlVvyH6vM/iv00T/bdlE708QjTp5cUI9U6bgxL6VSEZq1+/DQDe6PToZvTE
+	vQPST59xt5ane3PFLaOoSaPEOyqpX8Anb+ooSCo+rYEPbdJ6lrkCWjQdXLWZWZiM01qpV2KrykD
+	Ak4TyRFna8H9ZeFwQllJ1Lj5erNzMhK4XcnQs5smDsIye9LRDDNvXMOeMx+TNi/6EqCt9xnt6t5
+	kUUjYIBFhXVdEQpcd4OtlDsx1aZeijBVAId91pyVEbqeSaQxybk3W923vH3lvzFCJQqHPptzcZk
+	1SUfxC6i19wj596zERzkvbeaAtrpAofbsTaqLKyon3ub4DV9oUcvzgctNRYnIuKsjsdqVxjGWfX
+	dBCPm5TUJexNFk6Z8eenlTIXj944V
+X-Google-Smtp-Source: AGHT+IH2lcoFJnmcKqHMHMuViyeQtAANiMR2GCkNYZS2Tc0UyGe6pfEvfe5k7CjqMK8sR0uQ3r12sw==
+X-Received: by 2002:a05:6214:2602:b0:6f2:a735:574f with SMTP id 6a1803df08f44-6f2c4675729mr64023376d6.40.1745031029301;
+        Fri, 18 Apr 2025 19:50:29 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2bfd86csm17008116d6.88.2025.04.18.19.50.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 19:50:28 -0700 (PDT)
+From: Gregory Price <gourry@gourry.net>
+To: platform-driver-x86@vger.kernel.org
+Cc: naveenkrishna.chatradhi@amd.com,
+	carlos.bilbao@kernel.org,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	suma.hegde@amd.com,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: [PATCH] platform/x86/amd/hsmp: change driver name from amd_hsmp to hsmp_acpi
+Date: Fri, 18 Apr 2025 22:50:26 -0400
+Message-ID: <20250419025026.1555230-1-gourry@gourry.net>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-arch_topology.c provides functionality to parse and scale CPU capacity. It
-also provides a corresponding sysfs interface. Some architectures parse
-and scale CPU capacity differently as per their own needs. On Intel
-processors, for instance, it is responsibility of the Intel P-state driver.
+The amd_hsmp and hsmp_acpi drivers fail to load together (whichever
+is loaded second, fails) because they have the same DRIVER_NAME.
 
-Relocate the implementation of that interface to a common location in
-topology.c. Architectures can use the interface and populate it using their
-own mechanisms.
+Change hsmp_acpi DRIVER_NAME from amd_hsmp to hsmp_acpi.
 
-An alternative approach would be to compile arch_topology.c even if not
-needed only to get this interface. This approach would create duplicated
-and conflicting functionality and data structures.
-
-Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Link: https://lore.kernel.org/all/20241021111428.2676884-8-suma.hegde@amd.com/
+Fixes: 7d3135d16356f ("platform/x86/amd/hsmp: Create separate ACPI, plat and common drivers")
+Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- drivers/base/arch_topology.c  | 52 -----------------------------------
- drivers/base/topology.c       | 52 +++++++++++++++++++++++++++++++++++
- include/linux/arch_topology.h |  8 ------
- include/linux/topology.h      |  9 ++++++
- 4 files changed, 61 insertions(+), 60 deletions(-)
+ drivers/platform/x86/amd/hsmp/acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index af0029d30dbe..1037169abb45 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -154,14 +154,6 @@ void topology_set_freq_scale(const struct cpumask *cpus, unsigned long cur_freq,
- 		per_cpu(arch_freq_scale, i) = scale;
- }
+diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
+index 444b43be35a2..a9c24502d3d2 100644
+--- a/drivers/platform/x86/amd/hsmp/acpi.c
++++ b/drivers/platform/x86/amd/hsmp/acpi.c
+@@ -26,7 +26,7 @@
  
--DEFINE_PER_CPU(unsigned long, cpu_scale) = SCHED_CAPACITY_SCALE;
--EXPORT_PER_CPU_SYMBOL_GPL(cpu_scale);
--
--void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
--{
--	per_cpu(cpu_scale, cpu) = capacity;
--}
--
- DEFINE_PER_CPU(unsigned long, hw_pressure);
+ #include "hsmp.h"
  
- /**
-@@ -207,53 +199,9 @@ void topology_update_hw_pressure(const struct cpumask *cpus,
- }
- EXPORT_SYMBOL_GPL(topology_update_hw_pressure);
+-#define DRIVER_NAME		"amd_hsmp"
++#define DRIVER_NAME		"hsmp_acpi"
+ #define DRIVER_VERSION		"2.3"
+ #define ACPI_HSMP_DEVICE_HID	"AMDI0097"
  
--static ssize_t cpu_capacity_show(struct device *dev,
--				 struct device_attribute *attr,
--				 char *buf)
--{
--	struct cpu *cpu = container_of(dev, struct cpu, dev);
--
--	return sysfs_emit(buf, "%lu\n", topology_get_cpu_scale(cpu->dev.id));
--}
--
- static void update_topology_flags_workfn(struct work_struct *work);
- static DECLARE_WORK(update_topology_flags_work, update_topology_flags_workfn);
- 
--static DEVICE_ATTR_RO(cpu_capacity);
--
--static int cpu_capacity_sysctl_add(unsigned int cpu)
--{
--	struct device *cpu_dev = get_cpu_device(cpu);
--
--	if (!cpu_dev)
--		return -ENOENT;
--
--	device_create_file(cpu_dev, &dev_attr_cpu_capacity);
--
--	return 0;
--}
--
--static int cpu_capacity_sysctl_remove(unsigned int cpu)
--{
--	struct device *cpu_dev = get_cpu_device(cpu);
--
--	if (!cpu_dev)
--		return -ENOENT;
--
--	device_remove_file(cpu_dev, &dev_attr_cpu_capacity);
--
--	return 0;
--}
--
--static int register_cpu_capacity_sysctl(void)
--{
--	cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "topology/cpu-capacity",
--			  cpu_capacity_sysctl_add, cpu_capacity_sysctl_remove);
--
--	return 0;
--}
--subsys_initcall(register_cpu_capacity_sysctl);
--
- static int update_topology;
- 
- int topology_update_cpu_topology(void)
-diff --git a/drivers/base/topology.c b/drivers/base/topology.c
-index b962da263eee..8b42df05feff 100644
---- a/drivers/base/topology.c
-+++ b/drivers/base/topology.c
-@@ -208,3 +208,55 @@ static int __init topology_sysfs_init(void)
- }
- 
- device_initcall(topology_sysfs_init);
-+
-+DEFINE_PER_CPU(unsigned long, cpu_scale) = SCHED_CAPACITY_SCALE;
-+EXPORT_PER_CPU_SYMBOL_GPL(cpu_scale);
-+
-+void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
-+{
-+	per_cpu(cpu_scale, cpu) = capacity;
-+}
-+
-+static ssize_t cpu_capacity_show(struct device *dev,
-+				 struct device_attribute *attr,
-+				 char *buf)
-+{
-+	struct cpu *cpu = container_of(dev, struct cpu, dev);
-+
-+	return sysfs_emit(buf, "%lu\n", topology_get_cpu_scale(cpu->dev.id));
-+}
-+
-+static DEVICE_ATTR_RO(cpu_capacity);
-+
-+static int cpu_capacity_sysctl_add(unsigned int cpu)
-+{
-+	struct device *cpu_dev = get_cpu_device(cpu);
-+
-+	if (!cpu_dev)
-+		return -ENOENT;
-+
-+	device_create_file(cpu_dev, &dev_attr_cpu_capacity);
-+
-+	return 0;
-+}
-+
-+static int cpu_capacity_sysctl_remove(unsigned int cpu)
-+{
-+	struct device *cpu_dev = get_cpu_device(cpu);
-+
-+	if (!cpu_dev)
-+		return -ENOENT;
-+
-+	device_remove_file(cpu_dev, &dev_attr_cpu_capacity);
-+
-+	return 0;
-+}
-+
-+static int register_cpu_capacity_sysctl(void)
-+{
-+	cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "topology/cpu-capacity",
-+			  cpu_capacity_sysctl_add, cpu_capacity_sysctl_remove);
-+
-+	return 0;
-+}
-+subsys_initcall(register_cpu_capacity_sysctl);
-diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
-index 2222e8b03ff4..d72d6e5aa200 100644
---- a/include/linux/arch_topology.h
-+++ b/include/linux/arch_topology.h
-@@ -14,14 +14,6 @@ int topology_update_cpu_topology(void);
- struct device_node;
- bool topology_parse_cpu_capacity(struct device_node *cpu_node, int cpu);
- 
--DECLARE_PER_CPU(unsigned long, cpu_scale);
--
--static inline unsigned long topology_get_cpu_scale(int cpu)
--{
--	return per_cpu(cpu_scale, cpu);
--}
--
--void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity);
- 
- DECLARE_PER_CPU(unsigned long, capacity_freq_ref);
- 
-diff --git a/include/linux/topology.h b/include/linux/topology.h
-index 24e715f0f6d2..cd6b4bdc9cfd 100644
---- a/include/linux/topology.h
-+++ b/include/linux/topology.h
-@@ -332,4 +332,13 @@ sched_numa_hop_mask(unsigned int node, unsigned int hops)
- 	     !IS_ERR_OR_NULL(mask);					       \
- 	     __hops++)
- 
-+DECLARE_PER_CPU(unsigned long, cpu_scale);
-+
-+static inline unsigned long topology_get_cpu_scale(int cpu)
-+{
-+	return per_cpu(cpu_scale, cpu);
-+}
-+
-+void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity);
-+
- #endif /* _LINUX_TOPOLOGY_H */
 -- 
-2.43.0
+2.49.0
 
