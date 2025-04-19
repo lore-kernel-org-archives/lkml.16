@@ -1,96 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99DC8136E;
-	Sat, 19 Apr 2025 02:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CEBD288CC;
+	Sat, 19 Apr 2025 02:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745030758; cv=none; b=q3mGLj1d1bWH3WTTCpsIRxKy4dwnrrXQyIHy/fP4QDZpg+N0I3b/7PgkH7NyCTyWKhy2m0+Tgv3otwcCScyLSCR/gZGtuukJizJN7GRe0CotPhh4gSk8n1kwED85SDYo+Rsl33j0z6KYcqZ3iorSMsDhbLbT/sAOXDaDePxAGRM=
+	t=1745030990; cv=none; b=guCnfZBNZuN74pBeUYqg660LWkq8ae/Gyld6oTRkZod6x2Tze6CaXXlUe0Ph/N8H/6yIw7vs07IR1RFE3zQ7++ZlIM1TgQa9kzFiIUG8AftleV31ElpFEIInL/B1uS7likklJZg1cQki2XHVcS+F4rwea3LkhQCmfNwEIV6fs6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745030758; c=relaxed/simple;
-	bh=NoCw7J1EIepitFB4PWj8H+u0JsHKxU09lVRrOlawf1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W56beNmTQymin/iNNTu80QphxgKYsTCxAKY3BqSbwn8KOZdU3KDTOnF2R0Bx5BbLJs5Je45MyH0/XL0pSYOdxxhxi46N4/OF3+EJV1/F54iWCzC9u5001lk5y/7HWP/pmEC5feWlvY26lw4Kx3HLaapsSMU/yTT0ehuH2i6vFlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08614C4CEE2;
-	Sat, 19 Apr 2025 02:45:56 +0000 (UTC)
-Date: Fri, 18 Apr 2025 22:45:55 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Devaansh Kumar <devaanshk840@gmail.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- skhan@linuxfoundation.org, linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH v4] tracing: Replace deprecated strncpy() with strscpy()
- for stack_trace_filter_buf
-Message-ID: <20250418224555.5b8b8232@batman.local.home>
-In-Reply-To: <20250418221443.1067938-1-devaanshk840@gmail.com>
-References: <20250418221443.1067938-1-devaanshk840@gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1745030990; c=relaxed/simple;
+	bh=BKjdCpQP5HRZ/1EEUnIej+ttFx/pSeE93kbclBz3y+I=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=uRiIRukMo5iBSRcWd50YpY6l7rbDLvlOppQbGMK4nwjY4zdWhV6CJLXDYKg/FNbzjD3AdpRK3VWNJiXfcMmwwtT1XJlYaY7rsKBXP9v+PM+3Sd8wyytk2i00VvHEUGgTQMbtPc6w61Qtp8CvoHZRM4SRZtQd2h8ERO8x8cCcqzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DDdzYByi; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DDdzYByi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745030989; x=1776566989;
+  h=from:to:cc:subject:date:message-id;
+  bh=BKjdCpQP5HRZ/1EEUnIej+ttFx/pSeE93kbclBz3y+I=;
+  b=DDdzYByiqWr6D7t+x/Ao+gMl8nwh12A6rkdTBZKhI1auguIOoh4JXN17
+   M9p9WD0Y5gilQimljwrPZ82k58SSZVm9ONTm+/RL+VKgZtuSTrXirtKou
+   jmUCd801R5EnkORIy+PwxGset+Rxy8cVK+MabogQgJNDrafZ9IIk+uCO9
+   odYck+gAwunCEPrAupPKGmh4bp2IJM1EaZoydG11dZI/a7FHHmaAstKkM
+   JAzNos50UzfBCPYP7eqaVEY91+OSKwi9BSdj/u2CKKwFzy6sYqvFMjOUx
+   L7BBwCePgXpZ1P6jLUR/7J/b3BJeeR0hcLJOE/KRvtqvYSj+usYEDqlFN
+   g==;
+X-CSE-ConnectionGUID: NfFdU4niQyilVdxeDcv2vw==
+X-CSE-MsgGUID: pziXTcM8RniinK7+g0Zu/w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="50490433"
+X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
+   d="scan'208";a="50490433"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 19:49:48 -0700
+X-CSE-ConnectionGUID: xrpVH6pcSJqmYAymina/wg==
+X-CSE-MsgGUID: +jdrZeeoSmuMyqBlqSqFaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
+   d="scan'208";a="162308318"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by fmviesa001.fm.intel.com with ESMTP; 18 Apr 2025 19:49:47 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Sudeep Holla <sudeep.holla@arm.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Len Brown <len.brown@intel.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Ricardo Neri <ricardo.neri@intel.com>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Subject: [PATCH 0/2] topology/sysfs, cpufreq/intel_pstate: Populate cpu_capacity
+Date: Fri, 18 Apr 2025 19:55:02 -0700
+Message-Id: <20250419025504.9760-1-ricardo.neri-calderon@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, 19 Apr 2025 03:44:41 +0530
-Devaansh Kumar <devaanshk840@gmail.com> wrote:
+Hi,
 
-> diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
-> index 14c6f272c4d8..0f2253f3bc8c 100644
-> --- a/kernel/trace/trace_stack.c
-> +++ b/kernel/trace/trace_stack.c
-> @@ -542,7 +542,7 @@ static __init int enable_stacktrace(char *str)
->  	int len;
-> =20
->  	if ((len =3D str_has_prefix(str, "_filter=3D")))
-> -		strncpy(stack_trace_filter_buf, str + len, COMMAND_LINE_SIZE);
-> +		strscpy(stack_trace_filter_buf, str + len, sizeof(stack_trace_filter_b=
-uf));
+Capacity-aware scheduling is now supported on Intel hybrid processors. It
+makes sense now to populate the interface /sys/devices/system/cpu/cpuN/
+cpu_capacity. User space entities can use this information to implement
+policy such as utilization clamps.
 
-Is the sizeof() needed?
+This interface currently lives in arch_topology.c. Rather than implementing
+the interface again for x86, we can move it to a common location in
+topology.c from which other architectures can also benefit and populate
+using their own mechanisms.
 
-=46rom include/linux/string.h:
+I tested this patchset on Intel Alder Lake and DragonBoard 845c. The
+interfaces are populated correctly.
 
-/**
- * strscpy - Copy a C-string into a sized buffer
- * @dst: Where to copy the string to
- * @src: Where to copy the string from
- * @...: Size of destination buffer (optional)
- *
- * Copy the source string @src, or as much of it as fits, into the
- * destination @dst buffer. The behavior is undefined if the string
- * buffers overlap. The destination @dst buffer is always NUL terminated,
- * unless it's zero-sized.
- *
- * The size argument @... is only required when @dst is not an array, or
- * when the copy needs to be smaller than sizeof(@dst).
- *
- * Preferred to strncpy() since it always returns a valid string, and
- * doesn't unnecessarily force the tail of the destination buffer to be
- * zero padded. If padding is desired please use strscpy_pad().
- *
- * Returns the number of characters copied in @dst (not including the
- * trailing %NUL) or -E2BIG if @size is 0 or the copy from @src was
- * truncated.
- */
-#define strscpy(dst, src, ...)  \
-        CONCATENATE(__strscpy, COUNT_ARGS(__VA_ARGS__))(dst, src, __VA_ARGS=
-__)
+I'd appreciate any feedback!
 
-With stack_trace_filter_buf defined as:
+Thanks and BR,
+Ricardo
+Ricardo Neri (2):
+  arch_topology: Relocate cpu_scale to topology.[h|c]
+  cpufreq: intel_pstate: Populate the cpu_capacity sysfs entries
 
-  static char stack_trace_filter_buf[COMMAND_LINE_SIZE+1] __initdata;
+ drivers/base/arch_topology.c   | 52 ----------------------------------
+ drivers/base/topology.c        | 52 ++++++++++++++++++++++++++++++++++
+ drivers/cpufreq/intel_pstate.c |  2 ++
+ include/linux/arch_topology.h  |  8 ------
+ include/linux/topology.h       |  9 ++++++
+ 5 files changed, 63 insertions(+), 60 deletions(-)
 
-This looks like a text book example of just having that be:
+-- 
+2.43.0
 
-		strscpy(stack_trace_filter_buf, str + len);
-
--- Steve
-
-
-> =20
->  	stack_tracer_enabled =3D 1;
->  	return 1;
