@@ -1,31 +1,31 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CAF6F305;
-	Sat, 19 Apr 2025 10:46:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74223594F;
+	Sat, 19 Apr 2025 10:46:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745059592; cv=none; b=Tym0/fno7q1P3e+J9kF6kARRo0bSGEsmbH+HQHfBztE5pwy80+xR+CiMNPLb9SNFRC+oWctyfY7hdCoI1fVeZ8phRHxn+Mrv9ETZfV/zOK9O3lHQWLQXPmc5AmWPE+4ymFSnhWLomnyNz54FfEcaz1vATVi+b9lVSIJnj+R8Iac=
+	t=1745059592; cv=none; b=PMxweFThwn95/3V7zfJpeYiaxVRFaEi0bBQgRsiM65AnLuZ7Qx/9sSz4InTLbwCZ12oTKB9GI+i1Gsh10rMxFCr+qlLsCK5IT/91ZOGg04B25Pv44P91jvfLthmwBuhUvMp0d5VoXfYHm+24X02GTwxYWhIG/2fEmRExwcXUYnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745059592; c=relaxed/simple;
-	bh=KobCUeJS2OEM5lPwozYg0JTzSnTraZcO9O3oDYtCUhI=;
+	bh=Fu/a9dHUfU/79QPTkLGEpbkvpxkUIMfawpy6A0iNqxY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aR/CeOgzVQ+xQamhZChn8Ysf237C00e+MFOH9oHDkPqTtaC846TTplRMsQzSMf+tLWu2jk6OLgFe3oWmnhFKaMT6V6OJ3j+wHbGnpDr1I3ZT5hDpaOUqo2nb0/XNNjqZDAESuvDPbFtP/7SVcZDxTBA2QbdlpCVnZj6V1qdt6uY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=rBTkcQHb; arc=none smtp.client-ip=159.69.126.157
+	 In-Reply-To:To:Cc; b=Qf4ClpY11q6/lzfF8G/Nr6TGxlWrgPPC2kJ2BaetNrV4F9kzMF2nMKmk2bXIRSweEXU4Zb9fA+QuBqt6jZjRLcus2ucTcLCtoe7RWfRbcZEvu0eQJw04UuBBQEv7cqceVXU7HDz/MSZ+mWLJzNcK11sJGggfmTZLcrW4Wunsbu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=B8D/hyRD; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="rBTkcQHb"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="B8D/hyRD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1745059588;
-	bh=KobCUeJS2OEM5lPwozYg0JTzSnTraZcO9O3oDYtCUhI=;
+	s=mail; t=1745059587;
+	bh=Fu/a9dHUfU/79QPTkLGEpbkvpxkUIMfawpy6A0iNqxY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=rBTkcQHb8lkVzHhG9XDJRHGDK4+0Q7wUdSUzRvO+/WWD2Pk/XtnkYWDri6SoSlyIt
-	 /uV8K4IMyrLTxvwSt6ZMLdan7sFebHwnLdxbuWiEm2XrDfmqcBokuG1MspyL77oNGm
-	 MeSrGa/09fX8ei82TJURoX7wzLn9UAgTv8s4PV/4=
+	b=B8D/hyRDOsOkP8ijENRJPFIbKNtaeiGbYOXpqY9mnBRDDgv6xDydXpFUXAjp1e3Ef
+	 7M+/+X+BQurglBVGw44X0NEuWlkyE1RPLmEgJUwst8MwKguKWrmS0wcARtuLILIhBB
+	 BE0TJwq9RgkURvOTEfQXGS9IHX7BXkPhRBfR/bHM=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Sat, 19 Apr 2025 12:46:23 +0200
-Subject: [PATCH v2 6/7] selftests/nolibc: disable ubsan for smash_stack()
+Date: Sat, 19 Apr 2025 12:46:18 +0200
+Subject: [PATCH v2 1/7] tools/nolibc: add __nolibc_has_feature()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,7 +34,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250419-nolibc-ubsan-v2-6-060b8a016917@weissschuh.net>
+Message-Id: <20250419-nolibc-ubsan-v2-1-060b8a016917@weissschuh.net>
 References: <20250419-nolibc-ubsan-v2-0-060b8a016917@weissschuh.net>
 In-Reply-To: <20250419-nolibc-ubsan-v2-0-060b8a016917@weissschuh.net>
 To: Willy Tarreau <w@1wt.eu>, "Paul E. McKenney" <paulmck@kernel.org>, 
@@ -42,35 +42,41 @@ To: Willy Tarreau <w@1wt.eu>, "Paul E. McKenney" <paulmck@kernel.org>,
 Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745059587; l=736;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745059587; l=938;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=KobCUeJS2OEM5lPwozYg0JTzSnTraZcO9O3oDYtCUhI=;
- b=aTcG+XP2wsZflP4N2plzIKE1ncwCU+vNw2Ru1zEyu3v9UOkFjJ3uWddAb+bhWm5LKc2+40T4N
- X5Hz/NPuZT/AOChjxHY7B4WDDPLDKT2MAWzkHqsy86AR9FZGeYB1hX9
+ bh=Fu/a9dHUfU/79QPTkLGEpbkvpxkUIMfawpy6A0iNqxY=;
+ b=jZKxSVvJvzKwJPUpol2ww+N3g5hZzIzBox9BWKkrgbb2LCaxNULTCMMJrruB0yyZpsnwSRP1n
+ nT9I9XG7QeYAtUbtRGHDttt+RIp1NFFaCuXiP5oX0qpnZE1pLZPkMOm
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-smash_stack() intentionally crashes.
+Certain compiler features are signaled via the __has_feature()
+preprocessor builtin.
 
-Prevent UBSAN from tripping over it.
+Add a nolibc wrapper for it, similar to __nolibc_has_attribute().
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- tools/testing/selftests/nolibc/nolibc-test.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/include/nolibc/compiler.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
-index 7a60b6ac1457e8d862ab1a6a26c9e46abec92111..b176a706609b7641dd1d743c8a02b6b6e7a4c746 100644
---- a/tools/testing/selftests/nolibc/nolibc-test.c
-+++ b/tools/testing/selftests/nolibc/nolibc-test.c
-@@ -1438,6 +1438,7 @@ static int run_vfprintf(int min, int max)
- 	return ret;
- }
+diff --git a/tools/include/nolibc/compiler.h b/tools/include/nolibc/compiler.h
+index fa1f547e7f13d151ea98b9c585b36659d2d27324..e6d6dc116e43aa69b37eca02ed1590fc09486bdb 100644
+--- a/tools/include/nolibc/compiler.h
++++ b/tools/include/nolibc/compiler.h
+@@ -12,6 +12,12 @@
+ #  define __nolibc_has_attribute(attr) 0
+ #endif
  
-+__attribute__((no_sanitize("undefined")))
- static int smash_stack(void)
- {
- 	char buf[100];
++#if defined(__has_feature)
++#  define __nolibc_has_feature(feature) __has_feature(feature)
++#else
++#  define __nolibc_has_feature(feature) 0
++#endif
++
+ #if __nolibc_has_attribute(naked)
+ #  define __nolibc_entrypoint __attribute__((naked))
+ #  define __nolibc_entrypoint_epilogue()
 
 -- 
 2.49.0
