@@ -1,113 +1,102 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E6942AA3
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02253172BD5
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 06:03:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745042161; cv=none; b=tItg0KMuc/DIzxXZVs/WAIa+lQFwtWPq8HpViWXzy4cbgVg1mEfghIUF5sIXlm3DenwXu4V4txJz1D6tAeWP5Z/DL8mo/xphCW1klSUdxtjRwn1fouCbyArhsnkpMXWI76djWP7ATIlAbOzOnm45qt8US25FI7eaz6AcGK1qNiw=
+	t=1745042629; cv=none; b=vAkXySXTzvpr7sXIjuIJ4p1vB3tWKugr+r8MShIce+N9UbiTvb52jCJXPMc/90Mo9+22s8x0WGVwomCXJ5B63rKAmPpO1I5uR//jekPbjn7u3qcfJgd5Ll0m987N7URMJ6S5LIbqc6yKgMLy8eAfCSMsed0I+MJ4kj1iDAWdWvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745042161; c=relaxed/simple;
-	bh=Ow5OzIdQrw1DFiXgXxbjMJWQK3tqwXy5Fav+FGiBbw0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bV9PLfpeHcRftcrUG3hBBH8jQQzTCxK6oWbY6LQrcI1uiAMynF8vsUD0jJpWZWlsCab2Q4yWBusyPilnCcMX4RM9zmBjtz8uLTXzx7iKqFK7Oze/eiJcztc/FGNiz1Ak7MAGmpi5IwVFp2e1BsPAWno//BrVnsx4OpZe69dapvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O0M2k4EM; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745042629; c=relaxed/simple;
+	bh=dBw0csETq4Oax7D/gIJsoGLgmtl6zPN0tQTFG8GjEtw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QYh4Qpz4VzNn5D01BnUryQ1vcHmzpNBnu3J0uCph3GuwZEflAqKn2mUtZ8KbvzXSCVJh1mwqQU6n4RUEj9dzU0JJQd7d8/quwAdqO4RNqIQg1ER+Ujd+1h5bMXddQqETlcsfys84zs4L8TOwd0l9mgp/TGC4GmgEL7lMV6WoKK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rGD1hFqv; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O0M2k4EM"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30bfc79ad97so37977781fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 22:55:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rGD1hFqv"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-225477548e1so25124415ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 23:03:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745042158; x=1745646958; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1745042627; x=1745647427; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XdPIwZMbbH/v4IfyGs8wVOWQZOeGXcJa+MlXzZtV0wg=;
-        b=O0M2k4EMdNYKsB4wsF2xOYGGIev4+1sujkeVG6+tfZKZaQFTz6BKg7QbBwhCKrW8qv
-         JEN0E6jW/YDV90DpLYp5MccTWuD0+eA/SoQxNyL9MNPXiqnR41FSosKRTOiWwBgqMEVl
-         DW2hBqQfOxmQuFKQg4+WbJ3lRP3hrGOvrSrbll2FTMout70QdgLC2HefLM00QQ3isfSE
-         8ihm0YYoKs2dl1DJMixvBiuiQCMuu6xlu5P4qBaEhLoKgXB6C9mW2Y8VD3mFNe4eU4+Z
-         8Mf3faMGCSbidIyjb8nENdlYIgWyiwz+cahiKWrZ1fP9HLkf5VjIVT4vA4EAfzBFZba+
-         E6WA==
+        bh=2lTgQTvZYqN0TLCj43/V6Q2NyHBYHePk/+H2FCWatKs=;
+        b=rGD1hFqvX+Qm6W1NKqWPKkkt1ZWZso6vUSwToAeQtLPVmc0f4UXf1eiLnelAbpyFE1
+         w4r/Xhmmnp3hsZ2Zq/QKL9U15uIr1ifSkhEzPDvlgC1lsbEy22YwZlbnWI2E/0dIoPhu
+         4ONYm2bnYZnJkfAOBNCteg/sZ8OYHUp7tOZfSAaPPbyr3FJXhgGcM/UtAXJrdW0+Ivii
+         1Hm/xEEOhsrussOzGVNRb1AaGRpKRTZVYsdWxpFdSUlPYEzLAros98ddZ7zP/rxhw9ya
+         reYIHc9XrTbphu3gXEWGVWstuCI870N1Pm3XIQZky46qCavtj5yaAGrC0nGIDxnbLHKW
+         rpxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745042158; x=1745646958;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1745042627; x=1745647427;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XdPIwZMbbH/v4IfyGs8wVOWQZOeGXcJa+MlXzZtV0wg=;
-        b=E1pT/FD70kCuPs+W1e2IW+0a8+ipqSdQFpyhT8XwcwpdCKNPd9h3kMCuPJHo0XBN5n
-         O3PA/K+2PmXP1e/B6XGsXwdFZiB6+Q4YftqKINbjLjeUHcM7zV8l4gQIO31hGxEvvDO/
-         Ks/Nm2Ve0QtAyfmu+nL7xsoc+q4X8qzke8b2pYafjNEZlZVavXORkvA24opkRkJiexXL
-         y+zSfF+ZHMfLZfB6RH591ahMEWAZNf5HKSFZUGsZxyl6rs+FIZCYn7Scy69Os6c5WGXo
-         yjagxjLfe5+VYSHte5xlv0cvdAa0SfXuyRK83mB8v2XZbaNVOc5DXrGPTkjuAYNh/7J5
-         so1w==
-X-Forwarded-Encrypted: i=1; AJvYcCUsEmNFBNxF9jAGanrgVOJS8D+5TIVcLxJXYjYaDk8ZiVPAXj/S+Q7qSrrfBYkgC9JANGgaDTdmKxd+Bro=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz80n/UCOARKrf3LyoD1CiJONbUcsz73sItxHySkZgmjfrUxkI8
-	GBsIax5JyDVRVrjHa7QWS9w2p3ZTLIpzMwPuup2A+zEEDYveE6m3VrM2V/R2OsJtrtzHENC67Kl
-	LMKYLpR7SCuK5Cl8ESQ0fw4aLMs/G2Ou1b30=
-X-Gm-Gg: ASbGncsEbUQRWcy6asZ/rxhE6lNHafAslJK2jJS2YeJyq+4trK1WP5bdDFjDPYkJ+C2
-	Umvq0N78RjSAOzodxRWALkAo3GeSLzLkzCalYXmVCF5pnBxBS+FKxNhk61mzDd31FvCgGmAGpV/
-	k2snRRLuXMh0oE9u+iLsvKGY2VVwzTPvhpttT/8fcA8G5kZqO1EV+t1mTVBGwuzg==
-X-Google-Smtp-Source: AGHT+IEcHxjZqljPDfrwZ+WwyAACsxSZEdF+AnzuNtbkAxWcFAZWBScBT4hoQ7usLT55L4a5MJ5+ffD8mkHxy7acQLs=
-X-Received: by 2002:a05:6512:31cf:b0:54b:117f:686f with SMTP id
- 2adb3069b0e04-54d6e7f4e06mr1275061e87.28.1745042157705; Fri, 18 Apr 2025
- 22:55:57 -0700 (PDT)
+        bh=2lTgQTvZYqN0TLCj43/V6Q2NyHBYHePk/+H2FCWatKs=;
+        b=XJUgYAxFc647cAUnKq9KtJqU/tHqDyVzAVpmAXCxjcxpS0hxh85cOeqQzYiVRJWsfi
+         y0ynZJ1B/38kK26yGsDiPa46apGg41N403H84obN0Pl1fH7/na8z4BE5oIzXpZ8MW17J
+         vjHacfMDfYF+aUmw8LbD1Gs25Wy00nnNUyKV7F4p98g9OzaPa5G80SDy6zHdWHqRL4X4
+         arHIi0XYmWmGxvqd5cTmIkmmHHJ+tBHUYsrFNiQ474JsR4LVv6HYAakm26fTCW0yjli7
+         KevbrHVo5gwXYUBLkP7Sk42Wl1wz6CGzfWM5o5A7i5luVL3csPKgnUJ5NbdcsJnBGMg4
+         VOSg==
+X-Forwarded-Encrypted: i=1; AJvYcCUn3TevbOxrCmEkhQoRhaLR7EM/pliLY/HLeLjj1aR2UD1u1x0iFy1LN8B3C3GSZ+NBn2QNK/jeTk3UGAQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHfS+X4nGRRaWNKGQio7x6RWf1g5W8wjlJfg5Z+rSzz+iw2WVy
+	hPFQ8RXIloxNCGYQUivXFs3LymmfVTTk2Rbvml03fooodTTUWr9o6vsiWX59uQ==
+X-Gm-Gg: ASbGncs8TaufKsUt0/F8aCgtQiUzXhQfQJJzwmkRslRjR7XxGjSgz2mpCRauOHvQRh/
+	ENp4b5xi032gQJXNu1YbWi9WqQk5tFIv1VfROndrlggyRbqXy9S42rxDyXRhVyytUDrurSlQx8U
+	jXW8xpJu8bAsb+ZSIYjlV1MyUORb1fjV5DkOuLep1UyuAv7767vjIC5X4YlmQH6iYaQvEPsPfBo
+	OD8IGqi+5hanSZBs2EHcFaOhQwzfzdIRX+jfVkV12TFx0ik8G9+tsbOnYqXO5fdLep2y6opM8av
+	LjDksVtW5mwZxrH97GyACLlGCCRc1RyVtd1n++5/nVDTFfORKlHGXRnXFHFdHCCJ
+X-Google-Smtp-Source: AGHT+IHe7z+mwljypPJwxHYQDW6Or2SxhxqJIzdabeYhZVRypfM4toLH9er4he0mUfYtnDMuCNfesQ==
+X-Received: by 2002:a17:902:e546:b0:21a:8300:b9d5 with SMTP id d9443c01a7336-22c535a7ec7mr65152705ad.23.1745042626951;
+        Fri, 18 Apr 2025 23:03:46 -0700 (PDT)
+Received: from thinkpad.. ([36.255.17.167])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8bf7ecsm2609173b3a.31.2025.04.18.23.03.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 23:03:46 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Rob Herring (Arm)" <robh@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: mvebu: Use for_each_of_range() iterator for parsing "ranges"
+Date: Sat, 19 Apr 2025 11:33:32 +0530
+Message-ID: <174504243663.11666.13632057141942882562.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241107153255.2740610-1-robh@kernel.org>
+References: <20241107153255.2740610-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320200306.1712599-1-jstultz@google.com> <Z-KURRE_Gr72Xv_n@localhost>
- <874izezv3c.ffs@tglx> <Z-Vx8kV4M3khPknC@localhost> <Z-qsg6iDGlcIJulJ@localhost>
- <87o6xgwftc.ffs@tglx> <Z-vL3cVZuQ8XQXhG@localhost> <87iknnwxa4.ffs@tglx>
- <Z-5HlSUEh1xgCi4f@localhost> <877c41wkis.ffs@tglx> <87h632wals.ffs@tglx>
- <CANDhNCrUhZktW=_h9YTZndmyHwe9YbUMG6uVYaEuQyuKsG4AEg@mail.gmail.com>
- <87tt6mq8jz.ffs@tglx> <87r01qq7hp.ffs@tglx>
-In-Reply-To: <87r01qq7hp.ffs@tglx>
-From: John Stultz <jstultz@google.com>
-Date: Fri, 18 Apr 2025 22:55:45 -0700
-X-Gm-Features: ATxdqUHKCUss3Lu3EUOBiHOPQD5kXjTO7sufFV19DZLFsnOExQXyOVNeazDE9Mw
-Message-ID: <CANDhNCr21HXQOqfhcJFM6x7pNHCevSEKdg2_jz7KbLj=g8+0Sg@mail.gmail.com>
-Subject: Re: [PATCH] timekeeping: Prevent coarse clocks going backwards
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Miroslav Lichvar <mlichvar@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-	Stephen Boyd <sboyd@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org, 
-	kernel-team@android.com, Lei Chen <lei.chen@smartx.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 18, 2025 at 12:00=E2=80=AFAM Thomas Gleixner <tglx@linutronix.d=
-e> wrote:
-> On Fri, Apr 18 2025 at 08:37, Thomas Gleixner wrote:
-> > On Thu, Apr 17 2025 at 17:46, John Stultz wrote:
-> >> Instead it seems like we should just do:
-> >>   tk->coarse_nsec =3D tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
-> >
-> > You end up with the same problem again because xtime_nsec can move
-> > backwards when the multiplier is updated, no?
->
-> Something like the below should work.
 
-Hey Thomas,
-  So I did test this version (I'll call it v2) of the patch and it
-does avoid the problem I was seeing earlier with your first patch.
+On Thu, 07 Nov 2024 09:32:55 -0600, Rob Herring (Arm) wrote:
+> The mvebu "ranges" is a bit unusual with its own encoding of addresses,
+> but it's still just normal "ranges" as far as parsing is concerned.
+> Convert mvebu_get_tgt_attr() to use the for_each_of_range() iterator
+> instead of open coding the parsing.
+> 
+> 
 
-Though I also just sent my own slight rework of your patch
-(https://lore.kernel.org/lkml/20250419054706.2319105-1-jstultz@google.com/)=
-.
-The main difference with my version is just the avoidance of mid-tick
-updates to the coarse clock by adjtime calls (and the slight benefit
-of avoiding the mult in the update path, but this is probably minor).
+Applied to controller/mvebu, thanks!
 
-It's done ok in my testing so far, but obviously the effects of these
-changes can be subtle.
+[1/1] PCI: mvebu: Use for_each_of_range() iterator for parsing "ranges"
+      commit: 506d34571e2f204c991aefe3f1300175907594e3
 
-I'm ok with either approach, so let me know what you'd prefer.
-For your version:
-  Acked-by: John Stultz <jstultz@google.com>
-
-thanks
--john
+Best regards,
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
