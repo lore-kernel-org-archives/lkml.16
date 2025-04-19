@@ -1,43 +1,77 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31A3F1BC5C;
-	Sat, 19 Apr 2025 13:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7C519E975;
+	Sat, 19 Apr 2025 13:56:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745069501; cv=none; b=h2BCThbJHt4k+JePhsDbVuIgJ7pNKOWl7M9PZv6Rgq6VOOM4thqUrhYlRTwvzqBixp50jTuoQB5CHzZvW026A3rFHO/t1wSAufav9IDYYwPRJxdaUKb9ZSLf/hWlWlAQyEv0oV3wp1LJO/7GgH4aKvqHkUpVfPBs/Da4PVjtquc=
+	t=1745071003; cv=none; b=u5stVYCNRNMmPloo8ppb/B8ZXVNVNqbBOsYDtITLRfLf777V1ETItovXRcIlo7DgLk+EOvkmxogGIC4F675Ya8nxEhQ6xJNb0m7ajPYVrmb3cAf0mS6R+OJBKzaH2AuC+g6KumzF8gfbbzn3b46D2EWqI4DRI4lVbGA+6FWhTn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745069501; c=relaxed/simple;
-	bh=ssXIJJuGP95RkgCpmKHU+tZmzEYFmzhw+s+rRGRogrQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sgVr9CrApjJqruubZzLh8/Fx+rSq43HSeM0WxIJGZLNGlfmFqzALPT5Ee4A81YHMmsYv2dXah9qqwQ/VTv35ImwDLyowng5u9ON3t5kPSvuKWCj4lD0uui1Udnc3+IlNpfsiAIDAzeXpv092fbpvJxKIKH5h0UA+Fh34lnef5g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=iH28avn5; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1745071003; c=relaxed/simple;
+	bh=32CJ5lqsP6SeFL28byG1FmT/OVtQTHdseuVPntwIxgw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iaCUAziUo/b7GXdfWEy9ddCgfVTApoCDQIF31m8hn5tZMwKBU/hmsSARVl2uuIoLV/cqtYX9s7E+uvObm1m/WK8X97SIKFVmsK/I9IROWEdSe0/gjGwj9gCsMiHt7lhG5XS7ssibhzSy7RxcoaHDwtd/Buvi4gxZkEIjPxpvvqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iKCxz706; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="iH28avn5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=aV77m
-	p3/Eh1DGD/CUm+p8HEbcIqk8afWhv5HTlvgT6c=; b=iH28avn58vigPgrFxGndf
-	5FsCVpP6yq9qdnH4zeX1F6frMbjdguMcogQkrpoWzszqPHzjN+8OuvdHBQxbcx++
-	DCNhnkcMwmEGWu0lV0kxER4IdG5/VzF5eXATgzgdC1KAIylfha227FqOhTkKdsEp
-	ZaR2dQbMQ7xkOiJhbAXbgo=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wAXnlSVpQNokyeUBA--.14018S2;
-	Sat, 19 Apr 2025 21:31:02 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org
-Cc: kw@linux.com,
-	manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	s-vadapalli@ti.com,
-	thomas.richard@bootlin.com,
-	linux-pci@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iKCxz706"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6ed0cc5eca4so38875436d6.1;
+        Sat, 19 Apr 2025 06:56:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745071000; x=1745675800; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1T9iPTvrhyH2WPe+v9UKop2Oe53Fi14F7QzLPmeRS8c=;
+        b=iKCxz706tNORfoRwA8lMqJixxe/rs7TJGjZwvPZ1PnFvR7gTCjZ+lheosxr8r7cnyN
+         1Pb5RhnULaVWnaBGVO8sTP5qofhhlt8hN1kQvoigzt7zIs9i1FGOunom40PATCZHCLhz
+         4iwwGtMuzaAVZ1smXAZ4RZ6qHbWXhAuZ6KhY6NjIXlYSyQYox9yg9DtSyp5Ck0Ne6btE
+         DfpVw1ue4jzswZRsuRmY7gG7JQVn7gTdf2yrPMl5QJPVGEC0n/Gg8nA4M+Muw7HzE47A
+         +/u5Ni/Rlso0oBgdIdZRu6nakQpBqIxmaiX+HqSRSV7GQM70cYevjQC2+EcbULXQl/WC
+         rABg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745071000; x=1745675800;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1T9iPTvrhyH2WPe+v9UKop2Oe53Fi14F7QzLPmeRS8c=;
+        b=antt/edY6tZWEmt6FiL8+PB/isyeuOL6SxUFzGTRE3W6Jbn1kjTyOwCkYsT0SZnF+P
+         MfXHngpOuyXmhFPvR2PyVsHiw1d8U+PEUZLNqGWP5q1oNdUBfvNYWQvZZD9PjM5daU3e
+         pvfZg1mK+XKs/8XlQD2bp9Z2EuYjp/VTGxMC1Cy+3RTstxKSb6s06ZfO2u5867lw2+aX
+         5a9nE+XnEvhV/lJ4+7SkuCaZhI5rJ1JZI06BHZsOg3pxZNwYQ4CAyCxEWBTKduP9HjqS
+         r+FqqsFRhRH3x+MYIyG6v2b+sZJT6kOg3JTOc+lBPLQ5cFnjpzl+T4zuTNI0CV9VIYMP
+         ahkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCULMxmTh3OCnMIJTLoU5NwSghzJGhL7lB/I8n+sCjkX7n1HJkXT3Cd4JfBRIVyvYYXrecEOwAaetfqR5khz@vger.kernel.org, AJvYcCWGEGj7lDh5XrHxg5AEnSxjidD7MDXXDqM8w6Vcc1iQ31QyqJyKU/LQgclNols7wbCGg6vuFoSuM7o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5pjd4vTLePeyI2IiJBv+ArL9WYpiPwhKkz6apfQQU7kYJLZUM
+	4FEJor7RaXN9gmWBR/+xr04TcklWtbySIbzL0pS5iTOCz19jBChW
+X-Gm-Gg: ASbGncsY1vm6xFEo3uvExG26a+fa/GY7ksYBpbg0ZhVKbgvVcVNU12OHPfPIZY8kFWv
+	5JKN7q58NAmtbT/qku8Y3VMxyLSMoOYQJOLe8WBkMg6DUiGnoHimO96Ae5qFNRwjhTsFgSNaqiH
+	1BvSNEDFdxm3imGb2/6ruTb826tOdp6rAnfqWRu1ieq7dAdQKCgjb3hiIK4w1GinxrYOUJX2tmj
+	cqRmZ1Jp2k78bW8FljmuNlbs/t5gIi2iQ3Gs81SaAMsUxQPjMEpHbeumOdvtpKJ4jSWI3a0Ztir
+	l8wF2peh8Asw2oXWlMf1LZD9xXjPMOyR9T2pE/eSYn45XTLETLyE3bg=
+X-Google-Smtp-Source: AGHT+IF6XYWp7StUvpSliLtmghbyco2BwMZGL4YQPcUII64a1QaKlsmbRaUVtyMvgWQng1VnpCCOXQ==
+X-Received: by 2002:a05:6214:519b:b0:6ea:d604:9e4f with SMTP id 6a1803df08f44-6f2c27d0d27mr115357786d6.19.1745071000485;
+        Sat, 19 Apr 2025 06:56:40 -0700 (PDT)
+Received: from theriatric.mshome.net ([73.123.232.110])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925ac4749sm214350185a.59.2025.04.19.06.56.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Apr 2025 06:56:40 -0700 (PDT)
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+To: gregkh@linuxfoundation.org,
+	jic23@kernel.org,
+	lars@metafoo.de,
+	linux-iio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	rockswang7@gmail.com,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v2] PCI: cadence: Fix runtime atomic count underflow.
-Date: Sat, 19 Apr 2025 21:30:58 +0800
-Message-Id: <20250419133058.162048-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	linux-staging@lists.linux.dev,
+	Michael.Hennerich@analog.com,
+	sonic.zhang@analog.com,
+	vapier@gentoo.org
+Cc: gshahrouzi@gmail.com,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: [PATCH 0/5] staging: iio: adc: ad7816: Fix channel handling and refactor
+Date: Sat, 19 Apr 2025 09:56:33 -0400
+Message-ID: <20250419135638.810070-1-gshahrouzi@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,54 +79,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAXnlSVpQNokyeUBA--.14018S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7tw18ArWUXryDXr18Cr15urg_yoW8XF1UpF
-	ZFgryxJ3WfXayYvan7Z3ZrXFyayasxt34DJ392kw1fZF13C3yUtrsFkFyjqFy7KrZFqr13
-	J3WqqasxCF45JFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zi7PE3UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWx80o2gDoOGcEwAAs2
 
-If the call to pci_host_probe() in cdns_pcie_host_setup()
-fails, PM runtime count is decremented in the error path using
-pm_runtime_put_sync().But the runtime count is not incremented by this
-driver, but only by the callers (cdns_plat_pcie_probe/j721e_pcie_probe).
-And the callers also decrement theruntime PM count in their error path.
-So this leads to the below warning from the PM core:
+The original patch combined a functional fix (allowing channel 7) with
+several refactoring steps (introducing chip_info, renaming structs,
+improving validation). As requested, these have now been separated.
 
-runtime PM usage count underflow!
+The series proceeds as follows:
+1. Fix: Allow diagnostic channel 7 for all device variants.
+2. Refactor: Rename the main state structure for clarity before introducing
+   the new chip_info struct.
+3. Refactor: Introduce struct ad7816_chip_info to hold static per-variant
+   data, update ID tables to store pointers, and switch to using
+   device_get_match_data() for firmware-independent identification.
+   This removes the old enum/id mechanism.
+4. Refactor: Add has_busy_pin to chip_info and use this flag to
+   determine BUSY pin handling, replacing pointer comparisons.
+5. Refactor: Simplify channel validation logic using 
+   chip_info->max_channels, removing strcmp() checks.
 
-So fix it by getting rid of pm_runtime_put_sync() in the error path and
-directly return the errno.
+Regarding the 'fixes' tag: I've applied it only to the first commit
+containing the core fix, primarily to make backporting easier. Is this
+the standard practice, or should the tag typically be applied to
+subsequent commits that build upon or are related to the fix as well?
 
-Fixes: 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe controller")
+Changes in v4:
+	- Include missing bracket for condtional statement.
+Chainges in v3:
+	- Split the patch into smaller patches. Make the fix first
+	  followed by clean up.
+	- Include missing channel for channel selection.
+	- Address specific feedback regarding enums vs. chip_info data.
+	- Use device_get_match_data() for device identification.
+	- Move BUSY pin capability check into chip_info data.
+	- Simplify channel validation using chip_info data.
+Changes in v2:
+        - Refactor by adding chip_info struct which simplifies
+          conditional logic.
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- drivers/pci/controller/cadence/pcie-cadence-host.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+Gabriel Shahrouzi (5):
+  staging: iio: adc: ad7816: Allow channel 7 for all devices
+  staging: iio: adc: ad7816: Rename state structure
+  staging: iio: adc: ad7816: Introduce chip_info and use pointer
+    matching
+  staging: iio: adc: ad7816: Use chip_info for device capabilities
+  staging: iio: adc: ad7816: Simplify channel validation using chip_info
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 8af95e9da7ce..741e10a575ec 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -570,14 +570,5 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 	if (!bridge->ops)
- 		bridge->ops = &cdns_pcie_host_ops;
- 
--	ret = pci_host_probe(bridge);
--	if (ret < 0)
--		goto err_init;
--
--	return 0;
--
-- err_init:
--	pm_runtime_put_sync(dev);
--
--	return ret;
-+	return pci_host_probe(bridge);
- }
+ drivers/staging/iio/adc/ad7816.c | 94 ++++++++++++++++++--------------
+ 1 file changed, 54 insertions(+), 40 deletions(-)
 
-base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
 -- 
-2.25.1
+2.43.0
 
