@@ -1,91 +1,127 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CF21537C8
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 12:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+Received: from pku.edu.cn (mx17.pku.edu.cn [162.105.129.180])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EFDDEACE
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 12:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.105.129.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745064057; cv=none; b=Lhq47Tl/4DBYH34eWlf1AUD/pVtmXX/CKcckjEIjBoBvpKWA7bQLChzQ3ZGbt68QiEsmOYp/8uQe+pLcaQu1voin5KoSAxA7T4dQ0UXNnVqZ7SBBUK6b3pVYWVBxtyo1fv5301dZdHBhKdfN59+WFqfghgVyEO3tc+VsqoKy+Dk=
+	t=1745064518; cv=none; b=kd5snZb9jWGf3k0Me4smP8SOR/3lU9sGqD6dXo3WIxH/DIrCX4yRpy5tU+AUH9GXNonrIR21a8CuPSWIT1o21qIf6WdHkbd3UtyzYwy7l88GF5TAviC6U+IL2sac4nSlZleV+AgfMHjuQ8odQuAdIVfZT9MJRx44yKczBvYB6G4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745064057; c=relaxed/simple;
-	bh=S/JogNL0Z5r7fTN1TYZJwx0JV0BnRDzijgIYGg3OcAs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ei5FEzU7f4bDMjmELEd8QwUJ51WHXMmGau6OKVyRejdjKz+6kshBXjrjmBt6Iathtszj57gcUcSzO+F9clc0sSN8VVDsg43246ByXLUfTVtra62ifrGk0UtEVT16c/lzVvYxDZXf3P73UFNnM/Lz34u8P0HL9DqA8ccgLAIlK8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=but2MW+d; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745064518; c=relaxed/simple;
+	bh=0vi9bSxOteNpYRBLQUKsaQ6T9Zp5ziaJXp50ZLSx+vI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RYeZlPgWe+PgNsaUQfpim9kkZApQqvfOoAxCGZGTkqAxOxfMnRlUdWp8+jRnMjUCqq+Aj8TxXRzXjlyVSWESPJi30o9MdzKFYjM6AV5yap2eFPF7y6t4A7UMWaA7VN0Gf/L6o3YKEDgQNoG5aSh5yae9Z1nChHwEhSeRC2oImOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pku.edu.cn; spf=pass smtp.mailfrom=pku.edu.cn; dkim=pass (1024-bit key) header.d=pku.edu.cn header.i=@pku.edu.cn header.b=RvoaSgHf; arc=none smtp.client-ip=162.105.129.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pku.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pku.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="but2MW+d"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745064042;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=AtQwAwd4D2QAaXwT+fjX/n4DbO60dxzK1kBHI70Rybc=;
-	b=but2MW+dKMSSeZZ8Nec+C/7lyAc4EvHBufP8jRjrk2y4ZGz8uJwkDiHEZfj3ygs0x/sOWg
-	CHVqw84fEzIV2HeGQ8PTfOMXonxh6XJ7T8kb3ZWpvrxaKZzN7Am2wWVg66Ri1GVk6e0jfn
-	h6rsU3XmFf5raFZyra5g5mjrL/xq7W0=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-hardening@vger.kernel.org,
-	linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] alpha: Replace strcpy() with strscpy() in setup_arch()
-Date: Sat, 19 Apr 2025 14:00:04 +0200
-Message-ID: <20250419120005.177136-2-thorsten.blum@linux.dev>
+	dkim=pass (1024-bit key) header.d=pku.edu.cn header.i=@pku.edu.cn header.b="RvoaSgHf"
+Received: from pku.edu.cn (unknown [10.4.225.203])
+	by mtasvr (Coremail) with SMTP id _____7Dw5kc8kgNoKm9QAA--.8882S3;
+	Sat, 19 Apr 2025 20:08:29 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=pku.edu.cn; s=dkim; h=Received:Date:From:To:Cc:Subject:
+	Message-ID:References:MIME-Version:Content-Type:
+	Content-Disposition:In-Reply-To; bh=ShQJ6bdQ3naO3cGgvt+FpfUT7oKS
+	BjoS2qTqwnLQx1g=; b=RvoaSgHfnbW6HB90vYoyEhTwEA1HE2MGpr70p7MBRPb/
+	dW3y6NDSA1KBjHWq0L0IfMtz9vm77GXKd9tWw2sDZ3glZSfX6KAhaTwtMcSRHuC+
+	haFOrYFOTrtLET1jXglCz0Vd3NESf6LIJ6Mpt/IdNw36oH1TD9qFmBr8xgeqzuM=
+Received: from localhost (unknown [10.4.225.203])
+	by front02 (Coremail) with SMTP id 54FpogAXTIY2kgNoR68rAA--.15898S2;
+	Sat, 19 Apr 2025 20:08:28 +0800 (CST)
+Date: Sat, 19 Apr 2025 20:08:22 +0800
+From: Ruihan Li <lrh2000@pku.edu.cn>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Ruihan Li <lrh2000@pku.edu.cn>
+Subject: Re: [PATCH] mm/mm_init: Don't iterate pages below ARCH_PFN_OFFSET
+Message-ID: <6f2sjssx6f4lidlhucdio45s6p7d6xr4ibr3n3f73z53x5u62e@hvyh5socmfll>
+References: <20250418162727.1535335-1-lrh2000@pku.edu.cn>
+ <aANN0rwxcajUtFXs@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aANN0rwxcajUtFXs@kernel.org>
+X-CM-TRANSID:54FpogAXTIY2kgNoR68rAA--.15898S2
+X-CM-SenderInfo: yssqiiarrvmko6sn3hxhgxhubq/1tbiAgEIBWf35XUDOwARsn
+X-CM-DELIVERINFO: =?B?aH/fJ6aAH6dYjNjDbLdWX9VB7ttaQFyXTaecYZzOeDisy/krtsX5TsLkpeAzENeCPc
+	0+BDdXjm5Mlm64oODP/CxX7Cd2WUS6gvCXweNJGg4wTqVPON5pxajDNeWruRnFGC+vzwRc
+	v3bsqmnf43BmGcHw7dEE9dfsVAMjqNIpZo88038huZM7cFNpXzyutorufK+aBg==
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-strcpy() is deprecated; use strscpy() instead.
+Hi Mike,
 
-Since the destination buffer 'command_line' has a fixed length,
-strscpy() automatically determines its size using sizeof() when the size
-argument is omitted. This makes the explicit size argument for the
-existing strscpy() call unnecessary - remove it.
+Thanks a lot for your review!
 
-No functional changes intended.
+On Sat, Apr 19, 2025 at 10:16:34AM +0300, Mike Rapoport wrote:
+> On Sat, Apr 19, 2025 at 12:27:27AM +0800, Ruihan Li wrote:
+> > Currently, memmap_init initializes pfn_hole with 0 instead of
+> > ARCH_PFN_OFFSET. Then init_unavailable_range will start iterating each
+> > page from the page at address zero to the first available page, but it
+> > won't do anything for pages below ARCH_PFN_OFFSET because pfn_valid
+> > won't pass.
+> > 
+> > If ARCH_PFN_OFFSET is very large (e.g., something like 2^64-2GiB if the
+> > kernel is used as a library and loaded at a very high address), the
+> > pointless iteration for pages below ARCH_PFN_OFFSET will take a very
+> > long time, and the kernel will look stuck at boot time.
+> > 
+> > This commit sets the initial value of pfn_hole to ARCH_PFN_OFFSET, which
+> > avoids the problematic and useless iteration mentioned above.
+> > 
+> > Fixes: 907ec5fca3dc ("mm: zero remaining unavailable struct pages")
+> 
+> I don't think it should be backported, this does not fix a bug.
 
-Link: https://github.com/KSPP/linux/issues/88
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- arch/alpha/kernel/setup.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I thought the Fixes tag only indicated that the problem existed since
+the specific commit, not the need for a backport (since the backport
+should only happen when someone sends or CC's the patch to the
+linux-stable mailing list)?
 
-diff --git a/arch/alpha/kernel/setup.c b/arch/alpha/kernel/setup.c
-index bebdffafaee8..8b51e6ca83d6 100644
---- a/arch/alpha/kernel/setup.c
-+++ b/arch/alpha/kernel/setup.c
-@@ -468,8 +468,8 @@ setup_arch(char **cmdline_p)
- 	/* 
- 	 * Locate the command line.
- 	 */
--	strscpy(command_line, COMMAND_LINE, sizeof(command_line));
--	strcpy(boot_command_line, command_line);
-+	strscpy(command_line, COMMAND_LINE);
-+	strscpy(boot_command_line, command_line, COMMAND_LINE_SIZE);
- 	*cmdline_p = command_line;
- 
- 	/* 
-@@ -511,7 +511,7 @@ setup_arch(char **cmdline_p)
- 	}
- 
- 	/* Replace the command line, now that we've killed it with strsep.  */
--	strcpy(command_line, boot_command_line);
-+	strscpy(command_line, boot_command_line);
- 
- 	/* If we want SRM console printk echoing early, do it now. */
- 	if (alpha_using_srm && srmcons_output) {
--- 
-2.49.0
+But anyway, I'm going to remove the Fixes tag when I send v2.
+
+> 
+> > Signed-off-by: Ruihan Li <lrh2000@pku.edu.cn>
+> > ---
+> >  mm/mm_init.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/mm/mm_init.c b/mm/mm_init.c
+> > index 84f14fa12..b3ae9f797 100644
+> > --- a/mm/mm_init.c
+> > +++ b/mm/mm_init.c
+> > @@ -966,7 +966,7 @@ static void __init memmap_init_zone_range(struct zone *zone,
+> >  static void __init memmap_init(void)
+> >  {
+> >  	unsigned long start_pfn, end_pfn;
+> > -	unsigned long hole_pfn = 0;
+> > +	unsigned long hole_pfn = ARCH_PFN_OFFSET;
+> 
+> ARCH_PFN_OFFSET is defined only for FLATMEM, this won't even build for
+> SPARSEMEM.
+
+Sorry for my ignorance. I'm not familiar with the code and I'm only
+testing the FLATMEM configuration. I'll send a v2 patch to fix this.
+Thanks for pointing out my stupid mistake.
+
+> 
+> >  	int i, j, zone_id = 0, nid;
+> >  
+> >  	for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
+> > -- 
+> > 2.49.0
+> > 
+> > 
+> 
+> -- 
+> Sincerely yours,
+> Mike.
+
+Thanks,
+Ruihan Li
 
