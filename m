@@ -1,48 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F376942049
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 16:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5328A19343B
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 16:25:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745079836; cv=none; b=JmFk+IuumxnxGwMqkjy7U3JntGclaZU6ch4SKdTFb/nntIXvKZkmpNkWzGkoU37/DZyK8mwSLHOc+b8w9vRYtPk84MtJdkM4Udj1+1C7WvaAl3sAr2AEYBa8R94d84DneM/hEfcU6dTJFmgtIxEetqwaQ3buQABuQQErbht64bA=
+	t=1745079912; cv=none; b=KWB6R0BNrIpRIgJIMl3dnT0x5oCQHvZgb9i5Ss78qyl7VJisNpB7QNVrCg67iJ2x1EHMSDnlCXdgtedJbH2lh9N7VQOgh8ezwDA8/6s5x2KGxfNJIzmDUugqcrRpoxBMMPsifrP41o7ICfc+O+lLxYg/UhsuuV9f7tcs9OB0fdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745079836; c=relaxed/simple;
-	bh=A4aXslW3tMdSS9KDIVJUYu3oEx1GrGTAqMb/Si2j3Ak=;
+	s=arc-20240116; t=1745079912; c=relaxed/simple;
+	bh=ZCTbZYsz3i673XjwYNGUdoYKgUhBD5x8hbDix4gS4DA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MNEU/S3/640D/X74dCNyHJoLHBfl/qIM3ubqLytsSF/5bwbpV4YTSI5yVLla3AhJJD7oNYz4dAC0D6QhWGGmqcmOvO2ku5V7IZ1M5doFJHW50otduAWWEGjDsSQcSAu+JrZ3qikpZ/w4baNsIU6idkpAG5tAxQV4Ni08JZ2LbvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.12
+	 Content-Type:Content-Disposition:In-Reply-To; b=SYOe6bDf8qX+7ztHQbRfGw65mJSeiJjTWhtlEM3xN9J03TskGehgj+sKkbB1CBZ5V7zu+lqEmPZoG6bsTV0YQPr+pE8V/r8yptzcxdQJhB1Lg7w1LwxzXsg5SCLfmF/3pgC/hCA1Kh5NEcLcO10Ny4sPW+HguiAb957i5CAhwrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: tI0fwigyQP+T6peKBgELpA==
-X-CSE-MsgGUID: yiEe89/zRpKuTWlnJAz4ww==
-X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="50509656"
+X-CSE-ConnectionGUID: BygiXtrURQmhK/mOr0UhOA==
+X-CSE-MsgGUID: q4gxoHZeToCmHh9QaCYtQA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="34297472"
 X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
-   d="scan'208";a="50509656"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 09:23:54 -0700
-X-CSE-ConnectionGUID: ByY1JARDRouKYTX1aIUFhQ==
-X-CSE-MsgGUID: CL120DMJREOmmHSvOrx3Yw==
+   d="scan'208";a="34297472"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 09:25:11 -0700
+X-CSE-ConnectionGUID: e2+yuJEHRRm1I9Etldu8ug==
+X-CSE-MsgGUID: Rw/4HmKVTTCmLUkwaJcpNw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
-   d="scan'208";a="131649436"
+   d="scan'208";a="131889650"
 Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 09:23:52 -0700
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 09:25:09 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
 	(envelope-from <andy@kernel.org>)
-	id 1u6Ayr-0000000Drcm-2eds;
-	Sat, 19 Apr 2025 19:23:49 +0300
-Date: Sat, 19 Apr 2025 19:23:49 +0300
+	id 1u6B06-0000000Drda-2NxT;
+	Sat, 19 Apr 2025 19:25:06 +0300
+Date: Sat, 19 Apr 2025 19:25:06 +0300
 From: Andy Shevchenko <andy@kernel.org>
 To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
 Cc: julia.lawall@inria.fr, gregkh@linuxfoundation.org,
 	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
 	dan.carpenter@linaro.org
-Subject: Re: [PATCH v6 1/2] staging: rtl8723bs: Remove duplicate NULL tests
- on pstat
-Message-ID: <aAPOFccMEWDHjJ_S@smile.fi.intel.com>
+Subject: Re: [PATCH v6 2/2] staging: rtl8723bs: Prevent duplicate NULL tests
+ on psta pointer
+Message-ID: <aAPOYhdJoD23b4np@smile.fi.intel.com>
 References: <cover.1744990405.git.abrahamadekunle50@gmail.com>
- <016d5429e5db0596a4fc8bb25b1c23ff94ff88b4.1744990405.git.abrahamadekunle50@gmail.com>
+ <4fb8314f1ca4c273a1f2c2f648c7993d7708224c.1744990405.git.abrahamadekunle50@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,29 +51,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <016d5429e5db0596a4fc8bb25b1c23ff94ff88b4.1744990405.git.abrahamadekunle50@gmail.com>
+In-Reply-To: <4fb8314f1ca4c273a1f2c2f648c7993d7708224c.1744990405.git.abrahamadekunle50@gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Apr 18, 2025 at 03:41:56PM +0000, Abraham Samuel Adekunle wrote:
-> The pstat pointer has been previously tested for NULL after being
-> initialized as seen from line 970-973 of the file.
-> The first NULL test is shown below:
-
-> 		pstat = rtw_get_stainfo(pstapriv, GetAddr2Ptr(pframe));
-> 		 if (!pstat) {
-> 			 status = WLAN_REASON_CLASS2_FRAME_FROM_NONAUTH_STA;
-> 			goto asoc_class2_error;
-> 		}
-
-It's too much for such a change. You can do that in the comment area
-(after '---' line below), or drop it completely. You can rephrase that
-the pointer is checked before the changed lines.
-
-> Remove the second NULL test to avoid redundancy in code.
+On Fri, Apr 18, 2025 at 03:41:57PM +0000, Abraham Samuel Adekunle wrote:
+> The psta pointer had previously been tested for NULL after initialization,
+> as seen in the code below:
 > 
-> Found by Coccinelle
+> 		psta = rtw_get_stainfo(&padapter->stapriv, pattrib->ra);
+> 		...
+>                 if (!psta)
+> 			return _FAIL;
+> This makes a second NULL test on psta unnecessary.
+> 
+> Remove the second NULL test on psta to avoid redundancy in code.
+> 
+> Found by Cocinelle
 
 Missing period.
+
+P.S. Here the commit message is fine, however misindented
+(check the indentation).
 
 -- 
 With Best Regards,
