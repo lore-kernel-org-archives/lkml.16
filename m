@@ -1,184 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCB72D613;
-	Sat, 19 Apr 2025 15:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637ACBE4E;
+	Sat, 19 Apr 2025 15:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745076646; cv=none; b=WZMdtSjrXxXjbG9omWsJNp5GH8guhQDe0Pl3oLmFnTmzdcNlLagtKsbPSAHsSFOMsRhKbYSCTDCjst3KHujoXGj7uydlVaNqR5kwyjKUwf1tv+DJ1Gw6WcMNdENlHK8ZplugqQMBC5RDOJ726toijEb8shHN/y6IXGitu/KEzFI=
+	t=1745077132; cv=none; b=ejpAPQPU3dLYy0muHuPfrDmIZJnyx0ySwTVdqNzh8Jc+SK2JjPAscULQSL2Y9mhsRjICDAIep59fe7qRjtUBCr8zlfQFd6rJEqNB9biDjN+5c1CaMMWBrn3u6vyHS/FOp/UOv7nA6Z4zUQttZr9ooCq7KAGu6aqU8OX3L9aov84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745076646; c=relaxed/simple;
-	bh=EJY6VnbO/oorT+t/r51LBHIJCvd7pfE+OXcRXcdWp/Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ti17lqHbCON2jdLEZmzsy2kys466Bas8u5XvAfHoiBAlqukOGGy9Z8KTyaRseiSaL4WwKXbS06GNfNFV+NcEaUhk3r3TnsFJBOrO49tzDv9WJcykqKJZTq488p3U8dgZBmIX4YK8zoY4l+uuM3u29XvQaa1vaX1sHiCTtnRljuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kqy9yxI0; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745077132; c=relaxed/simple;
+	bh=DlaA179pUDVk3UupX+xzdV09IgdpYtb62ICAwXFuDr0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=gM32+rwrj4jHXgIkzlbf8nvaEVoW7rpwLenbIZyf8ZjohfpBBY8A+xRyA+66/5A1DqrUe7jfa5ZzHXFE0WxD50x7qlHvV/9kPWQQbPvgq2/4KmRt7fHh285zwc9Zx3oIfLh1IY7/q91143OX05yIh11S08M18m+dipiUGaesD+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G9HIuaz8; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kqy9yxI0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745076645; x=1776612645;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=EJY6VnbO/oorT+t/r51LBHIJCvd7pfE+OXcRXcdWp/Y=;
-  b=kqy9yxI0ZfoOWs1glYcuiUfAd8IeLhIOjzDKlyVWWtXmPI8Z9C3j6jdY
-   xg8nQpw9MkLbdPvL8dbzKq056ND84nxA0H+5Qujl7xO/ooR7uS2K/OOds
-   xAl+EoI3kw/L4UDV6+XO/MuBhtCt9LcHiEcCONqz+TvmGRdhQYERB0RHg
-   M/V4SXIwfEoEHO4b5XXwlXMh8dS4RWo6KnvzNsRFPiB2mIY3wGRL4f0VB
-   xW/6CqPb+7xI7w6rSL8+LulS6lJ4oL0UqgRQRwtzfgvZKF+8945e8fvif
-   qumRL0jDAoG5D4fndeSpAOK3l/R9fwoLOz1iZID/agGds9sJy/s0ohkO4
-   A==;
-X-CSE-ConnectionGUID: OO56U8EaR3y71mlFyqiocg==
-X-CSE-MsgGUID: 2P+9OFUcSfyqAHX5Eluckg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="46806652"
-X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
-   d="scan'208";a="46806652"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 08:30:44 -0700
-X-CSE-ConnectionGUID: CuoieLxUT1K3ksC/Kut48Q==
-X-CSE-MsgGUID: ZSJTu6nsQF+IEiTNRnHGnA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
-   d="scan'208";a="154517506"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 08:30:35 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u6A9I-0000000DqsB-0AwJ;
-	Sat, 19 Apr 2025 18:30:32 +0300
-Date: Sat, 19 Apr 2025 18:30:31 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 11/16] of: property: Allow fw_devlink device-tree support
- for x86
-Message-ID: <aAPBl7qdbUizMQko@smile.fi.intel.com>
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
- <20250407145546.270683-12-herve.codina@bootlin.com>
- <Z_Pw_MoPpVNwiEhc@smile.fi.intel.com>
- <20250408154925.5653d506@bootlin.com>
- <Z_U0DkSemHK0lrJW@smile.fi.intel.com>
- <20250418151036.719f982b@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G9HIuaz8"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7398d65476eso2200369b3a.1;
+        Sat, 19 Apr 2025 08:38:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745077130; x=1745681930; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=DlaA179pUDVk3UupX+xzdV09IgdpYtb62ICAwXFuDr0=;
+        b=G9HIuaz8kcVsKSPP80FPF/3iKrOuFDsTfJzMT3L21MPNPaqAVtlDzBgMkLxuanmc/V
+         1mjaQGgiznxvVuScBi0CUhHihbQRUD0O3uSvQRbNq9EFdNIBArGhgFeKTOBM3iFO25aP
+         gWJxzdTvlz2ppYUL/JXe+x8TX7Ziw5nzSRHZgl9BuGIs8wX2Kt2Bu2UayCtYkivVefQl
+         yFnwgC0VcTelF2bNCPc53WNR8op1lM9HDGX6JxVhGeL4FudjW+RIn02CP0jPvOvyKDE4
+         wM7KzaPmIUjLj3K2kCUOOdWE4AKqxkQxqLCnVLfKgXZLRFPS6MdNIUotOcQjNLsWwIYc
+         1Vig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745077130; x=1745681930;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DlaA179pUDVk3UupX+xzdV09IgdpYtb62ICAwXFuDr0=;
+        b=di7uwIF8NZFub7xUmwcA2G+gWXfUZtHuGBWUd/RmfvovvmhiHG57A+aV+L76o6N295
+         EQ7D22pBTYvNN1OpJ5bG6ENPUg5eZhqdEV2cE9k3XvcuqymcFV/R0S9CvOQBoE1FEDYx
+         VDDO1h4VOPWF7kN8UTruqzA50wd4R/pcu+P47/B6sxt7fAnsVyOfY4KYFGo2FY0TXPaQ
+         o4GCibWLzX5+nrp+5mhVZe+92enuiIG3lSA/wwjkfPPisE+YsOcRHKFcGftY01EIN2EN
+         QL8K4nYZY1p/k52nTiu08hP0o52WgerwJcoAKiU1ZJFQlcWdUghns2/dYoEWWbNcldx8
+         drLg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPR3+o9mB+HsBE4TF3D2DDF3sWbZH/DG7/5pgMtC9yDMfLC3YdHVDwXT+8vWCTKAsROJz2p/GB1b5G2Tc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLonlzxZcCxEu795FmlkBlKaQPeHT84aSRiYVttIXW6KYvdshm
+	tV7s/wa47vK3yNC7LpVLciR0eq121I1XbQOVZGXCKNEkveTG3pb+
+X-Gm-Gg: ASbGnct6re5QEHO6PHScCpNfNrdwlIoirjThERQ49hrkMpYN8ppmP9yPeVpi192fM07
+	NAQDiow///9Q97aD1Hqaob7JD7yhZN4nqegj5yAoLhg9Pzwvkoy9UOdOIGlQk2lp4xkWCzVaijb
+	CWz9Feg9VUVRKhFSr6/n6xEKuhcv9+Hvh22roeQmKQbSZtfG/gk+IL65Vo2ySNGNzkwTj4h1hrw
+	hkXMqDk+xKnc0DyEZQZT5ByrfldHIk0m+FX6wgaC9vmfzpNhyJSOOFLEea7H1XlrFMM0ZevKzrw
+	O4erRABzWCAkPZovW75Jy+hLlR3h9lvpw2FUQf2IEHA8dzlnjH4AZZKSe31rRw==
+X-Google-Smtp-Source: AGHT+IGjMg5+kviz+gp0F1ryn7TU+yeHi6CJxEK1TEuwEw6ajfIscq2dZURhTwk4TSdmRlHCEZuALg==
+X-Received: by 2002:a05:6a00:114c:b0:736:5969:2b6f with SMTP id d2e1a72fcca58-73dc1829732mr8290477b3a.6.1745077130364;
+        Sat, 19 Apr 2025 08:38:50 -0700 (PDT)
+Received: from ubuntu.localdomain ([39.86.156.14])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8e3631sm3571421b3a.51.2025.04.19.08.38.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Apr 2025 08:38:49 -0700 (PDT)
+From: Penglei Jiang <superman.xpt@gmail.com>
+To: tj@kernel.org
+Cc: cgroups@vger.kernel.org,
+	hannes@cmpxchg.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	mkoutny@suse.com,
+	xnxc22xnxc22@qq.com
+Subject: Re: KASAN: slab-use-after-free Read in cgroup_rstat_flush
+Date: Sat, 19 Apr 2025 08:38:43 -0700
+Message-Id: <20250419153843.5035-1-superman.xpt@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <Z_1JBt3RMATxnDgL@slm.duckdns.org>
+References: <Z_1JBt3RMATxnDgL@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250418151036.719f982b@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Apr 18, 2025 at 03:10:36PM +0200, Herve Codina wrote:
-> On Tue, 8 Apr 2025 17:34:54 +0300
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > On Tue, Apr 08, 2025 at 03:49:25PM +0200, Herve Codina wrote:
-> > > On Mon, 7 Apr 2025 18:36:28 +0300
-> > > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:  
-> > > > On Mon, Apr 07, 2025 at 04:55:40PM +0200, Herve Codina wrote:  
+On Mon, 14 Apr 2025 07:42:30 -1000, tj <tj@kernel.org> wrote:
 
-...
+> Maybe another casualty of the bug fixed by a22b3d54de94 ("cgroup/cpuset: Fix
+> race between newly created partition and dying one")?
 
-> > > > This is incorrect, they never had ACPI to begin with. Also there is third
-> > > > platform that are using DT on x86 core — SpreadTrum based phones.  
-> > > 
-> > > I will rework the commit log to avoid 'mixing ACPI and device-tree'
-> > > 
-> > > For "SpreadTrum based phones", do you have an idea about the Kconfig symbol
-> > > I could use to filter our this x86 systems?  
-> > 
-> > Hmm... good question. I don't think it was anything. The Airmont core just
-> > works and doesn't require anything special to be set. And platform is x86 with
-> > the devices that are established on ARM, so nothing special in device tree
-> > either, I suppose. Basically any x86 platform with OF should be excluded,
-> > rather think of what should be included. But I see that as opposite
-> > requirements to the same function. I have no idea how to solve this. Perhaps
-> > find that SpreadTrum Intel Atom-based device? Would be really hard, I believe.
-> > Especially if we want to install a custom kernel there...
-> > 
-> > > Anything I find upstream related to SpreadTrum seems base on ARM cpus.
-> > > I probably miss something.  
-> > 
-> > There were two SoCs that were Intel Atom based [1]. And some patches [2] to x86
-> > DT code were made to support those cases.
-> > 
-> > > > And not sure about AMD stuff (Geode?).  
-> > > 
-> > > Same here, if some AMD devices need to be filtered out, is there a specific
-> > > Kconfig symbol I can use ?  
-> > 
-> > This is question to AMD people. I have no clue.
-> > 
-> > [1]: https://www.anandtech.com/show/11196/mwc-2017-spreadtrum-launches-8core-intel-airmontbased-soc-with-cat-7-lte-for-smartphones
-> > 
-> > [2]: 4e07db9c8db8 ("x86/devicetree: Use CPU description from Device Tree")
-> > and co. `git log --no-merges 4e07db9c8db8 -- arch/x86/kernel/devicetree.c
-> 
-> I have tried to find a solution for this topic.
-> 
-> Indeed, this patch enables fw_devlink based on device-tree on all x86
-> platform except OLPC and CE4100.
-> 
-> You have mentioned some other x86 based system that could have issues with
-> fw_devlink and it seems to be hard to have a complete list of systems for
-> which we should not enable fw_devlink (potential issues and so regression
-> against current kernel behavior).
-> 
-> As you also proposed, we can thing on the opposite direction and enable
-> fw_devlink on x86 systems that need it.
-> 
-> We need it because we need the device-tree description over PCI device feature
-> (CONFIG_PCI_DYNAMIC_OF_NODES) on x86 in order to support the LAN966x use case.
-> 
-> What do you think about the following condition?
-> 
-> 	if (IS_ENABLED(CONFIG_X86) && !IS_ENABLED(CONFIG_PCI_DYNAMIC_OF_NODES))
->  		return 0; /* Not enabled */
-> 
-> CONFIG_PCI_DYNAMIC_OF_NODES has already to set explicitly by the user.
-> 
-> Do you think it makes sense and could be a good alternative instead of
-> filtering out a list of x86 systems ?
-
-At least this won't break old platforms that won't set that configuration
-option. Ideally, of course, it would be nice to have some kind of detection
-at run-time...
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+This issue was maybe caused by commit 093c8812de2d3, and was later fixed
+by commit 7d6c63c319142.
