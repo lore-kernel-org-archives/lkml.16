@@ -1,70 +1,79 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17691DEFDC
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 16:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6283717E
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 16:54:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745081524; cv=none; b=DXLrHRdxGQ7delubI49WNk3rLEGy8QyOUiMGaywJuUXGdgQTFVASKJCNA3PetlIUzajVGYs7fho04ynNHfH4lc+W3Y1uP9fMBj9qVivIpbiuZ0Vxfa4E5GWhVlnguVz6zq9VFzDVDefghO7O3/Qj2QnTvkJzXki9vt+TUlfP32A=
+	t=1745081684; cv=none; b=A3o+Eu4wTMWIwotCj1AsEdSVK6oYtvHCXSXBk9EXaIYo9oMjVJhKWj0jww2KzHBh8fuK/E3v0XinTsjVXxMvt9ljzeAG171ohX5jflvwnAVV/vcOvp9n9DYUMHn7pcgLKcSfY3cYBBqMifNpWdG4CirfrAaaV/9ZL3y2Qt5RrSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745081524; c=relaxed/simple;
-	bh=0umZVab4MInIm6Hh9sW7E6pBic4UWXBleyLmUV0NDJ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XyziIuV9Ma9aS0kG9gORUv0A1PL0Xr7PVWflIw5e6kekLKz5HD64xs3Hn5lGrYV8ZNZ6C4AQmZK3CM7Ta32HtgayP+kPkmZS5DqCPbqxDLTS9hkWc+i5RrMls2BMbs89Sr8P9EIooIMti3xh3WeqDHr+RfCDe5dIcjv7N1f891Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v58tI5tf; arc=none smtp.client-ip=209.85.214.176
+	s=arc-20240116; t=1745081684; c=relaxed/simple;
+	bh=gpFzt9a0/L009rwgmaXycDOg9jsGrSoOkzkXV3bFgNA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fVqmonTx5ZpYXz4CgJ4BIRJi8WxKBIh6/IpqCaqDf/gwcpfgSlOzVmeG+FOtAP+BuFADx1R+5vtXEO0uUmhfw1eFx+9O9RkqNDHO+z82jJY5NWBQ2g7Q3U1WFUrLKk99jMMpcuBlIIX0jhw8+zhJNkGxLxi48LGcnGE7wHqbnyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HAdYTFpU; arc=none smtp.client-ip=209.85.215.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v58tI5tf"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-223fd89d036so33688505ad.1
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 09:52:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HAdYTFpU"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b0db0b6a677so1826437a12.2
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 09:54:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745081521; x=1745686321; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=f+ZQg5iuK94qPLtJ84KAwd3BvA9WmtkRkwUWNrpfTPA=;
-        b=v58tI5tf286k4dhYLLj/7Tq4eqUckl+Xz/PppA2E7MsTB9pUXI/R0tUPok235vOwlQ
-         tQZBUe+hxbWFXaaf3B6Bm3RhOgXodPSJStPHR5G4JLXdctEpVV4PBJjt7ExRyGvNFH9E
-         uYYx0ZiNI7ANP3JCPV8j7Id9q9l9I15UDG+acrpgqMjunrA7ZRI/8s0F942YF0i2WLa6
-         oRyQSmHdg4cy9a9+CNSryj3S02kJkCTSORpwGRDt/e6dbJ+LJLqYBkbR/XdBWkHYkV7d
-         aYdFsJ8nDiwRmjjHWd96wRza34NyNL0sSTSfzF+ZCKejE6EKYtDmut2Yp2suM+5bkRmr
-         MvUg==
+        d=linaro.org; s=google; t=1745081683; x=1745686483; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m93ArCqGj/VL7itXbB4s74bjvMX+c/h5RtG0prz3w/8=;
+        b=HAdYTFpUx06hV+zq/NWZ1RxR6KkQD5OhmRYCljXlCbrnZUm6FD92rDUJBXaKRVkznQ
+         jA6ng3gC8x94ii5uyLckqo27rfaqB5gd4WPnySTydxyHklN2rsCnIoAL7CRd9JeTXVNB
+         P5mMLSgqvfNc9J1HLx1rWq2xcvUXjT1OAxgBtOJ7/5PSr3Xim0j7jOfV1dTCS6aI3uky
+         ipi0tT33TKxwO4yJpKe3MIYuqtdQA9q3Os0SHy/uLEI/PHOrsnKSJ2eHej2IzQLswu3H
+         asYc1i6QbyRjLqeWS8t7qb+o1Hwz/iNFoev1ScXGMD6mJXWCxvc/jbKZa6xOFYJBvv4K
+         SQ2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745081521; x=1745686321;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f+ZQg5iuK94qPLtJ84KAwd3BvA9WmtkRkwUWNrpfTPA=;
-        b=FF7aYFI16zybua8M7LBCROuqu1qBHDC0CJbwmN1ADDO1YHokXLCNv7CZfSlKqSLpai
-         uQ8FJGHfAKY4O12Xg9B9BoMSRNf90WYReKpUXWYA77QCV2K3UrCMlWwS3M42jw19NIaK
-         SV1tGvD2DpSQvKXww96kwpkggHU1s5ZMK2nno+XO3QiUxmAyzmkwSf+Sn5ZPKQkx7esP
-         lQLCCzOnhc+zNhJPX4Z7K3Sjhr1i0UrmkeLAeb6R/nbVS04w0xbYuqJRJt9NUg2flAIX
-         VRGgOMR3V4qaoQua2rF9BVeYO/396wJZQIvpYoF1eIhUBTFJ4mhT6pNfiOrYrKVSNqma
-         NhaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWBzZ8/S100ispFZCdUDSrH8+pQvpIDHy5G/szvokPNKIjH7D7tXmpd8qlD6T0W/LeckH8gRJ0hOYbDuZo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPU7MmpTto6dbx3+8w8wosJ3k/xhQaNZf4+zbhjne5VEftjRsn
-	mNNbULpGmpOyeyV3CuESvXzq2llMKACNo7E19rULcIfkzunYyw8yAjuIo0sA5w==
-X-Gm-Gg: ASbGnct1SfZt4cxD/Yo1SdxqKHUeZ7qMzeumWClneizmbo0QlIgEc+x9Bu8ORqcqXdp
-	tA8pbxzRKRVzQMXFquFnleJaQm0sFD0inly4hiBxVR6LfS4DYhVMc1FXJGyR0kFftEsgk93dO0R
-	naIOUvMe7yIavd6FdpGLsdykWHjYUFd43GEmRBSKPrr8FeBdwvDLvN5RTZcMa0zu78343UG2nKf
-	yNJP7OLYJ4wV+vG0RzUJbHD1kGcVvkwFpOW/R8jNTWA3pqmksi92ZmgXiXNJsCTpjOqy1Ce7/qa
-	46r3VSMl/J7ocR5mPyuPA20Y4RnSVamE0MlrK1W4g9A5bkpJqZcYwZz/POWuNQ==
-X-Google-Smtp-Source: AGHT+IHOvuDRuhzgmIYZ0PseMo6wMw5ZW9e3ASq9UuPs4rj4cDesFYOxLb1JejQpj1NRcFCMCHE/VQ==
-X-Received: by 2002:a17:903:228a:b0:21f:5638:2d8 with SMTP id d9443c01a7336-22c53620bdfmr86912015ad.53.1745081520863;
-        Sat, 19 Apr 2025 09:52:00 -0700 (PDT)
-Received: from thinkpad ([36.255.17.167])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bde283sm36154275ad.6.2025.04.19.09.51.57
+        d=1e100.net; s=20230601; t=1745081683; x=1745686483;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=m93ArCqGj/VL7itXbB4s74bjvMX+c/h5RtG0prz3w/8=;
+        b=BNdrANABOKZ6G8Vg486B/+lsvXGcE6xp4E65X5Na0ApYc5kPBzXXjpaltIiE/86HgC
+         ikcHJTiaM5Sgpo4R1R5Agdr6i4HGhbpdOq8Nl/zXisVlLdDTw+oG+dmJDRrFnbxE/qKm
+         stoQrCQNMX4BROHHNFeahZ+VNaWZvLaP8HwoowPJLu6Hf74MrBSfz9FJt04NI7p75eeg
+         Ik49bdMXY+gt8vHCbajGpg3Ggf0o0Y94L8G0EEbPvoJ5VuUAPXDsHQ3o7YRFbBcAR2Zn
+         8Lt+1qwzV98Hiep2+zZxa9qJHCU+TF8TWLHbW9jZllEYHeziR3rtA0B9isoLNkUCrTMM
+         F8Zw==
+X-Forwarded-Encrypted: i=1; AJvYcCWQLpFNiadIgKT9NDoepiecoN5qs0t7rGzSLmmQ3IYcM605/Z1fPafje1GwzpU7SszEStUDI3dx6+Tl5kQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7Fvg0+w4sQensVtHr9yzeHEYE/Hvinfe/vkKRbCwvasTvsg7A
+	sbN+uFlXzJfhyg9TqAGpXTrrQ0n/Y1iDfpu+rHn/E0lQOYgtXC32uZDILmh3iQ==
+X-Gm-Gg: ASbGnctbtHsyzgXIHpFt5/wjAG31xuhuaitRYvcrYayYy7M6DCGYxS9PRDSCiUPk/ND
+	9OMUZFFjJ4libPSVBGFqyoCc5P8yEfx5W4y2G1fKthmSvj4zJaq4ADW+9J73uifINkCiKKzwHQQ
+	3oABu6blDeEqGOAxRsbfN8XbbC+DC+PAk4gmCx4PvPNuRoYKwt16EROmenpFAFb/4e4zh0RclWF
+	nyKKpDjjDPEvrPjmV7AiuDNH0SXhxXPm7ha2kcFq6r/Gss7NwyLc+4OGPZuXLHIdR9mQJgikOys
+	4W+7W1SXv+rba61d2Vra+LVuVXOGtVgaDxrtj0Gu6oDfYE6Bcrx1fQ==
+X-Google-Smtp-Source: AGHT+IHCBR39x7sDCmGPm0DAtebsJb1E3Rb4vSoppQGMXGzbrScjvVjdiiA/UY71hEB2ck6zvFVsPg==
+X-Received: by 2002:a05:6a20:12d4:b0:1f5:6f95:2544 with SMTP id adf61e73a8af0-203cbcd5e44mr8909123637.33.1745081682802;
+        Sat, 19 Apr 2025 09:54:42 -0700 (PDT)
+Received: from thinkpad.. ([36.255.17.167])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfa59cd6sm3480086b3a.86.2025.04.19.09.54.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 09:52:00 -0700 (PDT)
-Date: Sat, 19 Apr 2025 22:21:53 +0530
+        Sat, 19 Apr 2025 09:54:42 -0700 (PDT)
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
-	bhelgaas@google.com, s-vadapalli@ti.com, thomas.richard@bootlin.com, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rockswang7@gmail.com
+To: lpieralisi@kernel.org,
+	Hans Zhang <18255117159@163.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	s-vadapalli@ti.com,
+	thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	rockswang7@gmail.com
 Subject: Re: [PATCH v2] PCI: cadence: Fix runtime atomic count underflow.
-Message-ID: <pjacxodfaywqxabqeftguqcrz2eoib5l5l32oevy5j5rrwl5s6@hhglbkyrmnzg>
+Date: Sat, 19 Apr 2025 22:24:32 +0530
+Message-ID: <174508165327.58233.7858938812683501667.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250419133058.162048-1-18255117159@163.com>
 References: <20250419133058.162048-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -72,12 +81,11 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250419133058.162048-1-18255117159@163.com>
 
-On Sat, Apr 19, 2025 at 09:30:58PM +0800, Hans Zhang wrote:
+
+On Sat, 19 Apr 2025 21:30:58 +0800, Hans Zhang wrote:
 > If the call to pci_host_probe() in cdns_pcie_host_setup()
 > fails, PM runtime count is decremented in the error path using
 > pm_runtime_put_sync().But the runtime count is not incremented by this
@@ -85,55 +93,13 @@ On Sat, Apr 19, 2025 at 09:30:58PM +0800, Hans Zhang wrote:
 > And the callers also decrement theruntime PM count in their error path.
 > So this leads to the below warning from the PM core:
 > 
-> runtime PM usage count underflow!
-> 
-> So fix it by getting rid of pm_runtime_put_sync() in the error path and
-> directly return the errno.
-> 
-> Fixes: 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe controller")
-> 
+> [...]
 
-This is not the correct Fixes commit. In fact it took me a while to find the
-correct one. This exact same issue was already fixed by commit, 19abcd790b51
-("PCI: cadence: Fix cdns_pcie_{host|ep}_setup() error path").
+Applied, thanks!
 
-But then, this bug got reintroduced while fixing the merge conflict in:
-49e427e6bdd1 ("Merge branch 'pci/host-probe-refactor'")
+[1/1] PCI: cadence: Fix runtime atomic count underflow.
+      commit: f8015b6a0db95ce09aaacb236746f33b7a540a3e
 
-I will change the tag while applying.
-
-- Mani
-
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 11 +----------
->  1 file changed, 1 insertion(+), 10 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 8af95e9da7ce..741e10a575ec 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -570,14 +570,5 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->  	if (!bridge->ops)
->  		bridge->ops = &cdns_pcie_host_ops;
->  
-> -	ret = pci_host_probe(bridge);
-> -	if (ret < 0)
-> -		goto err_init;
-> -
-> -	return 0;
-> -
-> - err_init:
-> -	pm_runtime_put_sync(dev);
-> -
-> -	return ret;
-> +	return pci_host_probe(bridge);
->  }
-> 
-> base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
-> -- 
-> 2.25.1
-> 
-
+Best regards,
 -- 
-மணிவண்ணன் சதாசிவம்
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
