@@ -1,109 +1,120 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9B914601C
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 17:47:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9CB647
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 17:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745084848; cv=none; b=HVIsAQ1dPwMCBv3PJ3o21CSfRRDlHaPZzo/O/JKc/03UckI/E5YHiaYhpk79adfukgNSu63hWoVFI6qKTAu+tXkFlqO/Ii+VE43CHSOowjOgH+W1VB2q7Uw6Xn+GvwxFIkwzmXA1nCIyTqkR+zteeA8daGGY9gOJrd4wH5WW6Ns=
+	t=1745085438; cv=none; b=ZWXOAmvQby9xItQNLob50NmktIEahHWgc5NZOCJoirEgu4+QxhyN1ym8u+aPcpSAzC8Lg3RJ4mhAd+ci5EOpmyrQfXQn8KMyc845ebAFVzVVJI+ELZkcX/uF0RktG9TuDzG0se9fdLj91rSiELuZHEJpW3dp2tTCHfjGLGfE1bQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745084848; c=relaxed/simple;
-	bh=8rdRVsiRgEQBAfCISbqGX0xI9hmN+uhxTp3GrzN2J9s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ohdYfvkZeFIfBlENm6RG6ys6dysmpo07JCjvEKESpUdk5G6vulLx5nJgCcQaQgtmv7iUKNbjnSIprxTVfITRfyYjNC8dB/8fkioIFLPLSRiDYjyrH0dpgXX8fG2d5ZWU0SxjimUrved0qY5/TdiuyGtBThCAGgfcegZfm89kJSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RFcQxBfv; arc=none smtp.client-ip=209.85.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745085438; c=relaxed/simple;
+	bh=mmlxa8Rk/7RKZ2bVqNvnj28XwEsEz6g/FUP9UUVflxQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C2DsinPo2OYJ0MmaRfGUASnmDMWJsWFvddo6z0RppuPGP4FFri4AU26ySbfRqQ8pwlxcqZcwyGb4M0O3e/sCygQdkV4EK2NcMR82+/QC6GhF6t6o9423SPG/xr3vHdU9zWOL5Jqdat+lC1OrjSelFqipUqZB/5dCFX0XROy4FCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=OpNwLcRN; arc=none smtp.client-ip=209.85.167.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RFcQxBfv"
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-72bd5f25ea6so666430a34.1
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 10:47:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="OpNwLcRN"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3fea67e64caso1717391b6e.2
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 10:57:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745084846; x=1745689646; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=l9p/9GPno78DZ3qtYAcJxFBAogUfeTY9SwXa+83U50I=;
-        b=RFcQxBfvMTpscbZ+1lqt9THAl2b6jf/OJFgIAsVD0oSdqvHIBV2w/t/feTJ4fBKJUS
-         4EHLSFL0aVKdXSYZh75OlbmiwYsC+s9QbiM5zT3uFow6Er/JbFhkEWiRamvLgkeBInVn
-         xbZNYR1xUOGB5s9alFslkHmIk/mLS2+ZKg4GljUzNX7KBXVY/xVoJUxLj4wJA+ToImJW
-         1slzLjiQgkiuAR1ABE4K2Rx9n0JkCxpRIvDc/AxSOBAGSuLy9Ru7tqZIyXff01w3GGHO
-         BcUToiLK70gY4AMb3gpJPdqrgiMzyHC1U7uALlmhe9jFvII20SIxKAkhFDh0lVy8Stej
-         7q8g==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745085434; x=1745690234; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Jwv9dp5ITGuQ5J1GUX4sJX0dj0mGjzAgFo3XEGjECnw=;
+        b=OpNwLcRNJFsRBkdqDyZM9QvjFqVeWy2SHMSkUFT2oFDvCBi01TcU9vS19EiFnfkMg3
+         3LHugh1xsOBzmUUl8tLUSykGc/V+aZkaOWK8rk76i3Tmr8CAOTsiYUgQ3Wnh6Bf7V+UK
+         cII2CfUsTqwQ3G78DFAyIgEe//NGu4X6trCTg4KcPct2u8QwpDm2Dt2tcgK/zTvPz8su
+         I0kq837dF4qKRzkgMij9BnQcMlZQQ9WB9aY17qDnS1KqLIAsaGIkyIU0RyDPGNNW5sb1
+         tN30GjccbHFPAVJmFMQmoKE87xcNVx+8msKjkSykT2hI0l39Y0DvZymm0YdVFl2WA2xg
+         1Slg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745084846; x=1745689646;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=l9p/9GPno78DZ3qtYAcJxFBAogUfeTY9SwXa+83U50I=;
-        b=V2BiE3N2e0G1t3A8ttCNIFma3HyOTNTUwiCa4/xLzllyAFxfil3bQuZ0/ZAH2ENSJL
-         393WMNjegW4IaExKPFOZIYEpwMVb7PKdO+/K/bLTYIWUPPzg1QJ7xs0IXAhZ8MTYHPlR
-         UugPDgSmHrNfgX7XhSr0xwibTTsuws1J1wolA4zTXHhq1IFrIGmQoUX9wsWZTrsY3YYn
-         nvwilialXZFo8LfHDqg5MPQ5UMG+srK3BNCd4jNRoveQCsRV3SjdkLh3RP2+GMAx2ceV
-         dlJALS4fK33LrUCSEfuk8q9ogi1sP3gHvXpu7kee+g2DgnrhWTSj1a9pBclqJNkpZ+Cl
-         +nVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXSqCF6QkewAhNzvk8RCP9W/1UJVgSV/2BILme2EQ9a09g3FghBxJP4Sy26WgFep0W7knqwf7eykpadibA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/5J+omUtRbhcBGPsDMV2RWwOrfxIEjo4LDUpw6mbjOlwJv65N
-	Ez4sTi+/bMIxx3JaB6YaKCMNnbibRsGO5hhyWFfqVDVhZr0m7D89
-X-Gm-Gg: ASbGncufZgGMuv1G7S+bmk5ymcq3i5+I/CUaTHl/+jBSRmV3EJa3uDsSgYbNicYAe8Z
-	SNLMR0n/+gWORo0Vmoe3fFSS/VTRsTNKD5gRwbjehnxh8crM8KZU6LfpCqaoNZyTAwpmn9obtFj
-	FTsTTNHqzFxSGNSMLacvYWdfqxl7h3wgyKxUVI1Lln+RUgrWT4X3SskhVtkEk53HQ1jsPYubXhH
-	FXqNdARLZnhbUXMZZQ0HtrKgv9zNGZkvIxrYCqwngkrYvjrA7OEY2lCVHH00/6To2k+jxj8xKVf
-	zL8p3PIKoy3JTpd8gcRzqj5GrlA12PXu0C8BZSGIpzgU5sFDZbSVpeGITGT0otweMA==
-X-Google-Smtp-Source: AGHT+IH7fN/A8iC5n1j7ocQhspXTJ6+h7siteXgS4p4hgqZk5bAH4bdltKLh7cf5EfIBHx46fSjAIg==
-X-Received: by 2002:a05:6830:3696:b0:72a:327:eed3 with SMTP id 46e09a7af769-730061fb6d7mr4115147a34.5.1745084846232;
-        Sat, 19 Apr 2025 10:47:26 -0700 (PDT)
-Received: from c65201v1.fyre.ibm.com ([170.225.223.22])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-730047af85bsm773268a34.19.2025.04.19.10.47.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 10:47:25 -0700 (PDT)
-From: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
-To: alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	sunil.khatri@amd.com,
-	mario.limonciello@amd.com,
-	aurabindo.pillai@amd.com
-Cc: boyuan.zhang@amd.com,
-	sunpeng.li@amd.com,
-	dominik.kaszewski@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
-Subject: [PATCH] drm: Fix for kernel doc warning
-Date: Sat, 19 Apr 2025 10:46:08 -0700
-Message-ID: <20250419174608.20993-1-chelsyratnawat2001@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1745085434; x=1745690234;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jwv9dp5ITGuQ5J1GUX4sJX0dj0mGjzAgFo3XEGjECnw=;
+        b=oUJfKIT3ibnoZxLddSkT8XehtNOXmQKrJqwnc3jt4KFkeGPj6pxBVuunq2hCP0Ud11
+         4iTpLs7T2WHkaz4o6EMy3jlRHjRtGlbaRc0NXyvmPBcvhsvo2pbB0ZH7dwaqbywXBOm0
+         OlWMJFgKe83iSsDkT9/3HyFhdGI4KZEQ64VthN/8gx+NWSm8b3bv1353iHhXyRc3xNRa
+         sKn2/kwrYWdOY5+TqOLbr7wWlfnJ/z5Oaai4J1ewHcvklWcb5MVNiwRbNvFz2yw8WXcH
+         1eppbsl8TAOlZQOM8W73onn/+JyqWO0pE7cif94DbVQQDatezSiWiwdzKko85Wmf7Sge
+         0pPA==
+X-Forwarded-Encrypted: i=1; AJvYcCWyfVQorclkkBbBIuIWsucdGo9ppvjl3nyPoGSfL0rE5+o2gYabfX9PQTF5/DhrswY/pWBmtDPVv/acZLc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwV3VFi8SSU3xQdp+EPQSJKYtXi7u07Mabn2Lwngk7/XxD/jsLF
+	r7IYRocPuTeRQSY/82mXemu4FUuxlv/aiBXf//WBwZy5BSkocHPiXIs942eK/RI=
+X-Gm-Gg: ASbGncuUfRRga5usnswpVowFqabopF+nU357mfsGeWyY5Io2bAFiYhLZ9mVrXoCfqpY
+	AR8Xz2FFc/bBPMsSWxG0DnvXhFSclbBRN2wsRpws2eQRBxQIPqcX9aarUB12qxhd2bzFODuOkS6
+	9cIyCQvuABkDK1Nz5q8Jl7GZYbdDJlP4CV6BxvyF3kBsU6+75/SGxvKaIOimrEmZaB15abVUFs5
+	S/ahQatEViPgq5LaAAVd5u9IteuTFrqxyVpZSG13gvFnYOvr0uhbu4c8mYwaXds/0/REajYE0+g
+	sYEHV/k3s7mxEbklx1uK+AoyIzFmPgWCL2lYqk1mEGOWBvUhQslpCrxbm1qxcquYI6axXdZJEYF
+	Mm/zuxnO635A8
+X-Google-Smtp-Source: AGHT+IFzVhDW/P9qqVJQTA9B6IABAVJUcp+fnfDJo98mF1L/yBiLAzFMirsdskXPwrDNOMkJjIWNrw==
+X-Received: by 2002:a05:6808:8214:b0:3f7:28ac:8068 with SMTP id 5614622812f47-401c09534a2mr3337213b6e.13.1745085434363;
+        Sat, 19 Apr 2025 10:57:14 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:79a:b8ae:edee:ec5? ([2600:8803:e7e4:1d00:79a:b8ae:edee:ec5])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-401beeee213sm789037b6e.27.2025.04.19.10.57.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 19 Apr 2025 10:57:13 -0700 (PDT)
+Message-ID: <a834e345-6d44-4fe6-a3ed-cc856e9dc4d3@baylibre.com>
+Date: Sat, 19 Apr 2025 12:57:11 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] iio: adc: ad4695: use IIO_DECLARE_BUFFER_WITH_TS
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-0-ee0c62a33a0f@baylibre.com>
+ <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-2-ee0c62a33a0f@baylibre.com>
+ <aAPRbb93lJrnEE5l@smile.fi.intel.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <aAPRbb93lJrnEE5l@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Added colon in kernel-doc comment to fix the warning.
+On 4/19/25 11:38 AM, Andy Shevchenko wrote:
+> On Fri, Apr 18, 2025 at 05:58:33PM -0500, David Lechner wrote:
+>> Use IIO_DECLARE_BUFFER_WITH_TS to declare the buffer that gets used with
+>> iio_push_to_buffers_with_ts(). This makes the code a bit easier to read
+>> and understand.
+>>
+>> AD4695_MAX_CHANNEL_SIZE macro is dropped since it was making the line
+>> too long and didn't add that much value.
+>>
+>> AD4695_MAX_CHANNELS + 2 is changed to AD4695_MAX_CHANNELS + 1 because
+>> previously we were overallocating. AD4695_MAX_CHANNELS is the number of
+>> of voltage channels and + 1 is for the temperature channel.
+> 
+> ...
+> 
+>> -/* Max size of 1 raw sample in bytes. */
+>> -#define AD4695_MAX_CHANNEL_SIZE		2
+> 
+>>  	/* Raw conversion data received. */
+>> -	u8 buf[ALIGN((AD4695_MAX_CHANNELS + 2) * AD4695_MAX_CHANNEL_SIZE,
+>> -		     sizeof(s64)) + sizeof(s64)] __aligned(IIO_DMA_MINALIGN);
+>> +	IIO_DECLARE_BUFFER_WITH_TS(u8, buf, (AD4695_MAX_CHANNELS + 1) * 2)
+>> +		__aligned(IIO_DMA_MINALIGN);
+> 
+> I would rather expect this to be properly written as u16 / __le16 / __be16
+> instead of playing tricks with u8.
+> 
+> With all comments given so far I would expect here something like:
+> 
+> 	IIO_DECLARE_BUFFER_WITH_TS(u16, buf, AD4695_MAX_CHANNELS + 1);
+> 
+> 
 
-drivers/gpu/drm/amd/include/amd_shared.h:369: warning: Incorrect use of kernel-doc format:          * @DC_HDCP_LC_ENABLE_SW_FALLBACK If set, upon HDCP Locality Check FW
-
-Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
----
- drivers/gpu/drm/amd/include/amd_shared.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/amd/include/amd_shared.h b/drivers/gpu/drm/amd/include/amd_shared.h
-index 4c95b885d1d0..c8eccee9b023 100644
---- a/drivers/gpu/drm/amd/include/amd_shared.h
-+++ b/drivers/gpu/drm/amd/include/amd_shared.h
-@@ -366,7 +366,7 @@ enum DC_DEBUG_MASK {
- 	DC_HDCP_LC_FORCE_FW_ENABLE = 0x80000,
- 
- 	/**
--	 * @DC_HDCP_LC_ENABLE_SW_FALLBACK If set, upon HDCP Locality Check FW
-+	 * @DC_HDCP_LC_ENABLE_SW_FALLBACK: If set, upon HDCP Locality Check FW
- 	 * path failure, retry using legacy SW path.
- 	 */
- 	DC_HDCP_LC_ENABLE_SW_FALLBACK = 0x100000,
--- 
-2.43.0
-
+We would have to make significant changes to the driver to allow u16 instead
+of u8. I don't remember why I did it that way in the first place, but I consider
+changing it out of scope for this patch.
