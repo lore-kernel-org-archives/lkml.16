@@ -1,49 +1,49 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90BD813C3F2;
-	Sat, 19 Apr 2025 14:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8621E78F47;
+	Sat, 19 Apr 2025 14:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745072924; cv=none; b=NdujKvqkTIObOpzZihzYzIvpm89S2iV50CDd5eH3ZPMKna1AYsc+qFu1T6NbajZrIwoNSp5RxyVSjYYF5GFJbHdwXOX8mta4LddWJsMyd2AZq+Hqvpr+07unnBauhvwLGWICCa7SGtSgYS2biaeOL47YblaSFqQzGJt14JFyA7Y=
+	t=1745073242; cv=none; b=W5GEkivgQmukJUU9a6P+wR62zIPRygS7FkzR5lE+Y6TQE0RFkg7x1HpCul0VOsdCYnMbWNFnpD6hpj6QwNb0YOpUlp716nnRIYWIX/OSTyEy/YmYVSHYMszQ2/bfHbIKeeEqo7vou7UVlhDls7s0EzuWOH+M94wspCXAW+uF1KA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745072924; c=relaxed/simple;
-	bh=uzvmIdzNKMJvRDHxUKWWpbzGyBYgL/QazvZXZg5y6JQ=;
+	s=arc-20240116; t=1745073242; c=relaxed/simple;
+	bh=Ha4P1R9eT1HsEdVkTcuCB9B3AC12wmvj0FU1PqsZXek=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=iH0MJ+1Dz8MAa1scHamRhVw47Tsp/FopvvX3wgFCGh+VzUftnx1eoTXVnBept4W+ldvvEqkWWOnpYrzrpiSm8RitJAGvicX9TTXAcg6Y8dFeCMdKfyhl/Qv8bffXHMwXSVP6QFQBtDNjdl/MmaRbfGaUdapM4WO3sYIdFjwiBxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vDHHg3dr; arc=none smtp.client-ip=198.47.19.245
+	 In-Reply-To:Content-Type; b=PtBIoQ8qjsd9eGHhdTVQoIRWt5K29QzM88UyNiySR33uhTIth2+pk3AMdHaZ9NPMOQGaPZaMAXbrjjGSQ+gOzrfskWUZqOEJwi/nTcVxvbpgqpgR3tvNLjNfOHX2CxaR5ql6CI7yR2UBGlvRGfeBvyhoEPloAF9jomU8tk1v2ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=GmVx0L6A; arc=none smtp.client-ip=198.47.23.234
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vDHHg3dr"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53JESXnD512670
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GmVx0L6A"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53JEXsRE509844
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 19 Apr 2025 09:28:33 -0500
+	Sat, 19 Apr 2025 09:33:54 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745072913;
-	bh=bnT6SpimH/suvUjF2ZXLGhM0wMOvau/mRpChBQiDxrQ=;
+	s=ti-com-17Q1; t=1745073234;
+	bh=Ha4P1R9eT1HsEdVkTcuCB9B3AC12wmvj0FU1PqsZXek=;
 	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=vDHHg3drJ3ss897hg7P1UhiTvhAogx3/cclr3BePV84xckZIrWXh7z8Z0PMgy4j/+
-	 YKS3G4eTfZ4k+Z3f3z5zpXDPhjiVs014BUotYgtp+WUGJSLbAKkrY3vHzu9hw1QP0N
-	 TdQKGhrZsSF0VzllDILxmX3cEwRLvRs8oqX668sg=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53JESXYO023232
+	b=GmVx0L6A9wMPfMRLsHxEdrj4BsdwDis1J0+LSNf49rjXAtic9fR5A7CdRrZJaeVPg
+	 ZBK4/fq5381a/A2+xY7C4onoR7xYDUhkAQP79SAv/7T0cezlk0r0qwV2/ESiSdUej4
+	 d6uRBhgXP0sJU6E41U/HLVi0/vsWZLwijK2m52rU=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53JEXsOZ028388
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sat, 19 Apr 2025 09:28:33 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+	Sat, 19 Apr 2025 09:33:54 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 19
- Apr 2025 09:28:33 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2025 09:33:53 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sat, 19 Apr 2025 09:28:33 -0500
+ Frontend Transport; Sat, 19 Apr 2025 09:33:54 -0500
 Received: from [10.249.141.75] ([10.249.141.75])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53JESTrG107279;
-	Sat, 19 Apr 2025 09:28:30 -0500
-Message-ID: <a34e8c08-0259-417a-8312-9f6efbdccead@ti.com>
-Date: Sat, 19 Apr 2025 19:58:29 +0530
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53JEXo1e115318;
+	Sat, 19 Apr 2025 09:33:50 -0500
+Message-ID: <a64ebeae-c05b-4228-9714-308d655ca383@ti.com>
+Date: Sat, 19 Apr 2025 20:03:49 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,76 +51,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] arm64: dts: ti: k3-j784s4-j742s2-evm: Add overlay to
- enable USB0 Type-A
+Subject: Re: [PATCH v2 RESEND] arm64: dts: ti: k3-j784s4-j742s2-main-common:
+ Enable ACSPCIE output for PCIe1
 To: Siddharth Vadapalli <s-vadapalli@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
         <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
         <conor+dt@kernel.org>
 CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
         <u-kumar1@ti.com>
-References: <20250409100853.4179934-1-s-vadapalli@ti.com>
+References: <20250411121307.793646-1-s-vadapalli@ti.com>
 Content-Language: en-US
 From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <20250409100853.4179934-1-s-vadapalli@ti.com>
+In-Reply-To: <20250411121307.793646-1-s-vadapalli@ti.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
 
-On 4/9/2025 3:38 PM, Siddharth Vadapalli wrote:
-> The USB0 instance of the USB controller on both the J742S2 EVM and the
-> J784S4 EVM supports a single USB interface at a time among the following:
-> 1. USB3.1 Gen1 Type C interface
-> 2. Two USB2.0 Type A interfaces via an on-board USB Hub.
->
-> By default, the USB3.1 Gen1 Type C interface is supported on both of the
-> EVMs. Enable the USB2.0 Type A interface by configuring the USB2.0_MUX_SEL
-> mux. Additionally, set the Dual-Role Mode to Host since a Type-A interface
-> is only associated with the Host Mode of operation.
->
+On 4/11/2025 5:43 PM, Siddharth Vadapalli wrote:
+> The PCIe reference clock required by the PCIe Endpoints connected to the
+> PCIe connector corresponding to the PCIe1 instance of PCIe on J784S4-EVM
+> and J742S2-EVM is driven by the ACSPCIE module. Add the device-tree support
+> for enabling the same.
+
+Please check once if you want to enable PCIe ref clock on AM69 as well.
+
+unlike EVM, this clock is terminated on test point.
+
+Thanks
+
+Udit
+
 > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 > ---
 >
 > Hello,
 >
-> This patch is based on linux-next tagged next-20250409.
->
-> v2 of this patch is at:
-> https://lore.kernel.org/r/20250226124245.9856-4-s-vadapalli@ti.com/
-> Changes since v2:
-> - Rebased patch on next-20250409 and dropped other patches which were
->    present in the v2 series.
+> This patch is based on linux-next tagged next-20250411.
+> The v2 patch is at:
+> https://lore.kernel.org/r/20241209085157.1203168-1-s-vadapalli@ti.com/
+> No changes since v2. The dtbs_check warnings are no longer seen with
+> next-20250411 and no changes were required to the patch itself to fix
+> the warnings. Hence the patch has been marked with a RESEND tag.
 >
 > Regards,
 > Siddharth.
->
->   arch/arm64/boot/dts/ti/Makefile               |  7 +++++
->   .../ti/k3-j784s4-j742s2-evm-usb0-type-a.dtso  | 29 +++++++++++++++++++
->   2 files changed, 36 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-j742s2-evm-usb0-type-a.dtso
->
-> diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-> [..]index 03d4cecfc001..c7f23fbce660 100644
-> +/dts-v1/;
-> +/plugin/;
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +
-> +&exp2 {
-> +	p12-hog {
-> +		/* P12 - USB2.0_MUX_SEL */
-> +		gpio-hog;
-> +		gpios = <12 GPIO_ACTIVE_HIGH>;
-> +		output-high;
-> +		line-name = "USB2.0_MUX_SEL";
-> +	};
-> +};
-> +
-> +&usb0 {
-> +	dr_mode = "host";
-> +};
-
-Reviewed-by: Udit Kumar <u-kumar1@ti.com>
-
-
+> [..]
