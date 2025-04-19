@@ -1,334 +1,154 @@
-Received: from mail-108-mta246.mxroute.com (mail-108-mta246.mxroute.com [136.175.108.246])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E26D78C9C
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEE7136E;
+	Sat, 19 Apr 2025 05:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745039334; cv=none; b=kKmhVkqhHHQhI3/Uo6By8U1g0x8bDnUrsay7Rtokwv3xlI37HLy8tI11yD9r0Rx0BJk66cnXqdZ5zsK71a6TzvqVJlhvhAO3jqWfpdOowc10ZDLpbxSKe5+VU6rDd/WkY6/bC1vEPcOCmu7sJK3TQuXkr/m0hgOGQFI34E2AuaY=
+	t=1745039539; cv=none; b=Ll3UUcD8jd+wIovdpnIVEQGc/JlfWCPpgViIH0nnJOcZjn9+jXerdkd8CxYedOEuT6EvyrkelefBk7xx6YxOfRwtzxTT5YFRNGdPu/F/R86n8bXpHIheK/+vXXqOxnBC6Z9xcKPWI/sxS+VfFjFJMza8qSuwkQEimuBiLSYRaQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745039334; c=relaxed/simple;
-	bh=A3tNZDJcm4cvUZ1O6Z65DWR1sO9mHY36lteyQLaE/lA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=nRv5hfXUsXQZzonQPSE5GoImkhvXh0WifxzeRsh+M5w3lyx3YHzngIH6FVrEHM1WxjN4Kj5KiipGpW/6G8RyqSDKWN+Xes4/77pxf03TIaTQjnk6UmrsEDH1Va88R3KMx87EUT83zfNlbA12Y77Ojwx8VpgajYfZIhA0ofT3KYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=damenly.org; spf=pass smtp.mailfrom=damenly.org; dkim=pass (2048-bit key) header.d=damenly.org header.i=@damenly.org header.b=and5crRP; arc=none smtp.client-ip=136.175.108.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=damenly.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=damenly.org
+	s=arc-20240116; t=1745039539; c=relaxed/simple;
+	bh=AlEY4zKhmRNDt20P9Xp6i5Nd73YvPO7VbqqVtJST+RY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=odjmst6OhLRhNS1DPgohgn0pmI9J3EAOPWYbpLR+7mnHs4aapQVcAzPDGSrYlpr4XqzMESGUKJuk/uGnVe7MqqbtWFBu94gK6mivlp8o912JBDZ7lNFOtZG2E3sUTYBgzSiC5drC/u5Q1pJa2IrRU3T/sTPBb9rWR3YFMVIo1aM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T6903dHy; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=damenly.org header.i=@damenly.org header.b="and5crRP"
-Received: from filter006.mxroute.com ([136.175.111.3] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta246.mxroute.com (ZoneMTA) with ESMTPSA id 1964c6e573a0008631.012
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Sat, 19 Apr 2025 05:03:41 +0000
-X-Zone-Loop: 370d8d49aa0807649313659c29de0dfc378b5adcf7c4
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=damenly.org
-	; s=x; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:References:
-	In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description
-	:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-	List-Archive; bh=A3tNZDJcm4cvUZ1O6Z65DWR1sO9mHY36lteyQLaE/lA=; b=and5crRPKsy5
-	ISMG2TLM1BCRd+KfGFvOKgdQj35qEkMIMLYn8f/7xD82uv4mrbO6wqPNgdBy9amGDHpdhaaHld1mb
-	9Q3wAsgvJwhlq7pwBJ8appZxljHWs+ZsfOggU5iPkEoNe3G9JMgMyHYPNB0sGb2FwfFxepQQYQ1js
-	zUe+mQsCWkjbdJD509ccLoi7RgwEUCk2JrvBcM+TiA3MQ4E3cxkt2g/cIYczo78o9ncn27ECtiEUp
-	17bIs3JLmMf3+HKzDeRkvwIVNSLmBMCPodOaiGZpx+yuEcV7vBfwZ18pwpsH9LERDP2FieJBamo9a
-	epx9MnVIPIGc1JXq6UeDQQ==;
-From: Su Yue <l@damenly.org>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: axboe@kernel.dk,  xni@redhat.com,  agk@redhat.com,  snitzer@kernel.org,
-  mpatocka@redhat.com,  song@kernel.org,  viro@zeniv.linux.org.uk,
-  akpm@linux-foundation.org,  nadav.amit@gmail.com,  ubizjak@gmail.com,
-  cl@linux.com,  linux-block@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  dm-devel@lists.linux.dev,
-  linux-raid@vger.kernel.org,  yi.zhang@huawei.com,  yangerkun@huawei.com,
-  johnny.chenyi@huawei.com,  "yukuai (C)" <yukuai3@huawei.com>
-Subject: Re: [PATCH v2 4/5] md: fix is_mddev_idle()
-In-Reply-To: <e5ec218e-dcab-ff8c-f455-d8fc6943a6e7@huaweicloud.com> (Yu Kuai's
-	message of "Sat, 19 Apr 2025 10:00:16 +0800")
-References: <20250418010941.667138-1-yukuai1@huaweicloud.com>
-	<20250418010941.667138-5-yukuai1@huaweicloud.com>
-	<v7r19baz.fsf@damenly.org>
-	<e5ec218e-dcab-ff8c-f455-d8fc6943a6e7@huaweicloud.com>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Sat, 19 Apr 2025 13:03:16 +0800
-Message-ID: <plh8agkr.fsf@damenly.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T6903dHy"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so25223235e9.1;
+        Fri, 18 Apr 2025 22:12:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745039536; x=1745644336; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dWXhDw052JqSwc2DEiWR3CaVZdUZyR9wDp3GTxz2iYM=;
+        b=T6903dHyoI8e/rd5EPeep42RKoYdI8DzYFXk47sOvp9XHkcph1GwXIXlDGzRwDG89o
+         J4Yjz6ebtn+xG3jzH/tActkz7F+1ecXspzaoTu6NKk7ivhGDhEJ7MFrdzqRo1qT08ijp
+         GmHq8yLJrdj5RjnB5WYS+NHXAwyEmivQju0eMHaWierocsAcK+Cyi5MLZZFiII/kENU5
+         8CeRxLwCNUTdar2aANxVcNJ78Bedtcppbg+xDErjpRT/IjNWTpxmoVAJE2kqMWXvEUcA
+         4ZBpli7jtcJwb7qbebDRl14HZG1ihju2Wo3Uz5/uF9S8nj1BSPbKmmEt4TGbrkTktVTv
+         jrwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745039536; x=1745644336;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dWXhDw052JqSwc2DEiWR3CaVZdUZyR9wDp3GTxz2iYM=;
+        b=eVcSIBuNlrJkE4VtQgX4Cy20Ba0kxid8mUFMW04L+mpEpjSZbeaWG84mm8usGNq1Bk
+         cpsdXUPn7x1exJfSuz5TXGzsSNbNDELAI8fU8KLGqpM/t+WCBLskHNx2Z/VKJhc3NglI
+         2AmfpmXygdKFx24AESZaWUI3nVxcgQln0PVjHZ29Yksh8YvpiNt8kqOpFM1c9XuA6Q2m
+         TGrsVfxymq9EpFaOU8/6bvd+x2AryKyFVzHwP6MU/sMFSnf59MSBXeZXi8vviQ1PWfo9
+         2LQM8mBGaGjdlO2pu26LrZQk9DtWGMeF/HTHDHTmeorVc60q5fqGOyms+PoN5oDI9PMy
+         RwGw==
+X-Forwarded-Encrypted: i=1; AJvYcCUdOX9/AWUMbSLvN+AMCGwYGKA5290XZLIWg286l1zNJfeW9R21/lt+QRj3x0BqimSXdJtB9ZsEqmq3TrrFhIM=@vger.kernel.org, AJvYcCX74JYDR1IEGdvLfNyq1UnJGiwlyayWnnLqjy0TvTEuAQ2r6aqasOUPml0TYeQzhI9G5c+rQFn7MoB/KsI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZMNptRsgaXkDMjdAWZKUDhHwc6eOQnBz1WpVr0o8Ci0alPn3d
+	/VHjRfUtOKxsu9vY8kRYbcSDu2+7ncOw4kPxMzrs1AEiHNZYnzBp
+X-Gm-Gg: ASbGncvEPXa3UnQ91p796Ykt5fZPzOooVY//dcRPaz51SKMfoIJK8xu41bO1ME3poYS
+	yY9sYFaKcoJpqY0wchZ5QOSG0f+aOJTCvQnIPTBVob5VflAyNvb84RxiPVi1notImeNKHFhPqBK
+	0jYkrsCEVmLJJX9TLVMiGwdGVFH5tNdayvh0y3yCUz+AATpU6lB1pKsuLBR1aNTwRFqCBv9+Os0
+	+xa16fV2FuWRWgg7V0wmZTAzYM2S1ZDrsVFThAOJyKluEMDS1lh1+XBO5/A08VNAAq2Z1AtzY51
+	+7QaPYsMq00ANCTNJGJbFBgFF9GdpHp7XgNlJ12EyVgD8uvO3o/FAZTDDLDFhfIxrB0FSbeNkUZ
+	IdPqQ
+X-Google-Smtp-Source: AGHT+IF0DV0PcqkPAMgHSHJ/AFOSOa8OeTQRkmET5HDuCcPTUUq6yyc8/DRGg/vAcFHczFOzZXzsSQ==
+X-Received: by 2002:a05:600c:1c9d:b0:43c:fb95:c76f with SMTP id 5b1f17b1804b1-4406ab93151mr44342075e9.9.1745039535907;
+        Fri, 18 Apr 2025 22:12:15 -0700 (PDT)
+Received: from localhost (cpc1-brnt4-2-0-cust862.4-2.cable.virginm.net. [86.9.131.95])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5bbd7fsm45920605e9.21.2025.04.18.22.12.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 22:12:14 -0700 (PDT)
+Date: Sat, 19 Apr 2025 06:12:14 +0100
+From: Stafford Horne <shorne@gmail.com>
+To: Sahil Siddiq <icegambit91@gmail.com>
+Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
+	sahilcdq@proton.me, linux-openrisc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] openrisc: Fix build warning in cache.c
+Message-ID: <aAMwri9RK2oNuC_p@antec>
+References: <20250401200129.287769-1-sahilcdq@proton.me>
+ <Z-6VyRhGdInVidsw@antec>
+ <af85b465-13e5-44e5-a0af-c7c68af7d43e@gmail.com>
+ <aAIDfcZ4XD5f6mA4@antec>
+ <f6f4f410-4a0a-4ce3-bf41-413af39fd50e@gmail.com>
+ <aAIivK7NDG-6_aIU@antec>
+ <64beb3b4-a8fa-4acd-a139-6c19de0e37f4@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Authenticated-Id: l@damenly.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <64beb3b4-a8fa-4acd-a139-6c19de0e37f4@gmail.com>
 
-On Sat 19 Apr 2025 at 10:00, Yu Kuai <yukuai1@huaweicloud.com>=20
-wrote:
-
+On Fri, Apr 18, 2025 at 06:04:29PM +0530, Sahil Siddiq wrote:
 > Hi,
->
-> =E5=9C=A8 2025/04/19 9:42, Su Yue =E5=86=99=E9=81=93:
->> On Fri 18 Apr 2025 at 09:09, Yu Kuai <yukuai1@huaweicloud.com>=20
->> wrote:
->>
->>> From: Yu Kuai <yukuai3@huawei.com>
->>>
->>> If sync_speed is above speed_min, then is_mddev_idle() will be=20
->>> called
->>> for each sync IO to check if the array is idle, and inflihgt=20
->>> sync_io
->>> will be limited if the array is not idle.
->>>
->>> However, while mkfs.ext4 for a large raid5 array while=20
->>> recovery is in
->>> progress, it's found that sync_speed is already above=20
->>> speed_min while
->>> lots of stripes are used for sync IO, causing long delay for=20
->>> mkfs.ext4.
->>>
->>> Root cause is the following checking from is_mddev_idle():
->>>
->>> t1: submit sync IO: events1 =3D completed IO - issued sync IO
->>> t2: submit next sync IO: events2=C2=A0 =3D completed IO - issued sync=20
->>> IO
->>> if (events2 - events1 > 64)
->>>
->>> For consequence, the more sync IO issued, the less likely=20
->>> checking will
->>> pass. And when completed normal IO is more than issued sync=20
->>> IO, the
->>> condition will finally pass and is_mddev_idle() will return=20
->>> false,
->>> however, last_events will be updated hence is_mddev_idle() can=20
->>> only
->>> return false once in a while.
->>>
->>> Fix this problem by changing the checking as following:
->>>
->>> 1) mddev doesn't have normal IO completed;
->>> 2) mddev doesn't have normal IO inflight;
->>> 3) if any member disks is partition, and all other partitions=20
->>> doesn't
->>> =C2=A0=C2=A0 have IO completed.
->>>
->>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
->>> ---
->>> =C2=A0drivers/md/md.c | 84=20
->>> =C2=A0+++++++++++++++++++++++++++----------------------
->>> =C2=A0drivers/md/md.h |=C2=A0 3 +-
->>> =C2=A02 files changed, 48 insertions(+), 39 deletions(-)
->>>
->>> diff --git a/drivers/md/md.c b/drivers/md/md.c
->>> index 52cadfce7e8d..dfd85a5d6112 100644
->>> --- a/drivers/md/md.c
->>> +++ b/drivers/md/md.c
->>> @@ -8625,50 +8625,58 @@ void md_cluster_stop(struct mddev=20
->>> *mddev)
->>> =C2=A0=C2=A0=C2=A0=C2=A0 put_cluster_ops(mddev);
->>> =C2=A0}
->>>
->>> -static int is_mddev_idle(struct mddev *mddev, int init)
->>> +static bool is_rdev_holder_idle(struct md_rdev *rdev, bool=20
->>> init)
->>> =C2=A0{
->>> +=C2=A0=C2=A0=C2=A0 unsigned long last_events =3D rdev->last_events;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 if (!bdev_is_partition(rdev->bdev))
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return true;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 /*
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * If rdev is partition, and user doesn't issu=
-e IO to the=20
->>> array, the
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * array is still not idle if user issues IO t=
-o other=20
->>> partitions.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
->>> +=C2=A0=C2=A0=C2=A0 rdev->last_events =3D=20
->>> part_stat_read_accum(rdev->bdev->bd_disk->part0,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- sectors) -
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 part_stat_read_accum(rdev->bdev, sectors);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 if (!init && rdev->last_events > last_events)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return false;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 return true;
->>> +}
->>> +
->>> +/*
->>> + * mddev is idle if following conditions are match since last=20
->>> check:
->>> + * 1) mddev doesn't have normal IO completed;
->>> + * 2) mddev doesn't have inflight normal IO;
->>> + * 3) if any member disk is partition, and other partitions=20
->>> doesn't have IO
->>> + *=C2=A0=C2=A0=C2=A0 completed;
->>> + *
->>> + * Noted this checking rely on IO accounting is enabled.
->>> + */
->>> +static bool is_mddev_idle(struct mddev *mddev, int init)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 unsigned long last_events =3D mddev->last_events;
->>> +=C2=A0=C2=A0=C2=A0 struct gendisk *disk;
->>> =C2=A0=C2=A0=C2=A0=C2=A0 struct md_rdev *rdev;
->>> -=C2=A0=C2=A0=C2=A0 int idle;
->>> -=C2=A0=C2=A0=C2=A0 int curr_events;
->>> +=C2=A0=C2=A0=C2=A0 bool idle =3D true;
->>>
->>> -=C2=A0=C2=A0=C2=A0 idle =3D 1;
->>> -=C2=A0=C2=A0=C2=A0 rcu_read_lock();
->>> -=C2=A0=C2=A0=C2=A0 rdev_for_each_rcu(rdev, mddev) {
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct gendisk *disk =3D rd=
-ev->bdev->bd_disk;
->>> +=C2=A0=C2=A0=C2=A0 disk =3D mddev_is_dm(mddev) ? mddev->dm_gendisk :=20
->>> mddev->gendisk;
->>> +=C2=A0=C2=A0=C2=A0 if (!disk)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return true;
->>>
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!init && !blk_queue_io_=
-stat(disk->queue))
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 con=
-tinue;
->>> +=C2=A0=C2=A0=C2=A0 mddev->last_events =3D part_stat_read_accum(disk->p=
-art0,=20
->>> sectors);
->>> +=C2=A0=C2=A0=C2=A0 if (!init && (mddev->last_events > last_events ||
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 bdev_count_inflight(disk->part0)))
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 idle =3D false;
->>>
->> Forgot return or goto here?
->
-> No, following still need to be executed to init or update
-> rdev->last_events.k
->
+> 
+> On 4/18/25 3:30 PM, Stafford Horne wrote:
+> > On Fri, Apr 18, 2025 at 02:42:20PM +0530, Sahil Siddiq wrote:
+> > > On 4/18/25 1:17 PM, Stafford Horne wrote:
+> > > > On Fri, Apr 04, 2025 at 10:39:22AM +0530, Sahil Siddiq wrote:
+> > > > [...]
+> > > > I was working on getting this patches ready for upstreaming and noticed one
+> > > > thing:
+> > > > 
+> > > >       ---------------------------------------------------------------------------------------
+> > > >       ./patches/or1k-20250418/0001-openrisc-Refactor-struct-cpuinfo_or1k-to-reduce-dupl.patch
+> > > >       ---------------------------------------------------------------------------------------
+> > > >       WARNING: From:/Signed-off-by: email address mismatch: 'From: Sahil Siddiq <icegambit91@gmail.com>' != 'Signed-off-by: Sahil Siddiq <sahilcdq@proton.me>'
+> > > > 
+> > > >       total: 0 errors, 1 warnings, 102 lines checked
+> > > > 
+> > > > As you can see above the scripts/checkpatch.pl is failing with the warning
+> > > > about your email and signed-off-by not matching.  You can see more about it
+> > > > in the FROM_SIGN_OFF_MISMATCH section of the checkpatch[0] docs.
+> > > 
+> > > Ok, this makes sense. I configured git-send-email to use gmail because
+> > > protonmail does not work with git-send-email without a paid account.
+> > > 
+> > > > How would you like to resolve this?
+> > > 
+> > > Is this a warning that cannot be ignored? I can:
+> > > 
+> > > 1. submit the patch series with another email address that won't have issues
+> > >     with git-send-email, or
+> > > 2. submit the patch series using protonmail's web client (which might not be
+> > >     the best option).
+> > > 
+> > > I would prefer not to use "icegambit91" in the signed-off-by tag.
+> > > 
+> > > What are your thoughts on this?
+> > 
+> > I could rewrite the from header to match sahilcdq@proton.me.
+> > 
+> > But if I do that you should find a way to get proton.me to work with
+> > gi-send-email [0] for future commits.  It seems this can work using the
+> > Protonmail Bridge[1], though this site also says proton.me is not so good for
+> > using with git send email.
+> 
+> Right. Also, protonmail bridge requires a paid proton account.
+> 
+> > Maybe using another email in signed-off-by would be better.  The current
+> > patches are on linux-next[2] where we can see the From/Signed-off-by mismatch.
+> > For example:
+> > 
+> >      author	Sahil Siddiq <icegambit91@gmail.com>	2025-03-29 15:16:22 +0530
+> >      committer	Stafford Horne <shorne@gmail.com>	2025-03-29 10:22:21 +0000
+> >      commit	af83ece87a1ef5097434b7c3c1fc0e9e7b83b192 (patch)
+> > 
+> >      ...
+> > 
+> >      Signed-off-by: Sahil Siddiq <sahilcdq@proton.me>
+> >      Signed-off-by: Stafford Horne <shorne@gmail.com>
+> > 
+> 
+> I agree. I have another email id (sahilcdq0@gmail.com). I can configure git
+> to use this and this can also be used in the signed-off-by tag. So, this id
+> shouldn't cause an issue.
+> 
+> Let me know if I should send the series using this email id.
 
-Okay, I see. is_rdev_holder_idle does the work.
+Yes, please do this.
 
---
-Su
-
-> Thanks,
-> Kuai
->
->> -- Su
->>
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 curr_events =3D (int)part_s=
-tat_read_accum(disk->part0,=20
->>> sectors) -
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 atomic_read(&disk->sync_io);
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* sync IO will cause sync_=
-io to increase before the=20
->>> disk_stats
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * as sync_io is count=
-ed when a request starts, and
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * disk_stats is count=
-ed when it completes.
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * So resync activity =
-will cause curr_events to be=20
->>> smaller than
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * when there was no s=
-uch activity.
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * non-sync IO will ca=
-use disk_stat to increase=20
->>> without
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * increasing sync_io =
-so curr_events will=20
->>> (eventually)
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * be larger than it w=
-as before.=C2=A0 Once it becomes
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * substantially large=
-r, the test below will cause
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * the array to appear=
- non-idle, and resync will slow
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * down.
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * If there is a lot o=
-f outstanding resync activity=20
->>> when
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * we set last_event t=
-o curr_events, then all that=20
->>> activity
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * completing might ca=
-use the array to appear=20
->>> non-idle
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * and resync will be =
-slowed down even though there=20
->>> might
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * not have been non-r=
-esync activity.=C2=A0 This will only
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * happen once though.=
-=C2=A0 'last_events' will soon=20
->>> reflect
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * the state where the=
-re is little or no outstanding
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * resync requests, an=
-d further resync activity will
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * always make curr_ev=
-ents less than last_events.
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (init || curr_events - r=
-dev->last_events > 64) {
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rde=
-v->last_events =3D curr_events;
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 idl=
-e =3D 0;
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>> -=C2=A0=C2=A0=C2=A0 }
->>> +=C2=A0=C2=A0=C2=A0 rcu_read_lock();
->>> +=C2=A0=C2=A0=C2=A0 rdev_for_each_rcu(rdev, mddev)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!is_rdev_holder_idle(rd=
-ev, init))
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 idl=
-e =3D false;
->>> =C2=A0=C2=A0=C2=A0=C2=A0 rcu_read_unlock();
->>> +
->>> =C2=A0=C2=A0=C2=A0=C2=A0 return idle;
->>> =C2=A0}
->>>
->>> diff --git a/drivers/md/md.h b/drivers/md/md.h
->>> index b57842188f18..1d51c2405d3d 100644
->>> --- a/drivers/md/md.h
->>> +++ b/drivers/md/md.h
->>> @@ -132,7 +132,7 @@ struct md_rdev {
->>>
->>> =C2=A0=C2=A0=C2=A0=C2=A0 sector_t sectors;=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 /* Device size (in 512bytes=20
->>> sectors) =C2=A0*/
->>> =C2=A0=C2=A0=C2=A0=C2=A0 struct mddev *mddev;=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 /* RAID array if running */
->>> -=C2=A0=C2=A0=C2=A0 int last_events;=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 /* IO event timestamp */
->>> +=C2=A0=C2=A0=C2=A0 unsigned long last_events;=C2=A0=C2=A0=C2=A0 /* IO =
-event timestamp */
->>>
->>> =C2=A0=C2=A0=C2=A0=C2=A0 /*
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * If meta_bdev is non-NULL, it means tha=
-t a separate=20
->>> device =C2=A0is
->>> @@ -520,6 +520,7 @@ struct mddev {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * adding a spare
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>
->>> +=C2=A0=C2=A0=C2=A0 unsigned long=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 last_events;=C2=A0=C2=A0=C2=A0 /* IO event=20
->>> timestamp */
->>> =C2=A0=C2=A0=C2=A0=C2=A0 atomic_t=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 recovery_active; /* blocks scheduled,=20
->>> but =C2=A0not
->>> written */
->>> =C2=A0=C2=A0=C2=A0=C2=A0 wait_queue_head_t=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 recovery_wait;
->>> =C2=A0=C2=A0=C2=A0=C2=A0 sector_t=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 recovery_cp;
->> .
->>
+-Stafford
