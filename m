@@ -1,245 +1,298 @@
-Received: from smtp01.aussiebb.com.au (smtp01.aussiebb.com.au [121.200.0.92])
+Received: from MA0PR01CU012.outbound.protection.outlook.com (mail-southindiaazolkn19011033.outbound.protection.outlook.com [52.103.67.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BD2944F;
-	Sat, 19 Apr 2025 01:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.200.0.92
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745025261; cv=none; b=bO0z/ADk1+ibpgftdVUqO64/3xjs5WYCRSycbHnOGerXSF3X1SBv3dtC7Qiv9Gf+nQ249k8oDDNz0AGIpNhQf5sxYWjXEb2fcQVRiljaqkz0xJfOanUxQo7Xd471uifLNepLZXOerVgJKhADvMX4YzAhUdF/i8W7mtx1/lssuyQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745025261; c=relaxed/simple;
-	bh=sWdM+T3rOkkP+yaS0doaDa67ymsymtWqfImCD2HOA1A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aKb2ziXphr2ISoZVVQb5zRvipVdOKHu4IvOuwSTIo3kubfaBlhz5tr9CKHCorMINLLFTJOgmc6r7YVfVi8ZD2nndUhV2TANwAxSvR/hThfS0s2+gErUNrz7e8ImUr7aPtf7WP5PZ72f+aQlqkWOrMX6UU7DjztxOWmDq+fx2PxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=themaw.net; spf=fail smtp.mailfrom=themaw.net; arc=none smtp.client-ip=121.200.0.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=themaw.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=themaw.net
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp01.aussiebb.com.au (Postfix) with ESMTP id F2D34100724;
-	Sat, 19 Apr 2025 11:14:09 +1000 (AEST)
-X-Virus-Scanned: Debian amavisd-new at smtp01.aussiebb.com.au
-Received: from smtp01.aussiebb.com.au ([127.0.0.1])
-	by localhost (smtp01.aussiebb.com.au [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id LlThB9oCYBYS; Sat, 19 Apr 2025 11:14:09 +1000 (AEST)
-Received: by smtp01.aussiebb.com.au (Postfix, from userid 116)
-	id F15BB100767; Sat, 19 Apr 2025 11:14:07 +1000 (AEST)
-X-Spam-Level: 
-Received: from [192.168.0.229] (159-196-82-144.9fc452.per.static.aussiebb.net [159.196.82.144])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: ian146@aussiebb.com.au)
-	by smtp01.aussiebb.com.au (Postfix) with ESMTPSA id 51D8D1003AF;
-	Sat, 19 Apr 2025 11:14:03 +1000 (AEST)
-Message-ID: <709ac1f0-b3da-4813-ad88-78944d5a8e2d@themaw.net>
-Date: Sat, 19 Apr 2025 09:14:02 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7079CEAF1;
+	Sat, 19 Apr 2025 01:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.33
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745025652; cv=fail; b=nJ1KC5eA/DZ7PIsPS4RHo4+JyPqo2C50LZpvTz4f53e4T8cFAezp6wbXFgwMnnOyaygD8rn6sQ3J7UJLs3Z9tbBU9a1QQwjcRwXY2nBJ1SsYUIrENCgQ8vsY4nM/Bl1R+JBdlL8zmXaH2qNaTyach1rI/YUPIz4ga0Rr3OaPmU8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745025652; c=relaxed/simple;
+	bh=dBwrrk6KmyLdzKoc0kstjZc+ifLgREGnZeunp30TFAM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=QvS3Kfz0mju5zyW22zgudyUSOZ/oEOwdSshH7loHiz+hHKMf2hv2a1rQ02ej+D4fNlGTRdESszNHs4eQkr8iEarkodfv65FcaY+veXSBJDIYXsWaJ2A1yD9uVOl30swFxJOnepre9yB4c4XLPV36I8wjrEbMvkUVuyRMCxIUvb8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=sjjWPg2i; arc=fail smtp.client-ip=52.103.67.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="sjjWPg2i"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hQgTDjVHAeW8NX7Uf1egK3p7ww+wejUANpHJB0nAPdHZjBSadVpyDXfn8A3ZOaYq0bFhmODkGv6xAQ+ccIeCeNlTU13w7XugbVesNc3gm+giTkyDbYgr/p3cFOlw293wqhnda1hE71EPhIuZjSz3a/FzIYiyTS+sCDt537a043B5b9kt8SipkI/mWB7pBlQ6jhF4AloaCI4+Uv/UhzTjlIXGsQEXaxhDaoZ6tMMyzOuvwN/Mjq7aFzGkUUzsjCxMi4x3I+5EYTMA8f2kRm/nSkxdmzSfe04AzXNwJa7sTVHw3TKEVv89ZJA48i3Ed+iZk8Dwhn7EevwVwHc5BeH1jQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=403l3NkQ3h7eCSA3v8u1jcljOmOtG4qkjXSfLdSEHoU=;
+ b=T/UkMC4qHVXAPqt0MiP0O2jU/HLW5Ttn3utycAWI7XyahmwxdnmSp5HvhQh9d983dbhSrXD4VUwHEjp4hlTK04zypM2KhgYQVgZD/GYXnNtq3gjl9A4j3dU7wWpQzNxG5tvAn1ZDOWTgJYyOJYm2rSGzzJxbXoupMTgz3522DIiQKfaa3t3n74cvxBUcXURwC42IpQ0Gi6h5b2bIGl1yzfReIldKXFPs5Io/BOcmt+lMyrPeW5E4akRdSjuNOGh3u2VwC2bdkWjQIhd/xuLeze9r33eb/4L0gF+AOsNdGfYCOd6Dd3VS0y4IDa7kp/BOhe7eXVLTmaT3hB2Uh04QpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=403l3NkQ3h7eCSA3v8u1jcljOmOtG4qkjXSfLdSEHoU=;
+ b=sjjWPg2ix5xEQLbni17GyAmgel2gL9i8rYtDLYEuaKsBqh2LBScB/8nfRF6JaP+1mTouGIsFUgD4a7BG3ht7Wvj/onICfffjiCL33iqKtTCUXtCoIXU3fe/78FDP7S7XXv35FOUEV3nkxa6mdYZ3goeHRNTGlvgE4F8LVvRg7JHUXEj88hDdcApMSzfB3meIM/jUsHf1N6J904Y0LjfvRC1kH8Y2kP46OIUXIQ3ae4LADJKHCY7bYtLDmHQWKYHZekg7k9vO2V+msJ4f79Qg7hr1j1rWi6goVJpJta7DPtMVbu4sNPDxU+AoxW7vqIYb+Hzad7TtDJiPkWtiCvzvuA==
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
+ by PN1P287MB3646.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:24e::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.27; Sat, 19 Apr
+ 2025 01:20:43 +0000
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4]) by MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4%5]) with mapi id 15.20.8655.025; Sat, 19 Apr 2025
+ 01:20:43 +0000
+Message-ID:
+ <MA0P287MB226200B6006A974CE752F5AFFEBE2@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+Date: Sat, 19 Apr 2025 09:20:34 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] pwm: sophgo: reorganize the code structure
+To: Longbin Li <looong.bin@gmail.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Inochi Amaoto <inochiama@gmail.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ sophgo@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+References: <20250418022948.22853-1-looong.bin@gmail.com>
+ <20250418022948.22853-3-looong.bin@gmail.com>
+From: Chen Wang <unicorn_wang@outlook.com>
+In-Reply-To: <20250418022948.22853-3-looong.bin@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR06CA0191.apcprd06.prod.outlook.com (2603:1096:4:1::23)
+ To MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
+X-Microsoft-Original-Message-ID:
+ <adae344f-87eb-4b19-9ab2-3c254b02e7ab@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
-To: Christian Brauner <brauner@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, Eric Chanudet <echanude@redhat.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Ian Kent <ikent@redhat.com>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
- Alexander Larsson <alexl@redhat.com>, Lucas Karpinski <lkarpins@redhat.com>,
- Aishwarya.TCV@arm.com
-References: <20250408210350.749901-12-echanude@redhat.com>
- <fbbafa84-f86c-4ea4-8f41-e5ebb51173ed@sirena.org.uk>
- <20250417-wolfsrudel-zubewegt-10514f07d837@brauner>
- <fb566638-a739-41dc-bafc-aa8c74496fa4@themaw.net>
- <20250417-abartig-abfuhr-40e558b85f97@brauner>
- <20250417-outen-dreihundert-7a772f78f685@brauner>
- <7980515f-2c5f-4279-bb41-7a3b336a4e26@themaw.net>
- <20250418-bekunden-virusinfektion-3ec992b21bfb@brauner>
-Content-Language: en-US
-From: Ian Kent <raven@themaw.net>
-Autocrypt: addr=raven@themaw.net; keydata=
- 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
-In-Reply-To: <20250418-bekunden-virusinfektion-3ec992b21bfb@brauner>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MA0P287MB2262:EE_|PN1P287MB3646:EE_
+X-MS-Office365-Filtering-Correlation-Id: 307a8712-5a94-43f4-836f-08dd7ee0674a
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199028|15080799006|7092599003|19110799003|6090799003|5072599009|8060799006|3412199025|440099028|41001999003;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Vlp0N252RjlvWWJOR2JjK01ySE1BNzNZREJMWFloRS96WnFCT0JwMjBkNXZv?=
+ =?utf-8?B?RTFHWGlpdExST2NCbUxLS1VpVmhQUTc5UVZnS3YwTk1QVUlCUytzUXBKUHlu?=
+ =?utf-8?B?SUNPaFIvU2tNandMVm9laXZrM3kraEIvR0dSdEU0WkpRKzhoZDVrdWdBajh2?=
+ =?utf-8?B?U1haN2N0Mjd2L09XSUVkakJtZWxDeXh3RjdsdzZPYmlHa2h3dmw3MXJsQWVR?=
+ =?utf-8?B?cU9kR0JwZTM1ckJaa0V1ZGNUWlN0b3BCa1B1c1RCRmdDb2I3YkhBcTdia0VE?=
+ =?utf-8?B?QXhqRnN4NmRxcW1XZzJwWnVQaE55M1hIMWpXM1k0V3ZuVWNXS0MyZCtMVUs1?=
+ =?utf-8?B?TnpkR2FOZzg2Y2hsalhzWHU2em1ZUFo1TDF6VVQ2c0pQOHoyRmU5Q20wclVz?=
+ =?utf-8?B?ZHBWd0F5YUhVR25oczVGcHUweWVGTzVDVWg0Y2JqWXQ1Ykg0ZlNHYzlwWUVH?=
+ =?utf-8?B?Zkh5bkhhSEF1UTd4UjBCU1RiQ3VORG9oK2JySmI0amlQUjJoZ3d0TVpkR1FF?=
+ =?utf-8?B?TVlkNnY1UFpjOW5qZTdBNW8zM0hTeE5KNTdVWEx0eVMvWEtaY01kQ29BN2hZ?=
+ =?utf-8?B?bDdCT2ZCS2dCb3BzN2dDa1B5UG1YeUtYVGVWN0YvOEZnZW5wSis3czNRQlpp?=
+ =?utf-8?B?MC83VjMydmFjVjJ1VGNjZDB3aTc5QlNJaGdJMUx6dTN2NFZIRGRkSGViWDFP?=
+ =?utf-8?B?S2N1ZVkySTFyeFVwRmlUQ0p0SVNYYzYwZHcvVVh3RkdabjhDMjlvdW5zWmdu?=
+ =?utf-8?B?MzVrOUx1Rkt5akV6WU80VXpndnlBMU1rSnJZM2RDNlk3Q0NFQUFwamlWOWw2?=
+ =?utf-8?B?Ty96dTkxSUdwWkwxV3JPMUdWZUxYYW9qaHA5UEhLNzVBbVF4VEYzaHAvdlFQ?=
+ =?utf-8?B?dWpWVGx2NkZsaldwQU9mRGwxVGV5dm9EZjAvUTdQMmJhWHcrY3Y4U0QzdW5J?=
+ =?utf-8?B?OG1ycGFLcUZkS3U1U0NHbWlXYWsvcDhLcHh6VFJwQXlTcW1uNENQb3hINE56?=
+ =?utf-8?B?eWgvZEZOUHZ5MWpzSHlCV2xGWUI0cUNtVW1IekJkZUxUbXhrbCtEREtIMlVW?=
+ =?utf-8?B?Nkl5MitsK2ZTT3NjRUUwL2E2TTRURHduZlVvOWlCRS95S0hIOSt4ZVErUU1k?=
+ =?utf-8?B?cndQaHBVak1pb1p2blY0aE5VVFNiYWJVSUl6bERqTzVTWHozeElDUFY2TTRP?=
+ =?utf-8?B?T3c4dm5pU1RNTEFTRGoyc0xac2lsWDFmMk1jZHRXLzlyOHJoMW9Pd1Z4cG9X?=
+ =?utf-8?B?cnVnUDh5YVZ1dGZ3eUtBci9aeVA5aFRaUHR0QmU3T1VrcXlFWUtkQ2tXTmUw?=
+ =?utf-8?B?VDRENG4yanZDbk5FVHg2d3l3cEV4WXE5eGZYNmI5SzBidWllQVcvMStJUWcx?=
+ =?utf-8?B?bTA4NVpHaDl0bWRpaXVrUWNJbUIxNGF0d2dGdkdiMGI2RHR2OEwxeC9kUUlC?=
+ =?utf-8?B?M3NvVlI4cWpTbE5KOE54OVNDdUxXamNyOUZmOHdoaFhFQ2w3cDZzNkFXWjZk?=
+ =?utf-8?B?elh0dzJ6TkUzYVE1RklsaVYvQ3RkcmQrZm5pSFEyY0h3QWF0K1RsMEpIOEdH?=
+ =?utf-8?Q?q7mVui4G/2MVyMbB1q/ehUCb8=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MTdtY25uRXVPb0tzWDVuWWtQN25ablpxMldsZUF0c2RGQ0xmalIwM1NFeWtP?=
+ =?utf-8?B?dkNhSVRpa09Gb24wNk5vU2xrRURmbjFJdGJxdGlua2RNRXJLdFc4YUg0UmRu?=
+ =?utf-8?B?NVpuRnFIR3cyOXNoSWdWYnFTclZnakQ3YlBxRzdsaGIyaUVLeDJ3ZEYvcUE1?=
+ =?utf-8?B?cHIzWHVMVjU1WFlTSnFrSEczUW4rM2RMK1NDMExQSzFiZjJRd3VDYVpEVW1u?=
+ =?utf-8?B?RVNaclVhN2hiTFcxRlJvSFhhelVwTVQvN3J5YVBDaXhPcFR4ejBaYWxwSDJM?=
+ =?utf-8?B?dHJjWHM0Rk9STm44UTNIVHI1OXhtc2puMVpZZk1rOCt4dWFCWkdyQ0VXbllp?=
+ =?utf-8?B?SWZFQ2hVRHJCK3FqeUwrWTBOaUZTc2ZsV09NSi9NOVE3ZCtQZGNqRjNXVnp5?=
+ =?utf-8?B?RjdNS0RGWCtGK2oydFZEM1JHVnBGVm51ZVZ0Z3d3UlZwQlArV3hPdFNBK0NX?=
+ =?utf-8?B?R2RUOTFiRFY0OGd6bURYV0JEdTlVUFVJcUhVcE4yd1ZIMjFLREFybmpNVVBq?=
+ =?utf-8?B?NEdMM00vT3dJaktRRE5rRVcyeTkwMWxOYzlJcWNDRUx0RkdUcW1xQkJiWnVO?=
+ =?utf-8?B?djIyTDJxamhMRHYzL0x3cFFoajdaNi9SL1laZmoxNHQ0ejdMQVFzWnZsQXky?=
+ =?utf-8?B?cmx0UVNlejI3Rm5FNHdyTVpJcXBPbFl0N1BoTHlmOG9jb1hJK2grbXNWMnNE?=
+ =?utf-8?B?UE5qMWFPVVJqaUFqZHR1WGVtMm9xblJva1dUTDlIZW5nUHFna1B4TnZzYzA0?=
+ =?utf-8?B?VjdiNU9JTjlIQnZiQVBDenAvd3FLbHF0T29XbDQwYkJNTkR0TTZiZG0yVTdB?=
+ =?utf-8?B?STYra1hCMkdZenc4R0JBQnl6SHJudUwwSE9aempCOXhuTS9RYmZwRFlMSUhH?=
+ =?utf-8?B?L0EyWHhTQXZQVjExN0xGZ3lsVnVQVDVSOEx3ajc5Wit2MnNYdjRkMllSS09r?=
+ =?utf-8?B?Y21FUGZDOHI1ak5OQm5WbEJOSndEMmQ0RUI0b216ZVVDTjlOQVRKNVZsSFdy?=
+ =?utf-8?B?R3BvMFpzRmM4Y1ZPalRPSVpZSzFHVGQzZHlmZk9yMmdkZzJVU1RydXlNRWxr?=
+ =?utf-8?B?NCt3QmdaRlQ4MDFDMUhJd2t2RlJUTDhldnBCWUpWZ3c0djNlUUozRFVaVTla?=
+ =?utf-8?B?aTZhYWhDT3YvcDFHVFYwN3lMMVVmeEIzYVMwb3U5S3NqK1JjTnd1RWMxZ1Nt?=
+ =?utf-8?B?RHpMVDlrTXdPZmJneWQ2ak5KL2NyL2YwNkpzVmN0cUp3dXNtdlZoVUlUbk92?=
+ =?utf-8?B?NjljbjRjOUEzeWpPTnN1b1U3akUzcFpMOVlwWWhuRjRFSG5VcjQwaGpVU1Uy?=
+ =?utf-8?B?TmUxV1FWRXBrb0pNUVZJdGRsU1NOQU1leXVjb2hpVFM5T2M0TkUxRi9JbG02?=
+ =?utf-8?B?VFdSNEE2N0pBU21SSXd6VHg2bGxUWko5TUxzTFVjaU13VFF4R0tJTm1jbTZL?=
+ =?utf-8?B?K3BQZEN6elpHZEZkNFY0YmVKcngzNnN0TXNybGMwenh5WnE2amUzYk5xWnZ2?=
+ =?utf-8?B?TmVNNFdCdzQrOXhkbHdZdkxtc0VSeGlycVJEYVhwZU5qVWRQMGNMZkl3R21i?=
+ =?utf-8?B?bVpUVmlpRHM4UGdKRG5iOHU5T05SbTFPbk1mR0NpdzlMQS85R1NmbXpqdmRO?=
+ =?utf-8?B?RHNMSVFZc1JuTWE2UE9tMWFmWkZLbkcwem5vWG0zY2pROTh2N29TWEsxdUlX?=
+ =?utf-8?B?YllsaU5FS3F4VFkrSVdDeWtTSjVkYitORmxrMHdoSFpPaWZGZ0Y3bmI5UGM0?=
+ =?utf-8?Q?42DyiXPkcv5ZHuT71bSIiehunGP2wrtPD06cjrU?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 307a8712-5a94-43f4-836f-08dd7ee0674a
+X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2025 01:20:43.0111
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN1P287MB3646
 
-On 18/4/25 16:59, Christian Brauner wrote:
-> On Fri, Apr 18, 2025 at 08:31:03AM +0800, Ian Kent wrote:
->> On 17/4/25 23:12, Christian Brauner wrote:
->>> On Thu, Apr 17, 2025 at 01:31:40PM +0200, Christian Brauner wrote:
->>>> On Thu, Apr 17, 2025 at 06:17:01PM +0800, Ian Kent wrote:
->>>>> On 17/4/25 17:01, Christian Brauner wrote:
->>>>>> On Wed, Apr 16, 2025 at 11:11:51PM +0100, Mark Brown wrote:
->>>>>>> On Tue, Apr 08, 2025 at 04:58:34PM -0400, Eric Chanudet wrote:
->>>>>>>> Defer releasing the detached file-system when calling namespace_unlock()
->>>>>>>> during a lazy umount to return faster.
->>>>>>>>
->>>>>>>> When requesting MNT_DETACH, the caller does not expect the file-system
->>>>>>>> to be shut down upon returning from the syscall. Calling
->>>>>>>> synchronize_rcu_expedited() has a significant cost on RT kernel that
->>>>>>>> defaults to rcupdate.rcu_normal_after_boot=1. Queue the detached struct
->>>>>>>> mount in a separate list and put it on a workqueue to run post RCU
->>>>>>>> grace-period.
->>>>>>> For the past couple of days we've been seeing failures in a bunch of LTP
->>>>>>> filesystem related tests on various arm64 systems.  The failures are
->>>>>>> mostly (I think all) in the form:
->>>>>>>
->>>>>>> 20101 10:12:40.378045  tst_test.c:1833: TINFO: === Testing on vfat ===
->>>>>>> 20102 10:12:40.385091  tst_test.c:1170: TINFO: Formatting /dev/loop0 with vfat opts='' extra opts=''
->>>>>>> 20103 10:12:40.391032  mkfs.vfat: unable to open /dev/loop0: Device or resource busy
->>>>>>> 20104 10:12:40.395953  tst_test.c:1170: TBROK: mkfs.vfat failed with exit code 1
->>>>>>>
->>>>>>> ie, a failure to stand up the test environment on the loopback device
->>>>>>> all happening immediately after some other filesystem related test which
->>>>>>> also used the loop device.  A bisect points to commit a6c7a78f1b6b97
->>>>>>> which is this, which does look rather relevant.  LTP is obviously being
->>>>>>> very much an edge case here.
->>>>>> Hah, here's something I didn't consider and that I should've caught.
->>>>>>
->>>>>> Look, on current mainline no matter if MNT_DETACH/UMOUNT_SYNC or
->>>>>> non-MNT_DETACH/UMOUNT_SYNC. The mntput() calls after the
->>>>>> synchronize_rcu_expedited() calls will end up in task_work():
->>>>>>
->>>>>>            if (likely(!(mnt->mnt.mnt_flags & MNT_INTERNAL))) {
->>>>>>                    struct task_struct *task = current;
->>>>>>                    if (likely(!(task->flags & PF_KTHREAD))) {
->>>>>>                            init_task_work(&mnt->mnt_rcu, __cleanup_mnt);
->>>>>>                            if (!task_work_add(task, &mnt->mnt_rcu, TWA_RESUME))
->>>>>>                                    return;
->>>>>>                    }
->>>>>>                    if (llist_add(&mnt->mnt_llist, &delayed_mntput_list))
->>>>>>                            schedule_delayed_work(&delayed_mntput_work, 1);
->>>>>>                    return;
->>>>>>            }
->>>>>>
->>>>>> because all of those mntput()s are done from the task's contect.
->>>>>>
->>>>>> IOW, if userspace does umount(MNT_DETACH) and the task has returned to
->>>>>> userspace it is guaranteed that all calls to cleanup_mnt() are done.
->>>>>>
->>>>>> With your change that simply isn't true anymore. The call to
->>>>>> queue_rcu_work() will offload those mntput() to be done from a kthread.
->>>>>> That in turn means all those mntputs end up on the delayed_mntput_work()
->>>>>> queue. So the mounts aren't cleaned up by the time the task returns to
->>>>>> userspace.
->>>>>>
->>>>>> And that's likely problematic even for the explicit MNT_DETACH use-case
->>>>>> because it means EBUSY errors are a lot more likely to be seen by
->>>>>> concurrent mounters especially for loop devices.
->>>>>>
->>>>>> And fwiw, this is exactly what I pointed out in a prior posting to this
->>>>>> patch series.
->>>>> And I didn't understand what you said then but this problem is more
->>>>>
->>>>> understandable to me now.
->>> I mean I'm saying it could be problematic for the MNT_DETACH case. I'm
->>> not sure how likely it is. If some process P1 does MNT_DETACH on a loop
->>> device and then another process P2 wants to use that loop device and
->>> sess EBUSY then we don't care. That can already happen. But even in this
->>> case I'm not sure if there aren't subtle ways where this will bite us.
->>>
->>> But there's two other problems:
->>>
->>> (1) The real issue is with the same process P1 doing stupid stuff that
->>>       just happened to work. For example if there's code out there that
->>>       does a MNT_DETACH on a filesystem that uses a loop device
->>>       immediately followed by the desire to reuse the loop device:
->>>
->>>       It doesn't matter whether such code must in theory already be
->>>       prepared to handle the case of seeing EBUSY after the MNT_DETACH. If
->>>       this currently just happens to work because we guarantee that the
->>>       last mntput() and cleanup_mnt() will have been done when the caller
->>>       returns to userspace it's a uapi break plain and simple.
->>>
->>>       This implicit guarantee isn't there anymore after your patch because
->>>       the final mntput() from is done from the system_unbound_wq which has
->>>       the consequence that the cleanup_mnt() is done from the
->>>       delayed_mntput_work workqeueue. And that leads to problem number
->>>       (2).
->> This is a bit puzzling to me.
->>
->>
->> All the mounts in the tree should be unhashed before any of these mntput()
->>
->> calls so I didn't think it would be found. I'll need to look at the loop
->>
->> device case to work out how it's finding (or holing onto) the stale mount
->>
->> and concluding it's busy.
-> Say you do:
->
-> mount(/dev/loop0 /mnt);
->
-> Unmounting that thing with or without MNT_DETACH will have the following
-> effect (if no path lookup happens and it isn't kept busy otherwise):
->
-> After the task returns the loop device will be free again because
-> deactivate_super() will have been called and the loop device is
-> release when the relevant filesystems release the claim on the block
-> device.
->
-> IOW, if the task that just returned wanted to reuse the same loop device
-> right after the umount() returned for another image file it could. It
-> would succeed with or without MNT_DETACH. Because the task_work means
-> that cleanup_mnt() will have been called when the task returns to
-> userspace.
->
-> But when we start offloading this to a workqueue that "guarantee" isn't
-> there anymore specifically for MNT_DETACH. If the system is mighty busy
-> the system_unbound_wq that does the mntput() and the delayed_mntput_work
-> workqueue that would ultimately do the cleanup_mnt() and thus
-> deactivate_super() to release the loop device could be run way way after
-> the task has returned to userspace. Thus, the task could prepare a new
-> image file and whatever and then try to use the same loop device and it
-> would fail because the workqueue hasn't gotten around to the item yet.
-> And it would be pretty opaque to the caller. I have no idea how likely
-> that is to become a problem. I'm just saying that is a not so subtle
-> change in behavior that might be noticable.
 
-Right, thanks for the effort to clear that up for me.
+On 2025/4/18 10:29, Longbin Li wrote:
+> As the driver logic can be used in both SG2042 and SG2044, it
+> will be better to reorganize the code structure.
+>
+> Signed-off-by: Longbin Li <looong.bin@gmail.com>
 
-Ian
+Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
 
+Thanks,
+
+Chen
+
+> ---
+>   drivers/pwm/pwm-sophgo-sg2042.c | 62 +++++++++++++++++++--------------
+>   1 file changed, 35 insertions(+), 27 deletions(-)
+>
+> diff --git a/drivers/pwm/pwm-sophgo-sg2042.c b/drivers/pwm/pwm-sophgo-sg2042.c
+> index ff4639d849ce..23a83843ba53 100644
+> --- a/drivers/pwm/pwm-sophgo-sg2042.c
+> +++ b/drivers/pwm/pwm-sophgo-sg2042.c
+> @@ -26,18 +26,6 @@
+>   #include <linux/pwm.h>
+>   #include <linux/reset.h>
+>
+> -/*
+> - * Offset RegisterName
+> - * 0x0000 HLPERIOD0
+> - * 0x0004 PERIOD0
+> - * 0x0008 HLPERIOD1
+> - * 0x000C PERIOD1
+> - * 0x0010 HLPERIOD2
+> - * 0x0014 PERIOD2
+> - * 0x0018 HLPERIOD3
+> - * 0x001C PERIOD3
+> - * Four groups and every group is composed of HLPERIOD & PERIOD
+> - */
+>   #define SG2042_PWM_HLPERIOD(chan) ((chan) * 8 + 0)
+>   #define SG2042_PWM_PERIOD(chan) ((chan) * 8 + 4)
+>
+> @@ -53,6 +41,10 @@ struct sg2042_pwm_ddata {
+>   	unsigned long clk_rate_hz;
+>   };
+>
+> +struct sg2042_chip_data {
+> +	const struct pwm_ops ops;
+> +};
+> +
+>   /*
+>    * period_ticks: PERIOD
+>    * hlperiod_ticks: HLPERIOD
+> @@ -66,21 +58,13 @@ static void pwm_sg2042_config(struct sg2042_pwm_ddata *ddata, unsigned int chan,
+>   	writel(hlperiod_ticks, base + SG2042_PWM_HLPERIOD(chan));
+>   }
+>
+> -static int pwm_sg2042_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> -			    const struct pwm_state *state)
+> +static void pwm_set_dutycycle(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			      const struct pwm_state *state)
+>   {
+>   	struct sg2042_pwm_ddata *ddata = pwmchip_get_drvdata(chip);
+>   	u32 hlperiod_ticks;
+>   	u32 period_ticks;
+>
+> -	if (state->polarity == PWM_POLARITY_INVERSED)
+> -		return -EINVAL;
+> -
+> -	if (!state->enabled) {
+> -		pwm_sg2042_config(ddata, pwm->hwpwm, 0, 0);
+> -		return 0;
+> -	}
+> -
+>   	/*
+>   	 * Duration of High level (duty_cycle) = HLPERIOD x Period_of_input_clk
+>   	 * Duration of One Cycle (period) = PERIOD x Period_of_input_clk
+> @@ -92,6 +76,22 @@ static int pwm_sg2042_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>   		pwm->hwpwm, period_ticks, hlperiod_ticks);
+>
+>   	pwm_sg2042_config(ddata, pwm->hwpwm, period_ticks, hlperiod_ticks);
+> +}
+> +
+> +static int pwm_sg2042_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			    const struct pwm_state *state)
+> +{
+> +	struct sg2042_pwm_ddata *ddata = pwmchip_get_drvdata(chip);
+> +
+> +	if (state->polarity == PWM_POLARITY_INVERSED)
+> +		return -EINVAL;
+> +
+> +	if (!state->enabled) {
+> +		pwm_sg2042_config(ddata, pwm->hwpwm, 0, 0);
+> +		return 0;
+> +	}
+> +
+> +	pwm_set_dutycycle(chip, pwm, state);
+>
+>   	return 0;
+>   }
+> @@ -123,13 +123,16 @@ static int pwm_sg2042_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+>   	return 0;
+>   }
+>
+> -static const struct pwm_ops pwm_sg2042_ops = {
+> -	.apply = pwm_sg2042_apply,
+> -	.get_state = pwm_sg2042_get_state,
+> +static const struct sg2042_chip_data sg2042_chip_data = {
+> +	.ops = {
+> +		.apply = pwm_sg2042_apply,
+> +		.get_state = pwm_sg2042_get_state,
+> +	}
+>   };
+>
+>   static const struct of_device_id sg2042_pwm_ids[] = {
+> -	{ .compatible = "sophgo,sg2042-pwm" },
+> +	{ .compatible = "sophgo,sg2042-pwm",
+> +	  .data = &sg2042_chip_data },
+>   	{ }
+>   };
+>   MODULE_DEVICE_TABLE(of, sg2042_pwm_ids);
+> @@ -137,12 +140,17 @@ MODULE_DEVICE_TABLE(of, sg2042_pwm_ids);
+>   static int pwm_sg2042_probe(struct platform_device *pdev)
+>   {
+>   	struct device *dev = &pdev->dev;
+> +	const struct sg2042_chip_data *chip_data;
+>   	struct sg2042_pwm_ddata *ddata;
+>   	struct reset_control *rst;
+>   	struct pwm_chip *chip;
+>   	struct clk *clk;
+>   	int ret;
+>
+> +	chip_data = device_get_match_data(dev);
+> +	if (!chip_data)
+> +		return -ENODEV;
+> +
+>   	chip = devm_pwmchip_alloc(dev, SG2042_PWM_CHANNELNUM, sizeof(*ddata));
+>   	if (IS_ERR(chip))
+>   		return PTR_ERR(chip);
+> @@ -170,7 +178,7 @@ static int pwm_sg2042_probe(struct platform_device *pdev)
+>   	if (IS_ERR(rst))
+>   		return dev_err_probe(dev, PTR_ERR(rst), "Failed to get reset\n");
+>
+> -	chip->ops = &pwm_sg2042_ops;
+> +	chip->ops = &chip_data->ops;
+>   	chip->atomic = true;
+>
+>   	ret = devm_pwmchip_add(dev, chip);
+> --
+> 2.49.0
