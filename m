@@ -1,46 +1,74 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A5078C9C;
-	Sat, 19 Apr 2025 01:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB852CCDB;
+	Sat, 19 Apr 2025 01:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745026224; cv=none; b=IyjA558vlw9LNZ8bQX7ZE+z7QoEhcV0HVaVDbqNFyCDyxcgRhi8F76VcpolB7kd5tfo6PKIGSFX7sQXhggFCaZyH8mZ2UUQ6ydZigqs6hCheoKyjg+W8iH1kULfGsiNDMgWnqMvAhoLbmMpWgOcd9kphIo340ip15PY6oTZVLAQ=
+	t=1745026262; cv=none; b=dhBUWtMMqeido0v7Qr8NrFQ/oXvzcS3x9RIzlDsZWHPxsL05AAcLoA9qecOXKiNuCQiYwpE/yScAcrln95R89Gv1tgZmdFfdyT4R3N1bmU2TvE7pYnUaUtSYMaBGnIFMxvYAf6DaQ3AjcsDYnlJHae7V8h5jbK7py+7ILUvh/kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745026224; c=relaxed/simple;
-	bh=JN/ug3dM1UBGfNxAh11HlE1UcacJnvtGdNX59TS7qxk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sLdnHMKTVGaRXUlIztFSep1C2enH78DQdHQqMQNKiI9z/ez6fCIg3qk2nQ1RpX8LQJ1wouP6Wkx4KqoKx9o/eEC6PtNDw96sDtRzfPBxOACqiBLPS6C9weH8BeiqdgSvQoi6xAljwXXnypa7JXJU0d/il+gXnRjVlYPgmVrpQD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZfYw317hmz4f3k5c;
-	Sat, 19 Apr 2025 09:29:55 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 970981A0359;
-	Sat, 19 Apr 2025 09:30:13 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgAHa1+i_AJo6lCaJw--.27471S6;
-	Sat, 19 Apr 2025 09:30:13 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: song@kernel.org,
-	linux-raid@vger.kernel.org,
+	s=arc-20240116; t=1745026262; c=relaxed/simple;
+	bh=h1I7azrs9dgpknSH+P+IhNbPLmtlQBazARRV3ngykeI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JaQhHuVQUi7dOpg7GFFhCQsjMOxdKPUa5kt9GyYeNS1dIy8vvdkwBlRrIP7iUBAr5gloRBKi0ZdZpZ4lq9Tf6qLXHQIupOGZb2xlMqqMi8FML/8fgSBRvWPYR1pipR7GCSVBCrwLzTbYEBKrktPuhvNg36GV/DVzS5Jb188H5pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GLQC8NGy; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GLQC8NGy"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6ecf0e07954so34018896d6.1;
+        Fri, 18 Apr 2025 18:31:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745026260; x=1745631060; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yWCtJ50FKxjfzSVOv6So7GDOtXW1AyTUmdzzwtUL1F4=;
+        b=GLQC8NGylaCfazuoAtW2WciQiwwURW3PbJUrDE7C25uNk38KJcdpQaB+GxNUX9q5bn
+         +d3fFwmIt2/C9jX2RVuFyhx+CfFICxOqqHV+2QhZhxGX/7CSbjAC0Q9oi+Zz2qfVQbMG
+         Wqx/IPdL0uPi8LsWmgJA7ATIH32NSMhE3SH5V8aHgaYUEibqmYEEtXPiRE7E/tGsSB/7
+         Xk/YpA+LtuplCHLhZXbYR2pVpZe6TTLjwkMZsE9YrCozg37iV2EVJRqozk7zeg1JVhk5
+         w544nFS3IKtrEQgFILT9VrZ2EUpeHkapqMA+w0C6IjKxCYlKPx2jExjWIGRHBoyV06a6
+         4MSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745026260; x=1745631060;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yWCtJ50FKxjfzSVOv6So7GDOtXW1AyTUmdzzwtUL1F4=;
+        b=EoW+T3XVwq7MPgCia+ZcC+aRuPCL5v7PFkd3RL6y2tiS+Jy7O9hUlhjwmIHXn1T7fX
+         o61WzZ9bxgr3YZmlQrp369fJZ1fsbEyBRL6Bqn8YMnNx1jVXFWUdgZt5RaqHHJ2b0AKh
+         ARvaif8qjvmO4fo3gVEBWmVIzSfqvHg9+xit4WFX5qdP4Wxj7CZMnaEMpm+p08t9O4xy
+         3yTYe0+RtGeU92BDvtKWaJ+3Wb69Y79Bj2fDKeSfrT5iuGRYuyqpA78Y9aBJONyb996u
+         Qre4BZ6jSqOsClyJVWPipIdRsjKiEbyyj+aZtLUEg/spii+xH5SymTyS5Nh+F8aJ6jxD
+         qicQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVFbD56kv2xyYOzQ6glPkUbbMWxPMCsaHi+n57JkJa/og8vDYRYTk0UAcsfc1yvlIqlA6EYVID3Dc9cA0=@vger.kernel.org, AJvYcCV0yzYIZcxwSq1KdtFBE8VLLPs+czLSLkp8SMuQ0hBj6cbNMWexMszEv1vi9VuNjVoSPyJJa24P@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkQJZNvbeXj3lhKye3dQVhMVIK/Y0Iw5lIviubqHO7ENnXwfH4
+	h2yrEQkUcKDLo/X5NksWVmrqaDc/D/RkFQ4fA8WBQiMrDDt6Bdyu
+X-Gm-Gg: ASbGncs3qPGw00z1ciuLXqLcA05RRLn/3tX34MhI5DjeIqG/pARAD/a+n4F8efROqV5
+	48hIb70WxeJEoV/VoNNqAUSFS719+ZFUaiTztKxbp49JM3jEVGxN3qj5EMizTrBLfxgA3fNdo10
+	gZaaHCuKEY4Qz3DL3mrE3l2ifyf6xlm/0sRo5SV7p1kGlexZuG/YVuczRSIQ/LgI45cdiv73eZp
+	+M+QOd4vbRo+FBm6ZAoE442iRh7PbMP77z5X6+v/yc2kNNmSIzcYQzpxv7YlLMqEHbeSorfOEuU
+	XdC4p3qBSbd8pM7HTfTuqU9o0HvNCiahZYzA3rz6RNMrCyqcclFLTuw=
+X-Google-Smtp-Source: AGHT+IH2dNoQ71LMwjqMyD04yE+yHrJLLk5w9rj2a4E+sh5ENZAdgWvNcZAqjqEj/zzrNb4XcWw+Iw==
+X-Received: by 2002:a05:6214:c88:b0:6ed:1659:76b0 with SMTP id 6a1803df08f44-6f2c456cd92mr69394846d6.20.1745026259950;
+        Fri, 18 Apr 2025 18:30:59 -0700 (PDT)
+Received: from theriatric.mshome.net ([73.123.232.110])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2af14b9sm16649266d6.21.2025.04.18.18.30.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 18:30:59 -0700 (PDT)
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+To: gregkh@linuxfoundation.org,
+	gshahrouzi@gmail.com,
+	jacobsfeder@gmail.com,
 	linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	johnny.chenyi@huawei.com,
-	carnil@debian.org
-Subject: [PATCH 6.1 2/2] md: fix mddev uaf while iterating all_mddevs list
-Date: Sat, 19 Apr 2025 09:23:03 +0800
-Message-Id: <20250419012303.85554-3-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250419012303.85554-1-yukuai1@huaweicloud.com>
-References: <20250419012303.85554-1-yukuai1@huaweicloud.com>
+	linux-staging@lists.linux.dev,
+	sergio.paracuellos@gmail.com
+Cc: skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: [PATCH] staging: axis-fifo: Correct handling of tx_fifo_depth for size validation
+Date: Fri, 18 Apr 2025 21:29:37 -0400
+Message-ID: <20250419012937.674924-1-gshahrouzi@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,143 +76,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAHa1+i_AJo6lCaJw--.27471S6
-X-Coremail-Antispam: 1UD129KBjvJXoWxurykWr1fCw48tF47Zr15XFb_yoWrGrWUpF
-	Waga1fGr48X3s3XF4DGw4DuFy5Ww18Kr4qqryxGa1rCr1Utr98Wr1Sgw15XFyj9ayfXrn0
-	qa18Ja4Yvr1DWwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQv14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCF54CYxVCY1x0262kKe7AK
-	xVWUtVW8ZwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQXo7UUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: Yu Kuai <yukuai3@huawei.com>
+Remove erroneous subtraction of 4 from the total FIFO depth read from
+device tree. The stored depth is for checking against total capacity,
+not initial vacancy. This prevented writes near the FIFO's full size.
 
-commit 8542870237c3a48ff049b6c5df5f50c8728284fa upstream.
+The check performed just before data transfer, which uses live reads of
+the TDFV register to determine current vacancy, correctly handles the
+initial Depth - 4 hardware state and subsequent FIFO fullness.
 
-While iterating all_mddevs list from md_notify_reboot() and md_exit(),
-list_for_each_entry_safe is used, and this can race with deletint the
-next mddev, causing UAF:
-
-t1:
-spin_lock
-//list_for_each_entry_safe(mddev, n, ...)
- mddev_get(mddev1)
- // assume mddev2 is the next entry
- spin_unlock
-            t2:
-            //remove mddev2
-            ...
-            mddev_free
-            spin_lock
-            list_del
-            spin_unlock
-            kfree(mddev2)
- mddev_put(mddev1)
- spin_lock
- //continue dereference mddev2->all_mddevs
-
-The old helper for_each_mddev() actually grab the reference of mddev2
-while holding the lock, to prevent from being freed. This problem can be
-fixed the same way, however, the code will be complex.
-
-Hence switch to use list_for_each_entry, in this case mddev_put() can free
-the mddev1 and it's not safe as well. Refer to md_seq_show(), also factor
-out a helper mddev_put_locked() to fix this problem.
-
-Cc: Christoph Hellwig <hch@lst.de>
-Link: https://lore.kernel.org/linux-raid/20250220124348.845222-1-yukuai1@huaweicloud.com
-Fixes: f26514342255 ("md: stop using for_each_mddev in md_notify_reboot")
-Fixes: 16648bac862f ("md: stop using for_each_mddev in md_exit")
-Reported-and-tested-by: Guillaume Morin <guillaume@morinfr.org>
-Closes: https://lore.kernel.org/all/Z7Y0SURoA8xwg7vn@bender.morinfr.org/
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-[skip md_seq_show() that is not exist]
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Fixes: 4a965c5f89de ("staging: add driver for Xilinx AXI-Stream FIFO v4.1 IP core")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
 ---
- drivers/md/md.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/staging/axis-fifo/axis-fifo.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 639fe8ebaa68..d5fbccc72810 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -684,6 +684,12 @@ static void __mddev_put(struct mddev *mddev)
- 	queue_work(md_misc_wq, &mddev->del_work);
- }
- 
-+static void mddev_put_locked(struct mddev *mddev)
-+{
-+	if (atomic_dec_and_test(&mddev->active))
-+		__mddev_put(mddev);
-+}
-+
- void mddev_put(struct mddev *mddev)
- {
- 	if (!atomic_dec_and_lock(&mddev->active, &all_mddevs_lock))
-@@ -9704,11 +9710,11 @@ EXPORT_SYMBOL_GPL(rdev_clear_badblocks);
- static int md_notify_reboot(struct notifier_block *this,
- 			    unsigned long code, void *x)
- {
--	struct mddev *mddev, *n;
-+	struct mddev *mddev;
- 	int need_delay = 0;
- 
- 	spin_lock(&all_mddevs_lock);
--	list_for_each_entry_safe(mddev, n, &all_mddevs, all_mddevs) {
-+	list_for_each_entry(mddev, &all_mddevs, all_mddevs) {
- 		if (!mddev_get(mddev))
- 			continue;
- 		spin_unlock(&all_mddevs_lock);
-@@ -9720,8 +9726,8 @@ static int md_notify_reboot(struct notifier_block *this,
- 			mddev_unlock(mddev);
- 		}
- 		need_delay = 1;
--		mddev_put(mddev);
- 		spin_lock(&all_mddevs_lock);
-+		mddev_put_locked(mddev);
+diff --git a/drivers/staging/axis-fifo/axis-fifo.c b/drivers/staging/axis-fifo/axis-fifo.c
+index 76db29e4d2828..351f983ef9149 100644
+--- a/drivers/staging/axis-fifo/axis-fifo.c
++++ b/drivers/staging/axis-fifo/axis-fifo.c
+@@ -770,9 +770,6 @@ static int axis_fifo_parse_dt(struct axis_fifo *fifo)
+ 		goto end;
  	}
- 	spin_unlock(&all_mddevs_lock);
  
-@@ -10043,7 +10049,7 @@ void md_autostart_arrays(int part)
- 
- static __exit void md_exit(void)
- {
--	struct mddev *mddev, *n;
-+	struct mddev *mddev;
- 	int delay = 1;
- 
- 	unregister_blkdev(MD_MAJOR,"md");
-@@ -10064,7 +10070,7 @@ static __exit void md_exit(void)
- 	remove_proc_entry("mdstat", NULL);
- 
- 	spin_lock(&all_mddevs_lock);
--	list_for_each_entry_safe(mddev, n, &all_mddevs, all_mddevs) {
-+	list_for_each_entry(mddev, &all_mddevs, all_mddevs) {
- 		if (!mddev_get(mddev))
- 			continue;
- 		spin_unlock(&all_mddevs_lock);
-@@ -10076,8 +10082,8 @@ static __exit void md_exit(void)
- 		 * the mddev for destruction by a workqueue, and the
- 		 * destroy_workqueue() below will wait for that to complete.
- 		 */
--		mddev_put(mddev);
- 		spin_lock(&all_mddevs_lock);
-+		mddev_put_locked(mddev);
- 	}
- 	spin_unlock(&all_mddevs_lock);
- 
+-	/* IP sets TDFV to fifo depth - 4 so we will do the same */
+-	fifo->tx_fifo_depth -= 4;
+-
+ 	ret = get_dts_property(fifo, "xlnx,use-rx-data", &fifo->has_rx_fifo);
+ 	if (ret) {
+ 		dev_err(fifo->dt_device, "missing xlnx,use-rx-data property\n");
 -- 
-2.39.2
+2.43.0
 
