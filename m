@@ -1,49 +1,31 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20A118A6A7;
-	Sat, 19 Apr 2025 09:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DCB2AE96;
+	Sat, 19 Apr 2025 09:35:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745055305; cv=none; b=oizJ+nQyUnjqDven+NifbErX39rcldR+Fr0wnxZGW6bBh78F1HyHlXQ/kpWNM9KI46yvlZ4+D9vbMaGqUgc9V1Upc1QRPgqLZN+UY/SAEi5kD3CMtwTCPmVvqQwPn/1pH0j3cHNOWOxYlbk3Yxep8sOHKH7I/IxJKsyTuqty0ds=
+	t=1745055358; cv=none; b=JChDX/yQZgHvwtjPIc+HlXrSm4L+AvozVnjOgcziDHmvfmTP0Vnv/ny3OSRzb5uogjSsF9Mvf/fALnFZ84pbFQdr5JjyCvyfrgVWiO8UY6lajTV5LbZcknKmTiWEnlW7slpPWVGq9Nm2oaTkbfHwX7aI7iZ04GjT2toGgmhhG3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745055305; c=relaxed/simple;
-	bh=WolXuewx7OlA5cu8AF4VVhCTZxn5SojxszGM0R0x200=;
+	s=arc-20240116; t=1745055358; c=relaxed/simple;
+	bh=arihgOkEvq/rFpBVmfQywP7Cnn9CIntQMufo1ibAEcY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mabsmheDKMo0ElHakIZAvC3gCVUtwXrapuMIyLUOnTDCkyLUR1nhH9HiOa2xmIs4+hGtOzdZ3bv+VXpAtyjjbwku0Cad9KjeUs1zWmnjy92EevWb1/4pG50/0AVfOjFVEtI7MJWjjugkQCG3XsXKzFyg7nt0j4Afu/+dmIXxdj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WU8mhadh; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WU8mhadh"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53J9Yw8m474476
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 19 Apr 2025 04:34:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745055298;
-	bh=gft5NuX6qVKgd8gTmf59OKqmKGXTRiwgf8HWTh+DF7E=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=WU8mhadhngmBa/ah+C0F72oEmz78Ms2gn+eanhVvPcR7ZOEnNWmG4iR28aVcX2dXV
-	 2AX40nlSeWZpui7cVZjUDOeTu3NeMtupeU+WwgKhVyGIRRvXnRYCqKtxcgs6WlJPpq
-	 Fdm5arMpuSnKko7k63wAfw0f0MihaK2U6ViXMW7k=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53J9YwXf087851
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sat, 19 Apr 2025 04:34:58 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 19
- Apr 2025 04:34:58 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sat, 19 Apr 2025 04:34:57 -0500
-Received: from [10.249.141.75] ([10.249.141.75])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53J9Ys4F081127;
-	Sat, 19 Apr 2025 04:34:55 -0500
-Message-ID: <4144abf5-82aa-49db-82d7-c1429c12292e@ti.com>
-Date: Sat, 19 Apr 2025 15:04:54 +0530
+	 In-Reply-To:Content-Type; b=Td2NhAfFIJ/ERQvDGoo17Txu/zFczKwPMnAXbmpMzgiCSdfP6SkKUh2aLaQtP9iZT/fshaurjzi1X7sSqL25bb8XI1NdPdbJhRVt5I8irs8MPOMiN4V5IxL9MDitQW5SBLdAedyRl5B+z3CAIfL1HmRCVvC3wcUok/dO0EYw2cU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Zfmcn14wjzHrFr;
+	Sat, 19 Apr 2025 17:32:25 +0800 (CST)
+Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id 00BD7180B53;
+	Sat, 19 Apr 2025 17:35:53 +0800 (CST)
+Received: from [10.67.121.90] (10.67.121.90) by kwepemh100008.china.huawei.com
+ (7.202.181.93) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 19 Apr
+ 2025 17:35:52 +0800
+Message-ID: <c704850d-1fdd-4f25-8251-5bab03f055bb@huawei.com>
+Date: Sat, 19 Apr 2025 17:35:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,67 +33,93 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/7] arm64: dts: ti: k3-am68-sk: Enable DSI on
- DisplayPort-0
-To: Jayesh Choudhary <j-choudhary@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <devarsht@ti.com>, <linux-kernel@vger.kernel.org>
-CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <kristo@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <u-kumar1@ti.com>
-References: <20250411105155.303657-1-j-choudhary@ti.com>
- <20250411105155.303657-8-j-choudhary@ti.com>
-Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <20250411105155.303657-8-j-choudhary@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Subject: Re: [PATCH] cpufreq: acpi: Don't enable boost on policy exit
+To: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki"
+	<rafael@kernel.org>
+CC: Nicholas Chin <nic.c3.14@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, <rafael.j.wysocki@intel.com>,
+	<vincent.guittot@linaro.org>
+References: <2c788c2ca0cab09a8ef4e384f272af928a880b0e.1744781329.git.viresh.kumar@linaro.org>
+ <20250417015424.36487-1-nic.c3.14@gmail.com>
+ <20250417050226.c6kdp2s5du3y3a3j@vireshk-i7>
+ <20250417050911.xycjkalehqsg3i6x@vireshk-i7>
+ <CAJZ5v0iO4=nHcATzPyiKiWumdETFRR32C97K_RH=yhD--Tai=g@mail.gmail.com>
+ <CAJZ5v0gcf07YykOS9VsQgHwM0DnphBX4yc9dt5cKjNR8G_4mAQ@mail.gmail.com>
+ <CAKohpomN1PYn1NPSsxCxqpMfg-9nYgCRQD6dFGQ30B+76vneQw@mail.gmail.com>
+ <978bc0b7-4dfe-4ca1-9dd5-6c4a9c892be6@gmail.com>
+ <CAJZ5v0iwAsVnvYKjKskLXuu5bDV_SMpgnTTy0zD=7fgnGzHQnA@mail.gmail.com>
+ <CAKohponCr6pwgmK+J0WnvY_VZdDhA738JF18L518A2MKJVQLmw@mail.gmail.com>
+From: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
+In-Reply-To: <CAKohponCr6pwgmK+J0WnvY_VZdDhA738JF18L518A2MKJVQLmw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemh100008.china.huawei.com (7.202.181.93)
 
+On 2025/4/19 15:54, Viresh Kumar wrote:
 
-On 4/11/2025 4:21 PM, Jayesh Choudhary wrote:
-> Enable DSI support for AM68-SK platform.
->
-> Add DT node for DSI2eDP bridge. The DSI to eDP bridge is sn65dsi86
-> on the board.
->
-> Add the endpoint nodes to describe connection from:
-> DSS => DSI => SN65DSI86 bridge => DisplayPort-0
->
-> Set status for all required nodes for DisplayPort-0 as 'okay'.
->
-> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
-> ---
->   .../boot/dts/ti/k3-am68-sk-base-board.dts     | 96 +++++++++++++++++++
->   1 file changed, 96 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
-> index 11522b36e0ce..df54de2d8236 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
-> @@ -124,6 +124,35 @@ transceiver4: can-phy3 {
->   		max-bitrate = <5000000>;
->   	};
->   
-> +	edp0_refclk: clock-edp0-refclk {
-> +		#clock-cells = <0>;
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <19200000>;
-> +	};
+> On Sat, 19 Apr 2025 at 00:58, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> 
+>> So it updates policy->boost_enabled in accordance with the current
+>> setting in the MSR.
+> 
+> Yes.
+> 
+>> IMO it would be better to update the MSR in accordance with
+>> policy->boost_enabled or users may get confused if their boost
+>> settings change after a suspend-resume cycle.  Or have I got lost
+>> completely?
+> 
+> I wrote this patch based on the sync that happens at the end of
+> cpufreq_online():
+> 
+>         /* Let the per-policy boost flag mirror the cpufreq_driver
+> boost during init */
+>         if (cpufreq_driver->set_boost && policy->boost_supported &&
+>             policy->boost_enabled != cpufreq_boost_enabled()) {
+>                 policy->boost_enabled = cpufreq_boost_enabled();
+>                 ret = cpufreq_driver->set_boost(policy, policy->boost_enabled);
+>                 if (ret) {
+>                         /* If the set_boost fails, the online
+> operation is not affected */
+>                         pr_info("%s: CPU%d: Cannot %s BOOST\n",
+> __func__, policy->cpu,
+>                                 str_enable_disable(policy->boost_enabled));
+>                         policy->boost_enabled = !policy->boost_enabled;
+>                 }
+>         }
+> 
+> So my patch works as the cpufreq core force-syncs the state at init
+> (pretty much what the driver was doing before).
+> 
+> Though I now wonder if this code (in cpufreq_online()) is really doing
+> the right thing or not. So if global boost is enabled before suspend with
+> policy boost being disabled, the policy boost will be enabled on resume.
 
-I assume on this board and through out series, display is DP not eDP.
+Yes, the policy boost will be forcibly set to mirror the global boost. This
+indicates that the global boost value is the default value of policy boost
+each time the CPU goes online. Otherwise, we'll meet things like:
 
-do you see possibility to change wording from eDP to DP
+1. The global boost is set to disabled after a CPU going offline but the
+policy boost is still be enabled after the CPU going online again.
 
+2. The global boost is set to enabled after a CPU going offline and the
+rest of the online CPUs are all boost enabled. However, the offline CPU
+remains in the boost disabled state after it going online again. Users
+have to set its boost state separately.
 
-> +
-> +	dp0_pwr_3v3: fixedregulator-dp0-pwr {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "dp0-pwr";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		gpio = <&exp2 2 GPIO_ACTIVE_HIGH>;     /*P0 - DP0_3V3 _EN */
-> +		enable-active-high;
-> +		regulator-always-on;
-> +	};
-> +
-> [..]
+IMV, a user set the global boost means "I want all policy boost/unboost",
+every CPU going online after that should follow this order. So I think
+the code in cpufreq_online() is doing the right thing.
+
+BTW, I think there is optimization can be done in
+cpufreq_boost_trigger_state(). Currently, Nothing will happend if users set
+global boost flag to true when this flag is already true. But I think it's
+better to set all policies to boost in this situation. It might make more
+sense to think of this as a refresh operation. This is just my idea. I'd
+like to hear your opinion.
+
+> 
+> --
+> Viresh
+
