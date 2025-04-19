@@ -1,199 +1,513 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-20.smtpout.orange.fr [80.12.242.20])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58451A254C;
-	Sat, 19 Apr 2025 08:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5341A254C;
+	Sat, 19 Apr 2025 08:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745051330; cv=none; b=n2JCwcosUI2SIj/tuzDsMQNU1VKDt01j/V312XT2dKGrBYdyh2+CSF8pOEhxwcwBiHNfmFGyPxKhuLBbaNb/OCKxlnUcwWsSWa3+u1L79yolI+Wk1seZGYyHjx0Dk6D3Lp7UBEKfNJWTDw9Yg1BV9WsDgAt50bHarDS1v9UnxI4=
+	t=1745051394; cv=none; b=ODCSrVqJu4EErddPA+2n2hqXrWiBxPV+wG9VdWsmys1tImUBsre9iwfXgOnOhsvsMLn0/6+M04gAhdS3j4wYzvGXvtuDz/5y44ZPSorVAH8VLQxYc1crUeC+7YjvHxgv1Kw+BFcQTgCeg8baGRZRRM5zO0Ob1aSoZIOp8fxfokU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745051330; c=relaxed/simple;
-	bh=G9y+lG16rIgiZl8Rp3w1VzmoSlJOMaSlDc8bZM/MDIQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JKqFXgCGq/O0YlKAzYBrWq+ri5j7ruShNt2kPaT93CokMrQ8V/GJOjV+EIvZOcHg+/vq/53TJhJz2UovH41FByZIyHSTA9ULyp9o2TAPt07djrpFpuTJanb91HdRJ8Wx+ZJU7owJomqPE5otjZSIAGDTAizELU32ZRqZhtHSQlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Zfl6s2fcfz5vMZ;
-	Sat, 19 Apr 2025 16:24:53 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id E02A9180B49;
-	Sat, 19 Apr 2025 16:28:42 +0800 (CST)
-Received: from [10.174.179.155] (10.174.179.155) by
- kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Sat, 19 Apr 2025 16:28:41 +0800
-Message-ID: <21817f2c-2971-4568-9ae4-1ccc25f7f1ef@huawei.com>
-Date: Sat, 19 Apr 2025 16:28:41 +0800
+	s=arc-20240116; t=1745051394; c=relaxed/simple;
+	bh=gAscmcKNfnO0N3FLcOUQMab5Im0Tp2Z3a7oR01znvBY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DLfJnWpr50lbGvbig6dvlfeFl/kEuldb8ppD6aiIlKuQ8Smm+F4HRcdavd8TDQ2PkSzUW1mf5DIB2wuSMPZ4q5PuT1PzV1oI3f9xKjVoQVC1wspX6AqtlvObDdDQxvdcaOVeG6XG74jTLnLgn7YT76RQV1Nq0u+E1U4I4rqhJw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=fY2PUlNv; arc=none smtp.client-ip=80.12.242.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="fY2PUlNv"
+Received: from localhost.localdomain ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id 63ZxueZLbiSFB63a0u9oRv; Sat, 19 Apr 2025 10:29:42 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1745051382;
+	bh=QZ0M3YULwiTEHZp44mqFeUb6ZMxl5OzqThY94fuFEgw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=fY2PUlNvMrebWHzDO3fXFKroyOGgqOjTtytwkM9ZrkUXLZxilpMrNhnckVOrhleI0
+	 Xzvy+l/pDjuC74rEun5NefeZA+OXOxBSGy9+6DFu5snE3IGpyAJCVXry5AcM/eEbvQ
+	 W8OHJ5AIt1TEzDZyWYJkJFm6Qp715JRoNqsovcfs/b/rtAHs8/IkoqN1jW5Txh+OUU
+	 JlxG81w8mzYatxJzzdWutT5b0ai4vnYGhGmvgsub30CIJ3hwcJMMHY7jk6ovfdOzaC
+	 KLowhTdpTizoPsNcmKgmIZ9vgijQxd/Qe3qmRCyhTpU9TpFZsW4U3uuHk9veuLRMJG
+	 kecF+pAd6QQmQ==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 19 Apr 2025 10:29:42 +0200
+X-ME-IP: 90.11.132.44
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-wireless@vger.kernel.org,
+	ath10k@lists.infradead.org
+Subject: [PATCH] wifi: ath10k: Constify structures in hw.c
+Date: Sat, 19 Apr 2025 10:29:17 +0200
+Message-ID: <504b4d5276d13f5f9c3bffcfdaf244006312c22b.1745051315.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: [PATCH] nfs: handle failure of nfs_get_lock_context in unlock
- path
-To: Jeff Layton <jlayton@kernel.org>, <trondmy@kernel.org>, <anna@kernel.org>,
-	<bcodding@redhat.com>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>
-References: <20250417072508.3850532-1-lilingfeng3@huawei.com>
- <1c7aa66639d9297dae186181aa3a03ff237be81f.camel@kernel.org>
- <678aae33-3af0-4229-a2ce-d9cef1572f96@huawei.com>
- <a53ddece5d8deb77f6e6a37e4358dd3eb93401ba.camel@kernel.org>
-From: Li Lingfeng <lilingfeng3@huawei.com>
-In-Reply-To: <a53ddece5d8deb77f6e6a37e4358dd3eb93401ba.camel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemg500017.china.huawei.com (7.202.181.81)
 
+Structures defined in hw.c are not modified in this driver.
 
-在 2025/4/17 20:43, Jeff Layton 写道:
-> On Thu, 2025-04-17 at 20:24 +0800, Li Lingfeng wrote:
->> 在 2025/4/17 18:29, Jeff Layton 写道:
->>> On Thu, 2025-04-17 at 15:25 +0800, Li Lingfeng wrote:
->>>> When memory is insufficient, the allocation of nfs_lock_context in
->>>> nfs_get_lock_context() fails and returns -ENOMEM. If we mistakenly treat
->>>> an nfs4_unlockdata structure (whose l_ctx member has been set to -ENOMEM)
->>>> as valid and proceed to execute rpc_run_task(), this will trigger a NULL
->>>> pointer dereference in nfs4_locku_prepare. For example:
->>>>
->>>> BUG: kernel NULL pointer dereference, address: 000000000000000c
->>>> PGD 0 P4D 0
->>>> Oops: Oops: 0000 [#1] SMP PTI
->>>> CPU: 15 UID: 0 PID: 12 Comm: kworker/u64:0 Not tainted 6.15.0-rc2-dirty #60
->>>> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-2.fc40
->>>> Workqueue: rpciod rpc_async_schedule
->>>> RIP: 0010:nfs4_locku_prepare+0x35/0xc2
->>>> Code: 89 f2 48 89 fd 48 c7 c7 68 69 ef b5 53 48 8b 8e 90 00 00 00 48 89 f3
->>>> RSP: 0018:ffffbbafc006bdb8 EFLAGS: 00010246
->>>> RAX: 000000000000004b RBX: ffff9b964fc1fa00 RCX: 0000000000000000
->>>> RDX: 0000000000000000 RSI: fffffffffffffff4 RDI: ffff9ba53fddbf40
->>>> RBP: ffff9ba539934000 R08: 0000000000000000 R09: ffffbbafc006bc38
->>>> R10: ffffffffb6b689c8 R11: 0000000000000003 R12: ffff9ba539934030
->>>> R13: 0000000000000001 R14: 0000000004248060 R15: ffffffffb56d1c30
->>>> FS: 0000000000000000(0000) GS:ffff9ba5881f0000(0000) knlGS:00000000
->>>> CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>>> CR2: 000000000000000c CR3: 000000093f244000 CR4: 00000000000006f0
->>>> Call Trace:
->>>>    <TASK>
->>>>    __rpc_execute+0xbc/0x480
->>>>    rpc_async_schedule+0x2f/0x40
->>>>    process_one_work+0x232/0x5d0
->>>>    worker_thread+0x1da/0x3d0
->>>>    ? __pfx_worker_thread+0x10/0x10
->>>>    kthread+0x10d/0x240
->>>>    ? __pfx_kthread+0x10/0x10
->>>>    ret_from_fork+0x34/0x50
->>>>    ? __pfx_kthread+0x10/0x10
->>>>    ret_from_fork_asm+0x1a/0x30
->>>>    </TASK>
->>>> Modules linked in:
->>>> CR2: 000000000000000c
->>>> ---[ end trace 0000000000000000 ]---
->>>>
->>>> Free the allocated nfs4_unlockdata when nfs_get_lock_context() fails and
->>>> return NULL to terminate subsequent rpc_run_task, preventing NULL pointer
->>>> dereference.
->>>>
->>>> Fixes: f30cb757f680 ("NFS: Always wait for I/O completion before unlock")
->>>> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
->>>> ---
->>>>    fs/nfs/nfs4proc.c | 9 ++++++++-
->>>>    1 file changed, 8 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
->>>> index 970f28dbf253..9f5689c43a50 100644
->>>> --- a/fs/nfs/nfs4proc.c
->>>> +++ b/fs/nfs/nfs4proc.c
->>>> @@ -7074,10 +7074,18 @@ static struct nfs4_unlockdata *nfs4_alloc_unlockdata(struct file_lock *fl,
->>>>    	struct nfs4_unlockdata *p;
->>>>    	struct nfs4_state *state = lsp->ls_state;
->>>>    	struct inode *inode = state->inode;
->>>> +	struct nfs_lock_context *l_ctx;
->>>>    
->>>>    	p = kzalloc(sizeof(*p), GFP_KERNEL);
->>>>    	if (p == NULL)
->>>>    		return NULL;
->>>> +	l_ctx = nfs_get_lock_context(ctx);
->>>> +	if (!IS_ERR(l_ctx)) {
->>>> +		p->l_ctx = l_ctx;
->>>> +	} else {
->>>> +		kfree(p);
->>>> +		return NULL;
->>>> +	}
->>>>    	p->arg.fh = NFS_FH(inode);
->>>>    	p->arg.fl = &p->fl;
->>>>    	p->arg.seqid = seqid;
->>>> @@ -7085,7 +7093,6 @@ static struct nfs4_unlockdata *nfs4_alloc_unlockdata(struct file_lock *fl,
->>>>    	p->lsp = lsp;
->>>>    	/* Ensure we don't close file until we're done freeing locks! */
->>>>    	p->ctx = get_nfs_open_context(ctx);
->>> Not exactly the same problem, but get_nfs_open_context() can fail too.
->>> Does it need error handling for that as well?
->> Hi,
->>
->> IIUC, nfs_open_context is allocated during file open and attached to
->> filp->private_data. Upon successful file opening, the context remains valid.
->> Post-lock acquisition, nfs_open_context can be retrieved via
->> file_lock->file->nfs_open_context chain. Thus get_nfs_open_context() here
->> should have non-failure guarantee in standard code paths.
->
-> I'm not so sure. This function can get called from the rpc_release
-> callback for a LOCK request:
->
-> ->rpc_release
->      nfs4_lock_release
-> 	nfs4_do_unlck
-> 	    nfs4_alloc_unlockdata
->
-> Can that happen after the open_ctx->lock_context.count goes to 0?
->
-> Given that we have a safe failure path in this code, it seems like we
-> ought to check for that here, just to be safe. If it really shouldn't
-> happen like you say, then we could throw in a WARN_ON_ONCE() too.
-Thank you for raising this concern.
-During file open, the nfs_open_context is allocated, and
-open_ctx->lock_context.count is initialized to 1. Based on the current
-flow, I think it's unlikely for this counter to reach 0 during lock/unlock
-operations since its decrement is tied to file closure.
+Constifying these structures moves some data to a read-only section, so
+increase overall security.
 
-However, I agree with your suggestion to add checks when
-get_nfs_open_context fails. Furthermore, this check might also be
-necessary not only in the unlock path but potentially in the lock path if
-get_nfs_open_contextb fails there as well.
+On a x86_64, with allmodconfig:
+Before:
+======
+   text	   data	    bss	    dec	    hex	filename
+  10357	    951	      0	  11308	   2c2c	drivers/net/wireless/ath/ath10k/hw.o
 
-Additionally, I noticed that both the lock and unlock release callbacks
-dereference nfs_open_context. If get_nfs_open_context were to fail
-(assuming such a scenario is possible), this could lead to a NULL pointer
-dereference. Instead of relying solely on WARN_ON_ONCE(), it might be
-safer to halt the operation immediately upon detecting a failure in
-get_nfs_open_context.
+After:
+=====
+   text	   data	    bss	    dec	    hex	filename
+  11125	    203	      0	  11328	   2c40	drivers/net/wireless/ath/ath10k/hw.o
 
-// unlock
-nfs4_locku_release_calldata
-  put_nfs_open_context
-    __put_nfs_open_context
-     // dereference nfs_open_context
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+---
+ drivers/net/wireless/ath/ath10k/ce.c | 28 ++++++-------
+ drivers/net/wireless/ath/ath10k/hw.c | 62 ++++++++++++++--------------
+ drivers/net/wireless/ath/ath10k/hw.h | 34 ++++++++-------
+ 3 files changed, 64 insertions(+), 60 deletions(-)
 
-// lock
-nfs4_lock_release
-  nfs4_do_unlck
-   // dereference nfs_open_context
-  put_nfs_open_context
-   // dereference nfs_open_context
+diff --git a/drivers/net/wireless/ath/ath10k/ce.c b/drivers/net/wireless/ath/ath10k/ce.c
+index afae4a8027f8..c6ee0cbb58e2 100644
+--- a/drivers/net/wireless/ath/ath10k/ce.c
++++ b/drivers/net/wireless/ath/ath10k/ce.c
+@@ -80,7 +80,7 @@ static inline u32 shadow_sr_wr_ind_addr(struct ath10k *ar,
+ 
+ static inline unsigned int
+ ath10k_set_ring_byte(unsigned int offset,
+-		     struct ath10k_hw_ce_regs_addr_map *addr_map)
++		     const struct ath10k_hw_ce_regs_addr_map *addr_map)
+ {
+ 	return ((offset << addr_map->lsb) & addr_map->mask);
+ }
+@@ -203,7 +203,7 @@ static inline void ath10k_ce_src_ring_dmax_set(struct ath10k *ar,
+ 					       u32 ce_ctrl_addr,
+ 					       unsigned int n)
+ {
+-	struct ath10k_hw_ce_ctrl1 *ctrl_regs = ar->hw_ce_regs->ctrl1_regs;
++	const struct ath10k_hw_ce_ctrl1 *ctrl_regs = ar->hw_ce_regs->ctrl1_regs;
+ 
+ 	u32 ctrl1_addr = ath10k_ce_read32(ar, ce_ctrl_addr +
+ 					  ctrl_regs->addr);
+@@ -217,7 +217,7 @@ static inline void ath10k_ce_src_ring_byte_swap_set(struct ath10k *ar,
+ 						    u32 ce_ctrl_addr,
+ 						    unsigned int n)
+ {
+-	struct ath10k_hw_ce_ctrl1 *ctrl_regs = ar->hw_ce_regs->ctrl1_regs;
++	const struct ath10k_hw_ce_ctrl1 *ctrl_regs = ar->hw_ce_regs->ctrl1_regs;
+ 
+ 	u32 ctrl1_addr = ath10k_ce_read32(ar, ce_ctrl_addr +
+ 					  ctrl_regs->addr);
+@@ -231,7 +231,7 @@ static inline void ath10k_ce_dest_ring_byte_swap_set(struct ath10k *ar,
+ 						     u32 ce_ctrl_addr,
+ 						     unsigned int n)
+ {
+-	struct ath10k_hw_ce_ctrl1 *ctrl_regs = ar->hw_ce_regs->ctrl1_regs;
++	const struct ath10k_hw_ce_ctrl1 *ctrl_regs = ar->hw_ce_regs->ctrl1_regs;
+ 
+ 	u32 ctrl1_addr = ath10k_ce_read32(ar, ce_ctrl_addr +
+ 					  ctrl_regs->addr);
+@@ -313,7 +313,7 @@ static inline void ath10k_ce_src_ring_highmark_set(struct ath10k *ar,
+ 						   u32 ce_ctrl_addr,
+ 						   unsigned int n)
+ {
+-	struct ath10k_hw_ce_dst_src_wm_regs *srcr_wm = ar->hw_ce_regs->wm_srcr;
++	const struct ath10k_hw_ce_dst_src_wm_regs *srcr_wm = ar->hw_ce_regs->wm_srcr;
+ 	u32 addr = ath10k_ce_read32(ar, ce_ctrl_addr + srcr_wm->addr);
+ 
+ 	ath10k_ce_write32(ar, ce_ctrl_addr + srcr_wm->addr,
+@@ -325,7 +325,7 @@ static inline void ath10k_ce_src_ring_lowmark_set(struct ath10k *ar,
+ 						  u32 ce_ctrl_addr,
+ 						  unsigned int n)
+ {
+-	struct ath10k_hw_ce_dst_src_wm_regs *srcr_wm = ar->hw_ce_regs->wm_srcr;
++	const struct ath10k_hw_ce_dst_src_wm_regs *srcr_wm = ar->hw_ce_regs->wm_srcr;
+ 	u32 addr = ath10k_ce_read32(ar, ce_ctrl_addr + srcr_wm->addr);
+ 
+ 	ath10k_ce_write32(ar, ce_ctrl_addr + srcr_wm->addr,
+@@ -337,7 +337,7 @@ static inline void ath10k_ce_dest_ring_highmark_set(struct ath10k *ar,
+ 						    u32 ce_ctrl_addr,
+ 						    unsigned int n)
+ {
+-	struct ath10k_hw_ce_dst_src_wm_regs *dstr_wm = ar->hw_ce_regs->wm_dstr;
++	const struct ath10k_hw_ce_dst_src_wm_regs *dstr_wm = ar->hw_ce_regs->wm_dstr;
+ 	u32 addr = ath10k_ce_read32(ar, ce_ctrl_addr + dstr_wm->addr);
+ 
+ 	ath10k_ce_write32(ar, ce_ctrl_addr + dstr_wm->addr,
+@@ -349,7 +349,7 @@ static inline void ath10k_ce_dest_ring_lowmark_set(struct ath10k *ar,
+ 						   u32 ce_ctrl_addr,
+ 						   unsigned int n)
+ {
+-	struct ath10k_hw_ce_dst_src_wm_regs *dstr_wm = ar->hw_ce_regs->wm_dstr;
++	const struct ath10k_hw_ce_dst_src_wm_regs *dstr_wm = ar->hw_ce_regs->wm_dstr;
+ 	u32 addr = ath10k_ce_read32(ar, ce_ctrl_addr + dstr_wm->addr);
+ 
+ 	ath10k_ce_write32(ar, ce_ctrl_addr + dstr_wm->addr,
+@@ -360,7 +360,7 @@ static inline void ath10k_ce_dest_ring_lowmark_set(struct ath10k *ar,
+ static inline void ath10k_ce_copy_complete_inter_enable(struct ath10k *ar,
+ 							u32 ce_ctrl_addr)
+ {
+-	struct ath10k_hw_ce_host_ie *host_ie = ar->hw_ce_regs->host_ie;
++	const struct ath10k_hw_ce_host_ie *host_ie = ar->hw_ce_regs->host_ie;
+ 
+ 	u32 host_ie_addr = ath10k_ce_read32(ar, ce_ctrl_addr +
+ 					    ar->hw_ce_regs->host_ie_addr);
+@@ -372,7 +372,7 @@ static inline void ath10k_ce_copy_complete_inter_enable(struct ath10k *ar,
+ static inline void ath10k_ce_copy_complete_intr_disable(struct ath10k *ar,
+ 							u32 ce_ctrl_addr)
+ {
+-	struct ath10k_hw_ce_host_ie *host_ie = ar->hw_ce_regs->host_ie;
++	const struct ath10k_hw_ce_host_ie *host_ie = ar->hw_ce_regs->host_ie;
+ 
+ 	u32 host_ie_addr = ath10k_ce_read32(ar, ce_ctrl_addr +
+ 					    ar->hw_ce_regs->host_ie_addr);
+@@ -384,7 +384,7 @@ static inline void ath10k_ce_copy_complete_intr_disable(struct ath10k *ar,
+ static inline void ath10k_ce_watermark_intr_disable(struct ath10k *ar,
+ 						    u32 ce_ctrl_addr)
+ {
+-	struct ath10k_hw_ce_host_wm_regs *wm_regs = ar->hw_ce_regs->wm_regs;
++	const struct ath10k_hw_ce_host_wm_regs *wm_regs = ar->hw_ce_regs->wm_regs;
+ 
+ 	u32 host_ie_addr = ath10k_ce_read32(ar, ce_ctrl_addr +
+ 					    ar->hw_ce_regs->host_ie_addr);
+@@ -396,7 +396,7 @@ static inline void ath10k_ce_watermark_intr_disable(struct ath10k *ar,
+ static inline void ath10k_ce_error_intr_disable(struct ath10k *ar,
+ 						u32 ce_ctrl_addr)
+ {
+-	struct ath10k_hw_ce_misc_regs *misc_regs = ar->hw_ce_regs->misc_regs;
++	const struct ath10k_hw_ce_misc_regs *misc_regs = ar->hw_ce_regs->misc_regs;
+ 
+ 	u32 misc_ie_addr = ath10k_ce_read32(ar,
+ 			ce_ctrl_addr + ar->hw_ce_regs->misc_ie_addr);
+@@ -410,7 +410,7 @@ static inline void ath10k_ce_engine_int_status_clear(struct ath10k *ar,
+ 						     u32 ce_ctrl_addr,
+ 						     unsigned int mask)
+ {
+-	struct ath10k_hw_ce_host_wm_regs *wm_regs = ar->hw_ce_regs->wm_regs;
++	const struct ath10k_hw_ce_host_wm_regs *wm_regs = ar->hw_ce_regs->wm_regs;
+ 
+ 	ath10k_ce_write32(ar, ce_ctrl_addr + wm_regs->addr, mask);
+ }
+@@ -1230,7 +1230,7 @@ void ath10k_ce_per_engine_service(struct ath10k *ar, unsigned int ce_id)
+ {
+ 	struct ath10k_ce *ce = ath10k_ce_priv(ar);
+ 	struct ath10k_ce_pipe *ce_state = &ce->ce_states[ce_id];
+-	struct ath10k_hw_ce_host_wm_regs *wm_regs = ar->hw_ce_regs->wm_regs;
++	const struct ath10k_hw_ce_host_wm_regs *wm_regs = ar->hw_ce_regs->wm_regs;
+ 	u32 ctrl_addr = ce_state->ctrl_addr;
+ 
+ 	/*
+diff --git a/drivers/net/wireless/ath/ath10k/hw.c b/drivers/net/wireless/ath/ath10k/hw.c
+index 8fafe096adff..84b35a22fc23 100644
+--- a/drivers/net/wireless/ath/ath10k/hw.c
++++ b/drivers/net/wireless/ath/ath10k/hw.c
+@@ -212,40 +212,40 @@ const struct ath10k_hw_regs wcn3990_regs = {
+ 	.pcie_intr_fw_mask			= 0x00100000,
+ };
+ 
+-static struct ath10k_hw_ce_regs_addr_map wcn3990_src_ring = {
++static const struct ath10k_hw_ce_regs_addr_map wcn3990_src_ring = {
+ 	.msb	= 0x00000010,
+ 	.lsb	= 0x00000010,
+ 	.mask	= GENMASK(17, 17),
+ };
+ 
+-static struct ath10k_hw_ce_regs_addr_map wcn3990_dst_ring = {
++static const struct ath10k_hw_ce_regs_addr_map wcn3990_dst_ring = {
+ 	.msb	= 0x00000012,
+ 	.lsb	= 0x00000012,
+ 	.mask	= GENMASK(18, 18),
+ };
+ 
+-static struct ath10k_hw_ce_regs_addr_map wcn3990_dmax = {
++static const struct ath10k_hw_ce_regs_addr_map wcn3990_dmax = {
+ 	.msb	= 0x00000000,
+ 	.lsb	= 0x00000000,
+ 	.mask	= GENMASK(15, 0),
+ };
+ 
+-static struct ath10k_hw_ce_ctrl1 wcn3990_ctrl1 = {
++static const struct ath10k_hw_ce_ctrl1 wcn3990_ctrl1 = {
+ 	.addr		= 0x00000018,
+ 	.src_ring	= &wcn3990_src_ring,
+ 	.dst_ring	= &wcn3990_dst_ring,
+ 	.dmax		= &wcn3990_dmax,
+ };
+ 
+-static struct ath10k_hw_ce_regs_addr_map wcn3990_host_ie_cc = {
++static const struct ath10k_hw_ce_regs_addr_map wcn3990_host_ie_cc = {
+ 	.mask	= GENMASK(0, 0),
+ };
+ 
+-static struct ath10k_hw_ce_host_ie wcn3990_host_ie = {
++static const struct ath10k_hw_ce_host_ie wcn3990_host_ie = {
+ 	.copy_complete	= &wcn3990_host_ie_cc,
+ };
+ 
+-static struct ath10k_hw_ce_host_wm_regs wcn3990_wm_reg = {
++static const struct ath10k_hw_ce_host_wm_regs wcn3990_wm_reg = {
+ 	.dstr_lmask	= 0x00000010,
+ 	.dstr_hmask	= 0x00000008,
+ 	.srcr_lmask	= 0x00000004,
+@@ -255,7 +255,7 @@ static struct ath10k_hw_ce_host_wm_regs wcn3990_wm_reg = {
+ 	.addr		= 0x00000030,
+ };
+ 
+-static struct ath10k_hw_ce_misc_regs wcn3990_misc_reg = {
++static const struct ath10k_hw_ce_misc_regs wcn3990_misc_reg = {
+ 	.axi_err	= 0x00000100,
+ 	.dstr_add_err	= 0x00000200,
+ 	.srcr_len_err	= 0x00000100,
+@@ -266,19 +266,19 @@ static struct ath10k_hw_ce_misc_regs wcn3990_misc_reg = {
+ 	.addr		= 0x00000038,
+ };
+ 
+-static struct ath10k_hw_ce_regs_addr_map wcn3990_src_wm_low = {
++static const struct ath10k_hw_ce_regs_addr_map wcn3990_src_wm_low = {
+ 	.msb	= 0x00000000,
+ 	.lsb	= 0x00000010,
+ 	.mask	= GENMASK(31, 16),
+ };
+ 
+-static struct ath10k_hw_ce_regs_addr_map wcn3990_src_wm_high = {
++static const struct ath10k_hw_ce_regs_addr_map wcn3990_src_wm_high = {
+ 	.msb	= 0x0000000f,
+ 	.lsb	= 0x00000000,
+ 	.mask	= GENMASK(15, 0),
+ };
+ 
+-static struct ath10k_hw_ce_dst_src_wm_regs wcn3990_wm_src_ring = {
++static const struct ath10k_hw_ce_dst_src_wm_regs wcn3990_wm_src_ring = {
+ 	.addr		= 0x0000004c,
+ 	.low_rst	= 0x00000000,
+ 	.high_rst	= 0x00000000,
+@@ -286,18 +286,18 @@ static struct ath10k_hw_ce_dst_src_wm_regs wcn3990_wm_src_ring = {
+ 	.wm_high	= &wcn3990_src_wm_high,
+ };
+ 
+-static struct ath10k_hw_ce_regs_addr_map wcn3990_dst_wm_low = {
++static const struct ath10k_hw_ce_regs_addr_map wcn3990_dst_wm_low = {
+ 	.lsb	= 0x00000010,
+ 	.mask	= GENMASK(31, 16),
+ };
+ 
+-static struct ath10k_hw_ce_regs_addr_map wcn3990_dst_wm_high = {
++static const struct ath10k_hw_ce_regs_addr_map wcn3990_dst_wm_high = {
+ 	.msb	= 0x0000000f,
+ 	.lsb	= 0x00000000,
+ 	.mask	= GENMASK(15, 0),
+ };
+ 
+-static struct ath10k_hw_ce_dst_src_wm_regs wcn3990_wm_dst_ring = {
++static const struct ath10k_hw_ce_dst_src_wm_regs wcn3990_wm_dst_ring = {
+ 	.addr		= 0x00000050,
+ 	.low_rst	= 0x00000000,
+ 	.high_rst	= 0x00000000,
+@@ -305,7 +305,7 @@ static struct ath10k_hw_ce_dst_src_wm_regs wcn3990_wm_dst_ring = {
+ 	.wm_high	= &wcn3990_dst_wm_high,
+ };
+ 
+-static struct ath10k_hw_ce_ctrl1_upd wcn3990_ctrl1_upd = {
++static const struct ath10k_hw_ce_ctrl1_upd wcn3990_ctrl1_upd = {
+ 	.shift = 19,
+ 	.mask = 0x00080000,
+ 	.enable = 0x00000000,
+@@ -344,25 +344,25 @@ const struct ath10k_hw_values wcn3990_values = {
+ 	.ce_desc_meta_data_lsb		= 4,
+ };
+ 
+-static struct ath10k_hw_ce_regs_addr_map qcax_src_ring = {
++static const struct ath10k_hw_ce_regs_addr_map qcax_src_ring = {
+ 	.msb	= 0x00000010,
+ 	.lsb	= 0x00000010,
+ 	.mask	= GENMASK(16, 16),
+ };
+ 
+-static struct ath10k_hw_ce_regs_addr_map qcax_dst_ring = {
++static const struct ath10k_hw_ce_regs_addr_map qcax_dst_ring = {
+ 	.msb	= 0x00000011,
+ 	.lsb	= 0x00000011,
+ 	.mask	= GENMASK(17, 17),
+ };
+ 
+-static struct ath10k_hw_ce_regs_addr_map qcax_dmax = {
++static const struct ath10k_hw_ce_regs_addr_map qcax_dmax = {
+ 	.msb	= 0x0000000f,
+ 	.lsb	= 0x00000000,
+ 	.mask	= GENMASK(15, 0),
+ };
+ 
+-static struct ath10k_hw_ce_ctrl1 qcax_ctrl1 = {
++static const struct ath10k_hw_ce_ctrl1 qcax_ctrl1 = {
+ 	.addr		= 0x00000010,
+ 	.hw_mask	= 0x0007ffff,
+ 	.sw_mask	= 0x0007ffff,
+@@ -375,31 +375,31 @@ static struct ath10k_hw_ce_ctrl1 qcax_ctrl1 = {
+ 	.dmax		= &qcax_dmax,
+ };
+ 
+-static struct ath10k_hw_ce_regs_addr_map qcax_cmd_halt_status = {
++static const struct ath10k_hw_ce_regs_addr_map qcax_cmd_halt_status = {
+ 	.msb	= 0x00000003,
+ 	.lsb	= 0x00000003,
+ 	.mask	= GENMASK(3, 3),
+ };
+ 
+-static struct ath10k_hw_ce_cmd_halt qcax_cmd_halt = {
++static const struct ath10k_hw_ce_cmd_halt qcax_cmd_halt = {
+ 	.msb		= 0x00000000,
+ 	.mask		= GENMASK(0, 0),
+ 	.status_reset	= 0x00000000,
+ 	.status		= &qcax_cmd_halt_status,
+ };
+ 
+-static struct ath10k_hw_ce_regs_addr_map qcax_host_ie_cc = {
++static const struct ath10k_hw_ce_regs_addr_map qcax_host_ie_cc = {
+ 	.msb	= 0x00000000,
+ 	.lsb	= 0x00000000,
+ 	.mask	= GENMASK(0, 0),
+ };
+ 
+-static struct ath10k_hw_ce_host_ie qcax_host_ie = {
++static const struct ath10k_hw_ce_host_ie qcax_host_ie = {
+ 	.copy_complete_reset	= 0x00000000,
+ 	.copy_complete		= &qcax_host_ie_cc,
+ };
+ 
+-static struct ath10k_hw_ce_host_wm_regs qcax_wm_reg = {
++static const struct ath10k_hw_ce_host_wm_regs qcax_wm_reg = {
+ 	.dstr_lmask	= 0x00000010,
+ 	.dstr_hmask	= 0x00000008,
+ 	.srcr_lmask	= 0x00000004,
+@@ -409,7 +409,7 @@ static struct ath10k_hw_ce_host_wm_regs qcax_wm_reg = {
+ 	.addr		= 0x00000030,
+ };
+ 
+-static struct ath10k_hw_ce_misc_regs qcax_misc_reg = {
++static const struct ath10k_hw_ce_misc_regs qcax_misc_reg = {
+ 	.axi_err	= 0x00000400,
+ 	.dstr_add_err	= 0x00000200,
+ 	.srcr_len_err	= 0x00000100,
+@@ -420,19 +420,19 @@ static struct ath10k_hw_ce_misc_regs qcax_misc_reg = {
+ 	.addr		= 0x00000038,
+ };
+ 
+-static struct ath10k_hw_ce_regs_addr_map qcax_src_wm_low = {
++static const struct ath10k_hw_ce_regs_addr_map qcax_src_wm_low = {
+ 	.msb    = 0x0000001f,
+ 	.lsb	= 0x00000010,
+ 	.mask	= GENMASK(31, 16),
+ };
+ 
+-static struct ath10k_hw_ce_regs_addr_map qcax_src_wm_high = {
++static const struct ath10k_hw_ce_regs_addr_map qcax_src_wm_high = {
+ 	.msb	= 0x0000000f,
+ 	.lsb	= 0x00000000,
+ 	.mask	= GENMASK(15, 0),
+ };
+ 
+-static struct ath10k_hw_ce_dst_src_wm_regs qcax_wm_src_ring = {
++static const struct ath10k_hw_ce_dst_src_wm_regs qcax_wm_src_ring = {
+ 	.addr		= 0x0000004c,
+ 	.low_rst	= 0x00000000,
+ 	.high_rst	= 0x00000000,
+@@ -440,18 +440,18 @@ static struct ath10k_hw_ce_dst_src_wm_regs qcax_wm_src_ring = {
+ 	.wm_high        = &qcax_src_wm_high,
+ };
+ 
+-static struct ath10k_hw_ce_regs_addr_map qcax_dst_wm_low = {
++static const struct ath10k_hw_ce_regs_addr_map qcax_dst_wm_low = {
+ 	.lsb	= 0x00000010,
+ 	.mask	= GENMASK(31, 16),
+ };
+ 
+-static struct ath10k_hw_ce_regs_addr_map qcax_dst_wm_high = {
++static const struct ath10k_hw_ce_regs_addr_map qcax_dst_wm_high = {
+ 	.msb	= 0x0000000f,
+ 	.lsb	= 0x00000000,
+ 	.mask	= GENMASK(15, 0),
+ };
+ 
+-static struct ath10k_hw_ce_dst_src_wm_regs qcax_wm_dst_ring = {
++static const struct ath10k_hw_ce_dst_src_wm_regs qcax_wm_dst_ring = {
+ 	.addr		= 0x00000050,
+ 	.low_rst	= 0x00000000,
+ 	.high_rst	= 0x00000000,
+diff --git a/drivers/net/wireless/ath/ath10k/hw.h b/drivers/net/wireless/ath/ath10k/hw.h
+index 442091c6dfd2..7ffa1fbe2874 100644
+--- a/drivers/net/wireless/ath/ath10k/hw.h
++++ b/drivers/net/wireless/ath/ath10k/hw.h
+@@ -289,19 +289,22 @@ struct ath10k_hw_ce_ctrl1 {
+ 	u32 sw_wr_mask;
+ 	u32 reset_mask;
+ 	u32 reset;
+-	struct ath10k_hw_ce_regs_addr_map *src_ring;
+-	struct ath10k_hw_ce_regs_addr_map *dst_ring;
+-	struct ath10k_hw_ce_regs_addr_map *dmax; };
++	const struct ath10k_hw_ce_regs_addr_map *src_ring;
++	const struct ath10k_hw_ce_regs_addr_map *dst_ring;
++	const struct ath10k_hw_ce_regs_addr_map *dmax;
++};
+ 
+ struct ath10k_hw_ce_cmd_halt {
+ 	u32 status_reset;
+ 	u32 msb;
+ 	u32 mask;
+-	struct ath10k_hw_ce_regs_addr_map *status; };
++	const struct ath10k_hw_ce_regs_addr_map *status;
++};
+ 
+ struct ath10k_hw_ce_host_ie {
+ 	u32 copy_complete_reset;
+-	struct ath10k_hw_ce_regs_addr_map *copy_complete; };
++	const struct ath10k_hw_ce_regs_addr_map *copy_complete;
++};
+ 
+ struct ath10k_hw_ce_host_wm_regs {
+ 	u32 dstr_lmask;
+@@ -328,8 +331,9 @@ struct ath10k_hw_ce_dst_src_wm_regs {
+ 	u32 addr;
+ 	u32 low_rst;
+ 	u32 high_rst;
+-	struct ath10k_hw_ce_regs_addr_map *wm_low;
+-	struct ath10k_hw_ce_regs_addr_map *wm_high; };
++	const struct ath10k_hw_ce_regs_addr_map *wm_low;
++	const struct ath10k_hw_ce_regs_addr_map *wm_high;
++};
+ 
+ struct ath10k_hw_ce_ctrl1_upd {
+ 	u32 shift;
+@@ -355,14 +359,14 @@ struct ath10k_hw_ce_regs {
+ 	u32 ce_rri_low;
+ 	u32 ce_rri_high;
+ 	u32 host_ie_addr;
+-	struct ath10k_hw_ce_host_wm_regs *wm_regs;
+-	struct ath10k_hw_ce_misc_regs *misc_regs;
+-	struct ath10k_hw_ce_ctrl1 *ctrl1_regs;
+-	struct ath10k_hw_ce_cmd_halt *cmd_halt;
+-	struct ath10k_hw_ce_host_ie *host_ie;
+-	struct ath10k_hw_ce_dst_src_wm_regs *wm_srcr;
+-	struct ath10k_hw_ce_dst_src_wm_regs *wm_dstr;
+-	struct ath10k_hw_ce_ctrl1_upd *upd;
++	const struct ath10k_hw_ce_host_wm_regs *wm_regs;
++	const struct ath10k_hw_ce_misc_regs *misc_regs;
++	const struct ath10k_hw_ce_ctrl1 *ctrl1_regs;
++	const struct ath10k_hw_ce_cmd_halt *cmd_halt;
++	const struct ath10k_hw_ce_host_ie *host_ie;
++	const struct ath10k_hw_ce_dst_src_wm_regs *wm_srcr;
++	const struct ath10k_hw_ce_dst_src_wm_regs *wm_dstr;
++	const struct ath10k_hw_ce_ctrl1_upd *upd;
+ };
+ 
+ struct ath10k_hw_values {
+-- 
+2.49.0
 
-I'll incorporate your feedback and send a patchset soon.
->
->>>> -	p->l_ctx = nfs_get_lock_context(ctx);
->>>>    	locks_init_lock(&p->fl);
->>>>    	locks_copy_lock(&p->fl, fl);
->>>>    	p->server = NFS_SERVER(inode);
->>> Good catch:
->>>
->>> Reviewed-by: Jeff Layton <jlayton@kernel.org>
->>>
