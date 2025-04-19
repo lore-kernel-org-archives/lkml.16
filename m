@@ -1,171 +1,104 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99465DDBC;
-	Sat, 19 Apr 2025 04:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8107116F858;
+	Sat, 19 Apr 2025 04:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745038255; cv=none; b=cFzRiIVetcHiTk7a37JfGVgMr36fXlvgX7Zb2d2atGIWKZqr7thJKXld4LbyuLG/kBpjcj0xbS5G3cu4MurBmZF4/Tj8ENiGR/+Ap4qj/b/a1Nm8SoX3S6CJDTTgV4GRBgDGncqEGt/KxACy7QvhMofc32DFJ2AObUDlyWT20h0=
+	t=1745038258; cv=none; b=EkAoTFGC3310Q/qXPFmBiTO1JH55rh/JxmXGFSMGGZXXwVJSyBRDj3+ZJYFulJ3jD3Mf8GRTkYGeGF1JBDlaZ3d/habw6li6GPYZxWdzPbxpBo7VF+ZjOYfgA43B1iuRxaInX/yAKvo/hirptWt+lfC/X8Exq1PhgcsEOMnuTVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745038255; c=relaxed/simple;
-	bh=2ftc5ejbzpeva4waI8OSByzjRMedKnQgk4uz+UHSB0s=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=FXYteYQpzcFlAwM0qwALn4iNoyHA9W8qG0zJKrDLWrsoAOI+z3VmLAk4k0ElkaMEQTssjP0maj9VI0+jp7EqP10tjsqFff8PR+85LTxPWZJkXwB3ZAjCOMkdUiFsnLWUy768BxcRg7M95XKZN2dpeoCuCTT8x+/vULoDNanXEWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZffML1b03z4f3m6s;
-	Sat, 19 Apr 2025 12:50:22 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 88A941A058E;
-	Sat, 19 Apr 2025 12:50:47 +0800 (CST)
-Received: from [10.67.108.244] (unknown [10.67.108.244])
-	by APP4 (Coremail) with SMTP id gCh0CgAHa1+mKwNo5N2nJw--.29213S3;
-	Sat, 19 Apr 2025 12:50:47 +0800 (CST)
-Message-ID: <231276ba-bcdd-4d88-af07-4afe46da179b@huaweicloud.com>
-Date: Sat, 19 Apr 2025 12:50:45 +0800
+	s=arc-20240116; t=1745038258; c=relaxed/simple;
+	bh=xllVgqoRLGvzGswF8Ov1YPU1Ma/P4Q74aaN5uZdOglQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bEVZiDEK9NfdT0zcWF3Y/zeRGFTbN1kry3Omq3lhfm4jkdHDVK1S5fPO+GJtj91bHcISunYrKjKj6geMcm43vXJ9G5y4cLTNbWWOYeX2hXdb/5M6+aijA52eHgIOtQzJflZecPHTvo4woP+5dX7QhAi+NYGNVwLXlLl9NlL0aEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TphLAdwX; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TphLAdwX"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2aeada833so469472566b.0;
+        Fri, 18 Apr 2025 21:50:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745038255; x=1745643055; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xllVgqoRLGvzGswF8Ov1YPU1Ma/P4Q74aaN5uZdOglQ=;
+        b=TphLAdwXZpm5iUErTPNDcnZQ84ICxw15MXsAuCUuSEwhMliowokCppfYZMa7iUOipd
+         dKTS0bpYeQeNzaPD42CvYIIdSESPYQsJtezjatjM+lWYBRzXn8fDE2+28tHU+xsO4PyT
+         ywk6lCR2d/a0U3RUEUZLKsEJ20IiVZZ2Zm8S6rYkTk3U1NpQo4mePgIXteOkM0DTVnhb
+         vihO48tVGvaDzvDhLDAfzFrGXqATR2mfLF/Z7e2s2el+1TlY7UQVWBKKVkfRyYb/bXG/
+         4clsTMmo9NaJW/oBKe1zt2ZoYfJ7klJY7eCDWGRqzRWAxOzY3UoMPCT9AEi0KThz9EsI
+         NTeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745038255; x=1745643055;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xllVgqoRLGvzGswF8Ov1YPU1Ma/P4Q74aaN5uZdOglQ=;
+        b=mbp6bh8gpy3MOzKpcL+vTi2ZzZ3q7qWi0zBBMcMCtJFprX8+BD9+7E/ypUDa1/gzEn
+         gshpDU2LFIIGE3xle34UvHszfSdIiFWhzSodBAqCMCncJSzA1oiK2g+GHzfCnkr6KfcV
+         /LXtdSzM6ulmjBXtGIlbuEfjVzNt7r8TIWyRcUKaKxnfCJ4gq7qhnqxCHS+585eoH7NB
+         1fGUMPPIbbthqt7F4+vXFzLKCOIdMkI0eqpm2MlXH1goDnLHXjYOnt6TZiLMT+qzX2Sl
+         WnpioxX1C+nk6n0vUWzZhK3/R/rW3qWlq0kUSiqcT6TqEYt2qrY77oN9HMJNgOOZboBh
+         HZNA==
+X-Forwarded-Encrypted: i=1; AJvYcCUNDYBtZ0+PtfrsItzGhgep3xegwfQwTdxjOzg26TEVJKbl5yGU+3zqhbeMgLO1mljJEocWlzj/FCZAq7I=@vger.kernel.org, AJvYcCWE+CTioBsF+oArEULyaubjVJ3ftJcBpZfg9jTbaJwNUlnnITcDRGgExpSy+SsNytkp8OgtL6x1XJvioOI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMiD1xXlUE56WEha/08LPEUg8z212EZMkwx9WEoMBfx44tHt6V
+	QPVfg5OGOy2VJ1mA2hNnwFiQCUmJIdCCdTUOaBgwvp2L1fQdMYya+ozejjH8I5pkDMi0KkaPefs
+	xTc78hi1eiFJt5KYNzEJK3Rhz2Vg=
+X-Gm-Gg: ASbGnct3gT6FEnWux9vZysPjohh13eQNLGZ+zZ7Z7DHUXCIbE8aKmp9+cN/njQRN45w
+	EL38j4t6Axl8SKEkHEdUHi36CPQAp/Hep4YAFXPIYPfLtBgjigbb7m/54dc/ItF/zBGFMwB12vG
+	ApSYVGtTUbogvzi7MzQ6V+TQ==
+X-Google-Smtp-Source: AGHT+IGAg+Qag6lXJNxjRNIcXfUNnuL5uHrlN9ER48s4oo4qFiaVa7C2rV69ToGe51SHan6QunD9ObLsjZTCBc93loo=
+X-Received: by 2002:a17:907:728e:b0:aca:a128:f4e2 with SMTP id
+ a640c23a62f3a-acb751203damr353102366b.10.1745038254568; Fri, 18 Apr 2025
+ 21:50:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/intel: Fix lbr event can placed into non lbr
- group
-Content-Language: en-US
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-To: "Liang, Kan" <kan.liang@linux.intel.com>, peterz@infradead.org
-Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, tglx@linutronix.de, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250412091423.1839809-1-luogengkun@huaweicloud.com>
- <342ad7ad-417b-446d-8269-521a1ce9a6c6@linux.intel.com>
- <7b7642b8-2608-4349-b3cd-3c42eaafcabd@huaweicloud.com>
-In-Reply-To: <7b7642b8-2608-4349-b3cd-3c42eaafcabd@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAHa1+mKwNo5N2nJw--.29213S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxZrW7ZrWUZr1DZFykJr1fWFg_yoWrJw15pr
-	n5JF45KFW5Wwn5u34ftr1UtFyUtr1kJ3Z8Gw1UtFyUXF4qvr12gF4UX34Y9r98Ar48Jryr
-	Xw1UXr17ZFy5AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUFk
-	u4UUUUU
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
+References: <20250418071823.8756-1-hardevsinh.palaniya@siliconsignals.io>
+In-Reply-To: <20250418071823.8756-1-hardevsinh.palaniya@siliconsignals.io>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sat, 19 Apr 2025 07:50:18 +0300
+X-Gm-Features: ATxdqUGrYiK4kSjGmHt566SEB6DssLKQwuFsw4imxlIBfayp0v4dv5L9yVKr_bQ
+Message-ID: <CAHp75VexZWxOx+QZtYneAg+z3GJ9vqneVw0XVW8rxQX7vLfzwQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] media: atomisp: Remove compat ioctl32 header file
+To: Hardevsinh Palaniya <hardevsinh.palaniya@siliconsignals.io>
+Cc: andy@kernel.org, sakari.ailus@linux.intel.com, 
+	Hans de Goede <hdegoede@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, 
+	linux-media@vger.kernel.org, linux-staging@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Apr 18, 2025 at 10:19=E2=80=AFAM Hardevsinh Palaniya
+<hardevsinh.palaniya@siliconsignals.io> wrote:
+>
+> Arnd's patch [1] removed the compat ioctl32 code,
+> so this header file is no longer needed.
+>
+> Also, there are no references to this header file
+> in the atomisp codebase.
+>
+> Link[1]: https://lore.kernel.org/linux-media/20210614103409.3154127-7-arn=
+d@kernel.org/
 
-On 2025/4/19 10:25, Luo Gengkun wrote:
->
-> On 2025/4/14 22:29, Liang, Kan wrote:
->>
->> On 2025-04-12 5:14 a.m., Luo Gengkun wrote:
->>> The following perf command can trigger a warning on
->>> intel_pmu_lbr_counters_reorder.
->>>
->>>   # perf record -e "{cpu-clock,cycles/call-graph="lbr"/}" -- sleep 1
->>>
->>> The reason is that a lbr event are placed in non lbr group. And the
->>> previous implememtation cannot force the leader to be a lbr event in 
->>> this
->>> case.
->> Perf should only force the LBR leader for the branch counters case, so
->> perf only needs to reset the LBRs for the leader.
->> I don't think the leader restriction should be applied to other cases.
->
-> Yes, the commit message should be updated.  The code implementation only
->
-> restricts the leader to be an LBRs.
->
->>> And is_branch_counters_group will check if the group_leader supports
->>> BRANCH_COUNTERS.
->>> So if a software event becomes a group_leader, which
->>> hw.flags is -1, this check will alway pass.
->> I think the default flags for all events is 0. Can you point me to where
->> it is changed to -1?
->>
->> Thanks,
->> Kan>
->
-> The hw_perf_event contains a union, hw.flags is used only for hardware 
-> events.
->
-> For the software events, it uses hrtimer. Therefor, when 
-> perf_swevent_init_hrtimer
->
-> is called, it changes the value of hw.flags too.
->
->
-> Thanks,
->
-> Gengkun
+Should be rather
+Link: URL [1]
 
+>
 
-It seems that using union is dangerous because different types of 
-perf_events can be
-placed in the same group. Currently, a large number of codes directly 
-access the hw
-of the leader, which is insecure. This part of the logic needs to be 
-redesigned to void
-similar problems. And I am happy to work for this.
+...and no newline between it and SoB.
 
+> Signed-off-by: Hardevsinh Palaniya <hardevsinh.palaniya@siliconsignals.io=
+>
+> ---
 
-Thanks,
-Gengkun
->>> To fix this problem, using has_branch_stack to judge if leader is lbr
->>> event.
->>>
->>> Fixes: 33744916196b ("perf/x86/intel: Support branch counters logging")
->>> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
->>> ---
->>>   arch/x86/events/intel/core.c | 14 +++++++-------
->>>   1 file changed, 7 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/arch/x86/events/intel/core.c 
->>> b/arch/x86/events/intel/core.c
->>> index 09d2d66c9f21..c6b394019e54 100644
->>> --- a/arch/x86/events/intel/core.c
->>> +++ b/arch/x86/events/intel/core.c
->>> @@ -4114,6 +4114,13 @@ static int intel_pmu_hw_config(struct 
->>> perf_event *event)
->>>               event->hw.flags |= PERF_X86_EVENT_NEEDS_BRANCH_STACK;
->>>       }
->>>   +    /*
->>> +     * Force the leader to be a LBR event. So LBRs can be reset
->>> +     * with the leader event. See intel_pmu_lbr_del() for details.
->>> +     */
->>> +    if (has_branch_stack(event) && 
->>> !has_branch_stack(event->group_leader))
->>> +        return -EINVAL;
->>> +
->>>       if (branch_sample_counters(event)) {
->>>           struct perf_event *leader, *sibling;
->>>           int num = 0;
->>> @@ -4157,13 +4164,6 @@ static int intel_pmu_hw_config(struct 
->>> perf_event *event)
->>>                 ~(PERF_SAMPLE_BRANCH_PLM_ALL |
->>>                   PERF_SAMPLE_BRANCH_COUNTERS)))
->>>               event->hw.flags  &= ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
->>> -
->>> -        /*
->>> -         * Force the leader to be a LBR event. So LBRs can be reset
->>> -         * with the leader event. See intel_pmu_lbr_del() for details.
->>> -         */
->>> -        if (!intel_pmu_needs_branch_stack(leader))
->>> -            return -EINVAL;
->>>       }
->>>         if (intel_pmu_needs_branch_stack(event)) {
+Otherwise LGTM.
 
+--=20
+With Best Regards,
+Andy Shevchenko
