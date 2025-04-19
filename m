@@ -1,115 +1,86 @@
-Received: from bayard.4d2.org (bayard.4d2.org [155.254.16.17])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238C41BB6BA;
-	Sat, 19 Apr 2025 09:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=155.254.16.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C47518C06
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 09:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745055794; cv=none; b=BOIF2effXCbjLMGxYcMYXV8a/StgGq4whfZCVfQmn19ywUmPEZQnq3QgAZu/PE/3KVcfdRkIaaKW2PxWHpqpXq44puM8AybNPIpATLrOKCrYivD1ugBxQ7t/6f7RiNaZZxk9zwRCKt3fFL2tuBnrcW8X7L28Yd6X28YRPtofQj8=
+	t=1745056141; cv=none; b=hqaxzvQsrkN5tLSwr2mQGOvr89EymJq+mvdpTh7Gxs7DAAVe+riL3F6RzP904YN4yBjlG2hpXhy7FMo9c+pbbdMpNl98ZmNb/2i1g5GcmR/QFjKNtnJdb5fCDSv0TI9pQfWPglWkTrWjPsvLxj/4IRqG6P+BIcZjYWQxKLrc/as=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745055794; c=relaxed/simple;
-	bh=TOBj/1ChDvQnz19HxGfDD7N1HbsUAezNiKIuArHitj0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LHft8G3V38+uEnRBTkktkDyB7iMr4NS4S6FwhmHzELkMQfE+4jq9/JXG1lOGKOTgwRmGJezmQqELarZVd7VqfBX1Ij4dCb9tx+19EobkihO9hSTEDIwcItszTpdyNzuDQud63xBGg7Noj7Xeo9vPM6a8QfXSYIB2mmDcX1ZemvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=bNiPjR1W; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=wr5TvnpU; arc=none smtp.client-ip=155.254.16.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4d2.org
+	s=arc-20240116; t=1745056141; c=relaxed/simple;
+	bh=zklzViCR78rtGWWpSQ+SH1wiYY08pHKOOyED16FNUtY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=AabYb/ttzAyKdrALK/HgWEgar+4PGMtX69WRZcuSHCZ57Kkp3MU4Ls/rL/oxPwIQZbZrDvdwwfl0tHC2VGCQZurQBM/UWPeqmwV0L5JCSUdM2zYUhVw+iUJ5OoE0EK6EEWmvEvJ5cC7a1K40bWpl0jklCgMTqPRqLVtNBEG43yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=XKnDJwgw; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="bNiPjR1W";
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="wr5TvnpU"
-Received: from bayard.4d2.org (bayard.4d2.org [127.0.0.1])
-	by bayard.4d2.org (Postfix) with ESMTP id 509B812FB42D;
-	Sat, 19 Apr 2025 02:43:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1745055784; bh=TOBj/1ChDvQnz19HxGfDD7N1HbsUAezNiKIuArHitj0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bNiPjR1WKT0/qO+GEwYV3ti6DJ49pPMOi+jbfO3N4GODOi6p9j7inA8FOc4vLpH0j
-	 dASyRqNb9Ps//zuysI/icCS/35r1suh21OW8Dyvi8U21b3KGu1skl21hqr4nujNhPS
-	 fK9kkNKbisx1GGZYD8p4g7ufqTrBNPrBtKILL4eq7aALULnaYuBWd+BO0x+S2h2jez
-	 rtx7zRUEblW9Qo3MFEJWNC343Bx4N7zSpd+K5ngRlq4ZRV2f8iuKnD6hmFl25XlTwZ
-	 PpufaHD2LZCRWQ+IeSezOZCOTVJxXre1ccd4tqIENSw4w+pgSMXBeWSOltGEziruhb
-	 b5TXUlIq0VYXQ==
-X-Virus-Scanned: amavisd-new at 4d2.org
-Received: from bayard.4d2.org ([127.0.0.1])
- by bayard.4d2.org (bayard.4d2.org [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id 0FlYzok8K45B; Sat, 19 Apr 2025 02:42:58 -0700 (PDT)
-Received: from ketchup (unknown [183.217.80.191])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: heylenay@4d2.org)
-	by bayard.4d2.org (Postfix) with ESMTPSA id 45D7A12FB42F;
-	Sat, 19 Apr 2025 02:42:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1745055778; bh=TOBj/1ChDvQnz19HxGfDD7N1HbsUAezNiKIuArHitj0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=wr5TvnpUG18QOtD4HGV0Oi94la5waO52Jiofd6Nl/C7t150TDDWF6P9nogJSy4wwj
-	 QO0Vc3/weoQtsh5XMDhY4DECXbfbUA+1utkqvvQDj/xIjvytH7eVGMIA5ULw8bHZ9D
-	 5O36SRf6xhB+L2cBZmyEscMyH4QVLxuQyD/fmiUYr+x5l8Hy26AE9rq7c93CKU902Q
-	 5MjNu38Nw76QU2Wffp/kIgzp6yDLwAbpEE0RVOrkOiq3D1AViAx2VqFwkPKhZJtY7y
-	 KxSnacvzI3AEoySjQZZYh/o50y+d5G/kQ1Wksix/r4ixg2HdLakYBjozgfRqCVuCGv
-	 R9ImEj7ciEC8A==
-Date: Sat, 19 Apr 2025 09:42:49 +0000
-From: Haylen Chu <heylenay@4d2.org>
-To: Yixun Lan <dlan@gentoo.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>
-Cc: Alex Elder <elder@riscstar.com>, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] riscv: dts: spacemit: Add clocks to pinctrl and UART
-Message-ID: <aANwGZCIpMcd47IB@ketchup>
-References: <20250419-05-dts-clock-v1-0-1cce5d59aba2@gentoo.org>
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="XKnDJwgw"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250419-05-dts-clock-v1-0-1cce5d59aba2@gentoo.org>
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1745056135;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WYcIiX7im0SwEgUBjW9RpMKMf9b+aamLPfpMOC5NliI=;
+	b=XKnDJwgwVh+2AJkayQ0NeH2Kvg8qAbd1tnYvcMl+DKXHqiczpSpLHXSIzPBsxU/16t7iF4
+	hlYG9UTJWjXQNnUnkl64Qgc/oFfw/T8qtw6j0f9K6IvZmc7UEmQIKrmtpBHirzgLvOQPh0
+	J3ZWdIczd+6ufV4zdSA/E+qA1OtlNVgCdyNgn29IB8XuTI5EEc9vqkSezr7poIUqsoBwmV
+	MxMirsfelUlnq6h9recCZVOrPLxjseiwhEtSocWqQ96RR6A5TKgXHBsJoiTs3TwP6IiEf0
+	CejUseD8cefGgezfsiE2cTsZxrvlhitP1egzdsgPVf3AdOdTHVAn/I5JnviHXA==
+Content-Type: multipart/signed;
+ boundary=787e13d5ada3b08197d931c1726e36235e1092534fb802965a37df9b17c0;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Sat, 19 Apr 2025 11:48:46 +0200
+Message-Id: <D9AIRPBIHXAO.3SDHEJW99DP4X@cknow.org>
+Subject: Re: [PATCH v3 00/10] Tegra Security Engine driver improvements
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Herbert Xu" <herbert@gondor.apana.org.au>
+Cc: "Akhil R" <akhilrajeev@nvidia.com>, <davem@davemloft.net>,
+ <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+ <linux-crypto@vger.kernel.org>, <linux-tegra@vger.kernel.org>, "Dragan
+ Simic" <dsimic@manjaro.org>, "Corentin Labbe" <clabbe@baylibre.com>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20250224091610.49683-1-akhilrajeev@nvidia.com>
+ <D99QMGBHHYJO.1D7D0ZXJLBG9Y@cknow.org>
+ <aAMhYaq0Ze-z6E8q@gondor.apana.org.au>
+In-Reply-To: <aAMhYaq0Ze-z6E8q@gondor.apana.org.au>
+X-Migadu-Flow: FLOW_OUT
 
-On Sat, Apr 19, 2025 at 11:32:29AM +0800, Yixun Lan wrote:
-> Populate clock property for pinctrl and UART controller.
-> 
-> The pinctrl's clock dt-binding patch is still waiting to be merged[1].
-> 
-> The UART's dt-binding and driver code has already been accepted[2],
-> so we now are only sending the DT part patch.
-> 
-> These two patches are abased on SpacemiT SoC tree's for-next branch[3]
-> 
-> Link: https://lore.kernel.org/r/20250416-02-k1-pinctrl-clk-v2-0-2b5fcbd4183c@gentoo.org [1]
-> Link: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git/log/?h=tty-next [2]
-> Link: https://github.com/spacemit-com/linux/tree/for-next [3]
-> Signed-off-by: Yixun Lan <dlan@gentoo.org>
+--787e13d5ada3b08197d931c1726e36235e1092534fb802965a37df9b17c0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Generally this looks good to me, but I realized that splitting the
-commit that introduces clock controllers and the one that correctly
-fills clock properties for various peripherals may cause bisectable
-issues, i.e. the UART won't function with only the clock controller
-introduced and no clk_ignore_unused specified on commandline.
+On Sat Apr 19, 2025 at 6:06 AM CEST, Herbert Xu wrote:
+> On Fri, Apr 18, 2025 at 01:45:23PM +0200, Diederik de Haas wrote:
+>>=20
+>> Earlier today I tried to boot my 6.15-rc1 kernel on my RockPro64
+>> (rk3399) and that didn't go too well:
+>
+> This should be fixed in the latest mainline kernel where hash
+> request chaining has been disabled.
 
-If this isn't really a problem, for the whole series,
+Excellent, thanks for letting me know.
+b2e689baf220 ("crypto: ahash - Disable request chaining")
 
-Reviewed-by: Haylen Chu <heylenay@4d2.org>
+Cheers,
+  Diederik
 
-> ---
-> Yixun Lan (2):
->       riscv: dts: spacemit: Acquire clocks for pinctrl
->       riscv: dts: spacemit: Acquire clocks for UART
-> 
->  arch/riscv/boot/dts/spacemit/k1.dtsi | 39 +++++++++++++++++++++++++++---------
->  1 file changed, 30 insertions(+), 9 deletions(-)
-> ---
-> base-commit: 279d51ad9f6dc0c667f6f141a669b2c921277d1a
-> change-id: 20250419-05-dts-clock-026bfca75e5b
-> 
-> Best regards,
-> -- 
-> Yixun Lan
-> 
+--787e13d5ada3b08197d931c1726e36235e1092534fb802965a37df9b17c0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaANxgAAKCRDXblvOeH7b
+blJ4AP4v0v8uHn92ZBD/ipPt+rGobZitRKp0xpoUesLYwz/VOQD+ObBSY+Fau99D
+uvbyarhPlqm3RUyDXRzJnNuy1XXOEwY=
+=82VX
+-----END PGP SIGNATURE-----
+
+--787e13d5ada3b08197d931c1726e36235e1092534fb802965a37df9b17c0--
