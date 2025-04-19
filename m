@@ -1,83 +1,233 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637ACBE4E;
-	Sat, 19 Apr 2025 15:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE11BE4E;
+	Sat, 19 Apr 2025 15:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745077132; cv=none; b=ejpAPQPU3dLYy0muHuPfrDmIZJnyx0ySwTVdqNzh8Jc+SK2JjPAscULQSL2Y9mhsRjICDAIep59fe7qRjtUBCr8zlfQFd6rJEqNB9biDjN+5c1CaMMWBrn3u6vyHS/FOp/UOv7nA6Z4zUQttZr9ooCq7KAGu6aqU8OX3L9aov84=
+	t=1745077162; cv=none; b=eVQzleIg+p3qBY8t4x1MkLUxPLfK8/acnY+JbR66EdqpThZRR03S0NeVmbevTJPSaJesCbiFx9klvfKBs739c0W2NDfPc9QKQ8dNOqxJM4FZioHoZnRA7cg2oChRL5qbakhgfFUFWre39ejwMpbSJL1ivgW4YtSNVV/rMj9wGrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745077132; c=relaxed/simple;
-	bh=DlaA179pUDVk3UupX+xzdV09IgdpYtb62ICAwXFuDr0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=gM32+rwrj4jHXgIkzlbf8nvaEVoW7rpwLenbIZyf8ZjohfpBBY8A+xRyA+66/5A1DqrUe7jfa5ZzHXFE0WxD50x7qlHvV/9kPWQQbPvgq2/4KmRt7fHh285zwc9Zx3oIfLh1IY7/q91143OX05yIh11S08M18m+dipiUGaesD+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G9HIuaz8; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G9HIuaz8"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7398d65476eso2200369b3a.1;
-        Sat, 19 Apr 2025 08:38:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745077130; x=1745681930; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=DlaA179pUDVk3UupX+xzdV09IgdpYtb62ICAwXFuDr0=;
-        b=G9HIuaz8kcVsKSPP80FPF/3iKrOuFDsTfJzMT3L21MPNPaqAVtlDzBgMkLxuanmc/V
-         1mjaQGgiznxvVuScBi0CUhHihbQRUD0O3uSvQRbNq9EFdNIBArGhgFeKTOBM3iFO25aP
-         gWJxzdTvlz2ppYUL/JXe+x8TX7Ziw5nzSRHZgl9BuGIs8wX2Kt2Bu2UayCtYkivVefQl
-         yFnwgC0VcTelF2bNCPc53WNR8op1lM9HDGX6JxVhGeL4FudjW+RIn02CP0jPvOvyKDE4
-         wM7KzaPmIUjLj3K2kCUOOdWE4AKqxkQxqLCnVLfKgXZLRFPS6MdNIUotOcQjNLsWwIYc
-         1Vig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745077130; x=1745681930;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DlaA179pUDVk3UupX+xzdV09IgdpYtb62ICAwXFuDr0=;
-        b=di7uwIF8NZFub7xUmwcA2G+gWXfUZtHuGBWUd/RmfvovvmhiHG57A+aV+L76o6N295
-         EQ7D22pBTYvNN1OpJ5bG6ENPUg5eZhqdEV2cE9k3XvcuqymcFV/R0S9CvOQBoE1FEDYx
-         VDDO1h4VOPWF7kN8UTruqzA50wd4R/pcu+P47/B6sxt7fAnsVyOfY4KYFGo2FY0TXPaQ
-         o4GCibWLzX5+nrp+5mhVZe+92enuiIG3lSA/wwjkfPPisE+YsOcRHKFcGftY01EIN2EN
-         QL8K4nYZY1p/k52nTiu08hP0o52WgerwJcoAKiU1ZJFQlcWdUghns2/dYoEWWbNcldx8
-         drLg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPR3+o9mB+HsBE4TF3D2DDF3sWbZH/DG7/5pgMtC9yDMfLC3YdHVDwXT+8vWCTKAsROJz2p/GB1b5G2Tc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLonlzxZcCxEu795FmlkBlKaQPeHT84aSRiYVttIXW6KYvdshm
-	tV7s/wa47vK3yNC7LpVLciR0eq121I1XbQOVZGXCKNEkveTG3pb+
-X-Gm-Gg: ASbGnct6re5QEHO6PHScCpNfNrdwlIoirjThERQ49hrkMpYN8ppmP9yPeVpi192fM07
-	NAQDiow///9Q97aD1Hqaob7JD7yhZN4nqegj5yAoLhg9Pzwvkoy9UOdOIGlQk2lp4xkWCzVaijb
-	CWz9Feg9VUVRKhFSr6/n6xEKuhcv9+Hvh22roeQmKQbSZtfG/gk+IL65Vo2ySNGNzkwTj4h1hrw
-	hkXMqDk+xKnc0DyEZQZT5ByrfldHIk0m+FX6wgaC9vmfzpNhyJSOOFLEea7H1XlrFMM0ZevKzrw
-	O4erRABzWCAkPZovW75Jy+hLlR3h9lvpw2FUQf2IEHA8dzlnjH4AZZKSe31rRw==
-X-Google-Smtp-Source: AGHT+IGjMg5+kviz+gp0F1ryn7TU+yeHi6CJxEK1TEuwEw6ajfIscq2dZURhTwk4TSdmRlHCEZuALg==
-X-Received: by 2002:a05:6a00:114c:b0:736:5969:2b6f with SMTP id d2e1a72fcca58-73dc1829732mr8290477b3a.6.1745077130364;
-        Sat, 19 Apr 2025 08:38:50 -0700 (PDT)
-Received: from ubuntu.localdomain ([39.86.156.14])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8e3631sm3571421b3a.51.2025.04.19.08.38.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 08:38:49 -0700 (PDT)
-From: Penglei Jiang <superman.xpt@gmail.com>
-To: tj@kernel.org
-Cc: cgroups@vger.kernel.org,
-	hannes@cmpxchg.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	mkoutny@suse.com,
-	xnxc22xnxc22@qq.com
-Subject: Re: KASAN: slab-use-after-free Read in cgroup_rstat_flush
-Date: Sat, 19 Apr 2025 08:38:43 -0700
-Message-Id: <20250419153843.5035-1-superman.xpt@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <Z_1JBt3RMATxnDgL@slm.duckdns.org>
-References: <Z_1JBt3RMATxnDgL@slm.duckdns.org>
+	s=arc-20240116; t=1745077162; c=relaxed/simple;
+	bh=KJwC/q34WQ1vVn3FqzfPmsnC1UiX1DRtv3w74U3sF38=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GBuWWI295sR7relKE/TAw9NW8XW64QpTUimSp+h59t/j3HhjGhwZb1spKuk+t2qbfEFAK6eU163s1viY3PRDIA+99mhLqz7ll46D94OFZF/kTTq1vOxzRorLvhljCX7ASaIPnv/E4qUQnqD9ljPiO8+THZQhN3sc5RSNuXUH6Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: ZtV6g4ZeSJK6Vx+kE+d8kw==
+X-CSE-MsgGUID: VXtycfjEQFOCIyuisC2jSw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="46807087"
+X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
+   d="scan'208";a="46807087"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 08:39:20 -0700
+X-CSE-ConnectionGUID: mJinMyU7QSKkPKdJZu9csw==
+X-CSE-MsgGUID: s6yPo9JDRFyuV/ylYCA+UA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
+   d="scan'208";a="154518124"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 08:39:18 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u6AHj-0000000Dqz1-1I9a;
+	Sat, 19 Apr 2025 18:39:15 +0300
+Date: Sat, 19 Apr 2025 18:39:14 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: jean-baptiste.maneyrol@tdk.com
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] iio: imu: inv_icm42600: add WoM support
+Message-ID: <aAPDovuee7hoY1PS@smile.fi.intel.com>
+References: <20250418-losd-3-inv-icm42600-add-wom-support-v3-0-7a180af02bfe@tdk.com>
+ <20250418-losd-3-inv-icm42600-add-wom-support-v3-1-7a180af02bfe@tdk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250418-losd-3-inv-icm42600-add-wom-support-v3-1-7a180af02bfe@tdk.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, 14 Apr 2025 07:42:30 -1000, tj <tj@kernel.org> wrote:
+On Fri, Apr 18, 2025 at 06:19:02PM +0200, Jean-Baptiste Maneyrol via B4 Relay wrote:
+> From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+> 
+> Add WoM as accel roc rising x|y|z event.
 
-> Maybe another casualty of the bug fixed by a22b3d54de94 ("cgroup/cpuset: Fix
-> race between newly created partition and dying one")?
+...
 
-This issue was maybe caused by commit 093c8812de2d3, and was later fixed
-by commit 7d6c63c319142.
+> +static unsigned int inv_icm42600_accel_convert_roc_to_wom(uint64_t roc,
+> +							  int accel_hz, int accel_uhz)
+> +{
+> +	/* 1000/256mg per LSB converted in µm/s² */
+> +	const unsigned int convert = (1000U * 9807U) / 256U;
+
+Wondering if KILO (or MILLI?) is a good suit here...
+
+> +	uint64_t value;
+> +	uint64_t freq_uhz;
+> +
+> +	/* return 0 only if roc is 0 */
+> +	if (roc == 0)
+> +		return 0;
+> +
+> +	freq_uhz = (uint64_t)accel_hz * MICRO + (uint64_t)accel_uhz;
+> +	value = div64_u64(roc * MICRO, freq_uhz * (uint64_t)convert);
+> +
+> +	/* limit value to 8 bits and prevent 0 */
+> +	return clamp(value, 1, 255);
+> +}
+> +
+> +static uint64_t inv_icm42600_accel_convert_wom_to_roc(unsigned int threshold,
+> +						      int accel_hz, int accel_uhz)
+> +{
+> +	/* 1000/256mg per LSB converted in µm/s² */
+> +	const unsigned int convert = (1000U * 9807U) / 256U;
+
+Ditto.
+
+> +	uint64_t value;
+> +	uint64_t freq_uhz;
+> +
+> +	value = threshold * convert;
+> +	freq_uhz = (uint64_t)accel_hz * MICRO + (uint64_t)accel_uhz;
+> +
+> +	/* compute the differential by multiplying by the frequency */
+> +	return div_u64(value * freq_uhz, MICRO);
+> +}
+
+...
+
+> +static int inv_icm42600_accel_disable_wom(struct iio_dev *indio_dev)
+> +{
+> +	struct inv_icm42600_state *st = iio_device_get_drvdata(indio_dev);
+> +	struct device *pdev = regmap_get_device(st->map);
+> +	struct inv_icm42600_sensor_conf conf = INV_ICM42600_SENSOR_CONF_INIT;
+> +	unsigned int sleep_ms = 0;
+> +	int ret;
+> +
+> +	scoped_guard(mutex, &st->lock) {
+
+> +		st->apex.wom.enable = false;
+> +		st->apex.on--;
+
+Hmm... Even if the below fails we consider it successful? Why?
+
+> +		ret = inv_icm42600_disable_wom(st);
+> +		if (ret)
+> +			break;
+> +		/* turn off accel sensor if not used */
+> +		if (!st->apex.on && !iio_buffer_enabled(indio_dev)) {
+> +			conf.mode = INV_ICM42600_SENSOR_MODE_OFF;
+> +			ret = inv_icm42600_set_accel_conf(st, &conf, &sleep_ms);
+> +			if (ret)
+> +				break;
+> +		}
+> +	}
+> +
+> +	if (sleep_ms)
+> +		msleep(sleep_ms);
+> +	pm_runtime_mark_last_busy(pdev);
+> +	pm_runtime_put_autosuspend(pdev);
+> +
+> +	return ret;
+> +}
+
+...
+
+> +static int inv_icm42600_accel_read_event_config(struct iio_dev *indio_dev,
+> +						const struct iio_chan_spec *chan,
+> +						enum iio_event_type type,
+> +						enum iio_event_direction dir)
+> +{
+> +	struct inv_icm42600_state *st = iio_device_get_drvdata(indio_dev);
+> +
+> +	guard(mutex)(&st->lock);
+> +
+> +	/* handle WoM (roc rising) event */
+> +	if (type == IIO_EV_TYPE_ROC && dir == IIO_EV_DIR_RISING)
+> +		return st->apex.wom.enable ? 1 : 0;
+
+Invert conditional as below?
+
+> +	return -EINVAL;
+> +}
+> +
+> +static int inv_icm42600_accel_write_event_config(struct iio_dev *indio_dev,
+> +						 const struct iio_chan_spec *chan,
+> +						 enum iio_event_type type,
+> +						 enum iio_event_direction dir,
+> +						 bool state)
+> +{
+> +	struct inv_icm42600_state *st = iio_device_get_drvdata(indio_dev);
+> +
+> +	/* handle only WoM (roc rising) event */
+> +	if (type != IIO_EV_TYPE_ROC || dir != IIO_EV_DIR_RISING)
+> +		return -EINVAL;
+> +
+> +	scoped_guard(mutex, &st->lock) {
+> +		if (st->apex.wom.enable == state)
+> +			return 0;
+> +	}
+> +
+> +	if (state)
+> +		return inv_icm42600_accel_enable_wom(indio_dev);
+> +	else
+> +		return inv_icm42600_accel_disable_wom(indio_dev);
+> +}
+
+...
+
+> +static int inv_icm42600_accel_write_event_value(struct iio_dev *indio_dev,
+> +						const struct iio_chan_spec *chan,
+> +						enum iio_event_type type,
+> +						enum iio_event_direction dir,
+> +						enum iio_event_info info,
+> +						int val, int val2)
+> +{
+> +	struct inv_icm42600_state *st = iio_device_get_drvdata(indio_dev);
+> +	struct device *dev = regmap_get_device(st->map);
+> +	uint64_t value;
+> +	unsigned int accel_hz, accel_uhz;
+> +	int ret;
+> +
+> +	/* handle only WoM (roc rising) event value */
+> +	if (type != IIO_EV_TYPE_ROC || dir != IIO_EV_DIR_RISING || val < 0 || val2 < 0)
+> +		return -EINVAL;
+
+Hmm... I think that splitting this will be logically better, as we see the
+type/dir conditionals in many functions, and values checks only
+exceptionally.
+
+	if (type != IIO_EV_TYPE_ROC || dir != IIO_EV_DIR_RISING)
+		return -EINVAL;
+
+	if (val < 0 || val2 < 0)
+		return -EINVAL;
+
+> +	value = (uint64_t)val * MICRO + (uint64_t)val2;
+> +	pm_runtime_get_sync(dev);
+> +	scoped_guard(mutex, &st->lock) {
+> +		ret = inv_icm42600_accel_read_odr(st, &accel_hz, &accel_uhz);
+> +		if (ret >= 0)
+> +			ret = inv_icm42600_accel_set_wom_threshold(st, value,
+> +								   accel_hz, accel_uhz);
+> +	}
+> +	pm_runtime_mark_last_busy(dev);
+> +	pm_runtime_put_autosuspend(dev);
+> +
+> +	return ret;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
