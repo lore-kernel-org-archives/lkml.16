@@ -1,73 +1,74 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8745FB95
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:19:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079DA17A302
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:19:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745039979; cv=none; b=tJea0N/u2+CGxhvlO006KRRh1XQ5XGmhA8938i6igvsPbNdQ9LufbGqcjGWcSTkQncY0Y3qn0blr91Bd93LR1RWjUnaWJ1wAQL4/wA+CGxsmkOWnEFTGWvO1xh9PqkSudCzBkUPKsL72HTeHKGJva+pqe9MHT1Y/3gADkSeopPQ=
+	t=1745039983; cv=none; b=Oh0VKTQPcIUYsLwZR79/7h/BCL84PUYan591DAE7YuaDnrQC1WCEoeHimiKoJbL5Y24IS07LYYEbuqLhCZCbVtuI8pSeNie/WhyRkGf5+JrIF+EN+aRaGSqU+JEJAFqQLsDrvJxdZ4AJxoFXPJfD+wUm4kblqL++eqo/K5pnIbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745039979; c=relaxed/simple;
-	bh=pCUtwHwlvnjyljIuUeik7MfYiHlj0LKv8lBuxtYIixw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Pnei5eQv1femZIk2Ii08bz9a/bFP5nk32KMwLvzzHJgJnj6IfulSEVTkPlCEQ2tHw2vJTcJ71p0fFxG34MEgr6fp7yrkLWVuOUP6F7nWGzCwkdygxVRUQMqop1Jf2S1fJapvnowfDI4tCOctcTvQ0mYa6zY6qkiVGT49FKA1M7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GTE0abRs; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1745039983; c=relaxed/simple;
+	bh=nE7IjJhMRhNyIuWq7+m22BFxM13wxFoka3TTlw1/Y/k=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=p8xvHpvRQLEpfjtQ3pVvQZtFzul3GHoihAz31tXVgOMTuj0Z4TwF02RnmtKdad3/wquOvv7EkVvmCM9lsUWNyUgKygyoasZDpFGxA0gYHGGgUsiwENs8Kff7O/ipYvQxEtkJtvKAXkk3Lg5n3Q9tt0Qmfv9K6fTm1aXNTbRSdss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mwgxfDsz; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GTE0abRs"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53J2BtXj028112
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:19:37 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mwgxfDsz"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53J4BS8G027688
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:19:41 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=UScITCwY8q7fw1TPqgcbJg
-	0jdZe8aQUjHNEHKoH7YL0=; b=GTE0abRsWrbLESwb7FdLhiyO7b/SQdACI17oOp
-	g2q74twwISlX1J5x0Pn5o/MRJRgigthpsb4GEqs30uzIG7OgF7j1QGAK8RTcaaBY
-	xjwLbPRsK2fugvAnkDcGYgGalBYEZjvGGSHQwiqHY61wT3H+FAtkOIdZnQNPQA9F
-	kdRNirUq9lfhgkYxL7vUzwny5sJT/NBwS/Ve7r6AUD4U6I9zOwtMiz6GJ7kYn5Qy
-	qrkxOcHziqiY1S01JI5dmgouU2V5lnwtLbPdyJmEF43eT0ZUue+ht3DpChZrEvnh
-	rsGt/85iEULD3bydgbOInb8p/ALXiXQCuz21AHlr4tRs3Emg==
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4642u985q7-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	TLU2POU7c4DnlLOSszh8lb+fHxRv3wzsnmbCELHaQdQ=; b=mwgxfDszGfEHRJIf
+	pnfSqi5wrdTEfQWeEygI7ml0EnIx2eRlt1bd3MAdJw/HqCrdiW/cfAoS1yCe+TyC
+	s2uXGNyCt9vFfQsqf7H3HQ8EaVu6CT/B1KoYGWtCVxjb3LBQvrVkpdCviIKp9iEC
+	LH/xaflb5JuzGkh/Du1nqX9P8qVmCmTK377AdDp0WMO/ibYDJp49SwWB/osres7m
+	Jgho3RC7JfMobT5w2gZmB/VExW8y/mVYfULNxySjrgNiB17X7U7viSP9hzHiBens
+	Jo+bmcJWg+/+l6YAVyqGjK3prv+TT0nzL74ypp3wgOHqjLSR/bR5/zWpOiFPDvZw
+	qTdDlA==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46416qr9kk-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:19:36 +0000 (GMT)
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-739525d4d7bso1883816b3a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 22:19:36 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:19:40 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2265a09dbfcso36214165ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 22:19:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745039975; x=1745644775;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UScITCwY8q7fw1TPqgcbJg0jdZe8aQUjHNEHKoH7YL0=;
-        b=FQc3uAsRwmANxdCU9pfjWSknhnUCOGJfgCqDecMgGANbLM/lGLbKZPDNpSVZB9+CQ2
-         iUv+N5uNx2mKE4HS/84KveV2TTXsArPtzOHWZEJmKLChVfLEeE60JoboxyWXfH4Lgx/4
-         EkEiA+BgOyt9gqzR/KFrdkdhDusaAt15DHo//agxpNKj+oR7BwOq2Z7JVFYSObRH/Uwy
-         oAZyMJs40pWqn3AA5eD/dq7uVpT4B+ZUYNBYfHzl5YMZCOC0/YoWzWijshe7rNA52Tii
-         CEZmDmhWQHPzAAkvYdv9z79NN77LDm8iB8fEBSqTvydxmustAMaR4+Qjlllpg8ZZ+EiF
-         PTdg==
-X-Forwarded-Encrypted: i=1; AJvYcCXMzQ8D4GyRjIGZpCcBUz/wSR0mJ/O7qxyFRL5NRrUUMRzgYDT+RqyGaH7aeBHjWl8eekrYC4jZjuEuYmQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1Yr6PdJ6Fu6vzrxNJNjsXy8kAUNbTXjUTHYUSToxWopwtzdp4
-	9UkkvnhMoB5gw34WGjJTk56q+iGV8Oqy0A7V9AkwazwED3DFzGHYWmZSMToKeg32FviaYXk69qH
-	u2mESpbYcfJVFTSThApUCrhD/FjwA6EZrQ17dvueqy64AKS3g0XLzDXVDiIdyktc=
-X-Gm-Gg: ASbGncu3XJnoBvo3Uzrj/Cl+KlyrA2tmck0TbGLBnjUfwLL2f4rZUmrS54mhFS6m3HT
-	uWdEYkzedLlMmFznlL+ZTmr1c+2duzrUSfGV7fz75IhWrBjylTlnQL1QGSZgqBSHfx+PLxsUvQ7
-	SvS8tG2tA6wyiyrzcuoZMnGPWBqkxOTMnEJWE/bVwBl2bBSxKtwU16lzSDBMpUh7aKr7JsZ9Pod
-	FkZx+Y7P/yUJCXfbkv9doB3IBUm0gbAN3sh8IPjFUl+daparGLkuVAMxPecrJcmOYfQomh3poqI
-	dcAwt4jFg38+jEv04NoZRedTomArQyHfzHbUqN7OjYF2Cqc=
-X-Received: by 2002:a05:6a00:4644:b0:736:57cb:f2b6 with SMTP id d2e1a72fcca58-73dc14c6df1mr6097976b3a.12.1745039974891;
-        Fri, 18 Apr 2025 22:19:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH66xcAKN95mphAQHDv11KnhM7xlAiSAVOGHacJB6UPS1F/NYc/9azleyBWV36SJKszclH1AA==
-X-Received: by 2002:a05:6a00:4644:b0:736:57cb:f2b6 with SMTP id d2e1a72fcca58-73dc14c6df1mr6097953b3a.12.1745039974426;
-        Fri, 18 Apr 2025 22:19:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745039979; x=1745644779;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TLU2POU7c4DnlLOSszh8lb+fHxRv3wzsnmbCELHaQdQ=;
+        b=tllnz4FsbrfeIifQdgFEeOLay+wsysUXpdIu7He2Z2i1Qdy7inbybj/F7skCf/CWzd
+         f2XPA71F9/TkRV+iWfxL1jFcDikYDXZ9fOCxRbZ1nt5YAZQBN3VEonQLZzOpQ+jUblZV
+         pC6lORKzCjHoFJs0t2fbOdfp/A+6GEIScDJUUcixbubs/d0IN/nlE5x7Zdg7ty7Hwe9e
+         noUCmL4kdv/7+lSGadTA4acTFd2J358eHBDxdhSsFi9uMfIBpWoboxcTWOfvsAN/AX8P
+         yQIhOw8ye9y6O/PDo4G/Dzfi2VsFjxPNKc5Fh+onJPSDCOsUg0KlWDiwnG4NTRXGokxz
+         QyZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUbtBHlEIw3AzwGalyfE00MhjuRnZ3fE5ViKmKxpRHkasFLQdxQF1Nd075keArUHOx5miDYt2+3Eq7wDkI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7CXJPha/aTwv6H2of+CghOpn7xBJv79vrShDS36LNkj7vUl+B
+	nSsO3xbVajBnp6gigKJ0pFDSCBlU3HhzThOi95OHKpeFgbOe3yTNb4ow+1DnDmZWz4p4Her1v8q
+	ybiOTsBbxDian6BaSxBmhikhpt//k/syynCHYX11NPomuIBjZ4GCtIjyCiByKRVc=
+X-Gm-Gg: ASbGncunqH6+YgL8/KyabWMz31z0YRcvReXWWqo6NBUq3dJNMbm6512ZP/jqdUU7JvR
+	b33IjvJIjzHYKc4ZJqfBfnTakcCBbdTq01SP1Kg0hncOz03p5XiLwg7FUsIihtOQboWO5pl9FSu
+	HyXcCQtGxwuZ+SQHZtn7Cs+1sApSFE9RSsrT6un+h+AE0UeakJokH6at+qSJd9ZoR4Qp6o7X3Qg
+	8brBom1htdvLzBfAIw26DiAq+DxT2JEAzA5DJBZ0lGGwrGFkNv/9Aw3v/NUgtK7u85oCyiBGEjO
+	1wj1O1k4rWMjOnGSfhGDI2LddmHnoX+W9o2E/EqTlqIsYvQ=
+X-Received: by 2002:a17:903:2451:b0:224:1c41:a4bc with SMTP id d9443c01a7336-22c5358123dmr75029355ad.12.1745039979633;
+        Fri, 18 Apr 2025 22:19:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG3X5l3b/pEi4aT+9a3cQflRBBkyCuwkE36I24LsP/TkO2/xmEsZO4B/kwr/OjIaYdZeHRTzw==
+X-Received: by 2002:a17:903:2451:b0:224:1c41:a4bc with SMTP id d9443c01a7336-22c5358123dmr75029035ad.12.1745039979247;
+        Fri, 18 Apr 2025 22:19:39 -0700 (PDT)
 Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaac258sm2607932b3a.144.2025.04.18.22.19.29
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaac258sm2607932b3a.144.2025.04.18.22.19.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 22:19:34 -0700 (PDT)
+        Fri, 18 Apr 2025 22:19:38 -0700 (PDT)
 From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Subject: [PATCH v3 0/3] PCI: qcom: Move PERST# GPIO & phy retrieval from
- controller to PCIe bridge node
-Date: Sat, 19 Apr 2025 10:49:23 +0530
-Message-Id: <20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com>
+Date: Sat, 19 Apr 2025 10:49:24 +0530
+Subject: [PATCH v3 1/3] dt-bindings: PCI: qcom: Move phy, wake & reset
+ gpio's to root port
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,12 +76,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAFsyA2gC/32OywrCMBBFf0WyNpJMJ4+68j/ERWynGtC2JrUop
- f9uWhQFxc3AHe453IFFCp4iWy8GFqj30Td1CtlywYqjqw/EfZkyAwFKSCF5SyF2vNhbq/bKaQk
- 5S902UOVvs2e7S/noY9eE+6zt5fR9GfTT0EsuuECriTLCQmSbJsbV5epORXM+r9KZvDOUgfiEK
- ukUVNIqo+EfBJ8QKcLSGXQg8BuaJvfwnokSXzAk2OaAxqAujVI/4HEcH1QILcNIAQAA
-X-Change-ID: 20250101-perst-cb885b5a6129
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250419-perst-v3-1-1afec3c4ea62@oss.qualcomm.com>
+References: <20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com>
+In-Reply-To: <20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
@@ -95,89 +94,150 @@ Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         quic_vbadigan@quicinc.com, quic_mrana@quicinc.com,
         Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745039969; l=2918;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745039969; l=4358;
  i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
- bh=pCUtwHwlvnjyljIuUeik7MfYiHlj0LKv8lBuxtYIixw=;
- b=FVlBfcuxXKadBTxEhw/sqeWxx18IjUBlLboG70dBiZdUp22v8tesnyNEy5oDCiyRbTpGe0ERd
- Fnvw9kWRB39BiKi+mMqGOZkWQUonJP7J/QAiQQf+1LRN5xCDDBiD6df
+ bh=nE7IjJhMRhNyIuWq7+m22BFxM13wxFoka3TTlw1/Y/k=;
+ b=H82j7c4p3tWE1YGpV61jcSCWDogj71ruiOk3nh6IgF8P6eYre6j3+90AWZbZlKyDSvE9X3NIi
+ 2CwtEJJGPpwCXp1dSqc+ai57Dibvly8Wh+w5g2jJ9m3Dm9mwPGOHBz5
 X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
  pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Authority-Analysis: v=2.4 cv=TYaWtQQh c=1 sm=1 tr=0 ts=68033268 cx=c_pps a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=l8mvWsQ0dvX29tmygDoA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=IoOABgeZipijB_acs4fv:22
-X-Proofpoint-ORIG-GUID: APadoQbMQyoc4SkYX1muLFtMcBfdJfVo
-X-Proofpoint-GUID: APadoQbMQyoc4SkYX1muLFtMcBfdJfVo
+X-Authority-Analysis: v=2.4 cv=N7UpF39B c=1 sm=1 tr=0 ts=6803326c cx=c_pps a=cmESyDAEBpBGqyK7t0alAg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=zZdbXEcupTeRExCOI60A:9 a=QEXdDO2ut3YA:10
+ a=1OuFwYUASf3TG4hYMiVC:22
+X-Proofpoint-GUID: gFUSmPMgb3ye9zxMZal4R7GgQBNH9Cuz
+X-Proofpoint-ORIG-GUID: gFUSmPMgb3ye9zxMZal4R7GgQBNH9Cuz
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-19_01,2025-04-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 suspectscore=0 adultscore=0 clxscore=1015 priorityscore=1501
- mlxlogscore=842 mlxscore=0 malwarescore=0 spamscore=0 impostorscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
+ mlxscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
+ mlxlogscore=999 impostorscore=0 bulkscore=0 spamscore=0 malwarescore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
  definitions=main-2504190040
 
-The main intention of this series is to move wake# to the root port node.
-After this series we will come up with a patch which registers for wake IRQ
-from the pcieport driver. The wake IRQ is needed for the endpoint to wakeup
-the host from D3cold. The driver change for wake IRQ is posted here[1].
+Move the phy, phy-names, wake-gpio's to the pcie root port node instead of
+the bridge node, as agreed upon in multiple places one instance is[1].
 
-There are many places we agreed to move the wake and perst gpio's
-and phy etc to the pcie root port node instead of bridge node[2] as the
-these properties are root port specific and does not belongs to
+Update the qcom,pcie-common.yaml to include the phy, phy-names, and
+wake-gpios properties in the root port node. There is already reset-gpios
+defined for PERST# in pci-bus-common.yaml, start using that property
+instead of perst-gpio.
+
+For backward compatibility, do not remove any existing properties in the
 bridge node.
 
-So move the phy, phy-names, wake-gpio's in the root port.
-There is already reset-gpio defined for PERST# in pci-bus-common.yaml,
-start using that property instead of perst-gpio.
-
-For backward compatibility, don't remove any existing properties in the
-bridge node.
-
-There are some other properties like num-lanes, max-link-speed which
-needs to be moved to the root port nodes, but in this series we are
-excluding them for now as this requires more changes in dwc layer and
-can complicate the things.
-
-Once this series gets merged all other platforms also will be updated
-to use this new way.
-
-Note:- The driver change needs to be merged first before dts changes.
-Krzysztof Wilczyński or Mani can you provide the immutable branch with
-these PCIe changes.
-
-[1] https://lore.kernel.org/all/20250401-wake_irq_support-v1-0-d2e22f4a0efd@oss.qualcomm.com/ 
-[2] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
+[1] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
 
 Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 ---
-Changes in v3:
-- Make old properties as deprecated, update commit message (Dmitry)
-- Add helper functions wherever both multiport and legacy methods are used. (Mani)
-- Link to v2: https://lore.kernel.org/r/20250414-perst-v2-0-89247746d755@oss.qualcomm.com
+ .../devicetree/bindings/pci/qcom,pcie-common.yaml  | 36 ++++++++++++++++++++--
+ .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml  | 16 +++++++---
+ 2 files changed, 46 insertions(+), 6 deletions(-)
 
-Changes in v2:
-- Remove phy-names property and change the driver, dtsi accordingly (Rob)
-- Link to v1: https://lore.kernel.org/r/20250322-perst-v1-0-e5e4da74a204@oss.qualcomm.com
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
+index 0480c58f7d998adbac4c6de20cdaec945b3bab21..e5f60faa18ad68a29900a66fbfcba3d4f8e88e7b 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
+@@ -51,10 +51,18 @@ properties:
+ 
+   phys:
+     maxItems: 1
++    deprecated: true
++    description:
++      This property is deprecated, instead of referencing this property from
++      the controller node, use the property from the PCIe root port node.
+ 
+   phy-names:
+     items:
+       - const: pciephy
++    deprecated: true
++    description:
++      Phandle to the register map node. This property is deprecated, and not
++      required to add in the root port also, as the root port has only one phy.
+ 
+   power-domains:
+     maxItems: 1
+@@ -71,12 +79,18 @@ properties:
+     maxItems: 12
+ 
+   perst-gpios:
+-    description: GPIO controlled connection to PERST# signal
++    description: GPIO controlled connection to PERST# signal. This property is
++      deprecated, instead of referencing this property from the controller node,
++      use the reset-gpios property from the root port node.
+     maxItems: 1
++    deprecated: true
+ 
+   wake-gpios:
+-    description: GPIO controlled connection to WAKE# signal
++    description: GPIO controlled connection to WAKE# signal. This property is
++      deprecated, instead of referencing this property from the controller node,
++      use the property from the PCIe root port node.
+     maxItems: 1
++    deprecated: true
+ 
+   vddpe-3v3-supply:
+     description: PCIe endpoint power supply
+@@ -85,6 +99,24 @@ properties:
+   opp-table:
+     type: object
+ 
++patternProperties:
++  "^pcie@":
++    type: object
++    $ref: /schemas/pci/pci-pci-bridge.yaml#
++
++    properties:
++      reg:
++        maxItems: 1
++
++      phys:
++        maxItems: 1
++
++      wake-gpios:
++        description: GPIO controlled connection to WAKE# signal
++        maxItems: 1
++
++    unevaluatedProperties: false
++
+ required:
+   - reg
+   - reg-names
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
+index 76cb9fbfd476fb0412217c68bd8db44a51c7d236..eb70cc6b6618af43fb03e124db20e2ade26a95ae 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
+@@ -162,9 +162,6 @@ examples:
+             iommu-map = <0x0 &apps_smmu 0x1c80 0x1>,
+                         <0x100 &apps_smmu 0x1c81 0x1>;
+ 
+-            phys = <&pcie1_phy>;
+-            phy-names = "pciephy";
+-
+             pinctrl-names = "default";
+             pinctrl-0 = <&pcie1_clkreq_n>;
+ 
+@@ -173,7 +170,18 @@ examples:
+             resets = <&gcc GCC_PCIE_1_BCR>;
+             reset-names = "pci";
+ 
+-            perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+             vddpe-3v3-supply = <&pp3300_ssd>;
++            pcie1_port0: pcie@0 {
++                device_type = "pci";
++                reg = <0x0 0x0 0x0 0x0 0x0>;
++                bus-range = <0x01 0xff>;
++
++                #address-cells = <3>;
++                #size-cells = <2>;
++                ranges;
++                phys = <&pcie1_phy>;
++
++                reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
++            };
+         };
+     };
 
----
-Krishna Chaitanya Chundru (3):
-      dt-bindings: PCI: qcom: Move phy, wake & reset gpio's to root port
-      PCI: qcom: Add support for multi-root port
-      arm64: qcom: sc7280: Move phy, perst to root port node
-
- .../devicetree/bindings/pci/qcom,pcie-common.yaml  |  36 ++++-
- .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml  |  16 +-
- arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts       |   5 +-
- arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi     |   5 +-
- arch/arm64/boot/dts/qcom/sc7280-idp.dtsi           |   5 +-
- arch/arm64/boot/dts/qcom/sc7280.dtsi               |   6 +-
- drivers/pci/controller/dwc/pcie-qcom.c             | 169 +++++++++++++++++----
- 7 files changed, 202 insertions(+), 40 deletions(-)
----
-base-commit: cfb2e2c57aef75a414c0f18445c7441df5bc13be
-change-id: 20250101-perst-cb885b5a6129
-
-Best regards,
 -- 
-Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+2.34.1
 
