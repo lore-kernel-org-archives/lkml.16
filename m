@@ -1,115 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4BD136E;
-	Sat, 19 Apr 2025 02:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A072AEED;
+	Sat, 19 Apr 2025 02:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745031422; cv=none; b=LzhbrdOWZ9f4Gva7rDuZ+TIcNo9bLzK84ewvQe/7ILtkvEtluv8NNLXOYI5eiqaxOhdk59DOEsKtk+pvoT61CRNm+W8Rt2sN7mPJoa1+rbu0+9Ut/6CEk328lqzU3QJhfmKKxa694ms07Ojwj81PadoQH2s7aF4tH0DX8u/N5cw=
+	t=1745031452; cv=none; b=ol/TkhCjrPaMkLLtAMkAkyEcgHN6ooNqkKenplphaGuKmIcyi9PR7XbPkgGmp4K+DuSY+xLqeY7u/YBFsOKv5OX5eNxuQNxQpgMKxkAp1AM4TjbghB7/QcT/oSVZxFUd+2IuAqIL1R5ZLgPTMTO+uMvG/H9hzFqN2tyn/+aftlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745031422; c=relaxed/simple;
-	bh=9LvENVGoNKnJj1A2Fi3gOOQ054fliCzHJnQI2PP2B58=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gOe97mo+eHIZX+1FpCEwlf9A3Oo/MDnRnb9GRwKRLrd0G47YG4cY0tAEVuyUAsyFG8XMT/s+SdIcvrIZj9tQhneLV1SY8oDiKwpDm0wrtfhaOsDB4yult+JaesMhHB2tfcy453qDwNKnbOysHeMIOQXhe33Z0wrek2gX1K/t7U4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pdUrag4f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745031452; c=relaxed/simple;
+	bh=oYQU52FTMIcVNzxozSb6a1YBQuGXoxDmd1o9zWWNLC4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=co8zXUEkoekPhYfMC2uBsYO5jjdt8j0pKpUr/6IZj14bemrj1RaYp97olJnQA+UwWjxMy842duigWZ28TSmj8HH0m7a26ZnelPzK+ft87mipXP7t/OdcJ6Avlltj6tn+YeWRGIkz4ETadSH4LdbCtu9Mv3oGIAoAczuEaZFBdsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ni3NvFTA; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pdUrag4f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCEFDC4CEEA;
-	Sat, 19 Apr 2025 02:57:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745031421;
-	bh=9LvENVGoNKnJj1A2Fi3gOOQ054fliCzHJnQI2PP2B58=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pdUrag4fcCPCUevWWssqQ3oNXC2BUxv6/cda5J9AKxzr+AdhdS0zAGZ/DT2QZY+qf
-	 aLBrZjfDSZL3ZyoX/2t8KEBIFN5xGeF5CQS/JWxFz5nfVPO3JI3an1eEdHosvcB0i2
-	 BnZgWQHrlQ51ol1kNkcdn/gwzYIxqLS26n+NEXddE+eJQYd6LxGvi01DQRa0vr7I8h
-	 kGYDWAJd0EIYEty77ChyR7vS84yeMRdjtUa7PaXrN9MtJfL9ceWNAS3/rO9iNtA+CM
-	 VrQIn0ioN1Ro7Pm3Tur7vD7W5nH1uuAtLcmUNgTsAigN+J7k6F8XuuFkN9RemtudPR
-	 +dvctez4PUP0w==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e5cded3e2eso3824557a12.0;
-        Fri, 18 Apr 2025 19:57:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVJIGmr3edA3EPPEb5GM6CAnCfzMuyp+W96vF1MVQ060FsZz/LepzfYMyUbtromXk0YJavJJffqq3fyWxY=@vger.kernel.org, AJvYcCX5Clp8pgw/qX8rFeDSdl7q0DMB4CNyF+ODKzU9WZi5oe7R3Xu3Vm2+KpC40FHqieFpdpTVdFxtic0Tqg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwArdl4sxUKtGNrjqQc65jzD0/EKnrF3jufuL+dXf16rL8nCmhX
-	iKOU77uhyMGTsRwhClI615rIx/QuBSni3tooi0ke1aeAbTgkZSySQEaNDJTDZh5kRaEEj19i+58
-	WiQJyyJ4kAcN3h0b7dDggZxqG6j4=
-X-Google-Smtp-Source: AGHT+IGhmmy0M1FNCzQnSD4N/IVQ4o9mFSDKT+1+P5O1DB7cmFmnnqYTSvE9wO1v4U1sDB5wtYVxF8bO8IKd1iE/fL8=
-X-Received: by 2002:a17:907:9622:b0:ac2:d6d1:fe65 with SMTP id
- a640c23a62f3a-acb74d9aeb6mr466223366b.41.1745031420495; Fri, 18 Apr 2025
- 19:57:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ni3NvFTA"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54991d85f99so3785241e87.1;
+        Fri, 18 Apr 2025 19:57:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745031449; x=1745636249; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=gOKBK6TLc+/4yVp3WA/MHV1AsW5HIJfli9PYQyF6N1Y=;
+        b=Ni3NvFTAxPEIjoeazy0ZZnYsy4MgqeAC245GpB7aUm+bukbRpw9o3Ckf75wqF370mg
+         7eeaEmyP7UGPwn1MXP5+k+lccqGPpO96oPKnomgr+eZV5zQxcdznvrtdkuWmaXO+L9UD
+         xQZbeytNiL23tC/6tgsL3ZomUHrwytcxuuyx5GUO8VrG5t47cH51LTM6PyXuOlLqLkHP
+         nA4XYc4AzfrUE1Oe6GW+nAnC/VdawP67QV9xrdw/tJhm5e8qe4H2KVY7cNcBoqOvNY07
+         FXuvPLVatJ4Qwzt4tho2CqpiInC8ASo0L/2O3JElPzeX9plvP10PuN99taLJJrh9ot+r
+         XvEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745031449; x=1745636249;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gOKBK6TLc+/4yVp3WA/MHV1AsW5HIJfli9PYQyF6N1Y=;
+        b=AQ7rWRsmxwstxBJXxuo6S8zDIagdZQkRe1igMOcb6cMj6YSR50iy/i5vAOYKmSt+1H
+         mY3x7TBiA7JsFrm7cxcfuzH/wKcm+nOoh6f3aT5jurmbBhz2KdaFbSIwn+zHUrDBOcdw
+         KNdr8SqmkUX82Awmf6JuUqMCXOCsyYrBc82FaTww8GhG6ru4lGpDoLh8u5skHacUrvYY
+         yqIe9cERLpOjs7EHl8b3tANIH1nBk41toHNQ9vVUQlPKak4FBy2XWWeQHMipv2gjo3/L
+         JVgrWWTnnhP5GkxKxAKHQUT5LmgshMpPI0PTUx0QXwdzoekp+7kYs+YyR6qPPysycP9/
+         biFA==
+X-Forwarded-Encrypted: i=1; AJvYcCXtKwefvYm9lB5beWPRQyp6FfbU/4dI0jjaO9pwHA7A/KyqvKZopR+4d9JxbnWSv+x9eMZKiOt1qx+E@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1ecDFIdpIjlZ7l1C3gUaeDim7xp4M4TeCadoi2VwXqgzCR5LO
+	eObR/APfVTiFyAbupJ8Vnzx+nXmBxjUiYOKtMly7q7aaDfvbIXXn7FnK7wePLznSdcWB/r0LcHf
+	TjJVvs1p+JEC8Pa4HzyManTzOvnHgLRZG
+X-Gm-Gg: ASbGncvFaQiqAjQpludFSh91Es9JgmO4xzK9dptVOR6ut8T2AKDj0yw8wNaay2MWBxK
+	eOUyo4xKWVi9FiLWwRnMlLrFP/dIz1yyu134mss1mxBPIdcdrO94HeZ4osUHcaYyvNPcdCnRoQ/
+	AAihEdeqSbvJa0RjAJ1/oT9jZ1qMhQohEk3CQt5YfGwvQceeI1c5hO2gS3
+X-Google-Smtp-Source: AGHT+IGqL0LdxgbVEW8lh9R7dG0BuEkpVoTAi7YuZ/uhK0cpymdk0NrxI3h7fL+AqI1JtdqQbzfMfEEiHoPG7wEDmfI=
+X-Received: by 2002:a05:6512:3e08:b0:549:90ac:cca2 with SMTP id
+ 2adb3069b0e04-54d6e7705cbmr1413649e87.1.1745031448577; Fri, 18 Apr 2025
+ 19:57:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417174712.69292-2-thorsten.blum@linux.dev>
- <aAIF_kEFlOOVNDaE@alpha.franken.de> <DAD22E95-6D33-43D5-B5E5-3A7B45A63944@linux.dev>
- <alpine.DEB.2.21.2504181108170.18253@angie.orcam.me.uk> <EC98BAE8-8269-4169-B3A2-5F426E77C223@linux.dev>
- <alpine.DEB.2.21.2504181337350.18253@angie.orcam.me.uk> <B71034AC-B0FC-4C5F-8562-661D6AD11056@linux.dev>
- <alpine.DEB.2.21.2504181608420.18253@angie.orcam.me.uk> <9F6CA7CB-B36A-4F79-B78C-7ED63E39260D@linux.dev>
- <A08BC566-5F6D-4FA5-B315-34D2FCA55A6E@linux.dev>
-In-Reply-To: <A08BC566-5F6D-4FA5-B315-34D2FCA55A6E@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 19 Apr 2025 10:56:50 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4x4oQEtvk4Ah0WNBWtaQysj00k_Pybs=+r37oriJxVPA@mail.gmail.com>
-X-Gm-Features: ATxdqUGFZLLWAMZCWJu3dCZDa5XXtflEeZmWRMtc1ZY2sVDTcBrlSLM2u8DRWMQ
-Message-ID: <CAAhV-H4x4oQEtvk4Ah0WNBWtaQysj00k_Pybs=+r37oriJxVPA@mail.gmail.com>
-Subject: Re: [PATCH v2] MIPS: Fix MAX_REG_OFFSET and remove zero-length struct member
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Oleg Nesterov <oleg@redhat.com>, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Steve French <smfrench@gmail.com>
+Date: Fri, 18 Apr 2025 21:57:17 -0500
+X-Gm-Features: ATxdqUEsswlNUerJxEUNa1zdaEV_Yj3d1RtMSTKbJhEMUhN9KFfT0mp_QLUej9o
+Message-ID: <CAH2r5msf5GpS_RV3-apwDGuVMVDWsiWfeKfRy55xnTbjMvPCXw@mail.gmail.com>
+Subject: [GIT PULL] smb3 client fixes
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 19, 2025 at 4:22=E2=80=AFAM Thorsten Blum <thorsten.blum@linux.=
-dev> wrote:
->
-> On 18. Apr 2025, at 22:18, Thorsten Blum wrote:
-> > On 18. Apr 2025, at 17:14, Maciej W. Rozycki wrote:
-> >> On Fri, 18 Apr 2025, Thorsten Blum wrote:
-> >>>>> Does regs_get_register() even work for CPU_CAVIUM_OCTEON when acces=
-sing
-> >>>>> the last two registers because they're both ULL, not UL? (independe=
-nt of
-> >>>>> my patch)
-> >>>>
-> >>>> Or rather two arrays of registers.  With 32-bit configurations their
-> >>>> contents have to be retrieved by pieces.  I don't know if it's handl=
-ed by
-> >>>> the caller(s) though as I'm not familiar with this interface.
-> >>>
-> >>> Ah, CPU_CAVIUM_OCTEON seems to be 64-bit only, so there's no differen=
-ce
-> >>> between UL and ULL. Then both my patch and your suggestion:
-> >>
-> >> So it seems odd to use `long long int' here, but I can't be bothered t=
-o
-> >> check history.  There could be a valid reason or it could be just slop=
-py
-> >> coding.
-> >>
-> >>> I still prefer my approach without '__last[0]' because it also silenc=
-es
-> >>> the following false-positive Coccinelle warning, which is how I stumb=
-led
-> >>> upon this in the first place:
-> >>>
-> >>> ./ptrace.h:51:15-21: WARNING use flexible-array member instead
-> >>
-> >> So make `__last' a flexible array instead?  With a separate patch.
-> >
-> > No, '__last[0]' is a fake flexible array and the Coccinelle warning is
-> > wrong. We should either ignore the warning or silence it by removing th=
-e
-> > marker, but turning it into a real flexible array doesn't make sense.
-> > I'd prefer to just remove it from the struct.
-> >
-> > Stefan or Oleg, do you have any preference?
->
-> Sorry, I meant Thomas, not Stefan.
-In my opinion just changing __last[0] to __last[] is OK, no other
-actions needed.
+Please pull the following changes since commit
+8ffd015db85fea3e15a77027fda6c02ced4d2444:
 
-Huacai
->
->
+  Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
+
+are available in the Git repository at:
+
+  git://git.samba.org/sfrench/cifs-2.6.git tags/6.15-rc2-smb3-client-fixes
+
+for you to fetch changes up to 95d2b9f693ff2a1180a23d7d59acc0c4e72f4c41:
+
+  Revert "smb: client: fix TCP timers deadlock after rmmod"
+(2025-04-13 17:24:55 -0500)
+
+----------------------------------------------------------------
+smb client fixes
+- Fix hard link lease key problem when deferred close
+- Revert the socket lockdep/refcount workarounds done in cifs.ko now
+that fixed at the socket layer
+----------------------------------------------------------------
+Chunjie Zhu (1):
+      smb3 client: fix open hardlink on deferred close file error
+
+Kuniyuki Iwashima (2):
+      Revert "smb: client: Fix netns refcount imbalance causing leaks
+and use-after-free"
+      Revert "smb: client: fix TCP timers deadlock after rmmod"
+
+ fs/smb/client/cifsproto.h |  2 ++
+ fs/smb/client/connect.c   | 34 +++++++++-------------------------
+ fs/smb/client/file.c      | 28 ++++++++++++++++++++++++++++
+ 3 files changed, 39 insertions(+), 25 deletions(-)
+
+
+-- 
+Thanks,
+
+Steve
