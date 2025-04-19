@@ -1,115 +1,120 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E5A172BD5;
-	Sat, 19 Apr 2025 20:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED5F1922F6;
+	Sat, 19 Apr 2025 20:04:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745092888; cv=none; b=ByU1qeN1G12ktju8W9gOzoOi3LeV2mNKUVkhe6rBKY5+yFeo3zbzNkYEgmbJ7P1JjGRNELa9a88d1q9if9RauOuTNJyDYIsz6hR5smNpiBu35dV0d62EC0MQzGdJEVo5RlZkr2+P+FibX4SC8N0nSvwMAolqQojg3YmTMr60JyI=
+	t=1745093100; cv=none; b=OHMmQCVgNfV6vkE083ThfVodrDKs/95y2WEG6y/hlMMcGPQez/swZqo+8vh8xRBa8UJuA2sbFrE4Rngv+FUJuOAaO53F6Jwh0lazi0ybEdlqWavIYA68n5U0Wbh28L9CyKcBw05n4LbEm4y6yvWlvA3j8I8+bUpJV5aPkFoShPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745092888; c=relaxed/simple;
-	bh=P7tKjMmYvpQSt19eVgoXK1B4GJT2SFBF4f5fjdv6Abs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iS0+3xzmpEsteaJK07SaM6YjfLpT7C+MoB2qw09TYmtcewLV0ZJ+9Rvdt0skTpXCnXnD6GIgHI8PD54ZuUNSKSwCzt/w1rgFcRd/qSzxezDdn7zT5GOd+D0QBE17KPBaflICcE4gxVw3bsO54nmhlqZtFAmr+7e3gXtWHovSQjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HZPpUGVK; arc=none smtp.client-ip=209.85.210.169
+	s=arc-20240116; t=1745093100; c=relaxed/simple;
+	bh=u5FJ7O/Bk4zWHpep5CMeQFngie6H5PQbHNqajSf2QBo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RbQ4evJnMxxSPNoUnoiYy1uxH/vdj9pKpDyLxMXhxnPzwjCRoIihAyFxw3p9AhiKvi+iTDwDz5hhAr+E+blAN7jWL6xGNxvj8sT2OXiIqBViiHhcre+1URg/tv1Qx4y4yBL1P0E6Oe8wL9j/8AC5DSlmnk159WOIA2objZFSx7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X5Q899BP; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HZPpUGVK"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7369ce5d323so2283165b3a.1;
-        Sat, 19 Apr 2025 13:01:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X5Q899BP"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2260c91576aso25199045ad.3;
+        Sat, 19 Apr 2025 13:04:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745092886; x=1745697686; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=78bfCOlyaAzjSSC4kz49Ccuuh1pGQY6kRFiTtIDnJb8=;
-        b=HZPpUGVKT/Sfel7fmJ0dLZjTYUEA3UbR5Fc9t4XHGr2A/dHcBLIlXBx3jFkpA9eAZI
-         C9JIdsNRfBR6msv9KuBOFuFDlqnp3Ac+kh6KtrcchGt8/XtJO/39WeSRCbha4dqg46jD
-         GPyWLmRKAenZ/4htdB2C9d1eOJmygd4GIVYXDNa4vjwZoVL5DW4d2IRWmMmNz1F6VLNN
-         uON44zNp/uETZsrxrXZQw+L6SP0ZhL4R3lILRtwyh2hO3Djcb2atRtWA+ZuK21TH0AcX
-         ojYzGFX/Zan1BMlyazlA29/y7SLZY+Esi1orG/k3CMEbPTkPlzZG+qCoEVwIp/Z0DP5x
-         dEnA==
+        d=gmail.com; s=20230601; t=1745093098; x=1745697898; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=slCeZF2FANQQmUO1DaJwFXxYa64miWm1wNaU56U8m40=;
+        b=X5Q899BPpjyBjftPW1aijzxXbmGq/ZC3s/V1GBIYObg2OLFXceEIIE6BwHT4fCZm8B
+         SKGzp6d4i9QFJ4I/s2TV3v2I+TzNqTqEIwxTTZ2hLJN+ew1qzsExiU2o+LTWGeopYif2
+         /6x2PLYRw/FP1e8xswX3oufQlwebi9y7eGCPy+CozJmbNlZAz0iiRBLiJaBfGnLIUaUP
+         3raqvjwlbD0T2IoE69UEa5uW5DBtvbyFF4YoPkqS+bhZRshE/CO5wpD7Z02f3uGOItYh
+         QwrrHA+KlEuYkj5Kc+hN7Brq19z48z1nlo/jQgA8Vc3HBxkrvoSdEuXj1qUKCzMFx/22
+         7n2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745092886; x=1745697686;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=78bfCOlyaAzjSSC4kz49Ccuuh1pGQY6kRFiTtIDnJb8=;
-        b=pbIBmJPkjT16v/rhCgLW1e3bvcTwYPHwvFJ9fFa6fxdkTM0VlzSUwatoTsOzZuKEj2
-         XHquL3sAYijiNe0rnkrMyp1utwF+Hv9sb+oX79gLXGu5H9D7jGO9oFO8haKxRriUvI+u
-         nlkQklZ7LD7f6pCYC0EKhmRi7p56A2IppHUAGYFqHvuV2T1XnbAKqqYb0sA7IM06B4SM
-         7Sis2+46dWKikau3uwO+QVWGmeRfISas1+tuZaXkcKoyCl8CzIUprTsVaBoeeIGRSu7k
-         KIrY5qGeM2608uXTI+c551FqHxTqrAaNGjmApgL0ejU1Ut8fv8QraZDa0nMKNpJLePtU
-         0jSg==
-X-Forwarded-Encrypted: i=1; AJvYcCXcBd8NbtQn0ZxQI1ANaH1wSKuUXnjV5uN2lO2M9A6mo1tzoer5ADO9b39CBICGC+MflZVhgyu1khY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0vm7Ui/6TyP90GHMM1u8Exd/o38ifR9TBAm9nrbdl9str/cdY
-	VsYKu1usFQr1Emfxr/Uze0xmAqGfUPBq0h0A8Q5JAnKFB6DIY0x7
-X-Gm-Gg: ASbGncuP3Ara+WjsI9WoVo+wMwKTqtWhM81zNzGmBmT++c/cuIhyuIOS8bRVk1hmvzB
-	ecegVefrRuPZRojm0rQHP0sctJ1z2yfXW1m/37st5uX+IhyoQS3Zo1dEYWRj8hLELw5xMXfceBk
-	VmsE01uS6KdRqPh9afk+YNZeYOUG9ckizzJyBPPw4U+d5GL//GzKrysZT/KlAmnPRvCU8EsCDTL
-	1JxMKUTwahIp/73DKc0hY2sgKQNnLBxSW0cUce0AtrFGHME5grXUhxAMgYaRlOJHCYxEOrbN4h0
-	NktK5MuDi5Wq87L1TUUmH4OQk7EVTHJtvcZ4d6atbug0SPU3ONdHU3pdMz6klPX+RWRvCv4=
-X-Google-Smtp-Source: AGHT+IHHU3SG+U7iWICQGUwnRv6OZNIxtm1vAVch1HaAzoMdI8hi6JU7nF5iLgmeQesqOUWhTh/7fA==
-X-Received: by 2002:a05:6a00:3d02:b0:736:4e0a:7e82 with SMTP id d2e1a72fcca58-73dc1480119mr8028833b3a.10.1745092886146;
-        Sat, 19 Apr 2025 13:01:26 -0700 (PDT)
-Received: from localhost.localdomain ([177.10.12.81])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaaba76sm3778426b3a.143.2025.04.19.13.01.24
+        d=1e100.net; s=20230601; t=1745093098; x=1745697898;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=slCeZF2FANQQmUO1DaJwFXxYa64miWm1wNaU56U8m40=;
+        b=V9CaoBC0FjRAiSVV2i7stAJt1/AF/owsxiV4jAG+6T+INgBK35IZMA64aiJ51cprjg
+         T+injlKVlakKLr6tvfmVqozGEwAonOCGN1q2ACeAEi08cUr/Q48Vol6I6teurKyUiwie
+         s+9b9K2Nac6LQULH01RRPopMLqudsD9LcrY7oLoAIWOr6l0jtjwRXizbci/pWFR4aeqs
+         FEKjCJASeI4S9X0pVfFpd7isHH2C827ZT62YxgiSkD9dQSVKn6S73OHYbRGbqYjksiXP
+         3hgsSa3FCE+kin28VmE/kM3DIOprHNmWXZClVSLmSnNIirsv8TEzbiLkdMUISwzehhbH
+         i+xg==
+X-Forwarded-Encrypted: i=1; AJvYcCUzZbh8AqWyOqyMPBh81RRBGlfpHQi7GCPPjvHYRPC1J+OPxXWj04+brrTsbyc+gU/rbIAoyxWPmIUbKA==@vger.kernel.org, AJvYcCWV6BFsyDGZBQW53TP/nX9/dsnTqG4SqZbWNcgic/Ix2uwqQX4Ix0ACRBjKZcILCFFLkXxGuJ2Qzc2NF/81@vger.kernel.org
+X-Gm-Message-State: AOJu0YwiIX1rYdkRJFe2obO0mIoDn+yKgvNNLGfO1VbF04yacUkb+DEh
+	fygVPhiLJp1kU4mtiWPG72qU3wZrNKdRAZwcIXf6561zDqqh7nJe
+X-Gm-Gg: ASbGncuKdDqqZYR4pcpm2nPXW5eXCaCaLkbILn0QIJzxRCZCjbA1FEpUGI03JLljdzt
+	DsKftiHYw76dvfs/PlSwMEpv/GyiskSZ9gSRj5KFAHv5sZQWSbaZpgeqN/gea73QEQc3gC2Gae9
+	N4QKm+k/CiHDcGUDJ5NxQCa0c5y3fYINjzY965KhwEs9ICZM96LLmaQ/50xnetOzqNNTjfMflU+
+	6lAeb3jBupCLnSjlL6HVRagOpbnXxQXRwpQuRQvJFC8Fn5JUbW0YnaE/6vRtFbSccrpwjlB51oV
+	3CD9OShZus07vjlXf9vpVsM45s3WHRH0d/qRL2GEoTlEK9kvMwZKxD00rK8ZWEumEzIYsFyFt1x
+	to74K6xaVhA==
+X-Google-Smtp-Source: AGHT+IFcuHh1TgIZlauZRXMqg+RwPDUribzs6XJTkNntA9GZO2aGFSa2Ha/BySFu6FyTzglT3vZKVw==
+X-Received: by 2002:a17:902:e88a:b0:223:f9a4:3fa8 with SMTP id d9443c01a7336-22c5359e645mr101597215ad.19.1745093097857;
+        Sat, 19 Apr 2025 13:04:57 -0700 (PDT)
+Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([2409:4080:1187:dd2:ee65:709f:56e9:9560])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bd9963sm37752925ad.34.2025.04.19.13.04.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 13:01:25 -0700 (PDT)
-From: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
-To: rafael.v.volkmer@gmail.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	ukleinek@kernel.org
-Subject: [PATCH v4 4/4] pwm: tiehrpwm: drop unnecessary parentheses and fix spacing
-Date: Sat, 19 Apr 2025 17:01:00 -0300
-Message-Id: <20250419200100.79140-1-rafael.v.volkmer@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250419195830.79053-1-rafael.v.volkmer@gmail.com>
-References: <20250419195830.79053-1-rafael.v.volkmer@gmail.com>
+        Sat, 19 Apr 2025 13:04:57 -0700 (PDT)
+From: Purva Yeshi <purvayeshi550@gmail.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Purva Yeshi <purvayeshi550@gmail.com>
+Subject: [PATCH] input: iqs5xx: Fix incorrect argument passed to hex2bin
+Date: Sun, 20 Apr 2025 01:34:34 +0530
+Message-Id: <20250419200434.39661-1-purvayeshi550@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The comparison in pwm-tiehrpwm.c triggered “UNNECESSARY_PARENTHESES” and
-“PARENTHESIS_ALIGNMENT” when wrapping the second clause in extra parens.
-This removes superfluous parentheses, aligns continued lines under the ‘if’,
-and ensures operators are properly spaced.
+Fix Smatch-detected issue:
+drivers/input/touchscreen/iqs5xx.c:747 iqs5xx_fw_file_parse()
+error: hex2bin() 'rec->len' too small (2 vs 4)
 
-Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
+Fix incorrect second argument to hex2bin() when parsing firmware records.
+
+Pass a pointer to the ASCII hex data instead of the u8 record length to
+hex2bin(), which expects a pointer, not an integer. The previous code
+passed rec->len as the second argument, leading to undefined behavior
+as hex2bin() attempted to read from an unintended memory address.
+
+Cast the entire rec structure to a const char * using a new pointer
+rec_bytes. Skip the initial ':' character in the Intel HEX format by
+passing rec_bytes + 1 to hex2bin(). This allows the function to decode
+the 4-byte record header (length, address high, address low, and type)
+correctly from its ASCII hex representation into binary form.
+
+Preserve the original code flow while ensuring correctness and resolving
+the issue detected by Smatch.
+
+Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
 ---
- drivers/pwm/pwm-tiehrpwm.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/input/touchscreen/iqs5xx.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-index 23530d53e177..73c3dd57a50b 100644
---- a/drivers/pwm/pwm-tiehrpwm.c
-+++ b/drivers/pwm/pwm-tiehrpwm.c
-@@ -285,8 +285,7 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 * same period register for multiple channels.
- 	 */
- 	for (i = 0; i < NUM_PWM_CHANNEL; i++) {
--		if (pc->period_cycles[i] &&
--				(pc->period_cycles[i] != period_cycles)) {
-+		if (pc->period_cycles[i] && pc->period_cycles[i] != period_cycles) {
- 			/*
- 			 * Allow channel to reconfigure period if no other
- 			 * channels being configured.
-@@ -304,7 +303,7 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	pc->period_cycles[pwm->hwpwm] = period_cycles;
+diff --git a/drivers/input/touchscreen/iqs5xx.c b/drivers/input/touchscreen/iqs5xx.c
+index 4ebd7565ae6e..e8140a54685f 100644
+--- a/drivers/input/touchscreen/iqs5xx.c
++++ b/drivers/input/touchscreen/iqs5xx.c
+@@ -744,7 +744,9 @@ static int iqs5xx_fw_file_parse(struct i2c_client *client,
+ 			break;
+ 		}
  
- 	/* Configure clock prescaler to support Low frequency PWM wave */
--	if (set_prescale_div(period_cycles/PERIOD_MAX, &ps_divval,
-+	if (set_prescale_div(period_cycles / PERIOD_MAX, &ps_divval,
- 			     &tb_divval)) {
- 		dev_err(pwmchip_parent(chip), "Unsupported values\n");
- 		return -EINVAL;
+-		error = hex2bin(rec_hdr, rec->len, sizeof(rec_hdr));
++		const char *rec_bytes = (const char *)rec;
++
++		error = hex2bin(rec_hdr, rec_bytes + 1, sizeof(rec_hdr));
++
+ 		if (error) {
+ 			dev_err(&client->dev, "Invalid header at record %u\n",
+ 				rec_num);
 -- 
-2.25.1
+2.34.1
 
