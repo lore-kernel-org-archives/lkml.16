@@ -1,293 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69A8647;
-	Sat, 19 Apr 2025 13:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700A8647;
+	Sat, 19 Apr 2025 13:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745069202; cv=none; b=S+ahqFpQERX3Rn5s/90+XEblcqwduE4n/++Yz1+dICeFyOUsQB96zwAljJDnAAKto8JeuW6a4fl8drkJ7CLLZh4blP8m6/IMCbXUW80PZKrHnih7il+QkA2VTDElc/IF53gxKTzrN/sgNfVak7KGCOaGdIJCS3NjuOYm3BOSO5Y=
+	t=1745069257; cv=none; b=d3UymKWxc92rJm0C+4U8hQ4FF9uzk6nM9blRY7jsOv5y16+qhyM5lGnJED/qf69pNJ1e0szCu04scBjKWviSRhhR8e6cJL1aO6MtKspcmMHsTw/xTvaX65eG0xHBppthNHdsBmklOik+sIl8QL4+ZdpERUCvC3YYwZkfJA2jMkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745069202; c=relaxed/simple;
-	bh=ue1d4fMmfRR3owQCunDNf+9iBYOf5BIYwNCmQHL+aYc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JMpZ2uRGXyhNKmxBKaQatXFdT9psEDIj0JqPmQhIID3CQVZGYaeLocX2XN/sjgU8eKaD9AdOq70Ufkl+5nY2E66Oz6U9+Di3BahAr+9U3dfp9G/IUOsr+8xaSEj5E8ppt5Z6Q/XiiNZvmRxHrtH+n1CfLc7NFLGiqqzY28TiviI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhoXBSFi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745069257; c=relaxed/simple;
+	bh=+uz/4w6JNaDoPA9Ed/apbbZcQ5BJZe2Xz7DdZUVE1HM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EI6wrPm+qiyQlnqxbJBq5lWYtwpoMel274y1+3cFPaKY3+DYyoKASWMgnkRQyERmRq+z3Xk14LFiwkcZuzMD83Si/EfP90vKJIjxIKfeDLAtNpOqvlWiKbzFXP1glex9fs58rfltNqYX8U0kdPGtFc5pz/iylPYF/hYky75VW5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=NHPBaC4Q; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhoXBSFi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0765C4CEE7;
-	Sat, 19 Apr 2025 13:26:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745069200;
-	bh=ue1d4fMmfRR3owQCunDNf+9iBYOf5BIYwNCmQHL+aYc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qhoXBSFilpHckYgEmtDqRBpfmjJmPts5lx8F6zCbXSo3nFJ0Cviv8rFrH0tes7cTP
-	 fUfiEMkbHh9Akht0wGrdo/rcRcSZGvLnczo+4l8y/0+OgqYcyzz5WhuiS14CW0CCcn
-	 +QfvORdsJTxf7Y0SWmrSHMewixAeMo2z3STcP+fXbSHJh+AHFkFdwQxy41Wm3n5MU4
-	 ByNwNwEpWRmqquWhKcO+ASCMIRxEidpr+DXyfLU0t8bmivO5+888Sm8scFOjG7RcPc
-	 AEP9659sXUy2yZwV7iugNILxttUuYX46sZMw4VCbGaTUH/BCXbDJyt+TnulneOoyLX
-	 hDEmj6NHAqHYQ==
-Date: Sat, 19 Apr 2025 15:26:33 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Ian Kent <raven@themaw.net>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Mark Brown <broonie@kernel.org>, Eric Chanudet <echanude@redhat.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Clark Williams <clrkwllms@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ian Kent <ikent@redhat.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
-	Alexander Larsson <alexl@redhat.com>, Lucas Karpinski <lkarpins@redhat.com>, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
-Message-ID: <20250419-floskel-aufmachen-26e327d7334e@brauner>
-References: <20250417-abartig-abfuhr-40e558b85f97@brauner>
- <20250417-outen-dreihundert-7a772f78f685@brauner>
- <20250417-zappeln-angesagt-f172a71839d3@brauner>
- <20250417153126.QrVXSjt-@linutronix.de>
- <20250417-pyrotechnik-neigung-f4a727a5c76b@brauner>
- <39c36187-615e-4f83-b05e-419015d885e6@themaw.net>
- <125df195-5cac-4a65-b8bb-8b1146132667@themaw.net>
- <20250418-razzia-fixkosten-0569cf9f7b9d@brauner>
- <834853f4-10ca-4585-84b2-425c4e9f7d2b@themaw.net>
- <20250419-auftrag-knipsen-6e56b0ccd267@brauner>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="NHPBaC4Q"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=gU/E1vKlkPLWrJ0OVNNoWBxNFhw6hZGKnzDZ9DEn8dE=; b=NHPBaC4QRsGrYCbH
+	YhSNOZE7sI27YD1iN/o5cGp9DunmAmFx4WHQRfOl2pkmK7UAq1kDkLgipVNARPxPtQ0+FA02Sm9KK
+	EMqgSizzETFSw0Fun2MU1lTRbue1PNBmcW6ZZVVQfOmSc728EMFvzebtc7Ml64svoRGg+y1RQkTQs
+	pxYiQ8+E77KSB9qk/pQ/XwE+Z1iGNzei+BdVpRB6s1EEHrJEbkPoSAoEjLrDzPRBtuMlqZDdnsZbC
+	mCpgNw2u3nLbJbwlYAO3nbnRG1f63Lae6g/OBGpjl1zVAYTtwaqejhW0yYFv9jxr5488S1xmImj8B
+	MoU14Q/DnONux8hJLQ==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1u68EA-00CeT3-0M;
+	Sat, 19 Apr 2025 13:27:26 +0000
+From: linux@treblig.org
+To: yanjun.zhu@linux.dev,
+	zyjzyj2000@gmail.com,
+	jgg@ziepe.ca,
+	leon@kernel.org
+Cc: linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH v2] RDMA/rxe: Remove unused rxe_run_task
+Date: Sat, 19 Apr 2025 14:27:25 +0100
+Message-ID: <20250419132725.199785-1-linux@treblig.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250419-auftrag-knipsen-6e56b0ccd267@brauner>
 
-On Sat, Apr 19, 2025 at 12:44:18PM +0200, Christian Brauner wrote:
-> On Sat, Apr 19, 2025 at 09:24:31AM +0800, Ian Kent wrote:
-> > 
-> > On 18/4/25 16:47, Christian Brauner wrote:
-> > > On Fri, Apr 18, 2025 at 09:20:52AM +0800, Ian Kent wrote:
-> > > > On 18/4/25 09:13, Ian Kent wrote:
-> > > > > On 18/4/25 00:28, Christian Brauner wrote:
-> > > > > > On Thu, Apr 17, 2025 at 05:31:26PM +0200, Sebastian Andrzej Siewior
-> > > > > > wrote:
-> > > > > > > On 2025-04-17 17:28:20 [+0200], Christian Brauner wrote:
-> > > > > > > > >       So if there's some userspace process with a broken
-> > > > > > > > > NFS server and it
-> > > > > > > > >       does umount(MNT_DETACH) it will end up hanging every other
-> > > > > > > > >       umount(MNT_DETACH) on the system because the dealyed_mntput_work
-> > > > > > > > >       workqueue (to my understanding) cannot make progress.
-> > > > > > > > Ok, "to my understanding" has been updated after going back
-> > > > > > > > and reading
-> > > > > > > > the delayed work code. Luckily it's not as bad as I thought it is
-> > > > > > > > because it's queued on system_wq which is multi-threaded so it's at
-> > > > > > > > least not causing everyone with MNT_DETACH to get stuck. I'm still
-> > > > > > > > skeptical how safe this all is.
-> > > > > > > I would (again) throw system_unbound_wq into the game because
-> > > > > > > the former
-> > > > > > > will remain on the CPU on which has been enqueued (if speaking about
-> > > > > > > multi threading).
-> > > > > > Yes, good point.
-> > > > > > 
-> > > > > > However, what about using polled grace periods?
-> > > > > > 
-> > > > > > A first simple-minded thing to do would be to record the grace period
-> > > > > > after umount_tree() has finished and the check it in namespace_unlock():
-> > > > > > 
-> > > > > > diff --git a/fs/namespace.c b/fs/namespace.c
-> > > > > > index d9ca80dcc544..1e7ebcdd1ebc 100644
-> > > > > > --- a/fs/namespace.c
-> > > > > > +++ b/fs/namespace.c
-> > > > > > @@ -77,6 +77,7 @@ static struct hlist_head *mount_hashtable
-> > > > > > __ro_after_init;
-> > > > > >    static struct hlist_head *mountpoint_hashtable __ro_after_init;
-> > > > > >    static struct kmem_cache *mnt_cache __ro_after_init;
-> > > > > >    static DECLARE_RWSEM(namespace_sem);
-> > > > > > +static unsigned long rcu_unmount_seq; /* protected by namespace_sem */
-> > > > > >    static HLIST_HEAD(unmounted);  /* protected by namespace_sem */
-> > > > > >    static LIST_HEAD(ex_mountpoints); /* protected by namespace_sem */
-> > > > > >    static DEFINE_SEQLOCK(mnt_ns_tree_lock);
-> > > > > > @@ -1794,6 +1795,7 @@ static void namespace_unlock(void)
-> > > > > >           struct hlist_head head;
-> > > > > >           struct hlist_node *p;
-> > > > > >           struct mount *m;
-> > > > > > +       unsigned long unmount_seq = rcu_unmount_seq;
-> > > > > >           LIST_HEAD(list);
-> > > > > > 
-> > > > > >           hlist_move_list(&unmounted, &head);
-> > > > > > @@ -1817,7 +1819,7 @@ static void namespace_unlock(void)
-> > > > > >           if (likely(hlist_empty(&head)))
-> > > > > >                   return;
-> > > > > > 
-> > > > > > -       synchronize_rcu_expedited();
-> > > > > > +       cond_synchronize_rcu_expedited(unmount_seq);
-> > > > > > 
-> > > > > >           hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
-> > > > > >                   hlist_del(&m->mnt_umount);
-> > > > > > @@ -1939,6 +1941,8 @@ static void umount_tree(struct mount *mnt,
-> > > > > > enum umount_tree_flags how)
-> > > > > >                    */
-> > > > > >                   mnt_notify_add(p);
-> > > > > >           }
-> > > > > > +
-> > > > > > +       rcu_unmount_seq = get_state_synchronize_rcu();
-> > > > > >    }
-> > > > > > 
-> > > > > >    static void shrink_submounts(struct mount *mnt);
-> > > > > > 
-> > > > > > 
-> > > > > > I'm not sure how much that would buy us. If it doesn't then it should be
-> > > > > > possible to play with the following possibly strange idea:
-> > > > > > 
-> > > > > > diff --git a/fs/mount.h b/fs/mount.h
-> > > > > > index 7aecf2a60472..51b86300dc50 100644
-> > > > > > --- a/fs/mount.h
-> > > > > > +++ b/fs/mount.h
-> > > > > > @@ -61,6 +61,7 @@ struct mount {
-> > > > > >                   struct rb_node mnt_node; /* node in the ns->mounts
-> > > > > > rbtree */
-> > > > > >                   struct rcu_head mnt_rcu;
-> > > > > >                   struct llist_node mnt_llist;
-> > > > > > +               unsigned long mnt_rcu_unmount_seq;
-> > > > > >           };
-> > > > > >    #ifdef CONFIG_SMP
-> > > > > >           struct mnt_pcp __percpu *mnt_pcp;
-> > > > > > diff --git a/fs/namespace.c b/fs/namespace.c
-> > > > > > index d9ca80dcc544..aae9df75beed 100644
-> > > > > > --- a/fs/namespace.c
-> > > > > > +++ b/fs/namespace.c
-> > > > > > @@ -1794,6 +1794,7 @@ static void namespace_unlock(void)
-> > > > > >           struct hlist_head head;
-> > > > > >           struct hlist_node *p;
-> > > > > >           struct mount *m;
-> > > > > > +       bool needs_synchronize_rcu = false;
-> > > > > >           LIST_HEAD(list);
-> > > > > > 
-> > > > > >           hlist_move_list(&unmounted, &head);
-> > > > > > @@ -1817,7 +1818,16 @@ static void namespace_unlock(void)
-> > > > > >           if (likely(hlist_empty(&head)))
-> > > > > >                   return;
-> > > > > > 
-> > > > > > -       synchronize_rcu_expedited();
-> > > > > > +       hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
-> > > > > > +               if (!poll_state_synchronize_rcu(m->mnt_rcu_unmount_seq))
-> > > > > > +                       continue;
-> > > This has a bug. This needs to be:
-> > > 
-> > > 	/* A grace period has already elapsed. */
-> > > 	if (poll_state_synchronize_rcu(m->mnt_rcu_unmount_seq))
-> > > 		continue;
-> > > 
-> > > 	/* Oh oh, we have to pay up. */
-> > > 	needs_synchronize_rcu = true;
-> > > 	break;
-> > > 
-> > > which I'm pretty sure will eradicate most of the performance gain you've
-> > > seen because fundamentally the two version shouldn't be different (Note,
-> > > I drafted this while on my way out the door. r.
-> > > 
-> > > I would test the following version where we pay the cost of the
-> > > smb_mb() from poll_state_synchronize_rcu() exactly one time:
-> > > 
-> > > diff --git a/fs/mount.h b/fs/mount.h
-> > > index 7aecf2a60472..51b86300dc50 100644
-> > > --- a/fs/mount.h
-> > > +++ b/fs/mount.h
-> > > @@ -61,6 +61,7 @@ struct mount {
-> > >                  struct rb_node mnt_node; /* node in the ns->mounts rbtree */
-> > >                  struct rcu_head mnt_rcu;
-> > >                  struct llist_node mnt_llist;
-> > > +               unsigned long mnt_rcu_unmount_seq;
-> > >          };
-> > >   #ifdef CONFIG_SMP
-> > >          struct mnt_pcp __percpu *mnt_pcp;
-> > > diff --git a/fs/namespace.c b/fs/namespace.c
-> > > index d9ca80dcc544..dd367c54bc29 100644
-> > > --- a/fs/namespace.c
-> > > +++ b/fs/namespace.c
-> > > @@ -1794,6 +1794,7 @@ static void namespace_unlock(void)
-> > >          struct hlist_head head;
-> > >          struct hlist_node *p;
-> > >          struct mount *m;
-> > > +       unsigned long mnt_rcu_unmount_seq = 0;
-> > >          LIST_HEAD(list);
-> > > 
-> > >          hlist_move_list(&unmounted, &head);
-> > > @@ -1817,7 +1818,10 @@ static void namespace_unlock(void)
-> > >          if (likely(hlist_empty(&head)))
-> > >                  return;
-> > > 
-> > > -       synchronize_rcu_expedited();
-> > > +       hlist_for_each_entry_safe(m, p, &head, mnt_umount)
-> > > +               mnt_rcu_unmount_seq = max(m->mnt_rcu_unmount_seq, mnt_rcu_unmount_seq);
-> > > +
-> > > +       cond_synchronize_rcu_expedited(mnt_rcu_unmount_seq);
-> > > 
-> > >          hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
-> > >                  hlist_del(&m->mnt_umount);
-> > > @@ -1923,8 +1927,10 @@ static void umount_tree(struct mount *mnt, enum umount_tree_flags how)
-> > >                          }
-> > >                  }
-> > >                  change_mnt_propagation(p, MS_PRIVATE);
-> > > -               if (disconnect)
-> > > +               if (disconnect) {
-> > > +                       p->mnt_rcu_unmount_seq = get_state_synchronize_rcu();
-> > >                          hlist_add_head(&p->mnt_umount, &unmounted);
-> > > +               }
-> > > 
-> > >                  /*
-> > >                   * At this point p->mnt_ns is NULL, notification will be queued
-> > > 
-> > > If this doesn't help I had considered recording the rcu sequence number
-> > > during __legitimize_mnt() in the mounts. But we likely can't do that
-> > > because get_state_synchronize_rcu() is expensive because it inserts a
-> > > smb_mb() and that would likely be noticable during path lookup. This
-> > > would also hinge on the notion that the last store of the rcu sequence
-> > > number is guaranteed to be seen when we check them in namespace_unlock().
-> > > 
-> > > Another possibly insane idea (haven't fully thought it out but throwing
-> > > it out there to test): allocate a percpu counter for each mount and
-> > > increment it each time we enter __legitimize_mnt() and decrement it when
-> > > we leave __legitimize_mnt(). During umount_tree() check the percpu sum
-> > > for each mount after it's been added to the @unmounted list.
-> > 
-> > I had been thinking that a completion in the mount with a counter (say
-> > 
-> > walker_cnt) could be used. Because the mounts are unhashed there won't
-> > 
-> > be new walks so if/once the count is 0 the walker could call complete()
-> > 
-> > and wait_for_completion() replaces the rcu sync completely. The catch is
-> > 
-> > managing walker_cnt correctly could be racy or expensive.
-> > 
-> > 
-> > I thought this would not be received to well dew to the additional fields
-> 
-> Path walking absolutely has to be as fast as possible, unmounting
-> doesn't. Anything that writes to a shared field from e.g.,
-> __legitimize_mnt() will cause cacheline pingpong and will very likely be
-> noticable. And people care about even slight decreases in performances
-> there. That's why we have the percpu counter and why I didn't even
-> consider something like the completion stuff.
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-My wider problem with this whole patchset is that I didn't appreciate
-that we incur this complexity for the benefit of RT mostly which makes
-me somewhat resistant to this change. Especially anything that has
-noticable costs for path lookup.
+rxe_run_task() has been unused since 2024's
+commit 23bc06af547f ("RDMA/rxe: Don't call direct between tasks")
 
-I drafted my insane idea using percpu legitimize counts so we don't have
-to do that ugly queue_rcu_work() stuff. I did it and then I realized how
-terrible it is. It's going to be horrible managing the additional logic
-correctly because we add another synchronization mechanism to elide the
-rcu grace period via mnt->mnt_pcp->mnt_legitimizers.
+Remove it.
 
-One issue is of course that we need to guarantee that someone will
-always put the last reference.
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+v2
+  Remove reference in comment and reformat comment
 
-Another is that the any scheme that elides the grace period in
-namespace_unlock() will also mess up the fastpath in mntput_no_expire()
-such that we either have to take lock_mount_hash() on each
-mntput_no_expire() which is definitely a no-no or we have to come up
-with an elaborate scheme where we do a read_seqbegin() and
-read_seqcount_retry() dance based on mount_lock. Then we still need to
-fallback on lock_mount_hash() if the sequence count has changed. It's
-ugly and it will likely be noticable during RCU lookup.
+ drivers/infiniband/sw/rxe/rxe_task.c | 40 ++++++++--------------------
+ drivers/infiniband/sw/rxe/rxe_task.h |  2 --
+ 2 files changed, 11 insertions(+), 31 deletions(-)
 
-So queue_rcu_work() is still the ugly but likeliest option so far.
+diff --git a/drivers/infiniband/sw/rxe/rxe_task.c b/drivers/infiniband/sw/rxe/rxe_task.c
+index 80332638d9e3..6f8f353e9583 100644
+--- a/drivers/infiniband/sw/rxe/rxe_task.c
++++ b/drivers/infiniband/sw/rxe/rxe_task.c
+@@ -85,17 +85,17 @@ static bool is_done(struct rxe_task *task)
+ 
+ /* do_task is a wrapper for the three tasks (requester,
+  * completer, responder) and calls them in a loop until
+- * they return a non-zero value. It is called either
+- * directly by rxe_run_task or indirectly if rxe_sched_task
+- * schedules the task. They must call __reserve_if_idle to
+- * move the task to busy before calling or scheduling.
+- * The task can also be moved to drained or invalid
+- * by calls to rxe_cleanup_task or rxe_disable_task.
+- * In that case tasks which get here are not executed but
+- * just flushed. The tasks are designed to look to see if
+- * there is work to do and then do part of it before returning
+- * here with a return value of zero until all the work
+- * has been consumed then it returns a non-zero value.
++ * they return a non-zero value. It is called indirectly
++ * when rxe_sched_task schedules the task. They must
++ * call __reserve_if_idle to move the task to busy before
++ * calling or scheduling. The task can also be moved to
++ * drained or invalid by calls to rxe_cleanup_task or
++ * rxe_disable_task. In that case tasks which get here
++ * are not executed but just flushed. The tasks are
++ * designed to look to see if there is work to do and
++ * then do part of it before returning here with a return
++ * value of zero until all the work has been consumed then
++ * it returns a non-zero value.
+  * The number of times the task can be run is limited by
+  * max iterations so one task cannot hold the cpu forever.
+  * If the limit is hit and work remains the task is rescheduled.
+@@ -234,24 +234,6 @@ void rxe_cleanup_task(struct rxe_task *task)
+ 	spin_unlock_irqrestore(&task->lock, flags);
+ }
+ 
+-/* run the task inline if it is currently idle
+- * cannot call do_task holding the lock
+- */
+-void rxe_run_task(struct rxe_task *task)
+-{
+-	unsigned long flags;
+-	bool run;
+-
+-	WARN_ON(rxe_read(task->qp) <= 0);
+-
+-	spin_lock_irqsave(&task->lock, flags);
+-	run = __reserve_if_idle(task);
+-	spin_unlock_irqrestore(&task->lock, flags);
+-
+-	if (run)
+-		do_task(task);
+-}
+-
+ /* schedule the task to run later as a work queue entry.
+  * the queue_work call can be called holding
+  * the lock.
+diff --git a/drivers/infiniband/sw/rxe/rxe_task.h b/drivers/infiniband/sw/rxe/rxe_task.h
+index a63e258b3d66..a8c9a77b6027 100644
+--- a/drivers/infiniband/sw/rxe/rxe_task.h
++++ b/drivers/infiniband/sw/rxe/rxe_task.h
+@@ -47,8 +47,6 @@ int rxe_init_task(struct rxe_task *task, struct rxe_qp *qp,
+ /* cleanup task */
+ void rxe_cleanup_task(struct rxe_task *task);
+ 
+-void rxe_run_task(struct rxe_task *task);
+-
+ void rxe_sched_task(struct rxe_task *task);
+ 
+ /* keep a task from scheduling */
+-- 
+2.49.0
+
