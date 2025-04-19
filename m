@@ -1,163 +1,128 @@
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDE9141987;
-	Sat, 19 Apr 2025 18:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B65041C84C7;
+	Sat, 19 Apr 2025 18:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745088192; cv=none; b=Pt7kMkE1vAzT7mYE1QU2ElW5rHQweh9m/5ofLdHdA+lbvVEHPVxynKYpCAewq9s64jX6oElT32jEh1cvzDVnDhAW2GwFCdw6pmZ64ISkfi1y+5sq38Pu3Vc6k3nbpQq0L9Hf9W8CNp9VlCw8SfbBoLGYmnwBNM+PhjP0wGkMmeU=
+	t=1745088244; cv=none; b=s55ZZW+mHg0U8b8No8Ol3rQpMdV0GEgJiy0NAdyTTtsyJV7jzCwZgwN4ynfRYWg87n615B2o2qSjkCy9YVa955yxhaTE+cbPveUq4aA46o2aj+fwj5cbpbN73h6XvWisYNYHHLGKdJ4kZDowUP26qCnD1CSicqq/Y5WNcxtB+3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745088192; c=relaxed/simple;
-	bh=/IK6cg2GHIIyrcAJnvyMkeViVUMZrJYg2RkAOBwS19A=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PgcGGZVADuxzmCgmBcbaz6DRuU3H8A7W352nbGZJaEtJqrvnsPqu9fos9ylF/9dI5Hmi9BuPbCzxh0rTgFXO7YH6gQdIEvNvZbuoa6YwG0IzDT+R3/0/4c+/AyyZtNnfh969ZADOF6BCrLTAuvVDwx6tWtcaWDKLDXKGDl0g2Es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=RHMe1IHR; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	s=arc-20240116; t=1745088244; c=relaxed/simple;
+	bh=xN9R9QHlggheOZhKFP5TaJueN4ygvkm+pTmL2UM3tzY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Lww0y+7kKsbm99kSAfSyPtXutTb1AbE/pIla9VAEspb89XGREw4zX4NapZo74wP7n63ig4x4MO4/WjttC9a72whBNPvfmZp5uLCHCVM73/p2uUZCSE/J/GR0qHDyhbu4cm2mvx6SfjdkAysUPdUE/JshFGlFYQ73l7wzFDKpbsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TjnTq48V; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="RHMe1IHR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1745088187;
-	bh=/IK6cg2GHIIyrcAJnvyMkeViVUMZrJYg2RkAOBwS19A=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=RHMe1IHRKB26uNfJlBF7ALgONSElkWQ6KKW0bT2wodynaC/EV91ZGZT25zwOKcgUI
-	 AsNItyW4QJsECEFjsFIXN7LheApxWUGpEuTQCcC/zQkkiZIcAg02HQltXw1Ki7rif9
-	 0Nz3S0r1TQCKxqHmhJw7Mw1fAwjURiR+UyQJawYU=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 709701C0094;
-	Sat, 19 Apr 2025 14:43:06 -0400 (EDT)
-Message-ID: <64859c5c8fd969186c1997a340ed6307e2c70f06.camel@HansenPartnership.com>
-Subject: Re: [PATCH v2 security-next 1/4] security: Hornet LSM
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Blaise Boscaccy <bboscaccy@linux.microsoft.com>, Jonathan Corbet
- <corbet@lwn.net>, David Howells <dhowells@redhat.com>, Herbert Xu
- <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>,
- Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge
- E. Hallyn" <serge@hallyn.com>, Masahiro Yamada <masahiroy@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>,
- Shuah Khan <shuah@kernel.org>, =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?=
- <mic@digikod.net>,  =?ISO-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,  Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Jarkko Sakkinen
- <jarkko@kernel.org>,  Jan Stancek <jstancek@redhat.com>, Neal Gompa
- <neal@gompa.dev>, linux-doc@vger.kernel.org,  linux-kernel@vger.kernel.org,
- keyrings@vger.kernel.org,  linux-crypto@vger.kernel.org,
- linux-security-module@vger.kernel.org,  linux-kbuild@vger.kernel.org,
- linux-kselftest@vger.kernel.org,  bpf@vger.kernel.org,
- llvm@lists.linux.dev, nkapron@google.com, teknoraver@meta.com, 
- roberto.sassu@huawei.com, xiyou.wangcong@gmail.com
-Date: Sat, 19 Apr 2025 14:43:05 -0400
-In-Reply-To: <20250404215527.1563146-2-bboscaccy@linux.microsoft.com>
-References: <20250404215527.1563146-1-bboscaccy@linux.microsoft.com>
-	 <20250404215527.1563146-2-bboscaccy@linux.microsoft.com>
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TjnTq48V"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-30384072398so2354928a91.0;
+        Sat, 19 Apr 2025 11:44:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745088242; x=1745693042; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ijbkwuJz3JBQMyLg3M9/k4WnhScokz0mU3Vgn1ijLyE=;
+        b=TjnTq48VW2xLvuNJV1hEq0qT2Ok4KwMw/KPgDvui8kEJpAXgbQkD2+yf6G8+uz3gQ4
+         D+8FZTHYwgX72O2g68Fd6UGYh7+K+wGmaM+/FLczixjFlshBFQyjNd0Dzr1DL7vl7I1D
+         n+yb848eKxNM+OzPXDrXbw7pBXX/C/sdq0BWxdjJftWzztoE60N1fdEu4llLi85dnc1c
+         NASXsygDRNzyGZq3tNky6gWSvxI0wQrbZLKfMfOe2NfzAmaDa7JoplfUQhd6X1Xzlbim
+         8G7VNF8ux3TAMuBh2NEIGiXmLVDIB/fQ9vsdrV3Po8BrXzRoNcwikXQj1VtxzYIFuVL4
+         9U5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745088242; x=1745693042;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ijbkwuJz3JBQMyLg3M9/k4WnhScokz0mU3Vgn1ijLyE=;
+        b=FtoHoa7jQ0iPxc/Cpo6e2MFeHdF7ID36WwIJMUyGSRHe6eGGFS+6/7cVrLOPrbEq/f
+         U6FitQIRvt4UmbFe8B2ruQHWXfRSTEFWecibmb+yodbqNQdzVNP5fC+OTaZU9FYAidt5
+         1VVaULqgulsY8zsMwFOpyUH8lZupK5i401IYm5RKTfAOVXPZRxAwAFYOsbItKt0axSo3
+         1B4svoofbQ8KTQ2/Q67I2y7SLRDyUyS/AI/o33HtjWQw36MjHLW50OrrjLy5vXyS30w1
+         eenzHFMFQSmTAwCUbFTmZL9tjlQlniekh7r4cYA9hZahVNGbBfPL5C5aB+SVyDlHKklX
+         yjsg==
+X-Forwarded-Encrypted: i=1; AJvYcCV1J84FDvnhdxJhzNs6ICZWCZ4TqGwWiH5lJG/yxdNX/5uNxd/kU+a4UXflVSzPrxJ0MnTEVPygYXV7BIE=@vger.kernel.org, AJvYcCW2oZ5K7r/fbUjNgqOEAA5sfAUuSVZjgo+UwjD8OrWmz59tFKf+4lDB4s6iA/XQ8dGa5dyMpT31yBhR5Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxc7AjCjLrcU9NzbF8fqBig7UlQTL6CZgXUFA1NAU5YVCgmu083
+	n2tRMgfwxTaRc5Q4pnpC8d4gW0t/a5x9CzvDjbTxV+f0vdCV9Ay9
+X-Gm-Gg: ASbGncvGz5gLrCntmh0w0Iv0RsNKllOYzTOrkqjnYFr/5ed6zOaUAvp09n5+Q4QOoVZ
+	mV+PhvbFKcS8mR6NdEzKovUSr3qi5Kf8whbDIlys9rSBH1L01pksveuVpIN0uloCXSYiWHDQ+fS
+	NXFeRYm1QFwJq8/KeUzb15n/QL4ZbdOOaJQBLgF3bbv1bAWP1g/3LklokLWNwhLI5KiacLH5WRO
+	1gRM+95tZkLu8qf2idQHqgNuKSq2nlDgvLZ3iAbyxst+On7rQUcHRflZXNKjZjCLSlGk3IfBwKv
+	YbkH4exJis+feut/sMxxDGfk9kDwBfvvLK0SKOy/LJgqqR5y5YM5
+X-Google-Smtp-Source: AGHT+IErrjvrMdRDEriBQfqCq9LilN6m+1YPbXhICEem4Y7dsW+Gxc8R4w3pmLq8AZhFoW2onRBHnA==
+X-Received: by 2002:a17:90b:498d:b0:2ff:4e90:3c55 with SMTP id 98e67ed59e1d1-3087bbaeb22mr9109796a91.27.1745088241850;
+        Sat, 19 Apr 2025 11:44:01 -0700 (PDT)
+Received: from localhost.localdomain ([123.17.0.117])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087e1149b1sm3383052a91.40.2025.04.19.11.43.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Apr 2025 11:44:01 -0700 (PDT)
+From: Nam Tran <trannamatk@gmail.com>
+To: pavel@kernel.org,
+	lee@kernel.org,
+	krzk+dt@kernel.org,
+	robh@kernel.org,
+	conor+dt@kernel.org,
+	corbet@lwn.net
+Cc: devicetree@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Nam Tran <trannamatk@gmail.com>
+Subject: [PATCH v6 0/5] leds: add new LED driver for TI LP5812
+Date: Sun, 20 Apr 2025 01:43:28 +0700
+Message-Id: <20250419184333.56617-1-trannamatk@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2025-04-04 at 14:54 -0700, Blaise Boscaccy wrote:
-[...]
-> diff --git a/include/linux/kernel_read_file.h
-> b/include/linux/kernel_read_file.h
-> index 90451e2e12bd..7ed9337be542 100644
-> --- a/include/linux/kernel_read_file.h
-> +++ b/include/linux/kernel_read_file.h
-> @@ -14,6 +14,7 @@
-> =C2=A0	id(KEXEC_INITRAMFS, kexec-initramfs)	\
-> =C2=A0	id(POLICY, security-policy)		\
-> =C2=A0	id(X509_CERTIFICATE, x509-certificate)	\
-> +	id(EBPF, ebpf)				\
+This patch series adds support for the TI/National Semiconductor LP5812
+4x3 matrix RGB LED driver. The driver supports features such as autonomous
+animation and time-cross-multiplexing (TCM) for dynamic LED effects.
 
-This causes a BUILD_BUG_ON for me in security/selinux/hooks.c with
-CONFIG_SECURITY_SELINUX=3Dy because READING_MAX_ID and LOADING_MAX_ID
-become 8.
+Signed-off-by: Nam Tran <trannamatk@gmail.com>
+---
+Changes in v6:
+- Add `vcc-supply` property to describe the LP5812 power supply.
+- Remove `chan-name` property and entire LED subnodes, as they are not needed.
+- Update LP5812 LED driver node to Raspberry Pi 4 B Device Tree, based on updated binding.
+- Link to v5: https://lore.kernel.org/linux-leds/20250414145742.35713-1-trannamatk@gmail.com/
 
-Below is what I had to do to get the compile to work.
-
-Regards,
-
-James
-
+Changes in v5:
+- Rebase on v6.15-rc2
+- Removed unused functions (lp5812_dump_regs, lp5812_update_bit).
+- Address Krzysztof's review comments
+- Link to v4: https://lore.kernel.org/linux-leds/20250405183246.198568-1-trannamatk@gmail.com/
 ---
 
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index e7a7dcab81db..9a7ed0b4b08d 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -4133,7 +4133,7 @@ static int selinux_kernel_read_file(struct file *file=
-,
- {
- 	int rc =3D 0;
-=20
--	BUILD_BUG_ON_MSG(READING_MAX_ID > 7,
-+	BUILD_BUG_ON_MSG(READING_MAX_ID > 8,
- 			 "New kernel_read_file_id introduced; update SELinux!");
-=20
- 	switch (id) {
-@@ -4158,6 +4158,10 @@ static int selinux_kernel_read_file(struct file *fil=
-e,
- 		rc =3D selinux_kernel_load_from_file(file,
- 						SYSTEM__X509_CERTIFICATE_LOAD);
- 		break;
-+	case READING_EBPF:
-+		rc =3D selinux_kernel_load_from_file(file,
-+						SYSTEM__EBPF_LOAD);
-+		break;
- 	default:
- 		break;
- 	}
-@@ -4169,7 +4173,7 @@ static int selinux_kernel_load_data(enum kernel_load_=
-data_id id, bool contents)
- {
- 	int rc =3D 0;
-=20
--	BUILD_BUG_ON_MSG(LOADING_MAX_ID > 7,
-+	BUILD_BUG_ON_MSG(LOADING_MAX_ID > 8,
- 			 "New kernel_load_data_id introduced; update SELinux!");
-=20
- 	switch (id) {
-@@ -4195,6 +4199,10 @@ static int selinux_kernel_load_data(enum kernel_load=
-_data_id id, bool contents)
- 		rc =3D selinux_kernel_load_from_file(NULL,
- 						SYSTEM__X509_CERTIFICATE_LOAD);
- 		break;
-+	case LOADING_EBPF:
-+		rc =3D selinux_kernel_load_from_file(NULL,
-+						   SYSTEM__EBPF_LOAD);
-+		break;
- 	default:
- 		break;
- 	}
-diff --git a/security/selinux/include/classmap.h b/security/selinux/include=
-/classmap.h
-index 04a9b480885e..671db23451df 100644
---- a/security/selinux/include/classmap.h
-+++ b/security/selinux/include/classmap.h
-@@ -65,7 +65,7 @@ const struct security_class_mapping secclass_map[] =3D {
- 	  { "ipc_info", "syslog_read", "syslog_mod", "syslog_console",
- 	    "module_request", "module_load", "firmware_load",
- 	    "kexec_image_load", "kexec_initramfs_load", "policy_load",
--	    "x509_certificate_load", NULL } },
-+	    "x509_certificate_load", "ebpf_load", NULL } },
- 	{ "capability", { COMMON_CAP_PERMS, NULL } },
- 	{ "filesystem",
- 	  { "mount", "remount", "unmount", "getattr", "relabelfrom",
+Nam Tran (5):
+  dt-bindings: leds: add TI/National Semiconductor LP5812 LED Driver
+  leds: add TI/National Semiconductor LP5812 LED Driver
+  docs: ABI: Document LP5812 LED sysfs interfaces
+  docs: leds: Document TI LP5812 LED driver
+  arm64: dts: Add LP5812 LED node for Raspberry Pi 4 Model B
+
+ .../ABI/testing/sysfs-bus-i2c-devices-lp5812  |  144 +
+ .../devicetree/bindings/leds/ti,lp5812.yaml   |   46 +
+ Documentation/leds/leds-lp5812.rst            |   79 +
+ MAINTAINERS                                   |   12 +
+ .../arm/boot/dts/broadcom/bcm2711-rpi-4-b.dts |   10 +
+ drivers/leds/Kconfig                          |   16 +
+ drivers/leds/Makefile                         |    1 +
+ drivers/leds/leds-lp5812.c                    | 2797 +++++++++++++++++
+ drivers/leds/leds-lp5812.h                    |  350 +++
+ 9 files changed, 3455 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
+ create mode 100644 Documentation/devicetree/bindings/leds/ti,lp5812.yaml
+ create mode 100644 Documentation/leds/leds-lp5812.rst
+ create mode 100644 drivers/leds/leds-lp5812.c
+ create mode 100644 drivers/leds/leds-lp5812.h
+
+
+base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
+-- 
+2.25.1
 
