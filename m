@@ -1,254 +1,201 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2050.outbound.protection.outlook.com [40.107.95.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA92188CDB;
-	Sat, 19 Apr 2025 20:09:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745093362; cv=none; b=hjF1O5frnHX4s5Tnao944XYYNjRO/6Klb66Ug0mHPHYSgZ41j83Lfu9cJ4g2uxGKcYq5HeE2ftk0AJVM7oAC4QVUCSmAfWjgdnMjiNaCn2psTejCZIJVd6ABvXKhZfV64U9vxabAeKDwYU3BluQ7k3ElKRJQGQxRR2pjYJf7kIY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745093362; c=relaxed/simple;
-	bh=9XikV973ZL6dz8kwzy1HjcE0B3XPQdFSVDliDolOyw8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=XTbGdIGbgvhZZNsXqUHhuZZLDebJgqKtbjbOTF2bQ7zsSvIHnHCOkExurhYGQrPhnVDIeiCb5au1ThiQItoXM3DFg1AzOJcxse7vTDbFx95CM04L2VShEoKvHZGwrcpLzQFLCU3OZbtBwjM2NQRa+iGz8YWAwrqtbABTNvlkf84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oOJZKpkk; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF952188CDB
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 20:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745093423; cv=fail; b=kyclXLtvE9b0VWzzsWYZqq9G9xQBuUNmSw+/un4GUjquCAfedSO77+rIahoLJQdZLKn29L6OHnuzPBZ6luirpMAmVVbEt60PSxbKr3/WbT5rfHSImuKaOz8K78FhyMWPyn9Q3idliSjckya5l+8FhAfrdAZKHD4LK4vjZaz3hP0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745093423; c=relaxed/simple;
+	bh=mqb56S8g6zlaS1jiRQ4rq5r+1L29xy5BKdQHU/YlT3E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=hKFoF145P8vfEgjQ39SvZspUd0Hn8A4F6e1PxD3NR1krrPI6/orEbNw6sJIhuGyJlIy7R7n5v031fO2pNrQvH0MIyrJKRwe5aYs6Tat3fPSCdrHHvRMhUi89H4VIY5I4+oKo50Jn7/omK8OQHi2cXT724AaQ2rTzSI/b6Nt/i5c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=sai8wzIb; arc=fail smtp.client-ip=40.107.95.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oOJZKpkk"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53JJqtWE024291;
-	Sat, 19 Apr 2025 20:08:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	D6+NpKZ7gqgcoEwQPOm/EI7HAda5WGlRaDZuMVRMruU=; b=oOJZKpkkUCWsSqJY
-	ymau2aZ4Q+Fz1XgEOG5pbPP1fNhQN0GnS35oRtqeyhpWHktTsTYbfy6fOZUuULbO
-	TVMgepDgZ9ltKxtZjA7aAUmR0A6j0PN/WcfBMMpeG9k0jwgiC6nGGO06+d5DjrfJ
-	e791o5ULiKyQphV29KMau3PpfHkUqZGgz5ZJf0YT/JqllRZ5OCN7C2NzPa0yIOH5
-	bogvECOOkC8zy/VhWajquLiPurSln8aQVQ37YxVueAqxZopMp/jRVzwacvMfevEo
-	YQKbFEX4p5EdbYgz8pIJiFJrw/dOQ5ALjCXguk5h6HUFhsCKmSxHRYUs9LHcqj9A
-	IZxkag==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46435j91hj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 19 Apr 2025 20:08:54 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53JK8qvG024707
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 19 Apr 2025 20:08:52 GMT
-Received: from [10.216.62.173] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 19 Apr
- 2025 13:08:45 -0700
-Message-ID: <0d763853-5b1a-433e-9fa1-23ea0184b9bb@quicinc.com>
-Date: Sun, 20 Apr 2025 01:38:40 +0530
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="sai8wzIb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=g6fvDUE9VkqLy94MJoFPCVkHjBHLXIqT+nQqXn/9V8xfz6PQWa7PzHJaRu0QX2ZvqFJsqzucAhoCvtW3byScJUVnlY5NW5+7p14c7upP7wqTDLTR2+qS+PZIrOhMYATDxu/qF7TjW0KagkJKCrGtTuzqhbR7LzPtbFlj8at9FZK+aJKGEORrg6cdC7I2sZ+TPTzXlk4I0ImWGCFxuxm8qyncDgPwtzAd2xkBumPxe/J10YysXCbzbijNHz+VfYhVjgjyI2SleYtuO2M46pdpbbw3Qj7aYqUAjwvscemmESXIPKMVaXTeT9isnqNjcUl09vByl+OMTY1MygDQszq/Ww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UP7Gd9sQauySC3xKr25oVUgXR+U5h86DOEf6fU1g2OI=;
+ b=Srg5vQ1i9cheSs2uwTLnKGMZGeAlG43out3WURcKuageTc2BbaDu18BB8TyLnTdl1zvM9jIVovTbrmHtInBZRxgQZyx+rDhcxHQJZvRQwF7FEIvq3+mU/rXUhVO+GIusTuZ51iBVyQ5u8wzUYtL8VSnWlnZuuIFMEsnYHs+ED3h9fDQbZG0AsymCCnu1bJ6vGE/3ggyq5H52KpgxNmN+Z6n89VPar337/jJjJpkf0a8SSv7eGeVAAPVLamhho2zLcbnHcC/JVImcQ4WLBKCoCeEcuFnd7y4wEIf1Hw520sdxJf1n/HDa65/UOSvK4ixiUowFvO37w+JaxZIfcHlX3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UP7Gd9sQauySC3xKr25oVUgXR+U5h86DOEf6fU1g2OI=;
+ b=sai8wzIbWr5E+HAeyqPrlh9GXaw+7y72sxwv1NEON2v5gTxrk1fMLSi2lqL0yFZGZb/3Sey3MUDKzSRGoyxvJzorWbcM7S9K9sHEVu4ICyvJoDGnO0Ede9PnUdC5eSERdH/cOUKbBsokHvG+Dlh5PfYu4n6rR+7/aPDVg42BB/8sztk8Nxypp6Op/wi5x+vDEpD91wXlULimTH26C0vuvsLK9HO1jY3xBHD11USV8OMelqvUM2U8w84nDvf89mJnvzjj+2esmOOV2Lk9QHDI1t2kGDF/BwJ1FWzvWI8iOltRQMAc/OrLVjataYwWxp7jlC2SwouS0Z0ahRUODsrCPg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
+ by PH8PR12MB6940.namprd12.prod.outlook.com (2603:10b6:510:1bf::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Sat, 19 Apr
+ 2025 20:10:13 +0000
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5%6]) with mapi id 15.20.8655.022; Sat, 19 Apr 2025
+ 20:10:13 +0000
+Date: Sat, 19 Apr 2025 22:10:08 +0200
+From: Andrea Righi <arighi@nvidia.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched_ext: Track currently locked rq
+Message-ID: <aAQDIIPOUAU-nB_F@gpd3>
+References: <20250419123536.154469-1-arighi@nvidia.com>
+ <20250419123536.154469-2-arighi@nvidia.com>
+ <aAPemAFUsJaF_C2X@slm.duckdns.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aAPemAFUsJaF_C2X@slm.duckdns.org>
+X-ClientProxiedBy: MI0P293CA0006.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:290:44::17) To CY5PR12MB6405.namprd12.prod.outlook.com
+ (2603:10b6:930:3e::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 5/9] phy: qcom-qmp-ufs: Remove qmp_ufs_com_init()
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: <vkoul@kernel.org>, <kishon@kernel.org>,
-        <manivannan.sadhasivam@linaro.org>,
-        <James.Bottomley@hansenpartnership.com>, <martin.petersen@oracle.com>,
-        <bvanassche@acm.org>, <bjorande@quicinc.com>,
-        <neil.armstrong@linaro.org>, <konrad.dybcio@oss.qualcomm.com>,
-        <quic_rdwivedi@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>
-References: <20250410090102.20781-1-quic_nitirawa@quicinc.com>
- <20250410090102.20781-6-quic_nitirawa@quicinc.com>
- <zvc3gf7mek7u46wlcrjak3j2hihj4vfgdwpdzjhvnxxowuyvsr@hlra5bmz5ign>
- <4557abf9-bcd2-4a06-8161-43ad5047b277@quicinc.com>
- <CAO9ioeXyDWOhe1cbGO_tR=ppZd1aC0GSdeMzQjir4XmDRMQ3Jg@mail.gmail.com>
- <64216a90-e2e0-435c-87bc-388c72a702c0@quicinc.com>
- <sajcoh34gyfcvhik3yairil65guvp2rt2xdmbmlpmlcjvst5ci@qojbxhmrnrxj>
-Content-Language: en-US
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
-In-Reply-To: <sajcoh34gyfcvhik3yairil65guvp2rt2xdmbmlpmlcjvst5ci@qojbxhmrnrxj>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=EOYG00ZC c=1 sm=1 tr=0 ts=680402d6 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=JfrnYn6hAAAA:8 a=COk6AnOGAAAA:8 a=PNvhjDC_c5CfWSYif1gA:9
- a=QEXdDO2ut3YA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: O95NvhS4UrMRpq3tkLm5GO6Yujv1slXV
-X-Proofpoint-ORIG-GUID: O95NvhS4UrMRpq3tkLm5GO6Yujv1slXV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-19_08,2025-04-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 mlxscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 phishscore=0 spamscore=0 adultscore=0 impostorscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504190168
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|PH8PR12MB6940:EE_
+X-MS-Office365-Filtering-Correlation-Id: fea7bc64-b254-4474-8ae3-08dd7f7e3192
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RXBGODlSRjZXMkJSUE1RdCtJbjF4NHNpQ3pqQllLRVVYUFhtY1ZRaFhOaXNQ?=
+ =?utf-8?B?V1dYbVR0bXNpckFhek9uR24yb0dMNVY5eWhOaEVFR2RCWXZwVzNLZU8wMFAy?=
+ =?utf-8?B?UGExdHhEd1FETXloR05PeGpNb3ZkRTlDTjUvbnZHdVRSRmhPQ2VveEtERVEy?=
+ =?utf-8?B?Y2ZVVnE2L2wxU0Q2OWlFWEVUN0NkSE5ZOUowanMzbHNrenVIKzZNbk0wZTZl?=
+ =?utf-8?B?aHhCdjBSNFV3dzI5b09Vb0ltcG4wV1NpTm1oUzBabXdiTGxUbjA3UVFzTUh0?=
+ =?utf-8?B?OFNRVmVGNkJWSVdndmF6TE0zb0lNcVFPN1RJRGNnUW13eFhPWVFKUk9FUEVo?=
+ =?utf-8?B?SFlZT0Vjdk94dGNUTHYySkNjenFLb2l0eVhQdFJKTDVLMVZHbUhDbENoY0Nn?=
+ =?utf-8?B?dW00NzFJbStZOHdMQTcyT0NIcGMrREkrY3NhQWs0YmpqMWk4ZGVzVm1BVmZ1?=
+ =?utf-8?B?QnJRbWVSK1dXNy9kQW1ZdmJTa1ZXRXQ1aGNrMXVkV2luekV4YjNyQXI3ZUJK?=
+ =?utf-8?B?TUpPZEFXUkwxTmFZQnhNNHEwdVZjVzFiTGxNQ0syMmFZTi9aZndWajkyc0xS?=
+ =?utf-8?B?VlFFTFBQSXVxUmZqbVo0Smk4bU9jcEhOME9xRHU3VSs1UWNBWmlYT0xmZUpr?=
+ =?utf-8?B?MnpCYm82QmRhRUx0cmkrZXFCbDdJMVlkaEt2cElzTlRudW5hQ0hFVit6SmRv?=
+ =?utf-8?B?N2VrUXJQOCt0NGhxeWRqWW9STGtrdnUzT0JkNUxyeUNtOGJDS211aERqZ3hE?=
+ =?utf-8?B?dnRid3ZmanZNUXFwSlJxUm9vZHM4OCs5eUNKOFQ0MktaMUF0WEVSLzVqVENv?=
+ =?utf-8?B?Zi9YTmhPM0xtVEQ0b3FzcnZwQnFaeTJHMFU2MHR6Vk12T2p0ZXdIazI3Rktp?=
+ =?utf-8?B?VUFHTHZ4VzNxeWxaQUwyb1lLMjdmaFhBek1ZSzQxOUx5YVExNStBb2w4aFd6?=
+ =?utf-8?B?UUFvQVJOK1BWNzR1MFN4NXhoa3pxZjVMbHR3bzZvVndyRHhkQlp5bHRxSXFP?=
+ =?utf-8?B?VlRxVFVOWWtUZ1FCbjR5ZjdxWkdkUXhlaXJWcnV4Z2hpU3BrblNQNVA1aGRE?=
+ =?utf-8?B?M0NkRTk5NWd6KzAwdCtTK09xSnZadk1hcDZMNWlwTXpKUE0wR3NjdkZkM0tl?=
+ =?utf-8?B?T1l1MWtyaEZFeGxLRldFNThDdHl2Ynp6dFZHZ2loYzhzd3h1KzM1a2diY1ND?=
+ =?utf-8?B?dVlSbnBpNTNTWFNGQUlNVmdabGFPMWhSYUxhTi83dHlIUk5zT1Z2eVdRMmlE?=
+ =?utf-8?B?NklCSjBlM2k0TlYxRU0xRzZ4ZThLWXNNNktjKzBaRmF6SVdDeWVVa3BNcnFJ?=
+ =?utf-8?B?Q3g2dlhGTzRLQk9YT3hCUm5IUG1pUVlFMlZaemJwWGZwbmYyRnJ2dW9IbjBl?=
+ =?utf-8?B?UDdpREx5UHJ5ekg4eW5Ea2hOUVRaQ25oWVRQSWEzdlJyZGh3S1lyS21UcUlX?=
+ =?utf-8?B?UnRKL25vaWlRSXd4MStoNW5xYUdJeG5TTFJROFlESy9HdGdXTUFub2ViMWg1?=
+ =?utf-8?B?VVdzTnFtSlUzZXlhdkMxbmZuY0E2RFlrQVJ3a3hxOUh0YnY5Mit0RE9lUnE2?=
+ =?utf-8?B?MTRkdXBweHhPUzE0djRLNGpLaXZIM1lSazdqQzRJM05pS0F1NTJoSVN1SkpO?=
+ =?utf-8?B?QUNmNmVnL05qMkdRYzA0ODJiQVlHbUZ3Um5XZ3J5VGRidVoyRWZ1WGRiSFBP?=
+ =?utf-8?B?ckZpb252cWg5WjN4SGxPNDJYWktOQkZpamhKaGVFSzlvMklaeDU0enpvSUlE?=
+ =?utf-8?B?WGQvOTd4bDZLRlNJM2xoZXRRd2xqNDVSOE5reHNLQVEyVmpKTDU1YW9pbXhS?=
+ =?utf-8?B?WGIvUmZVQnI5bTZPRlUxOThhMnBjc25XZEQwb2hRUkxoNndvc0ZxWDM4Rm0x?=
+ =?utf-8?B?SFMzclF1ekNLcGpkaWxPMFlCSFlrejVVSExNRndzMXMzeVhvY2dIRXlCaStV?=
+ =?utf-8?Q?tXjHhK310MQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bTY2YVpRUVpucENkd0IrcVJOZWx1MGFsTGRQMTBmRnNSMFhPZ2orRHBjZ3NP?=
+ =?utf-8?B?eVZxRDNHYmk1RlBFcTZ1aHpXYjNHbDBCZkxVVzhpREorb0plV01DL0pvZUdT?=
+ =?utf-8?B?anJrL2h6MXZHV1daYkx3elhSVjlwcVFEQ1VIbEs0ZWF2UXpjd0dHd3l2RHlY?=
+ =?utf-8?B?NSt6S0xWUUJHdGhVZjhLM3dSWVVCR1pwbnFjZkZ0eC83S0oxRFpUUjYrZEts?=
+ =?utf-8?B?WGVMQWY1UkxQbmF5V1JIaGNMVldVbis5ZEJyRktJMkRQNzdkTmxYYXh6ZFNT?=
+ =?utf-8?B?Vk5EZ0o3RVVRNnJMWDVHTXV6WWZmTlN6QVlxUlRBSktQdnQxRFhaMkloQWJY?=
+ =?utf-8?B?TnBCdWQ2eG4xM0NkYzVMSnZ4dGlYanVUNmh1Vjd5TlI2WWg5OFRCUzRoci9I?=
+ =?utf-8?B?ZERXY2tyVCtNamtmckgzV0VqM2dOd0hWdVd5aXZwMkhRbXRQSDlLZHdtYWtx?=
+ =?utf-8?B?K0dMenI0Z29JaXlmTm00aGZqWXRnQjR0TTNlUW1rYzFVcjBIWVEzMDVYQmJv?=
+ =?utf-8?B?cFowMXpLSCtjcmhxRU5kZFpFSWF0OXNIWGhvV0hrWUZpUnM1N1c1NkFnaHda?=
+ =?utf-8?B?UFBtRzdSYVhOZEMvSW9KWkxXWEdqd1RNR0dnTVhKejFOWDN2a2lpVmtqUG9C?=
+ =?utf-8?B?RStrQTlucW5NeUtGcVM1aFZFSG9QZ29GcE9PTW9XbThSUjRuNDNYZlM2Mnl6?=
+ =?utf-8?B?QWNyamJ0a0tkMFJqV3pkOUU5KzlnQ1VVQkRJNm9QcXhaUExoaVA3ZXFTSlcr?=
+ =?utf-8?B?SXVURWN0VjdzRlh2MlVScm43b1AxWC9uc1VxNSsxRVJ5RnpCS0dPMUlqTVRO?=
+ =?utf-8?B?WG5NVElRTWdTRkNReHBPa1JVeDAwSHRGQ2FBdGpIWUIzcElHSFVJWktSQ3Z2?=
+ =?utf-8?B?cldFTlVRYmdBZHNhbEFleFlOR2xMS3dzcVJweXhqK3h2MVMraUt6T2RGeXVz?=
+ =?utf-8?B?WC9sZFo2WjVRa2h6aVVadkJFRjFmL1oxK3JUcHhoK2xJYmpxRkFUY2xGZU90?=
+ =?utf-8?B?VEJrNmhkVDJCWkh1MmdwVE1MSkFNY1hCcUNSL1VZTDk1b25WRWJkZ1c5akMy?=
+ =?utf-8?B?Y20xTzJlMmdRVjFlV3BjQ24yOEV3OFF5eEc3TWFZSFMvbnFSNS9tNVNWNTZr?=
+ =?utf-8?B?T2VlbWR4Z2R1TUptOWVPMUkvOTBENk5vaDd3UVFZZ3Q2U2hsSkdWYmdyZThx?=
+ =?utf-8?B?MDJmTGVpdGNLRWl4a2V5L1NZdUowc1F1dk1RaStzWENVYUhNTzBLbVZnbS9F?=
+ =?utf-8?B?VmtiZ2FhU1MxUE1ram5DRFlJQ3NYVThzaTVjbTlmK25iUEk1Nk5WQnZHYlQ2?=
+ =?utf-8?B?WFBxV0YzVDBHL1F6SjV1SXlVYTR0dkRnUE9XSENxZTVCTVBjejh0K3NMNTk2?=
+ =?utf-8?B?QkphdTNvOXRWVXNnR0Q1N1hWbnBHUG5TMjZ0U3pzcG14cnk5ZXVVVkVNSEZw?=
+ =?utf-8?B?NVV6bmlRN1FYT1FoQWxMNTFMU1ZLeGRJbTRKOHFFZzl5RWxEU3BrMVV2SG1u?=
+ =?utf-8?B?SWVuak5BZEVBVlJKemp6MkdBSXVFTG1MV3p2S1VKYkRWbG9YY2pLV1Fub1N1?=
+ =?utf-8?B?eGVqZm13ZDNWWStLcjhoc3djbTZYUUtseW1PcTAyaGpHQ1hCZDM1UzJVV1Bt?=
+ =?utf-8?B?ZXlkSnFVMnVZM1lzZUhWZHJ5b1dOYzV2YS9TdWROWFpXVVlwZURrNStBNU82?=
+ =?utf-8?B?a2xQZmxGVFlYODJPcVMyK0M3a0pUUEF4YlRiR0tUY2doVldNcjhIRE9Razcv?=
+ =?utf-8?B?Wlp2emJFTjBVYjI0U1NZWXo3aUxURFlVV3hEems1b3BNeTFxZFFIM2srOWIz?=
+ =?utf-8?B?OXJoUSsvRkdSQzh6N3VRS0JjYWdMTllxWFROcjdVTk11aE1GNnZmQXNmcE15?=
+ =?utf-8?B?OTFJU3prdEQxZVNOMEhrYXl2SUgzTS84U3g4QnNWSXczR3pSZndDQWU3NVlw?=
+ =?utf-8?B?ZHhsc09iUHpHM1JKRGgwTjcwa25udmk3TVRHUG80Y2V4UXVrbE0rMW9LTVNt?=
+ =?utf-8?B?Mm1xdnM5bWpGQU0rYitzTHRxc0pZbTMwWFcxb21OSDhlbjJ3SHJrM0o5UmtC?=
+ =?utf-8?B?cllqeTJ5ajMxeFRINnNpaXdxdm5GbmRqVnU5MGMwQ0k2S3dlZU5wTHFFMWxL?=
+ =?utf-8?Q?KS1wN7EaMMzSxV2r9Z7HLsV3X?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fea7bc64-b254-4474-8ae3-08dd7f7e3192
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2025 20:10:13.2347
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2ID/Ac0FCwmC+9feQiQkEQ/rKbBpGwMgjyDFtZ6iOltNIcZR/QUVmcX+53P0Cr8g4R346f2LZ3+T/nXusBoEoQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6940
 
-
-
-On 4/14/2025 1:13 PM, Dmitry Baryshkov wrote:
-> On Mon, Apr 14, 2025 at 12:58:48PM +0530, Nitin Rawat wrote:
->>
->>
->> On 4/11/2025 4:26 PM, Dmitry Baryshkov wrote:
->>> On Fri, 11 Apr 2025 at 13:42, Nitin Rawat <quic_nitirawa@quicinc.com> wrote:
->>>>
->>>>
->>>>
->>>> On 4/11/2025 1:39 AM, Dmitry Baryshkov wrote:
->>>>> On Thu, Apr 10, 2025 at 02:30:58PM +0530, Nitin Rawat wrote:
->>>>>> Simplify the qcom ufs phy driver by inlining qmp_ufs_com_init() into
->>>>>> qmp_ufs_power_on(). This change removes unnecessary function calls and
->>>>>> ensures that the initialization logic is directly within the power-on
->>>>>> routine, maintaining the same functionality.
->>>>>
->>>>> Which problem is this patch trying to solve?
->>>>
->>>> Hi Dmitry,
->>>>
->>>> As part of the patch, I simplified the code by moving qmp_ufs_com_init
->>>> inline to qmp_ufs_power_on, since qmp_ufs_power_on was merely calling
->>>> qmp_ufs_com_init. This change eliminates unnecessary function call.
->>>
->>> You again are describing what you did. Please start by stating the
->>> problem or the issue.
->>>
->>>>
->> Hi Dmitry,
->>
->> Sure, will update the commit with "problem" first in the next patchset when
->> I post.
+On Sat, Apr 19, 2025 at 07:34:16AM -1000, Tejun Heo wrote:
+> Hello, Andrea.
 > 
-> Before posting the next iteration, maybe you can respond inline? It well
-> might be that there is no problem to solve.a
+> On Sat, Apr 19, 2025 at 02:24:30PM +0200, Andrea Righi wrote:
+> > @@ -149,6 +149,7 @@ struct sched_ext_entity {
+> >  	s32			selected_cpu;
+> >  	u32			kf_mask;	/* see scx_kf_mask above */
+> >  	struct task_struct	*kf_tasks[2];	/* see SCX_CALL_OP_TASK() */
+> > +	struct rq		*locked_rq;	/* currently locked rq */
+> 
+> Can this be a percpu variable? While rq is locked, current can't switch out
+> anyway and that way we don't have to increase the size of task. Note that
+> kf_tasks[] are different in that some ops may, at least theoretically,
+> sleep.
 
-Hi Dmitry,
+Yeah, I was debating between using a percpu variable or storing it in
+current. I went with current just to stay consistent with kf_tasks.
 
-Apologies for late reply , I just realized I missed responding to your 
-comment on this patch.
-
-
-There is no functional "problem" here.
-===================================================================
-The qmp_ufs_power_on() function acts as a wrapper, solely invoking 
-qmp_ufs_com_init(). Additionally, the code within qmp_ufs_com_init() 
-does not correspond well with its name.
-
-Therefore, to enhance the readability and eliminate unnecessary function 
-call inline qmp_ufs_com_init() into qmp_ufs_power_on().
-
-There is no change to the functionality.
-==================================================================
-
-
-I agree with you that there isn't a significant issue here. If you 
-insist, I'm okay with skipping this patch. Let me know your thoughts.
-
-
-Regards,
-Nitin
-
+But you're right about not to increasing the size of the task, and as you
+pointed out, we can’t switch if the rq is locked, so a percpu variable
+should work. I’ll update that in v2.
 
 > 
->>
->> Thanks,
->> Nitin
->>
->>>> Regards,
->>>> Nitin
->>>>
->>>>
->>>>
->>>>>
->>>>>>
->>>>>> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
->>>>>> ---
->>>>>>     drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 44 ++++++++++---------------
->>>>>>     1 file changed, 18 insertions(+), 26 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->>>>>> index 12dad28cc1bd..2cc819089d71 100644
->>>>>> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->>>>>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->>>>>> @@ -1757,31 +1757,6 @@ static void qmp_ufs_init_registers(struct qmp_ufs *qmp, const struct qmp_phy_cfg
->>>>>>        qmp_ufs_init_all(qmp, &cfg->tbls_hs_b);
->>>>>>     }
->>>>>>
->>>>>> -static int qmp_ufs_com_init(struct qmp_ufs *qmp)
->>>>>> -{
->>>>>> -    const struct qmp_phy_cfg *cfg = qmp->cfg;
->>>>>> -    void __iomem *pcs = qmp->pcs;
->>>>>> -    int ret;
->>>>>> -
->>>>>> -    ret = regulator_bulk_enable(cfg->num_vregs, qmp->vregs);
->>>>>> -    if (ret) {
->>>>>> -            dev_err(qmp->dev, "failed to enable regulators, err=%d\n", ret);
->>>>>> -            return ret;
->>>>>> -    }
->>>>>> -
->>>>>> -    ret = clk_bulk_prepare_enable(qmp->num_clks, qmp->clks);
->>>>>> -    if (ret)
->>>>>> -            goto err_disable_regulators;
->>>>>> -
->>>>>> -    qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL], SW_PWRDN);
->>>>>> -
->>>>>> -    return 0;
->>>>>> -
->>>>>> -err_disable_regulators:
->>>>>> -    regulator_bulk_disable(cfg->num_vregs, qmp->vregs);
->>>>>> -
->>>>>> -    return ret;
->>>>>> -}
->>>>>>
->>>>>>     static int qmp_ufs_com_exit(struct qmp_ufs *qmp)
->>>>>>     {
->>>>>> @@ -1799,10 +1774,27 @@ static int qmp_ufs_com_exit(struct qmp_ufs *qmp)
->>>>>>     static int qmp_ufs_power_on(struct phy *phy)
->>>>>>     {
->>>>>>        struct qmp_ufs *qmp = phy_get_drvdata(phy);
->>>>>> +    const struct qmp_phy_cfg *cfg = qmp->cfg;
->>>>>> +    void __iomem *pcs = qmp->pcs;
->>>>>>        int ret;
->>>>>> +
->>>>>>        dev_vdbg(qmp->dev, "Initializing QMP phy\n");
->>>>>>
->>>>>> -    ret = qmp_ufs_com_init(qmp);
->>>>>> +    ret = regulator_bulk_enable(cfg->num_vregs, qmp->vregs);
->>>>>> +    if (ret) {
->>>>>> +            dev_err(qmp->dev, "failed to enable regulators, err=%d\n", ret);
->>>>>> +            return ret;
->>>>>> +    }
->>>>>> +
->>>>>> +    ret = clk_bulk_prepare_enable(qmp->num_clks, qmp->clks);
->>>>>> +    if (ret)
->>>>>> +            goto err_disable_regulators;
->>>>>> +
->>>>>> +    qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL], SW_PWRDN);
->>>>>> +    return 0;
->>>>>> +
->>>>>> +err_disable_regulators:
->>>>>> +    regulator_bulk_disable(cfg->num_vregs, qmp->vregs);
->>>>>>        return ret;
->>>>>>     }
->>>>>>
->>>>>> --
->>>>>> 2.48.1
->>>>>>
->>>>>
->>>>
->>>
->>>
->>
->>
->> -- 
->> linux-phy mailing list
->> linux-phy@lists.infradead.org
->> https://lists.infradead.org/mailman/listinfo/linux-phy
+> > +static inline void update_locked_rq(struct rq *rq)
+> > +{
+> > +	/*
+> > +	 * Check whether @rq is actually locked. This can help expose bugs
+> > +	 * or incorrect assumptions about the context in which a kfunc or
+> > +	 * callback is executed.
+> > +	 */
+> > +	if (rq)
+> > +		lockdep_assert_rq_held(rq);
+> > +	current->scx.locked_rq = rq;
+> > +	barrier();
 > 
+> As these conditions are program-order checks on the local CPU, I don't think
+> any barrier is necessary.
 
+Right, these are local CPU access only, I'll drop the barrier.
+
+Thanks,
+-Andrea
