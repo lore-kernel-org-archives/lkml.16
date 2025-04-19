@@ -1,154 +1,343 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEE7136E;
-	Sat, 19 Apr 2025 05:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745039539; cv=none; b=Ll3UUcD8jd+wIovdpnIVEQGc/JlfWCPpgViIH0nnJOcZjn9+jXerdkd8CxYedOEuT6EvyrkelefBk7xx6YxOfRwtzxTT5YFRNGdPu/F/R86n8bXpHIheK/+vXXqOxnBC6Z9xcKPWI/sxS+VfFjFJMza8qSuwkQEimuBiLSYRaQU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745039539; c=relaxed/simple;
-	bh=AlEY4zKhmRNDt20P9Xp6i5Nd73YvPO7VbqqVtJST+RY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=odjmst6OhLRhNS1DPgohgn0pmI9J3EAOPWYbpLR+7mnHs4aapQVcAzPDGSrYlpr4XqzMESGUKJuk/uGnVe7MqqbtWFBu94gK6mivlp8o912JBDZ7lNFOtZG2E3sUTYBgzSiC5drC/u5Q1pJa2IrRU3T/sTPBb9rWR3YFMVIo1aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T6903dHy; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AE63594F
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745039681; cv=fail; b=VZtxzlhwONaABpmT4yRlYR4que3dzazi0lgjh3MABHwXqm+qY0WAhAFaSdRySsOzce+9ASSygi8B+PM58i988xxb+hGrRTyY/Waaq2mf/e6dEQLIqO5fUzHEeRZ5w2c5XC7Yv16U/vQFjZ52FON1FFNrDkfmLbZoAaaSvCp5i0Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745039681; c=relaxed/simple;
+	bh=fY+6cYDrOGt1EoXi2VRUIzoMQVYoNvIYSJUb8gUDuAg=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=g4ZTvOyUm691ErrPXU0viwao0UP0qyjC6QFl7yScmlAaY3VRcqliR/3FR1BWH+WrP4NGPezyUqUm05/Y8Ag54pz1gzwH38HHk4kyJW5d8XpcxaSVAyiyLl7Cf3z8oOC1vZ656PwCFBMFIojZs6yGM6n/iNbtZCePaqzjc8ns70g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TIzpQndM; arc=fail smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T6903dHy"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so25223235e9.1;
-        Fri, 18 Apr 2025 22:12:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745039536; x=1745644336; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dWXhDw052JqSwc2DEiWR3CaVZdUZyR9wDp3GTxz2iYM=;
-        b=T6903dHyoI8e/rd5EPeep42RKoYdI8DzYFXk47sOvp9XHkcph1GwXIXlDGzRwDG89o
-         J4Yjz6ebtn+xG3jzH/tActkz7F+1ecXspzaoTu6NKk7ivhGDhEJ7MFrdzqRo1qT08ijp
-         GmHq8yLJrdj5RjnB5WYS+NHXAwyEmivQju0eMHaWierocsAcK+Cyi5MLZZFiII/kENU5
-         8CeRxLwCNUTdar2aANxVcNJ78Bedtcppbg+xDErjpRT/IjNWTpxmoVAJE2kqMWXvEUcA
-         4ZBpli7jtcJwb7qbebDRl14HZG1ihju2Wo3Uz5/uF9S8nj1BSPbKmmEt4TGbrkTktVTv
-         jrwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745039536; x=1745644336;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dWXhDw052JqSwc2DEiWR3CaVZdUZyR9wDp3GTxz2iYM=;
-        b=eVcSIBuNlrJkE4VtQgX4Cy20Ba0kxid8mUFMW04L+mpEpjSZbeaWG84mm8usGNq1Bk
-         cpsdXUPn7x1exJfSuz5TXGzsSNbNDELAI8fU8KLGqpM/t+WCBLskHNx2Z/VKJhc3NglI
-         2AmfpmXygdKFx24AESZaWUI3nVxcgQln0PVjHZ29Yksh8YvpiNt8kqOpFM1c9XuA6Q2m
-         TGrsVfxymq9EpFaOU8/6bvd+x2AryKyFVzHwP6MU/sMFSnf59MSBXeZXi8vviQ1PWfo9
-         2LQM8mBGaGjdlO2pu26LrZQk9DtWGMeF/HTHDHTmeorVc60q5fqGOyms+PoN5oDI9PMy
-         RwGw==
-X-Forwarded-Encrypted: i=1; AJvYcCUdOX9/AWUMbSLvN+AMCGwYGKA5290XZLIWg286l1zNJfeW9R21/lt+QRj3x0BqimSXdJtB9ZsEqmq3TrrFhIM=@vger.kernel.org, AJvYcCX74JYDR1IEGdvLfNyq1UnJGiwlyayWnnLqjy0TvTEuAQ2r6aqasOUPml0TYeQzhI9G5c+rQFn7MoB/KsI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZMNptRsgaXkDMjdAWZKUDhHwc6eOQnBz1WpVr0o8Ci0alPn3d
-	/VHjRfUtOKxsu9vY8kRYbcSDu2+7ncOw4kPxMzrs1AEiHNZYnzBp
-X-Gm-Gg: ASbGncvEPXa3UnQ91p796Ykt5fZPzOooVY//dcRPaz51SKMfoIJK8xu41bO1ME3poYS
-	yY9sYFaKcoJpqY0wchZ5QOSG0f+aOJTCvQnIPTBVob5VflAyNvb84RxiPVi1notImeNKHFhPqBK
-	0jYkrsCEVmLJJX9TLVMiGwdGVFH5tNdayvh0y3yCUz+AATpU6lB1pKsuLBR1aNTwRFqCBv9+Os0
-	+xa16fV2FuWRWgg7V0wmZTAzYM2S1ZDrsVFThAOJyKluEMDS1lh1+XBO5/A08VNAAq2Z1AtzY51
-	+7QaPYsMq00ANCTNJGJbFBgFF9GdpHp7XgNlJ12EyVgD8uvO3o/FAZTDDLDFhfIxrB0FSbeNkUZ
-	IdPqQ
-X-Google-Smtp-Source: AGHT+IF0DV0PcqkPAMgHSHJ/AFOSOa8OeTQRkmET5HDuCcPTUUq6yyc8/DRGg/vAcFHczFOzZXzsSQ==
-X-Received: by 2002:a05:600c:1c9d:b0:43c:fb95:c76f with SMTP id 5b1f17b1804b1-4406ab93151mr44342075e9.9.1745039535907;
-        Fri, 18 Apr 2025 22:12:15 -0700 (PDT)
-Received: from localhost (cpc1-brnt4-2-0-cust862.4-2.cable.virginm.net. [86.9.131.95])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5bbd7fsm45920605e9.21.2025.04.18.22.12.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 22:12:14 -0700 (PDT)
-Date: Sat, 19 Apr 2025 06:12:14 +0100
-From: Stafford Horne <shorne@gmail.com>
-To: Sahil Siddiq <icegambit91@gmail.com>
-Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
-	sahilcdq@proton.me, linux-openrisc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] openrisc: Fix build warning in cache.c
-Message-ID: <aAMwri9RK2oNuC_p@antec>
-References: <20250401200129.287769-1-sahilcdq@proton.me>
- <Z-6VyRhGdInVidsw@antec>
- <af85b465-13e5-44e5-a0af-c7c68af7d43e@gmail.com>
- <aAIDfcZ4XD5f6mA4@antec>
- <f6f4f410-4a0a-4ce3-bf41-413af39fd50e@gmail.com>
- <aAIivK7NDG-6_aIU@antec>
- <64beb3b4-a8fa-4acd-a139-6c19de0e37f4@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TIzpQndM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745039680; x=1776575680;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=fY+6cYDrOGt1EoXi2VRUIzoMQVYoNvIYSJUb8gUDuAg=;
+  b=TIzpQndMkgz446mv9S4tY+2b/yFF87puPlvuLC6Aey4psN4bvV5pGf2W
+   tJoOoE2s3QY5ROvNpapdn7Wnh6cezSJg9aqNHD0WJGpsmOaAgQ5neU8AE
+   ClbF+e3d2fqEFVj1/IcXXWUwXk9Zm83p7fp/udslCXxLU/e9Z4ktkk4Cy
+   V6IapCzl3pIBgdVOfDBOOvV/nDPOvz3d4DzHMIcVyIL9IQDLKJ/Ne9jvM
+   TzEXySPOsPVxjNjdW7YbGu3301BbcMbI7w/Fn0xqVX6ekIaxDwrVIoUI2
+   oHnUUvXp70jdnlq6JLrsgmnEm8f//u6T6/Qfjs8X7Avs84oEfVesQDvG8
+   w==;
+X-CSE-ConnectionGUID: 9mgAQARAT0mBUOVOqPWQGQ==
+X-CSE-MsgGUID: nz7hGgNXS06aQDliyAZWJg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="64198225"
+X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
+   d="scan'208";a="64198225"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 22:14:39 -0700
+X-CSE-ConnectionGUID: AAwKokBwRIGYjdcAnUerKQ==
+X-CSE-MsgGUID: pbvXCnnvQq2ThKZxAy4Wxg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
+   d="scan'208";a="162230793"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 22:14:39 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Fri, 18 Apr 2025 22:14:38 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Fri, 18 Apr 2025 22:14:38 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.171)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Fri, 18 Apr 2025 22:14:37 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=C2bEg/VFGFPu9O2D1leEfgQiHMF0ghvOBUbFgbQxZIlJCQMpOOU1iP+ZoNak9JigFS0biGxnLkNt6y4HYbLo35LSXr3zRnNIdM6Jcy0yTbKUvHKArhmEQDbx9Qbl5utKFtnCxoWMhzMCwsuaRI8LUGUtRQEti6f+p4bkd14hC+NwVqxtHIhsEVRdtJIM19eUKoqawfWB9RT/qJrzftzTA1ZrZr5xwuG2gGY/e04LlsxE0JQEmUkoauOlVxifXtXUWpv6jPl2V3oUOoscXXFWiQri7glXNktiisYZtxjIMcJDL6awbwkYrCrfunYdjTTrCnFjvROFPgNYKBJ9YRcUgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jQVmvwKVB2gbSa00YP/w1b+n0Utb1bAOkH2Ftn+kWV8=;
+ b=Zc5lFw8lMtB9ujfe51WOz9blQ0DE67CToUstjTGCQn+e6Y3FevJiWnr8H0ykSErIdYfvGI0qbk39HqBu4/9Pkg314dkf2iWrqRT/R0SizpNoKwyAEi8UIiwojSYHPSRuFyFTvCSNyO11MfKlqMQ6i6VpF8Sq/ZR5Ip7GYH0noaj8wOgMduBWVHQbuJn48JZkk0lIZPOSOa4u+3kHhSp6FvB9KlYyI797QuWJDhBLXyYkOO7fqfqNZjKMkyVzGlQq7eh/BGuqqMUQ7K1kOKiBBTTiz/ymi3usy3XXAejKE6Qa9WCZ5HcW6glSceqq5DoTZdNGduC6i3HrBhOWI/34kA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by PH7PR11MB7003.namprd11.prod.outlook.com (2603:10b6:510:20a::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Sat, 19 Apr
+ 2025 05:14:35 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8632.030; Sat, 19 Apr 2025
+ 05:14:34 +0000
+Message-ID: <fba9db1e-4840-432e-87ff-12819381ff41@intel.com>
+Date: Fri, 18 Apr 2025 22:14:33 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 19/26] x86/resctrl: Sanity check telemetry RMID values
+To: Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghuay@nvidia.com>, "Maciej
+ Wieczor-Retman" <maciej.wieczor-retman@intel.com>, Peter Newman
+	<peternewman@google.com>, James Morse <james.morse@arm.com>, Babu Moger
+	<babu.moger@amd.com>, Drew Fustini <dfustini@baylibre.com>, Dave Martin
+	<Dave.Martin@arm.com>, Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>
+CC: <linux-kernel@vger.kernel.org>, <patches@lists.linux.dev>
+References: <20250407234032.241215-1-tony.luck@intel.com>
+ <20250407234032.241215-20-tony.luck@intel.com>
+Content-Language: en-US
+From: Reinette Chatre <reinette.chatre@intel.com>
+In-Reply-To: <20250407234032.241215-20-tony.luck@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4PR03CA0033.namprd03.prod.outlook.com
+ (2603:10b6:303:8e::8) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <64beb3b4-a8fa-4acd-a139-6c19de0e37f4@gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|PH7PR11MB7003:EE_
+X-MS-Office365-Filtering-Correlation-Id: b94eb918-d612-443a-69a9-08dd7f0112eb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?NWd3dVF6c0JKcTlXejVjbnR2UG1rbExoMjhNeGphZnlwSWlRMzVZYU12WGNP?=
+ =?utf-8?B?czIvZlFNczBIU0c2WklrNVZYV2w5aTVFSUpYakV3ZFBiK1BrTmtidjVHa2VQ?=
+ =?utf-8?B?anpCdDVjZ0ZwY014VGFUK2c5NHB1WVhNZlVxMFB1YjZES1dPVGtXcWZWTkQz?=
+ =?utf-8?B?WGFhbnQ0V1QveTZVaVEzb2ppak91SGVkdWJSZGdpR0p6bW1aeHJHMndOd1JV?=
+ =?utf-8?B?QUJVbkM4c2Z3NC92UlRIZEZ4TERXYTJHcmtKQzRpVHlPVHlOSDlTTWQzajBx?=
+ =?utf-8?B?ajJJM21FRVBqMDBobDQ5TnkzYVdaUEJJb3J5U29ob2dGd1JjWjJpZWlVSWdI?=
+ =?utf-8?B?S25HVHBlWUNTRERzMWpNNE9QdmhLL2loeisxenlZUTRDazhsNDEwRGdINmht?=
+ =?utf-8?B?VlpZS1pUbk4wYVJBWHBzUmc5Q1hNTWUyMHlIZzg3WkFZcmxCOGdvbWVoU1Jm?=
+ =?utf-8?B?Nk0xZDJQVXRZb0ZOOExWWGgrZ1IwYWU0SklVVDB5QXd1K3VRMW56ZGQwYUxr?=
+ =?utf-8?B?MDZvdm5zVHhjYjloZVJTK0hWeGwyMEdXQVJNM28vZXFHdjFNMG9uVnRzc1FU?=
+ =?utf-8?B?cHpFcU52Z0xZTGFxbE9GRkNwMnVLSmNPWXM4c3JoQ2dYS3dud3JFOG1HZTBo?=
+ =?utf-8?B?ZjF4SFVuY21MRjUxWGhLdUlLc3EvaWd0ZUNsSWd6L1Y5Q2JCckFqTWROaVdk?=
+ =?utf-8?B?TzhBSG9SM1hmaVA1Y0VvRzVMMWtENFVSRUZHNW5HaklncmMzR3g2MTdEYkdN?=
+ =?utf-8?B?TThCV3hVQ3ZrUXpKSmlIeTVqNmxkRmtqaStuUVMvMDBNeGhaMnliSTlBWGNC?=
+ =?utf-8?B?T0FMcDVkTml6YWhCb2JZUFpVSVRGSUhVeG1PUHFVNS9pdjdCRnFPakRSMlpx?=
+ =?utf-8?B?b2NoNnhvMHhZdTlCdHIwdWJnazhSUUhFNEdKdGRDNk9SZDVoU2VFQm9EUmd4?=
+ =?utf-8?B?LzVOeFlDMkFPN01xNjF2SkNUYXBFNVRyeDI1SDdTUVdSRjIxamR3U2NoSGRU?=
+ =?utf-8?B?K0ZINnRYbmtTS0J1VEhlMFMybU5CWlBqdmFaaGhLNWNPVWd3NlBESmNyMGpo?=
+ =?utf-8?B?aU44ODdzS0NzQ0ZQK3dvZTJ3K2s0cnVPTkpaSXNvUUI2ZDRUOFEyS0dxSS9Y?=
+ =?utf-8?B?bG9UOXlEcGNpN3M1cFhYNWpoeFNDK1hYeUtEYXAvWjFGTVlrdjlZZEt0NWZk?=
+ =?utf-8?B?dmVzYnN5VG9VQ3pFYlNXYmVjbktENk1nTWFGaVdGTld6UnVWc0M0MTc4Q29V?=
+ =?utf-8?B?WlgrcWxLUmpaTVR4eE9xQk5EZ1VFYWxzbHkwbjFOOW91eHNOdGRLc0hVTldB?=
+ =?utf-8?B?RTllUmNKSmozd2huOWZoY0RucmV4TjF4TnlWL3V3UlNNcjZxcGIyRm9jSXZ5?=
+ =?utf-8?B?Z3hJNWgrY3ZCMEp0RytOS052MkpzbmtjVXpzd1NVQ1Zwblh3YmdZRlphSTVN?=
+ =?utf-8?B?czZjZnBaMkVxUE9BcHhnVGl6bFVPMXpDUXBDWXVSS2VwY1Azbm4xWHpOWUdn?=
+ =?utf-8?B?MDBDWFFwKytaL2dDUGFPWmNINGVKNWljRW1JSFFib1ZlYS80aGcwRStuN3Fq?=
+ =?utf-8?B?MFJnU3d1U2I2MU5GZUhXNjcvY2xMYWJ3Nk1JUlhleVkxME01dlBFNXdLV0g4?=
+ =?utf-8?B?R0VWK3lRUlBTRlBLUHNUUGRHa055bjNBTXlzK2xtSlIvYU1mM3FKaEE5cU1m?=
+ =?utf-8?B?bnlQVUYwWFJiT0pmNE96dU9GRkVaWlZtbEJDMnZGb2NoaFVPU1hrOE0xRUxE?=
+ =?utf-8?B?cUwwSHFwYnRncEdmT0p5b1ZOV3FGYkRRRlY3UkZ2d2tiZjdKKzNkVlA3UGdq?=
+ =?utf-8?B?QnRhTG02OHZxNGw3RmY0NzdiYW1Nb1FIWEVWOWo2WGtpQVowUTdsUGxrajVW?=
+ =?utf-8?B?bm1PbFYxblV4MktydjJxQURGU1o0ZU9qSVVUQ3dXYUNqdWtwZkxKRGl6ZW1M?=
+ =?utf-8?Q?B7CpneHf4JY=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dkVnejZFMFR4cnR5WVgxVGtURnhCQXR2eG0rU0RmRTlmNjdNK1RTcjBkV2VT?=
+ =?utf-8?B?K3dDMHBXa3VOd29MMlJhblJKT3VjNzF2T2ptZEVmRG4vVy9OaVlLNjlGMUl1?=
+ =?utf-8?B?N3Q5MGNQdE8yVGhxaXBmZmpHSTJiajJVMWRCSzZqaTYyTDNJWmJhY2xrSFZm?=
+ =?utf-8?B?NHd5aW5NYlFmVng4TTZDTFVDeTFncUhlVkVScTRKNEtUbyszeEFSNGgwZ3pT?=
+ =?utf-8?B?eTJDL1JDL2U1dytzSFEyRk9TUU9Oc3BFV0cvMlBKa2VaRHdScnlYbG0xSGk3?=
+ =?utf-8?B?SFBtTHRQYzVwOXpBNXN5dGZpZ0NyNzA2ejRmM2t5bDB3b21lblFIdE8ybm90?=
+ =?utf-8?B?SFJ3dFpLRXdhbjZjWjBsTmNKajhtSlIxcHB1TjZLamJxT3NiNWM2WWxmdnFQ?=
+ =?utf-8?B?OHhwQm96bllzSkRWbG5pVms3WkxvdXFkVTZZZ2dyNjdMc0tmOHlPdVJpQ1dQ?=
+ =?utf-8?B?TGZuMGFTcEo1SWkrbVMwMFVOTStGRmZTdXpjRk1kaDlLVlpudEh5RzJURU1a?=
+ =?utf-8?B?bm9nckhUMXF2eXpGQmRwRnN1ZFhpcUF5WWFmOC80UFMwZlpOeFBZWUgrcFkw?=
+ =?utf-8?B?elRoaVUxYkJVQVBMUG9YV0FDbHJabnV5Umg4WWJLSFFwSHFxWS9zajRWL0cx?=
+ =?utf-8?B?TVhJdkpIMzNKc3A4K3cwa1d2U1VQM0NnS1F5K1lvKzY1VHkyMTVxNUZtemFy?=
+ =?utf-8?B?SlRvVVR2MXcxK1kwcHFvNUhTY1JGR3ZGdlpXTmtOckpYcEUrSFlQdkNPYmdn?=
+ =?utf-8?B?NHJGQy9aczBxM29hMC9uWXZkT3l4NlN5MVhuclF6K0dWS2tvakVSSUN0dGli?=
+ =?utf-8?B?aURmN0RkUFZZcisyWG9naFZrWU9WTXgzMlpwUzc2M1ViODNwa0FzbnV6YzlL?=
+ =?utf-8?B?NEIvYnBGYk5LVzFjVitoaWRteHBpWDB5N0tUV2JaMEtJejFkLzkza2ZkeUsy?=
+ =?utf-8?B?TFJEanVvK2U0S2FVZFIyaHNockxyMEx1cGt4VTJLM2NjSU9FYm03eDZySW1j?=
+ =?utf-8?B?RWplUXpVUlM5d0NFVlJRZEw4bzZpUXkvNGw0WHdrQjFiVzcvejZ2SEVtdmVK?=
+ =?utf-8?B?OUJBK2lteno3SitXQzhZaWpoa0dGWlMvUWk4d0xzSnprK3lTdm9DSHdYaVRM?=
+ =?utf-8?B?MFByUkRrZ1B1ZjYxazF2WGdzN1djSTBlOTZySzNnSktHUTNOSm1SSjNWM1Zz?=
+ =?utf-8?B?WXREYUFvMitjMjV4QW42Q3UwcW5ibHBIZGU1OTl4TTFRQm92V1lWUlB2MG1Z?=
+ =?utf-8?B?M0IxWmlVOHZwNWpSd0JORHl6ZmdUUlNScE9qYm1JTkFNbnRvSUJqckM1S1ds?=
+ =?utf-8?B?enIweVpKY2loWGFPZ09yTDJUckN1QkRuSUpGeFVtbGQ4eDZHNE9aalVJa3RX?=
+ =?utf-8?B?clczQ0xzeW4xNm4wS1pncW91aEdhMm9oZEwyWmpVU3NvUjZGU0hMWmwwRTli?=
+ =?utf-8?B?d3JkbEpuUTczN1oxZWhHRnl1UXlqZHZPN2U5T0lnNUJpakUxKzBvamZ3Rkd4?=
+ =?utf-8?B?V2FPN2tFdUx4dlI0SGhLU0tKc1hiK0ZUSklnVVBrZmpRU2dUeHc0K0ZjYWI1?=
+ =?utf-8?B?QUVQdW04N3F3cXRtYnd4bmdVWWg2bzNlSWNhNDZST01LWUY2Wkt4b0F6Wkt3?=
+ =?utf-8?B?bVRCbm43RmJOd1g3cHJDUk1iOW8yUXJ4WmRxV0Fsa3lrVVlJSFZoMlRZcnpR?=
+ =?utf-8?B?THRBc0VQVkJleWdTWFZVTTF5RTlZNHh5NmlQTStxMHYzRnBvdkt0a3g5SUdz?=
+ =?utf-8?B?dXNFV0d5bXc1TU1FS2I1TTNIbWFpNW5VbHFGa3FKUTFRdXZnZWpuc216Vnlo?=
+ =?utf-8?B?QzUzZjZIYk1qVEcvMTlEbnhuYTltRGxOSXM4R2lISTgraW9LcllhVjlSVlZh?=
+ =?utf-8?B?OWRaV1ZnbmFuaHArOGs1T2JnQmd3SFpDcDVJVlcxclRaakRnNFNYZVlGdFRD?=
+ =?utf-8?B?eXFKTEdGcGNDTFJxY2tsRi9tRkxVV0FIanhsZWNBS21hUGNwWjU1S0dWNHRt?=
+ =?utf-8?B?WFhoYkx0d0xJZFo5VW13MGhPRnhUenN4dEhtNnk4eWs3Wm9YVEE2U0MzMmZD?=
+ =?utf-8?B?Z3NzKzN4VStKSjRnUUZCTWFQNlpYZE5Ha1I5dTdLSEE3R2xjM0tRa2hvSzBw?=
+ =?utf-8?B?QWZDdDU3ZUU1cUoxU25VK3ZyTjlab1d1U0s4QkFncE1tMTNxU0RreCtSL2tV?=
+ =?utf-8?B?OEE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b94eb918-d612-443a-69a9-08dd7f0112eb
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2025 05:14:34.7101
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qMGC9Z4o0EJTrw/WKje2P7NHktePfMo8qsV9BufCGB9/Tmzg7Asd49vj8USvyT3xzk9St88ShNO8HHMONhxBerE6OeWzA4qTzCv950EzsR0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7003
+X-OriginatorOrg: intel.com
 
-On Fri, Apr 18, 2025 at 06:04:29PM +0530, Sahil Siddiq wrote:
-> Hi,
-> 
-> On 4/18/25 3:30 PM, Stafford Horne wrote:
-> > On Fri, Apr 18, 2025 at 02:42:20PM +0530, Sahil Siddiq wrote:
-> > > On 4/18/25 1:17 PM, Stafford Horne wrote:
-> > > > On Fri, Apr 04, 2025 at 10:39:22AM +0530, Sahil Siddiq wrote:
-> > > > [...]
-> > > > I was working on getting this patches ready for upstreaming and noticed one
-> > > > thing:
-> > > > 
-> > > >       ---------------------------------------------------------------------------------------
-> > > >       ./patches/or1k-20250418/0001-openrisc-Refactor-struct-cpuinfo_or1k-to-reduce-dupl.patch
-> > > >       ---------------------------------------------------------------------------------------
-> > > >       WARNING: From:/Signed-off-by: email address mismatch: 'From: Sahil Siddiq <icegambit91@gmail.com>' != 'Signed-off-by: Sahil Siddiq <sahilcdq@proton.me>'
-> > > > 
-> > > >       total: 0 errors, 1 warnings, 102 lines checked
-> > > > 
-> > > > As you can see above the scripts/checkpatch.pl is failing with the warning
-> > > > about your email and signed-off-by not matching.  You can see more about it
-> > > > in the FROM_SIGN_OFF_MISMATCH section of the checkpatch[0] docs.
-> > > 
-> > > Ok, this makes sense. I configured git-send-email to use gmail because
-> > > protonmail does not work with git-send-email without a paid account.
-> > > 
-> > > > How would you like to resolve this?
-> > > 
-> > > Is this a warning that cannot be ignored? I can:
-> > > 
-> > > 1. submit the patch series with another email address that won't have issues
-> > >     with git-send-email, or
-> > > 2. submit the patch series using protonmail's web client (which might not be
-> > >     the best option).
-> > > 
-> > > I would prefer not to use "icegambit91" in the signed-off-by tag.
-> > > 
-> > > What are your thoughts on this?
-> > 
-> > I could rewrite the from header to match sahilcdq@proton.me.
-> > 
-> > But if I do that you should find a way to get proton.me to work with
-> > gi-send-email [0] for future commits.  It seems this can work using the
-> > Protonmail Bridge[1], though this site also says proton.me is not so good for
-> > using with git send email.
-> 
-> Right. Also, protonmail bridge requires a paid proton account.
-> 
-> > Maybe using another email in signed-off-by would be better.  The current
-> > patches are on linux-next[2] where we can see the From/Signed-off-by mismatch.
-> > For example:
-> > 
-> >      author	Sahil Siddiq <icegambit91@gmail.com>	2025-03-29 15:16:22 +0530
-> >      committer	Stafford Horne <shorne@gmail.com>	2025-03-29 10:22:21 +0000
-> >      commit	af83ece87a1ef5097434b7c3c1fc0e9e7b83b192 (patch)
-> > 
-> >      ...
-> > 
-> >      Signed-off-by: Sahil Siddiq <sahilcdq@proton.me>
-> >      Signed-off-by: Stafford Horne <shorne@gmail.com>
-> > 
-> 
-> I agree. I have another email id (sahilcdq0@gmail.com). I can configure git
-> to use this and this can also be used in the signed-off-by tag. So, this id
-> shouldn't cause an issue.
-> 
-> Let me know if I should send the series using this email id.
+Hi Tony,
 
-Yes, please do this.
+On 4/7/25 4:40 PM, Tony Luck wrote:
+> There are three values of interest:
+> 1) The number of RMIDs supported by the CPU core. This is enumerated by
+>    CPUID leaf 0xF. Linux saves the value in boot_cpu_data.x86_cache_max_rmid.
+> 2) The number of counter registers in each telemetry region. This is
+>    described in the XML file for the region. Linux hard codes it into
+>    the struct telem_entry..num_rmids field.
 
--Stafford
+Syntax telem_entry::num_rmids can be used for a member.
+
+> 3) The maximum number of RMIDs that can be tracked simultaneously for
+>    a telemetry region. This is provided in the structures received from
+>    the intel_pmt_get_regions_by_feature() calls.
+
+Is (2) and (3) not required to be the same? If not, how does resctrl know
+which counter/RMID is being tracked?
+
+> 
+> Print appropriate warnings if these values do not match.
+
+As mentioned in cover letter I do not think that just printing a warning
+is sufficient. It really becomes a trial-and-error guessing game for user
+space to know which monitor group supports telemetry events.
+
+> 
+> TODO: Need a better UI. The number of implemented counters can be
+> different per telemetry region.
+> 
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> ---
+>  arch/x86/kernel/cpu/resctrl/intel_aet.c | 31 +++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/resctrl/intel_aet.c b/arch/x86/kernel/cpu/resctrl/intel_aet.c
+> index 67a1245858dc..0bcbac326bee 100644
+> --- a/arch/x86/kernel/cpu/resctrl/intel_aet.c
+> +++ b/arch/x86/kernel/cpu/resctrl/intel_aet.c
+> @@ -13,6 +13,7 @@
+>  
+>  #include <linux/cpu.h>
+>  #include <linux/cleanup.h>
+> +#include <linux/minmax.h>
+
+Please sort includes alphabetically.
+
+>  #include "fake_intel_aet_features.h"
+>  #include <linux/intel_vsec.h>
+>  #include <linux/resctrl.h>
+> @@ -51,6 +52,7 @@ struct pmt_event {
+>   * @last_overflow_tstamp_off:	Offset of overflow timestamp
+>   * @last_update_tstamp_off:	Offset of last update timestamp
+>   * @active:			Marks this group as active on this system
+> + * @rmid_warned:		Set to stop multiple rmid sanity warnings
+
+rmid -> RMID. 
+
+I find the description unclear on how to interact with this member. How about
+something like:
+	True if user space have been warned about number of RMIDs used by
+	different resources not matching.
+
+>   * @num_events:			Size of @evts array
+>   * @evts:			Telemetry events in this group
+>   */
+> @@ -63,6 +65,7 @@ struct telem_entry {
+>  	int	last_overflow_tstamp_off;
+>  	int	last_update_tstamp_off;
+>  	bool	active;
+> +	bool	rmid_warned;
+>  	int	num_events;
+>  	struct pmt_event evts[];
+>  };
+> @@ -84,6 +87,33 @@ static struct telem_entry *telem_entry[] = {
+>  	NULL
+>  };
+>  
+> +static void rmid_sanity_check(struct telemetry_region *tr, struct telem_entry *tentry)
+> +{
+> +	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_PERF_PKG].r_resctrl;
+> +	int system_rmids = boot_cpu_data.x86_cache_max_rmid + 1;
+
+It is not clear what "system_rmids" should represent here. Is it, as changelog states,
+maximum supported by CPU core, or is it maximum supported by L3 resource, which is the
+maximum number of monitor groups that can be created.
+
+We see in rdt_get_mon_l3_config() that:
+	r->num_rmid = (boot_cpu_data.x86_cache_max_rmid + 1) / snc_nodes_per_l3_cache;
+
+This makes me wonder how this feature behaves on SNC systems?
+
+> +
+> +	if (tentry->rmid_warned)
+> +		return;
+> +
+> +	if (tentry->num_rmids != system_rmids) {
+> +		pr_info("Telemetry region %s has %d RMIDs system supports %d\n",
+
+Is pr_info() intended to be pr_warn()?
+The message self could do with a comma?
+
+> +			tentry->name, tentry->num_rmids, system_rmids);
+> +		tentry->rmid_warned = true;
+> +	}
+
+Could you please add comments about consequences of when this is encountered?
+
+> +
+> +	if (tr->num_rmids < tentry->num_rmids) {
+> +		pr_info("Telemetry region %s only supports %d simultaneous RMIDS\n",
+> +			tentry->name, tr->num_rmids);
+> +		tentry->rmid_warned = true;
+> +	}
+
+I am still trying to get used to all the data structures. From what I can tell, the
+offset of counter is obtained from struct telem_entry. If struct telem_entry thus
+thinks there are more RMIDs than what the region supports, would this not cause
+memory reads to exceed what region supports?
+
+Could you please add comments about consequences of when this is encountered?
+
+> +
+> +	/* info/PKG_PERF_MON/num_rmids reports number of guaranteed counters */
+> +	if (!r->num_rmid)
+> +		r->num_rmid = tr->num_rmids;
+> +	else
+> +		r->num_rmid = min((u32)r->num_rmid, tr->num_rmids);
+> +}
+
+As I mentioned in response to previous version it may be possible to move
+resctrl_mon_resource_init() to rdt_get_tree() to be done after these RMID
+counts are discovered. When doing so it is possible to size the available
+RMIDs used on system to be supported by all resources.
+
+> +
+>  /*
+>   * Scan a feature group looking for guids recognized
+>   * and update the per-package counts of known groups.
+> @@ -109,6 +139,7 @@ static bool count_events(struct pkg_info *pkg, int max_pkgs, struct pmt_feature_
+>  					pr_warn_once("MMIO region for guid 0x%x too small\n", tr->guid);
+>  					continue;
+>  				}
+> +				rmid_sanity_check(tr, *tentry);
+>  				found = true;
+>  				(*tentry)->active = true;
+>  				pkg[tr->plat_info.package_id].count++;
+
+Reinette
