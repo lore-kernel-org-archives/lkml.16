@@ -1,73 +1,30 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7541F956
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 02:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27EF454654;
+	Sat, 19 Apr 2025 02:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745028409; cv=none; b=AETGEYf0mfcsebHINfZV1LvbvA70W8lBJbZ1oK030zh+er4wEz9daHLHw4WFciM/64uqX0QRdlow4VipFeeaSkKhEGpJYmbm0l5DsHR+sMJSX/i4Lu1Q7GvIs3IRP+hSkY0MCaqKhj+gmlbUIMJdCxk9i9+J532HM5zQVaDXc4g=
+	t=1745029521; cv=none; b=mBEset6AzC1HpZilLUMAatrw2HvAc3TAAi0Kl/40b5j4S2TZV64tHa1ehUaYiQcPXQ9eFcyVc+6AoNxG8G30n4BQHfgi9MDj6C9rXyx1q5IsSa7P0bPNg64+EJvYsMdNA3f2aFURaWDpZbbFxJKU1n/L/RMJBFPl8Iz9XciRdOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745028409; c=relaxed/simple;
-	bh=J8edkT/dlhLbGssrkoyx6Tobg+gIJo+zAqjLwecFDA4=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=bbkw6A58S/4XDsmnNFYunctHyqx65Zp+2a9uohTuxTHwPIdZFMM27TqH1WoTK9uwYfd2x3Tn5G3JxjkfHCes5Kfh2pmWpfddH/sUCtzN/y5woz1tamncfRpN9yYeeuwo5H455B72nC+l0oRHKgEK1u+gYiFOe+LuOBqQWhccpx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y14edkmc; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y14edkmc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745028405;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Fg5jTz0E8wfSFW3z1gz+claCWc6uoPxGD1UaNbxQo8M=;
-	b=Y14edkmcvISSCIxXaciN3kcDGQz+/Ji5+Q4q9CCHCsb+K5IlRvvzyd4Fjn8194qM4SxeKt
-	NUoaPGET8qiwSftktsKJIK3OP4z8tQQaE2bPHod/j6caLbGFhwxwC+jC9nQhVUWQwDUepu
-	7RX+2Z1o3iTikM+Z6YmigRZtovESESY=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-575-uXQNRMLdP0eEYxrpxRtOlA-1; Fri, 18 Apr 2025 22:06:44 -0400
-X-MC-Unique: uXQNRMLdP0eEYxrpxRtOlA-1
-X-Mimecast-MFC-AGG-ID: uXQNRMLdP0eEYxrpxRtOlA_1745028403
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5750ca8b2so332447585a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 19:06:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745028403; x=1745633203;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fg5jTz0E8wfSFW3z1gz+claCWc6uoPxGD1UaNbxQo8M=;
-        b=g5gIuEIEU9nbUPzzD59lZQQmFWLPazZcSBXHUyDGflTg9gAivdzxvduv0+eIt/nXSI
-         MTWQT295fBiFj5lR1wyuAxXAJiYOeFwaX5LfRT6VgQSqM15dqyFrOSKHcJYV9DRjqYbs
-         4mB2rsp0w3hZhPDqjhAXmTVF/wiXmc0IBC13kcwWDbY8XeV8HWlJHsszlClTJq4a8kcv
-         IuEwU1x44os0tciW6PzGnju+eYN2/DbvrwgjsOQyTZxWPOXQsCYyD6CXbKsvQZG8eMME
-         qLnJmPi9WiuMIoSqp47CEwcZOZrNnMyiNoYp8hV1N26E9Y1Cnp8SDdtESn4ydwiGTjEO
-         uKQg==
-X-Forwarded-Encrypted: i=1; AJvYcCWWs6o+gIQHwh5JISn/I0v09AB+L9MEy0PmiWyhTR6YnZnPHK1caqWNWFBW0toc421vPLdT/ZZ+qlw44I4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQGJdPJav1rqayWWjsU9iTbS8bi4oISN8WBgfaa0FSCeMyH6Gj
-	6bG35oAG/iYlrTa+bi7IhVR8Q9jdA7tESolDQ7wuwYqk+mHzygXcKzXbsxJYplZ8kqdoqq2oZea
-	NQ530SoHQDEELkfTPvGgWyC7uSxm7f344CJlbqRW3zK9HY2sknm4/NcJdTKo4Xg==
-X-Gm-Gg: ASbGncsJXeOmRuHt1pggr6KO6/x4xMkRnegG5MO3KjNSLB8Dt4+RSpEPwpcn31RR6kK
-	89tMUzQdntdZWW945hZnHaq0UoJNlcS/e3F/ugIVf4az9rFGv6w/zZNWrGit+i4VMupjYpaPVGv
-	VZZCni4uO7BUykBmx09NBdS6CqZEGWLP0WLJ9eXV09qeVmG8OUjE8lyjln8o+E0nWlzQ4oS0iVR
-	iTgnU9Fr1ziQMiJFDU4Z6bOlqAH0LbA9RhnpEr9URjoG9cl3mtfKPXHIXLW4ZEBLCHkqdrPG8FC
-	a0M/HkTD6kgyCLjEkNnXcabtXtlvCAHDg+tz5zKoDsEVGta4Tg==
-X-Received: by 2002:a05:620a:1a88:b0:7c5:4caa:21b7 with SMTP id af79cd13be357-7c928049e4fmr805917685a.56.1745028403368;
-        Fri, 18 Apr 2025 19:06:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH0Vva5HgQYqt3HAguwTyJTqtBqylBMgw/o808p/lVSAP69/kKkHthGT+f5tt9sh/5MY+qQTg==
-X-Received: by 2002:a05:620a:1a88:b0:7c5:4caa:21b7 with SMTP id af79cd13be357-7c928049e4fmr805915785a.56.1745028402963;
-        Fri, 18 Apr 2025 19:06:42 -0700 (PDT)
-Received: from [192.168.130.170] (67-212-218-66.static.pfnllc.net. [67.212.218.66])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925a90ce7sm167726485a.47.2025.04.18.19.06.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Apr 2025 19:06:42 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <162f1ae4-2adf-4133-8de4-20f240e5469e@redhat.com>
-Date: Fri, 18 Apr 2025 22:06:40 -0400
+	s=arc-20240116; t=1745029521; c=relaxed/simple;
+	bh=LvUF0hUDUiDHSIMaLZuAHDmZs47+xPNqVYRb+fSFJLI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gv+DgSIokLnT4J2TrcaLyoMZs+hfHAGytqXGN+LJiUz96xGdCPnVi1Du10QEGhHB4u3GobVOVhcoZD8XqxiIv0O8jPSURn62mr4M2rb+j0FhW9UDfu4gcLFf7kGza+EihXEMsPxmUQ+rFG5eFvEZ4VCKuMu599rKikTRJTD7Wrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zfb7P3jZWz4f3m7T;
+	Sat, 19 Apr 2025 10:24:49 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id D24E11A13FA;
+	Sat, 19 Apr 2025 10:25:14 +0800 (CST)
+Received: from [10.67.108.244] (unknown [10.67.108.244])
+	by APP4 (Coremail) with SMTP id gCh0CgD3Wl+JCQNo+xeeJw--.23807S3;
+	Sat, 19 Apr 2025 10:25:14 +0800 (CST)
+Message-ID: <7b7642b8-2608-4349-b3cd-3c42eaafcabd@huaweicloud.com>
+Date: Sat, 19 Apr 2025 10:25:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,186 +32,122 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] vmscan,cgroup: apply mems_effective to reclaim
-To: Gregory Price <gourry@gourry.net>, cgroups@vger.kernel.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
- tj@kernel.org, hannes@cmpxchg.org, mkoutny@suse.com, mhocko@kernel.org,
- roman.gushchin@linux.dev, shakeel.butt@linux.dev, muchun.song@linux.dev,
- akpm@linux-foundation.org
-References: <20250418031352.1277966-1-gourry@gourry.net>
- <20250418031352.1277966-2-gourry@gourry.net>
+Subject: Re: [PATCH] perf/x86/intel: Fix lbr event can placed into non lbr
+ group
 Content-Language: en-US
-In-Reply-To: <20250418031352.1277966-2-gourry@gourry.net>
+To: "Liang, Kan" <kan.liang@linux.intel.com>, peterz@infradead.org
+Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, tglx@linutronix.de, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250412091423.1839809-1-luogengkun@huaweicloud.com>
+ <342ad7ad-417b-446d-8269-521a1ce9a6c6@linux.intel.com>
+From: Luo Gengkun <luogengkun@huaweicloud.com>
+In-Reply-To: <342ad7ad-417b-446d-8269-521a1ce9a6c6@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgD3Wl+JCQNo+xeeJw--.23807S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxZrWxCry8Ww13AF1UZFyxZrb_yoW5WrWkp3
+	yfJF43KF4jgwn5u3s3tFnrtF4Yvr1vq3Z5G347try3X3Z0vr9xtFWxK345Cr95uw1xAryf
+	Xw10vryUCas8Za7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
+	aFAJUUUUU==
+X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-On 4/17/25 11:13 PM, Gregory Price wrote:
-> It is possible for a reclaimer to cause demotions of an lruvec belonging
-> to a cgroup with cpuset.mems set to exclude some nodes. Attempt to apply
-> this limitation based on the lruvec's memcg and prevent demotion.
->
-> Notably, this may still allow demotion of shared libraries or any memory
-> first instantiated in another cgroup. This means cpusets still cannot
-> cannot guarantee complete isolation when demotion is enabled, and the
-> docs have been updated to reflect this.
->
-> This is useful for isolating workloads on a multi-tenant system from
-> certain classes of memory more consistently - with the noted exceptions.
->
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-> ---
->   .../ABI/testing/sysfs-kernel-mm-numa          | 14 ++++---
->   include/linux/cgroup.h                        |  7 ++++
->   include/linux/cpuset.h                        |  5 +++
->   include/linux/memcontrol.h                    |  9 ++++
->   kernel/cgroup/cgroup.c                        |  5 +++
->   kernel/cgroup/cpuset.c                        | 22 ++++++++++
->   mm/vmscan.c                                   | 41 +++++++++++--------
->   7 files changed, 82 insertions(+), 21 deletions(-)
->
-> diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-numa b/Documentation/ABI/testing/sysfs-kernel-mm-numa
-> index 77e559d4ed80..27cdcab901f7 100644
-> --- a/Documentation/ABI/testing/sysfs-kernel-mm-numa
-> +++ b/Documentation/ABI/testing/sysfs-kernel-mm-numa
-> @@ -16,9 +16,13 @@ Description:	Enable/disable demoting pages during reclaim
->   		Allowing page migration during reclaim enables these
->   		systems to migrate pages from fast tiers to slow tiers
->   		when the fast tier is under pressure.  This migration
-> -		is performed before swap.  It may move data to a NUMA
-> -		node that does not fall into the cpuset of the
-> -		allocating process which might be construed to violate
-> -		the guarantees of cpusets.  This should not be enabled
-> -		on systems which need strict cpuset location
-> +		is performed before swap if an eligible numa node is
-> +		present in cpuset.mems for the cgroup. If cpusets.mems
-> +		changes at runtime, it may move data to a NUMA node that
-> +		does not fall into the cpuset of the new cpusets.mems,
-> +		which might be construed to violate the guarantees of
-> +		cpusets.  Shared memory, such as libraries, owned by
-> +		another cgroup may still be demoted and result in memory
-> +		use on a node not present in cpusets.mem. This should not
-> +		be enabled on systems which need strict cpuset location
->   		guarantees.
-> diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
-> index f8ef47f8a634..2915250a3e5e 100644
-> --- a/include/linux/cgroup.h
-> +++ b/include/linux/cgroup.h
-> @@ -632,6 +632,8 @@ static inline void cgroup_kthread_ready(void)
->   
->   void cgroup_path_from_kernfs_id(u64 id, char *buf, size_t buflen);
->   struct cgroup *cgroup_get_from_id(u64 id);
-> +
-> +extern bool cgroup_node_allowed(struct cgroup *cgroup, int nid);
->   #else /* !CONFIG_CGROUPS */
->   
->   struct cgroup_subsys_state;
-> @@ -681,6 +683,11 @@ static inline bool task_under_cgroup_hierarchy(struct task_struct *task,
->   
->   static inline void cgroup_path_from_kernfs_id(u64 id, char *buf, size_t buflen)
->   {}
-> +
-> +static inline bool cgroup_node_allowed(struct cgroup *cgroup, int nid)
-> +{
-> +	return true;
-> +}
->   #endif /* !CONFIG_CGROUPS */
->   
->   #ifdef CONFIG_CGROUPS
-> diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
-> index 893a4c340d48..c64b4a174456 100644
-> --- a/include/linux/cpuset.h
-> +++ b/include/linux/cpuset.h
-> @@ -171,6 +171,7 @@ static inline void set_mems_allowed(nodemask_t nodemask)
->   	task_unlock(current);
->   }
->   
-> +extern bool cpuset_node_allowed(struct cgroup *cgroup, int nid);
->   #else /* !CONFIG_CPUSETS */
->   
->   static inline bool cpusets_enabled(void) { return false; }
-> @@ -282,6 +283,10 @@ static inline bool read_mems_allowed_retry(unsigned int seq)
->   	return false;
->   }
->   
-> +static inline bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
-> +{
-> +	return false;
-> +}
->   #endif /* !CONFIG_CPUSETS */
->   
->   #endif /* _LINUX_CPUSET_H */
-> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> index 53364526d877..2906e4bb12e9 100644
-> --- a/include/linux/memcontrol.h
-> +++ b/include/linux/memcontrol.h
-> @@ -1736,6 +1736,11 @@ static inline void count_objcg_events(struct obj_cgroup *objcg,
->   	rcu_read_unlock();
->   }
->   
-> +static inline bool mem_cgroup_node_allowed(struct mem_cgroup *memcg, int nid)
-> +{
-> +	return memcg ? cgroup_node_allowed(memcg->css.cgroup, nid) : true;
-> +}
-> +
->   #else
->   static inline bool mem_cgroup_kmem_disabled(void)
->   {
-> @@ -1793,6 +1798,10 @@ static inline void count_objcg_events(struct obj_cgroup *objcg,
->   {
->   }
->   
-> +static inline bool mem_cgroup_node_allowed(struct mem_cgroup *memcg, int nid)
-> +{
-> +	return true;
-> +}
->   #endif /* CONFIG_MEMCG */
->   
->   #if defined(CONFIG_MEMCG) && defined(CONFIG_ZSWAP)
-> diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-> index afc665b7b1fe..ba0b90cd774c 100644
-> --- a/kernel/cgroup/cgroup.c
-> +++ b/kernel/cgroup/cgroup.c
-> @@ -7038,6 +7038,11 @@ int cgroup_parse_float(const char *input, unsigned dec_shift, s64 *v)
->   	return 0;
->   }
->   
-> +bool cgroup_node_allowed(struct cgroup *cgroup, int nid)
-> +{
-> +	return cpuset_node_allowed(cgroup, nid);
-> +}
-> +
->   /*
->    * sock->sk_cgrp_data handling.  For more info, see sock_cgroup_data
->    * definition in cgroup-defs.h.
-> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-> index d6ed3f053e62..31e4c4cbcdfc 100644
-> --- a/kernel/cgroup/cpuset.c
-> +++ b/kernel/cgroup/cpuset.c
-> @@ -4163,6 +4163,28 @@ bool cpuset_current_node_allowed(int node, gfp_t gfp_mask)
->   	return allowed;
->   }
->   
-> +bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
-> +{
-> +	struct cgroup_subsys_state *css;
-> +	unsigned long flags;
-> +	struct cpuset *cs;
-> +	bool allowed;
-> +
-> +	css = cgroup_get_e_css(cgroup, &cpuset_cgrp_subsys);
-> +	if (!css)
-> +		return true;
-> +
-> +	cs = container_of(css, struct cpuset, css);
-> +	spin_lock_irqsave(&callback_lock, flags);
-> +	/* At least one parent must have a valid node list */
-> +	while (nodes_empty(cs->effective_mems))
-> +		cs = parent_cs(cs);
 
-For cgroup v2, effective_mems should always be set and walking up the 
-tree isn't necessary. For v1, it can be empty, but memory cgroup and 
-cpuset are unlikely in the same hierarchy.
+On 2025/4/14 22:29, Liang, Kan wrote:
+>
+> On 2025-04-12 5:14 a.m., Luo Gengkun wrote:
+>> The following perf command can trigger a warning on
+>> intel_pmu_lbr_counters_reorder.
+>>
+>>   # perf record -e "{cpu-clock,cycles/call-graph="lbr"/}" -- sleep 1
+>>
+>> The reason is that a lbr event are placed in non lbr group. And the
+>> previous implememtation cannot force the leader to be a lbr event in this
+>> case.
+> Perf should only force the LBR leader for the branch counters case, so
+> perf only needs to reset the LBRs for the leader.
+> I don't think the leader restriction should be applied to other cases.
 
-Cheers,
-Longman
+Yes, the commit message should be updated.  The code implementation only
+
+restricts the leader to be an LBRs.
+
+>> And is_branch_counters_group will check if the group_leader supports
+>> BRANCH_COUNTERS.
+>> So if a software event becomes a group_leader, which
+>> hw.flags is -1, this check will alway pass.
+> I think the default flags for all events is 0. Can you point me to where
+> it is changed to -1?
+>
+> Thanks,
+> Kan>
+
+The hw_perf_event contains a union, hw.flags is used only for hardware 
+events.
+
+For the software events, it uses hrtimer. Therefor, when 
+perf_swevent_init_hrtimer
+
+is called, it changes the value of hw.flags too.
+
+
+Thanks,
+
+Gengkun
+
+>> To fix this problem, using has_branch_stack to judge if leader is lbr
+>> event.
+>>
+>> Fixes: 33744916196b ("perf/x86/intel: Support branch counters logging")
+>> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+>> ---
+>>   arch/x86/events/intel/core.c | 14 +++++++-------
+>>   1 file changed, 7 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> index 09d2d66c9f21..c6b394019e54 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -4114,6 +4114,13 @@ static int intel_pmu_hw_config(struct perf_event *event)
+>>   			event->hw.flags |= PERF_X86_EVENT_NEEDS_BRANCH_STACK;
+>>   	}
+>>   
+>> +	/*
+>> +	 * Force the leader to be a LBR event. So LBRs can be reset
+>> +	 * with the leader event. See intel_pmu_lbr_del() for details.
+>> +	 */
+>> +	if (has_branch_stack(event) && !has_branch_stack(event->group_leader))
+>> +		return -EINVAL;
+>> +
+>>   	if (branch_sample_counters(event)) {
+>>   		struct perf_event *leader, *sibling;
+>>   		int num = 0;
+>> @@ -4157,13 +4164,6 @@ static int intel_pmu_hw_config(struct perf_event *event)
+>>   			  ~(PERF_SAMPLE_BRANCH_PLM_ALL |
+>>   			    PERF_SAMPLE_BRANCH_COUNTERS)))
+>>   			event->hw.flags  &= ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
+>> -
+>> -		/*
+>> -		 * Force the leader to be a LBR event. So LBRs can be reset
+>> -		 * with the leader event. See intel_pmu_lbr_del() for details.
+>> -		 */
+>> -		if (!intel_pmu_needs_branch_stack(leader))
+>> -			return -EINVAL;
+>>   	}
+>>   
+>>   	if (intel_pmu_needs_branch_stack(event)) {
 
