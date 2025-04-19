@@ -1,102 +1,100 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4552513CFB6;
-	Sat, 19 Apr 2025 10:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31860136347;
+	Sat, 19 Apr 2025 10:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745057331; cv=none; b=eHIrqEDr8INBLNxVeUP7SlRlxvkVUhUjAtdhgbvpu6VCkWnSKXYP9x7nZHd4Ffmrl4NIDes52D9w14F/3atznRLY5NMz7bZfDjkR8c3fNgsXao3MQlflgyFCXasJmNRO+e2LWghL3/b+TCHr3wKpHFrTcBfc+O1B6EGZ7RYnKj8=
+	t=1745057433; cv=none; b=OCZ9rDY5g6CFRAT7jovH/tsqVAIHVPWV+SGwlTZlp08Z3/gwqsCG+qeHhkCeNdf4AYpaJp3Vl2aXOX3pcQjK44p13kSkwZbwdz57gYbsXE5WCt7W/ivtNfzBUxauO0nUJXBiF+wtl0wKaaAvAy+DM1dwxTxQiZxJUqSVMMAe2ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745057331; c=relaxed/simple;
-	bh=B2EqCOFVYPJGm4kbIcA38H8ygbgF+b1tGvM63gAKFoU=;
+	s=arc-20240116; t=1745057433; c=relaxed/simple;
+	bh=BysPsT7ANdRFjBu/Ui8fcsmGFHpnkB2GIzJ96l7psEA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S/p2fob7Zlc5JyFrA1c8nQgTiGrv+UaRlnzsEPN1PZjnCmAcPYjeDME0u8L/ihDtTqvSwsfahToFlCqke7SaLELLc4RsiRe2hjamcEc8pIdOTNA/RZjzKS8e7QVHifOnR+6ueoQeTZV2GdX1jOgBSgxvrLS/PCxWF2HrH+ioSmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [116.232.27.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 02F9A34301B;
-	Sat, 19 Apr 2025 10:08:48 +0000 (UTC)
-Date: Sat, 19 Apr 2025 10:08:44 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Haylen Chu <heylenay@4d2.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Alex Elder <elder@riscstar.com>, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] riscv: dts: spacemit: Add clocks to pinctrl and UART
-Message-ID: <20250419100844-GYA38730@gentoo>
-References: <20250419-05-dts-clock-v1-0-1cce5d59aba2@gentoo.org>
- <aANwGZCIpMcd47IB@ketchup>
+	 Content-Type:Content-Disposition:In-Reply-To; b=fkMLZuyHWUTSJZeg9KkktIjzSdagKCvkwXFv1EkAEdLSb2Mqc6UIizWNOqTTl0oVrGu4whuWI27YKf25Ljvi5gyBZclSDiwr8lRTvFZd0ZjvKKDZ9XpmDJZhhznANQbRgUadTpGUuDzCj05pvPBjdD2a588dwEFWUlS7TT7IlDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=RnFR0kyj; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="RnFR0kyj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1745057425;
+	bh=BysPsT7ANdRFjBu/Ui8fcsmGFHpnkB2GIzJ96l7psEA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RnFR0kyjHOq+TdfQwcRHChjW5kkbnEu7vEtRsHJi0gWoeFq5mwaOtp4nFT6oq8i5K
+	 9XPb6m3uTKxoNsR0ZRhZZHRRPisCXrpD/KPxJ6mJQhMIupGSdtk98R+20pSISSU+zO
+	 8LRCeLpDuCzBJhJ1J7dZMXuhEg5035FJD+1ueTJQ=
+Date: Sat, 19 Apr 2025 12:10:24 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Willy Tarreau <w@1wt.eu>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 2/6] tools/nolibc: disable function sanitizer for
+ _start_c()
+Message-ID: <96891976-1f46-4080-91af-1a810fe4498c@t-8ch.de>
+References: <20250416-nolibc-ubsan-v1-0-c4704bb23da7@weissschuh.net>
+ <20250416-nolibc-ubsan-v1-2-c4704bb23da7@weissschuh.net>
+ <20250419090631.GB31874@1wt.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aANwGZCIpMcd47IB@ketchup>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250419090631.GB31874@1wt.eu>
 
-On 09:42 Sat 19 Apr     , Haylen Chu wrote:
-> On Sat, Apr 19, 2025 at 11:32:29AM +0800, Yixun Lan wrote:
-> > Populate clock property for pinctrl and UART controller.
+On 2025-04-19 11:06:31+0200, Willy Tarreau wrote:
+> On Wed, Apr 16, 2025 at 08:40:17PM +0200, Thomas Weißschuh wrote:
+> > Both constructors and main() may be executed with different function
+> > signatures than they are actually using.
+> > This is intentional but trips up UBSAN.
 > > 
-> > The pinctrl's clock dt-binding patch is still waiting to be merged[1].
+> > Disable the function sanitizer of UBSAN in _start_c().
 > > 
-> > The UART's dt-binding and driver code has already been accepted[2],
-> > so we now are only sending the DT part patch.
-> > 
-> > These two patches are abased on SpacemiT SoC tree's for-next branch[3]
-> > 
-> > Link: https://lore.kernel.org/r/20250416-02-k1-pinctrl-clk-v2-0-2b5fcbd4183c@gentoo.org [1]
-> > Link: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git/log/?h=tty-next [2]
-> > Link: https://github.com/spacemit-com/linux/tree/for-next [3]
-> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> 
-> Generally this looks good to me, but I realized that splitting the
-> commit that introduces clock controllers and the one that correctly
-> fills clock properties for various peripherals may cause bisectable
-> issues, i.e. the UART won't function with only the clock controller
-> introduced and no clk_ignore_unused specified on commandline.
-> 
-I don't think you should worry about this, my plan is to apply
-these two patches to for-next branch of spacemiT SoC tree, which
-exactly on top of clock patches, besides pinctrl[1], uart[2] patches
-will go via different subsystem, and this series depend on them
-in order to work properly at run time phase, so regarding this, it's
- kind of broken already.. but if take a high picture that they all
-will be merged into for-next/master branch, then it's fine
-
-
-> If this isn't really a problem, for the whole series,
-> 
-> Reviewed-by: Haylen Chu <heylenay@4d2.org>
-> 
+> > Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 > > ---
-> > Yixun Lan (2):
-> >       riscv: dts: spacemit: Acquire clocks for pinctrl
-> >       riscv: dts: spacemit: Acquire clocks for UART
+> >  tools/include/nolibc/crt.h | 5 +++++
+> >  1 file changed, 5 insertions(+)
 > > 
-> >  arch/riscv/boot/dts/spacemit/k1.dtsi | 39 +++++++++++++++++++++++++++---------
-> >  1 file changed, 30 insertions(+), 9 deletions(-)
-> > ---
-> > base-commit: 279d51ad9f6dc0c667f6f141a669b2c921277d1a
-> > change-id: 20250419-05-dts-clock-026bfca75e5b
-> > 
-> > Best regards,
-> > -- 
-> > Yixun Lan
-> > 
+> > diff --git a/tools/include/nolibc/crt.h b/tools/include/nolibc/crt.h
+> > index c4b10103bbec50f1a3a0a4562e34fdbd1b43ce6f..961cfe777c3564e705dfdd581de828b374d05b0b 100644
+> > --- a/tools/include/nolibc/crt.h
+> > +++ b/tools/include/nolibc/crt.h
+> > @@ -7,6 +7,8 @@
+> >  #ifndef _NOLIBC_CRT_H
+> >  #define _NOLIBC_CRT_H
+> >  
+> > +#include "compiler.h"
+> > +
+> >  char **environ __attribute__((weak));
+> >  const unsigned long *_auxv __attribute__((weak));
+> >  
+> > @@ -25,6 +27,9 @@ extern void (*const __fini_array_end[])(void) __attribute__((weak));
+> >  
+> >  void _start_c(long *sp);
+> >  __attribute__((weak,used))
+> > +#if __nolibc_has_feature(undefined_behavior_sanitizer)
+> > +	__attribute__((no_sanitize("function")))
+> > +#endif
 > 
+> I'm wondering if it wouldn't be more reliable with:
+> 
+>   #if __nolibc_has_attribute(no_sanitize)
+> 	__attribute__((no_sanitize("function")))
+>   #endif
+> 
+> Because in the end, what you want is to always place that attribute
+> whenever it's supported, no ?
 
--- 
-Yixun Lan (dlan)
+That doesn't work because GCC does knows no_sanitize but not
+no_sanitize("function").
+Also no_sanitize is not specific to UBSAN but works for all sanitizers.
+
+> 
+> >  void _start_c(long *sp)
+> >  {
+> >  	long argc;
+> 
+> Willy
