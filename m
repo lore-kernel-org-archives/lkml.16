@@ -1,144 +1,171 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D06D8472
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 04:38:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99465DDBC;
+	Sat, 19 Apr 2025 04:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745037508; cv=none; b=kHIbtbxOb+5gt9R+DYIp6xMAwPWnrixJsPluwqV9QZsKjytc+1ciTTCe+C0DpftGoWAaPaS8L1FT/m+10omyiwUJwcYFJZzp2awM6GNIYz1jVXHZ5KJvvnS3PAn/8vjVWmGczNfZefAtwcnaADzGYeb/4DJyqHYuqqY2cD35Z8o=
+	t=1745038255; cv=none; b=cFzRiIVetcHiTk7a37JfGVgMr36fXlvgX7Zb2d2atGIWKZqr7thJKXld4LbyuLG/kBpjcj0xbS5G3cu4MurBmZF4/Tj8ENiGR/+Ap4qj/b/a1Nm8SoX3S6CJDTTgV4GRBgDGncqEGt/KxACy7QvhMofc32DFJ2AObUDlyWT20h0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745037508; c=relaxed/simple;
-	bh=Nt5ULpuHYCWklLKL6dPTgL9w76UrAf0HuuX78/0txLU=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ltiyHWB/AxATYR9Ob863GkNTImIAnuHvEMi42awQG1pCuiYkcaPPaWxXycV7NeurTbNNmHSNYkvwD5g3TJwAA5Eb1/6Vxrq65ZNADt1gSlh1e0elKNwBjw4yfwWy8Y4uUGA8n1X1PQ38vxch3I61HAsmRCcdlq/a1sAom27NzQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d438be189bso21240795ab.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 21:38:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745037505; x=1745642305;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Hhd8cxcmA31nIqcjjcRMiI9LaDS8bI++9l+oDYSpg5Q=;
-        b=Py7pqBi24qNEmykVgQq0Ka9MZci9Ii6qKxysWmUds1EoRwhJNOx7C/Skcv7NrYXLmx
-         7Wbt6Qf9b6gGP7+pPjNv5Pp5Glu3lI9oUX1S6CmfCZKoDZIFaYNCrnyARbcB1xpvyKVg
-         5s5gypeVSoTsh97d83o5eBVNL3AynlX36hkg/OGrBxmnht3+OAI0e8kcCceWapjQHYQY
-         7s+cAe9TZDtl+R41ECHGI6dbfA7RnjFdXsjjmipV/3qVojRTSixiEMfS6hd7mMoc0D8b
-         fmEi+Bvzbb7D4TUOqQCqgWWIoFt6Du9XeapIYoqRZUmL9lngDqcjQR4lK+F17GA6cuUA
-         /HOA==
-X-Forwarded-Encrypted: i=1; AJvYcCVU6qExtgYWr8UTt6lEEgfzH8jEwB/MLvUfTsBarNdRNxUfubmHwSY2249OKmHApsXgj9BxzCvXpRX/ksI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXrMN/RHBbnaRbTULiM1mpT8TnUy88jbdtxWJtYjc39bylIKcm
-	3r2uC4hw11W5Aoe1zqt0wrzKjjpAWINVEiB+2Prw60u865LuAzUUdT2wRr25iih1mw7WZC9EgIH
-	ek56VedATqgzMBgQsxGeFLRuak9AVtcRktWJtEEB3LczZIeiQn5uArwQ=
-X-Google-Smtp-Source: AGHT+IGFU/es6XnWPK3DJJGOqgSN01ufsNggX9u5A3TtNUM+51PHoTGM+fEnynrp5BPc7gci1AKVR0EITqn4lprOlgm174WWsc16
+	s=arc-20240116; t=1745038255; c=relaxed/simple;
+	bh=2ftc5ejbzpeva4waI8OSByzjRMedKnQgk4uz+UHSB0s=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=FXYteYQpzcFlAwM0qwALn4iNoyHA9W8qG0zJKrDLWrsoAOI+z3VmLAk4k0ElkaMEQTssjP0maj9VI0+jp7EqP10tjsqFff8PR+85LTxPWZJkXwB3ZAjCOMkdUiFsnLWUy768BxcRg7M95XKZN2dpeoCuCTT8x+/vULoDNanXEWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZffML1b03z4f3m6s;
+	Sat, 19 Apr 2025 12:50:22 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 88A941A058E;
+	Sat, 19 Apr 2025 12:50:47 +0800 (CST)
+Received: from [10.67.108.244] (unknown [10.67.108.244])
+	by APP4 (Coremail) with SMTP id gCh0CgAHa1+mKwNo5N2nJw--.29213S3;
+	Sat, 19 Apr 2025 12:50:47 +0800 (CST)
+Message-ID: <231276ba-bcdd-4d88-af07-4afe46da179b@huaweicloud.com>
+Date: Sat, 19 Apr 2025 12:50:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:b25:b0:3d3:fbae:3978 with SMTP id
- e9e14a558f8ab-3d88eda88b8mr36412315ab.9.1745037505566; Fri, 18 Apr 2025
- 21:38:25 -0700 (PDT)
-Date: Fri, 18 Apr 2025 21:38:25 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <680328c1.050a0220.243d89.0024.GAE@google.com>
-Subject: [syzbot] [hfs?] WARNING in check_flush_dependency (4)
-From: syzbot <syzbot+09455b3f0a89d685a9d3@syzkaller.appspotmail.com>
-To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    c72692105976 Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=150cf0cc580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3074fa928809af2b
-dashboard link: https://syzkaller.appspot.com/bug?extid=09455b3f0a89d685a9d3
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/02d65c9d9776/disk-c7269210.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/caf24085c451/vmlinux-c7269210.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/92025d8a23a1/Image-c7269210.gz.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+09455b3f0a89d685a9d3@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-workqueue: WQ_MEM_RECLAIM dio/loop0:dio_aio_complete_work is flushing !WQ_MEM_RECLAIM events_long:flush_mdb
-WARNING: CPU: 1 PID: 6522 at kernel/workqueue.c:3721 check_flush_dependency+0x290/0x344 kernel/workqueue.c:3717
-Modules linked in:
-CPU: 1 UID: 0 PID: 6522 Comm: kworker/1:5 Not tainted 6.15.0-rc2-syzkaller-gc72692105976 #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Workqueue: dio/loop0 dio_aio_complete_work
-pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : check_flush_dependency+0x290/0x344 kernel/workqueue.c:3717
-lr : check_flush_dependency+0x290/0x344 kernel/workqueue.c:3717
-sp : ffff8000a4cc76d0
-x29: ffff8000a4cc76d0 x28: 0000000000000000 x27: 1fffe0001dc7b42b
-x26: 0000000000000000 x25: ffff80009341b000 x24: ffff0000d23f4400
-x23: dfff800000000000 x22: ffff0000d3fb1918 x21: ffff80008133b000
-x20: ffff0000d23f4578 x19: ffff0000c0029400 x18: 0000000000000008
-x17: 00000000fffffffa x16: ffff80008333704c x15: 0000000000000001
-x14: 1fffe000366e2322 x13: 0000000000000000 x12: 0000000000000000
-x11: 0000000000000003 x10: 0000000000ff0100 x9 : a994bece50049800
-x8 : a994bece50049800 x7 : 0000000000000001 x6 : 0000000000000001
-x5 : ffff8000a4cc6e58 x4 : ffff800090035460 x3 : ffff800080750da0
-x2 : 0000000000000001 x1 : 0000000100000001 x0 : 0000000000000000
-Call trace:
- check_flush_dependency+0x290/0x344 kernel/workqueue.c:3717 (P)
- start_flush_work kernel/workqueue.c:4171 [inline]
- __flush_work+0x220/0x958 kernel/workqueue.c:4208
- flush_work kernel/workqueue.c:4265 [inline]
- flush_delayed_work+0xcc/0xf8 kernel/workqueue.c:4287
- hfs_file_fsync+0xec/0x148 fs/hfs/inode.c:680
- vfs_fsync_range+0x160/0x19c fs/sync.c:187
- generic_write_sync include/linux/fs.h:2976 [inline]
- dio_complete+0x510/0x6bc fs/direct-io.c:313
- dio_aio_complete_work+0x28/0x38 fs/direct-io.c:325
- process_one_work+0x810/0x1638 kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3319 [inline]
- worker_thread+0x97c/0xf08 kernel/workqueue.c:3400
- kthread+0x674/0x7dc kernel/kthread.c:464
- ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:862
-irq event stamp: 11908
-hardirqs last  enabled at (11907): [<ffff800080371ff0>] flush_delayed_work+0xac/0xf8 kernel/workqueue.c:4286
-hardirqs last disabled at (11908): [<ffff80008b9be494>] __raw_spin_lock_irq include/linux/spinlock_api_smp.h:117 [inline]
-hardirqs last disabled at (11908): [<ffff80008b9be494>] _raw_spin_lock_irq+0x28/0x70 kernel/locking/spinlock.c:170
-softirqs last  enabled at (11276): [<ffff80008583fac0>] spin_unlock_bh include/linux/spinlock.h:396 [inline]
-softirqs last  enabled at (11276): [<ffff80008583fac0>] ptr_ring_consume_bh include/linux/ptr_ring.h:367 [inline]
-softirqs last  enabled at (11276): [<ffff80008583fac0>] wg_packet_encrypt_worker+0x121c/0x12ac drivers/net/wireguard/send.c:293
-softirqs last disabled at (11274): [<ffff80008583f874>] spin_lock_bh include/linux/spinlock.h:356 [inline]
-softirqs last disabled at (11274): [<ffff80008583f874>] ptr_ring_consume_bh include/linux/ptr_ring.h:365 [inline]
-softirqs last disabled at (11274): [<ffff80008583f874>] wg_packet_encrypt_worker+0xfd0/0x12ac drivers/net/wireguard/send.c:293
----[ end trace 0000000000000000 ]---
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/intel: Fix lbr event can placed into non lbr
+ group
+Content-Language: en-US
+From: Luo Gengkun <luogengkun@huaweicloud.com>
+To: "Liang, Kan" <kan.liang@linux.intel.com>, peterz@infradead.org
+Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, tglx@linutronix.de, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250412091423.1839809-1-luogengkun@huaweicloud.com>
+ <342ad7ad-417b-446d-8269-521a1ce9a6c6@linux.intel.com>
+ <7b7642b8-2608-4349-b3cd-3c42eaafcabd@huaweicloud.com>
+In-Reply-To: <7b7642b8-2608-4349-b3cd-3c42eaafcabd@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAHa1+mKwNo5N2nJw--.29213S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxZrW7ZrWUZr1DZFykJr1fWFg_yoWrJw15pr
+	n5JF45KFW5Wwn5u34ftr1UtFyUtr1kJ3Z8Gw1UtFyUXF4qvr12gF4UX34Y9r98Ar48Jryr
+	Xw1UXr17ZFy5AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
+	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUFk
+	u4UUUUU
+X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+On 2025/4/19 10:25, Luo Gengkun wrote:
+>
+> On 2025/4/14 22:29, Liang, Kan wrote:
+>>
+>> On 2025-04-12 5:14 a.m., Luo Gengkun wrote:
+>>> The following perf command can trigger a warning on
+>>> intel_pmu_lbr_counters_reorder.
+>>>
+>>>   # perf record -e "{cpu-clock,cycles/call-graph="lbr"/}" -- sleep 1
+>>>
+>>> The reason is that a lbr event are placed in non lbr group. And the
+>>> previous implememtation cannot force the leader to be a lbr event in 
+>>> this
+>>> case.
+>> Perf should only force the LBR leader for the branch counters case, so
+>> perf only needs to reset the LBRs for the leader.
+>> I don't think the leader restriction should be applied to other cases.
+>
+> Yes, the commit message should be updated.  The code implementation only
+>
+> restricts the leader to be an LBRs.
+>
+>>> And is_branch_counters_group will check if the group_leader supports
+>>> BRANCH_COUNTERS.
+>>> So if a software event becomes a group_leader, which
+>>> hw.flags is -1, this check will alway pass.
+>> I think the default flags for all events is 0. Can you point me to where
+>> it is changed to -1?
+>>
+>> Thanks,
+>> Kan>
+>
+> The hw_perf_event contains a union, hw.flags is used only for hardware 
+> events.
+>
+> For the software events, it uses hrtimer. Therefor, when 
+> perf_swevent_init_hrtimer
+>
+> is called, it changes the value of hw.flags too.
+>
+>
+> Thanks,
+>
+> Gengkun
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+It seems that using union is dangerous because different types of 
+perf_events can be
+placed in the same group. Currently, a large number of codes directly 
+access the hw
+of the leader, which is insecure. This part of the logic needs to be 
+redesigned to void
+similar problems. And I am happy to work for this.
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+Thanks,
+Gengkun
+>>> To fix this problem, using has_branch_stack to judge if leader is lbr
+>>> event.
+>>>
+>>> Fixes: 33744916196b ("perf/x86/intel: Support branch counters logging")
+>>> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+>>> ---
+>>>   arch/x86/events/intel/core.c | 14 +++++++-------
+>>>   1 file changed, 7 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/arch/x86/events/intel/core.c 
+>>> b/arch/x86/events/intel/core.c
+>>> index 09d2d66c9f21..c6b394019e54 100644
+>>> --- a/arch/x86/events/intel/core.c
+>>> +++ b/arch/x86/events/intel/core.c
+>>> @@ -4114,6 +4114,13 @@ static int intel_pmu_hw_config(struct 
+>>> perf_event *event)
+>>>               event->hw.flags |= PERF_X86_EVENT_NEEDS_BRANCH_STACK;
+>>>       }
+>>>   +    /*
+>>> +     * Force the leader to be a LBR event. So LBRs can be reset
+>>> +     * with the leader event. See intel_pmu_lbr_del() for details.
+>>> +     */
+>>> +    if (has_branch_stack(event) && 
+>>> !has_branch_stack(event->group_leader))
+>>> +        return -EINVAL;
+>>> +
+>>>       if (branch_sample_counters(event)) {
+>>>           struct perf_event *leader, *sibling;
+>>>           int num = 0;
+>>> @@ -4157,13 +4164,6 @@ static int intel_pmu_hw_config(struct 
+>>> perf_event *event)
+>>>                 ~(PERF_SAMPLE_BRANCH_PLM_ALL |
+>>>                   PERF_SAMPLE_BRANCH_COUNTERS)))
+>>>               event->hw.flags  &= ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
+>>> -
+>>> -        /*
+>>> -         * Force the leader to be a LBR event. So LBRs can be reset
+>>> -         * with the leader event. See intel_pmu_lbr_del() for details.
+>>> -         */
+>>> -        if (!intel_pmu_needs_branch_stack(leader))
+>>> -            return -EINVAL;
+>>>       }
+>>>         if (intel_pmu_needs_branch_stack(event)) {
 
-If you want to undo deduplication, reply with:
-#syz undup
