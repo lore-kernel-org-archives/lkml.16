@@ -1,109 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86196B644;
-	Sat, 19 Apr 2025 14:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C39715A85E
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 14:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745074630; cv=none; b=kBfC03WE+TOMYYHe3xUHveNTY+C85lZHKJ2gcW+0ppHpLLpjgJe5zfCkbGKL/wxLTPFzJUj9HOc6pNbQcQ8cmsmpXte7WzP/2hzzCInP/PZHb6rAIyXsI0yGPS0s9pQCcd4bb4s7XpBgucWp/9q90UZn15Djie3TAfjowVGe5a0=
+	t=1745074708; cv=none; b=dNmhU06x/FMv80p0yzJABgjn1wnj34IldfWwWfRGFjqOPM4pyC+FtxFQzZQTv7Mii57fN5NlUe/KauYCqqBKsPCH5axffhaTFDSEIQcF6EDCkB/Nw4WZc1NdmlsbX3f9OWno35TwtClk9ZMgHYVKMiaYMG9FGPXumrxbyNI4ZpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745074630; c=relaxed/simple;
-	bh=EfW8iyCiQTttenkzgxw9qmd4szYCqkNpB+Jv3fRbpSw=;
+	s=arc-20240116; t=1745074708; c=relaxed/simple;
+	bh=t1JKrnA/osICaCGxpJ5Img8qs8jepn52cqyYectC4ro=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QBvoqx3oAYL6x1bSoDCALBBxLAORXin7vpm0C0ya58KZB0qYKTYqke5b00ac5hxXDwcCT89Cj32MnMC+c62pepuE0rH0t7sJ9ijJSCfj4rPkmYpA2FCaRi15kXEySzhwuhePpEo5K+/Pe/wGOUudwh/jbXFcHw3sQmM9EOw/DEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SYHDdB78; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=R40icqSa2ceUL6OYOoTKMjvf1cEX5n0vgV2b1+fd4L/0yhPBdfaow47lyjLJ0xs5tB7HwDNLH3oYaDD88Vg52IKyFDW2qUk6tpVLaT2Ic17HTH8RJ75qpefRm61rI9cz7LC/XlOP6lHw9mezRGwsoD4oVivn6T3ooJLYhKwii0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DmYDOset; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SYHDdB78"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74F98C4CEE9;
-	Sat, 19 Apr 2025 14:57:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745074629;
-	bh=EfW8iyCiQTttenkzgxw9qmd4szYCqkNpB+Jv3fRbpSw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SYHDdB78nWNz3I/InPQwlyxSrRf687bqduX/zMtUVJ56tp3mmCYqQcJV+p8Dfv5Z3
-	 J9MQD6bXfWVqowuc6UO7zDaZxIySxKDVoVplPVWdPDRJ1VLdHaxGUQYvimNMpTe7O+
-	 FpsHoKAiritrGbSB+92fwhEq6ftvDMCBe3mlmXpq2Y+NrwUVYXheJw4l0+E9Lplgf5
-	 KtlZmHa5JPsdKodoP4dSZerIHBuF8q2JoSqWNmoQFN+K63ID0ZJUsoc0CLXe2HFPHO
-	 XAdw4eg0VT8cYa7rmF+qRACeWg+vrPq5/DYFwgwx65WT7pW8bWlkVBqtg+9eG5OJtm
-	 3d8W39//GoH9w==
-Date: Sat, 19 Apr 2025 16:57:05 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Andy Shevchenko <andy@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/1] x86: Use resource_set_{range,size}() helpers
-Message-ID: <aAO5weh0nks6nqBq@gmail.com>
-References: <20250416101318.7313-1-ilpo.jarvinen@linux.intel.com>
- <Z_-E3W8i4EfxdBh3@smile.fi.intel.com>
- <a046f6bb-0b6e-a431-eaa5-ecd279459f86@linux.intel.com>
- <aAIB7Om9n_tXDnvk@gmail.com>
- <db829a60-c524-73bc-e7c3-fed60e980d99@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DmYDOset"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745074707; x=1776610707;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=t1JKrnA/osICaCGxpJ5Img8qs8jepn52cqyYectC4ro=;
+  b=DmYDOsetmgrQyYPwdOB/lmbP5lX+PZ6HgRmd3OvZXrZZ6fn6hCaL+yfh
+   99+M8a1Z64A2KtX3ifkNWp7krmoCWmO3XXsqbiTc4dyheBSDlDMVKIkbS
+   QCpwSG89FzXZJARsG2Xw0TvzXo7tin3M2zS65pBFLAwy2nu3GrLAWrzTq
+   /MQkRo4GL1C0epnHLLCfWZboCPxZ7W9u/Aa476EJ5GjgB+vlzjRNBDe/1
+   cbv/vi6el2+Ko3pcZnGzDKcobw9WrxA4tAqyyU+K7xzUl08/FcqPGk+Gd
+   MyPkmjpZaJx86luNjAaZaq4LqY9hx+6xMLFs4znT39+kMl4sV0WOpUjrq
+   Q==;
+X-CSE-ConnectionGUID: 5CnU41p/TCu1NHWb5pNgTw==
+X-CSE-MsgGUID: JoX1pkIsRN6rTdQwllveaw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="50340332"
+X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
+   d="scan'208";a="50340332"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 07:58:26 -0700
+X-CSE-ConnectionGUID: y09sYGf4QqODUfprBLDVMA==
+X-CSE-MsgGUID: Q+06b0FMTe+mtijA4d50yg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
+   d="scan'208";a="136207842"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 07:58:25 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u69eA-0000000DqPj-0RDZ;
+	Sat, 19 Apr 2025 17:58:22 +0300
+Date: Sat, 19 Apr 2025 17:58:21 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Corey Minyard <corey@minyard.net>
+Cc: Linux Kernel <linux-kernel@vger.kernel.org>,
+	OpenIPMI Developers <openipmi-developer@lists.sourceforge.net>
+Subject: Re: [PATCH v2] ipmi:si: Move SI type information into an info
+ structure
+Message-ID: <aAO6DVh2knSoA20x@smile.fi.intel.com>
+References: <20250416183614.3777003-2-corey@minyard.net>
+ <aAEkdwD888tW2OUY@smile.fi.intel.com>
+ <aAElHft1iVqZbhBA@smile.fi.intel.com>
+ <aAFqcaFGOoOVRpWO@mail.minyard.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <db829a60-c524-73bc-e7c3-fed60e980d99@linux.intel.com>
+In-Reply-To: <aAFqcaFGOoOVRpWO@mail.minyard.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-
-* Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
-
-> On Fri, 18 Apr 2025, Ingo Molnar wrote:
-> 
+On Thu, Apr 17, 2025 at 03:54:09PM -0500, Corey Minyard wrote:
+> On Thu, Apr 17, 2025 at 06:58:21PM +0300, Andy Shevchenko wrote:
+> > On Thu, Apr 17, 2025 at 06:55:35PM +0300, Andy Shevchenko wrote:
+> > > On Wed, Apr 16, 2025 at 01:36:15PM -0500, Corey Minyard wrote:
+> > > > Andy reported:
+> > > > 
+> > > > Debian clang version 19.1.7 is not happy when compiled with
+> > > > `make W=1` (note, CONFIG_WERROR=y is the default):
+> > > > 
+> > > > ipmi_si_platform.c:268:15: error: cast to smaller integer type 'enum si_type'
+> > > > +from 'const void *' [-Werror,-Wvoid-pointer-to-enum-cast]
 > > 
-> > * Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
-> > 
-> > > On Wed, 16 Apr 2025, Andy Shevchenko wrote:
-> > > 
-> > > > On Wed, Apr 16, 2025 at 01:13:18PM +0300, Ilpo Järvinen wrote:
-> > > > > Convert open coded resource size calculations to use
-> > > > > resource_set_{range,size}() helpers.
-> > > > > 
-> > > > > While at it, use SZ_* for size parameter which makes the intent of code
-> > > > > more obvious.
-> > > > 
-> > > > ...
-> > > > 
-> > > > > +	resource_set_range(res, base, 1ULL << (segn_busn_bits + 20));
-> > > > 
-> > > > Then probably
-> > > > 
-> > > > 	resource_set_range(res, base, BIT_ULL(segn_busn_bits) * SZ_1M);
-> > > > 
-> > > > to follow the same "While at it"?
-> > > 
-> > > I'll change that now since you brought it up. It did cross my mind to 
-> > > convert that to * SZ_1M but it seemed to go farther than I wanted with a 
-> > > simple conversion patch.
-> > > 
-> > > I've never liked the abuse of BIT*() for size related shifts though, 
-> > > I recall I saw somewhere a helper that was better named for size 
-> > > related operations but I just cannot recall its name and seem to not 
-> > > find that anymore :-(. But until I come across it once again, I guess 
-> > > I'll have to settle to BIT*().
-> > 
-> > BITS_TO_LONGS()?
+> > It seems you copied'n'pasted from narrow screen. The lines should kept as is
+> > (as long as they are) without an additional line break and plus sign.
 > 
-> Hi Ingo,
-> 
-> I'm not entiry sure if you're referring to my BIT*() matching unrelated
-> macros such as BITS_TO_LONGS() (I only meant BIT() and BIT_ULL() which I 
-> thought was clear from the context), or that BITS_TO_LONGS() would be the 
-> solution what I'm looking for.
+> Yep.  Thanks Andy.  Should this wait for for 6.16, or would 6.15 be
+> better?
 
-Indeed, I misremembered BITS_TO_LONGS() - now that I looked up its 
-definition it's definitely not what you wanted... :)
+I prefer v6.15, but it's not that critical, and v6.16 would work. So, up to you.
 
-Thanks,
+> > > >   268 |         io.si_type      = (enum
+> > > > +si_type)device_get_match_data(&pdev->dev);
+> > 
+> > Ditto.
+> > 
+> > > > The IPMI SI type is an enum that was cast into a pointer that was
+> > > > then cast into an enum again.  That's not the greatest style, so
+> > > > instead create an info structure to hold the data and use that.
+> > > 
+> > > Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-	Ingo
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
